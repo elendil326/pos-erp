@@ -44,29 +44,49 @@
 			
 		input[type="button"] {
 			-webkit-appearance: button;
-									margin : 15px;
+			margin : 15px;
+		}
+		
+		.title{
+			text-align: center;
+			font-size:22px; 
 		}
 
 	</style>
+	<link rel="stylesheet" type="text/css" href="./ext3/resources/css/ext-all.css">
+
+	<script type="text/javascript" src="./ext3/adapter/ext/ext-base.js"></script>
+	<script type="text/javascript" src='./ext3/ext-all.js'></script>
+	
+	<script>
+
+		Ext.onReady(function() {
+			
+			Ext.get("splash").fadeIn({duration: 2} );
+			
+		});
+	</script>
 </head>
 <body>
-	<div class="title">tituelo</div>
+	<div class="main-title">tituelo</div>
 	
-	<div class="box login">
-		<div>
-			usr <input type="text">
+	<div id="splash" style="display: none;">
+		<div id="login" class="box login">
+			<div class="title">Acceder</div>
+			<div>
+				usr <input type="text">
+			</div>
+			<div>
+				pswd <input type="text">
+			</div>
+			<div>
+			<input type="button" style="width: 70px" value="aceptar">
+			</div>
 		</div>
-		<div>
-		pswd <input type="text">
-		</div>
-		<div>
-		<input type="button" value="aceptar">
-		</div>
+	
+		<div class="box">
+			designed by caffeina
+		</div>	
 	</div>
-	
-	<div class="box">
-		some stuff
-	</div>	
-
 </body>
 </html>
