@@ -51,9 +51,9 @@ AppLogin.prototype.fadeForm = function ()
 	Ext.get("login").fadeOut({  
 		endOpacity: 0.3,
 		callback: function(){
-				Ext.get("login0").dom.disabled=true;
-				Ext.get("login1").dom.disabled=true;
-				Ext.get("login2").dom.disabled=true;
+				Ext.get("login0").dom.disabled = true;
+				Ext.get("login1").dom.disabled = true;
+				Ext.get("login2").dom.disabled = true;
 			}
 		
 		});
@@ -97,7 +97,7 @@ AppLogin.prototype.checkCurrentLoginInfo = function ()
 
 AppLogin.prototype.ajaxSuccess = function ( data )
 {
-	Ext.get("login").hasActiveFx
+	//Ext.get("login").hasActiveFx
 	console.log(data)
 	
 }

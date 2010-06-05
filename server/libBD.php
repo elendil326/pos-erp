@@ -1,4 +1,46 @@
-<?	include("adodb5/adodb.inc.php");
+<?	
+	/*
+		Estilo de consultas :
+		
+		
+		// sanitizar el array de parametros
+	    sanitize($params);
+
+	    $qry_create_user = "
+	      INSERT INTO `".$GLOBALS['dbname']."`.`user`(`name`,`f_name`,`s_name`,`pass`,`type`,`control`,`email`)
+	      VALUES (?, ?, ?, ?, ?, ?, ?);
+	    "; // end of query
+
+	    try{	
+	    	$result_create_user = $conn->Execute($qry_create_user, $params);
+		}catch(Exception $e){
+		  return_json_error('Error en la base de datos: No se pudo insertar alumno');
+	          return;
+		}
+		
+		
+		
+		
+		function sanitize(&$params) {
+		    foreach($params as &$param) {
+		        // se remueven los tags html
+		        if (is_string($param)) {
+		            $param = strip_tags($param);
+		        }
+
+		        // se comprueba que no sea un string en blanco
+		        //if (!trim($param) || ctype_space($string)){
+			/*if (!trim($param)){
+		            return_json_error("Error al procesar los datos. Intenta de nuevo.");
+		            exit;
+		        } else {
+		            $param = trim($param);
+		        }*/
+		    }
+		}
+	*/
+
+	include("adodb5/adodb.inc.php");
 	class bd{
 		var $con;
 		var $bd_man;
