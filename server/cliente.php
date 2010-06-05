@@ -23,24 +23,33 @@
 		}
 		
 		function inserta(){
-			$insert="INSERT INTO  cliente values(NULL,'".$this->rfc."' ,'".$this->nombre."' ,'".$this->direccion."' ,'".$this->telefono."' ,'".$this->e_mail."' ,'".$this->limite_credito."');";
-			return $this->bd->ejecuta($insert);
+			$insert="INSERT INTO  cliente values(NULL,?,?,?,?,?,?);";
+			$params=array($this->rfc,$this->nombre,$this->direccion,$this->telefono,$this->e_mail,$this->limite_credito);
+			if($this->bd->ejecuta($insert,$params)){
+				$query="select max(id_cliente) from cliente;";
+				$this->id_cliente=$this->bd->select_un_campo($query,array());
+				return true;
+			}else return;
 		}
 		function actualiza(){
-			$update="UPDATE  cliente SET  `rfc` =  '".$this->rfc."', `nombre` =  '".$this->nombre."', `direccion` =  '".$this->direccion."', `telefono` =  '".$this->telefono."', `e_mail` =  '".$this->e_mail."', `limite_credito` =  '".$this->limite_credito."' WHERE  `cliente`.`id_cliente` =".$this->id_cliente.";";
-			return $this->bd->ejecuta($update);
+			$update="UPDATE  cliente SET  `rfc` =  ?, `nombre` =  ?, `direccion` =  ?, `telefono` =?, `e_mail` = ?, `limite_credito` = ? WHERE  `cliente`.`id_cliente` =?;";
+			$params=array($this->rfc,$this->nombre,$this->direccion,$this->telefono,$this->e_mail,$this->limite_credito,$this->id_cliente);
+			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){
-			$query="select * from cliente where id_cliente` =".$this->id_cliente.";";
-			return $this->bd->select_json($query);
+			$query="select * from cliente where id_cliente` =?;";
+			$params=array($this->id_cliente);
+			return $this->bd->select_json($query,$params);
 		}
 		function borra (){
-			$query="delete from cliente where id_cliente=".$this->id_cliente.";";
-			return $this->bd->ejecuta($query);
+			$query="delete from cliente where id_cliente=?;";
+			$params=array($this->id_cliente);
+			return $this->bd->ejecuta($query,$params);
 		}
 		function obtener_datos($id){
-			$query="select * from cliente where id_cliente='$id';";
-			$datos=$this->bd->select_uno($query);
+			$query="select * from cliente where id_cliente=?;";
+			$params=array($id);
+			$datos=$this->bd->select_uno($query,$params);
 			$this->id_cliente=$datos[id_cliente];			
 			$this->rfc=$datos[rfc];	 	 	 	 	 	 	 
 			$this->nombre=$datos[nombre];	 	 	 	 	 	 	 
@@ -50,7 +59,9 @@
 			$this->limite_credito=$datos[limite_credito];
 		}
 		function existe(){
-			return $this->bd->existe("select id_cliente from cliente where id_cliente=".$this->id_cliente.";");
+			$query="select id_cliente from cliente where id_cliente=?;";
+			$params=array($this->id_cliente);
+			return $this->bd->existe($query,$params);
 		}
 	}
 	class cliente_vacio extends cliente {       
