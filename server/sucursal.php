@@ -25,7 +25,7 @@
 		}
 		function actualiza(){
 			$update="UPDATE  sucursal SET  `descripcion` =  ?, `direccion` =  ? WHERE  `id_sucursal` =?;";
-			$params=array($this->descripcion,$this->direccion);
+			$params=array($this->descripcion,$this->direccion,$this->id_sucursal);
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){
@@ -33,15 +33,15 @@
 			$params=array($this->id_sucursal);
 			return $this->bd->select_json($query,$params);
 		}
-		function borra (){
-			$query="delete from sucursal where id_sucursal=?;";
+		function borra(){
+			$query="delete from sucursal where id_sucursal=? ;";
 			$params=array($this->id_sucursal);
-			return $this->bd->ejecuta($query,$params);
+			return ($this->bd->ejecuta($query,$params))?true:false;
 		}
 		function obtener_datos($id){
 			$query="select * from sucursal where id_sucursal=?;";
 			$params=array($id);
-			$datos=$this->bd->select_uno($query,$params);
+			$datos=($this->bd->select_uno($query,$params));
 			$this->id_sucursal=$datos[id_sucursal];			
 			$this->descripcion=$datos[descripcion];	 	 	 	 	 	 	 
 			$this->direccion=$datos[direccion];

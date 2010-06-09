@@ -93,11 +93,10 @@
 		}
 		function sanitize(&$params) {
 		    foreach($params as &$param) {
-		        // se remueven los tags html
 		        if (is_string($param)) {
 		            $param = strip_tags($param);
 		        }
-		    }
+			}
 		}
 	}	
 	class bd_default extends bd{
