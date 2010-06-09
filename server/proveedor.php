@@ -1,4 +1,4 @@
-<?php include("libBD.php");
+<?php include_once("libBD.php");
 	class proveedor{
 		var $id_proveedor;	 	 	 	 	 	 	
 		var $rfc;	 	 	 	 	 	 	 

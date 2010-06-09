@@ -1,4 +1,4 @@
-<?php include("libBD.php");
+<?php include_once("libBD.php");
 	class cliente{
 		var $id_cliente;	 	 	 	 	 	 	
 		var $rfc;	 	 	 	 	 	 	 

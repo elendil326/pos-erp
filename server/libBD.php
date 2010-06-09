@@ -1,5 +1,4 @@
-<?	
-	include("adodb5/adodb.inc.php");
+<?	include_once("adodb5/adodb.inc.php");
 	class bd{
 		var $con;
 		var $bd_man;
@@ -98,20 +97,11 @@
 		        if (is_string($param)) {
 		            $param = strip_tags($param);
 		        }
-		        // se comprueba que no sea un string en blanco
-		        //if (!trim($param) || ctype_space($string)){
-			/*if (!trim($param)){
-		            return_json_error("Error al procesar los datos. Intenta de nuevo.");
-		            exit;
-		        } else {
-		            $param = trim($param);
-		        }*/
 		    }
 		}
-	}
+	}	
 	class bd_default extends bd{
 		function __construct(){ 
-		//echo 'mysql://root:@localhost/POS2<br>';
 			$this->bd_man="mysql";
 			$this->user="root";
 			$this->host="localhost";
