@@ -1,23 +1,27 @@
-# phpMyAdmin SQL Dump
-# version 3.1.1
-# http://www.phpmyadmin.net
-#
-# Servidor: localhost
-# Tiempo de generación: 02-06-2010 a las 23:08:48
-# Versión del servidor: 5.1.30
-# Versión de PHP: 5.2.8
+-- phpMyAdmin SQL Dump
+-- version 3.1.1
+-- http://www.phpmyadmin.net
+--
+-- Servidor: localhost
+-- Tiempo de generación: 08-06-2010 a las 21:59:00
+-- Versión del servidor: 5.1.30
+-- Versión de PHP: 5.2.8
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
-# ############################
+--
+-- Base de datos: `pos`
+--
 
-#
-# Estructura de tabla para la tabla `cliente`
-#
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cliente`
+--
 
 DROP TABLE IF EXISTS `cliente`;
 CREATE TABLE IF NOT EXISTS `cliente` (
-  `id_cliente` int(11) NOT NULL COMMENT 'identificador del cliente',
+  `id_cliente` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del cliente',
   `rfc` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'rfc del cliente si es que tiene',
   `nombre` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre del cliente',
   `direccion` varchar(300) COLLATE utf8_unicode_ci NOT NULL COMMENT 'domicilio del cliente calle, no, colonia',
@@ -25,13 +29,13 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   `e_mail` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0' COMMENT 'dias de credito para que pague el cliente',
   `limite_credito` float NOT NULL DEFAULT '0' COMMENT 'Limite de credito otorgado al cliente',
   PRIMARY KEY (`id_cliente`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=20 ;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `compras`
-#
+--
+-- Estructura de tabla para la tabla `compras`
+--
 
 DROP TABLE IF EXISTS `compras`;
 CREATE TABLE IF NOT EXISTS `compras` (
@@ -43,14 +47,17 @@ CREATE TABLE IF NOT EXISTS `compras` (
   `iva` float NOT NULL COMMENT 'iva de la compra',
   `sucursal` int(11) NOT NULL COMMENT 'sucursal en que se compro',
   `id_usuario` int(11) NOT NULL COMMENT 'quien realizo la compra',
-  PRIMARY KEY (`id_compra`)
+  PRIMARY KEY (`id_compra`),
+  KEY `compras_proveedor` (`id_proveedor`),
+  KEY `compras_sucursal` (`sucursal`),
+  KEY `compras_usuario` (`id_usuario`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `cotizacion`
-#
+--
+-- Estructura de tabla para la tabla `cotizacion`
+--
 
 DROP TABLE IF EXISTS `cotizacion`;
 CREATE TABLE IF NOT EXISTS `cotizacion` (
@@ -59,14 +66,15 @@ CREATE TABLE IF NOT EXISTS `cotizacion` (
   `fecha` date NOT NULL COMMENT 'fecha de cotizacion',
   `subtotal` float NOT NULL COMMENT 'subtotal de la cotizacion',
   `iva` float NOT NULL COMMENT 'iva sobre el subtotal',
-  PRIMARY KEY (`id_cotizacion`)
+  PRIMARY KEY (`id_cotizacion`),
+  KEY `cotizacion_cliente` (`id_cliente`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `cuenta_cliente`
-#
+--
+-- Estructura de tabla para la tabla `cuenta_cliente`
+--
 
 DROP TABLE IF EXISTS `cuenta_cliente`;
 CREATE TABLE IF NOT EXISTS `cuenta_cliente` (
@@ -75,11 +83,11 @@ CREATE TABLE IF NOT EXISTS `cuenta_cliente` (
   PRIMARY KEY (`id_cliente`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `cuenta_proveedor`
-#
+--
+-- Estructura de tabla para la tabla `cuenta_proveedor`
+--
 
 DROP TABLE IF EXISTS `cuenta_proveedor`;
 CREATE TABLE IF NOT EXISTS `cuenta_proveedor` (
@@ -88,11 +96,11 @@ CREATE TABLE IF NOT EXISTS `cuenta_proveedor` (
   PRIMARY KEY (`id_proveedor`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `detalle_compra`
-#
+--
+-- Estructura de tabla para la tabla `detalle_compra`
+--
 
 DROP TABLE IF EXISTS `detalle_compra`;
 CREATE TABLE IF NOT EXISTS `detalle_compra` (
@@ -100,14 +108,15 @@ CREATE TABLE IF NOT EXISTS `detalle_compra` (
   `id_producto` int(11) NOT NULL COMMENT 'id del producto',
   `cantidad` float NOT NULL COMMENT 'cantidad comprada',
   `precio` float NOT NULL COMMENT 'costo de compra',
-  PRIMARY KEY (`id_compra`,`id_producto`)
+  PRIMARY KEY (`id_compra`,`id_producto`),
+  KEY `detalle_compra_producto` (`id_producto`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `detalle_cotizacion`
-#
+--
+-- Estructura de tabla para la tabla `detalle_cotizacion`
+--
 
 DROP TABLE IF EXISTS `detalle_cotizacion`;
 CREATE TABLE IF NOT EXISTS `detalle_cotizacion` (
@@ -115,14 +124,30 @@ CREATE TABLE IF NOT EXISTS `detalle_cotizacion` (
   `id_producto` int(11) NOT NULL COMMENT 'id del producto',
   `cantidad` float NOT NULL COMMENT 'cantidad cotizado',
   `precio` float NOT NULL COMMENT 'precio al que cotizo el producto',
-  PRIMARY KEY (`id_cotizacion`,`id_producto`)
+  PRIMARY KEY (`id_cotizacion`,`id_producto`),
+  KEY `detalle_cotizacion_producto` (`id_producto`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `detalle_venta`
-#
+--
+-- Estructura de tabla para la tabla `detalle_inventario`
+--
+
+DROP TABLE IF EXISTS `detalle_inventario`;
+CREATE TABLE IF NOT EXISTS `detalle_inventario` (
+  `id_producto` int(11) NOT NULL COMMENT 'id del producto al que se refiere',
+  `existencia` float NOT NULL DEFAULT '0' COMMENT 'existencia en la sucursal',
+  `sucursal` int(11) NOT NULL COMMENT 'sucursal a la que se refiere',
+  PRIMARY KEY (`id_producto`,`sucursal`),
+  KEY `detalle_inventario_sucursal` (`sucursal`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalle_venta`
+--
 
 DROP TABLE IF EXISTS `detalle_venta`;
 CREATE TABLE IF NOT EXISTS `detalle_venta` (
@@ -130,42 +155,45 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
   `id_producto` int(11) NOT NULL COMMENT 'producto de la venta',
   `cantidad` float NOT NULL COMMENT 'cantidad que se vendio',
   `precio` float NOT NULL COMMENT 'precio al que se vendio',
-  PRIMARY KEY (`id_venta`,`id_producto`)
+  PRIMARY KEY (`id_venta`,`id_producto`),
+  KEY `detalle_venta_producto` (`id_producto`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `factura_compra`
-#
+--
+-- Estructura de tabla para la tabla `factura_compra`
+--
 
 DROP TABLE IF EXISTS `factura_compra`;
 CREATE TABLE IF NOT EXISTS `factura_compra` (
   `id_factura` int(20) NOT NULL AUTO_INCREMENT COMMENT 'NUMERO DE FACTURA',
   `folio` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
   `id_compra` int(11) NOT NULL COMMENT 'COMPRA A LA QUE CORRESPONDE LA FACTURA',
-  PRIMARY KEY (`id_factura`)
+  PRIMARY KEY (`id_factura`),
+  KEY `factura_compra_compra` (`id_compra`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `factura_venta`
-#
+--
+-- Estructura de tabla para la tabla `factura_venta`
+--
 
 DROP TABLE IF EXISTS `factura_venta`;
 CREATE TABLE IF NOT EXISTS `factura_venta` (
   `id_factura` int(20) NOT NULL AUTO_INCREMENT COMMENT 'Numero de factura al cliente',
   `folio` varchar(15) COLLATE utf8_unicode_ci NOT NULL COMMENT 'folio que tiene la factura',
   `id_venta` int(11) NOT NULL COMMENT 'venta a la cual corresponde la factura',
-  PRIMARY KEY (`id_factura`)
+  PRIMARY KEY (`id_factura`),
+  KEY `factura_venta_venta` (`id_venta`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `impuesto`
-#
+--
+-- Estructura de tabla para la tabla `impuesto`
+--
 
 DROP TABLE IF EXISTS `impuesto`;
 CREATE TABLE IF NOT EXISTS `impuesto` (
@@ -175,40 +203,40 @@ CREATE TABLE IF NOT EXISTS `impuesto` (
   PRIMARY KEY (`id_impuesto`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `inventario`
-#
+--
+-- Estructura de tabla para la tabla `inventario`
+--
 
 DROP TABLE IF EXISTS `inventario`;
 CREATE TABLE IF NOT EXISTS `inventario` (
   `id_producto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del producto',
   `nombre` varchar(90) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Descripcion o nombre del producto',
   `precio_venta` float NOT NULL COMMENT 'precio al que se vende el producto',
-  `existencia` float NOT NULL COMMENT 'total del producto en la sucursal',
-  `sucursal` int(11) NOT NULL COMMENT 'sucursal en la que tenemos el prodcto',
+  `minimo` float DEFAULT NULL COMMENT 'minimo de el producto',
   PRIMARY KEY (`id_producto`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `nota_remision`
-#
+--
+-- Estructura de tabla para la tabla `nota_remision`
+--
 
 DROP TABLE IF EXISTS `nota_remision`;
 CREATE TABLE IF NOT EXISTS `nota_remision` (
   `id_nota` int(11) NOT NULL AUTO_INCREMENT COMMENT 'numero de nota a clienes',
   `id_venta` int(11) NOT NULL COMMENT 'venta a la cual corresponde la nota',
-  PRIMARY KEY (`id_nota`)
+  PRIMARY KEY (`id_nota`),
+  KEY `nota_remision_venta` (`id_venta`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `pagos_compra`
-#
+--
+-- Estructura de tabla para la tabla `pagos_compra`
+--
 
 DROP TABLE IF EXISTS `pagos_compra`;
 CREATE TABLE IF NOT EXISTS `pagos_compra` (
@@ -216,14 +244,15 @@ CREATE TABLE IF NOT EXISTS `pagos_compra` (
   `id_compra` int(11) NOT NULL COMMENT 'identificador de la compra a la que pagamos',
   `fecha` date NOT NULL COMMENT 'fecha en que se abono',
   `monto` float NOT NULL COMMENT 'monto que se abono',
-  PRIMARY KEY (`id_pago`)
+  PRIMARY KEY (`id_pago`),
+  KEY `pagos_compra_compra` (`id_compra`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `pagos_venta`
-#
+--
+-- Estructura de tabla para la tabla `pagos_venta`
+--
 
 DROP TABLE IF EXISTS `pagos_venta`;
 CREATE TABLE IF NOT EXISTS `pagos_venta` (
@@ -231,14 +260,15 @@ CREATE TABLE IF NOT EXISTS `pagos_venta` (
   `id_venta` int(11) NOT NULL COMMENT 'id de la venta a la que se esta pagando',
   `monto` float NOT NULL COMMENT 'total de credito del cliente',
   `fecha` date NOT NULL COMMENT 'fecha de vencimiento para el pago',
-  PRIMARY KEY (`id_pago`)
+  PRIMARY KEY (`id_pago`),
+  KEY `pagos_venta_venta` (`id_venta`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `productos_proveedor`
-#
+--
+-- Estructura de tabla para la tabla `productos_proveedor`
+--
 
 DROP TABLE IF EXISTS `productos_proveedor`;
 CREATE TABLE IF NOT EXISTS `productos_proveedor` (
@@ -247,14 +277,16 @@ CREATE TABLE IF NOT EXISTS `productos_proveedor` (
   `id_proveedor` int(11) NOT NULL COMMENT 'clave del proveedor',
   `id_inventario` int(11) NOT NULL COMMENT 'clave con la que entra a nuestro inventario',
   `precio` int(11) NOT NULL COMMENT 'precio al que se compra el producto (sin descuento)',
-  PRIMARY KEY (`id_producto`)
+  PRIMARY KEY (`id_producto`),
+  KEY `productos_proveedor_proveedor` (`id_proveedor`),
+  KEY `productos_proveedor_producto` (`id_inventario`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `proveedor`
-#
+--
+-- Estructura de tabla para la tabla `proveedor`
+--
 
 DROP TABLE IF EXISTS `proveedor`;
 CREATE TABLE IF NOT EXISTS `proveedor` (
@@ -265,13 +297,13 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
   `telefono` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'telefono',
   `e_mail` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'email del provedor',
   PRIMARY KEY (`id_proveedor`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `sucursal`
-#
+--
+-- Estructura de tabla para la tabla `sucursal`
+--
 
 DROP TABLE IF EXISTS `sucursal`;
 CREATE TABLE IF NOT EXISTS `sucursal` (
@@ -281,11 +313,11 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   PRIMARY KEY (`id_sucursal`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `usuario`
-#
+--
+-- Estructura de tabla para la tabla `usuario`
+--
 
 DROP TABLE IF EXISTS `usuario`;
 CREATE TABLE IF NOT EXISTS `usuario` (
@@ -297,11 +329,11 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   PRIMARY KEY (`id_usuario`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-# ############################
+-- --------------------------------------------------------
 
-#
-# Estructura de tabla para la tabla `ventas`
-#
+--
+-- Estructura de tabla para la tabla `ventas`
+--
 
 DROP TABLE IF EXISTS `ventas`;
 CREATE TABLE IF NOT EXISTS `ventas` (
@@ -313,177 +345,8 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   `iva` float NOT NULL COMMENT 'iva agregado por la venta',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal de la venta',
   `id_usuario` int(11) NOT NULL COMMENT 'empleado que lo vendio',
-  PRIMARY KEY (`id_venta`)
+  PRIMARY KEY (`id_venta`),
+  KEY `ventas_cliente` (`id_cliente`),
+  KEY `ventas_sucursal` (`id_sucursal`),
+  KEY `ventas_usuario` (`id_usuario`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
-
-#aqui van las llaves foraneas
-#tabla compras
-ALTER TABLE compras DROP FOREIGN KEY compras_proveedor;
-
-alter table compras
-add CONSTRAINT compras_proveedor FOREIGN KEY (id_proveedor)
-REFERENCES  proveedores(id_proveedor);
-
-ALTER TABLE compras DROP FOREIGN KEY compras_sucursal;
-
-alter table compras
-add CONSTRAINT compras_sucursal FOREIGN KEY (sucursal)
-REFERENCES  sucursal(id_sucursal);
-
-ALTER TABLE compras DROP FOREIGN KEY compras_usuario;
-
-alter table compras
-add CONSTRAINT compras_usuario FOREIGN KEY (id_usuario)
-REFERENCES  usuario(id_usuario);
-
-# tabla cotizacion
-
-ALTER TABLE cotizacion DROP FOREIGN KEY cotizacion_cliente;
-
-alter table cotizacion
-add CONSTRAINT cotizacion_cliente FOREIGN KEY (id_cliente)
-REFERENCES  cliente(id_cliente);
-
-#tabla cuenta_cliente
-
-ALTER TABLE cuenta_cliente  DROP FOREIGN KEY cuenta_de_cliente;
-
-alter table cuenta_cliente
-add CONSTRAINT cuenta_de_cliente FOREIGN KEY (id_cliente)
-REFERENCES  cliente(id_cliente);
-
-#tabla cuenta proveedor
-
-ALTER TABLE cuenta_proveedor DROP FOREIGN KEY cuenta_de_proveedor;
-
-alter table cuenta_proveedor
-add CONSTRAINT cuenta_de_proveedor FOREIGN KEY (id_proveedor)
-REFERENCES  proveedor(id_proveedor);
-
-#tabla detalle compra
-
-ALTER TABLE detalle_compra DROP FOREIGN KEY detalle_compra_compra;
-
-alter table detalle_compra
-add CONSTRAINT detalle_compra_compra FOREIGN KEY (id_compra)
-REFERENCES  compras(id_compra);
-
-ALTER TABLE detalle_compra DROP FOREIGN KEY detalle_compra_producto;
-
-alter table detalle_compra
-add CONSTRAINT detalle_compra_producto FOREIGN KEY (id_producto)
-REFERENCES  productos_proveedor(id_producto);
-
-#tabla detalle cotizacion
-ALTER TABLE detalle_cotizacion DROP FOREIGN KEY detalle_cotizacion_cotizacion;
-
-alter table detalle_cotizacion
-add CONSTRAINT detalle_cotizacion_cotizacion FOREIGN KEY (id_cotizacion)
-REFERENCES cotizacion(id_cotizacion);
-
-ALTER TABLE detalle_cotizacion DROP FOREIGN KEY detalle_cotizacion_producto;
-
-alter table detalle_cotizacion
-add CONSTRAINT detalle_cotizacion_producto FOREIGN KEY (id_producto)
-REFERENCES  inventario(id_producto);
-
-#tabla detalle venta
-ALTER TABLE detalle_venta DROP FOREIGN KEY detalle_venta_venta;
-
-alter table detalle_venta
-add CONSTRAINT detalle_venta_venta FOREIGN KEY (id_venta)
-REFERENCES  ventas(id_venta);
-
-ALTER TABLE detalle_venta DROP FOREIGN KEY detalle_venta_producto;
-
-alter table detalle_venta
-add CONSTRAINT detalle_venta_producto FOREIGN KEY (id_producto)
-REFERENCES  inventario(id_producto);
-
-
-#tabla factura compra
-
-ALTER TABLE factura_compra DROP FOREIGN KEY factura_compra_compra;
-
-alter table factura_compra
-add CONSTRAINT factura_compra_compra FOREIGN KEY (id_compra)
-REFERENCES  compras(id_compra);
-
-#tabla factura venta
-
-ALTER TABLE factura_venta DROP FOREIGN KEY factura_venta_venta;
-
-alter table factura_venta
-add CONSTRAINT factura_venta_venta FOREIGN KEY (id_venta)
-REFERENCES  ventas(id_venta);
-
-#tabla inventario
-
-ALTER TABLE inventario DROP FOREIGN KEY inventario_sucursal;
-
-alter table inventario
-add CONSTRAINT inventario_sucursal FOREIGN KEY (sucursal)
-REFERENCES  sucursal(id_sucursal);
-
-#tabla nota_remision
-
-ALTER TABLE nota_remision DROP FOREIGN KEY nota_remision_venta;
-
-alter table nota_remision
-add CONSTRAINT nota_remision_venta FOREIGN KEY (id_venta)
-REFERENCES  ventas(id_venta);
-
-#tabla pagos_compra
-ALTER TABLE pagos_compra DROP FOREIGN KEY pagos_compra_compra ;
-
-alter table pagos_compra
-add CONSTRAINT pagos_compra_compra FOREIGN KEY (id_compra)
-REFERENCES  compras(id_compra);
-
-#tabla pagos_venta
-
-ALTER TABLE pagos_venta DROP FOREIGN KEY pagos_venta_venta;
-
-alter table pagos_venta
-add CONSTRAINT pagos_venta_venta FOREIGN KEY (id_venta)
-REFERENCES  ventas(id_venta);
-
-#tabla productos_proveedor
-
-ALTER TABLE productos_proveedor DROP FOREIGN KEY productos_proveedor_proveedor;
-
-alter table productos_proveedor
-add CONSTRAINT productos_proveedor_proveedor FOREIGN KEY (id_proveedor)
-REFERENCES  proveedor(id_proveedor);
-
-ALTER TABLE productos_proveedor DROP FOREIGN KEY productos_proveedor_producto;
-
-alter table productos_proveedor
-add CONSTRAINT productos_proveedor_producto FOREIGN KEY (id_inventario)
-REFERENCES  inventario(id_producto);
-
-#tabla ventas
-
-
-ALTER TABLE ventas DROP FOREIGN KEY ventas_cliente;
-
-alter table ventas
-add CONSTRAINT ventas_cliente  FOREIGN KEY (id_cliente)
-REFERENCES  clientes(id_cliente);
-
-ALTER TABLE ventas DROP FOREIGN KEY ventas_sucursal;
-
-alter table ventas
-add CONSTRAINT ventas_sucursal FOREIGN KEY (id_sucursal)
-REFERENCES  sucursal(id_sucursal);
-
-ALTER TABLE ventas DROP FOREIGN KEY ventas_usuario;
-
-alter table ventas
-add CONSTRAINT ventas_usuario FOREIGN KEY (id_usuario)
-REFERENCES  usuario(id_usuario);
-
-
-
