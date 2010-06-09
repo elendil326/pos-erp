@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 08-06-2010 a las 21:59:00
+-- Tiempo de generación: 08-06-2010 a las 23:59:42
 -- Versión del servidor: 5.1.30
 -- Versión de PHP: 5.2.8
 
@@ -258,8 +258,8 @@ DROP TABLE IF EXISTS `pagos_venta`;
 CREATE TABLE IF NOT EXISTS `pagos_venta` (
   `id_pago` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de pago del cliente',
   `id_venta` int(11) NOT NULL COMMENT 'id de la venta a la que se esta pagando',
+  `fecha` date NOT NULL COMMENT 'fecha de pago',
   `monto` float NOT NULL COMMENT 'total de credito del cliente',
-  `fecha` date NOT NULL COMMENT 'fecha de vencimiento para el pago',
   PRIMARY KEY (`id_pago`),
   KEY `pagos_venta_venta` (`id_venta`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
@@ -276,6 +276,7 @@ CREATE TABLE IF NOT EXISTS `productos_proveedor` (
   `clave_producto` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'clave de producto para el proveedor',
   `id_proveedor` int(11) NOT NULL COMMENT 'clave del proveedor',
   `id_inventario` int(11) NOT NULL COMMENT 'clave con la que entra a nuestro inventario',
+  `descripcion` varchar(200) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Descripcion del producto que nos vende el proveedor',
   `precio` int(11) NOT NULL COMMENT 'precio al que se compra el producto (sin descuento)',
   PRIMARY KEY (`id_producto`),
   KEY `productos_proveedor_proveedor` (`id_proveedor`),
@@ -343,10 +344,10 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de venta',
   `subtotal` float NOT NULL COMMENT 'subtotal de la venta',
   `iva` float NOT NULL COMMENT 'iva agregado por la venta',
-  `id_sucursal` int(11) NOT NULL COMMENT 'sucursal de la venta',
+  `sucursal` int(11) NOT NULL COMMENT 'sucursal de la venta',
   `id_usuario` int(11) NOT NULL COMMENT 'empleado que lo vendio',
   PRIMARY KEY (`id_venta`),
   KEY `ventas_cliente` (`id_cliente`),
-  KEY `ventas_sucursal` (`id_sucursal`),
+  KEY `ventas_sucursal` (`sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
