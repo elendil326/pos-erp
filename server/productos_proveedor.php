@@ -4,7 +4,7 @@
 		var $clave_producto;	 	 	 	 	 	 	
 		var $id_proveedor;	 	
 		var $id_inventario;	 	 	
-		var $descripcion;	 	 	
+		var $descripcion;
 		var $precio;	 	 	
 		var $bd;
 		

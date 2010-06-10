@@ -58,9 +58,9 @@
 		}
 	}
 	class detalle_venta_existente extends detalle_venta {
-		public function __construct($id) {
+		public function __construct($idv,$idp) {
 			$this->bd=new bd_default();
-			$this->obtener_datos($id);
+			$this->obtener_datos($idv,$idp);
 		}
 	}
 ?>

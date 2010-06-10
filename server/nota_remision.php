@@ -37,9 +37,9 @@
 			$params=array($this->id_nota,$this->id_venta);
 			return $this->bd->ejecuta($query,$params);
 		}
-		function obtener_datos($id_p,$id_s){
-			$query="select * from nota_remision where id_nota=? and id_venta=?;";
-			$params=array($id_p,$id_s);
+		function obtener_datos($id){
+			$query="select * from nota_remision where id_nota=?;";
+			$params=array($id);
 			$datos=$this->bd->select_uno($query,$params);
 			$this->id_nota=$datos[id_nota];		
 			$this->id_venta=$datos[id_venta];	

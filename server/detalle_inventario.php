@@ -55,9 +55,9 @@
 		}
 	}
 	class detalle_inventario_existente extends detalle_inventario {
-		public function __construct($id) {
+		public function __construct($idp,$ids) {
 			$this->bd=new bd_default();
-			$this->obtener_datos($id);
+			$this->obtener_datos($idp,$ids);
 		}
 	}
 ?>

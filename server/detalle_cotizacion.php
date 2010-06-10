@@ -58,9 +58,9 @@
 		}
 	}
 	class detalle_cotizacion_existente extends detalle_cotizacion {
-		public function __construct($id) {
+		public function __construct($idc,$idp) {
 			$this->bd=new bd_default();
-			$this->obtener_datos($id);
+			$this->obtener_datos($idc,$idp);
 		}
 	}
 ?>

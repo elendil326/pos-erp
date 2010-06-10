@@ -25,8 +25,8 @@
 			}else return false;
 		}
 		function actualiza(){
-			$update="UPDATE  pagos_compra SET `id_compra`=?, `fecha`=?, `monto`=? where id_pago=?";
-			$params=array($this->id_compra,$this->fecha,$this->monto,$this->id_pago);
+			$update="UPDATE  pagos_compra SET `id_compra`=?, `fecha`=curdate(), `monto`=? where id_pago=?";
+			$params=array($this->id_compra,$this->monto,$this->id_pago);
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){
