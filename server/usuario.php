@@ -29,7 +29,7 @@
 		}
 		function actualiza(){
 			$update="UPDATE  usuario SET  `nombre` =  ?, `usuario` =  ?, `contasena` =  ?, `nivel` =  ? WHERE  `id_usuario` =?;";
-			$params=array($this->nombre,$this->usuario,crypt($this->contrasena),$this->nivel);
+			$params=array($this->nombre,$this->usuario,crypt($this->contrasena),$this->nivel,$this->id_usuario);
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){

@@ -27,7 +27,7 @@
 			$query="select id_producto from productos_proveedor where id_inventario=? and id_proveedor=?;";
 			$params=array($this->id_inventario,$this->id_proveedor);
 				if(!($this->bd->existe($query,$params))){
-					$insert="INSERT INTO productos_proveedor values(null,?,?,?,?,?,?);";
+					$insert="INSERT INTO productos_proveedor values(null,?,?,?,?,?);";
 					$params=array($this->clave_producto,$this->id_proveedor,$this->id_inventario,$this->descripcion,$this->precio);
 					if($this->bd->ejecuta($insert,$params)){
 						$query="select max(id_producto) from productos_proveedor;";

@@ -16,6 +16,10 @@
 		}
 		
 		function inserta(){
+			//que el proveedor si exista
+			//que el saldo no sea negativo
+			//que no exista ningun registro para este proveedor
+			//metodos de para sumar o restar el saldo que se llamen desde pagos proveedor
 			$insert="INSERT INTO  pagos_venta values(NULL,?,CURDATE( ),?);";
 			$params=array($this->id_venta,$this->monto);
 			if($this->bd->ejecuta($insert,$params)){
@@ -25,6 +29,10 @@
 			}else return false;
 		}
 		function actualiza(){
+			//que el proveedor si exista
+			//que el saldo no sea negativo
+			//que no exista ningun registro para este proveedor
+			//metodos de para sumar o restar el saldo que se llamen desde pagos proveedor
 			$update="UPDATE  pagos_venta SET `id_venta`=?, `fecha`=?, `monto`=? where id_pago=?";
 			$params=array($this->id_venta,$this->fecha,$this->monto,$this->id_pago);
 			return $this->bd->ejecuta($update,$params);

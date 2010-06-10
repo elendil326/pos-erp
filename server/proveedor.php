@@ -20,6 +20,8 @@
 		}
 		
 		function inserta(){
+		//verificar que no exista el proveedor (id)
+		//que devuelva el error de porque no logro insertar
 			$insert="INSERT INTO  proveedor values(NULL,?,?,?,?,?);";
 			$params=array($this->rfc,$this->nombre,$this->direccion,$this->telefono,$this->e_mail);
 			if($this->bd->ejecuta($insert,$params)){
@@ -29,7 +31,9 @@
 			}else return;
 		}
 		function actualiza(){
-			$update="UPDATE  proveedor SET  `rfc` =  ?, `nombre` =  ?, `direccion` =  ?, `telefono` =?, `e_mail` = ? WHERE  `proveedor`.`id_proveedor` =?;";
+		//que solo cambien datos permitidos
+		//que devuelva el error
+			$update="UPDATE  proveedor SET  `rfc` =  ?, `nombre` =  ?, `direccion` =  ?, `telefono` =?, `e_mail` = ? WHERE  `id_proveedor` =?;";
 			$params=array($this->rfc,$this->nombre,$this->direccion,$this->telefono,$this->e_mail,$this->id_proveedor);
 			return $this->bd->ejecuta($update,$params);
 		}
@@ -39,11 +43,14 @@
 			return $this->bd->select_json($query,$params);
 		}
 		function borra (){
+		//que exista el que se quiere borrar
+		//que devuelva errores
 			$query="delete from proveedor where id_proveedor=?;";
 			$params=array($this->id_proveedor);
 			return $this->bd->ejecuta($query,$params);
 		}
 		function obtener_datos($id){
+		//nos regrese los datos correctos
 			$query="select * from proveedor where id_proveedor=?;";
 			$params=array($id);
 			$datos=$this->bd->select_uno($query,$params);

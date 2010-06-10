@@ -16,11 +16,16 @@
 		}
 		
 		function inserta(){
+		//que el producto y la sucursal si existan
+		//que la existencia no sea negativa
+		//agregar 2 metodos para cuando se quiera sumar y otro para cuando se quiera restar la mercancia y que los llame la detalle_compra y la detalle_venta
 			$insert="INSERT INTO  detalle_inventario values(?,?,?);";
 			$params=array($this->id_producto,$this->existencia,$this->sucursal);
 			return ($this->bd->ejecuta($insert,$params))?true:false;
 		}
 		function actualiza(){
+		//que el producto y la sucursal si existan
+		//que la existencia no sea negativa
 			$update="UPDATE  detalle_inventario SET id_producto=?, existencia=?, sucursal=? where id_producto=? and sucursal=?";
 			$params=array($this->id_producto,$this->existencia,$this->sucursal,$this->id_producto,$this->sucursal);
 			return $this->bd->ejecuta($update,$params);

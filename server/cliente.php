@@ -32,7 +32,7 @@
 			}else return;
 		}
 		function actualiza(){
-			$update="UPDATE  cliente SET  `rfc` =  ?, `nombre` =  ?, `direccion` =  ?, `telefono` =?, `e_mail` = ?, `limite_credito` = ? WHERE  `cliente`.`id_cliente` =?;";
+			$update="UPDATE  cliente SET  `rfc` =  ?, `nombre` =  ?, `direccion` =  ?, `telefono` =?, `e_mail` = ?, `limite_credito` = ? WHERE  `id_cliente` =?;";
 			$params=array($this->rfc,$this->nombre,$this->direccion,$this->telefono,$this->e_mail,$this->limite_credito,$this->id_cliente);
 			return $this->bd->ejecuta($update,$params);
 		}

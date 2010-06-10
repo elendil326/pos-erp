@@ -18,11 +18,21 @@
 		}
 		
 		function inserta(){
+		//que la venta si exista
+		//que no exista la tupla de id_venta e id_producto anteriormente
+		//que la cantidad no sea negativa
+		//que el precio no sea negativo
+		//hacer cambios en inventario
 			$insert="INSERT INTO  detalle_venta values(?,?,?,?);";
 			$params=array($this->id_venta,$this->id_producto,$this->cantidad,$this->precio);
 			return ($this->bd->ejecuta($insert,$params))?true:false;
 		}
 		function actualiza(){
+		//que la venta si exista
+		//que no exista la tupla de id_venta e id_producto anteriormente
+		//que la cantidad no sea negativa
+		//que el precio no sea negativo
+		//hacer cambio en inventario
 			$update="UPDATE  detalle_venta SET cantidad=?,precio=? where id_venta=? and id_producto=?";
 			$params=array($this->cantidad,$this->precio,$this->id_venta,$this->id_producto);
 			return $this->bd->ejecuta($update,$params);
