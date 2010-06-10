@@ -25,7 +25,7 @@
 				$query="select max(id_usuario) from usuario;";
 				$this->id_usuario=$this->bd->select_un_campo($query,array());
 				return true;
-			}else return;
+			}else return false;
 		}
 		function actualiza(){
 			$update="UPDATE  usuario SET  `nombre` =  ?, `usuario` =  ?, `contasena` =  ?, `nivel` =  ? WHERE  `id_usuario` =?;";
@@ -55,6 +55,11 @@
 		function existe(){
 			$query="select id_usuario from usuario where id_usuario=?;";
 			$params=array($this->id_usuario);
+			return $this->bd->existe($query,$params);
+		}
+		function existe_usuario(){
+			$query="select id_usuario from usuario where usuario=?;";
+			$params=array($this->usuario);
 			return $this->bd->existe($query,$params);
 		}
 		function login(){

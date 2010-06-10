@@ -48,7 +48,7 @@
 		}
 		
 		function select_arr($query,$arr){	
-			if (($res=$this->ejecuta_sanitizada($query,$arr)) === false)	return;
+			if (($res=$this->ejecuta_sanitizada($query,$arr)) === false) return;
 			else{
 				$arr=array();
 				while($fila = $res->FetchNextObject(false)) array_push($arr,$fila);
@@ -84,11 +84,10 @@
 		}
 		function ejecuta_sanitizada($query,$params){
 			$this->sanitize($params);
-			try{	
+			try{
 				return $rs=$this->con->Execute($query,$params);
 			}catch(Exception $e){
-			  return_json_error('Error en la base de datos: No se pudo insertar alumno');
-				 G-return;
+				return json_encode($e->message);
 			}
 		}
 		function sanitize(&$params) {
