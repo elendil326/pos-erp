@@ -20,7 +20,7 @@
 		}
 		
 		function inserta(){
-		//verificar que no exista el proveedor (id)
+		//verificar que no exista el proveedor (id): NO ES NECESARIO, EL ID ES AUTOINCREMENT, EL ID NO SE REPETIRA EN LAS INSERCIONES
 		//que devuelva el error de porque no logro insertar
 			$insert="INSERT INTO  proveedor values(NULL,?,?,?,?,?);";
 			$params=array($this->rfc,$this->nombre,$this->direccion,$this->telefono,$this->e_mail);
@@ -28,7 +28,7 @@
 				$query="select max(id_proveedor) from proveedor;";
 				$this->id_proveedor=$this->bd->select_un_campo($query,array());
 				return true;
-			}else return;
+			}else return false;
 		}
 		function actualiza(){
 		//que solo cambien datos permitidos

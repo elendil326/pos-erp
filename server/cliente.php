@@ -29,7 +29,7 @@
 				$query="select max(id_cliente) from cliente;";
 				$this->id_cliente=$this->bd->select_un_campo($query,array());
 				return true;
-			}else return;
+			}else return false;
 		}
 		function actualiza(){
 			$update="UPDATE  cliente SET  `rfc` =  ?, `nombre` =  ?, `direccion` =  ?, `telefono` =?, `e_mail` = ?, `limite_credito` = ? WHERE  `id_cliente` =?;";

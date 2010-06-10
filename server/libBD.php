@@ -88,7 +88,7 @@
 				return $rs=$this->con->Execute($query,$params);
 			}catch(Exception $e){
 			  return_json_error('Error en la base de datos: No se pudo insertar alumno');
-				  return;
+				 G-return;
 			}
 		}
 		function sanitize(&$params) {

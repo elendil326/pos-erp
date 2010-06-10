@@ -16,7 +16,12 @@
 		function inserta(){
 			$insert="INSERT INTO  cuenta_proveedor values(?,?);";
 			$params=array($this->id_proveedor,$this->saldo);
-			return($this->bd->ejecuta($insert,$params))?true:false;
+			if($this->bd->ejecuta($insert,$params)){
+				$query ="select * cuenta_proveedor where id_proveedor=?;";
+				$params=array($this->id_proveedor);
+				$this->saldo=$this->bd->select_un_campo($query,$params);
+				return true;
+			}else return false;
 		}
 		function actualiza(){
 			$update="UPDATE  cuenta_proveedor SET `id_proveedor`=?, `saldo`=? where id_proveedor=?";
