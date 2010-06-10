@@ -3,7 +3,7 @@
 		var $id_usuario;	 	 	 	 	 	 	
 		var $nombre;	 	 	 	 	 	 
 		var $usuario; 	 	
-		var $contrasena; 	 	
+		var $contrasena;
 		var $nivel; 	 	
 		var $bd;
 
@@ -33,7 +33,7 @@
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){
-			$query="select * from usuario where id_usuario` =?;";
+			$query="select * from usuario where id_usuario =?;";
 			$params=array($this->id_usuario);
 			return $this->bd->select_json($query,$params);
 		}

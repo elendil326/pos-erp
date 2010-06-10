@@ -37,7 +37,7 @@
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){
-			$query="select * from cliente where id_cliente` =?;";
+			$query="select * from cliente where id_cliente =?;";
 			$params=array($this->id_cliente);
 			return $this->bd->select_json($query,$params);
 		}

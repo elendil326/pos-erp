@@ -10,11 +10,13 @@
 		var $id_usuario;
 		var $bd;
 		
-		function __construct($id_proveedor,$tipo_compra,$sucursal,$id_usuario){ 	 	 	 	 	 	
-				$this->id_proveedor;	 	 	 	 	 	 	 
-				$this->tipo_compra;	 	 	 	 	 	 
-				$this->sucursal;	 	 
-				$this->id_usuario;
+		function __construct($id_proveedor,$tipo_compra,$sucursal,$id_usuario){ 
+				$this->id_proveedor=$id_proveedor;	 	 	 	 	 	 	 
+				$this->tipo_compra=$tipo_compra;	 	 	 	 	 	 
+				$this->sucursal=$sucursal;	 	 
+				$this->id_usuario=$id_usuario;	 	 	 	 	 	 
+				$this->subtotal=0;	 	 	 	 	 	 	 
+				$this->iva=0;	
 				$this->bd=new bd_default();
 		}
 		function __destruct(){ 
@@ -22,8 +24,8 @@
 		}
 		
 		function inserta(){
-			$insert="INSERT INTO compras values(NULL,?,?,CURRENT_TIMESTAMP,?,?,?,?);";
-			$params=array($this->id_proveedor,$this->tipo_compra,$this->fecha,$this->subtotal,$this->iva,$this->sucursal,$this->id_usuario);
+			$insert="INSERT INTO compras values(NULL,?,?,null,?,?,?,?);";
+			$params=array($this->id_proveedor,$this->tipo_compra,$this->subtotal,$this->iva,$this->sucursal,$this->id_usuario);
 			if($this->bd->ejecuta($insert,$params)){
 				$query="select max(id_compra) from compras;";
 				$this->id_compra=$this->bd->select_un_campo($query,array());
@@ -31,8 +33,8 @@
 			}else return false;
 		}
 		function actualiza(){
-			$update="UPDATE  compras SET  `id_proveedor`=?,`tipo_compra` =?,`fecha` =?,`subtotal` =?,`iva` =?,`sucursal` =?, `id_usuario`=? where id_compra=?;";
-			$params=array($this->id_proveedor,$this->tipo_compra,$this->fecha,$this->subtotal,$this->iva,$this->sucursal,$this->id_usuario,$this->id_compra);
+			$update="UPDATE  compras SET  `id_proveedor`=?,`tipo_compra` =?,`fecha` =CURRENT_TIMESTAMP,`subtotal` =?,`iva` =?,`sucursal` =?, `id_usuario`=? where id_compra=?;";
+			$params=array($this->id_proveedor,$this->tipo_compra,$this->subtotal,$this->iva,$this->sucursal,$this->id_usuario,$this->id_compra);
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){

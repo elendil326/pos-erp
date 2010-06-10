@@ -38,7 +38,7 @@
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){
-			$query="select * from proveedor where id_proveedor` =?;";
+			$query="select * from proveedor where id_proveedor=?;";
 			$params=array($this->id_proveedor);
 			return $this->bd->select_json($query,$params);
 		}

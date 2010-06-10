@@ -21,20 +21,12 @@
 		}
 		
 		function inserta(){
-		$query="select id_producto from productos_proveedor where clave_producto=? and id_proveedor=?;";
-		$params=array($this->clave_producto,$this->id_proveedor);
-			if(!($this->bd->existe($query,$params))){
-			$query="select id_producto from productos_proveedor where id_inventario=? and id_proveedor=?;";
-			$params=array($this->id_inventario,$this->id_proveedor);
-				if(!($this->bd->existe($query,$params))){
-					$insert="INSERT INTO productos_proveedor values(null,?,?,?,?,?);";
-					$params=array($this->clave_producto,$this->id_proveedor,$this->id_inventario,$this->descripcion,$this->precio);
-					if($this->bd->ejecuta($insert,$params)){
-						$query="select max(id_producto) from productos_proveedor;";
-						$this->id_producto=$this->bd->select_un_campo($query,array());
-						return true;
-					}else return false;
-				}else return false;
+			$insert="INSERT INTO productos_proveedor values(null,?,?,?,?,?);";
+			$params=array($this->clave_producto,$this->id_proveedor,$this->id_inventario,$this->descripcion,$this->precio);
+			if($this->bd->ejecuta($insert,$params)){
+				$query="select max(id_producto) from productos_proveedor;";
+				$this->id_producto=$this->bd->select_un_campo($query,array());
+				return true;
 			}else return false;
 		}
 		function actualiza(){

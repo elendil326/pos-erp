@@ -11,10 +11,12 @@
 		var $bd;
 		
 		function __construct($id_cliente,$tipo_venta,$sucursal,$id_usuario){ 	 	 	 	 	 	
-				$this->id_cliente;	 	 	 	 	 	 	 
-				$this->tipo_venta;	 	 	 	 	 	 
-				$this->sucursal;	 	 
-				$this->id_usuario;
+				$this->id_cliente=$id_cliente;	 	 	 	 	 	 	 
+				$this->tipo_venta=$tipo_venta;	 	 	 	 	 	 
+				$this->sucursal=$sucursal;	 	 
+				$this->id_usuario=$id_usuario;
+				$this->subtotal=0;
+				$this->iva=0;
 				$this->bd=new bd_default();
 		}
 		function __destruct(){ 
@@ -22,7 +24,7 @@
 		}
 		
 		function inserta(){
-			$insert="INSERT INTO  ventas values(NULL,?,?,CURRENT_TIMESTAMP,?,?,?,?);";
+			$insert="INSERT INTO  ventas values(NULL,?,?,null,?,?,?,?);";
 			$params=array($this->id_cliente,$this->tipo_venta,$this->subtotal,$this->iva,$this->sucursal,$this->id_usuario);
 			if($this->bd->ejecuta($insert,$params)){
 				$query="select max(id_venta) from ventas;";
@@ -31,8 +33,8 @@
 			}else return false;
 		}
 		function actualiza(){
-			$update="UPDATE  ventas SET  `id_cliente`=?,`tipo_venta` =?,`fecha` =?,`subtotal` =?,`iva` =?,`sucursal` =?, `id_usuario`=? where id_venta=?;";
-			$params=array($this->id_cliente,$this->tipo_venta,$this->fecha,$this->subtotal,$this->iva,$this->sucursal,$this->id_usuario,$this->id_venta);
+			$update="UPDATE  ventas SET  `id_cliente`=?,`tipo_venta` =?,`fecha` =CURRENT_TIMESTAMP,`subtotal` =?,`iva` =?,`sucursal` =?, `id_usuario`=? where id_venta=?;";
+			$params=array($this->id_cliente,$this->tipo_venta,$this->subtotal,$this->iva,$this->sucursal,$this->id_usuario,$this->id_venta);
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){

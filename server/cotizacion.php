@@ -7,10 +7,10 @@
 		var $iva;
 		var $bd;
 		
-		function __construct($id_cliente,$subtotal,$iva){ 	 	 	 	 	 	
+		function __construct($id_cliente){ 	 	 	 	 	 	
 			$this->id_cliente=$id_cliente;		 	 	
-			$this->subtotal=$subtotal;	 	 	 	 	 	 	
-			$this->iva=iva;
+			$this->subtotal=100;	 	 	 	 	 	 	
+			$this->iva=16;
 			$this->bd=new bd_default();
 		}
 		function __destruct(){ 
@@ -27,8 +27,8 @@
 			}else return false;
 		}
 		function actualiza(){
-			$update="UPDATE  cotizacion SET `id_cliente`=?, `fecha`=?, `subtotal`=?, `iva`=? where id_cotizacion=?";
-			$params=array($this->id_cliente,$this->fecha,$this->subtotal,$this->iva,$this->id_cotizacion);
+			$update="UPDATE  cotizacion SET `id_cliente`=?, `fecha`=curdate(), `subtotal`=?, `iva`=? where id_cotizacion=?";
+			$params=array($this->id_cliente,$this->subtotal,$this->iva,$this->id_cotizacion);
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){

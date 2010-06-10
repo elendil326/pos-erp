@@ -14,18 +14,11 @@
 		}
 		
 		function inserta(){
-			//que el cliente si exista
-			//que el saldo no sea negativo
-			//que no exista ningun registro para este cliente
 			$insert="INSERT INTO  cuenta_cliente values(?,?);";
 			$params=array($this->id_cliente,$this->saldo);
 			return($this->bd->ejecuta($insert,$params))?true:false;
 		}
 		function actualiza(){			
-			//que el cliente si exista
-			//que el saldo no sea negativo
-			//que no exista ningun registro para este cliente
-			//metodos de para sumar o restar el saldo que se llamen desde pagos cliente
 			$update="UPDATE  cuenta_cliente SET `id_cliente`=?, `saldo`=? where id_cliente=?";
 			$params=array($this->id_cliente,$this->saldo,$this->id_cliente);
 			return $this->bd->ejecuta($update,$params);

@@ -29,7 +29,7 @@
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){
-			$query="select * from sucursal where id_sucursal` =?;";
+			$query="select * from sucursal where id_sucursal =?;";
 			$params=array($this->id_sucursal);
 			return $this->bd->select_json($query,$params);
 		}

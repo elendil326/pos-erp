@@ -18,25 +18,17 @@
 		}
 		
 		function inserta(){
-		//que la cotizacion si exista
-		//que no exista la tupla de id_cotizacion e id_producto anteriormente
-		//que la cantidad no sea negativa
-		//que el precio no sea negativo
 			$insert="INSERT INTO  detalle_cotizacion values(?,?,?,?);";
 			$params=array($this->id_cotizacion,$this->id_producto,$this->cantidad,$this->precio);
 			return ($this->bd->ejecuta($insert,$params))?true:false;
 		}
-		function actualiza(){
-		//que la cotizacion si exista
-		//que no exista la tupla de id_cotizacion e id_producto anteriormente
-		//que la cantidad no sea negativa
-		//que el precio no sea negativo		
+		function actualiza(){	
 			$update="UPDATE  detalle_cotizacion SET cantidad=?,precio=? where id_cotizacion=? and id_producto=?";
 			$params=array($this->cantidad,$this->precio,$this->id_cotizacion,$this->id_producto);
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){
-			$query="select * from detalle_cotizacion where id_cotizacion =? and id_producto =?;";
+			$query="select * from detalle_cotizacion where id_cotizacion=? and id_producto =?;";
 			$params=array($this->id_cotizacion,$this->id_producto);
 			return $this->bd->select_json($query,$params);
 		}
