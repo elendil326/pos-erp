@@ -39,7 +39,7 @@
 		$user=new usuario_existente($id);
 		if($user->existe()){
 		$user->contrasena=$password;
-			if($user->actualiza()){
+			if($user->actualiza_pass()){
 				echo "{success : true}";
 			}false{
 				fail("Error al cambiar el password.");
@@ -47,6 +47,33 @@
 			}
 		}else {
 			fail("El usuario que no existe.");
+			return;
+		}
+	}
+	function cambiaDatos(){
+		$id=$_REQUEST['id_usuario'];
+		$nombre=$_REQUEST['nombre'];
+		$usuario=$_REQUEST['usuario'];
+		$nivel=$_REQUEST['nivel'];
+		$user=new usuario_existente($id);
+		$usu=$user=new usuario;
+		if($user->existe()){
+		$user->nombre=$nombre;
+		$user->usuario=$usuario;
+		$user->nivel=$nivel;
+			if(!(($usu!=$usuario)&&($user->existe_usuario()))){
+				if($user->actualiza()){
+					echo "{success : true}";
+				}false{
+					fail("Error al cambiar el password.");
+					return;
+				}
+			}else{
+				fail("El nick de usuario que desea asignar ya existe.");
+				return;
+			}
+		}else {
+			fail("El usuario que desea modificar no existe.");
 			return;
 		}
 	}

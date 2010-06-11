@@ -28,8 +28,13 @@
 			}else return false;
 		}
 		function actualiza(){
-			$update="UPDATE  usuario SET  `nombre` =  ?, `usuario` =  ?, `contasena` =  ?, `nivel` =  ? WHERE  `id_usuario` =?;";
-			$params=array($this->nombre,$this->usuario,crypt($this->contrasena),$this->nivel,$this->id_usuario);
+			$update="UPDATE  usuario SET  `nombre` =  ?, `usuario` =  ?, `nivel` =  ? WHERE  `id_usuario` =?;";
+			$params=array($this->nombre,$this->usuario,$this->nivel,$this->id_usuario);
+			return $this->bd->ejecuta($update,$params);
+		}
+		function actualiza_pass(){
+			$update="UPDATE  usuario SET  `contasena` =  ? WHERE  `id_usuario` =?;";
+			$params=array(crypt($this->contrasena),$this->id_usuario);
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){
