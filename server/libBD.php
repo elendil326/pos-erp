@@ -1,4 +1,4 @@
-<?	include_once("adodb5/adodb.inc.php");
+<?php	include_once("adodb5/adodb.inc.php");
 	class bd{
 		var $con;
 		var $bd_man;
@@ -97,7 +97,8 @@
 		        }
 			}
 		}
-	}	
+	}
+	
 	class bd_default extends bd{
 		function __construct(){ 
 			$this->bd_man="mysql";
