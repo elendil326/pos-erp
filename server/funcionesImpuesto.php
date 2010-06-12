@@ -33,13 +33,24 @@
 			$descripcion=$_REQUEST['descripcion'];
 			$valor=$_REQUEST['valor'];
 			$impuesto=new Impuesto_existente($id);
+			
 			if($impuesto->existe()){
-			$impuesto->descripcion=$descripcion;
-			$impuesto->valor=$valor;
-				if($impuesto->actualiza())		ok();
-				else							fail("Error al modificar el Impuesto.");
-			}else								fail("El Impuesto que desea modificar no existe.");
-		}else									fail("Faltan datos.");
+				
+				$impuesto->descripcion=$descripcion;
+				$impuesto->valor=$valor;
+				
+				if($impuesto->actualiza())
+					ok();
+				else							
+					fail("Error al modificar el Impuesto.");
+					
+			}else{
+				fail("El Impuesto que desea modificar no existe.");
+			}
+				
+		}else{
+			fail("Faltan datos.");
+		}									
 		return;
 	}
 	
