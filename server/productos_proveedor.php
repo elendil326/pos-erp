@@ -61,11 +61,21 @@
 			return $this->bd->existe($query,$params);
 		}
 		function existe_producto_proveedor(){
+			$query="select id_producto from productos_proveedor where clave_producto=? and id_proveedor=?;";
+			$params=array($this->clave_producto,$this->id_proveedor);
+			return $this->bd->existe($query,$params);
+		}
+		function existe_proveedor_inventario(){
+			$query="select id_producto from productos_proveedor where id_inventario=? and id_proveedor=?;";
+			$params=array($this->id_inventario,$this->id_proveedor);
+			return $this->bd->existe($query,$params);
+		}
+		function existe_producto_proveedor_id(){
 			$query="select id_producto from productos_proveedor where clave_producto=? and id_proveedor=? and not id_producto=?;";
 			$params=array($this->clave_producto,$this->id_proveedor,$this->id_producto);
 			return $this->bd->existe($query,$params);
 		}
-		function existe_proveedor_inventario(){
+		function existe_proveedor_inventario_id(){
 			$query="select id_producto from productos_proveedor where id_inventario=? and id_proveedor=? and not id_producto=?;";
 			$params=array($this->id_inventario,$this->id_proveedor,$this->id_producto);
 			return $this->bd->existe($query,$params);

@@ -38,7 +38,7 @@
 		return;
 	}
 	
-	function cambiaDatos(){
+	function cambiaDatosProducto(){
 		if((isset($_REQUEST['id_producto']))&&(isset($_REQUEST['clave_producto']))&&(isset($_REQUEST['id_proveedor']))&&(isset($_REQUEST['id_inventario']))&&(isset($_REQUEST['descripcion']))&&(isset($_REQUEST['precio']))){
 			$id_producto=$_REQUEST['id_producto'];
 			$clave_producto=$_REQUEST['clave_producto'];
@@ -46,7 +46,7 @@
 			$id_inventario=$_REQUEST['id_inventario'];
 			$descripcion=$_REQUEST['descripcion'];
 			$precio=$_REQUEST['precio'];
-			$producto=new productos_proveedor_existente(id_producto);
+			$producto=new productos_proveedor_existente($id_producto);
 			$producto->clave_producto=$clave_producto;
 			$producto->id_proveedor=$id_proveedor;
 			$producto->id_inventario=$id_inventario;
@@ -56,12 +56,12 @@
 			if($verifica_proveedor->existe()){
 				$verifica_inventario=new inventario_existente($id_inventario);
 				if($verifica_inventario->existe()){
-					if(!$producto->existe_producto_proveedor()){
-						if(!$producto->existe_proveedor_inventario()){
-							if(!$producto->existe()){
+					if(!$producto->existe_producto_proveedor_id()){
+						if(!$producto->existe_proveedor_inventario_id()){
+							if($producto->existe()){
 								if($producto->actualiza()){		ok();
 								}else							fail("Error al guardar el producto.");
-							}else 								fail("Ya existe este producto.");
+							}else 								fail("El producto no existe.");
 						}else 									fail("El proveedor ya nos vende un producto con esta clave interna.");
 					}else 										fail("El proveedor ya tiene un producto con esta clave.");
 				}else 											fail("El producto no esta dado de alta en almacen.");
