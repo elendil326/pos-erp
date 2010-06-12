@@ -20,7 +20,7 @@
 		
 		function inserta(){
 			$insert="INSERT INTO  usuario values(NULL,?,?,?,?);";
-			$params=array($this->nombre,$this->usuario, crypt($this->contrasena),$this->nivel);
+			$params=array($this->nombre,$this->usuario, base64_encode($this->contrasena),$this->nivel);
 			if($this->bd->ejecuta($insert,$params)){
 				$query="select max(id_usuario) from usuario;";
 				$this->id_usuario=$this->bd->select_un_campo($query,array());
@@ -33,8 +33,8 @@
 			return $this->bd->ejecuta($update,$params);
 		}
 		function actualiza_pass(){
-			$update="UPDATE  usuario SET  `contasena` =  ? WHERE  `id_usuario` =?;";
-			$params=array(crypt($this->contrasena),$this->id_usuario);
+			$update="UPDATE  usuario SET  `contrasena` =  ? WHERE  `id_usuario` =?;";
+			$params=array(base64_encode($this->contrasena),$this->id_usuario);
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){
@@ -69,7 +69,7 @@
 		}
 		function login(){
 			$query="select nivel from usuario where id_usuario=? and contraseña=?;";
-			$params=array($this->id_usuario, crypt($this->contrasena));
+			$params=array($this->id_usuario, base64_encode($this->contrasena));
 			$nivel=($this->bd->select_un_campo($query,$params));
 			return(isset($nivel))?nivel:0;
 		}

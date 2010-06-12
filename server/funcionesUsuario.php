@@ -1,93 +1,73 @@
 <?	include_once("AddAllClass.php");
 	
 	function addUser(){
-		$nombre=$_REQUEST['nombre'];
-		$usuario=$_REQUEST['usuario'];
-		$contraseña=$_REQUEST['contraseña'];
-		$nivel=$_REQUEST['nivel'];
-		$user=new usuario($nombre,$usuario,$contraseña,$nivel);
-		if(!$user->existe_usuario()){
-			if($user->inserta()){
-				echo "{success : true}";
-			}false{
-				fail("Error al guardar usuario.");
-				return;
-			}
-		}else {
-			fail("Ya existe este usuario.");
-			return;
-		}
-	}
-	function deleteUser(){
-		$id=$_REQUEST['id_usuario'];
-		$user=new usuario_existente($id);
-		if($user->existe()){
-			if($user->borra()){
-				echo "{success : true}";
-			}false{
-				fail("Error al borrar usuario.");
-				return;
-			}
-		}else {
-			fail("El usuario que desea eliminar no existe.");
-			return;
-		}
-	}
-	function cambiaPass(){
-		$id=$_REQUEST['id_usuario'];
-		$password=$_REQUEST['password'];
-		$user=new usuario_existente($id);
-		if($user->existe()){
-		$user->contrasena=$password;
-			if($user->actualiza_pass()){
-				echo "{success : true}";
-			}false{
-				fail("Error al cambiar el password.");
-				return;
-			}
-		}else {
-			fail("El usuario que no existe.");
-			return;
-		}
-	}
-	function cambiaDatos(){
-		$id=$_REQUEST['id_usuario'];
-		$nombre=$_REQUEST['nombre'];
-		$usuario=$_REQUEST['usuario'];
-		$nivel=$_REQUEST['nivel'];
-		$user=new usuario_existente($id);
-		$usu=$user=new usuario;
-		if($user->existe()){
-		$user->nombre=$nombre;
-		$user->usuario=$usuario;
-		$user->nivel=$nivel;
-			if(!(($usu!=$usuario)&&($user->existe_usuario()))){
-				if($user->actualiza()){
-					echo "{success : true}";
-				}false{
-					fail("Error al cambiar el password.");
-					return;
-				}
-			}else{
-				fail("El nick de usuario que desea asignar ya existe.");
-				return;
-			}
-		}else {
-			fail("El usuario que desea modificar no existe.");
-			return;
-		}
-	}
-	
-	function fail($razon){
-		echo "{success : false, error: '".$razon."'}"
+		if((isset($_REQUEST['nombre']))&&(isset($_REQUEST['usuario']))&&(isset($_REQUEST['contraseña']))&&(isset($_REQUEST['nivel']))){
+			$nombre=$_REQUEST['nombre'];
+			$usuario=$_REQUEST['usuario'];
+			$contraseña=$_REQUEST['contraseña'];
+			$nivel=$_REQUEST['nivel'];
+			$user=new usuario($nombre,$usuario,$contraseña,$nivel);
+			if(!$user->existe_usuario()){
+				if($user->inserta())	ok();
+				else					fail("Error al guardar usuario.");
+			}else 						fail("Ya existe un usuario con este nick de usuario.");
+		}else 							fail("faltan datos");
 		return;
 	}
+	function deleteUser(){
+		if(isset($_REQUEST['id_usuario'])){
+			$id=$_REQUEST['id_usuario'];
+			$user=new usuario_existente($id);
+			if($user->existe()){
+				if($user->borra())		ok();
+				else					fail("Error al borrar usuario.");
+			}else						fail("El usuario que desea eliminar no existe.");
+		}else							fail("faltan datos");
+		return;
+	}
+	
+	function cambiaPass(){
+		if((isset($_REQUEST['id_usuario']))&&(isset($_REQUEST['password']))){
+			$id=$_REQUEST['id_usuario'];
+			$password=$_REQUEST['password'];
+			$user=new usuario_existente($id);
+			if($user->existe()){
+			$user->contrasena=$password;
+				if($user->actualiza_pass())		ok();
+				else 							fail("Error al cambiar el password.");
+			}else 								fail("El usuario al que desea cambiar el password no existe.");
+		}else 									fail("faltan datos");
+		return;
+	}
+	
+	function cambiaDatos(){
+		if((isset($_REQUEST['id_usuario']))&&(isset($_REQUEST['nombre']))&&(isset($_REQUEST['usuario']))&&(isset($_REQUEST['nivel']))){
+			$id=$_REQUEST['id_usuario'];
+			$nombre=$_REQUEST['nombre'];
+			$usuario=$_REQUEST['usuario'];
+			$nivel=$_REQUEST['nivel'];
+			$user=new usuario_existente($id);
+			$usu=$user->usuario;
+			if($user->existe()){
+			$user->nombre=$nombre;
+			$user->usuario=$usuario;
+			$user->nivel=$nivel;
+				if(($usu==$usuario)||(!($user->existe_usuario()))){
+					if($user->actualiza())		ok();
+					else						fail("Error al cambiar el password.");
+				}else							fail("El nick de usuario que desea asignar ya existe.");
+			}else 								fail("El usuario que desea modificar no existe.");
+		}else fail("faltan datos");
+		return;
+	}
+	
 	if(isset($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
 			case "addUser" : 			addUser(); break;
 			case "deleteUser" : 		deleteUser(); break;
 			case "cambiaPass" : 		cambiaPass(); break;
+			case "cambiaDatos" : 		cambiaDatos(); break;
 			default: echo "-1"; 
 		}
 	}

@@ -22,4 +22,13 @@
 	include_once("usuario.php");
 	include_once("venta.php"); 
 	include_once("listar.php"); 
+	
+	function fail($razon){
+		echo "{success : false, error: '".$razon."'}";
+		return;
+	}
+	function ok(){
+		echo "{success : true}";
+		return;
+	}
 ?>
