@@ -105,6 +105,32 @@
 		}else												fail("Faltan datos.");
 		return;
 	}
+	
+	function vendeProducto(){
+		if((isset($_REQUEST['id_producto']))&&(isset($_REQUEST['existencia']))&&(isset($_REQUEST['sucursal']))){
+			$id=$_REQUEST['id_producto'];
+			$existencia=$_REQUEST['existencia'];
+			$sucursal=$_REQUEST['sucursal'];
+			$detalle_inventario=new detalle_inventario_existente($id,$sucursal);
+			$producto=new inventario_existente($id);
+			if($producto->existe()){
+				$verifica_sucursal=new sucursal_existente($sucursal);
+				if($verifica_sucursal->existe()){
+						if($detalle_inventario->existe()){
+							if($detalle_inventario->existencia>0){
+								if($detalle_inventario->existencia>=$existencia){
+									$detalle_inventario->existencia-=$existencia;
+									if($detalle_inventario->actualiza())			ok();
+									else											fail("Error al agregar los datos");
+								}else												fail("No puede vender mas producto que el que existe");
+							}else													fail("No hay mas producto, existencia en 0");
+						}else														fail("No existe el producto que desea vender");
+				}else																fail("La sucursal de la vender no existe.");
+			}else 																	fail("El producto que desea vender no existe.");
+		}else 																		fail("Faltan datos.");
+		return;
+	}
+	
 	if(isset($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
@@ -114,6 +140,7 @@
 			case "addNota" : 						addNota(); break;
 			case "deleteNota" : 					deleteNota(); break;
 			case "cambiaDatosNota" : 				cambiaDatosNota(); break;
+			case "vendeProducto" : 					vendeProducto(); break;
 			default: echo "-1"; 
 		}
 	}

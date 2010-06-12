@@ -58,12 +58,40 @@
 		return;
 	}
 	
+	function compraProducto(){
+		if((isset($_REQUEST['id_producto']))&&(isset($_REQUEST['existencia']))&&(isset($_REQUEST['sucursal']))){
+			$id=$_REQUEST['id_producto'];
+			$existencia=$_REQUEST['existencia'];
+			$sucursal=$_REQUEST['sucursal'];
+			$detalle_inventario=new detalle_inventario_existente($id,$sucursal);
+			$producto=new inventario_existente($id);
+			if($producto->existe()){
+				$verifica_sucursal=new sucursal_existente($sucursal);
+				if($verifica_sucursal->existe()){
+					if($detalle_inventario->existe()){
+						$detalle_inventario->existencia=$detalle_inventario->existencia+$existencia;
+						if($detalle_inventario->actualiza())			ok();
+						else											fail("Error al agregar los datos");
+					}else{
+						$detalle_inventario->id_producto=$id;
+						$detalle_inventario->existencia=$existencia;
+						$detalle_inventario->sucursal=$sucursal;
+						if($detalle_inventario->inserta())				ok();
+						else											fail("Error al guardar los datos");
+					}
+				}else													fail("La sucursal de la compra no existe.");
+			}else 														fail("El producto que desea comprar no existe.");
+		}else 															fail("Faltan datos.");
+		return;
+	}
+	
 	if(isset($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
 			case "addFactura" : 			addfactura(); break;
-			case "deleteFactura" : 		deletefactura(); break;
+			case "deleteFactura" : 			deletefactura(); break;
 			case "cambiaDatos" : 			cambiaDatos(); break;
+			case "compraProducto" : 		compraProducto(); break;
 			default: echo "-1"; 
 		}
 	}

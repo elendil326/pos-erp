@@ -45,7 +45,7 @@
 		}
 		function existe(){
 			$query="select id_producto from detalle_inventario where id_producto=? and sucursal=?;";
-			$params=array($this->id_producto,$this->id_producto);
+			$params=array($this->id_producto,$this->sucursal);
 			return $this->bd->existe($query,$params);
 		}
 	}
