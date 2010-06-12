@@ -10,6 +10,7 @@
 		var $bd;
 
 		function __construct($rfc,$nombre,$direccion,$telefono,$e_mail,$limite_credito){ 
+
 				 $this->rfc=$rfc; 
 				 $this->nombre=$nombre;
 				 $this->direccion=$direccion;
@@ -25,6 +26,7 @@
 		function inserta(){
 			$insert="INSERT INTO  cliente values(NULL,?,?,?,?,?,?);";
 			$params=array($this->rfc,$this->nombre,$this->direccion,$this->telefono,$this->e_mail,$this->limite_credito);
+			
 			if($this->bd->ejecuta($insert,$params)){
 				$query="select max(id_cliente) from cliente;";
 				$this->id_cliente=$this->bd->select_un_campo($query,array());
@@ -44,6 +46,7 @@
 		function borra (){
 			$query="delete from cliente where id_cliente=?;";
 			$params=array($this->id_cliente);
+			//echo $query." ".print_r($params);
 			return $this->bd->ejecuta($query,$params);
 		}
 		function obtener_datos($id){
@@ -71,6 +74,7 @@
 	}
 	class cliente_existente extends cliente {
 		public function __construct($id) {
+			//echo "me cree: ".$id;
 			$this->bd=new bd_default();
 			$this->obtener_datos($id);
 		}
