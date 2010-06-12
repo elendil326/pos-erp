@@ -33,7 +33,7 @@
 		return;
 	}
 	
-	function cambiaDatos(){
+	function cambiaDatosFactura(){
 		if((isset($_REQUEST['id_factura']))&&(isset($_REQUEST['folio']))&&(isset($_REQUEST['id_venta']))){
 			$id=$_REQUEST['id_factura'];
 			$folio=$_REQUEST['folio'];
@@ -57,13 +57,63 @@
 		}else												fail("Faltan datos.");
 		return;
 	}
+	function addNota(){
+		if(isset($_REQUEST['id_venta'])){
+			$id_venta=$_REQUEST['id_venta'];
+			$nota=new nota_remision($id_venta);
+			$verifica_venta=new venta_existente($id_venta);			//crea un objeto de la clase venta con el id
+			if($verifica_venta->existe()){						 	//checa que exista dicha venta
+				if(!$nota->existe_venta()){							//checa que no haya otra nota para la venta
+					if(!$nota->existe()){							//verifica que no exista la nota
+						if($nota->inserta()){			ok();		//inserta
+						}else							fail("Error al guardar la nota.");
+					}else 								fail("Ya existe esta nota.");
+				}else 									fail("Ya existe una nota para esta venta.");
+			}else 										fail("La venta para la nota no existe.");
+		}else											fail("Faltan datos.");
+		return;
+	}
 	
+	function deleteNota(){
+		if(isset($_REQUEST['id_nota'])){
+			$id=$_REQUEST['id_nota'];
+			$nota=new nota_remision_existente($id);
+			if($nota->existe()){												//verifica que si exista la nota
+				if($nota->borra())						ok();					//elimina la nota
+				else									fail("Error al borrar la nota.");
+			}else 										fail("La nota que desea eliminar no existe.");
+		}else fail("faltan datos.");
+		return;
+	}
+	
+	function cambiaDatosNota(){
+		if((isset($_REQUEST['id_nota']))&&(isset($_REQUEST['id_venta']))){
+			$id=$_REQUEST['id_nota'];
+			$id_venta=$_REQUEST['id_venta'];
+			$nota=new nota_remision_existente($id);									//creamos objeto venta existente para modificar
+			$venta=$nota->id_venta;													//variable para verificar si es el mismo id de venta
+			if($nota->existe()){													//verificamos que si exista la nota
+				$nota->id_venta=$id_venta;
+				$verifica_venta=new venta_existente($id_venta);						//creamos un objeto venta existente
+				if($verifica_venta->existe()){										//checamos que exista la venta para poder notar
+					if(($venta==$id_venta)||(!$nota->existe_venta())){				//checamos o que sea la misma venta o que no haya notas para la venta nueva
+						if($nota->actualiza())				ok();					//actualizamos los datos
+						else								fail("Error al modificar la nota.");
+					}else									fail("Ya existe una nota para esta venta.");
+				}else										fail("La venta para la nota no existe.");
+			}else											fail("La nota que desea modificar no existe.");
+		}else												fail("Faltan datos.");
+		return;
+	}
 	if(isset($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
-			case "addFactura" : 			addfactura(); break;
-			case "deleteFactura" : 		deletefactura(); break;
-			case "cambiaDatos" : 			cambiaDatos(); break;
+			case "addFactura" : 					addFactura(); break;
+			case "deleteFactura" : 					deleteFactura(); break;
+			case "cambiaDatosFactura" : 			cambiaDatosFactura(); break;
+			case "addNota" : 						addNota(); break;
+			case "deleteNota" : 					deleteNota(); break;
+			case "cambiaDatosNota" : 				cambiaDatosNota(); break;
 			default: echo "-1"; 
 		}
 	}

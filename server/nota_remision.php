@@ -4,8 +4,7 @@
 		var $id_venta;	
 		var $bd;
 		
-		function __construct($id_nota,$id_venta){ 	 	 	 	 	 	
-			$this->id_nota=$id_nota;
+		function __construct($id_venta){	 
 			$this->id_venta=$id_venta;
 			$this->bd=new bd_default();
 		}
@@ -14,8 +13,8 @@
 		}
 		
 		function inserta(){
-			$insert="INSERT INTO nota_remision values(?,?);";
-			$params=array($this->id_nota,$this->id_venta);
+			$insert="INSERT INTO nota_remision values(null,?);";
+			$params=array($this->id_venta);
 			if($this->bd->ejecuta($insert,$params)){
 				$query="select max(id_nota) from nota_remision;";
 				$this->id_nota=$this->bd->select_un_campo($query,array());
@@ -23,18 +22,18 @@
 			}else return false;
 		}
 		function actualiza(){
-			$update="UPDATE  nota_remision SET id_nota=?, id_venta=? where id_nota=? and id_venta=?";
-			$params=array($this->id_nota,$this->id_venta,$this->id_nota,$this->id_venta);
+			$update="UPDATE  nota_remision SET id_venta=? where id_nota=?";
+			$params=array($this->id_venta,$this->id_nota);
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){
-			$query="select * from nota_remision where id_nota =? and id_venta=?;";
-			$params=array($this->id_nota,$this->id_venta);
+			$query="select * from nota_remision where id_nota=? ;";
+			$params=array($this->id_nota);
 			return $this->bd->select_json($query,$params);
 		}
 		function borra (){
-			$query="delete from nota_remision where id_nota =? and id_venta=?;";
-			$params=array($this->id_nota,$this->id_venta);
+			$query="delete from nota_remision where id_nota =?;";
+			$params=array($this->id_nota);
 			return $this->bd->ejecuta($query,$params);
 		}
 		function obtener_datos($id){
@@ -45,8 +44,13 @@
 			$this->id_venta=$datos[id_venta];	
 		}
 		function existe(){
-			$query="select id_nota from nota_remision where id_nota=? and id_venta=?;";
-			$params=array($this->id_nota,$this->id_venta);
+			$query="select id_nota from nota_remision where id_nota=?;";
+			$params=array($this->id_nota);
+			return $this->bd->existe($query,$params);
+		}
+		function existe_venta(){
+			$query="select id_nota from nota_remision where id_venta=?;";
+			$params=array($this->id_venta);
 			return $this->bd->existe($query,$params);
 		}
 	}
