@@ -14,7 +14,7 @@
 		}
 		function lista(){
 			$result=$this->bd->select_arr($this->query,$this->params);
-			if(count($result)>1){
+			if(count($result)>0){
 				return "{ success : true, \"datos\": ". json_encode($result)."}";
 			}else{
 				return "{ success : false }";
