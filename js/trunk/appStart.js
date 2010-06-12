@@ -5,8 +5,11 @@
 -------------------------------------------- */
 
 var login;
+var DEBUG;
 
 Ext.onReady( function(){
+
+	DEBUG = true;
 	
 	//iniciar con el appLogin
 	

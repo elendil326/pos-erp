@@ -87,7 +87,7 @@ AppLogin.prototype.checkCurrentLoginInfo = function ()
 	   headers: {
 	       'my-header': 'foo'
 	   },
-	   params: { foo: 'bar' }
+	   params: { "001" : 'l' }
 	});
 	
 	
@@ -98,7 +98,9 @@ AppLogin.prototype.checkCurrentLoginInfo = function ()
 AppLogin.prototype.ajaxSuccess = function ( data )
 {
 	//Ext.get("login").hasActiveFx
-	console.log(data)
+	console.log(data);
+	
+
 	
 }
 
