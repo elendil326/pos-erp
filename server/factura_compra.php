@@ -51,6 +51,16 @@
 			$params=array($this->id_factura);
 			return $this->bd->existe($query,$params);
 		}
+		function existe_compra(){
+			$query="select id_factura from factura_compra where id_compra=?;";
+			$params=array($this->id_compra);
+			return $this->bd->existe($query,$params);
+		}
+		function existe_folio(){
+			$query="select id_factura from factura_compra where folio=?;";
+			$params=array($this->folio);
+			return $this->bd->existe($query,$params);
+		}
 	}
 	class factura_compra_vacio extends factura_compra {      
 		public function __construct() {
