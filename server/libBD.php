@@ -51,7 +51,19 @@
 			if (($res=$this->ejecuta_sanitizada($query,$arr)) === false) return;
 			else{
 				$arr=array();
-				while($fila = $res->FetchNextObject(false)) array_push($arr,$fila);
+				/*
+				//este devuelve asociativa y por indice
+				while (!$res->EOF){
+					array_push($arr,$res->fields);
+					$res->MoveNext();
+				}			
+				return $arr;
+				*/
+				while(!$res->EOF){
+					$algo=$res->GetRowAssoc();
+					array_push($arr,$algo);
+					$res->MoveNext();
+				}
 				return $arr;
 			}
 		}
