@@ -2,7 +2,7 @@
 	
 	
 	function addFactura(){
-		if((isset($_REQUEST['folio']))&&(isset($_REQUEST['id_venta']))){
+		if((!empty($_REQUEST['folio']))&&(!empty($_REQUEST['id_venta']))){
 			$folio=$_REQUEST['folio'];
 			$id_venta=$_REQUEST['id_venta'];
 			$factura=new factura_venta($folio,$id_venta);
@@ -22,7 +22,7 @@
 	}
 	
 	function deleteFactura(){
-		if(isset($_REQUEST['id_factura'])){
+		if(!empty($_REQUEST['id_factura'])){
 			$id=$_REQUEST['id_factura'];
 			$factura=new factura_venta_existente($id);
 			if($factura->existe()){												//verifica que si exista la factura
@@ -34,7 +34,7 @@
 	}
 	
 	function cambiaDatosFactura(){
-		if((isset($_REQUEST['id_factura']))&&(isset($_REQUEST['folio']))&&(isset($_REQUEST['id_venta']))){
+		if((!empty($_REQUEST['id_factura']))&&(!empty($_REQUEST['folio']))&&(!empty($_REQUEST['id_venta']))){
 			$id=$_REQUEST['id_factura'];
 			$folio=$_REQUEST['folio'];
 			$id_venta=$_REQUEST['id_venta'];
@@ -58,7 +58,7 @@
 		return;
 	}
 	function addNota(){
-		if(isset($_REQUEST['id_venta'])){
+		if(!empty($_REQUEST['id_venta'])){
 			$id_venta=$_REQUEST['id_venta'];
 			$nota=new nota_remision($id_venta);
 			$verifica_venta=new venta_existente($id_venta);			//crea un objeto de la clase venta con el id
@@ -75,7 +75,7 @@
 	}
 	
 	function deleteNota(){
-		if(isset($_REQUEST['id_nota'])){
+		if(!empty($_REQUEST['id_nota'])){
 			$id=$_REQUEST['id_nota'];
 			$nota=new nota_remision_existente($id);
 			if($nota->existe()){												//verifica que si exista la nota
@@ -87,7 +87,7 @@
 	}
 	
 	function cambiaDatosNota(){
-		if((isset($_REQUEST['id_nota']))&&(isset($_REQUEST['id_venta']))){
+		if((!empty($_REQUEST['id_nota']))&&(!empty($_REQUEST['id_venta']))){
 			$id=$_REQUEST['id_nota'];
 			$id_venta=$_REQUEST['id_venta'];
 			$nota=new nota_remision_existente($id);									//creamos objeto venta existente para modificar
@@ -107,7 +107,7 @@
 	}
 	
 	function vendeProducto(){
-		if((isset($_REQUEST['id_producto']))&&(isset($_REQUEST['existencia']))&&(isset($_REQUEST['sucursal']))){
+		if((!empty($_REQUEST['id_producto']))&&(!empty($_REQUEST['existencia']))&&(!empty($_REQUEST['sucursal']))){
 			$id=$_REQUEST['id_producto'];
 			$existencia=$_REQUEST['existencia'];
 			$sucursal=$_REQUEST['sucursal'];
@@ -131,7 +131,7 @@
 		return;
 	}
 	
-	if(isset($_REQUEST['method']))
+	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
 			case "addFactura" : 					addFactura(); break;

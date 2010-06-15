@@ -2,7 +2,7 @@
 	
 	
 	function addInventario(){
-		if((isset($_REQUEST['nombre']))&&(isset($_REQUEST['precio']))&&(isset($_REQUEST['minimo']))){
+		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['precio']))&&(!empty($_REQUEST['minimo']))){
 			$nombre=$_REQUEST['nombre'];
 			$precio=$_REQUEST['precio'];
 			$minimo=$_REQUEST['minimo'];
@@ -16,7 +16,7 @@
 	}
 	
 	function deleteInventario(){
-		if(isset($_REQUEST['id_inventario'])){
+		if(!empty($_REQUEST['id_inventario'])){
 			$id=$_REQUEST['id_inventario'];
 			$inventario=new Inventario_existente($id);
 			if($inventario->existe()){
@@ -28,7 +28,7 @@
 	}
 	
 	function cambiaDatos(){
-		if((isset($_REQUEST['id_inventario']))&&(isset($_REQUEST['nombre']))&&(isset($_REQUEST['precio']))&&(isset($_REQUEST['minimo']))){
+		if((!empty($_REQUEST['id_inventario']))&&(!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['precio']))&&(!empty($_REQUEST['minimo']))){
 			$id=$_REQUEST['id_inventario'];
 			$nombre=$_REQUEST['nombre'];
 			$precio=$_REQUEST['precio'];
@@ -45,7 +45,7 @@
 		return;
 	}
 	
-	if(isset($_REQUEST['method']))
+	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
 			case "addInventario" : 			addinventario(); break;

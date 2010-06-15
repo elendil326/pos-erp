@@ -56,6 +56,11 @@
 			$params=array($this->id_cotizacion);
 			return $this->bd->existe($query,$params);
 		}
+		function productos(){
+			$query="SELECT id_producto FROM detalle_cotizacion where id_cotizacion=?";
+			$params=array($this->id_cotizacion);
+			return $this->bd->select_arr($query,$params);
+		}
 	}
 	class cotizacion_vacio extends cotizacion {      
 		public function __construct() {

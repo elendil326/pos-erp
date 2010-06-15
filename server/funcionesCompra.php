@@ -2,7 +2,7 @@
 	
 	
 	function addFactura(){
-		if((isset($_REQUEST['folio']))&&(isset($_REQUEST['id_compra']))){
+		if((!empty($_REQUEST['folio']))&&(!empty($_REQUEST['id_compra']))){
 			$folio=$_REQUEST['folio'];
 			$id_compra=$_REQUEST['id_compra'];
 			$factura=new factura_compra($folio,$id_compra);
@@ -22,7 +22,7 @@
 	}
 	
 	function deleteFactura(){
-		if(isset($_REQUEST['id_factura'])){
+		if(!empty($_REQUEST['id_factura'])){
 			$id=$_REQUEST['id_factura'];
 			$factura=new factura_compra_existente($id);
 			if($factura->existe()){												//verifica que si exista la factura
@@ -34,7 +34,7 @@
 	}
 	
 	function cambiaDatos(){
-		if((isset($_REQUEST['id_factura']))&&(isset($_REQUEST['folio']))&&(isset($_REQUEST['id_compra']))){
+		if((!empty($_REQUEST['id_factura']))&&(!empty($_REQUEST['folio']))&&(!empty($_REQUEST['id_compra']))){
 			$id=$_REQUEST['id_factura'];
 			$folio=$_REQUEST['folio'];
 			$id_compra=$_REQUEST['id_compra'];
@@ -59,7 +59,7 @@
 	}
 	
 	function compraProducto(){
-		if((isset($_REQUEST['id_producto']))&&(isset($_REQUEST['existencia']))&&(isset($_REQUEST['sucursal']))){
+		if((!empty($_REQUEST['id_producto']))&&(!empty($_REQUEST['existencia']))&&(!empty($_REQUEST['sucursal']))){
 			$id=$_REQUEST['id_producto'];
 			$existencia=$_REQUEST['existencia'];
 			$sucursal=$_REQUEST['sucursal'];
@@ -85,7 +85,7 @@
 		return;
 	}
 	
-	if(isset($_REQUEST['method']))
+	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
 			case "addFactura" : 			addfactura(); break;

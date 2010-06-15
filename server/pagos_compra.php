@@ -53,6 +53,11 @@
 			$params=array($this->id_pago);
 			return $this->bd->existe($query,$params);
 		}
+		function suma_pagos(){
+			$query="select sum(monto) from pagos_compra where id_compra=?;";
+			$params=array($this->id_compra);
+			return $this->bd->select_un_campo($query,$params);
+		}
 	}
 	class pagos_compra_vacio extends pagos_compra {      
 		public function __construct() {

@@ -1,7 +1,7 @@
 <?	include_once("AddAllClass.php");
 	
 	function addUser(){
-		if((isset($_REQUEST['nombre']))&&(isset($_REQUEST['usuario']))&&(isset($_REQUEST['contraseña']))&&(isset($_REQUEST['nivel']))){
+		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['usuario']))&&(!empty($_REQUEST['contraseña']))&&(!empty($_REQUEST['nivel']))){
 			$nombre=$_REQUEST['nombre'];
 			$usuario=$_REQUEST['usuario'];
 			$contraseña=$_REQUEST['contraseña'];
@@ -15,7 +15,7 @@
 		return;
 	}
 	function deleteUser(){
-		if(isset($_REQUEST['id_usuario'])){
+		if(!empty($_REQUEST['id_usuario'])){
 			$id=$_REQUEST['id_usuario'];
 			$user=new usuario_existente($id);
 			if($user->existe()){
@@ -27,7 +27,7 @@
 	}
 	
 	function cambiaPass(){
-		if((isset($_REQUEST['id_usuario']))&&(isset($_REQUEST['password']))){
+		if((!empty($_REQUEST['id_usuario']))&&(!empty($_REQUEST['password']))){
 			$id=$_REQUEST['id_usuario'];
 			$password=$_REQUEST['password'];
 			$user=new usuario_existente($id);
@@ -41,7 +41,7 @@
 	}
 	
 	function cambiaDatos(){
-		if((isset($_REQUEST['id_usuario']))&&(isset($_REQUEST['nombre']))&&(isset($_REQUEST['usuario']))&&(isset($_REQUEST['nivel']))){
+		if((!empty($_REQUEST['id_usuario']))&&(!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['usuario']))&&(!empty($_REQUEST['nivel']))){
 			$id=$_REQUEST['id_usuario'];
 			$nombre=$_REQUEST['nombre'];
 			$usuario=$_REQUEST['usuario'];
@@ -61,7 +61,7 @@
 		return;
 	}
 	
-	if(isset($_REQUEST['method']))
+	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
 			case "addUser" : 			addUser(); break;

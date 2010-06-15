@@ -2,7 +2,7 @@
 	
 	
 	function addImpuesto(){
-		if((isset($_REQUEST['descripcion']))&&(isset($_REQUEST['valor']))){
+		if((!empty($_REQUEST['descripcion']))&&(!empty($_REQUEST['valor']))){
 			$descripcion=$_REQUEST['descripcion'];
 			$valor=$_REQUEST['valor'];
 			$impuesto=new Impuesto($descripcion,$valor);
@@ -16,7 +16,7 @@
 	}
 	
 	function deleteImpuesto(){
-		if(isset($_REQUEST['id_impuesto'])){
+		if(!empty($_REQUEST['id_impuesto'])){
 			$id=$_REQUEST['id_impuesto'];
 			$impuesto=new Impuesto_existente($id);
 			if($impuesto->existe()){
@@ -28,7 +28,7 @@
 	}
 	
 	function cambiaDatos(){
-		if((isset($_REQUEST['id_impuesto']))&&(isset($_REQUEST['descripcion']))&&(isset($_REQUEST['valor']))){
+		if((!empty($_REQUEST['id_impuesto']))&&(!empty($_REQUEST['descripcion']))&&(!empty($_REQUEST['valor']))){
 			$id=$_REQUEST['id_impuesto'];
 			$descripcion=$_REQUEST['descripcion'];
 			$valor=$_REQUEST['valor'];
@@ -54,7 +54,7 @@
 		return;
 	}
 	
-	if(isset($_REQUEST['method']))
+	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
 			case "addImpuesto" : 			addImpuesto(); break;

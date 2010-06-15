@@ -2,7 +2,7 @@
 	
 	
 	function addSucursal(){
-		if((isset($_REQUEST['descripcion']))&&(isset($_REQUEST['direccion']))){
+		if((!empty($_REQUEST['descripcion']))&&(!empty($_REQUEST['direccion']))){
 			$descripcion=$_REQUEST['descripcion'];
 			$direccion=$_REQUEST['direccion'];
 			$sucursal=new sucursal($descripcion,$direccion);
@@ -16,7 +16,7 @@
 	}
 	
 	function deleteSucursal(){
-		if(isset($_REQUEST['id_sucursal'])){
+		if(!empty($_REQUEST['id_sucursal'])){
 			$id=$_REQUEST['id_sucursal'];
 			$sucursal=new sucursal_existente($id);
 			if($sucursal->existe()){
@@ -28,7 +28,7 @@
 	}
 	
 	function cambiaDatos(){
-		if((isset($_REQUEST['id_sucursal']))&&(isset($_REQUEST['descripcion']))&&(isset($_REQUEST['direccion']))){
+		if((!empty($_REQUEST['id_sucursal']))&&(!empty($_REQUEST['descripcion']))&&(!empty($_REQUEST['direccion']))){
 			$id=$_REQUEST['id_sucursal'];
 			$descripcion=$_REQUEST['descripcion'];
 			$direccion=$_REQUEST['direccion'];
@@ -43,7 +43,7 @@
 		return;
 	}
 	
-	if(isset($_REQUEST['method']))
+	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
 			case "addSucursal" : 			addSucursal(); break;

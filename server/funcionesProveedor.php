@@ -1,7 +1,7 @@
 <?	include_once("AddAllClass.php");
  
 	function addproducto(){
-		if((isset($_REQUEST['clave_producto']))&&(isset($_REQUEST['id_proveedor']))&&(isset($_REQUEST['id_inventario']))&&(isset($_REQUEST['descripcion']))&&(isset($_REQUEST['precio']))){
+		if((!empty($_REQUEST['clave_producto']))&&(!empty($_REQUEST['id_proveedor']))&&(!empty($_REQUEST['id_inventario']))&&(!empty($_REQUEST['descripcion']))&&(!empty($_REQUEST['precio']))){
 			$clave_producto=$_REQUEST['clave_producto'];
 			$id_proveedor=$_REQUEST['id_proveedor'];
 			$id_inventario=$_REQUEST['id_inventario'];
@@ -27,7 +27,7 @@
 	}
 	
 	function deleteproducto(){
-		if(isset($_REQUEST['id_producto'])){
+		if(!empty($_REQUEST['id_producto'])){
 			$id=$_REQUEST['id_producto'];
 			$producto=new productos_proveedor_existente($id);
 			if($producto->existe()){
@@ -39,7 +39,7 @@
 	}
 	
 	function cambiaDatosProducto(){
-		if((isset($_REQUEST['id_producto']))&&(isset($_REQUEST['clave_producto']))&&(isset($_REQUEST['id_proveedor']))&&(isset($_REQUEST['id_inventario']))&&(isset($_REQUEST['descripcion']))&&(isset($_REQUEST['precio']))){
+		if((!empty($_REQUEST['id_producto']))&&(!empty($_REQUEST['clave_producto']))&&(!empty($_REQUEST['id_proveedor']))&&(!empty($_REQUEST['id_inventario']))&&(!empty($_REQUEST['descripcion']))&&(!empty($_REQUEST['precio']))){
 			$id_producto=$_REQUEST['id_producto'];
 			$clave_producto=$_REQUEST['clave_producto'];
 			$id_proveedor=$_REQUEST['id_proveedor'];
@@ -70,7 +70,7 @@
 		return;
 	}
 	
-	if(isset($_REQUEST['method']))
+	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
 			case "addProducto" : 			addProducto(); break;
