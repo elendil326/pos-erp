@@ -80,7 +80,7 @@
 		function select_uno($query,$arr){	
 			if (($res=$this->ejecuta_sanitizada($query,$arr)) === false)	return;
 			$arr=$res->GetRows();
-			return $arr[0];
+			return $arr;
 		}
 		
 		function select_un_campo($query,$arr){	
@@ -97,9 +97,11 @@
 		function ejecuta_sanitizada($query,$params){
 			$this->sanitize($params);
 			try{
+				//echo $query." -> ".print_r($params);
 				return $rs=$this->con->Execute($query,$params);
 			}catch(Exception $e){
-				return json_encode($e->message);
+				//echo "ENTRO AKA!!";
+				return json_encode("error no actualiza ".$e->message);
 			}
 		}
 		function sanitize(&$params) {
