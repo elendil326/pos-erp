@@ -70,12 +70,19 @@
 		return;
 	}
 	
+	function listarProveedores(){
+		$listar = new listar("select * from proveedor",array());
+		echo $listar->lista();
+		return;
+	}
+	
 	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
-			case "addProducto" : 			addProducto(); break;
-			case "deleteProducto" : 		deleteProducto(); break;
-			case "cambiaDatosProducto" : 			cambiaDatosProducto(); break;
+			case "addProducto" : 				addProducto(); break;
+			case "deleteProducto" : 			deleteProducto(); break;
+			case "cambiaDatosProducto" : 		cambiaDatosProducto(); break;
+			case "listarProveedores" : 			listarProveedores(); break;
 			default: echo "-1"; 
 		}
 	}

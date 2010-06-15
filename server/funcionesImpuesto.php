@@ -54,12 +54,19 @@
 		return;
 	}
 	
+	function listarImpuesto(){
+		$listar = new listar("select * from impuesto",array());
+		echo $listar->lista();
+		return;
+	}
+	
 	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
 			case "addImpuesto" : 			addImpuesto(); break;
 			case "deleteImpuesto" : 		deleteImpuesto(); break;
 			case "cambiaDatos" : 			cambiaDatos(); break;
+			case "listarImpuesto" : 		listarImpuesto(); break;
 			default: echo "-1"; 
 		}
 	}

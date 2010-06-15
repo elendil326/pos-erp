@@ -84,6 +84,17 @@
 		return;
 	}
 	
+	function listarPagosVenta(){
+		$listar = new listar("select * from pagos_venta",array());
+		echo $listar->lista();
+		return;
+	}
+	function listarPagosCompra(){
+		$listar = new listar("select * from pagos_compra",array());
+		echo $listar->lista();
+		return;
+	}
+	
 	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
@@ -91,6 +102,9 @@
 			case "deletePagoCompra" : 				deletePagoCompra(); break;
 			case "addPagoVenta" : 					addPagoVenta(); break;
 			case "deletePagoVenta" : 				deletePagoVenta(); break;
+			case "deletePagoVenta" : 				deletePagoVenta(); break;
+			case "listarPagosVenta" : 				listarPagosVenta(); break;
+			case "listarPagosCompra" : 				listarPagosCompra(); break;
 			default: echo "-1"; 
 		}
 	}

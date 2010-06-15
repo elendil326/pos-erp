@@ -131,6 +131,18 @@
 		return;
 	}
 	
+	
+	function listarFacturas(){
+		$listar = new listar("select * from factura_venta",array());
+		echo $listar->lista();
+		return;
+	}
+	function listarNotas(){
+		$listar = new listar("select * from nota_remision",array());
+		echo $listar->lista();
+		return;
+	}
+	
 	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
@@ -141,6 +153,8 @@
 			case "deleteNota" : 					deleteNota(); break;
 			case "cambiaDatosNota" : 				cambiaDatosNota(); break;
 			case "vendeProducto" : 					vendeProducto(); break;
+			case "listarFacturas" : 					listarFacturas(); break;
+			case "listarNotas" : 					listarNotas(); break;
 			default: echo "-1"; 
 		}
 	}

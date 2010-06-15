@@ -33,7 +33,7 @@
 		return;
 	}
 	
-	function cambiaDatos(){
+	function cambiaDatosFactura(){
 		if((!empty($_REQUEST['id_factura']))&&(!empty($_REQUEST['folio']))&&(!empty($_REQUEST['id_compra']))){
 			$id=$_REQUEST['id_factura'];
 			$folio=$_REQUEST['folio'];
@@ -57,6 +57,8 @@
 		}else												fail("Faltan datos.");
 		return;
 	}
+	
+	
 	
 	function compraProducto(){
 		if((!empty($_REQUEST['id_producto']))&&(!empty($_REQUEST['existencia']))&&(!empty($_REQUEST['sucursal']))){
@@ -85,13 +87,20 @@
 		return;
 	}
 	
+	function listarFacturas(){
+		$listar = new listar("select * from factura_compra",array());
+		echo $listar->lista();
+		return;
+	}
+	
 	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
 			case "addFactura" : 			addfactura(); break;
 			case "deleteFactura" : 			deletefactura(); break;
-			case "cambiaDatos" : 			cambiaDatos(); break;
+			case "cambiaDatosFactura" : 	cambiaDatosFactura(); break;
 			case "compraProducto" : 		compraProducto(); break;
+			case "listarFacturas" : 		listarFacturas(); break;
 			default: echo "-1"; 
 		}
 	}

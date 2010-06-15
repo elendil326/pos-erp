@@ -45,12 +45,18 @@
 		return;
 	}
 	
+	function listarProductos(){
+		$listar = new listar("select * from inventario",array());
+		echo $listar->lista();
+		return;
+	}
 	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
 			case "addInventario" : 			addinventario(); break;
 			case "deleteInventario" : 		deleteinventario(); break;
 			case "cambiaDatos" : 			cambiaDatos(); break;
+			case "listarProductos" : 		listarProductos(); break;
 			default: echo "-1"; 
 		}
 	}

@@ -43,12 +43,18 @@
 		return;
 	}
 	
+	function listarSucursal(){
+		$listar = new listar("select * from sucursal",array());
+		echo $listar->lista();
+		return;
+	}
 	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
 			case "addSucursal" : 			addSucursal(); break;
 			case "deleteSucursal" : 		deleteSucursal(); break;
 			case "cambiaDatos" : 			cambiaDatos(); break;
+			case "listarSucursal" : 		listarSucursal(); break;
 			default: echo "-1"; 
 		}
 	}

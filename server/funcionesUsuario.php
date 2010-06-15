@@ -61,6 +61,11 @@
 		return;
 	}
 	
+	function listarUsuario(){
+		$listar = new listar("select * from usuario",array());
+		echo $listar->lista();
+		return;
+	}
 	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
@@ -68,6 +73,7 @@
 			case "deleteUser" : 		deleteUser(); break;
 			case "cambiaPass" : 		cambiaPass(); break;
 			case "cambiaDatos" : 		cambiaDatos(); break;
+			case "listarUsuario" : 		listarUsuario(); break;
 			default: echo "-1"; 
 		}
 	}
