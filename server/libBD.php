@@ -60,7 +60,7 @@
 				return $arr;
 				*/
 				while(!$res->EOF){
-					$algo=$res->GetRowAssoc();
+					$algo=$res->GetRowAssoc($toUpper=false);
 					array_push($arr,$algo);
 					$res->MoveNext();
 				}
