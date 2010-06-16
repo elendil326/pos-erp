@@ -1,4 +1,4 @@
-<?	include_once("AddAllClass.php");
+<?php	include_once("AddAllClass.php");
  
 	function addproducto(){
 		if((!empty($_REQUEST['clave_producto']))&&(!empty($_REQUEST['id_proveedor']))&&(!empty($_REQUEST['id_inventario']))&&(!empty($_REQUEST['descripcion']))&&(!empty($_REQUEST['precio']))){

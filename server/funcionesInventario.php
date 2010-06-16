@@ -1,4 +1,4 @@
-<?	include_once("AddAllClass.php");
+<?php	include_once("AddAllClass.php");
 	
 	
 	function addInventario(){

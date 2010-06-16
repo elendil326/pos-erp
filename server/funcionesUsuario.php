@@ -1,4 +1,4 @@
-<?	include_once("AddAllClass.php");
+<?php	include_once("AddAllClass.php");
 	
 	function addUser(){
 		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['usuario']))&&(!empty($_REQUEST['contraseña']))&&(!empty($_REQUEST['nivel']))){

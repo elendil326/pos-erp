@@ -1,4 +1,4 @@
-<?	include_once("AddAllClass.php");
+<?php	include_once("AddAllClass.php");
 	
 	function addPagoCompra(){
 		if((!empty($_REQUEST['monto']))&&(!empty($_REQUEST['id_compra']))){
