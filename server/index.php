@@ -55,7 +55,7 @@ Ext.onReady(function(){
 
 //	var storeClientes = function(){
 		var clientes=  new Ext.data.JsonStore({
-			url: 'pos/funcionesCliente.php?action=list',
+			url: 'pos/funcionesCliente.php?method=listarClientes',
 			root: 'datos',
 			fields: [{name:'id_cliente',type: 'string'},{name:'nombre',type: 'string'}]
 		});//Datos desde la BD con respuesta del servidor php para un combo
@@ -80,7 +80,7 @@ Ext.onReady(function(){
 					
 						var idCliente=r.get('id_cliente');
 						Ext.Ajax.request({ //peticion al servidor 'AJAXSazo'
-						url: 'pos/funcionesCliente.php?action=showClient', //script
+						url: 'pos/funcionesCliente.php?method=mostrarCliente', //script
 						success: function(result) //propiedad que regresa el script php (JSON flag)
 						{
 							var data = Ext.util.JSON.decode( result.responseText ); //se guarda en esta variable local data la decodificacion JSON q regresa el servidor php
@@ -113,7 +113,7 @@ Ext.onReady(function(){
 		handler: function(){
 						var idCliente=combo.getValue();
 						Ext.Ajax.request({ //peticion al servidor 'AJAXSazo'
-						url: 'pos/funcionesCliente.php?action=update', //script
+						url: 'pos/funcionesCliente.php?method=actualizarCliente', //script
 						success: function(result) //propiedad que regresa el script php (JSON flag)
 						{
 							var data = Ext.util.JSON.decode( result.responseText ); //se guarda en esta variable local data la decodificacion JSON q regresa el servidor php
@@ -146,7 +146,7 @@ Ext.onReady(function(){
 		handler: function(){
 						var idCliente=combo.getValue();
 						Ext.Ajax.request({ //peticion al servidor 'AJAXSazo'
-						url: 'pos/funcionesCliente.php?action=insert', //script
+						url: 'pos/funcionesCliente.php?method=insertarCliente', //script
 						success: function(result) //propiedad que regresa el script php (JSON flag)
 						{
 							var data = Ext.util.JSON.decode( result.responseText ); //se guarda en esta variable local data la decodificacion JSON q regresa el servidor php
@@ -180,7 +180,7 @@ Ext.onReady(function(){
 		handler: function(){
 						var idCliente=combo.getValue();
 						Ext.Ajax.request({ //peticion al servidor 'AJAXSazo'
-						url: 'pos/funcionesCliente.php?action=delete', //script
+						url: 'pos/funcionesCliente.php?method=eliminarCliente', //script
 						success: function(result) //propiedad que regresa el script php (JSON flag)
 						{
 							var data = Ext.util.JSON.decode( result.responseText ); //se guarda en esta variable local data la decodificacion JSON q regresa el servidor php
@@ -275,7 +275,7 @@ Ext.onReady(function(){
 
 //	var storeClientes = function(){
 		var proveedores=  new Ext.data.JsonStore({
-			url: 'pos/funcionesProveedor.php?action=list',
+			url: 'pos/funcionesProveedor.php?method=listarProveedores',
 			root: 'datos',
 			fields: [{name:'id_proveedor',type: 'string'},{name:'nombre',type: 'string'}]
 		});//Datos desde la BD con respuesta del servidor php para un combo
@@ -300,7 +300,7 @@ Ext.onReady(function(){
 					
 						var idProveedor=r.get('id_proveedor');
 						Ext.Ajax.request({ //peticion al servidor 'AJAXSazo'
-						url: 'pos/funcionesProveedor.php?action=showProveedor', //script
+						url: 'pos/funcionesProveedor.php?method=mostrarProveedor', //script
 						success: function(result) //propiedad que regresa el script php (JSON flag)
 						{
 							var data = Ext.util.JSON.decode( result.responseText ); //se guarda en esta variable local data la decodificacion JSON q regresa el servidor php
@@ -333,7 +333,7 @@ Ext.onReady(function(){
 		handler: function(){
 						var idProveedor=comboP.getValue();
 						Ext.Ajax.request({ //peticion al servidor 'AJAXSazo'
-						url: 'pos/funcionesProveedor.php?action=update', //script
+						url: 'pos/funcionesProveedor.php?method=actualizarProveedor', //script
 						success: function(result) //propiedad que regresa el script php (JSON flag)
 						{
 							var data = Ext.util.JSON.decode( result.responseText ); //se guarda en esta variable local data la decodificacion JSON q regresa el servidor php
@@ -366,7 +366,7 @@ Ext.onReady(function(){
 		handler: function(){
 						var idProveedor=comboP.getValue();
 						Ext.Ajax.request({ //peticion al servidor 'AJAXSazo'
-						url: 'pos/funcionesProveedor.php?action=insert', //script
+						  url: 'pos/funcionesProveedor.php?method=insertarProveedor', //script
 						success: function(result) //propiedad que regresa el script php (JSON flag)
 						{
 							var data = Ext.util.JSON.decode( result.responseText ); //se guarda en esta variable local data la decodificacion JSON q regresa el servidor php
@@ -400,7 +400,7 @@ Ext.onReady(function(){
 		handler: function(){
 						var idProveedor=comboP.getValue();
 						Ext.Ajax.request({ //peticion al servidor 'AJAXSazo'
-						url: 'pos/funcionesProveedor.php?action=delete', //script
+						url: 'pos/funcionesProveedor.php?method=eliminarProveedor', //script
 						success: function(result) //propiedad que regresa el script php (JSON flag)
 						{
 							var data = Ext.util.JSON.decode( result.responseText ); //se guarda en esta variable local data la decodificacion JSON q regresa el servidor php
