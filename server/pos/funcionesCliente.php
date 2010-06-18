@@ -1,7 +1,7 @@
 ﻿<?php
 	include("../AddAllClass.php");
 
-	function insertar(){
+	function insertarCliente(){
 		$id =null;
 		$rfc=$_REQUEST['rfc'];
 		$nombre=$_REQUEST['nombre'];
@@ -17,7 +17,7 @@
 			echo "{success: false }";
 		}
 	}
-	function modificar(){
+	function actualizarCliente(){
 		
 		$cliente = new cliente_existente($_REQUEST['id']); 
 		$cliente->id_cliente=$_REQUEST['id'];
@@ -36,7 +36,7 @@
 		}
 	}
 	
-	function eliminar(){
+	function eliminarCliente(){
 		$cliente = new cliente_existente($_REQUEST['id']); 
 		$cliente->id_cliente =$_REQUEST['id'];
 		if($cliente->borra()){
@@ -61,20 +61,20 @@
 		//echo "".$cliente->lista();
 	}
 	
-	switch ($_REQUEST['action']){
-	case 'list':
+	switch ($_REQUEST['method']){
+	case 'listarClientes':
 		listarClientes();
 	break;
-	case 'update':
-		modificar();
+	case 'actualizarCliente':
+		actualizarCliente();
 	break;
-	case 'delete':
-		eliminar();
+	case 'eliminarCliente':
+		eliminarCliente();
 	break;
-	case 'insert': 
-		insertar();
+	case 'insertarCliente': 
+		insertarCliente();
 	break;
-	case 'showClient':
+	case 'mostrarCliente':
 		mostrarCliente();
 	break;
 }//fin switch
