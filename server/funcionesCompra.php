@@ -58,26 +58,24 @@
 		return;
 	}
 	
-	
-	
 	function compraProducto(){
-		if((!empty($_REQUEST['id_producto']))&&(!empty($_REQUEST['existencia']))&&(!empty($_REQUEST['sucursal']))){
+		if((!empty($_REQUEST['id_producto']))&&(!empty($_REQUEST['existencias']))&&(!empty($_REQUEST['id_sucursal']))){
 			$id=$_REQUEST['id_producto'];
-			$existencia=$_REQUEST['existencia'];
-			$sucursal=$_REQUEST['sucursal'];
-			$detalle_inventario=new detalle_inventario_existente($id,$sucursal);
+			$existencias=$_REQUEST['existencias'];
+			$id_sucursal=$_REQUEST['id_sucursal'];
+			$detalle_inventario=new detalle_inventario_existente($id,$id_sucursal);
 			$producto=new inventario_existente($id);
 			if($producto->existe()){
-				$verifica_sucursal=new sucursal_existente($sucursal);
+				$verifica_sucursal=new sucursal_existente($id_sucursal);
 				if($verifica_sucursal->existe()){
 					if($detalle_inventario->existe()){
-						$detalle_inventario->existencia=$detalle_inventario->existencia+$existencia;
+						$detalle_inventario->existencias=$detalle_inventario->existencias+$existencias;
 						if($detalle_inventario->actualiza())			ok();
 						else											fail("Error al agregar los datos");
 					}else{
 						$detalle_inventario->id_producto=$id;
-						$detalle_inventario->existencia=$existencia;
-						$detalle_inventario->sucursal=$sucursal;
+						$detalle_inventario->existencias=$existencias;
+						$detalle_inventario->id_sucursal=$id_sucursal;
 						if($detalle_inventario->inserta())				ok();
 						else											fail("Error al guardar los datos");
 					}

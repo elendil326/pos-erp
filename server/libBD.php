@@ -80,7 +80,7 @@
 		function select_uno($query,$arr){	
 			if (($res=$this->ejecuta_sanitizada($query,$arr)) === false)	return;
 			$arr=$res->GetRows();
-			return $arr;
+			return $arr[0];
 		}
 		
 		function select_un_campo($query,$arr){	

@@ -2,11 +2,10 @@
 	
 	
 	function addInventario(){
-		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['precio']))&&(!empty($_REQUEST['minimo']))){
+		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['denominacion']))){
 			$nombre=$_REQUEST['nombre'];
-			$precio=$_REQUEST['precio'];
-			$minimo=$_REQUEST['minimo'];
-			$inventario=new inventario($nombre,$precio,$minimo);
+			$denominacion=$_REQUEST['denominacion'];
+			$inventario=new inventario($nombre,$denominacion);
 			if(!$inventario->existe()){
 				if($inventario->inserta()){		ok();
 				}else							fail("Error al guardar el producto.");
@@ -28,16 +27,14 @@
 	}
 	
 	function cambiaDatos(){
-		if((!empty($_REQUEST['id_inventario']))&&(!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['precio']))&&(!empty($_REQUEST['minimo']))){
+		if((!empty($_REQUEST['id_inventario']))&&(!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['denominacion']))){
 			$id=$_REQUEST['id_inventario'];
 			$nombre=$_REQUEST['nombre'];
-			$precio=$_REQUEST['precio'];
-			$minimo=$_REQUEST['minimo'];
+			$denominacion=$_REQUEST['denominacion'];
 			$inventario=new Inventario_existente($id);
 			if($inventario->existe()){
 				$inventario->nombre=$nombre;
-				$inventario->precio_venta=$precio;
-				$inventario->minimo=$minimo;
+				$inventario->denominacion=$denominacion;
 				if($inventario->actualiza())	ok();
 				else							fail("Error al modificar el producto.");
 			}else								fail("El producto que desea modificar no existe.");
