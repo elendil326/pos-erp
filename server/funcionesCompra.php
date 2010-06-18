@@ -59,24 +59,26 @@
 	}
 	
 	function compraProducto(){
-		if((!empty($_REQUEST['id_producto']))&&(!empty($_REQUEST['existencias']))&&(!empty($_REQUEST['id_sucursal']))){
-			$id=$_REQUEST['id_producto'];
+		if((!empty($_REQUEST['id_producto']))&&(!empty($_REQUEST['existencias']))&&(!empty($_REQUEST['id_sucursal']))){ //revisa que se envien todos los datos
+			$id=$_REQUEST['id_producto'];																				//asigna valores a variables
 			$existencias=$_REQUEST['existencias'];
 			$id_sucursal=$_REQUEST['id_sucursal'];
-			$detalle_inventario=new detalle_inventario_existente($id,$id_sucursal);
-			$producto=new inventario_existente($id);
-			if($producto->existe()){
-				$verifica_sucursal=new sucursal_existente($id_sucursal);
-				if($verifica_sucursal->existe()){
-					if($detalle_inventario->existe()){
-						$detalle_inventario->existencias=$detalle_inventario->existencias+$existencias;
-						if($detalle_inventario->actualiza())			ok();
+			$detalle_inventario=new detalle_inventario_existente($id,$id_sucursal);										//creamos un objeto de la clase detalle_inventario que vamos a modificar
+			$producto=new inventario_existente($id);																	//creamos un objeto de la clase inventario para ver si existe
+			if($producto->existe()){																					//checamos si existe el producto en inventario
+				$verifica_sucursal=new sucursal_existente($id_sucursal);												//creamos un objeto de la clase sucursal para veridicar que tambien exista
+				if($verifica_sucursal->existe()){																		//checamos que exista la sucursal
+					if($detalle_inventario->existe()){																	//Verificamos si ya existe el registro del producto en la sucursal
+						$detalle_inventario->existencias=$detalle_inventario->existencias+$existencias;					//sumamos el productoentrante a la existencia
+						if($detalle_inventario->actualiza())			ok();											//actualizamos y verificamos que realice la actualizacion
 						else											fail("Error al agregar los datos");
-					}else{
+					}else{																								//generamos el registro podiendo en ceros el precio y el minimo
 						$detalle_inventario->id_producto=$id;
-						$detalle_inventario->existencias=$existencias;
 						$detalle_inventario->id_sucursal=$id_sucursal;
-						if($detalle_inventario->inserta())				ok();
+						$detalle_inventario->existencias=$existencias;
+						$detalle_inventario->precio_venta=0;
+						$detalle_inventario->min=0;
+						if($detalle_inventario->inserta())				ok();											//insertamos y verificamos que realize la insercion
 						else											fail("Error al guardar los datos");
 					}
 				}else													fail("La sucursal de la compra no existe.");

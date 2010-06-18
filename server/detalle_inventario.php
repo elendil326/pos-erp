@@ -25,7 +25,7 @@
 			return ($this->bd->ejecuta($insert,$params))?true:false;
 		}
 		function actualiza(){
-			$update="UPDATE  detalle_inventario SET id_producto=?,precio_venta=?,min=? id_sucursal=?, existencias=? where id_producto=? and id_sucursal=?";
+			$update="UPDATE  detalle_inventario SET id_producto=?,id_sucursal=?,precio_venta=?,min=?, existencias=? where id_producto=? and id_sucursal=?";
 			$params=array($this->id_producto,$this->id_sucursal,$this->precio_venta,$this->min,$this->existencias,$this->id_producto,$this->id_sucursal);
 			return $this->bd->ejecuta($update,$params);
 		}
