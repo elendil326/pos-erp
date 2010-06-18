@@ -1,7 +1,7 @@
 <?php	include_once("AddAllClass.php");
 	
 	
-	function addFactura(){
+	function insertarFacturaCompra(){
 		if((!empty($_REQUEST['folio']))&&(!empty($_REQUEST['id_compra']))){
 			$folio=$_REQUEST['folio'];
 			$id_compra=$_REQUEST['id_compra'];
@@ -21,7 +21,7 @@
 		return;
 	}
 	
-	function deleteFactura(){
+	function eliminarFacturaCompra(){
 		if(!empty($_REQUEST['id_factura'])){
 			$id=$_REQUEST['id_factura'];
 			$factura=new factura_compra_existente($id);
@@ -33,7 +33,7 @@
 		return;
 	}
 	
-	function cambiaDatosFactura(){
+	function actualizarFacturaCompra(){
 		if((!empty($_REQUEST['id_factura']))&&(!empty($_REQUEST['folio']))&&(!empty($_REQUEST['id_compra']))){
 			$id=$_REQUEST['id_factura'];
 			$folio=$_REQUEST['folio'];
@@ -58,7 +58,7 @@
 		return;
 	}
 	
-	function compraProducto(){
+	function comprarProducto(){
 		if((!empty($_REQUEST['id_producto']))&&(!empty($_REQUEST['existencias']))&&(!empty($_REQUEST['id_sucursal']))){ //revisa que se envien todos los datos
 			$id=$_REQUEST['id_producto'];																				//asigna valores a variables
 			$existencias=$_REQUEST['existencias'];
@@ -87,7 +87,7 @@
 		return;
 	}
 	
-	function listarFacturas(){
+	function listarFacturasCompra(){
 		$listar = new listar("select * from factura_compra",array());
 		echo $listar->lista();
 		return;
@@ -96,11 +96,11 @@
 	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
-			case "addFactura" : 			addfactura(); break;
-			case "deleteFactura" : 			deletefactura(); break;
-			case "cambiaDatosFactura" : 	cambiaDatosFactura(); break;
-			case "compraProducto" : 		compraProducto(); break;
-			case "listarFacturas" : 		listarFacturas(); break;
+			case "insertarFacturaCompra" : 			insertarFacturaCompra(); break;
+			case "eliminarFacturaCompra" : 			eliminarFacturaCompra(); break;
+			case "actualizarFacturaCompra" :	 	actualizarFacturaCompra(); break;
+			case "comprarProducto" : 				comprarProducto(); break;
+			case "listarFacturasCompra" : 			listarFacturasCompra(); break;
 			default: echo "-1"; 
 		}
 	}

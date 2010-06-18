@@ -1,7 +1,6 @@
-<?php	include_once("AddAllClass.php");
+<?php	include_once("AddAllClass.php");	
 	
-	
-	function addImpuesto(){
+	function insertarImpuesto(){
 		if((!empty($_REQUEST['descripcion']))&&(!empty($_REQUEST['valor']))){
 			$descripcion=$_REQUEST['descripcion'];
 			$valor=$_REQUEST['valor'];
@@ -15,7 +14,7 @@
 		return;
 	}
 	
-	function deleteImpuesto(){
+	function eliminarImpuesto(){
 		if(!empty($_REQUEST['id_impuesto'])){
 			$id=$_REQUEST['id_impuesto'];
 			$impuesto=new Impuesto_existente($id);
@@ -27,7 +26,7 @@
 		return;
 	}
 	
-	function cambiaDatos(){
+	function actualizarImpuesto(){
 		if((!empty($_REQUEST['id_impuesto']))&&(!empty($_REQUEST['descripcion']))&&(!empty($_REQUEST['valor']))){
 			$id=$_REQUEST['id_impuesto'];
 			$descripcion=$_REQUEST['descripcion'];
@@ -63,10 +62,10 @@
 	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
-			case "addImpuesto" : 			addImpuesto(); break;
-			case "deleteImpuesto" : 		deleteImpuesto(); break;
-			case "cambiaDatos" : 			cambiaDatos(); break;
-			case "listarImpuesto" : 		listarImpuesto(); break;
+			case "insertarImpuesto" : 				insertarImpuesto(); break;
+			case "eliminarImpuesto" : 				eliminarImpuesto(); break;
+			case "actualizarImpuesto" : 			actualizarImpuesto(); break;
+			case "listarImpuesto" : 				listarImpuesto(); break;
 			default: echo "-1"; 
 		}
 	}

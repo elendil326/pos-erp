@@ -1,6 +1,6 @@
 <?php	include_once("AddAllClass.php");
 	
-	function addPagoCompra(){
+	function insertarPagoCompra(){
 		if((!empty($_REQUEST['monto']))&&(!empty($_REQUEST['id_compra']))){
 			$monto=$_REQUEST['monto'];
 			$id_compra=$_REQUEST['id_compra'];
@@ -30,7 +30,7 @@
 		return;
 	}
 	
-	function deletePagoCompra(){
+	function eliminarPagoCompra(){
 		if(!empty($_REQUEST['id_PagoCompra'])){
 			$id=$_REQUEST['id_PagoCompra'];
 			$PagoCompra=new pagos_compra_existente($id);
@@ -42,7 +42,7 @@
 		return;
 	}
 	
-	function addPagoVenta(){
+	function insertarPagoVenta(){
 		if((!empty($_REQUEST['monto']))&&(!empty($_REQUEST['id_venta']))){
 			$monto=$_REQUEST['monto'];
 			$id_venta=$_REQUEST['id_venta'];
@@ -72,7 +72,7 @@
 		return;
 	}
 	
-	function deletePagoventa(){
+	function eliminarPagoVenta(){
 		if(!empty($_REQUEST['id_Pagoventa'])){
 			$id=$_REQUEST['id_Pagoventa'];
 			$Pagoventa=new pagos_venta_existente($id);
@@ -98,10 +98,10 @@
 	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
-			case "addPagoCompra" : 					addPagoCompra(); break;
-			case "deletePagoCompra" : 				deletePagoCompra(); break;
-			case "addPagoVenta" : 					addPagoVenta(); break;
-			case "deletePagoVenta" : 				deletePagoVenta(); break;
+			case "insertarPagoCompra" : 			insertarPagoCompra(); break;
+			case "eliminarPagoCompra" : 			eliminarPagoCompra(); break;
+			case "insertarPagoVenta" : 				insertarPagoVenta(); break;
+			case "eliminarPagoVenta" : 				eliminarPagoVenta(); break;
 			case "deletePagoVenta" : 				deletePagoVenta(); break;
 			case "listarPagosVenta" : 				listarPagosVenta(); break;
 			case "listarPagosCompra" : 				listarPagosCompra(); break;

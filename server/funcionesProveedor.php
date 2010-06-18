@@ -1,6 +1,6 @@
 <?php	include_once("AddAllClass.php");
  
-	function addproducto(){
+	function insertarProductoProveedor(){
 		if((!empty($_REQUEST['clave_producto']))&&(!empty($_REQUEST['id_proveedor']))&&(!empty($_REQUEST['id_inventario']))&&(!empty($_REQUEST['descripcion']))&&(!empty($_REQUEST['precio']))){
 			$clave_producto=$_REQUEST['clave_producto'];
 			$id_proveedor=$_REQUEST['id_proveedor'];
@@ -26,7 +26,7 @@
 		return;
 	}
 	
-	function deleteproducto(){
+	function eliminarProductoProveedor(){
 		if(!empty($_REQUEST['id_producto'])){
 			$id=$_REQUEST['id_producto'];
 			$producto=new productos_proveedor_existente($id);
@@ -38,7 +38,7 @@
 		return;
 	}
 	
-	function cambiaDatosProducto(){
+	function actualizarProductoProveedor(){
 		if((!empty($_REQUEST['id_producto']))&&(!empty($_REQUEST['clave_producto']))&&(!empty($_REQUEST['id_proveedor']))&&(!empty($_REQUEST['id_inventario']))&&(!empty($_REQUEST['descripcion']))&&(!empty($_REQUEST['precio']))){
 			$id_producto=$_REQUEST['id_producto'];
 			$clave_producto=$_REQUEST['clave_producto'];
@@ -70,7 +70,7 @@
 		return;
 	}
 	
-	function listarProveedores(){
+	function listarProveedor(){
 		$listar = new listar("select * from proveedor",array());
 		echo $listar->lista();
 		return;
@@ -79,10 +79,10 @@
 	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
-			case "addProducto" : 				addProducto(); break;
-			case "deleteProducto" : 			deleteProducto(); break;
-			case "cambiaDatosProducto" : 		cambiaDatosProducto(); break;
-			case "listarProveedores" : 			listarProveedores(); break;
+			case "insertarProductoProveedor" : 		insertarProductoProveedor(); break;
+			case "eliminarProductoProveedor" : 		eliminarProductoProveedor(); break;
+			case "actualizarProductoProveedor" : 	actualizarProductoProveedor(); break;
+			case "listarProveedor" : 				listarProveedor(); break;
 			default: echo "-1"; 
 		}
 	}

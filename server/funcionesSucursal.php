@@ -1,7 +1,7 @@
 <?php	include_once("AddAllClass.php");
 	
 	
-	function addSucursal(){
+	function insertarSucursal(){
 		if((!empty($_REQUEST['descripcion']))&&(!empty($_REQUEST['direccion']))){
 			$descripcion=$_REQUEST['descripcion'];
 			$direccion=$_REQUEST['direccion'];
@@ -15,7 +15,7 @@
 		return;
 	}
 	
-	function deleteSucursal(){
+	function eliminarSucursal(){
 		if(!empty($_REQUEST['id_sucursal'])){
 			$id=$_REQUEST['id_sucursal'];
 			$sucursal=new sucursal_existente($id);
@@ -27,7 +27,7 @@
 		return;
 	}
 	
-	function cambiaDatos(){
+	function actualizarSucursal(){
 		if((!empty($_REQUEST['id_sucursal']))&&(!empty($_REQUEST['descripcion']))&&(!empty($_REQUEST['direccion']))){
 			$id=$_REQUEST['id_sucursal'];
 			$descripcion=$_REQUEST['descripcion'];
@@ -51,10 +51,10 @@
 	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
-			case "addSucursal" : 			addSucursal(); break;
-			case "deleteSucursal" : 		deleteSucursal(); break;
-			case "cambiaDatos" : 			cambiaDatos(); break;
-			case "listarSucursal" : 		listarSucursal(); break;
+			case "insertarSucursal" : 				insertarSucursal(); break;
+			case "eliminarSucursal" : 				eliminarSucursal(); break;
+			case "actualizarSucursal" : 			actualizarSucursal(); break;
+			case "listarSucursal" : 				listarSucursal(); break;
 			default: echo "-1"; 
 		}
 	}

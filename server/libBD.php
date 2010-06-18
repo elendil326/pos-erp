@@ -15,7 +15,7 @@
 			$this->base->$base;
 			$this->conecta();
 		}
-		function __destruct(){ 
+		function __destruct(){
 			$this->con->Close();
 		}
 		function conecta(){
@@ -44,7 +44,10 @@
 		
 		function select_todo($query){	
 			if ($this->ejecuta_sanitizada($query,$arr) === false)	return;
-			else 	return $this->con->GetAll($query);
+			else{
+				
+				return $this->con->GetAll($query);
+			}
 		}
 		
 		function select_arr($query,$arr){	
@@ -61,20 +64,17 @@
 				*/
 				while(!$res->EOF){
 					$algo=$res->GetRowAssoc($toUpper=false);
+					foreach($algo as $atributo => &$valor)$valor=utf8_encode($valor);
 					array_push($arr,$algo);
 					$res->MoveNext();
 				}
+				print_r($arr);
 				return $arr;
 			}
 		}
 		
-		function select_json($query,$arr){	
-			if (($res=$this->ejecuta_sanitizada($query,$arr)) === false)	return;
-			else{
-				$arr=array();
-				while($fila = $res->FetchNextObject(false)) array_push($arr,$fila);
-				return json_encode($arr);
-			}
+		function select_json($query,$arr){
+				return json_encode($this->select_arr($query,$arr));
 		}
 		
 		function select_uno($query,$arr){	

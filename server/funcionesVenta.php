@@ -1,7 +1,7 @@
 <?php	include_once("AddAllClass.php");
 	
 	
-	function addFactura(){
+	function insertarFacturaVenta(){
 		if((!empty($_REQUEST['folio']))&&(!empty($_REQUEST['id_venta']))){
 			$folio=$_REQUEST['folio'];
 			$id_venta=$_REQUEST['id_venta'];
@@ -21,7 +21,7 @@
 		return;
 	}
 	
-	function deleteFactura(){
+	function eliminarFacturaVenta(){
 		if(!empty($_REQUEST['id_factura'])){
 			$id=$_REQUEST['id_factura'];
 			$factura=new factura_venta_existente($id);
@@ -33,7 +33,7 @@
 		return;
 	}
 	
-	function cambiaDatosFactura(){
+	function actualizarFacturaVenta(){
 		if((!empty($_REQUEST['id_factura']))&&(!empty($_REQUEST['folio']))&&(!empty($_REQUEST['id_venta']))){
 			$id=$_REQUEST['id_factura'];
 			$folio=$_REQUEST['folio'];
@@ -57,7 +57,7 @@
 		}else												fail("Faltan datos.");
 		return;
 	}
-	function addNota(){
+	function insertarNota(){
 		if(!empty($_REQUEST['id_venta'])){
 			$id_venta=$_REQUEST['id_venta'];
 			$nota=new nota_remision($id_venta);
@@ -74,7 +74,7 @@
 		return;
 	}
 	
-	function deleteNota(){
+	function eliminarNota(){
 		if(!empty($_REQUEST['id_nota'])){
 			$id=$_REQUEST['id_nota'];
 			$nota=new nota_remision_existente($id);
@@ -86,7 +86,7 @@
 		return;
 	}
 	
-	function cambiaDatosNota(){
+	function actualizarNota(){
 		if((!empty($_REQUEST['id_nota']))&&(!empty($_REQUEST['id_venta']))){
 			$id=$_REQUEST['id_nota'];
 			$id_venta=$_REQUEST['id_venta'];
@@ -132,7 +132,7 @@
 	}
 	
 	
-	function listarFacturas(){
+	function listarFacturasVenta(){
 		$listar = new listar("select * from factura_venta",array());
 		echo $listar->lista();
 		return;
@@ -146,14 +146,14 @@
 	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
-			case "addFactura" : 					addFactura(); break;
-			case "deleteFactura" : 					deleteFactura(); break;
-			case "cambiaDatosFactura" : 			cambiaDatosFactura(); break;
-			case "addNota" : 						addNota(); break;
-			case "deleteNota" : 					deleteNota(); break;
-			case "cambiaDatosNota" : 				cambiaDatosNota(); break;
+			case "insertarFacturaVenta" : 			insertarFacturaVenta(); break;
+			case "eliminarFacturaVenta" : 			eliminarFacturaVenta(); break;
+			case "actualizarFacturaVenta" : 		actualizarFacturaVenta(); break;
+			case "insertarNota" : 					insertarNota(); break;
+			case "eliminarNota" : 					eliminarNota(); break;
+			case "actualizarNota" : 				actualizarNota(); break;
 			case "vendeProducto" : 					vendeProducto(); break;
-			case "listarFacturas" : 					listarFacturas(); break;
+			case "listarFacturasVenta" : 			listarFacturasVenta(); break;
 			case "listarNotas" : 					listarNotas(); break;
 			default: echo "-1"; 
 		}

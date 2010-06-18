@@ -1,6 +1,6 @@
 <?php	include_once("AddAllClass.php");
 	
-	function addUser(){
+	function insertarUsuario(){
 		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['usuario']))&&(!empty($_REQUEST['contraseña']))&&(!empty($_REQUEST['nivel']))){
 			$nombre=$_REQUEST['nombre'];
 			$usuario=$_REQUEST['usuario'];
@@ -14,7 +14,7 @@
 		}else 							fail("faltan datos");
 		return;
 	}
-	function deleteUser(){
+	function eliminarUsuario(){
 		if(!empty($_REQUEST['id_usuario'])){
 			$id=$_REQUEST['id_usuario'];
 			$user=new usuario_existente($id);
@@ -26,7 +26,7 @@
 		return;
 	}
 	
-	function cambiaPass(){
+	function cambiaPassword(){
 		if((!empty($_REQUEST['id_usuario']))&&(!empty($_REQUEST['password']))){
 			$id=$_REQUEST['id_usuario'];
 			$password=$_REQUEST['password'];
@@ -40,7 +40,7 @@
 		return;
 	}
 	
-	function cambiaDatos(){
+	function actualizarUsuario(){
 		if((!empty($_REQUEST['id_usuario']))&&(!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['usuario']))&&(!empty($_REQUEST['nivel']))){
 			$id=$_REQUEST['id_usuario'];
 			$nombre=$_REQUEST['nombre'];
@@ -69,11 +69,11 @@
 	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
-			case "addUser" : 			addUser(); break;
-			case "deleteUser" : 		deleteUser(); break;
-			case "cambiaPass" : 		cambiaPass(); break;
-			case "cambiaDatos" : 		cambiaDatos(); break;
-			case "listarUsuario" : 		listarUsuario(); break;
+			case "insertarUsuario" : 				insertarUsuario(); break;
+			case "eliminarUsuario" : 				eliminarUsuario(); break;
+			case "cambiaPassword" : 				cambiaPassword(); break;
+			case "actualizarUsuario" : 				actualizarUsuario(); break;
+			case "listarUsuario" : 					listarUsuario(); break;
 			default: echo "-1"; 
 		}
 	}
