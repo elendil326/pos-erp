@@ -30,6 +30,7 @@ CREATE TABLE `cliente` (
   `limite_credito` float NOT NULL default '0' COMMENT 'Limite de credito otorgado al cliente',
   PRIMARY KEY  (`id_cliente`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=35 ;
+
 -- --------------------------------------------------------
 
 -- 
@@ -51,6 +52,11 @@ CREATE TABLE `compras` (
   KEY `compras_sucursal` (`sucursal`),
   KEY `compras_usuario` (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- 
+-- Volcar la base de datos para la tabla `compras`
+-- 
+
 
 -- --------------------------------------------------------
 
@@ -82,6 +88,11 @@ CREATE TABLE `cuenta_cliente` (
   PRIMARY KEY  (`id_cliente`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+-- 
+-- Volcar la base de datos para la tabla `cuenta_cliente`
+-- 
+
+
 -- --------------------------------------------------------
 
 -- 
@@ -94,6 +105,11 @@ CREATE TABLE `cuenta_proveedor` (
   `saldo` float NOT NULL COMMENT 'cantidad que adeudamos al proveedor',
   PRIMARY KEY  (`id_proveedor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- 
+-- Volcar la base de datos para la tabla `cuenta_proveedor`
+-- 
+
 
 -- --------------------------------------------------------
 
@@ -111,6 +127,11 @@ CREATE TABLE `detalle_compra` (
   KEY `detalle_compra_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+-- 
+-- Volcar la base de datos para la tabla `detalle_compra`
+-- 
+
+
 -- --------------------------------------------------------
 
 -- 
@@ -126,6 +147,7 @@ CREATE TABLE `detalle_cotizacion` (
   PRIMARY KEY  (`id_cotizacion`,`id_producto`),
   KEY `detalle_cotizacion_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 -- --------------------------------------------------------
 
@@ -160,6 +182,11 @@ CREATE TABLE `detalle_venta` (
   KEY `detalle_venta_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+-- 
+-- Volcar la base de datos para la tabla `detalle_venta`
+-- 
+
+
 -- --------------------------------------------------------
 
 -- 
@@ -175,6 +202,11 @@ CREATE TABLE `factura_compra` (
   KEY `factura_compra_compra` (`id_compra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
+-- 
+-- Volcar la base de datos para la tabla `factura_compra`
+-- 
+
+
 -- --------------------------------------------------------
 
 -- 
@@ -189,6 +221,11 @@ CREATE TABLE `factura_venta` (
   PRIMARY KEY  (`id_factura`),
   KEY `factura_venta_venta` (`id_venta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- 
+-- Volcar la base de datos para la tabla `factura_venta`
+-- 
+
 
 -- --------------------------------------------------------
 
@@ -232,6 +269,11 @@ CREATE TABLE `nota_remision` (
   KEY `nota_remision_venta` (`id_venta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
+-- 
+-- Volcar la base de datos para la tabla `nota_remision`
+-- 
+
+
 -- --------------------------------------------------------
 
 -- 
@@ -248,6 +290,11 @@ CREATE TABLE `pagos_compra` (
   KEY `pagos_compra_compra` (`id_compra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+-- 
+-- Volcar la base de datos para la tabla `pagos_compra`
+-- 
+
+
 -- --------------------------------------------------------
 
 -- 
@@ -263,6 +310,11 @@ CREATE TABLE `pagos_venta` (
   PRIMARY KEY  (`id_pago`),
   KEY `pagos_venta_venta` (`id_venta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- 
+-- Volcar la base de datos para la tabla `pagos_venta`
+-- 
+
 
 -- --------------------------------------------------------
 
@@ -284,6 +336,11 @@ CREATE TABLE `productos_proveedor` (
   KEY `productos_proveedor_proveedor` (`id_proveedor`),
   KEY `productos_proveedor_producto` (`id_inventario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- 
+-- Volcar la base de datos para la tabla `productos_proveedor`
+-- 
+
 
 -- --------------------------------------------------------
 
@@ -331,6 +388,11 @@ CREATE TABLE `usuario` (
   `nivel` int(11) NOT NULL,
   PRIMARY KEY  (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- 
+-- Volcar la base de datos para la tabla `usuario`
+-- 
+
 
 -- --------------------------------------------------------
 
@@ -435,3 +497,86 @@ ALTER TABLE `ventas`
   ADD CONSTRAINT `ventas_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
   ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`),
   ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`sucursal`) REFERENCES `sucursal` (`id_sucursal`);
+
+  ------------------------------------------------------------------
+  --INSERCIONES DE DATOS:
+  ----------------------------------------------------------------
+  
+-- 
+-- Volcar la base de datos para la tabla `cotizacion`
+-- 
+
+INSERT INTO `cotizacion` (`id_cotizacion`, `id_cliente`, `fecha`, `subtotal`, `iva`) VALUES 
+(1, 24, '2010-06-16', 57.5, 9.2),
+(2, 25, '2010-06-16', 44.5, 7.12),
+(3, 28, '2010-06-16', 83, 13.28);
+
+-- 
+-- Volcar la base de datos para la tabla `cliente`
+-- 
+
+INSERT INTO `cliente` (`id_cliente`, `rfc`, `nombre`, `direccion`, `telefono`, `e_mail`, `limite_credito`) VALUES 
+(24, 'JMHR220486', 'JUAN MANUEL HERNANDEZ REYES', 'CALLEJON SANTO NI', '4151858028', 'figu@gmail.com', 10000),
+(25, 'JMGC121185', 'JUAN MANUEL GARCIA CARMONA', 'DIEGO RIVERA', '4611469489', 'zonademanel@hotmail.com', 4000),
+(28, 'GJHER140203', 'Guadalupe de Jesus Hernandez Reyes', 'Santo nino #3 int 1', '4151858028', 'chucho@chucho.com', 10),
+(34, 'JDDHER??', 'Juan de Dios Hernandez XXX', 'Callejon Santo nino no 3 Int 1', '4151858028', 'jddios@live.com.mx', 5000);
+
+-- 
+-- Volcar la base de datos para la tabla `detalle_cotizacion`
+-- 
+
+INSERT INTO `detalle_cotizacion` (`id_cotizacion`, `id_producto`, `cantidad`, `precio`) VALUES 
+(1, 4, 1, 9.5),
+(1, 5, 4, 12),
+(2, 4, 1, 9.5),
+(2, 5, 2, 12),
+(2, 6, 1, 11),
+(3, 4, 4, 9.5),
+(3, 5, 1, 12),
+(3, 6, 3, 11);
+
+-- 
+-- Volcar la base de datos para la tabla `detalle_inventario`
+-- 
+
+INSERT INTO `detalle_inventario` (`id_producto`, `id_sucursal`, `precio_venta`, `min`, `existencias`) VALUES 
+(4, 1, 9.5, 1000, 0),
+(4, 2, 10, 200, 0),
+(5, 1, 9, 1000, 0);
+
+-- 
+-- Volcar la base de datos para la tabla `impuesto`
+-- 
+
+INSERT INTO `impuesto` (`id_impuesto`, `descripcion`, `valor`) VALUES 
+(5, 'IVA', 16);
+
+-- 
+-- Volcar la base de datos para la tabla `inventario`
+-- 
+
+INSERT INTO `inventario` (`id_producto`, `nombre`, `denominacion`) VALUES 
+(4, '1as', 'Papa Grande'),
+(5, '2as', 'Papa Mediana'),
+(6, '3as', 'Papa Chica'),
+(7, '4as', 'Papa Morada'),
+(8, 'Mixtas', 'Papa Surtida'),
+(9, 'Roñas', 'Papa baja');
+
+-- 
+-- Volcar la base de datos para la tabla `proveedor`
+-- 
+
+INSERT INTO `proveedor` (`id_proveedor`, `rfc`, `nombre`, `direccion`, `telefono`, `e_mail`) VALUES 
+(4, 'RFCPRIMERP', 'LA MORENASA DE FUEGO', 'DIRECCION DE LA MORENA', '461456789', 'email@morena.com'),
+(5, 'RFC2', 'PAPAS CHIDAS', 'DIREC', '455555', 'mail@mail.com');
+
+
+-- 
+-- Volcar la base de datos para la tabla `sucursal`
+-- 
+
+INSERT INTO `sucursal` (`id_sucursal`, `descripcion`, `direccion`) VALUES 
+(1, 'Bodega', 'Central de Abastos de Celaya Salida Apaseo'),
+(2, 'Sucursal de la Central', 'Central de Abastos Celaya'),
+(3, 'Sucursal 2', 'Rancho Nuevo');
