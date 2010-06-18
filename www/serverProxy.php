@@ -8,28 +8,16 @@
 */
 
 
-
-
-
-
-
-
-function failure () 
-{
-	
-	die("{success: false }");
-}
-
-
-
-
+include_once("../server/AddAllClass.php");
 
 
 
 if(!isset($_REQUEST['m'])){
-	
+	//failed to recieve request
 }
 
+
+//main switch
 switch( $_REQUEST['m'] ){
 	
 	//login functions
@@ -43,7 +31,8 @@ switch( $_REQUEST['m'] ){
 	
 	//admin functions
 	case 300: break;
-	default : failure();
+	
+	default : 
 
 }
 

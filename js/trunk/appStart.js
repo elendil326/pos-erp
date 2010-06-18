@@ -15,7 +15,7 @@ Ext.onReady( function(){
 	
 	login = new AppLogin ();
 	
-	login.showForm();
+	//login.showForm();
 	
 });
 

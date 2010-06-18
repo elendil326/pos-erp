@@ -20,14 +20,19 @@ AppLogin.prototype._init = function ()
 {
 	
 	var html_content = '';
-	html_content += '<div id="login" class="box login">';
-	html_content += '<div class="title">Acceder</div>';
-	html_content += '<div>usr  <input id="login0" type="text"></div>';
-	html_content += '<div>pswd <input id="login1" type="password"></div>';
-	html_content += '<div><input type="button" id="login2" style="width: 70px" value="aceptar" onclick="login.checkCurrentLoginInfo()"></div>';
+	
+	html_content += '<div id="login" class="login">';
 	html_content += "</div>";
+	html_content += '<div class="login_content" >';
+	html_content += '	<div>Nombre  <input id="login0" type="text"></div>';
+	html_content += '	<div>Clave <input id="login1" type="password"></div>';
+	html_content += '	<div><input type="button" id="login2" style="width: 70px" value="aceptar" onclick="login.checkCurrentLoginInfo()"></div>';
 	html_content += "</div>";
 	
+
+	
+
+
 	
 	Ext.get("work_zone").update(html_content);
 	
