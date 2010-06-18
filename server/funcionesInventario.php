@@ -43,7 +43,7 @@
 	}
 	
 	function listarProductos(){
-		$listar = new listar("select * from inventario",array());
+		$listar = new listar("select inventario.id_producto, inventario.denominacion, detalle_inventario.precio_venta from inventario inner join detalle_inventario on inventario.id_producto = detalle_inventario.id_producto where detalle_inventario.id_sucursal=1",array());
 		echo $listar->lista();
 		return;
 	}
