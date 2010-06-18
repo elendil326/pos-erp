@@ -1,7 +1,7 @@
 ﻿<?php
 	include("../AddAllClass.php");
 
-	function insertar(){
+	function insertarProveedor(){
 		$id =null;
 		$rfc=$_REQUEST['rfcP'];
 		$nombre=$_REQUEST['nombreP'];
@@ -17,7 +17,7 @@
 			echo "{success: false }";
 		}
 	}
-	function modificar(){
+	function actualizarProveedor(){
 		
 		$proveedor = new proveedor_existente($_REQUEST['idP']); 
 		$proveedor->id_proveedor=$_REQUEST['idP'];
@@ -35,7 +35,7 @@
 		}
 	}
 	
-	function eliminar(){
+	function eliminarProveedor(){
 		$proveedor = new proveedor_existente($_REQUEST['idP']); 
 		$proveedor->id_proveedor =$_REQUEST['idP'];
 		if($proveedor->borra()){
@@ -58,20 +58,20 @@
 		echo "{ success: true , \"datos\":".$proveedor->json()."}";
 	}
 	
-	switch ($_REQUEST['action']){
-	case 'list':
+	switch ($_REQUEST['method']){
+	case 'listarProveedores':
 		listarProveedores();
 	break;
-	case 'update':
-		modificar();
+	case 'actualizarProveedor':
+		actualizarProveedor();
 	break;
-	case 'delete':
-		eliminar();
+	case 'eliminarProveedor':
+		eliminarProveedor();
 	break;
-	case 'insert': 
-		insertar();
+	case 'insertarProveedor': 
+		insertarProveedor();
 	break;
-	case 'showProveedor':
+	case 'mostrarProveedor':
 		mostrarProveedor();
 	break;
 }//fin switch
