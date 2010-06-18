@@ -29,6 +29,7 @@
 		function actualiza(){
 			$update="UPDATE  cotizacion SET `id_cliente`=?, `fecha`=curdate(), `subtotal`=?, `iva`=? where id_cotizacion=?";
 			$params=array($this->id_cliente,$this->subtotal,$this->iva,$this->id_cotizacion);
+			//echo "entro a actualza: -->  ".$update." ".print_r($params);
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){
@@ -52,7 +53,7 @@
 			$this->iva=$datos[iva];
 		}
 		function detalle_cotizacion($id){
-			$query = "select * from detalle_cotizacion where id_cotizacion=?;";
+			$query = "SELECT id_cotizacion ,id_producto,cantidad,precio,(cantidad * precio) as subtotal FROM `detalle_cotizacion` where id_cotizacion=?;";
 			$params=array($id);
 			return 	$productos=$this->bd->select_arr($query,$params);
 		}
