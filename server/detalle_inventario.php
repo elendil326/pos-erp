@@ -3,7 +3,7 @@
 		var $id_producto;	 	 	 	 	 	 	
 		var $id_sucursal;	
 		var $precio_venta;	
-		var $min;	
+		var $minimo;	
 		var $existencias; 	 	 	 	
 		var $bd;
 		
@@ -11,7 +11,7 @@
 			$this->id_producto=$id_producto;
 			$this->id_sucursal=$id_sucursal;
 			$this->precio_venta=$precio_venta;
-			$this->min=$min;
+			$this->minimo=$min;
 			$this->existencias=$existencias;
 			$this->bd=new bd_default();
 		}
@@ -21,12 +21,17 @@
 		
 		function inserta(){
 			$insert="INSERT INTO  detalle_inventario values(?,?,?,?,?);";
-			$params=array($this->id_producto,$this->id_sucursal,$this->precio_venta,$this->min,$this->existencias);
+			$params=array($this->id_producto,$this->id_sucursal,$this->precio_venta,$this->minimo,$this->existencias);
 			return ($this->bd->ejecuta($insert,$params))?true:false;
 		}
 		function actualiza(){
+
+			$update="UPDATE  detalle_inventario SET id_producto=?,id_sucursal=?,precio_venta=?,min=?, existencias=? where id_producto=? and id_sucursal=?";
+			$params=array($this->id_producto,$this->id_sucursal,$this->precio_venta,$this->minimo,$this->existencias,$this->id_producto,$this->id_sucursal);
+
 			$update="UPDATE  detalle_inventario SET id_producto=?,id_sucursal=?,precio_venta=?,min=?, existencias=? where id_producto=? and id_sucursal=?";
 			$params=array($this->id_producto,$this->id_sucursal,$this->precio_venta,$this->min,$this->existencias,$this->id_producto,$this->id_sucursal);
+
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){
@@ -46,7 +51,7 @@
 			$this->id_producto=$datos[id_producto];	
 			$this->id_sucursal=$datos[id_sucursal];	
 			$this->precio_venta=$datos[precio_venta];	
-			$this->min=$datos[min];	
+			$this->minimo=$datos[min];	
 			$this->existencias=$datos[existencias];	
 		}
 		function existe(){
