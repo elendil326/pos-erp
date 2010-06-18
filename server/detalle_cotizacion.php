@@ -20,7 +20,8 @@
 		function inserta(){
 			$insert="INSERT INTO  detalle_cotizacion values(?,?,?,?);";
 			$params=array($this->id_cotizacion,$this->id_producto,$this->cantidad,$this->precio);
-			return ($this->bd->ejecuta($insert,$params))?true:false;
+			//echo "inserta detalle_cot:  ".$insert. " -> ".print_r($params);
+			return ($this->bd->ejecuta($insert,$params));
 		}
 		function actualiza(){	
 			$update="UPDATE  detalle_cotizacion SET cantidad=?,precio=? where id_cotizacion=? and id_producto=?";
