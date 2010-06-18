@@ -20,9 +20,13 @@ class funcionesCotizacion{
 			$cotizacion = new cotizacion($idClien);
 			$cotizacion->id_cotizacion=$idCot;
 			$this->detalle_cotizacion =$cotizacion->detalle_cotizacion($idCot);
-			echo "{ success : true , \"datos\" : ".json_encode($this->detalle_cotizacion)."}";
+			if($this->actualizaCabecera($this->detalle_cotizacion,$idCot,$idClien)){
+				echo "{ success : true , \"datos\" : ".json_encode($this->detalle_cotizacion)."}";
+			}else{
+				echo "{success: false}";	
+			}
 		}else{
-			echo "{success: false}";
+			echo "{success: false , \"error\": [{\"metodo\":\"if_detalleCot->inserta()\"}]}";
 		}
 	}
 	function eliminarProductoCotizacion(){
@@ -31,13 +35,17 @@ class funcionesCotizacion{
 		$cantidad=$_REQUEST['cantidad'];
 		$precio =$_REQUEST['precio'];
 		$idClien=$_REQUEST['idClien'];
-		$detalleCot= new detalle_cotizacion($id,$idProd,$cantidad,$precio);
+		$detalleCot= new detalle_cotizacion($idCot,$idProd,$cantidad,$precio);
 		
 		if($detalleCot->borra()){
 			$cotizacion = new cotizacion($idClien);
 			$cotizacion->id_cotizacion=$idCot;
 			$this->detalle_cotizacion =$cotizacion->detalle_cotizacion($idCot);
-			echo "{ success : true , \"datos\" : ".json_encode($this->detalle_cotizacion)."}";
+			if($this->actualizaCabecera($this->detalle_cotizacion,$idCot,$idClien)){
+				echo "{ success : true , \"datos\" : ".json_encode($this->detalle_cotizacion)."}";
+			}else{
+				echo "{success: false}";	
+			}
 		}else{
 			echo "{success: false}";
 		}
@@ -58,9 +66,9 @@ class funcionesCotizacion{
 			echo "{ success: false }";
 		}
 	}
-	function modificarCantidadProducto(){
+	function actualizarCantidadProducto(){
 		$idCot=$_REQUEST['idCot'];
-		$idProd=$_REQUEST['id_Producto'];
+		$idProd=$_REQUEST['id_Producto'];                               
 		$cantidad=$_REQUEST['cantidad'];
 		$precio =$_REQUEST['precio'];
 		$idClien=$_REQUEST['idClien'];
@@ -70,12 +78,16 @@ class funcionesCotizacion{
 			$cotizacion = new cotizacion($idClien);
 			$cotizacion->id_cotizacion=$idCot;
 			$this->detalle_cotizacion =$cotizacion->detalle_cotizacion($idCot);
-			echo "{ success : true , \"datos\" : ".json_encode($this->detalle_cotizacion)."}";
+			if($this->actualizaCabecera($this->detalle_cotizacion,$idCot,$idClien)){
+				echo "{ success : true , \"datos\" : ".json_encode($this->detalle_cotizacion)."}";
+			}else{
+				echo "{success: false}";	
+			}
 		}else{
 			echo "{success: false}";
 		}
 	}//fin modificarCantidad
-	function insertar(){
+	function insertarCotizacion(){
 		$idClien=$_REQUEST['idClien'];
 		$cotizacion = new cotizacion($idClien);
 				
@@ -85,40 +97,68 @@ class funcionesCotizacion{
 			echo "{success: false}";
 		}
 	}//fin insertar
-	function eliminar(){
-		$idClien=$_REQUEST['idClien'];
-		$cotizacion = new cotizacion($idClien);
-				
+	function eliminarCotizacion(){
+		$idCot=$_REQUEST['idCot'];
+		
+		$cotizacion = new cotizacion_existente($idCot);
+		$cotizacion->id_cotizacion=$idCot;
 		if($cotizacion->borra()){
 			echo "{success: true}";
 		}else{
 			echo "{success: false}";
 		}
-	}
+	}		 
+	function actualizaCabecera($detalle_cot,$idCot,$idClien){
+		$subtot=0;
+		$dim = count($detalle_cot);
+		//var_dump($detalle_cot);
+		for($i=0;$i<$dim;$i++){
+			$subtot += $detalle_cot[$i]["subtotal"];
+			//echo "subtot".$i." = ".$detalle_cot[$i]["subtotal"];
+		}
+		$iva = new impuesto_existente(5);//en mi bd el iva es el id 5
+		$iva->id_impuesto=5;
+		//$iva->obtener_datos(5);
+		$iva_valor=$iva->valor;
+		
+		$cotizacion = new cotizacion_existente($idCot);
+		$cotizacion->id_cotizacion=$idCot;
+		$cotizacion->id_cliente=$idClien;
+		$cotizacion->subtotal=$subtot;
+		$cotizacion->iva=($iva_valor/100) * $subtot;
+		//echo "iva: ".$iva->valor;
+		//echo "id_cot: ".$cotizacion->id_cotizacion." subtotal: ".$cotizacion->subtotal." iva: ".$cotizacion->iva;
+		//echo "id_cot: ".$idCot." subtotal: ".$subtot." iva: ".($iva_valor/100) * $subtot;
+		if($cotizacion->actualiza()){
+			return true;
+		}else{
+			return false;
+		}
+	}//actualiza cabecera
 }//fin clase
 
 
 	$fC = new funcionesCotizacion();
-switch ($_REQUEST['action']){
-	case 'list':
+switch ($_REQUEST['method']){
+	case 'listarCotizaciones':
 		$fC->listarCotizaciones();
 	break;
-	case 'modificarCantidadProducto':
-		$fC->modificarCantidadProducto();
+	case 'actualizarCantidadProducto':
+		$fC->actualizarCantidadProducto();
 	break;
-	case 'delete':
-		$fC->eliminar();
+	case 'eliminarCotizacion':
+		$fC->eliminarCotizacion();
 	break;
-	case 'insert': 
-		$fC->insertar();
+	case 'insertarCotizacion': 
+		$fC->insertarCotizacion();
 	break;
-	case 'agregarProducto':
+	case 'agregarProductoCotizacion':
 		$fC->agregarProductoCotizacion();
 	break;
-	case 'eliminarProducto':
+	case 'eliminarProductoCotizacion':
 		$fC->eliminarProductoCotizacion();
 	break;
-	case 'showCotizacion':
+	case 'mostrarDetalleCotizacion':
 		$fC->mostrarDetalleCotizacion();
 	break;
 }
