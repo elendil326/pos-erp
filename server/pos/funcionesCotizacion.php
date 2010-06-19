@@ -1,5 +1,5 @@
 ﻿<?php
-include("../AddAllClass.php");
+include_once("../AddAllClass.php");
 class funcionesCotizacion{
 
 
@@ -66,7 +66,7 @@ class funcionesCotizacion{
 			echo "{ success: false }";
 		}
 	}
-	function actualizarCantidadProducto(){
+	function actualizarCantidadProductoDetCot(){
 		$idCot=$_REQUEST['idCot'];
 		$idProd=$_REQUEST['id_Producto'];                               
 		$cantidad=$_REQUEST['cantidad'];
@@ -143,8 +143,8 @@ switch ($_REQUEST['method']){
 	case 'listarCotizaciones':
 		$fC->listarCotizaciones();
 	break;
-	case 'actualizarCantidadProducto':
-		$fC->actualizarCantidadProducto();
+	case 'actualizarCantidadProductoDetCot':
+		$fC->actualizarCantidadProductoDetCot();
 	break;
 	case 'eliminarCotizacion':
 		$fC->eliminarCotizacion();
