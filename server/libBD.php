@@ -68,7 +68,7 @@
 					array_push($arr,$algo);
 					$res->MoveNext();
 				}
-				print_r($arr);
+				//print_r($arr);
 				return $arr;
 			}
 		}
