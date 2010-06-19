@@ -140,26 +140,12 @@ class funcionesCotizacion{
 
 	$fC = new funcionesCotizacion();
 switch ($_REQUEST['method']){
-	case 'listarCotizaciones':
-		$fC->listarCotizaciones();
-	break;
-	case 'actualizarCantidadProductoDetCot':
-		$fC->actualizarCantidadProductoDetCot();
-	break;
-	case 'eliminarCotizacion':
-		$fC->eliminarCotizacion();
-	break;
-	case 'insertarCotizacion': 
-		$fC->insertarCotizacion();
-	break;
-	case 'agregarProductoCotizacion':
-		$fC->agregarProductoCotizacion();
-	break;
-	case 'eliminarProductoCotizacion':
-		$fC->eliminarProductoCotizacion();
-	break;
-	case 'mostrarDetalleCotizacion':
-		$fC->mostrarDetalleCotizacion();
-	break;
+	case 'listarCotizaciones':						$fC->listarCotizaciones();	break;
+	case 'actualizarCantidadProductoDetCot':		$fC->actualizarCantidadProductoDetCot();	break;
+	case 'eliminarCotizacion':						$fC->eliminarCotizacion();	break;
+	case 'insertarCotizacion': 						$fC->insertarCotizacion();	break;
+	case 'agregarProductoCotizacion':				$fC->agregarProductoCotizacion();	break;
+	case 'eliminarProductoCotizacion':				$fC->eliminarProductoCotizacion();	break;
+	case 'mostrarDetalleCotizacion':				$fC->mostrarDetalleCotizacion();	break;
 }
 ?>

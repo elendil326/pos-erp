@@ -125,7 +125,7 @@ include_once("../AddAllClass.php");
 	function listarCompras(){
 		$listar = new listar("SELECT id_compra ,id_proveedor,tipo_compra,fecha,subtotal,iva,sucursal,id_usuario,(iva + subtotal) as total FROM `compras`",array());
 		echo $listar->lista();
-		return $listar->lista();
+		return ;
 	}
 	function mostrarDetalleCompra(){
 		$id_proveedor=$_REQUEST['id_proveedor'];
@@ -227,14 +227,41 @@ include_once("../AddAllClass.php");
 		return;
 	}
 	
+	function reporteCompra(){
+		if(!empty($_REQUEST['id_compra'])){
+			$id=$_REQUEST['id_compra'];
+			$query="SELECT IF( c.tipo_compra =1,  'Contado',  'Credito' ) AS  'Tipo', DATE( c.fecha ) AS  'Fecha', c.subtotal AS  'Subtotal', c.iva AS  'Iva', (
+					c.subtotal + c.iva
+					) AS  'Total', p.rfc AS  'RFC', p.nombre AS  'Nombre'
+					FROM compras c
+					NATURAL JOIN proveedor p
+					where c.id_compra=?"; 
+			$listar = new listar($query,array($id));
+			$compra=$listar->lista_datos("compra");
+			$listar->query="select * , (precio*cantidad) as 'Subtotal' from detalle_compra where id_compra=?";
+			$detalles=$listar->lista_datos("detalle_compra");
+			ok_datos("$compra , $detalles");
+			return;
+		}else 											fail("Faltan datos.");
+	}
+	
 	if(!empty($_REQUEST['method']))
 	{
 		switch($_REQUEST["method"]){
-			case "insertarFacturaCompra" : 			insertarFacturaCompra(); break;
-			case "eliminarFacturaCompra" : 			eliminarFacturaCompra(); break;
-			case "actualizarFacturaCompra" :	 	actualizarFacturaCompra(); break;
-			case "comprarProducto" : 				comprarProducto(); break;
-			case "listarFacturasCompra" : 			listarFacturasCompra(); break;
+			case "insertarFacturaCompra" : 					insertarFacturaCompra(); break;
+			case "agregarProductoDetalle_compra" : 			agregarProductoDetalle_compra(); break;
+			case "eliminarProductoDetalle_compra" : 		eliminarProductoDetalle_compra(); break;
+			case "actualizarCantidadProductoDetCot" : 		actualizarCantidadProductoDetCot(); break;
+			case "actualizaCabeceraCompra" : 				actualizaCabeceraCompra(); break;
+			case "mostrarDetalleCompra" : 					mostrarDetalleCompra(); break;
+			case "eliminarFacturaCompra" : 					eliminarFacturaCompra(); break;
+			case "actualizarFacturaCompra" :	 			actualizarFacturaCompra(); break;
+			case "comprarProducto" : 						comprarProducto(); break;
+			case "listarFacturasCompra" : 					listarFacturasCompra(); break;
+			case "listarCompras" : 							listarCompras(); break;
+			case "insertarCompra" : 						insertarCompra(); break;
+			case "eliminarCompra" : 						eliminarCompra(); break;
+			case "reporteCompra" : 							reporteCompra(); break;
 			default: echo "-1"; 
 		}
 	}

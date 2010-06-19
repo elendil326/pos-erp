@@ -61,22 +61,68 @@
 		//echo "".$cliente->lista();
 	}
 	
+	function reporteClientesTodos(){
+		$query="SELECT `id_cliente` as 'ID',`nombre` as 'Nombre',`rfc` as 'RFC',`direccion` as 'Direccion' ,`telefono` as Telefono ,`e_mail` as 'E-mail',`limite_credito` as 'Limite de credito' from cliente";
+		$listar = new listar($query,array());
+		echo $listar->lista();
+		return $listar->lista();
+	}
+	function reporteClientesDeben(){
+		$query="SELECT nombre AS  'Nombre', saldo AS  'Saldo',  `rfc` AS  'RFC',  `direccion` AS  'Direccion',  `telefono` AS Telefono,  `e_mail` AS  'E-mail' FROM cliente c NATURAL JOIN cuenta_cliente cc"; 
+		$listar = new listar($query,array());
+		echo $listar->lista();
+		return $listar->lista();
+	}
+	function reporteClientesCompras(){
+		$query="SELECT id_venta AS  'ID', nombre AS  'Cliente', ( subtotal + iva ) AS  'Total', IF( tipo_venta =1,  'Contado',  'Credito' ) AS  'Tipo', date(fecha) AS  'Fecha', sucursal AS  'Sucursal' FROM  `ventas` NATURAL JOIN cliente"; 
+		$listar = new listar($query,array());
+		echo $listar->lista();
+		return $listar->lista();
+	}	
+	function reporteClientesComprasCredito(){
+		$query="SELECT pv.id_venta, (
+				v.subtotal + v.iva
+				) AS  'Total', SUM( pv.monto ) AS  'Pagado', (
+				v.subtotal + v.iva - pv.monto
+				) AS  'Debe', c.nombre AS  'Nombre', DATE( v.fecha ) AS  'Fecha'
+				FROM  `pagos_venta` pv
+				LEFT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
+				NATURAL JOIN cliente c
+				GROUP BY pv.id_venta "; 
+		$listar = new listar($query,array());
+		echo $listar->lista();
+		return $listar->lista();
+	}
+	
+	function reporteClientesComprasCreditoDeben(){
+		$query="SELECT pv.id_venta, (
+				v.subtotal + v.iva
+				) AS  'Total', SUM( pv.monto ) AS  'Pagado', (
+				v.subtotal + v.iva - pv.monto
+				) AS  'Debe', c.nombre AS  'Nombre', DATE( v.fecha ) AS  'Fecha'
+				FROM  `pagos_venta` pv
+				LEFT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
+				NATURAL JOIN cliente c
+				GROUP BY pv.id_venta
+				having Pagado<Total"; 
+		$listar = new listar($query,array());
+		echo $listar->lista();
+		return $listar->lista();
+	}
+	
 	switch ($_REQUEST['method']){
-	case 'listarClientes':
-		listarClientes();
-	break;
-	case 'actualizarCliente':
-		actualizarCliente();
-	break;
-	case 'eliminarCliente':
-		eliminarCliente();
-	break;
-	case 'insertarCliente': 
-		insertarCliente();
-	break;
-	case 'mostrarCliente':
-		mostrarCliente();
-	break;
+	case 'listarClientes':									listarClientes();	break;
+	case 'actualizarCliente':								actualizarCliente();	break;
+	case 'eliminarCliente':									eliminarCliente();	break;
+	case 'insertarCliente':									insertarCliente();	break;
+	case 'mostrarCliente':									mostrarCliente();	break;
+	case 'reporteClientesTodos': 							reporteClientesTodos(); 	break;
+	case 'reporteClientesDeben': 							reporteClientesDeben(); 	break;
+	case 'reporteClientesCompras': 							reporteClientesCompras(); 	break;
+	case 'reporteClientesComprasCredito': 					reporteClientesComprasCredito(); 	break;
+	case 'reporteClientesComprasCreditoDeben': 				reporteClientesComprasCreditoDeben(); 	break;
+	
 }//fin switch
 	
 ?>
+

@@ -59,21 +59,11 @@
 	}
 	
 	switch ($_REQUEST['method']){
-	case 'listarProveedores':
-		listarProveedores();
-	break;
-	case 'actualizarProveedor':
-		actualizarProveedor();
-	break;
-	case 'eliminarProveedor':
-		eliminarProveedor();
-	break;
-	case 'insertarProveedor': 
-		insertarProveedor();
-	break;
-	case 'mostrarProveedor':
-		mostrarProveedor();
-	break;
+	case 'listarProveedores': 			listarProveedores(); 	break;
+	case 'actualizarProveedor':			actualizarProveedor();	break;
+	case 'eliminarProveedor':			eliminarProveedor(); 	break;
+	case 'insertarProveedor': 			insertarProveedor();	break;
+	case 'mostrarProveedor':			mostrarProveedor();		break;
 }//fin switch
 	
 ?>
