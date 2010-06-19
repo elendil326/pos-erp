@@ -60,6 +60,13 @@
 			$this->sucursal=$datos[sucursal];	 	 	 		
 			$this->id_usuario=$datos[id_usuario];	 		
 		}
+		
+		function detalle_compra($id){
+			$query = "SELECT id_compra ,id_producto,cantidad,precio,(cantidad * precio) as subtotal FROM `detalle_compra` where id_compra=?;";
+			$params=array($id);
+			return 	$productos=$this->bd->select_arr($query,$params);
+		}
+		
 		function existe(){
 			$query="select id_compra from compras where id_compra=?;";
 			$params=array($this->id_compra);
