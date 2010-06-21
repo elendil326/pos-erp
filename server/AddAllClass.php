@@ -31,4 +31,8 @@
 		echo "{success : true}";
 		return;
 	}
+	function ok_datos($datos){
+		echo "{success : true ,$datos}";
+		return;
+	}
 ?>

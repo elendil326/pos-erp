@@ -244,6 +244,26 @@ include_once("../AddAllClass.php");
 			return;
 		}else 											fail("Faltan datos.");
 	}
+	function reporteFactura(){
+		if(!empty($_REQUEST['id_factura'])){
+			$id=$_REQUEST['id_factura'];
+			$query="SELECT f.folio, IF( c.tipo_compra =1,  'Contado',  'Credito' ) AS  'Tipo', c.subtotal AS  'Subtotal', c.iva AS  'Iva', (
+					c.subtotal + c.iva
+					) AS  'Total', p.rfc AS  'RFC', p.nombre AS  'Nombre'
+					FROM factura_compra f
+					NATURAL JOIN compras c
+					NATURAL JOIN proveedor p
+					WHERE f.id_factura =?"; 
+			$listar_factura = new listar($query,array($id));
+			$factura=$listar_factura->lista_datos("factura");
+			$fac=new factura_compra_existente($id);
+			$query="select * , (precio*cantidad) as 'Subtotal' from detalle_compra where id_compra=?";
+			$listar_detalle = new listar($query,array($fac->id_compra));
+			$detalles=$listar_factura->lista_datos("detalle_factura");
+			ok_datos("$factura , $detalles");
+			return;
+		}else 											fail("Faltan datos.");
+	}
 	
 	if(!empty($_REQUEST['method']))
 	{
@@ -262,6 +282,7 @@ include_once("../AddAllClass.php");
 			case "insertarCompra" : 						insertarCompra(); break;
 			case "eliminarCompra" : 						eliminarCompra(); break;
 			case "reporteCompra" : 							reporteCompra(); break;
+			case "reporteFactura" : 						reporteFactura(); break;
 			default: echo "-1"; 
 		}
 	}
