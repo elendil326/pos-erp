@@ -23,7 +23,7 @@ AppLogin.prototype._init = function ()
 	
 	html_content += '<div id="login" class="login">';
 	html_content += "</div>";
-	html_content += '<div class="login_content" >';
+	html_content += '<div id="login_content" class="login_content" >';
 	html_content += '	<div>Nombre  <input id="login0" type="text"></div>';
 	html_content += '	<div>Clave <input id="login1" type="password"></div>';
 	html_content += '	<div><input type="button" id="login2" style="width: 70px" value="aceptar" onclick="login.checkCurrentLoginInfo()"></div>';
@@ -40,20 +40,11 @@ AppLogin.prototype._init = function ()
 
 
 
-AppLogin.prototype.showForm = function ()
-{
-
-	Ext.get("login").fadeIn();
-}
-
-
-
-
 
 AppLogin.prototype.fadeForm = function ()
 {
 
-	Ext.get("login").fadeOut({  
+	Ext.get("login_content").fadeOut({  
 		endOpacity: 0.3,
 		callback: function(){
 				Ext.get("login0").dom.disabled = true;

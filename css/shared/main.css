@@ -51,9 +51,9 @@
 	    -khtml-border-radius: 10px;
 	
 		
-		-moz-box-shadow: 10px 10px 30px hsla(0,0%,0%,.5);
-		-webkit-box-shadow: 10px 10px 30px hsla(0,0%,0%,.5);
-		box-shadow: 10px 10px 30px hsla(0,0%,0%,.5);
+		-moz-box-shadow: 10px 10px 30px hsla(0,0%,0%,.9);
+		-webkit-box-shadow: 10px 10px 30px hsla(0,0%,0%,.9);
+		box-shadow: 10px 10px 30px hsla(0,0%,0%,.9);
 	
 		display: block;
 		background: white url(media/shared/setOwner.jpg) no-repeat 40px;
