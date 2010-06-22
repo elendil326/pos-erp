@@ -1,5 +1,5 @@
 ﻿<?php
-	include("../AddAllClass.php");
+
 
 	function insertarCliente(){
 		$id =null;
@@ -110,19 +110,7 @@
 		return $listar->lista();
 	}
 	
-	switch ($_REQUEST['method']){
-	case 'listarClientes':									listarClientes();	break;
-	case 'actualizarCliente':								actualizarCliente();	break;
-	case 'eliminarCliente':									eliminarCliente();	break;
-	case 'insertarCliente':									insertarCliente();	break;
-	case 'mostrarCliente':									mostrarCliente();	break;
-	case 'reporteClientesTodos': 							reporteClientesTodos(); 	break;
-	case 'reporteClientesDeben': 							reporteClientesDeben(); 	break;
-	case 'reporteClientesCompras': 							reporteClientesCompras(); 	break;
-	case 'reporteClientesComprasCredito': 					reporteClientesComprasCredito(); 	break;
-	case 'reporteClientesComprasCreditoDeben': 				reporteClientesComprasCreditoDeben(); 	break;
 	
-}//fin switch
 	
 ?>
 

@@ -231,10 +231,7 @@ sink.Main = {
 	//al navegar en cualquier opcion
     onNavigate : function(ui, item) {
         if (item.ayuda) {
-			//this item does have help
-			if(DEBUG){
-				console.log("Main: this card has help." , item.ayuda);
-			}
+
 
             if (this.ayudaButton.hidden) {
                 this.ayudaButton.show();

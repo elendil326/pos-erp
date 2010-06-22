@@ -1,5 +1,5 @@
 <?php	
-include_once("../AddAllClass.php");
+
 
 	function comprarProducto(){
 		if((!empty($_REQUEST['id_producto']))&&(!empty($_REQUEST['existencias']))&&(!empty($_REQUEST['id_sucursal']))){ //revisa que se envien todos los datos
@@ -265,25 +265,5 @@ include_once("../AddAllClass.php");
 		}else 											fail("Faltan datos.");
 	}
 	
-	if(!empty($_REQUEST['method']))
-	{
-		switch($_REQUEST["method"]){
-			case "insertarFacturaCompra" : 					insertarFacturaCompra(); break;
-			case "agregarProductoDetalle_compra" : 			agregarProductoDetalle_compra(); break;
-			case "eliminarProductoDetalle_compra" : 		eliminarProductoDetalle_compra(); break;
-			case "actualizarCantidadProductoDetCot" : 		actualizarCantidadProductoDetCot(); break;
-			case "actualizaCabeceraCompra" : 				actualizaCabeceraCompra(); break;
-			case "mostrarDetalleCompra" : 					mostrarDetalleCompra(); break;
-			case "eliminarFacturaCompra" : 					eliminarFacturaCompra(); break;
-			case "actualizarFacturaCompra" :	 			actualizarFacturaCompra(); break;
-			case "comprarProducto" : 						comprarProducto(); break;
-			case "listarFacturasCompra" : 					listarFacturasCompra(); break;
-			case "listarCompras" : 							listarCompras(); break;
-			case "insertarCompra" : 						insertarCompra(); break;
-			case "eliminarCompra" : 						eliminarCompra(); break;
-			case "reporteCompra" : 							reporteCompra(); break;
-			case "reporteFactura" : 						reporteFactura(); break;
-			default: echo "-1"; 
-		}
-	}
+
 ?>

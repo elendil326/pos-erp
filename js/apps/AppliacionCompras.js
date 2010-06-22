@@ -39,6 +39,7 @@ ApplicationCompras.prototype._init = function()
 	this.leftMenuItems = [
 	{
         text: 'menu1',
+       	card: this.menu1,
         ayuda: 'ayuda en menu 1'
     },
     {
@@ -56,6 +57,38 @@ ApplicationCompras.prototype._init = function()
 	
 	
 };
+
+
+ApplicationCompras.prototype.menu1 = new Ext.Panel({
+	cls: 'cards',
+	layout: {
+		type: 'vbox',
+		align: 'strech'
+	},
+	defaults:{
+		flex: 1
+	},
+	items:[{
+		xtype: 'carousel',
+		cls: 'card',
+		items : [
+			{
+			            html: '<p>Navigate the carousel on this page by swiping left/right or clicking on one side of the circle indicators below.</p>',
+			            cls: 'card1',
+			        },
+			        {
+			            html: 'Card #2',
+			            cls: 'card2'
+			        },
+			        {
+			            html: 'Card #3',
+			            cls: 'card3'
+			        }
+		]
+	}]
+	
+	
+});
 
 
 ApplicationCompras.prototype.menu2 = new Ext.form.FormPanel({
@@ -146,7 +179,8 @@ ApplicationCompras.prototype.menu2 = new Ext.form.FormPanel({
     {
         xtype: 'toggle',
         name: 'enable',
-        label: 'Enable'
+		disabled : true,
+        label: 'AJAX '
     }]
 });
 

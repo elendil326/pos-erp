@@ -14,6 +14,7 @@ include_once("../server/AddAllClass.php");
 
 if(!isset($_REQUEST['m'])){
 	//failed to recieve request
+	
 }
 
 
@@ -21,7 +22,7 @@ if(!isset($_REQUEST['m'])){
 switch( $_REQUEST['m'] ){
 	
 	//login functions
-	case 100 : echo "100";
+	case 'echo' : echo "TODO BIEN !"; break;
 	
 	case 199 : echo "hola"; break;
 	

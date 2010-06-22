@@ -23,6 +23,87 @@
 	include_once("venta.php"); 
 	include_once("listar.php"); 
 	
+
+	include_once('pos/funcionesCliente.php');
+	include_once('pos/funcionesCompra.php');
+	include_once('pos/funcionesCotizacion.php');
+	include_once('pos/funcionesProveedor.php');
+	
+	
+	
+	/*
+		DA BIG SWITCHING FUNCTION 
+	*/
+	
+	switch($_REQUEST["method"]){
+		case "insertarFacturaCompra" : 					insertarFacturaCompra(); break;
+		case "agregarProductoDetalle_compra" : 			agregarProductoDetalle_compra(); break;
+		case "eliminarProductoDetalle_compra" : 		eliminarProductoDetalle_compra(); break;
+		case "actualizarCantidadProductoDetCot" : 		actualizarCantidadProductoDetCot(); break;
+		case "actualizaCabeceraCompra" : 				actualizaCabeceraCompra(); break;
+		case "mostrarDetalleCompra" : 					mostrarDetalleCompra(); break;
+		case "eliminarFacturaCompra" : 					eliminarFacturaCompra(); break;
+		case "actualizarFacturaCompra" :	 			actualizarFacturaCompra(); break;
+		case "comprarProducto" : 						comprarProducto(); break;
+		case "listarFacturasCompra" : 					listarFacturasCompra(); break;
+		case "listarCompras" : 							listarCompras(); break;
+		case "insertarCompra" : 						insertarCompra(); break;
+		case "eliminarCompra" : 						eliminarCompra(); break;
+		case "reporteCompra" : 							reporteCompra(); break;
+		case "reporteFactura" : 						reporteFactura(); break;
+		
+		
+		
+		//-----
+		case 'listarClientes':									listarClientes();	break;
+		case 'actualizarCliente':								actualizarCliente();	break;
+		case 'eliminarCliente':									eliminarCliente();	break;
+		case 'insertarCliente':									insertarCliente();	break;
+		case 'mostrarCliente':									mostrarCliente();	break;
+		case 'reporteClientesTodos': 							reporteClientesTodos(); 	break;
+		case 'reporteClientesDeben': 							reporteClientesDeben(); 	break;
+		case 'reporteClientesCompras': 							reporteClientesCompras(); 	break;
+		case 'reporteClientesComprasCredito': 					reporteClientesComprasCredito(); 	break;
+		case 'reporteClientesComprasCreditoDeben': 				reporteClientesComprasCreditoDeben(); 	break;
+		
+		
+		//------
+		case 'listarProveedores': 								listarProveedores(); 	break;
+		case 'actualizarProveedor':								actualizarProveedor();	break;
+		case 'eliminarProveedor':								eliminarProveedor(); 	break;
+		case 'insertarProveedor': 								insertarProveedor();	break;
+		case 'mostrarProveedor':								mostrarProveedor();		break;
+		
+		
+		
+		//------
+		case 'listarCotizaciones':						$fC = new funcionesCotizacion(); $fC->listarCotizaciones();	break;
+		case 'actualizarCantidadProductoDetCot':		$fC = new funcionesCotizacion(); $fC->actualizarCantidadProductoDetCot();	break;
+		case 'eliminarCotizacion':						$fC = new funcionesCotizacion(); $fC->eliminarCotizacion();	break;
+		case 'insertarCotizacion': 						$fC = new funcionesCotizacion(); $fC->insertarCotizacion();	break;
+		case 'agregarProductoCotizacion':				$fC = new funcionesCotizacion(); $fC->agregarProductoCotizacion();	break;
+		case 'eliminarProductoCotizacion':				$fC = new funcionesCotizacion(); $fC->eliminarProductoCotizacion();	break;
+		case 'mostrarDetalleCotizacion':				$fC = new funcionesCotizacion(); $fC->mostrarDetalleCotizacion();	break;
+		
+		
+		
+		default: echo "{success:false, reason:'Bad Request'}"; 
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	function fail($razon){
 		echo "{success : false, error: '".$razon."'}";
 		return;
