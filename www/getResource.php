@@ -131,6 +131,8 @@ if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandl
 		case 'shared' : loadDir( $module, $type ); break;
 		case 'pos' : loadDir( $module, $type ); break;
 		case 'admin' : loadDir( $module, $type ); break;
+		case 'apps' : loadDir( $module, $type ); break;
+		case 'final' : loadDir( $module, $type ); break;
 		default : die("{success: false}");
 		
 	}
