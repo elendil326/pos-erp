@@ -1,12 +1,7 @@
 /* 
-	Esta es la estructura del menu principal, es decir la barra izquierda
+	solo para referencia
 */
 
-
-
-sink.Structure = [
-
-];
 
 /*
 sink.Structure = [{
