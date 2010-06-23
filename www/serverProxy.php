@@ -10,7 +10,4 @@
 
 include_once("../server/AddAllClass.php");
 
-
-
-
 ?>

@@ -5,7 +5,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
     layout: 'card',
     items: [{
         cls: 'launchscreen',
-        html: '<div><h1>PAPAS</h1><p>This is a comprehensive collection of our examples in an <br /> easy-to-navigate format. Each sample has a “view source” button which dynamically displays its associated code.<br /><br /><span>Sencha Touch &beta; (0.9)</span></p></div>'
+        html: '<div><h1>Papas Supremas</h1><p><br /><br /><span>caffeina 2010</span></p></div>'
     }],
 
     initComponent : function() {
@@ -67,7 +67,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
     },
     
     onListChange : function(list, item) {
-		
+		console.log("list changed");
         if (Ext.orientation == 'portrait' && !Ext.platform.isPhone && !item.items && !item.preventHide) {
             this.navigationPanel.hide();
         }
@@ -92,6 +92,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
     },
     
     onBackButtonTap : function() {
+		
         this.setCard(this.navigationPanel, {type: 'slide', direction: 'right'});
 
         this.currentCard = this.navigationPanel;
@@ -172,6 +173,67 @@ AppInstaller = function ( app )
 };
 
 
+
+
+
+//	--------------------------------------------------------------------------------------
+//		Utility functions
+//	--------------------------------------------------------------------------------------
+
+POS = {
+	aviso : null,
+	AJAXandDECODE: null
+		
+};
+
+
+POS.AJAXandDECODE = function (params, success, failure)
+{
+	
+	Ext.Ajax.request({
+		
+		url: 'serverProxy.php',
+		success: function (response){
+
+			var datos;
+			try{				
+				eval("datos = " + response.responseText);
+			}catch(e){
+				console.warn("Error ");
+			}
+			 
+
+			success( datos );
+			
+		},
+		failure : failure,
+		params: params
+		
+	});
+	
+	
+};
+
+POS.aviso = function (title, contents) 
+{
+	this.popup = new Ext.Panel({
+            floating: true,
+            modal: true,
+            centered: true,
+            width: 320,
+            height: 300,
+            styleHtmlContent: true,
+            html: '<p>'+contents+'</p>',
+            dockedItems: [{
+                dock: 'top',
+                xtype: 'toolbar',
+                title: title
+            }],
+            scroll: 'vertical'
+        });
+    
+    this.popup.show('pop');
+};
 
 
 
@@ -275,7 +337,7 @@ sink.Main = {
                 this.ayudaActive = true;
                 this.currentTitle = this.ui.navigationBar.title;
                 this.ui.navigationBar.setTitle('Source');
-                this.ayudaButton.setText('Example');
+                this.ayudaButton.setText('Regresar');
             }
             this.ui.navigationBar.doLayout();
         }//end else

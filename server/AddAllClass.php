@@ -1,4 +1,5 @@
-<?php 	
+<?php	
+
 	include_once("libBD.php");
 	include_once("cliente.php");
 	include_once("compra.php");

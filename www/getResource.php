@@ -11,7 +11,7 @@ if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandl
  */
 
 
-	$comprimir = true;
+	$comprimir = false;
 
 	//incluir jsmin
 	include_once("../server/JSMin.php");

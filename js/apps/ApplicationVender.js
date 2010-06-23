@@ -37,19 +37,9 @@ ApplicationVender.prototype.dockedItems = null;
 
 
 
-
 ApplicationVender.prototype._init = function()
 {
-	
-	
-	
-	
-	
-	
-//	var storeasdf = new Ext.data.JsonStore();
 
-//	storeasdf.load();
-	
 	
 	
 	//iniciar variables
@@ -100,17 +90,24 @@ ApplicationVender.prototype.doVender = function ()
 	
 	console.log("prueba de comunicacion con server");
 	
-	Ext.Ajax.request({
-		
-		url: 'serverProxy.php',
-		success: function (response){
-			alert(response.responseText);
+
+	POS.AJAXandDECODE({
+		method: 'listarClientes',
+		byName : 'Monica'
+		}, 
+		function (datos){
+		 	POS.aviso("OK", "Todo salio bien");
+			console.log(datos);
+
 		},
-		params:{
-			method : 'listarClientes'
+		function (){
+			POS.aviso("DE LA VERGA", ":(");
+			
 		}
-		
-	});	
+	);
+
+	
+
  
 };
 
@@ -449,15 +446,24 @@ var alanboy = new Ext.data.Store({
 
 
 
+
+
+
+
+
+
+
+
 //------------------------------------------------------------------------------------------------------------------------------------------------
 //
 //					BUSCAR CLIENTES
 //
 //------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 Ext.regModel('Contact', {
     fields: ['firstName', 'lastName']
 });
-
 
 
 
