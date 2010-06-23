@@ -1,4 +1,4 @@
-<?php include_once("libBD.php");
+<?php 
 	class cuenta_cliente{
 		var $id_cliente;	 	 	 	 	 	 	
 		var $saldo;

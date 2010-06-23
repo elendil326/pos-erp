@@ -1,4 +1,4 @@
-<?php include_once("libBD.php");
+<?php 
 	class cotizacion{
 		var $id_cotizacion;	 	 	 	 	 	 	
 		var $id_cliente;	 	 	 	 	 	 	

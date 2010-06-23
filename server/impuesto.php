@@ -1,4 +1,4 @@
-<?php include_once("libBD.php");
+<?php 
 	class impuesto{
 		var $id_impuesto;	 	 	 	 	 	 	
 		var $descripcion;	 	 	 	 	 	 	

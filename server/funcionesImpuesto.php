@@ -1,5 +1,4 @@
-<?php	include_once("AddAllClass.php");	
-	
+<?php	
 	function insertarImpuesto(){
 		if((!empty($_REQUEST['descripcion']))&&(!empty($_REQUEST['valor']))){
 			$descripcion=$_REQUEST['descripcion'];

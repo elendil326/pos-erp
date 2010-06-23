@@ -1,4 +1,4 @@
-<?php include_once("libBD.php");
+<?php 
 	class usuario{
 		var $id_usuario;	 	 	 	 	 	 	
 		var $nombre;	 	 	 	 	 	 

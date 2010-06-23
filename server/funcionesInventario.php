@@ -1,5 +1,4 @@
-<?php	include_once("AddAllClass.php");
-	
+<?php
 	
 	function insertarInventario(){
 		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['denominacion']))){

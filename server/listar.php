@@ -1,5 +1,5 @@
 <?php 
-	include_once("libBD.php");
+	
 	class listar{
 		var $bd;
 		var $query;

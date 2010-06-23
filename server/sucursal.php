@@ -1,4 +1,4 @@
-<?php include_once("libBD.php");
+<?php 
 	class sucursal{
 		var $id_sucursal;	 	 	 	 	 	 	
 		var $descripcion;	 	 	 	 	 	 

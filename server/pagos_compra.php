@@ -1,4 +1,4 @@
-<?php include_once("libBD.php");
+<?php 
 	class pagos_compra{
 		var $id_pago;	 	 	 	 	 	 	
 		var $id_compra;	 	 	 	 	 	 	

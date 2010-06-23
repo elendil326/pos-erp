@@ -1,4 +1,4 @@
-<?php include_once("libBD.php");
+<?php 
 	class detalle_compra{
 		var $id_compra;	 	 	 	 	 	 	
 		var $id_producto;	 	 	 	 	 	 	

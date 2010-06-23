@@ -1,5 +1,4 @@
-<?php	include_once("AddAllClass.php");
-	
+<?php	
 	function insertarUsuario(){
 		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['usuario']))&&(!empty($_REQUEST['contraseña']))&&(!empty($_REQUEST['nivel']))){
 			$nombre=$_REQUEST['nombre'];

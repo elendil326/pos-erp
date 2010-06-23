@@ -1,4 +1,4 @@
-<?php include_once("libBD.php");
+<?php 
 	class cuenta_proveedor{
 		var $id_proveedor;	 	 	 	 	 	 	
 		var $saldo;

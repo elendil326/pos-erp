@@ -1,4 +1,4 @@
-<?php include_once("libBD.php");
+<?php 
 	class nota_remision{
 		var $id_nota;	 	 	 	 	 	 	
 		var $id_venta;	

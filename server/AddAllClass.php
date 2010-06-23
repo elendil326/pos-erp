@@ -29,6 +29,13 @@
 	include_once('pos/funcionesCotizacion.php');
 	include_once('pos/funcionesProveedor.php');
 	
+	include_once('funcionesImpuesto.php');
+	include_once('funcionesInventario.php');
+	include_once('funcionesPago.php');
+	include_once('funcionesSucursal.php');
+	include_once('funcionesUsuario.php');
+	include_once('funcionesVenta.php');
+	
 	
 	
 	/*

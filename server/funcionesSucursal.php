@@ -1,6 +1,4 @@
-<?php	include_once("AddAllClass.php");
-	
-	
+<?php		
 	function insertarSucursal(){
 		if((!empty($_REQUEST['descripcion']))&&(!empty($_REQUEST['direccion']))){
 			$descripcion=$_REQUEST['descripcion'];

@@ -1,6 +1,4 @@
-<?php	include_once("AddAllClass.php");
-	
-	
+<?php	
 	function insertarFacturaVenta(){
 		if((!empty($_REQUEST['folio']))&&(!empty($_REQUEST['id_venta']))){
 			$folio=$_REQUEST['folio'];

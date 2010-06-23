@@ -1,4 +1,4 @@
-<?php include_once("libBD.php");
+<?php 
 	class factura_compra{
 		var $id_factura;	 	 	 	 	 	 	
 		var $folio;	 	 	 	 	 	 	
