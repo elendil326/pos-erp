@@ -48,14 +48,4 @@
 		echo $listar->lista();
 		return;
 	}
-	if(!empty($_REQUEST['method']))
-	{
-		switch($_REQUEST["method"]){
-			case "insertarSucursal" : 				insertarSucursal(); break;
-			case "eliminarSucursal" : 				eliminarSucursal(); break;
-			case "actualizarSucursal" : 			actualizarSucursal(); break;
-			case "listarSucursal" : 				listarSucursal(); break;
-			default: echo "-1"; 
-		}
-	}
 ?>

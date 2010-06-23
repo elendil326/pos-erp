@@ -57,7 +57,7 @@
 					else						fail("Error al cambiar el password.");
 				}else							fail("El nick de usuario que desea asignar ya existe.");
 			}else 								fail("El usuario que desea modificar no existe.");
-		}else fail("faltan datos");
+		}else 									fail("faltan datos");
 		return;
 	}
 	
@@ -66,15 +66,14 @@
 		echo $listar->lista();
 		return;
 	}
-	if(!empty($_REQUEST['method']))
-	{
-		switch($_REQUEST["method"]){
-			case "insertarUsuario" : 				insertarUsuario(); break;
-			case "eliminarUsuario" : 				eliminarUsuario(); break;
-			case "cambiaPassword" : 				cambiaPassword(); break;
-			case "actualizarUsuario" : 				actualizarUsuario(); break;
-			case "listarUsuario" : 					listarUsuario(); break;
-			default: echo "-1"; 
-		}
+	
+	function datosUsuario(){
+		if((!empty($_REQUEST['id_usuario']))){
+			$id=$_REQUEST['id_usuario'];
+			$user=new usuario_existente($id);
+			if($user->existe())									ok_datos("datos: ".$user->json());
+			else												fail("El usuario no existe.");
+		}else 													fail("faltan datos");
+		return;
 	}
 ?>

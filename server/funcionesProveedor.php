@@ -75,15 +75,4 @@
 		echo $listar->lista();
 		return;
 	}
-	
-	if(!empty($_REQUEST['method']))
-	{
-		switch($_REQUEST["method"]){
-			case "insertarProductoProveedor" : 		insertarProductoProveedor(); break;
-			case "eliminarProductoProveedor" : 		eliminarProductoProveedor(); break;
-			case "actualizarProductoProveedor" : 	actualizarProductoProveedor(); break;
-			case "listarProveedor" : 				listarProveedor(); break;
-			default: echo "-1"; 
-		}
-	}
 ?>

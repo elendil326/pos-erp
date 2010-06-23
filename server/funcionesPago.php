@@ -94,18 +94,4 @@
 		echo $listar->lista();
 		return;
 	}
-	
-	if(!empty($_REQUEST['method']))
-	{
-		switch($_REQUEST["method"]){
-			case "insertarPagoCompra" : 			insertarPagoCompra(); break;
-			case "eliminarPagoCompra" : 			eliminarPagoCompra(); break;
-			case "insertarPagoVenta" : 				insertarPagoVenta(); break;
-			case "eliminarPagoVenta" : 				eliminarPagoVenta(); break;
-			case "deletePagoVenta" : 				deletePagoVenta(); break;
-			case "listarPagosVenta" : 				listarPagosVenta(); break;
-			case "listarPagosCompra" : 				listarPagosCompra(); break;
-			default: echo "-1"; 
-		}
-	}
 ?>

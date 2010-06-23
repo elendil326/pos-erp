@@ -142,20 +142,4 @@
 		echo $listar->lista();
 		return;
 	}
-	
-	if(!empty($_REQUEST['method']))
-	{
-		switch($_REQUEST["method"]){
-			case "insertarFacturaVenta" : 			insertarFacturaVenta(); break;
-			case "eliminarFacturaVenta" : 			eliminarFacturaVenta(); break;
-			case "actualizarFacturaVenta" : 		actualizarFacturaVenta(); break;
-			case "insertarNota" : 					insertarNota(); break;
-			case "eliminarNota" : 					eliminarNota(); break;
-			case "actualizarNota" : 				actualizarNota(); break;
-			case "vendeProducto" : 					vendeProducto(); break;
-			case "listarFacturasVenta" : 			listarFacturasVenta(); break;
-			case "listarNotas" : 					listarNotas(); break;
-			default: echo "-1"; 
-		}
-	}
 ?>

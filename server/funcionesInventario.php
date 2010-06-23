@@ -47,14 +47,5 @@
 		echo $listar->lista();
 		return;
 	}
-	if(!empty($_REQUEST['method']))
-	{
-		switch($_REQUEST["method"]){
-			case "insertarInventario" : 			insertarInventario(); break;
-			case "eliminarInventario" : 			eliminarInventario(); break;
-			case "actualizarInventario" : 			actualizarInventario(); break;
-			case "listarProductosInventario" : 		listarProductosInventario(); break;
-			default: echo "-1"; 
-		}
-	}
+	
 ?>

@@ -36,6 +36,8 @@
 	*/
 	
 	switch($_REQUEST["method"]){
+	
+		//-----Funciones compra
 		case "insertarFacturaCompra" : 					insertarFacturaCompra(); break;
 		case "agregarProductoDetalle_compra" : 			agregarProductoDetalle_compra(); break;
 		case "eliminarProductoDetalle_compra" : 		eliminarProductoDetalle_compra(); break;
@@ -53,6 +55,59 @@
 		case "reporteFactura" : 						reporteFactura(); break;
 		
 		
+		//-----funciones Usuario
+		case "insertarUsuario" : 				insertarUsuario(); break;
+		case "eliminarUsuario" : 				eliminarUsuario(); break;
+		case "cambiaPassword" : 				cambiaPassword(); break;
+		case "actualizarUsuario" : 				actualizarUsuario(); break;
+		case "listarUsuario" : 					listarUsuario(); break;
+		case "datosUsuario" : 					datosUsuario(); break;
+			
+		
+		//-----funciones Venta
+		case "insertarFacturaVenta" : 			insertarFacturaVenta(); break;
+		case "eliminarFacturaVenta" : 			eliminarFacturaVenta(); break;
+		case "actualizarFacturaVenta" : 		actualizarFacturaVenta(); break;
+		case "insertarNota" : 					insertarNota(); break;
+		case "eliminarNota" : 					eliminarNota(); break;
+		case "actualizarNota" : 				actualizarNota(); break;
+		case "vendeProducto" : 					vendeProducto(); break;
+		case "listarFacturasVenta" : 			listarFacturasVenta(); break;
+		case "listarNotas" : 					listarNotas(); break;
+		
+		//----- funciones sucursal
+		
+		case "insertarSucursal" : 				insertarSucursal(); break;
+		case "eliminarSucursal" : 				eliminarSucursal(); break;
+		case "actualizarSucursal" : 			actualizarSucursal(); break;
+		case "listarSucursal" : 				listarSucursal(); break;	
+		
+		//----- funciones productos proveedor
+		case "insertarProductoProveedor" : 		insertarProductoProveedor(); break;
+		case "eliminarProductoProveedor" : 		eliminarProductoProveedor(); break;
+		case "actualizarProductoProveedor" : 	actualizarProductoProveedor(); break;
+		case "listarProveedor" : 				listarProveedor(); break;
+		
+		//-----Funciones pago
+		case "insertarPagoCompra" : 			insertarPagoCompra(); break;
+		case "eliminarPagoCompra" : 			eliminarPagoCompra(); break;
+		case "insertarPagoVenta" : 				insertarPagoVenta(); break;
+		case "eliminarPagoVenta" : 				eliminarPagoVenta(); break;
+		case "deletePagoVenta" : 				deletePagoVenta(); break;
+		case "listarPagosVenta" : 				listarPagosVenta(); break;
+		case "listarPagosCompra" : 				listarPagosCompra(); break;
+		
+		//-----funciones invenario
+		case "insertarInventario" : 			insertarInventario(); break;
+		case "eliminarInventario" : 			eliminarInventario(); break;
+		case "actualizarInventario" : 			actualizarInventario(); break;
+		case "listarProductosInventario" : 		listarProductosInventario(); break;
+		
+		//-----Funciones impuesto
+		case "insertarImpuesto" : 				insertarImpuesto(); break;
+		case "eliminarImpuesto" : 				eliminarImpuesto(); break;
+		case "actualizarImpuesto" : 			actualizarImpuesto(); break;
+		case "listarImpuesto" : 				listarImpuesto(); break;
 		
 		//-----
 		case 'listarClientes':									listarClientes();	break;

@@ -58,15 +58,4 @@
 		echo $listar->lista();
 		return;
 	}
-	
-	if(!empty($_REQUEST['method']))
-	{
-		switch($_REQUEST["method"]){
-			case "insertarImpuesto" : 				insertarImpuesto(); break;
-			case "eliminarImpuesto" : 				eliminarImpuesto(); break;
-			case "actualizarImpuesto" : 			actualizarImpuesto(); break;
-			case "listarImpuesto" : 				listarImpuesto(); break;
-			default: echo "-1"; 
-		}
-	}
 ?>
