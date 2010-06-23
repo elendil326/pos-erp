@@ -57,10 +57,11 @@ ApplicationPagos.prototype._init = function()
 	});
 	
 		
-
+	//DIEGO: intenta comentar e identar este codigo....
 	POS.AJAXandDECODE({
 			method: 'listarClientes'
-		}, 
+		},
+	//success
 	function (d){
 		this.date=d;
 		if(date.success){	
@@ -74,11 +75,112 @@ ApplicationPagos.prototype._init = function()
 			});
 		}
 	},
+	//failure
 	function (){
+		//siempre pon codigo aqui, como un aviso, para saber que algo salio mal
 	}
 	);
 
+
+
+	this._initToolBar();
+
+
 };
+
+
+
+//Iniciar el toolbar
+ApplicationPagos.prototype._initToolBar = function (){
+
+
+
+	//Dejo los demas grupos por si quieres agregar mas botones
+	//grupo 1, funciones basicas
+	var buttonsGroup1 = [/*{
+        text: 'Agregar producto',
+        ui: 'round',
+        handler: this.doAddProduct
+    }*/];
+
+
+	//grupo 2, cualquier otra mamada
+	var buttonsGroup2 = [{
+        xtype: 'splitbutton',
+        activeButton: 0,
+        items: [{
+            text: 'Todos',
+            handler: null
+        }, {
+            text: 'Deudores',
+            handler: null
+        }, {
+            text: 'Pagados',
+            handler: null
+        }]    
+    }];
+    
+
+
+
+	//grupo 3, listo para vender
+    var buttonsGroup3 = [/*{
+        text: 'Cotizar',
+        handler: null
+    },{
+        text: 'Vender',
+        ui: 'action',
+        handler: null
+    }*/];
+
+
+	if (!Ext.platform.isPhone) {
+        buttonsGroup1.push({xtype: 'spacer'});
+        buttonsGroup2.push({xtype: 'spacer'});
+        
+        this.dockedItems = [new Ext.Toolbar({
+            // dock this toolbar at the bottom
+            ui: 'light',
+            dock: 'top',
+            items: buttonsGroup1.concat(buttonsGroup2).concat(buttonsGroup3)
+			
+        })];
+    }else {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            ui: 'light',
+            items: buttonsGroup1,
+            dock: 'bottom'
+        }, {
+            xtype: 'toolbar',
+            ui: 'dark',
+            items: buttonsGroup2,
+            dock: 'bottom'
+        }, {
+            xtype: 'toolbar',
+            ui: 'metal',
+            items: buttonsGroup3,
+            dock: 'bottom'
+        }];
+    }
+	
+	
+	
+	//agregar este dock a el panel que quieras
+	this.mainCard.addDocked( this.dockedItems );
+	
+
+};
+
+
+
+
+
+
+
+
+
+
 
 
 
