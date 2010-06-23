@@ -56,16 +56,21 @@ ApplicationPagos.prototype._init = function()
 		html: 'PAGOS'
 	});
 	
+		
+
 	POS.AJAXandDECODE({
 			method: 'listarClientes'
 		}, 
 	function (d){
 		this.date=d;
-		if(date.success){
+		if(date.success){	
+	Ext.regModel('modelo', {		
+		fields: ['id_cliente','rfc','nombre','direccion','telefono','e_mail','limite_credito']
+	});
 			this.clientesStore=new Ext.data.Store({
-				fields: ['id_cliente','rfc','nombre','direccion','telefono','e_mail','limite_credito'],
+				model:'modelo',
 				idIndex:'id_cliente',
-				data:this.date
+				data:this.date.datos
 			});
 		}
 	},
@@ -103,19 +108,6 @@ ApplicationPagos.prototype.listar = new Ext.Panel({
 						name: 'filtro',
 						label: 'Adeudan'
 					},
-			{
-                fieldLabel: 'nombre',
-                name: 'nombre',
-				xtype : "combo",
-				store:this.clientesStore,
-				displayField:'nombre',
-				typeAhead: true,
-				mode: 'local',
-				forceSelection: true,
-				triggerAction: 'all',
-				emptyText:'Seleccione Autor',
-                allowBlank:false
-            },
 					{
 						name: 'filtro',
 						label: 'Pagados'
