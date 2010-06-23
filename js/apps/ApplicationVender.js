@@ -41,6 +41,17 @@ ApplicationVender.prototype.dockedItems = null;
 ApplicationVender.prototype._init = function()
 {
 	
+	
+	
+	
+	
+	
+//	var storeasdf = new Ext.data.JsonStore();
+
+//	storeasdf.load();
+	
+	
+	
 	//iniciar variables
 	
 	//nombre de la aplicacion
@@ -52,8 +63,8 @@ ApplicationVender.prototype._init = function()
 	//submenues en el panel de la izquierda
 	this.leftMenuItems = [
 	{
-        text: 'menu1',
-       	card: this.menu1,
+        text: 'Buscar Cliente',
+       	card: demos.List,
         ayuda: 'ayuda en menu 1'
     },
     {
@@ -96,7 +107,7 @@ ApplicationVender.prototype.doVender = function ()
 			alert(response.responseText);
 		},
 		params:{
-			method : 'actualizarCantidadProductoDetCot'
+			method : 'listarClientes'
 		}
 		
 	});	
@@ -415,61 +426,139 @@ ApplicationVender.prototype.menu2 = new Ext.form.FormPanel({
 
 
 
-//autoinstalar esta applicacion
-AppInstaller( new ApplicationVender() );
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 
 
 /*
-demos.Animations = new Ext.Panel({
-
-})
-
-demos.Animations.slide = new Ext.Panel({
-	html: 'Slides can be used in tandem with <code>direction: "up/down/left/right"</code>.',
-	cls: 'card card2'
-});
-
-demos.Animations.slidecover = new Ext.Panel({
-	html: 'In addition to <code>direction</code>, slide can also accept <code>cover: true</code>',
-	cls: 'card card3'
-});
-
-demos.Animations.slidereveal = new Ext.Panel({
-	html: 'Then there&#8217;s <code>reveal: true</code>, which is opposite to <code>cover</code>',
-	cls: 'card card4'
-});
-
-demos.Animations.pop = new Ext.Panel({
-	html: 'Pop is another 2d animation that should work across iPhone OS &amp; Android.',
-	cls: 'card card5'
-});
-
-demos.Animations.flip = new Ext.Panel({
-	html: 'This one&#8217;s 3d and can also accept <code>direction: "up/down/left/right"</code>',
-	cls: 'card card1'
-});
-
-demos.Animations.cube = new Ext.Panel({
-	html: 'Crazy enough, this one does every <code>direction</code>, too.',
-	cls: 'card card2'
-});
-
-demos.Animations.fade = new Ext.Panel({
-	html: 'This one&#8217;s pretty straight-forward.',
-	cls: 'card card3'
+var alanboy = new Ext.data.Store({
+    proxy: new Ext.data.HttpProxy({
+        url: 'serverProxy.php'
+    }),
+    reader: new Ext.data.JsonReader({
+        totalProperty: 'total',
+        root: 'results',
+        id: 'skill_id'
+    },[ {name: 'skill_id'},
+        {name: 'name' },
+        {name: 'description'}
+      ])
 });
 */
+
+
+
+//------------------------------------------------------------------------------------------------------------------------------------------------
+//
+//					BUSCAR CLIENTES
+//
+//------------------------------------------------------------------------------------------------------------------------------------------------
+Ext.regModel('Contact', {
+    fields: ['firstName', 'lastName']
+});
+
+
+
+
+demos.ListStore = new Ext.data.Store({
+    model: 'Contact',
+    sorters: 'firstName',
+    getGroupString : function(record) {
+        return record.get('firstName')[0];
+    },
+    data: [
+        {firstName: 'Julio', lastName: 'Benesh'},
+        {firstName: 'Julio', lastName: 'Minich'},
+        {firstName: 'Tania', lastName: 'Ricco'},
+        {firstName: 'Odessa', lastName: 'Steuck'},
+        {firstName: 'Nelson', lastName: 'Raber'},
+        {firstName: 'Tyrone', lastName: 'Scannell'},
+        {firstName: 'Allan', lastName: 'Disbrow'},
+        {firstName: 'Cody', lastName: 'Herrell'},
+        {firstName: 'Julio', lastName: 'Burgoyne'},
+        {firstName: 'Jessie', lastName: 'Boedeker'},
+        {firstName: 'Allan', lastName: 'Leyendecker'},
+        {firstName: 'Javier', lastName: 'Lockley'},
+        {firstName: 'Guy', lastName: 'Reasor'},
+        {firstName: 'Jamie', lastName: 'Brummer'},
+        {firstName: 'Jessie', lastName: 'Casa'},
+        {firstName: 'Marcie', lastName: 'Ricca'},
+        {firstName: 'Gay', lastName: 'Lamoureaux'},
+        {firstName: 'Althea', lastName: 'Sturtz'},
+        {firstName: 'Kenya', lastName: 'Morocco'},
+        {firstName: 'Rae', lastName: 'Pasquariello'},
+        {firstName: 'Ted', lastName: 'Abundis'},
+        {firstName: 'Jessie', lastName: 'Schacherer'},
+        {firstName: 'Jamie', lastName: 'Gleaves'},
+        {firstName: 'Hillary', lastName: 'Spiva'},
+        {firstName: 'Elinor', lastName: 'Rockefeller'},
+        {firstName: 'Dona', lastName: 'Clauss'},
+        {firstName: 'Ashlee', lastName: 'Kennerly'},
+        {firstName: 'Alana', lastName: 'Wiersma'},
+        {firstName: 'Kelly', lastName: 'Holdman'},
+        {firstName: 'Mathew', lastName: 'Lofthouse'},
+        {firstName: 'Dona', lastName: 'Tatman'},
+        {firstName: 'Clayton', lastName: 'Clear'},
+        {firstName: 'Rosalinda', lastName: 'Urman'},
+        {firstName: 'Cody', lastName: 'Sayler'},
+        {firstName: 'Odessa', lastName: 'Averitt'},
+        {firstName: 'Ted', lastName: 'Poage'},
+        {firstName: 'Penelope', lastName: 'Gayer'},
+        {firstName: 'Katy', lastName: 'Bluford'},
+        {firstName: 'Kelly', lastName: 'Mchargue'},
+        {firstName: 'Kathrine', lastName: 'Gustavson'},
+        {firstName: 'Kelly', lastName: 'Hartson'},
+        {firstName: 'Carlene', lastName: 'Summitt'},
+        {firstName: 'Kathrine', lastName: 'Vrabel'},
+        {firstName: 'Roxie', lastName: 'Mcconn'},
+        {firstName: 'Margery', lastName: 'Pullman'},
+        {firstName: 'Avis', lastName: 'Bueche'},
+        {firstName: 'Esmeralda', lastName: 'Katzer'},
+        {firstName: 'Tania', lastName: 'Belmonte'},
+        {firstName: 'Malinda', lastName: 'Kwak'},
+        {firstName: 'Tanisha', lastName: 'Jobin'},
+        {firstName: 'Kelly', lastName: 'Dziedzic'},
+        {firstName: 'Darren', lastName: 'Devalle'},
+        {firstName: 'Julio', lastName: 'Buchannon'},
+        {firstName: 'Darren', lastName: 'Schreier'},
+        {firstName: 'Jamie', lastName: 'Pollman'},
+        {firstName: 'Karina', lastName: 'Pompey'},
+        {firstName: 'Hugh', lastName: 'Snover'},
+        {firstName: 'Zebra', lastName: 'Evilias'}
+    ]
+});
+
+
+demos.List = new Ext.Panel({
+    layout: Ext.platform.isPhone ? 'fit' : {
+        type: 'vbox',
+        align: 'left',
+        pack: 'center'
+    },
+    //cls: 'demo-list',
+    items: [{
+        width: '100%',
+        height: '100%',
+        xtype: 'list',
+        store: demos.ListStore,
+        tpl: '<tpl for="."><div class="contact"><strong>{firstName}</strong> {lastName}</div></tpl>',
+        itemSelector: 'div.contact',
+        singleSelect: true,
+        grouped: true,
+        indexBar: true
+    }]
+});
+
+
+
+
+
+
+
+
+//autoinstalar esta applicacion
+AppInstaller( new ApplicationVender() );
+
+
+
