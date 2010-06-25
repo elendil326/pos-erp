@@ -45,23 +45,14 @@ ApplicationVender.prototype._init = function()
 	//iniciar variables
 	
 	//nombre de la aplicacion
-	this.appName = "Venta en mostrador";
+	this.appName = "Mostrador";
 	
 	//ayuda sobre esta applicacion
 	this.ayuda = "esto es una ayuda sobre este modulo de compras, html es valido <br> :D";
 	
 	//submenues en el panel de la izquierda
-	this.leftMenuItems = [
-	{
-        text: 'Buscar Cliente',
-       	card: demos.List,
-        ayuda: 'ayuda en menu 1'
-    },
-    {
-        text: 'menu2',
-       	card: this.menu2,
-        ayuda: 'ayuda en menu2'
-    }];
+
+	//this.leftMenuItems = 
 
 
 	//initialize the tootlbar which is a dock
@@ -80,66 +71,20 @@ ApplicationVender.prototype._init = function()
 
 
 
-ApplicationVender.prototype.doVender = function ()
-{
-	
-	if(DEBUG){
-		console.log("ApplicationVender: doVender called....");
-	}
-	
-	
-	console.log("prueba de comunicacion con server");
-	
-
-	POS.AJAXandDECODE({
-		method: 'listarClientes',
-		byName : 'Monica'
-		}, 
-		function (datos){
-		 	POS.aviso("OK", "Todo salio bien");
-			console.log(datos);
-
-		},
-		function (){
-			POS.aviso("DE LA VERGA", ":(");
-			
-		}
-	);
-
-	
-
- 
-};
-
-
-ApplicationVender.prototype.doCotizar = function ()
-{
-	
-	if(DEBUG){
-		console.log("ApplicationVender: doCotizar called....");
-	}
-	
-};
 
 
 
-
-ApplicationVender.prototype.doAddProduct = function (button, event)
-{
-	
-	if(DEBUG){
-		console.log("ApplicationVender: doAddProduct called....");
-	}
-	
-};
 
 
 
 ApplicationVender.prototype._initToolBar = function (){
 
 
-	//grupo 1, funciones basicas
+	//grupo 1, agregar producto
 	var buttonsGroup1 = [{
+		  xtype: 'textfield',
+		  id: 'APaddProductByID',
+		},{
         text: 'Agregar producto',
         ui: 'round',
         handler: this.doAddProduct
@@ -205,12 +150,10 @@ ApplicationVender.prototype._initToolBar = function (){
             dock: 'bottom'
         }];
     }
-	
-	
+
 	
 	//agregar este dock a el panel principal
 	this.venderMainPanel.addDocked( this.dockedItems );
-	
 
 };
 
@@ -236,9 +179,9 @@ ApplicationVender.prototype.swapClienteComun = function (val)
 
 
 
-
-
-
+//----------------------------------------------------------------------------------------------------------------------------------------------
+//					main card
+//----------------------------------------------------------------------------------------------------------------------------------------------
 ApplicationVender.prototype.venderMainPanel = new Ext.form.FormPanel({
 	//tipo de scroll
     scroll: 'vertical',
@@ -270,8 +213,7 @@ ApplicationVender.prototype.venderMainPanel = new Ext.form.FormPanel({
             name: 'secret',
             value: false
         }]
-    },
-    {
+    },{
         xtype: 'fieldset',
         title: 'Detalles de la Venta',
         defaults: {
@@ -287,162 +229,136 @@ ApplicationVender.prototype.venderMainPanel = new Ext.form.FormPanel({
 	        name: 'enable',
 	        label: 'Nota'
         }]
-    }]
-});
-
-
-
-
-
-
-
-ApplicationVender.prototype.menu1 = new Ext.Panel({
-	cls: 'cards',
-	layout: {
-		type: 'vbox',
-		align: 'strech'
-	},
-	defaults:{
-		flex: 1
-	},
-	items:[{
-		xtype: 'carousel',
-		cls: 'card',
-		items : [
-			{
-			            html: '<p>Navigate the carousel on this page by swiping left/right or clicking on one side of the circle indicators below.</p>',
-			            cls: 'card1',
-			        },
-			        {
-			            html: 'Card #2',
-			            cls: 'card2'
-			        },
-			        {
-			            html: 'Card #3',
-			            cls: 'card3'
-			        }
-		]
+    },{
+		html: '',
+		id : 'carritoDeCompras'
 	}]
+});
+
+
+
+
+
+//----------------------------------------------------------------------------------------------------------------------------------------------
+//					lista de carrito de compras
+//----------------------------------------------------------------------------------------------------------------------------------------------
+ApplicationVender.prototype.htmlCart_items = [];
+
+
+
+
+//funciones de parse del contenido del carrito
+ApplicationVender.prototype.htmlCart_addItem = function( item )
+{
+
+	var id = item.id;
+	var name = item.name;
+	var description = item.description;
+	
+	var found = false;
+	
+	//revisar que no este ya en el carrito
+	for( a = 0; a < this.htmlCart_items.length;  a++){
+		if( this.htmlCart_items[ a ].id == id ){
+			found = true;
+			break;
+		}
+	}
 	
 	
-});
+	if(found){
+		POS.aviso("Mostrador", "Ya ha agregado este producto");
+		return;
+	}
+	
+	//empujar al carrito
+	this.htmlCart_items.push(item);
+	
+	var html = "";
+	
+	//renderear el html
+	for( a = 0; a < this.htmlCart_items.length; a++ ){
+		html += "<li class='ApplicationVender'><span class='id'>" + this.htmlCart_items[a].id +"</span><span class='name'>" + this.htmlCart_items[a].name +"</span><span class='description'>" + this.htmlCart_items[a].description +"</span></span><span class='cost'>" + this.htmlCart_items[a].cost +"</span></li>";
+	}
 
-
-ApplicationVender.prototype.menu2 = new Ext.form.FormPanel({
-    scroll: 'vertical',
-    items: [{
-        xtype: 'fieldset',
-        title: 'Personal Info',
-        instructions: 'Please enter the information above.',
-        items: [{
-            xtype: 'textfield',
-            name: 'name',
-            label: 'Name'
-        },
-        {
-            xtype: 'passwordfield',
-            name: 'password',
-            label: 'Password'
-        },
-        {
-            xtype: 'emailfield',
-            name: 'email',
-            label: 'Email',
-            placeholder: 'you@domain.com'
-        },
-        {
-            xtype: 'urlfield',
-            name: 'url',
-            label: 'Url',
-            placeholder: 'http://google.com'
-        },
-        {
-            xtype: 'checkbox',
-            name: 'cool',
-            label: 'Cool'
-        },
-        {
-            xtype: 'select',
-            name: 'rank',
-            label: 'Rank',
-            options: [{
-                text: 'Master',
-                value: 'master'
-            },
-            {
-                text: 'Student',
-                value: 'padawan'
-            }]
-        },
-        {
-            xtype: 'hidden',
-            name: 'secret',
-            value: false
-        },
-        {
-            xtype: 'textarea',
-            name: 'bio',
-            label: 'Bio'
-        }]
-    },
-    {
-        xtype: 'fieldset',
-        title: 'Favorite color',
-        defaults: {
-            xtype: 'radio'
-        },
-        items: [{
-            name: 'color',
-            label: 'Red'
-        },
-        {
-            name: 'color',
-            label: 'Blue'
-        },
-        {
-            name: 'color',
-            label: 'Green'
-        },
-        {
-            name: 'color',
-            label: 'Purple'
-        }]
-    },
-    {
-        xtype: 'slider',
-        name: 'value',
-        label: 'Value'
-    },
-    {
-        xtype: 'toggle',
-        name: 'enable',
-		disabled : true,
-        label: 'AJAX '
-    }]
-});
+	
+	Ext.get("carritoDeCompras").update("<ul class='ApplicationVender'>" + html +"</ul>");
+};
 
 
 
 
 
 
+//----------------------------------------------------------------------------------------------------------------------------------------------
+//					Agregar al carrito 
+//----------------------------------------------------------------------------------------------------------------------------------------------
+//evento de click en agregar producto
+ApplicationVender.prototype.doAddProduct = function (button, event)
+{
+	
+	if(DEBUG){
+		console.log("ApplicationVender: doAddProduct called....");
+	}
+	
+	
 
+	
+	//obtener el id del producto
+	var prodID = Ext.get("APaddProductByID").first().getValue();
+	
+	if(prodID.length == 0){
+		var opt = {
+		    duration: 2,
+		    easing: 'elasticOut',
+		    callback: null,
+		    scope: this
+		};
 
-/*
-var alanboy = new Ext.data.Store({
-    proxy: new Ext.data.HttpProxy({
-        url: 'serverProxy.php'
-    }),
-    reader: new Ext.data.JsonReader({
-        totalProperty: 'total',
-        root: 'results',
-        id: 'skill_id'
-    },[ {name: 'skill_id'},
-        {name: 'name' },
-        {name: 'description'}
-      ])
-});
-*/
+		//Ext.get("APaddProductByID").setSize(100, 100, opt);
+		return;
+	}
+	
+	//buscar si este producto existe
+	POS.AJAXandDECODE({
+			method: 'existenciaProductoSucursal',
+			id_producto : prodID,
+			id_sucursal : 2
+		}, 
+		function (datos){
+			//ya llego el request con los datos si existe o no
+			
+			console.log(datos);
+			
+			var existe = true;
+			
+			if(existe===true){
+				//si existe, agregarlo a detalles de venta
+				
+				var item = {
+					id : Ext.get("APaddProductByID").first().getValue(),
+					name : "cosa rara",
+					description : 'esta es una cosa rara',
+					cost : "123.88"
+				};
+				
+				ApplicationVender.currentInstance.htmlCart_addItem( item );
+				
+				Ext.get("APaddProductByID").first().dom.value = "";
+				
+			}else{
+				//no existe en el inventario
+				POS.aviso("Inventario", "Este articulo no existe en el inventario.");
+			}
+			
+		},
+		function (){
+			POS.aviso("Error", "Algo anda mal, porfavor intente de nuevo.");
+		}
+	);
+	
+	
+};
 
 
 
@@ -454,113 +370,52 @@ var alanboy = new Ext.data.Store({
 
 
 
-//------------------------------------------------------------------------------------------------------------------------------------------------
-//
-//					BUSCAR CLIENTES
-//
-//------------------------------------------------------------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------------------------------------------------------
+//					doVender & doCotizar
+//----------------------------------------------------------------------------------------------------------------------------------------------
 
 
-Ext.regModel('Contact', {
-    fields: ['firstName', 'lastName']
-});
+ApplicationVender.prototype.doVender = function ()
+{
+	
+	if(DEBUG){
+		console.log("ApplicationVender: doVender called....");
+	}
+	
+	
+	console.log("prueba de comunicacion con server");
+	
+
+	POS.AJAXandDECODE({
+		method: 'listarClientes',
+		byName : 'Monica'
+		}, 
+		function (datos){
+		 	POS.aviso("OK", "Todo salio bien");
+			console.log(datos);
+
+		},
+		function (){
+			POS.aviso("DE LA VERGA", ":(");
+			
+		}
+	);
+
+	
+
+ 
+};
 
 
-
-demos.ListStore = new Ext.data.Store({
-    model: 'Contact',
-    sorters: 'firstName',
-    getGroupString : function(record) {
-        return record.get('firstName')[0];
-    },
-    data: [
-        {firstName: 'Julio', lastName: 'Benesh'},
-        {firstName: 'Julio', lastName: 'Minich'},
-        {firstName: 'Tania', lastName: 'Ricco'},
-        {firstName: 'Odessa', lastName: 'Steuck'},
-        {firstName: 'Nelson', lastName: 'Raber'},
-        {firstName: 'Tyrone', lastName: 'Scannell'},
-        {firstName: 'Allan', lastName: 'Disbrow'},
-        {firstName: 'Cody', lastName: 'Herrell'},
-        {firstName: 'Julio', lastName: 'Burgoyne'},
-        {firstName: 'Jessie', lastName: 'Boedeker'},
-        {firstName: 'Allan', lastName: 'Leyendecker'},
-        {firstName: 'Javier', lastName: 'Lockley'},
-        {firstName: 'Guy', lastName: 'Reasor'},
-        {firstName: 'Jamie', lastName: 'Brummer'},
-        {firstName: 'Jessie', lastName: 'Casa'},
-        {firstName: 'Marcie', lastName: 'Ricca'},
-        {firstName: 'Gay', lastName: 'Lamoureaux'},
-        {firstName: 'Althea', lastName: 'Sturtz'},
-        {firstName: 'Kenya', lastName: 'Morocco'},
-        {firstName: 'Rae', lastName: 'Pasquariello'},
-        {firstName: 'Ted', lastName: 'Abundis'},
-        {firstName: 'Jessie', lastName: 'Schacherer'},
-        {firstName: 'Jamie', lastName: 'Gleaves'},
-        {firstName: 'Hillary', lastName: 'Spiva'},
-        {firstName: 'Elinor', lastName: 'Rockefeller'},
-        {firstName: 'Dona', lastName: 'Clauss'},
-        {firstName: 'Ashlee', lastName: 'Kennerly'},
-        {firstName: 'Alana', lastName: 'Wiersma'},
-        {firstName: 'Kelly', lastName: 'Holdman'},
-        {firstName: 'Mathew', lastName: 'Lofthouse'},
-        {firstName: 'Dona', lastName: 'Tatman'},
-        {firstName: 'Clayton', lastName: 'Clear'},
-        {firstName: 'Rosalinda', lastName: 'Urman'},
-        {firstName: 'Cody', lastName: 'Sayler'},
-        {firstName: 'Odessa', lastName: 'Averitt'},
-        {firstName: 'Ted', lastName: 'Poage'},
-        {firstName: 'Penelope', lastName: 'Gayer'},
-        {firstName: 'Katy', lastName: 'Bluford'},
-        {firstName: 'Kelly', lastName: 'Mchargue'},
-        {firstName: 'Kathrine', lastName: 'Gustavson'},
-        {firstName: 'Kelly', lastName: 'Hartson'},
-        {firstName: 'Carlene', lastName: 'Summitt'},
-        {firstName: 'Kathrine', lastName: 'Vrabel'},
-        {firstName: 'Roxie', lastName: 'Mcconn'},
-        {firstName: 'Margery', lastName: 'Pullman'},
-        {firstName: 'Avis', lastName: 'Bueche'},
-        {firstName: 'Esmeralda', lastName: 'Katzer'},
-        {firstName: 'Tania', lastName: 'Belmonte'},
-        {firstName: 'Malinda', lastName: 'Kwak'},
-        {firstName: 'Tanisha', lastName: 'Jobin'},
-        {firstName: 'Kelly', lastName: 'Dziedzic'},
-        {firstName: 'Darren', lastName: 'Devalle'},
-        {firstName: 'Julio', lastName: 'Buchannon'},
-        {firstName: 'Darren', lastName: 'Schreier'},
-        {firstName: 'Jamie', lastName: 'Pollman'},
-        {firstName: 'Karina', lastName: 'Pompey'},
-        {firstName: 'Hugh', lastName: 'Snover'},
-        {firstName: 'Zebra', lastName: 'Evilias'}
-    ]
-});
-
-
-demos.List = new Ext.Panel({
-    layout: Ext.platform.isPhone ? 'fit' : {
-        type: 'vbox',
-        align: 'left',
-        pack: 'center'
-    },
-    //cls: 'demo-list',
-    items: [{
-        width: '100%',
-        height: '100%',
-        xtype: 'list',
-        store: demos.ListStore,
-        tpl: '<tpl for="."><div class="contact"><strong>{firstName}</strong> {lastName}</div></tpl>',
-        itemSelector: 'div.contact',
-        singleSelect: true,
-        grouped: true,
-        indexBar: true
-    }]
-});
-
-
-
-
-
-
+ApplicationVender.prototype.doCotizar = function ()
+{
+	
+	if(DEBUG){
+		console.log("ApplicationVender: doCotizar called....");
+	}
+	
+};
 
 
 //autoinstalar esta applicacion
