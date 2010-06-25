@@ -1,5 +1,6 @@
 <?php	
 	function insertarUsuario(){
+	/* Usan variables con e~nes....no causara algun conflicto despues? - Rene*/
 		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['usuario']))&&(!empty($_REQUEST['contraseña']))&&(!empty($_REQUEST['nivel']))){
 			$nombre=$_REQUEST['nombre'];
 			$usuario=$_REQUEST['usuario'];

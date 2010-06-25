@@ -1,3 +1,17 @@
+/*
+
+	Acomoden mejor el codigo, y escriban bien sus comentarios. 
+	Expliquen que hace cada funcion antes de la declaracion.
+	
+	Expliquen que hace cada archivo
+	
+	
+	RECUERDEN QUE TODOS DEBEMOS SER CAPACES DE ENTENDER EL CODIGO!!
+	
+	
+	Veo demasiados if's lo cual no debe ser tan bueno....
+
+*/
 <?php	
 	function insertarFacturaVenta(){
 		if((!empty($_REQUEST['folio']))&&(!empty($_REQUEST['id_venta']))){

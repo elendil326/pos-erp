@@ -1,4 +1,5 @@
 <?php 
+
 	class cliente{
 		var $id_cliente;	 	 	 	 	 	 	
 		var $rfc;	 	 	 	 	 	 	 
@@ -27,6 +28,19 @@
 			$insert="INSERT INTO  cliente values(NULL,?,?,?,?,?,?);";
 			$params=array($this->rfc,$this->nombre,$this->direccion,$this->telefono,$this->e_mail,$this->limite_credito);
 			
+			/*
+				Para obtener el ultimo id agregado a la tabla pueden utilizar una funcion de la conexion a la base datos que se llama Insert_ID.
+				Siempre y cuando sea de una tabla que tenga ids con auto incremento. Lo mismo que hace la funcion mysql_inserted_id()
+				De esta manera se evitan el segundo select.
+				
+				por ejemplo 
+				
+				$resultado = $this->bd->ejecuta($insert,$params);
+				$this->id_cliente = $bd->con->Insert_ID();
+				
+				(He visto varios archivos y haces lo mismo en todos... con este tip te ahorras una consulta)
+				-Rene
+			*/
 			if($this->bd->ejecuta($insert,$params)){
 				$query="select max(id_cliente) from cliente;";
 				$this->id_cliente=$this->bd->select_un_campo($query,array());
