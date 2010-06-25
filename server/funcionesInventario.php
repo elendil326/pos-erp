@@ -65,16 +65,19 @@
 				$sucursal=new sucursal_existente($id_sucursal);
 				if($sucursal->existe()){		
 					$producto=new detalle_inventario_existente($id_producto,$id_sucursal);
-					if($producto->existe()){												ok_datos("existencia :".$producto->existencias);
+					if($producto->existe()){
+						$query="SELECT id_producto, nombre, denominacion, precio_venta, existencias
+								FROM detalle_inventario
+								NATURAL JOIN inventario
+								where id_producto=? and id_sucursal=?";
+								$listar = new listar($query,array($id_producto,$id_sucursal));
+								echo $listar->lista();
 					}else																	fail("Este producto no existe en esta sucursal.");	
 				}else																		fail("La sucursal no existe");
 			}else																			fail("El producto no existe");
 		}else																				fail("faltan datos.");	
 		return;
 	}
-	
-	
-	
 	
 	
 ?>
