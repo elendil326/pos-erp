@@ -110,6 +110,7 @@
 		case "eliminarInventario" : 			eliminarInventario(); break;
 		case "actualizarInventario" : 			actualizarInventario(); break;
 		case "listarProductosInventario" : 		listarProductosInventario(); break;
+		case "listarProductosInventarioSucursal" : 		listarProductosInventarioSucursal(); break;
 		
 		//-----Funciones impuesto
 		case "insertarImpuesto" : 				insertarImpuesto(); break;
@@ -168,7 +169,7 @@
 	
 	
 	function fail($razon){
-		echo "{success : false, error: '".$razon."'}";
+		echo "{success : false, reason: '".$razon."'}";
 		return;
 	}
 	function ok(){
