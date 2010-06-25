@@ -106,11 +106,12 @@
 		case "listarPagosCompra" : 				listarPagosCompra(); break;
 		
 		//-----funciones invenario
-		case "insertarInventario" : 			insertarInventario(); break;
-		case "eliminarInventario" : 			eliminarInventario(); break;
-		case "actualizarInventario" : 			actualizarInventario(); break;
-		case "listarProductosInventario" : 		listarProductosInventario(); break;
+		case "insertarInventario" : 					insertarInventario(); break;
+		case "eliminarInventario" : 					eliminarInventario(); break;
+		case "actualizarInventario" : 					actualizarInventario(); break;
+		case "listarProductosInventario" : 				listarProductosInventario(); break;
 		case "listarProductosInventarioSucursal" : 		listarProductosInventarioSucursal(); break;
+		case "existenciaProductoSucursal" : 			existenciaProductoSucursal(); break;
 		
 		//-----Funciones impuesto
 		case "insertarImpuesto" : 				insertarImpuesto(); break;

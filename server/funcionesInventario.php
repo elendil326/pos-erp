@@ -52,9 +52,27 @@
 		$id=$_REQUEST['id_sucursal'];
 			$listar = new listar("select inventario.id_producto, inventario.denominacion, detalle_inventario.precio_venta,detalle_inventario.existencias from inventario inner join detalle_inventario on inventario.id_producto = detalle_inventario.id_producto where detalle_inventario.id_sucursal=?",array($id));
 			echo $listar->lista();
-			return;
 		}											fail("faltan datos.");
+		return;
 	}
+	
+	function existenciaProductoSucursal(){
+	if((!empty($_REQUEST['id_producto']))&&(!empty($_REQUEST['id_sucursal']))){
+		$id_producto=$_REQUEST['id_producto'];
+		$id_sucursal=$_REQUEST['id_sucursal'];
+			$prod=new inventario_existente($id_producto);
+			if($prod->existe()){
+				$sucursal=new sucursal_existente($id_sucursal);
+				if($sucursal->existe()){		
+					$producto=new detalle_inventario_existente($id_producto,$id_sucursal);
+					if($producto->existe()){												ok_datos("existencia :".$producto->existencias);
+					}else																	fail("Este producto no existe en esta sucursal.");	
+				}else																		fail("La sucursal no existe");
+			}else																			fail("El producto no existe");
+		}else																				fail("faltan datos.");	
+		return;
+	}
+	
 	
 	
 	
