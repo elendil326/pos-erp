@@ -1,3 +1,4 @@
+<?php
 /*
 
 	Acomoden mejor el codigo, y escriban bien sus comentarios. 
@@ -12,7 +13,7 @@
 	Veo demasiados if's lo cual no debe ser tan bueno....
 
 */
-<?php	
+?><?php	
 	function insertarFacturaVenta(){
 		if((!empty($_REQUEST['folio']))&&(!empty($_REQUEST['id_venta']))){
 			$folio=$_REQUEST['folio'];
