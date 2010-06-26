@@ -52,6 +52,7 @@
 		$id=$_REQUEST['id_sucursal'];
 			$listar = new listar("select inventario.id_producto, inventario.denominacion, detalle_inventario.precio_venta,detalle_inventario.existencias,detalle_inventario.min from inventario inner join detalle_inventario on inventario.id_producto = detalle_inventario.id_producto where detalle_inventario.id_sucursal=?",array($id));
 			echo $listar->lista();
+			return;
 		}											fail("faltan datos.");
 		return;
 	}
