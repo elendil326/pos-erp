@@ -42,7 +42,7 @@
 	}
 	
 	function listarProductosInventario(){
-		$listar = new listar("select inventario.id_producto, inventario.denominacion, detalle_inventario.precio_venta,detalle_inventario.existencias,detalle_inventario.id_sucursal from inventario inner join detalle_inventario on inventario.id_producto = detalle_inventario.id_producto",array());
+		$listar = new listar("select inventario.id_producto, inventario.denominacion, detalle_inventario.precio_venta,detalle_inventario.existencias,detalle_inventario.id_sucursal,detalle_inventario.min from inventario inner join detalle_inventario on inventario.id_producto = detalle_inventario.id_producto",array());
 		echo $listar->lista();
 		return;
 	}
@@ -50,7 +50,7 @@
 	function listarProductosInventarioSucursal(){
 	if(!empty($_REQUEST['id_sucursal'])){
 		$id=$_REQUEST['id_sucursal'];
-			$listar = new listar("select inventario.id_producto, inventario.denominacion, detalle_inventario.precio_venta,detalle_inventario.existencias from inventario inner join detalle_inventario on inventario.id_producto = detalle_inventario.id_producto where detalle_inventario.id_sucursal=?",array($id));
+			$listar = new listar("select inventario.id_producto, inventario.denominacion, detalle_inventario.precio_venta,detalle_inventario.existencias,detalle_inventario.min from inventario inner join detalle_inventario on inventario.id_producto = detalle_inventario.id_producto where detalle_inventario.id_sucursal=?",array($id));
 			echo $listar->lista();
 		}											fail("faltan datos.");
 		return;
