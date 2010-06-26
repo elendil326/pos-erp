@@ -84,6 +84,14 @@ ApplicationVender.prototype._initToolBar = function (){
 	var buttonsGroup1 = [{
 		  xtype: 'textfield',
 		  id: 'APaddProductByID',
+		  startValue: 'ID del producto',
+			listeners:
+					{
+						keydown: function( ){
+							console.log("hola");
+
+						}
+					}
 		},{
         text: 'Agregar producto',
         ui: 'round',
@@ -112,6 +120,9 @@ ApplicationVender.prototype._initToolBar = function (){
 
 	//grupo 3, listo para vender
     var buttonsGroup3 = [{
+        text: 'Limpiar',
+        handler: null
+    },{
         text: 'Cotizar',
         handler: this.doCotizar
     },{
@@ -162,19 +173,6 @@ ApplicationVender.prototype._initToolBar = function (){
 
 
 
-ApplicationVender.prototype.swapClienteComun = function (val)
-{	
-	if(val==0){
-		ApplicationVender.currentInstance.mainCard.items.items[0].add(  {xtype: 'slider', id: 'asdfclienteComun', value: 1, label: 'Agregar Cliente'}   );
-		//ApplicationVender.currentInstance.mainCard.items.items[0].add(  {xtype: 'button', id: 'asdfclienteComun', value: 1, label: 'Agregar Cliente'}   );
-		ApplicationVender.currentInstance.mainCard.doLayout();		
-	}else{
-		ApplicationVender.currentInstance.mainCard.items.items[0].remove(   'asdfclienteComun'  );
-		ApplicationVender.currentInstance.mainCard.doLayout();
-	}
-
-};
-
 
 
 
@@ -197,9 +195,9 @@ ApplicationVender.prototype.venderMainPanel = new Ext.form.FormPanel({
         //instructions: 'Please enter the information above.',
         items: [{
 	        xtype: 'toggle',
-	        name: 'clienteComun',
+	        id: 'clienteComunToggle',
 			value: 1,
-	        label: 'Cliente Comun',
+	        label: 'Caja comun',
 			listeners:
 					{
 						change: function( slider, thumb, oldValue, newValue){
@@ -207,13 +205,11 @@ ApplicationVender.prototype.venderMainPanel = new Ext.form.FormPanel({
 							ApplicationVender.currentInstance.swapClienteComun(newValue);
 						}
 					}
-        },
-        {
-            xtype: 'hidden',
-            name: 'secret',
-            value: false
         }]
     },{
+			html: '',
+			id : 'detallesCliente'
+		},{
         xtype: 'fieldset',
         title: 'Detalles de la Venta',
         defaults: {
@@ -232,6 +228,9 @@ ApplicationVender.prototype.venderMainPanel = new Ext.form.FormPanel({
     },{
 		html: '',
 		id : 'carritoDeCompras'
+	},{
+		html: '',
+		id : 'carritoDeComprasTotales'
 	}]
 });
 
@@ -254,20 +253,28 @@ ApplicationVender.prototype.htmlCart_addItem = function( item )
 	var id = item.id;
 	var name = item.name;
 	var description = item.description;
+	var existencias = item.existencias;
+	var costo = item.cost;
 	
 	var found = false;
+	
+	//overrride multiple items
+	var MULTIPLE_SAME_ITEMS = true;
+	
+	
 	
 	//revisar que no este ya en el carrito
 	for( a = 0; a < this.htmlCart_items.length;  a++){
 		if( this.htmlCart_items[ a ].id == id ){
+			//item already in cart
 			found = true;
 			break;
 		}
 	}
 	
 	
-	if(found){
-		POS.aviso("Mostrador", "Ya ha agregado este producto");
+	if(found && !MULTIPLE_SAME_ITEMS){
+		POS.aviso("Mostrador", "Ya ha agregado este producto.");
 		return;
 	}
 	
@@ -278,11 +285,49 @@ ApplicationVender.prototype.htmlCart_addItem = function( item )
 	
 	//renderear el html
 	for( a = 0; a < this.htmlCart_items.length; a++ ){
-		html += "<li class='ApplicationVender'><span class='id'>" + this.htmlCart_items[a].id +"</span><span class='name'>" + this.htmlCart_items[a].name +"</span><span class='description'>" + this.htmlCart_items[a].description +"</span></span><span class='cost'>" + this.htmlCart_items[a].cost +"</span></li>";
-	}
+		
+		//si es el ultimo, quitar el border de abajo
+		var starter = (a == (this.htmlCart_items.length-1)) ? "<li class='ApplicationVender' style='border-bottom-width: 0px;'>" : "<li class='ApplicationVender'>";
+		
+		html += starter 
+		+ "<span class='id'>" + this.htmlCart_items[a].id +"</span>" 
+		+ "<span class='name'>" + this.htmlCart_items[a].name +"</span>" 
+		+ "<span class='description'>"+ this.htmlCart_items[a].description +"</span>" 
+		+ "<span class='cost'>"+ this.htmlCart_items[a].cost +"</span>"
+		+ "<span class='trash'>&nbsp;<img height=20 width=20 src='sencha/resources/img/toolbaricons/trash.png'></span>"		
+		
 
+		+ "</li>";
+	}
 	
+
+
+	//imprimir el html
 	Ext.get("carritoDeCompras").update("<ul class='ApplicationVender'>" + html +"</ul>");
+
+
+	//preparar un html para los totales
+	var totals_html = "";
+
+	//si hay mas de un producto, mostrar los totales
+	if(this.htmlCart_items.length > 0){
+		
+		var subtotal = 0;
+		
+		//revisar que no este ya en el carrito
+		for( a = 0; a < this.htmlCart_items.length;  a++){
+			subtotal += parseInt( this.htmlCart_items[a].cost );
+		}
+
+		
+		totals_html = "<li class='ApplicationVender-Totales'>Subtotal <b>" +  subtotal + "</b></li>"
+		+ "<li class='ApplicationVender-Totales'>IVA <b>" +  (subtotal*.15) + "</b></li>"
+		+ "<li class='ApplicationVender-Totales' style='border-bottom-width: 0px;'>Total <b>" +  ((subtotal*.15)+subtotal) + "</b></li>";
+	}else{
+		totals_html = "";
+	}
+	
+	Ext.get("carritoDeComprasTotales").update("<ul class='ApplicationVender-Totales'>" + totals_html +"</ul>");
 };
 
 
@@ -326,31 +371,31 @@ ApplicationVender.prototype.doAddProduct = function (button, event)
 			id_sucursal : 2
 		}, 
 		function (datos){
-			//ya llego el request con los datos si existe o no
 			
-			console.log(datos);
-			
-			var existe = true;
-			
-			if(existe===true){
-				//si existe, agregarlo a detalles de venta
-				
-				var item = {
-					id : Ext.get("APaddProductByID").first().getValue(),
-					name : "cosa rara",
-					description : 'esta es una cosa rara',
-					cost : "123.88"
-				};
-				
-				ApplicationVender.currentInstance.htmlCart_addItem( item );
-				
-				Ext.get("APaddProductByID").first().dom.value = "";
-				
-			}else{
-				//no existe en el inventario
-				POS.aviso("Inventario", "Este articulo no existe en el inventario.");
+			//ya llego el request con los datos si existe o no	
+			if(!datos.success){
+				POS.aviso("Mostrador", datos.reason);
+				return;
 			}
 			
+			//crear el item
+			var item = {
+				id 			: datos.datos[0].id_producto,
+				name 		: datos.datos[0].nombre,
+				description : datos.datos[0].denominacion,
+				cost 		: datos.datos[0].precio_venta,
+				existencias : datos.datos[0].existencias
+			};
+				
+			//agregarlo al carrito
+			ApplicationVender.currentInstance.htmlCart_addItem( item );
+			
+			//clear the textbox
+			Ext.get("APaddProductByID").first().dom.value = "";
+			
+			//give focus again
+			document.getElementById( Ext.get("APaddProductByID").first().id ).focus();
+
 		},
 		function (){
 			POS.aviso("Error", "Algo anda mal, porfavor intente de nuevo.");
@@ -384,9 +429,9 @@ ApplicationVender.prototype.doVender = function ()
 	}
 	
 	
-	console.log("prueba de comunicacion con server");
-	
 
+	
+	/*
 	POS.AJAXandDECODE({
 		method: 'listarClientes',
 		byName : 'Monica'
@@ -401,6 +446,7 @@ ApplicationVender.prototype.doVender = function ()
 			
 		}
 	);
+	*/
 
 	
 
@@ -416,6 +462,246 @@ ApplicationVender.prototype.doCotizar = function ()
 	}
 	
 };
+
+
+
+
+//----------------------------------------------------------------------------------------------------------------------------------------------
+//				Buscar cliente  
+//----------------------------------------------------------------------------------------------------------------------------------------------
+ApplicationVender.prototype.swapClienteComun = function (val)
+{	
+	if(val==0){
+		ApplicationVender.currentInstance.buscarCliente();
+		//ApplicationVender.currentInstance.mainCard.items.items[0].add(  {xtype: 'slider', id: 'asdfclienteComun', value: 1, label: 'Agregar Cliente'}   );
+		//ApplicationVender.currentInstance.mainCard.doLayout();		
+	}else{
+		//ApplicationVender.currentInstance.mainCard.items.items[0].remove(   'asdfclienteComun'  );
+		//ApplicationVender.currentInstance.mainCard.doLayout();
+		Ext.get("detallesCliente").update("");
+	}
+
+};
+
+
+ApplicationVender.prototype.buscarCliente = function ()
+{
+	
+
+
+		Ext.regModel('Contact', {
+		    fields: ['firstName', 'lastName']
+		});
+
+		demos.ListStore = new Ext.data.Store({
+		    model: 'Contact',
+		    sorters: 'firstName',
+		    getGroupString : function(record) {
+		        return record.get('firstName')[0];
+		    },
+		    data: [
+		        {firstName: 'Julio', lastName: 'Benesh'},
+		        {firstName: 'Julio', lastName: 'Minich'},
+		        {firstName: 'Tania', lastName: 'Ricco'},
+		        {firstName: 'Odessa', lastName: 'Steuck'},
+		        {firstName: 'Nelson', lastName: 'Raber'},
+		        {firstName: 'Tyrone', lastName: 'Scannell'},
+		        {firstName: 'Allan', lastName: 'Disbrow'},
+		        {firstName: 'Cody', lastName: 'Herrell'},
+		        {firstName: 'Julio', lastName: 'Burgoyne'},
+		        {firstName: 'Jessie', lastName: 'Boedeker'},
+		        {firstName: 'Allan', lastName: 'Leyendecker'},
+		        {firstName: 'Javier', lastName: 'Lockley'},
+		        {firstName: 'Guy', lastName: 'Reasor'},
+		        {firstName: 'Jamie', lastName: 'Brummer'},
+		        {firstName: 'Jessie', lastName: 'Casa'},
+		        {firstName: 'Marcie', lastName: 'Ricca'},
+		        {firstName: 'Gay', lastName: 'Lamoureaux'},
+		        {firstName: 'Althea', lastName: 'Sturtz'},
+		        {firstName: 'Kenya', lastName: 'Morocco'},
+		        {firstName: 'Rae', lastName: 'Pasquariello'},
+		        {firstName: 'Ted', lastName: 'Abundis'},
+		        {firstName: 'Jessie', lastName: 'Schacherer'},
+		        {firstName: 'Jamie', lastName: 'Gleaves'},
+		        {firstName: 'Hillary', lastName: 'Spiva'},
+		        {firstName: 'Elinor', lastName: 'Rockefeller'},
+		        {firstName: 'Dona', lastName: 'Clauss'},
+		        {firstName: 'Ashlee', lastName: 'Kennerly'},
+		        {firstName: 'Alana', lastName: 'Wiersma'},
+		        {firstName: 'Kelly', lastName: 'Holdman'},
+		        {firstName: 'Mathew', lastName: 'Lofthouse'},
+		        {firstName: 'Dona', lastName: 'Tatman'},
+		        {firstName: 'Clayton', lastName: 'Clear'},
+		        {firstName: 'Rosalinda', lastName: 'Urman'},
+		        {firstName: 'Cody', lastName: 'Sayler'},
+		        {firstName: 'Odessa', lastName: 'Averitt'},
+		        {firstName: 'Ted', lastName: 'Poage'},
+		        {firstName: 'Penelope', lastName: 'Gayer'},
+		        {firstName: 'Katy', lastName: 'Bluford'},
+		        {firstName: 'Kelly', lastName: 'Mchargue'},
+		        {firstName: 'Kathrine', lastName: 'Gustavson'},
+		        {firstName: 'Kelly', lastName: 'Hartson'},
+		        {firstName: 'Carlene', lastName: 'Summitt'},
+		        {firstName: 'Kathrine', lastName: 'Vrabel'},
+		        {firstName: 'Roxie', lastName: 'Mcconn'},
+		        {firstName: 'Margery', lastName: 'Pullman'},
+		        {firstName: 'Avis', lastName: 'Bueche'},
+		        {firstName: 'Esmeralda', lastName: 'Katzer'},
+		        {firstName: 'Tania', lastName: 'Belmonte'},
+		        {firstName: 'Malinda', lastName: 'Kwak'},
+		        {firstName: 'Tanisha', lastName: 'Jobin'},
+		        {firstName: 'Kelly', lastName: 'Dziedzic'},
+		        {firstName: 'Darren', lastName: 'Devalle'},
+		        {firstName: 'Julio', lastName: 'Buchannon'},
+		        {firstName: 'Darren', lastName: 'Schreier'},
+		        {firstName: 'Jamie', lastName: 'Pollman'},
+		        {firstName: 'Karina', lastName: 'Pompey'},
+		        {firstName: 'Hugh', lastName: 'Snover'},
+		        {firstName: 'Zebra', lastName: 'Evilias'}
+		    ]
+		});
+        
+
+
+
+
+
+
+
+
+        var formBase = {
+
+
+			//	items
+            items: [{
+		        width: "100%",
+		        height: "100%",
+				id: 'buscarClientesLista',
+		        xtype: 'list',
+		        store: demos.ListStore,
+		        tpl: '<tpl for="."><div class="contact"><strong>{firstName}</strong> {lastName}</div></tpl>',
+		        itemSelector: 'div.contact',
+		        singleSelect: true,
+		        grouped: true,
+		        indexBar: true
+		    }],
+		
+		
+			//	dock		
+            dockedItems: [{
+                    xtype: 'toolbar',
+                    dock: 'bottom',
+                    items: [{
+				        xtype: 'splitbutton',
+				        activeButton: "1",
+				        items: [{
+				            text: 'Nombre',
+				            handler: null
+				        }, {
+				            text: 'RFC',
+				            handler: null
+				        }, {
+				            text: 'Direccion',
+				            handler: null
+				        }]    
+				    },{
+						xtype: 'spacer'
+					},{
+						text: 'Cancelar',
+						handler: function() {
+							//regresar el boton de cliente comun a 1
+							Ext.getCmp("clienteComunToggle").setValue(1);
+
+
+							//ocultar esta tabla
+							form.hide();							
+							
+							//destruir la lista
+							if( Ext.getCmp('buscarClientesLista') ){
+									Ext.getCmp('buscarClientesLista').store = null;
+									Ext.getCmp('buscarClientesLista').destroy();
+								}
+								
+                            }
+					},{
+						
+                            text: 'Seleccionar',
+                            ui: 'action',
+                            handler: function() {
+
+
+								
+								
+								if(Ext.getCmp("buscarClientesLista").selected.elements.length == 0){
+									//no haseleccionado a nadie
+									return;
+									
+								}
+								
+								//mostrar los detalles del cliente
+								Ext.get("detallesCliente").update("Detallles del cliente.... " + Ext.getCmp("buscarClientesLista").selected.elements[0].innerText);
+								
+								
+								//hide the form
+								form.hide();
+								
+								
+								//destruir la lista
+								if( Ext.getCmp('buscarClientesLista') ){
+										Ext.getCmp('buscarClientesLista').store = null;
+										Ext.getCmp('buscarClientesLista').destroy();
+									}
+                            }
+
+                    }]
+                }
+            ]
+        };
+
+
+
+
+
+        
+        if (Ext.platform.isAndroidOS) {
+            formBase.items.unshift({
+                xtype: 'component',
+                styleHtmlContent: true,
+                html: '<span style="color: red">Forms on Android are currently under development. We are working hard to improve this in upcoming releases.</span>'
+            });
+        }
+        
+
+
+
+        if (Ext.platform.isPhone) {
+            formBase.fullscreen = true;
+        } else {
+            Ext.apply(formBase, {
+                autoRender: true,
+                floating: true,
+                modal: true,
+                centered: true,
+                hideOnMaskTap: false,
+                height: 585,
+                width: 680
+            });
+        }
+        
+
+
+        var form = new Ext.Panel(formBase);
+
+        form.show();
+	
+
+};
+
+
+
+
+
+
 
 
 //autoinstalar esta applicacion
