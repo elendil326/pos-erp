@@ -1,9 +1,15 @@
-ApplicationPagos = function ()
+ApplicationPagos= function ()
 {
 	if(DEBUG){
 		console.log("ApplicationPagos: construyendo");
 	}
-	return this._init();
+	ApplicationPagos.currentInstance = this;	
+	//ApplicationPagos.prototype.currentInstance=this;
+	this._init();
+
+	return this;
+	
+	
 };
 
 
@@ -11,6 +17,8 @@ ApplicationPagos = function ()
 
 //aqui va el panel principal 
 ApplicationPagos.prototype.mainCard = null;
+
+ApplicationPagos.currentInstance=87;
 
 //aqui va el nombre de la applicacion
 ApplicationPagos.prototype.appName = null;
@@ -21,9 +29,13 @@ ApplicationPagos.prototype.leftMenuItems = null;
 //aqui va un texto de ayuda en html
 ApplicationPagos.prototype.ayuda = null;
 
+ApplicationPagos.prototype.clientesContainer= null;
 
-ApplicationPagos.prototype.date;
-ApplicationPagos.prototype.clientesStore;
+ApplicationPagos.prototype.MostrarStore = null;
+
+ApplicationPagos.prototype.ListaClientes= null;
+
+ApplicationPagos.prototype.customers = null;
 
 ApplicationPagos.prototype._init = function()
 {
@@ -34,74 +46,78 @@ ApplicationPagos.prototype._init = function()
 	this.appName = "Pagos";
 	
 	//ayuda sobre esta applicacion
-	this.ayuda = "ayuda sobre este modulo de Pagos";
+	this.ayuda = "Ayuda sobre este modulo de prueba <br>, html es valido <br> :D";
 	
 	//submenues en el panel de la izquierda
 	this.leftMenuItems = [
 	{
         text: 'Listar',
-       	card: this.listar,
-        ayuda: 'ayuda en listado'
+        ayuda: 'SE ENLISTAN TODOS LOS CLIENTES REGISTRADOS EN PAPAS SUPREMAS',
+		card: this.mainCard
     },
     {
         text: 'Abonar',
        	card: this.abonar,
-        ayuda: 'ayuda de abonar'
+        ayuda: 'ayuda en SECOND'
     }
 	];
 	
-	//panel principal
-	this.mainCard = new Ext.Panel({
-		cls: 'card card1',
-		html: 'PAGOS'
-	});
 	
-		
-	//DIEGO: intenta comentar e identar este codigo....
-	POS.AJAXandDECODE({
-			method: 'listarClientes'
-		},
-	//success
-	function (d){
-		this.date=d;
-		if(date.success){	
-	Ext.regModel('modelo', {		
-		fields: ['id_cliente','rfc','nombre','direccion','telefono','e_mail','limite_credito']
-	});
-			this.clientesStore=new Ext.data.Store({
-				model:'modelo',
-				idIndex:'id_cliente',
-				data:this.date.datos
-			});
-		}
-	},
-	//failure
-	function (){
-		//siempre pon codigo aqui, como un aviso, para saber que algo salio mal
-	}
-	);
-
-
-
+	
 	this._initToolBar();
+	
+};//fin CONSTRUCTOR
 
+cbClientes=new Ext.form.TextField({
+			hidden:'true',
+            name: 'id_cliente',
+            label: 'Cliente',
+            options: [{
+                text: 'nombre',
+                value: 'id'
+            },{
+                text: 'name',
+                value: 'id_c'
+            }]
+        });
+de =new Ext.form.TextField({
+			fieldLabel: 'Del:',
+			name: 'fecha_inicio:',
+			allowBlank:false
+		});
+al =new Ext.form.TextField({
+			fieldLabel: 'al:',
+			name: 'fecha_fin:',
+			allowBlank:false
+		});
+fechas = new Ext.form.FormPanel({
+	hidden:'true',
+    items: [de,al]
+});
 
-};
-
-
+formulario=new Ext.form.FormPanel({
+		minHeight:80,
+    items: [{
+        xtype: 'fieldset',
+        title: 'Buscar por:',
+        instructions: 'Insertelos datos y de click en el boton de buscar.',
+        items: [cbClientes,fechas]
+    }]
+});
 
 //Iniciar el toolbar
 ApplicationPagos.prototype._initToolBar = function (){
 
+	if(DEBUG)console.log("iniciando el tool bar");
 
 
 	//Dejo los demas grupos por si quieres agregar mas botones
 	//grupo 1, funciones basicas
-	var buttonsGroup1 = [/*{
-        text: 'Agregar producto',
+	var buttonsGroup1 = [{
+        text: 'Buscar',
         ui: 'round',
-        handler: this.doAddProduct
-    }*/];
+        handler: clickBuscar
+    }];
 
 
 	//grupo 2, cualquier otra mamada
@@ -109,14 +125,14 @@ ApplicationPagos.prototype._initToolBar = function (){
         xtype: 'splitbutton',
         activeButton: 0,
         items: [{
-            text: 'Todos',
-            handler: null
-        }, {
             text: 'Deudores',
-            handler: null
+            handler: clickDeudores
         }, {
             text: 'Pagados',
-            handler: null
+            handler: clickPagados
+        }, {
+            text: 'Todos',
+            handler: clickTodos
         }]    
     }];
     
@@ -124,14 +140,13 @@ ApplicationPagos.prototype._initToolBar = function (){
 
 
 	//grupo 3, listo para vender
-    var buttonsGroup3 = [/*{
-        text: 'Cotizar',
-        handler: null
+    var buttonsGroup3 = [{
+        text: 'Cliente',
+        handler: clickCliente
     },{
-        text: 'Vender',
-        ui: 'action',
-        handler: null
-    }*/];
+        text: 'Periodo',
+        handler: clickPeriodo
+    }];
 
 
 	if (!Ext.platform.isPhone) {
@@ -164,81 +179,126 @@ ApplicationPagos.prototype._initToolBar = function (){
         }];
     }
 	
-	
-	
 	//agregar este dock a el panel que quieras
 	this.mainCard.addDocked( this.dockedItems );
 	
 
 };
 
+Ext.regModel('modeloVentas', {
+    fields: ['id_venta','total', 'pagado', 'debe', 'nombre', 'fecha']
+});
 
 
 
+MostrarStore = new Ext.data.Store({
+    model: 'modeloVentas',
+    sorters: 'nombre',
+    getGroupString : function(record) {
+        return record.get('nombre')[0];
+    }
+});
 
 
-
-
-
-
-
-
-
-ApplicationPagos.prototype.listar = new Ext.Panel({
+ApplicationPagos.prototype.mainCard = new Ext.Panel({
+   
     scroll: 'vertical',
 	cls: 'cards',
 	layout: {
 		type: 'vbox',
-		align: 'top'
+		align: 'strech'
 	},
-	defaults:{
-		flex: 1
+	
+    listeners: {
+		beforeshow : function(component){
+						
+						POS.AJAXandDECODE({
+						method: 'reporteClientesComprasCreditoDeben'
+						},
+						function (datos){
+							this.customers = datos.datos;
+							MostrarStore.loadData(this.customers); 
+						},
+						function (){//no responde
+							POS.aviso("ERROR",":(");
+						}
+					);	
+		}//fin before
 	},
-	items:[
-		new Ext.form.FormPanel({
-			items: [{
-					xtype: 'fieldset',
-					title: 'Filtrar por:',
-					defaults: {
-						xtype: 'radio'
-					},
-					items: [{
-						name: 'filtro',
-						label: 'todos'
-					},
-					{
-						name: 'filtro',
-						label: 'Adeudan'
-					},
-					{
-						name: 'filtro',
-						label: 'Pagados'
-					}]
+    items: [formulario,
+			{
+						xtype: 'toolbar',
+						dock: 'bottom',
+						title: "TOTAL &#09; PAGADO ADEUDA DEBE CLIENTE FECHA"
 				},
-				{
-					fieldLabel: 'Cliente:',
-					xtype : "textfield",
-					name: 'nombre:',
-					allowBlank:false
-				}
-			]
-		}),
-		{
-			html: 'grid con los datos',
-			cls: 'card3'
-		}
-		]
+			{
+				width: '100%',
+				height: '100%',
+				xtype: 'list',
+				store: MostrarStore,
+				tpl: '<tpl for="."><div class="modeloVentas">total:{total}pagado:{pagado} adeuda:{debe} cliente:{nombre} fecha:{fecha}</div></tpl>',
+				itemSelector: 'div.modeloVentas',
+				singleSelect: true,
+				indexBar: true
+			}
+			]	
 });
 
 ApplicationPagos.prototype.abonar = new Ext.form.FormPanel({
-    scroll: 'vertical',
-    items: [{
-        xtype: 'slider',
-        name: 'Fotmulario',
-        label: 'form:'
-    }]
+	
 });
+this.clickBuscar = function ()
+{
+	if(!cbClientes.isVisible()){
+			if(!fechas.isVisible()){
+				POS.aviso("Buscar", "Buscar al cliente: "+cbClientes.getValue()+" del:"+de.getValue()+" al "+al.getValue()); 				
+			}else{
+				POS.aviso("Buscar", "Buscar al cliente: "+cbClientes.getValue()); 			
+			}	
+	}else{
+			if(!fechas.isVisible()){
+				POS.aviso("Buscar", "Buscar ventas a credito del: "+de.getValue()+" al: "+al.getValue()); 
+			}else{	
+				POS.aviso("Imposible", "No se puede buscar ya que no hay ninguna opcion seleccionada"); 
+			}
+	}
+};
+this.clickDeudores = function ()
+{
+		 	POS.aviso("OK", "boton de Deudores"); 
+};
 
+this.clickPagados = function ()
+{
+		 	POS.aviso("OK", "boton de Pagados"); 
+};
+
+this.clickTodos = function ()
+{
+		 	POS.aviso("OK", "boton de Todos"); 
+};
+
+this.clickCliente = function ()
+{
+	if(cbClientes.isVisible()){
+			cbClientes.setVisible(true);
+			formulario.setHeight(formulario.getHeight()+30)
+	}else{
+			cbClientes.setVisible(false);
+			formulario.setHeight(formulario.getHeight()-30)
+	}
+};
+
+this.clickPeriodo = function ()
+{
+	if(fechas.isVisible()){
+			fechas.setVisible(true);
+			formulario.setHeight(formulario.getHeight()+70)
+	}else{
+			fechas.setVisible(false);
+			formulario.setHeight(formulario.getHeight()-70)
+	}
+};
 
 //autoinstalar esta applicacion
 AppInstaller( new ApplicationPagos() );
