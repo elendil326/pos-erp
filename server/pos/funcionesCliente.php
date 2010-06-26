@@ -12,7 +12,13 @@
 		$cliente = new cliente($rfc,$nombre,$direccion,$telefono,$e_mail,$limite_credito);
 		
 		if ($cliente->inserta()){
-			echo "{success: true }";
+			$cuenta_cliente = new cuenta_cliente($cliente->id_cliente,0);
+			if($cuenta_cliente->inserta()){
+				echo "{success: true , id_cliente: ".$cliente->id_cliente."}";
+			}else{
+				echo "{success: false }";
+			}
+			
 		}else{
 			echo "{success: false }";
 		}
@@ -109,8 +115,7 @@
 		echo $listar->lista();
 		return $listar->lista();
 	}
-	
-	
+
 	
 ?>
 

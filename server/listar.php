@@ -15,9 +15,9 @@
 		function lista(){
 			$result=$this->bd->select_arr($this->query,$this->params);
 			if(count($result)>0){
-				return "{ success : true, datos : ". json_encode($result)."}";
+				return " { success : true, datos : ". json_encode($result)."}";
 			}else{
-				return "{ success : false }";
+				return " { success : false }";
 			}
 		}
 		function lista_datos($nombre){

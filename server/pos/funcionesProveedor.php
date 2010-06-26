@@ -12,7 +12,12 @@
 		$proveedor = new proveedor($rfc,$nombre,$direccion,$telefono,$e_mail);
 		
 		if ($proveedor->inserta()){
-			echo "{success: true }";
+			$cuenta_proveedor = new cuenta_proveedor($proveedor->id_proveedor,0);
+			if($cuenta_proveedor->inserta()){
+				echo "{success: true , id_proveedor: ".$proveedor->id_proveedor."}";
+			}else{
+				echo "{success: false }";
+			}
 		}else{
 			echo "{success: false }";
 		}
@@ -29,9 +34,9 @@
 	
 		
 		if($proveedor->actualiza()){
-			echo "{success: true}";
+			echo "{success: true }";
 		}else{
-			echo "{success: false}";
+			echo "{success: false }";
 		}
 	}
 	

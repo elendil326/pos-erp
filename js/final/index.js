@@ -199,7 +199,7 @@ POS.AJAXandDECODE = function (params, success, failure)
 			try{				
 				eval("datos = " + response.responseText);
 			}catch(e){
-				console.warn("Error ");
+				console.warn("Error: "+e);
 			}
 			 
 
