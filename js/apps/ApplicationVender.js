@@ -218,11 +218,6 @@ ApplicationVender.prototype.venderMainPanel = new Ext.form.FormPanel({
         items: [{
 	        xtype: 'toggle',
 	        name: 'enable',
-	        label: 'Factura'
-        },
-        {
-	        xtype: 'toggle',
-	        name: 'enable',
 	        label: 'Nota'
         }]
     },{
@@ -472,113 +467,103 @@ ApplicationVender.prototype.doCotizar = function ()
 ApplicationVender.prototype.swapClienteComun = function (val)
 {	
 	if(val==0){
+		//buscar cliente
 		ApplicationVender.currentInstance.buscarCliente();
-		//ApplicationVender.currentInstance.mainCard.items.items[0].add(  {xtype: 'slider', id: 'asdfclienteComun', value: 1, label: 'Agregar Cliente'}   );
-		//ApplicationVender.currentInstance.mainCard.doLayout();		
+
+		//agregar la opcion de facturar
+		ApplicationVender.currentInstance.mainCard.items.items[2].add(  {xtype: 'toggle', id: 'ventaFacturar', value: 1, label: 'Facturar'}   );
+		ApplicationVender.currentInstance.mainCard.doLayout();		
 	}else{
-		//ApplicationVender.currentInstance.mainCard.items.items[0].remove(   'asdfclienteComun'  );
-		//ApplicationVender.currentInstance.mainCard.doLayout();
+		
+		//remove client detail
 		Ext.get("detallesCliente").update("");
+		
+		//remove "facturar" option
+		ApplicationVender.currentInstance.mainCard.items.items[2].remove(   'ventaFacturar'  );
+		ApplicationVender.currentInstance.mainCard.doLayout();		
 	}
 
 };
 
 
+ApplicationVender.prototype.actualizarDetallesCliente = function ( clienteID )
+{
+	//mostrar los detalles del cliente
+	Ext.get("detallesCliente").update("Detallles del cliente.... " + clienteID);
+	
+};
+
+
+
+
+
 ApplicationVender.prototype.buscarCliente = function ()
 {
+	//retrive client list from server
+	POS.AJAXandDECODE({
+			method : "listarClientes"
+		},
+		function(response){
+			
+			//success
+			if(!response.success){
+				POS.aviso("Mostrador", "Error al traer la lista de clintes.");
+				return;
+			}
+
+
+			//createArray for client data
+			var clientesData = [];
+			
+			
+			//fill array
+			for(a = 0; a < response.datos.length ; a++){
+				clientesData.push( {firstName: response.datos[a].id_cliente, lastName: response.datos[a].nombre} );
+			}
+
+			//create regmodel
+			Ext.regModel('Contact', {
+		                    fields: ['firstName', 'lastName']
+		    });
+
+			//create the actual store
+			var clientesStore = new Ext.data.Store({
+                model: 'Contact',
+                sorters: 'lastName',
+                getGroupString : function(record) {
+                    return record.get('lastName')[0];
+                },
+                data: clientesData
+            });
+
+		 	//send the store to the client searching form
+			ApplicationVender.currentInstance.buscarClienteShowForm( clientesStore );
+			
+		},
+		function(){
+			//failure
+		});
+
+};
+
+
+
+
+
+
+
+
+ApplicationVender.prototype.buscarClienteShowForm = function ( clientesStore )
+{
 	
-
-
-		Ext.regModel('Contact', {
-		    fields: ['firstName', 'lastName']
-		});
-
-		demos.ListStore = new Ext.data.Store({
-		    model: 'Contact',
-		    sorters: 'firstName',
-		    getGroupString : function(record) {
-		        return record.get('firstName')[0];
-		    },
-		    data: [
-		        {firstName: 'Julio', lastName: 'Benesh'},
-		        {firstName: 'Julio', lastName: 'Minich'},
-		        {firstName: 'Tania', lastName: 'Ricco'},
-		        {firstName: 'Odessa', lastName: 'Steuck'},
-		        {firstName: 'Nelson', lastName: 'Raber'},
-		        {firstName: 'Tyrone', lastName: 'Scannell'},
-		        {firstName: 'Allan', lastName: 'Disbrow'},
-		        {firstName: 'Cody', lastName: 'Herrell'},
-		        {firstName: 'Julio', lastName: 'Burgoyne'},
-		        {firstName: 'Jessie', lastName: 'Boedeker'},
-		        {firstName: 'Allan', lastName: 'Leyendecker'},
-		        {firstName: 'Javier', lastName: 'Lockley'},
-		        {firstName: 'Guy', lastName: 'Reasor'},
-		        {firstName: 'Jamie', lastName: 'Brummer'},
-		        {firstName: 'Jessie', lastName: 'Casa'},
-		        {firstName: 'Marcie', lastName: 'Ricca'},
-		        {firstName: 'Gay', lastName: 'Lamoureaux'},
-		        {firstName: 'Althea', lastName: 'Sturtz'},
-		        {firstName: 'Kenya', lastName: 'Morocco'},
-		        {firstName: 'Rae', lastName: 'Pasquariello'},
-		        {firstName: 'Ted', lastName: 'Abundis'},
-		        {firstName: 'Jessie', lastName: 'Schacherer'},
-		        {firstName: 'Jamie', lastName: 'Gleaves'},
-		        {firstName: 'Hillary', lastName: 'Spiva'},
-		        {firstName: 'Elinor', lastName: 'Rockefeller'},
-		        {firstName: 'Dona', lastName: 'Clauss'},
-		        {firstName: 'Ashlee', lastName: 'Kennerly'},
-		        {firstName: 'Alana', lastName: 'Wiersma'},
-		        {firstName: 'Kelly', lastName: 'Holdman'},
-		        {firstName: 'Mathew', lastName: 'Lofthouse'},
-		        {firstName: 'Dona', lastName: 'Tatman'},
-		        {firstName: 'Clayton', lastName: 'Clear'},
-		        {firstName: 'Rosalinda', lastName: 'Urman'},
-		        {firstName: 'Cody', lastName: 'Sayler'},
-		        {firstName: 'Odessa', lastName: 'Averitt'},
-		        {firstName: 'Ted', lastName: 'Poage'},
-		        {firstName: 'Penelope', lastName: 'Gayer'},
-		        {firstName: 'Katy', lastName: 'Bluford'},
-		        {firstName: 'Kelly', lastName: 'Mchargue'},
-		        {firstName: 'Kathrine', lastName: 'Gustavson'},
-		        {firstName: 'Kelly', lastName: 'Hartson'},
-		        {firstName: 'Carlene', lastName: 'Summitt'},
-		        {firstName: 'Kathrine', lastName: 'Vrabel'},
-		        {firstName: 'Roxie', lastName: 'Mcconn'},
-		        {firstName: 'Margery', lastName: 'Pullman'},
-		        {firstName: 'Avis', lastName: 'Bueche'},
-		        {firstName: 'Esmeralda', lastName: 'Katzer'},
-		        {firstName: 'Tania', lastName: 'Belmonte'},
-		        {firstName: 'Malinda', lastName: 'Kwak'},
-		        {firstName: 'Tanisha', lastName: 'Jobin'},
-		        {firstName: 'Kelly', lastName: 'Dziedzic'},
-		        {firstName: 'Darren', lastName: 'Devalle'},
-		        {firstName: 'Julio', lastName: 'Buchannon'},
-		        {firstName: 'Darren', lastName: 'Schreier'},
-		        {firstName: 'Jamie', lastName: 'Pollman'},
-		        {firstName: 'Karina', lastName: 'Pompey'},
-		        {firstName: 'Hugh', lastName: 'Snover'},
-		        {firstName: 'Zebra', lastName: 'Evilias'}
-		    ]
-		});
-        
-
-
-
-
-
-
-
-
         var formBase = {
-
-
 			//	items
             items: [{
 		        width: "100%",
 		        height: "100%",
 				id: 'buscarClientesLista',
 		        xtype: 'list',
-		        store: demos.ListStore,
+		        store: clientesStore,
 		        tpl: '<tpl for="."><div class="contact"><strong>{firstName}</strong> {lastName}</div></tpl>',
 		        itemSelector: 'div.contact',
 		        singleSelect: true,
@@ -607,6 +592,9 @@ ApplicationVender.prototype.buscarCliente = function ()
 				    },{
 						xtype: 'spacer'
 					},{
+						//-------------------------------------------------------------------------------
+						//			cancelar
+						//-------------------------------------------------------------------------------
 						text: 'Cancelar',
 						handler: function() {
 							//regresar el boton de cliente comun a 1
@@ -624,35 +612,34 @@ ApplicationVender.prototype.buscarCliente = function ()
 								
                             }
 					},{
+						//-------------------------------------------------------------------------------
+						//			seleccionar	
+						//-------------------------------------------------------------------------------
+	                    text: 'Seleccionar',
+	                    ui: 'action',
+	                    handler: function() {
+
 						
-                            text: 'Seleccionar',
-                            ui: 'action',
-                            handler: function() {
-
-
-								
-								
-								if(Ext.getCmp("buscarClientesLista").selected.elements.length == 0){
-									//no haseleccionado a nadie
-									return;
-									
+							if(Ext.getCmp("buscarClientesLista").selected.elements.length == 0){
+								//no haseleccionado a nadie
+								return;
+							
+							}
+						
+							//imprimir los detalles del cliente en la forma principal
+							ApplicationVender.currentInstance.actualizarDetallesCliente( Ext.getCmp("buscarClientesLista").selected.elements[0].innerText )
+						
+							//hide the form
+							form.hide();
+						
+						
+							//destruir la lista
+							if( Ext.getCmp('buscarClientesLista') ){
+									Ext.getCmp('buscarClientesLista').store = null;
+									Ext.getCmp('buscarClientesLista').destroy();
 								}
-								
-								//mostrar los detalles del cliente
-								Ext.get("detallesCliente").update("Detallles del cliente.... " + Ext.getCmp("buscarClientesLista").selected.elements[0].innerText);
-								
-								
-								//hide the form
-								form.hide();
-								
-								
-								//destruir la lista
-								if( Ext.getCmp('buscarClientesLista') ){
-										Ext.getCmp('buscarClientesLista').store = null;
-										Ext.getCmp('buscarClientesLista').destroy();
-									}
-                            }
-
+	                   }
+					
                     }]
                 }
             ]
