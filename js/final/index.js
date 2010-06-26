@@ -67,7 +67,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
     },
     
     onListChange : function(list, item) {
-		console.log("list changed");
+		//console.log("list changed");
         if (Ext.orientation == 'portrait' && !Ext.platform.isPhone && !item.items && !item.preventHide) {
             this.navigationPanel.hide();
         }
@@ -199,7 +199,7 @@ POS.AJAXandDECODE = function (params, success, failure)
 			try{				
 				eval("datos = " + response.responseText);
 			}catch(e){
-				console.warn("Error: "+e);
+				console.warn("Error", e);
 			}
 			 
 
@@ -358,7 +358,10 @@ Ext.setup({
     glossOnIcon: false,
     
     onReady: function() {
-		console.log("DOM listo, iniciando aplicacion...");
+		if(DEBUG){
+			console.log("DOM listo, iniciando aplicacion...");			
+		}
+
 		
         sink.Main.init();
     }
