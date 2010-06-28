@@ -58,7 +58,8 @@ ApplicacionClientes.prototype._initToolBar = function (){
     var btnagregarCliente = [{
 		id: 'btn_agregarCliente',
         text: 'Agregar Cliente',
-        handler: this.agregarCliente
+        handler: this.agregarCliente,
+		ui: 'action'
     }];
 
 
@@ -76,7 +77,7 @@ ApplicacionClientes.prototype._initToolBar = function (){
             xtype: 'toolbar',
             ui: 'metal',
             items: btnagregarCliente,
-            dock: 'bottom'
+            dock: 'top'
         }];
     }
 	
@@ -269,103 +270,6 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
 	
 });
 
-/*ApplicacionClientes.prototype.menu2 = new Ext.form.FormPanel({
-    scroll: 'vertical',
-	id:'menu2',
-    items: [{
-		
-        xtype: 'fieldset',
-        title: 'Cliente Info',
-        instructions: 'Los campos que contienen * son obligatorios',
-        items: [
-				nombreCliente = new Ext.form.TextField({
-					id: 'nombreCliente',
-					label: '*Nombre'
-				})
-        ,
-				rfcCliente = new Ext.form.TextField({
-					id: 'rfcCliente',
-					label: '*RFC'
-				})
-        ,
-				direccionCliente = new Ext.form.TextField({
-					id: 'direccionCliente',
-					label: 'Direccion'
-				})
-        ,
-				emailCliente = new Ext.form.TextField({
-					id: 'emailCliente',
-					label: 'E-mail'
-				})
-        ,
-				telefonoCliente = new Ext.form.TextField({
-					id: 'telefonoCliente',
-					label: 'Telefono'
-				})
-        ,
-        		limite_creditoCliente = new Ext.form.NumberField({
-					id: 'limite_creditoCliente',
-					label: '*Max Credito'
-				})
-		]//fin items form
-		
-    },
-		{
-            xtype: 'button',
-            id: 'guardarCliente',
-            text: 'Guardar',
-			maxWidth:100,
-			handler: function(event,button) {
-				if( nombreCliente.getValue() =='' || rfcCliente.getValue() =='' || limite_creditoCliente.getValue() ==''){
-					POS.aviso("ERROR!!","LLENAR ALMENOS LOS CAMPOS CON  *");					
-					}else{
-						Ext.getBody().mask(false, '<div class="demos-loading">Loading&hellip;</div>');
-						POS.AJAXandDECODE({
-						method: 'insertarCliente',
-						rfc: rfcCliente.getValue(),
-						nombre: nombreCliente.getValue(),
-						direccion: direccionCliente.getValue(),
-						telefono: telefonoCliente.getValue(),
-						e_mail: emailCliente.getValue(),
-						limite_credito: limite_creditoCliente.getValue()
-						},
-						function (datos){//mientras responda
-							POS.aviso("NUEVO CLIENTE","LOS DATOS DEL CLIENTE FUERON GUARDADOS CORRECTAMENTE  :)");
-							rfcCliente.setValue('');
-							nombreCliente.setValue('');
-							direccionCliente.setValue('');
-							telefonoCliente.setValue('');
-							emailCliente.setValue('');
-							limite_creditoCliente.setValue('');
-						},
-						function (){//no responde	
-							POS.aviso("ERROR","NO SE PUDO INSERTAR CLIENTE, ERROR EN LA CONEXION :(");	
-						}
-					);//AJAXandDECODE insertar cliente
-					Ext.getBody().unmask();
-					}//else de validar vacios
-					Ext.get('menu2').hide(true);
-				}//fin handler
-	
-        }//fin boton
-		,
-		{
-			xtype: 'button',
-			id: 'cancelarGuardarCliente',
-			text: 'Cancelar',
-			maxWidth:100,
-			handler: function(event,button) {
-				Ext.get('menu2').hide();
-				ApplicacionClientes.currentInstance.ClientesList.removeDocked(ApplicacionClientes.currentInstance.menu2);
-				ApplicacionClientes.currentInstance.ClientesList.show();
-								
-				//return ApplicacionClientes.currentInstance.ClientesList.doLayout();
-			}//fin handler cancelar cliente
-			
-		}//fin boton cancelar
-	]//,//fin items formpanel
-});*/
-
 
 ApplicacionClientes.prototype.agregarCliente = function ()
 {
@@ -487,7 +391,7 @@ ApplicacionClientes.prototype.agregarCliente = function ()
 	]//,//fin items formpanel
 })
 );//fin addDccked
-	//return this.menu2;
+
 	
 };
 

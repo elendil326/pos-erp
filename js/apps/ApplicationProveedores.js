@@ -37,6 +37,7 @@ ApplicationProveedores.prototype.updateProviderForm= null;
 
 ApplicationProveedores.prototype.record = null;
 
+ApplicationProveedores.prototype.dockedItems = null;
 
 ApplicationProveedores.prototype._init = function()
 {
@@ -46,25 +47,45 @@ ApplicationProveedores.prototype._init = function()
 	//ayuda sobre esta applicacion
 	this.ayuda = "Ayuda sobre este modulo de prueba <br>, html es valido <br> :D";
 	//submenues en el panel de la izquierda
-	this.leftMenuItems = [
-	{
-        text: 'Ver Proveedores',
-        ayuda: 'SE ENLISTAN TODOS LOS PROVEEDORES REGISTRADOS EN PAPAS SUPREMAS',
-		card: this.ProveedoresList
-    },
-    {
-        text: 'Agregar Proveedor',
-       	card: this.menu2,
-        ayuda: 'MODULO QUE AGREGA PROVEEDORES'
-    }
-	];
 	
+	this._initToolBar();
 	//panel principal
-	this.mainCard = new Ext.Panel({
-		cls: 'card card1',
-		html: 'MODULO DE PROVEEDORES'
-	});	
+	this.mainCard = this.ProveedoresList
 };//fin CONSTRUCTOR
+
+
+ApplicationProveedores.prototype._initToolBar = function (){
+	//grupo 3, listo para vender
+    var btnagregarProveedor = [{
+		id: 'btn_agregarProveedor',
+        text: 'Agregar Proveedor',
+        handler: this.agregarProveedor,
+		ui: 'action'
+    }];
+
+
+	if (!Ext.platform.isPhone) {
+                
+        this.dockedItems = [new Ext.Toolbar({
+            // dock this toolbar at the bottom
+            ui: 'light',
+            dock: 'top',
+            items: btnagregarProveedor
+			
+        })];
+    }else {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            ui: 'metal',
+            items: btnagregarProveedor,
+            dock: 'top'
+        }];
+    }
+	
+	//agregar este dock a el panel principal
+	this.ProveedoresList.addDocked( this.dockedItems );
+
+};
 
 
 Ext.regModel('Proveedor', {
@@ -243,9 +264,15 @@ ApplicationProveedores.prototype.ProveedoresList = new Ext.Panel({
 
 
 
-ApplicationProveedores.prototype.menu2 = new Ext.form.FormPanel({
+ApplicationProveedores.prototype.agregarProveedor = function (){
+	Ext.getCmp('btn_agregarProveedor').setVisible(false);
+	if(DEBUG){
+		console.log("ApplicacionProveedores: agregarProveedor called....");
+	}
+	ApplicationProveedores.currentInstance.ProveedoresList.addDocked(formAgregarProveedor = new Ext.form.FormPanel({
     scroll: 'vertical',
-	id:'menu2',
+	id:'formAgregarProveedor',
+	fullscreen:true,
     items: [{
 		
         xtype: 'fieldset',
@@ -300,7 +327,22 @@ ApplicationProveedores.prototype.menu2 = new Ext.form.FormPanel({
 						e_mailP: emailProveedor.getValue()
 						},
 						function (datos){//mientras responda
-							POS.aviso("NUEVO PROVEEDOR","LOS DATOS DEL PROVEEDOR FUERON GUARDADOS CORRECTAMENTE  :)");
+							if(datos.success == true){//
+								POS.aviso("NUEVO CLIENTE","LOS DATOS DEL PROVEEDOR FUERON GUARDADOS CORRECTAMENTE :)");						
+								POS.AJAXandDECODE({
+								method: 'listarProveedores'
+								},
+								function (datos){//mientras responda
+									this.customers = datos.datos;
+									ProveedoresListStore.loadData(this.providers); 
+								},
+								function (){//no responde	
+									POS.aviso("ERROR!!","NO SE PUDO CARGAR LA LISTA DE PROVEEDORES ERROR EN LA CONEXION :(");	
+								}
+								);//AJAXandDECODE refrescar lista clientes
+							}else{
+								POS.aviso("ERROR!!","LOS DATOS DEL 	CLIENTE NO SE MODIFICARON :(");
+							}
 							rfcProveedor.setValue('');
 							nombreProveedor.setValue('');
 							direccionProveedor.setValue('');
@@ -312,11 +354,27 @@ ApplicationProveedores.prototype.menu2 = new Ext.form.FormPanel({
 						}
 					);//AJAXandDECODE insertar proveedor
 					Ext.getBody().unmask();
+					Ext.getCmp('formAgregarProveedor').destroy();
+					Ext.getCmp('btn_agregarProveedor').setVisible(true);
 					}//else de validar vacios
 				}//fin handler	
-        }//fin boton
+        }//fin boton guardar
+		,
+		{
+			xtype: 'button',
+			id: 'cancelarGuardarProveedor',
+			text: 'Cancelar',
+			maxWidth:100,
+			handler: function(event,button) {
+				Ext.getCmp('formAgregarProveedor').destroy();
+				Ext.getCmp('btn_agregarProveedor').setVisible(true);
+				
+			}//fin handler cancelar cliente
+			
+		}//fin boton cancelar
 	]//,//fin items formpanel
-});//fin menu2
-
+	})//fin menu2
+);
+};
 //autoinstalar esta applicacion
 AppInstaller( new ApplicationProveedores() );
