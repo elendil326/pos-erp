@@ -55,12 +55,14 @@ ApplicationVender.prototype._init = function()
 	//this.leftMenuItems = 
 
 
+	//panel principal	
+	this.mainCard = this.venderMainPanel;
+
 	//initialize the tootlbar which is a dock
 	this._initToolBar();
 	
 	
-	//panel principal	
-	this.mainCard = this.venderMainPanel;
+
 	
 	
 	
@@ -99,21 +101,8 @@ ApplicationVender.prototype._initToolBar = function (){
     }];
 
 
-	//grupo 2, cualquier otra mamada
-	var buttonsGroup2 = [/*{
-        xtype: 'splitbutton',
-        activeButton: 0,
-        items: [{
-            text: 'Option 1',
-            handler: tapHandler
-        }, {
-            text: 'Option 2',
-            handler: tapHandler
-        }, {
-            text: 'Option 3',
-            handler: tapHandler
-        }]    
-    }*/];
+	//grupo 2, cualquier otra cosa
+	var buttonsGroup2 = [];
     
 
 
@@ -121,13 +110,14 @@ ApplicationVender.prototype._initToolBar = function (){
 	//grupo 3, listo para vender
     var buttonsGroup3 = [{
         text: 'Limpiar',
-        handler: null
+        handler: this.doLimpiarCarrito
     },{
         text: 'Cotizar',
         handler: this.doCotizar
     },{
         text: 'Vender',
         ui: 'action',
+		id: 'doVenderButton',
         handler: this.doVender
     }];
 
@@ -138,7 +128,7 @@ ApplicationVender.prototype._initToolBar = function (){
         
         this.dockedItems = [new Ext.Toolbar({
             // dock this toolbar at the bottom
-            ui: 'light',
+            ui: 'dark',
             dock: 'bottom',
             items: buttonsGroup1.concat(buttonsGroup2).concat(buttonsGroup3)
 			
@@ -164,7 +154,92 @@ ApplicationVender.prototype._initToolBar = function (){
 
 	
 	//agregar este dock a el panel principal
-	this.venderMainPanel.addDocked( this.dockedItems );
+	this.mainCard.addDocked( this.dockedItems );
+	
+	//----------------------------------------------------------------------
+	//grupo 1
+	buttonsGroup1 = [{
+        xtype: 'splitbutton',
+		activeItem: 0,
+		id: 'av_request_notes',
+		allowMultiple: true,
+		listeners:
+				{
+					render: function( a ){
+
+					}
+				},
+        items: [{
+            text: 'Nota'
+        }, {
+            text: 'Factura',
+			id :'av_request_factura',
+			handler: function (){
+				
+			}
+
+        }]    
+    }];
+
+
+	//grupo 2
+	buttonsGroup2 = [{
+        xtype: 'splitbutton',
+		id:'av_top_nota_factura',
+		activeItem: 0,
+		listeners:
+				{
+					render: function( a ){
+
+					}
+				},
+        items: [{
+            text: 'Caja Comun',
+			handler : function (){
+					ApplicationVender.currentInstance.swapClienteComun(1);
+			}
+        }, {
+            text: 'Cliente',
+			handler : function (){
+					ApplicationVender.currentInstance.swapClienteComun(0);
+			}
+        }]    
+    }];
+    
+
+	if (!Ext.platform.isPhone) {
+        buttonsGroup1.push({xtype: 'spacer'});
+        
+        this.dockedItemsTop = [ new Ext.Toolbar({
+			scroll: 'horizontal',
+            // dock this toolbar at the bottom
+            ui: 'light',
+            dock: 'top',
+            items: buttonsGroup1.concat(buttonsGroup2)
+        })];
+
+    }else {
+        this.dockedItemsTop = [{
+            xtype: 'toolbar',
+            ui: 'light',
+            items: buttonsGroup1,
+            dock: 'bottom'
+        }, {
+            xtype: 'toolbar',
+            ui: 'dark',
+            items: buttonsGroup2,
+            dock: 'bottom'
+        }, {
+            xtype: 'toolbar',
+            ui: 'metal',
+            items: buttonsGroup3,
+            dock: 'bottom'
+        }];
+    }
+
+	
+	//agregar este dock a el panel principal
+	this.mainCard.addDocked( this.dockedItemsTop );
 
 };
 
@@ -189,44 +264,31 @@ ApplicationVender.prototype.venderMainPanel = new Ext.form.FormPanel({
 	
 	//items del formpanel
     items: [{
-
-        xtype: 'fieldset',
-        title: 'Detalles del cliente',
-        //instructions: 'Please enter the information above.',
-        items: [{
-	        xtype: 'toggle',
-	        id: 'clienteComunToggle',
-			value: 1,
-	        label: 'Caja comun',
-			listeners:
-					{
-						change: function( slider, thumb, oldValue, newValue){
-							if(oldValue == newValue) { return; }
-							ApplicationVender.currentInstance.swapClienteComun(newValue);
-						}
-					}
-        }]
-    },{
-			html: '',
+		// ---- item-0 ---- 
+        	xtype: 'fieldset',
+        	title: 'Detalles del cliente',
+        	items: []
+    	},{
+		// ---- item-1 ---- 
+			html: '<div class="helper1"></div>',
 			id : 'detallesCliente'
 		},{
-        xtype: 'fieldset',
-        title: 'Detalles de la Venta',
-        defaults: {
-            xtype: 'radio',
-        },
-        items: [{
-	        xtype: 'toggle',
-	        name: 'enable',
-	        label: 'Nota'
-        }]
-    },{
-		html: '',
-		id : 'carritoDeCompras'
-	},{
-		html: '',
-		id : 'carritoDeComprasTotales'
-	}]
+		// ---- item-2 ---- 
+			xtype: 'fieldset',
+        	title: 'Detalles de la Venta',
+        	defaults: {
+            	xtype: 'radio',
+        	},
+        	items: []
+    	},{
+		// ---- item-3 ---- 
+			html: '',
+			id : 'carritoDeCompras'
+		},{
+		// ---- item-4 ---- 
+			html: '',
+			id : 'carritoDeComprasTotales'
+		}]
 });
 
 
@@ -237,6 +299,107 @@ ApplicationVender.prototype.venderMainPanel = new Ext.form.FormPanel({
 //					lista de carrito de compras
 //----------------------------------------------------------------------------------------------------------------------------------------------
 ApplicationVender.prototype.htmlCart_items = [];
+
+
+ApplicationVender.prototype.doLimpiarCarrito = function ( )
+{
+	
+	var items = ApplicationVender.currentInstance.htmlCart_items;
+	
+	if( items.length != 0){
+		while(items.length != 0){
+			items.pop();
+		}
+		
+		ApplicationVender.currentInstance.doRefreshItemList();
+	}
+	
+	
+	
+	ApplicationVender.currentInstance.swapClienteComun(1);
+	
+};
+
+
+
+
+
+
+ApplicationVender.prototype.doDeleteItem = function ( item )
+{
+	
+	this.htmlCart_items.splice(item, 1);
+	
+	this.doRefreshItemList();
+	
+};
+
+
+
+ApplicationVender.prototype.doRefreshItemList = function (  )
+{
+	
+	if( this.htmlCart_items.length == 0){
+		Ext.get("carritoDeCompras").update("");
+		Ext.get("carritoDeComprasTotales").update("");
+		return;
+	}
+	
+	var html = "";
+	
+	//renderear el html
+	for( a = 0; a < this.htmlCart_items.length; a++ ){
+		
+		//si es el ultimo, quitar el border de abajo
+		var starter = (a == (this.htmlCart_items.length-1)) ? "<li class='ApplicationVender' style='border-bottom-width: 0px;'>" : "<li class='ApplicationVender'>";
+		
+		html += starter 
+		+ "<span class='id'>" + this.htmlCart_items[a].id +"</span>" 
+		+ "<span class='name'>" + this.htmlCart_items[a].name +"</span>" 
+		+ "<span class='description'>"+ this.htmlCart_items[a].description +"</span>" 
+		+ "<span class='cost'>"+ this.htmlCart_items[a].cost +"</span>"
+		+ "<span class='trash' onclick='ApplicationVender.currentInstance.doDeleteItem(" +a+ ")'>&nbsp;<img height=20 width=20 src='sencha/resources/img/toolbaricons/trash.png'></span>"		
+		
+
+		+ "</li>";
+	}
+	
+
+
+	//imprimir el html
+	Ext.get("carritoDeCompras").update("<ul class='ApplicationVender'>" + html +"</ul>");
+	
+	
+	
+	//preparar un html para los totales
+	var totals_html = "";
+
+	//si hay mas de un producto, mostrar los totales
+	if(this.htmlCart_items.length > 0){
+		
+		var subtotal = 0;
+		
+		//revisar que no este ya en el carrito
+		for( a = 0; a < this.htmlCart_items.length;  a++){
+			subtotal += parseInt( this.htmlCart_items[a].cost );
+		}
+
+		
+		totals_html = "<li class='ApplicationVender-Totales'>Subtotal <b>" +  subtotal + "</b></li>"
+		+ "<li class='ApplicationVender-Totales'>IVA <b>" +  (subtotal*.15) + "</b></li>"
+		+ "<li class='ApplicationVender-Totales' style='border-bottom-width: 0px;'>Total <b>" +  ((subtotal*.15)+subtotal) + "</b></li>";
+	}else{
+		totals_html = "";
+	}
+	
+	Ext.get("carritoDeComprasTotales").update("<ul class='ApplicationVender-Totales'>" + totals_html +"</ul>");
+};
+
+
+
+
+
+
 
 
 
@@ -276,53 +439,12 @@ ApplicationVender.prototype.htmlCart_addItem = function( item )
 	//empujar al carrito
 	this.htmlCart_items.push(item);
 	
-	var html = "";
 	
-	//renderear el html
-	for( a = 0; a < this.htmlCart_items.length; a++ ){
-		
-		//si es el ultimo, quitar el border de abajo
-		var starter = (a == (this.htmlCart_items.length-1)) ? "<li class='ApplicationVender' style='border-bottom-width: 0px;'>" : "<li class='ApplicationVender'>";
-		
-		html += starter 
-		+ "<span class='id'>" + this.htmlCart_items[a].id +"</span>" 
-		+ "<span class='name'>" + this.htmlCart_items[a].name +"</span>" 
-		+ "<span class='description'>"+ this.htmlCart_items[a].description +"</span>" 
-		+ "<span class='cost'>"+ this.htmlCart_items[a].cost +"</span>"
-		+ "<span class='trash'>&nbsp;<img height=20 width=20 src='sencha/resources/img/toolbaricons/trash.png'></span>"		
-		
-
-		+ "</li>";
-	}
-	
+	//dibujar el carrito
+	this.doRefreshItemList();
 
 
-	//imprimir el html
-	Ext.get("carritoDeCompras").update("<ul class='ApplicationVender'>" + html +"</ul>");
 
-
-	//preparar un html para los totales
-	var totals_html = "";
-
-	//si hay mas de un producto, mostrar los totales
-	if(this.htmlCart_items.length > 0){
-		
-		var subtotal = 0;
-		
-		//revisar que no este ya en el carrito
-		for( a = 0; a < this.htmlCart_items.length;  a++){
-			subtotal += parseInt( this.htmlCart_items[a].cost );
-		}
-
-		
-		totals_html = "<li class='ApplicationVender-Totales'>Subtotal <b>" +  subtotal + "</b></li>"
-		+ "<li class='ApplicationVender-Totales'>IVA <b>" +  (subtotal*.15) + "</b></li>"
-		+ "<li class='ApplicationVender-Totales' style='border-bottom-width: 0px;'>Total <b>" +  ((subtotal*.15)+subtotal) + "</b></li>";
-	}else{
-		totals_html = "";
-	}
-	
-	Ext.get("carritoDeComprasTotales").update("<ul class='ApplicationVender-Totales'>" + totals_html +"</ul>");
 };
 
 
@@ -424,8 +546,18 @@ ApplicationVender.prototype.doVender = function ()
 	}
 	
 	
-
+	items = ApplicationVender.currentInstance.htmlCart_items;
 	
+	//revisar que exista por lo menos un item
+	if(items.length == 0){
+		POS.aviso("Mostrador", "Agregue primero al menos un arituclo para poder vender.");
+		return;
+	}
+	
+	newPanel = ApplicationVender.currentInstance.doVenderPanel;
+	
+	sink.Main.ui.setCard( newPanel, 'slide' );
+
 	/*
 	POS.AJAXandDECODE({
 		method: 'listarClientes',
@@ -456,41 +588,111 @@ ApplicationVender.prototype.doCotizar = function ()
 		console.log("ApplicationVender: doCotizar called....");
 	}
 	
+	items = ApplicationVender.currentInstance.htmlCart_items;
+	
+	//revisar que exista por lo menos un item
+	if(items.length == 0){
+		POS.aviso("Mostrador", "Agregue primero al menos un arituclo para poder cotizar.");
+		return;
+	}
 };
 
 
 
+
+
+//----------------------------------------------------------------------------------------------------------------------------------------------
+//				Panel de Vender  
+//----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+ApplicationVender.prototype.doVenderPanel = new Ext.form.FormPanel({
+	//tipo de scroll
+    scroll: 'vertical',
+
+	//toolbar
+	dockedItems: null,
+	
+	//items del formpanel
+    items: [{
+
+        xtype: 'fieldset',
+        title: 'Venta',
+        items: [{
+	        	xtype: 'textfield',
+	        	label: 'SubTotal'
+       		},{
+		        xtype: 'textfield',
+		        label: 'IVA'
+	      	},{
+			    xtype: 'textfield',
+			    label: 'Total'
+		    }]
+		},{
+        	xtype: 'fieldset',
+        	title: 'Credito',
+        	defaults: {
+            	xtype: 'radio',
+        	},
+        	items: [{
+	        	xtype: 'toggle',
+	        	name: 'enable',
+	        	label: 'Compra a credito'
+        		}]
+    	}]
+});
+
+
+
+ApplicationVender.prototype.CLIENTE_COMUN = true;
 
 //----------------------------------------------------------------------------------------------------------------------------------------------
 //				Buscar cliente  
 //----------------------------------------------------------------------------------------------------------------------------------------------
 ApplicationVender.prototype.swapClienteComun = function (val)
 {	
+	
+	
 	if(val==0){
 		//buscar cliente
 		ApplicationVender.currentInstance.buscarCliente();
+		ApplicationVender.currentInstance.CLIENTE_COMUN = false;
 
-		//agregar la opcion de facturar
-		ApplicationVender.currentInstance.mainCard.items.items[2].add(  {xtype: 'toggle', id: 'ventaFacturar', value: 1, label: 'Facturar'}   );
-		ApplicationVender.currentInstance.mainCard.doLayout();		
 	}else{
 		
 		//remove client detail
 		Ext.get("detallesCliente").update("");
 		
 		//remove "facturar" option
-		ApplicationVender.currentInstance.mainCard.items.items[2].remove(   'ventaFacturar'  );
-		ApplicationVender.currentInstance.mainCard.doLayout();		
+		//ApplicationVender.currentInstance.mainCard.items.items[2].remove(   'ventaFacturar'  );
+		//ApplicationVender.currentInstance.mainCard.doLayout();
+		
+		ApplicationVender.currentInstance.CLIENTE_COMUN = true; 	
 	}
 
 };
 
 
-ApplicationVender.prototype.actualizarDetallesCliente = function ( clienteID )
+ApplicationVender.prototype.actualizarDetallesCliente = function ( cliente )
 {
-	//mostrar los detalles del cliente
-	Ext.get("detallesCliente").update("Detallles del cliente.... " + clienteID);
+	//si ya vamos a actualizar cliente entonces es porque todo salio bien, entonces.... agregar la opcion de facturar
+	//ApplicationVender.currentInstance.mainCard.items.items[2].add(  {xtype: 'toggle', id: 'ventaFacturar', value: 0, label: 'Facturar'}   );
+	//ApplicationVender.currentInstance.mainCard.doLayout();
 	
+	//mostrar los detalles del cliente
+	
+	var html = "";
+	html += " <div class='ApplicationVender-clienteBox'> ";
+		html += " <div><h2>" + cliente.nombre + "</h2></div>";
+		html += " <div class='ApplicationVender-clienteDetalle'> RFC " + cliente.rfc + "</div>";
+		html += " <div class='ApplicationVender-clienteDetalle'> Direccion " + cliente.direccion + "</div>";
+		html += " <div class='ApplicationVender-clienteDetalle'> Telefono " + cliente.telefono + "</div>";
+		html += " <div class='ApplicationVender-clienteDetalle'> Correo Electronico " + cliente.e_mail + "</div>";
+		html += " <div class='ApplicationVender-clienteDetalle'> Limite de Credito " + cliente.limite_credito + "</div>";
+	html += " </div> ";
+	
+	
+	Ext.get("detallesCliente").update( html );
 };
 
 
@@ -518,20 +720,42 @@ ApplicationVender.prototype.buscarCliente = function ()
 			
 			//fill array
 			for(a = 0; a < response.datos.length ; a++){
-				clientesData.push( {firstName: response.datos[a].id_cliente, lastName: response.datos[a].nombre} );
+				clientesData.push( {
+					iden: 		response.datos[a].id_cliente, 
+					nombre: 	response.datos[a].nombre, 
+					rfc: 		response.datos[a].rfc,
+					direccion: 	response.datos[a].direccion,
+					telefono: 	response.datos[a].telefono,
+					e_mail: 	response.datos[a].e_mail,
+					limite_credito:response.datos[a].limite_credito
+					
+					});
 			}
 
-			//create regmodel
-			Ext.regModel('Contact', {
-		                    fields: ['firstName', 'lastName']
+
+
+
+			//create regmodel para busqueda por nombre
+			Ext.regModel('ApplicationVender_nombre', {
+		                    fields: [ 'nombre']
+		    });
+		
+			//create regmodel para busqueda por rfc
+			Ext.regModel('ApplicationVender_rfc', {
+		                    fields: [ 'rfc', 'nombre']
+		    });
+		
+			//create regmodel para busqueda por direccion
+			Ext.regModel('ApplicationVender_direccion', {
+		                    fields: [ 'direccion' ]
 		    });
 
 			//create the actual store
 			var clientesStore = new Ext.data.Store({
-                model: 'Contact',
-                sorters: 'lastName',
+                model: 'ApplicationVender_' + ApplicationVender.currentInstance.buscarClienteFormSearchtype,
+                sorters: ApplicationVender.currentInstance.buscarClienteFormSearchtype,
                 getGroupString : function(record) {
-                    return record.get('lastName')[0];
+                    return record.get( ApplicationVender.currentInstance.buscarClienteFormSearchtype )[0];
                 },
                 data: clientesData
             });
@@ -548,9 +772,25 @@ ApplicationVender.prototype.buscarCliente = function ()
 
 
 
+ApplicationVender.prototype.buscarClienteFormSearchtype = 'nombre';
 
 
 
+//thi shit wont work
+
+ApplicationVender.prototype.buscarClienteFormSearchTemplate = function ()
+{
+	console.log("requesting template-...");
+	switch(ApplicationVender.currentInstance.buscarClienteFormSearchtype){
+		case 'nombre': 		return '<tpl for="."><div class="contact"><strong>{nombre}</strong>{rfc},{direccion}</div></tpl>';
+		case 'rfc': 		return '<tpl for="."><div class="contact"><strong>{rfc}</strong> {nombre}</div></tpl>';		
+		case 'direccion': 	return '<tpl for="."><div class="contact">{direccion}<strong> {nombre}</strong></div></tpl>';
+	}
+};
+
+
+
+var alanboy = '<tpl for="."><div class="contact"><strong>{nombre}</strong> {rfc} {direccion}</div></tpl>';
 
 
 ApplicationVender.prototype.buscarClienteShowForm = function ( clientesStore )
@@ -559,13 +799,14 @@ ApplicationVender.prototype.buscarClienteShowForm = function ( clientesStore )
         var formBase = {
 			//	items
             items: [{
+				loadingText: 'Cargando datos...',
 		        width: "100%",
 		        height: "100%",
 				id: 'buscarClientesLista',
 		        xtype: 'list',
 		        store: clientesStore,
-		        tpl: '<tpl for="."><div class="contact"><strong>{firstName}</strong> {lastName}</div></tpl>',
-		        itemSelector: 'div.contact',
+		        tpl: ApplicationVender.currentInstance.buscarClienteFormSearchTemplate() , //al hacer refresh() la lista no actualiza el tpl, creo que lo tendre que hacer con CSS
+				itemSelector: 'div.contact',
 		        singleSelect: true,
 		        grouped: true,
 		        indexBar: true
@@ -581,13 +822,25 @@ ApplicationVender.prototype.buscarClienteShowForm = function ( clientesStore )
 				        activeButton: "1",
 				        items: [{
 				            text: 'Nombre',
-				            handler: null
+				            handler: function (){
+								//Ext.getCmp("buscarClientesLista")
+								ApplicationVender.currentInstance.buscarClienteFormSearchtype = "nombre";
+								Ext.getCmp("buscarClientesLista").refresh();
+							}
 				        }, {
 				            text: 'RFC',
-				            handler: null
+				            handler: function (){
+
+								ApplicationVender.currentInstance.buscarClienteFormSearchtype = "rfc";
+								Ext.getCmp("buscarClientesLista").refresh();
+							}
 				        }, {
 				            text: 'Direccion',
-				            handler: null
+				            handler: function (){
+
+								ApplicationVender.currentInstance.buscarClienteFormSearchtype = "direccion";
+								Ext.getCmp("buscarClientesLista").refresh();
+							}
 				        }]    
 				    },{
 						xtype: 'spacer'
@@ -598,7 +851,8 @@ ApplicationVender.prototype.buscarClienteShowForm = function ( clientesStore )
 						text: 'Cancelar',
 						handler: function() {
 							//regresar el boton de cliente comun a 1
-							Ext.getCmp("clienteComunToggle").setValue(1);
+
+							Ext.getCmp("av_top_nota_factura").setActive(0);
 
 
 							//ocultar esta tabla
@@ -627,7 +881,7 @@ ApplicationVender.prototype.buscarClienteShowForm = function ( clientesStore )
 							}
 						
 							//imprimir los detalles del cliente en la forma principal
-							ApplicationVender.currentInstance.actualizarDetallesCliente( Ext.getCmp("buscarClientesLista").selected.elements[0].innerText )
+							ApplicationVender.currentInstance.actualizarDetallesCliente( Ext.getCmp("buscarClientesLista").getSelectedRecords()[0].data )
 						
 							//hide the form
 							form.hide();
@@ -687,7 +941,9 @@ ApplicationVender.prototype.buscarClienteShowForm = function ( clientesStore )
 
 
 
-
+ApplicationVender.prototype.ventaLista = new Ext.Panel({
+	
+});
 
 
 

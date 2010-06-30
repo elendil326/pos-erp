@@ -3,9 +3,10 @@ Ext.ns('sink', 'demos', 'Ext.ux');
 Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
     fullscreen: true,
     layout: 'card',
+	scroll: 'vertical',
     items: [{
         cls: 'launchscreen',
-        html: '<div><h1>Papas Supremas</h1><p><br /><br /><span>caffeina 2010</span></p></div>'
+        html: '<div>Papas Supremas<br/><span>caffeina 2010</span><br></div><div class="helper1"></div>'
     }],
 
     initComponent : function() {
@@ -21,7 +22,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
 		//boton de navegacion
         this.navigationButton = new Ext.Button({
             hidden: Ext.platform.isPhone || Ext.orientation == 'landscape',
-            text: 'Navigation',
+            text: 'Navegacion',
             handler: this.onNavButtonTap,
             scope: this
         });
@@ -279,7 +280,7 @@ sink.Main = {
 
 		//crear el UI
         this.ui = new Ext.ux.UniversalUI({
-            title: Ext.platform.isPhone ? 'iphone' : 'POS',
+            title: Ext.platform.isPhone ? 'POS iPhone' : 'Punto de Venta',
             navigationItems: Apps,
             buttons: [{xtype: 'spacer'}, this.ayudaButton],
             listeners: {

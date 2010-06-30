@@ -84,6 +84,47 @@ ApplicationProveedores.prototype._initToolBar = function (){
 	
 	//agregar este dock a el panel principal
 	this.ProveedoresList.addDocked( this.dockedItems );
+	
+	
+	//--------------------------------------
+	
+	//grupo 3, listo para vender
+    btnagregarProveedor = [{
+        text: 'Modificar'
+    },	{
+	        text: 'regresar',
+			ui: 'back'
+	    },
+		{
+		        text: 'comprale',
+				ui: 'action'
+		    },
+			{
+			        text: 'regresar',
+					ui: 'action'
+			    }];
+
+
+	if (!Ext.platform.isPhone) {
+                
+        this.dockedItems = [new Ext.Toolbar({
+            // dock this toolbar at the bottom
+            ui: 'light',
+            dock: 'bottom',
+            items: btnagregarProveedor
+			
+        })];
+    }else {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            ui: 'metal',
+            items: btnagregarProveedor,
+            dock: 'bottom'
+        }];
+    }
+	
+	//agregar este dock a el panel principal
+	this.ProveedoresList.addDocked( this.dockedItems );
 
 };
 

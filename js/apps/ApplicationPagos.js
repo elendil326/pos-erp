@@ -67,6 +67,9 @@ ApplicationPagos.prototype._init = function()
 	
 };//fin CONSTRUCTOR
 
+
+
+// TODO esto es una variable global !
 btnClientes=new Ext.Button({
 			hidden:'true',		
 			handler:function (){
@@ -83,21 +86,28 @@ btnClientes=new Ext.Button({
                 value: 'id_c'
             }]
         });
+
+// TODO esto es una variable global !
 de =new Ext.form.SearchField({
 			fieldLabel: 'Del:',
 			name: 'fecha_inicio:',
 			allowBlank:false
 		});
+// TODO esto es una variable global !
 al =new Ext.form.TextField({
 			fieldLabel: 'al:',
 			name: 'fecha_fin:',
 			allowBlank:false
 		});
+		
+// TODO esto es una variable global !
 fechas = new Ext.form.FormPanel({
 	hidden:'true',
     items: [de,al]
 });
 
+
+// TODO esto es una variable global !
 formulario=new Ext.form.FormPanel({
 		minHeight:80,
     items: [{
@@ -220,6 +230,7 @@ storePagos = new Ext.data.Store({
 ApplicationPagos.prototype.mainCard = new Ext.Panel({
    
     scroll: 'vertical',
+
 	cls: 'cards',
 	layout: {
 		type: 'vbox',

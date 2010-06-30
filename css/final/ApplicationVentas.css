@@ -46,21 +46,30 @@ li.ApplicationVender{
 }
 
 
+
+
+/* ------------------------------------------------------------------------
+	Items del carrito
+   ------------------------------------------------------------------------ */
 span.id{
 
+	margin-left : 5px;
+	
 	font-weight: bold;
 	color: black;
 }
 
 span.name{
-
+	margin-left : 5px;
 }
 
 span.description{
-	color: green;	
+		margin-left : 5px;
+		color: black;	
 }
 
 span.cost{
+	margin-left : 5px;
 	text-align: right;
 	color: blue;	
 }
@@ -68,11 +77,18 @@ span.cost{
 
 span.trash{
 	/*background-image: url(sencha/resources/img/toolbaricons/trash.png);*/
-	margin-top: 9px;
+
 }
 
 
 
+
+
+
+
+/* ------------------------------------------------------------------------
+	Totales del carrito
+   ------------------------------------------------------------------------ */
 ul.ApplicationVender-Totales  {
 	-webkit-box-shadow: rgba(255, 255, 255, 0.699219) 0px 1px 0px 0px;
 	-webkit-box-sizing: border-box;
@@ -125,5 +141,70 @@ li.ApplicationVender-Totales{
 	border-top-left-radius: 3px;
 	border-top-style: solid;
 	border-top-width: 1px;
+	
+}
+
+
+/* ------------------------------------------------------------------------
+	Detalles del cliente
+   ------------------------------------------------------------------------ */
+
+/*
+li.ApplicationVender-clienteDetalle{
+	
+	color: black;
+	text-shadow: white 0px 1px 1px;
+	text-align: right;
+	background-color: #F4F3F1;
+	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+	font-weight: normal;
+	padding : 5px;
+
+	border-bottom-color: #DED9D4;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	
+	border-top-color: white;
+	border-top-left-radius: 3px;
+	border-top-style: solid;
+	border-top-width: 1px;
+	
+}
+*/
+
+
+
+div.ApplicationVender-clienteBox  {
+	-webkit-box-shadow: rgba(255, 255, 255, 0.699219) 0px 1px 0px 0px;
+	-webkit-box-sizing: border-box;
+	-webkit-user-select: none;
+	
+	padding : 5px;
+	
+	background-color: white;
+	border-bottom-color: #DED9D4;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	
+	border-left-color: #DED9D4;
+	border-left-style: solid;
+	border-left-width: 1px;
+	
+	border-right-color: #DED9D4;
+	border-right-style: solid;
+	border-right-width: 1px;
+	
+	border-top-color: #DED9D4;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	border-top-style: solid;
+	border-top-width: 1px;
+	
+	
+	display: block;
+	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+	font-size: 12px;
 	
 }

@@ -26,8 +26,28 @@ code, pre {
   background-color: #ccc;
 }
 
+/* HELPERS !!! */
+.helper1
+{
+	background-image: url(media/helper1.png);
+	top: 0px;
+	position: absolute;
+	width: 400px !important;
+	height: 110px;
+	
+}
+
+
+
+
+/* PANELS CUSTOMIZADOS */
+.panel-custom{
+		background-image: url(media/g1.png) !important;
+}
+
 .launchscreen > .x-panel-body {
-  background-color: #eee;
+  /* BACKGROUND */
+  background: url(media/g1.png);
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-box-align: center;
@@ -39,8 +59,8 @@ code, pre {
   text-align: center;
   font-size: 18px;
   line-height: 28px;
-  color: #666;
-  text-shadow: #fff 0 0 25px;
+  color: #fff;
+  text-shadow: black 0 0 25px;
 }
 
 .launchscreen > .x-panel-body h1 {
@@ -51,7 +71,8 @@ code, pre {
 }
 
 .launchscreen .x-panel-body span {
-  color: #999;
+  font-size: 10px;
+  color: #fff;
 }
 
 .cards .x-panel-body h1 {
@@ -123,6 +144,7 @@ code, pre {
 }
 
 .overlay .x-panel-body {
+	
   background-color: #5E99CC;
   padding: 80px 0 !important;
   text-align: center;
@@ -145,7 +167,8 @@ code, pre {
 }
 
 .demos-loading {
-  background: rgba(0,0,0,.3) url(../../../resources/shared/loading.gif) center center no-repeat;
+
+
   display: block;
   width: 10em;
   height: 10em;
@@ -236,6 +259,7 @@ span.loading {
 
 .x-tablet .demo-list > .x-panel-body,
 .demo-picker > .x-panel-body {
+	
   background-color: #494949;
 }
 

@@ -86,12 +86,14 @@ ApplicacionClientes.prototype._initToolBar = function (){
 
 };
 
+
+//TODO utilizar id con prefijo
 Ext.regModel('Contact', {
     fields: ['nombre', 'rfc']
 });
 
 
-
+//TODO esto debe ser una variable miembro
 ClientesListStore = new Ext.data.Store({
     model: 'Contact',
     sorters: 'nombre',
@@ -277,6 +279,10 @@ ApplicacionClientes.prototype.agregarCliente = function ()
 	if(DEBUG){
 		console.log("ApplicacionClientes: agregarCliente called....");
 	}
+	
+	
+	
+	//TODO aqui estas dockeando....debe ser una nueva tarjeta, "	sink.Main.ui.setCard( newPanel, 'slide' );" ver ApplicationVender:559
 	ApplicacionClientes.currentInstance.ClientesList.addDocked(formAgregarCliente = new Ext.form.FormPanel({
     scroll: 'vertical',
 	id:'formAgregarCliente',
@@ -328,6 +334,11 @@ ApplicacionClientes.prototype.agregarCliente = function ()
 				if( nombreCliente.getValue() =='' || rfcCliente.getValue() =='' || limite_creditoCliente.getValue() ==''){
 					POS.aviso("ERROR!!","LLENAR ALMENOS LOS CAMPOS CON  *");					
 					}else{
+						
+						
+						//TODO validar campos
+						//tags html, scripts
+						
 						Ext.getBody().mask(false, '<div class="demos-loading">Loading&hellip;</div>');
 						POS.AJAXandDECODE({
 						method: 'insertarCliente',
