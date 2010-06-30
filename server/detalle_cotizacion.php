@@ -42,10 +42,10 @@
 			$query="select * from detalle_cotizacion where id_cotizacion =? and id_producto =?;";
 			$params=array($id_c,$id_p);
 			$datos=$this->bd->select_uno($query,$params);
-			$this->id_cotizacion=$datos[id_cotizacion];	
-			$this->id_producto=$datos[id_producto];	
-			$this->cantidad=$datos[cantidad];	
-			$this->precio=$datos[precio];	
+			$this->id_cotizacion=$datos['id_cotizacion'];	
+			$this->id_producto=$datos['id_producto'];	
+			$this->cantidad=$datos['cantidad'];	
+			$this->precio=$datos['precio'];	
 		}
 		function existe(){
 			$query="select id_cotizacion from detalle_cotizacion where id_cotizacion=? and id_producto=?;";

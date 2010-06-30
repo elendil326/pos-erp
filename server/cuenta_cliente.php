@@ -42,8 +42,8 @@
 			$query="select * from cuenta_cliente where id_cliente=?;";
 			$params=array($id);
 			$datos=$this->bd->select_uno($query,$params);	
-			$this->id_cliente=$datos[id_cliente];	
-			$this->saldo=$datos[saldo];	
+			$this->id_cliente=$datos['id_cliente'];	
+			$this->saldo=$datos['saldo'];	
 		}
 		function existe(){
 			$query="select id_cliente from cuenta_cliente where id_cliente=?;";

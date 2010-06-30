@@ -42,8 +42,8 @@
 			$query="select * from cuenta_proveedor where id_proveedor=?;";
 			$params=array($id);
 			$datos=$this->bd->select_uno($query,$params);	
-			$this->id_proveedor=$datos[id_proveedor];	
-			$this->saldo=$datos[saldo];	
+			$this->id_proveedor=$datos['id_proveedor'];	
+			$this->saldo=$datos['saldo'];	
 		}
 		function existe(){
 			$query="select id_proveedor from cuenta_proveedor where id_proveedor=?;";

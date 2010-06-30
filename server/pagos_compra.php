@@ -43,10 +43,10 @@
 			$query="select * from pagos_compra where id_pago=?;";
 			$params=array($id);
 			$datos=$this->bd->select_uno($query,$params);
-			$this->id_pago=$datos[id_pago];	
-			$this->id_compra=$datos[id_compra];	
-			$this->fecha=$datos[fecha];	
-			$this->monto=$datos[monto];	
+			$this->id_pago=$datos['id_pago'];	
+			$this->id_compra=$datos['id_compra'];	
+			$this->fecha=$datos['fecha'];	
+			$this->monto=$datos['monto'];	
 		}
 		function existe(){
 			$query="select id_pago from pagos_compra where id_pago=?;";

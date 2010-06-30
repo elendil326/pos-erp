@@ -42,9 +42,9 @@
 			$query="select * from inventario where id_producto =?;";
 			$params=array($id);
 			$datos=$this->bd->select_uno($query,$params);
-			$this->id_producto=$datos[id_producto];	
-			$this->nombre=$datos[nombre];	
-			$this->denominacion=$datos[denominacion];	
+			$this->id_producto=$datos['id_producto'];	
+			$this->nombre=$datos['nombre'];	
+			$this->denominacion=$datos['denominacion'];	
 		}
 		function existe(){
 			$query="select id_producto from inventario where id_producto=?;";

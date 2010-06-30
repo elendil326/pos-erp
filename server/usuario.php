@@ -53,12 +53,12 @@
 			$query="select * from usuario where id_usuario=?;";
 			$params=array($id);
 			$datos=$this->bd->select_uno($query,$params);
-			$this->id_usuario=$datos[id_usuario];			
-			$this->nombre=$datos[nombre];	 	 	 	 	 	 	 
-			$this->usuario=$datos[usuario];			
-			$this->contrasena=$datos[contrasena];	 	 	 	 	 	 	 
-			$this->nivel=$datos[nivel];
-			$this->id_sucursal=$datos[id_sucursal];
+			$this->id_usuario=$datos['id_usuario'];			
+			$this->nombre=$datos['nombre'];	 	 	 	 	 	 	 
+			$this->usuario=$datos['usuario'];			
+			$this->contrasena=$datos['contrasena'];	 	 	 	 	 	 	 
+			$this->nivel=$datos['nivel'];
+			$this->id_sucursal=$datos['id_sucursal'];
 		}
 		function existe(){
 			$query="select id_usuario from usuario where id_usuario=?;";
@@ -96,12 +96,12 @@
 			$query="select * from usuario where usuario=? and contrasena=?;";
 			$params=array($this->usuario, base64_encode($this->contrasena));
 			$datos=$this->bd->select_uno($query,$params);
-			$this->id_usuario=$datos[id_usuario];			
-			$this->nombre=$datos[nombre];	 	 	 	 	 	 	 
-			$this->usuario=$datos[usuario];			
-			$this->contrasena=$datos[contrasena];	 	 	 	 	 	 	 
-			$this->nivel=$datos[nivel];
-			$this->id_sucursal=$datos[id_sucursal];
+			$this->id_usuario=$datos['id_usuario'];			
+			$this->nombre=$datos['nombre'];	 	 	 	 	 	 	 
+			$this->usuario=$datos['usuario'];			
+			$this->contrasena=$datos['contrasena'];	 	 	 	 	 	 	 
+			$this->nivel=$datos['nivel'];
+			$this->id_sucursal=$datos['id_sucursal'];
 		}
 	}
 ?>

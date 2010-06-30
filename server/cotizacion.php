@@ -46,11 +46,11 @@
 			$query="SELECT id_cotizacion ,id_cliente,fecha,subtotal,iva,(iva + subtotal) as total FROM `cotizacion`  where id_cotizacion=?;";
 			$params=array($id);
 			$datos=$this->bd->select_uno($query,$params);
-			$this->id_cotizacion=$datos[id_cotizacion];	
-			$this->id_cliente=$datos[id_cliente];	
-			$this->fecha=$datos[fecha];	
-			$this->subtotal=$datos[subtotal];	
-			$this->iva=$datos[iva];
+			$this->id_cotizacion=$datos['id_cotizacion'];	
+			$this->id_cliente=$datos['id_cliente'];	
+			$this->fecha=$datos['fecha'];	
+			$this->subtotal=$datos['subtotal'];	
+			$this->iva=$datos['iva'];
 		}
 		function detalle_cotizacion($id){
 			$query = "SELECT id_cotizacion ,id_producto,cantidad,precio,(cantidad * precio) as subtotal FROM `detalle_cotizacion` where id_cotizacion=?;";

@@ -41,10 +41,10 @@
 			$query="select * from detalle_compra where id_compra =? and id_producto =?;";
 			$params=array($id_c,$id_p);
 			$datos=$this->bd->select_uno($query,$params);
-			$this->id_compra=$datos[id_compra];	
-			$this->id_producto=$datos[id_producto];	
-			$this->cantidad=$datos[cantidad];	
-			$this->precio=$datos[precio];	
+			$this->id_compra=$datos['id_compra'];	
+			$this->id_producto=$datos['id_producto'];	
+			$this->cantidad=$datos['cantidad'];	
+			$this->precio=$datos['precio'];	
 		}
 		function existe(){
 			$query="select id_compra from detalle_compra where id_compra=? and id_producto=?;";

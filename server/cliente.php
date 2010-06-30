@@ -67,13 +67,13 @@
 			$query="select * from cliente where id_cliente=?;";
 			$params=array($id);
 			$datos=$this->bd->select_uno($query,$params);
-			$this->id_cliente=$datos[id_cliente];			
-			$this->rfc=$datos[rfc];	 	 	 	 	 	 	 
-			$this->nombre=$datos[nombre];	 	 	 	 	 	 	 
-			$this->direccion=$datos[direccion]; 	 	 	 	 	 	 
-			$this->telefono=$datos[telefono];	 	 	 	 	 	 	 
-			$this->e_mail=$datos[e_mail];	 	 	 	 	 	 	 
-			$this->limite_credito=$datos[limite_credito];
+			$this->id_cliente=$datos['id_cliente'];			
+			$this->rfc=$datos['rfc'];	 	 	 	 	 	 	 
+			$this->nombre=$datos['nombre'];	 	 	 	 	 	 	 
+			$this->direccion=$datos['direccion']; 	 	 	 	 	 	 
+			$this->telefono=$datos['telefono'];	 	 	 	 	 	 	 
+			$this->e_mail=$datos['e_mail'];	 	 	 	 	 	 	 
+			$this->limite_credito=$datos['limite_credito'];
 		}
 		function existe(){
 			$query="select id_cliente from cliente where id_cliente=?;";

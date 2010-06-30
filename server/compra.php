@@ -51,14 +51,14 @@
 			$query="select * from compras where id_compra=?;";
 			$params=array($id);
 			$datos=$this->bd->select_uno($query,$params);
-			$this->id_compra=$datos[id_compra];	 	 	 		
-			$this->id_proveedor=$datos[id_proveedor];	 	 	 		
-			$this->tipo_compra=$datos[tipo_compra];	 	 	 		
-			$this->fecha=$datos[fecha];	 	 	 		
-			$this->subtotal=$datos[subtotal];	 	 	 		
-			$this->iva=$datos[iva];	 	 	 		
-			$this->sucursal=$datos[sucursal];	 	 	 		
-			$this->id_usuario=$datos[id_usuario];	 		
+			$this->id_compra=$datos['id_compra'];	 	 	 		
+			$this->id_proveedor=$datos['id_proveedor'];	 	 	 		
+			$this->tipo_compra=$datos['tipo_compra'];	 	 	 		
+			$this->fecha=$datos['fecha'];	 	 	 		
+			$this->subtotal=$datos['subtotal'];	 	 	 		
+			$this->iva=$datos['iva'];	 	 	 		
+			$this->sucursal=$datos['sucursal'];	 	 	 		
+			$this->id_usuario=$datos['id_usuario'];	 		
 		}
 		
 		function detalle_compra($id){

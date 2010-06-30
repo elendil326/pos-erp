@@ -40,8 +40,8 @@
 			$query="select * from nota_remision where id_nota=?;";
 			$params=array($id);
 			$datos=$this->bd->select_uno($query,$params);
-			$this->id_nota=$datos[id_nota];		
-			$this->id_venta=$datos[id_venta];	
+			$this->id_nota=$datos['id_nota'];		
+			$this->id_venta=$datos['id_venta'];	
 		}
 		function existe(){
 			$query="select id_nota from nota_remision where id_nota=?;";

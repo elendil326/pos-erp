@@ -48,11 +48,11 @@
 			$query="select * from detalle_inventario where id_producto=? and id_sucursal=?;";
 			$params=array($id_p,$id_s);
 			$datos=$this->bd->select_uno($query,$params);
-			$this->id_producto=$datos[id_producto];	
-			$this->id_sucursal=$datos[id_sucursal];	
-			$this->precio_venta=$datos[precio_venta];	
-			$this->minimo=$datos[min];	
-			$this->existencias=$datos[existencias];	
+			$this->id_producto=$datos['id_producto'];	
+			$this->id_sucursal=$datos['id_sucursal'];	
+			$this->precio_venta=$datos['precio_venta'];	
+			$this->minimo=$datos['min'];	
+			$this->existencias=$datos['existencias'];	
 		}
 		function existe(){
 			$query="select id_producto from detalle_inventario where id_producto=? and id_sucursal=?;";

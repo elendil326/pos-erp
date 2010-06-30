@@ -48,12 +48,12 @@
 			$query="select * from productos_proveedor where id_producto =?;";
 			$params=array($id);
 			$datos=$this->bd->select_uno($query,$params);
-			$this->id_producto=$datos[id_producto];	 	 	 	 	 	 	
-			$this->clave_producto=$datos[clave_producto];	 	 	 	 	 	 	
-			$this->id_proveedor=$datos[id_proveedor];
-			$this->id_inventario=$datos[id_inventario];
-			$this->descripcion=$datos[descripcion];
-			$this->precio=$datos[precio];
+			$this->id_producto=$datos['id_producto'];	 	 	 	 	 	 	
+			$this->clave_producto=$datos['clave_producto'];	 	 	 	 	 	 	
+			$this->id_proveedor=$datos['id_proveedor'];
+			$this->id_inventario=$datos['id_inventario'];
+			$this->descripcion=$datos['descripcion'];
+			$this->precio=$datos['precio'];
 		}
 		function existe(){
 			$query="select id_producto from productos_proveedor where id_producto=?;";

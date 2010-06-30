@@ -51,14 +51,14 @@
 			$query="select * from ventas where id_venta=?;";
 			$params=array($id);
 			$datos=$this->bd->select_uno($query,$params);
-			$this->id_venta=$datos[id_venta];	 	 	 		
-			$this->id_cliente=$datos[id_cliente];	 	 	 		
-			$this->tipo_venta=$datos[tipo_venta];	 	 	 		
-			$this->fecha=$datos[fecha];	 	 	 		
-			$this->subtotal=$datos[subtotal];	 	 	 		
-			$this->iva=$datos[iva];	 	 	 		
-			$this->sucursal=$datos[sucursal];	 	 	 		
-			$this->id_usuario=$datos[id_usuario];	 		
+			$this->id_venta=$datos['id_venta'];	 	 	 		
+			$this->id_cliente=$datos['id_cliente'];	 	 	 		
+			$this->tipo_venta=$datos['tipo_venta'];	 	 	 		
+			$this->fecha=$datos['fecha'];	 	 	 		
+			$this->subtotal=$datos['subtotal'];	 	 	 		
+			$this->iva=$datos['iva'];	 	 	 		
+			$this->sucursal=$datos['sucursal'];	 	 	 		
+			$this->id_usuario=$datos['id_usuario'];	 		
 		}
 		function existe(){
 			$query="select id_venta from ventas where id_venta=?;";

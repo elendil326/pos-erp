@@ -42,9 +42,9 @@
 			$query="select * from impuesto where id_impuesto =?;";
 			$params=array($id);
 			$datos=$this->bd->select_uno($query,$params);
-			$this->id_impuesto=$datos[id_impuesto];	
-			$this->descripcion=$datos[descripcion];	
-			$this->valor=$datos[valor];	
+			$this->id_impuesto=$datos['id_impuesto'];	
+			$this->descripcion=$datos['descripcion'];	
+			$this->valor=$datos['valor'];	
 		}
 		function existe(){
 			$query="select id_impuesto from impuesto where id_impuesto=?;";

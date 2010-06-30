@@ -42,9 +42,9 @@
 			$query="select * from factura_compra where id_factura =?;";
 			$params=array($id);
 			$datos=$this->bd->select_uno($query,$params);
-			$this->id_factura=$datos[id_factura];	
-			$this->folio=$datos[folio];	
-			$this->id_compra=$datos[id_compra];	
+			$this->id_factura=$datos['id_factura'];	
+			$this->folio=$datos['folio'];	
+			$this->id_compra=$datos['id_compra'];	
 		}
 		function existe(){
 			$query="select id_factura from factura_compra where id_factura=?;";
