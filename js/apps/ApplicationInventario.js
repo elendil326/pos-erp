@@ -39,7 +39,10 @@ ApplicationInventario.prototype.products = null;
 //Color de fondo de los elementos de la lista
 ApplicationInventario.backgroundColor = null;
 
+//Lista que guardara los productos que pueden ser insertados en el inventario
+ApplicationInventario.prototype.productList = null;
 
+ApplicationInventario.popup = null;
 
 ApplicationInventario.prototype._init = function()
 {
@@ -52,15 +55,15 @@ ApplicationInventario.prototype._init = function()
 	this.appName = "Inventario";
 	
 	//ayuda sobre esta applicacion
-	this.ayuda = "esto es una ayuda sobre este modulo de compras, html es valido <br> :D";
+	this.ayuda = 'Los botones de la parte inferior muestran <br>los productos que se encuentran actualmente registrados en el<br> inventario de la sucursal especificada <br>en los botones.';
 	
 	//panel principal
 	this.inventarioMainPanel = new Ext.Panel({
 		id: 'inventarioMainPanel',
-		layout: 'card'
+		layout: 'card',
+		html: '<br><div align="center"><h1>Puede consultar las existencias de los productos guardados en cada una de las sucursales. Para comenzar, presione algun botón en la parte inferior de la aplicación</h1></div>'
 	});
-	//alert();
-	console.log(this.inventarioMainPanel);
+	
 	
 	//initialize the tootlbar which is a dock
 	this._initToolbar();
@@ -72,56 +75,10 @@ ApplicationInventario.prototype._init = function()
 	//this.inventarioMainPanel.setCard( firstPanel , 'slide' );
 	//submenues en el panel de la izquierda
 	this.leftMenuItems = [
-	{
-        text: 'Ingresar producto',
-       	card: new Ext.Panel({
-    cls: 'cards',
-    layout: {
-        type: 'vbox',
-        align: 'stretch'
-    },
-    defaults: {
-        flex: 1
-    },
-    items: [{
-        xtype: 'carousel',
-        cls: 'card',
-        items: [{
-            html: '<p>Navigate the carousel on this page by swiping left/right or clicking on one side of the circle indicators below.</p>',
-            cls: 'card1',
-        },
-        {
-            html: 'Card #2',
-            cls: 'card2'
-        },
-        {
-            html: 'Card #3',
-            cls: 'card3'
-        }]
-    }, {
-        xtype: 'carousel',
-        cls: 'card',
-        ui: 'light',
-        items: [{
-            html: '<p>Carousels can be given a <code>ui</code> of &#8216;light&#8217; or &#8216;dark.&#8217;</p>',
-            cls: 'card1',
-        },
-        {
-            html: 'Card #2',
-            cls: 'card2'
-        },
-        {
-            html: 'Card #3',
-            cls: 'card3'
-        }]
-    }]
-}),
-        ayuda: 'ayuda en menu 1'
-    },
     {
         text: 'Existencias',
        	card: this.inventarioMainPanel,
-        ayuda: 'ayuda en menu2'
+        ayuda: this.ayuda
     }];
 		
 };
@@ -164,15 +121,12 @@ ApplicationInventario.prototype._initToolbar = function(){
 	POS.AJAXandDECODE({
 		 method: 'listarSucursal',
 	}, function(result){  //Success AJAX
-		console.log(result);
+		
 		for(var i=0; i < result.datos.length ; i++){
 			buttonsArray.push(new Ext.Button({
 				text: result.datos[i].descripcion,
 				index: i,
 				handler: function(btn){
-					//alert(i);
-					console.log(btn);
-					//alert(btn.index);
 					
 					//Si se da click en un boton del toolbar se deshabilita y los demas se habilitan
 					for (var j=0; j<buttonsArray.length ; j++){
@@ -190,6 +144,46 @@ ApplicationInventario.prototype._initToolbar = function(){
 				}
 			}));
 		}
+		
+		//Hacemos una lista para poner los productos que pueden ingresarse al inventario
+		//this.productList = new Ext.list
+		 
+		//Checamos si es telefono, si no para agregar espacio entre botones
+		/*if(!Ext.platform.isPhone){
+			buttonsArray.push({ xtype: 'spacer'} , {
+				text: '+',
+				ui: 'action',
+				handler: function(){
+					if (!this.popup) {
+			                this.popup = new Ext.Panel({
+			                    floating: true,
+			                    modal: true,
+			                    centered: true,
+			                    width: 320,
+			                    height: 300,
+			                    styleHtmlContent: true,
+			                    html: '<p>Tap anywhere outside the overlay to close it.</p>',
+			                    dockedItems: [{
+			                        dock: 'top',
+			                        xtype: 'toolbar',
+			                        title: 'Agregar Producto'
+			                    }],
+			                    scroll: 'vertical'
+			                });
+			            }
+			            this.popup.show('pop');
+						}
+			});
+		}else{
+			buttonsArray.push({
+				text: '+',
+				ui: 'action',
+				handler: function(){
+					POS.aviso('Agregar producto', 'Aqui ira el contenido');
+				}
+			});
+		}*/
+		
 		ApplicationInventario.currentInstance.toolBar = new Ext.Toolbar({
 		dock: 'bottom',
 	    items: [buttonsArray]
@@ -219,30 +213,62 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id){
 	listeners: {
 		beforeshow : function(component){
 						
-						POS.AJAXandDECODE({
+				funcAjax = function(){
+					POS.AJAXandDECODE({
 						method: 'listarProductosInventarioSucursal',
 						id_sucursal: sucursal_id
-						},
-						function (datos){//mientras responda
-							
-							console.log(datos.datos);
-							//console.log("datos.datos[0].nombre = "+datos.datos[0].nombre);
-							if (datos.success) { //Si el success trae true
-								this.products = datos.datos;
-								InvProductsListStore.loadData(this.products);
-							} 
-							else{
-								//alert("No trae nada el json");
-								InvProductsListStore.loadData(0);
-								return 0;
-							}
-							//console.log(InvProductsListStore);
-							
-						},
-						function (){//no responde
-							POS.aviso("ERROR",":(");
+					}, function(datos){//mientras responda
+					
+						if (datos.success) { //Si el success trae true
+							this.products = datos.datos;
+							InvProductsListStore.loadData(this.products);
 						}
-					);	
+						else {
+							InvProductsListStore.loadData(0);
+							return 0;
+						}
+						if (ApplicationInventario.popup){
+							ApplicationInventario.popup.hide();
+						}
+					
+					}, function(){//no responde
+						if (!ApplicationInventario.popup) {
+							ApplicationInventario.popup = new Ext.Panel({
+								id: 'errorPopUpInv',
+								floating: true,
+								modal: true,
+								centered: true,
+								width: 500,
+								height: 150,
+								styleHtmlContent: true,
+								html: '<div align="center" style="font-size: 18px">Hubo un error en la conexión.<br> ¿ Desea reintentar la conexión ?</div>',
+								dockedItems: [{
+									dock: 'top',
+									xtype: 'toolbar',
+									title: 'Error',
+									items: [new Ext.Button({
+										ui: 'dark',
+										text: 'Cancelar',
+										handler: function(){
+											Ext.getCmp('errorPopUpInv').hide();
+										}
+									}), {
+										xtype: 'spacer'
+									}, new Ext.Button({
+										ui: 'action',
+										text: 'Reintentar',
+										handler: function(){
+											funcAjax();
+										}
+									})]
+								}]
+							});
+						}
+						
+						ApplicationInventario.popup.show('pop');
+					});
+				}
+				funcAjax();
 		}//fin before
 	},
 	items: [{
@@ -258,13 +284,21 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id){
     }]
 	
 	});
-
-	console.log(ApplicationInventario.currentInstance.inventarioMainPanel); 
+ 
 	this.inventarioMainPanel.setCard( sucursalPanel , 'slide' );
 	//this.inventarioMainPanel.addDocked(sucursalPanel);
 	//this.mainCard = sucursalPanel;
 	return sucursalPanel;
 };
+
+//ApplicationInventario.prototype.getInvList = function(){
+	
+	/*var listInvStore = new Ext.store({
+		fields:[ '']
+	});*/
+	
+//};
+
 
 /*
 //Panel principal de Inventario
