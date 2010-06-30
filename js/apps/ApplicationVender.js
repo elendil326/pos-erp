@@ -24,7 +24,7 @@ ApplicationVender.prototype.mainCard = null;
 //aqui va el nombre de la applicacion
 ApplicationVender.prototype.appName = null;
 
-//aqui va el nombre de la applicacion
+//aqui van los items del menu de la izquierda
 ApplicationVender.prototype.leftMenuItems = null;
 
 //aqui va un texto de ayuda en html
@@ -39,10 +39,6 @@ ApplicationVender.prototype.dockedItems = null;
 
 ApplicationVender.prototype._init = function()
 {
-
-	
-	
-	//iniciar variables
 	
 	//nombre de la aplicacion
 	this.appName = "Mostrador";
@@ -51,8 +47,7 @@ ApplicationVender.prototype._init = function()
 	this.ayuda = "esto es una ayuda sobre este modulo de compras, html es valido <br> :D";
 	
 	//submenues en el panel de la izquierda
-
-	//this.leftMenuItems = 
+	this.leftMenuItems = null;
 
 
 	//panel principal	
@@ -60,11 +55,7 @@ ApplicationVender.prototype._init = function()
 
 	//initialize the tootlbar which is a dock
 	this._initToolBar();
-	
-	
 
-	
-	
 	
 };
 
@@ -83,10 +74,11 @@ ApplicationVender.prototype._initToolBar = function (){
 
 
 	//grupo 1, agregar producto
-	var buttonsGroup1 = [{
-		  xtype: 'textfield',
-		  id: 'APaddProductByID',
-		  startValue: 'ID del producto',
+	var buttonsGroup1 = [
+		{
+			xtype: 'textfield',
+			id: 'APaddProductByID',
+			startValue: 'ID del producto',
 			listeners:
 					{
 						keydown: function( ){
@@ -95,16 +87,14 @@ ApplicationVender.prototype._initToolBar = function (){
 						}
 					}
 		},{
-        text: 'Agregar producto',
-        ui: 'round',
-        handler: this.doAddProduct
-    }];
+        	text: 'Agregar producto',
+        	ui: 'round',
+        	handler: this.doAddProduct
+    	}];
 
 
 	//grupo 2, cualquier otra cosa
 	var buttonsGroup2 = [];
-    
-
 
 
 	//grupo 3, listo para vender
@@ -123,16 +113,16 @@ ApplicationVender.prototype._initToolBar = function (){
 
 
 	if (!Ext.platform.isPhone) {
+		
         buttonsGroup1.push({xtype: 'spacer'});
         buttonsGroup2.push({xtype: 'spacer'});
         
         this.dockedItems = [new Ext.Toolbar({
-            // dock this toolbar at the bottom
             ui: 'dark',
             dock: 'bottom',
             items: buttonsGroup1.concat(buttonsGroup2).concat(buttonsGroup3)
-			
         })];
+
     }else {
         this.dockedItems = [{
             xtype: 'toolbar',
@@ -157,7 +147,7 @@ ApplicationVender.prototype._initToolBar = function (){
 	this.mainCard.addDocked( this.dockedItems );
 	
 	//----------------------------------------------------------------------
-	//grupo 1
+	// request documents.... notas y facturas
 	buttonsGroup1 = [{
         xtype: 'splitbutton',
 		activeItem: 0,
@@ -182,10 +172,9 @@ ApplicationVender.prototype._initToolBar = function (){
     }];
 
 
-	//grupo 2
+	// client type
 	buttonsGroup2 = [{
         xtype: 'splitbutton',
-		id:'av_top_nota_factura',
 		activeItem: 0,
 		listeners:
 				{
@@ -211,14 +200,13 @@ ApplicationVender.prototype._initToolBar = function (){
         buttonsGroup1.push({xtype: 'spacer'});
         
         this.dockedItemsTop = [ new Ext.Toolbar({
-			scroll: 'horizontal',
-            // dock this toolbar at the bottom
             ui: 'light',
             dock: 'top',
             items: buttonsGroup1.concat(buttonsGroup2)
         })];
 
     }else {
+	
         this.dockedItemsTop = [{
             xtype: 'toolbar',
             ui: 'light',
@@ -255,32 +243,20 @@ ApplicationVender.prototype._initToolBar = function (){
 //----------------------------------------------------------------------------------------------------------------------------------------------
 //					main card
 //----------------------------------------------------------------------------------------------------------------------------------------------
-ApplicationVender.prototype.venderMainPanel = new Ext.form.FormPanel({
+ApplicationVender.prototype.venderMainPanel = new Ext.Panel({
 	//tipo de scroll
     scroll: 'vertical',
 
 	//toolbar
 	dockedItems: null,
+	cls: "ApplicationVender-mainPanel",
 	
 	//items del formpanel
     items: [{
-		// ---- item-0 ---- 
-        	xtype: 'fieldset',
-        	title: 'Detalles del cliente',
-        	items: []
-    	},{
 		// ---- item-1 ---- 
-			html: '<div class="helper1"></div>',
+			html: '',
 			id : 'detallesCliente'
 		},{
-		// ---- item-2 ---- 
-			xtype: 'fieldset',
-        	title: 'Detalles de la Venta',
-        	defaults: {
-            	xtype: 'radio',
-        	},
-        	items: []
-    	},{
 		// ---- item-3 ---- 
 			html: '',
 			id : 'carritoDeCompras'
@@ -313,9 +289,7 @@ ApplicationVender.prototype.doLimpiarCarrito = function ( )
 		
 		ApplicationVender.currentInstance.doRefreshItemList();
 	}
-	
-	
-	
+
 	ApplicationVender.currentInstance.swapClienteComun(1);
 	
 };
@@ -346,28 +320,31 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 	}
 	
 	var html = "";
+	//cabezera
+	html += "<div class='ApplicationVender-item' >" 
+	+ "<div class='trash' ></div>"
+	+ "<div class='id'>ID</div>" 
+	+ "<div class='name'>Nombre</div>" 
+	+ "<div class='description'>Descripcion</div>" 
+	+ "<div class='cost'>Precio</div>"
+	+ "</div>";
 	
 	//renderear el html
 	for( a = 0; a < this.htmlCart_items.length; a++ ){
-		
-		//si es el ultimo, quitar el border de abajo
-		var starter = (a == (this.htmlCart_items.length-1)) ? "<li class='ApplicationVender' style='border-bottom-width: 0px;'>" : "<li class='ApplicationVender'>";
-		
-		html += starter 
-		+ "<span class='id'>" + this.htmlCart_items[a].id +"</span>" 
-		+ "<span class='name'>" + this.htmlCart_items[a].name +"</span>" 
-		+ "<span class='description'>"+ this.htmlCart_items[a].description +"</span>" 
-		+ "<span class='cost'>"+ this.htmlCart_items[a].cost +"</span>"
-		+ "<span class='trash' onclick='ApplicationVender.currentInstance.doDeleteItem(" +a+ ")'>&nbsp;<img height=20 width=20 src='sencha/resources/img/toolbaricons/trash.png'></span>"		
-		
 
-		+ "</li>";
+		html += "<div class='ApplicationVender-item' >" 
+		+ "<div class='trash' onclick='ApplicationVender.currentInstance.doDeleteItem(" +a+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/trash.png'></div>"	
+		+ "<div class='id'>" + this.htmlCart_items[a].id +"</div>" 
+		+ "<div class='name'>" + this.htmlCart_items[a].name +"</div>" 
+		+ "<div class='description'>"+ this.htmlCart_items[a].description +"</div>" 
+		+ "<div class='cost'>$"+ this.htmlCart_items[a].cost +".00</div>"
+		+ "</div>";
 	}
 	
 
 
 	//imprimir el html
-	Ext.get("carritoDeCompras").update("<ul class='ApplicationVender'>" + html +"</ul>");
+	Ext.get("carritoDeCompras").update("<div class='ApplicationVender-itemsBox'>" + html +"</div>");
 	
 	
 	
@@ -379,20 +356,22 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 		
 		var subtotal = 0;
 		
-		//revisar que no este ya en el carrito
+		//calcular totales
 		for( a = 0; a < this.htmlCart_items.length;  a++){
 			subtotal += parseInt( this.htmlCart_items[a].cost );
 		}
 
 		
-		totals_html = "<li class='ApplicationVender-Totales'>Subtotal <b>" +  subtotal + "</b></li>"
-		+ "<li class='ApplicationVender-Totales'>IVA <b>" +  (subtotal*.15) + "</b></li>"
-		+ "<li class='ApplicationVender-Totales' style='border-bottom-width: 0px;'>Total <b>" +  ((subtotal*.15)+subtotal) + "</b></li>";
+		totals_html = "<div style=''>SubTotal <div class='ApplicationVender-Totales'>$" +  subtotal + "</div>"
+					+ "<div style='padding-top: 5px;'>IVA <div class='ApplicationVender-Totales'>$" +  (subtotal*.15) + "</div></div>"
+					+ "<div style='padding-top: 5px;'>Total <div class='ApplicationVender-Totales' style='font-size:20px;'>$" +  ((subtotal*.15)+subtotal) + "</div></div>";
+		
 	}else{
+		
 		totals_html = "";
 	}
 	
-	Ext.get("carritoDeComprasTotales").update("<ul class='ApplicationVender-Totales'>" + totals_html +"</ul>");
+	Ext.get("carritoDeComprasTotales").update("<div class='ApplicationVender-TotalesBox' >" + totals_html +"</div>");
 };
 
 
@@ -408,20 +387,18 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 ApplicationVender.prototype.htmlCart_addItem = function( item )
 {
 
+	//overrride multiple items
+	var MULTIPLE_SAME_ITEMS = true;
+
 	var id = item.id;
 	var name = item.name;
 	var description = item.description;
 	var existencias = item.existencias;
 	var costo = item.cost;
-	
-	var found = false;
-	
-	//overrride multiple items
-	var MULTIPLE_SAME_ITEMS = true;
-	
-	
-	
+
+
 	//revisar que no este ya en el carrito
+	var found = false;
 	for( a = 0; a < this.htmlCart_items.length;  a++){
 		if( this.htmlCart_items[ a ].id == id ){
 			//item already in cart
@@ -439,11 +416,8 @@ ApplicationVender.prototype.htmlCart_addItem = function( item )
 	//empujar al carrito
 	this.htmlCart_items.push(item);
 	
-	
 	//dibujar el carrito
 	this.doRefreshItemList();
-
-
 
 };
 
@@ -462,10 +436,8 @@ ApplicationVender.prototype.doAddProduct = function (button, event)
 	if(DEBUG){
 		console.log("ApplicationVender: doAddProduct called....");
 	}
-	
-	
 
-	
+
 	//obtener el id del producto
 	var prodID = Ext.get("APaddProductByID").first().getValue();
 	
@@ -477,7 +449,6 @@ ApplicationVender.prototype.doAddProduct = function (button, event)
 		    scope: this
 		};
 
-		//Ext.get("APaddProductByID").setSize(100, 100, opt);
 		return;
 	}
 	
@@ -558,26 +529,6 @@ ApplicationVender.prototype.doVender = function ()
 	
 	sink.Main.ui.setCard( newPanel, 'slide' );
 
-	/*
-	POS.AJAXandDECODE({
-		method: 'listarClientes',
-		byName : 'Monica'
-		}, 
-		function (datos){
-		 	POS.aviso("OK", "Todo salio bien");
-			console.log(datos);
-
-		},
-		function (){
-			POS.aviso("DE LA VERGA", ":(");
-			
-		}
-	);
-	*/
-
-	
-
- 
 };
 
 
@@ -683,7 +634,7 @@ ApplicationVender.prototype.actualizarDetallesCliente = function ( cliente )
 	
 	var html = "";
 	html += " <div class='ApplicationVender-clienteBox'> ";
-		html += " <div><h2>" + cliente.nombre + "</h2></div>";
+		html += " <div class='nombre'>" + cliente.nombre + "</div>";
 		html += " <div class='ApplicationVender-clienteDetalle'> RFC " + cliente.rfc + "</div>";
 		html += " <div class='ApplicationVender-clienteDetalle'> Direccion " + cliente.direccion + "</div>";
 		html += " <div class='ApplicationVender-clienteDetalle'> Telefono " + cliente.telefono + "</div>";

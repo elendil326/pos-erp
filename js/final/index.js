@@ -3,7 +3,6 @@ Ext.ns('sink', 'demos', 'Ext.ux');
 Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
     fullscreen: true,
     layout: 'card',
-	scroll: 'vertical',
     items: [{
         cls: 'launchscreen',
         html: '<div>Papas Supremas<br/><span>caffeina 2010</span><br></div><div class="helper1"></div>'
