@@ -1,3 +1,7 @@
+/*
+check this out later
+background-image: -webkit-gradient(linear, 0% 0, 0% 100%, from(#7E8E9B), color-stop(0.02, #4E5B65), to(#2D343A));
+*/
 .mosaico-wrapper{
 	background-image:url(media/g2.png);
 	width: 100%;
@@ -6,13 +10,7 @@
 }
 
 
-.mosaico-item{
-	margin: 5px;
-	width: 75px;
-	height: 80px;
-	float: left;
-	text-align: center;
-}
+
 
 .mosaico-image{
 	margin-left: 10px;
@@ -29,6 +27,14 @@
 	text-align: center;
 	text-shadow: black 0px 0px 25px;
 	
+}
+
+.mosaico-item{
+	margin: 5px;
+	width: 75px;
+	height: 80px;
+	float: left;
+	text-align: center;
 }
 
 .mosaico-item-selected{

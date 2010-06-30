@@ -25,6 +25,7 @@ Mosaico.prototype.destroy = function ()
 
 Mosaico.prototype.doSearch = function ( string )
 {
+
 	if(string.length == 0){
 		this.doShadow([]);
 		return;
@@ -60,6 +61,7 @@ Mosaico.prototype.doSearch = function ( string )
 
 Mosaico.prototype.doShadow = function ( ids )
 {
+	
 	var wrapper = document.getElementById(this.uniqueID);
 
 	if(ids.length == 0){

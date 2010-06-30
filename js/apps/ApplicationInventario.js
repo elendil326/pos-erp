@@ -44,13 +44,12 @@ ApplicationInventario.prototype.productList = null;
 
 ApplicationInventario.popup = null;
 
+//Mosaico
+ApplicationInventario.prototype.mosaic = null;
+
 ApplicationInventario.prototype._init = function()
 {
 
-	
-	
-	//iniciar variables
-	
 	//nombre de la aplicacion
 	this.appName = "Inventario";
 	
@@ -61,10 +60,33 @@ ApplicationInventario.prototype._init = function()
 	this.inventarioMainPanel = new Ext.Panel({
 		id: 'inventarioMainPanel',
 		layout: 'card',
-		html: '<br><div align="center"><h1>Puede consultar las existencias de los productos guardados en cada una de las sucursales. Para comenzar, presione algun botón en la parte inferior de la aplicación</h1></div>'
+		html: '<div style="width:100%; height:100%" id="inventario_mosaico"></div>',
+		listeners : {
+			'afterrender' : function (){
+				ApplicationInventario.currentInstance.mosaic = new Mosaico({
+					renderTo : 'inventario_mosaico',
+					items: [{ 
+							title: 'norte',
+							image: 'media/truck.png',
+							keywords: [ 'f', 'g']
+						},{
+							title: 'pino suarez',
+							image: 'media/truck.png',
+							keywords: [ 'h','i']
+						},{ 
+							title: 'pinos',
+							image: 'media/truck.png',
+							keywords: []
+						},{
+							title: 'leon',
+							image: 'media/truck.png'
+						}]
+				});
+			}
+		}
 	});
-	
-	
+
+
 	//initialize the tootlbar which is a dock
 	this._initToolbar();
 	//this.initSucursalPanel(1);
@@ -114,7 +136,45 @@ ApplicationInventario.backgroundPicker = function (existencias, min){
 									}
 }
 
+
+
+
 ApplicationInventario.prototype._initToolbar = function(){
+	
+	
+	/*------------------------ buscar --------*/
+	var buscar = [{
+		xtype: 'textfield',
+		id:'ApplicationInvenario_searchField',
+		listeners:
+				{
+					'render': function( ){
+						//medio feo, pero bueno
+						Ext.get("ApplicationInvenario_searchField").first().dom.setAttribute("onkeyup", "ApplicationInventario.currentInstance.mosaic.doSearch( this.value )");
+
+					}
+				}
+		}];
+
+
+
+        this.dockedItems = [ new Ext.Toolbar({
+            ui: 'dark',
+            dock: 'bottom',
+            items: buscar
+        })];
+    
+	
+	//agregar este dock a el panel principal
+	this.inventarioMainPanel.addDocked( this.dockedItems );
+	
+	
+	/*------------------------ buscar --------*/
+	
+	
+	
+	
+	
 	
 	var buttonsArray = [];
 	var panel;
