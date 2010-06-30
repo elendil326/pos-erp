@@ -116,6 +116,22 @@
 		return $listar->lista();
 	}
 
+	function reporteClientesComprasCreditoPagado(){
+		$query="SELECT pv.id_venta, (
+				v.subtotal + v.iva
+				) AS  'Total', SUM( pv.monto ) AS  'Pagado', (
+				v.subtotal + v.iva - pv.monto
+				) AS  'Debe', c.nombre AS  'Nombre', DATE( v.fecha ) AS  'Fecha'
+				FROM  `pagos_venta` pv
+				LEFT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
+				NATURAL JOIN cliente c
+				GROUP BY pv.id_venta
+				having Pagado>=Total"; 
+		$listar = new listar($query,array());
+		echo $listar->lista();
+		return $listar->lista();
+	}
+
 	
 ?>
 

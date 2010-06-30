@@ -1,17 +1,21 @@
 <?php	
 	function insertarUsuario(){
 	/* Usan variables con e~nes....no causara algun conflicto despues? - Rene*/
-		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['usuario']))&&(!empty($_REQUEST['contraseña']))&&(!empty($_REQUEST['nivel']))){
+		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['usuario']))&&(!empty($_REQUEST['contrasena']))&&(!empty($_REQUEST['nivel']))&&(!empty($_REQUEST['id_sucursal']))){
 			$nombre=$_REQUEST['nombre'];
 			$usuario=$_REQUEST['usuario'];
-			$contraseña=$_REQUEST['contraseña'];
+			$contrasena=$_REQUEST['contrasena'];
 			$nivel=$_REQUEST['nivel'];
-			$user=new usuario($nombre,$usuario,$contraseña,$nivel);
-			if(!$user->existe_usuario()){
-				if($user->inserta())	ok();
-				else					fail("Error al guardar usuario.");
-			}else 						fail("Ya existe un usuario con este nick de usuario.");
-		}else 							fail("faltan datos");
+			$id_sucursal=$_REQUEST['id_sucursal'];
+			$user=new usuario($nombre,$usuario,$contrasena,$nivel,$id_sucursal);
+			$sucursal=new sucursal_existente($id_sucursal);
+			if($sucursal->existe()){
+				if(!$user->existe_usuario()){
+					if($user->inserta())	ok();
+					else					fail("Error al guardar usuario.");
+				}else 						fail("Ya existe un usuario con este nick de usuario.");
+			}else 							fail("La Sucursal no existe.");
+		}else 								fail("faltan datos");
 		return;
 	}
 	function eliminarUsuario(){
@@ -41,23 +45,28 @@
 	}
 	
 	function actualizarUsuario(){
-		if((!empty($_REQUEST['id_usuario']))&&(!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['usuario']))&&(!empty($_REQUEST['nivel']))){
+		if((!empty($_REQUEST['id_usuario']))&&(!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['usuario']))&&(!empty($_REQUEST['nivel']))&&(!empty($_REQUEST['id_sucursal']))){
 			$id=$_REQUEST['id_usuario'];
 			$nombre=$_REQUEST['nombre'];
 			$usuario=$_REQUEST['usuario'];
 			$nivel=$_REQUEST['nivel'];
+			$id_sucursal=$_REQUEST['id_sucursal'];
 			$user=new usuario_existente($id);
 			$usu=$user->usuario;
 			if($user->existe()){
 			$user->nombre=$nombre;
 			$user->usuario=$usuario;
 			$user->nivel=$nivel;
-				if(($usu==$usuario)||(!($user->existe_usuario()))){
-					if($user->actualiza())		ok();
-					else						fail("Error al cambiar el password.");
-				}else							fail("El nick de usuario que desea asignar ya existe.");
-			}else 								fail("El usuario que desea modificar no existe.");
-		}else 									fail("faltan datos");
+			$user->id_sucursal=$id_sucursal;
+			$sucursal=new sucursal_existente($id_sucursal);
+				if($sucursal->existe()){
+					if(($usu==$usuario)||(!($user->existe_usuario()))){
+						if($user->actualiza())		ok();
+						else						fail("Error al cambiar el password.");
+					}else							fail("El nick de usuario que desea asignar ya existe.");
+				}else								fail("La sucursal no existe.");
+			}else 									fail("El usuario que desea modificar no existe.");
+		}else 										fail("faltan datos");
 		return;
 	}
 	
@@ -76,4 +85,16 @@
 		}else 													fail("faltan datos");
 		return;
 	}
+	
+	function loginUsuario(){
+		if((!empty($_REQUEST['usuario']))&&(!empty($_REQUEST['password']))){
+			$usuario=$_REQUEST['usuario'];
+			$pass=$_REQUEST['password'];
+			$user=new usuario_nombre_pass($usuario,$pass);
+			if($user->login())									ok_datos("datos: { id_usuario: ".$user->id_usuario." ,nivel : ".$user->nivel." , id_sucursal : ".$user->id_sucursal. "}");
+			else												fail("El usuario no existe.");
+		}else 													fail("faltan datos");
+		return;
+	}
+	
 ?>

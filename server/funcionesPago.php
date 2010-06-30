@@ -79,13 +79,22 @@
 				if($Pagoventa->borra())					ok();					//elimina el pago
 				else									fail("Error al borrar el pago.");
 			}else 										fail("La Pago que desea eliminar no existe.");
-		}else fail("faltan datos.");
+		}else											fail("faltan datos.");
 		return;
 	}
 	
 	function listarPagosVenta(){
 		$listar = new listar("select * from pagos_venta",array());
 		echo $listar->lista();
+		return;
+	}
+	
+	function listarPagosVentaDeVenta(){
+		if(!empty($_REQUEST['id_venta'])){
+			$id=$_REQUEST['id_venta'];
+			$listar = new listar("select * from pagos_venta where id_venta=?",array($id));
+			echo $listar->lista();
+		}else											fail("faltan datos.");
 		return;
 	}
 	function listarPagosCompra(){

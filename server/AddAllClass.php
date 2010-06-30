@@ -70,6 +70,7 @@
 		case "actualizarUsuario" : 				actualizarUsuario(); break;
 		case "listarUsuario" : 					listarUsuario(); break;
 		case "datosUsuario" : 					datosUsuario(); break;
+		case "loginUsuario" : 					loginUsuario(); break;
 			
 		
 		//-----funciones Venta
@@ -103,6 +104,7 @@
 		case "eliminarPagoVenta" : 				eliminarPagoVenta(); break;
 		case "deletePagoVenta" : 				deletePagoVenta(); break;
 		case "listarPagosVenta" : 				listarPagosVenta(); break;
+		case "listarPagosVentaDeVenta" : 		listarPagosVentaDeVenta(); break;
 		case "listarPagosCompra" : 				listarPagosCompra(); break;
 		
 		//-----funciones invenario
@@ -130,6 +132,7 @@
 		case 'reporteClientesCompras': 							reporteClientesCompras(); 	break;
 		case 'reporteClientesComprasCredito': 					reporteClientesComprasCredito(); 	break;
 		case 'reporteClientesComprasCreditoDeben': 				reporteClientesComprasCreditoDeben(); 	break;
+		case 'reporteClientesComprasCreditoPagado': 			reporteClientesComprasCreditoPagado(); 	break;
 		
 		
 		//------

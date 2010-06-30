@@ -18,7 +18,6 @@ ApplicationPagos= function ()
 //aqui va el panel principal 
 ApplicationPagos.prototype.mainCard = null;
 
-ApplicationPagos.currentInstance=87;
 
 //aqui va el nombre de la applicacion
 ApplicationPagos.prototype.appName = null;
@@ -31,11 +30,11 @@ ApplicationPagos.prototype.ayuda = null;
 
 ApplicationPagos.prototype.clientesContainer= null;
 
-ApplicationPagos.prototype.MostrarStore = null;
+ApplicationPagos.prototype.storeVentas = null;
+ApplicationPagos.prototype.storePagos = null;
 
-ApplicationPagos.prototype.ListaClientes= null;
-
-ApplicationPagos.prototype.customers = null;
+ApplicationPagos.prototype.datosVentas = null;
+ApplicationPagos.prototype.datosPagos = null;
 
 ApplicationPagos.prototype._init = function()
 {
@@ -68,10 +67,14 @@ ApplicationPagos.prototype._init = function()
 	
 };//fin CONSTRUCTOR
 
-cbClientes=new Ext.form.TextField({
-			hidden:'true',
+btnClientes=new Ext.Button({
+			hidden:'true',		
+			handler:function (){
+				POS.aviso("ok","ok");
+			},
             name: 'id_cliente',
-            label: 'Cliente',
+			width: 300,
+            text : 'Seleccionar Cliente',
             options: [{
                 text: 'nombre',
                 value: 'id'
@@ -80,7 +83,7 @@ cbClientes=new Ext.form.TextField({
                 value: 'id_c'
             }]
         });
-de =new Ext.form.TextField({
+de =new Ext.form.SearchField({
 			fieldLabel: 'Del:',
 			name: 'fecha_inicio:',
 			allowBlank:false
@@ -100,8 +103,8 @@ formulario=new Ext.form.FormPanel({
     items: [{
         xtype: 'fieldset',
         title: 'Buscar por:',
-        instructions: 'Insertelos datos y de click en el boton de buscar.',
-        items: [cbClientes,fechas]
+        instructions: 'Insertelos datos y de click en el boton de buscar.(formato de fecha DD/MM/AA)',
+        items: [btnClientes,fechas]
     }]
 });
 
@@ -191,11 +194,25 @@ Ext.regModel('modeloVentas', {
 
 
 
-MostrarStore = new Ext.data.Store({
+storeVentas = new Ext.data.Store({
     model: 'modeloVentas',
     sorters: 'nombre',
     getGroupString : function(record) {
         return record.get('nombre')[0];
+    }
+});
+
+Ext.regModel('modeloPagos', {
+    fields: ['id_pago','id_venta','fecha','monto']
+});
+
+
+
+storePagos = new Ext.data.Store({
+    model: 'modeloPagos',
+    sorters: 'fecha',
+    getGroupString : function(record) {
+        return record.get('fecha')[0];
     }
 });
 
@@ -213,47 +230,134 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
 		beforeshow : function(component){
 						
 						POS.AJAXandDECODE({
-						method: 'reporteClientesComprasCreditoDeben'
-						},
-						function (datos){
-							this.customers = datos.datos;
-							MostrarStore.loadData(this.customers); 
-						},
-						function (){//no responde
-							POS.aviso("ERROR",":(");
-						}
-					);	
+							method: 'reporteClientesComprasCreditoDeben'
+							},
+							function (datos){
+								this.datosVentas = datos.datos;
+								storeVentas.loadData(this.datosVentas); 
+							},
+							function (){//no responde
+								POS.aviso("ERROR",":(");
+							}
+						);	//ajaxAndDecode
 		}//fin before
 	},
     items: [formulario,
 			{
 						xtype: 'toolbar',
 						dock: 'bottom',
-						title: "TOTAL &#09; PAGADO ADEUDA DEBE CLIENTE FECHA"
+						title: "<pre>VENTA	     TOTAL	PAGADO	      ADEUDA		    CLIENTE			FECHA</pre>"
 				},
 			{
 				width: '100%',
 				height: '100%',
 				xtype: 'list',
-				store: MostrarStore,
-				tpl: '<tpl for="."><div class="modeloVentas">total:{total}pagado:{pagado} adeuda:{debe} cliente:{nombre} fecha:{fecha}</div></tpl>',
+				store: storeVentas,
+				tpl: 	'<tpl for="."><div class="modeloVentas"><pre>{id_venta}		{total}		{pagado} 		{debe} 		{nombre} 		   {fecha}</pre></div></tpl>',
 				itemSelector: 'div.modeloVentas',
 				singleSelect: true,
-				indexBar: true
+				indexBar: true,
+				listeners: {
+					selectionchange: function(){
+						try{
+							if (this.getSelectionCount() == 1) {
+								var id=this.getSelectedRecords()[0].id_venta;
+								
+								POS.AJAXandDECODE({
+									method: 'listarPagosVentaDeVenta',
+									id_venta:id
+									},
+									function (datos){
+										if(datos.success){
+											this.datosPagos = datos.datos;
+											storePagos.loadData(this.datosPagos); 
+										}else{
+											POS.aviso("error",datos.reason);
+										}
+									},
+									function (){//no responde
+										POS.aviso("ERROR",":(");
+									}
+								);	//ajaxAndDecode
+												
+		var formBase = {
+			//	items
+            items: [
+				{
+                    xtype: 'toolbar',
+                    dock: 'bottom',
+					title: "<pre>No. PAGO		FECHA		MONTO</pre>"
+				},
+				{
+		        width: "90%",
+		        height: "90%",
+				id: 'ListaPagos',
+		        xtype: 'list',
+		        store: storePagos,
+		        tpl: '<tpl for="."><div class="pagos"><pre>	   {id_pago}		  {fecha}		   {monto}		</pre></div></tpl>',
+		        itemSelector: 'div.pagos',
+		        singleSelect: true,
+		        indexBar: true
+		    }],
+			dockedItems: [{
+                    xtype: 'toolbar',
+                    dock: 'bottom',
+                    items: [{
+						text: 'Cerrar',
+						handler: function() {
+							//ocultar esta tabla
+							form.hide();	
+							//destruir la lista
+							if( Ext.getCmp('ListaPagos') ){
+									Ext.getCmp('ListaPagos').store = null;
+									Ext.getCmp('ListaPagos').destroy();
+								}
+								
+                            }
+					}]
+                }
+            ]
+		};				
+								
+        if (Ext.platform.isPhone) {
+            formBase.fullscreen = true;
+        } else {
+            Ext.apply(formBase, {
+                autoRender: true,
+                floating: true,
+                modal: true,
+                centered: true,
+                hideOnMaskTap: false,
+                height: 500,
+                width: 500
+            });
+        }
+        
+        var form = new Ext.Panel(formBase);
+
+        form.show();
+		
+							}//if seleccionado 1
+						}catch(e){ 
+							//EN CASO DE ERROR AGREGAR CODIGO
+						}//try-catch
+					}//selectionChange
+				}//listeners
 			}
-			]	
+			]//items principal	
 });
 
 ApplicationPagos.prototype.abonar = new Ext.form.FormPanel({
+
+    });
 	
-});
 this.clickBuscar = function ()
 {
-	if(!cbClientes.isVisible()){
+	if(!btnClientes.isVisible()){
 			if(!fechas.isVisible()){
-				POS.aviso("Buscar", "Buscar al cliente: "+cbClientes.getValue()+" del:"+de.getValue()+" al "+al.getValue()); 				
+				POS.aviso("Buscar", "Buscar al cliente: "+btnClientes.getValue()+" del:"+de.getValue()+" al "+al.getValue()); 				
 			}else{
-				POS.aviso("Buscar", "Buscar al cliente: "+cbClientes.getValue()); 			
+				POS.aviso("Buscar", "Buscar al cliente: "+btnClientes.getValue()); 			
 			}	
 	}else{
 			if(!fechas.isVisible()){
@@ -265,26 +369,56 @@ this.clickBuscar = function ()
 };
 this.clickDeudores = function ()
 {
-		 	POS.aviso("OK", "boton de Deudores"); 
+	POS.AJAXandDECODE({
+						method: 'reporteClientesComprasCreditoDeben'
+						},
+						function (datos){
+							this.datosVentas = datos.datos;
+							storeVentas.loadData(this.datosVentas); 
+						},
+						function (){//no responde
+							POS.aviso("ERROR",":(");
+						}
+					);
 };
 
 this.clickPagados = function ()
 {
-		 	POS.aviso("OK", "boton de Pagados"); 
+	POS.AJAXandDECODE({
+						method: 'reporteClientesComprasCreditoPagado'
+						},
+						function (datos){
+							this.datosVentas = datos.datos;
+							storeVentas.loadData(this.datosVentas); 
+						},
+						function (){//no responde
+							POS.aviso("ERROR",":(");
+						}
+					);
 };
 
 this.clickTodos = function ()
 {
-		 	POS.aviso("OK", "boton de Todos"); 
+	POS.AJAXandDECODE({
+						method: 'reporteClientesComprasCredito'
+						},
+						function (datos){
+							this.datosVentas = datos.datos;
+							storeVentas.loadData(this.datosVentas); 
+						},
+						function (){//no responde
+							POS.aviso("ERROR",":(");
+						}
+					);
 };
 
 this.clickCliente = function ()
 {
-	if(cbClientes.isVisible()){
-			cbClientes.setVisible(true);
+	if(btnClientes.isVisible()){
+			btnClientes.setVisible(true);
 			formulario.setHeight(formulario.getHeight()+30)
 	}else{
-			cbClientes.setVisible(false);
+			btnClientes.setVisible(false);
 			formulario.setHeight(formulario.getHeight()-30)
 	}
 };
