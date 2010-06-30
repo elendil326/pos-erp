@@ -3,28 +3,21 @@ ApplicationProveedores= function ()
 	if(DEBUG){
 		console.log("ApplicationProveedores: construyendo");
 	}
+	
 	ApplicationProveedores.currentInstance = this;	
-	//ApplicationProveedores.prototype.currentInstance=this;
+
 	this._init();
 
 	return this;
 	
 };
 
-//variables de esta clase, NO USEN VARIABLES ESTATICAS A MENOS QUE SEA 100% NECESARIO
-
-//aqui va el panel principal 
 ApplicationProveedores.prototype.mainCard = null;
 
-ApplicationProveedores.currentInstance=87;
-
-//aqui va el nombre de la applicacion
 ApplicationProveedores.prototype.appName = null;
 
-//aqui va el nombre de la applicacion
 ApplicationProveedores.prototype.leftMenuItems = null;
 
-//aqui va un texto de ayuda en html
 ApplicationProveedores.prototype.ayuda = null;
 
 ApplicationProveedores.prototype.ProveedoresListStore = null;
@@ -39,22 +32,64 @@ ApplicationProveedores.prototype.record = null;
 
 ApplicationProveedores.prototype.dockedItems = null;
 
+
+
+
+
+
+
 ApplicationProveedores.prototype._init = function()
 {
-	//iniciar variables
+
 	//nombre de la aplicacion
 	this.appName = "Proveedores";
+	
 	//ayuda sobre esta applicacion
 	this.ayuda = "Ayuda sobre este modulo de prueba <br>, html es valido <br> :D";
+
 	//submenues en el panel de la izquierda
-	
 	this._initToolBar();
+	
 	//panel principal
-	this.mainCard = this.ProveedoresList
-};//fin CONSTRUCTOR
+	this.mainCard = this.proveedoresWelcome;
+	
+};
 
 
-ApplicationProveedores.prototype._initToolBar = function (){
+
+
+
+
+ApplicationProveedores.prototype._initToolBar = function ()
+{
+	/*	
+		Buscar
+	*/
+	var buscar = [{
+		xtype: 'textfield',
+		id:'ApplicationProveedores_searchField',
+		listeners:
+				{
+					'render': function( ){
+						//medio feo, pero bueno
+						Ext.get("ApplicationProveedores_searchField").first().dom.setAttribute("onkeyup",
+						 "ApplicationProveedores.currentInstance.mosaic.doSearch( this.value )");
+					}
+				}
+		}];
+
+
+
+        this.dockedItems = [ new Ext.Toolbar({
+            ui: 'dark',
+            dock: 'bottom',
+            items: buscar
+        })];
+    
+	
+	//agregar este dock a el panel principal
+	this.proveedoresWelcome.addDocked( this.dockedItems );
+	/*
 	//grupo 3, listo para vender
     var btnagregarProveedor = [{
 		id: 'btn_agregarProveedor',
@@ -125,8 +160,42 @@ ApplicationProveedores.prototype._initToolBar = function (){
 	
 	//agregar este dock a el panel principal
 	this.ProveedoresList.addDocked( this.dockedItems );
-
+	*/
 };
+
+
+
+
+ApplicationProveedores.prototype.proveedoresWelcome = new Ext.Panel({
+		id: 'inventarioMainPanel',
+		layout: 'card',
+		html: '<div style="width:100%; height:100%" id="proveedores_mosaico"></div>',
+		listeners : {
+			'afterrender' : function (){
+				ApplicationProveedores.currentInstance.mosaic = new Mosaico({
+					renderTo : 'proveedores_mosaico',
+					items: [{ 
+							title: 'norte',
+							image: 'media/truck.png',
+							keywords: [ 'f', 'g']
+						},{
+							title: 'pino suarez',
+							image: 'media/truck.png',
+							keywords: [ 'h','i']
+						},{ 
+							title: 'pinos',
+							image: 'media/truck.png',
+							keywords: []
+						},{
+							title: 'leon',
+							image: 'media/truck.png'
+						}]
+				});
+			}
+		}
+	});
+
+
 
 
 Ext.regModel('Proveedor', {
@@ -417,5 +486,11 @@ ApplicationProveedores.prototype.agregarProveedor = function (){
 	})//fin menu2
 );
 };
+
+
+
+
+
+
 //autoinstalar esta applicacion
 AppInstaller( new ApplicationProveedores() );
