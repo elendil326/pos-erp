@@ -3,6 +3,9 @@
 	session_start();
 
 	include_once("libBD.php");
+	
+	include_once('sesion.php');
+	
 	include_once("cliente.php");
 	include_once("compra.php");
 	include_once("cotizacion.php");
@@ -39,7 +42,7 @@
 	include_once('funcionesUsuario.php');
 	include_once('funcionesVenta.php');
 	
-	include_once('sesion.php');
+	
 	
 	/*
 		DA BIG SWITCHING FUNCTION 
@@ -48,6 +51,9 @@
 	
 	
 	switch($_REQUEST["method"]){
+	
+		//------funciones para checar login
+		case "login" :				login(); break;
 	
 		//-----Funciones compra
 		case "insertarFacturaCompra" : 					insertarFacturaCompra(); break;

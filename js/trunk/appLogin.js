@@ -23,11 +23,12 @@ AppLogin.prototype._init = function ()
 	
 	html_content += '<div id="message"></div>';
 	html_content += '<div id="login" class="login">';
-	html_content += '</div><form action="server_login/checkLogin.php" id="login_form" method="POST" >';
+	html_content += '</div><form action="serverProxy.php" id="login_form" method="POST" >';
 	html_content += '<div id="login_content" class="login_content" >';
 	html_content += '	<div>Nombre  <input id="login0" type="text" name="user"></div>';
 	html_content += '	<div>Clave <input id="login1" type="password" name="pwd"></div>';
 	html_content += '	<div><input type="button" id="login2" style="width: 70px" value="aceptar" onclick="login.checkCurrentLoginInfo()"></div>';
+	html_content += '<input type="hidden" name="method" value="login">';
 	html_content += "</div></form>";
 	
 

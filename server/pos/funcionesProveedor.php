@@ -1,6 +1,4 @@
-﻿<?php
-
-
+<?php
 	function insertarProveedor(){
 		$id =null;
 		$rfc=$_REQUEST['rfcP'];
@@ -137,6 +135,4 @@
 		echo $listar->lista();
 		return;
 	}
-
-	
 ?>

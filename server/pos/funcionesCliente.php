@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 	function insertarCliente(){
 		$id =null;
@@ -180,5 +180,4 @@
 		echo $listar->lista();
 		return $listar->lista();
 	}
-	
 ?>

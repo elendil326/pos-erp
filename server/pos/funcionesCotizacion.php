@@ -1,7 +1,5 @@
-﻿<?php
-
+<?php
 class funcionesCotizacion{
-
 
 	var $detalle_cotizacion = array();
 	
@@ -136,7 +134,4 @@ class funcionesCotizacion{
 		}
 	}//actualiza cabecera
 }//fin clase
-
-
-
 ?>
