@@ -89,7 +89,7 @@ ApplicationProveedores.prototype._initToolBar = function ()
 	
 	//agregar este dock a el panel principal
 	this.proveedoresWelcome.addDocked( this.dockedItems );
-	/*
+/*
 	//grupo 3, listo para vender
     var btnagregarProveedor = [{
 		id: 'btn_agregarProveedor',
@@ -160,14 +160,13 @@ ApplicationProveedores.prototype._initToolBar = function ()
 	
 	//agregar este dock a el panel principal
 	this.ProveedoresList.addDocked( this.dockedItems );
-	*/
+*/
 };
 
 
 
 
 ApplicationProveedores.prototype.proveedoresWelcome = new Ext.Panel({
-		id: 'inventarioMainPanel',
 		layout: 'card',
 		html: '<div style="width:100%; height:100%" id="proveedores_mosaico"></div>',
 		listeners : {
@@ -177,23 +176,35 @@ ApplicationProveedores.prototype.proveedoresWelcome = new Ext.Panel({
 					items: [{ 
 							title: 'norte',
 							image: 'media/truck.png',
-							keywords: [ 'f', 'g']
+							keywords: [ 'f', 'g'],
+							handler : function ( item ){
+								console.log('clicked 1');
+							}
 						},{
 							title: 'pino suarez',
 							image: 'media/truck.png',
-							keywords: [ 'h','i']
+							keywords: [ 'h','i'],
+							handler : function (  ){
+								console.log('clicked 2');
+							}
 						},{ 
 							title: 'pinos',
 							image: 'media/truck.png',
-							keywords: []
+							keywords: [],
+							handler : function (  ){
+								console.log('clicked 3');
+							}
 						},{
 							title: 'leon',
-							image: 'media/truck.png'
+							image: 'media/truck.png',
+							handler : function (  ){
+								console.log('clicked 4');
+							}
 						}]
 				});
 			}
 		}
-	});
+});
 
 
 

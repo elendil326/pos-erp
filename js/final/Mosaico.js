@@ -104,6 +104,7 @@ Mosaico.prototype.createHtml = function ()
 
 		item = document.createElement('div');
 		item.setAttribute('id', 'mosaico-item-' + a );
+		item.onclick = this.config.items[a].handler;
 		item.setAttribute('class', 'mosaico-item');
 		wrapper.appendChild(item);
 
@@ -139,18 +140,30 @@ Example of usage
 		items: [{ 
 				title: 'norte',
 				image: 'media/truck.png',
-				keywords: [ 'f', 'g']
+				keywords: [ 'f', 'g'],
+				handler : function ( item ){
+					console.log('clicked 1');
+				}
 			},{
 				title: 'pino suarez',
 				image: 'media/truck.png',
-				keywords: [ 'h','i']
+				keywords: [ 'h','i'],
+				handler : function ( item ){
+					console.log('clicked 1');
+				}
 			},{ 
 				title: 'pinos',
 				image: 'media/truck.png',
-				keywords: []
+				keywords: [],
+				handler : function ( item ){
+					console.log('clicked 1');
+				}
 			},{
 				title: 'leon',
-				image: 'media/truck.png'
+				image: 'media/truck.png',
+				handler : function ( item ){
+					console.log('clicked 1');
+				}
 			}]
 	});
 	</script>
