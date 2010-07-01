@@ -1,4 +1,6 @@
 <?php	
+//Para todos los php que tengan session
+	session_start();
 
 	include_once("libBD.php");
 	include_once("cliente.php");
@@ -37,11 +39,13 @@
 	include_once('funcionesUsuario.php');
 	include_once('funcionesVenta.php');
 	
-	
+	include_once('sesion.php');
 	
 	/*
 		DA BIG SWITCHING FUNCTION 
 	*/
+	
+	
 	
 	switch($_REQUEST["method"]){
 	
@@ -153,7 +157,8 @@
 		case 'eliminarProductoCotizacion':				$fC = new funcionesCotizacion(); $fC->eliminarProductoCotizacion();	break;
 		case 'mostrarDetalleCotizacion':				$fC = new funcionesCotizacion(); $fC->mostrarDetalleCotizacion();	break;
 		
-		
+		//---funciones de la sesion
+		case 'estaLoggeado': 					estaLoggeado(); break;
 		
 		default: echo "{success:false, reason:'Bad Request'}"; 
 	}

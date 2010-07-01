@@ -1,6 +1,5 @@
 ﻿<?php
 
-
 	function insertarCliente(){
 		$id =null;
 		$rfc=$_REQUEST['rfc'];
@@ -181,7 +180,5 @@
 		echo $listar->lista();
 		return $listar->lista();
 	}
-
 	
 ?>
-

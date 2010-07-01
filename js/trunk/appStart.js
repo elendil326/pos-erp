@@ -7,15 +7,15 @@
 var login;
 var DEBUG;
 
-Ext.onReady( function(){
-
+$(document).ready(function() {
 	DEBUG = true;
 	
 	//iniciar con el appLogin
 	login = new AppLogin ();
-	
-	
+
 });
+	
+
 
 
 

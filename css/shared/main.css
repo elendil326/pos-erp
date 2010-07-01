@@ -5,7 +5,8 @@
 				color: #273437;
 				background: white url(media/shared/fondos/2.jpg) repeat-x;
 
-							
+				padding:0px;
+				margin:0px;		
 			}
 		
 
@@ -88,7 +89,28 @@
 		font-size:22px; 
 	}
 	
+	#message{
+		width: auto;
+		height: 10px;
+		padding:10px;
+		display: none;
+		font-size: 12px;
+	}
 	
+	#message.success{
+		border: 1px solid #00ff00;
+		background-color: #bbffbb;
+	}
+	
+	#message.failure{
+		/*border: 1px solid #ff0000;*/
+		background-color: #ffbbbb;
+	}
+	
+	#message.warning{
+		/*border: 1px solid #ffff00;*/
+		background-color: #ffffbb;
+	}
 
 	.bottom{
 	/*

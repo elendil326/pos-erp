@@ -244,7 +244,23 @@ POS.aviso = function (title, contents)
 
 sink.Main = {
     init : function() {
+	
+	//En el mero inicio del sistema, se hace un AJAX para comprobar que la variable de session este fija
+	//Esto por dos caso: que si se efectuo un login correcto, o que el usuario esta regresando a una sesion valida anterior
+	POS.AJAXandDECODE(
+		//Parametros
+		{method: 'estaLoggeado'},
+		function(result){
 		
+			if(!result.success) { window.location = "index.html";}
+		
+		},
+		function(result){
+			
+			//No se pudo comprobar que se esta loggueado asi que se redirecciona al index
+			window.location = "index.html";
+		}
+	);
 		
 		//boton de cancelar
         this.ayudaButton = new Ext.Button({
