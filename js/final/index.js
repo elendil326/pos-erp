@@ -247,7 +247,7 @@ sink.Main = {
 	
 	//En el mero inicio del sistema, se hace un AJAX para comprobar que la variable de session este fija
 	//Esto por dos caso: que si se efectuo un login correcto, o que el usuario esta regresando a una sesion valida anterior
-	/*
+	
 	POS.AJAXandDECODE(
 		//Parametros
 		{method: 'estaLoggeado'},
@@ -261,7 +261,7 @@ sink.Main = {
 			//No se pudo comprobar que se esta loggueado asi que se redirecciona al index
 			window.location = "index.html";
 		}
-	);*/
+	);
 		
 		//boton de cancelar
         this.ayudaButton = new Ext.Button({
