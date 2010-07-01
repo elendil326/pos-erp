@@ -89,7 +89,14 @@ Mosaico.prototype.doShadow = function ( ids )
 
 };
 
+Mosaico.prototype.click = function ( mosaico, itemId )
+{
 
+	return function (){
+		mosaico.config.handler( mosaico.config.items[itemId] );
+	}
+	
+};
 
 
 Mosaico.prototype.createHtml = function ()
@@ -106,7 +113,7 @@ Mosaico.prototype.createHtml = function ()
 
 		item = document.createElement('div');
 		item.setAttribute('id', 'mosaico-item-' + a );
-		item.onclick = this.config.items[a].handler;
+		item.onclick = this.click( this, a );
 		item.setAttribute('class', 'mosaico-item');
 		wrapper.appendChild(item);
 

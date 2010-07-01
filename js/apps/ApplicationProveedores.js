@@ -181,33 +181,24 @@ ApplicationProveedores.prototype.proveedoresWelcome = new Ext.Panel({
 			'afterrender' : function (){
 				ApplicationProveedores.currentInstance.mosaic = new Mosaico({
 					renderTo : 'proveedores_mosaico',
+					handler : function (item){
+						console.log('YEAH!!',item.title)
+					},
 					items: [{ 
-							title: 'norte',
+							title: 'asas',
 							image: 'media/truck.png',
-							keywords: [ 'f', 'g'],
-							handler : function ( item ){
-								console.log('clicked 1');
-							}
+							keywords: [ 'f', 'g']
 						},{
 							title: 'pino suarez',
 							image: 'media/truck.png',
-							keywords: [ 'h','i'],
-							handler : function (  ){
-								console.log('clicked 2');
-							}
+							keywords: [ 'h','i']
 						},{ 
 							title: 'pinos',
 							image: 'media/truck.png',
-							keywords: [],
-							handler : function (  ){
-								console.log('clicked 3');
-							}
+							keywords: []
 						},{
 							title: 'leon',
-							image: 'media/truck.png',
-							handler : function (  ){
-								console.log('clicked 4');
-							}
+							image: 'media/truck.png'
 						}]
 				});
 			}
