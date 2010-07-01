@@ -68,6 +68,7 @@ ApplicationProveedores.prototype._initToolBar = function ()
 	var buscar = [{
 		xtype: 'textfield',
 		id:'ApplicationProveedores_searchField',
+		inputCls: 'caja-buscar',
 		listeners:
 				{
 					'render': function( ){
@@ -78,12 +79,19 @@ ApplicationProveedores.prototype._initToolBar = function ()
 				}
 		}];
 
-
+		var agregar = [{
+			xtype: 'button',
+			text: 'Nuevo Proveedor',
+			ui: 'action',
+			handler: function(){
+					console.log("agregar proveedor")
+				}
+			}];		
 
         this.dockedItems = [ new Ext.Toolbar({
             ui: 'dark',
             dock: 'bottom',
-            items: buscar
+            items: buscar.concat({xtype:'spacer'}).concat(agregar)
         })];
     
 	

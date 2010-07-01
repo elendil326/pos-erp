@@ -142,7 +142,9 @@ ApplicationInventario.backgroundPicker = function (existencias, min){
 ApplicationInventario.prototype._initToolbar = function(){
 	
 	
-	/*------------------------ buscar --------*/
+	/*	
+		Buscar
+	*/
 	var buscar = [{
 		xtype: 'textfield',
 		id:'ApplicationInvenario_searchField',
@@ -169,7 +171,7 @@ ApplicationInventario.prototype._initToolbar = function(){
 	this.inventarioMainPanel.addDocked( this.dockedItems );
 	
 	
-	/*------------------------ buscar --------*/
+
 	
 	
 	

@@ -65,9 +65,11 @@ Mosaico.prototype.doShadow = function ( ids )
 	var wrapper = document.getElementById(this.uniqueID);
 
 	if(ids.length == 0){
-		wrapper.setAttribute('style', 'background-image:url(media/g2.png);'  );
+		//wrapper.setAttribute('style', 'background-image:url(media/g2.png);'  );
+		wrapper.setAttribute('class', 'mosaico-wrapper fondo-claro'  );
 	}else{
-		wrapper.setAttribute('style', 'background-image:url(media/g1.png);'  );
+		//wrapper.setAttribute('style', 'background-image:url(media/g1.png);'  );
+		wrapper.setAttribute('class', 'mosaico-wrapper fondo-oscuro'  );
 	}
 
 	for(a = 0; a < this.config.items.length; a++){
@@ -94,7 +96,7 @@ Mosaico.prototype.createHtml = function ()
 {
 	var wrapper = document.createElement('div');
 	wrapper.setAttribute('id', this.uniqueID );
-	wrapper.setAttribute('class', 'mosaico-wrapper');
+	wrapper.setAttribute('class', 'mosaico-wrapper fondo-claro');
 
 	document.getElementById(this.config.renderTo).appendChild(wrapper);
 
