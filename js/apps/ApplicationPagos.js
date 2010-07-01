@@ -37,7 +37,8 @@ ApplicationPagos.prototype.datosVentas = null;
 ApplicationPagos.prototype.datosPagos = null;
 ApplicationPagos.fechas = null;
 ApplicationPagos.btnClientes = null;
-
+ApplicationPagos.formulario = null;
+ApplicationPagos.prototype.PagarVenta=null;
 
 ApplicationPagos.idCliente = null;
 ApplicationPagos.fechaInicio = new Date();
@@ -57,24 +58,84 @@ ApplicationPagos.prototype._init = function()
 	this.ayuda = "Ayuda sobre este modulo de prueba <br>, html es valido <br> :D";
 	
 	//submenues en el panel de la izquierda
-	this.leftMenuItems = [
-	{
-        text: 'Listar',
-        ayuda: 'SE ENLISTAN TODOS LOS CLIENTES REGISTRADOS EN PAPAS SUPREMAS',
-		card: this.mainCard
-    },
-    {
-        text: 'Abonar',
-		card:this.abonar,
-        ayuda: 'ayuda en SECOND'
-    }
-	];
-	
-	
 	
 	this._initToolBar();
 	
 };//fin CONSTRUCTOR
+
+
+
+//Iniciar el toolbar
+ApplicationPagos.prototype._initToolBar = function (){
+	
+	//Dejo los demas grupos por si quieres agregar mas botones
+	//grupo 1, funciones basicas
+	var buttonsGroup1 = [{
+        text: 'Buscar',
+        ui: 'round',
+        handler: clickBuscar
+    }];
+	//grupo 2, cualquier otra mamada
+	var buttonsGroup2 = [{
+        xtype: 'splitbutton',
+        activeButton: 0,
+        items: [{
+            text: 'Deudores',
+			id:'btnDeudores',
+            handler: clickDeudores
+        }, {
+            text: 'Pagados',
+			id:'btnPagados',
+            handler: clickPagados
+        }, {
+            text: 'Todos',
+			id:'btnTodos',
+            handler: clickTodos
+        }]    
+    }];
+	//grupo 3, listo para vender
+    var buttonsGroup3 = [{
+        text: 'Cliente',
+        handler: clickCliente
+    },{
+        text: 'Periodo',
+        handler: clickPeriodo
+    }];
+
+	if (!Ext.platform.isPhone) {
+        buttonsGroup1.push({xtype: 'spacer'});
+        buttonsGroup2.push({xtype: 'spacer'});
+        
+        this.dockedItems = [new Ext.Toolbar({
+            // dock this toolbar at the bottom
+            ui: 'light',
+            dock: 'top',
+			scroll: 'horizontal',
+            items: buttonsGroup1.concat(buttonsGroup2).concat(buttonsGroup3)
+        })];
+    }else {
+        this.dockedItems = [{
+			
+			scroll: 'horizontal',
+            xtype: 'toolbar',
+            ui: 'light',
+            items: buttonsGroup1,
+            dock: 'bottom'
+        }, {
+            xtype: 'toolbar',
+            ui: 'dark',
+            items: buttonsGroup2,
+            dock: 'bottom'
+        }, {
+            xtype: 'toolbar',
+            ui: 'metal',
+            items: buttonsGroup3,
+            dock: 'bottom'
+        }];
+    }
+	//agregar este dock a el panel que quieras
+	this.mainCard.addDocked( this.dockedItems );
+};
 
 		
 		
@@ -122,7 +183,6 @@ this.clickFechaInicio=function(){
 	
 this.clickfechaFin=function(){
     var fechaActual = new Date();
- 
     var dia = ApplicationPagos.fechaFin.getDate();
     var mes = ApplicationPagos.fechaFin.getMonth();
     var anio = ApplicationPagos.fechaFin.getYear()+1900;
@@ -170,7 +230,6 @@ ApplicationPagos.btnClientes=new Ext.Button({
         });	
 		
 ApplicationPagos.fechas = new Ext.form.FormPanel({
-	minHeight:100,
 	hidden:'true',
     items: [
 	{
@@ -200,99 +259,18 @@ ApplicationPagos.fechas = new Ext.form.FormPanel({
 });
 
 
-// TODO esto es una variable global !
-formulario=new Ext.form.FormPanel({
-	minHeight:120,
+
+
+ApplicationPagos.formulario=new Ext.form.FormPanel({
+	minHeight:80,
     items: [{
         xtype: 'fieldset',
         title: 'Buscar por:',
         instructions: 'Insertelos datos y de click en el boton de buscar.',
-        items: [
-			ApplicationPagos.btnClientes
-			,ApplicationPagos.fechas
-			]
+        items: [	ApplicationPagos.btnClientes,ApplicationPagos.fechas	]
     }]
 });
 
-//Iniciar el toolbar
-ApplicationPagos.prototype._initToolBar = function (){
-	
-	//Dejo los demas grupos por si quieres agregar mas botones
-	//grupo 1, funciones basicas
-	var buttonsGroup1 = [{
-        text: 'Buscar',
-        ui: 'round',
-        handler: clickBuscar
-    }];
-
-
-	//grupo 2, cualquier otra mamada
-	var buttonsGroup2 = [{
-        xtype: 'splitbutton',
-        activeButton: 0,
-        items: [{
-            text: 'Deudores',
-			id:'btnDeudores',
-            handler: clickDeudores
-        }, {
-            text: 'Pagados',
-			id:'btnPagados',
-            handler: clickPagados
-        }, {
-            text: 'Todos',
-			id:'btnTodos',
-            handler: clickTodos
-        }]    
-    }];
-    
-
-
-
-	//grupo 3, listo para vender
-    var buttonsGroup3 = [{
-        text: 'Cliente',
-        handler: clickCliente
-    },{
-        text: 'Periodo',
-        handler: clickPeriodo
-    }];
-
-
-	if (!Ext.platform.isPhone) {
-        buttonsGroup1.push({xtype: 'spacer'});
-        buttonsGroup2.push({xtype: 'spacer'});
-        
-        this.dockedItems = [new Ext.Toolbar({
-            // dock this toolbar at the bottom
-            ui: 'light',
-            dock: 'top',
-            items: buttonsGroup1.concat(buttonsGroup2).concat(buttonsGroup3)
-			
-        })];
-    }else {
-        this.dockedItems = [{
-            xtype: 'toolbar',
-            ui: 'light',
-            items: buttonsGroup1,
-            dock: 'bottom'
-        }, {
-            xtype: 'toolbar',
-            ui: 'dark',
-            items: buttonsGroup2,
-            dock: 'bottom'
-        }, {
-            xtype: 'toolbar',
-            ui: 'metal',
-            items: buttonsGroup3,
-            dock: 'bottom'
-        }];
-    }
-	
-	//agregar este dock a el panel que quieras
-	this.mainCard.addDocked( this.dockedItems );
-	
-
-};
 
 Ext.regModel('modeloVentas', {
     fields: ['id_venta','total', 'pagado', 'debe', 'nombre', 'fecha']
@@ -347,7 +325,8 @@ var metodo=(tipo==1)?'reporteClientesComprasCreditoDeben':((tipo==2)?'reporteCli
 								POS.aviso("ERROR",":(");
 							}
 						);	//ajaxAndDecode
-}
+};
+
 ApplicationPagos.funcion_ajax_pagos = function(id){
 	POS.AJAXandDECODE({
 		method: 'listarPagosVentaDeVenta',
@@ -367,44 +346,66 @@ ApplicationPagos.funcion_ajax_pagos = function(id){
 	);	//ajaxAndDecode
 };
 
-ApplicationPagos.prototype.mainCard = new Ext.Panel({
-   
-    scroll: 'vertical',
 
-	cls: 'cards',
-	layout: {
-		type: 'vbox',
-		align: 'strech'
-	},
-	
-    listeners: {
-		beforeshow : function(component){
-						ApplicationPagos.funcion_ajax_ventas(null,null,null);
-		}//fin before
-	},
-    items: [formulario,
-			{
-						xtype: 'toolbar',
-						dock: 'bottom',
-						title: "<pre>VENTA	     TOTAL	PAGADO	      ADEUDA		    CLIENTE			FECHA</pre>"
-				},
-			{
-				width: '100%',
-				height: '100%',
-				xtype: 'list',
-				store: ApplicationPagos.storeVentas,
-				tpl: 	'<tpl for="."><div class="modeloVentas"><pre>{id_venta}		{total}		{pagado} 		{debe} 		{nombre} 		   {fecha}</pre></div></tpl>',
-				itemSelector: 'div.modeloVentas',
-				singleSelect: true,
-				indexBar: true,
-				listeners: {
-					selectionchange: function(){
-						try{
-							if (this.getSelectionCount() == 1) {
-								var id=this.getSelectedRecords()[0].id_venta;
-								
-								ApplicationPagos.funcion_ajax_pagos(id);
-												
+
+
+ApplicationPagos.prototype.PagarVenta=function(id){			
+		var formPagaBase = new Ext.form.FormPanel({
+			scroll: 'vertical',
+			
+            items: [
+				{
+					xtype: 'numberfield',
+					name: 'monto',
+					label: 'Cantidad'
+				}			
+			],
+			dockedItems: [{
+                    xtype: 'toolbar',
+                    dock: 'bottom',
+					scroll:'horizontal',
+                    items: [{
+						text: 'Cerrar',
+						handler: function() {
+							//ocultar esta tabla
+							formPagaBase.hide();	
+							formPagaBase.destroy();	
+                            }
+					},{
+						xtype:'button',
+						text: 'Guardar',
+						handler: function() {	
+							formPagaBase.hide();	
+							formPagaBase.destroy();
+							POS.aviso("ok","Guardara");
+                            }
+					}]
+                }
+            ]
+		});//fromulario
+        if (Ext.platform.isPhone) {
+            formPagaBase.fullscreen = true;
+        } else {
+            Ext.apply(formPagaBase, {
+                autoRender: true,
+                floating: true,
+                modal: true,
+                centered: true,
+                hideOnMaskTap: false,
+                height: 150,
+                width: 400
+            });
+        }
+        formPagaBase.show();
+		
+};//PagarVenta
+
+
+
+
+ApplicationPagos.muestraPagos=function(id){			
+			ApplicationPagos.funcion_ajax_pagos(id);
+							
 		var formBase = {
 			//	items
             items: [
@@ -427,6 +428,7 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
 			dockedItems: [{
                     xtype: 'toolbar',
                     dock: 'bottom',
+					scroll:'horizontal',
                     items: [{
 						text: 'Cerrar',
 						handler: function() {
@@ -437,13 +439,30 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
 									Ext.getCmp('ListaPagos').store = null;
 									Ext.getCmp('ListaPagos').destroy();
 								}
-								
+                            }
+					},{
+						xtype:'button',
+						text: 'Pagar',
+						id:'btnPagarVenta',
+						listeners: {
+							added : function(){
+								if(ApplicationPagos.tipo>1){this.hide();}
+							}//fin before
+						},
+						handler: function() {	
+							//ocultar esta tabla
+							form.hide();	
+							//destruir la lista
+							if( Ext.getCmp('ListaPagos') ){
+									Ext.getCmp('ListaPagos').store = null;
+									Ext.getCmp('ListaPagos').destroy();
+								}
+								ApplicationPagos.currentInstance.PagarVenta(id);
                             }
 					}]
                 }
             ]
-		};				
-								
+		};//fromulario
         if (Ext.platform.isPhone) {
             formBase.fullscreen = true;
         } else {
@@ -457,25 +476,56 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
                 width: 500
             });
         }
-        
         var form = new Ext.Panel(formBase);
-
         form.show();
-		
-							}//if seleccionado 1
+};//muestraPagos
+
+
+ApplicationPagos.prototype.mainCard = new Ext.Panel({
+   
+    scroll: 'vertical',
+
+	cls: 'cards',
+	layout: {
+		type: 'vbox',
+		align: 'strech'
+	},
+	
+    listeners: {
+		beforeshow : function(component){
+						ApplicationPagos.funcion_ajax_ventas(null,null,null);
+		}//fin before
+	},
+    items: [ApplicationPagos.formulario,
+			{
+						xtype: 'toolbar',
+						dock: 'bottom',
+						title: "<pre>VENTA	     TOTAL	PAGADO	      ADEUDA		    CLIENTE			FECHA</pre>"
+				},
+			{
+				width: '100%',
+				height: '100%',
+				xtype: 'list',
+				store: ApplicationPagos.storeVentas,
+				tpl: 	'<tpl for="."><div class="modeloVentas"><pre>{id_venta}		{total}		{pagado} 		{debe} 		{nombre} 		   {fecha}</pre></div></tpl>',
+				itemSelector: 'div.modeloVentas',
+				singleSelect: true,
+				indexBar: true,
+				listeners: {
+					selectionchange:function(){
+						try{
+							if (this.getSelectionCount() == 1){	ApplicationPagos.muestraPagos(this.getSelectedRecords()[0].id_venta);}
 						}catch(e){ 
 							//EN CASO DE ERROR AGREGAR CODIGO
 						}//try-catch
-					}//selectionChange
+					}					
 				}//listeners
 			}
 			]//items principal	
 });
 
-ApplicationPagos.prototype.abonar = new Ext.form.FormPanel({
 
-    });
-	
+
 this.clickBuscar = function ()
 {
 	var de=Ext.get("finicio").dom.textContent;
@@ -517,10 +567,10 @@ this.clickCliente = function ()
 {
 	if(ApplicationPagos.btnClientes.isVisible()){
 			ApplicationPagos.btnClientes.setVisible(true);
-			formulario.setHeight(formulario.getHeight()+50);
+			ApplicationPagos.formulario.setHeight(ApplicationPagos.formulario.getHeight()+30);
 	}else{
 			ApplicationPagos.btnClientes.setVisible(false);
-			formulario.setHeight(formulario.getHeight()-50);
+			ApplicationPagos.formulario.setHeight(ApplicationPagos.formulario.getHeight()-30);
 	}
 };
 
@@ -528,10 +578,10 @@ this.clickPeriodo = function ()
 {
 	if(ApplicationPagos.fechas.isVisible()){
 			ApplicationPagos.fechas.setVisible(true);
-			formulario.setHeight(formulario.getHeight()+90);
+			ApplicationPagos.formulario.setHeight(ApplicationPagos.formulario.getHeight()+80);
 	}else{
 			ApplicationPagos.fechas.setVisible(false);
-			formulario.setHeight(formulario.getHeight()-90);
+			ApplicationPagos.formulario.setHeight(ApplicationPagos.formulario.getHeight()-80);
 	}
 };
 
