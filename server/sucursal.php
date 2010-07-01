@@ -42,9 +42,9 @@
 			$query="select * from sucursal where id_sucursal=?;";
 			$params=array($id);
 			$datos=($this->bd->select_uno($query,$params));
-			$this->id_sucursal=$datos[id_sucursal];			
-			$this->descripcion=$datos[descripcion];	 	 	 	 	 	 	 
-			$this->direccion=$datos[direccion];
+			$this->id_sucursal=$datos['id_sucursal'];			
+			$this->descripcion=$datos['descripcion'];	 	 	 	 	 	 	 
+			$this->direccion=$datos['direccion'];
 		}
 		function existe(){
 			$query="select id_sucursal from sucursal where id_sucursal=?;";

@@ -93,6 +93,7 @@ Mosaico.prototype.click = function ( mosaico, itemId )
 {
 
 	return function (){
+		console.log(this, mosaico, itemId);
 		mosaico.config.handler( mosaico.config.items[itemId] );
 	}
 	
@@ -122,6 +123,7 @@ Mosaico.prototype.createHtml = function ()
 		image.setAttribute('style', 'background: url('+this.config.items[a].image+') no-repeat;' );
 		image.setAttribute('class', 'mosaico-image');
 		item.appendChild(image);
+
 	
 		title = document.createElement('div');
 		title.innerHTML = this.config.items[a].title;

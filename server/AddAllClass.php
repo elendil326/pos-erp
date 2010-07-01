@@ -99,7 +99,8 @@
 		case "insertarSucursal" : 				insertarSucursal(); break;
 		case "eliminarSucursal" : 				eliminarSucursal(); break;
 		case "actualizarSucursal" : 			actualizarSucursal(); break;
-		case "listarSucursal" : 				listarSucursal(); break;	
+		case "listarSucursal" : 				listarSucursal(); break;
+		case "detallesSucursal":				detallesSucursal(); break;
 		
 		//----- funciones productos proveedor
 		case "insertarProductoProveedor" : 		insertarProductoProveedor(); break;
@@ -192,7 +193,7 @@
 		return;
 	}
 	function ok_datos($datos){
-		echo "{success : true ,$datos}";
+		echo "{success : true , $datos}";
 		return;
 	}
 ?>

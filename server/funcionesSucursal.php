@@ -46,4 +46,22 @@
 		echo $listar->lista();
 		return;
 	}
+
+	function detallesSucursal(){
+		if( !empty( $_REQUEST['id_sucursal'] ) ){
+			
+			$id = $_REQUEST['id_sucursal'];			
+			$sucursal = new sucursal_existente($id);
+
+			if( $sucursal->existe() ){
+				
+				ok_datos( 'datos: '.$sucursal->json());
+			}
+			else	fail( "No se encontró la sucursal especificada " );
+
+		}
+		else 	fail( "Faltan parametros" );
+		
+		return;
+	}
 ?>

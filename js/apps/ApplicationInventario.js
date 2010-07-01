@@ -42,10 +42,31 @@ ApplicationInventario.backgroundColor = null;
 //Lista que guardara los productos que pueden ser insertados en el inventario
 ApplicationInventario.prototype.productList = null;
 
+
+/********Paneles para navegar hacia atras y adelante***********/
+//Panel que traera los detalles de la sucursal
+ApplicationInventario.prototype.detailPanel = null;
+
+//Panel de inicio
+ApplicationInventario.prototype.homePanel = null;
+
+//Panel de inicio2
+ApplicationInventario.prototype.homePanel2 = null;
+/*******Paneles***********************************************/
+
+
+//Toolbar de navegacion, se mantendra constante en todas las cards
+ApplicationInventario.prototype.navToolbar = null;
+
 ApplicationInventario.popup = null;
 
 //Mosaico
 ApplicationInventario.prototype.mosaic = null;
+
+ApplicationInventario.prototype.mosaicItems = null;
+ApplicationInventario.prototype.mosaicItems2 = null;
+
+
 
 ApplicationInventario.prototype._init = function()
 {
@@ -56,68 +77,116 @@ ApplicationInventario.prototype._init = function()
 	//ayuda sobre esta applicacion
 	this.ayuda = 'Los botones de la parte inferior muestran <br>los productos que se encuentran actualmente registrados en el<br> inventario de la sucursal especificada <br>en los botones.';
 	
+	//cargamos los items del mosaico
+	this.getMosaicItems();
+	
 	//panel principal
-	this.inventarioMainPanel = new Ext.Panel({
+	this.inventarioMainPanel =  new Ext.Panel({
 		id: 'inventarioMainPanel',
 		layout: 'card',
-		html: '<div style="width:100%; height:100%" id="inventario_mosaico"></div>',
+		html: '<div></div>'
+	});
+
+	this.loadHomePanel();
+	//initialize the tootlbar which is a dock
+	//this._initToolbar();
+	//this.initSucursalPanel(1);
+	
+	this.inventarioMainPanel = this.homePanel;
+	this.loadNavigationBar();
+	this.mainCard = this.inventarioMainPanel;
+		
+};
+ 
+ApplicationInventario.prototype.loadHomePanel = function(){
+	
+	this.homePanel2 = new Ext.Panel({
+		id: 'inventarioHomePanel2',
+		layout: 'card',
+		html: '<div style="width:100%; height:100%" id="invapp_mosaico2"></div>',
 		listeners : {
 			'afterrender' : function (){
 				ApplicationInventario.currentInstance.mosaic = new Mosaico({
-					renderTo : 'inventario_mosaico',
-					items: [{ 
-							title: 'norte',
-							image: 'media/truck.png',
-							keywords: [ 'f', 'g']
-						},{
-							title: 'pino suarez',
-							image: 'media/truck.png',
-							keywords: [ 'h','i']
-						},{ 
-							title: 'pinos',
-							image: 'media/truck.png',
-							keywords: []
-						},{
-							title: 'leon',
-							image: 'media/truck.png'
-						}]
+					renderTo : 'invapp_mosaico2',
+					items: ApplicationInventario.currentInstance.mosaicItems2,
+					handler: function(item){
+						ApplicationInventario.currentInstance.loadDetailPanel(item.id_sucursal);
+					}
 				});
 			}
 		}
 	});
-
-
-	//initialize the tootlbar which is a dock
-	this._initToolbar();
-	//this.initSucursalPanel(1);
-		
-	this.mainCard = this.inventarioMainPanel;
-	 
-	//this.inventarioMainPanel.add( firstPanel );
-	//this.inventarioMainPanel.setCard( firstPanel , 'slide' );
-	//submenues en el panel de la izquierda
-	this.leftMenuItems = [
-    {
-        text: 'Existencias',
-       	card: this.inventarioMainPanel,
-        ayuda: this.ayuda
-    }];
-		
+	
+	this.homePanel = new Ext.Panel({
+		id: 'inventarioHomePanel',
+		layout: 'card',
+		html: '<div style="width:100%; height:100%" id="invapp_mosaico"></div>',
+		listeners : {
+			'afterrender' : function (){
+				ApplicationInventario.currentInstance.mosaic = new Mosaico({
+					renderTo : 'invapp_mosaico',
+					items: ApplicationInventario.currentInstance.mosaicItems,
+					handler: function(item){
+						ApplicationInventario.currentInstance.loadDetailPanel(item.id_sucursal);
+					}
+				});
+			}
+		}
+	});
+	
+	//console.log(this.inventarioMainPanel);
+	//this.inventarioMainPanel.setCard( this.homePanel , 'slide');
+	
 };
- 
- 
 
-Ext.regModel('InvExistencias', {
+Ext.regModel('inv_Existencias', {
     fields: ['denominacion', 'existencias', 'precio_venta', 'min']
 });
 
-InvProductsListStore = new Ext.data.Store({
-    model: 'InvExistencias',
-    sorters: 'denominacion',
-    getGroupString : function(record) {
-        return record.get('denominacion')[0];
-    }
-});
+//Funcion para obtener los items del mosaico dinamicamente
+ApplicationInventario.prototype.getMosaicItems = function(){
+	
+	
+	
+	POS.AJAXandDECODE(
+		//Parametros
+		{
+			method: 'listarSucursal'
+		},
+		//Funcion success
+		function(result){
+			
+			//Arreglo con los items que tendra el mosaico
+			var arrayItems = [];
+			var arrayItems2 = [];
+			// Un item del mosaico
+			var mosaicItem = null;
+			
+			if (result.success)
+			{
+				
+				for(var i=0; i<result.datos.length; i++)
+				{
+					mosaicItem = {
+						title: result.datos[i].descripcion,
+						image: 'media/truck.png',
+						id_sucursal: result.datos[i].id_sucursal
+						
+					};
+					
+					arrayItems.push(mosaicItem);
+				}
+				
+				ApplicationInventario.currentInstance.mosaicItems = arrayItems;
+				ApplicationInventario.currentInstance.mosaicItems2 = arrayItems;
+			}
+		},
+		//Funcion failure
+		function(){
+			
+		});
+	
+};
 
 
 //Funcion sencilla para escoger el color de fondo del elemento de la lista
@@ -134,20 +203,19 @@ ApplicationInventario.backgroundPicker = function (existencias, min){
 									if ( min == existencias ) {
 										return '#D7DF01'; //amarillo
 									}
-}
+};
 
 
-
-
-ApplicationInventario.prototype._initToolbar = function(){
-	
+ApplicationInventario.prototype.loadNavigationBar = function(){
 	
 	/*	
 		Buscar
 	*/
 	var buscar = [{
 		xtype: 'textfield',
+		emptyText: 'Búsqueda',
 		id:'ApplicationInvenario_searchField',
+		showAnimation: true,
 		listeners:
 				{
 					'render': function( ){
@@ -158,115 +226,116 @@ ApplicationInventario.prototype._initToolbar = function(){
 				}
 		}];
 
-
-
-        this.dockedItems = [ new Ext.Toolbar({
-            ui: 'dark',
-            dock: 'bottom',
-            items: buscar
-        })];
-    
-	
-	//agregar este dock a el panel principal
-	this.inventarioMainPanel.addDocked( this.dockedItems );
-	
-	
-
-	
-	
-	
-	
-	
-	
-	var buttonsArray = [];
-	var panel;
-	POS.AJAXandDECODE({
-		 method: 'listarSucursal',
-	}, function(result){  //Success AJAX
+	//Si existe la toolbar de navegacion, quita los componentes y agrega buscar, si no existe, la crea
+	if (!this.navToolbar) {
+		this.navToolbar = new Ext.Toolbar({
+			ui: 'dark',
+			dock: 'top',
+			items: buscar
+		});
 		
-		for(var i=0; i < result.datos.length ; i++){
-			buttonsArray.push(new Ext.Button({
-				text: result.datos[i].descripcion,
-				index: i,
-				handler: function(btn){
+		this.dockedItems = [this.navToolbar];
+		
+		
+		//agregar este dock a el panel principal
+		this.inventarioMainPanel.addDocked(this.dockedItems);
+	}else{
+		this.navToolbar.removeAll();
+		this.navToolbar.add(buscar);
+		this.navToolbar.doLayout();
+	}
+	
+
+
+	
+	
+}
+
+ApplicationInventario.prototype._initToolbar = function(){
+	
+	
+	//if (!this.toolBar) {
+		var buttonsArray = [];
+		var panel;
+		POS.AJAXandDECODE({
+			method: 'listarSucursal'
+		}, function(result){ //Success AJAX
+			for (var i = 0; i < result.datos.length; i++) {
+				buttonsArray.push(new Ext.Button({
+					text: result.datos[i].descripcion,
+					index: i,
+					handler: function(btn){
 					
-					//Si se da click en un boton del toolbar se deshabilita y los demas se habilitan
-					for (var j=0; j<buttonsArray.length ; j++){
-						if( btn.index == j){
-							btn.disable();
-						}else{
-							buttonsArray[j].enable();
+						//Si se da click en un boton del toolbar se deshabilita y los demas se habilitan
+						for (var j = 0; j < buttonsArray.length; j++) {
+							if (btn.index == j) {
+								btn.disable();
+							}
+							else {
+								buttonsArray[j].enable();
+							}
 						}
+						
+						//ApplicationInventario.currentInstance.initSucursalPanel(result.datos[btn.index].id_sucursal);
+						ApplicationInventario.currentInstance.loadDetailPanel(result.datos[btn.index].id_sucursal);
+						
+						
 					}
-					
-					ApplicationInventario.currentInstance.initSucursalPanel(result.datos[btn.index].id_sucursal);
-					
-					
-					
-				}
-			}));
-		}
+				}));
+			}
+			
+			
+			//Toolbar inferior	
+			if (!ApplicationInventario.currentInstance.toolBar) {
+				ApplicationInventario.currentInstance.toolBar = new Ext.Toolbar({
+					dock: 'bottom',
+					scroll: 'horizontal',
+					items: [buttonsArray]
+				});
+			}else{
+				/*ApplicationInventario.currentInstance.inventarioMainPanel.removeDocked(ApplicationInventario.currentInstance.toolBar);
+				ApplicationInventario.currentInstance.toolBar = new Ext.Toolbar({
+					dock: 'bottom',
+					scroll: 'horizontal',
+					items: [buttonsArray]
+				});*/
+			}
+			
+			
+			//Toolbar superior
+			/*var supToolbar = new Ext.Toolbar({
+		 dock: 'top',
+		 items:[ { xtype: 'spacer'},
+		 {
+		 text: 'Inventario',
+		 ui: 'forward'
+		 }]
+		 });*/
+			ApplicationInventario.currentInstance.inventarioMainPanel.addDocked(ApplicationInventario.currentInstance.toolBar);
+		//ApplicationInventario.currentInstance.inventarioMainPanel.addDocked(supToolbar);
 		
-		//Hacemos una lista para poner los productos que pueden ingresarse al inventario
-		//this.productList = new Ext.list
-		 
-		//Checamos si es telefono, si no para agregar espacio entre botones
-		/*if(!Ext.platform.isPhone){
-			buttonsArray.push({ xtype: 'spacer'} , {
-				text: '+',
-				ui: 'action',
-				handler: function(){
-					if (!this.popup) {
-			                this.popup = new Ext.Panel({
-			                    floating: true,
-			                    modal: true,
-			                    centered: true,
-			                    width: 320,
-			                    height: 300,
-			                    styleHtmlContent: true,
-			                    html: '<p>Tap anywhere outside the overlay to close it.</p>',
-			                    dockedItems: [{
-			                        dock: 'top',
-			                        xtype: 'toolbar',
-			                        title: 'Agregar Producto'
-			                    }],
-			                    scroll: 'vertical'
-			                });
-			            }
-			            this.popup.show('pop');
-						}
-			});
-		}else{
-			buttonsArray.push({
-				text: '+',
-				ui: 'action',
-				handler: function(){
-					POS.aviso('Agregar producto', 'Aqui ira el contenido');
-				}
-			});
-		}*/
-		
-		ApplicationInventario.currentInstance.toolBar = new Ext.Toolbar({
-		dock: 'bottom',
-	    items: [buttonsArray]
-	});
-	
-	ApplicationInventario.currentInstance.inventarioMainPanel.addDocked(ApplicationInventario.currentInstance.toolBar);
-	
-	},function(error){ //Failure Ajax
-		
-	});
-
+		}, function(error){ //Failure Ajax
+		});
+	/*}
+	else{
+		ApplicationInventario.currentInstance.inventarioMainPanel.addDocked(ApplicationInventario.currentInstance.toolBar);
+	}*/
 	
 };
 
 //Funcion para crear un panel con el listado de una sucursal especifica
 ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id){
 	
-	/*if (Ext.get('sucursalPanel'+sucursal_id)){
-		ApplicationInventario.currentInstance.inventarioMainPanel.setCard( Ext.getCmp('sucursalPanel'+sucursal_id) , 'slide');
-		return 0;
-	}*/
+	//Store para la lista de productos del inventario
+	var InvProductsListStore = new Ext.data.Store({
+    model: 'inv_Existencias',
+    sorters: 'denominacion',
+    getGroupString : function(record) {
+        return record.get('denominacion')[0];
+    }
+});
+
+
 	
 	var sucursalPanel = new Ext.Panel({
 	id: 'sucursalPanel'+sucursal_id,			    
@@ -295,6 +364,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id){
 					
 					}, function(){//no responde
 						if (!ApplicationInventario.popup) {
+							//Creamos un aviso de error para reintentar conexion
 							ApplicationInventario.popup = new Ext.Panel({
 								id: 'errorPopUpInv',
 								floating: true,
@@ -329,7 +399,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id){
 						
 						ApplicationInventario.popup.show('pop');
 					});
-				}
+				};
 				funcAjax();
 		}//fin before
 	},
@@ -347,64 +417,168 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id){
 	
 	});
  
+ 	//this._initToolbar();
+	//Quitamos los botones de la toolbar de navegacion
+	this.navToolbar.removeAll();
+	
+	//Y solo le agregamos un boton de atras
+	this.navToolbar.add({
+		text: 'Sucursal',
+		ui: 'back',
+		handler: function(){
+			ApplicationInventario.currentInstance.inventarioMainPanel.setCard( ApplicationInventario.currentInstance.detailPanel, { type: 'slide', direction: 'right'});
+			
+			//Creamos los botones de atras e inventario
+			ApplicationInventario.currentInstance.createBackInvButtons(sucursal_id);
+		}
+	});
+	this.navToolbar.doLayout();
+	
+	
 	this.inventarioMainPanel.setCard( sucursalPanel , 'slide' );
 	//this.inventarioMainPanel.addDocked(sucursalPanel);
 	//this.mainCard = sucursalPanel;
 	return sucursalPanel;
 };
 
-//ApplicationInventario.prototype.getInvList = function(){
+//Funcion que carga un panel con los detalles de la sucursal especificada
+ApplicationInventario.prototype.loadDetailPanel = function(sucursal_id){
 	
-	/*var listInvStore = new Ext.store({
-		fields:[ '']
-	});*/
+	//Variable que tendra los datos de la sucursal
+	var data = [];
+	//Panel que trae la form
+	var detailPanel;
 	
-//};
-
-
-/*
-//Panel principal de Inventario
-ApplicationInventario.prototype.inventarioMainPanel = new Ext.Panel({
-			    
-	draggable: false,
-	layout: 'card',			
-	listeners: {
-		beforeshow : function(component){
+	//Ajax para obtener los datos de la sucursal
+	POS.AJAXandDECODE(
+		//Parametros
+		{
+			method: 'detallesSucursal',
+			id_sucursal: sucursal_id
+		},
+		//Funcion success
+		function(datos){
+			console.log(datos);
+			data = datos;
+			/*
+			 * PANEL
+			 */
+			//Un formpanel que llenaremos con los datos que obtengamos
+			detailPanel = new Ext.form.FormPanel({
+					scroll: 'vertical',
+					items:[//--- item 0
+					{
+						xtype: 'fieldset',
+						title: 'Detalles de la sucursal',
+						items:[
+							//---- item fieldset 0
+						{
+							xtype: 'textfield',
+							disabled: true,
+							name: 'descripcion',
+							label: 'Nombre',
+							value: data.datos[0].descripcion
+						},
+							//---- item fieldset 1
+						{
+							xtype: 'textfield',
+							disabled: true,
+							name: 'direccion',
+							label: 'Dirección',
+							value: data.datos[0].direccion	
+						},
+							//-----item fieldset 2
+						{
+							xtype: 'textfield',
+							disabled: true,
+							name: 'telefono',
+							label: 'Teléfono'
+						},
+							//-----item fieldset 3
+						{
+							xtype: 'textfield',
+							disabled: true,
+							name: 'encargado',
+							label: 'Encargado'
+						}]
+					}]
+					
+				});
+				
+				/*
+				 * TOOLBARS
+				 */
+				
+				//Creamos los botones de atras e inventario
+				ApplicationInventario.currentInstance.createBackInvButtons(sucursal_id);
+				
+				//Agregamos la toolbar de abajo para cambiar rapido de sucursal
+				ApplicationInventario.currentInstance._initToolbar();
+				/*if (!ApplicationInventario.currentInstance.toolBar){
+					alert("no existe");
+					ApplicationInventario.currentInstance._initToolbar();
+					
+				}else{
+					alert("si existe");
+					ApplicationInventario.currentInstance.inventarioMainPanel.addDocked(ApplicationInventario.currentInstance.toolBar);
+					
+				}*/
+				
+				/*
+				 * SETCARD
+				 */
 						
-						POS.AJAXandDECODE({
-						method: 'listarProductosInventario'
-						},
-						function (datos){//mientras responda
-							
-							console.log(datos.datos);
-							//console.log("datos.datos[0].nombre = "+datos.datos[0].nombre);
-							this.products = datos.datos;
-							InvProductsListStore.loadData(this.products); 
-							//console.log(InvProductsListStore);
-							
-						},
-						function (){//no responde
-							POS.aviso("ERROR",":(");
+				//ApplicationInventario.currentInstance.inventarioMainPanel.setCard( detailPanel , 'slide' );
+				ApplicationInventario.currentInstance.detailPanel = detailPanel;
+				ApplicationInventario.currentInstance.inventarioMainPanel.setCard( detailPanel , 'slide' );
+		},
+		//Funcion failure
+		function(){
+			alert("Error");
+		}
+	);
+	
+	
+	
+	
+	return detailPanel;
+	
+};
+
+//Funcion para agregar los botones de back e inventario en la toolbar de navegacion
+ApplicationInventario.prototype.createBackInvButtons = function(sucursal_id){
+	
+				/*
+				 * Navigation Toolbar
+				 */
+				
+				//Quitamos los botones del navigation bar
+				ApplicationInventario.currentInstance.navToolbar.removeAll();
+				
+				//Creamos los botones de atras e inventario
+				var backinvButtons = [ new Ext.Button({
+						text: 'Inicio',
+						ui: 'back',
+						handler: function(){
+							ApplicationInventario.currentInstance.inventarioMainPanel.setCard(ApplicationInventario.currentInstance.homePanel2 , {type: 'slide', direction: 'right'});
+							ApplicationInventario.currentInstance.loadNavigationBar();
+							ApplicationInventario.currentInstance.inventarioMainPanel.removeDocked(ApplicationInventario.currentInstance.toolBar);
 						}
-					);	
-		}//fin before
-	},
-	items: [{
-        width: '100%',
-        height: '100%',
-        xtype: 'list',
-        store: InvProductsListStore,
-        tpl: '<tpl for="."><div style="background-color: '+ApplicationInventario.backgroundPicker('{existencias}', '{min}')+' " class="products"><strong>{denominacion}</strong><div width= "30%"></div>Existencias: {existencias} Precio: {precio_venta}</div></tpl>',
-        itemSelector: 'div.products',
-        singleSelect: true
-    }]
-
-});
-*/
-
-
-
-
+				}),{ xtype: 'spacer' },
+					new Ext.Button({
+						text: 'Inventario',
+						ui: 'forward',
+						handler: function(){
+							ApplicationInventario.currentInstance.initSucursalPanel(sucursal_id);	
+						}
+					})];
+				
+				//Añadimos los botones de atras e inventario a la toolbar de navegacion	
+				ApplicationInventario.currentInstance.navToolbar.add( backinvButtons );
+				ApplicationInventario.currentInstance.navToolbar.doLayout();
+	
+	
+};
 
 //autoinstalar esta applicacion
 AppInstaller( new ApplicationInventario() );
