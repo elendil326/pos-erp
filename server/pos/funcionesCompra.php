@@ -11,7 +11,7 @@
 			if($producto->existe()){																					//checamos si existe el producto en inventario
 				$verifica_sucursal=new sucursal_existente($id_sucursal);												//creamos un objeto de la clase sucursal para veridicar que tambien exista
 				if($verifica_sucursal->existe()){																		//checamos que exista la sucursal
-					if($detalle_inventario->existe()){																	//Verificamos si ya existe el registro del producto en la sucursal
+					if($detalle_inventario->existe()){																//Verificamos si ya existe el registro del producto en la sucursal
 						$detalle_inventario->existencias=$detalle_inventario->existencias+$existencias;					//sumamos el productoentrante a la existencia
 						if($detalle_inventario->actualiza())			ok();											//actualizamos y verificamos que realice la actualizacion
 						else											fail("Error al agregar los datos");

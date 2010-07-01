@@ -86,6 +86,14 @@
 		return $listar->lista();
 	}	
 	function reporteClientesComprasCredito(){
+	
+	$id_cliente=$_REQUEST['id_cliente'];
+		$de=$_REQUEST['de'];
+		$al=$_REQUEST['al'];
+		$cliente=!empty($id_cliente);
+		$fecha=(!empty($de)&&!empty($al));
+		$params=array();
+		
 		$query="SELECT pv.id_venta, (
 				v.subtotal + v.iva
 				) AS  'Total', SUM( pv.monto ) AS  'Pagado', (
@@ -94,13 +102,29 @@
 				FROM  `pagos_venta` pv
 				LEFT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
 				NATURAL JOIN cliente c
-				GROUP BY pv.id_venta "; 
-		$listar = new listar($query,array());
+				GROUP BY pv.id_venta,c.id_cliente,v.fecha "; 
+		if($cliente){
+			$query.=" having c.id_cliente=? ";
+			array_push($params,$id_cliente);
+		}
+		if($fecha){
+			$query.=(($cliente)?" and ":" having ")." DATE(v.fecha) BETWEEN ? AND ? ";
+			array_push($params,$de);
+			array_push($params,$al);
+		}
+		$query.=" ;";
+		$listar = new listar($query,$params);
 		echo $listar->lista();
 		return $listar->lista();
 	}
 	
 	function reporteClientesComprasCreditoDeben(){
+		$id_cliente=$_REQUEST['id_cliente'];
+		$de=$_REQUEST['de'];
+		$al=$_REQUEST['al'];
+		$cliente=!empty($id_cliente);
+		$fecha=(!empty($de)&&!empty($al));
+		$params=array();
 		$query="SELECT pv.id_venta, (
 				v.subtotal + v.iva
 				) AS  'Total', SUM( pv.monto ) AS  'Pagado', (
@@ -109,14 +133,30 @@
 				FROM  `pagos_venta` pv
 				LEFT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
 				NATURAL JOIN cliente c
-				GROUP BY pv.id_venta
-				having Pagado<Total"; 
-		$listar = new listar($query,array());
+				GROUP BY pv.id_venta,c.id_cliente,v.fecha
+				having Pagado < Total ";
+		if($cliente){
+			$query.=" and c.id_cliente=? ";
+			array_push($params,$id_cliente);
+		}
+		if($fecha){
+			$query.=" and DATE(v.fecha) BETWEEN ? AND ? ";
+			array_push($params,$de);
+			array_push($params,$al);
+		}
+		$query.=" ;";
+		$listar = new listar($query,$params);
 		echo $listar->lista();
 		return $listar->lista();
 	}
 
 	function reporteClientesComprasCreditoPagado(){
+		$id_cliente=$_REQUEST['id_cliente'];
+		$de=$_REQUEST['de'];
+		$al=$_REQUEST['al'];
+		$cliente=!empty($id_cliente);
+		$fecha=(!empty($de)&&!empty($al));
+		$params=array();
 		$query="SELECT pv.id_venta, (
 				v.subtotal + v.iva
 				) AS  'Total', SUM( pv.monto ) AS  'Pagado', (
@@ -125,9 +165,19 @@
 				FROM  `pagos_venta` pv
 				LEFT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
 				NATURAL JOIN cliente c
-				GROUP BY pv.id_venta
-				having Pagado>=Total"; 
-		$listar = new listar($query,array());
+				GROUP BY pv.id_venta,c.id_cliente,v.fecha
+				having Pagado >= Total ";
+		if($cliente){
+			$query.=" and c.id_cliente=? ";
+			array_push($params,$id_cliente);
+		}
+		if($fecha){
+			$query.=" and DATE(v.fecha) BETWEEN ? AND ? ";
+			array_push($params,$de);
+			array_push($params,$al);
+		}
+		$query.=" ;";
+		$listar = new listar($query,$params);
 		echo $listar->lista();
 		return $listar->lista();
 	}

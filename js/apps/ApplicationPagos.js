@@ -30,16 +30,25 @@ ApplicationPagos.prototype.ayuda = null;
 
 ApplicationPagos.prototype.clientesContainer= null;
 
-ApplicationPagos.prototype.storeVentas = null;
-ApplicationPagos.prototype.storePagos = null;
+ApplicationPagos.storeVentas = null;
+ApplicationPagos.storePagos = null;
 
 ApplicationPagos.prototype.datosVentas = null;
 ApplicationPagos.prototype.datosPagos = null;
+ApplicationPagos.fechas = null;
+ApplicationPagos.btnClientes = null;
+
+
+ApplicationPagos.idCliente = null;
+ApplicationPagos.fechaInicio = new Date();
+ApplicationPagos.fechaFin = new Date();
+ApplicationPagos.tipo = 1;
 
 ApplicationPagos.prototype._init = function()
 {
 	
 	//iniciar variables
+
 	
 	//nombre de la aplicacion
 	this.appName = "Pagos";
@@ -56,7 +65,7 @@ ApplicationPagos.prototype._init = function()
     },
     {
         text: 'Abonar',
-       	card: this.abonar,
+		card:this.abonar,
         ayuda: 'ayuda en SECOND'
     }
 	];
@@ -67,63 +76,147 @@ ApplicationPagos.prototype._init = function()
 	
 };//fin CONSTRUCTOR
 
+		
+		
+//Funciones para los pickers.		
+this.clickFechaInicio=function(){
 
+    var fechaActual = new Date();
+ 
+    var dia = ApplicationPagos.fechaInicio.getDate();
+    var mes = ApplicationPagos.fechaInicio.getMonth();
+    var anio = ApplicationPagos.fechaInicio.getYear()+1900;
+	 var picker = new Ext.DatePicker({
+            floating: true,
+            width: (!Ext.platform.isPhone ? 400 : 320),
+            height: Ext.platform.isAndroidOS ? 320 : (!Ext.platform.isPhone ? 356 : 300),
+            useTitles: false,
+            value: {
+                day: dia,
+                month: mes,
+                year: anio	
+            },
+            dockedItems: [{
+                xtype: 'toolbar',
+                dock: 'bottom',
+                title: 'Inicio de periodo',
+                items: [{xtype: 'component', flex: 1},{
+                    xtype: 'button',
+                    ui: 'action',
+                    text: 'OK',
+                    handler: function() {
+                        ApplicationPagos.fechaInicio = (picker.getValue()<=fechaActual)?picker.getValue():fechaActual;
+						if(ApplicationPagos.fechaFin !== null ){
+							ApplicationPagos.fechaInicio = (ApplicationPagos.fechaFin<ApplicationPagos.fechaInicio)?ApplicationPagos.fechaFin:ApplicationPagos.fechaInicio;
+						}
+						if(ApplicationPagos.fechaInicio !== null ){
+							Ext.get("finicio").update((ApplicationPagos.fechaInicio.getYear()+1900)+"-"+(ApplicationPagos.fechaInicio.getMonth()+1)+"-"+(ApplicationPagos.fechaInicio.getDate()));
+						}
+						picker.hide();
+                    }
+                }]
+            }]
+        });
+        picker.show();
+};
+	
+this.clickfechaFin=function(){
+    var fechaActual = new Date();
+ 
+    var dia = ApplicationPagos.fechaFin.getDate();
+    var mes = ApplicationPagos.fechaFin.getMonth();
+    var anio = ApplicationPagos.fechaFin.getYear()+1900;
+	 var picker = new Ext.DatePicker({
+            floating: true,
+            width: (!Ext.platform.isPhone ? 400 : 320),
+            height: Ext.platform.isAndroidOS ? 320 : (!Ext.platform.isPhone ? 356 : 300),
+            useTitles: false,
+            value: {
+                day: dia,
+                month: mes,
+                year: anio	
+            },
+            dockedItems: [{
+                xtype: 'toolbar',
+                dock: 'bottom',
+                title: 'Fin de periodo',
+                items: [{xtype: 'component', flex: 1},{
+                    xtype: 'button',
+                    ui: 'action',
+                    text: 'OK',
+                    handler: function() {
+                        ApplicationPagos.fechaFin = (picker.getValue()<=fechaActual)?picker.getValue():fechaActual;
+                        if(ApplicationPagos.fechaInicio !== undefined ){
+							ApplicationPagos.fechaFin = (ApplicationPagos.fechaFin<ApplicationPagos.fechaInicio)?ApplicationPagos.fechaInicio:ApplicationPagos.fechaFin;
+						}
+						Ext.get("ffin").update((ApplicationPagos.fechaFin.getYear()+1900)+"-"+(ApplicationPagos.fechaFin.getMonth()+1)+"-"+(ApplicationPagos.fechaFin.getDate()));
+						picker.hide();
+                    }
+                }]
+            }]
+        });
+        picker.show();
 
-// TODO esto es una variable global !
-btnClientes=new Ext.Button({
+};
+
+ApplicationPagos.btnClientes=new Ext.Button({
 			hidden:'true',		
 			handler:function (){
 				POS.aviso("ok","ok");
 			},
             name: 'id_cliente',
 			width: 300,
-            text : 'Seleccionar Cliente',
-            options: [{
-                text: 'nombre',
-                value: 'id'
-            },{
-                text: 'name',
-                value: 'id_c'
-            }]
-        });
-
-// TODO esto es una variable global !
-de =new Ext.form.SearchField({
-			fieldLabel: 'Del:',
-			name: 'fecha_inicio:',
-			allowBlank:false
-		});
-// TODO esto es una variable global !
-al =new Ext.form.TextField({
-			fieldLabel: 'al:',
-			name: 'fecha_fin:',
-			allowBlank:false
-		});
+            text : 'Seleccionar Cliente'
+        });	
 		
-// TODO esto es una variable global !
-fechas = new Ext.form.FormPanel({
+ApplicationPagos.fechas = new Ext.form.FormPanel({
+	minHeight:100,
 	hidden:'true',
-    items: [de,al]
+    items: [
+	{
+		html: '',
+		id : 'bCliente'
+	},
+	{
+		xtype:'button',
+		id:'btnFechaIni',
+		width: 300,
+		text : 'Fecha de inicio de periodo',
+		handler:clickFechaInicio
+	},{
+		html:(ApplicationPagos.fechaInicio.getYear()+1900)+"-"+(ApplicationPagos.fechaInicio.getMonth()+1)+"-"+(ApplicationPagos.fechaInicio.getDate()),
+		id : 'finicio'
+	},
+	{
+		xtype:'button',
+		id:'btnApplicationPagos.fechaFin',
+		width: 300,
+		text : 'Fecha de fin de periodo',
+		handler:clickfechaFin
+	},{
+		html: (ApplicationPagos.fechaFin.getYear()+1900)+"-"+(ApplicationPagos.fechaFin.getMonth()+1)+"-"+(ApplicationPagos.fechaFin.getDate()),
+		id : 'ffin'
+	}]
 });
 
 
 // TODO esto es una variable global !
 formulario=new Ext.form.FormPanel({
-		minHeight:80,
+	minHeight:120,
     items: [{
         xtype: 'fieldset',
         title: 'Buscar por:',
-        instructions: 'Insertelos datos y de click en el boton de buscar.(formato de fecha DD/MM/AA)',
-        items: [btnClientes,fechas]
+        instructions: 'Insertelos datos y de click en el boton de buscar.',
+        items: [
+			ApplicationPagos.btnClientes
+			,ApplicationPagos.fechas
+			]
     }]
 });
 
 //Iniciar el toolbar
 ApplicationPagos.prototype._initToolBar = function (){
-
-	if(DEBUG)console.log("iniciando el tool bar");
-
-
+	
 	//Dejo los demas grupos por si quieres agregar mas botones
 	//grupo 1, funciones basicas
 	var buttonsGroup1 = [{
@@ -139,12 +232,15 @@ ApplicationPagos.prototype._initToolBar = function (){
         activeButton: 0,
         items: [{
             text: 'Deudores',
+			id:'btnDeudores',
             handler: clickDeudores
         }, {
             text: 'Pagados',
+			id:'btnPagados',
             handler: clickPagados
         }, {
             text: 'Todos',
+			id:'btnTodos',
             handler: clickTodos
         }]    
     }];
@@ -204,7 +300,7 @@ Ext.regModel('modeloVentas', {
 
 
 
-storeVentas = new Ext.data.Store({
+ApplicationPagos.storeVentas = new Ext.data.Store({
     model: 'modeloVentas',
     sorters: 'nombre',
     getGroupString : function(record) {
@@ -218,7 +314,7 @@ Ext.regModel('modeloPagos', {
 
 
 
-storePagos = new Ext.data.Store({
+ApplicationPagos.storePagos = new Ext.data.Store({
     model: 'modeloPagos',
     sorters: 'fecha',
     getGroupString : function(record) {
@@ -226,6 +322,50 @@ storePagos = new Ext.data.Store({
     }
 });
 
+
+ApplicationPagos.funcion_ajax_ventas = function(cliente,deFecha,aFecha){
+tipo=ApplicationPagos.tipo;
+var metodo=(tipo==1)?'reporteClientesComprasCreditoDeben':((tipo==2)?'reporteClientesComprasCreditoPagado':'reporteClientesComprasCredito');
+						
+						if(DEBUG){console.log("llamando funcion_ajax_ventas");}
+//							POS.aviso("datos",cliente+"--"+deFecha+"--"+aFecha);
+						POS.AJAXandDECODE({
+							method: metodo,
+							id_cliente: cliente,
+							de: deFecha,
+							al: aFecha
+							},
+							function (datos){
+								if(datos.success){
+									this.datosVentas = datos.datos;
+									ApplicationPagos.storeVentas.loadData(this.datosVentas); 
+								}else{
+									POS.aviso("Vacio.","No se encontraron datos.");
+								}
+							},
+							function (){//no responde
+								POS.aviso("ERROR",":(");
+							}
+						);	//ajaxAndDecode
+}
+ApplicationPagos.funcion_ajax_pagos = function(id){
+	POS.AJAXandDECODE({
+		method: 'listarPagosVentaDeVenta',
+		id_venta:id
+		},
+		function (datos){
+			if(datos.success){
+				this.datosPagos = datos.datos;
+				ApplicationPagos.storePagos.loadData(this.datosPagos); 
+			}else{
+				POS.aviso("error",datos.reason);
+			}
+		},
+		function (){//no responde
+			POS.aviso("ERROR",":(");
+		}
+	);	//ajaxAndDecode
+};
 
 ApplicationPagos.prototype.mainCard = new Ext.Panel({
    
@@ -239,18 +379,7 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
 	
     listeners: {
 		beforeshow : function(component){
-						
-						POS.AJAXandDECODE({
-							method: 'reporteClientesComprasCreditoDeben'
-							},
-							function (datos){
-								this.datosVentas = datos.datos;
-								storeVentas.loadData(this.datosVentas); 
-							},
-							function (){//no responde
-								POS.aviso("ERROR",":(");
-							}
-						);	//ajaxAndDecode
+						ApplicationPagos.funcion_ajax_ventas(null,null,null);
 		}//fin before
 	},
     items: [formulario,
@@ -263,7 +392,7 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
 				width: '100%',
 				height: '100%',
 				xtype: 'list',
-				store: storeVentas,
+				store: ApplicationPagos.storeVentas,
 				tpl: 	'<tpl for="."><div class="modeloVentas"><pre>{id_venta}		{total}		{pagado} 		{debe} 		{nombre} 		   {fecha}</pre></div></tpl>',
 				itemSelector: 'div.modeloVentas',
 				singleSelect: true,
@@ -274,22 +403,7 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
 							if (this.getSelectionCount() == 1) {
 								var id=this.getSelectedRecords()[0].id_venta;
 								
-								POS.AJAXandDECODE({
-									method: 'listarPagosVentaDeVenta',
-									id_venta:id
-									},
-									function (datos){
-										if(datos.success){
-											this.datosPagos = datos.datos;
-											storePagos.loadData(this.datosPagos); 
-										}else{
-											POS.aviso("error",datos.reason);
-										}
-									},
-									function (){//no responde
-										POS.aviso("ERROR",":(");
-									}
-								);	//ajaxAndDecode
+								ApplicationPagos.funcion_ajax_pagos(id);
 												
 		var formBase = {
 			//	items
@@ -304,8 +418,8 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
 		        height: "90%",
 				id: 'ListaPagos',
 		        xtype: 'list',
-		        store: storePagos,
-		        tpl: '<tpl for="."><div class="pagos"><pre>	   {id_pago}		  {fecha}		   {monto}		</pre></div></tpl>',
+		        store: ApplicationPagos.storePagos,
+		        tpl: '<tpl for="."><div class="pagos"><pre>	   {id_pago}		  {fecha}		   ${monto}		</pre></div></tpl>',
 		        itemSelector: 'div.pagos',
 		        singleSelect: true,
 		        indexBar: true
@@ -364,15 +478,18 @@ ApplicationPagos.prototype.abonar = new Ext.form.FormPanel({
 	
 this.clickBuscar = function ()
 {
-	if(!btnClientes.isVisible()){
-			if(!fechas.isVisible()){
-				POS.aviso("Buscar", "Buscar al cliente: "+btnClientes.getValue()+" del:"+de.getValue()+" al "+al.getValue()); 				
+	var de=Ext.get("finicio").dom.textContent;
+	var al=Ext.get("ffin").dom.textContent;
+	var cliente=ApplicationPagos.idCliente;
+	if(!ApplicationPagos.btnClientes.isVisible()){
+			if(!(ApplicationPagos.fechas.isVisible())){
+				POS.aviso("Buscar","Buscar al cliente: "+cliente+" del:"+de+" al "+al); 				
 			}else{
-				POS.aviso("Buscar", "Buscar al cliente: "+btnClientes.getValue()); 			
+				POS.aviso("Buscar","Buscar al cliente: "+cliente); 			
 			}	
 	}else{
-			if(!fechas.isVisible()){
-				POS.aviso("Buscar", "Buscar ventas a credito del: "+de.getValue()+" al: "+al.getValue()); 
+			if(! (ApplicationPagos.fechas.isVisible())){
+				ApplicationPagos.funcion_ajax_ventas(null,de,al);
 			}else{	
 				POS.aviso("Imposible", "No se puede buscar ya que no hay ninguna opcion seleccionada"); 
 			}
@@ -380,68 +497,41 @@ this.clickBuscar = function ()
 };
 this.clickDeudores = function ()
 {
-	POS.AJAXandDECODE({
-						method: 'reporteClientesComprasCreditoDeben'
-						},
-						function (datos){
-							this.datosVentas = datos.datos;
-							storeVentas.loadData(this.datosVentas); 
-						},
-						function (){//no responde
-							POS.aviso("ERROR",":(");
-						}
-					);
+	ApplicationPagos.tipo=1;
+	ApplicationPagos.funcion_ajax_ventas(null,null,null);
 };
 
 this.clickPagados = function ()
 {
-	POS.AJAXandDECODE({
-						method: 'reporteClientesComprasCreditoPagado'
-						},
-						function (datos){
-							this.datosVentas = datos.datos;
-							storeVentas.loadData(this.datosVentas); 
-						},
-						function (){//no responde
-							POS.aviso("ERROR",":(");
-						}
-					);
+	ApplicationPagos.tipo=2;
+	ApplicationPagos.funcion_ajax_ventas(null,null,null);
 };
 
 this.clickTodos = function ()
 {
-	POS.AJAXandDECODE({
-						method: 'reporteClientesComprasCredito'
-						},
-						function (datos){
-							this.datosVentas = datos.datos;
-							storeVentas.loadData(this.datosVentas); 
-						},
-						function (){//no responde
-							POS.aviso("ERROR",":(");
-						}
-					);
+	ApplicationPagos.tipo=3;
+	ApplicationPagos.funcion_ajax_ventas(null,null,null);
 };
 
 this.clickCliente = function ()
 {
-	if(btnClientes.isVisible()){
-			btnClientes.setVisible(true);
-			formulario.setHeight(formulario.getHeight()+30)
+	if(ApplicationPagos.btnClientes.isVisible()){
+			ApplicationPagos.btnClientes.setVisible(true);
+			formulario.setHeight(formulario.getHeight()+50);
 	}else{
-			btnClientes.setVisible(false);
-			formulario.setHeight(formulario.getHeight()-30)
+			ApplicationPagos.btnClientes.setVisible(false);
+			formulario.setHeight(formulario.getHeight()-50);
 	}
 };
 
 this.clickPeriodo = function ()
 {
-	if(fechas.isVisible()){
-			fechas.setVisible(true);
-			formulario.setHeight(formulario.getHeight()+70)
+	if(ApplicationPagos.fechas.isVisible()){
+			ApplicationPagos.fechas.setVisible(true);
+			formulario.setHeight(formulario.getHeight()+90);
 	}else{
-			fechas.setVisible(false);
-			formulario.setHeight(formulario.getHeight()-70)
+			ApplicationPagos.fechas.setVisible(false);
+			formulario.setHeight(formulario.getHeight()-90);
 	}
 };
 
