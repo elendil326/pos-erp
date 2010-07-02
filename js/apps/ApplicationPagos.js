@@ -31,7 +31,6 @@ ApplicationPagos.prototype.ayuda = null;
 ApplicationPagos.prototype.clientesContainer= null;
 
 ApplicationPagos.storeVentas = null;
-ApplicationPagos.storePagos = null;
 
 ApplicationPagos.prototype.datosVentas = null;
 ApplicationPagos.prototype.datosPagos = null;
@@ -280,25 +279,12 @@ Ext.regModel('modeloVentas', {
 
 ApplicationPagos.storeVentas = new Ext.data.Store({
     model: 'modeloVentas',
-    sorters: 'nombre',
+    sorters: 'fecha',
     getGroupString : function(record) {
         return record.get('nombre')[0];
     }
 });
 
-Ext.regModel('modeloPagos', {
-    fields: ['id_pago','id_venta','fecha','monto']
-});
-
-
-
-ApplicationPagos.storePagos = new Ext.data.Store({
-    model: 'modeloPagos',
-    sorters: 'fecha',
-    getGroupString : function(record) {
-        return record.get('fecha')[0];
-    }
-});
 
 
 ApplicationPagos.funcion_ajax_ventas = function(cliente,deFecha,aFecha){
@@ -327,20 +313,32 @@ var metodo=(tipo==1)?'reporteClientesComprasCreditoDeben':((tipo==2)?'reporteCli
 						);	//ajaxAndDecode
 };
 
-ApplicationPagos.funcion_ajax_pagos = function(id){
-console.log(id);
+ApplicationPagos.funcion_ajax_pagos = function(id,debe){
+
+Ext.regModel('modeloPagos', {
+    fields: ['id_pago','id_venta','fecha','monto']
+});
+
+
+var storePagos = new Ext.data.Store({
+    model: 'modeloPagos',
+    sorters: 'fecha',
+    getGroupString : function(record) {
+        return record.get('fecha')[0];
+    }
+});
 	POS.AJAXandDECODE({
 		method: 'listarPagosVentaDeVenta',
 		id_venta:id
 		},
 		function (datos){
 			if(datos.success){
-				this.datosPagos = datos.datos;
-				ApplicationPagos.storePagos.loadData(this.datosPagos); 
+					this.datosPagos = datos.datos;
+					storePagos.loadData(this.datosPagos); 
 			}else{
-				ApplicationPagos.storePagos.loadData(new Array()); 
 				if(datos.reason!==undefined){		POS.aviso("error",datos.reason);	}
 			}
+			ApplicationPagos.muestraPagos(id,debe,storePagos);
 		},
 		function (){//no responde
 			POS.aviso("ERROR",":(");
@@ -381,7 +379,8 @@ ApplicationPagos.prototype.PagarVenta=function(id,debe){
 						xtype:'button',
 						text: 'Guardar',
 						handler: function() {	
-							if (/^[1-9]+[\.]$/.test(montoPago.getValue())){
+							var patron=/^\d*.\d{0,2}$/;
+							if (patron.test(montoPago.getValue())){
 								POS.AJAXandDECODE({
 									method: 'insertarPagoVenta',
 									id_venta: id,
@@ -428,8 +427,7 @@ ApplicationPagos.prototype.PagarVenta=function(id,debe){
 
 
 
-ApplicationPagos.muestraPagos=function(id,debe){			
-			ApplicationPagos.funcion_ajax_pagos(id);
+ApplicationPagos.muestraPagos=function(id,debe,store){		
 							
 		var formBase = {
 			//	items
@@ -444,7 +442,7 @@ ApplicationPagos.muestraPagos=function(id,debe){
 		        height: "90%",
 				id: 'ListaPagos',
 		        xtype: 'list',
-		        store: ApplicationPagos.storePagos,
+		        store: store,
 		        tpl: '<tpl for="."><div class="pagos"><pre>	   {id_pago}		  {fecha}		   ${monto}		</pre></div></tpl>',
 		        itemSelector: 'div.pagos',
 		        singleSelect: true,
@@ -471,7 +469,7 @@ ApplicationPagos.muestraPagos=function(id,debe){
 						id:'btnPagarVenta',
 						listeners: {
 							added : function(){
-								if(ApplicationPagos.tipo>1){this.hide();}
+								if(debe<=0){this.hide();}
 							}//fin before
 						},
 						handler: function() {	
@@ -540,8 +538,11 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
 				listeners: {
 					selectionchange:function(){
 						try{
-							console.log(this.getSelectedRecords());
-							if (this.getSelectionCount() == 1){	ApplicationPagos.muestraPagos(this.getSelectedRecords()[0].id_venta,this.getSelectedRecords()[0].debe);}
+							var id=this.getSelectedRecords()[0].id_venta;
+							var debe=this.getSelectedRecords()[0].debe;
+							if (this.getSelectionCount() == 1){
+								ApplicationPagos.funcion_ajax_pagos(id,debe);
+							}
 						}catch(e){ 
 							//EN CASO DE ERROR AGREGAR CODIGO
 						}//try-catch
