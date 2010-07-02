@@ -82,7 +82,8 @@ ApplicacionClientes.prototype._initToolBar = function (){
     }];
 
     var campoBusqueda = [{
-		xtype: 'textfield'
+		xtype: 'textfield',
+		inputCls : 'caja-buscar'
     }];
 
 
