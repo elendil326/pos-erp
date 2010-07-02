@@ -318,7 +318,7 @@ var metodo=(tipo==1)?'reporteClientesComprasCreditoDeben':((tipo==2)?'reporteCli
 									this.datosVentas = datos.datos;
 									ApplicationPagos.storeVentas.loadData(this.datosVentas); 
 								}else{
-									POS.aviso("Vacio.","No se encontraron datos.");
+									ApplicationPagos.storeVentas.loadData(new Array()); 
 								}
 							},
 							function (){//no responde
@@ -328,6 +328,7 @@ var metodo=(tipo==1)?'reporteClientesComprasCreditoDeben':((tipo==2)?'reporteCli
 };
 
 ApplicationPagos.funcion_ajax_pagos = function(id){
+console.log(id);
 	POS.AJAXandDECODE({
 		method: 'listarPagosVentaDeVenta',
 		id_venta:id
@@ -337,7 +338,8 @@ ApplicationPagos.funcion_ajax_pagos = function(id){
 				this.datosPagos = datos.datos;
 				ApplicationPagos.storePagos.loadData(this.datosPagos); 
 			}else{
-				POS.aviso("error",datos.reason);
+				ApplicationPagos.storePagos.loadData(new Array()); 
+				if(datos.reason!==undefined){		POS.aviso("error",datos.reason);	}
 			}
 		},
 		function (){//no responde
@@ -349,17 +351,21 @@ ApplicationPagos.funcion_ajax_pagos = function(id){
 
 
 
-ApplicationPagos.prototype.PagarVenta=function(id){			
-		var formPagaBase = new Ext.form.FormPanel({
-			scroll: 'vertical',
-			
+ApplicationPagos.prototype.PagarVenta=function(id,debe){	
+		var montoPago=new  Ext.form.NumberField({
+                        name: 'monto',
+                        label: 'Cantidad',
+						id: 'montoPago'
+                    });
+		var formPagaBase =  {
+            scroll: 'vertical',
             items: [
-				{
-					xtype: 'numberfield',
-					name: 'monto',
-					label: 'Cantidad'
-				}			
-			],
+                {
+                    xtype: 'fieldset',
+                    title: 'Pagar venta '+id+" adeuda: "+debe,
+                    items: [montoPago]
+                }
+            ],
 			dockedItems: [{
                     xtype: 'toolbar',
                     dock: 'bottom',
@@ -368,21 +374,40 @@ ApplicationPagos.prototype.PagarVenta=function(id){
 						text: 'Cerrar',
 						handler: function() {
 							//ocultar esta tabla
-							formPagaBase.hide();	
-							formPagaBase.destroy();	
+							form.hide();	
+							form.destroy();	
                             }
 					},{
 						xtype:'button',
 						text: 'Guardar',
 						handler: function() {	
-							formPagaBase.hide();	
-							formPagaBase.destroy();
-							POS.aviso("ok","Guardara");
-                            }
+							if (/^[1-9]+[\.]$/.test(montoPago.getValue())){
+								POS.AJAXandDECODE({
+									method: 'insertarPagoVenta',
+									id_venta: id,
+									monto: montoPago.getValue()
+									},
+									function (datos){
+										if(datos.success){
+											if(datos.cambio===undefined){POS.aviso("Guardado","Pago guardado correctamente");}
+											else{POS.aviso("Guardado","Pago guardado correctamente. Cambio: $"+datos.cambio);}
+											ApplicationPagos.funcion_ajax_ventas(null,null,null);
+										}else{
+											POS.aviso("Vacio.",datos.reason);
+										}
+									},
+									function (){//no responde
+										POS.aviso("ERROR","Error al guardar los datos");
+									}
+								);	//ajaxAndDecode
+								form.hide();	
+								form.destroy();
+							}else {POS.aviso("ERROR","No inserto una cantidad valida");}
+						}
 					}]
                 }
             ]
-		});//fromulario
+		};//fromulario
         if (Ext.platform.isPhone) {
             formPagaBase.fullscreen = true;
         } else {
@@ -396,14 +421,14 @@ ApplicationPagos.prototype.PagarVenta=function(id){
                 width: 400
             });
         }
-        formPagaBase.show();
-		
+        var form = new Ext.form.FormPanel(formPagaBase);
+        form.show();
 };//PagarVenta
 
 
 
 
-ApplicationPagos.muestraPagos=function(id){			
+ApplicationPagos.muestraPagos=function(id,debe){			
 			ApplicationPagos.funcion_ajax_pagos(id);
 							
 		var formBase = {
@@ -457,7 +482,7 @@ ApplicationPagos.muestraPagos=function(id){
 									Ext.getCmp('ListaPagos').store = null;
 									Ext.getCmp('ListaPagos').destroy();
 								}
-								ApplicationPagos.currentInstance.PagarVenta(id);
+								ApplicationPagos.currentInstance.PagarVenta(id,debe);
                             }
 					}]
                 }
@@ -506,6 +531,7 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
 				width: '100%',
 				height: '100%',
 				xtype: 'list',
+				id:'listaVentas',
 				store: ApplicationPagos.storeVentas,
 				tpl: 	'<tpl for="."><div class="modeloVentas"><pre>{id_venta}		{total}		{pagado} 		{debe} 		{nombre} 		   {fecha}</pre></div></tpl>',
 				itemSelector: 'div.modeloVentas',
@@ -514,7 +540,8 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
 				listeners: {
 					selectionchange:function(){
 						try{
-							if (this.getSelectionCount() == 1){	ApplicationPagos.muestraPagos(this.getSelectedRecords()[0].id_venta);}
+							console.log(this.getSelectedRecords());
+							if (this.getSelectionCount() == 1){	ApplicationPagos.muestraPagos(this.getSelectedRecords()[0].id_venta,this.getSelectedRecords()[0].debe);}
 						}catch(e){ 
 							//EN CASO DE ERROR AGREGAR CODIGO
 						}//try-catch
