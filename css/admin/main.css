@@ -1,0 +1,70 @@
+html, body {
+        font:normal 12px verdana;
+        margin:0;
+        padding:0;
+        border:0 none;
+        overflow:hidden;
+        height:100%;
+        background-color:#2E2E2E;
+    }
+p {
+margin:5px;
+}
+.settings {
+background-image:url(../shared/icons/fam/folder_wrench.png);
+}
+.nav {
+background-image:url(../shared/icons/fam/folder_go.png);
+}
+
+.title{
+	font-family:QuicksandBook, Helvetica, Arial, sans-serif;
+	font-size: 20px;
+	text-shadow: white 0px 1px 0px;
+	color: #273437;
+}
+
+#main{
+	margin-left:auto;
+	margin-right:auto;
+	width: 1024px;
+	height:100%;
+	background-color:white;
+}
+
+#menu-top{
+	width:100%;
+	height:40px;
+	background-color:#eeeeee;
+	position: relative;
+}
+
+#menu-left{
+	width:190px;
+	float:left;
+	height:100%;
+	padding:5px;
+}
+
+#main-container{
+
+}
+
+#content{
+	float:right;
+	width:824px;
+	height:100%;
+}
+
+#logout{
+	padding:5px;
+	height:30px;
+	position:absolute;
+	right:10px;
+}
+
+#title-text{
+	margin-left:20px;
+	padding:5px;
+	height:30px;
+}
