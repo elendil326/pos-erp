@@ -7,7 +7,7 @@ ApplicationInventario = function ()
 	ApplicationInventario.currentInstance = this;
 	
 	this._init();
-
+	
 	return this;
 };
 
@@ -96,8 +96,9 @@ ApplicationInventario.prototype._init = function()
 	//this.initSucursalPanel(1);
 	
 	this.inventarioMainPanel = this.homePanel;
-	this.loadNavigationBar();
 	this.mainCard = this.inventarioMainPanel;
+	this.loadNavigationBar();
+	
 		
 };
  
@@ -188,6 +189,8 @@ ApplicationInventario.prototype.getMosaicItems = function(){
 		function(){
 			
 		});
+		
+		
 	
 };
 
@@ -218,13 +221,15 @@ ApplicationInventario.prototype.loadNavigationBar = function(){
 		xtype: 'textfield',
 		emptyText: 'Búsqueda',
 		id:'ApplicationInvenario_searchField',
+		inputCls: 'caja-buscar',
 		showAnimation: true,
 		listeners:
 				{
 					'render': function( ){
 						//medio feo, pero bueno
 						Ext.get("ApplicationInvenario_searchField").first().dom.setAttribute("onkeyup", "ApplicationInventario.currentInstance.mosaic.doSearch( this.value )");
-
+						//Le damos focus al searchbar
+						document.getElementById( Ext.get('ApplicationInvenario_searchField').first().id ).focus();
 					}
 				}
 		}];
@@ -248,9 +253,6 @@ ApplicationInventario.prototype.loadNavigationBar = function(){
 		this.navToolbar.add(buscar);
 		this.navToolbar.doLayout();
 	}
-	
-
-
 	
 	
 }
