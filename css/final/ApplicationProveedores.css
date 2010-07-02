@@ -1,0 +1,32 @@
+.ApplicationProveedores-detallesProveedor{
+	
+	background-image:url(media/g3.png);	
+
+	color: white;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 26px;
+	padding: 1em 5%;
+	text-align: left;
+	text-shadow: black 0px 0px 25px;
+	padding-left:15px;
+}
+
+
+
+.ApplicationProveedores-Detalles{
+	
+	color : white;
+	font-size: 16px;
+
+	
+}
+
+
+
+.ApplicationProveedores-Detalles .nombre{
+	padding-bottom: 5px;
+	color: white;
+	text-shadow: black 0px 0px 25px;
+	font-size: 50px ;
+}

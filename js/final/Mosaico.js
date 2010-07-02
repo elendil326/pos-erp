@@ -36,7 +36,7 @@ Mosaico.prototype.doSearch = function ( string )
 	for(a = 0; a < this.config.items.length; a++)
 	{
 	
-		if(this.config.items[a].title.startsWith(string) ){
+		if(this.config.items[a].title.toLowerCase().startsWith(string.toLowerCase()) ){
 			coincidencias.push(a);
 			continue;
 		}
@@ -47,7 +47,7 @@ Mosaico.prototype.doSearch = function ( string )
 	
 		for(k=0; k < this.config.items[a].keywords.length; k++)
 		{
-			if(this.config.items[a].keywords[k].startsWith(string) ){
+			if(this.config.items[a].keywords[k].toLowerCase().startsWith(string.toLowerCase()) ){
 				coincidencias.push(a);
 				break;
 			}

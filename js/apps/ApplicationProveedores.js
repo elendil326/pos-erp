@@ -97,78 +97,67 @@ ApplicationProveedores.prototype._initToolBar = function ()
 	
 	//agregar este dock a el panel principal
 	this.proveedoresWelcome.addDocked( this.dockedItems );
-/*
-	//grupo 3, listo para vender
-    var btnagregarProveedor = [{
-		id: 'btn_agregarProveedor',
-        text: 'Agregar Proveedor',
-        handler: this.agregarProveedor,
-		ui: 'action'
-    }];
+
+};
 
 
-	if (!Ext.platform.isPhone) {
-                
-        this.dockedItems = [new Ext.Toolbar({
-            // dock this toolbar at the bottom
-            ui: 'light',
-            dock: 'top',
-            items: btnagregarProveedor
-			
-        })];
-    }else {
-        this.dockedItems = [{
-            xtype: 'toolbar',
-            ui: 'metal',
-            items: btnagregarProveedor,
-            dock: 'top'
-        }];
-    }
-	
-	//agregar este dock a el panel principal
-	this.ProveedoresList.addDocked( this.dockedItems );
-	
-	
-	//--------------------------------------
-	
-	//grupo 3, listo para vender
-    btnagregarProveedor = [{
-        text: 'Modificar'
-    },	{
-	        text: 'regresar',
-			ui: 'back'
-	    },
-		{
-		        text: 'comprale',
-				ui: 'action'
-		    },
-			{
-			        text: 'regresar',
-					ui: 'action'
-			    }];
+
+ApplicationProveedores.prototype.provedores = [];
 
 
-	if (!Ext.platform.isPhone) {
-                
-        this.dockedItems = [new Ext.Toolbar({
-            // dock this toolbar at the bottom
-            ui: 'light',
-            dock: 'bottom',
-            items: btnagregarProveedor
-			
-        })];
-    }else {
-        this.dockedItems = [{
-            xtype: 'toolbar',
-            ui: 'metal',
-            items: btnagregarProveedor,
-            dock: 'bottom'
-        }];
-    }
+
+
+ApplicationProveedores.prototype.renderMosaico = function ()
+{
+
+	if(DEBUG){
+		console.log("ApplicationProvedores: rendering " +this.provedores.length+ " items." );
+	}
+
+	var mItems = [];
 	
-	//agregar este dock a el panel principal
-	this.ProveedoresList.addDocked( this.dockedItems );
-*/
+	for(  a = 0; a < this.provedores.length; a++){
+		mItems.push({
+			image : 'media/truck.png',
+			title : this.provedores[a].nombre,
+			provedorId : this.provedores[a].id_proveedor,
+			provedor : this.provedores[a],
+			keywords : [ this.provedores[a].direccion, this.provedores[a].rfc ]
+		});
+	}
+	
+	
+	ApplicationProveedores.currentInstance.mosaic = new Mosaico({
+		renderTo : 'proveedores_mosaico',
+		handler : function (item){
+			ApplicationProveedores.currentInstance.doVerProvedor( item.provedor );
+		},
+		items: mItems
+	});
+	
+};
+
+
+ApplicationProveedores.prototype.getProvedores = function ()
+
+{
+	
+	if(DEBUG){
+		console.log( "ApplicationProvedores: refrescando lista de provedores"  );
+	}
+	
+	POS.AJAXandDECODE({
+		method: 'listarProveedores'
+		},
+		function (datos){
+			ApplicationProveedores.currentInstance.provedores = datos.datos;
+			ApplicationProveedores.currentInstance.renderMosaico();
+		},
+		function (){
+			POS.aviso("Provedores","Algo anda mal con tu conexion.");	
+		}
+	);
+
 };
 
 
@@ -179,31 +168,123 @@ ApplicationProveedores.prototype.proveedoresWelcome = new Ext.Panel({
 		html: '<div style="width:100%; height:100%" id="proveedores_mosaico"></div>',
 		listeners : {
 			'afterrender' : function (){
-				ApplicationProveedores.currentInstance.mosaic = new Mosaico({
-					renderTo : 'proveedores_mosaico',
-					handler : function (item){
-						console.log('YEAH!!',item.title)
-					},
-					items: [{ 
-							title: 'asas',
-							image: 'media/truck.png',
-							keywords: [ 'f', 'g']
-						},{
-							title: 'pino suarez',
-							image: 'media/truck.png',
-							keywords: [ 'h','i']
-						},{ 
-							title: 'pinos',
-							image: 'media/truck.png',
-							keywords: []
-						},{
-							title: 'leon',
-							image: 'media/truck.png'
-						}]
-				});
+				ApplicationProveedores.currentInstance.getProvedores();
 			}
+			
 		}
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ApplicationProveedores.prototype.doVerProvedor = function ( provedor )
+{
+	
+	if(DEBUG){
+		console.log("ApplicationProveedore: viendo proveedor " ,  provedor );
+	}
+
+	var newPanel = this.createPanelForProvedor( provedor );
+	
+	sink.Main.ui.setCard( newPanel, 'slide' );
+	
+};
+
+
+
+
+
+
+
+ApplicationProveedores.prototype.renderProvedorDetalles = function ( provedor )
+{
+	var html = "";
+	
+	html += "<div class='nombre'>" + provedor.nombre + "</div>";
+	
+	html += "<img src='media/iconos/mundo.png'>" +provedor.direccion 		+ "<br>";
+	html += "<img src='media/iconos/mail.png'>" +provedor.e_mail			+ "<br>";
+	html += "<img src='media/iconos/user.png'>" +provedor.id_proveedor	+ "<br>";
+	html += "<img src='media/iconos/rfc.png'>" +provedor.rfc			+ "<br>";
+	html += "<img src='media/iconos/telefono.png'>" +provedor.telefono		+ "<br>";
+	
+	return "<div class='ApplicationProveedores-Detalles'>"+html+"</div>";
+	
+};
+
+
+ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
+{
+
+	var carousel = new Ext.Carousel({
+
+		defaults: { 
+			cls: 'ApplicationProveedores-detallesProveedor'
+		},
+		items: [{
+			html: this.renderProvedorDetalles(provedor)
+		}, {
+			title: 'Tab 2',
+			html: '2'
+		}, {
+			title: 'Tab 3',
+			html: '3'
+		}]
+	});
+
+
+	var regresar = [{
+			xtype: 'button',
+			text: 'Regresar',
+			ui: 'back'
+		}];		
+
+	var surtir = [{
+			xtype: 'button',
+			text: 'Surtir',
+			ui: 'action'
+		}];
+		
+    var dockedItems = [ new Ext.Toolbar({
+        ui: 'dark',
+        dock: 'bottom',
+        items: regresar.concat({xtype:'spacer'}).concat(surtir)
+    })];
+
+
+	var panel = new Ext.Panel({
+		dockedItems : dockedItems,
+		layout: {
+			type: 'vbox',
+			align: 'stretch'
+		},
+		defaults: {
+	      flex: 1
+		},
+		items: [carousel]
+	});
+	
+
+	
+	return panel;
+};
+
+
+
+
+
 
 
 
@@ -221,8 +302,22 @@ ProveedoresListStore = new Ext.data.Store({
     }	
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ApplicationProveedores.prototype.ProveedoresList = new Ext.Panel({
-	id: 'panelProveedores',
+//	id: 'panelProveedores',
 	layout: Ext.platform.isPhone ? 'fit' : {
         type: 'vbox',
         align: 'left',
