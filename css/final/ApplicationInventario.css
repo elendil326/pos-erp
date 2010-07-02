@@ -1,0 +1,35 @@
+.ApplicationInventario-mainPanel{
+	background-image:url(media/g3.png);
+}
+
+.ApplicationInventario-mainPanel .products{
+	color: white !important;
+	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+	text-shadow: black 0px 1px 1px;
+	
+	margin: 5px ;
+
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+
+	border-style : solid;
+	border-width:1px;
+	border-right-color: #60656b;
+	border-left-color: #61666c;
+	border-top-color: #474a4f !important;
+	border-bottom-color: #959a9f !important;
+}
+
+
+.ApplicationInventario-detallesItems{
+	padding: 5px !important;
+	margin : 5px !important;
+
+}
+
+
+.ApplicationInventario-detallesItems .x-form-fieldset-title{
+	color: white;
+	text-shadow: black 0px 1px 1px;	
+}

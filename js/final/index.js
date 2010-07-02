@@ -236,60 +236,71 @@ POS.aviso = function (title, contents)
     this.popup.show('pop');
 };
 
+
+
+
+
+
 POS.map = function( address )
 {
 	
 	var mapPanel = new Ext.Panel({
 		layout: 'fit',
-		//html: '<div id="'+this.id+'posMap"></div>',
 		listeners: {
-			afterrender: function(panel){
+				afterrender: function(panel){
 
 					var geocoder = new google.maps.Geocoder();
 
 					var posMapOptions = {
-						      zoom: 15,
+						      zoom: 14,
 						      mapTypeId: google.maps.MapTypeId.ROADMAP
-						    }
+					    };
+						
 					var map = new google.maps.Map(document.getElementById( Ext.get(panel.id).first().id ), posMapOptions);
 
 					if (geocoder) {
 					      geocoder.geocode( { 'address': address}, function(results, status) {
-						if (status == google.maps.GeocoderStatus.OK) {
-						  map.setCenter(results[0].geometry.location);
-						  var marker = new google.maps.Marker({
-						      map: map, 
-						      position: results[0].geometry.location
-						  });
-						} else {
-							
-							//alert("Geocode was not successful for the following reason: " + status);
-							var errorMsg = '<div style="font-size: large" align="center" >';
-							switch(status){
-								case 'ERROR': errorMsg += 'Error al intentarse conectar con los servidores de Google';
-										break;
-								case 'INVALID_REQUEST': errorMsg += 'Solicitud de datos errónea'; 
-										break;
-								case 'OVER_QUERY_LIMIT': errorMsg += 'El servidor de mapas está teniendo sobrecarga. Intente más tarde'; break;
-								case 'REQUEST_DENIED': errorMsg += 'La página en donde esta no tiene permiso para cargar el mapa'; break;
-								case 'UNKNOWN_ERROR': errorMsg += 'Hubo un error en el servidor. Intente de nuevo'; break;
-								case 'ZERO_RESULTS': errorMsg += 'No se encontraron resultados'; break;
+							if (status == google.maps.GeocoderStatus.OK) {
 								
-								default: errorMsg += 'Hubo un error desconocido en el servidor';
-		
-							}				
-							errorMsg += '</div>';					
+								map.setCenter(results[0].geometry.location);
+								
+								var marker = new google.maps.Marker({
+										map: map, 
+										position: results[0].geometry.location
+						  			});
+							} else {
 							
-							POS.aviso('Error Mapa', errorMsg);
-						}
-					      });
+								switch(status){
+									case 'ERROR': 				errorMsg = 'Error al intentarse conectar con los servidores de Google'; break;
+									case 'INVALID_REQUEST': 	errorMsg = 'Solicitud de datos errónea'; break;
+									case 'OVER_QUERY_LIMIT': 	errorMsg = 'El servidor de mapas está teniendo sobrecarga. Intente más tarde'; break;
+									case 'REQUEST_DENIED': 		errorMsg = 'La página en donde esta no tiene permiso para cargar el mapa'; break;
+									case 'UNKNOWN_ERROR': 		errorMsg = 'Hubo un error en el servidor. Intente de nuevo'; break;
+									case 'ZERO_RESULTS': 		errorMsg = 'No se encontraron resultados'; break;
+									default: 					errorMsg = 'Hubo un error desconocido en el servidor';
+		
+								}				
+			
+								if(DEBUG){
+									console.warn("Mapas: ", status, errorMsg);
+								}
+							
+								return null;
+							}
+						});
 				    }
 				}
-		}
+			}
 	});
 	
 	return mapPanel;
 };
+
+
+
+
+
+
 
 
 

@@ -5,11 +5,17 @@ Array.prototype.has=function(v){for (i=0;i<this.length;i++){if (this[i]==v) retu
 
 Mosaico = function ( config )
 {
+	
+	
 	this.uniqueID = "mosaic-" + parseInt( Math.random() * 1000 ) ;
 
 	this.config = config;
 
 	this.createHtml();
+
+	if(DEBUG){
+		console.log("Mosaico: creando mosaico " + this.uniqueID );
+	}
 
 	return this;
 };
@@ -93,7 +99,7 @@ Mosaico.prototype.click = function ( mosaico, itemId )
 {
 
 	return function (){
-		console.log(this, mosaico, itemId);
+		//console.log(this, mosaico, itemId);
 		mosaico.config.handler( mosaico.config.items[itemId] );
 	}
 	
