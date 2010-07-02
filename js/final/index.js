@@ -39,6 +39,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
 		//	Panel de navegacion izquierdo
         this.navigationPanel = new Ext.NestedList({
             items: this.navigationItems || [],
+			cls: 'leftMenu',
             dock: 'left',
             width: 250,
             height: 456,

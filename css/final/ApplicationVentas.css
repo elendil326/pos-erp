@@ -1,29 +1,51 @@
 .ApplicationVender-mainPanel{
-	background-image:url(media/g1.png);
+	background-image:url(media/g3.png);
 	width: 100%;
 	height: 100%;
 
 }
 
+.ApplicationVender-ventaListaPanel{
+	padding: 5px !important;
+	margin : 5px !important;*
+}
 
+.ApplicationVender-ventaListaPanel .x-form-fieldset-title{
+	color: white;
+	text-shadow: black 0px 1px 1px;	
+}
+
+/* ------------------------------------------------------------------------
+	Items del carrito
+   ------------------------------------------------------------------------ */
 .ApplicationVender-itemsBox {
-	margin: 5px;
-	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+
 	font-size: 16px;
+	text-shadow: black 0px 1px 1px;
+
 
 }
 
 .ApplicationVender-item{
 	margin: 5px;
+	
 	-moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     -khtml-border-radius: 5px;
 
-	width: 100%;
+	border-style : solid;
+	border-width:1px;
+	border-right-color: #60656b;
+	border-left-color: #61666c;
+	border-top-color: #474a4f;
+	border-bottom-color: #959a9f;
+	
 	height: 30px;
-	color: #827264;
-	text-shadow: white 0px 1px 1px;
-	background-image:url(media/g2.png);
+	color: white;
+	
+	/*text-shadow: white 0px 1px 1px;*/
+	/*background-image:url(media/g2.png);*/
+	
 	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
 	font-weight: normal;
 	padding : 5px;
@@ -31,12 +53,6 @@
 
 }
 
-
-
-
-/* ------------------------------------------------------------------------
-	Items del carrito
-   ------------------------------------------------------------------------ */
 div.id{
 	float: left;
 	margin-left : 5px;
@@ -53,18 +69,18 @@ div.name{
 
 div.description{
 	float: left;
-	width : 77%;
+	width : 50%;
 	margin-left : 5px;
-	color: black;	
+	color: white;	
 }
 
 div.cost{
 	float: left;
 	margin-left : 5px;
-	text-shadow: black 0px 1px 1px;
+	text-shadow: #98AFC7 1px 1px 4px;
+	font-size: 18px;
 	color: black;	
 }
-
 
 div.trash{
 	float: left;
@@ -72,35 +88,50 @@ div.trash{
 }
 
 
-
-
-
-
-
 /* ------------------------------------------------------------------------
 	Totales del carrito
    ------------------------------------------------------------------------ */
-div.ApplicationVender-TotalesBox  {
+div.ApplicationVender-totalesBox  {
 
+	background-image: url(media/dark2.png);
+
+	margin : 5px;
+	border-style : solid;
+	border-width: 1px;
+	border-right-color: #60656b;
+	border-left-color: #61666c;
+	border-top-color: #474a4f;
+	border-bottom-width: 0px;
+	
 	-moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     -khtml-border-radius: 5px;
-	width: 25%;
-	margin-left: 70%;
-	text-align: right;
-	color: black;
-	text-shadow: white 0px 1px 1px;
-	background-image:url(media/g2.png);
+
+	color: white;
+	text-shadow: black 0px 1px 1px;
+
 	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
 	font-weight: normal;
-	font-size: 12px;
+	font-size: 19px;
 	padding : 10px;
-
+	text-align: right;
 }
 
 div.ApplicationVender-Totales{
 	
 	font-size:17px;
+	text-shadow: black 0px 1px 1px;
+}
+
+
+
+
+
+
+.gracias{
+	color: white;
+	text-align: center;
+	font-size: 40px;
 	text-shadow: black 0px 1px 1px;
 }
 
@@ -111,9 +142,7 @@ div.ApplicationVender-Totales{
 
 
 .ApplicationVender-clienteDetalle{
-	
 
-	
 }
 
 
@@ -121,6 +150,9 @@ div.ApplicationVender-clienteBox .nombre{
 	font-size: 20px;
 	text-shadow: gray 0px 1px 1px;
 }
+
+
+
 
 div.ApplicationVender-clienteBox  {
 	padding-left: 15px;
@@ -135,7 +167,6 @@ div.ApplicationVender-clienteBox  {
     -khtml-border-radius: 20px;
 
 	color: black;
-
 	background-image:url(media/g2.png);
 
 }

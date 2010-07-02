@@ -18,15 +18,65 @@
 	
 	color : white;
 	font-size: 16px;
-
-	
+	background-image: none;	
+	margin: 5px;
+	height: 32px;
 }
 
 
 
 .ApplicationProveedores-Detalles .nombre{
-	padding-bottom: 5px;
+	padding: 25px;
 	color: white;
 	text-shadow: black 0px 0px 25px;
 	font-size: 50px ;
+	text-align: center;
+	border-style : solid;
+	border-width:1px;
+
+	border-right-color: #60656b;
+	border-left-color: #61666c;
+	border-top-color: #474a4f;
+	border-bottom-color: #959a9f;
+	
+	
+	
+	
+	-moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+}
+
+
+.ApplicationProveedores-Detalles .direccion{
+	margin-top: 15px;
+	background:url(media/iconos/mundo.png) no-repeat;
+	padding-left: 40px;
+	height: 40px;
+}
+
+
+.ApplicationProveedores-Detalles .mail{
+	background:url(media/iconos/mail2.png) no-repeat;
+	padding-left: 40px;
+	height: 40px;
+}
+
+.ApplicationProveedores-Detalles .rfc{
+	background:url(media/iconos/rfc.png) no-repeat;
+	padding-left: 40px;
+	height: 40px;
+}
+
+.ApplicationProveedores-Detalles .id_provedor{
+	background:url(media/iconos/user.png) no-repeat;
+	padding-left: 40px;
+	height: 40px;
+}
+
+.ApplicationProveedores-Detalles .telefono{
+	background:url(media/iconos/telefono.png) no-repeat;
+	padding-left: 40px;
+	height: 40px;
 }

@@ -212,14 +212,14 @@ ApplicationProveedores.prototype.renderProvedorDetalles = function ( provedor )
 {
 	var html = "";
 	
-	html += "<div class='nombre'>" + provedor.nombre + "</div>";
-	
-	html += "<img src='media/iconos/mundo.png'>" +provedor.direccion 		+ "<br>";
-	html += "<img src='media/iconos/mail.png'>" +provedor.e_mail			+ "<br>";
-	html += "<img src='media/iconos/user.png'>" +provedor.id_proveedor	+ "<br>";
-	html += "<img src='media/iconos/rfc.png'>" +provedor.rfc			+ "<br>";
-	html += "<img src='media/iconos/telefono.png'>" +provedor.telefono		+ "<br>";
-	
+	html += "<div class='nombre'>" 		+provedor.nombre 		+ "</div>";
+	html += "<div class='direccion'>" 	+provedor.direccion 	+ "</div>";
+	html += "<div class='mail'>" 		+provedor.e_mail		+ "</div>";
+	html += "<div class='id_provedor'>" +provedor.id_proveedor	+ "</div>";
+	html += "<div class='rfc'>"  		+provedor.rfc			+ "</div>";
+	html += "<div class='telefono'>"  	+provedor.telefono		+ "</div>";
+
+
 	return "<div class='ApplicationProveedores-Detalles'>"+html+"</div>";
 	
 };
@@ -248,8 +248,16 @@ ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 	var regresar = [{
 			xtype: 'button',
 			text: 'Regresar',
-			ui: 'back'
+			ui: 'back',
+			handler : function(){
+				sink.Main.ui.setCard( 
+					ApplicationProveedores.currentInstance.mainCard, {
+						type: 'fade',
+						duration: 500
+					});
+			}
 		}];		
+
 
 	var surtir = [{
 			xtype: 'button',
@@ -287,7 +295,7 @@ ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 
 
 
-
+/*
 
 Ext.regModel('Proveedor', {
     fields: ['nombre', 'rfc']
@@ -302,6 +310,7 @@ ProveedoresListStore = new Ext.data.Store({
     }	
 });
 
+*/
 
 
 
@@ -313,8 +322,7 @@ ProveedoresListStore = new Ext.data.Store({
 
 
 
-
-
+/*
 
 ApplicationProveedores.prototype.ProveedoresList = new Ext.Panel({
 //	id: 'panelProveedores',
@@ -476,8 +484,10 @@ ApplicationProveedores.prototype.ProveedoresList = new Ext.Panel({
 ]//fin items proveedoresList panel
 	
 });
+*/
 
 
+/*
 
 ApplicationProveedores.prototype.agregarProveedor = function (){
 	Ext.getCmp('btn_agregarProveedor').setVisible(false);
@@ -593,7 +603,7 @@ ApplicationProveedores.prototype.agregarProveedor = function (){
 };
 
 
-
+*/
 
 
 

@@ -29,7 +29,7 @@ code, pre {
 /* HELPERS !!! */
 .helper1
 {
-	background-image: url(media/helper1.png);
+	background-image: url(media/helper1b.png);
 	top: 0px;
 	position: absolute;
 	width: 400px !important;
@@ -37,6 +37,14 @@ code, pre {
 	
 }
 
+
+
+/* left menu */
+.leftMenu{
+	
+  background: url(media/g3.png) !important; 
+	
+}
 
 
 
@@ -47,7 +55,7 @@ code, pre {
 
 .launchscreen > .x-panel-body {
   /* BACKGROUND */
-  background: url(media/g1.png);
+  background: url(media/g3.png);
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-box-align: center;
