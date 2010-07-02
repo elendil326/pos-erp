@@ -47,6 +47,9 @@ ApplicationInventario.prototype.productList = null;
 //Panel que traera los detalles de la sucursal
 ApplicationInventario.prototype.detailPanel = null;
 
+//Panel que trae la lista del inventario
+ApplicationInventario.prototype.sucursalPanel = null;
+
 //Panel de inicio
 ApplicationInventario.prototype.homePanel = null;
 
@@ -110,7 +113,7 @@ ApplicationInventario.prototype.loadHomePanel = function(){
 					renderTo : 'invapp_mosaico2',
 					items: ApplicationInventario.currentInstance.mosaicItems2,
 					handler: function(item){
-						ApplicationInventario.currentInstance.loadDetailPanel(item.id_sucursal);
+						ApplicationInventario.currentInstance.initSucursalPanel(item.id_sucursal, item.title);
 					}
 				});
 			}
@@ -127,7 +130,7 @@ ApplicationInventario.prototype.loadHomePanel = function(){
 					renderTo : 'invapp_mosaico',
 					items: ApplicationInventario.currentInstance.mosaicItems,
 					handler: function(item){
-						ApplicationInventario.currentInstance.loadDetailPanel(item.id_sucursal);
+						ApplicationInventario.currentInstance.initSucursalPanel(item.id_sucursal, item.title);
 					}
 				});
 			}
@@ -231,6 +234,7 @@ ApplicationInventario.prototype.loadNavigationBar = function(){
 		this.navToolbar = new Ext.Toolbar({
 			ui: 'dark',
 			dock: 'top',
+			//animation: 'slide',
 			items: buscar
 		});
 		
@@ -251,7 +255,7 @@ ApplicationInventario.prototype.loadNavigationBar = function(){
 	
 }
 
-ApplicationInventario.prototype._initToolbar = function(){
+ApplicationInventario.prototype._initToolbar = function(sucursal_name){
 	
 	
 	if (!this.toolBar) {
@@ -260,13 +264,25 @@ ApplicationInventario.prototype._initToolbar = function(){
 		var panel;
 		POS.AJAXandDECODE({
 			method: 'listarSucursal'
-		}, function(result){ //Success AJAX
+		}, function(result){ //Success AJAX		
+			var disableFlag = false;
 			for (var i = 0; i < result.datos.length; i++) {
+				
+				//Condicion para cambiar la bandera para que salga deshabilitado el boton de la sucursal
+				if ( result.datos[i].descripcion == sucursal_name)
+				{
+					disableFlag = true;
+				}
+				else{
+					disableFlag = false;
+				}
+				
 				buttonsArray.push(new Ext.Button({
 					text: result.datos[i].descripcion,
 					index: i,
+					disabled: disableFlag,
 					handler: function(btn){
-					
+						
 						//Si se da click en un boton del toolbar se deshabilita y los demas se habilitan
 						for (var j = 0; j < buttonsArray.length; j++) {
 							if (btn.index == j) {
@@ -278,7 +294,7 @@ ApplicationInventario.prototype._initToolbar = function(){
 						}
 						
 						//ApplicationInventario.currentInstance.initSucursalPanel(result.datos[btn.index].id_sucursal);
-						ApplicationInventario.currentInstance.loadDetailPanel(result.datos[btn.index].id_sucursal);
+						ApplicationInventario.currentInstance.initSucursalPanel(result.datos[btn.index].id_sucursal, btn.text);
 						
 						
 					}
@@ -291,6 +307,8 @@ ApplicationInventario.prototype._initToolbar = function(){
 				ApplicationInventario.currentInstance.toolBar = new Ext.Toolbar({
 					dock: 'bottom',
 					scroll: 'horizontal',
+					animation: 'slide',
+					showAnimation: true,
 					items: [buttonsArray]
 				});
 			}
@@ -307,7 +325,10 @@ ApplicationInventario.prototype._initToolbar = function(){
 };
 
 //Funcion para crear un panel con el listado de una sucursal especifica
-ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id){
+ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucursal_name){
+	
+	//Cargamos la toolbar inferior con las sucursales
+	this._initToolbar(sucursal_name);
 	
 	//Store para la lista de productos del inventario
 	var InvProductsListStore = new Ext.data.Store({
@@ -400,13 +421,14 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id){
 	
 	});
  
- 	//this._initToolbar();
+ 	/*
+	//this._initToolbar();
 	//Quitamos los botones de la toolbar de navegacion
 	this.navToolbar.removeAll();
 	
 	//Y solo le agregamos un boton de atras
 	this.navToolbar.add({
-		text: 'Sucursal',
+		text: 'Inventario',
 		ui: 'back',
 		handler: function(){
 			ApplicationInventario.currentInstance.inventarioMainPanel.setCard( ApplicationInventario.currentInstance.detailPanel, { type: 'slide', direction: 'right'});
@@ -415,12 +437,14 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id){
 			ApplicationInventario.currentInstance.createBackInvButtons(sucursal_id);
 		}
 	});
-	this.navToolbar.doLayout();
+	this.navToolbar.doLayout();*/
 	
+	this.createBackInvButtons(sucursal_id, sucursal_name);
 	
 	this.inventarioMainPanel.setCard( sucursalPanel , 'slide' );
 	//this.inventarioMainPanel.addDocked(sucursalPanel);
-	//this.mainCard = sucursalPanel;
+	this.sucursalPanel = sucursalPanel;
+	
 	return sucursalPanel;
 };
 
@@ -493,10 +517,26 @@ ApplicationInventario.prototype.loadDetailPanel = function(sucursal_id){
 				 */
 				
 				//Creamos los botones de atras e inventario
-				ApplicationInventario.currentInstance.createBackInvButtons(sucursal_id);
+				//ApplicationInventario.currentInstance.createBackInvButtons(sucursal_id);
+				
+				//Quitamos los botones de la toolbar de navegacion
+				ApplicationInventario.currentInstance.navToolbar.removeAll();
+				
+				//Y solo le agregamos un boton de atras
+				ApplicationInventario.currentInstance.navToolbar.add({
+					text: 'Inventario',
+					ui: 'back',
+					handler: function(){
+						ApplicationInventario.currentInstance.inventarioMainPanel.setCard( ApplicationInventario.currentInstance.sucursalPanel, { type: 'slide', direction: 'right'});
+						
+						//Creamos los botones de atras e inventario
+						ApplicationInventario.currentInstance.createBackInvButtons(sucursal_id, data.datos[0].descripcion);
+					}
+				});
+				ApplicationInventario.currentInstance.navToolbar.doLayout();
 				
 				//Agregamos la toolbar de abajo para cambiar rapido de sucursal
-				ApplicationInventario.currentInstance._initToolbar();
+				ApplicationInventario.currentInstance._initToolbar(data.datos[0].descripcion);
 				/*if (!ApplicationInventario.currentInstance.toolBar){
 					alert("no existe");
 					ApplicationInventario.currentInstance._initToolbar();
@@ -529,7 +569,7 @@ ApplicationInventario.prototype.loadDetailPanel = function(sucursal_id){
 };
 
 //Funcion para agregar los botones de back e inventario en la toolbar de navegacion
-ApplicationInventario.prototype.createBackInvButtons = function(sucursal_id){
+ApplicationInventario.prototype.createBackInvButtons = function(sucursal_id, sucursal_name){
 	
 				/*
 				 * Navigation Toolbar
@@ -549,19 +589,21 @@ ApplicationInventario.prototype.createBackInvButtons = function(sucursal_id){
 							ApplicationInventario.currentInstance.inventarioMainPanel.removeDocked(ApplicationInventario.currentInstance.toolBar);
 							ApplicationInventario.currentInstance.toolBar.destroy();
 							ApplicationInventario.currentInstance.toolBar = null;
+							ApplicationInventario.currentInstance.navToolbar.setTitle("");
 						}
 				}),{ xtype: 'spacer' },
 					new Ext.Button({
-						text: 'Inventario',
+						text: 'Detalles',
 						ui: 'forward',
 						showAnimation: true,
 						handler: function(){
-							ApplicationInventario.currentInstance.initSucursalPanel(sucursal_id);	
+							ApplicationInventario.currentInstance.loadDetailPanel(sucursal_id);	
 						}
 					})];
 				
 				//Añadimos los botones de atras e inventario a la toolbar de navegacion	
 				ApplicationInventario.currentInstance.navToolbar.add( backinvButtons );
+				ApplicationInventario.currentInstance.navToolbar.setTitle(sucursal_name);
 				ApplicationInventario.currentInstance.navToolbar.doLayout();
 	
 	
