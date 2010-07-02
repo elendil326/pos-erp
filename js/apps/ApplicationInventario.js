@@ -254,7 +254,8 @@ ApplicationInventario.prototype.loadNavigationBar = function(){
 ApplicationInventario.prototype._initToolbar = function(){
 	
 	
-	//if (!this.toolBar) {
+	if (!this.toolBar) {
+		
 		var buttonsArray = [];
 		var panel;
 		POS.AJAXandDECODE({
@@ -292,34 +293,16 @@ ApplicationInventario.prototype._initToolbar = function(){
 					scroll: 'horizontal',
 					items: [buttonsArray]
 				});
-			}else{
-				/*ApplicationInventario.currentInstance.inventarioMainPanel.removeDocked(ApplicationInventario.currentInstance.toolBar);
-				ApplicationInventario.currentInstance.toolBar = new Ext.Toolbar({
-					dock: 'bottom',
-					scroll: 'horizontal',
-					items: [buttonsArray]
-				});*/
 			}
 			
 			
-			//Toolbar superior
-			/*var supToolbar = new Ext.Toolbar({
-		 dock: 'top',
-		 items:[ { xtype: 'spacer'},
-		 {
-		 text: 'Inventario',
-		 ui: 'forward'
-		 }]
-		 });*/
 			ApplicationInventario.currentInstance.inventarioMainPanel.addDocked(ApplicationInventario.currentInstance.toolBar);
-		//ApplicationInventario.currentInstance.inventarioMainPanel.addDocked(supToolbar);
+		
 		
 		}, function(error){ //Failure Ajax
 		});
-	/*}
-	else{
-		ApplicationInventario.currentInstance.inventarioMainPanel.addDocked(ApplicationInventario.currentInstance.toolBar);
-	}*/
+	}
+	
 	
 };
 
@@ -559,15 +542,19 @@ ApplicationInventario.prototype.createBackInvButtons = function(sucursal_id){
 				var backinvButtons = [ new Ext.Button({
 						text: 'Inicio',
 						ui: 'back',
+						showAnimation: true,
 						handler: function(){
 							ApplicationInventario.currentInstance.inventarioMainPanel.setCard(ApplicationInventario.currentInstance.homePanel2 , {type: 'slide', direction: 'right'});
 							ApplicationInventario.currentInstance.loadNavigationBar();
 							ApplicationInventario.currentInstance.inventarioMainPanel.removeDocked(ApplicationInventario.currentInstance.toolBar);
+							ApplicationInventario.currentInstance.toolBar.destroy();
+							ApplicationInventario.currentInstance.toolBar = null;
 						}
 				}),{ xtype: 'spacer' },
 					new Ext.Button({
 						text: 'Inventario',
 						ui: 'forward',
+						showAnimation: true,
 						handler: function(){
 							ApplicationInventario.currentInstance.initSucursalPanel(sucursal_id);	
 						}
