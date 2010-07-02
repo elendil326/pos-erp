@@ -185,7 +185,7 @@ ApplicationInventario.prototype.getMosaicItems = function(){
 			Inventario de cada sucursal
    ------------------------------------------------------------------------------------- */
 //funcion para crear un panel con el listado de una sucursal especifica
-ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucursal_name){
+ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucursal_name, back){
 	
 	if(DEBUG){
 		console.log("ApplicationInventario: creando panel para sucursal " + sucursal_id);
@@ -249,7 +249,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 			xtype: 'spacer'
 		},{
 			xtype: 'button',
-			text : 'Regresar',
+			text : 'Sucursales',
 			ui: 'back',
 			handler : function(){
 				sink.Main.ui.setCard( ApplicationInventario.currentInstance.mainCard, { type: 'slide', direction: 'right' });
@@ -257,8 +257,9 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 		},{
 			xtype: 'button',
 			text : 'Detalles',
+			ui : 'forward',
 			handler : function(){
-				ApplicationInventario.currentInstance.loadDetailPanel(sucursal_id);
+				ApplicationInventario.currentInstance.loadDetailPanel(sucursal_id, { type: 'slide', direction: 'left' });
 			}
 		}]
 	});
@@ -307,7 +308,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
         	xtype: 'list',
 			baseCls : 'ApplicationInventario-mainPanel',
 			loadingText: 'Cargando datos...',
-			emptyText: 'No se encontraron datos',
+			emptyText: '<div class="no-data">No se encontraron productos para esta sucursal.</div>',
         	store: InvProductsListStore,
         	tpl: String.format('<tpl for="."><div class="products"><strong>{denominacion}</strong> &nbsp;Existencias: {existencias} Precio: {precio_venta}</div></tpl>' ),
         	itemSelector: 'div.products',
@@ -316,8 +317,12 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 	
 		});
 
+	if(back === true){
+		sink.Main.ui.setCard(sucursalPanel, { type: 'slide', direction: 'right' });
+	}else{
+		sink.Main.ui.setCard(sucursalPanel, { type: 'slide', direction: 'left' });
+	}
 
-	sink.Main.ui.setCard(sucursalPanel, 'slide');
 
 };
 
@@ -372,9 +377,9 @@ ApplicationInventario.prototype.renderDetalles = function( data )
 			},{
 				xtype: 'button',
 				ui	 : 'back',
-				text : 'Regresar',
+				text : 'Inventario',
 				handler: function(){
-					ApplicationInventario.currentInstance.initSucursalPanel( data.id_sucursal );
+					ApplicationInventario.currentInstance.initSucursalPanel( data.id_sucursal, null, true );
 				}
 			},{
 				xtype: 'button',
@@ -437,7 +442,7 @@ ApplicationInventario.prototype.renderDetalles = function( data )
 		});
 		
 		
-	sink.Main.ui.setCard( detailPanel );
+	sink.Main.ui.setCard( detailPanel , 'slide');
 		
 };
 
