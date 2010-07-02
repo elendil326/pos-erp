@@ -38,6 +38,7 @@ ApplicacionClientes.prototype.dockedItems = null;
 
 ApplicacionClientes.prototype.dockedItemsFormCliente = null;
 
+ApplicacionClientes.prototype.clienteSeleccionado = null;
 
 
 ApplicacionClientes.prototype._init = function()
@@ -73,20 +74,28 @@ ApplicacionClientes.prototype._initToolBar = function (){
 	var detallesDeBusqueda = [{
         xtype: 'splitbutton',
         items: [{
-            text: 'Nombre'
+            text: 'Nombre',
+			handler: this.filterByName
         }, {
-            text: 'RFC'
+            text: 'RFC',
+			handler: this.filterByRfc
         },{
-			text: 'Direccion'
+			text: 'Direccion',
+			handler: this.filterByDireccion
 		}]    
     }];
 
-    var campoBusqueda = [{
-		xtype: 'textfield',
-		inputCls : 'caja-buscar'
-    }];
+    var campoBusqueda = new Ext.form.TextField({
+		//xtype: 'textfield',
+		inputCls: 'cliente-buscar',
+		id: 'btnBuscarCliente'
+		
+    });
 
-
+	campoBusqueda.on('keyup', function() {
+      ApplicacionClientes.currentInstance.doSearch();
+		
+    });
 
 
 	/*
@@ -104,12 +113,17 @@ ApplicacionClientes.prototype._initToolBar = function (){
 
 	var detallesDeCliente = [{
         xtype: 'splitbutton',
+		id: 'btn_detallesCliente',
         items: [{
-            text: 'Detalles'
+            text: 'Detalles',
+			handler: this.mostrarDetallesCliente
         }, {
-            text: 'Compras'
+            text: 'Compras',
+			id: 'btnComprasCliente',
+			handler: this.mostrarVentasCliente
         },{
-			text: 'Creditos'
+			text: 'Creditos',
+			handler: this.mostrarVentasCreditoCliente
 		}]    
     }];
 
@@ -119,6 +133,14 @@ ApplicacionClientes.prototype._initToolBar = function (){
         handler: this.editClient,
         ui: 'action'
     }];
+	
+	var btnCancelEditCliente = [{
+		id: 'btn_CancelEditCliente',
+		text: 'Cancelar',
+		//handler: 
+		//hidden: true,
+		ui: 'action'
+	}];
 
 	
    if (!Ext.platform.isPhone) {
@@ -141,7 +163,7 @@ ApplicacionClientes.prototype._initToolBar = function (){
 		this.dockedItemsFormCliente =[ new Ext.Toolbar({
             ui: 'light',
             dock: 'top',
-            items:  btnBackCliente.concat(detallesDeCliente).concat(btnEditCliente)
+            items:  btnBackCliente.concat(detallesDeCliente).concat(btnCancelEditCliente).concat(btnEditCliente)
                  
         })];
 		
@@ -156,7 +178,7 @@ ApplicacionClientes.prototype._initToolBar = function (){
 		this.dockedItemsFormCliente = [{
             xtype: 'toolbar',
             ui: 'metal',
-            items: btnBackCliente.concat(detallesDeCliente).concat(btnEditCliente),
+            items: btnBackCliente.concat(detallesDeCliente).concat(btnCancelEditCliente).concat(btnEditCliente),
             dock: 'top'
         }];
     }
@@ -167,13 +189,6 @@ ApplicacionClientes.prototype._initToolBar = function (){
 		
 		
 };
-
-
-
-
-
-
-
 
 
 
@@ -197,6 +212,7 @@ ApplicacionClientes.prototype.editClient = function (){
 			Ext.getCmp('telefonoClienteM').setDisabled(false);	
 			Ext.getCmp('limite_creditoClienteM').setDisabled(false);
 			
+			Ext.getCmp('btn_CancelEditCliente').setVisible(true);
 			//add cancel button
 			//Ext.getCmp("updateForm").dockedItems
 			
@@ -210,7 +226,10 @@ ApplicacionClientes.prototype.editClient = function (){
 			Ext.getCmp('emailClienteM').setDisabled(true);
 			Ext.getCmp('telefonoClienteM').setDisabled(true);	
 			Ext.getCmp('limite_creditoClienteM').setDisabled(true);
+			
+			Ext.getCmp('btn_CancelEditCliente').setVisible(false);
 			//call handlerModificarCliente
+			ApplicacionClientes.currentInstance.handlerModificarCliente(idClienteM.getValue(),rfcClienteM.getValue(),nombreClienteM.getValue(),direccionClienteM.getValue(),telefonoClienteM.getValue(),emailClienteM.getValue(),limite_creditoClienteM.getValue());    
 			break;
 	}
 
@@ -219,12 +238,17 @@ ApplicacionClientes.prototype.editClient = function (){
 /*
 	Carga el panel de 'Detalles del cliente'
 */
+ApplicacionClientes.prototype.mostrarDetallesCliente = function(){
+	ApplicacionClientes.prototype.addClientDetailsPanel(ApplicacionClientes.currentInstance.clienteSeleccionado);
+}
+
 ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 	
 	var foo = ApplicacionClientes.currentInstance.updateForm( recor );
 	
+	Ext.getCmp('btn_CancelEditCliente').setVisible(false);
 	Ext.getCmp('btn_EditCliente').setText('Modificar');
-	
+	//Ext.getCmp('btn_detallesCliente').setActive();
 	sink.Main.ui.setCard( foo, 'slide' );
 }
 
@@ -360,15 +384,6 @@ ApplicacionClientes.prototype.updateForm = function( recor ){
 
 };
 
-/*	------------------------------------------------------------------------------------------
-		Credito de Cliente
-------------------------------------------------------------------------------------------*/
-
-
-
-
-
-
 
 /*	------------------------------------------------------------------------------------------
 		Buscar Clientes
@@ -377,18 +392,76 @@ ApplicacionClientes.prototype.updateForm = function( recor ){
 Ext.regModel('Contact', {
     fields: ['nombre', 'rfc']
 });
+//create regmodel para busqueda por nombre
+			Ext.regModel('ApplicacionClientes_nombre', {
+		                    fields: [ 'nombre']
+		    });
+		
+			//create regmodel para busqueda por rfc
+			Ext.regModel('ApplicacionClientes_rfc', {
+		                    fields: [ 'rfc', 'nombre','direccion']
+		    });
+		
+			//create regmodel para busqueda por direccion
+			Ext.regModel('ApplicacionClientes_direccion', {
+		                    fields: [ 'direccion' ]
+		    });
 
+var apClientes_filtro = 'nombre';
 
+ApplicacionClientes.prototype.filterByName = function(){
+	apClientes_filtro = "nombre";
+	Ext.getCmp("listaClientes").refresh();
+}
+ApplicacionClientes.prototype.filterByRfc = function(){
+	apClientes_filtro = "rfc";
+	Ext.getCmp("listaClientes").refresh();
+}
+ApplicacionClientes.prototype.filterByDireccion = function(){
+	apClientes_filtro = "direccion";
+	Ext.getCmp("listaClientes").refresh();
+}
 
 ClientesListStore = new Ext.data.Store({
-    model: 'Contact',
-    sorters: 'nombre',
+    model: 'ApplicacionClientes_'+apClientes_filtro,
+    sorters: apClientes_filtro,
+			
     getGroupString : function(record) {
-        return record.get('nombre')[0];
+        return record.get(apClientes_filtro)[0];
     }   
 });
 
 
+/*ApplicacionClientes.prototype.filter = function ()
+{
+	console.log("requesting template-...");
+	switch(ApplicationVender.currentInstance.filterTemplate){
+		case 'nombre': 		return '<tpl for="."><div class="contact"><strong>{nombre}</strong>{rfc},{direccion}</div></tpl>';
+		case 'rfc': 		return '<tpl for="."><div class="contact"><strong>{rfc}</strong> {nombre}</div></tpl>';		
+		case 'direccion': 	return '<tpl for="."><div class="contact">{direccion}<strong> {nombre}</strong></div></tpl>';
+	}
+};*/
+/*	------------------------------------------------------------------------------------
+		Filtrado de busqueda en el store HAY BUG AQUI, DESPUES DE 1 FILTRO CUANDO SE REGRESA A CLIENTES NO LOS MUESTRA TODOS A MENOS QUE SE TECLE EN EL TEXT DE BUSQUEDA ALGO O SE DEJE EN ''
+---------------------------------------------------------------------------------------*/
+ApplicacionClientes.prototype.doSearch = function(  ){
+	
+	if (Ext.getCmp('btnBuscarCliente').getValue() == "")
+		{			
+			ClientesListStore.clearFilter();
+			//Ext.getCmp("listaClientes").refresh();
+			ClientesListStore.sync();
+			
+		}
+		
+		ClientesListStore.filter([
+		{
+			property: 'nombre',
+			value: Ext.getCmp('btnBuscarCliente').getValue()
+		}
+		]);
+		
+}
 
 
 
@@ -401,6 +474,7 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
     	},
     	listeners: {
 			beforeshow : function(component){
+				Ext.getCmp('btnBuscarCliente').setValue() == "";
 				Ext.getBody().mask(false, '<div class="demos-loading">Loading&hellip;</div>');
 				POS.AJAXandDECODE({
 				        method: 'listarClientes'
@@ -420,7 +494,8 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
         	height: '100%',
         	xtype: 'list',
         	store: ClientesListStore,
-        	tpl: '<tpl for="."><div class="contact"><strong>{nombre}</strong> {rfc}</div></tpl>',
+			id: 'listaClientes',
+        	tpl: '<tpl for="."><div class="contact"><strong>{nombre}</strong>--<i>{rfc}</i>--{direccion}</div></tpl>',
         	itemSelector: 'div.contact',
         	singleSelect: true,
         	grouped: true,
@@ -431,8 +506,12 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
 					try{
 						if (this.getSelectionCount() > 0) {
 							var recor=this.getSelectedRecords();
-							//DESLIZAR EL NUEVO PANEL (FORMULARIO DE ACTUALIZACION)
-                        	ApplicacionClientes.currentInstance.addClientDetailsPanel( recor ); 
+							
+							//console.log("ApplicacionClientes.currentInstance.clienteSeleccionado = "+ recor.id_cliente);
+							//console.log(recor[0]);
+							ApplicacionClientes.currentInstance.clienteSeleccionado = recor;
+                        	//DESLIZAR EL NUEVO PANEL (FORMULARIO DE ACTUALIZACION)
+							ApplicacionClientes.currentInstance.addClientDetailsPanel( recor ); 
 						}
 					}catch(e){
 						if(DEBUG){
@@ -446,16 +525,8 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
 });
 
 
-
-
-
-
-
-
-
-
 /*	------------------------------------------------------------------------------------------
-		Nuevo Cliente
+		AGREGAR Nuevo Cliente
 ------------------------------------------------------------------------------------------*/
 
 ApplicacionClientes.prototype.addnewClientPanel= function(){
@@ -467,7 +538,7 @@ ApplicacionClientes.prototype.addnewClientPanel= function(){
 
 ApplicacionClientes.prototype.formAgregarCliente = new Ext.form.FormPanel({
     	scroll: 'vertical',
-        id:'formAgregarCliente',
+        id:'formAgregarCliente', 
     	items: [{
         	xtype: 'fieldset',
         	title: 'Cliente Info',
@@ -529,7 +600,7 @@ ApplicacionClientes.prototype.formAgregarCliente = new Ext.form.FormPanel({
                                             	ClientesListStore.loadData(this.customers); 
                                         	},
                                         	function (){//no responde       
-                                        		POS.aviso("ERROR!!","NO SE PUDO CARGAR LA LISTA DE CLIENTES ERROR EN LA CONEXION :(");  
+                                        		POS.aviso("ERROR!","NO SE PUDO CARGAR LA LISTA DE CLIENTES ERROR EN LA CONEXION :(");  
                                         	}
                                         );//AJAXandDECODE refrescar lista clientes
                                 }else{
@@ -573,5 +644,349 @@ ApplicacionClientes.prototype.formAgregarCliente = new Ext.form.FormPanel({
 
 
 
+/*------------------------------------------------------------------
+			VENTAS EMITIDAS A UN CLIENTE
+------------------------------------------------------------------------*/
+
+ApplicacionClientes.prototype.mostrarVentasCliente = function(){ //mostrarVentasCreditoCliente
+	console.log("a entrar a listar ventas");
+	console.log("ID cliente: "+ApplicacionClientes.currentInstance.clienteSeleccionado);
+	var dump = ApplicacionClientes.currentInstance.listarVentas( ApplicacionClientes.currentInstance.clienteSeleccionado );
+	
+	sink.Main.ui.setCard( dump , 'slide' );
+}
+
+
+ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
+	
+	var listaVentas = new Ext.form.FormPanel({
+			scroll: 'vertical',
+			id: 'listaVentasCliente',
+			dockedItems: this.dockedItemsFormCliente,
+			items: [{
+				  		id: 'datosCliente',
+						html: ''
+					},
+					{
+						id: 'ventasCliente',
+						html:''
+					}
+					]
+		});
+	
+	
+	Ext.regModel('ventasStore', {
+    	fields: ['nombre', 'rfc']
+	});
+
+	var ventasCliente = new Ext.data.Store({
+    	model: 'ventasStore'/*,
+    	sorters: 'nombre',
+    	getGroupString : function(record) {
+        	return record.get('nombre')[0];
+    	} */  
+	});	
+	
+	
+	//cabecera de datos del cliente seleccionado
+	
+	var clienteHtml = "";
+	clienteHtml += " <div class='ApplicationClientes-clienteBox'> ";
+	clienteHtml += " <div class='nombre'>" + record_cliente[0].nombre + "</div>";
+	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> RFC: " + record_cliente[0].rfc + "</div>";
+	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> Direccion: " + record_cliente[0].direccion + "</div>";
+	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> Telefono: " + record_cliente[0].telefono + "</div>";
+	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> Correo Electronico: " + record_cliente[0].e_mail + "</div>";
+	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> Limite de Credito: $ " + record_cliente[0].limite_credito + "</div>";
+	clienteHtml += " </div> ";
+	
+		POS.AJAXandDECODE({
+			method: 'listarVentasCliente',
+			id_cliente: record_cliente[0].id_cliente //recor[0].id_cliente
+			},
+			function (datos){//mientras responda AJAXDECODE LISTAR VENTAS CLIENTE
+				if(datos.success === true){
+					ventasCliente.loadData(datos.datos);
+					
+					Ext.get("datosCliente").update( clienteHtml );
+					var html = "";
+					html += "<div class='ApplicationClientes-item' >"
+							+ "<div class='trash' ></div>"
+							+ "<div class='id'>No. Venta</div>" 
+							+ "<div class='tipo'>Tipo Venta</div>" 
+							+ "<div class='fecha'>Fecha</div>" 
+							+ "<div class='sucursal'>Sucursal</div>"
+							+ "<div class='vendedor'>Vendedor</div>"
+							+ "<div class='subtotal'>Subtotal</div>"
+							+ "<div class='iva'>IVA</div>"
+							+ "<div class='total'>TOTAL</div>"
+							+ "</div>";
+					
+					//renderear el html
+					for( a = 0; a < ventasCliente.getCount(); a++ ){
+						var tipo="";
+						if (ventasCliente.data.items[a].tipo_venta == "2"){
+							tipo="Credito";
+						}else{
+							tipo ="Contado";
+						}
+						html += "<div class='ApplicationClientes-item' >" 
+						+ "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" +ventasCliente.data.items[a].id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>"	
+							+ "<div class='id'>" + ventasCliente.data.items[a].id_venta +"</div>" 
+							+ "<div class='tipo'>" + tipo +"</div>" 
+							+ "<div class='fecha'>"+ ventasCliente.data.items[a].fecha +"</div>" 
+							+ "<div class='sucursal'>"+ ventasCliente.data.items[a].descripcion +"</div>"
+							+ "<div class='vendedor'>"+ ventasCliente.data.items[a].nombre +"</div>"
+							+ "<div class='subtotal'>$"+ ventasCliente.data.items[a].subtotal +"</div>"
+							+ "<div class='iva'>$"+ ventasCliente.data.items[a].iva +"</div>"
+							+ "<div class='total'>$"+ ventasCliente.data.items[a].total +"</div>"
+							+ "</div>";
+					}
+								
+					//imprimir el html
+					Ext.get("ventasCliente").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
+					//console.log(ventasCliente.data.items);
+				}
+				if(datos.success == false){
+					//POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS PROBABLEMENTE ESTE CLIENTE 'NO' HA COMPRADO");
+					Ext.get("datosCliente").update( clienteHtml );
+					Ext.get("ventasCliente").update("<div class='ApplicationClientes-itemsBox'><div class='noVentas' align='center'>ESTE CLIENTE NO TIENE LISTA DE VENTAS</div> </div>");
+				}
+			},
+			function (){//no responde AJAXDECODE DE VENTAS CLIENTE
+				POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS   ERROR EN LA CONEXION :(");      
+			}
+		);//AJAXandDECODE LISTAR VENTAS CLIENTE
+				
+		
+	return listaVentas;
+}
+
+/*--------------------------------------------------------------------
+		VER DETALLES DE LA VENTA DEL CLIENTE
+----------------------------------------------------------------------*/
+ApplicacionClientes.prototype.verVenta = function( idVenta ){
+
+	 var formBase = new Ext.Panel({
+		id: 'detalleVentaPanel',
+		 scroll: 'vertical',
+			//	items
+            items: [{
+				id: 'detalleVentaCliente',
+		        html: ''
+		    }], 
+			//	dock		
+            dockedItems: [{
+                    xtype: 'toolbar',
+                    dock: 'bottom',
+                    items: [{
+						xtype: 'spacer'
+						},{
+						//-------------------------------------------------------------------------------
+						//			cancelar
+						//-------------------------------------------------------------------------------
+						text: 'X Cerrar',
+						handler: function() {
+							//regresar el boton de cliente comun a 1
+							Ext.getCmp("detalleVentaPanel").destroy();
+							 Ext.getBody().unmask();
+							//ocultar este form
+							//form.hide();							
+                            }
+						}]
+					}]
+			});
+	
+       
+	   if (Ext.platform.isAndroidOS) {
+            formBase.items.unshift({
+                xtype: 'component',
+                styleHtmlContent: true,
+                html: '<span style="color: red">Forms on Android are currently under development. We are working hard to improve this in upcoming releases.</span>'
+            });
+        }
+
+	if (Ext.platform.isPhone) {
+            formBase.fullscreen = true;
+        } else {
+            Ext.apply(formBase, {
+                autoRender: true,
+                floating: true,
+                modal: true,
+                centered: true,
+                hideOnMaskTap: false,
+                height: 585,
+                width: 680
+            });
+        }
+        
+		Ext.regModel('ventasDetalleStore', {
+    	fields: ['nombre', 'rfc']
+		});
+
+		var ventasDetalle= new Ext.data.Store({
+    	model: 'ventasDetalleStore'
+    	
+		});	
+		
+		POS.AJAXandDECODE({
+			method: 'mostrarDetalleVenta',
+			id: 0,
+			id_venta: idVenta
+			},
+			function (datos){//mientras responda AJAXDECODE MOSTRAR CLIENTE
+				if(datos.success == true){
+					
+					ventasDetalle.loadData(datos.datos);
+					
+					var html = "";
+					html += "<div class='ApplicationClientes-item' >" 
+					+ "<div class='vendedor'>PRODUCTO</div>" 
+					+ "<div class='sucursal'>CANTIDAD</div>" 
+					+ "<div class='subtotal'>PRECIO</div>" 
+					+ "<div class='subtotal'>SUBTOTAL</div>"
+					+ "</div>";
+								
+					for( a = 0; a < ventasDetalle.getCount(); a++ ){
+											
+						html += "<div class='ApplicationClientes-item' >" 
+						+ "<div class='vendedor'>" + ventasDetalle.data.items[a].denominacion +"</div>" 
+						+ "<div class='sucursal'>"+ ventasDetalle.data.items[a].cantidad +"</div>" 
+						+ "<div class='subtotal'>$ "+ ventasDetalle.data.items[a].precio+"</div>"
+						+ "<div class='subtotal'>$ "+ ventasDetalle.data.items[a].subtotal +"</div>"
+						+ "</div>";
+					}
+								
+								//imprimir el html
+					Ext.get("detalleVentaCliente").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
+						
+				}//FIN DATOS.SUCCES TRUE MOSTRAR CLIENTE
+				if(datos.success == false){
+					POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS PROBABLEMENTE ESTE CLIENTE NO HA COMPRADO");
+					return;
+				}
+				},
+			function (){//no responde  AJAXDECODE MOSTRAR CLIENTE     
+				POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS   ERROR EN LA CONEXION :("); 
+				return;
+			}
+		);//AJAXandDECODE MOSTRAR CLIENTE						
+	
+	formBase.show();
+	
+}
+/*------------------------------------------------------------
+	CREDITOS CLIENTE
+*/
+
+ApplicacionClientes.prototype.mostrarVentasCreditoCliente = function(){ 
+	//console.log("a entrar a listar ventas");
+	//console.log("ID cliente: "+ApplicacionClientes.currentInstance.clienteSeleccionado);
+	var creditCard = ApplicacionClientes.currentInstance.listarVentasCredito( ApplicacionClientes.currentInstance.clienteSeleccionado );
+	
+	sink.Main.ui.setCard( creditCard , 'slide' );
+}
+
+ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
+	
+	var listaVentasCredito = new Ext.form.FormPanel({
+			scroll: 'vertical',
+			id: 'listaVentasCreditoCliente',
+			dockedItems: this.dockedItemsFormCliente,
+			items: [{
+				  		id: 'datosClienteCredito',
+						html: ''
+					},
+					{
+						id: 'ventasCreditoCliente',
+						html:''
+					}
+					]
+		});
+	
+	
+	Ext.regModel('ventasCreditoStore', {
+    	fields: ['nombre', 'rfc']
+	});
+
+	var ventasClienteCredito = new Ext.data.Store({
+    	model: 'ventasCreditoStore'  
+	});	
+	
+	
+	//cabecera de datos del cliente seleccionado
+	
+	var clienteHtml = "";
+	clienteHtml += " <div class='ApplicationClientes-clienteBox'> ";
+	clienteHtml += " <div class='nombre'>" + record_cliente[0].nombre + "</div>";
+	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> RFC: " + record_cliente[0].rfc + "</div>";
+	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> Direccion: " + record_cliente[0].direccion + "</div>";
+	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> Telefono: " + record_cliente[0].telefono + "</div>";
+	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> Correo Electronico: " + record_cliente[0].e_mail + "</div>";
+	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> Limite de Credito: $ " + record_cliente[0].limite_credito + "</div>";
+	clienteHtml += " <div class='nombre'> SALDO: $ " + record_cliente[0].saldo + "</div>";
+	clienteHtml += " </div> ";
+	
+		POS.AJAXandDECODE({
+			method: 'listarVentasCreditoCliente',
+			id_cliente: record_cliente[0].id_cliente //recor[0].id_cliente
+			},
+			function (datos){//mientras responda AJAXDECODE LISTAR VENTAS CLIENTE
+				if(datos.success === true){
+					ventasClienteCredito.loadData(datos.datos);
+					
+					Ext.get("datosClienteCredito").update( clienteHtml );
+					var html = "";
+					html += "<div class='ApplicationClientes-item' >"
+							+ "<div class='trash' ></div>"
+							+ "<div class='id'>No. Venta</div>" 
+							+ "<div class='fecha'>Fecha</div>" 
+							+ "<div class='sucursal'>Sucursal</div>"
+							+ "<div class='vendedor'>Vendedor</div>"
+							+ "<div class='total'>TOTAL</div>"
+							+ "<div class='total'>ABONADO</div>"
+							+ "<div class='total'>ADEUDO</div>"
+							+ "</div>";
+					
+					//renderear el html
+					for( a = 0; a < ventasClienteCredito.getCount(); a++ ){
+						var tipo="";
+						if (ventasClienteCredito.data.items[a].tipo_venta == "2"){
+							tipo="Credito";
+						}else{
+							tipo ="Contado";
+						}   
+						//despues de agarrar el id de la venta sacar los los pagos de esa venta (abonos) con otro ajaxaso y meterlo al html
+						html += "<div class='ApplicationClientes-item' >" 
+						+ "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" +ventasClienteCredito.data.items[a].id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>"	
+							+ "<div class='id'>" + ventasClienteCredito.data.items[a].id_venta +"</div>" 
+							+ "<div class='tipo'>" + tipo +"</div>" 
+							+ "<div class='fecha'>"+ ventasClienteCredito.data.items[a].fecha +"</div>" 
+							+ "<div class='sucursal'>"+ ventasClienteCredito.data.items[a].descripcion +"</div>"
+							+ "<div class='vendedor'>"+ ventasClienteCredito.data.items[a].nombre +"</div>"
+							+ "<div class='subtotal'>$"+ ventasClienteCredito.data.items[a].subtotal +"</div>"
+							+ "<div class='iva'>$"+ ventasClienteCredito.data.items[a].iva +"</div>"
+							+ "<div class='total'>$"+ ventasClienteCredito.data.items[a].total +"</div>"
+							+ "</div>";
+					}
+								
+					//imprimir el html
+					Ext.get("ventasCreditoCliente").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
+					//console.log(ventasCliente.data.items);
+				}
+				if(datos.success == false){
+					//POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS PROBABLEMENTE ESTE CLIENTE 'NO' HA COMPRADO");
+					Ext.get("datosClienteCredito").update( clienteHtml );
+					Ext.get("ventasCreditoCliente").update("<div class='ApplicationClientes-itemsBox'><div class='noVentas' align='center'>ESTE CLIENTE NO TIENE LISTA DE VENTAS</div> </div>");
+				}
+			},
+			function (){//no responde AJAXDECODE DE VENTAS CLIENTE
+				POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS   ERROR EN LA CONEXION :(");      
+			}
+		);//AJAXandDECODE LISTAR VENTAS CLIENTE
+				
+		
+	return listaVentasCredito;
+}
 //autoinstalar esta applicacion
 AppInstaller( new ApplicacionClientes() );
