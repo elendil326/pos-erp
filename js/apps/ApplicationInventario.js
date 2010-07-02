@@ -98,7 +98,8 @@ ApplicationInventario.prototype._init = function()
 	this.inventarioMainPanel = this.homePanel;
 	this.mainCard = this.inventarioMainPanel;
 	this.loadNavigationBar();
-	
+	console.log(this.navToolbar);
+	this.navToolbar.dock = "bottom";
 		
 };
  
@@ -260,9 +261,9 @@ ApplicationInventario.prototype.loadNavigationBar = function(){
 ApplicationInventario.prototype._initToolbar = function(sucursal_name){
 	
 	
-	if (!this.toolBar) {
+	//if (!this.toolBar) {
 		
-		var buttonsArray = [];
+		/*var buttonsArray = [];
 		var panel;
 		POS.AJAXandDECODE({
 			method: 'listarSucursal'
@@ -320,8 +321,9 @@ ApplicationInventario.prototype._initToolbar = function(sucursal_name){
 		
 		
 		}, function(error){ //Failure Ajax
-		});
-	}
+		});*/
+		
+		
 	
 	
 };
@@ -330,7 +332,8 @@ ApplicationInventario.prototype._initToolbar = function(sucursal_name){
 ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucursal_name){
 	
 	//Cargamos la toolbar inferior con las sucursales
-	this._initToolbar(sucursal_name);
+	//this._initToolbar(sucursal_name);
+	this.navToolbar.dock = "top";
 	
 	//Store para la lista de productos del inventario
 	var InvProductsListStore = new Ext.data.Store({
@@ -340,6 +343,49 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
         return record.get('denominacion')[0];
     }
 });
+
+
+	buscar = function( textvalue ) {
+      
+		if ( textvalue == "")
+		{
+			InvProductsListStore.clearFilter();
+		}
+		
+		InvProductsListStore.filter([
+						{
+							property     : 'denominacion',
+							value        : textvalue,
+							anyMatch     : true, //optional, defaults to true
+							caseSensitive: false  //optional, defaults to true*/
+						}
+					]);
+    };
+	
+	
+	this.toolBar = new Ext.Toolbar({
+					dock: 'bottom',
+					animation: 'slide',
+					showAnimation: true,
+					items: [{
+							xtype: 'textfield',
+							emptyText: 'Búsqueda',
+							id:'ApplicationInventario_searchInventario',
+							inputCls: 'caja-buscar',
+							showAnimation: true,
+							listeners:
+									{
+										'render': function( ){
+											//medio feo, pero bueno
+											Ext.get("ApplicationInventario_searchInventario").first().dom.setAttribute("onkeyup", "buscar( this.value )");
+											//Le damos focus al searchbar
+											document.getElementById( Ext.get('ApplicationInventario_searchInventario').first().id ).focus();
+										}
+									}
+							}]
+				});
+	
+	this.inventarioMainPanel.addDocked(this.toolBar);
 
 
 	
@@ -453,10 +499,13 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 //Funcion que carga un panel con los detalles de la sucursal especificada
 ApplicationInventario.prototype.loadDetailPanel = function(sucursal_id){
 	
+	//this.toolBar.hide();
 	//Variable que tendra los datos de la sucursal
 	var data = [];
 	//Panel que trae la form
 	var detailPanel;
+	
+	this.navToolbar.dock = "top";
 	
 	//Ajax para obtener los datos de la sucursal
 	POS.AJAXandDECODE(
@@ -514,9 +563,14 @@ ApplicationInventario.prototype.loadDetailPanel = function(sucursal_id){
 					{//----item 2
 						xtype: 'fieldset',
 						title: 'Mapa',
+						width: 400,
 						items:[new Ext.Panel({
 								    layout: 'fit',
 									height: 300,
+									width: 400,
+									style: {
+										width: '40%'
+									},
 								    items: [ POS.map(data.datos[0].direccion) ]
 								})]
 					}]
@@ -542,12 +596,13 @@ ApplicationInventario.prototype.loadDetailPanel = function(sucursal_id){
 						
 						//Creamos los botones de atras e inventario
 						ApplicationInventario.currentInstance.createBackInvButtons(sucursal_id, data.datos[0].descripcion);
+						//ApplicationInventario.currentInstance.toolBar.show();
 					}
 				});
 				ApplicationInventario.currentInstance.navToolbar.doLayout();
 				
 				//Agregamos la toolbar de abajo para cambiar rapido de sucursal
-				ApplicationInventario.currentInstance._initToolbar(data.datos[0].descripcion);
+				//ApplicationInventario.currentInstance._initToolbar(data.datos[0].descripcion);
 				/*if (!ApplicationInventario.currentInstance.toolBar){
 					alert("no existe");
 					ApplicationInventario.currentInstance._initToolbar();
@@ -601,6 +656,7 @@ ApplicationInventario.prototype.createBackInvButtons = function(sucursal_id, suc
 							ApplicationInventario.currentInstance.toolBar.destroy();
 							ApplicationInventario.currentInstance.toolBar = null;
 							ApplicationInventario.currentInstance.navToolbar.setTitle("");
+							ApplicationInventario.currentInstance.navToolbar.dock = "bottom";
 						}
 				}),{ xtype: 'spacer' },
 					new Ext.Button({

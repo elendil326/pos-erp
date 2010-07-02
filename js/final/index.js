@@ -261,7 +261,25 @@ POS.map = function( address )
 						      position: results[0].geometry.location
 						  });
 						} else {
-						  alert("Geocode was not successful for the following reason: " + status);
+							
+							//alert("Geocode was not successful for the following reason: " + status);
+							var errorMsg = '<div style="font-size: large" align="center" >';
+							switch(status){
+								case 'ERROR': errorMsg += 'Error al intentarse conectar con los servidores de Google';
+										break;
+								case 'INVALID_REQUEST': errorMsg += 'Solicitud de datos errónea'; 
+										break;
+								case 'OVER_QUERY_LIMIT': errorMsg += 'El servidor de mapas está teniendo sobrecarga. Intente más tarde'; break;
+								case 'REQUEST_DENIED': errorMsg += 'La página en donde esta no tiene permiso para cargar el mapa'; break;
+								case 'UNKNOWN_ERROR': errorMsg += 'Hubo un error en el servidor. Intente de nuevo'; break;
+								case 'ZERO_RESULTS': errorMsg += 'No se encontraron resultados'; break;
+								
+								default: errorMsg += 'Hubo un error desconocido en el servidor';
+		
+							}				
+							errorMsg += '</div>';					
+							
+							POS.aviso('Error Mapa', errorMsg);
 						}
 					      });
 				    }
