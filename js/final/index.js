@@ -235,6 +235,42 @@ POS.aviso = function (title, contents)
     this.popup.show('pop');
 };
 
+POS.map = function( address )
+{
+	
+	var mapPanel = new Ext.Panel({
+		layout: 'fit',
+		//html: '<div id="'+this.id+'posMap"></div>',
+		listeners: {
+			afterrender: function(panel){
+
+					var geocoder = new google.maps.Geocoder();
+
+					var posMapOptions = {
+						      zoom: 15,
+						      mapTypeId: google.maps.MapTypeId.ROADMAP
+						    }
+					var map = new google.maps.Map(document.getElementById( Ext.get(panel.id).first().id ), posMapOptions);
+
+					if (geocoder) {
+					      geocoder.geocode( { 'address': address}, function(results, status) {
+						if (status == google.maps.GeocoderStatus.OK) {
+						  map.setCenter(results[0].geometry.location);
+						  var marker = new google.maps.Marker({
+						      map: map, 
+						      position: results[0].geometry.location
+						  });
+						} else {
+						  alert("Geocode was not successful for the following reason: " + status);
+						}
+					      });
+				    }
+				}
+		}
+	});
+	
+	return mapPanel;
+};
 
 
 

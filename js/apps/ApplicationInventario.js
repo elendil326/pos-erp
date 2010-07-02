@@ -510,6 +510,15 @@ ApplicationInventario.prototype.loadDetailPanel = function(sucursal_id){
 							name: 'encargado',
 							label: 'Encargado'
 						}]
+					},
+					{//----item 2
+						xtype: 'fieldset',
+						title: 'Mapa',
+						items:[new Ext.Panel({
+								    layout: 'fit',
+									height: 300,
+								    items: [ POS.map(data.datos[0].direccion) ]
+								})]
 					}]
 					
 				});
