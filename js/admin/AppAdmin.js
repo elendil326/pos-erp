@@ -90,6 +90,7 @@ AppAdmin.prototype.addGraph = function(config){
 	graph.setAttribute("class", 'graph'); //For Most Browsers
 	graph.setAttribute("className", 'graph'); //For IE; harmless to other browsers.
 	
+	//Selector que nos permite acceder al div a renderear con el id pasado
 	var renderToSelector = '#'+config.renderTo;
 
 	//Agregamos div y canvas al div contenedor 
@@ -122,7 +123,7 @@ AppAdmin.prototype.createLogoutMessage = function(){
 	$('#main').append(dialogo);
 	
 	//Creamos boton y asignamos el listener
-	$("#boton-salir").button();
+	//$("#boton-salir").button();
 	$("#boton-salir").click(function(){
 	
 		$('#dialogo').html("Esta seguro que desea abandonar el sistema?");
@@ -142,4 +143,16 @@ AppAdmin.prototype.createLogoutMessage = function(){
 				});
 		
 	});
+}
+
+AppAdmin.prototype.request = function(config){
+/*
+	$.ajax({
+		type: 'POST',
+		url: url,
+		data: data,
+		success: success
+		dataType: dataType
+	});
+*/
 }

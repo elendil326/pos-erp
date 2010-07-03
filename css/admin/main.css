@@ -22,6 +22,7 @@ background-image:url(../shared/icons/fam/folder_go.png);
 	font-size: 20px;
 	text-shadow: white 0px 1px 0px;
 	color: #273437;
+	
 }
 
 #main{
@@ -34,9 +35,29 @@ background-image:url(../shared/icons/fam/folder_go.png);
 
 #menu-top{
 	width:100%;
-	height:40px;
+	height:39px;
 	background-color:#eeeeee;
 	position: relative;
+	background-image:url(media/shared/grayTop.png);
+	background-repeat: repeat-x;
+	padding-top:5px !important;
+}
+
+#footer{
+	width:100%;
+	height:29px;
+	background-color:#eeeeee;
+	position: absolute;
+	background-image:url(media/shared/grayBottom.png);
+	background-repeat: repeat-x;
+	bottom:0px;
+	text-align: center;
+	font-family:QuicksandBook, Helvetica, Arial, sans-serif;
+	font-size: 12px;
+	text-shadow: white 0px 1px 0px;
+	color: #2E2E2E;
+	padding-top:15px;
+
 }
 
 #menu-left{
@@ -44,18 +65,20 @@ background-image:url(../shared/icons/fam/folder_go.png);
 	float:left;
 	height:100%;
 	padding:5px;
+	position:absolute;
+	left:0px;
 }
 
 #main-container{
-
+	position:relative;
 }
 
 #content{
-	float:right;
+	float:left;
 	width:804px;
 	height:100%;
 	padding:10px;
-	overflow: visible;
+	margin-left:200px;
 }
 
 #logout{
@@ -75,3 +98,35 @@ background-image:url(../shared/icons/fam/folder_go.png);
 	padding:5px;
 	float: left;
 }
+
+#top{
+	margin-right:20px;
+	font-family: Helvetica, arial, sans-serif;
+}
+
+#top span
+	{color:#2c3136; text-shadow:#d6dadd 0 1px 0;font-size:17px; position:absolute; display:block;}
+#top a
+	{float:right; height:25px; background:url("media/admin/sprite.gif"); background-position:0 -227px; text-align:center;
+	text-shadow:#D4DBE0 0 1px 0; padding:3px 15px 0 15px; font-weight:bold; color:#3C434A; cursor:pointer; display:block; position:relative;
+	text-decoration:none; }
+#top a .left
+	{background-image:url("media/admin/sprite.gif"); position:absolute; left:-3px; height:27px; width:3px; top:0;
+	background-position:left -142px; }
+#top a .right
+	{background-image:url("media/admin/sprite.gif"); position:absolute; right:-3px; height:27px; width:3px; top:0;
+	background-position:right -142px;}
+
+#top a:hover
+	{background-position:0 -255px;}
+#top a:hover .left
+	{background-position:left -170px;}
+#top a:hover .right
+	{background-position:right -170px;}
+
+#top a:active
+	{background-position:0 -283px;}
+#top a:active .left
+	{background-position:left -198px;}
+#top a:active .right
+	{background-position:right -198px;}
