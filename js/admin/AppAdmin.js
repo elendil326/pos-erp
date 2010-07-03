@@ -7,6 +7,7 @@
 
 AppAdmin = function(){
 
+	AppAdmin.currentInstance = this;
 	return this._init();
 
 }
@@ -18,8 +19,6 @@ AppAdmin.prototype._init = function(){
 
 	this.loadStructure();
 
-
-	
 }
 
 /*
@@ -28,6 +27,91 @@ AppAdmin.prototype._init = function(){
 */
 AppAdmin.prototype.loadStructure = function(){
 
+	//Creamos logout Message
+	this.createLogoutMessage();
+	
+	//Metemos contenido al menu 
+	$("#menu-left").html('<div id="accordion">\
+	    <h3><a href="#">Reportes</a></h3>\
+	    <div >Consulte reportes especificos</div>\
+	    <h3><a href="#">Ver datos</a></h3>\
+	    <div ">Visualice datos completos</div>\
+	    <h3><a href="#">Sucursales</a></h3>\
+	    <div ">Consulte datos de sus sucursales</div>\
+	</div>');
+	
+	//Convertimos a acordion
+	$('#accordion').accordion();
+	
+	 
+}
+
+/*
+	addGraph Funcion para agregar graficas a un div especifico
+---------------------------------------------------------------------------------------------------------------
+	@param config -objeto para cambiar caracteristicas de la grafica, configuracion inicial:
+		-> width -ancho de la grafica
+		-> height - alto de la grafica
+		-> renderTo - un div donde queremos que se renderee la grafica
+		-> divID -el id del div donde se rendereara.. se necesita <div id="algo"><canvas id="nombre"></canvas></div>
+		-> canvasName -nombre del canvas
+		-> tipo - el tipo de grafica [pie|line|bar]
+		-> data - un array con arreglos en el formato [ [x1,y1], [x2,y2]]
+		TODO: configuracion avanzada
+	Uso:
+	Para dibujar una grafica se debe hacer una llamada a la funcion MochiKit.DOM.addLoadEvent() despues de haber creado un objeto AppAdmin
+	
+	Ejemplo:
+	MochiKit.DOM.addLoadEvent(
+		appAdmin.addGraph({
+				width:400, 
+				height:300,
+				renderTo: 'content',
+				divID: 'graph-1',
+				canvasID: 'canvas-1',
+				tipo: 'bar',
+				data: [[0, 0], [1, 1], [2, 1.414], [3, 1.73], [4, 2]]
+				}));
+*/
+AppAdmin.prototype.addGraph = function(config){
+
+	//Creamos el div contenedor y el canvas
+	var d = document;
+	var graph = d.createElement("div"); //div contenedor
+	var canvas = d.createElement("canvas"); //canvas, donde se dibuja la grafica
+	
+	canvas.id = config.canvasID;
+	canvas.width = config.width;
+	canvas.height = config.height;
+	
+	graph.id = config.divID;
+	
+	//Agregamos una clase de CSS al div que contiene la grafica
+	graph.setAttribute("class", 'graph'); //For Most Browsers
+	graph.setAttribute("className", 'graph'); //For IE; harmless to other browsers.
+	
+	var renderToSelector = '#'+config.renderTo;
+
+	//Agregamos div y canvas al div contenedor 
+	$(renderToSelector).append(graph);
+	graph.appendChild(canvas);
+	
+	
+	
+
+	var layout = new PlotKit.Layout(config.tipo, {});
+	layout.addDataset("sqrt", config.data);
+	layout.evaluate();
+	var canvas = MochiKit.DOM.getElement(config.canvasID);
+	var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, {});
+	plotter.render();
+
+   
+
+}
+
+AppAdmin.prototype.createLogoutMessage = function(){
+	
 	//Creo un div para usarse como dialogo, este se reciclara
 	var d = document;
 	var dialogo = d.createElement("div");
@@ -58,29 +142,4 @@ AppAdmin.prototype.loadStructure = function(){
 				});
 		
 	});
-	
-	//Metemos contenido al menu 
-	$("#menu-left").html('<div id="accordion">\
-	    <h3><a href="#">Reportes</a></h3>\
-	    <div >Consulte reportes especificos</div>\
-	    <h3><a href="#">Ver datos</a></h3>\
-	    <div ">Visualice datos completos</div>\
-	    <h3><a href="#">Sucursales</a></h3>\
-	    <div ">Consulte datos de sus sucursales</div>\
-	</div>');
-	
-	//Convertimos a acordion
-	$('#accordion').accordion();
 }
-
-
-
-
-
-
-
-
-
-
-
-
