@@ -54,6 +54,9 @@ ApplicationPagos.fechaFin = new Date();
 //tipo de busqueda, 1=adeudan, 2=pagados, 3=todos
 ApplicationPagos.tipo = 1;
 
+ApplicationPagos.prototype.id = null;
+ApplicationPagos.prototype.debe = null;
+
 //constructor.
 ApplicationPagos.prototype._init = function()
 {
@@ -359,7 +362,7 @@ var metodo=(tipo==1)?'reporteClientesComprasCreditoDeben':((tipo==2)?'reporteCli
 //funcion_ajax_ventas_credito
 
 //ajaxAndDecode para los pagos de la venta
-ApplicationPagos.funcion_ajax_pagos = function(id,debe){
+ApplicationPagos.prototype.funcion_ajax_pagos = function(){
 
 	//registramos el modelo de los pagos de la venta
 	Ext.regModel('modeloPagos', {
@@ -379,7 +382,7 @@ ApplicationPagos.funcion_ajax_pagos = function(id,debe){
 	POS.AJAXandDECODE({
 		method: 'listarPagosVentaDeVenta',
 		//mandamos el id de la venta para la que buscamos los datos
-		id_venta:id
+		id_venta:ApplicationPagos.currentInstance.id
 		},
 		//peticion correcta
 		function (datos){
@@ -393,7 +396,7 @@ ApplicationPagos.funcion_ajax_pagos = function(id,debe){
 				if(datos.reason!==undefined){		POS.aviso("error",datos.reason);	}
 			}
 			//llamamos a la ventana que nos muestra los pagos, le enviamos el store para que aparezca hasta que este tenga datos
-			ApplicationPagos.muestraPagos(id,debe,storePagos);
+			ApplicationPagos.currentInstance.muestraPagos(storePagos);
 		},
 		function (){//no responde
 			POS.aviso("ERROR",":(");
@@ -406,26 +409,49 @@ ApplicationPagos.funcion_ajax_pagos = function(id,debe){
 //						Formularios dinamicos eventos
 //----------------------------------------------------------------------------------
 
-//formulario para pagar la venta a credito
-ApplicationPagos.prototype.PagarVenta=function(id,debe){	
-		//el numberfield en el que pondremos la cantidad a abonar
-		var montoPago=new  Ext.form.NumberField({
-                        name: 'monto',
-                        label: 'Cantidad',
-						id: 'montoPago'
-                    });
-		//formulario en el que va el numberfield
-		formPagaBase =  {
-            scroll: 'vertical',
-            items: [
-                {
-                    xtype: 'fieldset',
-                    title: 'Pagar venta '+id+" adeuda: "+debe,
-					//agregamos el boton al formulario
-                    items: [montoPago]
-                }
-            ],
-			//agregamos el toolbar de la ventana, cerrar y pagar
+//formulario para mostrar los pagos de ventas a credito
+ApplicationPagos.prototype.muestraPagos=function(store){	
+		ApplicationPagos.currentInstance.formBase = {
+			//	items
+			items: [
+				{
+					scroll: 'vertical',
+					id:'formPago',
+					items: [
+						{
+							xtype: 'fieldset',
+							title: 'Pagar venta '+ApplicationPagos.currentInstance.id+" adeuda: "+ApplicationPagos.currentInstance.debe,
+							//agregamos el boton al formulario
+							items: [
+								{
+									xtype:'numberfield',
+									name: 'monto',
+									label: 'Cantidad',
+									id: 'montoPago'
+								}							
+							]
+						}
+					]
+				}
+				,
+				{
+                    xtype: 'toolbar',
+                    dock: 'bottom',
+					title: "<pre>No. PAGO		FECHA		MONTO</pre>"
+				},
+				{
+		        width: "100%",
+				height:"70%",
+				id: 'ListaPagos',
+		        xtype: 'list',
+		        store: store,
+		        tpl: '<tpl for="."><div class="pagos"><pre>	   {id_pago}		  {fecha}		   ${monto}		</pre></div></tpl>',
+		        itemSelector: 'div.pagos',
+		        singleSelect: true,
+		        indexBar: true
+		    }
+			]//items
+			,
 			dockedItems: [{
                     xtype: 'toolbar',
                     dock: 'bottom',
@@ -434,24 +460,42 @@ ApplicationPagos.prototype.PagarVenta=function(id,debe){
 						text: 'Cerrar',
 						handler: function() {
 							//ocultar esta tabla
-							formPago.hide();	
-							formPago.destroy();	
+							ApplicationPagos.currentInstance.form.hide();	
+							ApplicationPagos.currentInstance.form.destroy();
+							ApplicationPagos.currentInstance.formBase.destroy();		
+							//destruir la lista
+							if( Ext.getCmp('ListaPagos') ){
+									Ext.getCmp('ListaPagos').store = null;
+									Ext.getCmp('ListaPagos').destroy();
+								}
                             }
 					},{
 						xtype:'button',
-						text: 'Guardar',
-						handler: function() {	
-							//patron para verificar si es un valor valido
+						text: 'Pagar',
+						id:'btnPagarVenta',
+						listeners: {
+							added : function(){
+								if(ApplicationPagos.currentInstance.debe<=0)
+								{
+									Ext.getCmp('formPago').hide();
+									this.hide();
+								}
+							}//fin before
+						},
+						handler: function() 
+						{	
+						
 							var patron=/^\d*.\d{0,2}$/;
+							var cantidad=Ext.getCmp('montoPago').getValue();
 							//verificamos que la cantidad sea valida
-							if (patron.test(montoPago.getValue())){
+							if (patron.test(cantidad)){
 							//cantidad valida
 								//ajax and decode que guarda el pago
 								POS.AJAXandDECODE({
 									//mandamos el id de la venta y la cantidad
 									method: 'insertarPagoVenta',
-									id_venta: id,
-									monto: montoPago.getValue()
+									id_venta: ApplicationPagos.currentInstance.id,
+									monto: cantidad
 									},
 									function (datos){
 									//peticion exitosa
@@ -481,109 +525,31 @@ ApplicationPagos.prototype.PagarVenta=function(id,debe){
 										POS.aviso("ERROR","Error al guardar los datos");
 									}
 								);	//ajaxAndDecode
-								formPago.hide();	
-								formPago.destroy();
+								ApplicationPagos.currentInstance.form.hide();	
+								ApplicationPagos.currentInstance.form.destroy();	
+								ApplicationPagos.currentInstance.formBase.destroy();	
+								//destruir la lista
+								if( Ext.getCmp('ListaPagos') ){
+										Ext.getCmp('ListaPagos').store = null;
+										Ext.getCmp('ListaPagos').destroy();
+									}
 							}
 							else 
 							{
 								//cantidad invalida
 								POS.aviso("ERROR","No inserto una cantidad valida");
+								
 							}
+														
 						}//handler boton pagar
-					}]//items del toolbar
-                }//toolbar
-            ]//items dockedItems
-		};//fromulario
-		
-		//definimos como se va a mostrar elformulario
-        if (Ext.platform.isPhone) {
-            formPagaBase.fullscreen = true;
-        } else {
-            Ext.apply(formPagaBase, {
-                autoRender: true,
-                floating: true,
-                modal: true,
-                centered: true,
-                hideOnMaskTap: false,
-                height: 150,
-                width: 400
-            });
-        }
-		//asignamos el formulario anterior a al formpago
-        var formPago = new Ext.form.FormPanel(formPagaBase);
-		
-		//mostramos el formulario
-        formPago.show();
-};//PagarVenta
-
-
-
-//formulario para mostrar los pagos de ventas a credito
-ApplicationPagos.muestraPagos=function(id,debe,store){	
-							
-		var formBase = {
-			//	items
-            items: [
-				{
-                    xtype: 'toolbar',
-                    dock: 'bottom',
-					title: "<pre>No. PAGO		FECHA		MONTO</pre>"
-				},
-				{
-		        width: "90%",
-		        height: "90%",
-				id: 'ListaPagos',
-		        xtype: 'list',
-		        store: store,
-		        tpl: '<tpl for="."><div class="pagos"><pre>	   {id_pago}		  {fecha}		   ${monto}		</pre></div></tpl>',
-		        itemSelector: 'div.pagos',
-		        singleSelect: true,
-		        indexBar: true
-		    }]//items
-			,
-			dockedItems: [{
-                    xtype: 'toolbar',
-                    dock: 'bottom',
-					scroll:'horizontal',
-                    items: [{
-						text: 'Cerrar',
-						handler: function() {
-							//ocultar esta tabla
-							form.hide();	
-							//destruir la lista
-							if( Ext.getCmp('ListaPagos') ){
-									Ext.getCmp('ListaPagos').store = null;
-									Ext.getCmp('ListaPagos').destroy();
-								}
-                            }
-					},{
-						xtype:'button',
-						text: 'Pagar',
-						id:'btnPagarVenta',
-						listeners: {
-							added : function(){
-								if(debe<=0){this.hide();}
-							}//fin before
-						},
-						handler: function() {	
-							//ocultar esta tabla
-							form.hide();	
-							//destruir la lista
-							if( Ext.getCmp('ListaPagos') ){
-									Ext.getCmp('ListaPagos').store = null;
-									Ext.getCmp('ListaPagos').destroy();
-								}
-								//llama formulario para pagar
-								ApplicationPagos.currentInstance.PagarVenta(id,debe);
-                            }//handler boton pagar
 					}//boton pagar
 					]//items toolbar
                 }]//docked
 		};//fromulario
         if (Ext.platform.isPhone) {
-            formBase.fullscreen = true;
+            ApplicationPagos.currentInstance.formBase.fullscreen = true;
         } else {
-            Ext.apply(formBase, {
+            Ext.apply(ApplicationPagos.currentInstance.formBase, {
                 autoRender: true,
                 floating: true,
                 modal: true,
@@ -593,8 +559,8 @@ ApplicationPagos.muestraPagos=function(id,debe,store){
                 width: 500
             });
         }
-        var form = new Ext.Panel(formBase);
-        form.show();
+        ApplicationPagos.currentInstance.form = new Ext.Panel(ApplicationPagos.currentInstance.formBase);
+        ApplicationPagos.currentInstance.form.show();
 };//muestraPagos
 
 
@@ -640,10 +606,10 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
 				listeners: {
 					selectionchange:function(){
 						try{
-							var id=this.getSelectedRecords()[0].id_venta;
-							var debe=this.getSelectedRecords()[0].debe;
+							ApplicationPagos.currentInstance.id=this.getSelectedRecords()[0].id_venta;
+							ApplicationPagos.currentInstance.debe=this.getSelectedRecords()[0].debe;
 							if (this.getSelectionCount() == 1){
-								ApplicationPagos.funcion_ajax_pagos(id,debe);
+								ApplicationPagos.currentInstance.funcion_ajax_pagos();
 							}
 						}catch(e){ 
 							//EN CASO DE ERROR AGREGAR CODIGO
