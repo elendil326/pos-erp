@@ -97,7 +97,7 @@ FROM  `cliente` INNER JOIN  `cuenta_cliente` ON cliente.id_cliente = cuenta_clie
 		$query="SELECT v.id_venta, (
 				v.subtotal + v.iva
 				) AS  'Total', IF(SUM( pv.monto )>0,SUM(pv.monto),0) AS  'Pagado',
-				if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),(v.subtotal + v.iva)
+				if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),0
 				) AS  'Debe', c.nombre AS  'Nombre', DATE( v.fecha ) AS  'Fecha'
 				FROM  `pagos_venta` pv
 				RIGHT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
@@ -129,7 +129,7 @@ FROM  `cliente` INNER JOIN  `cuenta_cliente` ON cliente.id_cliente = cuenta_clie
 		$query="SELECT v.id_venta, (
 				v.subtotal + v.iva
 				) AS  'Total', IF(SUM( pv.monto )>0,SUM(pv.monto),0) AS  'Pagado',
-				if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),(v.subtotal + v.iva)
+				if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),0
 				) AS  'Debe', c.nombre AS  'Nombre', DATE( v.fecha ) AS  'Fecha'
 				FROM  `pagos_venta` pv
 				RIGHT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
@@ -161,8 +161,8 @@ FROM  `cliente` INNER JOIN  `cuenta_cliente` ON cliente.id_cliente = cuenta_clie
 		$query="SELECT v.id_venta, (
 				v.subtotal + v.iva
 				) AS  'Total', IF(SUM( pv.monto )>0,SUM(pv.monto),0) AS  'Pagado', 
-				if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),(v.subtotal + v.iva)
-				) AS  'Debe', c.nombre AS  'Nombre', DATE( v.fecha ) AS  'Fecha'
+				if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),0) AS  'Debe',
+				c.nombre AS  'Nombre', DATE( v.fecha ) AS  'Fecha'
 				FROM  `pagos_venta` pv
 				RIGHT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
 				NATURAL JOIN cliente c
