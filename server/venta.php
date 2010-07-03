@@ -60,6 +60,15 @@
 			$this->sucursal=$datos['sucursal'];	 	 	 		
 			$this->id_usuario=$datos['id_usuario'];	 		
 		}
+		
+		function detalle_venta($id){
+			$query = "SELECT id_venta ,inventario.denominacion,cantidad,precio,(cantidad * precio) as subtotal 
+FROM `detalle_venta` inner join `inventario` on detalle_venta.id_producto = inventario.id_producto
+where id_venta=?;";
+			$params=array($id);
+			return 	$productos=$this->bd->select_arr($query,$params);
+		}
+		
 		function existe(){
 			$query="select id_venta from ventas where id_venta=?;";
 			$params=array($this->id_venta);

@@ -68,7 +68,7 @@
 					array_push($arr,$algo);
 					$res->MoveNext();
 				}
-				//print_r($arr);
+				
 				return $arr;
 			}
 		}
@@ -97,8 +97,9 @@
 		function ejecuta_sanitizada($query,$params){
 			$this->sanitize($params);
 			try{
-				//echo $query." -> ".print_r($params);
+			
 				return $rs=$this->con->Execute($query,$params);
+				
 			}catch(Exception $e){
 				//echo "ENTRO AKA!!";
 				return json_encode("error no actualiza ".$e->message);

@@ -20,6 +20,22 @@
 				return " { success : false }";
 			}
 		}
+		function Resultadoconsulta(){
+			$result=$this->bd->select_arr($this->query,$this->params);
+			if(count($result)>0){
+				/*echo "<br>NUMERO DE TUPLAS: ".count($result);
+				echo "<br>desde Resultadoconsulta regreso: ".$result[0]["abonado"]."     ";
+				echo "<br>   query:  ".$this->query;*/
+				return $result;
+			}else{
+				/*if($result== null) echo "<br>************** nulo desde else";
+				echo "<br>NUMERO DE TUPLAS: ".count($result);
+				echo "<br>entre a no es mayor a 0 result: ".$result;
+				echo " <br>  query:  ".$this->query;
+				*/
+				return 0;
+			}
+		}
 		function lista_datos($nombre){
 			$result=$this->bd->select_arr($this->query,$this->params);
 				return "$nombre : ". json_encode($result);

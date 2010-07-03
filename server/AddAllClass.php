@@ -32,6 +32,7 @@
 
 	include_once('pos/funcionesCliente.php');
 	include_once('pos/funcionesCompra.php');
+	include_once('pos/funcionesVentas.php');
 	include_once('pos/funcionesCotizacion.php');
 	include_once('pos/funcionesProveedor.php');
 	
@@ -59,7 +60,7 @@
 		case "insertarFacturaCompra" : 					insertarFacturaCompra(); break;
 		case "agregarProductoDetalle_compra" : 			agregarProductoDetalle_compra(); break;
 		case "eliminarProductoDetalle_compra" : 		eliminarProductoDetalle_compra(); break;
-		case "actualizarCantidadProductoDetCot" : 		actualizarCantidadProductoDetCot(); break;
+		case "actualizarCantidadProductoDetCompra" : 	actualizarCantidadProductoDetCompra(); break;
 		case "actualizaCabeceraCompra" : 				actualizaCabeceraCompra(); break;
 		case "mostrarDetalleCompra" : 					mostrarDetalleCompra(); break;
 		case "eliminarFacturaCompra" : 					eliminarFacturaCompra(); break;
@@ -70,7 +71,7 @@
 		case "insertarCompra" : 						insertarCompra(); break;
 		case "eliminarCompra" : 						eliminarCompra(); break;
 		case "reporteCompra" : 							reporteCompra(); break;
-		case "reporteFactura" : 						reporteFactura(); break;
+		case "reporteFacturaCompra" : 					reporteFacturaCompra(); break;
 		
 		
 		//-----funciones Usuario
@@ -90,9 +91,20 @@
 		case "insertarNota" : 					insertarNota(); break;
 		case "eliminarNota" : 					eliminarNota(); break;
 		case "actualizarNota" : 				actualizarNota(); break;
-		case "vendeProducto" : 					vendeProducto(); break;
+		case "venderProducto" : 				venderProducto(); break;
 		case "listarFacturasVenta" : 			listarFacturasVenta(); break;
 		case "listarNotas" : 					listarNotas(); break;
+		
+		case "agregarProductoDetalle_venta":	agregarProductoDetalle_venta(); break;
+		case "eliminarProductoDetalle_venta":	eliminarProductoDetalle_venta(); break;
+		case "actualizarCantidadProductoDetVenta": actualizarCantidadProductoDetVenta(); break;
+		case "listarVentas":					listarVentas(); break;
+		case "listarVentasCliente":				listarVentasCliente(); break;
+		case "mostrarDetalleVenta":				mostrarDetalleVenta(); break;
+		case "insertarVenta":					insertarVenta(); break;
+		case "eliminarVenta":					eliminarVenta(); break;
+		case "listarVentasCreditoCliente":		listarVentasCreditoCliente(); break;
+		case "abonosVentaCredito":				abonosVentaCredito(); break;
 		
 		//----- funciones sucursal
 		

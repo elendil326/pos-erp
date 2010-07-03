@@ -877,7 +877,7 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
 }
 /*------------------------------------------------------------
 	CREDITOS CLIENTE
-*/
+--------------------------------------------------------------*/
 
 ApplicacionClientes.prototype.mostrarVentasCreditoCliente = function(){ 
 	//console.log("a entrar a listar ventas");
@@ -926,6 +926,7 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
 	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> Limite de Credito: $ " + record_cliente[0].limite_credito + "</div>";
 	clienteHtml += " <div class='nombre'> SALDO: $ " + record_cliente[0].saldo + "</div>";
 	clienteHtml += " </div> ";
+	var html = "";
 	
 		POS.AJAXandDECODE({
 			method: 'listarVentasCreditoCliente',
@@ -936,7 +937,7 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
 					ventasClienteCredito.loadData(datos.datos);
 					
 					Ext.get("datosClienteCredito").update( clienteHtml );
-					var html = "";
+					
 					html += "<div class='ApplicationClientes-item' >"
 							+ "<div class='trash' ></div>"
 							+ "<div class='id'>No. Venta</div>" 
@@ -946,30 +947,41 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
 							+ "<div class='total'>TOTAL</div>"
 							+ "<div class='total'>ABONADO</div>"
 							+ "<div class='total'>ADEUDO</div>"
+							+ "<div class='subtotal'>VER ABONOS</div>"
+							+ "<div class='total'>STATUS</div>"
 							+ "</div>";
 					
 					//renderear el html
 					for( a = 0; a < ventasClienteCredito.getCount(); a++ ){
-						var tipo="";
-						if (ventasClienteCredito.data.items[a].tipo_venta == "2"){
-							tipo="Credito";
+						var ven = ventasClienteCredito.data.items[a];
+						var tot = parseFloat(ven.data.subtotal) + parseFloat(ven.data.iva);
+						var adeudo = tot - ven.data.abonado;
+						//console.log("-------------------- en la venta: "+ven.data.id_venta+" abonado: "+ven.data.abonado);
+						var status="";
+						if (adeudo <= 0){
+							status="<div class='pagado'>PAGADO</div>";
 						}else{
-							tipo ="Contado";
-						}   
-						//despues de agarrar el id de la venta sacar los los pagos de esa venta (abonos) con otro ajaxaso y meterlo al html
-						html += "<div class='ApplicationClientes-item' >" 
-						+ "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" +ventasClienteCredito.data.items[a].id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>"	
-							+ "<div class='id'>" + ventasClienteCredito.data.items[a].id_venta +"</div>" 
-							+ "<div class='tipo'>" + tipo +"</div>" 
-							+ "<div class='fecha'>"+ ventasClienteCredito.data.items[a].fecha +"</div>" 
-							+ "<div class='sucursal'>"+ ventasClienteCredito.data.items[a].descripcion +"</div>"
-							+ "<div class='vendedor'>"+ ventasClienteCredito.data.items[a].nombre +"</div>"
-							+ "<div class='subtotal'>$"+ ventasClienteCredito.data.items[a].subtotal +"</div>"
-							+ "<div class='iva'>$"+ ventasClienteCredito.data.items[a].iva +"</div>"
-							+ "<div class='total'>$"+ ventasClienteCredito.data.items[a].total +"</div>"
-							+ "</div>";
-					}
-								
+							//console.log(record_cliente[0].data.nombre);
+							//var x = record_cliente[0].data.nombre;
+							//console.log(ven.data.id_venta +" "+ x +"	"+tot+"	"+adeudo);
+							status ="<div class='abonar' onclick='ApplicacionClientes.currentInstance.abonarVenta(" + ven.data.id_venta + " , "+ tot +" , "+ adeudo +")'>ABONAR</div>";
+						}
+						html+= "<div class='ApplicationClientes-item' >" 
+						+ "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" + ven.data.id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>"	
+						+ "<div class='id'>" + ven.data.id_venta +"</div>" 
+						+ "<div class='fecha'>"+ ven.data.fecha +"</div>" 
+						+ "<div class='sucursal'>"+ ven.data.descripcion +"</div>"
+						+ "<div class='vendedor'>"+ ven.data.nombre +"</div>"
+						+ "<div class='total'>$"+ tot +"</div>"
+						+ "<div class='total'>$"+ ven.data.abonado +"</div>"
+						+ "<div class='total'>$"+ adeudo +"</div>"
+						+ "<div class='subtotal' onclick='ApplicacionClientes.currentInstance.verPagosVenta(" + ven.data.id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/compose.png'></div>"
+						+ status
+						+ "</div>";
+														
+						
+					}//fin for ventasClienteCredito
+		
 					//imprimir el html
 					Ext.get("ventasCreditoCliente").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
 					//console.log(ventasCliente.data.items);
@@ -977,7 +989,7 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
 				if(datos.success == false){
 					//POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS PROBABLEMENTE ESTE CLIENTE 'NO' HA COMPRADO");
 					Ext.get("datosClienteCredito").update( clienteHtml );
-					Ext.get("ventasCreditoCliente").update("<div class='ApplicationClientes-itemsBox'><div class='noVentas' align='center'>ESTE CLIENTE NO TIENE LISTA DE VENTAS</div> </div>");
+					Ext.get("ventasCreditoCliente").update("<div class='ApplicationClientes-itemsBox'><div class='noVentas' align='center'>ESTE CLIENTE NO TIENE LISTA DE VENTAS A CREDITO</div> </div>");
 				}
 			},
 			function (){//no responde AJAXDECODE DE VENTAS CLIENTE
@@ -988,5 +1000,275 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
 		
 	return listaVentasCredito;
 }
+
+
+ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
+
+	 var formBase = new Ext.Panel({
+		id: 'pagosVentaPanel',
+		 scroll: 'vertical',
+			//	items
+            items: [{
+				id: 'pagosVentaCliente',
+		        html: ''
+		    }], 
+			//	dock		
+            dockedItems: [{
+                    xtype: 'toolbar',
+                    dock: 'bottom',
+                    items: [{
+						xtype: 'spacer'
+						},{
+						//-------------------------------------------------------------------------------
+						//			cancelar
+						//-------------------------------------------------------------------------------
+						text: 'X Cerrar',
+						handler: function() {
+							//regresar el boton de cliente comun a 1
+							Ext.getCmp("pagosVentaPanel").destroy();
+							 Ext.getBody().unmask();
+							//ocultar este form
+							//form.hide();							
+                            }
+						}]
+					}]
+			});
+	
+       
+	   if (Ext.platform.isAndroidOS) {
+            formBase.items.unshift({
+                xtype: 'component',
+                styleHtmlContent: true,
+                html: '<span style="color: red">Forms on Android are currently under development. We are working hard to improve this in upcoming releases.</span>'
+            });
+        }
+
+	if (Ext.platform.isPhone) {
+            formBase.fullscreen = true;
+        } else {
+            Ext.apply(formBase, {
+                autoRender: true,
+                floating: true,
+                modal: true,
+                centered: true,
+                hideOnMaskTap: false,
+                height: 585,
+                width: 680
+            });
+        }
+        
+		Ext.regModel('ventasDetalleStore', {
+    	fields: ['nombre', 'rfc']
+		});
+
+		var ventasDetalle= new Ext.data.Store({
+    	model: 'ventasDetalleStore'
+    	
+		});	
+		
+		POS.AJAXandDECODE({
+			method: 'abonosVentaCredito',
+			id_venta: idVenta
+			},
+			function (datos){//mientras responda AJAXDECODE MOSTRAR CLIENTE
+				if(datos.success == true){
+					
+					ventasDetalle.loadData(datos.datos);
+					
+					var html = "";
+					html += "<div class='ApplicationClientes-item' >" 
+					+ "<div class='vendedor'>NUMERO DE VENTA</div>" 
+					+ "<div class='sucursal'>FECHA</div>" 
+					+ "<div class='subtotal'>MONTO</div>" 
+					+ "</div>";
+								
+					for( a = 0; a < ventasDetalle.getCount(); a++ ){
+											
+						html += "<div class='ApplicationClientes-item' >" 
+						+ "<div class='vendedor'>" + ventasDetalle.data.items[a].id_venta +"</div>" 
+						+ "<div class='sucursal'>"+ ventasDetalle.data.items[a].fecha +"</div>" 
+						+ "<div class='subtotal'>$ "+ ventasDetalle.data.items[a].monto+"</div>"
+						+ "</div>";
+					}
+								
+								//imprimir el html
+					Ext.get("pagosVentaCliente").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
+						
+				}//FIN DATOS.SUCCES TRUE MOSTRAR CLIENTE
+				if(datos.success == false){
+					POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE PAGOS ESTE CLIENTE NO HA ABONADO A ESTA VENTA (No. VENTA: "+idVenta+")");
+					return;
+				}
+				},
+			function (){//no responde  AJAXDECODE MOSTRAR CLIENTE     
+				POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE PAGOS ERROR EN LA CONEXION :("); 
+				return;
+			}
+		);//AJAXandDECODE MOSTRAR CLIENTE						
+	
+	formBase.show();
+	
+}
+/*------------------------------------------------------------
+	ABONAR A UNA VENTA QUE EL CLIENTE ADEUDA
+--------------------------------------------------------------*/
+
+ApplicacionClientes.prototype.abonarVenta = function( idVenta , total , adeudo ){
+	
+	var clienteHtml = "<div class='ApplicationClientes-itemsBox'>";
+		clienteHtml += " <div class='ApplicationClientes-clienteBox'> ";
+		clienteHtml += " <div class='nombre'>Abono de " + ApplicacionClientes.currentInstance.clienteSeleccionado[0].nombre + " para la venta '"+idVenta+"'</div>";
+		clienteHtml += " <div class='nombre'> Total de Venta: " + total + "</div>";
+		clienteHtml += " <div class='nombre'> Adeuda: " + adeudo + "</div>";
+		clienteHtml += " </div> </div><br>";
+		
+		
+	 var abonaPanel = new Ext.form.FormPanel({
+		 id: 'abonarVentaPanel',
+		 scroll: 'vertical',
+		 //html: clienteHtml,
+			//	items
+            items: [{
+					id: 'abonarVentaCliente',
+					html: clienteHtml
+		 			},{                                                       
+                        		xtype: 'fieldset',
+                                title: 'Detalles del Pago',
+								instructions: 'Inserte unicamente numeros no letras',
+                                items: [
+										monto = new Ext.form.TextField({
+                                			id: 'monto',
+											label: 'Abona $',
+											listeners:{
+												change: function(){
+													if(this.getValue() > adeudo){
+														this.setValue(adeudo);	
+														Ext.getCmp("restaria").setValue(adeudo - this.getValue());
+													}else{
+														Ext.getCmp("restaria").setValue(adeudo - this.getValue());
+													}
+												},
+												blur: function(){
+													if(this.getValue() > adeudo){
+														this.setValue(adeudo);	
+														Ext.getCmp("restaria").setValue(adeudo - this.getValue());
+													}else{
+														Ext.getCmp("restaria").setValue(adeudo - this.getValue());
+													}
+												}
+											}
+                                        }),
+										paga = new Ext.form.TextField({
+											id: 'paga',
+											label: 'Efectivo $',
+											listeners:{
+												change: function(){
+													if(Ext.getCmp("paga").getValue() < Ext.getCmp("monto").getValue()){
+														this.setValue(Ext.getCmp("monto").getValue());
+														Ext.getCmp("cambio").setValue(this.getValue() - monto.getValue());
+														Ext.getCmp("restaria").setValue(adeudo - monto.getValue());
+													}
+													if(Ext.getCmp("paga").getValue >= Ext.getCmp("monto").getValue()){
+														Ext.getCmp("cambio").setValue(Ext.getCmp("paga").getValue() - monto.getValue());	
+														Ext.getCmp("restaria").setValue(adeudo - monto.getValue());
+													}
+												},
+												blur: function(){
+													if(Ext.getCmp("paga").getValue() < Ext.getCmp("monto").getValue()){
+														Ext.getCmp("paga").setValue(Ext.getCmp("monto").getValue());
+														Ext.getCmp("cambio").setValue(this.getValue() - monto.getValue());
+														Ext.getCmp("restaria").setValue(adeudo - monto.getValue());
+													}
+													if(Ext.getCmp("paga").getValue >= Ext.getCmp("monto").getValue()){
+														Ext.getCmp("cambio").setValue(Ext.getCmp("paga").getValue() - monto.getValue());	
+														Ext.getCmp("restaria").setValue(adeudo - monto.getValue());
+													}
+												}
+											}
+										}),
+										cambio = new Ext.form.TextField({
+											id: 'cambio',
+											label: 'Cambio $',
+											disabled: true
+										}),
+										restaria = new Ext.form.TextField({
+											id: 'restaria',
+											label: 'Restaria $',
+											disabled: true
+										})
+										]
+						}
+				], 
+			//	dock		
+            dockedItems: [{
+                    xtype: 'toolbar',
+                    dock: 'bottom',
+                    items: [{text: 'Abonar',
+							ui: 'action'
+							},
+							{
+							xtype: 'spacer'
+							},{
+						//-------------------------------------------------------------------------------
+						//			cancelar
+						//-------------------------------------------------------------------------------
+						text: 'X Cancelar',
+						handler: function() {
+							//regresar el boton de cliente comun a 1
+							Ext.getCmp("abonarVentaPanel").destroy();
+							 Ext.getBody().unmask();
+							//ocultar este form
+							//form.hide();							
+                            }
+						}]
+					}]
+			});
+	
+       
+	   if (Ext.platform.isAndroidOS) {
+            abonaPanel.items.unshift({
+                xtype: 'component',
+                styleHtmlContent: true,
+                html: '<span style="color: red">Forms on Android are currently under development. We are working hard to improve this in upcoming releases.</span>'
+            });
+        }
+
+	if (Ext.platform.isPhone) {
+            abonaPanel.fullscreen = true;
+        } else {
+            Ext.apply(abonaPanel, {
+                autoRender: true,
+                floating: true,
+                modal: true,
+                centered: true,
+                hideOnMaskTap: false,
+                height: 585,
+                width: 680
+            });
+        }
+        
+		
+		
+
+		
+								
+					/*for( a = 0; a < ventasDetalle.getCount(); a++ ){
+											
+						html += "<div class='ApplicationClientes-item' >" 
+						+ "<div class='vendedor'>" + ventasDetalle.data.items[a].id_venta +"</div>" 
+						+ "<div class='sucursal'>"+ ventasDetalle.data.items[a].fecha +"</div>" 
+						+ "<div class='subtotal'>$ "+ ventasDetalle.data.items[a].monto+"</div>"
+						+ "</div>";
+					}*/
+								
+								//imprimir el html
+		//Ext.get("abonarVentaCliente").update("<div class='ApplicationClientes-itemsBox'>" + clienteHtml +"</div>");
+						
+				
+	abonaPanel.show();
+	
+}
+
+
 //autoinstalar esta applicacion
 AppInstaller( new ApplicacionClientes() );

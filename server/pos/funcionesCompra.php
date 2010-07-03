@@ -75,7 +75,7 @@
 		}
 	}
 	
-	function actualizarCantidadProductoDetCot(){
+	function actualizarCantidadProductoDetCompra(){
 		$id_compra=$_REQUEST['id_compra'];
 		$id_producto=$_REQUEST['id_producto'];
 		$cantidad=$_REQUEST['cantidad'];
@@ -146,7 +146,7 @@
 		$id_usuario=$_REQUEST['id_usuario'];
 		$compra = new compra($id_proveedor,$tipo_compra,$sucursal,$id_usuario);
 				
-		if($cotizacion->inserta()){
+		if($compra->inserta()){
 			echo "{success: true}";
 		}else{
 			echo "{success: false}";
@@ -244,7 +244,7 @@
 			return;
 		}else 											fail("Faltan datos.");
 	}
-	function reporteFactura(){
+	function reporteFacturaCompra(){
 		if(!empty($_REQUEST['id_factura'])){
 			$id=$_REQUEST['id_factura'];
 			$query="SELECT f.folio, IF( c.tipo_compra =1,  'Contado',  'Credito' ) AS  'Tipo', c.subtotal AS  'Subtotal', c.iva AS  'Iva', (
