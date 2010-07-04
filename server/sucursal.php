@@ -18,8 +18,7 @@
 			$insert="INSERT INTO  sucursal values(NULL,?,?);";
 			$params=array($this->descripcion,$this->direccion);
 			if($this->bd->ejecuta($insert,$params)){
-				$query="select max(id_sucursal) from sucursal;";
-				$this->id_sucursal=$this->bd->select_un_campo($query,array());
+				$this->id_sucursal=$this->bd->con->Insert_ID();
 				return true;
 			}else return;
 		}

@@ -18,8 +18,7 @@
 			$insert="INSERT INTO impuesto values(null,?,?);";
 			$params=array($this->descripcion,$this->valor);
 			if($this->bd->ejecuta($insert,$params)){
-				$query="select max(id_impuesto) from impuesto;";
-				$this->id_impuesto=$this->bd->select_un_campo($query,array());
+				$this->id_impuesto=$this->bd->con->Insert_ID();
 				return true;
 			}else return false;
 		}

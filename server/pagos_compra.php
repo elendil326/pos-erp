@@ -19,8 +19,7 @@
 			$insert="INSERT INTO  pagos_compra values(NULL,?,CURDATE( ),?);";
 			$params=array($this->id_compra,$this->monto);
 			if($this->bd->ejecuta($insert,$params)){
-				$query="select max(id_pago) from pagos_compra;";
-				$this->id_pago=$this->bd->select_un_campo($query,array());
+				$this->id_pago=$this->bd->con->Insert_ID();
 				return true;
 			}else return false;
 		}

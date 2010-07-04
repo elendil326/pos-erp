@@ -24,8 +24,7 @@
 			$insert="INSERT INTO  proveedor values(NULL,?,?,?,?,?);";
 			$params=array($this->rfc,$this->nombre,$this->direccion,$this->telefono,$this->e_mail);
 			if($this->bd->ejecuta($insert,$params)){
-				$query="select max(id_proveedor) from proveedor;";
-				$this->id_proveedor=$this->bd->select_un_campo($query,array());
+				$this->id_proveedor=$this->bd->con->Insert_ID();
 				return true;
 			}else return false;
 		}

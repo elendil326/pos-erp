@@ -24,8 +24,7 @@
 			$insert="INSERT INTO productos_proveedor values(null,?,?,?,?,?);";
 			$params=array($this->clave_producto,$this->id_proveedor,$this->id_inventario,$this->descripcion,$this->precio);
 			if($this->bd->ejecuta($insert,$params)){
-				$query="select max(id_producto) from productos_proveedor;";
-				$this->id_producto=$this->bd->select_un_campo($query,array());
+				$this->id_producto=$this->bd->con->Insert_ID();
 				return true;
 			}else return false;
 		}

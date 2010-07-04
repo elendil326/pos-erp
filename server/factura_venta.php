@@ -18,8 +18,7 @@
 			$insert="INSERT INTO factura_venta values(null,?,?);";
 			$params=array($this->folio,$this->id_venta);			
 			if($this->bd->ejecuta($insert,$params)){
-				$query="select max(id_factura) from factura_venta;";
-				$this->id_factura=$this->bd->select_un_campo($query,array());
+				$this->id_factura=$this->bd->con->Insert_ID();
 				return true;
 			}else return false;
 		}

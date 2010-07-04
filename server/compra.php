@@ -27,8 +27,7 @@
 			$insert="INSERT INTO compras values(NULL,?,?,null,?,?,?,?);";
 			$params=array($this->id_proveedor,$this->tipo_compra,$this->subtotal,$this->iva,$this->sucursal,$this->id_usuario);
 			if($this->bd->ejecuta($insert,$params)){
-				$query="select max(id_compra) from compras;";
-				$this->id_compra=$this->bd->select_un_campo($query,array());
+				$this->id_compra=$this->bd->con->Insert_ID();
 				return true;
 			}else return false;
 		}

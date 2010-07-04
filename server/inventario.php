@@ -18,8 +18,7 @@
 			$insert="INSERT INTO inventario values(null,?,?);";
 			$params=array($this->nombre,$this->denominacion);
 			if($this->bd->ejecuta($insert,$params)){
-				$query="select max(id_producto) from inventario;";
-				$this->id_producto=$this->bd->select_un_campo($query,array());
+				$this->id_producto=$this->bd->con->Insert_ID();
 				return true;
 			}else return false;
 		}

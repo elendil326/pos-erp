@@ -24,8 +24,7 @@
 			$insert="INSERT INTO  usuario values(NULL,?,?,?,?,?);";
 			$params=array($this->nombre,$this->usuario, base64_encode($this->contrasena),$this->nivel,$this->id_sucursal);
 			if($this->bd->ejecuta($insert,$params)){
-				$query="select max(id_usuario) from usuario;";
-				$this->id_usuario=$this->bd->select_un_campo($query,array());
+				$this->id_usuario=$this->bd->con->Insert_ID();
 				return true;
 			}else return false;
 		}

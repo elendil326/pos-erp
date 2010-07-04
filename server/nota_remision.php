@@ -16,8 +16,7 @@
 			$insert="INSERT INTO nota_remision values(null,?);";
 			$params=array($this->id_venta);
 			if($this->bd->ejecuta($insert,$params)){
-				$query="select max(id_nota) from nota_remision;";
-				$this->id_nota=$this->bd->select_un_campo($query,array());
+				$this->id_nota=$this->bd->con->Insert_ID();
 				return true;
 			}else return false;
 		}

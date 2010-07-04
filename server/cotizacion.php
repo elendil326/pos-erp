@@ -21,8 +21,7 @@
 			$insert="INSERT INTO  cotizacion values(NULL,?,CURDATE( ),?,?);";
 			$params=array($this->id_cliente,$this->subtotal,$this->iva);
 			if($this->bd->ejecuta($insert,$params)){
-				$query="select max(id_cotizacion) from cotizacion;";
-				$this->id_cotizacion=$this->bd->select_un_campo($query,array());
+				$this->id_cotizacion=$this->bd->con->Insert_ID();
 				return true;
 			}else return false;
 		}
