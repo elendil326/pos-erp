@@ -1,4 +1,6 @@
-<?php	include_once("adodb5/adodb.inc.php");
+<?php
+include_once("adodb5/adodb-exceptions.inc.php"); 
+include_once("adodb5/adodb.inc.php");
 	class bd{
 		var $con;
 		var $bd_man;
@@ -12,7 +14,7 @@
 			$this->user=$user;
 			$this->host=$host;
 			$this->password=$password;
-			$this->base->$base;
+			$this->base=$base;
 			$this->conecta();
 		}
 		function __destruct(){
@@ -20,9 +22,13 @@
 		}
 		function conecta(){
 			try{
-				$dsn=$this->bd_man."://".$this->user.":".$this->password."@".$this->host."/".$this->base;
-				$this->con=NewADOConnection($dsn);
-			}catch (Exception $e) {
+				//$dsn=$this->bd_man."://".$this->user.":".$this->password."@".$this->host."/".$this->base;
+				//$this->con=NewADOConnection($dsn);
+				
+				$this->con = ADONewConnection($this->bd_man);
+				@$this->con->Connect($this->host, $this->user, $this->password, $this->base);
+				
+			}catch (exception $e) {
 				return false;
 			}
 		}
@@ -121,7 +127,8 @@
 			$this->host="localhost";
 			$this->password="";
 			$this->base="pos";
-			$this->conecta();
+			
+			return $this->conecta();
 		}
 	}
 ?>

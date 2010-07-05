@@ -23,6 +23,13 @@
 	function login(){
 	
 		$bd = new bd_default();
+		
+		if(!$bd)
+		{ 
+			//echo "error grave";
+			header("Location: ../www/?error");
+			exit;
+		}
 	
 		if(!isset($_POST['user']) || !isset($_POST['pwd']) )
 		{
@@ -38,7 +45,14 @@
 	
 			$params = array($usr);
 			$qry = "SELECT usuario,contrasena FROM usuario WHERE usuario = ? ";
-			$result = $bd->con->Execute($qry,$params);
+			
+			try{
+				$result = $bd->con->Execute($qry,$params);
+			}catch(Exception $e){
+			
+				header("Location: ../www/?error");
+				exit;
+			}
 	
 	
 			if(!$result)

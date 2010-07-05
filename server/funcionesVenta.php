@@ -1,9 +1,8 @@
-<?php	
+<?php
 /*este documentotiene todas las funciones de ventas
 como insertar, eliminar, actualizar, consultas, listar 
 y algunas otras funciones
 */
-	
 	//esta funcion inserta una nueva factura para una venta
 	function insertarFacturaVenta()
 	{

@@ -32,18 +32,25 @@ AppAdmin.prototype.loadStructure = function(){
 	
 	//Metemos contenido al menu 
 	$("#menu-left").html('<div id="accordion">\
-	    <h3><a href="#">Reportes</a></h3>\
+	    <h3><a href="#" id="reportes-boton" >Reportes</a></h3>\
 	    <div >Consulte reportes especificos</div>\
-	    <h3><a href="#">Ver datos</a></h3>\
-	    <div ">Visualice datos completos</div>\
-	    <h3><a href="#">Sucursales</a></h3>\
-	    <div ">Consulte datos de sus sucursales</div>\
+	    <h3><a href="#" id="datos-boton">Ver datos</a></h3>\
+	    <div >Visualice datos completos</div>\
+	    <h3><a href="#" id="sucursales-boton">Sucursales</a></h3>\
+	    <div >Consulte datos de sus sucursales</div>\
 	</div>');
 	
-	//Convertimos a acordion
-	$('#accordion').accordion();
 	
+	
+	//Convertimos a acordion
+	$('#accordion').accordion({active: false});
+	
+	 //TODO: Agregamos listeners a los botones
+	 //$('#reportes-boton').click(alert('click!'));
 	 
+	 //$('#datos-boton').click(alert('click!'));
+	 
+	 //$('#sucursales-boton').click(alert('click!'));
 }
 
 /*
