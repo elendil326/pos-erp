@@ -4,7 +4,6 @@ ApplicationPagos= function ()
 		console.log("ApplicationPagos: construyendo");
 	}
 	ApplicationPagos.currentInstance = this;	
-	//ApplicationPagos.prototype.currentInstance=this;
 	this._init();
 
 	return this;
@@ -322,7 +321,7 @@ ApplicationPagos.storeVentasCredito = new Ext.data.Store({
 //------------------------------------------------------------------------------------------
 
 //ajax and decode para la busqueda de ventas a credito, funciona en todos los casos de busqueda
-ApplicationPagos.funcion_ajax_ventas_credito = function(cliente,deFecha,aFecha){
+ApplicationPagos.prototype.funcion_ajax_ventas_credito = function(cliente,deFecha,aFecha){
 //	-cliente el el id de cliente a buscar
 //	-defecha es el inicio de la fecha busqueda
 //	-afecha el el fin de la fecha de busqueda
@@ -344,12 +343,15 @@ var metodo=(tipo==1)?'reporteClientesComprasCreditoDeben':((tipo==2)?'reporteCli
 							al: aFecha
 							},
 							function (datos){
-								if(datos.success){
+								if(datos.success)
+								{
 									//el resultado es exitoso
 									this.datosVentas = datos.datos;
 									//cargamos los datos al store
 									ApplicationPagos.storeVentasCredito.loadData(this.datosVentas); 
-								}else{
+								}
+								else
+								{
 									//limpia el store si no encuentra datos
 									ApplicationPagos.storeVentasCredito.loadData(new Array()); 
 								}
@@ -432,8 +434,7 @@ ApplicationPagos.prototype.muestraPagos=function(store){
 							]
 						}
 					]
-				}
-				,
+				},
 				{
                     xtype: 'toolbar',
                     dock: 'bottom',
@@ -450,8 +451,7 @@ ApplicationPagos.prototype.muestraPagos=function(store){
 		        singleSelect: true,
 		        indexBar: true
 		    }
-			]//items
-			,
+			],//items
 			dockedItems: [{
                     xtype: 'toolbar',
                     dock: 'bottom',
@@ -512,7 +512,7 @@ ApplicationPagos.prototype.muestraPagos=function(store){
 												POS.aviso("Guardado","Pago guardado correctamente. Cambio: $"+datos.cambio);
 											}
 											//actualizamos la lista de ventas a credito
-											ApplicationPagos.funcion_ajax_ventas_credito(null,null,null);
+											ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(null,null,null);
 										}
 										else
 										{
@@ -584,7 +584,7 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
 	
     listeners: {
 		beforeshow : function(component){
-						ApplicationPagos.funcion_ajax_ventas_credito(null,null,null);
+						ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(null,null,null);
 		}//fin before
 	},
     items: [ApplicationPagos.formulario,
@@ -637,15 +637,15 @@ this.clickBuscar = function ()
 	//verifica el caso, es decir si se busca por periodo, fecha, ambos o ninguno y manda los parametros a la carga de la lista
 	if(!ApplicationPagos.btnClientes.isVisible()){
 			if(!(ApplicationPagos.fechas.isVisible())){
-				ApplicationPagos.funcion_ajax_ventas_credito(cliente,de,al);				
+				ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(cliente,de,al);				
 			}else{
-				ApplicationPagos.funcion_ajax_ventas_credito(cliente,null,null);		
+				ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(cliente,null,null);		
 			}	
 	}else{
 			if(! (ApplicationPagos.fechas.isVisible())){
-				ApplicationPagos.funcion_ajax_ventas_credito(null,de,al);
+				ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(null,de,al);
 			}else{
-				ApplicationPagos.funcion_ajax_ventas_credito(null,null,null);
+				ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(null,null,null);
 			}
 	}
 };

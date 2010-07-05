@@ -129,6 +129,7 @@
 		case "listarPagosVenta" : 				listarPagosVenta(); break;
 		case "listarPagosVentaDeVenta" : 		listarPagosVentaDeVenta(); break;
 		case "listarPagosCompra" : 				listarPagosCompra(); break;
+		case "listarPagosCompraDeCompra" : 		listarPagosCompraDeCompra(); break;
 		
 		//-----funciones invenario
 		case "insertarInventario" : 					insertarInventario(); break;
