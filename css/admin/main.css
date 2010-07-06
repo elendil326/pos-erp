@@ -29,7 +29,7 @@ background-image:url(../shared/icons/fam/folder_go.png);
 	margin-left:auto;
 	margin-right:auto;
 	width: 1024px;
-	height:auto;
+	height:100%;
 	background-color:white;
 }
 
@@ -61,10 +61,11 @@ background-image:url(../shared/icons/fam/folder_go.png);
 }
 
 #menu-left{
-	width:190px;
+	width:140px;
 	float:left;
 	height:100%;
 	padding:5px;
+	padding-top:10px !important;
 	position:absolute;
 	left:0px;
 }
@@ -75,10 +76,11 @@ background-image:url(../shared/icons/fam/folder_go.png);
 
 #content{
 	float:left;
-	width:804px;
-	height:100%;
+	width:854px;
+	height:auto;
 	padding:10px;
-	margin-left:200px;
+	margin-left:150px;
+	overflow:auto;
 }
 
 #logout{
@@ -95,7 +97,7 @@ background-image:url(../shared/icons/fam/folder_go.png);
 }
 
 .graph{
-	padding:5px;
+	margin:10px;
 	float: left;
 }
 
@@ -130,3 +132,38 @@ background-image:url(../shared/icons/fam/folder_go.png);
 	{background-position:left -198px;}
 #top a:active .right
 	{background-position:right -198px;}
+	
+.no-border{
+	border:1px solid #CCCCCC;
+	font-size:16px;
+	color:#777777;
+}
+
+#periodo-reporte{
+	text-align: right;
+	width: 100%;
+}
+
+#configuracion-reportes{
+	border: 1px solid #CCCCCC;
+	padding:10px;
+}
+
+.wrapper{
+	/*padding:10px;*/
+	height:auto;
+	/*width:auto;*/
+	float:left;
+	border:1px solid #CCCCCC;
+	margin-top:10px;
+	margin-right:10px;
+	overflow:hidden;
+}
+
+.title-graph{
+	height:20px;
+	/*width:auto;*/
+	text-align: center;
+	background-color:#666666;
+	color:white;
+}

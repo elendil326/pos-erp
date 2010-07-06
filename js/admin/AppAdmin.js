@@ -31,6 +31,7 @@ AppAdmin.prototype.loadStructure = function(){
 	this.createLogoutMessage();
 	
 	//Metemos contenido al menu 
+	
 	$("#menu-left").html('<div id="accordion">\
 	    <h3><a href="#" id="reportes-boton" >Reportes</a></h3>\
 	    <div >Consulte reportes especificos</div>\
@@ -45,12 +46,26 @@ AppAdmin.prototype.loadStructure = function(){
 	//Convertimos a acordion
 	$('#accordion').accordion({active: false});
 	
+	
 	 //TODO: Agregamos listeners a los botones
-	 //$('#reportes-boton').click(alert('click!'));
+	 $('#reportes-boton').click(function(){
 	 
-	 //$('#datos-boton').click(alert('click!'));
+	 				if(DEBUG){ console.log('click en reportes');}
+	 				new Reports();
+	 				
+	 				});
+	 				
+	 $('#datos-boton').click(function(){
 	 
-	 //$('#sucursales-boton').click(alert('click!'));
+	 				if(DEBUG){ console.log('click en datos');}
+	 				
+	 				});
+	 				
+	 $('#sucursales-boton').click(function(){
+	 
+	 				if(DEBUG){ console.log('click en sucursales');}
+	 				
+	 				});
 }
 
 /*
@@ -118,6 +133,64 @@ AppAdmin.prototype.addGraph = function(config){
 
 }
 
+
+/*
+	addGraph Funcion para agregar graficas a un div especifico con un borde y titulo especificado
+	
+	NOTA: funcion casi igual a la anterior, pero se le agrega en config una variable title que aparecera 
+		arriab de la grafica
+---------------------------------------------------------------------------------------------------------------
+*/
+AppAdmin.prototype.addGraphWithTitle = function(config){
+
+	//Creamos el div contenedor y el canvas
+	var d = document;
+	var graph = d.createElement("div"); //div contenedor
+	var canvas = d.createElement("canvas"); //canvas, donde se dibuja la grafica
+	var wrapper = d.createElement("div");
+	var title = d.createElement("div");
+	
+	wrapper.id = "wrapper"+"-"+config.divID;
+	title.id = "title"+"-"+config.divID;
+	wrapper.style.width = config.width+"px";
+	title.style.width = config.width+"px";
+	
+	canvas.id = config.canvasID;
+	canvas.width = config.width;
+	canvas.height = config.height;
+	
+	graph.id = config.divID;
+	
+	//Agregamos una clase de CSS al div que contiene la grafica
+	graph.setAttribute("class", 'graph'); //For Most Browsers
+	graph.setAttribute("className", 'graph'); //For IE; harmless to other browsers.
+	
+	//Selector que nos permite acceder al div a renderear con el id pasado
+	var renderToSelector = '#'+config.renderTo;
+	var wrapperSelector = '#'+wrapper.id;
+	var titleSelector = '#'+title.id;
+
+	//Agregamos div y canvas al div contenedor 
+	$(renderToSelector).append(wrapper);
+	$(wrapperSelector).append(title);
+	$(wrapperSelector).append(graph);
+	graph.appendChild(canvas);
+	
+	$(titleSelector).html(config.title);
+	
+	$(wrapperSelector).addClass('wrapper');
+	$(titleSelector).addClass('title-graph');
+	
+
+	var layout = new PlotKit.Layout(config.tipo, {});
+	layout.addDataset("sqrt", config.data);
+	layout.evaluate();
+	var canvas = MochiKit.DOM.getElement(config.canvasID);
+	var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, {});
+	plotter.render();
+
+}
+
 AppAdmin.prototype.createLogoutMessage = function(){
 	
 	//Creo un div para usarse como dialogo, este se reciclara
@@ -152,14 +225,16 @@ AppAdmin.prototype.createLogoutMessage = function(){
 	});
 }
 
-AppAdmin.prototype.request = function(config){
-/*
+AppAdmin.request = function(config){
+
 	$.ajax({
 		type: 'POST',
-		url: url,
-		data: data,
-		success: success
-		dataType: dataType
+		url: config.url,
+		data: config.data,
+		success: function(msg){
+			alert("w00t: "+msg);
+		},
+		dataType: "json"
 	});
-*/
+
 }

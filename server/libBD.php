@@ -25,6 +25,8 @@ include_once("adodb5/adodb.inc.php");
 				//$dsn=$this->bd_man."://".$this->user.":".$this->password."@".$this->host."/".$this->base;
 				//$this->con=NewADOConnection($dsn);
 				
+				//return true;
+				
 				$this->con = ADONewConnection($this->bd_man);
 				@$this->con->Connect($this->host, $this->user, $this->password, $this->base);
 				

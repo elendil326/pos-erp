@@ -46,13 +46,13 @@
 			$params = array($usr);
 			$qry = "SELECT usuario,contrasena, sucursal_id FROM usuario WHERE usuario = ? ";
 			
-			try{
+			//try{
 				$result = $bd->con->Execute($qry,$params);
-			}catch(Exception $e){
+			//}catch(Exception $e){
 			
-				header("Location: ../www/?error");
-				exit;
-			}
+			//	header("Location: ../www/?error");
+			//	exit;
+			//}
 	
 	
 			if(!$result)

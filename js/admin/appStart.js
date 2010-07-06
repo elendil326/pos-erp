@@ -57,5 +57,15 @@ $(document).ready(function() {
 				tipo: 'bar',
 				data: [[0, 0], [1, 1], [2, 1.414], [3, 1.73], [4, 2]]
 				}));
+				
+	//test ajax
+	AppAdmin.request({
+		url: "http://stable.hdclass.com/server/login_functions.php",
+		data: {test : 'bla', method: 'login'},
+		success: function(msg){
+			
+			alert("Data retrieved: "+msg);
+		}
+	});
 
 });	
