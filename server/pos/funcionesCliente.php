@@ -196,4 +196,59 @@ FROM  `cliente` INNER JOIN  `cuenta_cliente` ON cliente.id_cliente = cuenta_clie
                 return $listar->lista();
         }
 		//reporteClientesComprasCreditoPagado
+		
+		//esta funcion nos regresa el total de las compras realizadas por los clientes
+		//revisa por periodo si se el envia de y al
+		//revisa por sucursal si se le envia id_sucursal
+		function reporteCompraCliente(){
+		//asignamos los datos recibidos a las variables (en caso de que se reciban)
+		$id_sucursal=$_REQUEST['id_sucursal'];
+		$de=$_REQUEST['de'];
+		$al=$_REQUEST['al'];
+		//asignamos variables que seran booleanos para saber si nos enviaron parametros de sucursal y/o periodo
+		$sucursal=!empty($id_sucursal);
+		$fecha=(!empty($de)&&!empty($al));
+		//inicializamos arreglo de periodo vacio
+		$params=array();
+		//inicializamos la consulta, esta sera final si no se enviaron parametros
+		$query="select c.nombre,sum(v.subtotal+v.iva) as total
+				from ventas v natural join cliente c ";
+		//verificamos si se enviaron fechas
+		if($fecha)
+		{
+				//agregamos la condicion que cuente los que esten en las fechas
+				$query.="where v.fecha BETWEEN ? AND ? ";
+				//agrega los parametros a la pila
+				array_push($params,$de,$al);
+		}//if fechas
+		$query.=" group by c.nombre ";
+		//verificamos el booleano de sucursal
+		if($sucursal){
+			//agregamos having para que solo cuente los de la sucursal deseada
+			$query.=" ,v.sucursal
+					having sucursal=? ";
+			//agregamos parametro al arreglo
+			array_push($params,$id_sucursal);
+		}//if sucursal
+		//agregamos el ; final
+		$query.=";";
+		//creamos objeto de la clase listar y le pasamos el arreglo de parametros
+		$listar = new listar($query,$params);
+		//imprimimos el resultado
+		echo $listar->lista();
+		return;
+	}
+	//reporte compras cliente
+	
+	//esta funcion me regresara cuanto me deben mis cliente
+	function listarClientesSaldo(){
+		$query="SELECT p.nombre,cp.saldo 
+				FROM cuenta_proveedor cp natural join proveedor p 
+				where cp.saldo>0";
+		$listar = new listar($query,array());
+		echo $listar->lista();
+		return $listar->lista();
+	}
+	//listarClientesSaldo
+
 ?>

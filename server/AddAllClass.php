@@ -70,8 +70,10 @@
 		case "listarCompras" : 							listarCompras(); break;
 		case "insertarCompra" : 						insertarCompra(); break;
 		case "eliminarCompra" : 						eliminarCompra(); break;
+		//				reportes
 		case "reporteCompra" : 							reporteCompra(); break;
 		case "reporteFacturaCompra" : 					reporteFacturaCompra(); break;
+		case "reporteCompras" : 						reporteCompras(); break;
 		
 		
 		//-----funciones Usuario
@@ -98,6 +100,7 @@
 		//----------reportes de ventas
 		case "reporteVentasEmpleado" : 			reporteVentasEmpleado(); break;
 		case "reporteVentasSucursales" : 		reporteVentasSucursales(); break;
+		case "reporteVentas" : 					reporteVentas(); break;
 		
 		case "agregarProductoDetalle_venta":	agregarProductoDetalle_venta(); break;
 		case "eliminarProductoDetalle_venta":	eliminarProductoDetalle_venta(); break;
@@ -109,6 +112,10 @@
 		case "eliminarVenta":					eliminarVenta(); break;
 		case "listarVentasCreditoCliente":		listarVentasCreditoCliente(); break;
 		case "abonosVentaCredito":				abonosVentaCredito(); break;
+		//---------reportes
+		case "reporteCompraCliente":			reporteCompraCliente(); break;
+		case "listarClientesSaldo":				listarClientesSaldo(); break;
+		
 		
 		//----- funciones sucursal
 		
@@ -123,6 +130,9 @@
 		case "eliminarProductoProveedor" : 		eliminarProductoProveedor(); break;
 		case "actualizarProductoProveedor" : 	actualizarProductoProveedor(); break;
 		case "listarProveedor" : 				listarProveedor(); break;
+		//------------------
+		case "reporteCompraProveedor" : 		reporteCompraProveedor(); break;
+		
 		
 		//-----Funciones pago
 		case "insertarPagoCompra" : 			insertarPagoCompra(); break;

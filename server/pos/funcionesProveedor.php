@@ -130,9 +130,120 @@
 		return;
 	}
 	
+	
+	
+	
+		//esta funcion nos regresa el total de las compras realizadas por los Proveedors
+		//revisa por periodo si se el envia de y al
+		//revisa por sucursal si se le envia id_sucursal
+	function reporteCompraProveedor()
+	{
+		//asignamos los datos recibidos a las variables (en caso de que se reciban)
+		$id_sucursal=$_REQUEST['id_sucursal'];
+		$de=$_REQUEST['de'];
+		$al=$_REQUEST['al'];
+		//asignamos variables que seran booleanos para saber si nos enviaron parametros de sucursal y/o periodo
+		$sucursal=!empty($id_sucursal);
+		$fecha=(!empty($de)&&!empty($al));
+		//inicializamos arreglo de periodo vacio
+		$params=array();
+		//inicializamos la consulta, esta sera final si no se enviaron parametros
+		$query="select p.nombre,sum(c.subtotal+c.iva) as total
+				from compras c natural join Proveedor p";
+		//verificamos si se enviaron fechas
+		if($fecha)
+		{
+				//agregamos la condicion que cuente los que esten en las fechas
+				$query.=" where c.fecha BETWEEN ? AND ? ";
+				//agrega los parametros a la pila
+				array_push($params,$de,$al);
+		}//if fechas
+		$query.=" group by p.nombre ";
+		//verificamos el booleano de sucursal
+		if($sucursal){
+			//agregamos having para que solo cuente los de la sucursal deseada
+			$query.=" ,c.sucursal
+					having c.sucursal=? ";
+			//agregamos parametro al arreglo
+			array_push($params,$id_sucursal);
+		}//if sucursal
+		//agregamos el ; final
+		$query.=";";
+		//creamos objeto de la clase listar y le pasamos el arreglo de parametros
+		$listar = new listar($query,$params);
+		//imprimimos el resultado
+		echo $listar->lista();
+		return;
+	}
+	//reporte compras Pr€€oveedor
+	
+	
+	
 	function listarProveedor(){
 		$listar = new listar("select * from proveedor",array());
 		echo $listar->lista();
 		return;
 	}
+	
+	//esta funcion me regresara cuanto le debo a mis proveedores cliente
+	function listarProveedorSaldo(){
+		$query="";
+		$listar = new listar($query,array());
+		echo $listar->lista();
+		return $listar->lista();
+	}
+	//listarProveedorSaldo
+	
+	
+	
+	
+	
+	
+	//esta funcion regresa un reporte de compras,
+	//si se le envian fechas agrega un periodo
+	//si se le agrega un id de sucursal tambien lo busca
+	function reporteCompras()
+	{
+		//asignamos los datos recibidos a las variables (en caso de que se reciban)
+		$id_sucursal=$_REQUEST['id_sucursal'];
+		$de=$_REQUEST['de'];
+		$al=$_REQUEST['al'];
+		//asignamos variables que seran booleanos para saber si nos enviaron parametros de sucursal y/o periodo
+		$sucursal=!empty($id_sucursal);
+		$fecha=(!empty($de)&&!empty($al));
+		//inicializamos arreglo de periodo vacio
+		$params=array();
+		//inicializamos la consulta, esta sera final si no se enviaron parametros
+		$query="SELECT IF( c.tipo_compra =1,  'Contado',  'Credito' ) AS  'Tipo', DATE( c.fecha ) AS  'Fecha', c.subtotal AS  'Subtotal', c.iva AS  'Iva', (
+					c.subtotal + c.iva
+					) AS  'Total', p.rfc AS  'RFC', p.nombre AS  'Nombre', u.nombre as empleado
+					FROM compras c
+					NATURAL JOIN proveedor p
+					join usuario u on(u.id_usuario=c.id_usuario)";
+		//verificamos si se enviaron fechas
+		if($fecha)
+		{
+				//agregamos la condicion que cuente los que esten en las fechas
+				//si se agrego sucursal lo pone con and, de lo contrario pone el having
+				$query.="where date(c.fecha) BETWEEN ? AND ? ";
+				//agrega los parametros a la pila
+				array_push($params,$de,$al);
+		}//if fechas
+		
+		//verificamos el booleano de sucursal
+		if($sucursal){
+			//agregamos having para que solo cuente los de la sucursal deseada
+			$query.=(($fecha)?" and ":" where ")." sucursal=? ";
+			//agregamos parametro al arreglo
+			array_push($params,$id_sucursal);
+		}//if sucursal
+		//agregamos el ; final
+		$query.=";";
+		//creamos objeto de la clase listar y le pasamos el arreglo de parametros
+		$listar = new listar($query,$params);
+		//imprimimos el resultado
+		echo $listar->lista();
+		return;
+	}
+	//reporte compras
 ?>
