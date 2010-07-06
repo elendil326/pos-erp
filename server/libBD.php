@@ -108,7 +108,7 @@ include_once("adodb5/adodb.inc.php");
 				
 			}catch(Exception $e){
 				//echo "ENTRO AKA!!";
-				return json_encode("error no actualiza ".$e->message);
+				return false;//json_encode("error no actualiza ".$e->gettrace());
 			}
 		}
 		function sanitize(&$params) {
