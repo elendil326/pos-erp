@@ -36,16 +36,13 @@ ApplicationPagos.prototype.datosVentas = null;
 ApplicationPagos.prototype.datosPagos = null;
 //formulario de las fechas a seleccionar
 ApplicationPagos.fechas = null;
-//boton para seleccionar un cliente
-ApplicationPagos.btnClientes = null;
-//formualario en donde se colocaran los botones de cliente y fechas
+
+//formualario en donde se colocaran los botones de fechas
 ApplicationPagos.formulario = null;
 //funcion que llamarala ventana parapagar las ventas
 ApplicationPagos.prototype.PagarVenta=null;
 
 //variables que se ocupan para la busqueda de ventas a credito
-//id de cliente a buscar
-ApplicationPagos.idCliente = null;
 //fecha de inicio a buscar
 ApplicationPagos.fechaInicio = new Date();
 //fecha hasta la que se buscara
@@ -83,11 +80,9 @@ ApplicationPagos.prototype._init = function()
 ApplicationPagos.prototype._initToolBar = function (){
 	
 	//primer grupo de botones, solo el boton de buscar
-	var buttonsGroup1 = [{
-        text: 'Buscar',
-        ui: 'round',
-        handler: clickBuscar
-    }];
+	var buttonsGroup1 = [
+	
+	];
 	//grupo 2 la busqueda por estado de credito
 	var buttonsGroup2 = [{
         xtype: 'splitbutton',
@@ -106,14 +101,13 @@ ApplicationPagos.prototype._initToolBar = function (){
             handler: clickTodos
         }]    
     }];
-	//grupo 3 activar busqueda por cliente y/o periodo
-    var buttonsGroup3 = [{
-        text: 'Cliente',
-        handler: clickCliente
-    },{
-        text: 'Periodo',
-        handler: clickPeriodo
-    }];
+	//grupo 3 activar busqueda por periodo
+    var buttonsGroup3 = [
+		{
+			text: 'Periodo',
+			handler: clickPeriodo
+		}
+	];
 	//agregamos los grupos de botones a la tool bar
 	if (!Ext.platform.isPhone) {
         buttonsGroup1.push({xtype: 'spacer'});
@@ -187,7 +181,8 @@ this.clickFechaInicio=function(){
 						}
 						if(ApplicationPagos.fechaInicio !== null ){
 							Ext.get("finicio").update((ApplicationPagos.fechaInicio.getYear()+1900)+"-"+(ApplicationPagos.fechaInicio.getMonth()+1)+"-"+(ApplicationPagos.fechaInicio.getDate()));
-						}
+						}					
+						ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(ApplicationPagos.fechaInicio,ApplicationPagos.fechaFin);
 						picker.hide();
                     }
                 }]
@@ -227,6 +222,8 @@ this.clickfechaFin=function(){
 							ApplicationPagos.fechaFin = (ApplicationPagos.fechaFin<ApplicationPagos.fechaInicio)?ApplicationPagos.fechaInicio:ApplicationPagos.fechaFin;
 						}
 						Ext.get("ffin").update((ApplicationPagos.fechaFin.getYear()+1900)+"-"+(ApplicationPagos.fechaFin.getMonth()+1)+"-"+(ApplicationPagos.fechaFin.getDate()));
+						
+						ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(ApplicationPagos.fechaInicio,ApplicationPagos.fechaFin);
 						picker.hide();
                     }
                 }]
@@ -240,28 +237,13 @@ this.clickfechaFin=function(){
 //--------------------------------------------------------------------------------
 //					Inicializamos los controles del formulario
 //--------------------------------------------------------------------------------
-
-//Boton de clientes
-ApplicationPagos.btnClientes=new Ext.Button({
-			hidden:'true',		
-			handler:function (){
-				POS.aviso("ok","ok");
-			},
-            name: 'id_cliente',
-			width: 300,
-            text : 'Seleccionar Cliente'
-        });	
-//btnClientes		
+		
 
 //formulario de las fechas
 ApplicationPagos.fechas = new Ext.form.FormPanel({
-	hidden:'true',
+	//agregamos el estilo css
 	baseCls: "ApplicationInventario-mainPanel",
     items: [
-	{
-		html: '',
-		id : 'bCliente'
-	},
 	{
 		xtype:'button',
 		id:'btnFechaIni',
@@ -287,13 +269,15 @@ ApplicationPagos.fechas = new Ext.form.FormPanel({
 
 //agregamos los controles al formulario
 ApplicationPagos.formulario=new Ext.form.FormPanel({
+	hidden:'true',
+	//agregamos el estilo css 
 	baseCls: "ApplicationInventario-mainPanel",
-	minHeight:80,
+	minHeight:0,
     items: [{
         xtype: 'fieldset',
-        title: 'Buscar por:',
-        instructions: 'Insertelos datos y de click en el boton de buscar.',
-        items: [	ApplicationPagos.btnClientes,ApplicationPagos.fechas	]
+        title: 'Buscar por periodo:',
+        instructions: 'Inserte las fechas a buscar.',
+        items: [ApplicationPagos.fechas	]
     }]
 });
 //formulario
@@ -323,8 +307,7 @@ ApplicationPagos.storeVentasCredito = new Ext.data.Store({
 //------------------------------------------------------------------------------------------
 
 //ajax and decode para la busqueda de ventas a credito, funciona en todos los casos de busqueda
-ApplicationPagos.prototype.funcion_ajax_ventas_credito = function(cliente,deFecha,aFecha){
-//	-cliente el el id de cliente a buscar
+ApplicationPagos.prototype.funcion_ajax_ventas_credito = function(deFecha,aFecha){
 //	-defecha es el inicio de la fecha busqueda
 //	-afecha el el fin de la fecha de busqueda
 
@@ -338,8 +321,6 @@ var metodo=(tipo==1)?'reporteClientesComprasCreditoDeben':((tipo==2)?'reporteCli
 						POS.AJAXandDECODE({
 							//Parametros a enviar
 							method: metodo,
-							//id del cliente a buscar, si es null nos devuelve todos
-							id_cliente: cliente,
 							//fechas del periodo, si son null muestra todos
 							de: deFecha,
 							al: aFecha
@@ -416,7 +397,8 @@ ApplicationPagos.prototype.funcion_ajax_pagos = function(){
 //formulario para mostrar los pagos de ventas a credito
 ApplicationPagos.prototype.muestraPagos=function(store){	
 		ApplicationPagos.currentInstance.formBase = {
-		
+			
+			//agregamos el estilo css 
 			baseCls: "ApplicationInventario-mainPanel",
 			//	items
 			items: [
@@ -449,6 +431,7 @@ ApplicationPagos.prototype.muestraPagos=function(store){
 				height:"70%",
 				id: 'ListaPagos',
 		        xtype: 'list',
+				//agregamos el estilo css
 				baseCls: "ApplicationInventario-mainPanel",
 		        store: store,
 		        tpl: '<tpl for="."><div class="pagos"><pre>	   {id_pago}		  {fecha}		   ${monto}		</pre></div></tpl>',
@@ -517,7 +500,7 @@ ApplicationPagos.prototype.muestraPagos=function(store){
 												POS.aviso("Guardado","Pago guardado correctamente. Cambio: $"+datos.cambio);
 											}
 											//actualizamos la lista de ventas a credito
-											ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(null,null,null);
+											ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(null,null);
 										}
 										else
 										{
@@ -589,7 +572,7 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
 	
     listeners: {
 		beforeshow : function(component){
-						ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(null,null,null);
+						ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(null,null);
 		}//fin before
 	},
     items: [ApplicationPagos.formulario,
@@ -602,6 +585,7 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
 				width: '100%',
 				height: '100%',
 				xtype: 'list',
+				//agregamos el estilo css
 				baseCls: "ApplicationInventario-mainPanel",
 				id:'listaVentas',
 				store: ApplicationPagos.storeVentasCredito,
@@ -637,22 +621,12 @@ this.clickBuscar = function ()
 	//obtiene las fechas del periodo
 	var de=Ext.get("finicio").dom.textContent;
 	var al=Ext.get("ffin").dom.textContent;
-	//obtiene el id del cliente
-	var cliente=ApplicationPagos.idCliente;
 	
 	//verifica el caso, es decir si se busca por periodo, fecha, ambos o ninguno y manda los parametros a la carga de la lista
-	if(!ApplicationPagos.btnClientes.isVisible()){
-			if(!(ApplicationPagos.fechas.isVisible())){
-				ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(cliente,de,al);				
-			}else{
-				ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(cliente,null,null);		
-			}	
+	if(! (ApplicationPagos.fechas.isVisible())){
+		ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(de,al);
 	}else{
-			if(! (ApplicationPagos.fechas.isVisible())){
-				ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(null,de,al);
-			}else{
-				ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(null,null,null);
-			}
+		ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(null,null);
 	}
 };
 //clickBuscar
@@ -684,30 +658,17 @@ this.clickTodos = function ()
 };
 //clickTodos
 
-//clickCliente
-this.clickCliente = function ()
-{
-	//muestra el boton de seleccionar cliente o lo esconde si esta visible
-	if(ApplicationPagos.btnClientes.isVisible()){
-			ApplicationPagos.btnClientes.setVisible(true);
-			ApplicationPagos.formulario.setHeight(ApplicationPagos.formulario.getHeight()+30);
-	}else{
-			ApplicationPagos.btnClientes.setVisible(false);
-			ApplicationPagos.formulario.setHeight(ApplicationPagos.formulario.getHeight()-30);
-	}
-};
-//clickCliente
 
 //clickPeriodo
 this.clickPeriodo = function ()
 {
 	//muestra el botones de seleccionar periodo o lo esconde si esta visible
-	if(ApplicationPagos.fechas.isVisible()){
-			ApplicationPagos.fechas.setVisible(true);
-			ApplicationPagos.formulario.setHeight(ApplicationPagos.formulario.getHeight()+80);
+	if(ApplicationPagos.formulario.isVisible()){
+			ApplicationPagos.formulario.setVisible(true);
+			ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(ApplicationPagos.fechaInicio,ApplicationPagos.fechaFin);
 	}else{
-			ApplicationPagos.fechas.setVisible(false);
-			ApplicationPagos.formulario.setHeight(ApplicationPagos.formulario.getHeight()-80);
+			ApplicationPagos.formulario.setVisible(false);
+			ApplicationPagos.currentInstance.funcion_ajax_ventas_credito(null,null);
 	}
 };
 //clickPeriodo
