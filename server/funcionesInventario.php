@@ -81,11 +81,11 @@ y algunas otras funciones
 	}
 	//funcion actualizarInventario
 	
-	//esta funcion regresa un json de todos los producto de inventario y sus detalles en cada sucursal
-	function listarProductosInventario()
-	{
-		//creamos un objeto del tipo listar con la consulta
-		$listar = new listar("select inventario.id_producto, inventario.denominacion, detalle_inventario.precio_venta,detalle_inventario.existencias,detalle_inventario.id_sucursal,detalle_inventario.min from inventario inner join detalle_inventario on inventario.id_producto = detalle_inventario.id_producto",array());
+
+	function listarProductosInventario(){
+		$sucursal = $_SESSION['sucursal_id'];
+		$listar = new listar("select inventario.id_producto, inventario.denominacion, detalle_inventario.precio_venta,detalle_inventario.existencias,detalle_inventario.id_sucursal,detalle_inventario.min from inventario inner join detalle_inventario on inventario.id_producto = detalle_inventario.id_producto where detalle_inventario.id_sucursal=?",array($sucursal));
+
 		//imprimimos el json
 		echo $listar->lista();
 		return;
@@ -109,8 +109,17 @@ y algunas otras funciones
 		else											fail("faltan datos.");										//no se envio el id de la sucursal
 		return;
 	}
-	//funcion listarProductosInventarioSucursal
+
 	
+	function obtenerSucursalUsuario(){
+		$user = $_SESSION['user'];	
+
+		$listar = new listar("select usuario.sucursal_id from usuario where usuario.usuario = ?", array($user));
+		echo $listar->lista();
+		return;
+	}
+	//funcion listarProductosInventarioSucursal
+	
 	//Esta funcion nos regresa las existencias de un producto en una sucursal, recibiendo el id del producto y el de la sucursal
 	function existenciaProductoSucursal()
 	{
@@ -121,6 +130,7 @@ y algunas otras funciones
 			$id_producto=$_REQUEST['id_producto'];
 			$id_sucursal=$_REQUEST['id_sucursal'];
 			//creamos un objeto del tipo inventario existente
+
 			$prod=new inventario_existente($id_producto);
 			//vemos que el producto si exista
 			if($prod->existe())
@@ -155,6 +165,5 @@ y algunas otras funciones
 		else													fail("faltan datos.");								//no se enviaron los datos necesarios
 		return;
 	}
-	
 	
 ?>

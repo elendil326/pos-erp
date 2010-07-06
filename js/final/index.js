@@ -445,7 +445,8 @@ Ext.setup({
 			console.log("DOM listo, iniciando aplicacion...");			
 		}
 
-		
+	
         sink.Main.init();
+	
     }
 });

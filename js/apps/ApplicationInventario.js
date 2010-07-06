@@ -12,6 +12,12 @@ ApplicationInventario = function ()
 };
 
 
+//variable estatica, false si solo se muestra mi sucursal, true si se quieren mostrar todas
+ApplicationInventario.mostrarTodasSucursales = false;
+
+//variable que guarda la sucursal en la que se esta
+ApplicationInventario.prototype.sucursal_id = null;
+
 //aqui va el panel principal 
 ApplicationInventario.prototype.mainCard = null;
 
@@ -59,6 +65,9 @@ ApplicationInventario.prototype.mosaicItems = null;
 ApplicationInventario.prototype._init = function()
 {
 
+	//obtenemos la id de la sucursal del usuario
+	this.loadSucursalID();
+
 	//nombre de la aplicacion
 	this.appName = "Inventario";
 	
@@ -72,8 +81,9 @@ ApplicationInventario.prototype._init = function()
 	this.loadHomePanel();
 
 	//tarjeta principal
-	this.mainCard = this.homePanel;
-	
+	if (this.mostrarTodasSucursales === true) {
+		this.mainCard = this.homePanel;
+	}
 };
 
 
@@ -83,7 +93,23 @@ Ext.regModel('inv_Existencias', {
 });
 
 
-
+ApplicationInventario.prototype.loadSucursalID = function(){
+	
+	
+	POS.AJAXandDECODE({
+		method: 'obtenerSucursalUsuario'
+	}, function(result){
+		if (result.success){
+			ApplicationInventario.currentInstance.sucursal_id = result.datos[0].sucursal_id;
+			//ApplicationInventario.currentInstance.initSucursalPanel(result.datos[0].sucursal_id);
+		}
+		//ApplicationInventario.currentInstance.sucursal_id 
+	}, function(){
+		if(DEBUG){
+				console.error("ApplicationInventario.loadSucursalID: Failed Ajax");
+			}
+	});
+};
 
 
 
@@ -93,51 +119,61 @@ Ext.regModel('inv_Existencias', {
 ApplicationInventario.prototype.loadHomePanel = function()
 {
 	
-	/*	
-		Buscar
-	*/
-	var buscarMosaico = [{
-		xtype: 'textfield',
-		emptyText: 'Búsqueda',
-		id:'ApplicationInvenario_searchField',
-		inputCls: 'caja-buscar',
-		showAnimation: true,
-		listeners:
-				{
-					'render': function( ){
-						//medio feo, pero bueno
-						Ext.get("ApplicationInvenario_searchField").first().dom.setAttribute("onkeyup", "ApplicationInventario.currentInstance.mosaic.doSearch( this.value )");
-						//Le damos focus al searchbar
-						document.getElementById( Ext.get('ApplicationInvenario_searchField').first().id ).focus();
-					}
+	if (ApplicationInventario.mostrarTodasSucursales === true) {
+	
+	
+		/*	
+	 Buscar
+	 */
+		var buscarMosaico = [{
+			xtype: 'textfield',
+			emptyText: 'Búsqueda',
+			id: 'ApplicationInvenario_searchField',
+			inputCls: 'caja-buscar',
+			showAnimation: true,
+			listeners: {
+				'render': function(){
+					//medio feo, pero bueno
+					Ext.get("ApplicationInvenario_searchField").first().dom.setAttribute("onkeyup", "ApplicationInventario.currentInstance.mosaic.doSearch( this.value )");
+					//Le damos focus al searchbar
+					document.getElementById(Ext.get('ApplicationInvenario_searchField').first().id).focus();
 				}
-	}];
-
-
-	var buMoToolbar = new Ext.Toolbar({
-		ui: 'dark',
-		dock: 'bottom',
-		items: buscarMosaico
-	});
-
-
-	this.homePanel = new Ext.Panel({
-		id: 'inventarioHomePanel',
-		layout: 'card',
-		dockedItems: buMoToolbar,
-		html: '<div style="width:100%; height:100%" id="invapp_mosaico"></div>',
-		listeners : {
-			'afterrender' : function (){
-				ApplicationInventario.currentInstance.mosaic = new Mosaico({
-					renderTo : 'invapp_mosaico',
-					items: ApplicationInventario.currentInstance.mosaicItems,
-					handler: function(item){
-						ApplicationInventario.currentInstance.initSucursalPanel(item.id_sucursal, item.title);
-					}
-				});
 			}
-		}
-	});
+		}];
+		
+		
+		var buMoToolbar = new Ext.Toolbar({
+			ui: 'dark',
+			dock: 'bottom',
+			items: buscarMosaico
+		});
+		
+		
+		this.homePanel = new Ext.Panel({
+			id: 'inventarioHomePanel',
+			layout: 'card',
+			dockedItems: buMoToolbar,
+			html: '<div style="width:100%; height:100%" id="invapp_mosaico"></div>',
+			listeners: {
+				'afterrender': function(){
+					ApplicationInventario.currentInstance.mosaic = new Mosaico({
+						renderTo: 'invapp_mosaico',
+						items: ApplicationInventario.currentInstance.mosaicItems,
+						handler: function(item){
+							ApplicationInventario.currentInstance.initSucursalPanel(item.id_sucursal, item.title);
+						}
+					});
+				}
+			}
+		});
+		
+		this.mainCard = this.homePanel;
+	}
+	else{
+		//this.loadSucursalID();
+		this.initSucursalPanel(this.sucursal_id);
+		this.mainCard = this.sucursalPanel;
+	}
 };
 
 
@@ -252,6 +288,10 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 			text : 'Sucursales',
 			ui: 'back',
 			handler : function(){
+				if(ApplicationInventario.mostrarTodasSucursales == false){
+					ApplicationInventario.mostrarTodasSucursales = true;
+					ApplicationInventario.currentInstance.loadHomePanel();
+				}
 				sink.Main.ui.setCard( ApplicationInventario.currentInstance.mainCard, { type: 'slide', direction: 'right' });
 			}
 		},{
@@ -259,16 +299,44 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 			text : 'Detalles',
 			ui : 'forward',
 			handler : function(){
-				ApplicationInventario.currentInstance.loadDetailPanel(sucursal_id, { type: 'slide', direction: 'left' });
+				if (ApplicationInventario.mostrarTodasSucursales === true) {
+					ApplicationInventario.currentInstance.loadDetailPanel(sucursal_id, {
+						type: 'slide',
+						direction: 'left'
+					});
+				}
+				else
+				{
+					ApplicationInventario.currentInstance.loadDetailPanel(ApplicationInventario.currentInstance.sucursal_id, {
+						type: 'slide',
+						direction: 'left'
+					});
+				}
 			}
 		}]
 	});
 	
+	//Parametros para el AJAX
+	var AJAXparams;
+	
+	//Mostramos mi sucursal nada mas?
+	if ( ApplicationInventario.mostrarTodasSucursales == true ){
+		
+		AJAXparams = {
+						method: 'listarProductosInventarioSucursal',
+						id_sucursal: sucursal_id
+					};
+	}
+	else{
+		AJAXparams = {
+					method: 'listarProductosInventario'
+		};
+	}
 	
 	/*
 		creando el panel
 	*/
-	var sucursalPanel = new Ext.Panel({
+	this.sucursalPanel = new Ext.Panel({
 
 		dockedItems: searchBar,
 
@@ -276,16 +344,34 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 		layout: 'card',			
 		listeners: {
 			beforeshow : function(component){
-						
-					POS.AJAXandDECODE({
-						method: 'listarProductosInventarioSucursal',
-						id_sucursal: sucursal_id
-						}, function(datos){
-								//responded !
-								if (datos.success) { 
+		
+					POS.AJAXandDECODE(//Parametros
+									AJAXparams, 
+							function(datos){
+								//responded 
+								
+								if (datos.success) {
+									 
 									//si el success trae true
 									this.products = datos.datos;
 									InvProductsListStore.loadData(this.products);
+									if(ApplicationInventario.currentInstance.mostrarTodasSucursales == false){
+										//ApplicationInventario.currentInstance.mainCard = ApplicationInventario.currentInstance.sucursalPanel;
+									}
+									if (ApplicationInventario.mostrarTodasSucursales == false) {
+										if (back === true) {
+											sink.Main.ui.setCard(ApplicationInventario.currentInstance.sucursalPanel, {
+												type: 'slide',
+												direction: 'right'
+											});
+										}
+										else {
+											sink.Main.ui.setCard(ApplicationInventario.currentInstance.sucursalPanel, {
+												type: 'slide',
+												direction: 'left'
+											});
+										}
+									}
 								} else {
 									InvProductsListStore.loadData(0);
 									return 0;
@@ -316,11 +402,23 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
     	}]
 	
 		});
-
-	if(back === true){
-		sink.Main.ui.setCard(sucursalPanel, { type: 'slide', direction: 'right' });
-	}else{
-		sink.Main.ui.setCard(sucursalPanel, { type: 'slide', direction: 'left' });
+		
+	
+	if (ApplicationInventario.mostrarTodasSucursales === true) {
+		
+		if (back === true) {
+			sink.Main.ui.setCard(this.sucursalPanel, {
+				type: 'slide',
+				direction: 'right'
+			});
+		}
+		else {
+			
+			sink.Main.ui.setCard(this.sucursalPanel, {
+				type: 'slide',
+				direction: 'left'
+			});
+		}
 	}
 
 
@@ -369,6 +467,47 @@ ApplicationInventario.prototype.renderDetalles = function( data )
 		console.log("ApplicationInventario: mostrando detalles" , data);
 	}
 	
+	var html = "";
+	
+	html += "<div class='nombre'>" 		+data.descripcion		+ "</div>";
+	html += "<div class='direccion'>" 	+data.direccion 	+ "</div>";
+	html += "<div class='mail'>" 	+	 "</div>";
+	html += "<div class='id_provedor'>" + "</div>";
+	html += "<div class='rfc'>"  		+"</div>";
+	html += "<div class='telefono'>"  	+ "</div>";
+
+
+	var divDetalles = "<div class='ApplicationProveedores-Detalles'>"+html+"</div>";
+	
+
+	
+	
+	//Creamos un overlay para mostrar el mapa
+	var mapOverlayTb = new Ext.Toolbar({
+			title: 'Mapa',
+			dock: 'top'
+	});
+        
+	/*var mapOverlay = new Ext.Panel({
+		floating: true,
+		modal: true,
+		centered: true,
+		width: Ext.platform.isPhone ? 260 : 400,
+		height: Ext.platform.isPhone ? 220 : 400,
+		//styleHtmlContent: true,
+		dockedItems: mapOverlayTb,
+		scroll: 'vertical',
+		//contentEl: 'lipsum',
+		//cls: 'htmlcontent'
+	});*/
+	var mapOverlay = POS.map(data.direccion);
+	mapOverlay.setCentered(true);
+	mapOverlay.setFloating(true, true);
+	mapOverlay.setHeight(400);
+	mapOverlay.setWidth(400);
+	//mapOverlay.addDocked(mapOverlayTb);
+
+	
 	var backBar = new Ext.Toolbar({
 		dock: 'bottom',
 		showAnimation: true,
@@ -379,24 +518,26 @@ ApplicationInventario.prototype.renderDetalles = function( data )
 				ui	 : 'back',
 				text : 'Inventario',
 				handler: function(){
-					ApplicationInventario.currentInstance.initSucursalPanel( data.id_sucursal, null, true );
+					//ApplicationInventario.currentInstance.initSucursalPanel( data.id_sucursal, null, true );
+					sink.Main.ui.setCard( ApplicationInventario.currentInstance.sucursalPanel, {type: 'slide', direction: 'right'})
 				}
 			},{
 				xtype: 'button',
 				ui	 : 'action',
-				text : 'Editar',
+				text : 'Mapa',
 				handler: function(){
-
+						mapOverlay.show();
 				}
 			}]
 	});
 	
 	//Un formpanel que llenaremos con los datos que obtengamos
 	var detailPanel = new Ext.form.FormPanel({
-			scroll: 'none',
+			scroll: 'vertical',
 			dockedItems : backBar,
 			baseCls: "ApplicationInventario-mainPanel",
-			items:[{
+			html: divDetalles
+			/*items:[{
 				xtype: 'fieldset',
 				title: 'Detalles de la sucursal',
 				baseCls: "ApplicationInventario-detallesItems",
@@ -423,21 +564,7 @@ ApplicationInventario.prototype.renderDetalles = function( data )
 						name: 'encargado',
 						label: 'Encargado'
 					}]
-			},{
-				xtype: 'fieldset',
-				title: 'Mapa',
-				width: 400,
-				baseCls: "ApplicationInventario-detallesItems",
-				items:[new Ext.Panel({
-						    layout: 'fit',
-							height: 300,
-							width: 400,
-							style: {
-								width: '40%'
-							}, items: 
-								[ POS.map(data.direccion) ]
-						})]
-			}]
+			}]*/
 			
 		});
 		

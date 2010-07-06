@@ -262,7 +262,10 @@ ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 	var surtir = [{
 			xtype: 'button',
 			text: 'Surtir',
-			ui: 'action'
+			ui: 'action',
+			handler: function(){
+				
+			}
 		}];
 		
     var dockedItems = [ new Ext.Toolbar({
@@ -288,8 +291,6 @@ ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 	
 	return panel;
 };
-
-
 
 
 
