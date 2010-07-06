@@ -19,16 +19,6 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Estructura de tabla para la tabla `inventario`
 -- 
 
-CREATE TABLE `inventario` (
-  `id_producto` int(11) NOT NULL auto_increment COMMENT 'id del producto',
-  `nombre` varchar(90) collate utf8_unicode_ci NOT NULL COMMENT 'Descripcion o nombre del producto',
-  `denominacion` varchar(30) collate utf8_unicode_ci NOT NULL COMMENT 'es lo que se le mostrara a los clientes',
-  PRIMARY KEY  (`id_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=10 ;
-
--- 
--- Volcar la base de datos para la tabla `inventario`
--- 
 
 INSERT INTO `inventario` (`id_producto`, `nombre`, `denominacion`) VALUES 
 (4, '1as', 'Papa Grande'),

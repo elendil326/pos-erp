@@ -85,101 +85,103 @@ FROM  `cliente` INNER JOIN  `cuenta_cliente` ON cliente.id_cliente = cuenta_clie
 		echo $listar->lista();
 		return $listar->lista();
 	}	
-	function reporteClientesComprasCredito(){
 	
-	$id_cliente=$_REQUEST['id_cliente'];
-		$de=$_REQUEST['de'];
-		$al=$_REQUEST['al'];
-		$cliente=!empty($id_cliente);
-		$fecha=(!empty($de)&&!empty($al));
-		$params=array();
-		
-		$query="SELECT v.id_venta, (
-				v.subtotal + v.iva
-				) AS  'Total', IF(SUM( pv.monto )>0,SUM(pv.monto),0) AS  'Pagado',
-				if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),0
-				) AS  'Debe', c.nombre AS  'Nombre', DATE( v.fecha ) AS  'Fecha'
-				FROM  `pagos_venta` pv
-				RIGHT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
-				NATURAL JOIN cliente c
-				GROUP BY v.id_venta,c.id_cliente,v.fecha ,v.tipo_venta
-				having v.tipo_venta =2 "; 
-		if($cliente){
-			$query.=" and c.id_cliente=? ";
-			array_push($params,$id_cliente);
-		}
-		if($fecha){
-			$query.=" and  DATE(v.fecha) BETWEEN ? AND ? ";
-			array_push($params,$de);
-			array_push($params,$al);
-		}
-		$query.=" ORDER BY v.fecha ;";
-		$listar = new listar($query,$params);
-		echo $listar->lista();
-		return $listar->lista();
-	}
-	
-	function reporteClientesComprasCreditoDeben(){
-		$id_cliente=$_REQUEST['id_cliente'];
-		$de=$_REQUEST['de'];
-		$al=$_REQUEST['al'];
-		$cliente=!empty($id_cliente);
-		$fecha=(!empty($de)&&!empty($al));
-		$params=array();
-		$query="SELECT v.id_venta, (
-				v.subtotal + v.iva
-				) AS  'Total', IF(SUM( pv.monto )>0,SUM(pv.monto),0) AS  'Pagado',
-				if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),0
-				) AS  'Debe', c.nombre AS  'Nombre', DATE( v.fecha ) AS  'Fecha'
-				FROM  `pagos_venta` pv
-				RIGHT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
-				NATURAL JOIN cliente c
-				GROUP BY v.id_venta,c.id_cliente,v.fecha,v.tipo_venta,v.tipo_venta
-				having Pagado < Total and v.tipo_venta =2 ";
-		if($cliente){
-			$query.=" and c.id_cliente=? ";
-			array_push($params,$id_cliente);
-		}
-		if($fecha){
-			$query.=" and DATE(v.fecha) BETWEEN ? AND ? ";
-			array_push($params,$de);
-			array_push($params,$al);
-		}
-		$query.=" ORDER BY v.fecha;";
-		$listar = new listar($query,$params);
-		echo $listar->lista();
-		return $listar->lista();
-	}
+	     
+        function reporteClientesComprasCredito(){
+        
+        $id_cliente=$_REQUEST['id_cliente'];
+                $de=$_REQUEST['de'];
+                $al=$_REQUEST['al'];
+                $cliente=!empty($id_cliente);
+                $fecha=(!empty($de)&&!empty($al));
+                $params=array();
+                
+                $query="SELECT v.id_venta, (
+                                v.subtotal + v.iva
+                                ) AS  'Total', IF(SUM( pv.monto )>0,SUM(pv.monto),0) AS  'Pagado',
+                                if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),(v.subtotal + v.iva)
+                                ) AS  'Debe', c.nombre AS  'Nombre', DATE( v.fecha ) AS  'Fecha'
+                                FROM  `pagos_venta` pv
+                                RIGHT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
+                                NATURAL JOIN cliente c
+                                GROUP BY v.id_venta,c.id_cliente,v.fecha ,v.tipo_venta
+                                having v.tipo_venta =2 "; 
+                if($cliente){
+                        $query.=" and c.id_cliente=? ";
+                        array_push($params,$id_cliente);
+                }
+                if($fecha){
+                        $query.=" and  DATE(v.fecha) BETWEEN ? AND ? ";
+                        array_push($params,$de);
+                        array_push($params,$al);
+                }
+                $query.=" ORDER BY v.fecha ;";
+                $listar = new listar($query,$params);
+                echo $listar->lista();
+                return $listar->lista();
+        }
+        
+        function reporteClientesComprasCreditoDeben(){
+                $id_cliente=$_REQUEST['id_cliente'];
+                $de=$_REQUEST['de'];
+                $al=$_REQUEST['al'];
+                $cliente=!empty($id_cliente);
+                $fecha=(!empty($de)&&!empty($al));
+                $params=array();
+                $query="SELECT v.id_venta, (
+                                v.subtotal + v.iva
+                                ) AS  'Total', IF(SUM( pv.monto )>0,SUM(pv.monto),0) AS  'Pagado',
+                                if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),(v.subtotal + v.iva)
+                                ) AS  'Debe', c.nombre AS  'Nombre', DATE( v.fecha ) AS  'Fecha'
+                                FROM  `pagos_venta` pv
+                                RIGHT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
+                                NATURAL JOIN cliente c
+                                GROUP BY v.id_venta,c.id_cliente,v.fecha,v.tipo_venta,v.tipo_venta
+                                having Pagado < Total and v.tipo_venta =2 ";
+                if($cliente){
+                        $query.=" and c.id_cliente=? ";
+                        array_push($params,$id_cliente);
+                }
+                if($fecha){
+                        $query.=" and DATE(v.fecha) BETWEEN ? AND ? ";
+                        array_push($params,$de);
+                        array_push($params,$al);
+                }
+                $query.=" ORDER BY v.fecha;";
+                $listar = new listar($query,$params);
+                echo $listar->lista();
+                return $listar->lista();
+        }
 
-	function reporteClientesComprasCreditoPagado(){
-		$id_cliente=$_REQUEST['id_cliente'];
-		$de=$_REQUEST['de'];
-		$al=$_REQUEST['al'];
-		$cliente=!empty($id_cliente);
-		$fecha=(!empty($de)&&!empty($al));
-		$params=array();
-		$query="SELECT v.id_venta, (
-				v.subtotal + v.iva
-				) AS  'Total', IF(SUM( pv.monto )>0,SUM(pv.monto),0) AS  'Pagado', 
-				if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),0) AS  'Debe',
-				c.nombre AS  'Nombre', DATE( v.fecha ) AS  'Fecha'
-				FROM  `pagos_venta` pv
-				RIGHT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
-				NATURAL JOIN cliente c
-				GROUP BY v.id_venta,c.id_cliente,v.fecha,v.tipo_venta
-				having Pagado >= Total and v.tipo_venta =2 ";
-		if($cliente){
-			$query.=" and c.id_cliente=? ";
-			array_push($params,$id_cliente);
-		}
-		if($fecha){
-			$query.=" and DATE(v.fecha) BETWEEN ? AND ? ";
-			array_push($params,$de);
-			array_push($params,$al);
-		}
-		$query.=" ORDER BY v.fecha;";
-		$listar = new listar($query,$params);
-		echo $listar->lista();
-		return $listar->lista();
-	}
+        function reporteClientesComprasCreditoPagado(){
+                $id_cliente=$_REQUEST['id_cliente'];
+                $de=$_REQUEST['de'];
+                $al=$_REQUEST['al'];
+                $cliente=!empty($id_cliente);
+                $fecha=(!empty($de)&&!empty($al));
+                $params=array();
+                $query="SELECT v.id_venta, (
+                                v.subtotal + v.iva
+                                ) AS  'Total', IF(SUM( pv.monto )>0,SUM(pv.monto),0) AS  'Pagado', 
+                                if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),(v.subtotal + v.iva)
+                                ) AS  'Debe', c.nombre AS  'Nombre', DATE( v.fecha ) AS  'Fecha'
+                                FROM  `pagos_venta` pv
+                                RIGHT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
+                                NATURAL JOIN cliente c
+                                GROUP BY v.id_venta,c.id_cliente,v.fecha,v.tipo_venta
+                                having Pagado >= Total and v.tipo_venta =2 ";
+                if($cliente){
+                        $query.=" and c.id_cliente=? ";
+                        array_push($params,$id_cliente);
+                }
+                if($fecha){
+                        $query.=" and DATE(v.fecha) BETWEEN ? AND ? ";
+                        array_push($params,$de);
+                        array_push($params,$al);
+                }
+                $query.=" ORDER BY v.fecha;";
+                $listar = new listar($query,$params);
+                echo $listar->lista();
+                return $listar->lista();
+        }
 ?>

@@ -399,15 +399,17 @@ ApplicationPagos.prototype.muestraPagos=function(store){
 		ApplicationPagos.currentInstance.formBase = {
 			
 			//agregamos el estilo css 
-			baseCls: "ApplicationInventario-mainPanel",
+			Cls: "ApplicationPagos-mainPanel",
 			//	items
 			items: [
 				{
+					
 					scroll: 'vertical',
 					id:'formPago',
 					items: [
 						{
 							xtype: 'fieldset',
+							baseCls: "ApplicationInventario-mainPanel",
 							title: 'Pagar venta '+ApplicationPagos.currentInstance.id+" adeuda: "+ApplicationPagos.currentInstance.debe,
 							//agregamos el boton al formulario
 							items: [
@@ -579,7 +581,7 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
 			{
 						xtype: 'toolbar',
 						dock: 'bottom',
-						title: "<pre>VENTA	     TOTAL	PAGADO	      ADEUDA		    CLIENTE			FECHA</pre>"
+						title: "<pre>VENTA	     TOTAL	PAGADO	      ADEUDA	     FECHA			    CLIENTE		</pre>"
 				},
 			{
 				width: '100%',
@@ -589,7 +591,7 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
 				baseCls: "ApplicationInventario-mainPanel",
 				id:'listaVentas',
 				store: ApplicationPagos.storeVentasCredito,
-				tpl: 	'<tpl for="."><div class="modeloVentas"><pre>{id_venta}		{total}		{pagado} 		{debe} 		{nombre} 		   {fecha}</pre></div></tpl>',
+				tpl: 	'<tpl for="."><div class="modeloVentas"><pre>{id_venta}		{total}		{pagado} 		{debe}		{fecha}	 	{nombre}	</pre></div></tpl>',
 				itemSelector: 'div.modeloVentas',
 				singleSelect: true,
 				indexBar: true,
