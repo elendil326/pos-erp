@@ -256,6 +256,7 @@ ApplicationPagos.btnClientes=new Ext.Button({
 //formulario de las fechas
 ApplicationPagos.fechas = new Ext.form.FormPanel({
 	hidden:'true',
+	baseCls: "ApplicationInventario-mainPanel",
     items: [
 	{
 		html: '',
@@ -286,6 +287,7 @@ ApplicationPagos.fechas = new Ext.form.FormPanel({
 
 //agregamos los controles al formulario
 ApplicationPagos.formulario=new Ext.form.FormPanel({
+	baseCls: "ApplicationInventario-mainPanel",
 	minHeight:80,
     items: [{
         xtype: 'fieldset',
@@ -414,6 +416,8 @@ ApplicationPagos.prototype.funcion_ajax_pagos = function(){
 //formulario para mostrar los pagos de ventas a credito
 ApplicationPagos.prototype.muestraPagos=function(store){	
 		ApplicationPagos.currentInstance.formBase = {
+		
+			baseCls: "ApplicationInventario-mainPanel",
 			//	items
 			items: [
 				{
@@ -445,6 +449,7 @@ ApplicationPagos.prototype.muestraPagos=function(store){
 				height:"70%",
 				id: 'ListaPagos',
 		        xtype: 'list',
+				baseCls: "ApplicationInventario-mainPanel",
 		        store: store,
 		        tpl: '<tpl for="."><div class="pagos"><pre>	   {id_pago}		  {fecha}		   ${monto}		</pre></div></tpl>',
 		        itemSelector: 'div.pagos',
@@ -576,7 +581,7 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
    
     scroll: 'vertical',
 
-	cls: 'cards',
+	cls: "ApplicationVender-mainPanel",
 	layout: {
 		type: 'vbox',
 		align: 'strech'
@@ -597,6 +602,7 @@ ApplicationPagos.prototype.mainCard = new Ext.Panel({
 				width: '100%',
 				height: '100%',
 				xtype: 'list',
+				baseCls: "ApplicationInventario-mainPanel",
 				id:'listaVentas',
 				store: ApplicationPagos.storeVentasCredito,
 				tpl: 	'<tpl for="."><div class="modeloVentas"><pre>{id_venta}		{total}		{pagado} 		{debe} 		{nombre} 		   {fecha}</pre></div></tpl>',
