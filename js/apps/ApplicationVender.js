@@ -381,9 +381,9 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 	}
 
 
-	totals_html = "<span>Subtotal " +  subtotal + "</span> "
-				+ "<span>IVA $" +  (subtotal*.15) + "</span> "
-				+ "<span>Total " +  ((subtotal*.15)+subtotal) + "</span>";
+	totals_html = "<span>Subtotal " +  POS.currencyFormat(subtotal) + "</span> "
+				+ "<span>IVA " +  POS.currencyFormat(subtotal*.15) + "</span> "
+				+ "<span>Total " +  POS.currencyFormat((subtotal*.15)+subtotal) + "</span>";
 					
 
 	// wrap divs
@@ -530,23 +530,102 @@ ApplicationVender.prototype.doVender = function ()
 	
 	//revisar que exista por lo menos un item
 	if(items.length == 0){
-		POS.aviso("Mostrador", "Agregue primero al menos un arituclo para poder vender.");
+		POS.aviso("Mostrador", "Agregue al menos un artículo para poder vender.");
 		return;
 	}
 	
-	newPanel = ApplicationVender.currentInstance.doVenderPanel();
+	if (Ext.get('ApplicationVender-askForMoney-pagoOverlay') == null) {
+		ApplicationVender.currentInstance.askForMoney();
+	}
+	else{
+		Ext.getCmp('ApplicationVender-askForMoney-pagoOverlay').show();
+		//Focus a cantidad
+		document.getElementById(Ext.get('ApplicationVender-askForMoney-cantidad').dom.childNodes[1].id).focus();
+	}
 	
-	sink.Main.ui.setCard( newPanel, 'slide' );
+	/*newPanel = ApplicationVender.currentInstance.doVenderPanel();
+	
+	sink.Main.ui.setCard( newPanel, 'slide' );*/
 
 };
 
+//Funcion para mostrarle un overlay para recibir la cantidad con la que se pagará
+ApplicationVender.prototype.askForMoney = function(){
+	
+	var pagoToolbar = new Ext.Toolbar({
+		title: 'Pago',
+		dock: 'top',
+		items: [{
+				xtype: 'button',
+				text: 'Crédito',
+				handler: function(){
+					//Comprobar aca si no ha rebasado su limite de credito
+				}
+			}, { xtype: 'spacer' } ,
+			{
+				xtype: 'button',
+				ui: 'action',
+				text: 'Aceptar',
+				handler: function(){
+				
+					pagoOverlay.hide();
+					Ext.getCmp('ApplicationVender-askForMoney-cantidad').reset();
+					var cantidadPago = Ext.getCmp('ApplicationVender-askForMoney-cantidad').getValue();
+					newPanel = ApplicationVender.currentInstance.doVenderPanel(cantidadPago);	
+					sink.Main.ui.setCard( newPanel, 'slide' );
+				}
+			}]
+	});
+	
+	var pagoOverlay = new Ext.Panel({
+		id: 'ApplicationVender-askForMoney-pagoOverlay',
+		floating: true,
+		modal: true,
+		centered: true,
+		width: Ext.platform.isPhone ? 260 : 400,
+		height: Ext.platform.isPhone ? 220 : 200,
+		dockedItems: pagoToolbar,
+		items: [ new Ext.form.FormPanel({
+			items:[{
+				activeItem: 0,
+				xtype: 'fieldset',
+				label: 'Pago',
+				items:[{
+					id: 'ApplicationVender-askForMoney-cantidad',
+					xtype: 'textfield',
+					label: 'Cantidad',
+					name: 'cantidad'
+				}]
+			}]
+		})]
+		
+	});
+	
+	pagoOverlay.show();
+	
+	//medio feo, pero bueno
+	Ext.get("ApplicationVender-askForMoney-cantidad").dom.childNodes[1].setAttribute("onkeyup","ApplicationVender.currentInstance.enterOnKeyUp( this, this.value )");
+	
+	//Focus a cantidad
+	document.getElementById(Ext.get('ApplicationVender-askForMoney-cantidad').dom.childNodes[1].id).focus();
+	
+	
+};
 
-
-
-ApplicationVender.prototype.doVenderPanel = function ()
+ApplicationVender.prototype.enterOnKeyUp = function (a, b)
 {
-	
-	
+	if(event.keyCode == 13){
+		Ext.getCmp('ApplicationVender-askForMoney-pagoOverlay').hide();
+		Ext.getCmp('ApplicationVender-askForMoney-cantidad').reset();
+		newPanel = ApplicationVender.currentInstance.doVenderPanel(b);	
+		sink.Main.ui.setCard( newPanel, 'slide' );
+	}
+};
+
+
+ApplicationVender.prototype.doVenderPanel = function ( cantidadPago )
+{
+	//alert(POS.currencyFormat(cantidadPago));
 	var subtotal = 0;
 	var total = 0;
 	
@@ -592,19 +671,29 @@ ApplicationVender.prototype.doVenderPanel = function ()
 		baseCls: "ApplicationVender-ventaListaPanel",
         items: [{
 	        	xtype: 'textfield',
-	        	label: 'SubTotal',
-				value : subtotal
+	        	label: 'Subtotal',
+				value : POS.currencyFormat(subtotal),
+				disabled: true
        		},{
 		        xtype: 'textfield',
 		        label: 'IVA',
-				value : '.15'
+				value : '15%',
+				disabled: true
 	      	},{
 			    xtype: 'textfield',
 			    label: 'Total',
-				value : total
+				value : POS.currencyFormat(total),
+				disabled: true
 		    },{
 			    xtype: 'textfield',
-			    label: 'Pago'
+			    label: 'Pago',
+				value: POS.currencyFormat(cantidadPago),
+				disabled: true
+			},{
+				xtype: 'textfield',
+				label: 'Cambio',
+				value: POS.currencyFormat(cantidadPago-total),
+				disabled: true
 			}]
 		}]
 	});
