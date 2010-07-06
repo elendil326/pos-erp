@@ -485,7 +485,16 @@ ApplicationInventario.prototype.renderDetalles = function( data )
 	//Creamos un overlay para mostrar el mapa
 	var mapOverlayTb = new Ext.Toolbar({
 			title: 'Mapa',
-			dock: 'top'
+			dock: 'top',
+			items: [{
+				xtype: 'button',
+				ui: 'action',
+				text: 'Imprimir',
+				handler: function(){
+					//alert("PRINT!");
+					POS.print(mapOverlay.el.id);
+				}
+			}]
 	});
         
 	/*var mapOverlay = new Ext.Panel({
@@ -496,17 +505,25 @@ ApplicationInventario.prototype.renderDetalles = function( data )
 		height: Ext.platform.isPhone ? 220 : 400,
 		//styleHtmlContent: true,
 		dockedItems: mapOverlayTb,
-		scroll: 'vertical',
+		//scroll: 'vertical',
+		//items: POS.map(data.direccion)
+		items: //POS.map(data.direccion)
+		{xtype: 'map'}
 		//contentEl: 'lipsum',
 		//cls: 'htmlcontent'
 	});*/
+	
+	
 	var mapOverlay = POS.map(data.direccion);
+	mapOverlay.modal = true;
 	mapOverlay.setCentered(true);
 	mapOverlay.setFloating(true, true);
 	mapOverlay.setHeight(400);
 	mapOverlay.setWidth(400);
 	//mapOverlay.addDocked(mapOverlayTb);
+	mapOverlay.doLayout();
 
+	console.log(mapOverlay);
 	
 	var backBar = new Ext.Toolbar({
 		dock: 'bottom',
@@ -527,6 +544,7 @@ ApplicationInventario.prototype.renderDetalles = function( data )
 				text : 'Mapa',
 				handler: function(){
 						mapOverlay.show();
+						mapOverlay.addDocked(mapOverlayTb);
 				}
 			}]
 	});

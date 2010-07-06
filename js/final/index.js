@@ -252,7 +252,7 @@ POS.map = function( address )
 					var geocoder = new google.maps.Geocoder();
 
 					var posMapOptions = {
-						      zoom: 14,
+						      zoom: 15,
 						      mapTypeId: google.maps.MapTypeId.ROADMAP
 					    };
 						
@@ -297,8 +297,17 @@ POS.map = function( address )
 };
 
 
+//Imprime un div, el parametro es el id del div que quieres imprimir
+POS.print = function (divID){
 
+	var divToPrint = document.getElementById(divID);
 
+	var popWin = window.open(' ', 'popwindow');
+	popWin.document.write( divToPrint.innerHTML );
+	popWin.document.close();
+	popWin.print( );
+        //popWin.close();
+};
 
 
 
