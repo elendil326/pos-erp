@@ -42,7 +42,6 @@
 	include_once('funcionesPago.php');
 	include_once('funcionesSucursal.php');
 	include_once('funcionesUsuario.php');
-	include_once('funcionesVenta.php');
 	
 	
 	

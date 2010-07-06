@@ -86,7 +86,9 @@ FROM  `cliente` INNER JOIN  `cuenta_cliente` ON cliente.id_cliente = cuenta_clie
 		return $listar->lista();
 	}	
 	
-	     
+	    //esta funcion nos regresa un listado con los datos de todas las ventas a credito
+		//si se le manda un id_cliente nos regresa las compras a credito de ese cliente
+		//si le mandamo de y al como fechas en formato YYYY-MM-DD nos regresa las compras en ese periodo
         function reporteClientesComprasCredito(){
         
         $id_cliente=$_REQUEST['id_cliente'];
@@ -121,6 +123,9 @@ FROM  `cliente` INNER JOIN  `cuenta_cliente` ON cliente.id_cliente = cuenta_clie
                 return $listar->lista();
         }
         
+	    //esta funcion nos regresa un listado con los datos de todas las ventas a credito que aun se deben
+		//si se le manda un id_cliente nos regresa las compras a credito de ese cliente
+		//si le mandamo de y al como fechas en formato YYYY-MM-DD nos regresa las compras en ese periodo
         function reporteClientesComprasCreditoDeben(){
                 $id_cliente=$_REQUEST['id_cliente'];
                 $de=$_REQUEST['de'];
@@ -153,6 +158,10 @@ FROM  `cliente` INNER JOIN  `cuenta_cliente` ON cliente.id_cliente = cuenta_clie
                 return $listar->lista();
         }
 
+		
+	    //esta funcion nos regresa un listado con los datos de todas las ventas a credito
+		//si se le manda un id_cliente nos regresa las compras a credito de ese cliente
+		//si le mandamo de y al como fechas en formato YYYY-MM-DD nos regresa las compras en ese periodo
         function reporteClientesComprasCreditoPagado(){
                 $id_cliente=$_REQUEST['id_cliente'];
                 $de=$_REQUEST['de'];
@@ -184,4 +193,5 @@ FROM  `cliente` INNER JOIN  `cuenta_cliente` ON cliente.id_cliente = cuenta_clie
                 echo $listar->lista();
                 return $listar->lista();
         }
+		
 ?>
