@@ -73,12 +73,14 @@ y algunas otras funciones
 	function actualizarFacturaVenta()
 	{
 		//verificamos que no nos envien datos vacios  
-		if((!empty($_REQUEST['id_factura']))&&(!empty($_REQUEST['folio']))&&(!empty($_REQUEST['id_venta'])))
+		if((!empty($_REQUEST['id_factura']))&&(!empty($_REQUEST['folio']))&&(!empty($_REQUEST['id_venta']))&&(!empty($_REQUEST['subtotal']))&&(!empty($_REQUEST['iva'])))
 		{
 			//asignamos valores obtenidos a las variables
 			$id=$_REQUEST['id_factura'];
 			$folio=$_REQUEST['folio'];
 			$id_venta=$_REQUEST['id_venta'];
+			$subtotal=$_REQUEST['subtotal'];
+			$iva=$_REQUEST['iva'];
 			//creamos objeto venta existente para modificar
 			$factura=new factura_venta_existente($id);								
 			//variable para verificar si es el mismo id de venta
@@ -91,6 +93,8 @@ y algunas otras funciones
 				//le asignamos los valores al objeto
 				$factura->folio=$folio;												
 				$factura->id_venta=$id_venta;
+				$factura->subtotal=$subtotal;
+				$factura->iva=$iva;
 				//creamos un objeto venta existente
 				$verifica_venta=new venta_existente($id_venta);						
 				//checamos que exista la venta para poder facturar
@@ -101,7 +105,7 @@ y algunas otras funciones
 					{
 						//checamos o que sea el mismo folio o que no haya facturas con el
 						if(($folio1==$folio)||(!$factura->existe_folio()))
-						{	
+						{
 							//intentamos actualizar la factura
 							if($factura->actualiza())		ok();														//actualizacion correcta
 							else							fail("Error al modificar la factura.");						//error al actualizar
@@ -269,6 +273,46 @@ y algunas otras funciones
 		return;
 	}
 	//funcion vender producto
+	
+	//esta funcion factura un producto
+	function facturaProducto()
+	{
+		//verificamos que no nos envien datos vacios  
+		if((!empty($_REQUEST['id_factura']))&&(!empty($_REQUEST['id_producto']))&&(!empty($_REQUEST['cantidad']))&&(!empty($_REQUEST['precio'])))
+		{
+			//asignamos valores obtenidos a las variables
+			$id_factura=$_REQUEST['id_factura'];
+			$id_producto=$_REQUEST['id_producto'];
+			$cantidad=$_REQUEST['cantidad'];
+			$precio=$_REQUEST['precio'];
+			//creamos un objeto inventario existente para veridicar que vendemos el producto
+			$producto=new inventario_existente($id_producto);
+			//creamos objeto de la clase factura_venta
+			$factura=new factura_venta_existente($id_factura);
+			//verificamos que exista la factura
+			if($factura->existe())
+			{
+				//verificamos que vendemos este prodcuto
+				if($producto->existe())
+				{
+					//creamos objeto de la clase detalle_factura
+					$produto_facturado=new detalle_factura($id_factura,$id_producto,$cantidad,$precio);
+					//verificamos que no exista el producto para esta factura
+					if(!$produto_facturado->existe()){
+						//intentamos insertar
+						if($produto_facturado->inserta())							ok();														//insercion correcta
+						else														fail("no se pudo insertar el producto en la factura");		//insercion incorrecta
+					}//if existe producto-factura
+					else															fail("ya se facturo este producto para esta factura");
+				}//if producto existe
+				else																fail("No existe el producto que desea facturar");			//producto inexistente
+			}//if factura existe
+			else																	fail("No existe la factura");								//factura inexistente
+		}//if verifica datos
+		else 																		fail("Faltan datos.");										//datos incompletos
+		return;
+	}
+	//funcion facturar producto
 	
 	//esta funcion lista todas las facturas
 	function listarFacturasVenta()

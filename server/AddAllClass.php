@@ -15,6 +15,7 @@
 	include_once("detalle_cotizacion.php");
 	include_once("detalle_inventario.php");
 	include_once("detalle_venta.php");
+	include_once("detalle_factura.php");
 	include_once("factura_compra.php");
 	include_once("factura_venta.php");
 	include_once("impuesto.php");
@@ -92,6 +93,7 @@
 		case "eliminarNota" : 					eliminarNota(); break;
 		case "actualizarNota" : 				actualizarNota(); break;
 		case "venderProducto" : 				venderProducto(); break;
+		case "facturaProducto" : 				facturaProducto(); break;
 		case "listarFacturasVenta" : 			listarFacturasVenta(); break;
 		case "listarNotas" : 					listarNotas(); break;
 		//----------reportes de ventas

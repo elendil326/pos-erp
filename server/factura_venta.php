@@ -3,11 +3,16 @@
 		var $id_factura;	 	 	 	 	 	 	
 		var $folio;	 	 	 	 	 	 	
 		var $id_venta;	 	 	
+		var $fecha;	 	 	
+		var $subtotal;	 	 	
+		var $iva;	 	 	
 		var $bd;
 		
 		function __construct($folio,$id_venta){ 	 	
 			$this->folio=$folio;	 	 	 	 	 	 	
 			$this->id_venta=$id_venta;
+			$this->subtotal=0;
+			$this->iva=0;
 			$this->bd=new bd_default();
 		}
 		function __destruct(){ 
@@ -15,16 +20,16 @@
 		}
 		
 		function inserta(){
-			$insert="INSERT INTO factura_venta values(null,?,?);";
-			$params=array($this->folio,$this->id_venta);			
+			$insert="INSERT INTO factura_venta values(null,?,?,null,?,?);";
+			$params=array($this->folio,$this->id_venta,$this->subtotal,$this->iva);			
 			if($this->bd->ejecuta($insert,$params)){
 				$this->id_factura=$this->bd->con->Insert_ID();
 				return true;
 			}else return false;
 		}
 		function actualiza(){
-			$update="UPDATE factura_venta SET folio=?, id_venta=? where id_factura=?";
-			$params=array($this->folio,$this->id_venta,$this->id_factura);
+			$update="UPDATE factura_venta SET folio=?, id_venta=?,fecha=?,subtotal=?,iva=? where id_factura=?";
+			$params=array($this->folio,$this->id_venta,$this->fecha,$this->subtotal,$this->iva,$this->id_factura);
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){
