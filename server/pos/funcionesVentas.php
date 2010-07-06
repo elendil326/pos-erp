@@ -612,28 +612,28 @@ y algunas otras funciones
 		//inicializamos arreglo de periodo vacio
 		$params=array();
 		//inicializamos la consulta, esta sera final si no se enviaron parametros
-		$query="SELECT v.nombre,sum(v.total) as total
-				FROM  ventasusuario v
-				group by v.nombre,sucursal,v.fecha ";
-		//verificamos el booleano de sucursal
-		if($sucursal){
-			//agregamos having para que solo cuente los de la sucursal deseada
-			$query.=" having sucursal=? ";
-			//agregamos parametro al arreglo
-			array_push($params,$id_sucursal);
-		}//if sucursal
+		$query="select u.nombre, count(*) as total
+				from ventas v natural join usuario u ";
 		//verificamos si se enviaron fechas
 		if($fecha)
 		{
 				//agregamos la condicion que cuente los que esten en las fechas
 				//si se agrego sucursal lo pone con and, de lo contrario pone el having
-				$query.=(($sucursal)?" and ":" having ")."v.fecha BETWEEN ? AND ? ";
+				$query.="where v.fecha BETWEEN ? AND ? ";
 				//agrega los parametros a la pila
 				array_push($params,$de,$al);
 		}//if fechas
+		$query.=" group by u.nombre ";
+		//verificamos el booleano de sucursal
+		if($sucursal){
+			//agregamos having para que solo cuente los de la sucursal deseada
+			$query.=" ,v.sucursal
+					having sucursal=? ";
+			//agregamos parametro al arreglo
+			array_push($params,$id_sucursal);
+		}//if sucursal
 		//agregamos el ; final
 		$query.=";";
-		echo "$query<br><br>";
 		//creamos objeto de la clase listar y le pasamos el arreglo de parametros
 		$listar = new listar($query,$params);
 		//imprimimos el resultado
@@ -654,19 +654,18 @@ y algunas otras funciones
 		//inicializamos arreglo de parametros vacio
 		$params=array();
 		//inicializamos la consulta, esta sera final si no se enviaron parametros
-		$query="SELECT v.descripcion, sum( v.total ) AS total
-				FROM ventassucursal v
-				GROUP BY v.descripcion";
+		$query="select s.descripcion ,count(*) AS `total` 
+				from ventas v join sucursal `s` on((s.id_sucursal=v.sucursal)) ";
 		//verificamos si se enviaron fechas
 		if($fecha)
 		{
 				//agregamos la condicion que cuente las que esten en las fechas
-				$query.=", v.fecha having DATE(v.fecha) BETWEEN ? AND ? ";
+				$query.="where DATE(v.fecha) BETWEEN ? AND ? ";
 				//agrega los parametros a la pila
 				array_push($params,$de,$al);
 		}//if fechas
-		//agregamos el ; final
-		$query.=";";
+		//agregamos el final de la query	
+		$query.="group by s.descripcion;";
 		//creamos objeto de la clase listar y le pasamos el arreglo de parametros
 		$listar = new listar($query,$params);
 		//imprimimos el resultado

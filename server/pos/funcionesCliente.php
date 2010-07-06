@@ -97,7 +97,6 @@ FROM  `cliente` INNER JOIN  `cuenta_cliente` ON cliente.id_cliente = cuenta_clie
                 $cliente=!empty($id_cliente);
                 $fecha=(!empty($de)&&!empty($al));
                 $params=array();
-                
                 $query="SELECT v.id_venta, (
                                 v.subtotal + v.iva
                                 ) AS  'Total', IF(SUM( pv.monto )>0,SUM(pv.monto),0) AS  'Pagado',
@@ -122,6 +121,8 @@ FROM  `cliente` INNER JOIN  `cuenta_cliente` ON cliente.id_cliente = cuenta_clie
                 echo $listar->lista();
                 return $listar->lista();
         }
+		//reporteClientesComprasCredito
+		
         
 	    //esta funcion nos regresa un listado con los datos de todas las ventas a credito que aun se deben
 		//si se le manda un id_cliente nos regresa las compras a credito de ese cliente
@@ -157,9 +158,10 @@ FROM  `cliente` INNER JOIN  `cuenta_cliente` ON cliente.id_cliente = cuenta_clie
                 echo $listar->lista();
                 return $listar->lista();
         }
+		//reporteClientesComprasCreditoDeben
 
 		
-	    //esta funcion nos regresa un listado con los datos de todas las ventas a credito
+	    //esta funcion nos regresa un listado con los datos de todas las ventas a credito pagadas
 		//si se le manda un id_cliente nos regresa las compras a credito de ese cliente
 		//si le mandamo de y al como fechas en formato YYYY-MM-DD nos regresa las compras en ese periodo
         function reporteClientesComprasCreditoPagado(){
@@ -193,5 +195,5 @@ FROM  `cliente` INNER JOIN  `cuenta_cliente` ON cliente.id_cliente = cuenta_clie
                 echo $listar->lista();
                 return $listar->lista();
         }
-		
+		//reporteClientesComprasCreditoPagado
 ?>

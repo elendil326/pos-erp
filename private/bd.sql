@@ -3,14 +3,14 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 06-07-2010 a las 01:02:47
+-- Tiempo de generación: 06-07-2010 a las 02:56:02
 -- Versión del servidor: 5.1.30
 -- Versión de PHP: 5.2.8
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 --
--- Base de datos: `POS`
+-- Base de datos: `pos`
 --
 
 -- --------------------------------------------------------
@@ -562,7 +562,7 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=15 ;
 
 --
 -- Volcar la base de datos para la tabla `ventas`
@@ -573,50 +573,8 @@ INSERT INTO `ventas` (`id_venta`, `id_cliente`, `tipo_venta`, `fecha`, `subtotal
 (10, 48, 2, '2010-07-05 22:59:19', 1000, 160, 2, 5),
 (11, 50, 2, '2010-07-05 22:59:19', 100, 160, 1, 4),
 (12, 52, 2, '2010-07-05 22:59:19', 100, 160, 2, 4),
-(13, 25, 2, '2010-07-05 22:59:19', 200, 32, 2, 4);
-
--- --------------------------------------------------------
-
---
--- Estructura Stand-in para la vista `ventassucursal`
---
-DROP VIEW IF EXISTS `ventassucursal`;
-CREATE TABLE IF NOT EXISTS `ventassucursal` (
-`sucursal` int(11)
-,`descripcion` varchar(100)
-,`fecha` date
-,`total` bigint(21)
-);
--- --------------------------------------------------------
-
---
--- Estructura Stand-in para la vista `ventasusuario`
---
-DROP VIEW IF EXISTS `ventasusuario`;
-CREATE TABLE IF NOT EXISTS `ventasusuario` (
-`id_usuario` int(11)
-,`fecha` date
-,`nombre` varchar(100)
-,`total` bigint(21)
-,`sucursal` int(11)
-);
--- --------------------------------------------------------
-
---
--- Estructura para la vista `ventassucursal`
---
-DROP TABLE IF EXISTS `ventassucursal`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `ventassucursal` AS (select `v`.`sucursal` AS `sucursal`,`s`.`descripcion` AS `descripcion`,cast(`v`.`fecha` as date) AS `fecha`,count(`v`.`sucursal`) AS `total` from (`ventas` `v` join `sucursal` `s` on((`s`.`id_sucursal` = `v`.`sucursal`))) group by `v`.`sucursal`,`s`.`descripcion`,`v`.`fecha`);
-
--- --------------------------------------------------------
-
---
--- Estructura para la vista `ventasusuario`
---
-DROP TABLE IF EXISTS `ventasusuario`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `ventasusuario` AS (select `v`.`id_usuario` AS `id_usuario`,cast(`v`.`fecha` as date) AS `fecha`,`u`.`nombre` AS `nombre`,count(`v`.`id_usuario`) AS `total`,`v`.`sucursal` AS `sucursal` from (`ventas` `v` join `usuario` `u` on((`v`.`id_usuario` = `u`.`id_usuario`))) group by `v`.`id_usuario`,`v`.`sucursal`,`v`.`fecha`,`u`.`nombre`);
+(13, 25, 2, '2010-07-05 22:59:19', 200, 32, 2, 4),
+(14, 48, 2, '2010-07-06 01:49:27', 300, 48, 2, 4);
 
 --
 -- Filtros para las tablas descargadas (dump)
@@ -701,3 +659,13 @@ ALTER TABLE `ventas`
   ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+DELIMITER $$
+--
+-- Procedimientos
+--
+DROP PROCEDURE IF EXISTS `mi_proc`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `mi_proc`(venta INT)
+SET @id_venta = venta$$
+
+DELIMITER ;
