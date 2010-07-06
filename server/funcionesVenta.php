@@ -291,4 +291,82 @@ y algunas otras funciones
 		return;
 	}
 	//funcion listar notas
+	
+	//esta funcion regresa un reporte de ventas por usuario,
+	//si se le envian fechas agrega un periodo
+	//si se le agrega un id de sucursal tambien lo busca
+	function reporteVentasEmpleado(){
+		//asignamos los datos recibidos a las variables (en caso de que se reciban)
+		$id_sucursal=$_REQUEST['id_sucursal'];
+		$de=$_REQUEST['de'];
+		$al=$_REQUEST['al'];
+		//asignamos variables que seran booleanos para saber si nos enviaron parametros de sucursal y/o periodo
+		$sucursal=!empty($id_sucursal);
+		$fecha=(!empty($de)&&!empty($al));
+		//inicializamos arreglo de periodo vacio
+		$params=array();
+		//inicializamos la consulta, esta sera final si no se enviaron parametros
+		$query="SELECT v.nombre,sum(v.total) as total
+				FROM  ventasusuario v
+				group by v.nombre,sucursal,v.fecha ";
+		//verificamos el booleano de sucursal
+		if($sucursal){
+			//agregamos having para que solo cuente los de la sucursal deseada
+			$query.=" having sucursal=? ";
+			//agregamos parametro al arreglo
+			array_push($params,$id_sucursal);
+		}//if sucursal
+		//verificamos si se enviaron fechas
+		if($fecha)
+		{
+				//agregamos la condicion que cuente los que esten en las fechas
+				//si se agrego sucursal lo pone con and, de lo contrario pone el having
+				$query.=(($sucursal)?" and ":" having ")."v.fecha BETWEEN ? AND ? ";
+				//agrega los parametros a la pila
+				array_push($params,$de,$al);
+		}//if fechas
+		//agregamos el ; final
+		$query.=";";
+		echo "$query<br><br>";
+		//creamos objeto de la clase listar y le pasamos el arreglo de parametros
+		$listar = new listar($query,$params);
+		//imprimimos el resultado
+		echo $listar->lista();
+		return;
+	}
+	//reporte ventas empleado
+	
+	
+	//esta funcion regresa un reporte de ventas por sucursal,
+	//si se le envian fechas agrega un periodo
+	function reporteVentasSucursales(){
+		//asignamos los datos recibidos a las variables (en caso de que se reciban)
+		$de=$_REQUEST['de'];
+		$al=$_REQUEST['al'];
+		//asignamos variables que seran booleanos para saber si nos enviaron parametros de periodo
+		$fecha=(!empty($de)&&!empty($al));
+		//inicializamos arreglo de parametros vacio
+		$params=array();
+		//inicializamos la consulta, esta sera final si no se enviaron parametros
+		$query="SELECT v.descripcion, sum( v.total ) AS total
+				FROM ventassucursal v
+				GROUP BY v.descripcion";
+		//verificamos si se enviaron fechas
+		if($fecha)
+		{
+				//agregamos la condicion que cuente las que esten en las fechas
+				$query.=", v.fecha having DATE(v.fecha) BETWEEN ? AND ? ";
+				//agrega los parametros a la pila
+				array_push($params,$de,$al);
+		}//if fechas
+		//agregamos el ; final
+		$query.=";";
+		//creamos objeto de la clase listar y le pasamos el arreglo de parametros
+		$listar = new listar($query,$params);
+		//imprimimos el resultado
+		echo $listar->lista();
+		return;
+	}
+	//reporte ventas sucursal
+	
 ?>

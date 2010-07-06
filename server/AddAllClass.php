@@ -94,6 +94,9 @@
 		case "venderProducto" : 				venderProducto(); break;
 		case "listarFacturasVenta" : 			listarFacturasVenta(); break;
 		case "listarNotas" : 					listarNotas(); break;
+		//----------reportes de ventas
+		case "reporteVentasEmpleado" : 			reporteVentasEmpleado(); break;
+		case "reporteVentasSucursales" : 		reporteVentasSucursales(); break;
 		
 		case "agregarProductoDetalle_venta":	agregarProductoDetalle_venta(); break;
 		case "eliminarProductoDetalle_venta":	eliminarProductoDetalle_venta(); break;
@@ -152,6 +155,7 @@
 		case 'eliminarCliente':									eliminarCliente();	break;
 		case 'insertarCliente':									insertarCliente();	break;
 		case 'mostrarCliente':									mostrarCliente();	break;
+		//reportes
 		case 'reporteClientesTodos': 							reporteClientesTodos(); 	break;
 		case 'reporteClientesDeben': 							reporteClientesDeben(); 	break;
 		case 'reporteClientesCompras': 							reporteClientesCompras(); 	break;

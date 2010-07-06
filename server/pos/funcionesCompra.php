@@ -244,6 +244,7 @@
 			return;
 		}else 											fail("Faltan datos.");
 	}
+	
 	function reporteFacturaCompra(){
 		if(!empty($_REQUEST['id_factura'])){
 			$id=$_REQUEST['id_factura'];
