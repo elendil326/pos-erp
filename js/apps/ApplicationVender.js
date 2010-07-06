@@ -33,8 +33,8 @@ ApplicationVender.prototype.ayuda = null;
 //dockedItems
 ApplicationVender.prototype.dockedItems = null;
 
-
-
+//Informacion del cliente
+ApplicationVender.prototype.cliente = null;
 
 
 ApplicationVender.prototype._init = function()
@@ -534,6 +534,7 @@ ApplicationVender.prototype.doVender = function ()
 		return;
 	}
 	
+	//Si no existe el overlay lo creamos, sino solo lo mostramos
 	if (Ext.get('ApplicationVender-askForMoney-pagoOverlay') == null) {
 		ApplicationVender.currentInstance.askForMoney();
 	}
@@ -704,8 +705,34 @@ ApplicationVender.prototype.doVenderPanel = function ( cantidadPago )
 
 ApplicationVender.prototype.doVentaLogic = function ()
 {
-	var thksPanel = ApplicationVender.currentInstance.doGraciasPanel();
-	sink.Main.ui.setCard( thksPanel, 'fade' );
+	//Ajax para guardar la venta en la BD
+	
+	POS.AJAXandDECODE(
+					//Parametros
+					{
+						method: 'insertarVenta',
+						id_cliente: ApplicationVender.currentInstance.cliente.id_cliente,
+						tipo_venta: 1
+					},
+					//Funcion success
+					function(result){
+						console.log(result);
+						
+						if (result.success)
+						{
+							//Termina la venta y se agredece :)
+							var thksPanel = ApplicationVender.currentInstance.doGraciasPanel();
+							sink.Main.ui.setCard( thksPanel, 'fade' );							
+						}
+					},
+					//Funcion failure
+					function(){
+						console.warn("ApplicationVender: Error al realizar la venta");
+					}
+	);
+	
+	
+	
 };
 
 
@@ -786,7 +813,7 @@ ApplicationVender.prototype.swapClienteComun = function (val)
 	}else{
 		
 		Ext.get("detallesCliente").update("");
-		
+		this.cliente = null;
 		ApplicationVender.currentInstance.CLIENTE_COMUN = true; 	
 	}
 };
@@ -799,6 +826,8 @@ ApplicationVender.prototype.actualizarDetallesCliente = function ( cliente )
 	//ApplicationVender.currentInstance.mainCard.doLayout();
 	
 	//mostrar los detalles del cliente
+	
+	this.cliente = cliente;
 	
 	var html = "";
 	html += " <div class='ApplicationVender-clienteBox'> ";

@@ -194,8 +194,8 @@
 	function insertarVenta(){
 		$id_cliente =$_REQUEST['id_cliente'];
 		$tipo_venta=$_REQUEST['tipo_venta'];
-		$sucursal=$_REQUEST['sucursal'];
-		$id_usuario=$_REQUEST['id_usuario'];
+		$sucursal=$_SESSION['sucursal_id'];
+		$id_usuario=$_SESSION['user'];
 		$venta = new venta($id_cliente,$tipo_venta,$sucursal,$id_usuario);
 				
 		if($venta->inserta()){
