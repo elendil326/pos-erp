@@ -330,7 +330,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `usuario` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `contrasena` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `nivel` int(11) NOT NULL,
-  `id_sucursal` int(11) NOT NULL COMMENT 'Id de la sucursal a que pertenece',
+  `sucursal_id` int(11) NOT NULL COMMENT 'Id de la sucursal a que pertenece',
   PRIMARY KEY (`id_usuario`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
