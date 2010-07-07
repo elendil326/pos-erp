@@ -294,7 +294,6 @@ Ext.regModel('modeloVentas', {
 //inicializamos el store de ventas a credito
 ApplicationPagos.storeVentasCredito = new Ext.data.Store({
     model: 'modeloVentas',
-    sorters: 'fecha',
     getGroupString : function(record) {
         return record.get('nombre')[0];
     }

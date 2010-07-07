@@ -29,6 +29,8 @@
 	include_once("usuario.php");
 	include_once("venta.php"); 
 	include_once("listar.php"); 
+	include_once("encargado.php"); 
+	include_once("gastos.php"); 
 	
 
 	include_once('pos/funcionesCliente.php');
@@ -124,6 +126,14 @@
 		case "actualizarSucursal" : 			actualizarSucursal(); break;
 		case "listarSucursal" : 				listarSucursal(); break;
 		case "detallesSucursal":				detallesSucursal(); break;
+		//-Encargado
+		case "insertarEncargado":				insertarEncargado(); break;
+		case "eliminarEncargado":				eliminarEncargado(); break;
+		case "cambiarEncargado":				cambiarEncargado(); break;
+		case "insertarGasto":					insertarGasto(); break;
+		case "eliminarGasto":					eliminarGasto(); break;
+		case "actualizarGasto":					actualizarGasto(); break;
+		
 		
 		//----- funciones productos proveedor
 		case "insertarProductoProveedor" : 		insertarProductoProveedor(); break;

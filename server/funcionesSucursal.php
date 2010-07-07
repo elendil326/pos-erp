@@ -111,4 +111,224 @@ y algunas otras funciones
 		return;
 	}
 	//funcion detalle sucursal
+	
+	
+	
+	/*
+	Aqui van las funciones de encargado que se llevan a cabo en cada sucursal
+	*/
+	
+	
+	//esta funcion inserta un encargado a una sucursal
+	function insertarEncargado()
+	{
+		//verificamos que no nos envien datos vacios  
+		if((!empty($_REQUEST['id_usuario']))&&(!empty($_REQUEST['porciento'])))
+		{
+			//asignamos valores obtenidos a las variables
+			$id_usuario=$_REQUEST['id_usuario'];
+			$porciento=$_REQUEST['porciento'];
+			//creamos un objeto usuario
+			$usuario=new usuario_existente($id_usuario);
+			//verificamos que exista el usuario
+			if($usuario->existe())
+			{
+				//creamos objeto-encargado
+				$encargado=new encargado($id_usuario,$porciento);
+				//verficamos que no exista
+				if(!$encargado->existe())
+				{
+					//verificamos que el porciento sea correcto
+					if($encargado->porcientoValido())
+					{
+						//intentamos insertar al encargado
+						if($encargado->inserta())							ok();												//insercion existosa
+						else												fail("Error al guardar al encargado.");				//fallo la insercion
+					}//if porciento valido
+					else 													fail("El porcentaje debe ser menor para no exeder el 100%");//excede el 100%
+				}//if encargado no existe
+				else 														fail("Ya existe este encargado.");					//encargado existente
+			}//if existe usuario
+			else 															fail("El usuario no existe");						//usuario inexistente	
+		}//if verificar datos
+		else																fail("Faltan datos.");								//datos incompletos
+		return;
+	}
+	//funcion insertar encargado
+	
+	//esta funcion elimina a un encargado a una sucursal
+	function eliminarEncargado()
+	{
+		//verificamos que no nos envien datos vacios  
+		if((!empty($_REQUEST['id_usuario'])))
+		{
+			//asignamos valores obtenidos a las variables
+			$id_usuario=$_REQUEST['id_usuario'];
+			//creamos objeto-encargado
+			$encargado=new encargado_existente($id_usuario);
+			//verficamos que exista
+			if($encargado->existe())
+			{
+				//intentamos eliminar al encargado
+				if($encargado->borra())									ok();												//borrado existoso
+				else													fail("Error al guardar al encargado.");				//fallo el borado
+			}//if encargado  existe
+			else 														fail("No existe este encargado.");					//encargado inexistente
+		}//if verificar datos
+		else															fail("Faltan datos.");								//datos incompletos
+		return;
+	}
+	//funcion eliminar encargado
+	
+	//esta funcion inserta un encargado a una sucursal
+	function cambiarEncargado()
+	{
+		//verificamos que no nos envien datos vacios  
+		if((!empty($_REQUEST['id_usuario']))&&(!empty($_REQUEST['porciento'])))
+		{
+			//asignamos valores obtenidos a las variables
+			$id_usuario=$_REQUEST['id_usuario'];
+			$porciento=$_REQUEST['porciento'];
+			//creamos un objeto usuario
+			$usuario=new usuario_existente($id_usuario);
+			//verificamos que exista el usuario
+			if($usuario->existe())
+			{
+				//creamos objeto-encargado
+				$encargado=new encargado($id_usuario,$porciento);
+				//verificamos que el porciento sea correcto
+					//intentamos insertar al encargado
+					if($encargado->cambiar())							ok();												//cambio existoso
+					else
+					{
+						if($encargado->porcientoValido())						fail("Error al cambiar al encargado.");				//fallo el cambio
+						else 													fail("El porcentaje debe ser menor para no exeder el 100%");//excede el 100%
+					}
+			}//if existe usuario
+			else 														fail("El usuario no existe");						//usuario inexistente	
+		}//if verificar datos
+		else															fail("Faltan datos.");								//datos incompletos
+		return;
+	}
+	//funcion insertar encargado
+	
+	
+	/*
+	Aqui van las funciones de gastos que se llevaran a cabo en las sucursales
+	*/
+	
+	
+	//esta funcion inserta un gasto a una sucursal
+	function insertarGasto()
+	{
+		//verificamos que no nos envien datos vacios  
+		if((!empty($_REQUEST['concepto']))&&(!empty($_REQUEST['monto']))&&(!empty($_REQUEST['id_sucursal']))&&(!empty($_REQUEST['id_usuario'])))
+		{
+			//asignamos valores obtenidos a las variables
+			$concepto=$_REQUEST['concepto'];
+			$monto=$_REQUEST['monto'];
+			$id_sucursal=$_REQUEST['id_sucursal'];
+			$id_usuario=$_REQUEST['id_usuario'];
+			//creamos objeto-sucursal
+			$sucursal=new sucursal_existente($id_sucursal);
+			//verificamos que la sucursal exista
+			if($sucursal->existe())
+			{
+				//creamos objeto-usuario
+				$usuario=new usuario_existente($id_usuario);
+				if($usuario->existe())
+				{
+					//creamos objeto-gasto
+					$gasto=new gasto($concepto,$monto,$id_sucursal,$id_usuario);
+					//verficamos que no exista
+					if(!$gasto->existe())
+					{
+						//intentamos insertar al gasto
+						if($gasto->inserta())								ok();											//insercion existosa
+						else												fail("Error al guardar al gasto.");				//fallo la insercion
+					}//if gasto no existe
+					else 													fail("Ya existe este gasto.");					//gasto existente
+				}//if existe usuario
+				else														fail("El usuario no existe");					//usuario inexistente
+			}//if existe sucursal
+			else															fail("La sucursal no existe");					//sucursal inexistente
+		}//if verificar datos
+		else																fail("Faltan datos.");							//datos incompletos
+		return;
+	}
+	//funcion insertar gasto
+	
+	
+	//esta funcion elimina a un gasto de una sucursal
+	function eliminarGasto()
+	{
+		//verificamos que no nos envien datos vacios  
+		if((!empty($_REQUEST['id_gasto'])))
+		{
+			//asignamos valores obtenidos a las variables
+			$id_gasto=$_REQUEST['id_gasto'];
+			//creamos objeto-gasto
+			$gasto=new gasto_existente($id_gasto);
+			//verficamos que exista
+			if($gasto->existe())
+			{
+				//intentamos eliminar el gasto
+				if($gasto->borra())										ok();												//borrado existoso
+				else													fail("Error al guardar el gasto.");					//fallo el borado
+			}//if gasto  existe
+			else 														fail("No existe este gasto.");						//gasto inexistente
+		}//if verificar datos
+		else															fail("Faltan datos.");								//datos incompletos
+		return;
+	}
+	//funcion eliminar gasto
+	
+	
+	//esta funcion actualiza un gasto a una sucursal
+	function actualizarGasto()
+	{
+		//verificamos que no nos envien datos vacios  
+		if((!empty($_REQUEST['id_gasto']))&&(!empty($_REQUEST['concepto']))&&(!empty($_REQUEST['monto']))&&(!empty($_REQUEST['id_sucursal']))&&(!empty($_REQUEST['id_usuario'])))
+		{
+			//asignamos valores obtenidos a las variables
+			$id_gasto=$_REQUEST['id_gasto'];
+			$concepto=$_REQUEST['concepto'];
+			$monto=$_REQUEST['monto'];
+			$id_sucursal=$_REQUEST['id_sucursal'];
+			$id_usuario=$_REQUEST['id_usuario'];
+			//creamos objeto-sucursal
+			$sucursal=new sucursal_existente($id_sucursal);
+			//verificamos que la sucursal exista
+			if($sucursal->existe())
+			{
+				//creamos objeto-usuario
+				$usuario=new usuario_existente($id_usuario);
+				if($usuario->existe())
+				{
+					//creamos objeto-gasto
+					$gasto=new gasto_existente($id_gasto);
+					//verficamos que exista
+					if($gasto->existe())
+					{
+						//asignamos valriables al objeto
+						$gasto->concepto=$concepto;
+						$gasto->monto=$monto;
+						$gasto->id_sucursal=$id_sucursal;
+						$gasto->id_usuario=$id_usuario;
+						//intentamos actualizar al gasto
+						if($gasto->actualiza())								ok();											//actualizacion existosa
+						else												fail("Error al guardar al gasto.");				//fallo la actualizacion
+					}//if gasto  existe
+					else 													fail("No existe este gasto.");					//gasto inexistente
+				}//if existe usuario
+				else														fail("El usuario no existe");					//usuario inexistente
+			}//if existe sucursal
+			else															fail("La sucursal no existe");					//sucursal inexistente
+		}//if verificar datos
+		else																fail("Faltan datos.");							//datos incompletos
+		return;
+	}
+	//funcion actualizar gasto
+	
+	
 ?>
