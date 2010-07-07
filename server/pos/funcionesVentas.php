@@ -196,6 +196,10 @@
 		$tipo_venta=$_REQUEST['tipo_venta'];
 		$sucursal=$_SESSION['sucursal_id'];
 		$id_usuario=$_SESSION['id_usuario'];
+		$jsonItems = $_REQUEST['jsonItems'];
+
+		$objItems = json_decode($jsonItems);
+		
 		/*echo $id_cliente;
 		echo $tipo_venta;
 		echo $sucursal;

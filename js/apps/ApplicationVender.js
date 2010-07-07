@@ -805,13 +805,14 @@ ApplicationVender.prototype.doVentaLogic = function ()
 	
 	var jsonItems = Ext.util.JSON.encode(ApplicationVender.currentInstance.htmlCart_items);
 	console.log(jsonItems);
-	return;
+	
 	POS.AJAXandDECODE(
 					//Parametros
 					{
 						method: 'insertarVenta',
 						id_cliente: ApplicationVender.currentInstance.cliente.iden,
-						tipo_venta: 1
+						tipo_venta: 1,
+						jsonItems: jsonItems
 					},
 					//Funcion success
 					function(result){
