@@ -242,8 +242,19 @@ ApplicationVender.prototype._initToolBar = function (){
 
 ApplicationVender.prototype.addProductByIDKeyUp = function (a, b)
 {
-	if(event.keyCode == 13){
-		ApplicationVender.currentInstance.doAddProduct();
+
+	if(event.keyCode == 13)
+	{
+		//si teclea enter, pero hay un pop up visible, ocultarlo con este enter
+		if(POS.aviso.visible){
+			//close current pop up
+			POS.aviso.hide();
+		}else{
+			
+			//add product
+			ApplicationVender.currentInstance.doAddProduct();			
+		}
+
 	}
 };
 
@@ -533,6 +544,10 @@ ApplicationVender.prototype.doAddProduct = function (button, event)
 			//ya llego el request con los datos si existe o no	
 			if(!datos.success){
 				POS.aviso("Mostrador", datos.reason);
+				
+				//clear the textbox
+				Ext.get("APaddProductByID").first().dom.value = "";
+				
 				return;
 			}
 			

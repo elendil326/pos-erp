@@ -215,9 +215,41 @@ POS.AJAXandDECODE = function (params, success, failure)
 	
 };
 
+
+
+
+
+/*
+	Aviso
+*/
+
+
 POS.aviso = function (title, contents) 
 {
-	this.popup = new Ext.Panel({
+
+	if(POS.aviso.box){
+		if(DEBUG){
+			console.log("Aviso exists... swapping visibility");
+		}
+		
+		//cambiar el titulo
+		POS.aviso.box.getDockedItems()[0].setTitle( title );
+		
+		
+		//cambiar el contenido
+		POS.aviso.box.body.dom.childNodes[0].innerHTML = "<p>" + contents + "</p>";
+		
+		
+		POS.aviso.box.show('pop');
+		
+		return;
+	}
+	
+	if(DEBUG){
+		console.log("Aviso does not exist... creating one");
+	}
+	
+	POS.aviso.box = new Ext.Panel({
             floating: true,
             modal: true,
             centered: true,
@@ -230,11 +262,40 @@ POS.aviso = function (title, contents)
                 xtype: 'toolbar',
                 title: title
             }],
-            scroll: 'vertical'
+            scroll: 'vertical',
+			listeners:
+					{
+						'show': function( )
+						{
+							POS.aviso.visible = true;
+						},
+						'hide' : function ()
+						{
+							POS.aviso.visible = false;
+						}
+					}
         });
     
-    this.popup.show('pop');
+    POS.aviso.box.show('pop');
 };
+
+
+
+POS.aviso.hide = function ()
+{
+	if(POS.aviso.visible){
+		POS.aviso.box.hide();
+	}
+};
+
+POS.aviso.box = null;
+
+POS.aviso.visible = false;
+
+
+
+
+
 
 
 
@@ -248,7 +309,14 @@ POS.map = function( address )
 		layout: 'fit',
 		listeners: {
 				afterrender: function(panel){
-
+					
+					if(!window.google){
+						if(DEBUG){
+							console.log("No google ");
+						}
+						return null;
+					}
+					
 					var geocoder = new google.maps.Geocoder();
 
 					var posMapOptions = {
@@ -333,6 +401,19 @@ POS.currencyFormat = function (num){
 	return (((sign)?'':'-') + '$' + num + '.' + cents);
 
 };
+
+
+
+
+
+
+
+POS.doPrintTicket = function ()
+{
+	
+	
+	
+}
 
 
 //	--------------------------------------------------------------------------------------
