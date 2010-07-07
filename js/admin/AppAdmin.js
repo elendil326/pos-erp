@@ -58,7 +58,7 @@ AppAdmin.prototype.loadStructure = function(){
 	 $('#datos-boton').click(function(){
 	 
 	 				if(DEBUG){ console.log('click en datos');}
-	 				
+	 				new Datos();
 	 				});
 	 				
 	 $('#sucursales-boton').click(function(){
@@ -225,16 +225,14 @@ AppAdmin.prototype.createLogoutMessage = function(){
 	});
 }
 
+//Funcion estatica para hacer peticiones
 AppAdmin.request = function(config){
 
 	$.ajax({
 		type: 'POST',
 		url: config.url,
 		data: config.data,
-		success: function(msg){
-			alert("w00t: "+msg);
-		},
-		dataType: "json"
+		success: config.success
 	});
 
 }

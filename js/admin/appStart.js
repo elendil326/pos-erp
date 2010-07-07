@@ -58,14 +58,20 @@ $(document).ready(function() {
 				data: [[0, 0], [1, 1], [2, 1.414], [3, 1.73], [4, 2]]
 				}));
 				
-	//test ajax
+	
+
+});
+//AJAX EJEMPPLO
+//test ajax
+	/*
 	AppAdmin.request({
-		url: "http://stable.hdclass.com/server/login_functions.php",
-		data: {test : 'bla', method: 'login'},
+		url: "../serverProxy.php",
+		data: {test : 'bla', method: 'reporteClientesTodos'},
 		success: function(msg){
 			
-			alert("Data retrieved: "+msg);
+			//TODO: mejorar esto
+			var data = eval("("+msg+")");
+			
+			alert("Data retrieved: "+data.success);
 		}
-	});
-
-});	
+	});*/

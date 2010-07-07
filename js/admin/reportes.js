@@ -9,7 +9,10 @@ Reports = function(){
 	//Borramos el contenido del div principal
 	$('#content').html("");
 	this.loadSettings();
+	this.loadResumen();
 	this.loadCharts();
+	
+	Reports.currentInstance = this;
 }
 
 
@@ -62,6 +65,9 @@ Reports.prototype.loadSettings = function(){
 	
 	$('#boton-aplicar-fechas-reporte').html("Aplicar");
 	$('#boton-aplicar-fechas-reporte').button();
+	$('#boton-aplicar-fechas-reporte').click(function(){
+							Reports.currentInstance.applyPeriodo();
+						});
 	
 	$('#fecha-inicio-input').datepicker();
 	$('#fecha-final-input').datepicker();
@@ -90,6 +96,10 @@ Reports.prototype.loadSettings = function(){
 	/*====================fin radios tipo reporte==============================================*/
 }
 
+
+/*
+	Funcion para cargar graficas
+*/
 Reports.prototype.loadCharts = function(){
 	
 	MochiKit.DOM.addLoadEvent(
@@ -128,4 +138,38 @@ Reports.prototype.loadCharts = function(){
 				data: [[0, 3], [1, 1.3], [2, 1.414], [3, 1.73], [4, 2]]
 				}));
 
+}
+
+/* Funcion que pretende cargar un ligero resumen de cosas importantes 
+
+	ESTO PODRIA SER UN GRID CON ICONOS MAS FRESON, POR AHORA UNA LISTA SIMPLE...
+*/
+Reports.prototype.loadResumen = function(){
+
+	var d = document;
+	
+	var wrapper = d.createElement('div');
+	wrapper.id = "wrapper-resumen";
+	
+	$('#content').append(wrapper);
+	
+	$('#wrapper-resumen').addClass('borde-gris');
+	
+	//TODO: cargar aqui con AJAX datos para generar un resumen 'inteligente'
+	$('#wrapper-resumen').html("\
+					Resumen del periodo 2010/09/06 al 2010/10/06\
+					<ul>\
+						<li>Vendedor mas productivo: <b>Juan Martinez</b></li>\
+						<li>Sucursal mas productiva: <b>Bodega 1 Central de abastos</b></li>\
+						<li>Producto mas vendido: <b>Papa Mediana $18.00/kg</b></li>\
+						<li>Mejor comprador: <b>Abarrotes La Esquina</b></li>\
+					</ul>\
+				");
+
+}
+
+// Listener para el boton aplicar en la configuracion de periodo del reporte
+Reports.prototype.applyPeriodo = function(){
+
+	alert('click');
 }
