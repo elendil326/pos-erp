@@ -124,11 +124,11 @@ y algunas otras funciones
 	function existenciaProductoSucursal()
 	{
 		//verificamos que no nos envien datos vacios
-		if((!empty($_REQUEST['id_producto']))&&(!empty($_REQUEST['id_sucursal'])))
+		if((!empty($_REQUEST['id_producto'])))
 		{
 			//asignamos valores obtenidos a las variables
 			$id_producto=$_REQUEST['id_producto'];
-			$id_sucursal=$_REQUEST['id_sucursal'];
+			$id_sucursal=$_SESSION['sucursal_id'];
 			//creamos un objeto del tipo inventario existente
 
 			$prod=new inventario_existente($id_producto);

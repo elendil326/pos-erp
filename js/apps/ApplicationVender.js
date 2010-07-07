@@ -340,6 +340,7 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 		return;
 	}
 	
+	
 	var html = "";
 	
 	
@@ -350,18 +351,22 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 	+ "<div class='id'>ID</div>" 
 	+ "<div class='name'>Nombre</div>" 
 	+ "<div class='description'>Descripcion</div>" 
+	+ "<div class='cantidad'>Cantidad</div>"
 	+ "<div class='cost'>Precio</div>"
 	+ "</div>";
 	
 	// items
 	for( a = 0; a < this.htmlCart_items.length; a++ ){
 
+
 		html += "<div class='ApplicationVender-item' >" 
 		+ "<div class='trash' onclick='ApplicationVender.currentInstance.doDeleteItem(" +a+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/trash.png'></div>"	
 		+ "<div class='id'>" + this.htmlCart_items[a].id +"</div>" 
 		+ "<div class='name'>" + this.htmlCart_items[a].name +"</div>" 
 		+ "<div class='description'>"+ this.htmlCart_items[a].description +"</div>" 
-		+ "<div class='cost'>$"+ this.htmlCart_items[a].cost +".00</div>"
+		//+ "<div ><input type='button' value='-'/><input type='text' size='5px'/><input type='button' value='+'/></div>"
+		+ "<div class='cantidad' onclick='ApplicationVender.currentInstance.doCambiarCantidad("+a+")'>"+ this.htmlCart_items[a].cantidad +"</div>"
+		+ "<div class='cost'>"+ this.htmlCart_items[a].cost +"</div>"
 		+ "</div>";
 	}
 
@@ -399,7 +404,64 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 };
 
 
-
+ApplicationVender.prototype.doCambiarCantidad = function(item)
+{
+	//console.log(ApplicationVender.currentInstance.htmlCart_items[item]);
+	
+	
+	if (Ext.getCmp('ApplicationVender-doCambiarCantidad-panel') == null ) {
+		var cantidadToolbar = new Ext.Toolbar({
+			title: 'Cantidad',
+			dock: 'top',
+			items: [{
+				xtype: 'spacer'
+			}, {
+				xtype: 'button',
+				text: 'Aceptar',
+				ui: 'action',
+				handler: function(){
+					
+					var spinValue = Ext.getCmp('ApplicationVender-doCambiarCantidad-cantidad').getValue();
+					ApplicationVender.currentInstance.htmlCart_items[item].cantidad = spinValue;
+					cantidadPanel.hide();
+					cantidadPanel.destroy();
+					ApplicationVender.currentInstance.doRefreshItemList();
+				}
+			}]
+		});
+	
+		
+		var cantidadPanel = new Ext.Panel({
+			id: 'ApplicationVender-doCambiarCantidad-panel',
+			floating: true,
+			modal: true,
+			centered: true,
+			height: 150,
+			width: 400,
+			dockedItems: cantidadToolbar,
+			items: [new Ext.form.FormPanel({
+				items: [{
+					activeItem: 0,
+					xtype: 'fieldset',
+					label: 'Cantidad',
+					items: [{
+						id: 'ApplicationVender-doCambiarCantidad-cantidad',
+						xtype: 'spinnerfield',
+						label: 'Cantidad',
+						name: 'cantidad',
+						defaultValue: 1,
+						minValue: 1,
+					}]
+				}]
+			})]
+		});
+	}
+	
+	Ext.getCmp('ApplicationVender-doCambiarCantidad-panel').show();
+	
+	
+	
+};
 
 
 ApplicationVender.prototype.htmlCart_addItem = function( item )
@@ -413,7 +475,7 @@ ApplicationVender.prototype.htmlCart_addItem = function( item )
 	var description = item.description;
 	var existencias = item.existencias;
 	var costo = item.cost;
-
+	var cantidad = item.cantidad;
 
 	//revisar que no este ya en el carrito
 	var found = false;
@@ -464,8 +526,7 @@ ApplicationVender.prototype.doAddProduct = function (button, event)
 	//buscar si este producto existe
 	POS.AJAXandDECODE({
 			method: 'existenciaProductoSucursal',
-			id_producto : prodID,
-			id_sucursal : 2
+			id_producto : prodID
 		}, 
 		function (datos){
 			
@@ -481,7 +542,8 @@ ApplicationVender.prototype.doAddProduct = function (button, event)
 				name 		: datos.datos[0].nombre,
 				description : datos.datos[0].denominacion,
 				cost 		: datos.datos[0].precio_venta,
-				existencias : datos.datos[0].existencias
+				existencias : datos.datos[0].existencias,
+				cantidad	: 1
 			};
 				
 			//agregarlo al carrito
@@ -534,9 +596,20 @@ ApplicationVender.prototype.doVender = function ()
 		return;
 	}
 	
+	var subtotal = 0;
+	var total = 0;
+	
+	for( a = 0; a < items.length;  a++){
+		subtotal += parseInt( items[a].cost );
+	}
+	
+	total = (subtotal*.15) + subtotal;
+	
+	
+	
 	//Si no existe el overlay lo creamos, sino solo lo mostramos
 	if (Ext.get('ApplicationVender-askForMoney-pagoOverlay') == null) {
-		ApplicationVender.currentInstance.askForMoney();
+		ApplicationVender.currentInstance.askForMoney( total );
 	}
 	else{
 		Ext.getCmp('ApplicationVender-askForMoney-pagoOverlay').show();
@@ -551,7 +624,7 @@ ApplicationVender.prototype.doVender = function ()
 };
 
 //Funcion para mostrarle un overlay para recibir la cantidad con la que se pagará
-ApplicationVender.prototype.askForMoney = function(){
+ApplicationVender.prototype.askForMoney = function(totalPagar){
 	
 	var pagoToolbar = new Ext.Toolbar({
 		title: 'Pago',
@@ -569,11 +642,19 @@ ApplicationVender.prototype.askForMoney = function(){
 				text: 'Aceptar',
 				handler: function(){
 				
+					//Comprobamos que se ingrese una cantidad suficiente para pagar	
+					var cantidadPago = Ext.getCmp('ApplicationVender-askForMoney-cantidad').getValue();
+					if( totalPagar > cantidadPago){
+						alert("Falta dinero");
+						return false;
+					}
+				
 					pagoOverlay.hide();
+					
 					Ext.getCmp('ApplicationVender-askForMoney-cantidad').reset();
 					var cantidadPago = Ext.getCmp('ApplicationVender-askForMoney-cantidad').getValue();
-					newPanel = ApplicationVender.currentInstance.doVenderPanel(cantidadPago);	
-					sink.Main.ui.setCard( newPanel, 'slide' );
+					newPanel = ApplicationVender.currentInstance.doVenderPanel(cantidadPago);
+					sink.Main.ui.setCard(newPanel, 'slide');
 				}
 			}]
 	});
@@ -604,8 +685,10 @@ ApplicationVender.prototype.askForMoney = function(){
 	
 	pagoOverlay.show();
 	
+	var funcion = String.format("ApplicationVender.currentInstance.enterOnKeyUp( this, this.value, {0})", totalPagar);
+	
 	//medio feo, pero bueno
-	Ext.get("ApplicationVender-askForMoney-cantidad").dom.childNodes[1].setAttribute("onkeyup","ApplicationVender.currentInstance.enterOnKeyUp( this, this.value )");
+	Ext.get("ApplicationVender-askForMoney-cantidad").dom.childNodes[1].setAttribute("onkeyup",funcion);
 	
 	//Focus a cantidad
 	document.getElementById(Ext.get('ApplicationVender-askForMoney-cantidad').dom.childNodes[1].id).focus();
@@ -613,19 +696,32 @@ ApplicationVender.prototype.askForMoney = function(){
 	
 };
 
-ApplicationVender.prototype.enterOnKeyUp = function (a, b)
+ApplicationVender.prototype.enterOnKeyUp = function (a, b, total)
 {
 	if(event.keyCode == 13){
+		
+		//Comprobamos que se ingrese una cantidad suficiente para pagar	
+		var cantidadPago = Ext.getCmp('ApplicationVender-askForMoney-cantidad').getValue();
+		if( total > cantidadPago){
+			alert("Falta dinero");
+			return false;
+		}
+		
+		
 		Ext.getCmp('ApplicationVender-askForMoney-pagoOverlay').hide();
+		
 		Ext.getCmp('ApplicationVender-askForMoney-cantidad').reset();
-		newPanel = ApplicationVender.currentInstance.doVenderPanel(b);	
-		sink.Main.ui.setCard( newPanel, 'slide' );
+		newPanel = ApplicationVender.currentInstance.doVenderPanel(b);
+		sink.Main.ui.setCard(newPanel, 'slide');
+		
 	}
 };
 
 
 ApplicationVender.prototype.doVenderPanel = function ( cantidadPago )
 {
+	//console.log(ApplicationVender.currentInstance.htmlCart_items);
+	
 	//alert(POS.currencyFormat(cantidadPago));
 	var subtotal = 0;
 	var total = 0;
@@ -707,11 +803,14 @@ ApplicationVender.prototype.doVentaLogic = function ()
 {
 	//Ajax para guardar la venta en la BD
 	
+	var jsonItems = Ext.util.JSON.encode(ApplicationVender.currentInstance.htmlCart_items);
+	console.log(jsonItems);
+	return;
 	POS.AJAXandDECODE(
 					//Parametros
 					{
 						method: 'insertarVenta',
-						id_cliente: ApplicationVender.currentInstance.cliente.id_cliente,
+						id_cliente: ApplicationVender.currentInstance.cliente.iden,
 						tipo_venta: 1
 					},
 					//Funcion success

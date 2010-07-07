@@ -24,7 +24,7 @@
 		}
 		
 		function inserta(){
-			$insert="INSERT INTO  ventas values(NULL,?,?,null,?,?,?,?);";
+			$insert="INSERT INTO  ventas(id_cliente,tipo_venta,subtotal,iva,sucursal,id_usuario) values(?,?,?,?,?,?);";
 			$params=array($this->id_cliente,$this->tipo_venta,$this->subtotal,$this->iva,$this->sucursal,$this->id_usuario);
 			if($this->bd->ejecuta($insert,$params)){
 				$query="select max(id_venta) from ventas;";

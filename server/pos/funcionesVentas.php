@@ -31,7 +31,7 @@
 		$id_producto=$_REQUEST['id_producto'];
 		$cantidad=$_REQUEST['cantidad'];
 		$precio =$_REQUEST['precio'];
-		$id_usuario = $_REQUEST['id_usuario'];
+		$id_usuario = $_SESSION['id_usuario'];
 		
 		$detalle_venta= new detalle_venta($id_venta,$id_producto,$cantidad,$precio);//$id_venta,$id_producto,$cantidad,$precio
 
@@ -195,7 +195,11 @@
 		$id_cliente =$_REQUEST['id_cliente'];
 		$tipo_venta=$_REQUEST['tipo_venta'];
 		$sucursal=$_SESSION['sucursal_id'];
-		$id_usuario=$_SESSION['user'];
+		$id_usuario=$_SESSION['id_usuario'];
+		/*echo $id_cliente;
+		echo $tipo_venta;
+		echo $sucursal;
+		echo $id_usuario;*/
 		$venta = new venta($id_cliente,$tipo_venta,$sucursal,$id_usuario);
 				
 		if($venta->inserta()){

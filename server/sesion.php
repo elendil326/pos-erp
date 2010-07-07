@@ -44,7 +44,7 @@
 			$pwd = strip_tags($_POST['pwd']);
 	
 			$params = array($usr);
-			$qry = "SELECT usuario,contrasena, sucursal_id FROM usuario WHERE usuario = ? ";
+			$qry = "SELECT usuario,contrasena, sucursal_id, id_usuario FROM usuario WHERE usuario = ? ";
 			
 			try{
 				$result = $bd->con->Execute($qry,$params);
@@ -73,6 +73,7 @@
 					$row = $result->FetchNextObj($toupper=false);
 					$pwdStored = $row->contrasena;
 					$sucursal = $row->sucursal_id;
+					$id_usuario = $row->id_usuario;
 			
 					//Comprobamos que las contrasenas coincidan
 					if($pwd != $pwdStored) header("Location: ../www/?contrasena");
@@ -81,6 +82,7 @@
 						//Si todo bien, se fija la variable de session con el usuario y se redirige
 						$_SESSION['user'] = $usr;
 						$_SESSION['sucursal_id'] = $sucursal;
+						$_SESSION['id_usuario'] = $id_usuario;
 						header("Location: ../www/index-sencha.html");
 					}
 			

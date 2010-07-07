@@ -69,7 +69,14 @@ div.name{
 
 div.description{
 	float: left;
-	width : 50%;
+	width : 40%;
+	margin-left : 5px;
+	color: white;	
+}
+
+div.cantidad{
+	float: left;
+	width : 20%;
 	margin-left : 5px;
 	color: white;	
 }
