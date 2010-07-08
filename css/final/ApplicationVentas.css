@@ -69,29 +69,72 @@ div.name{
 
 div.description{
 	float: left;
-	width : 40%;
+	width : 20%;
 	margin-left : 5px;
 	color: white;	
 }
 
 div.cantidad{
 	float: left;
-	width : 20%;
+	cursor:pointer;
+	width: 50px;
+	text-align: center;
 	margin-left : 5px;
 	color: white;	
 }
+div.qty_dummy{
+	float: left;
+	margin-left : 5px;
+	color: white;
+	width: 45px;
+	padding-left : 20px;
+}
+div.qty_change{
+	cursor:pointer;
+	float: left;
+	margin-left : 5px;
+	color: white;
+	width: 55px;
+	padding-left : 25px;
+	
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+
+	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+	font-weight: normal;
+
+	color: white;
+	text-shadow: black 0px 1px 1px;
+	
+	background-image: url(media/dark2.png);
+}
+
 
 div.cost{
 	float: left;
 	margin-left : 5px;
+	width: 10%;
 	text-shadow: #98AFC7 1px 1px 4px;
 	font-size: 18px;
 	color: black;	
 }
 
+div.importe{
+	float: left;
+	margin-left : 75px;
+
+	text-shadow: #98AFC7 1px 1px 4px;
+	font-size: 18px;
+	color: black;	
+}
+
+
+
 div.trash{
 	float: left;
 	width: 15px;
+	cursor:pointer;
 }
 
 
@@ -99,16 +142,19 @@ div.trash{
 	Totales del carrito
    ------------------------------------------------------------------------ */
 div.ApplicationVender-totalesBox  {
-
+∫
+/*	
 	background-image: url(media/dark2.png);
-
-	margin : 5px;
 	border-style : solid;
 	border-width: 1px;
 	border-right-color: #60656b;
 	border-left-color: #61666c;
 	border-top-color: #474a4f;
 	border-bottom-width: 0px;
+*/
+
+	margin : 5px;
+
 	
 	-moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -126,7 +172,7 @@ div.ApplicationVender-totalesBox  {
 
 div.ApplicationVender-Totales{
 	
-	font-size:17px;
+	font-size:19px;
 	text-shadow: black 0px 1px 1px;
 }
 
@@ -155,7 +201,7 @@ div.ApplicationVender-Totales{
 
 div.ApplicationVender-clienteBox .nombre{
 	font-size: 20px;
-	text-shadow: gray 0px 1px 1px;
+	text-shadow: black 0px 1px 1px;
 }
 
 
@@ -168,12 +214,19 @@ div.ApplicationVender-clienteBox  {
 	margin: 5px;
 	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
 	font-size: 13px;
+	text-shadow: black 0px 1px 1px;
 
-	-moz-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    -khtml-border-radius: 20px;
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+	border-style : solid;
+	border-width:1px;
+	border-right-color: #60656b;
+	border-left-color: #61666c;
+	border-top-color: #474a4f;
+	border-bottom-color: #959a9f;
+	
+	color: white;
 
-	color: black;
-	background-image:url(media/g2.png);
 
 }

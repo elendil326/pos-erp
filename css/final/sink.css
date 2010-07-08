@@ -37,7 +37,16 @@ code, pre {
 	
 }
 
-
+.helperMostrador
+{
+	/*
+	background-image: url(media/helper_mostrador_credito.png);
+	top: 0px;
+	position: absolute;
+	width: 400px !important;
+	height: 110px;
+	*/
+}
 
 /* left menu */
 .leftMenu{
