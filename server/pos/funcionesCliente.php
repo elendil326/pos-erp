@@ -73,17 +73,65 @@ FROM  `cliente` INNER JOIN  `cuenta_cliente` ON cliente.id_cliente = cuenta_clie
 		echo $listar->lista();
 		return $listar->lista();
 	}
+	
+	function reporteClientesTodos_jgrid(){
+	
+		$query="SELECT `id_cliente` as 'ID',`nombre` as 'Nombre',`rfc` as 'RFC',`direccion` as 'Direccion' ,`telefono` as Telefono ,`e_mail` as 'E-mail',`limite_credito` as 'Limite de credito' from cliente";
+		
+		$listar = new listar($query,array());
+		
+		header("Expires: Mon, 26 Jul 1997 05:00:00 GMT" );
+		header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT" );
+		header("Cache-Control: no-cache, must-revalidate" );
+		header("Pragma: no-cache" );
+		header("Content-type: text/x-json");
+		
+		
+		echo $listar->lista_jgrid();
+		//return $listar->lista();
+	}
+	
+	
 	function reporteClientesDeben(){
-		$query="SELECT nombre AS  'Nombre', saldo AS  'Saldo',  `rfc` AS  'RFC',  `direccion` AS  'Direccion',  `telefono` AS Telefono,  `e_mail` AS  'E-mail' FROM cliente c NATURAL JOIN cuenta_cliente cc"; 
+		$query="SELECT `id_cliente` as 'ID', nombre AS  'Nombre', saldo AS  'Saldo',  `rfc` AS  'RFC',  `direccion` AS  'Direccion',  `telefono` AS Telefono,  `e_mail` AS  'E-mail' FROM cliente c NATURAL JOIN cuenta_cliente cc"; 
 		$listar = new listar($query,array());
 		echo $listar->lista();
 		return $listar->lista();
 	}
+	
+	function reporteClientesDeben_jgrid(){
+		$query="SELECT `id_cliente` as 'ID', nombre AS  'Nombre', saldo AS  'Saldo',  `rfc` AS  'RFC',  `direccion` AS  'Direccion',  `telefono` AS Telefono,  `e_mail` AS  'E-mail' FROM cliente c NATURAL JOIN cuenta_cliente cc"; 
+		$listar = new listar($query,array());
+		
+		header("Expires: Mon, 26 Jul 1997 05:00:00 GMT" );
+		header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT" );
+		header("Cache-Control: no-cache, must-revalidate" );
+		header("Pragma: no-cache" );
+		header("Content-type: text/x-json");
+		
+		echo $listar->lista_jgrid();
+		//return $listar->lista();
+	}
+	
 	function reporteClientesCompras(){
 		$query="SELECT id_venta AS  'ID', nombre AS  'Cliente', ( subtotal + iva ) AS  'Total', IF( tipo_venta =1,  'Contado',  'Credito' ) AS  'Tipo', date(fecha) AS  'Fecha', sucursal AS  'Sucursal' FROM  `ventas` NATURAL JOIN cliente"; 
 		$listar = new listar($query,array());
 		echo $listar->lista();
 		return $listar->lista();
+	}
+	
+	function reporteClientesCompras_jgrid(){
+		$query="SELECT id_venta AS  'ID', nombre AS  'Cliente', ( subtotal + iva ) AS  'Total', IF( tipo_venta =1,  'Contado',  'Credito' ) AS  'Tipo', date(fecha) AS  'Fecha', sucursal AS  'Sucursal' FROM  `ventas` NATURAL JOIN cliente"; 
+		$listar = new listar($query,array());
+		
+		header("Expires: Mon, 26 Jul 1997 05:00:00 GMT" );
+		header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT" );
+		header("Cache-Control: no-cache, must-revalidate" );
+		header("Pragma: no-cache" );
+		header("Content-type: text/x-json");
+		
+		echo $listar->lista_jgrid();
+		//return $listar->lista();
 	}	
 	
 	    //esta funcion nos regresa un listado con los datos de todas las ventas a credito

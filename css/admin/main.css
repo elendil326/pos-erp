@@ -83,7 +83,8 @@ background-image:url(../shared/icons/fam/folder_go.png);
 	height:100%;
 	padding:10px;
 	margin-left:150px;
-	overflow:auto;
+	/*overflow:auto;*/
+	padding-bottom:29px;
 }
 
 #logout{
@@ -155,7 +156,7 @@ background-image:url(../shared/icons/fam/folder_go.png);
 	width: 100%;
 }
 
-#configuracion-reportes{
+.configuracion{
 	border: 1px solid #CCCCCC;
 	padding:10px;
 }

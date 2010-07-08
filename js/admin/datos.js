@@ -11,19 +11,80 @@ Datos = function(){
 	
 	
 	//testing grids
-	this.loadDataGrid({
+	this.loadDataGrid2({
 			renderTo: 'content',
-			title: 'Ventas Agosto',
-			width: '800'
+			title: 'Clientes',
+			width: '100%',
+			url: '../serverProxy.php',
+			data: 'method=reporteClientesTodos_jgrid',
+			addNewGrid: false,
+			colModel: [
+				{display: 'ID', name : 'id', width : 30, sortable : true, align: 'left'},
+				{display: 'Nombre', name : 'nombre', width : 150, sortable : true, align: 'left'},
+				{display: 'RFC', name : 'rfc', width : 100, sortable : true, align: 'left'},
+				{display: 'Direccion', name : 'direccion', width : 250, sortable : true, align: 'left'},
+				{display: 'Telefono', name : 'telefono', width : 250, sortable : true, align: 'left'},
+				{display: 'E-mail', name : 'e-mail', width : 250, sortable : true, align: 'left'},
+				{display: 'Limite credito', name : 'limite de credito', width : 100, sortable : true, align: 'left'}
+			],
+			searchitems: [
+				{display: 'Nombre', name : 'nombre'},
+				{display: 'RFC', name : 'rfc', isdefault: true},
+				{display: 'Direccion', name : 'direccion'}
+			]
 			});
 
-
-	this.loadDataGrid({
+	
+	
+	this.loadDataGrid2({
 			renderTo: 'content',
-			title: 'Ventas Octubre',
-			width: 800
+			title: 'Clientes Deben',
+			width: '100%',
+			url: '../serverProxy.php',
+			data: 'method=reporteClientesDeben_jgrid',
+			addNewGrid: true,
+			colModel: [
+				{display: 'ID', name : 'id', width : 30, sortable : true, align: 'left'},
+				{display: 'Nombre', name : 'nombre', width : 300, sortable : true, align: 'left'},
+				{display: 'Saldo', name : 'Saldo', width : 80, sortable : true, align: 'left'},
+				{display: 'RFC', name : 'RFC', width : 100, sortable : true, align: 'left'},
+				{display: 'Direccion', name : 'Direccion', width : 250, sortable : true, align: 'left'},
+				{display: 'Telefono', name : 'Telefono', width : 100, sortable : true, align: 'left'},
+				{display: 'E-mail', name : 'E-mail', width : 100, sortable : true, align: 'left'}
+			],
+			searchitems: [
+				{display: 'Nombre', name : 'nombre'},
+				{display: 'RFC', name : 'rfc', isdefault: true},
+				{display: 'Direccion', name : 'direccion'}
+			]
 			});
+			
+	this.loadDataGrid2({
+			renderTo: 'content',
+			title: 'Clientes Compras',
+			width: '100%',
+			url: '../serverProxy.php',
+			data: 'method=reporteClientesCompras_jgrid',
+			addNewGrid: true,
+			colModel: [
+				{display: 'ID', name : 'id', width : 30, sortable : true, align: 'left'},
+				{display: 'Nombre', name : 'Cliente', width : 300, sortable : true, align: 'left'},
+				{display: 'Total', name : 'Total', width : 80, sortable : true, align: 'left'},
+				{display: 'Tipo', name : 'Tipo', width : 100, sortable : true, align: 'left'},
+				{display: 'Fecha', name : 'Fecha', width : 250, sortable : true, align: 'left'},
+				{display: 'Sucursal', name : 'Sucursal', width : 100, sortable : true, align: 'left'}
+			],
+			searchitems: [
+				{display: 'Nombre', name : 'nombre'},
+				{display: 'RFC', name : 'rfc', isdefault: true},
+				{display: 'Direccion', name : 'direccion'}
+			]
+			});
+			
+	//reporteClientesCompras_jgrid
 }
+
+Datos.gridTable = "tabla-grid-generico"; // Tabla generica, accesible desde la clase Datos estaticamente
 
 Datos.prototype.loadSettings = function(){
 
@@ -75,11 +136,37 @@ Datos.prototype.loadSettings = function(){
 	$('#fecha-final-input').datepicker();
 	
 	/*====================fechas fin==============================================*/
-
+	
+	/*
+	var divSettingsWrapper = d.createElement('div');
+	divSettingsWrapper.id = "configuracion-datos";
+	
+	$('#content').append(divSettingsWrapper);
+	
+	
+	//div contenedor de los radios
+	var divRadioTipoDatos = d.createElement('div');
+	divRadioTipoDatos.id = "radios-tipo-datos";
+	
+	$('#configuracion-datos').append(divRadioTipoDatos);
+	$('#configuracion-datos').addClass('configuracion');
+	$('#radios-tipo-datos').html('\
+					<input type="radio" id="tipo-datos-radio-1" name="radio" /><label for="tipo-datos-radio-1">Ventas</label>\
+					<input type="radio" id="tipo-datos-radio-2" name="radio" /><label for="tipo-datos-radio-2">Compras</label>\
+					<input type="radio" id="tipo-datos-radio-3" name="radio" /><label for="tipo-datos-radio-3">Personal</label>\
+					<input type="radio" id="tipo-datos-radio-4" name="radio" /><label for="tipo-datos-radio-4">Clientes</label>\
+					<input type="radio" id="tipo-datos-radio-5" name="radio" /><label for="tipo-datos-radio-5">Proveedores</label>\
+					');
+	
+	$("#radios-tipo-datos").buttonset();
+	*/
+	
 }
 
 
+
 /*
+	***DEPRECATED*** No usar esta, ya cambie el grid a uno mejor y mas flexible
 	loadDataGrid funcion para crear una tabla con datos sin procesar provenientes de la base de datos
 	-----------------------------------------------------------------------------------------------------
 	@param config objeto javascript con la configuracion del del grid
@@ -150,4 +237,74 @@ Datos.prototype.loadDataGrid = function(config){
 	    altRows: true
 	});
 	jQuery(selectorTableGrid).jqGrid('navGrid',selectorWrapperPager,{edit:false,add:false,del:false});
+}
+
+/*
+	loadDataGrid funcion para crear una tabla con datos sin procesar provenientes de la base de datos
+	-----------------------------------------------------------------------------------------------------
+	@param config objeto javascript con la configuracion del del grid
+		-> id : identificador del grid
+		-> renderTo : div id valido donde se agregara la tabla
+		-> columns: array con los titulos de las columnas
+		-> data:   datos de las columnas, deben contener los nombres de columans como los identificadores de los valores. 
+			Ej. columns: ['id', 'nombre'], data: [{id: 1, nombre: 'juan'}, {{id: 2, nombre: 'jose'}}]
+		-> title: titulo del grid
+		-> width: ancho de la tabla
+		-> url : de donde sacar los datos
+		-> addNewGrid : true para usar un div default y de esta manera siempre tener la tabla en el mismo lugar, 
+				   false si queremos agregar una nueva tabla
+		
+	TODO: work in progress
+
+*/
+Datos.prototype.loadDataGrid2 = function(config){
+
+	//Creamos divs y tabla donde estara contenida la tabla
+	var d = document;
+	var tableGrid = d.createElement('table');
+	//var wrapperPager = d.createElement('div');
+	
+	var randomNum = Math.round(Math.random()*10000);
+	
+	if(config.addNewGrid){ 
+		tableGrid.id = "table-"+randomNum;
+	}
+	else{
+		tableGrid.id = Datos.gridTable;
+	}	
+	//wrapperPager.id = "pager-"+randomNum;
+
+	var selectorRenderTo = '#'+config.renderTo;
+	
+	var selectorTableGrid = '#'+tableGrid.id;
+	//var selectorWrapperPager = '#'+wrapperPager.id;
+	
+	//Los agregamos al div especificado en renderTo
+	$(selectorRenderTo).append(tableGrid);
+	//$(selectorRenderTo).append(wrapperPager);
+		
+	$(selectorTableGrid).flexigrid(
+		{
+			url: config.url+'?'+config.data,
+			dataType: 'json',
+			colModel : config.colModel,/*
+			buttons : [
+			{name: 'Edit', bclass: 'edit', onpress : function(){ alert(); }},
+			{name: 'Delete', bclass: 'delete', onpress : function(){ alert(); }},
+			{separator: true}
+			],*/
+			searchitems : config.searchitems,
+			sortname: "id",
+			sortorder: "asc",
+			usepager: true,
+			title: config.title,
+			useRp: true,
+			rp: 10,
+			showTableToggleBtn: true,
+			resizable: false,
+			width: config.width,
+			height: 370,
+			singleSelect: true
+		}
+	);
 }

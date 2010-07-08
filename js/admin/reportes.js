@@ -85,6 +85,7 @@ Reports.prototype.loadSettings = function(){
 	divRadioTipoReporte.id = "radios-tipo-reporte";
 	
 	$('#configuracion-reportes').append(divRadioTipoReporte);
+	$('#configuracion-reportes').addClass('configuracion');
 	$('#radios-tipo-reporte').html('\
 					<input type="radio" id="tipo-reporte-radio-1" name="radio" /><label for="tipo-reporte-radio-1">Ventas</label>\
 					<input type="radio" id="tipo-reporte-radio-2" name="radio" /><label for="tipo-reporte-radio-2">Compras</label>\
