@@ -222,13 +222,13 @@ y algunas otras funciones
 	function insertarGasto()
 	{
 		//verificamos que no nos envien datos vacios  
-		if((!empty($_REQUEST['concepto']))&&(!empty($_REQUEST['monto']))&&(!empty($_REQUEST['id_sucursal']))&&(!empty($_REQUEST['id_usuario'])))
+		if((!empty($_REQUEST['concepto']))&&(!empty($_REQUEST['monto'])))
 		{
 			//asignamos valores obtenidos a las variables
 			$concepto=$_REQUEST['concepto'];
 			$monto=$_REQUEST['monto'];
-			$id_sucursal=$_REQUEST['id_sucursal'];
-			$id_usuario=$_REQUEST['id_usuario'];
+			$id_sucursal=$_SESSION['sucursal_id'];
+			$id_usuario=$_SESSION['id_usuario'];
 			//creamos objeto-sucursal
 			$sucursal=new sucursal_existente($id_sucursal);
 			//verificamos que la sucursal exista

@@ -287,6 +287,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 			xtype: 'button',
 			text : 'Sucursales',
 			ui: 'back',
+			disabled: !ApplicationInventario.mostrarTodasSucursales,
 			handler : function(){
 				if(ApplicationInventario.mostrarTodasSucursales == false){
 					ApplicationInventario.mostrarTodasSucursales = true;
@@ -379,6 +380,8 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 					
 							}, function(){
 								//no responde
+								InvProductsListStore.loadData(0);
+								
 								if(DEBUG){
 									console.error("ApplicationInventario: no server response");
 								}
@@ -450,6 +453,9 @@ ApplicationInventario.prototype.getDetalles = function( sucursal_id )
 			}
 
 		},function(){
+			
+			POS.aviso('Error', 'Error de conexión: No se pudieron obtener los detalles de la sucursal, intente de nuevo');
+			
 			if(DEBUG){
 				console.error("ApplicationInventario: could not retrive data");
 			}
@@ -523,7 +529,6 @@ ApplicationInventario.prototype.renderDetalles = function( data )
 	//mapOverlay.addDocked(mapOverlayTb);
 	mapOverlay.doLayout();
 
-	console.log(mapOverlay);
 	
 	var backBar = new Ext.Toolbar({
 		dock: 'bottom',

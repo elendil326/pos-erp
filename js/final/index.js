@@ -344,7 +344,7 @@ POS.map = function( address )
 									case 'OVER_QUERY_LIMIT': 	errorMsg = 'El servidor de mapas está teniendo sobrecarga. Intente más tarde'; break;
 									case 'REQUEST_DENIED': 		errorMsg = 'La página en donde esta no tiene permiso para cargar el mapa'; break;
 									case 'UNKNOWN_ERROR': 		errorMsg = 'Hubo un error en el servidor. Intente de nuevo'; break;
-									case 'ZERO_RESULTS': 		errorMsg = 'No se encontraron resultados'; break;
+									case 'ZERO_RESULTS': 		errorMsg = 'No se encontraron resultados para la dirección ingresada'; break;
 									default: 					errorMsg = 'Hubo un error desconocido en el servidor';
 		
 								}				
@@ -352,6 +352,8 @@ POS.map = function( address )
 								if(DEBUG){
 									console.warn("Mapas: ", status, errorMsg);
 								}
+								console.log( Ext.get(panel.id) );
+								document.getElementById( Ext.get(panel.id).dom.childNodes[1].id).innerHTML = '<div style="text-align:center; padding-top:30%;">'+ errorMsg +'.</div>';
 							
 								return null;
 							}

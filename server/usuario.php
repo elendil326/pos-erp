@@ -57,7 +57,7 @@
 			$this->usuario=$datos['usuario'];			
 			$this->contrasena=$datos['contrasena'];	 	 	 	 	 	 	 
 			$this->nivel=$datos['nivel'];
-			$this->id_sucursal=$datos['id_sucursal'];
+			$this->id_sucursal=$datos['sucursal_id'];
 		}
 		function existe(){
 			$query="select id_usuario from usuario where id_usuario=?;";
