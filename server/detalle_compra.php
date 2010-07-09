@@ -3,14 +3,18 @@
 		var $id_compra;	 	 	 	 	 	 	
 		var $id_producto;	 	 	 	 	 	 	
 		var $cantidad;	 	 	 	 	 	
-		var $precio;	
+		var $precio;
+		var $peso_arpillaPagado;
+		var $peso_arpillaReal;
 		var $bd;
 		
-		function __construct($id_compra,$id_producto,$cantidad,$precio){ 	 	 	 	 	 	
+		function __construct($id_compra,$id_producto,$cantidad,$precio,$peso_arpillaPagado,$peso_arpillaReal){ 	 	 	 	 	 	
 			$this->id_compra=$id_compra;		 	 	
 			$this->id_producto=$id_producto;	 	 	 	 	 	 	
 			$this->cantidad=$cantidad;
 			$this->precio=$precio;
+			$this->peso_arpillaPagado=$peso_arpillaPagado;
+			$this->peso_arpillaReal=$peso_arpillaReal;
 			$this->bd=new bd_default();
 		}
 		function __destruct(){ 
@@ -18,8 +22,8 @@
 		}
 		
 		function inserta(){
-			$insert="INSERT INTO  detalle_compra values(?,?,?,?);";
-			$params=array($this->id_compra,$this->id_producto,$this->cantidad,$this->precio);
+			$insert="INSERT INTO  detalle_compra values(?,?,?,?,?,?);";
+			$params=array($this->id_compra,$this->id_producto,$this->cantidad,$this->precio,$this->peso_arpillaPagado,$this->peso_arpillaReal);
 			return ($this->bd->ejecuta($insert,$params))?true:false;
 		}
 		function actualiza(){
@@ -44,7 +48,9 @@
 			$this->id_compra=$datos['id_compra'];	
 			$this->id_producto=$datos['id_producto'];	
 			$this->cantidad=$datos['cantidad'];	
-			$this->precio=$datos['precio'];	
+			$this->precio=$datos['precio'];
+			$this->peso_arpillaPagado=$datos['peso_arpillaPagado'];
+			$this->peso_arpillaReal=$datos['peso_arpillaReal'];
 		}
 		function existe(){
 			$query="select id_compra from detalle_compra where id_compra=? and id_producto=?;";

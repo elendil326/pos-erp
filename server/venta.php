@@ -24,28 +24,15 @@
 		}
 		
 		function inserta(){
-			$insert="INSERT INTO  ventas(id_cliente,tipo_venta,subtotal,iva,sucursal,id_usuario) values(?,?,?,?,?,?);";
+			$insert="INSERT INTO  ventas values(null,?,?,null,?,?,?,?);";
 			
 			$params=array($this->id_cliente,$this->tipo_venta,$this->subtotal,$this->iva,$this->sucursal,$this->id_usuario);
-			
-			$res = $this->bd->ejecuta_error($insert,$params);
-			
-			return $res;
-			/*
-			if($res){
-				$query="select max(id_venta) from ventas;";
-				$this->id_venta=$this->bd->select_un_campo($query,array());
+
+			if($this->bd->ejecuta($insert,$params)){
+				$this->id_venta=$this->bd->con->Insert_ID();
 				return true;
 			}else return false;
-			 */
 		}
-		
-		
-		
-		
-		
-		
-		
 		
 		function actualiza(){
 			$update="UPDATE  ventas SET  `id_cliente`=?,`tipo_venta` =?,`fecha` =CURRENT_TIMESTAMP,`subtotal` =?,`iva` =?,`sucursal` =?, `id_usuario`=? where id_venta=?;";
