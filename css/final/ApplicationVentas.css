@@ -194,6 +194,13 @@ div.ApplicationVender-Totales{
    ------------------------------------------------------------------------ */
 
 
+.tabla_detalles_cliente{
+	border-spacing: 5px 2px;
+	border-collapse: separate;
+	margin: 0px;
+	padding: 5px;
+}
+
 .ApplicationVender-clienteDetalle{
 
 }
@@ -219,13 +226,14 @@ div.ApplicationVender-clienteBox  {
 	-moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     -khtml-border-radius: 5px;
+/*
 	border-style : solid;
 	border-width:1px;
 	border-right-color: #60656b;
 	border-left-color: #61666c;
 	border-top-color: #474a4f;
 	border-bottom-color: #959a9f;
-	
+	*/
 	color: white;
 
 

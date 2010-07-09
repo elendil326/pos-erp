@@ -201,11 +201,21 @@ ApplicationVender.prototype.addProductByIDKeyUp = function (a, b)
 		if(POS.aviso.visible){
 			//close current pop up
 			POS.aviso.hide();
-		}else{
-			
-			//add product
-			ApplicationVender.currentInstance.doAddProduct();			
+			return;
 		}
+		
+		
+		if((Ext.get("APaddProductByID").first().getValue().length == 0)&&
+			(ApplicationVender.currentInstance.htmlCart_items.length > 0))
+		{
+			//si presiono enter y el campo esta vacio y ya hay items, vender
+			ApplicationVender.currentInstance.doVender();
+			return;
+		}
+			
+		//add product
+		ApplicationVender.currentInstance.doAddProduct();			
+		
 
 	}
 };
@@ -292,7 +302,7 @@ ApplicationVender.prototype.doDeleteItem = function ( item )
 
 
 
-
+ApplicationVender.prototype.ventaTotales = null;
 
 ApplicationVender.prototype.doRefreshItemList = function (  )
 {
@@ -308,8 +318,8 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 	
 	
 	// cabezera
-	html += "<div class='ApplicationVender-item' >" 
-	+ "<div class='trash' ><img height=20 width=20 src='sencha/resources/img/toolbaricons/trash.png'></div>"
+	html += "<div class='ApplicationVender-item' style='border:0px;'>" 
+	+ "<div class='trash' >&nbsp;</div>"
 	+ "<div class='id'>ID</div>" 
 	+ "<div class='name'>Nombre</div>" 
 	+ "<div class='description'>Descripcion</div>" 
@@ -323,17 +333,20 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 	// items
 	for( a = 0; a < this.htmlCart_items.length; a++ ){
 
-
+		if(this.htmlCart_items[a].cantidad < 0){
+			this.htmlCart_items[a].cantidad = 1;
+		}
+		
 		html += "<div class='ApplicationVender-item' >" 
 		+ "<div class='trash' onclick='ApplicationVender.currentInstance.doDeleteItem(" +a+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/trash.png'></div>"	
 		+ "<div class='id'>" + this.htmlCart_items[a].id +"</div>" 
 		+ "<div class='name'>" + this.htmlCart_items[a].name +"</div>" 
 		+ "<div class='description'>"+ this.htmlCart_items[a].description +"</div>" 
-		+ "<div class='cost'>"+ this.htmlCart_items[a].cost +"</div>"
-		+ "<div class='qty_change'>-</div>"		
+		+ "<div class='cost'>"+ POS.currencyFormat(this.htmlCart_items[a].cost) +"</div>"
+		+ "<div class='qty_change' onclick='ApplicationVender.currentInstance.doCambiarCantidad("+a+", -1)'>-</div>"		
 		+ "<div class='cantidad' onclick='ApplicationVender.currentInstance.doCambiarCantidad("+a+")'>"+ this.htmlCart_items[a].cantidad +"</div>"
-		+ "<div class='qty_change'>+</div>"		
-		+ "<div class='importe'>"+ this.htmlCart_items[a].cost +"</div>"
+		+ "<div class='qty_change' onclick='ApplicationVender.currentInstance.doCambiarCantidad("+a+", 1)'>+</div>"		
+		+ "<div class='importe'>"+ POS.currencyFormat( this.htmlCart_items[a].cost * this.htmlCart_items[a].cantidad) +"</div>"
 		+ "</div>";
 	}
 
@@ -346,17 +359,28 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 
 
 	var subtotal = 0;
-		
-	//calcular totales
+	
+	var iva = MOSTRADOR_IVA;
+	
+	var descuento = this.cliente ? this.cliente.descuento : 0;
+	
+	
+	//calcular subtotal
 	for( a = 0; a < this.htmlCart_items.length;  a++){
-		subtotal += parseInt( this.htmlCart_items[a].cost );
+		subtotal += parseFloat( this.htmlCart_items[a].cost * this.htmlCart_items[a].cantidad );
 	}
 
-
 	totals_html = "<span>Subtotal " +  POS.currencyFormat(subtotal) + "</span> "
-				+ "<span>IVA " +  POS.currencyFormat(subtotal*.15) + "</span> "
-				+ "<span>Total " +  POS.currencyFormat((subtotal*.15)+subtotal) + "</span>";
-					
+				+ "<span>IVA " +  POS.currencyFormat(subtotal*iva) + "</span> ";
+
+	total = (subtotal*iva) + subtotal ;
+
+	if(descuento > 0){
+		total = total - (total *(descuento / 100));
+		totals_html += "<span>Descuento " +  POS.currencyFormat(total *(descuento / 100)) + "</span> ";
+	}
+				
+	totals_html += "<span>Total " +  POS.currencyFormat(total) + "</span> ";
 
 	// wrap divs
 	html = "<div class='ApplicationVender-itemsBox'>" + html +"</div>" ;
@@ -366,13 +390,24 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 
 	Ext.get("carritoDeCompras").update("<div >" + endhtml + "</div>");
 	
-	
+	this.ventaTotales = {
+		subtotal : subtotal,
+		iva: iva,
+		descuento: total *(descuento / 100),
+		total : total
+	};
 
 };
 
 
-ApplicationVender.prototype.doCambiarCantidad = function(item)
+ApplicationVender.prototype.doCambiarCantidad = function(item, n)
 {
+	
+	if(n){
+		ApplicationVender.currentInstance.htmlCart_items[item].cantidad += n;
+		ApplicationVender.currentInstance.doRefreshItemList();
+		return;
+	}
 	
 	if (Ext.getCmp('ApplicationVender-doCambiarCantidad-panel') == null ) {
 		var cantidadToolbar = new Ext.Toolbar({
@@ -586,17 +621,6 @@ ApplicationVender.prototype.doVender = function ()
 		return;
 	}
 	
-	var subtotal = 0;
-	var total = 0;
-	
-	for( a = 0; a < items.length;  a++){
-		subtotal += parseFloat( items[a].cost );
-	}
-	
-	total = (subtotal* MOSTRADOR_IVA) + subtotal;
-	
-	
-	
 	
 	/*
 		listo para hacer la venta
@@ -652,16 +676,15 @@ ApplicationVender.prototype.swapPayingMethod = function ( tipo )
 ApplicationVender.prototype.doVentaContadoPanel = function (  )
 {
 
-	var subtotal = 0;
-	var total = 0;
 	
-	for( a = 0; a < this.htmlCart_items.length;  a++){
-		subtotal += parseInt( this.htmlCart_items[a].cost );
-	}
-	
-	total = (subtotal*.15) + subtotal;
-	
-	
+	//los totales de la venta estan en :
+	//this.ventaTotales ={
+	//	descuento: 
+	//	iva: 
+	//	subtotal: 
+	//	total: 
+	//}
+
 	
 	//docked items
 	var dockedItems = [{
@@ -723,30 +746,51 @@ ApplicationVender.prototype.doVentaContadoPanel = function (  )
         xtype: 'fieldset',
         title: 'Venta a contado',
 		baseCls: "ApplicationVender-ventaListaPanel",
+		defaults: {
+			disabledClass: '',
+		},
         items: [{
 	        	xtype: 'textfield',
 	        	label: 'Subtotal',
-				value : 0,//POS.currencyFormat(subtotal),
+				value : POS.currencyFormat(this.ventaTotales.subtotal),
 				disabled: true
        		},{
+	
 		        xtype: 'textfield',
 		        label: 'IVA',
-				value : '15%',
+				value : (this.ventaTotales.iva*100) + "%" ,
 				disabled: true
 	      	},{
 			    xtype: 'textfield',
+			    label: 'Descuento',
+				value : POS.currencyFormat(this.ventaTotales.descuento),
+				disabled: true
+			},{
+			    xtype: 'textfield',
 			    label: 'Total',
-				value : 0,//POS.currencyFormat(total),
+				value : POS.currencyFormat(this.ventaTotales.total),
 				disabled: true
 		    },{
 			    xtype: 'textfield',
 			    label: 'Pago',
-				value: 0,//POS.currencyFormat(cantidadPago),
-				disabled: false
+				id : 'mostrador_pago_id',
+				value: '',
+				disabled: false,
+				listeners : {
+					'render' : function ( a ){
+						
+						//darle el atributo de keyup
+						this.el.dom.childNodes[1].setAttribute("onkeyup", "ApplicationVender.currentInstance.doPayContadoKeyUp()" );
+
+						//Focus a cantidad por pagar
+						document.getElementById( this.el.dom.childNodes[1].id ).focus();
+					}
+				}
 			},{
 				xtype: 'textfield',
 				label: 'Cambio',
-				value: 0,//POS.currencyFormat(cantidadPago-total),
+				id: 'mostrador_cambio_id',
+				value: '',
 				disabled: true
 			}]
 		}]
@@ -754,11 +798,21 @@ ApplicationVender.prototype.doVentaContadoPanel = function (  )
 };
 
 
+
+
+
+ApplicationVender.prototype.doPayContadoKeyUp = function (  )
+{
+	if(event.keyCode == 13 )
+	{
+		ApplicationVender.currentInstance.doVentaLogic(  );
+	}
+};
+
+
 ApplicationVender.prototype.doVentaCreditoPanel = function ( cantidadPago )
 {
 
-
-	
 	return new Ext.Panel({
 
     scroll: 'none',
@@ -805,67 +859,111 @@ ApplicationVender.prototype.doVentaCreditoPanel = function ( cantidadPago )
 	        	label: 'Subtotal',
 				value : 0,//POS.currencyFormat(subtotal),
 				disabled: true
-       		},{
-		        xtype: 'textfield',
-		        label: 'IVA',
-				value : MOSTRADOR_IVA,
-				disabled: true
-	      	},{
-			    xtype: 'textfield',
-			    label: 'Total',
-				value : 0,//POS.currencyFormat(total),
-				disabled: true
-		    },{
-			    xtype: 'textfield',
-			    label: 'Limite de credito',
-				value: 0,//POS.currencyFormat(cantidadPago),
-				disabled: true
-			},{
-				xtype: 'textfield',
-				label: 'Cambio',
-				value: 0,//POS.currencyFormat(cantidadPago-total),
-				disabled: true
-			}]
+       		}]
 		}]
 	});
 };
 
 
+
+
+
+
+
+
 ApplicationVender.prototype.doVentaLogic = function ()
 {
-	//Ajax para guardar la venta en la BD
+	var subtotal = 0;
+
+	var iva = MOSTRADOR_IVA;
+	
+	for( a = 0; a < ApplicationVender.currentInstance.htmlCart_items.length;  a++){
+		subtotal += parseFloat( ApplicationVender.currentInstance.htmlCart_items[a].cost );
+	}
+	
+	var total = (subtotal*iva) + subtotal;
+	
+
+	var pago = Ext.getCmp("mostrador_pago_id").getValue();
+	
+	if( pago != parseFloat(pago) ){
+		Ext.getCmp("mostrador_cambio_id").setValue(  );
+		return;
+	}
+	
+	if( pago < total ){
+		Ext.getCmp("mostrador_cambio_id").setValue( "Dinero insuficiente." );
+		return;
+	}
+
+	var cambio =  -1 * (total - parseFloat(pago) );
+	
+	cambio = POS.currencyFormat(cambio);
+
+	Ext.getCmp("mostrador_cambio_id").setValue( cambio );
+	
+	
+	//disable the pago 
+	Ext.getCmp("mostrador_pago_id").disable();
+	
+	
+	//hacer la venta en el lado del servidor
 	
 	var jsonItems = Ext.util.JSON.encode(ApplicationVender.currentInstance.htmlCart_items);
-	console.log(jsonItems);
+	
+	if( DEBUG ){
+		console.log("Mostradr: items para vender....", jsonItems);
+	}
+	
+	
+	var cliente = ApplicationVender.currentInstance.cliente === null ? -1 : ApplicationVender.currentInstance.cliente.iden;
 	
 	POS.AJAXandDECODE(
 					//Parametros
 					{
 						method: 'insertarVenta',
-						id_cliente: ApplicationVender.currentInstance.cliente.iden,
+						id_cliente: cliente,
 						tipo_venta: 1,
 						jsonItems: jsonItems
 					},
 					//Funcion success
 					function(result){
-						console.log(result);
+						
+						
 						
 						if (result.success)
 						{
-							//Termina la venta y se agredece :)
-							var thksPanel = ApplicationVender.currentInstance.doGraciasPanel();
-							sink.Main.ui.setCard( thksPanel, 'fade' );							
+
+							if(DEBUG){
+								console.log("Mostrador: Venta Exitosa !", result);	
+							}
+							
+						}else{
+							if(DEBUG){
+								console.warn("Mostrador: Venta no exitosa ", result);	
+							}
 						}
 					},
 					//Funcion failure
 					function(){
-						console.warn("ApplicationVender: Error al realizar la venta");
+						if(DEBUG){
+							console.warn("ApplicationVender: Error al realizar la venta");	
+						}
+						
 					}
 	);
 	
-	
+
 	
 };
+
+
+
+ApplicationVender.prototype.ventaContadoExitosa = function ()
+{
+	
+};
+
 
 
 ApplicationVender.prototype.doGraciasPanel = function ()
@@ -900,8 +998,6 @@ ApplicationVender.prototype.doGraciasPanel = function ()
 	});
 };
 
-
-//Funcion para mostrarle un overlay para recibir la cantidad con la que se pagará
 ApplicationVender.prototype.askForMoney = function(totalPagar){
 	
 	var pagoToolbar = new Ext.Toolbar({
@@ -1040,33 +1136,42 @@ ApplicationVender.prototype.swapClienteComun = function (val)
 		Ext.getCmp("_cliente_cajacomun_btn").setActive(0);
 		Ext.get("detallesCliente").update("");
 		this.cliente = null;
-		ApplicationVender.currentInstance.CLIENTE_COMUN = true; 	
+		ApplicationVender.currentInstance.CLIENTE_COMUN = true;
+		this.doRefreshItemList();
 	}
 };
 
 
+
+
+
+
 ApplicationVender.prototype.actualizarDetallesCliente = function ( cliente )
 {
-	//si ya vamos a actualizar cliente entonces es porque todo salio bien, entonces.... agregar la opcion de facturar
-	//ApplicationVender.currentInstance.mainCard.items.items[2].add(  {xtype: 'toggle', id: 'ventaFacturar', value: 0, label: 'Facturar'}   );
-	//ApplicationVender.currentInstance.mainCard.doLayout();
 	
 	//mostrar los detalles del cliente
-	
 	this.cliente = cliente;
 	
 	var html = "";
 	html += " <div class='ApplicationVender-clienteBox'> ";
 		html += " <div class='nombre'>" + cliente.nombre + "</div>";
-		html += " <div class='ApplicationVender-clienteDetalle'> RFC " + cliente.rfc + "</div>";
-		html += " <div class='ApplicationVender-clienteDetalle'> Direccion " + cliente.direccion + "</div>";
-		html += " <div class='ApplicationVender-clienteDetalle'> Telefono " + cliente.telefono + "</div>";
-		html += " <div class='ApplicationVender-clienteDetalle'> Correo Electronico " + cliente.e_mail + "</div>";
-		html += " <div class='ApplicationVender-clienteDetalle'> Limite de Credito " + cliente.limite_credito + "</div>";
+
+		html += "<table border='0' class='tabla_detalles_cliente'>";
+		html += 	"<tr><td style='text-align: right'>RFC</td><td>" + cliente.rfc + "</td></tr>";
+		html += 	"<tr><td style='text-align: right'>Direccion</td><td>" + cliente.direccion + "</td></tr>";
+		html += 	"<tr><td style='text-align: right'>Telefono</td><td>" + cliente.telefono + "</td></tr>";
+		html += 	"<tr><td style='text-align: right'>Correo Electronico</td><td>" + cliente.e_mail + "</td></tr>";
+		html += 	"<tr><td style='text-align: right'>Descuento</td><td>" + cliente.descuento + "</td></tr>";
+		html += 	"<tr><td style='text-align: right'>Limite de Credito</td><td>" + cliente.limite_credito + "</td></tr>";
+		html += "</table>";
 	html += " </div> ";
 	
-	
+
 	Ext.get("detallesCliente").update( html );
+	
+	//actualizar tambien la lista de productos, por aquello de los descuentos
+	this.doRefreshItemList();
+	
 };
 
 
@@ -1101,6 +1206,7 @@ ApplicationVender.prototype.buscarCliente = function ()
 					direccion: 	response.datos[a].direccion,
 					telefono: 	response.datos[a].telefono,
 					e_mail: 	response.datos[a].e_mail,
+					descuento: 	response.datos[a].descuento,
 					limite_credito:response.datos[a].limite_credito
 					
 					});

@@ -52,8 +52,7 @@
 	}
 	
 	function listarClientes(){
-		$listar = new listar("SELECT cliente.id_cliente,rfc,nombre,direccion,telefono,e_mail,limite_credito,cuenta_cliente.saldo 
-FROM  `cliente` INNER JOIN  `cuenta_cliente` ON cliente.id_cliente = cuenta_cliente.id_cliente",array());
+		$listar = new listar("SELECT cliente.id_cliente, rfc, nombre, direccion, telefono, e_mail, limite_credito, descuento, cuenta_cliente.saldo FROM  `cliente` INNER JOIN  `cuenta_cliente` ON cliente.id_cliente = cuenta_cliente.id_cliente",array());
 		echo $listar->lista();
 		return $listar->lista();
 	}

@@ -204,13 +204,18 @@
 		echo $tipo_venta;
 		echo $sucursal;
 		echo $id_usuario;*/
+		
 		$venta = new venta($id_cliente,$tipo_venta,$sucursal,$id_usuario);
-				
-		if($venta->inserta()){
-			echo "{success: true}";
+		
+		$result = $venta->inserta();
+		
+		if($result == ""){
+			echo "{success: true }";
 		}else{
-			echo "{success: false}";
+			echo "{success: false, reason : '". $result ."'}";
 		}
+		
+
 	}//fin insertar
 	
 	/*	SE ELIMINA UNA VENTA */
