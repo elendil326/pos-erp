@@ -330,6 +330,51 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 	+ "<div class='importe'>Importe</div>"
 	+ "</div>";
 	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+	//preparar un html para los totales
+	var totals_html = "";
+
+
+	var subtotal = 0;
+	
+	var iva = MOSTRADOR_IVA;
+	
+	var descuento = this.cliente ? this.cliente.descuento : 0;
+	
+	
+	//calcular subtotal
+	for( a = 0; a < this.htmlCart_items.length;  a++){
+		
+
+		
+		//revisar que haya en existencia ese pedido
+		var existencias = parseFloat( this.htmlCart_items[a].existencias );
+		
+		
+		if( this.htmlCart_items[a].cantidad > existencias ){
+			this.htmlCart_items[a].cantidad = existencias;
+			POS.aviso("Mostrador", "No hay suficientes productos ( " + this.htmlCart_items[a].name + " ) en inventario.");
+		}
+		
+		//calcular subtotal
+		subtotal += parseFloat( this.htmlCart_items[a].cost * this.htmlCart_items[a].cantidad );
+	}
+
+
+
+
+
 	// items
 	for( a = 0; a < this.htmlCart_items.length; a++ ){
 
@@ -352,23 +397,6 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 
 
 
-
-
-	//preparar un html para los totales
-	var totals_html = "";
-
-
-	var subtotal = 0;
-	
-	var iva = MOSTRADOR_IVA;
-	
-	var descuento = this.cliente ? this.cliente.descuento : 0;
-	
-	
-	//calcular subtotal
-	for( a = 0; a < this.htmlCart_items.length;  a++){
-		subtotal += parseFloat( this.htmlCart_items[a].cost * this.htmlCart_items[a].cantidad );
-	}
 
 	totals_html = "<span>Subtotal " +  POS.currencyFormat(subtotal) + "</span> "
 				+ "<span>IVA " +  POS.currencyFormat(subtotal*iva) + "</span> ";
@@ -398,6 +426,9 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 	};
 
 };
+
+
+
 
 
 ApplicationVender.prototype.doCambiarCantidad = function(item, n)
@@ -705,13 +736,17 @@ ApplicationVender.prototype.doVentaContadoPanel = function (  )
 			xtype:'spacer'
 		}];
 	
-	//si no es cliente comun, agregar la opcion para pagar con credito
+	//si no es cliente comun, y no ha sobrepasado el limite de credito .... agregar la opcion para pagar con credito
 	if(!this.CLIENTE_COMUN){
+		
+		//revisar el limite de credito y creditos pasados
+		var limite = this.cliente.limite_credito;
+		
 		dockedItems.push({
 				xtype:'button',
 				tipo: 'credito',
 				ui: 'action',
-				text:'Comprar a Credito',
+				text:'Venta a Credito',
 				handler : ApplicationVender.currentInstance.swapPayingMethod
 			})
 	}
@@ -728,6 +763,8 @@ ApplicationVender.prototype.doVentaContadoPanel = function (  )
 	return new Ext.Panel({
 
     scroll: 'none',
+
+	id : 'doVentaContadoPanel',
 
 	cls: "ApplicationVender-mainPanel",
 	
@@ -817,6 +854,8 @@ ApplicationVender.prototype.doVentaCreditoPanel = function ( cantidadPago )
 
     scroll: 'none',
 
+	id : 'doVentaCreditoPanel',
+	
 	cls: "ApplicationVender-mainPanel",
 
 	//toolbar
@@ -835,7 +874,7 @@ ApplicationVender.prototype.doVentaCreditoPanel = function ( cantidadPago )
 			},{
 				xtype:'button', 
 				ui: 'action',
-				text:'Comprar a Contado',
+				text:'Venta a Contado',
 				tipo : 'contado',
 				handler : ApplicationVender.currentInstance.swapPayingMethod
 				
@@ -843,7 +882,7 @@ ApplicationVender.prototype.doVentaCreditoPanel = function ( cantidadPago )
 				xtype:'button', 
 				ui: 'action',
 				text:'Vender',
-				handler: ApplicationVender.currentInstance.doVentaLogic
+				handler: ApplicationVender.currentInstance.doVentaLogicCredito
 
 			}]
     	})],
@@ -852,14 +891,44 @@ ApplicationVender.prototype.doVentaCreditoPanel = function ( cantidadPago )
     items: [{
 
         xtype: 'fieldset',
-        title: 'Venta a credito',
+        title: 'Venta a Credito',
 		baseCls: "ApplicationVender-ventaListaPanel",
+		ui: 'green',
+		defaults: {
+			disabledClass: '',
+		},
         items: [{
 	        	xtype: 'textfield',
 	        	label: 'Subtotal',
-				value : 0,//POS.currencyFormat(subtotal),
+				value : POS.currencyFormat(this.ventaTotales.subtotal),
 				disabled: true
-       		}]
+       		},{
+	
+		        xtype: 'textfield',
+		        label: 'IVA',
+				value : (this.ventaTotales.iva*100) + "%" ,
+				disabled: true
+	      	},{
+			    xtype: 'textfield',
+			    label: 'Descuento',
+				value : POS.currencyFormat(this.ventaTotales.descuento),
+				disabled: true
+			},{
+			    xtype: 'textfield',
+			    label: 'Total',
+				value : POS.currencyFormat(this.ventaTotales.total),
+				disabled: true
+		    },{
+				xtype: 'textfield',
+				label: 'Limite de credito',
+				value: ApplicationVender.currentInstance.cliente.limite_credito,
+				disabled: true
+			},{
+				xtype: 'textfield',
+				label: 'Credito restante',
+				value: ApplicationVender.currentInstance.cliente.credito_restante,
+				disabled: true
+			}]
 		}]
 	});
 };
@@ -869,8 +938,92 @@ ApplicationVender.prototype.doVentaCreditoPanel = function ( cantidadPago )
 
 
 
+ApplicationVender.prototype.doVentaLogicCredito = function ()
+{
+	
+	//hacer la venta en el lado del servidor
+	var jsonItems = Ext.util.JSON.encode(ApplicationVender.currentInstance.htmlCart_items);
+	
+	var cliente = ApplicationVender.currentInstance.cliente.iden;
+	
+	POS.AJAXandDECODE({
+			method: 'insertarVenta',
+			id_cliente: cliente,
+			tipo_venta: 0,
+			jsonItems: jsonItems
+		}, function(result){
+				if (result.success)
+				{
+
+						if(DEBUG){
+							console.log("Mostrador: Venta a credito Exitosa !", result);	
+						}
+						
+						ApplicationVender.currentInstance.ventaCreditoExitosa();
+						
+					}else{
+						if(DEBUG){
+							console.warn("Mostrador: Venta a credito no exitosa ", result);	
+						}
+					}
+				},
+		function(){
+			if(DEBUG){
+				console.warn("ApplicationVender: Error al realizar la venta");	
+			}
+						
+		});
+};
 
 
+
+
+
+ApplicationVender.prototype.ventaCreditoExitosa = function ()
+{
+	
+
+	
+	//quitar el menu de cancelar venta y eso
+	Ext.getCmp("doVentaCreditoPanel").getDockedItems()[0].hide();
+	
+	Ext.getCmp("doVentaCreditoPanel").add({ 
+			html : '<div align="center">Venta a credito completada</div>',
+		});
+
+	Ext.getCmp("doVentaCreditoPanel").add({ 
+			xtype:'button', 
+			text:'Requerir Factura',
+			style: "margin-left: 45%; margin-top: 20px; width: 200px;",
+			ui: 'action'
+		});
+		
+		
+	Ext.getCmp("doVentaCreditoPanel").add({ 
+			xtype:'button', 
+			text:'Abonar a esta compra',
+			style: "margin-left: 45%; margin-top: 20px; width: 200px;",
+			ui: 'action'
+		});
+		
+	Ext.getCmp("doVentaCreditoPanel").doLayout();
+	
+	//limpiar el carrito
+	//this.doLimpiarCarrito();
+	
+};
+
+
+
+
+
+
+
+
+
+/*
+	solo para ventas a contado
+*/
 ApplicationVender.prototype.doVentaLogic = function ()
 {
 	var subtotal = 0;
@@ -906,17 +1059,16 @@ ApplicationVender.prototype.doVentaLogic = function ()
 	//disable the pago 
 	Ext.getCmp("mostrador_pago_id").disable();
 	
+
+	
 	
 	//hacer la venta en el lado del servidor
 	
 	var jsonItems = Ext.util.JSON.encode(ApplicationVender.currentInstance.htmlCart_items);
 	
-	if( DEBUG ){
-		console.log("Mostradr: items para vender....", jsonItems);
-	}
 	
-	
-	var cliente = ApplicationVender.currentInstance.cliente === null ? -1 : ApplicationVender.currentInstance.cliente.iden;
+	//hardcoded !!!
+	var cliente = ApplicationVender.currentInstance.cliente === null ? 24 : ApplicationVender.currentInstance.cliente.iden;
 	
 	POS.AJAXandDECODE(
 					//Parametros
@@ -937,6 +1089,8 @@ ApplicationVender.prototype.doVentaLogic = function ()
 							if(DEBUG){
 								console.log("Mostrador: Venta Exitosa !", result);	
 							}
+
+							ApplicationVender.currentInstance.ventaContadoExitosa();
 							
 						}else{
 							if(DEBUG){
@@ -961,6 +1115,35 @@ ApplicationVender.prototype.doVentaLogic = function ()
 
 ApplicationVender.prototype.ventaContadoExitosa = function ()
 {
+	
+
+	
+	//quitar el menu de cancelar venta y eso
+	Ext.getCmp("doVentaContadoPanel").getDockedItems()[0].hide();
+	
+	
+	if( this.cliente ){
+		Ext.getCmp("doVentaContadoPanel").add({ 
+				xtype:'button', 
+				text:'Requerir Factura',
+				style: "margin-left: 45%; margin-top: 20px; width: 150px;",
+				ui: 'action'
+			});
+
+			
+	}
+	
+	Ext.getCmp("doVentaContadoPanel").add({ 
+			xtype:'button', 
+			text:'Nueva venta',
+			style: "margin-left: 45%; margin-top: 20px; width: 150px;",
+			ui: 'back'
+		});
+		
+	Ext.getCmp("doVentaContadoPanel").doLayout();
+	
+	//limpiar el carrito
+	//this.doLimpiarCarrito();
 	
 };
 
@@ -1206,10 +1389,10 @@ ApplicationVender.prototype.buscarCliente = function ()
 					direccion: 	response.datos[a].direccion,
 					telefono: 	response.datos[a].telefono,
 					e_mail: 	response.datos[a].e_mail,
-					descuento: 	response.datos[a].descuento,
-					limite_credito:response.datos[a].limite_credito
-					
-					});
+					descuento: 			response.datos[a].descuento,
+					limite_credito: 	response.datos[a].limite_credito,
+					credito_restante: 	response.datos[a].credito_restante
+					});	
 			}
 
 
