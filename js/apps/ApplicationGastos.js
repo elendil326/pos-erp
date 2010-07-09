@@ -309,9 +309,19 @@ ApplicationGastos.prototype.loadGastosButtons = function(){
 			ui: 'action',
 			handler: function(){
 				//alert("Agregando gasto...");
-				var monto = Ext.getCmp('ApplicationGastos-gastosForm-monto').getValue();
 				
-				if ( isNaN(monto) || monto < 0 )
+				var datos = Ext.getCmp('ApplicationGastos-gastosFormPanel').getValues();
+				console.log(datos);
+				
+				if( datos['concepto'] == "" || datos['monto'] == "" || datos['fecha'] == "" )
+				{
+					POS.aviso('Error', 'Debes llenar todos los campos requeridos');
+					return;
+				}
+				
+				var monto = datos['monto'];
+				
+				if ( isNaN(monto) || monto < 1 )
 				{
 					POS.aviso('Error', 'El monto debe ser un número válido');
 					return;

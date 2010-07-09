@@ -352,7 +352,7 @@ POS.map = function( address )
 								if(DEBUG){
 									console.warn("Mapas: ", status, errorMsg);
 								}
-								console.log( Ext.get(panel.id) );
+
 								document.getElementById( Ext.get(panel.id).dom.childNodes[1].id).innerHTML = '<div style="text-align:center; padding-top:30%;">'+ errorMsg +'.</div>';
 							
 								return null;
