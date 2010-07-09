@@ -227,6 +227,7 @@ y algunas otras funciones
 			//asignamos valores obtenidos a las variables
 			$concepto=$_REQUEST['concepto'];
 			$monto=$_REQUEST['monto'];
+			$fecha=$_REQUEST['fecha'];
 			$id_sucursal=$_SESSION['sucursal_id'];
 			$id_usuario=$_SESSION['id_usuario'];
 			//creamos objeto-sucursal
@@ -239,7 +240,7 @@ y algunas otras funciones
 				if($usuario->existe())
 				{
 					//creamos objeto-gasto
-					$gasto=new gasto($concepto,$monto,$id_sucursal,$id_usuario);
+					$gasto=new gasto($concepto,$monto,$fecha,$id_sucursal,$id_usuario);
 					//verficamos que no exista
 					if(!$gasto->existe())
 					{

@@ -135,6 +135,7 @@ ApplicationGastos.prototype.loadGastosPanel = function(){
 			[{
 				xtype: 'fieldset',
 				title: 'Gasto nuevo',
+				instructions: '* Estos campos son requeridos',
 				items:
 					[{
 						xtype: 'textfield',
@@ -143,10 +144,23 @@ ApplicationGastos.prototype.loadGastosPanel = function(){
 						required: true
 					},
 					{
+						id: 'ApplicationGastos-gastosForm-monto',
 						xtype: 'textfield',
 						label: 	'Monto',
 						name: 'monto',
 						required: true
+					},
+					{
+						id: 'ApplicationGastos-gastosForm-fecha',
+						xtype: 'textfield',
+						label: 'Fecha',
+						name: 'fecha',
+						required: true,
+						listeners: {
+							focus: function( field ){
+								ApplicationGastos.currentInstance.getDate( field );
+							}
+						}
 					}] 	
 			}]
 	});
@@ -156,6 +170,72 @@ ApplicationGastos.prototype.loadGastosPanel = function(){
 	
 };
 
+ApplicationGastos.prototype.getDate = function( textfield ){
+	
+	var currentDate = new Date();
+	
+	if ( Ext.get( 'ApplicationGastos-getDate-panel' ) != null){
+		Ext.getCmp( 'ApplicationGastos-getDate-panel' ).show();
+		
+		 var picker = Ext.getCmp('ApplicationGastos-getDate-picker')
+		 picker.value.day = currentDate.getDate();
+		 picker.value.month = currentDate.getMonth();
+		 picker.value.year = currentDate.getFullYear();
+		
+		return;
+	}
+	
+	
+	
+	
+	//alert(currentDate.getDay());
+	
+	var datePicker = new Ext.Panel({
+		id: 'ApplicationGastos-getDate-panel',
+		height: 320,
+		width: 356,
+		floating: true,
+		centered: true,
+		modal: true,
+	    items: [{
+			id: 'ApplicationGastos-getDate-picker',
+	        xtype: 'datepicker',
+	        width: (!Ext.platform.isPhone ? 400 : 320),
+	        height: Ext.platform.isAndroidOS ? 320 : (!Ext.platform.isPhone ? 356 : 300),
+	        useTitles: false,
+			floating: true,
+			centered: true,
+	        value: {
+	            day: currentDate.getDate(),
+	            month: currentDate.getMonth(),
+	            year: currentDate.getFullYear()
+	        },
+	        dockedItems: [{
+	            xtype: 'toolbar',
+	            dock: 'top',
+				title: 'Fecha',
+	
+	            // alignment of the button to the right via
+	            // flexed components
+	            items: [{xtype: 'spacer'}, {
+	                xtype: 'button',
+	                ui: 'action',
+	                text: 'Aceptar',
+	                handler: function() {
+	                    var fecha = Ext.encode(Ext.getCmp('ApplicationGastos-getDate-picker').getValue());
+						var formatFecha = fecha.slice(1, fecha.indexOf('T'));
+						Ext.getCmp('ApplicationGastos-gastosForm-fecha').setValue(formatFecha);
+						datePicker.hide();
+	                }
+	            }]
+	        }]
+	    }]
+	});
+	
+	
+	datePicker.show();
+	
+};
 
 
 /* -------------------------------------------------------------------------------------
@@ -172,7 +252,8 @@ ApplicationGastos.prototype.logicAddGasto = function(){
 			{
 				method	: 'insertarGasto',
 				concepto: datos['concepto'],
-				monto	: datos['monto']
+				monto	: datos['monto'],
+				fecha	: datos['fecha']
 			},
 			//Responded
 			function(result)
@@ -184,7 +265,7 @@ ApplicationGastos.prototype.logicAddGasto = function(){
 					ApplicationGastos.currentInstance.loadHomeButtons();
 				}
 				else{
-					POS.aviso('Error', 'No se agregar el nuevo gasto, intente nuevamente');
+					POS.aviso('Error', 'No se pudo agregar el nuevo gasto, intente nuevamente');
 				}
 				
 			},
@@ -228,6 +309,14 @@ ApplicationGastos.prototype.loadGastosButtons = function(){
 			ui: 'action',
 			handler: function(){
 				//alert("Agregando gasto...");
+				var monto = Ext.getCmp('ApplicationGastos-gastosForm-monto').getValue();
+				
+				if ( isNaN(monto) || monto < 0 )
+				{
+					POS.aviso('Error', 'El monto debe ser un número válido');
+					return;
+				}
+				
 				ApplicationGastos.currentInstance.logicAddGasto();
 			}
 		}]

@@ -8,11 +8,12 @@
 		var $id_usuario;
 		var $bd;
 		
-		function __construct($concepto,$monto,$id_sucursal,$id_usuario){ 
+		function __construct($concepto,$monto,$fecha,$id_sucursal,$id_usuario){ 
 				$this->concepto=$concepto;	 	 	 	 	 	 	 
 				$this->monto=$monto;	 	 	 	 	 	 
 				$this->id_sucursal=$id_sucursal;	 	 
-				$this->id_usuario=$id_usuario;	 
+				$this->id_usuario=$id_usuario;
+				$this->fecha=$fecha;	 
 				$this->bd=new bd_default();
 		}
 		function __destruct(){ 
@@ -20,16 +21,16 @@
 		}
 		
 		function inserta(){
-			$insert="INSERT INTO gastos values(NULL,?,?,null,?,?);";
-			$params=array($this->concepto,$this->monto,$this->id_sucursal,$this->id_usuario);
+			$insert="INSERT INTO gastos values(NULL,?,?,?,?,?);";
+			$params=array($this->concepto,$this->monto,$this->fecha,$this->id_sucursal,$this->id_usuario);
 			if($this->bd->ejecuta($insert,$params)){
 				$this->id_gasto=$this->bd->con->Insert_ID();
 				return true;
 			}else return false;
 		}
 		function actualiza(){
-			$update="UPDATE  gastos SET  `concepto`=?,`monto` =?,`id_sucursal` =?, `id_usuario`=? where id_gasto=?;";
-			$params=array($this->concepto,$this->monto,$this->id_sucursal,$this->id_usuario,$this->id_gasto);
+			$update="UPDATE  gastos SET  `concepto`=?,`monto` =?, `fecha`=?, `id_sucursal` =?, `id_usuario`=? where id_gasto=?;";
+			$params=array($this->concepto,$this->monto,$this->fecha,$this->id_sucursal,$this->id_usuario,$this->id_gasto);
 			return $this->bd->ejecuta($update,$params);
 		}
 		function json(){

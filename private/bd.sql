@@ -235,7 +235,7 @@ CREATE TABLE IF NOT EXISTS `gastos` (
   `id_gasto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id para identificar el gasto',
   `concepto` varchar(100) NOT NULL COMMENT 'concepto en lo que se gasto',
   `monto` float NOT NULL COMMENT 'lo que costo este gasto',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha del gasto',
+  `fecha` timestamp NOT NULL COMMENT 'fecha del gasto',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal en la que se hizo el gasto',
   `id_usuario` int(11) NOT NULL COMMENT 'usuario que registro el gasto',
   PRIMARY KEY (`id_gasto`)
