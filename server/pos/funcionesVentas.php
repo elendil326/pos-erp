@@ -1,11 +1,12 @@
 <?php	
 //include("../AddAllClass.php");
 
-	function venderProducto(){
-		if((!empty($_REQUEST['id_producto']))&&(!empty($_REQUEST['cantidad']))&&(!empty($_REQUEST['id_sucursal']))){ //revisa que se envien todos los datos
-			$id=$_REQUEST['id_producto'];																				//asigna valores a variables
-			$cantidad=$_REQUEST['cantidad'];
-			$id_sucursal=$_REQUEST['id_sucursal'];
+	function venderProducto($id_producto, $existenciass, $id_Sucursal){
+		
+			$id=$id_producto;
+			$cantidad=$existenciass;
+			$id_sucursal=$id_Sucursal;
+			
 			$detalle_inventario=new detalle_inventario_existente($id,$id_sucursal);										//creamos un objeto de la clase detalle_inventario que vamos a modificar
 			$producto=new inventario_existente($id);																	//creamos un objeto de la clase inventario para ver si existe
 			if($producto->existe()){																					//checamos si existe el producto en inventario
@@ -13,41 +14,42 @@
 				if($verifica_sucursal->existe()){																		//checamos que exista la sucursal
 					if($detalle_inventario->existe()){																	//Verificamos si ya existe el registro del producto en la sucursal
 						$detalle_inventario->existencias=$detalle_inventario->existencias - $cantidad;					//restamos el producto que sale a la existencia
-						if($detalle_inventario->actualiza())			ok();											//actualizamos y verificamos que realice la actualizacion
-						else											fail("Error al agregar los datos");
+						if($detalle_inventario->actualiza())			return true;											//actualizamos y verificamos que realice la actualizacion
+						else											return "Error al agregar los datos en el inventario";
 					}else{
-						fail("Error El producto no exite funcion venderProducto else if detalle_inventario existe()");
+						return "Error El producto no exite funcion venderProducto else if detalle_inventario existe()";
 					}
-				}else													fail("La sucursal de la compra no existe.");
-			}else 														fail("El producto que desea comprar no existe.");
-		}else 															fail("Faltan datos.");
-		return;
+				}else													return "La sucursal de la venta no existe.";
+			}else 														return "El producto que desea vender no existe.";
+		
 	}
 	
 	/*	SE AGREGA 1 PRODUCTO AL DETALLE DE LA VENTA Y SE REFRESCA LA CABECERA (tabla ventas)*/
 	
-	function agregarProductoDetalle_venta(){
-		$id_venta=$_REQUEST['id_venta'];
-		$id_producto=$_REQUEST['id_producto'];
-		$cantidad=$_REQUEST['cantidad'];
-		$precio =$_REQUEST['precio'];
+	function agregarProductoDetalle_venta($id_venta, $id_producto, $cantidad, $precio, $id_sucursal){
+		$resultado = array();
+		array_push($resultado,false,"");
+		
 		$id_usuario = $_SESSION['id_usuario'];
 		
 		$detalle_venta= new detalle_venta($id_venta,$id_producto,$cantidad,$precio);//$id_venta,$id_producto,$cantidad,$precio
 
 		if($detalle_venta->inserta()){
-			$venta_existente = new venta_existente($id_venta);//$id_proveedor,$tipo_compra,$sucursal,$id_usuario
-			$venta_existente->id_venta=$id_venta;
-			$detalle_venta = $venta_existente->detalle_venta($id_compra);
-			if(actualizaCabeceraVenta($detalle_venta,$id_venta,$id_usuario)){ //<---aqui llamar a comprarProducto
-				echo "{ success : true , \"datos\" : ".json_encode($detalle_venta)."}";
+			$res = venderProducto($id_producto, $cantidad, $id_sucursal);
+			
+			if($res == true){ 
+				$resultado[0] = true;
 			}else{
-				echo "{success: false}";	
+				$resultado[0]= false;
+				$resultado[1] = " -- ".$res;
 			}
 		}else{
-			echo "{success: false , \"error\": [{\"metodo\":\"if_detalleCompra->inserta()\"}]}";
+			$resultado[0] = false;
+			$resultado[1] = " -- No se pudo insertar el producto con ID: '".$id_producto."' de la venta. en la venta con id: ".$id_venta;
 		}
+		return $resultado;
 	}
+
 	
 	/*	SE ELIMINA 1 PRODUCTO AL DETALLE DE LA VENTA Y SE REFRESCA LA CABECERA (tabla ventas)*/
 	
@@ -99,15 +101,12 @@
 		}
 	}//fin modificarCantidad
 	
+	
 	/*	REFRESCA LA CABECERA (tabla ventas) CON RESPECTO A LOS PRODUCTOS QUE CONTIENE ESA VENTA ACTUALIZA EL TOTAL Y SUBTOTAL 
 	PARA CADA MOVIMIENTO QUE SE HACE CON EL DETALLE DE LA VENTA*/
 	
-	function actualizaCabeceraVenta($detalle_venta,$id_venta,$id_usuario){
-		$subtot=0;
-		$dim = count($detalle_venta);
-		for($i=0;$i<$dim;$i++){
-			$subtot += $detalle_venta[$i]["subtotal"];
-		}
+	function actualizaCabeceraVenta($id_venta,$id_usuario,$subtotalVenta){
+		
 		$iva = new impuesto_existente(5);//en mi bd el iva es el id 5
 		$iva->id_impuesto=5;
 		
@@ -116,8 +115,8 @@
 		$venta = new venta_existente($id_venta);
 		$venta->id_venta=$id_venta;
 		$venta->id_proveedor=$id_usuario;
-		$venta->subtotal=$subtot;
-		$venta->iva=0;
+		$venta->subtotal=$subtotalVenta;
+		$venta->iva=($iva_valor/100) * $subtotalVenta;
 		
 		if($venta->actualiza()){
 			return true;
@@ -125,6 +124,7 @@
 			return false;
 		}
 	}//actualiza cabecera
+	
 	
 	/*	SE ENLISTAN TODAS LAS VENTAS EMITIDAS EN TODAS LAS SUCURSALES*/
 	
@@ -192,31 +192,39 @@
 	/*	SE INSERTA UNA NUEVA VENTA (UNICAMENTE LA CABECERA) */
 	
 	function insertarVenta(){
-		$id_cliente =$_REQUEST['id_cliente'];
-		$tipo_venta=$_REQUEST['tipo_venta'];
 		$sucursal=$_SESSION['sucursal_id'];
 		$id_usuario=$_SESSION['id_usuario'];
-		$jsonItems = $_REQUEST['jsonItems'];
-
-		$objItems = json_decode($jsonItems);
-		
-		/*echo $id_cliente;
-		echo $tipo_venta;
-		echo $sucursal;
-		echo $id_usuario;*/
+		$objson = $_REQUEST['jsonItems'];
+		$arregloItems = json_decode($objson,true);
+		$dim = count($arregloItems);
+		$id_cliente =$_REQUEST['id_cliente'];
+		$tipo_venta=$_REQUEST['tipo_venta']; 
 		
 		$venta = new venta($id_cliente,$tipo_venta,$sucursal,$id_usuario);
+		$id_venta = 0;
+		if( $venta->inserta() ){ //se inserta la cabecera de la venta
 		
-		$result = $venta->inserta();
+			$id_venta = $venta->id_venta;
+			$succes = array(); array_push($succes,false,"");
+			$subtotalVenta = 0;
 		
-		if($result == ""){
-			echo "{success: true }";
+			for($i=0; $i < $dim; $i++){
+		
+				$resul = agregarProductoDetalle_venta($id_venta, $arregloItems[$i]['id'], $arregloItems[$i]['cantidad'], $arregloItems[$i]['cost'], $sucursal); //se van agregando los productos que trae el json del lado del cliente a tabla detalle_venta
+				$subtot = $arregloItems[$i]['cantidad'] * $arregloItems[$i]['cost']; //se saca el subtotal de ese detalle_venta
+				$subtotalVenta += $subtot; //se van sumando los subtotales para el total de la cabecera de la venta
+				$succes[0]=$resul[0];
+				$succes[1].=$resul[1];
+			}//fin for
+			//se actualiza la cabecera con el nuevo total
+		
+			if (!actualizaCabeceraVenta($id_venta,$id_usuario,$subtotalVenta)) $succes[1].=" -- No se modifico el subtotal e iva de la compra";
+			echo "{ \"success\" : \"true\" , reason :'".$succes[1]."' , final: '".$succes[0]."' }";
 		}else{
-			echo "{success: false, reason : '". $result ."'}";
+			echo "{ \"success\" : \"false\" , reason : 'No se pudo insertar la cabecera de la venta ni sus detalles' }";
 		}
-		
-
 	}//fin insertar
+	
 	
 	/*	SE ELIMINA UNA VENTA */
 	

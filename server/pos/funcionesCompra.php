@@ -1,55 +1,32 @@
 <?php	
 
 
-	function comprarProducto(){
-		if((!empty($_REQUEST['id_producto']))&&(!empty($_REQUEST['existencias']))&&(!empty($_REQUEST['id_sucursal']))){ //revisa que se envien todos los datos
-			$id=$_REQUEST['id_producto'];																				//asigna valores a variables
-			$existencias=$_REQUEST['existencias'];
-			$id_sucursal=$_REQUEST['id_sucursal'];
+	function comprarProducto($id_producto, $existenciass, $id_Sucursal){
+		
+			$id=$id_producto;																				//asigna valores a variables
+			$existencias=$existenciass;
+			$id_sucursal=$id_Sucursal;
 			$detalle_inventario=new detalle_inventario_existente($id,$id_sucursal);										//creamos un objeto de la clase detalle_inventario que vamos a modificar
 			$producto=new inventario_existente($id);																	//creamos un objeto de la clase inventario para ver si existe
 			if($producto->existe()){																					//checamos si existe el producto en inventario
 				$verifica_sucursal=new sucursal_existente($id_sucursal);												//creamos un objeto de la clase sucursal para veridicar que tambien exista
 				if($verifica_sucursal->existe()){																		//checamos que exista la sucursal
 					if($detalle_inventario->existe()){																//Verificamos si ya existe el registro del producto en la sucursal
-						$detalle_inventario->existencias=$detalle_inventario->existencias+$existencias;					//sumamos el productoentrante a la existencia
-						if($detalle_inventario->actualiza())			ok();											//actualizamos y verificamos que realice la actualizacion
-						else											fail("Error al agregar los datos");
+						$detalle_inventario->existencias=$detalle_inventario->existencias + $existencias;					//sumamos el productoentrante a la existencia
+						if($detalle_inventario->actualiza())			return true;											//actualizamos y verificamos que realice la actualizacion
+						else											return "Error al agregar los datos en el inventario";
 					}else{																								//generamos el registro podiendo en ceros el precio y el minimo
 						$detalle_inventario->id_producto=$id;
 						$detalle_inventario->id_sucursal=$id_sucursal;
 						$detalle_inventario->existencias=$existencias;
 						$detalle_inventario->precio_venta=0;
 						$detalle_inventario->minimo=0;
-						if($detalle_inventario->inserta())				ok();											//insertamos y verificamos que realize la insercion
-						else											fail("Error al guardar los datos");
+						if($detalle_inventario->inserta())				return true;											//insertamos y verificamos que realize la insercion
+						else											return "Error al agregar nuevo producto en el inventario";
 					}
-				}else													fail("La sucursal de la compra no existe.");
-			}else 														fail("El producto que desea comprar no existe.");
-		}else 															fail("Faltan datos.");
-		return;
-	}
-	function agregarProductoDetalle_compra(){
-		$id_compra=$_REQUEST['id_compra'];
-		$id_producto=$_REQUEST['id_producto'];
-		$cantidad=$_REQUEST['cantidad'];
-		$precio =$_REQUEST['precio'];
-		$id_proveedor= $_REQUEST['id_proveedor'];
+				}else													return "La sucursal de la compra no existe.";
+			}else 														return "El producto que desea comprar no existe.";
 		
-		$detalle_compra= new detalle_compra($id_compra,$id_producto,$cantidad,$precio);//$id_compra,$id_producto,$cantidad,$precio
-
-		if($detalle_compra->inserta()){
-			$compra_existente = new compra_existente($id_compra);//$id_proveedor,$tipo_compra,$sucursal,$id_usuario
-			$compra_existente->id_compra=$id_compra;
-			$detalle_compra = $compra_existente->detalle_compra($id_compra);
-			if(actualizaCabeceraCompra($detalle_compra,$id_compra,$id_proveedor)){ //<---aqui llamar a comprarProducto
-				echo "{ success : true , \"datos\" : ".json_encode($detalle_compra)."}";
-			}else{
-				echo "{success: false}";	
-			}
-		}else{
-			echo "{success: false , \"error\": [{\"metodo\":\"if_detalleCompra->inserta()\"}]}";
-		}
 	}
 	
 	function eliminarProductoDetalle_compra(){
@@ -98,12 +75,8 @@
 		}
 	}//fin modificarCantidad
 	
-	function actualizaCabeceraCompra($detalle_compra,$id_compra,$id_proveedor){
-		$subtot=0;
-		$dim = count($detalle_compra);
-		for($i=0;$i<$dim;$i++){
-			$subtot += $detalle_compra[$i]["subtotal"];
-		}
+	function actualizaCabeceraCompra($id_compra,$id_proveedor,$subtotalCompra){
+		
 		$iva = new impuesto_existente(5);//en mi bd el iva es el id 5
 		$iva->id_impuesto=5;
 		
@@ -112,8 +85,8 @@
 		$compra = new compra_existente($id_compra);
 		$compra->id_compra=$id_compra;
 		$compra->id_proveedor=$id_proveedor;
-		$compra->subtotal=$subtot;
-		$compra->iva=($iva_valor/100) * $subtot;
+		$compra->subtotal=$subtotalCompra;
+		$compra->iva=($iva_valor/100) * $subtotalCompra;
 		
 		if($compra->actualiza()){
 			return true;
@@ -140,18 +113,66 @@
 	}
 	
 	function insertarCompra(){
+		$sucursal=$_SESSION['sucursal_id'];
+		$id_usuario=$_SESSION['id_usuario'];
+		$objson = $_REQUEST['jsonItems'];
+		$arregloItems = json_decode($objson,true);
+		$dim = count($arregloItems);
 		$id_proveedor=$_REQUEST['id_proveedor'];
 		$tipo_compra=$_REQUEST['tipo_compra'];
-		$sucursal=$_REQUEST['sucursal'];
-		$id_usuario=$_REQUEST['id_usuario'];
+		
 		$compra = new compra($id_proveedor,$tipo_compra,$sucursal,$id_usuario);
-				
+		$id_compra=0;
 		if($compra->inserta()){
-			echo "{success: true}";
+			$id_compra = $compra->id_compra;
+			$succes = array(); array_push($succes,false,"");
+			$subtotalCompra = 0;
+			for($i=0; $i < $dim; $i++){
+				
+				$inventario = ( $arregloItems[$i]['pesoArp'] + $arregloItems[$i]['kgR'] ) * $arregloItems[$i]['nA'];
+				
+				$pesoArpReal = $arregloItems[$i]['pesoArp'] + $arregloItems[$i]['kgR'];
+				
+				$resul = agregarProductoDetalle_compra($id_compra, $arregloItems[$i]['id'],$arregloItems[$i]['kgTot'],$arregloItems[$i]['prKg'] , $inventario, $sucursal, $arregloItems[$i]['pesoArp'], $pesoArpReal);
+				
+				$subtotalCompra += $arregloItems[$i]['subtot'];
+				
+				$succes[0]=$resul[0];
+				$succes[1].=$resul[1];
+			}
+			if (!actualizaCabeceraCompra($id_compra,$id_proveedor,$subtotalCompra)) $succes[1].=" -- No se modifico el subtotal e iva de la compra";
+			
+			echo "{ success : true , reason :'".$succes[1]."' , final: ".$succes[0]." }";//El proceso de insertar una compra se llevo con exito  { success : true, datos : [{"sucursal_id":"1"}]}
 		}else{
-			echo "{success: false}";
+			echo "{ success : false , reason : No se pudo insertar la cabecera de la compra ni sus detalles }";
 		}
 	}//fin insertar
+	
+	function agregarProductoDetalle_compra($idCompra , $idProducto, $cantidad , $precio , $paraInventario, $id_sucursal, $peso_arpillaPagado,$peso_arpillaReal ){
+		
+		$resultado = array();
+		array_push($resultado,false,"");
+		
+		$detalle_compra= new detalle_compra($idCompra,$idProducto,$cantidad,$precio,$peso_arpillaPagado,$peso_arpillaReal);
+		if($detalle_compra->inserta()){//<---aqui llamar a comprarProducto
+			$res = comprarProducto($idProducto, $paraInventario, $id_sucursal);
+			if ( $res == true ){
+				$resultado[0] = true;
+			}else{
+				$resultado[0]= false;
+				$resultado[1] = " -- ".$res;
+			}
+		}else{
+			$resultado[0] = false;
+			$resultado[1] = " -- No se pudo insertar el producto con ID: '".$idProducto."' de la compra.";
+		}
+		return $resultado;
+	}
+	
+	
+	
+	
+	
 	function eliminarCompra(){
 		$id_compra=$_REQUEST['id_compra'];
 
