@@ -98,14 +98,15 @@ ApplicacionClientes.prototype._initToolBar = function (){
     });
 
 
-	/*
+	/* 
 		Detalles cliente
 	*/
 	var btnBackCliente = [{
         id: 'btn_BackCliente',
         text: 'Regresar',
         handler: function(){
-			sink.Main.ui.setCard( Ext.getCmp('panelClientes'), 'slide' );
+			
+			sink.Main.ui.setCard( Ext.getCmp('panelClientes'), { type: 'slide', direction: 'right' } );
 		},
         ui: 'back'
     }];
@@ -113,9 +114,10 @@ ApplicacionClientes.prototype._initToolBar = function (){
 
 	var detallesDeCliente = [{
         xtype: 'splitbutton',
-		id: 'btn_detallesCliente',
+		id: 'actionButtonsClientes',
         items: [{
             text: 'Detalles',
+			id: 'btn_detallesCliente',
 			handler: this.mostrarDetallesCliente
         }, {
             text: 'Compras',
@@ -123,6 +125,7 @@ ApplicacionClientes.prototype._initToolBar = function (){
 			handler: this.mostrarVentasCliente
         },{
 			text: 'Creditos',
+			id: 'btnCreditosCliente',
 			handler: this.mostrarVentasCreditoCliente
 		}]    
     }];
@@ -186,8 +189,8 @@ ApplicacionClientes.prototype._initToolBar = function (){
     
 	//agregar este dock a el panel principal
 	this.ClientesList.addDocked( this.dockedItems );
-		
-		
+	
+	this.panelContenedor.addDocked(this.dockedItemsFormCliente);	
 };
 
 
@@ -235,21 +238,70 @@ ApplicacionClientes.prototype.editClient = function (){
 
 }
 
-/*
-	Carga el panel de 'Detalles del cliente'
-*/
+ApplicacionClientes.prototype.removePanel= null;
+ApplicacionClientes.prototype.removePanelName="updateForm";
+
+/*--------------------------------------------
+
+	PANEL CON EL TOOLBAR DE LAS ACCIONES DEL CLIENTE AQUI SE LE AGREGAN LOS CARDS
+	
+-----------------------------------------------*/
+
+ApplicacionClientes.prototype.panelContenedor = new Ext.Panel({ 
+	scroll: 'vertical',
+	id: 'clientes_contenedor',
+	layout: 'card',
+	listeners: {
+		beforeshow : function(){
+			//this.add(ApplicacionClientes.currentInstance.removePanel);
+			//this.doLayout();
+			console.log("-----CAMBIO DE CLIENTE------");
+			console.log(ApplicacionClientes.currentInstance.clienteSeleccionado[0].nombre);
+			
+		}
+	}
+});
+
+/*----------------------------------------------------
+	Carga el panel de 'Detalles del cliente' 
+-------------------------------------------------------*/
+
 ApplicacionClientes.prototype.mostrarDetallesCliente = function(){
-	ApplicacionClientes.prototype.addClientDetailsPanel(ApplicacionClientes.currentInstance.clienteSeleccionado);
+	ApplicacionClientes.currentInstance.addClientDetailsPanel(ApplicacionClientes.currentInstance.clienteSeleccionado , false);
 }
 
-ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
-	
+ApplicacionClientes.prototype.addClientDetailsPanel= function( recor , bandera){
+
+	if(ApplicacionClientes.currentInstance.removePanelName != "updateForm" ){
+		Ext.getCmp(ApplicacionClientes.currentInstance.removePanelName).destroy();
+		//console.log("En DETALLES CLIENTE DESTRUI: "+ApplicacionClientes.currentInstance.removePanelName +"estando elegido--- "+ApplicacionClientes.currentInstance.clienteSeleccionado[0].nombre);
+		//ApplicacionClientes.currentInstance.panelContenedor.removeAll();
+		console.log("-------REMOVI TODO EL PANEL ENTRANDO A DETALLES CLIENTE------");
+		
+	}
 	var foo = ApplicacionClientes.currentInstance.updateForm( recor );
+	ApplicacionClientes.currentInstance.removePanelName ="updateForm";
+
 	
+	if(bandera){
+		try{
+			ApplicacionClientes.currentInstance.panelContenedor.removeAll();
+			ApplicacionClientes.currentInstance.panelContenedor.add(foo);
+			Ext.getCmp("updateForm").hidden = false;
+			sink.Main.ui.setCard( ApplicacionClientes.currentInstance.panelContenedor , 'slide' );
+		}catch(e){console.log("NO SE DESPLAZO A PANEL CONTENEDOR QUE TIENE LOS DETALLES DEL CLIENTE DESDE LA LISTA: "+e);}
+	}else{
+		try{
+			ApplicacionClientes.currentInstance.panelContenedor.add(foo);
+			ApplicacionClientes.currentInstance.panelContenedor.setCard(foo,'slide');
+		}catch(e){console.log("ERROR CUANDO SE QUERIA MOSTRAR A LA CARD DETALLES CLIENTE DESDE LOS BOTONES: "+e);}
+	}
+	
+	Ext.getCmp('actionButtonsClientes').setActive(0);
 	Ext.getCmp('btn_CancelEditCliente').setVisible(false);
 	Ext.getCmp('btn_EditCliente').setText('Modificar');
-	//Ext.getCmp('btn_detallesCliente').setActive();
-	sink.Main.ui.setCard( foo, 'slide' );
+	
+	
 }
 
 
@@ -307,9 +359,8 @@ ApplicacionClientes.prototype.handlerModificarCliente= function(id,rfc,nombre,di
 ApplicacionClientes.prototype.updateForm = function( recor ){
 
 	 var forma =  new Ext.form.FormPanel({
-						scroll: 'vertical',
                         id: 'updateForm',
-						dockedItems: this.dockedItemsFormCliente,
+						//dockedItems: this.dockedItemsFormCliente,
                         items: [{                                                       
                         		xtype: 'fieldset',
                                 title: 'Detalles del Cliente',
@@ -380,6 +431,7 @@ ApplicacionClientes.prototype.updateForm = function( recor ){
                                	}//fin boton cancelar*/
                         ]//,//fin items formpanel
                      });
+
 	return forma;
 
 };
@@ -427,20 +479,11 @@ ClientesListStore = new Ext.data.Store({
     sorters: apClientes_filtro,
 			
     getGroupString : function(record) {
+		//console.log("voy a filtrar por: "+apClientes_filtro);
         return record.get(apClientes_filtro)[0];
     }   
 });
 
-
-/*ApplicacionClientes.prototype.filter = function ()
-{
-	console.log("requesting template-...");
-	switch(ApplicationVender.currentInstance.filterTemplate){
-		case 'nombre': 		return '<tpl for="."><div class="contact"><strong>{nombre}</strong>{rfc},{direccion}</div></tpl>';
-		case 'rfc': 		return '<tpl for="."><div class="contact"><strong>{rfc}</strong> {nombre}</div></tpl>';		
-		case 'direccion': 	return '<tpl for="."><div class="contact">{direccion}<strong> {nombre}</strong></div></tpl>';
-	}
-};*/
 /*	------------------------------------------------------------------------------------
 		Filtrado de busqueda en el store HAY BUG AQUI, DESPUES DE 1 FILTRO CUANDO SE REGRESA A CLIENTES NO LOS MUESTRA TODOS A MENOS QUE SE TECLE EN EL TEXT DE BUSQUEDA ALGO O SE DEJE EN ''
 ---------------------------------------------------------------------------------------*/
@@ -448,18 +491,20 @@ ApplicacionClientes.prototype.doSearch = function(  ){
 	
 	if (Ext.getCmp('btnBuscarCliente').getValue() == "")
 		{			
-			ClientesListStore.clearFilter();
-			//Ext.getCmp("listaClientes").refresh();
-			ClientesListStore.sync();
-			
+				ClientesListStore.clearFilter();
+				//try{
+				ClientesListStore.sync(); //marca erro pero si lo meto en try catch o no lo llamo la vista no coincide con el store
+				//}catch(e){console.log("Error sync -> "+e);}
 		}
 		
+		try{
 		ClientesListStore.filter([
 		{
 			property: 'nombre',
 			value: Ext.getCmp('btnBuscarCliente').getValue()
 		}
 		]);
+		}catch(e){console.log("Error -> "+e);}
 		
 }
 
@@ -474,7 +519,7 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
     	},
     	listeners: {
 			beforeshow : function(component){
-				Ext.getCmp('btnBuscarCliente').setValue() == "";
+				
 				Ext.getBody().mask(false, '<div class="demos-loading">Loading&hellip;</div>');
 				POS.AJAXandDECODE({
 				        method: 'listarClientes'
@@ -509,13 +554,14 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
 							
 							//console.log("ApplicacionClientes.currentInstance.clienteSeleccionado = "+ recor.id_cliente);
 							//console.log(recor[0]);
+							
 							ApplicacionClientes.currentInstance.clienteSeleccionado = recor;
                         	//DESLIZAR EL NUEVO PANEL (FORMULARIO DE ACTUALIZACION)
-							ApplicacionClientes.currentInstance.addClientDetailsPanel( recor ); 
+							ApplicacionClientes.currentInstance.addClientDetailsPanel( recor , true); 
 						}
 					}catch(e){
 						if(DEBUG){
-							console.error("ApplicationClientes:" +e);
+							console.log("ApplicationClientes:" +e);
 						}
 					}
 				}
@@ -645,24 +691,15 @@ ApplicacionClientes.prototype.formAgregarCliente = new Ext.form.FormPanel({
 
 
 /*------------------------------------------------------------------
-			VENTAS EMITIDAS A UN CLIENTE
+			VENTAS EMITIDAS A UN CLIENTE 
 ------------------------------------------------------------------------*/
-
-ApplicacionClientes.prototype.mostrarVentasCliente = function(){ //mostrarVentasCreditoCliente
-	console.log("a entrar a listar ventas");
-	console.log("ID cliente: "+ApplicacionClientes.currentInstance.clienteSeleccionado);
-	var dump = ApplicacionClientes.currentInstance.listarVentas( ApplicacionClientes.currentInstance.clienteSeleccionado );
-	
-	sink.Main.ui.setCard( dump , 'slide' );
-}
-
 
 ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 	
 	var listaVentas = new Ext.form.FormPanel({
-			scroll: 'vertical',
+			//scroll: 'vertical',
 			id: 'listaVentasCliente',
-			dockedItems: this.dockedItemsFormCliente,
+			//dockedItems: this.dockedItemsFormCliente,
 			items: [{
 				  		id: 'datosCliente',
 						html: ''
@@ -761,6 +798,8 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 		
 	return listaVentas;
 }
+
+
 
 /*--------------------------------------------------------------------
 		VER DETALLES DE LA VENTA DEL CLIENTE
@@ -875,24 +914,75 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
 	formBase.show();
 	
 }
+/* ----------------------------------------------------------------------
+	MUESTRA EL PANEL DE LAS VENTAS EMITIDAS A UN CLIENTE
+---------------------------------------------------------------------------*/
+
+ApplicacionClientes.prototype.mostrarVentasCliente = function(){ //mostrarVentasCreditoCliente
+
+	if(ApplicacionClientes.currentInstance.removePanelName != "listaVentasCliente"){
+		try{
+		Ext.getCmp(ApplicacionClientes.currentInstance.removePanelName).destroy();
+		//console.log("EN VENTAS CLIENTES Y BORRE: "+ApplicacionClientes.currentInstance.removePanelName);
+		//ApplicacionClientes.currentInstance.panelContenedor.remove(ApplicacionClientes.currentInstance.removePanelName);
+		console.log("------------LIMPIE EL PANEL ENTRANDO A MOSTRAR VENTAS--------------");
+		}catch(e){console.log("NO SE PUDO BORRAR EL COMPONENTE "+ApplicacionClientes.currentInstance.removePanelName+" -- "+e);}
+	}
+
+	var ven = ApplicacionClientes.currentInstance.listarVentas( ApplicacionClientes.currentInstance.clienteSeleccionado );
+
+	ApplicacionClientes.currentInstance.removePanelName ="listaVentasCliente";
+
+
+	try{
+		ApplicacionClientes.currentInstance.panelContenedor.add(ven);
+		ApplicacionClientes.currentInstance.panelContenedor.setCard( ven , 'slide' );
+	}catch(e){console.log("NO SE PUDO MOSTRAR LA CARD DE LISTA DE VENTAS A CLIENE: "+e); console.log(ven);}
+	
+	Ext.getCmp('actionButtonsClientes').setActive(1);
+	Ext.getCmp('btn_CancelEditCliente').setVisible(false);
+	Ext.getCmp('btn_EditCliente').setVisible(false);
+}
+
 /*------------------------------------------------------------
-	CREDITOS CLIENTE
+----------------	CREDITOS CLIENTE	------------------
 --------------------------------------------------------------*/
 
+/* -------------------------------------------------------------
+		MUESTRA LAS VENTAS A CREDITO DE UN CLIENTE
+---------------------------------------------------*/
+
 ApplicacionClientes.prototype.mostrarVentasCreditoCliente = function(){ 
-	//console.log("a entrar a listar ventas");
-	//console.log("ID cliente: "+ApplicacionClientes.currentInstance.clienteSeleccionado);
-	var creditCard = ApplicacionClientes.currentInstance.listarVentasCredito( ApplicacionClientes.currentInstance.clienteSeleccionado );
 	
-	sink.Main.ui.setCard( creditCard , 'slide' );
+	if(ApplicacionClientes.currentInstance.removePanelName != "listaVentasCreditoCliente"){
+		try{
+		Ext.getCmp(ApplicacionClientes.currentInstance.removePanelName).destroy();
+		//console.log("EN 'creditos' CLIENTES Y BORRE: "+ApplicacionClientes.currentInstance.removePanelName);
+		//ApplicacionClientes.currentInstance.panelContenedor.remove(ApplicacionClientes.currentInstance.removePanelName);
+		console.log("---------ELIMINE TODO DEL PANEL ENTRANDO A MOSTRAR CREDITOS--------");
+		}catch(e){console.log("NO SE PUDO BORRAR A "+ApplicacionClientes.currentInstance.removePanelName+" -- "+e);}
+	}
+	
+	var venC = ApplicacionClientes.currentInstance.listarVentasCredito( ApplicacionClientes.currentInstance.clienteSeleccionado );
+	
+	ApplicacionClientes.currentInstance.removePanelName ="listaVentasCreditoCliente";
+
+	try{
+		ApplicacionClientes.currentInstance.panelContenedor.add(venC);
+		ApplicacionClientes.currentInstance.panelContenedor.setCard( venC , 'slide' );
+	}catch(e){console.log("ERROR NO SE PUEDE MOSTRAR LA CARD: LISTA DE 'CREDITOS' CLIENTE: "+e); console.log(venC);}
+	Ext.getCmp('actionButtonsClientes').setActive(2);
+	
+	Ext.getCmp('btn_CancelEditCliente').setVisible(false);
+	Ext.getCmp('btn_EditCliente').setVisible(false);
 }
 
 ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
 	
 	var listaVentasCredito = new Ext.form.FormPanel({
-			scroll: 'vertical',
+			//scroll: 'vertical',
 			id: 'listaVentasCreditoCliente',
-			dockedItems: this.dockedItemsFormCliente,
+			//dockedItems: this.dockedItemsFormCliente,
 			items: [{
 				  		id: 'datosClienteCredito',
 						html: ''
