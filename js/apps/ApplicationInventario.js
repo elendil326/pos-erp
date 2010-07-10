@@ -30,6 +30,8 @@ ApplicationInventario.prototype.leftMenuItems = null;
 //aqui va un texto de ayuda en html
 ApplicationInventario.prototype.ayuda = null;
 
+//El store de la lista del inventario
+ApplicationInventario.prototype.InvProductsListStore = null;
 
 	//Productos
 	ApplicationInventario.prototype.products = null;
@@ -229,7 +231,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 	
 
 	//Store para la lista de productos del inventario
-	var InvProductsListStore = new Ext.data.Store({
+	this.InvProductsListStore = new Ext.data.Store({
     	model: 'inv_Existencias',
     	sorters: 'denominacion',
     	getGroupString : function(record) {
@@ -244,11 +246,11 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 	buscar = function( textvalue ) {
       
 		if ( textvalue == ""){
-			InvProductsListStore.clearFilter();
+			ApplicationInventario.currentInstance.InvProductsListStore.clearFilter();
 		}
 		
 		
-		InvProductsListStore.filter([{
+		ApplicationInventario.currentInstance.InvProductsListStore.filter([{
 			property     : 'denominacion',
 			value        : textvalue,
 			anyMatch     : true, 
@@ -294,6 +296,13 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 					ApplicationInventario.currentInstance.loadHomePanel();
 				}
 				sink.Main.ui.setCard( ApplicationInventario.currentInstance.mainCard, { type: 'slide', direction: 'right' });
+			}
+		},{
+			xtype: 'button',
+			text: 'Agregar nuevo producto',
+			ui: 'action',
+			handler: function(){
+				ApplicationInventario.currentInstance.addNewProduct();
 			}
 		},{
 			xtype: 'button',
@@ -355,7 +364,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 									 
 									//si el success trae true
 									this.products = datos.datos;
-									InvProductsListStore.loadData(this.products);
+									ApplicationInventario.currentInstance.InvProductsListStore.loadData(this.products);
 									if(ApplicationInventario.currentInstance.mostrarTodasSucursales == false){
 										//ApplicationInventario.currentInstance.mainCard = ApplicationInventario.currentInstance.sucursalPanel;
 									}
@@ -374,13 +383,13 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 										}
 									}
 								} else {
-									InvProductsListStore.loadData(0);
+									ApplicationInventario.currentInstance.InvProductsListStore.loadData(0);
 									return 0;
 								}
 					
 							}, function(){
 								//no responde
-								InvProductsListStore.loadData(0);
+								ApplicationInventario.currentInstance.InvProductsListStore.loadData(0);
 								
 								if(DEBUG){
 									console.error("ApplicationInventario: no server response");
@@ -398,7 +407,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 			baseCls : 'ApplicationInventario-mainPanel',
 			loadingText: 'Cargando datos...',
 			emptyText: '<div class="no-data">No se encontraron productos para esta sucursal.</div>',
-        	store: InvProductsListStore,
+        	store: ApplicationInventario.currentInstance.InvProductsListStore,
         	tpl: String.format('<tpl for="."><div class="products"><strong>{denominacion}</strong> &nbsp;Existencias: {existencias} Precio: {precio_venta}</div></tpl>' ),
         	itemSelector: 'div.products',
         	singleSelect: true
@@ -428,7 +437,133 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 };
 
 
+/* -------------------------------------------------------------------------------------
+			Agregar nuevo producto
+   ------------------------------------------------------------------------------------- */
 
+ApplicationInventario.prototype.addNewProduct = function(){
+	
+	if ( Ext.getCmp('ApplicationInventario-addNewProduct-panel') != null)
+	{
+		Ext.getCmp('ApplicationInventario-addNewProduct-panel').show();
+		return;
+	}
+	
+	var addProductTB = new Ext.Toolbar({
+		dock: 'top',
+		title: 'Agregar',
+		items:[{
+			xtype: 'spacer'
+		},{
+			xtype: 'button',
+			text: 'Aceptar',
+			ui: 'action',
+			handler: function(){
+				ApplicationInventario.currentInstance.addNewProductLogic();
+			}
+		}]
+	})
+	
+	
+	var addProductPanel = new Ext.Panel({
+		
+		id: 'ApplicationInventario-addNewProduct-panel',
+		floating: true,
+		centered: true,
+		modal: true,
+		height: 400,
+		width: 450,
+		layout: 'fit',
+		dockedItems: addProductTB,
+		items: [new Ext.form.FormPanel({
+			id: 'ApplicationInventario-addNewProduct-form',
+			scroll: 'vertical',
+			
+			items: [{
+				xtype: 'fieldset',
+				title: 'Nuevo producto',
+				instructions: ' *Cantidad en Kg mínima que se recomienda debe existir en almacen ',
+				items: [{
+					xtype: 'textfield',
+					label: 'Nombre',
+					name: 'nombre'
+				}, {
+					xtype: 'textfield',
+					label: 'Denominación',
+					name: 'denominacion'
+				}, {
+					xtype: 'textfield',
+					label: 'Precio/Kg',
+					name: 'precio_venta'
+				}, {
+					xtype: 'textfield',
+					label: 'Mínimo',
+					name: 'min',
+					required: true
+				}]
+			}]
+		})
+		
+		]
+		
+		
+	});
+	
+	addProductPanel.show();
+	
+};
+
+
+ApplicationInventario.prototype.addNewProductLogic = function(){
+	
+	var formData = Ext.getCmp('ApplicationInventario-addNewProduct-form').getValues();
+	
+	POS.AJAXandDECODE(
+			//Parametros
+			{
+				method: 'agregarNuevoProducto',
+				denominacion: formData['denominacion'],
+				nombre: formData['nombre'],
+				precio: formData['precio_venta'],
+				min: formData['min']
+			},
+			//Responded
+			function(result)
+			{
+				
+				if ( result.success )
+				{
+					Ext.getCmp('ApplicationInventario-addNewProduct-form').reset();
+					Ext.getCmp('ApplicationInventario-addNewProduct-panel').hide();
+					
+					POS.aviso('Éxito', 'Se agrego el nuevo producto existosamente');
+					//['denominacion', 'existencias', 'precio_venta', 'min']
+					ApplicationInventario.currentInstance.InvProductsListStore.add(
+						{
+							denominacion: formData['denominacion'],
+							existencias: 0,
+							precio_venta: formData['precio_venta'],
+							min: formData['min']
+						}
+					
+					);
+					
+				}
+				else{
+					POS.aviso('Error', 'Error al intentar insertar el nuevo producto');
+				}
+				
+			},
+			//Not responded
+			function()
+			{
+				POS.aviso('Error', 'Error en la conexión. Intente nuevamente')
+			}
+	);
+	
+	
+	
+};
 
 
 /* -------------------------------------------------------------------------------------

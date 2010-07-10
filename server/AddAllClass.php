@@ -163,6 +163,7 @@
 		case "listarProductosInventarioSucursal" : 		listarProductosInventarioSucursal(); break;
 		case "existenciaProductoSucursal" : 			existenciaProductoSucursal(); break;
 		case "obtenerSucursalUsuario" :				obtenerSucursalUsuario(); break;
+		case "agregarNuevoProducto" :				agregarNuevoProducto(); break;
 		
 		//-----Funciones impuesto
 		case "insertarImpuesto" : 				insertarImpuesto(); break;

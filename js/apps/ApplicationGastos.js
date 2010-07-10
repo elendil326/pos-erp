@@ -186,7 +186,9 @@ ApplicationGastos.prototype.getDate = function( textfield ){
 	}
 	
 	
+	POS.datePicker(1);
 	
+	console.log(POS.pickerSlots);
 	
 	//alert(currentDate.getDay());
 	
@@ -197,13 +199,14 @@ ApplicationGastos.prototype.getDate = function( textfield ){
 		floating: true,
 		centered: true,
 		modal: true,
-	    items: [{
+	    items: [ new Ext.DatePicker({
 			id: 'ApplicationGastos-getDate-picker',
-	        xtype: 'datepicker',
+			//xtype: 'datepicker',
 	        width: (!Ext.platform.isPhone ? 400 : 320),
 	        height: Ext.platform.isAndroidOS ? 320 : (!Ext.platform.isPhone ? 356 : 300),
 	        useTitles: false,
 			floating: true,
+			slots: POS.pickerSlots,
 			centered: true,
 	        value: {
 	            day: currentDate.getDate(),
@@ -229,9 +232,11 @@ ApplicationGastos.prototype.getDate = function( textfield ){
 	                }
 	            }]
 	        }]
-	    }]
+	    })]
 	});
 	
+	//Ext.getCmp('ApplicationGastos-getDate-picker').slots = POS.pickerSlots;
+	//console.log(Ext.getCmp('ApplicationGastos-getDate-picker'));
 	
 	datePicker.show();
 	

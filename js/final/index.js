@@ -405,8 +405,95 @@ POS.currencyFormat = function (num){
 };
 
 
+POS.datePicker = function( pickerConfig ){
+
+	var posPicker = pickerConfig;
+
+	posPicker.xtype = "datepicker";
+	
+	var months = [
+	
+		{ key: "Enero"		, value: 0 },
+		{ key: "Febrero"	, value: 1 },
+		{ key: "Marzo"		, value: 2 },
+		{ key: "Abril"		, value: 3 },
+		{ key: "Mayo"		, value: 4 },
+		{ key: "Junio"		, value: 5 },
+		{ key: "Julio"		, value: 6 },
+		{ key: "Agosto"		, value: 7 },
+		{ key: "Septiembre"	, value: 8 },
+		{ key: "Octubre"	, value: 9 },
+		{ key: "Noviembre"	, value: 10 },
+		{ key: "Diciembre"	, value: 11 }
+	];
+	
+	var days = [];
+	
+	for(var i=0; i < 31; i++)
+	{
+		days.push({ key: i , value: i });
+	}
 
 
+
+	var years = [];
+
+	for(var j=1987; j < 2101; j++)
+	{
+		years.push({ key: j , value: j });
+	}
+
+
+	/*var posSlot = [
+		{
+			name : 'month',
+			align: 'left',
+			items  : months, 
+			title : 'Mes'
+		},
+		{
+			
+			name : 'day',
+			align: 'center',			
+			name : 'day',
+			title : 'Día'			
+		},
+		{
+			name : 'year',
+			align: 'right',
+			items  : years,
+			title : 'Año'			
+		}
+	];*/
+
+
+	var posSlot = [{
+            text: 'Month',
+            name: 'month',
+            align: 'left',
+            items: months
+        },{
+            text: 'Day',
+            name: 'day',
+            align: 'center',
+            items: days
+        },{
+            text: 'Year',
+            name: 'year',
+            align: 'right',
+            items: years
+        }];
+
+	posPicker.slots = posSlot;
+
+	POS.pickerSlots = posSlot;
+	//console.log(posPicker);
+
+	//return posPicker;	
+};
+
+
+//POS.pickerSlots = null;
 
 
 
@@ -415,7 +502,7 @@ POS.doPrintTicket = function ()
 	
 	
 	
-}
+};
 
 
 //	--------------------------------------------------------------------------------------

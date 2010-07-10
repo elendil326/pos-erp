@@ -165,5 +165,51 @@ y algunas otras funciones
 		else													fail("faltan datos.");								//no se enviaron los datos necesarios
 		return;
 	}
+
+
+	//Funcion para insertar un nuevo producto al inventario (tiene que insertar en la tabla inventario y en detalles_inventario)
+	function agregarNuevoProducto()
+	{
+
+		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['denominacion']))&&(!empty($_REQUEST['precio']))&&(!empty($_REQUEST['min'])))
+		{
+			//asignamos valores obtenidos a las variables
+			$nombre=$_REQUEST['nombre'];
+			$denominacion=$_REQUEST['denominacion'];
+			//creamos un objeto del tipo inventario
+			$inventario=new inventario($nombre,$denominacion);
+			//varificamos que no exista
+			if(!$inventario->existe())
+			{
+				//intentamos insertar
+				if(!$inventario->inserta())		
+				{
+					fail("Error al guardar el producto.");							//se fallo el intento de insercion
+				}
+			}//if no existe producto inventario
+			else 								fail("Ya existe este producto.");								//el producto ya existia
+		}//if verifica datos
+		else									fail("Faltan datos.");	
+										//no se enviaron los datos requeridos
+
+		$detalles_inventario = new detalle_inventario( $inventario->id_producto, $_SESSION['sucursal_id'], $_REQUEST['precio'], $_REQUEST['min'], 0);
+		if (!$detalles_inventario->existe())
+		{
+			if($detalles_inventario->inserta())
+			{
+				ok();
+			}
+			else
+			{
+				fail("Error al intentar insertar el nuevo producto al inventario");
+			}
+		}
+		else
+		{
+			fail("Ya existe el producto");			
+		}
+		
+		return;
+	}
 	
 ?>
