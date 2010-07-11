@@ -31,6 +31,7 @@
 	include_once("listar.php"); 
 	include_once("encargado.php"); 
 	include_once("gastos.php"); 
+	include_once("ingreso.php");
 	
 
 	include_once('pos/funcionesCliente.php');
@@ -133,6 +134,7 @@
 		case "insertarGasto":					insertarGasto(); break;
 		case "eliminarGasto":					eliminarGasto(); break;
 		case "actualizarGasto":					actualizarGasto(); break;
+		case "insertarIngreso":					insertarIngreso(); break;
 		
 		
 		//----- funciones productos proveedor

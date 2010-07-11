@@ -52,10 +52,10 @@ ApplicationGastos.prototype._init = function(){
 	this.loadSucursalID();
 
 	//nombre de la aplicacion
-	this.appName = "Gastos";
+	this.appName = "Efectivo";
 	
 	//ayuda sobre esta applicacion
-	this.ayuda = 'Aquí se registran los gastos hechos por la sucursal';
+	this.ayuda = 'Aquí se registran el flujo de efectivo realizado por la sucursal';
 	
 	//instancia this.homePanel
 	this.loadHomePanel();
@@ -88,7 +88,7 @@ ApplicationGastos.prototype.loadSucursalID = function(){
    ------------------------------------------------------------------------------------- */
 ApplicationGastos.prototype.loadHomePanel = function()
 {
-	this.gastosToolbar = new Ext.Toolbar({
+	/*this.gastosToolbar = new Ext.Toolbar({
 			dock: 'bottom',
 			items: 
 				[{
@@ -115,6 +115,35 @@ ApplicationGastos.prototype.loadHomePanel = function()
 		layout: 'card',
 		dockedItems: this.gastosToolbar,
 		items: this.homePanel
+	});*/
+	
+	this.appMainPanel = new Ext.Panel({
+		layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
+    defaults: {
+        flex: 1
+    },
+    items: [{
+		id: 'ApplicationGastos-mainPanel-caraouselTop',
+        xtype: 'carousel',
+        //cls: 'card',
+		ui: 'dark',
+        items: [{
+			cls: 'card',
+            html: '<p> Para agregar un nuevo gasto deslice el panel a la izquierda  </p>'
+        },	ApplicationGastos.currentInstance.loadGastosPanel()
+		]
+    }, {
+		id: 'ApplicationGastos-mainPanel-caraouselBottom',
+        xtype: 'carousel',
+        ui: 'dark',
+        items: [{
+            html: '<p> Para agregar un nuevo ingreso deslice el panel a la izquierda</p>',
+            cls: 'card'
+        }, ApplicationGastos.currentInstance.loadIngresosPanel()]
+    }]
 	});
 		
 	this.mainCard = this.appMainPanel;
@@ -158,17 +187,88 @@ ApplicationGastos.prototype.loadGastosPanel = function(){
 						required: true,
 						listeners: {
 							focus: function( field ){
-								ApplicationGastos.currentInstance.getDate( field );
+								ApplicationGastos.currentInstance.getDate( 'top' );
 							}
 						}
 					}] 	
+			},{
+				xtype: 'button',
+				text: 'Agregar',
+				ui: 'action_round',
+				maxWidth: 300,
+				handler: function(){
+					ApplicationGastos.currentInstance.logicAddGasto();
+				}
 			}]
 	});
 	
 	
-	this.appMainPanel.setCard( this.gastosPanel, 'slide' );
+	//this.appMainPanel.setCard( this.gastosPanel, 'slide' );
+	return this.gastosPanel;
 	
 };
+
+/* -------------------------------------------------------------------------------------
+			Panel de ingresos
+   ------------------------------------------------------------------------------------- */
+  
+ApplicationGastos.prototype.loadIngresosPanel = function(){
+	
+	var ingresosPanel = new Ext.form.FormPanel({
+		id: 'ApplicationGastos-ingresosFormPanel',
+		scroll: 'none',
+		items:
+			[{
+				xtype: 'fieldset',
+				title: 'Ingreso nuevo',
+				instructions: '* Estos campos son requeridos',
+				items:
+					[{
+						xtype: 'textfield',
+						label: 'Concepto',
+						name: 'concepto',
+						required: true
+					},
+					{
+						id: 'ApplicationGastos-ingresosForm-monto',
+						xtype: 'textfield',
+						label: 	'Monto',
+						name: 'monto',
+						required: true
+					},
+					{
+						id: 'ApplicationGastos-ingresosForm-fecha',
+						xtype: 'textfield',
+						label: 'Fecha',
+						name: 'fecha',
+						required: true,
+						listeners: {
+							focus: function( field ){
+								ApplicationGastos.currentInstance.getDate( 'bottom' );
+							}
+						}
+					}] 	
+			},{
+				xtype: 'button',
+				text: 'Agregar',
+				ui: 'action_round',
+				maxWidth: 300,
+				handler: function(){
+					
+					ApplicationGastos.currentInstance.logicAddIngreso();
+					
+				}
+			}]
+	});
+	
+	
+	//this.appMainPanel.setCard( this.gastosPanel, 'slide' );
+	return ingresosPanel;
+	
+	
+	
+};
+  
 
 ApplicationGastos.prototype.getDate = function( textfield ){
 	
@@ -176,7 +276,7 @@ ApplicationGastos.prototype.getDate = function( textfield ){
 	
 	if ( Ext.get( 'ApplicationGastos-getDate-panel' ) != null){
 		Ext.getCmp( 'ApplicationGastos-getDate-panel' ).show();
-		
+		Ext.getCmp( 'ApplicationGastos-getDate-panel' ).POSposition = textfield;
 		 var picker = Ext.getCmp('ApplicationGastos-getDate-picker')
 		 picker.value.day = currentDate.getDate();
 		 picker.value.month = currentDate.getMonth();
@@ -188,12 +288,13 @@ ApplicationGastos.prototype.getDate = function( textfield ){
 	
 	POS.datePicker(1);
 	
-	console.log(POS.pickerSlots);
+	//console.log(POS.pickerSlots);
 	
 	//alert(currentDate.getDay());
 	
 	var datePicker = new Ext.Panel({
 		id: 'ApplicationGastos-getDate-panel',
+		POSposition: textfield,
 		height: 320,
 		width: 356,
 		floating: true,
@@ -227,7 +328,14 @@ ApplicationGastos.prototype.getDate = function( textfield ){
 	                handler: function() {
 	                    var fecha = Ext.encode(Ext.getCmp('ApplicationGastos-getDate-picker').getValue());
 						var formatFecha = fecha.slice(1, fecha.indexOf('T'));
-						Ext.getCmp('ApplicationGastos-gastosForm-fecha').setValue(formatFecha);
+						//alert(textfield);
+						var position = Ext.getCmp('ApplicationGastos-getDate-panel').POSposition;
+						
+						if (position == 'top') {
+							Ext.getCmp('ApplicationGastos-gastosForm-fecha').setValue(formatFecha);
+						}else{
+							Ext.getCmp('ApplicationGastos-ingresosForm-fecha').setValue(formatFecha);
+						}
 						datePicker.hide();
 	                }
 	            }]
@@ -266,8 +374,11 @@ ApplicationGastos.prototype.logicAddGasto = function(){
 				if ( result.success)
 				{
 					POS.aviso('Éxito', 'Se agregó el nuevo gasto correctamente');
-					ApplicationGastos.currentInstance.appMainPanel.setCard( ApplicationGastos.currentInstance.homePanel, { type:'slide', direction:'right'});
-					ApplicationGastos.currentInstance.loadHomeButtons();
+					//ApplicationGastos.currentInstance.appMainPanel.setCard( ApplicationGastos.currentInstance.homePanel, { type:'slide', direction:'right'});
+					Ext.getCmp('ApplicationGastos-gastosFormPanel').reset();
+					Ext.getCmp('ApplicationGastos-mainPanel-caraouselTop').previous();
+					console.log(Ext.getCmp('ApplicationGastos-mainPanel-caraouselTop'));
+					//ApplicationGastos.currentInstance.loadHomeButtons();
 				}
 				else{
 					POS.aviso('Error', 'No se pudo agregar el nuevo gasto, intente nuevamente');
@@ -285,6 +396,53 @@ ApplicationGastos.prototype.logicAddGasto = function(){
 	
 };
 
+
+/* -------------------------------------------------------------------------------------
+			Agregar ingreso logica
+   ------------------------------------------------------------------------------------- */
+
+ApplicationGastos.prototype.logicAddIngreso = function(){
+	
+	//Se obtienen los valores del form en un arreglo
+	var datos = Ext.getCmp('ApplicationGastos-ingresosFormPanel').getValues();
+	
+	POS.AJAXandDECODE(
+			//Parametros
+			{
+				method	: 'insertarIngreso',
+				concepto: datos['concepto'],
+				monto	: datos['monto'],
+				fecha	: datos['fecha']
+			},
+			//Responded
+			function(result)
+			{
+				if ( result.success)
+				{
+					POS.aviso('Éxito', 'Se agregó el nuevo ingreso correctamente');
+					//ApplicationGastos.currentInstance.appMainPanel.setCard( ApplicationGastos.currentInstance.homePanel, { type:'slide', direction:'right'});
+					Ext.getCmp('ApplicationGastos-ingresosFormPanel').reset();
+					Ext.getCmp('ApplicationGastos-mainPanel-caraouselBottom').previous();
+					//console.log(Ext.getCmp('ApplicationGastos-mainPanel-caraouselTop'));
+					//ApplicationGastos.currentInstance.loadHomeButtons();
+				}
+				else{
+					POS.aviso('Error', 'No se pudo agregar el nuevo ingreso, intente nuevamente');
+				}
+				
+			},
+			//No response
+			function(){
+				POS.aviso('Error', 'Hubo un error en la conexión, intente nuevamente');
+				if (DEBUG){
+					console.warn('ApplicationGastos.logicAddIngreso: AJAX failed');
+				}
+			}	
+	);
+	
+	
+	
+};
 
 
 /* -------------------------------------------------------------------------------------

@@ -222,7 +222,7 @@ y algunas otras funciones
 	function insertarGasto()
 	{
 		//verificamos que no nos envien datos vacios  
-		if((!empty($_REQUEST['concepto']))&&(!empty($_REQUEST['monto'])))
+		if((!empty($_REQUEST['concepto']))&&(!empty($_REQUEST['monto']))&&(!empty($_REQUEST['fecha'])))
 		{
 			//asignamos valores obtenidos a las variables
 			$concepto=$_REQUEST['concepto'];
@@ -330,6 +330,46 @@ y algunas otras funciones
 		return;
 	}
 	//funcion actualizar gasto
-	
+
+	//esta funcion inserta un ingreso a una sucursal
+	function insertarIngreso()
+	{
+		//verificamos que no nos envien datos vacios  
+		if((!empty($_REQUEST['concepto']))&&(!empty($_REQUEST['monto']))&&(!empty($_REQUEST['fecha'])))
+		{
+			//asignamos valores obtenidos a las variables
+			$concepto=$_REQUEST['concepto'];
+			$monto=$_REQUEST['monto'];
+			$fecha=$_REQUEST['fecha'];
+			$id_sucursal=$_SESSION['sucursal_id'];
+			$id_usuario=$_SESSION['id_usuario'];
+			//creamos objeto-sucursal
+			$sucursal=new sucursal_existente($id_sucursal);
+			//verificamos que la sucursal exista
+			if($sucursal->existe())
+			{
+				//creamos objeto-usuario
+				$usuario=new usuario_existente($id_usuario);
+				if($usuario->existe())
+				{
+					//creamos objeto-ingreso
+					$ingreso=new ingreso($concepto,$monto,$fecha,$id_sucursal,$id_usuario);
+					//verficamos que no exista
+					if(!$ingreso->existe())
+					{
+						//intentamos insertar al ingreso
+						if($ingreso->inserta())								ok();											//insercion existosa
+						else												fail("Error al guardar al ingreso.");				//fallo la insercion
+					}//if gasto no existe
+					else 													fail("Ya existe este ingreso.");					//gasto existente
+				}//if existe usuario
+				else														fail("El usuario no existe");					//usuario inexistente
+			}//if existe sucursal
+			else															fail("La sucursal no existe");					//sucursal inexistente
+		}//if verificar datos
+		else																fail("Faltan datos.");							//datos incompletos
+		return;
+	}
+	//funcion insertar ingreso	
 	
 ?>

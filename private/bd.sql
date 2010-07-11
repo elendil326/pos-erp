@@ -243,6 +243,24 @@ CREATE TABLE IF NOT EXISTS `gastos` (
 
 -- --------------------------------------------------------
 
+
+--
+-- Estructura de tabla para la tabla `ingresos`
+--
+
+DROP TABLE IF EXISTS `ingresos`;
+CREATE TABLE IF NOT EXISTS `ingresos` (
+  `id_ingreso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id para identificar el ingreso',
+  `concepto` varchar(100) NOT NULL COMMENT 'concepto en lo que se ingreso',
+  `monto` float NOT NULL COMMENT 'lo que costo este ingreso',
+  `fecha` timestamp NOT NULL COMMENT 'fecha del ingreso',
+  `id_sucursal` int(11) NOT NULL COMMENT 'sucursal en la que se hizo el ingreso',
+  `id_usuario` int(11) NOT NULL COMMENT 'usuario que registro el ingreso',
+  PRIMARY KEY (`id_ingreso`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+-- --------------------------------------------------------
+
 --
 -- Estructura de tabla para la tabla `impuesto`
 --
