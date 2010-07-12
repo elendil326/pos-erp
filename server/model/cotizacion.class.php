@@ -1,0 +1,72 @@
+<?php 
+	class cotizacion{
+		var $id_cotizacion;	 	 	 	 	 	 	
+		var $id_cliente;	 	 	 	 	 	 	
+		var $fecha;	 	 	 	 	 	
+		var $subtotal;	 	 	 	 	 	 	
+		var $iva;
+		var $bd;
+		
+		function __construct($id_cliente){ 	 	 	 	 	 	
+			$this->id_cliente=$id_cliente;		 	 	
+			$this->subtotal=0;	 	 	 	 	 	 	
+			$this->iva=0;
+			$this->bd=new bd_default();
+		}
+		function __destruct(){ 
+			 return; 
+		}
+		
+		function inserta(){
+			$insert="INSERT INTO  cotizacion values(NULL,?,CURDATE( ),?,?);";
+			$params=array($this->id_cliente,$this->subtotal,$this->iva);
+			if($this->bd->ejecuta($insert,$params)){
+				$this->id_cotizacion=$this->bd->con->Insert_ID();
+				return true;
+			}else return false;
+		}
+		function actualiza(){
+			$update="UPDATE  cotizacion SET `id_cliente`=?, `fecha`=curdate(), `subtotal`=?, `iva`=? where id_cotizacion=?";
+			$params=array($this->id_cliente,$this->subtotal,$this->iva,$this->id_cotizacion);
+			//echo "entro a actualza: -->  ".$update." ".print_r($params);
+			return $this->bd->ejecuta($update,$params);
+		}
+		function json(){
+			$query="SELECT id_cotizacion ,id_cliente,fecha,subtotal,iva,(iva + subtotal) as total FROM `cotizacion` where id_cotizacion =?;";
+			$params=array($this->id_cotizacion);
+			return $this->bd->select_json($query,$params);
+		}
+		function borra (){
+			$query="delete from cotizacion where id_cotizacion=?;";
+			$params=array($this->id_cotizacion);
+			return $this->bd->ejecuta($query,$params);
+		}
+		function obtener_datos($id){
+			$query="SELECT id_cotizacion ,id_cliente,fecha,subtotal,iva,(iva + subtotal) as total FROM `cotizacion`  where id_cotizacion=?;";
+			$params=array($id);
+			$datos=$this->bd->select_uno($query,$params);
+			$this->id_cotizacion=$datos['id_cotizacion'];	
+			$this->id_cliente=$datos['id_cliente'];	
+			$this->fecha=$datos['fecha'];	
+			$this->subtotal=$datos['subtotal'];	
+			$this->iva=$datos['iva'];
+		}
+		function detalle_cotizacion($id){
+			$query = "SELECT id_cotizacion ,id_producto,cantidad,precio,(cantidad * precio) as subtotal FROM `detalle_cotizacion` where id_cotizacion=?;";
+			$params=array($id);
+			return 	$productos=$this->bd->select_arr($query,$params);
+		}
+		function existe(){
+			$query="select id_cotizacion from cotizacion where id_cotizacion=?;";
+			$params=array($this->id_cotizacion);
+			return $this->bd->existe($query,$params);
+		}
+		function productos(){
+			$query="SELECT id_producto FROM detalle_cotizacion where id_cotizacion=?";
+			$params=array($this->id_cotizacion);
+			return $this->bd->select_arr($query,$params);
+		}
+	}
+	
+	
+?>
