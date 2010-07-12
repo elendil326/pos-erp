@@ -127,7 +127,7 @@ include_once("adodb5/adodb.inc.php");
 			$this->bd_man="mysql";
 			$this->user="root";
 			$this->host="localhost";
-			$this->password="";
+			$this->password="123";
 			$this->base="pos";
 			
 			return $this->conecta();

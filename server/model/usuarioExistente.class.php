@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 class usuarioExistente extends usuario {
 		public function __construct($id) {
 			$this->bd=new bd_default();

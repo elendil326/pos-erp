@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 class impuestoExistente extends impuesto {
 		public function __construct($id) {
 			$this->bd=new bd_default();

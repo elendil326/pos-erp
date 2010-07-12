@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 class cliente_existente extends cliente {
 		public function __construct($id) {
 			//echo "me cree: ".$id;

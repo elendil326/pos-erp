@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 class proveedorExistente extends proveedor {
 		public function __construct($id) {
 			$this->bd=new bd_default();

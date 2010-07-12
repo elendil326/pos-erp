@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 class facturaCompraExistente extends factura_compra {
 		public function __construct($id) {
 			$this->bd=new bd_default();

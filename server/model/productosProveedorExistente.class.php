@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 class productosProveedorExistente extends productos_proveedor {
 		public function __construct($id) {
 			$this->bd=new bd_default();

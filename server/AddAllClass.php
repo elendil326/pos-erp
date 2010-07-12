@@ -266,6 +266,7 @@
 		case 'reporteClientesTodos_jgrid': 							reporteClientesTodos_jgrid(); 	break;
 		case 'reporteClientesDeben_jgrid': 							reporteClientesDeben_jgrid(); 	break;
 		case 'reporteClientesCompras_jgrid': 							reporteClientesCompras_jgrid(); 	break;
+		case 'reporteClientesComprasCredito_jgrid': 					reporteClientesComprasCredito_jgrid(); 	break;
 		
 		//------
 		case 'listarProveedores': 								listarProveedores(); 	break;

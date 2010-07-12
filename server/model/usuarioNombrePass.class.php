@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 class usuarioNombrePass extends usuario {
 		public function __construct($usuario,$pass) {
 			$this->bd=new bd_default(); 	 	 	 	 	 	
