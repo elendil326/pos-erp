@@ -236,7 +236,7 @@ y algunas otras funciones
 			if($sucursal->existe())
 			{
 				//creamos objeto-usuario
-				$usuario=new usuario_existente($id_usuario);
+				$usuario=new usuarioExistente($id_usuario);
 				if($usuario->existe())
 				{
 					//creamos objeto-gasto
@@ -269,7 +269,7 @@ y algunas otras funciones
 			//asignamos valores obtenidos a las variables
 			$id_gasto=$_REQUEST['id_gasto'];
 			//creamos objeto-gasto
-			$gasto=new gasto_existente($id_gasto);
+			$gasto=new gastoExistente($id_gasto);
 			//verficamos que exista
 			if($gasto->existe())
 			{
@@ -303,11 +303,11 @@ y algunas otras funciones
 			if($sucursal->existe())
 			{
 				//creamos objeto-usuario
-				$usuario=new usuario_existente($id_usuario);
+				$usuario=new usuarioExistente($id_usuario);
 				if($usuario->existe())
 				{
 					//creamos objeto-gasto
-					$gasto=new gasto_existente($id_gasto);
+					$gasto=new gastoExistente($id_gasto);
 					//verficamos que exista
 					if($gasto->existe())
 					{
@@ -349,7 +349,7 @@ y algunas otras funciones
 			if($sucursal->existe())
 			{
 				//creamos objeto-usuario
-				$usuario=new usuario_existente($id_usuario);
+				$usuario=new usuarioExistente($id_usuario);
 				if($usuario->existe())
 				{
 					//creamos objeto-ingreso
