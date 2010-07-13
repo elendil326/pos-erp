@@ -147,13 +147,21 @@ y algunas otras funciones
 					//verificamos que el producto exista
 					if($producto->existe())
 					{	
+						//verificamos si se envio algun proveedor en especifico para tambien regresar el precio de adquicision
+						$proveedor=(!empty($_REQUEST['id_proveedor']))?$_REQUEST['id_proveedor']:0;
 						//definimos la consulta para obtener los datos
-						$query="SELECT id_producto, nombre, denominacion, precio_venta, existencias
-								FROM detalle_inventario
-								NATURAL JOIN inventario
-								where id_producto=? and id_sucursal=?";
+						$query="SELECT i.id_producto, nombre, denominacion, precio_venta, existencias ";
+						if($proveedor>0)$query.=" ,precio ";
+						$query.="FROM detalle_inventario
+								NATURAL JOIN inventario i ";
+						if($proveedor>0)$query.="left join productos_proveedor pp
+												on (i.id_producto=pp.id_inventario) ";		
+						$query.="where i.id_producto=? and id_sucursal=? ";
+								if($proveedor>0)$query.=" and id_proveedor=? ";
+								//creamos arreglo de parametros
+								$params=array($id_producto,$id_sucursal,$proveedor);
 								//creamos un objeto de la clase listar con la consulta y parametros necesarios
-								$listar = new listar($query,array($id_producto,$id_sucursal));
+								$listar = new listar($query,$params);
 								//imprimomos los datos obtenidos
 								echo $listar->lista();
 					}//if producto existe
