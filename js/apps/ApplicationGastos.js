@@ -148,7 +148,6 @@ ApplicationGastos.prototype.loadHomePanel = function()
 		
 	this.mainCard = this.appMainPanel;
 	
-	
 };
 
 /* -------------------------------------------------------------------------------------
@@ -167,6 +166,7 @@ ApplicationGastos.prototype.loadGastosPanel = function(){
 				instructions: '* Estos campos son requeridos',
 				items:
 					[{
+						id: 'ApplicationGastos-gastosForm-concepto',
 						xtype: 'textfield',
 						label: 'Concepto',
 						name: 'concepto',
@@ -204,6 +204,8 @@ ApplicationGastos.prototype.loadGastosPanel = function(){
 	
 	
 	//this.appMainPanel.setCard( this.gastosPanel, 'slide' );
+	
+	//document.getElementById(Ext.get('ApplicationGastos-gastosForm-concepto').dom.childNodes[1].id).focus();
 	return this.gastosPanel;
 	
 };
@@ -263,6 +265,7 @@ ApplicationGastos.prototype.loadIngresosPanel = function(){
 	
 	
 	//this.appMainPanel.setCard( this.gastosPanel, 'slide' );
+	//document.getElementById(Ext.get('ApplicationGastos-ingresosForm-concepto').first().id).focus();
 	return ingresosPanel;
 	
 	
@@ -307,7 +310,7 @@ ApplicationGastos.prototype.getDate = function( textfield ){
 	        height: Ext.platform.isAndroidOS ? 320 : (!Ext.platform.isPhone ? 356 : 300),
 	        useTitles: false,
 			floating: true,
-			slots: POS.pickerSlots,
+			slots: [POS.pickerSlots],
 			centered: true,
 	        value: {
 	            day: currentDate.getDate(),
@@ -318,7 +321,7 @@ ApplicationGastos.prototype.getDate = function( textfield ){
 	            xtype: 'toolbar',
 	            dock: 'top',
 				title: 'Fecha',
-	
+	 
 	            // alignment of the button to the right via
 	            // flexed components
 	            items: [{xtype: 'spacer'}, {
@@ -343,11 +346,12 @@ ApplicationGastos.prototype.getDate = function( textfield ){
 	    })]
 	});
 	
-	//Ext.getCmp('ApplicationGastos-getDate-picker').slots = POS.pickerSlots;
+	
 	//console.log(Ext.getCmp('ApplicationGastos-getDate-picker'));
 	
 	datePicker.show();
-	
+	//Ext.getCmp('ApplicationGastos-getDate-picker').slots = POS.pickerSlots;
+	//Ext.getCmp('ApplicationGastos-getDate-picker').update();
 };
 
 
@@ -376,6 +380,7 @@ ApplicationGastos.prototype.logicAddGasto = function(){
 					POS.aviso('Éxito', 'Se agregó el nuevo gasto correctamente');
 					//ApplicationGastos.currentInstance.appMainPanel.setCard( ApplicationGastos.currentInstance.homePanel, { type:'slide', direction:'right'});
 					Ext.getCmp('ApplicationGastos-gastosFormPanel').reset();
+					//document.getElementById(Ext.get('ApplicationGastos-gastosForm-concepto').first().id).focus();
 					Ext.getCmp('ApplicationGastos-mainPanel-caraouselTop').previous();
 					console.log(Ext.getCmp('ApplicationGastos-mainPanel-caraouselTop'));
 					//ApplicationGastos.currentInstance.loadHomeButtons();
@@ -422,6 +427,7 @@ ApplicationGastos.prototype.logicAddIngreso = function(){
 					POS.aviso('Éxito', 'Se agregó el nuevo ingreso correctamente');
 					//ApplicationGastos.currentInstance.appMainPanel.setCard( ApplicationGastos.currentInstance.homePanel, { type:'slide', direction:'right'});
 					Ext.getCmp('ApplicationGastos-ingresosFormPanel').reset();
+					//document.getElementById(Ext.get('ApplicationGastos-ingresosForm-concepto').first().id).focus();
 					Ext.getCmp('ApplicationGastos-mainPanel-caraouselBottom').previous();
 					//console.log(Ext.getCmp('ApplicationGastos-mainPanel-caraouselTop'));
 					//ApplicationGastos.currentInstance.loadHomeButtons();

@@ -429,7 +429,7 @@ POS.datePicker = function( pickerConfig ){
 	
 	var days = [];
 	
-	for(var i=0; i < 31; i++)
+	for(var i=1; i < 32; i++)
 	{
 		days.push({ key: i , value: i });
 	}
@@ -486,10 +486,15 @@ POS.datePicker = function( pickerConfig ){
 
 	posPicker.slots = posSlot;
 
-	POS.pickerSlots = posSlot;
+	//POS.pickerSlots = posSlot;
 	//console.log(posPicker);
 
 	//return posPicker;	
+
+	extPicker = new Ext.DatePicker();
+	extPicker.slots[0].items[0].key = 'Enero';
+
+	POS.pickerSlots = extPicker.slots;
 };
 
 
