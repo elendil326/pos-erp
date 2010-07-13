@@ -179,3 +179,20 @@ background-image:url(../shared/icons/fam/folder_go.png);
 	background-color:#666666;
 	color:white;
 }
+
+
+.cuadro-resumen{
+	padding:5px;
+	border: 1px solid #CCCCCC;
+	width: 150px;
+	height:150px;
+	float:left;
+	margin-right:5px;	
+	text-align: center;
+	background-image: url(media/admin/gradient.gif);
+}
+
+#wrapper-resumen{
+	
+
+}

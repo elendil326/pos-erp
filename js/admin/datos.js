@@ -11,7 +11,7 @@ Datos = function(){
 	
 	
 	//testing grids
-	this.loadDataGrid2({
+	Datos.loadDataGrid2({
 			renderTo: 'content',
 			title: 'Clientes',
 			width: '100%',
@@ -36,7 +36,7 @@ Datos = function(){
 
 	
 	
-	this.loadDataGrid2({
+	Datos.loadDataGrid2({
 			renderTo: 'content',
 			title: 'Clientes Deben',
 			width: '100%',
@@ -59,7 +59,7 @@ Datos = function(){
 			]
 			});
 			
-	this.loadDataGrid2({
+	Datos.loadDataGrid2({
 			renderTo: 'content',
 			title: 'Clientes Compras',
 			width: '100%',
@@ -182,7 +182,7 @@ Datos.prototype.loadSettings = function(){
 	TODO: work in progress
 
 */
-Datos.prototype.loadDataGrid = function(config){
+Datos.loadDataGrid = function(config){
 
 	//Creamos divs y tabla donde estara contenida la tabla
 	var d = document;
@@ -257,11 +257,12 @@ Datos.prototype.loadDataGrid = function(config){
 	TODO: work in progress
 
 */
-Datos.prototype.loadDataGrid2 = function(config){
+Datos.loadDataGrid2 = function(config){
 
 	//Creamos divs y tabla donde estara contenida la tabla
 	var d = document;
 	var tableGrid = d.createElement('table');
+	var breaktag = d.createElement('br');
 	//var wrapperPager = d.createElement('div');
 	
 	var randomNum = Math.round(Math.random()*10000);
@@ -279,8 +280,15 @@ Datos.prototype.loadDataGrid2 = function(config){
 	var selectorTableGrid = '#'+tableGrid.id;
 	//var selectorWrapperPager = '#'+wrapperPager.id;
 	
-	//Los agregamos al div especificado en renderTo
-	$(selectorRenderTo).append(tableGrid);
+
+	
+	if(!($(selectorTableGrid).length > 0))
+	{	
+		$(selectorRenderTo).append(breaktag);
+		
+		//Los agregamos al div especificado en renderTo
+		$(selectorRenderTo).append(tableGrid);
+	}
 	//$(selectorRenderTo).append(wrapperPager);
 		
 	$(selectorTableGrid).flexigrid(
