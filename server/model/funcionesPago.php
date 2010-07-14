@@ -101,7 +101,7 @@ y algunas otras funciones
 			//creamos objeto - pago venta
 			$Pagoventa=new pagos_venta($id_venta,$monto);
 			//crea un objeto de la clase venta con el id
-			$verifica_venta=new venta_existente($id_venta);							
+			$verifica_venta=new ventaExistente($id_venta);							
 			//checa que exista dicha venta
 			if($verifica_venta->existe())
 			{						 					
@@ -133,9 +133,9 @@ y algunas otras funciones
 									if($cambio>0)				echo "{success : true, cambio : ".$cambio."}";				//si hay cambio regresamos el true y el cambio
 									else 						ok();														//si no hay cambio solo el true
 								}//if actualiza cuenta
-								else							fail("Error al actualizar el saldo del proveedor.");		//fallo la actualizacion de saldo
+								else							fail("Error al actualizar el saldo del cliente.");		//fallo la actualizacion de saldo
 							}//if inserta pago
-							else								fail("Error al guardar la Pagoventa.");						//fallo guardar pago
+							else								fail("Error al guardar el Pago de venta.");						//fallo guardar pago
 						}//if no existe el pago
 						else									fail("Ya existe este pago");								//pago existente
 					}//if se aun debe

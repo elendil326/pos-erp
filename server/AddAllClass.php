@@ -109,6 +109,14 @@
 	include_once("model/ingresoExistente.class.php");
 	include_once("model/ingresoVacio.class.php");
 
+	include_once("model/corte.class.php");
+	include_once("model/corteExistente.class.php");
+	include_once("model/corteVacio.class.php");
+
+	include_once("model/detalleCorte.class.php");
+	include_once("model/detalleCorteExistente.class.php");
+	include_once("model/detalleCorteVacio.class.php");
+
 	include_once('model/funcionesCliente.php');
 	include_once('model/funcionesCompra.php');
 	include_once('model/funcionesVentas.php');
@@ -210,6 +218,9 @@
 		case "eliminarGasto":					eliminarGasto(); break;
 		case "actualizarGasto":					actualizarGasto(); break;
 		case "insertarIngreso":					insertarIngreso(); break;
+		//reportes
+		//reparticion de utilidadez
+		case "reparticionGanancias":			reparticionGanancias(); break;
 		
 		
 		//----- funciones productos proveedor

@@ -378,56 +378,49 @@ y algunas otras funciones
 	function reparticionGanancias(){
 		if((!empty($_REQUEST['de']))&&(!empty($_REQUEST['al'])))
 		{
-			$con=new bd_default();
 			$inicio=$_REQUEST['de'];
 			$fin=$_REQUEST['al'];
-			$queryVentas="
-					SELECT sum(IF( v.tipo_venta =1, v.subtotal + v.iva, pv.monto )) as ventas
-					FROM 
-					ventas v LEFT JOIN pagos_venta pv 
-					ON ( v.id_venta = pv.id_venta )
-					where 
-					(DATE(v.fecha) BETWEEN ? AND ? and v.tipo_venta=1)
-					or
-					(DATE(pv.fecha) BETWEEN  ? AND ?);
-			";
-			$params=array($inicio,$fin,$inicio,$fin);
-			$ventas=$con->select_un_campo($queryVentas,$params);
 			
-			$params=array($inicio,$fin);
-			$queryIngresos="SELECT sum(monto) 
-							from ingresos 
-							where 
-							DATE(fecha) BETWEEN ? AND ? 
-							";
-			$ingresos=$con->select_un_campo($queryIngresos,$params);
-			$queryGastos="SELECT sum(monto) 
-						FROM gastos
-						where 
-						DATE(fecha) BETWEEN ? AND ? ;
-						";
-			$gastos=$con->select_un_campo($queryGastos,$params);
-			$GananciasNetas=$ventas+$ingresos-$gastos;
+			//creamos un objeto de la clase corte
+			$corte=new corteVacio();
+			$corte->inicio=$inicio;
+			$corte->fin=$fin;
+			$corte->anio=substr($fin, 0, 4);
 			
-			$queryReport="select u.nombre,?*(e.porciento*.01) as total,sum(deben) as deben
-							from encargado e
-							join usuario u
-							on (e.id_usuario=u.id_usuario)
-							left join adeudan_sucursal a
-							on (e.id_usuario=a.id_usuario)
-							where date(fecha)<?
-							group by u.nombre,e.porciento;";
-			$params=array($GananciasNetas,$fin);
+			$corte->obtenVentas();
 			
-			$listar = new listar($queryReport,$params);
-			$salida="ventas: $ventas, ";
-			$salida.=" gastos: $gastos, ";
-			$salida.=" ingresos: $ingresos, ";
-			$salida.=" GananciasNetas: $GananciasNetas, ";	
-			$salida.=$listar->lista_datos("datos");	
-			ok_datos($salida);
+			$corte->obtenAbonosVentas();
 			
+			$corte->obtenCompras();
+			
+			$corte->obtenAbonosCompras();
+			
+			$corte->obtenerIngresos();
+			
+			$corte->obtenerGastos();
+			
+			$corte->calculaGananciasNetas();
+			
+			if(!empty($_REQUEST['corte']))
+			{
+				if($_REQUEST['corte']){
+					//intentamos insertar
+					if($corte->inserta())
+					{
+						//insetamos el detalle de corte
+						if($corte->insertaDetalles())									$corte->Reporte_corte();
+						else
+						{
+									$corte->borra();
+									fail("Error al insertar los datos del corte");
+						}
+					}
+					else																fail("Error al insertar el corte");
+				}
+			}
+			else																		$corte->Reporte();
 		}
-		else														fail("faltan datos");
+		else																			fail("faltan datos");
 	}
+	//fin reparticionGanancias
 ?>

@@ -28,14 +28,3 @@ INSERT INTO `inventario` (`id_producto`, `nombre`, `denominacion`) VALUES
 (8, 'Mixtas', 'Papa Surtida'),
 (9, 'Roñas', 'Papa baja');
 
--- 
--- Procedimientos
--- 
-DELIMITER $$
--- 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mi_proc`(venta INT)
-SET @id_venta = venta$$
-
--- 
-DELIMITER ;
--- 
