@@ -372,4 +372,62 @@ y algunas otras funciones
 	}
 	//funcion insertar ingreso	
 	
+	
+	//Esta funcion nos genera el reporte de corte para la reparticion de ganancias
+	//si se envia un corte=true inserta el corte en la bd
+	function reparticionGanancias(){
+		if((!empty($_REQUEST['de']))&&(!empty($_REQUEST['al'])))
+		{
+			$con=new bd_default();
+			$inicio=$_REQUEST['de'];
+			$fin=$_REQUEST['al'];
+			$queryVentas="
+					SELECT sum(IF( v.tipo_venta =1, v.subtotal + v.iva, pv.monto )) as ventas
+					FROM 
+					ventas v LEFT JOIN pagos_venta pv 
+					ON ( v.id_venta = pv.id_venta )
+					where 
+					(DATE(v.fecha) BETWEEN ? AND ? and v.tipo_venta=1)
+					or
+					(DATE(pv.fecha) BETWEEN  ? AND ?);
+			";
+			$params=array($inicio,$fin,$inicio,$fin);
+			$ventas=$con->select_un_campo($queryVentas,$params);
+			
+			$params=array($inicio,$fin);
+			$queryIngresos="SELECT sum(monto) 
+							from ingresos 
+							where 
+							DATE(fecha) BETWEEN ? AND ? 
+							";
+			$ingresos=$con->select_un_campo($queryIngresos,$params);
+			$queryGastos="SELECT sum(monto) 
+						FROM gastos
+						where 
+						DATE(fecha) BETWEEN ? AND ? ;
+						";
+			$gastos=$con->select_un_campo($queryGastos,$params);
+			$GananciasNetas=$ventas+$ingresos-$gastos;
+			
+			$queryReport="select u.nombre,?*(e.porciento*.01) as total,sum(deben) as deben
+							from encargado e
+							join usuario u
+							on (e.id_usuario=u.id_usuario)
+							left join adeudan_sucursal a
+							on (e.id_usuario=a.id_usuario)
+							where date(fecha)<?
+							group by u.nombre,e.porciento;";
+			$params=array($GananciasNetas,$fin);
+			
+			$listar = new listar($queryReport,$params);
+			$salida="ventas: $ventas, ";
+			$salida.=" gastos: $gastos, ";
+			$salida.=" ingresos: $ingresos, ";
+			$salida.=" GananciasNetas: $GananciasNetas, ";	
+			$salida.=$listar->lista_datos("datos");	
+			ok_datos($salida);
+			
+		}
+		else														fail("faltan datos");
+	}
 ?>
