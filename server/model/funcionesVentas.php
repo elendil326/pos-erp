@@ -751,6 +751,60 @@ y algunas otras funciones
 	*******************************************************************************/
 
 	/*
+	*	UTILS PARA LOS REPORTES
+	*/ 
+
+	//Obtenemos dos fechas dentro de un rango (semana, mes, año). Se refiere la ultima semana, mes, año.
+	function getDateRange($dateInterval){
+
+		$datesArray = array();
+		$currentDate = getdate();
+		$dateToday = $currentDate['year'].'-'.$currentDate['mon'].'-'.$currentDate['mday'];
+
+		switch($dateInterval)
+			{
+				case 'semana': 	$fecha = date_create( $dateToday );
+						//$fecha = date_create("2010-07-14");
+						date_sub($fecha, date_interval_create_from_date_string('7 days'));
+						$dateWeekBefore = date_format($fecha, 'Y-m-d');
+						array_push($datesArray, $dateWeekBefore);
+						array_push($datesArray, $dateToday);
+	
+						return($datesArray);
+
+						break;
+				/************************************************************************/
+
+				case 'mes':	$fecha = date_create( $dateToday );
+						//$fecha = date_create("2010-07-14");
+						date_sub($fecha, date_interval_create_from_date_string('1 month'));
+						$dateWeekBefore = date_format($fecha, 'Y-m-d');
+						array_push($datesArray, $dateWeekBefore);
+						array_push($datesArray, $dateToday);
+
+						return($datesArray);
+
+						break;
+				/************************************************************************/
+
+				case 'año':	$fecha = date_create( $dateToday );
+						//$fecha = date_create("2010-07-14");
+						date_sub($fecha, date_interval_create_from_date_string('1 year'));
+						$dateWeekBefore = date_format($fecha, 'Y-m-d');
+						array_push($datesArray, $dateWeekBefore);
+						array_push($datesArray, $dateToday);
+
+						return($datesArray);
+
+						break;
+				/************************************************************************/
+
+				default:	return false;
+			}
+
+	}
+
+	/*
 	*	VENDEDOR MAS PRODUCTIVO EN GENERAL
 	*/
 
@@ -762,8 +816,30 @@ y algunas otras funciones
 
 		$qry_select = "SELECT `ventas`.`id_usuario`, `usuario`.`nombre`, SUM(`ventas`.`subtotal`) AS `Vendido` FROM `ventas`, `usuario` WHERE `ventas`.`id_usuario` = `usuario`.`id_usuario` ";				
 
+
+		if( isset( $_REQUEST['dateRange']) )
+		{
+			$dateInterval = $_REQUEST['dateRange'];
+
+
+			//Escogemos el rango de tiempo para los datos (Semana, Mes, Año, Todos)	
+			$datesArray = getDateRange($dateInterval);	
+
+			if( $datesArray != false )
+			{
+				
+				array_push($params, $datesArray[0]);
+				array_push($params, $datesArray[1]);
+
+				$qry_select .= " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
+			}
+			
+			
+		}
+
+
 		//Si existen los rangos de fechas, agregamos una linea al query para filtrar los resultados dentro de ese rango
-		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) )
+		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) && !isset($_REQUEST['dateRange']) )
 		{
 			array_push($params, $_REQUEST['fecha-inicio']);
 			array_push($params, $_REQUEST['fecha-fin']);
@@ -794,7 +870,27 @@ y algunas otras funciones
 		$qry_select = " SELECT `inventario`.`denominacion` AS `nombre`, SUM(`detalle_venta`.`cantidad`) AS `Cantidad` FROM `inventario`, `detalle_venta`, `ventas`  WHERE `inventario`.`id_producto` = `detalle_venta`.`id_producto` AND `detalle_venta`.`id_venta` = `ventas`.`id_venta`";
 
 
-		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) )
+		if( isset( $_REQUEST['dateRange']) )
+		{
+			$dateInterval = $_REQUEST['dateRange'];
+
+
+			//Escogemos el rango de tiempo para los datos (Semana, Mes, Año, Todos)	
+			$datesArray = getDateRange($dateInterval);	
+
+			if( $datesArray != false )
+			{
+				array_push($params, $datesArray[0]);
+				array_push($params, $datesArray[1]);
+
+				$qry_select .= " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
+			}
+			
+			
+		}
+
+
+		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) && !isset($_REQUEST['dateRange']))
 		{
 			array_push($params, $_REQUEST['fecha-inicio']);
 			array_push($params, $_REQUEST['fecha-fin']);
@@ -823,8 +919,26 @@ y algunas otras funciones
 			
 		$qry_select = " SELECT `sucursal`.`descripcion` AS `nombre`, SUM(`ventas`.`subtotal`) AS `Cantidad` FROM `ventas`, `sucursal` WHERE `sucursal`.`id_sucursal` = `ventas`.`sucursal` ";
 
+		if( isset( $_REQUEST['dateRange']) )
+		{
+			$dateInterval = $_REQUEST['dateRange'];
 
-		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) )
+
+			//Escogemos el rango de tiempo para los datos (Semana, Mes, Año, Todos)	
+			$datesArray = getDateRange($dateInterval);	
+
+			if( $datesArray != false )
+			{
+				array_push($params, $datesArray[0]);
+				array_push($params, $datesArray[1]);
+
+				$qry_select .= " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
+			}
+
+			
+		}
+
+		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) && !isset($_REQUEST['dateRange']))
 		{
 			array_push($params, $_REQUEST['fecha-inicio']);
 			array_push($params, $_REQUEST['fecha-fin']);
@@ -853,8 +967,27 @@ y algunas otras funciones
 			
 		$qry_select = " SELECT `cliente`.`nombre`, SUM(`ventas`.`subtotal`) AS `Cantidad` FROM `ventas`, `cliente` WHERE `cliente`.`id_cliente` = `ventas`.`id_cliente` ";
 
+		if( isset( $_REQUEST['dateRange']) )
+		{
+			$dateInterval = $_REQUEST['dateRange'];
 
-		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) )
+
+			//Escogemos el rango de tiempo para los datos (Semana, Mes, Año, Todos)	
+			$datesArray = getDateRange($dateInterval);	
+
+			if( $datesArray != false )
+			{
+				array_push($params, $datesArray[0]);
+				array_push($params, $datesArray[1]);
+
+				$qry_select .= " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
+			}
+			
+			
+		}
+
+
+		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) && !isset($_REQUEST['dateRange']))
 		{
 			array_push($params, $_REQUEST['fecha-inicio']);
 			array_push($params, $_REQUEST['fecha-fin']);
@@ -889,8 +1022,28 @@ y algunas otras funciones
 
 		$qry_select = "SELECT `ventas`.`id_usuario`, `usuario`.`nombre`, SUM(`ventas`.`subtotal`) AS `Vendido` FROM `ventas`, `usuario` WHERE `ventas`.`id_usuario` = `usuario`.`id_usuario` AND `ventas`.`sucursal` = ?";				
 
+
+		if( isset( $_REQUEST['dateRange']) )
+		{
+			$dateInterval = $_REQUEST['dateRange'];
+
+
+			//Escogemos el rango de tiempo para los datos (Semana, Mes, Año, Todos)	
+			$datesArray = getDateRange($dateInterval);	
+
+			if( $datesArray != false )
+			{
+				array_push($params, $datesArray[0]);
+				array_push($params, $datesArray[1]);
+
+				$qry_select .= " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
+			}
+			
+			
+		}
+
 		//Si existen los rangos de fechas, agregamos una linea al query para filtrar los resultados dentro de ese rango
-		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) )
+		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) && !isset($_REQUEST['dateRange']))
 		{
 			array_push($params, $_REQUEST['fecha-inicio']);
 			array_push($params, $_REQUEST['fecha-fin']);
@@ -929,7 +1082,26 @@ y algunas otras funciones
 		$qry_select = " SELECT `inventario`.`denominacion`, SUM(`detalle_venta`.`cantidad`) AS `Cantidad` FROM `inventario`, `detalle_venta`, `ventas`  WHERE `inventario`.`id_producto` = `detalle_venta`.`id_producto` AND `detalle_venta`.`id_venta` = `ventas`.`id_venta` AND `ventas`.`sucursal` = ?";
 
 
-		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) )
+		if( isset( $_REQUEST['dateRange']) )
+		{
+			$dateInterval = $_REQUEST['dateRange'];
+
+
+			//Escogemos el rango de tiempo para los datos (Semana, Mes, Año, Todos)	
+			$datesArray = getDateRange($dateInterval);	
+
+			if( $datesArray != false )
+			{
+				array_push($params, $datesArray[0]);
+				array_push($params, $datesArray[1]);
+
+				$qry_select .= " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
+			}
+
+			
+		}
+
+		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) && !isset($_REQUEST['dateRange']) )
 		{
 			array_push($params, $_REQUEST['fecha-inicio']);
 			array_push($params, $_REQUEST['fecha-fin']);
@@ -968,7 +1140,26 @@ y algunas otras funciones
 		$qry_select = " SELECT `cliente`.`nombre`, SUM(`ventas`.`subtotal`) AS `Cantidad` FROM `ventas`, `cliente` WHERE `cliente`.`id_cliente` = `ventas`.`id_cliente` AND `ventas`.`sucursal` = ? ";
 
 
-		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) )
+		if( isset( $_REQUEST['dateRange']) )
+		{
+			$dateInterval = $_REQUEST['dateRange'];
+
+
+			//Escogemos el rango de tiempo para los datos (Semana, Mes, Año, Todos)	
+			$datesArray = getDateRange($dateInterval);	
+
+			if( $datesArray != false )
+			{
+				array_push($params, $datesArray[0]);
+				array_push($params, $datesArray[1]);
+
+				$qry_select .= " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
+			}
+
+			
+		}
+
+		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) && !isset($_REQUEST['dateRange']) )
 		{
 			array_push($params, $_REQUEST['fecha-inicio']);
 			array_push($params, $_REQUEST['fecha-fin']);
