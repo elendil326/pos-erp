@@ -232,7 +232,12 @@ AppAdmin.request = function(config){
 		type: 'POST',
 		url: config.url,
 		data: config.data,
-		success: config.success
+		success: function(msg){
+		
+			var data = eval("("+msg+")");
+			
+			config.success(data);
+		}
 	});
 
 }

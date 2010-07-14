@@ -93,6 +93,7 @@ Reports.prototype.loadSettings = function(){
 	
 	$('#configuracion-reportes').append(divRadioTipoReporte);
 	$('#configuracion-reportes').addClass('configuracion');
+	/*
 	$('#radios-tipo-reporte').html('\
 					<input type="radio" id="tipo-reporte-radio-1" name="radio" /><label for="tipo-reporte-radio-1">Ventas</label>\
 					<input type="radio" id="tipo-reporte-radio-2" name="radio" /><label for="tipo-reporte-radio-2">Compras</label>\
@@ -102,7 +103,7 @@ Reports.prototype.loadSettings = function(){
 					');
 	
 	$("#radios-tipo-reporte").buttonset();
-	/*====================fin radios tipo reporte==============================================*/
+	
 	
 	
 	$('#tipo-reporte-radio-1').click(function(){
@@ -124,6 +125,48 @@ Reports.prototype.loadSettings = function(){
 	$('#tipo-reporte-radio-5').click(function(){
 					
 				});
+				
+	*/
+	
+	// estructura del dropdown menu
+	$('#radios-tipo-reporte').html('<ul id="nav">\
+						<li><a href="#">Ventas</a>\
+							<ul>\
+								<li><a href="#">Por vendedor</a></li>\
+								<li><a href="#">Por sucursal</a></li>\
+								<li><a href="#">Por producto</a></li>\
+							</ul>\
+							<div class="clear"></div>\
+						</li>\
+						<li><a href="#">Compras</a>\
+							<ul>\
+								<li><a href="#" onclick="Reports.currentInstance.loadVentasReport()">Por clientes</a></li>\
+							</ul>\
+							<div class="clear"></div>\
+						</li>\
+						<li><a href="#">Clientes</a>\
+						<ul>\
+							<li><a href="#">Mostrar todos</a></li>\
+							<li><a href="#">Deben</a></li>\
+						</ul>\
+							<div class="clear"></div>\
+						</li>\
+						<li><a href="#">Personal</a></li>\
+					</ul>\
+					<div class="clear"></div>\
+				');
+				
+	$('#nav li').hover(
+		function () {
+			//show its submenu
+			$('ul', this).slideDown(200);
+
+		}, 
+		function () {
+			//hide its submenu
+			$('ul', this).slideUp(200);			
+		}
+	);
 }
 
 
@@ -203,12 +246,91 @@ Reports.prototype.loadResumen = function(){
 	//TODO: cargar aqui con AJAX datos para generar un resumen 'inteligente'
 	$('#wrapper-resumen').html("<p>Resumen del periodo 2010/09/06 al 2010/10/06</p>\
 					<p>\
-					<div class='cuadro-resumen'><img src='../media/admin/icons/user.png' width='100' height='100' />Vendedor mas productivo<br><b>Juan Martinez</b></div>\
-					<div class='cuadro-resumen'><img src='../media/admin/icons/objects.png' width='100' height='100' />Producto mas vendido<br><b>Papa Grande</b></div>\
-					<div class='cuadro-resumen'><img src='../media/admin/icons/db.png' width='100' height='100' />Sucursal con mas ventas<br><b>Sucursal Central de Abastos</b></div>\
+					<ul id='lista-cuadros'>\
+					<li><div class='cuadro-resumen'><img src='../media/admin/icons/user.png' width='100' height='100' /><p>Vendedor m&aacute;s productivo</p><p id='top-vendedor' class='resumen-text'>Juan Martinez</p></div></li>\
+					<li><div class='cuadro-resumen'><img src='../media/admin/icons/cart.png' width='100' height='100' /><p>Producto m&aacute;s vendido</p><p id='top-producto' class='resumen-text'>Papa Grande</p></div></li>\
+					<li><div class='cuadro-resumen'><img src='../media/admin/icons/piggybank.png' width='100' height='100' /><p>Sucursal con m&aacute;s ventas</p><p id='top-sucursal' class='resumen-text'>Central de Abastos</p></div></li>\
+					<li><div class='cuadro-resumen'><img src='../media/admin/icons/client.png' width='100' height='100' /><p>Cliente con m&aacute;s compras</p><p id='top-cliente' class='resumen-text'>Oscar Hernandez</p></div></li>\
+					</ul>\
 					<div style='clear:both'></div>\
 					</p>\
 				");
+
+	$('.resumen-text').html('<img src="../media/admin/load.gif" />');
+
+
+	//sacamos el top seller
+	AppAdmin.request({
+			url: '../serverProxy.php',
+			data: "method=vendedorMasProductivo",
+			success: function(data){
+			
+				//alert("nombre "+data.datos[0].nombre);
+				if(data.success)
+				{
+					$('#top-vendedor').html("<b>"+data.datos[0].nombre+"</b>");
+				}
+				else
+				{
+					$('#top-vendedor').html("No se obtuvieron datos");
+				}
+			}
+		});
+		
+	//sacamos el top product
+	AppAdmin.request({
+			url: '../serverProxy.php',
+			data: "method=productoMasVendido",
+			success: function(data){
+			
+				//alert("nombre "+data.datos[0].nombre);
+				if(data.success)
+				{
+					$('#top-producto').html("<b>"+data.datos[0].nombre+"</b>");
+				}
+				else
+				{
+					$('#top-producto').html("<b>No se obtuvieron datos</b>");
+				}
+			}
+		});
+		
+	//sacamos el top sucursal
+	AppAdmin.request({
+			url: '../serverProxy.php',
+			data: "method=sucursalVentasTop",
+			success: function(data){
+			
+				//alert("nombre "+data.datos[0].nombre);
+				if(data.success)
+				{
+					$('#top-sucursal').html("<b>"+data.datos[0].nombre+"</b>");
+				}
+				else
+				{
+					$('#top-sucursal').html("<b>No se obtuvieron datos</b>");
+				}
+			}
+		});
+		
+	//sacamos el top sucursal
+	AppAdmin.request({
+			url: '../serverProxy.php',
+			data: "method=clienteComprasTop",
+			success: function(data){
+			
+				//alert("nombre "+data.datos[0].nombre);
+				if(data.success)
+				{
+					$('#top-cliente').html("<b>"+data.datos[0].nombre+"</b>");
+				}
+				else
+				{
+					$('#top-cliente').html("<b>No se obtuvieron datos</b>");
+				}
+			}
+		});
+	
 
 }
 

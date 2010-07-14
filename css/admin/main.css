@@ -186,13 +186,36 @@ background-image:url(../shared/icons/fam/folder_go.png);
 	border: 1px solid #CCCCCC;
 	width: 150px;
 	height:150px;
-	float:left;
+	/*float:left;*/
 	margin-right:5px;	
+	margin-top:5px;
 	text-align: center;
 	background-image: url(media/admin/gradient.gif);
+	font-size: 11px;
+	position: relative;
+	text-shadow: white 0px 1px 0px;
+	color: #273437;
+}
+
+.resumen-text{
+	position: absolute;
+	bottom : 0px;
+	width: 140px;
 }
 
 #wrapper-resumen{
-	
+	height: 200px;
+	width:auto;
+}
 
+#lista-cuadros{
+	list-style: none;
+	padding:0px;
+}
+
+#lista-cuadros li{
+	
+	float: left;
+	/*width: 150px;
+	margin-right: 5px;*/
 }
