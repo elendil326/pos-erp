@@ -7,21 +7,29 @@ y algunas otras funciones
 	function insertarInventario()
 	{
 		//verificamos que no nos envien datos vacios
-		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['denominacion'])))
+		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['denominacion']))&&(!empty($_REQUEST['unidad_venta'])))
 		{
 			//asignamos valores obtenidos a las variables
 			$nombre=$_REQUEST['nombre'];
 			$denominacion=$_REQUEST['denominacion'];
+			$unidad_venta=$_REQUEST['unidad_venta'];
 			//creamos un objeto del tipo inventario
-			$inventario=new inventario($nombre,$denominacion);
-			//varificamos que no exista
-			if(!$inventario->existe())
+			$inventario=new inventario($nombre,$denominacion,$unidad_venta);
+			//creamos un objeto de la clase unidad_venta
+			$unidad=new unidadVentaExistente($unidad_venta);
+			//verificamos qu exista la unidad
+			if($unidad->existe)
 			{
-				//intentamos insertar
-				if($inventario->inserta())		ok();															//se logro insertar
-				else							fail("Error al guardar el producto.");							//se fallo el intento de insercion
-			}//if no existe producto inventario
-			else 								fail("Ya existe este producto.");								//el producto ya existia
+				//varificamos que no exista
+				if(!$inventario->existe())
+				{
+					//intentamos insertar
+					if($inventario->inserta())		ok();															//se logro insertar
+					else							fail("Error al guardar el producto.");							//se fallo el intento de insercion
+				}//if no existe producto inventario
+				else 								fail("Ya existe este producto.");								//el producto ya existia
+			}//if existe unidad
+			else									fail("la unidad de compra/venta seleccionada no existe");
 		}//if verifica datos
 		else									fail("Faltan datos.");											//no se enviaron los datos requeridos
 		return;
@@ -56,7 +64,7 @@ y algunas otras funciones
 	function actualizarInventario()
 	{
 		//verificamos que no nos envien datos vacios
-		if((!empty($_REQUEST['id_inventario']))&&(!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['denominacion'])))
+		if((!empty($_REQUEST['id_inventario']))&&(!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['denominacion']))&&(!empty($_REQUEST['unidad_venta'])))
 		{
 			//asignamos valores obtenidos a las variables
 			$id=$_REQUEST['id_inventario'];
@@ -67,12 +75,19 @@ y algunas otras funciones
 			//verificamos que si exista dicho producto
 			if($inventario->existe())
 			{
-				//asignamos los datos de las variables a las variables del objeto
-				$inventario->nombre=$nombre;
-				$inventario->denominacion=$denominacion;
-				//intentamos actualizar los datos
-				if($inventario->actualiza())	ok();																//exito al actualizar la informacion
-				else							fail("Error al modificar el producto.");							//fallo en el intento de actualizacion de objero
+				//creamos un objeto de la clase unidad_venta
+				$unidad=new unidadVentaExistente($unidad_venta);
+				//verificamos qu exista la unidad
+				if($unidad->existe)
+				{
+					//asignamos los datos de las variables a las variables del objeto
+					$inventario->nombre=$nombre;
+					$inventario->denominacion=$denominacion;
+					//intentamos actualizar los datos
+					if($inventario->actualiza())	ok();																//exito al actualizar la informacion
+					else							fail("Error al modificar el producto.");							//fallo en el intento de actualizacion de objero
+				}//if existe unidad
+				else								fail("la unidad de compra/venta seleccionada no existe");
 			}//if existe producto inventario
 			else								fail("El producto que desea modificar no existe.");					//el producto de inventario que se deseaba actualizar no existe
 		}//if verifica datos
@@ -180,21 +195,29 @@ y algunas otras funciones
 	function agregarNuevoProducto()
 	{
 
-		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['denominacion']))&&(!empty($_REQUEST['precio']))&&(!empty($_REQUEST['min'])))
+		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['denominacion']))&&(!empty($_REQUEST['precio']))&&(!empty($_REQUEST['unidad_venta']))&&(!empty($_REQUEST['min'])))
 		{
 			//asignamos valores obtenidos a las variables
 			$nombre=$_REQUEST['nombre'];
 			$denominacion=$_REQUEST['denominacion'];
+			$unidad_venta=$_REQUEST['unidad_venta'];
 			//creamos un objeto del tipo inventario
-			$inventario=new inventario($nombre,$denominacion);
+			$inventario=new inventario($nombre,$denominacion,$unidad_venta);
 			//varificamos que no exista
 			if(!$inventario->existe())
 			{
-				//intentamos insertar
-				if(!$inventario->inserta())		
-				{
-					fail("Error al guardar el producto.");							//se fallo el intento de insercion
-				}
+				//creamos un objeto de la clase unidad_venta
+				$unidad=new unidadVentaExistente($unidad_venta);
+				//verificamos qu exista la unidad
+				if($unidad->existe)
+					{
+					//intentamos insertar
+					if(!$inventario->inserta())		
+					{
+						fail("Error al guardar el producto.");							//se fallo el intento de insercion
+					}
+				}//if existe unidad
+				else								fail("la unidad de compra/venta seleccionada no existe");
 			}//if no existe producto inventario
 			else 								fail("Ya existe este producto.");								//el producto ya existia
 		}//if verifica datos
@@ -220,5 +243,85 @@ y algunas otras funciones
 		
 		return;
 	}
+	
+	
+	
+	//esta funcion inserta una unidad de venta
+	function insertarUnidadVenta()
+	{
+		//verificamos que no nos envien datos vacios
+		if((!empty($_REQUEST['descripcion']))&&(!empty($_REQUEST['entero'])))
+		{
+			//asignamos valores obtenidos a las variables
+			$descripcion=$_REQUEST['descripcion'];
+			$entero=$_REQUEST['entero'];
+			//creamos un objeto del tipo unidad_venta
+			$unidad_venta=new unidad_venta($descripcion,$entero);
+			//varificamos que no exista
+			if(!$unidad_venta->existe())
+			{
+				//intentamos insertar
+				if($unidad_venta->inserta())		ok();															//se logro insertar
+				else							fail("Error al guardar la unidad.");							//se fallo el intento de insercion
+			}//if no existe producto unidad_venta
+			else 								fail("Ya existe esta unidad.");								//el producto ya existia
+		}//if verifica datos
+		else									fail("Faltan datos.");											//no se enviaron los datos requeridos
+		return;
+	}
+	//funcion insertarUnidadVenta
+	
+	//esta funcion actualiza una unidad de venta
+	function actualizarUnidadVenta()
+	{
+		//verificamos que no nos envien datos vacios
+		if((!empty($_REQUEST['id_unidad']))&&(!empty($_REQUEST['descripcion']))&&(!empty($_REQUEST['entero'])))
+		{
+			//asignamos valores obtenidos a las variables
+			$id=$_REQUEST['id_unidad'];
+			//creamos un objeto del tipo unidad_venta
+			$unidad_venta=new unidadVentaExistente($id);
+			//varificamos que  exista
+			if($unidad_venta->existe())
+			{
+				//asignamos valores
+				$unidad_venta->descripcion=$_REQUEST['descripcion'];
+				$unidad_venta->entero=$_REQUEST['entero'];
+				//intentamos actualizar
+				if($unidad_venta->actualiza())		ok();															//se logro insertar
+				else							fail("Error al actualizar la unidad.");							//se fallo el intento de insercion
+			}//if  existe producto unidad_venta
+			else 								fail("No existe esta unidad.");								//el producto ya existia
+		}//if verifica datos
+		else									fail("Faltan datos.");											//no se enviaron los datos requeridos
+		return;
+	}
+	//funcion actualizarUnidadVenta
+	
+	
+	//esta funcion elimina una unidad de venta
+	function eliminarUnidadVenta()
+	{
+		//verificamos que no nos envien datos vacios
+		if((!empty($_REQUEST['id_unidad'])))
+		{
+			//asignamos valores obtenidos a las variables
+			$id=$_REQUEST['id_unidad'];
+			//creamos un objeto del tipo unidad_venta
+			$unidad_venta=new unidadVentaExistente($id);
+			//varificamos que  exista
+			if($unidad_venta->existe())
+			{
+				//intentamos eliminar
+				if($unidad_venta->borra())		ok();															//se logro insertar
+				else							fail("Error al borrar la unidad.");							//se fallo el intento de insercion
+			}//if  existe producto unidad_venta
+			else 								fail("No existe esta unidad.");								//el producto ya existia
+		}//if verifica datos
+		else									fail("Faltan datos.");											//no se enviaron los datos requeridos
+		return;
+	}
+	//funcion eliminarUnidadVenta
+	
 	
 ?>

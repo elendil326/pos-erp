@@ -1,9 +1,18 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
+
+
+
+
+
+
+
 -- phpMyAdmin SQL Dump
 -- version 3.1.1
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 13-07-2010 a las 22:11:15
+-- Tiempo de generación: 14-07-2010 a las 02:11:49
 -- Versión del servidor: 5.1.30
 -- Versión de PHP: 5.2.8
 
@@ -15,8 +24,18 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 -- --------------------------------------------------------
 
-SET FOREIGN_KEY_CHECKS = 0;
-
+--
+-- Estructura Stand-in para la vista `adeudan_sucursal`
+--
+DROP VIEW IF EXISTS `adeudan_sucursal`;
+CREATE TABLE IF NOT EXISTS `adeudan_sucursal` (
+`id_venta` int(11)
+,`sucursal` int(11)
+,`id_usuario` int(11)
+,`Deben` double
+,`fecha` datetime
+,`porciento` float
+);
 -- --------------------------------------------------------
 
 --
@@ -34,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   `limite_credito` float NOT NULL DEFAULT '0' COMMENT 'Limite de credito otorgado al cliente',
   `descuento` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Taza porcentual de descuento de 0 a 100',
   PRIMARY KEY (`id_cliente`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=54 ;
 
 --
 -- Volcar la base de datos para la tabla `cliente`
@@ -78,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `compras` (
   KEY `compras_proveedor` (`id_proveedor`),
   KEY `compras_sucursal` (`sucursal`),
   KEY `compras_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 --
 -- Volcar la base de datos para la tabla `compras`
@@ -109,15 +128,14 @@ CREATE TABLE IF NOT EXISTS `corte` (
   `ingresos` float NOT NULL COMMENT 'ingresos obtenidos en ese periodo',
   `gananciasNetas` float NOT NULL COMMENT 'ganancias netas dentro del periodo',
   PRIMARY KEY (`num_corte`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=37 ;
 
 --
 -- Volcar la base de datos para la tabla `corte`
 --
 
 INSERT INTO `corte` (`num_corte`, `anio`, `inicio`, `fin`, `ventas`, `abonosVentas`, `compras`, `AbonosCompra`, `gastos`, `ingresos`, `gananciasNetas`) VALUES
-(2, 2010, '2010-07-01', '2010-07-30', 4534, 113, 0, 550, 4410, 4700, 4387),
-(3, 2010, '2010-07-01', '2010-07-30', 4534, 113, 1018, 550, 4410, 4700, 3369);
+(35, 2010, '2010-07-01', '2010-07-30', 4534, 113, 1018, 550, 4410, 4700, 3369);
 
 -- --------------------------------------------------------
 
@@ -134,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `cotizacion` (
   `iva` float NOT NULL COMMENT 'iva sobre el subtotal',
   PRIMARY KEY (`id_cotizacion`),
   KEY `cotizacion_cliente` (`id_cliente`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Volcar la base de datos para la tabla `cotizacion`
@@ -165,7 +183,7 @@ INSERT INTO `cuenta_cliente` (`id_cliente`, `saldo`) VALUES
 (25, 0),
 (28, 0),
 (36, 0),
-(37, 0),
+(37, -100),
 (38, 0),
 (40, 0),
 (41, 0),
@@ -250,6 +268,10 @@ CREATE TABLE IF NOT EXISTS `detalle_corte` (
 -- Volcar la base de datos para la tabla `detalle_corte`
 --
 
+INSERT INTO `detalle_corte` (`num_corte`, `nombre`, `total`, `deben`) VALUES
+(35, 'alan Gonzalez', 1347.6, 748),
+(35, 'dventura', 842.25, 0),
+(35, 'Juan Manuel Hernandez', 1179.15, 1370);
 
 -- --------------------------------------------------------
 
@@ -395,7 +417,7 @@ CREATE TABLE IF NOT EXISTS `factura_compra` (
   `id_compra` int(11) NOT NULL COMMENT 'COMPRA A LA QUE CORRESPONDE LA FACTURA',
   PRIMARY KEY (`id_factura`),
   KEY `factura_compra_compra` (`id_compra`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
 --
 -- Volcar la base de datos para la tabla `factura_compra`
@@ -421,7 +443,7 @@ CREATE TABLE IF NOT EXISTS `factura_venta` (
   `iva` float NOT NULL COMMENT 'iva de los productos facturados',
   PRIMARY KEY (`id_factura`),
   KEY `factura_venta_venta` (`id_venta`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
 --
 -- Volcar la base de datos para la tabla `factura_venta`
@@ -470,7 +492,7 @@ CREATE TABLE IF NOT EXISTS `impuesto` (
   `descripcion` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `valor` int(11) NOT NULL,
   PRIMARY KEY (`id_impuesto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
 -- Volcar la base de datos para la tabla `impuesto`
@@ -517,20 +539,21 @@ CREATE TABLE IF NOT EXISTS `inventario` (
   `id_producto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del producto',
   `nombre` varchar(90) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Descripcion o nombre del producto',
   `denominacion` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT 'es lo que se le mostrara a los clientes',
+  `unidad_venta` int(11) NOT NULL COMMENT 'id de la unidad por la que se vendera',
   PRIMARY KEY (`id_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=10 ;
 
 --
 -- Volcar la base de datos para la tabla `inventario`
 --
 
-INSERT INTO `inventario` (`id_producto`, `nombre`, `denominacion`) VALUES
-(4, '1as', 'Papa Grande'),
-(5, '2as', 'Papa Mediana'),
-(6, '3as', 'Papa Chica'),
-(7, '4as', 'Papa Morada'),
-(8, 'Mixtas', 'Papa Surtida'),
-(9, 'Roñas', 'Papa baja');
+INSERT INTO `inventario` (`id_producto`, `nombre`, `denominacion`, `unidad_venta`) VALUES
+(4, '1as', 'Papa Grande', 1),
+(5, '2as', 'Papa Mediana', 1),
+(6, '3as', 'Papa Chica', 1),
+(7, '4as', 'Papa Morada', 1),
+(8, 'Mixtas', 'Papa Surtida', 1),
+(9, 'Roñas', 'Papa baja', 1);
 
 -- --------------------------------------------------------
 
@@ -545,7 +568,7 @@ CREATE TABLE IF NOT EXISTS `nota_remision` (
   PRIMARY KEY (`id_nota`),
   UNIQUE KEY `id_venta` (`id_venta`),
   KEY `nota_remision_venta` (`id_venta`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=11 ;
 
 --
 -- Volcar la base de datos para la tabla `nota_remision`
@@ -576,7 +599,7 @@ CREATE TABLE IF NOT EXISTS `pagos_compra` (
   `monto` float NOT NULL COMMENT 'monto que se abono',
   PRIMARY KEY (`id_pago`),
   KEY `pagos_compra_compra` (`id_compra`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Volcar la base de datos para la tabla `pagos_compra`
@@ -600,7 +623,7 @@ CREATE TABLE IF NOT EXISTS `pagos_venta` (
   `monto` float NOT NULL COMMENT 'total de credito del cliente',
   PRIMARY KEY (`id_pago`),
   KEY `pagos_venta_venta` (`id_venta`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=67 ;
 
 --
 -- Volcar la base de datos para la tabla `pagos_venta`
@@ -609,7 +632,8 @@ CREATE TABLE IF NOT EXISTS `pagos_venta` (
 INSERT INTO `pagos_venta` (`id_pago`, `id_venta`, `fecha`, `monto`) VALUES
 (63, 23, '2010-07-13', 13),
 (64, 23, '2010-07-13', 50),
-(65, 27, '2010-07-13', 50);
+(65, 27, '2010-07-13', 50),
+(66, 25, '2010-07-14', 100);
 
 -- --------------------------------------------------------
 
@@ -630,7 +654,7 @@ CREATE TABLE IF NOT EXISTS `productos_proveedor` (
   UNIQUE KEY `id_proveedor` (`id_proveedor`,`id_inventario`),
   KEY `productos_proveedor_proveedor` (`id_proveedor`),
   KEY `productos_proveedor_producto` (`id_inventario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=26 ;
 
 --
 -- Volcar la base de datos para la tabla `productos_proveedor`
@@ -663,7 +687,7 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
   `telefono` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'telefono',
   `e_mail` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'email del provedor',
   PRIMARY KEY (`id_proveedor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
 
 --
 -- Volcar la base de datos para la tabla `proveedor`
@@ -687,7 +711,7 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   `descripcion` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'nombre o descripcion de sucursal',
   `direccion` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'direccion de la sucursal',
   PRIMARY KEY (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
 
 --
 -- Volcar la base de datos para la tabla `sucursal`
@@ -697,6 +721,27 @@ INSERT INTO `sucursal` (`id_sucursal`, `descripcion`, `direccion`) VALUES
 (1, 'Bodega', 'Central de Abastos de Celaya Salida Apaseo'),
 (2, 'Sucursal de la Central', 'Central de Abastos Celaya'),
 (3, 'Sucursal 2', 'Rancho Nuevo');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `unidad_venta`
+--
+
+DROP TABLE IF EXISTS `unidad_venta`;
+CREATE TABLE IF NOT EXISTS `unidad_venta` (
+  `id_unidad` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de la unidad que venderemos',
+  `descripcion` varchar(50) NOT NULL COMMENT 'si es kg, metros, pieza, m2, litros, etc.',
+  `entero` tinyint(1) NOT NULL COMMENT 'indica si la unidad semaneja por enteros, de lo contrario maneja punto',
+  PRIMARY KEY (`id_unidad`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Volcar la base de datos para la tabla `unidad_venta`
+--
+
+INSERT INTO `unidad_venta` (`id_unidad`, `descripcion`, `entero`) VALUES
+(1, 'kilogramo', 0);
 
 -- --------------------------------------------------------
 
@@ -713,14 +758,14 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `nivel` int(11) NOT NULL,
   `sucursal_id` int(11) NOT NULL COMMENT 'Id de la sucursal a que pertenece',
   PRIMARY KEY (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=12 ;
 
 --
 -- Volcar la base de datos para la tabla `usuario`
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre`, `usuario`, `contrasena`, `nivel`, `sucursal_id`) VALUES
-(6, 'dventura', 'Diego Ventura', '123', 1, 1),
+(6, 'Diego Ventura', 'dventura', '123', 1, 1),
 (7, 'alan Gonzalez', 'alanboy', '123', 1, 2),
 (8, 'Juan Manuel Hernandez', 'figu', '123', 1, 3),
 (9, 'juan manuel garcia', 'mane', '123', 2, 1),
@@ -747,7 +792,7 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=34 ;
 
 --
 -- Volcar la base de datos para la tabla `ventas`
@@ -766,6 +811,15 @@ INSERT INTO `ventas` (`id_venta`, `id_cliente`, `tipo_venta`, `fecha`, `subtotal
 (31, 28, 2, '2010-07-13 16:05:46', 500, 80, 2, 9),
 (32, 38, 1, '2010-07-13 16:06:24', 2000, 320, 3, 9),
 (33, 48, 1, '2010-07-13 16:06:24', 1000, 160, 1, 10);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `adeudan_sucursal`
+--
+DROP TABLE IF EXISTS `adeudan_sucursal`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `adeudan_sucursal` AS select `v`.`id_venta` AS `id_venta`,`v`.`sucursal` AS `sucursal`,`e`.`id_usuario` AS `id_usuario`,if((((`v`.`subtotal` + `v`.`iva`) - sum(`pv`.`monto`)) > 0),((`v`.`subtotal` + `v`.`iva`) - sum(`pv`.`monto`)),(`v`.`subtotal` + `v`.`iva`)) AS `Deben`,if((max(`pv`.`fecha`) <> NULL),max(`pv`.`fecha`),`v`.`fecha`) AS `fecha`,`e`.`porciento` AS `porciento` from (`encargado` `e` left join ((`ventas` `v` left join `pagos_venta` `pv` on((`pv`.`id_venta` = `v`.`id_venta`))) left join `usuario` `u` on((`u`.`sucursal_id` = `v`.`sucursal`))) on((`u`.`id_usuario` = `e`.`id_usuario`))) where (`v`.`tipo_venta` = 2) group by `v`.`tipo_venta`,`v`.`sucursal`,`v`.`id_venta`,`e`.`id_usuario`;
 
 --
 -- Filtros para las tablas descargadas (dump)
@@ -865,9 +919,11 @@ ALTER TABLE `ventas`
   ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-  
-  drop view if exists adeudan_sucursal; 
-  CREATE VIEW `adeudan_sucursal` AS select `v`.`id_venta` AS `id_venta`,`v`.`sucursal` AS `sucursal`,`e`.`id_usuario` AS `id_usuario`,if((((`v`.`subtotal` + `v`.`iva`) - sum(`pv`.`monto`)) > 0),((`v`.`subtotal` + `v`.`iva`) - sum(`pv`.`monto`)),(`v`.`subtotal` + `v`.`iva`)) AS `Deben`,if((max(`pv`.`fecha`) <> NULL),max(`pv`.`fecha`),`v`.`fecha`) AS `fecha`,`e`.`porciento` AS `porciento` from (`encargado` `e` left join ((`ventas` `v` left join `pagos_venta` `pv` on((`pv`.`id_venta` = `v`.`id_venta`))) left join `usuario` `u` on((`u`.`sucursal_id` = `v`.`sucursal`))) on((`u`.`id_usuario` = `e`.`id_usuario`))) where (`v`.`tipo_venta` = 2) group by `v`.`tipo_venta`,`v`.`sucursal`,`v`.`id_venta`,`e`.`id_usuario`;
+
+
+
+
+
 
 
 

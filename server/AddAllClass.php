@@ -116,6 +116,9 @@
 	include_once("model/detalleCorte.class.php");
 	include_once("model/detalleCorteExistente.class.php");
 	include_once("model/detalleCorteVacio.class.php");
+	
+	include_once("model/unidadVenta.class.php");
+	include_once("model/unidadVentaExistente.class.php");
 
 	include_once('model/funcionesCliente.php');
 	include_once('model/funcionesCompra.php');
@@ -252,6 +255,10 @@
 		case "existenciaProductoSucursal" : 			existenciaProductoSucursal(); break;
 		case "obtenerSucursalUsuario" :				obtenerSucursalUsuario(); break;
 		case "agregarNuevoProducto" :				agregarNuevoProducto(); break;
+		//---unidades de venta
+		case "insertarUnidadVenta" :				insertarUnidadVenta(); break;
+		case "actualizarUnidadVenta" :				actualizarUnidadVenta(); break;
+		case "eliminarUnidadVenta" :				eliminarUnidadVenta(); break;
 		
 		//-----Funciones impuesto
 		case "insertarImpuesto" : 				insertarImpuesto(); break;

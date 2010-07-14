@@ -1,9 +1,16 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
+
+
+
+
+
 -- phpMyAdmin SQL Dump
 -- version 3.1.1
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 13-07-2010 a las 22:32:12
+-- Tiempo de generación: 14-07-2010 a las 02:12:56
 -- Versión del servidor: 5.1.30
 -- Versión de PHP: 5.2.8
 
@@ -14,7 +21,20 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 
 -- --------------------------------------------------------
-SET FOREIGN_KEY_CHECKS = 0;
+
+--
+-- Estructura Stand-in para la vista `adeudan_sucursal`
+--
+DROP VIEW IF EXISTS `adeudan_sucursal`;
+CREATE TABLE IF NOT EXISTS `adeudan_sucursal` (
+`id_venta` int(11)
+,`sucursal` int(11)
+,`id_usuario` int(11)
+,`Deben` double
+,`fecha` datetime
+,`porciento` float
+);
+-- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `cliente`
@@ -75,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `corte` (
   `ingresos` float NOT NULL COMMENT 'ingresos obtenidos en ese periodo',
   `gananciasNetas` float NOT NULL COMMENT 'ganancias netas dentro del periodo',
   PRIMARY KEY (`num_corte`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=37 ;
 
 -- --------------------------------------------------------
 
@@ -321,6 +341,7 @@ CREATE TABLE IF NOT EXISTS `inventario` (
   `id_producto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del producto',
   `nombre` varchar(90) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Descripcion o nombre del producto',
   `denominacion` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT 'es lo que se le mostrara a los clientes',
+  `unidad_venta` int(11) NOT NULL COMMENT 'id de la unidad por la que se vendera',
   PRIMARY KEY (`id_producto`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=10 ;
 
@@ -369,7 +390,7 @@ CREATE TABLE IF NOT EXISTS `pagos_venta` (
   `monto` float NOT NULL COMMENT 'total de credito del cliente',
   PRIMARY KEY (`id_pago`),
   KEY `pagos_venta_venta` (`id_venta`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=66 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=67 ;
 
 -- --------------------------------------------------------
 
@@ -426,6 +447,20 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `unidad_venta`
+--
+
+DROP TABLE IF EXISTS `unidad_venta`;
+CREATE TABLE IF NOT EXISTS `unidad_venta` (
+  `id_unidad` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de la unidad que venderemos',
+  `descripcion` varchar(50) NOT NULL COMMENT 'si es kg, metros, pieza, m2, litros, etc.',
+  `entero` tinyint(1) NOT NULL COMMENT 'indica si la unidad semaneja por enteros, de lo contrario maneja punto',
+  PRIMARY KEY (`id_unidad`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `usuario`
 --
 
@@ -461,6 +496,15 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   KEY `ventas_sucursal` (`sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=34 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `adeudan_sucursal`
+--
+DROP TABLE IF EXISTS `adeudan_sucursal`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `adeudan_sucursal` AS select `v`.`id_venta` AS `id_venta`,`v`.`sucursal` AS `sucursal`,`e`.`id_usuario` AS `id_usuario`,if((((`v`.`subtotal` + `v`.`iva`) - sum(`pv`.`monto`)) > 0),((`v`.`subtotal` + `v`.`iva`) - sum(`pv`.`monto`)),(`v`.`subtotal` + `v`.`iva`)) AS `Deben`,if((max(`pv`.`fecha`) <> NULL),max(`pv`.`fecha`),`v`.`fecha`) AS `fecha`,`e`.`porciento` AS `porciento` from (`encargado` `e` left join ((`ventas` `v` left join `pagos_venta` `pv` on((`pv`.`id_venta` = `v`.`id_venta`))) left join `usuario` `u` on((`u`.`sucursal_id` = `v`.`sucursal`))) on((`u`.`id_usuario` = `e`.`id_usuario`))) where (`v`.`tipo_venta` = 2) group by `v`.`tipo_venta`,`v`.`sucursal`,`v`.`id_venta`,`e`.`id_usuario`;
 
 --
 -- Filtros para las tablas descargadas (dump)
@@ -560,7 +604,15 @@ ALTER TABLE `ventas`
   ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-  drop view if exists adeudan_sucursal; 
-  CREATE VIEW `adeudan_sucursal` AS select `v`.`id_venta` AS `id_venta`,`v`.`sucursal` AS `sucursal`,`e`.`id_usuario` AS `id_usuario`,if((((`v`.`subtotal` + `v`.`iva`) - sum(`pv`.`monto`)) > 0),((`v`.`subtotal` + `v`.`iva`) - sum(`pv`.`monto`)),(`v`.`subtotal` + `v`.`iva`)) AS `Deben`,if((max(`pv`.`fecha`) <> NULL),max(`pv`.`fecha`),`v`.`fecha`) AS `fecha`,`e`.`porciento` AS `porciento` from (`encargado` `e` left join ((`ventas` `v` left join `pagos_venta` `pv` on((`pv`.`id_venta` = `v`.`id_venta`))) left join `usuario` `u` on((`u`.`sucursal_id` = `v`.`sucursal`))) on((`u`.`id_usuario` = `e`.`id_usuario`))) where (`v`.`tipo_venta` = 2) group by `v`.`tipo_venta`,`v`.`sucursal`,`v`.`id_venta`,`e`.`id_usuario`;
+
+
+
+
+
+
+
+
+
+
 
 SET FOREIGN_KEY_CHECKS = 1;
