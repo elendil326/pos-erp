@@ -273,6 +273,9 @@
 		case 'productoMasVendido'	:							productoMasVendido(); break;
 		case 'sucursalVentasTop'	:							sucursalVentasTop(); break;
 		case 'clienteComprasTop'	:							clienteComprasTop(); break;
+		case 'vendedorMasProductivoSucursal':							vendedorMasProductivoSucursal(); break;
+		case 'productoMasVendidoSucursal':							productoMasVendidoSucursal(); break;
+		case 'clienteComprasTopSucursal' :							clienteComprasTopSucursal(); break;
 		//------
 		case 'listarProveedores': 								listarProveedores(); 	break;
 		case 'actualizarProveedor':								actualizarProveedor();	break;

@@ -791,7 +791,7 @@ y algunas otras funciones
 		$params = array();
 
 			
-		$qry_select = " SELECT `inventario`.`denominacion`, SUM(`detalle_venta`.`cantidad`) AS `Cantidad` FROM `inventario`, `detalle_venta`, `ventas`  WHERE `inventario`.`id_producto` = `detalle_venta`.`id_producto` AND `detalle_venta`.`id_venta` = `ventas`.`id_venta`";
+		$qry_select = " SELECT `inventario`.`denominacion` AS `nombre`, SUM(`detalle_venta`.`cantidad`) AS `Cantidad` FROM `inventario`, `detalle_venta`, `ventas`  WHERE `inventario`.`id_producto` = `detalle_venta`.`id_producto` AND `detalle_venta`.`id_venta` = `ventas`.`id_venta`";
 
 
 		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) )
@@ -869,4 +869,119 @@ y algunas otras funciones
 
 		return;
 	}
+
+
+	/*
+	*	VENDEDOR MAS PRODUCTIVO EN UNA SUCURSAL ESPECIFICA
+	*/
+
+	function vendedorMasProductivoSucursal(){
+
+		if ( !isset($_REQUEST['id_sucursal']) )
+		{
+			fail("Faltan parametros");
+			return;
+		}
+		
+		$id_sucursal = $_REQUEST['id_sucursal'];
+		$dateRange = "";
+		$params = array($id_sucursal);
+
+		$qry_select = "SELECT `ventas`.`id_usuario`, `usuario`.`nombre`, SUM(`ventas`.`subtotal`) AS `Vendido` FROM `ventas`, `usuario` WHERE `ventas`.`id_usuario` = `usuario`.`id_usuario` AND `ventas`.`sucursal` = ?";				
+
+		//Si existen los rangos de fechas, agregamos una linea al query para filtrar los resultados dentro de ese rango
+		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) )
+		{
+			array_push($params, $_REQUEST['fecha-inicio']);
+			array_push($params, $_REQUEST['fecha-fin']);
+			$dateRange .= " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
+			$qry_select .= $dateRange;
+		}
+
+		$qry_select .= " GROUP BY `ventas`.`id_usuario` ORDER BY `Vendido` DESC LIMIT 1";
+
+		$listar = new listar($qry_select, $params);
+		echo $listar->lista();
+
+		return;
+
+	}
+
+	/*
+	*	PRODUCTO MAS VENDIDO EN UNA SUCURSAL
+	*/
+
+	function productoMasVendidoSucursal(){
+		
+
+		if ( !isset($_REQUEST['id_sucursal']) )
+		{
+			fail("Faltan parametros");
+			return;
+		}
+		
+		$id_sucursal = $_REQUEST['id_sucursal'];
+		
+		$dateRange = "";
+		$params = array($id_sucursal);
+
+			
+		$qry_select = " SELECT `inventario`.`denominacion`, SUM(`detalle_venta`.`cantidad`) AS `Cantidad` FROM `inventario`, `detalle_venta`, `ventas`  WHERE `inventario`.`id_producto` = `detalle_venta`.`id_producto` AND `detalle_venta`.`id_venta` = `ventas`.`id_venta` AND `ventas`.`sucursal` = ?";
+
+
+		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) )
+		{
+			array_push($params, $_REQUEST['fecha-inicio']);
+			array_push($params, $_REQUEST['fecha-fin']);
+			$dateRange .= " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
+			$qry_select .= $dateRange;
+		}
+
+		$qry_select .= " GROUP BY `detalle_venta`.`id_producto` ORDER BY `Cantidad` DESC LIMIT 1";
+
+		$listar = new listar($qry_select, $params);
+		echo $listar->lista();
+
+		return;
+
+	}
+
+	
+	/*
+	*	CLIENTE QUE COMPRA MAS EN UNA SUCURSAL
+	*/
+
+	function clienteComprasTopSucursal(){
+	
+		if ( !isset($_REQUEST['id_sucursal']) )
+		{
+			fail("Faltan parametros");
+			return;
+		}
+		
+		$id_sucursal = $_REQUEST['id_sucursal'];
+		
+		$dateRange = "";
+		$params = array($id_sucursal);
+
+			
+		$qry_select = " SELECT `cliente`.`nombre`, SUM(`ventas`.`subtotal`) AS `Cantidad` FROM `ventas`, `cliente` WHERE `cliente`.`id_cliente` = `ventas`.`id_cliente` AND `ventas`.`sucursal` = ? ";
+
+
+		if ( isset($_REQUEST['fecha-inicio']) && isset($_REQUEST['fecha-fin']) )
+		{
+			array_push($params, $_REQUEST['fecha-inicio']);
+			array_push($params, $_REQUEST['fecha-fin']);
+			$dateRange .= " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
+			$qry_select .= $dateRange;
+		}
+
+		$qry_select .= " GROUP BY `ventas`.`id_cliente` ORDER BY `Cantidad` DESC LIMIT 1";
+
+		$listar = new listar($qry_select, $params);
+		echo $listar->lista();
+
+		return;
+	}
+
 ?>
