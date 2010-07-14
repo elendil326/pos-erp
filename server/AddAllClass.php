@@ -261,13 +261,18 @@
 		case 'reporteClientesComprasCredito': 					reporteClientesComprasCredito(); 	break;
 		case 'reporteClientesComprasCreditoDeben': 				reporteClientesComprasCreditoDeben(); 	break;
 		case 'reporteClientesComprasCreditoPagado': 			reporteClientesComprasCreditoPagado(); 	break;
-		
+
 		//reportes_jgrid
 		case 'reporteClientesTodos_jgrid': 							reporteClientesTodos_jgrid(); 	break;
 		case 'reporteClientesDeben_jgrid': 							reporteClientesDeben_jgrid(); 	break;
 		case 'reporteClientesCompras_jgrid': 							reporteClientesCompras_jgrid(); 	break;
 		case 'reporteClientesComprasCredito_jgrid': 					reporteClientesComprasCredito_jgrid(); 	break;
 		
+		//reportes del tipo MVP (most valuable x)
+		case 'vendedorMasProductivo'	:							vendedorMasProductivo(); break;
+		case 'productoMasVendido'	:							productoMasVendido(); break;
+		case 'sucursalVentasTop'	:							sucursalVentasTop(); break;
+		case 'clienteComprasTop'	:							clienteComprasTop(); break;
 		//------
 		case 'listarProveedores': 								listarProveedores(); 	break;
 		case 'actualizarProveedor':								actualizarProveedor();	break;
