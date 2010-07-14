@@ -230,7 +230,6 @@ Reports.prototype.loadCharts = function(){
 
 /* Funcion que pretende cargar un ligero resumen de cosas importantes 
 
-	ESTO PODRIA SER UN GRID CON ICONOS MAS FRESON, POR AHORA UNA LISTA SIMPLE...
 */
 Reports.prototype.loadResumen = function(){
 
@@ -268,11 +267,15 @@ Reports.prototype.loadResumen = function(){
 				//alert("nombre "+data.datos[0].nombre);
 				if(data.success)
 				{
-					$('#top-vendedor').html("<b>"+data.datos[0].nombre+"</b>");
+					$('#top-vendedor').fadeOut('slow', function(){
+										
+										$('#top-vendedor').html("<b>"+data.datos[0].nombre+"</b>");
+										$('#top-vendedor').fadeIn();
+									});
 				}
 				else
 				{
-					$('#top-vendedor').html("No se obtuvieron datos");
+					$('#top-vendedor').html("<b>No hay datos</b>");
 				}
 			}
 		});
@@ -286,11 +289,15 @@ Reports.prototype.loadResumen = function(){
 				//alert("nombre "+data.datos[0].nombre);
 				if(data.success)
 				{
-					$('#top-producto').html("<b>"+data.datos[0].nombre+"</b>");
+					$('#top-producto').fadeOut('slow', function(){
+										
+											$('#top-producto').html("<b>"+data.datos[0].nombre+"</b>");
+											$('#top-producto').fadeIn();
+										});
 				}
 				else
 				{
-					$('#top-producto').html("<b>No se obtuvieron datos</b>");
+					$('#top-producto').html("<b>No hay datos</b>");
 				}
 			}
 		});
@@ -304,11 +311,14 @@ Reports.prototype.loadResumen = function(){
 				//alert("nombre "+data.datos[0].nombre);
 				if(data.success)
 				{
-					$('#top-sucursal').html("<b>"+data.datos[0].nombre+"</b>");
+					$('#top-sucursal').fadeOut('slow', function(){
+									$('#top-sucursal').html("<b>"+data.datos[0].nombre+"</b>");
+									$('#top-sucursal').fadeIn();
+									});
 				}
 				else
 				{
-					$('#top-sucursal').html("<b>No se obtuvieron datos</b>");
+					$('#top-sucursal').html("<b>No hay datos</b>");
 				}
 			}
 		});
@@ -322,11 +332,16 @@ Reports.prototype.loadResumen = function(){
 				//alert("nombre "+data.datos[0].nombre);
 				if(data.success)
 				{
-					$('#top-cliente').html("<b>"+data.datos[0].nombre+"</b>");
+					$('#top-cliente').fadeOut('slow', function(){
+										
+										$('#top-cliente').html("<b>"+data.datos[0].nombre+"</b>").fadeIn('slow');
+										$('#top-cliente').fadeIn();
+									});
+					
 				}
 				else
 				{
-					$('#top-cliente').html("<b>No se obtuvieron datos</b>");
+					$('#top-cliente').html("<b>No hay datos</b>");
 				}
 			}
 		});
