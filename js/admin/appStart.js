@@ -58,7 +58,39 @@ $(document).ready(function() {
 				data: [[0, 0], [1, 1], [2, 1.414], [3, 1.73], [4, 2]]
 				}));
 				
-	
+	AppAdmin.request({
+		url: "../serverProxy.php",
+		data: {dateRange : 'mes', method: 'graficaVentasContado'},
+		success: function(msg){
+			
+			var dataPair = [];
+			var x;
+			var y;
+
+			for( var i=0; i < msg.datos.length ; i++ )
+			{
+				x = parseInt(msg.datos[i].x);
+				y = parseFloat(msg.datos[i].y);
+				dataPair.push([  x, y ]);
+			}
+
+			
+
+			console.log(dataPair);	
+		
+			MochiKit.DOM.addLoadEvent(
+		appAdmin.addGraph({
+				width:350, 
+				height:150,
+				renderTo: 'content',
+				divID: 'graph-5',
+				canvasID: 'canvas-5',
+				tipo: 'pie',
+				data: dataPair
+				}));
+			alert("Data retrieved: "+msg.success);
+		}
+	});
 
 });
 //AJAX EJEMPPLO
