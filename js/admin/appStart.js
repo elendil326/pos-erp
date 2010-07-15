@@ -69,9 +69,7 @@ $(document).ready(function() {
 		data: {test : 'bla', method: 'reporteClientesTodos'},
 		success: function(msg){
 			
-			//TODO: mejorar esto
-			var data = eval("("+msg+")");
 			
-			alert("Data retrieved: "+data.success);
+			alert("Data retrieved: "+msg.success);
 		}
 	});*/
