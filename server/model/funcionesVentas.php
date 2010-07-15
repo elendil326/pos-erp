@@ -1175,4 +1175,210 @@ y algunas otras funciones
 		return;
 	}
 
+
+	/***************************************************************************************************
+				REPORTES PARA GRAFICAS
+	***************************************************************************************************/
+
+	/*
+	*	UTILS PARA LOS REPORTES
+	*/ 
+
+	//Obtenemos dos fechas dentro de un rango (semana, mes, año). Se refiere la ultima semana, mes, año.
+	function getDateRangeGraphics($dateInterval){
+
+		$datesArray = array();
+		$currentDate = getdate();
+		$dateToday = $currentDate['year'].'-'.$currentDate['mon'].'-'.$currentDate['mday'];
+
+		switch($dateInterval)
+			{
+				case 'semana': 	$fecha = date_create( $dateToday );
+						$today = date_format($fecha, 'Y-m-d');
+						array_push($datesArray, $today);
+						array_push($datesArray, $today);
+						//$fecha = date_create("2010-07-14");
+						date_sub($fecha, date_interval_create_from_date_string('1 day')); //A la fecha de hoy le quitamos un dia
+						$dateDayBefore = date_format($fecha, 'Y-m-d');
+						array_push($datesArray, $dateDayBefore);
+						array_push($datesArray, $dateDayBefore);						
+
+						if ( $currentDate['wday'] == 0)
+						{
+							$weekControl = 7;
+						}
+						else
+						{
+							$weekControl = $currentDate['wday'];
+						}
+
+						for ( $i=2; $i < $weekControl ; $i++ )
+						{
+							$fecha = date_create( $dateToday );
+							date_sub( $fecha, date_interval_create_from_date_string( $i.' days') ); //A la fecha de hoy le vamos quitando i dias para formar un arreglo de fechas
+							$dateDayBefore = date_format($fecha, 'Y-m-d');
+							array_push($datesArray, $dateDayBefore);
+							array_push($datesArray, $dateDayBefore);
+						}
+						//var_dump($datesArray);
+	
+						return($datesArray);
+
+						break;
+				/************************************************************************/
+
+				case 'mes':	//$fecha = date_create("2010-07-14");
+
+						$fecha = date_create($currentDate['year'].'-01-01'); //Ponemos el inicio de mes para que al substraer meses, regrese el inicio de cada mes
+						//date_sub($fecha, date_interval_create_from_date_string($i.' months'));
+						$dateMonth = date_format($fecha, 'Y-m-d');
+						array_push($datesArray, $dateMonth);
+
+						for ($i=2 ; $i < $currentDate['mon']+1 ; $i++)
+						{
+						$fecha = date_create($currentDate['year'].'-'.$i.'-01'); //Ponemos el inicio de mes para que al substraer meses, regrese el inicio de cada mes
+						//date_sub($fecha, date_interval_create_from_date_string($i.' months'));
+						$dateMonth = date_format($fecha, 'Y-m-d');
+						array_push($datesArray, $dateMonth);
+						array_push($datesArray, $dateMonth);
+						}
+
+						//$fechaInicioMes = date_create($currentDate['year'].'-'.$currentDate['mon'].'-01');
+						//array_push($datesArray, date_format($fechaInicioMes, 'Y-m-d'));
+
+						$fecha = date_create( $dateToday );
+						array_push($datesArray, date_format($fecha, 'Y-m-d')); //Agregamos la fecha de hoy porque sacara lo que lleva del mes actual
+						
+						
+
+						return($datesArray); //Regresa todas las fechas del inicio de cada mes, y la fecha actual
+
+						break;
+				/************************************************************************/
+
+				case 'año':	$fecha = date_create( $dateToday );
+						//$fecha = date_create("2010-07-14");
+						date_sub($fecha, date_interval_create_from_date_string('1 year'));
+						$dateWeekBefore = date_format($fecha, 'Y-m-d');
+						array_push($datesArray, $dateWeekBefore);
+						array_push($datesArray, $dateToday);
+
+						return($datesArray);
+
+						break;
+				/************************************************************************/
+
+				default:	return false;
+			}
+
+	}
+
+
+
+
+
+
+
+	/*
+	*	GRAFICA DE VENTAS AL CONTADO EN GENERAL
+	*
+	*	params:
+	*		'dateRange' puede ser ['semana', 'mes', 'año']
+	*/
+	function graficaVentasContado(){
+
+		
+		//$array = getDateRangeGraphics('semana');
+		$params = array();
+
+		if( isset( $_REQUEST['dateRange']) )
+		{
+			$dateInterval = $_REQUEST['dateRange'];
+
+
+			//Escogemos el rango de tiempo para los datos (Semana, Mes, Año, Todos)	
+			$datesArray = getDateRangeGraphics($dateInterval);	
+
+			if( $datesArray != false )
+			{
+				/*array_push($params, $datesArray[0]);
+				array_push($params, $datesArray[1]);*/
+				$count = count($datesArray);
+				//$date = array_pop($datesArray);
+				//array_push($params, $date);
+				//if ( $dateInterval == 'semana') { array_push($params, $date); }
+				
+
+				for( $i=0; $i < $count ; $i++)
+				{
+					$date = $datesArray[ $i ];
+					array_push($params, $date);
+					//array_push($params, $date);		
+					//$qry_select .= " OR DATE( `ventas`.`fecha` ) BETWEEN ? AND ? ";
+				}
+
+				$newcount = $count/2;
+
+				/*
+				*	FORMAMOS EL QUERY PARA LA SEMANA
+				*/
+				if ( $dateInterval == 'semana')
+				{
+					$qry_select = "SELECT DAYOFWEEK(`ventas`.`fecha`) AS `x`, SUM(`subtotal`) AS `y` FROM `ventas` WHERE `ventas`.`tipo_venta` = 1 ";
+					$qry_select .= " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
+	
+					for( $j=0; $j < $newcount - 1 ; $j++)
+					{
+						$qry_select .= " OR DATE( `ventas`.`fecha` ) BETWEEN ? AND ? ";					
+					}
+
+					$qry_select .= "GROUP BY DAYOFWEEK(`ventas`.`fecha` )";
+				}
+
+				/*
+				*	FORMAMOS EL QUERY PARA EL MES
+				*/
+
+				if ( $dateInterval == 'mes')
+				{
+
+					$qry_select = "SELECT MONTH(`ventas`.`fecha`) AS `x`, SUM(`subtotal`) AS `y` FROM `ventas` WHERE `ventas`.`tipo_venta` = 1 ";
+					$qry_select .= " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
+
+					for( $j=0; $j < $count/2-1; $j++)
+					{
+						$qry_select .= " OR DATE( `ventas`.`fecha` ) BETWEEN ? AND ? ";					
+					}
+
+					$qry_select .= "GROUP BY MONTH(`ventas`.`fecha` )";
+				}
+				//var_dump($params);
+
+				
+				//echo $qry_select;
+
+				$listar = new listar($qry_select, $params);
+				echo $listar->lista();
+
+				return;
+				
+			}
+			else
+			{
+				fail("Bad Request: getRange");
+				return;
+			}
+
+
+
+			
+		}
+		else
+		{
+			fail('Faltan parametros');
+			return;
+		}
+
+	}
+	
 ?>

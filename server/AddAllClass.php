@@ -294,6 +294,7 @@
 		case 'vendedorMasProductivoSucursal':							vendedorMasProductivoSucursal(); break;
 		case 'productoMasVendidoSucursal':							productoMasVendidoSucursal(); break;
 		case 'clienteComprasTopSucursal' :							clienteComprasTopSucursal(); break;
+		case 'graficaVentasContado'	:							graficaVentasContado(); break;
 		//------
 		case 'listarProveedores': 								listarProveedores(); 	break;
 		case 'actualizarProveedor':								actualizarProveedor();	break;
