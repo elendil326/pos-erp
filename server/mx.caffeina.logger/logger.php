@@ -2,7 +2,7 @@
 /**
 * Archivo de configuración para el <i>logging</i> del sistema.
 *
-* Usa el <i>framework</i> <code>Log</code> para realizar el <i>log</i> del sistema,
+* Usa el <i>framework</i> <i>Log</i> para realizar el <i>log</i> del sistema,
 * este archivo solo configura la clase, hace una instancia y deja el objeto listo
 * para ser usado.
 *
@@ -10,9 +10,9 @@
 * Archivo donde se guardara el <i>log</i>.
 *
 * @internal El archivo debe existir y el usuario donde esta ejecutandose
-* el navegador, p.ej. <code>www-data</code> debe ser capaz de escribir 
+* el navegador, p.ej. <i>www-data</i> debe ser capaz de escribir 
 * en el archivo. Comunmente
-* <code># touch /var/log/php/app.log && chmod 777 /var/log/php/app.log</code>
+* <i># touch /var/log/php/app.log && chmod 777 /var/log/php/app.log</i>
 * son suficientes.
 *
 * Aplica al segundo parametro de {@link Log::singleton()}.
@@ -54,7 +54,7 @@
 * Prioridad del <i>log</i>.
 *
 * Establece el nivel de <i>logging</i> en el sistema. Usa los mismos
-* niveles de prioridad que {@link http://www.indelible.org/php/Log/guide.html#log-levels <code>Log</code>}.
+* niveles de prioridad que {@link http://www.indelible.org/php/Log/guide.html#log-levels <i>Log</i>}.
 *
 * Level                 |       Description
 * ----------------------|-------------------------
@@ -67,7 +67,7 @@
 * PEAR_LOG_INFO 	|       Informational
 * PEAR_LOG_DEBUG 	|       Debug-level messages
 *
-* Esta tabla esta ordenada de alta (<code>PEAR_LOG_EMERG</code>) a baja (<code>PEAR_LOG_DEBUG</code>) prioridad.
+* Esta tabla esta ordenada de alta (<i>PEAR_LOG_EMERG</i>) a baja (<i>PEAR_LOG_DEBUG</i>) prioridad.
 *
 * Aplica al quinto parametro de {@link Log::singleton()}.
 *
@@ -75,11 +75,11 @@
 * @package com.hdclass.logger
 * @link http://pear.php.net/package/Log Log
 * @author Manuel Alejandro Gómez Nicasio <alejandro.gomez@alejandrogomez.org>
-* @example logger.ex.php Uso de la clase <code>Logger</code>.
+* @example logger.ex.php Uso de la clase <i>Logger</i>.
 */
 
 /**
- * Framework <code>Log</code>
+ * Framework <i>Log</i>
  *
  * @link http://pear.php.net/package/Log/ Log
  */

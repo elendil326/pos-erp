@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+   <html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>File Source for logger.php</title>
+  <link rel="stylesheet" href="../media/stylesheet.css" />
+<!-- template designed by Julien Damon based on PHPEdit's generated templates, and tweaked by Greg Beaver -->
+<body bgcolor="#ffffff" ><h1 align="center">Source for file logger.php</h1>
+<p>Documentation is available at <a href="../com-hdclass-logger/_logger.php.html">logger.php</a></p>
+<div class="src-code">
+<div class="src-code"><ol><li><div class="src-line"><a name="a1"></a><strong>&lt;?php</strong></div></li>
+<li><div class="src-line"><a name="a2"></a><font color="#009999">/**</font></div></li>
+<li><div class="src-line"><a name="a3"></a><font color="#009999">*&nbsp;Archivo&nbsp;de&nbsp;configuración&nbsp;para&nbsp;el&nbsp;&lt;i&gt;logging&lt;/i&gt;&nbsp;del&nbsp;sistema.</font></div></li>
+<li><div class="src-line"><a name="a4"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a5"></a><font color="#009999">*&nbsp;Usa&nbsp;el&nbsp;&lt;i&gt;framework&lt;/i&gt;&nbsp;&lt;i&gt;Log&lt;/i&gt;&nbsp;para&nbsp;realizar&nbsp;el&nbsp;&lt;i&gt;log&lt;/i&gt;&nbsp;del&nbsp;sistema,</font></div></li>
+<li><div class="src-line"><a name="a6"></a><font color="#009999">*&nbsp;este&nbsp;archivo&nbsp;solo&nbsp;configura&nbsp;la&nbsp;clase,&nbsp;hace&nbsp;una&nbsp;instancia&nbsp;y&nbsp;deja&nbsp;el&nbsp;objeto&nbsp;listo</font></div></li>
+<li><div class="src-line"><a name="a7"></a><font color="#009999">*&nbsp;para&nbsp;ser&nbsp;usado.</font></div></li>
+<li><div class="src-line"><a name="a8"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a9"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a10"></a><font color="#009999">*&nbsp;Archivo&nbsp;donde&nbsp;se&nbsp;guardara&nbsp;el&nbsp;&lt;i&gt;log&lt;/i&gt;.</font></div></li>
+<li><div class="src-line"><a name="a11"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a12"></a><font color="#009999">*&nbsp;</font><strong><font color = "#0099FF">@internal</font></strong><font color="#009999">&nbsp;El&nbsp;archivo&nbsp;debe&nbsp;existir&nbsp;y&nbsp;el&nbsp;usuario&nbsp;donde&nbsp;esta&nbsp;ejecutandose</font></div></li>
+<li><div class="src-line"><a name="a13"></a><font color="#009999">*&nbsp;&nbsp;el&nbsp;navegador,&nbsp;p.ej.&nbsp;&lt;i&gt;www-data&lt;/i&gt;&nbsp;debe&nbsp;ser&nbsp;capaz&nbsp;de&nbsp;escribir</font></div></li>
+<li><div class="src-line"><a name="a14"></a><font color="#009999">*&nbsp;&nbsp;en&nbsp;el&nbsp;archivo.&nbsp;Comunmente</font></div></li>
+<li><div class="src-line"><a name="a15"></a><font color="#009999">*&nbsp;&nbsp;&lt;i&gt;#&nbsp;touch&nbsp;/var/log/php/app.log&nbsp;&amp;&amp;&nbsp;chmod&nbsp;777&nbsp;/var/log/php/app.log&lt;/i&gt;</font></div></li>
+<li><div class="src-line"><a name="a16"></a><font color="#009999">*&nbsp;&nbsp;son&nbsp;suficientes.</font></div></li>
+<li><div class="src-line"><a name="a17"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a18"></a><font color="#009999">*&nbsp;&nbsp;Aplica&nbsp;al&nbsp;segundo&nbsp;parametro&nbsp;de&nbsp;</font><em><font color="#0099FF">{@link&nbsp;Log::singleton()}</font></em><font color="#009999">.</font></div></li>
+<li><div class="src-line"><a name="a19"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a20"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a21"></a><font color="#009999">*&nbsp;&nbsp;Identificación&nbsp;primaria&nbsp;del&nbsp;sistema&nbsp;en&nbsp;el&nbsp;archivo&nbsp;de&nbsp;&lt;i&gt;log&lt;/i&gt;.</font></div></li>
+<li><div class="src-line"><a name="a22"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a23"></a><font color="#009999">*&nbsp;&nbsp;Se&nbsp;puede&nbsp;especificar&nbsp;otra&nbsp;identificación&nbsp;usando&nbsp;el&nbsp;método&nbsp;</font><em><font color="#0099FF">{@link&nbsp;Log::setIdent()}</font></em></div></li>
+<li><div class="src-line"><a name="a24"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a25"></a><font color="#009999">*&nbsp;&nbsp;Aplica&nbsp;el&nbsp;tercer&nbsp;parametro&nbsp;de&nbsp;</font><em><font color="#0099FF">{@link&nbsp;Log::singleton()}</font></em></div></li>
+<li><div class="src-line"><a name="a26"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a27"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a28"></a><font color="#009999">*&nbsp;&nbsp;Parametros&nbsp;de&nbsp;configuración&nbsp;para&nbsp;la&nbsp;línea&nbsp;de&nbsp;log.</font></div></li>
+<li><div class="src-line"><a name="a29"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a30"></a><font color="#009999">*&nbsp;&nbsp;Parameter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Type&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Default&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Description</font></div></li>
+<li><div class="src-line"><a name="a31"></a><font color="#009999">*&nbsp;&nbsp;==============|===============|===============================|===============================================================</font></div></li>
+<li><div class="src-line"><a name="a32"></a><font color="#009999">*&nbsp;&nbsp;append&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Boolean&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;True&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Should&nbsp;new&nbsp;log&nbsp;entries&nbsp;be&nbsp;append&nbsp;to&nbsp;an&nbsp;existing&nbsp;log&nbsp;file,&nbsp;or&nbsp;should&nbsp;the&nbsp;a&nbsp;new&nbsp;log&nbsp;file&nbsp;overwrite&nbsp;an&nbsp;existing&nbsp;one?</font></div></li>
+<li><div class="src-line"><a name="a33"></a><font color="#009999">*&nbsp;&nbsp;mode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Integer&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;0644&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Octal&nbsp;representation&nbsp;of&nbsp;the&nbsp;log&nbsp;file's&nbsp;permissions&nbsp;mode.</font></div></li>
+<li><div class="src-line"><a name="a34"></a><font color="#009999">*&nbsp;&nbsp;eol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OS&nbsp;default&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;end-on-line&nbsp;character&nbsp;sequence.</font></div></li>
+<li><div class="src-line"><a name="a35"></a><font color="#009999">*&nbsp;&nbsp;lineFormat&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%1$s&nbsp;%2$s&nbsp;[%3$s]&nbsp;%4$s&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Log&nbsp;line&nbsp;format&nbsp;specification.</font></div></li>
+<li><div class="src-line"><a name="a36"></a><font color="#009999">*&nbsp;&nbsp;timeFormat&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%b&nbsp;%d&nbsp;%H:%M:%S&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Time&nbsp;stamp&nbsp;format&nbsp;(for&nbsp;strftime).</font></div></li>
+<li><div class="src-line"><a name="a37"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a38"></a><font color="#009999">*&nbsp;&nbsp;Donde&nbsp;lineFormat&nbsp;acepta&nbsp;los&nbsp;siguientes&nbsp;parametros.</font></div></li>
+<li><div class="src-line"><a name="a39"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a40"></a><font color="#009999">*&nbsp;&nbsp;Token&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Alternate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Description</font></div></li>
+<li><div class="src-line"><a name="a41"></a><font color="#009999">*================|=======================|==================================================</font></div></li>
+<li><div class="src-line"><a name="a42"></a><font color="#009999">*&nbsp;&nbsp;%{timestamp}&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%1$s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Timestamp.&nbsp;This&nbsp;is&nbsp;often&nbsp;configurable.</font></div></li>
+<li><div class="src-line"><a name="a43"></a><font color="#009999">*&nbsp;&nbsp;%{ident}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%2$s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;log&nbsp;handler's&nbsp;identification&nbsp;string.</font></div></li>
+<li><div class="src-line"><a name="a44"></a><font color="#009999">*&nbsp;&nbsp;%{priority}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%3$s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;log&nbsp;event's&nbsp;priority.</font></div></li>
+<li><div class="src-line"><a name="a45"></a><font color="#009999">*&nbsp;&nbsp;%{message}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%4$s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;log&nbsp;event's&nbsp;message&nbsp;text.</font></div></li>
+<li><div class="src-line"><a name="a46"></a><font color="#009999">*&nbsp;&nbsp;%{file}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%5$s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;full&nbsp;filename&nbsp;of&nbsp;the&nbsp;logging&nbsp;file.</font></div></li>
+<li><div class="src-line"><a name="a47"></a><font color="#009999">*&nbsp;&nbsp;%{line}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%6$s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;line&nbsp;number&nbsp;on&nbsp;which&nbsp;the&nbsp;event&nbsp;occured.</font></div></li>
+<li><div class="src-line"><a name="a48"></a><font color="#009999">*&nbsp;&nbsp;%{function}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%7$s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;function&nbsp;from&nbsp;which&nbsp;the&nbsp;event&nbsp;occurred.</font></div></li>
+<li><div class="src-line"><a name="a49"></a><font color="#009999">*&nbsp;&nbsp;%{class}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%8$s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;class&nbsp;in&nbsp;which&nbsp;the&nbsp;event&nbsp;occurred.</font></div></li>
+<li><div class="src-line"><a name="a50"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a51"></a><font color="#009999">*&nbsp;&nbsp;Aplica&nbsp;al&nbsp;cuarto&nbsp;parametro&nbsp;de&nbsp;</font><em><font color="#0099FF">{@link&nbsp;Log::singleton()}</font></em></div></li>
+<li><div class="src-line"><a name="a52"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a53"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a54"></a><font color="#009999">*&nbsp;&nbsp;Prioridad&nbsp;del&nbsp;&lt;i&gt;log&lt;/i&gt;.</font></div></li>
+<li><div class="src-line"><a name="a55"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a56"></a><font color="#009999">*&nbsp;&nbsp;Establece&nbsp;el&nbsp;nivel&nbsp;de&nbsp;&lt;i&gt;logging&lt;/i&gt;&nbsp;en&nbsp;el&nbsp;sistema.&nbsp;Usa&nbsp;los&nbsp;mismos</font></div></li>
+<li><div class="src-line"><a name="a57"></a><font color="#009999">*&nbsp;&nbsp;niveles&nbsp;de&nbsp;prioridad&nbsp;que&nbsp;</font><em><font color="#0099FF">{@link&nbsp;http://www.indelible.org/php/Log/guide.html#log-levels&nbsp;&lt;i&gt;Log&lt;/i&gt;}</font></em><font color="#009999">.</font></div></li>
+<li><div class="src-line"><a name="a58"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a59"></a><font color="#009999">*&nbsp;&nbsp;Level&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Description</font></div></li>
+<li><div class="src-line"><a name="a60"></a><font color="#009999">*&nbsp;&nbsp;----------------------|-------------------------</font></div></li>
+<li><div class="src-line"><a name="a61"></a><font color="#009999">*&nbsp;&nbsp;PEAR_LOG_EMERG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System&nbsp;is&nbsp;unusable</font></div></li>
+<li><div class="src-line"><a name="a62"></a><font color="#009999">*&nbsp;&nbsp;PEAR_LOG_ALERT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Immediate&nbsp;action&nbsp;required</font></div></li>
+<li><div class="src-line"><a name="a63"></a><font color="#009999">*&nbsp;&nbsp;PEAR_LOG_CRIT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Critical&nbsp;conditions</font></div></li>
+<li><div class="src-line"><a name="a64"></a><font color="#009999">*&nbsp;&nbsp;PEAR_LOG_ERR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error&nbsp;conditions</font></div></li>
+<li><div class="src-line"><a name="a65"></a><font color="#009999">*&nbsp;&nbsp;PEAR_LOG_WARNING&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Warning&nbsp;conditions</font></div></li>
+<li><div class="src-line"><a name="a66"></a><font color="#009999">*&nbsp;&nbsp;PEAR_LOG_NOTICE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Normal&nbsp;but&nbsp;significant</font></div></li>
+<li><div class="src-line"><a name="a67"></a><font color="#009999">*&nbsp;&nbsp;PEAR_LOG_INFO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Informational</font></div></li>
+<li><div class="src-line"><a name="a68"></a><font color="#009999">*&nbsp;&nbsp;PEAR_LOG_DEBUG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Debug-level&nbsp;messages</font></div></li>
+<li><div class="src-line"><a name="a69"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a70"></a><font color="#009999">*&nbsp;&nbsp;Esta&nbsp;tabla&nbsp;esta&nbsp;ordenada&nbsp;de&nbsp;alta&nbsp;(&lt;i&gt;PEAR_LOG_EMERG&lt;/i&gt;)&nbsp;a&nbsp;baja&nbsp;(&lt;i&gt;PEAR_LOG_DEBUG&lt;/i&gt;)&nbsp;prioridad.</font></div></li>
+<li><div class="src-line"><a name="a71"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a72"></a><font color="#009999">*&nbsp;&nbsp;Aplica&nbsp;al&nbsp;quinto&nbsp;parametro&nbsp;de&nbsp;</font><em><font color="#0099FF">{@link&nbsp;Log::singleton()}</font></em><font color="#009999">.</font></div></li>
+<li><div class="src-line"><a name="a73"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a74"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a75"></a><font color="#009999">*&nbsp;</font><strong><font color = "#0099FF">@package</font></strong><font color="#009999">&nbsp;com.hdclass.logger</font></div></li>
+<li><div class="src-line"><a name="a76"></a><font color="#009999">*&nbsp;</font><strong><font color = "#0099FF">@link</font></strong><font color="#009999">&nbsp;http://pear.php.net/package/Log&nbsp;Log</font></div></li>
+<li><div class="src-line"><a name="a77"></a><font color="#009999">*&nbsp;</font><strong><font color = "#0099FF">@author</font></strong><font color="#009999">&nbsp;Manuel&nbsp;Alejandro&nbsp;Gómez&nbsp;Nicasio&nbsp;&lt;alejandro.gomez@alejandrogomez.org&gt;</font></div></li>
+<li><div class="src-line"><a name="a78"></a><font color="#009999">*&nbsp;</font><strong><font color = "#0099FF">@example</font></strong><font color="#009999">&nbsp;logger.ex.php&nbsp;Uso&nbsp;de&nbsp;la&nbsp;clase&nbsp;&lt;i&gt;Logger&lt;/i&gt;.</font></div></li>
+<li><div class="src-line"><a name="a79"></a><font color="#009999">*/</font></div></li>
+<li><div class="src-line"><a name="a80"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a81"></a><font color="#009999">/**</font></div></li>
+<li><div class="src-line"><a name="a82"></a><font color="#009999">&nbsp;*&nbsp;Framework&nbsp;&lt;i&gt;Log&lt;/i&gt;</font></div></li>
+<li><div class="src-line"><a name="a83"></a><font color="#009999">&nbsp;*</font></div></li>
+<li><div class="src-line"><a name="a84"></a><font color="#009999">&nbsp;*&nbsp;</font><strong><font color = "#0099FF">@link</font></strong><font color="#009999">&nbsp;http://pear.php.net/package/Log/&nbsp;Log</font></div></li>
+<li><div class="src-line"><a name="a85"></a><font color="#009999">&nbsp;*/</font></div></li>
+<li><div class="src-line"><a name="a86"></a><font color="blue">require_once</font><strong>(</strong><font color="#66cccc">'Log.php'</font><strong>)</strong><strong>;</strong></div></li>
+<li><div class="src-line"><a name="a87"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a88"></a><strong>$conf&nbsp;</strong>=&nbsp;array<strong>(</strong><font color="#66cccc">'lineFormat'&nbsp;</font>=&gt;&nbsp;<font color="#66cccc">'%1$s&nbsp;%2$s&nbsp;[%3$s]&nbsp;%4$s&nbsp;in&nbsp;%5$s&nbsp;on&nbsp;line&nbsp;%6$s'</font><strong>)</strong><strong>;</strong></div></li>
+<li><div class="src-line"><a name="a89"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a90"></a><strong>$logger&nbsp;</strong>=&nbsp;<strong>&amp;</strong>Log<strong>::</strong>singleton<strong>(</strong><font color="#66cccc">'file'</font><strong>,&nbsp;</strong><font color="#66cccc">'/var/log/php/app.log'</font><strong>,&nbsp;</strong><font color="#66cccc">'SYSTEM&nbsp;CORE'</font><strong>,&nbsp;</strong><strong>$conf</strong><strong>,&nbsp;</strong>PEAR_LOG_DEBUG<strong>)</strong><strong>;</strong></div></li>
+</ol></div>
+</div>
+	<div id="credit">
+		<hr />
+		Documentation generated on Fri, 16 Jul 2010 16:12:11 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</div>
+</body>
+</html>
