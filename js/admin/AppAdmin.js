@@ -124,6 +124,23 @@ AppAdmin.prototype.addGraph = function(config){
 	$(renderToSelector).append(graph);
 	graph.appendChild(canvas);
 	
+	
+	/*
+	var options = {
+	   "IECanvasHTC": "/plotkit/iecanvas.htc",
+	   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
+	   "padding": {left: 0, right: 0, top: 10, bottom: 30},
+	   "xTicks": [{v:0, label:"zero"}, 
+		  {v:1, label:"one"}, 
+		  {v:2, label:"two"},
+		  {v:3, label:"three"},
+		  {v:4, label:"four"}],
+	   "drawYAxis": false
+	};
+	
+	*/
+	
+	
 	if(config.remoteData)
 	{
 		AppAdmin.request({
@@ -132,25 +149,30 @@ AppAdmin.prototype.addGraph = function(config){
 			success: function(msg){
 		
 				var dataPair = [];
+				var options;
+				options.xTicks = [];
 				var x;
 				var y;
+				var v;
+				var label;
 
 				for( var i=0; i < msg.datos.length ; i++ )
 				{
 					x = parseInt(msg.datos[i].x);
 					y = parseFloat(msg.datos[i].y);
 					dataPair.push([  x, y ]);
+					options.xTicks.push({v:x, label :msg.datos[i].label});
 				}
 		
 				if(DEBUG) { console.log(dataPair); }
 			
 			
-				var layout = new PlotKit.Layout(config.tipo, {});
+				var layout = new PlotKit.Layout(config.tipo, options);
 			
 				layout.addDataset("sqrt", dataPair);
 				layout.evaluate();
 				var canvas = MochiKit.DOM.getElement(config.canvasID);
-				var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, {});
+				var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, options);
 	
 				MochiKit.DOM.addLoadEvent(plotter.render());
 			
@@ -225,13 +247,69 @@ AppAdmin.prototype.addGraphWithTitle = function(config){
 	$(wrapperSelector).addClass('wrapper');
 	$(titleSelector).addClass('title-graph');
 	
-
+	/*
 	var layout = new PlotKit.Layout(config.tipo, {});
 	layout.addDataset("sqrt", config.data);
 	layout.evaluate();
 	var canvas = MochiKit.DOM.getElement(config.canvasID);
 	var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, {});
-	plotter.render();
+	plotter.render();*/
+	
+	if(config.remoteData)
+	{
+		AppAdmin.request({
+			url: config.url,
+			data: config.params,
+			success: function(msg){
+		
+				var dataPair = [];
+				var options;
+				options.xTicks = [];
+				var x;
+				var y;
+				var v;
+				var label;
+
+				for( var i=0; i < msg.datos.length ; i++ )
+				{
+					x = parseInt(msg.datos[i].x);
+					y = parseFloat(msg.datos[i].y);
+					dataPair.push([  x, y ]);
+					options.xTicks.push({v:x, label :msg.datos[i].label});
+				}
+		
+				if(DEBUG) { console.log(dataPair); }
+			
+			
+				var layout = new PlotKit.Layout(config.tipo, options);
+			
+				layout.addDataset("sqrt", dataPair);
+				layout.evaluate();
+				var canvas = MochiKit.DOM.getElement(config.canvasID);
+				var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, options);
+	
+				MochiKit.DOM.addLoadEvent(plotter.render());
+			
+				config.success(msg);
+			},
+			failure: function(msg){
+		
+				if(DEBUG) { console.error('error de ajax en las graficas'); }
+			}
+			});
+	
+	}
+	else
+	{
+		var layout = new PlotKit.Layout(config.tipo, {});
+			
+		layout.addDataset("sqrt", config.data);
+		layout.evaluate();
+		var canvas = MochiKit.DOM.getElement(config.canvasID);
+		var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, {});
+
+		MochiKit.DOM.addLoadEvent(plotter.render());
+	}
 
 }
 

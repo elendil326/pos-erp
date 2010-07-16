@@ -14,7 +14,8 @@ $(document).ready(function() {
 	appAdmin = new AppAdmin();
 
 	//ejemplo de cargar grafica con datos hardcoded	
-	appAdmin.addGraph({
+	appAdmin.addGraphWithTitle({
+			title: 'test',
 			width:350, 
 			height:150,
 			renderTo: 'content',
