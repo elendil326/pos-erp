@@ -1188,9 +1188,12 @@ y algunas otras funciones
 	function getDateRangeGraphics($dateInterval){
 
 		$datesArray = array();
+		$params = array();
 		$currentDate = getdate();
 		$dateToday = $currentDate['year'].'-'.$currentDate['mon'].'-'.$currentDate['mday'];
 
+
+		//**** ESTE SWITCH NOS REGRESA UN ARREGLO CON TODAS LAS FECHAS QUE QUEREMOS ANALIZAR******//
 		switch($dateInterval)
 			{
 				case 'semana': 	$fecha = date_create( $dateToday );
@@ -1211,7 +1214,7 @@ y algunas otras funciones
 						{
 							$weekControl = $currentDate['wday'];
 						}
-
+						//Obtenemos las fechas desde hoy, hasta el inicio de semana (Lunes) y lo guardamos en un arreglo
 						for ( $i=2; $i < $weekControl ; $i++ )
 						{
 							$fecha = date_create( $dateToday );
@@ -1222,12 +1225,48 @@ y algunas otras funciones
 						}
 						//var_dump($datesArray);
 	
-						return($datesArray);
+						//return($datesArray);
 
 						break;
 				/************************************************************************/
 
-				case 'mes':	//$fecha = date_create("2010-07-14");
+				case 'mes':	$fecha = date_create( $dateToday );
+						$today = date_format($fecha, 'Y-m-d');
+						array_push($datesArray, $today);
+						array_push($datesArray, $today);
+						//$fecha = date_create("2010-07-14");
+						date_sub($fecha, date_interval_create_from_date_string('1 day')); //A la fecha de hoy le quitamos un dia
+						$dateDayBefore = date_format($fecha, 'Y-m-d');
+						array_push($datesArray, $dateDayBefore);
+						array_push($datesArray, $dateDayBefore);						
+
+						/*if ( $currentDate['wday'] == 0)
+						{
+							$weekControl = 7;
+						}
+						else
+						{
+							$weekControl = $currentDate['wday'];
+						}*/
+						$monthControl = $currentDate['mday'];
+						//Obtenemos las fechas desde hoy, hasta el inicio de semana (Lunes) y lo guardamos en un arreglo
+						for ( $i=2; $i < $monthControl ; $i++ )
+						{
+							$fecha = date_create( $dateToday );
+							date_sub( $fecha, date_interval_create_from_date_string( $i.' days') ); //A la fecha de hoy le vamos quitando i dias para formar un arreglo de fechas
+							$dateDayBefore = date_format($fecha, 'Y-m-d');
+							array_push($datesArray, $dateDayBefore);
+							array_push($datesArray, $dateDayBefore);
+						}
+						//var_dump($datesArray);
+	
+						//return($datesArray);
+
+						break;
+
+				/************************************************************************/
+
+				case 'año':	//$fecha = date_create("2010-07-14");
 
 						$fecha = date_create($currentDate['year'].'-01-01'); //Ponemos el inicio de mes para que al substraer meses, regrese el inicio de cada mes
 						//date_sub($fecha, date_interval_create_from_date_string($i.' months'));
@@ -1251,29 +1290,85 @@ y algunas otras funciones
 						
 						
 
-						return($datesArray); //Regresa todas las fechas del inicio de cada mes, y la fecha actual
+						//return($datesArray); //Regresa todas las fechas del inicio de cada mes, y la fecha actual
 
 						break;
 				/************************************************************************/
 
-				case 'año':	$fecha = date_create( $dateToday );
-						//$fecha = date_create("2010-07-14");
-						date_sub($fecha, date_interval_create_from_date_string('1 year'));
-						$dateWeekBefore = date_format($fecha, 'Y-m-d');
-						array_push($datesArray, $dateWeekBefore);
-						array_push($datesArray, $dateToday);
+				default:	$datesArray = false;
 
-						return($datesArray);
-
-						break;
-				/************************************************************************/
-
-				default:	return false;
 			}
 
+		if( $datesArray != false )
+		{
+				$count = count($datesArray);
+				
+
+				for( $i=0; $i < $count ; $i++)
+				{
+					$date = $datesArray[ $i ];
+					array_push($params, $date);
+			
+				}
+
+				$newcount = $count/2;
+
+				/*
+				*	FORMAMOS EL QUERY PARA LA SEMANA
+				*/
+				if ( $dateInterval == 'semana')
+				{
+					$qry_select = " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
+	
+					for( $j=0; $j < $newcount - 1 ; $j++)
+					{
+						$qry_select .= " OR DATE( `ventas`.`fecha` ) BETWEEN ? AND ? ";					
+					}
+
+					$qry_select .= "GROUP BY DAYOFWEEK(`ventas`.`fecha` )";
+				}
+
+				/*
+				*	FORMAMOS EL QUERY PARA EL MES
+				*/
+
+				if ( $dateInterval == 'mes')
+				{
+					$qry_select = " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
+	
+					for( $j=0; $j < $newcount - 1 ; $j++)
+					{
+						$qry_select .= " OR DATE( `ventas`.`fecha` ) BETWEEN ? AND ? ";					
+					}
+
+					$qry_select .= "GROUP BY DAYOFMONTH(`ventas`.`fecha` )";
+
+
+				}
+				//var_dump($params);
+
+				if ($dateInterval == 'año')
+				{
+					$qry_select = " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
+
+					for( $j=0; $j < $count/2-1; $j++)
+					{
+						$qry_select .= " OR DATE( `ventas`.`fecha` ) BETWEEN ? AND ? ";					
+					}
+
+					$qry_select .= "GROUP BY MONTH(`ventas`.`fecha` )";
+				}
+
+				array_push($params, $qry_select);
+				return $params;
+
+	}
+	else
+	{
+		return false;
 	}
 
-
+}
 
 
 
@@ -1296,68 +1391,31 @@ y algunas otras funciones
 			$dateInterval = $_REQUEST['dateRange'];
 
 
-			//Escogemos el rango de tiempo para los datos (Semana, Mes, Año, Todos)	
-			$datesArray = getDateRangeGraphics($dateInterval);	
-
-			if( $datesArray != false )
+			//getDateRangeGraphics nos regresa un arreglo con todas las fechas para la consulta, y el ultimo dato es la consulta
+			$qry_select = getDateRangeGraphics($dateInterval);	
+			
+			//La clausula SELECT, FROM y WHERE la agregamos nosotros, esta es la que cambia
+			switch( $dateInterval ) 
 			{
-				/*array_push($params, $datesArray[0]);
-				array_push($params, $datesArray[1]);*/
-				$count = count($datesArray);
-				//$date = array_pop($datesArray);
-				//array_push($params, $date);
-				//if ( $dateInterval == 'semana') { array_push($params, $date); }
-				
+				case 'semana'	: $qry = "SELECT DAYOFWEEK(`ventas`.`fecha`) AS `x`, SUM(`subtotal`) AS `y`, DAYNAME(`ventas`.`fecha`) AS `label` FROM `ventas` WHERE `ventas`.`tipo_venta` = 1 ";
+						break;
+				case 'mes'	: $qry = "SELECT DAYOFMONTH(`ventas`.`fecha`) AS `x`, SUM(`subtotal`) AS `y`, DAYOFMONTH(`ventas`.`fecha`) AS `label` FROM `ventas` WHERE `ventas`.`tipo_venta` = 1 ";
+						break;
+				case 'año'	: $qry = "SELECT MONTH(`ventas`.`fecha`) AS `x`, SUM(`subtotal`) AS `y`, MONTHNAME(`ventas`.`fecha`) AS `label` FROM `ventas` WHERE `ventas`.`tipo_venta` = 1 ";
+						break;
+				default: break;
+			}
 
-				for( $i=0; $i < $count ; $i++)
-				{
-					$date = $datesArray[ $i ];
-					array_push($params, $date);
-					//array_push($params, $date);		
-					//$qry_select .= " OR DATE( `ventas`.`fecha` ) BETWEEN ? AND ? ";
-				}
 
-				$newcount = $count/2;
 
-				/*
-				*	FORMAMOS EL QUERY PARA LA SEMANA
-				*/
-				if ( $dateInterval == 'semana')
-				{
-					$qry_select = "SELECT DAYOFWEEK(`ventas`.`fecha`) AS `x`, SUM(`subtotal`) AS `y` FROM `ventas` WHERE `ventas`.`tipo_venta` = 1 ";
-					$qry_select .= " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
-	
-					for( $j=0; $j < $newcount - 1 ; $j++)
-					{
-						$qry_select .= " OR DATE( `ventas`.`fecha` ) BETWEEN ? AND ? ";					
-					}
 
-					$qry_select .= "GROUP BY DAYOFWEEK(`ventas`.`fecha` )";
-				}
-
-				/*
-				*	FORMAMOS EL QUERY PARA EL MES
-				*/
-
-				if ( $dateInterval == 'mes')
-				{
-
-					$qry_select = "SELECT MONTH(`ventas`.`fecha`) AS `x`, SUM(`subtotal`) AS `y` FROM `ventas` WHERE `ventas`.`tipo_venta` = 1 ";
-					$qry_select .= " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
-
-					for( $j=0; $j < $count/2-1; $j++)
-					{
-						$qry_select .= " OR DATE( `ventas`.`fecha` ) BETWEEN ? AND ? ";					
-					}
-
-					$qry_select .= "GROUP BY MONTH(`ventas`.`fecha` )";
-				}
-				//var_dump($params);
-
-				
+			
+			if ( $qry_select != false )
+			{			
 				//echo $qry_select;
 
-				$listar = new listar($qry_select, $params);
+				//Usamos arraypop para enviarle la consulta ya que el arreglo tiene la consulta en su ultimo dato
+				$listar = new listar( $qry.array_pop($qry_select), $qry_select);
 				echo $listar->lista();
 
 				return;
@@ -1365,7 +1423,7 @@ y algunas otras funciones
 			}
 			else
 			{
-				fail("Bad Request: getRange");
+				fail("Bad Request: dateRange");
 				return;
 			}
 
