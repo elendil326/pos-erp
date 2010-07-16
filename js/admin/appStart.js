@@ -27,19 +27,20 @@ $(document).ready(function() {
 			});
 			
 	//ejemplo cargar grafica mediante datos json
-	appAdmin.addGraph({
+	appAdmin.addGraphWithTitle({
+			title: 'Ventas de Contado por Mes',
 			width:350, 
 			height:150,
 			renderTo: 'content',
 			divID: 'graph-2',
 			canvasID: 'canvas-2',
-			tipo: 'pie',
+			tipo: 'bar',
 			remoteData: true,
 			url: "../serverProxy.php",
 			params: {dateRange : 'year', method: 'graficaVentasContado'},
 			success: function(msg){
 					
-					alert(msg.success);
+					//alert(msg.success);
 				},
 			failure: function(msg){
 			

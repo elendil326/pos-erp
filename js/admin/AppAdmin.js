@@ -161,8 +161,8 @@ AppAdmin.prototype.addGraph = function(config){
 					{
 						x = parseInt(msg.datos[i].x);
 						y = parseFloat(msg.datos[i].y);
-						dataPair.push([  x, y ]);
-						options.xTicks.push({v:x, label :msg.datos[i].label});
+						dataPair.push([  i, y ]);
+						options.xTicks.push({v:i, label :msg.datos[i].label});
 					}
 		
 					if(DEBUG) { console.log(dataPair); }
@@ -281,8 +281,8 @@ AppAdmin.prototype.addGraphWithTitle = function(config){
 					{
 						x = parseInt(msg.datos[i].x);
 						y = parseFloat(msg.datos[i].y);
-						dataPair.push([  x, y ]);
-						options.xTicks.push({v:x, label :msg.datos[i].label});
+						dataPair.push([  i, y ]);
+						options.xTicks.push({v:i, label :msg.datos[i].label});
 					}
 		
 					if(DEBUG) { console.log(dataPair); }
