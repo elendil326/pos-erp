@@ -148,35 +148,41 @@ AppAdmin.prototype.addGraph = function(config){
 			data: config.params,
 			success: function(msg){
 		
-				var dataPair = [];
-				var options;
-				options.xTicks = [];
-				var x;
-				var y;
-				var v;
-				var label;
-
-				for( var i=0; i < msg.datos.length ; i++ )
+				if(msg.success)
 				{
-					x = parseInt(msg.datos[i].x);
-					y = parseFloat(msg.datos[i].y);
-					dataPair.push([  x, y ]);
-					options.xTicks.push({v:x, label :msg.datos[i].label});
-				}
+					var dataPair = [];
+					var options = { xTicks:[] };
+					var x;
+					var y;
+					var v;
+					var label;
+
+					for( var i=0; i < msg.datos.length ; i++ )
+					{
+						x = parseInt(msg.datos[i].x);
+						y = parseFloat(msg.datos[i].y);
+						dataPair.push([  x, y ]);
+						options.xTicks.push({v:x, label :msg.datos[i].label});
+					}
 		
-				if(DEBUG) { console.log(dataPair); }
+					if(DEBUG) { console.log(dataPair); }
 			
 			
-				var layout = new PlotKit.Layout(config.tipo, options);
+					var layout = new PlotKit.Layout(config.tipo, options);
 			
-				layout.addDataset("sqrt", dataPair);
-				layout.evaluate();
-				var canvas = MochiKit.DOM.getElement(config.canvasID);
-				var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, options);
+					layout.addDataset("sqrt", dataPair);
+					layout.evaluate();
+					var canvas = MochiKit.DOM.getElement(config.canvasID);
+					var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, options);
 	
-				MochiKit.DOM.addLoadEvent(plotter.render());
+					MochiKit.DOM.addLoadEvent(plotter.render());
 			
-				config.success(msg);
+					config.success(msg);
+				}
+				else
+				{
+					if(DEBUG) { console.error('error de ajax en las graficas'); }
+				}
 			},
 			failure: function(msg){
 		
@@ -262,35 +268,41 @@ AppAdmin.prototype.addGraphWithTitle = function(config){
 			data: config.params,
 			success: function(msg){
 		
-				var dataPair = [];
-				var options;
-				options.xTicks = [];
-				var x;
-				var y;
-				var v;
-				var label;
-
-				for( var i=0; i < msg.datos.length ; i++ )
+				if(msg.success)
 				{
-					x = parseInt(msg.datos[i].x);
-					y = parseFloat(msg.datos[i].y);
-					dataPair.push([  x, y ]);
-					options.xTicks.push({v:x, label :msg.datos[i].label});
-				}
+					var dataPair = [];
+					var options = { xTicks:[] };
+					var x;
+					var y;
+					var v;
+					var label;
+
+					for( var i=0; i < msg.datos.length ; i++ )
+					{
+						x = parseInt(msg.datos[i].x);
+						y = parseFloat(msg.datos[i].y);
+						dataPair.push([  x, y ]);
+						options.xTicks.push({v:x, label :msg.datos[i].label});
+					}
 		
-				if(DEBUG) { console.log(dataPair); }
+					if(DEBUG) { console.log(dataPair); }
 			
 			
-				var layout = new PlotKit.Layout(config.tipo, options);
+					var layout = new PlotKit.Layout(config.tipo, options);
 			
-				layout.addDataset("sqrt", dataPair);
-				layout.evaluate();
-				var canvas = MochiKit.DOM.getElement(config.canvasID);
-				var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, options);
+					layout.addDataset("sqrt", dataPair);
+					layout.evaluate();
+					var canvas = MochiKit.DOM.getElement(config.canvasID);
+					var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, options);
 	
-				MochiKit.DOM.addLoadEvent(plotter.render());
+					MochiKit.DOM.addLoadEvent(plotter.render());
 			
-				config.success(msg);
+					config.success(msg);
+				}
+				else
+				{
+					if(DEBUG) { console.error('error de ajax en las graficas'); }
+				}
 			},
 			failure: function(msg){
 		
