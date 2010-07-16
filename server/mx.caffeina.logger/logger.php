@@ -9,12 +9,6 @@
 *
 * Archivo donde se guardara el <i>log</i>.
 *
-* @internal El archivo debe existir y el usuario donde esta ejecutandose
-* el navegador, p.ej. <i>www-data</i> debe ser capaz de escribir 
-* en el archivo. Comunmente
-* <i># touch /var/log/php/app.log && chmod 777 /var/log/php/app.log</i>
-* son suficientes.
-*
 * Aplica al segundo parametro de {@link Log::singleton()}.
 *
 *
@@ -26,7 +20,7 @@
 *
 *
 * Parametros de configuración para la línea de log.
-*
+* <pre>
 * Parameter     |       Type    | 	Default                 | 	Description
 * ==============|===============|===============================|===============================================================
 * append 	|       Boolean |	True                    |       Should new log entries be append to an existing log file, or should the a new log file overwrite an existing one?
@@ -34,9 +28,9 @@
 * eol           |       String 	|       OS default 	        |       The end-on-line character sequence.
 * lineFormat    |       String 	|       %1$s %2$s [%3$s] %4$s   | 	Log line format specification.
 * timeFormat    |       String 	|       %b %d %H:%M:%S 	        |       Time stamp format (for strftime).
-*
+* </pre>
 * Donde lineFormat acepta los siguientes parametros.
-*
+* <pre>
 * Token         |       Alternate       | 	Description
 *===============|=======================|==================================================
 * %{timestamp}  | 	%1$s            |       Timestamp. This is often configurable.
@@ -47,15 +41,15 @@
 * %{line} 	|       %6$s 	        |       The line number on which the event occured.
 * %{function} 	|       %7$s 	        |       The function from which the event occurred.
 * %{class} 	|       %8$s 	        |       The class in which the event occurred.
-*
+* </pre>
 * Aplica al cuarto parametro de {@link Log::singleton()}
 *
 *
 * Prioridad del <i>log</i>.
 *
 * Establece el nivel de <i>logging</i> en el sistema. Usa los mismos
-* niveles de prioridad que {@link http://www.indelible.org/php/Log/guide.html#log-levels <i>Log</i>}.
-*
+* niveles de prioridad que {@link http://www.indelible.org/php/Log/guide.html#log-levels Log}.
+* <pre>
 * Level                 |       Description
 * ----------------------|-------------------------
 * PEAR_LOG_EMERG        |       System is unusable
@@ -66,7 +60,7 @@
 * PEAR_LOG_NOTICE 	|       Normal but significant
 * PEAR_LOG_INFO 	|       Informational
 * PEAR_LOG_DEBUG 	|       Debug-level messages
-*
+* </pre>
 * Esta tabla esta ordenada de alta (<i>PEAR_LOG_EMERG</i>) a baja (<i>PEAR_LOG_DEBUG</i>) prioridad.
 *
 * Aplica al quinto parametro de {@link Log::singleton()}.
@@ -76,6 +70,12 @@
 * @link http://pear.php.net/package/Log Log
 * @author Manuel Alejandro Gómez Nicasio <alejandro.gomez@alejandrogomez.org>
 * @example logger.ex.php Uso de la clase <i>Logger</i>.
+*
+* @internal El archivo debe existir y el usuario donde esta ejecutandose
+* el navegador, p.ej. <i>www-data</i> debe ser capaz de escribir 
+* en el archivo. Comunmente
+* <i># touch /var/log/php/app.log && chmod 777 /var/log/php/app.log</i>
+* son suficientes.
 */
 
 /**

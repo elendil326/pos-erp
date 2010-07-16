@@ -97,11 +97,35 @@ tp1 = new WebFXTabPane( document.getElementById( "tabPane1" ) );
 <h2 class="tab">Description</h2>
 <!-- ========== Info from phpDoc block ========= -->
 <h5>Archivo de configuración para el <em>logging</em> del sistema.</h5>
-<div class="desc"><p>Usa el <em>framework</em> <em>Log</em> para realizar el <em>log</em> del sistema,  este archivo solo configura la clase, hace una instancia y deja el objeto listo  para ser usado.</p><p>Archivo donde se guardara el <em>log</em>.</p></div>
+<div class="desc"><p>Usa el <em>framework</em> <em>Log</em> para realizar el <em>log</em> del sistema,  este archivo solo configura la clase, hace una instancia y deja el objeto listo  para ser usado.</p><p>Archivo donde se guardara el <em>log</em>.</p><p>Aplica al segundo parametro de Log::singleton().</p><p>Identificación primaria del sistema en el archivo de <em>log</em>.</p><p>Se puede especificar otra identificación usando el método Log::setIdent()</p><p>Aplica el tercer parametro de Log::singleton()</p><p>Parametros de configuración para la línea de log.  <pre> Parameter     |       Type    |     Default                 |     Description
+ ==============|===============|===============================|===============================================================
+ append     |       Boolean |    True                    |       Should new log entries be append to an existing log file, or should the a new log file overwrite an existing one?
+ mode          |       Integer |    0644                    |       Octal representation of the log file's permissions mode.
+ eol           |       String     |       OS default             |       The end-on-line character sequence.
+ lineFormat    |       String     |       %1$s %2$s [%3$s] %4$s   |     Log line format specification.
+ timeFormat    |       String     |       %b %d %H:%M:%S             |       Time stamp format (for strftime).</pre>  Donde lineFormat acepta los siguientes parametros.  <pre> Token         |       Alternate       |     Description
+===============|=======================|==================================================
+ %{timestamp}  |     %1$s            |       Timestamp. This is often configurable.
+ %{ident}     |       %2$s             |       The log handler's identification string.
+ %{priority}     |       %3$s             |       The log event's priority.
+ %{message}     |       %4$s        |       The log event's message text.
+ %{file}     |       %5$s             |       The full filename of the logging file.
+ %{line}     |       %6$s             |       The line number on which the event occured.
+ %{function}     |       %7$s             |       The function from which the event occurred.
+ %{class}     |       %8$s             |       The class in which the event occurred.</pre>  Aplica al cuarto parametro de Log::singleton()</p><p>Prioridad del <em>log</em>.</p><p>Establece el nivel de <em>logging</em> en el sistema. Usa los mismos  niveles de prioridad que <a href="http://www.indelible.org/php/Log/guide.html#log-levels">Log</a>.  <pre> Level                 |       Description
+ ----------------------|-------------------------
+ PEAR_LOG_EMERG        |       System is unusable
+ PEAR_LOG_ALERT     |       Immediate action required
+ PEAR_LOG_CRIT     |       Critical conditions
+ PEAR_LOG_ERR             |       Error conditions
+ PEAR_LOG_WARNING     |       Warning conditions
+ PEAR_LOG_NOTICE     |       Normal but significant
+ PEAR_LOG_INFO     |       Informational
+ PEAR_LOG_DEBUG     |       Debug-level messages</pre>  Esta tabla esta ordenada de alta (<em>PEAR_LOG_EMERG</em>) a baja (<em>PEAR_LOG_DEBUG</em>) prioridad.</p><p>Aplica al quinto parametro de Log::singleton().</p></div>
 <ul>
 		<li><strong>author:</strong> - Manuel Alejandro Gómez Nicasio &lt;<a href="mailto:alejandro.gomez@alejandrogomez.org">alejandro.gomez@alejandrogomez.org</a>&gt;</li>
 		<li><strong>link:</strong> - <a href="http://pear.php.net/package/Log">Log</a></li>
-		<li><strong>internal:</strong> - <p>El archivo debe existir y el usuario donde esta ejecutandose  el navegador, p.ej. <em>www-data</em> debe ser capaz de escribir  en el archivo. Comunmente  <em># touch /var/log/php/app.log &amp;&amp; chmod 777 /var/log/php/app.log</em>  son suficientes.</p><p>Aplica al segundo parametro de Log::singleton().</p><p>Identificación primaria del sistema en el archivo de <em>log</em>.</p><p>Se puede especificar otra identificación usando el método Log::setIdent()</p><p>Aplica el tercer parametro de Log::singleton()</p><p>Parametros de configuración para la línea de log.</p><p>Parameter     |       Type    |     Default                 |     Description  ==============|===============|===============================|===============================================================  append     |       Boolean |    True                    |       Should new log entries be append to an existing log file, or should the a new log file overwrite an existing one?  mode          |       Integer |    0644                    |       Octal representation of the log file's permissions mode.  eol           |       String     |       OS default             |       The end-on-line character sequence.  lineFormat    |       String     |       %1$s %2$s [%3$s] %4$s   |     Log line format specification.  timeFormat    |       String     |       %b %d %H:%M:%S             |       Time stamp format (for strftime).</p><p>Donde lineFormat acepta los siguientes parametros.</p><p>Token         |       Alternate       |     Description ===============|=======================|==================================================  %{timestamp}  |     %1$s            |       Timestamp. This is often configurable.  %{ident}     |       %2$s             |       The log handler's identification string.  %{priority}     |       %3$s             |       The log event's priority.  %{message}     |       %4$s        |       The log event's message text.  %{file}     |       %5$s             |       The full filename of the logging file.  %{line}     |       %6$s             |       The line number on which the event occured.  %{function}     |       %7$s             |       The function from which the event occurred.  %{class}     |       %8$s             |       The class in which the event occurred.</p><p>Aplica al cuarto parametro de Log::singleton()</p><p>Prioridad del <em>log</em>.</p><p>Establece el nivel de <em>logging</em> en el sistema. Usa los mismos  niveles de prioridad que <a href="http://www.indelible.org/php/Log/guide.html#log-levels">&lt;i&gt;Log&lt;/i&gt;</a>.</p><p>Level                 |       Description  ----------------------|-------------------------  PEAR_LOG_EMERG        |       System is unusable  PEAR_LOG_ALERT     |       Immediate action required  PEAR_LOG_CRIT     |       Critical conditions  PEAR_LOG_ERR             |       Error conditions  PEAR_LOG_WARNING     |       Warning conditions  PEAR_LOG_NOTICE     |       Normal but significant  PEAR_LOG_INFO     |       Informational  PEAR_LOG_DEBUG     |       Debug-level messages</p><p>Esta tabla esta ordenada de alta (<em>PEAR_LOG_EMERG</em>) a baja (<em>PEAR_LOG_DEBUG</em>) prioridad.</p><p>Aplica al quinto parametro de Log::singleton().</p></li>
+		<li><strong>internal:</strong> - El archivo debe existir y el usuario donde esta ejecutandose  el navegador, p.ej. <em>www-data</em> debe ser capaz de escribir  en el archivo. Comunmente  <em># touch /var/log/php/app.log &amp;&amp; chmod 777 /var/log/php/app.log</em>  son suficientes.</li>
 		<li><strong>filesource:</strong> - <a href="../__filesource/fsource_com-hdclass-logger__logger.php.html">Source Code for this file</a></li>
 		<li><strong>example:</strong> - <a href="../__examplesource/exsource__pos-svn_trunk_private_docs_examples_logger.ex.php_9879716d5eccd50a5f3fa935b0edda9d.html">Uso de la clase <i>Logger</i>.</a></li>
 	</ul>
@@ -173,7 +197,7 @@ setupAllTabs();
 </script>
 	<div id="credit">
 		<hr />
-		Documentation generated on Fri, 16 Jul 2010 16:12:11 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+		Documentation generated on Fri, 16 Jul 2010 16:33:28 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
 	</div>
 </body>
 </html>
