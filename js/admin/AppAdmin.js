@@ -79,6 +79,11 @@ AppAdmin.prototype.loadStructure = function(){
 		-> canvasName -nombre del canvas
 		-> tipo - el tipo de grafica [pie|line|bar]
 		-> data - un array con arreglos en el formato [ [x1,y1], [x2,y2]]
+		-> remoteData - bool que nos indica si cargaremos datos desde un ajax
+		-> url - request url
+		-> params - parametros para enviar con el request
+		-> success - handler para cuando el request regresa con exito
+		-> failure - handler para cuando el request regresa con un fallo
 		TODO: configuracion avanzada
 	Uso:
 	Para dibujar una grafica se debe hacer una llamada a la funcion MochiKit.DOM.addLoadEvent() despues de haber creado un objeto AppAdmin
@@ -119,17 +124,56 @@ AppAdmin.prototype.addGraph = function(config){
 	$(renderToSelector).append(graph);
 	graph.appendChild(canvas);
 	
-	
-	
+	if(config.remoteData)
+	{
+		AppAdmin.request({
+			url: config.url,
+			data: config.params,
+			success: function(msg){
+		
+				var dataPair = [];
+				var x;
+				var y;
 
-	var layout = new PlotKit.Layout(config.tipo, {});
-	layout.addDataset("sqrt", config.data);
-	layout.evaluate();
-	var canvas = MochiKit.DOM.getElement(config.canvasID);
-	var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, {});
-	plotter.render();
+				for( var i=0; i < msg.datos.length ; i++ )
+				{
+					x = parseInt(msg.datos[i].x);
+					y = parseFloat(msg.datos[i].y);
+					dataPair.push([  x, y ]);
+				}
+		
+				if(DEBUG) { console.log(dataPair); }
+			
+			
+				var layout = new PlotKit.Layout(config.tipo, {});
+			
+				layout.addDataset("sqrt", dataPair);
+				layout.evaluate();
+				var canvas = MochiKit.DOM.getElement(config.canvasID);
+				var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, {});
+	
+				MochiKit.DOM.addLoadEvent(plotter.render());
+			
+				config.success(msg);
+			},
+			failure: function(msg){
+		
+				if(DEBUG) { console.error('error de ajax en las graficas'); }
+			}
+			});
+	
+	}
+	else
+	{
+		var layout = new PlotKit.Layout(config.tipo, {});
+			
+		layout.addDataset("sqrt", config.data);
+		layout.evaluate();
+		var canvas = MochiKit.DOM.getElement(config.canvasID);
+		var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, {});
 
-   
+		MochiKit.DOM.addLoadEvent(plotter.render());
+	}
 
 }
 
@@ -237,6 +281,11 @@ AppAdmin.request = function(config){
 			var data = eval("("+msg+")");
 			
 			config.success(data);
+		},
+		failure: function(msg){
+			var data = eval("("+msg+")");
+			
+			config.failure(data);
 		}
 	});
 

@@ -93,41 +93,8 @@ Reports.prototype.loadSettings = function(){
 	
 	$('#configuracion-reportes').append(divRadioTipoReporte);
 	$('#configuracion-reportes').addClass('configuracion');
-	/*
-	$('#radios-tipo-reporte').html('\
-					<input type="radio" id="tipo-reporte-radio-1" name="radio" /><label for="tipo-reporte-radio-1">Ventas</label>\
-					<input type="radio" id="tipo-reporte-radio-2" name="radio" /><label for="tipo-reporte-radio-2">Compras</label>\
-					<input type="radio" id="tipo-reporte-radio-3" name="radio" /><label for="tipo-reporte-radio-3">Personal</label>\
-					<input type="radio" id="tipo-reporte-radio-4" name="radio" /><label for="tipo-reporte-radio-4">Clientes</label>\
-					<input type="radio" id="tipo-reporte-radio-5" name="radio" /><label for="tipo-reporte-radio-5">Productos</label>\
-					');
 	
-	$("#radios-tipo-reporte").buttonset();
-	
-	
-	
-	$('#tipo-reporte-radio-1').click(function(){
-					Reports.currentInstance.loadVentasReport();
-				});
-				
-	$('#tipo-reporte-radio-2').click(function(){
-					
-				});
-				
-	$('#tipo-reporte-radio-3').click(function(){
-					
-				});
-				
-	$('#tipo-reporte-radio-4').click(function(){
-					
-				});
-				
-	$('#tipo-reporte-radio-5').click(function(){
-					
-				});
-				
-	*/
-	
+
 	// estructura del dropdown menu
 	$('#radios-tipo-reporte').html('<ul id="nav">\
 						<li><a href="#">Ventas</a>\
@@ -140,14 +107,17 @@ Reports.prototype.loadSettings = function(){
 						</li>\
 						<li><a href="#">Compras</a>\
 							<ul>\
-								<li><a href="#" onclick="Reports.currentInstance.loadVentasReport()">Por clientes</a></li>\
+								<li><a href="#" onclick="Reports.currentInstance.loadClientesComprasReport()">Por clientes</a></li>\
+								<li><a href="#" onclick="Reports.currentInstance.loadClientesComprasCreditoReport()" >Credito</a></li>\
+								<li><a href="#">Credito deudas</a></li>\
+								<li><a href="#">Credito pagado</a></li>\
 							</ul>\
 							<div class="clear"></div>\
 						</li>\
 						<li><a href="#">Clientes</a>\
 						<ul>\
-							<li><a href="#">Mostrar todos</a></li>\
-							<li><a href="#">Deben</a></li>\
+							<li><a href="#" onclick="Reports.currentInstance.loadClientesReport()">Mostrar todos</a></li>\
+							<li><a href="#" onclick="Reports.currentInstance.loadClientesDebenReport()">Deudores</a></li>\
 						</ul>\
 							<div class="clear"></div>\
 						</li>\
@@ -244,15 +214,15 @@ Reports.prototype.loadResumen = function(){
 	
 	//TODO: cargar aqui con AJAX datos para generar un resumen 'inteligente'
 	$('#wrapper-resumen').html("<p>Resumen del periodo 2010/09/06 al 2010/10/06</p>\
-					<p>\
-					<ul id='lista-cuadros'>\
-					<li><div class='cuadro-resumen'><img src='../media/admin/icons/user.png' width='100' height='100' /><p>Vendedor m&aacute;s productivo</p><p id='top-vendedor' class='resumen-text'>Juan Martinez</p></div></li>\
-					<li><div class='cuadro-resumen'><img src='../media/admin/icons/cart.png' width='100' height='100' /><p>Producto m&aacute;s vendido</p><p id='top-producto' class='resumen-text'>Papa Grande</p></div></li>\
-					<li><div class='cuadro-resumen'><img src='../media/admin/icons/piggybank.png' width='100' height='100' /><p>Sucursal con m&aacute;s ventas</p><p id='top-sucursal' class='resumen-text'>Central de Abastos</p></div></li>\
-					<li><div class='cuadro-resumen'><img src='../media/admin/icons/client.png' width='100' height='100' /><p>Cliente con m&aacute;s compras</p><p id='top-cliente' class='resumen-text'>Oscar Hernandez</p></div></li>\
-					</ul>\
-					<div style='clear:both'></div>\
-					</p>\
+	<p>\
+	<ul id='lista-cuadros'>\
+	<li><div class='cuadro-resumen'><img src='../media/admin/icons/user.png' width='100' height='100' /><p>Vendedor m&aacute;s productivo</p><p id='top-vendedor' class='resumen-text'>Juan Martinez</p></div></li>\
+	<li><div class='cuadro-resumen'><img src='../media/admin/icons/cart.png' width='100' height='100' /><p>Producto m&aacute;s vendido</p><p id='top-producto' class='resumen-text'>Papa Grande</p></div></li>\
+	<li><div class='cuadro-resumen'><img src='../media/admin/icons/piggybank.png' width='100' height='100' /><p>Sucursal con m&aacute;s ventas</p><p id='top-sucursal' class='resumen-text'>Central de Abastos</p></div></li>\
+	<li><div class='cuadro-resumen'><img src='../media/admin/icons/client.png' width='100' height='100' /><p>Cliente con m&aacute;s compras</p><p id='top-cliente' class='resumen-text'>Oscar Hernandez</p></div></li>\
+	</ul>\
+	<div style='clear:both'></div>\
+	</p>\
 				");
 
 	$('.resumen-text').html('<img src="../media/admin/load.gif" />');
@@ -361,15 +331,71 @@ Reports.prototype.applySucursal = function(){
 }
 
 
-Reports.prototype.loadVentasReport = function(){
+Reports.prototype.loadClientesDebenReport = function(){
 
 	Datos.loadDataGrid2({
 			renderTo: 'content',
-			title: 'Clientes Compras',
+			title: 'Clientes Deben',
+			width: '100%',
+			url: '../serverProxy.php',
+			data: 'method=reporteClientesDeben_jgrid',
+			addNewGrid: false,
+			sortname: 'id',
+			colModel: [
+				{display: 'ID', name : 'id', width : 30, sortable : true, align: 'left'},
+				{display: 'Nombre', name : 'nombre', width : 300, sortable : true, align: 'left'},
+				{display: 'Saldo', name : 'Saldo', width : 80, sortable : true, align: 'left'},
+				{display: 'RFC', name : 'RFC', width : 100, sortable : true, align: 'left'},
+				{display: 'Direccion', name : 'Direccion', width : 250, sortable : true, align: 'left'},
+				{display: 'Telefono', name : 'Telefono', width : 100, sortable : true, align: 'left'},
+				{display: 'E-mail', name : 'E-mail', width : 100, sortable : true, align: 'left'}
+			],
+			searchitems: [
+				{display: 'Nombre', name : 'nombre'},
+				{display: 'RFC', name : 'rfc', isdefault: true},
+				{display: 'Direccion', name : 'direccion'}
+			]
+			});
+
+}
+
+Reports.prototype.loadClientesReport = function(){
+
+	Datos.loadDataGrid2({
+			renderTo: 'content',
+			title: 'Clientes',
+			width: '100%',
+			url: '../serverProxy.php',
+			data: 'method=reporteClientesTodos_jgrid',
+			addNewGrid: false,
+			sortname: 'id',
+			colModel: [
+				{display: 'ID', name : 'id', width : 30, sortable : true, align: 'left'},
+				{display: 'Nombre', name : 'nombre', width : 150, sortable : true, align: 'left'},
+				{display: 'RFC', name : 'rfc', width : 100, sortable : true, align: 'left'},
+				{display: 'Direccion', name : 'direccion', width : 250, sortable : true, align: 'left'},
+				{display: 'Telefono', name : 'telefono', width : 250, sortable : true, align: 'left'},
+				{display: 'E-mail', name : 'e-mail', width : 250, sortable : true, align: 'left'},
+				{display: 'Limite credito', name : 'limite de credito', width : 100, sortable : true, align: 'left'}
+			],
+			searchitems: [
+				{display: 'Nombre', name : 'nombre'},
+				{display: 'RFC', name : 'rfc', isdefault: true},
+				{display: 'Direccion', name : 'direccion'}
+			]
+			});
+}
+
+Reports.prototype.loadClientesComprasReport = function(){
+
+	Datos.loadDataGrid2({
+			renderTo: 'content',
+			title: 'Compras por cliente',
 			width: '100%',
 			url: '../serverProxy.php',
 			data: 'method=reporteClientesCompras_jgrid',
 			addNewGrid: false,
+			sortname: 'id',
 			colModel: [
 				{display: 'ID', name : 'id', width : 30, sortable : true, align: 'left'},
 				{display: 'Nombre', name : 'Cliente', width : 300, sortable : true, align: 'left'},
@@ -379,14 +405,41 @@ Reports.prototype.loadVentasReport = function(){
 				{display: 'Sucursal', name : 'Sucursal', width : 100, sortable : true, align: 'left'}
 			],
 			searchitems: [
-				{display: 'Nombre', name : 'Nombre', isdefault: true},
-				{display: 'Fecha', name : 'Fecha' },
-				{display: 'Sucursal', name : 'Sucursal'}
+				{display: 'Nombre', name : 'nombre'},
+				{display: 'RFC', name : 'rfc', isdefault: true},
+				{display: 'Direccion', name : 'direccion'}
 			]
-		});
+			});
+
+
 
 }
 
+Reports.prototype.loadClientesComprasCreditoReport = function(config){
 
 
+	//reporteClientesComprasCredito_jgrid
+	Datos.loadDataGrid2({
+			renderTo: 'content',
+			title: 'Compras a cr&eacute;dito',
+			width: '100%',
+			url: '../serverProxy.php',
+			data: 'method=reporteClientesComprasCredito_jgrid',
+			addNewGrid: false,
+			sortname: 'v.fecha',
+			colModel: [
+				{display: 'ID', name : 'id', width : 30, sortable : true, align: 'left'},
+				{display: 'Nombre', name : 'Cliente', width : 300, sortable : true, align: 'left'},
+				{display: 'Total', name : 'Total', width : 80, sortable : true, align: 'left'},
+				{display: 'Tipo', name : 'Tipo', width : 100, sortable : true, align: 'left'},
+				{display: 'Fecha', name : 'Fecha', width : 250, sortable : true, align: 'left'},
+				{display: 'Sucursal', name : 'Sucursal', width : 100, sortable : true, align: 'left'}
+			],
+			searchitems: [
+				{display: 'Nombre', name : 'nombre'},
+				{display: 'RFC', name : 'rfc', isdefault: true},
+				{display: 'Direccion', name : 'direccion'}
+			]
+			});
 
+}

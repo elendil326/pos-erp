@@ -11,6 +11,7 @@ Datos = function(){
 	
 	
 	//testing grids
+	/*
 	Datos.loadDataGrid2({
 			renderTo: 'content',
 			title: 'Clientes',
@@ -80,7 +81,7 @@ Datos = function(){
 				{display: 'Direccion', name : 'direccion'}
 			]
 			});
-			
+	*/		
 	//reporteClientesCompras_jgrid
 }
 
@@ -281,38 +282,80 @@ Datos.loadDataGrid2 = function(config){
 	//var selectorWrapperPager = '#'+wrapperPager.id;
 	
 
-	
+	//Si ya existe la tabla borramos la existente y creamos una nueva en la misma posicion
+	// si la variable addNewGrid es true, se agregara una tabla despues de la ultima creada
 	if(!($(selectorTableGrid).length > 0))
 	{	
 		$(selectorRenderTo).append(breaktag);
 		
 		//Los agregamos al div especificado en renderTo
 		$(selectorRenderTo).append(tableGrid);
-	}
-	//$(selectorRenderTo).append(wrapperPager);
 		
-	$(selectorTableGrid).flexigrid(
-		{
-			url: config.url+'?'+config.data,
-			dataType: 'json',
-			colModel : config.colModel,/*
-			buttons : [
-			{name: 'Edit', bclass: 'edit', onpress : function(){ alert(); }},
-			{name: 'Delete', bclass: 'delete', onpress : function(){ alert(); }},
-			{separator: true}
-			],*/
-			searchitems : config.searchitems,
-			sortname: "id",
-			sortorder: "asc",
-			usepager: true,
-			title: config.title,
-			useRp: true,
-			rp: 10,
-			showTableToggleBtn: true,
-			resizable: false,
-			width: config.width,
-			height: 370,
-			singleSelect: true
-		}
-	);
+		$(selectorTableGrid).flexigrid(
+			{
+				url: config.url+'?'+config.data,
+				dataType: 'json',
+				colModel : config.colModel,/*
+				buttons : [
+				{name: 'Edit', bclass: 'edit', onpress : function(){ alert(); }},
+				{name: 'Delete', bclass: 'delete', onpress : function(){ alert(); }},
+				{separator: true}
+				],*/
+				searchitems : config.searchitems,
+				sortname: config.sortname,
+				sortorder: "asc",
+				usepager: true,
+				title: config.title,
+				useRp: true,
+				rp: 10,
+				showTableToggleBtn: true,
+				resizable: false,
+				width: config.width,
+				height: 370,
+				singleSelect: true
+			}
+		);
+	}
+	else
+	{
+		
+		$(".flexigrid").fadeOut('slow', function(){
+					
+						$(".flexigrid").remove();
+						
+						$(selectorTableGrid).remove();
+						
+						//Los agregamos al div especificado en renderTo
+						$(selectorRenderTo).append(tableGrid);
+						
+						
+						$(selectorTableGrid).flexigrid(
+							{
+								url: config.url+'?'+config.data,
+								dataType: 'json',
+								colModel : config.colModel,/*
+								buttons : [
+								{name: 'Edit', bclass: 'edit', onpress : function(){ alert(); }},
+								{name: 'Delete', bclass: 'delete', onpress : function(){ alert(); }},
+								{separator: true}
+								],*/
+								searchitems : config.searchitems,
+								sortname: config.sortname,
+								sortorder: "asc",
+								usepager: true,
+								title: config.title,
+								useRp: true,
+								rp: 10,
+								showTableToggleBtn: true,
+								resizable: false,
+								width: config.width,
+								height: 370,
+								singleSelect: true
+							}
+						);
+					});
+					
+	}
+				
+	
 }
