@@ -36,7 +36,7 @@ $(document).ready(function() {
 			tipo: 'pie',
 			remoteData: true,
 			url: "../serverProxy.php",
-			params: {dateRange : 'mes', method: 'graficaVentasContado'},
+			params: {dateRange : 'year', method: 'graficaVentasContado'},
 			success: function(msg){
 					
 					alert(msg.success);

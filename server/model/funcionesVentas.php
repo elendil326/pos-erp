@@ -1266,7 +1266,7 @@ y algunas otras funciones
 
 				/************************************************************************/
 
-				case 'año':	//$fecha = date_create("2010-07-14");
+				case 'year':	//$fecha = date_create("2010-07-14");
 
 						$fecha = date_create($currentDate['year'].'-01-01'); //Ponemos el inicio de mes para que al substraer meses, regrese el inicio de cada mes
 						//date_sub($fecha, date_interval_create_from_date_string($i.' months'));
@@ -1347,7 +1347,7 @@ y algunas otras funciones
 				}
 				//var_dump($params);
 
-				if ($dateInterval == 'año')
+				if ($dateInterval == 'year')
 				{
 					$qry_select = " AND date(`ventas`.`fecha`) BETWEEN ? AND ?";
 
@@ -1401,7 +1401,7 @@ y algunas otras funciones
 						break;
 				case 'mes'	: $qry = "SELECT DAYOFMONTH(`ventas`.`fecha`) AS `x`, SUM(`subtotal`) AS `y`, DAYOFMONTH(`ventas`.`fecha`) AS `label` FROM `ventas` WHERE `ventas`.`tipo_venta` = 1 ";
 						break;
-				case 'año'	: $qry = "SELECT MONTH(`ventas`.`fecha`) AS `x`, SUM(`subtotal`) AS `y`, MONTHNAME(`ventas`.`fecha`) AS `label` FROM `ventas` WHERE `ventas`.`tipo_venta` = 1 ";
+				case 'year'	: $qry = "SELECT MONTH(`ventas`.`fecha`) AS `x`, SUM(`subtotal`) AS `y`, MONTHNAME(`ventas`.`fecha`) AS `label` FROM `ventas` WHERE `ventas`.`tipo_venta` = 1 ";
 						break;
 				default: break;
 			}
