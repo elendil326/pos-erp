@@ -3,12 +3,16 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 
+
+
+
+
 -- phpMyAdmin SQL Dump
 -- version 3.1.1
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 15-07-2010 a las 22:45:37
+-- Tiempo de generación: 16-07-2010 a las 21:51:11
 -- Versión del servidor: 5.1.30
 -- Versión de PHP: 5.2.8
 
@@ -62,6 +66,28 @@ CREATE TABLE IF NOT EXISTS `compras` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `corte`
+--
+
+DROP TABLE IF EXISTS `corte`;
+CREATE TABLE IF NOT EXISTS `corte` (
+  `num_corte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'numero de corte',
+  `anio` year(4) NOT NULL COMMENT 'año del corte',
+  `inicio` date NOT NULL COMMENT 'año del corte',
+  `fin` date NOT NULL COMMENT 'fecha de fin del corte',
+  `ventas` float NOT NULL COMMENT 'ventas al contado en ese periodo',
+  `abonosVentas` float NOT NULL COMMENT 'pagos de abonos en este periodo',
+  `compras` float NOT NULL COMMENT 'compras realizadas en ese periodo',
+  `AbonosCompra` float NOT NULL COMMENT 'pagos realizados en ese periodo',
+  `gastos` float NOT NULL COMMENT 'gastos echos en ese periodo',
+  `ingresos` float NOT NULL COMMENT 'ingresos obtenidos en ese periodo',
+  `gananciasNetas` float NOT NULL COMMENT 'ganancias netas dentro del periodo',
+  PRIMARY KEY (`num_corte`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=37 ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `cotizacion`
 --
 
@@ -95,6 +121,21 @@ CREATE TABLE IF NOT EXISTS `detalle_compra` (
   PRIMARY KEY (`id_compra`,`id_producto`),
   KEY `detalle_compra_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalle_corte`
+--
+
+DROP TABLE IF EXISTS `detalle_corte`;
+CREATE TABLE IF NOT EXISTS `detalle_corte` (
+  `num_corte` int(11) NOT NULL COMMENT 'id del corte al que hace referencia',
+  `nombre` varchar(100) NOT NULL COMMENT 'nombre del encargado de sucursal al momento del corte',
+  `total` float NOT NULL COMMENT 'total que le corresponde al encargado al momento del corte',
+  `deben` float NOT NULL COMMENT 'lo que deben en la sucursal del encargado al momento del corte',
+  PRIMARY KEY (`num_corte`,`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -393,7 +434,7 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   `descripcion` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre o descripcion de sucursal',
   `direccion` varchar(200) COLLATE utf8_unicode_ci NOT NULL COMMENT 'direccion de la sucursal',
   PRIMARY KEY (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -410,7 +451,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `id_sucursal` int(11) NOT NULL COMMENT 'Id de la sucursal a que pertenece',
   PRIMARY KEY (`id_usuario`),
   KEY `fk_usuario_1` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
 
 -- --------------------------------------------------------
 
@@ -556,12 +597,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `mi_proc`(venta INT)
 SET @id_venta = venta$$
 
 DELIMITER ;
-
-
-
-
-
-
 
 
 
