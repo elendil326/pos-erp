@@ -137,6 +137,8 @@ Reports.prototype.loadSettings = function(){
 						</ul>\
 							<div class="clear"></div>\
 						</li>\
+						<li><a href="#" onclick="Reports.currentInstance.loadGastosReport()">Gastos</a></li>\
+						<li><a href="#" onclick="Reports.currentInstance.loadIngresosReport()">Ingresos</a></li>\
 						<li><a href="#">Personal</a></li>\
 					</ul>\
 					<div class="clear"></div>\
@@ -744,6 +746,141 @@ Reports.prototype.loadVentasContadoReport = function(config){
 			remoteData: true,
 			url: "../serverProxy.php",
 			params: {dateRange : 'year', method: 'graficaVentasContado'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
+			});
+
+}
+
+Reports.prototype.loadGastosReport = function(){
+
+	this.cleanDivs();
+	
+	appAdmin.addGraphWithTitle({
+			title: 'Gastos de la &uacute;ltima semana',
+			width:325, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-0',
+			canvasID: 'canvas-0',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'semana', method: 'graficaGastos'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
+			});
+	
+	appAdmin.addGraphWithTitle({
+			title: 'Gastos del &uacute;ltimo mes',
+			width:325, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-1',
+			canvasID: 'canvas-1',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'mes', method: 'graficaGastos'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
+			});
+	
+	
+	appAdmin.addGraphWithTitle({
+			title: 'Gastos del &uacute;ltimo A&ntilde;o',
+			width:324, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-2',
+			canvasID: 'canvas-2',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'year', method: 'graficaGastos'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
+			});
+
+}
+
+
+Reports.prototype.loadIngresosReport = function(){
+
+	this.cleanDivs();
+	
+	appAdmin.addGraphWithTitle({
+			title: 'Ingresos de la &uacute;ltima semana',
+			width:325, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-0',
+			canvasID: 'canvas-0',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'semana', method: 'graficaIngresos'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
+			});
+	
+	appAdmin.addGraphWithTitle({
+			title: 'Ingresos del &uacute;ltimo mes',
+			width:325, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-1',
+			canvasID: 'canvas-1',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'mes', method: 'graficaIngresos'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
+			});
+	
+	
+	appAdmin.addGraphWithTitle({
+			title: 'Ingresos del &uacute;ltimo A&ntilde;o',
+			width:324, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-2',
+			canvasID: 'canvas-2',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'year', method: 'graficaIngresos'},
 			success: function(msg){
 					
 					//alert(msg.success);

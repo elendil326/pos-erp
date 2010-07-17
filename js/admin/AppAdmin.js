@@ -225,6 +225,7 @@ AppAdmin.prototype.addGraphWithTitle = function(config){
 	var renderToSelector = '#'+config.renderTo;
 	var wrapperSelector = '#'+wrapper.id;
 	var titleSelector = '#'+title.id;
+	var graphSelector = '#'+graph.id;
 
 	//Agregamos div y canvas al div contenedor 
 	$(renderToSelector).append(wrapper);
@@ -280,11 +281,13 @@ AppAdmin.prototype.addGraphWithTitle = function(config){
 				else
 				{
 					if(DEBUG) { console.error('error de ajax en las graficas'); }
+					$(graphSelector).html("<p><table><tr><td><img src='../media/admin/cross.png' /></td><td>No se pudo cargar la grafica</td></tr></p>");
 				}
 			},
 			failure: function(msg){
 		
 				if(DEBUG) { console.error('error de ajax en las graficas'); }
+				$(graphSelector).html("<p><table><tr><td><img src='../media/admin/cross.png' /></td><td>No se pudo cargar la grafica</td></tr></p>");
 			}
 			});
 	

@@ -230,3 +230,8 @@ background-image:url(../shared/icons/fam/folder_go.png);
 	/*width: 150px;
 	margin-right: 5px;*/
 }
+
+table{
+
+	font-size:12px !important;
+}
