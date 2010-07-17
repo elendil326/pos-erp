@@ -132,6 +132,7 @@
 	include_once('model/funcionesSucursal.php');
 	include_once('model/funcionesUsuario.php');
 	
+	include_once('funciones/funcionesReportes.php');
 	
 	
 	/*
@@ -294,7 +295,10 @@
 		case 'vendedorMasProductivoSucursal':							vendedorMasProductivoSucursal(); break;
 		case 'productoMasVendidoSucursal':							productoMasVendidoSucursal(); break;
 		case 'clienteComprasTopSucursal' :							clienteComprasTopSucursal(); break;
+		case 'graficaVentas'		:							graficaVentas(); break;
 		case 'graficaVentasContado'	:							graficaVentasContado(); break;
+		case 'graficaVentasCredito'	:							graficaVentasCredito(); break;
+		case 'graficaCompras'		:							graficaCompras(); break;
 		//------
 		case 'listarProveedores': 								listarProveedores(); 	break;
 		case 'actualizarProveedor':								actualizarProveedor();	break;
