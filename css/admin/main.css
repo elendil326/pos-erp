@@ -79,8 +79,8 @@ background-image:url(../shared/icons/fam/folder_go.png);
 
 #content{
 	float:left;
-	width:1110px;
-	height:100%;
+	width:1010px;
+	height:auto;
 	padding:10px;
 	margin-left:150px;
 	/*overflow:auto;*/
@@ -161,7 +161,7 @@ background-image:url(../shared/icons/fam/folder_go.png);
 	padding:10px;
 }
 
-.wrapper{
+.wrapper-graph{
 	/*padding:10px;*/
 	height:auto;
 	/*width:auto;*/
@@ -173,11 +173,20 @@ background-image:url(../shared/icons/fam/folder_go.png);
 }
 
 .title-graph{
-	height:20px;
+	height:14px;
 	/*width:auto;*/
 	text-align: center;
 	background-color:#666666;
-	color:white;
+	background: url(jquery/css/flexigrid/images/wbg.gif);
+	background-repeat: x-repeat;
+	background-position: 0 -1px;
+	padding:6px;
+	color: #273437;
+	text-shadow: white 0px 1px 0px;
+	font-weight: bold;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	border-bottom: 1px solid #CCCCCC;
 }
 
 
@@ -195,6 +204,7 @@ background-image:url(../shared/icons/fam/folder_go.png);
 	position: relative;
 	text-shadow: white 0px 1px 0px;
 	color: #273437;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 .resumen-text{
@@ -204,13 +214,14 @@ background-image:url(../shared/icons/fam/folder_go.png);
 }
 
 #wrapper-resumen{
-	height: 200px;
+	height: auto;
 	width:auto;
 }
 
 #lista-cuadros{
 	list-style: none;
 	padding:0px;
+	margin:0px;
 }
 
 #lista-cuadros li{

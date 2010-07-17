@@ -286,6 +286,7 @@
 		case 'reporteClientesDeben_jgrid': 							reporteClientesDeben_jgrid(); 	break;
 		case 'reporteClientesCompras_jgrid': 							reporteClientesCompras_jgrid(); 	break;
 		case 'reporteClientesComprasCredito_jgrid': 						reporteClientesComprasCredito_jgrid(); 	break;
+		case 'reporteClientesComprasContado_jgrid':					reporteClientesComprasContado_jgrid();	break;
 		
 		//reportes del tipo MVP (most valuable x)
 		case 'vendedorMasProductivo'	:							vendedorMasProductivo(); break;

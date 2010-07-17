@@ -169,7 +169,86 @@
                 return $listar->lista();
         }
 		//reporteClientesComprasCredito
-		
+	function reporteClientesComprasCredito_jgrid(){
+        
+        $id_cliente=$_REQUEST['id_cliente'];
+                $de=$_REQUEST['de'];
+                $al=$_REQUEST['al'];
+                $cliente=!empty($id_cliente);
+                $fecha=(!empty($de)&&!empty($al));
+                $params=array();
+                $query="SELECT v.id_venta, (
+                                v.subtotal + v.iva
+                                ) AS  'Total', IF(SUM( pv.monto )>0,SUM(pv.monto),0) AS  'Pagado',
+                                if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),(v.subtotal + v.iva)
+                                ) AS  'Debe', c.nombre AS  'Nombre', DATE( v.fecha ) AS  'Fecha'
+                                FROM  `pagos_venta` pv
+                                RIGHT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
+                                NATURAL JOIN cliente c
+                                GROUP BY v.id_venta,c.id_cliente,v.fecha ,v.tipo_venta
+                                having v.tipo_venta =2 "; 
+                if($cliente){
+                        $query.=" and c.id_cliente=? ";
+                        array_push($params,$id_cliente);
+                }
+                if($fecha){
+                        $query.=" and  DATE(v.fecha) BETWEEN ? AND ? ";
+                        array_push($params,$de);
+                        array_push($params,$al);
+                }
+                //$query.=" ORDER BY v.fecha ;";
+                $listar = new listar($query,$params);
+                
+                header("Expires: Mon, 26 Jul 1997 05:00:00 GMT" );
+		header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT" );
+		header("Cache-Control: no-cache, must-revalidate" );
+		header("Pragma: no-cache" );
+		header("Content-type: text/x-json");
+                
+                
+                echo $listar->lista_jgrid();
+                //return $listar->lista();
+        }
+        
+        function reporteClientesComprasContado_jgrid(){
+        
+        $id_cliente=$_REQUEST['id_cliente'];
+                $de=$_REQUEST['de'];
+                $al=$_REQUEST['al'];
+                $cliente=!empty($id_cliente);
+                $fecha=(!empty($de)&&!empty($al));
+                $params=array();
+                $query="SELECT v.id_venta, (
+                                v.subtotal + v.iva
+                                ) AS  'Total', 
+                                c.nombre AS  'Nombre', DATE( v.fecha ) AS  'Fecha'
+                                FROM  `pagos_venta` pv
+                                RIGHT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
+                                NATURAL JOIN cliente c
+                                GROUP BY v.id_venta,c.id_cliente,v.fecha ,v.tipo_venta
+                                having v.tipo_venta = 1"; 
+                if($cliente){
+                        $query.=" and c.id_cliente=? ";
+                        array_push($params,$id_cliente);
+                }
+                if($fecha){
+                        $query.=" and  DATE(v.fecha) BETWEEN ? AND ? ";
+                        array_push($params,$de);
+                        array_push($params,$al);
+                }
+                //$query.=" ORDER BY v.fecha ;";
+                $listar = new listar($query,$params);
+                
+                header("Expires: Mon, 26 Jul 1997 05:00:00 GMT" );
+		header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT" );
+		header("Cache-Control: no-cache, must-revalidate" );
+		header("Pragma: no-cache" );
+		header("Content-type: text/x-json");
+                
+                
+                echo $listar->lista_jgrid();
+                //return $listar->lista();
+        }
         
 	    //esta funcion nos regresa un listado con los datos de todas las ventas a credito que aun se deben
 		//si se le manda un id_cliente nos regresa las compras a credito de ese cliente
@@ -200,13 +279,54 @@
                         array_push($params,$de);
                         array_push($params,$al);
                 }
+                //$query.=" ORDER BY v.fecha;";
+                $listar = new listar($query,$params);
+                
+                header("Expires: Mon, 26 Jul 1997 05:00:00 GMT" );
+		header("Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . "GMT" );
+		header("Cache-Control: no-cache, must-revalidate" );
+		header("Pragma: no-cache" );
+		header("Content-type: text/x-json");
+                
+                
+                echo $listar->lista_jgrid();
+                
+                //return $listar->lista();
+        }
+		//reporteClientesComprasCreditoDeben
+
+
+	function reporteClientesComprasCreditoDeben_jgrid(){
+                $id_cliente=$_REQUEST['id_cliente'];
+                $de=$_REQUEST['de'];
+                $al=$_REQUEST['al'];
+                $cliente=!empty($id_cliente);
+                $fecha=(!empty($de)&&!empty($al));
+                $params=array();
+                $query="SELECT v.id_venta, (
+                                v.subtotal + v.iva
+                                ) AS  'Total', IF(SUM( pv.monto )>0,SUM(pv.monto),0) AS  'Pagado',
+                                if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),(v.subtotal + v.iva)
+                                ) AS  'Debe', c.nombre AS  'Nombre', DATE( v.fecha ) AS  'Fecha'
+                                FROM  `pagos_venta` pv
+                                RIGHT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
+                                NATURAL JOIN cliente c
+                                GROUP BY v.id_venta,c.id_cliente,v.fecha,v.tipo_venta,v.tipo_venta
+                                having Pagado < Total and v.tipo_venta =2 ";
+                if($cliente){
+                        $query.=" and c.id_cliente=? ";
+                        array_push($params,$id_cliente);
+                }
+                if($fecha){
+                        $query.=" and DATE(v.fecha) BETWEEN ? AND ? ";
+                        array_push($params,$de);
+                        array_push($params,$al);
+                }
                 $query.=" ORDER BY v.fecha;";
                 $listar = new listar($query,$params);
                 echo $listar->lista();
                 return $listar->lista();
         }
-		//reporteClientesComprasCreditoDeben
-
 		
 	    //esta funcion nos regresa un listado con los datos de todas las ventas a credito pagadas
 		//si se le manda un id_cliente nos regresa las compras a credito de ese cliente

@@ -12,6 +12,19 @@ Reports = function(){
 	this.loadResumen();
 	//this.loadCharts();
 	
+	var d = document;
+	
+	var divGraficas = d.createElement('div');
+	divGraficas.id = "graficas-render";
+	divGraficas.style.width = "100%";
+	
+	var divDatos = d.createElement('div');
+	divDatos.id = "datos-render";
+	
+	$('#content').append(divDatos);
+	$('#content').append(divGraficas);
+	
+	
 	Reports.currentInstance = this;
 }
 
@@ -99,6 +112,9 @@ Reports.prototype.loadSettings = function(){
 	$('#radios-tipo-reporte').html('<ul id="nav">\
 						<li><a href="#">Ventas</a>\
 							<ul>\
+								<li><a href="#" onclick="Reports.currentInstance.loadVentasTodas()">Mostrar todas</a></li>\
+								<li><a href="#" onclick="Reports.currentInstance.loadVentasCreditoReport()">Cr&eacute;dito</a></li>\
+								<li><a href="#" onclick="Reports.currentInstance.loadVentasContadoReport()">Contado</a></li>\
 								<li><a href="#">Por vendedor</a></li>\
 								<li><a href="#">Por sucursal</a></li>\
 								<li><a href="#">Por producto</a></li>\
@@ -107,8 +123,8 @@ Reports.prototype.loadSettings = function(){
 						</li>\
 						<li><a href="#">Compras</a>\
 							<ul>\
-								<li><a href="#" onclick="Reports.currentInstance.loadClientesComprasReport()">Por clientes</a></li>\
-								<li><a href="#" onclick="Reports.currentInstance.loadClientesComprasCreditoReport()" >Credito</a></li>\
+								<li><a href="#" onclick="Reports.currentInstance.loadClientesComprasTodasReport()">Mostrar todas</a></li>\
+								<li><a href="#" >Credito</a></li>\
 								<li><a href="#">Credito deudas</a></li>\
 								<li><a href="#">Credito pagado</a></li>\
 							</ul>\
@@ -213,17 +229,14 @@ Reports.prototype.loadResumen = function(){
 	$('#wrapper-resumen').addClass('borde-gris');
 	
 	//TODO: cargar aqui con AJAX datos para generar un resumen 'inteligente'
-	$('#wrapper-resumen').html("<p>Resumen del periodo 2010/09/06 al 2010/10/06</p>\
-	<p>\
-	<ul id='lista-cuadros'>\
+	$('#wrapper-resumen').html("<ul id='lista-cuadros'>\
 	<li><div class='cuadro-resumen'><img src='../media/admin/icons/user.png' width='100' height='100' /><p>Vendedor m&aacute;s productivo</p><p id='top-vendedor' class='resumen-text'>Juan Martinez</p></div></li>\
 	<li><div class='cuadro-resumen'><img src='../media/admin/icons/cart.png' width='100' height='100' /><p>Producto m&aacute;s vendido</p><p id='top-producto' class='resumen-text'>Papa Grande</p></div></li>\
 	<li><div class='cuadro-resumen'><img src='../media/admin/icons/piggybank.png' width='100' height='100' /><p>Sucursal con m&aacute;s ventas</p><p id='top-sucursal' class='resumen-text'>Central de Abastos</p></div></li>\
 	<li><div class='cuadro-resumen'><img src='../media/admin/icons/client.png' width='100' height='100' /><p>Cliente con m&aacute;s compras</p><p id='top-cliente' class='resumen-text'>Oscar Hernandez</p></div></li>\
 	</ul>\
 	<div style='clear:both'></div>\
-	</p>\
-				");
+	");
 
 	$('.resumen-text').html('<img src="../media/admin/load.gif" />');
 
@@ -331,10 +344,112 @@ Reports.prototype.applySucursal = function(){
 }
 
 
-Reports.prototype.loadClientesDebenReport = function(){
+//	==================	VENTAS =======================================
+/**
+*	Carga los datos y graficas de todas las ventas
+*
+*/
+Reports.prototype.loadVentasTodas = function(){
+
+	this.cleanDivs();
+
+	
+
+	//ejemplo cargar grafica mediante datos json
+	appAdmin.addGraphWithTitle({
+			title: 'Ventas de la &uacute;ltima Semana',
+			width:324, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-ventas-0',
+			canvasID: 'canvas-ventas-0',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'semana', method: 'graficaVentas'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
+			});
+			
+	appAdmin.addGraphWithTitle({
+			title: 'Ventas del &uacute;ltimo Mes',
+			width:325, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-ventas-1',
+			canvasID: 'canvas-ventas-1',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'mes', method: 'graficaVentas'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
+			});
+			
+	appAdmin.addGraphWithTitle({
+			title: 'Ventas del &uacute;ltimo A&ntilde;o',
+			width:325, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-ventas-2',
+			canvasID: 'canvas-ventas-2',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'year', method: 'graficaVentas'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
+			});
 
 	Datos.loadDataGrid2({
-			renderTo: 'content',
+			renderTo: 'datos-render',
+			title: 'Ventas',
+			width: '100%',
+			url: '../serverProxy.php',
+			data: 'method=reporteClientesCompras_jgrid',
+			addNewGrid: false,
+			sortname: 'id',
+			colModel: [
+				{display: 'ID', name : 'id', width : 30, sortable : true, align: 'left'},
+				{display: 'Nombre', name : 'Cliente', width : 300, sortable : true, align: 'left'},
+				{display: 'Total', name : 'Total', width : 80, sortable : true, align: 'left'},
+				{display: 'Tipo', name : 'Tipo', width : 100, sortable : true, align: 'left'},
+				{display: 'Fecha', name : 'Fecha', width : 250, sortable : true, align: 'left'},
+				{display: 'Sucursal', name : 'Sucursal', width : 100, sortable : true, align: 'left'}
+			],
+			searchitems: [
+				{display: 'Nombre', name : 'nombre'},
+				{display: 'RFC', name : 'rfc', isdefault: true},
+				{display: 'Direccion', name : 'direccion'}
+			]
+			});
+
+}
+
+
+
+// ======================	CLIENTES 	========================================
+Reports.prototype.loadClientesDebenReport = function(){
+
+	this.cleanDivs();
+
+	Datos.loadDataGrid2({
+			renderTo: 'datos-render',
 			title: 'Clientes Deben',
 			width: '100%',
 			url: '../serverProxy.php',
@@ -361,8 +476,10 @@ Reports.prototype.loadClientesDebenReport = function(){
 
 Reports.prototype.loadClientesReport = function(){
 
+	this.cleanDivs();
+
 	Datos.loadDataGrid2({
-			renderTo: 'content',
+			renderTo: 'datos-render',
 			title: 'Clientes',
 			width: '100%',
 			url: '../serverProxy.php',
@@ -386,60 +503,262 @@ Reports.prototype.loadClientesReport = function(){
 			});
 }
 
-Reports.prototype.loadClientesComprasReport = function(){
 
-	Datos.loadDataGrid2({
-			renderTo: 'content',
-			title: 'Compras por cliente',
-			width: '100%',
-			url: '../serverProxy.php',
-			data: 'method=reporteClientesCompras_jgrid',
-			addNewGrid: false,
-			sortname: 'id',
-			colModel: [
-				{display: 'ID', name : 'id', width : 30, sortable : true, align: 'left'},
-				{display: 'Nombre', name : 'Cliente', width : 300, sortable : true, align: 'left'},
-				{display: 'Total', name : 'Total', width : 80, sortable : true, align: 'left'},
-				{display: 'Tipo', name : 'Tipo', width : 100, sortable : true, align: 'left'},
-				{display: 'Fecha', name : 'Fecha', width : 250, sortable : true, align: 'left'},
-				{display: 'Sucursal', name : 'Sucursal', width : 100, sortable : true, align: 'left'}
-			],
-			searchitems: [
-				{display: 'Nombre', name : 'nombre'},
-				{display: 'RFC', name : 'rfc', isdefault: true},
-				{display: 'Direccion', name : 'direccion'}
-			]
+
+Reports.prototype.loadClientesComprasTodasReport = function(){
+
+	this.cleanDivs();
+	
+	//ejemplo cargar grafica mediante datos json
+	appAdmin.addGraphWithTitle({
+			title: 'Compras de la &uacute;ltima Semana',
+			width:325, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-0',
+			canvasID: 'canvas-0',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'semana', method: 'graficaCompras'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
 			});
 
+
+	//ejemplo cargar grafica mediante datos json
+	appAdmin.addGraphWithTitle({
+			title: 'Compras del &uacute;ltimo Mes',
+			width:325, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-1',
+			canvasID: 'canvas-1',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'mes', method: 'graficaCompras'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
+			});
+			
+	appAdmin.addGraphWithTitle({
+			title: 'Compras del &uacute;ltimo A&ntilde;o',
+			width:324, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-2',
+			canvasID: 'canvas-2',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'year', method: 'graficaCompras'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
+			});
 
 
 }
 
-Reports.prototype.loadClientesComprasCreditoReport = function(config){
+Reports.prototype.loadVentasCreditoReport = function(config){
 
+	this.cleanDivs();
 
 	//reporteClientesComprasCredito_jgrid
 	Datos.loadDataGrid2({
-			renderTo: 'content',
-			title: 'Compras a cr&eacute;dito',
+			renderTo: 'datos-render',
+			title: 'Ventas a cr&eacute;dito',
 			width: '100%',
 			url: '../serverProxy.php',
 			data: 'method=reporteClientesComprasCredito_jgrid',
 			addNewGrid: false,
 			sortname: 'v.fecha',
 			colModel: [
-				{display: 'ID', name : 'id', width : 30, sortable : true, align: 'left'},
-				{display: 'Nombre', name : 'Cliente', width : 300, sortable : true, align: 'left'},
-				{display: 'Total', name : 'Total', width : 80, sortable : true, align: 'left'},
-				{display: 'Tipo', name : 'Tipo', width : 100, sortable : true, align: 'left'},
-				{display: 'Fecha', name : 'Fecha', width : 250, sortable : true, align: 'left'},
-				{display: 'Sucursal', name : 'Sucursal', width : 100, sortable : true, align: 'left'}
+				{display: 'Venta', name : 'id_venta', width : 50, sortable : true, align: 'left'},
+				{display: 'Total', name : 'Total', width : 100, sortable : true, align: 'left'},
+				{display: 'Pagado', name : 'Pagado', width : 80, sortable : true, align: 'left'},
+				{display: 'Debe', name : 'Debe', width : 100, sortable : true, align: 'left'},
+				{display: 'Nombre', name : 'Nombre', width : 300, sortable : true, align: 'left'},
+				{display: 'Fecha', name : 'Fecha', width : 100, sortable : true, align: 'left'}
 			],
 			searchitems: [
-				{display: 'Nombre', name : 'nombre'},
-				{display: 'RFC', name : 'rfc', isdefault: true},
-				{display: 'Direccion', name : 'direccion'}
+				{display: 'Nombre', name : 'Nombre', isdefault: true},
+				{display: 'Venta', name : 'id_venta'},
+				{display: 'Fecha', name : 'Fecha'}
 			]
 			});
+			
+	appAdmin.addGraphWithTitle({
+			title: 'Ventas a cr&eacute;dito de la &uacute;ltima Semana',
+			width:325, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-0',
+			canvasID: 'canvas-0',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'semana', method: 'graficaVentasCredito'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
+			});
+			
+	appAdmin.addGraphWithTitle({
+			title: 'Ventas a cr&eacute;dito del &uacute;ltimo Mes',
+			width:325, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-1',
+			canvasID: 'canvas-1',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'mes', method: 'graficaVentasCredito'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
+			});
+
+
+	appAdmin.addGraphWithTitle({
+			title: 'Ventas a cr&eacute;dito del &uacute;ltimo A&ntilde;o',
+			width:324, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-2',
+			canvasID: 'canvas-2',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'year', method: 'graficaVentasCredito'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
+			});
+
+}
+
+Reports.prototype.loadVentasContadoReport = function(config){
+
+	this.cleanDivs();
+
+	//reporteClientesComprasCredito_jgrid
+	Datos.loadDataGrid2({
+			renderTo: 'datos-render',
+			title: 'Ventas de contado',
+			width: '100%',
+			url: '../serverProxy.php',
+			data: 'method=reporteClientesComprasContado_jgrid',
+			addNewGrid: false,
+			sortname: 'v.fecha',
+			colModel: [
+				{display: 'Venta', name : 'id_venta', width : 50, sortable : true, align: 'left'},
+				{display: 'Total', name : 'Total', width : 100, sortable : true, align: 'left'},
+				{display: 'Nombre', name : 'Nombre', width : 300, sortable : true, align: 'left'},
+				{display: 'Fecha', name : 'Fecha', width : 100, sortable : true, align: 'left'}
+			],
+			searchitems: [
+				{display: 'Nombre', name : 'Nombre', isdefault: true},
+				{display: 'Venta', name : 'id_venta'},
+				{display: 'Fecha', name : 'Fecha'}
+			]
+			});
+			
+	appAdmin.addGraphWithTitle({
+			title: 'Ventas de contado de la &uacute;ltima Semana',
+			width:325, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-0',
+			canvasID: 'canvas-0',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'semana', method: 'graficaVentasContado'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
+			});
+			
+	appAdmin.addGraphWithTitle({
+			title: 'Ventas de contado del &uacute;ltimo Mes',
+			width:325, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-1',
+			canvasID: 'canvas-1',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'mes', method: 'graficaVentasContado'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
+			});
+
+
+	appAdmin.addGraphWithTitle({
+			title: 'Ventas de contado del &uacute;ltimo A&ntilde;o',
+			width:324, 
+			height:150,
+			renderTo: 'graficas-render',
+			divID: 'graph-2',
+			canvasID: 'canvas-2',
+			tipo: 'bar',
+			remoteData: true,
+			url: "../serverProxy.php",
+			params: {dateRange : 'year', method: 'graficaVentasContado'},
+			success: function(msg){
+					
+					//alert(msg.success);
+				},
+			failure: function(msg){
+			
+			}
+			});
+
+}
+
+
+Reports.prototype.cleanDivs = function(){
+
+	$('#graficas-render').html("");
+	$('#datos-render').html("");
 
 }

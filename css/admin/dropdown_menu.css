@@ -31,6 +31,8 @@
 		/*color:#333;*/
 		text-shadow: white 0px 1px 0px;
 		color: #273437;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size: 11px;
 	}
 
 	#nav li a:hover {

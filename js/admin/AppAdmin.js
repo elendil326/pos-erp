@@ -125,22 +125,6 @@ AppAdmin.prototype.addGraph = function(config){
 	graph.appendChild(canvas);
 	
 	
-	/*
-	var options = {
-	   "IECanvasHTC": "/plotkit/iecanvas.htc",
-	   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
-	   "padding": {left: 0, right: 0, top: 10, bottom: 30},
-	   "xTicks": [{v:0, label:"zero"}, 
-		  {v:1, label:"one"}, 
-		  {v:2, label:"two"},
-		  {v:3, label:"three"},
-		  {v:4, label:"four"}],
-	   "drawYAxis": false
-	};
-	
-	*/
-	
-	
 	if(config.remoteData)
 	{
 		AppAdmin.request({
@@ -250,17 +234,11 @@ AppAdmin.prototype.addGraphWithTitle = function(config){
 	
 	$(titleSelector).html(config.title);
 	
-	$(wrapperSelector).addClass('wrapper');
+	$(wrapperSelector).addClass('wrapper-graph');
 	$(titleSelector).addClass('title-graph');
 	
-	/*
-	var layout = new PlotKit.Layout(config.tipo, {});
-	layout.addDataset("sqrt", config.data);
-	layout.evaluate();
-	var canvas = MochiKit.DOM.getElement(config.canvasID);
-	var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, {});
-	plotter.render();*/
 	
+	//Si remoteData es verdadero, sacaremos los datos de la grafica haciendo un ajax
 	if(config.remoteData)
 	{
 		AppAdmin.request({

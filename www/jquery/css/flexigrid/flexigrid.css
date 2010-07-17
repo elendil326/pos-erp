@@ -1,6 +1,15 @@
 @charset "UTF-8";
 /* CSS Document */
 
+.ftitle{
+	color: #273437;
+	text-shadow: white 0px 1px 0px;
+	font-weight: bold;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+
+}
+
 .flexigrid
 	{
 	font-family: Arial, Helvetica, sans-serif;
