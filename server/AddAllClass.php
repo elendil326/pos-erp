@@ -295,10 +295,16 @@
 		case 'vendedorMasProductivoSucursal':							vendedorMasProductivoSucursal(); break;
 		case 'productoMasVendidoSucursal':							productoMasVendidoSucursal(); break;
 		case 'clienteComprasTopSucursal' :							clienteComprasTopSucursal(); break;
+	
+		//graficas para los reportes
 		case 'graficaVentas'		:							graficaVentas(); break;
 		case 'graficaVentasContado'	:							graficaVentasContado(); break;
 		case 'graficaVentasCredito'	:							graficaVentasCredito(); break;
 		case 'graficaCompras'		:							graficaCompras(); break;
+		case 'graficaComprasContado'	:							graficaComprasContado(); break;
+		case 'graficaComprasCredito'	:							graficaComprasCredito(); break;
+		case 'graficaGastos'		:							graficaGastos(); break;
+		case 'graficaIngresos'		:							graficaIngresos(); break;
 		//------
 		case 'listarProveedores': 								listarProveedores(); 	break;
 		case 'actualizarProveedor':								actualizarProveedor();	break;
