@@ -88,15 +88,15 @@
 	}
 </script>
 <!-- template designed by Julien Damon based on PHPEdit's generated templates, and tweaked by Greg Beaver -->
-<body bgcolor="#ffffff"  topmargin="3" leftmargin="3" rightmargin="2" bottommargin="3"><h3>Navigation: com-hdclass-logger</h3>
+<body bgcolor="#ffffff"  topmargin="3" leftmargin="3" rightmargin="2" bottommargin="3"><h3>Navigation: pos</h3>
 <script language="Javascript">
 if (document.getElementById) {
-  var tree = new WebFXTree('Help : com-hdclass-logger', 'blank.html');
+  var tree = new WebFXTree('Help : pos', 'blank.html');
   tree.setBehavior('classic');
   tree.openIcon = 'media/images/Disk.gif';
   tree.icon = 'media/images/Disk.gif';
 
-    var elements = new WebFXTreeItem('Index of elements', 'elementindex_com-hdclass-logger.html');
+    var elements = new WebFXTreeItem('Index of elements', 'elementindex_pos.html');
     elements.openIcon = 'media/images/file.png';
     elements.icon = 'media/images/file.png';
 	tree.add(elements);
@@ -106,12 +106,12 @@ if (document.getElementById) {
     tree_function.icon = 'media/images/Functions.gif';
     	tree.add(tree_function);
 
-	var tree_interface = new WebFXTreeItem('Interface(s)', 'classtrees_com-hdclass-logger.html');
+	var tree_interface = new WebFXTreeItem('Interface(s)', 'classtrees_pos.html');
     tree_interface.openIcon = 'media/images/classFolder.gif';
     tree_interface.icon = 'media/images/classFolder.gif';
     	tree.add(tree_interface);
 	
-    var tree_classe = new WebFXTreeItem('Class(es)', 'classtrees_com-hdclass-logger.html');
+    var tree_classe = new WebFXTreeItem('Class(es)', 'classtrees_pos.html');
     tree_classe.openIcon = 'media/images/classFolder.gif';
     tree_classe.icon = 'media/images/classFolder.gif';
     	tree.add(tree_classe);
@@ -119,11 +119,39 @@ if (document.getElementById) {
     var tree_file = new WebFXTreeItem('File(s)', '');
     tree_file.openIcon = 'media/images/FolderOpened.gif';
     tree_file.icon = 'media/images/foldericon.png';
-    	  var file = new WebFXTreeItem('logger.php', 'com-hdclass-logger/_server---mx.caffeina.logger---logger.php.html');
+    	  var file = new WebFXTreeItem('dispatcher.php', 'pos/_server---dispatcher.php.html');
+      file.openIcon = 'media/images/file.png';
+      file.icon = 'media/images/file.png';
+      tree_file.add(file);
+    	  var file = new WebFXTreeItem('proxy.php', 'pos/_www---proxy.php.html');
       file.openIcon = 'media/images/file.png';
       file.icon = 'media/images/file.png';
       tree_file.add(file);
     	tree.add(tree_file);
+  var subpackagetree = new WebFXTreeItem('Subpackage : db', '');
+  subpackagetree.openIcon = 'media/images/Disk.gif';
+  subpackagetree.icon = 'media/images/Disk.gif';
+
+    var subpackagetree_function = new WebFXTreeItem('Function(s)', '');
+    subpackagetree_function.openIcon = 'media/images/Functions.gif';
+    subpackagetree_function.icon = 'media/images/Functions.gif';
+    	subpackagetree.add(subpackagetree_function);
+	
+    var subpackagetree_classe = new WebFXTreeItem('Class(es)', 'classtrees_pos.html');
+    subpackagetree_classe.openIcon = 'media/images/classFolder.gif';
+    subpackagetree_classe.icon = 'media/images/classFolder.gif';
+    	subpackagetree.add(subpackagetree_classe);
+
+    var subpackagetree_file = new WebFXTreeItem('File(s)', '');
+    subpackagetree_file.openIcon = 'media/images/FolderOpened.gif';
+    subpackagetree_file.icon = 'media/images/foldericon.png';
+    	  var file = new WebFXTreeItem('DBConnection.php', 'pos/db/_server---db---DBConnection.php.html');
+      file.openIcon = 'media/images/file.png';
+      file.icon = 'media/images/file.png';
+      subpackagetree_file.add(file);
+    	subpackagetree.add(subpackagetree_file);
+	
+	tree.add(subpackagetree);
   document.write(tree);
 }
 </script>

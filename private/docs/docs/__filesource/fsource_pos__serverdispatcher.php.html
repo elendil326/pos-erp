@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+   <html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>File Source for dispatcher.php</title>
+  <link rel="stylesheet" href="../media/stylesheet.css" />
+<!-- template designed by Julien Damon based on PHPEdit's generated templates, and tweaked by Greg Beaver -->
+<body bgcolor="#ffffff" ><h1 align="center">Source for file dispatcher.php</h1>
+<p>Documentation is available at <a href="../pos/_server---dispatcher.php.html">dispatcher.php</a></p>
+<div class="src-code">
+<div class="src-code"><ol><li><div class="src-line"><a name="a1"></a><strong>&lt;?php</strong></div></li>
+<li><div class="src-line"><a name="a2"></a><font color="#009999">/**</font></div></li>
+<li><div class="src-line"><a name="a3"></a><font color="#009999">*&nbsp;Archivo&nbsp;principal&nbsp;del&nbsp;sistema,&nbsp;por&nbsp;aquí&nbsp;pasan&nbsp;todas&nbsp;la&nbsp;peticiones&nbsp;del&nbsp;cliente.</font></div></li>
+<li><div class="src-line"><a name="a4"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a5"></a><font color="#009999">*&nbsp;Este&nbsp;archivo&nbsp;incluye&nbsp;los&nbsp;scripts&nbsp;que&nbsp;estan&nbsp;disponibles&nbsp;en&nbsp;todo&nbsp;el&nbsp;sistema.&nbsp;Ademas</font></div></li>
+<li><div class="src-line"><a name="a6"></a><font color="#009999">*&nbsp;gestiona&nbsp;los&nbsp;niveles&nbsp;de&nbsp;seguridad&nbsp;de&nbsp;los&nbsp;usuarios&nbsp;y&nbsp;recibe&nbsp;los&nbsp;datos&nbsp;necesarios</font></div></li>
+<li><div class="src-line"><a name="a7"></a><font color="#009999">*&nbsp;para&nbsp;despues&nbsp;pasarlos&nbsp;a&nbsp;la&nbsp;aplicación&nbsp;adecuada.</font></div></li>
+<li><div class="src-line"><a name="a8"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a9"></a><font color="#009999">*&nbsp;</font><strong><font color = "#0099FF">@author</font></strong><font color="#009999">&nbsp;Manuel&nbsp;Alejandro&nbsp;Gómez&nbsp;Nicasio&nbsp;&lt;alejandro.gomez@alejandrogomez.org&gt;</font></div></li>
+<li><div class="src-line"><a name="a10"></a><font color="#009999">*&nbsp;</font><strong><font color = "#0099FF">@package</font></strong><font color="#009999">&nbsp;pos</font></div></li>
+<li><div class="src-line"><a name="a11"></a><font color="#009999">*/</font></div></li>
+<li><div class="src-line"><a name="a12"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a13"></a><font color="#009999">/**</font></div></li>
+<li><div class="src-line"><a name="a14"></a><font color="#009999">*&nbsp;Loggin&nbsp;del&nbsp;sistema.</font></div></li>
+<li><div class="src-line"><a name="a15"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a16"></a><font color="#009999">*&nbsp;</font><strong><font color = "#0099FF">@see</font></strong><font color="#009999">&nbsp;logger.php</font></div></li>
+<li><div class="src-line"><a name="a17"></a><font color="#009999">*/</font></div></li>
+<li><div class="src-line"><a name="a18"></a><font color="blue">require_once</font><strong>(</strong><font color="#66cccc">'mx.caffeina.logger/logger.php'</font><strong>)</strong><strong>;</strong></div></li>
+<li><div class="src-line"><a name="a19"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a20"></a><font color="#009999">/**</font></div></li>
+<li><div class="src-line"><a name="a21"></a><font color="#009999">*&nbsp;Conexión&nbsp;a&nbsp;la&nbsp;base&nbsp;de&nbsp;datos.</font></div></li>
+<li><div class="src-line"><a name="a22"></a><font color="#009999">*</font></div></li>
+<li><div class="src-line"><a name="a23"></a><font color="#009999">*&nbsp;</font><strong><font color = "#0099FF">@see</font></strong><font color="#009999">&nbsp;DBConnection.php</font></div></li>
+<li><div class="src-line"><a name="a24"></a><font color="#009999">*/</font></div></li>
+<li><div class="src-line"><a name="a25"></a><font color="blue">require_once</font><strong>(</strong><font color="#66cccc">'db/DBConnection.php'</font><strong>)</strong><strong>;</strong></div></li>
+<li><div class="src-line"><a name="a26"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a27"></a><font color="green">//Comprobamos&nbsp;que&nbsp;la&nbsp;variable&nbsp;que&nbsp;trae&nbsp;la&nbsp;funcion&nbsp;a&nbsp;ejecutar&nbsp;exista&nbsp;y&nbsp;despues&nbsp;</font></div></li>
+<li><div class="src-line"><a name="a28"></a><font color="green">//entramos&nbsp;al&nbsp;switch.</font></div></li>
+<li><div class="src-line"><a name="a29"></a><font color="blue">if&nbsp;</font><strong>(&nbsp;</strong>isset<strong>(</strong><strong>$_REQUEST</strong><strong>[</strong><font color="#66cccc">'action'</font><strong>]</strong><strong>)&nbsp;)</strong></div></li>
+<li><div class="src-line"><a name="a30"></a><strong>{</strong></div></li>
+<li><div class="src-line"><a name="a31"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">return&nbsp;</font><font color="#66cccc">&quot;No&nbsp;hay&nbsp;acciones&nbsp;por&nbsp;ejecutar.&quot;</font><strong>;</strong></div></li>
+<li><div class="src-line"><a name="a32"></a><strong>}</strong></div></li>
+<li><div class="src-line"><a name="a33"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a34"></a><font color="green">//switch&nbsp;enorme&nbsp;para&nbsp;ejectuar&nbsp;un&nbsp;action&nbsp;de&nbsp;algun&nbsp;modelo.</font></div></li>
+<li><div class="src-line"><a name="a35"></a><font color="green">//aquí&nbsp;va&nbsp;la&nbsp;seguridad&nbsp;del&nbsp;sistema&nbsp;(ACL)</font></div></li>
+</ol></div>
+</div>
+	<div id="credit">
+		<hr />
+		Documentation generated on Mon, 19 Jul 2010 03:16:19 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</div>
+</body>
+</html>

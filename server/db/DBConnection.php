@@ -25,7 +25,7 @@ require_once('adodb5/adodb-exceptions.inc.php');
 *
 * @see logger.php
 */
-require_once('mx.caffeina.logger/logger.php');
+require_once('../server/mx.caffeina.logger/logger.php');
 
 /**
 * Usuario de la base de datos.
