@@ -31,5 +31,20 @@ if ( isset($_REQUEST['action']) )
         return "No hay acciones por ejecutar.";
 }
 
+switch ($_REQUEST['action']) {
+    case 'insert_customer':
+        $rfc = $_REQUEST['rfc'];
+        $nombre = $_REQUEST['nombre'];
+        $direccion = $_REQUEST['direccion'];
+        $limite_credito = $_REQUEST['limite_credito'];
+        $descuento = $_REQUEST['descuento'];
+        $telefono = $_REQUEST['telefono'];
+        $e_mail = $_REQUEST['e_mail'];
+        unset($_REQUEST);
+        $ans = insert_customer($rfc, $nombre, $direccion, $limite_credito, $descuento, $telefono, $e_mail);
+        echo $ans;
+        break;
+}
+
 //switch enorme para ejectuar un action de algun modelo.
 //aquí va la seguridad del sistema (ACL)
