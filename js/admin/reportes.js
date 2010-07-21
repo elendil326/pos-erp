@@ -389,7 +389,7 @@ Reports.prototype.loadVentasTodas = function(){
 			canvasID: 'canvas-ventas-0',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'semana', method: 'graficaVentas'},
 			success: function(msg){
 					
@@ -409,7 +409,7 @@ Reports.prototype.loadVentasTodas = function(){
 			canvasID: 'canvas-ventas-1',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'mes', method: 'graficaVentas'},
 			success: function(msg){
 					
@@ -429,7 +429,7 @@ Reports.prototype.loadVentasTodas = function(){
 			canvasID: 'canvas-ventas-2',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'year', method: 'graficaVentas'},
 			success: function(msg){
 					
@@ -444,7 +444,7 @@ Reports.prototype.loadVentasTodas = function(){
 			renderTo: 'datos-render',
 			title: 'Ventas',
 			width: '100%',
-			url: '../serverProxy.php',
+			url: '../proxy.php',
 			data: 'method=reporteClientesCompras_jgrid',
 			addNewGrid: false,
 			sortname: 'id',
@@ -476,7 +476,7 @@ Reports.prototype.loadClientesDebenReport = function(){
 			renderTo: 'datos-render',
 			title: 'Clientes Deben',
 			width: '100%',
-			url: '../serverProxy.php',
+			url: '../proxy.php',
 			data: 'method=reporteClientesDeben_jgrid',
 			addNewGrid: false,
 			sortname: 'id',
@@ -506,7 +506,7 @@ Reports.prototype.loadClientesReport = function(){
 			renderTo: 'datos-render',
 			title: 'Clientes',
 			width: '100%',
-			url: '../serverProxy.php',
+			url: '../proxy.php',
 			data: 'method=reporteClientesTodos_jgrid',
 			addNewGrid: false,
 			sortname: 'id',
@@ -543,7 +543,7 @@ Reports.prototype.loadClientesComprasTodasReport = function(){
 			canvasID: 'canvas-0',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'semana', method: 'graficaCompras'},
 			success: function(msg){
 					
@@ -565,7 +565,7 @@ Reports.prototype.loadClientesComprasTodasReport = function(){
 			canvasID: 'canvas-1',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'mes', method: 'graficaCompras'},
 			success: function(msg){
 					
@@ -585,7 +585,7 @@ Reports.prototype.loadClientesComprasTodasReport = function(){
 			canvasID: 'canvas-2',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'year', method: 'graficaCompras'},
 			success: function(msg){
 					
@@ -608,7 +608,7 @@ Reports.prototype.loadVentasCreditoReport = function(config){
 			renderTo: 'datos-render',
 			title: 'Ventas a cr&eacute;dito',
 			width: '100%',
-			url: '../serverProxy.php',
+			url: '../proxy.php',
 			data: 'method=reporteClientesComprasCredito_jgrid',
 			addNewGrid: false,
 			sortname: 'v.fecha',
@@ -636,7 +636,7 @@ Reports.prototype.loadVentasCreditoReport = function(config){
 			canvasID: 'canvas-0',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'semana', method: 'graficaVentasCredito'},
 			success: function(msg){
 					
@@ -656,7 +656,7 @@ Reports.prototype.loadVentasCreditoReport = function(config){
 			canvasID: 'canvas-1',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'mes', method: 'graficaVentasCredito'},
 			success: function(msg){
 					
@@ -677,7 +677,7 @@ Reports.prototype.loadVentasCreditoReport = function(config){
 			canvasID: 'canvas-2',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'year', method: 'graficaVentasCredito'},
 			success: function(msg){
 					
@@ -699,7 +699,7 @@ Reports.prototype.loadVentasContadoReport = function(config){
 			renderTo: 'datos-render',
 			title: 'Ventas de contado',
 			width: '100%',
-			url: '../serverProxy.php',
+			url: '../proxy.php',
 			data: 'method=reporteClientesComprasContado_jgrid',
 			addNewGrid: false,
 			sortname: 'v.fecha',
@@ -725,7 +725,7 @@ Reports.prototype.loadVentasContadoReport = function(config){
 			canvasID: 'canvas-0',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'semana', method: 'graficaVentasContado'},
 			success: function(msg){
 					
@@ -745,7 +745,7 @@ Reports.prototype.loadVentasContadoReport = function(config){
 			canvasID: 'canvas-1',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'mes', method: 'graficaVentasContado'},
 			success: function(msg){
 					
@@ -766,7 +766,7 @@ Reports.prototype.loadVentasContadoReport = function(config){
 			canvasID: 'canvas-2',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'year', method: 'graficaVentasContado'},
 			success: function(msg){
 					
@@ -792,7 +792,7 @@ Reports.prototype.loadGastosReport = function(){
 			canvasID: 'canvas-0',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'semana', method: 'graficaGastos'},
 			success: function(msg){
 					
@@ -812,7 +812,7 @@ Reports.prototype.loadGastosReport = function(){
 			canvasID: 'canvas-1',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'mes', method: 'graficaGastos'},
 			success: function(msg){
 					
@@ -833,7 +833,7 @@ Reports.prototype.loadGastosReport = function(){
 			canvasID: 'canvas-2',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'year', method: 'graficaGastos'},
 			success: function(msg){
 					
@@ -860,7 +860,7 @@ Reports.prototype.loadIngresosReport = function(){
 			canvasID: 'canvas-0',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'semana', method: 'graficaIngresos'},
 			success: function(msg){
 					
@@ -880,7 +880,7 @@ Reports.prototype.loadIngresosReport = function(){
 			canvasID: 'canvas-1',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'mes', method: 'graficaIngresos'},
 			success: function(msg){
 					
@@ -901,7 +901,7 @@ Reports.prototype.loadIngresosReport = function(){
 			canvasID: 'canvas-2',
 			tipo: 'bar',
 			remoteData: true,
-			url: "../serverProxy.php",
+			url: "../proxy.php",
 			params: {dateRange : 'year', method: 'graficaIngresos'},
 			success: function(msg){
 					
