@@ -14,7 +14,7 @@ if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandl
 	$comprimir = false;
 
 	//incluir jsmin
-	include_once("../server/JSMin.php");
+	include_once("../server/misc/JSMin.php");
 
 	//minificar js
 	function miniJS( $fileData ){

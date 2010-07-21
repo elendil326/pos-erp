@@ -26,9 +26,10 @@ require_once('db/DBConnection.php');
 
 //Comprobamos que la variable que trae la funcion a ejecutar exista y despues 
 //entramos al switch.
-if ( isset($_REQUEST['action']) )
+if ( !isset($_REQUEST['action']) )
 {
-        return "No hay acciones por ejecutar.";
+	echo "{ success: false }";
+        return;
 }
 
 switch ($_REQUEST['action']) {
