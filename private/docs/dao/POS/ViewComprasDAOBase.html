@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class ViewComprasDAOBase</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name"><img src="../media/images/AbstractPrivateClass_logo.png"
+														alt="AbstractPrivate Class"
+														title="AbstractPrivate Class"
+														style="vertical-align: middle"> ViewComprasDAOBase</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+							<a href="#sec-descendents">Descendents</a>
+			|													<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">ViewCompras Data Access Object (DAO) Base.</p>
+<p class="description"><p>Esta clase contiene toda la manipulacion de bases de datos que se necesita para  <strong>recuperar</strong> instancias de objetos <a href="../POS/ViewCompras.html">ViewCompras</a>.</p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Alan Gonzalez &lt;<a href="mailto:alan@caffeina.mx">alan@caffeina.mx</a>&gt;</li>
+				<li><span class="field">abstract:</span> </li>
+				<li><span class="field">access:</span> private</li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_model---base---view_compras.dao.base.php.html">/model/base/view_compras.dao.base.php</a> (line <span class="field"><a href="../__filesource/fsource_POS__modelbaseview_compras.dao.base.php.html#a10">10</a></span>)
+		</p>
+		
+				
+		<pre><a href="../POS/VistaDAO.html">VistaDAO</a>
+   |
+   --ViewComprasDAOBase</pre>
+	
+			</div>
+</div>
+
+	<a name="sec-descendents"></a>
+	<div class="info-box">
+		<div class="info-box-title">Direct descendents</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+			<span class="disabled">Descendents</span>
+			|															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<table cellpadding="2" cellspacing="0" class="class-table">
+				<tr>
+					<th class="class-table-header">Class</th>
+					<th class="class-table-header">Description</th>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em; white-space: nowrap">
+						<img src="../media/images/Class.png"
+								 alt=" class"
+								 title=" class"
+								 style="vertical-align: center"/>
+						<a href="../POS/ViewComprasDAO.html">ViewComprasDAO</a>
+					</td>
+					<td>
+											ViewCompras Data Access Object (DAO).
+										</td>
+				</tr>
+							</table>
+		</div>
+	</div>
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendants</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+												<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+											static <span class="method-result">Array</span>
+										<a href="#getAll" title="details" class="method-name">getAll</a>
+										()
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/StaticMethod.png" alt=" "/>
+											static <span class="method-result">Array</span>
+										<a href="#search" title="details" class="method-name">search</a>
+											(<span class="var-type">Objeto</span>&nbsp;<span class="var-name">$view_compras</span>)
+									</div>
+																															</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+													<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodgetAll" id="getAll"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static getAll</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__modelbaseview_compras.dao.base.php.html#a24">24</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Obtener todas las filas.</p>
+<p class="description"><p>Esta funcion leera todos los contenidos de la vista en la base de datos y construira  un vector que contiene objetos de tipo <a href="../POS/ViewCompras.html">ViewCompras</a>. Tenga en cuenta que este metodo  consumen enormes cantidades de recursos si la tabla tiene muchas filas.  Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Un arreglo que contiene objetos del tipo <a href="../POS/ViewCompras.html">ViewCompras</a>.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Array</span>
+		<span class="method-name">
+			getAll
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodsearch" id="search"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/StaticMethod.png" />
+		<span class="method-title">static search</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__modelbaseview_compras.dao.base.php.html#a60">60</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Buscar registros.</p>
+<p class="description"><p>Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos <a href="../POS/ViewCompras.html">ViewCompras</a> de la base de datos.  Consiste en buscar todos los objetos que coinciden con las variables permanentes instanciadas de objeto pasado como argumento.  Aquellas variables que tienen valores NULL seran excluidos en busca de criterios.</p><p><div class="src-code"><ol><li><div class="src-line">&nbsp;&nbsp;<span class="src-doc">/**</span></div></li>
+<li><div class="src-line"><span class="src-doc">&nbsp;&nbsp;&nbsp;*&nbsp;Ejemplo&nbsp;de&nbsp;uso&nbsp;-&nbsp;buscar&nbsp;todos&nbsp;los&nbsp;clientes&nbsp;que&nbsp;tengan&nbsp;limite&nbsp;de&nbsp;credito&nbsp;igual&nbsp;a&nbsp;20000</span></div></li>
+<li><div class="src-line"><span class="src-doc">&nbsp;&nbsp;&nbsp;*/</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$cliente&nbsp;</span>=&nbsp;<span class="src-key">new&nbsp;</span><span class="src-id"><a href="../POS/Cliente.html">Cliente</a></span><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$cliente</span><span class="src-sym">-&gt;</span><span class="src-id">setLimiteCredito</span><span class="src-sym">(</span><span class="src-str">&quot;20000&quot;</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$resultados&nbsp;</span>=&nbsp;<span class="src-id"><a href="../POS/ClienteDAO.html">ClienteDAO</a></span><span class="src-sym">::</span><span class="src-id">search</span><span class="src-sym">(</span><span class="src-var">$cliente</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;</div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">foreach</span><span class="src-sym">(</span><span class="src-var">$resultados&nbsp;</span><span class="src-key">as&nbsp;</span><span class="src-var">$c&nbsp;</span><span class="src-sym">)</span><span class="src-sym">{</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;<span class="src-var">$c</span><span class="src-sym">-&gt;</span><span class="src-id">getNombre</span><span class="src-sym">(</span><span class="src-sym">)&nbsp;</span>.&nbsp;<span class="src-str">&quot;&lt;br&gt;&quot;</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
+</ol></div></p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Un arreglo de objetos del tipo <a href="../POS/ViewCompras.html">ViewCompras</a> que coinciden con el objeto de busqueda.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Array</span>
+		<span class="method-name">
+			search
+		</span>
+					(<span class="var-type">Objeto</span>&nbsp;<span class="var-name">$view_compras</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Objeto</span>
+				<span class="var-name">$view_compras</span><span class="var-description">: Un objeto del tipo <a href="../POS/ViewCompras.html">ViewCompras</a>.</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+	
+	<p class="notes" id="credit">
+		Documentation generated on Wed, 21 Jul 2010 04:15:06 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>
