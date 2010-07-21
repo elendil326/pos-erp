@@ -66,7 +66,7 @@ AND `i`.`id_usuario` = `u`.`id_usuario` );
 ********************************************************/
 
 CREATE OR REPLACE VIEW view_detalle_venta
-AS SELECT `d`.`id_venta`, `d`.`id_producto`,`i`.`denominacion`, `d`.`cantidad`, `d`.`precio`, `v`.`fecha`, `v`.`tipo_venta`
+AS SELECT `d`.`id_venta`, `d`.`id_producto`,`i`.`denominacion`, `d`.`cantidad`, `d`.`precio`, `v`.`fecha`, `v`.`tipo_venta`, `v`.`id_sucursal`
 FROM `detalle_venta` AS d
 INNER JOIN ( `inventario` AS i, `ventas` AS v)
 ON ( `d`.`id_venta` = `v`.`id_venta`
@@ -78,7 +78,7 @@ AND `d`.`id_producto` = `i`.`id_producto` );
 ********************************************************/
 
 CREATE OR REPLACE VIEW view_detalle_compra
-AS SELECT `d`.`id_compra`, `d`.`id_producto`,`i`.`denominacion`, `d`.`cantidad`, `d`.`precio`, `c`.`fecha`
+AS SELECT `d`.`id_compra`, `d`.`id_producto`,`i`.`denominacion`, `d`.`cantidad`, `d`.`precio`, `c`.`fecha`, `c`.`tipo_compra`, `c`. `id_sucursal`
 FROM `detalle_compra` AS d
 INNER JOIN ( `inventario` AS i, `compras` AS c)
 ON ( `d`.`id_compra` = `c`.`id_compra`
