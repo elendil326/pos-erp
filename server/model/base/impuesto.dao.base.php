@@ -7,15 +7,16 @@
   * @access private
   * 
   */
-abstract class ImpuestoDAOBase
+abstract class ImpuestoDAOBase extends TablaDAO
 {
 
 	/**
-	  *	metodo save 
+	  *	Guardar registros. 
 	  *	
 	  *	Este metodo guarda el estado actual del objeto {@link Impuesto} pasado en la base de datos. La llave 
-	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara 
-	  *	no esta definicda en el objeto, entonces save() creara una nueva fila.
+	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
+	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
+	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @param Impuesto [$impuesto] El objeto de tipo Impuesto
@@ -23,11 +24,11 @@ abstract class ImpuestoDAOBase
 	  **/
 	public static final function save( &$impuesto )
 	{
-		if(  $impuesto->getIdImpuesto()  )
+		if( self::getByPK(  $impuesto->getIdImpuesto() ) === NULL )
 		{
-			return ImpuestoDAOBase::update( $impuesto) ;
-		}else{
 			return ImpuestoDAOBase::create( $impuesto) ;
+		}else{
+			return ImpuestoDAOBase::update( $impuesto) ;
 		}
 	}
 
@@ -35,11 +36,11 @@ abstract class ImpuestoDAOBase
 	/**
 	  *	Obtener {@link Impuesto} por llave primaria. 
 	  *	
-	  * This will create and load {@link Impuesto} objects contents from database 
-	  * using given Primary-Key as identifier. 
+	  * Este metodo cargara un objeto {@link Impuesto} de la base de datos 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link Impuesto}.
+	  * @return Objeto Un objeto del tipo {@link Impuesto}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_impuesto )
 	{
@@ -47,6 +48,7 @@ abstract class ImpuestoDAOBase
 		$params = array(  $id_impuesto );
 		global $db;
 		$rs = $db->GetRow($sql, $params);
+		if(count($rs)==0)return NULL;
 		return new Impuesto( $rs );
 	}
 
@@ -95,7 +97,7 @@ abstract class ImpuestoDAOBase
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Objeto Un objeto del tipo {@link Impuesto}.
+	  * @param Impuesto [$impuesto] El objeto de tipo Impuesto
 	  **/
 	public static final function search( $impuesto )
 	{
@@ -140,7 +142,8 @@ abstract class ImpuestoDAOBase
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Impuesto} a actualizar. 
+	  * @return Filas afectadas
+	  * @param Impuesto [$impuesto] El objeto de tipo Impuesto a actualizar.
 	  **/
 	private static final function update( $impuesto )
 	{
@@ -152,6 +155,7 @@ abstract class ImpuestoDAOBase
 			$impuesto->getIdImpuesto(), );
 		global $db;
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 
@@ -162,10 +166,11 @@ abstract class ImpuestoDAOBase
 	  * contenidos del objeto Impuesto suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto Impuesto.
+	  * primaria generada en el objeto Impuesto dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Impuesto} a crear. 
+	  * @return Filas afectadas
+	  * @param Impuesto [$impuesto] El objeto de tipo Impuesto a crear.
 	  **/
 	private static final function create( &$impuesto )
 	{
@@ -178,7 +183,10 @@ abstract class ImpuestoDAOBase
 		 );
 		global $db;
 		$db->Execute($sql, $params);
+		$ar = $db->Affected_Rows();
+		if($ar == 0) return 0;
 		
+		return $ar;
 	}
 
 
@@ -187,22 +195,23 @@ abstract class ImpuestoDAOBase
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
 	  * en el objeto Impuesto suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). Restaurarlo solo se puede hacer usando el metodo create(), 
-	  * pero el objeto resultante tendra una diferente clave primaria de la que estaba en el objeto eliminado. 
-	  * Si no puede encontrar eliminar fila coincidente, NotFoundException sera lanzada.
+	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
+	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
+	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
-	  * @param Objeto El objeto del tipo {@link Impuesto} a eliminar. 
+	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
+	  *	@return int El numero de filas afectadas.
+	  * @param Impuesto [$impuesto] El objeto de tipo Impuesto a eliminar
 	  **/
 	public static final function delete( &$impuesto )
 	{
+		if(self::getByPK($impuesto->getIdImpuesto()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM impuesto WHERE  id_impuesto = ?;";
-
-		$params = array( 
-			$impuesto->getIdImpuesto(), );
-
+		$params = array( $impuesto->getIdImpuesto() );
 		global $db;
 
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 

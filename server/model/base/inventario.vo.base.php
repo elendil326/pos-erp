@@ -7,7 +7,7 @@
   * 
   */
 
-class Inventario
+class Inventario extends VO
 {
 	/**
 	  * Constructor de Inventario

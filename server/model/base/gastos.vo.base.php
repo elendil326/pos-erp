@@ -7,7 +7,7 @@
   * 
   */
 
-class Gastos
+class Gastos extends VO
 {
 	/**
 	  * Constructor de Gastos

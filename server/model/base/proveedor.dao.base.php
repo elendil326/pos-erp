@@ -7,15 +7,16 @@
   * @access private
   * 
   */
-abstract class ProveedorDAOBase
+abstract class ProveedorDAOBase extends TablaDAO
 {
 
 	/**
-	  *	metodo save 
+	  *	Guardar registros. 
 	  *	
 	  *	Este metodo guarda el estado actual del objeto {@link Proveedor} pasado en la base de datos. La llave 
-	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara 
-	  *	no esta definicda en el objeto, entonces save() creara una nueva fila.
+	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
+	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
+	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @param Proveedor [$proveedor] El objeto de tipo Proveedor
@@ -23,11 +24,11 @@ abstract class ProveedorDAOBase
 	  **/
 	public static final function save( &$proveedor )
 	{
-		if(  $proveedor->getIdProveedor()  )
+		if( self::getByPK(  $proveedor->getIdProveedor() ) === NULL )
 		{
-			return ProveedorDAOBase::update( $proveedor) ;
-		}else{
 			return ProveedorDAOBase::create( $proveedor) ;
+		}else{
+			return ProveedorDAOBase::update( $proveedor) ;
 		}
 	}
 
@@ -35,11 +36,11 @@ abstract class ProveedorDAOBase
 	/**
 	  *	Obtener {@link Proveedor} por llave primaria. 
 	  *	
-	  * This will create and load {@link Proveedor} objects contents from database 
-	  * using given Primary-Key as identifier. 
+	  * Este metodo cargara un objeto {@link Proveedor} de la base de datos 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link Proveedor}.
+	  * @return Objeto Un objeto del tipo {@link Proveedor}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_proveedor )
 	{
@@ -47,6 +48,7 @@ abstract class ProveedorDAOBase
 		$params = array(  $id_proveedor );
 		global $db;
 		$rs = $db->GetRow($sql, $params);
+		if(count($rs)==0)return NULL;
 		return new Proveedor( $rs );
 	}
 
@@ -95,7 +97,7 @@ abstract class ProveedorDAOBase
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Objeto Un objeto del tipo {@link Proveedor}.
+	  * @param Proveedor [$proveedor] El objeto de tipo Proveedor
 	  **/
 	public static final function search( $proveedor )
 	{
@@ -150,7 +152,8 @@ abstract class ProveedorDAOBase
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Proveedor} a actualizar. 
+	  * @return Filas afectadas
+	  * @param Proveedor [$proveedor] El objeto de tipo Proveedor a actualizar.
 	  **/
 	private static final function update( $proveedor )
 	{
@@ -164,6 +167,7 @@ abstract class ProveedorDAOBase
 			$proveedor->getIdProveedor(), );
 		global $db;
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 
@@ -174,10 +178,11 @@ abstract class ProveedorDAOBase
 	  * contenidos del objeto Proveedor suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto Proveedor.
+	  * primaria generada en el objeto Proveedor dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Proveedor} a crear. 
+	  * @return Filas afectadas
+	  * @param Proveedor [$proveedor] El objeto de tipo Proveedor a crear.
 	  **/
 	private static final function create( &$proveedor )
 	{
@@ -191,7 +196,10 @@ abstract class ProveedorDAOBase
 		 );
 		global $db;
 		$db->Execute($sql, $params);
+		$ar = $db->Affected_Rows();
+		if($ar == 0) return 0;
 		$proveedor->setIdProveedor( $db->Insert_ID() );
+		return $ar;
 	}
 
 
@@ -200,22 +208,23 @@ abstract class ProveedorDAOBase
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
 	  * en el objeto Proveedor suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). Restaurarlo solo se puede hacer usando el metodo create(), 
-	  * pero el objeto resultante tendra una diferente clave primaria de la que estaba en el objeto eliminado. 
-	  * Si no puede encontrar eliminar fila coincidente, NotFoundException sera lanzada.
+	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
+	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
+	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
-	  * @param Objeto El objeto del tipo {@link Proveedor} a eliminar. 
+	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
+	  *	@return int El numero de filas afectadas.
+	  * @param Proveedor [$proveedor] El objeto de tipo Proveedor a eliminar
 	  **/
 	public static final function delete( &$proveedor )
 	{
+		if(self::getByPK($proveedor->getIdProveedor()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM proveedor WHERE  id_proveedor = ?;";
-
-		$params = array( 
-			$proveedor->getIdProveedor(), );
-
+		$params = array( $proveedor->getIdProveedor() );
 		global $db;
 
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 

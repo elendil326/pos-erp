@@ -1,6 +1,8 @@
 <?php
 
 require_once("base/cotizacion.dao.base.php");
+require_once("base/cotizacion.vo.base.php");
+require_once ('Estructura.php');
 /** Cotizacion Data Access Object (DAO).
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 

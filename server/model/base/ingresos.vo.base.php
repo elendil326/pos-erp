@@ -7,7 +7,7 @@
   * 
   */
 
-class Ingresos
+class Ingresos extends VO
 {
 	/**
 	  * Constructor de Ingresos

@@ -7,15 +7,16 @@
   * @access private
   * 
   */
-abstract class CorteDAOBase
+abstract class CorteDAOBase extends TablaDAO
 {
 
 	/**
-	  *	metodo save 
+	  *	Guardar registros. 
 	  *	
 	  *	Este metodo guarda el estado actual del objeto {@link Corte} pasado en la base de datos. La llave 
-	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara 
-	  *	no esta definicda en el objeto, entonces save() creara una nueva fila.
+	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
+	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
+	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @param Corte [$corte] El objeto de tipo Corte
@@ -23,11 +24,11 @@ abstract class CorteDAOBase
 	  **/
 	public static final function save( &$corte )
 	{
-		if(  $corte->getNumCorte()  )
+		if( self::getByPK(  $corte->getNumCorte() ) === NULL )
 		{
-			return CorteDAOBase::update( $corte) ;
-		}else{
 			return CorteDAOBase::create( $corte) ;
+		}else{
+			return CorteDAOBase::update( $corte) ;
 		}
 	}
 
@@ -35,11 +36,11 @@ abstract class CorteDAOBase
 	/**
 	  *	Obtener {@link Corte} por llave primaria. 
 	  *	
-	  * This will create and load {@link Corte} objects contents from database 
-	  * using given Primary-Key as identifier. 
+	  * Este metodo cargara un objeto {@link Corte} de la base de datos 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link Corte}.
+	  * @return Objeto Un objeto del tipo {@link Corte}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $num_corte )
 	{
@@ -47,6 +48,7 @@ abstract class CorteDAOBase
 		$params = array(  $num_corte );
 		global $db;
 		$rs = $db->GetRow($sql, $params);
+		if(count($rs)==0)return NULL;
 		return new Corte( $rs );
 	}
 
@@ -95,7 +97,7 @@ abstract class CorteDAOBase
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Objeto Un objeto del tipo {@link Corte}.
+	  * @param Corte [$corte] El objeto de tipo Corte
 	  **/
 	public static final function search( $corte )
 	{
@@ -175,7 +177,8 @@ abstract class CorteDAOBase
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Corte} a actualizar. 
+	  * @return Filas afectadas
+	  * @param Corte [$corte] El objeto de tipo Corte a actualizar.
 	  **/
 	private static final function update( $corte )
 	{
@@ -194,6 +197,7 @@ abstract class CorteDAOBase
 			$corte->getNumCorte(), );
 		global $db;
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 
@@ -204,10 +208,11 @@ abstract class CorteDAOBase
 	  * contenidos del objeto Corte suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto Corte.
+	  * primaria generada en el objeto Corte dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Corte} a crear. 
+	  * @return Filas afectadas
+	  * @param Corte [$corte] El objeto de tipo Corte a crear.
 	  **/
 	private static final function create( &$corte )
 	{
@@ -226,7 +231,10 @@ abstract class CorteDAOBase
 		 );
 		global $db;
 		$db->Execute($sql, $params);
+		$ar = $db->Affected_Rows();
+		if($ar == 0) return 0;
 		$corte->setNumCorte( $db->Insert_ID() );
+		return $ar;
 	}
 
 
@@ -235,22 +243,23 @@ abstract class CorteDAOBase
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
 	  * en el objeto Corte suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). Restaurarlo solo se puede hacer usando el metodo create(), 
-	  * pero el objeto resultante tendra una diferente clave primaria de la que estaba en el objeto eliminado. 
-	  * Si no puede encontrar eliminar fila coincidente, NotFoundException sera lanzada.
+	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
+	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
+	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
-	  * @param Objeto El objeto del tipo {@link Corte} a eliminar. 
+	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
+	  *	@return int El numero de filas afectadas.
+	  * @param Corte [$corte] El objeto de tipo Corte a eliminar
 	  **/
 	public static final function delete( &$corte )
 	{
+		if(self::getByPK($corte->getNumCorte()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM corte WHERE  num_corte = ?;";
-
-		$params = array( 
-			$corte->getNumCorte(), );
-
+		$params = array( $corte->getNumCorte() );
 		global $db;
 
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 

@@ -7,7 +7,7 @@
   * 
   */
 
-class Compras
+class Compras extends VO
 {
 	/**
 	  * Constructor de Compras

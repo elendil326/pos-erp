@@ -7,15 +7,16 @@
   * @access private
   * 
   */
-abstract class DetalleInventarioDAOBase
+abstract class DetalleInventarioDAOBase extends TablaDAO
 {
 
 	/**
-	  *	metodo save 
+	  *	Guardar registros. 
 	  *	
 	  *	Este metodo guarda el estado actual del objeto {@link DetalleInventario} pasado en la base de datos. La llave 
-	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara 
-	  *	no esta definicda en el objeto, entonces save() creara una nueva fila.
+	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
+	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
+	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @param DetalleInventario [$detalle_inventario] El objeto de tipo DetalleInventario
@@ -23,11 +24,11 @@ abstract class DetalleInventarioDAOBase
 	  **/
 	public static final function save( &$detalle_inventario )
 	{
-		if(  $detalle_inventario->getIdProducto() && $detalle_inventario->getIdSucursal()  )
+		if( self::getByPK(  $detalle_inventario->getIdProducto() , $detalle_inventario->getIdSucursal() ) === NULL )
 		{
-			return DetalleInventarioDAOBase::update( $detalle_inventario) ;
-		}else{
 			return DetalleInventarioDAOBase::create( $detalle_inventario) ;
+		}else{
+			return DetalleInventarioDAOBase::update( $detalle_inventario) ;
 		}
 	}
 
@@ -35,11 +36,11 @@ abstract class DetalleInventarioDAOBase
 	/**
 	  *	Obtener {@link DetalleInventario} por llave primaria. 
 	  *	
-	  * This will create and load {@link DetalleInventario} objects contents from database 
-	  * using given Primary-Key as identifier. 
+	  * Este metodo cargara un objeto {@link DetalleInventario} de la base de datos 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link DetalleInventario}.
+	  * @return Objeto Un objeto del tipo {@link DetalleInventario}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_producto, $id_sucursal )
 	{
@@ -47,6 +48,7 @@ abstract class DetalleInventarioDAOBase
 		$params = array(  $id_producto, $id_sucursal );
 		global $db;
 		$rs = $db->GetRow($sql, $params);
+		if(count($rs)==0)return NULL;
 		return new DetalleInventario( $rs );
 	}
 
@@ -95,7 +97,7 @@ abstract class DetalleInventarioDAOBase
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Objeto Un objeto del tipo {@link DetalleInventario}.
+	  * @param DetalleInventario [$detalle_inventario] El objeto de tipo DetalleInventario
 	  **/
 	public static final function search( $detalle_inventario )
 	{
@@ -145,7 +147,8 @@ abstract class DetalleInventarioDAOBase
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link DetalleInventario} a actualizar. 
+	  * @return Filas afectadas
+	  * @param DetalleInventario [$detalle_inventario] El objeto de tipo DetalleInventario a actualizar.
 	  **/
 	private static final function update( $detalle_inventario )
 	{
@@ -157,6 +160,7 @@ abstract class DetalleInventarioDAOBase
 			$detalle_inventario->getIdProducto(),$detalle_inventario->getIdSucursal(), );
 		global $db;
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 
@@ -167,10 +171,11 @@ abstract class DetalleInventarioDAOBase
 	  * contenidos del objeto DetalleInventario suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto DetalleInventario.
+	  * primaria generada en el objeto DetalleInventario dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link DetalleInventario} a crear. 
+	  * @return Filas afectadas
+	  * @param DetalleInventario [$detalle_inventario] El objeto de tipo DetalleInventario a crear.
 	  **/
 	private static final function create( &$detalle_inventario )
 	{
@@ -184,7 +189,10 @@ abstract class DetalleInventarioDAOBase
 		 );
 		global $db;
 		$db->Execute($sql, $params);
+		$ar = $db->Affected_Rows();
+		if($ar == 0) return 0;
 		
+		return $ar;
 	}
 
 
@@ -193,22 +201,23 @@ abstract class DetalleInventarioDAOBase
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
 	  * en el objeto DetalleInventario suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). Restaurarlo solo se puede hacer usando el metodo create(), 
-	  * pero el objeto resultante tendra una diferente clave primaria de la que estaba en el objeto eliminado. 
-	  * Si no puede encontrar eliminar fila coincidente, NotFoundException sera lanzada.
+	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
+	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
+	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
-	  * @param Objeto El objeto del tipo {@link DetalleInventario} a eliminar. 
+	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
+	  *	@return int El numero de filas afectadas.
+	  * @param DetalleInventario [$detalle_inventario] El objeto de tipo DetalleInventario a eliminar
 	  **/
 	public static final function delete( &$detalle_inventario )
 	{
+		if(self::getByPK($detalle_inventario->getIdProducto(), $detalle_inventario->getIdSucursal()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM detalle_inventario WHERE  id_producto = ? AND id_sucursal = ?;";
-
-		$params = array( 
-			$detalle_inventario->getIdProducto(),$detalle_inventario->getIdSucursal(), );
-
+		$params = array( $detalle_inventario->getIdProducto(), $detalle_inventario->getIdSucursal() );
 		global $db;
 
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 

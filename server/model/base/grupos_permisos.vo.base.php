@@ -7,7 +7,7 @@
   * 
   */
 
-class GruposPermisos
+class GruposPermisos extends VO
 {
 	/**
 	  * Constructor de GruposPermisos

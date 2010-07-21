@@ -7,7 +7,7 @@
   * 
   */
 
-class Encargado
+class Encargado extends VO
 {
 	/**
 	  * Constructor de Encargado

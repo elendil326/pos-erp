@@ -7,15 +7,16 @@
   * @access private
   * 
   */
-abstract class GruposUsuariosDAOBase
+abstract class GruposUsuariosDAOBase extends TablaDAO
 {
 
 	/**
-	  *	metodo save 
+	  *	Guardar registros. 
 	  *	
 	  *	Este metodo guarda el estado actual del objeto {@link GruposUsuarios} pasado en la base de datos. La llave 
-	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara 
-	  *	no esta definicda en el objeto, entonces save() creara una nueva fila.
+	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
+	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
+	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @param GruposUsuarios [$grupos_usuarios] El objeto de tipo GruposUsuarios
@@ -23,11 +24,11 @@ abstract class GruposUsuariosDAOBase
 	  **/
 	public static final function save( &$grupos_usuarios )
 	{
-		if(  $grupos_usuarios->getIdGrupo() && $grupos_usuarios->getIdUsuario()  )
+		if( self::getByPK(  $grupos_usuarios->getIdGrupo() , $grupos_usuarios->getIdUsuario() ) === NULL )
 		{
-			return GruposUsuariosDAOBase::update( $grupos_usuarios) ;
-		}else{
 			return GruposUsuariosDAOBase::create( $grupos_usuarios) ;
+		}else{
+			return GruposUsuariosDAOBase::update( $grupos_usuarios) ;
 		}
 	}
 
@@ -35,11 +36,11 @@ abstract class GruposUsuariosDAOBase
 	/**
 	  *	Obtener {@link GruposUsuarios} por llave primaria. 
 	  *	
-	  * This will create and load {@link GruposUsuarios} objects contents from database 
-	  * using given Primary-Key as identifier. 
+	  * Este metodo cargara un objeto {@link GruposUsuarios} de la base de datos 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link GruposUsuarios}.
+	  * @return Objeto Un objeto del tipo {@link GruposUsuarios}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_grupo, $id_usuario )
 	{
@@ -47,6 +48,7 @@ abstract class GruposUsuariosDAOBase
 		$params = array(  $id_grupo, $id_usuario );
 		global $db;
 		$rs = $db->GetRow($sql, $params);
+		if(count($rs)==0)return NULL;
 		return new GruposUsuarios( $rs );
 	}
 
@@ -95,7 +97,7 @@ abstract class GruposUsuariosDAOBase
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Objeto Un objeto del tipo {@link GruposUsuarios}.
+	  * @param GruposUsuarios [$grupos_usuarios] El objeto de tipo GruposUsuarios
 	  **/
 	public static final function search( $grupos_usuarios )
 	{
@@ -130,7 +132,8 @@ abstract class GruposUsuariosDAOBase
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link GruposUsuarios} a actualizar. 
+	  * @return Filas afectadas
+	  * @param GruposUsuarios [$grupos_usuarios] El objeto de tipo GruposUsuarios a actualizar.
 	  **/
 	private static final function update( $grupos_usuarios )
 	{
@@ -144,10 +147,11 @@ abstract class GruposUsuariosDAOBase
 	  * contenidos del objeto GruposUsuarios suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto GruposUsuarios.
+	  * primaria generada en el objeto GruposUsuarios dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link GruposUsuarios} a crear. 
+	  * @return Filas afectadas
+	  * @param GruposUsuarios [$grupos_usuarios] El objeto de tipo GruposUsuarios a crear.
 	  **/
 	private static final function create( &$grupos_usuarios )
 	{
@@ -158,7 +162,10 @@ abstract class GruposUsuariosDAOBase
 		 );
 		global $db;
 		$db->Execute($sql, $params);
+		$ar = $db->Affected_Rows();
+		if($ar == 0) return 0;
 		
+		return $ar;
 	}
 
 
@@ -167,14 +174,23 @@ abstract class GruposUsuariosDAOBase
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
 	  * en el objeto GruposUsuarios suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). Restaurarlo solo se puede hacer usando el metodo create(), 
-	  * pero el objeto resultante tendra una diferente clave primaria de la que estaba en el objeto eliminado. 
-	  * Si no puede encontrar eliminar fila coincidente, NotFoundException sera lanzada.
+	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
+	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
+	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
-	  * @param Objeto El objeto del tipo {@link GruposUsuarios} a eliminar. 
+	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
+	  *	@return int El numero de filas afectadas.
+	  * @param GruposUsuarios [$grupos_usuarios] El objeto de tipo GruposUsuarios a eliminar
 	  **/
 	public static final function delete( &$grupos_usuarios )
 	{
+		if(self::getByPK($grupos_usuarios->getIdGrupo(), $grupos_usuarios->getIdUsuario()) === NULL) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM grupos_usuarios WHERE  id_grupo = ? AND id_usuario = ?;";
+		$params = array( $grupos_usuarios->getIdGrupo(), $grupos_usuarios->getIdUsuario() );
+		global $db;
+
+		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 

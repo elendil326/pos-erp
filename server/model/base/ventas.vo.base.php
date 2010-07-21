@@ -7,7 +7,7 @@
   * 
   */
 
-class Ventas
+class Ventas extends VO
 {
 	/**
 	  * Constructor de Ventas

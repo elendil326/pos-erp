@@ -7,7 +7,7 @@
   * 
   */
 
-class DetalleCorte
+class DetalleCorte extends VO
 {
 	/**
 	  * Constructor de DetalleCorte

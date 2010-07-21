@@ -7,7 +7,7 @@
   * 
   */
 
-class Corte
+class Corte extends VO
 {
 	/**
 	  * Constructor de Corte

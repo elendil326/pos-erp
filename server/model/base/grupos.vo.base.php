@@ -7,7 +7,7 @@
   * 
   */
 
-class Grupos
+class Grupos extends VO
 {
 	/**
 	  * Constructor de Grupos

@@ -7,7 +7,7 @@
   * 
   */
 
-class Impuesto
+class Impuesto extends VO
 {
 	/**
 	  * Constructor de Impuesto

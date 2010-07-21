@@ -7,7 +7,7 @@
   * 
   */
 
-class PagosCompra
+class PagosCompra extends VO
 {
 	/**
 	  * Constructor de PagosCompra

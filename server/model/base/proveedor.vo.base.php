@@ -7,7 +7,7 @@
   * 
   */
 
-class Proveedor
+class Proveedor extends VO
 {
 	/**
 	  * Constructor de Proveedor

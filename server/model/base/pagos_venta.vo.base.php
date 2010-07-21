@@ -7,7 +7,7 @@
   * 
   */
 
-class PagosVenta
+class PagosVenta extends VO
 {
 	/**
 	  * Constructor de PagosVenta

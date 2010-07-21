@@ -7,7 +7,7 @@
   * 
   */
 
-class DetalleCotizacion
+class DetalleCotizacion extends VO
 {
 	/**
 	  * Constructor de DetalleCotizacion

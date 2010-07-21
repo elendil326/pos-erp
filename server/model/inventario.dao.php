@@ -1,6 +1,8 @@
 <?php
 
 require_once("base/inventario.dao.base.php");
+require_once("base/inventario.vo.base.php");
+require_once ('Estructura.php');
 /** Inventario Data Access Object (DAO).
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 

@@ -7,7 +7,7 @@
   * 
   */
 
-class FacturaCompra
+class FacturaCompra extends VO
 {
 	/**
 	  * Constructor de FacturaCompra

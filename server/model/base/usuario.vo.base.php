@@ -7,7 +7,7 @@
   * 
   */
 
-class Usuario
+class Usuario extends VO
 {
 	/**
 	  * Constructor de Usuario

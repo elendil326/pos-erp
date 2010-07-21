@@ -7,15 +7,16 @@
   * @access private
   * 
   */
-abstract class IngresosDAOBase
+abstract class IngresosDAOBase extends TablaDAO
 {
 
 	/**
-	  *	metodo save 
+	  *	Guardar registros. 
 	  *	
 	  *	Este metodo guarda el estado actual del objeto {@link Ingresos} pasado en la base de datos. La llave 
-	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara 
-	  *	no esta definicda en el objeto, entonces save() creara una nueva fila.
+	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
+	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
+	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @param Ingresos [$ingresos] El objeto de tipo Ingresos
@@ -23,11 +24,11 @@ abstract class IngresosDAOBase
 	  **/
 	public static final function save( &$ingresos )
 	{
-		if(  $ingresos->getIdIngreso()  )
+		if( self::getByPK(  $ingresos->getIdIngreso() ) === NULL )
 		{
-			return IngresosDAOBase::update( $ingresos) ;
-		}else{
 			return IngresosDAOBase::create( $ingresos) ;
+		}else{
+			return IngresosDAOBase::update( $ingresos) ;
 		}
 	}
 
@@ -35,11 +36,11 @@ abstract class IngresosDAOBase
 	/**
 	  *	Obtener {@link Ingresos} por llave primaria. 
 	  *	
-	  * This will create and load {@link Ingresos} objects contents from database 
-	  * using given Primary-Key as identifier. 
+	  * Este metodo cargara un objeto {@link Ingresos} de la base de datos 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link Ingresos}.
+	  * @return Objeto Un objeto del tipo {@link Ingresos}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_ingreso )
 	{
@@ -47,6 +48,7 @@ abstract class IngresosDAOBase
 		$params = array(  $id_ingreso );
 		global $db;
 		$rs = $db->GetRow($sql, $params);
+		if(count($rs)==0)return NULL;
 		return new Ingresos( $rs );
 	}
 
@@ -95,7 +97,7 @@ abstract class IngresosDAOBase
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Objeto Un objeto del tipo {@link Ingresos}.
+	  * @param Ingresos [$ingresos] El objeto de tipo Ingresos
 	  **/
 	public static final function search( $ingresos )
 	{
@@ -150,7 +152,8 @@ abstract class IngresosDAOBase
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Ingresos} a actualizar. 
+	  * @return Filas afectadas
+	  * @param Ingresos [$ingresos] El objeto de tipo Ingresos a actualizar.
 	  **/
 	private static final function update( $ingresos )
 	{
@@ -164,6 +167,7 @@ abstract class IngresosDAOBase
 			$ingresos->getIdIngreso(), );
 		global $db;
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 
@@ -174,10 +178,11 @@ abstract class IngresosDAOBase
 	  * contenidos del objeto Ingresos suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto Ingresos.
+	  * primaria generada en el objeto Ingresos dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Ingresos} a crear. 
+	  * @return Filas afectadas
+	  * @param Ingresos [$ingresos] El objeto de tipo Ingresos a crear.
 	  **/
 	private static final function create( &$ingresos )
 	{
@@ -191,7 +196,10 @@ abstract class IngresosDAOBase
 		 );
 		global $db;
 		$db->Execute($sql, $params);
+		$ar = $db->Affected_Rows();
+		if($ar == 0) return 0;
 		$ingresos->setIdIngreso( $db->Insert_ID() );
+		return $ar;
 	}
 
 
@@ -200,22 +208,23 @@ abstract class IngresosDAOBase
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
 	  * en el objeto Ingresos suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). Restaurarlo solo se puede hacer usando el metodo create(), 
-	  * pero el objeto resultante tendra una diferente clave primaria de la que estaba en el objeto eliminado. 
-	  * Si no puede encontrar eliminar fila coincidente, NotFoundException sera lanzada.
+	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
+	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
+	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
-	  * @param Objeto El objeto del tipo {@link Ingresos} a eliminar. 
+	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
+	  *	@return int El numero de filas afectadas.
+	  * @param Ingresos [$ingresos] El objeto de tipo Ingresos a eliminar
 	  **/
 	public static final function delete( &$ingresos )
 	{
+		if(self::getByPK($ingresos->getIdIngreso()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM ingresos WHERE  id_ingreso = ?;";
-
-		$params = array( 
-			$ingresos->getIdIngreso(), );
-
+		$params = array( $ingresos->getIdIngreso() );
 		global $db;
 
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 

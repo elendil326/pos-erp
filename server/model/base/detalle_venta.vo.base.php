@@ -7,7 +7,7 @@
   * 
   */
 
-class DetalleVenta
+class DetalleVenta extends VO
 {
 	/**
 	  * Constructor de DetalleVenta

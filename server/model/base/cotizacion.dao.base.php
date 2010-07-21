@@ -7,15 +7,16 @@
   * @access private
   * 
   */
-abstract class CotizacionDAOBase
+abstract class CotizacionDAOBase extends TablaDAO
 {
 
 	/**
-	  *	metodo save 
+	  *	Guardar registros. 
 	  *	
 	  *	Este metodo guarda el estado actual del objeto {@link Cotizacion} pasado en la base de datos. La llave 
-	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara 
-	  *	no esta definicda en el objeto, entonces save() creara una nueva fila.
+	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
+	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
+	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @param Cotizacion [$cotizacion] El objeto de tipo Cotizacion
@@ -23,11 +24,11 @@ abstract class CotizacionDAOBase
 	  **/
 	public static final function save( &$cotizacion )
 	{
-		if(  $cotizacion->getIdCotizacion()  )
+		if( self::getByPK(  $cotizacion->getIdCotizacion() ) === NULL )
 		{
-			return CotizacionDAOBase::update( $cotizacion) ;
-		}else{
 			return CotizacionDAOBase::create( $cotizacion) ;
+		}else{
+			return CotizacionDAOBase::update( $cotizacion) ;
 		}
 	}
 
@@ -35,11 +36,11 @@ abstract class CotizacionDAOBase
 	/**
 	  *	Obtener {@link Cotizacion} por llave primaria. 
 	  *	
-	  * This will create and load {@link Cotizacion} objects contents from database 
-	  * using given Primary-Key as identifier. 
+	  * Este metodo cargara un objeto {@link Cotizacion} de la base de datos 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link Cotizacion}.
+	  * @return Objeto Un objeto del tipo {@link Cotizacion}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_cotizacion )
 	{
@@ -47,6 +48,7 @@ abstract class CotizacionDAOBase
 		$params = array(  $id_cotizacion );
 		global $db;
 		$rs = $db->GetRow($sql, $params);
+		if(count($rs)==0)return NULL;
 		return new Cotizacion( $rs );
 	}
 
@@ -95,7 +97,7 @@ abstract class CotizacionDAOBase
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Objeto Un objeto del tipo {@link Cotizacion}.
+	  * @param Cotizacion [$cotizacion] El objeto de tipo Cotizacion
 	  **/
 	public static final function search( $cotizacion )
 	{
@@ -155,7 +157,8 @@ abstract class CotizacionDAOBase
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Cotizacion} a actualizar. 
+	  * @return Filas afectadas
+	  * @param Cotizacion [$cotizacion] El objeto de tipo Cotizacion a actualizar.
 	  **/
 	private static final function update( $cotizacion )
 	{
@@ -170,6 +173,7 @@ abstract class CotizacionDAOBase
 			$cotizacion->getIdCotizacion(), );
 		global $db;
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 
@@ -180,10 +184,11 @@ abstract class CotizacionDAOBase
 	  * contenidos del objeto Cotizacion suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto Cotizacion.
+	  * primaria generada en el objeto Cotizacion dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Cotizacion} a crear. 
+	  * @return Filas afectadas
+	  * @param Cotizacion [$cotizacion] El objeto de tipo Cotizacion a crear.
 	  **/
 	private static final function create( &$cotizacion )
 	{
@@ -198,7 +203,10 @@ abstract class CotizacionDAOBase
 		 );
 		global $db;
 		$db->Execute($sql, $params);
+		$ar = $db->Affected_Rows();
+		if($ar == 0) return 0;
 		$cotizacion->setIdCotizacion( $db->Insert_ID() );
+		return $ar;
 	}
 
 
@@ -207,22 +215,23 @@ abstract class CotizacionDAOBase
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
 	  * en el objeto Cotizacion suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). Restaurarlo solo se puede hacer usando el metodo create(), 
-	  * pero el objeto resultante tendra una diferente clave primaria de la que estaba en el objeto eliminado. 
-	  * Si no puede encontrar eliminar fila coincidente, NotFoundException sera lanzada.
+	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
+	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
+	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
-	  * @param Objeto El objeto del tipo {@link Cotizacion} a eliminar. 
+	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
+	  *	@return int El numero de filas afectadas.
+	  * @param Cotizacion [$cotizacion] El objeto de tipo Cotizacion a eliminar
 	  **/
 	public static final function delete( &$cotizacion )
 	{
+		if(self::getByPK($cotizacion->getIdCotizacion()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM cotizacion WHERE  id_cotizacion = ?;";
-
-		$params = array( 
-			$cotizacion->getIdCotizacion(), );
-
+		$params = array( $cotizacion->getIdCotizacion() );
 		global $db;
 
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 

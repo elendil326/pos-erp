@@ -7,15 +7,16 @@
   * @access private
   * 
   */
-abstract class ClienteDAOBase
+abstract class ClienteDAOBase extends TablaDAO
 {
 
 	/**
-	  *	metodo save 
+	  *	Guardar registros. 
 	  *	
 	  *	Este metodo guarda el estado actual del objeto {@link Cliente} pasado en la base de datos. La llave 
-	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara 
-	  *	no esta definicda en el objeto, entonces save() creara una nueva fila.
+	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
+	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
+	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @param Cliente [$cliente] El objeto de tipo Cliente
@@ -23,11 +24,11 @@ abstract class ClienteDAOBase
 	  **/
 	public static final function save( &$cliente )
 	{
-		if(  $cliente->getIdCliente()  )
+		if( self::getByPK(  $cliente->getIdCliente() ) === NULL )
 		{
-			return ClienteDAOBase::update( $cliente) ;
-		}else{
 			return ClienteDAOBase::create( $cliente) ;
+		}else{
+			return ClienteDAOBase::update( $cliente) ;
 		}
 	}
 
@@ -35,11 +36,11 @@ abstract class ClienteDAOBase
 	/**
 	  *	Obtener {@link Cliente} por llave primaria. 
 	  *	
-	  * This will create and load {@link Cliente} objects contents from database 
-	  * using given Primary-Key as identifier. 
+	  * Este metodo cargara un objeto {@link Cliente} de la base de datos 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link Cliente}.
+	  * @return Objeto Un objeto del tipo {@link Cliente}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_cliente )
 	{
@@ -47,6 +48,7 @@ abstract class ClienteDAOBase
 		$params = array(  $id_cliente );
 		global $db;
 		$rs = $db->GetRow($sql, $params);
+		if(count($rs)==0)return NULL;
 		return new Cliente( $rs );
 	}
 
@@ -95,7 +97,7 @@ abstract class ClienteDAOBase
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Objeto Un objeto del tipo {@link Cliente}.
+	  * @param Cliente [$cliente] El objeto de tipo Cliente
 	  **/
 	public static final function search( $cliente )
 	{
@@ -160,7 +162,8 @@ abstract class ClienteDAOBase
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Cliente} a actualizar. 
+	  * @return Filas afectadas
+	  * @param Cliente [$cliente] El objeto de tipo Cliente a actualizar.
 	  **/
 	private static final function update( $cliente )
 	{
@@ -176,6 +179,7 @@ abstract class ClienteDAOBase
 			$cliente->getIdCliente(), );
 		global $db;
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 
@@ -186,10 +190,11 @@ abstract class ClienteDAOBase
 	  * contenidos del objeto Cliente suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto Cliente.
+	  * primaria generada en el objeto Cliente dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Cliente} a crear. 
+	  * @return Filas afectadas
+	  * @param Cliente [$cliente] El objeto de tipo Cliente a crear.
 	  **/
 	private static final function create( &$cliente )
 	{
@@ -205,7 +210,10 @@ abstract class ClienteDAOBase
 		 );
 		global $db;
 		$db->Execute($sql, $params);
+		$ar = $db->Affected_Rows();
+		if($ar == 0) return 0;
 		$cliente->setIdCliente( $db->Insert_ID() );
+		return $ar;
 	}
 
 
@@ -214,22 +222,23 @@ abstract class ClienteDAOBase
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
 	  * en el objeto Cliente suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). Restaurarlo solo se puede hacer usando el metodo create(), 
-	  * pero el objeto resultante tendra una diferente clave primaria de la que estaba en el objeto eliminado. 
-	  * Si no puede encontrar eliminar fila coincidente, NotFoundException sera lanzada.
+	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
+	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
+	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
-	  * @param Objeto El objeto del tipo {@link Cliente} a eliminar. 
+	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
+	  *	@return int El numero de filas afectadas.
+	  * @param Cliente [$cliente] El objeto de tipo Cliente a eliminar
 	  **/
 	public static final function delete( &$cliente )
 	{
+		if(self::getByPK($cliente->getIdCliente()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM cliente WHERE  id_cliente = ?;";
-
-		$params = array( 
-			$cliente->getIdCliente(), );
-
+		$params = array( $cliente->getIdCliente() );
 		global $db;
 
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 

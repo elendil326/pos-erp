@@ -7,15 +7,16 @@
   * @access private
   * 
   */
-abstract class PermisosDAOBase
+abstract class PermisosDAOBase extends TablaDAO
 {
 
 	/**
-	  *	metodo save 
+	  *	Guardar registros. 
 	  *	
 	  *	Este metodo guarda el estado actual del objeto {@link Permisos} pasado en la base de datos. La llave 
-	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara 
-	  *	no esta definicda en el objeto, entonces save() creara una nueva fila.
+	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
+	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
+	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @param Permisos [$permisos] El objeto de tipo Permisos
@@ -23,11 +24,11 @@ abstract class PermisosDAOBase
 	  **/
 	public static final function save( &$permisos )
 	{
-		if(  $permisos->getIdPermiso()  )
+		if( self::getByPK(  $permisos->getIdPermiso() ) === NULL )
 		{
-			return PermisosDAOBase::update( $permisos) ;
-		}else{
 			return PermisosDAOBase::create( $permisos) ;
+		}else{
+			return PermisosDAOBase::update( $permisos) ;
 		}
 	}
 
@@ -35,11 +36,11 @@ abstract class PermisosDAOBase
 	/**
 	  *	Obtener {@link Permisos} por llave primaria. 
 	  *	
-	  * This will create and load {@link Permisos} objects contents from database 
-	  * using given Primary-Key as identifier. 
+	  * Este metodo cargara un objeto {@link Permisos} de la base de datos 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link Permisos}.
+	  * @return Objeto Un objeto del tipo {@link Permisos}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_permiso )
 	{
@@ -47,6 +48,7 @@ abstract class PermisosDAOBase
 		$params = array(  $id_permiso );
 		global $db;
 		$rs = $db->GetRow($sql, $params);
+		if(count($rs)==0)return NULL;
 		return new Permisos( $rs );
 	}
 
@@ -95,7 +97,7 @@ abstract class PermisosDAOBase
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Objeto Un objeto del tipo {@link Permisos}.
+	  * @param Permisos [$permisos] El objeto de tipo Permisos
 	  **/
 	public static final function search( $permisos )
 	{
@@ -135,7 +137,8 @@ abstract class PermisosDAOBase
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Permisos} a actualizar. 
+	  * @return Filas afectadas
+	  * @param Permisos [$permisos] El objeto de tipo Permisos a actualizar.
 	  **/
 	private static final function update( $permisos )
 	{
@@ -146,6 +149,7 @@ abstract class PermisosDAOBase
 			$permisos->getIdPermiso(), );
 		global $db;
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 
@@ -156,10 +160,11 @@ abstract class PermisosDAOBase
 	  * contenidos del objeto Permisos suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto Permisos.
+	  * primaria generada en el objeto Permisos dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Permisos} a crear. 
+	  * @return Filas afectadas
+	  * @param Permisos [$permisos] El objeto de tipo Permisos a crear.
 	  **/
 	private static final function create( &$permisos )
 	{
@@ -171,7 +176,10 @@ abstract class PermisosDAOBase
 		 );
 		global $db;
 		$db->Execute($sql, $params);
+		$ar = $db->Affected_Rows();
+		if($ar == 0) return 0;
 		
+		return $ar;
 	}
 
 
@@ -180,22 +188,23 @@ abstract class PermisosDAOBase
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
 	  * en el objeto Permisos suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). Restaurarlo solo se puede hacer usando el metodo create(), 
-	  * pero el objeto resultante tendra una diferente clave primaria de la que estaba en el objeto eliminado. 
-	  * Si no puede encontrar eliminar fila coincidente, NotFoundException sera lanzada.
+	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
+	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
+	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
-	  * @param Objeto El objeto del tipo {@link Permisos} a eliminar. 
+	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
+	  *	@return int El numero de filas afectadas.
+	  * @param Permisos [$permisos] El objeto de tipo Permisos a eliminar
 	  **/
 	public static final function delete( &$permisos )
 	{
+		if(self::getByPK($permisos->getIdPermiso()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM permisos WHERE  id_permiso = ?;";
-
-		$params = array( 
-			$permisos->getIdPermiso(), );
-
+		$params = array( $permisos->getIdPermiso() );
 		global $db;
 
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 

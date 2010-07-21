@@ -7,7 +7,7 @@
   * 
   */
 
-class DetalleInventario
+class DetalleInventario extends VO
 {
 	/**
 	  * Constructor de DetalleInventario

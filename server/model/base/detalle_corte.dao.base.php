@@ -7,15 +7,16 @@
   * @access private
   * 
   */
-abstract class DetalleCorteDAOBase
+abstract class DetalleCorteDAOBase extends TablaDAO
 {
 
 	/**
-	  *	metodo save 
+	  *	Guardar registros. 
 	  *	
 	  *	Este metodo guarda el estado actual del objeto {@link DetalleCorte} pasado en la base de datos. La llave 
-	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara 
-	  *	no esta definicda en el objeto, entonces save() creara una nueva fila.
+	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
+	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
+	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @param DetalleCorte [$detalle_corte] El objeto de tipo DetalleCorte
@@ -23,11 +24,11 @@ abstract class DetalleCorteDAOBase
 	  **/
 	public static final function save( &$detalle_corte )
 	{
-		if(  $detalle_corte->getNumCorte() && $detalle_corte->getNombre()  )
+		if( self::getByPK(  $detalle_corte->getNumCorte() , $detalle_corte->getNombre() ) === NULL )
 		{
-			return DetalleCorteDAOBase::update( $detalle_corte) ;
-		}else{
 			return DetalleCorteDAOBase::create( $detalle_corte) ;
+		}else{
+			return DetalleCorteDAOBase::update( $detalle_corte) ;
 		}
 	}
 
@@ -35,11 +36,11 @@ abstract class DetalleCorteDAOBase
 	/**
 	  *	Obtener {@link DetalleCorte} por llave primaria. 
 	  *	
-	  * This will create and load {@link DetalleCorte} objects contents from database 
-	  * using given Primary-Key as identifier. 
+	  * Este metodo cargara un objeto {@link DetalleCorte} de la base de datos 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link DetalleCorte}.
+	  * @return Objeto Un objeto del tipo {@link DetalleCorte}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $num_corte, $nombre )
 	{
@@ -47,6 +48,7 @@ abstract class DetalleCorteDAOBase
 		$params = array(  $num_corte, $nombre );
 		global $db;
 		$rs = $db->GetRow($sql, $params);
+		if(count($rs)==0)return NULL;
 		return new DetalleCorte( $rs );
 	}
 
@@ -95,7 +97,7 @@ abstract class DetalleCorteDAOBase
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Objeto Un objeto del tipo {@link DetalleCorte}.
+	  * @param DetalleCorte [$detalle_corte] El objeto de tipo DetalleCorte
 	  **/
 	public static final function search( $detalle_corte )
 	{
@@ -140,7 +142,8 @@ abstract class DetalleCorteDAOBase
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link DetalleCorte} a actualizar. 
+	  * @return Filas afectadas
+	  * @param DetalleCorte [$detalle_corte] El objeto de tipo DetalleCorte a actualizar.
 	  **/
 	private static final function update( $detalle_corte )
 	{
@@ -151,6 +154,7 @@ abstract class DetalleCorteDAOBase
 			$detalle_corte->getNumCorte(),$detalle_corte->getNombre(), );
 		global $db;
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 
@@ -161,10 +165,11 @@ abstract class DetalleCorteDAOBase
 	  * contenidos del objeto DetalleCorte suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto DetalleCorte.
+	  * primaria generada en el objeto DetalleCorte dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link DetalleCorte} a crear. 
+	  * @return Filas afectadas
+	  * @param DetalleCorte [$detalle_corte] El objeto de tipo DetalleCorte a crear.
 	  **/
 	private static final function create( &$detalle_corte )
 	{
@@ -177,7 +182,10 @@ abstract class DetalleCorteDAOBase
 		 );
 		global $db;
 		$db->Execute($sql, $params);
+		$ar = $db->Affected_Rows();
+		if($ar == 0) return 0;
 		
+		return $ar;
 	}
 
 
@@ -186,22 +194,23 @@ abstract class DetalleCorteDAOBase
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
 	  * en el objeto DetalleCorte suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). Restaurarlo solo se puede hacer usando el metodo create(), 
-	  * pero el objeto resultante tendra una diferente clave primaria de la que estaba en el objeto eliminado. 
-	  * Si no puede encontrar eliminar fila coincidente, NotFoundException sera lanzada.
+	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
+	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
+	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
-	  * @param Objeto El objeto del tipo {@link DetalleCorte} a eliminar. 
+	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
+	  *	@return int El numero de filas afectadas.
+	  * @param DetalleCorte [$detalle_corte] El objeto de tipo DetalleCorte a eliminar
 	  **/
 	public static final function delete( &$detalle_corte )
 	{
+		if(self::getByPK($detalle_corte->getNumCorte(), $detalle_corte->getNombre()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM detalle_corte WHERE  num_corte = ? AND nombre = ?;";
-
-		$params = array( 
-			$detalle_corte->getNumCorte(),$detalle_corte->getNombre(), );
-
+		$params = array( $detalle_corte->getNumCorte(), $detalle_corte->getNombre() );
 		global $db;
 
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 

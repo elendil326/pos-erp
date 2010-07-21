@@ -7,7 +7,7 @@
   * 
   */
 
-class Sucursal
+class Sucursal extends VO
 {
 	/**
 	  * Constructor de Sucursal

@@ -7,7 +7,7 @@
   * 
   */
 
-class ProductosProveedor
+class ProductosProveedor extends VO
 {
 	/**
 	  * Constructor de ProductosProveedor

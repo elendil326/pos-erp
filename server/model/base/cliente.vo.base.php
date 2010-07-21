@@ -7,7 +7,7 @@
   * 
   */
 
-class Cliente
+class Cliente extends VO
 {
 	/**
 	  * Constructor de Cliente

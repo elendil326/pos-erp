@@ -7,15 +7,16 @@
   * @access private
   * 
   */
-abstract class DetalleCompraDAOBase
+abstract class DetalleCompraDAOBase extends TablaDAO
 {
 
 	/**
-	  *	metodo save 
+	  *	Guardar registros. 
 	  *	
 	  *	Este metodo guarda el estado actual del objeto {@link DetalleCompra} pasado en la base de datos. La llave 
-	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara 
-	  *	no esta definicda en el objeto, entonces save() creara una nueva fila.
+	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
+	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
+	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @param DetalleCompra [$detalle_compra] El objeto de tipo DetalleCompra
@@ -23,11 +24,11 @@ abstract class DetalleCompraDAOBase
 	  **/
 	public static final function save( &$detalle_compra )
 	{
-		if(  $detalle_compra->getIdCompra() && $detalle_compra->getIdProducto()  )
+		if( self::getByPK(  $detalle_compra->getIdCompra() , $detalle_compra->getIdProducto() ) === NULL )
 		{
-			return DetalleCompraDAOBase::update( $detalle_compra) ;
-		}else{
 			return DetalleCompraDAOBase::create( $detalle_compra) ;
+		}else{
+			return DetalleCompraDAOBase::update( $detalle_compra) ;
 		}
 	}
 
@@ -35,11 +36,11 @@ abstract class DetalleCompraDAOBase
 	/**
 	  *	Obtener {@link DetalleCompra} por llave primaria. 
 	  *	
-	  * This will create and load {@link DetalleCompra} objects contents from database 
-	  * using given Primary-Key as identifier. 
+	  * Este metodo cargara un objeto {@link DetalleCompra} de la base de datos 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link DetalleCompra}.
+	  * @return Objeto Un objeto del tipo {@link DetalleCompra}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_compra, $id_producto )
 	{
@@ -47,6 +48,7 @@ abstract class DetalleCompraDAOBase
 		$params = array(  $id_compra, $id_producto );
 		global $db;
 		$rs = $db->GetRow($sql, $params);
+		if(count($rs)==0)return NULL;
 		return new DetalleCompra( $rs );
 	}
 
@@ -95,7 +97,7 @@ abstract class DetalleCompraDAOBase
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Objeto Un objeto del tipo {@link DetalleCompra}.
+	  * @param DetalleCompra [$detalle_compra] El objeto de tipo DetalleCompra
 	  **/
 	public static final function search( $detalle_compra )
 	{
@@ -140,7 +142,8 @@ abstract class DetalleCompraDAOBase
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link DetalleCompra} a actualizar. 
+	  * @return Filas afectadas
+	  * @param DetalleCompra [$detalle_compra] El objeto de tipo DetalleCompra a actualizar.
 	  **/
 	private static final function update( $detalle_compra )
 	{
@@ -151,6 +154,7 @@ abstract class DetalleCompraDAOBase
 			$detalle_compra->getIdCompra(),$detalle_compra->getIdProducto(), );
 		global $db;
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 
@@ -161,10 +165,11 @@ abstract class DetalleCompraDAOBase
 	  * contenidos del objeto DetalleCompra suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto DetalleCompra.
+	  * primaria generada en el objeto DetalleCompra dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link DetalleCompra} a crear. 
+	  * @return Filas afectadas
+	  * @param DetalleCompra [$detalle_compra] El objeto de tipo DetalleCompra a crear.
 	  **/
 	private static final function create( &$detalle_compra )
 	{
@@ -177,7 +182,10 @@ abstract class DetalleCompraDAOBase
 		 );
 		global $db;
 		$db->Execute($sql, $params);
+		$ar = $db->Affected_Rows();
+		if($ar == 0) return 0;
 		
+		return $ar;
 	}
 
 
@@ -186,22 +194,23 @@ abstract class DetalleCompraDAOBase
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
 	  * en el objeto DetalleCompra suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). Restaurarlo solo se puede hacer usando el metodo create(), 
-	  * pero el objeto resultante tendra una diferente clave primaria de la que estaba en el objeto eliminado. 
-	  * Si no puede encontrar eliminar fila coincidente, NotFoundException sera lanzada.
+	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
+	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
+	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
-	  * @param Objeto El objeto del tipo {@link DetalleCompra} a eliminar. 
+	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
+	  *	@return int El numero de filas afectadas.
+	  * @param DetalleCompra [$detalle_compra] El objeto de tipo DetalleCompra a eliminar
 	  **/
 	public static final function delete( &$detalle_compra )
 	{
+		if(self::getByPK($detalle_compra->getIdCompra(), $detalle_compra->getIdProducto()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM detalle_compra WHERE  id_compra = ? AND id_producto = ?;";
-
-		$params = array( 
-			$detalle_compra->getIdCompra(),$detalle_compra->getIdProducto(), );
-
+		$params = array( $detalle_compra->getIdCompra(), $detalle_compra->getIdProducto() );
 		global $db;
 
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 

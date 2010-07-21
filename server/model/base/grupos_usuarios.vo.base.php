@@ -7,7 +7,7 @@
   * 
   */
 
-class GruposUsuarios
+class GruposUsuarios extends VO
 {
 	/**
 	  * Constructor de GruposUsuarios

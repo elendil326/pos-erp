@@ -7,15 +7,16 @@
   * @access private
   * 
   */
-abstract class EncargadoDAOBase
+abstract class EncargadoDAOBase extends TablaDAO
 {
 
 	/**
-	  *	metodo save 
+	  *	Guardar registros. 
 	  *	
 	  *	Este metodo guarda el estado actual del objeto {@link Encargado} pasado en la base de datos. La llave 
-	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara 
-	  *	no esta definicda en el objeto, entonces save() creara una nueva fila.
+	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
+	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
+	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @param Encargado [$encargado] El objeto de tipo Encargado
@@ -23,11 +24,11 @@ abstract class EncargadoDAOBase
 	  **/
 	public static final function save( &$encargado )
 	{
-		if(  $encargado->getIdUsuario()  )
+		if( self::getByPK(  $encargado->getIdUsuario() ) === NULL )
 		{
-			return EncargadoDAOBase::update( $encargado) ;
-		}else{
 			return EncargadoDAOBase::create( $encargado) ;
+		}else{
+			return EncargadoDAOBase::update( $encargado) ;
 		}
 	}
 
@@ -35,11 +36,11 @@ abstract class EncargadoDAOBase
 	/**
 	  *	Obtener {@link Encargado} por llave primaria. 
 	  *	
-	  * This will create and load {@link Encargado} objects contents from database 
-	  * using given Primary-Key as identifier. 
+	  * Este metodo cargara un objeto {@link Encargado} de la base de datos 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link Encargado}.
+	  * @return Objeto Un objeto del tipo {@link Encargado}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_usuario )
 	{
@@ -47,6 +48,7 @@ abstract class EncargadoDAOBase
 		$params = array(  $id_usuario );
 		global $db;
 		$rs = $db->GetRow($sql, $params);
+		if(count($rs)==0)return NULL;
 		return new Encargado( $rs );
 	}
 
@@ -95,7 +97,7 @@ abstract class EncargadoDAOBase
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Objeto Un objeto del tipo {@link Encargado}.
+	  * @param Encargado [$encargado] El objeto de tipo Encargado
 	  **/
 	public static final function search( $encargado )
 	{
@@ -130,7 +132,8 @@ abstract class EncargadoDAOBase
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Encargado} a actualizar. 
+	  * @return Filas afectadas
+	  * @param Encargado [$encargado] El objeto de tipo Encargado a actualizar.
 	  **/
 	private static final function update( $encargado )
 	{
@@ -140,6 +143,7 @@ abstract class EncargadoDAOBase
 			$encargado->getIdUsuario(), );
 		global $db;
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 
@@ -150,10 +154,11 @@ abstract class EncargadoDAOBase
 	  * contenidos del objeto Encargado suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto Encargado.
+	  * primaria generada en el objeto Encargado dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Encargado} a crear. 
+	  * @return Filas afectadas
+	  * @param Encargado [$encargado] El objeto de tipo Encargado a crear.
 	  **/
 	private static final function create( &$encargado )
 	{
@@ -164,7 +169,10 @@ abstract class EncargadoDAOBase
 		 );
 		global $db;
 		$db->Execute($sql, $params);
+		$ar = $db->Affected_Rows();
+		if($ar == 0) return 0;
 		
+		return $ar;
 	}
 
 
@@ -173,22 +181,23 @@ abstract class EncargadoDAOBase
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
 	  * en el objeto Encargado suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). Restaurarlo solo se puede hacer usando el metodo create(), 
-	  * pero el objeto resultante tendra una diferente clave primaria de la que estaba en el objeto eliminado. 
-	  * Si no puede encontrar eliminar fila coincidente, NotFoundException sera lanzada.
+	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
+	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
+	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
-	  * @param Objeto El objeto del tipo {@link Encargado} a eliminar. 
+	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
+	  *	@return int El numero de filas afectadas.
+	  * @param Encargado [$encargado] El objeto de tipo Encargado a eliminar
 	  **/
 	public static final function delete( &$encargado )
 	{
+		if(self::getByPK($encargado->getIdUsuario()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM encargado WHERE  id_usuario = ?;";
-
-		$params = array( 
-			$encargado->getIdUsuario(), );
-
+		$params = array( $encargado->getIdUsuario() );
 		global $db;
 
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 

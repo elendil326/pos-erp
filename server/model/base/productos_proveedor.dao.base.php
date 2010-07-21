@@ -7,15 +7,16 @@
   * @access private
   * 
   */
-abstract class ProductosProveedorDAOBase
+abstract class ProductosProveedorDAOBase extends TablaDAO
 {
 
 	/**
-	  *	metodo save 
+	  *	Guardar registros. 
 	  *	
 	  *	Este metodo guarda el estado actual del objeto {@link ProductosProveedor} pasado en la base de datos. La llave 
-	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara 
-	  *	no esta definicda en el objeto, entonces save() creara una nueva fila.
+	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
+	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
+	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @param ProductosProveedor [$productos_proveedor] El objeto de tipo ProductosProveedor
@@ -23,11 +24,11 @@ abstract class ProductosProveedorDAOBase
 	  **/
 	public static final function save( &$productos_proveedor )
 	{
-		if(  $productos_proveedor->getIdProducto()  )
+		if( self::getByPK(  $productos_proveedor->getIdProducto() ) === NULL )
 		{
-			return ProductosProveedorDAOBase::update( $productos_proveedor) ;
-		}else{
 			return ProductosProveedorDAOBase::create( $productos_proveedor) ;
+		}else{
+			return ProductosProveedorDAOBase::update( $productos_proveedor) ;
 		}
 	}
 
@@ -35,11 +36,11 @@ abstract class ProductosProveedorDAOBase
 	/**
 	  *	Obtener {@link ProductosProveedor} por llave primaria. 
 	  *	
-	  * This will create and load {@link ProductosProveedor} objects contents from database 
-	  * using given Primary-Key as identifier. 
+	  * Este metodo cargara un objeto {@link ProductosProveedor} de la base de datos 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link ProductosProveedor}.
+	  * @return Objeto Un objeto del tipo {@link ProductosProveedor}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_producto )
 	{
@@ -47,6 +48,7 @@ abstract class ProductosProveedorDAOBase
 		$params = array(  $id_producto );
 		global $db;
 		$rs = $db->GetRow($sql, $params);
+		if(count($rs)==0)return NULL;
 		return new ProductosProveedor( $rs );
 	}
 
@@ -95,7 +97,7 @@ abstract class ProductosProveedorDAOBase
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Objeto Un objeto del tipo {@link ProductosProveedor}.
+	  * @param ProductosProveedor [$productos_proveedor] El objeto de tipo ProductosProveedor
 	  **/
 	public static final function search( $productos_proveedor )
 	{
@@ -150,7 +152,8 @@ abstract class ProductosProveedorDAOBase
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link ProductosProveedor} a actualizar. 
+	  * @return Filas afectadas
+	  * @param ProductosProveedor [$productos_proveedor] El objeto de tipo ProductosProveedor a actualizar.
 	  **/
 	private static final function update( $productos_proveedor )
 	{
@@ -164,6 +167,7 @@ abstract class ProductosProveedorDAOBase
 			$productos_proveedor->getIdProducto(), );
 		global $db;
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 
@@ -174,10 +178,11 @@ abstract class ProductosProveedorDAOBase
 	  * contenidos del objeto ProductosProveedor suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto ProductosProveedor.
+	  * primaria generada en el objeto ProductosProveedor dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link ProductosProveedor} a crear. 
+	  * @return Filas afectadas
+	  * @param ProductosProveedor [$productos_proveedor] El objeto de tipo ProductosProveedor a crear.
 	  **/
 	private static final function create( &$productos_proveedor )
 	{
@@ -191,7 +196,10 @@ abstract class ProductosProveedorDAOBase
 		 );
 		global $db;
 		$db->Execute($sql, $params);
+		$ar = $db->Affected_Rows();
+		if($ar == 0) return 0;
 		$productos_proveedor->setIdProducto( $db->Insert_ID() );
+		return $ar;
 	}
 
 
@@ -200,22 +208,23 @@ abstract class ProductosProveedorDAOBase
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
 	  * en el objeto ProductosProveedor suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). Restaurarlo solo se puede hacer usando el metodo create(), 
-	  * pero el objeto resultante tendra una diferente clave primaria de la que estaba en el objeto eliminado. 
-	  * Si no puede encontrar eliminar fila coincidente, NotFoundException sera lanzada.
+	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
+	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
+	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
-	  * @param Objeto El objeto del tipo {@link ProductosProveedor} a eliminar. 
+	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
+	  *	@return int El numero de filas afectadas.
+	  * @param ProductosProveedor [$productos_proveedor] El objeto de tipo ProductosProveedor a eliminar
 	  **/
 	public static final function delete( &$productos_proveedor )
 	{
+		if(self::getByPK($productos_proveedor->getIdProducto()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM productos_proveedor WHERE  id_producto = ?;";
-
-		$params = array( 
-			$productos_proveedor->getIdProducto(), );
-
+		$params = array( $productos_proveedor->getIdProducto() );
 		global $db;
 
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 

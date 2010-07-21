@@ -1,6 +1,8 @@
 <?php
 
 require_once("base/grupos_usuarios.dao.base.php");
+require_once("base/grupos_usuarios.vo.base.php");
+require_once ('Estructura.php');
 /** GruposUsuarios Data Access Object (DAO).
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 

@@ -7,15 +7,16 @@
   * @access private
   * 
   */
-abstract class SucursalDAOBase
+abstract class SucursalDAOBase extends TablaDAO
 {
 
 	/**
-	  *	metodo save 
+	  *	Guardar registros. 
 	  *	
 	  *	Este metodo guarda el estado actual del objeto {@link Sucursal} pasado en la base de datos. La llave 
-	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara 
-	  *	no esta definicda en el objeto, entonces save() creara una nueva fila.
+	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
+	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
+	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @param Sucursal [$sucursal] El objeto de tipo Sucursal
@@ -23,11 +24,11 @@ abstract class SucursalDAOBase
 	  **/
 	public static final function save( &$sucursal )
 	{
-		if(  $sucursal->getIdSucursal()  )
+		if( self::getByPK(  $sucursal->getIdSucursal() ) === NULL )
 		{
-			return SucursalDAOBase::update( $sucursal) ;
-		}else{
 			return SucursalDAOBase::create( $sucursal) ;
+		}else{
+			return SucursalDAOBase::update( $sucursal) ;
 		}
 	}
 
@@ -35,11 +36,11 @@ abstract class SucursalDAOBase
 	/**
 	  *	Obtener {@link Sucursal} por llave primaria. 
 	  *	
-	  * This will create and load {@link Sucursal} objects contents from database 
-	  * using given Primary-Key as identifier. 
+	  * Este metodo cargara un objeto {@link Sucursal} de la base de datos 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link Sucursal}.
+	  * @return Objeto Un objeto del tipo {@link Sucursal}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_sucursal )
 	{
@@ -47,6 +48,7 @@ abstract class SucursalDAOBase
 		$params = array(  $id_sucursal );
 		global $db;
 		$rs = $db->GetRow($sql, $params);
+		if(count($rs)==0)return NULL;
 		return new Sucursal( $rs );
 	}
 
@@ -95,7 +97,7 @@ abstract class SucursalDAOBase
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Objeto Un objeto del tipo {@link Sucursal}.
+	  * @param Sucursal [$sucursal] El objeto de tipo Sucursal
 	  **/
 	public static final function search( $sucursal )
 	{
@@ -135,7 +137,8 @@ abstract class SucursalDAOBase
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Sucursal} a actualizar. 
+	  * @return Filas afectadas
+	  * @param Sucursal [$sucursal] El objeto de tipo Sucursal a actualizar.
 	  **/
 	private static final function update( $sucursal )
 	{
@@ -146,6 +149,7 @@ abstract class SucursalDAOBase
 			$sucursal->getIdSucursal(), );
 		global $db;
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 
@@ -156,10 +160,11 @@ abstract class SucursalDAOBase
 	  * contenidos del objeto Sucursal suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto Sucursal.
+	  * primaria generada en el objeto Sucursal dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link Sucursal} a crear. 
+	  * @return Filas afectadas
+	  * @param Sucursal [$sucursal] El objeto de tipo Sucursal a crear.
 	  **/
 	private static final function create( &$sucursal )
 	{
@@ -170,7 +175,10 @@ abstract class SucursalDAOBase
 		 );
 		global $db;
 		$db->Execute($sql, $params);
+		$ar = $db->Affected_Rows();
+		if($ar == 0) return 0;
 		$sucursal->setIdSucursal( $db->Insert_ID() );
+		return $ar;
 	}
 
 
@@ -179,22 +187,23 @@ abstract class SucursalDAOBase
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
 	  * en el objeto Sucursal suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). Restaurarlo solo se puede hacer usando el metodo create(), 
-	  * pero el objeto resultante tendra una diferente clave primaria de la que estaba en el objeto eliminado. 
-	  * Si no puede encontrar eliminar fila coincidente, NotFoundException sera lanzada.
+	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
+	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
+	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
-	  * @param Objeto El objeto del tipo {@link Sucursal} a eliminar. 
+	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
+	  *	@return int El numero de filas afectadas.
+	  * @param Sucursal [$sucursal] El objeto de tipo Sucursal a eliminar
 	  **/
 	public static final function delete( &$sucursal )
 	{
+		if(self::getByPK($sucursal->getIdSucursal()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM sucursal WHERE  id_sucursal = ?;";
-
-		$params = array( 
-			$sucursal->getIdSucursal(), );
-
+		$params = array( $sucursal->getIdSucursal() );
 		global $db;
 
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 

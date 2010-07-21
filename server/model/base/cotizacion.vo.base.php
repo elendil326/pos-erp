@@ -7,7 +7,7 @@
   * 
   */
 
-class Cotizacion
+class Cotizacion extends VO
 {
 	/**
 	  * Constructor de Cotizacion

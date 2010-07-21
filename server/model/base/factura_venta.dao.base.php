@@ -7,15 +7,16 @@
   * @access private
   * 
   */
-abstract class FacturaVentaDAOBase
+abstract class FacturaVentaDAOBase extends TablaDAO
 {
 
 	/**
-	  *	metodo save 
+	  *	Guardar registros. 
 	  *	
 	  *	Este metodo guarda el estado actual del objeto {@link FacturaVenta} pasado en la base de datos. La llave 
-	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara 
-	  *	no esta definicda en el objeto, entonces save() creara una nueva fila.
+	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
+	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
+	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @param FacturaVenta [$factura_venta] El objeto de tipo FacturaVenta
@@ -23,11 +24,11 @@ abstract class FacturaVentaDAOBase
 	  **/
 	public static final function save( &$factura_venta )
 	{
-		if(  $factura_venta->getFolio()  )
+		if( self::getByPK(  $factura_venta->getFolio() ) === NULL )
 		{
-			return FacturaVentaDAOBase::update( $factura_venta) ;
-		}else{
 			return FacturaVentaDAOBase::create( $factura_venta) ;
+		}else{
+			return FacturaVentaDAOBase::update( $factura_venta) ;
 		}
 	}
 
@@ -35,11 +36,11 @@ abstract class FacturaVentaDAOBase
 	/**
 	  *	Obtener {@link FacturaVenta} por llave primaria. 
 	  *	
-	  * This will create and load {@link FacturaVenta} objects contents from database 
-	  * using given Primary-Key as identifier. 
+	  * Este metodo cargara un objeto {@link FacturaVenta} de la base de datos 
+	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link FacturaVenta}.
+	  * @return Objeto Un objeto del tipo {@link FacturaVenta}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $folio )
 	{
@@ -47,6 +48,7 @@ abstract class FacturaVentaDAOBase
 		$params = array(  $folio );
 		global $db;
 		$rs = $db->GetRow($sql, $params);
+		if(count($rs)==0)return NULL;
 		return new FacturaVenta( $rs );
 	}
 
@@ -95,7 +97,7 @@ abstract class FacturaVentaDAOBase
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Objeto Un objeto del tipo {@link FacturaVenta}.
+	  * @param FacturaVenta [$factura_venta] El objeto de tipo FacturaVenta
 	  **/
 	public static final function search( $factura_venta )
 	{
@@ -130,7 +132,8 @@ abstract class FacturaVentaDAOBase
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link FacturaVenta} a actualizar. 
+	  * @return Filas afectadas
+	  * @param FacturaVenta [$factura_venta] El objeto de tipo FacturaVenta a actualizar.
 	  **/
 	private static final function update( $factura_venta )
 	{
@@ -140,6 +143,7 @@ abstract class FacturaVentaDAOBase
 			$factura_venta->getFolio(), );
 		global $db;
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 
@@ -150,10 +154,11 @@ abstract class FacturaVentaDAOBase
 	  * contenidos del objeto FacturaVenta suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto FacturaVenta.
+	  * primaria generada en el objeto FacturaVenta dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @param Objeto El objeto del tipo {@link FacturaVenta} a crear. 
+	  * @return Filas afectadas
+	  * @param FacturaVenta [$factura_venta] El objeto de tipo FacturaVenta a crear.
 	  **/
 	private static final function create( &$factura_venta )
 	{
@@ -164,7 +169,10 @@ abstract class FacturaVentaDAOBase
 		 );
 		global $db;
 		$db->Execute($sql, $params);
+		$ar = $db->Affected_Rows();
+		if($ar == 0) return 0;
 		
+		return $ar;
 	}
 
 
@@ -173,22 +181,23 @@ abstract class FacturaVentaDAOBase
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
 	  * en el objeto FacturaVenta suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). Restaurarlo solo se puede hacer usando el metodo create(), 
-	  * pero el objeto resultante tendra una diferente clave primaria de la que estaba en el objeto eliminado. 
-	  * Si no puede encontrar eliminar fila coincidente, NotFoundException sera lanzada.
+	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
+	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
+	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
-	  * @param Objeto El objeto del tipo {@link FacturaVenta} a eliminar. 
+	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
+	  *	@return int El numero de filas afectadas.
+	  * @param FacturaVenta [$factura_venta] El objeto de tipo FacturaVenta a eliminar
 	  **/
 	public static final function delete( &$factura_venta )
 	{
+		if(self::getByPK($factura_venta->getFolio()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM factura_venta WHERE  folio = ?;";
-
-		$params = array( 
-			$factura_venta->getFolio(), );
-
+		$params = array( $factura_venta->getFolio() );
 		global $db;
 
 		$db->Execute($sql, $params);
+		return $db->Affected_Rows();
 	}
 
 
