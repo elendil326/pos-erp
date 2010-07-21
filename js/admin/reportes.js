@@ -4,6 +4,12 @@
 	Javascript para manejar los reportes
 */
 
+
+/**
+*	Constructor, limpia el div de contenido principal "content" y carga los resumenes y settings.
+*	Ademas agrega los elementos necesarios al DOM para la estructura basica de la pagina de reportes
+*
+*/
 Reports = function(){
 
 	//Borramos el contenido del div principal
@@ -29,8 +35,8 @@ Reports = function(){
 }
 
 
-/*
-	Funcion para cargar los diferentes settings para generar reportes
+/**
+*	Funcion para cargar los diferentes settings para generar reportes
 */
 Reports.prototype.loadSettings = function(){
 
@@ -158,8 +164,8 @@ Reports.prototype.loadSettings = function(){
 }
 
 
-/*
-	Funcion para cargar graficas
+/**
+*	Funcion para cargar graficas de ejemplo, no deberia ser llamada.
 */
 Reports.prototype.loadCharts = function(){
 	
@@ -216,8 +222,9 @@ Reports.prototype.loadCharts = function(){
 	$(selectorWrapper).append(divclear);
 }
 
-/* Funcion que pretende cargar un ligero resumen de cosas importantes 
-
+/**
+*	Funcion que pretende cargar un ligero resumen de informacion importante, con el formato de MVX (Most Valuable [something])
+*
 */
 Reports.prototype.loadResumen = function(){
 
@@ -245,7 +252,7 @@ Reports.prototype.loadResumen = function(){
 
 	//sacamos el top seller
 	AppAdmin.request({
-			url: '../serverProxy.php',
+			url: '../proxy.php',
 			data: "method=vendedorMasProductivo",
 			success: function(data){
 			
@@ -262,12 +269,15 @@ Reports.prototype.loadResumen = function(){
 				{
 					$('#top-vendedor').html("<b>No hay datos</b>");
 				}
+			},
+			failure: function(data){
+				$('#top-vendedor').html("<b>Error: No hay datos</b>");
 			}
 		});
 		
 	//sacamos el top product
 	AppAdmin.request({
-			url: '../serverProxy.php',
+			url: '../proxy.php',
 			data: "method=productoMasVendido",
 			success: function(data){
 			
@@ -284,12 +294,15 @@ Reports.prototype.loadResumen = function(){
 				{
 					$('#top-producto').html("<b>No hay datos</b>");
 				}
+			},
+			failure: function(data){
+				$('#top-producto').html("<b>Error: No hay datos</b>");
 			}
 		});
 		
 	//sacamos el top sucursal
 	AppAdmin.request({
-			url: '../serverProxy.php',
+			url: '../proxy.php',
 			data: "method=sucursalVentasTop",
 			success: function(data){
 			
@@ -305,12 +318,15 @@ Reports.prototype.loadResumen = function(){
 				{
 					$('#top-sucursal').html("<b>No hay datos</b>");
 				}
+			},
+			failure: function(data){
+				$('#top-sucursal').html("<b>Error: No hay datos</b>");
 			}
 		});
 		
 	//sacamos el top sucursal
 	AppAdmin.request({
-			url: '../serverProxy.php',
+			url: '../proxy.php',
 			data: "method=clienteComprasTop",
 			success: function(data){
 			
@@ -328,6 +344,9 @@ Reports.prototype.loadResumen = function(){
 				{
 					$('#top-cliente').html("<b>No hay datos</b>");
 				}
+			},
+			failure: function(data){
+				$('#top-cliente').html("<b>Error: No hay datos</b>");
 			}
 		});
 	
