@@ -1,8 +1,22 @@
 <?php
-/* Value Object file for table Corte */
+/** Value Object file for table corte.
+  * 
+  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
+  * @author Alan Gonzalez <alan@caffeina.mx> 
+  * @access public
+  * 
+  */
 
 class Corte
 {
+	/**
+	  * Constructor de Corte
+	  * 
+	  * Para construir un objeto de tipo Corte debera llamarse a el constructor 
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  * cuyos campos son iguales a las variables que constituyen a este objeto.
+	  * @return Corte
+	  */
 	function __construct( $data = NULL)
 	{ 
 		if(isset($data))
@@ -23,74 +37,109 @@ class Corte
 
 	/**
 	  * num_corte
-	  * es llave primara 
-	  * es de auto incremento 
-	  * @var int(11) numero de corte
+	  * 
+	  * numero de corte<br>
+	  * <b>Llave Primaria</b><br>
+	  * <b>Auto Incremento</b><br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $num_corte;
 
 	/**
 	  * anio
-	  * @var year(4) año del corte
+	  * 
+	  * año del corte<br>
+	  * @access protected
+	  * @var year(4)
 	  */
 	protected $anio;
 
 	/**
 	  * inicio
-	  * @var date año del corte
+	  * 
+	  * año del corte<br>
+	  * @access protected
+	  * @var date
 	  */
 	protected $inicio;
 
 	/**
 	  * fin
-	  * @var date fecha de fin del corte
+	  * 
+	  * fecha de fin del corte<br>
+	  * @access protected
+	  * @var date
 	  */
 	protected $fin;
 
 	/**
 	  * ventas
-	  * @var float ventas al contado en ese periodo
+	  * 
+	  * ventas al contado en ese periodo<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $ventas;
 
 	/**
 	  * abonosVentas
-	  * @var float pagos de abonos en este periodo
+	  * 
+	  * pagos de abonos en este periodo<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $abonosVentas;
 
 	/**
 	  * compras
-	  * @var float compras realizadas en ese periodo
+	  * 
+	  * compras realizadas en ese periodo<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $compras;
 
 	/**
 	  * AbonosCompra
-	  * @var float pagos realizados en ese periodo
+	  * 
+	  * pagos realizados en ese periodo<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $AbonosCompra;
 
 	/**
 	  * gastos
-	  * @var float gastos echos en ese periodo
+	  * 
+	  * gastos echos en ese periodo<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $gastos;
 
 	/**
 	  * ingresos
-	  * @var float ingresos obtenidos en ese periodo
+	  * 
+	  * ingresos obtenidos en ese periodo<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $ingresos;
 
 	/**
 	  * gananciasNetas
-	  * @var float ganancias netas dentro del periodo
+	  * 
+	  * ganancias netas dentro del periodo<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $gananciasNetas;
 
 	/**
-	  * es llave primara 
+	  * getNumCorte
+	  * 
+	  * Get the <i>num_corte</i> property for this object. Donde <i>num_corte</i> es numero de corte
 	  * @return int(11)
 	  */
 	final public function getNumCorte()
@@ -99,6 +148,15 @@ class Corte
 	}
 
 	/**
+	  * setNumCorte( $num_corte )
+	  * 
+	  * Set the <i>num_corte</i> property for this object. Donde <i>num_corte</i> es numero de corte.
+	  * Una validacion basica se hara aqui para comprobar que <i>num_corte</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
+	  * No deberias usar setNumCorte( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setNumCorte( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setNumCorte( $num_corte )
@@ -107,6 +165,9 @@ class Corte
 	}
 
 	/**
+	  * getAnio
+	  * 
+	  * Get the <i>anio</i> property for this object. Donde <i>anio</i> es año del corte
 	  * @return year(4)
 	  */
 	final public function getAnio()
@@ -115,6 +176,11 @@ class Corte
 	}
 
 	/**
+	  * setAnio( $anio )
+	  * 
+	  * Set the <i>anio</i> property for this object. Donde <i>anio</i> es año del corte.
+	  * Una validacion basica se hara aqui para comprobar que <i>anio</i> es de tipo <i>year(4)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param year(4)
 	  */
 	final public function setAnio( $anio )
@@ -123,6 +189,9 @@ class Corte
 	}
 
 	/**
+	  * getInicio
+	  * 
+	  * Get the <i>inicio</i> property for this object. Donde <i>inicio</i> es año del corte
 	  * @return date
 	  */
 	final public function getInicio()
@@ -131,6 +200,11 @@ class Corte
 	}
 
 	/**
+	  * setInicio( $inicio )
+	  * 
+	  * Set the <i>inicio</i> property for this object. Donde <i>inicio</i> es año del corte.
+	  * Una validacion basica se hara aqui para comprobar que <i>inicio</i> es de tipo <i>date</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param date
 	  */
 	final public function setInicio( $inicio )
@@ -139,6 +213,9 @@ class Corte
 	}
 
 	/**
+	  * getFin
+	  * 
+	  * Get the <i>fin</i> property for this object. Donde <i>fin</i> es fecha de fin del corte
 	  * @return date
 	  */
 	final public function getFin()
@@ -147,6 +224,11 @@ class Corte
 	}
 
 	/**
+	  * setFin( $fin )
+	  * 
+	  * Set the <i>fin</i> property for this object. Donde <i>fin</i> es fecha de fin del corte.
+	  * Una validacion basica se hara aqui para comprobar que <i>fin</i> es de tipo <i>date</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param date
 	  */
 	final public function setFin( $fin )
@@ -155,6 +237,9 @@ class Corte
 	}
 
 	/**
+	  * getVentas
+	  * 
+	  * Get the <i>ventas</i> property for this object. Donde <i>ventas</i> es ventas al contado en ese periodo
 	  * @return float
 	  */
 	final public function getVentas()
@@ -163,6 +248,11 @@ class Corte
 	}
 
 	/**
+	  * setVentas( $ventas )
+	  * 
+	  * Set the <i>ventas</i> property for this object. Donde <i>ventas</i> es ventas al contado en ese periodo.
+	  * Una validacion basica se hara aqui para comprobar que <i>ventas</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setVentas( $ventas )
@@ -171,6 +261,9 @@ class Corte
 	}
 
 	/**
+	  * getAbonosVentas
+	  * 
+	  * Get the <i>abonosVentas</i> property for this object. Donde <i>abonosVentas</i> es pagos de abonos en este periodo
 	  * @return float
 	  */
 	final public function getAbonosVentas()
@@ -179,6 +272,11 @@ class Corte
 	}
 
 	/**
+	  * setAbonosVentas( $abonosVentas )
+	  * 
+	  * Set the <i>abonosVentas</i> property for this object. Donde <i>abonosVentas</i> es pagos de abonos en este periodo.
+	  * Una validacion basica se hara aqui para comprobar que <i>abonosVentas</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setAbonosVentas( $abonosVentas )
@@ -187,6 +285,9 @@ class Corte
 	}
 
 	/**
+	  * getCompras
+	  * 
+	  * Get the <i>compras</i> property for this object. Donde <i>compras</i> es compras realizadas en ese periodo
 	  * @return float
 	  */
 	final public function getCompras()
@@ -195,6 +296,11 @@ class Corte
 	}
 
 	/**
+	  * setCompras( $compras )
+	  * 
+	  * Set the <i>compras</i> property for this object. Donde <i>compras</i> es compras realizadas en ese periodo.
+	  * Una validacion basica se hara aqui para comprobar que <i>compras</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setCompras( $compras )
@@ -203,6 +309,9 @@ class Corte
 	}
 
 	/**
+	  * getAbonosCompra
+	  * 
+	  * Get the <i>AbonosCompra</i> property for this object. Donde <i>AbonosCompra</i> es pagos realizados en ese periodo
 	  * @return float
 	  */
 	final public function getAbonosCompra()
@@ -211,6 +320,11 @@ class Corte
 	}
 
 	/**
+	  * setAbonosCompra( $AbonosCompra )
+	  * 
+	  * Set the <i>AbonosCompra</i> property for this object. Donde <i>AbonosCompra</i> es pagos realizados en ese periodo.
+	  * Una validacion basica se hara aqui para comprobar que <i>AbonosCompra</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setAbonosCompra( $AbonosCompra )
@@ -219,6 +333,9 @@ class Corte
 	}
 
 	/**
+	  * getGastos
+	  * 
+	  * Get the <i>gastos</i> property for this object. Donde <i>gastos</i> es gastos echos en ese periodo
 	  * @return float
 	  */
 	final public function getGastos()
@@ -227,6 +344,11 @@ class Corte
 	}
 
 	/**
+	  * setGastos( $gastos )
+	  * 
+	  * Set the <i>gastos</i> property for this object. Donde <i>gastos</i> es gastos echos en ese periodo.
+	  * Una validacion basica se hara aqui para comprobar que <i>gastos</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setGastos( $gastos )
@@ -235,6 +357,9 @@ class Corte
 	}
 
 	/**
+	  * getIngresos
+	  * 
+	  * Get the <i>ingresos</i> property for this object. Donde <i>ingresos</i> es ingresos obtenidos en ese periodo
 	  * @return float
 	  */
 	final public function getIngresos()
@@ -243,6 +368,11 @@ class Corte
 	}
 
 	/**
+	  * setIngresos( $ingresos )
+	  * 
+	  * Set the <i>ingresos</i> property for this object. Donde <i>ingresos</i> es ingresos obtenidos en ese periodo.
+	  * Una validacion basica se hara aqui para comprobar que <i>ingresos</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setIngresos( $ingresos )
@@ -251,6 +381,9 @@ class Corte
 	}
 
 	/**
+	  * getGananciasNetas
+	  * 
+	  * Get the <i>gananciasNetas</i> property for this object. Donde <i>gananciasNetas</i> es ganancias netas dentro del periodo
 	  * @return float
 	  */
 	final public function getGananciasNetas()
@@ -259,6 +392,11 @@ class Corte
 	}
 
 	/**
+	  * setGananciasNetas( $gananciasNetas )
+	  * 
+	  * Set the <i>gananciasNetas</i> property for this object. Donde <i>gananciasNetas</i> es ganancias netas dentro del periodo.
+	  * Una validacion basica se hara aqui para comprobar que <i>gananciasNetas</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setGananciasNetas( $gananciasNetas )

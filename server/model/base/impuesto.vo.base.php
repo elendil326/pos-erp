@@ -1,8 +1,22 @@
 <?php
-/* Value Object file for table Impuesto */
+/** Value Object file for table impuesto.
+  * 
+  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
+  * @author Alan Gonzalez <alan@caffeina.mx> 
+  * @access public
+  * 
+  */
 
 class Impuesto
 {
+	/**
+	  * Constructor de Impuesto
+	  * 
+	  * Para construir un objeto de tipo Impuesto debera llamarse a el constructor 
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  * cuyos campos son iguales a las variables que constituyen a este objeto.
+	  * @return Impuesto
+	  */
 	function __construct( $data = NULL)
 	{ 
 		if(isset($data))
@@ -16,31 +30,45 @@ class Impuesto
 
 	/**
 	  * id_impuesto
-	  * es llave primara 
-	  * @var int(11) Campo no documentado
+	  * 
+	  * Campo no documentado<br>
+	  * <b>Llave Primaria</b><br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_impuesto;
 
 	/**
 	  * descripcion
-	  * @var varchar(100) Campo no documentado
+	  * 
+	  * Campo no documentado<br>
+	  * @access protected
+	  * @var varchar(100)
 	  */
 	protected $descripcion;
 
 	/**
 	  * valor
-	  * @var int(11) Campo no documentado
+	  * 
+	  * Campo no documentado<br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $valor;
 
 	/**
 	  * id_sucursal
-	  * @var int(11) Campo no documentado
+	  * 
+	  * Campo no documentado<br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_sucursal;
 
 	/**
-	  * es llave primara 
+	  * getIdImpuesto
+	  * 
+	  * Get the <i>id_impuesto</i> property for this object. Donde <i>id_impuesto</i> es Campo no documentado
 	  * @return int(11)
 	  */
 	final public function getIdImpuesto()
@@ -49,6 +77,13 @@ class Impuesto
 	}
 
 	/**
+	  * setIdImpuesto( $id_impuesto )
+	  * 
+	  * Set the <i>id_impuesto</i> property for this object. Donde <i>id_impuesto</i> es Campo no documentado.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_impuesto</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdImpuesto( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdImpuesto( $id_impuesto )
@@ -57,6 +92,9 @@ class Impuesto
 	}
 
 	/**
+	  * getDescripcion
+	  * 
+	  * Get the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es Campo no documentado
 	  * @return varchar(100)
 	  */
 	final public function getDescripcion()
@@ -65,6 +103,11 @@ class Impuesto
 	}
 
 	/**
+	  * setDescripcion( $descripcion )
+	  * 
+	  * Set the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es Campo no documentado.
+	  * Una validacion basica se hara aqui para comprobar que <i>descripcion</i> es de tipo <i>varchar(100)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(100)
 	  */
 	final public function setDescripcion( $descripcion )
@@ -73,6 +116,9 @@ class Impuesto
 	}
 
 	/**
+	  * getValor
+	  * 
+	  * Get the <i>valor</i> property for this object. Donde <i>valor</i> es Campo no documentado
 	  * @return int(11)
 	  */
 	final public function getValor()
@@ -81,6 +127,11 @@ class Impuesto
 	}
 
 	/**
+	  * setValor( $valor )
+	  * 
+	  * Set the <i>valor</i> property for this object. Donde <i>valor</i> es Campo no documentado.
+	  * Una validacion basica se hara aqui para comprobar que <i>valor</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
 	final public function setValor( $valor )
@@ -89,6 +140,9 @@ class Impuesto
 	}
 
 	/**
+	  * getIdSucursal
+	  * 
+	  * Get the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es Campo no documentado
 	  * @return int(11)
 	  */
 	final public function getIdSucursal()
@@ -97,6 +151,11 @@ class Impuesto
 	}
 
 	/**
+	  * setIdSucursal( $id_sucursal )
+	  * 
+	  * Set the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es Campo no documentado.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_sucursal</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
 	final public function setIdSucursal( $id_sucursal )

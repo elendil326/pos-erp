@@ -1,8 +1,22 @@
 <?php
-/* Value Object file for table Compras */
+/** Value Object file for table compras.
+  * 
+  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
+  * @author Alan Gonzalez <alan@caffeina.mx> 
+  * @access public
+  * 
+  */
 
 class Compras
 {
+	/**
+	  * Constructor de Compras
+	  * 
+	  * Para construir un objeto de tipo Compras debera llamarse a el constructor 
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  * cuyos campos son iguales a las variables que constituyen a este objeto.
+	  * @return Compras
+	  */
 	function __construct( $data = NULL)
 	{ 
 		if(isset($data))
@@ -20,56 +34,82 @@ class Compras
 
 	/**
 	  * id_compra
-	  * es llave primara 
-	  * es de auto incremento 
-	  * @var int(11) id de la compra
+	  * 
+	  * id de la compra<br>
+	  * <b>Llave Primaria</b><br>
+	  * <b>Auto Incremento</b><br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_compra;
 
 	/**
 	  * id_proveedor
-	  * @var int(11) PROVEEDOR AL QUE SE LE COMPRO
+	  * 
+	  * PROVEEDOR AL QUE SE LE COMPRO<br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_proveedor;
 
 	/**
 	  * tipo_compra
-	  * @var enum('credito','contado') tipo de compra, contado o credito
+	  * 
+	  * tipo de compra, contado o credito<br>
+	  * @access protected
+	  * @var enum('credito','contado')
 	  */
 	protected $tipo_compra;
 
 	/**
 	  * fecha
-	  * @var timestamp fecha de compra
+	  * 
+	  * fecha de compra<br>
+	  * @access protected
+	  * @var timestamp
 	  */
 	protected $fecha;
 
 	/**
 	  * subtotal
-	  * @var float subtotal de compra
+	  * 
+	  * subtotal de compra<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $subtotal;
 
 	/**
 	  * iva
-	  * @var float iva de la compra
+	  * 
+	  * iva de la compra<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $iva;
 
 	/**
 	  * id_sucursal
-	  * @var int(11) sucursal en que se compro
+	  * 
+	  * sucursal en que se compro<br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_sucursal;
 
 	/**
 	  * id_usuario
-	  * @var int(11) quien realizo la compra
+	  * 
+	  * quien realizo la compra<br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_usuario;
 
 	/**
-	  * es llave primara 
+	  * getIdCompra
+	  * 
+	  * Get the <i>id_compra</i> property for this object. Donde <i>id_compra</i> es id de la compra
 	  * @return int(11)
 	  */
 	final public function getIdCompra()
@@ -78,6 +118,15 @@ class Compras
 	}
 
 	/**
+	  * setIdCompra( $id_compra )
+	  * 
+	  * Set the <i>id_compra</i> property for this object. Donde <i>id_compra</i> es id de la compra.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_compra</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
+	  * No deberias usar setIdCompra( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdCompra( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdCompra( $id_compra )
@@ -86,6 +135,9 @@ class Compras
 	}
 
 	/**
+	  * getIdProveedor
+	  * 
+	  * Get the <i>id_proveedor</i> property for this object. Donde <i>id_proveedor</i> es PROVEEDOR AL QUE SE LE COMPRO
 	  * @return int(11)
 	  */
 	final public function getIdProveedor()
@@ -94,6 +146,11 @@ class Compras
 	}
 
 	/**
+	  * setIdProveedor( $id_proveedor )
+	  * 
+	  * Set the <i>id_proveedor</i> property for this object. Donde <i>id_proveedor</i> es PROVEEDOR AL QUE SE LE COMPRO.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_proveedor</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
 	final public function setIdProveedor( $id_proveedor )
@@ -102,6 +159,9 @@ class Compras
 	}
 
 	/**
+	  * getTipoCompra
+	  * 
+	  * Get the <i>tipo_compra</i> property for this object. Donde <i>tipo_compra</i> es tipo de compra, contado o credito
 	  * @return enum('credito','contado')
 	  */
 	final public function getTipoCompra()
@@ -110,6 +170,11 @@ class Compras
 	}
 
 	/**
+	  * setTipoCompra( $tipo_compra )
+	  * 
+	  * Set the <i>tipo_compra</i> property for this object. Donde <i>tipo_compra</i> es tipo de compra, contado o credito.
+	  * Una validacion basica se hara aqui para comprobar que <i>tipo_compra</i> es de tipo <i>enum('credito','contado')</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param enum('credito','contado')
 	  */
 	final public function setTipoCompra( $tipo_compra )
@@ -118,6 +183,9 @@ class Compras
 	}
 
 	/**
+	  * getFecha
+	  * 
+	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha de compra
 	  * @return timestamp
 	  */
 	final public function getFecha()
@@ -126,6 +194,11 @@ class Compras
 	}
 
 	/**
+	  * setFecha( $fecha )
+	  * 
+	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha de compra.
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>timestamp</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param timestamp
 	  */
 	final public function setFecha( $fecha )
@@ -134,6 +207,9 @@ class Compras
 	}
 
 	/**
+	  * getSubtotal
+	  * 
+	  * Get the <i>subtotal</i> property for this object. Donde <i>subtotal</i> es subtotal de compra
 	  * @return float
 	  */
 	final public function getSubtotal()
@@ -142,6 +218,11 @@ class Compras
 	}
 
 	/**
+	  * setSubtotal( $subtotal )
+	  * 
+	  * Set the <i>subtotal</i> property for this object. Donde <i>subtotal</i> es subtotal de compra.
+	  * Una validacion basica se hara aqui para comprobar que <i>subtotal</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setSubtotal( $subtotal )
@@ -150,6 +231,9 @@ class Compras
 	}
 
 	/**
+	  * getIva
+	  * 
+	  * Get the <i>iva</i> property for this object. Donde <i>iva</i> es iva de la compra
 	  * @return float
 	  */
 	final public function getIva()
@@ -158,6 +242,11 @@ class Compras
 	}
 
 	/**
+	  * setIva( $iva )
+	  * 
+	  * Set the <i>iva</i> property for this object. Donde <i>iva</i> es iva de la compra.
+	  * Una validacion basica se hara aqui para comprobar que <i>iva</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setIva( $iva )
@@ -166,6 +255,9 @@ class Compras
 	}
 
 	/**
+	  * getIdSucursal
+	  * 
+	  * Get the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es sucursal en que se compro
 	  * @return int(11)
 	  */
 	final public function getIdSucursal()
@@ -174,6 +266,11 @@ class Compras
 	}
 
 	/**
+	  * setIdSucursal( $id_sucursal )
+	  * 
+	  * Set the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es sucursal en que se compro.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_sucursal</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
 	final public function setIdSucursal( $id_sucursal )
@@ -182,6 +279,9 @@ class Compras
 	}
 
 	/**
+	  * getIdUsuario
+	  * 
+	  * Get the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es quien realizo la compra
 	  * @return int(11)
 	  */
 	final public function getIdUsuario()
@@ -190,6 +290,11 @@ class Compras
 	}
 
 	/**
+	  * setIdUsuario( $id_usuario )
+	  * 
+	  * Set the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es quien realizo la compra.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_usuario</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
 	final public function setIdUsuario( $id_usuario )

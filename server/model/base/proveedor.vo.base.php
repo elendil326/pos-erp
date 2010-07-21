@@ -1,8 +1,22 @@
 <?php
-/* Value Object file for table Proveedor */
+/** Value Object file for table proveedor.
+  * 
+  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
+  * @author Alan Gonzalez <alan@caffeina.mx> 
+  * @access public
+  * 
+  */
 
 class Proveedor
 {
+	/**
+	  * Constructor de Proveedor
+	  * 
+	  * Para construir un objeto de tipo Proveedor debera llamarse a el constructor 
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  * cuyos campos son iguales a las variables que constituyen a este objeto.
+	  * @return Proveedor
+	  */
 	function __construct( $data = NULL)
 	{ 
 		if(isset($data))
@@ -18,44 +32,64 @@ class Proveedor
 
 	/**
 	  * id_proveedor
-	  * es llave primara 
-	  * es de auto incremento 
-	  * @var int(11) identificador del proveedor
+	  * 
+	  * identificador del proveedor<br>
+	  * <b>Llave Primaria</b><br>
+	  * <b>Auto Incremento</b><br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_proveedor;
 
 	/**
 	  * rfc
-	  * @var varchar(20) rfc del proveedor
+	  * 
+	  * rfc del proveedor<br>
+	  * @access protected
+	  * @var varchar(20)
 	  */
 	protected $rfc;
 
 	/**
 	  * nombre
-	  * @var varchar(30) nombre del proveedor
+	  * 
+	  * nombre del proveedor<br>
+	  * @access protected
+	  * @var varchar(30)
 	  */
 	protected $nombre;
 
 	/**
 	  * direccion
-	  * @var varchar(100) direccion del proveedor
+	  * 
+	  * direccion del proveedor<br>
+	  * @access protected
+	  * @var varchar(100)
 	  */
 	protected $direccion;
 
 	/**
 	  * telefono
-	  * @var varchar(20) telefono
+	  * 
+	  * telefono<br>
+	  * @access protected
+	  * @var varchar(20)
 	  */
 	protected $telefono;
 
 	/**
 	  * e_mail
-	  * @var varchar(60) email del provedor
+	  * 
+	  * email del provedor<br>
+	  * @access protected
+	  * @var varchar(60)
 	  */
 	protected $e_mail;
 
 	/**
-	  * es llave primara 
+	  * getIdProveedor
+	  * 
+	  * Get the <i>id_proveedor</i> property for this object. Donde <i>id_proveedor</i> es identificador del proveedor
 	  * @return int(11)
 	  */
 	final public function getIdProveedor()
@@ -64,6 +98,15 @@ class Proveedor
 	}
 
 	/**
+	  * setIdProveedor( $id_proveedor )
+	  * 
+	  * Set the <i>id_proveedor</i> property for this object. Donde <i>id_proveedor</i> es identificador del proveedor.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_proveedor</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
+	  * No deberias usar setIdProveedor( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdProveedor( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdProveedor( $id_proveedor )
@@ -72,6 +115,9 @@ class Proveedor
 	}
 
 	/**
+	  * getRfc
+	  * 
+	  * Get the <i>rfc</i> property for this object. Donde <i>rfc</i> es rfc del proveedor
 	  * @return varchar(20)
 	  */
 	final public function getRfc()
@@ -80,6 +126,11 @@ class Proveedor
 	}
 
 	/**
+	  * setRfc( $rfc )
+	  * 
+	  * Set the <i>rfc</i> property for this object. Donde <i>rfc</i> es rfc del proveedor.
+	  * Una validacion basica se hara aqui para comprobar que <i>rfc</i> es de tipo <i>varchar(20)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(20)
 	  */
 	final public function setRfc( $rfc )
@@ -88,6 +139,9 @@ class Proveedor
 	}
 
 	/**
+	  * getNombre
+	  * 
+	  * Get the <i>nombre</i> property for this object. Donde <i>nombre</i> es nombre del proveedor
 	  * @return varchar(30)
 	  */
 	final public function getNombre()
@@ -96,6 +150,11 @@ class Proveedor
 	}
 
 	/**
+	  * setNombre( $nombre )
+	  * 
+	  * Set the <i>nombre</i> property for this object. Donde <i>nombre</i> es nombre del proveedor.
+	  * Una validacion basica se hara aqui para comprobar que <i>nombre</i> es de tipo <i>varchar(30)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(30)
 	  */
 	final public function setNombre( $nombre )
@@ -104,6 +163,9 @@ class Proveedor
 	}
 
 	/**
+	  * getDireccion
+	  * 
+	  * Get the <i>direccion</i> property for this object. Donde <i>direccion</i> es direccion del proveedor
 	  * @return varchar(100)
 	  */
 	final public function getDireccion()
@@ -112,6 +174,11 @@ class Proveedor
 	}
 
 	/**
+	  * setDireccion( $direccion )
+	  * 
+	  * Set the <i>direccion</i> property for this object. Donde <i>direccion</i> es direccion del proveedor.
+	  * Una validacion basica se hara aqui para comprobar que <i>direccion</i> es de tipo <i>varchar(100)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(100)
 	  */
 	final public function setDireccion( $direccion )
@@ -120,6 +187,9 @@ class Proveedor
 	}
 
 	/**
+	  * getTelefono
+	  * 
+	  * Get the <i>telefono</i> property for this object. Donde <i>telefono</i> es telefono
 	  * @return varchar(20)
 	  */
 	final public function getTelefono()
@@ -128,6 +198,11 @@ class Proveedor
 	}
 
 	/**
+	  * setTelefono( $telefono )
+	  * 
+	  * Set the <i>telefono</i> property for this object. Donde <i>telefono</i> es telefono.
+	  * Una validacion basica se hara aqui para comprobar que <i>telefono</i> es de tipo <i>varchar(20)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(20)
 	  */
 	final public function setTelefono( $telefono )
@@ -136,6 +211,9 @@ class Proveedor
 	}
 
 	/**
+	  * getEMail
+	  * 
+	  * Get the <i>e_mail</i> property for this object. Donde <i>e_mail</i> es email del provedor
 	  * @return varchar(60)
 	  */
 	final public function getEMail()
@@ -144,6 +222,11 @@ class Proveedor
 	}
 
 	/**
+	  * setEMail( $e_mail )
+	  * 
+	  * Set the <i>e_mail</i> property for this object. Donde <i>e_mail</i> es email del provedor.
+	  * Una validacion basica se hara aqui para comprobar que <i>e_mail</i> es de tipo <i>varchar(60)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(60)
 	  */
 	final public function setEMail( $e_mail )

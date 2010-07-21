@@ -1,8 +1,22 @@
 <?php
-/* Value Object file for table DetalleCotizacion */
+/** Value Object file for table detalle_cotizacion.
+  * 
+  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
+  * @author Alan Gonzalez <alan@caffeina.mx> 
+  * @access public
+  * 
+  */
 
 class DetalleCotizacion
 {
+	/**
+	  * Constructor de DetalleCotizacion
+	  * 
+	  * Para construir un objeto de tipo DetalleCotizacion debera llamarse a el constructor 
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  * cuyos campos son iguales a las variables que constituyen a este objeto.
+	  * @return DetalleCotizacion
+	  */
 	function __construct( $data = NULL)
 	{ 
 		if(isset($data))
@@ -16,32 +30,46 @@ class DetalleCotizacion
 
 	/**
 	  * id_cotizacion
-	  * es llave primara 
-	  * @var int(11) id de la cotizacion
+	  * 
+	  * id de la cotizacion<br>
+	  * <b>Llave Primaria</b><br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_cotizacion;
 
 	/**
 	  * id_producto
-	  * es llave primara 
-	  * @var int(11) id del producto
+	  * 
+	  * id del producto<br>
+	  * <b>Llave Primaria</b><br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_producto;
 
 	/**
 	  * cantidad
-	  * @var float cantidad cotizado
+	  * 
+	  * cantidad cotizado<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $cantidad;
 
 	/**
 	  * precio
-	  * @var float precio al que cotizo el producto
+	  * 
+	  * precio al que cotizo el producto<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $precio;
 
 	/**
-	  * es llave primara 
+	  * getIdCotizacion
+	  * 
+	  * Get the <i>id_cotizacion</i> property for this object. Donde <i>id_cotizacion</i> es id de la cotizacion
 	  * @return int(11)
 	  */
 	final public function getIdCotizacion()
@@ -50,6 +78,13 @@ class DetalleCotizacion
 	}
 
 	/**
+	  * setIdCotizacion( $id_cotizacion )
+	  * 
+	  * Set the <i>id_cotizacion</i> property for this object. Donde <i>id_cotizacion</i> es id de la cotizacion.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_cotizacion</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdCotizacion( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdCotizacion( $id_cotizacion )
@@ -58,7 +93,9 @@ class DetalleCotizacion
 	}
 
 	/**
-	  * es llave primara 
+	  * getIdProducto
+	  * 
+	  * Get the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es id del producto
 	  * @return int(11)
 	  */
 	final public function getIdProducto()
@@ -67,6 +104,13 @@ class DetalleCotizacion
 	}
 
 	/**
+	  * setIdProducto( $id_producto )
+	  * 
+	  * Set the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es id del producto.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_producto</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdProducto( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdProducto( $id_producto )
@@ -75,6 +119,9 @@ class DetalleCotizacion
 	}
 
 	/**
+	  * getCantidad
+	  * 
+	  * Get the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es cantidad cotizado
 	  * @return float
 	  */
 	final public function getCantidad()
@@ -83,6 +130,11 @@ class DetalleCotizacion
 	}
 
 	/**
+	  * setCantidad( $cantidad )
+	  * 
+	  * Set the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es cantidad cotizado.
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setCantidad( $cantidad )
@@ -91,6 +143,9 @@ class DetalleCotizacion
 	}
 
 	/**
+	  * getPrecio
+	  * 
+	  * Get the <i>precio</i> property for this object. Donde <i>precio</i> es precio al que cotizo el producto
 	  * @return float
 	  */
 	final public function getPrecio()
@@ -99,6 +154,11 @@ class DetalleCotizacion
 	}
 
 	/**
+	  * setPrecio( $precio )
+	  * 
+	  * Set the <i>precio</i> property for this object. Donde <i>precio</i> es precio al que cotizo el producto.
+	  * Una validacion basica se hara aqui para comprobar que <i>precio</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setPrecio( $precio )

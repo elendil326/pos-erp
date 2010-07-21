@@ -1,8 +1,22 @@
 <?php
-/* Value Object file for table DetalleVenta */
+/** Value Object file for table detalle_venta.
+  * 
+  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
+  * @author Alan Gonzalez <alan@caffeina.mx> 
+  * @access public
+  * 
+  */
 
 class DetalleVenta
 {
+	/**
+	  * Constructor de DetalleVenta
+	  * 
+	  * Para construir un objeto de tipo DetalleVenta debera llamarse a el constructor 
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  * cuyos campos son iguales a las variables que constituyen a este objeto.
+	  * @return DetalleVenta
+	  */
 	function __construct( $data = NULL)
 	{ 
 		if(isset($data))
@@ -16,32 +30,46 @@ class DetalleVenta
 
 	/**
 	  * id_venta
-	  * es llave primara 
-	  * @var int(11) venta a que se referencia
+	  * 
+	  * venta a que se referencia<br>
+	  * <b>Llave Primaria</b><br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_venta;
 
 	/**
 	  * id_producto
-	  * es llave primara 
-	  * @var int(11) producto de la venta
+	  * 
+	  * producto de la venta<br>
+	  * <b>Llave Primaria</b><br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_producto;
 
 	/**
 	  * cantidad
-	  * @var float cantidad que se vendio
+	  * 
+	  * cantidad que se vendio<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $cantidad;
 
 	/**
 	  * precio
-	  * @var float precio al que se vendio
+	  * 
+	  * precio al que se vendio<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $precio;
 
 	/**
-	  * es llave primara 
+	  * getIdVenta
+	  * 
+	  * Get the <i>id_venta</i> property for this object. Donde <i>id_venta</i> es venta a que se referencia
 	  * @return int(11)
 	  */
 	final public function getIdVenta()
@@ -50,6 +78,13 @@ class DetalleVenta
 	}
 
 	/**
+	  * setIdVenta( $id_venta )
+	  * 
+	  * Set the <i>id_venta</i> property for this object. Donde <i>id_venta</i> es venta a que se referencia.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_venta</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdVenta( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdVenta( $id_venta )
@@ -58,7 +93,9 @@ class DetalleVenta
 	}
 
 	/**
-	  * es llave primara 
+	  * getIdProducto
+	  * 
+	  * Get the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es producto de la venta
 	  * @return int(11)
 	  */
 	final public function getIdProducto()
@@ -67,6 +104,13 @@ class DetalleVenta
 	}
 
 	/**
+	  * setIdProducto( $id_producto )
+	  * 
+	  * Set the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es producto de la venta.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_producto</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdProducto( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdProducto( $id_producto )
@@ -75,6 +119,9 @@ class DetalleVenta
 	}
 
 	/**
+	  * getCantidad
+	  * 
+	  * Get the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es cantidad que se vendio
 	  * @return float
 	  */
 	final public function getCantidad()
@@ -83,6 +130,11 @@ class DetalleVenta
 	}
 
 	/**
+	  * setCantidad( $cantidad )
+	  * 
+	  * Set the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es cantidad que se vendio.
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setCantidad( $cantidad )
@@ -91,6 +143,9 @@ class DetalleVenta
 	}
 
 	/**
+	  * getPrecio
+	  * 
+	  * Get the <i>precio</i> property for this object. Donde <i>precio</i> es precio al que se vendio
 	  * @return float
 	  */
 	final public function getPrecio()
@@ -99,6 +154,11 @@ class DetalleVenta
 	}
 
 	/**
+	  * setPrecio( $precio )
+	  * 
+	  * Set the <i>precio</i> property for this object. Donde <i>precio</i> es precio al que se vendio.
+	  * Una validacion basica se hara aqui para comprobar que <i>precio</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setPrecio( $precio )

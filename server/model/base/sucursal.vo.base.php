@@ -1,8 +1,22 @@
 <?php
-/* Value Object file for table Sucursal */
+/** Value Object file for table sucursal.
+  * 
+  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
+  * @author Alan Gonzalez <alan@caffeina.mx> 
+  * @access public
+  * 
+  */
 
 class Sucursal
 {
+	/**
+	  * Constructor de Sucursal
+	  * 
+	  * Para construir un objeto de tipo Sucursal debera llamarse a el constructor 
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  * cuyos campos son iguales a las variables que constituyen a este objeto.
+	  * @return Sucursal
+	  */
 	function __construct( $data = NULL)
 	{ 
 		if(isset($data))
@@ -15,26 +29,37 @@ class Sucursal
 
 	/**
 	  * id_sucursal
-	  * es llave primara 
-	  * es de auto incremento 
-	  * @var int(11) Identificador de cada sucursal
+	  * 
+	  * Identificador de cada sucursal<br>
+	  * <b>Llave Primaria</b><br>
+	  * <b>Auto Incremento</b><br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_sucursal;
 
 	/**
 	  * descripcion
-	  * @var varchar(100) nombre o descripcion de sucursal
+	  * 
+	  * nombre o descripcion de sucursal<br>
+	  * @access protected
+	  * @var varchar(100)
 	  */
 	protected $descripcion;
 
 	/**
 	  * direccion
-	  * @var varchar(200) direccion de la sucursal
+	  * 
+	  * direccion de la sucursal<br>
+	  * @access protected
+	  * @var varchar(200)
 	  */
 	protected $direccion;
 
 	/**
-	  * es llave primara 
+	  * getIdSucursal
+	  * 
+	  * Get the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es Identificador de cada sucursal
 	  * @return int(11)
 	  */
 	final public function getIdSucursal()
@@ -43,6 +68,15 @@ class Sucursal
 	}
 
 	/**
+	  * setIdSucursal( $id_sucursal )
+	  * 
+	  * Set the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es Identificador de cada sucursal.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_sucursal</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
+	  * No deberias usar setIdSucursal( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdSucursal( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdSucursal( $id_sucursal )
@@ -51,6 +85,9 @@ class Sucursal
 	}
 
 	/**
+	  * getDescripcion
+	  * 
+	  * Get the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es nombre o descripcion de sucursal
 	  * @return varchar(100)
 	  */
 	final public function getDescripcion()
@@ -59,6 +96,11 @@ class Sucursal
 	}
 
 	/**
+	  * setDescripcion( $descripcion )
+	  * 
+	  * Set the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es nombre o descripcion de sucursal.
+	  * Una validacion basica se hara aqui para comprobar que <i>descripcion</i> es de tipo <i>varchar(100)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(100)
 	  */
 	final public function setDescripcion( $descripcion )
@@ -67,6 +109,9 @@ class Sucursal
 	}
 
 	/**
+	  * getDireccion
+	  * 
+	  * Get the <i>direccion</i> property for this object. Donde <i>direccion</i> es direccion de la sucursal
 	  * @return varchar(200)
 	  */
 	final public function getDireccion()
@@ -75,6 +120,11 @@ class Sucursal
 	}
 
 	/**
+	  * setDireccion( $direccion )
+	  * 
+	  * Set the <i>direccion</i> property for this object. Donde <i>direccion</i> es direccion de la sucursal.
+	  * Una validacion basica se hara aqui para comprobar que <i>direccion</i> es de tipo <i>varchar(200)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(200)
 	  */
 	final public function setDireccion( $direccion )

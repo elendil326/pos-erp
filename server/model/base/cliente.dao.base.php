@@ -1,24 +1,27 @@
 <?php
-/* Cliente Data Access Object (DAO).
- * Esta clase contiene toda la manipulación de bases de datos que se necesita para 
- * almacenar de forma permanente y recuperar instancias de objetos Cliente. 
- */
-
-class ClienteDAOBase
+/** Cliente Data Access Object (DAO) Base.
+  * 
+  * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
+  * almacenar de forma permanente y recuperar instancias de objetos {@link Cliente }. 
+  * @author Alan Gonzalez <alan@caffeina.mx> 
+  * @access private
+  * 
+  */
+abstract class ClienteDAOBase
 {
 
-	private function __construct()
-	{
-		//prevent instatiation of this class by marking it private
-	}
-
-
 	/**
-	  *	Este método guarda el estado actual de objeto Cliente en la base de datos. La llave 
-	  *	primaria indicará qué instancia va a ser actualizado en base de datos. Si la llave primara 
+	  *	metodo save 
+	  *	
+	  *	Este metodo guarda el estado actual del objeto {@link Cliente} pasado en la base de datos. La llave 
+	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara 
 	  *	no esta definicda en el objeto, entonces save() creara una nueva fila.
+	  *	
+	  *	@static
+	  * @param Cliente [$cliente] El objeto de tipo Cliente
+	  * @return bool Verdadero si el metodo guardo correctamente este objeto, falso si no.
 	  **/
-	final public function save( &$cliente )
+	public static final function save( &$cliente )
 	{
 		if(  $cliente->getIdCliente()  )
 		{
@@ -30,12 +33,15 @@ class ClienteDAOBase
 
 
 	/**
-	  * getObject-method. This will create and load valueObject contents from database 
-	  * using given Primary-Key as identifier. This method is just a convenience method 
-	  * for the real load-method which accepts the valueObject as a parameter. Returned
-	  * valueObject will be created using the createValueObject() method.
+	  *	Obtener {@link Cliente} por llave primaria. 
+	  *	
+	  * This will create and load {@link Cliente} objects contents from database 
+	  * using given Primary-Key as identifier. 
+	  *	
+	  *	@static
+	  * @return Objeto Un objeto del tipo {@link Cliente}.
 	  **/
-	final public function getByPK(  $id_cliente )
+	public static final function getByPK(  $id_cliente )
 	{
 		$sql = "SELECT * FROM cliente WHERE (id_cliente = ?) LIMIT 1;";
 		$params = array(  $id_cliente );
@@ -46,12 +52,17 @@ class ClienteDAOBase
 
 
 	/**
+	  *	Obtener todas las filas.
+	  *	
 	  * Esta funcion leera todos los contenidos de la tabla en la base de datos y construira
-	  * un vector que contiene objetos de tipo Cliente. Tenga en cuenta que este método
-	  * se consumen enormes cantidades de recursos si la tabla tiene muchas de las filas. 
-	  * Esto sólo debe usarse cuando las tablas de destino tienen sólo pequeñas cantidades de datos
+	  * un vector que contiene objetos de tipo {@link Cliente}. Tenga en cuenta que este metodo
+	  * consumen enormes cantidades de recursos si la tabla tiene muchas filas. 
+	  * Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos
+	  *	
+	  *	@static
+	  * @return Array Un arreglo que contiene objetos del tipo {@link Cliente}.
 	  **/
-	final public function getAll( )
+	public static final function getAll( )
 	{
 		$sql = "SELECT * from cliente ;";
 		global $db;
@@ -65,18 +76,28 @@ class ClienteDAOBase
 
 
 	/**
-	 * searchMatching-Method. This method provides searching capability to 
-	 * get matching valueObjects from database. It works by searching all 
-	 * objects that match permanent instance variables of given object.
-	 * Upper layer should use this by setting some parameters in valueObject
-	 * and then  call searchMatching. The result will be 0-N objects in vector, 
-	 * all matching those criteria you specified. Those instance-variables that
-	 * have NULL values are excluded in search-criteria.
-	 *
-	 * @param valueObject  This parameter contains the class instance where search will be based.
-	 *                     Primary-key field should not be set.
-	 */
-	final public function search( $cliente )
+	  *	Buscar registros.
+	  *	
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Cliente} de la base de datos. 
+	  * Consiste en buscar todos los objetos que coinciden con las variables permanentes instanciadas de objeto pasado como argumento. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en busca de criterios.
+	  *	
+	  * <code>
+	  *  /**
+	  *   * Ejemplo de uso - buscar todos los clientes que tengan limite de credito igual a 20000
+	  *   {@*} 
+	  *	  $cliente = new Cliente();
+	  *	  $cliente->setLimiteCredito("20000");
+	  *	  $resultados = ClienteDAO::search($cliente);
+	  *	  
+	  *	  foreach($resultados as $c ){
+	  *	  	echo $c->getNombre() . "<br>";
+	  *	  }
+	  * </code>
+	  *	@static
+	  * @param Objeto Un objeto del tipo {@link Cliente}.
+	  **/
+	public static final function search( $cliente )
 	{
 		$sql = "SELECT * from cliente WHERE ("; 
 		$val = array();
@@ -132,11 +153,16 @@ class ClienteDAOBase
 
 
 	/**
-	  * Este método es un método de ayuda para uso interno. Se ejecutará todas las manipulaciones 
-	  * base de datos que va a cambiar la información en tablas. consultas SELECT no se ejecutará
-	  * aquí, sin embargo. El valor de retorno indica cuántas filas se vieron afectados. 
+	  *	Actualizar registros.
+	  *	
+	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
+	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
+	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
+	  *	
+	  * @internal private information for advanced developers only
+	  * @param Objeto El objeto del tipo {@link Cliente} a actualizar. 
 	  **/
-	final public function update( $cliente )
+	private static final function update( $cliente )
 	{
 		$sql = "UPDATE cliente SET  rfc = ?, nombre = ?, direccion = ?, telefono = ?, e_mail = ?, limite_credito = ?, descuento = ? WHERE  id_cliente = ?;";
 		$params = array( 
@@ -154,13 +180,18 @@ class ClienteDAOBase
 
 
 	/**
-	  * Este metodo creará una nueva fila en la base de datos de acuerdo con los 
-	  * contenidos del objeto Cliente suministrado. Asegúrese
+	  *	Crear registros.
+	  *	
+	  * Este metodo creara una nueva fila en la base de datos de acuerdo con los 
+	  * contenidos del objeto Cliente suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
-	  * correctamente. Después del comando INSERT, este método asignara la clave 
+	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
 	  * primaria generada en el objeto Cliente.
+	  *	
+	  * @internal private information for advanced developers only
+	  * @param Objeto El objeto del tipo {@link Cliente} a crear. 
 	  **/
-	final public function create( &$cliente )
+	private static final function create( &$cliente )
 	{
 		$sql = "INSERT INTO cliente ( rfc, nombre, direccion, telefono, e_mail, limite_credito, descuento ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
@@ -179,13 +210,17 @@ class ClienteDAOBase
 
 
 	/**
-	  * Este método se eliminará la información de base de datos identificados por la clave primaria
+	  *	Eliminar registros.
+	  *	
+	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
 	  * en el objeto Cliente suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). Restaurar sólo se puede hacer usando el método create(), 
-	  * pero el objeto resultante tendrá una diferente clave primaria de la que estaba en el objeto eliminado. 
-	  * Si no puede encontrar eliminar fila coincidente, NotFoundException será lanzada.
+	  * puede ser restaurado llamando a save(). Restaurarlo solo se puede hacer usando el metodo create(), 
+	  * pero el objeto resultante tendra una diferente clave primaria de la que estaba en el objeto eliminado. 
+	  * Si no puede encontrar eliminar fila coincidente, NotFoundException sera lanzada.
+	  *	
+	  * @param Objeto El objeto del tipo {@link Cliente} a eliminar. 
 	  **/
-	final public function delete( &$cliente )
+	public static final function delete( &$cliente )
 	{
 		$sql = "DELETE FROM cliente WHERE  id_cliente = ?;";
 
@@ -195,7 +230,6 @@ class ClienteDAOBase
 		global $db;
 
 		$db->Execute($sql, $params);
-		$cliente = NULL;
 	}
 
 

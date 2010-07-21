@@ -1,8 +1,22 @@
 <?php
-/* Value Object file for table Ventas */
+/** Value Object file for table ventas.
+  * 
+  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
+  * @author Alan Gonzalez <alan@caffeina.mx> 
+  * @access public
+  * 
+  */
 
 class Ventas
 {
+	/**
+	  * Constructor de Ventas
+	  * 
+	  * Para construir un objeto de tipo Ventas debera llamarse a el constructor 
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  * cuyos campos son iguales a las variables que constituyen a este objeto.
+	  * @return Ventas
+	  */
 	function __construct( $data = NULL)
 	{ 
 		if(isset($data))
@@ -20,56 +34,82 @@ class Ventas
 
 	/**
 	  * id_venta
-	  * es llave primara 
-	  * es de auto incremento 
-	  * @var int(11) id de venta
+	  * 
+	  * id de venta<br>
+	  * <b>Llave Primaria</b><br>
+	  * <b>Auto Incremento</b><br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_venta;
 
 	/**
 	  * id_cliente
-	  * @var int(11) cliente al que se le vendio
+	  * 
+	  * cliente al que se le vendio<br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_cliente;
 
 	/**
 	  * tipo_venta
-	  * @var enum('credito','contado') tipo de venta, contado o credito
+	  * 
+	  * tipo de venta, contado o credito<br>
+	  * @access protected
+	  * @var enum('credito','contado')
 	  */
 	protected $tipo_venta;
 
 	/**
 	  * fecha
-	  * @var timestamp fecha de venta
+	  * 
+	  * fecha de venta<br>
+	  * @access protected
+	  * @var timestamp
 	  */
 	protected $fecha;
 
 	/**
 	  * subtotal
-	  * @var float subtotal de la venta
+	  * 
+	  * subtotal de la venta<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $subtotal;
 
 	/**
 	  * iva
-	  * @var float iva agregado por la venta
+	  * 
+	  * iva agregado por la venta<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $iva;
 
 	/**
 	  * id_sucursal
-	  * @var int(11) sucursal de la venta
+	  * 
+	  * sucursal de la venta<br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_sucursal;
 
 	/**
 	  * id_usuario
-	  * @var int(11) empleado que lo vendio
+	  * 
+	  * empleado que lo vendio<br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_usuario;
 
 	/**
-	  * es llave primara 
+	  * getIdVenta
+	  * 
+	  * Get the <i>id_venta</i> property for this object. Donde <i>id_venta</i> es id de venta
 	  * @return int(11)
 	  */
 	final public function getIdVenta()
@@ -78,6 +118,15 @@ class Ventas
 	}
 
 	/**
+	  * setIdVenta( $id_venta )
+	  * 
+	  * Set the <i>id_venta</i> property for this object. Donde <i>id_venta</i> es id de venta.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_venta</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
+	  * No deberias usar setIdVenta( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdVenta( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdVenta( $id_venta )
@@ -86,6 +135,9 @@ class Ventas
 	}
 
 	/**
+	  * getIdCliente
+	  * 
+	  * Get the <i>id_cliente</i> property for this object. Donde <i>id_cliente</i> es cliente al que se le vendio
 	  * @return int(11)
 	  */
 	final public function getIdCliente()
@@ -94,6 +146,11 @@ class Ventas
 	}
 
 	/**
+	  * setIdCliente( $id_cliente )
+	  * 
+	  * Set the <i>id_cliente</i> property for this object. Donde <i>id_cliente</i> es cliente al que se le vendio.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_cliente</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
 	final public function setIdCliente( $id_cliente )
@@ -102,6 +159,9 @@ class Ventas
 	}
 
 	/**
+	  * getTipoVenta
+	  * 
+	  * Get the <i>tipo_venta</i> property for this object. Donde <i>tipo_venta</i> es tipo de venta, contado o credito
 	  * @return enum('credito','contado')
 	  */
 	final public function getTipoVenta()
@@ -110,6 +170,11 @@ class Ventas
 	}
 
 	/**
+	  * setTipoVenta( $tipo_venta )
+	  * 
+	  * Set the <i>tipo_venta</i> property for this object. Donde <i>tipo_venta</i> es tipo de venta, contado o credito.
+	  * Una validacion basica se hara aqui para comprobar que <i>tipo_venta</i> es de tipo <i>enum('credito','contado')</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param enum('credito','contado')
 	  */
 	final public function setTipoVenta( $tipo_venta )
@@ -118,6 +183,9 @@ class Ventas
 	}
 
 	/**
+	  * getFecha
+	  * 
+	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha de venta
 	  * @return timestamp
 	  */
 	final public function getFecha()
@@ -126,6 +194,11 @@ class Ventas
 	}
 
 	/**
+	  * setFecha( $fecha )
+	  * 
+	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha de venta.
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>timestamp</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param timestamp
 	  */
 	final public function setFecha( $fecha )
@@ -134,6 +207,9 @@ class Ventas
 	}
 
 	/**
+	  * getSubtotal
+	  * 
+	  * Get the <i>subtotal</i> property for this object. Donde <i>subtotal</i> es subtotal de la venta
 	  * @return float
 	  */
 	final public function getSubtotal()
@@ -142,6 +218,11 @@ class Ventas
 	}
 
 	/**
+	  * setSubtotal( $subtotal )
+	  * 
+	  * Set the <i>subtotal</i> property for this object. Donde <i>subtotal</i> es subtotal de la venta.
+	  * Una validacion basica se hara aqui para comprobar que <i>subtotal</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setSubtotal( $subtotal )
@@ -150,6 +231,9 @@ class Ventas
 	}
 
 	/**
+	  * getIva
+	  * 
+	  * Get the <i>iva</i> property for this object. Donde <i>iva</i> es iva agregado por la venta
 	  * @return float
 	  */
 	final public function getIva()
@@ -158,6 +242,11 @@ class Ventas
 	}
 
 	/**
+	  * setIva( $iva )
+	  * 
+	  * Set the <i>iva</i> property for this object. Donde <i>iva</i> es iva agregado por la venta.
+	  * Una validacion basica se hara aqui para comprobar que <i>iva</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setIva( $iva )
@@ -166,6 +255,9 @@ class Ventas
 	}
 
 	/**
+	  * getIdSucursal
+	  * 
+	  * Get the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es sucursal de la venta
 	  * @return int(11)
 	  */
 	final public function getIdSucursal()
@@ -174,6 +266,11 @@ class Ventas
 	}
 
 	/**
+	  * setIdSucursal( $id_sucursal )
+	  * 
+	  * Set the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es sucursal de la venta.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_sucursal</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
 	final public function setIdSucursal( $id_sucursal )
@@ -182,6 +279,9 @@ class Ventas
 	}
 
 	/**
+	  * getIdUsuario
+	  * 
+	  * Get the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es empleado que lo vendio
 	  * @return int(11)
 	  */
 	final public function getIdUsuario()
@@ -190,6 +290,11 @@ class Ventas
 	}
 
 	/**
+	  * setIdUsuario( $id_usuario )
+	  * 
+	  * Set the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es empleado que lo vendio.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_usuario</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
 	final public function setIdUsuario( $id_usuario )

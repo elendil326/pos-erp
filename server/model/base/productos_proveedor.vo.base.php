@@ -1,8 +1,22 @@
 <?php
-/* Value Object file for table ProductosProveedor */
+/** Value Object file for table productos_proveedor.
+  * 
+  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
+  * @author Alan Gonzalez <alan@caffeina.mx> 
+  * @access public
+  * 
+  */
 
 class ProductosProveedor
 {
+	/**
+	  * Constructor de ProductosProveedor
+	  * 
+	  * Para construir un objeto de tipo ProductosProveedor debera llamarse a el constructor 
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  * cuyos campos son iguales a las variables que constituyen a este objeto.
+	  * @return ProductosProveedor
+	  */
 	function __construct( $data = NULL)
 	{ 
 		if(isset($data))
@@ -18,44 +32,64 @@ class ProductosProveedor
 
 	/**
 	  * id_producto
-	  * es llave primara 
-	  * es de auto incremento 
-	  * @var int(11) identificador del producto
+	  * 
+	  * identificador del producto<br>
+	  * <b>Llave Primaria</b><br>
+	  * <b>Auto Incremento</b><br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_producto;
 
 	/**
 	  * clave_producto
-	  * @var varchar(20) clave de producto para el proveedor
+	  * 
+	  * clave de producto para el proveedor<br>
+	  * @access protected
+	  * @var varchar(20)
 	  */
 	protected $clave_producto;
 
 	/**
 	  * id_proveedor
-	  * @var int(11) clave del proveedor
+	  * 
+	  * clave del proveedor<br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_proveedor;
 
 	/**
 	  * id_inventario
-	  * @var int(11) clave con la que entra a nuestro inventario
+	  * 
+	  * clave con la que entra a nuestro inventario<br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_inventario;
 
 	/**
 	  * descripcion
-	  * @var varchar(200) Descripcion del producto que nos vende el proveedor
+	  * 
+	  * Descripcion del producto que nos vende el proveedor<br>
+	  * @access protected
+	  * @var varchar(200)
 	  */
 	protected $descripcion;
 
 	/**
 	  * precio
-	  * @var int(11) precio al que se compra el producto (sin descuento)
+	  * 
+	  * precio al que se compra el producto (sin descuento)<br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $precio;
 
 	/**
-	  * es llave primara 
+	  * getIdProducto
+	  * 
+	  * Get the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es identificador del producto
 	  * @return int(11)
 	  */
 	final public function getIdProducto()
@@ -64,6 +98,15 @@ class ProductosProveedor
 	}
 
 	/**
+	  * setIdProducto( $id_producto )
+	  * 
+	  * Set the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es identificador del producto.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_producto</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
+	  * No deberias usar setIdProducto( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdProducto( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdProducto( $id_producto )
@@ -72,6 +115,9 @@ class ProductosProveedor
 	}
 
 	/**
+	  * getClaveProducto
+	  * 
+	  * Get the <i>clave_producto</i> property for this object. Donde <i>clave_producto</i> es clave de producto para el proveedor
 	  * @return varchar(20)
 	  */
 	final public function getClaveProducto()
@@ -80,6 +126,11 @@ class ProductosProveedor
 	}
 
 	/**
+	  * setClaveProducto( $clave_producto )
+	  * 
+	  * Set the <i>clave_producto</i> property for this object. Donde <i>clave_producto</i> es clave de producto para el proveedor.
+	  * Una validacion basica se hara aqui para comprobar que <i>clave_producto</i> es de tipo <i>varchar(20)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(20)
 	  */
 	final public function setClaveProducto( $clave_producto )
@@ -88,6 +139,9 @@ class ProductosProveedor
 	}
 
 	/**
+	  * getIdProveedor
+	  * 
+	  * Get the <i>id_proveedor</i> property for this object. Donde <i>id_proveedor</i> es clave del proveedor
 	  * @return int(11)
 	  */
 	final public function getIdProveedor()
@@ -96,6 +150,11 @@ class ProductosProveedor
 	}
 
 	/**
+	  * setIdProveedor( $id_proveedor )
+	  * 
+	  * Set the <i>id_proveedor</i> property for this object. Donde <i>id_proveedor</i> es clave del proveedor.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_proveedor</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
 	final public function setIdProveedor( $id_proveedor )
@@ -104,6 +163,9 @@ class ProductosProveedor
 	}
 
 	/**
+	  * getIdInventario
+	  * 
+	  * Get the <i>id_inventario</i> property for this object. Donde <i>id_inventario</i> es clave con la que entra a nuestro inventario
 	  * @return int(11)
 	  */
 	final public function getIdInventario()
@@ -112,6 +174,11 @@ class ProductosProveedor
 	}
 
 	/**
+	  * setIdInventario( $id_inventario )
+	  * 
+	  * Set the <i>id_inventario</i> property for this object. Donde <i>id_inventario</i> es clave con la que entra a nuestro inventario.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_inventario</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
 	final public function setIdInventario( $id_inventario )
@@ -120,6 +187,9 @@ class ProductosProveedor
 	}
 
 	/**
+	  * getDescripcion
+	  * 
+	  * Get the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es Descripcion del producto que nos vende el proveedor
 	  * @return varchar(200)
 	  */
 	final public function getDescripcion()
@@ -128,6 +198,11 @@ class ProductosProveedor
 	}
 
 	/**
+	  * setDescripcion( $descripcion )
+	  * 
+	  * Set the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es Descripcion del producto que nos vende el proveedor.
+	  * Una validacion basica se hara aqui para comprobar que <i>descripcion</i> es de tipo <i>varchar(200)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(200)
 	  */
 	final public function setDescripcion( $descripcion )
@@ -136,6 +211,9 @@ class ProductosProveedor
 	}
 
 	/**
+	  * getPrecio
+	  * 
+	  * Get the <i>precio</i> property for this object. Donde <i>precio</i> es precio al que se compra el producto (sin descuento)
 	  * @return int(11)
 	  */
 	final public function getPrecio()
@@ -144,6 +222,11 @@ class ProductosProveedor
 	}
 
 	/**
+	  * setPrecio( $precio )
+	  * 
+	  * Set the <i>precio</i> property for this object. Donde <i>precio</i> es precio al que se compra el producto (sin descuento).
+	  * Una validacion basica se hara aqui para comprobar que <i>precio</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
 	final public function setPrecio( $precio )

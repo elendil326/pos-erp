@@ -1,8 +1,22 @@
 <?php
-/* Value Object file for table DetalleCompra */
+/** Value Object file for table detalle_compra.
+  * 
+  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
+  * @author Alan Gonzalez <alan@caffeina.mx> 
+  * @access public
+  * 
+  */
 
 class DetalleCompra
 {
+	/**
+	  * Constructor de DetalleCompra
+	  * 
+	  * Para construir un objeto de tipo DetalleCompra debera llamarse a el constructor 
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  * cuyos campos son iguales a las variables que constituyen a este objeto.
+	  * @return DetalleCompra
+	  */
 	function __construct( $data = NULL)
 	{ 
 		if(isset($data))
@@ -16,32 +30,46 @@ class DetalleCompra
 
 	/**
 	  * id_compra
-	  * es llave primara 
-	  * @var int(11) id de la compra
+	  * 
+	  * id de la compra<br>
+	  * <b>Llave Primaria</b><br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_compra;
 
 	/**
 	  * id_producto
-	  * es llave primara 
-	  * @var int(11) id del producto
+	  * 
+	  * id del producto<br>
+	  * <b>Llave Primaria</b><br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_producto;
 
 	/**
 	  * cantidad
-	  * @var float cantidad comprada
+	  * 
+	  * cantidad comprada<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $cantidad;
 
 	/**
 	  * precio
-	  * @var float costo de compra
+	  * 
+	  * costo de compra<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $precio;
 
 	/**
-	  * es llave primara 
+	  * getIdCompra
+	  * 
+	  * Get the <i>id_compra</i> property for this object. Donde <i>id_compra</i> es id de la compra
 	  * @return int(11)
 	  */
 	final public function getIdCompra()
@@ -50,6 +78,13 @@ class DetalleCompra
 	}
 
 	/**
+	  * setIdCompra( $id_compra )
+	  * 
+	  * Set the <i>id_compra</i> property for this object. Donde <i>id_compra</i> es id de la compra.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_compra</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdCompra( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdCompra( $id_compra )
@@ -58,7 +93,9 @@ class DetalleCompra
 	}
 
 	/**
-	  * es llave primara 
+	  * getIdProducto
+	  * 
+	  * Get the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es id del producto
 	  * @return int(11)
 	  */
 	final public function getIdProducto()
@@ -67,6 +104,13 @@ class DetalleCompra
 	}
 
 	/**
+	  * setIdProducto( $id_producto )
+	  * 
+	  * Set the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es id del producto.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_producto</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdProducto( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdProducto( $id_producto )
@@ -75,6 +119,9 @@ class DetalleCompra
 	}
 
 	/**
+	  * getCantidad
+	  * 
+	  * Get the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es cantidad comprada
 	  * @return float
 	  */
 	final public function getCantidad()
@@ -83,6 +130,11 @@ class DetalleCompra
 	}
 
 	/**
+	  * setCantidad( $cantidad )
+	  * 
+	  * Set the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es cantidad comprada.
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setCantidad( $cantidad )
@@ -91,6 +143,9 @@ class DetalleCompra
 	}
 
 	/**
+	  * getPrecio
+	  * 
+	  * Get the <i>precio</i> property for this object. Donde <i>precio</i> es costo de compra
 	  * @return float
 	  */
 	final public function getPrecio()
@@ -99,6 +154,11 @@ class DetalleCompra
 	}
 
 	/**
+	  * setPrecio( $precio )
+	  * 
+	  * Set the <i>precio</i> property for this object. Donde <i>precio</i> es costo de compra.
+	  * Una validacion basica se hara aqui para comprobar que <i>precio</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setPrecio( $precio )

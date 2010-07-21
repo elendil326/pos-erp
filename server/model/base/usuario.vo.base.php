@@ -1,8 +1,22 @@
 <?php
-/* Value Object file for table Usuario */
+/** Value Object file for table usuario.
+  * 
+  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
+  * @author Alan Gonzalez <alan@caffeina.mx> 
+  * @access public
+  * 
+  */
 
 class Usuario
 {
+	/**
+	  * Constructor de Usuario
+	  * 
+	  * Para construir un objeto de tipo Usuario debera llamarse a el constructor 
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  * cuyos campos son iguales a las variables que constituyen a este objeto.
+	  * @return Usuario
+	  */
 	function __construct( $data = NULL)
 	{ 
 		if(isset($data))
@@ -17,38 +31,55 @@ class Usuario
 
 	/**
 	  * id_usuario
-	  * es llave primara 
-	  * es de auto incremento 
-	  * @var int(11) identificador del usuario
+	  * 
+	  * identificador del usuario<br>
+	  * <b>Llave Primaria</b><br>
+	  * <b>Auto Incremento</b><br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_usuario;
 
 	/**
 	  * nombre
-	  * @var varchar(100) nombre del empleado
+	  * 
+	  * nombre del empleado<br>
+	  * @access protected
+	  * @var varchar(100)
 	  */
 	protected $nombre;
 
 	/**
 	  * usuario
-	  * @var varchar(50) Campo no documentado
+	  * 
+	  * Campo no documentado<br>
+	  * @access protected
+	  * @var varchar(50)
 	  */
 	protected $usuario;
 
 	/**
 	  * contrasena
-	  * @var varchar(128) Campo no documentado
+	  * 
+	  * Campo no documentado<br>
+	  * @access protected
+	  * @var varchar(128)
 	  */
 	protected $contrasena;
 
 	/**
 	  * id_sucursal
-	  * @var int(11) Id de la sucursal a que pertenece
+	  * 
+	  * Id de la sucursal a que pertenece<br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_sucursal;
 
 	/**
-	  * es llave primara 
+	  * getIdUsuario
+	  * 
+	  * Get the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es identificador del usuario
 	  * @return int(11)
 	  */
 	final public function getIdUsuario()
@@ -57,6 +88,15 @@ class Usuario
 	}
 
 	/**
+	  * setIdUsuario( $id_usuario )
+	  * 
+	  * Set the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es identificador del usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_usuario</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
+	  * No deberias usar setIdUsuario( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdUsuario( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdUsuario( $id_usuario )
@@ -65,6 +105,9 @@ class Usuario
 	}
 
 	/**
+	  * getNombre
+	  * 
+	  * Get the <i>nombre</i> property for this object. Donde <i>nombre</i> es nombre del empleado
 	  * @return varchar(100)
 	  */
 	final public function getNombre()
@@ -73,6 +116,11 @@ class Usuario
 	}
 
 	/**
+	  * setNombre( $nombre )
+	  * 
+	  * Set the <i>nombre</i> property for this object. Donde <i>nombre</i> es nombre del empleado.
+	  * Una validacion basica se hara aqui para comprobar que <i>nombre</i> es de tipo <i>varchar(100)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(100)
 	  */
 	final public function setNombre( $nombre )
@@ -81,6 +129,9 @@ class Usuario
 	}
 
 	/**
+	  * getUsuario
+	  * 
+	  * Get the <i>usuario</i> property for this object. Donde <i>usuario</i> es Campo no documentado
 	  * @return varchar(50)
 	  */
 	final public function getUsuario()
@@ -89,6 +140,11 @@ class Usuario
 	}
 
 	/**
+	  * setUsuario( $usuario )
+	  * 
+	  * Set the <i>usuario</i> property for this object. Donde <i>usuario</i> es Campo no documentado.
+	  * Una validacion basica se hara aqui para comprobar que <i>usuario</i> es de tipo <i>varchar(50)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(50)
 	  */
 	final public function setUsuario( $usuario )
@@ -97,6 +153,9 @@ class Usuario
 	}
 
 	/**
+	  * getContrasena
+	  * 
+	  * Get the <i>contrasena</i> property for this object. Donde <i>contrasena</i> es Campo no documentado
 	  * @return varchar(128)
 	  */
 	final public function getContrasena()
@@ -105,6 +164,11 @@ class Usuario
 	}
 
 	/**
+	  * setContrasena( $contrasena )
+	  * 
+	  * Set the <i>contrasena</i> property for this object. Donde <i>contrasena</i> es Campo no documentado.
+	  * Una validacion basica se hara aqui para comprobar que <i>contrasena</i> es de tipo <i>varchar(128)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(128)
 	  */
 	final public function setContrasena( $contrasena )
@@ -113,6 +177,9 @@ class Usuario
 	}
 
 	/**
+	  * getIdSucursal
+	  * 
+	  * Get the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es Id de la sucursal a que pertenece
 	  * @return int(11)
 	  */
 	final public function getIdSucursal()
@@ -121,6 +188,11 @@ class Usuario
 	}
 
 	/**
+	  * setIdSucursal( $id_sucursal )
+	  * 
+	  * Set the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es Id de la sucursal a que pertenece.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_sucursal</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
 	final public function setIdSucursal( $id_sucursal )

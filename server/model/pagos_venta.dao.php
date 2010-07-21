@@ -1,6 +1,14 @@
 <?php
-/* Data Access Object file for table pagos_venta */
 
+require_once("base/pagos_venta.dao.base.php");
+/** PagosVenta Data Access Object (DAO).
+  * 
+  * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
+  * almacenar de forma permanente y recuperar instancias de objetos {@link PagosVenta }. 
+  * @author Alan Gonzalez <alan@caffeina.mx> 
+  * @access public
+  * 
+  */
 class PagosVentaDAO extends PagosVentaDAOBase
 {
 

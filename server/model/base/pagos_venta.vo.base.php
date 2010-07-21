@@ -1,8 +1,22 @@
 <?php
-/* Value Object file for table PagosVenta */
+/** Value Object file for table pagos_venta.
+  * 
+  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
+  * @author Alan Gonzalez <alan@caffeina.mx> 
+  * @access public
+  * 
+  */
 
 class PagosVenta
 {
+	/**
+	  * Constructor de PagosVenta
+	  * 
+	  * Para construir un objeto de tipo PagosVenta debera llamarse a el constructor 
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  * cuyos campos son iguales a las variables que constituyen a este objeto.
+	  * @return PagosVenta
+	  */
 	function __construct( $data = NULL)
 	{ 
 		if(isset($data))
@@ -16,32 +30,46 @@ class PagosVenta
 
 	/**
 	  * id_pago
-	  * es llave primara 
-	  * es de auto incremento 
-	  * @var int(11) id de pago del cliente
+	  * 
+	  * id de pago del cliente<br>
+	  * <b>Llave Primaria</b><br>
+	  * <b>Auto Incremento</b><br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_pago;
 
 	/**
 	  * id_venta
-	  * @var int(11) id de la venta a la que se esta pagando
+	  * 
+	  * id de la venta a la que se esta pagando<br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_venta;
 
 	/**
 	  * fecha
-	  * @var date fecha de pago
+	  * 
+	  * fecha de pago<br>
+	  * @access protected
+	  * @var date
 	  */
 	protected $fecha;
 
 	/**
 	  * monto
-	  * @var float total de credito del cliente
+	  * 
+	  * total de credito del cliente<br>
+	  * @access protected
+	  * @var float
 	  */
 	protected $monto;
 
 	/**
-	  * es llave primara 
+	  * getIdPago
+	  * 
+	  * Get the <i>id_pago</i> property for this object. Donde <i>id_pago</i> es id de pago del cliente
 	  * @return int(11)
 	  */
 	final public function getIdPago()
@@ -50,6 +78,15 @@ class PagosVenta
 	}
 
 	/**
+	  * setIdPago( $id_pago )
+	  * 
+	  * Set the <i>id_pago</i> property for this object. Donde <i>id_pago</i> es id de pago del cliente.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_pago</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
+	  * No deberias usar setIdPago( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdPago( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdPago( $id_pago )
@@ -58,6 +95,9 @@ class PagosVenta
 	}
 
 	/**
+	  * getIdVenta
+	  * 
+	  * Get the <i>id_venta</i> property for this object. Donde <i>id_venta</i> es id de la venta a la que se esta pagando
 	  * @return int(11)
 	  */
 	final public function getIdVenta()
@@ -66,6 +106,11 @@ class PagosVenta
 	}
 
 	/**
+	  * setIdVenta( $id_venta )
+	  * 
+	  * Set the <i>id_venta</i> property for this object. Donde <i>id_venta</i> es id de la venta a la que se esta pagando.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_venta</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
 	final public function setIdVenta( $id_venta )
@@ -74,6 +119,9 @@ class PagosVenta
 	}
 
 	/**
+	  * getFecha
+	  * 
+	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha de pago
 	  * @return date
 	  */
 	final public function getFecha()
@@ -82,6 +130,11 @@ class PagosVenta
 	}
 
 	/**
+	  * setFecha( $fecha )
+	  * 
+	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha de pago.
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>date</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param date
 	  */
 	final public function setFecha( $fecha )
@@ -90,6 +143,9 @@ class PagosVenta
 	}
 
 	/**
+	  * getMonto
+	  * 
+	  * Get the <i>monto</i> property for this object. Donde <i>monto</i> es total de credito del cliente
 	  * @return float
 	  */
 	final public function getMonto()
@@ -98,6 +154,11 @@ class PagosVenta
 	}
 
 	/**
+	  * setMonto( $monto )
+	  * 
+	  * Set the <i>monto</i> property for this object. Donde <i>monto</i> es total de credito del cliente.
+	  * Una validacion basica se hara aqui para comprobar que <i>monto</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
 	final public function setMonto( $monto )

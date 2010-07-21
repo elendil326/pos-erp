@@ -1,8 +1,22 @@
 <?php
-/* Value Object file for table Grupos */
+/** Value Object file for table grupos.
+  * 
+  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
+  * @author Alan Gonzalez <alan@caffeina.mx> 
+  * @access public
+  * 
+  */
 
 class Grupos
 {
+	/**
+	  * Constructor de Grupos
+	  * 
+	  * Para construir un objeto de tipo Grupos debera llamarse a el constructor 
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  * cuyos campos son iguales a las variables que constituyen a este objeto.
+	  * @return Grupos
+	  */
 	function __construct( $data = NULL)
 	{ 
 		if(isset($data))
@@ -15,25 +29,36 @@ class Grupos
 
 	/**
 	  * id_grupo
-	  * es llave primara 
-	  * @var int(11) Campo no documentado
+	  * 
+	  * Campo no documentado<br>
+	  * <b>Llave Primaria</b><br>
+	  * @access protected
+	  * @var int(11)
 	  */
 	protected $id_grupo;
 
 	/**
 	  * nombre
-	  * @var varchar(45) Campo no documentado
+	  * 
+	  * Campo no documentado<br>
+	  * @access protected
+	  * @var varchar(45)
 	  */
 	protected $nombre;
 
 	/**
 	  * descripcion
-	  * @var varchar(45) Campo no documentado
+	  * 
+	  * Campo no documentado<br>
+	  * @access protected
+	  * @var varchar(45)
 	  */
 	protected $descripcion;
 
 	/**
-	  * es llave primara 
+	  * getIdGrupo
+	  * 
+	  * Get the <i>id_grupo</i> property for this object. Donde <i>id_grupo</i> es Campo no documentado
 	  * @return int(11)
 	  */
 	final public function getIdGrupo()
@@ -42,6 +67,13 @@ class Grupos
 	}
 
 	/**
+	  * setIdGrupo( $id_grupo )
+	  * 
+	  * Set the <i>id_grupo</i> property for this object. Donde <i>id_grupo</i> es Campo no documentado.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_grupo</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdGrupo( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdGrupo( $id_grupo )
@@ -50,6 +82,9 @@ class Grupos
 	}
 
 	/**
+	  * getNombre
+	  * 
+	  * Get the <i>nombre</i> property for this object. Donde <i>nombre</i> es Campo no documentado
 	  * @return varchar(45)
 	  */
 	final public function getNombre()
@@ -58,6 +93,11 @@ class Grupos
 	}
 
 	/**
+	  * setNombre( $nombre )
+	  * 
+	  * Set the <i>nombre</i> property for this object. Donde <i>nombre</i> es Campo no documentado.
+	  * Una validacion basica se hara aqui para comprobar que <i>nombre</i> es de tipo <i>varchar(45)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(45)
 	  */
 	final public function setNombre( $nombre )
@@ -66,6 +106,9 @@ class Grupos
 	}
 
 	/**
+	  * getDescripcion
+	  * 
+	  * Get the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es Campo no documentado
 	  * @return varchar(45)
 	  */
 	final public function getDescripcion()
@@ -74,6 +117,11 @@ class Grupos
 	}
 
 	/**
+	  * setDescripcion( $descripcion )
+	  * 
+	  * Set the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es Campo no documentado.
+	  * Una validacion basica se hara aqui para comprobar que <i>descripcion</i> es de tipo <i>varchar(45)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(45)
 	  */
 	final public function setDescripcion( $descripcion )

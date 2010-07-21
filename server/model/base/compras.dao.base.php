@@ -1,24 +1,27 @@
 <?php
-/* Compras Data Access Object (DAO).
- * Esta clase contiene toda la manipulación de bases de datos que se necesita para 
- * almacenar de forma permanente y recuperar instancias de objetos Compras. 
- */
-
-class ComprasDAOBase
+/** Compras Data Access Object (DAO) Base.
+  * 
+  * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
+  * almacenar de forma permanente y recuperar instancias de objetos {@link Compras }. 
+  * @author Alan Gonzalez <alan@caffeina.mx> 
+  * @access private
+  * 
+  */
+abstract class ComprasDAOBase
 {
 
-	private function __construct()
-	{
-		//prevent instatiation of this class by marking it private
-	}
-
-
 	/**
-	  *	Este método guarda el estado actual de objeto Compras en la base de datos. La llave 
-	  *	primaria indicará qué instancia va a ser actualizado en base de datos. Si la llave primara 
+	  *	metodo save 
+	  *	
+	  *	Este metodo guarda el estado actual del objeto {@link Compras} pasado en la base de datos. La llave 
+	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara 
 	  *	no esta definicda en el objeto, entonces save() creara una nueva fila.
+	  *	
+	  *	@static
+	  * @param Compras [$compras] El objeto de tipo Compras
+	  * @return bool Verdadero si el metodo guardo correctamente este objeto, falso si no.
 	  **/
-	final public function save( &$compras )
+	public static final function save( &$compras )
 	{
 		if(  $compras->getIdCompra()  )
 		{
@@ -30,12 +33,15 @@ class ComprasDAOBase
 
 
 	/**
-	  * getObject-method. This will create and load valueObject contents from database 
-	  * using given Primary-Key as identifier. This method is just a convenience method 
-	  * for the real load-method which accepts the valueObject as a parameter. Returned
-	  * valueObject will be created using the createValueObject() method.
+	  *	Obtener {@link Compras} por llave primaria. 
+	  *	
+	  * This will create and load {@link Compras} objects contents from database 
+	  * using given Primary-Key as identifier. 
+	  *	
+	  *	@static
+	  * @return Objeto Un objeto del tipo {@link Compras}.
 	  **/
-	final public function getByPK(  $id_compra )
+	public static final function getByPK(  $id_compra )
 	{
 		$sql = "SELECT * FROM compras WHERE (id_compra = ?) LIMIT 1;";
 		$params = array(  $id_compra );
@@ -46,12 +52,17 @@ class ComprasDAOBase
 
 
 	/**
+	  *	Obtener todas las filas.
+	  *	
 	  * Esta funcion leera todos los contenidos de la tabla en la base de datos y construira
-	  * un vector que contiene objetos de tipo Compras. Tenga en cuenta que este método
-	  * se consumen enormes cantidades de recursos si la tabla tiene muchas de las filas. 
-	  * Esto sólo debe usarse cuando las tablas de destino tienen sólo pequeñas cantidades de datos
+	  * un vector que contiene objetos de tipo {@link Compras}. Tenga en cuenta que este metodo
+	  * consumen enormes cantidades de recursos si la tabla tiene muchas filas. 
+	  * Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos
+	  *	
+	  *	@static
+	  * @return Array Un arreglo que contiene objetos del tipo {@link Compras}.
 	  **/
-	final public function getAll( )
+	public static final function getAll( )
 	{
 		$sql = "SELECT * from compras ;";
 		global $db;
@@ -65,18 +76,28 @@ class ComprasDAOBase
 
 
 	/**
-	 * searchMatching-Method. This method provides searching capability to 
-	 * get matching valueObjects from database. It works by searching all 
-	 * objects that match permanent instance variables of given object.
-	 * Upper layer should use this by setting some parameters in valueObject
-	 * and then  call searchMatching. The result will be 0-N objects in vector, 
-	 * all matching those criteria you specified. Those instance-variables that
-	 * have NULL values are excluded in search-criteria.
-	 *
-	 * @param valueObject  This parameter contains the class instance where search will be based.
-	 *                     Primary-key field should not be set.
-	 */
-	final public function search( $compras )
+	  *	Buscar registros.
+	  *	
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Compras} de la base de datos. 
+	  * Consiste en buscar todos los objetos que coinciden con las variables permanentes instanciadas de objeto pasado como argumento. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en busca de criterios.
+	  *	
+	  * <code>
+	  *  /**
+	  *   * Ejemplo de uso - buscar todos los clientes que tengan limite de credito igual a 20000
+	  *   {@*} 
+	  *	  $cliente = new Cliente();
+	  *	  $cliente->setLimiteCredito("20000");
+	  *	  $resultados = ClienteDAO::search($cliente);
+	  *	  
+	  *	  foreach($resultados as $c ){
+	  *	  	echo $c->getNombre() . "<br>";
+	  *	  }
+	  * </code>
+	  *	@static
+	  * @param Objeto Un objeto del tipo {@link Compras}.
+	  **/
+	public static final function search( $compras )
 	{
 		$sql = "SELECT * from cliente WHERE ("; 
 		$val = array();
@@ -132,11 +153,16 @@ class ComprasDAOBase
 
 
 	/**
-	  * Este método es un método de ayuda para uso interno. Se ejecutará todas las manipulaciones 
-	  * base de datos que va a cambiar la información en tablas. consultas SELECT no se ejecutará
-	  * aquí, sin embargo. El valor de retorno indica cuántas filas se vieron afectados. 
+	  *	Actualizar registros.
+	  *	
+	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
+	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
+	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
+	  *	
+	  * @internal private information for advanced developers only
+	  * @param Objeto El objeto del tipo {@link Compras} a actualizar. 
 	  **/
-	final public function update( $compras )
+	private static final function update( $compras )
 	{
 		$sql = "UPDATE compras SET  id_proveedor = ?, tipo_compra = ?, fecha = ?, subtotal = ?, iva = ?, id_sucursal = ?, id_usuario = ? WHERE  id_compra = ?;";
 		$params = array( 
@@ -154,13 +180,18 @@ class ComprasDAOBase
 
 
 	/**
-	  * Este metodo creará una nueva fila en la base de datos de acuerdo con los 
-	  * contenidos del objeto Compras suministrado. Asegúrese
+	  *	Crear registros.
+	  *	
+	  * Este metodo creara una nueva fila en la base de datos de acuerdo con los 
+	  * contenidos del objeto Compras suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
-	  * correctamente. Después del comando INSERT, este método asignara la clave 
+	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
 	  * primaria generada en el objeto Compras.
+	  *	
+	  * @internal private information for advanced developers only
+	  * @param Objeto El objeto del tipo {@link Compras} a crear. 
 	  **/
-	final public function create( &$compras )
+	private static final function create( &$compras )
 	{
 		$sql = "INSERT INTO compras ( id_proveedor, tipo_compra, fecha, subtotal, iva, id_sucursal, id_usuario ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
@@ -179,13 +210,17 @@ class ComprasDAOBase
 
 
 	/**
-	  * Este método se eliminará la información de base de datos identificados por la clave primaria
+	  *	Eliminar registros.
+	  *	
+	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
 	  * en el objeto Compras suministrado. Una vez que se ha suprimido un objeto, este no 
-	  * puede ser restaurado llamando a save(). Restaurar sólo se puede hacer usando el método create(), 
-	  * pero el objeto resultante tendrá una diferente clave primaria de la que estaba en el objeto eliminado. 
-	  * Si no puede encontrar eliminar fila coincidente, NotFoundException será lanzada.
+	  * puede ser restaurado llamando a save(). Restaurarlo solo se puede hacer usando el metodo create(), 
+	  * pero el objeto resultante tendra una diferente clave primaria de la que estaba en el objeto eliminado. 
+	  * Si no puede encontrar eliminar fila coincidente, NotFoundException sera lanzada.
+	  *	
+	  * @param Objeto El objeto del tipo {@link Compras} a eliminar. 
 	  **/
-	final public function delete( &$compras )
+	public static final function delete( &$compras )
 	{
 		$sql = "DELETE FROM compras WHERE  id_compra = ?;";
 
@@ -195,7 +230,6 @@ class ComprasDAOBase
 		global $db;
 
 		$db->Execute($sql, $params);
-		$compras = NULL;
 	}
 
 
