@@ -28,7 +28,7 @@ require_once('db/DBConnection.php');
 //entramos al switch.
 if ( !isset($_REQUEST['action']) )
 {
-	echo "{ success: false }";
+	echo "{ \"success\": false }";
         return;
 }
 

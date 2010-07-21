@@ -343,21 +343,21 @@ AppAdmin.prototype.createLogoutMessage = function(){
 //Funcion estatica para hacer peticiones
 AppAdmin.request = function(config){
 
-	$.ajax({
-		type: 'POST',
-		url: config.url,
-		data: config.data,
-		success: function(msg){
+	$.getJSON(
+		config.url,
+		config.data,
+		function(data){
 		
-			var data = eval("("+msg+")");
+			//var data = eval("("+msg+")");
 			
 			config.success(data);
+			
 		},
-		failure: function(msg){
-			var data = eval("("+msg+")");
+		function(data){
+			//var data = eval("("+msg+")");
 			
 			config.failure(data);
 		}
-	});
+	);
 
 }

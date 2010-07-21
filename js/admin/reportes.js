@@ -257,6 +257,9 @@ Reports.prototype.loadResumen = function(){
 			success: function(data){
 			
 				//alert("nombre "+data.datos[0].nombre);
+				if(DEBUG) { console.log(data);}
+				
+				
 				if(data.success)
 				{
 					$('#top-vendedor').fadeOut('slow', function(){
