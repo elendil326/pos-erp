@@ -1,13 +1,17 @@
-/*
-	Caffeina 2010
-	
-	Javascript para manejar los reportes
+/**
+*	@fileoverview	Javascript para manejar la seccion de reportes
+*
+*	@author	Rene Michel rene@caffeina.mx
+*	@version 0.1
 */
 
 
 /**
 *	Constructor, limpia el div de contenido principal "content" y carga los resumenes y settings.
 *	Ademas agrega los elementos necesarios al DOM para la estructura basica de la pagina de reportes
+*
+*	@class Clase para manejar la seccion de reportes
+*	@constructor
 *
 */
 Reports = function(){
@@ -165,65 +169,7 @@ Reports.prototype.loadSettings = function(){
 
 
 /**
-*	Funcion para cargar graficas de ejemplo, no deberia ser llamada.
-*/
-Reports.prototype.loadCharts = function(){
-	
-	var d = document;
-	
-	var graphWrapper = d.createElement('div');
-	graphWrapper.id = "graph-wrapper-reporte";
-	graphWrapper.style.width = "100%";
-	graphWrapper.style.height = "auto";
-	
-	$('#content').append(graphWrapper);
-	
-	MochiKit.DOM.addLoadEvent(
-		appAdmin.addGraphWithTitle({
-				title:'Ventas Semanal',
-				width:350, 
-				height:150,
-				//renderTo: 'content',
-				renderTo: graphWrapper.id,
-				divID: 'graph-4',
-				canvasID: 'canvas-4',
-				tipo: 'bar',
-				data: [[0, 0], [1, 1], [2, 1.414], [3, 1.73], [4, 2]]
-				}));
-				
-	MochiKit.DOM.addLoadEvent(
-		appAdmin.addGraphWithTitle({
-				title:'Ventas Mensuales',
-				width:350, 
-				height:150,
-				renderTo: graphWrapper.id,
-				divID: 'graph-5',
-				canvasID: 'canvas-5',
-				tipo: 'pie',
-				data: [[0, 3], [1, 1.3], [2, 1.414], [3, 1.73], [4, 2]]
-				}));
-				
-	MochiKit.DOM.addLoadEvent(
-		appAdmin.addGraphWithTitle({
-				title:'Compras Mensuales',
-				width:350, 
-				height:150,
-				renderTo: graphWrapper.id,
-				divID: 'graph-6',
-				canvasID: 'canvas-6',
-				tipo: 'line',
-				data: [[0, 3], [1, 1.3], [2, 1.414], [3, 1.73], [4, 2]]
-				}));
-
-
-	var selectorWrapper = '#'.graphWrapper.id;
-	var divclear = d.createElement('div');
-	divclear.style.clear = 'both';
-	$(selectorWrapper).append(divclear);
-}
-
-/**
-*	Funcion que pretende cargar un ligero resumen de informacion importante, con el formato de MVX (Most Valuable [something])
+*	Funcion para cargar un ligero resumen de informacion importante, con el formato de MVX (Most Valuable [something])
 *
 */
 Reports.prototype.loadResumen = function(){
@@ -251,7 +197,7 @@ Reports.prototype.loadResumen = function(){
 
 
 	//sacamos el top seller
-	AppAdmin.request({
+	Utils.request({
 			url: '../proxy.php',
 			data: "method=vendedorMasProductivo",
 			success: function(data){
@@ -279,7 +225,7 @@ Reports.prototype.loadResumen = function(){
 		});
 		
 	//sacamos el top product
-	AppAdmin.request({
+	Utils.request({
 			url: '../proxy.php',
 			data: "method=productoMasVendido",
 			success: function(data){
@@ -304,7 +250,7 @@ Reports.prototype.loadResumen = function(){
 		});
 		
 	//sacamos el top sucursal
-	AppAdmin.request({
+	Utils.request({
 			url: '../proxy.php',
 			data: "method=sucursalVentasTop",
 			success: function(data){
@@ -328,7 +274,7 @@ Reports.prototype.loadResumen = function(){
 		});
 		
 	//sacamos el top sucursal
-	AppAdmin.request({
+	Utils.request({
 			url: '../proxy.php',
 			data: "method=clienteComprasTop",
 			success: function(data){
@@ -380,7 +326,7 @@ Reports.prototype.loadVentasTodas = function(){
 	
 
 	//ejemplo cargar grafica mediante datos json
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Ventas de la &uacute;ltima Semana',
 			width:324, 
 			height:150,
@@ -400,7 +346,7 @@ Reports.prototype.loadVentasTodas = function(){
 			}
 			});
 			
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Ventas del &uacute;ltimo Mes',
 			width:325, 
 			height:150,
@@ -420,7 +366,7 @@ Reports.prototype.loadVentasTodas = function(){
 			}
 			});
 			
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Ventas del &uacute;ltimo A&ntilde;o',
 			width:325, 
 			height:150,
@@ -534,7 +480,7 @@ Reports.prototype.loadClientesComprasTodasReport = function(){
 	this.cleanDivs();
 	
 	//ejemplo cargar grafica mediante datos json
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Compras de la &uacute;ltima Semana',
 			width:325, 
 			height:150,
@@ -556,7 +502,7 @@ Reports.prototype.loadClientesComprasTodasReport = function(){
 
 
 	//ejemplo cargar grafica mediante datos json
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Compras del &uacute;ltimo Mes',
 			width:325, 
 			height:150,
@@ -576,7 +522,7 @@ Reports.prototype.loadClientesComprasTodasReport = function(){
 			}
 			});
 			
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Compras del &uacute;ltimo A&ntilde;o',
 			width:324, 
 			height:150,
@@ -627,7 +573,7 @@ Reports.prototype.loadVentasCreditoReport = function(config){
 			]
 			});
 			
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Ventas a cr&eacute;dito de la &uacute;ltima Semana',
 			width:325, 
 			height:150,
@@ -647,7 +593,7 @@ Reports.prototype.loadVentasCreditoReport = function(config){
 			}
 			});
 			
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Ventas a cr&eacute;dito del &uacute;ltimo Mes',
 			width:325, 
 			height:150,
@@ -668,7 +614,7 @@ Reports.prototype.loadVentasCreditoReport = function(config){
 			});
 
 
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Ventas a cr&eacute;dito del &uacute;ltimo A&ntilde;o',
 			width:324, 
 			height:150,
@@ -716,7 +662,7 @@ Reports.prototype.loadVentasContadoReport = function(config){
 			]
 			});
 			
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Ventas de contado de la &uacute;ltima Semana',
 			width:325, 
 			height:150,
@@ -736,7 +682,7 @@ Reports.prototype.loadVentasContadoReport = function(config){
 			}
 			});
 			
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Ventas de contado del &uacute;ltimo Mes',
 			width:325, 
 			height:150,
@@ -757,7 +703,7 @@ Reports.prototype.loadVentasContadoReport = function(config){
 			});
 
 
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Ventas de contado del &uacute;ltimo A&ntilde;o',
 			width:324, 
 			height:150,
@@ -783,7 +729,7 @@ Reports.prototype.loadGastosReport = function(){
 
 	this.cleanDivs();
 	
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Gastos de la &uacute;ltima semana',
 			width:325, 
 			height:150,
@@ -803,7 +749,7 @@ Reports.prototype.loadGastosReport = function(){
 			}
 			});
 	
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Gastos del &uacute;ltimo mes',
 			width:325, 
 			height:150,
@@ -824,7 +770,7 @@ Reports.prototype.loadGastosReport = function(){
 			});
 	
 	
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Gastos del &uacute;ltimo A&ntilde;o',
 			width:324, 
 			height:150,
@@ -851,7 +797,7 @@ Reports.prototype.loadIngresosReport = function(){
 
 	this.cleanDivs();
 	
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Ingresos de la &uacute;ltima semana',
 			width:325, 
 			height:150,
@@ -871,7 +817,7 @@ Reports.prototype.loadIngresosReport = function(){
 			}
 			});
 	
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Ingresos del &uacute;ltimo mes',
 			width:325, 
 			height:150,
@@ -892,7 +838,7 @@ Reports.prototype.loadIngresosReport = function(){
 			});
 	
 	
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Ingresos del &uacute;ltimo A&ntilde;o',
 			width:324, 
 			height:150,
@@ -914,7 +860,9 @@ Reports.prototype.loadIngresosReport = function(){
 
 }
 
-
+/**
+*	Funcion para borrar los divs que se usan para contener el grid de datos y las graficas
+*/
 Reports.prototype.cleanDivs = function(){
 
 	$('#graficas-render').html("");

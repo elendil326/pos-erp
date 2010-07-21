@@ -14,7 +14,7 @@ $(document).ready(function() {
 	appAdmin = new AppAdmin();
 
 	//ejemplo de cargar grafica con datos hardcoded	
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'test',
 			width:350, 
 			height:150,
@@ -27,7 +27,7 @@ $(document).ready(function() {
 			});
 			
 	//ejemplo cargar grafica mediante datos json
-	appAdmin.addGraphWithTitle({
+	Graficas.addGraphWithTitle({
 			title: 'Ventas de Contado por Mes',
 			width:350, 
 			height:150,
@@ -51,7 +51,7 @@ $(document).ready(function() {
 //AJAX EJEMPPLO
 //test ajax
 	/*
-	AppAdmin.request({
+	Utils.request({
 		url: "../serverProxy.php",
 		data: {test : 'bla', method: 'reporteClientesTodos'},
 		success: function(msg){

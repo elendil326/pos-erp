@@ -205,6 +205,7 @@ background-image:url(../shared/icons/fam/folder_go.png);
 	text-shadow: white 0px 1px 0px;
 	color: #273437;
 	font-family: Arial, Helvetica, sans-serif;
+	z-index: 0;
 }
 
 .resumen-text{
@@ -216,12 +217,14 @@ background-image:url(../shared/icons/fam/folder_go.png);
 #wrapper-resumen{
 	height: auto;
 	width:auto;
+	z-index: -3;
 }
 
 #lista-cuadros{
 	list-style: none;
 	padding:0px;
 	margin:0px;
+	z-index: -2;
 }
 
 #lista-cuadros li{
