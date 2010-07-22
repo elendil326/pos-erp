@@ -134,3 +134,29 @@ function show_customer($id_cliente) {
         return "{success: false, reason: 'No existe cliente con ese id.' }";
     }
 }
+
+
+/**
+*	Funcion para obtener el json formateado de los clientes que compraron a credito y deben dineros
+*	para que sea leido por el Flexigrid
+*
+*	@author Rene Michel <rene@caffeina.mx>
+*	@return	String JSON con los datos formateados para Flexigrid	
+*/
+function getGridDataClientesDeudores(){
+	
+	$clientes = ClienteDAO::getClientesDeudores_grid();
+	
+	//Si no se envia el dato de page, significa que estamos en la 1
+	if(isset($_POST['page']))
+	{
+		$page = strip_tags($_POST['page']);
+	}
+	else{
+		$page = 1;
+	}
+	
+	$array_result = '{ "page": '.$page.', "total": '.count($clientes).', "rows" : '.json_encode($clientes).'}';
+	echo $array_result;
+
+}

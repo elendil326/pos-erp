@@ -1,7 +1,9 @@
-/*
-	APLICACION DE ADMINISTRACION, ESTA APP TENDRA FUNCIONES PARA AGREGAR PESTANAS
-	CONFIGURAR MENUS, ETC RELACIONADOS A LA ESTRUCTURA Y ACOMODO DE MINI APPS
-
+/**
+*	@fileoverview APLICACION DE ADMINISTRACION, ESTA APP TENDRA FUNCIONES PARA AGREGAR PESTANAS
+*	CONFIGURAR MENUS, ETC RELACIONADOS A LA ESTRUCTURA Y ACOMODO DE MINI APPS
+*
+*	@author	Rene Michel rene@caffeina.mx
+*	@version 0.1
 */
 
 
@@ -35,10 +37,10 @@ AppAdmin.prototype.loadStructure = function(){
 	$("#menu-left").html('<div id="accordion">\
 	    <h3><a href="#" id="reportes-boton" >Reportes</a></h3>\
 	    <div >Consulte reportes especificos</div>\
-	    <h3><a href="#" id="datos-boton">Ver datos</a></h3>\
-	    <div >Visualice datos completos</div>\
 	    <h3><a href="#" id="sucursales-boton">Sucursales</a></h3>\
 	    <div >Consulte datos de sus sucursales</div>\
+	    <h3><a href="#" id="personal-boton">Personal</a></h3>\
+	    <div >Administre el personal de sus sucursales</div>\
 	</div>');
 	
 	
@@ -55,16 +57,16 @@ AppAdmin.prototype.loadStructure = function(){
 	 				
 	 				});
 	 				
-	 $('#datos-boton').click(function(){
-	 
-	 				if(DEBUG){ console.log('click en datos');}
-	 				new Datos();
-	 				});
-	 				
 	 $('#sucursales-boton').click(function(){
 	 
 	 				if(DEBUG){ console.log('click en sucursales');}
 	 				
+	 				});
+	 				
+	 $('#personal-boton').click(function(){
+	 
+	 				if(DEBUG){ console.log('click en personal');}
+	 				new Datos();
 	 				});
 }
 
