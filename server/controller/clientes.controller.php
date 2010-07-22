@@ -143,31 +143,15 @@ function show_customer($id_cliente) {
 *	@author Rene Michel <rene@caffeina.mx>
 *	@return	String JSON con los datos formateados para Flexigrid	
 */
-function getGridDataClientesDeudores(){
+function getGridDataClientesDeudores($page,$rp,$sortname,$sortorder,$search,$qtype, $page){
 	
-	$page = strip_tags($_POST['page']);
-        $rp = strip_tags($_POST['rp']);
-        $sortname = strip_tags($_POST['sortname']);
-        $sortorder = strip_tags($_POST['sortorder']);
-        
-        if(isset($_POST['query']) && !empty($_POST['query']))
-        {
-                $search = strip_tags($_POST['query']);
-                $qtype = strip_tags($_POST['qtype']);
-	}
+	
 	
 	$clientes = ClienteDAO::getClientesDeudores_grid($page,$rp,$sortname,$sortorder,$search,$qtype);
 	
-	//Si no se envia el dato de page, significa que estamos en la 1
-	if(isset($_POST['page']))
-	{
-		$page = strip_tags($_POST['page']);
-	}
-	else{
-		$page = 1;
-	}
+	
 	
 	$array_result = '{ "page": '.$page.', "total": '.count($clientes).', "rows" : '.json_encode($clientes).'}';
-	echo $array_result;
+	return $array_result;
 
 }
