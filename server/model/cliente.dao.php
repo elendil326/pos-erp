@@ -51,38 +51,45 @@ class ClienteDAO extends ClienteDAOBase
         *       para el componente grid de jQuery Flexigrid {@link http://www.flexigrid.info/}. 
         *       Se obtienen id_venta, nombre del cliente, subtotal, tipo de venta, fecha y sucursal.
         *
+        *	@param	int	$page		Pagina actual que se muestra en el componente Flexigrid
+        *	@param	int	$rp		Numero de filas que deben mostrarse en cada pagina en el componente Flexigrid
+        *	@param	String	$sortname	Columna con la que se ordenaran el grid
+        *	@param	String	$sortorder	Direccion de ordenamiento [asc | desc]
+        *	@param	String	$search		Palabra que se buscara en los datos de la tabla
+        *	@param	String	$qtype		Columna en la que se buscara si existe una peticion de busqueda (si $search existe)
+        *
         *       @author Rene Michel <rene@caffeina.mx>
         *       @static
-        *       @access public
+        *       @access static
         *       @return Array un arreglo con los datos obtenidos de la consulta con formato array("id"=> {int} , "cell" => {[]} )
         */
-	static function getClientesDeudores_grid(){
+	static function getClientesDeudores_grid($page, $rp, $sortname, $sortorder, $search, $qtype){
 		
-		$page = strip_tags($_POST['page']);
-                $rp = strip_tags($_POST['rp']);
-                $sortname = strip_tags($_POST['sortname']);
-                $sortorder = strip_tags($_POST['sortorder']);
+		
 
-                if (!$sortname) $sortname = 'name';
-                if (!$sortorder) $sortorder = 'desc';
+                
+                if (!$sortname){/* $sortname = 'name';
+                if (!$sortorder) $sortorder = 'desc';*/
 
-                $sort = "ORDER BY $sortname $sortorder";
+                	$sort = "ORDER BY $sortname $sortorder";
+                }
+                else
+                {
+                	$sort = "";
+                }
 
                 if (!$page) $page = 1;
                 if (!$rp) $rp = 10;
 
                 $start = (($page-1) * $rp);
-
-                $limit = "LIMIT $start, $rp";
+		$end  = $page * $rp;
+                $limit = "LIMIT $start, $end";
                 
                 
                 $sql="SELECT `id_cliente` as 'ID', nombre AS  'Nombre', saldo AS  'Saldo',  `rfc` AS  'RFC',  `direccion` AS  'Direccion',  `telefono` AS Telefono,  `e_mail` AS  'E-mail' FROM cliente c NATURAL JOIN cuenta_cliente cc"; 
                 
-                if(isset($_POST['query']) && !empty($_POST['query']))
+                if(isset($search) && !empty($search))
                 {
-                        $search = strip_tags($_POST['query']);
-                        $qtype = strip_tags($_POST['qtype']);
-                        
                         $sql .= " WHERE $qtype LIKE '%$search%'";
                 }
         

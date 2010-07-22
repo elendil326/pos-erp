@@ -49,38 +49,43 @@ class VentasDAO extends VentasDAOBase
         *       para el componente grid de jQuery Flexigrid {@link http://www.flexigrid.info/}. 
         *       Se obtienen id_venta, nombre del cliente, subtotal, tipo de venta, fecha y sucursal.
         *
+        *	@param	int	$page		Pagina actual que se muestra en el componente Flexigrid
+        *	@param	int	$rp		Numero de filas que deben mostrarse en cada pagina en el componente Flexigrid
+        *	@param	String	$sortname	Columna con la que se ordenaran el grid
+        *	@param	String	$sortorder	Direccion de ordenamiento [asc | desc]
+        *	@param	String	$search		Palabra que se buscara en los datos de la tabla
+        *	@param	String	$qtype		Columna en la que se buscara si existe una peticion de busqueda (si $search existe)
+        *
+        *
         *       @author Rene Michel <rene@caffeina.mx>
         *       @static
         *       @access public
         *       @return Array un arreglo con los datos obtenidos de la consulta con formato array("id"=> {int} , "cell" => {[]} )
         */
-        static function getVentasPorClientes_grid(){
+        static function getVentasPorClientes_grid($page, $rp, $sortname, $sortorder, $search, $qtype){
         
-                $page = strip_tags($_POST['page']);
-                $rp = strip_tags($_POST['rp']);
-                $sortname = strip_tags($_POST['sortname']);
-                $sortorder = strip_tags($_POST['sortorder']);
+                if (!$sortname){/* $sortname = 'name';
+                if (!$sortorder) $sortorder = 'desc';*/
 
-                if (!$sortname) $sortname = 'name';
-                if (!$sortorder) $sortorder = 'desc';
-
-                $sort = "ORDER BY $sortname $sortorder";
+                	$sort = "ORDER BY $sortname $sortorder";
+                }
+                else
+                {
+                	$sort = "";
+                }
 
                 if (!$page) $page = 1;
                 if (!$rp) $rp = 10;
 
                 $start = (($page-1) * $rp);
-
-                $limit = "LIMIT $start, $rp";
+		$end  = $page * $rp;
+                $limit = "LIMIT $start, $end";
                 
                 
                 $sql = "SELECT id_venta AS  'ID', nombre AS  'Cliente', ( subtotal + iva ) AS  'Total', IF( tipo_venta =1,  'Contado',  'Credito' ) AS  'Tipo', date(fecha) AS  'Fecha', sucursal AS  'Sucursal' FROM  `ventas` NATURAL JOIN cliente";
                 
-                if(isset($_POST['query']) && !empty($_POST['query']))
-                {
-                        $search = strip_tags($_POST['query']);
-                        $qtype = strip_tags($_POST['qtype']);
-                        
+                if(isset($search) && !empty($search))
+                {                        
                         $sql .= " WHERE $qtype LIKE '%$search%'";
                 }
         
@@ -171,16 +176,18 @@ class VentasDAO extends VentasDAOBase
         *       para el componente grid de jQuery Flexigrid {@link http://www.flexigrid.info/}. 
         *       Se obtienen id_venta, nombre del cliente, subtotal, tipo de venta, fecha y sucursal.
         *
+        *	@param	int	$id_cliente	Id del cliente, si se especifica este parametro el resultado sera especifico para ese cliente
+        *	@param	date	$de		Rango inferior para la obtencion de datos dentro de un periodo especicado
+        *	@param	String	$al		Rango superior para la obtencion de datos dentro de un periodo especicado
+        *
         *       @author Rene Michel <rene@caffeina.mx>
         *       @static
         *       @access public
         *       @return Array un arreglo con los datos obtenidos de la consulta con formato array("id"=> {int} , "cell" => {[]} )
         */
-        static function getVentasACreditoPorClientes_grid(){
+        static function getVentasACreditoPorClientes_grid($id_cliente, $de, $al){
         
-        	$id_cliente=$_REQUEST['id_cliente'];
-                $de=$_REQUEST['de'];
-                $al=$_REQUEST['al'];
+        	
                 $cliente=!empty($id_cliente);
                 $fecha=(!empty($de)&&!empty($al));
                 $params=array();
@@ -292,16 +299,18 @@ class VentasDAO extends VentasDAOBase
         *       para el componente grid de jQuery Flexigrid {@link http://www.flexigrid.info/}. 
         *       Se obtienen id_venta, nombre del cliente, subtotal, tipo de venta, fecha y sucursal.
         *
+        *	@param	int	$id_cliente	Id del cliente, si se especifica este parametro el resultado sera especifico para ese cliente
+        *	@param	date	$de		Rango inferior para la obtencion de datos dentro de un periodo especicado
+        *	@param	String	$al		Rango superior para la obtencion de datos dentro de un periodo especicado
+        *
         *       @author Rene Michel <rene@caffeina.mx>
         *       @static
         *       @access public
         *       @return Array un arreglo con los datos obtenidos de la consulta con formato array("id"=> {int} , "cell" => {[]} )
         */
-        static function getVentasDeContadoPorClientes_grid(){
+        static function getVentasDeContadoPorClientes_grid($id_cliente, $de, $al){
         
-        	$id_cliente=$_REQUEST['id_cliente'];
-                $de=$_REQUEST['de'];
-                $al=$_REQUEST['al'];
+        	
                 $cliente=!empty($id_cliente);
                 $fecha=(!empty($de)&&!empty($al));
                 $params=array();

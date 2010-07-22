@@ -27,7 +27,19 @@ require_once('../model/ventas.dao.php');
 */
 function getGridDataVentasPorClientes(){
 
-	$ventas = VentasDAO::getVentasPorClientes_grid();
+	$page = strip_tags($_POST['page']);
+        $rp = strip_tags($_POST['rp']);
+        $sortname = strip_tags($_POST['sortname']);
+        $sortorder = strip_tags($_POST['sortorder']);
+        
+        if(isset($_POST['query']) && !empty($_POST['query']))
+        {
+                $search = strip_tags($_POST['query']);
+                $qtype = strip_tags($_POST['qtype']);
+	}
+
+
+	$ventas = VentasDAO::getVentasPorClientes_grid($page,$rp,$sortname,$sortorder,$search,$qtype);
 	
 	//Si no se envia el dato de page, significa que estamos en la 1
 	if(isset($_POST['page']))
@@ -50,10 +62,15 @@ function getGridDataVentasPorClientes(){
 *
 *	@author Rene Michel <rene@caffeina.mx>
 *	@return	String JSON con los datos formateados para Flexigrid	
+*	@see	getVentasACreditoPorClientes_grid
 */
 function getGridDataVentasACreditoPorClientes(){
 
-	$ventas = VentasDAO::getVentasACreditoPorClientes_grid();
+	$id_cliente=$_REQUEST['id_cliente'];
+        $de=$_REQUEST['de'];
+        $al=$_REQUEST['al'];
+
+	$ventas = VentasDAO::getVentasACreditoPorClientes_grid($id_cliente, $de, $al);
 	
 	//Si no se envia el dato de page, significa que estamos en la 1
 	if(isset($_POST['page']))
@@ -78,7 +95,11 @@ function getGridDataVentasACreditoPorClientes(){
 */
 function getGridDataVentasDeContadoPorClientes(){
 
-	$ventas = VentasDAO::getVentasDeContadoPorClientes_grid();
+	$id_cliente=$_REQUEST['id_cliente'];
+        $de=$_REQUEST['de'];
+        $al=$_REQUEST['al'];
+
+	$ventas = VentasDAO::getVentasDeContadoPorClientes_grid($id_cliente, $de, $al);
 	
 	//Si no se envia el dato de page, significa que estamos en la 1
 	if(isset($_POST['page']))
