@@ -288,7 +288,7 @@ class VentasDAO extends VentasDAOBase
         }
         
          /**
-        *       Funcion para obtener los datos especificos de las ventas a credito y los datos reelevantes del cliente. 
+        *       Funcion para obtener los datos especificos de las ventas de contado y los datos reelevantes del cliente. 
         *       para el componente grid de jQuery Flexigrid {@link http://www.flexigrid.info/}. 
         *       Se obtienen id_venta, nombre del cliente, subtotal, tipo de venta, fecha y sucursal.
         *
@@ -297,7 +297,7 @@ class VentasDAO extends VentasDAOBase
         *       @access public
         *       @return Array un arreglo con los datos obtenidos de la consulta con formato array("id"=> {int} , "cell" => {[]} )
         */
-        static function getVentasACreditoPorClientes_grid(){
+        static function getVentasDeContadoPorClientes_grid(){
         
         	$id_cliente=$_REQUEST['id_cliente'];
                 $de=$_REQUEST['de'];
