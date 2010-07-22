@@ -101,16 +101,16 @@ abstract class GruposPermisosDAOBase extends TablaDAO
 	  **/
 	public static final function search( $grupos_permisos )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from grupos_permisos WHERE ("; 
 		$val = array();
-		if($cliente->getIdGrupo() != NULL){
+		if( $grupos_permisos->getIdGrupo() != NULL){
 			$sql .= " id_grupo = ? AND";
-			array_push( $val, $cliente->getIdGrupo() );
+			array_push( $val, $grupos_permisos->getIdGrupo() );
 		}
 
-		if($cliente->getIdPermiso() != NULL){
+		if( $grupos_permisos->getIdPermiso() != NULL){
 			$sql .= " id_permiso = ? AND";
-			array_push( $val, $cliente->getIdPermiso() );
+			array_push( $val, $grupos_permisos->getIdPermiso() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

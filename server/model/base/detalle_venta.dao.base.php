@@ -101,26 +101,26 @@ abstract class DetalleVentaDAOBase extends TablaDAO
 	  **/
 	public static final function search( $detalle_venta )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from detalle_venta WHERE ("; 
 		$val = array();
-		if($cliente->getIdVenta() != NULL){
+		if( $detalle_venta->getIdVenta() != NULL){
 			$sql .= " id_venta = ? AND";
-			array_push( $val, $cliente->getIdVenta() );
+			array_push( $val, $detalle_venta->getIdVenta() );
 		}
 
-		if($cliente->getIdProducto() != NULL){
+		if( $detalle_venta->getIdProducto() != NULL){
 			$sql .= " id_producto = ? AND";
-			array_push( $val, $cliente->getIdProducto() );
+			array_push( $val, $detalle_venta->getIdProducto() );
 		}
 
-		if($cliente->getCantidad() != NULL){
+		if( $detalle_venta->getCantidad() != NULL){
 			$sql .= " cantidad = ? AND";
-			array_push( $val, $cliente->getCantidad() );
+			array_push( $val, $detalle_venta->getCantidad() );
 		}
 
-		if($cliente->getPrecio() != NULL){
+		if( $detalle_venta->getPrecio() != NULL){
 			$sql .= " precio = ? AND";
-			array_push( $val, $cliente->getPrecio() );
+			array_push( $val, $detalle_venta->getPrecio() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

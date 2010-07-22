@@ -101,46 +101,46 @@ abstract class ComprasDAOBase extends TablaDAO
 	  **/
 	public static final function search( $compras )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from compras WHERE ("; 
 		$val = array();
-		if($cliente->getIdCompra() != NULL){
+		if( $compras->getIdCompra() != NULL){
 			$sql .= " id_compra = ? AND";
-			array_push( $val, $cliente->getIdCompra() );
+			array_push( $val, $compras->getIdCompra() );
 		}
 
-		if($cliente->getIdProveedor() != NULL){
+		if( $compras->getIdProveedor() != NULL){
 			$sql .= " id_proveedor = ? AND";
-			array_push( $val, $cliente->getIdProveedor() );
+			array_push( $val, $compras->getIdProveedor() );
 		}
 
-		if($cliente->getTipoCompra() != NULL){
+		if( $compras->getTipoCompra() != NULL){
 			$sql .= " tipo_compra = ? AND";
-			array_push( $val, $cliente->getTipoCompra() );
+			array_push( $val, $compras->getTipoCompra() );
 		}
 
-		if($cliente->getFecha() != NULL){
+		if( $compras->getFecha() != NULL){
 			$sql .= " fecha = ? AND";
-			array_push( $val, $cliente->getFecha() );
+			array_push( $val, $compras->getFecha() );
 		}
 
-		if($cliente->getSubtotal() != NULL){
+		if( $compras->getSubtotal() != NULL){
 			$sql .= " subtotal = ? AND";
-			array_push( $val, $cliente->getSubtotal() );
+			array_push( $val, $compras->getSubtotal() );
 		}
 
-		if($cliente->getIva() != NULL){
+		if( $compras->getIva() != NULL){
 			$sql .= " iva = ? AND";
-			array_push( $val, $cliente->getIva() );
+			array_push( $val, $compras->getIva() );
 		}
 
-		if($cliente->getIdSucursal() != NULL){
+		if( $compras->getIdSucursal() != NULL){
 			$sql .= " id_sucursal = ? AND";
-			array_push( $val, $cliente->getIdSucursal() );
+			array_push( $val, $compras->getIdSucursal() );
 		}
 
-		if($cliente->getIdUsuario() != NULL){
+		if( $compras->getIdUsuario() != NULL){
 			$sql .= " id_usuario = ? AND";
-			array_push( $val, $cliente->getIdUsuario() );
+			array_push( $val, $compras->getIdUsuario() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

@@ -61,34 +61,34 @@ abstract class ViewGastosDAOBase extends VistaDAO
 	{
 		$sql = "SELECT * from cliente WHERE ("; 
 		$val = array();
-		if($cliente->getIdGasto() != NULL){
+		if( $view_gastos->getIdGasto() != NULL){
 			$sql .= " id_gasto = ? AND";
-			array_push( $val, $cliente->getIdGasto() );
+			array_push( $val, $view_gastos->getIdGasto() );
 		}
 
-		if($cliente->getMonto() != NULL){
+		if( $view_gastos->getMonto() != NULL){
 			$sql .= " monto = ? AND";
-			array_push( $val, $cliente->getMonto() );
+			array_push( $val, $view_gastos->getMonto() );
 		}
 
-		if($cliente->getFecha() != NULL){
+		if( $view_gastos->getFecha() != NULL){
 			$sql .= " fecha = ? AND";
-			array_push( $val, $cliente->getFecha() );
+			array_push( $val, $view_gastos->getFecha() );
 		}
 
-		if($cliente->getSucursal() != NULL){
+		if( $view_gastos->getSucursal() != NULL){
 			$sql .= " sucursal = ? AND";
-			array_push( $val, $cliente->getSucursal() );
+			array_push( $val, $view_gastos->getSucursal() );
 		}
 
-		if($cliente->getIdSucursal() != NULL){
+		if( $view_gastos->getIdSucursal() != NULL){
 			$sql .= " id_sucursal = ? AND";
-			array_push( $val, $cliente->getIdSucursal() );
+			array_push( $val, $view_gastos->getIdSucursal() );
 		}
 
-		if($cliente->getUsuario() != NULL){
+		if( $view_gastos->getUsuario() != NULL){
 			$sql .= " usuario = ? AND";
-			array_push( $val, $cliente->getUsuario() );
+			array_push( $val, $view_gastos->getUsuario() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

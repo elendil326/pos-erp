@@ -61,59 +61,59 @@ abstract class ViewComprasDAOBase extends VistaDAO
 	{
 		$sql = "SELECT * from cliente WHERE ("; 
 		$val = array();
-		if($cliente->getIdCompra() != NULL){
+		if( $view_compras->getIdCompra() != NULL){
 			$sql .= " id_compra = ? AND";
-			array_push( $val, $cliente->getIdCompra() );
+			array_push( $val, $view_compras->getIdCompra() );
 		}
 
-		if($cliente->getProveedor() != NULL){
+		if( $view_compras->getProveedor() != NULL){
 			$sql .= " proveedor = ? AND";
-			array_push( $val, $cliente->getProveedor() );
+			array_push( $val, $view_compras->getProveedor() );
 		}
 
-		if($cliente->getIdProveedor() != NULL){
+		if( $view_compras->getIdProveedor() != NULL){
 			$sql .= " id_proveedor = ? AND";
-			array_push( $val, $cliente->getIdProveedor() );
+			array_push( $val, $view_compras->getIdProveedor() );
 		}
 
-		if($cliente->getTipoCompra() != NULL){
+		if( $view_compras->getTipoCompra() != NULL){
 			$sql .= " tipo_compra = ? AND";
-			array_push( $val, $cliente->getTipoCompra() );
+			array_push( $val, $view_compras->getTipoCompra() );
 		}
 
-		if($cliente->getFecha() != NULL){
+		if( $view_compras->getFecha() != NULL){
 			$sql .= " fecha = ? AND";
-			array_push( $val, $cliente->getFecha() );
+			array_push( $val, $view_compras->getFecha() );
 		}
 
-		if($cliente->getSubtotal() != NULL){
+		if( $view_compras->getSubtotal() != NULL){
 			$sql .= " subtotal = ? AND";
-			array_push( $val, $cliente->getSubtotal() );
+			array_push( $val, $view_compras->getSubtotal() );
 		}
 
-		if($cliente->getIva() != NULL){
+		if( $view_compras->getIva() != NULL){
 			$sql .= " iva = ? AND";
-			array_push( $val, $cliente->getIva() );
+			array_push( $val, $view_compras->getIva() );
 		}
 
-		if($cliente->getSucursal() != NULL){
+		if( $view_compras->getSucursal() != NULL){
 			$sql .= " sucursal = ? AND";
-			array_push( $val, $cliente->getSucursal() );
+			array_push( $val, $view_compras->getSucursal() );
 		}
 
-		if($cliente->getIdSucursal() != NULL){
+		if( $view_compras->getIdSucursal() != NULL){
 			$sql .= " id_sucursal = ? AND";
-			array_push( $val, $cliente->getIdSucursal() );
+			array_push( $val, $view_compras->getIdSucursal() );
 		}
 
-		if($cliente->getUsuario() != NULL){
+		if( $view_compras->getUsuario() != NULL){
 			$sql .= " usuario = ? AND";
-			array_push( $val, $cliente->getUsuario() );
+			array_push( $val, $view_compras->getUsuario() );
 		}
 
-		if($cliente->getIdUsuario() != NULL){
+		if( $view_compras->getIdUsuario() != NULL){
 			$sql .= " id_usuario = ? AND";
-			array_push( $val, $cliente->getIdUsuario() );
+			array_push( $val, $view_compras->getIdUsuario() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

@@ -101,41 +101,41 @@ abstract class CotizacionDAOBase extends TablaDAO
 	  **/
 	public static final function search( $cotizacion )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from cotizacion WHERE ("; 
 		$val = array();
-		if($cliente->getIdCotizacion() != NULL){
+		if( $cotizacion->getIdCotizacion() != NULL){
 			$sql .= " id_cotizacion = ? AND";
-			array_push( $val, $cliente->getIdCotizacion() );
+			array_push( $val, $cotizacion->getIdCotizacion() );
 		}
 
-		if($cliente->getIdCliente() != NULL){
+		if( $cotizacion->getIdCliente() != NULL){
 			$sql .= " id_cliente = ? AND";
-			array_push( $val, $cliente->getIdCliente() );
+			array_push( $val, $cotizacion->getIdCliente() );
 		}
 
-		if($cliente->getFecha() != NULL){
+		if( $cotizacion->getFecha() != NULL){
 			$sql .= " fecha = ? AND";
-			array_push( $val, $cliente->getFecha() );
+			array_push( $val, $cotizacion->getFecha() );
 		}
 
-		if($cliente->getSubtotal() != NULL){
+		if( $cotizacion->getSubtotal() != NULL){
 			$sql .= " subtotal = ? AND";
-			array_push( $val, $cliente->getSubtotal() );
+			array_push( $val, $cotizacion->getSubtotal() );
 		}
 
-		if($cliente->getIva() != NULL){
+		if( $cotizacion->getIva() != NULL){
 			$sql .= " iva = ? AND";
-			array_push( $val, $cliente->getIva() );
+			array_push( $val, $cotizacion->getIva() );
 		}
 
-		if($cliente->getIdSucursal() != NULL){
+		if( $cotizacion->getIdSucursal() != NULL){
 			$sql .= " id_sucursal = ? AND";
-			array_push( $val, $cliente->getIdSucursal() );
+			array_push( $val, $cotizacion->getIdSucursal() );
 		}
 
-		if($cliente->getIdUsuario() != NULL){
+		if( $cotizacion->getIdUsuario() != NULL){
 			$sql .= " id_usuario = ? AND";
-			array_push( $val, $cliente->getIdUsuario() );
+			array_push( $val, $cotizacion->getIdUsuario() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

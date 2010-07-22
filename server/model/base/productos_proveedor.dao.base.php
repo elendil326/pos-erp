@@ -101,36 +101,36 @@ abstract class ProductosProveedorDAOBase extends TablaDAO
 	  **/
 	public static final function search( $productos_proveedor )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from productos_proveedor WHERE ("; 
 		$val = array();
-		if($cliente->getIdProducto() != NULL){
+		if( $productos_proveedor->getIdProducto() != NULL){
 			$sql .= " id_producto = ? AND";
-			array_push( $val, $cliente->getIdProducto() );
+			array_push( $val, $productos_proveedor->getIdProducto() );
 		}
 
-		if($cliente->getClaveProducto() != NULL){
+		if( $productos_proveedor->getClaveProducto() != NULL){
 			$sql .= " clave_producto = ? AND";
-			array_push( $val, $cliente->getClaveProducto() );
+			array_push( $val, $productos_proveedor->getClaveProducto() );
 		}
 
-		if($cliente->getIdProveedor() != NULL){
+		if( $productos_proveedor->getIdProveedor() != NULL){
 			$sql .= " id_proveedor = ? AND";
-			array_push( $val, $cliente->getIdProveedor() );
+			array_push( $val, $productos_proveedor->getIdProveedor() );
 		}
 
-		if($cliente->getIdInventario() != NULL){
+		if( $productos_proveedor->getIdInventario() != NULL){
 			$sql .= " id_inventario = ? AND";
-			array_push( $val, $cliente->getIdInventario() );
+			array_push( $val, $productos_proveedor->getIdInventario() );
 		}
 
-		if($cliente->getDescripcion() != NULL){
+		if( $productos_proveedor->getDescripcion() != NULL){
 			$sql .= " descripcion = ? AND";
-			array_push( $val, $cliente->getDescripcion() );
+			array_push( $val, $productos_proveedor->getDescripcion() );
 		}
 
-		if($cliente->getPrecio() != NULL){
+		if( $productos_proveedor->getPrecio() != NULL){
 			$sql .= " precio = ? AND";
-			array_push( $val, $cliente->getPrecio() );
+			array_push( $val, $productos_proveedor->getPrecio() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

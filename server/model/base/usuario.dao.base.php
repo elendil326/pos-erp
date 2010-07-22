@@ -101,31 +101,31 @@ abstract class UsuarioDAOBase extends TablaDAO
 	  **/
 	public static final function search( $usuario )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from usuario WHERE ("; 
 		$val = array();
-		if($cliente->getIdUsuario() != NULL){
+		if( $usuario->getIdUsuario() != NULL){
 			$sql .= " id_usuario = ? AND";
-			array_push( $val, $cliente->getIdUsuario() );
+			array_push( $val, $usuario->getIdUsuario() );
 		}
 
-		if($cliente->getNombre() != NULL){
+		if( $usuario->getNombre() != NULL){
 			$sql .= " nombre = ? AND";
-			array_push( $val, $cliente->getNombre() );
+			array_push( $val, $usuario->getNombre() );
 		}
 
-		if($cliente->getUsuario() != NULL){
+		if( $usuario->getUsuario() != NULL){
 			$sql .= " usuario = ? AND";
-			array_push( $val, $cliente->getUsuario() );
+			array_push( $val, $usuario->getUsuario() );
 		}
 
-		if($cliente->getContrasena() != NULL){
+		if( $usuario->getContrasena() != NULL){
 			$sql .= " contrasena = ? AND";
-			array_push( $val, $cliente->getContrasena() );
+			array_push( $val, $usuario->getContrasena() );
 		}
 
-		if($cliente->getIdSucursal() != NULL){
+		if( $usuario->getIdSucursal() != NULL){
 			$sql .= " id_sucursal = ? AND";
-			array_push( $val, $cliente->getIdSucursal() );
+			array_push( $val, $usuario->getIdSucursal() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

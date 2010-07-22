@@ -101,36 +101,36 @@ abstract class GastosDAOBase extends TablaDAO
 	  **/
 	public static final function search( $gastos )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from gastos WHERE ("; 
 		$val = array();
-		if($cliente->getIdGasto() != NULL){
+		if( $gastos->getIdGasto() != NULL){
 			$sql .= " id_gasto = ? AND";
-			array_push( $val, $cliente->getIdGasto() );
+			array_push( $val, $gastos->getIdGasto() );
 		}
 
-		if($cliente->getConcepto() != NULL){
+		if( $gastos->getConcepto() != NULL){
 			$sql .= " concepto = ? AND";
-			array_push( $val, $cliente->getConcepto() );
+			array_push( $val, $gastos->getConcepto() );
 		}
 
-		if($cliente->getMonto() != NULL){
+		if( $gastos->getMonto() != NULL){
 			$sql .= " monto = ? AND";
-			array_push( $val, $cliente->getMonto() );
+			array_push( $val, $gastos->getMonto() );
 		}
 
-		if($cliente->getFecha() != NULL){
+		if( $gastos->getFecha() != NULL){
 			$sql .= " fecha = ? AND";
-			array_push( $val, $cliente->getFecha() );
+			array_push( $val, $gastos->getFecha() );
 		}
 
-		if($cliente->getIdSucursal() != NULL){
+		if( $gastos->getIdSucursal() != NULL){
 			$sql .= " id_sucursal = ? AND";
-			array_push( $val, $cliente->getIdSucursal() );
+			array_push( $val, $gastos->getIdSucursal() );
 		}
 
-		if($cliente->getIdUsuario() != NULL){
+		if( $gastos->getIdUsuario() != NULL){
 			$sql .= " id_usuario = ? AND";
-			array_push( $val, $cliente->getIdUsuario() );
+			array_push( $val, $gastos->getIdUsuario() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

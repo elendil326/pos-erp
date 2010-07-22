@@ -101,16 +101,16 @@ abstract class GruposUsuariosDAOBase extends TablaDAO
 	  **/
 	public static final function search( $grupos_usuarios )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from grupos_usuarios WHERE ("; 
 		$val = array();
-		if($cliente->getIdGrupo() != NULL){
+		if( $grupos_usuarios->getIdGrupo() != NULL){
 			$sql .= " id_grupo = ? AND";
-			array_push( $val, $cliente->getIdGrupo() );
+			array_push( $val, $grupos_usuarios->getIdGrupo() );
 		}
 
-		if($cliente->getIdUsuario() != NULL){
+		if( $grupos_usuarios->getIdUsuario() != NULL){
 			$sql .= " id_usuario = ? AND";
-			array_push( $val, $cliente->getIdUsuario() );
+			array_push( $val, $grupos_usuarios->getIdUsuario() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

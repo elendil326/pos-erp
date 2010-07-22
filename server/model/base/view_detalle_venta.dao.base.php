@@ -61,44 +61,44 @@ abstract class ViewDetalleVentaDAOBase extends VistaDAO
 	{
 		$sql = "SELECT * from cliente WHERE ("; 
 		$val = array();
-		if($cliente->getIdVenta() != NULL){
+		if( $view_detalle_venta->getIdVenta() != NULL){
 			$sql .= " id_venta = ? AND";
-			array_push( $val, $cliente->getIdVenta() );
+			array_push( $val, $view_detalle_venta->getIdVenta() );
 		}
 
-		if($cliente->getIdProducto() != NULL){
+		if( $view_detalle_venta->getIdProducto() != NULL){
 			$sql .= " id_producto = ? AND";
-			array_push( $val, $cliente->getIdProducto() );
+			array_push( $val, $view_detalle_venta->getIdProducto() );
 		}
 
-		if($cliente->getDenominacion() != NULL){
+		if( $view_detalle_venta->getDenominacion() != NULL){
 			$sql .= " denominacion = ? AND";
-			array_push( $val, $cliente->getDenominacion() );
+			array_push( $val, $view_detalle_venta->getDenominacion() );
 		}
 
-		if($cliente->getCantidad() != NULL){
+		if( $view_detalle_venta->getCantidad() != NULL){
 			$sql .= " cantidad = ? AND";
-			array_push( $val, $cliente->getCantidad() );
+			array_push( $val, $view_detalle_venta->getCantidad() );
 		}
 
-		if($cliente->getPrecio() != NULL){
+		if( $view_detalle_venta->getPrecio() != NULL){
 			$sql .= " precio = ? AND";
-			array_push( $val, $cliente->getPrecio() );
+			array_push( $val, $view_detalle_venta->getPrecio() );
 		}
 
-		if($cliente->getFecha() != NULL){
+		if( $view_detalle_venta->getFecha() != NULL){
 			$sql .= " fecha = ? AND";
-			array_push( $val, $cliente->getFecha() );
+			array_push( $val, $view_detalle_venta->getFecha() );
 		}
 
-		if($cliente->getTipoVenta() != NULL){
+		if( $view_detalle_venta->getTipoVenta() != NULL){
 			$sql .= " tipo_venta = ? AND";
-			array_push( $val, $cliente->getTipoVenta() );
+			array_push( $val, $view_detalle_venta->getTipoVenta() );
 		}
 
-		if($cliente->getIdSucursal() != NULL){
+		if( $view_detalle_venta->getIdSucursal() != NULL){
 			$sql .= " id_sucursal = ? AND";
-			array_push( $val, $cliente->getIdSucursal() );
+			array_push( $val, $view_detalle_venta->getIdSucursal() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

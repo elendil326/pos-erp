@@ -101,36 +101,36 @@ abstract class ProveedorDAOBase extends TablaDAO
 	  **/
 	public static final function search( $proveedor )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from proveedor WHERE ("; 
 		$val = array();
-		if($cliente->getIdProveedor() != NULL){
+		if( $proveedor->getIdProveedor() != NULL){
 			$sql .= " id_proveedor = ? AND";
-			array_push( $val, $cliente->getIdProveedor() );
+			array_push( $val, $proveedor->getIdProveedor() );
 		}
 
-		if($cliente->getRfc() != NULL){
+		if( $proveedor->getRfc() != NULL){
 			$sql .= " rfc = ? AND";
-			array_push( $val, $cliente->getRfc() );
+			array_push( $val, $proveedor->getRfc() );
 		}
 
-		if($cliente->getNombre() != NULL){
+		if( $proveedor->getNombre() != NULL){
 			$sql .= " nombre = ? AND";
-			array_push( $val, $cliente->getNombre() );
+			array_push( $val, $proveedor->getNombre() );
 		}
 
-		if($cliente->getDireccion() != NULL){
+		if( $proveedor->getDireccion() != NULL){
 			$sql .= " direccion = ? AND";
-			array_push( $val, $cliente->getDireccion() );
+			array_push( $val, $proveedor->getDireccion() );
 		}
 
-		if($cliente->getTelefono() != NULL){
+		if( $proveedor->getTelefono() != NULL){
 			$sql .= " telefono = ? AND";
-			array_push( $val, $cliente->getTelefono() );
+			array_push( $val, $proveedor->getTelefono() );
 		}
 
-		if($cliente->getEMail() != NULL){
+		if( $proveedor->getEMail() != NULL){
 			$sql .= " e_mail = ? AND";
-			array_push( $val, $cliente->getEMail() );
+			array_push( $val, $proveedor->getEMail() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

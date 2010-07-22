@@ -101,16 +101,16 @@ abstract class FacturaCompraDAOBase extends TablaDAO
 	  **/
 	public static final function search( $factura_compra )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from factura_compra WHERE ("; 
 		$val = array();
-		if($cliente->getFolio() != NULL){
+		if( $factura_compra->getFolio() != NULL){
 			$sql .= " folio = ? AND";
-			array_push( $val, $cliente->getFolio() );
+			array_push( $val, $factura_compra->getFolio() );
 		}
 
-		if($cliente->getIdCompra() != NULL){
+		if( $factura_compra->getIdCompra() != NULL){
 			$sql .= " id_compra = ? AND";
-			array_push( $val, $cliente->getIdCompra() );
+			array_push( $val, $factura_compra->getIdCompra() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

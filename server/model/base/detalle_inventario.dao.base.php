@@ -101,31 +101,31 @@ abstract class DetalleInventarioDAOBase extends TablaDAO
 	  **/
 	public static final function search( $detalle_inventario )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from detalle_inventario WHERE ("; 
 		$val = array();
-		if($cliente->getIdProducto() != NULL){
+		if( $detalle_inventario->getIdProducto() != NULL){
 			$sql .= " id_producto = ? AND";
-			array_push( $val, $cliente->getIdProducto() );
+			array_push( $val, $detalle_inventario->getIdProducto() );
 		}
 
-		if($cliente->getIdSucursal() != NULL){
+		if( $detalle_inventario->getIdSucursal() != NULL){
 			$sql .= " id_sucursal = ? AND";
-			array_push( $val, $cliente->getIdSucursal() );
+			array_push( $val, $detalle_inventario->getIdSucursal() );
 		}
 
-		if($cliente->getPrecioVenta() != NULL){
+		if( $detalle_inventario->getPrecioVenta() != NULL){
 			$sql .= " precio_venta = ? AND";
-			array_push( $val, $cliente->getPrecioVenta() );
+			array_push( $val, $detalle_inventario->getPrecioVenta() );
 		}
 
-		if($cliente->getMin() != NULL){
+		if( $detalle_inventario->getMin() != NULL){
 			$sql .= " min = ? AND";
-			array_push( $val, $cliente->getMin() );
+			array_push( $val, $detalle_inventario->getMin() );
 		}
 
-		if($cliente->getExistencias() != NULL){
+		if( $detalle_inventario->getExistencias() != NULL){
 			$sql .= " existencias = ? AND";
-			array_push( $val, $cliente->getExistencias() );
+			array_push( $val, $detalle_inventario->getExistencias() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

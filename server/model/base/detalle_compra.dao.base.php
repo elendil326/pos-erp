@@ -101,26 +101,26 @@ abstract class DetalleCompraDAOBase extends TablaDAO
 	  **/
 	public static final function search( $detalle_compra )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from detalle_compra WHERE ("; 
 		$val = array();
-		if($cliente->getIdCompra() != NULL){
+		if( $detalle_compra->getIdCompra() != NULL){
 			$sql .= " id_compra = ? AND";
-			array_push( $val, $cliente->getIdCompra() );
+			array_push( $val, $detalle_compra->getIdCompra() );
 		}
 
-		if($cliente->getIdProducto() != NULL){
+		if( $detalle_compra->getIdProducto() != NULL){
 			$sql .= " id_producto = ? AND";
-			array_push( $val, $cliente->getIdProducto() );
+			array_push( $val, $detalle_compra->getIdProducto() );
 		}
 
-		if($cliente->getCantidad() != NULL){
+		if( $detalle_compra->getCantidad() != NULL){
 			$sql .= " cantidad = ? AND";
-			array_push( $val, $cliente->getCantidad() );
+			array_push( $val, $detalle_compra->getCantidad() );
 		}
 
-		if($cliente->getPrecio() != NULL){
+		if( $detalle_compra->getPrecio() != NULL){
 			$sql .= " precio = ? AND";
-			array_push( $val, $cliente->getPrecio() );
+			array_push( $val, $detalle_compra->getPrecio() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

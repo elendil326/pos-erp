@@ -101,21 +101,21 @@ abstract class PermisosDAOBase extends TablaDAO
 	  **/
 	public static final function search( $permisos )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from permisos WHERE ("; 
 		$val = array();
-		if($cliente->getIdPermiso() != NULL){
+		if( $permisos->getIdPermiso() != NULL){
 			$sql .= " id_permiso = ? AND";
-			array_push( $val, $cliente->getIdPermiso() );
+			array_push( $val, $permisos->getIdPermiso() );
 		}
 
-		if($cliente->getNombre() != NULL){
+		if( $permisos->getNombre() != NULL){
 			$sql .= " nombre = ? AND";
-			array_push( $val, $cliente->getNombre() );
+			array_push( $val, $permisos->getNombre() );
 		}
 
-		if($cliente->getDescripcion() != NULL){
+		if( $permisos->getDescripcion() != NULL){
 			$sql .= " descripcion = ? AND";
-			array_push( $val, $cliente->getDescripcion() );
+			array_push( $val, $permisos->getDescripcion() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

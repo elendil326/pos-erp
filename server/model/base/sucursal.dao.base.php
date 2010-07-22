@@ -101,21 +101,21 @@ abstract class SucursalDAOBase extends TablaDAO
 	  **/
 	public static final function search( $sucursal )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from sucursal WHERE ("; 
 		$val = array();
-		if($cliente->getIdSucursal() != NULL){
+		if( $sucursal->getIdSucursal() != NULL){
 			$sql .= " id_sucursal = ? AND";
-			array_push( $val, $cliente->getIdSucursal() );
+			array_push( $val, $sucursal->getIdSucursal() );
 		}
 
-		if($cliente->getDescripcion() != NULL){
+		if( $sucursal->getDescripcion() != NULL){
 			$sql .= " descripcion = ? AND";
-			array_push( $val, $cliente->getDescripcion() );
+			array_push( $val, $sucursal->getDescripcion() );
 		}
 
-		if($cliente->getDireccion() != NULL){
+		if( $sucursal->getDireccion() != NULL){
 			$sql .= " direccion = ? AND";
-			array_push( $val, $cliente->getDireccion() );
+			array_push( $val, $sucursal->getDireccion() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

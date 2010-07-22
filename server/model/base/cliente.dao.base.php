@@ -103,42 +103,42 @@ abstract class ClienteDAOBase extends TablaDAO
 	{
 		$sql = "SELECT * from cliente WHERE ("; 
 		$val = array();
-		if($cliente->getIdCliente() != NULL){
+		if( $cliente->getIdCliente() != NULL){
 			$sql .= " id_cliente = ? AND";
 			array_push( $val, $cliente->getIdCliente() );
 		}
 
-		if($cliente->getRfc() != NULL){
+		if( $cliente->getRfc() != NULL){
 			$sql .= " rfc = ? AND";
 			array_push( $val, $cliente->getRfc() );
 		}
 
-		if($cliente->getNombre() != NULL){
+		if( $cliente->getNombre() != NULL){
 			$sql .= " nombre = ? AND";
 			array_push( $val, $cliente->getNombre() );
 		}
 
-		if($cliente->getDireccion() != NULL){
+		if( $cliente->getDireccion() != NULL){
 			$sql .= " direccion = ? AND";
 			array_push( $val, $cliente->getDireccion() );
 		}
 
-		if($cliente->getTelefono() != NULL){
+		if( $cliente->getTelefono() != NULL){
 			$sql .= " telefono = ? AND";
 			array_push( $val, $cliente->getTelefono() );
 		}
 
-		if($cliente->getEMail() != NULL){
+		if( $cliente->getEMail() != NULL){
 			$sql .= " e_mail = ? AND";
 			array_push( $val, $cliente->getEMail() );
 		}
 
-		if($cliente->getLimiteCredito() != NULL){
+		if( $cliente->getLimiteCredito() != NULL){
 			$sql .= " limite_credito = ? AND";
 			array_push( $val, $cliente->getLimiteCredito() );
 		}
 
-		if($cliente->getDescuento() != NULL){
+		if( $cliente->getDescuento() != NULL){
 			$sql .= " descuento = ? AND";
 			array_push( $val, $cliente->getDescuento() );
 		}

@@ -101,21 +101,21 @@ abstract class InventarioDAOBase extends TablaDAO
 	  **/
 	public static final function search( $inventario )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from inventario WHERE ("; 
 		$val = array();
-		if($cliente->getIdProducto() != NULL){
+		if( $inventario->getIdProducto() != NULL){
 			$sql .= " id_producto = ? AND";
-			array_push( $val, $cliente->getIdProducto() );
+			array_push( $val, $inventario->getIdProducto() );
 		}
 
-		if($cliente->getNombre() != NULL){
+		if( $inventario->getNombre() != NULL){
 			$sql .= " nombre = ? AND";
-			array_push( $val, $cliente->getNombre() );
+			array_push( $val, $inventario->getNombre() );
 		}
 
-		if($cliente->getDenominacion() != NULL){
+		if( $inventario->getDenominacion() != NULL){
 			$sql .= " denominacion = ? AND";
-			array_push( $val, $cliente->getDenominacion() );
+			array_push( $val, $inventario->getDenominacion() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

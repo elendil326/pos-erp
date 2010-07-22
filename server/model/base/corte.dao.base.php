@@ -101,61 +101,61 @@ abstract class CorteDAOBase extends TablaDAO
 	  **/
 	public static final function search( $corte )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from corte WHERE ("; 
 		$val = array();
-		if($cliente->getNumCorte() != NULL){
+		if( $corte->getNumCorte() != NULL){
 			$sql .= " num_corte = ? AND";
-			array_push( $val, $cliente->getNumCorte() );
+			array_push( $val, $corte->getNumCorte() );
 		}
 
-		if($cliente->getAnio() != NULL){
+		if( $corte->getAnio() != NULL){
 			$sql .= " anio = ? AND";
-			array_push( $val, $cliente->getAnio() );
+			array_push( $val, $corte->getAnio() );
 		}
 
-		if($cliente->getInicio() != NULL){
+		if( $corte->getInicio() != NULL){
 			$sql .= " inicio = ? AND";
-			array_push( $val, $cliente->getInicio() );
+			array_push( $val, $corte->getInicio() );
 		}
 
-		if($cliente->getFin() != NULL){
+		if( $corte->getFin() != NULL){
 			$sql .= " fin = ? AND";
-			array_push( $val, $cliente->getFin() );
+			array_push( $val, $corte->getFin() );
 		}
 
-		if($cliente->getVentas() != NULL){
+		if( $corte->getVentas() != NULL){
 			$sql .= " ventas = ? AND";
-			array_push( $val, $cliente->getVentas() );
+			array_push( $val, $corte->getVentas() );
 		}
 
-		if($cliente->getAbonosVentas() != NULL){
+		if( $corte->getAbonosVentas() != NULL){
 			$sql .= " abonosVentas = ? AND";
-			array_push( $val, $cliente->getAbonosVentas() );
+			array_push( $val, $corte->getAbonosVentas() );
 		}
 
-		if($cliente->getCompras() != NULL){
+		if( $corte->getCompras() != NULL){
 			$sql .= " compras = ? AND";
-			array_push( $val, $cliente->getCompras() );
+			array_push( $val, $corte->getCompras() );
 		}
 
-		if($cliente->getAbonosCompra() != NULL){
+		if( $corte->getAbonosCompra() != NULL){
 			$sql .= " AbonosCompra = ? AND";
-			array_push( $val, $cliente->getAbonosCompra() );
+			array_push( $val, $corte->getAbonosCompra() );
 		}
 
-		if($cliente->getGastos() != NULL){
+		if( $corte->getGastos() != NULL){
 			$sql .= " gastos = ? AND";
-			array_push( $val, $cliente->getGastos() );
+			array_push( $val, $corte->getGastos() );
 		}
 
-		if($cliente->getIngresos() != NULL){
+		if( $corte->getIngresos() != NULL){
 			$sql .= " ingresos = ? AND";
-			array_push( $val, $cliente->getIngresos() );
+			array_push( $val, $corte->getIngresos() );
 		}
 
-		if($cliente->getGananciasNetas() != NULL){
+		if( $corte->getGananciasNetas() != NULL){
 			$sql .= " gananciasNetas = ? AND";
-			array_push( $val, $cliente->getGananciasNetas() );
+			array_push( $val, $corte->getGananciasNetas() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

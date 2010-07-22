@@ -101,16 +101,16 @@ abstract class FacturaVentaDAOBase extends TablaDAO
 	  **/
 	public static final function search( $factura_venta )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from factura_venta WHERE ("; 
 		$val = array();
-		if($cliente->getFolio() != NULL){
+		if( $factura_venta->getFolio() != NULL){
 			$sql .= " folio = ? AND";
-			array_push( $val, $cliente->getFolio() );
+			array_push( $val, $factura_venta->getFolio() );
 		}
 
-		if($cliente->getIdVenta() != NULL){
+		if( $factura_venta->getIdVenta() != NULL){
 			$sql .= " id_venta = ? AND";
-			array_push( $val, $cliente->getIdVenta() );
+			array_push( $val, $factura_venta->getIdVenta() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

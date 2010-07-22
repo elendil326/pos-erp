@@ -101,26 +101,26 @@ abstract class ImpuestoDAOBase extends TablaDAO
 	  **/
 	public static final function search( $impuesto )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from impuesto WHERE ("; 
 		$val = array();
-		if($cliente->getIdImpuesto() != NULL){
+		if( $impuesto->getIdImpuesto() != NULL){
 			$sql .= " id_impuesto = ? AND";
-			array_push( $val, $cliente->getIdImpuesto() );
+			array_push( $val, $impuesto->getIdImpuesto() );
 		}
 
-		if($cliente->getDescripcion() != NULL){
+		if( $impuesto->getDescripcion() != NULL){
 			$sql .= " descripcion = ? AND";
-			array_push( $val, $cliente->getDescripcion() );
+			array_push( $val, $impuesto->getDescripcion() );
 		}
 
-		if($cliente->getValor() != NULL){
+		if( $impuesto->getValor() != NULL){
 			$sql .= " valor = ? AND";
-			array_push( $val, $cliente->getValor() );
+			array_push( $val, $impuesto->getValor() );
 		}
 
-		if($cliente->getIdSucursal() != NULL){
+		if( $impuesto->getIdSucursal() != NULL){
 			$sql .= " id_sucursal = ? AND";
-			array_push( $val, $cliente->getIdSucursal() );
+			array_push( $val, $impuesto->getIdSucursal() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

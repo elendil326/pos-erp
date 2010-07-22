@@ -101,26 +101,26 @@ abstract class DetalleCotizacionDAOBase extends TablaDAO
 	  **/
 	public static final function search( $detalle_cotizacion )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from detalle_cotizacion WHERE ("; 
 		$val = array();
-		if($cliente->getIdCotizacion() != NULL){
+		if( $detalle_cotizacion->getIdCotizacion() != NULL){
 			$sql .= " id_cotizacion = ? AND";
-			array_push( $val, $cliente->getIdCotizacion() );
+			array_push( $val, $detalle_cotizacion->getIdCotizacion() );
 		}
 
-		if($cliente->getIdProducto() != NULL){
+		if( $detalle_cotizacion->getIdProducto() != NULL){
 			$sql .= " id_producto = ? AND";
-			array_push( $val, $cliente->getIdProducto() );
+			array_push( $val, $detalle_cotizacion->getIdProducto() );
 		}
 
-		if($cliente->getCantidad() != NULL){
+		if( $detalle_cotizacion->getCantidad() != NULL){
 			$sql .= " cantidad = ? AND";
-			array_push( $val, $cliente->getCantidad() );
+			array_push( $val, $detalle_cotizacion->getCantidad() );
 		}
 
-		if($cliente->getPrecio() != NULL){
+		if( $detalle_cotizacion->getPrecio() != NULL){
 			$sql .= " precio = ? AND";
-			array_push( $val, $cliente->getPrecio() );
+			array_push( $val, $detalle_cotizacion->getPrecio() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

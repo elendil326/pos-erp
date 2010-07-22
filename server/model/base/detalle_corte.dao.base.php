@@ -101,26 +101,26 @@ abstract class DetalleCorteDAOBase extends TablaDAO
 	  **/
 	public static final function search( $detalle_corte )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from detalle_corte WHERE ("; 
 		$val = array();
-		if($cliente->getNumCorte() != NULL){
+		if( $detalle_corte->getNumCorte() != NULL){
 			$sql .= " num_corte = ? AND";
-			array_push( $val, $cliente->getNumCorte() );
+			array_push( $val, $detalle_corte->getNumCorte() );
 		}
 
-		if($cliente->getNombre() != NULL){
+		if( $detalle_corte->getNombre() != NULL){
 			$sql .= " nombre = ? AND";
-			array_push( $val, $cliente->getNombre() );
+			array_push( $val, $detalle_corte->getNombre() );
 		}
 
-		if($cliente->getTotal() != NULL){
+		if( $detalle_corte->getTotal() != NULL){
 			$sql .= " total = ? AND";
-			array_push( $val, $cliente->getTotal() );
+			array_push( $val, $detalle_corte->getTotal() );
 		}
 
-		if($cliente->getDeben() != NULL){
+		if( $detalle_corte->getDeben() != NULL){
 			$sql .= " deben = ? AND";
-			array_push( $val, $cliente->getDeben() );
+			array_push( $val, $detalle_corte->getDeben() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

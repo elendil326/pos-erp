@@ -101,16 +101,16 @@ abstract class EncargadoDAOBase extends TablaDAO
 	  **/
 	public static final function search( $encargado )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from encargado WHERE ("; 
 		$val = array();
-		if($cliente->getIdUsuario() != NULL){
+		if( $encargado->getIdUsuario() != NULL){
 			$sql .= " id_usuario = ? AND";
-			array_push( $val, $cliente->getIdUsuario() );
+			array_push( $val, $encargado->getIdUsuario() );
 		}
 
-		if($cliente->getPorciento() != NULL){
+		if( $encargado->getPorciento() != NULL){
 			$sql .= " porciento = ? AND";
-			array_push( $val, $cliente->getPorciento() );
+			array_push( $val, $encargado->getPorciento() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

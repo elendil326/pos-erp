@@ -61,44 +61,44 @@ abstract class ViewDetalleCompraDAOBase extends VistaDAO
 	{
 		$sql = "SELECT * from cliente WHERE ("; 
 		$val = array();
-		if($cliente->getIdCompra() != NULL){
+		if( $view_detalle_compra->getIdCompra() != NULL){
 			$sql .= " id_compra = ? AND";
-			array_push( $val, $cliente->getIdCompra() );
+			array_push( $val, $view_detalle_compra->getIdCompra() );
 		}
 
-		if($cliente->getIdProducto() != NULL){
+		if( $view_detalle_compra->getIdProducto() != NULL){
 			$sql .= " id_producto = ? AND";
-			array_push( $val, $cliente->getIdProducto() );
+			array_push( $val, $view_detalle_compra->getIdProducto() );
 		}
 
-		if($cliente->getDenominacion() != NULL){
+		if( $view_detalle_compra->getDenominacion() != NULL){
 			$sql .= " denominacion = ? AND";
-			array_push( $val, $cliente->getDenominacion() );
+			array_push( $val, $view_detalle_compra->getDenominacion() );
 		}
 
-		if($cliente->getCantidad() != NULL){
+		if( $view_detalle_compra->getCantidad() != NULL){
 			$sql .= " cantidad = ? AND";
-			array_push( $val, $cliente->getCantidad() );
+			array_push( $val, $view_detalle_compra->getCantidad() );
 		}
 
-		if($cliente->getPrecio() != NULL){
+		if( $view_detalle_compra->getPrecio() != NULL){
 			$sql .= " precio = ? AND";
-			array_push( $val, $cliente->getPrecio() );
+			array_push( $val, $view_detalle_compra->getPrecio() );
 		}
 
-		if($cliente->getFecha() != NULL){
+		if( $view_detalle_compra->getFecha() != NULL){
 			$sql .= " fecha = ? AND";
-			array_push( $val, $cliente->getFecha() );
+			array_push( $val, $view_detalle_compra->getFecha() );
 		}
 
-		if($cliente->getTipoCompra() != NULL){
+		if( $view_detalle_compra->getTipoCompra() != NULL){
 			$sql .= " tipo_compra = ? AND";
-			array_push( $val, $cliente->getTipoCompra() );
+			array_push( $val, $view_detalle_compra->getTipoCompra() );
 		}
 
-		if($cliente->getIdSucursal() != NULL){
+		if( $view_detalle_compra->getIdSucursal() != NULL){
 			$sql .= " id_sucursal = ? AND";
-			array_push( $val, $cliente->getIdSucursal() );
+			array_push( $val, $view_detalle_compra->getIdSucursal() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

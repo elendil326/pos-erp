@@ -101,26 +101,26 @@ abstract class PagosCompraDAOBase extends TablaDAO
 	  **/
 	public static final function search( $pagos_compra )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from pagos_compra WHERE ("; 
 		$val = array();
-		if($cliente->getIdPago() != NULL){
+		if( $pagos_compra->getIdPago() != NULL){
 			$sql .= " id_pago = ? AND";
-			array_push( $val, $cliente->getIdPago() );
+			array_push( $val, $pagos_compra->getIdPago() );
 		}
 
-		if($cliente->getIdCompra() != NULL){
+		if( $pagos_compra->getIdCompra() != NULL){
 			$sql .= " id_compra = ? AND";
-			array_push( $val, $cliente->getIdCompra() );
+			array_push( $val, $pagos_compra->getIdCompra() );
 		}
 
-		if($cliente->getFecha() != NULL){
+		if( $pagos_compra->getFecha() != NULL){
 			$sql .= " fecha = ? AND";
-			array_push( $val, $cliente->getFecha() );
+			array_push( $val, $pagos_compra->getFecha() );
 		}
 
-		if($cliente->getMonto() != NULL){
+		if( $pagos_compra->getMonto() != NULL){
 			$sql .= " monto = ? AND";
-			array_push( $val, $cliente->getMonto() );
+			array_push( $val, $pagos_compra->getMonto() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";

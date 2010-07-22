@@ -101,21 +101,21 @@ abstract class GruposDAOBase extends TablaDAO
 	  **/
 	public static final function search( $grupos )
 	{
-		$sql = "SELECT * from cliente WHERE ("; 
+		$sql = "SELECT * from grupos WHERE ("; 
 		$val = array();
-		if($cliente->getIdGrupo() != NULL){
+		if( $grupos->getIdGrupo() != NULL){
 			$sql .= " id_grupo = ? AND";
-			array_push( $val, $cliente->getIdGrupo() );
+			array_push( $val, $grupos->getIdGrupo() );
 		}
 
-		if($cliente->getNombre() != NULL){
+		if( $grupos->getNombre() != NULL){
 			$sql .= " nombre = ? AND";
-			array_push( $val, $cliente->getNombre() );
+			array_push( $val, $grupos->getNombre() );
 		}
 
-		if($cliente->getDescripcion() != NULL){
+		if( $grupos->getDescripcion() != NULL){
 			$sql .= " descripcion = ? AND";
-			array_push( $val, $cliente->getDescripcion() );
+			array_push( $val, $grupos->getDescripcion() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
