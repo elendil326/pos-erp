@@ -47,23 +47,29 @@ switch ($_REQUEST['action']) {
         break;
         
         
-        case 'getGridDataClientesDeudores':
+        case 'getGridDataClientesCreditoDeudores':
         
-        	$page = strip_tags($_POST['page']);
-		$rp = strip_tags($_POST['rp']);
-		$sortname = strip_tags($_POST['sortname']);
-		$sortorder = strip_tags($_POST['sortorder']);
+        	require_once("controller/clientes.controller.php");
+        
+        	$id_cliente=$_REQUEST['id_cliente'];
+                $de=$_REQUEST['de'];
+                $al=$_REQUEST['al'];
+                
+        	$page = strip_tags($_REQUEST['page']);
+		$rp = strip_tags($_REQUEST['rp']);
+		$sortname = strip_tags($_REQUEST['sortname']);
+		$sortorder = strip_tags($_REQUEST['sortorder']);
 		
-		if(isset($_POST['query']) && !empty($_POST['query']))
+		if(isset($_REQUEST['query']) && !empty($_REQUEST['query']))
 		{
-		        $search = strip_tags($_POST['query']);
-		        $qtype = strip_tags($_POST['qtype']);
+		        $search = strip_tags($_REQUEST['query']);
+		        $qtype = strip_tags($_REQUEST['qtype']);
 		}
 		
 		//Si no se envia el dato de page, significa que estamos en la 1
-		if(isset($_POST['page']))
+		if(isset($_REQUEST['page']))
 		{
-			$page = strip_tags($_POST['page']);
+			$page = strip_tags($_REQUEST['page']);
 		}
 		else{
 			$page = 1;
@@ -71,12 +77,50 @@ switch ($_REQUEST['action']) {
         
         	unset($_POST);
         
-        	$ans = getGridDataClientesDeudores($page,$rp,$sortname,$sortorder,$search,$qtype, $page);
+        	$ans = getGridDataClientesCreditoDeudores($page,$rp,$sortname,$sortorder,$search,$qtype, $de, $al, $id_cliente);
         	echo $ans;
         
         	break;
         	
+       case 'getGridDataClientesCreditoPagado':
+       
+       		require_once("controller/clientes.controller.php");
+        
+        	$id_cliente=$_REQUEST['id_cliente'];
+                $de=$_REQUEST['de'];
+                $al=$_REQUEST['al'];
+                
+        	$page = strip_tags($_REQUEST['page']);
+		$rp = strip_tags($_REQUEST['rp']);
+		$sortname = strip_tags($_REQUEST['sortname']);
+		$sortorder = strip_tags($_REQUEST['sortorder']);
+		
+		if(isset($_REQUEST['query']) && !empty($_REQUEST['query']))
+		{
+		        $search = strip_tags($_REQUEST['query']);
+		        $qtype = strip_tags($_REQUEST['qtype']);
+		}
+		
+		//Si no se envia el dato de page, significa que estamos en la 1
+		if(isset($_REQUEST['page']))
+		{
+			$page = strip_tags($_REQUEST['page']);
+		}
+		else{
+			$page = 1;
+		}
+        
+        	unset($_POST);
+        
+        	$ans = getGridDataClientesCreditoPagado($page,$rp,$sortname,$sortorder,$search,$qtype, $de, $al, $id_cliente);
+        	echo $ans;
+       
+       
+       		break;
+        	
        case 'getGridDataAllClientes':
+       
+       		require_once("controller/clientes.controller.php");
        
        		$page = strip_tags($_POST['page']);
 		$rp = strip_tags($_POST['rp']);
@@ -170,7 +214,7 @@ switch ($_REQUEST['action']) {
 		unset($_REQUEST);
 		
 		$ans = getGridDataVentasDeContadoPorClientes($id_cliente, $de, $al, $page);
-
+		echo $ans;
 	
 		break;
 		

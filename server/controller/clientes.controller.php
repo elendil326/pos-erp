@@ -156,11 +156,11 @@ function getGridDataAllClientes($page,$rp,$sortname,$sortorder,$search,$qtype, $
 *	@author Rene Michel <rene@caffeina.mx>
 *	@return	String JSON con los datos formateados para Flexigrid	
 */
-function getGridDataClientesDeudores($page,$rp,$sortname,$sortorder,$search,$qtype, $page){
+function getGridDataClientesCreditoDeudores($page,$rp,$sortname,$sortorder,$search,$qtype, $de, $al, $id_cliente){
 	
 	
 	
-	$clientes = ClienteDAO::getClientesDeudores_grid($page,$rp,$sortname,$sortorder,$search,$qtype);
+	$clientes = ClienteDAO::getClientesCreditoDeudores_grid($rp,$sortname,$sortorder,$search,$qtype,$de, $al, $id_cliente);
 	
 	
 	
@@ -168,3 +168,13 @@ function getGridDataClientesDeudores($page,$rp,$sortname,$sortorder,$search,$qty
 	return $array_result;
 
 }
+
+function getGridDataClientesCreditoPagado($page,$rp,$sortname,$sortorder,$search,$qtype, $de, $al, $id_cliente){
+
+	$clientes = ClienteDAO::getClientesCreditoPagado_grid($rp,$sortname,$sortorder,$search,$qtype, $de, $al, $id_cliente);
+	
+	$array_result = '{ "page": '.$page.', "total": '.count($clientes).', "rows" : '.json_encode($clientes).'}';
+	return $array_result;
+}
+
+
