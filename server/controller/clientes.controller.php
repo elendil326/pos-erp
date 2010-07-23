@@ -6,12 +6,15 @@
 /**
  *
  */
-require_once('../model/clientes.vo.php');
+ 
+//require_once('../server/model/base/cliente.vo.base.php');
 
 /**
  *
  */
-require_once('../model/clientes.dao.php');
+require_once('../server/model/cliente.dao.php');
+
+
 
 /**
  *
@@ -83,7 +86,7 @@ function insert_customer($rfc, $nombre, $direccion, $limite_credito, $descuento 
  * @param <type> $id_cliente 
  */
 function delete_customer($id_cliente) {
-    if (!is_int($id_cliente))
+    if (!is_int($id_cliente)){
         return "{success: false, reason: 'Id no válido.' }";
     }
     $cliente = ClienteDAO::getByPK($id_cliente);
@@ -134,6 +137,16 @@ function show_customer($id_cliente) {
         return "{success: false, reason: 'No existe cliente con ese id.' }";
     }
 }
+
+
+function getGridDataAllClientes($page,$rp,$sortname,$sortorder,$search,$qtype, $page)
+{
+	$clientes = ClienteDAO::getClientesAll_grid($page,$rp,$sortname,$sortorder,$search,$qtype, $page);
+	
+	$array_result = '{ "page": '.$page.', "total": '.count($clientes).', "rows" : '.json_encode($clientes).'}';
+	return $array_result;
+}
+
 
 
 /**

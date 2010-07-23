@@ -76,9 +76,40 @@ switch ($_REQUEST['action']) {
         
         	break;
         	
+       case 'getGridDataAllClientes':
+       
+       		$page = strip_tags($_POST['page']);
+		$rp = strip_tags($_POST['rp']);
+		$sortname = strip_tags($_POST['sortname']);
+		$sortorder = strip_tags($_POST['sortorder']);
+		
+		if(isset($_POST['query']) && !empty($_POST['query']))
+		{
+		        $search = strip_tags($_POST['query']);
+		        $qtype = strip_tags($_POST['qtype']);
+		}
+		
+		//Si no se envia el dato de page, significa que estamos en la 1
+		if(isset($_POST['page']))
+		{
+			$page = strip_tags($_POST['page']);
+		}
+		else{
+			$page = 1;
+		}
+        
+        	unset($_POST);
+        
+        	$ans = getGridDataAllClientes($page,$rp,$sortname,$sortorder,$search,$qtype, $page);
+        	echo $ans;
+       		
+       		break;
         	
 //===========================funciones ventas==================================================
 	case 'getGridDataVentasPorClientes':
+	
+		require_once("controller/ventas.controller.php");
+	
 		$page = strip_tags($_POST['page']);
 		$rp = strip_tags($_POST['rp']);
 		$sortname = strip_tags($_POST['sortname']);
@@ -97,6 +128,8 @@ switch ($_REQUEST['action']) {
 		break;
 		
 	case 'getGridDataVentasACreditoPorClientes':
+	
+		require_once("controller/ventas.controller.php");
 	
 		$id_cliente=$_REQUEST['id_cliente'];
 		$de=$_REQUEST['de'];
@@ -119,6 +152,8 @@ switch ($_REQUEST['action']) {
 		
 	case 'getGridDataVentasDeContadoPorClientes':
 	
+		require_once("controller/ventas.controller.php");
+	
 		$id_cliente=$_REQUEST['id_cliente'];
 		$de=$_REQUEST['de'];
 		$al=$_REQUEST['al'];
@@ -138,6 +173,10 @@ switch ($_REQUEST['action']) {
 
 	
 		break;
+		
+//==========================================================
+	default:
+		echo "BAD REQUEST ERROR";
 }
 
 //switch enorme para ejectuar un action de algun modelo.

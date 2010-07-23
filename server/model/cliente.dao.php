@@ -1,8 +1,9 @@
 <?php
 
+require_once ('Estructura.php');
 require_once("base/cliente.dao.base.php");
 require_once("base/cliente.vo.base.php");
-require_once ('Estructura.php');
+
 /** Cliente Data Access Object (DAO).
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
@@ -13,6 +14,58 @@ require_once ('Estructura.php');
   */
 class ClienteDAO extends ClienteDAOBase
 {
+
+
+	function getClientesAll_grid($page,$rp,$sortname,$sortorder,$search,$qtype, $page){
+	
+		
+		 if (!$sortname){/* $sortname = 'name';
+                if (!$sortorder) $sortorder = 'desc';*/
+
+                	$sort = "ORDER BY $sortname $sortorder";
+                }
+                else
+                {
+                	$sort = "";
+                }
+
+                if (!$page) $page = 1;
+                if (!$rp) $rp = 10;
+
+                $start = (($page-1) * $rp);
+		$end  = $page * $rp;
+                $limit = "LIMIT $start, $end";
+                
+                $sql="SELECT `id_cliente` as 'ID',`nombre` as 'Nombre',`rfc` as 'RFC',`direccion` as 'Direccion' ,`telefono` as Telefono ,`e_mail` as 'E-mail',`limite_credito` as 'Limite de credito' from cliente";
+                
+                if(isset($search) && !empty($search))
+                {
+                        $sql .= " WHERE $qtype LIKE '%$search%'";
+                }
+        
+                
+                global $conn;
+                
+                try{
+                        $rs = $conn->Execute($sql." ".$sort." ".$limit);
+                }catch(Exception $e){
+                
+                        $logger->log($e->getMessage(), PEAR_LOG_ERR);
+                        
+                        return array();
+                
+                }
+                
+                $allData = array();
+                while( $row = $rs->FetchRow() )
+                {
+                        array_push($allData, array("id"=>$row[0], "cell"=>$row));
+                }
+
+                return $allData;
+	
+	}
+
 
 	 /**
         *       Funcion para obtener los datos de los clientes que compraron a credito y debe

@@ -1,8 +1,8 @@
 <?php
 
+require_once ('Estructura.php');
 require_once("base/ventas.dao.base.php");
 require_once("base/ventas.vo.base.php");
-require_once ('Estructura.php');
 /** Ventas Data Access Object (DAO).
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
@@ -25,7 +25,7 @@ class VentasDAO extends VentasDAOBase
         */
         static function getVentasPorClientes(){
         
-                $sql = "SELECT id_venta AS  'ID', nombre AS  'Cliente', ( subtotal + iva ) AS  'Total', IF( tipo_venta =1,  'Contado',  'Credito' ) AS  'Tipo', date(fecha) AS  'Fecha', sucursal AS  'Sucursal' FROM  `ventas` NATURAL JOIN cliente";
+                $sql = "SELECT id_venta AS  'ID', nombre AS  'Cliente', ( subtotal + iva ) AS  'Total', IF( tipo_venta =1,  'Contado',  'Credito' ) AS  'Tipo', date(fecha) AS  'Fecha', id_sucursal AS  'Sucursal' FROM  `ventas` NATURAL JOIN cliente";
                 global $conn;
                 
                 try{
@@ -64,7 +64,9 @@ class VentasDAO extends VentasDAOBase
         */
         static function getVentasPorClientes_grid($page, $rp, $sortname, $sortorder, $search, $qtype){
         
-                if (!$sortname){/* $sortname = 'name';
+        	global $logger;
+        
+                if (isset($sortname) && !empty($sortname) ){/* $sortname = 'name';
                 if (!$sortorder) $sortorder = 'desc';*/
 
                 	$sort = "ORDER BY $sortname $sortorder";
@@ -82,7 +84,7 @@ class VentasDAO extends VentasDAOBase
                 $limit = "LIMIT $start, $end";
                 
                 
-                $sql = "SELECT id_venta AS  'ID', nombre AS  'Cliente', ( subtotal + iva ) AS  'Total', IF( tipo_venta =1,  'Contado',  'Credito' ) AS  'Tipo', date(fecha) AS  'Fecha', sucursal AS  'Sucursal' FROM  `ventas` NATURAL JOIN cliente";
+                $sql = "SELECT id_venta AS  'ID', nombre AS  'Cliente', ( subtotal + iva ) AS  'Total', IF( tipo_venta =1,  'Contado',  'Credito' ) AS  'Tipo', date(fecha) AS  'Fecha', id_sucursal AS  'Sucursal' FROM  `ventas` NATURAL JOIN cliente";
                 
                 if(isset($search) && !empty($search))
                 {                        
@@ -122,6 +124,8 @@ class VentasDAO extends VentasDAOBase
         */
         static function getVentasACreditoPorClientes(){
         
+        	global $logger;
+        
         	$id_cliente=$_REQUEST['id_cliente'];
                 $de=$_REQUEST['de'];
                 $al=$_REQUEST['al'];
@@ -152,7 +156,7 @@ class VentasDAO extends VentasDAOBase
                 global $conn;
                 
                 try{
-                        $rs = $conn->Execute($query." ".$sort." ".$limit);
+                        $rs = $conn->Execute($query);
                 }catch(Exception $e){
                 
                         $logger->log($e->getMessage(), PEAR_LOG_ERR);
@@ -187,6 +191,7 @@ class VentasDAO extends VentasDAOBase
         */
         static function getVentasACreditoPorClientes_grid($id_cliente, $de, $al){
         
+        	global $logger;
         	
                 $cliente=!empty($id_cliente);
                 $fecha=(!empty($de)&&!empty($al));
@@ -215,7 +220,7 @@ class VentasDAO extends VentasDAOBase
                 global $conn;
                 
                 try{
-                        $rs = $conn->Execute($query." ".$sort." ".$limit);
+                        $rs = $conn->Execute($query);
                 }catch(Exception $e){
                 
                         $logger->log($e->getMessage(), PEAR_LOG_ERR);
@@ -244,6 +249,8 @@ class VentasDAO extends VentasDAOBase
         *       @return Array un arreglo con los datos obtenidos de la consulta
         */
         static function getVentasDeContadoPorClientes(){
+        
+        	global $logger;
         
         	$id_cliente=$_REQUEST['id_cliente'];
                 $de=$_REQUEST['de'];
@@ -275,7 +282,7 @@ class VentasDAO extends VentasDAOBase
                 global $conn;
                 
                 try{
-                        $rs = $conn->Execute($query." ".$sort." ".$limit);
+                        $rs = $conn->Execute($query);
                 }catch(Exception $e){
                 
                         $logger->log($e->getMessage(), PEAR_LOG_ERR);
@@ -310,6 +317,7 @@ class VentasDAO extends VentasDAOBase
         */
         static function getVentasDeContadoPorClientes_grid($id_cliente, $de, $al){
         
+        	global $logger;
         	
                 $cliente=!empty($id_cliente);
                 $fecha=(!empty($de)&&!empty($al));
@@ -338,7 +346,7 @@ class VentasDAO extends VentasDAOBase
                 global $conn;
                 
                 try{
-                        $rs = $conn->Execute($query." ".$sort." ".$limit);
+                        $rs = $conn->Execute($query);
                 }catch(Exception $e){
                 
                         $logger->log($e->getMessage(), PEAR_LOG_ERR);

@@ -10,12 +10,11 @@
 /**
  *
  */
-require_once('../model/ventas.vo.php');
 
 /**
  *
  */
-require_once('../model/ventas.dao.php');
+require_once('../server/model/ventas.dao.php');
 
 
 /**
