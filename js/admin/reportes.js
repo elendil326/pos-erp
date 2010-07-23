@@ -391,7 +391,7 @@ Reports.prototype.loadVentasTodas = function(){
 			title: 'Ventas',
 			width: '100%',
 			url: '../proxy.php',
-			data: 'method=reporteClientesCompras_jgrid',
+			data: 'action=getGridDataVentasPorClientes',
 			addNewGrid: false,
 			sortname: 'id',
 			colModel: [
@@ -423,22 +423,21 @@ Reports.prototype.loadClientesDebenReport = function(){
 			title: 'Clientes Deben',
 			width: '100%',
 			url: '../proxy.php',
-			data: 'method=reporteClientesDeben_jgrid',
+			data: 'action=getGridDataClientesCreditoDeudores',
 			addNewGrid: false,
 			sortname: 'id',
 			colModel: [
-				{display: 'ID', name : 'id', width : 30, sortable : true, align: 'left'},
-				{display: 'Nombre', name : 'nombre', width : 300, sortable : true, align: 'left'},
-				{display: 'Saldo', name : 'Saldo', width : 80, sortable : true, align: 'left'},
-				{display: 'RFC', name : 'RFC', width : 100, sortable : true, align: 'left'},
-				{display: 'Direccion', name : 'Direccion', width : 250, sortable : true, align: 'left'},
-				{display: 'Telefono', name : 'Telefono', width : 100, sortable : true, align: 'left'},
-				{display: 'E-mail', name : 'E-mail', width : 100, sortable : true, align: 'left'}
+				{display: 'ID', name : 'id_venta', width : 30, sortable : true, align: 'left'},
+				{display: 'Total', name : 'Total', width : 300, sortable : true, align: 'left'},
+				{display: 'Pagado', name : 'Pagado', width : 80, sortable : true, align: 'left'},
+				{display: 'Debe', name : 'Debe', width : 100, sortable : true, align: 'left'},
+				{display: 'Nombre', name : 'Nombre', width : 250, sortable : true, align: 'left'},
+				{display: 'Fecha', name : 'Fecha', width : 100, sortable : true, align: 'left'}
 			],
 			searchitems: [
-				{display: 'Nombre', name : 'nombre'},
-				{display: 'RFC', name : 'rfc', isdefault: true},
-				{display: 'Direccion', name : 'direccion'}
+				{display: 'Nombre', name : 'Nombre'},
+				{display: 'Fecha', name : 'Fecha', isdefault: true},
+				{display: 'ID', name : 'id_venta'}
 			]
 			});
 
@@ -453,7 +452,7 @@ Reports.prototype.loadClientesReport = function(){
 			title: 'Clientes',
 			width: '100%',
 			url: '../proxy.php',
-			data: 'method=reporteClientesTodos_jgrid',
+			data: 'action=getGridDataAllClientes',
 			addNewGrid: false,
 			sortname: 'id',
 			colModel: [
@@ -463,7 +462,7 @@ Reports.prototype.loadClientesReport = function(){
 				{display: 'Direccion', name : 'direccion', width : 250, sortable : true, align: 'left'},
 				{display: 'Telefono', name : 'telefono', width : 250, sortable : true, align: 'left'},
 				{display: 'E-mail', name : 'e-mail', width : 250, sortable : true, align: 'left'},
-				{display: 'Limite credito', name : 'limite de credito', width : 100, sortable : true, align: 'left'}
+				{display: 'Limite credito', name : 'Limite de credito', width : 100, sortable : true, align: 'left'}
 			],
 			searchitems: [
 				{display: 'Nombre', name : 'nombre'},
@@ -555,7 +554,7 @@ Reports.prototype.loadVentasCreditoReport = function(config){
 			title: 'Ventas a cr&eacute;dito',
 			width: '100%',
 			url: '../proxy.php',
-			data: 'method=reporteClientesComprasCredito_jgrid',
+			data: 'action=getGridDataVentasACreditoPorClientes',
 			addNewGrid: false,
 			sortname: 'v.fecha',
 			colModel: [
@@ -646,7 +645,7 @@ Reports.prototype.loadVentasContadoReport = function(config){
 			title: 'Ventas de contado',
 			width: '100%',
 			url: '../proxy.php',
-			data: 'method=reporteClientesComprasContado_jgrid',
+			data: 'action=getGridDataVentasDeContadoPorClientes',
 			addNewGrid: false,
 			sortname: 'v.fecha',
 			colModel: [
