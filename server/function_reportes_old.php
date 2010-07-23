@@ -307,7 +307,7 @@
                 $params = array($id_sucursal);
 
                 //$qry_select = "SELECT `ventas`.`id_usuario`, `usuario`.`nombre`, SUM(`ventas`.`subtotal`) AS `Vendido` FROM `ventas`, `usuario` WHERE `ventas`.`id_usuario` = `usuario`.`id_usuario` AND `ventas`.`sucursal` = ?";                              
-		$qry_select = "SELECT `usuario`, SUM(`subtotal`) AS `vendido` FROM `view_detalles`";
+		$qry_select = "SELECT `usuario`, SUM(`subtotal`) AS `vendido` FROM `view_venta` WHERE `id_sucursal` = ?";
 
 
                 if( isset( $_REQUEST['dateRange']) )
