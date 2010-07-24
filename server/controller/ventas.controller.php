@@ -50,7 +50,6 @@ function getGridDataVentasPorClientes($page,$rp,$sortname,$sortorder,$search,$qt
 *
 *	@author Rene Michel <rene@caffeina.mx>
 *	@return	String JSON con los datos formateados para Flexigrid	
-* 	@param asdfsadf
 *	@see	getVentasACreditoPorClientes_grid
 */
 function getGridDataVentasACreditoPorClientes($id_cliente, $de, $al, $page){
@@ -82,17 +81,78 @@ function getGridDataVentasDeContadoPorClientes($id_cliente, $de, $al, $page){
 }
 
 
+switch($args['action']){
 
-
-
-
-// ventas dispatching
-
-switch($args['action'])
-{
+	//case 'getGridDataVentasPorClientes':
+	case '301':
 	
-	case '301' : echo "algo en ventas"; break;
-	case '302' : echo "otra cosa en ventas"; break;	
-	default : echo "mal request en ventas";
+		
 	
+		$page = strip_tags($_POST['page']);
+		$rp = strip_tags($_POST['rp']);
+		$sortname = strip_tags($_POST['sortname']);
+		$sortorder = strip_tags($_POST['sortorder']);
+		
+		if(isset($_POST['query']) && !empty($_POST['query']))
+		{
+		        $search = strip_tags($_POST['query']);
+		        $qtype = strip_tags($_POST['qtype']);
+		}
+
+		unset($_POST);
+		
+		$ans = getGridDataVentasPorClientes($page,$rp,$sortname,$sortorder,$search,$qtype);
+		echo $ans;
+		break;
+		
+	//case 'getGridDataVentasACreditoPorClientes':
+	case '302':
+	
+		
+	
+		$id_cliente=$_REQUEST['id_cliente'];
+		$de=$_REQUEST['de'];
+		$al=$_REQUEST['al'];
+		
+		//Si no se envia el dato de page, significa que estamos en la 1
+		if(isset($_POST['page']))
+		{
+			$page = strip_tags($_POST['page']);
+		}
+		else{
+			$page = 1;
+		}
+
+		unset($_REQUEST);
+		
+		$ans = getGridDataVentasACreditoPorClientes($id_cliente, $de, $al, $page);
+		echo $ans;
+		break;
+		
+	//case 'getGridDataVentasDeContadoPorClientes':
+	case '303':
+	
+		
+	
+		$id_cliente=$_REQUEST['id_cliente'];
+		$de=$_REQUEST['de'];
+		$al=$_REQUEST['al'];
+		
+		//Si no se envia el dato de page, significa que estamos en la 1
+		if(isset($_POST['page']))
+		{
+			$page = strip_tags($_POST['page']);
+		}
+		else{
+			$page = 1;
+		}
+				
+		unset($_REQUEST);
+		
+		$ans = getGridDataVentasDeContadoPorClientes($id_cliente, $de, $al, $page);
+		echo $ans;
+	
+		break;
+
+
 }
