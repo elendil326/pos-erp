@@ -21,6 +21,13 @@ class ClienteDAO extends ClienteDAOBase
 	
 		global $logger;
 		
+		
+		
+		
+		
+		
+		
+		
 		if (isset($sortname) && !empty($sortname) ){/* $sortname = 'name';
                 if (!$sortorder) $sortorder = 'desc';*/
 

@@ -50,6 +50,7 @@ function getGridDataVentasPorClientes($page,$rp,$sortname,$sortorder,$search,$qt
 *
 *	@author Rene Michel <rene@caffeina.mx>
 *	@return	String JSON con los datos formateados para Flexigrid	
+* 	@param asdfsadf
 *	@see	getVentasACreditoPorClientes_grid
 */
 function getGridDataVentasACreditoPorClientes($id_cliente, $de, $al, $page){
@@ -81,4 +82,17 @@ function getGridDataVentasDeContadoPorClientes($id_cliente, $de, $al, $page){
 }
 
 
-?>
+
+
+
+
+// ventas dispatching
+
+switch($args['action'])
+{
+	
+	case '301' : echo "algo en ventas"; break;
+	case '302' : echo "otra cosa en ventas"; break;	
+	default : echo "mal request en ventas";
+	
+}

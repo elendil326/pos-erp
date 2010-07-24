@@ -7,12 +7,12 @@
 /**
  * Importa el bean 
  */
-require_once('../model/proveedor.vo.php');
+
 
 /**
  *
  */
-require_once('../model/proveedor.dao.php');
+require_once('../server/model/proveedor.dao.php');
 
 
 /**
@@ -79,7 +79,7 @@ function save_provider($id, $rfc, $nombre, $direccion, $telefono , $e_mail) {
  * @param <type> $id_proveedor
  */
 function delete_provider($id_proveedor) {
-    if (!is_int($id_proveedor))
+    if (!is_int($id_proveedor)){
         return "{success: false, reason: 'Id no válido.' }";
     }
     $proveedor = ProveedorDAO::getByPK($id_proveedor);
