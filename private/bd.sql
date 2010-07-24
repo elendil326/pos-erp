@@ -658,19 +658,6 @@ DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_unicode_ci;
 
 
--- -----------------------------------------------------
--- procedure mi_proc
--- -----------------------------------------------------
-
-USE `pos`;
-DROP procedure IF EXISTS `pos`.`mi_proc`;
-
-DELIMITER $$
-USE `pos`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mi_proc`(venta INT)
-SET @id_venta = venta$$
-
-DELIMITER ;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

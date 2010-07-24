@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 //incluir la capa de abstraccion de base de datos
 require_once("db/adodb5/adodb.inc.php");
@@ -10,7 +10,7 @@ require_once("model/model.inc.php");
 //conectar a la base de datos
 $db = ADONewConnection( "mysql" ); 
 $db->debug = true;
-$db->Connect("localhost", "root", "", "pos");
+$db->Connect("localhost", "root", "", "posF");
 
 
 
@@ -45,7 +45,7 @@ $clientes = ClienteDAO::getAll();
 
 //eso regresa un arreglo de clientes
 $nombre_de_primer_cliente = $clientes[ 0 ]->getNombre();
-
+echo "PRIMERO ".$nombre_de_primer_cliente ;
 //eliminar al primer cliente
 $cliente_x = $clientes[0];
 
