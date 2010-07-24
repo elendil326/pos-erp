@@ -20,7 +20,7 @@ abstract class VentasDAOBase extends TablaDAO
 	  *	
 	  *	@static
 	  * @param Ventas [$ventas] El objeto de tipo Ventas
-	  * @return bool Verdadero si el metodo guardo correctamente este objeto, falso si no.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
 	  **/
 	public static final function save( &$ventas )
 	{
@@ -44,10 +44,10 @@ abstract class VentasDAOBase extends TablaDAO
 	  **/
 	public static final function getByPK(  $id_venta )
 	{
-		$sql = "SELECT * FROM ventas WHERE (id_venta = ?) LIMIT 1;";
+		$sql = "SELECT * FROM ventas WHERE (id_venta = ? ) LIMIT 1;";
 		$params = array(  $id_venta );
-		global $db;
-		$rs = $db->GetRow($sql, $params);
+		global $conn;
+		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 		return new Ventas( $rs );
 	}
@@ -67,8 +67,8 @@ abstract class VentasDAOBase extends TablaDAO
 	public static final function getAll( )
 	{
 		$sql = "SELECT * from ventas ;";
-		global $db;
-		$rs = $db->Execute($sql);
+		global $conn;
+		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Ventas($foo));
@@ -144,8 +144,8 @@ abstract class VentasDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		global $db;
-		$rs = $db->Execute($sql, $val);
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Ventas($foo));
@@ -162,7 +162,7 @@ abstract class VentasDAOBase extends TablaDAO
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Ventas [$ventas] El objeto de tipo Ventas a actualizar.
 	  **/
 	private static final function update( $ventas )
@@ -177,9 +177,10 @@ abstract class VentasDAOBase extends TablaDAO
 			$ventas->getIdSucursal(), 
 			$ventas->getIdUsuario(), 
 			$ventas->getIdVenta(), );
-		global $db;
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		return $conn->Affected_Rows();
 	}
 
 
@@ -193,7 +194,7 @@ abstract class VentasDAOBase extends TablaDAO
 	  * primaria generada en el objeto Ventas dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Ventas [$ventas] El objeto de tipo Ventas a crear.
 	  **/
 	private static final function create( &$ventas )
@@ -208,11 +209,12 @@ abstract class VentasDAOBase extends TablaDAO
 			$ventas->getIdSucursal(), 
 			$ventas->getIdUsuario(), 
 		 );
-		global $db;
-		$db->Execute($sql, $params);
-		$ar = $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$ventas->setIdVenta( $db->Insert_ID() );
+		$ventas->setIdVenta( $conn->Insert_ID() );
 		return $ar;
 	}
 
@@ -235,10 +237,10 @@ abstract class VentasDAOBase extends TablaDAO
 		if(self::getByPK($ventas->getIdVenta()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM ventas WHERE  id_venta = ?;";
 		$params = array( $ventas->getIdVenta() );
-		global $db;
+		global $conn;
 
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		$conn->Execute($sql, $params);
+		return $conn->Affected_Rows();
 	}
 
 

@@ -20,7 +20,7 @@ abstract class EncargadoDAOBase extends TablaDAO
 	  *	
 	  *	@static
 	  * @param Encargado [$encargado] El objeto de tipo Encargado
-	  * @return bool Verdadero si el metodo guardo correctamente este objeto, falso si no.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
 	  **/
 	public static final function save( &$encargado )
 	{
@@ -44,10 +44,10 @@ abstract class EncargadoDAOBase extends TablaDAO
 	  **/
 	public static final function getByPK(  $id_usuario )
 	{
-		$sql = "SELECT * FROM encargado WHERE (id_usuario = ?) LIMIT 1;";
+		$sql = "SELECT * FROM encargado WHERE (id_usuario = ? ) LIMIT 1;";
 		$params = array(  $id_usuario );
-		global $db;
-		$rs = $db->GetRow($sql, $params);
+		global $conn;
+		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 		return new Encargado( $rs );
 	}
@@ -67,8 +67,8 @@ abstract class EncargadoDAOBase extends TablaDAO
 	public static final function getAll( )
 	{
 		$sql = "SELECT * from encargado ;";
-		global $db;
-		$rs = $db->Execute($sql);
+		global $conn;
+		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Encargado($foo));
@@ -114,8 +114,8 @@ abstract class EncargadoDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		global $db;
-		$rs = $db->Execute($sql, $val);
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Encargado($foo));
@@ -132,7 +132,7 @@ abstract class EncargadoDAOBase extends TablaDAO
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Encargado [$encargado] El objeto de tipo Encargado a actualizar.
 	  **/
 	private static final function update( $encargado )
@@ -141,9 +141,10 @@ abstract class EncargadoDAOBase extends TablaDAO
 		$params = array( 
 			$encargado->getPorciento(), 
 			$encargado->getIdUsuario(), );
-		global $db;
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		return $conn->Affected_Rows();
 	}
 
 
@@ -157,7 +158,7 @@ abstract class EncargadoDAOBase extends TablaDAO
 	  * primaria generada en el objeto Encargado dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Encargado [$encargado] El objeto de tipo Encargado a crear.
 	  **/
 	private static final function create( &$encargado )
@@ -167,9 +168,10 @@ abstract class EncargadoDAOBase extends TablaDAO
 			$encargado->getIdUsuario(), 
 			$encargado->getPorciento(), 
 		 );
-		global $db;
-		$db->Execute($sql, $params);
-		$ar = $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
 		
 		return $ar;
@@ -194,10 +196,10 @@ abstract class EncargadoDAOBase extends TablaDAO
 		if(self::getByPK($encargado->getIdUsuario()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM encargado WHERE  id_usuario = ?;";
 		$params = array( $encargado->getIdUsuario() );
-		global $db;
+		global $conn;
 
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		$conn->Execute($sql, $params);
+		return $conn->Affected_Rows();
 	}
 
 

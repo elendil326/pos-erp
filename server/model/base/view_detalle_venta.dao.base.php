@@ -24,8 +24,8 @@ abstract class ViewDetalleVentaDAOBase extends VistaDAO
 	public static final function getAll( )
 	{
 		$sql = "SELECT * from view_detalle_venta ;";
-		global $db;
-		$rs = $db->Execute($sql);
+		global $conn;
+		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new ViewDetalleVenta($foo));
@@ -102,8 +102,8 @@ abstract class ViewDetalleVentaDAOBase extends VistaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		global $db;
-		$rs = $db->Execute($sql, $val);
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new ViewDetalleVenta($foo));

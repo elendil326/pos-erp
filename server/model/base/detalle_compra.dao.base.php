@@ -20,7 +20,7 @@ abstract class DetalleCompraDAOBase extends TablaDAO
 	  *	
 	  *	@static
 	  * @param DetalleCompra [$detalle_compra] El objeto de tipo DetalleCompra
-	  * @return bool Verdadero si el metodo guardo correctamente este objeto, falso si no.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
 	  **/
 	public static final function save( &$detalle_compra )
 	{
@@ -44,10 +44,10 @@ abstract class DetalleCompraDAOBase extends TablaDAO
 	  **/
 	public static final function getByPK(  $id_compra, $id_producto )
 	{
-		$sql = "SELECT * FROM detalle_compra WHERE (id_compra = ?,id_producto = ?) LIMIT 1;";
+		$sql = "SELECT * FROM detalle_compra WHERE (id_compra = ? AND id_producto = ? ) LIMIT 1;";
 		$params = array(  $id_compra, $id_producto );
-		global $db;
-		$rs = $db->GetRow($sql, $params);
+		global $conn;
+		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 		return new DetalleCompra( $rs );
 	}
@@ -67,8 +67,8 @@ abstract class DetalleCompraDAOBase extends TablaDAO
 	public static final function getAll( )
 	{
 		$sql = "SELECT * from detalle_compra ;";
-		global $db;
-		$rs = $db->Execute($sql);
+		global $conn;
+		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new DetalleCompra($foo));
@@ -124,8 +124,8 @@ abstract class DetalleCompraDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		global $db;
-		$rs = $db->Execute($sql, $val);
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new DetalleCompra($foo));
@@ -142,7 +142,7 @@ abstract class DetalleCompraDAOBase extends TablaDAO
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param DetalleCompra [$detalle_compra] El objeto de tipo DetalleCompra a actualizar.
 	  **/
 	private static final function update( $detalle_compra )
@@ -152,9 +152,10 @@ abstract class DetalleCompraDAOBase extends TablaDAO
 			$detalle_compra->getCantidad(), 
 			$detalle_compra->getPrecio(), 
 			$detalle_compra->getIdCompra(),$detalle_compra->getIdProducto(), );
-		global $db;
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		return $conn->Affected_Rows();
 	}
 
 
@@ -168,7 +169,7 @@ abstract class DetalleCompraDAOBase extends TablaDAO
 	  * primaria generada en el objeto DetalleCompra dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param DetalleCompra [$detalle_compra] El objeto de tipo DetalleCompra a crear.
 	  **/
 	private static final function create( &$detalle_compra )
@@ -180,9 +181,10 @@ abstract class DetalleCompraDAOBase extends TablaDAO
 			$detalle_compra->getCantidad(), 
 			$detalle_compra->getPrecio(), 
 		 );
-		global $db;
-		$db->Execute($sql, $params);
-		$ar = $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
 		
 		return $ar;
@@ -207,10 +209,10 @@ abstract class DetalleCompraDAOBase extends TablaDAO
 		if(self::getByPK($detalle_compra->getIdCompra(), $detalle_compra->getIdProducto()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM detalle_compra WHERE  id_compra = ? AND id_producto = ?;";
 		$params = array( $detalle_compra->getIdCompra(), $detalle_compra->getIdProducto() );
-		global $db;
+		global $conn;
 
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		$conn->Execute($sql, $params);
+		return $conn->Affected_Rows();
 	}
 
 

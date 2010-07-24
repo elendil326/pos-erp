@@ -20,7 +20,7 @@ abstract class CorteDAOBase extends TablaDAO
 	  *	
 	  *	@static
 	  * @param Corte [$corte] El objeto de tipo Corte
-	  * @return bool Verdadero si el metodo guardo correctamente este objeto, falso si no.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
 	  **/
 	public static final function save( &$corte )
 	{
@@ -44,10 +44,10 @@ abstract class CorteDAOBase extends TablaDAO
 	  **/
 	public static final function getByPK(  $num_corte )
 	{
-		$sql = "SELECT * FROM corte WHERE (num_corte = ?) LIMIT 1;";
+		$sql = "SELECT * FROM corte WHERE (num_corte = ? ) LIMIT 1;";
 		$params = array(  $num_corte );
-		global $db;
-		$rs = $db->GetRow($sql, $params);
+		global $conn;
+		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 		return new Corte( $rs );
 	}
@@ -67,8 +67,8 @@ abstract class CorteDAOBase extends TablaDAO
 	public static final function getAll( )
 	{
 		$sql = "SELECT * from corte ;";
-		global $db;
-		$rs = $db->Execute($sql);
+		global $conn;
+		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Corte($foo));
@@ -159,8 +159,8 @@ abstract class CorteDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		global $db;
-		$rs = $db->Execute($sql, $val);
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Corte($foo));
@@ -177,7 +177,7 @@ abstract class CorteDAOBase extends TablaDAO
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Corte [$corte] El objeto de tipo Corte a actualizar.
 	  **/
 	private static final function update( $corte )
@@ -195,9 +195,10 @@ abstract class CorteDAOBase extends TablaDAO
 			$corte->getIngresos(), 
 			$corte->getGananciasNetas(), 
 			$corte->getNumCorte(), );
-		global $db;
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		return $conn->Affected_Rows();
 	}
 
 
@@ -211,7 +212,7 @@ abstract class CorteDAOBase extends TablaDAO
 	  * primaria generada en el objeto Corte dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Corte [$corte] El objeto de tipo Corte a crear.
 	  **/
 	private static final function create( &$corte )
@@ -229,11 +230,12 @@ abstract class CorteDAOBase extends TablaDAO
 			$corte->getIngresos(), 
 			$corte->getGananciasNetas(), 
 		 );
-		global $db;
-		$db->Execute($sql, $params);
-		$ar = $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$corte->setNumCorte( $db->Insert_ID() );
+		$corte->setNumCorte( $conn->Insert_ID() );
 		return $ar;
 	}
 
@@ -256,10 +258,10 @@ abstract class CorteDAOBase extends TablaDAO
 		if(self::getByPK($corte->getNumCorte()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM corte WHERE  num_corte = ?;";
 		$params = array( $corte->getNumCorte() );
-		global $db;
+		global $conn;
 
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		$conn->Execute($sql, $params);
+		return $conn->Affected_Rows();
 	}
 
 

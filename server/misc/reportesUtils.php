@@ -227,7 +227,7 @@ class reportesUtils
         */
 
 
-	static function selectEfectivoIntervalo( $interval, $table )
+	static function selectIntervalo( $interval, $table )
         {
                 
                 //La clausula SELECT, FROM y WHERE la agregamos nosotros, esta es la que cambia

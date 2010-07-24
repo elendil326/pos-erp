@@ -1,9 +1,10 @@
 <?php
 
+require_once ('Estructura.php');
 require_once("base/view_detalle_compra.dao.base.php");
 require_once("base/view_detalle_compra.vo.base.php");
-require_once ('Estructura.php');
-require_once("../misc/reportesUtils.php");
+
+require_once("../server/misc/reportesUtils.php");
 /** ViewDetalleCompra Data Access Object (DAO).
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 

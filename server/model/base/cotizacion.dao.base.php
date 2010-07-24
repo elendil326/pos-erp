@@ -20,7 +20,7 @@ abstract class CotizacionDAOBase extends TablaDAO
 	  *	
 	  *	@static
 	  * @param Cotizacion [$cotizacion] El objeto de tipo Cotizacion
-	  * @return bool Verdadero si el metodo guardo correctamente este objeto, falso si no.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
 	  **/
 	public static final function save( &$cotizacion )
 	{
@@ -44,10 +44,10 @@ abstract class CotizacionDAOBase extends TablaDAO
 	  **/
 	public static final function getByPK(  $id_cotizacion )
 	{
-		$sql = "SELECT * FROM cotizacion WHERE (id_cotizacion = ?) LIMIT 1;";
+		$sql = "SELECT * FROM cotizacion WHERE (id_cotizacion = ? ) LIMIT 1;";
 		$params = array(  $id_cotizacion );
-		global $db;
-		$rs = $db->GetRow($sql, $params);
+		global $conn;
+		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 		return new Cotizacion( $rs );
 	}
@@ -67,8 +67,8 @@ abstract class CotizacionDAOBase extends TablaDAO
 	public static final function getAll( )
 	{
 		$sql = "SELECT * from cotizacion ;";
-		global $db;
-		$rs = $db->Execute($sql);
+		global $conn;
+		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Cotizacion($foo));
@@ -139,8 +139,8 @@ abstract class CotizacionDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		global $db;
-		$rs = $db->Execute($sql, $val);
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Cotizacion($foo));
@@ -157,7 +157,7 @@ abstract class CotizacionDAOBase extends TablaDAO
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Cotizacion [$cotizacion] El objeto de tipo Cotizacion a actualizar.
 	  **/
 	private static final function update( $cotizacion )
@@ -171,9 +171,10 @@ abstract class CotizacionDAOBase extends TablaDAO
 			$cotizacion->getIdSucursal(), 
 			$cotizacion->getIdUsuario(), 
 			$cotizacion->getIdCotizacion(), );
-		global $db;
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		return $conn->Affected_Rows();
 	}
 
 
@@ -187,7 +188,7 @@ abstract class CotizacionDAOBase extends TablaDAO
 	  * primaria generada en el objeto Cotizacion dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Cotizacion [$cotizacion] El objeto de tipo Cotizacion a crear.
 	  **/
 	private static final function create( &$cotizacion )
@@ -201,11 +202,12 @@ abstract class CotizacionDAOBase extends TablaDAO
 			$cotizacion->getIdSucursal(), 
 			$cotizacion->getIdUsuario(), 
 		 );
-		global $db;
-		$db->Execute($sql, $params);
-		$ar = $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$cotizacion->setIdCotizacion( $db->Insert_ID() );
+		$cotizacion->setIdCotizacion( $conn->Insert_ID() );
 		return $ar;
 	}
 
@@ -228,10 +230,10 @@ abstract class CotizacionDAOBase extends TablaDAO
 		if(self::getByPK($cotizacion->getIdCotizacion()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM cotizacion WHERE  id_cotizacion = ?;";
 		$params = array( $cotizacion->getIdCotizacion() );
-		global $db;
+		global $conn;
 
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		$conn->Execute($sql, $params);
+		return $conn->Affected_Rows();
 	}
 
 

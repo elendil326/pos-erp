@@ -20,7 +20,7 @@ abstract class UsuarioDAOBase extends TablaDAO
 	  *	
 	  *	@static
 	  * @param Usuario [$usuario] El objeto de tipo Usuario
-	  * @return bool Verdadero si el metodo guardo correctamente este objeto, falso si no.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
 	  **/
 	public static final function save( &$usuario )
 	{
@@ -44,10 +44,10 @@ abstract class UsuarioDAOBase extends TablaDAO
 	  **/
 	public static final function getByPK(  $id_usuario )
 	{
-		$sql = "SELECT * FROM usuario WHERE (id_usuario = ?) LIMIT 1;";
+		$sql = "SELECT * FROM usuario WHERE (id_usuario = ? ) LIMIT 1;";
 		$params = array(  $id_usuario );
-		global $db;
-		$rs = $db->GetRow($sql, $params);
+		global $conn;
+		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 		return new Usuario( $rs );
 	}
@@ -67,8 +67,8 @@ abstract class UsuarioDAOBase extends TablaDAO
 	public static final function getAll( )
 	{
 		$sql = "SELECT * from usuario ;";
-		global $db;
-		$rs = $db->Execute($sql);
+		global $conn;
+		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Usuario($foo));
@@ -129,8 +129,8 @@ abstract class UsuarioDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		global $db;
-		$rs = $db->Execute($sql, $val);
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Usuario($foo));
@@ -147,7 +147,7 @@ abstract class UsuarioDAOBase extends TablaDAO
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Usuario [$usuario] El objeto de tipo Usuario a actualizar.
 	  **/
 	private static final function update( $usuario )
@@ -159,9 +159,10 @@ abstract class UsuarioDAOBase extends TablaDAO
 			$usuario->getContrasena(), 
 			$usuario->getIdSucursal(), 
 			$usuario->getIdUsuario(), );
-		global $db;
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		return $conn->Affected_Rows();
 	}
 
 
@@ -175,7 +176,7 @@ abstract class UsuarioDAOBase extends TablaDAO
 	  * primaria generada en el objeto Usuario dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Usuario [$usuario] El objeto de tipo Usuario a crear.
 	  **/
 	private static final function create( &$usuario )
@@ -187,11 +188,12 @@ abstract class UsuarioDAOBase extends TablaDAO
 			$usuario->getContrasena(), 
 			$usuario->getIdSucursal(), 
 		 );
-		global $db;
-		$db->Execute($sql, $params);
-		$ar = $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$usuario->setIdUsuario( $db->Insert_ID() );
+		$usuario->setIdUsuario( $conn->Insert_ID() );
 		return $ar;
 	}
 
@@ -214,10 +216,10 @@ abstract class UsuarioDAOBase extends TablaDAO
 		if(self::getByPK($usuario->getIdUsuario()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM usuario WHERE  id_usuario = ?;";
 		$params = array( $usuario->getIdUsuario() );
-		global $db;
+		global $conn;
 
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		$conn->Execute($sql, $params);
+		return $conn->Affected_Rows();
 	}
 
 

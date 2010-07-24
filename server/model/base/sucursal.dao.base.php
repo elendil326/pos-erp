@@ -20,7 +20,7 @@ abstract class SucursalDAOBase extends TablaDAO
 	  *	
 	  *	@static
 	  * @param Sucursal [$sucursal] El objeto de tipo Sucursal
-	  * @return bool Verdadero si el metodo guardo correctamente este objeto, falso si no.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
 	  **/
 	public static final function save( &$sucursal )
 	{
@@ -44,10 +44,10 @@ abstract class SucursalDAOBase extends TablaDAO
 	  **/
 	public static final function getByPK(  $id_sucursal )
 	{
-		$sql = "SELECT * FROM sucursal WHERE (id_sucursal = ?) LIMIT 1;";
+		$sql = "SELECT * FROM sucursal WHERE (id_sucursal = ? ) LIMIT 1;";
 		$params = array(  $id_sucursal );
-		global $db;
-		$rs = $db->GetRow($sql, $params);
+		global $conn;
+		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 		return new Sucursal( $rs );
 	}
@@ -67,8 +67,8 @@ abstract class SucursalDAOBase extends TablaDAO
 	public static final function getAll( )
 	{
 		$sql = "SELECT * from sucursal ;";
-		global $db;
-		$rs = $db->Execute($sql);
+		global $conn;
+		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Sucursal($foo));
@@ -119,8 +119,8 @@ abstract class SucursalDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		global $db;
-		$rs = $db->Execute($sql, $val);
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Sucursal($foo));
@@ -137,7 +137,7 @@ abstract class SucursalDAOBase extends TablaDAO
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Sucursal [$sucursal] El objeto de tipo Sucursal a actualizar.
 	  **/
 	private static final function update( $sucursal )
@@ -147,9 +147,10 @@ abstract class SucursalDAOBase extends TablaDAO
 			$sucursal->getDescripcion(), 
 			$sucursal->getDireccion(), 
 			$sucursal->getIdSucursal(), );
-		global $db;
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		return $conn->Affected_Rows();
 	}
 
 
@@ -163,7 +164,7 @@ abstract class SucursalDAOBase extends TablaDAO
 	  * primaria generada en el objeto Sucursal dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Sucursal [$sucursal] El objeto de tipo Sucursal a crear.
 	  **/
 	private static final function create( &$sucursal )
@@ -173,11 +174,12 @@ abstract class SucursalDAOBase extends TablaDAO
 			$sucursal->getDescripcion(), 
 			$sucursal->getDireccion(), 
 		 );
-		global $db;
-		$db->Execute($sql, $params);
-		$ar = $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$sucursal->setIdSucursal( $db->Insert_ID() );
+		$sucursal->setIdSucursal( $conn->Insert_ID() );
 		return $ar;
 	}
 
@@ -200,10 +202,10 @@ abstract class SucursalDAOBase extends TablaDAO
 		if(self::getByPK($sucursal->getIdSucursal()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM sucursal WHERE  id_sucursal = ?;";
 		$params = array( $sucursal->getIdSucursal() );
-		global $db;
+		global $conn;
 
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		$conn->Execute($sql, $params);
+		return $conn->Affected_Rows();
 	}
 
 

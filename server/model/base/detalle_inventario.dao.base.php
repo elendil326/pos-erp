@@ -20,7 +20,7 @@ abstract class DetalleInventarioDAOBase extends TablaDAO
 	  *	
 	  *	@static
 	  * @param DetalleInventario [$detalle_inventario] El objeto de tipo DetalleInventario
-	  * @return bool Verdadero si el metodo guardo correctamente este objeto, falso si no.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
 	  **/
 	public static final function save( &$detalle_inventario )
 	{
@@ -44,10 +44,10 @@ abstract class DetalleInventarioDAOBase extends TablaDAO
 	  **/
 	public static final function getByPK(  $id_producto, $id_sucursal )
 	{
-		$sql = "SELECT * FROM detalle_inventario WHERE (id_producto = ?,id_sucursal = ?) LIMIT 1;";
+		$sql = "SELECT * FROM detalle_inventario WHERE (id_producto = ? AND id_sucursal = ? ) LIMIT 1;";
 		$params = array(  $id_producto, $id_sucursal );
-		global $db;
-		$rs = $db->GetRow($sql, $params);
+		global $conn;
+		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 		return new DetalleInventario( $rs );
 	}
@@ -67,8 +67,8 @@ abstract class DetalleInventarioDAOBase extends TablaDAO
 	public static final function getAll( )
 	{
 		$sql = "SELECT * from detalle_inventario ;";
-		global $db;
-		$rs = $db->Execute($sql);
+		global $conn;
+		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new DetalleInventario($foo));
@@ -129,8 +129,8 @@ abstract class DetalleInventarioDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		global $db;
-		$rs = $db->Execute($sql, $val);
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new DetalleInventario($foo));
@@ -147,7 +147,7 @@ abstract class DetalleInventarioDAOBase extends TablaDAO
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param DetalleInventario [$detalle_inventario] El objeto de tipo DetalleInventario a actualizar.
 	  **/
 	private static final function update( $detalle_inventario )
@@ -158,9 +158,10 @@ abstract class DetalleInventarioDAOBase extends TablaDAO
 			$detalle_inventario->getMin(), 
 			$detalle_inventario->getExistencias(), 
 			$detalle_inventario->getIdProducto(),$detalle_inventario->getIdSucursal(), );
-		global $db;
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		return $conn->Affected_Rows();
 	}
 
 
@@ -174,7 +175,7 @@ abstract class DetalleInventarioDAOBase extends TablaDAO
 	  * primaria generada en el objeto DetalleInventario dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param DetalleInventario [$detalle_inventario] El objeto de tipo DetalleInventario a crear.
 	  **/
 	private static final function create( &$detalle_inventario )
@@ -187,9 +188,10 @@ abstract class DetalleInventarioDAOBase extends TablaDAO
 			$detalle_inventario->getMin(), 
 			$detalle_inventario->getExistencias(), 
 		 );
-		global $db;
-		$db->Execute($sql, $params);
-		$ar = $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
 		
 		return $ar;
@@ -214,10 +216,10 @@ abstract class DetalleInventarioDAOBase extends TablaDAO
 		if(self::getByPK($detalle_inventario->getIdProducto(), $detalle_inventario->getIdSucursal()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM detalle_inventario WHERE  id_producto = ? AND id_sucursal = ?;";
 		$params = array( $detalle_inventario->getIdProducto(), $detalle_inventario->getIdSucursal() );
-		global $db;
+		global $conn;
 
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		$conn->Execute($sql, $params);
+		return $conn->Affected_Rows();
 	}
 
 

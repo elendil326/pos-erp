@@ -20,7 +20,7 @@ abstract class GruposUsuariosDAOBase extends TablaDAO
 	  *	
 	  *	@static
 	  * @param GruposUsuarios [$grupos_usuarios] El objeto de tipo GruposUsuarios
-	  * @return bool Verdadero si el metodo guardo correctamente este objeto, falso si no.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
 	  **/
 	public static final function save( &$grupos_usuarios )
 	{
@@ -44,10 +44,10 @@ abstract class GruposUsuariosDAOBase extends TablaDAO
 	  **/
 	public static final function getByPK(  $id_grupo, $id_usuario )
 	{
-		$sql = "SELECT * FROM grupos_usuarios WHERE (id_grupo = ?,id_usuario = ?) LIMIT 1;";
+		$sql = "SELECT * FROM grupos_usuarios WHERE (id_grupo = ? AND id_usuario = ? ) LIMIT 1;";
 		$params = array(  $id_grupo, $id_usuario );
-		global $db;
-		$rs = $db->GetRow($sql, $params);
+		global $conn;
+		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 		return new GruposUsuarios( $rs );
 	}
@@ -67,8 +67,8 @@ abstract class GruposUsuariosDAOBase extends TablaDAO
 	public static final function getAll( )
 	{
 		$sql = "SELECT * from grupos_usuarios ;";
-		global $db;
-		$rs = $db->Execute($sql);
+		global $conn;
+		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new GruposUsuarios($foo));
@@ -114,8 +114,8 @@ abstract class GruposUsuariosDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		global $db;
-		$rs = $db->Execute($sql, $val);
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new GruposUsuarios($foo));
@@ -132,7 +132,7 @@ abstract class GruposUsuariosDAOBase extends TablaDAO
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param GruposUsuarios [$grupos_usuarios] El objeto de tipo GruposUsuarios a actualizar.
 	  **/
 	private static final function update( $grupos_usuarios )
@@ -150,7 +150,7 @@ abstract class GruposUsuariosDAOBase extends TablaDAO
 	  * primaria generada en el objeto GruposUsuarios dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param GruposUsuarios [$grupos_usuarios] El objeto de tipo GruposUsuarios a crear.
 	  **/
 	private static final function create( &$grupos_usuarios )
@@ -160,9 +160,10 @@ abstract class GruposUsuariosDAOBase extends TablaDAO
 			$grupos_usuarios->getIdGrupo(), 
 			$grupos_usuarios->getIdUsuario(), 
 		 );
-		global $db;
-		$db->Execute($sql, $params);
-		$ar = $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
 		
 		return $ar;
@@ -187,10 +188,10 @@ abstract class GruposUsuariosDAOBase extends TablaDAO
 		if(self::getByPK($grupos_usuarios->getIdGrupo(), $grupos_usuarios->getIdUsuario()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM grupos_usuarios WHERE  id_grupo = ? AND id_usuario = ?;";
 		$params = array( $grupos_usuarios->getIdGrupo(), $grupos_usuarios->getIdUsuario() );
-		global $db;
+		global $conn;
 
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		$conn->Execute($sql, $params);
+		return $conn->Affected_Rows();
 	}
 
 

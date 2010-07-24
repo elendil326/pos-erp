@@ -20,7 +20,7 @@ abstract class IngresosDAOBase extends TablaDAO
 	  *	
 	  *	@static
 	  * @param Ingresos [$ingresos] El objeto de tipo Ingresos
-	  * @return bool Verdadero si el metodo guardo correctamente este objeto, falso si no.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
 	  **/
 	public static final function save( &$ingresos )
 	{
@@ -44,10 +44,10 @@ abstract class IngresosDAOBase extends TablaDAO
 	  **/
 	public static final function getByPK(  $id_ingreso )
 	{
-		$sql = "SELECT * FROM ingresos WHERE (id_ingreso = ?) LIMIT 1;";
+		$sql = "SELECT * FROM ingresos WHERE (id_ingreso = ? ) LIMIT 1;";
 		$params = array(  $id_ingreso );
-		global $db;
-		$rs = $db->GetRow($sql, $params);
+		global $conn;
+		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 		return new Ingresos( $rs );
 	}
@@ -67,8 +67,8 @@ abstract class IngresosDAOBase extends TablaDAO
 	public static final function getAll( )
 	{
 		$sql = "SELECT * from ingresos ;";
-		global $db;
-		$rs = $db->Execute($sql);
+		global $conn;
+		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Ingresos($foo));
@@ -134,8 +134,8 @@ abstract class IngresosDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		global $db;
-		$rs = $db->Execute($sql, $val);
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Ingresos($foo));
@@ -152,7 +152,7 @@ abstract class IngresosDAOBase extends TablaDAO
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Ingresos [$ingresos] El objeto de tipo Ingresos a actualizar.
 	  **/
 	private static final function update( $ingresos )
@@ -165,9 +165,10 @@ abstract class IngresosDAOBase extends TablaDAO
 			$ingresos->getIdSucursal(), 
 			$ingresos->getIdUsuario(), 
 			$ingresos->getIdIngreso(), );
-		global $db;
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		return $conn->Affected_Rows();
 	}
 
 
@@ -181,7 +182,7 @@ abstract class IngresosDAOBase extends TablaDAO
 	  * primaria generada en el objeto Ingresos dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Ingresos [$ingresos] El objeto de tipo Ingresos a crear.
 	  **/
 	private static final function create( &$ingresos )
@@ -194,11 +195,12 @@ abstract class IngresosDAOBase extends TablaDAO
 			$ingresos->getIdSucursal(), 
 			$ingresos->getIdUsuario(), 
 		 );
-		global $db;
-		$db->Execute($sql, $params);
-		$ar = $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$ingresos->setIdIngreso( $db->Insert_ID() );
+		$ingresos->setIdIngreso( $conn->Insert_ID() );
 		return $ar;
 	}
 
@@ -221,10 +223,10 @@ abstract class IngresosDAOBase extends TablaDAO
 		if(self::getByPK($ingresos->getIdIngreso()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM ingresos WHERE  id_ingreso = ?;";
 		$params = array( $ingresos->getIdIngreso() );
-		global $db;
+		global $conn;
 
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		$conn->Execute($sql, $params);
+		return $conn->Affected_Rows();
 	}
 
 

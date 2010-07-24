@@ -20,7 +20,7 @@ abstract class GruposPermisosDAOBase extends TablaDAO
 	  *	
 	  *	@static
 	  * @param GruposPermisos [$grupos_permisos] El objeto de tipo GruposPermisos
-	  * @return bool Verdadero si el metodo guardo correctamente este objeto, falso si no.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
 	  **/
 	public static final function save( &$grupos_permisos )
 	{
@@ -44,10 +44,10 @@ abstract class GruposPermisosDAOBase extends TablaDAO
 	  **/
 	public static final function getByPK(  $id_grupo, $id_permiso )
 	{
-		$sql = "SELECT * FROM grupos_permisos WHERE (id_grupo = ?,id_permiso = ?) LIMIT 1;";
+		$sql = "SELECT * FROM grupos_permisos WHERE (id_grupo = ? AND id_permiso = ? ) LIMIT 1;";
 		$params = array(  $id_grupo, $id_permiso );
-		global $db;
-		$rs = $db->GetRow($sql, $params);
+		global $conn;
+		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 		return new GruposPermisos( $rs );
 	}
@@ -67,8 +67,8 @@ abstract class GruposPermisosDAOBase extends TablaDAO
 	public static final function getAll( )
 	{
 		$sql = "SELECT * from grupos_permisos ;";
-		global $db;
-		$rs = $db->Execute($sql);
+		global $conn;
+		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new GruposPermisos($foo));
@@ -114,8 +114,8 @@ abstract class GruposPermisosDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		global $db;
-		$rs = $db->Execute($sql, $val);
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new GruposPermisos($foo));
@@ -132,7 +132,7 @@ abstract class GruposPermisosDAOBase extends TablaDAO
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param GruposPermisos [$grupos_permisos] El objeto de tipo GruposPermisos a actualizar.
 	  **/
 	private static final function update( $grupos_permisos )
@@ -150,7 +150,7 @@ abstract class GruposPermisosDAOBase extends TablaDAO
 	  * primaria generada en el objeto GruposPermisos dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param GruposPermisos [$grupos_permisos] El objeto de tipo GruposPermisos a crear.
 	  **/
 	private static final function create( &$grupos_permisos )
@@ -160,9 +160,10 @@ abstract class GruposPermisosDAOBase extends TablaDAO
 			$grupos_permisos->getIdGrupo(), 
 			$grupos_permisos->getIdPermiso(), 
 		 );
-		global $db;
-		$db->Execute($sql, $params);
-		$ar = $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
 		
 		return $ar;
@@ -187,10 +188,10 @@ abstract class GruposPermisosDAOBase extends TablaDAO
 		if(self::getByPK($grupos_permisos->getIdGrupo(), $grupos_permisos->getIdPermiso()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM grupos_permisos WHERE  id_grupo = ? AND id_permiso = ?;";
 		$params = array( $grupos_permisos->getIdGrupo(), $grupos_permisos->getIdPermiso() );
-		global $db;
+		global $conn;
 
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		$conn->Execute($sql, $params);
+		return $conn->Affected_Rows();
 	}
 
 

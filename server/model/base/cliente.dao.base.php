@@ -20,7 +20,7 @@ abstract class ClienteDAOBase extends TablaDAO
 	  *	
 	  *	@static
 	  * @param Cliente [$cliente] El objeto de tipo Cliente
-	  * @return bool Verdadero si el metodo guardo correctamente este objeto, falso si no.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
 	  **/
 	public static final function save( &$cliente )
 	{
@@ -44,10 +44,10 @@ abstract class ClienteDAOBase extends TablaDAO
 	  **/
 	public static final function getByPK(  $id_cliente )
 	{
-		$sql = "SELECT * FROM cliente WHERE (id_cliente = ?) LIMIT 1;";
+		$sql = "SELECT * FROM cliente WHERE (id_cliente = ? ) LIMIT 1;";
 		$params = array(  $id_cliente );
-		global $db;
-		$rs = $db->GetRow($sql, $params);
+		global $conn;
+		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 		return new Cliente( $rs );
 	}
@@ -67,8 +67,8 @@ abstract class ClienteDAOBase extends TablaDAO
 	public static final function getAll( )
 	{
 		$sql = "SELECT * from cliente ;";
-		global $db;
-		$rs = $db->Execute($sql);
+		global $conn;
+		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Cliente($foo));
@@ -144,8 +144,8 @@ abstract class ClienteDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		global $db;
-		$rs = $db->Execute($sql, $val);
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Cliente($foo));
@@ -162,7 +162,7 @@ abstract class ClienteDAOBase extends TablaDAO
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Cliente [$cliente] El objeto de tipo Cliente a actualizar.
 	  **/
 	private static final function update( $cliente )
@@ -177,9 +177,10 @@ abstract class ClienteDAOBase extends TablaDAO
 			$cliente->getLimiteCredito(), 
 			$cliente->getDescuento(), 
 			$cliente->getIdCliente(), );
-		global $db;
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		return $conn->Affected_Rows();
 	}
 
 
@@ -193,7 +194,7 @@ abstract class ClienteDAOBase extends TablaDAO
 	  * primaria generada en el objeto Cliente dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Cliente [$cliente] El objeto de tipo Cliente a crear.
 	  **/
 	private static final function create( &$cliente )
@@ -208,11 +209,12 @@ abstract class ClienteDAOBase extends TablaDAO
 			$cliente->getLimiteCredito(), 
 			$cliente->getDescuento(), 
 		 );
-		global $db;
-		$db->Execute($sql, $params);
-		$ar = $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$cliente->setIdCliente( $db->Insert_ID() );
+		$cliente->setIdCliente( $conn->Insert_ID() );
 		return $ar;
 	}
 
@@ -235,10 +237,10 @@ abstract class ClienteDAOBase extends TablaDAO
 		if(self::getByPK($cliente->getIdCliente()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM cliente WHERE  id_cliente = ?;";
 		$params = array( $cliente->getIdCliente() );
-		global $db;
+		global $conn;
 
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		$conn->Execute($sql, $params);
+		return $conn->Affected_Rows();
 	}
 
 

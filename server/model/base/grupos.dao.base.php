@@ -20,7 +20,7 @@ abstract class GruposDAOBase extends TablaDAO
 	  *	
 	  *	@static
 	  * @param Grupos [$grupos] El objeto de tipo Grupos
-	  * @return bool Verdadero si el metodo guardo correctamente este objeto, falso si no.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
 	  **/
 	public static final function save( &$grupos )
 	{
@@ -44,10 +44,10 @@ abstract class GruposDAOBase extends TablaDAO
 	  **/
 	public static final function getByPK(  $id_grupo )
 	{
-		$sql = "SELECT * FROM grupos WHERE (id_grupo = ?) LIMIT 1;";
+		$sql = "SELECT * FROM grupos WHERE (id_grupo = ? ) LIMIT 1;";
 		$params = array(  $id_grupo );
-		global $db;
-		$rs = $db->GetRow($sql, $params);
+		global $conn;
+		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 		return new Grupos( $rs );
 	}
@@ -67,8 +67,8 @@ abstract class GruposDAOBase extends TablaDAO
 	public static final function getAll( )
 	{
 		$sql = "SELECT * from grupos ;";
-		global $db;
-		$rs = $db->Execute($sql);
+		global $conn;
+		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Grupos($foo));
@@ -119,8 +119,8 @@ abstract class GruposDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
-		global $db;
-		$rs = $db->Execute($sql, $val);
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
 		$allData = array();
 		foreach ($rs as $foo) {
     		array_push( $allData, new Grupos($foo));
@@ -137,7 +137,7 @@ abstract class GruposDAOBase extends TablaDAO
 	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Grupos [$grupos] El objeto de tipo Grupos a actualizar.
 	  **/
 	private static final function update( $grupos )
@@ -147,9 +147,10 @@ abstract class GruposDAOBase extends TablaDAO
 			$grupos->getNombre(), 
 			$grupos->getDescripcion(), 
 			$grupos->getIdGrupo(), );
-		global $db;
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		return $conn->Affected_Rows();
 	}
 
 
@@ -163,7 +164,7 @@ abstract class GruposDAOBase extends TablaDAO
 	  * primaria generada en el objeto Grupos dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
-	  * @return Filas afectadas
+	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Grupos [$grupos] El objeto de tipo Grupos a crear.
 	  **/
 	private static final function create( &$grupos )
@@ -174,9 +175,10 @@ abstract class GruposDAOBase extends TablaDAO
 			$grupos->getNombre(), 
 			$grupos->getDescripcion(), 
 		 );
-		global $db;
-		$db->Execute($sql, $params);
-		$ar = $db->Affected_Rows();
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ return $e->getMessage(); }
+		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
 		
 		return $ar;
@@ -201,10 +203,10 @@ abstract class GruposDAOBase extends TablaDAO
 		if(self::getByPK($grupos->getIdGrupo()) === NULL) throw new Exception('Campo no encontrado.');
 		$sql = "DELETE FROM grupos WHERE  id_grupo = ?;";
 		$params = array( $grupos->getIdGrupo() );
-		global $db;
+		global $conn;
 
-		$db->Execute($sql, $params);
-		return $db->Affected_Rows();
+		$conn->Execute($sql, $params);
+		return $conn->Affected_Rows();
 	}
 
 

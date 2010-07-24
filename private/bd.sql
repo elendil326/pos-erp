@@ -3,13 +3,16 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 23-07-2010 a las 20:54:25
+-- Tiempo de generación: 24-07-2010 a las 05:20:09
 -- Versión del servidor: 5.1.37
 -- Versión de PHP: 5.3.0
 
 SET FOREIGN_KEY_CHECKS=0;
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+SET AUTOCOMMIT=0;
+START TRANSACTION;
 
 --
 -- Base de datos: `pos`
@@ -21,7 +24,6 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Estructura de tabla para la tabla `cliente`
 --
 
-DROP TABLE IF EXISTS `cliente`;
 CREATE TABLE IF NOT EXISTS `cliente` (
   `id_cliente` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del cliente',
   `rfc` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'rfc del cliente si es que tiene',
@@ -32,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   `limite_credito` float NOT NULL DEFAULT '0' COMMENT 'Limite de credito otorgado al cliente',
   `descuento` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Taza porcentual de descuento de 0 a 100',
   PRIMARY KEY (`id_cliente`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=201 ;
 
 -- --------------------------------------------------------
 
@@ -40,7 +42,6 @@ CREATE TABLE IF NOT EXISTS `cliente` (
 -- Estructura de tabla para la tabla `compras`
 --
 
-DROP TABLE IF EXISTS `compras`;
 CREATE TABLE IF NOT EXISTS `compras` (
   `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de la compra',
   `id_proveedor` int(11) NOT NULL COMMENT 'PROVEEDOR AL QUE SE LE COMPRO',
@@ -62,7 +63,6 @@ CREATE TABLE IF NOT EXISTS `compras` (
 -- Estructura de tabla para la tabla `corte`
 --
 
-DROP TABLE IF EXISTS `corte`;
 CREATE TABLE IF NOT EXISTS `corte` (
   `num_corte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'numero de corte',
   `anio` year(4) NOT NULL COMMENT 'año del corte',
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `corte` (
   `ingresos` float NOT NULL COMMENT 'ingresos obtenidos en ese periodo',
   `gananciasNetas` float NOT NULL COMMENT 'ganancias netas dentro del periodo',
   PRIMARY KEY (`num_corte`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
 -- --------------------------------------------------------
 
@@ -84,7 +84,6 @@ CREATE TABLE IF NOT EXISTS `corte` (
 -- Estructura de tabla para la tabla `cotizacion`
 --
 
-DROP TABLE IF EXISTS `cotizacion`;
 CREATE TABLE IF NOT EXISTS `cotizacion` (
   `id_cotizacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de la cotizacion',
   `id_cliente` int(11) NOT NULL COMMENT 'id del cliente',
@@ -105,7 +104,6 @@ CREATE TABLE IF NOT EXISTS `cotizacion` (
 -- Estructura de tabla para la tabla `detalle_compra`
 --
 
-DROP TABLE IF EXISTS `detalle_compra`;
 CREATE TABLE IF NOT EXISTS `detalle_compra` (
   `id_compra` int(11) NOT NULL COMMENT 'id de la compra',
   `id_producto` int(11) NOT NULL COMMENT 'id del producto',
@@ -121,7 +119,6 @@ CREATE TABLE IF NOT EXISTS `detalle_compra` (
 -- Estructura de tabla para la tabla `detalle_corte`
 --
 
-DROP TABLE IF EXISTS `detalle_corte`;
 CREATE TABLE IF NOT EXISTS `detalle_corte` (
   `num_corte` int(11) NOT NULL COMMENT 'id del corte al que hace referencia',
   `nombre` varchar(100) NOT NULL COMMENT 'nombre del encargado de sucursal al momento del corte',
@@ -137,7 +134,6 @@ CREATE TABLE IF NOT EXISTS `detalle_corte` (
 -- Estructura de tabla para la tabla `detalle_cotizacion`
 --
 
-DROP TABLE IF EXISTS `detalle_cotizacion`;
 CREATE TABLE IF NOT EXISTS `detalle_cotizacion` (
   `id_cotizacion` int(11) NOT NULL COMMENT 'id de la cotizacion',
   `id_producto` int(11) NOT NULL COMMENT 'id del producto',
@@ -153,7 +149,6 @@ CREATE TABLE IF NOT EXISTS `detalle_cotizacion` (
 -- Estructura de tabla para la tabla `detalle_inventario`
 --
 
-DROP TABLE IF EXISTS `detalle_inventario`;
 CREATE TABLE IF NOT EXISTS `detalle_inventario` (
   `id_producto` int(11) NOT NULL COMMENT 'id del producto al que se refiere',
   `id_sucursal` int(11) NOT NULL COMMENT 'id de la sucursal',
@@ -170,7 +165,6 @@ CREATE TABLE IF NOT EXISTS `detalle_inventario` (
 -- Estructura de tabla para la tabla `detalle_venta`
 --
 
-DROP TABLE IF EXISTS `detalle_venta`;
 CREATE TABLE IF NOT EXISTS `detalle_venta` (
   `id_venta` int(11) NOT NULL COMMENT 'venta a que se referencia',
   `id_producto` int(11) NOT NULL COMMENT 'producto de la venta',
@@ -186,7 +180,6 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
 -- Estructura de tabla para la tabla `encargado`
 --
 
-DROP TABLE IF EXISTS `encargado`;
 CREATE TABLE IF NOT EXISTS `encargado` (
   `id_usuario` int(11) NOT NULL COMMENT 'Este id es el del usuario encargado de su sucursal',
   `porciento` float NOT NULL COMMENT 'este es el porciento de las ventas que le tocan al encargado',
@@ -201,7 +194,6 @@ CREATE TABLE IF NOT EXISTS `encargado` (
 -- Estructura de tabla para la tabla `factura_compra`
 --
 
-DROP TABLE IF EXISTS `factura_compra`;
 CREATE TABLE IF NOT EXISTS `factura_compra` (
   `folio` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
   `id_compra` int(11) NOT NULL COMMENT 'COMPRA A LA QUE CORRESPONDE LA FACTURA',
@@ -215,7 +207,6 @@ CREATE TABLE IF NOT EXISTS `factura_compra` (
 -- Estructura de tabla para la tabla `factura_venta`
 --
 
-DROP TABLE IF EXISTS `factura_venta`;
 CREATE TABLE IF NOT EXISTS `factura_venta` (
   `folio` varchar(15) COLLATE utf8_unicode_ci NOT NULL COMMENT 'folio que tiene la factura',
   `id_venta` int(11) NOT NULL COMMENT 'venta a la cual corresponde la factura',
@@ -229,7 +220,6 @@ CREATE TABLE IF NOT EXISTS `factura_venta` (
 -- Estructura de tabla para la tabla `gastos`
 --
 
-DROP TABLE IF EXISTS `gastos`;
 CREATE TABLE IF NOT EXISTS `gastos` (
   `id_gasto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id para identificar el gasto',
   `concepto` varchar(100) NOT NULL COMMENT 'concepto en lo que se gasto',
@@ -241,7 +231,7 @@ CREATE TABLE IF NOT EXISTS `gastos` (
   KEY `fk_gastos_1` (`id_usuario`),
   KEY `usuario_gasto` (`id_usuario`),
   KEY `sucursal_gasto` (`id_sucursal`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=201 ;
 
 -- --------------------------------------------------------
 
@@ -249,11 +239,10 @@ CREATE TABLE IF NOT EXISTS `gastos` (
 -- Estructura de tabla para la tabla `grupos`
 --
 
-DROP TABLE IF EXISTS `grupos`;
 CREATE TABLE IF NOT EXISTS `grupos` (
   `id_grupo` int(11) NOT NULL,
-  `nombre` varchar(45) NOT NULL,
-  `descripcion` varchar(45) NOT NULL,
+  `nombre` varchar(45) NOT NULL COMMENT 'Nombre del Grupo',
+  `descripcion` varchar(256) NOT NULL,
   PRIMARY KEY (`id_grupo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -263,7 +252,6 @@ CREATE TABLE IF NOT EXISTS `grupos` (
 -- Estructura de tabla para la tabla `grupos_permisos`
 --
 
-DROP TABLE IF EXISTS `grupos_permisos`;
 CREATE TABLE IF NOT EXISTS `grupos_permisos` (
   `id_grupo` int(11) NOT NULL,
   `id_permiso` int(11) NOT NULL,
@@ -278,7 +266,6 @@ CREATE TABLE IF NOT EXISTS `grupos_permisos` (
 -- Estructura de tabla para la tabla `grupos_usuarios`
 --
 
-DROP TABLE IF EXISTS `grupos_usuarios`;
 CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
   `id_grupo` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
@@ -293,7 +280,6 @@ CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
 -- Estructura de tabla para la tabla `impuesto`
 --
 
-DROP TABLE IF EXISTS `impuesto`;
 CREATE TABLE IF NOT EXISTS `impuesto` (
   `id_impuesto` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -309,7 +295,6 @@ CREATE TABLE IF NOT EXISTS `impuesto` (
 -- Estructura de tabla para la tabla `ingresos`
 --
 
-DROP TABLE IF EXISTS `ingresos`;
 CREATE TABLE IF NOT EXISTS `ingresos` (
   `id_ingreso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id para identificar el ingreso',
   `concepto` varchar(100) NOT NULL COMMENT 'concepto en lo que se ingreso',
@@ -321,7 +306,7 @@ CREATE TABLE IF NOT EXISTS `ingresos` (
   KEY `fk_ingresos_1` (`id_usuario`),
   KEY `usuario_ingreso` (`id_usuario`),
   KEY `sucursal_ingreso` (`id_sucursal`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=201 ;
 
 -- --------------------------------------------------------
 
@@ -329,13 +314,12 @@ CREATE TABLE IF NOT EXISTS `ingresos` (
 -- Estructura de tabla para la tabla `inventario`
 --
 
-DROP TABLE IF EXISTS `inventario`;
 CREATE TABLE IF NOT EXISTS `inventario` (
   `id_producto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del producto',
   `nombre` varchar(90) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Descripcion o nombre del producto',
   `denominacion` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT 'es lo que se le mostrara a los clientes',
   PRIMARY KEY (`id_producto`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=201 ;
 
 -- --------------------------------------------------------
 
@@ -343,7 +327,6 @@ CREATE TABLE IF NOT EXISTS `inventario` (
 -- Estructura de tabla para la tabla `pagos_compra`
 --
 
-DROP TABLE IF EXISTS `pagos_compra`;
 CREATE TABLE IF NOT EXISTS `pagos_compra` (
   `id_pago` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del pago',
   `id_compra` int(11) NOT NULL COMMENT 'identificador de la compra a la que pagamos',
@@ -359,15 +342,14 @@ CREATE TABLE IF NOT EXISTS `pagos_compra` (
 -- Estructura de tabla para la tabla `pagos_venta`
 --
 
-DROP TABLE IF EXISTS `pagos_venta`;
 CREATE TABLE IF NOT EXISTS `pagos_venta` (
   `id_pago` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de pago del cliente',
   `id_venta` int(11) NOT NULL COMMENT 'id de la venta a la que se esta pagando',
-  `fecha` date NOT NULL COMMENT 'fecha de pago',
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha en que se registro el pago',
   `monto` float NOT NULL COMMENT 'total de credito del cliente',
   PRIMARY KEY (`id_pago`),
   KEY `pagos_venta_venta` (`id_venta`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=162 ;
 
 -- --------------------------------------------------------
 
@@ -375,7 +357,6 @@ CREATE TABLE IF NOT EXISTS `pagos_venta` (
 -- Estructura de tabla para la tabla `permisos`
 --
 
-DROP TABLE IF EXISTS `permisos`;
 CREATE TABLE IF NOT EXISTS `permisos` (
   `id_permiso` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL,
@@ -389,7 +370,6 @@ CREATE TABLE IF NOT EXISTS `permisos` (
 -- Estructura de tabla para la tabla `productos_proveedor`
 --
 
-DROP TABLE IF EXISTS `productos_proveedor`;
 CREATE TABLE IF NOT EXISTS `productos_proveedor` (
   `id_producto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del producto',
   `clave_producto` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'clave de producto para el proveedor',
@@ -402,7 +382,7 @@ CREATE TABLE IF NOT EXISTS `productos_proveedor` (
   UNIQUE KEY `id_proveedor` (`id_proveedor`,`id_inventario`),
   KEY `productos_proveedor_proveedor` (`id_proveedor`),
   KEY `productos_proveedor_producto` (`id_inventario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=43 ;
 
 -- --------------------------------------------------------
 
@@ -410,7 +390,6 @@ CREATE TABLE IF NOT EXISTS `productos_proveedor` (
 -- Estructura de tabla para la tabla `proveedor`
 --
 
-DROP TABLE IF EXISTS `proveedor`;
 CREATE TABLE IF NOT EXISTS `proveedor` (
   `id_proveedor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del proveedor',
   `rfc` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'rfc del proveedor',
@@ -419,7 +398,7 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
   `telefono` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'telefono',
   `e_mail` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'email del provedor',
   PRIMARY KEY (`id_proveedor`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=51 ;
 
 -- --------------------------------------------------------
 
@@ -427,13 +406,12 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
 -- Estructura de tabla para la tabla `sucursal`
 --
 
-DROP TABLE IF EXISTS `sucursal`;
 CREATE TABLE IF NOT EXISTS `sucursal` (
   `id_sucursal` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identificador de cada sucursal',
   `descripcion` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre o descripcion de sucursal',
   `direccion` varchar(200) COLLATE utf8_unicode_ci NOT NULL COMMENT 'direccion de la sucursal',
   PRIMARY KEY (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=53 ;
 
 -- --------------------------------------------------------
 
@@ -441,7 +419,6 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
 -- Estructura de tabla para la tabla `usuario`
 --
 
-DROP TABLE IF EXISTS `usuario`;
 CREATE TABLE IF NOT EXISTS `usuario` (
   `id_usuario` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del usuario',
   `nombre` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre del empleado',
@@ -450,7 +427,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `id_sucursal` int(11) NOT NULL COMMENT 'Id de la sucursal a que pertenece',
   PRIMARY KEY (`id_usuario`),
   KEY `fk_usuario_1` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=101 ;
 
 -- --------------------------------------------------------
 
@@ -458,113 +435,279 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 -- Estructura de tabla para la tabla `ventas`
 --
 
-DROP TABLE IF EXISTS `ventas`;
 CREATE TABLE IF NOT EXISTS `ventas` (
   `id_venta` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de venta',
   `id_cliente` int(11) NOT NULL COMMENT 'cliente al que se le vendio',
   `tipo_venta` enum('credito','contado') COLLATE utf8_unicode_ci NOT NULL COMMENT 'tipo de venta, contado o credito',
   `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de venta',
-  `subtotal` float NOT NULL COMMENT 'subtotal de la venta',
-  `iva` float NOT NULL COMMENT 'iva agregado por la venta',
+  `subtotal` float DEFAULT NULL COMMENT 'subtotal de la venta, puede ser nulo',
+  `iva` float DEFAULT NULL COMMENT 'iva agregado por la venta, depende de cada sucursal',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal de la venta',
   `id_usuario` int(11) NOT NULL COMMENT 'empleado que lo vendio',
   PRIMARY KEY (`id_venta`),
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`id_sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=55 ;
 
 -- --------------------------------------------------------
 
+--
+-- Estructura Stand-in para la vista `view_compras`
+--
+CREATE TABLE IF NOT EXISTS `view_compras` (
+`id_compra` int(11)
+,`proveedor` varchar(30)
+,`id_proveedor` int(11)
+,`tipo_compra` enum('credito','contado')
+,`fecha` timestamp
+,`subtotal` float
+,`iva` float
+,`sucursal` varchar(100)
+,`id_sucursal` int(11)
+,`usuario` varchar(100)
+,`id_usuario` int(11)
+);
+-- --------------------------------------------------------
 
-/******************************************************************
-*	SCRIPT PARA GENERAR LAS VISTAS PARA LOS REPORTES Y GRAFICAS
-*	
-******************************************************************/
+--
+-- Estructura Stand-in para la vista `view_detalle_compra`
+--
+CREATE TABLE IF NOT EXISTS `view_detalle_compra` (
+`id_compra` int(11)
+,`id_producto` int(11)
+,`denominacion` varchar(30)
+,`cantidad` float
+,`precio` float
+,`fecha` timestamp
+,`tipo_compra` enum('credito','contado')
+,`id_sucursal` int(11)
+);
+-- --------------------------------------------------------
 
+--
+-- Estructura Stand-in para la vista `view_detalle_venta`
+--
+CREATE TABLE IF NOT EXISTS `view_detalle_venta` (
+`id_venta` int(11)
+,`id_producto` int(11)
+,`denominacion` varchar(30)
+,`cantidad` float
+,`precio` float
+,`fecha` timestamp
+,`tipo_venta` enum('credito','contado')
+,`id_sucursal` int(11)
+);
+-- --------------------------------------------------------
 
+--
+-- Estructura Stand-in para la vista `view_gastos`
+--
+CREATE TABLE IF NOT EXISTS `view_gastos` (
+`id_gasto` int(11)
+,`monto` float
+,`fecha` timestamp
+,`sucursal` varchar(100)
+,`id_sucursal` int(11)
+,`usuario` varchar(100)
+);
+-- --------------------------------------------------------
 
+--
+-- Estructura Stand-in para la vista `view_ingresos`
+--
+CREATE TABLE IF NOT EXISTS `view_ingresos` (
+`id_ingreso` int(11)
+,`monto` float
+,`fecha` timestamp
+,`sucursal` varchar(100)
+,`id_sucursal` int(11)
+,`usuario` varchar(100)
+);
+-- --------------------------------------------------------
 
-/********************************************************
-*	VISTA DE VENTAS
-********************************************************/
+--
+-- Estructura Stand-in para la vista `view_ventas`
+--
+CREATE TABLE IF NOT EXISTS `view_ventas` (
+`id_venta` int(11)
+,`cliente` varchar(100)
+,`id_cliente` int(11)
+,`tipo_venta` enum('credito','contado')
+,`fecha` timestamp
+,`subtotal` float
+,`iva` float
+,`sucursal` varchar(100)
+,`id_sucursal` int(11)
+,`usuario` varchar(100)
+,`id_usuario` int(11)
+);
+-- --------------------------------------------------------
 
+--
+-- Estructura para la vista `view_compras`
+--
+DROP TABLE IF EXISTS `view_compras`;
 
-CREATE OR REPLACE VIEW view_ventas
-AS SELECT `v`.`id_venta`, `c`.`nombre` AS `cliente`, `v`.`id_cliente`, `v`.`tipo_venta`, `v`.`fecha`, `v`.`subtotal`, `v`.`iva`, `s`.`descripcion` AS `sucursal`, `v`.`id_sucursal`, `u`.`nombre` AS `usuario`, `v`.`id_usuario`
-FROM `ventas` AS v
-INNER JOIN ( `cliente` AS c, `sucursal` AS s, `usuario` AS u)
-ON  (`v`.`id_cliente` = `c`.`id_cliente`
-AND `v`.`id_sucursal` = `s`.`id_sucursal`
-AND `v`.`id_usuario` = `u`.`id_usuario`);
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_compras` AS select `c`.`id_compra` AS `id_compra`,`p`.`nombre` AS `proveedor`,`p`.`id_proveedor` AS `id_proveedor`,`c`.`tipo_compra` AS `tipo_compra`,`c`.`fecha` AS `fecha`,`c`.`subtotal` AS `subtotal`,`c`.`iva` AS `iva`,`s`.`descripcion` AS `sucursal`,`c`.`id_sucursal` AS `id_sucursal`,`u`.`nombre` AS `usuario`,`c`.`id_usuario` AS `id_usuario` from (`compras` `c` join ((`proveedor` `p` join `sucursal` `s`) join `usuario` `u`) on(((`c`.`id_proveedor` = `p`.`id_proveedor`) and (`c`.`id_sucursal` = `s`.`id_sucursal`) and (`c`.`id_usuario` = `u`.`id_usuario`))));
 
+-- --------------------------------------------------------
 
+--
+-- Estructura para la vista `view_detalle_compra`
+--
+DROP TABLE IF EXISTS `view_detalle_compra`;
 
-/********************************************************
-*	VISTA DE COMPRAS
-********************************************************/
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_detalle_compra` AS select `d`.`id_compra` AS `id_compra`,`d`.`id_producto` AS `id_producto`,`i`.`denominacion` AS `denominacion`,`d`.`cantidad` AS `cantidad`,`d`.`precio` AS `precio`,`c`.`fecha` AS `fecha`,`c`.`tipo_compra` AS `tipo_compra`,`c`.`id_sucursal` AS `id_sucursal` from (`detalle_compra` `d` join (`inventario` `i` join `compras` `c`) on(((`d`.`id_compra` = `c`.`id_compra`) and (`d`.`id_producto` = `i`.`id_producto`))));
 
-CREATE OR REPLACE VIEW view_compras
-AS SELECT `c`.`id_compra`, `p`.`nombre` AS `proveedor`, `p`.`id_proveedor`,`c`.`tipo_compra`, `c`.`fecha`, `c`.`subtotal`, `c`.`iva`, `s`.`descripcion` AS `sucursal`, `c`.`id_sucursal`, `u`.`nombre` AS `usuario`, `c`.`id_usuario`
-FROM `compras` AS c
-INNER JOIN ( `proveedor` AS p, `sucursal` AS s, `usuario` AS u)
-ON  (`c`.`id_proveedor` = `p`.`id_proveedor`
-AND `c`.`id_sucursal` = `s`.`id_sucursal`
-AND `c`.`id_usuario` = `u`.`id_usuario`);
+-- --------------------------------------------------------
 
+--
+-- Estructura para la vista `view_detalle_venta`
+--
+DROP TABLE IF EXISTS `view_detalle_venta`;
 
-/********************************************************
-*	VISTA DE GASTOS
-********************************************************/
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_detalle_venta` AS select `d`.`id_venta` AS `id_venta`,`d`.`id_producto` AS `id_producto`,`i`.`denominacion` AS `denominacion`,`d`.`cantidad` AS `cantidad`,`d`.`precio` AS `precio`,`v`.`fecha` AS `fecha`,`v`.`tipo_venta` AS `tipo_venta`,`v`.`id_sucursal` AS `id_sucursal` from (`detalle_venta` `d` join (`inventario` `i` join `ventas` `v`) on(((`d`.`id_venta` = `v`.`id_venta`) and (`d`.`id_producto` = `i`.`id_producto`))));
 
-CREATE OR REPLACE VIEW view_gastos
-AS SELECT `g`.`id_gasto`, `g`.`monto`, `g`.`fecha`, `s`.`descripcion` AS `sucursal`, `g`.`id_sucursal`, `u`.`nombre` AS `usuario`
-FROM `gastos` AS g
-INNER JOIN ( `sucursal` AS s, `usuario` AS u)
-ON ( `g`.`id_sucursal` = `s`.`id_sucursal`
-AND `g`.`id_usuario` = `u`.`id_usuario` );
+-- --------------------------------------------------------
 
+--
+-- Estructura para la vista `view_gastos`
+--
+DROP TABLE IF EXISTS `view_gastos`;
 
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_gastos` AS select `g`.`id_gasto` AS `id_gasto`,`g`.`monto` AS `monto`,`g`.`fecha` AS `fecha`,`s`.`descripcion` AS `sucursal`,`g`.`id_sucursal` AS `id_sucursal`,`u`.`nombre` AS `usuario` from (`gastos` `g` join (`sucursal` `s` join `usuario` `u`) on(((`g`.`id_sucursal` = `s`.`id_sucursal`) and (`g`.`id_usuario` = `u`.`id_usuario`))));
 
-/********************************************************
-*	VISTA DE INGRESOS
-********************************************************/
+-- --------------------------------------------------------
 
-CREATE OR REPLACE VIEW view_ingresos
-AS SELECT `i`.`id_ingreso`, `i`.`monto`, `i`.`fecha`, `s`.`descripcion` AS `sucursal`, `i`.`id_sucursal`, `u`.`nombre` AS `usuario`
-FROM `ingresos` AS i
-INNER JOIN ( `sucursal` AS s, `usuario` AS u)
-ON ( `i`.`id_sucursal` = `s`.`id_sucursal`
-AND `i`.`id_usuario` = `u`.`id_usuario` );
+--
+-- Estructura para la vista `view_ingresos`
+--
+DROP TABLE IF EXISTS `view_ingresos`;
 
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_ingresos` AS select `i`.`id_ingreso` AS `id_ingreso`,`i`.`monto` AS `monto`,`i`.`fecha` AS `fecha`,`s`.`descripcion` AS `sucursal`,`i`.`id_sucursal` AS `id_sucursal`,`u`.`nombre` AS `usuario` from (`ingresos` `i` join (`sucursal` `s` join `usuario` `u`) on(((`i`.`id_sucursal` = `s`.`id_sucursal`) and (`i`.`id_usuario` = `u`.`id_usuario`))));
 
+-- --------------------------------------------------------
 
+--
+-- Estructura para la vista `view_ventas`
+--
+DROP TABLE IF EXISTS `view_ventas`;
 
-/********************************************************
-*	VISTA DE DETALLES DE VENTA
-********************************************************/
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_ventas` AS select `v`.`id_venta` AS `id_venta`,`c`.`nombre` AS `cliente`,`v`.`id_cliente` AS `id_cliente`,`v`.`tipo_venta` AS `tipo_venta`,`v`.`fecha` AS `fecha`,`v`.`subtotal` AS `subtotal`,`v`.`iva` AS `iva`,`s`.`descripcion` AS `sucursal`,`v`.`id_sucursal` AS `id_sucursal`,`u`.`nombre` AS `usuario`,`v`.`id_usuario` AS `id_usuario` from (`ventas` `v` join ((`cliente` `c` join `sucursal` `s`) join `usuario` `u`) on(((`v`.`id_cliente` = `c`.`id_cliente`) and (`v`.`id_sucursal` = `s`.`id_sucursal`) and (`v`.`id_usuario` = `u`.`id_usuario`))));
 
-CREATE OR REPLACE VIEW view_detalle_venta
-AS SELECT `d`.`id_venta`, `d`.`id_producto`,`i`.`denominacion`, `d`.`cantidad`, `d`.`precio`, `v`.`fecha`, `v`.`tipo_venta`, `v`.`id_sucursal`
-FROM `detalle_venta` AS d
-INNER JOIN ( `inventario` AS i, `ventas` AS v)
-ON ( `d`.`id_venta` = `v`.`id_venta`
-AND `d`.`id_producto` = `i`.`id_producto` );
+--
+-- Filtros para las tablas descargadas (dump)
+--
 
+--
+-- Filtros para la tabla `compras`
+--
+ALTER TABLE `compras`
+  ADD CONSTRAINT `compras_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id_proveedor`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `compras_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `compras_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
-/********************************************************
-*	VISTA DE DETALLES DE VENTA
-********************************************************/
+--
+-- Filtros para la tabla `cotizacion`
+--
+ALTER TABLE `cotizacion`
+  ADD CONSTRAINT `cotizacion_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `cotizacion_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `cotizacion_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
-CREATE OR REPLACE VIEW view_detalle_compra
-AS SELECT `d`.`id_compra`, `d`.`id_producto`,`i`.`denominacion`, `d`.`cantidad`, `d`.`precio`, `c`.`fecha`, `c`.`tipo_compra`, `c`. `id_sucursal`
-FROM `detalle_compra` AS d
-INNER JOIN ( `inventario` AS i, `compras` AS c)
-ON ( `d`.`id_compra` = `c`.`id_compra`
-AND `d`.`id_producto` = `i`.`id_producto` );
+--
+-- Filtros para la tabla `detalle_compra`
+--
+ALTER TABLE `detalle_compra`
+  ADD CONSTRAINT `detalle_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `detalle_compra_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
 
+--
+-- Filtros para la tabla `detalle_corte`
+--
+ALTER TABLE `detalle_corte`
+  ADD CONSTRAINT `corte_detalleCorte` FOREIGN KEY (`num_corte`) REFERENCES `corte` (`num_corte`) ON UPDATE CASCADE;
 
+--
+-- Filtros para la tabla `detalle_cotizacion`
+--
+ALTER TABLE `detalle_cotizacion`
+  ADD CONSTRAINT `detalle_cotizacion_ibfk_1` FOREIGN KEY (`id_cotizacion`) REFERENCES `cotizacion` (`id_cotizacion`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `detalle_cotizacion_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
 
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+--
+-- Filtros para la tabla `detalle_inventario`
+--
+ALTER TABLE `detalle_inventario`
+  ADD CONSTRAINT `detalle_inventario_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `detalle_inventario_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `factura_compra`
+--
+ALTER TABLE `factura_compra`
+  ADD CONSTRAINT `factura_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `factura_venta`
+--
+ALTER TABLE `factura_venta`
+  ADD CONSTRAINT `factura_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `grupos_permisos`
+--
+ALTER TABLE `grupos_permisos`
+  ADD CONSTRAINT `grupos_permisos_ibfk_1` FOREIGN KEY (`id_grupo`) REFERENCES `grupos` (`id_grupo`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `grupos_permisos_ibfk_2` FOREIGN KEY (`id_permiso`) REFERENCES `permisos` (`id_permiso`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `grupos_usuarios`
+--
+ALTER TABLE `grupos_usuarios`
+  ADD CONSTRAINT `grupos_usuarios_ibfk_1` FOREIGN KEY (`id_grupo`) REFERENCES `grupos` (`id_grupo`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `grupos_usuarios_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `impuesto`
+--
+ALTER TABLE `impuesto`
+  ADD CONSTRAINT `impuesto_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `pagos_compra`
+--
+ALTER TABLE `pagos_compra`
+  ADD CONSTRAINT `pagos_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `pagos_venta`
+--
+ALTER TABLE `pagos_venta`
+  ADD CONSTRAINT `pagos_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `productos_proveedor`
+--
+ALTER TABLE `productos_proveedor`
+  ADD CONSTRAINT `productos_proveedor_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id_proveedor`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `productos_proveedor_ibfk_2` FOREIGN KEY (`id_inventario`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `ventas`
+--
+ALTER TABLE `ventas`
+  ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `ventas_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
+
+SET FOREIGN_KEY_CHECKS=1;
+
+COMMIT;
