@@ -28,7 +28,8 @@ static function product_price($id_producto, $id_proveedor , $sucursal ) {
 	
 	$query="SELECT precio FROM detalle_inventario NATURAL JOIN inventario i left join
 				productos_proveedor pp on (i.id_producto=pp.id_inventario) where i.id_producto=? 
-				and id_sucursal=? and id_proveedor=?;"
+				and id_sucursal=? and id_proveedor=?;";
+				
 	$params=array($id_producto , $sucursal, $id_proveedor);
 	
 	global $conn;

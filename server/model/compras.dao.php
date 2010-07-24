@@ -24,7 +24,7 @@ class ComprasDAO extends ComprasDAOBase
  * @param <type> $sucursal
  */
 static function list_purchases( $id_proveedor , $sucursal ) {
-	$query = "SELECT compras.id_compra, compras.id_proveedor, compras.tipo_compra, compras.fecha, compras.subtotal,compras.iva, sucursal.descripcion, usuario.nombre, (iva + subtotal) AS total FROM  `compras`  INNER JOIN  `usuario` ON compras.id_usuario = usuario.id_usuario INNER JOIN  `sucursal` ON compras.sucursal = sucursal.id_sucursal WHERE compras.id_proveedor = ? and compras.sucursal =?;");
+	$query = "SELECT compras.id_compra, compras.id_proveedor, compras.tipo_compra, compras.fecha, compras.subtotal,compras.iva, sucursal.descripcion, usuario.nombre, (iva + subtotal) AS total FROM  `compras`  INNER JOIN  `usuario` ON compras.id_usuario = usuario.id_usuario INNER JOIN  `sucursal` ON compras.sucursal = sucursal.id_sucursal WHERE compras.id_proveedor = ? and compras.sucursal =?;";
 	
 	$params = array();
 	array_push($params, $id_proveedor, $sucursal);
