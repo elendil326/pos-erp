@@ -80,11 +80,11 @@ class VentasDAO extends VentasDAOBase
                 if (!$rp) $rp = 10;
 
                 $start = (($page-1) * $rp);
-		$end  = $page * $rp;
+		$end  = $rp;
                 $limit = "LIMIT $start, $end";
                 
                 
-                $sql = "SELECT id_venta AS  'ID', nombre AS  'Cliente', ( subtotal + iva ) AS  'Total', IF( tipo_venta =1,  'Contado',  'Credito' ) AS  'Tipo', date(fecha) AS  'Fecha', id_sucursal AS  'Sucursal' FROM  `ventas` NATURAL JOIN cliente";
+                $sql = "SELECT SQL_CALC_FOUND_ROWS id_venta AS  'ID', nombre AS  'Cliente', ( subtotal + iva ) AS  'Total', IF( tipo_venta =1,  'Contado',  'Credito' ) AS  'Tipo', date(fecha) AS  'Fecha', id_sucursal AS  'Sucursal' FROM  `ventas` NATURAL JOIN cliente";
                 
                 if(isset($search) && !empty($search))
                 {                        
@@ -96,6 +96,7 @@ class VentasDAO extends VentasDAOBase
                 
                 try{
                         $rs = $conn->Execute($sql." ".$sort." ".$limit);
+                        $totalrs = $conn->Execute("SELECT FOUND_ROWS();");
                 }catch(Exception $e){
                 
                         $logger->log($e->getMessage(), PEAR_LOG_ERR);
@@ -110,7 +111,7 @@ class VentasDAO extends VentasDAOBase
                         array_push($allData, array("id"=>$row[0], "cell"=>$row));
                 }
 
-                return $allData;
+                return array("total"=>$totalrs->fields[0], "data"=>$allData);
         
         }
         
@@ -189,14 +190,31 @@ class VentasDAO extends VentasDAOBase
         *       @access public
         *       @return Array un arreglo con los datos obtenidos de la consulta con formato array("id"=> {int} , "cell" => {[]} )
         */
-        static function getVentasACreditoPorClientes_grid($id_cliente, $de, $al){
+        static function getVentasACreditoPorClientes_grid($page,$rp, $sortname, $sortorder, $search, $qtype, $de, $al, $id_cliente){
         
         	global $logger;
+        	
+        	 if (isset($sortname) && !empty($sortname) ){/* $sortname = 'name';
+                if (!$sortorder) $sortorder = 'desc';*/
+
+                	$sort = "ORDER BY $sortname $sortorder";
+                }
+                else
+                {
+                	$sort = "";
+                }
+
+                if (!$page) $page = 1;
+                if (!$rp) $rp = 10;
+
+                $start = (($page-1) * $rp);
+		$end  = $rp;
+                $limit = "LIMIT $start, $end";
         	
                 $cliente=!empty($id_cliente);
                 $fecha=(!empty($de)&&!empty($al));
                 $params=array();
-                $query="SELECT v.id_venta, (
+                $query="SELECT SQL_CALC_FOUND_ROWS v.id_venta, (
                                 v.subtotal + v.iva
                                 ) AS  'Total', IF(SUM( pv.monto )>0,SUM(pv.monto),0) AS  'Pagado',
                                 if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),(v.subtotal + v.iva)
@@ -220,7 +238,8 @@ class VentasDAO extends VentasDAOBase
                 global $conn;
                 
                 try{
-                        $rs = $conn->Execute($query);
+                        $rs = $conn->Execute($query." ".$sort." ".$limit);
+                        $totalrs = $conn->Execute("SELECT FOUND_ROWS();");
                 }catch(Exception $e){
                 
                         $logger->log($e->getMessage(), PEAR_LOG_ERR);
@@ -235,7 +254,7 @@ class VentasDAO extends VentasDAOBase
                         array_push($allData, array("id"=>$row[0], "cell"=>$row));
                 }
 
-                return $allData;
+                return array("total"=>$totalrs->fields[0], "data"=>$allData);
         
         }
         
@@ -315,14 +334,31 @@ class VentasDAO extends VentasDAOBase
         *       @access public
         *       @return Array un arreglo con los datos obtenidos de la consulta con formato array("id"=> {int} , "cell" => {[]} )
         */
-        static function getVentasDeContadoPorClientes_grid($id_cliente, $de, $al){
+        static function getVentasDeContadoPorClientes_grid($page,$rp, $sortname, $sortorder, $search, $qtype, $de, $al, $id_cliente){
         
         	global $logger;
+        	
+        	 if (isset($sortname) && !empty($sortname) ){/* $sortname = 'name';
+                if (!$sortorder) $sortorder = 'desc';*/
+
+                	$sort = "ORDER BY $sortname $sortorder";
+                }
+                else
+                {
+                	$sort = "";
+                }
+
+                if (!$page) $page = 1;
+                if (!$rp) $rp = 10;
+
+                $start = (($page-1) * $rp);
+		$end  = $rp;
+                $limit = "LIMIT $start, $end";
         	
                 $cliente=!empty($id_cliente);
                 $fecha=(!empty($de)&&!empty($al));
                 $params=array();
-                $query="SELECT v.id_venta, (
+                $query="SELECT SQL_CALC_FOUND_ROWS v.id_venta, (
                                 v.subtotal + v.iva
                                 ) AS  'Total', IF(SUM( pv.monto )>0,SUM(pv.monto),0) AS  'Pagado',
                                 if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),(v.subtotal + v.iva)
@@ -346,7 +382,8 @@ class VentasDAO extends VentasDAOBase
                 global $conn;
                 
                 try{
-                        $rs = $conn->Execute($query);
+                        $rs = $conn->Execute($query." ".$sort." ".$limit);
+                        $totalrs = $conn->Execute("SELECT FOUND_ROWS();");
                 }catch(Exception $e){
                 
                         $logger->log($e->getMessage(), PEAR_LOG_ERR);
@@ -361,7 +398,7 @@ class VentasDAO extends VentasDAOBase
                         array_push($allData, array("id"=>$row[0], "cell"=>$row));
                 }
 
-                return $allData;
+                return array("total"=>$totalrs->fields[0], "data"=>$allData);
         
         }
 

@@ -87,5 +87,4 @@ require_once('Log.php');
 
 $conf = array('lineFormat' => '%1$s %2$s [%3$s] %4$s in %5$s on line %6$s');
 
-//$logger = &Log::singleton('file', '/var/log/php/app.log', 'SYSTEM CORE', $conf, PEAR_LOG_DEBUG);
-$logger = &Log::singleton('file', 'C:\app.log', 'SYSTEM CORE', $conf, PEAR_LOG_DEBUG);
+$logger = &Log::singleton('file', '/var/log/php/app.log', 'SYSTEM CORE', $conf, PEAR_LOG_DEBUG);

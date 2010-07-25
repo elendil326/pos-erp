@@ -29,16 +29,8 @@ function getGridDataVentasPorClientes($page,$rp,$sortname,$sortorder,$search,$qt
 	
 	$ventas = VentasDAO::getVentasPorClientes_grid($page,$rp,$sortname,$sortorder,$search,$qtype);
 	
-	//Si no se envia el dato de page, significa que estamos en la 1
-	if(isset($_POST['page']))
-	{
-		$page = strip_tags($_POST['page']);
-	}
-	else{
-		$page = 1;
-	}
-	
-	$array_result = '{ "page": '.$page.', "total": '.count($ventas).', "rows" : '.json_encode($ventas).'}';
+	//$array_result = '{ "page": '.$page.', "total": '.count($ventas).', "rows" : '.json_encode($ventas).'}';
+	$array_result = '{ "page": '.$page.', "total": '.$ventas['total'].', "rows" : '.json_encode($ventas['data']).'}';
 	return $array_result;
 
 }
@@ -52,13 +44,14 @@ function getGridDataVentasPorClientes($page,$rp,$sortname,$sortorder,$search,$qt
 *	@return	String JSON con los datos formateados para Flexigrid	
 *	@see	getVentasACreditoPorClientes_grid
 */
-function getGridDataVentasACreditoPorClientes($id_cliente, $de, $al, $page){
+function getGridDataVentasACreditoPorClientes($page,$rp,$sortname,$sortorder,$search,$qtype, $de, $al,$id_cliente){
 
-	$ventas = VentasDAO::getVentasACreditoPorClientes_grid($id_cliente, $de, $al);
+	$ventas = VentasDAO::getVentasACreditoPorClientes_grid($page,$rp,$sortname,$sortorder,$search,$qtype, $de, $al,$id_cliente);
 	
 	
 	
-	$array_result = '{ "page": '.$page.', "total": '.count($ventas).', "rows" : '.json_encode($ventas).'}';
+	//$array_result = '{ "page": '.$page.', "total": '.count($ventas).', "rows" : '.json_encode($ventas).'}';
+	$array_result = '{ "page": '.$page.', "total": '.$ventas['total'].', "rows" : '.json_encode($ventas['data']).'}';
 	return $array_result;
 
 }
@@ -70,12 +63,13 @@ function getGridDataVentasACreditoPorClientes($id_cliente, $de, $al, $page){
 *	@author Rene Michel <rene@caffeina.mx>
 *	@return	String JSON con los datos formateados para Flexigrid	
 */
-function getGridDataVentasDeContadoPorClientes($id_cliente, $de, $al, $page){
+function getGridDataVentasDeContadoPorClientes($page,$rp, $sortname, $sortorder, $search, $qtype, $de, $al, $id_cliente){
 
 
-	$ventas = VentasDAO::getVentasDeContadoPorClientes_grid($id_cliente, $de, $al);
+	$ventas = VentasDAO::getVentasDeContadoPorClientes_grid($page,$rp, $sortname, $sortorder, $search, $qtype, $de, $al, $id_cliente);
 	
-	$array_result = '{ "page": '.$page.', "total": '.count($ventas).', "rows" : '.json_encode($ventas).'}';
+	//$array_result = '{ "page": '.$page.', "total": '.count($ventas).', "rows" : '.json_encode($ventas).'}';
+	$array_result = '{ "page": '.$page.', "total": '.$ventas['total'].', "rows" : '.json_encode($ventas['data']).'}';
 	return $array_result;
 
 }
@@ -83,73 +77,94 @@ function getGridDataVentasDeContadoPorClientes($id_cliente, $de, $al, $page){
 
 switch($args['action']){
 
-	//case 'getGridDataVentasPorClientes':
-	case '301':
 	
-		
+	case '301': //'getGridDataVentasPorClientes'
 	
-		$page = strip_tags($_POST['page']);
-		$rp = strip_tags($_POST['rp']);
-		$sortname = strip_tags($_POST['sortname']);
-		$sortorder = strip_tags($_POST['sortorder']);
+		$rp = strip_tags($args['rp']);
+		$sortname = strip_tags($args['sortname']);
+		$sortorder = strip_tags($args['sortorder']);
 		
-		if(isset($_POST['query']) && !empty($_POST['query']))
+		if(isset($args['query']) && !empty($args['query']))
 		{
-		        $search = strip_tags($_POST['query']);
-		        $qtype = strip_tags($_POST['qtype']);
+		        $search = strip_tags($args['query']);
+		        $qtype = strip_tags($args['qtype']);
 		}
 
-		unset($_POST);
-		
+		if(isset($args['page']))
+		{
+			$page = strip_tags($args['page']);
+		}
+		else{
+			$page = 1;
+		}
 		$ans = getGridDataVentasPorClientes($page,$rp,$sortname,$sortorder,$search,$qtype);
 		echo $ans;
 		break;
 		
-	//case 'getGridDataVentasACreditoPorClientes':
-	case '302':
+	
+	case '302': //'getGridDataVentasACreditoPorClientes'
 	
 		
 	
-		$id_cliente=$_REQUEST['id_cliente'];
-		$de=$_REQUEST['de'];
-		$al=$_REQUEST['al'];
+		$id_cliente=$args['id_cliente'];
+		$de=$args['de'];
+		$al=$args['al'];
+		
+		$page = strip_tags($args['page']);
+		$rp = strip_tags($args['rp']);
+		$sortname = strip_tags($args['sortname']);
+		$sortorder = strip_tags($args['sortorder']);
+		
+		if(isset($args['query']) && !empty($args['query']))
+		{
+		        $search = strip_tags($args['query']);
+		        $qtype = strip_tags($args['qtype']);
+		}
 		
 		//Si no se envia el dato de page, significa que estamos en la 1
-		if(isset($_POST['page']))
+		if(isset($args['page']))
 		{
-			$page = strip_tags($_POST['page']);
+			$page = strip_tags($args['page']);
 		}
 		else{
 			$page = 1;
 		}
 
-		unset($_REQUEST);
-		
-		$ans = getGridDataVentasACreditoPorClientes($id_cliente, $de, $al, $page);
+		$ans = getGridDataVentasACreditoPorClientes($page,$rp,$sortname,$sortorder,$search,$qtype, $de, $al,$id_cliente);
 		echo $ans;
 		break;
 		
-	//case 'getGridDataVentasDeContadoPorClientes':
-	case '303':
+	
+	case '303': //'getGridDataVentasDeContadoPorClientes'
 	
 		
 	
-		$id_cliente=$_REQUEST['id_cliente'];
-		$de=$_REQUEST['de'];
-		$al=$_REQUEST['al'];
+		$id_cliente=$args['id_cliente'];
+		$de=$args['de'];
+		$al=$args['al'];
+		
+		$page = strip_tags($args['page']);
+		$rp = strip_tags($args['rp']);
+		$sortname = strip_tags($args['sortname']);
+		$sortorder = strip_tags($args['sortorder']);
+		
+		if(isset($args['query']) && !empty($args['query']))
+		{
+		        $search = strip_tags($args['query']);
+		        $qtype = strip_tags($args['qtype']);
+		}
 		
 		//Si no se envia el dato de page, significa que estamos en la 1
-		if(isset($_POST['page']))
+		if(isset($args['page']))
 		{
-			$page = strip_tags($_POST['page']);
+			$page = strip_tags($args['page']);
 		}
 		else{
 			$page = 1;
 		}
-				
-		unset($_REQUEST);
+
 		
-		$ans = getGridDataVentasDeContadoPorClientes($id_cliente, $de, $al, $page);
+		$ans = getGridDataVentasDeContadoPorClientes($page,$rp,$sortname,$sortorder,$search,$qtype, $de, $al,$id_cliente);
 		echo $ans;
 	
 		break;

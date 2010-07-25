@@ -51,56 +51,43 @@ Reports.prototype.loadSettings = function(){
 	var divFechas = d.createElement('div');
 	divFechas.id = "periodo-reporte";
 	
-	
-	//input para la fecha de inicio del reporte
-	var inputFechaInicio = d.createElement('input');
-	inputFechaInicio.id = "fecha-inicio-input";
-	inputFechaInicio.name = "fecha-inicio";
-	inputFechaInicio.type = "text";
-	inputFechaInicio.class = "no-border";
-	inputFechaInicio.value = "Inicio";
-	
-	//input para la fecha de final del reporte
-	var inputFechaFinal = d.createElement('input');
-	inputFechaFinal.id = "fecha-final-input";
-	inputFechaFinal.name = "fecha-final";
-	inputFechaFinal.type = "text";
-	inputFechaFinal.class = "no-border";
-	inputFechaFinal.value = "Fin";
-
-	//boton para actualizar el reporte con las fechas ingresadas
-	var botonAplicarFechas = d.createElement('button');
-	botonAplicarFechas.id = "boton-aplicar-fechas-reporte";
-	
-	
-	
-	
-	/*===================fechas inicio==============================================*/
 	$('#content').append(divFechas);
-	$('#periodo-reporte').append(inputFechaInicio);
-	$('#periodo-reporte').append('-');
-	$('#periodo-reporte').append(inputFechaFinal);
-	$('#periodo-reporte').append(inputFechaFinal);
-	$('#periodo-reporte').append(botonAplicarFechas);
 	
-	//Agregamos clases a los inputs
-	$('#fecha-inicio-input').addClass('no-border');
-	$('#fecha-final-input').addClass('no-border');
+	$('#periodo-reporte').html('<div style="height:20px; padding:5px;">\
+				<div class="rangePicker futureRange">\
+					<label for="start_date">De:</label>\
+					<input type="text" name="start_date" id="start_date" value="mm/dd/yyyy" />\
+					<label for="end_date">Al:</label>\
+					<input type="text" name="end_date" id="end_date" value="mm/dd/yyyy" />\
+				</div><button id="actualizar-rango">Actualizar</button>\
+				</div>\
+			');
+		
 	
-	$('#boton-aplicar-fechas-reporte').html("Aplicar");
-	$('#boton-aplicar-fechas-reporte').button();
-	$('#boton-aplicar-fechas-reporte').click(function(){
-							Reports.currentInstance.applyPeriodo();
-						});
-						
-	$('#boton-aplicar-sucursal-reporte').html("Aplicar");
-	$('#boton-aplicar-sucursal-reporte').button();
-	$('#boton-aplicar-sucursal-reporte').click(function(){
-							Reports.currentInstance.applySucursal();
-						});
+	enhancedDomReady(function(){
+			$('.toggleRPpos').click(function(){
+				if($('div.rangePicker').css('float') == 'left') { 
+					$('div.rangePicker').css('float', 'right');
+					$('.toggleRPpos').html('Align date picker to the left');
+				}
+				else { 
+					$('div.rangePicker').css('float', 'left'); 
+					$('.toggleRPpos').html('Align date picker to the right');
+				}
+				return false;
+			});
+			
+			
+			// create date picker by replacing out the inputs
+		$('.rangePicker').html('<a href="#" class="range_prev"><span>Previous</span></a><a href="#" class="rangeDisplay"><span>Pick a Date</span></a><a href="#" class="range_next"><span>Next</span></a>').dateRangePicker({menuSet: 'pastRange'});
+			
+			
+		});
+		
 	
-	$('#fecha-inicio-input').datepicker();
-	$('#fecha-final-input').datepicker();
+	//$('#start_date').val(); //obtener datos del rango inicial
+	//$('#end_date').val(); // obtener datos del rango final
+	
 	
 	/*====================fechas fin==============================================*/
 
@@ -115,7 +102,7 @@ Reports.prototype.loadSettings = function(){
 	divRadioTipoReporte.id = "radios-tipo-reporte";
 	
 	$('#configuracion-reportes').append(divRadioTipoReporte);
-	$('#configuracion-reportes').addClass('configuracion');
+	//$('#configuracion-reportes').addClass('configuracion');
 	
 
 	// estructura del dropdown menu
@@ -184,12 +171,13 @@ Reports.prototype.loadResumen = function(){
 	$('#wrapper-resumen').addClass('borde-gris');
 	
 	//TODO: cargar aqui con AJAX datos para generar un resumen 'inteligente'
-	$('#wrapper-resumen').html("<ul id='lista-cuadros'>\
-	<li><div class='cuadro-resumen'><img src='../media/admin/icons/user.png' width='100' height='100' /><p>Vendedor m&aacute;s productivo</p><p id='top-vendedor' class='resumen-text'>Juan Martinez</p></div></li>\
-	<li><div class='cuadro-resumen'><img src='../media/admin/icons/cart.png' width='100' height='100' /><p>Producto m&aacute;s vendido</p><p id='top-producto' class='resumen-text'>Papa Grande</p></div></li>\
-	<li><div class='cuadro-resumen'><img src='../media/admin/icons/piggybank.png' width='100' height='100' /><p>Sucursal con m&aacute;s ventas</p><p id='top-sucursal' class='resumen-text'>Central de Abastos</p></div></li>\
-	<li><div class='cuadro-resumen'><img src='../media/admin/icons/client.png' width='100' height='100' /><p>Cliente con m&aacute;s compras</p><p id='top-cliente' class='resumen-text'>Oscar Hernandez</p></div></li>\
-	</ul>\
+	$('#wrapper-resumen').html("<div style='margin:0 auto;'><ul id='lista-cuadros'>\
+	<li><div class='cuadro-resumen'><img src='../media/admin/icons/user.png' width='100' height='100' /><p>Vendedor m&aacute;s productivo</p><p id='top-vendedor' class='resumen-text'></p></div></li>\
+	<li><div class='cuadro-resumen'><img src='../media/admin/icons/cart.png' width='100' height='100' /><p>Producto m&aacute;s vendido</p><p id='top-producto' class='resumen-text'></p></div></li>\
+	<li><div class='cuadro-resumen'><img src='../media/admin/icons/piggybank.png' width='100' height='100' /><p>Sucursal con m&aacute;s ventas</p><p id='top-sucursal' class='resumen-text'></p></div></li>\
+	<li><div class='cuadro-resumen'><img src='../media/admin/icons/client.png' width='100' height='100' /><p>Cliente con m&aacute;s compras</p><p id='top-cliente' class='resumen-text'></p></div></li>\
+	<li><div class='cuadro-resumen'><img src='../media/admin/icons/client.png' width='100' height='100' /><p>Cliente m&aacute;s recurrente</p><p id='top-cliente-recurrente' class='resumen-text'></p></div></li>\
+	</ul></div>\
 	<div style='clear:both'></div>\
 	");
 
@@ -273,7 +261,7 @@ Reports.prototype.loadResumen = function(){
 			}
 		});
 		
-	//sacamos el top sucursal
+	//sacamos el top cliente
 	Utils.request({
 			url: '../proxy.php',
 			data: "method=clienteComprasTop",
@@ -391,7 +379,7 @@ Reports.prototype.loadVentasTodas = function(){
 			title: 'Ventas',
 			width: '100%',
 			url: '../proxy.php',
-			data: 'action=getGridDataVentasPorClientes',
+			data: 'action=301',
 			addNewGrid: false,
 			sortname: 'id',
 			colModel: [
@@ -423,20 +411,20 @@ Reports.prototype.loadClientesDebenReport = function(){
 			title: 'Clientes Deben',
 			width: '100%',
 			url: '../proxy.php',
-			data: 'action=getGridDataClientesCreditoDeudores',
+			data: 'action=101',
 			addNewGrid: false,
-			sortname: 'id',
+			sortname: 'v.id_venta',
 			colModel: [
 				{display: 'ID', name : 'id_venta', width : 30, sortable : true, align: 'left'},
-				{display: 'Total', name : 'Total', width : 300, sortable : true, align: 'left'},
+				{display: 'Total', name : 'Total', width : 80, sortable : true, align: 'left'},
 				{display: 'Pagado', name : 'Pagado', width : 80, sortable : true, align: 'left'},
 				{display: 'Debe', name : 'Debe', width : 100, sortable : true, align: 'left'},
 				{display: 'Nombre', name : 'Nombre', width : 250, sortable : true, align: 'left'},
 				{display: 'Fecha', name : 'Fecha', width : 100, sortable : true, align: 'left'}
 			],
 			searchitems: [
-				{display: 'Nombre', name : 'Nombre'},
-				{display: 'Fecha', name : 'Fecha', isdefault: true},
+				{display: 'Nombre', name : 'Nombre', isdefault: true},
+				{display: 'Fecha', name : 'Fecha'},
 				{display: 'ID', name : 'id_venta'}
 			]
 			});
@@ -452,7 +440,7 @@ Reports.prototype.loadClientesReport = function(){
 			title: 'Clientes',
 			width: '100%',
 			url: '../proxy.php',
-			data: 'action=getGridDataAllClientes',
+			data: 'action=103',
 			addNewGrid: false,
 			sortname: 'id',
 			colModel: [
@@ -554,7 +542,7 @@ Reports.prototype.loadVentasCreditoReport = function(config){
 			title: 'Ventas a cr&eacute;dito',
 			width: '100%',
 			url: '../proxy.php',
-			data: 'action=getGridDataVentasACreditoPorClientes',
+			data: 'action=302',
 			addNewGrid: false,
 			sortname: 'v.fecha',
 			colModel: [
@@ -645,12 +633,14 @@ Reports.prototype.loadVentasContadoReport = function(config){
 			title: 'Ventas de contado',
 			width: '100%',
 			url: '../proxy.php',
-			data: 'action=getGridDataVentasDeContadoPorClientes',
+			data: 'action=303',
 			addNewGrid: false,
 			sortname: 'v.fecha',
 			colModel: [
 				{display: 'Venta', name : 'id_venta', width : 50, sortable : true, align: 'left'},
 				{display: 'Total', name : 'Total', width : 100, sortable : true, align: 'left'},
+				{display: 'Pagado', name : 'Pagado', width : 80, sortable : true, align: 'left'},
+				{display: 'Debe', name : 'Debe', width : 100, sortable : true, align: 'left'},
 				{display: 'Nombre', name : 'Nombre', width : 300, sortable : true, align: 'left'},
 				{display: 'Fecha', name : 'Fecha', width : 100, sortable : true, align: 'left'}
 			],

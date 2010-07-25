@@ -16,17 +16,10 @@ class ClienteDAO extends ClienteDAOBase
 {
 
 
-	function getClientesAll_grid($page,$rp,$sortname,$sortorder,$search,$qtype, $page){
+	static function getClientesAll_grid($page,$rp,$sortname,$sortorder,$search,$qtype){
 	
 	
 		global $logger;
-		
-		
-		
-		
-		
-		
-		
 		
 		if (isset($sortname) && !empty($sortname) ){/* $sortname = 'name';
                 if (!$sortorder) $sortorder = 'desc';*/
@@ -42,10 +35,10 @@ class ClienteDAO extends ClienteDAOBase
                 if (!$rp) $rp = 10;
 
                 $start = (($page-1) * $rp);
-		$end  = $page * $rp;
+		$end  = $rp;
                 $limit = "LIMIT $start, $end";
                 
-                $sql="SELECT `id_cliente` as 'ID',`nombre` as 'Nombre',`rfc` as 'RFC',`direccion` as 'Direccion' ,`telefono` as Telefono ,`e_mail` as 'E-mail',`limite_credito` as 'Limite de credito' from cliente";
+                $sql="SELECT SQL_CALC_FOUND_ROWS `id_cliente` as 'ID',`nombre` as 'Nombre',`rfc` as 'RFC',`direccion` as 'Direccion' ,`telefono` as Telefono ,`e_mail` as 'E-mail',`limite_credito` as 'Limite de credito' from cliente";
                 
                 if(isset($search) && !empty($search))
                 {
@@ -57,6 +50,7 @@ class ClienteDAO extends ClienteDAOBase
                 
                 try{
                         $rs = $conn->Execute($sql." ".$sort." ".$limit);
+                        $totalrs = $conn->Execute("SELECT FOUND_ROWS();"); //obtenemos el total de rows de la consulta anterior ignorando el LIMIT
                 }catch(Exception $e){
                 
                         $logger->log($e->getMessage(), PEAR_LOG_ERR);
@@ -71,7 +65,7 @@ class ClienteDAO extends ClienteDAOBase
                         array_push($allData, array("id"=>$row[0], "cell"=>$row));
                 }
 
-                return $allData;
+                return array("total"=>$totalrs->fields[0], "data"=>$allData);
 	
 	}
 
@@ -156,7 +150,7 @@ class ClienteDAO extends ClienteDAOBase
         *       @access static
         *       @return Array un arreglo con los datos obtenidos de la consulta con formato array("id"=> {int} , "cell" => {[]} )
         */
-	static function getClientesCreditoDeudores_grid($rp, $sortname, $sortorder, $search, $qtype, $de, $al, $id_cliente){
+	static function getClientesCreditoDeudores_grid($page, $rp, $sortname, $sortorder, $search, $qtype, $de, $al, $id_cliente){
 		
 		
 		global $logger;
@@ -175,14 +169,14 @@ class ClienteDAO extends ClienteDAOBase
                 if (!$rp) $rp = 10;
 
                 $start = (($page-1) * $rp);
-		$end  = $page * $rp;
+		$end  = $rp;
                 $limit = "LIMIT $start, $end";
                 
                 
                  $cliente=!empty($id_cliente);
                 $fecha=(!empty($de)&&!empty($al));
                 $params=array();
-                $query="SELECT v.id_venta, (
+                $query="SELECT SQL_CALC_FOUND_ROWS v.id_venta, (
                                 v.subtotal + v.iva
                                 ) AS  'Total', IF(SUM( pv.monto )>0,SUM(pv.monto),0) AS  'Pagado',
                                 if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),(v.subtotal + v.iva)
@@ -212,6 +206,7 @@ class ClienteDAO extends ClienteDAOBase
                 
                 try{
                         $rs = $conn->Execute($query." ".$sort." ".$limit, $params);
+                        $totalrs = $conn->Execute("SELECT FOUND_ROWS();");
                 }catch(Exception $e){
                 
                         $logger->log($e->getMessage(), PEAR_LOG_ERR);
@@ -226,7 +221,7 @@ class ClienteDAO extends ClienteDAOBase
                         array_push($allData, array("id"=>$row[0], "cell"=>$row));
                 }
 
-                return $allData;
+                return array("total"=>$totalrs->fields[0], "data"=>$allData);
 	
 	}
 	
@@ -235,10 +230,7 @@ class ClienteDAO extends ClienteDAOBase
 	
 		global $logger;
 	
-		/*
-		$id_cliente=$_REQUEST['id_cliente'];
-	        $de=$_REQUEST['de'];
-	        $al=$_REQUEST['al'];*/
+		
 	        $cliente=!empty($id_cliente);
 	        $fecha=(!empty($de)&&!empty($al));
 	        $params=array();
@@ -286,7 +278,7 @@ class ClienteDAO extends ClienteDAOBase
 	}
 
 
-	static function getClientesCreditoPagado_grid($rp, $sortname, $sortorder, $search, $qtype, $de, $al, $id_cliente){
+	static function getClientesCreditoPagado_grid($page, $rp, $sortname, $sortorder, $search, $qtype, $de, $al, $id_cliente){
 	
 	
 		global $logger;
@@ -305,13 +297,13 @@ class ClienteDAO extends ClienteDAOBase
                 if (!$rp) $rp = 10;
 
                 $start = (($page-1) * $rp);
-		$end  = $page * $rp;
+		$end  = $rp;
                 $limit = "LIMIT $start, $end";
 	
 		$cliente=!empty($id_cliente);
 	        $fecha=(!empty($de)&&!empty($al));
 	        $params=array();
-	        $query="SELECT v.id_venta, (
+	        $query="SELECT SQL_CALC_FOUND_ROWS v.id_venta, (
 	                        v.subtotal + v.iva
 	                        ) AS  'Total', IF(SUM( pv.monto )>0,SUM(pv.monto),0) AS  'Pagado', 
 	                        if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),(v.subtotal + v.iva)
@@ -341,6 +333,7 @@ class ClienteDAO extends ClienteDAOBase
                 
                 try{
                         $rs = $conn->Execute($query." ".$sort." ".$limit, $params);
+                        $totalrs = $conn->Execute("SELECT FOUND_ROWS();");
                 }catch(Exception $e){
                 
                         $logger->log($e->getMessage(), PEAR_LOG_ERR);
@@ -355,7 +348,7 @@ class ClienteDAO extends ClienteDAOBase
                         array_push($allData, array("id"=>$row[0], "cell"=>$row));
                 }
 
-                return $allData;
+                return array("total"=>$totalrs->fields[0], "data"=>$allData);
 	
 	}
 
