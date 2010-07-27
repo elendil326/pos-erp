@@ -1,8 +1,8 @@
 <?php
+
 require_once ('Estructura.php');
 require_once("base/view_detalle_venta.dao.base.php");
 require_once("base/view_detalle_venta.vo.base.php");
-
 require_once("../server/misc/reportesUtils.php");
 /** ViewDetalleVenta Data Access Object (DAO).
   * 
@@ -43,7 +43,14 @@ class ViewDetalleVentaDAO extends ViewDetalleVentaDAOBase
 		    array_push($array_result, $objResult);
 		}
 
-                return $array_result;
+                if ( count($array_result) < 1 )
+		{
+			return array("No se encontraron datos");
+		}
+		else
+		{
+                	return $array_result;
+		}
 
 
 	}
@@ -126,7 +133,7 @@ class ViewDetalleVentaDAO extends ViewDetalleVentaDAOBase
 	static function getProductoMasVendidoSucursal( $id_sucursal, $timeRange, $fechaInicio, $fechaFinal)
 	{	
 
-		if ( $id_sucursal != null )
+		if ( $id_sucursal == null )
                 {
                         return array( false, "Faltan parametros" );
                 }
@@ -202,24 +209,24 @@ class ViewDetalleVentaDAO extends ViewDetalleVentaDAOBase
 
 
                         //Escogemos el rango de tiempo para los datos (Semana, Mes, Año, Todos)        
-                        $datesArray = getDateRange($dateInterval);      
+                        $datesArray = reportesUtils::getDateRange($dateInterval);      
 
                         if( $datesArray != false )
                         {
                                 array_push($params, $datesArray[0]);
                                 array_push($params, $datesArray[1]);
 
-                                $qry_select .= " AND date(`fecha`) BETWEEN ? AND ?";
+                                $qry_select .= " WHERE date(`fecha`) BETWEEN ? AND ?";
                         }
 
                         
                 }
 
-                if ( $fechaInicio != null && $fechaFinal != null )
+                if ( $fechaInicio != null && $fechaFinal != null && $timeRange == null)
                 {
                         array_push($params, $fechaInicio );
                         array_push($params, $fechaFinal );
-                        $dateRange .= " AND date(`fecha`) BETWEEN ? AND ?";
+                        $dateRange .= " WHERE date(`fecha`) BETWEEN ? AND ?";
                         $qry_select .= $dateRange;
                 }
 
@@ -231,62 +238,7 @@ class ViewDetalleVentaDAO extends ViewDetalleVentaDAOBase
 	}
 
 	
-	/**
-        *       Obtiene los datos del producto en el que mas se gasta. (Dinero)
-        *       Se obtienen nombre del producto, total del gasto del producto.
-        *
-        *       @author Luis Michel <luismichel@computer.org>
-        *       @static
-        *       @access public
-	*	@param {String} timeRange (Opcional) El rango de tiempo para formatear el resultado (semana, mes, year)
-	*	@param {Date} fechaInicio (Opcional) La fecha de inicio de donde se quieren ver los datos
-	*	@param {Date} fechaFinal (Opcional) La fecha final del rango de tiempo de donde se quieren obtener los datos
-        *       @return Array un arreglo con los datos obtenidos de la consulta
-        */
-
-
-	static function getProductoGastoTop( $timeRange, $fechaInicio, $fechaFinal )
-	{
-
-                $params = array();
-
-                //Consulta para obtener el producto con el mayor numero de cantidad * precio        
-		$qry_select = "SELECT `denominacion` AS `producto`, ROUND(SUM(`cantidad` * `precio`), 2) AS `gastos` FROM `view_detalle_compra` ";
-
-                if( $timeRange != null )
-                {
-                        $dateInterval = $timeRange;
-
-
-                        //Escogemos el rango de tiempo para los datos (Semana, Mes, Año, Todos)        
-                        $datesArray = getDateRange($dateInterval);      
-
-                        if( $datesArray != false )
-                        {
-                                array_push($params, $datesArray[0]);
-                                array_push($params, $datesArray[1]);
-
-                                $qry_select .= " AND date(`fecha`) BETWEEN ? AND ?";
-                        }
-
-                        
-                }
-
-                if ( $fechaInicio != null && $fechaFinal != null )
-                {
-                        array_push($params, $fechaInicio );
-                        array_push($params, $fechaFinal );
-                        $dateRange .= " AND date(`fecha`) BETWEEN ? AND ?";
-                        $qry_select .= $dateRange;
-                }
-
-                $qry_select .= " GROUP BY `id_producto` ORDER BY `gastos` DESC LIMIT 1";
-
-                return ViewDetalleVentaDAO::getResultArray( $qry_select, $params );
-			
-
-	}
-
+	
 
 	/**
         *       Obtiene los datos para generar una grafica de las ventas hechas de algun producto especifico.
@@ -349,8 +301,7 @@ class ViewDetalleVentaDAO extends ViewDetalleVentaDAOBase
                         }
                         else
                         {
-                                echo "{ success: false, error: 'Faltan parametros: Producto'}";
-				return;
+				return array( false, "Faltan parametros");
                         }
 
 			
@@ -361,7 +312,7 @@ class ViewDetalleVentaDAO extends ViewDetalleVentaDAOBase
                         if ( $qry_select != false )
                         {                       
                                 //Todo salio bien asi que regresamos el arreglo con el resultado
-				return ViewDetalleVentasDAO::getResultArray( $completeQuery, $params);
+				return ViewDetalleVentaDAO::getResultArray( $completeQuery, $params);
                                 
                         }
                         else
@@ -393,7 +344,7 @@ class ViewDetalleVentaDAO extends ViewDetalleVentaDAOBase
 	*			elemento del arreglo es FALSE, y el segundo la razon del error
         */
 
-	static function getDataProductosMasVendidos($conn)
+	static function getDataProductosMasVendidos($timeRange, $tipo_venta, $id_sucursal, $fechaInicio, $fechaFinal)
 	{
 		//$array = getDateRangeGraphics('semana');
                 $params = array();
@@ -408,7 +359,7 @@ class ViewDetalleVentaDAO extends ViewDetalleVentaDAOBase
                         //getDateRangeGraphics nos regresa un arreglo con todas las fechas para la consulta, y el ultimo dato es la consulta
                         $datesArray = reportesUtils::getDateRangeGraphics($dateInterval);
                         //$qry_select = betweenDatesQueryPart($dateInterval, 'view_detalle_venta');
-			$qry_select = " date(`fecha`) BETWEEN ? AND ? GROUP BY `id_producto` DESC";
+			$qry_select = " date(`fecha`) BETWEEN ? AND ? GROUP BY `id_producto` ORDER BY `y` DESC ";
                         
 
                         //Si se escogieron las fechas manualmente, se sobreescriben
@@ -447,7 +398,7 @@ class ViewDetalleVentaDAO extends ViewDetalleVentaDAOBase
                         if ( $qry_select != false )
                         {                       
                                 //Todo salio bien asi que regresamos el arreglo con el resultado
-				return ViewDetalleVentasDAO::getResultArray( $completeQuery, $params);
+				return ViewDetalleVentaDAO::getResultArray( $completeQuery, $params);
                                 
                         }
                         else

@@ -3,9 +3,7 @@
 require_once ('Estructura.php');
 require_once("base/view_ventas.dao.base.php");
 require_once("base/view_ventas.vo.base.php");
-
 require_once("../server/misc/reportesUtils.php");
-
 /** ViewVentas Data Access Object (DAO).
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
@@ -45,7 +43,15 @@ class ViewVentasDAO extends ViewVentasDAOBase
 		    array_push($array_result, $objResult);
 		}
 
-                return $array_result;
+
+		if ( count($array_result) < 1 )
+		{
+			return array("No se encontraron datos");
+		}
+		else
+		{
+                	return $array_result;
+		}
 
 
 	}
@@ -87,7 +93,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
                                 array_push($params, $datesArray[0]);
                                 array_push($params, $datesArray[1]);
 
-                                $qry_select .= " AND date(`view_ventas`.`fecha`) BETWEEN ? AND ?";
+                                $qry_select .= " WHERE date(`view_ventas`.`fecha`) BETWEEN ? AND ?";
                         }
                         
                         
@@ -95,15 +101,17 @@ class ViewVentasDAO extends ViewVentasDAOBase
 
 
                 //Si existen los rangos de fechas, agregamos una linea al query para filtrar los resultados dentro de ese rango
-                if ( $fechaInicio != null && $fechaFinal != null )
+                if ( $fechaInicio != null && $fechaFinal != null && $timeRange == null)
                 {
                         array_push($params, $fechaInicio);
                         array_push($params, $fechaFinal);
-                        $dateRange .= " AND date(`view_ventas`.`fecha`) BETWEEN ? AND ?";
+                        $dateRange .= " WHERE date(`view_ventas`.`fecha`) BETWEEN ? AND ?";
                         $qry_select .= $dateRange;
                 }
 
                 $qry_select .= " GROUP BY `usuario` ORDER BY `vendido` DESC LIMIT 1";
+
+		
 
                 return ViewVentasDAO::getResultArray( $qry_select, $params);
 		
@@ -147,17 +155,17 @@ class ViewVentasDAO extends ViewVentasDAOBase
                                 array_push($params, $datesArray[0]);
                                 array_push($params, $datesArray[1]);
 
-                                $qry_select .= " AND date(`fecha`) BETWEEN ? AND ?";
+                                $qry_select .= " WHERE date(`fecha`) BETWEEN ? AND ?";
                         }
 
                         
                 }
 
-                if ( $fechaInicio != null && $fechaFinal != null )
+                if ( $fechaInicio != null && $fechaFinal != null && $timeRange == null)
                 {
                         array_push($params, $fechaInicio);
                         array_push($params, $fechaFinal);
-                        $dateRange .= " AND date(`fecha`) BETWEEN ? AND ?";
+                        $dateRange .= " WHERE date(`fecha`) BETWEEN ? AND ?";
                         $qry_select .= $dateRange;
                 }
 
@@ -203,18 +211,18 @@ class ViewVentasDAO extends ViewVentasDAOBase
                                 array_push($params, $datesArray[0]);
                                 array_push($params, $datesArray[1]);
 
-                                $qry_select .= " AND date(`fecha`) BETWEEN ? AND ?";
+                                $qry_select .= " WHERE date(`fecha`) BETWEEN ? AND ?";
                         }
                         
                         
                 }
 
 
-                if ( $fechaInicio != null && $fechaFinal != null )
+                if ( $fechaInicio != null && $fechaFinal != null && $timeRange == null )
                 {
                         array_push($params, $fechaInicio);
                         array_push($params, $fechaFinal);
-                        $dateRange .= " AND date(`fecha`) BETWEEN ? AND ?";
+                        $dateRange .= " WHERE date(`fecha`) BETWEEN ? AND ?";
                         $qry_select .= $dateRange;
                 }
 
@@ -251,7 +259,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
                 $params = array($id_sucursal);
 
                 //$qry_select = "SELECT `ventas`.`id_usuario`, `usuario`.`nombre`, SUM(`ventas`.`subtotal`) AS `Vendido` FROM `ventas`, `usuario` WHERE `ventas`.`id_usuario` = `usuario`.`id_usuario` AND `ventas`.`sucursal` = ?";                              
-		$qry_select = "SELECT `usuario`, SUM(`subtotal`) AS `vendido` FROM `view_venta` WHERE `id_sucursal` = ?";
+		$qry_select = "SELECT `usuario`, SUM(`subtotal`) AS `vendido` FROM `view_ventas` WHERE `id_sucursal` = ?";
 
 
                 if( $timeRange != null )
@@ -274,7 +282,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
                 }
 
                 //Si existen los rangos de fechas, agregamos una linea al query para filtrar los resultados dentro de ese rango
-                if ( $fechaInicio != null && $fechaFinal != null)
+                if ( $fechaInicio != null && $fechaFinal != null && $timeRange == null)
                 {
                         array_push($params, $fechaInicio);
                         array_push($params, $fechaFinal);
@@ -283,6 +291,8 @@ class ViewVentasDAO extends ViewVentasDAOBase
                 }
 
                 $qry_select .= " GROUP BY `id_usuario` ORDER BY `vendido` DESC LIMIT 1";
+	
+
 
                 return ViewVentasDAO::getResultArray( $qry_select, $params);
 
@@ -338,13 +348,15 @@ class ViewVentasDAO extends ViewVentasDAOBase
                         
                 }
 
-                if ( $fechaInicio != null && $fechaFinal != null )
+                if ( $fechaInicio != null && $fechaFinal != null && $timeRange == null)
                 {
                         array_push($params, $fechaInicio);
                         array_push($params, $fechaFinal);
                         $dateRange .= " AND date(`fecha`) BETWEEN ? AND ?";
                         $qry_select .= $dateRange;
                 }
+
+		
 
                 return ViewVentasDAO::getResultArray( $qry_select, $params);
 
@@ -392,7 +404,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
                         
                 }
 
-                if ( $fechaInicio != null && $fechaFinal != null )
+                if ( $fechaInicio != null && $fechaFinal != null && $timeRange == null)
                 {
                         array_push($params, $fechaInicio);
                         array_push($params, $fechaFinal);
@@ -522,6 +534,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
                         //Formamos nuestro query completo
                         $completeQuery = $functionQuery . $qry_select ;
 
+			
                         
                         if ( $qry_select != false )
                         {                       
@@ -638,7 +651,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
 	*			elemento del arreglo es FALSE, y el segundo la razon del error
         */
 
-	static function getDataVentasCredito(){
+	static function getDataVentasCredito($timeRange, $id_sucursal, $fechaInicio, $fechaFinal){
 
                 //$array = getDateRangeGraphics('semana');
                 $params = array();
@@ -755,7 +768,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
                         //Formamos nuestro query completo
                         $completeQuery = $functionQuery . $qry_select ;
 
-                        
+
                         if ( $qry_select != false )
                         {                       
                                 //Todo salio bien asi que regresamos el arreglo con el resultado

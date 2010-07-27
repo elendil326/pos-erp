@@ -68,12 +68,27 @@ switch( ((int)($args['action'] / 100))*100 )
 		require_once('controller/ventas.controller.php');
 	break;
 	
-	case 400: break;
+	case 400: 
+		require_once('controller/view_ventas.controller.php');
+	break;
 	
-	case 500: break;
+	case 500: 
+		require_once('controller/view_detalle_venta.controller.php');
+	break;
 	
-	case 600: break;
-	
+	case 600: 
+		require_once('controller/view_compras.controller.php');
+	break;
+
+	case 700:
+		require_once('controller/view_detalle_compra.controller.php');
+	break;
+
+	case 800:
+		require_once('controller/view_gastos.controller.php');
+		require_once('controller/view_ingresos.controller.php');
+	break;
+
 	case 900:
 		require_once('controller/test.controller.php');
 	break;

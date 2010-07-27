@@ -1,4 +1,5 @@
 <?php
+
 require_once ('Estructura.php');
 require_once("base/view_compras.dao.base.php");
 require_once("base/view_compras.vo.base.php");
@@ -43,7 +44,14 @@ class ViewComprasDAO extends ViewComprasDAOBase
 		    array_push($array_result, $objResult);
 		}
 
-                return $array_result;
+                if ( count($array_result) < 1 )
+		{
+			return array("No se encontraron datos");
+		}
+		else
+		{
+                	return $array_result;
+		}
 
 
 	}
@@ -67,7 +75,7 @@ class ViewComprasDAO extends ViewComprasDAOBase
         */
 
 
-	static function getDataCompras()
+	static function getDataCompras($timeRange, $id_sucursal, $fechaInicio, $fechaFinal)
         {
 
                 $params = array();
@@ -304,7 +312,7 @@ class ViewComprasDAO extends ViewComprasDAOBase
         */
 
 	
-	static function getDataComprasProveedor()
+	static function getDataComprasProveedor($timeRange, $id_proveedor, $fechaInicio, $fechaFinal)
 	{
 		//$array = getDateRangeGraphics('semana');
                 $params = array();

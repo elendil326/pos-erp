@@ -1,8 +1,8 @@
 <?php
+
 require_once ('Estructura.php');
 require_once("base/view_ingresos.dao.base.php");
 require_once("base/view_ingresos.vo.base.php");
-
 require_once("../server/misc/reportesUtils.php");
 /** ViewIngresos Data Access Object (DAO).
   * 
@@ -43,7 +43,14 @@ class ViewIngresosDAO extends ViewIngresosDAOBase
 		    array_push($array_result, $objResult);
 		}
 
-                return $array_result;
+                if ( count($array_result) < 1 )
+		{
+			return array("No se encontraron datos");
+		}
+		else
+		{
+                	return $array_result;
+		}
 
 
 	}

@@ -1,8 +1,8 @@
 <?php
+
 require_once ('Estructura.php');
 require_once("base/view_gastos.dao.base.php");
 require_once("base/view_gastos.vo.base.php");
-
 require_once("../server/misc/reportesUtils.php");
 /** ViewGastos Data Access Object (DAO).
   * 
@@ -42,7 +42,14 @@ class ViewGastosDAO extends ViewGastosDAOBase
 		    array_push($array_result, $objResult);
 		}
 
-                return $array_result;
+                if ( count($array_result) < 1 )
+		{
+			return array("No se encontraron datos");
+		}
+		else
+		{
+                	return $array_result;
+		}
 
 
 	}

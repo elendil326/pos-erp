@@ -233,11 +233,11 @@ class reportesUtils
                 //La clausula SELECT, FROM y WHERE la agregamos nosotros, esta es la que cambia
                         switch( $interval ) 
                         {
-                                case 'semana'   : $qry = "SELECT DAYOFWEEK(`fecha`) AS `x`, SUM(`monto`) AS `y`, DAYNAME(`fecha`) AS `label` FROM `".$table."`  ";
+                                case 'semana'   : $qry = "SELECT DAYOFWEEK(`fecha`) AS `x`, SUM(`subtotal`) AS `y`, DAYNAME(`fecha`) AS `label` FROM `".$table."`  ";
                                                 break;
-                                case 'mes'      : $qry = "SELECT DAYOFMONTH(`fecha`) AS `x`, SUM(`monto`) AS `y`, DAYOFMONTH(`fecha`) AS `label` FROM `".$table."` ";
+                                case 'mes'      : $qry = "SELECT DAYOFMONTH(`fecha`) AS `x`, SUM(`subtotal`) AS `y`, DAYOFMONTH(`fecha`) AS `label` FROM `".$table."` ";
                                                 break;
-                                case 'year'     : $qry = "SELECT MONTH(`fecha`) AS `x`, SUM(`monto`) AS `y`, MONTHNAME(`fecha`) AS `label` FROM `".$table."` ";
+                                case 'year'     : $qry = "SELECT MONTH(`fecha`) AS `x`, SUM(`subtotal`) AS `y`, MONTHNAME(`fecha`) AS `label` FROM `".$table."` ";
                                                 break;
                                 default: break;
                         }
