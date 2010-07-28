@@ -29,6 +29,25 @@ class DetalleCorte extends VO
 	}
 
 	/**
+	  * Obtener una representacion en String
+	  * 
+	  * Este metodo permite tratar a un objeto DetalleCorte en forma de cadena.
+	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
+	  * @return String 
+	  */
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
+		"num_corte" => $this->num_corte,
+		"nombre" => $this->nombre,
+		"total" => $this->total,
+		"deben" => $this->deben
+		)); 
+	return json_encode($vec, true); 
+	}
+	
+	/**
 	  * num_corte
 	  * 
 	  * id del corte al que hace referencia<br>

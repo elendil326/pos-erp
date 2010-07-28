@@ -29,6 +29,25 @@ class Impuesto extends VO
 	}
 
 	/**
+	  * Obtener una representacion en String
+	  * 
+	  * Este metodo permite tratar a un objeto Impuesto en forma de cadena.
+	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
+	  * @return String 
+	  */
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
+		"id_impuesto" => $this->id_impuesto,
+		"descripcion" => $this->descripcion,
+		"valor" => $this->valor,
+		"id_sucursal" => $this->id_sucursal
+		)); 
+	return json_encode($vec, true); 
+	}
+	
+	/**
 	  * id_impuesto
 	  * 
 	  * Campo no documentado<br>

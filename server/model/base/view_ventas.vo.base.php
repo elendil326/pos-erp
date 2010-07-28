@@ -116,7 +116,7 @@ class ViewVentas extends VO
 	  * getIdVenta
 	  * 
 	  * Get the <i>id_venta</i> property for this ViewVentas object.
-	  * @return unknown
+	  * @return null
 	  */
 	final public function getIdVenta()
 	{
@@ -124,10 +124,21 @@ class ViewVentas extends VO
 	}
 
 	/**
+	  * setIdVenta
+	  * 
+	  * Set the <i>id_venta</i> property for this ViewVentas object.
+	  * @param null
+	  */
+	final public function setIdVenta( $id_venta )
+	{
+		$this->id_venta = $id_venta;
+	}
+
+	/**
 	  * getCliente
 	  * 
 	  * Get the <i>cliente</i> property for this ViewVentas object.
-	  * @return unknown
+	  * @return null
 	  */
 	final public function getCliente()
 	{
@@ -135,10 +146,21 @@ class ViewVentas extends VO
 	}
 
 	/**
+	  * setCliente
+	  * 
+	  * Set the <i>cliente</i> property for this ViewVentas object.
+	  * @param null
+	  */
+	final public function setCliente( $cliente )
+	{
+		$this->cliente = $cliente;
+	}
+
+	/**
 	  * getIdCliente
 	  * 
 	  * Get the <i>id_cliente</i> property for this ViewVentas object.
-	  * @return unknown
+	  * @return null
 	  */
 	final public function getIdCliente()
 	{
@@ -146,10 +168,21 @@ class ViewVentas extends VO
 	}
 
 	/**
+	  * setIdCliente
+	  * 
+	  * Set the <i>id_cliente</i> property for this ViewVentas object.
+	  * @param null
+	  */
+	final public function setIdCliente( $id_cliente )
+	{
+		$this->id_cliente = $id_cliente;
+	}
+
+	/**
 	  * getTipoVenta
 	  * 
 	  * Get the <i>tipo_venta</i> property for this ViewVentas object.
-	  * @return unknown
+	  * @return null
 	  */
 	final public function getTipoVenta()
 	{
@@ -157,10 +190,21 @@ class ViewVentas extends VO
 	}
 
 	/**
+	  * setTipoVenta
+	  * 
+	  * Set the <i>tipo_venta</i> property for this ViewVentas object.
+	  * @param null
+	  */
+	final public function setTipoVenta( $tipo_venta )
+	{
+		$this->tipo_venta = $tipo_venta;
+	}
+
+	/**
 	  * getFecha
 	  * 
 	  * Get the <i>fecha</i> property for this ViewVentas object.
-	  * @return unknown
+	  * @return null
 	  */
 	final public function getFecha()
 	{
@@ -168,10 +212,21 @@ class ViewVentas extends VO
 	}
 
 	/**
+	  * setFecha
+	  * 
+	  * Set the <i>fecha</i> property for this ViewVentas object.
+	  * @param null
+	  */
+	final public function setFecha( $fecha )
+	{
+		$this->fecha = $fecha;
+	}
+
+	/**
 	  * getSubtotal
 	  * 
 	  * Get the <i>subtotal</i> property for this ViewVentas object.
-	  * @return unknown
+	  * @return null
 	  */
 	final public function getSubtotal()
 	{
@@ -179,10 +234,21 @@ class ViewVentas extends VO
 	}
 
 	/**
+	  * setSubtotal
+	  * 
+	  * Set the <i>subtotal</i> property for this ViewVentas object.
+	  * @param null
+	  */
+	final public function setSubtotal( $subtotal )
+	{
+		$this->subtotal = $subtotal;
+	}
+
+	/**
 	  * getIva
 	  * 
 	  * Get the <i>iva</i> property for this ViewVentas object.
-	  * @return unknown
+	  * @return null
 	  */
 	final public function getIva()
 	{
@@ -190,10 +256,21 @@ class ViewVentas extends VO
 	}
 
 	/**
+	  * setIva
+	  * 
+	  * Set the <i>iva</i> property for this ViewVentas object.
+	  * @param null
+	  */
+	final public function setIva( $iva )
+	{
+		$this->iva = $iva;
+	}
+
+	/**
 	  * getSucursal
 	  * 
 	  * Get the <i>sucursal</i> property for this ViewVentas object.
-	  * @return unknown
+	  * @return null
 	  */
 	final public function getSucursal()
 	{
@@ -201,10 +278,21 @@ class ViewVentas extends VO
 	}
 
 	/**
+	  * setSucursal
+	  * 
+	  * Set the <i>sucursal</i> property for this ViewVentas object.
+	  * @param null
+	  */
+	final public function setSucursal( $sucursal )
+	{
+		$this->sucursal = $sucursal;
+	}
+
+	/**
 	  * getIdSucursal
 	  * 
 	  * Get the <i>id_sucursal</i> property for this ViewVentas object.
-	  * @return unknown
+	  * @return null
 	  */
 	final public function getIdSucursal()
 	{
@@ -212,10 +300,21 @@ class ViewVentas extends VO
 	}
 
 	/**
+	  * setIdSucursal
+	  * 
+	  * Set the <i>id_sucursal</i> property for this ViewVentas object.
+	  * @param null
+	  */
+	final public function setIdSucursal( $id_sucursal )
+	{
+		$this->id_sucursal = $id_sucursal;
+	}
+
+	/**
 	  * getUsuario
 	  * 
 	  * Get the <i>usuario</i> property for this ViewVentas object.
-	  * @return unknown
+	  * @return null
 	  */
 	final public function getUsuario()
 	{
@@ -223,14 +322,36 @@ class ViewVentas extends VO
 	}
 
 	/**
+	  * setUsuario
+	  * 
+	  * Set the <i>usuario</i> property for this ViewVentas object.
+	  * @param null
+	  */
+	final public function setUsuario( $usuario )
+	{
+		$this->usuario = $usuario;
+	}
+
+	/**
 	  * getIdUsuario
 	  * 
 	  * Get the <i>id_usuario</i> property for this ViewVentas object.
-	  * @return unknown
+	  * @return null
 	  */
 	final public function getIdUsuario()
 	{
 		return $this->id_usuario;
+	}
+
+	/**
+	  * setIdUsuario
+	  * 
+	  * Set the <i>id_usuario</i> property for this ViewVentas object.
+	  * @param null
+	  */
+	final public function setIdUsuario( $id_usuario )
+	{
+		$this->id_usuario = $id_usuario;
 	}
 
 }

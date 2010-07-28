@@ -19,6 +19,7 @@ abstract class ClienteDAOBase extends TablaDAO
 	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
+	  * @throws Exception si la operacion fallo.
 	  * @param Cliente [$cliente] El objeto de tipo Cliente
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
 	  **/
@@ -26,9 +27,9 @@ abstract class ClienteDAOBase extends TablaDAO
 	{
 		if( self::getByPK(  $cliente->getIdCliente() ) === NULL )
 		{
-			return ClienteDAOBase::create( $cliente) ;
+			try{ return ClienteDAOBase::create( $cliente) ; } catch(Exception $e){ throw $e; }
 		}else{
-			return ClienteDAOBase::update( $cliente) ;
+			try{ return ClienteDAOBase::update( $cliente) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
@@ -59,14 +60,24 @@ abstract class ClienteDAOBase extends TablaDAO
 	  * Esta funcion leera todos los contenidos de la tabla en la base de datos y construira
 	  * un vector que contiene objetos de tipo {@link Cliente}. Tenga en cuenta que este metodo
 	  * consumen enormes cantidades de recursos si la tabla tiene muchas filas. 
-	  * Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos
+	  * Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos o se usan sus parametros para obtener un menor numero de filas.
 	  *	
 	  *	@static
+	  * @param $pagina Pagina a ver.
+	  * @param $columnas_por_pagina Columnas por pagina.
+	  * @param $orden Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $tipo_de_orden 'ASC' o 'DESC' el default es 'ASC'
 	  * @return Array Un arreglo que contiene objetos del tipo {@link Cliente}.
 	  **/
-	public static final function getAll( )
+	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
-		$sql = "SELECT * from cliente ;";
+		$sql = "SELECT * from cliente";
+		if($pagina != NULL)
+		{
+			if($orden != NULL)
+			{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
+			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
+		}
 		global $conn;
 		$rs = $conn->Execute($sql);
 		$allData = array();
@@ -98,8 +109,9 @@ abstract class ClienteDAOBase extends TablaDAO
 	  * </code>
 	  *	@static
 	  * @param Cliente [$cliente] El objeto de tipo Cliente
+	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
 	  **/
-	public static final function search( $cliente )
+	public static final function search( $cliente , $json = false)
 	{
 		$sql = "SELECT * from cliente WHERE ("; 
 		$val = array();
@@ -146,11 +158,20 @@ abstract class ClienteDAOBase extends TablaDAO
 		$sql = substr($sql, 0, -3) . " )";
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		$allData = array();
-		foreach ($rs as $foo) {
-    		array_push( $allData, new Cliente($foo));
+		if($json === false){
+			$ar = array();
+			foreach ($rs as $foo) {
+    			array_push( $ar, new Cliente($foo));
+			}
+			return $ar;
+		}else{
+			$allData = '[';
+			foreach ($rs as $foo) {
+    			$allData .= new Cliente($foo) . ',';
+			}
+    		$allData = substr($allData, 0 , -1) . ']';
+			return $allData;
 		}
-		return $allData;
 	}
 
 
@@ -179,7 +200,7 @@ abstract class ClienteDAOBase extends TablaDAO
 			$cliente->getIdCliente(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
-		catch(Exception $e){ return $e->getMessage(); }
+		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		return $conn->Affected_Rows();
 	}
 
@@ -211,11 +232,155 @@ abstract class ClienteDAOBase extends TablaDAO
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
-		catch(Exception $e){ return $e->getMessage(); }
+		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
 		$cliente->setIdCliente( $conn->Insert_ID() );
 		return $ar;
+	}
+
+
+	/**
+	  *	Buscar por rango.
+	  *	
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Cliente} de la base de datos siempre y cuando 
+	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Cliente}.
+	  * 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
+	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
+	  *	
+	  * <code>
+	  *  /**
+	  *   * Ejemplo de uso - buscar todos los clientes que tengan limite de credito 
+	  *   * mayor a 2000 y menor a 5000. Y que tengan un descuento del 50%.
+	  *   {@*} 
+	  *	  $cr1 = new Cliente();
+	  *	  $cr1->setLimiteCredito("2000");
+	  *	  $cr1->setDescuento("50");
+	  *	  
+	  *	  $cr2 = new Cliente();
+	  *	  $cr2->setLimiteCredito("5000");
+	  *	  $resultados = ClienteDAO::byRange($cr1, $cr2);
+	  *	  
+	  *	  foreach($resultados as $c ){
+	  *	  	echo $c->getNombre() . "<br>";
+	  *	  }
+	  * </code>
+	  *	@static
+	  * @param Cliente [$cliente] El objeto de tipo Cliente
+	  * @param Cliente [$cliente] El objeto de tipo Cliente
+	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  **/
+	public static final function byRange( $clienteA , $clienteB , $json = false)
+	{
+		$sql = "SELECT * from cliente WHERE ("; 
+		$val = array();
+		if( (($a = $clienteA->getIdCliente()) != NULL) & ( ($b = $clienteB->getIdCliente()) != NULL) ){
+				$sql .= " id_cliente >= ? AND id_cliente <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " id_cliente = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $clienteA->getRfc()) != NULL) & ( ($b = $clienteB->getRfc()) != NULL) ){
+				$sql .= " rfc >= ? AND rfc <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " rfc = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $clienteA->getNombre()) != NULL) & ( ($b = $clienteB->getNombre()) != NULL) ){
+				$sql .= " nombre >= ? AND nombre <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " nombre = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $clienteA->getDireccion()) != NULL) & ( ($b = $clienteB->getDireccion()) != NULL) ){
+				$sql .= " direccion >= ? AND direccion <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " direccion = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $clienteA->getTelefono()) != NULL) & ( ($b = $clienteB->getTelefono()) != NULL) ){
+				$sql .= " telefono >= ? AND telefono <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " telefono = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $clienteA->getEMail()) != NULL) & ( ($b = $clienteB->getEMail()) != NULL) ){
+				$sql .= " e_mail >= ? AND e_mail <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " e_mail = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $clienteA->getLimiteCredito()) != NULL) & ( ($b = $clienteB->getLimiteCredito()) != NULL) ){
+				$sql .= " limite_credito >= ? AND limite_credito <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " limite_credito = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $clienteA->getDescuento()) != NULL) & ( ($b = $clienteB->getDescuento()) != NULL) ){
+				$sql .= " descuento >= ? AND descuento <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " descuento = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		$sql = substr($sql, 0, -3) . " )";
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
+		if($json === false){
+			$ar = array();
+			foreach ($rs as $foo) {
+    			array_push( $ar, new Cliente($foo));
+			}
+			return $ar;
+		}else{
+			$allData = '[';
+			foreach ($rs as $foo) {
+    			$allData .= new Cliente($foo) . ',';
+			}
+    		$allData = substr($allData, 0 , -1) . ']';
+			return $allData;
+		}
 	}
 
 

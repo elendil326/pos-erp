@@ -76,7 +76,7 @@ class ViewGastos extends VO
 	  * getIdGasto
 	  * 
 	  * Get the <i>id_gasto</i> property for this ViewGastos object.
-	  * @return unknown
+	  * @return null
 	  */
 	final public function getIdGasto()
 	{
@@ -84,10 +84,21 @@ class ViewGastos extends VO
 	}
 
 	/**
+	  * setIdGasto
+	  * 
+	  * Set the <i>id_gasto</i> property for this ViewGastos object.
+	  * @param null
+	  */
+	final public function setIdGasto( $id_gasto )
+	{
+		$this->id_gasto = $id_gasto;
+	}
+
+	/**
 	  * getMonto
 	  * 
 	  * Get the <i>monto</i> property for this ViewGastos object.
-	  * @return unknown
+	  * @return null
 	  */
 	final public function getMonto()
 	{
@@ -95,10 +106,21 @@ class ViewGastos extends VO
 	}
 
 	/**
+	  * setMonto
+	  * 
+	  * Set the <i>monto</i> property for this ViewGastos object.
+	  * @param null
+	  */
+	final public function setMonto( $monto )
+	{
+		$this->monto = $monto;
+	}
+
+	/**
 	  * getFecha
 	  * 
 	  * Get the <i>fecha</i> property for this ViewGastos object.
-	  * @return unknown
+	  * @return null
 	  */
 	final public function getFecha()
 	{
@@ -106,10 +128,21 @@ class ViewGastos extends VO
 	}
 
 	/**
+	  * setFecha
+	  * 
+	  * Set the <i>fecha</i> property for this ViewGastos object.
+	  * @param null
+	  */
+	final public function setFecha( $fecha )
+	{
+		$this->fecha = $fecha;
+	}
+
+	/**
 	  * getSucursal
 	  * 
 	  * Get the <i>sucursal</i> property for this ViewGastos object.
-	  * @return unknown
+	  * @return null
 	  */
 	final public function getSucursal()
 	{
@@ -117,10 +150,21 @@ class ViewGastos extends VO
 	}
 
 	/**
+	  * setSucursal
+	  * 
+	  * Set the <i>sucursal</i> property for this ViewGastos object.
+	  * @param null
+	  */
+	final public function setSucursal( $sucursal )
+	{
+		$this->sucursal = $sucursal;
+	}
+
+	/**
 	  * getIdSucursal
 	  * 
 	  * Get the <i>id_sucursal</i> property for this ViewGastos object.
-	  * @return unknown
+	  * @return null
 	  */
 	final public function getIdSucursal()
 	{
@@ -128,14 +172,36 @@ class ViewGastos extends VO
 	}
 
 	/**
+	  * setIdSucursal
+	  * 
+	  * Set the <i>id_sucursal</i> property for this ViewGastos object.
+	  * @param null
+	  */
+	final public function setIdSucursal( $id_sucursal )
+	{
+		$this->id_sucursal = $id_sucursal;
+	}
+
+	/**
 	  * getUsuario
 	  * 
 	  * Get the <i>usuario</i> property for this ViewGastos object.
-	  * @return unknown
+	  * @return null
 	  */
 	final public function getUsuario()
 	{
 		return $this->usuario;
+	}
+
+	/**
+	  * setUsuario
+	  * 
+	  * Set the <i>usuario</i> property for this ViewGastos object.
+	  * @param null
+	  */
+	final public function setUsuario( $usuario )
+	{
+		$this->usuario = $usuario;
 	}
 
 }

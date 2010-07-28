@@ -33,6 +33,29 @@ class Compras extends VO
 	}
 
 	/**
+	  * Obtener una representacion en String
+	  * 
+	  * Este metodo permite tratar a un objeto Compras en forma de cadena.
+	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
+	  * @return String 
+	  */
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
+		"id_compra" => $this->id_compra,
+		"id_proveedor" => $this->id_proveedor,
+		"tipo_compra" => $this->tipo_compra,
+		"fecha" => $this->fecha,
+		"subtotal" => $this->subtotal,
+		"iva" => $this->iva,
+		"id_sucursal" => $this->id_sucursal,
+		"id_usuario" => $this->id_usuario
+		)); 
+	return json_encode($vec, true); 
+	}
+	
+	/**
 	  * id_compra
 	  * 
 	  * id de la compra<br>

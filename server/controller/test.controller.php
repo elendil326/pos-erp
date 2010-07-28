@@ -22,17 +22,17 @@ function div($t=NULL, $c = "")
 }
 
 
-function test1()
+function vender()
 {
 
 	
 	//seleccionar un usuario
-	$usuario = UsuarioDAO::getByPK(rand(1, 25));
+	$usuario = UsuarioDAO::getByPK( rand(1, 25) );
 	div( "Usuario a vender", $usuario->getNombre() );
 	div();
 	
 	//seleccionar un cliente
-	$cliente = ClienteDAO::getByPK(rand(1,200));
+	$cliente = ClienteDAO::getByPK( rand(1,200) );
 	div( "Cliente a comprar", $cliente->getNombre() );
 	div( "Su limite de credito es", $cliente->getLimiteCredito() );
 	div( "Su descuento es", $cliente->getDescuento() );
@@ -255,6 +255,9 @@ function test1()
 			div("Error pagando", $res);
 		}
 		
+		
+
+		
 	}
 	
 	div("Saldo en el que quedo la venta", $saldo);
@@ -265,248 +268,45 @@ function test1()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function test2(){
-	echo "ok, vamos a generar compras :D";
+function test()
+{
 	
-	//seleccionar un usuario
-	$usuario = UsuarioDAO::getByPK(rand(1, 25));
-	div( "Usuario a vender", $usuario->getNombre() );
-	div();
+	div( "Probando by range" );
 	
-	//seleccionar un proveedor
-	$proveedor = ProveedorDAO::getByPK(rand(1,50));
-	div( "Proveedor a comprar", $proveedor->getNombre() );
-	div();
-	
-	
-	//seleccinar si sera credito o contado
-	$tipo = array("contado", "credito");
-	$tipo = $tipo[ rand(0,1) ];
-	div("La compra sera de tipo", $tipo);
-	
-	
-	//insertar compra 'vacia'
-	$compra = new Compras();
-	$compra->setIdProveedor( $proveedor->getIdProveedor() );
-	$compra->setIdUsuario( $usuario->getIdUsuario() );
-	$compra->setTipocompra( $tipo );
-	$compra->setIdSucursal( $usuario->getIdSucursal() );
-	$compra->setSubtotal(0);
-	$compra->setIva(0);
-	
-	
-	//obtener todos los productos del proveedor
-	$prodABuscar = new ProductosProveedor();
-	$prodABuscar->setIdProveedor($proveedor->getIdProveedor() );
-	$productosProveedor = ProductosProveedorDao::search( $prodABuscar );
-	$totalProds = count($productosProveedor);
-	div("Productos del proveedor", $totalProds);
-	div();
-	
-	//verificamos que si haya productos para comprar si no es asi para que compramos
-	
-	if ($totalProds ==0)
-	{
-		div("no hay productos para comprar :(  , no compraremos nada");
-		div("Gracias por usar el modelo DAO");
-		div();
-		return;
-	}
-	
-	$resultado = ComprasDAO::save($compra);
-	
-	if($resultado === 1){
-		//compra bien
-		div("Inserscion de compra", "OK");
-		div("Id de esta compra", $compra->getIdCompra());
-		div();
-	}else{
-		//compra mal, si la compra sale mal, trae el error 
-		div("Inserscion de compra", $resultado);
-		die("Script ended.");
-	}
-	
-	
-	
+	$criteriaA = new Cliente();
+	$criteriaA->setDescuento('34');
 
-	//aqui guardo el subtotal
-	$subtotal = 0;
 
-	//insetar productos a detalle_compra
-	//incomprar un numero de prodcutos a comprar
-	$prodsAComprar = rand(1, $totalProds);
-	div("Intentare comprar " . $prodsAComprar . " productos" );
-	div();
-	
-	while($prodsAComprar > 0)
-	{
-		
-		//escojer un producto del arreglo $productosProveedor al azar
-		$producto = $productosProveedor[ rand( 0, $totalProds - 1 ) ];
-		div("Intentando comprar el producto ", $producto->getIdProducto() );
+	$criteriaB = new Cliente();
+	$criteriaB->setIdCliente('30');	
+	$criteriaB->setDescuento('50');	
+	global $conn;
 
-		// escojer una cantidad al azar de este producto, osea, cuantos voy a comprar
-		$cantidad = rand(1, 100);
-		div("Cantidad de estos articulos que comprare", $cantidad);
+	$res = ClienteDAO::getAll( 1, 10, 'rfc', 'DESC'  );
 
-		
-		//ok producto valido, lo voy a insertar en detalle_compra
-		$detallecompra = new Detallecompra();
-		$detallecompra->setIdcompra( $compra->getIdcompra() );
-		$detallecompra->setIdProducto( $producto->getIdInventario() );
-		$detallecompra->setCantidad( $cantidad );
-		$detallecompra->setPrecio( $producto->getPrecio() );
-		
-		$res = DetallecompraDAO::save($detallecompra);
-		
-		if($res === 1)
-		{
-			div("Agregando a detalle compra", "OK");
-		}else{
-			div("Error al crear detalle compra", $res );
-			return;
+		foreach( $res as $c ){
+			echo $c->getNombre() . "<br>";
 		}
-		
-		//si todo salio bien
-		$subtotal += $cantidad*$producto->getPrecio();
-		div();
-		
-		$prodsAComprar--;
-		
-	}
 
-	//muestro el subtotal
-	div("Sub Total", $subtotal );
-	
-	//ok, ya inserte detalles a la compra, ahora
-	//actualizo la compra que estava 'vacia' osea la cabecera
-	
-	$iva=$subtotal*.016;
-	$total=$subtotal+$iva;
-	
-	//muestro el total total total :P
-	div("Total", $total );
-	
-	
-	//actualizo la compra, este objeto fue el que usamos al inicio
-	//asi que llamar a save() no creara uno nuevo, sino que actualizara
-	//los datos nuevos
-	$compra->setSubTotal( $subtotal );
-	$compra->setIva( $iva );
-	$res = comprasDAO::save($compra);
-	
-	if($res === 1){
-		div("Actualizando cabecera", "OK");
-		div();
-	}else{
-		div("Actualizando cabecera", "Ups");
-		div();
-		return;
-	}
-	
-		
-	//ahora facturamos
-	div("Facturamos !!");			
-
-	$factura = new FacturaCompra();
-	$factura->setIdcompra($compra->getIdcompra());
-	$factura->setFolio("ALGUNFOLIO7" . rand(1000, 9999));
-	$res = FacturacompraDAO::save($factura);
-
-	if($res===1){
-		div("Facturando", "OK");
-		div();
-	}else{
-		div("Error al facturar", $res);
-		div();
-	}
-			
-	
-	
-	if($tipo == "credito"){
-		//si es a credito, vamos a ingresar algunos pago al azar
-		div("Esta compra fue a Credito");
-	
-	
-		$pagosQty = rand( 0, 15 );
-	
-		div("Pagos que realizare", $pagosQty);
-		div();
-	
-		//en este momento mi saldo es igual al total, ya que no he pagado nada
-		$saldo = $total;
-	
-		for($i = 1; $i <= $pagosQty; $i++)
-		{
-
-			if($saldo <= 0){
-				div("Termine de pagar el articulo !!");
-				break;
-			}
-			div("Saldo restante", $saldo);
-		
-			$pcompra = new PagosCompra();
-			$pcompra->setIdcompra( $compra->getIdcompra() );
-			$fecha=date("Y-m-d");
-			$pcompra->setFecha($fecha);
-		
-			//cantidad que pagare al azar...
-			$amount = rand(1, ($saldo * .25));
-			div("Pago " . $i, $amount);
-		
-			$pcompra->setMonto($amount);
-			$res = PagoscompraDAO::save($pcompra);
-		
-			if($res===1){
-				div("Pagando... ", "OK, el id del pago fue " . $pcompra->getIdPago());
-				div();
-				$saldo -= $amount;
-			
-			}else{
-				div("Error pagando", $res);
-			}
-		
-		}
-	
-		div("Saldo en el que quedo la compra", $saldo);
-	}
-	div("Gracias por usar el modelo DAO");
+try{
+	ClienteDAO::save($criteriaA);
+}catch(Exception $e){
+	//echo $e->getMessage() ."--- ";
 }
 
+	
+	
+}
 
-
-
-
-
-
-
-
-
-
-
+function generarVentas()
+{
+	test();
+	//vender();
+}
 
 switch($args['action'])
 {
-	case 901: test1(); break;
-	case 902: test2(); break;
+	case 901: generarVentas(); break;
 	default: echo "bad testing";
 	
 }

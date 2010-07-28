@@ -28,6 +28,24 @@ class Sucursal extends VO
 	}
 
 	/**
+	  * Obtener una representacion en String
+	  * 
+	  * Este metodo permite tratar a un objeto Sucursal en forma de cadena.
+	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
+	  * @return String 
+	  */
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
+		"id_sucursal" => $this->id_sucursal,
+		"descripcion" => $this->descripcion,
+		"direccion" => $this->direccion
+		)); 
+	return json_encode($vec, true); 
+	}
+	
+	/**
 	  * id_sucursal
 	  * 
 	  * Identificador de cada sucursal<br>

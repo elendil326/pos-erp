@@ -27,6 +27,23 @@ class FacturaCompra extends VO
 	}
 
 	/**
+	  * Obtener una representacion en String
+	  * 
+	  * Este metodo permite tratar a un objeto FacturaCompra en forma de cadena.
+	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
+	  * @return String 
+	  */
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
+		"folio" => $this->folio,
+		"id_compra" => $this->id_compra
+		)); 
+	return json_encode($vec, true); 
+	}
+	
+	/**
 	  * folio
 	  * 
 	  * Campo no documentado<br>

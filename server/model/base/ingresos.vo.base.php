@@ -31,6 +31,27 @@ class Ingresos extends VO
 	}
 
 	/**
+	  * Obtener una representacion en String
+	  * 
+	  * Este metodo permite tratar a un objeto Ingresos en forma de cadena.
+	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
+	  * @return String 
+	  */
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
+		"id_ingreso" => $this->id_ingreso,
+		"concepto" => $this->concepto,
+		"monto" => $this->monto,
+		"fecha" => $this->fecha,
+		"id_sucursal" => $this->id_sucursal,
+		"id_usuario" => $this->id_usuario
+		)); 
+	return json_encode($vec, true); 
+	}
+	
+	/**
 	  * id_ingreso
 	  * 
 	  * id para identificar el ingreso<br>

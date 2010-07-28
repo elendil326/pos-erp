@@ -30,6 +30,26 @@ class DetalleInventario extends VO
 	}
 
 	/**
+	  * Obtener una representacion en String
+	  * 
+	  * Este metodo permite tratar a un objeto DetalleInventario en forma de cadena.
+	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
+	  * @return String 
+	  */
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
+		"id_producto" => $this->id_producto,
+		"id_sucursal" => $this->id_sucursal,
+		"precio_venta" => $this->precio_venta,
+		"min" => $this->min,
+		"existencias" => $this->existencias
+		)); 
+	return json_encode($vec, true); 
+	}
+	
+	/**
 	  * id_producto
 	  * 
 	  * id del producto al que se refiere<br>

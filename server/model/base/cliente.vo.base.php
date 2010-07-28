@@ -33,6 +33,29 @@ class Cliente extends VO
 	}
 
 	/**
+	  * Obtener una representacion en String
+	  * 
+	  * Este metodo permite tratar a un objeto Cliente en forma de cadena.
+	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
+	  * @return String 
+	  */
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
+		"id_cliente" => $this->id_cliente,
+		"rfc" => $this->rfc,
+		"nombre" => $this->nombre,
+		"direccion" => $this->direccion,
+		"telefono" => $this->telefono,
+		"e_mail" => $this->e_mail,
+		"limite_credito" => $this->limite_credito,
+		"descuento" => $this->descuento
+		)); 
+	return json_encode($vec, true); 
+	}
+	
+	/**
 	  * id_cliente
 	  * 
 	  * identificador del cliente<br>

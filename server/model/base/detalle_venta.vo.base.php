@@ -29,6 +29,25 @@ class DetalleVenta extends VO
 	}
 
 	/**
+	  * Obtener una representacion en String
+	  * 
+	  * Este metodo permite tratar a un objeto DetalleVenta en forma de cadena.
+	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
+	  * @return String 
+	  */
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
+		"id_venta" => $this->id_venta,
+		"id_producto" => $this->id_producto,
+		"cantidad" => $this->cantidad,
+		"precio" => $this->precio
+		)); 
+	return json_encode($vec, true); 
+	}
+	
+	/**
 	  * id_venta
 	  * 
 	  * venta a que se referencia<br>

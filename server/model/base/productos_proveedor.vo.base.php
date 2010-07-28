@@ -31,6 +31,27 @@ class ProductosProveedor extends VO
 	}
 
 	/**
+	  * Obtener una representacion en String
+	  * 
+	  * Este metodo permite tratar a un objeto ProductosProveedor en forma de cadena.
+	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
+	  * @return String 
+	  */
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
+		"id_producto" => $this->id_producto,
+		"clave_producto" => $this->clave_producto,
+		"id_proveedor" => $this->id_proveedor,
+		"id_inventario" => $this->id_inventario,
+		"descripcion" => $this->descripcion,
+		"precio" => $this->precio
+		)); 
+	return json_encode($vec, true); 
+	}
+	
+	/**
 	  * id_producto
 	  * 
 	  * identificador del producto<br>

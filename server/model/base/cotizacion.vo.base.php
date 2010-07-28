@@ -32,6 +32,28 @@ class Cotizacion extends VO
 	}
 
 	/**
+	  * Obtener una representacion en String
+	  * 
+	  * Este metodo permite tratar a un objeto Cotizacion en forma de cadena.
+	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
+	  * @return String 
+	  */
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
+		"id_cotizacion" => $this->id_cotizacion,
+		"id_cliente" => $this->id_cliente,
+		"fecha" => $this->fecha,
+		"subtotal" => $this->subtotal,
+		"iva" => $this->iva,
+		"id_sucursal" => $this->id_sucursal,
+		"id_usuario" => $this->id_usuario
+		)); 
+	return json_encode($vec, true); 
+	}
+	
+	/**
 	  * id_cotizacion
 	  * 
 	  * id de la cotizacion<br>

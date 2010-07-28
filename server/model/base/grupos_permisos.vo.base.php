@@ -27,6 +27,23 @@ class GruposPermisos extends VO
 	}
 
 	/**
+	  * Obtener una representacion en String
+	  * 
+	  * Este metodo permite tratar a un objeto GruposPermisos en forma de cadena.
+	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
+	  * @return String 
+	  */
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
+		"id_grupo" => $this->id_grupo,
+		"id_permiso" => $this->id_permiso
+		)); 
+	return json_encode($vec, true); 
+	}
+	
+	/**
 	  * id_grupo
 	  * 
 	  * Campo no documentado<br>

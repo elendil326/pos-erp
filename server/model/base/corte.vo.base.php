@@ -36,6 +36,32 @@ class Corte extends VO
 	}
 
 	/**
+	  * Obtener una representacion en String
+	  * 
+	  * Este metodo permite tratar a un objeto Corte en forma de cadena.
+	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
+	  * @return String 
+	  */
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
+		"num_corte" => $this->num_corte,
+		"anio" => $this->anio,
+		"inicio" => $this->inicio,
+		"fin" => $this->fin,
+		"ventas" => $this->ventas,
+		"abonosVentas" => $this->abonosVentas,
+		"compras" => $this->compras,
+		"AbonosCompra" => $this->AbonosCompra,
+		"gastos" => $this->gastos,
+		"ingresos" => $this->ingresos,
+		"gananciasNetas" => $this->gananciasNetas
+		)); 
+	return json_encode($vec, true); 
+	}
+	
+	/**
 	  * num_corte
 	  * 
 	  * numero de corte<br>

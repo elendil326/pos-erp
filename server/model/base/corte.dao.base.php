@@ -19,6 +19,7 @@ abstract class CorteDAOBase extends TablaDAO
 	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
+	  * @throws Exception si la operacion fallo.
 	  * @param Corte [$corte] El objeto de tipo Corte
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
 	  **/
@@ -26,9 +27,9 @@ abstract class CorteDAOBase extends TablaDAO
 	{
 		if( self::getByPK(  $corte->getNumCorte() ) === NULL )
 		{
-			return CorteDAOBase::create( $corte) ;
+			try{ return CorteDAOBase::create( $corte) ; } catch(Exception $e){ throw $e; }
 		}else{
-			return CorteDAOBase::update( $corte) ;
+			try{ return CorteDAOBase::update( $corte) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
@@ -59,14 +60,24 @@ abstract class CorteDAOBase extends TablaDAO
 	  * Esta funcion leera todos los contenidos de la tabla en la base de datos y construira
 	  * un vector que contiene objetos de tipo {@link Corte}. Tenga en cuenta que este metodo
 	  * consumen enormes cantidades de recursos si la tabla tiene muchas filas. 
-	  * Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos
+	  * Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos o se usan sus parametros para obtener un menor numero de filas.
 	  *	
 	  *	@static
+	  * @param $pagina Pagina a ver.
+	  * @param $columnas_por_pagina Columnas por pagina.
+	  * @param $orden Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $tipo_de_orden 'ASC' o 'DESC' el default es 'ASC'
 	  * @return Array Un arreglo que contiene objetos del tipo {@link Corte}.
 	  **/
-	public static final function getAll( )
+	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
-		$sql = "SELECT * from corte ;";
+		$sql = "SELECT * from corte";
+		if($pagina != NULL)
+		{
+			if($orden != NULL)
+			{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
+			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
+		}
 		global $conn;
 		$rs = $conn->Execute($sql);
 		$allData = array();
@@ -98,8 +109,9 @@ abstract class CorteDAOBase extends TablaDAO
 	  * </code>
 	  *	@static
 	  * @param Corte [$corte] El objeto de tipo Corte
+	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
 	  **/
-	public static final function search( $corte )
+	public static final function search( $corte , $json = false)
 	{
 		$sql = "SELECT * from corte WHERE ("; 
 		$val = array();
@@ -161,11 +173,20 @@ abstract class CorteDAOBase extends TablaDAO
 		$sql = substr($sql, 0, -3) . " )";
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		$allData = array();
-		foreach ($rs as $foo) {
-    		array_push( $allData, new Corte($foo));
+		if($json === false){
+			$ar = array();
+			foreach ($rs as $foo) {
+    			array_push( $ar, new Corte($foo));
+			}
+			return $ar;
+		}else{
+			$allData = '[';
+			foreach ($rs as $foo) {
+    			$allData .= new Corte($foo) . ',';
+			}
+    		$allData = substr($allData, 0 , -1) . ']';
+			return $allData;
 		}
-		return $allData;
 	}
 
 
@@ -197,7 +218,7 @@ abstract class CorteDAOBase extends TablaDAO
 			$corte->getNumCorte(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
-		catch(Exception $e){ return $e->getMessage(); }
+		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		return $conn->Affected_Rows();
 	}
 
@@ -232,11 +253,188 @@ abstract class CorteDAOBase extends TablaDAO
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
-		catch(Exception $e){ return $e->getMessage(); }
+		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
 		$corte->setNumCorte( $conn->Insert_ID() );
 		return $ar;
+	}
+
+
+	/**
+	  *	Buscar por rango.
+	  *	
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Corte} de la base de datos siempre y cuando 
+	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Corte}.
+	  * 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
+	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
+	  *	
+	  * <code>
+	  *  /**
+	  *   * Ejemplo de uso - buscar todos los clientes que tengan limite de credito 
+	  *   * mayor a 2000 y menor a 5000. Y que tengan un descuento del 50%.
+	  *   {@*} 
+	  *	  $cr1 = new Cliente();
+	  *	  $cr1->setLimiteCredito("2000");
+	  *	  $cr1->setDescuento("50");
+	  *	  
+	  *	  $cr2 = new Cliente();
+	  *	  $cr2->setLimiteCredito("5000");
+	  *	  $resultados = ClienteDAO::byRange($cr1, $cr2);
+	  *	  
+	  *	  foreach($resultados as $c ){
+	  *	  	echo $c->getNombre() . "<br>";
+	  *	  }
+	  * </code>
+	  *	@static
+	  * @param Corte [$corte] El objeto de tipo Corte
+	  * @param Corte [$corte] El objeto de tipo Corte
+	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  **/
+	public static final function byRange( $corteA , $corteB , $json = false)
+	{
+		$sql = "SELECT * from corte WHERE ("; 
+		$val = array();
+		if( (($a = $corteA->getNumCorte()) != NULL) & ( ($b = $corteB->getNumCorte()) != NULL) ){
+				$sql .= " num_corte >= ? AND num_corte <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " num_corte = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $corteA->getAnio()) != NULL) & ( ($b = $corteB->getAnio()) != NULL) ){
+				$sql .= " anio >= ? AND anio <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " anio = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $corteA->getInicio()) != NULL) & ( ($b = $corteB->getInicio()) != NULL) ){
+				$sql .= " inicio >= ? AND inicio <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " inicio = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $corteA->getFin()) != NULL) & ( ($b = $corteB->getFin()) != NULL) ){
+				$sql .= " fin >= ? AND fin <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " fin = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $corteA->getVentas()) != NULL) & ( ($b = $corteB->getVentas()) != NULL) ){
+				$sql .= " ventas >= ? AND ventas <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " ventas = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $corteA->getAbonosVentas()) != NULL) & ( ($b = $corteB->getAbonosVentas()) != NULL) ){
+				$sql .= " abonosVentas >= ? AND abonosVentas <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " abonosVentas = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $corteA->getCompras()) != NULL) & ( ($b = $corteB->getCompras()) != NULL) ){
+				$sql .= " compras >= ? AND compras <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " compras = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $corteA->getAbonosCompra()) != NULL) & ( ($b = $corteB->getAbonosCompra()) != NULL) ){
+				$sql .= " AbonosCompra >= ? AND AbonosCompra <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " AbonosCompra = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $corteA->getGastos()) != NULL) & ( ($b = $corteB->getGastos()) != NULL) ){
+				$sql .= " gastos >= ? AND gastos <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " gastos = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $corteA->getIngresos()) != NULL) & ( ($b = $corteB->getIngresos()) != NULL) ){
+				$sql .= " ingresos >= ? AND ingresos <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " ingresos = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $corteA->getGananciasNetas()) != NULL) & ( ($b = $corteB->getGananciasNetas()) != NULL) ){
+				$sql .= " gananciasNetas >= ? AND gananciasNetas <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " gananciasNetas = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		$sql = substr($sql, 0, -3) . " )";
+		global $conn;
+		$rs = $conn->Execute($sql, $val);
+		if($json === false){
+			$ar = array();
+			foreach ($rs as $foo) {
+    			array_push( $ar, new Corte($foo));
+			}
+			return $ar;
+		}else{
+			$allData = '[';
+			foreach ($rs as $foo) {
+    			$allData .= new Corte($foo) . ',';
+			}
+    		$allData = substr($allData, 0 , -1) . ']';
+			return $allData;
+		}
 	}
 
 

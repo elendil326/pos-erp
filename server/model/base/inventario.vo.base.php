@@ -28,6 +28,24 @@ class Inventario extends VO
 	}
 
 	/**
+	  * Obtener una representacion en String
+	  * 
+	  * Este metodo permite tratar a un objeto Inventario en forma de cadena.
+	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
+	  * @return String 
+	  */
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
+		"id_producto" => $this->id_producto,
+		"nombre" => $this->nombre,
+		"denominacion" => $this->denominacion
+		)); 
+	return json_encode($vec, true); 
+	}
+	
+	/**
 	  * id_producto
 	  * 
 	  * id del producto<br>
