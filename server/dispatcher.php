@@ -92,6 +92,10 @@ switch( ((int)($args['action'] / 100))*100 )
 	case 900:
 		require_once('controller/test.controller.php');
 	break;
+
+	case 1000:
+		require_once('controller/cortes.controller.php');
+	break;
 	
 }
 
