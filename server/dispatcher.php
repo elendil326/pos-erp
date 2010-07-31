@@ -11,6 +11,41 @@
 */
 
 
+
+/**
+ * iniciar la sesion y comprobar seguridad basica
+ */
+$ss = session_start (  );
+
+if(!$ss){
+	echo "{\"succes\": false , \"reason\": -1,  \"text\" : \"Imposible iniciar sesion. Debe habilitar las cookies para ingresar.\" }";
+	return;
+}
+
+//si voy a hacer algo que no sea iniciar sesion
+if( $_REQUEST['action']  != "1201" )
+{
+	//verificar que no se haya modificado el user agent
+	if ( ($_SESSION['HTTP_USER_AGENT'] != md5($_SERVER['HTTP_USER_AGENT'])) )
+	{
+		//log security breach
+		echo "{\"succes\": false , \"reason\": 31416, \"text\" : \"Please re-log in.\" }";
+		exit;
+	}	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 * cargar configuracion
 *
@@ -25,7 +60,7 @@ require_once('config.php');
 * @todo agrear if(LOG)
 * @see logger.php
 */
-//require_once('mx.caffeina.logger/logger.php');
+require_once('mx.caffeina.logger/logger.php');
 
 /**
 * Conexión a la base de datos.

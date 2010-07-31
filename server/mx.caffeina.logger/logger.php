@@ -83,8 +83,9 @@
  *
  * @link http://pear.php.net/package/Log/ Log
  */
-$path = $_SERVER['DOCUMENT_ROOT'] . '/../server/pear';
-set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+//$path = $_SERVER['DOCUMENT_ROOT'] . '/../server/pear';
+//set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+
 require_once('Log.php');
 
 $conf = array('lineFormat' => '%1$s %2$s [%3$s] %4$s in %5$s on line %6$s');

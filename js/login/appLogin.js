@@ -18,7 +18,13 @@ AppLogin = function ()
 
 AppLogin.prototype._init = function ()
 {
-	
+	this.createBasicHTML();
+
+}
+
+
+AppLogin.prototype.createBasicHTML = function ()
+{
 	var html_content = '';
 	html_content += '<div id="message"><img src="media/loader.gif"></div>';
 	html_content += '<div id="login" class="login">';
@@ -28,10 +34,8 @@ AppLogin.prototype._init = function ()
 	html_content += '	<div>Clave <input id="login1" type="password" name="pwd"></div>';
 	html_content += '	<div><input type="button" id="login2" style="width: 70px" value="aceptar" onclick="login.checkCurrentLoginInfo()"></div>';
 	html_content += "</div>";
+	document.getElementById("work_zone").innerHTML = html_content;	
 }
-
-
-
 
 
 AppLogin.prototype.checkCurrentLoginInfo = function ()
@@ -42,9 +46,9 @@ AppLogin.prototype.checkCurrentLoginInfo = function ()
 	var pwd = $('#login1').val();
 
 	//Comprobacion que no haya datos invalidos
-	if(user.length > 5 && pwd.length > 5 )
+	if(user.length > 2 && pwd.length > 2 )
 	{
-		this.submitData( u, p );
+		this.submitData( user, pwd );
 	}
 	else
 	{
@@ -74,13 +78,29 @@ AppLogin.prototype.submitData = function ( u, p )
 }
 
 
+AppLogin.prototype.wrong = function ( t )
+{
+	if(DEBUG){
+		console.log("Credenciales invalidas o algo anda mal.", "intentos:" + t )
+	}
+	
+	//limpiar los campos
+	var user = $('#login0').val("");
+	var pwd = $('#login1').val("");
+	
+   	$('#login_content').fadeIn('slow', function() {
+   		$("#login_content").effect("shake", { times:2 }, 100);
+	});
+}
+
 
 AppLogin.prototype.ajaxReturned = function (data)
 {
+	
 	//fade slider
 	$('#message').fadeOut('slow', function() {
 		//show loader animation
-    	$('#login_content').fadeIn('slow', function() {
+
 			
 			if(data.status != 200){
 				//algo anda mal
@@ -88,24 +108,54 @@ AppLogin.prototype.ajaxReturned = function (data)
 			}
 			
 			var x;
+			
 			try{
 				x = jQuery.parseJSON( data.responseText );
 			}catch(e){
 				//invalid json
-				if(DEBUG)console.log("invalid json");
+				if(DEBUG){console.error("Invalid json", data.responseText);}
 				return;
 			}
 			
-			if(!x.success){
+			if(!x){
+				if(DEBUG){console.error("Json is null" , data.responseText);}
+				return;
+			}
+			
+			if(!x.succes){
 				//algo anda mal, success igual a falso
+				switch(x.reason){
+					case 100 : 
+						//credenciales invalidas
+						login.wrong( x.intentos );
+					break;
+					case 101 :
+					
+						if(DEBUG){
+							console.warn(x.text)
+						}
+						alert(x.text);
+						login.wrong(  );
+					break;
+				}
 				return;
 			}
 			
-			//todo anda bien...
-			
-			
-			
-			
-	  	});
+			//verificar sucursal
+			login.verificarSucursal();
+
+			window.location = x.payload.redir;
+
   	});
+}
+
+
+
+
+AppLogin.prototype.verificarSucursal = function ()
+{
+			
+			if(DEBUG){
+				console.log("Sucursal" , x.payload.sucursal);
+			}
 }

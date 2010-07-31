@@ -51,3 +51,17 @@
 	* Default false.
 	*/
 	define('DB_DEBUG', false);
+	
+	
+	
+	
+	//serguridad
+	//timeout's
+	//cada que una sesion sobrepase de este valor, volvera a pedir las credenciales
+	$__ADMIN_TIME_OUT 	= 3600;
+	$__GERENTE_TIME_OUT = 3600;
+	$__CAJERO_TIME_OUT 	= 3600;
+	
+	
+	
+	
