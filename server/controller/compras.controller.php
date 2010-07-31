@@ -7,23 +7,20 @@
   * @author Juan Manuel Hernadez <manuel@caffeina.mx> 
   * 
   */
-/**
- * Se importan las clases necesarias para la instanciacion de los objetos que son 
- * importantes en una compra.
- */
-require_once('../model/base/compras.vo.base.php');
-require_once('../model/base/detalle_compra.vo.base.php');
-require_once('../model/base/detalle_inventario.vo.base.php');
-require_once('../model/base/pagos_compra.vo.base.php');
-require_once('../model/base/productos_proveedor.vo.base.php');
+
 /**
  * Se importan los DAO para poder realizar las operaciones sobre la BD.
- */
-require_once('../model/compras.dao.php');
-require_once('../model/detalle_compra.dao.php');
-require_once('../model/detalle_inventario.dao.php');
-require_once('../model/pagos_compra.dao.php');
-require_once('../model/productos_proveedor.dao.php');
+ */ 
+require_once('../server/model/compras.dao.php');
+require_once('../server/model/detalle_compra.dao.php');
+require_once('../server/model/detalle_inventario.dao.php');
+require_once('../server/model/pagos_compra.dao.php');
+require_once('../server/model/productos_proveedor.dao.php');
+require_once('../server/model/inventario.dao.php');
+require_once('../server/model/impuesto.dao.php');
+require_once('../server/model/sucursal.dao.php');
+require_once('../server/model/usuario.dao.php');
+require_once('../server/model/proveedor.dao.php');
 /**
  * insert_purchase
  *
@@ -43,10 +40,14 @@ require_once('../model/productos_proveedor.dao.php');
 
 		
 function insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra) {//01
-	 $sucursal=$_SESSION['sucursal_id'];
-	 $id_usuario=$_SESSION['id_usuario'];
+	 $sucursal=$_SESSION['sucursal'];
+	 $id_usuario=$_SESSION['usuario'];
+	 
+	 //$sucursal=2;
+	 //$id_usuario=1;
+	 
 	 $out="";
-	 $compra = new Compra();
+	 $compra = new Compras();
 	 
 	 $compra->setIdProveedor($id_proveedor);
 	 $compra->setTipoCompra($tipo_compra);
@@ -57,9 +58,9 @@ function insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra) 
 	 
 	 $ans = ComprasDAO::save($compra);
 	 
-	 if($ans){
+	 if( $ans > 0 ){
 		 
-		 $id_compra = compra->getIdCompra();
+		 $id_compra = $compra->getIdCompra();
 		 $arregloItems = json_decode($jsonItems,true);
 		 $dim = count($arregloItems);
 		 $subtotalCompra =0;
@@ -101,7 +102,14 @@ function insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra) 
 			}else{//if else modo_compra GENERAL MODE
 								
 				$cantidad = $arregloItems[$i]['cantidad'];
-				$precioP = ProductosProveedorDAO::product_price($arregloItems[$i]['id'], $id_proveedor, $sucursal );
+				//sacar el precio a como lo da el proveedor
+				$productoProveedor = new ProductoProveedor();
+				$productoProveedor->setIdProveedor( $id_proveedor );
+				$productoProveedor->setIdInventario( $arregloItems[$i]['id'] );
+				
+				$pP = ProductosProveedorDAO::search( $productoProveedor );
+				
+				$precioP = $pP[0]->getPrecio();
 				
 				$detalle_compra = new DetalleCompra();
 				
@@ -109,8 +117,8 @@ function insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra) 
 				$detalle_compra->setIdProducto($arregloItems[$i]['id']);
 				$detalle_compra->setCantidad($cantidad);
 				$detalle_compra->setPrecio($precioP);
-				$detalle_compra->setPesoArpillaPagado(0);
-				$detalle_compra->setPesoArpillaReal(0);
+				//$detalle_compra->setPesoArpillaPagado(0);
+				//$detalle_compra->setPesoArpillaReal(0);
 				
 				$resul = DetalleCompraDAO::save($detalle_compra);
 				
@@ -137,9 +145,9 @@ function insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra) 
 		$actCabeceraCompra = update_purchaseHeader($id_compra, $id_proveedor, $tipo_compra, $subtotalCompra);
 		
 		if ( !$actCabeceraCompra ){
-			return sprintf "{success: false , reason: 'No se modifico el subtotal e iva de la compra', details: '%s'}",$out;
+			return sprintf ("{success: false , reason: 'No se modifico el subtotal e iva de la compra', details: '%s'}",$out);
 		}else{		
-			return sprintf "{ success : true , reason :'Compra registrada completamente' , details:'%s'}",$out;
+			return sprintf ("{ success : true , reason :'Compra registrada completamente' , details:' %s '}",$out);
 		}
 	 }else{//if ans
 	 	return "{success: false , reason 'No se inserto la compra ni sus detalles, ni en inventario'}";
@@ -160,10 +168,12 @@ function insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra) 
  * @param <type> $subtotal
  */
 function update_purchaseHeader($id_compra, $id_proveedor, $tipo_compra, $subtotal ) { 
-	$sucursal=$_SESSION['sucursal_id'];
-	$id_usuario=$_SESSION['id_usuario'];
-	
-	$iva = ImpuestoDAO::getByPK(5);//en mi bd el iva es el id 5
+	$sucursal=$_SESSION['sucursal'];
+	$id_usuario=$_SESSION['usuario'];
+	//$sucursal=2;
+	//$id_usuario=1;
+	 
+	$iva = ImpuestoDAO::getByPK(1);//en mi bd el iva es el id 1
 		
 	$compras = new Compras();
 	
@@ -173,7 +183,7 @@ function update_purchaseHeader($id_compra, $id_proveedor, $tipo_compra, $subtota
 	$compras->setSubtotal($subtotal);
 	$compras->setIva( ( $iva->getValor() / 100 ) * $subtotal );
 	$compras->setIdSucursal($sucursal);
-	$compras->IdUsuario($id_usuario);
+	$compras->setIdUsuario($id_usuario);
 
 	$res = ComprasDAO::save($compras);//regresa false o un int
 	
@@ -183,19 +193,103 @@ function update_purchaseHeader($id_compra, $id_proveedor, $tipo_compra, $subtota
 /**
  * delete_purchase
  *
- * Elimina una compra existente hecha a un proveedor
+ * Elimina una compra existente hecha a un proveedor (como si nunca se hubiera hecho, se registro mal)
+ * no se actualiza el almacen pero si se eliminan los pagos a esta compra si es que hay
  *
  * @param <type> $id_compra
  */
 function delete_purchase($id_compra) { 
+
+	$detalles_compra = new DetalleCompra();
+	$detalles_compra->setIdCompra( $id_compra );
+	$compras_borrar = DetalleCompraDAO::search( $detalles_compra );
 	
-   $res = ComprasDAO::delete($id_compra);
-   if($res){
-	   return "{success: true , reason: 'Se elimino la compra satisfactoriamente'}";
+	$subtotal = 0;
+	
+	foreach( $compras_borrar as $detalle ){
+		DetalleCompraDAO::delete( $detalle );
+	}
+	
+	$compra = new Compras();
+	$compra->setIdCompra( $id_compra );
+	
+	if( $compra->getTipoCompra() == 'credito' ){
+		$pagos = new PagosCompra();
+		$pagos->setIdCompra( $id_compra );
+		
+		$pagos_compra = PagosCompraDAO::search( $pagos );
+		
+		
+		if( count($pagos_compra) > 0 ){
+			foreach( $pagos_compra as $pago){
+				$subtotal += $pago->getMonto();
+				PagosCompraDAO::delete( $pago );
+			}
+		}
+	}else{
+		$subtotal = $compra->getSubtotal();
+	}
+	
+	$res = ComprasDAO::delete($compra);
+   
+   	if( $res > 0 ){
+	   return "{success: true , reason: 'Se elimino la compra satisfactoriamente, se pago a esta compra un total de: $ ".$subtotal."'}";
+   	}else{
+	   return "{success: false , reason: 'No se pudo eliminar la compra'}";
+   	}
+}//fin delete_purchase
+
+/**
+
+ * entire_devolution_purchase
+ *
+ * Elimina una compra existente hecha a un proveedor y se quitan los productos al 
+ * almacen (devolucion completa) asi como eliminar los pagos hechos a esta compra
+ *
+ * @param <type> $id_compra
+ */
+function entire_devolution_purchase($id_compra) { 
+	
+	$detalles_compra = new DetalleCompra();
+	$detalles_compra->setIdCompra( $id_compra );
+	$compras_borrar = DetalleCompraDAO::search( $detalles_compra );
+	
+	$compra_delete = ComprasDAO::getByPK( $id_compra );
+	$suc = $compra_delete->getIdSucursal();
+	$subtotal = 0;
+	
+	foreach( $compras_borrar as $detalle ){
+		
+		$detalle_inventario = DetalleInventarioDAO::getByPK( $detalle->getIdProducto(), $suc );
+		$existencias = $detalle_inventario->getExistencias();
+		$detalle_inventario->setExistencias( ( $existencias - $detalle->getCantidad() ) );
+		
+		DetalleVentaDAO::delete( $detalle );
+	}
+	
+	if( $compra_delete->getTipoCompra() == 'credito' ){
+		$pagos = new PagosVenta();
+		$pagos->setIdCompra( $id_compra );
+		
+		$pagos_compra = PagosCompraDAO::search( $pagos );
+		
+		if( count($pagos_compra) > 0 ){
+			foreach( $pagos_compra as $pago){
+				$subtotal += $pago->getMonto();
+				PagosCompraDAO::delete( $pago );
+			}
+		}
+	}else{
+		$subtotal = $compra_delete->getSubtotal();
+	}
+	$res = ComprasDAO::delete($compra_delete);
+   
+   if($res > 0){
+	   return "{success: true , reason: 'Se elimino la compra satisfactoriamente, se pago a esta compra un total de: $ ".$subtotal."'}";
    }else{
 	   return "{success: false , reason: 'No se pudo eliminar la compra'}";
    }
-}//fin delete_purchase
+}//fin entire_devolution_purchase
 
 
 /**
@@ -209,12 +303,11 @@ function delete_purchase($id_compra) {
  * Si es modo_compra  es true, registra el producto por cantidad (pieza) y al
  * precio que este registrado ese producto en la BD.
  *
+ * @param <type> $jsonItems
  * @param <type> $id_compra
- * @param <type> $id_producto
- * @param <type> $cantidad
- * @param <type> $precio
- * @param <type> $pesoArpPagado
- * @param <type> $pesoArpReal
+ * @param <type> $id_proveedor
+ * @param <type> $tipo_compra
+ * @param <type> $modo_compra
  */
 function addItems_Existent_purchase($jsonItems,$id_compra, $id_proveedor, $tipo_compra, $modo_compra) {
 	
@@ -244,7 +337,7 @@ function addItems_Existent_purchase($jsonItems,$id_compra, $id_proveedor, $tipo_
 				
 				$resul = DetalleCompraDAO::save($detalle_compra);
 				
-				if($resul){
+				if( $resul > 0 ){
 					
 					$detalle_inventario = DetalleInventarioDAO::getByPK($arregloItems[$i]['id'],$sucursal);
 					$detalle_inventario->setExistencias( $detalle_inventario->getExistencias() + $inventario);
@@ -260,7 +353,14 @@ function addItems_Existent_purchase($jsonItems,$id_compra, $id_proveedor, $tipo_
 			}else{//if else modo_compra GENERAL MODE
 				
 				$cantidad = $arregloItems[$i]['cantidad'];
-				$precioP = ProductosProveedorDAO::product_price($arregloItems[$i]['id'], $id_proveedor, $sucursal );
+				//sacar el precio a como lo da el proveedor
+				$productoProveedor = new ProductoProveedor();
+				$productoProveedor->setIdProveedor( $id_proveedor );
+				$productoProveedor->setIdInventario( $arregloItems[$i]['id'] );
+				
+				$pP = ProductosProveedorDAO::search( $productoProveedor );
+				
+				$precioP = $pP[0]->getPrecio();
 				
 				$detalle_compra = new DetalleCompra();
 				
@@ -273,7 +373,7 @@ function addItems_Existent_purchase($jsonItems,$id_compra, $id_proveedor, $tipo_
 				
 				$resul = DetalleCompraDAO::save($detalle_compra);
 				
-				if($resul){
+				if( $resul > 0 ){
 					
 					$detalle_inventario = DetalleInventarioDAO::getByPK($arregloItems[$i]['id'],$sucursal);
 					$detalle_inventario->setExistencias( $detalle_inventario->getExistencias() + $cantidad);
@@ -288,19 +388,22 @@ function addItems_Existent_purchase($jsonItems,$id_compra, $id_proveedor, $tipo_
 			}//fin else GENERAL MODE
 		}//fin for
 		
+		$compra = new DetalleCompra();
 		$compra->setIdCompra($id_compra);
 		$detallesCompra = DetalleCompraDAO::search($compra);
+		
 		$subtotal = 0;
+		
 		foreach($detallesCompra as $detalle){
 			$subtotal += $detalle->getCantidad() * $detalle->getPrecio();
 		}//foreach
 		
 		$actCabeceraCompra = update_purchaseHeader($id_compra, $id_proveedor, $tipo_compra, $subtotal);
 		
-		if ( !$actCabeceraCompra ){
-			return sprintf "{success: false , reason: 'No se modifico el subtotal e iva de la compra', details: '%s'}",$out;
+		if ( $actCabeceraCompra < 1 ){
+			return sprintf ("{success: false , reason: 'No se modifico el subtotal e iva de la compra', details: '%s'}",$out);
 		}else{		
-			return sprintf "{ success : true , reason :'Compra registrada completamente' , details:'%s'}",$out;
+			return sprintf ("{ success : true , reason :'Compra modificada completamente' , details:'%s'}",$out);
 		}
 	
 	
@@ -385,7 +488,7 @@ function removeItem_Existent_purchase($jsonItems) {
 			}
 				
 				
-			return sprintf "{success : true , reason :'Producto eliminado completamente de la compra %s'}",$out;
+			return sprintf ("{success : true , reason :'Producto eliminado completamente de la compra %s'}",$out);
 			
 			
 		}else{//else res
@@ -553,7 +656,7 @@ function EditItem_Existent_purchase( $id_compra, $id_producto, $precio, $cantida
 		$devolver = $beforeSubtot - $subtotal;
 		$out .=', El proveedor debe devolverle a usted $ '.$devolver;
 	}
-	return sprintf "{success : true , reason :'El producto cambio de cantidad %s'}",$out;
+	return sprintf ("{success : true , reason :'El producto cambio de cantidad %s'}",$out);
 			
 }//fin payments_regularization
 
@@ -566,13 +669,30 @@ function EditItem_Existent_purchase( $id_compra, $id_producto, $precio, $cantida
  * @param <type> $id_proveedor
  */
 function list_sucursal_purchases( $id_proveedor ){
+
+	$sucursal = $_SESSION['sucursal'];
+	//$sucursal = 2;
 	
-	$sucursal = $_SESSION['id_sucursal'];
-	
-	$result = ComprasDAO::list_purchases( $id_proveedor , $sucursal );
-	
-	if(count($result)>0){
-		return " { success : true, datos : ". json_encode($result)."}";
+	$compras = new Compras();
+	$compras->setIdProveedor( $id_proveedor );
+	$compras->setIdSucursal( $sucursal );
+	$compras_sucursal = ComprasDAO::search($compras);
+	$foo="";
+	if( count($compras_sucursal) > 0 ){
+		$sc = SucursalDAO::getByPK( $sucursal );
+		$jsonArray = array();
+		foreach($compras_sucursal as $compra){
+			
+			$usuario = UsuarioDAO::getByPK( $compra->getIdUsuario() );
+			$total = $compra->getSubtotal() + $compra->getIva();
+			$usuario = UsuarioDAO::getByPK( $compra->getIdUsuario() );
+			
+			$foo .= substr($compra,1,-2);
+
+			$foo.=',"total":"'.$total.'","nombre":"'.$usuario->getNombre().'","descripcion":"'.$sc->getDescripcion().'"},';
+		}//fin for
+		$foo = substr($foo,0,-1);
+		return " { success : true, datos : [".$foo."] }";
 	}else{
 		return " { success : false , reason: 'No se le ha comprado a este proveedor'}";
 	}
@@ -587,11 +707,25 @@ function list_sucursal_purchases( $id_proveedor ){
  * @param <type> $id_compra
  */
 function purchase_details( $id_compra ){
+
+	$detalles = new DetalleCompra();
+	$detalles->setIdCompra( $id_compra );
 	
-	$result = ComprasDAO::get_purchase_details( $id_compra );
+	$detalles_compra = DetalleCompraDAO::search( $detalles );
+	$out = "";
 	
-	if(count($result)>0){
-		return " { success : true, datos : ". json_encode($result)."}";
+	if( count($detalles_compra) > 0 ){
+		
+		foreach( $detalles_compra as $detail ){
+			$inventario = new Inventario();
+			$inventario->setIdProducto( $detail->getIdProducto() );
+			$producto = InventarioDAO::search( $inventario );
+			$subtot = $detail->getCantidad() * $detail->getPrecio();
+			$out .= substr($detail,1,-2);
+			$out .=',"denominacion":"'.$producto[0]->getDenominacion().'","subtotal":"'.$subtot.'"},';
+		}//fin foreach
+		$out = substr($out,0,-1);
+		return " { success : true, datos : [".$out."]}";
 	}else{
 		return " { success : false , reason: 'Esta compra no tiene productos'}";
 	}
@@ -606,13 +740,22 @@ function purchase_details( $id_compra ){
  * @param <type> $id_compra
  */
 function purchase_payments( $id_compra ){
+	$pagos = new PagosCompra();
+	$pagos->setIdCompra( $id_compra );
 	
-	$result = ComprasDAO::get_purchase_payments( $id_compra );
+	$pagos_compra = PagosCompraDAO::search( $pagos );
+	$out ="";
 	
-	if(count($result)>0){
-		return " { success : true, datos : ". json_encode($result)."}";
+	if(count($pagos_compra)>0){
+		foreach( $pagos_compra as $pago ){
+			$out.= substr( $pago, 1, -1 );//[{jgkjgk}] -> {jgkjgk}
+			$out.=","; //{jgkjgk} -> {jgkjgk},
+		}
+		$data ="[";
+		$data .= substr($out,0,-1)."]"; // [{jgkjgk},{jgkjgk},{jgkjgk},] -> [{jgkjgk},{jgkjgk},{jgkjgk}]
+		return "{ success : true, datos : ". $data."}";
 	}else{
-		return " { success : false , reason: 'Esta compra no tiene abonos'}";
+		return "{ success : false , reason: 'Esta compra no tiene abonos'}";
 	}
 }//fin purchase_payments
 
@@ -626,14 +769,85 @@ function purchase_payments( $id_compra ){
  * @param <type> $id_proveedor
  */
 function credit_providerPurchases( $id_proveedor ){
+
+	$out = ""; 
+	$sucursal= $_SESSION['sucursal'];
+	//$sucursal= 2;
 	
-	$result = ComprasDAO::get_credit_providerpurchases( $id_proveedor );
+	$compra = new Compras();
+	$compra->setIdProveedor( $id_proveedor );
+	$compra->setIdSucursal( $sucursal );	
+	$compra->setTipoCompra( 'credito' );	
+	$compras = ComprasDAO::search( $compra );
 	
-	if(count($result)>0){
-		return " { success : true, datos : ". json_encode($result)."}";
+	if( count($compras) > 0 ){
+		$jsonArray = array();
+		foreach( $compras as $c )
+		{
+			$total_pagos = 0;
+			$purchase_payments = new PagosCompra();
+			$purchase_payments->setIdCompra( $c->getIdCompra() );
+			$pc = PagosCompraDAO::search( $purchase_payments );
+
+			if ( count($pc) > 0 ){
+				foreach( $pc as $pago )
+				{
+					$total_pagos += $pago->getMonto();
+				}
+			}
+			$proveedor = ProveedorDAO::getByPK( $c->getIdProveedor() );
+			$totCompra = $c->getSubtotal() + $c->getIva();
+			$adeudo = $totCompra - $total_pagos;
+			$usuario = UsuarioDAO::getByPK( $c->getIdUsuario() );
+			$sc = SucursalDAO::getByPK( $c->getIdSucursal() );
+			
+			$out .= substr($c,1,-2);
+
+			$out.=',"total":"'.$totalCompra.'","abonado":"'.$total_pagos.'","adeudo":"'.$adeudo.'","nombre":"'.$proveedor->getNombre().'","comprador":"'.$usuario->getNombre().'","sucursal":"'.$sc->getDescripcion().'"},';
+	
+		}//fin foreach compras
+		$out = substr($out,0,-1);
+		return " { success : true, datos : [".$out."] }";
 	}else{
 		return " { success : false , reason: 'No se le han hecho compras a credito a este proveedor'}";
 	}
+	
 }//fin purchase_payments
+
+
+/**
+ * existenciaProductoSucursal
+ * itemExistence_sucursal
+ *
+ * Regresa las existencias de un producto en una sucursal, 
+ * recibiendo el id del producto y el de la sucursal lo saca de la session
+ *
+ * @param <type> $id_producto
+ */
+function itemExistence_sucursal( $id_producto, $id_proveedor ){
+	$sucursal= $_SESSION['sucursal'];
+	//$sucursal= 2;
+	
+	$producto = DetalleInventarioDAO::getByPK( $id_producto, $sucursal );
+	$inventario = InventarioDAO::getByPK( $id_producto );
+				  
+	$productoProv = new ProductosProveedor();
+	//$productoProv->setIdProducto( $id_producto );
+	$productoProv->setIdInventario( $id_producto );
+	$productoProv->setIdProveedor( $id_proveedor );
+	
+	$producto_proveedor = ProductosProveedorDAO::search( $productoProv );
+	
+	if( count($producto_proveedor) > 0 ){
+		$jsonArray = array();
+		
+		array_push( $jsonArray, array("id_producto"=>$inventario->getIdProducto(), "nombre"=>$inventario->getNombre(), "denominacion"=>$inventario->getDenominacion(), "precio_venta"=>$producto->getPrecioVenta(), "existencias"=>$producto->getExistencias(), "precio"=>$producto_proveedor[0]->getPrecio() ) );
+		
+		return " { success : true, datos : ". json_encode($jsonArray)."}";
+		
+	}else{
+		return "{success: false, reason:'Este producto no esta disponible' }";
+	}
+}
 
 ?>

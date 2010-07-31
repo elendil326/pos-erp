@@ -80,3 +80,9 @@
 	padding-left: 40px;
 	height: 40px;
 }
+
+.ApplicationProveedores-Detalles .ubicacion{
+	background:url(media/iconos/bodega.png) no-repeat;
+	padding-left: 40px;
+	height: 40px;
+}

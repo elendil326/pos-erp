@@ -24,7 +24,8 @@ require_once('../server/model/proveedor.dao.php');
  * @param <type> $e_mail 
  */
 function insert_provider($rfc, $nombre, $direccion, $telefono , $e_mail) {
-    save_provider(null, $rfc, $nombre, $direccion, $telefono , $e_mail);
+	
+    return save_provider(null, $rfc, $nombre, $direccion, $telefono , $e_mail);
 }
 
 /**
@@ -37,7 +38,7 @@ function insert_provider($rfc, $nombre, $direccion, $telefono , $e_mail) {
  * @param <type> $e_mail
  */
 function update_provider($id, $rfc, $nombre, $direccion, $telefono , $e_mail) {
-    save_provider($id, $rfc, $nombre, $direccion, $telefono, $e_mail);
+    return save_provider($id, $rfc, $nombre, $direccion, $telefono, $e_mail);
 }
 
 /**
@@ -53,12 +54,12 @@ function update_provider($id, $rfc, $nombre, $direccion, $telefono , $e_mail) {
  */
 function save_provider($id, $rfc, $nombre, $direccion, $telefono , $e_mail) {
     //validar RFC
-
+	
     $proveedor = new Proveedor();
 	
 	if( is_int($id) )
 		$proveedor->setIdProveedor( $id );
-		
+	
 	$proveedor->setRfc( $rfc );
 	$proveedor->setNombre( $nombre );
 	$proveedor->setDireccion( $direccion );
@@ -66,10 +67,9 @@ function save_provider($id, $rfc, $nombre, $direccion, $telefono , $e_mail) {
 	$proveedor->setEmail( $e_mail );
 	
     $ans = ProveedorDAO::save($proveedor);
-
-    if ($ans) {
-        return sprintf("{success: true, reason: 'Se inserto el proveedor con id %s'}", $proveedor->getIdProveedor());
-    } else {
+    if ( $ans > 0 ) {
+        return "{ success: true , reason: 'Se inserto el proveedor' }";
+    } else {	 
         return "{success: false, reason: 'No se inserto el proveedor.' }";
     }
 }
@@ -114,21 +114,19 @@ function show_provider($id_proveedor) {
 
 function list_providers() {
     $proveedores = ProveedorDAO::getAll();
-
-    $ans = '';
-    foreach ($proveedores as $proveedor) :
-            $ans .= sprintf("%s,", $proveedor->getJSON());
-    endforeach;
-
-    $ans = sprint("datos:[%s]", $ans);
-
-    return str_replace("},]", "}]", $ans);
-    /*
-        $proveedores = ProveedorDAO::customQuery($query, $params);
-
-       //proveedores almacena el record set que envia adodb
-
-     */
+	if( count($proveedores) > 0 ){
+		$ans = '';
+		foreach ($proveedores as $proveedor) :
+				//$ans .= sprintf("%s,", $proveedor->getJSON());
+				$tmp = substr( $proveedor, 1, -1 );//[{jgkjgk}] -> {jgkjgk}
+				$ans .= $tmp."," ;
+		endforeach;
+		$out = substr($ans,0,-1);
+		$ans = sprintf("{success:true, datos:[%s] }", $out);
+		return $ans;
+	}else{
+		return "{success: false, reason: 'No hay lista de proveedores' }";
+	}
 }
 
 ?>

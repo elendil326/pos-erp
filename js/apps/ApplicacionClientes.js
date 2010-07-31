@@ -101,15 +101,6 @@ ApplicacionClientes.prototype._initToolBar = function (){
 	/* 
 		Detalles cliente
 	*/
-	var btnBackCliente = [{
-        id: 'btn_BackCliente',
-        text: 'Regresar',
-        handler: function(){
-			
-			sink.Main.ui.setCard( Ext.getCmp('panelClientes'), { type: 'slide', direction: 'right' } );
-		},
-        ui: 'back'
-    }];
 
 
 	var detallesDeCliente = [{
@@ -130,20 +121,7 @@ ApplicacionClientes.prototype._initToolBar = function (){
 		}]    
     }];
 
-	var btnEditCliente = [{
-		id: 'btn_EditCliente',
-        text: 'Modificar',
-        handler: this.editClient,
-        ui: 'action'
-    }];
-	
-	var btnCancelEditCliente = [{
-		id: 'btn_CancelEditCliente',
-		text: 'Cancelar',
-		//handler: 
-		//hidden: true,
-		ui: 'action'
-	}];
+
 
 	
    if (!Ext.platform.isPhone) {
@@ -160,15 +138,7 @@ ApplicacionClientes.prototype._initToolBar = function (){
 		/*
 			Detalles cliente
 		*/
-		btnBackCliente.push({xtype: 'spacer'});
-		detallesDeCliente.push({xtype: 'spacer'});
 		
-		this.dockedItemsFormCliente =[ new Ext.Toolbar({
-            ui: 'light',
-            dock: 'top',
-            items:  btnBackCliente.concat(detallesDeCliente).concat(btnCancelEditCliente).concat(btnEditCliente)
-                 
-        })];
 		
     }else {
         this.dockedItems = [{
@@ -178,19 +148,14 @@ ApplicacionClientes.prototype._initToolBar = function (){
             dock: 'bottom'
         }];
 		
-		this.dockedItemsFormCliente = [{
-            xtype: 'toolbar',
-            ui: 'metal',
-            items: btnBackCliente.concat(detallesDeCliente).concat(btnCancelEditCliente).concat(btnEditCliente),
-            dock: 'top'
-        }];
+		
     }
     
     
 	//agregar este dock a el panel principal
 	this.ClientesList.addDocked( this.dockedItems );
 	
-	this.panelContenedor.addDocked(this.dockedItemsFormCliente);	
+	//jthis.panelContenedor.addDocked(this.dockedItemsFormCliente);	
 };
 
 
@@ -203,8 +168,10 @@ ApplicacionClientes.prototype._initToolBar = function (){
 		Detalles de Cliente
 ------------------------------------------------------------------------------------------*/
 ApplicacionClientes.prototype.editClient = function (){
-	
+	console.log("ENTRO A EDITCLIENTE");
+	console.log(Ext.getCmp('btn_EditCliente').getText());
 	switch(Ext.getCmp('btn_EditCliente').getText()){
+	//switch(action){
 		case 'Modificar': 
 			//disable form items
 			Ext.getCmp('btn_EditCliente').setText("Guardar");
@@ -214,11 +181,7 @@ ApplicacionClientes.prototype.editClient = function (){
 			Ext.getCmp('emailClienteM').setDisabled(false);
 			Ext.getCmp('telefonoClienteM').setDisabled(false);	
 			Ext.getCmp('limite_creditoClienteM').setDisabled(false);
-			
 			Ext.getCmp('btn_CancelEditCliente').setVisible(true);
-			//add cancel button
-			//Ext.getCmp("updateForm").dockedItems
-			
 			break;
 		case 'Guardar': 
 			//enable form items
@@ -238,68 +201,123 @@ ApplicacionClientes.prototype.editClient = function (){
 
 }
 
-ApplicacionClientes.prototype.removePanel= null;
-ApplicacionClientes.prototype.removePanelName="updateForm";
+ApplicacionClientes.prototype.cancelEditClient = function(){
+	Ext.getCmp('btn_EditCliente').setText("Modificar");
+	Ext.getCmp('nombreClienteM').setDisabled(true);	
+	Ext.getCmp('direccionClienteM').setDisabled(true);
+	Ext.getCmp('rfcClienteM').setDisabled(true);	
+	Ext.getCmp('emailClienteM').setDisabled(true);
+	Ext.getCmp('telefonoClienteM').setDisabled(true);	
+	Ext.getCmp('limite_creditoClienteM').setDisabled(true);
+	Ext.getCmp('btn_CancelEditCliente').setVisible(false);
+}
 
-/*--------------------------------------------
-
-	PANEL CON EL TOOLBAR DE LAS ACCIONES DEL CLIENTE AQUI SE LE AGREGAN LOS CARDS
-	
------------------------------------------------*/
-
-ApplicacionClientes.prototype.panelContenedor = new Ext.Panel({ 
-	scroll: 'vertical',
-	id: 'clientes_contenedor',
-	layout: 'card',
-	listeners: {
-		beforeshow : function(){
-			//this.add(ApplicacionClientes.currentInstance.removePanel);
-			//this.doLayout();
-			console.log("-----CAMBIO DE CLIENTE------");
-			console.log(ApplicacionClientes.currentInstance.clienteSeleccionado[0].nombre);
-			
-		}
-	}
-});
 
 /*----------------------------------------------------
 	Carga el panel de 'Detalles del cliente' 
 -------------------------------------------------------*/
 
-ApplicacionClientes.prototype.mostrarDetallesCliente = function(){
-	ApplicacionClientes.currentInstance.addClientDetailsPanel(ApplicacionClientes.currentInstance.clienteSeleccionado , false);
-}
 
-ApplicacionClientes.prototype.addClientDetailsPanel= function( recor , bandera){
+ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 
-	if(ApplicacionClientes.currentInstance.removePanelName != "updateForm" ){
-		Ext.getCmp(ApplicacionClientes.currentInstance.removePanelName).destroy();
-		//console.log("En DETALLES CLIENTE DESTRUI: "+ApplicacionClientes.currentInstance.removePanelName +"estando elegido--- "+ApplicacionClientes.currentInstance.clienteSeleccionado[0].nombre);
-		//ApplicacionClientes.currentInstance.panelContenedor.removeAll();
-		console.log("-------REMOVI TODO EL PANEL ENTRANDO A DETALLES CLIENTE------");
-		
-	}
 	var foo = ApplicacionClientes.currentInstance.updateForm( recor );
-	ApplicacionClientes.currentInstance.removePanelName ="updateForm";
+
+
+	var btnBackCliente2 = [{
+        id: 'btn_BackCliente',
+        text: 'Regresar',
+        handler: function(){
+			Ext.getCmp('btn_EditCliente').setText("Modificar");
+			sink.Main.ui.setCard( Ext.getCmp('panelClientes'), { type: 'slide', direction: 'right' } );
+		},
+        ui: 'back'
+    }];
+
 
 	
-	if(bandera){
-		try{
-			ApplicacionClientes.currentInstance.panelContenedor.removeAll();
-			ApplicacionClientes.currentInstance.panelContenedor.add(foo);
-			Ext.getCmp("updateForm").hidden = false;
-			sink.Main.ui.setCard( ApplicacionClientes.currentInstance.panelContenedor , 'slide' );
-		}catch(e){console.log("NO SE DESPLAZO A PANEL CONTENEDOR QUE TIENE LOS DETALLES DEL CLIENTE DESDE LA LISTA: "+e);}
-	}else{
-		try{
-			ApplicacionClientes.currentInstance.panelContenedor.add(foo);
-			ApplicacionClientes.currentInstance.panelContenedor.setCard(foo,'slide');
-		}catch(e){console.log("ERROR CUANDO SE QUERIA MOSTRAR A LA CARD DETALLES CLIENTE DESDE LOS BOTONES: "+e);}
-	}
+	var btnEditCliente2 = [{
+		id: 'btn_EditCliente',
+        text: 'Modificar',
+        handler: ApplicacionClientes.currentInstance.editClient,
+        ui: 'action'
+    }];
 	
-	Ext.getCmp('actionButtonsClientes').setActive(0);
-	Ext.getCmp('btn_CancelEditCliente').setVisible(false);
-	Ext.getCmp('btn_EditCliente').setText('Modificar');
+	var btnCancelEditCliente2 = [{
+		id: 'btn_CancelEditCliente',
+		text: 'Cancelar',
+		handler: ApplicacionClientes.currentInstance.cancelEditClient,
+		//hidden: true,
+		ui: 'action'
+	}];
+	
+	if (!Ext.platform.isPhone) {
+
+		//btnBackCliente2.push({xtype: 'spacer'});
+		
+		
+		var dockedItemsFormCliente2 =[ new Ext.Toolbar({
+            ui: 'dark',
+            dock: 'bottom',
+            //items:  btnBackCliente.concat(detallesDeCliente).concat(btnCancelEditCliente).concat(btnEditCliente)
+			items:  btnBackCliente2.concat(btnCancelEditCliente2).concat(btnEditCliente2)
+                 
+        })];
+		
+    }else {
+        
+		var dockedItemsFormCliente2 = [{
+            xtype: 'toolbar',
+            ui: 'dark',
+            items: btnBackCliente2.concat(btnCancelEditCliente2).concat(btnEditCliente2),
+            dock: 'bottom'
+        }];
+    }
+	var carousel = new Ext.Carousel({
+		defaults:{cls: 'ApplicationClientes-mainPanel'},
+		items: [{
+			scroll: 'vertical',
+			xtype: 'panel',
+			title: 'customerDetails',
+			id: 'customerDetailsForm',
+			items: [foo]
+		}, {
+			scroll: 'vertical',
+			xtype: 'panel',
+			title: 'ventas',
+			id: 'customerHistorial',
+			items: [ {id:'datosCliente'},{id: 'customerHistorialSlide' }]
+			
+		}, { 
+			scroll: 'vertical',
+			xtype: 'panel',
+			title: 'creditos',
+			id: 'customerCreditHistorial',
+			items: [{id:'datosClienteCredito'},{id: 'customerCreditHistorialSlide'}]
+		}],
+	});
+	
+	var panel = new Ext.Panel({
+		dockedItems : dockedItemsFormCliente2,
+		layout: {
+			type: 'vbox',
+			align: 'stretch'
+		},
+		defaults: {
+	      flex: 1
+		},
+		items: [carousel]
+	});
+	
+	ApplicacionClientes.currentInstance.listarVentas( recor );
+	
+	ApplicacionClientes.currentInstance.listarVentasCredito( recor );
+	
+	//Ext.getCmp('btn_CancelEditCliente').setVisible(false);
+	//Ext.getCmp('btn_EditCliente').setText('Modificar');
+
+	panel.doLayout();
+	sink.Main.ui.setCard( panel , 'slide' );
+	
 	
 	
 }
@@ -317,7 +335,7 @@ ApplicacionClientes.prototype.handlerModificarCliente= function(id,rfc,nombre,di
 	}else{
 		Ext.getBody().mask(false, '<div class="demos-loading">Loading&hellip;</div>');
         POS.AJAXandDECODE({
-			method: 'actualizarCliente',
+			action: 'actualizarCliente',//102
 			id: id,
 			rfc: rfc,
 			nombre: nombre,
@@ -328,19 +346,22 @@ ApplicacionClientes.prototype.handlerModificarCliente= function(id,rfc,nombre,di
         },
         function (datos){//mientras responda
         	if(datos.success == true){//
-            	POS.aviso("MODIFICACION","LOS DATOS DEL CLIENTE FUERON CAMBIADOS  :)");                                         
+            	//POS.aviso("MODIFICACION","LOS DATOS DEL CLIENTE FUERON CAMBIADOS  :)");
+				console.log("************** LOS DATOS DEL CLIENTE FUERON CAMBIADOS  :)");
             	POS.AJAXandDECODE({
-            		method: 'listarClientes'
+            		action: '1005'
             	},
             	function (datos){//mientras responda
             		ClientesListStore.loadData(datos.datos); 
             	},
 				function (){//no responde       
                 	POS.aviso("ERROR!!","NO SE PUDO CARGAR LA LISTA DE CLIENTES ERROR EN LA CONEXION :(");  
+					console.log("ENtre a no se pudo cargar lista");
                 }
                 );//AJAXandDECODE refrescar lista clientes
             }else{
                   POS.aviso("ERROR!!","LOS DATOS DEL      CLIENTE NO SE MODIFICARON :(");
+					console.log("LOS DATOS DEL      CLIENTE NO SE MODIFICARON :(");
                   }
             //Ext.getCmp('updateForm').destroy();
             //sink.Main.ui.setCard( Ext.getCmp('panelClientes'), 'slide' );
@@ -410,25 +431,7 @@ ApplicacionClientes.prototype.updateForm = function( recor ){
 											disabled: true
                                         })
                                 ]//fin items form
-                                }/*,{
-                                		xtype: 'button',
-                                    	id: 'updateCliente',
-                                    	text: 'Modificar',
-                                    	maxWidth:150,
-                                    	handler: function(event,button) {
-			                              		ApplicacionClientes.currentInstance.handlerModificarCliente(idClienteM.getValue(),rfcClienteM.getValue(),nombreClienteM.getValue(),direccionClienteM.getValue(),telefonoClienteM.getValue(),emailClienteM.getValue(),limite_creditoClienteM.getValue());        
-                                    	}//fin handler
-								}//fin boton updateCliente
-								,
-                                {
-                                	xtype: 'button',
-                                    id: 'cancelUpdateCliente',
-                                    text: 'Cancelar',
-                                    maxWidth:150,
-                                    handler: function(event,button) {
-                                    	sink.Main.ui.setCard( Ext.getCmp('panelClientes'), 'slide' );
-                                    }
-                               	}//fin boton cancelar*/
+                                }
                         ]//,//fin items formpanel
                      });
 
@@ -522,7 +525,7 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
 				
 				Ext.getBody().mask(false, '<div class="demos-loading">Loading&hellip;</div>');
 				POS.AJAXandDECODE({
-				        method: 'listarClientes'
+				        action: '1005'
 				        },
 				        function (datos){//mientras responda
 				                ClientesListStore.loadData(datos.datos);                                                     
@@ -532,7 +535,7 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
 				        }
 				);//AJAXandDECODE
 				Ext.getBody().unmask();
-			}//fin before
+			}//fin beforef
         },
     	items: [{
         	width: '100%',
@@ -557,7 +560,7 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
 							
 							ApplicacionClientes.currentInstance.clienteSeleccionado = recor;
                         	//DESLIZAR EL NUEVO PANEL (FORMULARIO DE ACTUALIZACION)
-							ApplicacionClientes.currentInstance.addClientDetailsPanel( recor , true); 
+							ApplicacionClientes.currentInstance.addClientDetailsPanel( recor ); 
 						}
 					}catch(e){
 						if(DEBUG){
@@ -627,8 +630,8 @@ ApplicacionClientes.prototype.formAgregarCliente = new Ext.form.FormPanel({
                         }else{
                         	Ext.getBody().mask(false, '<div class="demos-loading">Loading&hellip;</div>');
                             POS.AJAXandDECODE({
-                            	method: 'insertarCliente',
-                            	rfc: rfcCliente.getValue(),
+                            	action: 'insertarCliente',
+								rfc: rfcCliente.getValue(),
                             	nombre: nombreCliente.getValue(),
                             	direccion: direccionCliente.getValue(),
                             	telefono: telefonoCliente.getValue(),
@@ -639,7 +642,7 @@ ApplicacionClientes.prototype.formAgregarCliente = new Ext.form.FormPanel({
                         		if(datos.success == true){//
                             		POS.aviso("NUEVO CLIENTE","LOS DATOS DEL CLIENTE FUERON GUARDADOS CORRECTAMENTE :)");
                                     	POS.AJAXandDECODE({
-                                        		method: 'listarClientes'
+                                        		action: '1005'
                                         	},
                                         	function (datos){//mientras responda
                                         		this.customers = datos.datos;
@@ -696,57 +699,30 @@ ApplicacionClientes.prototype.formAgregarCliente = new Ext.form.FormPanel({
 
 ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 	
-	var listaVentas = new Ext.form.FormPanel({
-			//scroll: 'vertical',
-			id: 'listaVentasCliente',
-			//dockedItems: this.dockedItemsFormCliente,
-			items: [{
-				  		id: 'datosCliente',
-						html: ''
-					},
-					{
-						id: 'ventasCliente',
-						html:''
-					}
-					]
-		});
-	
 	
 	Ext.regModel('ventasStore', {
     	fields: ['nombre', 'rfc']
 	});
 
 	var ventasCliente = new Ext.data.Store({
-    	model: 'ventasStore'/*,
-    	sorters: 'nombre',
-    	getGroupString : function(record) {
-        	return record.get('nombre')[0];
-    	} */  
+    	model: 'ventasStore'
+    	
 	});	
 	
 	
 	//cabecera de datos del cliente seleccionado
 	
-	var clienteHtml = "";
-	clienteHtml += " <div class='ApplicationClientes-clienteBox'> ";
-	clienteHtml += " <div class='nombre'>" + record_cliente[0].nombre + "</div>";
-	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> RFC: " + record_cliente[0].rfc + "</div>";
-	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> Direccion: " + record_cliente[0].direccion + "</div>";
-	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> Telefono: " + record_cliente[0].telefono + "</div>";
-	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> Correo Electronico: " + record_cliente[0].e_mail + "</div>";
-	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> Limite de Credito: $ " + record_cliente[0].limite_credito + "</div>";
-	clienteHtml += " </div> ";
+	var html = "";
 	
 		POS.AJAXandDECODE({
-			method: 'listarVentasCliente',
+			action: '1401',
 			id_cliente: record_cliente[0].id_cliente //recor[0].id_cliente
 			},
 			function (datos){//mientras responda AJAXDECODE LISTAR VENTAS CLIENTE
 				if(datos.success === true){
 					ventasCliente.loadData(datos.datos);
 					
-					Ext.get("datosCliente").update( clienteHtml );
-					var html = "";
+										
 					html += "<div class='ApplicationClientes-item' >"
 							+ "<div class='trash' ></div>"
 							+ "<div class='id'>No. Venta</div>" 
@@ -761,16 +737,11 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 					
 					//renderear el html
 					for( a = 0; a < ventasCliente.getCount(); a++ ){
-						var tipo="";
-						if (ventasCliente.data.items[a].tipo_venta == "2"){
-							tipo="Credito";
-						}else{
-							tipo ="Contado";
-						}
+						
 						html += "<div class='ApplicationClientes-item' >" 
 						+ "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" +ventasCliente.data.items[a].id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>"	
 							+ "<div class='id'>" + ventasCliente.data.items[a].id_venta +"</div>" 
-							+ "<div class='tipo'>" + tipo +"</div>" 
+							+ "<div class='tipo'>" + ventasCliente.data.items[a].tipo_venta +"</div>" 
 							+ "<div class='fecha'>"+ ventasCliente.data.items[a].fecha +"</div>" 
 							+ "<div class='sucursal'>"+ ventasCliente.data.items[a].descripcion +"</div>"
 							+ "<div class='vendedor'>"+ ventasCliente.data.items[a].nombre +"</div>"
@@ -781,14 +752,15 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 					}
 								
 					//imprimir el html
-					Ext.get("ventasCliente").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
+					
 					//console.log(ventasCliente.data.items);
 				}
 				if(datos.success == false){
 					//POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS PROBABLEMENTE ESTE CLIENTE 'NO' HA COMPRADO");
-					Ext.get("datosCliente").update( clienteHtml );
-					Ext.get("ventasCliente").update("<div class='ApplicationClientes-itemsBox'><div class='noVentas' align='center'>ESTE CLIENTE NO TIENE LISTA DE VENTAS</div> </div>");
+					html="<div class='ApplicationClientes-itemsBox'><div class='noVentas' align='center'>ESTE CLIENTE NO TIENE LISTA DE VENTAS</div> </div>";
 				}
+				Ext.get("customerHistorialSlide").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
+				
 			},
 			function (){//no responde AJAXDECODE DE VENTAS CLIENTE
 				POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS   ERROR EN LA CONEXION :(");      
@@ -796,7 +768,7 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 		);//AJAXandDECODE LISTAR VENTAS CLIENTE
 				
 		
-	return listaVentas;
+	//return listaVentas;
 }
 
 
@@ -821,9 +793,7 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
                     items: [{
 						xtype: 'spacer'
 						},{
-						//-------------------------------------------------------------------------------
-						//			cancelar
-						//-------------------------------------------------------------------------------
+						
 						text: 'X Cerrar',
 						handler: function() {
 							//regresar el boton de cliente comun a 1
@@ -869,8 +839,7 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
 		});	
 		
 		POS.AJAXandDECODE({
-			method: 'mostrarDetalleVenta',
-			id: 0,
+			action: '1402',
 			id_venta: idVenta
 			},
 			function (datos){//mientras responda AJAXDECODE MOSTRAR CLIENTE
@@ -914,35 +883,6 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
 	formBase.show();
 	
 }
-/* ----------------------------------------------------------------------
-	MUESTRA EL PANEL DE LAS VENTAS EMITIDAS A UN CLIENTE
----------------------------------------------------------------------------*/
-
-ApplicacionClientes.prototype.mostrarVentasCliente = function(){ //mostrarVentasCreditoCliente
-
-	if(ApplicacionClientes.currentInstance.removePanelName != "listaVentasCliente"){
-		try{
-		Ext.getCmp(ApplicacionClientes.currentInstance.removePanelName).destroy();
-		//console.log("EN VENTAS CLIENTES Y BORRE: "+ApplicacionClientes.currentInstance.removePanelName);
-		//ApplicacionClientes.currentInstance.panelContenedor.remove(ApplicacionClientes.currentInstance.removePanelName);
-		console.log("------------LIMPIE EL PANEL ENTRANDO A MOSTRAR VENTAS--------------");
-		}catch(e){console.log("NO SE PUDO BORRAR EL COMPONENTE "+ApplicacionClientes.currentInstance.removePanelName+" -- "+e);}
-	}
-
-	var ven = ApplicacionClientes.currentInstance.listarVentas( ApplicacionClientes.currentInstance.clienteSeleccionado );
-
-	ApplicacionClientes.currentInstance.removePanelName ="listaVentasCliente";
-
-
-	try{
-		ApplicacionClientes.currentInstance.panelContenedor.add(ven);
-		ApplicacionClientes.currentInstance.panelContenedor.setCard( ven , 'slide' );
-	}catch(e){console.log("NO SE PUDO MOSTRAR LA CARD DE LISTA DE VENTAS A CLIENE: "+e); console.log(ven);}
-	
-	Ext.getCmp('actionButtonsClientes').setActive(1);
-	Ext.getCmp('btn_CancelEditCliente').setVisible(false);
-	Ext.getCmp('btn_EditCliente').setVisible(false);
-}
 
 /*------------------------------------------------------------
 ----------------	CREDITOS CLIENTE	------------------
@@ -952,47 +892,8 @@ ApplicacionClientes.prototype.mostrarVentasCliente = function(){ //mostrarVentas
 		MUESTRA LAS VENTAS A CREDITO DE UN CLIENTE
 ---------------------------------------------------*/
 
-ApplicacionClientes.prototype.mostrarVentasCreditoCliente = function(){ 
-	
-	if(ApplicacionClientes.currentInstance.removePanelName != "listaVentasCreditoCliente"){
-		try{
-		Ext.getCmp(ApplicacionClientes.currentInstance.removePanelName).destroy();
-		//console.log("EN 'creditos' CLIENTES Y BORRE: "+ApplicacionClientes.currentInstance.removePanelName);
-		//ApplicacionClientes.currentInstance.panelContenedor.remove(ApplicacionClientes.currentInstance.removePanelName);
-		console.log("---------ELIMINE TODO DEL PANEL ENTRANDO A MOSTRAR CREDITOS--------");
-		}catch(e){console.log("NO SE PUDO BORRAR A "+ApplicacionClientes.currentInstance.removePanelName+" -- "+e);}
-	}
-	
-	var venC = ApplicacionClientes.currentInstance.listarVentasCredito( ApplicacionClientes.currentInstance.clienteSeleccionado );
-	
-	ApplicacionClientes.currentInstance.removePanelName ="listaVentasCreditoCliente";
-
-	try{
-		ApplicacionClientes.currentInstance.panelContenedor.add(venC);
-		ApplicacionClientes.currentInstance.panelContenedor.setCard( venC , 'slide' );
-	}catch(e){console.log("ERROR NO SE PUEDE MOSTRAR LA CARD: LISTA DE 'CREDITOS' CLIENTE: "+e); console.log(venC);}
-	Ext.getCmp('actionButtonsClientes').setActive(2);
-	
-	Ext.getCmp('btn_CancelEditCliente').setVisible(false);
-	Ext.getCmp('btn_EditCliente').setVisible(false);
-}
 
 ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
-	
-	var listaVentasCredito = new Ext.form.FormPanel({
-			//scroll: 'vertical',
-			id: 'listaVentasCreditoCliente',
-			//dockedItems: this.dockedItemsFormCliente,
-			items: [{
-				  		id: 'datosClienteCredito',
-						html: ''
-					},
-					{
-						id: 'ventasCreditoCliente',
-						html:''
-					}
-					]
-		});
 	
 	
 	Ext.regModel('ventasCreditoStore', {
@@ -1007,26 +908,16 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
 	//cabecera de datos del cliente seleccionado
 	
 	var clienteHtml = "";
-	clienteHtml += " <div class='ApplicationClientes-clienteBox'> ";
-	clienteHtml += " <div class='nombre'>" + record_cliente[0].nombre + "</div>";
-	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> RFC: " + record_cliente[0].rfc + "</div>";
-	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> Direccion: " + record_cliente[0].direccion + "</div>";
-	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> Telefono: " + record_cliente[0].telefono + "</div>";
-	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> Correo Electronico: " + record_cliente[0].e_mail + "</div>";
-	clienteHtml += " <div class='ApplicationClientes-clienteDetalle'> Limite de Credito: $ " + record_cliente[0].limite_credito + "</div>";
-	clienteHtml += " <div class='nombre'> SALDO: $ " + record_cliente[0].saldo + "</div>";
-	clienteHtml += " </div> ";
+	
 	var html = "";
 	
 		POS.AJAXandDECODE({
-			method: 'listarVentasCreditoCliente',
+			action: '1403',
 			id_cliente: record_cliente[0].id_cliente //recor[0].id_cliente
 			},
 			function (datos){//mientras responda AJAXDECODE LISTAR VENTAS CLIENTE
 				if(datos.success === true){
 					ventasClienteCredito.loadData(datos.datos);
-					
-					Ext.get("datosClienteCredito").update( clienteHtml );
 					
 					html += "<div class='ApplicationClientes-item' >"
 							+ "<div class='trash' ></div>"
@@ -1044,8 +935,9 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
 					//renderear el html
 					for( a = 0; a < ventasClienteCredito.getCount(); a++ ){
 						var ven = ventasClienteCredito.data.items[a];
-						var tot = parseFloat(ven.data.subtotal) + parseFloat(ven.data.iva);
-						var adeudo = tot - ven.data.abonado;
+						var adeudo = ven.data.adeudo;
+						
+						//console.log("***+************VENTA :"+ven.data.id_venta+"  SUBTOT: "+ven.data.subtotal+"  IVA: "+ven.data.iva);
 						//console.log("-------------------- en la venta: "+ven.data.id_venta+" abonado: "+ven.data.abonado);
 						var status="";
 						if (adeudo <= 0){
@@ -1054,17 +946,17 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
 							//console.log(record_cliente[0].data.nombre);
 							//var x = record_cliente[0].data.nombre;
 							//console.log(ven.data.id_venta +" "+ x +"	"+tot+"	"+adeudo);
-							status ="<div class='abonar' onclick='ApplicacionClientes.currentInstance.abonarVenta(" + ven.data.id_venta + " , "+ tot +" , "+ adeudo +")'>ABONAR</div>";
+							status ="<div class='abonar' onclick='ApplicacionClientes.currentInstance.abonarVenta(" + ven.data.id_venta + " , "+ ven.data.total +" , "+ ven.data.adeudo +")'>ABONAR</div>";
 						}
 						html+= "<div class='ApplicationClientes-item' >" 
 						+ "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" + ven.data.id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>"	
 						+ "<div class='id'>" + ven.data.id_venta +"</div>" 
 						+ "<div class='fecha'>"+ ven.data.fecha +"</div>" 
-						+ "<div class='sucursal'>"+ ven.data.descripcion +"</div>"
-						+ "<div class='vendedor'>"+ ven.data.nombre +"</div>"
-						+ "<div class='total'>$"+ tot +"</div>"
+						+ "<div class='sucursal'>"+ ven.data.sucursal +"</div>"
+						+ "<div class='vendedor'>"+ ven.data.vendedor +"</div>"
+						+ "<div class='total'>$"+ ven.data.total +"</div>"
 						+ "<div class='total'>$"+ ven.data.abonado +"</div>"
-						+ "<div class='total'>$"+ adeudo +"</div>"
+						+ "<div class='total'>$"+ ven.data.adeudo +"</div>"
 						+ "<div class='subtotal' onclick='ApplicacionClientes.currentInstance.verPagosVenta(" + ven.data.id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/compose.png'></div>"
 						+ status
 						+ "</div>";
@@ -1073,14 +965,15 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
 					}//fin for ventasClienteCredito
 		
 					//imprimir el html
-					Ext.get("ventasCreditoCliente").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
+					
 					//console.log(ventasCliente.data.items);
 				}
 				if(datos.success == false){
 					//POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS PROBABLEMENTE ESTE CLIENTE 'NO' HA COMPRADO");
-					Ext.get("datosClienteCredito").update( clienteHtml );
-					Ext.get("ventasCreditoCliente").update("<div class='ApplicationClientes-itemsBox'><div class='noVentas' align='center'>ESTE CLIENTE NO TIENE LISTA DE VENTAS A CREDITO</div> </div>");
+					html ="<div class='ApplicationClientes-itemsBox'><div class='noVentas' align='center'>ESTE CLIENTE NO TIENE LISTA DE VENTAS A CREDITO</div> </div>";
 				}
+				
+				Ext.get("customerCreditHistorialSlide").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
 			},
 			function (){//no responde AJAXDECODE DE VENTAS CLIENTE
 				POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS   ERROR EN LA CONEXION :(");      
@@ -1088,10 +981,12 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
 		);//AJAXandDECODE LISTAR VENTAS CLIENTE
 				
 		
-	return listaVentasCredito;
+	//return listaVentasCredito;
 }
 
-
+/*-------------------------------------------------------
+	PAGOS HECHOS SOBRE 1 VENTA EN ESPECIFICO
+---------------------------------------------------------*/
 ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
 
 	 var formBase = new Ext.Panel({
@@ -1109,9 +1004,7 @@ ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
                     items: [{
 						xtype: 'spacer'
 						},{
-						//-------------------------------------------------------------------------------
-						//			cancelar
-						//-------------------------------------------------------------------------------
+						
 						text: 'X Cerrar',
 						handler: function() {
 							//regresar el boton de cliente comun a 1
@@ -1157,7 +1050,7 @@ ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
 		});	
 		
 		POS.AJAXandDECODE({
-			method: 'abonosVentaCredito',
+			action: '1404',
 			id_venta: idVenta
 			},
 			function (datos){//mientras responda AJAXDECODE MOSTRAR CLIENTE

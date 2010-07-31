@@ -1,6 +1,6 @@
 ﻿<?php
-switch ($args['method']) {
-    case '101':
+switch ($args['action']) {
+    case '1001':
         $rfc = $args['rfc'];
         $nombre = $args['nombre'];
         $direccion = $args['direccion'];
@@ -12,7 +12,7 @@ switch ($args['method']) {
         echo $ans;
 	break;
 	
-	case '102':
+	case '1002':
 		$id = $args['id'];
         $rfc = $args['rfc'];
         $nombre = $args['nombre'];
@@ -26,22 +26,23 @@ switch ($args['method']) {
         echo $ans;
 	break;
 	
-	case '103':
+	case '1003':
 		$id = $args['id'];
         unset($args);
         $ans = delete_customer($id);
         echo $ans;
 	break;
 	
-	case '104':
+	case '1004':
 		$id = $args['id'];
         unset($args);
         $ans = show_customer($id);
         echo $ans;
 	break;
 	
-	case '105':
+	case '1005':
         unset($args);
+		include_once("controller/clientes.controller.php");
         $ans = list_customers();
         echo $ans;
 	break;

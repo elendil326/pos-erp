@@ -64,7 +64,7 @@ function save_customer($id, $rfc, $nombre, $direccion, $limite_credito, $descuen
  * @param <type> $e_mail
  */
 function update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $descuento = 0, $telefono = null, $e_mail = null) {
-    save_customer($id, $rfc, $nombre, $direccion, $limite_credito, $descuento, $telefono, $e_mail);
+    return save_customer($id, $rfc, $nombre, $direccion, $limite_credito, $descuento, $telefono, $e_mail);
 }
 
 /**
@@ -78,7 +78,7 @@ function update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $descu
  * @param <type> $e_mail 
  */
 function insert_customer($rfc, $nombre, $direccion, $limite_credito, $descuento = 0, $telefono = null, $e_mail = null) {
-    save_customer(null, $rfc, $nombre, $direccion, $limite_credito, $descuento, $telefono, $e_mail);
+    return save_customer(null, $rfc, $nombre, $direccion, $limite_credito, $descuento, $telefono, $e_mail);
 }
 
 /**

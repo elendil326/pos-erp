@@ -179,6 +179,7 @@ ApplicationCompras.prototype.compras_addProductByIDKeyUp = function (a, b)
 /*------------------------------------------------------------------
 	PROPIEDAD DE LA CLAS QUE ALMACENA EL ID DEL PROVEEDOR SELECCIONADO
 --------------------------------------------------------------------*/
+
 ApplicationCompras.prototype.idProviderSelected = function( id ){
 	//console.log("ENTRE AL METODO DE IDPROVIDERSELECTED Y ME ESTA LLEGANDO UN :"+id);
 	//console.log(id);
@@ -378,8 +379,8 @@ ApplicationCompras.prototype.doRefreshItemList2 = function (  )
 	}
 
 	var totals_html = "<span id='subtotal_compra'>Subtotal " +  subtotal + "</span> "
-				+ "<span id='iva_compra'>IVA $" +  (subtotal*.16) + "</span> "
-				+ "<span id='total_compra'>Total " +  ((subtotal*.16) + subtotal) + "</span>";
+				+ "<span id='iva_compra'>IVA $" +  (subtotal* 0) + "</span> "
+				+ "<span id='total_compra'>Total " +  ((subtotal* 0) + subtotal) + "</span>";
 					
 
 	// wrap divs
@@ -472,8 +473,8 @@ ApplicationCompras.prototype.doRefreshItemList = function (  )
 
 
 	totals_html = "<span>Subtotal " +  subtotal + "</span> "
-				+ "<span>IVA $" +  (subtotal*.15) + "</span> "
-				+ "<span>Total " +  ((subtotal*.15)+subtotal) + "</span>";
+				+ "<span>IVA $" +  (subtotal * 0) + "</span> "
+				+ "<span>Total " +  ((subtotal * 0)+subtotal) + "</span>";
 					
 
 	// wrap divs
@@ -604,7 +605,7 @@ ApplicationCompras.prototype.sumaCantidad = function( indiceItem ,  cantidad , c
 	for(i=0; i < this.htmlCart_items.length; i++){
 		subtotal_compra += parseFloat(this.htmlCart_items[i].subtot);
 	}
-	var iva_compra = subtotal_compra * .16;
+	var iva_compra = subtotal_compra * 0;
 	
 	Ext.get("subtotal_compra").update("$ "+subtotal_compra);
 	Ext.get("iva_compra").update("$ "+ iva_compra);
@@ -684,9 +685,9 @@ ApplicationCompras.prototype.compras_doAddProduct = function (button, event)
 	}
 	
 	
-	//buscar si este producto existe
+	//buscar si este producto existe (vender un producto que exista en la sucursal)
 	POS.AJAXandDECODE({
-			method: 'existenciaProductoSucursal',
+			action: '1210',
 			id_producto : prodID,
 			id_proveedor: ApplicationCompras.currentInstance.idProveedor,
 			sucursal_id : 2 //de todos modos del lado del server con SESSION se pesca este dato
@@ -964,11 +965,19 @@ ApplicationCompras.prototype.doCompraLogic = function ()
 	var jsonItems = Ext.util.JSON.encode(ApplicationCompras.currentInstance.htmlCart_items);
 
 	var tipoCom = Ext.getCmp("tipoCompra").getValue(true) + 1;
+	var tipoCompra ="";
+	
+	if( tipoCom == 1 ){
+		tipoCompra = "contado";
+	}else{
+		tipoCompra = "credito";
+	}
+	
 	POS.AJAXandDECODE({
-			method: 'insertarCompra',
+			action: '1201',//insertar compra
 			jsonItems : jsonItems,
 			id_proveedor : ApplicationCompras.currentInstance.idProveedor,//aqui el id del proveedor
-			tipo_compra : tipoCom,
+			tipo_compra : tipoCompra,
 			modo_compra	: ApplicationCompras.currentInstance._BANDERA //false toño mode, true general mode
 		}, 
 		function (datos){
