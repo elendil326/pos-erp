@@ -72,7 +72,7 @@ class PagosCompra extends VO
 	  * 
 	  * fecha en que se abono<br>
 	  * @access protected
-	  * @var date
+	  * @var timestamp
 	  */
 	protected $fecha;
 
@@ -141,7 +141,7 @@ class PagosCompra extends VO
 	  * getFecha
 	  * 
 	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha en que se abono
-	  * @return date
+	  * @return timestamp
 	  */
 	final public function getFecha()
 	{
@@ -152,9 +152,9 @@ class PagosCompra extends VO
 	  * setFecha( $fecha )
 	  * 
 	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha en que se abono.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>date</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>timestamp</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param date
+	  * @param timestamp
 	  */
 	final public function setFecha( $fecha )
 	{

@@ -78,7 +78,7 @@ class Cotizacion extends VO
 	  * 
 	  * fecha de cotizacion<br>
 	  * @access protected
-	  * @var date
+	  * @var timestamp
 	  */
 	protected $fecha;
 
@@ -174,7 +174,7 @@ class Cotizacion extends VO
 	  * getFecha
 	  * 
 	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha de cotizacion
-	  * @return date
+	  * @return timestamp
 	  */
 	final public function getFecha()
 	{
@@ -185,9 +185,9 @@ class Cotizacion extends VO
 	  * setFecha( $fecha )
 	  * 
 	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha de cotizacion.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>date</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>timestamp</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param date
+	  * @param timestamp
 	  */
 	final public function setFecha( $fecha )
 	{

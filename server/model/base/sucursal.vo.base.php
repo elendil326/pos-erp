@@ -24,6 +24,7 @@ class Sucursal extends VO
 			$this->id_sucursal = $data['id_sucursal'];
 			$this->descripcion = $data['descripcion'];
 			$this->direccion = $data['direccion'];
+			$this->token = $data['token'];
 		}
 	}
 
@@ -40,7 +41,8 @@ class Sucursal extends VO
 		array_push($vec, array( 
 		"id_sucursal" => $this->id_sucursal,
 		"descripcion" => $this->descripcion,
-		"direccion" => $this->direccion
+		"direccion" => $this->direccion,
+		"token" => $this->token
 		)); 
 	return json_encode($vec, true); 
 	}
@@ -73,6 +75,15 @@ class Sucursal extends VO
 	  * @var varchar(200)
 	  */
 	protected $direccion;
+
+	/**
+	  * token
+	  * 
+	  * Token de seguridad para esta sucursal<br>
+	  * @access protected
+	  * @var varchar(512)
+	  */
+	protected $token;
 
 	/**
 	  * getIdSucursal
@@ -148,6 +159,30 @@ class Sucursal extends VO
 	final public function setDireccion( $direccion )
 	{
 		$this->direccion = $direccion;
+	}
+
+	/**
+	  * getToken
+	  * 
+	  * Get the <i>token</i> property for this object. Donde <i>token</i> es Token de seguridad para esta sucursal
+	  * @return varchar(512)
+	  */
+	final public function getToken()
+	{
+		return $this->token;
+	}
+
+	/**
+	  * setToken( $token )
+	  * 
+	  * Set the <i>token</i> property for this object. Donde <i>token</i> es Token de seguridad para esta sucursal.
+	  * Una validacion basica se hara aqui para comprobar que <i>token</i> es de tipo <i>varchar(512)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(512)
+	  */
+	final public function setToken( $token )
+	{
+		$this->token = $token;
 	}
 
 }

@@ -72,10 +72,10 @@ abstract class VentasDAOBase extends TablaDAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from ventas";
+		if($orden != NULL)
+		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
 		if($pagina != NULL)
 		{
-			if($orden != NULL)
-			{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
 		global $conn;
@@ -145,6 +145,16 @@ abstract class VentasDAOBase extends TablaDAO
 			array_push( $val, $ventas->getIva() );
 		}
 
+		if( $ventas->getDescuento() != NULL){
+			$sql .= " descuento = ? AND";
+			array_push( $val, $ventas->getDescuento() );
+		}
+
+		if( $ventas->getTotal() != NULL){
+			$sql .= " total = ? AND";
+			array_push( $val, $ventas->getTotal() );
+		}
+
 		if( $ventas->getIdSucursal() != NULL){
 			$sql .= " id_sucursal = ? AND";
 			array_push( $val, $ventas->getIdSucursal() );
@@ -153,6 +163,16 @@ abstract class VentasDAOBase extends TablaDAO
 		if( $ventas->getIdUsuario() != NULL){
 			$sql .= " id_usuario = ? AND";
 			array_push( $val, $ventas->getIdUsuario() );
+		}
+
+		if( $ventas->getPagado() != NULL){
+			$sql .= " pagado = ? AND";
+			array_push( $val, $ventas->getPagado() );
+		}
+
+		if( $ventas->getIp() != NULL){
+			$sql .= " ip = ? AND";
+			array_push( $val, $ventas->getIp() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
@@ -188,15 +208,19 @@ abstract class VentasDAOBase extends TablaDAO
 	  **/
 	private static final function update( $ventas )
 	{
-		$sql = "UPDATE ventas SET  id_cliente = ?, tipo_venta = ?, fecha = ?, subtotal = ?, iva = ?, id_sucursal = ?, id_usuario = ? WHERE  id_venta = ?;";
+		$sql = "UPDATE ventas SET  id_cliente = ?, tipo_venta = ?, fecha = ?, subtotal = ?, iva = ?, descuento = ?, total = ?, id_sucursal = ?, id_usuario = ?, pagado = ?, ip = ? WHERE  id_venta = ?;";
 		$params = array( 
 			$ventas->getIdCliente(), 
 			$ventas->getTipoVenta(), 
 			$ventas->getFecha(), 
 			$ventas->getSubtotal(), 
 			$ventas->getIva(), 
+			$ventas->getDescuento(), 
+			$ventas->getTotal(), 
 			$ventas->getIdSucursal(), 
 			$ventas->getIdUsuario(), 
+			$ventas->getPagado(), 
+			$ventas->getIp(), 
 			$ventas->getIdVenta(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -220,15 +244,19 @@ abstract class VentasDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$ventas )
 	{
-		$sql = "INSERT INTO ventas ( id_cliente, tipo_venta, fecha, subtotal, iva, id_sucursal, id_usuario ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO ventas ( id_cliente, tipo_venta, fecha, subtotal, iva, descuento, total, id_sucursal, id_usuario, pagado, ip ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$ventas->getIdCliente(), 
 			$ventas->getTipoVenta(), 
 			$ventas->getFecha(), 
 			$ventas->getSubtotal(), 
 			$ventas->getIva(), 
+			$ventas->getDescuento(), 
+			$ventas->getTotal(), 
 			$ventas->getIdSucursal(), 
 			$ventas->getIdUsuario(), 
+			$ventas->getPagado(), 
+			$ventas->getIp(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -342,6 +370,28 @@ abstract class VentasDAOBase extends TablaDAO
 			
 		}
 
+		if( (($a = $ventasA->getDescuento()) != NULL) & ( ($b = $ventasB->getDescuento()) != NULL) ){
+				$sql .= " descuento >= ? AND descuento <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " descuento = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $ventasA->getTotal()) != NULL) & ( ($b = $ventasB->getTotal()) != NULL) ){
+				$sql .= " total >= ? AND total <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " total = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
 		if( (($a = $ventasA->getIdSucursal()) != NULL) & ( ($b = $ventasB->getIdSucursal()) != NULL) ){
 				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
 				array_push( $val, min($a,$b)); 
@@ -359,6 +409,28 @@ abstract class VentasDAOBase extends TablaDAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " id_usuario = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $ventasA->getPagado()) != NULL) & ( ($b = $ventasB->getPagado()) != NULL) ){
+				$sql .= " pagado >= ? AND pagado <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " pagado = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $ventasA->getIp()) != NULL) & ( ($b = $ventasB->getIp()) != NULL) ){
+				$sql .= " ip >= ? AND ip <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " ip = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

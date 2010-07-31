@@ -27,8 +27,12 @@ class Ventas extends VO
 			$this->fecha = $data['fecha'];
 			$this->subtotal = $data['subtotal'];
 			$this->iva = $data['iva'];
+			$this->descuento = $data['descuento'];
+			$this->total = $data['total'];
 			$this->id_sucursal = $data['id_sucursal'];
 			$this->id_usuario = $data['id_usuario'];
+			$this->pagado = $data['pagado'];
+			$this->ip = $data['ip'];
 		}
 	}
 
@@ -49,8 +53,12 @@ class Ventas extends VO
 		"fecha" => $this->fecha,
 		"subtotal" => $this->subtotal,
 		"iva" => $this->iva,
+		"descuento" => $this->descuento,
+		"total" => $this->total,
 		"id_sucursal" => $this->id_sucursal,
-		"id_usuario" => $this->id_usuario
+		"id_usuario" => $this->id_usuario,
+		"pagado" => $this->pagado,
+		"ip" => $this->ip
 		)); 
 	return json_encode($vec, true); 
 	}
@@ -96,7 +104,7 @@ class Ventas extends VO
 	/**
 	  * subtotal
 	  * 
-	  * subtotal de la venta<br>
+	  * subtotal de la venta, puede ser nulo<br>
 	  * @access protected
 	  * @var float
 	  */
@@ -105,11 +113,29 @@ class Ventas extends VO
 	/**
 	  * iva
 	  * 
-	  * iva agregado por la venta<br>
+	  * iva agregado por la venta, depende de cada sucursal<br>
 	  * @access protected
 	  * @var float
 	  */
 	protected $iva;
+
+	/**
+	  * descuento
+	  * 
+	  * descuento aplicado a esta venta<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $descuento;
+
+	/**
+	  * total
+	  * 
+	  * total de esta venta<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $total;
 
 	/**
 	  * id_sucursal
@@ -128,6 +154,24 @@ class Ventas extends VO
 	  * @var int(11)
 	  */
 	protected $id_usuario;
+
+	/**
+	  * pagado
+	  * 
+	  * porcentaje pagado de esta venta<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $pagado;
+
+	/**
+	  * ip
+	  * 
+	  * ip de donde provino esta compra<br>
+	  * @access protected
+	  * @var varchar(16)
+	  */
+	protected $ip;
 
 	/**
 	  * getIdVenta
@@ -232,7 +276,7 @@ class Ventas extends VO
 	/**
 	  * getSubtotal
 	  * 
-	  * Get the <i>subtotal</i> property for this object. Donde <i>subtotal</i> es subtotal de la venta
+	  * Get the <i>subtotal</i> property for this object. Donde <i>subtotal</i> es subtotal de la venta, puede ser nulo
 	  * @return float
 	  */
 	final public function getSubtotal()
@@ -243,7 +287,7 @@ class Ventas extends VO
 	/**
 	  * setSubtotal( $subtotal )
 	  * 
-	  * Set the <i>subtotal</i> property for this object. Donde <i>subtotal</i> es subtotal de la venta.
+	  * Set the <i>subtotal</i> property for this object. Donde <i>subtotal</i> es subtotal de la venta, puede ser nulo.
 	  * Una validacion basica se hara aqui para comprobar que <i>subtotal</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -256,7 +300,7 @@ class Ventas extends VO
 	/**
 	  * getIva
 	  * 
-	  * Get the <i>iva</i> property for this object. Donde <i>iva</i> es iva agregado por la venta
+	  * Get the <i>iva</i> property for this object. Donde <i>iva</i> es iva agregado por la venta, depende de cada sucursal
 	  * @return float
 	  */
 	final public function getIva()
@@ -267,7 +311,7 @@ class Ventas extends VO
 	/**
 	  * setIva( $iva )
 	  * 
-	  * Set the <i>iva</i> property for this object. Donde <i>iva</i> es iva agregado por la venta.
+	  * Set the <i>iva</i> property for this object. Donde <i>iva</i> es iva agregado por la venta, depende de cada sucursal.
 	  * Una validacion basica se hara aqui para comprobar que <i>iva</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -275,6 +319,54 @@ class Ventas extends VO
 	final public function setIva( $iva )
 	{
 		$this->iva = $iva;
+	}
+
+	/**
+	  * getDescuento
+	  * 
+	  * Get the <i>descuento</i> property for this object. Donde <i>descuento</i> es descuento aplicado a esta venta
+	  * @return float
+	  */
+	final public function getDescuento()
+	{
+		return $this->descuento;
+	}
+
+	/**
+	  * setDescuento( $descuento )
+	  * 
+	  * Set the <i>descuento</i> property for this object. Donde <i>descuento</i> es descuento aplicado a esta venta.
+	  * Una validacion basica se hara aqui para comprobar que <i>descuento</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setDescuento( $descuento )
+	{
+		$this->descuento = $descuento;
+	}
+
+	/**
+	  * getTotal
+	  * 
+	  * Get the <i>total</i> property for this object. Donde <i>total</i> es total de esta venta
+	  * @return float
+	  */
+	final public function getTotal()
+	{
+		return $this->total;
+	}
+
+	/**
+	  * setTotal( $total )
+	  * 
+	  * Set the <i>total</i> property for this object. Donde <i>total</i> es total de esta venta.
+	  * Una validacion basica se hara aqui para comprobar que <i>total</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setTotal( $total )
+	{
+		$this->total = $total;
 	}
 
 	/**
@@ -323,6 +415,54 @@ class Ventas extends VO
 	final public function setIdUsuario( $id_usuario )
 	{
 		$this->id_usuario = $id_usuario;
+	}
+
+	/**
+	  * getPagado
+	  * 
+	  * Get the <i>pagado</i> property for this object. Donde <i>pagado</i> es porcentaje pagado de esta venta
+	  * @return float
+	  */
+	final public function getPagado()
+	{
+		return $this->pagado;
+	}
+
+	/**
+	  * setPagado( $pagado )
+	  * 
+	  * Set the <i>pagado</i> property for this object. Donde <i>pagado</i> es porcentaje pagado de esta venta.
+	  * Una validacion basica se hara aqui para comprobar que <i>pagado</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setPagado( $pagado )
+	{
+		$this->pagado = $pagado;
+	}
+
+	/**
+	  * getIp
+	  * 
+	  * Get the <i>ip</i> property for this object. Donde <i>ip</i> es ip de donde provino esta compra
+	  * @return varchar(16)
+	  */
+	final public function getIp()
+	{
+		return $this->ip;
+	}
+
+	/**
+	  * setIp( $ip )
+	  * 
+	  * Set the <i>ip</i> property for this object. Donde <i>ip</i> es ip de donde provino esta compra.
+	  * Una validacion basica se hara aqui para comprobar que <i>ip</i> es de tipo <i>varchar(16)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(16)
+	  */
+	final public function setIp( $ip )
+	{
+		$this->ip = $ip;
 	}
 
 }

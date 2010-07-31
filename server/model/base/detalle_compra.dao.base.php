@@ -72,10 +72,10 @@ abstract class DetalleCompraDAOBase extends TablaDAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from detalle_compra";
+		if($orden != NULL)
+		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
 		if($pagina != NULL)
 		{
-			if($orden != NULL)
-			{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
 		global $conn;
@@ -135,6 +135,16 @@ abstract class DetalleCompraDAOBase extends TablaDAO
 			array_push( $val, $detalle_compra->getPrecio() );
 		}
 
+		if( $detalle_compra->getPesoArpillaPagado() != NULL){
+			$sql .= " peso_arpillaPagado = ? AND";
+			array_push( $val, $detalle_compra->getPesoArpillaPagado() );
+		}
+
+		if( $detalle_compra->getPesoArpillaReal() != NULL){
+			$sql .= " peso_arpillaReal = ? AND";
+			array_push( $val, $detalle_compra->getPesoArpillaReal() );
+		}
+
 		$sql = substr($sql, 0, -3) . " )";
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
@@ -168,10 +178,12 @@ abstract class DetalleCompraDAOBase extends TablaDAO
 	  **/
 	private static final function update( $detalle_compra )
 	{
-		$sql = "UPDATE detalle_compra SET  cantidad = ?, precio = ? WHERE  id_compra = ? AND id_producto = ?;";
+		$sql = "UPDATE detalle_compra SET  cantidad = ?, precio = ?, peso_arpillaPagado = ?, peso_arpillaReal = ? WHERE  id_compra = ? AND id_producto = ?;";
 		$params = array( 
 			$detalle_compra->getCantidad(), 
 			$detalle_compra->getPrecio(), 
+			$detalle_compra->getPesoArpillaPagado(), 
+			$detalle_compra->getPesoArpillaReal(), 
 			$detalle_compra->getIdCompra(),$detalle_compra->getIdProducto(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -195,12 +207,14 @@ abstract class DetalleCompraDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$detalle_compra )
 	{
-		$sql = "INSERT INTO detalle_compra ( id_compra, id_producto, cantidad, precio ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO detalle_compra ( id_compra, id_producto, cantidad, precio, peso_arpillaPagado, peso_arpillaReal ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$detalle_compra->getIdCompra(), 
 			$detalle_compra->getIdProducto(), 
 			$detalle_compra->getCantidad(), 
 			$detalle_compra->getPrecio(), 
+			$detalle_compra->getPesoArpillaPagado(), 
+			$detalle_compra->getPesoArpillaReal(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -287,6 +301,28 @@ abstract class DetalleCompraDAOBase extends TablaDAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " precio = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $detalle_compraA->getPesoArpillaPagado()) != NULL) & ( ($b = $detalle_compraB->getPesoArpillaPagado()) != NULL) ){
+				$sql .= " peso_arpillaPagado >= ? AND peso_arpillaPagado <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " peso_arpillaPagado = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $detalle_compraA->getPesoArpillaReal()) != NULL) & ( ($b = $detalle_compraB->getPesoArpillaReal()) != NULL) ){
+				$sql .= " peso_arpillaReal >= ? AND peso_arpillaReal <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " peso_arpillaReal = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

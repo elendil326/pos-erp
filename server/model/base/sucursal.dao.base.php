@@ -72,10 +72,10 @@ abstract class SucursalDAOBase extends TablaDAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from sucursal";
+		if($orden != NULL)
+		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
 		if($pagina != NULL)
 		{
-			if($orden != NULL)
-			{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
 		global $conn;
@@ -130,6 +130,11 @@ abstract class SucursalDAOBase extends TablaDAO
 			array_push( $val, $sucursal->getDireccion() );
 		}
 
+		if( $sucursal->getToken() != NULL){
+			$sql .= " token = ? AND";
+			array_push( $val, $sucursal->getToken() );
+		}
+
 		$sql = substr($sql, 0, -3) . " )";
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
@@ -163,10 +168,11 @@ abstract class SucursalDAOBase extends TablaDAO
 	  **/
 	private static final function update( $sucursal )
 	{
-		$sql = "UPDATE sucursal SET  descripcion = ?, direccion = ? WHERE  id_sucursal = ?;";
+		$sql = "UPDATE sucursal SET  descripcion = ?, direccion = ?, token = ? WHERE  id_sucursal = ?;";
 		$params = array( 
 			$sucursal->getDescripcion(), 
 			$sucursal->getDireccion(), 
+			$sucursal->getToken(), 
 			$sucursal->getIdSucursal(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -190,10 +196,11 @@ abstract class SucursalDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$sucursal )
 	{
-		$sql = "INSERT INTO sucursal ( descripcion, direccion ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO sucursal ( descripcion, direccion, token ) VALUES ( ?, ?, ?);";
 		$params = array( 
 			$sucursal->getDescripcion(), 
 			$sucursal->getDireccion(), 
+			$sucursal->getToken(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -269,6 +276,17 @@ abstract class SucursalDAOBase extends TablaDAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " direccion = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $sucursalA->getToken()) != NULL) & ( ($b = $sucursalB->getToken()) != NULL) ){
+				$sql .= " token >= ? AND token <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " token = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

@@ -86,7 +86,7 @@ class Corte extends VO
 	  * 
 	  * año del corte<br>
 	  * @access protected
-	  * @var date
+	  * @var timestamp
 	  */
 	protected $inicio;
 
@@ -95,7 +95,7 @@ class Corte extends VO
 	  * 
 	  * fecha de fin del corte<br>
 	  * @access protected
-	  * @var date
+	  * @var timestamp
 	  */
 	protected $fin;
 
@@ -218,7 +218,7 @@ class Corte extends VO
 	  * getInicio
 	  * 
 	  * Get the <i>inicio</i> property for this object. Donde <i>inicio</i> es año del corte
-	  * @return date
+	  * @return timestamp
 	  */
 	final public function getInicio()
 	{
@@ -229,9 +229,9 @@ class Corte extends VO
 	  * setInicio( $inicio )
 	  * 
 	  * Set the <i>inicio</i> property for this object. Donde <i>inicio</i> es año del corte.
-	  * Una validacion basica se hara aqui para comprobar que <i>inicio</i> es de tipo <i>date</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>inicio</i> es de tipo <i>timestamp</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param date
+	  * @param timestamp
 	  */
 	final public function setInicio( $inicio )
 	{
@@ -242,7 +242,7 @@ class Corte extends VO
 	  * getFin
 	  * 
 	  * Get the <i>fin</i> property for this object. Donde <i>fin</i> es fecha de fin del corte
-	  * @return date
+	  * @return timestamp
 	  */
 	final public function getFin()
 	{
@@ -253,9 +253,9 @@ class Corte extends VO
 	  * setFin( $fin )
 	  * 
 	  * Set the <i>fin</i> property for this object. Donde <i>fin</i> es fecha de fin del corte.
-	  * Una validacion basica se hara aqui para comprobar que <i>fin</i> es de tipo <i>date</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>fin</i> es de tipo <i>timestamp</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param date
+	  * @param timestamp
 	  */
 	final public function setFin( $fin )
 	{

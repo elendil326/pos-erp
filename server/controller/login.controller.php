@@ -1,4 +1,4 @@
-<?
+<?php
 
 require_once("../server/model/usuario.dao.php");
 require_once("../server/model/grupos_usuarios.dao.php");

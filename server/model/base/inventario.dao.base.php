@@ -72,10 +72,10 @@ abstract class InventarioDAOBase extends TablaDAO
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
 		$sql = "SELECT * from inventario";
+		if($orden != NULL)
+		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
 		if($pagina != NULL)
 		{
-			if($orden != NULL)
-			{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
 			$sql .= " LIMIT " . (( $pagina - 1 )*$columnas_por_pagina) . "," . $columnas_por_pagina; 
 		}
 		global $conn;

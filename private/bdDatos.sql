@@ -3,16 +3,11 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 24-07-2010 a las 05:23:04
+-- Tiempo de generación: 31-07-2010 a las 10:54:00
 -- Versión del servidor: 5.1.37
 -- Versión de PHP: 5.3.0
 
-SET FOREIGN_KEY_CHECKS=0;
-
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-
-SET AUTOCOMMIT=0;
-START TRANSACTION;
 
 --
 -- Base de datos: `pos`
@@ -24,6 +19,7 @@ START TRANSACTION;
 -- Estructura de tabla para la tabla `cliente`
 --
 
+DROP TABLE IF EXISTS `cliente`;
 CREATE TABLE IF NOT EXISTS `cliente` (
   `id_cliente` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del cliente',
   `rfc` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'rfc del cliente si es que tiene',
@@ -41,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
 --
 
 INSERT INTO `cliente` (`id_cliente`, `rfc`, `nombre`, `direccion`, `telefono`, `e_mail`, `limite_credito`, `descuento`) VALUES
+(-6, '', '', '', NULL, '0', 0, 0),
 (1, 'AFJ19INT3JI', 'Clementine Manning', '992-3353 Euismod Street', '(777) 586-8657', 'adipiscing.elit.Curabitur@elitelit.edu', 25563, 0),
 (2, 'EEN95XGS4ZA', 'September Whitaker', 'Ap #147-755 Montes, Rd.', '(569) 226-0218', 'gravida.non@lacusEtiambibendum.edu', 10101, 26),
 (3, 'SFV46VKN7TB', 'Kimberly Rocha', '154-2822 Non, St.', '(772) 180-4981', 'mollis@vitaerisusDuis.com', 17321, 9),
@@ -248,6 +245,7 @@ INSERT INTO `cliente` (`id_cliente`, `rfc`, `nombre`, `direccion`, `telefono`, `
 -- Estructura de tabla para la tabla `compras`
 --
 
+DROP TABLE IF EXISTS `compras`;
 CREATE TABLE IF NOT EXISTS `compras` (
   `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de la compra',
   `id_proveedor` int(11) NOT NULL COMMENT 'PROVEEDOR AL QUE SE LE COMPRO',
@@ -274,11 +272,12 @@ CREATE TABLE IF NOT EXISTS `compras` (
 -- Estructura de tabla para la tabla `corte`
 --
 
+DROP TABLE IF EXISTS `corte`;
 CREATE TABLE IF NOT EXISTS `corte` (
   `num_corte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'numero de corte',
   `anio` year(4) NOT NULL COMMENT 'año del corte',
-  `inicio` date NOT NULL COMMENT 'año del corte',
-  `fin` date NOT NULL COMMENT 'fecha de fin del corte',
+  `inicio` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'año del corte',
+  `fin` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'fecha de fin del corte',
   `ventas` float NOT NULL COMMENT 'ventas al contado en ese periodo',
   `abonosVentas` float NOT NULL COMMENT 'pagos de abonos en este periodo',
   `compras` float NOT NULL COMMENT 'compras realizadas en ese periodo',
@@ -294,16 +293,16 @@ CREATE TABLE IF NOT EXISTS `corte` (
 --
 
 INSERT INTO `corte` (`num_corte`, `anio`, `inicio`, `fin`, `ventas`, `abonosVentas`, `compras`, `AbonosCompra`, `gastos`, `ingresos`, `gananciasNetas`) VALUES
-(1, 2011, '2010-05-02', '2011-06-01', 46364, 1000, 4483, 7173, 7184, 8911, 46401),
-(2, 2010, '2010-04-16', '2011-02-26', 49346, 1000, 2815, 9191, 9356, 7840, 42454),
-(3, 2009, '2009-07-24', '2010-08-11', 44787, 1000, 8994, 1819, 9450, 2866, 46378),
-(4, 2010, '2010-06-01', '2010-12-02', 83376, 1000, 2203, 9898, 6535, 9027, 79173),
-(5, 2009, '2009-11-21', '2010-09-20', 77295, 1000, 7344, 4913, 2736, 9242, 87232),
-(6, 2010, '2009-08-05', '2010-10-31', 42213, 1000, 5861, 3576, 8225, 8345, 45618),
-(7, 2009, '2009-10-29', '2011-06-07', 57566, 1000, 3522, 5206, 5552, 1055, 52385),
-(8, 2009, '2010-03-21', '2011-02-25', 15751, 1000, 3787, 7110, 8900, 3130, 7658),
-(9, 2010, '2009-08-02', '2011-05-10', 59563, 1000, 1542, 7693, 3867, 9112, 59657),
-(10, 2011, '2009-12-10', '2011-06-11', 94966, 1000, 9665, 7721, 7570, 4357, 94697);
+(1, 2011, '2010-05-02 00:00:00', '2011-06-01 00:00:00', 46364, 1000, 4483, 7173, 7184, 8911, 46401),
+(2, 2010, '2010-04-16 00:00:00', '2011-02-26 00:00:00', 49346, 1000, 2815, 9191, 9356, 7840, 42454),
+(3, 2009, '2009-07-24 00:00:00', '2010-08-11 00:00:00', 44787, 1000, 8994, 1819, 9450, 2866, 46378),
+(4, 2010, '2010-06-01 00:00:00', '2010-12-02 00:00:00', 83376, 1000, 2203, 9898, 6535, 9027, 79173),
+(5, 2009, '2009-11-21 00:00:00', '2010-09-20 00:00:00', 77295, 1000, 7344, 4913, 2736, 9242, 87232),
+(6, 2010, '2009-08-05 00:00:00', '2010-10-31 00:00:00', 42213, 1000, 5861, 3576, 8225, 8345, 45618),
+(7, 2009, '2009-10-29 00:00:00', '2011-06-07 00:00:00', 57566, 1000, 3522, 5206, 5552, 1055, 52385),
+(8, 2009, '2010-03-21 00:00:00', '2011-02-25 00:00:00', 15751, 1000, 3787, 7110, 8900, 3130, 7658),
+(9, 2010, '2009-08-02 00:00:00', '2011-05-10 00:00:00', 59563, 1000, 1542, 7693, 3867, 9112, 59657),
+(10, 2011, '2009-12-10 00:00:00', '2011-06-11 00:00:00', 94966, 1000, 9665, 7721, 7570, 4357, 94697);
 
 -- --------------------------------------------------------
 
@@ -311,10 +310,11 @@ INSERT INTO `corte` (`num_corte`, `anio`, `inicio`, `fin`, `ventas`, `abonosVent
 -- Estructura de tabla para la tabla `cotizacion`
 --
 
+DROP TABLE IF EXISTS `cotizacion`;
 CREATE TABLE IF NOT EXISTS `cotizacion` (
   `id_cotizacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de la cotizacion',
   `id_cliente` int(11) NOT NULL COMMENT 'id del cliente',
-  `fecha` date NOT NULL COMMENT 'fecha de cotizacion',
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de cotizacion',
   `subtotal` float NOT NULL COMMENT 'subtotal de la cotizacion',
   `iva` float NOT NULL COMMENT 'iva sobre el subtotal',
   `id_sucursal` int(11) NOT NULL,
@@ -336,11 +336,14 @@ CREATE TABLE IF NOT EXISTS `cotizacion` (
 -- Estructura de tabla para la tabla `detalle_compra`
 --
 
+DROP TABLE IF EXISTS `detalle_compra`;
 CREATE TABLE IF NOT EXISTS `detalle_compra` (
   `id_compra` int(11) NOT NULL COMMENT 'id de la compra',
   `id_producto` int(11) NOT NULL COMMENT 'id del producto',
   `cantidad` float NOT NULL COMMENT 'cantidad comprada',
   `precio` float NOT NULL COMMENT 'costo de compra',
+  `peso_arpillaPagado` float DEFAULT '0',
+  `peso_arpillaReal` float DEFAULT '0',
   PRIMARY KEY (`id_compra`,`id_producto`),
   KEY `detalle_compra_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -356,6 +359,7 @@ CREATE TABLE IF NOT EXISTS `detalle_compra` (
 -- Estructura de tabla para la tabla `detalle_corte`
 --
 
+DROP TABLE IF EXISTS `detalle_corte`;
 CREATE TABLE IF NOT EXISTS `detalle_corte` (
   `num_corte` int(11) NOT NULL COMMENT 'id del corte al que hace referencia',
   `nombre` varchar(100) NOT NULL COMMENT 'nombre del encargado de sucursal al momento del corte',
@@ -406,6 +410,7 @@ INSERT INTO `detalle_corte` (`num_corte`, `nombre`, `total`, `deben`) VALUES
 -- Estructura de tabla para la tabla `detalle_cotizacion`
 --
 
+DROP TABLE IF EXISTS `detalle_cotizacion`;
 CREATE TABLE IF NOT EXISTS `detalle_cotizacion` (
   `id_cotizacion` int(11) NOT NULL COMMENT 'id de la cotizacion',
   `id_producto` int(11) NOT NULL COMMENT 'id del producto',
@@ -426,6 +431,7 @@ CREATE TABLE IF NOT EXISTS `detalle_cotizacion` (
 -- Estructura de tabla para la tabla `detalle_inventario`
 --
 
+DROP TABLE IF EXISTS `detalle_inventario`;
 CREATE TABLE IF NOT EXISTS `detalle_inventario` (
   `id_producto` int(11) NOT NULL COMMENT 'id del producto al que se refiere',
   `id_sucursal` int(11) NOT NULL COMMENT 'id de la sucursal',
@@ -638,6 +644,7 @@ INSERT INTO `detalle_inventario` (`id_producto`, `id_sucursal`, `precio_venta`, 
 -- Estructura de tabla para la tabla `detalle_venta`
 --
 
+DROP TABLE IF EXISTS `detalle_venta`;
 CREATE TABLE IF NOT EXISTS `detalle_venta` (
   `id_venta` int(11) NOT NULL COMMENT 'venta a que se referencia',
   `id_producto` int(11) NOT NULL COMMENT 'producto de la venta',
@@ -816,7 +823,59 @@ INSERT INTO `detalle_venta` (`id_venta`, `id_producto`, `cantidad`, `precio`) VA
 (53, 28, 159, 152),
 (53, 43, 96, 162),
 (54, 18, 13, 202),
-(54, 48, 36, 257);
+(54, 48, 36, 257),
+(55, 9, 12, 431),
+(55, 26, 58, 63),
+(55, 33, 188, 59),
+(56, 13, 55, 238),
+(56, 19, 106, 270),
+(57, 9, 177, 203),
+(57, 38, 7, 343),
+(58, 32, 262, 399),
+(58, 40, 68, 285),
+(59, 18, 14, 202),
+(59, 21, 304, 27),
+(59, 28, 30, 259),
+(59, 48, 104, 257),
+(60, 30, 10, 148),
+(60, 45, 28, 429),
+(61, 3, 32, 4),
+(61, 4, 194, 474),
+(61, 38, 180, 314),
+(62, 4, 218, 474),
+(62, 9, 159, 102),
+(62, 38, 196, 314),
+(63, 13, 125, 243),
+(63, 30, 14, 148),
+(63, 45, 360, 429),
+(64, 11, 164, 117),
+(64, 13, 180, 247),
+(64, 37, 202, 323),
+(65, 2, 57, 493),
+(65, 22, 29, 51),
+(65, 41, 101, 400),
+(65, 43, 20, 139),
+(65, 47, 109, 130),
+(66, 9, 32, 431),
+(66, 26, 87, 63),
+(66, 33, 9, 59),
+(79, 13, 1, 243),
+(80, 13, 1, 243),
+(81, 13, 1, 243),
+(82, 13, 1, 243),
+(83, 13, 3, 243),
+(84, 13, 3, 243),
+(85, 13, 3, 243),
+(86, 13, 2, 243),
+(87, 13, 2, 243),
+(88, 13, 2, 243),
+(89, 13, 2, 243),
+(90, 13, 2, 243),
+(91, 13, 3, 243),
+(92, 13, 3, 243),
+(93, 13, 1, 243),
+(94, 13, 1, 243),
+(95, 13, 2, 243);
 
 -- --------------------------------------------------------
 
@@ -824,6 +883,7 @@ INSERT INTO `detalle_venta` (`id_venta`, `id_producto`, `cantidad`, `precio`) VA
 -- Estructura de tabla para la tabla `encargado`
 --
 
+DROP TABLE IF EXISTS `encargado`;
 CREATE TABLE IF NOT EXISTS `encargado` (
   `id_usuario` int(11) NOT NULL COMMENT 'Este id es el del usuario encargado de su sucursal',
   `porciento` float NOT NULL COMMENT 'este es el porciento de las ventas que le tocan al encargado',
@@ -861,6 +921,7 @@ INSERT INTO `encargado` (`id_usuario`, `porciento`) VALUES
 -- Estructura de tabla para la tabla `factura_compra`
 --
 
+DROP TABLE IF EXISTS `factura_compra`;
 CREATE TABLE IF NOT EXISTS `factura_compra` (
   `folio` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
   `id_compra` int(11) NOT NULL COMMENT 'COMPRA A LA QUE CORRESPONDE LA FACTURA',
@@ -879,6 +940,7 @@ CREATE TABLE IF NOT EXISTS `factura_compra` (
 -- Estructura de tabla para la tabla `factura_venta`
 --
 
+DROP TABLE IF EXISTS `factura_venta`;
 CREATE TABLE IF NOT EXISTS `factura_venta` (
   `folio` varchar(15) COLLATE utf8_unicode_ci NOT NULL COMMENT 'folio que tiene la factura',
   `id_venta` int(11) NOT NULL COMMENT 'venta a la cual corresponde la factura',
@@ -901,7 +963,11 @@ INSERT INTO `factura_venta` (`folio`, `id_venta`) VALUES
 ('ALGUNFOLIO76085', 35),
 ('ALGUNFOLIO78268', 40),
 ('ALGUNFOLIO72701', 49),
-('ALGUNFOLIO75463', 53);
+('ALGUNFOLIO75463', 53),
+('ALGUNFOLIO79669', 57),
+('ALGUNFOLIO79711', 60),
+('ALGUNFOLIO78452', 62),
+('ALGUNFOLIO77077', 66);
 
 -- --------------------------------------------------------
 
@@ -909,6 +975,7 @@ INSERT INTO `factura_venta` (`folio`, `id_venta`) VALUES
 -- Estructura de tabla para la tabla `gastos`
 --
 
+DROP TABLE IF EXISTS `gastos`;
 CREATE TABLE IF NOT EXISTS `gastos` (
   `id_gasto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id para identificar el gasto',
   `concepto` varchar(100) NOT NULL COMMENT 'concepto en lo que se gasto',
@@ -1134,6 +1201,7 @@ INSERT INTO `gastos` (`id_gasto`, `concepto`, `monto`, `fecha`, `id_sucursal`, `
 -- Estructura de tabla para la tabla `grupos`
 --
 
+DROP TABLE IF EXISTS `grupos`;
 CREATE TABLE IF NOT EXISTS `grupos` (
   `id_grupo` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL COMMENT 'Nombre del Grupo',
@@ -1153,28 +1221,10 @@ INSERT INTO `grupos` (`id_grupo`, `nombre`, `descripcion`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `grupos_permisos`
---
-
-CREATE TABLE IF NOT EXISTS `grupos_permisos` (
-  `id_grupo` int(11) NOT NULL,
-  `id_permiso` int(11) NOT NULL,
-  PRIMARY KEY (`id_grupo`,`id_permiso`),
-  KEY `fk_grupos_permisos_1` (`id_permiso`),
-  KEY `fk_grupos_permisos_2` (`id_grupo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Volcar la base de datos para la tabla `grupos_permisos`
---
-
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `grupos_usuarios`
 --
 
+DROP TABLE IF EXISTS `grupos_usuarios`;
 CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
   `id_grupo` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
@@ -1187,6 +1237,9 @@ CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
 -- Volcar la base de datos para la tabla `grupos_usuarios`
 --
 
+INSERT INTO `grupos_usuarios` (`id_grupo`, `id_usuario`) VALUES
+(1, 1),
+(2, 2);
 
 -- --------------------------------------------------------
 
@@ -1194,6 +1247,7 @@ CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
 -- Estructura de tabla para la tabla `impuesto`
 --
 
+DROP TABLE IF EXISTS `impuesto`;
 CREATE TABLE IF NOT EXISTS `impuesto` (
   `id_impuesto` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -1214,6 +1268,7 @@ CREATE TABLE IF NOT EXISTS `impuesto` (
 -- Estructura de tabla para la tabla `ingresos`
 --
 
+DROP TABLE IF EXISTS `ingresos`;
 CREATE TABLE IF NOT EXISTS `ingresos` (
   `id_ingreso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id para identificar el ingreso',
   `concepto` varchar(100) NOT NULL COMMENT 'concepto en lo que se ingreso',
@@ -1439,6 +1494,7 @@ INSERT INTO `ingresos` (`id_ingreso`, `concepto`, `monto`, `fecha`, `id_sucursal
 -- Estructura de tabla para la tabla `inventario`
 --
 
+DROP TABLE IF EXISTS `inventario`;
 CREATE TABLE IF NOT EXISTS `inventario` (
   `id_producto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del producto',
   `nombre` varchar(90) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Descripcion o nombre del producto',
@@ -1657,10 +1713,11 @@ INSERT INTO `inventario` (`id_producto`, `nombre`, `denominacion`) VALUES
 -- Estructura de tabla para la tabla `pagos_compra`
 --
 
+DROP TABLE IF EXISTS `pagos_compra`;
 CREATE TABLE IF NOT EXISTS `pagos_compra` (
   `id_pago` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del pago',
   `id_compra` int(11) NOT NULL COMMENT 'identificador de la compra a la que pagamos',
-  `fecha` date NOT NULL COMMENT 'fecha en que se abono',
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha en que se abono',
   `monto` float NOT NULL COMMENT 'monto que se abono',
   PRIMARY KEY (`id_pago`),
   KEY `pagos_compra_compra` (`id_compra`)
@@ -1677,6 +1734,7 @@ CREATE TABLE IF NOT EXISTS `pagos_compra` (
 -- Estructura de tabla para la tabla `pagos_venta`
 --
 
+DROP TABLE IF EXISTS `pagos_venta`;
 CREATE TABLE IF NOT EXISTS `pagos_venta` (
   `id_pago` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de pago del cliente',
   `id_venta` int(11) NOT NULL COMMENT 'id de la venta a la que se esta pagando',
@@ -1684,7 +1742,7 @@ CREATE TABLE IF NOT EXISTS `pagos_venta` (
   `monto` float NOT NULL COMMENT 'total de credito del cliente',
   PRIMARY KEY (`id_pago`),
   KEY `pagos_venta_venta` (`id_venta`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=162 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=205 ;
 
 --
 -- Volcar la base de datos para la tabla `pagos_venta`
@@ -1851,7 +1909,50 @@ INSERT INTO `pagos_venta` (`id_pago`, `id_venta`, `fecha`, `monto`) VALUES
 (158, 48, '2010-07-24 07:17:18', 83),
 (159, 48, '2010-07-24 07:17:18', 32),
 (160, 48, '2010-07-24 07:17:18', 40),
-(161, 52, '2010-07-24 07:17:25', 61);
+(161, 52, '2010-07-24 07:17:25', 61),
+(162, 59, '2010-07-26 16:30:39', 197),
+(163, 59, '2010-07-26 16:30:39', 275),
+(164, 59, '2010-07-26 16:30:39', 152),
+(165, 59, '2010-07-26 16:30:39', 76),
+(166, 59, '2010-07-26 16:30:39', 137),
+(167, 59, '2010-07-26 16:30:39', 45),
+(168, 59, '2010-07-26 16:30:39', 21),
+(169, 59, '2010-07-26 16:30:39', 11),
+(170, 59, '2010-07-26 16:30:39', 148),
+(171, 59, '2010-07-26 16:30:39', 109),
+(172, 59, '2010-07-26 16:30:39', 6),
+(173, 59, '2010-07-26 16:30:39', 68),
+(174, 61, '2010-07-26 21:06:16', 172),
+(175, 61, '2010-07-26 21:06:16', 5),
+(176, 61, '2010-07-26 21:06:16', 64),
+(177, 61, '2010-07-26 21:06:16', 34),
+(178, 61, '2010-07-26 21:06:16', 64),
+(179, 61, '2010-07-26 21:06:16', 85),
+(180, 61, '2010-07-26 21:06:16', 43),
+(181, 61, '2010-07-26 21:06:16', 33),
+(182, 61, '2010-07-26 21:06:16', 42),
+(183, 61, '2010-07-26 21:06:16', 14),
+(184, 61, '2010-07-26 21:06:16', 9),
+(185, 61, '2010-07-26 21:06:16', 47),
+(186, 61, '2010-07-26 21:06:16', 9),
+(187, 63, '2010-07-26 21:08:45', 80),
+(188, 63, '2010-07-26 21:08:45', 22),
+(189, 63, '2010-07-26 21:08:45', 33),
+(190, 63, '2010-07-26 21:08:45', 125),
+(191, 63, '2010-07-26 21:08:45', 4),
+(192, 63, '2010-07-26 21:08:45', 17),
+(193, 63, '2010-07-26 21:08:45', 110),
+(194, 63, '2010-07-26 21:08:45', 72),
+(195, 63, '2010-07-26 21:08:45', 40),
+(196, 65, '2010-07-26 21:08:49', 369),
+(197, 65, '2010-07-26 21:08:49', 60),
+(198, 65, '2010-07-26 21:08:49', 212),
+(199, 65, '2010-07-26 21:08:49', 64),
+(200, 65, '2010-07-26 21:08:49', 65),
+(201, 65, '2010-07-26 21:08:50', 6),
+(202, 65, '2010-07-26 21:08:50', 42),
+(203, 65, '2010-07-26 21:08:50', 76),
+(204, 65, '2010-07-26 21:08:50', 12);
 
 -- --------------------------------------------------------
 
@@ -1859,6 +1960,7 @@ INSERT INTO `pagos_venta` (`id_pago`, `id_venta`, `fecha`, `monto`) VALUES
 -- Estructura de tabla para la tabla `permisos`
 --
 
+DROP TABLE IF EXISTS `permisos`;
 CREATE TABLE IF NOT EXISTS `permisos` (
   `id_permiso` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL,
@@ -1877,6 +1979,7 @@ CREATE TABLE IF NOT EXISTS `permisos` (
 -- Estructura de tabla para la tabla `productos_proveedor`
 --
 
+DROP TABLE IF EXISTS `productos_proveedor`;
 CREATE TABLE IF NOT EXISTS `productos_proveedor` (
   `id_producto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del producto',
   `clave_producto` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'clave de producto para el proveedor',
@@ -1945,6 +2048,7 @@ INSERT INTO `productos_proveedor` (`id_producto`, `clave_producto`, `id_proveedo
 -- Estructura de tabla para la tabla `proveedor`
 --
 
+DROP TABLE IF EXISTS `proveedor`;
 CREATE TABLE IF NOT EXISTS `proveedor` (
   `id_proveedor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del proveedor',
   `rfc` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'rfc del proveedor',
@@ -2017,10 +2121,12 @@ INSERT INTO `proveedor` (`id_proveedor`, `rfc`, `nombre`, `direccion`, `telefono
 -- Estructura de tabla para la tabla `sucursal`
 --
 
+DROP TABLE IF EXISTS `sucursal`;
 CREATE TABLE IF NOT EXISTS `sucursal` (
   `id_sucursal` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identificador de cada sucursal',
   `descripcion` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre o descripcion de sucursal',
   `direccion` varchar(200) COLLATE utf8_unicode_ci NOT NULL COMMENT 'direccion de la sucursal',
+  `token` varchar(512) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Token de seguridad para esta sucursal',
   PRIMARY KEY (`id_sucursal`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=53 ;
 
@@ -2028,57 +2134,57 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
 -- Volcar la base de datos para la tabla `sucursal`
 --
 
-INSERT INTO `sucursal` (`id_sucursal`, `descripcion`, `direccion`) VALUES
-(3, 'Descripcion de la sucural 3', '2127 A Street'),
-(4, 'Descripcion de la sucural 4', '673-8005 Non Road'),
-(5, 'Descripcion de la sucural 5', 'P.O. Box 211, 4360 Sem Street'),
-(6, 'Descripcion de la sucural 6', 'Ap #141-3279 Amet, St.'),
-(7, 'Descripcion de la sucural 7', 'P.O. Box 434, 401 Adipiscing. St.'),
-(8, 'Descripcion de la sucural 8', 'P.O. Box 777, 3956 Ridiculus Road'),
-(9, 'Descripcion de la sucural 9', '4582 Nulla Rd.'),
-(10, 'Descripcion de la sucural 10', 'P.O. Box 820, 3880 Magna. St.'),
-(11, 'Descripcion de la sucural 11', '947-7151 Lorem Rd.'),
-(12, 'Descripcion de la sucural 12', 'Ap #575-9024 Sodales Road'),
-(13, 'Descripcion de la sucural 13', 'P.O. Box 892, 9492 Congue, Av.'),
-(14, 'Descripcion de la sucural 14', 'Ap #910-9538 Integer Avenue'),
-(15, 'Descripcion de la sucural 15', 'P.O. Box 905, 963 Aliquam Street'),
-(16, 'Descripcion de la sucural 16', 'P.O. Box 661, 1219 Nullam Street'),
-(17, 'Descripcion de la sucural 17', 'Ap #830-2370 Tempus Street'),
-(18, 'Descripcion de la sucural 18', 'Ap #212-8071 Est. Street'),
-(19, 'Descripcion de la sucural 19', 'Ap #721-7537 Lorem, Av.'),
-(20, 'Descripcion de la sucural 20', 'Ap #281-1584 Lobortis Street'),
-(21, 'Descripcion de la sucural 21', '783-4525 Diam Rd.'),
-(22, 'Descripcion de la sucural 22', '6202 Enim. Road'),
-(23, 'Descripcion de la sucural 23', 'P.O. Box 340, 5890 Imperdiet Av.'),
-(24, 'Descripcion de la sucural 24', 'P.O. Box 257, 1071 Curabitur Rd.'),
-(25, 'Descripcion de la sucural 25', 'Ap #104-6388 Sapien. Avenue'),
-(26, 'Descripcion de la sucural 26', 'P.O. Box 586, 4244 Auctor Ave'),
-(27, 'Descripcion de la sucural 27', 'P.O. Box 993, 1394 Vel Ave'),
-(28, 'Descripcion de la sucural 28', 'Ap #234-2072 Sodales Road'),
-(29, 'Descripcion de la sucural 29', 'P.O. Box 425, 4026 Pellentesque St.'),
-(30, 'Descripcion de la sucural 30', '6696 Fermentum Street'),
-(31, 'Descripcion de la sucural 31', '4215 Consequat Avenue'),
-(32, 'Descripcion de la sucural 32', 'P.O. Box 895, 5667 Dictum Av.'),
-(33, 'Descripcion de la sucural 33', '7331 Ornare, Road'),
-(34, 'Descripcion de la sucural 34', 'Ap #320-8103 Aliquam St.'),
-(35, 'Descripcion de la sucural 35', '3680 At Avenue'),
-(36, 'Descripcion de la sucural 36', '586-4893 Cursus. St.'),
-(37, 'Descripcion de la sucural 37', '781-2443 Orci. Av.'),
-(38, 'Descripcion de la sucural 38', 'Ap #964-3699 Eleifend Rd.'),
-(39, 'Descripcion de la sucural 39', '9932 Orci, Av.'),
-(40, 'Descripcion de la sucural 40', 'Ap #445-9226 Quam Avenue'),
-(41, 'Descripcion de la sucural 41', 'Ap #648-5372 Sit Rd.'),
-(42, 'Descripcion de la sucural 42', 'Ap #798-4104 Velit. Avenue'),
-(43, 'Descripcion de la sucural 43', '147-6410 Dictum Street'),
-(44, 'Descripcion de la sucural 44', 'P.O. Box 829, 9426 Placerat, Street'),
-(45, 'Descripcion de la sucural 45', 'Ap #830-1087 Proin St.'),
-(46, 'Descripcion de la sucural 46', 'P.O. Box 425, 4690 At, St.'),
-(47, 'Descripcion de la sucural 47', 'P.O. Box 692, 4235 Mattis Av.'),
-(48, 'Descripcion de la sucural 48', '402-1322 Elit Road'),
-(49, 'Descripcion de la sucural 49', '359-6446 In Rd.'),
-(50, 'Descripcion de la sucural 50', '367 Erat. Rd.'),
-(51, 'Descripcion de la sucural 51', '5295 Rutrum Av.'),
-(52, 'Descripcion de la sucural 52', 'Ap #240-8862 Penatibus Av.');
+INSERT INTO `sucursal` (`id_sucursal`, `descripcion`, `direccion`, `token`) VALUES
+(3, 'Descripcion de la sucural 3', '2127 A Street', NULL),
+(4, 'Descripcion de la sucural 4', '673-8005 Non Road', NULL),
+(5, 'Descripcion de la sucural 5', 'P.O. Box 211, 4360 Sem Street', NULL),
+(6, 'Descripcion de la sucural 6', 'Ap #141-3279 Amet, St.', NULL),
+(7, 'Descripcion de la sucural 7', 'P.O. Box 434, 401 Adipiscing. St.', NULL),
+(8, 'Descripcion de la sucural 8', 'P.O. Box 777, 3956 Ridiculus Road', NULL),
+(9, 'Descripcion de la sucural 9', '4582 Nulla Rd.', NULL),
+(10, 'Descripcion de la sucural 10', 'P.O. Box 820, 3880 Magna. St.', NULL),
+(11, 'Descripcion de la sucural 11', '947-7151 Lorem Rd.', NULL),
+(12, 'Descripcion de la sucural 12', 'Ap #575-9024 Sodales Road', NULL),
+(13, 'Descripcion de la sucural 13', 'P.O. Box 892, 9492 Congue, Av.', NULL),
+(14, 'Descripcion de la sucural 14', 'Ap #910-9538 Integer Avenue', NULL),
+(15, 'Descripcion de la sucural 15', 'P.O. Box 905, 963 Aliquam Street', NULL),
+(16, 'Descripcion de la sucural 16', 'P.O. Box 661, 1219 Nullam Street', NULL),
+(17, 'Descripcion de la sucural 17', 'Ap #830-2370 Tempus Street', NULL),
+(18, 'Descripcion de la sucural 18', 'Ap #212-8071 Est. Street', NULL),
+(19, 'Descripcion de la sucural 19', 'Ap #721-7537 Lorem, Av.', NULL),
+(20, 'Descripcion de la sucural 20', 'Ap #281-1584 Lobortis Street', NULL),
+(21, 'Descripcion de la sucural 21', '783-4525 Diam Rd.', NULL),
+(22, 'Descripcion de la sucural 22', '6202 Enim. Road', NULL),
+(23, 'Descripcion de la sucural 23', 'P.O. Box 340, 5890 Imperdiet Av.', NULL),
+(24, 'Descripcion de la sucural 24', 'P.O. Box 257, 1071 Curabitur Rd.', NULL),
+(25, 'Descripcion de la sucural 25', 'Ap #104-6388 Sapien. Avenue', NULL),
+(26, 'Descripcion de la sucural 26', 'P.O. Box 586, 4244 Auctor Ave', NULL),
+(27, 'Descripcion de la sucural 27', 'P.O. Box 993, 1394 Vel Ave', NULL),
+(28, 'Descripcion de la sucural 28', 'Ap #234-2072 Sodales Road', NULL),
+(29, 'Descripcion de la sucural 29', 'P.O. Box 425, 4026 Pellentesque St.', NULL),
+(30, 'Descripcion de la sucural 30', '6696 Fermentum Street', NULL),
+(31, 'Descripcion de la sucural 31', '4215 Consequat Avenue', NULL),
+(32, 'Descripcion de la sucural 32', 'P.O. Box 895, 5667 Dictum Av.', NULL),
+(33, 'Descripcion de la sucural 33', '7331 Ornare, Road', NULL),
+(34, 'Descripcion de la sucural 34', 'Ap #320-8103 Aliquam St.', NULL),
+(35, 'Descripcion de la sucural 35', '3680 At Avenue', NULL),
+(36, 'Descripcion de la sucural 36', '586-4893 Cursus. St.', NULL),
+(37, 'Descripcion de la sucural 37', '781-2443 Orci. Av.', NULL),
+(38, 'Descripcion de la sucural 38', 'Ap #964-3699 Eleifend Rd.', NULL),
+(39, 'Descripcion de la sucural 39', '9932 Orci, Av.', NULL),
+(40, 'Descripcion de la sucural 40', 'Ap #445-9226 Quam Avenue', NULL),
+(41, 'Descripcion de la sucural 41', 'Ap #648-5372 Sit Rd.', NULL),
+(42, 'Descripcion de la sucural 42', 'Ap #798-4104 Velit. Avenue', NULL),
+(43, 'Descripcion de la sucural 43', '147-6410 Dictum Street', NULL),
+(44, 'Descripcion de la sucural 44', 'P.O. Box 829, 9426 Placerat, Street', NULL),
+(45, 'Descripcion de la sucural 45', 'Ap #830-1087 Proin St.', NULL),
+(46, 'Descripcion de la sucural 46', 'P.O. Box 425, 4690 At, St.', NULL),
+(47, 'Descripcion de la sucural 47', 'P.O. Box 692, 4235 Mattis Av.', NULL),
+(48, 'Descripcion de la sucural 48', '402-1322 Elit Road', NULL),
+(49, 'Descripcion de la sucural 49', '359-6446 In Rd.', NULL),
+(50, 'Descripcion de la sucural 50', '367 Erat. Rd.', NULL),
+(51, 'Descripcion de la sucural 51', '5295 Rutrum Av.', NULL),
+(52, 'Descripcion de la sucural 52', 'Ap #240-8862 Penatibus Av.', NULL);
 
 -- --------------------------------------------------------
 
@@ -2086,6 +2192,7 @@ INSERT INTO `sucursal` (`id_sucursal`, `descripcion`, `direccion`) VALUES
 -- Estructura de tabla para la tabla `usuario`
 --
 
+DROP TABLE IF EXISTS `usuario`;
 CREATE TABLE IF NOT EXISTS `usuario` (
   `id_usuario` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del usuario',
   `nombre` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre del empleado',
@@ -2102,7 +2209,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 
 INSERT INTO `usuario` (`id_usuario`, `nombre`, `usuario`, `contrasena`, `id_sucursal`) VALUES
 (1, 'Paul Wilkinson', 'Alec', '123', 28),
-(2, 'Ferris Delgado', 'Lacota', '123', 6),
+(2, 'Ferris Delgado', 'lacota', '456', 6),
 (3, 'Barry Stevenson', 'Wade', '123', 5),
 (4, 'Buckminster Cantrell', 'Hoyt', '123', 46),
 (5, 'Kasimir Alexander', 'Xanthus', '123', 29),
@@ -2113,7 +2220,7 @@ INSERT INTO `usuario` (`id_usuario`, `nombre`, `usuario`, `contrasena`, `id_sucu
 (10, 'Brody Kennedy', 'Imelda', '123', 15),
 (11, 'Fuller Guy', 'Davis', '123', 30),
 (12, 'Jasper Neal', 'Garrison', '123', 7),
-(13, 'Marshall Frazier', 'Lacota', '123', 9),
+(13, 'Marshall Frazier', 'Lacotas', '123', 9),
 (14, 'Nigel Colon', 'Wynter', '123', 35),
 (15, 'Flynn Hodge', 'Simon', '123', 6),
 (16, 'Hyatt Preston', 'Jocelyn', '123', 29),
@@ -2134,6 +2241,7 @@ INSERT INTO `usuario` (`id_usuario`, `nombre`, `usuario`, `contrasena`, `id_sucu
 -- Estructura de tabla para la tabla `ventas`
 --
 
+DROP TABLE IF EXISTS `ventas`;
 CREATE TABLE IF NOT EXISTS `ventas` (
   `id_venta` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de venta',
   `id_cliente` int(11) NOT NULL COMMENT 'cliente al que se le vendio',
@@ -2141,79 +2249,125 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de venta',
   `subtotal` float DEFAULT NULL COMMENT 'subtotal de la venta, puede ser nulo',
   `iva` float DEFAULT NULL COMMENT 'iva agregado por la venta, depende de cada sucursal',
+  `descuento` float NOT NULL DEFAULT '0' COMMENT 'descuento aplicado a esta venta',
+  `total` float NOT NULL DEFAULT '0' COMMENT 'total de esta venta',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal de la venta',
   `id_usuario` int(11) NOT NULL COMMENT 'empleado que lo vendio',
+  `pagado` float NOT NULL DEFAULT '0' COMMENT 'porcentaje pagado de esta venta',
+  `ip` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0.0.0.0' COMMENT 'ip de donde provino esta compra',
   PRIMARY KEY (`id_venta`),
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`id_sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=55 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=96 ;
 
 --
 -- Volcar la base de datos para la tabla `ventas`
 --
 
-INSERT INTO `ventas` (`id_venta`, `id_cliente`, `tipo_venta`, `fecha`, `subtotal`, `iva`, `id_sucursal`, `id_usuario`) VALUES
-(1, 65, 'credito', '2010-07-24 07:16:10', 2826, 0, 35, 14),
-(2, 74, 'credito', '2010-07-24 07:16:17', 537, 0, 13, 19),
-(3, 77, 'credito', '2010-07-24 07:16:19', NULL, NULL, 13, 19),
-(4, 112, 'contado', '2010-07-24 07:16:20', 904, 0, 23, 9),
-(5, 25, 'credito', '2010-07-24 07:16:22', 405, 0, 7, 12),
-(6, 44, 'contado', '2010-07-24 07:16:23', 363, 0, 43, 17),
-(7, 68, 'credito', '2010-07-24 07:16:24', 2180, 0, 23, 9),
-(8, 20, 'contado', '2010-07-24 07:16:26', 3878, 0, 23, 9),
-(9, 32, 'contado', '2010-07-24 07:16:27', 1015, 0, 5, 3),
-(10, 9, 'credito', '2010-07-24 07:16:28', 1344, 0, 6, 15),
-(11, 56, 'contado', '2010-07-24 07:16:30', 958, 0, 16, 7),
-(12, 190, 'credito', '2010-07-24 07:16:32', 2337, 0, 32, 23),
-(13, 163, 'contado', '2010-07-24 07:16:33', 3350, 0, 23, 9),
-(14, 17, 'credito', '2010-07-24 07:16:34', 322, 0, 26, 8),
-(15, 116, 'contado', '2010-07-24 07:16:35', 1562, 0, 15, 25),
-(16, 142, 'credito', '2010-07-24 07:16:36', 1922, 0, 9, 13),
-(17, 46, 'contado', '2010-07-24 07:16:36', 1466, 0, 35, 14),
-(18, 8, 'credito', '2010-07-24 07:16:37', 769, 0, 47, 6),
-(19, 96, 'credito', '2010-07-24 07:16:38', 1330, 0, 7, 12),
-(20, 103, 'credito', '2010-07-24 07:16:39', 2062, 0, 15, 10),
-(21, 147, 'credito', '2010-07-24 07:16:40', 324, 0, 46, 4),
-(22, 146, 'contado', '2010-07-24 07:16:41', 2084, 0, 6, 2),
-(23, 73, 'credito', '2010-07-24 07:16:42', 1311, 0, 18, 18),
-(24, 151, 'contado', '2010-07-24 07:16:42', 322, 0, 26, 8),
-(25, 129, 'contado', '2010-07-24 07:16:44', 1790, 0, 23, 22),
-(26, 62, 'contado', '2010-07-24 07:16:45', 3099, 0, 34, 20),
-(27, 100, 'contado', '2010-07-24 07:16:46', 1845, 0, 32, 23),
-(28, 39, 'contado', '2010-07-24 07:16:47', 1224, 0, 29, 5),
-(29, 173, 'contado', '2010-07-24 07:16:48', 954, 0, 28, 1),
-(30, 166, 'credito', '2010-07-24 07:16:50', 624, 0, 43, 17),
-(31, 141, 'contado', '2010-07-24 07:16:53', 406, 0, 30, 11),
-(32, 32, 'credito', '2010-07-24 07:16:55', 1704, 0, 28, 1),
-(33, 191, 'contado', '2010-07-24 07:16:55', 1249, 0, 6, 2),
-(34, 32, 'credito', '2010-07-24 07:16:57', 1936, 0, 6, 15),
-(35, 114, 'contado', '2010-07-24 07:17:00', 609, 0, 30, 11),
-(36, 148, 'credito', '2010-07-24 07:17:01', 624, 0, 43, 17),
-(37, 183, 'credito', '2010-07-24 07:17:03', 2904, 0, 32, 23),
-(38, 155, 'contado', '2010-07-24 07:17:04', 2097, 0, 18, 18),
-(39, 68, 'credito', '2010-07-24 07:17:05', 2162, 0, 23, 22),
-(40, 153, 'contado', '2010-07-24 07:17:07', 3073, 0, 5, 3),
-(41, 76, 'credito', '2010-07-24 07:17:08', 1127, 0, 26, 8),
-(42, 69, 'credito', '2010-07-24 07:17:09', 229, 0, 15, 10),
-(43, 69, 'credito', '2010-07-24 07:17:11', 2040, 0, 16, 7),
-(44, 64, 'contado', '2010-07-24 07:17:13', 1655, 0, 6, 15),
-(45, 99, 'credito', '2010-07-24 07:17:14', 774, 0, 43, 17),
-(46, 78, 'contado', '2010-07-24 07:17:16', 2541, 0, 9, 13),
-(47, 118, 'contado', '2010-07-24 07:17:17', 975, 0, 47, 6),
-(48, 95, 'credito', '2010-07-24 07:17:18', 488, 0, 15, 25),
-(49, 158, 'contado', '2010-07-24 07:17:20', 2270, 0, 6, 2),
-(50, 92, 'contado', '2010-07-24 07:17:22', 1994, 0, 34, 20),
-(51, 143, 'contado', '2010-07-24 07:17:23', 3464, 0, 32, 23),
-(52, 58, 'credito', '2010-07-24 07:17:25', 820, 0, 6, 2),
-(53, 15, 'contado', '2010-07-24 07:17:26', 2480, 0, 46, 4),
-(54, 109, 'contado', '2010-07-24 07:17:27', 459, 0, 15, 10);
+INSERT INTO `ventas` (`id_venta`, `id_cliente`, `tipo_venta`, `fecha`, `subtotal`, `iva`, `descuento`, `total`, `id_sucursal`, `id_usuario`, `pagado`, `ip`) VALUES
+(1, 65, 'credito', '2010-07-24 07:16:10', 2826, 0, 0, 0, 35, 14, 0, '0.0.0.0'),
+(2, 74, 'credito', '2010-07-24 07:16:17', 537, 0, 0, 0, 13, 19, 0, '0.0.0.0'),
+(3, 77, 'credito', '2010-07-24 07:16:19', NULL, NULL, 0, 0, 13, 19, 0, '0.0.0.0'),
+(4, 112, 'contado', '2010-07-24 07:16:20', 904, 0, 0, 0, 23, 9, 0, '0.0.0.0'),
+(5, 25, 'credito', '2010-07-24 07:16:22', 405, 0, 0, 0, 7, 12, 0, '0.0.0.0'),
+(6, 44, 'contado', '2010-07-24 07:16:23', 363, 0, 0, 0, 43, 17, 0, '0.0.0.0'),
+(7, 68, 'credito', '2010-07-24 07:16:24', 2180, 0, 0, 0, 23, 9, 0, '0.0.0.0'),
+(8, 20, 'contado', '2010-07-24 07:16:26', 3878, 0, 0, 0, 23, 9, 0, '0.0.0.0'),
+(9, 32, 'contado', '2010-07-24 07:16:27', 1015, 0, 0, 0, 5, 3, 0, '0.0.0.0'),
+(10, 9, 'credito', '2010-07-24 07:16:28', 1344, 0, 0, 0, 6, 15, 0, '0.0.0.0'),
+(11, 56, 'contado', '2010-07-24 07:16:30', 958, 0, 0, 0, 16, 7, 0, '0.0.0.0'),
+(12, 190, 'credito', '2010-07-24 07:16:32', 2337, 0, 0, 0, 32, 23, 0, '0.0.0.0'),
+(13, 163, 'contado', '2010-07-24 07:16:33', 3350, 0, 0, 0, 23, 9, 0, '0.0.0.0'),
+(14, 17, 'credito', '2010-07-24 07:16:34', 322, 0, 0, 0, 26, 8, 0, '0.0.0.0'),
+(15, 116, 'contado', '2010-07-24 07:16:35', 1562, 0, 0, 0, 15, 25, 0, '0.0.0.0'),
+(16, 142, 'credito', '2010-07-24 07:16:36', 1922, 0, 0, 0, 9, 13, 0, '0.0.0.0'),
+(17, 46, 'contado', '2010-07-24 07:16:36', 1466, 0, 0, 0, 35, 14, 0, '0.0.0.0'),
+(18, 8, 'credito', '2010-07-24 07:16:37', 769, 0, 0, 0, 47, 6, 0, '0.0.0.0'),
+(19, 96, 'credito', '2010-07-24 07:16:38', 1330, 0, 0, 0, 7, 12, 0, '0.0.0.0'),
+(20, 103, 'credito', '2010-07-24 07:16:39', 2062, 0, 0, 0, 15, 10, 0, '0.0.0.0'),
+(21, 147, 'credito', '2010-07-24 07:16:40', 324, 0, 0, 0, 46, 4, 0, '0.0.0.0'),
+(22, 146, 'contado', '2010-07-24 07:16:41', 2084, 0, 0, 0, 6, 2, 0, '0.0.0.0'),
+(23, 73, 'credito', '2010-07-24 07:16:42', 1311, 0, 0, 0, 18, 18, 0, '0.0.0.0'),
+(24, 151, 'contado', '2010-07-24 07:16:42', 322, 0, 0, 0, 26, 8, 0, '0.0.0.0'),
+(25, 129, 'contado', '2010-07-24 07:16:44', 1790, 0, 0, 0, 23, 22, 0, '0.0.0.0'),
+(26, 62, 'contado', '2010-07-24 07:16:45', 3099, 0, 0, 0, 34, 20, 0, '0.0.0.0'),
+(27, 100, 'contado', '2010-07-24 07:16:46', 1845, 0, 0, 0, 32, 23, 0, '0.0.0.0'),
+(28, 39, 'contado', '2010-07-24 07:16:47', 1224, 0, 0, 0, 29, 5, 0, '0.0.0.0'),
+(29, 173, 'contado', '2010-07-24 07:16:48', 954, 0, 0, 0, 28, 1, 0, '0.0.0.0'),
+(30, 166, 'credito', '2010-07-24 07:16:50', 624, 0, 0, 0, 43, 17, 0, '0.0.0.0'),
+(31, 141, 'contado', '2010-07-24 07:16:53', 406, 0, 0, 0, 30, 11, 0, '0.0.0.0'),
+(32, 32, 'credito', '2010-07-24 07:16:55', 1704, 0, 0, 0, 28, 1, 0, '0.0.0.0'),
+(33, 191, 'contado', '2010-07-24 07:16:55', 1249, 0, 0, 0, 6, 2, 0, '0.0.0.0'),
+(34, 32, 'credito', '2010-07-24 07:16:57', 1936, 0, 0, 0, 6, 15, 0, '0.0.0.0'),
+(35, 114, 'contado', '2010-07-24 07:17:00', 609, 0, 0, 0, 30, 11, 0, '0.0.0.0'),
+(36, 148, 'credito', '2010-07-24 07:17:01', 624, 0, 0, 0, 43, 17, 0, '0.0.0.0'),
+(37, 183, 'credito', '2010-07-24 07:17:03', 2904, 0, 0, 0, 32, 23, 0, '0.0.0.0'),
+(38, 155, 'contado', '2010-07-24 07:17:04', 2097, 0, 0, 0, 18, 18, 0, '0.0.0.0'),
+(39, 68, 'credito', '2010-07-24 07:17:05', 2162, 0, 0, 0, 23, 22, 0, '0.0.0.0'),
+(40, 153, 'contado', '2010-07-24 07:17:07', 3073, 0, 0, 0, 5, 3, 0, '0.0.0.0'),
+(41, 76, 'credito', '2010-07-24 07:17:08', 1127, 0, 0, 0, 26, 8, 0, '0.0.0.0'),
+(42, 69, 'credito', '2010-07-24 07:17:09', 229, 0, 0, 0, 15, 10, 0, '0.0.0.0'),
+(43, 69, 'credito', '2010-07-24 07:17:11', 2040, 0, 0, 0, 16, 7, 0, '0.0.0.0'),
+(44, 64, 'contado', '2010-07-24 07:17:13', 1655, 0, 0, 0, 6, 15, 0, '0.0.0.0'),
+(45, 99, 'credito', '2010-07-24 07:17:14', 774, 0, 0, 0, 43, 17, 0, '0.0.0.0'),
+(46, 78, 'contado', '2010-07-24 07:17:16', 2541, 0, 0, 0, 9, 13, 0, '0.0.0.0'),
+(47, 118, 'contado', '2010-07-24 07:17:17', 975, 0, 0, 0, 47, 6, 0, '0.0.0.0'),
+(48, 95, 'credito', '2010-07-24 07:17:18', 488, 0, 0, 0, 15, 25, 0, '0.0.0.0'),
+(49, 158, 'contado', '2010-07-24 07:17:20', 2270, 0, 0, 0, 6, 2, 0, '0.0.0.0'),
+(50, 92, 'contado', '2010-07-24 07:17:22', 1994, 0, 0, 0, 34, 20, 0, '0.0.0.0'),
+(51, 143, 'contado', '2010-07-24 07:17:23', 3464, 0, 0, 0, 32, 23, 0, '0.0.0.0'),
+(52, 58, 'credito', '2010-07-24 07:17:25', 820, 0, 0, 0, 6, 2, 0, '0.0.0.0'),
+(53, 15, 'contado', '2010-07-24 07:17:26', 2480, 0, 0, 0, 46, 4, 0, '0.0.0.0'),
+(54, 109, 'contado', '2010-07-24 07:17:27', 459, 0, 0, 0, 15, 10, 0, '0.0.0.0'),
+(55, 39, 'contado', '2010-07-25 04:08:53', 1413, 0, 0, 0, 29, 5, 0, '0.0.0.0'),
+(56, 137, 'contado', '2010-07-25 04:17:49', 1222, 0, 0, 0, 16, 7, 0, '0.0.0.0'),
+(57, 42, 'contado', '2010-07-25 04:17:51', 2933, 0, 0, 0, 5, 24, 0, '0.0.0.0'),
+(58, 172, 'contado', '2010-07-26 16:29:56', 1254, 0, 0, 0, 34, 20, 0, '0.0.0.0'),
+(59, 155, 'credito', '2010-07-26 16:30:39', 1610, 0, 0, 0, 15, 25, 0, '0.0.0.0'),
+(60, 133, 'contado', '2010-07-26 18:31:39', 1879, 0, 0, 0, 6, 15, 0, '0.0.0.0'),
+(61, 96, 'credito', '2010-07-26 21:06:16', 796, 0, 0, 0, 23, 9, 0, '0.0.0.0'),
+(62, 147, 'contado', '2010-07-26 21:08:41', 992, 0, 0, 0, 23, 22, 0, '0.0.0.0'),
+(63, 129, 'credito', '2010-07-26 21:08:45', 1492, 0, 0, 0, 6, 15, 0, '0.0.0.0'),
+(64, 24, 'contado', '2010-07-26 21:08:47', 1127, 0, 0, 0, 18, 18, 0, '0.0.0.0'),
+(65, 98, 'credito', '2010-07-26 21:08:49', 1966, 0, 0, 0, 43, 17, 0, '0.0.0.0'),
+(66, 15, 'contado', '2010-07-26 21:09:05', 742, 0, 0, 0, 29, 16, 0, '0.0.0.0'),
+(67, -6, 'contado', '2010-07-31 10:03:57', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(68, -6, 'contado', '2010-07-31 10:05:28', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(69, -6, 'contado', '2010-07-31 10:05:30', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(70, -6, 'contado', '2010-07-31 10:05:31', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(71, -6, 'contado', '2010-07-31 10:06:29', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(72, -6, 'contado', '2010-07-31 10:16:25', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(73, -6, 'contado', '2010-07-31 10:17:54', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(74, -6, 'contado', '2010-07-31 10:18:15', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(75, -6, 'contado', '2010-07-31 10:18:56', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(76, -6, 'contado', '2010-07-31 10:19:09', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(77, -6, 'contado', '2010-07-31 10:19:28', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(78, -6, 'contado', '2010-07-31 10:19:37', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(79, -6, 'contado', '2010-07-31 10:19:53', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(80, -6, 'contado', '2010-07-31 10:20:04', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(81, -6, 'contado', '2010-07-31 10:20:33', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(82, -6, 'contado', '2010-07-31 10:27:27', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(83, -6, 'contado', '2010-07-31 10:28:02', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(84, -6, 'contado', '2010-07-31 10:34:06', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(85, -6, 'contado', '2010-07-31 10:41:00', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(86, -6, 'contado', '2010-07-31 10:41:18', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(87, -6, 'contado', '2010-07-31 10:42:05', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(88, -6, 'contado', '2010-07-31 10:42:17', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(89, -6, 'contado', '2010-07-31 10:42:21', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(90, -6, 'contado', '2010-07-31 10:46:07', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(91, -6, 'contado', '2010-07-31 10:46:24', NULL, NULL, 0, 0, 6, 2, 0, '0.0.0.0'),
+(92, -6, 'contado', '2010-07-31 11:00:53', 729, 0, 0, 0, 6, 2, 0, '0.0.0.0'),
+(93, -6, 'contado', '2010-07-31 11:05:48', 243, 0, 0, 0, 6, 2, 0, '0.0.0.0'),
+(94, -6, 'contado', '2010-07-31 11:07:54', 243, 0, 0, 0, 6, 2, 0, '0.0.0.0'),
+(95, -6, 'contado', '2010-07-31 11:53:56', 486, 0, 0, 0, 6, 2, 0, '0.0.0.0');
 
 -- --------------------------------------------------------
 
 --
 -- Estructura Stand-in para la vista `view_compras`
 --
+DROP VIEW IF EXISTS `view_compras`;
 CREATE TABLE IF NOT EXISTS `view_compras` (
 `id_compra` int(11)
 ,`proveedor` varchar(30)
@@ -2232,6 +2386,7 @@ CREATE TABLE IF NOT EXISTS `view_compras` (
 --
 -- Estructura Stand-in para la vista `view_detalle_compra`
 --
+DROP VIEW IF EXISTS `view_detalle_compra`;
 CREATE TABLE IF NOT EXISTS `view_detalle_compra` (
 `id_compra` int(11)
 ,`id_producto` int(11)
@@ -2247,6 +2402,7 @@ CREATE TABLE IF NOT EXISTS `view_detalle_compra` (
 --
 -- Estructura Stand-in para la vista `view_detalle_venta`
 --
+DROP VIEW IF EXISTS `view_detalle_venta`;
 CREATE TABLE IF NOT EXISTS `view_detalle_venta` (
 `id_venta` int(11)
 ,`id_producto` int(11)
@@ -2262,6 +2418,7 @@ CREATE TABLE IF NOT EXISTS `view_detalle_venta` (
 --
 -- Estructura Stand-in para la vista `view_gastos`
 --
+DROP VIEW IF EXISTS `view_gastos`;
 CREATE TABLE IF NOT EXISTS `view_gastos` (
 `id_gasto` int(11)
 ,`monto` float
@@ -2275,6 +2432,7 @@ CREATE TABLE IF NOT EXISTS `view_gastos` (
 --
 -- Estructura Stand-in para la vista `view_ingresos`
 --
+DROP VIEW IF EXISTS `view_ingresos`;
 CREATE TABLE IF NOT EXISTS `view_ingresos` (
 `id_ingreso` int(11)
 ,`monto` float
@@ -2288,6 +2446,7 @@ CREATE TABLE IF NOT EXISTS `view_ingresos` (
 --
 -- Estructura Stand-in para la vista `view_ventas`
 --
+DROP VIEW IF EXISTS `view_ventas`;
 CREATE TABLE IF NOT EXISTS `view_ventas` (
 `id_venta` int(11)
 ,`cliente` varchar(100)
@@ -2415,13 +2574,6 @@ ALTER TABLE `factura_venta`
   ADD CONSTRAINT `factura_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `grupos_permisos`
---
-ALTER TABLE `grupos_permisos`
-  ADD CONSTRAINT `grupos_permisos_ibfk_1` FOREIGN KEY (`id_grupo`) REFERENCES `grupos` (`id_grupo`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `grupos_permisos_ibfk_2` FOREIGN KEY (`id_permiso`) REFERENCES `permisos` (`id_permiso`) ON UPDATE CASCADE;
-
---
 -- Filtros para la tabla `grupos_usuarios`
 --
 ALTER TABLE `grupos_usuarios`
@@ -2466,7 +2618,3 @@ ALTER TABLE `ventas`
   ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
-
-SET FOREIGN_KEY_CHECKS=1;
-
-COMMIT;

@@ -25,6 +25,8 @@ class DetalleCompra extends VO
 			$this->id_producto = $data['id_producto'];
 			$this->cantidad = $data['cantidad'];
 			$this->precio = $data['precio'];
+			$this->peso_arpillaPagado = $data['peso_arpillaPagado'];
+			$this->peso_arpillaReal = $data['peso_arpillaReal'];
 		}
 	}
 
@@ -42,7 +44,9 @@ class DetalleCompra extends VO
 		"id_compra" => $this->id_compra,
 		"id_producto" => $this->id_producto,
 		"cantidad" => $this->cantidad,
-		"precio" => $this->precio
+		"precio" => $this->precio,
+		"peso_arpillaPagado" => $this->peso_arpillaPagado,
+		"peso_arpillaReal" => $this->peso_arpillaReal
 		)); 
 	return json_encode($vec, true); 
 	}
@@ -84,6 +88,24 @@ class DetalleCompra extends VO
 	  * @var float
 	  */
 	protected $precio;
+
+	/**
+	  * peso_arpillaPagado
+	  * 
+	  * Campo no documentado<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $peso_arpillaPagado;
+
+	/**
+	  * peso_arpillaReal
+	  * 
+	  * Campo no documentado<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $peso_arpillaReal;
 
 	/**
 	  * getIdCompra
@@ -183,6 +205,54 @@ class DetalleCompra extends VO
 	final public function setPrecio( $precio )
 	{
 		$this->precio = $precio;
+	}
+
+	/**
+	  * getPesoArpillaPagado
+	  * 
+	  * Get the <i>peso_arpillaPagado</i> property for this object. Donde <i>peso_arpillaPagado</i> es Campo no documentado
+	  * @return float
+	  */
+	final public function getPesoArpillaPagado()
+	{
+		return $this->peso_arpillaPagado;
+	}
+
+	/**
+	  * setPesoArpillaPagado( $peso_arpillaPagado )
+	  * 
+	  * Set the <i>peso_arpillaPagado</i> property for this object. Donde <i>peso_arpillaPagado</i> es Campo no documentado.
+	  * Una validacion basica se hara aqui para comprobar que <i>peso_arpillaPagado</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setPesoArpillaPagado( $peso_arpillaPagado )
+	{
+		$this->peso_arpillaPagado = $peso_arpillaPagado;
+	}
+
+	/**
+	  * getPesoArpillaReal
+	  * 
+	  * Get the <i>peso_arpillaReal</i> property for this object. Donde <i>peso_arpillaReal</i> es Campo no documentado
+	  * @return float
+	  */
+	final public function getPesoArpillaReal()
+	{
+		return $this->peso_arpillaReal;
+	}
+
+	/**
+	  * setPesoArpillaReal( $peso_arpillaReal )
+	  * 
+	  * Set the <i>peso_arpillaReal</i> property for this object. Donde <i>peso_arpillaReal</i> es Campo no documentado.
+	  * Una validacion basica se hara aqui para comprobar que <i>peso_arpillaReal</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setPesoArpillaReal( $peso_arpillaReal )
+	{
+		$this->peso_arpillaReal = $peso_arpillaReal;
 	}
 
 }

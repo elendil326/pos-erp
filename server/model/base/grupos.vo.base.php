@@ -58,7 +58,7 @@ class Grupos extends VO
 	/**
 	  * nombre
 	  * 
-	  * Campo no documentado<br>
+	  * Nombre del Grupo<br>
 	  * @access protected
 	  * @var varchar(45)
 	  */
@@ -69,7 +69,7 @@ class Grupos extends VO
 	  * 
 	  * Campo no documentado<br>
 	  * @access protected
-	  * @var varchar(45)
+	  * @var varchar(256)
 	  */
 	protected $descripcion;
 
@@ -102,7 +102,7 @@ class Grupos extends VO
 	/**
 	  * getNombre
 	  * 
-	  * Get the <i>nombre</i> property for this object. Donde <i>nombre</i> es Campo no documentado
+	  * Get the <i>nombre</i> property for this object. Donde <i>nombre</i> es Nombre del Grupo
 	  * @return varchar(45)
 	  */
 	final public function getNombre()
@@ -113,7 +113,7 @@ class Grupos extends VO
 	/**
 	  * setNombre( $nombre )
 	  * 
-	  * Set the <i>nombre</i> property for this object. Donde <i>nombre</i> es Campo no documentado.
+	  * Set the <i>nombre</i> property for this object. Donde <i>nombre</i> es Nombre del Grupo.
 	  * Una validacion basica se hara aqui para comprobar que <i>nombre</i> es de tipo <i>varchar(45)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(45)
@@ -127,7 +127,7 @@ class Grupos extends VO
 	  * getDescripcion
 	  * 
 	  * Get the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es Campo no documentado
-	  * @return varchar(45)
+	  * @return varchar(256)
 	  */
 	final public function getDescripcion()
 	{
@@ -138,9 +138,9 @@ class Grupos extends VO
 	  * setDescripcion( $descripcion )
 	  * 
 	  * Set the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es Campo no documentado.
-	  * Una validacion basica se hara aqui para comprobar que <i>descripcion</i> es de tipo <i>varchar(45)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>descripcion</i> es de tipo <i>varchar(256)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(45)
+	  * @param varchar(256)
 	  */
 	final public function setDescripcion( $descripcion )
 	{
