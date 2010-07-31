@@ -1,8 +1,9 @@
 <?php
 
+require_once ('Estructura.php');
 require_once("base/ingresos.dao.base.php");
 require_once("base/ingresos.vo.base.php");
-require_once ('Estructura.php');
+
 /** Ingresos Data Access Object (DAO).
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 

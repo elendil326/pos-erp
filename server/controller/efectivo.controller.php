@@ -13,12 +13,10 @@
 */
 
 
-require_once('../server/model/model.inc.php');
-/*
+
 //no se porque no funcionan
 require_once('../server/model/ingresos.dao.php');
 require_once('../server/model/gastos.dao.php');
-*/
 
 /**
 *
@@ -37,7 +35,7 @@ require_once('../server/model/gastos.dao.php');
  function insertarGasto($concepto, $monto, $fecha)//1601
  {
 	$id_sucursal=$_SESSION['sucursal'];
-	$id_usuario=$_SESSION['usuario'];
+	$id_usuario=$_SESSION['userid'];
 	$gasto=new Gastos();
 	$gasto->setConcepto($concepto);
 	$gasto->setFecha($fecha);
@@ -47,7 +45,7 @@ require_once('../server/model/gastos.dao.php');
 	
 	try
 	{
-		return (GastosDAO::save($gasto)>0)?'{ "success" : "true" }':'{ "success" : "false" , "reason" : "No se pudo guardar el gasto."}';
+		return (GastosDAO::save($gasto)>0)?'{ "success" : true }':'{ "success" : "false" , "reason" : "No se pudo guardar el gasto."}';
 	}
 	catch(Exception $e)
 	{
@@ -77,7 +75,7 @@ require_once('../server/model/gastos.dao.php');
  	{
 	 	$gasto= GastosDAO::getByPK($idGasto);
 	 	if(is_null($gasto))return '{ "succes" : "false" , "reason" : "El gasto que desea eliminar no existe."}';
-	        return(GastosDAO::delete($gasto)>0)?'{ "succes" : "true" }':'{ "succes" : "false" , "reason" : "No se pudo eliminar el gasto."}';
+	        return(GastosDAO::delete($gasto)>0)?'{ "succes" : true }':'{ "succes" : "false" , "reason" : "No se pudo eliminar el gasto."}';
  	}
  	catch (Exception $e)
  	{
@@ -112,13 +110,13 @@ require_once('../server/model/gastos.dao.php');
 	 	if(is_null($gasto))return '{ "succes" : "false" , "reason" : "El gasto que desea actualizar no existe."}';
 	 	
 		$id_sucursal=$_SESSION['sucursal'];
-		$id_usuario=$_SESSION['usuario'];
+		$id_usuario=$_SESSION['userid'];
 		$gasto->setConcepto($concepto);
 		$gasto->setFecha($fecha);
 		$gasto->setMonto($monto);
 		$gasto->setIdSucursal($id_sucursal);
 		$gasto->setIdUsuario($id_usuario);
-	        return(GastosDAO::save($gasto)>0)?'{ "succes" : "true" }':'{ "succes" : "false" , "reason" : "No se pudo actualizar el gasto."}';
+	        return(GastosDAO::save($gasto)>0)?'{ "succes" : true }':'{ "succes" : "false" , "reason" : "No se pudo actualizar el gasto."}';
  	}
  	catch (Exception $e)
  	{
@@ -145,7 +143,7 @@ require_once('../server/model/gastos.dao.php');
  function insertarIngreso($concepto, $monto, $fecha)//1604
  {
 	$id_sucursal=$_SESSION['sucursal'];
-	$id_usuario=$_SESSION['usuario'];
+	$id_usuario=$_SESSION['userid'];
 	$ingreso=new Ingresos();
 	$ingreso->setConcepto($concepto);
 	$ingreso->setFecha($fecha);
@@ -155,7 +153,7 @@ require_once('../server/model/gastos.dao.php');
 	
 	try
 	{
-		return (IngresosDAO::save($ingreso)>0)?'{ "success" : "true" }':'{ "success" : "false" , "reason" : "No se pudo guardar el ingreso."}';
+		return (IngresosDAO::save($ingreso)>0)?'{ "success" : true }':'{ "success" : "false" , "reason" : "No se pudo guardar el ingreso."}';
 	}
 	catch(Exception $e)
 	{
@@ -185,7 +183,7 @@ require_once('../server/model/gastos.dao.php');
  	{
 	 	$ingreso= IngresosDAO::getByPK($idIngreso);
 	 	if(is_null($ingreso))return '{ "succes" : "false" , "reason" : "El Ingreso que desea eliminar no existe."}';
-	        return(IngresosDAO::delete($ingreso)>0)?'{ "succes" : "true" }':'{ "succes" : "false" , "reason" : "No se pudo eliminar el Ingreso."}';
+	        return(IngresosDAO::delete($ingreso)>0)?'{ "succes" : true }':'{ "succes" : "false" , "reason" : "No se pudo eliminar el Ingreso."}';
  	}
  	catch (Exception $e)
  	{
@@ -222,13 +220,13 @@ require_once('../server/model/gastos.dao.php');
 	 	if(is_null($ingreso))return '{ "succes" : "false" , "reason" : "El Ingreso que desea actualizar no existe."}';
 	 	
 		$id_sucursal=$_SESSION['sucursal'];
-		$id_usuario=$_SESSION['usuario'];
+		$id_usuario=$_SESSION['userid'];
 		$ingreso->setConcepto($concepto);
 		$ingreso->setFecha($fecha);
 		$ingreso->setMonto($monto);
 		$ingreso->setIdSucursal($id_sucursal);
 		$ingreso->setIdUsuario($id_usuario);
-	        return(IngresosDAO::save($ingreso)>0)?'{ "succes" : "true" }':'{ "succes" : "false" , "reason" : "No se pudo actualizar el Ingreso."}';
+	        return(IngresosDAO::save($ingreso)>0)?'{ "succes" : true }':'{ "succes" : "false" , "reason" : "No se pudo actualizar el Ingreso."}';
  	}
  	catch (Exception $e)
  	{
@@ -250,6 +248,11 @@ switch($args['action'])
         		$monto=$args['monto'];
         		$fecha=$args['fecha'];
         		
+        		if(!is_float($monto))
+        		{
+        			echo '{ "success" : "false" , "reason" : "No es una cantidad valida." }'; 
+        			return;
+        		}
         		echo insertarGasto($concepto,$monto,$fecha);
         	}
         	else
@@ -279,6 +282,11 @@ switch($args['action'])
         		$monto=$args['monto'];
         		$fecha=$args['fecha'];
         		
+        		if(!is_float($monto))
+        		{
+        			echo '{ "success" : "false" , "reason" : "No es una cantidad valida." }'; 
+        			return;
+        		}
         		echo actualizarGasto($IdGasto,$concepto,$monto,$fecha);
         	}
         	else
@@ -294,6 +302,11 @@ switch($args['action'])
         		$monto=$args['monto'];
         		$fecha=$args['fecha'];
         		
+        		if(!is_float($monto))
+        		{
+        			echo '{ "success" : "false" , "reason" : "No es una cantidad valida." }'; 
+        			return;
+        		}
         		echo insertarIngreso($concepto,$monto,$fecha);
         	}
         	else
@@ -316,7 +329,6 @@ switch($args['action'])
         	
                 break;
           
-                                break;
          
          case '1606':   //'actualizarIngreso':
         	if((!empty($args['id_ingreso']))&&(!empty($args['concepto']))&&(!empty($args['monto']))&&(!empty($args['fecha'])))
@@ -326,13 +338,23 @@ switch($args['action'])
         		$monto=$args['monto'];
         		$fecha=$args['fecha'];
         		
+        		if(!is_float($monto))
+        		{
+        			echo '{ "success" : "false" , "reason" : "No es una cantidad valida." }'; 
+        			return;
+        		}
         		echo actualizarIngreso($IdIngreso,$concepto,$monto,$fecha);
         	}
         	else
         	{
         		echo '{ "success" : "false" , "reason" : "Faltan datos" }';
         	}
-                break;               
+                break;
+         
+         case '1607':   //'obtenerSucursalUsuario':
+        	echo '{ "success" : true , "id_sucursal" : "'.$_SESSION['sucursal'].'" }';
+                break;
+                               
                 
          default:
          	echo '{ "success" : "false" }';

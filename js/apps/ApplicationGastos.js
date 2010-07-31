@@ -67,9 +67,9 @@ ApplicationGastos.prototype.loadSucursalID = function(){
 	
 	
 	POS.AJAXandDECODE({
-		method: 'obtenerSucursalUsuario'
+		action: 1607//'obtenerSucursalUsuario'
 	}, function(result){
-		if (result.success){
+		if (result.success == true){
 			
 			ApplicationGastos.currentInstance.sucursal_id = result.datos[0].sucursal_id;
 			
@@ -367,7 +367,7 @@ ApplicationGastos.prototype.logicAddGasto = function(){
 	POS.AJAXandDECODE(
 			//Parametros
 			{
-				method	: 'insertarGasto',
+				action	: 1601,//'insertarGasto',
 				concepto: datos['concepto'],
 				monto	: datos['monto'],
 				fecha	: datos['fecha']
@@ -375,7 +375,7 @@ ApplicationGastos.prototype.logicAddGasto = function(){
 			//Responded
 			function(result)
 			{
-				if ( result.success)
+				if ( result.success == true)
 				{
 					POS.aviso('Éxito', 'Se agregó el nuevo gasto correctamente');
 					//ApplicationGastos.currentInstance.appMainPanel.setCard( ApplicationGastos.currentInstance.homePanel, { type:'slide', direction:'right'});
@@ -414,7 +414,7 @@ ApplicationGastos.prototype.logicAddIngreso = function(){
 	POS.AJAXandDECODE(
 			//Parametros
 			{
-				method	: 'insertarIngreso',
+				action	: 1604,//'insertarIngreso',
 				concepto: datos['concepto'],
 				monto	: datos['monto'],
 				fecha	: datos['fecha']
@@ -422,7 +422,7 @@ ApplicationGastos.prototype.logicAddIngreso = function(){
 			//Responded
 			function(result)
 			{
-				if ( result.success)
+				if ( result.success == true)
 				{
 					POS.aviso('Éxito', 'Se agregó el nuevo ingreso correctamente');
 					//ApplicationGastos.currentInstance.appMainPanel.setCard( ApplicationGastos.currentInstance.homePanel, { type:'slide', direction:'right'});
