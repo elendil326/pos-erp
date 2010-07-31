@@ -5,7 +5,7 @@
 * 	a sobre el inventario asi como detalle inventario 
 *	@author Diego Emanuelle Ventura <diego@caffeina.mx>
 *
-*	@see 
+*	@see InventarioDAO, DetalleInventarioDAO, SucursalDAO
 */
 
 /**
@@ -28,44 +28,25 @@ require_once('../server/model/sucursal.dao.php');
 *       @return json que nos indica si la operacion fue satisfactoria o fallo
 *	@params String [$nombre] nombre que asignaremos al nuevo producto
 *	@params String [$denominacion] descripcion del producto a agregar
-*	@see 
+*	@see InventarioDAO::save()
 *	
 *
 */
 	//
 	function insertarInventario($nombre,$denominacion)//1701
 	{
-	
-		return "ok";
-	/*
-		//verificamos que no nos envien datos vacios
-		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['denominacion']))&&(!empty($_REQUEST['unidad_venta'])))
+		$inventario=new Inventario();
+		$inventario->setNombre($nombre);
+		$inventario->setDenominacion($denominacion);
+		try
 		{
-			//asignamos valores obtenidos a las variables
-			$nombre=$_REQUEST['nombre'];
-			$denominacion=$_REQUEST['denominacion'];
-			$unidad_venta=$_REQUEST['unidad_venta'];
-			//creamos un objeto del tipo inventario
-			$inventario=new inventario($nombre,$denominacion,$unidad_venta);
-			//creamos un objeto de la clase unidad_venta
-			$unidad=new unidadVentaExistente($unidad_venta);
-			//verificamos qu exista la unidad
-			if($unidad->existe)
-			{
-				//varificamos que no exista
-				if(!$inventario->existe())
-				{
-					//intentamos insertar
-					if($inventario->inserta())		ok();															//se logro insertar
-					else							fail("Error al guardar el producto.");							//se fallo el intento de insercion
-				}//if no existe producto inventario
-				else 								fail("Ya existe este producto.");								//el producto ya existia
-			}//if existe unidad
-			else									fail("la unidad de compra/venta seleccionada no existe");
-		}//if verifica datos
-		else									fail("Faltan datos.");											//no se enviaron los datos requeridos
-		return;
-		*/
+			InventarioDAO::save($inventario);
+			return '{ "success" : true }';		
+		}
+		catch(Exception$e)
+		{
+			return '{ "success" : false , "reason" : "Error al guardar el producto."}';
+		}		
 	}
 	//funcion insertarInventario
 
@@ -80,33 +61,22 @@ require_once('../server/model/sucursal.dao.php');
 *       @return JSON q
 *	@paramsue nos indica si la operacion fu exitos o fallo y si fallo nos indica la razon de esto.
 *	@params int [$idInventario] id del producto de inventario que queremos eliminar. 
-*	@see 
+*	@see  InventarioDAO::getByPK(), DetalleInventarioDAO::delete()
 *	
 */
 
 	function eliminarInventario($idInventario)//1702
 	{
-		return "ok";
-	/*
-		//verificamos que no nos envien datos vacios
-		if(!empty($_REQUEST['id_inventario']))
+		$inventario=InventarioDAO::getByPK($idInventario);
+		try
 		{
-			//asignamos valores obtenidos a las variables
-			$id=$_REQUEST['id_inventario'];
-			//creamos un objeto del tipo inventario existente pasandole el id
-			$inventario=new inventarioExistente($id);
-			//verificamos que si exista
-			if($inventario->existe())
-			{
-				//intentamos eliminar
-				if($inventario->borra())		ok();															//exito al eliminar
-				else							fail("Error al borrar el producto.");							//fallo el intento de eliminar
-			}//if inventario existe (producto)
-			else 								fail("El producto que desea eliminar no existe.");				//no existe el producto
-		}//if verifica datos
-		else 									fail("faltan datos.");											//no se enviaron los datos necesarios
-		return;
-		*/
+			InventarioDAO::delete($inventario);
+			return '{ "success" : true }';		
+		}
+		catch(Exception$e)
+		{
+			return '{ "success" : false , "reason" : "Error al eliminar el producto."}';
+		}
 	}
 	//funcioneliminarInventario
 
@@ -122,45 +92,24 @@ require_once('../server/model/sucursal.dao.php');
 *	@params int [$idInventario] id del producto de inventario a actualizar
 *	@params String [$nombre] nombre que le queremos asignar al producto de inventario
 *	@params String [$denominacion] descripcion que deseamos asignar al producto de inventario
-*	@see 
+*	@see InventarioDAO::getByPK(), InventarioDAO::save() 
 *	
 */ 
 
 	function actualizarInventario($idInventario,$nombre,$denominacion)//1703
 	{
-		return "ok";
-		/*
-		//verificamos que no nos envien datos vacios
-		if((!empty($_REQUEST['id_inventario']))&&(!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['denominacion']))&&(!empty($_REQUEST['unidad_venta'])))
+		$inventario=InventarioDAO::getByPK($idInventario);
+		$inventario->setNombre($nombre);
+		$inventario->setDenominacion($denominacion);
+		try
 		{
-			//asignamos valores obtenidos a las variables
-			$id=$_REQUEST['id_inventario'];
-			$nombre=$_REQUEST['nombre'];
-			$denominacion=$_REQUEST['denominacion'];
-			//creamos un objeto del tipo inventario_existente
-			$inventario=new inventarioExistente($id);
-			//verificamos que si exista dicho producto
-			if($inventario->existe())
-			{
-				//creamos un objeto de la clase unidad_venta
-				$unidad=new unidadVentaExistente($unidad_venta);
-				//verificamos qu exista la unidad
-				if($unidad->existe)
-				{
-					//asignamos los datos de las variables a las variables del objeto
-					$inventario->nombre=$nombre;
-					$inventario->denominacion=$denominacion;
-					//intentamos actualizar los datos
-					if($inventario->actualiza())	ok();																//exito al actualizar la informacion
-					else							fail("Error al modificar el producto.");							//fallo en el intento de actualizacion de objero
-				}//if existe unidad
-				else								fail("la unidad de compra/venta seleccionada no existe");
-			}//if existe producto inventario
-			else								fail("El producto que desea modificar no existe.");					//el producto de inventario que se deseaba actualizar no existe
-		}//if verifica datos
-		else									fail("Faltan datos.");												//no se enviaron los datos necesarios para la funcion
-		return;
-		*/
+			InventarioDAO::save($inventario);
+			return '{ "success" : true }';		
+		}
+		catch(Exception$e)
+		{
+			return '{ "success" : false , "reason" : "Error al guardar los cambios del producto."}';
+		}		
 	}
 	//funcion actualizarInventario
 	
@@ -175,31 +124,27 @@ require_once('../server/model/sucursal.dao.php');
 *
 *       @access public
 *       @return JSON con los datos de los productos de inventario y sus detalles en las sucursales
-*	@see 
+*	@see DetalleInventarioDAO::search(), InventarioDAO::getByPK()
 *	
 */
 
 	function listarProductosInventario()//1704
 	{
+	
 		$sucursal = $_SESSION['sucursal'];
 		$detalleInventarioSearch=new DetalleInventario();
+		$detalleInventarioSearch->setIdSucursal($sucursal);
 		$detallesInventario=DetalleInventarioDAO::search($detalleInventarioSearch);
 		
+		$resul='{ "success" : true , "datos" : [';
 		foreach ($detallesInventario as $detalle)
 		{
-			//$inventario=InventarioDAO::getByPK($detalle->getIdProducto());
-			return "ok";
+			$inventario=InventarioDAO::getByPK($detalle->getIdProducto());
+			$resul.='{ "id_producto" : "'.$inventario->getIdProducto().'" , "denominacion" : "'.$inventario->getDenominacion().'" , "precio_venta" : "'.$detalle->getPrecioVenta().'" , "existencias" : "'.$detalle->getExistencias().'" , "id_sucursal" : "'.$sucursal.'" , "min" : "'.$detalle->getMin().'" } , ';
 		}
+		$resul.= "]}";
+		return str_replace(", ]","]",$resul);
 		
-		$listar = new listar("select inventario.id_producto, inventario.denominacion, detalle_inventario.precio_venta,detalle_inventario.existencias,detalle_inventario.id_sucursal,detalle_inventario.min 
-		from inventario inner join 
-		detalle_inventario 
-		on inventario.id_producto = detalle_inventario.id_producto 
-		where detalle_inventario.id_sucursal=?",array($sucursal));
-
-		//imprimimos el json
-		echo $listar->lista();
-		return $resul;
 	}
 	//funcion listarProductosInventario
 /*
@@ -217,110 +162,30 @@ salida ejemplo:
 *       @access public
 *       @return json con los datos de los productos de una sucursal
 *	@params int [$idSucursal] id de la sucursal de la que queremos obtener sus productos
-*	@see 
+*	@see DetalleInventarioDAO::search(),InventarioDAO::getByPK()
 *	
 */                                                                
 
                 
 	function listarProductosInventarioSucursal($idSucursal)//1705
 	{
+		$detalleInventarioSearch=new DetalleInventario();
+		$detalleInventarioSearch->setIdSucursal($idSucursal);
+		$detallesInventario=DetalleInventarioDAO::search($detalleInventarioSearch);
 		
-		/*//verificamos que no nos envien datos vacios
-		if(!empty($_REQUEST['id_sucursal']))
+		$resul='{ "success" : true , "datos" : [';
+		foreach ($detallesInventario as $detalle)
 		{
-			//asignamos valores obtenidos a las variables
-			$id=$_REQUEST['id_sucursal'];
-				//creamos un objeto del tipo listar
-				$listar = new listar("select inventario.id_producto, inventario.denominacion, detalle_inventario.precio_venta,detalle_inventario.existencias,detalle_inventario.min from inventario inner join detalle_inventario on inventario.id_producto = detalle_inventario.id_producto where detalle_inventario.id_sucursal=?",array($id));
-				//imprimimos el json
-				echo $listar->lista();
-				return;
-		}//if verifica datos
-		else											fail("faltan datos.");										//no se envio el id de la sucursal
-		return;
-		*/
+			$inventario=InventarioDAO::getByPK($detalle->getIdProducto());
+			$resul.='{ "id_producto" : "'.$inventario->getIdProducto().'" , "denominacion" : "'.$inventario->getDenominacion().'" , "precio_venta" : "'.$detalle->getPrecioVenta().'" , "existencias" : "'.$detalle->getExistencias().'" , "min" : "'.$detalle->getMin().'" } , ';
+		}
+		$resul.= "]}";
+		return str_replace(", ]","]",$resul);
 	}
 /*
 salida ejemplo
 { success : true, datos : [{"id_producto":"9","denominacion":"malesuada fames ac turpis eges","precio_venta":"203","existencias":"196","min":"79"},{"id_producto":"38","denominacion":"Phasellus elit pede, malesuada","precio_venta":"343","existencias":"31","min":"85"}]}
 */
-
-
-
-/**
-*
-* 	existenciaProductoSucursal
-*
-*	Esta funcion nos regresa las existencias de un producto en una sucursal, recibiendo el id del producto y la sucursal la toma de la session.
-*
-*       @access public
-*       @return json con la existencia de         case '1706':   //'existenciaProductoSucursal':
-        	echo "ok";
-                break;
-                
-                   un producto o con los datos en caso de error
-*	@params int [$idProducto] id del producto a buscar
-*	@see 
-*	
-*/
-
-
-	function existenciaProductoSucursal()//1706
-	{
-		return "ok";
-		/*
-		//verificamos que no nos envien datos vacios
-		if((!empty($_REQUEST['id_producto'])))
-		{
-			//asignamos valores obtenidos a las variables
-			$id_producto=$_REQUEST['id_producto'];
-			$id_sucursal=$_SESSION['sucursal'];
-			//creamos un objeto del tipo inventario existente
-
-			$prod=new inventarioExistente($id_producto);
-			//vemos que el producto si exista
-			if($prod->existe())
-			{
-				//creamos un objeto del tipo sucursal con el id que recibimos
-				$sucursal=new sucursalExistente($id_sucursal);
-				//verificamos que la sucursal si exista
-				if($sucursal->existe())
-				{
-					//creamos un objeto de la clase detalle_inventario_existente que es un objeto que tiene
-					//la informacion de cada producto en cada sucursal
-					$producto=new detalleInventarioExistente($id_producto,$id_sucursal);
-					//verificamos que el producto exista
-					if($producto->existe())
-					{	
-						//verificamos si se envio algun proveedor en especifico para tambien regresar el precio de adquicision
-						$proveedor=(!empty($_REQUEST['id_proveedor']))?$_REQUEST['id_proveedor']:0;
-						//definimos la consulta para obtener los datos
-						$query="SELECT i.id_producto, nombre, denominacion, precio_venta, existencias ";
-						if($proveedor>0)$query.=" ,precio ";
-						$query.="FROM detalle_inventario
-								NATURAL JOIN inventario i ";
-						if($proveedor>0)$query.="left join productos_proveedor pp
-												on (i.id_producto=pp.id_inventario) ";		
-						$query.="where i.id_producto=? and id_sucursal=? ";
-								if($proveedor>0)$query.=" and id_proveedor=? ";
-								//creamos arreglo de parametros
-								$params=array($id_producto,$id_sucursal,$proveedor);
-								//creamos un objeto de la clase listar con la consulta y parametros necesarios
-								$listar = new listar($query,$params);
-								//imprimomos los datos obtenidos
-								echo $listar->lista();
-					}//if producto existe
-					else										fail("Este producto no existe en esta sucursal.");	//el producto no existe en esta sucursal
-				}//if sucursal existe
-				else											fail("La sucursal no existe");						//la sucursal con este id no existe
-			}//if producto existe
-			else												fail("El producto no existe");						//el producto con ese id no existe
-		}//if verifica datos
-		else													fail("faltan datos.");								//no se enviaron los datos necesarios
-		return;
-		*/
-	}
-
 
 
 
@@ -337,61 +202,32 @@ salida ejemplo
 *	@params String [$denomincion] descripcion del nuevo producto
 *	@params float [$precio] precio al que venderemos el nuevo producto en la sucursal actual
 *	@params	$min [$min] existencia minima del producto dentro de la sucursal actual
-*	@see 
+*	@see InventarioDAO::save(), DetalleInventarioDAO::save()
 *	
 */
 	function agregarNuevoProducto($nombre,$denominacion,$precio,$min)//1707
 	{
-		return "ok";
-		/*
-		if((!empty($_REQUEST['nombre']))&&(!empty($_REQUEST['denominacion']))&&(!empty($_REQUEST['precio']))&&(!empty($_REQUEST['unidad_venta']))&&(!empty($_REQUEST['min'])))
+		$inventario=new Inventario();
+		$inventario->setNombre($nombre);
+		$inventario->setDenominacion($denominacion);
+		try
 		{
-			//asignamos valores obtenidos a las variables
-			$nombre=$_REQUEST['nombre'];
-			$denominacion=$_REQUEST['denominacion'];
-			$unidad_venta=$_REQUEST['unidad_venta'];
-			//creamos un objeto del tipo inventario
-			$inventario=new inventario($nombre,$denominacion,$unidad_venta);
-			//varificamos que no exista
-			if(!$inventario->existe())
-			{
-				//creamos un objeto de la clase unidad_venta
-				$unidad=new unidadVentaExistente($unidad_venta);
-				//verificamos qu exista la unidad
-				if($unidad->existe)
-					{
-					//intentamos insertar
-					if(!$inventario->inserta())		
-					{
-						fail("Error al guardar el producto.");							//se fallo el intento de insercion
-					}
-				}//if existe unidad
-				else								fail("la unidad de compra/venta seleccionada no existe");
-			}//if no existe producto inventario
-			else 								fail("Ya existe este producto.");								//el producto ya existia
-		}//if verifica datos
-		else									fail("Faltan datos.");	
-										//no se enviaron los datos requeridos
-
-		$detalles_inventario = new detalle_inventario( $inventario->id_producto, $_SESSION['sucursal'], $_REQUEST['precio'], $_REQUEST['min'], 0);
-		if (!$detalles_inventario->existe())
-		{
-			if($detalles_inventario->inserta())
-			{
-				ok();
-			}
-			else
-			{
-				fail("Error al intentar insertar el nuevo producto al inventario");
-			}
+			$sucursal = $_SESSION['sucursal'];
+			InventarioDAO::save($inventario);
+			$detalleInventario=new DetalleInventario();
+			$detalleInventario->setExistencias(0);
+			$detalleInventario->setIdProducto($inventario->getIdProducto());
+			$detalleInventario->setMin($min);
+			$detalleInventario->setPrecioVenta($precio);
+			$detalleInventario->setIdSucursal($sucursal);
+			DetalleInventarioDAO::save($detalleInventario);
+			return '{ "success" : true }';			
+			
 		}
-		else
+		catch(Exception$e)
 		{
-			fail("Ya existe el producto");			
+			return '{ "success" : false , "reason" : "Error al guardar el producto."}';
 		}
-		
-		return;
-		*/
 	}
 	
 	
@@ -403,7 +239,7 @@ salida ejemplo
 *
 *       @access public
 *       @return JSON con los datos de todas las sucursales.
-*	@see 
+*	@see SucursalDAO::getAll()
 *	
 */
 	function listarSucursal()//1708
@@ -417,21 +253,62 @@ salida ejemplo
 		$resul.=']}';
 		return str_replace(",]", "]",$resul);
 	}
+	
+/**
+*
+* 	detallesSucursal
+*
+* 	esta funcion devuelve los datos de todas las sucursales
+*
+*       @access public
+*       @return JSON con los datos de todas las sucursales.
+*	@params int [$idSucursal] nos envia el id de la sucursal a consultar
+*	@see SucursalDAO::getByPK()
+*	
+*/
+	function detallesSucursal($idSucursal)//1709
+	{
+		$sucursal=SucursalDAO::getByPK($idSucursal);
+		if(is_null($sucursal)) return '{ "success" : false , "reason" : "la sucursal no existe."}';
+		$resul='{ "success" : true , "datos" : [ { "id_sucursal" : "'.$sucursal->getIdSucursal().'", "descripcion" : "'.$sucursal->getDescripcion().'" , "direccion" : "'.$sucursal->getDireccion().'" }]}';
+		return $resul;
+	}
 
 //inventario dispatcher
 switch($args['action'])
 {
 
          case '1701':   //'insertarInventario':
-        	echo "ok";
+        	if((empty($args['nombre']))||(empty($args['denominacion'])))
+		{
+			echo '{ "success" : false , "reason" : "Faltan datos."}';
+         		return;
+		}
+		$nombre=$args['nombre'];
+		$denominacion=$args['denominacion'];
+        	echo insertarInventario($nombre,$denominacion);
                 break;
                 
          case '1702':   //'eliminarInventario':
-        	echo "ok";
+        	if(empty($args['id_inventario']))
+		{
+			echo '{ "success" : false , "reason" : "Faltan datos."}';
+         		return;
+		}
+		$id=$args['id_inventario'];
+        	echo eliminarInventario($id);
                 break;
                                 
          case '1703':   //'actualizarInventario':
-        	echo "ok";
+        	if((empty($args['id_inventario']))||(empty($args['nombre']))||(empty($args['denominacion'])))
+		{
+			echo '{ "success" : false , "reason" : "Faltan datos."}';
+         		return;
+		}
+		$id=$args['id_inventario'];
+		$nombre=$args['nombre'];
+		$denominacion=$args['denominacion'];
+        	echo actualizarInventario($id,$nombre,$denominacion);
                 break;
                                                 
          case '1704':   //'listarProductosInventario':
@@ -439,19 +316,42 @@ switch($args['action'])
                 break;
                                                                 
          case '1705':   //'listarProductosInventarioSucursal':
-        	echo listarProductosInventarioSucursal();
+      		if (empty($args['id_sucursal']))
+         	{
+         		echo '{ "success" : false , "reason" : "Faltan datos."}';
+         		return;
+         	}
+         	$id=$args['id_sucursal'];
+        	echo listarProductosInventarioSucursal($id);
                 break;
-                                                                                
-         case '1706':   //'existenciaProductoSucursal':
-        	echo "ok";
-                break;
+                          
+          //aqui estaba existenciasproductosucursal pero se elimino 1706
                                                                                                
          case '1707':   //'agregarNuevoProducto':
-        	echo "ok";
+         	if((empty($args['nombre']))||(empty($args['denominacion']))||(empty($args['precio']))||(empty($args['min'])))
+		{
+			echo '{ "success" : false , "reason" : "Faltan datos."}';
+         		return;
+		}
+		$nombre=$args['nombre'];
+		$denominacion=$args['denominacion'];
+		$precio=$args['precio'];
+		$minimo=$args['min'];
+        	echo agregarNuevoProducto($nombre,$denominacion,$precio,$minimo);
                 break;
                                                                                                                               
          case '1708':   //'listarSucursal':
         	echo listarSucursal();
+                break;
+                                                                                                                                              
+         case '1709':   //'detallesSucursal':
+         	if (empty($args['id_sucursal']))
+         	{
+         		echo '{ "success" : false , "reason" : "Faltan datos."}';
+         		return;
+         	}
+         	$id=$args['id_sucursal'];
+        	echo detallesSucursal($id);
                 break;
                 
          default:  
