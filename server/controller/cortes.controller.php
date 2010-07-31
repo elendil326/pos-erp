@@ -15,8 +15,11 @@
 
 
 require_once('../server/model/model.inc.php');
-
-
+/*
+//no se porque no funcionan :S
+require_once('../server/model/corte.dao.php');
+require_once('../server/model/detalle_corte.dao.php');
+/*
 /**
 *
 * 	obtener_cortes
