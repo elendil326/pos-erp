@@ -577,7 +577,7 @@ ApplicationVender.prototype.doAddProduct = function (button, event)
 	
 	//buscar si este producto existe
 	POS.AJAXandDECODE({
-			action: '1301',
+			action: '2101',
 			id_producto : prodID
 		}, 
 		function (datos){
@@ -948,7 +948,7 @@ ApplicationVender.prototype.doVentaLogicCredito = function ()
 	var cliente = ApplicationVender.currentInstance.cliente.iden;
 	
 	POS.AJAXandDECODE({
-			action: '1303',
+			action: '2103',
 			id_cliente: cliente,
 			tipo_venta: 0,
 			jsonItems: jsonItems
@@ -1075,7 +1075,7 @@ ApplicationVender.prototype.doVentaLogic = function ()
 	POS.AJAXandDECODE(
 					//Parametros
 					{
-						action: '1303',
+						action: '2103',
 						id_cliente: cliente,
 						tipo_venta: 'contado',
 						jsonItems: jsonItems
@@ -1365,7 +1365,7 @@ ApplicationVender.prototype.buscarCliente = function ()
 {
 	//retrive client list from server
 	POS.AJAXandDECODE({
-			action : "1302"
+			action : "2102"
 		},
 		function(response){
 			

@@ -69,7 +69,7 @@ AppLogin.prototype.submitData = function ( u, p )
 			$.ajax({ 
 				url: "proxy.php", 
 				dataType: 'json',
-				data: {'action': '1201', 'u' : u, 'p': p },
+				data: {'action': '2001', 'u' : u, 'p': p },
 				context: document.body, 
 				complete: login.ajaxReturned,
 			});

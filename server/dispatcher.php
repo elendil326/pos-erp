@@ -23,7 +23,7 @@ if(!$ss){
 }
 
 //si voy a hacer algo que no sea iniciar sesion
-if( $_REQUEST['action']  != "1201" )
+if( $_REQUEST['action']  != "2001" )
 {
 	//verificar que no se haya modificado el user agent, el user agent esta encriptado para que no pueda 
 	//ver cual es, asi como los demas datos
@@ -87,7 +87,6 @@ unset($_POST);
 unset($_GET);
 
 
-
 //main dispatching
 switch( ((int)($args['action'] / 100))*100 )
 {
@@ -140,14 +139,16 @@ switch( ((int)($args['action'] / 100))*100 )
 		require_once('controller/efectivo.controller.php');
 	break;
 	
-	case 1200:
+
+	
+	case 2000:
 		/* alan : login 
 		 * funciones de inicio de sesion
 		 */
 		require_once('controller/login.controller.php');
 	break;
 	
-	case 1300:
+	case 2100:
 		/* alan : mostrador 
 		 * funciones de venta de mostrador
 		 */

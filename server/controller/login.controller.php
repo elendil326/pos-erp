@@ -173,14 +173,14 @@ function logOut( $verbose = false )
 switch($args['action'])
 {
 	 
-	case '1201':
+	case '2001':
 	
 		checkCurrentSession();
 		
 		sendLogin($args['u'], $args['p']);
 	break;
 
-	case '1202':
+	case '2002':
 		logOut(true);
 	break;
 

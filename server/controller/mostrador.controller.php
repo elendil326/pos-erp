@@ -231,9 +231,9 @@ function insertarVenta($cliente, $tipo_venta, $items)
 
 switch($args['action'])
 {
-	case 1301: existeProd( $args['id_producto'] ); break;
-	case 1302: listarClientes(); break;
-	case 1303: insertarVenta( $args['id_cliente'], $args['tipo_venta'], $args['jsonItems'] ); break;
+	case 2101: existeProd( $args['id_producto'] ); break;
+	case 2102: listarClientes(); break;
+	case 2103: insertarVenta( $args['id_cliente'], $args['tipo_venta'], $args['jsonItems'] ); break;
 	
 	default: echo "NOPE";
 	
