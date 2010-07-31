@@ -34,10 +34,10 @@ require_once('../server/model/gastos.dao.php');
 *	@see GastosDAO::save() 
 *	
 */
- function insertarGasto($concepto, $monto, $fecha)//1101
+ function insertarGasto($concepto, $monto, $fecha)//1601
  {
-	$id_sucursal=3;//$_SESSION['sucursal_id'];
-	$id_usuario=1;//$_SESSION['id_usuario'];
+	$id_sucursal=$_SESSION['sucursal'];
+	$id_usuario=$_SESSION['usuario'];
 	$gasto=new Gastos();
 	$gasto->setConcepto($concepto);
 	$gasto->setFecha($fecha);
@@ -71,7 +71,7 @@ require_once('../server/model/gastos.dao.php');
 *	@see GastosDAO::search(), GastosDAO::delete() 
 *	
 */
- function eliminarGasto($idGasto)//1102
+ function eliminarGasto($idGasto)//1602
  {
  	try
  	{
@@ -104,15 +104,15 @@ require_once('../server/model/gastos.dao.php');
 
 *	
 */
- function actualizarGasto($idGasto,$concepto, $monto, $fecha)//1103
+ function actualizarGasto($idGasto,$concepto, $monto, $fecha)//1603
  {
  	try
  	{
 	 	$gasto= GastosDAO::getByPK($idGasto);
 	 	if(is_null($gasto))return '{ "succes" : "false" , "reason" : "El gasto que desea actualizar no existe."}';
 	 	
-		$id_sucursal=3;//$_SESSION['sucursal_id'];
-		$id_usuario=1;//$_SESSION['id_usuario'];
+		$id_sucursal=$_SESSION['sucursal'];
+		$id_usuario=$_SESSION['usuario'];
 		$gasto->setConcepto($concepto);
 		$gasto->setFecha($fecha);
 		$gasto->setMonto($monto);
@@ -142,10 +142,10 @@ require_once('../server/model/gastos.dao.php');
 *	@see IngresosDAO::save() 
 *	
 */
- function insertarIngreso($concepto, $monto, $fecha)//1104
+ function insertarIngreso($concepto, $monto, $fecha)//1604
  {
-	$id_sucursal=3;//$_SESSION['sucursal_id'];
-	$id_usuario=1;//$_SESSION['id_usuario'];
+	$id_sucursal=$_SESSION['sucursal'];
+	$id_usuario=$_SESSION['usuario'];
 	$ingreso=new Ingresos();
 	$ingreso->setConcepto($concepto);
 	$ingreso->setFecha($fecha);
@@ -179,7 +179,7 @@ require_once('../server/model/gastos.dao.php');
 *	@see IngresosDAO::search(), IngresosDAO::delete() 
 *	
 */
- function eliminarIngreso($idIngreso)//1105
+ function eliminarIngreso($idIngreso)//1605
  {
  	try
  	{
@@ -214,15 +214,15 @@ require_once('../server/model/gastos.dao.php');
 
 *	
 */
- function actualizarIngreso($idIngreso,$concepto, $monto, $fecha)//1106
+ function actualizarIngreso($idIngreso,$concepto, $monto, $fecha)//1606
  {
  	try
  	{
 	 	$ingreso= IngresosDAO::getByPK($idIngreso);
 	 	if(is_null($ingreso))return '{ "succes" : "false" , "reason" : "El Ingreso que desea actualizar no existe."}';
 	 	
-		$id_sucursal=3;//$_SESSION['sucursal_id'];
-		$id_usuario=1;//$_SESSION['id_usuario'];
+		$id_sucursal=$_SESSION['sucursal'];
+		$id_usuario=$_SESSION['usuario'];
 		$ingreso->setConcepto($concepto);
 		$ingreso->setFecha($fecha);
 		$ingreso->setMonto($monto);
@@ -243,7 +243,7 @@ require_once('../server/model/gastos.dao.php');
 switch($args['action'])
 {
 
-         case '1101':   //'insertarGasto':
+         case '1601':   //'insertarGasto':
         	if((!empty($args['concepto']))&&(!empty($args['monto']))&&(!empty($args['fecha'])))
         	{
         		$concepto=$args['concepto'];
@@ -258,7 +258,7 @@ switch($args['action'])
         	}
                 break;
                 
-         case '1102':   //'eliminarGasto':
+         case '1602':   //'eliminarGasto':
         	if(!empty($args['id_gasto']))
         	{
         		$IdGasto=$args['id_gasto'];
@@ -271,7 +271,7 @@ switch($args['action'])
         	
                 break;
          
-         case '1103':   //'actualizarGasto':
+         case '1603':   //'actualizarGasto':
         	if((!empty($args['id_gasto']))&&(!empty($args['concepto']))&&(!empty($args['monto']))&&(!empty($args['fecha'])))
         	{
         		$IdGasto=$args['id_gasto'];
@@ -287,7 +287,7 @@ switch($args['action'])
         	}
                 break;
 
-         case '1104':   //'insertarIngreso':
+         case '1604':   //'insertarIngreso':
         	if((!empty($args['concepto']))&&(!empty($args['monto']))&&(!empty($args['fecha'])))
         	{
         		$concepto=$args['concepto'];
@@ -303,7 +303,7 @@ switch($args['action'])
                 break;
                 
                      
-         case '1105':   //'eliminarIngreso':
+         case '1605':   //'eliminarIngreso':
         	if(!empty($args['id_ingreso']))
         	{
         		$IdIngreso=$args['id_ingreso'];
@@ -318,7 +318,7 @@ switch($args['action'])
           
                                 break;
          
-         case '1106':   //'actualizarIngreso':
+         case '1606':   //'actualizarIngreso':
         	if((!empty($args['id_ingreso']))&&(!empty($args['concepto']))&&(!empty($args['monto']))&&(!empty($args['fecha'])))
         	{
         		$IdIngreso=$args['id_ingreso'];

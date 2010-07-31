@@ -31,7 +31,7 @@ require_once('../server/model/detalle_corte.dao.php');
 *       @return json con los datos mas importantes de todos los cortes
 *	@see CorteDAO::getAll()
 */
- function obtener_cortes()//1001
+ function obtener_cortes()//1501
  {
         $cortes = CorteDAO::getAll();
         if( count($cortes) == 0 )return '{ "success" : "false" }';
@@ -58,7 +58,7 @@ require_once('../server/model/detalle_corte.dao.php');
 *	@see CorteDAO::search(), DetalleCorteDAO::search()
 */
 	
-function reporte_corte($numCorte)//1002
+function reporte_corte($numCorte)//1502
 {
 	if(empty($numCorte))return '{ "success" : "false" , "reason" , "Faltan datos." }';
         $corte=CorteDAO::getByPK($numCorte);
@@ -94,7 +94,7 @@ function reporte_corte($numCorte)//1002
 *	@see CorteDAO::reparticionGanancias()
 */
 
-function genera_corte($inicio,$fin,$guardar)//1003
+function genera_corte($inicio,$fin,$guardar)//1503
 {
 	if(empty($inicio)||empty($fin)) return '{ "success" : "false" , "reason" : "faltan datos" }';
         return ($guardar)?CorteDAO::reparticionGanancias($inicio,$fin,true):CorteDAO::reparticionGanancias($inicio,$fin);
@@ -111,7 +111,7 @@ function genera_corte($inicio,$fin,$guardar)//1003
 *	@see CorteDAO::search(), DetalleCorteDAO::search() , DetalleCorteDAO::delete()
 */
 	
-function eliminar_corte($numCorte)//1004
+function eliminar_corte($numCorte)//1504
 {
 	if(empty($numCorte))return '{ "success" : "false" , "reason" , "Faltan datos." }';
         $corte=CorteDAO::getByPK($numCorte);
@@ -138,18 +138,18 @@ function eliminar_corte($numCorte)//1004
 switch($args['action'])
 {
 
-         case '1001':   //'obtener_cortes':
+         case '1501':   //'obtener_cortes':
                 echo obtener_cortes();
                 break;
 
-         case '1002':   //'reporte_corte':
+         case '1502':   //'reporte_corte':
 
                 $ncorte=$args['num_corte'];
                 echo reporte_corte($ncorte);
                 break;
 
 
-         case '1003':   //'genera_corte':
+         case '1503':   //'genera_corte':
 
                 $inicio=$args['inicio'];
                 $fin=$args['fin'];
@@ -157,7 +157,7 @@ switch($args['action'])
                 echo genera_corte($inicio,$fin,$guarda);
                 break;
                 
-         case '1004':   //'eliminar_corte':
+         case '1504':   //'eliminar_corte':
 
                 $ncorte=$args['num_corte'];
                 echo eliminar_corte($ncorte);
