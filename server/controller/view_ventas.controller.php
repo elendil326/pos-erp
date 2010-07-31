@@ -9,7 +9,7 @@
 *	@author Luis Michel <luismichel@caffeina.mx>
 */
 
-require_once("model/view_ventas.dao.php");
+require_once("../server/model/view_ventas.dao.php");
 
 
 	/**
@@ -30,13 +30,14 @@ require_once("model/view_ventas.dao.php");
 	{
 		$data = ViewVentasDao::getVendedorMasProductivo($timeRange, $fechaInicio, $fechaFinal);
 
+		
 		if ( $data[0] != false )
 		{
-			$result = "{ success: true, datos: ".json_encode($data)."}";
+			$result = '{ "success": true, "datos": '.json_encode($data[0]).'}';
 		}
 		else
 		{
-			$result = "{ success: false, error: ".$data[1]."}";
+			$result = '{ "success": false, "error": '.$data[1].'}';
 		}
 
 		return $result;
@@ -62,11 +63,11 @@ require_once("model/view_ventas.dao.php");
 
 		if ( $data[0] != false )
 		{
-			$result = "{ success: true, datos: ".json_encode($data)."}";
+			$result = '{ "success": true, datos: '.json_encode($data[0]).'}';
 		}
 		else
 		{
-			$result = "{ success: false, error: ".$data[1]."}";
+			$result = '{ "success": false, error: '.$data[1].'}';
 		}
 
 		return $result;
@@ -93,11 +94,11 @@ require_once("model/view_ventas.dao.php");
 
 		if ( $data[0] != false )
 		{
-			$result = "{ success: true, datos: ".json_encode($data)."}";
+			$result = '{ "success": true, datos: '.json_encode($data[0]).'}';
 		}
 		else
 		{
-			$result = "{ success: false, error: ".$data[1]."}";
+			$result = '{ "success": false, error: '.$data[1].'}';
 		}
 
 		return $result;		
@@ -125,11 +126,11 @@ require_once("model/view_ventas.dao.php");
 
 		if ( $data[0] != false )
 		{
-			$result = "{ success: true, datos: ".json_encode($data)."}";
+			$result = '{ "success": true, datos: '.json_encode($data[0]).'}';
 		}
 		else
 		{
-			$result = "{ success: false, error: ".$data[1]."}";
+			$result = '{ "success": false, error: '.$data[1].'}';
 		}
 
 		return $result;	
@@ -159,11 +160,11 @@ require_once("model/view_ventas.dao.php");
 
 		if ( $data[0] != false )
 		{
-			$result = "{ success: true, datos: ".json_encode($data)."}";
+			$result = '{ "success": true, datos: '.json_encode($data[0]).'}';
 		}
 		else
 		{
-			$result = "{ success: false, error: ".$data[1]."}";
+			$result = '{ "success": false, error: '.$data[1].'}';
 		}
 
 		return $result;	
@@ -191,11 +192,11 @@ require_once("model/view_ventas.dao.php");
 
 		if ( $data[0] != false )
 		{
-			$result = "{ success: true, datos: ".json_encode($data)."}";
+			$result = '{ "success": true, datos: '.json_encode($data[0]).'}';
 		}
 		else
 		{
-			$result = "{ success: false, error: ".$data[1]."}";
+			$result = '{ "success": false, error: '.$data[1].'}';
 		}
 
 		return $result;	
@@ -222,11 +223,11 @@ require_once("model/view_ventas.dao.php");
 
 		if ( $data[0] != false )
 		{
-			$result = "{ success: true, datos: ".json_encode($data)."}";
+			$result = '{ "success": true, datos: '.json_encode($data[0]).'}';
 		}
 		else
 		{
-			$result = "{ success: false, error: ".$data[1]."}";
+			$result = '{ "success": false, error: '.$data[1].'}';
 		}
 
 		return $result;	
@@ -256,11 +257,11 @@ require_once("model/view_ventas.dao.php");
 
 		if ( $data[0] != false )
 		{
-			$result = "{ success: true, datos: ".json_encode($data)."}";
+			$result = '{ "success": true, "datos": '.json_encode($data).'}';
 		}
 		else
 		{
-			$result = "{ success: false, error: ".$data[1]."}";
+			$result = '{ "success": false, "error": '.$data[1].'}';
 		}
 
 		return $result;	
@@ -291,11 +292,11 @@ require_once("model/view_ventas.dao.php");
 
 		if ( $data[0] != false )
 		{
-			$result = "{ success: true, datos: ".json_encode($data)."}";
+			$result = '{ "success": true, "datos": '.json_encode($data).'}';
 		}
 		else
 		{
-			$result = "{ success: false, error: ".$data[1]."}";
+			$result = '{ "success": false, "error": '.$data[1].'}';
 		}
 
 		return $result;	
@@ -325,11 +326,11 @@ require_once("model/view_ventas.dao.php");
 
 		if ( $data[0] != false )
 		{
-			$result = "{ success: true, datos: ".json_encode($data)."}";
+			$result = '{ "success": true, "datos": '.json_encode($data).'}';
 		}
 		else
 		{
-			$result = "{ success: false, error: ".$data[1]."}";
+			$result = '{ "success": false, "error": '.$data[1].'}';
 		}
 
 		return $result;	
@@ -360,11 +361,11 @@ require_once("model/view_ventas.dao.php");
 
 		if ( $data[0] != false )
 		{
-			$result = "{ success: true, datos: ".json_encode($data)."}";
+			$result = '{ "success": true, "datos": '.json_encode($data).'}';
 		}
 		else
 		{
-			$result = "{ success: false, error: ".$data[1]."}";
+			$result = '{ "success": false, "error": '.$data[1].'}';
 		}
 
 		return $result;	

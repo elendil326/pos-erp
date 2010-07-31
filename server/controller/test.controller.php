@@ -298,6 +298,48 @@ try{
 	
 }
 
+function test1()
+{
+
+
+	$ventas = VentasDAO::getAll();
+	
+	foreach($ventas as $venta)
+	{
+	
+		$randDay = rand(1,28);
+		$randMonth = rand(1,12);
+		$randYear = rand(2009,2010);
+		
+		$randHour = rand(0,24);
+		$randMinute = rand(0,59);
+		$randSec = rand(0,59);
+		
+		
+		if($randDay < 10) $randDay = '0'.$randDay;
+		if($randMonth < 10) $randMonth = '0'.$randMonth;
+		
+		if($randHour < 10) $randHour = '0'.$randHour;
+		if($randMinute < 10) $randMinute = '0'.$randMinute;
+		if($randSec < 10) $randSec = '0'.$randSec;
+	
+		$randDate = $randYear.'-'.$randMonth.'-'.$randDay.' '.$randHour.':'.$randMinute.':'.$randSec;
+	
+		//div("Fecha random: ", $randDate);
+	
+		$venta->setFecha($randDate);
+		if(VentasDAO::save($venta))
+		{
+			div("Venta actualizada correctamente: ", $randDate);
+		}
+		else
+		{
+			div("Error al actualizar venta: ", $randDate);
+		}
+	
+	}
+}
+
 function generarVentas()
 {
 	test();
@@ -306,7 +348,7 @@ function generarVentas()
 
 switch($args['action'])
 {
-	case 901: generarVentas(); break;
+	case 901: test1(); break;
 	default: echo "bad testing";
 	
 }
