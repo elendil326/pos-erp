@@ -64,7 +64,7 @@ function save_customer($id, $rfc, $nombre, $direccion, $limite_credito, $descuen
  * @param <type> $e_mail
  */
 function update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $descuento = 0, $telefono = null, $e_mail = null) {
-    return save_customer($id, $rfc, $nombre, $direccion, $limite_credito, $descuento, $telefono, $e_mail);
+    save_customer($id, $rfc, $nombre, $direccion, $limite_credito, $descuento, $telefono, $e_mail);
 }
 
 /**
@@ -78,7 +78,7 @@ function update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $descu
  * @param <type> $e_mail 
  */
 function insert_customer($rfc, $nombre, $direccion, $limite_credito, $descuento = 0, $telefono = null, $e_mail = null) {
-    return save_customer(null, $rfc, $nombre, $direccion, $limite_credito, $descuento, $telefono, $e_mail);
+    save_customer(null, $rfc, $nombre, $direccion, $limite_credito, $descuento, $telefono, $e_mail);
 }
 
 /**
@@ -104,22 +104,20 @@ function delete_customer($id_cliente) {
 }
 
 function list_customers() {
-    $clientes = ClienteDAO::getAll();
-
+	$clientes = ClienteDAO::getAll();
     $ans = '';
     foreach ($clientes as $cliente) :
-            $ans .= sprintf("%s,", $cliente->getJSON());
+            //$ans .= sprintf("%s,", $cliente->getJSON());
+			//$ans .= sprintf("%s,", json_encode( array("nombre"=> $cliente->getNombre() ) ) );
+			//$aux = array();
+			//array_push( $aux, json_decode($cliente,true) );
+			$tmp = substr( $cliente, 1, -1 );//[{jgkjgk}] -> {jgkjgk}
+			$ans .= $tmp."," ;
     endforeach;
-
-    $ans = sprint("datos:[%s]", $ans);
-
-    return str_replace("},]", "}]", $ans);
-    /*
-        $clientes = ClienteDAO::customQuery($query, $params);
-
-       //clientes almacena el record set que envia adodb
-
-     */
+	$out = substr($ans,0,-1);
+    $ans = sprintf("{success:true, datos:[%s] }", $out);
+    return $ans;
+ 
 }
 
 /**
@@ -132,11 +130,12 @@ function show_customer($id_cliente) {
     }
     $cliente = ClienteDAO::getByPK($id_cliente);
     if (is_object($cliente)) {
-        return sprintf("success: true, datos: %s", $cliente->getJSON());
+        return sprintf("success: true, datos: %s", json_encode($cliente) );
     } else {
         return "{success: false, reason: 'No existe cliente con ese id.' }";
     }
 }
+
 
 
 function getGridDataAllClientes($page,$rp,$sortname,$sortorder,$search,$qtype)
