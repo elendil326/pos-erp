@@ -101,6 +101,9 @@ switch( ((int)($args['action'] / 100))*100 )
 		require_once('controller/efectivo.controller.php');
 	break;
 	
+	case 1200:
+		require_once('controller/login.controller.php');
+	break;
 }
 
 return;

@@ -1,9 +1,13 @@
+/*
+	Login window
+*/
+
 	body {
 				font-family:QuicksandBook, Helvetica, Arial, sans-serif;
 				font-size: 25px;
 				text-shadow: white 0px 1px 0px;
 				color: #273437;
-				background: white url(media/shared/fondos/2.jpg) repeat;
+				background: white url(../www/media/g3.png) repeat;
 
 				padding:0px;
 				margin:0px;		
@@ -28,38 +32,40 @@
 	
 	.login_content{
 		position: relative;
-		top: -13em;
+		top: -5em;
+		border-bottom-color: #959A9F !important;
+		border-bottom-left-radius: 5px 5px;
+		border-bottom-left-radius: 5px 5px;
+		border-bottom-right-radius: 5px 5px;
+		border-bottom-right-radius: 5px 5px;
+		border-style: solid;
+		border-width: 1px;
+		border-left-color: #61666C;
+		border-right-color: #60656B;
+		border-top-color: #474A4F !important;
+		border-top-left-radius: 5px 5px;
+		border-top-left-radius: 5px 5px;
+		border-top-right-radius: 5px 5px;
+		border-top-right-radius: 5px 5px;
+		color: white !important;
+		color: white !important;
+		font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+		margin-left: 35%;
+		margin-top: 25%;
+		text-align: center;
+		text-shadow: black 0px 1px 1px;
+		width: 300px;
+		border-bottom: 1px solid #EAEAEA;
+		border-top: 1px solid white;
 	}
 	
 	
 	.login{
-		margin: 150px ;
-		padding : 50px;
-		height: 5em;
+		
+		color: black;
+		padding: 0.8em;
+		
 
-		width: 500px;
-
-		filter:alpha(opacity=50);
-		-moz-opacity:0.5;
-
-		behavior: url(media/border-radius.htc);
-		
-		opacity:0.6;
-		
-		border-radius: 10px;
-		-moz-border-radius: 10px;
-	    -webkit-border-radius: 10px;
-	    -khtml-border-radius: 10px;
-	
-		
-		-moz-box-shadow: 10px 10px 30px hsla(0,0%,0%,.9);
-		-webkit-box-shadow: 10px 10px 30px hsla(0,0%,0%,.9);
-		box-shadow: 10px 10px 30px hsla(0,0%,0%,.9);
-	
-		display: block;
-		background: white url(media/shared/setOwner.jpg) no-repeat 40px;
-		text-align: right;
-		
 	}
 
 
@@ -94,7 +100,9 @@
 		height: 10px;
 		padding:10px;
 		display: none;
-		font-size: 12px;
+		font-size: 15px;
+		color: white;
+		margin-top: 10%;
 	}
 	
 	#message.success{
