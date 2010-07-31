@@ -35,8 +35,11 @@ function sendLogin( $u, $p )
 	}else{
 		unset( $_SESSION[ 'c' ] );
 	}
+
 	
 	$user = $res[0];
+	
+
 	
 	$grpu = new GruposUsuarios();
 	$grpu->setIdUsuario( $user->getIdUsuario() );

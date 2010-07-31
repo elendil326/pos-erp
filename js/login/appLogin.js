@@ -12,7 +12,7 @@ AppLogin = function ()
 	
 	this._init();
 
-}
+};
 
 
 
@@ -20,7 +20,7 @@ AppLogin.prototype._init = function ()
 {
 	this.createBasicHTML();
 
-}
+};
 
 
 AppLogin.prototype.createBasicHTML = function ()
@@ -35,7 +35,7 @@ AppLogin.prototype.createBasicHTML = function ()
 	html_content += '	<div><input type="button" id="login2" style="width: 70px" value="aceptar" onclick="login.checkCurrentLoginInfo()"></div>';
 	html_content += "</div>";
 	document.getElementById("work_zone").innerHTML = html_content;	
-}
+};
 
 
 AppLogin.prototype.checkCurrentLoginInfo = function ()
@@ -55,7 +55,7 @@ AppLogin.prototype.checkCurrentLoginInfo = function ()
       	$("#login_content").effect("shake", { times:2 }, 100);
 	}
 	
-}
+};
 
 
 
@@ -75,13 +75,13 @@ AppLogin.prototype.submitData = function ( u, p )
 			});
 	  	});
   	});
-}
+};
 
 
 AppLogin.prototype.wrong = function ( t )
 {
 	if(DEBUG){
-		console.log("Credenciales invalidas o algo anda mal.", "intentos:" + t )
+		console.log("Credenciales invalidas o algo anda mal.", "intentos:" + t );
 	}
 	
 	//limpiar los campos
@@ -91,7 +91,7 @@ AppLogin.prototype.wrong = function ( t )
    	$('#login_content').fadeIn('slow', function() {
    		$("#login_content").effect("shake", { times:2 }, 100);
 	});
-}
+};
 
 
 AppLogin.prototype.ajaxReturned = function (data)
@@ -132,7 +132,7 @@ AppLogin.prototype.ajaxReturned = function (data)
 					case 101 :
 					
 						if(DEBUG){
-							console.warn(x.text)
+							console.warn( x.text );
 						}
 						alert(x.text);
 						login.wrong(  );
@@ -143,11 +143,15 @@ AppLogin.prototype.ajaxReturned = function (data)
 			
 			//verificar sucursal
 			login.verificarSucursal();
-
+			
+			if(DEBUG){
+				console.log("Sucursal" , x.payload.sucursal);
+			}
+			
 			window.location = x.payload.redir;
 
   	});
-}
+};
 
 
 
@@ -155,7 +159,5 @@ AppLogin.prototype.ajaxReturned = function (data)
 AppLogin.prototype.verificarSucursal = function ()
 {
 			
-			if(DEBUG){
-				console.log("Sucursal" , x.payload.sucursal);
-			}
-}
+
+};
