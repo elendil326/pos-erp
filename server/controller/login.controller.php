@@ -69,32 +69,35 @@ function sendLogin( $u, $p )
 	
 	$suc = SucursalDAO::getByPK( $user->getIdSucursal() );
 	
+	//token de seguridad, 
 	
 	switch($grp->getNombre()){
 		case 'Administrador' : 
 			echo "{\"succes\": true , \"payload\": {  \"sucursal\": null,\"redir\": \"admin/\" }}";	
-			$_SESSION['userid'] =  $user->getIdUsuario() ;
-			$_SESSION['grupo'] = crypt( $grpu->getIdGrupo() );
-			$_SESSION['sucursal'] = crypt( $user->getIdSucursal() );
-			$_SESSION['timeout'] = $__ADMIN_TIME_OUT;
+			
+			$_SESSION['userid'] =  $user->getIdUsuario();
+			$_SESSION['sucursal'] =  $user->getIdSucursal();
+			$_SESSION['timeout'] = $__ADMIN_TIME_OUT;			
+			$_SESSION['token'] = crypt( $grpu->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina" );
 			$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
 		break;
 		
 		case 'Gerente':
 			echo "{\"succes\": true , \"payload\": {  \"sucursal_add\": \"" . $suc->getDireccion() . "\", \"sucursal\": " . $user->getIdSucursal() . ", \"redir\": \"pos-start.html\" }}";	
-			$_SESSION['userid'] =  $user->getIdUsuario() ;
-			$_SESSION['grupo'] = crypt( $grpu->getIdGrupo() );
-			$_SESSION['sucursal'] = crypt( $user->getIdSucursal() );
+			$_SESSION['userid'] =  $user->getIdUsuario();
+			$_SESSION['sucursal'] =  $user->getIdSucursal();
 			$_SESSION['timeout'] = $__GERENTE_TIME_OUT;
+			$_SESSION['token'] = crypt( $grpu->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina" );
 			$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
 		break;
 		
 		case 'Cajero':
 			echo "{\"succes\": true , \"payload\": {  \"sucursal_add\": \"" . $suc->getDireccion() . "\", \"sucursal\": " . $user->getIdSucursal() . ", \"redir\": \"pos-start.html\" }}";	
-			$_SESSION['userid'] =  $user->getIdUsuario() ;
-			$_SESSION['grupo'] = crypt( $grpu->getIdGrupo() );
-			$_SESSION['sucursal'] = crypt( $user->getIdSucursal() );
-			$_SESSION['timeout'] = $__CAJERO_TIME_OUT;
+			$_SESSION['userid'] =  $user->getIdUsuario();
+			$_SESSION['sucursal'] =  $user->getIdSucursal();
+			$_SESSION['grupo'] = $grpu->getIdGrupo();
+			$_SESSION['timeout'] = $__CAJERO_TIME_OUT;			
+			$_SESSION['token'] = crypt( $user->getIdUsuario()."-".$grpu->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina" );
 			$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
 		break;
 	}
@@ -107,13 +110,27 @@ function sendLogin( $u, $p )
 }
 
 
+function checkSecurityToken()
+{
+	$current_token = $_SESSION['userid']."-".$_SESSION['grupo']."-".$_SESSION['sucursal']."kaffeina";
+	
+	if (crypt($curren_token, $_SESSION['token']) == $_SESSION['token']) {
+	 	return true;
+	}else{
+		return false;
+	}
+}
+
+
 function checkCurrentSession()
 {
 	
 	//revisar si estoy loginiiiado, salirme
-	if( isset( $_SESSION['grupo'] ) || 
+	if( isset( $_SESSION['token'] ) || 
+		isset( $_SESSION['userid'] ) || 
 		isset( $_SESSION['sucursal'] ) || 
 		isset( $_SESSION['timeout'] ) ||
+		isset( $_SESSION['token'] ) || 
 		isset( $_SESSION['HTTP_USER_AGENT'] )
 	){
 		logOut();
@@ -136,9 +153,12 @@ function checkCurrentSession()
 function logOut( $verbose = false )
 {
 	//cerrar sesion
-	unset( $_SESSION['grupo'] );
+	
+	unset( $_SESSION['token'] ); 
+	unset( $_SESSION['userid'] );
 	unset( $_SESSION['sucursal'] );
 	unset( $_SESSION['timeout'] );
+	unset( $_SESSION['token'] );
 	unset( $_SESSION['HTTP_USER_AGENT'] );
 	
 	if($verbose) { 

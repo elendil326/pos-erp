@@ -577,13 +577,14 @@ ApplicationVender.prototype.doAddProduct = function (button, event)
 	
 	//buscar si este producto existe
 	POS.AJAXandDECODE({
-			method: '1301',
+			action: '1301',
 			id_producto : prodID
 		}, 
 		function (datos){
 			
 			//ya llego el request con los datos si existe o no	
-			if(!datos.success){
+			if(typeof(datos.success) !== 'undefined'){
+				
 				POS.aviso("Mostrador", datos.reason);
 				
 				//clear the textbox
@@ -591,14 +592,14 @@ ApplicationVender.prototype.doAddProduct = function (button, event)
 				
 				return;
 			}
-			
+
 			//crear el item
 			var item = {
-				id 			: datos.datos[0].id_producto,
-				name 		: datos.datos[0].nombre,
-				description : datos.datos[0].denominacion,
-				cost 		: datos.datos[0].precio_venta,
-				existencias : datos.datos[0].existencias,
+				id 			: datos.id_producto,
+				name 		: datos.nombre,
+				description : datos.denominacion,
+				cost 		: datos.precio_venta,
+				existencias : datos.existencias,
 				cantidad	: 1
 			};
 				
@@ -947,11 +948,15 @@ ApplicationVender.prototype.doVentaLogicCredito = function ()
 	var cliente = ApplicationVender.currentInstance.cliente.iden;
 	
 	POS.AJAXandDECODE({
-			method: 'insertarVenta',
+			action: '1303',
 			id_cliente: cliente,
 			tipo_venta: 0,
 			jsonItems: jsonItems
 		}, function(result){
+			
+			
+				console.log(result);
+				return;
 				if (result.success)
 				{
 
@@ -1036,7 +1041,6 @@ ApplicationVender.prototype.doVentaLogic = function ()
 	
 	var total = (subtotal*iva) + subtotal;
 	
-
 	var pago = Ext.getCmp("mostrador_pago_id").getValue();
 	
 	if( pago != parseFloat(pago) ){
@@ -1066,22 +1070,18 @@ ApplicationVender.prototype.doVentaLogic = function ()
 	
 	var jsonItems = Ext.util.JSON.encode(ApplicationVender.currentInstance.htmlCart_items);
 	
-	
-	//hardcoded !!!
-	var cliente = ApplicationVender.currentInstance.cliente === null ? 24 : ApplicationVender.currentInstance.cliente.iden;
+	var cliente = ApplicationVender.currentInstance.cliente === null ? 'caja_comun' : ApplicationVender.currentInstance.cliente.iden;
 	
 	POS.AJAXandDECODE(
 					//Parametros
 					{
-						method: 'insertarVenta',
+						action: '1303',
 						id_cliente: cliente,
-						tipo_venta: 1,
+						tipo_venta: 'contado',
 						jsonItems: jsonItems
 					},
 					//Funcion success
 					function(result){
-						
-						
 						
 						if (result.success)
 						{
@@ -1094,7 +1094,7 @@ ApplicationVender.prototype.doVentaLogic = function ()
 							
 						}else{
 							if(DEBUG){
-								console.warn("Mostrador: Venta no exitosa ", result);	
+								console.warn("Mostrador: Venta no exitosa ", result);
 							}
 						}
 					},
@@ -1365,12 +1365,12 @@ ApplicationVender.prototype.buscarCliente = function ()
 {
 	//retrive client list from server
 	POS.AJAXandDECODE({
-			method : "listarClientes"
+			action : "1302"
 		},
 		function(response){
 			
 			//success
-			if(!response.success){
+			if((typeof(response.success) !== 'undefined') && (response.success == false)){
 				POS.aviso("Mostrador", "Error al traer la lista de clintes.");
 				return;
 			}
@@ -1378,20 +1378,23 @@ ApplicationVender.prototype.buscarCliente = function ()
 
 			//createArray for client data
 			var clientesData = [];
-			
+
+			var clientes = response[0];
 			
 			//fill array
-			for(a = 0; a < response.datos.length ; a++){
+			for(a = 0; a < response.length ; a++){
+
 				clientesData.push( {
-					iden: 		response.datos[a].id_cliente, 
-					nombre: 	response.datos[a].nombre, 
-					rfc: 		response.datos[a].rfc,
-					direccion: 	response.datos[a].direccion,
-					telefono: 	response.datos[a].telefono,
-					e_mail: 	response.datos[a].e_mail,
-					descuento: 			response.datos[a].descuento,
-					limite_credito: 	response.datos[a].limite_credito,
-					credito_restante: 	response.datos[a].credito_restante
+					
+					iden: 		response[a][0].id_cliente, 
+					nombre: 	response[a][0].nombre, 
+					rfc: 		response[a][0].rfc,
+					direccion: 	response[a][0].direccion,
+					telefono: 	response[a][0].telefono,
+					e_mail: 	response[a][0].e_mail,
+					descuento: 			response[a][0].descuento,
+					limite_credito: 	response[a][0].limite_credito
+					
 					});	
 			}
 
