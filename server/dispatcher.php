@@ -6,14 +6,14 @@
 * gestiona los niveles de seguridad de los usuarios y recibe los datos necesarios
 * para despues pasarlos a la aplicación adecuada.
 *
-* @author Manuel Alejandro Gómez Nicasio <alejandro.gomez@alejandrogomez.org>
+* @author Manuel Alejandro Gómez Nicasio <alejandro.gomez@alejandrogomez.org>, Alan Gonzalez <alan@caffeina.mx>
 * @package pos
 */
 
 
 
 /**
- * iniciar la sesion y comprobar seguridad basica
+ * iniciar la sesion y comprobar seguridad 
  */
 $ss = session_start (  );
 
@@ -25,7 +25,8 @@ if(!$ss){
 //si voy a hacer algo que no sea iniciar sesion
 if( $_REQUEST['action']  != "1201" )
 {
-	//verificar que no se haya modificado el user agent
+	//verificar que no se haya modificado el user agent, el user agent esta encriptado para que no pueda 
+	//ver cual es, asi como los demas datos
 	if ( ($_SESSION['HTTP_USER_AGENT'] != md5($_SERVER['HTTP_USER_AGENT'])) )
 	{
 		//log security breach
@@ -125,6 +126,9 @@ switch( ((int)($args['action'] / 100))*100 )
 	break;
 
 	case 900:
+		/* alan : test 
+	 	* funciones para probar el dao
+	 	*/
 		require_once('controller/test.controller.php');
 	break;
 
@@ -137,8 +141,19 @@ switch( ((int)($args['action'] / 100))*100 )
 	break;
 	
 	case 1200:
+		/* alan : login 
+		 * funciones de inicio de sesion
+		 */
 		require_once('controller/login.controller.php');
 	break;
+	
+	case 1300:
+		/* alan : mostrador 
+		 * funciones de venta de mostrador
+		 */
+		require_once('controller/mostrador.controller.php');
+	break;
+	
 }
 
 return;

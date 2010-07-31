@@ -577,7 +577,7 @@ ApplicationVender.prototype.doAddProduct = function (button, event)
 	
 	//buscar si este producto existe
 	POS.AJAXandDECODE({
-			method: 'existenciaProductoSucursal',
+			method: '1301',
 			id_producto : prodID
 		}, 
 		function (datos){

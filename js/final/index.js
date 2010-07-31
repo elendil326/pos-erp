@@ -193,7 +193,7 @@ POS.AJAXandDECODE = function (params, success, failure)
 	
 	Ext.Ajax.request({
 		
-		url: 'serverProxy.php',
+		url: 'proxy.php',
 		success: function (response){
 
 			var datos;
