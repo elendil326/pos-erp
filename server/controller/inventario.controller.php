@@ -13,13 +13,10 @@
 */
 
 
-require_once('../server/model/model.inc.php');
-/*
 //no se porque no funcionan
 require_once('../server/model/inventario.dao.php');
 require_once('../server/model/detalle_inventario.dao.php');
-*/
-
+require_once('../server/model/sucursal.dao.php');
 
 /**
 *	insertarInventario
@@ -36,7 +33,7 @@ require_once('../server/model/detalle_inventario.dao.php');
 *
 */
 	//
-	function insertarInventario($nombre,$denominacion)
+	function insertarInventario($nombre,$denominacion)//1701
 	{
 	
 		return "ok";
@@ -87,7 +84,7 @@ require_once('../server/model/detalle_inventario.dao.php');
 *	
 */
 
-	function eliminarInventario($idInventario)
+	function eliminarInventario($idInventario)//1702
 	{
 		return "ok";
 	/*
@@ -129,7 +126,7 @@ require_once('../server/model/detalle_inventario.dao.php');
 *	
 */ 
 
-	function actualizarInventario($idInventario,$nombre,$denominacion)
+	function actualizarInventario($idInventario,$nombre,$denominacion)//1703
 	{
 		return "ok";
 		/*
@@ -182,19 +179,33 @@ require_once('../server/model/detalle_inventario.dao.php');
 *	
 */
 
-	function listarProductosInventario(){
-		return "ok";
-		/*
+	function listarProductosInventario()//1704
+	{
 		$sucursal = $_SESSION['sucursal'];
-		$listar = new listar("select inventario.id_producto, inventario.denominacion, detalle_inventario.precio_venta,detalle_inventario.existencias,detalle_inventario.id_sucursal,detalle_inventario.min from inventario inner join detalle_inventario on inventario.id_producto = detalle_inventario.id_producto where detalle_inventario.id_sucursal=?",array($sucursal));
+		$detalleInventarioSearch=new DetalleInventario();
+		$detallesInventario=DetalleInventarioDAO::search($detalleInventarioSearch);
+		
+		foreach ($detallesInventario as $detalle)
+		{
+			//$inventario=InventarioDAO::getByPK($detalle->getIdProducto());
+			return "ok";
+		}
+		
+		$listar = new listar("select inventario.id_producto, inventario.denominacion, detalle_inventario.precio_venta,detalle_inventario.existencias,detalle_inventario.id_sucursal,detalle_inventario.min 
+		from inventario inner join 
+		detalle_inventario 
+		on inventario.id_producto = detalle_inventario.id_producto 
+		where detalle_inventario.id_sucursal=?",array($sucursal));
 
 		//imprimimos el json
 		echo $listar->lista();
-		return;
-		*/
+		return $resul;
 	}
 	//funcion listarProductosInventario
-	
+/*
+salida ejemplo:
+{ success : true, datos : [{"id_producto":"2","denominacion":"arcu. Curabitur ut odio vel","precio_venta":"272","existencias":"92","id_sucursal":"28","min":"61"}]}
+*/	
 
 
 /**
@@ -209,12 +220,11 @@ require_once('../server/model/detalle_inventario.dao.php');
 *	@see 
 *	
 */                                                                
-         case '1705':   //'listarProductosInventarioSucursal':
-        	echo "ok";
-                break;
+
                 
-	function listarProductosInventarioSucursal($idSucursal)
+	function listarProductosInventarioSucursal($idSucursal)//1705
 	{
+		
 		/*//verificamos que no nos envien datos vacios
 		if(!empty($_REQUEST['id_sucursal']))
 		{
@@ -230,7 +240,10 @@ require_once('../server/model/detalle_inventario.dao.php');
 		return;
 		*/
 	}
-
+/*
+salida ejemplo
+{ success : true, datos : [{"id_producto":"9","denominacion":"malesuada fames ac turpis eges","precio_venta":"203","existencias":"196","min":"79"},{"id_producto":"38","denominacion":"Phasellus elit pede, malesuada","precio_venta":"343","existencias":"31","min":"85"}]}
+*/
 
 
 
@@ -252,7 +265,7 @@ require_once('../server/model/detalle_inventario.dao.php');
 */
 
 
-	function existenciaProductoSucursal()
+	function existenciaProductoSucursal()//1706
 	{
 		return "ok";
 		/*
@@ -321,11 +334,13 @@ require_once('../server/model/detalle_inventario.dao.php');
 *       @access public
 *       @return JSON con el resultado de la operacion.
 *	@params String [$nombre] nombre del nuevo producto
-*	@params 
+*	@params String [$denomincion] descripcion del nuevo producto
+*	@params float [$precio] precio al que venderemos el nuevo producto en la sucursal actual
+*	@params	$min [$min] existencia minima del producto dentro de la sucursal actual
 *	@see 
 *	
 */
-	function agregarNuevoProducto($nombre,$denominacion,$precio,$min)
+	function agregarNuevoProducto($nombre,$denominacion,$precio,$min)//1707
 	{
 		return "ok";
 		/*
@@ -378,8 +393,30 @@ require_once('../server/model/detalle_inventario.dao.php');
 		return;
 		*/
 	}
-
-
+	
+	
+/**
+*
+* 	listarSucursal
+*
+* 	esta funcion devuelve los datos de todas las sucursales
+*
+*       @access public
+*       @return JSON con los datos de todas las sucursales.
+*	@see 
+*	
+*/
+	function listarSucursal()//1708
+	{
+		$sucursales=SucursalDAO::getAll();
+		$resul='{ "success" : true , "datos" : [';
+		foreach ($sucursales as $sucursal)
+		{
+			$resul.='{ "id_sucursal" : "'.$sucursal->getIdSucursal().'", "descripcion" : "'.$sucursal->getDescripcion().'" , "direccion" : "'.$sucursal->getDireccion().'" } ,';
+		}
+		$resul.=']}';
+		return str_replace(",]", "]",$resul);
+	}
 
 //inventario dispatcher
 switch($args['action'])
@@ -398,11 +435,11 @@ switch($args['action'])
                 break;
                                                 
          case '1704':   //'listarProductosInventario':
-        	echo "ok";
+        	echo listarProductosInventario();
                 break;
                                                                 
          case '1705':   //'listarProductosInventarioSucursal':
-        	echo "ok";
+        	echo listarProductosInventarioSucursal();
                 break;
                                                                                 
          case '1706':   //'existenciaProductoSucursal':
@@ -412,8 +449,12 @@ switch($args['action'])
          case '1707':   //'agregarNuevoProducto':
         	echo "ok";
                 break;
+                                                                                                                              
+         case '1708':   //'listarSucursal':
+        	echo listarSucursal();
+                break;
                 
-                  
+         default:  
                 
          default:
          	echo '{ "success" : "false" }';

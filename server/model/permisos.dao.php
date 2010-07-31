@@ -1,8 +1,8 @@
 <?php
 
+require_once ('Estructura.php');
 require_once("base/permisos.dao.base.php");
 require_once("base/permisos.vo.base.php");
-require_once ('Estructura.php');
 /** Permisos Data Access Object (DAO).
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 

@@ -71,7 +71,7 @@ ApplicationGastos.prototype.loadSucursalID = function(){
 	}, function(result){
 		if (result.success == true){
 			
-			ApplicationGastos.currentInstance.sucursal_id = result.datos[0].sucursal_id;
+			ApplicationGastos.currentInstance.sucursal_id = result.id_sucursal;
 			
 		}
 		

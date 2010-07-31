@@ -1,8 +1,8 @@
 <?php
 
+require_once ('Estructura.php');
 require_once("base/compras.dao.base.php");
 require_once("base/compras.vo.base.php");
-require_once ('Estructura.php');
 /** Compras Data Access Object (DAO).
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 

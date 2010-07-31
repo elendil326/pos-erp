@@ -99,10 +99,10 @@ ApplicationInventario.prototype.loadSucursalID = function(){
 	
 	
 	POS.AJAXandDECODE({
-		method: 'obtenerSucursalUsuario'
+		action: 1607//'obtenerSucursalUsuario'
 	}, function(result){
 		if (result.success){
-			ApplicationInventario.currentInstance.sucursal_id = result.datos[0].sucursal_id;
+			ApplicationInventario.currentInstance.sucursal_id = result.id_sucursal;
 			//ApplicationInventario.currentInstance.initSucursalPanel(result.datos[0].sucursal_id);
 		}
 		//ApplicationInventario.currentInstance.sucursal_id 
@@ -187,7 +187,7 @@ ApplicationInventario.prototype.loadHomePanel = function()
 ApplicationInventario.prototype.getMosaicItems = function(){
 
 	POS.AJAXandDECODE({ 
-		method: 'listarSucursal'
+		action: 1708//'listarSucursal'
 		
 		}, function( result ){
 			
@@ -333,13 +333,13 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 	if ( ApplicationInventario.mostrarTodasSucursales == true ){
 		
 		AJAXparams = {
-						method: 'listarProductosInventarioSucursal',
+						action: 'listarProductosInventarioSucursal',//1705,//
 						id_sucursal: sucursal_id
 					};
 	}
 	else{
 		AJAXparams = {
-					method: 'listarProductosInventario'
+					action: 1704//'listarProductosInventario'
 		};
 	}
 	
@@ -521,7 +521,7 @@ ApplicationInventario.prototype.addNewProductLogic = function(){
 	POS.AJAXandDECODE(
 			//Parametros
 			{
-				method: 'agregarNuevoProducto',
+				action: 'agregarNuevoProducto',
 				denominacion: formData['denominacion'],
 				nombre: formData['nombre'],
 				precio: formData['precio_venta'],
@@ -576,7 +576,7 @@ ApplicationInventario.prototype.getDetalles = function( sucursal_id )
 	//get data via ajax
 	POS.AJAXandDECODE(
 		{
-			method: 'detallesSucursal',
+			action: 'detallesSucursal',
 			id_sucursal: sucursal_id
 		},function(datos){
 
