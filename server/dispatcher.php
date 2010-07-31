@@ -71,7 +71,6 @@ require_once('mx.caffeina.logger/logger.php');
 require_once('db/DBConnection.php');
 
 
-
 //Comprobamos que la variable que trae la funcion a ejecutar exista y despues 
 //entramos al switch.
 if ( !isset($_REQUEST['action']) )
@@ -79,7 +78,6 @@ if ( !isset($_REQUEST['action']) )
 	echo "{ \"success\": false }";
         return;
 }
-
 
 
 $args = $_REQUEST;

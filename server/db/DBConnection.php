@@ -32,6 +32,5 @@ try{
 } catch (exception $e) {
     global $logger;
     $logger->log($e->getMessage(), PEAR_LOG_EMERG);
-	echo "asdfexit";
 }
 ?>
