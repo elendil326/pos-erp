@@ -31,7 +31,7 @@ require_once("../server/model/view_detalle_venta.dao.php");
 
 		if ( $data[0] != false )
 		{
-			$result = '{ "success": true, "datos": '.json_encode($data[0]).'}';
+			$result = '{ "success": true, "datos": '.json_encode($data).'}';
 		}
 		else
 		{
