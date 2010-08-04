@@ -62,6 +62,16 @@
 	$__GERENTE_TIME_OUT = 3600;
 	$__CAJERO_TIME_OUT 	= 3600;
 	
-	
+	//calculos
+	//funcion para calular el total
+	//subtotal - pesos
+	//iva - porcentaje
+	//descuento - porcentaje
+	function __pos__calcularTotal($subtotal, $iva, $descuento)
+	{
+		//descuento sobre iva
+		return (($subtotal * $iva) + $subtotal);
+
+	}
 	
 	

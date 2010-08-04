@@ -321,7 +321,7 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 	html += "<div class='ApplicationVender-item' style='border:0px;'>" 
 	+ "<div class='trash' >&nbsp;</div>"
 	+ "<div class='id'>ID</div>" 
-	+ "<div class='name'>Nombre</div>" 
+	+ "<div class='name' >Nombre</div>" 
 	+ "<div class='description'>Descripcion</div>" 
 	+ "<div class='cost'>Precio</div>"
 	+ "<div class='qty_dummy'>&nbsp;</div>"
@@ -332,16 +332,6 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 	
 	
 	
-	
-	
-	
-	
-
-
-
-
-
-
 	//preparar un html para los totales
 	var totals_html = "";
 
@@ -846,7 +836,15 @@ ApplicationVender.prototype.doPayContadoKeyUp = function (  )
 {
 	if(event.keyCode == 13 )
 	{
-		ApplicationVender.currentInstance.doVentaLogic(  );
+		var val = Ext.getCmp("mostrador_cambio_id").getValue( );
+		
+		if( (val.length > 0) &&  ( val != "Dinero insuficiente." ) ){
+			sink.Main.ui.setCard( ApplicationVender.currentInstance.venderMainPanel, 'fade' );
+		}else{
+			ApplicationVender.currentInstance.doVentaLogic(  );
+		}
+		
+
 	}
 };
 
@@ -953,13 +951,10 @@ ApplicationVender.prototype.doVentaLogicCredito = function ()
 	POS.AJAXandDECODE({
 			action: '2103',
 			id_cliente: cliente,
-			tipo_venta: 0,
+			tipo_venta: 'credito',
 			jsonItems: jsonItems
 		}, function(result){
-			
-			
-				console.log(result);
-				return;
+
 				if (result.success)
 				{
 
@@ -991,6 +986,7 @@ ApplicationVender.prototype.ventaCreditoExitosa = function ()
 {
 	
 
+	appImpresora.ImprimirTicket();
 	
 	//quitar el menu de cancelar venta y eso
 	Ext.getCmp("doVentaCreditoPanel").getDockedItems()[0].hide();
@@ -998,14 +994,27 @@ ApplicationVender.prototype.ventaCreditoExitosa = function ()
 	Ext.getCmp("doVentaCreditoPanel").add({ 
 			html : '<div align="center">Venta a credito completada</div>',
 		});
-
+		
+	/*
+	no puede requerir ffactura en una compra a credito hasta que 
+	termine de saldar
 	Ext.getCmp("doVentaCreditoPanel").add({ 
 			xtype:'button', 
 			text:'Requerir Factura',
 			style: "margin-left: 45%; margin-top: 20px; width: 200px;",
 			ui: 'action'
 		});
-		
+	*/	
+	
+	Ext.getCmp("doVentaCreditoPanel").add({ 
+			xtype:'button', 
+			text:'Nueva venta',
+			style: "margin-left: 45%; margin-top: 20px; width: 150px;",
+			ui: 'back',
+			handler: function (){
+				sink.Main.ui.setCard( ApplicationVender.currentInstance.venderMainPanel, 'fade' );
+			}
+		});
 		
 	Ext.getCmp("doVentaCreditoPanel").add({ 
 			xtype:'button', 
@@ -1017,7 +1026,7 @@ ApplicationVender.prototype.ventaCreditoExitosa = function ()
 	Ext.getCmp("doVentaCreditoPanel").doLayout();
 	
 	//limpiar el carrito
-	//this.doLimpiarCarrito();
+	this.doLimpiarCarrito();
 	
 };
 
@@ -1118,7 +1127,8 @@ ApplicationVender.prototype.doVentaLogic = function ()
 
 ApplicationVender.prototype.ventaContadoExitosa = function ()
 {
-	
+
+	appImpresora.ImprimirTicket();
 
 	
 	//quitar el menu de cancelar venta y eso
@@ -1140,142 +1150,21 @@ ApplicationVender.prototype.ventaContadoExitosa = function ()
 			xtype:'button', 
 			text:'Nueva venta',
 			style: "margin-left: 45%; margin-top: 20px; width: 150px;",
-			ui: 'back'
+			ui: 'back',
+			handler: function (){
+				sink.Main.ui.setCard( ApplicationVender.currentInstance.venderMainPanel, 'fade' );
+			}
 		});
 		
 	Ext.getCmp("doVentaContadoPanel").doLayout();
 	
 	//limpiar el carrito
-	//this.doLimpiarCarrito();
+	this.doLimpiarCarrito();
 	
 };
 
 
 
-ApplicationVender.prototype.doGraciasPanel = function ()
-{
-	
-	
-	return new Ext.form.FormPanel({
-	//tipo de scroll
-    scroll: 'none',
-
-	baseCls: "ApplicationVender-mainPanel",
-
-	//toolbar
-	dockedItems: [new Ext.Toolbar({
-        ui: 'dark',
-        dock: 'bottom',
-        items: [{
-				xtype:'spacer'
-			},{
-				xtype:'button', 
-				ui: 'action',
-				text:'Nueva venta'
-			}]
-    })],
-	
-	//items del formpanel
-    items: [{
-			html : 'Gracias !',
-			cls  : 'gracias',
-			baseCls: "ApplicationVender-ventaListaPanel",
-		}]
-	});
-};
-
-ApplicationVender.prototype.askForMoney = function(totalPagar){
-	
-	var pagoToolbar = new Ext.Toolbar({
-		title: 'Pago',
-		dock: 'top',
-		items: [{
-				xtype: 'button',
-				text: 'Crédito',
-				handler: function(){
-					//Comprobar aca si no ha rebasado su limite de credito
-				}
-			}, { xtype: 'spacer' } ,
-			{
-				xtype: 'button',
-				ui: 'action',
-				text: 'Aceptar',
-				handler: function(){
-				
-					//Comprobamos que se ingrese una cantidad suficiente para pagar	
-					var cantidadPago = Ext.getCmp('ApplicationVender-askForMoney-cantidad').getValue();
-					if( totalPagar > cantidadPago){
-						alert("Falta dinero");
-						return false;
-					}
-				
-					pagoOverlay.hide();
-					
-					Ext.getCmp('ApplicationVender-askForMoney-cantidad').reset();
-					var cantidadPago = Ext.getCmp('ApplicationVender-askForMoney-cantidad').getValue();
-					newPanel = ApplicationVender.currentInstance.doVenderPanel(cantidadPago);
-					sink.Main.ui.setCard(newPanel, 'slide');
-				}
-			}]
-	});
-	
-	var pagoOverlay = new Ext.Panel({
-		id: 'ApplicationVender-askForMoney-pagoOverlay',
-		floating: true,
-		modal: true,
-		centered: true,
-		width: Ext.platform.isPhone ? 260 : 400,
-		height: Ext.platform.isPhone ? 220 : 200,
-		dockedItems: pagoToolbar,
-		items: [ new Ext.form.FormPanel({
-			items:[{
-				activeItem: 0,
-				xtype: 'fieldset',
-				label: 'Pago',
-				items:[{
-					id: 'ApplicationVender-askForMoney-cantidad',
-					xtype: 'textfield',
-					label: 'Cantidad',
-					name: 'cantidad'
-				}]
-			}]
-		})]
-		
-	});
-	
-	pagoOverlay.show();
-	
-	var funcion = String.format("ApplicationVender.currentInstance.enterOnKeyUp( this, this.value, {0})", totalPagar);
-	
-	//medio feo, pero bueno
-	Ext.get("ApplicationVender-askForMoney-cantidad").dom.childNodes[1].setAttribute("onkeyup",funcion);
-	
-	//Focus a cantidad
-	document.getElementById(Ext.get('ApplicationVender-askForMoney-cantidad').dom.childNodes[1].id).focus();
-	
-	
-};
-
-ApplicationVender.prototype.enterOnKeyUp = function (a, b, total)
-{
-	if(event.keyCode == 13){
-		
-		//Comprobamos que se ingrese una cantidad suficiente para pagar	
-		var cantidadPago = Ext.getCmp('ApplicationVender-askForMoney-cantidad').getValue();
-		if( total > cantidadPago){
-			alert("Falta dinero");
-			return false;
-		}
-		
-		
-		Ext.getCmp('ApplicationVender-askForMoney-pagoOverlay').hide();
-		
-		Ext.getCmp('ApplicationVender-askForMoney-cantidad').reset();
-		newPanel = ApplicationVender.currentInstance.doVenderPanel(b);
-		sink.Main.ui.setCard(newPanel, 'slide');
-		
-	}
-};
 
 
 

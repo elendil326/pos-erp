@@ -209,8 +209,17 @@ POS.AJAXandDECODE = function (params, success, failure)
 					console.log("HTTP Request returned with code 200", datos);
 				}
 				
+				if((typeof(datos.succes) !== 'undefined') && (datos.succes === false)){
+					if((typeof(datos.reason) !== 'undefined') && datos.reason == 31416 ){
+						alert("Sesion no valida. Porfavor identifiquese de nuevo.");
+						window.location = "index.html";
+						return;
+					}
+				}
+				
 			}catch(e){
-				console.warn("Error", e);
+				console.warn("Failed to parse JSON", e);
+				console.warn("Full response : " + response.responseText);
 				return;
 			}
 			 

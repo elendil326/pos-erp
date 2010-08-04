@@ -8,11 +8,14 @@ require_once("../server/model/sucursal.dao.php");
 function sendLogin( $u, $p )
 {
 	
+	
 	global $logger;
 	$logger->setIdent("Login");
-	$logger->log("Hola !");
-	$logger->setIdent("SYSTEM CORE");
+	$logger->log("Peticion de autenticacion para el usuario " . $u . " desde " . $_SERVER['REMOTE_ADDR'] );
+
+
 		
+	
 	$user = new Usuario();
 	$user->setUsuario( $u );
 	$user->setContrasena( $p );
@@ -30,6 +33,8 @@ function sendLogin( $u, $p )
 
 	if(count($res) != 1){
 		//loggear intento fallido
+		$logger->log("Credenciales Invalidas !!", PEAR_LOG_WARNING);
+		
 		if($_SESSION[ 'c' ] < 3 )
 		{
 			echo "{\"succes\": false , \"reason\": 100, \"text\" : \"Credenciales invalidas.\", \"intentos\": ".$_SESSION[ 'c' ]." }";
@@ -39,6 +44,8 @@ function sendLogin( $u, $p )
 
 		return;
 	}else{
+		
+		$logger->log("Credenciales Aceptadas.");
 		unset( $_SESSION[ 'c' ] );
 	}
 
@@ -53,6 +60,7 @@ function sendLogin( $u, $p )
 	
 	if(count($res) < 1){
 		echo "{\"succes\": false , \"reason\": 101,  \"text\" : \"Este usuario no pertenece a ningun grupo.\" }";
+		$logger->log("Usuario " . $u . " no pertenece a niungun grupo.", PEAR_LOG_WARNING);
 		return;
 	}
 
@@ -86,6 +94,9 @@ function sendLogin( $u, $p )
 			$_SESSION['timeout'] = $__ADMIN_TIME_OUT;			
 			$_SESSION['token'] = crypt( $grpu->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina" );
 			$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
+			
+			$logger->log( "Aceptando usuario " . $u . " como Admin ");
+			
 		break;
 		
 		case 'Gerente':
@@ -95,6 +106,8 @@ function sendLogin( $u, $p )
 			$_SESSION['timeout'] = $__GERENTE_TIME_OUT;
 			$_SESSION['token'] = crypt( $grpu->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina" );
 			$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
+			
+			$logger->log( "Aceptando usuario " . $u . " como Gerente ");
 		break;
 		
 		case 'Cajero':
@@ -105,6 +118,8 @@ function sendLogin( $u, $p )
 			$_SESSION['timeout'] = $__CAJERO_TIME_OUT;			
 			$_SESSION['token'] = crypt( $user->getIdUsuario()."-".$grpu->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina" );
 			$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
+			
+			$logger->log( "Aceptando usuario " . $u . " como Cajero ");
 		break;
 	}
 	
@@ -159,6 +174,8 @@ function checkCurrentSession()
 function logOut( $verbose = false )
 {
 	//cerrar sesion
+	global $logger;
+	$logger->log("Cerrando Sesion proveniente de " . $_SERVER['REMOTE_ADDR'] . " correspondiente al usuario : " . $_SESSION['userid']);
 	
 	unset( $_SESSION['token'] ); 
 	unset( $_SESSION['userid'] );

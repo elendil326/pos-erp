@@ -27,6 +27,7 @@
 }
 
 .ApplicationVender-item{
+	overflow: hidden;
 	margin: 5px;
 	
 	-moz-border-radius: 5px;

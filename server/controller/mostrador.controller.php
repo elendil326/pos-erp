@@ -114,11 +114,15 @@ function insertarVenta($cliente, $tipo_venta, $items)
 	$venta->setIdUsuario( $usuario->getIdUsuario() );
 	$venta->setTipoVenta( $tipo_venta );
 	$venta->setIdSucursal( $usuario->getIdSucursal() );
-	
+	$venta->setDescuento( $cliente->getDescuento() );
+	$venta->setTotal( 0 );
+	$venta->setPagado( 0 );
+	$venta->setIP( $_SERVER['REMOTE_ADDR'] );
+			
 	try{
 		$resultado = VentasDAO::save($venta);		
 	}catch(Exception $e){
-		echo "{\"success\": false, \"reason\": \"". $e ."\"}";
+		echo "{\"success\": false, \"reason\": \"". addslashes($e) ."\"}";
 		return;
 	}
 	
@@ -208,6 +212,22 @@ function insertarVenta($cliente, $tipo_venta, $items)
 	
 	$venta->setSubTotal( $subtotal );
 	$venta->setIva( $totalImp );
+	$total = __pos__calcularTotal($subtotal, $totalImp, $cliente->getDescuento());
+	$venta->setTotal( $total );
+	
+	if($tipo_venta == 'contado')
+	{
+		$venta->setPagado( $total );		
+	}else{
+		
+		if($total > $cliente->getLimiteCredito()){
+			echo "{\"success\": false, \"reason\":  \"Limite de Credito excedido.\"}";
+			return;
+		}
+		
+	}
+
+	
 	try{
 		$res = VentasDAO::save( $venta );		
 	}catch(Exception $e){
@@ -218,7 +238,9 @@ function insertarVenta($cliente, $tipo_venta, $items)
 	
 	
 	//revisar que el total no pase de mi limite de credito	
-	echo("Id de esta venta" . $venta->getIdVenta() );
+	//echo("Id de esta venta" .  );
+	echo "{\"success\": true, \"v_id\":  ".$venta->getIdVenta()."}";
+	
 
 }
 
