@@ -1,52 +1,49 @@
 ﻿<?php
 switch ($args['action']) {
-    case '1001':
+	
+    case '1101':
         $rfc = $args['rfc'];
         $nombre = $args['nombre'];
         $direccion = $args['direccion'];
-        $limite_credito = $args['limite_credito'];
         $telefono = $args['telefono'];
         $e_mail = $args['e_mail'];
         unset($args);
-		include_once("controller/clientes.controller.php");
-        $ans = insert_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0);
+		include_once("proveedores.controller.php");
+        $ans = insert_provider($rfc, $nombre, $direccion, $telefono , $e_mail);
         echo $ans;
 	break;
 	
-	case '1002':
+	case '1102':
 		$id = $args['id'];
         $rfc = $args['rfc'];
         $nombre = $args['nombre'];
         $direccion = $args['direccion'];
-        $limite_credito = $args['limite_credito'];
         $telefono = $args['telefono'];
         $e_mail = $args['e_mail'];
-		$descuento = $args['descuento'];
         unset($args);
-		include_once("controller/clientes.controller.php");
-        $ans = update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0);
+        $ans = update_provider($id, $rfc, $nombre, $direccion, $telefono , $e_mail);
         echo $ans;
 	break;
 	
-	case '1003':
+	case '1103':
 		$id = $args['id'];
         unset($args);
-        $ans = delete_customer($id);
+        $ans = delete_provider($id);
         echo $ans;
 	break;
 	
-	case '1004':
+	case '1104':
 		$id = $args['id'];
         unset($args);
-        $ans = show_customer($id);
+        $ans = show_provider($id);
         echo $ans;
 	break;
 	
-	case '1005':
+	case '1105':
         unset($args);
-		include_once("controller/clientes.controller.php");
-        $ans = list_customers();
+		include_once("proveedores.controller.php");
+        $ans = list_providers();
         echo $ans;
 	break;
-}//end switch
+}// end switch
 ?>

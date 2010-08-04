@@ -42,10 +42,8 @@ require_once('../server/model/proveedor.dao.php');
 function insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra) {//01
 	 $sucursal=$_SESSION['sucursal'];
 	 $id_usuario=$_SESSION['userid'];
-	 
 	 //$sucursal=2;
 	 //$id_usuario=1;
-	 
 	 $out="";
 	 $compra = new Compras();
 	 
@@ -58,8 +56,9 @@ function insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra) 
 	 
 	 try{
 	 $ans = ComprasDAO::save($compra);
+	 
 	 }catch(Exception $e){
-		 return "{success:false, reason'No se inserto la cabecera de la compra Detalles: ".$e->getMessage()." VALOR DE LA VARIABLE SESSION: ".$id_usuario."'}";
+		 return "{success:false, reason:'No se inserto la cabecera de la compra Detalles: ".$e->getMessage()."'}";
 	 }
 	 if( $ans > 0 ){
 		 
@@ -70,8 +69,8 @@ function insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra) 
 
 		for($i=0; $i < $dim; $i++){
 			
-			if(!$modo_compra){// TOÑO MODE
-				
+			if($modo_compra == 'false' ){// TOÑO MODE
+
 				$inventario = ( $arregloItems[$i]['pesoArp'] + $arregloItems[$i]['kgR'] ) * $arregloItems[$i]['nA'];
 				
 				$pesoArpReal = $arregloItems[$i]['pesoArp'] + $arregloItems[$i]['kgR'];
@@ -80,20 +79,23 @@ function insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra) 
 				
 				$detalle_compra->setIdCompra($id_compra);
 				$detalle_compra->setIdProducto($arregloItems[$i]['id']);
-				$detalle_compra->setCantidad($inventario);
+				$detalle_compra->setCantidad($arregloItems[$i]['kgTot']);
 				$detalle_compra->setPrecio($arregloItems[$i]['prKg']);
 				$detalle_compra->setPesoArpillaPagado($arregloItems[$i]['pesoArp']);
 				$detalle_compra->setPesoArpillaReal($pesoArpReal);
 				
+				try{
 				$resul = DetalleCompraDAO::save($detalle_compra);
-				
-				if($resul){
+				}catch(Exception $e){
+					return "{success:false, reason:'No se inserto el detalle de la compra Detalles: ".$e->getMessage()."'}";
+				}
+				if( $resul > 0 ){
 					
 					$detalle_inventario = DetalleInventarioDAO::getByPK($arregloItems[$i]['id'],$sucursal);
 					$detalle_inventario->setExistencias( $detalle_inventario->getExistencias() + $inventario);
 					$res = DetalleInventarioDAO::save($detalle_inventario);
 					
-					if($res){
+					if( $res > 0 ){
 						$subtotalCompra += $arregloItems[$i]['prKg'] * $arregloItems[$i]['kgTot'];
 					}else{//if res
 						$out .=" - No se agrego al inventario el producto con id: ".$arregloItems[$i]['id'];
@@ -102,8 +104,7 @@ function insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra) 
 					$out .= " - No se inserto el producto con id: ".$arregloItems[$i]['id'];
 				}
 				
-			}else{//if else modo_compra GENERAL MODE
-								
+			}else{//if else modo_compra GENERAL MODE	
 				$cantidad = $arregloItems[$i]['cantidad'];
 				//sacar el precio a como lo da el proveedor
 				$productoProveedor = new ProductosProveedor();
@@ -120,12 +121,10 @@ function insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra) 
 				$detalle_compra->setIdProducto($arregloItems[$i]['id']);
 				$detalle_compra->setCantidad($cantidad);
 				$detalle_compra->setPrecio($precioP);
-				//$detalle_compra->setPesoArpillaPagado(0);
-				//$detalle_compra->setPesoArpillaReal(0);
 				
 				$resul = DetalleCompraDAO::save($detalle_compra);
 				
-				if($resul){
+				if( $resul > 0 ){
 					
 					$detalle_inventario = DetalleInventarioDAO::getByPK($arregloItems[$i]['id'],$sucursal);
 					
@@ -147,7 +146,7 @@ function insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra) 
 		
 		$actCabeceraCompra = update_purchaseHeader($id_compra, $id_proveedor, $tipo_compra, $subtotalCompra);
 		
-		if ( !$actCabeceraCompra ){
+		if ( $actCabeceraCompra < 1 ){
 			return sprintf ("{success: false , reason: 'No se modifico el subtotal e iva de la compra', details: '%s'}",$out);
 		}else{		
 			return sprintf ("{ success : true , reason :'Compra registrada completamente' , details:' %s '}",$out);

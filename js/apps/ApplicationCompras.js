@@ -34,7 +34,7 @@ ApplicationCompras.prototype.ayuda = null;
 ApplicationCompras.prototype.dockedItems = null;
 
 
-ApplicationCompras.prototype._BANDERA = true; //en false habilita el modo surtir por kgs y embarques (TOÑO MODE)
+ApplicationCompras.prototype._BANDERA = false; //en false habilita el modo surtir por kgs y embarques (TOÑO MODE)
 
 ApplicationCompras.prototype.idProveedor = 0;
 
@@ -984,7 +984,7 @@ ApplicationCompras.prototype.doCompraLogic = function ()
 			
 			//ya llego el request con los datos si existe o no	
 			if(!datos.success){
-				POS.aviso("Mostrador", "nada de nada");
+				POS.aviso("Mostrador", ""+datos.reason);
 				return;
 			}
 			

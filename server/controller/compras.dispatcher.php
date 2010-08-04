@@ -6,7 +6,7 @@ switch ($args['action']) {
         $tipo_compra = $args['tipo_compra'];
         $modo_compra = $args['modo_compra'];
 		unset($args);
-		include_once("controller/compras.controller.php");
+		include_once("compras.controller.php");
         $ans = insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra);
         echo $ans;
 	break;
@@ -49,7 +49,7 @@ switch ($args['action']) {
 	case '1206':
 		$id_proveedor = $args['id_proveedor'];
 		unset($args);
-		include_once("controller/compras.controller.php");
+		include_once("compras.controller.php");
 		$ans= list_sucursal_purchases( $id_proveedor );
 		echo $ans;
 	break;
@@ -57,7 +57,7 @@ switch ($args['action']) {
 	case '1207':
 		$id_compra = $args['id_compra'];
 		unset($args);
-		include_once("controller/compras.controller.php");
+		include_once("compras.controller.php");
 		$ans= purchase_details( $id_compra );
 		echo $ans;
 	break;
@@ -65,7 +65,7 @@ switch ($args['action']) {
 	case '1208':
 		$id_compra = $args['id_compra'];
 		unset($args);
-		include_once("controller/compras.controller.php");
+		include_once("compras.controller.php");
 		$ans= purchase_payments( $id_compra );
 		echo $ans;
 	break;
@@ -73,7 +73,7 @@ switch ($args['action']) {
 	case '1209':
 		$id_proveedor = $args['id_proveedor'];
 		unset($args);
-		include_once("controller/compras.controller.php");
+		include_once("compras.controller.php");
 		$ans= credit_providerPurchases( $id_proveedor );
 		echo $ans;
 	break;
@@ -82,7 +82,7 @@ switch ($args['action']) {
 		$id_producto = $args['id_producto'];
 		$id_proveedor = $args['id_proveedor'];
 		unset($args);
-		include_once("controller/compras.controller.php");
+		include_once("compras.controller.php");
 		$ans= itemExistence_sucursal( $id_producto, $id_proveedor );
 		echo $ans;
 	break;

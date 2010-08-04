@@ -141,23 +141,23 @@ switch( ((int)($args['action'] / 100))*100 )
 	break;
 
 	case 1000:
-		require_once('clientes.dispatcher.php');
+		require_once('controller/clientes.dispatcher.php');
 	break;
 	
 	case 1100: 
-		require_once('proveedores.dispatcher.php');
+		require_once('controller/proveedores.dispatcher.php');
 	break;
 	
 	case 1200:
-		require_once('compras.dispatcher.php');
+		require_once('controller/compras.dispatcher.php');
 	break;
 	
 	case 1300:
-		require_once('pagos_compras.dispatcher.php');
+		require_once('controller/pagos_compras.dispatcher.php');
 	break;
 	
 	case 1400:
-		require_once('clientes_ventas.dispatcher.php');
+		require_once('controller/clientes_ventas.dispatcher.php');
 	break;
 	
 	case 1500:
