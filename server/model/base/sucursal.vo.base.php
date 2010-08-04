@@ -44,7 +44,7 @@ class Sucursal extends VO
 		"direccion" => $this->direccion,
 		"token" => $this->token
 		)); 
-	return json_encode($vec, true); 
+	return json_encode($vec); 
 	}
 	
 	/**

@@ -41,7 +41,7 @@ require_once('../server/model/proveedor.dao.php');
 		
 function insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra) {//01
 	 $sucursal=$_SESSION['sucursal'];
-	 $id_usuario=$_SESSION['usuario'];
+	 $id_usuario=$_SESSION['userid'];
 	 
 	 //$sucursal=2;
 	 //$id_usuario=1;
@@ -56,8 +56,11 @@ function insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra) 
 	 $compra->setIdSucursal($sucursal);
 	 $compra->setIdUsuario($id_usuario);
 	 
+	 try{
 	 $ans = ComprasDAO::save($compra);
-	 
+	 }catch(Exception $e){
+		 return "{success:false, reason'No se inserto la cabecera de la compra Detalles: ".$e->getMessage()." VALOR DE LA VARIABLE SESSION: ".$id_usuario."'}";
+	 }
 	 if( $ans > 0 ){
 		 
 		 $id_compra = $compra->getIdCompra();
@@ -103,7 +106,7 @@ function insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra) 
 								
 				$cantidad = $arregloItems[$i]['cantidad'];
 				//sacar el precio a como lo da el proveedor
-				$productoProveedor = new ProductoProveedor();
+				$productoProveedor = new ProductosProveedor();
 				$productoProveedor->setIdProveedor( $id_proveedor );
 				$productoProveedor->setIdInventario( $arregloItems[$i]['id'] );
 				
@@ -169,7 +172,7 @@ function insert_purchase($jsonItems, $id_proveedor, $tipo_compra, $modo_compra) 
  */
 function update_purchaseHeader($id_compra, $id_proveedor, $tipo_compra, $subtotal ) { 
 	$sucursal=$_SESSION['sucursal'];
-	$id_usuario=$_SESSION['usuario'];
+	$id_usuario=$_SESSION['userid'];
 	//$sucursal=2;
 	//$id_usuario=1;
 	 
@@ -354,7 +357,7 @@ function addItems_Existent_purchase($jsonItems,$id_compra, $id_proveedor, $tipo_
 				
 				$cantidad = $arregloItems[$i]['cantidad'];
 				//sacar el precio a como lo da el proveedor
-				$productoProveedor = new ProductoProveedor();
+				$productoProveedor = new ProductosProveedor();
 				$productoProveedor->setIdProveedor( $id_proveedor );
 				$productoProveedor->setIdInventario( $arregloItems[$i]['id'] );
 				

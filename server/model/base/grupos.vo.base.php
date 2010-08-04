@@ -42,7 +42,7 @@ class Grupos extends VO
 		"nombre" => $this->nombre,
 		"descripcion" => $this->descripcion
 		)); 
-	return json_encode($vec, true); 
+	return json_encode($vec); 
 	}
 	
 	/**

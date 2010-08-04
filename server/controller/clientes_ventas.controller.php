@@ -38,7 +38,7 @@ require_once('../server/model/cliente.dao.php');
  */
 function update_saleHeader($id_venta, $id_cliente, $tipo_venta, $subtotal ) { 
 	$sucursal=$_SESSION['sucursal'];
-	$id_usuario=$_SESSION['usuario'];
+	$id_usuario=$_SESSION['userid'];
 	$sucursal=2;
 	$id_usuario=1;
 	
@@ -625,7 +625,7 @@ function credit_clientSales( $id_cliente ){
 	
 	$venta = new Ventas();
 	$venta->setIdCliente( $id_cliente );
-	$venta->setIdSucursal( $sucursal );	
+	//$venta->setIdSucursal( $sucursal );	
 	$venta->setTipoVenta( 'credito' );	
 	$ventas = VentasDAO::search( $venta );
 	
@@ -652,7 +652,7 @@ function credit_clientSales( $id_cliente ){
 			
 			$out .= substr($v,1,-2);
 
-			$out.=',"total":"'.$totalCompra.'","abonado":"'.$total_pagos.'","adeudo":"'.$adeudo.'","nombre":"'.$cliente->getNombre().'","vendedor":"'.$usuario->getNombre().'","sucursal":"'.$sc->getDescripcion().'"},';
+			$out.=',"total":"'.$totVenta.'","abonado":"'.$total_pagos.'","adeudo":"'.$adeudo.'","nombre":"'.$cliente->getNombre().'","vendedor":"'.$usuario->getNombre().'","sucursal":"'.$sc->getDescripcion().'"},';
 	
 		}//fin foreach ventas
 		$out = substr($out,0,-1);

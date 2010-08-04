@@ -48,7 +48,7 @@ class Gastos extends VO
 		"id_sucursal" => $this->id_sucursal,
 		"id_usuario" => $this->id_usuario
 		)); 
-	return json_encode($vec, true); 
+	return json_encode($vec); 
 	}
 	
 	/**

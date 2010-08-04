@@ -42,7 +42,7 @@ class Inventario extends VO
 		"nombre" => $this->nombre,
 		"denominacion" => $this->denominacion
 		)); 
-	return json_encode($vec, true); 
+	return json_encode($vec); 
 	}
 	
 	/**

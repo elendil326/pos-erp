@@ -29,24 +29,38 @@ require_once('../server/model/cliente.dao.php');
  * @todo validad RFC con expresión regular.
  * @access private
  */
-function save_customer($id, $rfc, $nombre, $direccion, $limite_credito, $descuento = 0, $telefono = null, $e_mail = null) {
-    $data = array('rfc' => $rfc, 'nombre' => $nombre, 'telefono' => $telefono, 'e_mail' => $e_mail, 'limite_credito' => $limite_credito, 'descuento' => $descuento, 'direccion' => $direccion);
+function save_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0) {
+    //$data = array('rfc' => $rfc, 'nombre' => $nombre, 'telefono' => $telefono, 'e_mail' => $e_mail, 'limite_credito' => $limite_credito, 'descuento' => $descuento, 'direccion' => $direccion);
 
     if ($limite_credito < 0.0) {
         return "{success: false, reason: 'El limite de crédito debe ser mayor a cero.' }";
     }
 
     if ($descuento < 0.0 || $descuento > 100) {
-        return "{success: false, reason: 'El limite de crédito debe estar entre cero y cien.' }";
+        return "{success: false, reason: 'El descuento debe ser menor a 100' }";
     }
 
     //validar RFC
-
-    $cliente = new Cliente($data);
+	
+	$cliente = new Cliente();
+	
+	if( is_numeric($id) ){
+		$out="entro por ke soy entero y asigo id";
+		$cliente->setIdCliente( $id );
+	}
+    
+	$cliente->setRfc( $rfc );
+	$cliente->setNombre( $nombre );
+	$cliente->setDireccion( $direccion );
+	$cliente->setLimiteCredito( $limite_credito );
+	$cliente->setDescuento( $descuento );
+	$cliente->setTelefono( $telefono );
+	$cliente->setEmail( $e_mail );
+	
     $ans = ClienteDAO::save($cliente);
 
     if ($ans) {
-        return sprintf("{success: true, reason: 'Se inserto el cliente con id %s'}", $cliente->getIdCliente());
+        return sprintf("{success: true, reason: 'Se inserto el cliente con id %s, %d'}", $cliente->getIdCliente(),$out);
     } else {
         return "{success: false, reason: 'No se inserto el cliente.' }";
     }
@@ -63,8 +77,36 @@ function save_customer($id, $rfc, $nombre, $direccion, $limite_credito, $descuen
  * @param <type> $telefono
  * @param <type> $e_mail
  */
-function update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $descuento = 0, $telefono = null, $e_mail = null) {
-    save_customer($id, $rfc, $nombre, $direccion, $limite_credito, $descuento, $telefono, $e_mail);
+function update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0) {
+	
+	if ($limite_credito < 0.0) {
+        return "{success: false, reason: 'El limite de crédito debe ser mayor a cero.' }";
+    }
+
+    if ($descuento < 0.0 || $descuento > 100) {
+        return "{success: false, reason: 'El descuento debe ser menor a 100' }";
+    }
+
+    //validar RFC
+	
+	$cliente = new Cliente();
+	$cliente->setIdCliente( $id );
+
+    $cliente->setRfc( $rfc );
+	$cliente->setNombre( $nombre );
+	$cliente->setDireccion( $direccion );
+	$cliente->setLimiteCredito( $limite_credito );
+	$cliente->setDescuento( $descuento );
+	$cliente->setTelefono( $telefono );
+	$cliente->setEmail( $e_mail );
+	
+    $ans = ClienteDAO::save($cliente);
+	
+    if ($ans) {
+        return "{success: true, reason: 'Se modifico el cliente correctamente'}";
+    } else {
+        return "{success: false, reason: 'No se modifico el cliente.' }";
+    }
 }
 
 /**
@@ -77,8 +119,35 @@ function update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $descu
  * @param <type> $telefono
  * @param <type> $e_mail 
  */
-function insert_customer($rfc, $nombre, $direccion, $limite_credito, $descuento = 0, $telefono = null, $e_mail = null) {
-    save_customer(null, $rfc, $nombre, $direccion, $limite_credito, $descuento, $telefono, $e_mail);
+function insert_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0) {
+    
+	if ($limite_credito < 0.0) {
+        return "{success: false, reason: 'El limite de crédito debe ser mayor a cero.' }";
+    }
+
+    if ($descuento < 0.0 || $descuento > 100) {
+        return "{success: false, reason: 'El descuento debe ser menor a 100' }";
+    }
+
+    //validar RFC
+	
+	$cliente = new Cliente();
+    
+	$cliente->setRfc( $rfc );
+	$cliente->setNombre( $nombre );
+	$cliente->setDireccion( $direccion );
+	$cliente->setLimiteCredito( $limite_credito );
+	$cliente->setDescuento( $descuento );
+	$cliente->setTelefono( $telefono );
+	$cliente->setEmail( $e_mail );
+	
+    $ans = ClienteDAO::save($cliente);
+
+    if ($ans) {
+        return sprintf("{success: true, reason: 'Se inserto el cliente con id %s, %d'}", $cliente->getIdCliente());
+    } else {
+        return "{success: false, reason: 'No se inserto el cliente.' }";
+    }
 }
 
 /**
@@ -106,17 +175,18 @@ function delete_customer($id_cliente) {
 function list_customers() {
 	$clientes = ClienteDAO::getAll();
     $ans = '';
-    foreach ($clientes as $cliente) :
-            //$ans .= sprintf("%s,", $cliente->getJSON());
-			//$ans .= sprintf("%s,", json_encode( array("nombre"=> $cliente->getNombre() ) ) );
-			//$aux = array();
-			//array_push( $aux, json_decode($cliente,true) );
-			$tmp = substr( $cliente, 1, -1 );//[{jgkjgk}] -> {jgkjgk}
-			$ans .= $tmp."," ;
-    endforeach;
-	$out = substr($ans,0,-1);
-    $ans = sprintf("{success:true, datos:[%s] }", $out);
-    return $ans;
+	if( count($clientes) > 0 ){
+		foreach ($clientes as $cliente){
+		
+				$tmp = substr( $cliente, 1, -1 );//[{jgkjgk}] -> {jgkjgk}
+				$ans .= $tmp."," ;
+		}
+		$out = substr($ans,0,-1);
+		$ans = sprintf("{ success: true, datos:[%s] }", $out);
+		return $ans;
+	}else{
+		return "{success: false, reason: 'No hay lista de Clientes' }";
+	}
  
 }
 

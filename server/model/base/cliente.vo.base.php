@@ -52,7 +52,7 @@ class Cliente extends VO
 		"limite_credito" => $this->limite_credito,
 		"descuento" => $this->descuento
 		)); 
-	return json_encode($vec, true); 
+	return json_encode($vec); 
 	}
 	
 	/**

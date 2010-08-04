@@ -8,7 +8,8 @@ switch ($args['action']) {
         $telefono = $args['telefono'];
         $e_mail = $args['e_mail'];
         unset($args);
-        $ans = insert_customer($rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail);
+		include_once("controller/clientes.controller.php");
+        $ans = insert_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0);
         echo $ans;
 	break;
 	
@@ -22,7 +23,8 @@ switch ($args['action']) {
         $e_mail = $args['e_mail'];
 		$descuento = $args['descuento'];
         unset($args);
-        $ans = update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento);
+		include_once("controller/clientes.controller.php");
+        $ans = update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0);
         echo $ans;
 	break;
 	

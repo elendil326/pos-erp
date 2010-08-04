@@ -40,7 +40,7 @@ class FacturaCompra extends VO
 		"folio" => $this->folio,
 		"id_compra" => $this->id_compra
 		)); 
-	return json_encode($vec, true); 
+	return json_encode($vec); 
 	}
 	
 	/**
