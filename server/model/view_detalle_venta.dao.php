@@ -183,7 +183,7 @@ class ViewDetalleVentaDAO extends ViewDetalleVentaDAOBase
         */	
 
 
-	static function formatData( $data, $timeFormat )
+	static function formatData ( $data, $timeFormat )
 	{
 
 		$resultArray = array();
@@ -388,7 +388,7 @@ class ViewDetalleVentaDAO extends ViewDetalleVentaDAOBase
 				//var_dump($usuarioVentas);
 				for ( $a = 0; $a < count($productoVentas) ; $a++ )
 				{
-					$sumaSubtotal += $productoVentas[$a]->getCantidad() * $productoVentas[$a]->getPrecio();
+					$sumaSubtotal += $productoVentas[$a]->getCantidad();
 					
 				}
 				//echo $usuarioVentas[0]->getUsuario(). "-->" .$sumaSubtotal. "<br>";
@@ -442,45 +442,96 @@ class ViewDetalleVentaDAO extends ViewDetalleVentaDAOBase
                         return array( false, "Faltan parametros" );
                 }
 
-                $params = array($id_sucursal);
-
-                        
-                $qry_select = " SELECT `denominacion`, SUM(`cantidad`) AS `cantidad` FROM `view_detalle_venta` WHERE `id_sucursal` = ? ";
-
-
-                if( $timeRange != null )
-                {
-                        $dateInterval = $timeRange;
-
-
-                        //Escogemos el rango de tiempo para los datos (Semana, Mes, Año, Todos)        
-                        $datesArray = reportesUtils::getDateRange($dateInterval);      
-
-                        if( $datesArray != false )
-                        {
-                                array_push($params, $datesArray[0]);
-                                array_push($params, $datesArray[1]);
-
-                                $qry_select .= " AND date(`fecha`) BETWEEN ? AND ?";
-                        }
-
-                        
-                }
-
-                if ( $fechaInicio != null && $fechaFinal != null )
-                {
-                        array_push($params, $fechaInicio);
-                        array_push($params, $fechaFinal);
-                        $dateRange .= " AND date(`fecha`) BETWEEN ? AND ?";
-                        $qry_select .= $dateRange;
-                }
-
-                $qry_select .= " GROUP BY `id_producto` ORDER BY `cantidad` DESC LIMIT 1";
-
-		return ViewDetalleVentaDAO::getResultArray( $qry_select, $params );
-
+                $allVentas = ViewDetalleVentaDAO::getAllVentas( $timeRange, $fechaInicio, $fechaFinal, $id_sucursal );
+		
+		$ventasFecha2 = array_pop( $allVentas );
+		$ventasFecha1 = array_pop( $allVentas );
 		
 
+
+		$arrayResults = array();//Arreglo con los pares de resultados, (id_usuario, total_vendido)
+		$arrayID = array();//Guarda los id's que ya hemos analizado
+		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
+
+		//Obtenemos un arreglo con pares de resultados, (id_usuario, total_vendido)
+		//agrupamos cada usuario con la suma de lo que ha vendido
+		for ( $i = 0; $i < count($allVentas) ; $i++ )
+		{
+			$id = $allVentas[$i]->getIdProducto();
+
+			$duplicatedFlag = false;
+			$productoVentas = null;
+			//Buscamos en nuestro arreglo de ID's que ya hemos analizado
+			//para que no se repitan datos, si el currentId no se ha analizado
+			//se hace una busqueda de ese ID y se guardan todas las tuplas
+			for ( $j = 0; $j < count($arrayID) ; $j++)
+			{
+				//echo $id ."---->". $arrayID[$j]."<br>";
+				if ( $id == $arrayID[$j])
+				{
+					$duplicatedFlag = true;
+					//echo "no duplicado";
+				}
+			}
+
+			if( $duplicatedFlag != true)
+			{
+				
+				if ( $timeRange != null || $fechaInicio != null || $fechaFinal != null )
+				{
+					$ventasFecha1->setIdProducto($id);
+					$ventasFecha2->setIdProducto($id);
+					$productoVentas = ViewDetalleVentaDAO::byRange( $ventasFecha1, $ventasFecha2 );
+				}
+				else
+				{
+					$viewVentas = new ViewDetalleVenta();
+					$viewVentas->setIdProducto($id);
+					$productoVentas = ViewDetalleVentaDAO::search( $viewVentas );
+				}
+				//echo "no duplicado";
+				array_push($arrayID, $id);
+			}
+
+			//Teniendo ya las ventas de un unico usuario, sumamos el subtotal de lo 
+			//que ha avendido y lo guardamos en nuestro arreglo de resultados junto
+			//con el ID del usuario
+
+			
+			$sumaSubtotal = 0;
+			if($productoVentas != null)
+			{
+				//var_dump($usuarioVentas);
+				for ( $a = 0; $a < count($productoVentas) ; $a++ )
+				{
+					$sumaSubtotal += $productoVentas[$a]->getCantidad();
+					
+				}
+				//echo $usuarioVentas[0]->getUsuario(). "-->" .$sumaSubtotal. "<br>";
+				//break;
+				array_push($arrayResults, array("producto" => $productoVentas[0]->getDenominacion(), "cantidad" => $sumaSubtotal) );
+
+			}
+
+			
+
+		}
+
+		if ( count($arrayResults) > 0 )
+		{
+			foreach ($arrayResults as $key => $row) {
+			    $producto[$key]  = $row['producto'];
+			    $cantidad[$key] = $row['cantidad'];
+			}
+
+			array_multisort($cantidad, SORT_DESC, $arrayResults);
+
+			return $arrayResults;
+		}
+		else
+		{
+			return array( "No se encontraron datos" );
+		}
 
 	}
 
@@ -502,42 +553,96 @@ class ViewDetalleVentaDAO extends ViewDetalleVentaDAOBase
 	static function getProductoIngresosTop( $timeRange, $fechaInicio, $fechaFinal )
 	{
 
-                $params = array();
-
-                //Consulta para obtener el producto con el mayor numero de cantidad * precio        
-		$qry_select = "SELECT `denominacion` AS `producto`, ROUND(SUM(`cantidad` * `precio`), 2) AS `ingresos` FROM `view_detalle_venta` ";
-
-                if( $timeRange != null )
-                {
-                        $dateInterval = $timeRange;
-
-
-                        //Escogemos el rango de tiempo para los datos (Semana, Mes, Año, Todos)        
-                        $datesArray = reportesUtils::getDateRange($dateInterval);      
-
-                        if( $datesArray != false )
-                        {
-                                array_push($params, $datesArray[0]);
-                                array_push($params, $datesArray[1]);
-
-                                $qry_select .= " WHERE date(`fecha`) BETWEEN ? AND ?";
-                        }
-
-                        
-                }
-
-                if ( $fechaInicio != null && $fechaFinal != null && $timeRange == null)
-                {
-                        array_push($params, $fechaInicio );
-                        array_push($params, $fechaFinal );
-                        $dateRange .= " WHERE date(`fecha`) BETWEEN ? AND ?";
-                        $qry_select .= $dateRange;
-                }
-
-                $qry_select .= " GROUP BY `id_producto` ORDER BY `ingresos` DESC LIMIT 1";
-
-                return ViewDetalleVentaDAO::getResultArray( $qry_select, $params );
+                $allVentas = ViewDetalleVentaDAO::getAllVentas( $timeRange, $fechaInicio, $fechaFinal );
 		
+		$ventasFecha2 = array_pop( $allVentas );
+		$ventasFecha1 = array_pop( $allVentas );
+		
+
+
+		$arrayResults = array();//Arreglo con los pares de resultados, (id_usuario, total_vendido)
+		$arrayID = array();//Guarda los id's que ya hemos analizado
+		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
+
+		//Obtenemos un arreglo con pares de resultados, (id_usuario, total_vendido)
+		//agrupamos cada usuario con la suma de lo que ha vendido
+		for ( $i = 0; $i < count($allVentas) ; $i++ )
+		{
+			$id = $allVentas[$i]->getIdProducto();
+
+			$duplicatedFlag = false;
+			$productoVentas = null;
+			//Buscamos en nuestro arreglo de ID's que ya hemos analizado
+			//para que no se repitan datos, si el currentId no se ha analizado
+			//se hace una busqueda de ese ID y se guardan todas las tuplas
+			for ( $j = 0; $j < count($arrayID) ; $j++)
+			{
+				//echo $id ."---->". $arrayID[$j]."<br>";
+				if ( $id == $arrayID[$j])
+				{
+					$duplicatedFlag = true;
+					//echo "no duplicado";
+				}
+			}
+
+			if( $duplicatedFlag != true)
+			{
+				
+				if ( $timeRange != null || $fechaInicio != null || $fechaFinal != null )
+				{
+					$ventasFecha1->setIdProducto($id);
+					$ventasFecha2->setIdProducto($id);
+					$productoVentas = ViewDetalleVentaDAO::byRange( $ventasFecha1, $ventasFecha2 );
+				}
+				else
+				{
+					$viewVentas = new ViewDetalleVenta();
+					$viewVentas->setIdProducto($id);
+					$productoVentas = ViewDetalleVentaDAO::search( $viewVentas );
+				}
+				//echo "no duplicado";
+				array_push($arrayID, $id);
+			}
+
+			//Teniendo ya las ventas de un unico usuario, sumamos el subtotal de lo 
+			//que ha avendido y lo guardamos en nuestro arreglo de resultados junto
+			//con el ID del usuario
+
+			
+			$sumaSubtotal = 0;
+			if($productoVentas != null)
+			{
+				//var_dump($usuarioVentas);
+				for ( $a = 0; $a < count($productoVentas) ; $a++ )
+				{
+					$sumaSubtotal += $productoVentas[$a]->getCantidad() * $productoVentas[$a]->getPrecio();
+					
+				}
+				//echo $usuarioVentas[0]->getUsuario(). "-->" .$sumaSubtotal. "<br>";
+				//break;
+				array_push($arrayResults, array("producto" => $productoVentas[0]->getDenominacion(), "cantidad" => $sumaSubtotal) );
+
+			}
+
+			
+
+		}
+
+		if ( count($arrayResults) > 0 )
+		{
+			foreach ($arrayResults as $key => $row) {
+			    $producto[$key]  = $row['producto'];
+			    $cantidad[$key] = $row['cantidad'];
+			}
+
+			array_multisort($cantidad, SORT_DESC, $arrayResults);
+
+			return $arrayResults;
+		}
+		else
+		{
+			return array( "No se encontraron datos" );
+		}
 
 	}
 
@@ -564,71 +669,125 @@ class ViewDetalleVentaDAO extends ViewDetalleVentaDAOBase
 
 	static function getDataVentasProducto($id_producto, $timeRange, $tipo_venta, $fechaInicio, $fechaFinal )
 	{
-		//$array = getDateRangeGraphics('semana');
-                $params = array();
 
-                if( $timeRange != null )
-                {
-                        $dateInterval = $timeRange;
-                        $params = array();
-                        //Obtenemos el select del query para obtener las ventas
-                       $functionQuery = reportesUtils::selectDetallesIntervalo($dateInterval, 'view_detalle_venta');
+		//id_producto es necesario, si no se mando, se termina la funcion
+		if ( $id_producto == null )
+		{
+			return array("Faltan parametros");
+		}
+
+		//Si no se manda un timeRange termina la funcion
+		if ( $timeRange == null && $fechaInicio == null && $fechaFinal == null )
+		{
+			return array("Faltan parametros");
+		}
+
+
+		$allVentas = ViewDetalleVentaDAO::getAllVentas( $timeRange, $fechaInicio, $fechaFinal, null, null, $id_producto );
+		
+		$ventasFecha2 = array_pop( $allVentas );
+		$ventasFecha1 = array_pop( $allVentas );
+
+		$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
+		$arrayID = array();//Guarda los id's que ya hemos analizado
+		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
+
+		//Obtenemos un arreglo con pares de resultados, (id_sucursal, total_vendido)
+		//agrupamos cada usuario con la suma de lo que ha vendido
+		for ( $i = 0; $i < count($allVentas) ; $i++ )
+		{
+			$fechaHora = $allVentas[$i]->getFecha();
 			
-                        //getDateRangeGraphics nos regresa un arreglo con todas las fechas para la consulta, y el ultimo dato es la consulta
-                        $datesArray = reportesUtils::getDateRangeGraphics($dateInterval);
-                        $qry_select = reportesUtils::betweenDatesQueryPart($dateInterval, 'view_detalle_venta');
-                        
-
-                        //Si se escogieron las fechas manualmente, se sobreescriben
-                        if ( $fechaInicio != null && $fechaFinal != null )
-                        {
-                                $datesArray[0] = $fechaInicio;
-                                $datesArray[1] = $fechaFinal;
-                        }
-                        
-			//Si se mando el id del producto se agrega a los parametros y se agrega la parte que corresponde a la consulta
-			//sino se envia un error ya que este parametro es obligatorio
-                        if ( $id_producto != null )
-                        {
-                                $functionQuery .= " WHERE `id_producto` = ? AND ";
-                                array_push( $params, $id_producto );
-				
-				//Si se mando el tipo de venta se agrega a la consulta y a los parametros
-				if ( $tipo_venta != null )
+			$fechaYMD = explode(" ", $fechaHora);
+			$fecha = $fechaYMD[0];
+			list($compYear, $compMonth, $compDay) = explode("-", $fecha); //obtenemos año, mes, dia para comparar
+			$duplicatedFlag = false;
+			$dataVentas = null;
+			$ventaTupla = null;
+			//Buscamos en nuestro arreglo de ID's que ya hemos analizado
+			//para que no se repitan datos, si el currentId no se ha analizado
+			//se hace una busqueda de ese ID y se guardan todas las tuplas
+			for ( $j = 0; $j < count($arrayID) ; $j++)
+			{
+				//echo $id ."---->". $arrayID[$j]."<br>";
+				list($compYear2, $compMonth2, $compDay2) = explode("-", $arrayID[$j]);
+				if ( $compYear == $compYear2 && $compMonth == $compMonth2)
 				{
-					$functionQuery .= " `tipo_venta` = ? AND ";
-					array_push( $params, $tipo_venta );
+					
+					$duplicatedFlag = true;
+					
 				}
+			}
 
-                                array_push( $params, $datesArray[0] );
-                                array_push( $params, $datesArray[1] );
-                        }
-                        else
-                        {
-				return array( false, "Faltan parametros");
-                        }
+			if( $duplicatedFlag != true)
+			{
+				
+				
+				$ventaTupla = array();			
+				for($x=0; $x < count($allVentas); $x++)
+				{
+					$fullFecha = $allVentas[$x]->getFecha();
+
+					$fechaArray = explode(" ", $fullFecha);
+					$fechaSinHoras = $fechaArray[0];
+				
+				
+					list($y, $m, $d) = explode("-", $fechaSinHoras);
+					list($y2, $m2, $d2 ) = explode( "-", $fecha );
+
+					if ( $y == $y2 && $m == $m2 )
+					{
+						
+						array_push( $ventaTupla, $allVentas[$x]);
+					}	
+				}
+				array_push($arrayID, $fecha);
+			}
+
+			//Teniendo ya las ventas de un unico usuario, sumamos el subtotal de lo 
+			//que ha avendido y lo guardamos en nuestro arreglo de resultados junto
+			//con el ID del usuario
 
 			
-                        //Formamos nuestro query completo
-                        $completeQuery = $functionQuery . $qry_select ;
+			$sumaSubtotal = 0;
+			
+			if($ventaTupla != null)
+			{
+				
+				for ( $a = 0; $a < count($ventaTupla) ; $a++ )
+				{
+					$sumaSubtotal += $ventaTupla[$a]->getCantidad() * $ventaTupla[$a]->getPrecio();
+					
+				}
+				
+				array_push($arrayResults, array("fecha" => $ventaTupla[0]->getFecha(), "cantidad" => $sumaSubtotal) );
+				
 
-                        
-                        if ( $qry_select != false )
-                        {                       
-                                //Todo salio bien asi que regresamos el arreglo con el resultado
-				return ViewDetalleVentaDAO::getResultArray( $completeQuery, $params);
-                                
-                        }
-                        else
-                        {
-                                return array( false, "Bad Request: dateRange" );
-                        }
+			}
 
-                }
-                else
-                {
-                        return array( false, "Faltan parametros" );
-                }
+			
+
+		}
+
+		
+		if ( count($arrayResults) > 0 )
+		{
+			foreach ($arrayResults as $key => $row) {
+			    $fecha[$key]  = $row['fecha'];
+			    $cantidad[$key] = $row['cantidad'];
+			}
+
+			//array_multisort($fecha, SORT_DESC, $arrayResults);
+
+			//return $arrayResults;
+			$xylabelArray = ViewDetalleVentaDAO::formatData( $arrayResults, $timeRange);
+			return $xylabelArray;
+		}
+		else
+		{
+			return array( "No se encontraron datos" );
+		}
+
 	}
 	
 
@@ -650,71 +809,96 @@ class ViewDetalleVentaDAO extends ViewDetalleVentaDAOBase
 
 	static function getDataProductosMasVendidos($timeRange, $tipo_venta, $id_sucursal, $fechaInicio, $fechaFinal)
 	{
-		//$array = getDateRangeGraphics('semana');
-                $params = array();
-
-                if( $timeRange )
-                {
-                        $dateInterval = $timeRange;
-                        $params = array();
-                        //Obtenemos el select del query para obtener las ventas
-                       $functionQuery = "SELECT `id_producto` AS `x`, ROUND(SUM(`cantidad` * `precio`)) AS `y`, `denominacion` AS `label` FROM `view_detalle_venta`  WHERE ";
-			
-                        //getDateRangeGraphics nos regresa un arreglo con todas las fechas para la consulta, y el ultimo dato es la consulta
-                        $datesArray = reportesUtils::getDateRangeGraphics($dateInterval);
-                        //$qry_select = betweenDatesQueryPart($dateInterval, 'view_detalle_venta');
-			$qry_select = " date(`fecha`) BETWEEN ? AND ? GROUP BY `id_producto` ORDER BY `y` DESC ";
-                        
-
-                        //Si se escogieron las fechas manualmente, se sobreescriben
-                        if ( $fechaInicio != null && $fechaFinal != null )
-                        {
-                                $datesArray[0] = $fechaInicio;
-                                $datesArray[1] = $fechaFinal;
-                        }
-                        
-			//Si se mando el id del producto se agrega a los parametros y se agrega la parte que corresponde a la consulta
-			//sino se envia un error ya que este parametro es obligatorio
-                        if ( $id_sucursal != null )
-                        {
-                                $functionQuery .= " `id_sucursal` = ? AND ";
-                                array_push( $params, $id_sucursal );
-				
-                        }
+		$allVentas = ViewDetalleVentaDAO::getAllVentas( $timeRange, $fechaInicio, $fechaFinal, $id_sucursal, $tipo_venta );
+		
+		$ventasFecha2 = array_pop( $allVentas );
+		$ventasFecha1 = array_pop( $allVentas );
+		
 
 
-			//Si se mando el tipo de venta se agrega a la consulta y a los parametros
-			if ( $tipo_venta != null )
+		$arrayResults = array();//Arreglo con los pares de resultados, (id_usuario, total_vendido)
+		$arrayID = array();//Guarda los id's que ya hemos analizado
+		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
+
+		//Obtenemos un arreglo con pares de resultados, (id_usuario, total_vendido)
+		//agrupamos cada usuario con la suma de lo que ha vendido
+		for ( $i = 0; $i < count($allVentas) ; $i++ )
+		{
+			$id = $allVentas[$i]->getIdProducto();
+
+			$duplicatedFlag = false;
+			$productoVentas = null;
+			//Buscamos en nuestro arreglo de ID's que ya hemos analizado
+			//para que no se repitan datos, si el currentId no se ha analizado
+			//se hace una busqueda de ese ID y se guardan todas las tuplas
+			for ( $j = 0; $j < count($arrayID) ; $j++)
 			{
-				$functionQuery .= " `tipo_venta` = ? AND ";
-				array_push( $params, $tipo_venta );
+				//echo $id ."---->". $arrayID[$j]."<br>";
+				if ( $id == $arrayID[$j])
+				{
+					$duplicatedFlag = true;
+					//echo "no duplicado";
+				}
 			}
 
-			//Agregamos las dos fechas devueltas a los parametros de la consulta
-			array_push( $params, $datesArray[0] );
-			array_push( $params, $datesArray[1] );
+			if( $duplicatedFlag != true)
+			{
+				
+				if ( $timeRange != null || $fechaInicio != null || $fechaFinal != null )
+				{
+					$ventasFecha1->setIdProducto($id);
+					$ventasFecha2->setIdProducto($id);
+					$productoVentas = ViewDetalleVentaDAO::byRange( $ventasFecha1, $ventasFecha2 );
+				}
+				else
+				{
+					$viewVentas = new ViewDetalleVenta();
+					$viewVentas->setIdProducto($id);
+					$productoVentas = ViewDetalleVentaDAO::search( $viewVentas );
+				}
+				//echo "no duplicado";
+				array_push($arrayID, $id);
+			}
+
+			//Teniendo ya las ventas de un unico usuario, sumamos el subtotal de lo 
+			//que ha avendido y lo guardamos en nuestro arreglo de resultados junto
+			//con el ID del usuario
 
 			
-                        //Formamos nuestro query completo
-                        $completeQuery = $functionQuery . $qry_select ;
+			$sumaSubtotal = 0;
+			if($productoVentas != null)
+			{
+				//var_dump($usuarioVentas);
+				for ( $a = 0; $a < count($productoVentas) ; $a++ )
+				{
+					$sumaSubtotal += $productoVentas[$a]->getCantidad();
+					
+				}
+				//echo $usuarioVentas[0]->getUsuario(). "-->" .$sumaSubtotal. "<br>";
+				//break;
+				array_push($arrayResults, array("producto" => $productoVentas[0]->getDenominacion(), "cantidad" => $sumaSubtotal) );
 
-                        
-                        if ( $qry_select != false )
-                        {                       
-                                //Todo salio bien asi que regresamos el arreglo con el resultado
-				return ViewDetalleVentaDAO::getResultArray( $completeQuery, $params);
-                                
-                        }
-                        else
-                        {
-                                return array( false, "Bad Request: dateRange" );
-                        }
+			}
 
-                }
-                else
-                {
-                        return array( false, "Faltan parametros" );
-                }
+			
+
+		}
+
+		if ( count($arrayResults) > 0 )
+		{
+			foreach ($arrayResults as $key => $row) {
+			    $producto[$key]  = $row['producto'];
+			    $cantidad[$key] = $row['cantidad'];
+			}
+
+			array_multisort($cantidad, SORT_DESC, $arrayResults);
+
+			return $arrayResults;
+		}
+		else
+		{
+			return array( "No se encontraron datos" );
+		}
 	}
 
 }
