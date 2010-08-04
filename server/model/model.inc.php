@@ -16,7 +16,6 @@ require_once ('factura_compra.dao.php');
 require_once ('factura_venta.dao.php');
 require_once ('gastos.dao.php');
 require_once ('grupos.dao.php');
-require_once ('grupos_permisos.dao.php');
 require_once ('grupos_usuarios.dao.php');
 require_once ('impuesto.dao.php');
 require_once ('ingresos.dao.php');

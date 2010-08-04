@@ -190,7 +190,11 @@ POS = {
 
 POS.AJAXandDECODE = function (params, success, failure)
 {
-	
+	if(DEBUG){
+		console.log("Sending HTTP request ....", "action="+params.action);
+		//alert("caller is " + arguments.callee.caller.toString());
+		//alert("caller is " + POS.AJAXandDECODE.caller.toString());
+	}
 	Ext.Ajax.request({
 		
 		url: 'proxy.php',
@@ -200,8 +204,14 @@ POS.AJAXandDECODE = function (params, success, failure)
 			var datos;
 			try{				
 				eval("datos = " + response.responseText);
+				
+				if(DEBUG){
+					console.log("HTTP Request returned with code 200", datos);
+				}
+				
 			}catch(e){
 				console.warn("Error", e);
+				return;
 			}
 			 
 

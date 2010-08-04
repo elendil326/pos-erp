@@ -5,13 +5,49 @@
 -------------------------------------------- */
 
 var login;
-var DEBUG;
+var DEBUG = true;
 
-$(document).ready(function() {
-	DEBUG = true;
+function dostart(){
 	
 	//iniciar con el appLogin
 	login = new AppLogin ();
+}
+
+
+$(document).ready(function() {
+
+	if(DEBUG){
+		console.log("Dom loaded. Iniciando Applicacion...");
+	}
+	
+	
+	if(DEBUG){
+		console.log("Probando conexion con servidor...");
+		//actual ajax call
+			$.ajax({ 
+				url: "proxy.php", 
+				dataType: 'json',
+				data: {'action': 'test' },
+				context: document.body, 
+				complete: function (data){
+
+					try{
+						data = jQuery.parseJSON( data.responseText );
+						if(data.success === true)
+							dostart();
+						else
+							if(DEBUG) console.warn("Error", data);
+					}catch(e){
+						//invalid json
+						if(DEBUG){console.error("Invalid json", data.responseText);}
+						return;
+					}
+				}
+			});
+
+	}
+	
+
 
 });
 	

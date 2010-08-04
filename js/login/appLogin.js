@@ -9,9 +9,11 @@
 AppLogin = function ()
 {
 	
-	
+	if(DEBUG){
+		console.log("Iniciando Login...");
+	}
 	this._init();
-
+	
 };
 
 
@@ -19,7 +21,6 @@ AppLogin = function ()
 AppLogin.prototype._init = function ()
 {
 	this.createBasicHTML();
-
 };
 
 

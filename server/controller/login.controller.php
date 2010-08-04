@@ -7,11 +7,17 @@ require_once("../server/model/sucursal.dao.php");
 
 function sendLogin( $u, $p )
 {
+	
+	global $logger;
+	$logger->setIdent("Login");
+	$logger->log("Hola !");
+	$logger->setIdent("SYSTEM CORE");
+		
 	$user = new Usuario();
 	$user->setUsuario( $u );
 	$user->setContrasena( $p );
 	
-	$res ;
+
 	try{
 		$res = UsuarioDAO::search( $user );		
 	}catch(Exception $e){

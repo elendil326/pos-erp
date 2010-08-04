@@ -22,29 +22,6 @@ if(!$ss){
 	return;
 }
 
-//si voy a hacer algo que no sea iniciar sesion
-if( $_REQUEST['action']  != "2001" )
-{
-	//verificar que no se haya modificado el user agent, el user agent esta encriptado para que no pueda 
-	//ver cual es, asi como los demas datos
-	if ( ($_SESSION['HTTP_USER_AGENT'] != md5($_SERVER['HTTP_USER_AGENT'])) )
-	{
-		//log security breach
-		echo "{\"succes\": false , \"reason\": 31416, \"text\" : \"Please re-log in.\" }";
-		exit;
-	}	
-}
-
-
-
-
-
-
-
-
-
-
-
 
 
 /**
@@ -63,6 +40,7 @@ require_once('config.php');
 */
 require_once('mx.caffeina.logger/logger.php');
 
+
 /**
 * Conexión a la base de datos.
 *
@@ -71,13 +49,46 @@ require_once('mx.caffeina.logger/logger.php');
 require_once('db/DBConnection.php');
 
 
+/*
+ * el action 'echo' es solo para probar conexion con la base de datos
+ */
+if( isset($_REQUEST['action']) && ($_REQUEST['action'] == 'test'))
+{
+	echo "{ \"success\": true , \"payload\" : 200 }";
+	exit;
+}
+
+
+/**
+* Validar el user agent
+*
+*/
+if( $_REQUEST['action']  != "2001" )
+{
+	//verificar que no se haya modificado el user agent, el user agent esta encriptado para que no pueda 
+	//ver cual es, asi como los demas datos
+	if ( ($_SESSION['HTTP_USER_AGENT'] != md5($_SERVER['HTTP_USER_AGENT'])) )
+	{
+		//log security breach
+		echo "{\"succes\": false , \"reason\": 31416, \"text\" : \"Please re-log in.\" }";
+		exit;
+	}	
+}
+
+
+
+
+
 //Comprobamos que la variable que trae la funcion a ejecutar exista y despues 
 //entramos al switch.
 if ( !isset($_REQUEST['action']) )
 {
-	echo "{ \"success\": false }";
+	echo "{ \"success\": false , \"reason\" : \"Invalid method call for dispatching.\" }";
         return;
 }
+
+
+
 
 
 $args = $_REQUEST;

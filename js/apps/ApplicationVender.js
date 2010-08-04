@@ -613,8 +613,11 @@ ApplicationVender.prototype.doAddProduct = function (button, event)
 			document.getElementById( Ext.get("APaddProductByID").first().id ).focus();
 
 		},
-		function (){
-			POS.aviso("Error", "Algo anda mal, porfavor intente de nuevo.");
+		function (e){
+			POS.aviso("Error", "Algo anda mal, porfavor intente de nuevo." + e);
+			if(DEBUG){
+				console.log(e);
+			}
 		}
 	);
 	
