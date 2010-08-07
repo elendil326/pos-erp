@@ -38,6 +38,7 @@ switch ($args['action']) {
 	case '1004':
 		$id = $args['id'];
         unset($args);
+		include_once("clientes.controller.php");
         $ans = show_customer($id);
         echo $ans;
 	break;

@@ -172,7 +172,9 @@ switch( ((int)($args['action'] / 100))*100 )
 		require_once('controller/inventario.controller.php');
 	break;
 	
-
+	case 1800:
+		require_once('controller/facturas.dispatcher.php');
+	break;
 	
 	case 2000:
 		/* alan : login 

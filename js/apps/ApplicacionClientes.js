@@ -40,6 +40,7 @@ ApplicacionClientes.prototype.dockedItemsFormCliente = null;
 
 ApplicacionClientes.prototype.clienteSeleccionado = null;
 
+ApplicacionClientes.prototype.facturaObj = null;
 
 ApplicacionClientes.prototype._init = function()
 {
@@ -772,7 +773,12 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 					
 					//renderear el html
 					for( a = 0; a < ventasCliente.getCount(); a++ ){
-						
+						var facturado="";
+						if ( ventasCliente.data.items[a].facturado == 1 ){
+							facturado="<div class='pagado'>FACTURADA</div>";
+						}else{
+							facturado ="<div class='abonar' onclick='ApplicacionClientes.currentInstance.panelFacturas(" + ventasCliente.data.items[a].id_venta + " , "+ record_cliente[0].id_cliente +")'>FACTURAR</div>";
+						}
 						html += "<div class='ApplicationClientes-item' >" 
 						+ "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" +ventasCliente.data.items[a].id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>"	
 							+ "<div class='id'>" + ventasCliente.data.items[a].id_venta +"</div>" 
@@ -783,6 +789,7 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 							+ "<div class='subtotal'>$"+ ventasCliente.data.items[a].subtotal +"</div>"
 							+ "<div class='iva'>$"+ ventasCliente.data.items[a].iva +"</div>"
 							+ "<div class='total'>$"+ ventasCliente.data.items[a].total +"</div>"
+							+ facturado
 							+ "</div>";
 					}
 								
@@ -1373,6 +1380,17 @@ ApplicacionClientes.prototype.EliminarabonoVenta = function ( id_Pago ){
 	overlayTb.setTitle('CONFIRMAR ELIMINACION DE PAGO');
 	overlay.show();
 }
+
+/*--------------------------------------------------------------------
+	VER PANEL DE FACTURAS
+----------------------------------------------------------------------*/
+
+ApplicacionClientes.prototype.panelFacturas = function( id_venta , id_cliente ){
+	facturaObj = new ApplicationFacturaVentas( id_venta , id_cliente );
+
+	sink.Main.ui.setCard( facturaObj.facturaVenta , 'slide' );
+}
+
 
 
 //autoinstalar esta applicacion

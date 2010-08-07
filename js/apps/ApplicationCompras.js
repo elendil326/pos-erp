@@ -920,21 +920,21 @@ ApplicationCompras.prototype.doComprarPanel = function ()
 				value: 1,
 				listeners: 
 				{
-				change: function(  ){
-					var tipo = Ext.getCmp("tipoCompra").getValue(true);
-					if(tipo == 0){
-						//POS.aviso("message","SOY UNA VENTA DE CONTADO COMPA");
-						try{
-							Ext.get("abonoCompra").hide();
-						}catch(e){}
-					}else{
-						//POS.aviso("message","SOY UNA VENTA A CREDITO");
-						try{
-						Ext.get("abonoCompra").show();
-						}catch(e){}
+					change: function(  ){
+						var tipo = Ext.getCmp("tipoCompra").getValue(true);
+						if(tipo == 0){
+							//POS.aviso("message","SOY UNA VENTA DE CONTADO COMPA");
+							try{
+								Ext.get("abonoCompra").hide();
+							}catch(e){}
+						}else{
+							//POS.aviso("message","SOY UNA VENTA A CREDITO");
+							try{
+							Ext.get("abonoCompra").show();
+							}catch(e){}
+						}
 					}
 				}
-			}
             },{
 			    xtype: 'textfield',
 			    label: 'Abono',

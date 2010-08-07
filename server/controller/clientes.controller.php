@@ -195,12 +195,12 @@ function list_customers() {
  * @param <type> $id_cliente 
  */
 function show_customer($id_cliente) {
-    if (!is_int($id_cliente)) {
+    if (!is_numeric($id_cliente)) {
         return "{success: false, reason: 'Id no válido.' }";
     }
     $cliente = ClienteDAO::getByPK($id_cliente);
     if (is_object($cliente)) {
-        return sprintf("success: true, datos: %s", json_encode($cliente) );
+        return "{success: true, datos: ".$cliente." }";
     } else {
         return "{success: false, reason: 'No existe cliente con ese id.' }";
     }

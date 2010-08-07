@@ -21,7 +21,7 @@ require_once('../server/model/impuesto.dao.php');
 require_once('../server/model/sucursal.dao.php');
 require_once('../server/model/usuario.dao.php');
 require_once('../server/model/cliente.dao.php');
-
+require_once('../server/model/factura_venta.dao.php');
 
 /**
  * update_saleHeader
@@ -420,7 +420,7 @@ function EditItem_Existent_sale( $id_venta, $id_producto, $precio, $cantidad ) {
 	$dbCantidad = $detalle_venta->getCantidad(); //cantidad que hay en el detalle antes de modificar
 	$dbPrecio = $detalle_venta->getPrecio();//precio que esta en el detalle antes de modificar
 	
-	$venta = ventasDAO::getByPK( $id_venta );
+	$venta = VentasDAO::getByPK( $id_venta );
 	$iventario = DetalleInventarioDAO::$getByPK( $id_producto , $venta->getIdSucursal() );
 	
 	
@@ -524,7 +524,7 @@ function list_client_sales( $id_cliente ){
 	$ventas = new ventas();
 	$ventas->setIdCliente( $id_cliente );
 	
-	$ventas_sucursal = ventasDAO::search($ventas);
+	$ventas_sucursal = VentasDAO::search( $ventas );
 	$foo="";
 	if( count($ventas_sucursal) > 0 ){
 
@@ -534,10 +534,17 @@ function list_client_sales( $id_cliente ){
 			$total = $venta->getSubtotal() + $venta->getIva();
 			$usuario = UsuarioDAO::getByPK( $venta->getIdUsuario() );
 			$sc = SucursalDAO::getByPK( $venta->getIdSucursal() );
-			
-			$foo .= substr($venta,1,-2);
 
-			$foo.=',"total":"'.$total.'","nombre":"'.$usuario->getNombre().'","descripcion":"'.$sc->getDescripcion().'"},';
+			$factura = new FacturaVenta();
+			$factura->setIdVenta( $venta->getIdVenta() );
+			$fact = FacturaVentaDAO::search( $factura );
+			$facturado = 0;
+			
+			if( count($fact) > 0 ){	$facturado = 1;	}
+			
+			$foo .= substr($venta,1,-2);//[{'x':'1'}] --> {'x':'1'
+
+			$foo.=',"total":"'.$total.'","nombre":"'.$usuario->getNombre().'","descripcion":"'.$sc->getDescripcion().'","facturado":"'.($facturado).'"},';
 		}//fin for
 		$foo = substr($foo,0,-1);
 		return " { success : true, datos : [".$foo."] }";
