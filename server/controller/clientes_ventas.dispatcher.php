@@ -48,5 +48,13 @@ switch ($args['action']) {
 		$ans = delete_payment($id_pago);
 		echo $ans;
 	break;
+	
+	case '1407':
+		$id_venta = $args['id_venta'];
+		unset($args);
+		include_once("clientes_ventas.controller.php");
+		$ans = sale_header( $id_venta );
+		echo $ans;
+	break;
 }//end switch
 ?>

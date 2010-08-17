@@ -33,12 +33,13 @@ require_once('../server/model/impuesto.dao.php');
  */
 
 function facturar_sale( $id_venta , $jsonItems, $todos ) {
+	
 	$sucursal = $_SESSION['sucursal'];
 	
 	$folioFactura = generarFolio( $sucursal );
 	
 	if( $todos == 'true' ){
-		
+		return "{success: true, datos: 'entre a todos = true'}";	
 		$factura = new FacturaVenta();
 		$factura->setFolio( $folioFactura );
 		$fatura->setIdVenta( $id_venta );
@@ -52,7 +53,7 @@ function facturar_sale( $id_venta , $jsonItems, $todos ) {
 			return "{success: false, reason:'No se pudo registrar la factura de esta venta, Se ivan a registrar todos los elementos de la venta'}";
 		}
 	}else{//if else todos = true (aki todos = false)
-		
+		return "{success: true, datos: 'entre a todos = false'}";
 		$venta = VentasDAO::getByPK( $id_venta );
 		
 		if( !is_object($venta) ){
@@ -60,6 +61,9 @@ function facturar_sale( $id_venta , $jsonItems, $todos ) {
 		}
 		
 		$arregloItems = json_decode($jsonItems,true);
+		//test
+		return "{success: true , datos: '".$arregloItems."'}";
+		//end test
 		$dim = count($arregloItems);
 		$ban = false; //revisara que hay por lo menos 1 producto para facturar
 		
@@ -68,7 +72,7 @@ function facturar_sale( $id_venta , $jsonItems, $todos ) {
 		
 		for ($j = 0; $j < $dim; $i++){
 			if( $arregloItems[$j]['facturar'] == 'true' ){
-				$ban = true
+				$ban = true;
 				break;
 			}
 		}//fin for que ve si hay productos para facturar
@@ -154,11 +158,11 @@ function facturar_sale( $id_venta , $jsonItems, $todos ) {
 					if( $r1 < 1 || $r2 < 1 ){
 						try{
 							DetalleVentaDAO::delete( $detalle1 );
-						}catch(Exception e) {}
+						}catch(Exception $e) {}
 						
 						try{
 							DetalleVentaDAO::delete( $detalle2 );
-						}catch(Exception e) {}
+						}catch(Exception $e) {}
 						
 						return "{success:false, reason:'No se genero la factura debido al producto numero ".($i+1)."'}";
 					}
@@ -243,7 +247,7 @@ function facturar_sale( $id_venta , $jsonItems, $todos ) {
 		}
 		
 		if( $venta->getTipoVenta == 'credito' && $todos == 'false'  ){//regularizar pagos solo si es a credito y no se van a facturar todos los productos de la venta, es decir solo algunos
-			$out .= payments_regularization( $id_venta , $v1 , $v2 )
+			$out .= payments_regularization( $id_venta , $v1 , $v2 );
 		}
 		
 		return "{success: true, reason:'Factura registrada correctamente, se facturaron algunos elementos de la venta', details:'".$out."' }";
@@ -372,4 +376,19 @@ function payments_regularization( $id_venta , $venta1 , $venta2 ) {
 	}
 	return $out;
 }//fin payments_regularization
+
+
+
+switch($args['action'])
+{
+	case '1801':
+        $id_venta = $args['id_venta'];
+        $jsonItems = $args['jsonItems'];
+        $todos = $args['todos'];
+        unset($args);
+		$ans = facturar_sale( $id_venta , $jsonItems, $todos );
+        echo $ans;
+	break;
+	
+}
 ?>

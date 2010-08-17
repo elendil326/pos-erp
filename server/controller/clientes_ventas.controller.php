@@ -701,4 +701,28 @@ function itemExistence_sucursal( $id_producto ){
 	}
 }
 
+/**
+ * sale_header
+ *
+ * Trae la cabecera de la venta dado su id
+ *
+ * @param <type> $id_venta
+ */
+function sale_header( $id_venta ){
+	$venta = VentasDAO::getByPK( $id_venta );
+	
+	if( is_object($venta)  ){
+		$out = '{ "tipo_venta":"'.$venta->getTipoVenta().'" , ';
+		$out .= '"fecha":"'.$venta->getFecha().'", ';
+		$out .= '"subtotal":"'.$venta->getSubtotal().'", ';
+		$out .= '"iva":"'.$venta->getIva().'", ';
+		$out .= '"descuento":"'.$venta->getDescuento().'", ';
+		$out .= '"total":"'.$venta->getTotal().'", ';
+		$out .= '"pagado":"'.$venta->getPagado().'"} ';
+		return '{success: true, datos : [ '.$out.' ] }';
+	}else{
+		return "{success: false, reason: 'Esta venta no existe' }";
+	}
+}
+
 ?>

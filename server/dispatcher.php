@@ -173,7 +173,7 @@ switch( ((int)($args['action'] / 100))*100 )
 	break;
 	
 	case 1800:
-		require_once('controller/facturas.dispatcher.php');
+		require_once('controller/facturas_ventas.controller.php');
 	break;
 	
 	case 2000:
