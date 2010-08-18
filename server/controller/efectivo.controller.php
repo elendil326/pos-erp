@@ -248,7 +248,7 @@ switch($args['action'])
         		$monto=$args['monto'];
         		$fecha=$args['fecha'];
         		
-        		if(!is_float($monto))
+        		if(!is_numeric($monto))
         		{
         			echo '{ "success" : "false" , "reason" : "No es una cantidad valida." }'; 
         			return;
@@ -282,7 +282,7 @@ switch($args['action'])
         		$monto=$args['monto'];
         		$fecha=$args['fecha'];
         		
-        		if(!is_float($monto))
+        		if(!is_numeric($monto))
         		{
         			echo '{ "success" : "false" , "reason" : "No es una cantidad valida." }'; 
         			return;
@@ -302,7 +302,7 @@ switch($args['action'])
         		$monto=$args['monto'];
         		$fecha=$args['fecha'];
         		
-        		if(!is_float($monto))
+        		if(!is_numeric($monto))
         		{
         			echo '{ "success" : "false" , "reason" : "No es una cantidad valida." }'; 
         			return;
@@ -338,7 +338,7 @@ switch($args['action'])
         		$monto=$args['monto'];
         		$fecha=$args['fecha'];
         		
-        		if(!is_float($monto))
+        		if(!is_numeric($monto))
         		{
         			echo '{ "success" : "false" , "reason" : "No es una cantidad valida." }'; 
         			return;
