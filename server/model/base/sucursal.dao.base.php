@@ -135,6 +135,11 @@ abstract class SucursalDAOBase extends TablaDAO
 			array_push( $val, $sucursal->getToken() );
 		}
 
+		if( $sucursal->getLetrasFactura() != NULL){
+			$sql .= " letras_factura = ? AND";
+			array_push( $val, $sucursal->getLetrasFactura() );
+		}
+
 		$sql = substr($sql, 0, -3) . " )";
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
@@ -168,11 +173,12 @@ abstract class SucursalDAOBase extends TablaDAO
 	  **/
 	private static final function update( $sucursal )
 	{
-		$sql = "UPDATE sucursal SET  descripcion = ?, direccion = ?, token = ? WHERE  id_sucursal = ?;";
+		$sql = "UPDATE sucursal SET  descripcion = ?, direccion = ?, token = ?, letras_factura = ? WHERE  id_sucursal = ?;";
 		$params = array( 
 			$sucursal->getDescripcion(), 
 			$sucursal->getDireccion(), 
 			$sucursal->getToken(), 
+			$sucursal->getLetrasFactura(), 
 			$sucursal->getIdSucursal(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -196,18 +202,20 @@ abstract class SucursalDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$sucursal )
 	{
-		$sql = "INSERT INTO sucursal ( descripcion, direccion, token ) VALUES ( ?, ?, ?);";
+		$sql = "INSERT INTO sucursal ( id_sucursal, descripcion, direccion, token, letras_factura ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
+			$sucursal->getIdSucursal(), 
 			$sucursal->getDescripcion(), 
 			$sucursal->getDireccion(), 
 			$sucursal->getToken(), 
+			$sucursal->getLetrasFactura(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$sucursal->setIdSucursal( $conn->Insert_ID() );
+		
 		return $ar;
 	}
 
@@ -287,6 +295,17 @@ abstract class SucursalDAOBase extends TablaDAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " token = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $sucursalA->getLetrasFactura()) != NULL) & ( ($b = $sucursalB->getLetrasFactura()) != NULL) ){
+				$sql .= " letras_factura >= ? AND letras_factura <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " letras_factura = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

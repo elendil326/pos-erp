@@ -80,7 +80,10 @@ function listarClientes()
 
 function insertarVenta($cliente, $tipo_venta, $items)
 {
-	
+
+	global $logger;
+	$logger->setIdent("Mostrador");
+		
 	$stuff = json_decode($items);
 	
 	//obtener el usuario
@@ -171,6 +174,7 @@ function insertarVenta($cliente, $tipo_venta, $items)
 		if($producto->getPrecioVenta() != $item->cost )
 		{
 			//LOG THIS !
+			$logger->log("Incongruencia de precios." );
 			echo "{\"success\": false, \"reason\": \"Fuck you hacker.\"}";
 			return;
 		}
@@ -217,7 +221,8 @@ function insertarVenta($cliente, $tipo_venta, $items)
 	
 	if($tipo_venta == 'contado')
 	{
-		$venta->setPagado( $total );		
+		$venta->setPagado( $total );
+		$venta->setTotal( $total );
 	}else{
 		
 		if($total > $cliente->getLimiteCredito()){
@@ -236,19 +241,51 @@ function insertarVenta($cliente, $tipo_venta, $items)
 	}
 
 	
+	//todo salio bien, descontar estos productos del inventario
+	$criterio = new DetalleVenta();
+	$criterio->setIdVenta( $venta->getIdVenta() );
+	$res= DetalleVentaDAO::search($criterio);
 	
-	//revisar que el total no pase de mi limite de credito	
-	//echo("Id de esta venta" .  );
+	foreach($res as $dv)
+	{
+		$inventario = DetalleInventarioDAO::getByPK( $dv->getIdProducto(), $usuario->getIdSucursal() );
+		$inventario->setExistencias( $inventario->getExistencias(  ) - $dv->getCantidad() ); 
+		DetalleInventarioDAO::save( $inventario );
+	}
+	
+	
 	echo "{\"success\": true, \"v_id\":  ".$venta->getIdVenta()."}";
 	
+	$logger->log("Venta a " . $tipo_veta ." efecutada. Total: " . $total );
+
 
 }
 
 
+//obtener el iva que aplica a esta sucursal
+function getIVA()
+{
+	$imp = new Impuesto();
+	$imp->setIdSucursal( $_SESSION['sucursal'] );
+	$impuestos = ImpuestoDAO::search( $imp );
+	
+	//sumo los impuestos, ya que varios impouestos aplicacn a una misma sucursal	
+	$totalImp = 0;
+	foreach( $impuestos as $imp )
+	{
+		$totalImp += $imp->getValor();
+	}
+	
+	
+	echo "{\"success\": true, \"iva\":  " . $totalImp . "}";
+}
 
 
 
-
+function facturarVenta($id_venta)
+{
+	
+}
 
 
 switch($args['action'])
@@ -256,7 +293,8 @@ switch($args['action'])
 	case 2101: existeProd( $args['id_producto'] ); break;
 	case 2102: listarClientes(); break;
 	case 2103: insertarVenta( $args['id_cliente'], $args['tipo_venta'], $args['jsonItems'] ); break;
-	
+	case 2104: getIva(); break;
+	case 2105: facturarVenta( $args['id_venta'] ); break;
 	default: echo "NOPE";
 	
 }
