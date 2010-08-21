@@ -408,7 +408,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 			loadingText: 'Cargando datos...',
 			emptyText: '<div class="no-data">No se encontraron productos para esta sucursal.</div>',
         	store: ApplicationInventario.currentInstance.InvProductsListStore,
-        	tpl: String.format('<tpl for="."><div class="products">{id_producto}&nbsp;<strong>{denominacion}</strong> &nbsp;Existencias: {existencias} Precio: {precio_venta}</div></tpl>' ),
+        	tpl: String.format('<tpl for="."><div class="products"><strong>{denominacion}</strong> &nbsp;Existencias: {existencias} Precio: {precio_venta}</div></tpl>' ),
         	itemSelector: 'div.products',
         	singleSelect: true
     	}]

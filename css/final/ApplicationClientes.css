@@ -86,7 +86,7 @@ div.vendedor{
 
 div.subtotal{
 	float: left;
-	width: 7%;
+	width: 10%;
 	text-shadow: black 0px 1px 1px;
 	color: black;	
 }
@@ -99,14 +99,14 @@ div.total{
 
 div.pagado{
 	float: left;
-	width: 7%;
+	width: 9%;
 	text-shadow: black 0px 1px 1px;
 	color:#093;	
 }
 
 div.abonar{
 	float: left;
-	width: 7%;
+	width: 10%;
 	text-shadow: black 0px 1px 1px;
 	color:#F00;	
 }

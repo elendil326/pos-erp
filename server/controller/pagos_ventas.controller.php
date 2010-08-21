@@ -40,22 +40,28 @@ function insert_payment($id_venta , $monto) {
 	$venta = VentasDAO::getByPK( $id_venta );
 	
 	if( is_object($venta) && $venta->getTipoVenta() == 'credito' ){
-		
+		$out ="";
+		$numPagos =0;
 		$total_pagos = 0;
-		$pv = PagosVentaDAO::getByPK( $id_venta );
+		
+		$payment = new PagosVenta();
+		$payment->setIdVenta( $id_venta );
+		
+		$pv = PagosVentaDAO::search( $payment );
 			
 		if ( count($pv) > 0 ){
 			foreach( $pv as $pago )
 			{
 				$total_pagos += $pago->getMonto();
+				$numPagos++;
 			}
 		}
-		
+		$out .= "Antes de insertar pago Esta venta tiene un total en pagos de: ".$total_pagos." y numero de pagos ".$numPagos;
 		$totVenta = $venta->getSubtotal() + $venta->getIva();
 		$adeudo = $totVenta - $total_pagos; 
 			
 		if( $monto > $adeudo ){//se trata de abonar mas de lo que debe
-			return "{ success: false, reason: 'No se puede abonar mas de lo que debe a esta venta' }";
+			return "{ success: false, reason: 'No se puede abonar mas de lo que debe a esta venta', details: '".$out."' }";
 		}else{
 			$pago = new PagosVenta();
 			$pago->setIdVenta( $id_venta );
@@ -63,9 +69,15 @@ function insert_payment($id_venta , $monto) {
 			
 			$ans = PagosVentaDAO::save( $pago );
 			if( $ans > 0 ){
-				return "{ success: true, reason:'Pago insertado correctamente' }";
+				$out2 ="";
+				$venta->setPagado( ($total_pagos + $monto) );
+				$ans2 = VentasDAO::save( $venta );
+				if ( $ans2 < 1 ){
+					$out2 .= ", NO SE ACUTALIZA LA TABLA VENTA EN EL CAMPO PAGADO";
+				}
+				return "{ success: true, reason:'Pago insertado correctamente".$out2."', details: '".$out."' }";
 			}else{
-				return "{ success: false, reason:'No se inserto el pago de esta venta'}";
+				return "{ success: false, reason:'No se inserto el pago de esta venta', details:'".$out."'}";
 			}
 		}
 		
@@ -74,16 +86,33 @@ function insert_payment($id_venta , $monto) {
 	}
 }//fin insert_payment
 
+/**
+ * delete_payment
+ *
+ * Funcion que elimina un abono de una venta y manda llamar la funcion q actualiza el campo
+ * pagado de la tabla ventas
+ * 
+ *
+ * @param <type> $id_pago
+ */
 function delete_payment($id_pago) {
-	
+	$out ="";
 	$pago = PagosVentaDAO::getByPK( $id_pago );
+	$id_venta = $pago->getIdVenta();
 	
 	if( is_object($pago) ){
 		
 		$ans = PagosVentaDAO::delete( $pago );
 		
 		if( $ans > 0 ){
-			return "{ success: true, reason:'El pago se elimino correctamente'}";
+			
+			$res = update_pagadoField( $id_venta );
+			
+			if( $res < 1){
+				$out .= ", No se actualizo el campo pagado de la tabla ventas";
+			}
+			
+			return "{ success: true, reason:'El pago se elimino correctamente".$out."'}";
 		}else{
 			return "{ success: false, reason: 'No se pudo eliminar el pago de esta venta'}";
 		}
@@ -92,4 +121,32 @@ function delete_payment($id_pago) {
 		return "{ success: false, reason:'Este pago no existe' }";
 	}
 }//fin insert_payment
+
+
+/**
+ * update_pagadoField
+ *
+ * Funcion que actualiza el campo pagado de la tabla ventas despues de
+ * eliminar un pago
+ * 
+ *
+ * @param <type> $id_venta
+ */
+function update_pagadoField( $id_venta ){
+	
+	$totalPagos = 0;
+	$pagos = new PagosVenta();
+	$pagos->setIdVenta( $id_venta );
+	
+	$pagosVenta = PagosVentaDAO::search( $pagos );
+	
+	foreach( $pagosVenta as $payment ){
+		$totalPagos += $payment->getMonto();
+	}
+	
+	$venta = VentasDAO::getByPK( $id_venta );
+	$venta->setPagado( $totalPagos );
+	
+	return VentasDAO::save( $venta );
+}
 ?>

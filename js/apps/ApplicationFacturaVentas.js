@@ -1,5 +1,4 @@
-﻿
-ApplicationFacturaVentas = function( id_venta , id_cliente ){
+﻿ApplicationFacturaVentas = function( id_venta , id_cliente ){
 
 	if(DEBUG){
 		console.log("ApplicationFacturaVentas: construyendo");

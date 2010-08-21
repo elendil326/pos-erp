@@ -1,4 +1,4 @@
-﻿<?php
+﻿p<?php
 /** Facturas ventas Controller
   * 
   * Este script contiene las funciones necesarias para realizar las diferentes operaciones 
@@ -39,10 +39,10 @@ function facturar_sale( $id_venta , $jsonItems, $todos ) {
 	$folioFactura = generarFolio( $sucursal );
 	
 	if( $todos == 'true' ){
-		return "{success: true, datos: 'entre a todos = true'}";	
+			
 		$factura = new FacturaVenta();
 		$factura->setFolio( $folioFactura );
-		$fatura->setIdVenta( $id_venta );
+		$factura->setIdVenta( $id_venta );
 		$factura->setIdSucursal( $sucursal );
 		
 		$ans = FacturaVentaDAO::save( $factura );
@@ -53,7 +53,7 @@ function facturar_sale( $id_venta , $jsonItems, $todos ) {
 			return "{success: false, reason:'No se pudo registrar la factura de esta venta, Se ivan a registrar todos los elementos de la venta'}";
 		}
 	}else{//if else todos = true (aki todos = false)
-		return "{success: true, datos: 'entre a todos = false'}";
+		
 		$venta = VentasDAO::getByPK( $id_venta );
 		
 		if( !is_object($venta) ){
@@ -61,24 +61,23 @@ function facturar_sale( $id_venta , $jsonItems, $todos ) {
 		}
 		
 		$arregloItems = json_decode($jsonItems,true);
-		//test
-		return "{success: true , datos: '".$arregloItems."'}";
-		//end test
+		
 		$dim = count($arregloItems);
 		$ban = false; //revisara que hay por lo menos 1 producto para facturar
-		
+
 		$detalle_nuevaVenta = array();
 		$detalle_nuevaVentaFacturada = array();
-		
-		for ($j = 0; $j < $dim; $i++){
-			if( $arregloItems[$j]['facturar'] == 'true' ){
+		$out="";
+		for ($j = 0; $j < $dim; $j++){
+			if( $arregloItems[$j]['facturar'] == true ){
 				$ban = true;
+				$out = " si entre al for por q hay algo q facturar ban vale -> ".$ban;
 				break;
 			}
 		}//fin for que ve si hay productos para facturar
 		
-		if( $ban = false ){
-			return "{success: false, reason:'No hay productos que facturar de esta venta'";
+		if( $ban == false ){
+			return "{success: false, reason:'No hay productos que facturar de esta venta'}";
 		}
 		
 		$v1 = new Ventas();
@@ -94,7 +93,7 @@ function facturar_sale( $id_venta , $jsonItems, $todos ) {
 		$v1->setIdSucursal( $venta->getIdSucursal() );
 		$v1->setIdUsuario( $venta->getIdUsuario() );
 		$v1->setPagado( 0 );
-		$v1->getIp( $venta->getIp() );
+		$v1->setIp( $venta->getIp() );
 		
 		$v2->setIdCliente( $venta->getIdCliente() );
 		$v2->setTipoVenta( $venta->getTipoVenta() );
@@ -106,8 +105,9 @@ function facturar_sale( $id_venta , $jsonItems, $todos ) {
 		$v2->setIdSucursal( $venta->getIdSucursal() );
 		$v2->setIdUsuario( $venta->getIdUsuario() );
 		$v2->setPagado( 0 );
-		$v2->getIp( $venta->getIp() );
+		$v2->setIp( $venta->getIp() );
 		
+		//return "{succees:false, reason:'Apenas voy a guardar las 2 ventas , ".$out." , fuera del for ban bale -> ".$ban."' }";
 		$r1 = VentasDAO::save( $v1 );
 		$r2 = VentasDAO::save( $v2 );
 		
@@ -230,7 +230,7 @@ function facturar_sale( $id_venta , $jsonItems, $todos ) {
 		$subtotV2 = $totalV2 - $ivaV2;
 		
 		$v2->setIva( $ivaV2 ); 
-		$v2->setSubtotal( $subtot21 );
+		$v2->setSubtotal( $subtotV2 );
 		$v2->setTotal( $totalV2 );
 		$v2->setPagado( $totalV2 );
 		
@@ -245,9 +245,49 @@ function facturar_sale( $id_venta , $jsonItems, $todos ) {
 		if( $r2 < 1 ){
 			$out .= ", No se actualizo la cabecera de la venta con los productos no facturados";
 		}
-		
-		if( $venta->getTipoVenta == 'credito' && $todos == 'false'  ){//regularizar pagos solo si es a credito y no se van a facturar todos los productos de la venta, es decir solo algunos
+		$out .= "Antes del if de entrar a payments regularization tipoVenta -> ".$venta->getTipoVenta()." todos -> ".$todos." ";
+		if( $venta->getTipoVenta() == 'credito' && $todos == 'false'  ){//regularizar pagos solo si es a credito y no se van a facturar todos los productos de la venta, es decir solo algunos
 			$out .= payments_regularization( $id_venta , $v1 , $v2 );
+		}
+		
+		
+		$factura = new FacturaVenta();
+		$factura->setFolio( $folioFactura );
+		$factura->setIdVenta( $v1->getIdVenta() );
+		$factura->setIdSucursal( $sucursal );
+		$ans = FacturaVentaDAO::save( $factura );
+		
+		
+		if ( $ans < 1 ){
+			$out .= ", No se inserto la venta a facturar en la tabla de factura_venta";
+		}
+		
+		/* 
+			se elimina la venta original y sus detalles 
+		*/
+		$numDetB = 0;
+		$detallesDelete = new DetalleVenta();
+		$detallesDelete->setIdVenta( $id_venta );
+		
+		$detallesEliminar = DetalleVentaDAO::search( $detallesDelete );
+		
+		foreach( $detallesEliminar as $detailD ){
+			
+			$borrarDet = new DetalleVenta();
+			$borrarDet->setIdVenta( $id_venta );
+			$borrarDet->setIdProducto( $detailD->getIdProducto() );
+			
+			$resp = DetalleVentaDAO::delete( $borrarDet );
+			if( $resp > 0 ){
+				$numDetB++;
+			}
+		}
+		$out .=" , SE BORRARON ".$numDetB." DETALLES DE LA VENTA ORIGINAL";
+		
+		$ans = VentasDAO::delete( $venta );
+		
+		if ( $ans < 1 ){
+			$out .= ", No se elimino la venta original de la cual se derivaron las 2 ventas nuevas";
 		}
 		
 		return "{success: true, reason:'Factura registrada correctamente, se facturaron algunos elementos de la venta', details:'".$out."' }";
@@ -277,15 +317,15 @@ function generarFolio( $sucursal ){
 	$dim = count($facturasSucursal);
 	
 	if( $dim < 1 ){
-		 return "".$letrasFolio."1";//es la primera factura, en la factura impresa será A0001 y en la Bd sera A1
+		 return "".$letrasFolio."1 count vale: ".$dim;//es la primera factura, en la factura impresa será A0001 y en la Bd sera A1
 	}else{
 		
 		$letrasLength = strlen( $letrasFolio );//por si las letras son A- ó A-1-
 		
-		$num = substr($facturasSucursal[ $dim -1 ]->getFolio(), $letrasLength , 0 ); // se toma la ultima factura y se le saca el numero de fulio con un sbstr, A0001 -> 0001
-		$n = (int)$num + 1;
+		$num = substr($facturasSucursal[ $dim -1 ]->getFolio(), $letrasLength ); // se toma la ultima factura y se le saca el numero de folio con un sbstr, A0001 -> 0001
+		$n = $num + 1;
 		
-		return "".$letrasFolio."".$n;
+		return "".$letrasFolio.$n;
 	}
 }
 
@@ -302,14 +342,14 @@ function generarFolio( $sucursal ){
  * @param <type> $venta2
  */
 function payments_regularization( $id_venta , $venta1 , $venta2 ) {
-	$out ="";
+	$out =" 	,entre a payments regularization, ";
 	$pagos = new PagosVenta();
 	$pagos->setIdVenta( $id_venta );
 	
-	$pagosVenta = PagosVentaDAO::search( $pagos );
+	$pagosVenta = PagosVentaDAO::search( $pagos ); //este mismo se usa al final para borrar esos pagos
 	
 	$totalV1 = $venta1->getTotal();
-	
+	$out .= " el total de la venta 1 es de: ".$totalV1." ";
 	$pagosV1 = array();
 	$pagosV2 = array();
 	
@@ -374,6 +414,21 @@ function payments_regularization( $id_venta , $venta1 , $venta2 ) {
 			$out .=", No se regularizo un pago para la venta ".$venta2->getIdVenta()." de un monto de: ".$pagosV2[$i]['monto']."";
 		}
 	}
+	
+	/*
+		borrar pagos de la venta a borrar
+	*/
+	$numPagosDel = 0;	
+	foreach( $pagosVenta as $payment ){
+		$paymentD = new PagosVenta();
+		
+		$paymentD->setIdPago( $payment->getIdPago() );
+		$resul = PagosVentaDAO::delete( $paymentD );
+		if( $resul > 0 ){
+			$numPagosDel++;
+		}
+	}//fin foreach
+	$out .= " , SE BORRARON ".$numPagosDel." PAGOS de la venta ".$id_venta ." ORGINAL ";
 	return $out;
 }//fin payments_regularization
 
