@@ -1,12 +1,17 @@
-<html> 
+<html>
 <head> 
   <title>Papas Supremas | Administracion</title> 
     
     <link rel="stylesheet" type="text/css" href="../getResource.php?mod=admin&type=css" /> 
     
     <link type="text/css" href="../jquery/css/vader/jquery-ui-1.8.2.custom.css" rel="stylesheet" />
-    <link type="text/css" href="../jquery/css/ui.jqgrid.css" rel="stylesheet" />	
+    <link type="text/css" href="../jquery/css/ui.jqgrid.css" rel="stylesheet" />
+    <link type="text/css" href="../jquery/css/screen.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="../jquery/css/flexigrid/flexigrid.css">
+    <link rel="stylesheet" type="text/css" href="../jquery/css/uniform.agent.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../jquery/js/jqtransformplugin/jqtransform.css"> -->
+    
+    <script src="../jquery/js/init.js"  type="text/javascript"></script> 
 
     <script type="text/javascript" src="../mochikit/MochiKit.js"></script>
     <script type="text/javascript" src="../plotkit/Base.js"></script>
@@ -14,45 +19,54 @@
     <script type="text/javascript" src="../plotkit/Canvas.js"></script>
     <script type="text/javascript" src="../plotkit/SweetCanvas.js"></script>
     
+    
+    
     <script type="text/javascript" src="../jquery/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="../jquery/js/jquery-ui-1.8.2.custom.min.js"></script>
     <script type="text/javascript" src="../jquery/js/grid.locale-sp.js"></script>
     <script type="text/javascript" src="../jquery/js/jquery.jqGrid.min.js"></script>
     <script type="text/javascript" src="../jquery/js/flexigrid.js"></script>
-    
     <script type="text/javascript" src="../getResource.php?mod=admin&type=js"></script>  
+    <script type="text/javascript" src="../jquery/js/jquery-animate-css-rotate-scale.js"></script>
+    <script type="text/javascript" src="../jquery/js/jquery-css-transform/jquery-css-transform.js"></script>
+    <script type="text/javascript" src="../jquery/js/jquery.quicksand.min.js"></script>
+    <script type="text/javascript" src="../jquery/js/jquery.uniform.min.js"></script>
+    <!-- <script type="text/javascript" src="../jquery/js/jqtransformplugin/jquery.jqtransform.js"></script> -->
+    
+    <script type="text/javascript" src="../jquery/js/ui.datepicker.js"></script>
     
     
- 
     
 </head> 
 <body> 
-<div id="menu-top">
- 		<div id="title-text" style="float:left" class="title">Papas Supremas - Administraci&oacute;n </div>
- 		<!-- <div id="logout"><button id="boton-salir">Salir</button></div> -->
- 		
- 		<div id="top">
- 		<a href="#" id="boton-salir"> 
-			<span class="left"></span> 
-			<span class="right"></span> 
-			Salir
-		</a>
-		</div>
-		
- 	</div>
- <div id="main">
- 	<div id="main-container">
-		<div id="menu-left">
-		</div>
-		<div id="content">
+ <div id="main-2">
+ 	<div id="main-container-2">
+ 		<div id="mosaico-title">
+ 			Papas Supremas - Administraci&oacute;n
+ 		</div>
+ 		<div id="menu2">
+ 			<button onclick="appAdmin.loadMosaic(); ">Home</button>
+ 			<button onclick="$('#source').quicksand( $('#source-hidden li'));">Todo</button>
+ 			<button onclick="$('#source').quicksand( $('#r-ventas li'));">Ventas</button>
+ 			<button onclick="$('#source').quicksand( $('#r-compras li'));">Compras</button>
+ 			<button onclick="$('#source').quicksand( $('#r-clientes li'));">Clientes</button>
+ 			<button onclick="$('#source').quicksand( $('#r-dinero li'));">Efectivo</button>
+ 		</div>
+		<div id="content-2">
+			
+
+			
 		</div>
 		<div style="clear:both;"></div>
  	</div>
  	
  </div>
- <!--
- <div id="footer">
- Caffeina&copy;2010
- </div> -->
+ <div id="footer2">
+	<div style="width:1024px; margin-left:auto; margin-right:auto;">
+		<div style="width:250px; margin-left:auto; margin-right:auto;">
+		<table><tr><td><img src="../media/logo_simbolo.png" width="30" height="30"/></td><td style="text-align:center;">Development by Caffeina&copy;2010</td></tr></table>
+		</div>
+	</div>
+ </div>
 </body> 
 </html>
