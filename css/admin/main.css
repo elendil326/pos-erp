@@ -5,7 +5,7 @@ html, body {
         border:0 none;
         overflow:visible;
         height:100%;
-        /*background-color:#2E2E2E;*/
+        background-color:#2E2E2E;
     }
 p {
 margin:5px;
@@ -170,6 +170,7 @@ background-image:url(../shared/icons/fam/folder_go.png);
 	margin-top:10px;
 	margin-right:10px;
 	overflow:hidden;
+	background: white;
 }
 
 .title-graph{
@@ -238,4 +239,28 @@ background-image:url(../shared/icons/fam/folder_go.png);
 table{
 
 	font-size:12px !important;
+}
+
+#usuario-form table{
+	font-family:QuicksandBook, Helvetica, Arial, sans-serif;
+	font-size: 14px !important;
+	font-weight:bold !important;
+	/*text-shadow: rgba(255, 255, 255, 0.078125) 0px 1px 0px;*/
+	color: gray !important;
+	width: 400px;
+	margin-right:auto;
+	margin-left:auto;
+}
+
+#usuario-title{
+
+	font-family:Verdana, Trebuchet, Arial, sans-serif;
+	font-size:16px;
+	color: gray !important;
+}
+
+#usuario-text{
+	font-family:Verdana, Trebuchet, Arial, sans-serif;
+	font-size:11px;
+	color: gray !important;
 }

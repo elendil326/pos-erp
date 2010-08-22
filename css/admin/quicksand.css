@@ -1,0 +1,85 @@
+/*
+	css para el mosaico
+*/
+
+#main-container-2{
+	position:relative;
+	background-color:#2E2E2E;
+	border:1px solid #000000;
+}
+
+#content-2{
+	float:left;
+	width:1004px;
+	height:auto;
+	padding:10px;
+	/*overflow:auto;*/
+	padding-bottom:29px;
+}
+
+#main-2{
+	margin-left:auto;
+	margin-right:auto;
+	width: 1024px;
+	height:auto;
+	background-color:white;
+	margin-bottom:29px;
+	margin-top: 20px;
+	color:#dddddd;
+	border:10px solid #3f3f3f;
+	/*overflow:auto;*/
+}
+
+.hidden{
+	display:none !important;
+}
+
+
+.inline{
+	list-style-type:none;
+	height:100px;
+}
+
+.inline li{
+   /*isplay:inline;*/
+   float:left;
+   list-style-type:none;
+   padding:10px;
+}
+
+.mosaico-text{
+	text-align:center;
+	font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Verdana, sans-serif;
+	text-shadow: rgba(255, 255, 255, 0.8) 0px 0px 3px;
+}
+
+#mosaico-title{
+	padding:50px;
+	/*border-bottom:10px solid #3f3f3f;*/
+	text-align:center;
+	font-size:30px;
+	text-shadow: rgba(0,0,0, 1) 1px 1px 0px;
+	color: white;
+	font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Verdana, sans-serif;
+}
+
+#menu2{
+	height:30px;
+	text-align:center;
+	background: #3f3f3f;
+	width:100%;
+	border-top:1px solid #000000;
+	border-bottom:1px solid #000000;
+}
+
+#footer2{
+	text-shadow: rgba(255, 255, 255, 0.078125) 0px 1px 0px;
+	color: #0E0F10;
+	text-align:center;
+	width:100%;
+}
+
+#info-reporte{
+	font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Verdana, sans-serif;
+}
+	
