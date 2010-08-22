@@ -154,6 +154,11 @@ require_once('../server/model/view_compras.dao.php');
 	}
 
 
+	function getDataGridCompras($page,$rp, $sortname, $sortorder, $search, $qtype, $de, $al, $id_cliente)
+	{
+		$data = ViewComprasDao::getAll($page,$rp,$sortname, $sortorder);
+	}
+
 
 	switch( $args['action'] )
 	{

@@ -86,6 +86,17 @@ Graficas.addGraph = function(config){
 					var y;
 					var v;
 					var label;
+					
+					//Comprobamos si existen datos, sino mostramos un mensaje
+					if( isNaN(parseFloat(msg.datos[0].y)) )
+					{
+						var canvasSelector = "#"+config.canvasID;
+						
+						$(canvasSelector).remove();
+						
+						graph.innerHTML = "<p><table><tr><td><img src='../media/admin/cross.png' /></td><td>No hay datos para este periodo de tiempo</td></tr></p";
+						return;
+					}
 
 					for( var i=0; i < msg.datos.length ; i++ )
 					{
@@ -186,7 +197,6 @@ Graficas.addGraphWithTitle = function(config){
 	$(wrapperSelector).addClass('wrapper-graph');
 	$(titleSelector).addClass('title-graph');
 	
-	
 	//Si remoteData es verdadero, sacaremos los datos de la grafica haciendo un ajax
 	if(config.remoteData)
 	{
@@ -194,6 +204,8 @@ Graficas.addGraphWithTitle = function(config){
 			url: config.url,
 			data: config.params,
 			success: function(msg){
+
+				//console.log("test");
 		
 				if(msg.success)
 				{
@@ -203,6 +215,17 @@ Graficas.addGraphWithTitle = function(config){
 					var y;
 					var v;
 					var label;
+					
+					//Comprobamos si existen datos, sino mostramos un mensaje
+					if( isNaN(parseFloat(msg.datos[0].y)) )
+					{
+						var canvasSelector = "#"+config.canvasID;
+						
+						$(canvasSelector).remove();
+						
+						graph.innerHTML = "<p><table><tr><td><img src='../media/admin/cross.png' /></td><td>No hay datos para este periodo de tiempo</td></tr></p";
+						return;
+					}
 
 					for( var i=0; i < msg.datos.length ; i++ )
 					{

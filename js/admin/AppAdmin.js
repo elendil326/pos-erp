@@ -19,7 +19,8 @@ AppAdmin = function(){
 */
 AppAdmin.prototype._init = function(){
 
-	this.loadStructure();
+	//this.loadStructure();
+	this.loadMosaic();
 
 }
 
@@ -70,6 +71,166 @@ AppAdmin.prototype.loadStructure = function(){
 	 				});
 }
 
+AppAdmin.prototype.loadMosaic = function(){
+
+	$('#content-2').fadeOut('slow',function(){
+
+	$('#content-2').html('<ul id="source" class="inline">\
+				<li data-id="ventas-all" class="reporte-ventas" onclick="Reports.currentInstance.loadVentasTodas()"><img src=\'../media/admin/icons/piggybank.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Ventas Totales</p></li>\
+				<li data-id="ventas-credito" class="reporte-ventas" onclick="Reports.currentInstance.loadVentasCreditoReport()"><img src=\'../media/admin/icons/piggybank.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Ventas a Cr&eacute;dito</p></li>\
+				<li data-id="ventas-contado" class="reporte-ventas" onclick="Reports.currentInstance.loadVentasContadoReport()"><img src=\'../media/admin/icons/piggybank.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Ventas de Contado</p></li>\
+				<li data-id="compras-all" class="reporte-compras" onclick="Reports.currentInstance.loadClientesComprasTodasReport()"><img src=\'../media/admin/icons/cart.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Compras Totales</p></li>\
+				<li data-id="compras-credito" class="reporte-compras" onclick="Reports.currentInstance.loadComprasCreditoReport()"><img src=\'../media/admin/icons/cart.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Compras a Cr&eacute;dito</p></li>\
+				<li data-id="compras-contado" class="reporte-compras" onclick="Reports.currentInstance.loadComprasContadoReport()"><img src=\'../media/admin/icons/cart.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Compras de Contado</p></li>\
+				<li data-id="compras-deudas" class="reporte-compras"><img src=\'../media/admin/icons/cart.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Compras deudas</p></li>\
+				<li data-id="compras-pagado" class="reporte-compras"><img src=\'../media/admin/icons/cart.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Compras pagado</p></li>\
+				<li data-id="clientes-all" class="reporte-clientes" onclick="Reports.currentInstance.loadClientesReport()"><img src=\'../media/admin/icons/user.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Clientes</p></li>\
+				<li data-id="clientes-deudores" class="reporte-clientes" onclick="Reports.currentInstance.loadClientesDebenReport()"><img src=\'../media/admin/icons/user.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Clientes deudores</p></li>\
+				<li data-id="gastos" class="reporte-dinero" onclick="Reports.currentInstance.loadGastosReport()" ><img src=\'../media/admin/icons/money.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Gastos</p></li>\
+				<li data-id="pagos" class="reporte-dinero" onclick="Reports.currentInstance.loadIngresosReport()"><img src=\'../media/admin/icons/money.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Ingresos</p></li>\
+				<li data-id="admin-personal" class="admin-personal" onclick="appAdmin.loadPersonal()"><img src=\'../media/admin/icons/client.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Administrar Personal</p></li>\
+				<li data-id="rendimiento-personal" class="rendimiento-personal" onclick="appAdmin.loadRendimientoPersonal()"><img src=\'../media/admin/icons/client.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Rendimiento del Personal</p></li>\
+			</ul>\
+			<ul id="r-ventas" class="hidden inline">\
+				<li data-id="ventas-all" class="reporte-ventas" onclick="Reports.currentInstance.loadVentasTodas()"><img src=\'../media/admin/icons/piggybank.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Ventas Totales</p></li>\
+				<li data-id="ventas-credito" class="reporte-ventas" onclick="Reports.currentInstance.loadVentasCreditoReport()"><img src=\'../media/admin/icons/piggybank.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Ventas a Credito</p></li>\
+				<li data-id="ventas-contado" class="reporte-ventas" onclick="Reports.currentInstance.loadVentasContadoReport()"><img src=\'../media/admin/icons/piggybank.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Ventas de Contado</p></li>\
+			</ul>\
+			<ul id="r-compras" class="hidden inline">\
+				<li data-id="compras-all" class="reporte-compras" onclick="Reports.currentInstance.loadClientesComprasTodasReport()"><img src=\'../media/admin/icons/cart.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Compras Totales</p></li>\
+				<li data-id="compras-credito" class="reporte-compras" onclick="Reports.currentInstance.loadComprasCreditoReport()"><img src=\'../media/admin/icons/cart.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Compras a Cr&eacute;dito</p></li>\
+				<li data-id="compras-contado" class="reporte-compras" onclick="Reports.currentInstance.loadComprasContadoReport()"><img src=\'../media/admin/icons/cart.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Compras de Contado</p></li>\
+				<li data-id="compras-deudas" class="reporte-compras"><img src=\'../media/admin/icons/cart.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Compras deudas</p></li>\
+				<li data-id="compras-pagado" class="reporte-compras"><img src=\'../media/admin/icons/cart.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Compras pagado</p></li>\
+			</ul>\
+			<ul id="r-clientes" class="hidden inline">\
+				<li data-id="clientes-all" class="reporte-clientes" onclick="Reports.currentInstance.loadClientesReport()"><img src=\'../media/admin/icons/user.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Clientes</p></li>\
+				<li data-id="clientes-deudores" class="reporte-clientes" onclick="Reports.currentInstance.loadClientesDebenReport()"><img src=\'../media/admin/icons/user.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Clientes deudores</p></li>\
+			</ul>\
+			<ul id="r-dinero" class="hidden inline">\
+				<li data-id="gastos" class="reporte-dinero" onclick="Reports.currentInstance.loadGastosReport()" ><img src=\'../media/admin/icons/money.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Gastos</p></li>\
+				<li data-id="pagos" class="reporte-dinero" onclick="Reports.currentInstance.loadIngresosReport()"><img src=\'../media/admin/icons/money.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Ingresos</p></li>\
+			</ul>\
+			<ul id="source-hidden" class="hidden inline">\
+				<li data-id="ventas-all" class="reporte-ventas" onclick="Reports.currentInstance.loadVentasTodas()"><img src=\'../media/admin/icons/piggybank.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Ventas Totales</p></li>\
+				<li data-id="ventas-credito" class="reporte-ventas" onclick="Reports.currentInstance.loadVentasCreditoReport()"><img src=\'../media/admin/icons/piggybank.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Ventas a Credito</p></li>\
+				<li data-id="ventas-contado" class="reporte-ventas" onclick="Reports.currentInstance.loadVentasContadoReport()"><img src=\'../media/admin/icons/piggybank.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Ventas de Contado</p></li>\
+				<li data-id="compras-all" class="reporte-compras" onclick="Reports.currentInstance.loadClientesComprasTodasReport()"><img src=\'../media/admin/icons/cart.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Compras Totales</p></li>\
+				<li data-id="compras-credito" class="reporte-compras" onclick="Reports.currentInstance.loadComprasCreditoReport()"><img src=\'../media/admin/icons/cart.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Compras a Cr&eacute;dito</p></li>\
+				<li data-id="compras-contado" class="reporte-compras" onclick="Reports.currentInstance.loadComprasContadoReport()"><img src=\'../media/admin/icons/cart.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Compras de Contado</p></li>\
+				<li data-id="compras-deudas" class="reporte-compras"><img src=\'../media/admin/icons/cart.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Compras deudas</p></li>\
+				<li data-id="compras-pagado" class="reporte-compras"><img src=\'../media/admin/icons/cart.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Compras pagado</p></li>\
+				<li data-id="clientes-all" class="reporte-clientes" onclick="Reports.currentInstance.loadClientesReport()"><img src=\'../media/admin/icons/user.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Clientes</p></li>\
+				<li data-id="clientes-deudores" class="reporte-clientes" onclick="Reports.currentInstance.loadClientesDebenReport()"><img src=\'../media/admin/icons/user.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Clientes deudores</p></li>\
+				<li data-id="gastos" class="reporte-dinero" onclick="Reports.currentInstance.loadGastosReport()" ><img src=\'../media/admin/icons/money.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Gastos</p></li>\
+				<li data-id="pagos" class="reporte-dinero" onclick="Reports.currentInstance.loadIngresosReport()"><img src=\'../media/admin/icons/money.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Ingresos</p></li>\
+				<li data-id="admin-personal" class="admin-personal" onclick="appAdmin.loadPersonal()"><img src=\'../media/admin/icons/client.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Administrar Personal</p></li>\
+				<li data-id="rendimiento-personal" class="rendimiento-personal" onclick="appAdmin.loadRendimientoPersonal()"><img src=\'../media/admin/icons/client.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Rendimiento del Personal</p></li>\
+			</ul>');
+
+		$('#content-2').fadeIn('slow');
+	});
+
+}
+
+AppAdmin.prototype.loadPersonal = function(){
+
+	$('#content-2').fadeOut('slow',function(){
+	
+		$('#content-2').html('\
+			<div id="usuario-title">Administraci&oacute;n del Personal</div>\
+			<p id="usuario-text">\
+				Agregue o modifique el personal de sus sucursales. Si en alg&uacute;n momento usted necesita expandir su personal, en &eacute;ste m&oacute;dulo puede realizar todas\
+				esas acciones.\
+			</p>\
+			<div id="usuario-form">\
+			<form>\
+			      <table>\
+			      	<tr>\
+			      		<td>Nombre Completo</td><td><input type="text" id="nombre-new" name="nombre" style="width:200px;" /></td>\
+			      	</tr>\
+			      	<tr>\
+			      		<td>Usuario</td><td><input type="text" id="user-new" name="user" style="width:200px;"/></td>\
+			      	</tr>\
+			      	<tr>\
+			      		<td>Contrase&ntilde;a</td><td><input type="password" id="pwd-new" name="password" style="width:200px;"/></td>\
+			      	</tr>\
+			      	<tr>\
+			      		<td>Sucursal</td><td><select id="select-sucursal" name="sucursal" />\
+			      					</select>\
+			      		</td>\
+			      	</tr>\
+			      </table>\
+			    </form><button onclick="appAdmin.sendFormNewUser();">Enviar</button></div>\
+		');
+		
+		//$('form').jqTransform({imgPath:'../jquery/js/jqtransformplugin/img/'});
+		$("select, input:checkbox, input:radio, input:file").uniform();
+		
+		var options = "";
+		Utils.request({
+		url: "../proxy.php",
+		data: {action : "2201"},
+		success: function(msg){
+		
+			if(msg.success)
+			{
+				for (var i = 0; i < msg.data.length; i++) {
+					options += '<option value="' + msg.data[i].value + '">' + msg.data[i].display + '</option>';
+				}
+				
+				$("select#select-sucursal").html(options);
+			}
+			else
+			{
+				options += '<option>No se encontraron datos</option>';
+			}
+		}
+	});
+	
+		$('#content-2').fadeIn('slow');
+	
+	});
+}
+
+AppAdmin.prototype.loadRendimientoPersonal = function(){
+
+	$('#content-2').fadeOut('slow',function(){
+	
+	
+	
+	});
+
+}
+
+AppAdmin.prototype.sendFormNewUser = function(){
+
+	var _nombre = $("#nombre-new").val();
+	var _user = $("#user-new").val();
+	var _pwd = $("#pwd-new").val();
+	var _sucursal = $("#select-sucursal").val();
+	
+	console.log("ajax result0");
+
+	Utils.request({
+		url: "../proxy.php",
+		data: {action : "2301", nombre: _nombre, user2: _user, password: _pwd, sucursal : _sucursal},
+		success: function(msg){
+		
+			console.log("ajax result");
+			console.log(msg);
+		
+			if(msg.success)
+			{
+				alert('good :)');
+			}
+			else
+			{
+				alert('bad :(');
+			}
+		}
+	});
+}
 
 AppAdmin.prototype.createLogoutMessage = function(){
 	

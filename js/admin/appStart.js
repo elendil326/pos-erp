@@ -13,6 +13,8 @@ $(document).ready(function() {
 	//iniciar con el appLogin
 	appAdmin = new AppAdmin();
 
+	new Reports();
+	/*
 	//ejemplo de cargar grafica con datos hardcoded	
 	Graficas.addGraphWithTitle({
 			title: 'test',
@@ -46,6 +48,7 @@ $(document).ready(function() {
 			
 			}
 			});
+		*/
 
 });
 //AJAX EJEMPPLO

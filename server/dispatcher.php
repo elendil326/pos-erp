@@ -190,6 +190,11 @@ switch( ((int)($args['action'] / 100))*100 )
 		require_once('controller/mostrador.controller.php');
 	break;
 	
+	case 2300:
+		/* sucursal stuff*/
+		require_once('controller/usuarios.controller.php');
+	break;
+	
 	case 2200:
 		/* sucursal stuff*/
 		require_once('controller/sucursal.controller.php');
