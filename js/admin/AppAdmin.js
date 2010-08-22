@@ -197,6 +197,7 @@ AppAdmin.prototype.loadRendimientoPersonal = function(){
 
 	$('#content-2').fadeOut('slow',function(){
 	
+	/*
 		Utils.request({
 				url: "../proxy.php",
 				data: {action: "401", showAll: true},
@@ -208,7 +209,7 @@ AppAdmin.prototype.loadRendimientoPersonal = function(){
 					for(var i=0; i < msg.datos.length ; i++)
 					{
 					
-						html_result += msg.datos[i].usuario+" "+msg.datos[i].cantidad+"<br>";
+						html_result += "<div class='mvp-row'>"+msg.datos[i].usuario+" "+msg.datos[i].cantidad+"</div>";
 					}
 				
 					//console.log(html);
@@ -217,9 +218,66 @@ AppAdmin.prototype.loadRendimientoPersonal = function(){
 				}
 			});
 			
+	*/
+		Utils.request({
 		
+			url: "../proxy.php",
+			data: {action: "2201"},
+			success: function(msg){
+			
+				var options = "";
+			
+				if(msg.success)
+				{
+					for (var i = 0; i < msg.data.length; i++) {
+						options += '<a href="#" style="text-decoration:none; color:white;" onclick="appAdmin.loadMVPSucursal('+msg.data[i].value+')" ">' + msg.data[i].display + '</a>&nbsp;|&nbsp;';
+					}
+				
+					$("#content-2").html(options+"<div id='mvp-results'></div> ");
+					$('#content-2').fadeIn('slow');
+				
+				}
+				else
+				{
+					options += 'No se encontraron sucursales';
+				}
+			
+			}
+	
+		});	
 	
 	});
+
+}
+
+AppAdmin.prototype.loadMVPSucursal = function(sucursal){
+
+	Utils.request({
+			url: "../proxy.php",
+			data: {action: "404", showAll: true, id_sucursal: sucursal},
+			success: function(msg){
+			
+				var html_result = "";
+			
+				
+				for(var i=0; i < msg.datos.length ; i++)
+				{
+					if(msg.datos[i].usuario === undefined)
+					{
+						html_result = "<div class='mvp-row'>No se encontraron datos</div>";
+						break;
+					}
+					else
+					{
+						html_result += "<div class='mvp-row'>"+msg.datos[i].usuario+" "+msg.datos[i].cantidad+"</div>";
+					}
+				}
+			
+				//console.log(html);
+				$('#mvp-results').html(html_result);
+				$('#mvp-results').fadeIn('slow');
+			}
+		});
 
 }
 
@@ -236,9 +294,6 @@ AppAdmin.prototype.sendFormNewUser = function(){
 		url: "../proxy.php",
 		data: {action : "2301", nombre: _nombre, user2: _user, password: _pwd, sucursal : _sucursal},
 		success: function(msg){
-		
-			console.log("ajax result");
-			console.log(msg);
 		
 			if(msg.success)
 			{
