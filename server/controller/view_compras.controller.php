@@ -35,11 +35,11 @@ require_once('../server/model/view_compras.dao.php');
 
 		if ( $data[0] != false )
 		{
-			$result = '{ "success": true, "datos": '.json_encode($data).'}';
+			$result = "{ \"success\": true, \"datos\": ".json_encode($data)."}";
 		}
 		else
 		{
-			$result = '{ "success": false, "error": '.$data[1].'}';
+			$result = "{ \"success\": false, \"error\": ".$data[1]."}";
 		}
 
 		return $result;
@@ -70,11 +70,11 @@ require_once('../server/model/view_compras.dao.php');
 
 		if ( $data[0] != false )
 		{
-			$result = '{ "success": true, "datos": '.json_encode($data).'}';
+			$result = "{ \"success\": true, \"datos\": ".json_encode($data)."}";
 		}
 		else
 		{
-			$result = '{ "success": false, "error": '.$data[1].'}';
+			$result = "{ \"success\": false, \"error\": ".$data[1]."}";
 		}
 
 		return $result;
@@ -107,11 +107,11 @@ require_once('../server/model/view_compras.dao.php');
 
 		if ( $data[0] != false )
 		{
-			$result = '{ "success": true, "datos": '.json_encode($data).'}';
+			$result = "{ \"success\": true, \"datos\": ".json_encode($data)."}";
 		}
 		else
 		{
-			$result = '{ "success": false, "error": '.$data[1].'}';
+			$result = "{ \"success\": false, \"error\": ".$data[1]."}";
 		}
 
 		return $result;
@@ -143,21 +143,156 @@ require_once('../server/model/view_compras.dao.php');
 
 		if ( $data[0] != false )
 		{
-			$result = '{ "success": true, "datos": '.json_encode($data).'}';
+			$result = "{ \"success\": true, \"datos\": ".json_encode($data)."}";
 		}
 		else
 		{
-			$result = '{ "success": false, "error": '.$data[1].'}';
+			$result = "{ \"success\": false, \"error\": ".$data[1]."}";
 		}
+
 		return $result;
 
 	}
-
-
+	
+	
 	function getDataGridCompras($page,$rp, $sortname, $sortorder, $search, $qtype, $de, $al, $id_cliente)
 	{
-		$data = ViewComprasDao::getAll($page,$rp,$sortname, $sortorder);
+	
+		$total = count(ViewComprasDao::getAll());
+		$compras = ViewComprasDao::getAll($page,$rp,$sortname, $sortorder);
+		
+		$rows_array = array();
+		foreach($compras as $compra)
+		{
+			$row = array(	$compra->getIdCompra(), 
+					$compra->getProveedor(), 
+					$compra->getTipoCompra(), 
+					$compra->getFecha(), 
+					$compra->getSubtotal(),
+					$compra->getIva(),
+					$compra->getSucursal(),
+					$compra->getUsuario()
+					);
+					
+			array_push($rows_array, array( "id"=>$compra->getIdCompra(), "cell" => $row ));
+		}
+		
+		$array_result = '{ "page": '.$page.', "total": '.$total.', "rows" : '.json_encode($rows_array).'}';
+			
+		echo $array_result;
 	}
+	
+	
+	
+	function getDataGridComprasContado($page,$rp, $sortname, $sortorder, $search, $qtype, $de, $al, $id_cliente)
+	{
+	
+		//$total = count(ViewComprasDao::getAll());
+		$compras = ViewComprasDao::getAll(null,null,$sortname, $sortorder);
+		
+		$compras_contado = array();
+		$total = 0;
+		foreach($compras as $compra)
+		{
+			if($compra->getTipoCompra() == "contado")
+			{
+				array_push($compras_contado, $compra);
+				$total++;
+			}
+		}
+		
+		
+		
+		$rows_array = array();
+		
+		$counter = 0;
+		
+		foreach($compras_contado as $compra_contado)
+		{
+		
+			if( ($counter >= ($page-1)*$rp) && ( $counter < ($page*$rp)) )
+			{
+				$row = array(	$compra_contado->getIdCompra(), 
+						$compra_contado->getProveedor(), 
+						$compra_contado->getTipoCompra(), 
+						$compra_contado->getFecha(), 
+						$compra_contado->getSubtotal(),
+						$compra_contado->getIva(),
+						$compra_contado->getSucursal(),
+						$compra_contado->getUsuario()
+						);
+					
+				array_push($rows_array, array( "id"=>$compra_contado->getIdCompra(), "cell" => $row ));
+			}
+			
+			if( $counter > ($page*$rp))
+			{
+				break;
+			}
+			
+			$counter++;
+		}
+		
+		$array_result = '{ "page": '.$page.', "total": '.$total.', "rows" : '.json_encode($rows_array).'}';
+			
+		echo $array_result;
+	}
+	
+	
+	function getDataGridComprasCredito($page,$rp, $sortname, $sortorder, $search, $qtype, $de, $al, $id_cliente)
+	{
+	
+		//$total = count(ViewComprasDao::getAll());
+		$compras = ViewComprasDao::getAll(null,null,$sortname, $sortorder);
+		
+		$compras_contado = array();
+		$total = 0;
+		foreach($compras as $compra)
+		{
+			if($compra->getTipoCompra() == "credito")
+			{
+				array_push($compras_contado, $compra);
+				$total++;
+			}
+		}
+		
+		
+		
+		$rows_array = array();
+		
+		$counter = 0;
+		
+		foreach($compras_contado as $compra_contado)
+		{
+		
+			if( ($counter >= ($page-1)*$rp) && ( $counter < ($page*$rp)) )
+			{
+				$row = array(	$compra_contado->getIdCompra(), 
+						$compra_contado->getProveedor(), 
+						$compra_contado->getTipoCompra(), 
+						$compra_contado->getFecha(), 
+						$compra_contado->getSubtotal(),
+						$compra_contado->getIva(),
+						$compra_contado->getSucursal(),
+						$compra_contado->getUsuario()
+						);
+					
+				array_push($rows_array, array( "id"=>$compra_contado->getIdCompra(), "cell" => $row ));
+			}
+			
+			if( $counter > ($page*$rp))
+			{
+				break;
+			}
+			
+			$counter++;
+		}
+		
+		$array_result = '{ "page": '.$page.', "total": '.$total.', "rows" : '.json_encode($rows_array).'}';
+			
+		echo $array_result;
+	}
+
 
 
 	switch( $args['action'] )
@@ -283,6 +418,40 @@ require_once('../server/model/view_compras.dao.php');
 		echo $result;
 		break;
 
+
+	case '605': // getDataGridCompras
+		
+		$page = $args['page'];
+		$rp = $args['rp'];
+		$sortname = $args['sortname'];
+		$sortorder = $args['sortorder'];
+		
+		echo getDataGridCompras($page,$rp, $sortname, $sortorder, $search, $qtype, $de, $al, $id_cliente);
+	
+		break;
+		
+		
+	case '606': // getDataGridComprasContado
+	
+		$page = $args['page'];
+		$rp = $args['rp'];
+		$sortname = $args['sortname'];
+		$sortorder = $args['sortorder'];
+		
+		echo getDataGridComprasContado($page,$rp, $sortname, $sortorder, $search, $qtype, $de, $al, $id_cliente);
+	
+		break;
+		
+	case '607': // getDataGridComprasContado
+	
+		$page = $args['page'];
+		$rp = $args['rp'];
+		$sortname = $args['sortname'];
+		$sortorder = $args['sortorder'];
+		
+		echo getDataGridComprasCredito($page,$rp, $sortname, $sortorder, $search, $qtype, $de, $al, $id_cliente);
+	
+		break;
 
 	}
 
