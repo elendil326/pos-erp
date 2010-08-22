@@ -197,7 +197,27 @@ AppAdmin.prototype.loadRendimientoPersonal = function(){
 
 	$('#content-2').fadeOut('slow',function(){
 	
-	
+		Utils.request({
+				url: "../proxy.php",
+				data: {action: "401", showAll: true},
+				success: function(msg){
+				
+					var html_result = "";
+				
+					
+					for(var i=0; i < msg.datos.length ; i++)
+					{
+					
+						html_result += msg.datos[i].usuario+" "+msg.datos[i].cantidad+"<br>";
+					}
+				
+					//console.log(html);
+					$('#content-2').html(html_result);
+					$('#content-2').fadeIn('slow');
+				}
+			});
+			
+		
 	
 	});
 
