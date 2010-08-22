@@ -49,7 +49,9 @@ ApplicationFacturaVentas.prototype.facturarPanel = function( id_venta , id_clien
 		id:'regresarFacturaVentas',
 		handler:	function( ){
 			//var detallesCte = ApplicacionClientes.currentInstance.addClientDetailsPanel( ApplicacionClientes.currentInstance.clienteSeleccionado ); 
-
+						ApplicationFacturaVentas.currentInstance.detalleFactura.length = 0;
+						ApplicationFacturaVentas.currentInstance.cantidadesProd.length = 0;
+						ApplicationFacturaVentas.currentInstance.toggleBtns.length = 0;
 						sink.Main.ui.setCard( ApplicacionClientes.currentInstance.ClientesList, { type: 'slide', direction: 'right'} );
 						//console.log("Voy a a regresar con el wey seleccionado que es: ");
 						//console.log( ApplicacionClientes.currentInstance.clienteSeleccionado );
@@ -73,11 +75,18 @@ ApplicationFacturaVentas.prototype.facturarPanel = function( id_venta , id_clien
 					function (datos){//mientras responda
 						if(!datos.success){
 							POS.aviso("ERROR",""+datos.reason);
+							return;
 						}
 						console.log(datos.datos);
+						
+						ApplicationFacturaVentas.currentInstance.detalleFactura.length = 0;
+						ApplicationFacturaVentas.currentInstance.cantidadesProd.length = 0;
+						ApplicationFacturaVentas.currentInstance.toggleBtns.length = 0;
+						
+						POS.aviso("FACTURA REGISTRADA",""+ datos.reason);
 					},
 					function (){//no responde
-						POS.aviso("ERROR","NO SE PUDO MOSTRAR DATOS DEL CLIENTE,  ERROR EN LA CONEXION :(");	
+						POS.aviso("ERROR","NO SE PUDO MOSTRAR LOS DETALLES DE LA VENTA,  ERROR EN LA CONEXION :(");	
 					}
 				);//AJAXandDECODE 1004
 					
@@ -112,7 +121,7 @@ ApplicationFacturaVentas.prototype.facturarPanel = function( id_venta , id_clien
 						change: function(  ){
 							if( ApplicationFacturaVentas.currentInstance.detalleFactura.length > 0 ){
 							var tipo = Ext.getCmp("facturarTodos").getValue();
-							var n = ApplicationFacturaVentas.currentInstance.toggleBtns.length;
+							var n = ApplicationFacturaVentas.currentInstance.detalleFactura.length;
 							
 							if( tipo == 1){
 								
@@ -342,6 +351,7 @@ ApplicationFacturaVentas.prototype.cambiarCantidadFacturar = function( indice , 
 
 	if( isNaN(cantidad) )
 	{
+		//console.log("no es un numero le pondre esta cantidad: "+ApplicationFacturaVentas.currentInstance.cantidadesProd[ indice ].cantidad);
 		idCaja.value = ""+ApplicationFacturaVentas.currentInstance.cantidadesProd[ indice ].cantidad;
 		return;
 	}

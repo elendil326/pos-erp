@@ -290,7 +290,7 @@ function facturar_sale( $id_venta , $jsonItems, $todos ) {
 			$out .= ", No se elimino la venta original de la cual se derivaron las 2 ventas nuevas";
 		}
 		
-		return "{success: true, reason:'Factura registrada correctamente, se facturaron algunos elementos de la venta', details:'".$out."' }";
+		return "{success: true, reason:'Factura registrada correctamente, se facturaron ALGUNOS elementos de la venta', details:'".$out."' }";
 		
 	}//fin else todos (true = false)
 }//fin  facturar_sale
