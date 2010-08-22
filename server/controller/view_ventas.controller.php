@@ -26,14 +26,21 @@ require_once("../server/model/view_ventas.dao.php");
         */
 
 
-	function VendedorMasProductivo( $timeRange, $fechaInicio, $fechaFinal )
+	function VendedorMasProductivo( $timeRange, $fechaInicio, $fechaFinal, $showAll )
 	{
 		$data = ViewVentasDao::getVendedorMasProductivo($timeRange, $fechaInicio, $fechaFinal);
 
 		
 		if ( $data[0] != false )
 		{
-			$result = '{ "success": true, "datos": '.json_encode($data[0]).'}';
+			if ( $showAll == true )
+			{
+				$result = '{ "success": true, "datos": '.json_encode($data).'}';
+			}
+			else
+			{
+				$result = '{ "success": true, "datos": '.json_encode($data[0]).'}';
+			}
 		}
 		else
 		{
@@ -119,14 +126,21 @@ require_once("../server/model/view_ventas.dao.php");
         *       @return Array un arreglo con los datos obtenidos de la consulta
         */
 
-	function VendedorMasProductivoSucursal( $timeRange, $id_sucursal, $fechaInicio, $fechaFinal )
+	function VendedorMasProductivoSucursal( $timeRange, $id_sucursal, $fechaInicio, $fechaFinal, $showAll )
 	{
 		
 		$data = ViewVentasDao::getVendedorMasProductivoSucursal($timeRange, $id_sucursal, $fechaInicio, $fechaFinal);
 
 		if ( $data[0] != false )
 		{
-			$result = '{ "success": true, datos: '.json_encode($data[0]).'}';
+			if ( $showAll == true )
+			{
+				$result = '{ "success": true, "datos": '.json_encode($data).'}';
+			}
+			else
+			{
+				$result = '{ "success": true, "datos": '.json_encode($data[0]).'}';
+			}
 		}
 		else
 		{
@@ -382,7 +396,8 @@ require_once("../server/model/view_ventas.dao.php");
 		$timeRange = null;
 		$fechaInicio = null;
 		$fechaFinal = null;
-
+		$showAll = null;
+		
 		if ( isset($args['dateRange']) )
 		{
 			$timeRange = $args['dateRange'];
@@ -394,7 +409,16 @@ require_once("../server/model/view_ventas.dao.php");
 			$fechaFinal = $args['fecha-final'];	
 		}
 
-		$result = VendedorMasProductivo($timeRange, $fechaInicio, $fechaFinal);
+		if ( isset($args['showAll']) )
+		{
+			$showAll = $args['showAll'];
+		}
+		else
+		{
+			$showAll = false;
+		}
+		
+		$result = VendedorMasProductivo($timeRange, $fechaInicio, $fechaFinal, $showAll);
 		echo $result;
 		break;
 
@@ -449,6 +473,7 @@ require_once("../server/model/view_ventas.dao.php");
 		$fechaInicio = null;
 		$fechaFinal = null;
 		$id_sucursal = null;
+		$showAll = null;
 
 		if ( isset($args['dateRange']) )
 		{
@@ -465,8 +490,18 @@ require_once("../server/model/view_ventas.dao.php");
 			$fechaInicio = $args['fecha-inicio'];
 			$fechaFinal = $args['fecha-final'];	
 		}
+		
+		if ( isset($args['showAll']) )
+		{
+			$showAll = $args['showAll'];
+		}
+		else
+		{
+			$showAll = false;
+		}
+		
 
-		$result = VendedorMasProductivoSucursal($timeRange, $id_sucursal, $fechaInicio, $fechaFinal);
+		$result = VendedorMasProductivoSucursal($timeRange, $id_sucursal, $fechaInicio, $fechaFinal, $showAll);
 		echo $result;
 		break;
 

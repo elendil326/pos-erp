@@ -304,7 +304,7 @@ class ViewIngresosDAO extends ViewIngresosDAOBase
 
 
 		$allingresos = ViewIngresosDAO::getAllIngresos( $timeRange, $fechaInicio, $fechaFinal, $id_sucursal );
-		var_dump($allingresos);
+		//var_dump($allingresos);
 		
 		$ingresosFecha2 = array_pop( $allingresos );
 		$ingresosFecha1 = array_pop( $allingresos );
