@@ -444,6 +444,150 @@ CREATE TABLE `ventas` (
 -- --------------------------------------------------------
 
 -- 
+-- Estructura Stand-in para la vista `view_compras`
+-- 
+CREATE TABLE `view_compras` (
+`id_compra` int(11)
+,`proveedor` varchar(30)
+,`id_proveedor` int(11)
+,`tipo_compra` enum('credito','contado')
+,`fecha` timestamp
+,`subtotal` float
+,`iva` float
+,`sucursal` varchar(100)
+,`id_sucursal` int(11)
+,`usuario` varchar(100)
+,`id_usuario` int(11)
+);
+-- --------------------------------------------------------
+
+-- 
+-- Estructura Stand-in para la vista `view_detalle_compra`
+-- 
+CREATE TABLE `view_detalle_compra` (
+`id_compra` int(11)
+,`id_producto` int(11)
+,`denominacion` varchar(30)
+,`cantidad` float
+,`precio` float
+,`fecha` timestamp
+,`tipo_compra` enum('credito','contado')
+,`id_sucursal` int(11)
+);
+-- --------------------------------------------------------
+
+-- 
+-- Estructura Stand-in para la vista `view_detalle_venta`
+-- 
+CREATE TABLE `view_detalle_venta` (
+`id_venta` int(11)
+,`id_producto` int(11)
+,`denominacion` varchar(30)
+,`cantidad` float
+,`precio` float
+,`fecha` timestamp
+,`tipo_venta` enum('credito','contado')
+,`id_sucursal` int(11)
+);
+-- --------------------------------------------------------
+
+-- 
+-- Estructura Stand-in para la vista `view_gastos`
+-- 
+CREATE TABLE `view_gastos` (
+`id_gasto` int(11)
+,`monto` float
+,`fecha` timestamp
+,`sucursal` varchar(100)
+,`id_sucursal` int(11)
+,`usuario` varchar(100)
+);
+-- --------------------------------------------------------
+
+-- 
+-- Estructura Stand-in para la vista `view_ingresos`
+-- 
+CREATE TABLE `view_ingresos` (
+`id_ingreso` int(11)
+,`monto` float
+,`fecha` timestamp
+,`sucursal` varchar(100)
+,`id_sucursal` int(11)
+,`usuario` varchar(100)
+);
+-- --------------------------------------------------------
+
+-- 
+-- Estructura Stand-in para la vista `view_ventas`
+-- 
+CREATE TABLE `view_ventas` (
+`id_venta` int(11)
+,`cliente` varchar(100)
+,`id_cliente` int(11)
+,`tipo_venta` enum('credito','contado')
+,`fecha` timestamp
+,`subtotal` float
+,`iva` float
+,`sucursal` varchar(100)
+,`id_sucursal` int(11)
+,`usuario` varchar(100)
+,`id_usuario` int(11)
+);
+-- --------------------------------------------------------
+
+-- 
+-- Estructura para la vista `view_compras`
+-- 
+DROP TABLE IF EXISTS `view_compras`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `pos`.`view_compras` AS select `c`.`id_compra` AS `id_compra`,`p`.`nombre` AS `proveedor`,`p`.`id_proveedor` AS `id_proveedor`,`c`.`tipo_compra` AS `tipo_compra`,`c`.`fecha` AS `fecha`,`c`.`subtotal` AS `subtotal`,`c`.`iva` AS `iva`,`s`.`descripcion` AS `sucursal`,`c`.`id_sucursal` AS `id_sucursal`,`u`.`nombre` AS `usuario`,`c`.`id_usuario` AS `id_usuario` from (`pos`.`compras` `c` join ((`pos`.`proveedor` `p` join `pos`.`sucursal` `s`) join `pos`.`usuario` `u`) on(((`c`.`id_proveedor` = `p`.`id_proveedor`) and (`c`.`id_sucursal` = `s`.`id_sucursal`) and (`c`.`id_usuario` = `u`.`id_usuario`))));
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura para la vista `view_detalle_compra`
+-- 
+DROP TABLE IF EXISTS `view_detalle_compra`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `pos`.`view_detalle_compra` AS select `d`.`id_compra` AS `id_compra`,`d`.`id_producto` AS `id_producto`,`i`.`denominacion` AS `denominacion`,`d`.`cantidad` AS `cantidad`,`d`.`precio` AS `precio`,`c`.`fecha` AS `fecha`,`c`.`tipo_compra` AS `tipo_compra`,`c`.`id_sucursal` AS `id_sucursal` from (`pos`.`detalle_compra` `d` join (`pos`.`inventario` `i` join `pos`.`compras` `c`) on(((`d`.`id_compra` = `c`.`id_compra`) and (`d`.`id_producto` = `i`.`id_producto`))));
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura para la vista `view_detalle_venta`
+-- 
+DROP TABLE IF EXISTS `view_detalle_venta`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `pos`.`view_detalle_venta` AS select `d`.`id_venta` AS `id_venta`,`d`.`id_producto` AS `id_producto`,`i`.`denominacion` AS `denominacion`,`d`.`cantidad` AS `cantidad`,`d`.`precio` AS `precio`,`v`.`fecha` AS `fecha`,`v`.`tipo_venta` AS `tipo_venta`,`v`.`id_sucursal` AS `id_sucursal` from (`pos`.`detalle_venta` `d` join (`pos`.`inventario` `i` join `pos`.`ventas` `v`) on(((`d`.`id_venta` = `v`.`id_venta`) and (`d`.`id_producto` = `i`.`id_producto`))));
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura para la vista `view_gastos`
+-- 
+DROP TABLE IF EXISTS `view_gastos`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `pos`.`view_gastos` AS select `g`.`id_gasto` AS `id_gasto`,`g`.`monto` AS `monto`,`g`.`fecha` AS `fecha`,`s`.`descripcion` AS `sucursal`,`g`.`id_sucursal` AS `id_sucursal`,`u`.`nombre` AS `usuario` from (`pos`.`gastos` `g` join (`pos`.`sucursal` `s` join `pos`.`usuario` `u`) on(((`g`.`id_sucursal` = `s`.`id_sucursal`) and (`g`.`id_usuario` = `u`.`id_usuario`))));
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura para la vista `view_ingresos`
+-- 
+DROP TABLE IF EXISTS `view_ingresos`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `pos`.`view_ingresos` AS select `i`.`id_ingreso` AS `id_ingreso`,`i`.`monto` AS `monto`,`i`.`fecha` AS `fecha`,`s`.`descripcion` AS `sucursal`,`i`.`id_sucursal` AS `id_sucursal`,`u`.`nombre` AS `usuario` from (`pos`.`ingresos` `i` join (`pos`.`sucursal` `s` join `pos`.`usuario` `u`) on(((`i`.`id_sucursal` = `s`.`id_sucursal`) and (`i`.`id_usuario` = `u`.`id_usuario`))));
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura para la vista `view_ventas`
+-- 
+DROP TABLE IF EXISTS `view_ventas`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `pos`.`view_ventas` AS select `v`.`id_venta` AS `id_venta`,`c`.`nombre` AS `cliente`,`v`.`id_cliente` AS `id_cliente`,`v`.`tipo_venta` AS `tipo_venta`,`v`.`fecha` AS `fecha`,`v`.`subtotal` AS `subtotal`,`v`.`iva` AS `iva`,`s`.`descripcion` AS `sucursal`,`v`.`id_sucursal` AS `id_sucursal`,`u`.`nombre` AS `usuario`,`v`.`id_usuario` AS `id_usuario` from (`pos`.`ventas` `v` join ((`pos`.`cliente` `c` join `pos`.`sucursal` `s`) join `pos`.`usuario` `u`) on(((`v`.`id_cliente` = `c`.`id_cliente`) and (`v`.`id_sucursal` = `s`.`id_sucursal`) and (`v`.`id_usuario` = `u`.`id_usuario`))));
+
+-- 
 -- Filtros para las tablas descargadas (dump)
 -- 
 
@@ -547,12 +691,4 @@ ALTER TABLE `ventas`
   ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
-
-
-
-
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
 
