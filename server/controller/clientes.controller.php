@@ -177,7 +177,7 @@ function list_customers() {
     $ans = '';
 	if( count($clientes) > 0 ){
 		foreach ($clientes as $cliente){
-				if( $cliente->getIdCliente()  ){
+				if( $cliente->getIdCliente() > 0 ){
 					$tmp = substr( $cliente, 1, -1 );//[{jgkjgk}] -> {jgkjgk}
 					$ans .= $tmp."," ;
 				}
