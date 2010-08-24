@@ -62,7 +62,8 @@ class ViewVentasDAO extends ViewVentasDAOBase
 			}
 			//$allVentas = ViewVentasDAO::getAll();
 			$allVentas = ViewVentasDAO::byRange( $ventasFecha1, $ventasFecha2 );
-			
+			array_push( $allVentas, $ventasFecha1 );
+			array_push( $allVentas, $ventasFecha2 );
 
 		}
 		else if ( $fechaInicio != null && $fechaFinal != null )
@@ -95,7 +96,8 @@ class ViewVentasDAO extends ViewVentasDAOBase
 
 			//$allVentas = ViewVentasDAO::getAll();
 			$allVentas = ViewVentasDAO::byRange( $ventasFecha1, $ventasFecha2 );
-			
+			array_push( $allVentas, $ventasFecha1 );
+			array_push( $allVentas, $ventasFecha2 );
 		}
 		else
 		{
@@ -123,8 +125,8 @@ class ViewVentasDAO extends ViewVentasDAOBase
 			}
 		}	
 
-		array_push( $allVentas, $ventasFecha1 );
-		array_push( $allVentas, $ventasFecha2 );
+		//array_push( $allVentas, $ventasFecha1 );
+		//array_push( $allVentas, $ventasFecha2 );
 		return $allVentas;
 
 
@@ -424,7 +426,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
 				}
 				//echo $usuarioVentas[0]->getUsuario(). "-->" .$sumaSubtotal. "<br>";
 				//break;
-				array_push($arrayResults, array("usuario" => $usuarioVentas[0]->getUsuario(), "cantidad" => $sumaSubtotal) );
+				array_push($arrayResults, array("usuario" => $usuarioVentas[0]->getUsuario(), "cantidad" => $sumaSubtotal, "sucursal" => $usuarioVentas[0]->getSucursal()) );
 
 			}
 
@@ -683,7 +685,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
         *       @return Array un arreglo con los datos obtenidos de la consulta
         */
 
-	static function getVendedorMasProductivoSucursal( $timeRange, $id_sucursal, $fechaInicio, $fechaFinal )
+	static function getVendedorMasProductivoSucursal( $timeRange, $id_sucursal, $fechaInicio, $fechaFinal, $formatoGrafica )
 	{
 
 		if ( $id_sucursal == null )
@@ -692,7 +694,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
                 }
                 
             
-                $allVentas = ViewVentasDAO::getAllVentas( $timeRange, $fechaInicio, $fechaFinal, $id_sucursal );
+        $allVentas = ViewVentasDAO::getAllVentas( $timeRange, $fechaInicio, $fechaFinal, $id_sucursal );
 		
 		$ventasFecha2 = array_pop( $allVentas );
 		$ventasFecha1 = array_pop( $allVentas );
@@ -758,7 +760,14 @@ class ViewVentasDAO extends ViewVentasDAOBase
 				}
 				//echo $usuarioVentas[0]->getUsuario(). "-->" .$sumaSubtotal. "<br>";
 				//break;
-				array_push($arrayResults, array("usuario" => $usuarioVentas[0]->getUsuario(), "cantidad" => $sumaSubtotal) );
+				if( $formatoGrafica == true  )
+				{
+					array_push($arrayResults, array("x" => $usuarioVentas[0]->getUsuario(), "y" => $sumaSubtotal, "label" => $usuarioVentas[0]->getUsuario() ));
+				}
+				else
+				{
+					array_push($arrayResults, array("usuario" => $usuarioVentas[0]->getUsuario(), "cantidad" => $sumaSubtotal) );
+				}
 
 			}
 
@@ -768,14 +777,30 @@ class ViewVentasDAO extends ViewVentasDAOBase
 
 		if ( count($arrayResults) > 0 )
 		{
-			foreach ($arrayResults as $key => $row) {
-			    $usuario[$key]  = $row['usuario'];
-			    $cantidad[$key] = $row['cantidad'];
+			if( $formatoGrafica == true )
+			{
+			
+				foreach ($arrayResults as $key => $row) {
+					$x[$key]  = $row['x'];
+					$y[$key] = $row['y'];
+					$label[$key] = $row['label'];
+				}
+			
+				array_multisort($y, SORT_DESC, $arrayResults);
+				
 			}
-
-			array_multisort($cantidad, SORT_DESC, $arrayResults);
-
+			else
+			{
+				foreach ($arrayResults as $key => $row) {
+					$usuario[$key]  = $row['usuario'];
+					$cantidad[$key] = $row['cantidad'];
+				}
+			
+				array_multisort($cantidad, SORT_DESC, $arrayResults);	
+			}
+			
 			return $arrayResults;
+			
 		}
 		else
 		{

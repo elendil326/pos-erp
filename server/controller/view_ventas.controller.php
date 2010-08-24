@@ -70,7 +70,14 @@ require_once("../server/model/view_ventas.dao.php");
 
 		if ( $data[0] != false )
 		{
-			$result = '{ "success": true, datos: '.json_encode($data[0]).'}';
+			if ( $showAll == true )
+			{
+				$result = '{ "success": true, datos: '.json_encode($data).'}';
+			}
+			else
+			{
+				$result = '{ "success": true, datos: '.json_encode($data[0]).'}';
+			}
 		}
 		else
 		{
@@ -126,10 +133,10 @@ require_once("../server/model/view_ventas.dao.php");
         *       @return Array un arreglo con los datos obtenidos de la consulta
         */
 
-	function VendedorMasProductivoSucursal( $timeRange, $id_sucursal, $fechaInicio, $fechaFinal, $showAll )
+	function VendedorMasProductivoSucursal( $timeRange, $id_sucursal, $fechaInicio, $fechaFinal, $showAll, $formatoGrafica )
 	{
 		
-		$data = ViewVentasDao::getVendedorMasProductivoSucursal($timeRange, $id_sucursal, $fechaInicio, $fechaFinal);
+		$data = ViewVentasDao::getVendedorMasProductivoSucursal($timeRange, $id_sucursal, $fechaInicio, $fechaFinal, $formatoGrafica );
 
 		if ( $data[0] != false )
 		{
@@ -428,6 +435,7 @@ require_once("../server/model/view_ventas.dao.php");
 		$timeRange = null;
 		$fechaInicio = null;
 		$fechaFinal = null;
+		$showAll = null;
 
 		if ( isset($args['dateRange']) )
 		{
@@ -439,8 +447,13 @@ require_once("../server/model/view_ventas.dao.php");
 			$fechaInicio = $args['fecha-inicio'];
 			$fechaFinal = $args['fecha-final'];	
 		}
+		
+		if ( isset( $args['showAll']) )
+		{
+			$showAll = $args['showAll'];
+		}
 
-		$result = SucursalVentasTop($timeRange, $fechaInicio, $fechaFinal);
+		$result = SucursalVentasTop($timeRange, $fechaInicio, $fechaFinal, $showAll);
 		echo $result;
 		break;
 	
@@ -474,6 +487,7 @@ require_once("../server/model/view_ventas.dao.php");
 		$fechaFinal = null;
 		$id_sucursal = null;
 		$showAll = null;
+		$formatoGrafica = null;
 
 		if ( isset($args['dateRange']) )
 		{
@@ -500,8 +514,13 @@ require_once("../server/model/view_ventas.dao.php");
 			$showAll = false;
 		}
 		
+		if ( isset($args['formatoGrafica']) )
+		{
+			$formatoGrafica = $args['formatoGrafica'];
+		}
+		
 
-		$result = VendedorMasProductivoSucursal($timeRange, $id_sucursal, $fechaInicio, $fechaFinal, $showAll);
+		$result = VendedorMasProductivoSucursal($timeRange, $id_sucursal, $fechaInicio, $fechaFinal, $showAll, $formatoGrafica);
 		echo $result;
 		break;
 
