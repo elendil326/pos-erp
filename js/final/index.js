@@ -77,7 +77,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
             this.setCard(item.card, item.animation || 'slide');
             this.currentCard = item.card;
             if (item.text) {
-                this.navigationBar.setTitle(item.text);
+                //this.navigationBar.setTitle(item.text);
             }
             if (Ext.platform.isPhone) {
                 this.backButton.show();
@@ -99,7 +99,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
         this.currentCard = this.navigationPanel;
         if (Ext.platform.isPhone) {
             this.backButton.hide();
-            this.navigationBar.setTitle(this.title);
+            //this.navigationBar.setTitle(this.title);
             this.navigationBar.doLayout();
         }
         this.fireEvent('navigate', this, this.navigationPanel.activeItem, this.navigationPanel);
@@ -588,7 +588,7 @@ sink.Main = {
 
 		//crear el UI
         this.ui = new Ext.ux.UniversalUI({
-            title: Ext.platform.isPhone ? 'POS iPhone' : 'Punto de Venta',
+            title: Ext.platform.isPhone ? 'POS iPhone' : '<b>Sucursal</b> ' + POS_SUCURSAL_NOMBRE + '   <b>Cajero</b> ' + POS_CAJERO_NOMBRE,
             navigationItems: Apps,
             buttons: [{xtype: 'spacer'}, this.ayudaButton],
             listeners: {
@@ -639,13 +639,13 @@ sink.Main = {
             if (this.ayudaActive) {
                 this.ui.setCard(this.ui.currentCard, Ext.platform.isAndroidOS ? false : 'flip');
                 this.ayudaActive = false;
-                this.ui.navigationBar.setTitle(this.currentTitle);
+                //this.ui.navigationBar.setTitle(this.currentTitle);
                 this.ayudaButton.setText('Ayuda');
             }else {
                 this.ui.setCard(this.ayudaPanel, Ext.platform.isAndroidOS ? false : 'flip');
                 this.ayudaActive = true;
                 this.currentTitle = this.ui.navigationBar.title;
-                this.ui.navigationBar.setTitle('Source');
+                //this.ui.navigationBar.setTitle('Source');
                 this.ayudaButton.setText('Regresar');
             }
             this.ui.navigationBar.doLayout();
@@ -658,7 +658,8 @@ sink.Main = {
 
 
 
-
+var POS_SUCURSAL_NOMBRE = null;
+var POS_CAJERO_NOMBRE = null;
 
 Ext.setup({
     tabletStartupScreen: 'resources/img/tablet_startup.png',
@@ -671,8 +672,20 @@ Ext.setup({
 			console.log("DOM listo, iniciando aplicacion...");			
 		}
 
-	
-        sink.Main.init();
-	
+
+
+		POS.AJAXandDECODE({ action : "2003" }, 
+		function (response){
+			if(response.sucess){
+
+				POS_SUCURSAL_NOMBRE = response.payload.sucursal;
+				POS_CAJERO_NOMBRE = response.payload.cajero_nombre;
+			}
+
+        	sink.Main.init();
+		}, 
+		function (){
+			alert(response);
+		});// = function (params, success, failure)	
     }
 });

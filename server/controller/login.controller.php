@@ -193,7 +193,14 @@ function logOut( $verbose = false )
 }
 
 
+function askSucursal(){
+	
+	$usuario = UsuarioDAO::getByPK( $_SESSION['userid'] );
+	$sucursal = SucursalDAO::getByPK( $usuario->getIdSucursal() );
 
+	echo  "{\"sucess\": true, payload : {\"sucursal\": \"" .$sucursal->getDescripcion(). "\", cajero_nombre: \"" . $usuario->getNombre() . "\"}}";
+	
+}
 
 
 switch($args['action'])
@@ -208,6 +215,10 @@ switch($args['action'])
 
 	case '2002':
 		logOut(true);
+	break;
+
+	case '2003':
+		askSucursal();
 	break;
 
 	default:
