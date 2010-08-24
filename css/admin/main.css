@@ -252,15 +252,26 @@ table{
 	margin-left:auto;
 }
 
+#usuario-form input{
+	background-color:white;
+}
+
 #usuario-title{
 
-	font-family:Verdana, Trebuchet, Arial, sans-serif;
-	font-size:16px;
-	color: gray !important;
+	font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Verdana, sans-serif;
+	color: white !important;
 }
 
 #usuario-text{
-	font-family:Verdana, Trebuchet, Arial, sans-serif;
-	font-size:11px;
-	color: gray !important;
+	font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Verdana, sans-serif;
+	font-size:12px;
+	color: white !important;
 }
+
+#usuario-boton{
+	width: 400px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+/*#usuario-boton-enviar{ color:black;}*/

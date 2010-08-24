@@ -13,6 +13,9 @@ $(document).ready(function() {
 	//iniciar con el appLogin
 	appAdmin = new AppAdmin();
 
+	//convertimos todos los botones a jquery ui
+	$("button").button();
+	
 	new Reports();
 	/*
 	//ejemplo de cargar grafica con datos hardcoded	

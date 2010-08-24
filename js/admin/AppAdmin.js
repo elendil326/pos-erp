@@ -138,11 +138,15 @@ AppAdmin.prototype.loadPersonal = function(){
 	$('#content-2').fadeOut('slow',function(){
 	
 		$('#content-2').html('\
-			<div id="usuario-title">Administraci&oacute;n del Personal</div>\
-			<p id="usuario-text">\
-				Agregue o modifique el personal de sus sucursales. Si en alg&uacute;n momento usted necesita expandir su personal, en &eacute;ste m&oacute;dulo puede realizar todas\
+			<div style="height:100px;" >\
+			<img src="../media/admin/icons/db.png" width="100" height="100" align="left"/>\
+			<div id="usuario-title">\
+			<h2>Administraci&oacute;n del Personal</h2></div>\
+			<p id="usuario-text" >\
+				Agregue personal a sucursales. Si en alg&uacute;n momento usted necesita expandir su personal, en &eacute;ste m&oacute;dulo puede realizar todas\
 				esas acciones.\
 			</p>\
+			</div>\
 			<div id="usuario-form">\
 			<form>\
 			      <table>\
@@ -156,16 +160,22 @@ AppAdmin.prototype.loadPersonal = function(){
 			      		<td>Contrase&ntilde;a</td><td><input type="password" id="pwd-new" name="password" style="width:200px;"/></td>\
 			      	</tr>\
 			      	<tr>\
+			      		<td>Repita Contrase&ntilde;a</td><td><input type="password" id="pwd2-new" name="password2" style="width:200px;"/></td>\
+			      	</tr>\
+			      	<tr>\
 			      		<td>Sucursal</td><td><select id="select-sucursal" name="sucursal" />\
 			      					</select>\
 			      		</td>\
 			      	</tr>\
 			      </table>\
-			    </form><button onclick="appAdmin.sendFormNewUser();">Enviar</button></div>\
+			</form>\
+			<div id="usuario-boton">\
+			<button id="usuario-boton-enviar" onclick="appAdmin.sendFormNewUser();">Enviar</button></div>\
+			</div>\
 		');
 		
 		//$('form').jqTransform({imgPath:'../jquery/js/jqtransformplugin/img/'});
-		$("select, input:checkbox, input:radio, input:file").uniform();
+		
 		
 		var options = "";
 		Utils.request({
@@ -185,6 +195,9 @@ AppAdmin.prototype.loadPersonal = function(){
 			{
 				options += '<option>No se encontraron datos</option>';
 			}
+			
+			$("select, input").uniform();
+			$("#usuario-boton-enviar").button();
 		}
 	});
 	
@@ -219,21 +232,35 @@ AppAdmin.prototype.loadRendimientoPersonal = function(){
 			});
 			
 	*/
+	
+		var options = '<div style="height:100px;" >\
+			<img src="../media/admin/icons/report.png" width="100" height="100" align="left"/>\
+			<div id="usuario-title">\
+			<h2>Rendimiento del Personal</h2></div>\
+			<p id="usuario-text" >\
+				En esta secci&oacute;n podr&aacute; consultar el n&uacute;mero de ventas de cada\
+				miembro de su personal as&iacute; como el de sus sucursales. De tal manera que pueda\
+				obtener informaci&oacute;n confiable para tomar decisiones al evaluar las primas.\
+			</p>\
+			</div><fieldset>';
+		
+		
+	
 		Utils.request({
 		
 			url: "../proxy.php",
 			data: {action: "2201"},
 			success: function(msg){
 			
-				var options = "";
+				
 			
 				if(msg.success)
 				{
 					for (var i = 0; i < msg.data.length; i++) {
-						options += '<a href="#" style="text-decoration:none; color:white;" onclick="appAdmin.loadMVPSucursal('+msg.data[i].value+')" ">' + msg.data[i].display + '</a>&nbsp;|&nbsp;';
+						options += '<a class="sucursal-link" href="#" onclick="appAdmin.loadMVPSucursal('+msg.data[i].value+',\''+msg.data[i].display+'\')" ">' + msg.data[i].display + '</a>&nbsp;|&nbsp;';
 					}
 				
-					$("#content-2").html(options+"<div id='mvp-results'></div> ");
+					$("#content-2").html(options+"</fieldset><div id='mvp-results'></div> ");
 					$('#content-2').fadeIn('slow');
 				
 				}
@@ -250,26 +277,26 @@ AppAdmin.prototype.loadRendimientoPersonal = function(){
 
 }
 
-AppAdmin.prototype.loadMVPSucursal = function(sucursal){
+AppAdmin.prototype.loadMVPSucursal = function(sucursal,descripcion){
 
 	Utils.request({
 			url: "../proxy.php",
-			data: {action: "404", showAll: true, id_sucursal: sucursal},
+			data: {action: "404", showAll: true, id_sucursal: sucursal, dateRange: "mes"},
 			success: function(msg){
 			
-				var html_result = "";
+				var html_result = "<h2>Personal m&aacute;s productivo Sucursal "+descripcion+"</h2>Ventas por usuario";
 			
 				
 				for(var i=0; i < msg.datos.length ; i++)
 				{
 					if(msg.datos[i].usuario === undefined)
 					{
-						html_result = "<div class='mvp-row'>No se encontraron datos</div>";
+						html_result += "<div class='mvp-row'>No se encontraron datos</div>";
 						break;
 					}
 					else
 					{
-						html_result += "<div class='mvp-row'>"+msg.datos[i].usuario+" "+msg.datos[i].cantidad+"</div>";
+						html_result += "<div class='mvp-row'><img src='../media/iconos/user.png' />"+msg.datos[i].usuario+" vendi&oacute; un total de  $ "+msg.datos[i].cantidad+"</div>";
 					}
 				}
 			
@@ -286,25 +313,70 @@ AppAdmin.prototype.sendFormNewUser = function(){
 	var _nombre = $("#nombre-new").val();
 	var _user = $("#user-new").val();
 	var _pwd = $("#pwd-new").val();
+	var _pwd2 = $("#pwd2-new").val();
 	var _sucursal = $("#select-sucursal").val();
 	
-	console.log("ajax result0");
+	var error = false;
+	
+	if(_nombre == "" || _nombre == null)
+	{
+		error = true;
+		//console.log("nombre");
+	}
+	
+	if(_user == "" || _user == null)
+	{
+		error = true;
+		//console.log("user");
+	}
+	
+	if(_pwd == "" || _pwd  == null)
+	{
+		error = true;
+		//console.log("pwd");
+	}
+	
+	if(_pwd2 == "" || _pwd2 == null)
+	{
+		error = true;
+		//console.log(_pwd2);
+	}
+	
+	if(_pwd2 != _pwd)
+	{
+		error = true;
+		//console.log("pwd2!=pwd"+_pwd+" "+_pwd2);
+	}
+	
+	if(_sucursal == "" || _sucursal == null)
+	{
+		error = true;
+		//console.log("sucursal");
+	}
+	
+	if(error)
+	{
+		alert("Alguno de los campos tiene errores");
+	}
+	else
+	{
 
-	Utils.request({
-		url: "../proxy.php",
-		data: {action : "2301", nombre: _nombre, user2: _user, password: _pwd, sucursal : _sucursal},
-		success: function(msg){
+		Utils.request({
+			url: "../proxy.php",
+			data: {action : "2301", nombre: _nombre, user2: _user, password: _pwd, sucursal : _sucursal},
+			success: function(msg){
 		
-			if(msg.success)
-			{
-				alert('good :)');
+				if(msg.success)
+				{
+					alert('good :)');
+				}
+				else
+				{
+					alert('bad :(');
+				}
 			}
-			else
-			{
-				alert('bad :(');
-			}
-		}
-	});
+		});
+	}
 }
 
 AppAdmin.prototype.createLogoutMessage = function(){
