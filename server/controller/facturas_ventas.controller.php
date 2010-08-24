@@ -1,4 +1,4 @@
-﻿p<?php
+﻿<?php
 /** Facturas ventas Controller
   * 
   * Este script contiene las funciones necesarias para realizar las diferentes operaciones 

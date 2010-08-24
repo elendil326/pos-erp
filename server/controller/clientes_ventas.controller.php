@@ -538,14 +538,22 @@ function list_client_sales( $id_cliente ){
 			$factura = new FacturaVenta();
 			$factura->setIdVenta( $venta->getIdVenta() );
 			$fact = FacturaVentaDAO::search( $factura );
+			
 			$facturado = 0;
 			
 			if( count($fact) > 0 ){	$facturado = 1;	}
 			
 			$foo .= substr($venta,1,-2);//[{'x':'1'}] --> {'x':'1'
-
-			$foo.=',"total":"'.$total.'","nombre":"'.$usuario->getNombre().'","descripcion":"'.$sc->getDescripcion().'","facturado":"'.($facturado).'"},';
-		}//fin for
+			
+			
+			$hoy = ( date("Y-m-d H:i:s", time()) );
+			/*
+				FALTA SACAR LA DIFERENCIA DE LOS 30 DIAS PARA MANDAR EN JSON LA VARIABLE Q PERMITIRA O NO FACTURAR
+			*/
+			
+			$foo.=',"total":"'.$total.'","nombre":"'.$usuario->getNombre().'","descripcion":"'.$sc->getDescripcion().'","facturado":"'.($facturado).'" ,"hoy":"'.$hoy.'"},';
+		}//fin foreach
+		
 		$foo = substr($foo,0,-1);
 		return " { success : true, datos : [".$foo."] }";
 	}else{

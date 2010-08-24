@@ -177,9 +177,10 @@ function list_customers() {
     $ans = '';
 	if( count($clientes) > 0 ){
 		foreach ($clientes as $cliente){
-		
-				$tmp = substr( $cliente, 1, -1 );//[{jgkjgk}] -> {jgkjgk}
-				$ans .= $tmp."," ;
+				if( $cliente->getIdCliente()  ){
+					$tmp = substr( $cliente, 1, -1 );//[{jgkjgk}] -> {jgkjgk}
+					$ans .= $tmp."," ;
+				}
 		}
 		$out = substr($ans,0,-1);
 		$ans = sprintf("{ success: true, datos:[%s] }", $out);
