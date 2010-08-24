@@ -82,7 +82,7 @@ function insertarVenta($cliente, $tipo_venta, $items)
 {
 
 	global $logger;
-	$logger->setIdent("Mostrador");
+	//$logger->setIdent("Mostrador");
 		
 	$stuff = json_decode($items);
 	
@@ -174,7 +174,7 @@ function insertarVenta($cliente, $tipo_venta, $items)
 		if($producto->getPrecioVenta() != $item->cost )
 		{
 			//LOG THIS !
-			$logger->log("Incongruencia de precios." );
+			//$logger->log("Incongruencia de precios." );
 			echo "{\"success\": false, \"reason\": \"Fuck you hacker.\"}";
 			return;
 		}
@@ -256,7 +256,7 @@ function insertarVenta($cliente, $tipo_venta, $items)
 	
 	echo "{\"success\": true, \"v_id\":  ".$venta->getIdVenta()."}";
 	
-	$logger->log("Venta a " . $tipo_veta ." efecutada. Total: " . $total );
+	//$logger->log("Venta a " . $tipo_veta ." efecutada. Total: " . $total );
 
 
 }

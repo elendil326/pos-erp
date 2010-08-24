@@ -1045,13 +1045,18 @@ ApplicationVender.prototype.doVentaLogic = function ()
 {
 	var subtotal = 0;
 
+
 	var iva = MOSTRADOR_IVA;
+	
+	if(DEBUG){
+		console.log( "IVA para esta venta: ", iva );
+	}
 	
 	for( a = 0; a < ApplicationVender.currentInstance.htmlCart_items.length;  a++){
 		subtotal += parseFloat( ApplicationVender.currentInstance.htmlCart_items[a].cost );
 	}
 	
-	var total = (subtotal*iva) + subtotal;
+	var total = ( subtotal * iva ) + subtotal;
 	
 	var pago = Ext.getCmp("mostrador_pago_id").getValue();
 	
@@ -1065,7 +1070,7 @@ ApplicationVender.prototype.doVentaLogic = function ()
 		return;
 	}
 
-	var cambio =  -1 * (total - parseFloat(pago) );
+	var cambio =  -1 * ( parseFloat(pago) - total );
 	
 	cambio = POS.currencyFormat(cambio);
 
@@ -1108,6 +1113,7 @@ ApplicationVender.prototype.doVentaLogic = function ()
 							if(DEBUG){
 								console.warn("Mostrador: Venta no exitosa ", result);
 							}
+							POS.aviso( "Mostrador", "Venta no exitosa<br>" + result );
 						}
 					},
 					//Funcion failure
