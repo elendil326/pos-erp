@@ -10,8 +10,8 @@ function sendLogin( $u, $p )
 	
 	
 	global $logger;
-	$logger->setIdent("Login");
-	$logger->log("Peticion de autenticacion para el usuario " . $u . " desde " . $_SERVER['REMOTE_ADDR'] );
+	//$logger->setIdent("Login");
+	//$logger->log("Peticion de autenticacion para el usuario " . $u . " desde " . $_SERVER['REMOTE_ADDR'] );
 
 
 		
@@ -33,7 +33,7 @@ function sendLogin( $u, $p )
 
 	if(count($res) != 1){
 		//loggear intento fallido
-		$logger->log("Credenciales Invalidas !!", PEAR_LOG_WARNING);
+		//$logger->log("Credenciales Invalidas !!", PEAR_LOG_WARNING);
 		
 		if($_SESSION[ 'c' ] < 3 )
 		{
@@ -45,22 +45,20 @@ function sendLogin( $u, $p )
 		return;
 	}else{
 		
-		$logger->log("Credenciales Aceptadas.");
+		//$logger->log("Credenciales Aceptadas.");
 		unset( $_SESSION[ 'c' ] );
 	}
 
 	
 	$user = $res[0];
-	
 
-	
 	$grpu = new GruposUsuarios();
 	$grpu->setIdUsuario( $user->getIdUsuario() );
 	$res = GruposUsuariosDAO::search( $grpu );
 	
 	if(count($res) < 1){
 		echo "{\"succes\": false , \"reason\": 101,  \"text\" : \"Este usuario no pertenece a ningun grupo.\" }";
-		$logger->log("Usuario " . $u . " no pertenece a niungun grupo.", PEAR_LOG_WARNING);
+		//$logger->log("Usuario " . $u . " no pertenece a niungun grupo.", PEAR_LOG_WARNING);
 		return;
 	}
 
@@ -86,16 +84,21 @@ function sendLogin( $u, $p )
 	//token de seguridad, 
 	
 	switch($grp->getNombre()){
+		
+		//$__ADMIN_TIME_OUT;
+		//global $__GERENTE_TIME_OUT;
+		//global $__CAJERO_TIME_OUT;		
+		
 		case 'Administrador' : 
 			echo "{\"succes\": true , \"payload\": {  \"sucursal\": null,\"redir\": \"admin/\" }}";	
 			
 			$_SESSION['userid'] =  $user->getIdUsuario();
 			$_SESSION['sucursal'] =  $user->getIdSucursal();
-			$_SESSION['timeout'] = $__ADMIN_TIME_OUT;			
+			//$_SESSION['timeout'] = $__ADMIN_TIME_OUT;
 			$_SESSION['token'] = crypt( $grpu->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina" );
 			$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
 			
-			$logger->log( "Aceptando usuario " . $u . " como Admin ");
+			//$logger->log( "Aceptando usuario " . $u . " como Admin ");
 			
 		break;
 		
@@ -103,11 +106,11 @@ function sendLogin( $u, $p )
 			echo "{\"succes\": true , \"payload\": {  \"sucursal_add\": \"" . $suc->getDireccion() . "\", \"sucursal\": " . $user->getIdSucursal() . ", \"redir\": \"pos-start.html\" }}";	
 			$_SESSION['userid'] =  $user->getIdUsuario();
 			$_SESSION['sucursal'] =  $user->getIdSucursal();
-			$_SESSION['timeout'] = $__GERENTE_TIME_OUT;
+			//$_SESSION['timeout'] = $__GERENTE_TIME_OUT;
 			$_SESSION['token'] = crypt( $grpu->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina" );
 			$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
 			
-			$logger->log( "Aceptando usuario " . $u . " como Gerente ");
+			//$logger->log( "Aceptando usuario " . $u . " como Gerente ");
 		break;
 		
 		case 'Cajero':
@@ -115,11 +118,11 @@ function sendLogin( $u, $p )
 			$_SESSION['userid'] =  $user->getIdUsuario();
 			$_SESSION['sucursal'] =  $user->getIdSucursal();
 			$_SESSION['grupo'] = $grpu->getIdGrupo();
-			$_SESSION['timeout'] = $__CAJERO_TIME_OUT;			
+			//$_SESSION['timeout'] = $__CAJERO_TIME_OUT;			
 			$_SESSION['token'] = crypt( $user->getIdUsuario()."-".$grpu->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina" );
 			$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
 			
-			$logger->log( "Aceptando usuario " . $u . " como Cajero ");
+			//$logger->log( "Aceptando usuario " . $u . " como Cajero ");
 		break;
 	}
 	
@@ -175,7 +178,7 @@ function logOut( $verbose = false )
 {
 	//cerrar sesion
 	global $logger;
-	$logger->log("Cerrando Sesion proveniente de " . $_SERVER['REMOTE_ADDR'] . " correspondiente al usuario : " . $_SESSION['userid']);
+	//$logger->log("Cerrando Sesion proveniente de " . $_SERVER['REMOTE_ADDR'] . " correspondiente al usuario : " . $_SESSION['userid']);
 	
 	unset( $_SESSION['token'] ); 
 	unset( $_SESSION['userid'] );
