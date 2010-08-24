@@ -98,4 +98,25 @@ function delete_payment($id_pago) {
 		return "{ success: false, reason:'Este pago no existe' }";
 	}
 }//fin insert_payment
+
+
+
+switch ($args['action']) {
+    case '1301':
+        $id_compra = $args['id_compra'];
+        $monto = $args['monto'];
+		unset($args);
+		
+        $ans = insert_payment($id_compra , $monto);
+        echo $ans;
+	break;
+	
+	case '1302':
+		$id_pago = $args['id_pago'];
+		unset($args);
+		
+		$ans = delete_payment($id_pago);
+		echo $ans;
+	break;
+}
 ?>
