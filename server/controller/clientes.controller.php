@@ -248,110 +248,57 @@ function getGridDataClientesCreditoPagado($page,$rp,$sortname,$sortorder,$search
 
 
 //Clientes dispatcher
-switch($args['action'])
-{
-	 
-	 case '101': 	//'getGridDataClientesCreditoDeudores':
-        
-        	
-        
-        	$id_cliente=$args['id_cliente'];
-                $de=$args['de'];
-                $al=$args['al'];
-                
-        	$page = strip_tags($args['page']);
-		$rp = strip_tags($args['rp']);
-		$sortname = strip_tags($args['sortname']);
-		$sortorder = strip_tags($args['sortorder']);
-		
-		if(isset($args['query']) && !empty($args['query']))
-		{
-		        $search = strip_tags($args['query']);
-		        $qtype = strip_tags($args['qtype']);
-		}
-		
-		//Si no se envia el dato de page, significa que estamos en la 1
-		if(isset($args['page']) && !empty($args['page']))
-		{
-			$page = strip_tags($args['page']);
-		}
-		else{
-			$page = 1;
-		}
-        
-        	$ans = getGridDataClientesCreditoDeudores($page,$rp,$sortname,$sortorder,$search,$qtype, $de, $al, $id_cliente);
-        	echo $ans;
-        
-        	break;
-        	
-       
-       case '102': 	//'getGridDataClientesCreditoPagado':
-       
-       		
-        
-        	$id_cliente=$args['id_cliente'];
-                $de=$args['de'];
-                $al=$args['al'];
-                
-        	$page = strip_tags($args['page']);
-		$rp = strip_tags($args['rp']);
-		$sortname = strip_tags($args['sortname']);
-		$sortorder = strip_tags($args['sortorder']);
-		
-		if(isset($args['query']) && !empty($args['query']))
-		{
-		        $search = strip_tags($args['query']);
-		        $qtype = strip_tags($args['qtype']);
-		}
-		
-		//Si no se envia el dato de page, significa que estamos en la 1
-		if(isset($args['page']))
-		{
-			$page = strip_tags($args['page']);
-		}
-		else{
-			$page = 1;
-		}
-        
-        	$ans = getGridDataClientesCreditoPagado($page,$rp,$sortname,$sortorder,$search,$qtype, $de, $al, $id_cliente);
-        	echo $ans;
-       
-       
-       		break;
-        	
-       
-       case '103': //'getGridDataAllClientes':
-       
-       		
-       
-       		$page = strip_tags($args['page']);
-		$rp = strip_tags($args['rp']);
-		$sortname = strip_tags($args['sortname']);
-		$sortorder = strip_tags($args['sortorder']);
-		
-		if(isset($args['query']) && !empty($args['query']))
-		{
-		        $search = strip_tags($args['query']);
-		        $qtype = strip_tags($args['qtype']);
-		}
-		
-		//Si no se envia el dato de page, significa que estamos en la 1
-		if(isset($args['page']))
-		{
-			$page = strip_tags($args['page']);
-		}
-		else{
-			$page = 1;
-		}
-        
-        	$ans = getGridDataAllClientes($page,$rp,$sortname,$sortorder,$search,$qtype);
-        	echo $ans;
-       		
-       		break;
-
-
-}
-
+switch ($args['action']) {
+    case '1001':
+        $rfc = $args['rfc'];
+        $nombre = $args['nombre'];
+        $direccion = $args['direccion'];
+        $limite_credito = $args['limite_credito'];
+        $telefono = $args['telefono'];
+        $e_mail = $args['e_mail'];
+        unset($args);
+		include_once("clientes.controller.php");
+        $ans = insert_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0);
+        echo $ans;
+	break;
+	
+	case '1002':
+		$id = $args['id'];
+        $rfc = $args['rfc'];
+        $nombre = $args['nombre'];
+        $direccion = $args['direccion'];
+        $limite_credito = $args['limite_credito'];
+        $telefono = $args['telefono'];
+        $e_mail = $args['e_mail'];
+		$descuento = $args['descuento'];
+        unset($args);
+		include_once("clientes.controller.php");
+        $ans = update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0);
+        echo $ans;
+	break;
+	
+	case '1003':
+		$id = $args['id'];
+        unset($args);
+        $ans = delete_customer($id);
+        echo $ans;
+	break;
+	
+	case '1004':
+		$id = $args['id'];
+        unset($args);
+		include_once("clientes.controller.php");
+        $ans = show_customer($id);
+        echo $ans;
+	break;
+	
+	case '1005':
+        unset($args);
+		include_once("clientes.controller.php");
+        $ans = list_customers();
+        echo $ans;
+	break;
+}//end switch
 
 
 

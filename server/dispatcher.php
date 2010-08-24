@@ -141,7 +141,7 @@ switch( ((int)($args['action'] / 100))*100 )
 	break;
 
 	case 1000:
-		require_once('controller/clientes.dispatcher.php');
+		require_once('controller/clientes.controller.php');
 	break;
 	
 	case 1100: 
