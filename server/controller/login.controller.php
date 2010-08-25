@@ -95,8 +95,9 @@ function sendLogin( $u, $p )
 			
 			$_SESSION['userid'] =  $user->getIdUsuario();
 			$_SESSION['sucursal'] =  $user->getIdSucursal();
+			$_SESSION['grupo'] = $grpu->getIdGrupo();			
 			//$_SESSION['timeout'] = $__ADMIN_TIME_OUT;
-			$_SESSION['token'] = crypt( $grp->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina" );
+			$_SESSION['token'] = crypt( $grpu->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina" );
 			$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
 			
 			//$logger->log( "Aceptando usuario " . $u . " como Admin ");
@@ -107,8 +108,9 @@ function sendLogin( $u, $p )
 			echo "{\"succes\": true , \"payload\": {  \"sucursal_add\": \"" . $suc->getDireccion() . "\", \"sucursal\": " . $user->getIdSucursal() . ", \"redir\": \"pos-start.html\" }}";	
 			$_SESSION['userid'] =  $user->getIdUsuario();
 			$_SESSION['sucursal'] =  $user->getIdSucursal();
+			$_SESSION['grupo'] = $grpu->getIdGrupo();			
 			//$_SESSION['timeout'] = $__GERENTE_TIME_OUT;
-			$_SESSION['token'] = crypt( $grp->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina" );
+			$_SESSION['token'] = crypt( $grpu->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina" );
 			$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
 			
 			//$logger->log( "Aceptando usuario " . $u . " como Gerente ");
@@ -118,7 +120,7 @@ function sendLogin( $u, $p )
 			echo "{\"succes\": true , \"payload\": {  \"sucursal_add\": \"" . $suc->getDireccion() . "\", \"sucursal\": " . $user->getIdSucursal() . ", \"redir\": \"pos-start.html\" }}";	
 			$_SESSION['userid'] =  $user->getIdUsuario();
 			$_SESSION['sucursal'] =  $user->getIdSucursal();
-			$_SESSION['grupo'] = $grp->getIdGrupo();
+			$_SESSION['grupo'] = $grpu->getIdGrupo();
 			//$_SESSION['timeout'] = $__CAJERO_TIME_OUT;			
 			$_SESSION['token'] = crypt( $user->getIdUsuario()."-".$grpu->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina" );
 			$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
@@ -154,6 +156,7 @@ function checkCurrentSession()
 	if( isset( $_SESSION['token'] ) || 
 		isset( $_SESSION['userid'] ) || 
 		isset( $_SESSION['sucursal'] ) || 
+		isset( $_SESSION['grupo'] ) || 
 		isset( $_SESSION['timeout'] ) ||
 		isset( $_SESSION['token'] ) || 
 		isset( $_SESSION['HTTP_USER_AGENT'] )
@@ -184,6 +187,7 @@ function logOut( $verbose = false )
 	unset( $_SESSION['token'] ); 
 	unset( $_SESSION['userid'] );
 	unset( $_SESSION['sucursal'] );
+	unset( $_SESSION['grupo'] );
 	unset( $_SESSION['timeout'] );
 	unset( $_SESSION['token'] );
 	unset( $_SESSION['HTTP_USER_AGENT'] );
