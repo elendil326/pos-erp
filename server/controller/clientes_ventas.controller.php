@@ -774,7 +774,7 @@ switch ($args['action']) {
 		$id_venta = $args['id_venta'];
 		$monto = $args['monto'];
         unset($args);
-		
+		include_once("pagos_ventas.controller.php");
         $ans = insert_payment( $id_venta, $monto );
         echo $ans;
 	break;
@@ -782,7 +782,7 @@ switch ($args['action']) {
 	case '1406':
 		$id_pago = $args['id_pago'];
 		unset($args);
-		
+		include_once("pagos_ventas.controller.php");
 		$ans = delete_payment($id_pago);
 		echo $ans;
 	break;
