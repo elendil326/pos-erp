@@ -148,7 +148,7 @@ AppAdmin.prototype.loadPersonal = function(){
 			</p>\
 			</div>\
 			<div id="usuario-form">\
-			<form>\
+			<form id="usuario-form-element">\
 			      <table>\
 			      	<tr>\
 			      		<td>Nombre Completo</td><td><input type="text" id="nombre-new" name="nombre" style="width:200px;" /></td>\
@@ -163,7 +163,15 @@ AppAdmin.prototype.loadPersonal = function(){
 			      		<td>Repita Contrase&ntilde;a</td><td><input type="password" id="pwd2-new" name="password2" style="width:200px;"/></td>\
 			      	</tr>\
 			      	<tr>\
-			      		<td>Sucursal</td><td><select id="select-sucursal" name="sucursal" />\
+			      		<td>Sucursal</td><td><select id="select-sucursal" name="sucursal" >\
+			      					</select>\
+			      		</td>\
+			      	</tr>\
+			      	<tr>\
+			      		<td>Nivel de acceso</td><td><select id="acceso" name="acceso-nombre" >\
+			      						<option value="1">Administrador</option>\
+			      						<option value="2">Gerente</option>\
+			      						<option value="3">Cajero</option>\
 			      					</select>\
 			      		</td>\
 			      	</tr>\
@@ -315,6 +323,7 @@ AppAdmin.prototype.sendFormNewUser = function(){
 	var _pwd = $("#pwd-new").val();
 	var _pwd2 = $("#pwd2-new").val();
 	var _sucursal = $("#select-sucursal").val();
+	var _acceso = $("#acceso").val();
 	
 	var error = false;
 	
@@ -354,6 +363,12 @@ AppAdmin.prototype.sendFormNewUser = function(){
 		//console.log("sucursal");
 	}
 	
+	if(_acceso == "" || _acceso == null)
+	{
+		error = true;
+		//console.log("sucursal");
+	}
+	
 	if(error)
 	{
 		alert("Alguno de los campos tiene errores");
@@ -363,7 +378,7 @@ AppAdmin.prototype.sendFormNewUser = function(){
 
 		Utils.request({
 			url: "../proxy.php",
-			data: {action : "2301", nombre: _nombre, user2: _user, password: _pwd, sucursal : _sucursal},
+			data: {action : "2301", nombre: _nombre, user2: _user, password: _pwd, sucursal : _sucursal, acceso: _acceso},
 			success: function(msg){
 		
 				if(msg.success)

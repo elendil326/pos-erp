@@ -15,10 +15,14 @@
  *
  */
 require_once('../server/model/usuario.dao.php');
+require_once('../server/model/grupos_usuarios.dao.php');
 
 
-
-function insertUser($nombre, $user2, $pwd, $sucursal)
+/**
+*	Funcion para insertar usuarios a la base de datos incluyendo permisos de acceso
+*
+*/
+function insertUser($nombre, $user2, $pwd, $sucursal, $acceso)
 {	
 	//echo $user."===========";
 
@@ -28,7 +32,20 @@ function insertUser($nombre, $user2, $pwd, $sucursal)
 	$user->setContrasena($pwd);
 	$user->setIdSucursal($sucursal);
 	
-	return UsuarioDAO::save($user);
+	$gruposUsuarios = new GruposUsuarios();
+	$gruposUsuarios->setIdGrupo($acceso);
+	
+	if (UsuarioDAO::save($user) == 1)
+	{
+		$gruposUsuarios->setIdUsuario($user->getIdUsuario());
+		return GruposUsuariosDAO::save($gruposUsuarios);
+		
+	}
+	else
+	{
+		return false;
+	}
+
 }
 
 
@@ -37,14 +54,15 @@ switch($args['action']){
 	
 	case '2301':
 	
-		$nombre2 = $args['nombre'];
-		$user2 = $args['user2'];
-		$pwd2 = $args['password'];
-		$sucursal2 = $args['sucursal'];
+		@$nombre2 = $args['nombre'];
+		@$user2 = $args['user2'];
+		@$pwd2 = $args['password'];
+		@$sucursal2 = $args['sucursal'];
+		@$acceso = $args['acceso'];
 		
 		try{
 			
-			$result = insertUser($nombre2, $user2, $pwd2, $sucursal2);
+			$result = insertUser($nombre2, $user2, $pwd2, $sucursal2, $acceso);
 			
 			if($result == 1)
 			{
