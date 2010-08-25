@@ -299,6 +299,105 @@ switch ($args['action']) {
         $ans = list_customers();
         echo $ans;
 	break;
+	
+	case '1006': 	//'getGridDataClientesCreditoDeudores':
+        
+        	
+        
+        	@$id_cliente=$args['id_cliente'];
+                @$de=$args['de'];
+                @$al=$args['al'];
+                
+        	@$page = strip_tags($args['page']);
+		@$rp = strip_tags($args['rp']);
+		@$sortname = strip_tags($args['sortname']);
+		@$sortorder = strip_tags($args['sortorder']);
+		
+		if(isset($args['query']) && !empty($args['query']))
+		{
+		        $search = strip_tags($args['query']);
+		        @$qtype = strip_tags($args['qtype']);
+		}
+		
+		//Si no se envia el dato de page, significa que estamos en la 1
+		if(isset($args['page']) && !empty($args['page']))
+		{
+			$page = strip_tags($args['page']);
+		}
+		else{
+			$page = 1;
+		}
+        
+        	$ans = getGridDataClientesCreditoDeudores($page,$rp,$sortname,$sortorder,$search,$qtype, $de, $al, $id_cliente);
+        	echo $ans;
+        
+        	break;
+        	
+       
+       case '1007': 	//'getGridDataClientesCreditoPagado':
+       
+       		
+        
+        	@$id_cliente=$args['id_cliente'];
+                @$de=$args['de'];
+                @$al=$args['al'];
+                
+        	@$page = strip_tags($args['page']);
+		@$rp = strip_tags($args['rp']);
+		@$sortname = strip_tags($args['sortname']);
+		@$sortorder = strip_tags($args['sortorder']);
+		
+		if(isset($args['query']) && !empty($args['query']))
+		{
+		        $search = strip_tags($args['query']);
+		        @$qtype = strip_tags($args['qtype']);
+		}
+		
+		//Si no se envia el dato de page, significa que estamos en la 1
+		if(isset($args['page']))
+		{
+			$page = strip_tags($args['page']);
+		}
+		else{
+			$page = 1;
+		}
+        
+        	$ans = getGridDataClientesCreditoPagado($page,$rp,$sortname,$sortorder,$search,$qtype, $de, $al, $id_cliente);
+        	echo $ans;
+       
+       
+       		break;
+        	
+       
+       case '1008': //'getGridDataAllClientes':
+       
+       		
+       
+       		@$page = strip_tags($args['page']);
+		@$rp = strip_tags($args['rp']);
+		@$sortname = strip_tags($args['sortname']);
+		@$sortorder = strip_tags($args['sortorder']);
+		
+		if(isset($args['query']) && !empty($args['query']))
+		{
+		        $search = strip_tags($args['query']);
+		        @$qtype = strip_tags($args['qtype']);
+		}
+		
+		//Si no se envia el dato de page, significa que estamos en la 1
+		if(isset($args['page']))
+		{
+			$page = strip_tags($args['page']);
+		}
+		else{
+			$page = 1;
+		}
+        
+        	$ans = getGridDataAllClientes($page,$rp,$sortname,$sortorder,$search,$qtype);
+        	echo $ans;
+       		
+       		break;
+
 }//end switch
 
 

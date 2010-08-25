@@ -80,14 +80,14 @@ switch($args['action']){
 	
 	case '301': //'getGridDataVentasPorClientes'
 	
-		$rp = strip_tags($args['rp']);
-		$sortname = strip_tags($args['sortname']);
-		$sortorder = strip_tags($args['sortorder']);
+		@$rp = strip_tags($args['rp']);
+		@$sortname = strip_tags($args['sortname']);
+		@$sortorder = strip_tags($args['sortorder']);
 		
 		if(isset($args['query']) && !empty($args['query']))
 		{
 		        $search = strip_tags($args['query']);
-		        $qtype = strip_tags($args['qtype']);
+		        @$qtype = strip_tags($args['qtype']);
 		}
 
 		if(isset($args['page']))
@@ -106,19 +106,19 @@ switch($args['action']){
 	
 		
 	
-		$id_cliente=$args['id_cliente'];
-		$de=$args['de'];
-		$al=$args['al'];
+		@$id_cliente=$args['id_cliente'];
+		@$de=$args['de'];
+		@$al=$args['al'];
 		
-		$page = strip_tags($args['page']);
-		$rp = strip_tags($args['rp']);
-		$sortname = strip_tags($args['sortname']);
-		$sortorder = strip_tags($args['sortorder']);
+		@$page = strip_tags($args['page']);
+		@$rp = strip_tags($args['rp']);
+		@$sortname = strip_tags($args['sortname']);
+		@$sortorder = strip_tags($args['sortorder']);
 		
 		if(isset($args['query']) && !empty($args['query']))
 		{
 		        $search = strip_tags($args['query']);
-		        $qtype = strip_tags($args['qtype']);
+		        @$qtype = strip_tags($args['qtype']);
 		}
 		
 		//Si no se envia el dato de page, significa que estamos en la 1
@@ -139,19 +139,19 @@ switch($args['action']){
 	
 		
 	
-		$id_cliente=$args['id_cliente'];
-		$de=$args['de'];
-		$al=$args['al'];
+		@$id_cliente=$args['id_cliente'];
+		@$de=$args['de'];
+		@$al=$args['al'];
 		
-		$page = strip_tags($args['page']);
-		$rp = strip_tags($args['rp']);
-		$sortname = strip_tags($args['sortname']);
-		$sortorder = strip_tags($args['sortorder']);
+		@$page = strip_tags($args['page']);
+		@$rp = strip_tags($args['rp']);
+		@$sortname = strip_tags($args['sortname']);
+		@$sortorder = strip_tags($args['sortorder']);
 		
 		if(isset($args['query']) && !empty($args['query']))
 		{
 		        $search = strip_tags($args['query']);
-		        $qtype = strip_tags($args['qtype']);
+		        @$qtype = strip_tags($args['qtype']);
 		}
 		
 		//Si no se envia el dato de page, significa que estamos en la 1

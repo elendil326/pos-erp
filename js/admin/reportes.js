@@ -420,7 +420,7 @@ Reports.prototype.loadClientesDebenReport = function(){
 				title: 'Clientes Deben',
 				width: '100%',
 				url: '../proxy.php',
-				data: 'action=101',
+				data: 'action=1006',
 				addNewGrid: false,
 				sortname: 'v.id_venta',
 				colModel: [
@@ -457,7 +457,7 @@ Reports.prototype.loadClientesReport = function(){
 				title: 'Clientes',
 				width: '100%',
 				url: '../proxy.php',
-				data: 'action=103',
+				data: 'action=1008',
 				addNewGrid: false,
 				sortname: 'id',
 				colModel: [

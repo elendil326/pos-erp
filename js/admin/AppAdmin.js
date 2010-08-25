@@ -250,7 +250,7 @@ AppAdmin.prototype.loadRendimientoPersonal = function(){
 				miembro de su personal as&iacute; como el de sus sucursales. De tal manera que pueda\
 				obtener informaci&oacute;n confiable para tomar decisiones al evaluar las primas.\
 			</p>\
-			</div><fieldset>';
+			</div><fieldset style="text-align:center">';
 		
 		
 	
