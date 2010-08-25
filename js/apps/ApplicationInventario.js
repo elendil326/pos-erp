@@ -33,6 +33,9 @@ ApplicationInventario.prototype.ayuda = null;
 //El store de la lista del inventario
 ApplicationInventario.prototype.InvProductsListStore = null;
 
+//Guarda el item seleccionado de la lista
+ApplicationInventario.prototype.itemSelected = null;
+
 	//Productos
 	ApplicationInventario.prototype.products = null;
 
@@ -298,11 +301,27 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 				sink.Main.ui.setCard( ApplicationInventario.currentInstance.mainCard, { type: 'slide', direction: 'right' });
 			}
 		},{
-			xtype: 'button',
+			/*xtype: 'button',
 			text: 'Agregar nuevo producto',
 			ui: 'action',
 			handler: function(){
 				ApplicationInventario.currentInstance.addNewProduct();
+			}*/
+			xtype: 'button',
+			id: 'ApplicationInventario-addToVentaButton',
+			text: 'Agregar a venta actual',
+			ui: 'action',
+			disabled: true,
+			handler: function(){
+				
+				if ( Ext.get("carritoDeCompras") == null   )
+				{
+					POS.aviso('Error', 'Tiene que haber entrado a mostrador para poder agregar un producto');
+					ApplicationVender.currentInstance.doLimpiarCarrito();
+				}
+				//Mandamos el id del producto para que se agregue al mostrador
+				ApplicationVender.currentInstance.doAddProductById( ApplicationInventario.currentInstance.itemSelected);
+				POS.aviso('Éxito', 'Se agregó el artículo correctamente');
 			}
 		},{
 			xtype: 'button',
@@ -410,7 +429,26 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
         	store: ApplicationInventario.currentInstance.InvProductsListStore,
         	tpl: String.format('<tpl for="."><div class="products">ID: {id_producto} <strong>{denominacion}</strong> &nbsp;Existencias: {existencias} Precio: {precio_venta}</div></tpl>' ),
         	itemSelector: 'div.products',
-        	singleSelect: true
+        	singleSelect: true,
+			grouped: true,
+			listeners: {
+				selectionchange: function(){
+						
+						if ( this.getSelectionCount() > 0)
+						{
+							//Habilitamos el boton si hay algo seleccionado
+							Ext.getCmp('ApplicationInventario-addToVentaButton').setDisabled(false);
+							console.log(this.getSelectedRecords() );
+							var idItem = this.getSelectedRecords();
+							
+							ApplicationInventario.currentInstance.itemSelected = idItem[0].id_producto;
+						}
+						else
+						{
+							Ext.getCmp('ApplicationInventario-addToVentaButton').setDisabled(true);
+						}
+				}
+			}
     	}]
 	
 		});

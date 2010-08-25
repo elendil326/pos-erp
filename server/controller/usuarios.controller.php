@@ -48,6 +48,25 @@ function insertUser($nombre, $user2, $pwd, $sucursal, $acceso)
 
 }
 
+/**
+*	Función para obtener una lista de usuarios en una sucursal
+*
+*	@author Luis Michel < luismichel@computer.org >
+*	@params Integer id_sucursal La id de la sucursal
+*/
+
+
+function getUsersBySucursalId( $id_sucursal )
+{
+
+	$usuario = new Usuario();
+	$usuario->setIdSucursal( $id_sucursal );
+	$jsonUsuarios = array();
+	$jsonUsuarios = UsuarioDAO::search( $usuario );
+	
+	return $jsonUsuarios;
+}
+
 
 switch($args['action']){
 
@@ -85,6 +104,51 @@ switch($args['action']){
 		
 	break;
 	
+	case '2302':
+		
+		
+		@$id_sucursal = $args['id_sucursal'];
+		
+		try{
+			
+			$Usuarios = getUsersBySucursalId( $id_sucursal );
+			$result = array();
+			
+			//Arreglamos el arreglo porque no se forma bien el JSON con el arreglo devuelto por search
+			foreach( $Usuarios as $usuario )
+			{
+			
+				array_push($result, array( "id_usuario" => $usuario->getIdUsuario(),
+										   "nombre" => $usuario->getNombre(),
+										   "usuario" => $usuario->getUsuario(),
+										   "id_sucursal" => $usuario->getIdSucursal()
+				) );
+			
+			}
+			
+			echo ' { "success": true, "data": '.json_encode( $result ).' } ';
+		
+		}catch (Exception $e)
+		{
+			echo '{ "success" : false, "error" : "No se pudieron obtener datos de la base de datos" }';
+		}
+	break;
+	
+	case '2303':
+	
+		//Obtenemos el acceso del usuario
+		if ( isset( $_SESSION['grupo'] ) )
+		{
+			echo ' { "success" : true, "datos": '. $_SESSION['grupo'].' } ';
+		}
+		else
+		{
+			echo ' { "success" : false, "error": "No se encontraron datos " } ';
+		}
+		
+		
+		
+	break;
 	}
 
 ?>
