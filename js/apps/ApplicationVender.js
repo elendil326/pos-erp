@@ -292,6 +292,10 @@ ApplicationVender.prototype.doDeleteItem = function ( item )
 
 ApplicationVender.prototype.ventaTotales = null;
 
+
+/*
+	REFRESCAR CARRITOS Y CALCULAR TOTALES
+*/
 ApplicationVender.prototype.doRefreshItemList = function (  )
 {
 	
@@ -319,10 +323,9 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 	//preparar un html para los totales
 	var totals_html = "";
 
+	//valores conocidos
 	var subtotal = 0;
-	
 	var iva = MOSTRADOR_IVA;
-	
 	var descuento = this.cliente ? this.cliente.descuento : 0;
 	
 	/*	
@@ -334,9 +337,11 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 			this.htmlCart_items[a].cantidad = 1;
 		}
 		
+		//size of text for small screen
 		nombre = this.htmlCart_items[a].name.length > 7 ? this.htmlCart_items[a].name.substring(0,7) : this.htmlCart_items[a].name ;
 		descripcion = this.htmlCart_items[a].description.length > 18 ? this.htmlCart_items[a].description.substring(0,18) + "..." : this.htmlCart_items[a].description  ;
 
+		//actual creation of html
 		html += "<div class='ApplicationVender-item' >" 
 		+ "<div class='trash' onclick='ApplicationVender.currentInstance.doDeleteItem(" +a+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/trash.png'></div>"	
 		+ "<div class='id'>" + this.htmlCart_items[a].id +"</div>" 
@@ -354,11 +359,8 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 	//calcular subtotal
 	for( a = 0; a < this.htmlCart_items.length;  a++){
 		
-
-		
 		//revisar que haya en existencia ese pedido
 		var existencias = parseFloat( this.htmlCart_items[a].existencias );
-		
 		
 		if( this.htmlCart_items[a].cantidad > existencias ){
 			this.htmlCart_items[a].cantidad = existencias;
@@ -370,15 +372,17 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 	}
 
 	totals_html = "<span>Subtotal " +  POS.currencyFormat(subtotal) + "</span> "
-				+ "<span>IVA " +  POS.currencyFormat(subtotal*iva) + "</span> ";
+				+ "<span>IVA " +  POS.currencyFormat(subtotal* (iva/100)) + "</span> ";
 
-	total = (subtotal*iva) + subtotal ;
+	//calculo del total
+	total = calcularTotal(subtotal, iva, descuento) ;
 
+	//si tiene descuento
 	if(descuento > 0){
-		total = total - (total *(descuento / 100));
 		totals_html += "<span>Descuento " +  POS.currencyFormat(total *(descuento / 100)) + "</span> ";
 	}
-				
+
+	//total de totales
 	totals_html += "<span>Total " +  POS.currencyFormat(total) + "</span> ";
 
 	// wrap divs
@@ -392,8 +396,10 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 	this.ventaTotales = {
 		subtotal : subtotal,
 		iva: iva,
-		descuento: total *(descuento / 100),
-		total : total
+		descuento: descuento,
+		total : total,
+		efectivo : null,
+		cambio : null
 	};
 
 };
@@ -786,17 +792,13 @@ ApplicationVender.prototype.doVentaContadoPanel = function (  )
 			ui: 'action',
 			text:'Cobrar',
 			handler: ApplicationVender.currentInstance.doVentaLogic
-
 		});
 	
 	return new Ext.Panel({
 
     scroll: 'none',
-
 	id : 'doVentaContadoPanel',
-
 	cls: "ApplicationVender-mainPanel",
-	
 	html : '<div class="helperMostrador"></div>',
 
 	//toolbar
@@ -824,12 +826,12 @@ ApplicationVender.prototype.doVentaContadoPanel = function (  )
 	
 		        xtype: 'textfield',
 		        label: 'IVA',
-				value : (this.ventaTotales.iva*100) + "%" ,
+				value : (this.ventaTotales.iva) + "%" ,
 				disabled: true
 	      	},{
 			    xtype: 'textfield',
 			    label: 'Descuento',
-				value : POS.currencyFormat(this.ventaTotales.descuento),
+				value : (this.ventaTotales.descuento)+"%",
 				disabled: true
 			},{
 			    xtype: 'textfield',
@@ -1091,22 +1093,13 @@ ApplicationVender.prototype.ventaCreditoExitosa = function ()
 /*
 	solo para ventas a contado
 */
+ApplicationVender.prototype.dataForTicket = null;
+
 ApplicationVender.prototype.doVentaLogic = function ()
 {
-	var subtotal = 0;
-
-
-	var iva = MOSTRADOR_IVA;
 	
-	if(DEBUG){
-		console.log( "IVA para esta venta: ", iva );
-	}
+	total = this.ventaTotales.total;
 	
-	for( a = 0; a < ApplicationVender.currentInstance.htmlCart_items.length;  a++){
-		subtotal += parseFloat( ApplicationVender.currentInstance.htmlCart_items[a].cost );
-	}
-	
-	var total = ( subtotal * iva ) + subtotal;
 	
 	var pago = Ext.getCmp("mostrador_pago_id").getValue();
 	
@@ -1132,10 +1125,7 @@ ApplicationVender.prototype.doVentaLogic = function ()
 	
 	//disable the pago 
 	Ext.getCmp("mostrador_pago_id").disable();
-	
 
-	
-	
 	//hacer la venta en el lado del servidor
 	
 	var jsonItems = Ext.util.JSON.encode(ApplicationVender.currentInstance.htmlCart_items);
@@ -1185,10 +1175,29 @@ ApplicationVender.prototype.doVentaLogic = function ()
 
 
 
+
+
+/**
+* regresa una copia de lo que le manden 
+*/
+function copy (o) {
+	if (typeof o != "object" || o === null) return o;
+	var r = o.constructor == Array ? [] : {};
+	for (var i in o) {
+		r[i] = copy(o[i]);
+	}
+	return r;
+};
+
 ApplicationVender.prototype.ventaContadoExitosa = function ()
 {
 
-	appImpresora.ImprimirTicket();
+	items =  copy(ApplicationVender.currentInstance.htmlCart_items);
+	cliente = ApplicationVender.currentInstance.cliente;
+
+
+	//print this shit
+	appImpresora.ImprimirTicket( cliente, items, this.ventaTotales );
 
 	
 	//quitar el menu de cancelar venta y eso
@@ -1246,6 +1255,7 @@ ApplicationVender.prototype.doCotizar = function ()
 		POS.aviso("Mostrador", "Agregue primero al menos un arituclo para poder cotizar.");
 		return;
 	}
+	
 };
 
 
