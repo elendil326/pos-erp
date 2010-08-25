@@ -190,7 +190,10 @@ ApplicationProveedores.prototype.getProvedores = function ()
 		},
 		function (datos){
 			if(datos.success == true){
-				console.log("------------ entro success de getProveedores SUCCESS: "+datos.success);
+				if(DEBUG){
+					console.log("Entro success de getProveedores: ", datos);					
+				}
+
 				ApplicationProveedores.currentInstance.provedores = datos.datos;
 				ApplicationProveedores.currentInstance.renderMosaico();
 			}
@@ -208,6 +211,7 @@ ApplicationProveedores.prototype.getProvedores = function ()
 ApplicationProveedores.prototype.proveedoresWelcome = new Ext.Panel({
 		layout: 'card',
 		html: '<div style="width:100%; height:100%" id="proveedores_mosaico"></div>',
+		//scroll: 'vertical',
 		listeners : {
 			'afterrender' : function (){
 				ApplicationProveedores.currentInstance.getProvedores();

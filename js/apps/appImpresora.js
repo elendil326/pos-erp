@@ -89,8 +89,8 @@ appImpresora.ImprimirTicket = function ( json )
 	ventanaImpresion.document.write("<center>Gracias Por Su Preferencia</center><br>");
 	ventanaImpresion.document.close();
 */
-	//ventanaImpresion.print( );
-	//ventanaImpresion.close();
+	ventanaImpresion.print( );
+	ventanaImpresion.close();
 	
 };//ticket_print
 

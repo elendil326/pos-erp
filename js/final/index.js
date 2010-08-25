@@ -537,32 +537,18 @@ POS.doPrintTicket = function ()
 sink.Main = {
     init : function() {
 	
-	//En el mero inicio del sistema, se hace un AJAX para comprobar que la variable de session este fija
-	//Esto por dos caso: que si se efectuo un login correcto, o que el usuario esta regresando a una sesion valida anterior
-	/*
-	POS.AJAXandDECODE(
-		//Parametros
-		{method: 'estaLoggeado'},
-		function(result){
-		
-			if(!result.success) { window.location = "index.html";}
-		
-		},
-		function(result){
-			
-			//No se pudo comprobar que se esta loggueado asi que se redirecciona al index
-			window.location = "index.html";
-		}
-	);*/
-		
-		//boton de cancelar
+	
+		//boton de ayuda
         this.ayudaButton = new Ext.Button({
             text: 'Ayuda',
-            ui: 'action',
+            ui: 'normal',
             hidden: true,
             handler: this.onAyudaButtonTap,
             scope: this
         });
+
+
+
         
         this.codeBox = new Ext.ux.CodeBox({scroll: false});
         
@@ -586,26 +572,43 @@ sink.Main = {
         
 
 
+		//boton de cerrar sesion
+        this.salirButton = new Ext.Button({
+            text: 'Salir',
+            ui: 'action',
+            hidden: true,
+            handler: this.onSalirButtonTap,
+            scope: this
+        });
+
+		
+
 		//crear el UI
         this.ui = new Ext.ux.UniversalUI({
             title: Ext.platform.isPhone ? 'POS iPhone' : '<b>Sucursal</b> ' + POS_SUCURSAL_NOMBRE + '   <b>Cajero</b> ' + POS_CAJERO_NOMBRE,
             navigationItems: Apps,
-            buttons: [{xtype: 'spacer'}, this.ayudaButton],
+            buttons: [{xtype: 'spacer'}, this.ayudaButton, this.salirButton],
             listeners: {
                 navigate : this.onNavigate,
                 scope: this
             }
         });
+
+
+
     },
     
 
 	//al navegar en cualquier opcion
     onNavigate : function(ui, item) {
+
+        this.salirButton.show();
         if (item.ayuda) {
 
 
             if (this.ayudaButton.hidden) {
                 this.ayudaButton.show();
+
                 ui.navigationBar.doComponentLayout();
             }
             
@@ -625,7 +628,23 @@ sink.Main = {
     
 
 
-
+	onSalirButtonTap : function () {
+		
+		POS.AJAXandDECODE(
+				//params
+				{
+					action : '2002'
+				},
+				//sucess
+				function ( response ){
+					window.location = "./";
+				},
+				//failure
+				function (){
+					
+				}
+			);
+	},
 
     onAyudaButtonTap : function() {
 		
@@ -660,6 +679,7 @@ sink.Main = {
 
 var POS_SUCURSAL_NOMBRE = null;
 var POS_CAJERO_NOMBRE = null;
+var MOSTRADOR_IVA = null;
 
 Ext.setup({
     tabletStartupScreen: 'resources/img/tablet_startup.png',
@@ -677,7 +697,7 @@ Ext.setup({
 		POS.AJAXandDECODE({ action : "2003" }, 
 		function (response){
 			if(response.sucess){
-
+				MOSTRADOR_IVA = response.payload.iva ;
 				POS_SUCURSAL_NOMBRE = response.payload.sucursal;
 				POS_CAJERO_NOMBRE = response.payload.cajero_nombre;
 			}

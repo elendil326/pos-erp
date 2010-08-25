@@ -4,6 +4,7 @@ require_once("../server/model/usuario.dao.php");
 require_once("../server/model/grupos_usuarios.dao.php");
 require_once("../server/model/grupos.dao.php");
 require_once("../server/model/sucursal.dao.php");
+include_once("mostrador.controller.php");
 
 function sendLogin( $u, $p )
 {
@@ -193,12 +194,14 @@ function logOut( $verbose = false )
 }
 
 
+
 function askSucursal(){
+
 	
 	$usuario = UsuarioDAO::getByPK( $_SESSION['userid'] );
 	$sucursal = SucursalDAO::getByPK( $usuario->getIdSucursal() );
-
-	echo  "{\"sucess\": true, payload : {\"sucursal\": \"" .$sucursal->getDescripcion(). "\", cajero_nombre: \"" . $usuario->getNombre() . "\"}}";
+	$iva = getIVA(false);
+	echo  "{\"sucess\": true, payload : {\"sucursal\": \"" .$sucursal->getDescripcion(). "\", cajero_nombre: \"" . $usuario->getNombre() . "\", \"iva\": \"" . $iva . "\"}}";
 	
 }
 
@@ -221,7 +224,6 @@ switch($args['action'])
 		askSucursal();
 	break;
 
-	default:
 
 }
 

@@ -65,6 +65,14 @@ if( isset($_REQUEST['action']) && ($_REQUEST['action'] == 'test'))
 */
 if( $_REQUEST['action']  != "2001" )
 {
+	
+	if ( !isset($_SESSION['HTTP_USER_AGENT']) )
+	{
+		//si no tiene ni el valor de sesion en http_user_agent a la verga
+		echo "{\"succes\": false , \"reason\": 31416, \"text\" : \"Please re-log in.\" }";
+		exit;
+	}
+	
 	//verificar que no se haya modificado el user agent, el user agent esta encriptado para que no pueda 
 	//ver cual es, asi como los demas datos
 	if ( ($_SESSION['HTTP_USER_AGENT'] != md5($_SERVER['HTTP_USER_AGENT'])) )

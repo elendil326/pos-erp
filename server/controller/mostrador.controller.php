@@ -263,7 +263,7 @@ function insertarVenta($cliente, $tipo_venta, $items)
 
 
 //obtener el iva que aplica a esta sucursal
-function getIVA()
+function getIVA( $json = true )
 {
 	$imp = new Impuesto();
 	$imp->setIdSucursal( $_SESSION['sucursal'] );
@@ -276,8 +276,12 @@ function getIVA()
 		$totalImp += $imp->getValor();
 	}
 	
-	
-	echo "{\"success\": true, \"iva\":  " . $totalImp . "}";
+	if($json){
+		echo "{\"success\": true, \"iva\":  " . $totalImp . "}";		
+	}else{
+		return $totalImp;
+	}
+
 }
 
 
@@ -295,6 +299,5 @@ switch($args['action'])
 	case 2103: insertarVenta( $args['id_cliente'], $args['tipo_venta'], $args['jsonItems'] ); break;
 	case 2104: getIva(); break;
 	case 2105: facturarVenta( $args['id_venta'] ); break;
-	default: echo "NOPE";
-	
+
 }
