@@ -541,7 +541,62 @@ ApplicationVender.prototype.htmlCart_addItem = function( item )
 };
 
 
+ApplicationVender.prototype.doAddProductById = function (id)
+{
+	if(DEBUG){
+		console.log("ApplicationVender: doAddProductById called....");
+	}
 
+
+	//obtener el id del producto
+	var prodID = id;
+	
+
+	
+	//buscar si este producto existe
+	POS.AJAXandDECODE({
+			action: '2101',
+			id_producto : prodID
+		}, 
+		function (datos){
+			
+			//ya llego el request con los datos si existe o no	
+			if(typeof(datos.success) !== 'undefined'){
+				
+				POS.aviso("Mostrador", datos.reason);
+				
+				//clear the textbox
+				Ext.get("APaddProductByID").first().dom.value = "";
+				
+				return;
+			}
+
+			//crear el item
+			var item = {
+				id 			: datos.id_producto,
+				name 		: datos.nombre,
+				description : datos.denominacion,
+				cost 		: datos.precio_venta,
+				existencias : datos.existencias,
+				cantidad	: 1
+			};
+				
+			//agregarlo al carrito
+			ApplicationVender.currentInstance.htmlCart_addItem( item );
+
+
+		},
+		function (e){
+			POS.aviso("Error", "Algo anda mal, porfavor intente de nuevo." + e);
+			if(DEBUG){
+				console.log(e);
+			}
+		}
+	);
+	
+	
+	
+};
 
 ApplicationVender.prototype.doAddProduct = function (button, event)
 {
@@ -561,7 +616,6 @@ ApplicationVender.prototype.doAddProduct = function (button, event)
 		    callback: null,
 		    scope: this
 		};
-
 		return;
 	}
 	
@@ -1113,13 +1167,14 @@ ApplicationVender.prototype.doVentaLogic = function ()
 							if(DEBUG){
 								console.warn("Mostrador: Venta no exitosa ", result);
 							}
-							POS.aviso( "Mostrador", "Venta no exitosa<br>" + result );
+							
+							POS.aviso( "Mostrador", "Venta no exitosa<br>" + result.reason );
 						}
 					},
 					//Funcion failure
 					function(){
 						if(DEBUG){
-							console.warn("ApplicationVender: Error al realizar la venta");	
+							console.warn("ApplicationVender: Error al realizar la venta");
 						}
 						
 					}
