@@ -429,7 +429,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
         	store: ApplicationInventario.currentInstance.InvProductsListStore,
         	tpl: String.format('<tpl for="."><div class="products">ID: {id_producto} <strong>{denominacion}</strong> &nbsp;Existencias: {existencias} Precio: {precio_venta}</div></tpl>' ),
         	itemSelector: 'div.products',
-        	singleSelect: true,
+        	//singleSelect: true,
 			grouped: true,
 			listeners: {
 				selectionchange: function(){

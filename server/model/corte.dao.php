@@ -1,8 +1,8 @@
 <?php
 
-require_once ('Estructura.php');
+require_once ('Estructura.php');require_once("base/corte.vo.base.php");
 require_once("base/corte.dao.base.php");
-require_once("base/corte.vo.base.php");
+
 
 /** Corte Data Access Object (DAO).
   * 
