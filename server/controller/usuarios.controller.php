@@ -66,18 +66,18 @@ switch($args['action']){
 			
 			if($result == 1)
 			{
-				echo "[{ \"success\" : true, \"message\": 'Usuario insertado correctamente'}]";
+				echo "{ \"success\": true, \"message\": \"Usuario insertado correctamente\"}";
 			}
 			else
 			{
 				$result = "Occuri&oacute; un error al insertar el usuario nuevo, intente nuevamente";
-				echo "[{ \"success\" : false, \"error\": '$result'}]";
+				echo "{ \"success\": false, \"error\": \"$result\"}";
 			}
 			
 		}catch(Exception $e){
 		
 			$result = "Occuri&oacute; un error al insertar el usuario nuevo, intente nuevamente";
-			echo "[{ \"success\" : false, \"error\": '$result'}]";
+			echo "{ \"success\": false, \"error\": \"$result\"}";
 		
 		}
 		

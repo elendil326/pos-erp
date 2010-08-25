@@ -383,11 +383,14 @@ AppAdmin.prototype.sendFormNewUser = function(){
 		
 				if(msg.success)
 				{
-					alert('good :)');
+					alert("Usuario agregado correctamente");
+					
+					var form = document.getElementById("usuario-form-element");
+					form.reset();
 				}
 				else
 				{
-					alert('bad :(');
+					alert(msg.error);
 				}
 			}
 		});
