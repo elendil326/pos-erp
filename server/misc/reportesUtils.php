@@ -31,11 +31,14 @@ class reportesUtils
                 switch($dateInterval)
                         {
                                 case 'semana':  $fecha = date_create( $dateToday );
+												$today = $fecha;
+												date_add($today, date_interval_create_from_date_string('1 day'));
+												$dToday = date_format( $today, 'Y-m-d');
                                                 //$fecha = date_create("2010-07-14");
                                                 date_sub($fecha, date_interval_create_from_date_string('7 days'));
                                                 $dateWeekBefore = date_format($fecha, 'Y-m-d');
                                                 array_push($datesArray, $dateWeekBefore);
-                                                array_push($datesArray, $dateToday);
+                                                array_push($datesArray, $dToday);
         
                                                 return($datesArray);
 
@@ -43,11 +46,14 @@ class reportesUtils
                                 /************************************************************************/
 
                                 case 'mes':     $fecha = date_create( $dateToday );
+												$today = $fecha;
+												date_add($today, date_interval_create_from_date_string('1 day'));
+												$dToday = date_format( $today, 'Y-m-d');
                                                 //$fecha = date_create("2010-07-14");
                                                 date_sub($fecha, date_interval_create_from_date_string('1 month'));
                                                 $dateWeekBefore = date_format($fecha, 'Y-m-d');
                                                 array_push($datesArray, $dateWeekBefore);
-                                                array_push($datesArray, $dateToday);
+                                                array_push($datesArray, $dToday);
 
                                                 return($datesArray);
 
@@ -55,11 +61,13 @@ class reportesUtils
                                 /************************************************************************/
 
                                 case 'year':    $fecha = date_create( $dateToday );
-                                                //$fecha = date_create("2010-07-14");
+												$today = $fecha;
+												date_add($today, date_interval_create_from_date_string('1 day'));
+												$dToday = date_format( $today, 'Y-m-d');
                                                 date_sub($fecha, date_interval_create_from_date_string('1 year'));
                                                 $dateWeekBefore = date_format($fecha, 'Y-m-d');
                                                 array_push($datesArray, $dateWeekBefore);
-                                                array_push($datesArray, $dateToday);
+                                                array_push($datesArray, $dToday);
 
                                                 return($datesArray);
 

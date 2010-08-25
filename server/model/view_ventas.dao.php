@@ -35,7 +35,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
 		if ( $timeRange != null )
 		{
 			$datesArray = reportesUtils::getDateRange($timeRange);
-			
+			var_dump($datesArray);
 			//Creamos los objetos ViewVentas para buscar en un rango de fechas
 			$ventasFecha1 = new ViewVentas();
 			$ventasFecha1->setFecha($datesArray[0]);
