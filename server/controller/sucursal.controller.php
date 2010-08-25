@@ -34,6 +34,22 @@ function getSelectData()
 	return $return;
 }
 
+/**
+*	Insertar sucursal
+*
+*/
+function insertSucursal($descripcion, $direccion, $letrasFactura)
+{
+
+	$sucursal = new Sucursal();
+	
+	$sucursal->setDescripcion($descripcion);
+	$sucursal->setDireccion($direccion);
+	$sucursal->setLetrasFactura($letrasFactura);
+	
+	return SucursalDAO::save($sucursal);
+}
+
 
 switch($args['action']){
 
@@ -42,6 +58,33 @@ switch($args['action']){
 	
 		echo getSelectData();
 		
+	break;
+	
+	case '2202': //insertar sucusal
+	
+		@$descripcion = $args['descripcion'];
+		@$direccion = $args['direccion'];
+		@$letrasFactura = $args['letras_factura'];
+		
+		
+		try{
+			if(insertSucursal($descripcion, $direccion, $letrasFactura) == 1)
+			{
+				echo "{ \"success\": true, \"message\": \"Sucursal insertada correctamente\"}";
+			}
+			else
+			{
+				$result = "Occuri&oacute; un error al insertar la sucursal nueva, intente nuevamente";
+				echo "{ \"success\": false, \"error\": \"$result\"}";
+			}
+			
+		}catch(Exception $e){
+			
+			$result = "Occuri&oacute; un error al insertar la sucursal nueva, intente nuevamente";
+			echo "{ \"success\": false, \"error\": \"$result\" }";
+			
+		}
+	
 	break;
 	
 	}

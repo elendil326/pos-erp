@@ -25,7 +25,7 @@ class VentasDAO extends VentasDAOBase
         */
         static function getVentasPorClientes(){
         
-                $sql = "SELECT id_venta AS  'ID', nombre AS  'Cliente', ( subtotal + iva ) AS  'Total', IF( tipo_venta =1,  'Contado',  'Credito' ) AS  'Tipo', date(fecha) AS  'Fecha', id_sucursal AS  'Sucursal' FROM  `ventas` NATURAL JOIN cliente";
+                $sql = "SELECT id_venta AS  'ID', nombre AS  'Cliente', ( subtotal + iva ) AS  'Total', IF( tipo_venta = 2,  'Contado',  'Credito' ) AS  'Tipo', date(fecha) AS  'Fecha', id_sucursal AS  'Sucursal' FROM  `ventas` NATURAL JOIN cliente";
                 global $conn;
                 
                 try{
@@ -84,7 +84,7 @@ class VentasDAO extends VentasDAOBase
                 $limit = "LIMIT $start, $end";
                 
                 
-                $sql = "SELECT SQL_CALC_FOUND_ROWS id_venta AS  'ID', nombre AS  'Cliente', ( subtotal + iva ) AS  'Total', IF( tipo_venta =1,  'Contado',  'Credito' ) AS  'Tipo', date(fecha) AS  'Fecha', id_sucursal AS  'Sucursal' FROM  `ventas` NATURAL JOIN cliente";
+                $sql = "SELECT SQL_CALC_FOUND_ROWS id_venta AS  'ID', nombre AS  'Cliente', ( subtotal + iva ) AS  'Total', IF( tipo_venta = 2,  'Contado',  'Credito' ) AS  'Tipo', date(fecha) AS  'Fecha', id_sucursal AS  'Sucursal' FROM  `ventas` NATURAL JOIN cliente";
                 
                 if(isset($search) && !empty($search))
                 {                        
@@ -142,7 +142,7 @@ class VentasDAO extends VentasDAOBase
                                 RIGHT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
                                 NATURAL JOIN cliente c
                                 GROUP BY v.id_venta,c.id_cliente,v.fecha ,v.tipo_venta
-                                having v.tipo_venta =2 "; 
+                                having v.tipo_venta =1 "; 
                 if($cliente){
                         $query.=" and c.id_cliente=? ";
                         array_push($params,$id_cliente);
@@ -223,7 +223,7 @@ class VentasDAO extends VentasDAOBase
                                 RIGHT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
                                 NATURAL JOIN cliente c
                                 GROUP BY v.id_venta,c.id_cliente,v.fecha ,v.tipo_venta
-                                having v.tipo_venta =2 "; 
+                                having v.tipo_venta = 1 "; 
                 if($cliente){
                         $query.=" and c.id_cliente=? ";
                         array_push($params,$id_cliente);
@@ -286,7 +286,7 @@ class VentasDAO extends VentasDAOBase
                                 RIGHT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
                                 NATURAL JOIN cliente c
                                 GROUP BY v.id_venta,c.id_cliente,v.fecha ,v.tipo_venta
-                                having v.tipo_venta =1 "; 
+                                having v.tipo_venta = 2 "; 
                 if($cliente){
                         $query.=" and c.id_cliente=? ";
                         array_push($params,$id_cliente);
@@ -367,7 +367,7 @@ class VentasDAO extends VentasDAOBase
                                 RIGHT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
                                 NATURAL JOIN cliente c
                                 GROUP BY v.id_venta,c.id_cliente,v.fecha ,v.tipo_venta
-                                having v.tipo_venta =1 "; 
+                                having v.tipo_venta = 2 "; 
                 if($cliente){
                         $query.=" and c.id_cliente=? ";
                         array_push($params,$id_cliente);

@@ -90,6 +90,7 @@ AppAdmin.prototype.loadMosaic = function(){
 				<li data-id="pagos" class="reporte-dinero" onclick="Reports.currentInstance.loadIngresosReport()"><img src=\'../media/admin/icons/money.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Ingresos</p></li>\
 				<li data-id="admin-personal" class="admin-personal" onclick="appAdmin.loadPersonal()"><img src=\'../media/admin/icons/client.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Administrar Personal</p></li>\
 				<li data-id="rendimiento-personal" class="rendimiento-personal" onclick="appAdmin.loadRendimientoPersonal()"><img src=\'../media/admin/icons/client.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Rendimiento del Personal</p></li>\
+				<li data-id="agregar-sucursal" class="agregar-sucursal" onclick="appAdmin.addSucursal()"><img src=\'../media/admin/icons/db.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Agregar Sucursal</p></li>\
 			</ul>\
 			<ul id="r-ventas" class="hidden inline">\
 				<li data-id="ventas-all" class="reporte-ventas" onclick="Reports.currentInstance.loadVentasTodas()"><img src=\'../media/admin/icons/piggybank.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Ventas Totales</p></li>\
@@ -126,6 +127,7 @@ AppAdmin.prototype.loadMosaic = function(){
 				<li data-id="pagos" class="reporte-dinero" onclick="Reports.currentInstance.loadIngresosReport()"><img src=\'../media/admin/icons/money.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Ingresos</p></li>\
 				<li data-id="admin-personal" class="admin-personal" onclick="appAdmin.loadPersonal()"><img src=\'../media/admin/icons/client.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Administrar Personal</p></li>\
 				<li data-id="rendimiento-personal" class="rendimiento-personal" onclick="appAdmin.loadRendimientoPersonal()"><img src=\'../media/admin/icons/client.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Rendimiento del Personal</p></li>\
+				<li data-id="agregar-sucursal" class="agregar-sucursal" onclick="appAdmin.addSucursal()"><img src=\'../media/admin/icons/db.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Agregar Sucursal</p></li>\
 			</ul>');
 
 		$('#content-2').fadeIn('slow');
@@ -292,7 +294,7 @@ AppAdmin.prototype.loadMVPSucursal = function(sucursal,descripcion){
 			data: {action: "404", showAll: true, id_sucursal: sucursal, dateRange: "mes"},
 			success: function(msg){
 			
-				var html_result = "<h2>Personal m&aacute;s productivo Sucursal "+descripcion+"</h2>Ventas por usuario";
+				var html_result = "<h2>"+descripcion+"<br>Personal m&aacute;s productivo en el &uacute;ltimo mes</h2>";
 			
 				
 				for(var i=0; i < msg.datos.length ; i++)
@@ -304,7 +306,7 @@ AppAdmin.prototype.loadMVPSucursal = function(sucursal,descripcion){
 					}
 					else
 					{
-						html_result += "<div class='mvp-row'><img src='../media/iconos/user.png' />"+msg.datos[i].usuario+" vendi&oacute; un total de  $ "+msg.datos[i].cantidad+"</div>";
+						html_result += "<div class='mvp-row'><img src='../media/iconos/user.png' align='left' /><div class='mvp-row-text'>"+msg.datos[i].usuario+" vendi&oacute; un total de  $ "+msg.datos[i].cantidad+"</div></div>";
 					}
 				}
 			
@@ -384,6 +386,132 @@ AppAdmin.prototype.sendFormNewUser = function(){
 				if(msg.success)
 				{
 					alert("Usuario agregado correctamente");
+					
+					var form = document.getElementById("usuario-form-element");
+					form.reset();
+				}
+				else
+				{
+					alert(msg.error);
+				}
+			}
+		});
+	}
+}
+
+AppAdmin.prototype.addSucursal = function(){
+	
+	$('#content-2').fadeOut('slow',function(){
+	
+		$('#content-2').html('\
+			<div style="height:100px;" >\
+			<img src="../media/admin/icons/db.png" width="100" height="100" align="left"/>\
+			<div id="usuario-title">\
+			<h2>Agregar Sucursal</h2></div>\
+			<p id="usuario-text" >\
+				Modulo para agregar sucursales nuevas. Si en alg&uacute;n momento usted necesita expandir su empresa, en &eacute;ste m&oacute;dulo puede realizar todas\
+				esas acciones.<br>El token es un identificador &uacute;nico para determinar que equipo pertenece a que sucursal; si no esta seguro que poner aqu&iacute; consulte a un administrador\
+				del sistema.\
+			</p>\
+			</div>\
+			<div id="usuario-form">\
+			<form id="usuario-form-element">\
+			      <table>\
+			      	<tr>\
+			      		<td>Descripci&oacute;n</td><td><input type="text" id="descripcion-new" name="descripcion" style="width:200px;" /></td>\
+			      	</tr>\
+			      	<tr>\
+			      		<td>Direcci&oacute;n</td><td><input type="text" id="direccion-new" name="direccion" style="width:200px;"/></td>\
+			      	</tr>\
+			      	<tr>\
+			      		<td>Identificador de facturas</td><td><input type="text" id="letras-factura-new" name="letras_factura" style="width:200px;"/></td>\
+			      	</tr>\
+			      	<tr>\
+			      		<td>Token</td><td><input type="text" id="token-new" name="token" style="width:200px;"/></td>\
+			      	</tr>\
+			      </table>\
+			</form>\
+			<div id="usuario-boton">\
+			<button id="usuario-boton-enviar" onclick="appAdmin.sendFormNewSucursal();">Enviar</button></div>\
+			</div>\
+		');
+		
+		//$('form').jqTransform({imgPath:'../jquery/js/jqtransformplugin/img/'});
+		
+		
+		var options = "";
+		Utils.request({
+		url: "../proxy.php",
+		data: {action : "2201"},
+		success: function(msg){
+		
+			if(msg.success)
+			{
+				for (var i = 0; i < msg.data.length; i++) {
+					options += '<option value="' + msg.data[i].value + '">' + msg.data[i].display + '</option>';
+				}
+				
+				$("select#select-sucursal").html(options);
+			}
+			else
+			{
+				options += '<option>No se encontraron datos</option>';
+			}
+			
+			$("select, input").uniform();
+			$("#usuario-boton-enviar").button();
+		}
+	});
+	
+		$('#content-2').fadeIn('slow');
+	
+	});
+}
+
+
+AppAdmin.prototype.sendFormNewSucursal = function(){
+
+	var _descripcion = $("#descripcion-new").val();
+	var _direccion = $("#direccion-new").val();
+	var _token = $("#token-new").val();
+	var _letras_factura = $("#letras-factura-new").val();
+	
+	var error = false;
+	
+	if(_descripcion == "" || _descripcion == null)
+	{
+		error = true;
+		//console.log("nombre");
+	}
+	
+	if(_direccion == "" || _direccion == null)
+	{
+		error = true;
+		//console.log("user");
+	}
+	
+	if(_token == "" || _token  == null)
+	{
+		error = true;
+		//console.log("pwd");
+	}
+	
+	if(error)
+	{
+		//TODO: mejorar despliegue de info
+		alert("Alguno de los campos tiene errores");
+	}
+	else
+	{
+		
+		Utils.request({
+			url: "../proxy.php",
+			data: {action : "2202", descripcion: _descripcion, direccion: _direccion, token: _token, letras_factura: _letras_factura},
+			success: function(msg){
+		
+				if(msg.success)
+				{
+					alert("Sucursal agregada correctamente");
 					
 					var form = document.getElementById("usuario-form-element");
 					form.reset();

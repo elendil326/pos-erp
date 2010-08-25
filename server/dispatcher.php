@@ -18,7 +18,7 @@
 $ss = session_start (  );
 
 if(!$ss){
-	echo "{\"succes\": false , \"reason\": -1,  \"text\" : \"Imposible iniciar sesion. Debe habilitar las cookies para ingresar.\" }";
+	echo "{\"success\": false , \"reason\": -1,  \"text\" : \"Imposible iniciar sesion. Debe habilitar las cookies para ingresar.\" }";
 	return;
 }
 
@@ -199,7 +199,7 @@ switch( ((int)($args['action'] / 100))*100 )
 	break;
 	
 	case 2300:
-		/* sucursal stuff*/
+		/* manejar usuarios en admin*/
 		require_once('controller/usuarios.controller.php');
 	break;
 	
