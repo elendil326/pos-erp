@@ -319,8 +319,14 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 					POS.aviso('Error', 'Tiene que haber entrado a mostrador para poder agregar un producto');
 					ApplicationVender.currentInstance.doLimpiarCarrito();
 				}
+				var items = ApplicationInventario.currentInstance.itemSelected;
 				//Mandamos el id del producto para que se agregue al mostrador
-				ApplicationVender.currentInstance.doAddProductById( ApplicationInventario.currentInstance.itemSelected);
+				for ( var i=0 ; i < items.length ; i++ )
+				{
+					console.log( items[i].id_producto );
+					ApplicationVender.currentInstance.doAddProductById( items[i].id_producto );
+				}
+				//ApplicationVender.currentInstance.doAddProductById( ApplicationInventario.currentInstance.itemSelected);
 				POS.aviso('Éxito', 'Se agregó el artículo correctamente');
 			}
 		},{
@@ -430,6 +436,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
         	tpl: String.format('<tpl for="."><div class="products">ID: {id_producto} <strong>{denominacion}</strong> &nbsp;Existencias: {existencias} Precio: {precio_venta}</div></tpl>' ),
         	itemSelector: 'div.products',
         	//singleSelect: true,
+			multiSelect: true,
 			grouped: true,
 			listeners: {
 				selectionchange: function(){
@@ -441,7 +448,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 							console.log(this.getSelectedRecords() );
 							var idItem = this.getSelectedRecords();
 							
-							ApplicationInventario.currentInstance.itemSelected = idItem[0].id_producto;
+							ApplicationInventario.currentInstance.itemSelected = idItem;
 						}
 						else
 						{

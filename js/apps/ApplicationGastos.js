@@ -364,6 +364,26 @@ ApplicationGastos.prototype.logicAddGasto = function(){
 	//Se obtienen los valores del form en un arreglo
 	var datos = Ext.getCmp('ApplicationGastos-gastosFormPanel').getValues();
 	
+	var regText = /^\S[a-zA-Z ]{3,}/;
+
+	if ( datos['concepto'] == "" || regText.test(datos['concepto']) == false )
+	{
+		alert("Debe llenar el campo de Concepto correctamente, tal vez dejaste espacios al inicio");
+		return;
+	}
+	
+	if ( datos['monto'] <= 0 )
+	{
+		alert("El monto debe ser un número válido");
+		return;
+	}
+	
+	if ( datos['fecha'] == "" )
+	{
+		alert("Debe ingresar una fecha");
+		return;
+	}
+	
 	POS.AJAXandDECODE(
 			//Parametros
 			{
@@ -410,6 +430,26 @@ ApplicationGastos.prototype.logicAddIngreso = function(){
 	
 	//Se obtienen los valores del form en un arreglo
 	var datos = Ext.getCmp('ApplicationGastos-ingresosFormPanel').getValues();
+	
+	var regText = /^\S[a-zA-Z ]{3,}/;
+
+	if ( datos['concepto'] == "" || regText.test(datos['concepto']) == false )
+	{
+		alert("Debe llenar el campo de Concepto correctamente, tal vez dejaste espacios al inicio");
+		return;
+	}
+	
+	if ( datos['monto'] <= 0 )
+	{
+		alert("El monto debe ser un número válido");
+		return;
+	}
+	
+	if ( datos['fecha'] == "" )
+	{
+		alert("Debe ingresar una fecha");
+		return;
+	}
 	
 	POS.AJAXandDECODE(
 			//Parametros
