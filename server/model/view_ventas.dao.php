@@ -1418,7 +1418,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
 			    $cantidad[$key] = $row['cantidad'];
 			}
 
-			//array_multisort($fecha, SORT_DESC, $arrayResults);
+			array_multisort($fecha, SORT_ASC, $arrayResults);
 
 			//return $arrayResults;
 			$xylabelArray = ViewVentasDAO::formatData( $arrayResults, $timeRange);
