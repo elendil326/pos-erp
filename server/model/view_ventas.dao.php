@@ -15,6 +15,120 @@ require_once("../server/misc/reportesUtils.php");
 class ViewVentasDAO extends ViewVentasDAOBase
 {
 
+	static function groupDataByDate( &$allVentas, $timeRange )
+	{
+		
+		$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
+		$arrayID = array();//Guarda los id's que ya hemos analizado
+		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
+
+		//Obtenemos un arreglo con pares de resultados, (id_sucursal, total_vendido)
+		//agrupamos cada usuario con la suma de lo que ha vendido
+		for ( $i = 0; $i < count($allVentas) ; $i++ )
+		{
+			$fechaHora = $allVentas[$i]->getFecha();
+			
+			$fechaYMD = explode(" ", $fechaHora);
+			$fecha = $fechaYMD[0];
+			
+			list($compYear, $compMonth, $compDay) = explode("-", $fecha); //obtenemos año, mes, dia para comparar
+			$duplicatedFlag = false;
+			$dataVentas = null;
+			$ventaTupla = null;
+			//Buscamos en nuestro arreglo de ID's que ya hemos analizado
+			//para que no se repitan datos, si el currentId no se ha analizado
+			//se hace una busqueda de ese ID y se guardan todas las tuplas
+			for ( $j = 0; $j < count($arrayID) ; $j++)
+			{
+				//echo $id ."---->". $arrayID[$j]."<br>";
+				list($compYear2, $compMonth2, $compDay2) = explode("-", $arrayID[$j]);
+				if ( $timeRange == "year" )
+				{
+					if ( $compYear == $compYear2 && $compMonth == $compMonth2)
+					{
+						
+						$duplicatedFlag = true;
+						
+					}
+				}
+				if ( $timeRange == "mes" || $timeRange == "semana" )
+				{
+					if ( $compYear == $compYear2 && $compMonth == $compMonth2 && $compDay == $compDay2)
+					{
+						
+						$duplicatedFlag = true;
+						
+					}
+				}
+ 			}
+
+			if( $duplicatedFlag != true)
+			{
+				
+				
+				$ventaTupla = array();			
+				for($x=0; $x < count($allVentas); $x++)
+				{
+					$fullFecha = $allVentas[$x]->getFecha();
+
+					$fechaArray = explode(" ", $fullFecha);
+					$fechaSinHoras = $fechaArray[0];
+				
+				
+					list($y, $m, $d) = explode("-", $fechaSinHoras);
+					list($y2, $m2, $d2 ) = explode( "-", $fecha );
+					
+					if ( $timeRange == "year" )
+					{
+						if ( $y == $y2 && $m == $m2 )
+						{
+					
+							array_push( $ventaTupla, $allVentas[$x]);
+						}
+					}
+					
+					if ( $timeRange == "mes" || $timeRange == "semana" )
+					{
+						if ( $d == $d2 && $m == $m2 && $y == $y2 )
+						{
+
+							array_push( $ventaTupla, $allVentas[$x]);
+						}
+					}
+				}
+				array_push($arrayID, $fecha);
+			}
+
+			//Teniendo ya las ventas de un unico usuario, sumamos el subtotal de lo 
+			//que ha avendido y lo guardamos en nuestro arreglo de resultados junto
+			//con el ID del usuario
+
+			
+			$sumaSubtotal = 0;
+			
+			if($ventaTupla != null)
+			{
+				
+				for ( $a = 0; $a < count($ventaTupla) ; $a++ )
+				{
+					$sumaSubtotal += $ventaTupla[$a]->getSubtotal();
+					
+				}
+				
+				array_push($arrayResults, array("fecha" => $ventaTupla[0]->getFecha(), "cantidad" => $sumaSubtotal) );
+				
+
+			}
+
+			
+
+		}
+	
+		return $arrayResults;
+	}
+
+
+
 	/**
         *       Obtiene un arreglo con los resultados de todas las ventas, obtiene los
 	*	resultados dependiendo del rango de tiempo que se pida
@@ -26,8 +140,9 @@ class ViewVentasDAO extends ViewVentasDAOBase
 	*	@param String Fecha final del rango de tiempo, se utiliza si se quiere ingresar el rango manualmente
 	*	@param Integer ID de la sucursal de donde se quieren obtener los datos
         *       @return Array un arreglo con los datos obtenidos de las ventas
-        */	
-
+        */		
+		
+		
 	static function getAllVentas($timeRange, $fechaInicio, $fechaFinal, $id_sucursal=null, $tipo_venta = null, $id_cliente = null)
 	{
 		
@@ -35,7 +150,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
 		if ( $timeRange != null )
 		{
 			$datesArray = reportesUtils::getDateRange($timeRange);
-			
+	
 			//Creamos los objetos ViewVentas para buscar en un rango de fechas
 			$ventasFecha1 = new ViewVentas();
 			$ventasFecha1->setFecha($datesArray[0]);
@@ -1061,7 +1176,10 @@ class ViewVentasDAO extends ViewVentasDAOBase
 		$ventasFecha2 = array_pop( $allVentas );
 		$ventasFecha1 = array_pop( $allVentas );
 		
-
+		
+		
+		
+		
 		$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
 		$arrayID = array();//Guarda los id's que ya hemos analizado
 		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
@@ -1184,7 +1302,9 @@ class ViewVentasDAO extends ViewVentasDAOBase
 		$ventasFecha2 = array_pop( $allVentas );
 		$ventasFecha1 = array_pop( $allVentas );
 
-		$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
+		$arrayResults = ViewVentasDAO::groupDataByDate( $allVentas, $timeRange );
+		
+		/*$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
 		$arrayID = array();//Guarda los id's que ya hemos analizado
 		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
 
@@ -1196,6 +1316,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
 			
 			$fechaYMD = explode(" ", $fechaHora);
 			$fecha = $fechaYMD[0];
+			
 			list($compYear, $compMonth, $compDay) = explode("-", $fecha); //obtenemos año, mes, dia para comparar
 			$duplicatedFlag = false;
 			$dataVentas = null;
@@ -1207,13 +1328,25 @@ class ViewVentasDAO extends ViewVentasDAOBase
 			{
 				//echo $id ."---->". $arrayID[$j]."<br>";
 				list($compYear2, $compMonth2, $compDay2) = explode("-", $arrayID[$j]);
-				if ( $compYear == $compYear2 && $compMonth == $compMonth2)
+				if ( $timeRange == "year" )
 				{
-					
-					$duplicatedFlag = true;
-					
+					if ( $compYear == $compYear2 && $compMonth == $compMonth2)
+					{
+						
+						$duplicatedFlag = true;
+						
+					}
 				}
-			}
+				if ( $timeRange == "mes" || $timeRange == "semana" )
+				{
+					if ( $compYear == $compYear2 && $compMonth == $compMonth2 && $compDay == $compDay2)
+					{
+						
+						$duplicatedFlag = true;
+						
+					}
+				}
+ 			}
 
 			if( $duplicatedFlag != true)
 			{
@@ -1230,12 +1363,24 @@ class ViewVentasDAO extends ViewVentasDAOBase
 				
 					list($y, $m, $d) = explode("-", $fechaSinHoras);
 					list($y2, $m2, $d2 ) = explode( "-", $fecha );
-
-					if ( $y == $y2 && $m == $m2 )
+					
+					if ( $timeRange == "year" )
 					{
-						
-						array_push( $ventaTupla, $allVentas[$x]);
-					}	
+						if ( $y == $y2 && $m == $m2 )
+						{
+					
+							array_push( $ventaTupla, $allVentas[$x]);
+						}
+					}
+					
+					if ( $timeRange == "mes" || $timeRange == "semana" )
+					{
+						if ( $d == $d2 && $m == $m2 && $y == $y2 )
+						{
+
+							array_push( $ventaTupla, $allVentas[$x]);
+						}
+					}
 				}
 				array_push($arrayID, $fecha);
 			}
@@ -1264,7 +1409,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
 			
 
 		}
-
+		*/
 		
 		if ( count($arrayResults) > 0 )
 		{
@@ -1316,7 +1461,9 @@ class ViewVentasDAO extends ViewVentasDAOBase
 		$ventasFecha2 = array_pop( $allVentas );
 		$ventasFecha1 = array_pop( $allVentas );
 
-		$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
+		
+		$arrayResults = ViewVentasDAO::groupDataByDate( $allVentas, $timeRange );
+		/*$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
 		$arrayID = array();//Guarda los id's que ya hemos analizado
 		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
 
@@ -1395,7 +1542,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
 
 			
 
-		}
+		}*/
 
 		
 		if ( count($arrayResults) > 0 )
@@ -1447,8 +1594,10 @@ class ViewVentasDAO extends ViewVentasDAOBase
 		
 		$ventasFecha2 = array_pop( $allVentas );
 		$ventasFecha1 = array_pop( $allVentas );
-
-		$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
+		
+		$arrayResults = ViewVentasDAO::groupDataByDate( $allVentas, $timeRange );
+		
+		/*$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
 		$arrayID = array();//Guarda los id's que ya hemos analizado
 		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
 
@@ -1527,7 +1676,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
 
 			
 
-		}
+		}*/
 
 		
 		if ( count($arrayResults) > 0 )
@@ -1585,7 +1734,8 @@ class ViewVentasDAO extends ViewVentasDAOBase
 		$ventasFecha2 = array_pop( $allVentas );
 		$ventasFecha1 = array_pop( $allVentas );
 		
-		$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
+		$arrayResults = ViewVentasDAO::groupDataByDate( $allVentas, $timeRange );
+		/*$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
 		$arrayID = array();//Guarda los id's que ya hemos analizado
 		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
 
@@ -1664,7 +1814,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
 
 			
 
-		}
+		}*/
 
 		
 		if ( count($arrayResults) > 0 )
