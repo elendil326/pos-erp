@@ -536,7 +536,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
 				}
 				//echo $usuarioVentas[0]->getUsuario(). "-->" .$sumaSubtotal. "<br>";
 				//break;
-				array_push($arrayResults, array("sucursal" => $sucursalVentas[0]->getSucursal(), "cantidad" => $sumaSubtotal, "id_sucursal" => $sucursalVentas[0]->getSucursal()) );
+				array_push($arrayResults, array("sucursal" => $sucursalVentas[0]->getSucursal(), "cantidad" => $sumaSubtotal, "id_sucursal" => $sucursalVentas[0]->getIdSucursal()) );
 
 			}
 
