@@ -97,7 +97,7 @@ switch($args['action']){
 		else{
 			$page = 1;
 		}
-		$ans = getGridDataVentasPorClientes($page,$rp,$sortname,$sortorder,$search,$qtype);
+		@$ans = getGridDataVentasPorClientes($page,$rp,$sortname,$sortorder,$search,$qtype);
 		echo $ans;
 		break;
 		
@@ -130,7 +130,7 @@ switch($args['action']){
 			$page = 1;
 		}
 
-		$ans = getGridDataVentasACreditoPorClientes($page,$rp,$sortname,$sortorder,$search,$qtype, $de, $al,$id_cliente);
+		@$ans = getGridDataVentasACreditoPorClientes($page,$rp,$sortname,$sortorder,$search,$qtype, $de, $al,$id_cliente);
 		echo $ans;
 		break;
 		
@@ -164,7 +164,7 @@ switch($args['action']){
 		}
 
 		
-		$ans = getGridDataVentasDeContadoPorClientes($page,$rp,$sortname,$sortorder,$search,$qtype, $de, $al,$id_cliente);
+		@$ans = getGridDataVentasDeContadoPorClientes($page,$rp,$sortname,$sortorder,$search,$qtype, $de, $al,$id_cliente);
 		echo $ans;
 	
 		break;
