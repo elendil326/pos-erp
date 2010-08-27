@@ -433,12 +433,12 @@ require_once('../server/model/view_compras.dao.php');
 		
 	case '606': // getDataGridComprasContado
 	
-		$page = $args['page'];
-		$rp = $args['rp'];
-		$sortname = $args['sortname'];
-		$sortorder = $args['sortorder'];
+		@$page = $args['page'];
+		@$rp = $args['rp'];
+		@$sortname = $args['sortname'];
+		@$sortorder = $args['sortorder'];
 		
-		echo getDataGridComprasContado($page,$rp, $sortname, $sortorder, $search, $qtype, $de, $al, $id_cliente);
+		echo @getDataGridComprasContado($page,$rp, $sortname, $sortorder, $search, $qtype, $de, $al, $id_cliente);
 	
 		break;
 		
