@@ -343,7 +343,9 @@ class ViewComprasDAO extends ViewComprasDAOBase
 		$comprasFecha2 = array_pop( $allCompras );
 		$comprasFecha1 = array_pop( $allCompras );
 
-		$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
+		$arrayResults = ViewVentasDAO::groupDataByDate( $allCompras, $timeRange );
+		
+		/*$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
 		$arrayID = array();//Guarda los id's que ya hemos analizado
 		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
 
@@ -422,7 +424,7 @@ class ViewComprasDAO extends ViewComprasDAOBase
 
 			
 
-		}
+		}*/
 
 		
 		if ( count($arrayResults) > 0 )
@@ -432,7 +434,7 @@ class ViewComprasDAO extends ViewComprasDAOBase
 			    $cantidad[$key] = $row['cantidad'];
 			}
 
-			//array_multisort($fecha, SORT_DESC, $arrayResults);
+			array_multisort($fecha, SORT_ASC, $arrayResults);
 
 			//return $arrayResults;
 			$xylabelArray = ViewComprasDAO::formatData( $arrayResults, $timeRange);
@@ -477,6 +479,9 @@ class ViewComprasDAO extends ViewComprasDAOBase
 		$comprasFecha2 = array_pop( $allCompras );
 		$comprasFecha1 = array_pop( $allCompras );
 
+		$arrayResults = ViewVentasDAO::groupDataByDate( $allCompras, $timeRange );
+		
+		/*
 		$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
 		$arrayID = array();//Guarda los id's que ya hemos analizado
 		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
@@ -556,7 +561,7 @@ class ViewComprasDAO extends ViewComprasDAOBase
 
 			
 
-		}
+		}*/
 
 		
 		if ( count($arrayResults) > 0 )
@@ -566,7 +571,7 @@ class ViewComprasDAO extends ViewComprasDAOBase
 			    $cantidad[$key] = $row['cantidad'];
 			}
 
-			//array_multisort($fecha, SORT_DESC, $arrayResults);
+			array_multisort($fecha, SORT_ASC, $arrayResults);
 
 			//return $arrayResults;
 			$xylabelArray = ViewComprasDAO::formatData( $arrayResults, $timeRange);
@@ -610,6 +615,9 @@ class ViewComprasDAO extends ViewComprasDAOBase
 		$comprasFecha2 = array_pop( $allCompras );
 		$comprasFecha1 = array_pop( $allCompras );
 
+		$arrayResults = ViewVentasDAO::groupDataByDate( $allCompras, $timeRange );
+		
+		/*
 		$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
 		$arrayID = array();//Guarda los id's que ya hemos analizado
 		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
@@ -689,7 +697,7 @@ class ViewComprasDAO extends ViewComprasDAOBase
 
 			
 
-		}
+		}*/
 
 		
 		if ( count($arrayResults) > 0 )
@@ -699,7 +707,7 @@ class ViewComprasDAO extends ViewComprasDAOBase
 			    $cantidad[$key] = $row['cantidad'];
 			}
 
-			//array_multisort($fecha, SORT_DESC, $arrayResults);
+			array_multisort($fecha, SORT_ASC, $arrayResults);
 
 			//return $arrayResults;
 			$xylabelArray = ViewComprasDAO::formatData( $arrayResults, $timeRange);
@@ -744,7 +752,10 @@ class ViewComprasDAO extends ViewComprasDAOBase
 		$comprasFecha2 = array_pop( $allCompras );
 		$comprasFecha1 = array_pop( $allCompras );
 
-		$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
+		
+		$arrayResults = ViewVentasDAO::groupDataByDate( $allCompras, $timeRange );
+		
+		/*$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
 		$arrayID = array();//Guarda los id's que ya hemos analizado
 		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
 
@@ -823,7 +834,7 @@ class ViewComprasDAO extends ViewComprasDAOBase
 
 			
 
-		}
+		}*/
 
 		
 		if ( count($arrayResults) > 0 )
@@ -833,7 +844,7 @@ class ViewComprasDAO extends ViewComprasDAOBase
 			    $cantidad[$key] = $row['cantidad'];
 			}
 
-			//array_multisort($fecha, SORT_DESC, $arrayResults);
+			array_multisort($fecha, SORT_ASC, $arrayResults);
 
 			//return $arrayResults;
 			$xylabelArray = ViewComprasDAO::formatData( $arrayResults, $timeRange);

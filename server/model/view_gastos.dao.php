@@ -15,6 +15,120 @@ require_once("../server/misc/reportesUtils.php");
 class ViewGastosDAO extends ViewGastosDAOBase
 {
 
+
+	static function groupDataByDate( &$allVentas, $timeRange )
+	{
+		
+		$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
+		$arrayID = array();//Guarda los id's que ya hemos analizado
+		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
+
+		//Obtenemos un arreglo con pares de resultados, (id_sucursal, total_vendido)
+		//agrupamos cada usuario con la suma de lo que ha vendido
+		for ( $i = 0; $i < count($allVentas) ; $i++ )
+		{
+			$fechaHora = $allVentas[$i]->getFecha();
+			
+			$fechaYMD = explode(" ", $fechaHora);
+			$fecha = $fechaYMD[0];
+			
+			list($compYear, $compMonth, $compDay) = explode("-", $fecha); //obtenemos año, mes, dia para comparar
+			$duplicatedFlag = false;
+			$dataVentas = null;
+			$ventaTupla = null;
+			//Buscamos en nuestro arreglo de ID's que ya hemos analizado
+			//para que no se repitan datos, si el currentId no se ha analizado
+			//se hace una busqueda de ese ID y se guardan todas las tuplas
+			for ( $j = 0; $j < count($arrayID) ; $j++)
+			{
+				//echo $id ."---->". $arrayID[$j]."<br>";
+				list($compYear2, $compMonth2, $compDay2) = explode("-", $arrayID[$j]);
+				if ( $timeRange == "year" )
+				{
+					if ( $compYear == $compYear2 && $compMonth == $compMonth2)
+					{
+						
+						$duplicatedFlag = true;
+						
+					}
+				}
+				if ( $timeRange == "mes" || $timeRange == "semana" )
+				{
+					if ( $compYear == $compYear2 && $compMonth == $compMonth2 && $compDay == $compDay2)
+					{
+						
+						$duplicatedFlag = true;
+						
+					}
+				}
+ 			}
+
+			if( $duplicatedFlag != true)
+			{
+				
+				
+				$ventaTupla = array();			
+				for($x=0; $x < count($allVentas); $x++)
+				{
+					$fullFecha = $allVentas[$x]->getFecha();
+
+					$fechaArray = explode(" ", $fullFecha);
+					$fechaSinHoras = $fechaArray[0];
+				
+				
+					list($y, $m, $d) = explode("-", $fechaSinHoras);
+					list($y2, $m2, $d2 ) = explode( "-", $fecha );
+					
+					if ( $timeRange == "year" )
+					{
+						if ( $y == $y2 && $m == $m2 )
+						{
+					
+							array_push( $ventaTupla, $allVentas[$x]);
+						}
+					}
+					
+					if ( $timeRange == "mes" || $timeRange == "semana" )
+					{
+						if ( $d == $d2 && $m == $m2 && $y == $y2 )
+						{
+
+							array_push( $ventaTupla, $allVentas[$x]);
+						}
+					}
+				}
+				array_push($arrayID, $fecha);
+			}
+
+			//Teniendo ya las ventas de un unico usuario, sumamos el subtotal de lo 
+			//que ha avendido y lo guardamos en nuestro arreglo de resultados junto
+			//con el ID del usuario
+
+			
+			$sumaSubtotal = 0;
+			
+			if($ventaTupla != null)
+			{
+				
+				for ( $a = 0; $a < count($ventaTupla) ; $a++ )
+				{
+					$sumaSubtotal += $ventaTupla[$a]->getMonto();
+					
+				}
+				
+				array_push($arrayResults, array("fecha" => $ventaTupla[0]->getFecha(), "monto" => $sumaSubtotal) );
+				
+
+			}
+
+			
+
+		}
+	
+		return $arrayResults;
+	}
+
+
 	/**
         *       Obtiene un arreglo con los resultados de todas las gastos, obtiene los
 	*	resultados dependiendo del rango de tiempo que se pida
@@ -308,7 +422,9 @@ class ViewGastosDAO extends ViewGastosDAOBase
 		$gastosFecha2 = array_pop( $allgastos );
 		$gastosFecha1 = array_pop( $allgastos );
 
-		$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
+		$arrayResults = ViewGastosDAO::groupDataByDate( $allgastos, $timeRange );
+		
+		/*$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
 		$arrayID = array();//Guarda los id's que ya hemos analizado
 		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
 
@@ -387,7 +503,7 @@ class ViewGastosDAO extends ViewGastosDAOBase
 
 			
 
-		}
+		}*/
 
 		
 		if ( count($arrayResults) > 0 )
@@ -397,7 +513,7 @@ class ViewGastosDAO extends ViewGastosDAOBase
 			    $monto[$key] = $row['monto'];
 			}
 
-			//array_multisort($fecha, SORT_DESC, $arrayResults);
+			array_multisort($fecha, SORT_ASC, $arrayResults);
 
 			//return $arrayResults;
 			$xylabelArray = ViewGastosDAO::formatData( $arrayResults, $timeRange);

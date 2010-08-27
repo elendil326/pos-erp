@@ -309,7 +309,9 @@ class ViewIngresosDAO extends ViewIngresosDAOBase
 		$ingresosFecha2 = array_pop( $allingresos );
 		$ingresosFecha1 = array_pop( $allingresos );
 
-		$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
+		$arrayResults = ViewGastosDAO::groupDataByDate( $allingresos, $timeRange );
+		
+		/*$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
 		$arrayID = array();//Guarda los id's que ya hemos analizado
 		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
 
@@ -388,7 +390,7 @@ class ViewIngresosDAO extends ViewIngresosDAOBase
 
 			
 
-		}
+		}*/
 
 		
 		if ( count($arrayResults) > 0 )
@@ -398,7 +400,7 @@ class ViewIngresosDAO extends ViewIngresosDAOBase
 			    $monto[$key] = $row['monto'];
 			}
 
-			//array_multisort($fecha, SORT_DESC, $arrayResults);
+			array_multisort($fecha, SORT_ASC, $arrayResults);
 
 			//return $arrayResults;
 			$xylabelArray = ViewIngresosDAO::formatData( $arrayResults, $timeRange);
