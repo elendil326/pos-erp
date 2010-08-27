@@ -64,7 +64,7 @@ require_once("../server/model/view_ventas.dao.php");
         *       @return Array un arreglo con los datos obtenidos de la consulta
         */
 	
-	function SucursalVentasTop( $timeRange, $fechaInicio, $fechaFinal )
+	function SucursalVentasTop( $timeRange, $fechaInicio, $fechaFinal, $showAll )
 	{
 		$data = ViewVentasDao::getSucursalVentasTop($timeRange, $fechaInicio, $fechaFinal);
 
