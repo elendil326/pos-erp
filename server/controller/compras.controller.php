@@ -853,6 +853,61 @@ function itemExistence_sucursal( $id_producto, $id_proveedor ){
 }
 
 
+/**
+ * list_provider_products
+ * 
+ * Dado el id del proveedor regresa los productos que éste surte a esta
+ * sucursal
+ *
+ * @param <type> $id_provider
+ */
+function list_provider_products( $id_provider ){
+	
+	$sucursal = $_SESSION['sucursal'];
+	
+	$productosSucursal = new DetalleInventario();
+	$productosSucursal->setIdSucursal( $sucursal );
+	
+	$productos = DetalleInventarioDAO::search( $productosSucursal );
+	
+	$prodProv = new ProductosProveedor();
+	$prodProv->setIdProveedor( $id_provider );
+	
+	$productosProveedor = ProductosProveedorDAO::search( $prodProv );
+	
+	$numProd = count( $productos );
+	
+	$numProdProv = count( $productosProveedor );
+	
+	$datos ="";
+	$numProductosProv = 0;
+	
+	for( $i = 0; $i < $numProdProv; $i++ ){
+		
+		for( $j = 0; $j < $numProd; $j++ ){
+			
+			if( $productos[ $j ]->getIdProducto() == $productosProveedor[ $i ]->getIdInventario()  ){
+
+				$inventario = InventarioDAO::getByPK( $productos[ $j ]->getIdProducto() );
+				
+				$datos .= '{ "id_producto":"'.$productos[ $j ]->getIdProducto().'","nombre":"'.$inventario->getNombre().'","denominacion":"'.$inventario->getDenominacion().'","precio_venta":"'.$productos[ $j ]->getPrecioVenta().'","existencias":"'.$productos[ $j ]->getExistencias().'","precio":"'.$productosProveedor[ $i ]->getPrecio().'" },';
+				
+				$numProductosProv++;
+				
+			}//fin if
+			
+		}//fin for j		
+	}//fin for i
+	
+	if( $numProductosProv < 1){
+		return "{success:false , reason: 'Este proveedor no surte a esta sucursal con ningun producto'}";
+	}
+	
+	$out = substr($datos,0,-1);
+	
+	return '{ success:true , datos:['.$out.'] ,details:" numero de productos en esta suc '.$numProd.' y num de prod q vende este prov '.$numProdProv.'"}';
+}//fin metodo list_provider_productos
+
 
 switch ($args['action']) {
     case '1201':
@@ -939,6 +994,13 @@ switch ($args['action']) {
 		unset($args);
 		
 		$ans= itemExistence_sucursal( $id_producto, $id_proveedor );
+		echo $ans;
+	break;
+	
+	case '1211':
+		$id_proveedor = $args['id_proveedor'];
+		unset($args);
+		$ans = list_provider_products( $id_proveedor );
 		echo $ans;
 	break;
 }//end switch

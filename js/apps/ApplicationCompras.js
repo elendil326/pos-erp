@@ -237,14 +237,36 @@ ApplicationCompras.prototype.comprarMainPanel = new Ext.Panel({
 			}
 		],
 		listeners: {
-		beforeshow: function(){
-			//console.log("EL ID DEL PROVEEDOR SELEC ES: "+ApplicationCompras.currentInstance.idProveedor);
-			if(!ApplicationCompras.currentInstance._BANDERA){
-				console.log("SI ES FALSO DEBO DE ENTRAR A SURTIR POR KGS (TOÑO MODE)");
-				Ext.getCmp("pesoEmbarque").show();
-				
+			beforeshow: function(){
+				//console.log("EL ID DEL PROVEEDOR SELEC ES: "+ApplicationCompras.currentInstance.idProveedor);
+				if(!ApplicationCompras.currentInstance._BANDERA){
+					console.log("SI ES FALSO DEBO DE ENTRAR A SURTIR POR KGS (TOÑO MODE)");
+					Ext.getCmp("pesoEmbarque").show();
+					
+				}
+			},
+			show: function(){
+				/*
+					PRODUCTOS QUE VENDE ESTE PROVEEDOR A ESTA SUCURSAL
+				*/
+				POS.AJAXandDECODE({
+						action: '1211',
+						id_proveedor: ApplicationCompras.currentInstance.idProveedor 
+						},
+						function (datos){//mientras responda AJAXDECODE LISTAR VENTAS CLIENTE
+							if(!datos.success){
+								POS.aviso("Error",""+datos.reason);
+								return;
+							}
+							
+						},
+						function (){//no responde AJAXDECODE DE VENTAS CLIENTE
+							POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS   ERROR EN LA CONEXION :(");      
+						}
+					);//AJAXandDECODE LISTAR VENTAS CLIENTE
+				/*-------------
+				*/
 			}
-		}
 		}
 });
 

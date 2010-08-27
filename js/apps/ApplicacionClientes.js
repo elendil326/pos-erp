@@ -260,7 +260,7 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
             ui: 'dark',
             dock: 'bottom',
             //items:  btnBackCliente.concat(detallesDeCliente).concat(btnCancelEditCliente).concat(btnEditCliente)
-			items:  btnBackCliente2.concat(btnCancelEditCliente2).concat(btnEditCliente2)
+			items:  btnBackCliente2.concat(btnCancelEditCliente2).concat({xtype:'spacer'}).concat(btnEditCliente2).concat({xtype:'spacer'})
                  
         })];
 		
@@ -773,12 +773,25 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 					
 					//renderear el html
 					for( a = 0; a < ventasCliente.getCount(); a++ ){
+						
 						var facturado="";
 						if ( ventasCliente.data.items[a].facturado == 1 ){
+							
 							facturado="<div class='pagado'>FACTURADA</div>";
-						}else{
-							facturado ="<div class='abonar' onclick='ApplicacionClientes.currentInstance.panelFacturas(" + ventasCliente.data.items[a].id_venta + " , "+ record_cliente[0].id_cliente +")'>FACTURAR</div>";
 						}
+						if ( ventasCliente.data.items[a].facturado == 0 ){
+								
+								vtaClteTotal = parseFloat(ventasCliente.data.items[a].total); 
+								vtaCltePagado = parseFloat(ventasCliente.data.items[a].pagado);
+								
+								if(  vtaClteTotal > vtaCltePagado ){
+									
+									facturado = "<div class='abonar'>ADEUDA</div>";
+								}else{
+									facturado ="<div class='abonar' onclick='ApplicacionClientes.currentInstance.panelFacturas(" + ventasCliente.data.items[a].id_venta + " , "+ record_cliente[0].id_cliente +")'>FACTURAR</div>";
+								}
+						}
+						
 						html += "<div class='ApplicationClientes-item' >" 
 						+ "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" +ventasCliente.data.items[a].id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>"	
 							+ "<div class='id'>" + ventasCliente.data.items[a].id_venta +"</div>" 

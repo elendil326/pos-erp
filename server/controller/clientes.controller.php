@@ -103,9 +103,9 @@ function update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telef
     $ans = ClienteDAO::save($cliente);
 	
     if ($ans) {
-        return "{success: true, reason: 'Se modifico el cliente correctamente'}";
+        return "{success: true, reason: 'Se modifico el cliente correctamente. ans -> ".$ans."'}";
     } else {
-        return "{success: false, reason: 'No se modifico el cliente.' }";
+        return "{success: false, reason: 'No se modifico el cliente. ans -> ".$ans."' }";
     }
 }
 

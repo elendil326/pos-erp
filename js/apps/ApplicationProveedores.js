@@ -324,10 +324,12 @@ ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 			text: 'Surtir',
 			ui: 'action',
 			handler: function(){
-				//console.log("EL PROVEEDOR SELECCIONADO ES: "+provedor.id_proveedor);
-				ApplicationProveedores.currentInstance.comprasObj.idProviderSelected ( provedor );
-				//console.log("LE PASE EL VALOR: "+ApplicationCompras.currentInstance.idProveedor);
-				sink.Main.ui.setCard( ApplicationProveedores.currentInstance.comprasObj.comprarMainPanel, 'slide' );
+				
+				//ApplicationProveedores.currentInstance.comprasObj.idProviderSelected ( provedor );
+				
+				//sink.Main.ui.setCard( ApplicationProveedores.currentInstance.comprasObj.comprarMainPanel, 'slide' );
+				var obj = new ApplicationComprasProveedor ( provedor );
+				sink.Main.ui.setCard( obj.surtir, 'slide' );			
 				
 			}
 		}];

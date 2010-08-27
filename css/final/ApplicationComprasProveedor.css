@@ -1,0 +1,278 @@
+﻿
+.ApplicationComprasProveedor-background{
+	background-image:url(media/g3.png);
+}
+
+.ApplicationComprasProveedor-proveedorProductos_Sucursal{
+	position:relative;
+	float:left;
+	width:48%;
+	height:100%;
+
+	/*border:solid;
+	border-color:#F00;*/
+}
+.ApplicationComprasProveedor-proveedorProductos_Sucursal2{
+	position:relative;
+	float:left;
+	width:100%;
+	height:100%;
+
+}
+
+
+.ApplicationComprasProveedor-itemsBox {
+	margin: 5px;
+	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+	font-size: 12px;
+
+}
+
+.ApplicationComprasProveedor-item{
+	margin: 5px;
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+
+	width: 100%;
+	height: 35px;
+	color: #827264;
+	text-shadow: white 0px 1px 1px;
+	background-image:url(media/g2.png);
+	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+	font-weight: normal;
+	line-height:35px;
+	padding-left:5px;
+	
+}
+
+.ApplicationComprasProveedor-toggle{
+	position:relative;
+	float:left;
+	width:15%;
+	height:100%;
+	margin:-5px;
+}
+.ApplicationComprasProveedor-pesoEmbarque{
+	/*margin: 5px;*/
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+	float:left;
+	width: 48%;
+	height: 35px;
+	color:#F00;
+	text-shadow: black 0px 1px 1px;
+	background-image:url(media/g2.png);
+	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+	font-weight: normal;
+	padding : 5px;
+	text-align:center;
+
+}
+
+.ApplicationComprasProveedor-numeroArpillas{
+	float:left;
+	width: 25%;
+	color:#F00;
+	text-shadow: black 0px 1px 1px;
+	font-weight: normal;
+	font-size:13px;
+	text-align:center;
+}
+.ApplicationComprasProveedor-PesoArpilla{
+	float:left;
+	width: 25%;
+	color:#F00;
+	text-shadow: black 0px 1px 1px;
+	font-weight: normal;
+	font-size:13px;
+	text-align:center;
+}
+.ApplicationComprasProveedor-totalArpillas{
+	float:left;
+	width: 25%;
+	color:#000;
+	text-shadow: black 0px 1px 1px;
+	font-weight: normal;
+	font-size:13px;
+	text-align:center;
+}
+
+.ApplicationComprasProveedor-pesoArpillas{
+	float:left;
+	width: 25%;
+	color:#000;
+	text-shadow: black 0px 1px 1px;
+	font-weight: normal;
+	font-size:13px;
+	text-align:center;
+}
+
+
+/* ------------------------------------------------------------------------
+	Items del carrito
+   ------------------------------------------------------------------------ */
+
+div.caja_texto{
+	float: left;
+	font-weight: bold;
+	color: black;
+	width: 15%;
+}
+
+div.tipo{
+	float: left;
+	width : 7%;
+
+}
+
+div.fecha{
+	float: left;
+	width : 11%;
+	color: black;	
+}
+div.iva{
+	float: left;
+	width : 7%;
+	color: black;	
+}
+
+div.sucursal{
+	float: left;
+	width : 15%;
+	color: black;	
+}
+div.producto_nombre{
+	float: left;
+	width : 40%;
+	color: black;
+	font-size:12px;
+}
+
+div.cabecera-compra{
+	float: left;
+	width: 15%;
+	text-shadow: black 0px 1px 1px;
+	color: black;
+	font-size:12px;
+}
+div.cabecera-subtotales-compra{
+	float: left;
+	width: 15%;
+	text-shadow: gray 0px 1px 1px;
+	color: black;
+	font-size:11px;
+	text-align:center;
+}
+div.total{
+	float: left;
+	width: 7%;
+	text-shadow: black 0px 1px 1px;
+	color: black;	
+}
+
+div.pagado{
+	float: left;
+	width: 9%;
+	text-shadow: black 0px 1px 1px;
+	color:#093;	
+}
+
+div.abonar{
+	float: left;
+	width: 10%;
+	text-shadow: black 0px 1px 1px;
+	color:#F00;	
+}
+div.trash{
+	float: left;
+	width: 5%px;
+	text-shadow: black 0px 1px 1px;
+	color: black
+}
+
+div.noVentas{
+	float: left;
+	width: 90%;
+	text-shadow: black 0px 1px 1px;
+	color: black,
+	font-size: 20px;
+}
+
+
+.cliente-buscar{
+	background-image: url(media/search-icon.jpeg) !important;
+	background-repeat: no-repeat;
+	background-position: 6px 1px;
+	padding-left: 35px !important;
+}
+
+.cliente-Abonar{
+	margin: 15px;
+	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+	font-size: 18px;
+}
+
+/* ------------------------------------------------------------------------
+	Totales del carrito
+   ------------------------------------------------------------------------ */
+
+div.ApplicationClientes-TotalesBox  {
+
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+	width: 25%;
+	margin-left: 70%;
+	text-align: right;
+	color: black;
+	text-shadow: white 0px 1px 1px;
+	background-image:url(media/g2.png);
+	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+	font-weight: normal;
+	font-size: 12px;
+	padding : 10px;
+
+}
+
+div.ApplicationClientes-Totales{
+	
+	font-size:17px;
+	text-shadow: black 0px 1px 1px;
+}
+
+
+/* ------------------------------------------------------------------------
+	Detalles del cliente
+   ------------------------------------------------------------------------ */
+
+.ApplicationClientes-clienteDetalle{
+	
+
+	
+}
+
+
+div.ApplicationClientes-clienteBox .nombre{
+	font-size: 20px;
+	text-shadow: gray 0px 1px 1px;
+}
+
+div.ApplicationClientes-clienteBox  {
+	padding-left: 15px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin: 5px;
+	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+	font-size: 13px;
+
+	-moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+
+	color: black;
+
+	background-image:url(media/g2.png);
+
+}
