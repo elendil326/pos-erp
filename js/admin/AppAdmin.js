@@ -28,6 +28,9 @@ AppAdmin.prototype._init = function(){
 	loadStructure carga la estructura inicial de la app de administracion, paneles laterales,
 	pesta~nas y todo lo referente a controles. DEBE LLAMARSE EN LA FUNCION _init()
 */
+
+AppAdmin.prototype.sizeSucursalesUtilidades = 0;
+
 AppAdmin.prototype.loadStructure = function(){
 
 	//Creamos logout Message
@@ -91,6 +94,7 @@ AppAdmin.prototype.loadMosaic = function(){
 				<li data-id="admin-personal" class="admin-personal" onclick="appAdmin.loadPersonal()"><img src=\'../media/admin/icons/client.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Administrar Personal</p></li>\
 				<li data-id="rendimiento-personal" class="rendimiento-personal" onclick="appAdmin.loadRendimientoPersonal()"><img src=\'../media/admin/icons/client.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Rendimiento del Personal</p></li>\
 				<li data-id="agregar-sucursal" class="agregar-sucursal" onclick="appAdmin.addSucursal()"><img src=\'../media/admin/icons/db.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Agregar Sucursal</p></li>\
+				<li data-id="calcular-utilidades" class="calcular-utilidades" onclick="appAdmin.loadUtilidades()"><img src=\'../media/admin/icons/calc.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Calcular Utilidades</p></li>\
 			</ul>\
 			<ul id="r-ventas" class="hidden inline">\
 				<li data-id="ventas-all" class="reporte-ventas" onclick="Reports.currentInstance.loadVentasTodas()"><img src=\'../media/admin/icons/piggybank.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Ventas Totales</p></li>\
@@ -128,6 +132,7 @@ AppAdmin.prototype.loadMosaic = function(){
 				<li data-id="admin-personal" class="admin-personal" onclick="appAdmin.loadPersonal()"><img src=\'../media/admin/icons/client.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Administrar Personal</p></li>\
 				<li data-id="rendimiento-personal" class="rendimiento-personal" onclick="appAdmin.loadRendimientoPersonal()"><img src=\'../media/admin/icons/client.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Rendimiento del Personal</p></li>\
 				<li data-id="agregar-sucursal" class="agregar-sucursal" onclick="appAdmin.addSucursal()"><img src=\'../media/admin/icons/db.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Agregar Sucursal</p></li>\
+				<li data-id="calcular-utilidades" class="calcular-utilidades" onclick="appAdmin.loadUtilidades()"><img src=\'../media/admin/icons/calc.png\' width=\'150\' height=\'150\' /><p class="mosaico-text">Calcular Utilidades</p></li>\
 			</ul>');
 
 		$('#content-2').fadeIn('slow');
@@ -270,7 +275,7 @@ AppAdmin.prototype.loadRendimientoPersonal = function(){
 						options += '<a class="sucursal-link" href="#" onclick="appAdmin.loadMVPSucursal('+msg.data[i].value+',\''+msg.data[i].display+'\')" ">' + msg.data[i].display + '</a>&nbsp;|&nbsp;';
 					}
 				
-					$("#content-2").html(options+"</fieldset><div id='mvp-results'></div> ");
+					$("#content-2").html(options+"</fieldset><div id='mvp-results'></div><div id='mvp-summary'></div>");
 					$('#content-2').fadeIn('slow');
 				
 				}
@@ -313,6 +318,22 @@ AppAdmin.prototype.loadMVPSucursal = function(sucursal,descripcion){
 				//console.log(html);
 				$('#mvp-results').html(html_result);
 				$('#mvp-results').fadeIn('slow');
+				
+				
+				//obtenemos ventas totales de la succursal
+				/*
+				Utils.request({
+					url: "../proxy.php",
+					data: {action: "402", id_sucursal: sucursal, dateRange: "mes"},
+					success: function(msg){
+					
+						var html_ventas = "<h2>Ventas Totales en el &uacute;ltimo mes</h2>";
+						
+						html_ventas += "<p></p>";
+					
+					}
+				
+				});*/
 			}
 		});
 
@@ -439,30 +460,9 @@ AppAdmin.prototype.addSucursal = function(){
 		//$('form').jqTransform({imgPath:'../jquery/js/jqtransformplugin/img/'});
 		
 		
-		var options = "";
-		Utils.request({
-		url: "../proxy.php",
-		data: {action : "2201"},
-		success: function(msg){
 		
-			if(msg.success)
-			{
-				for (var i = 0; i < msg.data.length; i++) {
-					options += '<option value="' + msg.data[i].value + '">' + msg.data[i].display + '</option>';
-				}
-				
-				$("select#select-sucursal").html(options);
-			}
-			else
-			{
-				options += '<option>No se encontraron datos</option>';
-			}
-			
-			$("select, input").uniform();
-			$("#usuario-boton-enviar").button();
-		}
-	});
-	
+		$("select, input").uniform();
+		$("#usuario-boton-enviar").button();
 		$('#content-2').fadeIn('slow');
 	
 	});
@@ -523,6 +523,264 @@ AppAdmin.prototype.sendFormNewSucursal = function(){
 			}
 		});
 	}
+}
+
+
+AppAdmin.prototype.loadUtilidades = function(){
+
+	$('#content-2').fadeOut('slow',function(){
+	
+		//html inicial
+		var options = '\
+			<div style="height:100px;" >\
+			<img src="../media/admin/icons/calc.png" width="100" height="100" align="left"/>\
+			<div id="usuario-title">\
+			<h2>Calcular Utilidades</h2></div>\
+			<p id="usuario-text" >\
+				M&oacute;dulo para calcular utilidades. &Eacute;ste m&oacute;dulo permite calcular y repartir utilidades entre representates de cada sucursal.\
+				Dicho c&aacute;lculo se efect&uacute;a consultando las ventas totales, abonos y gastos de cada sucursal. La herramienta tambi&eacute;n permite asignar porcentajes\
+				de repartici&oacute;n a cada representante.\
+			</p>\
+			</div>\
+			<p>Seleccione un rango de fechas\
+			<div class="rangePicker"></div><button id="actualiza-button-utilidades" onclick="appAdmin.updateDate()">Actualizar</button><br><br>\
+			</p>\
+		';
+	
+	
+		options += '<div id="flujo-efectivo"><p><b>Flujo de efectivo</b></p><br>\
+				<div class="flujo-efectivo-image"><img width="100" height="100" src="../media/admin/icons/money.png" /><p>Utilidades <br><span id="utilidades"></span></p></div>\
+				<div class="flujo-efectivo-image"><img width="100" height="100" src="../media/admin/icons/up.png" /><p>Abonos <br><span id="abonos-utilidades"></span></p></div>\
+				<div class="flujo-efectivo-image"><img width="100" height="100" src="../media/admin/icons/down.png" /><p>Gastos <br><span id="gastos-utilidades"></span></p></div>\
+				<div class="flujo-efectivo-image"><img width="100" height="100" src="../media/admin/icons/piggybank.png" /><p>Ventas de Contado<br><span id="ventas-utilidades"></span></p></div>\
+				</div>';
+	
+		/*
+		var date_start = $('#start_date').val();
+		var date_end = $('#end_date').val()
+	
+		var date_start_array = date_start.split("/");
+		var date_end_array = date_end.split("/");
+		
+		var date_start_format = date_start_array[2]+"-"+date_start_array[0]+"-"+date_start_array[1];
+		var date_end_format = date_end_array[2]+"-"+date_end_array[0]+"-"+date_end_array[1];
+		
+		//consultamos datos de ventas, gastos, ingresos, abonos (flujo de efectivo)
+		Utils.request({
+		url: "../proxy.php",
+		data: {action : "412", fecha_inicio: date_start_format, fecha_final: date_end_format},
+		success: function(msg){
+		
+				console.log(msg);
+			}
+		});*/
+		
+		var ventas = 0;
+		var gastos = 0;
+		var ingresos = 0;
+		var abonos = 0;
+		var utilidad = 0;
+		var size = 0;
+		
+		//sacamos todas las sucursales
+		Utils.request({
+		url: "../proxy.php",
+		data: {action : "2201"},
+		success: function(msg){
+		
+				size = msg.data.length;
+				//cargamos date picker
+				enhancedDomReady(function(){
+					$('.toggleRPpos').click(function(){
+						if($('div.rangePicker').css('float') == 'left') { 
+							$('div.rangePicker').css('float', 'right');
+							$('.toggleRPpos').html('Alinear a la izquierda');
+						}
+						else { 
+							$('div.rangePicker').css('float', 'left'); 
+							$('.toggleRPpos').html('Alinear a la derecha');
+						}
+						return false;
+					});
+			
+			
+					// create date picker by replacing out the inputs
+					$('.rangePicker').html('<a href="#" class="range_prev"><span>Previous</span></a><a href="#" class="rangeDisplay"><span>Pick a Date</span></a><a href="#" class="range_next"><span>Next</span></a>').dateRangePicker({menuSet: 'pastRange'});
+			
+			
+			
+					var date_start = $('#start_date').val();
+					var date_end = $('#end_date').val();
+	
+					var date_start_array = date_start.split("/");
+					var date_end_array = date_end.split("/");
+		
+					var date_start_format = date_start_array[2]+"-"+date_start_array[0]+"-"+date_start_array[1];
+					var date_end_format = date_end_array[2]+"-"+date_end_array[0]+"-"+date_end_array[1];
+		
+					//consultamos datos de ventas, gastos, ingresos, abonos (flujo de efectivo)
+					Utils.request({
+					url: "../proxy.php",
+					data: "action=412&fecha-inicio="+date_start_format+"&fecha-final="+date_end_format,
+					success: function(msg){
+		
+							if(msg.success)
+							{
+								ventas = msg.datos[0].venta_total;
+								gastos = msg.datos[0].gasto_total;
+								abonos = msg.datos[0].abono_total;
+								
+								utilidad = ventas + abonos - gastos;
+								
+								//console.log(utilidad);
+								
+								$("#utilidades").html("<b>$"+utilidad+".00</b>");
+								$("#ventas-utilidades").html("<b>$"+ventas+".00</b>");
+								$("#gastos-utilidades").html("<b>$"+gastos+".00</b>");
+								$("#abonos-utilidades").html("<b>$"+abonos+".00</b>");
+								
+								$("#content-2").append('<div id="button-calc-wrapper"><button id="button-calcular-reparticion" onclick="appAdmin.doCalc('+utilidad+','+size+')">Calcular Repartici&oacute;n</button></div>');
+							}
+							else
+							{
+								$("#ventas-utilidades").html("<b>No hay datos</b>");
+								$("#gastos-utilidades").html("<b>No hay datos</b>");
+								$("#abonos-utilidades").html("<b>No hay datos</b>");
+							}
+						}
+					});
+				});
+		
+		
+				options += '<p>El porcentaje de repartici&oacute;n se calcula equitativamente por defecto, si usted desea modificar dichos valores por favor use los campos siguientes</p>';
+		
+				if(msg.success)
+				{
+					
+					options += '<table style="color:white !important"><tr><td>Sucursal</td><td>Porcentaje</td><td>Dinero repartido</td></tr>';
+					
+					var porcentaje = 100 / msg.data.length;
+					
+					appAdmin.sizeSucursalesUtilidades = msg.data.length;
+					
+					for (var i = 0; i < msg.data.length; i++) {
+						options += '<tr><td id="renglon-sucursales-'+ i +'">' + msg.data[i].display + '</td>\
+								<td><input type="text" class="campo-sucursal" id="campo-sucursal-'+ i +'" value="'+Math.round(porcentaje*1000)/1000+'" /></td>\
+								<td id="total-sucursal-repartido-'+ i +'"></td></tr>';
+					}
+				
+					
+					/*options += 	'<tr><td>\
+							<button id="button-calcular-reparticion" onclick="appAdmin.doCalc('+utilidad+','+msg.data.length+')">Calcular Repartici&oacute;n</button>\
+							</td><td></td></tr>';*/
+							
+					
+					options += '</table>';
+				}
+				else
+				{
+					options += '<tr><td>No hay datos</td><td></td></tr></table>';
+				}
+			
+			
+				$('#content-2').html(options);
+				$("input").uniform();
+				$('#button-calcular-reparticion').button();
+				$('#actualiza-button-utilidades').button();
+				
+				
+				
+				
+				
+				$('#content-2').fadeIn('slow');	
+				
+			}
+		});
+	
+		
+		
+	});
+
+}
+
+AppAdmin.prototype.doCalc = function(utilidad, size){
+
+	var value = 0;
+	var sum = 0;
+	
+	//console.log(utilidad);
+	
+	for(var i = 0; i < size; i++)
+	{
+		value = $("#campo-sucursal-"+i).val();
+		
+		sum += parseFloat(value);
+		
+		
+	}
+	
+	console.log(sum);
+	
+	if(sum > 100)
+	{
+		alert("La suma de los porcentajes debe ser por mucho 100%");
+		
+		return;
+	}
+	
+	for(var i = 0; i < size; i++)
+	{
+		value = $("#campo-sucursal-"+i).val();
+		
+		$("#total-sucursal-repartido-"+i).html("<b>$"+Math.round(((value/100)*utilidad)*100)/100+"</b>");
+	}
+}
+
+AppAdmin.prototype.updateDate = function(){
+
+	var date_start = $('#start_date').val();
+	var date_end = $('#end_date').val();
+
+	var date_start_array = date_start.split("/");
+	var date_end_array = date_end.split("/");
+
+	var date_start_format = date_start_array[2]+"-"+date_start_array[0]+"-"+date_start_array[1];
+	var date_end_format = date_end_array[2]+"-"+date_end_array[0]+"-"+date_end_array[1];
+	
+	var size = this.sizeSucursalesUtilidades;
+
+	//consultamos datos de ventas, gastos, ingresos, abonos (flujo de efectivo)
+	Utils.request({
+	url: "../proxy.php",
+	data: "action=412&fecha-inicio="+date_start_format+"&fecha-final="+date_end_format,
+	success: function(msg){
+
+			if(msg.success)
+			{
+				ventas = msg.datos[0].venta_total;
+				gastos = msg.datos[0].gasto_total;
+				abonos = msg.datos[0].abono_total;
+				
+				utilidad = ventas + abonos - gastos;
+				
+				//console.log(utilidad);
+				
+				$("#utilidades").html("<b>$"+utilidad+".00</b>");
+				$("#ventas-utilidades").html("<b>$"+ventas+".00</b>");
+				$("#gastos-utilidades").html("<b>$"+gastos+".00</b>");
+				$("#abonos-utilidades").html("<b>$"+abonos+".00</b>");
+				
+				$("#button-calc-wrapper").html('<button id="button-calcular-reparticion" onclick="appAdmin.doCalc('+utilidad+','+size+')">Calcular Repartici&oacute;n</button>');
+			}
+			else
+			{
+				$("#ventas-utilidades").html("<b>No hay datos</b>");
+				$("#gastos-utilidades").html("<b>No hay datos</b>");
+				$("#abonos-utilidades").html("<b>No hay datos</b>");
+			}
+		}
+	});
+
 }
 
 AppAdmin.prototype.createLogoutMessage = function(){

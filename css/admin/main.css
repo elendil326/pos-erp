@@ -274,4 +274,27 @@ table{
 	margin-right:auto;
 }
 
+.campo-sucursal{ background: white !important;}
+
+#flujo-efectivo{
+	height:200px;
+	border:1px solid gray;
+	padding:10px;
+	background: #444444;
+	text-shadow: black 0px 1px 0px;
+}
+
+.flujo-efectivo-image{
+	float:left;
+	width:100px;
+	height:auto;
+	text-align: center;
+	padding:10px;
+}
+
+button{
+	text-shadow: white 0px 1px 0px;
+	color: #273437;
+	font-weight:700;
+}
 /*#usuario-boton-enviar{ color:black;}*/

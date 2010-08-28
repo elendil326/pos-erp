@@ -8,15 +8,15 @@ function PopUpCal() {
 	this._inDialog = false; // True if showing within a "dialog", false if not
 	this.regional = []; // Available regional settings, indexed by language code
 	this.regional[''] = { // Default regional settings
-		clearText: 'Limpiar', // Display text for clear link
-		closeText: 'Cerrar', // Display text for close link
+		clearText: 'Clear', // Display text for clear link
+		closeText: 'Close', // Display text for close link
 		prevText: '&lt;Prev', // Display text for previous month link
-		nextText: 'Sig&gt;', // Display text for next month link
-		currentText: 'Hoy', // Display text for current month link
-		dayNames: ['Do','Lu','M','Mi','Ju','Vi','Sa'], // Names of days starting at Sunday
-		monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
-			'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'], // Names of months
-		dateFormat: 'YMD-' // First three are day, month, year in the required order,
+		nextText: 'Next&gt;', // Display text for next month link
+		currentText: 'Today', // Display text for current month link
+		dayNames: ['Su','Mo','Tu','We','Th','Fr','Sa'], // Names of days starting at Sunday
+		monthNames: ['January','February','March','April','May','June',
+			'July','August','September','October','November','December'], // Names of months
+		dateFormat: 'MDY/' // First three are day, month, year in the required order,
 			// fourth (optional) is the separator, e.g. US would be 'MDY/', ISO would be 'YMD-'
 	};
 	this._defaults = { // Global defaults for all the calendar instances
@@ -950,43 +950,43 @@ $.fn.dateRangePicker = function(options){
 
 		var presetMenu = {
 				pastRange: '<div class="dateRange_contain dateRange_wide"><div class="dateRange"><ul class="dateRange_presets">'+
-					'<li class="dateRange_last30"><a href="javascript://">&Uacute;ltimos 30 d&iacute;as</a></li>'+
-					'<li class="dateRange_lastYear"><a href="javascript://">&Uacute;ltimos 12 Meses</a></li>'+
-					'<li class="dateRange_yearToDate"><a href="javascript://">Desde inicio de a&ntilde;o</a></li>'+
-					'<li class="dateRange_allDates"><a href="javascript://">Todos los d&iacute;as</a></li>'+
-					'<li class="dateRange_allBefore"><a href="javascript://">Todos los d&iacute;as antes...</a></li>'+
-					'<li class="dateRange_allAfter"><a href="javascript://">Todos los d&iacute;as despu&eacute;...</a></li>'+
-					'<li class="dateRange_specificDate"><a href="javascript://">Fecha espec&iacute;fica...</a></li>'+
-					'<li class="dateRange_dateRange"><a href="javascript://">Rango de fechas...</a></li>'+
+					'<li class="dateRange_last30"><a href="javascript://">Past 30 Days</a></li>'+
+					'<li class="dateRange_lastYear"><a href="javascript://">Past 12 Months</a></li>'+
+					'<li class="dateRange_yearToDate"><a href="javascript://">Current YTD</a></li>'+
+					'<li class="dateRange_allDates"><a href="javascript://">All Dates</a></li>'+
+					'<li class="dateRange_allBefore"><a href="javascript://">All Dates Before...</a></li>'+
+					'<li class="dateRange_allAfter"><a href="javascript://">All Dates After...</a></li>'+
+					'<li class="dateRange_specificDate"><a href="javascript://">Specific Date...</a></li>'+
+					'<li class="dateRange_dateRange"><a href="javascript://">Date Range...</a></li>'+
 					'</ul>'+
-					'<a href="javascript://" class="dateRange_close">Hecho</a>'+
+					'<a href="javascript://" class="dateRange_close">Done</a>'+
 					'<h2 class="selectDate" style="display: none;"></h2>'+
 					'<input type="text" name="start_date" id="start_date" class="start_date" />'+
 					'<input type="text" name="end_date" id="end_date" class="end_date" /></div></div>',
 				futureRange: '<div class="dateRange_contain dateRange_wide"><div class="dateRange"><ul class="dateRange_presets">'+
-					'<li class="dateRange_today"><a href="javascript://">Hoy</a></li>'+
-					'<li class="dateRange_tomorrow"><a href="javascript://">Ma&ntilde;ana</a></li>'+
-					'<li class="dateRange_next7"><a href="javascript://">Pr&oacute;ximos 7 d&iacute;as</a></li>'+
-					'<li class="dateRange_next30"><a href="javascript://">Pr&oacute;ximo a&ntilde;o</a></li>'+
-					'<li class="dateRange_nextYear"><a href="javascript://">Pr&oacute;ximo a&ntilde;o</a></li>'+
-					'<li class="dateRange_allDates"><a href="javascript://">Todos los d&iacute;as</a></li>'+
-					'<li class="dateRange_specificDate"><a href="javascript://">Fecha espec&iacute;fica...</a></li>'+
-					'<li class="dateRange_allBefore"><a href="javascript://">Todos los d&iacute;as antes...</a></li>'+
-					'<li class="dateRange_allAfter"><a href="javascript://">Todos los d&iacute;as despu&eacute;s...</a></li>'+
-					'<li class="dateRange_dateRange"><a href="javascript://">Rango de fechas...</a></li>'+
+					'<li class="dateRange_today"><a href="javascript://">Today</a></li>'+
+					'<li class="dateRange_tomorrow"><a href="javascript://">Tomorrow</a></li>'+
+					'<li class="dateRange_next7"><a href="javascript://">Next 7 Days</a></li>'+
+					'<li class="dateRange_next30"><a href="javascript://">Next 30 Days</a></li>'+
+					'<li class="dateRange_nextYear"><a href="javascript://">Next Year</a></li>'+
+					'<li class="dateRange_allDates"><a href="javascript://">All Dates</a></li>'+
+					'<li class="dateRange_specificDate"><a href="javascript://">Specific Date...</a></li>'+
+					'<li class="dateRange_allBefore"><a href="javascript://">All Dates Before...</a></li>'+
+					'<li class="dateRange_allAfter"><a href="javascript://">All Dates After...</a></li>'+
+					'<li class="dateRange_dateRange"><a href="javascript://">Date Range...</a></li>'+
 					'</ul>'+
-					'<a href="javascript://" class="dateRange_close">Hecho</a>'+
+					'<a href="javascript://" class="dateRange_close">Done</a>'+
 					'<h2 class="selectDate" style="display: none;"></h2>'+
 					'<input type="text" name="start_date" id="start_date" class="start_date" />'+
 					'<input type="text" name="end_date" id="end_date" class="end_date" /></div></div>',
 				singleUpcoming: '<div class="dateRange_contain"><div class="dateRange"><ul class="dateRange_presets">'+
-					'<li class="dateRange_today"><a href="javascript://">Hoy</a></li>'+
-					'<li class="dateRange_tomorrow"><a href="javascript://">Ma&ntilde;ana</a></li>'+
-					'<li class="dateRange_beginningOfWeek"><a href="javascript://">Inicio de semana</a></li>'+
-					'<li class="dateRange_endOfWeek"><a href="javascript://">T&eacute;rmino de semana</a></li>'+
-					'<li class="dateRange_specificDate"><a href="javascript://">Fecha espec&iacute;fica...</a></li>'+
+					'<li class="dateRange_today"><a href="javascript://">Today</a></li>'+
+					'<li class="dateRange_tomorrow"><a href="javascript://">Tomorrow</a></li>'+
+					'<li class="dateRange_beginningOfWeek"><a href="javascript://">Start of Week</a></li>'+
+					'<li class="dateRange_endOfWeek"><a href="javascript://">End of Week</a></li>'+
+					'<li class="dateRange_specificDate"><a href="javascript://">Specific Date...</a></li>'+
 					'</ul>'+
-					'<a href="javascript://" class="dateRange_close">Hecho</a>'+
+					'<a href="javascript://" class="dateRange_close">Done</a>'+
 					'<h2 class="selectDate" style="display: none;"></h2>'+
 					'<input type="text" name="start_date" id="start_date" class="start_date" />'+
 					'<input type="text" name="end_date" id="end_date" class="end_date" /></div></div>'	
@@ -1435,21 +1435,21 @@ $.fn.dateRangePicker = function(options){
 			//items involving pickers
 			if($(this).is('.dateRange_specificDate')) {
 				end_date.val('');
-				$(this).showPickers('picker1', 'Seleccione una fecha:');
+				$(this).showPickers('picker1', 'Select a Date:');
 			}
 			
 			if($(this).is('.dateRange_allBefore')) {
 				start_date.val('All Dates Before');
-				$(this).showPickers('picker2', 'Antes:');
+				$(this).showPickers('picker2', 'All Dates Before:');
 			}
 			
 			if($(this).is('.dateRange_allAfter')) {
 				start_date.val('All Dates After');
-				$(this).showPickers('picker2', 'Despu&eacute;s:');
+				$(this).showPickers('picker2', 'All Dates After:');
 			}
 			
 			if($(this).is('.dateRange_dateRange')) {
-				$(this).showPickers('both', 'Rango de fechas:');
+				$(this).showPickers('both', 'Select a Date Range:');
 			}
 
 		});
