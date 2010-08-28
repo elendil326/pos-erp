@@ -2,6 +2,8 @@
 
 Ext.ns('sink', 'demos', 'Ext.ux');
 
+
+
 var POS_SUCURSAL_NOMBRE;
 var POS_CAJERO_NOMBRE;
 var POS_CAJERO_TIPO;
@@ -137,9 +139,6 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
 });
 
 
-
-//imprimir informacion de debug
-var DEBUG = true;
 
 
 

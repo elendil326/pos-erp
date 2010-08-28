@@ -3,10 +3,20 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
     <title>POS</title>
+		<script>
+		var DEBUG; 
+		if(document.location.search=="?debug")
+		{
+		    DEBUG=true;
 
+			console.log("Debug mode !");
+		}else{
+			DEBUG = false;
+		}
+		</script>
 
         <link rel="stylesheet" href="sencha/resources/css/ext-touch.css" type="text/css">
-        <script type="text/javascript" src="sencha/ext-touch-debug.js"></script>
+        <script type="text/javascript" src="sencha/ext-touch.js"></script>
 
 
 

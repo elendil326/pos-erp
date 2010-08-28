@@ -288,7 +288,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 				}
 		},{
 			xtype: 'spacer'
-		},{
+		} /*,{
 			xtype: 'button',
 			text : 'Sucursales',
 			ui: 'back',
@@ -300,7 +300,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 				}
 				sink.Main.ui.setCard( ApplicationInventario.currentInstance.mainCard, { type: 'slide', direction: 'right' });
 			}
-		},{
+		} */ ,{
 			/*xtype: 'button',
 			text: 'Agregar nuevo producto',
 			ui: 'action',
@@ -573,7 +573,8 @@ ApplicationInventario.prototype.addNewProductLogic = function(){
 				denominacion: formData['denominacion'],
 				nombre: formData['nombre'],
 				precio: formData['precio_venta'],
-				min: formData['min']
+				min: formData['min']
+				
 			},
 			//Responded
 			function(result)

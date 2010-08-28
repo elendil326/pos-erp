@@ -1043,15 +1043,15 @@ ApplicationVender.prototype.doVentaLogicCredito = function ()
 ApplicationVender.prototype.ventaCreditoExitosa = function ()
 {
 	
-
-	appImpresora.ImprimirTicket();
+	appImpresora.ImprimirTicket( cliente, items, this.ventaTotales );
+	//appImpresora.ImprimirTicket();
 	
 	//quitar el menu de cancelar venta y eso
 	Ext.getCmp("doVentaCreditoPanel").getDockedItems()[0].hide();
 	
 	Ext.getCmp("doVentaCreditoPanel").add({ 
-			html : '<div align="center">Venta a credito completada</div>',
-		});
+			html : '<div align="center">Venta a credito exitosa !</div>',
+	});
 		
 	/*
 	no puede requerir ffactura en una compra a credito hasta que 
@@ -1073,7 +1073,8 @@ ApplicationVender.prototype.ventaCreditoExitosa = function ()
 				sink.Main.ui.setCard( ApplicationVender.currentInstance.venderMainPanel, 'fade' );
 			}
 		});
-		
+	
+	/*
 	Ext.getCmp("doVentaCreditoPanel").add({ 
 			xtype:'button', 
 			text:'Abonar a esta compra',
@@ -1082,12 +1083,21 @@ ApplicationVender.prototype.ventaCreditoExitosa = function ()
 			handler : function (){
 				if(DEBUG){
 					console.log("Abonar a esta compra!");
+					
+				}
+				
+				try{
 					ApplicacionClientes.currentInstance.abonarVenta(9,9,9); 
+				}catch(e){
+					if(DEBUG){
+						console.log("Error al abonar a esta venta");
+					}
 				}
 				
 			}
 		});
-		
+	*/
+	
 	Ext.getCmp("doVentaCreditoPanel").doLayout();
 	
 	//limpiar el carrito

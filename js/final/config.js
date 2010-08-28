@@ -4,9 +4,6 @@
 	CONFIG
 -------------------------------------------- */
 
-
-DEBUG = true;
-
 /* 
 	CONSTANTES DE LA APLICACIN
 */

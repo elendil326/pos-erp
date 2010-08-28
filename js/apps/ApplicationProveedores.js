@@ -1024,11 +1024,7 @@ ApplicationProveedores.prototype.agregarProveedor =  new Ext.form.FormPanel({
 						id: 'telefonoProveedor',
 						label: 'Telefono'
 					})
-		   ,
-		   			ubicacionProveedor = new Ext.form.TextField({
-						id: 'ubicacionProveedor',
-						label: 'Ubicacion'
-					})
+		   
 			]//fin items form
 			
 		}//,
