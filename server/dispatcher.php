@@ -6,11 +6,13 @@
 * gestiona los niveles de seguridad de los usuarios y recibe los datos necesarios
 * para despues pasarlos a la aplicación adecuada.
 *
-* @author Manuel Alejandro Gómez Nicasio <alejandro.gomez@alejandrogomez.org>, Alan Gonzalez <alan@caffeina.mx>
 * @package pos
 */
 
-
+/*
+ * Set time zone
+ * */
+date_default_timezone_set('America/Mexico_City');
 
 /**
  * iniciar la sesion y comprobar seguridad 
