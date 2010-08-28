@@ -12,6 +12,7 @@
 require_once("../server/model/view_ventas.dao.php");
 require_once("../server/model/view_gastos.dao.php");
 require_once("../server/model/pagos_venta.dao.php");
+require_once("../server/model/sucursal.dao.php");
 
 
 
@@ -415,9 +416,53 @@ require_once("../server/model/pagos_venta.dao.php");
 		$dataGastos = ViewGastosDao::gastosSucursal( NULL, $fechaInicio, $fechaFinal, $id_sucursal );
 		$dataAbonos = PagosVentaDAO::abonosSucursal( $id_sucursal, $fechaInicio, $fechaFinal );
 		
-		$arrayResults = array();
-		array_push( $arrayResults, array( "id_sucursal" => $dataVentas[0]['id_sucursal'], "sucursal" => $dataVentas[0]['sucursal'], "venta_total" => $dataVentas[0]['cantidad'], "gasto_total" => $dataGastos[0]['cantidad'], "abono_total" => $dataAbonos[0]['abono'] ) );
+		$ventasTotales = 0;
+		$gastosTotales = 0;
+		$abonosTotales = 0;
+		
+		if ( $dataVentas[0] == "No se encontraron datos" )
+		{
+			$ventasTotales = 0;
+		}
+		else
+		{
+			$ventasTotales = $dataVentas[0]['cantidad'];
+		}
+		
+		if ( $dataGastos[0] == "No se encontraron datos" )
+		{
+			$gastosTotales = 0;
+		}
+		else
+		{
+			$gastosTotales = $dataGastos[0]['cantidad'];
+		}
+		
+		
+		if ( count($dataAbonos[0]) == 1  )
+		{
+			$abonosTotales = 0; 
+		}
+		else
+		{
+			$abonosTotales = $dataAbonos[0]['abono'];
+		}
+		
+		$sucursal = new Sucursal();
+		$sucursal->setIdSucursal($id_sucursal);
+		$datosSucursal = SucursalDAO::search($sucursal);
 	
+		
+		
+		$arrayResults = array();
+		array_push( $arrayResults, array( "id_sucursal" => $id_sucursal, "sucursal" => $datosSucursal[0]->getDescripcion(), "venta_total" => $ventasTotales, "gasto_total" => $gastosTotales, "abono_total" => $abonosTotales ) );
+		
+		/*var_dump( $dataVentas );
+		echo "<br>";
+		var_dump( $dataGastos );
+		echo "<br>";
+		var_dump( $dataAbonos );
+		echo "<br>";*/
 		
 		$result = '{ "success": true, "datos": '.json_encode($arrayResults).'}';
 		
