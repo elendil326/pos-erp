@@ -31,8 +31,8 @@ try{
         throw new Exception("Error en la conexión a la base de datos.");
     }
 } catch (exception $e) {
-    global $logger;
-    $logger->log($e->getMessage(), PEAR_LOG_EMERG);
+    //global $logger;
+    //$logger->log($e->getMessage(), PEAR_LOG_EMERG);
 
 	echo "{ \"success\" : false, \"reason\" : \"NO_DB\" }";
 	exit;
