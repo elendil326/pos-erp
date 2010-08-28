@@ -10,6 +10,9 @@
 */
 
 require_once("../server/model/view_ventas.dao.php");
+require_once("../server/model/view_gastos.dao.php");
+require_once("../server/model/pagos_venta.dao.php");
+
 
 
 	/**
@@ -393,6 +396,36 @@ require_once("../server/model/view_ventas.dao.php");
 	}
 
 
+	/**
+	*	getDataVentasGastosAbonos
+	*
+	*	Obtiene las ventas totales, los gastos y los abonos de una sucursal en un determinado tiempo.
+	*	Se pueden obtener las utilidades con estos datos.
+	*
+	*	@param <Integer> id_sucursal El id de la sucursal de la cual se quieren obtener los datos
+	*	@param <fechaInicio> fechaInicio Fecha de inicio de un período de tiempo del cual se quieren analizar los datos. Debe de ir junto con fechaFinal.
+	*	@param <fechaFinal> fechaFinal Fecha final de un período de tiempo del cual se quieren analizar los datos. Debe de ir junto con fechaInicio.
+	*
+	*/
+	
+	function getDataVentasGastosAbonos( $id_sucursal, $fechaInicio, $fechaFinal )
+	{
+	
+		$dataVentas = ViewVentasDao::getSucursalVentasTop(NULL, $fechaInicio, $fechaFinal, $id_sucursal);
+		$dataGastos = ViewGastosDao::gastosSucursal( NULL, $fechaInicio, $fechaFinal, $id_sucursal );
+		$dataAbonos = PagosVentaDAO::abonosSucursal( $id_sucursal, $fechaInicio, $fechaFinal );
+		
+		$arrayResults = array();
+		array_push( $arrayResults, array( "id_sucursal" => $dataVentas[0]['id_sucursal'], "sucursal" => $dataVentas[0]['sucursal'], "venta_total" => $dataVentas[0]['cantidad'], "gasto_total" => $dataGastos[0]['cantidad'], "abono_total" => $dataAbonos[0]['abono'] ) );
+	
+		
+		$result = '{ "success": true, "datos": '.json_encode($arrayResults).'}';
+		
+		return $result;
+	
+	}
+	
+	
 
 	switch($args['action'])
 	{
@@ -712,6 +745,26 @@ require_once("../server/model/view_ventas.dao.php");
 		$result = DataVentasCliente($timeRange, $id_cliente, $fechaInicio, $fechaFinal);
 		echo $result;
 		break;			
+		
+	case '412' :
+	
+		if ( !isset( $args['id_sucursal'] ) && !isset( $args['fecha-inicio'] ) && !isset( $args['fecha-final'] ) )
+		{
+			echo ' { "success": false, "error": "Faltan parametros" } ';
+			return;
+		}
+	
+	
+		$id_sucursal = $args['id_sucursal'];
+		$fechaInicio = $args['fecha-inicio'];
+		$fechaFinal = $args['fecha-final'];
+		
+		$result = getDataVentasGastosAbonos( $id_sucursal, $fechaInicio, $fechaFinal );
+		echo $result;
+		return;
+		
+		
+	break;
 
 	}
 

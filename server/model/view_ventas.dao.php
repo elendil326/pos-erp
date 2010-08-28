@@ -193,8 +193,8 @@ class ViewVentasDAO extends ViewVentasDAOBase
 	
 			if ( $id_sucursal != null )
 			{
-				$ventasFechas1->setIdSucursal($id_sucursal);
-				$ventasFechas2->setIdSucursal($id_sucursal);
+				$ventasFecha1->setIdSucursal($id_sucursal);
+				$ventasFecha2->setIdSucursal($id_sucursal);
 			}
 			
 			if ( $tipo_venta != null )

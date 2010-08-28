@@ -181,8 +181,8 @@ class ViewGastosDAO extends ViewGastosDAOBase
 	
 			if ( $id_sucursal != null )
 			{
-				$gastosFechas1->setIdSucursal($id_sucursal);
-				$gastosFechas2->setIdSucursal($id_sucursal);
+				$gastosFecha1->setIdSucursal($id_sucursal);
+				$gastosFecha2->setIdSucursal($id_sucursal);
 			}
 			
 			//$allGastos = ViewGastosDAO::getAll();
