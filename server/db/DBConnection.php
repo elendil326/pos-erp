@@ -34,7 +34,7 @@ try{
     //global $logger;
     //$logger->log($e->getMessage(), PEAR_LOG_EMERG);
 
-	echo "{ \"success\" : false, \"reason\" : \"NO_DB\" }";
+	echo "{ \"success\" : false, \"reason\" : \"NO_DB '" . $e .  "'\" }";
 	exit;
 }
 ?>
