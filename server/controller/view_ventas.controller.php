@@ -64,9 +64,9 @@ require_once("../server/model/view_ventas.dao.php");
         *       @return Array un arreglo con los datos obtenidos de la consulta
         */
 	
-	function SucursalVentasTop( $timeRange, $fechaInicio, $fechaFinal, $showAll )
+	function SucursalVentasTop( $timeRange, $fechaInicio, $fechaFinal, $id_sucursal, $showAll )
 	{
-		$data = ViewVentasDao::getSucursalVentasTop($timeRange, $fechaInicio, $fechaFinal);
+		$data = ViewVentasDao::getSucursalVentasTop($timeRange, $fechaInicio, $fechaFinal, $id_sucursal);
 
 		if ( $data[0] != false )
 		{
@@ -436,6 +436,7 @@ require_once("../server/model/view_ventas.dao.php");
 		$fechaInicio = null;
 		$fechaFinal = null;
 		$showAll = null;
+		$id_sucursal = null;
 
 		if ( isset($args['dateRange']) )
 		{
@@ -453,7 +454,12 @@ require_once("../server/model/view_ventas.dao.php");
 			$showAll = $args['showAll'];
 		}
 
-		$result = SucursalVentasTop($timeRange, $fechaInicio, $fechaFinal, $showAll);
+		if ( isset ( $args['id_sucursal']) )
+		{
+			$id_sucursal = $args['id_sucursal'];
+		}
+		
+		$result = SucursalVentasTop($timeRange, $fechaInicio, $fechaFinal, $id_sucursal, $showAll);
 		echo $result;
 		break;
 	
