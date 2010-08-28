@@ -39,8 +39,9 @@ $(document).ready(function() {
 							if(DEBUG) console.warn("Error", data);
 					}catch(e){
 						//invalid json
-						alert("Algo anda mal con la conexion al servidor.");
-						if(DEBUG){console.error("Invalid json", data.responseText);}
+						alert("Algo anda mal con la conexion al servidor. Probablemnte el la base de datos no existe o el usuario y contrasena estan mal en el archivo de configuracion.");
+						
+						if(DEBUG){console.error("Invalid json : ", data);}
 						return;
 					}
 				}
