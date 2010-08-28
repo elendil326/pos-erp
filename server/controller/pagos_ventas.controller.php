@@ -149,4 +149,51 @@ function update_pagadoField( $id_venta ){
 	
 	return VentasDAO::save( $venta );
 }
+
+/**
+*	sucursalAbonos
+*
+*	Obtiene los abonos que se han hecho a ventas a crédito
+*	en determinada sucursal en cierto período de tiempo
+*
+*	@param <Integer> id_sucusal El id de la sucursal de la cual se quieren obtener los datos
+*	@param <String> fechaInicio Fecha de inicio del periodo de tiempo que se quiere analizar. Debe de ir junto con fechaFinal
+*	@param <String> fechaFinal Fecha final del periodo de tiempo que se quiere analizar. Debe de ir junto con fechaInicio
+*/
+
+function sucursalAbonos( $id_sucursal, $fechaInicio, $fechaFinal )
+{
+
+	$data = PagosVentaDao::abonosSucursal($id_sucursal, $fechaInicio, $fechaFinal);
+
+	$result = '{ "success": true, "datos": '.json_encode($data[0]).'}';
+
+
+	return $result;		
+
+}
+
+
+switch( $args['action'] )
+{
+	case 2401: 
+		
+		if ( !isset( $args['id_sucursal'] ) && !isset( $args['fecha-inicio'] ) && !isset( $args['fecha-final'] ) )
+		{
+			echo ' { "success": false, "error": "Faltan parametros" } ';
+			return;
+		}
+		
+		$id_sucursal = $args['id_sucursal'];
+		$fechaInicio = $args['fecha-inicio'];
+		$fechaFinal = $args['fecha-final'];
+		
+		
+		echo sucursalAbonos( $id_sucursal, $fechaInicio, $fechaFinal );
+		
+		
+	break;
+}
+
+
 ?>

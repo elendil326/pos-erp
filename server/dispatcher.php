@@ -211,6 +211,9 @@ switch( ((int)($args['action'] / 100))*100 )
 		require_once('controller/sucursal.controller.php');
 	break;
 	
+	case 2400:
+		require_once('controller/pagos_ventas.controller.php');
+	break;
 }
 
 return;
