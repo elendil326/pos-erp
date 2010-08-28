@@ -309,7 +309,7 @@ class ViewIngresosDAO extends ViewIngresosDAOBase
 		$ingresosFecha2 = array_pop( $allingresos );
 		$ingresosFecha1 = array_pop( $allingresos );
 
-		$arrayResults = ViewGastosDAO::groupDataByDate( $allingresos, $timeRange );
+		$arrayResults = ViewIngresosDAO::groupDataByDate( $allingresos, $timeRange );
 		
 		/*$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
 		$arrayID = array();//Guarda los id's que ya hemos analizado
@@ -412,6 +412,115 @@ class ViewIngresosDAO extends ViewIngresosDAOBase
 		}                              
                 
         }
+		
+		
+	/**
+	*	Obtiene los datos de los ingresos por sucursal
+	*
+	*	@params <String> timeRange (Opcional) Es un rango de tiempo, puede ser semana, mes o year
+	*	@params <String> fechaInicio (Opcional) Fecha de inicio de un rango de tiempo del cual se requiere consultar datos; fechaFinal es obligatorio si se usa fechaInicio
+	*	@params <String> fechaFinal (Opcional) Fecha final de un rango de tiempo del cual se requiere consultar datos; Debe de ir junto con fechaInicio
+	*	@params <Integer> id_sucursal El id de una sucursal del cual se quieren obtener datos
+	*/
+		
+		
+	static function ingresosSucursal( $timeRange, $fechaInicio, $fechaFinal, $id_sucursal )
+	{
+	
+		$allVentas = ViewIngresosDAO::getAllIngresos( $timeRange, $fechaInicio, $fechaFinal, $id_sucursal );
+		
+		$ventasFecha2 = array_pop( $allVentas );
+		$ventasFecha1 = array_pop( $allVentas );
+		
+
+		$arrayResults = array();//Arreglo con los pares de resultados, (id_sucursal, total_vendido)
+		$arrayID = array();//Guarda los id's que ya hemos analizado
+		$duplicatedFlag = false; //Bandera que se activa si existe un id duplicado
+
+		//Obtenemos un arreglo con pares de resultados, (id_sucursal, total_vendido)
+		//agrupamos cada usuario con la suma de lo que ha vendido
+		for ( $i = 0; $i < count($allVentas) ; $i++ )
+		{
+			$id = $allVentas[$i]->getIdSucursal();
+
+			$duplicatedFlag = false;
+			$sucursalVentas = null;
+			//Buscamos en nuestro arreglo de ID's que ya hemos analizado
+			//para que no se repitan datos, si el currentId no se ha analizado
+			//se hace una busqueda de ese ID y se guardan todas las tuplas
+			for ( $j = 0; $j < count($arrayID) ; $j++)
+			{
+				//echo $id ."---->". $arrayID[$j]."<br>";
+				if ( $id == $arrayID[$j])
+				{
+					$duplicatedFlag = true;
+					//echo "no duplicado";
+				}
+			}
+
+			if( $duplicatedFlag != true)
+			{
+				$viewIngresos = new ViewIngresos();
+				$viewIngresos->setIdSucursal($id);
+				if ( $timeRange != null || $fechaInicio != null || $fechaFinal != null )
+				{
+					$ventasFecha1->setIdSucursal($id);
+					$ventasFecha2->setIdSucursal($id);
+					$sucursalVentas = ViewIngresosDAO::byRange( $ventasFecha1, $ventasFecha2 );
+				}
+				else
+				{
+					$sucursalVentas = ViewIngresosDAO::search( $viewIngresos );
+				}
+				//echo "no duplicado";
+				array_push($arrayID, $id);
+			}
+
+			//Teniendo ya las ventas de un unico usuario, sumamos el subtotal de lo 
+			//que ha avendido y lo guardamos en nuestro arreglo de resultados junto
+			//con el ID del usuario
+
+			
+			$sumaSubtotal = 0;
+			if($sucursalVentas != null)
+			{
+				//var_dump($usuarioVentas);
+				for ( $a = 0; $a < count($sucursalVentas) ; $a++ )
+				{
+					$sumaSubtotal += $sucursalVentas[$a]->getMonto();
+					
+				}
+				//echo $usuarioVentas[0]->getUsuario(). "-->" .$sumaSubtotal. "<br>";
+				//break;
+				array_push($arrayResults, array("sucursal" => $sucursalVentas[0]->getSucursal(), "cantidad" => $sumaSubtotal, "id_sucursal" => $sucursalVentas[0]->getIdSucursal()) );
+
+			}
+
+			
+
+		}
+
+		if ( count($arrayResults) > 0 )
+		{
+			foreach ($arrayResults as $key => $row) {
+			    $sucursal[$key]  = $row['sucursal'];
+			    $cantidad[$key] = $row['cantidad'];
+			}
+
+			array_multisort($cantidad, SORT_DESC, $arrayResults);
+
+			return $arrayResults;
+		}
+		else
+		{
+			return array( "No se encontraron datos" );
+		}
+	
+		     
+                
+        
+		
+	}
 
 
 }
