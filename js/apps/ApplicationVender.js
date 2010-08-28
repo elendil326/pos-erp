@@ -328,14 +328,40 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 	var iva = MOSTRADOR_IVA;
 	var descuento = this.cliente ? this.cliente.descuento : 0;
 	
+	
+	
+	//calcular subtotal
+	for( a = 0; a < this.htmlCart_items.length;  a++){
+		if(this.htmlCart_items[a].cantidad < .01){
+			this.htmlCart_items[a].cantidad = 1;
+		}
+		//revisar que haya en existencia ese pedido
+		var existencias = parseFloat( this.htmlCart_items[a].existencias );
+		
+		if( this.htmlCart_items[a].cantidad > existencias ){
+			if(existencias == 0 ){
+				POS.aviso("Mostrador", "No hay mas existencias del producto " + this.htmlCart_items[a].description +".");
+				return this.doDeleteItem( a );
+				
+			}else{
+				this.htmlCart_items[a].cantidad = existencias;
+				POS.aviso("Mostrador", "Solamente queda en existencia " +existencias+  " productos "+ this.htmlCart_items[a].description + ".");	
+			}
+
+		}
+		
+		//calcular subtotal
+		subtotal += parseFloat( this.htmlCart_items[a].cost * this.htmlCart_items[a].cantidad );
+	}
+	
+	
+	
 	/*	
 		rendereo de cada item
 	*/
 	for( a = 0; a < this.htmlCart_items.length; a++ ){
 
-		if(this.htmlCart_items[a].cantidad < .01){
-			this.htmlCart_items[a].cantidad = 1;
-		}
+
 		
 		//size of text for small screen
 		nombre = this.htmlCart_items[a].name.length > 7 ? this.htmlCart_items[a].name.substring(0,7) : this.htmlCart_items[a].name ;
@@ -356,20 +382,7 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 	}
 
 
-	//calcular subtotal
-	for( a = 0; a < this.htmlCart_items.length;  a++){
-		
-		//revisar que haya en existencia ese pedido
-		var existencias = parseFloat( this.htmlCart_items[a].existencias );
-		
-		if( this.htmlCart_items[a].cantidad > existencias ){
-			this.htmlCart_items[a].cantidad = existencias;
-			POS.aviso("Mostrador", "No hay suficientes productos ( " + this.htmlCart_items[a].name + " ) en inventario.");
-		}
-		
-		//calcular subtotal
-		subtotal += parseFloat( this.htmlCart_items[a].cost * this.htmlCart_items[a].cantidad );
-	}
+
 
 	totals_html = "<span>Subtotal " +  POS.currencyFormat(subtotal) + "</span> "
 				+ "<span>IVA " +  POS.currencyFormat(subtotal* (iva/100)) + "</span> ";

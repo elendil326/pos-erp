@@ -314,20 +314,23 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 			disabled: true,
 			handler: function(){
 				
-				if ( Ext.get("carritoDeCompras") == null   )
+				if ( Ext.get("carritoDeCompras") === null   )
 				{
 					POS.aviso('Error', 'Tiene que haber entrado a mostrador para poder agregar un producto');
 					ApplicationVender.currentInstance.doLimpiarCarrito();
+				}else{
+
+					var items = ApplicationInventario.currentInstance.itemSelected;
+					//Mandamos el id del producto para que se agregue al mostrador
+					for ( var i=0 ; i < items.length ; i++ )
+					{
+						console.log( items[i].id_producto );
+						ApplicationVender.currentInstance.doAddProductById( items[i].id_producto );
+					}
+					//ApplicationVender.currentInstance.doAddProductById( ApplicationInventario.currentInstance.itemSelected);
+					//POS.aviso('Éxito', 'Se agregó el artículo correctamente');					
 				}
-				var items = ApplicationInventario.currentInstance.itemSelected;
-				//Mandamos el id del producto para que se agregue al mostrador
-				for ( var i=0 ; i < items.length ; i++ )
-				{
-					console.log( items[i].id_producto );
-					ApplicationVender.currentInstance.doAddProductById( items[i].id_producto );
-				}
-				//ApplicationVender.currentInstance.doAddProductById( ApplicationInventario.currentInstance.itemSelected);
-				POS.aviso('Éxito', 'Se agregó el artículo correctamente');
+
 			}
 		},{
 			xtype: 'button',
@@ -433,7 +436,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 			loadingText: 'Cargando datos...',
 			emptyText: '<div class="no-data">No se encontraron productos para esta sucursal.</div>',
         	store: ApplicationInventario.currentInstance.InvProductsListStore,
-        	tpl: String.format('<tpl for="."><div class="products">ID: {id_producto} <strong>{denominacion}</strong> &nbsp;Existencias: {existencias} Precio: {precio_venta}</div></tpl>' ),
+        	tpl: String.format('<tpl for="."><div class="products"><strong>ID</strong>{id_producto} <strong>Denominacion</strong>&nbsp;{denominacion}&nbsp;<strong>Existencias</strong>&nbsp;{existencias}&nbsp;<strong>Precio Venta</strong>&nbsp;${precio_venta}</div></tpl>' ),
         	itemSelector: 'div.products',
         	//singleSelect: true,
 			multiSelect: true,
