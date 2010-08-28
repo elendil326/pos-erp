@@ -358,22 +358,5 @@ ApplicationUsuarios.prototype.addNewUserLogic = function(){
 	
 };
 
+//esta aplicacion se instala en index.js !!! depende de variables que devuelve el server
 
-POS.AJAXandDECODE(
-				//Parametros
-				{action: 2303},
-				//Server responded
-				function( datos ) {
-				
-					if ( datos.success )
-					{
-						
-						if ( datos.datos != 3 )
-						{
-							//autoinstalar esta applicacion
-							AppInstaller( new ApplicationUsuarios() );
-						}
-					}
-				
-				}
-) ;

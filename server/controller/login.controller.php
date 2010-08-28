@@ -200,12 +200,25 @@ function logOut( $verbose = false )
 
 
 function askSucursal(){
-
+	
+	$tipo = NULL;
 	
 	$usuario = UsuarioDAO::getByPK( $_SESSION['userid'] );
 	$sucursal = SucursalDAO::getByPK( $usuario->getIdSucursal() );
 	$iva = getIVA(false);
-	echo  "{\"sucess\": true, payload : {\"sucursal\": \"" .$sucursal->getDescripcion(). "\", cajero_nombre: \"" . $usuario->getNombre() . "\", \"iva\": \"" . $iva . "\"}}";
+	
+
+	$tipo_q = new GruposUsuarios();
+    $tipo_q->setIdUsuario( $_SESSION['userid'] );
+    $tipo_g = GruposUsuariosDAO::search($tipo_q);
+
+	$foo = new Grupos();
+	$foo->setIdGrupo( $tipo_g[0]->getIdGrupo() );
+	$tipo_r = GruposDAO::search( $foo );
+	
+	$tipo = $tipo_r[0]->getNombre();
+
+	echo  "{\"sucess\": true, payload : {\"sucursal\": \"" .$sucursal->getDescripcion(). "\", cajero_nombre: \"" . $usuario->getNombre() . "\", \"iva\": \"" . $iva . "\", \"tipo\" : \"" . $tipo . "\"}}";
 	
 }
 

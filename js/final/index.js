@@ -4,6 +4,7 @@ Ext.ns('sink', 'demos', 'Ext.ux');
 
 var POS_SUCURSAL_NOMBRE;
 var POS_CAJERO_NOMBRE;
+var POS_CAJERO_TIPO;
 var POS_IS_GERENTE;
 var MOSTRADOR_IVA;
 
@@ -709,15 +710,23 @@ Ext.setup({
 		POS.AJAXandDECODE({ action : "2003" }, 
 		function (response){
 			if(response.sucess){
+				if(DEBUG){
+					console.log("Loading config... ok ", response);
+				}
 				MOSTRADOR_IVA = response.payload.iva ;
 				POS_SUCURSAL_NOMBRE = response.payload.sucursal;
 				POS_CAJERO_NOMBRE = response.payload.cajero_nombre;
+				POS_CAJERO_TIPO = response.payload.tipo;
+
+				if(POS_CAJERO_TIPO == "Gerente")
+					AppInstaller( new ApplicationUsuarios() );
 			}
 
         	sink.Main.init();
 		}, 
-		function (){
+		function (response){
 			alert(response);
-		});// = function (params, success, failure)	
+		});
+		
     }
 });
