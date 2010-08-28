@@ -12,7 +12,15 @@ AppLogin = function ()
 	if(DEBUG){
 		console.log("Iniciando Login...");
 	}
+	
 	this._init();
+	
+};
+
+AppLogin.prototype.getToken = function ()
+{
+
+	return "NULL";
 	
 };
 
@@ -20,7 +28,57 @@ AppLogin = function ()
 
 AppLogin.prototype._init = function ()
 {
-	this.createBasicHTML();
+	this.verificarLogin();
+};
+
+
+AppLogin.prototype.verificarLogin = function ()
+{
+			//actual ajax call
+			$.ajax({ 
+				url: "proxy.php", 
+				dataType: 'json',
+				data: {'action': '2001', 'subaction' : 'check', 'token' : this.getToken() },
+				context: document.body, 
+				complete: function (data){
+
+					
+					
+					if(data.status != 200){
+					//algo anda mal
+						alert("Algo anda tecnicamente mal.");
+						return;
+					}
+			
+					var x;
+			
+					try{
+						x = jQuery.parseJSON( data.responseText );
+					}catch(e){
+						//invalid json
+						if(DEBUG){console.error("Invalid json", data.responseText);}
+						return;
+					}
+					
+					if(!x){
+						if(DEBUG){console.error("Json is null" , data.responseText);}
+						return;
+					}
+					
+
+					if(DEBUG){
+						console.log("RESPONSE",x);
+					}
+					
+					if(x.sucess){
+						login.createBasicHTML();
+					}else{
+						alert("Este equipo no esta registrado.");
+					}
+
+				}
+			});
+
 };
 
 
@@ -35,6 +93,12 @@ AppLogin.prototype.createBasicHTML = function ()
 	html_content += '	<div>Clave <input id="login1" type="password" name="pwd"></div>';
 	html_content += '	<div><input type="button" id="login2" style="width: 70px" value="aceptar" onclick="login.checkCurrentLoginInfo()"></div>';
 	html_content += "</div>";
+	html_content += '<div id="login_content" class="login_content" >';
+	html_content += '	<div>FingerPrint TOKEN <input id="login1" type="password" name="ftoken"></div>';	
+	html_content += '	<div><input type="button" id="login2" style="width: 70px" value="aceptar" onclick="login.checkCurrentLoginInfo()"></div>';
+	html_content += "</div>";
+
+
 	document.getElementById("work_zone").innerHTML = html_content;	
 };
 

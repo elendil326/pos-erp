@@ -210,14 +210,29 @@ function askSucursal(){
 }
 
 
+
+function welcome( $token ){
+	
+	echo  "{\"sucess\": true , \"response\" : \"". $token ."\"}";
+	
+}
+
 switch($args['action'])
 {
 	 
 	case '2001':
 	
-		checkCurrentSession();
-		
-		sendLogin($args['u'], $args['p']);
+		if(isset($args['subaction'])){
+			
+			welcome( $args['token'] );
+			
+		}else{
+			
+			checkCurrentSession();
+
+			sendLogin($args['u'], $args['p']);			
+		}
+
 	break;
 
 	case '2002':

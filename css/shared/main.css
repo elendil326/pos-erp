@@ -32,7 +32,7 @@
 	
 	.login_content{
 		position: relative;
-		top: -5em;
+
 		border-bottom-color: #959A9F !important;
 		border-bottom-left-radius: 5px 5px;
 		border-bottom-left-radius: 5px 5px;
@@ -51,7 +51,7 @@
 		color: white !important;
 		font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
 		margin-left: 35%;
-		margin-top: 25%;
+		margin-top: 25px;
 		text-align: center;
 		text-shadow: black 0px 1px 1px;
 		width: 300px;

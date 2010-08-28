@@ -1,4 +1,11 @@
+
+
 Ext.ns('sink', 'demos', 'Ext.ux');
+
+var POS_SUCURSAL_NOMBRE;
+var POS_CAJERO_NOMBRE;
+var POS_IS_GERENTE;
+var MOSTRADOR_IVA;
 
 Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
     fullscreen: true,
@@ -195,6 +202,7 @@ POS.AJAXandDECODE = function (params, success, failure)
 		//alert("caller is " + arguments.callee.caller.toString());
 		//alert("caller is " + POS.AJAXandDECODE.caller.toString());
 	}
+	
 	Ext.Ajax.request({
 		
 		url: 'proxy.php',
@@ -218,8 +226,13 @@ POS.AJAXandDECODE = function (params, success, failure)
 				}
 				
 			}catch(e){
-				console.warn("Failed to parse JSON", e);
-				console.warn("Full response : " + response.responseText);
+			
+				if(DEBUG){
+					console.warn("Failed to parse JSON", e);
+					console.warn("Full response : " + response.responseText);
+				}
+				
+				
 				return;
 			}
 			 
@@ -356,6 +369,7 @@ POS.map = function( address )
 										map: map, 
 										position: results[0].geometry.location
 						  			});
+									
 							} else {
 							
 								switch(status){
@@ -567,7 +581,7 @@ sink.Main = {
                 floating: true
             });
         }
-                
+
         this.ayudaPanel = new Ext.Panel(ayudaConfig);
         
 
@@ -585,7 +599,7 @@ sink.Main = {
 
 		//crear el UI
         this.ui = new Ext.ux.UniversalUI({
-            title: Ext.platform.isPhone ? 'POS iPhone' : '<b>Sucursal</b> ' + POS_SUCURSAL_NOMBRE + '   <b>Cajero</b> ' + POS_CAJERO_NOMBRE,
+            title: Ext.platform.isPhone ? 'POS iPhone' : '<b>Sucursal</b> ' + POS_SUCURSAL_NOMBRE + '   <b>Usuario</b> ' + POS_CAJERO_NOMBRE,
             navigationItems: Apps,
             buttons: [{xtype: 'spacer'}, this.ayudaButton, this.salirButton],
             listeners: {
@@ -677,9 +691,7 @@ sink.Main = {
 
 
 
-var POS_SUCURSAL_NOMBRE = null;
-var POS_CAJERO_NOMBRE = null;
-var MOSTRADOR_IVA = null;
+
 
 Ext.setup({
     tabletStartupScreen: 'resources/img/tablet_startup.png',

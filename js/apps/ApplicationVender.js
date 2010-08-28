@@ -202,7 +202,7 @@ ApplicationVender.prototype.addProductByIDKeyUp = function (a, b)
 		}
 			
 		//add product
-		ApplicationVender.currentInstance.doAddProduct();			
+		ApplicationVender.currentInstance.doAddProduct();
 		
 
 	}

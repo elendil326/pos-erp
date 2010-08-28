@@ -39,6 +39,7 @@ $(document).ready(function() {
 							if(DEBUG) console.warn("Error", data);
 					}catch(e){
 						//invalid json
+						alert("Algo anda mal con la conexion al servidor.");
 						if(DEBUG){console.error("Invalid json", data.responseText);}
 						return;
 					}
