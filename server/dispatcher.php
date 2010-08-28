@@ -81,9 +81,6 @@ if( isset($_REQUEST['action'])  && ($_REQUEST['action']  != "2001") )
 		echo "{\"succes\": false , \"reason\": 31416, \"text\" : \"Please re-log in.\" }";
 		exit;
 	}	
-}else{
-	echo "{\"succes\": false , \"reason\": 31416, \"text\" : \"Please re-log in.\" }";
-	exit;
 }
 
 

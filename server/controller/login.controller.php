@@ -223,8 +223,11 @@ switch($args['action'])
 	case '2001':
 	
 		if(isset($args['subaction'])){
-			
-			welcome( $args['token'] );
+
+			if(isset($args['token']))
+				welcome( $args['token'] );
+			else
+				echo ":(";
 			
 		}else{
 			

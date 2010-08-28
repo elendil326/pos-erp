@@ -73,6 +73,7 @@ AppLogin.prototype.verificarLogin = function ()
 					if(x.sucess){
 						login.createBasicHTML();
 					}else{
+
 						alert("Este equipo no esta registrado.");
 					}
 
