@@ -573,7 +573,7 @@ ApplicationInventario.prototype.addNewProductLogic = function(){
 				denominacion: formData['denominacion'],
 				nombre: formData['nombre'],
 				precio: formData['precio_venta'],
-				min: formData['min']
+				min: formData['min']
 				
 			},
 			//Responded
