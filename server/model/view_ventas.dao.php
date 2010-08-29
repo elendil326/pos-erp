@@ -583,10 +583,10 @@ class ViewVentasDAO extends ViewVentasDAOBase
         *       @return Array un arreglo con los datos obtenidos de la consulta
         */
 	
-	static function getSucursalVentasTop( $timeRange, $fechaInicio, $fechaFinal, $id_sucursal )
+	static function getSucursalVentasTop( $timeRange, $fechaInicio, $fechaFinal, $id_sucursal, $tipo_venta = NULL )
 	{
 
-		$allVentas = ViewVentasDAO::getAllVentas( $timeRange, $fechaInicio, $fechaFinal, $id_sucursal );
+		$allVentas = ViewVentasDAO::getAllVentas( $timeRange, $fechaInicio, $fechaFinal, $id_sucursal, $tipo_venta );
 		
 		$ventasFecha2 = array_pop( $allVentas );
 		$ventasFecha1 = array_pop( $allVentas );

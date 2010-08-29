@@ -68,6 +68,37 @@ function getUsersBySucursalId( $id_sucursal )
 }
 
 
+/**
+*
+*	Modifica los datos de un usuario
+*
+*	@param <Integer> id_usuario El id del usuario de quien se quieren modificar los datos
+*	@param <String> nombre Nuevo nombre del usuario
+*	@param <String> usuario Nuevo usuario
+*	@param <String> password Nuevo password
+*/
+
+function modificarUsuario( $id_usuario, $nombre, $username, $password )
+{
+
+	$usuario = UsuarioDAO::getByPK($id_usuario);
+
+	$usuario->setNombre( $nombre );
+	$usuario->setUsuario( $username );
+	$usuario->setContrasena( $password );
+	
+	try{
+		UsuarioDAO::save( $usuario );
+	}
+	catch( Exception $e )
+	{
+		echo ' { "success" : false, "error" : "No se pudieron actualizar los datos del usuario" } ';
+	}
+	
+	echo ' { "success" : true, datos: "Se actualizaron correctamente los datos de '.$nombre.'" } ';
+
+}
+
 switch($args['action']){
 
 	
@@ -149,6 +180,25 @@ switch($args['action']){
 		
 		
 	break;
+	
+	case '2304':
+			
+			if( !isset( $args['nombre'] ) && !isset( $args['user2'] ) && !isset( $args['password'] ) && !isset( $args['id_usuario'] ) )
+			{
+				echo ' { "success" : false, "error" : "Faltan parametros" } ';
+			}
+			
+			$id_usuario = $args['id_usuario'];
+			$nombre = $args['nombre'];
+			$usuario = $args['user2'];
+			$password = $args['password'];
+			
+			
+			modificarUsuario( $id_usuario, $nombre, $usuario, $password );
+			
+			
+	break;
+	
 	}
 
 ?>

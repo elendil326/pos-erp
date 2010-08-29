@@ -68,9 +68,9 @@ require_once("../server/model/sucursal.dao.php");
         *       @return Array un arreglo con los datos obtenidos de la consulta
         */
 	
-	function SucursalVentasTop( $timeRange, $fechaInicio, $fechaFinal, $id_sucursal, $showAll )
+	function SucursalVentasTop( $timeRange, $fechaInicio, $fechaFinal, $id_sucursal, $showAll, $tipo_venta )
 	{
-		$data = ViewVentasDao::getSucursalVentasTop($timeRange, $fechaInicio, $fechaFinal, $id_sucursal);
+		$data = ViewVentasDao::getSucursalVentasTop($timeRange, $fechaInicio, $fechaFinal, $id_sucursal, $tipo_venta);
 
 		if ( $data[0] != false )
 		{
@@ -415,7 +415,7 @@ require_once("../server/model/sucursal.dao.php");
 		if ( $id_sucursal != NULL )
 		{
 
-			$dataVentas = ViewVentasDao::getSucursalVentasTop(NULL, $fechaInicio, $fechaFinal, $id_sucursal);
+			$dataVentas = ViewVentasDao::getSucursalVentasTop(NULL, $fechaInicio, $fechaFinal, $id_sucursal, 'contado');
 			$dataGastos = ViewGastosDao::gastosSucursal( NULL, $fechaInicio, $fechaFinal, $id_sucursal );
 			$dataAbonos = PagosVentaDAO::abonosSucursal( $id_sucursal, $fechaInicio, $fechaFinal );
 			
@@ -484,7 +484,7 @@ require_once("../server/model/sucursal.dao.php");
 			
 				$id_sucursal = $allSucursales[$i]->getIdSucursal();
 				
-				$dataVentas = ViewVentasDao::getSucursalVentasTop(NULL, $fechaInicio, $fechaFinal, $id_sucursal);
+				$dataVentas = ViewVentasDao::getSucursalVentasTop(NULL, $fechaInicio, $fechaFinal, $id_sucursal, 'contado');
 				$dataGastos = ViewGastosDao::gastosSucursal( NULL, $fechaInicio, $fechaFinal, $id_sucursal );
 				$dataAbonos = PagosVentaDAO::abonosSucursal( $id_sucursal, $fechaInicio, $fechaFinal );
 				
@@ -590,7 +590,9 @@ require_once("../server/model/sucursal.dao.php");
 		$fechaFinal = null;
 		$showAll = null;
 		$id_sucursal = null;
-
+		$tipo_venta = null;
+		
+		
 		if ( isset($args['dateRange']) )
 		{
 			$timeRange = $args['dateRange'];
@@ -612,7 +614,11 @@ require_once("../server/model/sucursal.dao.php");
 			$id_sucursal = $args['id_sucursal'];
 		}
 		
-		$result = SucursalVentasTop($timeRange, $fechaInicio, $fechaFinal, $id_sucursal, $showAll);
+		if ( isset( $args['tipo_venta'] ) )
+		{
+				$tipo_venta = $args['tipo_venta'];
+		}
+		$result = SucursalVentasTop($timeRange, $fechaInicio, $fechaFinal, $id_sucursal, $showAll, $tipo_venta);
 		echo $result;
 		break;
 	

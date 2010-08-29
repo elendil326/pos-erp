@@ -637,7 +637,7 @@ ApplicationUsuarios.prototype.removeUser = function(){
 	
 			Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').hideTitle();
 		
-				[{
+			Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').add(	[{
 				id: 'ApplicationUsuarios-homePanel-modificar',
 				xtype: 'button',
 				text: 'Modificar usuario',
@@ -662,7 +662,9 @@ ApplicationUsuarios.prototype.removeUser = function(){
 					ApplicationUsuarios.currentInstance.addNewUser();
 				}
 				
-			}]
+			}] );
+			
+			Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').doLayout();
 			}
 		},
 		{
