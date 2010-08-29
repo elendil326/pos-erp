@@ -45,7 +45,7 @@ function save_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefon
 	$cliente = new Cliente();
 	
 	if( is_numeric($id) ){
-		$out="entro por ke soy entero y asigo id";
+
 		$cliente->setIdCliente( $id );
 	}
     
@@ -144,7 +144,7 @@ function insert_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telef
     $ans = ClienteDAO::save($cliente);
 
     if ($ans) {
-        return sprintf("{success: true, reason: 'Se inserto el cliente con id %s, %d'}", $cliente->getIdCliente());
+        return sprintf("{success: true, reason: 'Se inserto el cliente con id %s'}", $cliente->getIdCliente());
     } else {
         return "{success: false, reason: 'No se inserto el cliente.' }";
     }

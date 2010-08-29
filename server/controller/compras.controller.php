@@ -1003,5 +1003,21 @@ switch ($args['action']) {
 		$ans = list_provider_products( $id_proveedor );
 		echo $ans;
 	break;
+	
+	case '1220':
+        $jsonItems = $args['jsonItems'];
+ 		unset($args);
+		include_once("productos_proveedor.controller.php");
+        $ans = insert_provider_product( $jsonItems );
+        echo $ans;
+	break;
+	
+	case '1221':
+		$id_proveedor = $args['id_proveedor'];
+        unset($args);
+		include_once("productos_proveedor.controller.php");		
+        $ans = list_provider_available_products( $id_proveedor );
+        echo $ans;
+	break;
 }//end switch
 ?>
