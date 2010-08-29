@@ -112,8 +112,10 @@ ApplicationUsuarios.prototype.loadHomePanel = function()
 					ApplicationUsuarios.currentInstance.modifyUser();
 			}
 			},{
+				id: 'ApplicationUsuarios-homePanel-eliminar',
 				xtype: 'button',
 				text: 'Eliminar usuario',
+				disabled: true,
 				ui: 'drastic',
 				handler: function(){
 					ApplicationUsuarios.currentInstance.removeUser();
@@ -190,11 +192,14 @@ ApplicationUsuarios.prototype.loadHomePanel = function()
 						{
 							//Habilitamos el boton si hay algo seleccionado
 							Ext.getCmp('ApplicationUsuarios-homePanel-modificar').setDisabled(false);
+							Ext.getCmp('ApplicationUsuarios-homePanel-eliminar').setDisabled(false);
+							
 							ApplicationUsuarios.currentInstance.user_selected = this.getSelectedRecords();
 						}
 						else
 						{
 							Ext.getCmp('ApplicationUsuarios-homePanel-modificar').setDisabled(true);
+							Ext.getCmp('ApplicationUsuarios-homePanel-eliminar').setDisabled(true);
 						}
 				}
 			}
@@ -626,7 +631,7 @@ ApplicationUsuarios.prototype.removeUser = function(){
 	
 	Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').removeAll();
 	
-	Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').setTitle("¿Esta seguro?");
+	Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').setTitle("&iquest;Esta seguro?");
 	
 	var toolbarContent = [{
 		xtype: 'button',
@@ -649,6 +654,7 @@ ApplicationUsuarios.prototype.removeUser = function(){
 				xtype: 'button',
 				text: 'Eliminar usuario',
 				ui: 'drastic',
+				disabled: true,
 				handler: function(){
 					ApplicationUsuarios.currentInstance.removeUser();
 				}

@@ -56,11 +56,15 @@ function insertUser($nombre, $user2, $pwd, $sucursal, $acceso)
 */
 
 
-function getUsersBySucursalId( $id_sucursal )
+function getUsersBySucursalId( $id_sucursal, $activo = NULL )
 {
 
 	$usuario = new Usuario();
 	$usuario->setIdSucursal( $id_sucursal );
+	if ( $activo != NULL )
+	{
+		$usuario->setActivo( $activo );
+	}
 	$jsonUsuarios = array();
 	$jsonUsuarios = UsuarioDAO::search( $usuario );
 	
@@ -98,6 +102,30 @@ function modificarUsuario( $id_usuario, $nombre, $username, $password )
 	echo ' { "success" : true, datos: "Se actualizaron correctamente los datos de '.$nombre.'" } ';
 
 }
+
+
+function desactivarUsuario( $id_usuario )
+{
+
+
+	$usuario = UsuarioDAO::getByPK($id_usuario);
+	
+	$usuario->setActivo( 0 );
+	
+	try{
+		
+		UsuarioDAO::save( $usuario );
+	
+	}
+	catch( Exception $e )
+	{
+		echo ' { "success" : false, "error" : "No se pudo desactivar la cuenta del usuario" } ';
+	}
+	
+	echo ' { "success" : true, datos: "Se desactivo correctamente la cuenta" } ';
+
+}
+
 
 switch($args['action']){
 
