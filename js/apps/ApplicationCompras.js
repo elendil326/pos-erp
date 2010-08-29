@@ -802,7 +802,7 @@ ApplicationCompras.prototype.compras_doVender = function ()
 		
 		if(items.length == 0){
 				POS.aviso("Comprar Productos", "1) Agregue primero al menos un producto para poder comprar.");
-				return
+				return;
 		}
 			if(Ext.getCmp("pesoEmbarque").getValue() == "0"){
 				POS.aviso("Comprar Productos", "2) Colocar un numero mayor a 0 en el campo 'Peso en Kg del Embarque'");
@@ -844,7 +844,7 @@ ApplicationCompras.prototype.compras_doVender = function ()
 		
 		if(items.length == 0){
 				POS.aviso("Comprar Productos", "1) Agregue primero al menos un producto para poder comprar.");
-				return
+				return;
 		}
 		if(total < 1 || ban){
 			POS.aviso("Comprar Productos", "5) Revisar en las columnas 'Cantidad' de cada producto que el valor sea mayor '0'");

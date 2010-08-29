@@ -13,16 +13,20 @@ ApplicationComprasProveedor = function( idProveedor ){
 
 ApplicationComprasProveedor.prototype.surtir = null;
 ApplicationComprasProveedor.prototype.providerId = null;
-ApplicationComprasProveedor.prototype._BANDERA = false;
+ApplicationComprasProveedor.prototype._BANDERA = false;//false = toño mode
 ApplicationComprasProveedor.prototype._BANDERATOGGLES = false;
+ApplicationComprasProveedor.prototype._BANDERATOGGLES2 = false;
 ApplicationComprasProveedor.prototype.toggleBtns = [];
+ApplicationComprasProveedor.prototype.toggleBtns2 = [];
 ApplicationComprasProveedor.prototype.compraItems = [];
-
+ApplicationComprasProveedor.prototype.inventarioItems = [];
+ApplicationComprasProveedor.prototype.nombreProv = "";
 
 ApplicationComprasProveedor.prototype._init = function( idProveedor ){
 	
-	this.comprarPanel( idProveedor );
+	this.comprarPanel( idProveedor.id_proveedor );
 	this.providerId = idProveedor.id_proveedor;
+	this.nombreProv = idProveedor.nombre;
 };
 
 
@@ -35,6 +39,11 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 	//por si se esta realizando una compra y se pica en otra aplicacion se reestablece el arreglo de los items
 	//para no generar errores y no se queden items almacenados para futuras compras
 	this.compraItems.length = 0;
+	this.inventarioItems.length = 0;
+	this.toggleBtns.length = 0;
+	this.toggleBtns2.length = 0;
+	this.pesoArpilla = 0;
+	this.totalArpillas = 0;
 	
 	var buscar = [{
 		xtype: 'button',
@@ -43,8 +52,12 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 		id:'regresarComprasProveedor',
 		handler:	function( ){
 						ApplicationComprasProveedor.currentInstance.toggleBtns.length = 0;
+						ApplicationComprasProveedor.currentInstance.toggleBtns2.length = 0;
 						ApplicationComprasProveedor.currentInstance.compraItems.length = 0;
+						ApplicationComprasProveedor.currentInstance.inventarioItems.length = 0;
 						ApplicationComprasProveedor.currentInstance.pesoArpilla = 0;
+						ApplicationComprasProveedor.currentInstance.totalArpillas = 0;
+						
 						sink.Main.ui.setCard( ApplicationProveedores.currentInstance.mainCard, { type: 'slide', direction: 'right' } );
 						
 					}
@@ -55,16 +68,29 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 		xtype: 'button',
 		text: 'Comprar',
 		ui: 'action',
+		id: '_btnComprarProducto',
 		handler: function(){
 				
-				
+				ApplicationComprasProveedor.currentInstance.doComprar();
 			}
-		}];		
+		}];
+	
+	var agregarInventario = [{
+		xtype: 'button',
+		text: 'Agregar Producto',
+		ui: 'action',
+		id: '_btnAgregarProducto',
+		
+		handler: function(){
+				
+				ApplicationComprasProveedor.currentInstance.do_agregarInventario();
+			}
+		}];
 
         var dockedItems = [ new Ext.Toolbar({
             ui: 'dark',
             dock: 'bottom',
-            items: buscar.concat({xtype:'spacer'}).concat(agregar)
+            items: buscar.concat({xtype:'spacer'}).concat(agregar).concat(agregarInventario)
         })];
 
 	
@@ -109,6 +135,7 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 							+ "<div id='pesoArpillas' class= 'ApplicationComprasProveedor-pesoArpillas'>0</div>" 
 							
 						+ "</div>",
+					hidden : true
 					//cls: 'ApplicationComprasProveedor-pesoEmbarque'
 				}
 				,
@@ -119,7 +146,7 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 				title: 'panelLeft',
 				id: 'proveedorProductos_SucursalContainer',
 				cls: 'ApplicationComprasProveedor-proveedorProductos_Sucursal',
-				items:[{ html: '<div id="proveedorProductos_Sucursal" class="ApplicationComprasProveedor-proveedorProductos_Sucursal2"></div>' }]
+				items:[{ html: '<div id="proveedorProductos_Sucursal" class="ApplicationComprasProveedor-proveedorProductos_Sucursal2"><div class="ApplicationComprasProveedor-itemsBox" id="productosProvSucursal"></div>' }]
 				}
 				,
 				{
@@ -136,10 +163,11 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 				],
 		listeners: {
 			afterrender: function(){
-				//console.log("EL ID DEL PROVEEDOR SELEC ES: "+ApplicationCompras.currentInstance.idProveedor);
+
 				if(!ApplicationComprasProveedor.currentInstance._BANDERA){
 					console.log("SI ES FALSO DEBO DE ENTRAR A SURTIR POR KGS (TOÑO MODE)");
 					Ext.getCmp("pesoEmbarque").show();
+					Ext.getCmp("arpillasDatos").show();
 					
 				}
 			}
@@ -150,8 +178,11 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 	/*
 		Se llama a funcion q ejecuta ajax para llenar con html las divs del panel compras
 	*/
-	this.llenarPanelCompras( idProveedor ); 
-	
+	if( !this._BANDERA ){
+		this.llenarPanelComprasXarpillas( idProveedor ); 
+	}else{
+		this.llenarPanelComprasXpiezas( idProveedor ); 
+	}
 	
 	
 	
@@ -163,19 +194,42 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 		items: [{
 			scroll: 'vertical',
 			xtype: 'panel',
-			title: 'customerDetails',
+			title: 'panel_compra_Proveedor',
 			id: 'compraProveedorPanel',
 			items: [panelCompras],
-			
+			listeners:{
+				activate: function(){
+					Ext.getCmp("_btnComprarProducto").show();
+					Ext.getCmp("_btnAgregarProducto").hide();
+				}
+			}
 		}, {
 			//scroll: 'vertical',
 			xtype: 'panel',
-			title: 'ventas',
+			scroll: 'vertical',
+			title: 'producto_proveedor',
 			id: 'nuevoProductoProveedor',
-			items: [ {id:'datosCliente'},{id: 'customerHistorialSlide' }],
+			items: [ {
+					id:'listaProductosAgregar',
+					html: '<div id="Productos-Proveedor" ></div>',
+					
+					}
+				],
+			listeners:{
+				activate: function(){
+					Ext.getCmp("_btnComprarProducto").hide();
+					Ext.getCmp("_btnAgregarProducto").show();
+				}
+			}//fin listeners
 			
 		}],
 	});
+	
+	/*
+		Se llama a la funcion que renderea el html del panel con los productos que ofrece el proveedor
+	*/
+	this.llenarPanelProductosProveedor( idProveedor );
+	
 	
 	var panelP = new Ext.Panel({
 		dockedItems: dockedItems,
@@ -201,44 +255,106 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 	para seleccionar y agregarlo a la compra o eliminarlo de la compra
 */
 ApplicationComprasProveedor.prototype.elegirProducto = function ( idToggle ){
-	
+	console.log("******* 4) Esto es el handler del toggle renderado");
 	if( !ApplicationComprasProveedor.currentInstance._BANDERATOGGLES ){
 		return;
 	}
-	
+	console.log("Si ejectuo el metodo elegirProducto");
 	id = idToggle.substring(6);
 	
-	if ( Ext.getCmp("CProd_"+id).getValue() == 1){
-	 	document.getElementById("NoArpProducto_"+id).disabled = false;
-	 	document.getElementById("KgsMenosProducto_"+id).disabled = false;
-	 	document.getElementById("precioKgProducto_"+id).disabled = false;
+	if( !ApplicationComprasProveedor.currentInstance._BANDERA ){//toño mode
 		
-		document.getElementById("NoArpProducto_"+id).value = 0;
-	 	document.getElementById("KgsMenosProducto_"+id).value = 0;
-	 	document.getElementById("precioKgProducto_"+id).value = 0;
 		
-		ApplicationComprasProveedor.currentInstance.agregarProductoCompra( id );
+		if ( Ext.getCmp("CProd_"+id).getValue() == 1){
+			document.getElementById("NoArpProducto_"+id).disabled = false;
+			document.getElementById("KgsMenosProducto_"+id).disabled = false;
+			document.getElementById("precioKgProducto_"+id).disabled = false;
+			
+			document.getElementById("NoArpProducto_"+id).value = 0;
+			document.getElementById("KgsMenosProducto_"+id).value = 0;
+			document.getElementById("precioKgProducto_"+id).value = 0;
+			
+			ApplicationComprasProveedor.currentInstance.agregarProductoCompra( id );
+			
+		}else{
+			document.getElementById("NoArpProducto_"+id).disabled = true;
+			document.getElementById("KgsMenosProducto_"+id).disabled = true;
+			document.getElementById("precioKgProducto_"+id).disabled = true;
+			
+			document.getElementById("NoArpProducto_"+id).value = '';
+			document.getElementById("KgsMenosProducto_"+id).value = '';
+			document.getElementById("precioKgProducto_"+id).value = '';
+			
+			if( Ext.get("subtotalesProd_"+id) ){
+				Ext.get("subtotalesProd_"+id).remove();
+				
+				ApplicationComprasProveedor.currentInstance.compras_doDeleteProduct( id );
+			}
+		}//fin else
+		
 		
 	}else{
-		document.getElementById("NoArpProducto_"+id).disabled = true;
-		document.getElementById("KgsMenosProducto_"+id).disabled = true;
-		document.getElementById("precioKgProducto_"+id).disabled = true;
-		
-		document.getElementById("NoArpProducto_"+id).value = '';
-	 	document.getElementById("KgsMenosProducto_"+id).value = '';
-	 	document.getElementById("precioKgProducto_"+id).value = '';
-		
-		if( Ext.get("subtotalesProd_"+id) ){
-			Ext.get("subtotalesProd_"+id).remove();
+				
+		if ( Ext.getCmp("CProd_"+id).getValue() == 1){
+			document.getElementById("cantidadProducto_"+id).disabled = false;
 			
+			document.getElementById("cantidadProducto_"+id).value = 0;
+			ApplicationComprasProveedor.currentInstance.compras_doAddProduct( id );
+						
+		}else{
+			document.getElementById("cantidadProducto_"+id).disabled = true;
+			document.getElementById("cantidadProducto_"+id).value = '';
+			Ext.get("subtotProducto_"+id).update("$ 0");
 			ApplicationComprasProveedor.currentInstance.compras_doDeleteProduct( id );
-		}
+			
+		}//fin else
+		
+	}//fin else ._BANDERA
+};
+
+
+/*
+	Se dispara cada vez que un Toggle de un producto que ofrece el proveedor 
+	pero aun no surte es cambiado de valor
+	para seleccionar y agregarlo al inventario de la sucursal
+*/
+ApplicationComprasProveedor.prototype.elegirProductoInventario = function ( idToggle ){
+	
+	if( !ApplicationComprasProveedor.currentInstance._BANDERATOGGLES2 ){
+		return;
 	}
+	
+	id = idToggle.substring(8);
+	
+	
+	if ( Ext.getCmp("agregar_"+id).getValue() == 1){
+		document.getElementById("precioVenta_"+id).disabled = false;
+		document.getElementById("stockMin_"+id).disabled = false;
+		
+		document.getElementById("stockMin_"+id).value = 0;
+		document.getElementById("precioVenta_"+id).value = 0;
+		
+		denominacion = Ext.get("nuevoProd_"+id).getHTML()
+		
+		ApplicationComprasProveedor.currentInstance.inventario_doAddProduct( id , denominacion );
+						
+	}else{
+		document.getElementById("precioVenta_"+id).disabled = true;
+		document.getElementById("stockMin_"+id).disabled = true;
+		
+		document.getElementById("stockMin_"+id).value = '';
+		document.getElementById("precioVenta_"+id).value = '';
+		
+		ApplicationComprasProveedor.currentInstance.inventario_doDeleteProduct( id );
+			
+	}//fin else
+		
+	
 };
 
 /*
 	Agrega a la div de la derecha el producto seleccinado y lo agrega ala
-	lista de items (arreglo)
+	lista de items (arreglo) 
 */
 ApplicationComprasProveedor.prototype.agregarProductoCompra = function( id_producto ){
 	
@@ -273,11 +389,85 @@ ApplicationComprasProveedor.prototype.agregarProductoCompra = function( id_produ
 };
 
 /*
+	Agrega a la div abajo de la lista de productos que surte el proveedor a esta sucursal
+*/
+ApplicationComprasProveedor.prototype.htmlItemInventario = function(  ){
+	
+	items = ApplicationComprasProveedor.currentInstance.inventarioItems;
+	ApplicationComprasProveedor.currentInstance._BANDERATOGGLES = false;	
+	console.log("-----> 3) htmlItemInventario: se van a renderear: "+items.length+" items");
+		
+		
+	for( a = 0; a < items.length; a++ ){
+		
+		if(!Ext.get("nombreProdComprar_"+items[a].id)){
+			
+			var producto = document.createElement("div");
+			producto.className = 'ApplicationComprasProveedor-item';//
+			var codigo = "";		
+			codigo += ""
+				+ "<div class='producto_nombre' id='nombreProdComprar_"+items[a].id+"'>" + items[a].denominacion +"</div>" 
+						
+				+ "<div class='caja_texto'>" 
+				+ "<INPUT TYPE='text' id='NoArpProducto_"+items[a].id+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.sumarArp("+items[a].id+",this.value, NoArpProducto_"+items[a].id+")' class='description' disabled='true'>" 
+				+"</div>"
+						
+				+ "<div class='caja_texto'>" 
+				+ "<INPUT TYPE='text' id='KgsMenosProducto_"+items[a].id+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.revisarCantidadKg("+items[a].id+",this.value, KgsMenosProducto_"+items[a].id+")' class='description' disabled='true'>" 
+				+"</div>"
+						
+						
+				+ "<div class='caja_texto'>" 
+				+ "<INPUT TYPE='text' id='precioKgProducto_"+items[a].id+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.revisarCantidaPrecio("+items[a].id+",this.value, precioKgProducto_"+items[a].id+")' class='description' disabled='true'>" 
+				+"</div>"
+						
+						
+				+ "<div class = 'ApplicationComprasProveedor-toggle' id = 'Buy_prod_"+items[a].id+"'></div>";
+						
+			//	+ "</div>";
+						
+				producto.innerHTML = codigo;		
+				document.getElementById("productosProvSucursal").appendChild( producto );
+				
+				Ext.get("nuevoItemInventario_"+items[a].id).remove();
+		}
+	}//fin for 
+		
+		
+		//console.log(ApplicationComprasProveedor.currentInstance.toggleBtns);
+	for( hh = 0; hh < items.length; hh++ ){
+		if(Ext.get("nombreProdComprar_"+items[hh].id)){
+			console.log("ENTRE A RENDEREAR ESTA MIERDA");
+			buyProduct = new Ext.form.Toggle({
+				id: 'CProd_'+items[hh].id,
+				renderTo: 'Buy_prod_'+items[hh].id,
+					listeners: {
+						change:	function() {
+								
+							ApplicationComprasProveedor.currentInstance.elegirProducto( this.getId() );
+						}
+					}//listeners
+			});
+
+			ApplicationComprasProveedor.currentInstance.toggleBtns.push( buyProduct );
+		}//fin if
+	}//fin for hh
+	//console.log("AHORA:");
+	//console.log(ApplicationComprasProveedor.currentInstance.toggleBtns);
+	
+	ApplicationComprasProveedor.currentInstance._BANDERATOGGLES = true;	
+	ApplicationComprasProveedor.currentInstance.inventarioItems.length = 0;
+	
+
+	POS.aviso("Compras Proveedor","SE HAN AGREGADO NUEVOS PRODUCTOS AL INVENTARIO DE ESTA SUCURSAL");
+};
+
+/*
 	Lanza una llamada al servidor y trae los productos que surte el proveedor
 	a la sucursal para generar el html y asi los renderea al panel principal 
-	en su capa de la izquierda
+	en su capa de la izquierda (Vender en modalidad por arpillas Toño Mode)
 */
-ApplicationComprasProveedor.prototype.llenarPanelCompras = function( idProveedor ){
+ApplicationComprasProveedor.prototype.llenarPanelComprasXarpillas = function( idProveedor ){
 	
 	Ext.regModel('productosSucursal', {
 
@@ -289,15 +479,17 @@ ApplicationComprasProveedor.prototype.llenarPanelCompras = function( idProveedor
 	
 	POS.AJAXandDECODE({
 			action: '1211',
-			id_proveedor: idProveedor.id_proveedor
+			id_proveedor: idProveedor
 			},
 			function (datos){//mientras responda
 				if(!datos.success){
 					POS.aviso("ERROR",""+datos.reason);
+					return;
 				}
 				
 				
 				productosSucursal.loadData( datos.datos );
+				
 				
 				var html = "";
 					html += 
@@ -339,7 +531,7 @@ ApplicationComprasProveedor.prototype.llenarPanelCompras = function( idProveedor
 					}//fin for 
 				
 					//imprimir el html
-					Ext.get("proveedorProductos_Sucursal").update("<div class='ApplicationComprasProveedor-itemsBox'>" + html +"</div>");
+					Ext.get("productosProvSucursal").update("" + html +"</div>");
 					
 					Ext.get("totalesCompra").update("<div class='ApplicationComprasProveedor-item' >" 
 							+ "<div class='producto_nombre'>PRODUCTO</div>" 
@@ -375,6 +567,204 @@ ApplicationComprasProveedor.prototype.llenarPanelCompras = function( idProveedor
 		);//AJAXandDECODE
 };
 
+/*
+	Lanza una llamada al servidor y trae los productos que surte el proveedor
+	a la sucursal para generar el html y asi los renderea al panel principal 
+	en su capa de la izquierda (Vender en modalidad por piezas General Mode)
+*/
+ApplicationComprasProveedor.prototype.llenarPanelComprasXpiezas = function( idProveedor ){
+	
+	Ext.regModel('productosSucursal', {
+
+	});
+
+	var productosSucursal = new Ext.data.Store({
+		model: 'productosSucursal'
+	});	
+	
+	POS.AJAXandDECODE({
+			action: '1211',
+			id_proveedor: idProveedor
+			},
+			function (datos){//mientras responda
+				if(!datos.success){
+					POS.aviso("ERROR",""+datos.reason);
+					return;
+				}
+				
+				
+				productosSucursal.loadData( datos.datos );
+				
+				
+				var html = "";
+					html += 
+						"<div class='ApplicationComprasProveedor-item' >" 
+							+ "<div class='producto_nombre'>PRODUCTO</div>" 
+							
+							+ "<div class='cabecera-compra'>PRECIO</div>" 
+							
+							+ "<div class='cabecera-compra'>CANTIDAD</div>" 
+							
+							+ "<div class='cabecera-compra'>SUBTOTAL</div>" 
+						+ "</div>";
+					
+					for( a = 0; a < productosSucursal.getCount(); a++ ){
+						
+						html += "<div class='ApplicationComprasProveedor-item' >" 
+						+ "<div class='producto_nombre' id='nombreProdComprar_"+productosSucursal.data.items[a].id_producto+"'>" + productosSucursal.data.items[a].denominacion +"</div>" 
+						
+						+ "<div class='cabecera-subtotales-compra'>$ "+ 
+							productosSucursal.data.items[a].precio
+							
+						+"</div>"
+						
+						+ "<div class='caja_texto'>" 
+						+ "<INPUT TYPE='text' id='cantidadProducto_"+productosSucursal.data.items[a].id_producto+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.sumaCantidad("+productosSucursal.data.items[a].id_producto+",this.value, cantidadProducto_"+productosSucursal.data.items[a].id_producto+")' disabled='true'>" 
+						+"</div>"
+						
+						
+						+ "<div class='cabecera-subtotales-compra' id= 'subtotProducto_"+productosSucursal.data.items[a].id_producto+"' >$ 0" 
+						
+						+"</div>"
+						
+						
+						+ "<div class = 'ApplicationComprasProveedor-toggle' id = 'Buy_prod_"+productosSucursal.data.items[a].id_producto+"'></div>"
+						
+						+ "</div>";
+						
+						
+					}//fin for 
+				
+					//imprimir el html
+					Ext.get("proveedorProductos_Sucursal").update("<div class='ApplicationComprasProveedor-itemsBox'>" + html +"</div>");
+					
+					Ext.get("totalesCompra").update("<div class='ApplicationComprasProveedor-item' >" 
+							+ "<div class='cabecera-subtotales-compra'>SUBTOTAL:</div>"						
+							+ "<div class='cabecera-subtotales-compra' id ='subtotal_compraProducto'>$ 0</div>"
+							
+							+ "<div class='cabecera-subtotales-compra' >IVA:</div>" 
+							+ "<div class='cabecera-subtotales-compra' id= 'iva_compraProducto'>$ 0</div>" 
+							
+							+ "<div class='cabecera-subtotales-compra'>TOTAL:</div>" 
+							+ "<div class='cabecera-subtotales-compra' id='total_compraProducto'>$ 0</div>" 
+							
+						+ "</div>");
+					
+					
+					for( hh = 0; hh < productosSucursal.getCount(); hh++ ){
+						buyProduct = new Ext.form.Toggle({
+							id: 'CProd_'+productosSucursal.data.items[hh].id_producto,
+							renderTo: 'Buy_prod_'+productosSucursal.data.items[hh].id_producto,
+							listeners: {
+								change:	function() {
+									
+										ApplicationComprasProveedor.currentInstance.elegirProducto( this.getId() );
+								}
+							}//listeners
+						});
+						ApplicationComprasProveedor.currentInstance.toggleBtns.push( buyProduct );
+					}
+					ApplicationComprasProveedor.currentInstance._BANDERATOGGLES = true;	
+			},
+			function (){//no responde
+				POS.aviso("ERROR","NO SE PUDO MOSTRAR DATOS DEL CLIENTE,  ERROR EN LA CONEXION :(");	
+			}
+		);//AJAXandDECODE
+};
+
+/*
+	Lanza una llamada al servidor y trae los productos que ofrece el proveedor
+	y aun no se venden en la sucursal, genera el html y asi los renderea al panel del carrusel
+	que esta a la izquierda del panel principal
+*/
+ApplicationComprasProveedor.prototype.llenarPanelProductosProveedor = function( idProveedor ){
+	
+	Ext.regModel('productosProveedor', {
+
+	});
+
+	var nuevosProductos = new Ext.data.Store({
+		model: 'productosProveedor'
+	});	
+	
+	POS.AJAXandDECODE({
+			action: '1221',
+			id_proveedor: idProveedor
+			},
+			function (datos){//mientras responda
+				if(!datos.success){
+					POS.aviso("ERROR",""+datos.reason);
+					return;
+				}
+				
+				
+				nuevosProductos.loadData( datos.datos );
+				
+				
+				var html = "";
+					html += 
+						"<div class='ApplicationComprasProveedor-item' >" 
+							+ "<div class='producto_nombre'>PRODUCTO</div>" 
+							
+							+ "<div class='cabecera-compra'>PRECIO PROVEEDOR</div>" 
+							
+							+ "<div class='cabecera-compra'>PRECIO VENTA</div>" 
+							
+							+ "<div class='cabecera-compra'>STOCK MINIMO</div>" 
+							
+						+ "</div>";
+								
+					for( a = 0; a < nuevosProductos.getCount(); a++ ){
+					
+						html += "<div class='ApplicationComprasProveedor-item' id ='nuevoItemInventario_"+nuevosProductos.data.items[a].id_producto+"'>" 
+						+ "<div class='producto_nombre' id='nuevoProd_"+nuevosProductos.data.items[a].id_producto+"'>" + nuevosProductos.data.items[a].denominacion +"</div>" 
+						
+						+ "<div class='cabecera-compra'>" 
+						+ nuevosProductos.data.items[a].precio
+						+"</div>"
+						
+						+ "<div class='caja_texto'>" 
+						+ "<INPUT TYPE='text' id='precioVenta_"+nuevosProductos.data.items[a].id_producto+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.precioVenta("+nuevosProductos.data.items[a].id_producto+",this.value, precioVenta_"+nuevosProductos.data.items[a].id_producto+")' class='description' disabled='true'>" 
+						+"</div>"
+						
+						
+						+ "<div class='caja_texto'>" 
+						+ "<INPUT TYPE='text' id='stockMin_"+nuevosProductos.data.items[a].id_producto+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.stockMin("+nuevosProductos.data.items[a].id_producto+",this.value, stockMin_"+nuevosProductos.data.items[a].id_producto+")' class='description' disabled='true'>" 
+						+"</div>"
+						
+						
+						+ "<div class = 'ApplicationComprasProveedor-toggle' id = 'add_prod_"+nuevosProductos.data.items[a].id_producto+"'></div>"
+						
+						+ "</div>";
+						
+						
+					}//fin for 
+				
+					//imprimir el html
+					Ext.get("Productos-Proveedor").update("<div class='ApplicationComprasProveedor-itemsBox'>" + html +"</div>");
+					
+				
+					
+					for( hh = 0; hh < nuevosProductos.getCount(); hh++ ){
+						addProduct = new Ext.form.Toggle({
+							id: 'agregar_'+nuevosProductos.data.items[hh].id_producto,
+							renderTo: 'add_prod_'+nuevosProductos.data.items[hh].id_producto,
+							listeners: {
+								change:	function() {
+									
+										  ApplicationComprasProveedor.currentInstance.elegirProductoInventario( this.getId() );
+								}
+							}//listeners
+						});
+						ApplicationComprasProveedor.currentInstance.toggleBtns2.push( addProduct );
+					}
+					ApplicationComprasProveedor.currentInstance._BANDERATOGGLES2 = true;	
+			},
+			function (){//no responde
+				POS.aviso("ERROR","NO SE PUDO MOSTRAR LISTA DE PRODUCTOS DEL PROVEEDOR,  ERROR EN LA CONEXION :(");	
+			}
+		);//AJAXandDECODE
+};
 
 /*
 	Lanza peticion al servidor para ver si el producto q se intenta comprar
@@ -424,7 +814,7 @@ ApplicationComprasProveedor.prototype.compras_doAddProduct = function ( id_produ
 				id 			: datos.datos[0].id_producto,
 				name 		: datos.datos[0].nombre,
 				description : datos.datos[0].denominacion,
-				cost 		: datos.datos[0].precio,//el precio de compra
+				cost 		: parseFloat(datos.datos[0].precio),//el precio de compra
 				existencias : datos.datos[0].existencias,
 				cantidad	: 0,
 				subtot		: 0
@@ -444,6 +834,25 @@ ApplicationComprasProveedor.prototype.compras_doAddProduct = function ( id_produ
 };
 
 /*
+	agrega item al carrito de productos por agregar al inventario 
+*/
+
+ApplicationComprasProveedor.prototype.inventario_doAddProduct = function ( id_producto , denominacion )
+{
+	var item = {
+		id 			: id_producto,
+		precioVenta	: 0,
+		stockMin : 0,
+		denominacion: denominacion
+	};
+		
+			//agregarlo al carrito
+	ApplicationComprasProveedor.currentInstance.inventarioItems.push( item );
+		
+	
+};
+
+/*
 	Elimina un producto de la lista de items por comprar
 */
 
@@ -455,6 +864,24 @@ ApplicationComprasProveedor.prototype.compras_doDeleteProduct = function( id_pro
 		if( ApplicationComprasProveedor.currentInstance.compraItems[ f ].id == id_producto ){
 			//item already in cart
 			ApplicationComprasProveedor.currentInstance.compraItems.splice( f , 1);
+			break;
+		}
+	}
+	
+};
+
+/*
+	Elimina un producto de la lista de items de prodcutos por agregar al inventario
+*/
+
+ApplicationComprasProveedor.prototype.inventario_doDeleteProduct = function( id_producto ){
+	
+	
+	for( f = 0; f < ApplicationComprasProveedor.currentInstance.inventarioItems.length;  f++){
+		
+		if( ApplicationComprasProveedor.currentInstance.inventarioItems[ f ].id == id_producto ){
+			//item already in cart
+			ApplicationComprasProveedor.currentInstance.inventarioItems.splice( f , 1);
 			break;
 		}
 	}
@@ -698,4 +1125,518 @@ ApplicationComprasProveedor.prototype.revisarCantidaPrecio = function( idProd , 
 		document.getElementById( cajaId.id ).focus();
 	}
 
+};
+
+ApplicationComprasProveedor.prototype.precioVenta = function( idProd ,  precio , cajaId ){
+	
+	var indiceItem = 0;
+	
+	for( f = 0; f < ApplicationComprasProveedor.currentInstance.inventarioItems.length;  f++){
+		
+		if( ApplicationComprasProveedor.currentInstance.inventarioItems[ f ].id == idProd ){
+				//item already in cart
+				indiceItem = f;
+	
+				break;
+			}
+	}//fin for
+	
+	if( !isNaN(precio) && precio > 0 )
+	{
+		ApplicationComprasProveedor.currentInstance.inventarioItems[ indiceItem ].precioVenta = precio;
+		
+				
+	}
+	if ( precio === null || precio =='' || precio < 0 || isNaN(precio) ){
+		cajaId.value = "0";
+		
+		ApplicationComprasProveedor.currentInstance.inventarioItems[ indiceItem ].precioVenta = 0;
+		document.getElementById( cajaId.id ).focus();
+	}
+
+};
+
+ApplicationComprasProveedor.prototype.stockMin = function( idProd ,  stockM , cajaId ){
+	
+	var indiceItem = 0;
+	
+	for( f = 0; f < ApplicationComprasProveedor.currentInstance.inventarioItems.length;  f++){
+		
+		if( ApplicationComprasProveedor.currentInstance.inventarioItems[ f ].stockMin == stockM ){
+				//item already in cart
+				indiceItem = f;
+	
+				break;
+			}
+	}//fin for
+	
+	if( !isNaN(stockM) && stockM > 0 )
+	{
+		ApplicationComprasProveedor.currentInstance.inventarioItems[ indiceItem ].stockMin = stockM;
+		
+				
+	}
+	if ( stockM === null || stockM =='' || stockM < 0 || isNaN(stockM) ){
+		cajaId.value = "0";
+		
+		ApplicationComprasProveedor.currentInstance.inventarioItems[ indiceItem ].stockMin = 0;
+		document.getElementById( cajaId.id ).focus();
+	}
+
+};
+
+
+ApplicationComprasProveedor.prototype.do_agregarInventario = function ()
+{
+	
+	if(DEBUG){
+		console.log("ApplicationCompras: do_agregarInventario called....");
+	}
+	
+	ban = false;
+	ban2= false;
+	
+	items = ApplicationComprasProveedor.currentInstance.inventarioItems;
+	console.log("-----> 1) do_agregarInventario en inventario items hay: "+items.length+" elementos");
+	for( a = 0; a < items.length;  a++){
+		
+		if(items[a].precioVenta == 0 )
+		ban=true;
+		if(items[a].stockMin == 0)
+		ban2=true;
+	}
+		
+
+		
+	if(items.length == 0){
+		POS.aviso("Agregar Productos", "Agregue primero al menos un producto para poder Agregar al inventario.");
+		return;
+	}
+			
+	if( ban ){
+		POS.aviso("Agregar Productos", "Llenar las columnas 'Precio Venta' de todos los productos agregados con un numero mayor a 0");
+		return;
+	}
+		
+	if( ban2 ){
+		POS.aviso("Agregar Productos", "Revisar en las columnas 'Stock Minimo' de cada producto que tenga un valor y que ese valor sea mayor '0'");
+		return;
+	}
+	
+	ApplicationComprasProveedor.currentInstance.do_agregarItemInventario();
+};
+
+
+ApplicationComprasProveedor.prototype.do_agregarItemInventario = function(){
+	console.log("------> 2) AJAX do_agregarItemInventario estos son los items q se mandan: ");
+	var jsonItems = Ext.util.JSON.encode(ApplicationComprasProveedor.currentInstance.inventarioItems);
+	console.log(jsonItems);
+
+	POS.AJAXandDECODE({
+			action: '1220',//insertar compra
+			jsonItems : jsonItems,
+		}, 
+		function (datos){
+			
+			//ya llego el request con los datos si existe o no	
+			if(!datos.success){
+				POS.aviso("Error", ""+datos.reason);
+				return;
+			}
+
+			ApplicationComprasProveedor.currentInstance.htmlItemInventario();
+		},
+		function (){
+			POS.aviso("Error", "Error en la conexion, porfavor intente de nuevo.");
+		}
+	);
+	///fin ajaxazo
+
+
+};
+
+/*--------------------------------------------------------------
+	METODO QUE SE USA UNICAMENTE PARA MODO DE COMPRA POR CANIIDAD(GENERAL MODE)
+	SIRVE PARA IR VALIDANDO LAS CANTIDADES E IR CALCULANDO LOS TOTALES Y REFRESCANDO
+	EL HTML
+----------------------------------------------------------------*/
+
+ApplicationComprasProveedor.prototype.sumaCantidad = function( idProd ,  cantidad , cajaId ){
+	
+	var indiceItem = 0;
+	
+	for( f = 0; f < ApplicationComprasProveedor.currentInstance.compraItems.length;  f++){
+		
+		if( ApplicationComprasProveedor.currentInstance.compraItems[ f ].id == idProd ){
+				//item already in cart
+				indiceItem = f;
+	
+				break;
+			}
+	}//fin for
+	
+	if(!isNaN(cantidad)  && cantidad > 0 )
+	{
+		
+		ApplicationComprasProveedor.currentInstance.compraItems[ indiceItem ].cantidad = cantidad;
+		
+		ApplicationComprasProveedor.currentInstance.compraItems[ indiceItem ].subtot = ApplicationComprasProveedor.currentInstance.compraItems[ indiceItem ].cantidad * ApplicationComprasProveedor.currentInstance.compraItems[ indiceItem ].cost;
+		
+		Ext.get("subtotProducto_"+idProd).update("$ "+ApplicationComprasProveedor.currentInstance.compraItems[ indiceItem ].subtot.toFixed(2) );
+		
+	}
+	if ( cantidad === null || cantidad =='' || cantidad < 0 || isNaN(cantidad) ){
+		cajaId.value = "0";
+		ApplicationComprasProveedor.currentInstance.compraItems[ indiceItem ].cantidad = 0;
+		ApplicationComprasProveedor.currentInstance.compraItems[ indiceItem ].subtot = 0;
+		Ext.get("subtotProducto_"+idProd).update("$ 0");
+	}
+	
+	var subtotal_compra=0;
+	
+	for(i=0; i < ApplicationComprasProveedor.currentInstance.compraItems.length; i++){
+		subtotal_compra += parseFloat( ApplicationComprasProveedor.currentInstance.compraItems[i].subtot );
+	}
+	var iva_compra = subtotal_compra * 0;
+	
+	Ext.get("subtotal_compraProducto").update("$ "+subtotal_compra.toFixed(2) );
+	Ext.get("iva_compraProducto").update("$ "+ iva_compra.toFixed(2) );
+	Ext.get("total_compraProducto").update("$ "+ (subtotal_compra + iva_compra).toFixed(2) );
+	
+
+};
+
+
+/* ------------------------------------------------------------------------------------
+		vender, VALIDA LA COMPRA (SEGUN SEA EL METODO DE COMPRA), Y SI TODO ESTA BIEN, 
+		HACE EL LLAMADO	AL METODO QUE SE COMUNICA CON EL SERVER
+   ------------------------------------------------------------------------------------ */
+
+
+ApplicationComprasProveedor.prototype.doComprar = function ()
+{
+	
+	if(DEBUG){
+		console.log("ApplicationCompras: doComprar called....");
+	}
+	
+	
+	items = ApplicationComprasProveedor.currentInstance.compraItems;
+
+	if(!ApplicationComprasProveedor.currentInstance._BANDERA){//validacion en toño mode
+
+		var subtotal = 0;
+		var total = 0;
+		var ban=false;
+		var ban2=false;
+		
+		for( a = 0; a < items.length;  a++){
+			subtotal += parseFloat( items[a].subtot );
+			if(items[a].nA == 0 )
+			ban=true;
+			if(items[a].prKg == 0)
+			ban2=true;
+		}
+		
+		total = subtotal;
+		
+		if(items.length == 0){
+				POS.aviso("Comprar Productos", "1) Agregue primero al menos un producto para poder comprar.");
+				return;
+		}
+			if(Ext.getCmp("pesoEmbarque").getValue() == "0"){
+				POS.aviso("Comprar Productos", "2) Colocar un numero mayor a 0 en el campo 'Peso en Kg del Embarque'");
+				return;
+			}
+			if(ApplicationComprasProveedor.currentInstance.totalArpillas == 0 || ban){
+				POS.aviso("Comprar Productos", "3) Llenar las columnas No. Arpillas de todos los productos agregados con un numero mayor a 0");
+				return;
+			}
+			if(ApplicationComprasProveedor.currentInstance.totalArpillas > Ext.getCmp("pesoEmbarque").getValue()){
+				POS.aviso("Comprar Productos", "4) El valor de 'Peso en Kg del Embarque' debe ser mayor al de 'Numero de Arpillas'");
+				return;
+			}
+			
+			if(total < 1 || ban2){
+				POS.aviso("Comprar Productos", "5) Revisar en las columnas 'Kg Menos' de cada producto que tenga un valor y que ese valor no sea mayor o igual al 'Peso por Arpilla' <br>6) Revisar en las columnas 'Precio x Kg' de cada producto que el valor sea mayor '0'");
+				return;
+			}
+			if(ApplicationComprasProveedor.currentInstance.pesoArpilla > Ext.getCmp("pesoEmbarque").getValue()){
+				POS.aviso("Comprar Productos", "* El valor de 'Peso en Kg del Embarque' debe ser mayor al de 'Peso por Arpilla'");
+				return;
+			}
+		
+		newPanel = ApplicationComprasProveedor.currentInstance.doComprarPanel();
+		sink.Main.ui.setCard( newPanel, 'slide' );
+		
+	}else{//VALIDACION GENERAL MODE
+		var subtotal = 0;
+		var total = 0;
+		var ban=false;
+
+		for( a = 0; a < items.length;  a++){
+			subtotal += items[a].subtot;
+			if(items[a].cantidad == 0 )
+			ban=true;
+			
+		}
+		
+		total = subtotal;
+		
+		if(items.length == 0){
+				POS.aviso("Comprar Productos", "1) Agregue primero al menos un producto para poder comprar.");
+				return;
+		}
+		if(total < 1 || ban){
+			POS.aviso("Comprar Productos", "2) Revisar en las columnas 'Cantidad' de cada producto que el valor sea mayor '0'");
+			return;
+		}
+		
+		newPanel = ApplicationComprasProveedor.currentInstance.doComprarPanel();
+		sink.Main.ui.setCard( newPanel, 'slide' );		
+	}
+	
+};
+
+
+/*------------------------------------------------------
+	MUESTRA EL PANEL CON EL SUBTOTAL IVA Y TOTAL DE LA VENTA
+	Y SE DEFINE SI ES DE CONTADO O A CREDITO
+--------------------------------------------------------*/
+
+ApplicationComprasProveedor.prototype.doComprarPanel = function ()
+{
+	
+	
+	var subtotal = 0;
+	var total = 0;
+	var iva=0;
+	for( a = 0; a < ApplicationComprasProveedor.currentInstance.compraItems.length;  a++){
+		subtotal += parseFloat( ApplicationComprasProveedor.currentInstance.compraItems[a].subtot );
+	}
+	
+	total = subtotal;
+	iva = 0 * total; //0 porque el no incluye iva
+	return new Ext.form.FormPanel({
+	//tipo de scroll
+    scroll: 'none',
+
+	baseCls: "ApplicationCompras-mainPanel",
+
+	//toolbar
+	dockedItems: [new Ext.Toolbar({
+        ui: 'dark',
+        dock: 'bottom',
+        items: [{
+				xtype:'button', 
+				text:'Regresar',
+				ui: 'back',
+				handler: function(){
+					sink.Main.ui.setCard( ApplicationComprasProveedor.currentInstance.surtir, { type: 'slide', direction: 'right' } );
+				}
+			},{
+				xtype:'button', 
+				text:'Cancelar Compra',
+				handler: function(){
+					//reestablecer todo para una nueva venta
+					
+					ApplicationComprasProveedor.currentInstance.toggleBtns.length = 0;
+					ApplicationComprasProveedor.currentInstance.toggleBtns2.length = 0;
+					ApplicationComprasProveedor.currentInstance.compraItems.length = 0;
+					ApplicationComprasProveedor.currentInstance.inventarioItems.length = 0;
+					ApplicationComprasProveedor.currentInstance._BANDERATOGGLES = false;
+					ApplicationComprasProveedor.currentInstance._BANDERATOGGLES2 = false;
+					
+					//se regresa al panel donde se realiza la compra
+					sink.Main.ui.setCard( ApplicationComprasProveedor.currentInstance.surtir, { type: 'slide', direction: 'right' } );
+					
+					//segun el modo de compra se actualiza todo desde el inicio para una nueva compra
+					if(!ApplicationComprasProveedor.currentInstance._BANDERA){
+						
+						ApplicationComprasProveedor.currentInstance.pesoArpilla = 0;
+						ApplicationComprasProveedor.currentInstance.totalArpillas = 0;
+						
+						ApplicationComprasProveedor.currentInstance.llenarPanelComprasXarpillas( ApplicationComprasProveedor.currentInstance.providerId );
+						
+						Ext.getCmp("pesoEmbarque").setValue(0);						
+						Ext.get("totalArps").update("0");
+						Ext.get("pesoArpillas").update("0");
+						
+					}else{
+						
+						ApplicationComprasProveedor.currentInstance.llenarPanelComprasXpiezas( ApplicationComprasProveedor.currentInstance.providerId );
+					}
+										
+					
+				}//handler
+				
+			},{
+				xtype:'spacer'
+			},{
+				xtype:'button', 
+				ui: 'action',
+				text:'Registrar Compra',
+				handler: ApplicationComprasProveedor.currentInstance.doCompraLogic
+
+			}]
+    })],
+	
+	//items del formpanel
+    items: [{
+
+        xtype: 'fieldset',				
+        title: 'Compra a proveedor: <b>'+ApplicationComprasProveedor.currentInstance.nombreProv+"</b>",
+		baseCls: "ApplicationCompras-ventaListaPanel",
+        items: [{
+	        	xtype: 'textfield',
+	        	label: 'SubTotal',
+				value : subtotal
+       		},{
+		        xtype: 'textfield',
+		        label: 'IVA',
+				value : iva
+	      	},{
+			    xtype: 'textfield',
+			    label: 'Total',
+				value : total
+		    },
+			{
+				//Ext.getCmp("tipoCompra").setValue(0); Ext.getCmp("tipoCompra").getValue(true); --> 1 o 0
+				xtype: 'toggle',
+                id : 'tipoCompra',
+                label: 'Compra a Credito',
+				value: 1
+				
+            }
+			]
+		}]
+	});
+};
+
+
+
+/*-----------------------------------------------------------------
+	SE ENVIA PETICION AL SERVER PARA REGISTRAR LA COMPRA EN LA BD
+-------------------------------------------------------------------*/
+
+ApplicationComprasProveedor.prototype.doCompraLogic = function ()
+{
+	//insercion en la BD				 
+	var jsonItems = Ext.util.JSON.encode(ApplicationComprasProveedor.currentInstance.compraItems);
+	console.log(jsonItems);
+	
+	var tipoCom = Ext.getCmp("tipoCompra").getValue(true) + 1;
+	var tipoCompra ="";
+	
+	if( tipoCom == 1 ){
+		tipoCompra = "contado";
+	}else{
+		tipoCompra = "credito";
+	}
+	
+	
+	POS.AJAXandDECODE({
+			action: '1201',//insertar compra
+			jsonItems : jsonItems,
+			id_proveedor : ApplicationComprasProveedor.currentInstance.providerId,//aqui el id del proveedor
+			tipo_compra : tipoCompra,
+			modo_compra	: ApplicationComprasProveedor.currentInstance._BANDERA //false toño mode, true general mode
+		}, 
+		function (datos){
+			
+			//ya llego el request con los datos si existe o no	
+			if(!datos.success){
+				POS.aviso("Mostrador", ""+datos.reason);
+				return;
+			}
+			
+			
+		},
+		function (){
+			POS.aviso("Error", "Error en la conexion, porfavor intente de nuevo.");
+		}
+	);
+	///fin ajaxazo
+	var thksPanel = ApplicationComprasProveedor.currentInstance.compras_doGraciasPanel();
+	sink.Main.ui.setCard( thksPanel, 'fade' );
+};
+
+
+/*-----------------------------------------------------------
+	SE REALIZÓ LA COMPRA Y MUESTRA PANEL FINAL
+-------------------------------------------------------------*/
+ApplicationComprasProveedor.prototype.compras_doGraciasPanel = function ()
+{
+	//reestablecer todo para una nueva venta
+	ApplicationComprasProveedor.currentInstance.toggleBtns.length = 0;
+	ApplicationComprasProveedor.currentInstance.toggleBtns2.length = 0;
+	ApplicationComprasProveedor.currentInstance.compraItems.length = 0;
+	ApplicationComprasProveedor.currentInstance.inventarioItems.length = 0;
+	ApplicationComprasProveedor.currentInstance._BANDERATOGGLES = false;
+	ApplicationComprasProveedor.currentInstance._BANDERATOGGLES2 = false;
+	
+	return new Ext.form.FormPanel({
+	//tipo de scroll
+    scroll: 'none',
+
+	baseCls: "ApplicationVender-mainPanel",
+
+	//toolbar
+	dockedItems: [new Ext.Toolbar({
+        ui: 'dark',
+        dock: 'bottom',
+        items: [{
+				xtype:'button', 
+				text:'Regresar',
+				ui: 'back',
+				handler: function(){
+					
+					//reestablecer todo para una nueva venta				
+					Ext.get("proveedorProductos_Sucursal").update("");
+					Ext.get("totalesCompra").update("");
+					
+					sink.Main.ui.setCard( ApplicationProveedores.currentInstance.mainCard, { type: 'slide', direction: 'right' } );
+					
+				}//handler
+			},{
+				xtype:'spacer'
+			},{
+				xtype:'button', 
+				ui: 'action',
+				text:'Comprar a mismo Proveedor',
+				handler: function(){
+					
+				
+									
+					//se regresa al panel donde se realiza la compra
+					sink.Main.ui.setCard( ApplicationComprasProveedor.currentInstance.surtir, { type: 'slide', direction: 'right' } );
+					
+					//segun el modo de compra se actualiza todo desde el inicio para una nueva compra
+					if(!ApplicationComprasProveedor.currentInstance._BANDERA){
+						
+						Ext.getCmp("pesoEmbarque").setValue(0);						
+						Ext.get("totalArps").update("0");
+						Ext.get("pesoArpillas").update("0");
+						
+						ApplicationComprasProveedor.currentInstance.pesoArpilla = 0;
+						ApplicationComprasProveedor.currentInstance.totalArpillas = 0;
+						
+						ApplicationComprasProveedor.currentInstance.llenarPanelComprasXarpillas( ApplicationComprasProveedor.currentInstance.providerId );
+												
+					}else{
+						
+						ApplicationComprasProveedor.currentInstance.llenarPanelComprasXpiezas( ApplicationComprasProveedor.currentInstance.providerId );
+					}
+					
+				}//handler
+			}]
+    })],
+	
+	//items del formpanel
+    items: [{
+			html : 'COMPRA REGISTRADA !',
+			cls  : 'gracias',
+			baseCls: "ApplicationCompras-ventaListaPanel",
+		}]
+	});
 };
