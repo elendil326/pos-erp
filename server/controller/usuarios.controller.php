@@ -194,10 +194,17 @@ switch($args['action']){
 		
 		
 		@$id_sucursal = $args['id_sucursal'];
+		$activo = NULL;
+		
+		if ( $args['activo'] )
+		{
+			$activo = $args['activo'];
+		}
+		
 		
 		try{
 			
-			$Usuarios = getUsersBySucursalId( $id_sucursal );
+			$Usuarios = getUsersBySucursalId( $id_sucursal, $activo );
 			$result = array();
 			
 			//Arreglamos el arreglo porque no se forma bien el JSON con el arreglo devuelto por search
@@ -241,6 +248,7 @@ switch($args['action']){
 			if( !isset( $args['nombre'] ) && !isset( $args['user2'] ) && !isset( $args['password'] ) && !isset( $args['id_usuario'] ) )
 			{
 				echo ' { "success" : false, "error" : "Faltan parametros" } ';
+				return;
 			}
 			
 			$id_usuario = $args['id_usuario'];
@@ -254,8 +262,25 @@ switch($args['action']){
 			
 	break;
 	
+
+	case '2305':
+		
+			if( !isset( $args['id_usuario'] ) )
+			{
+				echo ' { "success" : false, "error" : "Faltan parametros" } ';
+				return;
+			}
+		
+			$id_usuario = $args['id_usuario'];
+			
+			desactivarUsuario( $id_usuario );
+		
+	break;
 	
-	case '2305': //getDataGridUsuarios
+	
+
+	
+	case '2306': //getDataGridUsuarios
 	
 		if( !isset( $args['page'] ) && !isset( $args['rp'] ) && !isset( $args['sortname'] ) && !isset( $args['sortorder'] ) )
 		{
@@ -273,6 +298,7 @@ switch($args['action']){
 		}
 		
 	
+
 	}
 
 ?>

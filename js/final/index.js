@@ -520,7 +520,7 @@ POS.datePicker = function( pickerConfig ){
 
 	posPicker.slots = posSlot;
 
-	//POS.pickerSlots = posSlot;
+	POS.pickerSlots = posSlot;
 	//console.log(posPicker);
 
 	//return posPicker;	
@@ -528,7 +528,7 @@ POS.datePicker = function( pickerConfig ){
 	extPicker = new Ext.DatePicker();
 	extPicker.slots[0].items[0].key = 'Enero';
 
-	POS.pickerSlots = extPicker.slots;
+	//POS.pickerSlots = extPicker.slots;
 };
 
 

@@ -32,6 +32,9 @@ ApplicationUsuarios.prototype.id_sucursal = null;
 //Usuario seleccionado en la lista
 ApplicationUsuarios.prototype.user_selected = null;
 
+//Botones del toolbar
+ApplicationUsuarios.prototype.toolbar_buttons = null;
+
 
 /* -------------------------------------------------------------------------------------
 			init
@@ -93,17 +96,11 @@ ApplicationUsuarios.prototype.loadHomePanel = function()
     	model: 'appUsuarios_usuarios',
     	sorters: 'nombre',
     	getGroupString : function(record) {
-        	return record.get('id_usuario')[0];
+        	return record.get('nombre')[0];
     	}
 	});
 	
-	
-
-	var homeToolbar = new Ext.Toolbar({
-			id: 'ApplicationUsuarios-homePanel-toolbar',
-			ui: 'dark',
-			dock: 'bottom',
-			items: [{
+	ApplicationUsuarios.currentInstance.toolbar_buttons = [{
 				id: 'ApplicationUsuarios-homePanel-modificar',
 				xtype: 'button',
 				text: 'Modificar usuario',
@@ -130,9 +127,17 @@ ApplicationUsuarios.prototype.loadHomePanel = function()
 					ApplicationUsuarios.currentInstance.addNewUser();
 				}
 				
-			}]
+			}];
+
+	var homeToolbar = new Ext.Toolbar({
+			id: 'ApplicationUsuarios-homePanel-toolbar',
+			ui: 'dark',
+			dock: 'bottom',
+			items: [ ApplicationUsuarios.currentInstance.toolbar_buttons ]
 	});
 
+	console.log(ApplicationUsuarios.currentInstance.UserListStore);
+	
 	this.homePanel = new Ext.Panel({
 		
 			id: 'ApplicationUsuarios-homePanel',
@@ -144,7 +149,8 @@ ApplicationUsuarios.prototype.loadHomePanel = function()
 					POS.AJAXandDECODE(//Parametros
 									{
 										action : 2302,
-										id_sucursal : ApplicationUsuarios.currentInstance.id_sucursal
+										id_sucursal : ApplicationUsuarios.currentInstance.id_sucursal,
+										activo: 1
 										
 									}, 
 							function(datos){
@@ -154,7 +160,7 @@ ApplicationUsuarios.prototype.loadHomePanel = function()
 									 
 									//si el success trae true
 									usuarios = datos.data;
-									ApplicationUsuarios.currentInstance.UserListStore.loadData(usuarios);
+									ApplicationUsuarios.currentInstance.UserListStore.loadData(usuarios, false);
 									
 								} else {
 									ApplicationUsuarios.currentInstance.UserListStore.loadData(0);
@@ -175,15 +181,18 @@ ApplicationUsuarios.prototype.loadHomePanel = function()
 			
 		},
 		items: [{
+			id: 'ApplicationUsuarios-lista',
         	width: '100%',
         	height: '100%',
         	xtype: 'list',
-			baseCls : 'ApplicationInventario-mainPanel',
+			baseCls : 'ApplicationUsuarios-homePanel',
 			loadingText: 'Cargando datos...',
 			emptyText: '<div class="no-data">No se encontraron usuarios para esta sucursal.</div>',
         	store: ApplicationUsuarios.currentInstance.UserListStore,
-        	tpl: String.format('<tpl for="."><div class="products">ID: {id_usuario} <strong>{nombre}</strong> &nbsp;Usuario: {usuario} </div></tpl>' ),
-        	itemSelector: 'div.products',
+        	tpl: String.format('<tpl for="."><div class="usuarios">ID: {id_usuario} <strong>{nombre}</strong> &nbsp;Usuario: {usuario} </div></tpl>' ),
+			//tplWriteMode: 'insertFirst',
+        	itemSelector: 'div.usuarios',
+			grouped: true,
         	singleSelect: true,
 			listeners: {
 				selectionchange: function(){
@@ -191,15 +200,21 @@ ApplicationUsuarios.prototype.loadHomePanel = function()
 						if ( this.getSelectionCount() > 0)
 						{
 							//Habilitamos el boton si hay algo seleccionado
-							Ext.getCmp('ApplicationUsuarios-homePanel-modificar').setDisabled(false);
-							Ext.getCmp('ApplicationUsuarios-homePanel-eliminar').setDisabled(false);
+							if( Ext.getCmp('ApplicationUsuarios-homePanel-modificar') != undefined && Ext.getCmp('ApplicationUsuarios-homePanel-eliminar') != undefined )
+							{
+								Ext.getCmp('ApplicationUsuarios-homePanel-modificar').setDisabled(false);
+								Ext.getCmp('ApplicationUsuarios-homePanel-eliminar').setDisabled(false);
+							}
 							
 							ApplicationUsuarios.currentInstance.user_selected = this.getSelectedRecords();
 						}
 						else
 						{
-							Ext.getCmp('ApplicationUsuarios-homePanel-modificar').setDisabled(true);
-							Ext.getCmp('ApplicationUsuarios-homePanel-eliminar').setDisabled(true);
+							if( Ext.getCmp('ApplicationUsuarios-homePanel-modificar') != undefined && Ext.getCmp('ApplicationUsuarios-homePanel-eliminar') != undefined )
+							{
+								Ext.getCmp('ApplicationUsuarios-homePanel-modificar').setDisabled(true);
+								Ext.getCmp('ApplicationUsuarios-homePanel-eliminar').setDisabled(true);
+							}
 						}
 				}
 			}
@@ -210,7 +225,7 @@ ApplicationUsuarios.prototype.loadHomePanel = function()
 	});
 
 
-
+	//Ext.getCmp('ApplicationUsuarios-lista').update();
 
 }
 
@@ -339,7 +354,14 @@ ApplicationUsuarios.prototype.addNewUserLogic = function(){
 					Ext.getCmp('ApplicationUsuarios-addNewUser-form').reset();
 					Ext.getCmp('ApplicationUsuarios-addNewUser-panel').hide();
 					
-					POS.aviso('Éxito', 'Se agrego el nuevo usuario existosamente');
+					//POS.aviso('Éxito', 'Se agrego el nuevo usuario existosamente');
+					
+					Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').removeAll();
+					Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').setTitle("Se agrego el nuevo usuario");
+					Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').showTitle();
+					setTimeout( "ApplicationUsuarios.currentInstance.restoreToolbar( ApplicationUsuarios.currentInstance.toolbar_buttons, 'ApplicationUsuarios-homePanel-toolbar')", 3000 );
+					
+					
 					//['denominacion', 'existencias', 'precio_venta', 'min']
 					/*ApplicationUsuarios.currentInstance.UserListStore.add(
 						{
@@ -353,7 +375,8 @@ ApplicationUsuarios.prototype.addNewUserLogic = function(){
 					POS.AJAXandDECODE(//Parametros
 									{
 										action : 2302,
-										id_sucursal : ApplicationUsuarios.currentInstance.id_sucursal
+										id_sucursal : ApplicationUsuarios.currentInstance.id_sucursal,
+										activo: 1
 										
 									}, 
 							function(datos){
@@ -411,7 +434,7 @@ ApplicationUsuarios.prototype.modifyUser = function(){
 	
 	if (DEBUG)
 	{
-		console.log(ApplicationUsuarios.currentInstance.user_selected);
+		console.log(ApplicationUsuarios.currentInstance.user_selected[0].data.nombre);
 	}
 	
 	var modifyUserTB = new Ext.Toolbar({
@@ -452,7 +475,6 @@ ApplicationUsuarios.prototype.modifyUser = function(){
 	
 
 	
-	
 	var modifyUserPanel = new Ext.Panel({
 		
 		id: 'ApplicationUsuarios-modifyUser-panel',
@@ -475,7 +497,7 @@ ApplicationUsuarios.prototype.modifyUser = function(){
 					xtype: 'textfield',
 					label: 'Nombre',
 					name: 'nombre',
-					value: ApplicationUsuarios.currentInstance.user_selected[0].nombre,
+					value: ApplicationUsuarios.currentInstance.user_selected[0].data.nombre,
 					listeners: {
 						change: function()
 						{
@@ -487,7 +509,7 @@ ApplicationUsuarios.prototype.modifyUser = function(){
 					xtype: 'textfield',
 					label: 'Usuario',
 					name: 'user2',
-					value: ApplicationUsuarios.currentInstance.user_selected[0].usuario,
+					value: ApplicationUsuarios.currentInstance.user_selected[0].data.usuario,
 					listeners: {
 						change: function()
 						{
@@ -523,8 +545,8 @@ ApplicationUsuarios.prototype.modifyUser = function(){
 		],
 			listeners: {
 				beforeshow: function(){
-					Ext.getCmp('ApplicationUsuarios-modifyUser-form-nombre').setValue(ApplicationUsuarios.currentInstance.user_selected[0].nombre);
-					Ext.getCmp('ApplicationUsuarios-modifyUser-form-usuario').setValue(ApplicationUsuarios.currentInstance.user_selected[0].usuario);
+					Ext.getCmp('ApplicationUsuarios-modifyUser-form-nombre').setValue(ApplicationUsuarios.currentInstance.user_selected[0].data.nombre);
+					Ext.getCmp('ApplicationUsuarios-modifyUser-form-usuario').setValue(ApplicationUsuarios.currentInstance.user_selected[0].data.usuario);
 				}
 			}
 		
@@ -562,7 +584,11 @@ ApplicationUsuarios.prototype.modifyUserLogic = function(){
 					Ext.getCmp('ApplicationUsuarios-modifyUser-panel').hide();
 					ApplicationUsuarios.currentInstance.user_selected[0].nombre = formData['nombre'];
 					ApplicationUsuarios.currentInstance.user_selected[0].usuario = formData['user2'];
-					POS.aviso('Éxito', 'Se modificaron los datos correctamente');
+					//POS.aviso('Éxito', 'Se modificaron los datos correctamente');
+					Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').removeAll();
+					Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').setTitle("Se modificaron los datos correctamente");
+					Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').showTitle();
+					setTimeout( "ApplicationUsuarios.currentInstance.restoreToolbar( ApplicationUsuarios.currentInstance.toolbar_buttons, 'ApplicationUsuarios-homePanel-toolbar')", 3000 );
 					//['denominacion', 'existencias', 'precio_venta', 'min']
 					/*ApplicationUsuarios.currentInstance.UserListStore.add(
 						{
@@ -576,7 +602,8 @@ ApplicationUsuarios.prototype.modifyUserLogic = function(){
 					POS.AJAXandDECODE(//Parametros
 									{
 										action : 2302,
-										id_sucursal : ApplicationUsuarios.currentInstance.id_sucursal
+										id_sucursal : ApplicationUsuarios.currentInstance.id_sucursal,
+										activo: 1
 										
 									}, 
 							function(datos){
@@ -632,6 +659,7 @@ ApplicationUsuarios.prototype.removeUser = function(){
 	Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').removeAll();
 	
 	Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').setTitle("&iquest;Esta seguro?");
+	Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').showTitle();
 	
 	var toolbarContent = [{
 		xtype: 'button',
@@ -651,6 +679,7 @@ ApplicationUsuarios.prototype.removeUser = function(){
 					ApplicationUsuarios.currentInstance.modifyUser();
 			}
 			},{
+				id: 'ApplicationUsuarios-homePanel-eliminar' ,
 				xtype: 'button',
 				text: 'Eliminar usuario',
 				ui: 'drastic',
@@ -680,7 +709,7 @@ ApplicationUsuarios.prototype.removeUser = function(){
 			text: 'OK',
 			ui: 'action',
 			handler: function(){
-				alert("Ok...");
+				ApplicationUsuarios.currentInstance.removeUserLogic();
 			}
 		}
 	];
@@ -689,6 +718,99 @@ ApplicationUsuarios.prototype.removeUser = function(){
 	Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').doLayout();
 
 }
+
+ApplicationUsuarios.prototype.removeUserLogic = function ()
+{
+	
+	var user = ApplicationUsuarios.currentInstance.user_selected;
+	
+	
+	POS.AJAXandDECODE(
+			//Parametros
+			{
+				action: 2305,//'desactivarUsuario',
+				id_usuario: user[0].data.id_usuario
+			},
+			//Responded
+			function(result)
+			{
+				
+				if ( result.success )
+				{
+
+					//POS.aviso('Éxito', 'Se modificaron los datos correctamente');
+					Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').removeAll();
+					Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').setTitle("Se borraron los datos correctamente");
+					Ext.getCmp('ApplicationUsuarios-homePanel-toolbar').showTitle();
+					setTimeout( "ApplicationUsuarios.currentInstance.restoreToolbar( ApplicationUsuarios.currentInstance.toolbar_buttons, 'ApplicationUsuarios-homePanel-toolbar')", 3000 );
+					//['denominacion', 'existencias', 'precio_venta', 'min']
+					/*ApplicationUsuarios.currentInstance.UserListStore.add(
+						{
+							denominacion: formData['denominacion'],
+							existencias: 0,
+							precio_venta: formData['precio_venta'],
+							min: formData['min']
+						}
+					
+					);*/
+					POS.AJAXandDECODE(//Parametros
+									{
+										action : 2302,
+										id_sucursal : ApplicationUsuarios.currentInstance.id_sucursal,
+										activo: 1
+										
+										
+									}, 
+							function(datos){
+								//responded 
+								
+								if (datos.success) {
+									 
+									//si el success trae true
+									usuarios = datos.data;
+									ApplicationUsuarios.currentInstance.UserListStore.loadData(usuarios);
+									
+								} else {
+									ApplicationUsuarios.currentInstance.UserListStore.loadData(0);
+									return 0;
+								}
+					
+							}, function(){
+								//no responde
+								ApplicationUsuarios.currentInstance.UserListStore.loadData(0);
+								
+								if(DEBUG){
+									console.error("ApplicationUsuarios: no server response");
+								}
+							}
+					);
+				}
+				else{
+					POS.aviso('Error', 'Error al intentar borrar los datos del usuario');
+				}
+				
+			},
+			//Not responded
+			function()
+			{
+				POS.aviso('Error', 'Error en la conexión. Intente nuevamente')
+			}
+	);
+	
+	
+	
+}
+
+ApplicationUsuarios.prototype.restoreToolbar = function ( buttons, toolbar_id )
+{
+	var toolbar = Ext.getCmp( toolbar_id );
+	
+	toolbar.hideTitle();
+	toolbar.add( buttons );
+	toolbar.doLayout();
+
+}
+
 
 /*POS.AJAXandDECODE(
 				//Parametros

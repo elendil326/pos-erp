@@ -24,7 +24,7 @@
 	/**
 	* Contraseña de la base de datos.
 	*/
-	define('DB_PASSWORD', 'pos');
+	define('DB_PASSWORD', '');
 
 	/**
 	* Nombre de la base de datos.

@@ -125,7 +125,7 @@ ApplicationGastos.prototype.loadHomePanel = function()
     defaults: {
         flex: 1
     },
-    items: [{
+    items: [/*{
 		id: 'ApplicationGastos-mainPanel-caraouselTop',
         xtype: 'carousel',
         //cls: 'card',
@@ -133,17 +133,20 @@ ApplicationGastos.prototype.loadHomePanel = function()
         items: [{
 			cls: 'card',
             html: '<p> Para agregar un nuevo gasto deslice el panel a la izquierda  </p>'
-        },	ApplicationGastos.currentInstance.loadGastosPanel()
-		]
-    }, {
+        },*/	ApplicationGastos.currentInstance.loadGastosPanel()
+		//]
+    //}
+	, 
+	/*{
 		id: 'ApplicationGastos-mainPanel-caraouselBottom',
         xtype: 'carousel',
         ui: 'dark',
         items: [{
             html: '<p> Para agregar un nuevo ingreso deslice el panel a la izquierda</p>',
             cls: 'card'
-        }, ApplicationGastos.currentInstance.loadIngresosPanel()]
-    }]
+        }, */ApplicationGastos.currentInstance.loadIngresosPanel()//]
+    //}
+	]
 	});
 		
 	this.mainCard = this.appMainPanel;
@@ -281,9 +284,9 @@ ApplicationGastos.prototype.getDate = function( textfield ){
 		Ext.getCmp( 'ApplicationGastos-getDate-panel' ).show();
 		Ext.getCmp( 'ApplicationGastos-getDate-panel' ).POSposition = textfield;
 		 var picker = Ext.getCmp('ApplicationGastos-getDate-picker')
-		 picker.value.day = currentDate.getDate();
+		 /*picker.value.day = currentDate.getDate();
 		 picker.value.month = currentDate.getMonth();
-		 picker.value.year = currentDate.getFullYear();
+		 picker.value.year = currentDate.getFullYear();*/
 		
 		return;
 	}
@@ -312,11 +315,12 @@ ApplicationGastos.prototype.getDate = function( textfield ){
 			floating: true,
 			slots: [POS.pickerSlots],
 			centered: true,
-	        value: {
+	        values: {
 	            day: currentDate.getDate(),
 	            month: currentDate.getMonth(),
 	            year: currentDate.getFullYear()
 	        },
+			text: 'wtf',
 	        dockedItems: [{
 	            xtype: 'toolbar',
 	            dock: 'top',
@@ -347,7 +351,7 @@ ApplicationGastos.prototype.getDate = function( textfield ){
 	});
 	
 	
-	//console.log(Ext.getCmp('ApplicationGastos-getDate-picker'));
+	console.log(Ext.getCmp('ApplicationGastos-getDate-picker'));
 	
 	datePicker.show();
 	//Ext.getCmp('ApplicationGastos-getDate-picker').slots = POS.pickerSlots;
@@ -401,8 +405,8 @@ ApplicationGastos.prototype.logicAddGasto = function(){
 					//ApplicationGastos.currentInstance.appMainPanel.setCard( ApplicationGastos.currentInstance.homePanel, { type:'slide', direction:'right'});
 					Ext.getCmp('ApplicationGastos-gastosFormPanel').reset();
 					//document.getElementById(Ext.get('ApplicationGastos-gastosForm-concepto').first().id).focus();
-					Ext.getCmp('ApplicationGastos-mainPanel-caraouselTop').previous();
-					console.log(Ext.getCmp('ApplicationGastos-mainPanel-caraouselTop'));
+					//Ext.getCmp('ApplicationGastos-mainPanel-caraouselTop').previous();
+					
 					//ApplicationGastos.currentInstance.loadHomeButtons();
 				}
 				else{
@@ -468,7 +472,7 @@ ApplicationGastos.prototype.logicAddIngreso = function(){
 					//ApplicationGastos.currentInstance.appMainPanel.setCard( ApplicationGastos.currentInstance.homePanel, { type:'slide', direction:'right'});
 					Ext.getCmp('ApplicationGastos-ingresosFormPanel').reset();
 					//document.getElementById(Ext.get('ApplicationGastos-ingresosForm-concepto').first().id).focus();
-					Ext.getCmp('ApplicationGastos-mainPanel-caraouselBottom').previous();
+					//Ext.getCmp('ApplicationGastos-mainPanel-caraouselBottom').previous();
 					//console.log(Ext.getCmp('ApplicationGastos-mainPanel-caraouselTop'));
 					//ApplicationGastos.currentInstance.loadHomeButtons();
 				}
