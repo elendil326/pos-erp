@@ -39,7 +39,7 @@ AND `c`.`id_usuario` = `u`.`id_usuario`);
 ********************************************************/
 
 CREATE OR REPLACE VIEW view_gastos
-AS SELECT `g`.`id_gasto`, `g`.`monto`, `g`.`fecha`, `s`.`descripcion` AS `sucursal`, `g`.`id_sucursal`, `u`.`nombre` AS `usuario`
+AS SELECT `g`.`id_gasto`, `g`.`concepto`,`g`.`monto`, `g`.`fecha`, `s`.`descripcion` AS `sucursal`, `g`.`id_sucursal`, `u`.`nombre` AS `usuario`
 FROM `gastos` AS g
 INNER JOIN ( `sucursal` AS s, `usuario` AS u)
 ON ( `g`.`id_sucursal` = `s`.`id_sucursal`
@@ -52,7 +52,7 @@ AND `g`.`id_usuario` = `u`.`id_usuario` );
 ********************************************************/
 
 CREATE OR REPLACE VIEW view_ingresos
-AS SELECT `i`.`id_ingreso`, `i`.`monto`, `i`.`fecha`, `s`.`descripcion` AS `sucursal`, `i`.`id_sucursal`, `u`.`nombre` AS `usuario`
+AS SELECT `i`.`id_ingreso`, `i`.`concepto`, `i`.`monto`, `i`.`fecha`, `s`.`descripcion` AS `sucursal`, `i`.`id_sucursal`, `u`.`nombre` AS `usuario`
 FROM `ingresos` AS i
 INNER JOIN ( `sucursal` AS s, `usuario` AS u)
 ON ( `i`.`id_sucursal` = `s`.`id_sucursal`
