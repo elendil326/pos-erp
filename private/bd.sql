@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 30-08-2010 a las 21:11:52
+-- Tiempo de generación: 30-08-2010 a las 22:04:11
 -- Versión del servidor: 5.1.37
 -- Versión de PHP: 5.3.0
 
@@ -25,17 +25,12 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   `nombre` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre del cliente',
   `direccion` varchar(300) COLLATE utf8_unicode_ci NOT NULL COMMENT 'domicilio del cliente calle, no, colonia',
   `telefono` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Telefono del cliete',
-  `e_mail` varchar(60) COLLATE utf8_unicode_ci DEFAULT '@' COMMENT 'dias de credito para que pague el cliente',
+  `e_mail` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0' COMMENT 'dias de credito para que pague el cliente',
   `limite_credito` float NOT NULL DEFAULT '0' COMMENT 'Limite de credito otorgado al cliente',
   `descuento` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Taza porcentual de descuento de 0 a 100',
-  `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
+  `activo` tinyint(2) DEFAULT NULL COMMENT 'Indica si la cuenta esta activada o desactivada',
   PRIMARY KEY (`id_cliente`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=211 ;
-
---
--- Volcar la base de datos para la tabla `cliente`
---
-
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=201 ;
 
 -- --------------------------------------------------------
 
@@ -56,12 +51,7 @@ CREATE TABLE IF NOT EXISTS `compras` (
   KEY `compras_proveedor` (`id_proveedor`),
   KEY `compras_sucursal` (`id_sucursal`),
   KEY `compras_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=19 ;
-
---
--- Volcar la base de datos para la tabla `compras`
---
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -84,11 +74,6 @@ CREATE TABLE IF NOT EXISTS `corte` (
   PRIMARY KEY (`num_corte`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
---
--- Volcar la base de datos para la tabla `corte`
---
-
-
 -- --------------------------------------------------------
 
 --
@@ -109,11 +94,6 @@ CREATE TABLE IF NOT EXISTS `cotizacion` (
   KEY `fk_cotizacion_2` (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
---
--- Volcar la base de datos para la tabla `cotizacion`
---
-
-
 -- --------------------------------------------------------
 
 --
@@ -131,11 +111,6 @@ CREATE TABLE IF NOT EXISTS `detalle_compra` (
   KEY `detalle_compra_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Volcar la base de datos para la tabla `detalle_compra`
---
-
-
 -- --------------------------------------------------------
 
 --
@@ -151,11 +126,6 @@ CREATE TABLE IF NOT EXISTS `detalle_corte` (
   KEY `corte_detalleCorte` (`num_corte`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Volcar la base de datos para la tabla `detalle_corte`
---
-
-
 -- --------------------------------------------------------
 
 --
@@ -170,11 +140,6 @@ CREATE TABLE IF NOT EXISTS `detalle_cotizacion` (
   PRIMARY KEY (`id_cotizacion`,`id_producto`),
   KEY `detalle_cotizacion_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcar la base de datos para la tabla `detalle_cotizacion`
---
-
 
 -- --------------------------------------------------------
 
@@ -192,11 +157,6 @@ CREATE TABLE IF NOT EXISTS `detalle_inventario` (
   KEY `id_sucursal` (`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcar la base de datos para la tabla `detalle_inventario`
---
-
-
 -- --------------------------------------------------------
 
 --
@@ -212,11 +172,6 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
   KEY `detalle_venta_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Volcar la base de datos para la tabla `detalle_venta`
---
-
-
 -- --------------------------------------------------------
 
 --
@@ -226,13 +181,10 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
 CREATE TABLE IF NOT EXISTS `encargado` (
   `id_usuario` int(11) NOT NULL COMMENT 'Este id es el del usuario encargado de su sucursal',
   `porciento` float NOT NULL COMMENT 'este es el porciento de las ventas que le tocan al encargado',
-  PRIMARY KEY (`id_usuario`)
+  PRIMARY KEY (`id_usuario`),
+  KEY `fk_encargado_1` (`id_usuario`),
+  KEY `usuario_encargado` (`id_usuario`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Volcar la base de datos para la tabla `encargado`
---
-
 
 -- --------------------------------------------------------
 
@@ -247,11 +199,6 @@ CREATE TABLE IF NOT EXISTS `factura_compra` (
   KEY `factura_compra_compra` (`id_compra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Volcar la base de datos para la tabla `factura_compra`
---
-
-
 -- --------------------------------------------------------
 
 --
@@ -261,16 +208,9 @@ CREATE TABLE IF NOT EXISTS `factura_compra` (
 CREATE TABLE IF NOT EXISTS `factura_venta` (
   `folio` varchar(15) COLLATE utf8_unicode_ci NOT NULL COMMENT 'folio que tiene la factura',
   `id_venta` int(11) NOT NULL COMMENT 'venta a la cual corresponde la factura',
-  `id_sucursal` int(11) NOT NULL,
   PRIMARY KEY (`folio`),
-  KEY `factura_venta_venta` (`id_venta`),
-  KEY `id_sucursal` (`id_sucursal`)
+  KEY `factura_venta_venta` (`id_venta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Volcar la base de datos para la tabla `factura_venta`
---
-
 
 -- --------------------------------------------------------
 
@@ -289,12 +229,7 @@ CREATE TABLE IF NOT EXISTS `gastos` (
   KEY `fk_gastos_1` (`id_usuario`),
   KEY `usuario_gasto` (`id_usuario`),
   KEY `sucursal_gasto` (`id_sucursal`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=201 ;
-
---
--- Volcar la base de datos para la tabla `gastos`
---
-
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=211 ;
 
 -- --------------------------------------------------------
 
@@ -308,11 +243,6 @@ CREATE TABLE IF NOT EXISTS `grupos` (
   `descripcion` varchar(256) NOT NULL,
   PRIMARY KEY (`id_grupo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Volcar la base de datos para la tabla `grupos`
---
-
 
 -- --------------------------------------------------------
 
@@ -328,11 +258,6 @@ CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
   KEY `fk_grupos_usuarios_2` (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Volcar la base de datos para la tabla `grupos_usuarios`
---
-
-
 -- --------------------------------------------------------
 
 --
@@ -346,12 +271,7 @@ CREATE TABLE IF NOT EXISTS `impuesto` (
   `id_sucursal` int(11) NOT NULL,
   PRIMARY KEY (`id_impuesto`),
   KEY `fk_impuesto_1` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
-
---
--- Volcar la base de datos para la tabla `impuesto`
---
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -370,12 +290,7 @@ CREATE TABLE IF NOT EXISTS `ingresos` (
   KEY `fk_ingresos_1` (`id_usuario`),
   KEY `usuario_ingreso` (`id_usuario`),
   KEY `sucursal_ingreso` (`id_sucursal`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=201 ;
-
---
--- Volcar la base de datos para la tabla `ingresos`
---
-
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=202 ;
 
 -- --------------------------------------------------------
 
@@ -388,12 +303,7 @@ CREATE TABLE IF NOT EXISTS `inventario` (
   `nombre` varchar(90) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Descripcion o nombre del producto',
   `denominacion` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT 'es lo que se le mostrara a los clientes',
   PRIMARY KEY (`id_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=201 ;
-
---
--- Volcar la base de datos para la tabla `inventario`
---
-
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=202 ;
 
 -- --------------------------------------------------------
 
@@ -408,12 +318,7 @@ CREATE TABLE IF NOT EXISTS `pagos_compra` (
   `monto` float NOT NULL COMMENT 'monto que se abono',
   PRIMARY KEY (`id_pago`),
   KEY `pagos_compra_compra` (`id_compra`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
-
---
--- Volcar la base de datos para la tabla `pagos_compra`
---
-
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -428,12 +333,20 @@ CREATE TABLE IF NOT EXISTS `pagos_venta` (
   `monto` float NOT NULL COMMENT 'total de credito del cliente',
   PRIMARY KEY (`id_pago`),
   KEY `pagos_venta_venta` (`id_venta`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=206 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=207 ;
+
+-- --------------------------------------------------------
 
 --
--- Volcar la base de datos para la tabla `pagos_venta`
+-- Estructura de tabla para la tabla `permisos`
 --
 
+CREATE TABLE IF NOT EXISTS `permisos` (
+  `id_permiso` int(11) NOT NULL,
+  `nombre` varchar(45) NOT NULL,
+  `descripcion` varchar(45) NOT NULL,
+  PRIMARY KEY (`id_permiso`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -453,12 +366,7 @@ CREATE TABLE IF NOT EXISTS `productos_proveedor` (
   UNIQUE KEY `id_proveedor` (`id_proveedor`,`id_inventario`),
   KEY `productos_proveedor_proveedor` (`id_proveedor`),
   KEY `productos_proveedor_producto` (`id_inventario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=45 ;
-
---
--- Volcar la base de datos para la tabla `productos_proveedor`
---
-
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=43 ;
 
 -- --------------------------------------------------------
 
@@ -473,14 +381,9 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
   `direccion` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'direccion del proveedor',
   `telefono` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'telefono',
   `e_mail` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'email del provedor',
-  `activo` tinyint(2) NOT NULL DEFAULT '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
+  `activo` tinyint(2) DEFAULT NULL COMMENT 'Indica si la cuenta esta activada o desactivada',
   PRIMARY KEY (`id_proveedor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=52 ;
-
---
--- Volcar la base de datos para la tabla `proveedor`
---
-
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=51 ;
 
 -- --------------------------------------------------------
 
@@ -492,19 +395,13 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   `id_sucursal` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identificador de cada sucursal',
   `descripcion` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre o descripcion de sucursal',
   `direccion` varchar(200) COLLATE utf8_unicode_ci NOT NULL COMMENT 'direccion de la sucursal',
-  `rfc` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'rfc del proveedor',
-  `e_mail` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'direccion de correo electronico',
-  `telefono` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'telefono',
+  `e_mail` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'La dirección de correo electrónico',
+  `rfc` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'El RFC de la sucursal',
+  `telefono` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'El telefono de la sucursal',
   `token` varchar(512) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Token de seguridad para esta sucursal',
   `letras_factura` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `activo` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=53 ;
-
---
--- Volcar la base de datos para la tabla `sucursal`
---
-
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=54 ;
 
 -- --------------------------------------------------------
 
@@ -517,18 +414,13 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `nombre` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre del empleado',
   `usuario` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `contrasena` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
-  `figer_token` varchar(1024) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Una cadena que sera comparada con el token que mande el scanner de huella digital',
   `id_sucursal` int(11) NOT NULL COMMENT 'Id de la sucursal a que pertenece',
+  `activo` tinyint(1) NOT NULL COMMENT 'Guarda el estado de la cuenta del usuario',
+  `finger_token` varchar(1024) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Una cadena que sera comparada con el token que mande el scanner de huella digital',
   `last_check` timestamp NULL DEFAULT NULL COMMENT 'Ultima vez que este usuario hizo una peticion al servidor',
-  `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
   PRIMARY KEY (`id_usuario`),
   KEY `fk_usuario_1` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=27 ;
-
---
--- Volcar la base de datos para la tabla `usuario`
---
-
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=35 ;
 
 -- --------------------------------------------------------
 
@@ -553,12 +445,7 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`id_sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=98 ;
-
---
--- Volcar la base de datos para la tabla `ventas`
---
-
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=114 ;
 
 -- --------------------------------------------------------
 

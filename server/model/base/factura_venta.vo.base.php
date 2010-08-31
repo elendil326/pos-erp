@@ -23,7 +23,6 @@ class FacturaVenta extends VO
 		{
 			$this->folio = $data['folio'];
 			$this->id_venta = $data['id_venta'];
-			$this->id_sucursal = $data['id_sucursal'];
 		}
 	}
 
@@ -39,10 +38,9 @@ class FacturaVenta extends VO
 		$vec = array();
 		array_push($vec, array( 
 		"folio" => $this->folio,
-		"id_venta" => $this->id_venta,
-		"id_sucursal" => $this->id_sucursal
+		"id_venta" => $this->id_venta
 		)); 
-	return json_encode($vec, true); 
+	return json_encode($vec); 
 	}
 	
 	/**
@@ -63,15 +61,6 @@ class FacturaVenta extends VO
 	  * @var int(11)
 	  */
 	protected $id_venta;
-
-	/**
-	  * id_sucursal
-	  * 
-	  * Campo no documentado<br>
-	  * @access protected
-	  * @var int(11)
-	  */
-	protected $id_sucursal;
 
 	/**
 	  * getFolio
@@ -121,30 +110,6 @@ class FacturaVenta extends VO
 	final public function setIdVenta( $id_venta )
 	{
 		$this->id_venta = $id_venta;
-	}
-
-	/**
-	  * getIdSucursal
-	  * 
-	  * Get the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es Campo no documentado
-	  * @return int(11)
-	  */
-	final public function getIdSucursal()
-	{
-		return $this->id_sucursal;
-	}
-
-	/**
-	  * setIdSucursal( $id_sucursal )
-	  * 
-	  * Set the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es Campo no documentado.
-	  * Una validacion basica se hara aqui para comprobar que <i>id_sucursal</i> es de tipo <i>int(11)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
-	  */
-	final public function setIdSucursal( $id_sucursal )
-	{
-		$this->id_sucursal = $id_sucursal;
 	}
 
 }

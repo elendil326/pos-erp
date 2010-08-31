@@ -189,7 +189,7 @@ class VO{
 							pw.println( "		\"" +f.title +"\" => $this->" + f.title  );
 					}
 				pw.println( "		)); " );					
-				pw.println( "	return json_encode($vec, true); " );					
+				pw.println( "	return json_encode($vec); " );					
 				pw.println("	}");
 				pw.println("	");
 			}
@@ -458,12 +458,13 @@ class VO{
 			pw.println("	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )");
 			pw.println("	{");
 			pw.println("		$sql = \"SELECT * from "+tabla+"\";");				
+
+			pw.println("		if($orden != NULL)");
+			pw.println("		{ $sql .= \" ORDER BY \" . $orden . \" \" . $tipo_de_orden;	}");
+			
 			pw.println("		if($pagina != NULL)");
 			pw.println("		{");
-			pw.println("			if($orden != NULL)");
-			pw.println("			{ $sql .= \" ORDER BY \" . $orden . \" \" . $tipo_de_orden;	}");
 			pw.println("			$sql .= \" LIMIT \" . (( $pagina - 1 )*$columnas_por_pagina) . \",\" . $columnas_por_pagina; ");
-
 			pw.println("		}");
 			pw.println("		global $conn;");
 			pw.println("		$rs = $conn->Execute($sql);");
@@ -1074,13 +1075,15 @@ class VO{
 				pw.println("	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )");
 				pw.println("	{");
 				pw.println("		$sql = \"SELECT * from "+tabla+"\";");				
+
+				pw.println("		if($orden != NULL)");
+				pw.println("		{ $sql .= \" ORDER BY \" . $orden . \" \" . $tipo_de_orden;	}");
+
 				pw.println("		if($pagina != NULL)");
 				pw.println("		{");
-				pw.println("			if($orden != NULL)");
-				pw.println("			{ $sql .= \" ORDER BY \" . $orden . \" \" . $tipo_de_orden;	}");
 				pw.println("			$sql .= \" LIMIT \" . (( $pagina - 1 )*$columnas_por_pagina) . \",\" . $columnas_por_pagina; ");
-
 				pw.println("		}");
+
 				pw.println("		global $conn;");
 				pw.println("		$rs = $conn->Execute($sql);");
 				pw.println("		$allData = array();");

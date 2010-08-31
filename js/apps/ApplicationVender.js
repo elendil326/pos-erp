@@ -1224,7 +1224,7 @@ ApplicationVender.prototype.ventaContadoExitosa = function ()
 
 	
 	//quitar el menu de cancelar venta y eso
-	Ext.getCmp("doVentaContadoPanel").getDockedItems()[0].hide();
+	Ext.getCmp("doVentaContadoPanel").getDockedItems()[0].fade();
 	
 	
 	if( this.cliente ){

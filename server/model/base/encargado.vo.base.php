@@ -40,7 +40,7 @@ class Encargado extends VO
 		"id_usuario" => $this->id_usuario,
 		"porciento" => $this->porciento
 		)); 
-	return json_encode($vec, true); 
+	return json_encode($vec); 
 	}
 	
 	/**

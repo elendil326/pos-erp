@@ -135,24 +135,24 @@ abstract class UsuarioDAOBase extends TablaDAO
 			array_push( $val, $usuario->getContrasena() );
 		}
 
-		if( $usuario->getFigerToken() != NULL){
-			$sql .= " figer_token = ? AND";
-			array_push( $val, $usuario->getFigerToken() );
-		}
-
 		if( $usuario->getIdSucursal() != NULL){
 			$sql .= " id_sucursal = ? AND";
 			array_push( $val, $usuario->getIdSucursal() );
 		}
 
-		if( $usuario->getLastCheck() != NULL){
-			$sql .= " last_check = ? AND";
-			array_push( $val, $usuario->getLastCheck() );
-		}
-
 		if( $usuario->getActivo() != NULL){
 			$sql .= " activo = ? AND";
 			array_push( $val, $usuario->getActivo() );
+		}
+
+		if( $usuario->getFingerToken() != NULL){
+			$sql .= " finger_token = ? AND";
+			array_push( $val, $usuario->getFingerToken() );
+		}
+
+		if( $usuario->getLastCheck() != NULL){
+			$sql .= " last_check = ? AND";
+			array_push( $val, $usuario->getLastCheck() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
@@ -188,15 +188,15 @@ abstract class UsuarioDAOBase extends TablaDAO
 	  **/
 	private static final function update( $usuario )
 	{
-		$sql = "UPDATE usuario SET  nombre = ?, usuario = ?, contrasena = ?, figer_token = ?, id_sucursal = ?, last_check = ?, activo = ? WHERE  id_usuario = ?;";
+		$sql = "UPDATE usuario SET  nombre = ?, usuario = ?, contrasena = ?, id_sucursal = ?, activo = ?, finger_token = ?, last_check = ? WHERE  id_usuario = ?;";
 		$params = array( 
 			$usuario->getNombre(), 
 			$usuario->getUsuario(), 
 			$usuario->getContrasena(), 
-			$usuario->getFigerToken(), 
 			$usuario->getIdSucursal(), 
-			$usuario->getLastCheck(), 
 			$usuario->getActivo(), 
+			$usuario->getFingerToken(), 
+			$usuario->getLastCheck(), 
 			$usuario->getIdUsuario(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -220,15 +220,15 @@ abstract class UsuarioDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$usuario )
 	{
-		$sql = "INSERT INTO usuario ( nombre, usuario, contrasena, figer_token, id_sucursal, last_check, activo ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO usuario ( nombre, usuario, contrasena, id_sucursal, activo, finger_token, last_check ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$usuario->getNombre(), 
 			$usuario->getUsuario(), 
 			$usuario->getContrasena(), 
-			$usuario->getFigerToken(), 
 			$usuario->getIdSucursal(), 
-			$usuario->getLastCheck(), 
 			$usuario->getActivo(), 
+			$usuario->getFingerToken(), 
+			$usuario->getLastCheck(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -320,17 +320,6 @@ abstract class UsuarioDAOBase extends TablaDAO
 			
 		}
 
-		if( (($a = $usuarioA->getFigerToken()) != NULL) & ( ($b = $usuarioB->getFigerToken()) != NULL) ){
-				$sql .= " figer_token >= ? AND figer_token <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
-			$sql .= " figer_token = ? AND"; 
-			$a = $a == NULL ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
 		if( (($a = $usuarioA->getIdSucursal()) != NULL) & ( ($b = $usuarioB->getIdSucursal()) != NULL) ){
 				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
 				array_push( $val, min($a,$b)); 
@@ -342,23 +331,34 @@ abstract class UsuarioDAOBase extends TablaDAO
 			
 		}
 
-		if( (($a = $usuarioA->getLastCheck()) != NULL) & ( ($b = $usuarioB->getLastCheck()) != NULL) ){
-				$sql .= " last_check >= ? AND last_check <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
-			$sql .= " last_check = ? AND"; 
-			$a = $a == NULL ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
 		if( (($a = $usuarioA->getActivo()) != NULL) & ( ($b = $usuarioB->getActivo()) != NULL) ){
 				$sql .= " activo >= ? AND activo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " activo = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $usuarioA->getFingerToken()) != NULL) & ( ($b = $usuarioB->getFingerToken()) != NULL) ){
+				$sql .= " finger_token >= ? AND finger_token <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " finger_token = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $usuarioA->getLastCheck()) != NULL) & ( ($b = $usuarioB->getLastCheck()) != NULL) ){
+				$sql .= " last_check >= ? AND last_check <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " last_check = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

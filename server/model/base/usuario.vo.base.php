@@ -25,10 +25,10 @@ class Usuario extends VO
 			$this->nombre = $data['nombre'];
 			$this->usuario = $data['usuario'];
 			$this->contrasena = $data['contrasena'];
-			$this->figer_token = $data['figer_token'];
 			$this->id_sucursal = $data['id_sucursal'];
-			$this->last_check = $data['last_check'];
 			$this->activo = $data['activo'];
+			$this->finger_token = $data['finger_token'];
+			$this->last_check = $data['last_check'];
 		}
 	}
 
@@ -47,12 +47,12 @@ class Usuario extends VO
 		"nombre" => $this->nombre,
 		"usuario" => $this->usuario,
 		"contrasena" => $this->contrasena,
-		"figer_token" => $this->figer_token,
 		"id_sucursal" => $this->id_sucursal,
-		"last_check" => $this->last_check,
-		"activo" => $this->activo
+		"activo" => $this->activo,
+		"finger_token" => $this->finger_token,
+		"last_check" => $this->last_check
 		)); 
-	return json_encode($vec, true); 
+	return json_encode($vec); 
 	}
 	
 	/**
@@ -94,15 +94,6 @@ class Usuario extends VO
 	protected $contrasena;
 
 	/**
-	  * figer_token
-	  * 
-	  * Una cadena que sera comparada con el token que mande el scanner de huella digital<br>
-	  * @access protected
-	  * @var varchar(1024)
-	  */
-	protected $figer_token;
-
-	/**
 	  * id_sucursal
 	  * 
 	  * Id de la sucursal a que pertenece<br>
@@ -112,6 +103,24 @@ class Usuario extends VO
 	protected $id_sucursal;
 
 	/**
+	  * activo
+	  * 
+	  * Guarda el estado de la cuenta del usuario<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $activo;
+
+	/**
+	  * finger_token
+	  * 
+	  * Una cadena que sera comparada con el token que mande el scanner de huella digital<br>
+	  * @access protected
+	  * @var varchar(1024)
+	  */
+	protected $finger_token;
+
+	/**
 	  * last_check
 	  * 
 	  * Ultima vez que este usuario hizo una peticion al servidor<br>
@@ -119,15 +128,6 @@ class Usuario extends VO
 	  * @var timestamp
 	  */
 	protected $last_check;
-
-	/**
-	  * activo
-	  * 
-	  * Indica si la cuenta esta activada o desactivada<br>
-	  * @access protected
-	  * @var tinyint(1)
-	  */
-	protected $activo;
 
 	/**
 	  * getIdUsuario
@@ -230,30 +230,6 @@ class Usuario extends VO
 	}
 
 	/**
-	  * getFigerToken
-	  * 
-	  * Get the <i>figer_token</i> property for this object. Donde <i>figer_token</i> es Una cadena que sera comparada con el token que mande el scanner de huella digital
-	  * @return varchar(1024)
-	  */
-	final public function getFigerToken()
-	{
-		return $this->figer_token;
-	}
-
-	/**
-	  * setFigerToken( $figer_token )
-	  * 
-	  * Set the <i>figer_token</i> property for this object. Donde <i>figer_token</i> es Una cadena que sera comparada con el token que mande el scanner de huella digital.
-	  * Una validacion basica se hara aqui para comprobar que <i>figer_token</i> es de tipo <i>varchar(1024)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(1024)
-	  */
-	final public function setFigerToken( $figer_token )
-	{
-		$this->figer_token = $figer_token;
-	}
-
-	/**
 	  * getIdSucursal
 	  * 
 	  * Get the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es Id de la sucursal a que pertenece
@@ -278,6 +254,54 @@ class Usuario extends VO
 	}
 
 	/**
+	  * getActivo
+	  * 
+	  * Get the <i>activo</i> property for this object. Donde <i>activo</i> es Guarda el estado de la cuenta del usuario
+	  * @return tinyint(1)
+	  */
+	final public function getActivo()
+	{
+		return $this->activo;
+	}
+
+	/**
+	  * setActivo( $activo )
+	  * 
+	  * Set the <i>activo</i> property for this object. Donde <i>activo</i> es Guarda el estado de la cuenta del usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>activo</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setActivo( $activo )
+	{
+		$this->activo = $activo;
+	}
+
+	/**
+	  * getFingerToken
+	  * 
+	  * Get the <i>finger_token</i> property for this object. Donde <i>finger_token</i> es Una cadena que sera comparada con el token que mande el scanner de huella digital
+	  * @return varchar(1024)
+	  */
+	final public function getFingerToken()
+	{
+		return $this->finger_token;
+	}
+
+	/**
+	  * setFingerToken( $finger_token )
+	  * 
+	  * Set the <i>finger_token</i> property for this object. Donde <i>finger_token</i> es Una cadena que sera comparada con el token que mande el scanner de huella digital.
+	  * Una validacion basica se hara aqui para comprobar que <i>finger_token</i> es de tipo <i>varchar(1024)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(1024)
+	  */
+	final public function setFingerToken( $finger_token )
+	{
+		$this->finger_token = $finger_token;
+	}
+
+	/**
 	  * getLastCheck
 	  * 
 	  * Get the <i>last_check</i> property for this object. Donde <i>last_check</i> es Ultima vez que este usuario hizo una peticion al servidor
@@ -299,30 +323,6 @@ class Usuario extends VO
 	final public function setLastCheck( $last_check )
 	{
 		$this->last_check = $last_check;
-	}
-
-	/**
-	  * getActivo
-	  * 
-	  * Get the <i>activo</i> property for this object. Donde <i>activo</i> es Indica si la cuenta esta activada o desactivada
-	  * @return tinyint(1)
-	  */
-	final public function getActivo()
-	{
-		return $this->activo;
-	}
-
-	/**
-	  * setActivo( $activo )
-	  * 
-	  * Set the <i>activo</i> property for this object. Donde <i>activo</i> es Indica si la cuenta esta activada o desactivada.
-	  * Una validacion basica se hara aqui para comprobar que <i>activo</i> es de tipo <i>tinyint(1)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param tinyint(1)
-	  */
-	final public function setActivo( $activo )
-	{
-		$this->activo = $activo;
 	}
 
 }

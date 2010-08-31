@@ -44,7 +44,7 @@ class Impuesto extends VO
 		"valor" => $this->valor,
 		"id_sucursal" => $this->id_sucursal
 		)); 
-	return json_encode($vec, true); 
+	return json_encode($vec); 
 	}
 	
 	/**

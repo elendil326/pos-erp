@@ -50,7 +50,7 @@ class Proveedor extends VO
 		"e_mail" => $this->e_mail,
 		"activo" => $this->activo
 		)); 
-	return json_encode($vec, true); 
+	return json_encode($vec); 
 	}
 	
 	/**
