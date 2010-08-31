@@ -314,11 +314,11 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 			disabled: true,
 			handler: function(){
 				
-				if ( Ext.get("carritoDeCompras") === null   )
-				{
-					POS.aviso('Error', 'Tiene que haber entrado a mostrador para poder agregar un producto');
+				//if ( Ext.get("carritoDeCompras") === null   )
+				//{
+					//POS.aviso('Error', 'Tiene que haber entrado a mostrador para poder agregar un producto');
 					ApplicationVender.currentInstance.doLimpiarCarrito();
-				}else{
+				//}else{
 
 					var items = ApplicationInventario.currentInstance.itemSelected;
 					//Mandamos el id del producto para que se agregue al mostrador
@@ -332,7 +332,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 					}
 					//ApplicationVender.currentInstance.doAddProductById( ApplicationInventario.currentInstance.itemSelected);
 					//POS.aviso('Éxito', 'Se agregó el artículo correctamente');					
-				}
+				//}
 
 			}
 		},{
