@@ -27,6 +27,7 @@ class Proveedor extends VO
 			$this->direccion = $data['direccion'];
 			$this->telefono = $data['telefono'];
 			$this->e_mail = $data['e_mail'];
+			$this->activo = $data['activo'];
 		}
 	}
 
@@ -46,9 +47,10 @@ class Proveedor extends VO
 		"nombre" => $this->nombre,
 		"direccion" => $this->direccion,
 		"telefono" => $this->telefono,
-		"e_mail" => $this->e_mail
+		"e_mail" => $this->e_mail,
+		"activo" => $this->activo
 		)); 
-	return json_encode($vec); 
+	return json_encode($vec, true); 
 	}
 	
 	/**
@@ -106,6 +108,15 @@ class Proveedor extends VO
 	  * @var varchar(60)
 	  */
 	protected $e_mail;
+
+	/**
+	  * activo
+	  * 
+	  * Indica si la cuenta esta activada o desactivada<br>
+	  * @access protected
+	  * @var tinyint(2)
+	  */
+	protected $activo;
 
 	/**
 	  * getIdProveedor
@@ -253,6 +264,30 @@ class Proveedor extends VO
 	final public function setEMail( $e_mail )
 	{
 		$this->e_mail = $e_mail;
+	}
+
+	/**
+	  * getActivo
+	  * 
+	  * Get the <i>activo</i> property for this object. Donde <i>activo</i> es Indica si la cuenta esta activada o desactivada
+	  * @return tinyint(2)
+	  */
+	final public function getActivo()
+	{
+		return $this->activo;
+	}
+
+	/**
+	  * setActivo( $activo )
+	  * 
+	  * Set the <i>activo</i> property for this object. Donde <i>activo</i> es Indica si la cuenta esta activada o desactivada.
+	  * Una validacion basica se hara aqui para comprobar que <i>activo</i> es de tipo <i>tinyint(2)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(2)
+	  */
+	final public function setActivo( $activo )
+	{
+		$this->activo = $activo;
 	}
 
 }

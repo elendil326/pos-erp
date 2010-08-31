@@ -42,7 +42,7 @@ class Permisos extends VO
 		"nombre" => $this->nombre,
 		"descripcion" => $this->descripcion
 		)); 
-	return json_encode($vec); 
+	return json_encode($vec, true); 
 	}
 	
 	/**

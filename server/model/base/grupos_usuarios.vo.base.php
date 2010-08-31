@@ -40,7 +40,7 @@ class GruposUsuarios extends VO
 		"id_grupo" => $this->id_grupo,
 		"id_usuario" => $this->id_usuario
 		)); 
-	return json_encode($vec); 
+	return json_encode($vec, true); 
 	}
 	
 	/**

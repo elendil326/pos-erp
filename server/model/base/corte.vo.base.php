@@ -58,7 +58,7 @@ class Corte extends VO
 		"ingresos" => $this->ingresos,
 		"gananciasNetas" => $this->gananciasNetas
 		)); 
-	return json_encode($vec); 
+	return json_encode($vec, true); 
 	}
 	
 	/**

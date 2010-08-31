@@ -48,7 +48,7 @@ class DetalleCompra extends VO
 		"peso_arpillaPagado" => $this->peso_arpillaPagado,
 		"peso_arpillaReal" => $this->peso_arpillaReal
 		)); 
-	return json_encode($vec); 
+	return json_encode($vec, true); 
 	}
 	
 	/**

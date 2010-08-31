@@ -145,6 +145,11 @@ abstract class ProveedorDAOBase extends TablaDAO
 			array_push( $val, $proveedor->getEMail() );
 		}
 
+		if( $proveedor->getActivo() != NULL){
+			$sql .= " activo = ? AND";
+			array_push( $val, $proveedor->getActivo() );
+		}
+
 		$sql = substr($sql, 0, -3) . " )";
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
@@ -178,13 +183,14 @@ abstract class ProveedorDAOBase extends TablaDAO
 	  **/
 	private static final function update( $proveedor )
 	{
-		$sql = "UPDATE proveedor SET  rfc = ?, nombre = ?, direccion = ?, telefono = ?, e_mail = ? WHERE  id_proveedor = ?;";
+		$sql = "UPDATE proveedor SET  rfc = ?, nombre = ?, direccion = ?, telefono = ?, e_mail = ?, activo = ? WHERE  id_proveedor = ?;";
 		$params = array( 
 			$proveedor->getRfc(), 
 			$proveedor->getNombre(), 
 			$proveedor->getDireccion(), 
 			$proveedor->getTelefono(), 
 			$proveedor->getEMail(), 
+			$proveedor->getActivo(), 
 			$proveedor->getIdProveedor(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -208,13 +214,14 @@ abstract class ProveedorDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$proveedor )
 	{
-		$sql = "INSERT INTO proveedor ( rfc, nombre, direccion, telefono, e_mail ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO proveedor ( rfc, nombre, direccion, telefono, e_mail, activo ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$proveedor->getRfc(), 
 			$proveedor->getNombre(), 
 			$proveedor->getDireccion(), 
 			$proveedor->getTelefono(), 
 			$proveedor->getEMail(), 
+			$proveedor->getActivo(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -323,6 +330,17 @@ abstract class ProveedorDAOBase extends TablaDAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " e_mail = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $proveedorA->getActivo()) != NULL) & ( ($b = $proveedorB->getActivo()) != NULL) ){
+				$sql .= " activo >= ? AND activo <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " activo = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

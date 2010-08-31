@@ -52,7 +52,7 @@ class Compras extends VO
 		"id_sucursal" => $this->id_sucursal,
 		"id_usuario" => $this->id_usuario
 		)); 
-	return json_encode($vec); 
+	return json_encode($vec, true); 
 	}
 	
 	/**

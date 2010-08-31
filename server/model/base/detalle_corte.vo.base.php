@@ -44,7 +44,7 @@ class DetalleCorte extends VO
 		"total" => $this->total,
 		"deben" => $this->deben
 		)); 
-	return json_encode($vec); 
+	return json_encode($vec, true); 
 	}
 	
 	/**

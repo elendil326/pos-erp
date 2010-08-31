@@ -25,7 +25,10 @@ class Usuario extends VO
 			$this->nombre = $data['nombre'];
 			$this->usuario = $data['usuario'];
 			$this->contrasena = $data['contrasena'];
+			$this->figer_token = $data['figer_token'];
 			$this->id_sucursal = $data['id_sucursal'];
+			$this->last_check = $data['last_check'];
+			$this->activo = $data['activo'];
 		}
 	}
 
@@ -44,9 +47,12 @@ class Usuario extends VO
 		"nombre" => $this->nombre,
 		"usuario" => $this->usuario,
 		"contrasena" => $this->contrasena,
-		"id_sucursal" => $this->id_sucursal
+		"figer_token" => $this->figer_token,
+		"id_sucursal" => $this->id_sucursal,
+		"last_check" => $this->last_check,
+		"activo" => $this->activo
 		)); 
-	return json_encode($vec); 
+	return json_encode($vec, true); 
 	}
 	
 	/**
@@ -88,6 +94,15 @@ class Usuario extends VO
 	protected $contrasena;
 
 	/**
+	  * figer_token
+	  * 
+	  * Una cadena que sera comparada con el token que mande el scanner de huella digital<br>
+	  * @access protected
+	  * @var varchar(1024)
+	  */
+	protected $figer_token;
+
+	/**
 	  * id_sucursal
 	  * 
 	  * Id de la sucursal a que pertenece<br>
@@ -95,6 +110,24 @@ class Usuario extends VO
 	  * @var int(11)
 	  */
 	protected $id_sucursal;
+
+	/**
+	  * last_check
+	  * 
+	  * Ultima vez que este usuario hizo una peticion al servidor<br>
+	  * @access protected
+	  * @var timestamp
+	  */
+	protected $last_check;
+
+	/**
+	  * activo
+	  * 
+	  * Indica si la cuenta esta activada o desactivada<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $activo;
 
 	/**
 	  * getIdUsuario
@@ -197,6 +230,30 @@ class Usuario extends VO
 	}
 
 	/**
+	  * getFigerToken
+	  * 
+	  * Get the <i>figer_token</i> property for this object. Donde <i>figer_token</i> es Una cadena que sera comparada con el token que mande el scanner de huella digital
+	  * @return varchar(1024)
+	  */
+	final public function getFigerToken()
+	{
+		return $this->figer_token;
+	}
+
+	/**
+	  * setFigerToken( $figer_token )
+	  * 
+	  * Set the <i>figer_token</i> property for this object. Donde <i>figer_token</i> es Una cadena que sera comparada con el token que mande el scanner de huella digital.
+	  * Una validacion basica se hara aqui para comprobar que <i>figer_token</i> es de tipo <i>varchar(1024)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(1024)
+	  */
+	final public function setFigerToken( $figer_token )
+	{
+		$this->figer_token = $figer_token;
+	}
+
+	/**
 	  * getIdSucursal
 	  * 
 	  * Get the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es Id de la sucursal a que pertenece
@@ -218,6 +275,54 @@ class Usuario extends VO
 	final public function setIdSucursal( $id_sucursal )
 	{
 		$this->id_sucursal = $id_sucursal;
+	}
+
+	/**
+	  * getLastCheck
+	  * 
+	  * Get the <i>last_check</i> property for this object. Donde <i>last_check</i> es Ultima vez que este usuario hizo una peticion al servidor
+	  * @return timestamp
+	  */
+	final public function getLastCheck()
+	{
+		return $this->last_check;
+	}
+
+	/**
+	  * setLastCheck( $last_check )
+	  * 
+	  * Set the <i>last_check</i> property for this object. Donde <i>last_check</i> es Ultima vez que este usuario hizo una peticion al servidor.
+	  * Una validacion basica se hara aqui para comprobar que <i>last_check</i> es de tipo <i>timestamp</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param timestamp
+	  */
+	final public function setLastCheck( $last_check )
+	{
+		$this->last_check = $last_check;
+	}
+
+	/**
+	  * getActivo
+	  * 
+	  * Get the <i>activo</i> property for this object. Donde <i>activo</i> es Indica si la cuenta esta activada o desactivada
+	  * @return tinyint(1)
+	  */
+	final public function getActivo()
+	{
+		return $this->activo;
+	}
+
+	/**
+	  * setActivo( $activo )
+	  * 
+	  * Set the <i>activo</i> property for this object. Donde <i>activo</i> es Indica si la cuenta esta activada o desactivada.
+	  * Una validacion basica se hara aqui para comprobar que <i>activo</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setActivo( $activo )
+	{
+		$this->activo = $activo;
 	}
 
 }

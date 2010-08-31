@@ -44,7 +44,7 @@ class DetalleCotizacion extends VO
 		"cantidad" => $this->cantidad,
 		"precio" => $this->precio
 		)); 
-	return json_encode($vec); 
+	return json_encode($vec, true); 
 	}
 	
 	/**

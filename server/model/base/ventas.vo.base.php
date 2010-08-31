@@ -60,7 +60,7 @@ class Ventas extends VO
 		"pagado" => $this->pagado,
 		"ip" => $this->ip
 		)); 
-	return json_encode($vec); 
+	return json_encode($vec, true); 
 	}
 	
 	/**

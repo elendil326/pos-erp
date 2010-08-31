@@ -118,7 +118,7 @@ appImpresora.ImprimirTicket = function ( cliente, items, ventaTotales )
 	ventanaImpresion.document.write("</html>");
 
 
-	ventanaImpresion.print( );
+	ventanaImpresion.print( false );
 	//ventanaImpresion.close();
 	
 };//ticket_print

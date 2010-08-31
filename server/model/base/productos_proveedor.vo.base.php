@@ -48,7 +48,7 @@ class ProductosProveedor extends VO
 		"descripcion" => $this->descripcion,
 		"precio" => $this->precio
 		)); 
-	return json_encode($vec); 
+	return json_encode($vec, true); 
 	}
 	
 	/**

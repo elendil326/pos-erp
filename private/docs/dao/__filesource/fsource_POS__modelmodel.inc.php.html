@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>File Source for model.inc.php</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+						<h1>Source for file model.inc.php</h1>
+<p>Documentation is available at <a href="../POS/_model---model.inc.php.html">model.inc.php</a></p>
+<div class="src-code">
+<div class="src-code"><ol><li><div class="src-line"><a name="a1"></a><span class="src-php">&lt;?php</span></div></li>
+<li><div class="src-line"><a name="a2"></a><span class="src-comm">/*&nbsp;Todos&nbsp;los&nbsp;includes&nbsp;de&nbsp;este&nbsp;sitema&nbsp;*/</span></div></li>
+<li><div class="src-line"><a name="a3"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a4"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'Estructura.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a5"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'cliente.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a6"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'compras.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a7"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'corte.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a8"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'cotizacion.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a9"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'detalle_compra.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a10"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'detalle_corte.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a11"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'detalle_cotizacion.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a12"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'detalle_inventario.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a13"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'detalle_venta.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a14"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'encargado.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a15"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'factura_compra.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a16"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'factura_venta.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a17"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'gastos.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a18"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'grupos.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a19"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'grupos_usuarios.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a20"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'impuesto.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a21"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'ingresos.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a22"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'inventario.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a23"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'pagos_compra.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a24"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'pagos_venta.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a25"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'productos_proveedor.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a26"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'proveedor.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a27"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'sucursal.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a28"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'usuario.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a29"></a><span class="src-inc">require_once&nbsp;</span><span class="src-sym">(</span><span class="src-str">'ventas.dao.php'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+</ol></div>
+</div>
+	<p class="notes" id="credit">
+		Documentation generated on Mon, 30 Aug 2010 21:15:18 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</body>
+</html>

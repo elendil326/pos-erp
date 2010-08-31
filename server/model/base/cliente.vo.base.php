@@ -29,6 +29,7 @@ class Cliente extends VO
 			$this->e_mail = $data['e_mail'];
 			$this->limite_credito = $data['limite_credito'];
 			$this->descuento = $data['descuento'];
+			$this->activo = $data['activo'];
 		}
 	}
 
@@ -50,9 +51,10 @@ class Cliente extends VO
 		"telefono" => $this->telefono,
 		"e_mail" => $this->e_mail,
 		"limite_credito" => $this->limite_credito,
-		"descuento" => $this->descuento
+		"descuento" => $this->descuento,
+		"activo" => $this->activo
 		)); 
-	return json_encode($vec); 
+	return json_encode($vec, true); 
 	}
 	
 	/**
@@ -128,6 +130,15 @@ class Cliente extends VO
 	  * @var tinyint(4)
 	  */
 	protected $descuento;
+
+	/**
+	  * activo
+	  * 
+	  * Indica si la cuenta esta activada o desactivada<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $activo;
 
 	/**
 	  * getIdCliente
@@ -323,6 +334,30 @@ class Cliente extends VO
 	final public function setDescuento( $descuento )
 	{
 		$this->descuento = $descuento;
+	}
+
+	/**
+	  * getActivo
+	  * 
+	  * Get the <i>activo</i> property for this object. Donde <i>activo</i> es Indica si la cuenta esta activada o desactivada
+	  * @return tinyint(1)
+	  */
+	final public function getActivo()
+	{
+		return $this->activo;
+	}
+
+	/**
+	  * setActivo( $activo )
+	  * 
+	  * Set the <i>activo</i> property for this object. Donde <i>activo</i> es Indica si la cuenta esta activada o desactivada.
+	  * Una validacion basica se hara aqui para comprobar que <i>activo</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setActivo( $activo )
+	{
+		$this->activo = $activo;
 	}
 
 }

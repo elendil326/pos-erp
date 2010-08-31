@@ -46,7 +46,7 @@ class DetalleInventario extends VO
 		"min" => $this->min,
 		"existencias" => $this->existencias
 		)); 
-	return json_encode($vec); 
+	return json_encode($vec, true); 
 	}
 	
 	/**

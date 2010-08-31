@@ -44,7 +44,7 @@ class PagosCompra extends VO
 		"fecha" => $this->fecha,
 		"monto" => $this->monto
 		)); 
-	return json_encode($vec); 
+	return json_encode($vec, true); 
 	}
 	
 	/**

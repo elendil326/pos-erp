@@ -155,6 +155,11 @@ abstract class ClienteDAOBase extends TablaDAO
 			array_push( $val, $cliente->getDescuento() );
 		}
 
+		if( $cliente->getActivo() != NULL){
+			$sql .= " activo = ? AND";
+			array_push( $val, $cliente->getActivo() );
+		}
+
 		$sql = substr($sql, 0, -3) . " )";
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
@@ -188,7 +193,7 @@ abstract class ClienteDAOBase extends TablaDAO
 	  **/
 	private static final function update( $cliente )
 	{
-		$sql = "UPDATE cliente SET  rfc = ?, nombre = ?, direccion = ?, telefono = ?, e_mail = ?, limite_credito = ?, descuento = ? WHERE  id_cliente = ?;";
+		$sql = "UPDATE cliente SET  rfc = ?, nombre = ?, direccion = ?, telefono = ?, e_mail = ?, limite_credito = ?, descuento = ?, activo = ? WHERE  id_cliente = ?;";
 		$params = array( 
 			$cliente->getRfc(), 
 			$cliente->getNombre(), 
@@ -197,6 +202,7 @@ abstract class ClienteDAOBase extends TablaDAO
 			$cliente->getEMail(), 
 			$cliente->getLimiteCredito(), 
 			$cliente->getDescuento(), 
+			$cliente->getActivo(), 
 			$cliente->getIdCliente(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -220,7 +226,7 @@ abstract class ClienteDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$cliente )
 	{
-		$sql = "INSERT INTO cliente ( rfc, nombre, direccion, telefono, e_mail, limite_credito, descuento ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO cliente ( rfc, nombre, direccion, telefono, e_mail, limite_credito, descuento, activo ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$cliente->getRfc(), 
 			$cliente->getNombre(), 
@@ -229,6 +235,7 @@ abstract class ClienteDAOBase extends TablaDAO
 			$cliente->getEMail(), 
 			$cliente->getLimiteCredito(), 
 			$cliente->getDescuento(), 
+			$cliente->getActivo(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -359,6 +366,17 @@ abstract class ClienteDAOBase extends TablaDAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " descuento = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $clienteA->getActivo()) != NULL) & ( ($b = $clienteB->getActivo()) != NULL) ){
+				$sql .= " activo >= ? AND activo <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " activo = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

@@ -130,6 +130,21 @@ abstract class SucursalDAOBase extends TablaDAO
 			array_push( $val, $sucursal->getDireccion() );
 		}
 
+		if( $sucursal->getRfc() != NULL){
+			$sql .= " rfc = ? AND";
+			array_push( $val, $sucursal->getRfc() );
+		}
+
+		if( $sucursal->getEMail() != NULL){
+			$sql .= " e_mail = ? AND";
+			array_push( $val, $sucursal->getEMail() );
+		}
+
+		if( $sucursal->getTelefono() != NULL){
+			$sql .= " telefono = ? AND";
+			array_push( $val, $sucursal->getTelefono() );
+		}
+
 		if( $sucursal->getToken() != NULL){
 			$sql .= " token = ? AND";
 			array_push( $val, $sucursal->getToken() );
@@ -138,6 +153,11 @@ abstract class SucursalDAOBase extends TablaDAO
 		if( $sucursal->getLetrasFactura() != NULL){
 			$sql .= " letras_factura = ? AND";
 			array_push( $val, $sucursal->getLetrasFactura() );
+		}
+
+		if( $sucursal->getActivo() != NULL){
+			$sql .= " activo = ? AND";
+			array_push( $val, $sucursal->getActivo() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
@@ -173,12 +193,16 @@ abstract class SucursalDAOBase extends TablaDAO
 	  **/
 	private static final function update( $sucursal )
 	{
-		$sql = "UPDATE sucursal SET  descripcion = ?, direccion = ?, token = ?, letras_factura = ? WHERE  id_sucursal = ?;";
+		$sql = "UPDATE sucursal SET  descripcion = ?, direccion = ?, rfc = ?, e_mail = ?, telefono = ?, token = ?, letras_factura = ?, activo = ? WHERE  id_sucursal = ?;";
 		$params = array( 
 			$sucursal->getDescripcion(), 
 			$sucursal->getDireccion(), 
+			$sucursal->getRfc(), 
+			$sucursal->getEMail(), 
+			$sucursal->getTelefono(), 
 			$sucursal->getToken(), 
 			$sucursal->getLetrasFactura(), 
+			$sucursal->getActivo(), 
 			$sucursal->getIdSucursal(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -202,20 +226,23 @@ abstract class SucursalDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$sucursal )
 	{
-		$sql = "INSERT INTO sucursal ( id_sucursal, descripcion, direccion, token, letras_factura ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO sucursal ( descripcion, direccion, rfc, e_mail, telefono, token, letras_factura, activo ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
-			$sucursal->getIdSucursal(), 
 			$sucursal->getDescripcion(), 
 			$sucursal->getDireccion(), 
+			$sucursal->getRfc(), 
+			$sucursal->getEMail(), 
+			$sucursal->getTelefono(), 
 			$sucursal->getToken(), 
 			$sucursal->getLetrasFactura(), 
+			$sucursal->getActivo(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		
+		$sucursal->setIdSucursal( $conn->Insert_ID() );
 		return $ar;
 	}
 
@@ -289,6 +316,39 @@ abstract class SucursalDAOBase extends TablaDAO
 			
 		}
 
+		if( (($a = $sucursalA->getRfc()) != NULL) & ( ($b = $sucursalB->getRfc()) != NULL) ){
+				$sql .= " rfc >= ? AND rfc <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " rfc = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $sucursalA->getEMail()) != NULL) & ( ($b = $sucursalB->getEMail()) != NULL) ){
+				$sql .= " e_mail >= ? AND e_mail <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " e_mail = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $sucursalA->getTelefono()) != NULL) & ( ($b = $sucursalB->getTelefono()) != NULL) ){
+				$sql .= " telefono >= ? AND telefono <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " telefono = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
 		if( (($a = $sucursalA->getToken()) != NULL) & ( ($b = $sucursalB->getToken()) != NULL) ){
 				$sql .= " token >= ? AND token <= ? AND";
 				array_push( $val, min($a,$b)); 
@@ -306,6 +366,17 @@ abstract class SucursalDAOBase extends TablaDAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " letras_factura = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $sucursalA->getActivo()) != NULL) & ( ($b = $sucursalB->getActivo()) != NULL) ){
+				$sql .= " activo >= ? AND activo <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " activo = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
