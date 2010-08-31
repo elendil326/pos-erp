@@ -180,33 +180,7 @@ ApplicationVender.prototype._initToolBar = function (){
 
 
 
-ApplicationVender.prototype.addProductByIDKeyUp = function (a, b)
-{
 
-	if(event.keyCode == 13)
-	{
-		//si teclea enter, pero hay un pop up visible, ocultarlo con este enter
-		if(POS.aviso.visible){
-			//close current pop up
-			POS.aviso.hide();
-			return;
-		}
-		
-		
-		if((Ext.get("APaddProductByID").first().getValue().length == 0)&&
-			(ApplicationVender.currentInstance.htmlCart_items.length > 0))
-		{
-			//si presiono enter y el campo esta vacio y ya hay items, vender
-			ApplicationVender.currentInstance.doVender();
-			return;
-		}
-			
-		//add product
-		ApplicationVender.currentInstance.doAddProduct();
-		
-
-	}
-};
 
 
 
@@ -223,7 +197,7 @@ ApplicationVender.prototype.venderMainPanel = new Ext.Panel({
 	
 	listeners : {
 		
-		'show' : function (){
+		'render' : function (){
 			if(DEBUG){
 				console.log("Mostrando el mostrador");
 			}
@@ -239,8 +213,10 @@ ApplicationVender.prototype.venderMainPanel = new Ext.Panel({
 			html: '',
 			id : 'detallesCliente'
 		},{
-			html: 'asdfasdfadsfasdfadsfasdf',
+			
+			html: '',
 			id : 'carritoDeCompras'
+			
 		}]
 });
 
@@ -302,7 +278,7 @@ ApplicationVender.prototype.doDeleteItem = function ( item )
 
 
 ApplicationVender.prototype.ventaTotales = null;
-
+ApplicationVender.prototype.carritoPendingUpdate = null;
 
 /*
 	REFRESCAR CARRITOS Y CALCULAR TOTALES
@@ -311,16 +287,19 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 {
 	
 	if(DEBUG){
-		console.log("Application Mostrador... refrescando lista del carrito");
+		console.log("Application Mostrador: Refrescando lista del carrito");
 	}
 
-
+	
 	if(Ext.get("carritoDeCompras") === null){
+		if(DEBUG){
+			console.log("Application Mostrador: carritoDeCompras es nulo");
+		}
 		return;
 	}
 	
 	if( this.htmlCart_items.length == 0){
-		Ext.get("carritoDeCompras").update("logo here");
+		Ext.get("carritoDeCompras").update("");
 		console.log(Ext.get("carritoDeCompras"));
 		return;
 	}
@@ -604,12 +583,14 @@ ApplicationVender.prototype.doAddProductById = function (id)
 			ApplicationVender.currentInstance.htmlCart_addItem( item );
 
 
+			if(Ext.get("APaddProductByID") != null){
+				//clear the textbox
+				Ext.get("APaddProductByID").first().dom.value = "";
 
-			//clear the textbox
-			Ext.get("APaddProductByID").first().dom.value = "";
-			
-			//give focus again
-			document.getElementById( Ext.get("APaddProductByID").first().id ).focus();
+				//give focus again
+				document.getElementById( Ext.get("APaddProductByID").first().id ).focus();				
+			}
+
 
 		},
 		function (e){
@@ -621,18 +602,47 @@ ApplicationVender.prototype.doAddProductById = function (id)
 	);
 };
 
+
+
+/*
+	Agregar un producto por oprimir el boton
+*/
 ApplicationVender.prototype.doAddProduct = function (button, event)
 {
-	
 	//obtener el id del producto
 	this.doAddProductById(Ext.get("APaddProductByID").first().getValue());
-	
 };
 
 
 
+/*
+	Agregar un producto por teclear enter
+*/
+ApplicationVender.prototype.addProductByIDKeyUp = function (a, b)
+{
 
-
+	if(event.keyCode == 13)
+	{
+		//si teclea enter, pero hay un pop up visible, ocultarlo con este enter
+		if(POS.aviso.visible){
+			//close current pop up
+			POS.aviso.hide();
+			return;
+		}
+		
+		
+		if((Ext.get("APaddProductByID").first().getValue().length == 0)&&
+			(ApplicationVender.currentInstance.htmlCart_items.length > 0))
+		{
+			//si presiono enter y el campo esta vacio y ya hay items, vender
+			ApplicationVender.currentInstance.doVender();
+			return;
+		}
+			
+		//add product
+		ApplicationVender.currentInstance.doAddProduct();
+	}
+};
 
 
 
@@ -716,16 +726,7 @@ ApplicationVender.prototype.swapPayingMethod = function ( tipo )
 ApplicationVender.prototype.doVentaContadoPanel = function (  )
 {
 
-	
-	//los totales de la venta estan en :
-	//this.ventaTotales ={
-	//	descuento: 
-	//	iva: 
-	//	subtotal: 
-	//	total: 
-	//}
 
-	
 	//docked items
 	var dockedItems = [{
 			xtype:'button', 

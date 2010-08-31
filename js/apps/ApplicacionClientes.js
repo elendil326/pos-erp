@@ -108,27 +108,6 @@ ApplicacionClientes.prototype._initToolBar = function (){
         Detalles cliente
     */
 
-/*
-    var detallesDeCliente = [{
-        xtype: 'splitbutton',
-        id: 'actionButtonsClientes',
-        items: [{
-            text: 'Detalles',
-            id: 'btn_detallesCliente',
-            handler: this.mostrarDetallesCliente
-        }, {
-            text: 'Compras',
-            id: 'btnComprasCliente',
-            handler: this.mostrarVentasCliente
-        },{
-            text: 'Creditos',
-            id: 'btnCreditosCliente',
-            handler: this.mostrarVentasCreditoCliente
-        }]    
-    }];
-*/
-
-
     
    if (!Ext.platform.isPhone) {
         /*
@@ -225,6 +204,7 @@ ApplicacionClientes.prototype.cancelEditClient = function(){
 
 
 ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
+
 
     var foo = ApplicacionClientes.currentInstance.updateForm( recor );
 
@@ -411,46 +391,46 @@ ApplicacionClientes.prototype.updateForm = function( recor ){
                                 instructions: 'Los campos que contienen * son obligatorios',
                                 items: [idClienteM = new Ext.form.HiddenField({
                                             id: 'idClienteM',
-                                            value: recor[0].id_cliente
+                                            value: recor.id_cliente
                                         }),
                                         nombreClienteM = new Ext.form.TextField({
                                             id: 'nombreClienteM',
                                             label: 'Nombre',
                                             required: true,
-                                            value: recor[0].nombre,
+                                            value: recor.nombre,
                                             disabled: true
                                         }),
                                         rfcClienteM = new Ext.form.TextField({
                                             id: 'rfcClienteM',
                                             label: 'RFC',
                                             required: true,
-                                            value: recor[0].rfc,
+                                            value: recor.rfc,
                                             disabled: true
                                         }),
                                         direccionClienteM = new Ext.form.TextField({
                                             id: 'direccionClienteM',
                                             label: 'Direccion',
                                             required: true,
-                                            value: recor[0].direccion,
+                                            value: recor.direccion,
                                             disabled: true
                                         }),
                                         emailClienteM = new Ext.form.TextField({
                                             id: 'emailClienteM',
                                             label: 'E-mail',
-                                            value: recor[0].e_mail,
+                                            value: recor.e_mail,
                                             disabled: true
                                         }),
                                         telefonoClienteM = new Ext.form.TextField({
                                             id: 'telefonoClienteM',
                                             label: 'Telefono',
-                                            value: recor[0].telefono,
+                                            value: recor.telefono,
                                             disabled: true
                                         }),
                                         limite_creditoClienteM = new Ext.form.NumberField({
                                             id: 'limite_creditoClienteM',
                                             label: 'Max Credito',
                                             required: true,
-                                            value: recor[0].limite_credito,
+                                            value: recor.limite_credito,
                                             disabled: true
                                         })
                                 ]//fin items form
@@ -579,24 +559,29 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
             indexBar: true,
             listeners: {
                 selectionchange: function(){
+	
+                        if (this.getSelectionCount() == 1) {
 
-                    try{
-                        if (this.getSelectionCount() > 0) {
-                            var recor=this.getSelectedRecords();
-                            
-                            //console.log("ApplicacionClientes.currentInstance.clienteSeleccionado = "+ recor.id_cliente);
-                            //console.log(recor[0]);
-                            
+                            var recor = this.getSelectedRecords();
+							
+							recor = recor[0].data;
+							
+							if(DEBUG){
+								console.log("Seleccionano cliente", recor  );
+							}
+							
+
+
                             ApplicacionClientes.currentInstance.clienteSeleccionado = recor;
-                            //DESLIZAR EL NUEVO PANEL (FORMULARIO DE ACTUALIZACION)
-                            var detalles = ApplicacionClientes.currentInstance.addClientDetailsPanel( recor ); 
+
+							//deslizar el nuevo panel
+							
+                            var detalles = ApplicacionClientes.currentInstance.addClientDetailsPanel( recor); 
+
                             sink.Main.ui.setCard( detalles, 'fade');
                         }
-                    }catch(e){
-                        if(DEBUG){
-                            console.log("ApplicationClientes:" +e);
-                        }
-                    }
+
+
                 }
             }//fin listener
         }]
@@ -763,7 +748,7 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
     
         POS.AJAXandDECODE({
             action: '1401',
-            id_cliente: record_cliente[0].id_cliente //recor[0].id_cliente
+            id_cliente: record_cliente.id_cliente //recor[0].id_cliente
             },
             function (datos){//mientras responda AJAXDECODE LISTAR VENTAS CLIENTE
                 if(datos.success === true){
@@ -799,7 +784,7 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
                                     
                                     facturado = "<div class='abonar'>ADEUDA</div>";
                                 }else{
-                                    facturado ="<div class='abonar' onclick='ApplicacionClientes.currentInstance.panelFacturas(" + ventasCliente.data.items[a].id_venta + " , "+ record_cliente[0].id_cliente +")'>FACTURAR</div>";
+                                    facturado ="<div class='abonar' onclick='ApplicacionClientes.currentInstance.panelFacturas(" + ventasCliente.data.items[a].id_venta + " , "+ record_cliente[0].data.id_cliente +")'>FACTURAR</div>";
                                 }
                         }
                         
@@ -978,7 +963,7 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
     
         POS.AJAXandDECODE({
             action: '1403',
-            id_cliente: record_cliente[0].id_cliente //recor[0].id_cliente
+            id_cliente: record_cliente.id_cliente //recor[0].id_cliente
             },
             function (datos){//mientras responda AJAXDECODE LISTAR VENTAS CLIENTE
                 if(datos.success === true){

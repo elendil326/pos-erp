@@ -314,25 +314,20 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 			disabled: true,
 			handler: function(){
 				
-				//if ( Ext.get("carritoDeCompras") === null   )
-				//{
-					//POS.aviso('Error', 'Tiene que haber entrado a mostrador para poder agregar un producto');
-					ApplicationVender.currentInstance.doLimpiarCarrito();
-				//}else{
+					//ApplicationVender.currentInstance.doLimpiarCarrito();
 
 					var items = ApplicationInventario.currentInstance.itemSelected;
+					
 					//Mandamos el id del producto para que se agregue al mostrador
 					for ( var i=0 ; i < items.length ; i++ )
 					{
 						if (DEBUG)
 						{
-							console.log( items[i].data.id_producto );
+							console.log( "Inventario: Agregando item " +  items[i].data.id_producto  + " al mostrador.");
 						}
 						ApplicationVender.currentInstance.doAddProductById( items[i].data.id_producto );
 					}
-					//ApplicationVender.currentInstance.doAddProductById( ApplicationInventario.currentInstance.itemSelected);
-					//POS.aviso('Éxito', 'Se agregó el artículo correctamente');					
-				//}
+
 
 			}
 		},{
