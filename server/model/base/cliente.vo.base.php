@@ -54,7 +54,7 @@ class Cliente extends VO
 		"descuento" => $this->descuento,
 		"activo" => $this->activo
 		)); 
-	return json_encode($vec, true); 
+	return json_encode($vec); 
 	}
 	
 	/**
