@@ -181,7 +181,7 @@ function checkCurrentSession()
 function logOut( $verbose = false )
 {
 	//cerrar sesion
-	global $logger;
+	//global $logger;
 	//$logger->log("Cerrando Sesion proveniente de " . $_SERVER['REMOTE_ADDR'] . " correspondiente al usuario : " . $_SESSION['userid']);
 	
 	unset( $_SESSION['token'] ); 

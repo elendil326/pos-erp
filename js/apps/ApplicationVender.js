@@ -62,7 +62,7 @@ ApplicationVender.prototype._init = function()
 	//initialize the tootlbar which is a dock
 	this._initToolBar();
 
-	
+
 };
 
 
@@ -221,6 +221,17 @@ ApplicationVender.prototype.venderMainPanel = new Ext.Panel({
 
 	dockedItems: null,
 	
+	listeners : {
+		
+		'show' : function (){
+			if(DEBUG){
+				console.log("Mostrando el mostrador");
+			}
+			
+			ApplicationVender.currentInstance.doRefreshItemList();
+		}
+		
+	},
 	cls: "ApplicationVender-mainPanel",
 	
 	//items del formpanel
@@ -228,7 +239,7 @@ ApplicationVender.prototype.venderMainPanel = new Ext.Panel({
 			html: '',
 			id : 'detallesCliente'
 		},{
-			html: '',
+			html: 'asdfasdfadsfasdfadsfasdf',
 			id : 'carritoDeCompras'
 		}]
 });
@@ -299,8 +310,18 @@ ApplicationVender.prototype.ventaTotales = null;
 ApplicationVender.prototype.doRefreshItemList = function (  )
 {
 	
+	if(DEBUG){
+		console.log("Application Mostrador... refrescando lista del carrito");
+	}
+
+
+	if(Ext.get("carritoDeCompras") === null){
+		return;
+	}
+	
 	if( this.htmlCart_items.length == 0){
-		Ext.get("carritoDeCompras").update("");
+		Ext.get("carritoDeCompras").update("logo here");
+		console.log(Ext.get("carritoDeCompras"));
 		return;
 	}
 	
@@ -544,15 +565,13 @@ ApplicationVender.prototype.htmlCart_addItem = function( item )
 ApplicationVender.prototype.doAddProductById = function (id)
 {
 	if(DEBUG){
-		console.log("ApplicationVender: doAddProductById called....");
+		console.log("ApplicationVender: Agregando producto " + id);
 	}
 
 
 	//obtener el id del producto
 	var prodID = id;
 	
-
-	
 	//buscar si este producto existe
 	POS.AJAXandDECODE({
 			action: '2101',
@@ -585,71 +604,7 @@ ApplicationVender.prototype.doAddProductById = function (id)
 			ApplicationVender.currentInstance.htmlCart_addItem( item );
 
 
-		},
-		function (e){
-			POS.aviso("Error", "Algo anda mal, porfavor intente de nuevo." + e);
-			if(DEBUG){
-				console.log(e);
-			}
-		}
-	);
-	
-	
-	
-};
 
-ApplicationVender.prototype.doAddProduct = function (button, event)
-{
-	
-	if(DEBUG){
-		console.log("ApplicationVender: doAddProduct called....");
-	}
-
-
-	//obtener el id del producto
-	var prodID = Ext.get("APaddProductByID").first().getValue();
-	
-	if(prodID.length == 0){
-		var opt = {
-		    duration: 2,
-		    easing: 'elasticOut',
-		    callback: null,
-		    scope: this
-		};
-		return;
-	}
-	
-	//buscar si este producto existe
-	POS.AJAXandDECODE({
-			action: '2101',
-			id_producto : prodID
-		}, 
-		function (datos){
-			
-			//ya llego el request con los datos si existe o no	
-			if(typeof(datos.success) !== 'undefined'){
-				
-				POS.aviso("Mostrador", datos.reason);
-				
-				//clear the textbox
-				Ext.get("APaddProductByID").first().dom.value = "";
-				
-				return;
-			}
-
-			//crear el item
-			var item = {
-				id 			: datos.id_producto,
-				name 		: datos.nombre,
-				description : datos.denominacion,
-				cost 		: datos.precio_venta,
-				existencias : datos.existencias,
-				cantidad	: 1
-			};
-				
-			//agregarlo al carrito
-			ApplicationVender.currentInstance.htmlCart_addItem( item );
-			
 			//clear the textbox
 			Ext.get("APaddProductByID").first().dom.value = "";
 			
@@ -664,7 +619,13 @@ ApplicationVender.prototype.doAddProduct = function (button, event)
 			}
 		}
 	);
+};
+
+ApplicationVender.prototype.doAddProduct = function (button, event)
+{
 	
+	//obtener el id del producto
+	this.doAddProductById(Ext.get("APaddProductByID").first().getValue());
 	
 };
 
@@ -1224,7 +1185,7 @@ ApplicationVender.prototype.ventaContadoExitosa = function ()
 
 	
 	//quitar el menu de cancelar venta y eso
-	Ext.getCmp("doVentaContadoPanel").getDockedItems()[0].fade();
+	Ext.getCmp("doVentaContadoPanel").getDockedItems()[0].hide();
 	
 	
 	if( this.cliente ){
