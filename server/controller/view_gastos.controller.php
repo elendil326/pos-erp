@@ -83,6 +83,37 @@ require_once("../server/model/view_gastos.dao.php");
 	}
 	
 	
+	function getDataGridGastos($page,$rp,$sortname,$sortorder,$search,$qtype){
+	
+		$total = count(ViewGastosDAO::getAll());
+		
+		$data = ViewGastosDAO::getAll($page,$rp,$sortname,$sortorder);
+		
+		
+		$gridData = array();
+		foreach($data as $row)
+		{
+			//agregamos los datos en el formato del grid
+			array_push($gridData, array(	"id"=>$row->getIdGasto(),
+							"cell"=>array(
+									$row->getIdGasto(),
+									$row->getSucursal(),
+									$row->getConcepto(),
+									$row->getMonto(),
+									$row->getFecha(),
+									$row->getUsuario()
+								)
+							));
+		
+		}
+		
+		//return $gridData;
+		$array_result = '{ "page": '.$page.', "total": '.$total.', "rows" : '.json_encode($gridData).'}';
+		return $array_result;
+	
+	}
+	
+	
 	switch($args['action'])
 	{
 
@@ -154,7 +185,51 @@ require_once("../server/model/view_gastos.dao.php");
 	
 		echo $result;
 	break;
+	
+	
+	case "806": //sacar datos para el grid getDataGridIngresos
+	
+		/*if(isset($args['page']))
+		{
+			$page = strip_tags($args['page']);
+		} */
 		
+		if(isset($args['rp']))
+		{
+			$rp = strip_tags($args['rp']);
+		}
+		
+		if(isset($args['sortname']))
+		{
+			$sortname = strip_tags($args['sortname']);
+		}
+		
+		if(isset($args['sortorder']))
+		{
+			$sortorder = strip_tags($args['sortorder']);
+		}
+		
+		if(isset($args['query']) && !empty($args['query']))
+		{
+		        $search = strip_tags($args['query']);
+		        @$qtype = strip_tags($args['qtype']);
+		}
+		
+		//Si no se envia el dato de page, significa que estamos en la 1
+		if(isset($args['page']))
+		{
+			$page = strip_tags($args['page']);
+		}
+		else{
+			$page = 1;
+		}
+		
+		//,$search,$qtype
+		
+		
+		echo @getDataGridGastos($page,$rp,$sortname,$sortorder,$search,$qtype);
+		
+	break;		
 
 	}
 

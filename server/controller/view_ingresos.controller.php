@@ -82,6 +82,36 @@ require_once("../server/model/view_ingresos.dao.php");
 	}
 	
 	
+	function getDataGridIngresos($page,$rp,$sortname,$sortorder,$search,$qtype){
+	
+		$total = count(ViewIngresosDAO::getAll());
+		
+		$data = ViewIngresosDAO::getAll($page,$rp,$sortname,$sortorder);
+		
+		
+		$gridData = array();
+		foreach($data as $row)
+		{
+			//agregamos los datos en el formato del grid
+			array_push($gridData, array(	"id"=>$row->getIdIngreso(),
+							"cell"=>array(
+									$row->getIdIngreso(),
+									$row->getSucursal(),
+									$row->getConcepto(),
+									$row->getMonto(),
+									$row->getFecha(),
+									$row->getUsuario()
+								)
+							));
+		
+		}
+		
+		//return $gridData;
+		$array_result = '{ "page": '.$page.', "total": '.$total.', "rows" : '.json_encode($gridData).'}';
+		return $array_result;
+	
+	}
+	
 	
 
 	switch($args['action'])
@@ -120,7 +150,7 @@ require_once("../server/model/view_ingresos.dao.php");
 		break;
 
 		
-			case '804' : //sucursalIngresos
+	case '804' : //sucursalIngresos
 	
 		$timeRange = null;
 		$fechaInicio = null;
@@ -156,6 +186,48 @@ require_once("../server/model/view_ingresos.dao.php");
 		echo $result;
 	break;
 		
+	case "805": //sacar datos para el grid getDataGridIngresos
+	
+		/*if(isset($args['page']))
+		{
+			$page = strip_tags($args['page']);
+		} */
+		
+		if(isset($args['rp']))
+		{
+			$rp = strip_tags($args['rp']);
+		}
+		
+		if(isset($args['sortname']))
+		{
+			$sortname = strip_tags($args['sortname']);
+		}
+		
+		if(isset($args['sortorder']))
+		{
+			$sortorder = strip_tags($args['sortorder']);
+		}
+		
+		if(isset($args['query']) && !empty($args['query']))
+		{
+		        $search = strip_tags($args['query']);
+		        @$qtype = strip_tags($args['qtype']);
+		}
+		
+		//Si no se envia el dato de page, significa que estamos en la 1
+		if(isset($args['page']))
+		{
+			$page = strip_tags($args['page']);
+		}
+		else{
+			$page = 1;
+		}
+		
+		//,$search,$qtype
+		
+		
+		echo @getDataGridIngresos($page,$rp,$sortname,$sortorder,$search,$qtype);
+	break;
 
 
 		

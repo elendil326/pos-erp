@@ -1001,6 +1001,30 @@ Reports.prototype.loadGastosReport = function(){
 		$('#info-reporte').html("<img src='../media/admin/icons/report.png' width='100' height='100' align=left /><h2>Reporte de Gastos Totales</h2><span>Reporte de todos los gastos que se efectuaron en alguna de \
 					las sucursales, puede servir para determinar que tanto se gasta en cada sucursal y tomar alguna decisi&oacute;n para reducir dichos gastos.</span>\
 					 ");
+					 
+					 
+		Datos.loadDataGrid2({
+				renderTo: 'datos-render',
+				title: 'Gastos Totales',
+				width: '100%',
+				url: '../proxy.php',
+				data: 'action=806',
+				addNewGrid: false,
+				sortname: 'id_gasto',
+				colModel: [
+					{display: 'Gasto', name : 'id_gasto', width : 30, sortable : true, align: 'left'},
+					{display: 'Sucursal', name : 'sucursal', width : 170, sortable : true, align: 'left'},
+					{display: 'Concepto', name : 'concepto', width : 200, sortable : true, align: 'left'},
+					{display: 'Monto', name : 'monto', width : 75, sortable : true, align: 'left'},
+					{display: 'Fecha', name : 'fecha', width : 140, sortable : true, align: 'left'},
+					{display: 'Usuario', name : 'usuario', width : 150, sortable : true, align: 'left'}
+				],
+				searchitems: [
+					{display: 'Usuario', name : 'usuario'},
+					{display: 'Concepto', name : 'concepto', isdefault: true},
+					{display: 'Fecha', name : 'fecha'}
+				]
+				});
 	
 		Graficas.addGraphWithTitle({
 				title: 'Gastos de la &uacute;ltima semana',
@@ -1074,6 +1098,29 @@ Reports.prototype.loadIngresosReport = function(){
 		$('#info-reporte').html("<img src='../media/admin/icons/report.png' width='100' height='100' align=left /><h2>Reporte de Ingresos Totales</h2><span>Reporte de todos los ingresos que se registraron en \
 					las sucursales, puede servir para determinar que sucursal esta recibiendo mas ingresos y tomar decisiones.</span>\
 					 ");
+					 
+		Datos.loadDataGrid2({
+				renderTo: 'datos-render',
+				title: 'Ingresos Totales',
+				width: '100%',
+				url: '../proxy.php',
+				data: 'action=805',
+				addNewGrid: false,
+				sortname: 'id_ingreso',
+				colModel: [
+					{display: 'Ingreso', name : 'id_ingreso', width : 40, sortable : true, align: 'left'},
+					{display: 'Sucursal', name : 'sucursal', width : 170, sortable : true, align: 'left'},
+					{display: 'Concepto', name : 'concepto', width : 200, sortable : true, align: 'left'},
+					{display: 'Monto', name : 'monto', width : 75, sortable : true, align: 'left'},
+					{display: 'Fecha', name : 'fecha', width : 140, sortable : true, align: 'left'},
+					{display: 'Usuario', name : 'usuario', width : 150, sortable : true, align: 'left'}
+				],
+				searchitems: [
+					{display: 'Usuario', name : 'usuario'},
+					{display: 'Concepto', name : 'concepto', isdefault: true},
+					{display: 'Fecha', name : 'fecha'}
+				]
+				});
 	
 		Graficas.addGraphWithTitle({
 				title: 'Ingresos de la &uacute;ltima semana',

@@ -639,7 +639,8 @@ AppAdmin.prototype.loadUtilidades = function(){
 								$("#gastos-utilidades").html("<b>$"+gastos+".00</b>");
 								$("#abonos-utilidades").html("<b>$"+abonos+".00</b>");
 								
-								$("#content-2").append('<div id="button-calc-wrapper"><button id="button-calcular-reparticion" onclick="appAdmin.doCalc('+utilidad+','+size+')">Calcular Repartici&oacute;n</button></div>');
+								//el ultimo cierre de div es del div de la tabla de sucursales
+								$("#content-2").append('<div id="button-calc-wrapper"><button id="button-calcular-reparticion" onclick="appAdmin.doCalc('+utilidad+','+size+')">Calcular Repartici&oacute;n</button></div></div>');
 							}
 							else
 							{
@@ -657,7 +658,7 @@ AppAdmin.prototype.loadUtilidades = function(){
 				if(msg.success)
 				{
 					
-					options += '<table style="color:white !important"><tr><td>Sucursal</td><td>Porcentaje</td><td>Dinero repartido</td></tr>';
+					options += '<div id="tabla-sucursales"><table style="color:white !important"><tr><td><b>Sucursal</b></td><td><b>Porcentaje</b></td><td><b>Dinero repartido</b></td></tr>';
 					
 					var porcentaje = 100 / msg.data.length;
 					

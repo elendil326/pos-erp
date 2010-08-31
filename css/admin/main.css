@@ -297,4 +297,11 @@ button{
 	color: #273437;
 	font-weight:700;
 }
+
+#tabla-sucursales{
+	padding:20px;
+	border:1px solid gray;
+	background: #444444;
+	text-shadow: black 0px 1px 0px;	
+}
 /*#usuario-boton-enviar{ color:black;}*/
