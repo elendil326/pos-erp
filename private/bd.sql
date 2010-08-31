@@ -397,6 +397,9 @@ CREATE TABLE `sucursal` (
   `id_sucursal` int(11) NOT NULL auto_increment COMMENT 'Identificador de cada sucursal',
   `descripcion` varchar(100) collate utf8_unicode_ci NOT NULL COMMENT 'nombre o descripcion de sucursal',
   `direccion` varchar(200) collate utf8_unicode_ci NOT NULL COMMENT 'direccion de la sucursal',
+  `rfc` varchar(20) collate utf8_unicode_ci NOT NULL COMMENT 'rfc del proveedor',
+  `e_mail` varchar(200) collate utf8_unicode_ci NULL COMMENT 'direccion de correo electronico',
+  `telefono` varchar(20) collate utf8_unicode_ci default NULL COMMENT 'telefono',
   `token` varchar(512) collate utf8_unicode_ci default NULL COMMENT 'Token de seguridad para esta sucursal',
   `letras_factura` varchar(10) collate utf8_unicode_ci NOT NULL,
   PRIMARY KEY  (`id_sucursal`)
