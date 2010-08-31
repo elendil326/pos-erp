@@ -28,7 +28,7 @@ CREATE TABLE `cliente` (
   `e_mail` varchar(60) collate utf8_unicode_ci default '@' COMMENT 'dias de credito para que pague el cliente',
   `limite_credito` float NOT NULL default '0' COMMENT 'Limite de credito otorgado al cliente',
   `descuento` tinyint(4) NOT NULL default '0' COMMENT 'Taza porcentual de descuento de 0 a 100',
-  `activo` tintyint(2) NOT NULL default '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
+  `activo` tinyint(2) NOT NULL default '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
   PRIMARY KEY  (`id_cliente`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=211 ;
 
@@ -383,7 +383,7 @@ CREATE TABLE `proveedor` (
   `direccion` varchar(100) collate utf8_unicode_ci default NULL COMMENT 'direccion del proveedor',
   `telefono` varchar(20) collate utf8_unicode_ci default NULL COMMENT 'telefono',
   `e_mail` varchar(60) collate utf8_unicode_ci default NULL COMMENT 'email del provedor',
-  `activo` tintyint(2) NOT NULL default '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
+  `activo` tinyint(2) NOT NULL default '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
   PRIMARY KEY  (`id_proveedor`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=52 ;
 
@@ -417,7 +417,7 @@ CREATE TABLE `usuario` (
   `usuario` varchar(50) collate utf8_unicode_ci NOT NULL,
   `contrasena` varchar(128) collate utf8_unicode_ci NOT NULL,
   `id_sucursal` int(11) NOT NULL COMMENT 'Id de la sucursal a que pertenece',
-  `activo` tintyint(2) NOT NULL default '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
+  `activo` tinyint(2) NOT NULL default '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
   PRIMARY KEY  (`id_usuario`),
   KEY `fk_usuario_1` (`id_sucursal`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=27 ;
