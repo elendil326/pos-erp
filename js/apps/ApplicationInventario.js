@@ -324,8 +324,8 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 					//Mandamos el id del producto para que se agregue al mostrador
 					for ( var i=0 ; i < items.length ; i++ )
 					{
-						console.log( items[i].id_producto );
-						ApplicationVender.currentInstance.doAddProductById( items[i].id_producto );
+						console.log( items[i].data.id_producto );
+						ApplicationVender.currentInstance.doAddProductById( items[i].data.id_producto );
 					}
 					//ApplicationVender.currentInstance.doAddProductById( ApplicationInventario.currentInstance.itemSelected);
 					//POS.aviso('Éxito', 'Se agregó el artículo correctamente');					
