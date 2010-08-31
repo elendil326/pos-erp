@@ -107,8 +107,6 @@ ApplicacionClientes.prototype._initToolBar = function (){
     /* 
         Detalles cliente
     */
-
-    
    if (!Ext.platform.isPhone) {
         /*
             Buscar cliente
@@ -118,13 +116,6 @@ ApplicacionClientes.prototype._initToolBar = function (){
             dock: 'top',
             items: [campoBusqueda,{xtype: 'spacer'},detallesDeBusqueda,{xtype: 'spacer'}, btnagregarCliente]
         })];
-        
-        
-        /*
-            Detalles cliente
-        */
-        
-        
     }else {
         this.dockedItems = [{
             xtype: 'toolbar',
@@ -206,9 +197,6 @@ ApplicacionClientes.prototype.cancelEditClient = function(){
 ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 
 
-    var foo = ApplicacionClientes.currentInstance.updateForm( recor );
-
-
     var btnBackCliente2 = [{
         id: 'btn_BackCliente',
         text: 'Regresar',
@@ -240,14 +228,10 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
     var dockedItemsFormCliente2;
     
     if (!Ext.platform.isPhone) {
-
-        //btnBackCliente2.push({xtype: 'spacer'});
-        
-        
+       
         dockedItemsFormCliente2 =[ new Ext.Toolbar({
             ui: 'dark',
             dock: 'bottom',
-            //items:  btnBackCliente.concat(detallesDeCliente).concat(btnCancelEditCliente).concat(btnEditCliente)
             items:  btnBackCliente2.concat(btnCancelEditCliente2).concat({xtype:'spacer'}).concat(btnEditCliente2).concat({xtype:'spacer'})
                  
         })];
@@ -261,6 +245,11 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
             dock: 'bottom'
         }];
     }
+
+	//crear la forma de detalles
+	formaDeDetalles = ApplicacionClientes.currentInstance.updateForm( recor );
+
+	//crear el carrusel que contiene esa forma
     var carousel = new Ext.Carousel({
         defaults:{cls: 'ApplicationClientes-mainPanel'},
         items: [{
@@ -268,7 +257,7 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
             xtype: 'panel',
             title: 'customerDetails',
             id: 'customerDetailsForm',
-            items: [foo],
+            items: [formaDeDetalles],
             listeners:{
                 activate: function(){
                     Ext.getCmp('btn_EditCliente').show();
@@ -295,33 +284,37 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
         }]
     });
     
+
+
+
     var panel = new Ext.Panel({
         dockedItems : dockedItemsFormCliente2,
+//		layout: 'card',	
         layout: {
             type: 'vbox',
             align: 'stretch'
         },
+
         defaults: {
           flex: 1
         },
         items: [carousel]
     });
     
-    ApplicacionClientes.currentInstance.listarVentas( recor );
-    
-    ApplicacionClientes.currentInstance.listarVentasCredito( recor );
+ 
     
     //Ext.getCmp('btn_CancelEditCliente').setVisible(false);
     //Ext.getCmp('btn_EditCliente').setText('Modificar');
 
-    //panel.doLayout();
-    
     return panel;
-    //sink.Main.ui.setCard( panel , 'slide' );
     
     
     
 };
+
+
+
+
 
 
 
@@ -381,7 +374,7 @@ ApplicacionClientes.prototype.handlerModificarCliente= function(id,rfc,nombre,di
 
 ApplicacionClientes.prototype.updateForm = function( recor ){
 
-     var forma =  new Ext.form.FormPanel({
+     return new Ext.form.FormPanel({
                         id: 'updateForm',
                         //dockedItems: this.dockedItemsFormCliente,
                         items: [{                                                       
@@ -437,8 +430,6 @@ ApplicacionClientes.prototype.updateForm = function( recor ){
                                 }
                         ]//,//fin items formpanel
                      });
-
-    return forma;
 
 };
 
@@ -569,16 +560,18 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
 							if(DEBUG){
 								console.log("Seleccionano cliente", recor  );
 							}
-							
-
 
                             ApplicacionClientes.currentInstance.clienteSeleccionado = recor;
 
-							//deslizar el nuevo panel
-							
-                            var detalles = ApplicacionClientes.currentInstance.addClientDetailsPanel( recor); 
+						   	ApplicacionClientes.currentInstance.listarVentas( recor );
 
-                            sink.Main.ui.setCard( detalles, 'fade');
+						    ApplicacionClientes.currentInstance.listarVentasCredito( recor );
+							
+							//crear el nuevo panel
+                            var detalles = ApplicacionClientes.currentInstance.addClientDetailsPanel( recor ); 
+							
+							//deslizarlo
+                            sink.Main.ui.setCard( detalles , 'fade');
                         }
 
 

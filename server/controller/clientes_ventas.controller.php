@@ -520,30 +520,38 @@ function EditItem_Existent_sale( $id_venta, $id_producto, $precio, $cantidad ) {
 function list_client_sales( $id_cliente ){
 
 	//$sucursal = 2;
-	
-	$ventas = new ventas();
+
+	$ventas = new Ventas();
+
 	$ventas->setIdCliente( $id_cliente );
 	
+
 	$ventas_sucursal = VentasDAO::search( $ventas );
-	$foo="";
+	
+	$foo = "";
+	
 	if( count($ventas_sucursal) > 0 ){
 
 		foreach($ventas_sucursal as $venta){
 			
 			$usuario = UsuarioDAO::getByPK( $venta->getIdUsuario() );
+			
+			// ESTE CALCULO SE HACE LLAMANDO A LA FUNCION GLOBAL !!!
+			
 			$total = $venta->getSubtotal() + $venta->getIva();
 			$usuario = UsuarioDAO::getByPK( $venta->getIdUsuario() );
 			$sc = SucursalDAO::getByPK( $venta->getIdSucursal() );
 
 			$factura = new FacturaVenta();
 			$factura->setIdVenta( $venta->getIdVenta() );
+
 			$fact = FacturaVentaDAO::search( $factura );
 			
 			$facturado = 0;
 			
 			if( count($fact) > 0 ){	$facturado = 1;	}
 			
-			$foo .= substr($venta,1,-2);//[{'x':'1'}] --> {'x':'1'
+			$foo .= substr($venta,1,-2);
 			
 			
 			$hoy = ( date("Y-m-d H:i:s", time()) );

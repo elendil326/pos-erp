@@ -125,11 +125,6 @@ abstract class FacturaVentaDAOBase extends TablaDAO
 			array_push( $val, $factura_venta->getIdVenta() );
 		}
 
-		if( $factura_venta->getIdSucursal() != NULL){
-			$sql .= " id_sucursal = ? AND";
-			array_push( $val, $factura_venta->getIdSucursal() );
-		}
-
 		$sql = substr($sql, 0, -3) . " )";
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
@@ -163,10 +158,9 @@ abstract class FacturaVentaDAOBase extends TablaDAO
 	  **/
 	private static final function update( $factura_venta )
 	{
-		$sql = "UPDATE factura_venta SET  id_venta = ?, id_sucursal = ? WHERE  folio = ?;";
+		$sql = "UPDATE factura_venta SET  id_venta = ? WHERE  folio = ?;";
 		$params = array( 
 			$factura_venta->getIdVenta(), 
-			$factura_venta->getIdSucursal(), 
 			$factura_venta->getFolio(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -190,11 +184,10 @@ abstract class FacturaVentaDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$factura_venta )
 	{
-		$sql = "INSERT INTO factura_venta ( folio, id_venta, id_sucursal ) VALUES ( ?, ?, ?);";
+		$sql = "INSERT INTO factura_venta ( folio, id_venta ) VALUES ( ?, ?);";
 		$params = array( 
 			$factura_venta->getFolio(), 
 			$factura_venta->getIdVenta(), 
-			$factura_venta->getIdSucursal(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -259,17 +252,6 @@ abstract class FacturaVentaDAOBase extends TablaDAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " id_venta = ? AND"; 
-			$a = $a == NULL ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( (($a = $factura_ventaA->getIdSucursal()) != NULL) & ( ($b = $factura_ventaB->getIdSucursal()) != NULL) ){
-				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
-			$sql .= " id_sucursal = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
