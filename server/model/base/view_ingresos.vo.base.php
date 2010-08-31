@@ -22,6 +22,7 @@ class ViewIngresos extends VO
 		if(isset($data))
 		{
 			$this->id_ingreso = $data['id_ingreso'];
+			$this->concepto = $data['concepto'];
 			$this->monto = $data['monto'];
 			$this->fecha = $data['fecha'];
 			$this->sucursal = $data['sucursal'];
@@ -36,6 +37,13 @@ class ViewIngresos extends VO
 	  * @access protected
 	  */
 	protected $id_ingreso;
+
+	/**
+	  * concepto
+	  * 
+	  * @access protected
+	  */
+	protected $concepto;
 
 	/**
 	  * monto
@@ -92,6 +100,28 @@ class ViewIngresos extends VO
 	final public function setIdIngreso( $id_ingreso )
 	{
 		$this->id_ingreso = $id_ingreso;
+	}
+
+	/**
+	  * getConcepto
+	  * 
+	  * Get the <i>concepto</i> property for this ViewIngresos object.
+	  * @return null
+	  */
+	final public function getConcepto()
+	{
+		return $this->concepto;
+	}
+
+	/**
+	  * setConcepto
+	  * 
+	  * Set the <i>concepto</i> property for this ViewIngresos object.
+	  * @param null
+	  */
+	final public function setConcepto( $concepto )
+	{
+		$this->concepto = $concepto;
 	}
 
 	/**

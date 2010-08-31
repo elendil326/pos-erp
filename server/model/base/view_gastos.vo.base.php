@@ -22,6 +22,7 @@ class ViewGastos extends VO
 		if(isset($data))
 		{
 			$this->id_gasto = $data['id_gasto'];
+			$this->concepto = $data['concepto'];
 			$this->monto = $data['monto'];
 			$this->fecha = $data['fecha'];
 			$this->sucursal = $data['sucursal'];
@@ -36,6 +37,13 @@ class ViewGastos extends VO
 	  * @access protected
 	  */
 	protected $id_gasto;
+
+	/**
+	  * concepto
+	  * 
+	  * @access protected
+	  */
+	protected $concepto;
 
 	/**
 	  * monto
@@ -92,6 +100,28 @@ class ViewGastos extends VO
 	final public function setIdGasto( $id_gasto )
 	{
 		$this->id_gasto = $id_gasto;
+	}
+
+	/**
+	  * getConcepto
+	  * 
+	  * Get the <i>concepto</i> property for this ViewGastos object.
+	  * @return null
+	  */
+	final public function getConcepto()
+	{
+		return $this->concepto;
+	}
+
+	/**
+	  * setConcepto
+	  * 
+	  * Set the <i>concepto</i> property for this ViewGastos object.
+	  * @param null
+	  */
+	final public function setConcepto( $concepto )
+	{
+		$this->concepto = $concepto;
 	}
 
 	/**

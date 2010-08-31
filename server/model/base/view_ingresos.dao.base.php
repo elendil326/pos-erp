@@ -76,6 +76,11 @@ abstract class ViewIngresosDAOBase extends VistaDAO
 			array_push( $val, $view_ingresos->getIdIngreso() );
 		}
 
+		if( $view_ingresos->getConcepto() != NULL){
+			$sql .= " concepto = ? AND";
+			array_push( $val, $view_ingresos->getConcepto() );
+		}
+
 		if( $view_ingresos->getMonto() != NULL){
 			$sql .= " monto = ? AND";
 			array_push( $val, $view_ingresos->getMonto() );
@@ -163,6 +168,17 @@ abstract class ViewIngresosDAOBase extends VistaDAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " id_ingreso = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $view_ingresosA->getConcepto()) != NULL) & ( ($b = $view_ingresosB->getConcepto()) != NULL) ){
+				$sql .= " concepto >= ? AND concepto <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " concepto = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

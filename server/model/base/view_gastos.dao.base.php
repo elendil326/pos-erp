@@ -76,6 +76,11 @@ abstract class ViewGastosDAOBase extends VistaDAO
 			array_push( $val, $view_gastos->getIdGasto() );
 		}
 
+		if( $view_gastos->getConcepto() != NULL){
+			$sql .= " concepto = ? AND";
+			array_push( $val, $view_gastos->getConcepto() );
+		}
+
 		if( $view_gastos->getMonto() != NULL){
 			$sql .= " monto = ? AND";
 			array_push( $val, $view_gastos->getMonto() );
@@ -163,6 +168,17 @@ abstract class ViewGastosDAOBase extends VistaDAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " id_gasto = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $view_gastosA->getConcepto()) != NULL) & ( ($b = $view_gastosB->getConcepto()) != NULL) ){
+				$sql .= " concepto >= ? AND concepto <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " concepto = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
