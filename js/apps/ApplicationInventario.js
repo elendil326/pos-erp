@@ -324,7 +324,10 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 					//Mandamos el id del producto para que se agregue al mostrador
 					for ( var i=0 ; i < items.length ; i++ )
 					{
-						console.log( items[i].data.id_producto );
+						if (DEBUG)
+						{
+							console.log( items[i].data.id_producto );
+						}
 						ApplicationVender.currentInstance.doAddProductById( items[i].data.id_producto );
 					}
 					//ApplicationVender.currentInstance.doAddProductById( ApplicationInventario.currentInstance.itemSelected);
@@ -448,7 +451,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 						{
 							//Habilitamos el boton si hay algo seleccionado
 							Ext.getCmp('ApplicationInventario-addToVentaButton').setDisabled(false);
-							console.log(this.getSelectedRecords() );
+							
 							var idItem = this.getSelectedRecords();
 							
 							ApplicationInventario.currentInstance.itemSelected = idItem;
