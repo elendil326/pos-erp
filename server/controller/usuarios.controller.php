@@ -126,6 +126,33 @@ function desactivarUsuario( $id_usuario )
 
 }
 
+function getDataGridUsuarios($page, $rp, $sortname, $sortorder){
+
+	$todos = UsuarioDAO::getAll();
+	$usuarios = UsuarioDAO::getAll($page, $rp, $sortname, $sortorder);
+	
+	$arrayDatos = array();
+	
+	foreach($usuarios as $usuario)
+	{
+		/*array_push($arrayDatos, array(
+						"id_usuario"=>$usuario->getIdUsuario(),
+						"nombre"=>$usuario->getNombre(),
+						"usuario"=>$usuario->getUsuario(),
+						"id_sucursal"=>$usuario->getIdSucursal()
+					));*/
+					
+		array_push($arrayDatos, array(
+						$usuario->getIdUsuario(),
+						$usuario->getNombre(),
+						$usuario->getUsuario(),
+						$usuario->getIdSucursal()
+					));
+	}
+
+	return '{ "success": true, "page": '.$page.', "total": '.count($todos).', "data" : '.json_encode($arrayDatos).' }';
+}
+
 
 switch($args['action']){
 
@@ -226,6 +253,25 @@ switch($args['action']){
 			
 			
 	break;
+	
+	
+	case '2305': //getDataGridUsuarios
+	
+		if( !isset( $args['page'] ) && !isset( $args['rp'] ) && !isset( $args['sortname'] ) && !isset( $args['sortorder'] ) )
+		{
+			echo ' { "success" : false, "error" : "Faltan parametros" } ';
+		}
+		else
+		{
+			$page = $args['page'];
+			$rp = $args['rp'];
+			$sortname = $args['sortname'];
+			$sortorder = $args['sortorder'];
+			
+			echo getDataGridUsuarios($page, $rp, $sortname, $sortorder);
+		
+		}
+		
 	
 	}
 

@@ -214,7 +214,19 @@ AppAdmin.prototype.loadPersonal = function(){
 			$("select, input").uniform();
 			$("#usuario-boton-enviar").button();
 		}
-	});
+		});
+		
+		Utils.grid({
+			url: "../proxy.php",
+			data: {action: "2305", page: "1", rp: "10", sortname: "id_usuario", sortorder: "asc"},
+			renderTo: "content-2",
+			deleteAction: "2306",
+			columns: ["ID", "Nombre", "Usuario", "Sucursal"],
+			success: function(msg){
+			
+				//alert(msg.success);
+			}
+		});
 	
 		$('#content-2').fadeIn('slow');
 	
@@ -784,7 +796,7 @@ AppAdmin.prototype.updateDate = function(){
 
 }
 
-AppAdmin.prototype.createLogoutMessage = function(){
+AppAdmin.prototype.logout = function(){
 	
 	//Creo un div para usarse como dialogo, este se reciclara
 	var d = document;
@@ -793,11 +805,11 @@ AppAdmin.prototype.createLogoutMessage = function(){
 	
 	
 	//Agregamos el div del dialogo reusable
-	$('#main').append(dialogo);
+	$('#content-2').append(dialogo);
 	
 	//Creamos boton y asignamos el listener
 	//$("#boton-salir").button();
-	$("#boton-salir").click(function(){
+	//$("#boton-salir").click(function(){
 	
 		$('#dialogo').html("Esta seguro que desea abandonar el sistema?");
 		$('#dialogo').dialog({
@@ -807,7 +819,17 @@ AppAdmin.prototype.createLogoutMessage = function(){
 					buttons: {
 						'Salir': function() {
 							//Hacer algo al salir
-							$(this).dialog('close');
+							
+							Utils.request({
+								url:"../proxy.php",
+								data: {action:"2002"},
+								success: function(){
+								
+									$(this).dialog('close');
+									window.location = "../";
+								}
+							
+							});
 						},
 						Cancel: function() {
 							$(this).dialog('close');
@@ -815,5 +837,5 @@ AppAdmin.prototype.createLogoutMessage = function(){
 					}
 				});
 		
-	});
+	//});
 }

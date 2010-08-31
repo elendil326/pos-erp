@@ -304,4 +304,17 @@ button{
 	background: #444444;
 	text-shadow: black 0px 1px 0px;	
 }
+
+.tabla-datos{
+	width: 100%;
+	border:1px solid gray;
+	background: #444444;
+	text-shadow: black 0px 1px 0px;
+	color: white !important;
+}
+
+.row-usuario:hover{
+	background: black;
+}
+
 /*#usuario-boton-enviar{ color:black;}*/

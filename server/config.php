@@ -19,7 +19,7 @@
 	/**
 	* Usuario de la base de datos.
 	*/
-	define('DB_USER', 'pos');
+	define('DB_USER', 'root');
 
 	/**
 	* Contraseña de la base de datos.
@@ -34,7 +34,7 @@
 	/**
 	* Nombre del driver para conectar al DBMS.
 	*/
-	define('DB_DRIVER', 'mysql');
+	define('DB_DRIVER', 'pos');
 
 	/**
 	* Donde se encuentra el DBMS.
