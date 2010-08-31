@@ -251,7 +251,7 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 
 	//crear el carrusel que contiene esa forma
     var carousel = new Ext.Carousel({
-        defaults:{cls: 'ApplicationClientes-mainPanel'},
+
         items: [{
             scroll: 'vertical',
             xtype: 'panel',
@@ -287,26 +287,25 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 
 
 
-    var panel = new Ext.Panel({
+    return new Ext.Panel({
+	
+		cls: "ApplicationClientes-addClientDetailsPanel",
+		
         dockedItems : dockedItemsFormCliente2,
-//		layout: 'card',	
+	
         layout: {
             type: 'vbox',
             align: 'stretch'
         },
 
         defaults: {
+		  disabledClass: '',
           flex: 1
         },
         items: [carousel]
     });
-    
- 
-    
-    //Ext.getCmp('btn_CancelEditCliente').setVisible(false);
-    //Ext.getCmp('btn_EditCliente').setText('Modificar');
 
-    return panel;
+
     
     
     
@@ -374,63 +373,62 @@ ApplicacionClientes.prototype.handlerModificarCliente= function(id,rfc,nombre,di
 
 ApplicacionClientes.prototype.updateForm = function( recor ){
 
-     return new Ext.form.FormPanel({
-                        id: 'updateForm',
-                        //dockedItems: this.dockedItemsFormCliente,
-                        items: [{                                                       
-                                xtype: 'fieldset',
-                                title: 'Detalles del Cliente',
-                                
-                                instructions: 'Los campos que contienen * son obligatorios',
-                                items: [idClienteM = new Ext.form.HiddenField({
-                                            id: 'idClienteM',
-                                            value: recor.id_cliente
-                                        }),
-                                        nombreClienteM = new Ext.form.TextField({
-                                            id: 'nombreClienteM',
-                                            label: 'Nombre',
-                                            required: true,
-                                            value: recor.nombre,
-                                            disabled: true
-                                        }),
-                                        rfcClienteM = new Ext.form.TextField({
-                                            id: 'rfcClienteM',
-                                            label: 'RFC',
-                                            required: true,
-                                            value: recor.rfc,
-                                            disabled: true
-                                        }),
-                                        direccionClienteM = new Ext.form.TextField({
-                                            id: 'direccionClienteM',
-                                            label: 'Direccion',
-                                            required: true,
-                                            value: recor.direccion,
-                                            disabled: true
-                                        }),
-                                        emailClienteM = new Ext.form.TextField({
-                                            id: 'emailClienteM',
-                                            label: 'E-mail',
-                                            value: recor.e_mail,
-                                            disabled: true
-                                        }),
-                                        telefonoClienteM = new Ext.form.TextField({
-                                            id: 'telefonoClienteM',
-                                            label: 'Telefono',
-                                            value: recor.telefono,
-                                            disabled: true
-                                        }),
-                                        limite_creditoClienteM = new Ext.form.NumberField({
-                                            id: 'limite_creditoClienteM',
-                                            label: 'Max Credito',
-                                            required: true,
-                                            value: recor.limite_credito,
-                                            disabled: true
-                                        })
-                                ]//fin items form
-                                }
-                        ]//,//fin items formpanel
-                     });
 
+return {                                                       
+        xtype: 'fieldset',
+        title: 'Detalles del Cliente',
+        id: 'updateForm',
+		defaults: {
+			disabledClass: '',
+		},
+		//utliizare un css que ya tenia por ahi
+		baseCls: "ApplicationVender-ventaListaPanel",
+        items: [idClienteM = new Ext.form.HiddenField({
+                    id: 'idClienteM',
+                    value: recor.id_cliente
+                }),
+                nombreClienteM = new Ext.form.TextField({
+                    id: 'nombreClienteM',
+                    label: 'Nombre',
+                    required: true,
+                    value: recor.nombre,
+                    disabled: true
+                }),
+                rfcClienteM = new Ext.form.TextField({
+                    id: 'rfcClienteM',
+                    label: 'RFC',
+                    required: true,
+                    value: recor.rfc,
+                    disabled: true
+                }),
+                direccionClienteM = new Ext.form.TextField({
+                    id: 'direccionClienteM',
+                    label: 'Direccion',
+                    required: true,
+                    value: recor.direccion,
+                    disabled: true
+                }),
+                emailClienteM = new Ext.form.TextField({
+                    id: 'emailClienteM',
+                    label: 'E-mail',
+                    value: recor.e_mail,
+                    disabled: true
+                }),
+                telefonoClienteM = new Ext.form.TextField({
+                    id: 'telefonoClienteM',
+                    label: 'Telefono',
+                    value: recor.telefono,
+                    disabled: true
+                }),
+                limite_creditoClienteM = new Ext.form.NumberField({
+                    id: 'limite_creditoClienteM',
+                    label: 'Max Credito',
+                    required: true,
+                    value: recor.limite_credito,
+                    disabled: true
+                })
+        ]//fin items form
+        };
 };
 
 
