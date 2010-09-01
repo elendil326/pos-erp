@@ -264,17 +264,20 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
                 }
             }
         }, {
+
             scroll: 'vertical',
             xtype: 'panel',
             title: 'ventas',
             id: 'customerHistorial',
-            items: [ {id:'datosCliente'},{id: 'customerHistorialSlide' }],
+            items: [ {id:'datosCliente'}, {id: 'customerHistorialSlide' }],
             listeners: {
                 activate:   function(){
                         Ext.getCmp('btn_CancelEditCliente').hide();
                         Ext.getCmp('btn_EditCliente').hide();
                     }
             }
+
+
         }, { 
             scroll: 'vertical',
             xtype: 'panel',
@@ -567,7 +570,7 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
 							
 							//crear el nuevo panel
                             var detalles = ApplicacionClientes.currentInstance.addClientDetailsPanel( recor ); 
-							
+
 							//deslizarlo
                             sink.Main.ui.setCard( detalles , 'fade');
                         }
@@ -733,20 +736,19 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
     }); 
     
     
-    //cabecera de datos del cliente seleccionado
-    
-    var html = "";
-    
-        POS.AJAXandDECODE({
-            action: '1401',
-            id_cliente: record_cliente.id_cliente //recor[0].id_cliente
-            },
-            function (datos){//mientras responda AJAXDECODE LISTAR VENTAS CLIENTE
-                if(datos.success === true){
-                    ventasCliente.loadData(datos.datos);
+	//cabecera de datos del cliente seleccionado
+    POS.AJAXandDECODE({
+       	action: '1401',
+       	id_cliente: record_cliente.id_cliente 
+    },
+    function (datos){
+		if(datos.success === true){
+	
+		ventasCliente.loadData(datos.datos);
                     
-                                        
-                    html += "<div class='ApplicationClientes-item' >"
+		var html = "";
+
+		html += "<div class='ApplicationClientes-item' >"
                             + "<div class='trash' ></div>"
                             + "<div class='id'>No. Venta</div>" 
                             + "<div class='tipo'>Tipo Venta</div>" 
@@ -758,56 +760,61 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
                             + "<div class='total'>TOTAL</div>"
                             + "</div>";
                     
-                    //renderear el html
-                    for( a = 0; a < ventasCliente.getCount(); a++ ){
-                        
-                        var facturado="";
-                        if ( ventasCliente.data.items[a].facturado == 1 ){
-                            
-                            facturado="<div class='pagado'>FACTURADA</div>";
-                        }
-                        if ( ventasCliente.data.items[a].facturado === 0 ){
-                                
-                                vtaClteTotal = parseFloat(ventasCliente.data.items[a].total); 
-                                vtaCltePagado = parseFloat(ventasCliente.data.items[a].pagado);
-                                
-                                if(  vtaClteTotal > vtaCltePagado ){
-                                    
-                                    facturado = "<div class='abonar'>ADEUDA</div>";
-                                }else{
-                                    facturado ="<div class='abonar' onclick='ApplicacionClientes.currentInstance.panelFacturas(" + ventasCliente.data.items[a].id_venta + " , "+ record_cliente[0].data.id_cliente +")'>FACTURAR</div>";
-                                }
-                        }
-                        
-                        html += "<div class='ApplicationClientes-item' >" 
-                        + "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" +ventasCliente.data.items[a].id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>" 
-                            + "<div class='id'>" + ventasCliente.data.items[a].id_venta +"</div>" 
-                            + "<div class='tipo'>" + ventasCliente.data.items[a].tipo_venta +"</div>" 
-                            + "<div class='fecha'>"+ ventasCliente.data.items[a].fecha +"</div>" 
-                            + "<div class='sucursal'>"+ ventasCliente.data.items[a].descripcion +"</div>"
-                            + "<div class='vendedor'>"+ ventasCliente.data.items[a].nombre +"</div>"
-                            + "<div class='subtotal'>$"+ ventasCliente.data.items[a].subtotal +"</div>"
-                            + "<div class='iva'>$"+ ventasCliente.data.items[a].iva +"</div>"
-                            + "<div class='total'>$"+ ventasCliente.data.items[a].total +"</div>"
-                            + facturado
-                            + "</div>";
-                    }
-                                
-                    //imprimir el html
-                    
-                    //console.log(ventasCliente.data.items);
-                }
-                if(!datos.success){
-                    //POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS PROBABLEMENTE ESTE CLIENTE 'NO' HA COMPRADO");
-                    html="<div class='ApplicationClientes-itemsBox'><div class='noVentas' align='center'>ESTE CLIENTE NO TIENE LISTA DE VENTAS</div> </div>";
-                }
-                Ext.get("customerHistorialSlide").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
-                
-            },
-            function (){//no responde AJAXDECODE DE VENTAS CLIENTE
-                POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS   ERROR EN LA CONEXION :(");      
-            }
-        );//AJAXandDECODE LISTAR VENTAS CLIENTE
+		//renderear el html
+		for( a = 0; a < ventasCliente.getCount(); a++ ){
+
+			var facturado="";
+			if ( ventasCliente.data.items[a].facturado == 1 ){
+				facturado="<div class='pagado'>FACTURADA</div>";
+			}
+
+			if ( ventasCliente.data.items[a].facturado === 0 ){
+
+				vtaClteTotal = parseFloat(ventasCliente.data.items[a].total); 
+				vtaCltePagado = parseFloat(ventasCliente.data.items[a].pagado);
+
+				if(  vtaClteTotal > vtaCltePagado ){
+
+					facturado = "<div class='abonar'>ADEUDA</div>";
+				}else{
+					facturado ="<div class='abonar' onclick='ApplicacionClientes.currentInstance.panelFacturas(" + ventasCliente.data.items[a].id_venta + " , "+ record_cliente[0].data.id_cliente +")'>FACTURAR</div>";
+				}
+			}
+
+			html += "<div class='ApplicationClientes-item' >" 
+				+ "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" +ventasCliente.data.items[a].id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>" 
+				+ "<div class='id'>" + ventasCliente.data.items[a].id_venta +"</div>" 
+				+ "<div class='tipo'>" + ventasCliente.data.items[a].tipo_venta +"</div>" 
+				+ "<div class='fecha'>"+ ventasCliente.data.items[a].fecha +"</div>" 
+				+ "<div class='sucursal'>"+ ventasCliente.data.items[a].descripcion +"</div>"
+				+ "<div class='vendedor'>"+ ventasCliente.data.items[a].nombre +"</div>"
+				+ "<div class='subtotal'>$"+ ventasCliente.data.items[a].subtotal +"</div>"
+				+ "<div class='iva'>$"+ ventasCliente.data.items[a].iva +"</div>"
+				+ "<div class='total'>$"+ ventasCliente.data.items[a].total +"</div>"
+				+ facturado
+				+ "</div>";
+		}
+
+		//imprimir el html
+
+		//console.log(ventasCliente.data.items);
+		}
+
+
+
+		if(!datos.success){
+		//POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS PROBABLEMENTE ESTE CLIENTE 'NO' HA COMPRADO");
+		html="<div class='ApplicationClientes-itemsBox'><div class='noVentas' align='center'>ESTE CLIENTE NO TIENE LISTA DE VENTAS</div> </div>";
+		}
+
+
+		Ext.get("customerHistorialSlide").update("HOLA !<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
+
+		},
+		function (){//no responde AJAXDECODE DE VENTAS CLIENTE
+			POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS   ERROR EN LA CONEXION :(");      
+		}
+		);//AJAXandDECODE LISTAR VENTAS CLIENTE
                 
         
     //return listaVentas;
