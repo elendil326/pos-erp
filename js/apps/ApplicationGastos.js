@@ -313,14 +313,13 @@ ApplicationGastos.prototype.getDate = function( textfield ){
 	        height: Ext.platform.isAndroidOS ? 320 : (!Ext.platform.isPhone ? 356 : 300),
 	        useTitles: false,
 			floating: true,
-			slots: [POS.pickerSlots],
+			//slots: [POS.pickerSlots],
 			centered: true,
-	        values: {
+	        /*value: {
 	            day: currentDate.getDate(),
 	            month: currentDate.getMonth(),
 	            year: currentDate.getFullYear()
-	        },
-			text: 'wtf',
+	        },*/
 	        dockedItems: [{
 	            xtype: 'toolbar',
 	            dock: 'top',
@@ -351,8 +350,12 @@ ApplicationGastos.prototype.getDate = function( textfield ){
 	});
 	
 	
-	console.log(Ext.getCmp('ApplicationGastos-getDate-picker'));
-	
+	Ext.getCmp('ApplicationGastos-getDate-picker').setValue({
+	            day: currentDate.getDate(),
+	            month: currentDate.getMonth(),
+	            year: currentDate.getFullYear()
+	        });
+
 	datePicker.show();
 	//Ext.getCmp('ApplicationGastos-getDate-picker').slots = POS.pickerSlots;
 	//Ext.getCmp('ApplicationGastos-getDate-picker').update();

@@ -16,6 +16,7 @@
  */
 require_once('../server/model/usuario.dao.php');
 require_once('../server/model/grupos_usuarios.dao.php');
+require_once('../server/misc/sanitize.php');
 
 
 /**
@@ -31,6 +32,7 @@ function insertUser($nombre, $user2, $pwd, $sucursal, $acceso)
 	$user->setUsuario($user2);
 	$user->setContrasena($pwd);
 	$user->setIdSucursal($sucursal);
+	$user->setActivo(1);
 	
 	$gruposUsuarios = new GruposUsuarios();
 	$gruposUsuarios->setIdGrupo($acceso);
@@ -165,6 +167,16 @@ switch($args['action']){
 		@$sucursal2 = $args['sucursal'];
 		@$acceso = $args['acceso'];
 		
+		$params = array(
+					&$nombre2,
+					&$user2,
+					&$pwd2,
+					&$sucursal2,
+					&$acceso
+		);
+
+		sanitize( $params );
+
 		try{
 			
 			$result = insertUser($nombre2, $user2, $pwd2, $sucursal2, $acceso);
@@ -181,7 +193,7 @@ switch($args['action']){
 			
 		}catch(Exception $e){
 		
-			$result = "Occuri&oacute; un error al insertar el usuario nuevo, intente nuevamente";
+			$result = "Occuri&oacute; un error al insertar el usuario nuevo, intente nuevamente ".$e->getMessage();
 			echo "{ \"success\": false, \"error\": \"$result\"}";
 		
 		}

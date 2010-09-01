@@ -13,6 +13,7 @@
  *
  */
 require_once('../server/model/proveedor.dao.php');
+require_once('../server/misc/sanitize.php');
 
 
 /**
@@ -140,6 +141,22 @@ switch ($args['action']) {
         $e_mail = $args['e_mail'];
         unset($args);
 
+		
+		/*
+		* COMPROBAMOS QUE NO LOS DATOS NO TENGAN ESPACIOS BLANCOS AL INICIO O AL FINAL
+		* O QUE SEAN CADENAS EN BLANCO, Y SE QUITAN LOS TAGS DE HTML
+		*/
+		$params = array(
+					&$rfc,
+					&$nombre,
+					&$direccion,
+					&$telefono,
+					&$e_mail
+		);
+		sanitize( $params );
+		
+		//===========================================
+		
         $ans = insert_provider($rfc, $nombre, $direccion, $telefono , $e_mail);
         echo $ans;
 	break;
@@ -151,6 +168,23 @@ switch ($args['action']) {
         $direccion = $args['direccion'];
         $telefono = $args['telefono'];
         $e_mail = $args['e_mail'];
+		
+		/*
+		* COMPROBAMOS QUE NO LOS DATOS NO TENGAN ESPACIOS BLANCOS AL INICIO O AL FINAL
+		* O QUE SEAN CADENAS EN BLANCO, Y SE QUITAN LOS TAGS DE HTML
+		*/
+		$params = array(
+					&$rfc,
+					&$nombre,
+					&$direccion,
+					&$telefono,
+					&$e_mail
+		);
+		sanitize( $params );
+		
+		//===========================================
+		
+		
         unset($args);
         $ans = update_provider($id, $rfc, $nombre, $direccion, $telefono , $e_mail);
         echo $ans;

@@ -334,7 +334,14 @@ ApplicationUsuarios.prototype.addNewUserLogic = function(){
 
 	var formData = Ext.getCmp('ApplicationUsuarios-addNewUser-form').getValues();
 	
+	var username = formData['user2'];
 	
+	var validateUsername = /[^A-Za-z0-9_@\.]|@{2,}|\.{5,}/;
+	if ( validateUsername.test(username) )
+	{
+		alert("Se encontraron caracteres no validos en usuario");
+		return;
+	}
 	POS.AJAXandDECODE(
 			//Parametros
 			{

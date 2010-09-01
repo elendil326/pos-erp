@@ -38,7 +38,7 @@ function getSelectData()
 *	Insertar sucursal
 *
 */
-function insertSucursal($descripcion, $direccion, $letrasFactura)
+function insertSucursal($descripcion, $direccion, $letrasFactura, $telefono, $rfc, $email)
 {
 
 	$sucursal = new Sucursal();
@@ -46,6 +46,9 @@ function insertSucursal($descripcion, $direccion, $letrasFactura)
 	$sucursal->setDescripcion($descripcion);
 	$sucursal->setDireccion($direccion);
 	$sucursal->setLetrasFactura($letrasFactura);
+	$sucursal->setTelefono($telefono);
+	$sucursal->setRfc($rfc);
+	$sucursal->setEMail($email);
 	
 	return SucursalDAO::save($sucursal);
 }
@@ -65,10 +68,28 @@ switch($args['action']){
 		@$descripcion = $args['descripcion'];
 		@$direccion = $args['direccion'];
 		@$letrasFactura = $args['letras_factura'];
+		@$telefono = $args['telefono'];
+		@$rfc = $args['rfc'];
+		@$email = $args['email'];
 		
+		/*
+		* COMPROBAMOS QUE NO LOS DATOS NO TENGAN ESPACIOS BLANCOS AL INICIO O AL FINAL
+		* O QUE SEAN CADENAS EN BLANCO, Y SE QUITAN LOS TAGS DE HTML
+		*/
+		$params = array(
+					&$rfc,
+					&$descripcion,
+					&$direccion,
+					&$telefono,
+					&$email,
+					&$letrasFactura
+		);
+		sanitize( $params );
+		
+		//===========================================
 		
 		try{
-			if(insertSucursal($descripcion, $direccion, $letrasFactura) == 1)
+			if(insertSucursal($descripcion, $direccion, $letrasFactura, $telefono, $rfc, $email) == 1)
 			{
 				echo "{ \"success\": true, \"message\": \"Sucursal insertada correctamente\"}";
 			}
