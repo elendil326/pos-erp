@@ -43,9 +43,13 @@ ApplicationVender.prototype.panelContado = null;
 
 ApplicationVender.prototype.panelCredito = null;
 
+ApplicationVender.emptyText =  "<div class='no-data'>Mostrador</div>";
+
+
 ApplicationVender.prototype._init = function()
 {
-	
+
+
 	//nombre de la aplicacion
 	this.appName = "Mostrador";
 	
@@ -214,7 +218,7 @@ ApplicationVender.prototype.venderMainPanel = new Ext.Panel({
 			id : 'detallesCliente'
 		},{
 			
-			html: '',
+			html: ApplicationVender.emptyText,
 			id : 'carritoDeCompras'
 			
 		}]
@@ -299,8 +303,7 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 	}
 	
 	if( this.htmlCart_items.length == 0){
-		Ext.get("carritoDeCompras").update("");
-		console.log(Ext.get("carritoDeCompras"));
+		Ext.get("carritoDeCompras").update(ApplicationVender.emptyText);
 		return;
 	}
 	
@@ -1005,8 +1008,10 @@ ApplicationVender.prototype.doVentaLogicCredito = function ()
 ApplicationVender.prototype.ventaCreditoExitosa = function ()
 {
 	
+	items =  copy(ApplicationVender.currentInstance.htmlCart_items);
+	cliente = ApplicationVender.currentInstance.cliente;
+	
 	appImpresora.ImprimirTicket( cliente, items, this.ventaTotales );
-	//appImpresora.ImprimirTicket();
 	
 	//quitar el menu de cancelar venta y eso
 	Ext.getCmp("doVentaCreditoPanel").getDockedItems()[0].hide();
@@ -1015,16 +1020,7 @@ ApplicationVender.prototype.ventaCreditoExitosa = function ()
 			html : '<div align="center">Venta a credito exitosa !</div>',
 	});
 		
-	/*
-	no puede requerir ffactura en una compra a credito hasta que 
-	termine de saldar
-	Ext.getCmp("doVentaCreditoPanel").add({ 
-			xtype:'button', 
-			text:'Requerir Factura',
-			style: "margin-left: 45%; margin-top: 20px; width: 200px;",
-			ui: 'action'
-		});
-	*/
+
 	
 	Ext.getCmp("doVentaCreditoPanel").add({ 
 			xtype:'button', 

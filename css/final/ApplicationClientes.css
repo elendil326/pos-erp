@@ -80,86 +80,151 @@
 }
 
 
+.AC-Title{
+	/*font-size: 1.2em;*/
+	font-size: 19px;
+	font-weight: bold;
+	margin: 12px 0px 6px;
+	color: white;
+	text-shadow: black 0px 1px 1px;
+}
 
 
 /* ------------------------------------------------------------------------
 	Items del carrito
    ------------------------------------------------------------------------ */
+.ApplicationClientes-Item{
+	overflow: hidden;
+	margin: 5px;
+	
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
 
-div.id{
+	border-style : solid;
+	border-width:1px;
+	border-right-color: #60656b;
+	border-left-color: #61666c;
+	border-top-color: #474a4f;
+	border-bottom-color: #959a9f;
+	
+	height: 30px;
+	color: white;
+	
+	/*text-shadow: white 0px 1px 1px;*/
+	/*background-image:url(media/g2.png);*/
+	
+	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+	font-weight: normal;
+	padding : 5px;
+	
+
+
+	
+}
+
+.ApplicationClientes-Item .id{
 	float: left;
 	font-weight: bold;
+	margin-left:5px;
 	color: black;
-	width: 10%;
+	width: 5%;
+		overflow: hidden !important;
+	height: 15px !important;	
+	
+	
 }
 
-div.tipo{
+.ApplicationClientes-Item .tipo{
 	float: left;
 	width : 7%;
-
+	margin-left:5px;
+	height: 15px !important;	
+		overflow: hidden !important;
 }
 
-div.fecha{
+.ApplicationClientes-Item .fecha{
 	float: left;
-	width : 11%;
+	text-shadow: black 0px 1px 1px;
+	width : 12%;
 	color: black;	
+	margin-left:5px;	
+		height: 15px !important;
+			overflow: hidden !important;
 }
-div.iva{
+.ApplicationClientes-Item .iva{
 	float: left;
 	width : 7%;
 	color: black;	
+	margin-left:5px;
+		height: 15px !important;	
+			overflow: hidden !important;
 }
 
-div.sucursal{
+.ApplicationClientes-Item .sucursal{
 	float: left;
 	width : 15%;
 	color: black;	
-}
-div.vendedor{
-	float: left;
-	width : 15%;
-	color: black;	
+	margin-left:5px;
+		height: 15px !important;	
+			overflow: hidden !important;
 }
 
-div.subtotal{
+.ApplicationClientes-Item .descuento{
+	float: left;
+	width : 7%;
+	text-shadow: black 0px 1px 1px;	
+	color: black;	
+	margin-left:5px;
+		height: 15px !important;	
+			overflow: hidden !important;
+}
+
+.ApplicationClientes-Item .vendedor{
+	float: left;
+	width : 13%;
+	text-shadow: black 0px 1px 1px;
+	color: black;	
+	margin-left:5px;
+		height: 15px !important;	
+			overflow: hidden !important;
+}
+
+.ApplicationClientes-Item .subtotal{
 	float: left;
 	width: 10%;
-	text-shadow: black 0px 1px 1px;
 	color: black;	
+		height: 15px !important;
+			overflow: hidden !important;
 }
-div.total{
+.ApplicationClientes-Item .total{
 	float: left;
-	width: 7%;
+	width: 8%;
 	text-shadow: black 0px 1px 1px;
 	color: black;	
+	height: 25px !important;
 }
 
-div.pagado{
+.ApplicationClientes-Item .pagado{
 	float: left;
 	width: 9%;
 	text-shadow: black 0px 1px 1px;
 	color:#093;	
+	height: 15px !important;
 }
 
-div.abonar{
+.ApplicationClientes-Item .abonar{
 	float: left;
 	width: 10%;
 	text-shadow: black 0px 1px 1px;
 	color:#F00;	
+		height: 15px !important;
 }
-div.trash{
+.ApplicationClientes-Item .trash{
 	float: left;
 	width: 5%px;
-	text-shadow: black 0px 1px 1px;
 	color: black
-}
-
-div.noVentas{
-	float: left;
-	width: 90%;
-	text-shadow: black 0px 1px 1px;
-	color: black,
-	font-size: 20px;
+		height: 15px !important;
 }
 
 

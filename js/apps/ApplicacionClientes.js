@@ -188,6 +188,7 @@ ApplicacionClientes.prototype.cancelEditClient = function(){
     Ext.getCmp('emailClienteM').setDisabled(true);
     Ext.getCmp('telefonoClienteM').setDisabled(true);   
     Ext.getCmp('limite_creditoClienteM').setDisabled(true);
+    Ext.getCmp('descuentoClienteM').setDisabled(true);
     Ext.getCmp('btn_CancelEditCliente').setVisible(false);
 };
 
@@ -778,7 +779,6 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 
     var ventasCliente = new Ext.data.Store({
         model: 'ventasStore'
-        
     }); 
     
     
@@ -792,19 +792,20 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 	
 		ventasCliente.loadData(datos.datos);
                     
-		var html = "";
+		var html = "<div class='AC-Title'>Todas la ventas a este cliente</div>";
 
-		html += "<div class='ApplicationClientes-item' >"
+		html += "<div class='ApplicationClientes-Item' style='border:0px; font-size: 14px;' >"
                             + "<div class='trash' ></div>"
-                            + "<div class='id'>No. Venta</div>" 
+                            + "<div class='id' style='width:6%; '>Venta</div>" 
                             + "<div class='tipo'>Tipo Venta</div>" 
                             + "<div class='fecha'>Fecha</div>" 
                             + "<div class='sucursal'>Sucursal</div>"
                             + "<div class='vendedor'>Vendedor</div>"
                             + "<div class='subtotal'>Subtotal</div>"
+                            + "<div class='descuento' >Desc.</div>"
                             + "<div class='iva'>IVA</div>"
-                            + "<div class='total'>TOTAL</div>"
-                            + "</div>";
+                            + "<div class='total'>Total</div>"
+			+ "</div>";
 
 		//renderear el html
 		for( a = 0; a < ventasCliente.getCount(); a++ ){
@@ -812,7 +813,7 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 			var facturado="";
 			
 			if ( ventasCliente.data.items[a].data.facturado == 1 ){
-				facturado="<div class='pagado'>FACTURADA</div>";
+				facturado="<div class='pagado'>Facturada</div>";
 			}
 
 			if ( ventasCliente.data.items[a].data.facturado === 0 ){
@@ -821,30 +822,27 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 				vtaCltePagado = parseFloat(ventasCliente.data.items[a].data.pagado);
 
 				if(  vtaClteTotal > vtaCltePagado ){
-
 					facturado = "<div class='abonar'>ADEUDA</div>";
 				}else{
 					facturado ="<div class='abonar' onclick='ApplicacionClientes.currentInstance.panelFacturas(" + ventasCliente.data.items[a].data.id_venta + " , "+ record_cliente[0].data.id_cliente +")'>FACTURAR</div>";
 				}
 			}
 
-			html += "<div class='ApplicationClientes-item' >" 
+			html += "<div class='ApplicationClientes-Item' >" 
 				+ "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" +ventasCliente.data.items[a].data.id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>" 
 				+ "<div class='id'>" + ventasCliente.data.items[a].data.id_venta +"</div>" 
 				+ "<div class='tipo'>" + ventasCliente.data.items[a].data.tipo_venta +"</div>" 
 				+ "<div class='fecha'>"+ ventasCliente.data.items[a].data.fecha +"</div>" 
 				+ "<div class='sucursal'>"+ ventasCliente.data.items[a].data.descripcion +"</div>"
 				+ "<div class='vendedor'>"+ ventasCliente.data.items[a].data.nombre +"</div>"
-				+ "<div class='subtotal'>$"+ ventasCliente.data.items[a].data.subtotal +"</div>"
-				+ "<div class='iva'>$"+ ventasCliente.data.items[a].data.iva +"</div>"
-				+ "<div class='total'>$"+ ventasCliente.data.items[a].data.total +"</div>"
+				+ "<div class='subtotal'>"+ POS.currencyFormat(ventasCliente.data.items[a].data.subtotal) +"</div>"
+				+ "<div class='descuento'>"+ POS.currencyFormat(ventasCliente.data.items[a].data.descuento) +"</div>"
+				+ "<div class='iva'>"+ POS.currencyFormat(ventasCliente.data.items[a].data.iva) +"</div>"
+				+ "<div class='total'>"+ POS.currencyFormat(ventasCliente.data.items[a].data.total) +"</div>"
 				+ facturado
 				+ "</div>";
 		}
 
-		//imprimir el html
-
-		//console.log(ventasCliente.data.items);
 		}
 
 
@@ -980,9 +978,6 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
     
 };
 
-/*------------------------------------------------------------
-----------------    CREDITOS CLIENTE    ------------------
---------------------------------------------------------------*/
 
 /* -------------------------------------------------------------
         MUESTRA LAS VENTAS A CREDITO DE UN CLIENTE
@@ -1002,29 +997,27 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
     
     //cabecera de datos del cliente seleccionado
     
-    //var clienteHtml = "";
-    
-    var html = "";
-    
         POS.AJAXandDECODE({
             action: '1403',
-            id_cliente: record_cliente.id_cliente //recor[0].id_cliente
+            id_cliente: record_cliente.id_cliente 
             },
             function (datos){//mientras responda AJAXDECODE LISTAR VENTAS CLIENTE
                 if(datos.success === true){
                     ventasClienteCredito.loadData(datos.datos);
+
+					var html = "<div class='AC-Title'>Ventas a Credito para este cliente</div>";
                     
-                    html += "<div class='ApplicationClientes-item' >"
+					html += "<div class='ApplicationClientes-Item' style='border:0px; font-size: 14px;' >"
                             + "<div class='trash' ></div>"
-                            + "<div class='id'>No. Venta</div>" 
+                            + "<div class='id'>Venta</div>" 
                             + "<div class='fecha'>Fecha</div>" 
                             + "<div class='sucursal'>Sucursal</div>"
                             + "<div class='vendedor'>Vendedor</div>"
-                            + "<div class='total'>TOTAL</div>"
-                            + "<div class='total'>ABONADO</div>"
-                            + "<div class='total'>ADEUDO</div>"
-                            + "<div class='subtotal'>VER ABONOS</div>"
-                            + "<div class='total'>STATUS</div>"
+                            + "<div class='total'>Total</div>"
+                            + "<div class='total'>Abonado</div>"
+                            + "<div class='total'>Adeudo</div>"
+                            + "<div class='subtotal'>Abonos</div>"
+                            + "<div class='total'>Estado</div>"
                             + "</div>";
                     
                     //renderear el html
@@ -1032,27 +1025,24 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
                         var ven = ventasClienteCredito.data.items[a];
                         var adeudo = ven.data.adeudo;
                         
-                        //console.log("***+************VENTA :"+ven.data.id_venta+"  SUBTOT: "+ven.data.subtotal+"  IVA: "+ven.data.iva);
-                        //console.log("-------------------- en la venta: "+ven.data.id_venta+" abonado: "+ven.data.abonado);
+
                         var status="";
+
                         if (adeudo <= 0){
                             status="<div class='pagado'>PAGADO</div>";
                         }else{
-                            //console.log(record_cliente[0].data.nombre);
-                            //var x = record_cliente[0].data.nombre;
-                            //console.log(ven.data.id_venta +" "+ x +"  "+tot+" "+adeudo);
-                            status ="<div class='abonar' onclick='ApplicacionClientes.currentInstance.abonarVenta(" + ven.data.id_venta + " , "+ ven.data.total +" , "+ ven.data.adeudo +")'>ABONAR</div>";
+                            status ="<div onclick='ApplicacionClientes.currentInstance.abonarVenta(" + ven.data.id_venta + " , "+ ven.data.total +" , "+ ven.data.adeudo +")'>ABONAR</div>";
                         }
-                        html+= "<div class='ApplicationClientes-item' >" 
+                        html+= "<div class='ApplicationClientes-Item' >" 
                         + "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" + ven.data.id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>"   
                         + "<div class='id'>" + ven.data.id_venta +"</div>" 
                         + "<div class='fecha'>"+ ven.data.fecha +"</div>" 
                         + "<div class='sucursal'>"+ ven.data.sucursal +"</div>"
                         + "<div class='vendedor'>"+ ven.data.vendedor +"</div>"
-                        + "<div class='total'>$"+ ven.data.total +"</div>"
-                        + "<div class='total'>$"+ ven.data.abonado +"</div>"
-                        + "<div class='total'>$"+ ven.data.adeudo +"</div>"
-                        + "<div class='subtotal' onclick='ApplicacionClientes.currentInstance.verPagosVenta(" + ven.data.id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/compose.png'></div>"
+                        + "<div class='total'>"+ POS.currencyFormat(ven.data.total) +"</div>"
+                        + "<div class='total'>"+ POS.currencyFormat(ven.data.abonado) +"</div>"
+                        + "<div class='total'>"+ POS.currencyFormat(ven.data.adeudo) +"</div>"
+                        + "<div class='total' style='height:15px;'  onclick='ApplicacionClientes.currentInstance.verPagosVenta(" + ven.data.id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/compose.png'></div>"
                         + status
                         + "</div>";
                                                         

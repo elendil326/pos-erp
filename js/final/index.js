@@ -214,7 +214,7 @@ POS.AJAXandDECODE = function (params, success, failure)
 				eval("datos = " + response.responseText);
 				
 				if(DEBUG){
-					console.log("HTTP Request returned with code 200", datos);
+					//console.log("HTTP Request returned with code 200", datos);
 				}
 				
 				if((typeof(datos.succes) !== 'undefined') && (datos.succes === false)){
