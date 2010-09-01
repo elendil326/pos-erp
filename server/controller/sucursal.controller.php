@@ -15,6 +15,7 @@
  *
  */
 require_once('../server/model/sucursal.dao.php');
+require_once('../server/misc/sanitize.php');
 
 
 

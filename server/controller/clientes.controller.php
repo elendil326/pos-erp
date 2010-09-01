@@ -13,6 +13,7 @@
  *
  */
 require_once('../server/model/cliente.dao.php');
+require_once('../server/misc/sanitize.php');
 
 
 
@@ -258,6 +259,24 @@ switch ($args['action']) {
         $telefono = $args['telefono'];
         $e_mail = $args['e_mail'];
         unset($args);
+		
+		/*
+		* COMPROBAMOS QUE NO LOS DATOS NO TENGAN ESPACIOS BLANCOS AL INICIO O AL FINAL
+		* O QUE SEAN CADENAS EN BLANCO, Y SE QUITAN LOS TAGS DE HTML
+		*/
+		$params = array(
+					&$rfc,
+					&$nombre,
+					&$direccion,
+					&$telefono,
+					&$e_mail,
+					&$limite_credito
+		);
+		sanitize( $params );
+		
+		//===========================================
+		
+		
 
         $ans = insert_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0);
         echo $ans;
@@ -274,6 +293,23 @@ switch ($args['action']) {
         $e_mail = $args['e_mail'];
 		$descuento = $args['descuento'];
 
+		/*
+		* COMPROBAMOS QUE NO LOS DATOS NO TENGAN ESPACIOS BLANCOS AL INICIO O AL FINAL
+		* O QUE SEAN CADENAS EN BLANCO, Y SE QUITAN LOS TAGS DE HTML
+		*/
+		$params = array(
+					&$rfc,
+					&$nombre,
+					&$direccion,
+					&$telefono,
+					&$e_mail,
+					&$limite_credito,
+					&$descuento
+		);
+		sanitize( $params );
+		
+		//===========================================
+		
         $ans = update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0);
         echo $ans;
 	break;

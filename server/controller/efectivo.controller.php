@@ -17,6 +17,7 @@
 //no se porque no funcionan
 require_once('../server/model/ingresos.dao.php');
 require_once('../server/model/gastos.dao.php');
+require_once('../server/misc/sanitize.php');
 
 /**
 *
@@ -248,6 +249,15 @@ switch($args['action'])
         		$monto=$args['monto'];
         		$fecha=$args['fecha'];
         		
+				$params = array(
+					&$concepto,
+					&$monto,
+					&$fecha
+				);
+
+				sanitize( $params );
+				
+				
         		if(!is_numeric($monto))
         		{
         			echo '{ "success" : "false" , "reason" : "No es una cantidad valida." }'; 
@@ -282,6 +292,12 @@ switch($args['action'])
         		$monto=$args['monto'];
         		$fecha=$args['fecha'];
         		
+				$params = array(
+					&$concepto,
+					&$monto,
+					&$fecha
+				);
+				
         		if(!is_numeric($monto))
         		{
         			echo '{ "success" : "false" , "reason" : "No es una cantidad valida." }'; 
@@ -302,6 +318,12 @@ switch($args['action'])
         		$monto=$args['monto'];
         		$fecha=$args['fecha'];
         		
+				$params = array(
+					&$concepto,
+					&$monto,
+					&$fecha
+				);
+				
         		if(!is_numeric($monto))
         		{
         			echo '{ "success" : "false" , "reason" : "No es una cantidad valida." }'; 
@@ -338,6 +360,12 @@ switch($args['action'])
         		$monto=$args['monto'];
         		$fecha=$args['fecha'];
         		
+				$params = array(
+					&$concepto,
+					&$monto,
+					&$fecha
+				);
+				
         		if(!is_numeric($monto))
         		{
         			echo '{ "success" : "false" , "reason" : "No es una cantidad valida." }'; 
