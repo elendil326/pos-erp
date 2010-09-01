@@ -103,9 +103,9 @@ function update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telef
     $ans = ClienteDAO::save($cliente);
 	
     if ($ans) {
-        return "{success: true, reason: 'Se modifico el cliente correctamente. ans -> ".$ans."'}";
+        return "{success: true, reason: 'Se modifico el cliente correctamente. AR:".$ans."'}";
     } else {
-        return "{success: false, reason: 'No se modifico el cliente. ans -> ".$ans."' }";
+        return "{success: false, reason: 'No se modifico el cliente. AR:".$ans."' }";
     }
 }
 
@@ -258,12 +258,13 @@ switch ($args['action']) {
         $telefono = $args['telefono'];
         $e_mail = $args['e_mail'];
         unset($args);
-		include_once("clientes.controller.php");
+
         $ans = insert_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0);
         echo $ans;
 	break;
 	
 	case '1002':
+	
 		$id = $args['id'];
         $rfc = $args['rfc'];
         $nombre = $args['nombre'];
@@ -272,8 +273,7 @@ switch ($args['action']) {
         $telefono = $args['telefono'];
         $e_mail = $args['e_mail'];
 		$descuento = $args['descuento'];
-        unset($args);
-		include_once("clientes.controller.php");
+
         $ans = update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0);
         echo $ans;
 	break;
@@ -288,14 +288,14 @@ switch ($args['action']) {
 	case '1004':
 		$id = $args['id'];
         unset($args);
-		include_once("clientes.controller.php");
+
         $ans = show_customer($id);
         echo $ans;
 	break;
 	
 	case '1005':
         unset($args);
-		include_once("clientes.controller.php");
+
         $ans = list_customers();
         echo $ans;
 	break;

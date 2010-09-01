@@ -1,4 +1,4 @@
-﻿
+
 
 .ApplicationClientes-addClientDetailsPanel{
 	background-image:url(media/g3.png);
@@ -31,6 +31,35 @@
 	font-size: 12px;
 
 }
+
+
+.ApplicationClientes-itemsBox .no-data{
+	padding: 10px;
+	width: 300px;
+
+	text-align: center;
+	
+	color: red !important;
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+
+	border-style : solid;
+	border-width:1px;
+	border-right-color: #60656b;
+	border-left-color: #61666c;
+	border-top-color: #474a4f !important;
+	border-bottom-color: #959a9f !important;
+
+	color: white !important;
+	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+	text-shadow: black 0px 1px 1px;
+	
+	margin-left: 35%;
+	margin-top: 25%;
+
+}
+
 
 .ApplicationClientes-item{
 	margin: 5px;
