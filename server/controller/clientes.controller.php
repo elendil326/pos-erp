@@ -99,15 +99,22 @@ function update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telef
 	$cliente->setLimiteCredito( $limite_credito );
 	$cliente->setDescuento( $descuento );
 	$cliente->setTelefono( $telefono );
-	$cliente->setEmail( $e_mail );
+	$cliente->setEMail( $e_mail );
 	
-    $ans = ClienteDAO::save($cliente);
-	
-    if ($ans) {
+	try{
+		$ans = ClienteDAO::save($cliente);
+		if ($ans) {
         return "{success: true, reason: 'Se modifico el cliente correctamente. AR:".$ans."'}";
-    } else {
+		} else {
         return "{success: false, reason: 'No se modifico el cliente. AR:".$ans."' }";
-    }
+		}
+	}
+	catch(Exception $e)
+	{
+		return "{success: false, reason: 'No se modifico el cliente. AR:".$e->getMessage()."' }";
+	}
+	
+   
 }
 
 /**
@@ -307,10 +314,11 @@ switch ($args['action']) {
 					&$descuento
 		);
 		sanitize( $params );
-		
+
+
 		//===========================================
 		
-        $ans = update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0);
+        $ans = update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento);
         echo $ans;
 	break;
 	
