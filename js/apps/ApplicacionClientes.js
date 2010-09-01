@@ -521,11 +521,12 @@ var ClientesListStore = new Ext.data.Store({
         Filtrado de busqueda en el store HAY BUG AQUI, DESPUES DE 1 FILTRO CUANDO SE REGRESA A CLIENTES NO LOS MUESTRA TODOS A MENOS QUE SE TECLE EN EL TEXT DE BUSQUEDA ALGO O SE DEJE EN ''
 ---------------------------------------------------------------------------------------*/
 ApplicacionClientes.prototype.doSearch = function(  ){
-    
+ 
     if (Ext.getCmp('btnBuscarCliente').getValue().length === 0){
 	
         ClientesListStore.clearFilter();
         try{
+			console.log("limpio filtro");
         	ClientesListStore.sync(); //marca erro pero si lo meto en try catch o no lo llamo la vista no coincide con el store
         }catch(e){
 			console.warn("Error sync -> "+e);
@@ -537,17 +538,16 @@ ApplicacionClientes.prototype.doSearch = function(  ){
 			console.log( "AppCliente Buscando " + Ext.getCmp('btnBuscarCliente').getValue() );
 		}
         try{
-        	ClientesListStore.filter([{
-            	property: 'nombre',
-            	value: Ext.getCmp('btnBuscarCliente').getValue()
-        	}]);
-			//ClientesListStore.sync();
+			console.log("buscando");
+        	ClientesListStore.filter('nombre', Ext.getCmp('btnBuscarCliente').getValue()  );
+			ClientesListStore.sync();
         }catch(e){
 			console.warn("Error -> "+e);
 		}		
 		
 	}
         
+
 
         
 };

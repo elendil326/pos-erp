@@ -139,7 +139,7 @@ ApplicationProveedores.prototype._initToolBar = function ()
 
 ApplicationProveedores.prototype.provedores = [];
 
-ApplicationProveedores.prototype.comprasObj = new ApplicationCompras();
+ApplicationProveedores.prototype.comprasObj = new ApplicationComprasProveedor();
 
 ApplicationProveedores.prototype.proveedorSelected=null;
 
@@ -262,6 +262,7 @@ ApplicationProveedores.prototype.doVerProvedor = function ( provedor )
 
 ApplicationProveedores.prototype.renderProvedorDetalles = function ( provedor )
 {
+	console.log(provedor);
 	var html = "";
 	
 	html += "<div class='nombre'>" 		+provedor.nombre 		+ "</div>";
@@ -278,32 +279,37 @@ ApplicationProveedores.prototype.renderProvedorDetalles = function ( provedor )
 
 ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 {
+	if( !this.carousel ){
 
-	var carousel = new Ext.Carousel({
-		
-		defaults: { 
-			//cls: 'ApplicationProveedores-detallesProveedor'
-			scroll: 'vertical'
-		},
-		items: [{
-			cls: 'ApplicationProveedores-detallesProveedor',
-			html: this.renderProvedorDetalles(provedor)
-		}, {
-			scroll: 'vertical',
-			xtype: 'panel',
-			title: 'compras',
-			id: 'comprasProveedorSucursalPanel',
-			items: [ {id: 'comprasProveedorSucursal' }]
+		this.carousel = new Ext.Carousel({
 			
-		}, { 
-			scroll: 'vertical',
-			xtype: 'panel',
-			title: 'creditos',
-			id: 'comprasProveedorCreditoPanel',
-			items: [{id: 'comprasProveedorCredito'}]
-		}]
-	});
-
+			defaults: { 
+				//cls: 'ApplicationProveedores-detallesProveedor'
+				scroll: 'vertical'
+			},
+			items: [{
+				cls: 'ApplicationProveedores-detallesProveedor',
+				html: '<div id="detalles-proveedor">'+this.renderProvedorDetalles(provedor)+'</div>'
+			}, {
+				scroll: 'vertical',
+				xtype: 'panel',
+				title: 'compras',
+				id: 'comprasProveedorSucursalPanel',
+				items: [ {id: 'comprasProveedorSucursal' }]
+				
+			}, { 
+				scroll: 'vertical',
+				xtype: 'panel',
+				title: 'creditos',
+				id: 'comprasProveedorCreditoPanel',
+				items: [{id: 'comprasProveedorCredito'}]
+			}]
+		});
+	}else{
+		
+		Ext.get("detalles-proveedor").update(this.renderProvedorDetalles(provedor));
+		
+	}
 
 	var regresar = [{
 			xtype: 'button',
@@ -325,11 +331,13 @@ ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 			ui: 'action',
 			handler: function(){
 				
-				//ApplicationProveedores.currentInstance.comprasObj.idProviderSelected ( provedor );
+				ApplicationProveedores.currentInstance.comprasObj.providerId= provedor.id_proveedor;
+				ApplicationProveedores.currentInstance.comprasObj.nombreProv= provedor.nombre;
+				ApplicationProveedores.currentInstance.comprasObj.comprarPanel( provedor.id_proveedor);
+				sink.Main.ui.setCard( ApplicationProveedores.currentInstance.comprasObj.surtir, 'slide' );
 				
-				//sink.Main.ui.setCard( ApplicationProveedores.currentInstance.comprasObj.comprarMainPanel, 'slide' );
-				var obj = new ApplicationComprasProveedor ( provedor );
-				sink.Main.ui.setCard( obj.surtir, 'slide' );			
+					//this.obj = new ApplicationComprasProveedor ( provedor );
+					//sink.Main.ui.setCard( this.obj.surtir, 'slide' );			
 				
 			}
 		}];
@@ -350,7 +358,7 @@ ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 		defaults: {
 	      flex: 1
 		},
-		items: [carousel]
+		items: [this.carousel]
 	});
 	
 
@@ -410,15 +418,15 @@ ApplicationProveedores.prototype.listarCompras = function (  ){
 					for( a = 0; a < comprasProveedor.getCount(); a++ ){
 						
 						html += "<div class='ApplicationClientes-item' >" 
-						+ "<div class='trash' onclick='ApplicationProveedores.currentInstance.verCompra(" +comprasProveedor.data.items[a].id_compra+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>"	
-							+ "<div class='id'>" + comprasProveedor.data.items[a].id_compra +"</div>" 
-							+ "<div class='tipo'>" + comprasProveedor.data.items[a].tipo_compra+"</div>" 
-							+ "<div class='fecha'>"+ comprasProveedor.data.items[a].fecha +"</div>" 
-							+ "<div class='sucursal'>"+ comprasProveedor.data.items[a].descripcion +"</div>"
-							+ "<div class='vendedor'>"+ comprasProveedor.data.items[a].nombre +"</div>"
-							+ "<div class='subtotal'>$"+ comprasProveedor.data.items[a].subtotal +"</div>"
-							+ "<div class='iva'>$"+ comprasProveedor.data.items[a].iva +"</div>"
-							+ "<div class='total'>$"+ comprasProveedor.data.items[a].total +"</div>"
+						+ "<div class='trash' onclick='ApplicationProveedores.currentInstance.verCompra(" +comprasProveedor.data.items[a].data.id_compra+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>"	
+							+ "<div class='id'>" + comprasProveedor.data.items[a].data.id_compra +"</div>" 
+							+ "<div class='tipo'>" + comprasProveedor.data.items[a].data.tipo_compra+"</div>" 
+							+ "<div class='fecha'>"+ comprasProveedor.data.items[a].data.fecha +"</div>" 
+							+ "<div class='sucursal'>"+ comprasProveedor.data.items[a].data.descripcion +"</div>"
+							+ "<div class='vendedor'>"+ comprasProveedor.data.items[a].data.nombre +"</div>"
+							+ "<div class='subtotal'>$"+ comprasProveedor.data.items[a].data.subtotal +"</div>"
+							+ "<div class='iva'>$"+ comprasProveedor.data.items[a].data.iva +"</div>"
+							+ "<div class='total'>$"+ comprasProveedor.data.items[a].data.total +"</div>"
 							+ "</div>";
 					}//fin for
 					

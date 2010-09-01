@@ -44,12 +44,12 @@ function insert_provider_product( $jsonItems ) {
 		$detalle->setIdSucursal( $sucursal );
 		$detalle->setPrecioVenta( $arregloItems[$i]['precioVenta'] );
 		$detalle->setMin( $arregloItems[$i]['stockMin'] );
+		$detalle->setExistencias ( 0 );	
+		//$ans = DetalleInventarioDAO::save( $detalle );
 			
-		$ans = DetalleInventarioDAO::save( $detalle );
-			
-		if( $ans > 0 ){
+		//if( $ans > 0 ){
 			$agregados++;
-		}
+		//}
 	}//fin for
 	
 	if( $agregados < 1 ){

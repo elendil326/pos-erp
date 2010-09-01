@@ -1,9 +1,9 @@
-ApplicationComprasProveedor = function( idProveedor ){
+ApplicationComprasProveedor = function(  ){
 	if(DEBUG){
 		console.log("ApplicationComprasProveedor: construyendo");
 	}
 	
-	this._init( idProveedor );
+	this._init(  );
 	
 	ApplicationComprasProveedor.currentInstance = this;
 	
@@ -22,11 +22,11 @@ ApplicationComprasProveedor.prototype.compraItems = [];
 ApplicationComprasProveedor.prototype.inventarioItems = [];
 ApplicationComprasProveedor.prototype.nombreProv = "";
 
-ApplicationComprasProveedor.prototype._init = function( idProveedor ){
+ApplicationComprasProveedor.prototype._init = function(  ){
 	
-	this.comprarPanel( idProveedor.id_proveedor );
-	this.providerId = idProveedor.id_proveedor;
-	this.nombreProv = idProveedor.nombre;
+	//this.comprarPanel( this.providerId );
+	//this.providerId = idProveedor.id_proveedor;
+	//this.nombreProv = idProveedor.nombre;
 };
 
 
@@ -57,6 +57,9 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 						ApplicationComprasProveedor.currentInstance.inventarioItems.length = 0;
 						ApplicationComprasProveedor.currentInstance.pesoArpilla = 0;
 						ApplicationComprasProveedor.currentInstance.totalArpillas = 0;
+						Ext.get("productosProvSucursal").update("");
+						Ext.get("totalesCompra").update("");
+						Ext.get("Productos-Proveedor").update("");
 						
 						sink.Main.ui.setCard( ApplicationProveedores.currentInstance.mainCard, { type: 'slide', direction: 'right' } );
 						
@@ -82,7 +85,7 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 		id: '_btnAgregarProducto',
 		
 		handler: function(){
-				
+				console.log("@@@@@@@@@@@@ 0) Desencandenando este pedo");
 				ApplicationComprasProveedor.currentInstance.do_agregarInventario();
 			}
 		}];
@@ -95,85 +98,86 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 
 	
 	
-	
-	var panelCompras = new Ext.Panel({
-		id: 'surtir_proveedor',
-		//scroll: 'vertical',
-		//dockedItems: dockedItems,
-		items: [
-				{
-				id: 'embarqueDatos',
-				html: '',
-				items:[
+	if( !this.panelCompras ){	
+
+		this.panelCompras = new Ext.Panel({
+			id: 'surtir_proveedor',
+			//scroll: 'vertical',
+			//dockedItems: dockedItems,
+			items: [
 					{
-					xtype: 'textfield',
-					label: 'Peso en Kgs del Embarque:',
-					id: 'pesoEmbarque',
-					cls: 'ApplicationComprasProveedor-pesoEmbarque',
-					value: 0,
-					hidden : true,
-					listeners: {
-						change: function(){
-								
-						ApplicationComprasProveedor.currentInstance.pesoEmbarque();
+					id: 'embarqueDatos',
+					html: '',
+					items:[
+						{
+						xtype: 'textfield',
+						label: 'Peso en Kgs del Embarque:',
+						id: 'pesoEmbarque',
+						cls: 'ApplicationComprasProveedor-pesoEmbarque',
+						value: 0,
+						hidden : true,
+						listeners: {
+							change: function(){
 									
+							ApplicationComprasProveedor.currentInstance.pesoEmbarque();
+										
+									
+							}//function
+						}//listener
+						}//item textfield
+					]
+					},
+					{
+						id:'arpillasDatos',
+						html: "<div class='ApplicationComprasProveedor-pesoEmbarque' >" 
+								+ "<div class='ApplicationComprasProveedor-numeroArpillas'>Numero Arpillas: </div>" 
 								
-						}//function
-					}//listener
-					}//item textfield
-				]
-				},
-				{
-					id:'arpillasDatos',
-					html: "<div class='ApplicationComprasProveedor-pesoEmbarque' >" 
-							+ "<div class='ApplicationComprasProveedor-numeroArpillas'>Numero Arpillas: </div>" 
-							
-							+ "<div id='totalArps' class='ApplicationComprasProveedor-totalArpillas'>0</div>" 
-							
-							+ "<div class='ApplicationComprasProveedor-PesoArpilla'>Peso por Arpilla: </div>" 
-							
-							+ "<div id='pesoArpillas' class= 'ApplicationComprasProveedor-pesoArpillas'>0</div>" 
-							
-						+ "</div>",
-					hidden : true
-					//cls: 'ApplicationComprasProveedor-pesoEmbarque'
-				}
-				,
-				
-				{
-
-				xtype: 'panel',
-				title: 'panelLeft',
-				id: 'proveedorProductos_SucursalContainer',
-				cls: 'ApplicationComprasProveedor-proveedorProductos_Sucursal',
-				items:[{ html: '<div id="proveedorProductos_Sucursal" class="ApplicationComprasProveedor-proveedorProductos_Sucursal2"><div class="ApplicationComprasProveedor-itemsBox" id="productosProvSucursal"></div>' }]
-				}
-				,
-				{
-				scroll: 'vertical',
-				xtype: 'panel',
-				title: 'panelRi',
-				cls:'ApplicationComprasProveedor-proveedorProductos_Sucursal',
-				items:[{
-				id: 'totales_Compras',  
-				html: "<div id = 'totalesCompra' class='ApplicationComprasProveedor-proveedorProductos_Sucursal2' >"
-						+"</div>"
-				}]
-				}
-				],
-		listeners: {
-			afterrender: function(){
-
-				if(!ApplicationComprasProveedor.currentInstance._BANDERA){
-					console.log("SI ES FALSO DEBO DE ENTRAR A SURTIR POR KGS (TOÑO MODE)");
-					Ext.getCmp("pesoEmbarque").show();
-					Ext.getCmp("arpillasDatos").show();
+								+ "<div id='totalArps' class='ApplicationComprasProveedor-totalArpillas'>0</div>" 
+								
+								+ "<div class='ApplicationComprasProveedor-PesoArpilla'>Peso por Arpilla: </div>" 
+								
+								+ "<div id='pesoArpillas' class= 'ApplicationComprasProveedor-pesoArpillas'>0</div>" 
+								
+							+ "</div>",
+						hidden : true
+						//cls: 'ApplicationComprasProveedor-pesoEmbarque'
+					}
+					,
 					
+					{
+	
+					xtype: 'panel',
+					title: 'panelLeft',
+					id: 'proveedorProductos_SucursalContainer',
+					cls: 'ApplicationComprasProveedor-proveedorProductos_Sucursal',
+					items:[{ html: '<div id="proveedorProductos_Sucursal" class="ApplicationComprasProveedor-proveedorProductos_Sucursal2"><div class="ApplicationComprasProveedor-itemsBox" id="productosProvSucursal"></div>' }]
+					}
+					,
+					{
+					scroll: 'vertical',
+					xtype: 'panel',
+					title: 'panelRi',
+					cls:'ApplicationComprasProveedor-proveedorProductos_Sucursal',
+					items:[{
+					id: 'totales_Compras',  
+					html: "<div id = 'totalesCompra' class='ApplicationComprasProveedor-proveedorProductos_Sucursal2' >"
+							+"</div>"
+					}]
+					}
+					],
+			listeners: {
+				afterrender: function(){
+	
+					if(!ApplicationComprasProveedor.currentInstance._BANDERA){
+						console.log("SI ES FALSO DEBO DE ENTRAR A SURTIR POR KGS (TOÑO MODE)");
+						Ext.getCmp("pesoEmbarque").show();
+						Ext.getCmp("arpillasDatos").show();
+						
+					}
 				}
 			}
-		}
-	});
-	
+		});
+	}
 	
 	/*
 		Se llama a funcion q ejecuta ajax para llenar con html las divs del panel compras
@@ -189,42 +193,44 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 	/*
 	
 	*/
-	var carousel = new Ext.Carousel({
-		defaults:{cls: 'ApplicationClientes-mainPanel'},
-		items: [{
-			scroll: 'vertical',
-			xtype: 'panel',
-			title: 'panel_compra_Proveedor',
-			id: 'compraProveedorPanel',
-			items: [panelCompras],
-			listeners:{
-				activate: function(){
-					Ext.getCmp("_btnComprarProducto").show();
-					Ext.getCmp("_btnAgregarProducto").hide();
-				}
-			}
-		}, {
-			//scroll: 'vertical',
-			xtype: 'panel',
-			scroll: 'vertical',
-			title: 'producto_proveedor',
-			id: 'nuevoProductoProveedor',
-			items: [ {
-					id:'listaProductosAgregar',
-					html: '<div id="Productos-Proveedor" ></div>',
-					
+	if( !this.carousel ){
+
+		this.carousel = new Ext.Carousel({
+			defaults:{cls: 'ApplicationClientes-mainPanel'},
+			items: [{
+				scroll: 'vertical',
+				xtype: 'panel',
+				title: 'panel_compra_Proveedor',
+				id: 'compraProveedorPanel',
+				items: [this.panelCompras],
+				listeners:{
+					activate: function(){
+						//Ext.getCmp("_btnComprarProducto").show();
+						//Ext.getCmp("_btnAgregarProducto").hide();
 					}
-				],
-			listeners:{
-				activate: function(){
-					Ext.getCmp("_btnComprarProducto").hide();
-					Ext.getCmp("_btnAgregarProducto").show();
 				}
-			}//fin listeners
-			
-		}],
-	});
-	
+			}, {
+				//scroll: 'vertical',
+				xtype: 'panel',
+				scroll: 'vertical',
+				title: 'producto_proveedor',
+				id: 'nuevoProductoProveedor',
+				items: [ {
+						id:'listaProductosAgregar',
+						html: '<div id="Productos-Proveedor" ></div>',
+						
+						}
+					],
+				listeners:{
+					activate: function(){
+						//Ext.getCmp("_btnComprarProducto").hide();
+						//Ext.getCmp("_btnAgregarProducto").show();
+					}
+				}//fin listeners
+				
+			}],
+		});
+	}
 	/*
 		Se llama a la funcion que renderea el html del panel con los productos que ofrece el proveedor
 	*/
@@ -240,7 +246,7 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 		defaults: {
 	      flex: 1
 		},
-		items: [carousel]
+		items: [this.carousel]
 	});
 	
 	/*
@@ -505,25 +511,25 @@ ApplicationComprasProveedor.prototype.llenarPanelComprasXarpillas = function( id
 						+ "</div>";
 								
 					for( a = 0; a < productosSucursal.getCount(); a++ ){
-					
+						//console.log(productosSucursal);	
 						html += "<div class='ApplicationComprasProveedor-item' >" 
-						+ "<div class='producto_nombre' id='nombreProdComprar_"+productosSucursal.data.items[a].id_producto+"'>" + productosSucursal.data.items[a].denominacion +"</div>" 
+						+ "<div class='producto_nombre' id='nombreProdComprar_"+productosSucursal.data.items[a].data.id_producto+"'>" + productosSucursal.data.items[a].data.denominacion +"</div>" 
 						
 						+ "<div class='caja_texto'>" 
-						+ "<INPUT TYPE='text' id='NoArpProducto_"+productosSucursal.data.items[a].id_producto+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.sumarArp("+productosSucursal.data.items[a].id_producto+",this.value, NoArpProducto_"+productosSucursal.data.items[a].id_producto+")' class='description' disabled='true'>" 
+						+ "<INPUT TYPE='text' id='NoArpProducto_"+productosSucursal.data.items[a].data.id_producto+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.sumarArp("+productosSucursal.data.items[a].data.id_producto+",this.value, NoArpProducto_"+productosSucursal.data.items[a].data.id_producto+")' class='description' disabled='true'>" 
 						+"</div>"
 						
 						+ "<div class='caja_texto'>" 
-						+ "<INPUT TYPE='text' id='KgsMenosProducto_"+productosSucursal.data.items[a].id_producto+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.revisarCantidadKg("+productosSucursal.data.items[a].id_producto+",this.value, KgsMenosProducto_"+productosSucursal.data.items[a].id_producto+")' class='description' disabled='true'>" 
+						+ "<INPUT TYPE='text' id='KgsMenosProducto_"+productosSucursal.data.items[a].data.id_producto+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.revisarCantidadKg("+productosSucursal.data.items[a].data.id_producto+",this.value, KgsMenosProducto_"+productosSucursal.data.items[a].data.id_producto+")' class='description' disabled='true'>" 
 						+"</div>"
 						
 						
 						+ "<div class='caja_texto'>" 
-						+ "<INPUT TYPE='text' id='precioKgProducto_"+productosSucursal.data.items[a].id_producto+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.revisarCantidaPrecio("+productosSucursal.data.items[a].id_producto+",this.value, precioKgProducto_"+productosSucursal.data.items[a].id_producto+")' class='description' disabled='true'>" 
+						+ "<INPUT TYPE='text' id='precioKgProducto_"+productosSucursal.data.items[a].data.id_producto+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.revisarCantidaPrecio("+productosSucursal.data.items[a].data.id_producto+",this.value, precioKgProducto_"+productosSucursal.data.items[a].data.id_producto+")' class='description' disabled='true'>" 
 						+"</div>"
 						
 						
-						+ "<div class = 'ApplicationComprasProveedor-toggle' id = 'Buy_prod_"+productosSucursal.data.items[a].id_producto+"'></div>"
+						+ "<div class = 'ApplicationComprasProveedor-toggle' id = 'Buy_prod_"+productosSucursal.data.items[a].data.id_producto+"'></div>"
 						
 						+ "</div>";
 						
@@ -531,8 +537,9 @@ ApplicationComprasProveedor.prototype.llenarPanelComprasXarpillas = function( id
 					}//fin for 
 				
 					//imprimir el html
-					Ext.get("productosProvSucursal").update("" + html +"</div>");
 					
+					Ext.get("productosProvSucursal").update("" + html +"</div>");
+
 					Ext.get("totalesCompra").update("<div class='ApplicationComprasProveedor-item' >" 
 							+ "<div class='producto_nombre'>PRODUCTO</div>" 
 							
@@ -548,8 +555,8 @@ ApplicationComprasProveedor.prototype.llenarPanelComprasXarpillas = function( id
 					
 					for( hh = 0; hh < productosSucursal.getCount(); hh++ ){
 						buyProduct = new Ext.form.Toggle({
-							id: 'CProd_'+productosSucursal.data.items[hh].id_producto,
-							renderTo: 'Buy_prod_'+productosSucursal.data.items[hh].id_producto,
+							id: 'CProd_'+productosSucursal.data.items[hh].data.id_producto,
+							renderTo: 'Buy_prod_'+productosSucursal.data.items[hh].data.id_producto,
 							listeners: {
 								change:	function() {
 									
@@ -611,24 +618,24 @@ ApplicationComprasProveedor.prototype.llenarPanelComprasXpiezas = function( idPr
 					for( a = 0; a < productosSucursal.getCount(); a++ ){
 						
 						html += "<div class='ApplicationComprasProveedor-item' >" 
-						+ "<div class='producto_nombre' id='nombreProdComprar_"+productosSucursal.data.items[a].id_producto+"'>" + productosSucursal.data.items[a].denominacion +"</div>" 
+						+ "<div class='producto_nombre' id='nombreProdComprar_"+productosSucursal.data.items[a].data.id_producto+"'>" + productosSucursal.data.items[a].data.denominacion +"</div>" 
 						
 						+ "<div class='cabecera-subtotales-compra'>$ "+ 
-							productosSucursal.data.items[a].precio
+							productosSucursal.data.items[a].data.precio
 							
 						+"</div>"
 						
 						+ "<div class='caja_texto'>" 
-						+ "<INPUT TYPE='text' id='cantidadProducto_"+productosSucursal.data.items[a].id_producto+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.sumaCantidad("+productosSucursal.data.items[a].id_producto+",this.value, cantidadProducto_"+productosSucursal.data.items[a].id_producto+")' disabled='true'>" 
+						+ "<INPUT TYPE='text' id='cantidadProducto_"+productosSucursal.data.items[a].data.id_producto+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.sumaCantidad("+productosSucursal.data.items[a].data.id_producto+",this.value, cantidadProducto_"+productosSucursal.data.items[a].data.id_producto+")' disabled='true'>" 
 						+"</div>"
 						
 						
-						+ "<div class='cabecera-subtotales-compra' id= 'subtotProducto_"+productosSucursal.data.items[a].id_producto+"' >$ 0" 
+						+ "<div class='cabecera-subtotales-compra' id= 'subtotProducto_"+productosSucursal.data.items[a].data.id_producto+"' >$ 0" 
 						
 						+"</div>"
 						
 						
-						+ "<div class = 'ApplicationComprasProveedor-toggle' id = 'Buy_prod_"+productosSucursal.data.items[a].id_producto+"'></div>"
+						+ "<div class = 'ApplicationComprasProveedor-toggle' id = 'Buy_prod_"+productosSucursal.data.items[a].data.id_producto+"'></div>"
 						
 						+ "</div>";
 						
@@ -653,8 +660,8 @@ ApplicationComprasProveedor.prototype.llenarPanelComprasXpiezas = function( idPr
 					
 					for( hh = 0; hh < productosSucursal.getCount(); hh++ ){
 						buyProduct = new Ext.form.Toggle({
-							id: 'CProd_'+productosSucursal.data.items[hh].id_producto,
-							renderTo: 'Buy_prod_'+productosSucursal.data.items[hh].id_producto,
+							id: 'CProd_'+productosSucursal.data.items[hh].data.id_producto,
+							renderTo: 'Buy_prod_'+productosSucursal.data.items[hh].data.id_producto,
 							listeners: {
 								change:	function() {
 									
@@ -675,7 +682,7 @@ ApplicationComprasProveedor.prototype.llenarPanelComprasXpiezas = function( idPr
 /*
 	Lanza una llamada al servidor y trae los productos que ofrece el proveedor
 	y aun no se venden en la sucursal, genera el html y asi los renderea al panel del carrusel
-	que esta a la izquierda del panel principal
+	que esta a la derecha del panel principal
 */
 ApplicationComprasProveedor.prototype.llenarPanelProductosProveedor = function( idProveedor ){
 	
@@ -713,27 +720,27 @@ ApplicationComprasProveedor.prototype.llenarPanelProductosProveedor = function( 
 							+ "<div class='cabecera-compra'>STOCK MINIMO</div>" 
 							
 						+ "</div>";
-								
+				
 					for( a = 0; a < nuevosProductos.getCount(); a++ ){
 					
-						html += "<div class='ApplicationComprasProveedor-item' id ='nuevoItemInventario_"+nuevosProductos.data.items[a].id_producto+"'>" 
-						+ "<div class='producto_nombre' id='nuevoProd_"+nuevosProductos.data.items[a].id_producto+"'>" + nuevosProductos.data.items[a].denominacion +"</div>" 
+						html += "<div class='ApplicationComprasProveedor-item' id ='nuevoItemInventario_"+nuevosProductos.data.items[a].data.id_producto+"'>" 
+						+ "<div class='producto_nombre' id='nuevoProd_"+nuevosProductos.data.items[a].data.id_producto+"'>" + nuevosProductos.data.items[a].data.denominacion +"</div>" 
 						
 						+ "<div class='cabecera-compra'>" 
-						+ nuevosProductos.data.items[a].precio
+						+ nuevosProductos.data.items[a].data.precio
 						+"</div>"
 						
 						+ "<div class='caja_texto'>" 
-						+ "<INPUT TYPE='text' id='precioVenta_"+nuevosProductos.data.items[a].id_producto+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.precioVenta("+nuevosProductos.data.items[a].id_producto+",this.value, precioVenta_"+nuevosProductos.data.items[a].id_producto+")' class='description' disabled='true'>" 
+						+ "<INPUT TYPE='text' id='precioVenta_"+nuevosProductos.data.items[a].data.id_producto+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.precioVenta("+nuevosProductos.data.items[a].data.id_producto+",this.value, precioVenta_"+nuevosProductos.data.items[a].data.id_producto+")' class='description' disabled='true'>" 
 						+"</div>"
 						
 						
 						+ "<div class='caja_texto'>" 
-						+ "<INPUT TYPE='text' id='stockMin_"+nuevosProductos.data.items[a].id_producto+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.stockMin("+nuevosProductos.data.items[a].id_producto+",this.value, stockMin_"+nuevosProductos.data.items[a].id_producto+")' class='description' disabled='true'>" 
+						+ "<INPUT TYPE='text' id='stockMin_"+nuevosProductos.data.items[a].data.id_producto+"' SIZE='5'  onchange='ApplicationComprasProveedor.currentInstance.stockMin("+nuevosProductos.data.items[a].data.id_producto+",this.value, stockMin_"+nuevosProductos.data.items[a].data.id_producto+")' class='description' disabled='true'>" 
 						+"</div>"
 						
 						
-						+ "<div class = 'ApplicationComprasProveedor-toggle' id = 'add_prod_"+nuevosProductos.data.items[a].id_producto+"'></div>"
+						+ "<div class = 'ApplicationComprasProveedor-toggle' id = 'add_prod_"+nuevosProductos.data.items[a].data.id_producto+"'></div>"
 						
 						+ "</div>";
 						
@@ -747,8 +754,8 @@ ApplicationComprasProveedor.prototype.llenarPanelProductosProveedor = function( 
 					
 					for( hh = 0; hh < nuevosProductos.getCount(); hh++ ){
 						addProduct = new Ext.form.Toggle({
-							id: 'agregar_'+nuevosProductos.data.items[hh].id_producto,
-							renderTo: 'add_prod_'+nuevosProductos.data.items[hh].id_producto,
+							id: 'agregar_'+nuevosProductos.data.items[hh].data.id_producto,
+							renderTo: 'add_prod_'+nuevosProductos.data.items[hh].data.id_producto,
 							listeners: {
 								change:	function() {
 									
@@ -1241,9 +1248,10 @@ ApplicationComprasProveedor.prototype.do_agregarItemInventario = function(){
 			//ya llego el request con los datos si existe o no	
 			if(!datos.success){
 				POS.aviso("Error", ""+datos.reason);
+				console.log("|||||||||||| ME REGRESO FALSO SUCCESS: "+datos.success);
 				return;
 			}
-
+			console.log("!!!!!!!!!!!!!!!!!!! SUCCESS: "+datos.succcess);
 			ApplicationComprasProveedor.currentInstance.htmlItemInventario();
 		},
 		function (){
@@ -1594,6 +1602,9 @@ ApplicationComprasProveedor.prototype.compras_doGraciasPanel = function ()
 					//reestablecer todo para una nueva venta				
 					Ext.get("proveedorProductos_Sucursal").update("");
 					Ext.get("totalesCompra").update("");
+					Ext.get("productosProvSucursal").update("");
+					Ext.get("totalesCompra").update("");
+					Ext.get("Productos-Proveedor").update("");
 					
 					sink.Main.ui.setCard( ApplicationProveedores.currentInstance.mainCard, { type: 'slide', direction: 'right' } );
 					
