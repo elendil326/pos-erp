@@ -5,7 +5,9 @@
 .ApplicationInventario-mainPanel .products{
 	color: white !important;
 	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+	font-size: 13px;
 	text-shadow: black 0px 1px 1px;
+	
 	
 	margin: 5px ;
 

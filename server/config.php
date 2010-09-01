@@ -70,8 +70,11 @@
 	//descuento - porcentaje
 	function __pos__calcularTotal($subtotal, $iva, $descuento)
 	{
+		$iva /= 100;
+		$descuento /= 100;
 		//descuento sobre iva
-		return (($subtotal * $iva) + $subtotal);
+
+		return ( ($subtotal- ($subtotal*$descuento)) + (($subtotal-($subtotal*$descuento))*$iva) );
 
 	}
 	

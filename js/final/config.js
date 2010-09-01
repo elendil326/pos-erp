@@ -23,7 +23,7 @@ function calcularTotal ( subtotal, iva, descuento ){
 	
 	descuento /= 100;
 
-	total = (subtotal- (subtotal*descuento)) + ((subtotal-descuento)*iva);
+	total = (subtotal- (subtotal*descuento)) + ((subtotal-(subtotal*descuento))*iva);
 
 	return total;
 
