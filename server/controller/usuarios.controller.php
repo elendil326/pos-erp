@@ -103,7 +103,7 @@ function modificarUsuario( $id_usuario, $nombre, $username, $password )
 		echo ' { "success" : false, "error" : "No se pudieron actualizar los datos del usuario" } ';
 	}
 	
-	echo ' { "success" : true, datos: "Se actualizaron correctamente los datos de '.$nombre.'" } ';
+	echo ' { "success" : true, "datos": "Se actualizaron correctamente los datos de '.$nombre.'" } ';
 
 }
 
@@ -124,9 +124,10 @@ function desactivarUsuario( $id_usuario )
 	catch( Exception $e )
 	{
 		echo ' { "success" : false, "error" : "No se pudo desactivar la cuenta del usuario" } ';
+		return;
 	}
 	
-	echo ' { "success" : true, datos: "Se desactivo correctamente la cuenta" } ';
+	echo ' { "success" : true, "datos": "Se desactivo correctamente la cuenta" } ';
 
 }
 
@@ -145,15 +146,17 @@ function getDataGridUsuarios($page, $rp, $sortname, $sortorder){
 						"usuario"=>$usuario->getUsuario(),
 						"id_sucursal"=>$usuario->getIdSucursal()
 					));*/
+		if($usuario->getActivo() == 1)
+		{		
+			$sucursal = SucursalDAO::getByPK($usuario->getIdSucursal());
 					
-		$sucursal = SucursalDAO::getByPK($usuario->getIdSucursal());
-					
-		array_push($arrayDatos, array(
-						$usuario->getIdUsuario(),
-						$usuario->getNombre(),
-						$usuario->getUsuario(),
-						$sucursal->getDescripcion()
-					));
+			array_push($arrayDatos, array(
+							$usuario->getIdUsuario(),
+							$usuario->getNombre(),
+							$usuario->getUsuario(),
+							$sucursal->getDescripcion()
+						));
+		}
 	}
 
 	return '{ "success": true, "page": '.$page.', "total": '.count($todos).', "data" : '.json_encode($arrayDatos).' }';

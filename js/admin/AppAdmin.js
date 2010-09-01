@@ -216,19 +216,24 @@ AppAdmin.prototype.loadPersonal = function(){
 		}
 		});
 		
-		Utils.grid({
-			url: "../proxy.php",
-			data: {action: "2306", page: "1", rp: "10", sortname: "id_usuario", sortorder: "asc"},
-			renderTo: "content-2",
-			deleteAction: "2307",
-			columns: ["ID", "Nombre", "Usuario", "Sucursal"],
-			success: function(msg){
-			
-				//alert(msg.success);
-			}
-		});
+		
 	
-		$('#content-2').fadeIn('slow');
+		$('#content-2').fadeIn('slow', function(){
+		
+			Utils.grid({
+				url: "../proxy.php",
+				data: {action: "2306", page: "1", rp: "10", sortname: "id_usuario", sortorder: "asc"},
+				renderTo: "content-2",
+				deleteAction: "2305",
+				columns: ["ID", "Nombre", "Usuario", "Sucursal"],
+				success: function(msg){
+			
+					//alert(msg.success);
+				}
+			});
+		
+		
+		});
 	
 	});
 }
