@@ -311,10 +311,25 @@ button{
 	background: #444444;
 	text-shadow: black 0px 1px 0px;
 	color: white !important;
+	margin-top: 10px;
 }
 
 .row-usuario:hover{
 	background: black;
+}
+
+.tabla-input{
+	border: 1px solid gray;
+	background: white;
+}
+
+.tabla-nav-link{
+	text-decoration: none;
+	color: gray;
+}
+
+.tabla-nav-link:hover{
+	color:black;
 }
 
 /*#usuario-boton-enviar{ color:black;}*/

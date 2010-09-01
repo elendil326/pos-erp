@@ -218,9 +218,9 @@ AppAdmin.prototype.loadPersonal = function(){
 		
 		Utils.grid({
 			url: "../proxy.php",
-			data: {action: "2305", page: "1", rp: "10", sortname: "id_usuario", sortorder: "asc"},
+			data: {action: "2306", page: "1", rp: "10", sortname: "id_usuario", sortorder: "asc"},
 			renderTo: "content-2",
-			deleteAction: "2306",
+			deleteAction: "2307",
 			columns: ["ID", "Nombre", "Usuario", "Sucursal"],
 			success: function(msg){
 			

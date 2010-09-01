@@ -16,7 +16,9 @@
  */
 require_once('../server/model/usuario.dao.php');
 require_once('../server/model/grupos_usuarios.dao.php');
+require_once('../server/model/sucursal.dao.php');
 require_once('../server/misc/sanitize.php');
+
 
 
 /**
@@ -144,11 +146,13 @@ function getDataGridUsuarios($page, $rp, $sortname, $sortorder){
 						"id_sucursal"=>$usuario->getIdSucursal()
 					));*/
 					
+		$sucursal = SucursalDAO::getByPK($usuario->getIdSucursal());
+					
 		array_push($arrayDatos, array(
 						$usuario->getIdUsuario(),
 						$usuario->getNombre(),
 						$usuario->getUsuario(),
-						$usuario->getIdSucursal()
+						$sucursal->getDescripcion()
 					));
 	}
 
