@@ -526,7 +526,6 @@ ApplicacionClientes.prototype.doSearch = function(  ){
 	
         ClientesListStore.clearFilter();
         try{
-			console.log("limpio filtro");
         	ClientesListStore.sync(); //marca erro pero si lo meto en try catch o no lo llamo la vista no coincide con el store
         }catch(e){
 			console.warn("Error sync -> "+e);
@@ -535,10 +534,9 @@ ApplicacionClientes.prototype.doSearch = function(  ){
 	}else{
 		
 		if(DEBUG){
-			console.log( "AppCliente Buscando " + Ext.getCmp('btnBuscarCliente').getValue() );
+			//console.log( "AppCliente Buscando " + Ext.getCmp('btnBuscarCliente').getValue() );
 		}
         try{
-			console.log("buscando");
         	ClientesListStore.filter('nombre', Ext.getCmp('btnBuscarCliente').getValue()  );
 			ClientesListStore.sync();
         }catch(e){
@@ -1191,7 +1189,7 @@ ApplicacionClientes.prototype.abonarVenta = function( idVenta , total , adeudo )
     
     var clienteHtml = "<div class='ApplicationClientes-itemsBox'>";
         clienteHtml += " <div class='ApplicationClientes-clienteBox'> ";
-        clienteHtml += " <div class='nombre'>Abono de " + ApplicacionClientes.currentInstance.clienteSeleccionado[0].nombre + " para la venta '"+idVenta+"'</div>";
+        clienteHtml += " <div class='nombre'>Abono de " + ApplicacionClientes.currentInstance.clienteSeleccionado.nombre + " para la venta '"+idVenta+"'</div>";
         clienteHtml += " <div class='nombre'> Total de Venta: " + total + "</div>";
         clienteHtml += " <div class='nombre'> Adeuda: " + adeudo + "</div>";
         clienteHtml += " </div> </div><br>";

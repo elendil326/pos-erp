@@ -136,7 +136,7 @@ ApplicationUsuarios.prototype.loadHomePanel = function()
 			items: [ ApplicationUsuarios.currentInstance.toolbar_buttons ]
 	});
 
-	console.log(ApplicationUsuarios.currentInstance.UserListStore);
+	//console.log(ApplicationUsuarios.currentInstance.UserListStore);
 	
 	this.homePanel = new Ext.Panel({
 		

@@ -194,6 +194,3 @@ switch( $args['action'] )
 		
 	break;
 }
-
-
-?>

@@ -575,4 +575,4 @@ ApplicationGastos.prototype.loadHomeButtons = function(){
 };
 
 //autoinstalar esta applicacion
-AppInstaller( new ApplicationGastos() );
+//esta aplicacion se instala desde otro lugar desde el index, ya que solo carga si eres gerente

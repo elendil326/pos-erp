@@ -717,8 +717,11 @@ Ext.setup({
 				POS_CAJERO_NOMBRE = response.payload.cajero_nombre;
 				POS_CAJERO_TIPO = response.payload.tipo;
 
-				if(POS_CAJERO_TIPO == "Gerente")
+				if(POS_CAJERO_TIPO == "Gerente"){
 					AppInstaller( new ApplicationUsuarios() );
+					AppInstaller( new ApplicationGastos() );
+				}
+					
 			}
 
         	sink.Main.init();
