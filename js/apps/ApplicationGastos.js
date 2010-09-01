@@ -349,12 +349,6 @@ ApplicationGastos.prototype.getDate = function( textfield ){
 	    })]
 	});
 	
-	
-	Ext.getCmp('ApplicationGastos-getDate-picker').setValue({
-	            day: currentDate.getDate(),
-	            month: currentDate.getMonth(),
-	            year: currentDate.getFullYear()
-	        });
 
 	datePicker.show();
 	//Ext.getCmp('ApplicationGastos-getDate-picker').slots = POS.pickerSlots;
