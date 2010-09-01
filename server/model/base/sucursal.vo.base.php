@@ -54,7 +54,7 @@ class Sucursal extends VO
 		"letras_factura" => $this->letras_factura,
 		"activo" => $this->activo
 		)); 
-	return json_encode($vec, true); 
+	return json_encode($vec); 
 	}
 	
 	/**
