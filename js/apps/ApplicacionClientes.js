@@ -305,8 +305,24 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 		  disabledClass: '',
           flex: 1
         },
-        items: [carousel]
-    });
+        //items: [carousel]
+		items: [{
+			        xtype: 'carousel',
+			        items: [{
+			            html: '<p>Navigate the carousel on this page by swiping left/right.</p>',
+			            cls: 'card card1'
+			        },
+			        {
+			            html: '<p>Clicking on either side of the indicators below</p>',
+			            cls: 'card card2'
+			        },
+			        {
+			            html: 'Card #3',
+			            cls: 'card card3'
+			        }
+					]
+				}]
+    	});
 
 
     
