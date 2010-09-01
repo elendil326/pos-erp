@@ -251,7 +251,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 		if ( textvalue.length < 1){
 			ApplicationInventario.currentInstance.InvProductsListStore.clearFilter();
 		}
-		console.log(ApplicationInventario.currentInstance.InvProductsListStore);
+
 		
 		ApplicationInventario.currentInstance.InvProductsListStore.filter({
 			property     : 'denominacion',
