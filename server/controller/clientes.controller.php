@@ -120,7 +120,7 @@ function update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telef
  * @param <type> $telefono
  * @param <type> $e_mail 
  */
-function insert_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0) {
+function insert_customer($rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0) {
     
 	if ($limite_credito < 0.0) {
         return "{success: false, reason: 'El limite de crédito debe ser mayor a cero.' }";
@@ -278,7 +278,7 @@ switch ($args['action']) {
 		
 		
 
-        $ans = insert_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0);
+        $ans = insert_customer($rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0);
         echo $ans;
 	break;
 	

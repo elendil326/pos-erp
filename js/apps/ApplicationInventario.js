@@ -94,7 +94,7 @@ ApplicationInventario.prototype._init = function()
 
 //register model
 Ext.regModel('inv_Existencias', {
-    fields: ['id_producto','denominacion', 'existencias', 'precio_venta', 'min']
+    fields: ['id_producto', 'nombre', 'denominacion', 'existencias', 'precio_venta', 'min']
 });
 
 
@@ -248,17 +248,17 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 	*/
 	buscar = function( textvalue ) {
       
-		if ( textvalue == ""){
+		if ( textvalue.length < 1){
 			ApplicationInventario.currentInstance.InvProductsListStore.clearFilter();
 		}
+		console.log(ApplicationInventario.currentInstance.InvProductsListStore);
 		
-		
-		ApplicationInventario.currentInstance.InvProductsListStore.filter([{
+		ApplicationInventario.currentInstance.InvProductsListStore.filter({
 			property     : 'denominacion',
 			value        : textvalue,
 			anyMatch     : true, 
 			caseSensitive: false 
-		}]);
+		});
     };
 	
 	
@@ -434,7 +434,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 			loadingText: 'Cargando datos...',
 			emptyText: '<div class="no-data">No se encontraron productos para esta sucursal.</div>',
         	store: ApplicationInventario.currentInstance.InvProductsListStore,
-        	tpl: String.format('<tpl for="."><div class="products"><strong>ID</strong>{id_producto} <strong>Denominacion</strong>&nbsp;{denominacion}&nbsp;<strong>Existencias</strong>&nbsp;{existencias}&nbsp;<strong>Precio Venta</strong>&nbsp;${precio_venta}</div></tpl>' ),
+        	tpl: String.format('<tpl for="."><div class="products"><strong>ID</strong>{id_producto} <strong>Nombre</strong> {nombre} <strong>Denominacion</strong>&nbsp;{denominacion}&nbsp;<strong>Existencias</strong>&nbsp;{existencias}&nbsp;<strong>Precio Venta</strong>&nbsp;${precio_venta}</div></tpl>' ),
         	itemSelector: 'div.products',
         	//singleSelect: true,
 			multiSelect: true,

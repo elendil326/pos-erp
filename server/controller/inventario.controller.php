@@ -140,7 +140,7 @@ require_once('../server/model/sucursal.dao.php');
 		foreach ($detallesInventario as $detalle)
 		{
 			$inventario=InventarioDAO::getByPK($detalle->getIdProducto());
-			$resul.='{ "id_producto" : "'.$inventario->getIdProducto().'" , "denominacion" : "'.$inventario->getDenominacion().'" , "precio_venta" : "'.$detalle->getPrecioVenta().'" , "existencias" : "'.$detalle->getExistencias().'" , "id_sucursal" : "'.$sucursal.'" , "min" : "'.$detalle->getMin().'" } , ';
+			$resul.='{ "id_producto" : "'.$inventario->getIdProducto().'" , "denominacion" : "'.$inventario->getDenominacion().'" , "nombre" : "'.$inventario->getNombre().'" , "precio_venta" : "'.$detalle->getPrecioVenta().'" , "existencias" : "'.$detalle->getExistencias().'" , "id_sucursal" : "'.$sucursal.'" , "min" : "'.$detalle->getMin().'" } , ';
 		}
 		$resul.= "]}";
 		return str_replace(", ]","]",$resul);

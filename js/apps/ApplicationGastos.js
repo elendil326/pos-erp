@@ -122,6 +122,8 @@ ApplicationGastos.prototype.loadHomePanel = function()
         type: 'vbox',
         align: 'stretch'
     },
+	id: 'ApplicationGastos-mainPanel',
+	baseCls: 'ApplicationGastos-mainPanel',
     defaults: {
         flex: 1
     },
@@ -161,6 +163,7 @@ ApplicationGastos.prototype.loadGastosPanel = function(){
 
 	this.gastosPanel = new Ext.form.FormPanel({
 		id: 'ApplicationGastos-gastosFormPanel',
+		baseCls: 'ApplicationGastos-gastosFormPanel',
 		scroll: 'none',
 		items:
 			[{
@@ -221,6 +224,7 @@ ApplicationGastos.prototype.loadIngresosPanel = function(){
 	
 	var ingresosPanel = new Ext.form.FormPanel({
 		id: 'ApplicationGastos-ingresosFormPanel',
+		baseCls: 'ApplicationGastos-ingresosFormPanel',
 		scroll: 'none',
 		items:
 			[{
