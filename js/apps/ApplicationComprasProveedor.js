@@ -44,58 +44,68 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 	this.toggleBtns2.length = 0;
 	this.pesoArpilla = 0;
 	this.totalArpillas = 0;
-	
-	var buscar = [{
-		xtype: 'button',
-		text: 'Regresar',
-		ui: 'back',
-		id:'regresarComprasProveedor',
-		handler:	function( ){
-						ApplicationComprasProveedor.currentInstance.toggleBtns.length = 0;
-						ApplicationComprasProveedor.currentInstance.toggleBtns2.length = 0;
-						ApplicationComprasProveedor.currentInstance.compraItems.length = 0;
-						ApplicationComprasProveedor.currentInstance.inventarioItems.length = 0;
-						ApplicationComprasProveedor.currentInstance.pesoArpilla = 0;
-						ApplicationComprasProveedor.currentInstance.totalArpillas = 0;
-						Ext.get("productosProvSucursal").update("");
-						Ext.get("totalesCompra").update("");
-						Ext.get("Productos-Proveedor").update("");
-						
-						sink.Main.ui.setCard( ApplicationProveedores.currentInstance.mainCard, { type: 'slide', direction: 'right' } );
-						
-					}
-				
-		}];
 
-	var agregar = [{
-		xtype: 'button',
-		text: 'Comprar',
-		ui: 'action',
-		id: '_btnComprarProducto',
-		handler: function(){
-				
-				ApplicationComprasProveedor.currentInstance.doComprar();
-			}
-		}];
-	
-	var agregarInventario = [{
-		xtype: 'button',
-		text: 'Agregar Producto',
-		ui: 'action',
-		id: '_btnAgregarProducto',
-		
-		handler: function(){
-				console.log("@@@@@@@@@@@@ 0) Desencandenando este pedo");
-				ApplicationComprasProveedor.currentInstance.do_agregarInventario();
-			}
-		}];
+	if( !this.regresarB ){
 
-        var dockedItems = [ new Ext.Toolbar({
+		this.regresarB = [{
+			xtype: 'button',
+			text: 'Regresar',
+			ui: 'back',
+			id:'regresarComprasProveedor',
+			handler:	function( ){
+
+							ApplicationComprasProveedor.currentInstance.toggleBtns.length = 0;
+							ApplicationComprasProveedor.currentInstance.toggleBtns2.length = 0;
+							ApplicationComprasProveedor.currentInstance.compraItems.length = 0;
+							ApplicationComprasProveedor.currentInstance.inventarioItems.length = 0;
+							ApplicationComprasProveedor.currentInstance.pesoArpilla = 0;
+							ApplicationComprasProveedor.currentInstance.totalArpillas = 0;
+							
+							/*Ext.get("productosProvSucursal").update("");
+							Ext.get("totalesCompra").update("");*/
+							Ext.get("Productos-Proveedor").update("");
+							
+							sink.Main.ui.setCard( ApplicationProveedores.currentInstance.mainCard, { type: 'slide', direction: 'right' } );
+							
+						}
+					
+			}];
+	}
+	
+	if( !this.agregar ){
+		this.agregar = [{
+			xtype: 'button',
+			text: 'Comprar',
+			ui: 'action',
+			id: '_btnComprarProducto',
+			handler: function(){
+					
+					ApplicationComprasProveedor.currentInstance.doComprar();
+				}
+			}];
+	}
+	
+	if( !this.agregarInventario ){
+		this.agregarInventario = [{
+			xtype: 'button',
+			text: 'Agregar Producto',
+			ui: 'action',
+			id: '_btnAgregarProducto',
+			
+			handler: function(){
+					console.log("@@@@@@@@@@@@ 0) Desencandenando este pedo");
+					ApplicationComprasProveedor.currentInstance.do_agregarInventario();
+				}
+			}];
+	}
+	
+	if( !this.dockedItems ){
+        this.dockedItems = [ new Ext.Toolbar({
             ui: 'dark',
             dock: 'bottom',
-            items: buscar.concat({xtype:'spacer'}).concat(agregar).concat(agregarInventario)
+            items: this.regresarB.concat({xtype:'spacer'}).concat(this.agregar).concat(this.agregarInventario)
         })];
-
+	}
 	
 	
 	if( !this.panelCompras ){	
@@ -140,7 +150,7 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 								
 							+ "</div>",
 						hidden : true
-						//cls: 'ApplicationComprasProveedor-pesoEmbarque'
+						
 					}
 					,
 					
@@ -196,41 +206,48 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 	if( !this.carousel ){
 
 		this.carousel = new Ext.Carousel({
-			defaults:{cls: 'ApplicationClientes-mainPanel'},
+			id: 'CarruselSurtirProductosSucursal',
 			items: [{
 				scroll: 'vertical',
 				xtype: 'panel',
 				title: 'panel_compra_Proveedor',
 				id: 'compraProveedorPanel',
+				
 				items: [this.panelCompras],
 				listeners:{
 					activate: function(){
-						//Ext.getCmp("_btnComprarProducto").show();
-						//Ext.getCmp("_btnAgregarProducto").hide();
+						console.log("Activado LEFT DEFAULT");
+						
+						Ext.getCmp("_btnComprarProducto").enable(true);
+						Ext.getCmp("_btnAgregarProducto").enable(false);
 					}
 				}
 			}, {
-				//scroll: 'vertical',
+
 				xtype: 'panel',
 				scroll: 'vertical',
 				title: 'producto_proveedor',
 				id: 'nuevoProductoProveedor',
 				items: [ {
+
 						id:'listaProductosAgregar',
-						html: '<div id="Productos-Proveedor" ></div>',
+						html: '<div id="Productos-Proveedor"></div>',
 						
 						}
 					],
 				listeners:{
 					activate: function(){
-						//Ext.getCmp("_btnComprarProducto").hide();
-						//Ext.getCmp("_btnAgregarProducto").show();
+						console.log("Activado DERECHA");
+						
+						Ext.getCmp("_btnComprarProducto").enable(false);
+						Ext.getCmp("_btnAgregarProducto").enable(true);
 					}
 				}//fin listeners
 				
 			}],
 		});
-	}
+		
+	}//fin if !this.carousel
 	/*
 		Se llama a la funcion que renderea el html del panel con los productos que ofrece el proveedor
 	*/
@@ -238,7 +255,7 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 	
 	
 	var panelP = new Ext.Panel({
-		dockedItems: dockedItems,
+		dockedItems: this.dockedItems,
 		layout: {
 			type: 'vbox',
 			align: 'stretch'
@@ -249,6 +266,7 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 		items: [this.carousel]
 	});
 	
+		
 	/*
 	*/
 	this.surtir = panelP;
@@ -265,7 +283,7 @@ ApplicationComprasProveedor.prototype.elegirProducto = function ( idToggle ){
 	if( !ApplicationComprasProveedor.currentInstance._BANDERATOGGLES ){
 		return;
 	}
-	console.log("Si ejectuo el metodo elegirProducto");
+
 	id = idToggle.substring(6);
 	
 	if( !ApplicationComprasProveedor.currentInstance._BANDERA ){//toño mode
@@ -279,6 +297,8 @@ ApplicationComprasProveedor.prototype.elegirProducto = function ( idToggle ){
 			document.getElementById("NoArpProducto_"+id).value = 0;
 			document.getElementById("KgsMenosProducto_"+id).value = 0;
 			document.getElementById("precioKgProducto_"+id).value = 0;
+			
+			console.log("Apenas voy a agregar 1 producto al arreglo");
 			
 			ApplicationComprasProveedor.currentInstance.agregarProductoCompra( id );
 			
@@ -390,6 +410,7 @@ ApplicationComprasProveedor.prototype.agregarProductoCompra = function( id_produ
 		producto.innerHTML = codigo;		
 		document.getElementById("totalesCompra").appendChild( producto );
 		
+		console.log("Apenas llamare al metodo q invoca al AJAX ");
 		ApplicationComprasProveedor.currentInstance.compras_doAddProduct( id_producto );
 	}
 };
@@ -436,6 +457,8 @@ ApplicationComprasProveedor.prototype.htmlItemInventario = function(  ){
 				document.getElementById("productosProvSucursal").appendChild( producto );
 				
 				Ext.get("nuevoItemInventario_"+items[a].id).remove();
+				
+				
 		}
 	}//fin for 
 		
@@ -449,7 +472,7 @@ ApplicationComprasProveedor.prototype.htmlItemInventario = function(  ){
 				renderTo: 'Buy_prod_'+items[hh].id,
 					listeners: {
 						change:	function() {
-								
+							console.log("Se ha elegido otro producto");	
 							ApplicationComprasProveedor.currentInstance.elegirProducto( this.getId() );
 						}
 					}//listeners
@@ -489,7 +512,8 @@ ApplicationComprasProveedor.prototype.llenarPanelComprasXarpillas = function( id
 			},
 			function (datos){//mientras responda
 				if(!datos.success){
-					POS.aviso("ERROR",""+datos.reason);
+					//POS.aviso("ERROR",""+datos.reason);
+					Ext.get("productosProvSucursal").update("<div class='ApplicationClientes-itemsBox'><div class='no-data'>"+datos.reason+"</div></div>");
 					return;
 				}
 				
@@ -700,7 +724,9 @@ ApplicationComprasProveedor.prototype.llenarPanelProductosProveedor = function( 
 			},
 			function (datos){//mientras responda
 				if(!datos.success){
-					POS.aviso("ERROR",""+datos.reason);
+					//POS.aviso("ERROR",""+datos.reason);
+					
+					Ext.get("Productos-Proveedor").update("<div class='ApplicationComprasProveedor-itemsBox'><div class=\"no-data\">"+datos.reason+"</div></div>");
 					return;
 				}
 				
@@ -783,9 +809,9 @@ ApplicationComprasProveedor.prototype.llenarPanelProductosProveedor = function( 
 ApplicationComprasProveedor.prototype.compras_doAddProduct = function ( id_producto )
 {
 	
+	console.log("Entrando a Metodo AJAX q hace el push");
 	
-	
-	
+
 	//buscar si este producto existe (vender un producto que exista en la sucursal)
 	POS.AJAXandDECODE({
 			action: '1210',
@@ -793,7 +819,7 @@ ApplicationComprasProveedor.prototype.compras_doAddProduct = function ( id_produ
 			id_proveedor: ApplicationComprasProveedor.currentInstance.providerId,
 		}, 
 		function (datos){
-			
+			console.log("-- ANTES A AGREGAR A COMPRA ITEMS SUCCESS: "+datos.success);
 			//ya llego el request con los datos si existe o no	
 			if(!datos.success){
 				POS.aviso("Error", datos.reason);
@@ -828,6 +854,7 @@ ApplicationComprasProveedor.prototype.compras_doAddProduct = function ( id_produ
 			};
 			}
 			//agregarlo al carrito
+				console.log("------ ANTES DE HACER EL PUSH EN COMPRA ITEMS");
 			ApplicationComprasProveedor.currentInstance.compraItems.push( item );
 			
 			
@@ -1240,7 +1267,7 @@ ApplicationComprasProveedor.prototype.do_agregarItemInventario = function(){
 	console.log(jsonItems);
 
 	POS.AJAXandDECODE({
-			action: '1220',//insertar compra
+			action: '1220',
 			jsonItems : jsonItems,
 		}, 
 		function (datos){
@@ -1251,7 +1278,8 @@ ApplicationComprasProveedor.prototype.do_agregarItemInventario = function(){
 				console.log("|||||||||||| ME REGRESO FALSO SUCCESS: "+datos.success);
 				return;
 			}
-			console.log("!!!!!!!!!!!!!!!!!!! SUCCESS: "+datos.succcess);
+			console.log("!!!!!!!!!!!!!!!!!!! SUCCESS: "+datos.success);
+
 			ApplicationComprasProveedor.currentInstance.htmlItemInventario();
 		},
 		function (){

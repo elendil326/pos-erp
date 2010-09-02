@@ -35,7 +35,7 @@ function insert_provider_product( $jsonItems ) {
 	$arregloItems = json_decode($jsonItems,true);
 	$dim = count($arregloItems);
 	$agregados =0;
-	
+	$out = "";
 	for ( $i = 0; $i < $dim; $i++ ){	
 	
 		$detalle = new DetalleInventario();
@@ -49,13 +49,14 @@ function insert_provider_product( $jsonItems ) {
 			
 		//if( $ans > 0 ){
 			$agregados++;
+			$out .= ", ID: ".$detalle->getIdProducto()." precio venta: ".$detalle->getPrecioVenta()." Min: ".$detalle->getMin()." existencias: ".$detalle->getExistencias();
 		//}
 	}//fin for
 	
 	if( $agregados < 1 ){
 		return "{success: false, reason: 'No se agrego ningun producto al inventario, intente nuevamente'}";
 	}else{
-		return "{success: true, reason: 'Se agregaron ".$agregados." productos al inventario'}";
+		return "{success: true, reason: 'Se agregaron ".$agregados." productos al inventario', details: '".$out."'}";
 	}
 }
 

@@ -336,6 +336,9 @@ ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 				ApplicationProveedores.currentInstance.comprasObj.comprarPanel( provedor.id_proveedor);
 				sink.Main.ui.setCard( ApplicationProveedores.currentInstance.comprasObj.surtir, 'slide' );
 				
+				Ext.get("CarruselSurtirProductosSucursal").setStyle({
+					'background-image':'url("media/g3.png")'								   
+				});
 					//this.obj = new ApplicationComprasProveedor ( provedor );
 					//sink.Main.ui.setCard( this.obj.surtir, 'slide' );			
 				
@@ -402,7 +405,7 @@ ApplicationProveedores.prototype.listarCompras = function (  ){
 					
 					
 					
-					html += "<div class='ApplicationClientes-item' >"
+					html += "<div class='ApplicationClientes-Item' >"
 							+ "<div class='trash' ></div>"
 							+ "<div class='id'>No. Compra</div>" 
 							+ "<div class='tipo'>Tipo Venta</div>" 
@@ -417,7 +420,7 @@ ApplicationProveedores.prototype.listarCompras = function (  ){
 					//renderear el html
 					for( a = 0; a < comprasProveedor.getCount(); a++ ){
 						
-						html += "<div class='ApplicationClientes-item' >" 
+						html += "<div class='ApplicationClientes-Item' >" 
 						+ "<div class='trash' onclick='ApplicationProveedores.currentInstance.verCompra(" +comprasProveedor.data.items[a].data.id_compra+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>"	
 							+ "<div class='id'>" + comprasProveedor.data.items[a].data.id_compra +"</div>" 
 							+ "<div class='tipo'>" + comprasProveedor.data.items[a].data.tipo_compra+"</div>" 
@@ -479,7 +482,7 @@ ApplicationProveedores.prototype.listarComprasCredito = function (  ){
 				if(datos.success === true){
 					comprasProveedorCredito.loadData(datos.datos);
 					
-					html += "<div class='ApplicationClientes-item' >"
+					html += "<div class='ApplicationClientes-Item' >"
 							+ "<div class='trash' ></div>"
 							+ "<div class='id'>No. Compra</div>" 
 							+ "<div class='fecha'>Fecha</div>" 
@@ -505,7 +508,7 @@ ApplicationProveedores.prototype.listarComprasCredito = function (  ){
 							
 							status ="<div class='abonar' onclick='ApplicationProveedores.currentInstance.abonarCompra(" + compra.data.id_compra + " , "+ tot +" , "+ adeudo +", "+ compra.data.abonado +")'>ABONAR</div>";
 						}
-						html+= "<div class='ApplicationClientes-item' >" 
+						html+= "<div class='ApplicationClientes-Item' >" 
 						+ "<div class='trash' onclick='ApplicationProveedores.currentInstance.verCompra(" + compra.data.id_compra+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>"	
 						+ "<div class='id'>" + compra.data.id_compra +"</div>" 
 						+ "<div class='fecha'>"+ compra.data.fecha +"</div>" 
@@ -616,8 +619,8 @@ ApplicationProveedores.prototype.verPagosCompra = function( idCompra ){
 					comprasDetalle.loadData(datos.datos);
 					
 					var html = "";
-					html += "<div class='ApplicationClientes-item' >" 
-					+ "<div class='vendedor'>NUMERO DE COMPRA</div>" 
+					html += "<div class='ApplicationClientes-Item' >" 
+					+ "<div class='vendedor'># COMPRA</div>" 
 					+ "<div class='sucursal'>FECHA</div>" 
 					+ "<div class='subtotal'>MONTO</div>"
 					+ "<div class='subtotal'></div>"
@@ -625,11 +628,11 @@ ApplicationProveedores.prototype.verPagosCompra = function( idCompra ){
 								
 					for( a = 0; a < comprasDetalle.getCount(); a++ ){
 											
-						html += "<div class='ApplicationClientes-item' id='pago_Borrar_"+comprasDetalle.data.items[a].id_pago+"'>" 
-						+ "<div class='vendedor'>" + comprasDetalle.data.items[a].id_compra +"</div>" 
-						+ "<div class='sucursal'>"+ comprasDetalle.data.items[a].fecha +"</div>" 
-						+ "<div class='subtotal'>$ "+ comprasDetalle.data.items[a].monto+"</div>"
-						+ "<div class='abonar' onclick='ApplicationProveedores.currentInstance.EliminarabonoCompra(" +  comprasDetalle.data.items[a].id_pago +")'>ELIMINAR PAGO</div>"
+						html += "<div class='ApplicationClientes-Item' id='pago_Borrar_"+comprasDetalle.data.items[a].data.id_pago+"'>" 
+						+ "<div class='vendedor'>" + comprasDetalle.data.items[a].data.id_compra +"</div>" 
+						+ "<div class='sucursal'>"+ comprasDetalle.data.items[a].data.fecha +"</div>" 
+						+ "<div class='subtotal'>$ "+ comprasDetalle.data.items[a].data.monto+"</div>"
+						+ "<div class='abonar' onclick='ApplicationProveedores.currentInstance.EliminarabonoCompra(" +  comprasDetalle.data.items[a].data.id_pago +")'>ELIMINAR</div>"
 						+ "</div>";
 					}
 								
@@ -894,7 +897,7 @@ ApplicationProveedores.prototype.verCompra = function( idCompra ){
 
 	 var formBase = new Ext.Panel({
 		id: 'detalleCompraPanel',
-		 scroll: 'vertical',
+		scroll: 'vertical',
 			//	items
             items: [{
 				id: 'detalleCompraProveedor',
@@ -959,7 +962,7 @@ ApplicationProveedores.prototype.verCompra = function( idCompra ){
 					comprasDetalle.loadData(datos.datos);
 					
 					var html = "";
-					html += "<div class='ApplicationClientes-item' >" 
+					html += "<div class='ApplicationClientes-Item' >" 
 					+ "<div class='vendedor'>PRODUCTO</div>" 
 					+ "<div class='sucursal'>CANTIDAD</div>" 
 					+ "<div class='subtotal'>PRECIO</div>" 
@@ -968,11 +971,11 @@ ApplicationProveedores.prototype.verCompra = function( idCompra ){
 								
 					for( a = 0; a < comprasDetalle.getCount(); a++ ){
 											
-						html += "<div class='ApplicationClientes-item' >" 
-						+ "<div class='vendedor'>" + comprasDetalle.data.items[a].denominacion +"</div>" 
-						+ "<div class='sucursal'>"+ comprasDetalle.data.items[a].cantidad +"</div>" 
-						+ "<div class='subtotal'>$ "+ comprasDetalle.data.items[a].precio+"</div>"
-						+ "<div class='subtotal'>$ "+ comprasDetalle.data.items[a].subtotal +"</div>"
+						html += "<div class='ApplicationClientes-Item' >" 
+						+ "<div class='vendedor'>" + comprasDetalle.data.items[a].data.denominacion +"</div>" 
+						+ "<div class='sucursal'>"+ comprasDetalle.data.items[a].data.cantidad +"</div>" 
+						+ "<div class='subtotal'>$ "+ comprasDetalle.data.items[a].data.precio+"</div>"
+						+ "<div class='subtotal'>$ "+ comprasDetalle.data.items[a].data.subtotal +"</div>"
 						+ "</div>";
 					}
 								
@@ -993,6 +996,14 @@ ApplicationProveedores.prototype.verCompra = function( idCompra ){
 	
 	formBase.show();
 	
+	
+	Ext.get("detalleCompraPanel").setStyle({
+					'background-image':'url("media/g3.png")'								   
+	});
+	
+	Ext.get("detalleCompraProveedor").setStyle({
+					'background-image':'url("media/g3.png")'								   
+	});
 }
 
 /*----------------------------------------------------------
