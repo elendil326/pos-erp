@@ -335,11 +335,12 @@ POS.aviso.visible = false;
 
 
 
-POS.map = function( address )
+POS.map = function( address, idRender )
 {
 	
 	var mapPanel = new Ext.Panel({
 		layout: 'fit',
+		renderTo: idRender,
 		listeners: {
 				afterrender: function(panel){
 					
@@ -350,7 +351,14 @@ POS.map = function( address )
 						return null;
 					}
 					
-					var geocoder = new google.maps.Geocoder();
+					try{
+						var geocoder = new google.maps.Geocoder();
+					}
+					catch(error)
+					{
+						//document.getElementById( Ext.get(panel.id).dom.childNodes[1].id).innerHTML = '<div style="text-align:center; padding-top:30%;"> Error al contactar a Google Maps .</div>';
+						return null;
+					}
 
 					var posMapOptions = {
 						      zoom: 15,

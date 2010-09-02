@@ -6,6 +6,32 @@
 	height: 100%;	
 }
 
+.formAgregarCliente{
+	background-image:url(media/g3.png);
+	
+	height: 100%;
+
+
+}
+
+.formAgregarCliente-body{
+	padding: 10px;
+}
+
+ .formAgregarCliente .x-form-fieldset-title{
+ 
+	color: white;
+	text-shadow: black 0px 1px 1px;
+ }
+ 
+  .formAgregarCliente .x-form-fieldset-instructions{
+ 
+	color: white;
+	text-shadow: black 0px 1px 1px;
+ }
+
+
+
 
 #comprasProveedorSucursalPanel{
 	background-image:url(media/g3.png);

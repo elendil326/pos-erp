@@ -270,7 +270,7 @@ salida ejemplo
 	{
 		$sucursal=SucursalDAO::getByPK($idSucursal);
 		if(is_null($sucursal)) return '{ "success" : false , "reason" : "la sucursal no existe."}';
-		$resul='{ "success" : true , "datos" : [ { "id_sucursal" : "'.$sucursal->getIdSucursal().'", "descripcion" : "'.$sucursal->getDescripcion().'" , "direccion" : "'.$sucursal->getDireccion().'" }]}';
+		$resul='{ "success" : true , "datos" : [ { "id_sucursal" : "'.$sucursal->getIdSucursal().'", "descripcion" : "'.$sucursal->getDescripcion().'" , "direccion" : "'.$sucursal->getDireccion().'" , "rfc" : "'.$sucursal->getRfc().'" , "email" : "'.$sucursal->getEMail().'" , "telefono" : "'.$sucursal->getTelefono().'"}]}';
 		return $resul;
 	}
 

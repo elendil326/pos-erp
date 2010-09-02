@@ -655,17 +655,23 @@ ApplicationInventario.prototype.renderDetalles = function( data )
 		console.log("ApplicationInventario: mostrando detalles" , data);
 	}
 	
+	var divMap = "";
+	
+	divMap += "<div style=' float:right; margin-right:30px; margin-top: -40px;' id='ApplicationInventario-renderDetalles-map' width='50%' ></div>";
+	
+	
 	var html = "";
 	
-	html += "<div class='nombre'>" 		+data.descripcion		+ "</div>";
-	html += "<div class='direccion'>" 	+data.direccion 	+ "</div>";
-	html += "<div class='mail'>" 	+	 "</div>";
-	html += "<div class='id_provedor'>" + "</div>";
-	html += "<div class='rfc'>"  		+"</div>";
-	html += "<div class='telefono'>"  	+ "</div>";
+	html += "<div class='nombre'>" 		+data.descripcion		+  "</div>";
+	html += "<div class='direccion'>" 	+data.direccion 	+ "</div>"+ divMap;
+	html += "<div class='mail'>" 		+data.email	 +"</div>";
+	html += "<div class='id_provedor'>" +data.id_sucursal +"</div>";
+	html += "<div class='rfc'>"  		+data.rfc +"</div>";
+	html += "<div class='telefono'>"  	+data.telefono + "</div>";
 
+	
 
-	var divDetalles = "<div class='ApplicationProveedores-Detalles'>"+html+"</div>";
+	var divDetalles = "<div class='ApplicationInventario-Detalles'>"+html+"</div>";
 	
 
 	
@@ -702,14 +708,7 @@ ApplicationInventario.prototype.renderDetalles = function( data )
 	});*/
 	
 	
-	var mapOverlay = POS.map(data.direccion);
-	mapOverlay.modal = true;
-	mapOverlay.setCentered(true);
-	mapOverlay.setFloating(true, true);
-	mapOverlay.setHeight(400);
-	mapOverlay.setWidth(400);
-	//mapOverlay.addDocked(mapOverlayTb);
-	mapOverlay.doLayout();
+	
 
 	
 	var backBar = new Ext.Toolbar({
@@ -730,15 +729,16 @@ ApplicationInventario.prototype.renderDetalles = function( data )
 				ui	 : 'action',
 				text : 'Mapa',
 				handler: function(){
-						mapOverlay.show();
-						mapOverlay.addDocked(mapOverlayTb);
+						//mapOverlay.show();
+						//mapOverlay.addDocked(mapOverlayTb);
 				}
 			}]
 	});
 	
 	//Un formpanel que llenaremos con los datos que obtengamos
 	var detailPanel = new Ext.form.FormPanel({
-			scroll: 'vertical',
+			//scroll: 'vertical',
+			width: 300,
 			dockedItems : backBar,
 			baseCls: "ApplicationInventario-mainPanel",
 			html: divDetalles
@@ -775,7 +775,16 @@ ApplicationInventario.prototype.renderDetalles = function( data )
 		
 		
 	sink.Main.ui.setCard( detailPanel , 'slide');
-		
+	var mapOverlay = POS.map(data.direccion, 'ApplicationInventario-renderDetalles-map');
+	/*mapOverlay.modal = true;
+	mapOverlay.setCentered(true);
+	mapOverlay.setFloating(true, true);*/
+	mapOverlay.setHeight(300);
+	mapOverlay.setWidth(300);
+	//mapOverlay.renderTo = 'ApplicationInventario-renderDetalles-map';
+	//mapOverlay.addDocked(mapOverlayTb);
+	mapOverlay.doLayout();
+	
 };
 
 

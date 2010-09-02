@@ -666,6 +666,7 @@ ApplicacionClientes.prototype.formAgregarCliente = function(){
     var formulario = new Ext.form.FormPanel({
         scroll: 'vertical',
         id:'formAgregarCliente', 
+		baseCls: 'formAgregarCliente',
         items: [{
             xtype: 'fieldset',
             title: 'Cliente Info',

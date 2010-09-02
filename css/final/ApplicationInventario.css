@@ -63,6 +63,89 @@
 
 }
 
+.ApplicationInventario-Detalles{
+	
+	color : white;
+	font-size: 16px;
+	background-image: none;	
+	margin: 5px;
+	height: 32px;
+}
+
+
+
+.ApplicationInventario-Detalles .nombre{
+	padding: 25px;
+	color: white;
+	text-shadow: black 0px 0px 25px;
+	font-size: 50px ;
+	text-align: center;
+	border-style : solid;
+	border-width:1px;
+
+	border-right-color: #60656b;
+	border-left-color: #61666c;
+	border-top-color: #474a4f;
+	border-bottom-color: #959a9f;
+	
+	
+	
+	
+	-moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -khtml-border-radius: 20px;
+    border-radius: 20px;
+}
+
+
+.ApplicationInventario-Detalles .direccion{
+	margin-top: 15px;
+	background:url(media/iconos/mundo.png) no-repeat;
+	padding-left: 40px;
+	height: 40px;
+
+
+}
+
+
+.ApplicationInventario-Detalles .mail{
+	background:url(media/iconos/mail2.png) no-repeat;
+	padding-left: 40px;
+	height: 40px;
+
+}
+
+.ApplicationInventario-Detalles .rfc{
+	background:url(media/iconos/rfc.png) no-repeat;
+	padding-left: 40px;
+	height: 40px;
+
+}
+
+.ApplicationInventario-Detalles .id_provedor{
+	background:url(media/iconos/user.png) no-repeat;
+	padding-left: 40px;
+	height: 40px;
+
+}
+
+.ApplicationInventario-Detalles .telefono{
+	background:url(media/iconos/telefono.png) no-repeat;
+	padding-left: 40px;
+	height: 40px;
+	width: 50% !important;
+	margin-right:0px !important;
+	padding-right:0px !important;
+}
+
+.ApplicationInventario-Detalles .ubicacion{
+	background:url(media/iconos/bodega.png) no-repeat;
+	padding-left: 40px;
+	height: 40px;
+
+}
+
+
 div.map-no-data {
 	background-image:url(media/g3.png);
 	width: 200px;
