@@ -41,6 +41,9 @@ ApplicationInventario.prototype.itemSelected = null;
 
 	//Lista que guardara los productos que pueden ser insertados en el inventario
 	ApplicationInventario.prototype.productList = null;
+	
+	//Datos sucursal
+	ApplicationInventario.prototype.sucursalData = null;
 
 
 // --- paneles ----
@@ -347,6 +350,13 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 						type: 'slide',
 						direction: 'left'
 					});
+					
+					if ( document.getElementById('ApplicationInventario-renderDetalles-map') != undefined )
+					{
+										
+						
+					}
+					
 				}
 			}
 		}]
@@ -655,9 +665,14 @@ ApplicationInventario.prototype.renderDetalles = function( data )
 		console.log("ApplicationInventario: mostrando detalles" , data);
 	}
 	
-	var divMap = "";
+	//ApplicationInventario.currentInstance.sucursalData = data;
 	
-	divMap += "<div style=' float:right; margin-right:30px; margin-top: -40px;' id='ApplicationInventario-renderDetalles-map' width='50%' ></div>";
+	if( divMap == undefined)
+	{
+		var divMap = "";
+
+		divMap += "<div class='nombre' style=' float:right; margin-right:30px; margin-top: -40px;' id='ApplicationInventario-renderDetalles-map' width='50%' ></div>";
+	}
 	
 	
 	var html = "";
@@ -715,8 +730,6 @@ ApplicationInventario.prototype.renderDetalles = function( data )
 		dock: 'bottom',
 		showAnimation: true,
 		items: [{
-				xtype: 'spacer'
-			},{
 				xtype: 'button',
 				ui	 : 'back',
 				text : 'Inventario',
@@ -724,7 +737,7 @@ ApplicationInventario.prototype.renderDetalles = function( data )
 					//ApplicationInventario.currentInstance.initSucursalPanel( data.id_sucursal, null, true );
 					sink.Main.ui.setCard( ApplicationInventario.currentInstance.sucursalPanel, {type: 'slide', direction: 'right'})
 				}
-			},{
+			}/*,{
 				xtype: 'button',
 				ui	 : 'action',
 				text : 'Mapa',
@@ -732,58 +745,32 @@ ApplicationInventario.prototype.renderDetalles = function( data )
 						//mapOverlay.show();
 						//mapOverlay.addDocked(mapOverlayTb);
 				}
-			}]
+			}*/]
 	});
 	
 	//Un formpanel que llenaremos con los datos que obtengamos
 	var detailPanel = new Ext.form.FormPanel({
+			id: 'ApplicationInventario-detailPanel',
 			//scroll: 'vertical',
 			width: 300,
 			dockedItems : backBar,
 			baseCls: "ApplicationInventario-mainPanel",
-			html: divDetalles
-			/*items:[{
-				xtype: 'fieldset',
-				title: 'Detalles de la sucursal',
-				baseCls: "ApplicationInventario-detallesItems",
-				items:[{
-						xtype: 'textfield',
-						disabled: true,
-						name: 'descripcion',
-						label: 'Nombre',
-						value: data.descripcion
-					},{
-						xtype: 'textfield',
-						disabled: true,
-						name: 'direccion',
-						label: 'Dirección',
-						value: data.direccion	
-					},{
-						xtype: 'textfield',
-						disabled: true,
-						name: 'telefono',
-						label: 'Teléfono'
-					},{
-						xtype: 'textfield',
-						disabled: true,
-						name: 'encargado',
-						label: 'Encargado'
-					}]
-			}]*/
+			html: divDetalles,
+			listeners: {
+				afterrender: function(){
+						var mapOverlay = POS.map(data.direccion, 'ApplicationInventario-renderDetalles-map');
+
+						mapOverlay.setHeight(300);
+						mapOverlay.setWidth(300);
+						
+				}
+			}
 			
 		});
 		
-		
+	
 	sink.Main.ui.setCard( detailPanel , 'slide');
-	var mapOverlay = POS.map(data.direccion, 'ApplicationInventario-renderDetalles-map');
-	/*mapOverlay.modal = true;
-	mapOverlay.setCentered(true);
-	mapOverlay.setFloating(true, true);*/
-	mapOverlay.setHeight(300);
-	mapOverlay.setWidth(300);
-	//mapOverlay.renderTo = 'ApplicationInventario-renderDetalles-map';
-	//mapOverlay.addDocked(mapOverlayTb);
-	mapOverlay.doLayout();
+
 	
 };
 
@@ -795,8 +782,16 @@ ApplicationInventario.prototype.loadDetailPanel = function(sucursal_id)
 		console.log("ApplicationInventario: cargando detalles de sucursal " + sucursal_id);
 	} 
 
-	//first off, retrive office info
-	ApplicationInventario.currentInstance.getDetalles( sucursal_id );
+	//Verificamos que no se haya creado antes, si si esta creado, solo lo deslizamos, si no esta creado lo creamos
+	if ( Ext.get('ApplicationInventario-detailPanel') == undefined)
+	{	
+		//first off, retrive office info
+		ApplicationInventario.currentInstance.getDetalles( sucursal_id );
+	}
+	else
+	{
+		sink.Main.ui.setCard( Ext.getCmp('ApplicationInventario-detailPanel'), 'slide' );
+	}
 
 };
 
