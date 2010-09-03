@@ -71,7 +71,9 @@ ApplicacionClientes.prototype._initToolBar = function (){
     var btnagregarCliente = [{
         id: 'btn_agregarCliente',
         text: 'Nuevo Cliente',
-        handler: this.addnewClientPanel,
+        handler: function(){
+			sink.Main.ui.setCard( ApplicacionClientes.currentInstance.formAgregarCliente, 'slide' );
+		},//this.addnewClientPanel
         ui: 'action'
     }];
 
@@ -128,6 +130,34 @@ ApplicacionClientes.prototype._initToolBar = function (){
     
     //agregar este dock a el panel principal
     this.ClientesList.addDocked( this.dockedItems );
+	
+	
+	
+	/*
+	Tool bar para formulario agregar cliente
+	*/
+	
+	var regresar =[{
+        xtype: 'button',
+        id: 'cancelarGuardarCliente',
+        text: 'Regresar',
+        ui: 'back',
+        handler: function(event,button) {
+			
+            sink.Main.ui.setCard( Ext.getCmp('panelClientes'), { type: 'slide', direction: 'right'} );
+						
+            Ext.getCmp('btn_agregarCliente').setVisible(true);
+        }//fin handler cancelar cliente
+                
+    }];//fin boton regresar
+    
+    this.saveClientTool = [ new Ext.Toolbar ({ 
+        ui: 'dark',
+        dock: 'bottom',
+        items: regresar.concat({xtype: 'spacer'})//.concat(guardar)
+    })];
+
+	this.formAgregarCliente.addDocked(this.saveClientTool);
 };
 
 
@@ -632,38 +662,7 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
         AGREGAR Nuevo Cliente
 ------------------------------------------------------------------------------------------*/
 
-ApplicacionClientes.prototype.addnewClientPanel= function(){
-    
-    var tonto = ApplicacionClientes.currentInstance.formAgregarCliente();
-    
-    sink.Main.ui.setCard( tonto, 'slide' );
-};
-
-ApplicacionClientes.prototype.formAgregarCliente = function(){
-    
-    var regresar =[{
-        xtype: 'button',
-        id: 'cancelarGuardarCliente',
-        text: 'Regresar',
-        ui: 'back',
-        handler: function(event,button) {
-            sink.Main.ui.setCard( Ext.getCmp('panelClientes'), { type: 'slide', direction: 'right'} );
-            Ext.getCmp("formAgregarCliente").destroy();
-            Ext.getCmp('btn_agregarCliente').setVisible(true);
-        }//fin handler cancelar cliente
-                
-    }];//fin boton regresar
-    
-    var saveClientTool = [ new Ext.Toolbar ({ 
-        ui: 'dark',
-        dock: 'bottom',
-        items: regresar.concat({xtype: 'spacer'})//.concat(guardar)
-    })];
-    
-    /*---------------------------------------------
-    formulario guardar cliente
-    ----------------------------------------------*/
-    var formulario = new Ext.form.FormPanel({
+ApplicacionClientes.prototype.formAgregarCliente  = new Ext.form.FormPanel({
         scroll: 'vertical',
         id:'formAgregarCliente', 
 		baseCls: 'formAgregarCliente',
@@ -758,12 +757,9 @@ ApplicacionClientes.prototype.formAgregarCliente = function(){
         
                 }//fin boton
                
-        ],
-        dockedItems: saveClientTool
+        ]
 });//fin formPanel
 
-return formulario;
-};
 
 /*------------------------------------------------------------------
             VENTAS EMITIDAS A UN CLIENTE 
@@ -941,7 +937,7 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
                     ventasDetalle.loadData(datos.datos);
                     
                     var html = "";
-                    html += "<div class='ApplicationClientes-item' >" 
+                    html += "<div class='ApplicationClientes-Item' >" 
                     + "<div class='vendedor'>PRODUCTO</div>" 
                     + "<div class='sucursal'>CANTIDAD</div>" 
                     + "<div class='subtotal'>PRECIO</div>" 
@@ -950,7 +946,7 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
                                 
                     for( a = 0; a < ventasDetalle.getCount(); a++ ){
                                             
-                        html += "<div class='ApplicationClientes-item' >" 
+                        html += "<div class='ApplicationClientes-Item' >" 
                         + "<div class='vendedor'>" + ventasDetalle.data.items[a].data.denominacion +"</div>" 
                         + "<div class='sucursal'>"+ ventasDetalle.data.items[a].data.cantidad +"</div>" 
                         + "<div class='subtotal'>$ "+ ventasDetalle.data.items[a].data.precio+"</div>"
@@ -974,7 +970,13 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
         );//AJAXandDECODE MOSTRAR CLIENTE                       
     
     formBase.show();
-    
+	
+    /*
+		Se le da un fono al panel contenedor
+	*/
+	Ext.get("detalleVentaCliente").parent().setStyle({
+					'background-image':'url("media/g3.png")'								   
+	});
 };
 
 
@@ -1143,8 +1145,8 @@ ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
                     ventasDetalle.loadData(datos.datos);
                     
                     var html = "";
-                    html += "<div class='ApplicationClientes-item' >" 
-                    + "<div class='vendedor'>NUMERO DE VENTA</div>" 
+                    html += "<div class='ApplicationClientes-Item' >" 
+                    + "<div class='vendedor'># DE VENTA</div>" 
                     + "<div class='sucursal'>FECHA</div>" 
                     + "<div class='subtotal'>MONTO</div>"
                     + "<div class='subtotal'></div>"
@@ -1152,11 +1154,11 @@ ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
                                 
                     for( a = 0; a < ventasDetalle.getCount(); a++ ){
                                             
-                        html += "<div class='ApplicationClientes-item' id='pago_Borrar_"+ventasDetalle.data.items[a].id_pago+"'>" 
-                        + "<div class='vendedor'>" + ventasDetalle.data.items[a].id_venta +"</div>" 
-                        + "<div class='sucursal'>"+ ventasDetalle.data.items[a].fecha +"</div>" 
-                        + "<div class='subtotal'>$ "+ ventasDetalle.data.items[a].monto+"</div>"
-                        + "<div class='abonar' onclick='ApplicacionClientes.currentInstance.EliminarabonoVenta(" +  ventasDetalle.data.items[a].id_pago +")'>ELIMINAR PAGO</div>"
+                        html += "<div class='ApplicationClientes-Item' id='pago_Borrar_"+ventasDetalle.data.items[a].data.id_pago+"'>" 
+                        + "<div class='vendedor'>" + ventasDetalle.data.items[a].data.id_venta +"</div>" 
+                        + "<div class='sucursal'>"+ ventasDetalle.data.items[a].data.fecha +"</div>" 
+                        + "<div class='subtotal'>$ "+ ventasDetalle.data.items[a].data.monto+"</div>"
+                        + "<div class='abonar' onclick='ApplicacionClientes.currentInstance.EliminarabonoVenta(" +  ventasDetalle.data.items[a].data.id_pago +")'>ELIMINAR</div>"
                         + "</div>";
                     }
                                 
@@ -1176,6 +1178,13 @@ ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
         );//AJAXandDECODE MOSTRAR CLIENTE                       
     
     formBase.show();
+	
+	/*
+		Se le da un fono al panel contenedor
+	*/
+	Ext.get("pagosVentaCliente").parent().setStyle({
+					'background-image':'url("media/g3.png")'								   
+	});
     
 };
 

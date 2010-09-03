@@ -247,6 +247,7 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 			}],
 		});
 		
+		
 	}//fin if !this.carousel
 	/*
 		Se llama a la funcion que renderea el html del panel con los productos que ofrece el proveedor
@@ -263,7 +264,8 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 		defaults: {
 	      flex: 1
 		},
-		items: [this.carousel]
+		items: [this.carousel],
+
 	});
 	
 		

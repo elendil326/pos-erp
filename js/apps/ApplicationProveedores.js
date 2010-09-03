@@ -85,7 +85,7 @@ ApplicationProveedores.prototype._initToolBar = function ()
 			ui: 'action',
 			handler: function(){
 					console.log("ApplicacionProveedores: agregarProveedor called....");
-					sink.Main.ui.setCard( ApplicationProveedores.prototype.agregarProveedor, 'slide' );
+					sink.Main.ui.setCard( ApplicationProveedores.currentInstance.agregarProveedor, 'slide' );
 				}
 			}];		
 
@@ -129,7 +129,7 @@ ApplicationProveedores.prototype._initToolBar = function ()
 	this.dockedItems = [ new Ext.Toolbar ({ 
 		ui: 'dark',
 		dock: 'bottom',
-		items: regresar.concat({xtype: 'spacer'}).concat(guardar)
+		items: regresar.concat({xtype: 'spacer'})//.concat(guardar)
 	})];
 	
 	this.agregarProveedor.addDocked( this.dockedItems );
@@ -262,7 +262,7 @@ ApplicationProveedores.prototype.doVerProvedor = function ( provedor )
 
 ApplicationProveedores.prototype.renderProvedorDetalles = function ( provedor )
 {
-	console.log(provedor);
+
 	var html = "";
 	
 	html += "<div class='nombre'>" 		+provedor.nombre 		+ "</div>";
@@ -653,6 +653,13 @@ ApplicationProveedores.prototype.verPagosCompra = function( idCompra ){
 	
 	formBase.show();
 	
+	/*
+		Se le da fondo al panel padre del panel generado
+	*/
+	Ext.get("pagosCompraProveedor").parent().setStyle({
+					'background-image':'url("media/g3.png")'								   
+	});
+	
 }
 
 
@@ -662,8 +669,8 @@ ApplicationProveedores.prototype.verPagosCompra = function( idCompra ){
 
 ApplicationProveedores.prototype.abonarCompra = function( idCompra , total , adeudo ,totalAbonado ){
 	
-	var clienteHtml = "<div class='ApplicationClientes-itemsBox'>";
-		clienteHtml += " <div class='ApplicationClientes-clienteBox'> ";
+	var clienteHtml = "<div class='ApplicationProveedores-itemsBox' >";
+		clienteHtml += " <div class='no-data' id='abonar-compraP'> ";
 		clienteHtml += " <div class='nombre'>Abono para la compra '"+idCompra+"'</div>";
 		clienteHtml += " <div class='nombre'> Total de Compra: " + total + "</div>";
 		clienteHtml += " <div class='nombre'> Adeuda: " + adeudo + "</div>";
@@ -761,11 +768,7 @@ ApplicationProveedores.prototype.abonarCompra = function( idCompra , total , ade
 									},
 									function (datos){
 										if(datos.success == true){
-											/*abono = parseFloat( Ext.getCmp("montoAbonoCompra").getValue() );
-											Ext.get("abonadoCompra_"+idCompra).update("$ "+ (totalAbonado + abono) );
-											Ext.get("adeudoCompra_"+idCompra).update("$ "+ (adeudo - abono));
-											Ext.getCmp("abonarCompraPanel").destroy();
-							 				Ext.getBody().unmask();*/
+										
 											ApplicationProveedores.currentInstance.listarComprasCredito();
 											Ext.getCmp("abonarCompraPanel").destroy();
 							 				Ext.getBody().unmask();
@@ -825,6 +828,21 @@ ApplicationProveedores.prototype.abonarCompra = function( idCompra , total , ade
 				
 	abonaPanel.show();
 	
+	/*
+		Se le da un fono al panel contenedor
+	*/
+	
+	Ext.get("abonar-compraP").setStyle({
+					'background-image':'url("media/g3.png")'								   
+	});
+	
+	Ext.get("abonar-compraP").parent().parent().setStyle({
+					'background-image':'url("media/g2.png")'								   
+	});
+	
+	Ext.get("abonarCompraProveedor").parent().parent().setStyle({
+					'background-image':'url("media/g2.png")'								   
+	});
 }
 
 /*-------------------------------------------------------------------
@@ -996,12 +1014,11 @@ ApplicationProveedores.prototype.verCompra = function( idCompra ){
 	
 	formBase.show();
 	
-	
-	Ext.get("detalleCompraPanel").setStyle({
-					'background-image':'url("media/g3.png")'								   
-	});
-	
-	Ext.get("detalleCompraProveedor").setStyle({
+	/*
+		Se le da el estilo al formulario q se desplega con los detalles de la venta
+		a un fondo obscuro (g3.png)
+	*/
+	Ext.get("detalleCompraProveedor").parent().setStyle({
 					'background-image':'url("media/g3.png")'								   
 	});
 }
@@ -1013,6 +1030,7 @@ ApplicationProveedores.prototype.verCompra = function( idCompra ){
 ApplicationProveedores.prototype.agregarProveedor =  new Ext.form.FormPanel({
 		scroll: 'vertical',
 		id:'formAgregarProveedor',
+		baseCls :'formAgregarProveedor',
 		items: [{
 			
 			xtype: 'fieldset',
@@ -1043,11 +1061,20 @@ ApplicationProveedores.prototype.agregarProveedor =  new Ext.form.FormPanel({
 						id: 'telefonoProveedor',
 						label: 'Telefono'
 					})
-		   
+			
+			
 			]//fin items form
 			
-		}//,
-		
+		},
+		{
+				xtype: 'button',
+				text: 'Guardar',
+				ui: 'action',
+				maxWidth: 150,
+				handler: function(){
+					ApplicationProveedores.currentInstance.guardarProveedor();
+				}
+			}
 			
 		]//,//fin items formpanel
 });//fin agregar proveedor
@@ -1143,7 +1170,9 @@ ApplicationProveedores.prototype.finalPanel = function ()
 				ui: 'action',
 				text:'Agregar Otro Proveedor',
 				handler: function(){
+					
 					sink.Main.ui.setCard( ApplicationProveedores.currentInstance.agregarProveedor, { type: 'slide', direction: 'right'} );
+					
 				}
 			}]
     })],
