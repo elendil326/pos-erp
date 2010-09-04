@@ -1197,8 +1197,8 @@ ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
 
 ApplicacionClientes.prototype.abonarVenta = function( idVenta , total , adeudo ){
     
-    var clienteHtml = "<div class='ApplicationClientes-itemsBox'>";
-        clienteHtml += " <div class='ApplicationClientes-clienteBox'> ";
+    var clienteHtml = "<div class='ApplicationProveedores-itemsBox'>";
+        clienteHtml += " <div class='no-data' id='abonar-Venta' > ";
         clienteHtml += " <div class='nombre'>Abono de " + ApplicacionClientes.currentInstance.clienteSeleccionado.nombre + " para la venta '"+idVenta+"'</div>";
         clienteHtml += " <div class='nombre'> Total de Venta: " + total + "</div>";
         clienteHtml += " <div class='nombre'> Adeuda: " + adeudo + "</div>";
@@ -1374,6 +1374,22 @@ ApplicacionClientes.prototype.abonarVenta = function( idVenta , total , adeudo )
                 
     abonaPanel.show();
     
+	/*
+		Se le da un fono al panel contenedor
+	*/
+	
+	Ext.get("abonar-Venta").setStyle({
+					'background-image':'url("media/g3.png")'								   
+	});
+	
+	Ext.get("abonar-Venta").parent().parent().setStyle({
+					'background-image':'url("media/g2.png")'								   
+	});
+	
+	Ext.get("abonarVentaCliente").parent().parent().setStyle({
+					'background-image':'url("media/g2.png")'								   
+	});
+	
 };
 
 /*---------------------------------------------------
