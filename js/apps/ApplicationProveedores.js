@@ -339,11 +339,10 @@ ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 				Ext.get("CarruselSurtirProductosSucursal").setStyle({
 					'background-image':'url("media/g3.png")'								   
 				});
-					//this.obj = new ApplicationComprasProveedor ( provedor );
-					//sink.Main.ui.setCard( this.obj.surtir, 'slide' );			
 				
 			}
 		}];
+	
 		
     var dockedItems = [ new Ext.Toolbar({
         ui: 'dark',
@@ -442,7 +441,8 @@ ApplicationProveedores.prototype.listarCompras = function (  ){
 				if(datos.success == false){
 					//POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS PROBABLEMENTE ESTE CLIENTE 'NO' HA COMPRADO");
 					
-					proveedorHtml += "<div class='ApplicationClientes-itemsBox'><div class='noVentas' align='center'>NO SE LE HAN HECHO COMPRAS A ESTE PROVEEDOR</div> </div>";
+					proveedorHtml += "<div class='ApplicationClientes-itemsBox' id='no_ComprasProv' ><div class='no-data'>"+datos.reason+"</div></div>"
+
 				}
 				
 				Ext.get("comprasProveedorSucursal").update(proveedorHtml);
@@ -530,7 +530,7 @@ ApplicationProveedores.prototype.listarComprasCredito = function (  ){
 				}
 				if(datos.success == false){
 					//POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS PROBABLEMENTE ESTE CLIENTE 'NO' HA COMPRADO");
-					Ext.get("comprasProveedorCredito").update("<div class='ApplicationClientes-itemsBox'><div class='noVentas' align='center'>NO SE HAN HECHO COMPRAS A CREDITO A ESTE PROVEEDOR</div> </div>");
+					Ext.get("comprasProveedorCredito").update("<div class='ApplicationClientes-itemsBox' id='no_ComprasCreditoProv' ><div class='no-data'>"+datos.reason+"</div></div>");
 				}
 			},
 			function (){//no responde AJAXDECODE DE VENTAS CLIENTE
@@ -680,7 +680,7 @@ ApplicationProveedores.prototype.abonarCompra = function( idCompra , total , ade
 	 var abonaPanel = new Ext.form.FormPanel({
 		 id: 'abonarCompraPanel',
 		 scroll: 'vertical',
-		 //html: clienteHtml,
+		 //baseCls: "formAgregarProveedor",
 			//	items
             items: [{
 					id: 'abonarCompraProveedor',

@@ -45,12 +45,12 @@ function insert_provider_product( $jsonItems ) {
 		$detalle->setPrecioVenta( $arregloItems[$i]['precioVenta'] );
 		$detalle->setMin( $arregloItems[$i]['stockMin'] );
 		$detalle->setExistencias ( 0 );	
-		//$ans = DetalleInventarioDAO::save( $detalle );
+		$ans = DetalleInventarioDAO::save( $detalle );
 			
-		//if( $ans > 0 ){
+		if( $ans > 0 ){
 			$agregados++;
 			$out .= ", ID: ".$detalle->getIdProducto()." precio venta: ".$detalle->getPrecioVenta()." Min: ".$detalle->getMin()." existencias: ".$detalle->getExistencias();
-		//}
+		}
 	}//fin for
 	
 	if( $agregados < 1 ){
