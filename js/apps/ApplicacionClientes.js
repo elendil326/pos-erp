@@ -173,14 +173,15 @@ ApplicacionClientes.prototype.editClient = function (){
 	
 	if(DEBUG){
 	    console.log("AppClientes: Editar Cliente");
-	    //console.log(Ext.getCmp('btn_EditCliente').getText());		
+		
 	}
+		
 	
-
     switch(Ext.getCmp('btn_EditCliente').getText()){
 
         case 'Modificar': 
             //disable form items
+	
             Ext.getCmp('btn_EditCliente').setText("Guardar");
             Ext.getCmp('nombreClienteM').setDisabled(false);    
             Ext.getCmp('direccionClienteM').setDisabled(false);
@@ -189,11 +190,12 @@ ApplicacionClientes.prototype.editClient = function (){
             Ext.getCmp('telefonoClienteM').setDisabled(false);  
             Ext.getCmp('limite_creditoClienteM').setDisabled(false);
             Ext.getCmp('descuentoClienteM').setDisabled(false);
-            Ext.getCmp('btn_CancelEditCliente').show();
+            Ext.getCmp('btn_CancelEditCliente').setDisabled(false);
             break;
 
         case 'Guardar': 
             //enable form items
+		
             Ext.getCmp('btn_EditCliente').setText("Modificar");
             Ext.getCmp('nombreClienteM').setDisabled(true); 
             Ext.getCmp('direccionClienteM').setDisabled(true);
@@ -202,7 +204,7 @@ ApplicacionClientes.prototype.editClient = function (){
             Ext.getCmp('telefonoClienteM').setDisabled(true);   
             Ext.getCmp('limite_creditoClienteM').setDisabled(true);
             Ext.getCmp('descuentoClienteM').setDisabled(true);
-            Ext.getCmp('btn_CancelEditCliente').hide();
+            Ext.getCmp('btn_CancelEditCliente').setDisabled(true);
 
             ApplicacionClientes.currentInstance.handlerModificarCliente(idClienteM.getValue(),rfcClienteM.getValue(),nombreClienteM.getValue(),direccionClienteM.getValue(),telefonoClienteM.getValue(),emailClienteM.getValue(),limite_creditoClienteM.getValue());    
             break;
@@ -211,6 +213,7 @@ ApplicacionClientes.prototype.editClient = function (){
 };
 
 ApplicacionClientes.prototype.cancelEditClient = function(){
+	
     Ext.getCmp('btn_EditCliente').setText("Modificar");
     Ext.getCmp('nombreClienteM').setDisabled(true); 
     Ext.getCmp('direccionClienteM').setDisabled(true);
@@ -219,7 +222,8 @@ ApplicacionClientes.prototype.cancelEditClient = function(){
     Ext.getCmp('telefonoClienteM').setDisabled(true);   
     Ext.getCmp('limite_creditoClienteM').setDisabled(true);
     Ext.getCmp('descuentoClienteM').setDisabled(true);
-    Ext.getCmp('btn_CancelEditCliente').setVisible(false);
+    Ext.getCmp('btn_CancelEditCliente').setDisabled(true);
+	
 };
 
 
@@ -231,55 +235,66 @@ ApplicacionClientes.prototype.cancelEditClient = function(){
 ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 
 
-    var btnBackCliente2 = [{
-        id: 'btn_BackCliente',
-        text: 'Regresar',
-        handler: function(){
-            Ext.getCmp('btn_EditCliente').setText("Modificar");
-            sink.Main.ui.setCard( Ext.getCmp('panelClientes'), { type: 'slide', direction: 'right' } );
-        },
-        ui: 'back'
-    }];
+	if( !this.btnBackCliente2 ){
+		
+		this.btnBackCliente2 = [{
+			id: 'btn_BackCliente',
+			text: 'Regresar',
+			handler: function(){
+				Ext.getCmp('btn_EditCliente').setText("Modificar");
+				sink.Main.ui.setCard( Ext.getCmp('panelClientes'), { type: 'slide', direction: 'right' } );
+			},
+			ui: 'back'
+		}];
+		
+	}
 
+    
+	if( !this.btnEditCliente2 ){
 
+		this.btnEditCliente2 = [{
+			id: 'btn_EditCliente',
+			text: 'Modificar',
+			handler: ApplicacionClientes.currentInstance.editClient,
+			ui: 'action'
+		}];
+	}
+	
+	if( !this.btnCancelEditCliente2 ){
+		
+		this.btnCancelEditCliente2 = [{
+			id: 'btn_CancelEditCliente',
+			text: 'Cancelar',
+			handler: ApplicacionClientes.currentInstance.cancelEditClient,
+			//hidden: true,
+			ui: 'action'
+		}];
+	}
     
-    var btnEditCliente2 = [{
-        id: 'btn_EditCliente',
-        text: 'Modificar',
-        handler: ApplicacionClientes.currentInstance.editClient,
-        ui: 'action'
-    }];
-    
-    var btnCancelEditCliente2 = [{
-        id: 'btn_CancelEditCliente',
-        text: 'Cancelar',
-        handler: ApplicacionClientes.currentInstance.cancelEditClient,
-        hidden: true,
-        ui: 'action'
-    }];
-    
-    
-    var dockedItemsFormCliente2;
-    
-    if (!Ext.platform.isPhone) {
-       
-        dockedItemsFormCliente2 =[ new Ext.Toolbar({
-            ui: 'dark',
-            dock: 'bottom',
-            items:  btnBackCliente2.concat(btnCancelEditCliente2).concat({xtype:'spacer'}).concat(btnEditCliente2).concat({xtype:'spacer'})
-                 
-        })];
-        
-    }else {
-        
-        dockedItemsFormCliente2 = [{
-            xtype: 'toolbar',
-            ui: 'dark',
-            items: btnBackCliente2.concat(btnCancelEditCliente2).concat(btnEditCliente2),
-            dock: 'bottom'
-        }];
-    }
-
+	if( !this.dockedItemsFormCliente2 ){
+		
+		this.dockedItemsFormCliente2;
+		
+		if (!Ext.platform.isPhone) {
+		   
+			this.dockedItemsFormCliente2 =[ new Ext.Toolbar({
+				ui: 'dark',
+				dock: 'bottom',
+				items:  this.btnBackCliente2.concat({xtype:'spacer'}).concat(this.btnCancelEditCliente2).concat(this.btnEditCliente2)
+					 
+			})];
+			
+		}else {
+			
+			this.dockedItemsFormCliente2 = [{
+				xtype: 'toolbar',
+				ui: 'dark',
+				items: this.btnBackCliente2.concat(this.btnCancelEditCliente2).concat(this.btnEditCliente2),
+				dock: 'bottom'
+			}];
+		}
+	
+	}
 
 
 	//crear el carrusel que contiene esa forma si es que no existe
@@ -349,18 +364,21 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 		        ]};
 		
 		this.carousel = new Ext.Carousel({
-
+			id: 'carruselDetallesCliente',
 	        items: [{
 	            scroll: 'vertical',
 	            xtype: 'panel',
 	            title: 'customerDetails',
 	            id: 'customerDetailsForm',
 	            items: [formaDeDetalles],
-	            listeners:{
-	                activate: function(){
-	                    Ext.getCmp('btn_EditCliente').show();
-	                }
-	            }
+				listeners:{
+					show: function(){
+
+						Ext.getCmp('btn_CancelEditCliente').setDisabled( true );
+						Ext.getCmp('btn_EditCliente').setText("Modificar");
+					}
+				}
+	          
 	        }, {
 
 	            scroll: 'vertical',
@@ -368,22 +386,32 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 	            title: 'ventas',
 	            id: 'customerHistorial',
 	            items: [ {id:'datosCliente'}, {id: 'customerHistorialSlide' }],
-	            listeners: {
-	                activate:   function(){
-	                        Ext.getCmp('btn_CancelEditCliente').hide();
-	                        Ext.getCmp('btn_EditCliente').hide();
-	                    }
-	            }
-
-
+	          
 	        }, { 
 	            scroll: 'vertical',
 	            xtype: 'panel',
 	            title: 'creditos',
 	            id: 'customerCreditHistorial',
 	            items: [{id:'datosClienteCredito'},{id: 'customerCreditHistorialSlide'}]
-	        }]
+	        }],
+			listeners: {
+				cardswitch : function( a ){
+					
+					if( Ext.getCmp("carruselDetallesCliente").getActiveIndex() == 0 ){
+						
+						Ext.getCmp('btn_CancelEditCliente').setDisabled( true );
+	                    Ext.getCmp('btn_EditCliente').setDisabled( false );
+						
+					}else{
+						
+						Ext.getCmp('btn_CancelEditCliente').setDisabled( true );
+	                    Ext.getCmp('btn_EditCliente').setDisabled( true );
+						
+					}
+				}
+			}
 	    });
+		
 	}else{
 		
 		//Si si existe, solo actualizar los datos de los campos de texto
@@ -406,7 +434,7 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 	
 		cls: "ApplicationClientes-addClientDetailsPanel",
 		
-        dockedItems : dockedItemsFormCliente2,
+        dockedItems : this.dockedItemsFormCliente2,
 	
         layout: {
             type: 'vbox',
@@ -472,7 +500,7 @@ ApplicacionClientes.prototype.handlerModificarCliente = function(id,rfc,nombre,d
                 });
 
             }else{
-                  	POS.aviso("No se puedieron guardar los datos, intente nuevamente.");
+                  	POS.aviso("No se guardaron los datos",""+datos.reason);
 
 				  	if(DEBUG){
 						console.warn("No se pudieron guardar los datos del cliente");
@@ -811,7 +839,7 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 				facturado="<div class='pagado'>Facturada</div>";
 			}
 
-			if ( ventasCliente.data.items[a].data.facturado === 0 ){
+			if ( ventasCliente.data.items[a].data.facturado == 0 ){
 
 				vtaClteTotal = parseFloat(ventasCliente.data.items[a].data.total); 
 				vtaCltePagado = parseFloat(ventasCliente.data.items[a].data.pagado);
@@ -819,7 +847,7 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 				if(  vtaClteTotal > vtaCltePagado ){
 					facturado = "<div class='abonar'>ADEUDA</div>";
 				}else{
-					facturado ="<div class='abonar' onclick='ApplicacionClientes.currentInstance.panelFacturas(" + ventasCliente.data.items[a].data.id_venta + " , "+ record_cliente[0].data.id_cliente +")'>FACTURAR</div>";
+					facturado ="<div class='abonar' onclick='ApplicacionClientes.currentInstance.panelFacturas(" + ventasCliente.data.items[a].data.id_venta + " , "+ ventasCliente.data.items[a].data.id_cliente +")'>FACTURAR</div>";
 				}
 			}
 
@@ -843,7 +871,7 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 
 
 		if(!datos.success){
-			//POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS PROBABLEMENTE ESTE CLIENTE 'NO' HA COMPRADO");
+			
 			html="<div class=\"no-data\">Este cliente no ha hecho ninguna compra.</div>";
 		}
 
@@ -974,7 +1002,7 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
     /*
 		Se le da un fono al panel contenedor
 	*/
-	Ext.get("detalleVentaCliente").parent().setStyle({
+	Ext.get("detalleVentaCliente").parent().parent().setStyle({
 					'background-image':'url("media/g3.png")'								   
 	});
 };
@@ -1055,7 +1083,7 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
                     //console.log(ventasCliente.data.items);
                 }
                 if(!datos.success){
-                    //POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS PROBABLEMENTE ESTE CLIENTE 'NO' HA COMPRADO");
+                    
 					html="<div class=\"no-data\">Este cliente no ha hecho ninguna compra a credito.</div>";
                 }
                 
@@ -1167,7 +1195,11 @@ ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
                         
                 }//FIN DATOS.SUCCES TRUE MOSTRAR CLIENTE
                 if(!datos.success){
-                    POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE PAGOS ESTE CLIENTE NO HA ABONADO A ESTA VENTA (No. VENTA: "+idVenta+")");
+
+					html = "<div class='ApplicationClientes-itemsBox' id='no_pagosVentaClien' ><div class='no-data'>"+datos.reason+"</div></div>";
+					
+					Ext.get("pagosVentaCliente").update(html);
+					
                     return;
                 }
                 },
@@ -1182,7 +1214,7 @@ ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
 	/*
 		Se le da un fono al panel contenedor
 	*/
-	Ext.get("pagosVentaCliente").parent().setStyle({
+	Ext.get("pagosVentaCliente").parent().parent().setStyle({
 					'background-image':'url("media/g3.png")'								   
 	});
     
@@ -1411,6 +1443,7 @@ ApplicacionClientes.prototype.EliminarabonoVenta = function ( id_Pago ){
                             function (datos){//mientras responda
                                 if(!datos.success){
                                     POS.aviso("ERROR",""+datos.reason);
+									return;
                                 }
                                 ApplicacionClientes.currentInstance.listarVentasCredito( ApplicacionClientes.currentInstance.clienteSeleccionado );
                                 Ext.get("pago_Borrar_"+id_Pago).remove();

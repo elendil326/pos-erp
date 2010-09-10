@@ -25,7 +25,7 @@
 .ApplicationComprasProveedor-itemsBox {
 	margin: 5px;
 	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
-	font-size: 12px;
+	font-size: 11px;
 
 }
 
@@ -42,7 +42,7 @@
 	background-image:url(media/g2.png);
 	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
 	font-weight: normal;
-	line-height:35px;
+	/*line-height:35px;*/
 	padding-left:5px;
 	
 }
@@ -61,7 +61,7 @@
 	background-image:url(media/g2.png);
 	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
 	font-weight: normal;
-	line-height:35px;
+	/*line-height:35px;*/
 	padding-left:5px;
 	
 }
@@ -96,9 +96,11 @@
 .ApplicationComprasProveedor-toggle{
 	position:relative;
 	float:left;
-	width:15%;
+	width:10%;
 	height:100%;
-	margin:-5px;
+	margin-left:4px;
+	/*margin:-5px;*/
+	/*line-height:35px;*/
 }
 .ApplicationComprasProveedor-pesoEmbarque{
 	/*margin: 5px;*/
@@ -114,7 +116,7 @@
 	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
 	font-weight: normal;
 	padding : 5px;
-	text-align:center;
+	/*text-align:center;*/
 
 }
 
@@ -124,8 +126,9 @@
 	color:#F00;
 	text-shadow: black 0px 1px 1px;
 	font-weight: normal;
-	font-size:13px;
+	font-size:11px;
 	text-align:center;
+	line-height:35px;
 }
 .ApplicationComprasProveedor-PesoArpilla{
 	float:left;
@@ -133,8 +136,9 @@
 	color:#F00;
 	text-shadow: black 0px 1px 1px;
 	font-weight: normal;
-	font-size:13px;
+	font-size:11px;
 	text-align:center;
+	line-height:35px;
 }
 .ApplicationComprasProveedor-totalArpillas{
 	float:left;
@@ -142,8 +146,9 @@
 	color:#000;
 	text-shadow: black 0px 1px 1px;
 	font-weight: normal;
-	font-size:13px;
+	font-size:11px;
 	text-align:center;
+	line-height:35px;
 }
 
 .ApplicationComprasProveedor-pesoArpillas{
@@ -152,8 +157,9 @@
 	color:#000;
 	text-shadow: black 0px 1px 1px;
 	font-weight: normal;
-	font-size:13px;
+	font-size:11px;
 	text-align:center;
+	line-height:35px;
 }
 
 
@@ -165,13 +171,15 @@ div.caja_texto{
 	float: left;
 	font-weight: bold;
 	color: black;
-	width: 15%;
+	width: 14%;
+	margin-left:5px;
+	margin-right:3px;
+	margin-top:8px;
 }
 
 div.tipo{
 	float: left;
 	width : 7%;
-
 }
 
 div.fecha{
@@ -190,11 +198,18 @@ div.sucursal{
 	width : 15%;
 	color: black;	
 }
+div.cabecera-producto_nombre{
+	float: left;
+	width : 33%;
+	color: black;
+	font-size:11px;
+	line-height:35px;
+}
 div.producto_nombre{
 	float: left;
-	width : 40%;
+	width : 33%;
 	color: black;
-	font-size:12px;
+	font-size:11px;
 }
 
 div.cabecera-compra{
@@ -202,15 +217,29 @@ div.cabecera-compra{
 	width: 15%;
 	text-shadow: black 0px 1px 1px;
 	color: black;
-	font-size:12px;
+	font-size:11px;
+	line-height:35px; 
+}
+div.cabecera-compra-ARP{
+	float: left;
+	width: 15%;
+	text-shadow: black 0px 1px 1px;
+	color: black;
+	font-size:11px;
 }
 div.cabecera-subtotales-compra{
 	float: left;
 	width: 15%;
+	height:100%;
 	text-shadow: gray 0px 1px 1px;
 	color: black;
-	font-size:11px;
+	font-size:9px;
 	text-align:center;
+	overflow:hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	line-height:35px;
+
 }
 div.total{
 	float: left;
@@ -234,7 +263,7 @@ div.abonar{
 }
 div.trash{
 	float: left;
-	width: 5%px;
+	width: 5px;
 	text-shadow: black 0px 1px 1px;
 	color: black
 }

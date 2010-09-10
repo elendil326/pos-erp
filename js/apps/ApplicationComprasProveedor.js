@@ -119,7 +119,7 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 					items:[
 						{
 						xtype: 'textfield',
-						label: 'Peso en Kgs del Embarque:',
+						label: 'No. Kgs del Embarque:',
 						id: 'pesoEmbarque',
 						cls: 'ApplicationComprasProveedor-pesoEmbarque',
 						value: 0,
@@ -139,7 +139,6 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 						id:'arpillasDatos',
 						html: "<div class='ApplicationComprasProveedor-pesoEmbarque' >" 
 								+ "<div class='ApplicationComprasProveedor-numeroArpillas'>Numero Arpillas: </div>" 
-								
 								+ "<div id='totalArps' class='ApplicationComprasProveedor-totalArpillas'>0</div>" 
 								
 								+ "<div class='ApplicationComprasProveedor-PesoArpilla'>Peso por Arpilla: </div>" 
@@ -185,7 +184,7 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 						console.log("MODO DE COMPRA: 'GENERAL MODE' (X PIEZAS)");
 						Ext.getCmp("embarqueDatos").update(
 							"<div class='ApplicationComprasProveedor-item-GeneralMode' >" 
-							+ "<div class='producto_nombre'>PRODUCTO</div>" 
+							+ "<div class='cabecera-producto_nombre'>PRODUCTO</div>" 
 							
 							+ "<div class='cabecera-compra'>PRECIO</div>" 
 							
@@ -649,19 +648,16 @@ ApplicationComprasProveedor.prototype.llenarPanelComprasXarpillas = function( id
 			},
 			function (datos){//mientras responda
 				if(!datos.success){
-					//POS.aviso("ERROR",""+datos.reason);
-					//Ext.get("productosProvSucursal").update("<div class='ApplicationClientes-itemsBox'><div class='no-data'>"+datos.reason+"</div></div>");
-					
-					
+									
 					Ext.get("productosProvSucursal").update(
 					"<div class='ApplicationComprasProveedor-item' >" 
-							+ "<div class='producto_nombre'>PRODUCTO</div>" 
+							+ "<div class='cabecera-producto_nombre'>PRODUCTO</div>" 
 							
-							+ "<div class='cabecera-compra'>No. Arpillas</div>" 
+							+ "<div class='cabecera-compra-ARP'>No. Arpillas</div>" 
 							
-							+ "<div class='cabecera-compra'>Kgs Menos</div>" 
+							+ "<div class='cabecera-compra-ARP'>Kgs Menos</div>" 
 							
-							+ "<div class='cabecera-compra'>Precio x Kg</div>" 
+							+ "<div class='cabecera-compra-ARP'>Precio x Kg</div>" 
 							
 						+ "</div>"	
 						+ "<div class='ApplicationClientes-itemsBox' id='no_ProdComprarProv' ><div class='no-data'>"+datos.reason
@@ -669,7 +665,7 @@ ApplicationComprasProveedor.prototype.llenarPanelComprasXarpillas = function( id
 					);
 					
 					Ext.get("totalesCompra").update("<div class='ApplicationComprasProveedor-item' >" 
-							+ "<div class='producto_nombre'>PRODUCTO</div>" 
+							+ "<div class='cabecera-producto_nombre'>PRODUCTO</div>" 
 							
 							+ "<div class='cabecera-subtotales-compra' >Peso Arp</div>"
 							
@@ -692,13 +688,13 @@ ApplicationComprasProveedor.prototype.llenarPanelComprasXarpillas = function( id
 				var html = "";
 					html += 
 						"<div class='ApplicationComprasProveedor-item' >" 
-							+ "<div class='producto_nombre'>PRODUCTO</div>" 
+							+ "<div class='cabecera-producto_nombre'>PRODUCTO</div>" 
 							
-							+ "<div class='cabecera-compra'>No. Arpillas</div>" 
+							+ "<div class='cabecera-compra-ARP'>No. Arpillas</div>" 
 							
-							+ "<div class='cabecera-compra'>Kgs Menos</div>" 
+							+ "<div class='cabecera-compra-ARP'>Kgs Menos</div>" 
 							
-							+ "<div class='cabecera-compra'>Precio x Kg</div>" 
+							+ "<div class='cabecera-compra-ARP'>Precio x Kg</div>" 
 							
 						+ "</div>";
 								
@@ -733,7 +729,7 @@ ApplicationComprasProveedor.prototype.llenarPanelComprasXarpillas = function( id
 					Ext.get("productosProvSucursal").update("" + html +"</div>");
 
 					Ext.get("totalesCompra").update("<div class='ApplicationComprasProveedor-item' >" 
-							+ "<div class='producto_nombre'>PRODUCTO</div>" 
+							+ "<div class='cabecera-producto_nombre'>PRODUCTO</div>" 
 							
 							+ "<div class='cabecera-subtotales-compra' >Peso Arp</div>"
 							
@@ -790,8 +786,7 @@ ApplicationComprasProveedor.prototype.llenarPanelComprasXpiezas = function( idPr
 			},
 			function (datos){//mientras responda
 				if(!datos.success){
-					//POS.aviso("ERROR",""+datos.reason);
-					
+										
 					Ext.get("productosProvSucursal").update("<div class='ApplicationClientes-itemsBox' id= 'no_ProdComprarProv'><div class='no-data'>"+datos.reason+"</div></div>");
 					
 					
@@ -883,7 +878,6 @@ ApplicationComprasProveedor.prototype.llenarPanelProductosProveedor = function( 
 			},
 			function (datos){//mientras responda
 				if(!datos.success){
-					//POS.aviso("ERROR",""+datos.reason);
 					
 					Ext.get("Productos-Proveedor").update("<div class='ApplicationComprasProveedor-itemsBox'><div class=\"no-data\">"+datos.reason+"</div></div>");
 					return;

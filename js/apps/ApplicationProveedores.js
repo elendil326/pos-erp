@@ -439,8 +439,7 @@ ApplicationProveedores.prototype.listarCompras = function (  ){
 					//console.log(comprasProveedor.data.items);
 				}
 				if(datos.success == false){
-					//POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS PROBABLEMENTE ESTE CLIENTE 'NO' HA COMPRADO");
-					
+							
 					proveedorHtml += "<div class='ApplicationClientes-itemsBox' id='no_ComprasProv' ><div class='no-data'>"+datos.reason+"</div></div>"
 
 				}
@@ -529,7 +528,7 @@ ApplicationProveedores.prototype.listarComprasCredito = function (  ){
 					//console.log(ventasCliente.data.items);
 				}
 				if(datos.success == false){
-					//POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS PROBABLEMENTE ESTE CLIENTE 'NO' HA COMPRADO");
+					
 					Ext.get("comprasProveedorCredito").update("<div class='ApplicationClientes-itemsBox' id='no_ComprasCreditoProv' ><div class='no-data'>"+datos.reason+"</div></div>");
 				}
 			},
@@ -641,7 +640,11 @@ ApplicationProveedores.prototype.verPagosCompra = function( idCompra ){
 						
 				}//FIN DATOS.SUCCES TRUE MOSTRAR CLIENTE
 				if(datos.success == false){
-					POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE PAGOS, NO SE HA ABONADO A ESTA COMPRA (No. COMPRA: "+idCompra+")");
+					
+					html = "<div class='ApplicationClientes-itemsBox' id='no_pagosComprarProv' ><div class='no-data'>"+datos.reason+"</div></div>";
+					
+					Ext.get("pagosCompraProveedor").update(html);
+					
 					return;
 				}
 				},
@@ -656,7 +659,7 @@ ApplicationProveedores.prototype.verPagosCompra = function( idCompra ){
 	/*
 		Se le da fondo al panel padre del panel generado
 	*/
-	Ext.get("pagosCompraProveedor").parent().setStyle({
+	Ext.get("pagosCompraProveedor").parent().parent().setStyle({
 					'background-image':'url("media/g3.png")'								   
 	});
 	
@@ -1002,7 +1005,10 @@ ApplicationProveedores.prototype.verCompra = function( idCompra ){
 						
 				}//FIN DATOS.SUCCES TRUE MOSTRAR CLIENTE
 				if(datos.success == false){
-					POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE COMPRAS PROBABLEMENTE A ESTE PROVEEDOR NO SE LE HA COMPRADO");
+
+					html = "<div class='ApplicationClientes-itemsBox' id='no_detalleCompraProv' ><div class='no-data'>"+datos.reason+"</div></div>";
+					
+					Ext.get("detalleCompraProveedor").update(html);
 					return;
 				}
 				},
@@ -1018,7 +1024,7 @@ ApplicationProveedores.prototype.verCompra = function( idCompra ){
 		Se le da el estilo al formulario q se desplega con los detalles de la venta
 		a un fondo obscuro (g3.png)
 	*/
-	Ext.get("detalleCompraProveedor").parent().setStyle({
+	Ext.get("detalleCompraProveedor").parent().parent().setStyle({
 					'background-image':'url("media/g3.png")'								   
 	});
 }
