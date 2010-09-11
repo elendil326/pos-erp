@@ -167,6 +167,7 @@ class ViewComprasDAO extends ViewComprasDAOBase
 						list($year,$month,$day) = explode('-',$fechaSinHoras[0]);
 			
 						$formatDate = date("l", mktime(0, 0, 0, $month, $day, $year));
+						$abrevMonth = ViewVentasDAO::getMonthAbrevName( $month );
 						//echo "dia: ".$day." mes: ".$month." year: ".$year."<br>";
 						array_push( $resultArray, array("x" => $fechaSinHoras[0], "y" => $cantidad[$key], "label" => $formatDate));
 
@@ -184,8 +185,9 @@ class ViewComprasDAO extends ViewComprasDAOBase
 						list($year,$month,$day) = explode('-',$fechaSinHoras[0]);
 			
 						$formatDate = date("l", mktime(0, 0, 0, $month, $day, $year));
+						$abrevMonth = ViewVentasDAO::getMonthAbrevName( $month );
 						//echo "dia: ".$day." mes: ".$month." year: ".$year."<br>";
-						array_push( $resultArray, array("x" => $fechaSinHoras[0], "y" => $cantidad[$key], "label" => $day));
+						array_push( $resultArray, array("x" => $fechaSinHoras[0], "y" => $cantidad[$key], "label" => $day.'-'.$abrevMonth));
 
 					}
 					break;

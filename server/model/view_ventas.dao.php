@@ -111,7 +111,18 @@ class ViewVentasDAO extends ViewVentasDAOBase
 				
 				for ( $a = 0; $a < count($ventaTupla) ; $a++ )
 				{
+					if ( $ventaTupla[$a]->getIva() == null)
+					{
+						$iva = 0;
+					}
+					else
+					{
+						$iva = $ventaTupla[$a]->getIva()/ 100;
+					}
 					$sumaSubtotal += $ventaTupla[$a]->getSubtotal();
+					
+					$iva *= $ventaTupla[$a]->getSubtotal();
+					$sumaSubtotal += $iva;
 					
 				}
 				
@@ -247,6 +258,37 @@ class ViewVentasDAO extends ViewVentasDAOBase
 
 	}
 
+	
+	/**
+	*	Obtiene una cadena con las primeras 3 letras de un mes, ejemplo: Ene, Feb, Mar, Abr, May, Jun
+	*	@static
+	*	@author Luis Michel <luismichel@computer.org>
+	*	
+	*	@param Integer month El número del mes
+	*/
+	
+	static function getMonthAbrevName( $month )
+	{
+	
+		switch( $month )
+		{
+			case 1: return 'Ene';
+			case 2: return 'Feb';
+			case 3: return 'Mar';
+			case 4: return 'Abr';
+			case 5: return 'May';
+			case 6: return 'Jun';
+			case 7: return 'Jul';
+			case 8: return 'Ago';
+			case 9: return 'Sep';
+			case 10: return 'Oct';
+			case 11: return 'Nov';
+			case 12: return 'Dic';
+		
+		}
+	
+	
+	}
 
 	/**
         *       Obtiene un arreglo con los resultados en el formato que se solicita
@@ -283,6 +325,7 @@ class ViewVentasDAO extends ViewVentasDAOBase
 						list($year,$month,$day) = explode('-',$fechaSinHoras[0]);
 			
 						$formatDate = date("l", mktime(0, 0, 0, $month, $day, $year));
+						$abrevMonth = ViewVentasDAO::getMonthAbrevName( $month );
 						//echo "dia: ".$day." mes: ".$month." year: ".$year."<br>";
 						array_push( $resultArray, array("x" => $fechaSinHoras[0], "y" => $cantidad[$key], "label" => $formatDate));
 
@@ -300,8 +343,9 @@ class ViewVentasDAO extends ViewVentasDAOBase
 						list($year,$month,$day) = explode('-',$fechaSinHoras[0]);
 			
 						$formatDate = date("l", mktime(0, 0, 0, $month, $day, $year));
+						$abrevMonth = ViewVentasDAO::getMonthAbrevName( $month );
 						//echo "dia: ".$day." mes: ".$month." year: ".$year."<br>";
-						array_push( $resultArray, array("x" => $fechaSinHoras[0], "y" => $cantidad[$key], "label" => $day));
+						array_push( $resultArray, array("x" => $fechaSinHoras[0], "y" => $cantidad[$key], "label" => $day.'-'.$abrevMonth));
 
 					}
 					break;
