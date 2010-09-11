@@ -43,8 +43,8 @@ ApplicacionClientes.prototype.dockedItemsFormCliente = null;
 
 ApplicacionClientes.prototype.clienteSeleccionado = null;
 
-ApplicacionClientes.prototype.facturaObj = null;
 
+											   
 ApplicacionClientes.prototype._init = function()
 {
         //nombre de la aplicacion
@@ -845,9 +845,9 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 				vtaCltePagado = parseFloat(ventasCliente.data.items[a].data.pagado);
 
 				if(  vtaClteTotal > vtaCltePagado ){
-					facturado = "<div class='abonar'>ADEUDA</div>";
+					facturado = "<div class='abonar'>Adeuda</div>";
 				}else{
-					facturado ="<div class='abonar' onclick='ApplicacionClientes.currentInstance.panelFacturas(" + ventasCliente.data.items[a].data.id_venta + " , "+ ventasCliente.data.items[a].data.id_cliente +")'>FACTURAR</div>";
+					facturado ="<div class='abonar' onclick='ApplicacionClientes.currentInstance.panelFacturas(" + ventasCliente.data.items[a].data.id_venta + " , "+ ventasCliente.data.items[a].data.id_cliente +")'>Facturar</div>";
 				}
 			}
 
@@ -1491,9 +1491,18 @@ ApplicacionClientes.prototype.EliminarabonoVenta = function ( id_Pago ){
 ----------------------------------------------------------------------*/
 
 ApplicacionClientes.prototype.panelFacturas = function( id_venta , id_cliente ){
-    facturaObj = new ApplicationFacturaVentas( id_venta , id_cliente );
-
-    sink.Main.ui.setCard( facturaObj.facturaVenta , 'slide' );
+	
+	if( !ApplicacionClientes.currentInstance.facturaObj ){
+		
+		ApplicacionClientes.prototype.facturaObj = new ApplicationFacturaVentas();
+	}
+		
+		
+		
+		ApplicacionClientes.currentInstance.facturaObj.facturarPanel( id_venta, id_cliente );
+		sink.Main.ui.setCard(  ApplicacionClientes.currentInstance.facturaObj.facturaVenta, 'slide' );
+		
+	
 };
 
 

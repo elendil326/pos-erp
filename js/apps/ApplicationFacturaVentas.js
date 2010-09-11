@@ -1,13 +1,14 @@
-﻿ApplicationFacturaVentas = function( id_venta , id_cliente ){
+﻿ApplicationFacturaVentas = function(  ){
 
 	if(DEBUG){
 		console.log("ApplicationFacturaVentas: construyendo");
 	}
 	
 	ApplicationFacturaVentas.currentInstance = this;
-	this._init( id_venta , id_cliente );
+	this._init(  );
 	
 };
+
 
 
 ApplicationFacturaVentas.prototype.facturaVenta = null;
@@ -26,10 +27,10 @@ ApplicationFacturaVentas.prototype.ivaFact = 0;
 
 ApplicationFacturaVentas.prototype.totFact = 0;
 
-ApplicationFacturaVentas.prototype._init = function( id_venta , id_cliente ){
+ApplicationFacturaVentas.prototype._init = function(  ){
 	
-	ApplicationFacturaVentas.prototype.detalleFactura = [];
-	ApplicationFacturaVentas.currentInstance.facturarPanel( id_venta , id_cliente);
+	
+	//ApplicationFacturaVentas.currentInstance.facturarPanel( id_venta , id_cliente);
 	
 };
 
@@ -39,27 +40,34 @@ ApplicationFacturaVentas.prototype._init = function( id_venta , id_cliente ){
 	PANEL QUE MUESTRA LOS DETALLES DE LA VENTA PARA PODER FACTURAR
 --------------------------------------------------------------*/
 ApplicationFacturaVentas.prototype.facturarPanel = function( id_venta , id_cliente ){
+
+	ApplicationFacturaVentas.prototype.detalleFactura = [];
 	/*
 		elementos de la toolbar
 	*/
-	var buscar = [{
-		xtype: 'button',
-		text: 'Regresar',
-		ui: 'back',
-		id:'regresarFacturaVentas',
-		handler:	function( ){
-			//var detallesCte = ApplicacionClientes.currentInstance.addClientDetailsPanel( ApplicacionClientes.currentInstance.clienteSeleccionado ); 
-						ApplicationFacturaVentas.currentInstance.detalleFactura.length = 0;
-						ApplicationFacturaVentas.currentInstance.cantidadesProd.length = 0;
-						ApplicationFacturaVentas.currentInstance.toggleBtns.length = 0;
-						sink.Main.ui.setCard( ApplicacionClientes.currentInstance.ClientesList, { type: 'slide', direction: 'right'} );
-						//console.log("Voy a a regresar con el wey seleccionado que es: ");
-						//console.log( ApplicacionClientes.currentInstance.clienteSeleccionado );
-					}
-				
-		}];
+	if( !this.buscar )	{
+		this.buscar = [{
+			xtype: 'button',
+			text: 'Regresar',
+			ui: 'back',
+			id:'regresarFacturaVentas',
+			handler:	function( ){
+		
+							console.log("--------------- REGRESAR DESDE FACURAS");
+							
+							ApplicationFacturaVentas.currentInstance.detalleFactura.length = 0;
+							ApplicationFacturaVentas.currentInstance.cantidadesProd.length = 0;
+							ApplicationFacturaVentas.currentInstance.toggleBtns.length = 0;
+							sink.Main.ui.setCard( ApplicacionClientes.currentInstance.ClientesList, { type: 'slide', direction: 'right'} );
+		
+						}
+					
+			}];
+	}
 
-		var agregar = [{
+
+	if( !this.agregar ){
+		this.agregar = [{
 			xtype: 'button',
 			text: 'Imprimir Factura',
 			ui: 'action',
@@ -92,79 +100,86 @@ ApplicationFacturaVentas.prototype.facturarPanel = function( id_venta , id_clien
 					
 				}
 			}];		
+	}
 
-        var dockedItems = [ new Ext.Toolbar({
+        
+	if( !this.dockedItems  ){	
+		this.dockedItems = [ new Ext.Toolbar({
             ui: 'dark',
             dock: 'bottom',
-            items: buscar.concat({xtype:'spacer'}).concat(agregar)
+            items: this.buscar.concat({xtype:'spacer'}).concat(this.agregar)
         })];
-	
+	}
+
 	/*
 		Panel principal
 	*/
-	var panel = new Ext.Panel({
-		id: 'facturarVenta',
-		scroll: 'vertical',
-		dockedItems: dockedItems,
-		items: [
-				{
-				id: 'datosClienteFactura',
-				html: '' 
-				},
-				{
-					xtype: 'toggle',
-					id : 'facturarTodos',
-					label: 'TODOS:',
-					//value: 1,
-					listeners: 
-					{
-						change: function(  ){
-							if( ApplicationFacturaVentas.currentInstance.detalleFactura.length > 0 ){
-							var tipo = Ext.getCmp("facturarTodos").getValue();
-							var n = ApplicationFacturaVentas.currentInstance.detalleFactura.length;
-							
-							if( tipo == 1){
-								
-							
-								for( b= 0; b < (n);  b++){
-			
-									ApplicationFacturaVentas.currentInstance.toggleBtns[b].setValue(1);
 	
-									ApplicationFacturaVentas.currentInstance.detalleFactura[b].facturar = true;
+	if( !this.panel )	{
+		this.panel = new Ext.Panel({
+			id: 'facturarVenta',
+			scroll: 'vertical',
+			dockedItems: this.dockedItems,
+			items: [
+					{
+					id: 'datosClienteFactura',
+					html: '' 
+					},
+					{
+						xtype: 'toggle',
+						id : 'facturarTodos',
+						label: 'TODOS:',
+						//value: 1,
+						listeners: 
+						{
+							change: function(  ){
+								if( ApplicationFacturaVentas.currentInstance.detalleFactura.length > 0 ){
+								var tipo = Ext.getCmp("facturarTodos").getValue();
+								var n = ApplicationFacturaVentas.currentInstance.detalleFactura.length;
+								
+								if( tipo == 1){
 									
-									ApplicationFacturaVentas.currentInstance.detalleFactura[b].cantidad = ApplicationFacturaVentas.currentInstance.cantidadesProd[ b ].cantidad;
+								
+									for( b= 0; b < (n);  b++){
+				
+										ApplicationFacturaVentas.currentInstance.toggleBtns[b].setValue(1);
+		
+										ApplicationFacturaVentas.currentInstance.detalleFactura[b].facturar = true;
+										
+										ApplicationFacturaVentas.currentInstance.detalleFactura[b].cantidad = ApplicationFacturaVentas.currentInstance.cantidadesProd[ b ].cantidad;
+										
+										Ext.get("cantidadFact_"+b).dom.value = ApplicationFacturaVentas.currentInstance.cantidadesProd[ b ].cantidad;
+										Ext.get("subtotFact_"+b).update("$ "+ (  ApplicationFacturaVentas.currentInstance.cantidadesProd[ b ].cantidad *  ApplicationFacturaVentas.currentInstance.cantidadesProd[ b ].precio ) );
+									}
+							
+									Ext.get("totFactura").update("$ "+ ( ApplicationFacturaVentas.currentInstance.calculaTotalFactura() ) );
+									ApplicationFacturaVentas.currentInstance.facturarTodos = true;
 									
-									Ext.get("cantidadFact_"+b).dom.value = ApplicationFacturaVentas.currentInstance.cantidadesProd[ b ].cantidad;
-									Ext.get("subtotFact_"+b).update("$ "+ (  ApplicationFacturaVentas.currentInstance.cantidadesProd[ b ].cantidad *  ApplicationFacturaVentas.currentInstance.cantidadesProd[ b ].precio ) );
+								}else{
+									
+									ApplicationFacturaVentas.currentInstance.facturarTodos = false;
+								}//else
 								}
-						
-								Ext.get("totFactura").update("$ "+ ( ApplicationFacturaVentas.currentInstance.calculaTotalFactura() ) );
-								ApplicationFacturaVentas.currentInstance.facturarTodos = true;
-								
-							}else{
-								
-								ApplicationFacturaVentas.currentInstance.facturarTodos = false;
-							}//else
 							}
 						}
+					},
+					{
+					id: 'detallesFactura',
+					html: ''
+					},
+					{
+					id: 'subtotalesFact',
+					html: "<div class='ApplicationFacturaVentas-Item' >"
+							+"<div class='pagado'>SUBTOT:</div><div class='abonar' id='subtotVta'></div>"
+							+"<div class='pagado'>IVA: </div><div class='abonar' id='ivaVta'></div>"
+							+"<div class='pagado'>TOTAL: </div><div class='abonar' id='totVta'></div>"
+							+ "<div class='subtotal'>&nbsp;</div>"
+							+"<div class='pagado'>TOTAL FACTURA: </div><div class='abonar' id='totFactura'></div>"
+							+"</div>"
 					}
-				},
-				{
-				id: 'detallesFactura',
-				html: ''
-				},
-				{
-				id: 'subtotalesFact',
-				html: "<div class='ApplicationClientes-item' >"
-						+"<div class='pagado'>SUBTOT:</div><div class='abonar' id='subtotVta'></div>"
-						+"<div class='pagado'>IVA: </div><div class='abonar' id='ivaVta'></div>"
-						+"<div class='pagado'>TOTAL: </div><div class='abonar' id='totVta'></div>"
-						+ "<div class='subtotal'>&nbsp;</div>"
-						+"<div class='pagado'>TOTAL FACTURA: </div><div class='abonar' id='totFactura'></div>"
-						+"</div>"
-				}
-				]
-		});
+					]
+			});
+	}
 	
 	Ext.regModel('facturaModel', {
 
@@ -214,7 +229,7 @@ ApplicationFacturaVentas.prototype.facturarPanel = function( id_venta , id_clien
 				
 				var html = "";
 					html += 
-						"<div class='ApplicationClientes-item' >" 
+						"<div class='ApplicationFacturaVentas-Item' >" 
 							+ "<div class='vendedor'>PRODUCTO</div>" 
 							+ "<div class='sucursal'>CANTIDAD</div>"  
 							+ "<div class='subtotal'>PRECIO</div>" 
@@ -226,43 +241,43 @@ ApplicationFacturaVentas.prototype.facturarPanel = function( id_venta , id_clien
 								
 					for( a = 0; a < detalleFacturaStore.getCount(); a++ ){
 					
-						html += "<div class='ApplicationClientes-item' >" 
-						+ "<div class='vendedor'>" + detalleFacturaStore.data.items[a].denominacion +"</div>" 
-						+ "<div class='sucursal'>"+ detalleFacturaStore.data.items[a].cantidad +"</div>"
+						html += "<div class='ApplicationFacturaVentas-Item' >" 
+						+ "<div class='vendedor'>" + detalleFacturaStore.data.items[a].data.denominacion +"</div>" 
+						+ "<div class='sucursal'>"+ detalleFacturaStore.data.items[a].data.cantidad +"</div>"
 						
 						
-						+ "<div class='subtotal'>$ "+ detalleFacturaStore.data.items[a].precio+"</div>"
-						+ "<div class='subtotal'>$ "+ detalleFacturaStore.data.items[a].subtotal +"</div>"
+						+ "<div class='subtotal'>$ "+ detalleFacturaStore.data.items[a].data.precio+"</div>"
+						+ "<div class='subtotal'>$ "+ detalleFacturaStore.data.items[a].data.subtotal +"</div>"
 						+ "<div class='subtotal'>&nbsp;</div>"
 						+ "<div class='sucursal'>" //this.htmlCart_items[a].description 
-						+ "<INPUT TYPE='text' id='cantidadFact_"+a+"' SIZE='5' VALUE='"+detalleFacturaStore.data.items[a].cantidad+"' onchange='ApplicationFacturaVentas.currentInstance.cambiarCantidadFacturar("+a+",this.value, cantidadFact_"+a+")' class='description'>" 						
+						+ "<INPUT TYPE='text' id='cantidadFact_"+a+"' SIZE='5' VALUE='"+detalleFacturaStore.data.items[a].data.cantidad+"' onchange='ApplicationFacturaVentas.currentInstance.cambiarCantidadFacturar("+a+",this.value, cantidadFact_"+a+")' class='description'>" 						
 						+"</div>"
 						
-						+"<div class='pagado' id ='subtotFact_"+a+"'>$ "+ detalleFacturaStore.data.items[a].subtotal +"</div>"
-						+ "<div class='vendedor' id='prod_"+detalleFacturaStore.data.items[a].id_producto+"'></div>"
+						+"<div class='pagado' id ='subtotFact_"+a+"'>$ "+ detalleFacturaStore.data.items[a].data.subtotal +"</div>"
+						+ "<div class='toggleFactura' id='prod_"+detalleFacturaStore.data.items[a].data.id_producto+"'></div>"
 						+ "</div>";
 						
 						ApplicationFacturaVentas.currentInstance.cantidadesProd.push( {
-							cantidad: parseFloat( detalleFacturaStore.data.items[a].cantidad),
-							precio : parseFloat( detalleFacturaStore.data.items[a].precio )
+							cantidad: parseFloat( detalleFacturaStore.data.items[a].data.cantidad),
+							precio : parseFloat( detalleFacturaStore.data.items[a].data.precio )
 							});
 						
 											
 						ApplicationFacturaVentas.currentInstance.detalleFactura.push({
-							id:			parseInt( detalleFacturaStore.data.items[a].id_producto ),
+							id:			parseInt( detalleFacturaStore.data.items[a].data.id_producto ),
 							facturar:	true,
-							cantidad:	parseFloat( detalleFacturaStore.data.items[a].cantidad )
+							cantidad:	parseFloat( detalleFacturaStore.data.items[a].data.cantidad )
 						});
 					}//fin for 
 				
 					//imprimir el html
-					Ext.get("detallesFactura").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
+					Ext.get("detallesFactura").update("<div class='ApplicationFacturaVentas-itemsBox'>" + html +"</div>");
 					for( a = 0; a < detalleFacturaStore.getCount(); a++ ){
 						fact = new Ext.form.Toggle({
-							id: 'fProd_'+detalleFacturaStore.data.items[a].id_producto,
-							renderTo: 'prod_'+detalleFacturaStore.data.items[a].id_producto,
+							id: 'fProd_'+detalleFacturaStore.data.items[a].data.id_producto,
+							renderTo: 'prod_'+detalleFacturaStore.data.items[a].data.id_producto,
 							value: 1,
-							
+
 							listeners: {
 							
 								
@@ -270,8 +285,9 @@ ApplicationFacturaVentas.prototype.facturarPanel = function( id_venta , id_clien
 										ApplicationFacturaVentas.currentInstance.facturaProducto ( this.getId() );
 									}
 							}
-						});
+						});						
 						ApplicationFacturaVentas.currentInstance.toggleBtns.push( fact );
+
 					}
 					
 			},
@@ -307,7 +323,7 @@ ApplicationFacturaVentas.prototype.facturarPanel = function( id_venta , id_clien
 	
 	
 	
-	this.facturaVenta = panel;
+	this.facturaVenta = this.panel;
 };//fin facturarPanel
 
 
