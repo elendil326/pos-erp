@@ -1502,6 +1502,25 @@ ApplicacionClientes.prototype.panelFacturas = function( id_venta , id_cliente ){
 		ApplicacionClientes.currentInstance.facturaObj.facturarPanel( id_venta, id_cliente );
 		sink.Main.ui.setCard(  ApplicacionClientes.currentInstance.facturaObj.facturaVenta, 'slide' );
 		
+		Ext.get("datosClienteFactura").parent().parent().setStyle({
+					'background-image':'url("media/g3.png")'								   
+		});
+		
+		Ext.get("datosClienteFactura").setStyle({   
+			'overflow': 'hidden',
+			'margin': '5px',
+			'-moz-border-radius': '15px',
+		    '-webkit-border-radius': '15px',
+    		'-khtml-border-radius': '15px',
+			'background-image':'url(media/dark2.png)',
+			'padding-left' : '5px',
+			'border-style':'solid',
+			'border-width':'1px',
+			'border-right-color':'#60656b',
+			'border-left-color':'#61666c',
+			'border-top-color':'#474a4f',
+			'border-bottom-color':'#959a9f'
+		});
 	
 };
 

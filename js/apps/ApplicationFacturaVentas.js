@@ -123,13 +123,14 @@ ApplicationFacturaVentas.prototype.facturarPanel = function( id_venta , id_clien
 			items: [
 					{
 					id: 'datosClienteFactura',
-					html: '' 
+					//baseCls: 'ApplicationFacturaVentas-DatosCliente',
+					html: ''
 					},
 					{
 						xtype: 'toggle',
 						id : 'facturarTodos',
-						label: 'TODOS:',
-						//value: 1,
+						label: '¿Facturar Todos?:',
+						cls:'toggleFacturaTodos',
 						listeners: 
 						{
 							change: function(  ){
@@ -199,15 +200,18 @@ ApplicationFacturaVentas.prototype.facturarPanel = function( id_venta , id_clien
 				}
 				html ="";
 				html2 ="";
+				i = 0;
 				for(var obj in datos.datos){
 					for ( var propiedad in datos.datos[obj] ){
 						if( typeof(datos.datos[obj][propiedad]) != "function" ) {
 							//html += datos.datos[obj][propiedad] +"<br>"; //imprime unicamente los valores						
-							html2 += propiedad +" : "+datos.datos[obj][propiedad]+"<br>";
+							html2 += "<div class='ApplicationFacturaVentas-itemsBox2' id='datoCliente_"+i+"'>"+propiedad +" : "+datos.datos[obj][propiedad]+"</div>";
 						}
+						i++;
 					}
 				}
-				Ext.get("datosClienteFactura").update(html+html2);
+				i=0;
+				Ext.get("datosClienteFactura").update("<div class='ApplicationFacturaVentas-ItemData' id='contenedorDatosCliente'>"+ html+html2 +"</div>" );
 			},
 			function (){//no responde
 				POS.aviso("ERROR","NO SE PUDO MOSTRAR DATOS DEL CLIENTE,  ERROR EN LA CONEXION :(");	
@@ -323,7 +327,8 @@ ApplicationFacturaVentas.prototype.facturarPanel = function( id_venta , id_clien
 	
 	
 	
-	this.facturaVenta = this.panel;
+	this.facturaVenta = this.panel;	
+	
 };//fin facturarPanel
 
 

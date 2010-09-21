@@ -1,10 +1,40 @@
-﻿.ApplicationFacturaVentas-itemsBox {
+﻿.ApplicationFacturaVentas-ItemData{
+	overflow: hidden;
 	margin: 5px;
+	
+	-moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -khtml-border-radius: 15px;
+
+	border-style : solid;
+	border-width:1px;
+	border-right-color: #60656b;
+	border-left-color: #61666c;
+	border-top-color: #474a4f;
+	border-bottom-color: #959a9f;
+	
+	height: 100%;
+	width: 100%;
+	background-image:url(media/g2.png);
+	
+	padding-left : 5px;
+
+	
+}
+.ApplicationFacturaVentas-itemsBox2 {
+	margin-left:15px;
+	margin-bottom: 5px;
 	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
-	font-size: 10px;
+	font-size: 16px;
+	color:#FFF;
+	text-shadow: gray 0px 1px 1px;
 
 }
 
+.ApplicationFacturaVentas-itemsBox {
+	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+	font-size: 10px;	
+}
 
 .ApplicationFacturaVentas-itemsBox .no-data{
 	padding: 10px;
@@ -23,7 +53,7 @@
 	border-left-color: #61666c;
 	border-top-color: #474a4f !important;
 	border-bottom-color: #959a9f !important;
-
+	
 	color: white !important;
 	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
 	text-shadow: black 0px 1px 1px;
@@ -73,6 +103,14 @@
 	font-size:11px;
 }
 
+.toggleFacturaTodos{
+	margin-left:15px;
+	margin-bottom: 5px;
+	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+	font-size: 16px;
+	color:#FFF;
+	text-shadow: black 0px 1px 1px;
+}
 
 .ApplicationFacturaVentas-Item .id{
 	float: left;
