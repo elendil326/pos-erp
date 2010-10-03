@@ -594,14 +594,6 @@ sink.Main = {
         
 
 
-		//boton de cerrar sesion
-        this.salirButton = new Ext.Button({
-            text: 'Salir',
-            ui: 'action',
-            hidden: true,
-            handler: this.onSalirButtonTap,
-            scope: this
-        });
 
 		
 
@@ -609,7 +601,7 @@ sink.Main = {
         this.ui = new Ext.ux.UniversalUI({
             title: Ext.platform.isPhone ? 'POS iPhone' : '<b>Sucursal</b> ' + POS_SUCURSAL_NOMBRE + '   <b>Usuario</b> ' + POS_CAJERO_NOMBRE,
             navigationItems: Apps,
-            buttons: [{xtype: 'spacer'}, this.ayudaButton, this.salirButton],
+            buttons: [{xtype: 'spacer'}, this.ayudaButton ],
             listeners: {
                 navigate : this.onNavigate,
                 scope: this
@@ -624,7 +616,7 @@ sink.Main = {
 	//al navegar en cualquier opcion
     onNavigate : function(ui, item) {
 
-        this.salirButton.show();
+
         if (item.ayuda) {
 
 
@@ -650,23 +642,7 @@ sink.Main = {
     
 
 
-	onSalirButtonTap : function () {
-		
-		POS.AJAXandDECODE(
-				//params
-				{
-					action : '2002'
-				},
-				//sucess
-				function ( response ){
-					window.location = "./";
-				},
-				//failure
-				function (){
-					
-				}
-			);
-	},
+
 
     onAyudaButtonTap : function() {
 		

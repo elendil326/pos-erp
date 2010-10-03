@@ -347,20 +347,27 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 		                    value: recor.telefono,
 		                    disabled: true
 		                }),
-						limite_creditoClienteM = new Ext.form.NumberField({
+						limite_creditoClienteM = new Ext.form.TextField({
 		                    id: 'descuentoClienteM',
 		                    label: 'Descuento',
 		                    required: false,
 		                    value: recor.descuento,
 		                    disabled: true
 		                }),
-		                limite_creditoClienteM = new Ext.form.NumberField({
+		                    new Ext.form.TextField({
 		                    id: 'limite_creditoClienteM',
-		                    label: 'Max Credito',
-		                    required: true,
-		                    value: recor.limite_credito,
+		                    label: 'Credito Max',
+		                    required: false,
+		                    value: POS.currencyFormat(recor.limite_credito),
 		                    disabled: true
-		                })
+		                })	,
+			            	new Ext.form.TextField({
+			                    id: 'creditoRestanteClienteM',
+			                    label: 'Credito Res',
+			                    required: false,
+			                    value: POS.currencyFormat(recor.credito_restante),
+			                    disabled: true
+			                })
 		        ]};
 		
 		this.carousel = new Ext.Carousel({
@@ -370,7 +377,7 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 	            xtype: 'panel',
 	            title: 'customerDetails',
 	            id: 'customerDetailsForm',
-	            items: [formaDeDetalles],
+	            items: [ formaDeDetalles ],
 				listeners:{
 					show: function(){
 
@@ -422,7 +429,9 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 		Ext.getCmp("emailClienteM").setValue(recor.e_mail);
 		Ext.getCmp("telefonoClienteM").setValue(recor.telefono);		
 		Ext.getCmp("descuentoClienteM").setValue(recor.descuento);				
-		Ext.getCmp("limite_creditoClienteM").setValue(recor.limite_credito);		
+		Ext.getCmp("limite_creditoClienteM").setValue( POS.currencyFormat(recor.limite_credito));
+		Ext.getCmp("creditoRestanteClienteM").setValue( POS.currencyFormat(recor.credito_restante));		
+		
 	
 	}
 
@@ -445,7 +454,7 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 		  disabledClass: '',
           flex: 1
         },
-        items: [this.carousel]
+        items: [ this.carousel ]
 	
     });
 };

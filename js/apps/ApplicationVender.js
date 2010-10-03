@@ -686,6 +686,9 @@ ApplicationVender.prototype.doVender = function ()
 
 ApplicationVender.prototype.payingMethod = null;
 
+
+
+
 ApplicationVender.prototype.doVentaForms = function()
 {
 	if(this.panelContado === null){
@@ -698,7 +701,8 @@ ApplicationVender.prototype.doVentaForms = function()
 	if(!this.CLIENTE_COMUN && this.panelCredito === null){
 		this.panelCredito = this.doVentaCreditoPanel();			
 	}else{
-		
+		this.panelCredito.destroy();
+		this.panelCredito = this.doVentaCreditoPanel();		
 	}
 	
 	this.payingMethod = 'contado';
@@ -866,6 +870,15 @@ ApplicationVender.prototype.doPayContadoKeyUp = function (  )
 
 ApplicationVender.prototype.doVentaCreditoPanel = function ( cantidadPago )
 {
+	
+	
+	//revisar si puedo pagar a contado
+	var canDoCredit = true;
+	if( this.ventaTotales.total > ApplicationVender.currentInstance.cliente.credito_restante ){
+		canDoCredit = false;
+	}
+	
+	
 
 	return new Ext.Panel({
 
@@ -907,6 +920,7 @@ ApplicationVender.prototype.doVentaCreditoPanel = function ( cantidadPago )
 				xtype:'button', 
 				ui: 'action',
 				text:'Vender',
+				hidden: !canDoCredit,
 				handler: ApplicationVender.currentInstance.doVentaLogicCredito
 
 			}]
@@ -945,16 +959,19 @@ ApplicationVender.prototype.doVentaCreditoPanel = function ( cantidadPago )
 				disabled: true
 		    },{
 				xtype: 'textfield',
-				label: 'Limite de credito',
-				value: ApplicationVender.currentInstance.cliente.limite_credito,
+				label: 'Credito Max',
+				value: POS.currencyFormat(ApplicationVender.currentInstance.cliente.limite_credito),
 				disabled: true
 			},{
 				xtype: 'textfield',
-				label: 'Credito restante',
-				value: ApplicationVender.currentInstance.cliente.credito_restante,
+				label: 'Credito Res',
+				value: POS.currencyFormat(ApplicationVender.currentInstance.cliente.credito_restante),
 				disabled: true
 			}]
-		}]
+		}	,{
+					html: '<div align=center>El limite de credito es mas alto que el total actual.</div>',
+					hidden: canDoCredit
+			}]
 	});
 };
 
@@ -1287,8 +1304,9 @@ ApplicationVender.prototype.actualizarDetallesCliente = function ( cliente )
 		html += 	"<tr><td style='text-align: right'>Direccion</td><td>" + cliente.direccion + "</td></tr>";
 		html += 	"<tr><td style='text-align: right'>Telefono</td><td>" + cliente.telefono + "</td></tr>";
 		html += 	"<tr><td style='text-align: right'>Correo Electronico</td><td>" + cliente.e_mail + "</td></tr>";
-		html += 	"<tr><td style='text-align: right'>Descuento</td><td>" + cliente.descuento + "</td></tr>";
-		html += 	"<tr><td style='text-align: right'>Limite de Credito</td><td>" + cliente.limite_credito + "</td></tr>";
+		html += 	"<tr><td style='text-align: right'>Descuento</td><td>" + cliente.descuento + " %</td></tr>";
+		html += 	"<tr><td style='text-align: right'>Limite de Credito</td><td>" + POS.currencyFormat(cliente.limite_credito) + "</td></tr>";
+		html += 	"<tr><td style='text-align: right'>Credito Restante</td><td>" + POS.currencyFormat(cliente.credito_restante) + "</td></tr>";
 		html += "</table>";
 	html += " </div> ";
 	
@@ -1308,7 +1326,7 @@ ApplicationVender.prototype.buscarCliente = function ()
 {
 	//retrive client list from server
 	POS.AJAXandDECODE({
-			action : "2102"
+			action : "1005"
 		},
 		function(response){
 			
@@ -1322,21 +1340,22 @@ ApplicationVender.prototype.buscarCliente = function ()
 			//createArray for client data
 			var clientesData = [];
 
-			var clientes = response[0];
+			var datos = response.datos;
 			
 			//fill array
-			for(a = 0; a < response.length ; a++){
+			for(a = 0; a < datos.length ; a++){
 
 				clientesData.push( {
 					
-					iden: 		response[a][0].id_cliente, 
-					nombre: 	response[a][0].nombre, 
-					rfc: 		response[a][0].rfc,
-					direccion: 	response[a][0].direccion,
-					telefono: 	response[a][0].telefono,
-					e_mail: 	response[a][0].e_mail,
-					descuento: 			response[a][0].descuento,
-					limite_credito: 	response[a][0].limite_credito
+					iden: 		datos[a].id_cliente, 
+					nombre: 	datos[a].nombre, 
+					rfc: 		datos[a].rfc,
+					direccion: 	datos[a].direccion,
+					telefono: 	datos[a].telefono,
+					e_mail: 	datos[a].e_mail,
+					descuento: 			datos[a].descuento,
+					limite_credito: 	datos[a].limite_credito,
+					credito_restante: 	datos[a].credito_restante
 					
 					});	
 			}

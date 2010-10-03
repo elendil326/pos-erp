@@ -13,6 +13,7 @@
  *
  */
 require_once('../server/model/cliente.dao.php');
+require_once('../server/model/ventas.dao.php');
 require_once('../server/misc/sanitize.php');
 
 
@@ -80,16 +81,12 @@ function save_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefon
  */
 function update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0) {
 	
-	if ($limite_credito < 0.0) {
-        return "{success: false, reason: 'El limite de crédito debe ser mayor a cero.' }";
-    }
 
-    if ($descuento < 0.0 || $descuento > 100) {
-        return "{success: false, reason: 'El descuento debe ser menor a 100' }";
+    if ($descuento < 0 || $descuento > 100) {
+        return "{success: false, reason: 'El descuento debe ser entre 0 y 100' }";
     }
 
     //validar RFC
-	
 	$cliente = new Cliente();
 	$cliente->setIdCliente( $id );
 
@@ -100,7 +97,7 @@ function update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telef
 	$cliente->setDescuento( $descuento );
 	$cliente->setTelefono( $telefono );
 	$cliente->setEMail( $e_mail );
-	
+	$cliente->setActivo( 1 );	
 	try{
 		$ans = ClienteDAO::save($cliente);
 		if ($ans) {
@@ -181,22 +178,44 @@ function delete_customer($id_cliente) {
 }
 
 function list_customers() {
-	$clientes = ClienteDAO::getAll();
-    $ans = '';
-	if( count($clientes) > 0 ){
-		foreach ($clientes as $cliente){
-				if( $cliente->getIdCliente() > 0 ){
-					$tmp = substr( $cliente, 1, -1 );//[{jgkjgk}] -> {jgkjgk}
-					$ans .= $tmp."," ;
-				}
-		}
-		$out = substr($ans,0,-1);
-		$ans = sprintf("{ success: true, datos:[%s] }", $out);
-		return $ans;
-	}else{
-		return "{success: false, reason: 'No hay lista de Clientes' }";
+	
+	$total_customers = array();
+	
+	//buscar clientes que esten activos
+	$tcliente = new Cliente();
+	$tcliente->setActivo(1);
+	$clientes = ClienteDAO::search($tcliente);
+
+	if( count($clientes) <= 0 ){
+		echo "{success: false, reason: 'No hay lista de Clientes' }";
+		return;
 	}
  
+	foreach ($clientes as $cliente){
+		
+			//si es una caja comun, continuar
+			if( $cliente->getIdCliente() < 0 ){
+				continue;
+			}
+			
+			//buscar a este cliente en las ventas a credito
+			$qventa = new Ventas();
+			$qventa->setIdCliente( $cliente->getIdCliente() );
+			$qventa->setTipoVenta( "credito" );				
+			$res = VentasDAO::search($qventa);
+			
+			$por_pagar = 0;
+			foreach($res as $venta){
+				//restar lo que ha pagado del total
+				$por_pagar += $venta->getTotal() - $venta->getPagado();
+			}
+			
+			$c = json_decode($cliente, true);
+			$c[0]["credito_restante"] = $cliente->getLimiteCredito() - $por_pagar;
+			array_push($total_customers, $c[0] );
+	}
+
+	printf("{ success: true, datos: %s }",  json_encode($total_customers));
 }
 
 /**
@@ -338,10 +357,8 @@ switch ($args['action']) {
 	break;
 	
 	case '1005':
-        unset($args);
+		list_customers();
 
-        $ans = list_customers();
-        echo $ans;
 	break;
 	
 	case '1006': 	//'getGridDataClientesCreditoDeudores':
