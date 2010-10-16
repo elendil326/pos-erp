@@ -1,288 +1,282 @@
 -- phpMyAdmin SQL Dump
--- version 3.2.0.1
+-- version 3.3.7
 -- http://www.phpmyadmin.net
 --
--- Servidor: localhost
--- Tiempo de generación: 31-08-2010 a las 04:58:48
--- Versión del servidor: 5.1.36
--- Versión de PHP: 5.3.0
+-- Host: localhost
+-- Generation Time: Oct 16, 2010 at 01:34 AM
+-- Server version: 5.0.51
+-- PHP Version: 5.2.6-1+lenny9
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
 --
--- Base de datos: `pos`
+-- Database: `pos`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `cliente`
+-- Table structure for table `cliente`
 --
 
 CREATE TABLE IF NOT EXISTS `cliente` (
-  `id_cliente` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del cliente',
-  `rfc` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'rfc del cliente si es que tiene',
-  `nombre` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre del cliente',
-  `direccion` varchar(300) COLLATE utf8_unicode_ci NOT NULL COMMENT 'domicilio del cliente calle, no, colonia',
-  `telefono` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Telefono del cliete',
-  `e_mail` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0' COMMENT 'dias de credito para que pague el cliente',
-  `limite_credito` float NOT NULL DEFAULT '0' COMMENT 'Limite de credito otorgado al cliente',
-  `descuento` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Taza porcentual de descuento de 0 a 100',
-  `activo` tinyint(2) DEFAULT NULL COMMENT 'Indica si la cuenta esta activada o desactivada',
-  PRIMARY KEY (`id_cliente`)
+  `id_cliente` int(11) NOT NULL auto_increment COMMENT 'identificador del cliente',
+  `rfc` varchar(20) collate utf8_unicode_ci NOT NULL COMMENT 'rfc del cliente si es que tiene',
+  `nombre` varchar(100) collate utf8_unicode_ci NOT NULL COMMENT 'nombre del cliente',
+  `direccion` varchar(300) collate utf8_unicode_ci NOT NULL COMMENT 'domicilio del cliente calle, no, colonia',
+  `telefono` varchar(25) collate utf8_unicode_ci default NULL COMMENT 'Telefono del cliete',
+  `e_mail` varchar(60) collate utf8_unicode_ci NOT NULL default '0' COMMENT 'dias de credito para que pague el cliente',
+  `limite_credito` float NOT NULL default '0' COMMENT 'Limite de credito otorgado al cliente',
+  `descuento` tinyint(4) NOT NULL default '0' COMMENT 'Taza porcentual de descuento de 0 a 100',
+  `activo` tinyint(2) NOT NULL default '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
+  PRIMARY KEY  (`id_cliente`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=201 ;
 
 --
--- Volcar la base de datos para la tabla `cliente`
+-- Dumping data for table `cliente`
 --
 
 INSERT INTO `cliente` (`id_cliente`, `rfc`, `nombre`, `direccion`, `telefono`, `e_mail`, `limite_credito`, `descuento`, `activo`) VALUES
-(-28, '', '', '', NULL, '0', 0, 0, NULL),
-(-6, '', '', '', NULL, '0', 0, 0, NULL),
-(1, 'AFJ19INT3JI', 'Clementine Manning', '992-3353 Euismod Street', '(777) 586-8657', 'adipiscing.elit.Curabitur@elitelit.edu', 25563, 0, NULL),
-(2, 'EEN95XGS4ZA', 'September Whitaker', 'Ap #147-755 Montes, Rd.', '(569) 226-0218', 'gravida.non@lacusEtiambibendum.edu', 10101, 26, NULL),
-(3, 'SFV46VKN7TB', 'Kimberly Rocha', '154-2822 Non, St.', '(772) 180-4981', 'mollis@vitaerisusDuis.com', 17321, 9, NULL),
-(4, 'DKP61IRR1UT', 'MacKenzie Shelton', 'Ap #375-3459 Urna. Street', '(538) 429-4572', 'amet.ornare.lectus@egetodio.org', 2454, 34, NULL),
-(5, 'WKK55EHC0IL', 'Madeson Moon', 'P.O. Box 659, 4605 Etiam St.', '(369) 832-8679', 'a@augueidante.edu', 3219, 33, NULL),
-(6, 'THA83JHY9CZ', 'Alana Parker', '454-1969 Faucibus Road', '(660) 339-5167', 'tortor.dictum@Integermollis.edu', 15257, 42, NULL),
-(7, 'KWF38HIW0TF', 'Germane Chan', '4262 Aliquet. Avenue', '(313) 820-5680', 'Nunc.ac.sem@pretiumaliquet.com', 12906, 38, NULL),
-(8, 'QHD91DTJ4XT', 'Irma Odom', '5688 Purus. Rd.', '(406) 164-0336', 'quis@iaculis.com', 10734, 44, NULL),
-(9, 'INC08OYP9QU', 'Maggy House', 'Ap #971-755 Ac St.', '(241) 687-5584', 'faucibus.orci.luctus@ornareFusce.org', 15693, 13, NULL),
-(10, 'PCG10XZR3HS', 'Shelly Estrada', 'Ap #934-6679 Dolor St.', '(572) 156-0812', 'malesuada.vel@aenim.org', 23593, 15, NULL),
-(11, 'URH40PEW8YY', 'Madonna Stephenson', 'Ap #869-2606 Tincidunt St.', '(252) 165-5207', 'mauris.ipsum.porta@placerat.org', 10578, 10, NULL),
-(12, 'NZK38IHL2XP', 'Roanna Ramirez', '209-9933 Blandit. Avenue', '(965) 362-2430', 'lacus.Etiam.bibendum@lorem.org', 18810, 40, NULL),
-(13, 'MZE91BNZ8KY', 'Beverly Lambert', 'P.O. Box 554, 2937 Dui. St.', '(875) 305-3778', 'malesuada.augue@Pellentesqueutipsum.com', 25364, 34, NULL),
-(14, 'NXH57RLV1KW', 'Guinevere Valencia', 'Ap #700-4494 Ut St.', '(727) 595-8326', 'mollis.Integer.tincidunt@aptenttaciti.ca', 19935, 35, NULL),
-(15, 'RIF45QJW5NZ', 'Daria Christensen', '265-4464 Enim Avenue', '(472) 798-4027', 'Vivamus@Vestibulumante.com', 20749, 10, NULL),
-(16, 'VIP68CRC2CB', 'Martina Estrada', 'P.O. Box 782, 6958 Sed Avenue', '(961) 198-0837', 'ullamcorper@gravida.com', 18118, 29, NULL),
-(17, 'FRH29JJP6WO', 'Mikayla Mcmillan', '449-6881 Cras Rd.', '(227) 155-2552', 'nec.malesuada.ut@CraspellentesqueSed.ca', 3661, 18, NULL),
-(18, 'VMT41PYU2FL', 'Kaitlin Mcdonald', '8968 Vitae Ave', '(734) 990-1820', 'nibh.Quisque.nonummy@Nam.ca', 19368, 6, NULL),
-(19, 'IUT25YMB4BE', 'Belle Talley', '580-8290 Arcu. Av.', '(350) 270-1814', 'aliquam.iaculis.lacus@pellentesqueSed.org', 11219, 17, NULL),
-(20, 'FIW27XLW8NS', 'Barbara Bishop', 'Ap #584-4614 Montes, Road', '(455) 370-1662', 'dapibus@sodalesnisi.com', 13632, 33, NULL),
-(21, 'DJF91TRH8FP', 'Jescie Puckett', '661-1909 Pellentesque Av.', '(162) 735-9414', 'Integer.id.magna@dui.ca', 10619, 43, NULL),
-(22, 'CCQ38VZI5BF', 'Tanya Noel', '712-7158 Est. Avenue', '(716) 220-9829', 'facilisis.magna.tellus@atliberoMorbi.org', 14095, 12, NULL),
-(23, 'PHG98IDU9NU', 'Haley Contreras', '240-1962 Felis. St.', '(721) 540-3082', 'ac.risus.Morbi@felisullamcorper.org', 22455, 12, NULL),
-(24, 'NBK30XCJ1OL', 'Kaye Pierce', '7616 Eget St.', '(747) 156-2306', 'Aliquam.nisl.Nulla@vitaealiquet.edu', 15248, 17, NULL),
-(25, 'NOH69KEJ8XZ', 'Anjolie Strickland', '596-7633 Nec Ave', '(929) 326-9919', 'malesuada@Ut.edu', 17355, 14, NULL),
-(26, 'DZM48KMY2GR', 'Martina Roman', 'P.O. Box 475, 7793 Bibendum. Rd.', '(307) 326-4891', 'sit@rhoncusid.com', 28787, 29, NULL),
-(27, 'JJD26JYH1KV', 'Charlotte Sargent', '3203 Magna. Rd.', '(719) 298-3937', 'metus@congueelitsed.edu', 2663, 40, NULL),
-(28, 'NTG40JWV5RL', 'Alika Mccray', 'Ap #727-9108 Lacinia. Ave', '(652) 699-7864', 'libero@idmagna.org', 17688, 0, NULL),
-(29, 'OZW35OVO1OI', 'Shellie Edwards', '4376 Urna Rd.', '(284) 861-3687', 'sed@Nunc.ca', 8646, 7, NULL),
-(30, 'JVS13WTR7AX', 'Diana Snider', 'Ap #772-2725 Ligula Road', '(386) 173-2165', 'a@dapibusidblandit.ca', 13048, 32, NULL),
-(31, 'EIL80MTH3CR', 'Yvette Sherman', 'Ap #620-2912 Dolor, Street', '(595) 660-7572', 'luctus.et@penatibusetmagnis.org', 13119, 16, NULL),
-(32, 'PXD82FOF0NM', 'Quemby Boyle', 'P.O. Box 388, 8261 Etiam St.', '(645) 228-5480', 'tellus.Nunc.lectus@nonenim.edu', 17520, 21, NULL),
-(33, 'LUA68NDP6XV', 'Mia Dean', 'Ap #311-5229 At, Street', '(810) 391-2268', 'amet.diam@Nunc.edu', 9122, 26, NULL),
-(34, 'XVS54QID8YL', 'Keelie Conley', '136-6146 Dolor, Road', '(328) 686-0190', 'ut@accumsansed.edu', 10076, 25, NULL),
-(35, 'PZW78VDI0CQ', 'Hayfa Burnett', '211-2435 Taciti Rd.', '(383) 473-5095', 'sollicitudin@tincidunt.com', 754, 20, NULL),
-(36, 'CWO49RBG7IX', 'Buffy Hubbard', '513-7323 Lorem Road', '(182) 188-2199', 'accumsan.interdum@Cumsociis.ca', 29506, 42, NULL),
-(37, 'TQA04IXO7AX', 'Amber Kent', '906-1645 Natoque St.', '(273) 373-6671', 'egestas.lacinia@montes.com', 3796, 15, NULL),
-(38, 'ULG32HGH7XJ', 'Blythe Russell', 'Ap #909-5031 Sit Street', '(321) 903-4748', 'aliquet@feugiat.edu', 12716, 13, NULL),
-(39, 'ISO54MYP2LV', 'Roanna Gordon', 'Ap #559-9642 Pharetra. St.', '(684) 432-5944', 'nibh@eleifendvitaeerat.org', 9940, 44, NULL),
-(40, 'CUX60JNW7WX', 'Ginger Guzman', 'P.O. Box 391, 3312 Et, Avenue', '(668) 603-6910', 'orci.in@Duiscursusdiam.edu', 26689, 14, NULL),
-(41, 'HGV19SBG0YF', 'Gisela Dunn', '3941 Sagittis Avenue', '(597) 288-2322', 'felis@diam.ca', 10773, 6, NULL),
-(42, 'YIV05XYU2FI', 'Cathleen Booth', 'P.O. Box 488, 9081 Nunc Ave', '(821) 353-2045', 'tempor.erat.neque@laciniaSedcongue.edu', 17226, 35, NULL),
-(43, 'TMT57YWW0OP', 'Anastasia Wynn', 'P.O. Box 666, 2056 In Avenue', '(794) 740-5372', 'nulla.Integer@facilisi.ca', 24068, 34, NULL),
-(44, 'OTP47DAW1NU', 'India Cannon', 'P.O. Box 504, 9108 Nec, St.', '(654) 937-4686', 'Phasellus.elit@egestasa.com', 29056, 25, NULL),
-(45, 'EDO02CUR2UV', 'Hilary Day', 'Ap #260-9257 In Avenue', '(193) 779-2333', 'arcu.eu.odio@interdumNuncsollicitudin.com', 15596, 44, NULL),
-(46, 'SPU38OEE7XE', 'Kirsten Boone', 'P.O. Box 497, 3246 Nonummy Rd.', '(746) 279-9198', 'Duis.elementum@tellusNunclectus.edu', 17829, 31, NULL),
-(47, 'XDW09UGL8IA', 'Summer Robertson', 'P.O. Box 944, 8072 Ac Rd.', '(197) 285-7340', 'posuere.enim@maurisMorbinon.edu', 17612, 16, NULL),
-(48, 'BJP52YNC7WT', 'Vielka Roy', 'Ap #359-884 Arcu. Avenue', '(688) 928-3256', 'sagittis.semper@elementumduiquis.com', 17251, 44, NULL),
-(49, 'SNM82JPE1ED', 'Sybil Hudson', '103-4285 Lobortis Rd.', '(687) 833-2537', 'sem@pedeblandit.com', 4596, 26, NULL),
-(50, 'RNE86IZN7EA', 'Bree Clements', 'P.O. Box 279, 5417 Nulla. Ave', '(457) 984-9716', 'ornare@enim.ca', 11978, 33, NULL),
-(51, 'LTS95WAQ0MI', 'Ariel Nieves', 'P.O. Box 685, 3731 Aliquam Rd.', '(212) 929-1510', 'augue.malesuada@maurisipsumporta.com', 13257, 37, NULL),
-(52, 'VIV43IUL9RX', 'Cynthia Gardner', '601-2414 Tempus Street', '(743) 363-6205', 'iaculis.nec@et.ca', 5091, 36, NULL),
-(53, 'GMP64HPR5WA', 'Angelica Hoffman', '5950 Mollis. Av.', '(159) 770-2255', 'odio.a@ProinvelitSed.org', 7507, 45, NULL),
-(54, 'JSG93WWK9HQ', 'Ocean Conrad', '1770 Sed Av.', '(652) 888-4422', 'mi.Aliquam.gravida@laciniamattis.com', 5112, 3, NULL),
-(55, 'IOY19WLO5QU', 'Ignacia Henson', '1885 Sem Avenue', '(879) 312-4928', 'magna.Praesent.interdum@lorem.ca', 18424, 35, NULL),
-(56, 'COQ51FFY5PX', 'Lacota Macdonald', '157-5491 Fames Street', '(539) 458-1190', 'nisl@liberoestcongue.edu', 13402, 32, NULL),
-(57, 'FRX12NBU0CC', 'Ila Clark', 'Ap #665-2797 Etiam Av.', '(144) 335-3934', 'sagittis@dolor.com', 3628, 18, NULL),
-(58, 'RQL47OOC7FY', 'Debra Smith', '709-5601 Eu, Street', '(718) 643-6259', 'pellentesque.massa@vel.com', 22347, 36, NULL),
-(59, 'BHJ10PCG4HO', 'Regina Whitley', 'P.O. Box 996, 1852 Dolor. Rd.', '(638) 897-5608', 'fermentum.risus.at@ullamcorperDuisat.edu', 1019, 7, NULL),
-(60, 'DQG30NYV4BJ', 'Maya Bell', '449-1625 Ante, Street', '(416) 925-9029', 'sapien@velit.ca', 10637, 28, NULL),
-(61, 'ZWO83QEA6SH', 'Beverly Browning', '225-4423 Odio Rd.', '(573) 593-6248', 'risus@sitamet.org', 1232, 43, NULL),
-(62, 'BRD03VJL9UX', 'Cleo Ward', 'Ap #748-1590 Consectetuer Rd.', '(607) 856-0301', 'Donec@Integer.ca', 6656, 7, NULL),
-(63, 'DBN50INF2VW', 'Velma Manning', 'Ap #803-4380 Erat. Rd.', '(244) 546-4675', 'dui.Fusce@euenimEtiam.edu', 6791, 8, NULL),
-(64, 'AOR28NCT0CH', 'Nyssa Terry', '278-3066 Cubilia Av.', '(887) 453-8504', 'luctus.ut@nullaante.ca', 10336, 35, NULL),
-(65, 'QWW39ZRR8KN', 'Chanda Mcfarland', '627-4051 Velit Avenue', '(992) 597-0135', 'dui.Suspendisse.ac@Nullam.org', 5151, 44, NULL),
-(66, 'PDQ20AUE6PD', 'Alisa Church', 'P.O. Box 841, 5000 Sed St.', '(155) 290-1737', 'dictum@Curabiturconsequatlectus.org', 10311, 7, NULL),
-(67, 'SJY89NAA6PA', 'Quynn Hebert', '210 Risus. Ave', '(990) 264-8995', 'penatibus.et.magnis@etarcuimperdiet.com', 8993, 43, NULL),
-(68, 'FHL22DVH8GU', 'Minerva Dale', 'P.O. Box 884, 7324 Risus, Rd.', '(826) 721-6916', 'consequat@maurisSuspendisse.org', 81, 34, NULL),
-(69, 'ZDP20VBR0WH', 'Colleen Ray', 'P.O. Box 676, 7483 Semper Avenue', '(383) 399-4459', 'mauris@estmollisnon.org', 8700, 17, NULL),
-(70, 'SDL31ISJ0TJ', 'Candace Gutierrez', 'P.O. Box 527, 6908 Dolor Rd.', '(241) 691-7588', 'sit@nulla.edu', 19750, 12, NULL),
-(71, 'LZY80SEF0HR', 'Eugenia Riley', 'P.O. Box 592, 655 Dignissim. Rd.', '(267) 755-8677', 'auctor.odio.a@mi.com', 135, 5, NULL),
-(72, 'NSH77PLA3VM', 'Lunea Harding', 'P.O. Box 391, 5071 Nec Av.', '(694) 271-1124', 'fermentum.arcu@atsem.ca', 25058, 42, NULL),
-(73, 'RLK77FFJ6TE', 'Naida Boyd', 'P.O. Box 154, 4881 Nec Street', '(725) 940-5656', 'Sed.malesuada@tinciduntadipiscing.ca', 386, 0, NULL),
-(74, 'PGF98ZDO0UU', 'Autumn Soto', 'P.O. Box 892, 7125 Tincidunt Av.', '(692) 349-8851', 'malesuada.malesuada.Integer@ornare.ca', 10531, 12, NULL),
-(75, 'RIK24FAM0HH', 'Cheyenne Cherry', 'P.O. Box 324, 9778 At Ave', '(518) 479-0203', 'massa@Suspendisseac.ca', 2489, 43, NULL),
-(76, 'EHY63GZO4ZI', 'Karina Dennis', '201-4175 Iaculis St.', '(204) 418-4552', 'pretium@vehicula.ca', 3737, 7, NULL),
-(77, 'IJD87DFG3NG', 'Regina Mendez', 'Ap #255-3268 Magnis Avenue', '(808) 450-7122', 'consectetuer@Curabiturut.org', 15844, 15, NULL),
-(78, 'MRO70BZV6RS', 'Halla Sims', '8569 Et St.', '(548) 361-4748', 'vitae@enimcommodo.org', 205, 5, NULL),
-(79, 'JBE38VAP1WQ', 'Genevieve Roberts', '441-685 Molestie Av.', '(944) 793-9165', 'nec.ante.blandit@necenim.org', 24360, 21, NULL),
-(80, 'OQM17JTC1GY', 'Ivy Mills', 'P.O. Box 538, 882 Eget Road', '(170) 245-9120', 'mollis.Phasellus.libero@nisiMauris.org', 28990, 23, NULL),
-(81, 'MJH55NNY1NH', 'Evangeline Yatess', '4061 Ac Road', '(529) 432-4128', 'libero.Proin@euaccumsansed.com', 6240, 0, NULL),
-(82, 'ASW56ABX2BG', 'Martina Shields', 'P.O. Box 688, 5631 Placerat, St.', '(589) 618-1172', 'nonummy.ac@tellusjusto.org', 12348, 6, NULL),
-(83, 'HLF27GMJ0DM', 'Cheryl Rush', 'Ap #127-2548 Nunc Rd.', '(894) 966-5511', 'tincidunt@Integer.edu', 15399, 35, NULL),
-(84, 'TTG08KOB2QR', 'Tamara Morton', 'Ap #399-7199 Tincidunt, Ave', '(292) 814-0776', 'ut.pellentesque.eget@actellus.edu', 19526, 26, NULL),
-(85, 'WBD92UPE4NX', 'Yolanda Snow', '8912 Erat, St.', '(993) 170-6430', 'sed.pede.Cum@blanditmattisCras.edu', 22636, 32, NULL),
-(86, 'DAM71XGC8CS', 'Anjolie Wall', '9174 Est St.', '(169) 702-7064', 'risus.at@adipiscing.ca', 7480, 36, NULL),
-(87, 'RLS95OBF6ZV', 'Moana Strickland', '745-4828 Egestas Ave', '(692) 667-2495', 'Aliquam.adipiscing@convallisdolor.org', 2039, 44, NULL),
-(88, 'EQA32ZFY8YR', 'Heidi Norton', 'Ap #475-5783 Sem Avenue', '(318) 703-0270', 'aliquam.iaculis.lacus@orci.com', 874, 22, NULL),
-(89, 'TAS68RJF3NE', 'Adele Webster', 'P.O. Box 606, 9686 Vel Street', '(290) 570-4515', 'semper@risusDuisa.edu', 20753, 22, NULL),
-(90, 'AJW26KKR3DZ', 'Jessamine Parker', 'Ap #947-1402 Mi Rd.', '(405) 910-0208', 'tellus.id@orci.edu', 4686, 29, NULL),
-(91, 'UOB49FLJ8JZ', 'Leila Frank', '708-9260 Nam Avenue', '(579) 787-0505', 'ligula.Aenean.euismod@sagittis.ca', 6148, 43, NULL),
-(92, 'RKJ02TZW0CV', 'Ima Roman', 'Ap #712-5336 Congue. Av.', '(446) 941-6721', 'Ut.sagittis@Donec.ca', 13619, 6, NULL),
-(93, 'EFD02GVQ0PM', 'Lillian Duran', 'Ap #667-8834 Ut Avenue', '(275) 806-3574', 'at.sem@idmagna.com', 22104, 27, NULL),
-(94, 'QZL20ATP2UN', 'Xaviera Hayes', 'P.O. Box 937, 489 Eget St.', '(253) 728-0446', 'molestie.in.tempus@amet.edu', 19775, 33, NULL),
-(95, 'FRM79GIX6TB', 'Samantha Nelson', 'P.O. Box 535, 6996 Non St.', '(537) 984-7062', 'tellus@Phasellusdolorelit.ca', 13456, 9, NULL),
-(96, 'XSN83GWF9ZF', 'Cathleen Howe', '6768 Accumsan Ave', '(660) 467-6805', 'non@tempor.ca', 22711, 1, NULL),
-(97, 'TDH63FPN3AL', 'Ariel Sellers', '272-1345 Enim. Ave', '(197) 993-2947', 'sem.molestie.sodales@semmagnanec.com', 961, 13, NULL),
-(98, 'QGW16XPS7RL', 'Cheryl Stone', '3239 Sed Street', '(276) 470-1728', 'Proin.sed@fringillaornareplacerat.edu', 5084, 24, NULL),
-(99, 'IVL95EPY3MN', 'McKenzie Ford', 'P.O. Box 553, 2931 Pharetra, Av.', '(854) 683-9326', 'Maecenas.malesuada@ornare.edu', 17875, 38, NULL),
-(100, 'TUL61YFU2AQ', 'Gwendolyn Leon', 'P.O. Box 425, 7578 Mi St.', '(966) 482-9248', 'egestas.a@infaucibusorci.ca', 4351, 42, NULL),
-(101, 'ZCD73DKR6JW', 'Roanna Pearson', '375-1370 Non Ave', '(360) 609-0062', 'nec.tempus.mauris@consequat.ca', 9761, 30, NULL),
-(102, 'EMC81LSY1IS', 'Lacy Mendoza', 'P.O. Box 925, 3801 Egestas. Av.', '(384) 447-2191', 'ipsum@egetlacusMauris.org', 28580, 2, NULL),
-(103, 'WKT85BOC6KX', 'Teegan Franks', 'P.O. Box 729, 5653 Risus. St.', '(648) 830-8590', 'sem@nisi.com', 25748, 41, NULL),
-(104, 'UYL86VUN1BS', 'Fay Riddle', 'P.O. Box 221, 6584 Morbi Av.', '(514) 905-2963', 'aliquam@Lorem.com', 19873, 40, NULL),
-(105, 'AMR56THY5OU', 'Neve Oneil', '9321 Odio St.', '(294) 480-7059', 'ornare@indolor.ca', 2639, 30, NULL),
-(106, 'MSK76YIL6AX', 'Roanna Stark', '2963 Quam. Avenue', '(473) 188-9975', 'congue.In.scelerisque@maurisblanditmattis.edu', 12033, 44, NULL),
-(107, 'ZBX35OIL3EH', 'Glenna Aguilar', 'Ap #915-7442 Et Ave', '(577) 453-3398', 'Mauris.eu@NullamenimSed.com', 23112, 39, NULL),
-(108, 'ZIE36JRA3FR', 'Athena Calderon', '1687 Laoreet Rd.', '(144) 474-2380', 'volutpat.ornare.facilisis@faucibusorciluctus.com', 5677, 41, NULL),
-(109, 'RWG38POO6SZ', 'Eve Mclean', 'P.O. Box 666, 6891 Elementum Street', '(819) 390-1288', 'turpis.egestas@Proinnislsem.ca', 28958, 26, NULL),
-(110, 'VOD32VJN4NV', 'Lacey Castaneda', '497-6470 At, Road', '(347) 535-0433', 'per.inceptos@cursusNuncmauris.ca', 1424, 26, NULL),
-(111, 'BXY53MKW6XH', 'Sylvia Gonzales', '6843 Porttitor St.', '(612) 755-0989', 'tristique@fringillaornareplacerat.org', 26078, 28, NULL),
-(112, 'HFC60SOJ6YH', 'Olympia Porter', '2515 Lorem Road', '(148) 136-0420', 'nisl@scelerisquescelerisquedui.com', 2319, 38, NULL),
-(113, 'YEO55DLV8EV', 'Danielle Beard', 'Ap #875-3737 Vitae, Street', '(843) 373-4721', 'rhoncus@imperdiet.com', 17003, 22, NULL),
-(114, 'ASY85CRU1SC', 'Melodie Mccarthy', 'P.O. Box 852, 8476 Luctus Rd.', '(823) 645-6856', 'Donec@lacus.ca', 1966, 9, NULL),
-(115, 'KEW13PGZ1SM', 'Deanna Lynn', '6347 Magnis St.', '(721) 416-0471', 'nisi.dictum.augue@dolor.ca', 11664, 38, NULL),
-(116, 'DSK46PDD8RM', 'Tallulah Houston', 'Ap #314-9748 Non, Rd.', '(889) 361-0230', 'odio@nonsapienmolestie.com', 8807, 31, NULL),
-(117, 'DWU26MTO9WE', 'McKenzie Brown', 'P.O. Box 231, 7261 Ipsum Rd.', '(637) 867-0462', 'a.arcu.Sed@tinciduntaliquamarcu.ca', 23321, 16, NULL),
-(118, 'NGD01ZGV1KH', 'Breanna Marquez', '7692 Interdum Ave', '(655) 602-8928', 'Fusce@eleifendCras.org', 26971, 25, NULL),
-(119, 'QBO98QIE7XD', 'Kiona Richardson', '537-7442 Dapibus St.', '(476) 395-3917', 'vitae.orci@vulputate.edu', 25587, 4, NULL),
-(120, 'ANL12IIU1GX', 'Jamalia Phillips', '359-911 Nascetur Ave', '(484) 492-8050', 'aliquet@turpis.ca', 16733, 14, NULL),
-(121, 'DXQ99WVK6LE', 'Angelica Randolph', 'Ap #735-7644 Imperdiet Road', '(596) 546-6778', 'ridiculus.mus@aliquet.edu', 23922, 31, NULL),
-(122, 'FRM62YVI7CT', 'Dorothy Rosario', 'Ap #234-2978 Sed Ave', '(279) 957-5993', 'nunc@libero.com', 14776, 44, NULL),
-(123, 'SLU01WVK6JE', 'Idola Klein', '479-3975 Odio Rd.', '(829) 812-9922', 'dui.nec@netus.edu', 29973, 5, NULL),
-(124, 'JWY75HXX8JK', 'Briar Romero', 'P.O. Box 764, 7736 Lacinia Avenue', '(296) 129-4015', 'odio@Craseget.edu', 17901, 14, NULL),
-(125, 'OXF47PWV3RV', 'India Herrera', '347-6807 Est Rd.', '(711) 736-8434', 'accumsan.laoreet@ullamcorperDuisat.ca', 29052, 22, NULL),
-(126, 'NOJ39AEI4UX', 'Signe Bean', 'P.O. Box 742, 2187 Nunc Rd.', '(630) 165-4525', 'taciti.sociosqu@temporloremeget.ca', 10401, 10, NULL),
-(127, 'TJK08FZR2OF', 'Kelly Finley', 'Ap #577-1129 Dictum St.', '(305) 931-2601', 'odio.vel@utmolestie.ca', 24031, 13, NULL),
-(128, 'QZH32WOT1ZV', 'Rosalyn Larsen', 'Ap #572-306 Mi, St.', '(962) 674-0182', 'faucibus.leo.in@dolortempus.org', 24978, 44, NULL),
-(129, 'WSN68NLQ0JU', 'Megan Strong', 'Ap #171-2107 Integer Rd.', '(352) 434-3900', 'amet.metus@iaculisaliquetdiam.org', 16073, 44, NULL),
-(130, 'KBK01TVT6QJ', 'Candice Peterson', 'P.O. Box 832, 7842 Eros Road', '(531) 431-9213', 'primis.in.faucibus@Phasellus.ca', 19989, 11, NULL),
-(131, 'XKC60TAF4PP', 'Naomi Hendricks', 'Ap #576-6427 Ullamcorper St.', '(175) 398-0612', 'sem.Pellentesque@euodio.edu', 18362, 45, NULL),
-(132, 'HJA48PBM0KS', 'Pascale Weaver', 'Ap #929-869 Semper Av.', '(681) 394-6799', 'arcu@arcuMorbisit.ca', 276, 36, NULL),
-(133, 'SQW16HXJ2GE', 'Tamekah Castillo', '4005 Dictum Rd.', '(797) 467-3723', 'non@tellussem.ca', 29666, 29, NULL),
-(134, 'AQX90DDE0HL', 'Kiayada Dyer', 'P.O. Box 662, 5966 Mauris St.', '(839) 653-5763', 'quam.Curabitur@turpis.com', 27754, 21, NULL),
-(135, 'IBP40XYP1TV', 'Hanae Hall', 'Ap #433-7903 Massa. St.', '(363) 137-5071', 'tortor.Nunc@viverraDonec.org', 5100, 7, NULL),
-(136, 'VBC42VGO2RU', 'Venus Avila', 'Ap #941-2651 Mauris Street', '(168) 249-4151', 'vel.lectus.Cum@euismod.org', 11521, 6, NULL),
-(137, 'ZFJ54AIJ0WP', 'Raven Salazar', '703-9924 Malesuada Av.', '(964) 116-9796', 'nec.diam@purusactellus.org', 4570, 1, NULL),
-(138, 'YEI32FXA0TW', 'Kimberly Hodges', 'P.O. Box 408, 5179 Et, Rd.', '(294) 980-4289', 'malesuada.id.erat@lobortisultricesVivamus.edu', 9982, 0, NULL),
-(139, 'LOX45RIC1FO', 'Calista Lowe', 'Ap #554-2098 Aliquam Street', '(456) 646-3460', 'felis.adipiscing.fringilla@id.com', 29261, 27, NULL),
-(140, 'BQY17DRX6TE', 'Clio Downs', '296 Iaculis Rd.', '(336) 682-6416', 'tristique.neque@consequatnec.org', 9335, 8, NULL),
-(141, 'WBI59AHC2OM', 'Scarlett Hays', 'Ap #210-6395 Tempor, St.', '(532) 159-6169', 'gravida.Aliquam.tincidunt@Nullam.ca', 12474, 14, NULL),
-(142, 'YLQ06ENM5AO', 'Fiona Burton', '495-8316 Phasellus Av.', '(134) 293-0948', 'libero.lacus.varius@sagittis.com', 23077, 40, NULL),
-(143, 'ZYK45KAU5EP', 'Abigail Melendez', 'P.O. Box 934, 2048 Vel St.', '(132) 971-8626', 'dolor@sitamet.ca', 28386, 20, NULL),
-(144, 'MIL28QXW2IW', 'Desiree Elliott', 'Ap #410-1791 Et Street', '(440) 176-0720', 'aliquet.vel.vulputate@diameu.org', 28659, 24, NULL),
-(145, 'JPK28TCB0EI', 'Maia Lambert', '4892 Suspendisse Avenue', '(171) 143-1256', 'magna.a@purusaccumsan.com', 6115, 19, NULL),
-(146, 'RAE70FYK8MW', 'Rhoda House', 'P.O. Box 571, 9343 Quis, Av.', '(690) 847-3533', 'ligula.eu.enim@ornareplaceratorci.org', 28106, 20, NULL),
-(147, 'SDK19WZT3JO', 'Karen Stone', '5990 Tellus. St.', '(923) 377-6734', 'Suspendisse.dui@laoreetipsum.org', 15087, 14, NULL),
-(148, 'TLE71NCT9ZG', 'Bethany Riggs', 'P.O. Box 287, 4222 Netus St.', '(890) 625-0289', 'dapibus.ligula.Aliquam@sed.ca', 12919, 18, NULL),
-(149, 'AYN79MAA2WC', 'Fiona Boone', 'P.O. Box 645, 7129 Nascetur St.', '(317) 697-4391', 'Maecenas@euelit.com', 1359, 45, NULL),
-(150, 'GOA28XJC9WF', 'Aileen Juarez', 'Ap #706-9084 Nunc Road', '(633) 934-1703', 'neque@Sedmolestie.org', 10975, 23, NULL),
-(151, 'KGW52TSG2QP', 'Scarlett Frost', 'Ap #876-3867 Ac Road', '(135) 738-7429', 'aliquet@lectusrutrum.ca', 10956, 0, NULL),
-(152, 'CCT33JYE6LP', 'Illana Finley', 'Ap #552-1224 Gravida Road', '(148) 568-5230', 'arcu@eget.ca', 24365, 27, NULL),
-(153, 'EEN38YXG2WR', 'Sylvia Hardin', '6289 Donec Avenue', '(444) 978-0851', 'Nullam@arcuvelquam.org', 3837, 11, NULL),
-(154, 'VAF72LQY3AS', 'Ella Salinas', '821-6709 Montes, Ave', '(967) 818-9576', 'Curabitur@metusAliquamerat.ca', 3330, 28, NULL),
-(155, 'FOG19HVE0EV', 'Hayfa Whitaker', 'Ap #307-1524 Dapibus Street', '(700) 387-2761', 'Nulla.semper.tellus@nullaIntegervulputate.com', 1634, 0, NULL),
-(156, 'FIV34ZGU9TC', 'Lana William', 'P.O. Box 394, 5483 Rhoncus. Street', '(908) 779-3472', 'non.quam.Pellentesque@tincidunt.edu', 2315, 19, NULL),
-(157, 'QBQ40KMO3TW', 'Ivy Bentley', 'P.O. Box 307, 9927 Aliquet. Street', '(823) 405-1881', 'consectetuer@ultriciessem.ca', 7280, 3, NULL),
-(158, 'AQO50HLK3VT', 'Kelsie Bauer', '173-7068 Curae; Road', '(368) 240-2468', 'volutpat.nunc@variusNamporttitor.org', 16004, 44, NULL),
-(159, 'NVJ92FRS2KB', 'Lacey Johns', 'P.O. Box 666, 178 Tortor, Av.', '(662) 121-4108', 'convallis.erat@consequatpurusMaecenas.com', 4807, 4, NULL),
-(160, 'RJT36DLD6FZ', 'Rebecca Smith', 'Ap #305-4753 Dui Road', '(839) 947-6047', 'venenatis.lacus@eueleifendnec.edu', 19243, 25, NULL),
-(161, 'QUA74GUF0UQ', 'Maia Albert', '991-3791 Nec Road', '(879) 827-3865', 'volutpat.ornare.facilisis@at.edu', 3661, 13, NULL),
-(162, 'NJC74WJB8LM', 'Daryl Holland', 'P.O. Box 850, 8758 Lorem St.', '(462) 227-0696', 'Ut.tincidunt.vehicula@diamluctuslobortis.com', 29647, 45, NULL),
-(163, 'VWI87UJY2EZ', 'Hilda Ashley', 'Ap #178-9163 Neque Ave', '(980) 676-2855', 'rutrum@sedorci.com', 26302, 43, NULL),
-(164, 'BRH08MZG4VY', 'Camilla Tyler', '8675 Cursus St.', '(654) 949-4640', 'pede.Cras.vulputate@ullamcorperDuiscursus.ca', 16353, 41, NULL),
-(165, 'XLJ86WSQ0PM', 'Bianca Hays', '8167 At, Ave', '(747) 202-1700', 'mauris@etultrices.ca', 283, 28, NULL),
-(166, 'SRM42NAU6LD', 'Helen Higgins', '7258 Mi St.', '(289) 450-3809', 'nunc@blanditcongueIn.org', 19411, 10, NULL),
-(167, 'AYT07IMV6XT', 'Pamela Phelps', 'Ap #520-2602 Tellus. Avenue', '(256) 155-1459', 'Aenean@Cras.edu', 26374, 3, NULL),
-(168, 'WFO69LLQ1YO', 'Quemby Hatfield', '4543 Pellentesque Avenue', '(940) 286-0882', 'a.arcu.Sed@enim.ca', 9321, 24, NULL),
-(169, 'NFZ98EXL9HG', 'Sage Craft', 'Ap #779-9246 Arcu Av.', '(639) 511-3123', 'est.ac.facilisis@loremipsumsodales.ca', 27263, 19, NULL),
-(170, 'SBI19PKU8DO', 'Karyn Talley', '535-5187 Luctus St.', '(469) 692-5520', 'pellentesque.Sed@Craspellentesque.edu', 22480, 12, NULL),
-(171, 'DJR91VNQ7AR', 'Xyla Kent', 'P.O. Box 193, 9643 In Road', '(234) 755-1692', 'Donec.dignissim.magna@massarutrum.edu', 5722, 44, NULL),
-(172, 'EAM87MNS9SC', 'Celeste Saunders', 'P.O. Box 603, 473 Senectus Street', '(801) 593-3683', 'Aliquam.ultrices.iaculis@Morbiaccumsan.edu', 25026, 33, NULL),
-(173, 'VIG53YQM7SU', 'Yeo Edwards', '995-2585 Elementum, Ave', '(336) 929-7336', 'sem.Nulla@sit.org', 16871, 38, NULL),
-(174, 'VNM32ECG4YA', 'Rachel Waller', '893-937 Ut St.', '(687) 924-4477', 'enim.sit.amet@sempertellus.ca', 937, 3, NULL),
-(175, 'CFE36DJK0QN', 'Iliana Knox', '444-9444 Et, Avenue', '(673) 150-9867', 'Cum.sociis@Nuncquisarcu.ca', 29721, 2, NULL),
-(176, 'NCK91BLO5BN', 'Willa Hinton', 'P.O. Box 855, 6264 Lorem Rd.', '(796) 553-1218', 'cursus@necquamCurabitur.com', 10845, 28, NULL),
-(177, 'LKC99DNX5ZM', 'Quynn Sanders', 'Ap #748-533 Sed Rd.', '(302) 621-7303', 'lectus.a@accumsan.ca', 2626, 1, NULL),
-(178, 'UFN77NFN3IA', 'Angelica Ballard', 'P.O. Box 355, 9357 Malesuada Road', '(336) 740-3803', 'ut.erat@arcuCurabitur.com', 28096, 6, NULL),
-(179, 'CLI67QQU6SE', 'Remedios Wolfe', '773-7983 Dictum. St.', '(871) 674-2897', 'sagittis@acarcuNunc.com', 6362, 40, NULL),
-(180, 'AWN85FAI2DL', 'Lisandra Stevenson', 'Ap #414-301 Posuere Road', '(483) 370-4597', 'Aenean.massa.Integer@consequatlectus.ca', 5717, 33, NULL),
-(181, 'OKT86WIF7OP', 'India Tate', 'Ap #928-1115 Tellus Av.', '(595) 183-9008', 'primis@elitpretium.org', 10174, 20, NULL),
-(182, 'GFT49IBJ2RE', 'Wendy Mccarty', 'Ap #886-5189 Risus. Road', '(524) 523-5580', 'sit@pellentesquea.com', 9147, 41, NULL),
-(183, 'LQY78PZT1GF', 'Petra Burris', '258-6675 Quis St.', '(641) 232-3677', 'ipsum@nibhenim.org', 17306, 14, NULL),
-(184, 'NEH23NMD6FI', 'Alana Hardin', '1562 Morbi Rd.', '(823) 281-8924', 'enim.nisl@a.org', 7900, 0, NULL),
-(185, 'VQP37GNC2XB', 'Ursa Rogers', 'P.O. Box 643, 8775 Mi Ave', '(977) 902-3031', 'magna.et@non.edu', 23731, 34, NULL),
-(186, 'ZAH02ECF9HY', 'Alana Trevino', 'Ap #608-8401 Egestas. Avenue', '(872) 813-4658', 'ligula.consectetuer.rhoncus@elita.com', 26624, 40, NULL),
-(187, 'QBZ80HUB1QA', 'Susan Collins', '584 Morbi Rd.', '(503) 979-8624', 'venenatis.lacus@nuncsed.com', 12410, 13, NULL),
-(188, 'ELO95TPN6UJ', 'Florence Riddle', '8183 A, Av.', '(767) 620-0674', 'Ut@lectuspedeultrices.edu', 8249, 40, NULL),
-(189, 'DUQ73GNR5HC', 'Holly Carlson', '6929 Mattis St.', '(797) 864-2740', 'dui@pede.ca', 2998, 23, NULL),
-(190, 'MKU01IHF7LD', 'Shelby Cooley', 'P.O. Box 618, 4137 Pede Rd.', '(806) 646-5094', 'quis.diam.Pellentesque@sodales.com', 23651, 16, NULL),
-(191, 'PDQ88CYS2UH', 'Kay Hahn', '392-9693 Orci, Road', '(895) 990-7001', 'habitant.morbi@egestasFusce.ca', 4267, 40, NULL),
-(192, 'VGV55QVA0NK', 'Iona Simpson', '9303 Iaculis Street', '(279) 970-1286', 'Proin@velturpisAliquam.org', 29380, 1, NULL),
-(193, 'FNR05ROX0KH', 'Hayley Dean', '1916 Turpis. Rd.', '(572) 601-2399', 'magna.nec@ligulaelitpretium.ca', 14025, 11, NULL),
-(194, 'XZY48BWE3CJ', 'Venus Brooks', '7730 Luctus. Rd.', '(188) 328-3752', 'non.bibendum@enimEtiamimperdiet.com', 21741, 24, NULL),
-(195, 'VQP77ZVD8XR', 'Haviva Rollins', 'Ap #407-7531 Duis Road', '(920) 673-9105', 'fringilla.mi@montes.com', 21110, 1, NULL),
-(196, 'FRV35TAX5MI', 'Daryl Schmidt', 'P.O. Box 233, 7870 Metus. St.', '(747) 953-4347', 'mauris.sit.amet@liberoProinmi.ca', 19381, 13, NULL),
-(197, 'LKI39VRE6TI', 'Mia Valenzuela', '893-3621 Nunc Road', '(927) 375-0930', 'aliquam.adipiscing.lacus@Curae;Phasellus.com', 20409, 26, NULL),
-(198, 'JMG51AXU9ZF', 'Haley Stanley', 'P.O. Box 418, 6043 Magna Street', '(896) 827-5208', 'Sed.nec.metus@Aliquamultrices.com', 19731, 29, NULL),
-(199, 'JRN16NJY3XG', 'Kessie Estrada', 'P.O. Box 575, 1628 Pellentesque Road', '(527) 735-4195', 'non.lacinia@egestas.com', 21817, 41, NULL),
-(200, 'YGG86EDD4ZN', 'McKenzie Knight', '4182 Tempus, St.', '(819) 329-8560', 'lectus.ante@nislsemconsequat.ca', 672, 23, NULL);
+(-28, '', '', '', NULL, '0', 0, 0, 1),
+(-6, '', '', '', NULL, '0', 0, 0, 1),
+(1, 'AFJ19INT3JI', 'Clementine Manning', '992-3353 Euismod Street', '(777) 586-8657', 'adipiscing.elit.Curabitur@elitelit.edu', 25563, 0, 1),
+(2, 'EEN95XGS4ZA', 'September Whitaker', 'Ap #147-755 Montes, Rd.', '(569) 226-0218', 'gravida.non@lacusEtiambibendum.edu', 10101, 26, 1),
+(3, 'SFV46VKN7TB', 'Kimberly Rocha', '154-2822 Non, St.', '(772) 180-4981', 'mollis@vitaerisusDuis.com', 17321, 9, 1),
+(4, 'DKP61IRR1UT', 'MacKenzie Shelton', 'Ap #375-3459 Urna. Street', '(538) 429-4572', 'amet.ornare.lectus@egetodio.org', 2454, 34, 1),
+(5, 'WKK55EHC0IL', 'Madeson Moon', 'P.O. Box 659, 4605 Etiam St.', '(369) 832-8679', 'a@augueidante.edu', 3219, 33, 1),
+(6, 'THA83JHY9CZ', 'Alana Parker', '454-1969 Faucibus Road', '(660) 339-5167', 'tortor.dictum@Integermollis.edu', 15257, 42, 1),
+(7, 'KWF38HIW0TF', 'Germane Chan', '4262 Aliquet. Avenue', '(313) 820-5680', 'Nunc.ac.sem@pretiumaliquet.com', 12906, 38, 1),
+(8, 'QHD91DTJ4XT', 'Irma Odom', '5688 Purus. Rd.', '(406) 164-0336', 'quis@iaculis.com', 10734, 44, 1),
+(9, 'INC08OYP9QU', 'Maggy House', 'Ap #971-755 Ac St.', '(241) 687-5584', 'faucibus.orci.luctus@ornareFusce.org', 15693, 13, 1),
+(10, 'PCG10XZR3HS', 'Shelly Estrada', 'Ap #934-6679 Dolor St.', '(572) 156-0812', 'malesuada.vel@aenim.org', 23593, 15, 1),
+(11, 'URH40PEW8YY', 'Madonna Stephenson', 'Ap #869-2606 Tincidunt St.', '(252) 165-5207', 'mauris.ipsum.porta@placerat.org', 10578, 10, 1),
+(12, 'NZK38IHL2XP', 'Roanna Ramirez', '209-9933 Blandit. Avenue', '(965) 362-2430', 'lacus.Etiam.bibendum@lorem.org', 18810, 40, 1),
+(13, 'MZE91BNZ8KY', 'Beverly Lambert', 'P.O. Box 554, 2937 Dui. St.', '(875) 305-3778', 'malesuada.augue@Pellentesqueutipsum.com', 25364, 34, 1),
+(14, 'NXH57RLV1KW', 'Guinevere Valencia', 'Ap #700-4494 Ut St.', '(727) 595-8326', 'mollis.Integer.tincidunt@aptenttaciti.ca', 19935, 35, 1),
+(15, 'RIF45QJW5NZ', 'Daria Christensen', '265-4464 Enim Avenue', '(472) 798-4027', 'Vivamus@Vestibulumante.com', 20749, 10, 1),
+(16, 'VIP68CRC2CB', 'Martina Estrada', 'P.O. Box 782, 6958 Sed Avenue', '(961) 198-0837', 'ullamcorper@gravida.com', 18118, 29, 1),
+(17, 'FRH29JJP6WO', 'Mikayla Mcmillan', '449-6881 Cras Rd.', '(227) 155-2552', 'nec.malesuada.ut@CraspellentesqueSed.ca', 3661, 18, 1),
+(18, 'VMT41PYU2FL', 'Kaitlin Mcdonald', '8968 Vitae Ave', '(734) 990-1820', 'nibh.Quisque.nonummy@Nam.ca', 19368, 6, 1),
+(19, 'IUT25YMB4BE', 'Belle Talley', '580-8290 Arcu. Av.', '(350) 270-1814', 'aliquam.iaculis.lacus@pellentesqueSed.org', 11219, 17, 1),
+(20, 'FIW27XLW8NS', 'Barbara Bishop', 'Ap #584-4614 Montes, Road', '(455) 370-1662', 'dapibus@sodalesnisi.com', 13632, 33, 1),
+(21, 'DJF91TRH8FP', 'Jescie Puckett', '661-1909 Pellentesque Av.', '(162) 735-9414', 'Integer.id.magna@dui.ca', 10619, 43, 1),
+(22, 'CCQ38VZI5BF', 'Tanya Noel', '712-7158 Est. Avenue', '(716) 220-9829', 'facilisis.magna.tellus@atliberoMorbi.org', 14095, 12, 1),
+(23, 'PHG98IDU9NU', 'Haley Contreras', '240-1962 Felis. St.', '(721) 540-3082', 'ac.risus.Morbi@felisullamcorper.org', 22455, 12, 1),
+(24, 'NBK30XCJ1OL', 'Kaye Pierce', '7616 Eget St.', '(747) 156-2306', 'Aliquam.nisl.Nulla@vitaealiquet.edu', 15248, 17, 1),
+(25, 'NOH69KEJ8XZ', 'Anjolie Strickland', '596-7633 Nec Ave', '(929) 326-9919', 'malesuada@Ut.edu', 17355, 14, 1),
+(26, 'DZM48KMY2GR', 'Martina Roman', 'P.O. Box 475, 7793 Bibendum. Rd.', '(307) 326-4891', 'sit@rhoncusid.com', 28787, 29, 1),
+(27, 'JJD26JYH1KV', 'Charlotte Sargent', '3203 Magna. Rd.', '(719) 298-3937', 'metus@congueelitsed.edu', 2663, 40, 1),
+(28, 'NTG40JWV5RL', 'Alika Mccray', 'Ap #727-9108 Lacinia. Ave', '(652) 699-7864', 'libero@idmagna.org', 17688, 0, 1),
+(29, 'OZW35OVO1OI', 'Shellie Edwards', '4376 Urna Rd.', '(284) 861-3687', 'sed@Nunc.ca', 8646, 7, 1),
+(30, 'JVS13WTR7AX', 'Diana Snider', 'Ap #772-2725 Ligula Road', '(386) 173-2165', 'a@dapibusidblandit.ca', 13048, 32, 1),
+(31, 'EIL80MTH3CR', 'Yvette Sherman', 'Ap #620-2912 Dolor, Street', '(595) 660-7572', 'luctus.et@penatibusetmagnis.org', 13119, 16, 1),
+(32, 'PXD82FOF0NM', 'Quemby Boyle', 'P.O. Box 388, 8261 Etiam St.', '(645) 228-5480', 'tellus.Nunc.lectus@nonenim.edu', 17520, 21, 1),
+(33, 'LUA68NDP6XV', 'Mia Dean', 'Ap #311-5229 At, Street', '(810) 391-2268', 'amet.diam@Nunc.edu', 9122, 26, 1),
+(34, 'XVS54QID8YL', 'Keelie Conley', '136-6146 Dolor, Road', '(328) 686-0190', 'ut@accumsansed.edu', 10076, 25, 1),
+(35, 'PZW78VDI0CQ', 'Hayfa Burnett', '211-2435 Taciti Rd.', '(383) 473-5095', 'sollicitudin@tincidunt.com', 754, 20, 1),
+(36, 'CWO49RBG7IX', 'Buffy Hubbard', '513-7323 Lorem Road', '(182) 188-2199', 'accumsan.interdum@Cumsociis.ca', 29506, 42, 1),
+(37, 'TQA04IXO7AX', 'Amber Kent', '906-1645 Natoque St.', '(273) 373-6671', 'egestas.lacinia@montes.com', 3796, 15, 1),
+(38, 'ULG32HGH7XJ', 'Blythe Russell', 'Ap #909-5031 Sit Street', '(321) 903-4748', 'aliquet@feugiat.edu', 12716, 13, 1),
+(39, 'ISO54MYP2LV', 'Roanna Gordon', 'Ap #559-9642 Pharetra. St.', '(684) 432-5944', 'nibh@eleifendvitaeerat.org', 9940, 44, 1),
+(40, 'CUX60JNW7WX', 'Ginger Guzman', 'P.O. Box 391, 3312 Et, Avenue', '(668) 603-6910', 'orci.in@Duiscursusdiam.edu', 26689, 14, 1),
+(41, 'HGV19SBG0YF', 'Gisela Dunn', '3941 Sagittis Avenue', '(597) 288-2322', 'felis@diam.ca', 10773, 6, 1),
+(42, 'YIV05XYU2FI', 'Cathleen Booth', 'P.O. Box 488, 9081 Nunc Ave', '(821) 353-2045', 'tempor.erat.neque@laciniaSedcongue.edu', 17226, 35, 1),
+(43, 'TMT57YWW0OP', 'Anastasia Wynn', 'P.O. Box 666, 2056 In Avenue', '(794) 740-5372', 'nulla.Integer@facilisi.ca', 24068, 34, 1),
+(44, 'OTP47DAW1NU', 'India Cannon', 'P.O. Box 504, 9108 Nec, St.', '(654) 937-4686', 'Phasellus.elit@egestasa.com', 29056, 25, 1),
+(45, 'EDO02CUR2UV', 'Hilary Day', 'Ap #260-9257 In Avenue', '(193) 779-2333', 'arcu.eu.odio@interdumNuncsollicitudin.com', 15596, 44, 1),
+(46, 'SPU38OEE7XE', 'Kirsten Boone', 'P.O. Box 497, 3246 Nonummy Rd.', '(746) 279-9198', 'Duis.elementum@tellusNunclectus.edu', 17829, 31, 1),
+(47, 'XDW09UGL8IA', 'Summer Robertson', 'P.O. Box 944, 8072 Ac Rd.', '(197) 285-7340', 'posuere.enim@maurisMorbinon.edu', 17612, 16, 1),
+(48, 'BJP52YNC7WT', 'Vielka Roy', 'Ap #359-884 Arcu. Avenue', '(688) 928-3256', 'sagittis.semper@elementumduiquis.com', 17251, 44, 1),
+(49, 'SNM82JPE1ED', 'Sybil Hudson', '103-4285 Lobortis Rd.', '(687) 833-2537', 'sem@pedeblandit.com', 4596, 26, 1),
+(50, 'RNE86IZN7EA', 'Bree Clements', 'P.O. Box 279, 5417 Nulla. Ave', '(457) 984-9716', 'ornare@enim.ca', 11978, 33, 1),
+(51, 'LTS95WAQ0MI', 'Ariel Nieves', 'P.O. Box 685, 3731 Aliquam Rd.', '(212) 929-1510', 'augue.malesuada@maurisipsumporta.com', 13257, 37, 1),
+(52, 'VIV43IUL9RX', 'Cynthia Gardner', '601-2414 Tempus Street', '(743) 363-6205', 'iaculis.nec@et.ca', 5091, 36, 1),
+(53, 'GMP64HPR5WA', 'Angelica Hoffman', '5950 Mollis. Av.', '(159) 770-2255', 'odio.a@ProinvelitSed.org', 7507, 45, 1),
+(54, 'JSG93WWK9HQ', 'Ocean Conrad', '1770 Sed Av.', '(652) 888-4422', 'mi.Aliquam.gravida@laciniamattis.com', 5112, 3, 1),
+(55, 'IOY19WLO5QU', 'Ignacia Henson', '1885 Sem Avenue', '(879) 312-4928', 'magna.Praesent.interdum@lorem.ca', 18424, 35, 1),
+(56, 'COQ51FFY5PX', 'Lacota Macdonald', '157-5491 Fames Street', '(539) 458-1190', 'nisl@liberoestcongue.edu', 13402, 32, 1),
+(57, 'FRX12NBU0CC', 'Ila Clark', 'Ap #665-2797 Etiam Av.', '(144) 335-3934', 'sagittis@dolor.com', 3628, 18, 1),
+(58, 'RQL47OOC7FY', 'Debra Smith', '709-5601 Eu, Street', '(718) 643-6259', 'pellentesque.massa@vel.com', 22347, 36, 1),
+(59, 'BHJ10PCG4HO', 'Regina Whitley', 'P.O. Box 996, 1852 Dolor. Rd.', '(638) 897-5608', 'fermentum.risus.at@ullamcorperDuisat.edu', 1019, 7, 1),
+(60, 'DQG30NYV4BJ', 'Maya Bell', '449-1625 Ante, Street', '(416) 925-9029', 'sapien@velit.ca', 10637, 28, 1),
+(61, 'ZWO83QEA6SH', 'Beverly Browning', '225-4423 Odio Rd.', '(573) 593-6248', 'risus@sitamet.org', 1232, 43, 1),
+(62, 'BRD03VJL9UX', 'Cleo Ward', 'Ap #748-1590 Consectetuer Rd.', '(607) 856-0301', 'Donec@Integer.ca', 6656, 7, 1),
+(63, 'DBN50INF2VW', 'Velma Manning', 'Ap #803-4380 Erat. Rd.', '(244) 546-4675', 'dui.Fusce@euenimEtiam.edu', 6791, 8, 1),
+(64, 'AOR28NCT0CH', 'Nyssa Terry', '278-3066 Cubilia Av.', '(887) 453-8504', 'luctus.ut@nullaante.ca', 10336, 35, 1),
+(65, 'QWW39ZRR8KN', 'Chanda Mcfarland', '627-4051 Velit Avenue', '(992) 597-0135', 'dui.Suspendisse.ac@Nullam.org', 5151, 44, 1),
+(66, 'PDQ20AUE6PD', 'Alisa Church', 'P.O. Box 841, 5000 Sed St.', '(155) 290-1737', 'dictum@Curabiturconsequatlectus.org', 10311, 7, 1),
+(67, 'SJY89NAA6PA', 'Quynn Hebert', '210 Risus. Ave', '(990) 264-8995', 'penatibus.et.magnis@etarcuimperdiet.com', 8993, 43, 1),
+(68, 'FHL22DVH8GU', 'Minerva Dale', 'P.O. Box 884, 7324 Risus, Rd.', '(826) 721-6916', 'consequat@maurisSuspendisse.org', 81, 34, 1),
+(69, 'ZDP20VBR0WH', 'Colleen Ray', 'P.O. Box 676, 7483 Semper Avenue', '(383) 399-4459', 'mauris@estmollisnon.org', 8700, 17, 1),
+(70, 'SDL31ISJ0TJ', 'Candace Gutierrez', 'P.O. Box 527, 6908 Dolor Rd.', '(241) 691-7588', 'sit@nulla.edu', 19750, 12, 1),
+(71, 'LZY80SEF0HR', 'Eugenia Riley', 'P.O. Box 592, 655 Dignissim. Rd.', '(267) 755-8677', 'auctor.odio.a@mi.com', 135, 5, 1),
+(72, 'NSH77PLA3VM', 'Lunea Harding', 'P.O. Box 391, 5071 Nec Av.', '(694) 271-1124', 'fermentum.arcu@atsem.ca', 25058, 42, 1),
+(73, 'RLK77FFJ6TE', 'Naida Boyd', 'P.O. Box 154, 4881 Nec Street', '(725) 940-5656', 'Sed.malesuada@tinciduntadipiscing.ca', 386, 0, 1),
+(74, 'PGF98ZDO0UU', 'Autumn Soto', 'P.O. Box 892, 7125 Tincidunt Av.', '(692) 349-8851', 'malesuada.malesuada.Integer@ornare.ca', 10531, 12, 1),
+(75, 'RIK24FAM0HH', 'Cheyenne Cherry', 'P.O. Box 324, 9778 At Ave', '(518) 479-0203', 'massa@Suspendisseac.ca', 2489, 43, 1),
+(76, 'EHY63GZO4ZI', 'Karina Dennis', '201-4175 Iaculis St.', '(204) 418-4552', 'pretium@vehicula.ca', 3737, 7, 1),
+(77, 'IJD87DFG3NG', 'Regina Mendez', 'Ap #255-3268 Magnis Avenue', '(808) 450-7122', 'consectetuer@Curabiturut.org', 15844, 15, 1),
+(78, 'MRO70BZV6RS', 'Halla Sims', '8569 Et St.', '(548) 361-4748', 'vitae@enimcommodo.org', 205, 5, 1),
+(79, 'JBE38VAP1WQ', 'Genevieve Roberts', '441-685 Molestie Av.', '(944) 793-9165', 'nec.ante.blandit@necenim.org', 24360, 21, 1),
+(80, 'OQM17JTC1GY', 'Ivy Mills', 'P.O. Box 538, 882 Eget Road', '(170) 245-9120', 'mollis.Phasellus.libero@nisiMauris.org', 28990, 23, 1),
+(81, 'MJH55NNY1NH', 'Evangeline Yatess', '4061 Ac Road', '(529) 432-4128', 'libero.Proin@euaccumsansed.com', 6240, 0, 1),
+(82, 'ASW56ABX2BG', 'Martina Shields', 'P.O. Box 688, 5631 Placerat, St.', '(589) 618-1172', 'nonummy.ac@tellusjusto.org', 12348, 6, 1),
+(83, 'HLF27GMJ0DM', 'Cheryl Rush', 'Ap #127-2548 Nunc Rd.', '(894) 966-5511', 'tincidunt@Integer.edu', 15399, 35, 1),
+(84, 'TTG08KOB2QR', 'Tamara Morton', 'Ap #399-7199 Tincidunt, Ave', '(292) 814-0776', 'ut.pellentesque.eget@actellus.edu', 19526, 26, 1),
+(85, 'WBD92UPE4NX', 'Yolanda Snow', '8912 Erat, St.', '(993) 170-6430', 'sed.pede.Cum@blanditmattisCras.edu', 22636, 32, 1),
+(86, 'DAM71XGC8CS', 'Anjolie Wall', '9174 Est St.', '(169) 702-7064', 'risus.at@adipiscing.ca', 7480, 36, 1),
+(87, 'RLS95OBF6ZV', 'Moana Strickland', '745-4828 Egestas Ave', '(692) 667-2495', 'Aliquam.adipiscing@convallisdolor.org', 2039, 44, 1),
+(88, 'EQA32ZFY8YR', 'Heidi Norton', 'Ap #475-5783 Sem Avenue', '(318) 703-0270', 'aliquam.iaculis.lacus@orci.com', 874, 22, 1),
+(89, 'TAS68RJF3NE', 'Adele Webster', 'P.O. Box 606, 9686 Vel Street', '(290) 570-4515', 'semper@risusDuisa.edu', 20753, 22, 1),
+(90, 'AJW26KKR3DZ', 'Jessamine Parker', 'Ap #947-1402 Mi Rd.', '(405) 910-0208', 'tellus.id@orci.edu', 4686, 29, 1),
+(91, 'UOB49FLJ8JZ', 'Leila Frank', '708-9260 Nam Avenue', '(579) 787-0505', 'ligula.Aenean.euismod@sagittis.ca', 6148, 43, 1),
+(92, 'RKJ02TZW0CV', 'Ima Roman', 'Ap #712-5336 Congue. Av.', '(446) 941-6721', 'Ut.sagittis@Donec.ca', 13619, 6, 1),
+(93, 'EFD02GVQ0PM', 'Lillian Duran', 'Ap #667-8834 Ut Avenue', '(275) 806-3574', 'at.sem@idmagna.com', 22104, 27, 1),
+(94, 'QZL20ATP2UN', 'Xaviera Hayes', 'P.O. Box 937, 489 Eget St.', '(253) 728-0446', 'molestie.in.tempus@amet.edu', 19775, 33, 1),
+(95, 'FRM79GIX6TB', 'Samantha Nelson', 'P.O. Box 535, 6996 Non St.', '(537) 984-7062', 'tellus@Phasellusdolorelit.ca', 13456, 9, 1),
+(96, 'XSN83GWF9ZF', 'Cathleen Howe', '6768 Accumsan Ave', '(660) 467-6805', 'non@tempor.ca', 22711, 1, 1),
+(97, 'TDH63FPN3AL', 'Ariel Sellers', '272-1345 Enim. Ave', '(197) 993-2947', 'sem.molestie.sodales@semmagnanec.com', 961, 13, 1),
+(98, 'QGW16XPS7RL', 'Cheryl Stone', '3239 Sed Street', '(276) 470-1728', 'Proin.sed@fringillaornareplacerat.edu', 5084, 24, 1),
+(99, 'IVL95EPY3MN', 'McKenzie Ford', 'P.O. Box 553, 2931 Pharetra, Av.', '(854) 683-9326', 'Maecenas.malesuada@ornare.edu', 17875, 38, 1),
+(100, 'TUL61YFU2AQ', 'Gwendolyn Leon', 'P.O. Box 425, 7578 Mi St.', '(966) 482-9248', 'egestas.a@infaucibusorci.ca', 4351, 42, 1),
+(101, 'ZCD73DKR6JW', 'Roanna Pearson', '375-1370 Non Ave', '(360) 609-0062', 'nec.tempus.mauris@consequat.ca', 9761, 30, 1),
+(102, 'EMC81LSY1IS', 'Lacy Mendoza', 'P.O. Box 925, 3801 Egestas. Av.', '(384) 447-2191', 'ipsum@egetlacusMauris.org', 28580, 2, 1),
+(103, 'WKT85BOC6KX', 'Teegan Franks', 'P.O. Box 729, 5653 Risus. St.', '(648) 830-8590', 'sem@nisi.com', 25748, 41, 1),
+(104, 'UYL86VUN1BS', 'Fay Riddle', 'P.O. Box 221, 6584 Morbi Av.', '(514) 905-2963', 'aliquam@Lorem.com', 19873, 40, 1),
+(105, 'AMR56THY5OU', 'Neve Oneil', '9321 Odio St.', '(294) 480-7059', 'ornare@indolor.ca', 2639, 30, 1),
+(106, 'MSK76YIL6AX', 'Roanna Stark', '2963 Quam. Avenue', '(473) 188-9975', 'congue.In.scelerisque@maurisblanditmattis.edu', 12033, 44, 1),
+(107, 'ZBX35OIL3EH', 'Glenna Aguilar', 'Ap #915-7442 Et Ave', '(577) 453-3398', 'Mauris.eu@NullamenimSed.com', 23112, 39, 1),
+(108, 'ZIE36JRA3FR', 'Athena Calderon', '1687 Laoreet Rd.', '(144) 474-2380', 'volutpat.ornare.facilisis@faucibusorciluctus.com', 5677, 41, 1),
+(109, 'RWG38POO6SZ', 'Eve Mclean', 'P.O. Box 666, 6891 Elementum Street', '(819) 390-1288', 'turpis.egestas@Proinnislsem.ca', 28958, 26, 1),
+(110, 'VOD32VJN4NV', 'Lacey Castaneda', '497-6470 At, Road', '(347) 535-0433', 'per.inceptos@cursusNuncmauris.ca', 1424, 26, 1),
+(111, 'BXY53MKW6XH', 'Sylvia Gonzales', '6843 Porttitor St.', '(612) 755-0989', 'tristique@fringillaornareplacerat.org', 26078, 28, 1),
+(112, 'HFC60SOJ6YH', 'Olympia Porter', '2515 Lorem Road', '(148) 136-0420', 'nisl@scelerisquescelerisquedui.com', 2319, 38, 1),
+(113, 'YEO55DLV8EV', 'Danielle Beard', 'Ap #875-3737 Vitae, Street', '(843) 373-4721', 'rhoncus@imperdiet.com', 17003, 22, 1),
+(114, 'ASY85CRU1SC', 'Melodie Mccarthy', 'P.O. Box 852, 8476 Luctus Rd.', '(823) 645-6856', 'Donec@lacus.ca', 1966, 9, 1),
+(115, 'KEW13PGZ1SM', 'Deanna Lynn', '6347 Magnis St.', '(721) 416-0471', 'nisi.dictum.augue@dolor.ca', 11664, 38, 1),
+(116, 'DSK46PDD8RM', 'Tallulah Houston', 'Ap #314-9748 Non, Rd.', '(889) 361-0230', 'odio@nonsapienmolestie.com', 8807, 31, 1),
+(117, 'DWU26MTO9WE', 'McKenzie Brown', 'P.O. Box 231, 7261 Ipsum Rd.', '(637) 867-0462', 'a.arcu.Sed@tinciduntaliquamarcu.ca', 23321, 16, 1),
+(118, 'NGD01ZGV1KH', 'Breanna Marquez', '7692 Interdum Ave', '(655) 602-8928', 'Fusce@eleifendCras.org', 26971, 25, 1),
+(119, 'QBO98QIE7XD', 'Kiona Richardson', '537-7442 Dapibus St.', '(476) 395-3917', 'vitae.orci@vulputate.edu', 25587, 4, 1),
+(120, 'ANL12IIU1GX', 'Jamalia Phillips', '359-911 Nascetur Ave', '(484) 492-8050', 'aliquet@turpis.ca', 16733, 14, 1),
+(121, 'DXQ99WVK6LE', 'Angelica Randolph', 'Ap #735-7644 Imperdiet Road', '(596) 546-6778', 'ridiculus.mus@aliquet.edu', 23922, 31, 1),
+(122, 'FRM62YVI7CT', 'Dorothy Rosario', 'Ap #234-2978 Sed Ave', '(279) 957-5993', 'nunc@libero.com', 14776, 44, 1),
+(123, 'SLU01WVK6JE', 'Idola Klein', '479-3975 Odio Rd.', '(829) 812-9922', 'dui.nec@netus.edu', 29973, 5, 1),
+(124, 'JWY75HXX8JK', 'Briar Romero', 'P.O. Box 764, 7736 Lacinia Avenue', '(296) 129-4015', 'odio@Craseget.edu', 17901, 14, 1),
+(125, 'OXF47PWV3RV', 'India Herrera', '347-6807 Est Rd.', '(711) 736-8434', 'accumsan.laoreet@ullamcorperDuisat.ca', 29052, 22, 1),
+(126, 'NOJ39AEI4UX', 'Signe Bean', 'P.O. Box 742, 2187 Nunc Rd.', '(630) 165-4525', 'taciti.sociosqu@temporloremeget.ca', 10401, 10, 1),
+(127, 'TJK08FZR2OF', 'Kelly Finley', 'Ap #577-1129 Dictum St.', '(305) 931-2601', 'odio.vel@utmolestie.ca', 24031, 13, 1),
+(128, 'QZH32WOT1ZV', 'Rosalyn Larsen', 'Ap #572-306 Mi, St.', '(962) 674-0182', 'faucibus.leo.in@dolortempus.org', 24978, 44, 1),
+(129, 'WSN68NLQ0JU', 'Megan Strong', 'Ap #171-2107 Integer Rd.', '(352) 434-3900', 'amet.metus@iaculisaliquetdiam.org', 16073, 44, 1),
+(130, 'KBK01TVT6QJ', 'Candice Peterson', 'P.O. Box 832, 7842 Eros Road', '(531) 431-9213', 'primis.in.faucibus@Phasellus.ca', 19989, 11, 1),
+(131, 'XKC60TAF4PP', 'Naomi Hendricks', 'Ap #576-6427 Ullamcorper St.', '(175) 398-0612', 'sem.Pellentesque@euodio.edu', 18362, 45, 1),
+(132, 'HJA48PBM0KS', 'Pascale Weaver', 'Ap #929-869 Semper Av.', '(681) 394-6799', 'arcu@arcuMorbisit.ca', 276, 36, 1),
+(133, 'SQW16HXJ2GE', 'Tamekah Castillo', '4005 Dictum Rd.', '(797) 467-3723', 'non@tellussem.ca', 29666, 29, 1),
+(134, 'AQX90DDE0HL', 'Kiayada Dyer', 'P.O. Box 662, 5966 Mauris St.', '(839) 653-5763', 'quam.Curabitur@turpis.com', 27754, 21, 1),
+(135, 'IBP40XYP1TV', 'Hanae Hall', 'Ap #433-7903 Massa. St.', '(363) 137-5071', 'tortor.Nunc@viverraDonec.org', 5100, 7, 1),
+(136, 'VBC42VGO2RU', 'Venus Avila', 'Ap #941-2651 Mauris Street', '(168) 249-4151', 'vel.lectus.Cum@euismod.org', 11521, 6, 1),
+(137, 'ZFJ54AIJ0WP', 'Raven Salazar', '703-9924 Malesuada Av.', '(964) 116-9796', 'nec.diam@purusactellus.org', 4570, 1, 1),
+(138, 'YEI32FXA0TW', 'Kimberly Hodges', 'P.O. Box 408, 5179 Et, Rd.', '(294) 980-4289', 'malesuada.id.erat@lobortisultricesVivamus.edu', 9982, 0, 1),
+(139, 'LOX45RIC1FO', 'Calista Lowe', 'Ap #554-2098 Aliquam Street', '(456) 646-3460', 'felis.adipiscing.fringilla@id.com', 29261, 27, 1),
+(140, 'BQY17DRX6TE', 'Clio Downs', '296 Iaculis Rd.', '(336) 682-6416', 'tristique.neque@consequatnec.org', 9335, 8, 1),
+(141, 'WBI59AHC2OM', 'Scarlett Hays', 'Ap #210-6395 Tempor, St.', '(532) 159-6169', 'gravida.Aliquam.tincidunt@Nullam.ca', 12474, 14, 1),
+(142, 'YLQ06ENM5AO', 'Fiona Burton', '495-8316 Phasellus Av.', '(134) 293-0948', 'libero.lacus.varius@sagittis.com', 23077, 40, 1),
+(143, 'ZYK45KAU5EP', 'Abigail Melendez', 'P.O. Box 934, 2048 Vel St.', '(132) 971-8626', 'dolor@sitamet.ca', 28386, 20, 1),
+(144, 'MIL28QXW2IW', 'Desiree Elliott', 'Ap #410-1791 Et Street', '(440) 176-0720', 'aliquet.vel.vulputate@diameu.org', 28659, 24, 1),
+(145, 'JPK28TCB0EI', 'Maia Lambert', '4892 Suspendisse Avenue', '(171) 143-1256', 'magna.a@purusaccumsan.com', 6115, 19, 1),
+(146, 'RAE70FYK8MW', 'Rhoda House', 'P.O. Box 571, 9343 Quis, Av.', '(690) 847-3533', 'ligula.eu.enim@ornareplaceratorci.org', 28106, 20, 1),
+(147, 'SDK19WZT3JO', 'Karen Stone', '5990 Tellus. St.', '(923) 377-6734', 'Suspendisse.dui@laoreetipsum.org', 15087, 14, 1),
+(148, 'TLE71NCT9ZG', 'Bethany Riggs', 'P.O. Box 287, 4222 Netus St.', '(890) 625-0289', 'dapibus.ligula.Aliquam@sed.ca', 12919, 18, 1),
+(149, 'AYN79MAA2WC', 'Fiona Boone', 'P.O. Box 645, 7129 Nascetur St.', '(317) 697-4391', 'Maecenas@euelit.com', 1359, 45, 1),
+(150, 'GOA28XJC9WF', 'Aileen Juarez', 'Ap #706-9084 Nunc Road', '(633) 934-1703', 'neque@Sedmolestie.org', 10975, 23, 1),
+(151, 'KGW52TSG2QP', 'Scarlett Frost', 'Ap #876-3867 Ac Road', '(135) 738-7429', 'aliquet@lectusrutrum.ca', 10956, 0, 1),
+(152, 'CCT33JYE6LP', 'Illana Finley', 'Ap #552-1224 Gravida Road', '(148) 568-5230', 'arcu@eget.ca', 24365, 27, 1),
+(153, 'EEN38YXG2WR', 'Sylvia Hardin', '6289 Donec Avenue', '(444) 978-0851', 'Nullam@arcuvelquam.org', 3837, 11, 1),
+(154, 'VAF72LQY3AS', 'Ella Salinas', '821-6709 Montes, Ave', '(967) 818-9576', 'Curabitur@metusAliquamerat.ca', 3330, 28, 1),
+(155, 'FOG19HVE0EV', 'Hayfa Whitaker', 'Ap #307-1524 Dapibus Street', '(700) 387-2761', 'Nulla.semper.tellus@nullaIntegervulputate.com', 1634, 0, 1),
+(156, 'FIV34ZGU9TC', 'Lana William', 'P.O. Box 394, 5483 Rhoncus. Street', '(908) 779-3472', 'non.quam.Pellentesque@tincidunt.edu', 2315, 19, 1),
+(157, 'QBQ40KMO3TW', 'Ivy Bentley', 'P.O. Box 307, 9927 Aliquet. Street', '(823) 405-1881', 'consectetuer@ultriciessem.ca', 7280, 3, 1),
+(158, 'AQO50HLK3VT', 'Kelsie Bauer', '173-7068 Curae; Road', '(368) 240-2468', 'volutpat.nunc@variusNamporttitor.org', 16004, 44, 1),
+(159, 'NVJ92FRS2KB', 'Lacey Johns', 'P.O. Box 666, 178 Tortor, Av.', '(662) 121-4108', 'convallis.erat@consequatpurusMaecenas.com', 4807, 4, 1),
+(160, 'RJT36DLD6FZ', 'Rebecca Smith', 'Ap #305-4753 Dui Road', '(839) 947-6047', 'venenatis.lacus@eueleifendnec.edu', 19243, 25, 1),
+(161, 'QUA74GUF0UQ', 'Maia Albert', '991-3791 Nec Road', '(879) 827-3865', 'volutpat.ornare.facilisis@at.edu', 3661, 13, 1),
+(162, 'NJC74WJB8LM', 'Daryl Holland', 'P.O. Box 850, 8758 Lorem St.', '(462) 227-0696', 'Ut.tincidunt.vehicula@diamluctuslobortis.com', 29647, 45, 1),
+(163, 'VWI87UJY2EZ', 'Hilda Ashley', 'Ap #178-9163 Neque Ave', '(980) 676-2855', 'rutrum@sedorci.com', 26302, 43, 1),
+(164, 'BRH08MZG4VY', 'Camilla Tyler', '8675 Cursus St.', '(654) 949-4640', 'pede.Cras.vulputate@ullamcorperDuiscursus.ca', 16353, 41, 1),
+(165, 'XLJ86WSQ0PM', 'Bianca Hays', '8167 At, Ave', '(747) 202-1700', 'mauris@etultrices.ca', 283, 28, 1),
+(166, 'SRM42NAU6LD', 'Helen Higgins', '7258 Mi St.', '(289) 450-3809', 'nunc@blanditcongueIn.org', 19411, 10, 1),
+(167, 'AYT07IMV6XT', 'Pamela Phelps', 'Ap #520-2602 Tellus. Avenue', '(256) 155-1459', 'Aenean@Cras.edu', 26374, 3, 1),
+(168, 'WFO69LLQ1YO', 'Quemby Hatfield', '4543 Pellentesque Avenue', '(940) 286-0882', 'a.arcu.Sed@enim.ca', 9321, 24, 1),
+(169, 'NFZ98EXL9HG', 'Sage Craft', 'Ap #779-9246 Arcu Av.', '(639) 511-3123', 'est.ac.facilisis@loremipsumsodales.ca', 27263, 19, 1),
+(170, 'SBI19PKU8DO', 'Karyn Talley', '535-5187 Luctus St.', '(469) 692-5520', 'pellentesque.Sed@Craspellentesque.edu', 22480, 12, 1),
+(171, 'DJR91VNQ7AR', 'Xyla Kent', 'P.O. Box 193, 9643 In Road', '(234) 755-1692', 'Donec.dignissim.magna@massarutrum.edu', 5722, 44, 1),
+(172, 'EAM87MNS9SC', 'Celeste Saunders', 'P.O. Box 603, 473 Senectus Street', '(801) 593-3683', 'Aliquam.ultrices.iaculis@Morbiaccumsan.edu', 25026, 33, 1),
+(173, 'VIG53YQM7SU', 'Yeo Edwards', '995-2585 Elementum, Ave', '(336) 929-7336', 'sem.Nulla@sit.org', 16871, 38, 1),
+(174, 'VNM32ECG4YA', 'Rachel Waller', '893-937 Ut St.', '(687) 924-4477', 'enim.sit.amet@sempertellus.ca', 937, 3, 1),
+(175, 'CFE36DJK0QN', 'Iliana Knox', '444-9444 Et, Avenue', '(673) 150-9867', 'Cum.sociis@Nuncquisarcu.ca', 29721, 2, 1),
+(176, 'NCK91BLO5BN', 'Willa Hinton', 'P.O. Box 855, 6264 Lorem Rd.', '(796) 553-1218', 'cursus@necquamCurabitur.com', 10845, 28, 1),
+(177, 'LKC99DNX5ZM', 'Quynn Sanders', 'Ap #748-533 Sed Rd.', '(302) 621-7303', 'lectus.a@accumsan.ca', 2626, 1, 1),
+(178, 'UFN77NFN3IA', 'Angelica Ballard', 'P.O. Box 355, 9357 Malesuada Road', '(336) 740-3803', 'ut.erat@arcuCurabitur.com', 28096, 6, 1),
+(179, 'CLI67QQU6SE', 'Remedios Wolfe', '773-7983 Dictum. St.', '(871) 674-2897', 'sagittis@acarcuNunc.com', 6362, 40, 1),
+(180, 'AWN85FAI2DL', 'Lisandra Stevenson', 'Ap #414-301 Posuere Road', '(483) 370-4597', 'Aenean.massa.Integer@consequatlectus.ca', 5717, 33, 1),
+(181, 'OKT86WIF7OP', 'India Tate', 'Ap #928-1115 Tellus Av.', '(595) 183-9008', 'primis@elitpretium.org', 10174, 20, 1),
+(182, 'GFT49IBJ2RE', 'Wendy Mccarty', 'Ap #886-5189 Risus. Road', '(524) 523-5580', 'sit@pellentesquea.com', 9147, 41, 1),
+(183, 'LQY78PZT1GF', 'Petra Burris', '258-6675 Quis St.', '(641) 232-3677', 'ipsum@nibhenim.org', 17306, 14, 1),
+(184, 'NEH23NMD6FI', 'Alana Hardin', '1562 Morbi Rd.', '(823) 281-8924', 'enim.nisl@a.org', 7900, 0, 1),
+(185, 'VQP37GNC2XB', 'Ursa Rogers', 'P.O. Box 643, 8775 Mi Ave', '(977) 902-3031', 'magna.et@non.edu', 23731, 34, 1),
+(186, 'ZAH02ECF9HY', 'Alana Trevino', 'Ap #608-8401 Egestas. Avenue', '(872) 813-4658', 'ligula.consectetuer.rhoncus@elita.com', 26624, 40, 1),
+(187, 'QBZ80HUB1QA', 'Susan Collins', '584 Morbi Rd.', '(503) 979-8624', 'venenatis.lacus@nuncsed.com', 12410, 13, 1),
+(188, 'ELO95TPN6UJ', 'Florence Riddle', '8183 A, Av.', '(767) 620-0674', 'Ut@lectuspedeultrices.edu', 8249, 40, 1),
+(189, 'DUQ73GNR5HC', 'Holly Carlson', '6929 Mattis St.', '(797) 864-2740', 'dui@pede.ca', 2998, 23, 1),
+(190, 'MKU01IHF7LD', 'Shelby Cooley', 'P.O. Box 618, 4137 Pede Rd.', '(806) 646-5094', 'quis.diam.Pellentesque@sodales.com', 23651, 16, 1),
+(191, 'PDQ88CYS2UH', 'Kay Hahn', '392-9693 Orci, Road', '(895) 990-7001', 'habitant.morbi@egestasFusce.ca', 4267, 40, 1),
+(192, 'VGV55QVA0NK', 'Iona Simpson', '9303 Iaculis Street', '(279) 970-1286', 'Proin@velturpisAliquam.org', 29380, 1, 1),
+(193, 'FNR05ROX0KH', 'Hayley Dean', '1916 Turpis. Rd.', '(572) 601-2399', 'magna.nec@ligulaelitpretium.ca', 14025, 11, 1),
+(194, 'XZY48BWE3CJ', 'Venus Brooks', '7730 Luctus. Rd.', '(188) 328-3752', 'non.bibendum@enimEtiamimperdiet.com', 21741, 24, 1),
+(195, 'VQP77ZVD8XR', 'Haviva Rollins', 'Ap #407-7531 Duis Road', '(920) 673-9105', 'fringilla.mi@montes.com', 21110, 1, 1),
+(196, 'FRV35TAX5MI', 'Daryl Schmidt', 'P.O. Box 233, 7870 Metus. St.', '(747) 953-4347', 'mauris.sit.amet@liberoProinmi.ca', 19381, 13, 1),
+(197, 'LKI39VRE6TI', 'Mia Valenzuela', '893-3621 Nunc Road', '(927) 375-0930', 'aliquam.adipiscing.lacus@Curae;Phasellus.com', 20409, 26, 1),
+(198, 'JMG51AXU9ZF', 'Haley Stanley', 'P.O. Box 418, 6043 Magna Street', '(896) 827-5208', 'Sed.nec.metus@Aliquamultrices.com', 19731, 29, 1),
+(199, 'JRN16NJY3XG', 'Kessie Estrada', 'P.O. Box 575, 1628 Pellentesque Road', '(527) 735-4195', 'non.lacinia@egestas.com', 21817, 41, 1),
+(200, 'YGG86EDD4ZN', 'McKenzie Knight', '4182 Tempus, St.', '(819) 329-8560', 'lectus.ante@nislsemconsequat.ca', 672, 23, 1);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `compras`
+-- Table structure for table `compras`
 --
 
 CREATE TABLE IF NOT EXISTS `compras` (
-  `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de la compra',
+  `id_compra` int(11) NOT NULL auto_increment COMMENT 'id de la compra',
   `id_proveedor` int(11) NOT NULL COMMENT 'PROVEEDOR AL QUE SE LE COMPRO',
-  `tipo_compra` enum('credito','contado') COLLATE utf8_unicode_ci NOT NULL COMMENT 'tipo de compra, contado o credito',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de compra',
+  `tipo_compra` enum('credito','contado') collate utf8_unicode_ci NOT NULL COMMENT 'tipo de compra, contado o credito',
+  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha de compra',
   `subtotal` float NOT NULL COMMENT 'subtotal de compra',
   `iva` float NOT NULL COMMENT 'iva de la compra',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal en que se compro',
   `id_usuario` int(11) NOT NULL COMMENT 'quien realizo la compra',
-  PRIMARY KEY (`id_compra`),
+  PRIMARY KEY  (`id_compra`),
   KEY `compras_proveedor` (`id_proveedor`),
   KEY `compras_sucursal` (`id_sucursal`),
   KEY `compras_usuario` (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
--- Volcar la base de datos para la tabla `compras`
+-- Dumping data for table `compras`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `corte`
+-- Table structure for table `corte`
 --
 
 CREATE TABLE IF NOT EXISTS `corte` (
-  `num_corte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'numero de corte',
+  `num_corte` int(11) NOT NULL auto_increment COMMENT 'numero de corte',
   `anio` year(4) NOT NULL COMMENT 'año del corte',
-  `inicio` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'año del corte',
-  `fin` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'fecha de fin del corte',
+  `inicio` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'año del corte',
+  `fin` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'fecha de fin del corte',
   `ventas` float NOT NULL COMMENT 'ventas al contado en ese periodo',
   `abonosVentas` float NOT NULL COMMENT 'pagos de abonos en este periodo',
   `compras` float NOT NULL COMMENT 'compras realizadas en ese periodo',
@@ -290,11 +284,11 @@ CREATE TABLE IF NOT EXISTS `corte` (
   `gastos` float NOT NULL COMMENT 'gastos echos en ese periodo',
   `ingresos` float NOT NULL COMMENT 'ingresos obtenidos en ese periodo',
   `gananciasNetas` float NOT NULL COMMENT 'ganancias netas dentro del periodo',
-  PRIMARY KEY (`num_corte`)
+  PRIMARY KEY  (`num_corte`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
 --
--- Volcar la base de datos para la tabla `corte`
+-- Dumping data for table `corte`
 --
 
 INSERT INTO `corte` (`num_corte`, `anio`, `inicio`, `fin`, `ventas`, `abonosVentas`, `compras`, `AbonosCompra`, `gastos`, `ingresos`, `gananciasNetas`) VALUES
@@ -312,32 +306,32 @@ INSERT INTO `corte` (`num_corte`, `anio`, `inicio`, `fin`, `ventas`, `abonosVent
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `cotizacion`
+-- Table structure for table `cotizacion`
 --
 
 CREATE TABLE IF NOT EXISTS `cotizacion` (
-  `id_cotizacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de la cotizacion',
+  `id_cotizacion` int(11) NOT NULL auto_increment COMMENT 'id de la cotizacion',
   `id_cliente` int(11) NOT NULL COMMENT 'id del cliente',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de cotizacion',
+  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha de cotizacion',
   `subtotal` float NOT NULL COMMENT 'subtotal de la cotizacion',
   `iva` float NOT NULL COMMENT 'iva sobre el subtotal',
   `id_sucursal` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
-  PRIMARY KEY (`id_cotizacion`),
+  PRIMARY KEY  (`id_cotizacion`),
   KEY `cotizacion_cliente` (`id_cliente`),
   KEY `fk_cotizacion_1` (`id_sucursal`),
   KEY `fk_cotizacion_2` (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
--- Volcar la base de datos para la tabla `cotizacion`
+-- Dumping data for table `cotizacion`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalle_compra`
+-- Table structure for table `detalle_compra`
 --
 
 CREATE TABLE IF NOT EXISTS `detalle_compra` (
@@ -345,21 +339,21 @@ CREATE TABLE IF NOT EXISTS `detalle_compra` (
   `id_producto` int(11) NOT NULL COMMENT 'id del producto',
   `cantidad` float NOT NULL COMMENT 'cantidad comprada',
   `precio` float NOT NULL COMMENT 'costo de compra',
-  `peso_arpillaPagado` float DEFAULT '0',
-  `peso_arpillaReal` float DEFAULT '0',
-  PRIMARY KEY (`id_compra`,`id_producto`),
+  `peso_arpillaPagado` float default '0',
+  `peso_arpillaReal` float default '0',
+  PRIMARY KEY  (`id_compra`,`id_producto`),
   KEY `detalle_compra_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Volcar la base de datos para la tabla `detalle_compra`
+-- Dumping data for table `detalle_compra`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalle_corte`
+-- Table structure for table `detalle_corte`
 --
 
 CREATE TABLE IF NOT EXISTS `detalle_corte` (
@@ -367,12 +361,12 @@ CREATE TABLE IF NOT EXISTS `detalle_corte` (
   `nombre` varchar(100) NOT NULL COMMENT 'nombre del encargado de sucursal al momento del corte',
   `total` float NOT NULL COMMENT 'total que le corresponde al encargado al momento del corte',
   `deben` float NOT NULL COMMENT 'lo que deben en la sucursal del encargado al momento del corte',
-  PRIMARY KEY (`num_corte`,`nombre`),
+  PRIMARY KEY  (`num_corte`,`nombre`),
   KEY `corte_detalleCorte` (`num_corte`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcar la base de datos para la tabla `detalle_corte`
+-- Dumping data for table `detalle_corte`
 --
 
 INSERT INTO `detalle_corte` (`num_corte`, `nombre`, `total`, `deben`) VALUES
@@ -409,7 +403,7 @@ INSERT INTO `detalle_corte` (`num_corte`, `nombre`, `total`, `deben`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalle_cotizacion`
+-- Table structure for table `detalle_cotizacion`
 --
 
 CREATE TABLE IF NOT EXISTS `detalle_cotizacion` (
@@ -417,33 +411,33 @@ CREATE TABLE IF NOT EXISTS `detalle_cotizacion` (
   `id_producto` int(11) NOT NULL COMMENT 'id del producto',
   `cantidad` float NOT NULL COMMENT 'cantidad cotizado',
   `precio` float NOT NULL COMMENT 'precio al que cotizo el producto',
-  PRIMARY KEY (`id_cotizacion`,`id_producto`),
+  PRIMARY KEY  (`id_cotizacion`,`id_producto`),
   KEY `detalle_cotizacion_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcar la base de datos para la tabla `detalle_cotizacion`
+-- Dumping data for table `detalle_cotizacion`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalle_inventario`
+-- Table structure for table `detalle_inventario`
 --
 
 CREATE TABLE IF NOT EXISTS `detalle_inventario` (
   `id_producto` int(11) NOT NULL COMMENT 'id del producto al que se refiere',
   `id_sucursal` int(11) NOT NULL COMMENT 'id de la sucursal',
   `precio_venta` float NOT NULL COMMENT 'precio al que se vendera al publico',
-  `min` float NOT NULL DEFAULT '0' COMMENT 'cantidad minima que debe de haber del producto en almacen de esta sucursal',
-  `existencias` float NOT NULL DEFAULT '0' COMMENT 'cantidad de producto que hay actualmente en almacen de esta sucursal',
-  PRIMARY KEY (`id_producto`,`id_sucursal`),
+  `min` float NOT NULL default '0' COMMENT 'cantidad minima que debe de haber del producto en almacen de esta sucursal',
+  `existencias` float NOT NULL default '0' COMMENT 'cantidad de producto que hay actualmente en almacen de esta sucursal',
+  PRIMARY KEY  (`id_producto`,`id_sucursal`),
   KEY `id_sucursal` (`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcar la base de datos para la tabla `detalle_inventario`
+-- Dumping data for table `detalle_inventario`
 --
 
 INSERT INTO `detalle_inventario` (`id_producto`, `id_sucursal`, `precio_venta`, `min`, `existencias`) VALUES
@@ -643,7 +637,7 @@ INSERT INTO `detalle_inventario` (`id_producto`, `id_sucursal`, `precio_venta`, 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalle_venta`
+-- Table structure for table `detalle_venta`
 --
 
 CREATE TABLE IF NOT EXISTS `detalle_venta` (
@@ -651,12 +645,12 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
   `id_producto` int(11) NOT NULL COMMENT 'producto de la venta',
   `cantidad` float NOT NULL COMMENT 'cantidad que se vendio',
   `precio` float NOT NULL COMMENT 'precio al que se vendio',
-  PRIMARY KEY (`id_venta`,`id_producto`),
+  PRIMARY KEY  (`id_venta`,`id_producto`),
   KEY `detalle_venta_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Volcar la base de datos para la tabla `detalle_venta`
+-- Dumping data for table `detalle_venta`
 --
 
 INSERT INTO `detalle_venta` (`id_venta`, `id_producto`, `cantidad`, `precio`) VALUES
@@ -922,19 +916,19 @@ INSERT INTO `detalle_venta` (`id_venta`, `id_producto`, `cantidad`, `precio`) VA
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `encargado`
+-- Table structure for table `encargado`
 --
 
 CREATE TABLE IF NOT EXISTS `encargado` (
   `id_usuario` int(11) NOT NULL COMMENT 'Este id es el del usuario encargado de su sucursal',
   `porciento` float NOT NULL COMMENT 'este es el porciento de las ventas que le tocan al encargado',
-  PRIMARY KEY (`id_usuario`),
+  PRIMARY KEY  (`id_usuario`),
   KEY `fk_encargado_1` (`id_usuario`),
   KEY `usuario_encargado` (`id_usuario`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Volcar la base de datos para la tabla `encargado`
+-- Dumping data for table `encargado`
 --
 
 INSERT INTO `encargado` (`id_usuario`, `porciento`) VALUES
@@ -959,36 +953,36 @@ INSERT INTO `encargado` (`id_usuario`, `porciento`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `factura_compra`
+-- Table structure for table `factura_compra`
 --
 
 CREATE TABLE IF NOT EXISTS `factura_compra` (
-  `folio` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
+  `folio` varchar(15) collate utf8_unicode_ci NOT NULL,
   `id_compra` int(11) NOT NULL COMMENT 'COMPRA A LA QUE CORRESPONDE LA FACTURA',
-  PRIMARY KEY (`folio`),
+  PRIMARY KEY  (`folio`),
   KEY `factura_compra_compra` (`id_compra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Volcar la base de datos para la tabla `factura_compra`
+-- Dumping data for table `factura_compra`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `factura_venta`
+-- Table structure for table `factura_venta`
 --
 
 CREATE TABLE IF NOT EXISTS `factura_venta` (
-  `folio` varchar(15) COLLATE utf8_unicode_ci NOT NULL COMMENT 'folio que tiene la factura',
+  `folio` varchar(15) collate utf8_unicode_ci NOT NULL COMMENT 'folio que tiene la factura',
   `id_venta` int(11) NOT NULL COMMENT 'venta a la cual corresponde la factura',
-  PRIMARY KEY (`folio`),
+  PRIMARY KEY  (`folio`),
   KEY `factura_venta_venta` (`id_venta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Volcar la base de datos para la tabla `factura_venta`
+-- Dumping data for table `factura_venta`
 --
 
 INSERT INTO `factura_venta` (`folio`, `id_venta`) VALUES
@@ -1011,24 +1005,24 @@ INSERT INTO `factura_venta` (`folio`, `id_venta`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `gastos`
+-- Table structure for table `gastos`
 --
 
 CREATE TABLE IF NOT EXISTS `gastos` (
-  `id_gasto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id para identificar el gasto',
+  `id_gasto` int(11) NOT NULL auto_increment COMMENT 'id para identificar el gasto',
   `concepto` varchar(100) NOT NULL COMMENT 'concepto en lo que se gasto',
   `monto` float NOT NULL COMMENT 'lo que costo este gasto',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'fecha del gasto',
+  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'fecha del gasto',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal en la que se hizo el gasto',
   `id_usuario` int(11) NOT NULL COMMENT 'usuario que registro el gasto',
-  PRIMARY KEY (`id_gasto`),
+  PRIMARY KEY  (`id_gasto`),
   KEY `fk_gastos_1` (`id_usuario`),
   KEY `usuario_gasto` (`id_usuario`),
   KEY `sucursal_gasto` (`id_sucursal`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=211 ;
 
 --
--- Volcar la base de datos para la tabla `gastos`
+-- Dumping data for table `gastos`
 --
 
 INSERT INTO `gastos` (`id_gasto`, `concepto`, `monto`, `fecha`, `id_sucursal`, `id_usuario`) VALUES
@@ -1246,18 +1240,18 @@ INSERT INTO `gastos` (`id_gasto`, `concepto`, `monto`, `fecha`, `id_sucursal`, `
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `grupos`
+-- Table structure for table `grupos`
 --
 
 CREATE TABLE IF NOT EXISTS `grupos` (
   `id_grupo` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL COMMENT 'Nombre del Grupo',
   `descripcion` varchar(256) NOT NULL,
-  PRIMARY KEY (`id_grupo`)
+  PRIMARY KEY  (`id_grupo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcar la base de datos para la tabla `grupos`
+-- Dumping data for table `grupos`
 --
 
 INSERT INTO `grupos` (`id_grupo`, `nombre`, `descripcion`) VALUES
@@ -1268,19 +1262,19 @@ INSERT INTO `grupos` (`id_grupo`, `nombre`, `descripcion`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `grupos_usuarios`
+-- Table structure for table `grupos_usuarios`
 --
 
 CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
   `id_grupo` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
-  PRIMARY KEY (`id_grupo`,`id_usuario`),
+  PRIMARY KEY  (`id_grupo`,`id_usuario`),
   KEY `fk_grupos_usuarios_1` (`id_grupo`),
   KEY `fk_grupos_usuarios_2` (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcar la base de datos para la tabla `grupos_usuarios`
+-- Dumping data for table `grupos_usuarios`
 --
 
 INSERT INTO `grupos_usuarios` (`id_grupo`, `id_usuario`) VALUES
@@ -1298,44 +1292,44 @@ INSERT INTO `grupos_usuarios` (`id_grupo`, `id_usuario`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `impuesto`
+-- Table structure for table `impuesto`
 --
 
 CREATE TABLE IF NOT EXISTS `impuesto` (
-  `id_impuesto` int(11) NOT NULL AUTO_INCREMENT,
-  `descripcion` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `id_impuesto` int(11) NOT NULL auto_increment,
+  `descripcion` varchar(100) collate utf8_unicode_ci NOT NULL,
   `valor` int(11) NOT NULL,
   `id_sucursal` int(11) NOT NULL,
-  PRIMARY KEY (`id_impuesto`),
+  PRIMARY KEY  (`id_impuesto`),
   KEY `fk_impuesto_1` (`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
--- Volcar la base de datos para la tabla `impuesto`
+-- Dumping data for table `impuesto`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `ingresos`
+-- Table structure for table `ingresos`
 --
 
 CREATE TABLE IF NOT EXISTS `ingresos` (
-  `id_ingreso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id para identificar el ingreso',
+  `id_ingreso` int(11) NOT NULL auto_increment COMMENT 'id para identificar el ingreso',
   `concepto` varchar(100) NOT NULL COMMENT 'concepto en lo que se ingreso',
   `monto` float NOT NULL COMMENT 'lo que costo este ingreso',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'fecha del ingreso',
+  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'fecha del ingreso',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal en la que se hizo el ingreso',
   `id_usuario` int(11) NOT NULL COMMENT 'usuario que registro el ingreso',
-  PRIMARY KEY (`id_ingreso`),
+  PRIMARY KEY  (`id_ingreso`),
   KEY `fk_ingresos_1` (`id_usuario`),
   KEY `usuario_ingreso` (`id_usuario`),
   KEY `sucursal_ingreso` (`id_sucursal`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=202 ;
 
 --
--- Volcar la base de datos para la tabla `ingresos`
+-- Dumping data for table `ingresos`
 --
 
 INSERT INTO `ingresos` (`id_ingreso`, `concepto`, `monto`, `fecha`, `id_sucursal`, `id_usuario`) VALUES
@@ -1544,18 +1538,18 @@ INSERT INTO `ingresos` (`id_ingreso`, `concepto`, `monto`, `fecha`, `id_sucursal
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `inventario`
+-- Table structure for table `inventario`
 --
 
 CREATE TABLE IF NOT EXISTS `inventario` (
-  `id_producto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del producto',
-  `nombre` varchar(90) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Descripcion o nombre del producto',
-  `denominacion` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT 'es lo que se le mostrara a los clientes',
-  PRIMARY KEY (`id_producto`)
+  `id_producto` int(11) NOT NULL auto_increment COMMENT 'id del producto',
+  `nombre` varchar(90) collate utf8_unicode_ci NOT NULL COMMENT 'Descripcion o nombre del producto',
+  `denominacion` varchar(30) collate utf8_unicode_ci NOT NULL COMMENT 'es lo que se le mostrara a los clientes',
+  PRIMARY KEY  (`id_producto`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=202 ;
 
 --
--- Volcar la base de datos para la tabla `inventario`
+-- Dumping data for table `inventario`
 --
 
 INSERT INTO `inventario` (`id_producto`, `nombre`, `denominacion`) VALUES
@@ -1763,40 +1757,40 @@ INSERT INTO `inventario` (`id_producto`, `nombre`, `denominacion`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `pagos_compra`
+-- Table structure for table `pagos_compra`
 --
 
 CREATE TABLE IF NOT EXISTS `pagos_compra` (
-  `id_pago` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del pago',
+  `id_pago` int(11) NOT NULL auto_increment COMMENT 'identificador del pago',
   `id_compra` int(11) NOT NULL COMMENT 'identificador de la compra a la que pagamos',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha en que se abono',
+  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha en que se abono',
   `monto` float NOT NULL COMMENT 'monto que se abono',
-  PRIMARY KEY (`id_pago`),
+  PRIMARY KEY  (`id_pago`),
   KEY `pagos_compra_compra` (`id_compra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
--- Volcar la base de datos para la tabla `pagos_compra`
+-- Dumping data for table `pagos_compra`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `pagos_venta`
+-- Table structure for table `pagos_venta`
 --
 
 CREATE TABLE IF NOT EXISTS `pagos_venta` (
-  `id_pago` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de pago del cliente',
+  `id_pago` int(11) NOT NULL auto_increment COMMENT 'id de pago del cliente',
   `id_venta` int(11) NOT NULL COMMENT 'id de la venta a la que se esta pagando',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha en que se registro el pago',
+  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'Fecha en que se registro el pago',
   `monto` float NOT NULL COMMENT 'total de credito del cliente',
-  PRIMARY KEY (`id_pago`),
+  PRIMARY KEY  (`id_pago`),
   KEY `pagos_venta_venta` (`id_venta`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=207 ;
 
 --
--- Volcar la base de datos para la tabla `pagos_venta`
+-- Dumping data for table `pagos_venta`
 --
 
 INSERT INTO `pagos_venta` (`id_pago`, `id_venta`, `fecha`, `monto`) VALUES
@@ -2010,35 +2004,35 @@ INSERT INTO `pagos_venta` (`id_pago`, `id_venta`, `fecha`, `monto`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `permisos`
+-- Table structure for table `permisos`
 --
 
 CREATE TABLE IF NOT EXISTS `permisos` (
   `id_permiso` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL,
   `descripcion` varchar(45) NOT NULL,
-  PRIMARY KEY (`id_permiso`)
+  PRIMARY KEY  (`id_permiso`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcar la base de datos para la tabla `permisos`
+-- Dumping data for table `permisos`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `productos_proveedor`
+-- Table structure for table `productos_proveedor`
 --
 
 CREATE TABLE IF NOT EXISTS `productos_proveedor` (
-  `id_producto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del producto',
-  `clave_producto` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'clave de producto para el proveedor',
+  `id_producto` int(11) NOT NULL auto_increment COMMENT 'identificador del producto',
+  `clave_producto` varchar(20) collate utf8_unicode_ci NOT NULL COMMENT 'clave de producto para el proveedor',
   `id_proveedor` int(11) NOT NULL COMMENT 'clave del proveedor',
   `id_inventario` int(11) NOT NULL COMMENT 'clave con la que entra a nuestro inventario',
-  `descripcion` varchar(200) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Descripcion del producto que nos vende el proveedor',
+  `descripcion` varchar(200) collate utf8_unicode_ci NOT NULL COMMENT 'Descripcion del producto que nos vende el proveedor',
   `precio` int(11) NOT NULL COMMENT 'precio al que se compra el producto (sin descuento)',
-  PRIMARY KEY (`id_producto`),
+  PRIMARY KEY  (`id_producto`),
   UNIQUE KEY `clave_producto` (`clave_producto`,`id_proveedor`),
   UNIQUE KEY `id_proveedor` (`id_proveedor`,`id_inventario`),
   KEY `productos_proveedor_proveedor` (`id_proveedor`),
@@ -2046,7 +2040,7 @@ CREATE TABLE IF NOT EXISTS `productos_proveedor` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=43 ;
 
 --
--- Volcar la base de datos para la tabla `productos_proveedor`
+-- Dumping data for table `productos_proveedor`
 --
 
 INSERT INTO `productos_proveedor` (`id_producto`, `clave_producto`, `id_proveedor`, `id_inventario`, `descripcion`, `precio`) VALUES
@@ -2096,22 +2090,22 @@ INSERT INTO `productos_proveedor` (`id_producto`, `clave_producto`, `id_proveedo
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `proveedor`
+-- Table structure for table `proveedor`
 --
 
 CREATE TABLE IF NOT EXISTS `proveedor` (
-  `id_proveedor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del proveedor',
-  `rfc` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'rfc del proveedor',
-  `nombre` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre del proveedor',
-  `direccion` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'direccion del proveedor',
-  `telefono` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'telefono',
-  `e_mail` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'email del provedor',
-  `activo` tinyint(2) DEFAULT NULL COMMENT 'Indica si la cuenta esta activada o desactivada',
-  PRIMARY KEY (`id_proveedor`)
+  `id_proveedor` int(11) NOT NULL auto_increment COMMENT 'identificador del proveedor',
+  `rfc` varchar(20) collate utf8_unicode_ci NOT NULL COMMENT 'rfc del proveedor',
+  `nombre` varchar(30) collate utf8_unicode_ci NOT NULL COMMENT 'nombre del proveedor',
+  `direccion` varchar(100) collate utf8_unicode_ci default NULL COMMENT 'direccion del proveedor',
+  `telefono` varchar(20) collate utf8_unicode_ci default NULL COMMENT 'telefono',
+  `e_mail` varchar(60) collate utf8_unicode_ci default NULL COMMENT 'email del provedor',
+  `activo` tinyint(2) default NULL COMMENT 'Indica si la cuenta esta activada o desactivada',
+  PRIMARY KEY  (`id_proveedor`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=51 ;
 
 --
--- Volcar la base de datos para la tabla `proveedor`
+-- Dumping data for table `proveedor`
 --
 
 INSERT INTO `proveedor` (`id_proveedor`, `rfc`, `nombre`, `direccion`, `telefono`, `e_mail`, `activo`) VALUES
@@ -2169,23 +2163,23 @@ INSERT INTO `proveedor` (`id_proveedor`, `rfc`, `nombre`, `direccion`, `telefono
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `sucursal`
+-- Table structure for table `sucursal`
 --
 
 CREATE TABLE IF NOT EXISTS `sucursal` (
-  `id_sucursal` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identificador de cada sucursal',
-  `descripcion` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre o descripcion de sucursal',
-  `direccion` varchar(200) COLLATE utf8_unicode_ci NOT NULL COMMENT 'direccion de la sucursal',
-  `e_mail` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'La dirección de correo electrónico',
-  `rfc` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'El RFC de la sucursal',
-  `telefono` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'El telefono de la sucursal',
-  `token` varchar(512) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Token de seguridad para esta sucursal',
-  `letras_factura` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id_sucursal`)
+  `id_sucursal` int(11) NOT NULL auto_increment COMMENT 'Identificador de cada sucursal',
+  `descripcion` varchar(100) collate utf8_unicode_ci NOT NULL COMMENT 'nombre o descripcion de sucursal',
+  `direccion` varchar(200) collate utf8_unicode_ci NOT NULL COMMENT 'direccion de la sucursal',
+  `e_mail` varchar(200) collate utf8_unicode_ci default NULL COMMENT 'La dirección de correo electrónico',
+  `rfc` varchar(20) collate utf8_unicode_ci default NULL COMMENT 'El RFC de la sucursal',
+  `telefono` varchar(20) collate utf8_unicode_ci default NULL COMMENT 'El telefono de la sucursal',
+  `token` varchar(512) collate utf8_unicode_ci default NULL COMMENT 'Token de seguridad para esta sucursal',
+  `letras_factura` varchar(10) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id_sucursal`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=54 ;
 
 --
--- Volcar la base de datos para la tabla `sucursal`
+-- Dumping data for table `sucursal`
 --
 
 INSERT INTO `sucursal` (`id_sucursal`, `descripcion`, `direccion`, `e_mail`, `rfc`, `telefono`, `token`, `letras_factura`) VALUES
@@ -2244,24 +2238,24 @@ INSERT INTO `sucursal` (`id_sucursal`, `descripcion`, `direccion`, `e_mail`, `rf
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuario`
+-- Table structure for table `usuario`
 --
 
 CREATE TABLE IF NOT EXISTS `usuario` (
-  `id_usuario` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del usuario',
-  `nombre` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre del empleado',
-  `usuario` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `contrasena` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
+  `id_usuario` int(11) NOT NULL auto_increment COMMENT 'identificador del usuario',
+  `nombre` varchar(100) collate utf8_unicode_ci NOT NULL COMMENT 'nombre del empleado',
+  `usuario` varchar(50) collate utf8_unicode_ci NOT NULL,
+  `contrasena` varchar(128) collate utf8_unicode_ci NOT NULL,
   `id_sucursal` int(11) NOT NULL COMMENT 'Id de la sucursal a que pertenece',
   `activo` tinyint(1) NOT NULL COMMENT 'Guarda el estado de la cuenta del usuario',
-  `finger_token` varchar(1024) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Una cadena que sera comparada con el token que mande el scanner de huella digital',
-  `last_check` timestamp NULL DEFAULT NULL COMMENT 'Ultima vez que este usuario hizo una peticion al servidor',
-  PRIMARY KEY (`id_usuario`),
+  `finger_token` varchar(1024) collate utf8_unicode_ci default NULL COMMENT 'Una cadena que sera comparada con el token que mande el scanner de huella digital',
+  `last_check` timestamp NULL default NULL COMMENT 'Ultima vez que este usuario hizo una peticion al servidor',
+  PRIMARY KEY  (`id_usuario`),
   KEY `fk_usuario_1` (`id_sucursal`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=35 ;
 
 --
--- Volcar la base de datos para la tabla `usuario`
+-- Dumping data for table `usuario`
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre`, `usuario`, `contrasena`, `id_sucursal`, `activo`, `finger_token`, `last_check`) VALUES
@@ -2303,30 +2297,30 @@ INSERT INTO `usuario` (`id_usuario`, `nombre`, `usuario`, `contrasena`, `id_sucu
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `ventas`
+-- Table structure for table `ventas`
 --
 
 CREATE TABLE IF NOT EXISTS `ventas` (
-  `id_venta` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de venta',
+  `id_venta` int(11) NOT NULL auto_increment COMMENT 'id de venta',
   `id_cliente` int(11) NOT NULL COMMENT 'cliente al que se le vendio',
-  `tipo_venta` enum('credito','contado') COLLATE utf8_unicode_ci NOT NULL COMMENT 'tipo de venta, contado o credito',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de venta',
-  `subtotal` float DEFAULT NULL COMMENT 'subtotal de la venta, puede ser nulo',
-  `iva` float DEFAULT NULL COMMENT 'iva agregado por la venta, depende de cada sucursal',
-  `descuento` float NOT NULL DEFAULT '0' COMMENT 'descuento aplicado a esta venta',
-  `total` float NOT NULL DEFAULT '0' COMMENT 'total de esta venta',
+  `tipo_venta` enum('credito','contado') collate utf8_unicode_ci NOT NULL COMMENT 'tipo de venta, contado o credito',
+  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha de venta',
+  `subtotal` float default NULL COMMENT 'subtotal de la venta, puede ser nulo',
+  `iva` float default NULL COMMENT 'iva agregado por la venta, depende de cada sucursal',
+  `descuento` float NOT NULL default '0' COMMENT 'descuento aplicado a esta venta',
+  `total` float NOT NULL default '0' COMMENT 'total de esta venta',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal de la venta',
   `id_usuario` int(11) NOT NULL COMMENT 'empleado que lo vendio',
-  `pagado` float NOT NULL DEFAULT '0' COMMENT 'porcentaje pagado de esta venta',
-  `ip` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0.0.0.0' COMMENT 'ip de donde provino esta compra',
-  PRIMARY KEY (`id_venta`),
+  `pagado` float NOT NULL default '0' COMMENT 'porcentaje pagado de esta venta',
+  `ip` varchar(16) collate utf8_unicode_ci NOT NULL default '0.0.0.0' COMMENT 'ip de donde provino esta compra',
+  PRIMARY KEY  (`id_venta`),
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`id_sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=114 ;
 
 --
--- Volcar la base de datos para la tabla `ventas`
+-- Dumping data for table `ventas`
 --
 
 INSERT INTO `ventas` (`id_venta`, `id_cliente`, `tipo_venta`, `fecha`, `subtotal`, `iva`, `descuento`, `total`, `id_sucursal`, `id_usuario`, `pagado`, `ip`) VALUES
@@ -2447,7 +2441,7 @@ INSERT INTO `ventas` (`id_venta`, `id_cliente`, `tipo_venta`, `fecha`, `subtotal
 -- --------------------------------------------------------
 
 --
--- Estructura Stand-in para la vista `view_compras`
+-- Stand-in structure for view `view_compras`
 --
 CREATE TABLE IF NOT EXISTS `view_compras` (
 `id_compra` int(11)
@@ -2465,7 +2459,7 @@ CREATE TABLE IF NOT EXISTS `view_compras` (
 -- --------------------------------------------------------
 
 --
--- Estructura Stand-in para la vista `view_detalle_compra`
+-- Stand-in structure for view `view_detalle_compra`
 --
 CREATE TABLE IF NOT EXISTS `view_detalle_compra` (
 `id_compra` int(11)
@@ -2480,7 +2474,7 @@ CREATE TABLE IF NOT EXISTS `view_detalle_compra` (
 -- --------------------------------------------------------
 
 --
--- Estructura Stand-in para la vista `view_detalle_venta`
+-- Stand-in structure for view `view_detalle_venta`
 --
 CREATE TABLE IF NOT EXISTS `view_detalle_venta` (
 `id_venta` int(11)
@@ -2495,7 +2489,7 @@ CREATE TABLE IF NOT EXISTS `view_detalle_venta` (
 -- --------------------------------------------------------
 
 --
--- Estructura Stand-in para la vista `view_gastos`
+-- Stand-in structure for view `view_gastos`
 --
 CREATE TABLE IF NOT EXISTS `view_gastos` (
 `id_gasto` int(11)
@@ -2508,7 +2502,7 @@ CREATE TABLE IF NOT EXISTS `view_gastos` (
 -- --------------------------------------------------------
 
 --
--- Estructura Stand-in para la vista `view_ingresos`
+-- Stand-in structure for view `view_ingresos`
 --
 CREATE TABLE IF NOT EXISTS `view_ingresos` (
 `id_ingreso` int(11)
@@ -2521,7 +2515,7 @@ CREATE TABLE IF NOT EXISTS `view_ingresos` (
 -- --------------------------------------------------------
 
 --
--- Estructura Stand-in para la vista `view_ventas`
+-- Stand-in structure for view `view_ventas`
 --
 CREATE TABLE IF NOT EXISTS `view_ventas` (
 `id_venta` int(11)
@@ -2539,7 +2533,7 @@ CREATE TABLE IF NOT EXISTS `view_ventas` (
 -- --------------------------------------------------------
 
 --
--- Estructura para la vista `view_compras`
+-- Structure for view `view_compras`
 --
 DROP TABLE IF EXISTS `view_compras`;
 
@@ -2548,7 +2542,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Estructura para la vista `view_detalle_compra`
+-- Structure for view `view_detalle_compra`
 --
 DROP TABLE IF EXISTS `view_detalle_compra`;
 
@@ -2557,7 +2551,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Estructura para la vista `view_detalle_venta`
+-- Structure for view `view_detalle_venta`
 --
 DROP TABLE IF EXISTS `view_detalle_venta`;
 
@@ -2566,7 +2560,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Estructura para la vista `view_gastos`
+-- Structure for view `view_gastos`
 --
 DROP TABLE IF EXISTS `view_gastos`;
 
@@ -2575,7 +2569,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Estructura para la vista `view_ingresos`
+-- Structure for view `view_ingresos`
 --
 DROP TABLE IF EXISTS `view_ingresos`;
 
@@ -2584,18 +2578,18 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Estructura para la vista `view_ventas`
+-- Structure for view `view_ventas`
 --
 DROP TABLE IF EXISTS `view_ventas`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_ventas` AS select `v`.`id_venta` AS `id_venta`,`c`.`nombre` AS `cliente`,`v`.`id_cliente` AS `id_cliente`,`v`.`tipo_venta` AS `tipo_venta`,`v`.`fecha` AS `fecha`,`v`.`subtotal` AS `subtotal`,`v`.`iva` AS `iva`,`s`.`descripcion` AS `sucursal`,`v`.`id_sucursal` AS `id_sucursal`,`u`.`nombre` AS `usuario`,`v`.`id_usuario` AS `id_usuario` from (`ventas` `v` join ((`cliente` `c` join `sucursal` `s`) join `usuario` `u`) on(((`v`.`id_cliente` = `c`.`id_cliente`) and (`v`.`id_sucursal` = `s`.`id_sucursal`) and (`v`.`id_usuario` = `u`.`id_usuario`))));
 
 --
--- Filtros para las tablas descargadas (dump)
+-- Constraints for dumped tables
 --
 
 --
--- Filtros para la tabla `compras`
+-- Constraints for table `compras`
 --
 ALTER TABLE `compras`
   ADD CONSTRAINT `compras_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id_proveedor`) ON UPDATE CASCADE,
@@ -2603,7 +2597,7 @@ ALTER TABLE `compras`
   ADD CONSTRAINT `compras_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `cotizacion`
+-- Constraints for table `cotizacion`
 --
 ALTER TABLE `cotizacion`
   ADD CONSTRAINT `cotizacion_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON UPDATE CASCADE,
@@ -2611,86 +2605,87 @@ ALTER TABLE `cotizacion`
   ADD CONSTRAINT `cotizacion_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `detalle_compra`
+-- Constraints for table `detalle_compra`
 --
 ALTER TABLE `detalle_compra`
   ADD CONSTRAINT `detalle_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE,
   ADD CONSTRAINT `detalle_compra_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `detalle_corte`
+-- Constraints for table `detalle_corte`
 --
 ALTER TABLE `detalle_corte`
   ADD CONSTRAINT `corte_detalleCorte` FOREIGN KEY (`num_corte`) REFERENCES `corte` (`num_corte`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `detalle_cotizacion`
+-- Constraints for table `detalle_cotizacion`
 --
 ALTER TABLE `detalle_cotizacion`
   ADD CONSTRAINT `detalle_cotizacion_ibfk_1` FOREIGN KEY (`id_cotizacion`) REFERENCES `cotizacion` (`id_cotizacion`) ON UPDATE CASCADE,
   ADD CONSTRAINT `detalle_cotizacion_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `detalle_inventario`
+-- Constraints for table `detalle_inventario`
 --
 ALTER TABLE `detalle_inventario`
   ADD CONSTRAINT `detalle_inventario_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `detalle_inventario_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `factura_compra`
+-- Constraints for table `factura_compra`
 --
 ALTER TABLE `factura_compra`
   ADD CONSTRAINT `factura_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `factura_venta`
+-- Constraints for table `factura_venta`
 --
 ALTER TABLE `factura_venta`
   ADD CONSTRAINT `factura_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `grupos_usuarios`
+-- Constraints for table `grupos_usuarios`
 --
 ALTER TABLE `grupos_usuarios`
   ADD CONSTRAINT `grupos_usuarios_ibfk_1` FOREIGN KEY (`id_grupo`) REFERENCES `grupos` (`id_grupo`) ON UPDATE CASCADE,
   ADD CONSTRAINT `grupos_usuarios_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `impuesto`
+-- Constraints for table `impuesto`
 --
 ALTER TABLE `impuesto`
   ADD CONSTRAINT `impuesto_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `pagos_compra`
+-- Constraints for table `pagos_compra`
 --
 ALTER TABLE `pagos_compra`
   ADD CONSTRAINT `pagos_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `pagos_venta`
+-- Constraints for table `pagos_venta`
 --
 ALTER TABLE `pagos_venta`
   ADD CONSTRAINT `pagos_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `productos_proveedor`
+-- Constraints for table `productos_proveedor`
 --
 ALTER TABLE `productos_proveedor`
   ADD CONSTRAINT `productos_proveedor_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id_proveedor`) ON UPDATE CASCADE,
   ADD CONSTRAINT `productos_proveedor_ibfk_2` FOREIGN KEY (`id_inventario`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `usuario`
+-- Constraints for table `usuario`
 --
 ALTER TABLE `usuario`
   ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `ventas`
+-- Constraints for table `ventas`
 --
 ALTER TABLE `ventas`
   ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
+

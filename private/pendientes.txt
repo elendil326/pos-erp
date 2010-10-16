@@ -1,0 +1,77 @@
+Revision 425
+
+    --- Administrador ---
+    Todos:
+        Cuando estas dentro de un modulo, ninguna opcion del menu funciona, mas que Home y Salir.
+        Las tablas no llenan el espacio que tienen asignado.
+        Crear un modulo de devoluciones para aprovar estas.
+        Formatear los campos de dinero con punto flotante y $ inicial.
+        No hay modulo para editar detalles de sucursal. (Editar gerente, desactivar sucursal, token, etc)
+        El selector de rango de fechas esta en ingles.
+        Rendimiento del Personal esta incompleto.
+        Compras deudas y compras pagado incompleto.
+
+    Insertar sucursal:
+        Error al insertar sucursal.
+        Error no descriptivo al insertar nueva sucursal. Error en el mensaje, "&oacute;".
+
+    Clientes:
+        En el modulo de clientes, las cajas comunes aparecen.
+        Especificar de que es el ID que tiene en la primer columna.
+
+    Administracino de personal:        
+        El mensage de "Esta seguro que desea borrar esta fila?" en Administracino de personal le falta el signo de interrogacion.
+        El boton de modificar en Administracion de personal no funciona.
+        El forumlario de Agregar personal no tiene subtitulos, agregar personal, y ver personal.. la alerta de que hiciste algo mal en el formulario no dice nada sobre el error.
+
+
+    --- Punto de Venta ---
+    General:
+        Salir no funciona.
+
+    Efectivo:
+        El ingreso de fechas esta en ingles, y la fecha inicial siempre es 1/1/1980
+        El error al ingresar un gasto erroneo es muy poco descriptivo
+        Crear un visor de Gastos e ingresos, donde solo pueda ver los gastos e ingresos de esta sucursal, para saber si ya agregue algo antes, y no hacerlo de nuevo.
+        Tal vez imprimir una lista de gastos e ingresos.
+        Chrome/Linux muestran el boton de Aceptar con el borde cuadrado, deberia ser redondo.
+        El mensaje "Debe llenar el campo de Concepto correctamente, tal vez dejaste espacios al inicio" aparece como una alerta normal y no es muy descriptivo. Sucede al insertar espacios o numeros como concepto.
+
+    Usuarios:
+        El boton de Modificar/Eliminar usuario deberia desaparecer cuando no esta seleccionado ningun cliente.
+        Al modificar datos de usuario sale una alerta normal que dice "Los passwords deben ser iguales" es mejor no habilitar el boton de aceptar hasta que los datos sean correctos.
+        Modificar datos de usuario no cambio el password, y no notifico de error alguno.
+        El formulario de agregar usuario, hay campos que no caben.
+
+    Inventario:
+        El boton de agregar a la venta actual, estar bien que no apareciera hasta que se haga alguna seleccion.
+        La busqueda parece no funcionar, solo reacomoda ... 
+        Descripcion de la sucursal muestra un espacio en sin llenar en la parte de arriba. Aparte, detalles de sucursal.. si debe ir en inventario ???
+
+    Proveedores:
+        El fondo de el carrusel es blanco.
+        Falta mapa aqui.
+
+    Mostrador:
+        Linux/Chrome El boton de agregar producto muestra el contorno cuadrado.
+        Al agregar un producto que no existe en esta sucursal, pero si en otra... se debe mostrar el nombre de la sucursal y su direccion, no solo la direccion, ademas se debe poner un boton para imprimir esa informacion.
+        Es probable que sea mejor mostra los  hasta arriba... alado de los detalles de cliente cuando hay cliente.
+        Cotizar esta incompleto.
+        Al escoger otro tipo de busqueda por ejemplo RFC, y cerrar la ventana, al volver a buscar.. bueno, ver resultados.
+        Desglosar descuento, no solo mostrar el porcentage.
+        Al hacer click en vender en cualquiera de las modalidades, eliminar los botones de regresar y cancelar.
+        **Por alguna razon, se inserto la venta sin insertar los productos... si algo sale mal al final entonces eliminar la venta.**
+        Click en Agregar producto no fuciona
+
+    Clientes:
+        El boton de facturar no debe ser rojo, y debe tener mas aspecto de boton...
+        Si una venta no tiene productos, al facturar no mostrar el panel...
+        Editar estilo de facturar.
+        no mostrar Activo en detalles de cliente al facturar.
+        Quitar la X de Cerrar en Abonos.
+        El pointer del mouse no debe ser el de insertar texto al pasar por los campos de la tabla.
+        Cambiar los textos que estan en todo mayusculas.
+        "console.log("--------------- REGRESAR DESDE FACURAS");" en ApplicationFacturaVentas.prototype.facturarPanel imprime independientemente de estar en debug o no.
+
+
+
