@@ -52,6 +52,8 @@ ApplicationProveedores.prototype._init = function()
 	
 	//panel principal
 	this.mainCard = this.proveedoresWelcome;
+
+	//this.comprasObj = new ApplicationComprasProveedor();
 	
 };
 
@@ -139,7 +141,7 @@ ApplicationProveedores.prototype._initToolBar = function ()
 
 ApplicationProveedores.prototype.provedores = [];
 
-ApplicationProveedores.prototype.comprasObj = new ApplicationComprasProveedor();
+ApplicationProveedores.prototype.comprasObj = null;
 
 ApplicationProveedores.prototype.proveedorSelected=null;
 

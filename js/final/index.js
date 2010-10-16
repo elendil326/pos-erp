@@ -689,7 +689,7 @@ Ext.setup({
 		}
 
 
-
+		
 		POS.AJAXandDECODE({ action : "2003" }, 
 		function (response){
 			if(response.sucess){
