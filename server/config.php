@@ -19,17 +19,17 @@
 	/**
 	* Usuario de la base de datos.
 	*/
-	define('DB_USER', 'root');
+	define('DB_USER', 'pos');
 
 	/**
 	* Contraseña de la base de datos.
 	*/
-	define('DB_PASSWORD', '123');
+	define('DB_PASSWORD', 'pospos');
 
 	/**
 	* Nombre de la base de datos.
 	*/
-	define('DB_NAME', 'pos_new2');
+	define('DB_NAME', 'pos');
 
 	/**
 	* Nombre del driver para conectar al DBMS.
