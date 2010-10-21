@@ -35,12 +35,23 @@ ApplicationProveedores.prototype.dockedItems = null;
 ApplicationProveedores.prototype.dockedItemsGuardar = null;
 
 
+ApplicationProveedores.prototype.provedores = [];
+
+ApplicationProveedores.prototype.comprasObj = null;
+
+ApplicationProveedores.prototype.proveedorSelected=null;
+
+ApplicationProveedores.prototype.proveedorSelectedHtml="";
+
 
 
 
 ApplicationProveedores.prototype._init = function()
 {
-
+	
+	if(DEBUG){
+		console.log("ApplicationProveedores: en init ")
+	}
 	//nombre de la aplicacion
 	this.appName = "Proveedores";
 	
@@ -68,10 +79,10 @@ ApplicationProveedores.prototype._initToolBar = function ()
 		Buscar
 	*/
 	var buscar = [{
-		xtype: 'textfield',
-		id:'ApplicationProveedores_searchField',
-		inputCls: 'caja-buscar',
-		listeners:
+			xtype: 'textfield',
+			id:'ApplicationProveedores_searchField',
+			inputCls: 'caja-buscar',
+			listeners:
 				{
 					'render': function( ){
 						//medio feo, pero bueno
@@ -79,9 +90,9 @@ ApplicationProveedores.prototype._initToolBar = function ()
 						 "ApplicationProveedores.currentInstance.mosaic.doSearch( this.value )");
 					}
 				}
-		}];
+			}];
 
-		var agregar = [{
+	var agregar = [{
 			xtype: 'button',
 			text: 'Nuevo Proveedor',
 			ui: 'action',
@@ -91,7 +102,7 @@ ApplicationProveedores.prototype._initToolBar = function ()
 				}
 			}];		
 
-        this.dockedItems = [ new Ext.Toolbar({
+    this.dockedItems = [ new Ext.Toolbar({
             ui: 'dark',
             dock: 'bottom',
             items: buscar.concat({xtype:'spacer'}).concat(agregar)
@@ -139,13 +150,7 @@ ApplicationProveedores.prototype._initToolBar = function ()
 
 
 
-ApplicationProveedores.prototype.provedores = [];
 
-ApplicationProveedores.prototype.comprasObj = null;
-
-ApplicationProveedores.prototype.proveedorSelected=null;
-
-ApplicationProveedores.prototype.proveedorSelectedHtml="";
 
 
 ApplicationProveedores.prototype.renderMosaico = function ()
@@ -188,7 +193,7 @@ ApplicationProveedores.prototype.getProvedores = function ()
 	}
 	
 	POS.AJAXandDECODE({
-		action: '1105'
+			action: '1105'
 		},
 		function (datos){
 			if(datos.success == true){

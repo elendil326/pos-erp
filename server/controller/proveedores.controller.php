@@ -113,8 +113,10 @@ function show_provider($id_proveedor) {
     }
 }
 
+
 function list_providers() {
     $proveedores = ProveedorDAO::getAll();
+
 	if( count($proveedores) > 0 ){
 		$ans = '';
 		foreach ($proveedores as $proveedor) :
@@ -205,10 +207,7 @@ switch ($args['action']) {
 	break;
 	
 	case '1105':
-        unset($args);
-
-        $ans = list_providers();
-        echo $ans;
+        echo list_providers();
 	break;
 }// end switch
 ?>
