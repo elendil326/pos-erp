@@ -401,5 +401,47 @@ class VentasDAO extends VentasDAOBase
                 return array("total"=>$totalrs->fields[0], "data"=>$allData);
         
         }
+        
+        
+        //Funcion para obtener lo que se debe a cada sucursal
+        static function getDeudaPorSucursal(){
+        
+        	global $logger;
+        
+        	
+                $params=array();
+                $query="SELECT v.id_venta, (
+                                v.subtotal + v.iva
+                                ) AS  'Total', IF(SUM( pv.monto )>0,SUM(pv.monto),0) AS  'Pagado',
+                                if((v.subtotal + v.iva - SUM( pv.monto ))>0,(v.subtotal + v.iva - SUM( pv.monto )),(v.subtotal + v.iva)
+                                ) AS  'Debe', c.nombre AS  'Nombre', DATE( v.fecha ) AS  'Fecha'
+                                FROM  `pagos_venta` pv
+                                RIGHT JOIN ventas v ON ( pv.id_venta = v.id_venta ) 
+                                NATURAL JOIN cliente c
+                                GROUP BY v.id_venta,c.id_cliente,v.fecha ,v.tipo_venta
+                                having v.tipo_venta =1 "; 
+                
+                
+                global $conn;
+                
+                try{
+                        $rs = $conn->Execute($query);
+                }catch(Exception $e){
+                
+                        $logger->log($e->getMessage(), PEAR_LOG_ERR);
+                        
+                        return array();
+                
+                }
+                
+                $allData = array();
+                while( $row = $rs->FetchRow() )
+                {
+                        array_push($allData, array("id"=>$row[0], "cell"=>$row));
+                }
+
+                return $allData;
+        
+        }
 
 }

@@ -64,6 +64,81 @@ Utils.borrar = function(id, action, row){
 			
 		
 	}
+	
+
+/**
+*	Funcion para editar datos del grid
+*/
+Utils.editar = function(id, action, row){
+
+	console.log(id+" "+action+" "+row);
+	var sel = "#row-tabla-caffeina-"+row;
+	var selButon = "#editar-tabla-caffeina-"+row;
+	
+	
+	//escondemos el boton de editar
+	$(selButon).hide();
+	
+	var tds = $(sel).children(); // contiene las columnas de la fila especificada en el selector
+	
+	var i = 0;
+	tds.each( function(){
+	
+		if(i < 4 && i != 0)
+			$(this).html("<input type='text' value='"+$(this).html()+"' />");
+			
+		if(i == 5) $(this).append("<button  id='boton-ok-editar-row-"+row+"' >OK</button><button id='boton-cancel-editar-row-"+row+"'>Cancelar</button>");
+		i++;
+	});
+	
+	var selOkButton = "#boton-ok-editar-row-"+row;
+	var selCancelButton = "#boton-cancel-editar-row-"+row;
+	
+	//Evento para el boton de cancelar edicion
+	$(selCancelButton).click(function(){
+	
+		var tds_  = $(this).parent().parent().children();
+		
+		
+		console.log(tds_);
+		
+		var j = 0;
+		tds_.each(function(){
+		
+			if(j < 4 && j != 0)
+			{
+				$(this).html($(this).children()[0].value);
+				//console.log($(this).children()[0].value);
+			}
+			
+			if(j == 5) {
+				$(this).children()[0].style.display = "block";
+				$(this).html($(this).children()[0]);
+				//console.log("cell[5] children: ");
+				//console.log($(this).children()[0]);
+			}
+			j++;
+			
+		});
+		
+		
+	
+	});
+	
+	//Evento para el boton de Enviar edicion
+	$(selOkButton).click(function(){
+		
+		/*
+		Utils.request({
+			url: "../proxy.php",
+			
+		
+		});*/
+	
+	});
+
+}
+
 /**
 *	Funcion para hacer un grid sacando datos con ajax
 *
@@ -137,7 +212,7 @@ Utils.grid = function(config){
 						html += "<td>"+msg.data[i][k]+"</td>";
 					}
 					
-					html += "<td><button id='borrar-tabla-caffeina-"+i+"' onclick='Utils.borrar("+msg.data[i][0]+","+config.deleteAction+", "+i+")'><img src='../media/admin/cross.png'  /></button></td><td><button onclick='edit("+msg.data[i][0]+")' ><img src='../media/admin/icon_date_picker_input.gif' /></button></td></tr>";
+					html += "<td><button id='borrar-tabla-caffeina-"+i+"' onclick='Utils.borrar("+msg.data[i][0]+","+config.deleteAction+", "+i+")'><img src='../media/admin/cross.png'  /></button></td><td><button id='editar-tabla-caffeina-"+i+"' onclick='Utils.editar("+msg.data[i][0]+",1000, "+i+")' ><img src='../media/admin/icon_date_picker_input.gif' /></button></td></tr>";
 					html += "</tr>";
 				}
 				
@@ -313,7 +388,7 @@ Utils.grid = function(config){
 						html += "<td>"+msg.data[i][k]+"</td>";
 					}
 					
-					html += "<td><button id='borrar-tabla-caffeina-"+i+"' onclick='Utils.borrar("+msg.data[i][0]+","+config.deleteAction+", "+i+")'><img src='../media/admin/cross.png' /></button></td><td><button onclick='edit("+msg.data[i][0]+")' ><img src='../media/admin/icon_date_picker_input.gif' /></button></td></tr>";
+					html += "<td><button id='borrar-tabla-caffeina-"+i+"' onclick='Utils.borrar("+msg.data[i][0]+","+config.deleteAction+", "+i+")'><img src='../media/admin/cross.png' /></button></td><td><button id='editar-tabla-caffeina-"+i+"' onclick='Utils.editar("+msg.data[i][0]+",1000, "+i+")' ><img src='../media/admin/icon_date_picker_input.gif' /></button></td></tr>";
 					html += "</tr>";
 				}
 				
