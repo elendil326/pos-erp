@@ -1,88 +1,219 @@
+/** 
+ * @fileoverview Este archivo contiene el modulo Mostrador 
+ * del punto de venta. Es accesible por todos los cajeros,
+ * y gerentes del sistema.
+ *
+ * @author 
+ * @version 0.1 
+ */
+
+
+
+
+/**
+ * Construir un nuevo objeto de tipo ApplicationProveedores.
+ * @class Esta clase se encarga de la creacion de interfacez
+ * que intervinen en la manipulación de proveedores. 
+ * @constructor
+ * @throws MemoryException Si se agota la memoria
+ * @return Un objeto del tipo ApplicationProveedores
+ */
 ApplicationProveedores= function ()
 {
 	if(DEBUG){
 		console.log("ApplicationProveedores: construyendo");
 	}
 	
-	ApplicationProveedores.currentInstance = this;	
-
-	this._init();
-
-	return this;
-	
-};
-
-ApplicationProveedores.prototype.mainCard = null;
-
-ApplicationProveedores.prototype.appName = null;
-
-ApplicationProveedores.prototype.leftMenuItems = null;
-
-ApplicationProveedores.prototype.ayuda = null;
-
-ApplicationProveedores.prototype.ProveedoresListStore = null;
-
-ApplicationProveedores.prototype.providers = null;
-
-ApplicationProveedores.prototype.actualizaProveedor=null;
-
-ApplicationProveedores.prototype.updateProviderForm= null;
-
-ApplicationProveedores.prototype.record = null;
-
-ApplicationProveedores.prototype.dockedItems = null;
-
-ApplicationProveedores.prototype.dockedItemsGuardar = null;
-
-
-ApplicationProveedores.prototype.provedores = [];
-
-ApplicationProveedores.prototype.comprasObj = null;
-
-ApplicationProveedores.prototype.proveedorSelected=null;
-
-ApplicationProveedores.prototype.proveedorSelectedHtml="";
-
-
-
-
-ApplicationProveedores.prototype._init = function()
-{
-	
-	if(DEBUG){
-		console.log("ApplicationProveedores: en init ")
-	}
 	//nombre de la aplicacion
 	this.appName = "Proveedores";
 	
 	//ayuda sobre esta applicacion
 	this.ayuda = "Ayuda sobre este modulo de prueba <br>, html es valido <br> :D";
 
+    //submenues en el panel de la izquierda
+    this.leftMenuItems = null;
+
+    //panel principal
+	this.mainCard = this.proveedoresWelcome;
+
 	//submenues en el panel de la izquierda
 	this._initToolBar();
-	
-	//panel principal
-	this.mainCard = this.proveedoresWelcome;
+		
 
 	//this.comprasObj = new ApplicationComprasProveedor();
 	
+	//variable auxiliar para referirse a esta instancia del objeto
+    //solo funciona al instanciarse una vez, si el constructor
+    //se vuelve a ejecutar esta variable contendra el ultimo 
+    //objeto construido	
+	ApplicationProveedores.currentInstance = this;	
+
+	return this;
+	
 };
 
+/**
+ * Contiene el panel principal
+ * @type Ext.Panel
+ */
+ApplicationProveedores.prototype.mainCard = null;
+
+/**
+ * Nombre que se muestra en el menu principal.
+ * @type String
+ */
+ApplicationProveedores.prototype.appName = null;
+
+/**
+ * Items que que colocaran en el menu principal al cargar este modulo.
+ * De no requerirse ninguno, hacer igual a null
+ * @type Ext.Panel
+ */
+ApplicationProveedores.prototype.leftMenuItems = null;
+
+/**
+ * Texto de ayuda formateado en HTML para este modulo.
+ * @type String
+ */
+ApplicationProveedores.prototype.ayuda = null;
+
+/**
+ * Items que estan anclados a este panel.
+ * @type 
+ */
+ApplicationProveedores.prototype.dockedItems = null;
 
 
 
 
 
+
+//ApplicationProveedores.prototype.ProveedoresListStore = null;
+
+//ApplicationProveedores.prototype.providers = null;
+
+//ApplicationProveedores.prototype.actualizaProveedor=null;
+
+//ApplicationProveedores.prototype.updateProviderForm= null;
+
+//ApplicationProveedores.prototype.record = null;
+
+//ApplicationProveedores.prototype.dockedItemsGuardar = null;
+
+//ApplicationProveedores.prototype.proveedorSelectedHtml="";
+
+
+
+
+
+/**
+ * Crea un Ext.Panel
+ * @return Ext.Panel
+ * @type void
+ */
+ApplicationProveedores.prototype.proveedoresWelcome = new Ext.Panel({
+
+		layout: 'card',
+		html: '<div style="width:100%; height:100%" id="proveedores_mosaico"></div>',
+		//scroll: 'vertical',
+		listeners : {
+			'afterrender' : function (){
+				ApplicationProveedores.currentInstance.getProvedores();
+			}
+			
+		}
+});
+
+
+/**
+ * Crea un Ext.Panel que contiene un formulario para agregar un nuevo proveedor.
+ * @return Ext.Panel
+ * @type void
+ */
+ApplicationProveedores.prototype.agregarProveedor =  new Ext.form.FormPanel({
+		scroll: 'vertical',
+		id:'formAgregarProveedor',
+		baseCls :'formAgregarProveedor',
+		items: [{
+			
+			xtype: 'fieldset',
+			title: 'Proveedor Info',
+			instructions: 'Los campos que contienen * son obligatorios',
+			items: [
+					nombreProveedor = new Ext.form.TextField({
+						id: 'nombreProveedor',
+						label: '*Nombre'
+					})
+			,
+					rfcProveedor = new Ext.form.TextField({
+						id: 'rfcProveedor',
+						label: '*RFC'
+					})
+			,
+					direccionProveedor = new Ext.form.TextField({
+						id: 'direccionProveedor',
+						label: '*Direccion'
+					})
+			,
+					emailProveedor = new Ext.form.TextField({
+						id: 'emailProveedor',
+						label: 'E-mail'
+					})
+			,
+					telefonoProveedor = new Ext.form.TextField({
+						id: 'telefonoProveedor',
+						label: 'Telefono'
+					})
+			
+			
+			]//fin items form
+			
+		},
+		{
+				xtype: 'button',
+				text: 'Guardar',
+				ui: 'action',
+				maxWidth: 150,
+				handler: function(){
+					ApplicationProveedores.currentInstance.guardarProveedor();
+				}
+			}
+			
+		]//,//fin items formpanel
+});//fin agregar proveedor
+
+
+
+
+/**
+ * Guarda Objetos con los datos de cada proveedor.
+ * @type Array
+ */
+ApplicationProveedores.prototype.provedores = [];
+
+ApplicationProveedores.prototype.comprasObj = null;
+
+ApplicationProveedores.prototype.proveedorSelected=null;
+
+
+
+
+
+/**
+ * Crea un Ext.Toolbar en cual se guarda en {@link ApplicationProveedores#dockedItems}
+ * y despues se los agrega a {@link ApplicationVender#mainCard}
+ * @return void
+ */
 ApplicationProveedores.prototype._initToolBar = function ()
 {
 	/*	
-		Buscar
-	*/
+	 *	DOCKED ITEMS PARA EL PANEL "proveedoresWelcome"
+	 */
 	var buscar = [{
-			xtype: 'textfield',
-			id:'ApplicationProveedores_searchField',
-			inputCls: 'caja-buscar',
-			listeners:
+		xtype: 'textfield',
+		id:'ApplicationProveedores_searchField',
+		inputCls: 'caja-buscar',
+		listeners:
 				{
 					'render': function( ){
 						//medio feo, pero bueno
@@ -90,9 +221,9 @@ ApplicationProveedores.prototype._initToolBar = function ()
 						 "ApplicationProveedores.currentInstance.mosaic.doSearch( this.value )");
 					}
 				}
-			}];
+		}];
 
-	var agregar = [{
+		var agregar = [{
 			xtype: 'button',
 			text: 'Nuevo Proveedor',
 			ui: 'action',
@@ -102,7 +233,7 @@ ApplicationProveedores.prototype._initToolBar = function ()
 				}
 			}];		
 
-    this.dockedItems = [ new Ext.Toolbar({
+        this.dockedItems = [ new Ext.Toolbar({
             ui: 'dark',
             dock: 'bottom',
             items: buscar.concat({xtype:'spacer'}).concat(agregar)
@@ -114,20 +245,9 @@ ApplicationProveedores.prototype._initToolBar = function ()
 	
 
 	/*
-		DOCKED ITEMS PARA AGREGAR PROVEEDOR
-	*/
-	
-	var guardar= [{
-		xtype: 'button',
-		id: 'guardarProveedor',
-		text: 'Guardar Proveedor',
-		ui: 'action',
-		handler: function(event,button) {
-				ApplicationProveedores.currentInstance.guardarProveedor();
-				}//fin handler	
-	}];//fin boton guardar
-	
-	
+	 *	DOCKED ITEMS PARA EL PANEL "agregarProveedor"
+	 */
+		
 	var regresar =[{
 		xtype: 'button',
 		id: 'cancelarGuardarProveedor',
@@ -135,24 +255,26 @@ ApplicationProveedores.prototype._initToolBar = function ()
 		ui: 'back',
 		handler: function(event,button) {
 				sink.Main.ui.setCard( ApplicationProveedores.currentInstance.proveedoresWelcome, { type: 'slide', direction: 'right'} );		
-				}//fin handler cancelar cliente
+	    }//fin handler cancelar cliente
 				
 	}];//fin boton cancelar
 
-	this.dockedItems = [ new Ext.Toolbar ({ 
-		ui: 'dark',
-		dock: 'bottom',
-		items: regresar.concat({xtype: 'spacer'})//.concat(guardar)
-	})];
 	
-	this.agregarProveedor.addDocked( this.dockedItems );
+	this.agregarProveedor.addDocked(  
+	    new Ext.Toolbar ({ 
+		    ui: 'dark',
+		    dock: 'bottom',
+		    items: regresar.concat({xtype: 'spacer'})
+	    }) 
+	);//addDocked
 };
 
 
-
-
-
-
+/**
+ * Crea un objeto de tipo Mosaico y lo guarda en {@link ApplicationProveedores#mosaic}.
+ * @see Mosaico
+ * @return void
+ */
 ApplicationProveedores.prototype.renderMosaico = function ()
 {
 
@@ -183,7 +305,15 @@ ApplicationProveedores.prototype.renderMosaico = function ()
 	
 };
 
-
+/**
+ * Obtiene una lista con los datos de todos los proveedores y la almacena en
+ * {@link ApplicationProveedores#provedores}, posteriormente manda llamar al
+ * metodo {@link ApplicationProveedores#renderMosaico } que se encarga de crear
+ * un arreglo de objetos con los datos de los proveedores que sera usado para
+ * crear el mosaico.
+ * @see ApplicationProveedores#renderMosaico
+ * @return void
+ */
 ApplicationProveedores.prototype.getProvedores = function ()
 
 {
@@ -193,15 +323,17 @@ ApplicationProveedores.prototype.getProvedores = function ()
 	}
 	
 	POS.AJAXandDECODE({
-			action: '1105'
+		action: '1105'
 		},
 		function (datos){
 			if(datos.success == true){
 				if(DEBUG){
 					console.log("Entro success de getProveedores: ", datos);					
 				}
-
+                
+                //carga los datos de los proveedores
 				ApplicationProveedores.currentInstance.provedores = datos.datos;
+				//manda construir el mosaico que contiene los proveedores
 				ApplicationProveedores.currentInstance.renderMosaico();
 			}
 		},
@@ -213,73 +345,33 @@ ApplicationProveedores.prototype.getProvedores = function ()
 };
 
 
-
-
-ApplicationProveedores.prototype.proveedoresWelcome = new Ext.Panel({
-		layout: 'card',
-		html: '<div style="width:100%; height:100%" id="proveedores_mosaico"></div>',
-		//scroll: 'vertical',
-		listeners : {
-			'afterrender' : function (){
-				ApplicationProveedores.currentInstance.getProvedores();
-			}
-			
-		}
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-ApplicationProveedores.prototype.doVerProvedor = function ( provedor )
+/**
+ *Establece el proveedor actual y lo guarda en {@link ApplicationProveedores#proveedorSelected}
+ *
+ *@param (Object)
+ *@see ApplicationProveedores#listarCompras
+ *@see ApplicationProveedores#listarComprasCredito
+ *@return void
+ */
+ApplicationProveedores.prototype.doVerProvedor = function (provedor)
 {
 	
 	if(DEBUG){
-		console.log("ApplicationProveedore: viendo proveedor " ,  provedor );
+		console.log("ApplicationProveedore: viendo proveedor " ,  provedor);
 	}
 
-	ApplicationProveedores.currentInstance.proveedorSelected =provedor;
+    //Establece el proveedor acual
+	ApplicationProveedores.currentInstance.proveedorSelected = provedor;
 	
-	ApplicationProveedores.currentInstance.listarCompras( );
+	//crea el carrusel con los datos de ese proveedor
+	var newPanel = this.createPanelForProvedor(provedor);
+	
+	ApplicationProveedores.currentInstance.listarCompras();
 	
 	ApplicationProveedores.currentInstance.listarComprasCredito();
 	
-	var newPanel = this.createPanelForProvedor( provedor );
 	
 	sink.Main.ui.setCard( newPanel, 'slide' );
-	
-};
-
-
-
-
-
-
-
-ApplicationProveedores.prototype.renderProvedorDetalles = function ( provedor )
-{
-
-	var html = "";
-	
-	html += "<div class='nombre'>" 		+provedor.nombre 		+ "</div>";
-	html += "<div class='direccion'>" 	+provedor.direccion 	+ "</div>";
-	html += "<div class='mail'>" 		+provedor.e_mail		+ "</div>";
-	html += "<div class='id_provedor'>" +provedor.id_proveedor	+ "</div>";
-	html += "<div class='rfc'>"  		+provedor.rfc			+ "</div>";
-	html += "<div class='telefono'>"  	+provedor.telefono		+ "</div>";
-
-	return "<div class='ApplicationProveedores-Detalles'>"+html+"</div>";
 	
 };
 
@@ -377,176 +469,223 @@ ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 
 
 
-
 /*------------------------------------------------------------------
 			COMPRAS HECHAS A UN PROVEEDOR
 ------------------------------------------------------------------------*/
 
-ApplicationProveedores.prototype.listarCompras = function (  ){
+ApplicationProveedores.prototype.listarCompras = function (){
 	
+	//guarda en record_proveedor los datos del proveedor actual
 	var record_proveedor = ApplicationProveedores.currentInstance.proveedorSelected;
 
+    //registra el modelo para compras proveedor
 	Ext.regModel('comprasProvStore', {
     	fields: ['nombre', 'rfc']
 	});
 	
+	//indica el modelo a seguir para el store de compras proveedor
 	var comprasProveedor = new Ext.data.Store({
-    	model: 'comprasProvStore'
- 
+    	model: 'comprasProvStore' 
 	});	
 	
 	
 	//cabecera de datos del cliente seleccionado
 	
-	var proveedorHtml = ""; 	var html = "";
+	var proveedorHtml = ""; 	
+	var html = "";
 
-	
-		POS.AJAXandDECODE({
-			action: '1206',
-			id_proveedor: record_proveedor.id_proveedor 
-			},
-			function (datos){//mientras responda AJAXDECODE LISTAR VENTAS CLIENTE
-				if(datos.success === true){
-					comprasProveedor.loadData(datos.datos);
+    //obtiene las compras hechas a un proveedor en especifico en esa sucursal
+	POS.AJAXandDECODE({
+    	action: '1206',
+		id_proveedor: record_proveedor.id_proveedor 
+    	},
+		function (datos){
+		    //mientras responda AJAXDECODE LISTAR VENTAS CLIENTE
+    		if(datos.success === true)
+    		{
+                
+                //carga los datos al store
+			    comprasProveedor.loadData(datos.datos);
 					
+				html += "<div class='ApplicationClientes-Item'>";
+			    html += "   <div class='trash' ></div>";
+			    html += "   <div class='id'>No. Compra</div>";
+				html += "   <div class='tipo'>Tipo Venta</div>";
+				html += "   <div class='fecha'>Fecha</div>";
+				html += "   <div class='sucursal'>Sucursal</div>";
+				html += "   <div class='vendedor'>Realizo compra</div>";
+				html += "   <div class='subtotal'>Subtotal</div>";
+				html += "   <div class='iva'>IVA</div>";
+				html += "   <div class='total'>TOTAL</div>";
+				html += "</div>";
 					
-					
-					html += "<div class='ApplicationClientes-Item' >"
-							+ "<div class='trash' ></div>"
-							+ "<div class='id'>No. Compra</div>" 
-							+ "<div class='tipo'>Tipo Venta</div>" 
-							+ "<div class='fecha'>Fecha</div>" 
-							+ "<div class='sucursal'>Sucursal</div>"
-							+ "<div class='vendedor'>Realizo compra</div>"
-							+ "<div class='subtotal'>Subtotal</div>"
-							+ "<div class='iva'>IVA</div>"
-							+ "<div class='total'>TOTAL</div>"
-							+ "</div>";
-					
-					//renderear el html
-					for( a = 0; a < comprasProveedor.getCount(); a++ ){
-						
-						html += "<div class='ApplicationClientes-Item' >" 
-						+ "<div class='trash' onclick='ApplicationProveedores.currentInstance.verCompra(" +comprasProveedor.data.items[a].data.id_compra+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>"	
-							+ "<div class='id'>" + comprasProveedor.data.items[a].data.id_compra +"</div>" 
-							+ "<div class='tipo'>" + comprasProveedor.data.items[a].data.tipo_compra+"</div>" 
-							+ "<div class='fecha'>"+ comprasProveedor.data.items[a].data.fecha +"</div>" 
-							+ "<div class='sucursal'>"+ comprasProveedor.data.items[a].data.descripcion +"</div>"
-							+ "<div class='vendedor'>"+ comprasProveedor.data.items[a].data.nombre +"</div>"
-							+ "<div class='subtotal'>$"+ comprasProveedor.data.items[a].data.subtotal +"</div>"
-							+ "<div class='iva'>$"+ comprasProveedor.data.items[a].data.iva +"</div>"
-							+ "<div class='total'>$"+ comprasProveedor.data.items[a].data.total +"</div>"
-							+ "</div>";
-					}//fin for
-					
-					
-					//imprimir el html
-					proveedorHtml += html;
+				//renderear el html
+
+				for( a = 0; a < comprasProveedor.getCount(); a++ )
+				{
+				    
+					html += "<div class='ApplicationClientes-Item' >";
+					html += "   <div class='trash' onclick='ApplicationProveedores.currentInstance.verCompra(" + comprasProveedor.data.items[a].data.id_compra +  ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>";
+				    html += "   <div class='id'>" + comprasProveedor.data.items[a].data.id_compra +"</div>";
+				    html += "   <div class='tipo'>" + comprasProveedor.data.items[a].data.tipo_compra+"</div>";
+					html += "   <div class='fecha'>"+ comprasProveedor.data.items[a].data.fecha +"</div>";
+					html += "   <div class='sucursal'>"+ comprasProveedor.data.items[a].data.descripcion +"</div>";
+					html += "   <div class='vendedor'>"+ comprasProveedor.data.items[a].data.nombre +"</div>";
+					html += "   <div class='subtotal'>$"+ comprasProveedor.data.items[a].data.subtotal +"</div>";
+					html += "   <div class='iva'>$"+ comprasProveedor.data.items[a].data.iva +"</div>";
+					html += "   <div class='total'>$"+ comprasProveedor.data.items[a].data.total +"</div>";
+					html += "</div>";
+				}//fin for
+										
+				//imprimir el html
+				proveedorHtml += html;
 					
 					//console.log(comprasProveedor.data.items);
-				}
-				if(datos.success == false){
-							
-					proveedorHtml += "<div class='ApplicationClientes-itemsBox' id='no_ComprasProv' ><div class='no-data'>"+datos.reason+"</div></div>"
-
-				}
-				
-				Ext.get("comprasProveedorSucursal").update(proveedorHtml);
-				
-			},
-			function (){//no responde AJAXDECODE DE VENTAS CLIENTE
-				POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS   ERROR EN LA CONEXION :(");      
+			}//if
+			
+			if(datos.success == false)
+			{							
+			    proveedorHtml += "<div class='ApplicationClientes-itemsBox' id='no_ComprasProv' ><div class='no-data'>"+datos.reason+"</div></div>"
 			}
-		);//AJAXandDECODE LISTAR VENTAS CLIENTE
+				
+			Ext.get("comprasProveedorSucursal").update(proveedorHtml);
+				
+		},
+		function ()
+		{
+		    //no responde AJAXDECODE DE VENTAS CLIENTE
+			POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS   ERROR EN LA CONEXION :(");      
+		}
+	);//AJAXandDECODE LISTAR VENTAS CLIENTE
 			
 	
-}
+};
+
 /*-----------------------------------------------------------------
 	COMPRAS A CREDITO HECHAS A UN PROVEEDOR
 -------------------------------------------------------------------*/
-ApplicationProveedores.prototype.listarComprasCredito = function (  ){
-	 
+ApplicationProveedores.prototype.listarComprasCredito = function (){
+	
+	//guarda en record_proveedor los datos del proveedor actual 
 	var record_proveedor = ApplicationProveedores.currentInstance.proveedorSelected;
 	
+	//registra el modelo para compras proveedor a credito
 	Ext.regModel('comprasCreditoStore', {
     	fields: ['nombre', 'rfc']
 	});
 
+    //indica el modelo a seguir para el store de compras proveedor a credito
 	var comprasProveedorCredito = new Ext.data.Store({
     	model: 'comprasCreditoStore'  
 	});	
 	
-	
-	
+		
 	var html = "";
 	
-		POS.AJAXandDECODE({
-			action: '1209',
-			id_proveedor: record_proveedor.id_proveedor//recor[0].id_cliente
-			},
-			function (datos){//mientras responda AJAXDECODE LISTAR VENTAS CLIENTE
-				if(datos.success === true){
-					comprasProveedorCredito.loadData(datos.datos);
+	POS.AJAXandDECODE({
+		action: '1209',
+		id_proveedor: record_proveedor.id_proveedor//recor[0].id_cliente
+		},
+		function (datos){//mientras responda AJAXDECODE LISTAR VENTAS CLIENTE
+			if(datos.success === true)
+			{
+				comprasProveedorCredito.loadData(datos.datos);
 					
-					html += "<div class='ApplicationClientes-Item' >"
-							+ "<div class='trash' ></div>"
-							+ "<div class='id'>No. Compra</div>" 
-							+ "<div class='fecha'>Fecha</div>" 
-							+ "<div class='sucursal'>Sucursal</div>"
-							+ "<div class='vendedor'>Realizo compra</div>"
-							+ "<div class='total'>TOTAL</div>"
-							+ "<div class='total'>ABONADO</div>"
-							+ "<div class='total'>ADEUDO</div>"
-							+ "<div class='subtotal'>VER ABONOS</div>"
-							+ "<div class='total'>STATUS</div>"
-							+ "</div>";
+				html += "<div class='ApplicationClientes-Item' >";
+				html += "   <div class='trash' ></div>";
+				html += "   <div class='id'>No. Compra</div>";
+				html += "   <div class='fecha'>Fecha</div>";
+				html += "   <div class='sucursal'>Sucursal</div>";
+				html += "   <div class='vendedor'>Realizo compra</div>";
+				html += "   <div class='total'>TOTAL</div>";
+				html += "   <div class='total'>ABONADO</div>";
+				html += "   <div class='total'>ADEUDO</div>";
+				html += "   <div class='subtotal'>VER ABONOS</div>";
+				html += "   <div class='total'>STATUS</div>";
+				html += "</div>";
 					
-					//renderear el html
-					for( a = 0; a < comprasProveedorCredito.getCount(); a++ ){
-						var compra = comprasProveedorCredito.data.items[a];
-						var tot = parseFloat(compra.data.subtotal) + parseFloat(compra.data.iva);
-						var adeudo = tot - compra.data.abonado;
-						//console.log("-------------------- en la comprata: "+compra.data.id_comprata+" abonado: "+compra.data.abonado);
-						var status="";
-						if (adeudo <= 0){
-							status="<div class='pagado'>PAGADO</div>";
-						}else{
+				//renderear el html
+				for( a = 0; a < comprasProveedorCredito.getCount(); a++ )
+				{
+					var compra = comprasProveedorCredito.data.items[a];
+					var tot = parseFloat(compra.data.subtotal) + parseFloat(compra.data.iva);
+					var adeudo = tot - compra.data.abonado;
+					//console.log("-------------------- en la comprata: "+compra.data.id_comprata+" abonado: "+compra.data.abonado);
+					var status="";
+					if (adeudo <= 0)
+					{
+						status="<div class='pagado'>PAGADO</div>";
+					}
+					else
+					{
 							
-							status ="<div class='abonar' onclick='ApplicationProveedores.currentInstance.abonarCompra(" + compra.data.id_compra + " , "+ tot +" , "+ adeudo +", "+ compra.data.abonado +")'>ABONAR</div>";
-						}
-						html+= "<div class='ApplicationClientes-Item' >" 
-						+ "<div class='trash' onclick='ApplicationProveedores.currentInstance.verCompra(" + compra.data.id_compra+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>"	
-						+ "<div class='id'>" + compra.data.id_compra +"</div>" 
-						+ "<div class='fecha'>"+ compra.data.fecha +"</div>" 
-						+ "<div class='sucursal'>"+ compra.data.sucursal +"</div>"
-						+ "<div class='vendedor'>"+ compra.data.comprador +"</div>"
-						+ "<div class='total'>$"+ tot +"</div>"
-						+ "<div class='total' id='abonadoCompra_"+compra.data.id_compra+"'>$"+ compra.data.abonado +"</div>"
-						+ "<div class='total' id='adeudoCompra_"+compra.data.id_compra+"'>$"+ adeudo +"</div>"
-						+ "<div class='subtotal' onclick='ApplicationProveedores.currentInstance.verPagosCompra(" + compra.data.id_compra+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/compose.png'></div>"
-						+ status
-						+ "</div>";
+					    status ="<div class='abonar' onclick='ApplicationProveedores.currentInstance.abonarCompra(" + compra.data.id_compra + " , "+ tot +" , "+ adeudo +", "+ compra.data.abonado +")'>ABONAR</div>";
+					}
+					
+					html += "<div class='ApplicationClientes-Item'>";
+					html +=	"   <div class='trash' onclick='ApplicationProveedores.currentInstance.verCompra(" + compra.data.id_compra+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>";
+					html += "<  div class='id'>" + compra.data.id_compra +"</div>";
+					html += "   <div class='fecha'>"+ compra.data.fecha +"</div>";
+					html += "   <div class='sucursal'>"+ compra.data.sucursal +"</div>";
+					html += "   <div class='vendedor'>"+ compra.data.comprador +"</div>";
+					html += "   <div class='total'>$"+ tot +"</div>";
+					html += "   <div class='total' id='abonadoCompra_"+compra.data.id_compra+"'>$"+ compra.data.abonado +"</div>";
+					html += "   <div class='total' id='adeudoCompra_"+compra.data.id_compra+"'>$"+ adeudo +"</div>";
+					html += "   <div class='subtotal' onclick='ApplicationProveedores.currentInstance.verPagosCompra(" + compra.data.id_compra+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/compose.png'></div>";
+					html +=     status;
+					html += "</div>";
 														
 						
-					}//fin for comprasProveedorCredito
+				}//fin for comprasProveedorCredito
 					
-					//imprimir el html
-					Ext.get("comprasProveedorCredito").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
-					//console.log(ventasCliente.data.items);
-				}
-				if(datos.success == false){
-					
-					Ext.get("comprasProveedorCredito").update("<div class='ApplicationClientes-itemsBox' id='no_ComprasCreditoProv' ><div class='no-data'>"+datos.reason+"</div></div>");
-				}
-			},
-			function (){//no responde AJAXDECODE DE VENTAS CLIENTE
-				POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE COMPRAS   ERROR EN LA CONEXION :(");      
-			}
-		);//AJAXandDECODE LISTAR VENTAS CLIENTE
+				//imprimir el html
+				Ext.get("comprasProveedorCredito").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
+				//console.log(ventasCliente.data.items);
+			}//if
 				
-		
+			if(datos.success == false)
+			{
+					
+			    Ext.get("comprasProveedorCredito").update("<div class='ApplicationClientes-itemsBox' id='no_ComprasCreditoProv' ><div class='no-data'>"+datos.reason+"</div></div>");
+			    
+			}
+		},
+		function ()
+		{//no responde AJAXDECODE DE VENTAS CLIENTE
+	
+				POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE COMPRAS   ERROR EN LA CONEXION :(");      
+				
+		}
+	);//AJAXandDECODE LISTAR VENTAS CLIENTE
+				
+};
 
-}
+
+
+
+
+ApplicationProveedores.prototype.renderProvedorDetalles = function ( provedor )
+{
+
+	var html = "";
+	
+	html += "<div class='nombre'>" 		+provedor.nombre 		+ "</div>";
+	html += "<div class='direccion'>" 	+provedor.direccion 	+ "</div>";
+	html += "<div class='mail'>" 		+provedor.e_mail		+ "</div>";
+	html += "<div class='id_provedor'>" +provedor.id_proveedor	+ "</div>";
+	html += "<div class='rfc'>"  		+provedor.rfc			+ "</div>";
+	html += "<div class='telefono'>"  	+provedor.telefono		+ "</div>";
+
+	return "<div class='ApplicationProveedores-Detalles'>"+html+"</div>";
+	
+};
+
+
+
+
+
+
+
 
 /*-------------------------------------------------------
 	PAGOS HECHOS SOBRE 1 COMPRA EN ESPECIFICO
@@ -670,7 +809,7 @@ ApplicationProveedores.prototype.verPagosCompra = function( idCompra ){
 					'background-image':'url("media/g3.png")'								   
 	});
 	
-}
+};
 
 
 /*------------------------------------------------------------
@@ -853,7 +992,7 @@ ApplicationProveedores.prototype.abonarCompra = function( idCompra , total , ade
 	Ext.get("abonarCompraProveedor").parent().parent().setStyle({
 					'background-image':'url("media/g2.png")'								   
 	});
-}
+};
 
 /*-------------------------------------------------------------------
 	ELIMINAR UN PAGO DE UNA COMPRA
@@ -915,7 +1054,7 @@ ApplicationProveedores.prototype.EliminarabonoCompra = function ( id_Pago ){
 
 	overlayTb.setTitle('CONFIRMAR ELIMINACION DE PAGO');
 	overlay.show();
-}
+};
 
 
 /*--------------------------------------------------------------------
@@ -1034,63 +1173,8 @@ ApplicationProveedores.prototype.verCompra = function( idCompra ){
 	Ext.get("detalleCompraProveedor").parent().parent().setStyle({
 					'background-image':'url("media/g3.png")'								   
 	});
-}
+};
 
-/*----------------------------------------------------------
-	AGREGAR UN PROVEEDOR
-------------------------------------------------------------*/
-
-ApplicationProveedores.prototype.agregarProveedor =  new Ext.form.FormPanel({
-		scroll: 'vertical',
-		id:'formAgregarProveedor',
-		baseCls :'formAgregarProveedor',
-		items: [{
-			
-			xtype: 'fieldset',
-			title: 'Proveedor Info',
-			instructions: 'Los campos que contienen * son obligatorios',
-			items: [
-					nombreProveedor = new Ext.form.TextField({
-						id: 'nombreProveedor',
-						label: '*Nombre'
-					})
-			,
-					rfcProveedor = new Ext.form.TextField({
-						id: 'rfcProveedor',
-						label: '*RFC'
-					})
-			,
-					direccionProveedor = new Ext.form.TextField({
-						id: 'direccionProveedor',
-						label: '*Direccion'
-					})
-			,
-					emailProveedor = new Ext.form.TextField({
-						id: 'emailProveedor',
-						label: 'E-mail'
-					})
-			,
-					telefonoProveedor = new Ext.form.TextField({
-						id: 'telefonoProveedor',
-						label: 'Telefono'
-					})
-			
-			
-			]//fin items form
-			
-		},
-		{
-				xtype: 'button',
-				text: 'Guardar',
-				ui: 'action',
-				maxWidth: 150,
-				handler: function(){
-					ApplicationProveedores.currentInstance.guardarProveedor();
-				}
-			}
-			
-		]//,//fin items formpanel
-});//fin agregar proveedor
 
 
 
@@ -1149,7 +1233,7 @@ ApplicationProveedores.prototype.guardarProveedor = function(){
 						
 						
 						}//else de validar vacios
-}
+};
 
 
 /*-----------------------------------------------------------
