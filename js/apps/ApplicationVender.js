@@ -121,7 +121,7 @@ ApplicationVender.prototype.htmlCart_items = [];
 
 /**
  * ventaTotales
- * @type Int
+ * @type Object
  */
 ApplicationVender.prototype.ventaTotales = null;
 
@@ -620,15 +620,11 @@ ApplicationVender.prototype.htmlCart_addItem = function( item )
 
 
 
-ApplicationVender.prototype.doAddProductById = function (id)
+ApplicationVender.prototype.doAddProductById = function ( prodID )
 {
     if(DEBUG){
         console.log("ApplicationVender: Agregando producto " + id);
     }
-
-
-    //obtener el id del producto
-    var prodID = id;
     
     //buscar si este producto existe
     POS.AJAXandDECODE({
@@ -640,7 +636,7 @@ ApplicationVender.prototype.doAddProductById = function (id)
             //ya llego el request con los datos si existe o no    
             if(typeof(datos.success) !== 'undefined'){
                 
-                POS.aviso("Mostrador", datos.reason);
+                POS.aviso("Mostrador", datos.reason );
                 
                 //clear the textbox
                 Ext.get("APaddProductByID").first().dom.value = "";
@@ -650,10 +646,10 @@ ApplicationVender.prototype.doAddProductById = function (id)
 
             //crear el item
             var item = {
-                id             : datos.id_producto,
-                name         : datos.nombre,
+                id			: datos.id_producto,
+                name		: datos.nombre,
                 description : datos.denominacion,
-                cost         : datos.precio_venta,
+                cost		: datos.precio_venta,
                 existencias : datos.existencias,
                 cantidad    : 1
             };
@@ -683,20 +679,38 @@ ApplicationVender.prototype.doAddProductById = function (id)
 
 
 
-/*
-    Agregar un producto por oprimir el boton
-*/
+/**
+ * Accion para el boton: Agregar Producto, esta funcion solamente
+ * toma el valor de la caja de texto y se la envia a la funcion
+ * doAddProductById que es la que contiene la logica de agregar el
+ * producto al carrito
+ * @return void
+ */
 ApplicationVender.prototype.doAddProduct = function (button, event)
 {
-    //obtener el id del producto
-    this.doAddProductById(Ext.get("APaddProductByID").first().getValue());
+    //obtener el id del producto y enviarselo a doAddProductById
+    ApplicationVender.currentInstance.doAddProductById(
+		Ext.get("APaddProductByID").first().getValue()
+	);
+	
 };
 
 
 
-/*
-    Agregar un producto por teclear enter
-*/
+/**
+ * Esta funcion atrapa el evento de KeyUp en la caja
+ * de texto de agregar producto. Ya que atrapa todas
+ * las teclas que se tecleen en el, es util para hacer
+ * busquedas rapidas.
+ * Actualmente la funcion addProductByIDKeyUp tiene 3 
+ * funciones basadas solamente en la tecla ENTER:
+ * 1) Si la caja de texto contiene alguna cadena, intentara buscar ese producto.
+ * 2) Si la caja de texto esta vacia y hay mas de un item en el carrito, iniciara el proceso de Vender.
+ * 3) Si hay un aviso visible en el mostrador, lo cerrara.
+ * 
+ * producto al carrito
+ * @return void
+ */
 ApplicationVender.prototype.addProductByIDKeyUp = function (a, b)
 {
 
@@ -704,22 +718,26 @@ ApplicationVender.prototype.addProductByIDKeyUp = function (a, b)
     {
         //si teclea enter, pero hay un pop up visible, ocultarlo con este enter
         if(POS.aviso.visible){
-            //close current pop up
+			
             POS.aviso.hide();
             return;
         }
         
-        
-        if((Ext.get("APaddProductByID").first().getValue().length === 0)&&
-            (ApplicationVender.currentInstance.htmlCart_items.length > 0))
+        //si no hay nada escrito y hay mas de un item, intentar vender
+        if( (Ext.get("APaddProductByID").first().getValue().length === 0) &&
+            	(ApplicationVender.currentInstance.htmlCart_items.length > 0))
         {
-            //si presiono enter y el campo esta vacio y ya hay items, vender
+
             ApplicationVender.currentInstance.doVender();
             return;
         }
-            
-        //add product
-        ApplicationVender.currentInstance.doAddProduct();
+        
+
+        if(Ext.get("APaddProductByID").first().getValue().length !== 0){
+	        //Agregar el producto en la caja de texto.
+	        ApplicationVender.currentInstance.doAddProduct();	
+		}
+
     }
 };
 
@@ -760,24 +778,33 @@ ApplicationVender.prototype.doVender = function ()
 };
 
 
-
+/**
+ * 
+ */
 ApplicationVender.prototype.doVentaForms = function()
 {
-    if(this.panelContado === null){
-        this.panelContado = this.doVentaContadoPanel();
-    }else{
-        this.panelContado.destroy();
-        this.panelContado = this.doVentaContadoPanel();
-    }
-    
-    if(!this.CLIENTE_COMUN && this.panelCredito === null){
-        this.panelCredito = this.doVentaCreditoPanel();            
-    }else{
-        this.panelCredito.destroy();
-        this.panelCredito = this.doVentaCreditoPanel();        
-    }
+	
+	try{
+	    if(this.panelContado === null){
+	        this.panelContado = this.doVentaContadoPanel();
+	    }else{
+	        this.panelContado.destroy();
+	        this.panelContado = this.doVentaContadoPanel();
+	    }
+
+	    if(!this.CLIENTE_COMUN && this.panelCredito === null){
+	        this.panelCredito = this.doVentaCreditoPanel();            
+	    }else{
+	        this.panelCredito.destroy();
+	        this.panelCredito = this.doVentaCreditoPanel();        
+	    }		
+	}catch( e){
+		console.log(e);
+	}
+
     
     this.payingMethod = 'contado';
+
     sink.Main.ui.setCard( this.panelContado, 'slide' );
 };
 
@@ -1311,9 +1338,13 @@ ApplicationVender.prototype.ventaContadoExitosa = function ()
 
 
 
-/* ------------------------------------------------------------------------------------
-                    cotizar
-   ------------------------------------------------------------------------------------ */
+/**
+ * Accion de boton cotizar, verifica que exista
+ * por lo menos un item en el carrito. De ser
+ * asi, imprime el ticket con la informacion
+ * global del mostrador.
+ * @return void
+ */
 ApplicationVender.prototype.doCotizar = function ()
 {
     
@@ -1329,6 +1360,18 @@ ApplicationVender.prototype.doCotizar = function ()
         return;
     }
     
+	//listo para imprimir un ticket
+	
+	//hacer una copia del arreglo que hay en htmlCart_items
+    items =  copy( ApplicationVender.currentInstance.htmlCart_items );
+
+	//seleccionar al cliente, puede ser nulo para denotar una caja comun
+    cliente = ApplicationVender.currentInstance.cliente;
+
+    //imprimir el ticket, ojo, la accion de la computadora es abrir
+ 	//la caja de dinero al imprimir algo, por consiguiente, la caja
+	//de dinero se abrira al imprimir una cotizacion
+    appImpresora.ImprimirTicket( cliente, items, this.ventaTotales );
 };
 
 
@@ -1342,6 +1385,19 @@ ApplicationVender.prototype.doCotizar = function ()
 /* ------------------------------------------------------------------------------------
                     buscar cliente
    ------------------------------------------------------------------------------------ */
+
+
+/**
+ * Cambia el estado de la variable CLIENTE_COMUN, recibe un valor
+ * entero que denota si se cambiara por una caja comun o un cliente
+ * de ser un cliente, llama a la funcion buscarCliente que muestra 
+ * la caja de busqueda. De ser caja comun, borra los detalles del 
+ * cliente anterior si es que los hay... hace this.cliente = null
+ * refresca la lista de items en el carrito
+ * 
+ * @param int valor de swap, 0 para cliente y 1 para caja comun
+ * @return void
+ */
 ApplicationVender.prototype.swapClienteComun = function (val)
 {        
     if(val===0){
@@ -1363,13 +1419,22 @@ ApplicationVender.prototype.swapClienteComun = function (val)
 
 
 
-
+/**
+ * Funcion que recibe un cliente que ha sido seleccionado
+ * de la lista de clientes, y genera contenido html para 
+ * mostrarlo en la parte de detallescliente, tambien 
+ * actualiza el carrito de compras para calcular los totales
+ * ya que cada cliente tiene un valor de descuento
+ * @params Cliente
+ * @return void
+ */
 ApplicationVender.prototype.actualizarDetallesCliente = function ( cliente )
 {
     
     //mostrar los detalles del cliente
     this.cliente = cliente;
     
+	//crear el contenido html
     var html = "";
     html += " <div class='ApplicationVender-clienteBox'> ";
         html += " <div class='nombre'>" + cliente.nombre + "</div>";
@@ -1385,10 +1450,11 @@ ApplicationVender.prototype.actualizarDetallesCliente = function ( cliente )
         html += "</table>";
     html += " </div> ";
     
-
+	//cambiar el contenido de detallesCliente
     Ext.get("detallesCliente").update( html );
     
-    //actualizar tambien la lista de productos, por aquello de los descuentos
+    //actualizar tambien la lista de productos, ya que se deben actualizar
+	//los descuentos que cada cliente trae consigo
     this.doRefreshItemList();
     
 };

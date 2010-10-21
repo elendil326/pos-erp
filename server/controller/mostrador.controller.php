@@ -31,14 +31,15 @@ function existeProd( $prodID )
 		$res = DetalleInventarioDAO::search($criteria);
 		
 		if(count($res) == 0){
-			echo "{\"success\": false, \"reason\": \"Este productno existe.\"}";
+			echo "{\"success\": false, \"reason\": \"Este product no existe.\"}";
 			return;
 		}
 		
 		$json = "{\"success\": false, \"reason\": \"<b>Este producto no existe en esta sucursal. Sin embargo existe en nuestras sucurales de :</b><br><br>";
 		foreach($res as $p){
 			$s = SucursalDAO::getByPK( $p->getIdSucursal() );
-			$json .= $s->getDireccion() . "<br>";
+			$json .= "<b>" . $s->getDescripcion() . "</b><br>";
+			$json .= $s->getDireccion() . "<br><br>";
 		}
 		$json .= "\"}";
 		

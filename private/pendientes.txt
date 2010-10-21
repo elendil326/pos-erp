@@ -53,16 +53,22 @@ Revision 425
         Falta mapa aqui.
 
     Mostrador:
+        [ok] Click en Agregar producto no fuciona
+        [ok] Cotizar esta incompleto.
+		[ok] Arreglado bug de enter con el texto
+ 		[ok] Al agregar un producto que no existe en esta sucursal, pero si en otra... mostrar el nombre de la sucursal y su direccion
+
+		agregar boton de imprimir informacion cuando un producto no existe en esta sucursal pero si en otra
+		
         Linux/Chrome El boton de agregar producto muestra el contorno cuadrado.
-        Al agregar un producto que no existe en esta sucursal, pero si en otra... se debe mostrar el nombre de la sucursal y su direccion, no solo la direccion, ademas se debe poner un boton para imprimir esa informacion.
-        Es probable que sea mejor mostra los  hasta arriba... alado de los detalles de cliente cuando hay cliente.
-        Cotizar esta incompleto.
+        Es probable que sea mejor mostrar los  hasta arriba... alado de los detalles de cliente cuando hay cliente
         Al escoger otro tipo de busqueda por ejemplo RFC, y cerrar la ventana, al volver a buscar.. bueno, ver resultados.
         Desglosar descuento, no solo mostrar el porcentage.
         Al hacer click en vender en cualquiera de las modalidades, eliminar los botones de regresar y cancelar.
         **Por alguna razon, se inserto la venta sin insertar los productos... si algo sale mal al final entonces eliminar la venta.**
-        Click en Agregar producto no fuciona
 
+		Duda: al cotizar tengo que eliminar el mostrador o que ?
+		
     Clientes:
         El boton de facturar no debe ser rojo, y debe tener mas aspecto de boton...
         Si una venta no tiene productos, al facturar no mostrar el panel...
