@@ -38,10 +38,7 @@ ApplicationProveedores= function ()
 
 	//submenues en el panel de la izquierda
 	this._initToolBar();
-		
-
-	//this.comprasObj = new ApplicationComprasProveedor();
-	
+			
 	//variable auxiliar para referirse a esta instancia del objeto
     //solo funciona al instanciarse una vez, si el constructor
     //se vuelve a ejecutar esta variable contendra el ultimo 
@@ -140,46 +137,46 @@ ApplicationProveedores.prototype.agregarProveedor =  new Ext.form.FormPanel({
 			title: 'Proveedor Info',
 			instructions: 'Los campos que contienen * son obligatorios',
 			items: [
-					nombreProveedor = new Ext.form.TextField({
-						id: 'nombreProveedor',
-						label: '*Nombre'
-					})
+				nombreProveedor = new Ext.form.TextField({
+				    id: 'nombreProveedor',
+					label: '*Nombre'
+				})
 			,
-					rfcProveedor = new Ext.form.TextField({
-						id: 'rfcProveedor',
-						label: '*RFC'
-					})
+				rfcProveedor = new Ext.form.TextField({
+					id: 'rfcProveedor',
+					label: '*RFC'
+				})
 			,
-					direccionProveedor = new Ext.form.TextField({
-						id: 'direccionProveedor',
-						label: '*Direccion'
-					})
+				direccionProveedor = new Ext.form.TextField({
+					id: 'direccionProveedor',
+					label: '*Direccion'
+				})
 			,
-					emailProveedor = new Ext.form.TextField({
-						id: 'emailProveedor',
-						label: 'E-mail'
-					})
+				emailProveedor = new Ext.form.TextField({
+					id: 'emailProveedor',
+					label: 'E-mail'
+				})
 			,
-					telefonoProveedor = new Ext.form.TextField({
-						id: 'telefonoProveedor',
-						label: 'Telefono'
-					})
+				telefonoProveedor = new Ext.form.TextField({
+					id: 'telefonoProveedor',
+					label: 'Telefono'
+				})
 			
 			
 			]//fin items form
 			
 		},
 		{
-				xtype: 'button',
-				text: 'Guardar',
-				ui: 'action',
-				maxWidth: 150,
-				handler: function(){
-					ApplicationProveedores.currentInstance.guardarProveedor();
-				}
+			xtype: 'button',
+			text: 'Guardar',
+			ui: 'action',
+			maxWidth: 150,
+			handler: function(){
+				ApplicationProveedores.currentInstance.guardarProveedor();
 			}
+		}
 			
-		]//,//fin items formpanel
+	]//,//fin items formpanel
 });//fin agregar proveedor
 
 
@@ -191,7 +188,6 @@ ApplicationProveedores.prototype.agregarProveedor =  new Ext.form.FormPanel({
  */
 ApplicationProveedores.prototype.provedores = [];
 
-ApplicationProveedores.prototype.comprasObj = null;
 
 ApplicationProveedores.prototype.proveedorSelected=null;
 
@@ -213,31 +209,29 @@ ApplicationProveedores.prototype._initToolBar = function ()
 		xtype: 'textfield',
 		id:'ApplicationProveedores_searchField',
 		inputCls: 'caja-buscar',
-		listeners:
-				{
-					'render': function( ){
-						//medio feo, pero bueno
-						Ext.get("ApplicationProveedores_searchField").first().dom.setAttribute("onkeyup",
-						 "ApplicationProveedores.currentInstance.mosaic.doSearch( this.value )");
-					}
-				}
-		}];
+		listeners:{
+		    'render': function( ){
+			    //medio feo, pero bueno
+				Ext.get("ApplicationProveedores_searchField").first().dom.setAttribute("onkeyup","ApplicationProveedores.currentInstance.mosaic.doSearch( this.value )");
+			}
+		}
+	}];
 
-		var agregar = [{
-			xtype: 'button',
-			text: 'Nuevo Proveedor',
-			ui: 'action',
-			handler: function(){
-					console.log("ApplicacionProveedores: agregarProveedor called....");
-					sink.Main.ui.setCard( ApplicationProveedores.currentInstance.agregarProveedor, 'slide' );
-				}
-			}];		
+	var agregar = [{
+	    xtype: 'button',
+		text: 'Nuevo Proveedor',
+		ui: 'action',
+		handler: function(){
+	    	console.log("ApplicacionProveedores: agregarProveedor called....");
+			sink.Main.ui.setCard( ApplicationProveedores.currentInstance.agregarProveedor, 'slide' );
+		}
+	}];		
 
-        this.dockedItems = [ new Ext.Toolbar({
-            ui: 'dark',
-            dock: 'bottom',
-            items: buscar.concat({xtype:'spacer'}).concat(agregar)
-        })];
+    this.dockedItems = [new Ext.Toolbar({
+        ui: 'dark',
+        dock: 'bottom',
+        items: buscar.concat({xtype:'spacer'}).concat(agregar)
+    })];
     
 	
 	//agregar este dock a el panel principal
@@ -249,14 +243,13 @@ ApplicationProveedores.prototype._initToolBar = function ()
 	 */
 		
 	var regresar =[{
-		xtype: 'button',
+	    xtype: 'button',
 		id: 'cancelarGuardarProveedor',
 		text: 'Regresar',
 		ui: 'back',
 		handler: function(event,button) {
-				sink.Main.ui.setCard( ApplicationProveedores.currentInstance.proveedoresWelcome, { type: 'slide', direction: 'right'} );		
-	    }//fin handler cancelar cliente
-				
+	    	sink.Main.ui.setCard( ApplicationProveedores.currentInstance.proveedoresWelcome, { type: 'slide', direction: 'right'} );		
+	    }//fin handler cancelar cliente			
 	}];//fin boton cancelar
 
 	
@@ -278,13 +271,14 @@ ApplicationProveedores.prototype._initToolBar = function ()
 ApplicationProveedores.prototype.renderMosaico = function ()
 {
 
-	if(DEBUG){
+	if(DEBUG)
+	{
 		console.log("ApplicationProvedores: rendering " +ApplicationProveedores.currentInstance.provedores.length+ " items." );
 	}
 
 	var mItems = [];
 	
-	for(  a = 0; a < ApplicationProveedores.currentInstance.provedores.length; a++){
+	for(a = 0; a < ApplicationProveedores.currentInstance.provedores.length; a++){
 		mItems.push({
 			image : 'media/truck.png',
 			title : ApplicationProveedores.currentInstance.provedores[a].nombre,
@@ -325,8 +319,10 @@ ApplicationProveedores.prototype.getProvedores = function ()
 	POS.AJAXandDECODE({
 		action: '1105'
 		},
-		function (datos){
-			if(datos.success == true){
+		function (datos)
+		{
+			if(datos.success == true)
+			{
 				if(DEBUG){
 					console.log("Entro success de getProveedores: ", datos);					
 				}
@@ -337,7 +333,8 @@ ApplicationProveedores.prototype.getProvedores = function ()
 				ApplicationProveedores.currentInstance.renderMosaico();
 			}
 		},
-		function (){
+		function ()
+		{
 			POS.aviso("Provedores","Algo anda mal con tu conexion.");	
 		}
 	);
@@ -385,7 +382,8 @@ ApplicationProveedores.prototype.doVerProvedor = function (provedor)
  */
 ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 {
-	if( !this.carousel ){
+	if(!this.carousel)
+	{
 
 		this.carousel = new Ext.Carousel({
 			
@@ -393,66 +391,75 @@ ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 				//cls: 'ApplicationProveedores-detallesProveedor'
 				scroll: 'vertical'
 			},
-			items: [{
-				cls: 'ApplicationProveedores-detallesProveedor',
-				html: '<div id="detalles-proveedor">'+this.renderProvedorDetalles(provedor)+'</div>'
-			}, {
-				scroll: 'vertical',
-				xtype: 'panel',
-				title: 'compras',
-				id: 'comprasProveedorSucursalPanel',
-				items: [ {id: 'comprasProveedorSucursal' }]
+			items: [
+			    {
+				    cls: 'ApplicationProveedores-detallesProveedor',
+				    html: '<div id="detalles-proveedor">'+this.renderProvedorDetalles(provedor)+'</div>'
+			    }, 
+			    {
+				    scroll: 'vertical',
+				    xtype: 'panel',
+				    title: 'compras',
+				    id: 'comprasProveedorSucursalPanel',
+				    items: [ 
+				        {id: 'comprasProveedorSucursal' }
+				    ]
 				
-			}, { 
-				scroll: 'vertical',
-				xtype: 'panel',
-				title: 'creditos',
-				id: 'comprasProveedorCreditoPanel',
-				items: [{id: 'comprasProveedorCredito'}]
-			}]
+			    }, 
+			    { 
+				    scroll: 'vertical',
+				    xtype: 'panel',
+				    title: 'creditos',
+				    id: 'comprasProveedorCreditoPanel',
+				    items: [{id: 'comprasProveedorCredito'}]
+			    }
+		    ]
 		});
-	}else{
+	}
+	else
+	{
 		
 		Ext.get("detalles-proveedor").update(this.renderProvedorDetalles(provedor));
 		
 	}
 
 	var regresar = [{
-			xtype: 'button',
-			text: 'Regresar',
-			ui: 'back',
-			handler : function(){
-				sink.Main.ui.setCard( 
-					ApplicationProveedores.currentInstance.mainCard, {
-						type: 'fade',
-						duration: 500
-					});
-			}
-		}];		
+	    xtype: 'button',
+		text: 'Regresar',
+		ui: 'back',
+		handler : function(){
+	    	sink.Main.ui.setCard( 
+	    		ApplicationProveedores.currentInstance.mainCard, {
+	    			type: 'fade',
+					duration: 500
+				}
+			);
+		}
+	}];		
 
 
 	var surtir = [{
-			xtype: 'button',
-			text: 'Surtir',
-			ui: 'action',
-			handler: function(){
+	    xtype: 'button',
+		text: 'Surtir',
+		ui: 'action',
+		handler: function(){
 				
-				ApplicationProveedores.currentInstance.comprasObj = new ApplicationComprasProveedor();
+			var appComProv = new ApplicationComprasProveedor();
 				
-				ApplicationProveedores.currentInstance.comprasObj.providerId= provedor.id_proveedor;
-				ApplicationProveedores.currentInstance.comprasObj.nombreProv= provedor.nombre;
-				ApplicationProveedores.currentInstance.comprasObj.comprarPanel( provedor.id_proveedor);
-				sink.Main.ui.setCard( ApplicationProveedores.currentInstance.comprasObj.surtir, 'slide' );
+			appComProv.providerId = provedor.id_proveedor;
+			appComProv.nombreProv = provedor.nombre;
+			appComProv.comprarPanel( provedor.id_proveedor);
+			sink.Main.ui.setCard( appComProv.surtir, 'slide' );
 				
-				Ext.get("CarruselSurtirProductosSucursal").setStyle({
-					'background-image':'url("media/g3.png")'								   
-				});
+			Ext.get("CarruselSurtirProductosSucursal").setStyle({
+				'background-image':'url("media/g3.png")'								   
+			});
 				
-			}
-		}];
+		}
+	}];
 	
 		
-    var dockedItems = [ new Ext.Toolbar({
+    var dockedItems = [new Ext.Toolbar({
         ui: 'dark',
         dock: 'bottom',
         items: regresar.concat({xtype:'spacer'}).concat(surtir)
@@ -461,6 +468,7 @@ ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 
 	var panel = new Ext.Panel({
 		dockedItems : dockedItems,
+		cls:'ApplicationProveedores-CarrouselBackgroud',
 		layout: {
 			type: 'vbox',
 			align: 'stretch'
@@ -470,9 +478,7 @@ ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 		},
 		items: [this.carousel]
 	});
-	
-
-	
+		
 	return panel;
 };
 
@@ -705,11 +711,6 @@ ApplicationProveedores.prototype.renderProvedorDetalles = function ( provedor )
 
 
 
-
-
-
-
-
 /*-------------------------------------------------------
 	PAGOS HECHOS SOBRE 1 COMPRA EN ESPECIFICO
 ---------------------------------------------------------*/
@@ -852,165 +853,191 @@ ApplicationProveedores.prototype.verPagosCompra = function( idCompra ){
 
 ApplicationProveedores.prototype.abonarCompra = function( idCompra , total , adeudo ,totalAbonado ){
 	
-	var clienteHtml = "<div class='ApplicationProveedores-itemsBox' >";
-		clienteHtml += " <div class='no-data' id='abonar-compraP'> ";
-		clienteHtml += " <div class='nombre'>Abono para la compra '"+idCompra+"'</div>";
-		clienteHtml += " <div class='nombre'> Total de Compra: " + total + "</div>";
-		clienteHtml += " <div class='nombre'> Adeuda: " + adeudo + "</div>";
-		clienteHtml += " </div> </div><br>";
+	var clienteHtml = "";
+	
+	clienteHtml += "<div class='ApplicationProveedores-itemsBox'>";
+	clienteHtml += "    <div class='no-data' id='abonar-compraP'>";
+	clienteHtml += "        <div class='nombre'>Abono para la compra '"+idCompra+"'</div>";
+	clienteHtml += "        <div class='nombre'> Total de Compra: " + total + "</div>";
+	clienteHtml += "        <div class='nombre'> Adeuda: " + adeudo + "</div>";
+	clienteHtml += "    </div>";
+	clienteHtml += "</div>";
+	clienteHtml += "<br>";
 		
 		
-	 var abonaPanel = new Ext.form.FormPanel({
-		 id: 'abonarCompraPanel',
-		 scroll: 'vertical',
-		 //baseCls: "formAgregarProveedor",
-			//	items
-            items: [{
-					id: 'abonarCompraProveedor',
-					html: clienteHtml
-		 			},{                                                       
-                        		xtype: 'fieldset',
-                                title: 'Detalles del Pago',
-								instructions: 'Inserte unicamente numeros no letras',
-                                items: [
-										montoAbonoCompra = new Ext.form.TextField({
-                                			id: 'montoAbonoCompra',
-											label: 'Abona $',
-											listeners:{
-												change: function(){
-													if(this.getValue() > adeudo){
-														this.setValue(adeudo);	
-														Ext.getCmp("restariaCompra").setValue(adeudo - this.getValue());
-													}else{
-														Ext.getCmp("restariaCompra").setValue(adeudo - this.getValue());
-													}
-												},
-												blur: function(){
-													if(this.getValue() > adeudo){
-														this.setValue(adeudo);	
-														Ext.getCmp("restariaCompra").setValue(adeudo - this.getValue());
-													}else{
-														Ext.getCmp("restariaCompra").setValue(adeudo - this.getValue());
-													}
-												}
-											}
-                                        }),
-										pagaAbonoCompra = new Ext.form.TextField({
-											id: 'pagaAbonoCompra',
-											label: 'Efectivo $',
-											listeners:{
-												change: function(){
-													if(Ext.getCmp("pagaAbonoCompra").getValue() < Ext.getCmp("montoAbonoCompra").getValue()){
-														this.setValue(Ext.getCmp("montoAbonoCompra").getValue());
-														Ext.getCmp("cambioAbonoCompra").setValue(this.getValue() - montoAbonoCompra.getValue());
-														Ext.getCmp("restariaCompra").setValue(adeudo - montoAbonoCompra.getValue());
-													}
-													if(Ext.getCmp("pagaAbonoCompra").getValue >= Ext.getCmp("montoAbonoCompra").getValue()){
-														Ext.getCmp("cambioAbonoCompra").setValue(Ext.getCmp("pagaAbonoCompra").getValue() - montoAbonoCompra.getValue());	
-														Ext.getCmp("restariaCompra").setValue(adeudo - montoAbonoCompra.getValue());
-													}
-												},
-												blur: function(){
-													if(Ext.getCmp("pagaAbonoCompra").getValue() < Ext.getCmp("montoAbonoCompra").getValue()){
-														Ext.getCmp("pagaAbonoCompra").setValue(Ext.getCmp("montoAbonoCompra").getValue());
-														Ext.getCmp("cambioAbonoCompra").setValue(this.getValue() - montoAbonoCompra.getValue());
-														Ext.getCmp("restariaCompra").setValue(adeudo - montoAbonoCompra.getValue());
-													}
-													if(Ext.getCmp("pagaAbonoCompra").getValue >= Ext.getCmp("montoAbonoCompra").getValue()){
-														Ext.getCmp("cambioAbonoCompra").setValue(Ext.getCmp("pagaAbonoCompra").getValue() - montoAbonoCompra.getValue());	
-														Ext.getCmp("restariaCompra").setValue(adeudo - montoAbonoCompra.getValue());
-													}
-												}
-											}
-										}),
-										cambioAbonoCompra = new Ext.form.TextField({
-											id: 'cambioAbonoCompra',
-											label: 'Cambio $',
-											disabled: true
-										}),
-										restariaCompra = new Ext.form.TextField({
-											id: 'restariaCompra',
-											label: 'Restaria $',
-											disabled: true
-										})
-										]
-						}
-				], 
-			//	dock		
-            dockedItems: [{
-                    xtype: 'toolbar',
-                    dock: 'bottom',
-                    items: [{text: 'Abonar',
-							ui: 'action',
-							handler: function(){
-
-								POS.AJAXandDECODE({
-									action: '1301',
-									id_compra: idCompra,
-									monto: Ext.getCmp("montoAbonoCompra").getValue()
-									},
-									function (datos){
-										if(datos.success == true){
-										
-											ApplicationProveedores.currentInstance.listarComprasCredito();
-											Ext.getCmp("abonarCompraPanel").destroy();
-							 				Ext.getBody().unmask();
-										}else{
-											POS.aviso("Abono Compra",""+datos.reason);		
-										}
-									},
-									function (){
-										POS.aviso("Provedores","Algo anda mal con tu conexion.");	
-									}
-								);
-
-								
-							}
-							},
-							{
-							xtype: 'spacer'
-							},{
-						//-------------------------------------------------------------------------------
-						//			cancelar
-						//-------------------------------------------------------------------------------
-						text: 'X Cancelar',
-						handler: function() {
-							//regresar el boton de cliente comun a 1
-							Ext.getCmp("abonarCompraPanel").destroy();
-							 Ext.getBody().unmask();
-							//ocultar este form
-							//form.hide();							
-                            }
-						}]
-					}]
-			});
+    var abonaPanel = new Ext.form.FormPanel({
+        id: 'abonarCompraPanel',
+        scroll: 'vertical',        
+        items: [
+            {
+		        id: 'abonarCompraProveedor',
+		        html: clienteHtml
+		    },
+            {                                                       
+                xtype: 'fieldset',
+                title: 'Detalles del Pago',
+	    		instructions: 'Inserte unicamente numeros no letras',
+                items:[
+			        montoAbonoCompra = new Ext.form.TextField({
+                        id: 'montoAbonoCompra',
+					    label: 'Abona $',
+					    listeners:{
+				        	change: function(){
+				        		if(this.getValue() > adeudo)
+				        		{
+							        this.setValue(adeudo);	
+								    Ext.getCmp("restariaCompra").setValue(adeudo - this.getValue());
+							    }
+							    else
+							    {
+							        Ext.getCmp("restariaCompra").setValue(adeudo - this.getValue());
+							    }
+						    },
+						    blur: function(){
+						        if(this.getValue() > adeudo)
+						        {
+							        this.setValue(adeudo);	
+							        Ext.getCmp("restariaCompra").setValue(adeudo - this.getValue());
+							    }
+							    else
+							    {
+							        Ext.getCmp("restariaCompra").setValue(adeudo - this.getValue());
+							    }
+						    }
+					    }
+                    }),
+				    pagaAbonoCompra = new Ext.form.TextField({
+				        id: 'pagaAbonoCompra',
+					    label: 'Efectivo $',
+					    listeners:{
+				        	change: function(){
+						            
+					            if(Ext.getCmp("pagaAbonoCompra").getValue() < Ext.getCmp("montoAbonoCompra").getValue())
+					            {
+							        this.setValue(Ext.getCmp("montoAbonoCompra").getValue());
+								    Ext.getCmp("cambioAbonoCompra").setValue(this.getValue() - montoAbonoCompra.getValue());
+								    Ext.getCmp("restariaCompra").setValue(adeudo - montoAbonoCompra.getValue());
+							    }
+							
+							    if(Ext.getCmp("pagaAbonoCompra").getValue >= Ext.getCmp("montoAbonoCompra").getValue())
+							    {
+							        Ext.getCmp("cambioAbonoCompra").setValue(Ext.getCmp("pagaAbonoCompra").getValue() - montoAbonoCompra.getValue());	
+								    Ext.getCmp("restariaCompra").setValue(adeudo - montoAbonoCompra.getValue());
+							    }
+						    },
+						    blur: function(){
+							
+						        if(Ext.getCmp("pagaAbonoCompra").getValue() < Ext.getCmp("montoAbonoCompra").getValue())
+						        {
+							        Ext.getCmp("pagaAbonoCompra").setValue(Ext.getCmp("montoAbonoCompra").getValue());
+								    Ext.getCmp("cambioAbonoCompra").setValue(this.getValue() - montoAbonoCompra.getValue());
+								    Ext.getCmp("restariaCompra").setValue(adeudo - montoAbonoCompra.getValue());
+							    }
+							
+							    if(Ext.getCmp("pagaAbonoCompra").getValue >= Ext.getCmp("montoAbonoCompra").getValue())
+							    {
+							        Ext.getCmp("cambioAbonoCompra").setValue(Ext.getCmp("pagaAbonoCompra").getValue() - montoAbonoCompra.getValue());	
+								    Ext.getCmp("restariaCompra").setValue(adeudo - montoAbonoCompra.getValue());
+							    }
+						    }
+					    }
+				    }),
+				    cambioAbonoCompra = new Ext.form.TextField({
+				        id: 'cambioAbonoCompra',
+					    label: 'Cambio $',
+					    disabled: true
+				    }),
+				    restariaCompra = new Ext.form.TextField({
+				        id: 'restariaCompra',
+					    label: 'Restaria $',
+					    disabled: true
+				    })	
+                ]//items
+			}//fieldset		                
+        ], 
+        dockedItems: [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            items: [
+                {
+                   text: 'Abonar',
+			        ui: 'action',
+			        handler: function(){				            
+			            POS.AJAXandDECODE({
+			                	action: '1301',
+					            id_compra: idCompra,
+				        	    monto: Ext.getCmp("montoAbonoCompra").getValue()
+				            },
+   						    function (datos)
+					        {
+					            if(datos.success == true)
+					            {										
+						            ApplicationProveedores.currentInstance.listarComprasCredito();
+							        Ext.getCmp("abonarCompraPanel").destroy();
+						         	Ext.getBody().unmask();
+						        }
+						        else
+						        {
+						            POS.aviso("Abono Compra",""+datos.reason);		
+						        }
+					        },
+					        function ()
+					        {
+					            POS.aviso("Provedores","Algo anda mal con tu conexion.");	
+					        }
+				        );								
+			        }
+		        },
+				{
+				    xtype: 'spacer'
+				},
+				{
+				    //-------------------------------------------------------------------------------
+					//			cancelar
+					//-------------------------------------------------------------------------------
+					text: 'X Cancelar',
+					handler: function() 
+					{
+						//regresar el boton de cliente comun a 1
+						Ext.getCmp("abonarCompraPanel").destroy();
+						 Ext.getBody().unmask();
+						//ocultar este form
+						//form.hide();							
+                       }
+				}
+			]//items
+    	}]//dockedItems
+    });//abonaPanel
 	
        
-	   if (Ext.platform.isAndroidOS) {
-            abonaPanel.items.unshift({
-                xtype: 'component',
-                styleHtmlContent: true,
-                html: '<span style="color: red">Forms on Android are currently under development. We are working hard to improve this in upcoming releases.</span>'
-            });
-        }
+    if (Ext.platform.isAndroidOS) 
+    {
+        abonaPanel.items.unshift({
+            xtype: 'component',
+            styleHtmlContent: true,
+            html: '<span style="color: red">Forms on Android are currently under development. We are working hard to improve this in upcoming releases.</span>'
+        });
+    }
 
-	if (Ext.platform.isPhone) {
-            abonaPanel.fullscreen = true;
-        } else {
-            Ext.apply(abonaPanel, {
-                autoRender: true,
-                floating: true,
-                modal: true,
-                centered: true,
-                hideOnMaskTap: false,
-                height: 585,
-                width: 680
-            });
-        }
-        		
-				
+    if (Ext.platform.isPhone) 
+    {
+        abonaPanel.fullscreen = true;
+    } 
+    else 
+    {
+        Ext.apply(abonaPanel, {
+            autoRender: true,
+            floating: true,
+            modal: true,
+            centered: true,
+            hideOnMaskTap: false,
+            height: 585,
+            width: 680
+        });
+    }
+        						
 	abonaPanel.show();
-	
+        
 	/*
 		Se le da un fono al panel contenedor
 	*/
@@ -1032,62 +1059,70 @@ ApplicationProveedores.prototype.abonarCompra = function( idCompra , total , ade
 	ELIMINAR UN PAGO DE UNA COMPRA
 ---------------------------------------------------------------------*/
 
-ApplicationProveedores.prototype.EliminarabonoCompra = function ( id_Pago ){
-	var overlayTb = new Ext.Toolbar({
-            dock: 'top'
-        });
+ApplicationProveedores.prototype.EliminarabonoCompra = function (id_Pago){
+	
+    var overlayTb = new Ext.Toolbar({
+        dock: 'top'
+    });
+
 	var btns = new Ext.Toolbar({
-			items :[{
-					text: 'Eliminar',
-					ui: 'action',
-					handler: function(){
-						POS.AJAXandDECODE({
-							action: '1302',
-							id_pago: id_Pago
-							},
-							function (datos){//mientras responda
-								if(!datos.success){
-									POS.aviso("ERROR",""+datos.reason);
-								}
-								ApplicationProveedores.currentInstance.listarComprasCredito();
-								Ext.get("pago_Borrar_"+id_Pago).remove();
-								Ext.getCmp("confirmaBorrarPago").destroy();
-							},
-							function (){//no responde
-								POS.aviso("ERROR","NO SE PUDO ELIMINAR PAGO  ERROR EN LA CONEXION :(");	
-							}
-						);//AJAXandDECODE 1105
-						
-					}
+    	items :[
+    	    {
+			    text: 'Eliminar',
+				ui: 'action',
+				handler: function(){
+			
+			    	POS.AJAXandDECODE({
+			       		action: '1302',
+					    id_pago: id_Pago
 					},
-					{
-					xtype: 'spacer'
-					},
-					{
-					text: 'Cancelar',
-					ui: 'action',
-					handler: function(){
+					function (datos)
+					{//mientras responda
+					    if(!datos.success)
+					    {
+						    POS.aviso("ERROR",""+datos.reason);
+						}
+						ApplicationProveedores.currentInstance.listarComprasCredito();
+						Ext.get("pago_Borrar_"+id_Pago).remove();
 						Ext.getCmp("confirmaBorrarPago").destroy();
-					}
-					}],
-            dock: 'bottom'
-        });
+					},
+					function ()
+					{//no responde
+					    POS.aviso("ERROR","NO SE PUDO ELIMINAR PAGO  ERROR EN LA CONEXION :(");	
+					});//AJAXandDECODE 1105
+						
+				}//handler
+			},
+			{
+			    xtype: 'spacer'
+			},
+			{
+			    text: 'Cancelar',
+				ui: 'action',
+				handler: function(){
+				    Ext.getCmp("confirmaBorrarPago").destroy();
+				}
+			}
+		],
+        dock: 'bottom'
+    });//btns
 	
 	var overlay = new Ext.Panel({
-			id: 'confirmaBorrarPago',
-            floating: true,
-            modal: true,
-            centered: true,
-            width: Ext.platform.isPhone ? 260 : 400,
-            height: Ext.platform.isPhone ? 115 : 210,
-            styleHtmlContent: true,
-			dockedItems: [overlayTb, btns],
-            scroll: 'vertical',
-			html: '- Si elimina este pago es porque nunca dio el dinero <br>- Por que le estan regresando ese dinero<br>- Eliminar este pago incrementara la deuda con esta compra.'
-        });
+	    id: 'confirmaBorrarPago',
+        floating: true,
+        modal: true,
+        centered: true,
+        width: Ext.platform.isPhone ? 260 : 400,
+        height: Ext.platform.isPhone ? 115 : 210,
+        styleHtmlContent: true,
+	    dockedItems: [overlayTb, btns],
+        scroll: 'vertical',
+		html: '- Si elimina este pago es porque nunca dio el dinero <br>- Por que le estan regresando ese dinero<br>- Eliminar este pago incrementara la deuda con esta compra.'
+    });
 
 	overlayTb.setTitle('CONFIRMAR ELIMINACION DE PAGO');
 	overlay.show();
+	
 };
 
 
@@ -1096,107 +1131,123 @@ ApplicationProveedores.prototype.EliminarabonoCompra = function ( id_Pago ){
 ----------------------------------------------------------------------*/
 ApplicationProveedores.prototype.verCompra = function( idCompra ){
 
-	 var formBase = new Ext.Panel({
-		id: 'detalleCompraPanel',
+    var formBase = new Ext.Panel({
+    	id: 'detalleCompraPanel',
 		scroll: 'vertical',
-			//	items
-            items: [{
-				id: 'detalleCompraProveedor',
-		        html: ''
-		    }], 
-			//	dock		
-            dockedItems: [{
-                    xtype: 'toolbar',
-                    dock: 'bottom',
-                    items: [{
-						xtype: 'spacer'
-						},{
-						text: 'X Cerrar',
-						handler: function() {
-							//regresar el boton de cliente comun a 1
-							Ext.getCmp("detalleCompraPanel").destroy();
-							 Ext.getBody().unmask();							
-                            }
-						}]
-					}]
-			});
+		//	items
+        items: [{
+		    id: 'detalleCompraProveedor',
+		    html: ''
+		}], 
+		//	dock		
+        dockedItems:[{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            items: [
+                {
+		    	    xtype: 'spacer'
+				},
+				{
+				    text: 'X Cerrar',
+				    handler: function() {
+				        //regresar el boton de cliente comun a 1
+						Ext.getCmp("detalleCompraPanel").destroy();
+				        Ext.getBody().unmask();							
+                    }
+				}
+			]//items
+		}]
+	});//formBase
 	
        
-	   if (Ext.platform.isAndroidOS) {
-            formBase.items.unshift({
-                xtype: 'component',
-                styleHtmlContent: true,
-                html: '<span style="color: red">Forms on Android are currently under development. We are working hard to improve this in upcoming releases.</span>'
-            });
-        }
+	if (Ext.platform.isAndroidOS) 
+	{
+        formBase.items.unshift({
+            xtype: 'component',
+            styleHtmlContent: true,
+            html: '<span style="color: red">Forms on Android are currently under development. We are working hard to improve this in upcoming releases.</span>'
+        });
+    }
 
-	if (Ext.platform.isPhone) {
-            formBase.fullscreen = true;
-        } else {
-            Ext.apply(formBase, {
-                autoRender: true,
-                floating: true,
-                modal: true,
-                centered: true,
-                hideOnMaskTap: false,
-                height: 585,
-                width: 680
-            });
-        }
+	if (Ext.platform.isPhone)   
+	{
+        formBase.fullscreen = true;
+    } 
+    else 
+    {
+        Ext.apply(formBase, {
+            autoRender: true,
+            floating: true,
+            modal: true,
+            centered: true,
+            hideOnMaskTap: false,
+            height: 585,
+            width: 680
+        });
+    }
         
-		Ext.regModel('comprasDetalleStore', {
-    	fields: ['nombre', 'rfc']
-		});
+	Ext.regModel('comprasDetalleStore', {
+        fields: ['nombre', 'rfc']
+	});
 
-		var comprasDetalle= new Ext.data.Store({
-    	model: 'comprasDetalleStore'
-    	
-		});	
+	var comprasDetalle= new Ext.data.Store({
+        model: 'comprasDetalleStore'	
+	});	
 		
-		POS.AJAXandDECODE({
-			action: '1207',
-			id_compra: idCompra
-			},
-			function (datos){//mientras responda AJAXDECODE MOSTRAR CLIENTE
-				if(datos.success == true){
+    POS.AJAXandDECODE(
+        {
+            action: '1207',
+		    id_compra: idCompra
+	    },
+	    function (datos)
+	    {
+	        //mientras responda AJAXDECODE MOSTRAR CLIENTE
+	        if(datos.success == true)
+	        {					
+		     
+		        comprasDetalle.loadData(datos.datos);
 					
-					comprasDetalle.loadData(datos.datos);
-					
-					var html = "";
-					html += "<div class='ApplicationClientes-Item' >" 
-					+ "<div class='vendedor'>PRODUCTO</div>" 
-					+ "<div class='sucursal'>CANTIDAD</div>" 
-					+ "<div class='subtotal'>PRECIO</div>" 
-					+ "<div class='subtotal'>SUBTOTAL</div>"
-					+ "</div>";
+			    var html = "";
+			
+			    html += "<div class='ApplicationClientes-Item'>"; 
+			    html += "   <div class='vendedor'>PRODUCTO</div>"; 
+			    html += "   <div class='sucursal'>CANTIDAD</div>"; 
+			    html += "   <div class='subtotal'>PRECIO</div>"; 
+			    html += "   <div class='subtotal'>SUBTOTAL</div>";
+			    html += "</div>";
 								
-					for( a = 0; a < comprasDetalle.getCount(); a++ ){
+			    for( a = 0; a < comprasDetalle.getCount(); a++ )
+			    {
 											
-						html += "<div class='ApplicationClientes-Item' >" 
-						+ "<div class='vendedor'>" + comprasDetalle.data.items[a].data.denominacion +"</div>" 
-						+ "<div class='sucursal'>"+ comprasDetalle.data.items[a].data.cantidad +"</div>" 
-						+ "<div class='subtotal'>$ "+ comprasDetalle.data.items[a].data.precio+"</div>"
-						+ "<div class='subtotal'>$ "+ comprasDetalle.data.items[a].data.subtotal +"</div>"
-						+ "</div>";
-					}
+			        html += "<div class='ApplicationClientes-Item'>";
+				    html += "   <div class='vendedor'>" + comprasDetalle.data.items[a].data.denominacion +"</div>";
+				    html += "   <div class='sucursal'>"+ comprasDetalle.data.items[a].data.cantidad +"</div>";
+				    html += "   <div class='subtotal'>$ "+ comprasDetalle.data.items[a].data.precio+"</div>";
+				    html += "   <div class='subtotal'>$ "+ comprasDetalle.data.items[a].data.subtotal +"</div>";
+				    html += "</div>";
+			    }
 								
-								//imprimir el html
-					Ext.get("detalleCompraProveedor").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
+			    //imprimir el html
+			    Ext.get("detalleCompraProveedor").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
 						
-				}//FIN DATOS.SUCCES TRUE MOSTRAR CLIENTE
-				if(datos.success == false){
+		    }//FIN DATOS.SUCCES TRUE MOSTRAR CLIENTE
+		    else
+		    {
 
-					html = "<div class='ApplicationClientes-itemsBox' id='no_detalleCompraProv' ><div class='no-data'>"+datos.reason+"</div></div>";
+		        html = "<div class='ApplicationClientes-itemsBox' id='no_detalleCompraProv' ><div class='no-data'>"+datos.reason+"</div></div>";
 					
-					Ext.get("detalleCompraProveedor").update(html);
-					return;
-				}
-				},
-			function (){//no responde  AJAXDECODE MOSTRAR CLIENTE     
-				POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE COMPRAS   ERROR EN LA CONEXION :("); 
-				return;
-			}
-		);//AJAXandDECODE MOSTRAR CLIENTE						
+			    Ext.get("detalleCompraProveedor").update(html);
+			
+			    return;
+		    }
+	    },
+	    function ()
+	    {
+	        //no responde  AJAXDECODE MOSTRAR CLIENTE     
+		    POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE COMPRAS   ERROR EN LA CONEXION :("); 
+		    return;
+	    }
+	);//AJAXandDECODE MOSTRAR CLIENTE						
 	
 	formBase.show();
 	
@@ -1205,7 +1256,7 @@ ApplicationProveedores.prototype.verCompra = function( idCompra ){
 		a un fondo obscuro (g3.png)
 	*/
 	Ext.get("detalleCompraProveedor").parent().parent().setStyle({
-					'background-image':'url("media/g3.png")'								   
+	    'background-image':'url("media/g3.png")'								   
 	});
 };
 
@@ -1213,108 +1264,120 @@ ApplicationProveedores.prototype.verCompra = function( idCompra ){
 
 
 ApplicationProveedores.prototype.guardarProveedor = function(){
-						if( nombreProveedor.getValue() =='' || rfcProveedor.getValue() =='' || direccionProveedor.getValue() ==''){
-						Ext.getBody().mask(false, '<div class="demos-loading">Loading&hellip;</div>');
-						POS.aviso("ERROR!!","LLENAR ALMENOS LOS CAMPOS CON  *");					
-						}else{
-							POS.AJAXandDECODE({
-							action: '1101',
-							rfc: rfcProveedor.getValue(),
-							nombre: nombreProveedor.getValue(),
-							direccion: direccionProveedor.getValue(),
-							telefono: telefonoProveedor.getValue(),
-							e_mail: emailProveedor.getValue(),
-							ubicacion: ubicacionProveedor.getValue()
-							},
-							function (datos){//mientras responda
-								if(datos.success == true){//
+
+    if( nombreProveedor.getValue() =='' || rfcProveedor.getValue() =='' || direccionProveedor.getValue() =='')
+    {
+	    Ext.getBody().mask(false, '<div class="demos-loading">Loading&hellip;</div>');
+		POS.aviso("ERROR!!","LLENAR ALMENOS LOS CAMPOS CON  *");					
+	}
+	else
+	{
+	    POS.AJAXandDECODE(
+	        {
+			    action: '1101',
+				rfc: rfcProveedor.getValue(),
+				nombre: nombreProveedor.getValue(),
+				direccion: direccionProveedor.getValue(),
+				telefono: telefonoProveedor.getValue(),
+			    e_mail: emailProveedor.getValue(),
+				ubicacion: ubicacionProveedor.getValue()
+			},
+			function (datos)
+			{
+			    //mientras responda
+				if(datos.success == true)
+				{//
 										
-									rfcProveedor.setValue('');
-									nombreProveedor.setValue('');
-									direccionProveedor.setValue('');
-									telefonoProveedor.setValue('');
-									emailProveedor.setValue('');
-									ubicacionProveedor.setValue('');
+				    rfcProveedor.setValue('');
+					nombreProveedor.setValue('');
+					direccionProveedor.setValue('');
+					telefonoProveedor.setValue('');
+					emailProveedor.setValue('');
+					ubicacionProveedor.setValue('');
 									
-									console.log("entro a success de insertar");
+					if(DEBUG){
+					    console.log("entro a success de insertar");
+					}
 											
-									POS.AJAXandDECODE({
-										action: '1105'
-										},
-										function (datos){
-											if(datos.success == true){
-												ApplicationProveedores.currentInstance.mosaic.destroy();
-												ApplicationProveedores.currentInstance.provedores = datos.datos;
-												ApplicationProveedores.currentInstance.renderMosaico();
-												sink.Main.ui.setCard( ApplicationProveedores.currentInstance.finalPanel(), { type: 'slide', direction: 'right'} );
-											}
-										},
-										function (){
-											POS.aviso("Provedores","Algo anda mal con tu conexion.");	
-										}
-									);
-									
-									
-								}else{
-									POS.aviso("ERROR!!","LOS DATOS DEL 	PROVEEDOR NO SE MODIFICARON :(");
-								}
+					POS.AJAXandDECODE({
+					    action: '1105'
+					},
+					function (datos)
+					{
+					    if(datos.success == true)
+					    {
+						    ApplicationProveedores.currentInstance.mosaic.destroy();
+							ApplicationProveedores.currentInstance.provedores = datos.datos;
+							ApplicationProveedores.currentInstance.renderMosaico();
+						    sink.Main.ui.setCard( ApplicationProveedores.currentInstance.finalPanel(), { type: 'slide', direction: 'right'} );
+						}
+					},
+					function ()
+					{
+					    POS.aviso("Provedores","Algo anda mal con tu conexion.");	
+					}
+					);				
+				}
+				else
+				{
+				    POS.aviso("ERROR!!","LOS DATOS DEL 	PROVEEDOR NO SE MODIFICARON :(");
+				}
 								
-							},
-							function (){//no responde	
-								POS.aviso("ERROR","NO SE PUDO INSERTAR PROVEEDOR, ERROR EN LA CONEXION :(");	
-							}
-						);//AJAXandDECODE insertar proveedor
+			},
+			function ()
+			{
+			    //no responde	
+				POS.aviso("ERROR","NO SE PUDO INSERTAR PROVEEDOR, ERROR EN LA CONEXION :(");	
+			}
+		);//AJAXandDECODE insertar proveedor
 						
 						
-						}//else de validar vacios
+	}//else de validar vacios
 };
 
 
 /*-----------------------------------------------------------
 	SE REALIZÓ LA INSERCION Y MUESTRA PANEL FINAL
 -------------------------------------------------------------*/
-ApplicationProveedores.prototype.finalPanel = function ()
-{
-	
+ApplicationProveedores.prototype.finalPanel = function (){
 	
 	return new Ext.form.FormPanel({
-	//tipo de scroll
-    scroll: 'none',
 
-	baseCls: "ApplicationCompras-mainPanel",
-
-	//toolbar
-	dockedItems: [new Ext.Toolbar({
-        ui: 'dark',
-        dock: 'bottom',
+        scroll: 'none',
+	    baseCls: "ApplicationCompras-mainPanel",
+	    //toolbar
+	    dockedItems:[new Ext.Toolbar({
+            ui: 'dark',
+            dock: 'bottom',
+            items: [
+                {
+				    xtype: 'button',
+				    ui: 'back',
+				    text: 'Ver Proveedores',
+				    handler: function(){
+					    sink.Main.ui.setCard( ApplicationProveedores.currentInstance.proveedoresWelcome, { type: 'slide', direction: 'right'} );
+				    }
+				},
+				{
+				    xtype:'spacer'
+			    },
+			    {
+				    xtype:'button', 
+				    ui: 'action',
+				    text:'Agregar Otro Proveedor',
+				    handler: function(){					
+					    sink.Main.ui.setCard( ApplicationProveedores.currentInstance.agregarProveedor, { type: 'slide', direction: 'right'} );					
+				    }
+			    }
+			]
+        })],
+	    //items del formpanel
         items: [{
-				xtype: 'button',
-				ui: 'back',
-				text: 'Ver Proveedores',
-				handler: function(){
-					sink.Main.ui.setCard( ApplicationProveedores.currentInstance.proveedoresWelcome, { type: 'slide', direction: 'right'} );
-				}
-				},{
-				xtype:'spacer'
-			},{
-				xtype:'button', 
-				ui: 'action',
-				text:'Agregar Otro Proveedor',
-				handler: function(){
-					
-					sink.Main.ui.setCard( ApplicationProveedores.currentInstance.agregarProveedor, { type: 'slide', direction: 'right'} );
-					
-				}
-			}]
-    })],
-	
-	//items del formpanel
-    items: [{
-			html : 'PROVEEDOR GUARDADO!',
-			cls  : 'gracias',
-			baseCls: "ApplicationCompras-ventaListaPanel",
-		}]
-	});
+			    html : 'PROVEEDOR GUARDADO!',
+			    cls  : 'gracias',
+			    baseCls: "ApplicationCompras-ventaListaPanel",
+		    }]
+	    });
 };
 
 //autoinstalar esta applicacion
