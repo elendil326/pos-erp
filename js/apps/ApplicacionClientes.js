@@ -1,4 +1,24 @@
-﻿ApplicacionClientes= function ()
+﻿/** 
+ * @fileoverview Este archivo contiene el modulo Clientes 
+ * del punto de venta. Es accesible por todos los cajeros,
+ * y gerentes del sistema.
+ *
+ * @author 
+ * @version 0.1 
+ */
+
+
+
+
+/**
+ * Construir un nuevo objeto de tipo ApplicacionClientes.
+ * @class Esta clase se encarga de la creacion de interfacez
+ * que intervinen en la manipulación de clientes. 
+ * @constructor
+ * @throws MemoryException Si se agota la memoria
+ * @return Un objeto del tipo ApplicacionClientes
+ */
+ApplicacionClientes= function ()
 {
 
 
@@ -8,43 +28,78 @@
 
         }
 
+		this._init();
+		
+	//variable auxiliar para referirse a esta instancia del objeto
+    //solo funciona al instanciarse una vez, si el constructor
+    //se vuelve a ejecutar esta variable contendra el ultimo 
+    //objeto construido
         ApplicacionClientes.currentInstance = this;     
 
-        this._init();
+        
 
         return this;
 };
 
 
 
-
-/*
-    Class fields
-*/
-//aqui va el panel principal 
+/**
+ * Contiene el panel principal de la aplicacion clientes
+ * @type Ext.Panel
+ */
 ApplicacionClientes.prototype.mainCard = null;
 
-//aqui va el nombre de la applicacion
+/**
+ * Nombre que se muestra en el menu principal.
+ * @type String
+ */
 ApplicacionClientes.prototype.appName = null;
 
-//aqui va el nombre de la applicacion
+/**
+ * Items que colocaran en el menu principal al cargar este modulo.
+ * De no requerirse ninguno, hacer igual a null
+ * @type Ext.Panel
+ */
 ApplicacionClientes.prototype.leftMenuItems = null;
 
-//aqui va un texto de ayuda en html
+/**
+ * Texto de ayuda formateado en HTML para este modulo.
+ * @type HTML
+ */
 ApplicacionClientes.prototype.ayuda = null;
-
+/**
+ * Store que contendra la lista de clientes que hay en el sistema, 
+ * este Store se sincronizará con un componente Lista para visualizarlos.
+ * @type Ext.data.Store
+ */
 ApplicacionClientes.prototype.ClientesListStore = null;
-
-ApplicacionClientes.prototype.customers = null;
-
+/**
+ * Toolbar que se agrega al mainCard en la parte superior, contiene el TextField 
+ * buscar cliente, el SplitButton con los filtrados de busqueda (Nombre, RFC, Direccion), 
+ * y el boton Nuevo Cliente
+ * @type Ext.Toolbar
+ */
 ApplicacionClientes.prototype.dockedItems = null;
-
+/**
+ * Toolbar que se agrega al panel que visualiza un form con los datos del cliente, el ToolBar
+ * se coloca en la parte inferior, contiene los botones Regresar, Cancelar, Modificar
+ * @type Ext.Toolbar
+ */
 ApplicacionClientes.prototype.dockedItemsFormCliente = null;
-
+/**
+ * Propiedad de la clase que hace referencia al cliente que se ha elegido de la
+ * lista de clientes
+ * @type Ext.data.Model
+ */
 ApplicacionClientes.prototype.clienteSeleccionado = null;
 
 
-											   
+/**
+ * Funcion que se ejecuta para inicializar la Toolbar de la mainCard y
+ * y la Toolbar de la card que contiene el formulario de Nuevo Cliente,
+ * inicializa la mainCard.
+ * @return void
+ */											   
 ApplicacionClientes.prototype._init = function()
 {
         //nombre de la aplicacion
@@ -55,19 +110,24 @@ ApplicacionClientes.prototype._init = function()
         
         //initialize the tootlbar which is a dock
         this._initToolBar();
-        
+        //inicializa la mainCard
         this.mainCard = this.ClientesList;
       
 };
 
 
 
-
+/**
+ * Crea 2 Ext.Toolbar en las cuales se guarda en {@link ApplicacionClientes#dockedItems} y
+ * en el dock del form de agregar cliente, para despues agregarselos a {@link ApplicacionClientes#mainCard} y
+ * {@link ApplicacionClientes#formAgregarCliente} respectivamente.
+ * @return void
+ */
 ApplicacionClientes.prototype._initToolBar = function (){
 
     /*
-        Buscar cliente
-    */
+     *   DOCKED ITEMS PARA LA MAINCARD
+     */
     var btnagregarCliente = [{
         id: 'btn_agregarCliente',
         text: 'Nuevo Cliente',
@@ -105,13 +165,9 @@ ApplicacionClientes.prototype._initToolBar = function (){
     });
 
 
-    /* 
-        Detalles cliente
-    */
+   
    if (!Ext.is.Phone) {
-        /*
-            Buscar cliente
-        */
+      
         this.dockedItems = [ new Ext.Toolbar({
             ui: 'light',
             dock: 'top',
@@ -135,8 +191,8 @@ ApplicacionClientes.prototype._initToolBar = function (){
 	
 	
 	/*
-	Tool bar para formulario agregar cliente
-	*/
+	 *	DOCKED ITEMS PARA EL PANEL QUE CONTIENE AL FORMULARIO DE AGREGAR CLIENTE
+	 */
 	
 	var regresar =[{
         xtype: 'button',
@@ -158,6 +214,7 @@ ApplicacionClientes.prototype._initToolBar = function (){
         items: regresar.concat({xtype: 'spacer'})//.concat(guardar)
     })];
 
+	//agregar este Dock al panel con el formulario agregar cliente
 	this.formAgregarCliente.addDocked(this.saveClientTool);
 };
 
@@ -170,6 +227,15 @@ ApplicacionClientes.prototype._initToolBar = function (){
 /*  ------------------------------------------------------------------------------------------
         Detalles de Cliente
 ------------------------------------------------------------------------------------------*/
+/**
+ * Funcion que hablilita/deshabilita las cajas de texto del formulario Detalles del Cliente 
+ * {@link ApplicacionClientes#addClientDetailsPanel} .
+ * Cambia el texto del Boton que inicialemente dice 'Modificar' (Habilita cajas de texto) 
+ * por 'Guardar' (Deshabilita cajas de texto), el boton esta en la Toolbar Inferior. 
+ * Cuando el Boton dice 'Guardar' se llama al evento que realiza los cambios en la BD
+ * {@link ApplicacionClientes#handlerModificarCliente} con los valores de las cajas de texto.
+ * @return void
+ */
 ApplicacionClientes.prototype.editClient = function (){
 	
 	if(DEBUG){
@@ -181,7 +247,7 @@ ApplicacionClientes.prototype.editClient = function (){
     switch(Ext.getCmp('btn_EditCliente').getText()){
 
         case 'Modificar': 
-            //disable form items
+            //deshabilitar las cajas de texto del formulario y cambia el texto a 'Guardar'
 	
             Ext.getCmp('btn_EditCliente').setText("Guardar");
             Ext.getCmp('nombreClienteM').setDisabled(false);    
@@ -195,8 +261,8 @@ ApplicacionClientes.prototype.editClient = function (){
             break;
 
         case 'Guardar': 
-            //enable form items
-		
+            //habilita las cajas de texto del formulario y cambia el texto a 'Modificar'
+			
             Ext.getCmp('btn_EditCliente').setText("Modificar");
             Ext.getCmp('nombreClienteM').setDisabled(true); 
             Ext.getCmp('direccionClienteM').setDisabled(true);
@@ -206,13 +272,21 @@ ApplicacionClientes.prototype.editClient = function (){
             Ext.getCmp('limite_creditoClienteM').setDisabled(true);
             Ext.getCmp('descuentoClienteM').setDisabled(true);
             Ext.getCmp('btn_CancelEditCliente').setDisabled(true);
-
-            ApplicacionClientes.currentInstance.handlerModificarCliente(idClienteM.getValue(),rfcClienteM.getValue(),nombreClienteM.getValue(),direccionClienteM.getValue(),telefonoClienteM.getValue(),emailClienteM.getValue(),limite_creditoClienteM.getValue());    
+			
+			//se ejecuta el metodo que realiza los cambios en la BD (handlerModificarCliente)
+            
+			ApplicacionClientes.currentInstance.handlerModificarCliente(idClienteM.getValue(),rfcClienteM.getValue(),nombreClienteM.getValue(),direccionClienteM.getValue(),telefonoClienteM.getValue(),emailClienteM.getValue(),limite_creditoClienteM.getValue());    
             break;
     }
 
 };
 
+/**
+ * Funcion que deshabilita las cajas de texto del formulario Detalles del Cliente 
+ * {@link ApplicacionClientes#addClientDetailsPanel} y cambia el texto del Boton que 
+ * inicialemente dice 'Modificar' (y que en ese momento dice 'Guardar') por 'Modificar'
+ * @return void
+ */
 ApplicacionClientes.prototype.cancelEditClient = function(){
 	
     Ext.getCmp('btn_EditCliente').setText("Modificar");
@@ -232,10 +306,20 @@ ApplicacionClientes.prototype.cancelEditClient = function(){
     Carga el panel de 'Detalles del cliente' 
 -------------------------------------------------------*/
 
-
+/**
+ * Funcion que regresa un panel que contiene un Carrusel con 3 cards, una card para contener
+ * un formulario con los detalles del cliente (datos del cliente editables), otra card 
+ * para ventas hechas por un cliente, y la ultima card para las ventas a credito 
+ * (aqui en esta ultima card esta contenida la funcionalidad de pagos).
+ * @param {Ext.data.Model} Un record con los datos del cliente seleccionado de la lista de clientes.
+ * @return Ext.Panel
+ */
 ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 
-
+	/*	
+	 *	DOCKED ITEMS PARA EL PANEL QUE CONTIENE EL FORM CON LOS DATOS DEL CLIENTE SELECCIONADO
+	 */
+	
 	if( !this.btnBackCliente2 ){
 		
 		this.btnBackCliente2 = [{
@@ -272,6 +356,7 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 		}];
 	}
     
+	//si no existe se crea el Toolbar del carrusel
 	if( !this.dockedItemsFormCliente2 ){
 		
 		this.dockedItemsFormCliente2;
@@ -298,10 +383,10 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 	}
 
 
-	//crear el carrusel que contiene esa forma si es que no existe
+	//se crea el carrusel si es que no existe, contiene el formulario de los datos del cliente, las ventas, y ventas a credito
 	if(!this.carousel){
 		
-		//crear la forma de detalles
+		//crear el formulario de los detalles del cliente, los datos del cliente se obtienen del record que recibe como parametro éste método (recor).
 		formaDeDetalles = {                                                       
 		        xtype: 'fieldset',
 		        title: 'Detalles del Cliente',
@@ -370,7 +455,7 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 			                    disabled: true
 			                })
 		        ]};
-		
+		//se crea el carrusel con el formulario arriba creado, ademas de las 2 cards que contienen las ventas y ventas a credtio (estas 2 ultimas cards no contienen nada mas que divs a las que posteriormente se les actualizara codigo HTML)
 		this.carousel = new Ext.Carousel({
 			id: 'carruselDetallesCliente',
 	        items: [{
@@ -422,7 +507,7 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 		
 	}else{
 		
-		//Si si existe, solo actualizar los datos de los campos de texto
+		//Si si existe el carrusel, solo actualizar los datos de los campos de texto del formulario
 		Ext.getCmp("idClienteM").setValue(recor.id_cliente);
 		Ext.getCmp("nombreClienteM").setValue(recor.nombre);
 		Ext.getCmp("rfcClienteM").setValue(recor.rfc);
@@ -438,7 +523,11 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 
     
 
-
+	/*
+	 * Se retorna un panel que tiene dockeada la Toolbar arriba creada en esta misma funcion,
+	 * y el carrusel creado anteriormente.
+	 */
+	
 
     return new Ext.Panel({
 	
@@ -469,19 +558,27 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 /*
     Application Logic for modifying clients
 */
+
+/**
+ * Funcion que hace una peticion al servidor para realizar los cambios efectuados en los
+ * datos de un cliente seleccionado. 
+ * @param {String,String,String,String,String,String,String} 7 Cadenas que representan los datos del cliente:
+ * Id, RFC, nombre, direccion, telefono, email, limite de credito 
+ * @return Ext.Panel
+ */
 ApplicacionClientes.prototype.handlerModificarCliente = function(id,rfc,nombre,direccion,telefono,email,limite_credito){
     
     
-	//revisar los datos de la forma e intentar guardarlos
+	//revisar los datos de la forma e intentar guardarlos, si estan vacios no hace nada y retorna
 
     if( nombre === '' || rfc === '' || limite_credito === ''){
 		return;
     }
-
+	//se pone una capa negra con el texto Guardando Cambios mientras se procesa la peticion, si el servidor responde rapido esta capa no se alcanza a visualizar.
     Ext.getBody().mask(false, '<div class="demos-loading">Guardando cambios</div>');
 
    	POS.AJAXandDECODE({
-            action: '1002',//102
+            action: '1002',
             id: id,
             rfc: rfc,
             nombre: nombre,
@@ -523,7 +620,7 @@ ApplicacionClientes.prototype.handlerModificarCliente = function(id,rfc,nombre,d
         function (){//no responde  AJAXanDECODE actualizar
             POS.aviso("ERROR","NO SE PUDO MODIFICAR CLIENTE ERROR EN LA CONEXION ");      
         });//AJAXandDECODE actualizar cliente
-
+		//se quita la capa negra con el texto Guardando Cambios
         Ext.getBody().unmask();
 
 
@@ -535,46 +632,77 @@ ApplicacionClientes.prototype.handlerModificarCliente = function(id,rfc,nombre,d
 
 
 /*  ------------------------------------------------------------------------------------------
-        Buscar Clientes
+        Buscar Clientes 
 ------------------------------------------------------------------------------------------*/
 
-Ext.regModel('Contact', {
-    fields: ['nombre', 'rfc']
-});
-//create regmodel para busqueda por nombre
-            Ext.regModel('ApplicacionClientes_nombre', {
-                            fields: [ 'nombre']
-            });
-        
-            //create regmodel para busqueda por rfc
-            Ext.regModel('ApplicacionClientes_rfc', {
-                            fields: [ 'rfc', 'nombre','direccion']
-            });
-        
-            //create regmodel para busqueda por direccion
-            Ext.regModel('ApplicacionClientes_direccion', {
-                            fields: [ 'direccion' ]
-            });
+/**
+ * Se crean Modelos para un Store para así poder filtrar los datos que estan contenidos en el.
+ * ES IMPORTANTE SABER QUE PARA QUE SE PUEDA SORTEAR EL CONTENIDO DEL STORE TODOS LOS VALORES
+ * QUE ESTEN CARGADOS EN ÉL SEAN DIFERENTES DE NULO O NO SEAN CADENAS VACIAS, DE LO CONTRARIO NO SE CARGARAN
+ * LOS DATOS, ES DECIR NO DEBE DE HABER CAMPOS VACIOS.
+ * @param {String} Nombre del modelo {Array} Arreglo de cadenas que representan los campos por los q se filtrara
+ * @return Ext.regModel
+ */
 
+//create regmodel para busqueda por nombre
+Ext.regModel('ApplicacionClientes_nombre', {
+	fields: [ 'nombre']
+});
+        
+//create regmodel para busqueda por rfc
+Ext.regModel('ApplicacionClientes_rfc', {
+	fields: [ 'rfc', 'nombre','direccion']
+});
+        
+//create regmodel para busqueda por direccion
+Ext.regModel('ApplicacionClientes_direccion', {
+	fields: [ 'direccion' ]
+});
+
+/**
+ * Variable de tipo String que indica por que campo se sorteara (ordenara) en la lista de clientes
+ * dependiendo del valor de la variable es el filtrado
+ */
 var apClientes_filtro = 'nombre';
 
+/**
+ * Funcion que ordena dentro de la lista de clientes por el campo 'nombre'
+ * asignando a la variable apClientes_filtro el valor de "nombre" y refresca 
+ * la interfaz grafica de la lista para ver el resultado del filtrado
+ * @return void
+ */
 ApplicacionClientes.prototype.filterByName = function(){
     apClientes_filtro = "nombre";
     Ext.getCmp("listaClientes").refresh();
 };
-
+/**
+ * Funcion que ordena dentro de la lista de clientes por el campo 'rfc'
+ * asignando a la variable apClientes_filtro el valor de "rfc" y refresca 
+ * la interfaz grafica de la lista para ver el resultado del filtrado
+ * @return void
+ */
 ApplicacionClientes.prototype.filterByRfc = function(){
     apClientes_filtro = "rfc";
     Ext.getCmp("listaClientes").refresh();
 };
-
+/**
+ * Funcion que ordena dentro de la lista de clientes por el campo 'direccion'
+ * asignando a la variable apClientes_filtro el valor de "direccion" y refresca 
+ * la interfaz grafica de la lista para ver el resultado del filtrado
+ * @return void
+ */
 ApplicacionClientes.prototype.filterByDireccion = function(){
     apClientes_filtro = "direccion";
     Ext.getCmp("listaClientes").refresh();
 };
 
 
-
+/**
+ * Es el Store que contiene la lista de clientes cargada con una peticion al servidor.
+ * Recibe como parametros un modelo y una cadena que indica por que se va a sortear (ordenar) 
+ * en este caso ese filtro es dado por apClientes_filtro
+ * @return Ext.data.Store
+ */
 var ClientesListStore = new Ext.data.Store({
     model: 'ApplicacionClientes_'+apClientes_filtro,
     sorters: apClientes_filtro,
@@ -588,13 +716,18 @@ var ClientesListStore = new Ext.data.Store({
 /*  ------------------------------------------------------------------------------------
         Filtrado de busqueda en el store HAY BUG AQUI, DESPUES DE 1 FILTRO CUANDO SE REGRESA A CLIENTES NO LOS MUESTRA TODOS A MENOS QUE SE TECLE EN EL TEXT DE BUSQUEDA ALGO O SE DEJE EN ''
 ---------------------------------------------------------------------------------------*/
+/**
+ * Funcion que filtra dentro de la lista de clientes por el campo 'nombre'
+ * y refresca la interfaz grafica de la lista para ver el resultado del filtrado
+ * @return void
+ */
 ApplicacionClientes.prototype.doSearch = function(  ){
  
     if (Ext.getCmp('btnBuscarCliente').getValue().length === 0){
 	
         ClientesListStore.clearFilter();
         try{
-        	ClientesListStore.sync(); //marca erro pero si lo meto en try catch o no lo llamo la vista no coincide con el store
+        	ClientesListStore.sync(); //marca error pero si lo meto en try catch o no lo llamo la vista no coincide con el store
         }catch(e){
 			console.warn("Error sync -> "+e);
 		}
@@ -613,13 +746,19 @@ ApplicacionClientes.prototype.doSearch = function(  ){
 		
 	}
         
-
-
-        
 };
 
 
-
+/**
+ * Regresa la mainCard de la aplicacion Clientes, contiene la lista de clientes dados de
+ * alta en el sistema, tiene como elemento principal una lista y una Toolbar 
+ * {@link ApplicacionClientes#dockedItems} , manda una peticion al servidor para llenar
+ * la lista en el evento beforeshow del panel, y en el evento selectionchange de la lista
+ * le asigna valor a {@link ApplicacionClientes#clienteSeleccionado} y ejecuta los metodos
+ * {@link ApplicacionClientes#addClientDetailsPanel} , {@link ApplicacionClientes#listarVentas} y 
+ * {@link ApplicacionClientes#listarVentasCredito} .
+ * @return Ext.Panel
+ */
 ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
         id: 'panelClientes',
         layout: Ext.is.Phone ? 'fit' : {
@@ -639,6 +778,7 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
                                 POS.aviso("ERROR", ""+datos.reason);    
                                 return;
                             }
+							//llena el store con los datos enviados del servidor
                             ClientesListStore.loadData(datos.datos);          
                         },
                         function (){//no responde       
@@ -676,7 +816,7 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
 
 
 							
-							//crear el nuevo panel
+							//La funcion addClientDetailsPanel regresa un panel con el carrusel de 3 cards 
                             var detalles = ApplicacionClientes.currentInstance.addClientDetailsPanel( recor ); 
 
 
@@ -684,8 +824,8 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
 
 						    ApplicacionClientes.currentInstance.listarVentasCredito( recor );
 
-							//deslizarlo
-                            sink.Main.ui.setCard( detalles , 'fade');
+							//Se desliza para mostrar el panel que contiene el carrusel con las 3 cards (detalles del cliente, ventas al cliente, ventas a credito al cliente).
+                            sink.Main.ui.setCard( detalles , 'slide');
                         }
 
 
@@ -699,7 +839,11 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
 /*  ------------------------------------------------------------------------------------------
         AGREGAR Nuevo Cliente
 ------------------------------------------------------------------------------------------*/
-
+/**
+ * Regresa un formulario vacio con los campos necesarios para dar de alta 
+ * en el sistema a un nuevo cliente.
+ * @return Ext.form.FormPanel
+ */
 ApplicacionClientes.prototype.formAgregarCliente  = new Ext.form.FormPanel({
         scroll: 'vertical',
         id:'formAgregarCliente', 
@@ -769,8 +913,8 @@ ApplicacionClientes.prototype.formAgregarCliente  = new Ext.form.FormPanel({
                                             action: '1005'
                                         },
                                         function (datos){//mientras responda
-                                            this.customers = datos.datos;
-                                            ClientesListStore.loadData(this.customers); 
+											//se vuelve a cargar el store de la lista de clientes para asi incluir el nuevo registro agregado
+                                            ClientesListStore.loadData(datos.datos); 
                                         },
                                         function (){//no responde       
                                             POS.aviso("ERROR!","NO SE PUDO CARGAR LA LISTA DE CLIENTES ERROR EN LA CONEXION :(");  
@@ -786,8 +930,7 @@ ApplicacionClientes.prototype.formAgregarCliente  = new Ext.form.FormPanel({
                             }
                             );//AJAXandDECODE insertar cliente
                                 Ext.getBody().unmask();
-                               // sink.Main.ui.setCard( Ext.getCmp('panelClientes'), { type: 'slide', direction: 'right'} );
-                                //Ext.getCmp('btn_agregarCliente').setVisible(true);
+                         
                         }//else de validar vacios
                                         
                                         
@@ -802,7 +945,15 @@ ApplicacionClientes.prototype.formAgregarCliente  = new Ext.form.FormPanel({
 /*------------------------------------------------------------------
             VENTAS EMITIDAS A UN CLIENTE 
 ------------------------------------------------------------------------*/
-
+/**
+ * Funcion que dado un cliente enlista las ventas hechas a un cliente ya sean de contado o a credito.
+ * Con la informacion que proporciona el servidor se actualiza con html generado al vuelo la segunda 
+ * card del carrusel contenido en {@link ApplicacionClientes#addClientDetailsPanel} 
+ * mostrando asi el estado de cada venta del cliente. Dado el estado de la venta se
+ * evalua si se puede facturar o no.
+ * @param {Ext.data.Model} El cliente seleccionado en la lista {@link ApplicacionClientes#clienteSeleccionado}
+ * @return void
+ */
 ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
     
     
@@ -822,9 +973,9 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
     },
     function (datos){
 		if(datos.success === true){
-	
+		//Se carga el store con los datos enviados del servidor
 		ventasCliente.loadData(datos.datos);
-                    
+        //Cabecera en HTML del panel           
 		var html = "<div class='AC-Title'>Todas la ventas a este cliente</div>";
 
 		html += "<div class='ApplicationClientes-Item' style='border:0px; font-size: 14px;' >"
@@ -840,29 +991,34 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
                             + "<div class='total'>Total</div>"
 			+ "</div>";
 
-		//renderear el html
+		//Generar el html, si hay mas de una venta se genera el html que contendra los datos y el estado
+		//de cada venta hecha al cliente.
 		for( a = 0; a < ventasCliente.getCount(); a++ ){
 
 			var facturado="";
-			
+			//Se evalua si la venta esta facturada de ser asi, se la el estilo y se le da el texto de Facturada
 			if ( ventasCliente.data.items[a].data.facturado == 1 ){
 				facturado="<div class='pagado'>Facturada</div>";
 			}
-
+			//Si no esta facturada se debe evaluar si fue de contado o adeuda a esta venta
 			if ( ventasCliente.data.items[a].data.facturado == 0 ){
 
 				vtaClteTotal = parseFloat(ventasCliente.data.items[a].data.total); 
 				vtaCltePagado = parseFloat(ventasCliente.data.items[a].data.pagado);
-
+				//Si adeuda se le da el estilo y se le da el texto de Adeuda, de lo contrario se genera un evento
+				//al texto Facturar para que pueda Facturar esa venta.
 				if(  vtaClteTotal > vtaCltePagado ){
 					facturado = "<div class='abonar'>Adeuda</div>";
 				}else{
+					//Se genera el evento sobre el texto Facturar y se llama ala funcion 
+					//{@link ApplicacionClientes#panelFacturas} para que muestre la interfaz para hacerlo.
 					facturado ="<div class='abonar' onclick='ApplicacionClientes.currentInstance.panelFacturas(" + ventasCliente.data.items[a].data.id_venta + " , "+ ventasCliente.data.items[a].data.id_cliente +")'>Facturar</div>";
 				}
 			}
-
+			//Se genera el contenido en html de los datos de cada venta, en cada venta se genera una div con 
+			//fondo una imagen para que se pueda visualizar los detalles de esa venta {@link ApplicacionClientes#verVenta} mediante el ID de la venta.
 			html += "<div class='ApplicationClientes-Item' >" 
-				+ "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" +ventasCliente.data.items[a].data.id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>" 
+				+ "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" +ventasCliente.data.items[a].data.id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'/></div>" 
 				+ "<div class='id'>" + ventasCliente.data.items[a].data.id_venta +"</div>" 
 				+ "<div class='tipo'>" + ventasCliente.data.items[a].data.tipo_venta +"</div>" 
 				+ "<div class='fecha'>"+ ventasCliente.data.items[a].data.fecha +"</div>" 
@@ -879,13 +1035,13 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 		}
 
 
-
+		//Si no hay ventas solo se muestra un mensaje estilizado al centro del panel
 		if(!datos.success){
 			
 			html="<div class=\"no-data\">Este cliente no ha hecho ninguna compra.</div>";
 		}
 
-
+		//Se actualiza la segunda card del carrusel con el codigo HTML generado
 		Ext.get("customerHistorialSlide").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
 
 		},
@@ -903,6 +1059,12 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 /*--------------------------------------------------------------------
         VER DETALLES DE LA VENTA DEL CLIENTE
 ----------------------------------------------------------------------*/
+/**
+ * Funcion que dado el ID de la venta extrae los detalles de la misma y los
+ * muestra sombreando la pantalla y colocando un panel en el centro con los items de la venta.
+ * @param {Ext.data.Model}
+ * @return Ext.Panel
+ */
 ApplicacionClientes.prototype.verVenta = function( idVenta ){
 
      var formBase = new Ext.Panel({
@@ -923,11 +1085,10 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
                         
                         text: 'X Cerrar',
                         handler: function() {
-                            //regresar el boton de cliente comun a 1
+                            //Elimina el formulario actual para regresar a la lista de ventas
                             Ext.getCmp("detalleVentaPanel").destroy();
                              Ext.getBody().unmask();
-                            //ocultar este form
-                            //form.hide();                          
+                                                   
                             }
                         }]
                     }]
@@ -971,9 +1132,9 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
             },
             function (datos){//mientras responda AJAXDECODE MOSTRAR CLIENTE
                 if(datos.success){
-                    
+                    //Se llena el store con los productos pertenecientes a esta venta
                     ventasDetalle.loadData(datos.datos);
-                    
+                    //Se genera el HTML para la cabecera 
                     var html = "";
                     html += "<div class='ApplicationClientes-Item' >" 
                     + "<div class='vendedor'>PRODUCTO</div>" 
@@ -983,7 +1144,7 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
                     + "</div>";
                                 
                     for( a = 0; a < ventasDetalle.getCount(); a++ ){
-                                            
+                       //HTML de cada producto                     
                         html += "<div class='ApplicationClientes-Item' >" 
                         + "<div class='vendedor'>" + ventasDetalle.data.items[a].data.denominacion +"</div>" 
                         + "<div class='sucursal'>"+ ventasDetalle.data.items[a].data.cantidad +"</div>" 
@@ -992,7 +1153,7 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
                         + "</div>";
                     }
                                 
-                                //imprimir el html
+                    //Se actualiza la parte de este formulario con el HTML generado
                     Ext.get("detalleVentaCliente").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
                         
                 }//FIN DATOS.SUCCES TRUE MOSTRAR CLIENTE
@@ -1009,9 +1170,9 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
     
     formBase.show();
 	
-    /*
-		Se le da un fono al panel contenedor
-	*/
+    
+	//Se le da un fondo al panel contenedor
+	
 	Ext.get("detalleVentaCliente").parent().parent().setStyle({
 					'background-image':'url("media/g3.png")'								   
 	});
@@ -1022,7 +1183,14 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
         MUESTRA LAS VENTAS A CREDITO DE UN CLIENTE
 ---------------------------------------------------*/
 
-
+/**
+ * Funcion que dado un cliente enlista las ventas a credito hechas a un cliente.
+ * Con la informacion que proporciona el servidor se actualiza con html generado al vuelo la tercera 
+ * card del carrusel contenido en {@link addClientDetailsPanel} mostrando asi el estado de cada venta
+ * del cliente. Dado el estado de la venta se evalua si se puede abonar o no.
+ * @param {Ext.data.Model}
+ * @return void
+ */
 ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
 
     Ext.regModel('ventasCreditoStore', {
@@ -1042,8 +1210,9 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
             },
             function (datos){//mientras responda AJAXDECODE LISTAR VENTAS CLIENTE
                 if(datos.success === true){
+					//Carga el store con las ventas a credito
                     ventasClienteCredito.loadData(datos.datos);
-
+					//Cabecera del panel que contendra las ventas a credito
 					var html = "<div class='AC-Title'>Ventas a Credito para este cliente</div>";
                     
 					html += "<div class='ApplicationClientes-Item' style='border:0px; font-size: 14px;' >"
@@ -1059,7 +1228,10 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
                             + "<div class='total'>Estado</div>"
                             + "</div>";
                     
-                    //renderear el html
+                    //Genera el html de cada venta a credito dando la opcion de ver los detalles de cada
+					//venta llamando al metodo {@link ApplicacionClientes#verVenta} , asi como Abonar a las
+					//ventas que aun se adeuden mediante el metodo {@link ApplicacionClientes#abonarVenta}.
+					//Tambien se podran ver los pagos que se hayan hecho a cada venta mediante {@link ApplicacionClientes#verPagosVenta}
                     for( a = 0; a < ventasClienteCredito.getCount(); a++ ){
                         var ven = ventasClienteCredito.data.items[a];
                         var adeudo = ven.data.adeudo;
@@ -1092,11 +1264,12 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
                     
                     //console.log(ventasCliente.data.items);
                 }
+				//Si no hay ventas a credito muestra un mensaje.
                 if(!datos.success){
                     
 					html="<div class=\"no-data\">Este cliente no ha hecho ninguna compra a credito.</div>";
                 }
-                
+				//Se actualiza la tercera card del carrusel con el html generado
                 Ext.get("customerCreditHistorialSlide").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
             },
             function (){//no responde AJAXDECODE DE VENTAS CLIENTE
@@ -1111,6 +1284,12 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
 /*-------------------------------------------------------
     PAGOS HECHOS SOBRE 1 VENTA EN ESPECIFICO
 ---------------------------------------------------------*/
+/**
+ * Funcion que dado el ID de la venta extrae los pagos hechos a la misma y los
+ * muestra sombreando la pantalla y colocando un panel en el centro con los items de la venta.
+ * @param {String} Id de la venta
+ * @return void
+ */
 ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
 
      var formBase = new Ext.Panel({
@@ -1131,11 +1310,10 @@ ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
                         
                         text: 'X Cerrar',
                         handler: function() {
-                            //regresar el boton de cliente comun a 1
+                            //Elimina este panel
                             Ext.getCmp("pagosVentaPanel").destroy();
                              Ext.getBody().unmask();
-                            //ocultar este form
-                            //form.hide();                          
+                                                      
                             }
                         }]
                     }]
@@ -1179,9 +1357,10 @@ ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
             },
             function (datos){//mientras responda AJAXDECODE MOSTRAR CLIENTE
                 if(datos.success){
-                    
+                    //Carga el Store con los pagos de la venta
                     ventasDetalle.loadData(datos.datos);
                     
+					//Cabecera del panel que contendra los pagos del venta
                     var html = "";
                     html += "<div class='ApplicationClientes-Item' >" 
                     + "<div class='vendedor'># DE VENTA</div>" 
@@ -1191,7 +1370,7 @@ ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
                     + "</div>";
                                 
                     for( a = 0; a < ventasDetalle.getCount(); a++ ){
-                                            
+                        //Se genera el HML con cada 1 de los pagos hechos a la venta                   
                         html += "<div class='ApplicationClientes-Item' id='pago_Borrar_"+ventasDetalle.data.items[a].data.id_pago+"'>" 
                         + "<div class='vendedor'>" + ventasDetalle.data.items[a].data.id_venta +"</div>" 
                         + "<div class='sucursal'>"+ ventasDetalle.data.items[a].data.fecha +"</div>" 
@@ -1200,10 +1379,12 @@ ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
                         + "</div>";
                     }
                                 
-                                //imprimir el html
+                    //Se actualiza con el html generado el panel
                     Ext.get("pagosVentaCliente").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
                         
                 }//FIN DATOS.SUCCES TRUE MOSTRAR CLIENTE
+				
+				//Si no hay pagos muestra un mensaje
                 if(!datos.success){
 
 					html = "<div class='ApplicationClientes-itemsBox' id='no_pagosVentaClien' ><div class='no-data'>"+datos.reason+"</div></div>";
@@ -1221,9 +1402,9 @@ ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
     
     formBase.show();
 	
-	/*
-		Se le da un fono al panel contenedor
-	*/
+	
+	//Se le da un fondo al panel contenedor
+	
 	Ext.get("pagosVentaCliente").parent().parent().setStyle({
 					'background-image':'url("media/g3.png")'								   
 	});
@@ -1236,9 +1417,17 @@ ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
 /*------------------------------------------------------------
     ABONAR A UNA VENTA QUE EL CLIENTE ADEUDA
 --------------------------------------------------------------*/
-
+/**
+ * Funcion que dado el ID de la venta, el total de la venta y lo que se adeda de la misma
+ * muestra sombreando la pantalla un panel en el centro con un formulario para poder
+ * abonar a esa venta, mostrando asi informacion del abono y los totales de la venta.
+ * @param {String} el id de la venta
+ * @param {String} el total de la venta
+ * @param {String} lo que se deuda a la venta
+ * @return void
+ */
 ApplicacionClientes.prototype.abonarVenta = function( idVenta , total , adeudo ){
-    
+    //Cabecera del Panel
     var clienteHtml = "<div class='ApplicationProveedores-itemsBox'>";
         clienteHtml += " <div class='no-data' id='abonar-Venta' > ";
         clienteHtml += " <div class='nombre'>Abono de " + ApplicacionClientes.currentInstance.clienteSeleccionado.nombre + " para la venta '"+idVenta+"'</div>";
@@ -1338,7 +1527,7 @@ ApplicacionClientes.prototype.abonarVenta = function( idVenta , total , adeudo )
                                     },
                                     function (datos){
                                         if(datos.success){
-                                        
+                                        	//Se manda llamar al metodo que enlista las ventas a credito para que refresque la informacion debido al abono insertado
                                             ApplicacionClientes.currentInstance.listarVentasCredito( ApplicacionClientes.currentInstance.clienteSeleccionado );
                                             
                                             Ext.getCmp("abonarVentaPanel").destroy();
@@ -1396,29 +1585,12 @@ ApplicacionClientes.prototype.abonarVenta = function( idVenta , total , adeudo )
             });
         }
         
-        
-        
-
-        
-                                
-                    /*for( a = 0; a < ventasDetalle.getCount(); a++ ){
-                                            
-                        html += "<div class='ApplicationClientes-item' >" 
-                        + "<div class='vendedor'>" + ventasDetalle.data.items[a].id_venta +"</div>" 
-                        + "<div class='sucursal'>"+ ventasDetalle.data.items[a].fecha +"</div>" 
-                        + "<div class='subtotal'>$ "+ ventasDetalle.data.items[a].monto+"</div>"
-                        + "</div>";
-                    }*/
-                                
-                                //imprimir el html
-        //Ext.get("abonarVentaCliente").update("<div class='ApplicationClientes-itemsBox'>" + clienteHtml +"</div>");
-                        
-                
+           
+     //Se muestra el panel con la forma para abonar           
     abonaPanel.show();
     
-	/*
-		Se le da un fono al panel contenedor
-	*/
+	
+	//Se le da un fono al panel contenedor
 	
 	Ext.get("abonar-Venta").setStyle({
 					'background-image':'url("media/g3.png")'								   
@@ -1437,6 +1609,13 @@ ApplicacionClientes.prototype.abonarVenta = function( idVenta , total , adeudo )
 /*---------------------------------------------------
     ELIMINAR UN PAGO DE UNA VENTA
 -----------------------------------------------------*/
+
+/**
+ * Funcion que dado el ID de un pago lo elimina de la BD y actualiza los datos de esa venta
+ * para refrescar asi principalemente el campo Adeuda.
+ * @param {String} El id del pago
+ * @return void
+ */
 ApplicacionClientes.prototype.EliminarabonoVenta = function ( id_Pago ){
     var overlayTb = new Ext.Toolbar({
             dock: 'top'
@@ -1499,19 +1678,33 @@ ApplicacionClientes.prototype.EliminarabonoVenta = function ( id_Pago ){
 /*--------------------------------------------------------------------
     VER PANEL DE FACTURAS
 ----------------------------------------------------------------------*/
-
+/**
+ * Funcion que dado el ID de la venta y del cliente seleccionado crea una 
+ * instancia de la clase ApplicationFacturaVentas para poder Deslizar un panel 
+ * con los datos del cliente y de la venta a facturar.
+ * @param {String} El id de la vente
+ * @param {String} El id del clienet
+ * @return void
+ */
 ApplicacionClientes.prototype.panelFacturas = function( id_venta , id_cliente ){
-	
+	//Si no hay una instancia de ApplicationFacturaVentas la crea
 	if( !ApplicacionClientes.currentInstance.facturaObj ){
 		
 		ApplicacionClientes.prototype.facturaObj = new ApplicationFacturaVentas();
 	}
 		
 		
+		//Con el id de la venta y del cliente se ejecuta el metodo facturaPanel del objeto
+		//anteriormente instanciado (facturaObj), el metodo facturarPanel le asigna un panel a la propiedad
+		//facturaVenta del objeto anteriormente instanciado (facturaObj) con el html rendereado para poder
+		// facturar una venta
 		
 		ApplicacionClientes.currentInstance.facturaObj.facturarPanel( id_venta, id_cliente );
+		
+		//Se desliza la propiedad facturarVenta del objeto facturaObj (esa propiedad es un panel)
 		sink.Main.ui.setCard(  ApplicacionClientes.currentInstance.facturaObj.facturaVenta, 'slide' );
 		
+		//Se le da fondo alos datos del cliente
 		Ext.get("datosClienteFactura").parent().parent().setStyle({
 					'background-image':'url("media/g3.png")'								   
 		});
