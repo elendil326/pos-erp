@@ -88,19 +88,19 @@ ApplicationProveedores.prototype.dockedItems = null;
 
 
 
-//ApplicationProveedores.prototype.ProveedoresListStore = null;
+ApplicationProveedores.prototype.ProveedoresListStore = null;
 
-//ApplicationProveedores.prototype.providers = null;
+ApplicationProveedores.prototype.providers = null;
 
-//ApplicationProveedores.prototype.actualizaProveedor=null;
+ApplicationProveedores.prototype.actualizaProveedor=null;
 
-//ApplicationProveedores.prototype.updateProviderForm= null;
+ApplicationProveedores.prototype.updateProviderForm= null;
 
-//ApplicationProveedores.prototype.record = null;
+ApplicationProveedores.prototype.record = null;
 
-//ApplicationProveedores.prototype.dockedItemsGuardar = null;
+ApplicationProveedores.prototype.dockedItemsGuardar = null;
 
-//ApplicationProveedores.prototype.proveedorSelectedHtml="";
+ApplicationProveedores.prototype.proveedorSelectedHtml="";
 
 
 
@@ -437,6 +437,8 @@ ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 			ui: 'action',
 			handler: function(){
 				
+				ApplicationProveedores.currentInstance.comprasObj = new ApplicationComprasProveedor();
+				
 				ApplicationProveedores.currentInstance.comprasObj.providerId= provedor.id_proveedor;
 				ApplicationProveedores.currentInstance.comprasObj.nombreProv= provedor.nombre;
 				ApplicationProveedores.currentInstance.comprasObj.comprarPanel( provedor.id_proveedor);
@@ -713,121 +715,132 @@ ApplicationProveedores.prototype.renderProvedorDetalles = function ( provedor )
 ---------------------------------------------------------*/
 ApplicationProveedores.prototype.verPagosCompra = function( idCompra ){
 
-	 var formBase = new Ext.Panel({
-		id: 'pagosCompraPanel',
-		 scroll: 'vertical',
-			//	items
-            items: [{
-				id: 'pagosCompraProveedor',
-		        html: ''
-		    }], 
-			//	dock		
-            dockedItems: [{
-                    xtype: 'toolbar',
-                    dock: 'bottom',
-                    items: [{
-						xtype: 'spacer'
-						},{
-						//-------------------------------------------------------------------------------
-						//			cancelar
-						//-------------------------------------------------------------------------------
-						text: 'X Cerrar',
-						handler: function() {
-							//regresar el boton de cliente comun a 1
-							Ext.getCmp("pagosCompraPanel").destroy();
-							 Ext.getBody().unmask();
-							//ocultar este form
-							//form.hide();							
-                            }
-						}]
-					}]
-			});
+    var formBase = new Ext.Panel({
+	    id: 'pagosCompraPanel',
+	    scroll: 'vertical',		
+        items: [{
+		    id: 'pagosCompraProveedor',
+		    html: ''
+		}], 
+		dockedItems: [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            items: [
+                {
+                    xtype: 'spacer'
+                },
+                {
+				    //-------------------------------------------------------------------------------
+					//			cancelar
+					//-------------------------------------------------------------------------------
+				    text: 'X Cerrar',
+					handler: function() {
+					    //regresar el boton de cliente comun a 1
+						Ext.getCmp("pagosCompraPanel").destroy();
+					    Ext.getBody().unmask();
+						//ocultar este form
+						//form.hide();							
+                    }
+				}
+			]//items
+		}]//dockedItems
+	});//formBase
 	
        
-	   if (Ext.platform.isAndroidOS) {
-            formBase.items.unshift({
-                xtype: 'component',
-                styleHtmlContent: true,
-                html: '<span style="color: red">Forms on Android are currently under development. We are working hard to improve this in upcoming releases.</span>'
-            });
-        }
+	if (Ext.platform.isAndroidOS) 
+	{
+        formBase.items.unshift({
+            xtype: 'component',
+            styleHtmlContent: true,
+            html: '<span style="color: red">Forms on Android are currently under development. We are working hard to improve this in upcoming releases.</span>'
+        });
+    }
 
-	if (Ext.platform.isPhone) {
-            formBase.fullscreen = true;
-        } else {
-            Ext.apply(formBase, {
-                autoRender: true,
-                floating: true,
-                modal: true,
-                centered: true,
-                hideOnMaskTap: false,
-                height: 585,
-                width: 680
-            });
-        }
+	if (Ext.platform.isPhone) 
+	{
+        formBase.fullscreen = true;
+    } 
+    else 
+    {
+        Ext.apply(formBase, {
+            autoRender: true,
+            floating: true,
+            modal: true,
+            centered: true,
+            hideOnMaskTap: false,
+            height: 585,
+            width: 680
+        });
+    }
         
-		Ext.regModel('comprasCreditoDetalleStore', {
-    	fields: ['nombre', 'rfc']
-		});
+	Ext.regModel('comprasCreditoDetalleStore', {
+        fields: ['nombre', 'rfc']
+    });
 
-		var comprasDetalle= new Ext.data.Store({
-    	model: 'comprasCreditoDetalleStore'
-    	
-		});	
+	var comprasDetalle= new Ext.data.Store({
+       	model: 'comprasCreditoDetalleStore'    	
+	});	
 		
-		POS.AJAXandDECODE({
-			action: '1208',
-			id_compra: idCompra
-			},
-			function (datos){//mientras responda AJAXDECODE MOSTRAR CLIENTE
-				if(datos.success == true){
+    POS.AJAXandDECODE({
+        	action: '1208',
+		    id_compra: idCompra
+	    },
+	    function (datos)
+	    {
+	        //mientras responda AJAXDECODE MOSTRAR CLIENTE
+            if(datos.success == true)
+            {
 					
-					comprasDetalle.loadData(datos.datos);
+		        comprasDetalle.loadData(datos.datos);
 					
-					var html = "";
-					html += "<div class='ApplicationClientes-Item' >" 
-					+ "<div class='vendedor'># COMPRA</div>" 
-					+ "<div class='sucursal'>FECHA</div>" 
-					+ "<div class='subtotal'>MONTO</div>"
-					+ "<div class='subtotal'></div>"
-					+ "</div>";
+			    var html = "";
+		
+			    html += "<div class='ApplicationClientes-Item'>"; 
+			    html += "   <div class='vendedor'># COMPRA</div>"; 
+			    html += "   <div class='sucursal'>FECHA</div>"; 
+			    html += "   <div class='subtotal'>MONTO</div>";
+			    html += "   <div class='subtotal'></div>";
+			    html += "</div>";
 								
-					for( a = 0; a < comprasDetalle.getCount(); a++ ){
+			    for( a = 0; a < comprasDetalle.getCount(); a++ )
+			    {
 											
-						html += "<div class='ApplicationClientes-Item' id='pago_Borrar_"+comprasDetalle.data.items[a].data.id_pago+"'>" 
-						+ "<div class='vendedor'>" + comprasDetalle.data.items[a].data.id_compra +"</div>" 
-						+ "<div class='sucursal'>"+ comprasDetalle.data.items[a].data.fecha +"</div>" 
-						+ "<div class='subtotal'>$ "+ comprasDetalle.data.items[a].data.monto+"</div>"
-						+ "<div class='abonar' onclick='ApplicationProveedores.currentInstance.EliminarabonoCompra(" +  comprasDetalle.data.items[a].data.id_pago +")'>ELIMINAR</div>"
-						+ "</div>";
-					}
+			        html += "<div class='ApplicationClientes-Item' id='pago_Borrar_"+comprasDetalle.data.items[a].data.id_pago+"'>";
+				    html += "<div class='vendedor'>" + comprasDetalle.data.items[a].data.id_compra +"</div>"; 
+				    html += "<div class='sucursal'>"+ comprasDetalle.data.items[a].data.fecha +"</div>"; 
+				    html += "<div class='subtotal'>$ "+ comprasDetalle.data.items[a].data.monto+"</div>";
+				    html += "<div class='abonar' onclick='ApplicationProveedores.currentInstance.EliminarabonoCompra(" +  comprasDetalle.data.items[a].data.id_pago +")'>ELIMINAR</div>";
+				    html += "</div>";
+			    }
 								
-								//imprimir el html
-					Ext.get("pagosCompraProveedor").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
+			    //imprimir el html
+			    Ext.get("pagosCompraProveedor").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
 						
-				}//FIN DATOS.SUCCES TRUE MOSTRAR CLIENTE
-				if(datos.success == false){
+		    }//FIN DATOS.SUCCES TRUE MOSTRAR CLIENTE
+		    else
+		    {
 					
-					html = "<div class='ApplicationClientes-itemsBox' id='no_pagosComprarProv' ><div class='no-data'>"+datos.reason+"</div></div>";
+		        html = "<div class='ApplicationClientes-itemsBox' id='no_pagosComprarProv' ><div class='no-data'>"+datos.reason+"</div></div>";
 					
-					Ext.get("pagosCompraProveedor").update(html);
+			    Ext.get("pagosCompraProveedor").update(html);
 					
-					return;
-				}
-				},
-			function (){//no responde  AJAXDECODE MOSTRAR CLIENTE     
-				POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE PAGOS ERROR EN LA CONEXION :("); 
-				return;
-			}
-		);//AJAXandDECODE MOSTRAR CLIENTE						
+			    return;
+		    }
+	    },
+	    function ()
+	    {//no responde  AJAXDECODE MOSTRAR CLIENTE     
+	        POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE PAGOS ERROR EN LA CONEXION :("); 
+		    return;
+	    }
+	);//AJAXandDECODE MOSTRAR CLIENTE						
 	
 	formBase.show();
 	
-	/*
-		Se le da fondo al panel padre del panel generado
-	*/
+	
+	//Se le da fondo al panel padre del panel generado
+	
 	Ext.get("pagosCompraProveedor").parent().parent().setStyle({
-					'background-image':'url("media/g3.png")'								   
+	    'background-image':'url("media/g3.png")'								   
 	});
 	
 };
