@@ -522,6 +522,8 @@ ApplicationProveedores.prototype.listarCompras = function (){
     		if(datos.success === true)
     		{
                 
+                Ext.get("comprasProveedorSucursal").update("");
+                
                 //carga los datos al store
 			    comprasProveedor.loadData(datos.datos);
 					
@@ -653,7 +655,7 @@ ApplicationProveedores.prototype.listarComprasCredito = function (){
 					html += "   <div class='total'>$"+ tot +"</div>";
 					html += "   <div class='total' id='abonadoCompra_"+compra.data.id_compra+"'>$"+ compra.data.abonado +"</div>";
 					html += "   <div class='total' id='adeudoCompra_"+compra.data.id_compra+"'>$"+ adeudo +"</div>";
-					html += "   <div class='subtotal' onclick='ApplicationProveedores.currentInstance.verPagosCompra(" + compra.data.id_compra+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/compose.png'></div>";
+					html += "   <div class='subtotal' onclick='ApplicationProveedores.currentInstance.verPagosCompra(" + compra.data.id_compra+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/compose.png' /></div>";
 					html +=     status;
 					html += "</div>";
 														
@@ -747,15 +749,7 @@ ApplicationProveedores.prototype.verPagosCompra = function( idCompra ){
 		}]//dockedItems
 	});//formBase
 	
-       
-	if (Ext.platform.isAndroidOS) 
-	{
-        formBase.items.unshift({
-            xtype: 'component',
-            styleHtmlContent: true,
-            html: '<span style="color: red">Forms on Android are currently under development. We are working hard to improve this in upcoming releases.</span>'
-        });
-    }
+    
 
 	if (Ext.platform.isPhone) 
 	{
@@ -1009,15 +1003,7 @@ ApplicationProveedores.prototype.abonarCompra = function( idCompra , total , ade
     	}]//dockedItems
     });//abonaPanel
 	
-       
-    if (Ext.platform.isAndroidOS) 
-    {
-        abonaPanel.items.unshift({
-            xtype: 'component',
-            styleHtmlContent: true,
-            html: '<span style="color: red">Forms on Android are currently under development. We are working hard to improve this in upcoming releases.</span>'
-        });
-    }
+   
 
     if (Ext.platform.isPhone) 
     {
@@ -1157,17 +1143,7 @@ ApplicationProveedores.prototype.verCompra = function( idCompra ){
 				}
 			]//items
 		}]
-	});//formBase
-	
-       
-	if (Ext.platform.isAndroidOS) 
-	{
-        formBase.items.unshift({
-            xtype: 'component',
-            styleHtmlContent: true,
-            html: '<span style="color: red">Forms on Android are currently under development. We are working hard to improve this in upcoming releases.</span>'
-        });
-    }
+	});//formBase	    
 
 	if (Ext.platform.isPhone)   
 	{
