@@ -101,11 +101,59 @@ function modificarUsuario( $id_usuario, $nombre, $username, $password )
 	catch( Exception $e )
 	{
 		echo ' { "success" : false, "error" : "No se pudieron actualizar los datos del usuario" } ';
+		return;
 	}
 	
 	echo ' { "success" : true, "datos": "Se actualizaron correctamente los datos de '.$nombre.'" } ';
 
 }
+
+
+/**
+*
+*	actualizarUsuario
+*
+*	@param <Integer> id_usuario El id del usuario de quien se quieren modificar los datos
+*	@param <String> nombre Nuevo nombre del usuario
+*	@param <String> usuario Nuevo usuario
+*	@param <String> id_sucursal nuevas
+*	@param <String> id_grupo nuevo
+*/
+
+function actualizarUsuario( $id_usuario, $nombre, $username, $id_sucursal, $id_grupo )
+{
+
+	$usuario = UsuarioDAO::getByPK($id_usuario);
+
+	$usuario->setNombre( $nombre );
+	$usuario->setUsuario( $username );
+	//$usuario->setContrasena( $password );
+	$usuario->setIdSucursal( $id_sucursal );
+
+
+	$userSearch = new GruposUsuarios();
+	$userSearch->setIdUsuario($id_usuario);
+	$gruposUsuarios = GruposUsuariosDAO::search($userSearch);
+	
+	//var_dump($gruposUsuarios);
+	$gs = array_pop($gruposUsuarios);
+	$gs->setIdGrupo($id_grupo);
+	
+	try{
+		UsuarioDAO::save( $usuario );
+		GruposUsuariosDAO::save( $gs );
+	}
+	catch( Exception $e )
+	{
+		echo ' { "success" : false, "error" : "No se pudieron actualizar los datos del usuario" } ';
+		return;
+	}
+	
+	echo ' { "success" : true, "datos": "Se actualizaron correctamente los datos de '.$nombre.'" } ';
+
+}
+
+
 
 
 function desactivarUsuario( $id_usuario )
@@ -262,7 +310,7 @@ switch($args['action']){
 		
 	break;
 	
-	case '2304':
+	case '2304': //modificarUsuario
 			
 			if( !isset( $args['nombre'] ) && !isset( $args['user2'] ) && !isset( $args['password'] ) && !isset( $args['id_usuario'] ) )
 			{
@@ -316,7 +364,28 @@ switch($args['action']){
 		
 		}
 		
+	break;
 	
+	case '2307': //actualizarUsuario
+	
+		if( 	!isset( $args['id_usuario'] ) && !isset( $args['nombre'] ) && !isset( $args['username']) && !isset( $args['id_usuario'] ) 
+			&& !isset( $args['id_grupo']) && !isset( $args['id_sucursal'])){
+			
+			echo ' { "success" : false, "error" : "Alg&uacute;n campo no est&aacute; completo" } ';
+			
+		}else{
+		
+			$nombre = $args['nombre'];
+			$user = $args['username'];
+			$id_usuario = $args['id_usuario'];
+			$id_grupo = $args['id_grupo'];
+			$id_sucursal = $args['id_sucursal'];
+		
+			actualizarUsuario( $id_usuario, $nombre, $user, $id_sucursal, $id_grupo );
+		}
+		
+	
+	break;
 
 	}
 

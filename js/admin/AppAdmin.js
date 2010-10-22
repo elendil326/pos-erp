@@ -201,7 +201,7 @@ AppAdmin.prototype.loadPersonal = function(){
 			if(msg.success)
 			{
 				for (var i = 0; i < msg.data.length; i++) {
-					options += '<option value="' + msg.data[i].value + '">' + msg.data[i].display + '</option>';
+					options += '<option name="'+msg.data[i].display+'" value="' + msg.data[i].value + '">' + msg.data[i].display + '</option>';
 				}
 				
 				$("select#select-sucursal").html(options);
@@ -225,6 +225,7 @@ AppAdmin.prototype.loadPersonal = function(){
 				data: {action: "2306", page: "1", rp: "10", sortname: "id_usuario", sortorder: "asc"},
 				renderTo: "content-2",
 				deleteAction: "2305",
+				editAction: "2307",
 				columns: ["ID", "Nombre", "Usuario", "Sucursal"],
 				success: function(msg){
 			

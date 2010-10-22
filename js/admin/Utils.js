@@ -71,7 +71,7 @@ Utils.borrar = function(id, action, row){
 */
 Utils.editar = function(id, action, row){
 
-	console.log(id+" "+action+" "+row);
+	//console.log(id+" "+action+" "+row);
 	var sel = "#row-tabla-caffeina-"+row;
 	var selButon = "#editar-tabla-caffeina-"+row;
 	
@@ -84,8 +84,36 @@ Utils.editar = function(id, action, row){
 	var i = 0;
 	tds.each( function(){
 	
-		if(i < 4 && i != 0)
-			$(this).html("<input type='text' value='"+$(this).html()+"' />");
+		if(i < 3 && i != 0)
+			$(this).html("<input type='text' value='"+$(this).html()+"' name='celda-"+row+"-"+i+"' />");
+		
+		//si es la columna de sucursal
+		if(i == 3)
+		{
+			var valorSel = $(this).html();
+			//var selSelect = "option [text="+valorSel+"]";
+			$(this).html("<select >"+$('#select-sucursal').html()+"</select>");
+			
+			//console.log($(this).children()[0].options);
+			$(this).children().each(function(){
+			
+				//iteramos por las opciones
+				$(this).children().each(function(){
+				
+					console.log($(this).html()+"=="+valorSel);					
+					if( $(this).html() == valorSel ) { 
+
+						
+						$(this).attr("selected", true); 
+					}
+					
+				});
+			
+			});
+		}
+		
+		//si es la columna de administracion
+		
 			
 		if(i == 5) $(this).append("<button  id='boton-ok-editar-row-"+row+"' >OK</button><button id='boton-cancel-editar-row-"+row+"'>Cancelar</button>");
 		i++;
@@ -100,16 +128,23 @@ Utils.editar = function(id, action, row){
 		var tds_  = $(this).parent().parent().children();
 		
 		
-		console.log(tds_);
+		//console.log(tds_);
 		
 		var j = 0;
 		tds_.each(function(){
 		
-			if(j < 4 && j != 0)
+			if(j < 3 && j != 0)
 			{
 				$(this).html($(this).children()[0].value);
 				//console.log($(this).children()[0].value);
 			}
+			
+			/*
+			if(j == 3)
+			{
+				//console.log($(this).children()[0].display);
+				$(this).html($(this).children()[0].display);
+			}*/
 			
 			if(j == 5) {
 				$(this).children()[0].style.display = "block";
@@ -128,12 +163,67 @@ Utils.editar = function(id, action, row){
 	//Evento para el boton de Enviar edicion
 	$(selOkButton).click(function(){
 		
-		/*
+		//obtenemos las celdas de la fila que se quiere editar
+		var tds_  = $(this).parent().parent().children();
+		
+		
+		//console.log(tds_);
+		
+		var j = 0;
+		var nombre;
+		var usuario;
+		var sucursal;
+		var id;
+		
+		tds_.each(function(){
+		
+			if(j == 0) //campo del id
+			{
+				id = $(this).text();
+			}
+		
+			//si son las celdas de datos
+			if(j < 4 && j != 0)
+			{
+				
+				switch(j){
+					case 1:
+						nombre = $(this).children()[0].value;
+					break;
+					
+					case 2:
+						usuario = $(this).children()[0].value;
+					break;
+					
+					case 3:
+						sucursal = $(this).children()[0].value;
+					break;
+				}
+				
+				
+				$(this).html($(this).children()[0].value);
+				//console.log($(this).children()[0].value);
+			}
+			
+			//si es la celda de los botones
+			if(j == 5) {
+				$(this).children()[0].style.display = "block";
+				$(this).html($(this).children()[0]);
+			}
+			j++;
+			
+		});
+		
+		
 		Utils.request({
 			url: "../proxy.php",
-			
+			data: { action: action, nombre: nombre, username: usuario, id_sucursal: sucursal, id_usuario : id },
+			success: function(data){
+				
+				console.log(data);
+			}
 		
-		});*/
+		});
 	
 	});
 
@@ -212,7 +302,7 @@ Utils.grid = function(config){
 						html += "<td>"+msg.data[i][k]+"</td>";
 					}
 					
-					html += "<td><button id='borrar-tabla-caffeina-"+i+"' onclick='Utils.borrar("+msg.data[i][0]+","+config.deleteAction+", "+i+")'><img src='../media/admin/cross.png'  /></button></td><td><button id='editar-tabla-caffeina-"+i+"' onclick='Utils.editar("+msg.data[i][0]+",1000, "+i+")' ><img src='../media/admin/icon_date_picker_input.gif' /></button></td></tr>";
+					html += "<td><button id='borrar-tabla-caffeina-"+i+"' onclick='Utils.borrar("+msg.data[i][0]+","+config.deleteAction+", "+i+")'><img src='../media/admin/cross.png'  /></button></td><td><button id='editar-tabla-caffeina-"+i+"' onclick='Utils.editar("+msg.data[i][0]+","+config.editAction+", "+i+")' ><img src='../media/admin/icon_date_picker_input.gif' /></button></td></tr>";
 					html += "</tr>";
 				}
 				
@@ -388,7 +478,7 @@ Utils.grid = function(config){
 						html += "<td>"+msg.data[i][k]+"</td>";
 					}
 					
-					html += "<td><button id='borrar-tabla-caffeina-"+i+"' onclick='Utils.borrar("+msg.data[i][0]+","+config.deleteAction+", "+i+")'><img src='../media/admin/cross.png' /></button></td><td><button id='editar-tabla-caffeina-"+i+"' onclick='Utils.editar("+msg.data[i][0]+",1000, "+i+")' ><img src='../media/admin/icon_date_picker_input.gif' /></button></td></tr>";
+					html += "<td><button id='borrar-tabla-caffeina-"+i+"' onclick='Utils.borrar("+msg.data[i][0]+","+config.deleteAction+", "+i+")'><img src='../media/admin/cross.png' /></button></td><td><button id='editar-tabla-caffeina-"+i+"' onclick='Utils.editar("+msg.data[i][0]+","+config.editAction+","+i+")' ><img src='../media/admin/icon_date_picker_input.gif' /></button></td></tr>";
 					html += "</tr>";
 				}
 				
