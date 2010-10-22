@@ -77,8 +77,9 @@ ApplicacionClientes.prototype._initToolBar = function (){
         ui: 'action'
     }];
 
+
     var detallesDeBusqueda = [{
-        xtype: 'splitbutton',
+        xtype: 'segmentedbutton',
         items: [{
             text: 'Nombre',
             handler: this.filterByName
@@ -107,7 +108,7 @@ ApplicacionClientes.prototype._initToolBar = function (){
     /* 
         Detalles cliente
     */
-   if (!Ext.platform.isPhone) {
+   if (!Ext.is.Phone) {
         /*
             Buscar cliente
         */
@@ -275,7 +276,7 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 		
 		this.dockedItemsFormCliente2;
 		
-		if (!Ext.platform.isPhone) {
+		if (!Ext.is.Phone) {
 		   
 			this.dockedItemsFormCliente2 =[ new Ext.Toolbar({
 				ui: 'dark',
@@ -621,7 +622,7 @@ ApplicacionClientes.prototype.doSearch = function(  ){
 
 ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
         id: 'panelClientes',
-        layout: Ext.platform.isPhone ? 'fit' : {
+        layout: Ext.is.Phone ? 'fit' : {
             type: 'vbox',
             align: 'left',
             pack: 'center'
@@ -941,7 +942,7 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
             });
         }
 
-    if (Ext.platform.isPhone) {
+    if (Ext.is.Phone) {
             formBase.fullscreen = true;
         } else {
             Ext.apply(formBase, {
@@ -1149,7 +1150,7 @@ ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
             });
         }
 
-    if (Ext.platform.isPhone) {
+    if (Ext.is.Phone) {
             formBase.fullscreen = true;
         } else {
             Ext.apply(formBase, {
@@ -1381,7 +1382,7 @@ ApplicacionClientes.prototype.abonarVenta = function( idVenta , total , adeudo )
             });
         }
 
-    if (Ext.platform.isPhone) {
+    if (Ext.is.Phone) {
             abonaPanel.fullscreen = true;
         } else {
             Ext.apply(abonaPanel, {
@@ -1483,8 +1484,8 @@ ApplicacionClientes.prototype.EliminarabonoVenta = function ( id_Pago ){
             floating: true,
             modal: true,
             centered: true,
-            width: Ext.platform.isPhone ? 260 : 400,
-            height: Ext.platform.isPhone ? 115 : 210,
+            width: Ext.is.Phone ? 260 : 400,
+            height: Ext.is.Phone ? 115 : 210,
             styleHtmlContent: true,
             dockedItems: [overlayTb, btns],
             scroll: 'vertical',

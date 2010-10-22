@@ -59,7 +59,6 @@ Revision 425
  		[ok] Al agregar un producto que no existe en esta sucursal, pero si en otra... mostrar el nombre de la sucursal y su direccion
 
 		agregar boton de imprimir informacion cuando un producto no existe en esta sucursal pero si en otra
-		
         Linux/Chrome El boton de agregar producto muestra el contorno cuadrado.
         Es probable que sea mejor mostrar los  hasta arriba... alado de los detalles de cliente cuando hay cliente
         Al escoger otro tipo de busqueda por ejemplo RFC, y cerrar la ventana, al volver a buscar.. bueno, ver resultados.

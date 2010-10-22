@@ -177,26 +177,27 @@ ApplicationVender.prototype._initToolBar = function (){
 
     //grupo 2, caja comun o cliente
     var buttonsGroup2 = [{
-        xtype: 'splitbutton',
-        id:'_cliente_cajacomun_btn',
-        activeItem: '0',
-        items: [{
-            text: 'Caja Comun',
-            listeners:{
-                render: function (a){
-                    Ext.getCmp("_cliente_cajacomun_btn").setActive(0);
-                }
-            },
-            handler : function (){
-                    ApplicationVender.currentInstance.swapClienteComun(1);
-            }
-        }, {
-            text: 'Cliente',
-            handler : function (){
-                    ApplicationVender.currentInstance.swapClienteComun(0);
-            }
-        }]    
-    }];
+        	xtype: 'segmentedbutton',
+        	id:'_cliente_cajacomun_btn',
+        	activeItem: '0',
+        	items: [{
+	            text: 'Caja Comun',
+	            listeners:{
+	                render: function (a){
+						//sencha 0.97
+	                    //Ext.getCmp("_cliente_cajacomun_btn").setActive(0);
+	                }
+	            },
+	            handler : function (){
+	                    ApplicationVender.currentInstance.swapClienteComun(1);
+	            }
+	        }, {
+	            text: 'Cliente',
+	            handler : function (){
+	                    ApplicationVender.currentInstance.swapClienteComun(0);
+	            }
+	        }]    
+    	}];
 
 
     //grupo 3, listo para vender
@@ -211,7 +212,7 @@ ApplicationVender.prototype._initToolBar = function (){
     }];
 
 
-    if (!Ext.platform.isPhone) {
+    if (!Ext.is.Phone) {
         
         buttonsGroup1.push({xtype: 'spacer'});
         buttonsGroup2.push({xtype: 'spacer'});
@@ -1587,7 +1588,7 @@ ApplicationVender.prototype.buscarClienteShowForm = function ( clientesStore )
                     xtype: 'toolbar',
                     dock: 'bottom',
                     items: [{
-                        xtype: 'splitbutton',
+                        xtype: 'segmentedbutton',
                         activeButton: "1",
                         items: [{
                             text: 'Nombre',
@@ -1670,7 +1671,7 @@ ApplicationVender.prototype.buscarClienteShowForm = function ( clientesStore )
 
 
 
-        
+        /*
         if (Ext.platform.isAndroidOS) {
             formBase.items.unshift({
                 xtype: 'component',
@@ -1679,10 +1680,10 @@ ApplicationVender.prototype.buscarClienteShowForm = function ( clientesStore )
             });
         }
         
+*/
 
 
-
-        if (Ext.platform.isPhone) {
+        if (Ext.is.Phone) {
             formBase.fullscreen = true;
         } else {
             Ext.apply(formBase, {

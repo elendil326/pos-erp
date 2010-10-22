@@ -3,12 +3,22 @@
 Ext.ns('sink', 'demos', 'Ext.ux');
 
 
-
 var POS_SUCURSAL_NOMBRE;
 var POS_CAJERO_NOMBRE;
 var POS_CAJERO_TIPO;
 var POS_IS_GERENTE;
 var MOSTRADOR_IVA;
+
+Ext.regModel('AppModel', {
+    fields: [
+        {name: 'text',        type: 'string'},
+        {name: 'ayuda',      type: 'string'},
+        //{name: 'preventHide', type: 'boolean'},
+        //{name: 'animation'},
+        {name: 'card'}
+    ]
+});
+
 
 Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
     fullscreen: true,
@@ -17,69 +27,248 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
         cls: 'launchscreen',
         html: '<div>Papas Supremas<br/><span>caffeina 2010</span><br></div><div class="helper1"></div>'
     }],
-
-    initComponent : function() {
-	
-        this.backButton = new Ext.Button({
-            hidden: true,
-            text: 'Atras',
-            ui: 'back',
-            handler: this.onBackButtonTap,
-            scope: this
-        });
-
+    backText: 'Back',
+    useTitleAsBackText: true,
+    initComponent : function() {	
 		//boton de navegacion
         this.navigationButton = new Ext.Button({
-            hidden: Ext.platform.isPhone || Ext.orientation == 'landscape',
+			hidden: Ext.is.Phone || Ext.orientation == 'landscape',
             text: 'Navegacion',
             handler: this.onNavButtonTap,
             scope: this
         });
         
-		//barra de navegacion
+
+        this.backButton = new Ext.Button({
+            text: this.backText,	
+            hidden: true,
+            text: 'Atras',
+            ui: 'back',
+            handler: this.onUiBack,
+            scope: this
+        });
+
+        var btns = [this.navigationButton];
+        if (Ext.is.Phone) {
+            btns.unshift(this.backButton);
+        }
+
         this.navigationBar = new Ext.Toolbar({
             ui: 'dark',
             dock: 'top',
             title: this.title,
-            items: [this.backButton, this.navigationButton].concat(this.buttons || [])
+            //items: [this.backButton, this.navigationButton].concat(this.buttons || [])
+			items: btns.concat(this.buttons || [])
         });
         
 		
 
+
+		//sencha 0.97
+		Estructura = new Ext.data.TreeStore({
+		    model: 'AppModel',
+		    root: {
+		        items: Apps
+		    },
+		    proxy: {
+		        type: 'ajax',
+		        reader: {
+		            type: 'tree',
+		            root: 'items'
+		        }
+		    }
+		});
+
 		//	Panel de navegacion izquierdo
         this.navigationPanel = new Ext.NestedList({
-            items: this.navigationItems || [],
-			cls: 'leftMenu',
+			store: Estructura,
+			//cls: 'leftMenu',
+          	useToolbar: Ext.is.Phone ? false : true,
+            updateTitleText: false,
             dock: 'left',
-            width: 250,
-            height: 456,
-            hidden: !Ext.platform.isPhone && Ext.orientation == 'portrait',
-            toolbar: Ext.platform.isPhone ? this.navigationBar : null,
+            hidden: !Ext.is.Phone && Ext.orientation == 'portrait',
+            toolbar: Ext.is.Phone ? this.navigationBar : null,
             listeners: {
-                listchange: this.onListChange,
+                itemtap: this.onNavPanelItemTap,
                 scope: this
             }
         });
         
+		this.navigationPanel.on('back', this.onNavBack, this);
+
+        if (!Ext.is.Phone) {
+            this.navigationPanel.setWidth(250);
+        }
+
         this.dockedItems = this.dockedItems || [];
         this.dockedItems.unshift(this.navigationBar);
-        
-        if (!Ext.platform.isPhone && Ext.orientation == 'landscape') {
+
+        if (!Ext.is.Phone && Ext.orientation == 'landscape') {
             this.dockedItems.unshift(this.navigationPanel);
         }
-        else if (Ext.platform.isPhone) {
+        else if (Ext.is.Phone) {
             this.items = this.items || [];
             this.items.unshift(this.navigationPanel);
         }
-        
+
         this.addEvents('navigate');
-        
+
         Ext.ux.UniversalUI.superclass.initComponent.call(this);
+    },
+	toggleUiBackButton: function() {
+        var navPnl = this.navigationPanel;
+
+        if (Ext.is.Phone) {
+            if (this.getActiveItem() === navPnl) {
+
+                var currList      = navPnl.getActiveItem(),
+                    currIdx       = navPnl.items.indexOf(currList),
+                    recordNode    = currList.recordNode,
+                    title         = navPnl.renderTitleText(recordNode),
+                    parentNode    = recordNode ? recordNode.parentNode : null,
+                    backTxt       = (parentNode && !parentNode.isRoot) ? navPnl.renderTitleText(parentNode) : this.title || '';
+
+
+                if (currIdx <= 0) {
+                    this.navigationBar.setTitle(this.title || '');
+                    this.backButton.hide();
+                } else {
+                    this.navigationBar.setTitle(title);
+                    if (this.useTitleAsBackText) {
+                        this.backButton.setText(backTxt);
+                    }
+
+                    this.backButton.show();
+                }
+            // on a demo
+            } else {
+                var activeItem = navPnl.getActiveItem(),
+                    recordNode = activeItem.recordNode,
+                    backTxt    = (recordNode && !recordNode.isRoot) ? navPnl.renderTitleText(recordNode) : this.title || '';
+
+                if (this.useTitleAsBackText) {
+                    this.backButton.setText(backTxt);
+                }
+                this.backButton.show();
+            }
+            this.navigationBar.doLayout();
+        }
+
+    },
+
+    onUiBack: function() {
+        var navPnl = this.navigationPanel;
+
+        // if we already in the nested list
+        if (this.getActiveItem() === navPnl) {
+            navPnl.onBackTap();
+        // we were on a demo, slide back into
+        // navigation
+        } else {
+            this.setCard(navPnl, {
+                type: 'slide',
+                reverse: true
+            });
+        }
+        this.toggleUiBackButton();
+        this.fireEvent('navigate', this, {});
+    },
+
+    onNavPanelItemTap: function(subList, subIdx, el, e) {
+
+
+        var store      = subList.getStore(),
+            record     = store.getAt(subIdx),
+            recordNode = record.node,
+            nestedList = this.navigationPanel,
+            title      = nestedList.renderTitleText(recordNode),
+            card, preventHide, anim;
+
+        if (record) {
+            card        = record.get('card');
+            anim        = record.get('animation');
+            preventHide = record.get('preventHide');
+        }
+
+        if (Ext.orientation == 'portrait' && !Ext.is.Phone && !recordNode.childNodes.length && !preventHide) {
+            this.navigationPanel.hide();
+        }
+
+        if (card) {
+            this.setCard(card, anim || 'slide');
+            this.currentCard = card;
+        }
+
+        if (title) {
+            this.navigationBar.setTitle(title);
+        }
+        this.toggleUiBackButton();
+        this.fireEvent('navigate', this, record);
+    },
+
+    onNavButtonTap : function() {
+        this.navigationPanel.showBy(this.navigationButton, 'fade');
+    },
+
+    layoutOrientation : function(orientation, w, h) {
+        if (!Ext.is.Phone) {
+            if (orientation == 'portrait') {
+                this.navigationPanel.hide(false);
+                this.removeDocked(this.navigationPanel, false);
+                if (this.navigationPanel.rendered) {
+                    this.navigationPanel.el.appendTo(document.body);
+                }
+                this.navigationPanel.setFloating(true);
+                this.navigationPanel.setHeight(400);
+                this.navigationButton.show(false);
+            }
+            else {
+                this.navigationPanel.setFloating(false);
+                this.navigationPanel.show(false);
+                this.navigationButton.hide(false);
+                this.insertDocked(0, this.navigationPanel);
+            }
+            this.navigationBar.doComponentLayout();
+        }
+
+        Ext.ux.UniversalUI.superclass.layoutOrientation.call(this, orientation, w, h);
+    }
+	/*
+
+	onNavPanelItemTap: function(subList, subIdx, el, e) {
+        var store      = subList.getStore(),
+            record     = store.getAt(subIdx),
+            recordNode = record.node,
+            nestedList = this.navigationPanel,
+            title      = nestedList.renderTitleText(recordNode),
+            card, preventHide, anim;
+
+        if (record) {
+            card        = record.get('card');
+            anim        = record.get('animation');
+            preventHide = record.get('preventHide');
+        }
+
+        if (Ext.orientation == 'portrait' && !Ext.is.Phone && !recordNode.childNodes.length && !preventHide) {
+            //this.navigationPanel.hide();
+        }
+
+        if (card) {
+            this.setCard(card, anim || 'slide');
+            this.currentCard = card;
+        }
+
+        if (title) {
+            //this.navigationBar.setTitle(title);
+        }
+        //this.toggleUiBackButton();
+        this.fireEvent('navigate', this, record);
     },
     
     onListChange : function(list, item) {
-		//console.log("list changed");
-        if (Ext.orientation == 'portrait' && !Ext.platform.isPhone && !item.items && !item.preventHide) {
+
+		return;
+        if (Ext.orientation == 'portrait' && !Ext.is.Phone && !item.items && !item.preventHide) {
             this.navigationPanel.hide();
         }
         
@@ -89,7 +278,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
             if (item.text) {
                 //this.navigationBar.setTitle(item.text);
             }
-            if (Ext.platform.isPhone) {
+            if (Ext.is.Phone) {
                 this.backButton.show();
                 this.navigationBar.doLayout();
             }
@@ -107,7 +296,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
         this.setCard(this.navigationPanel, {type: 'slide', direction: 'right'});
 
         this.currentCard = this.navigationPanel;
-        if (Ext.platform.isPhone) {
+        if (Ext.is.Phone) {
             this.backButton.hide();
             //this.navigationBar.setTitle(this.title);
             this.navigationBar.doLayout();
@@ -118,7 +307,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
     onOrientationChange : function(orientation, w, h) {
         Ext.ux.UniversalUI.superclass.onOrientationChange.call(this, orientation, w, h);
         
-        if (!Ext.platform.isPhone) {
+        if (!Ext.is.Phone) {
             if (orientation == 'portrait') {
                 this.removeDocked(this.navigationPanel, false);
                 this.navigationPanel.hide();
@@ -135,7 +324,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
             this.doComponentLayout();
             this.navigationBar.doComponentLayout();
         }
-    }
+    }*/
 });
 
 
@@ -169,7 +358,8 @@ AppInstaller = function ( app )
 		text: app.appName,
 	    ayuda: app.ayuda,
 	    card: app.mainCard,
-		items : app.leftMenuItems
+		items : app.leftMenuItems,
+	    leaf: true
 	};
 	
 	Apps.push( make_app );
@@ -184,373 +374,6 @@ AppInstaller = function ( app )
 
 
 
-//	--------------------------------------------------------------------------------------
-//		Utility functions
-//	--------------------------------------------------------------------------------------
-
-POS = {
-	aviso : null,
-	AJAXandDECODE: null
-		
-};
-
-
-POS.AJAXandDECODE = function (params, success, failure)
-{
-	if(DEBUG){
-		console.log("Sending HTTP request ....", "action="+params.action);
-		//alert("caller is " + arguments.callee.caller.toString());
-		//alert("caller is " + POS.AJAXandDECODE.caller.toString());
-	}
-	
-	Ext.Ajax.request({
-		
-		url: 'proxy.php',
-		
-		success: function (response){
-
-			var datos;
-			try{				
-				eval("datos = " + response.responseText);
-				
-				if(DEBUG){
-					//console.log("HTTP Request returned with code 200", datos);
-				}
-				
-				if((typeof(datos.succes) !== 'undefined') && (datos.succes === false)){
-					if((typeof(datos.reason) !== 'undefined') && datos.reason == 31416 ){
-						alert("Sesion no valida. Porfavor identifiquese de nuevo.");
-						window.location = "index.html";
-						return;
-					}
-				}
-				
-			}catch(e){
-			
-				if(DEBUG){
-					console.warn("Failed to parse JSON", e);
-					console.warn("Full response : " + response.responseText);
-				}
-				
-				
-				return;
-			}
-			 
-
-			success( datos );
-			
-		},
-		failure : failure,
-		params: params
-		
-	});
-	
-	
-};
-
-
-
-
-
-/*
-	Aviso
-*/
-
-
-POS.aviso = function (title, contents) 
-{
-
-	if(POS.aviso.box){
-		if(DEBUG){
-			console.log("Aviso exists... swapping visibility");
-		}
-		
-		//cambiar el titulo
-		POS.aviso.box.getDockedItems()[0].setTitle( title );
-		
-		
-		//cambiar el contenido
-		POS.aviso.box.body.dom.childNodes[0].innerHTML = "<p>" + contents + "</p>";
-		
-		
-		POS.aviso.box.show('pop');
-		
-		return;
-	}
-	
-	if(DEBUG){
-		console.log("Aviso does not exist... creating one");
-	}
-	
-	POS.aviso.box = new Ext.Panel({
-            floating: true,
-            modal: true,
-            centered: true,
-            width: 320,
-            height: 300,
-            styleHtmlContent: true,
-            html: '<p>'+contents+'</p>',
-            dockedItems: [{
-                dock: 'top',
-                xtype: 'toolbar',
-                title: title
-            }],
-            scroll: 'vertical',
-			listeners:
-					{
-						'show': function( )
-						{
-							POS.aviso.visible = true;
-						},
-						'hide' : function ()
-						{
-							POS.aviso.visible = false;
-						}
-					}
-        });
-    
-    POS.aviso.box.show('pop');
-};
-
-
-
-POS.aviso.hide = function ()
-{
-	if(POS.aviso.visible){
-		POS.aviso.box.hide();
-	}
-};
-
-POS.aviso.box = null;
-
-POS.aviso.visible = false;
-
-
-
-
-
-
-
-
-
-
-
-POS.map = function( address, idRender )
-{
-	
-	var mapPanel = new Ext.Panel({
-		layout: 'fit',
-		renderTo: idRender,
-		listeners: {
-				afterrender: function(panel){
-					
-					if(!window.google){
-						if(DEBUG){
-							console.log("No google ");
-						}
-						return null;
-					}
-					
-					try{
-						var geocoder = new google.maps.Geocoder();
-					}
-					catch(error)
-					{
-						//document.getElementById( Ext.get(panel.id).dom.childNodes[1].id).innerHTML = '<div style="text-align:center; padding-top:30%;"> Error al contactar a Google Maps .</div>';
-						return null;
-					}
-
-					var posMapOptions = {
-						      zoom: 15,
-						      mapTypeId: google.maps.MapTypeId.ROADMAP
-					    };
-						
-					var map = new google.maps.Map(document.getElementById( Ext.get(panel.id).first().id ), posMapOptions);
-
-					if (geocoder) {
-					      geocoder.geocode( { 'address': address}, function(results, status) {
-							if (status == google.maps.GeocoderStatus.OK) {
-								
-								map.setCenter(results[0].geometry.location);
-								
-								var marker = new google.maps.Marker({
-										map: map, 
-										position: results[0].geometry.location
-						  			});
-									
-							} else {
-							
-								switch(status){
-									case 'ERROR': 				errorMsg = 'Error al intentarse conectar con los servidores de Google'; break;
-									case 'INVALID_REQUEST': 	errorMsg = 'Solicitud de datos errónea'; break;
-									case 'OVER_QUERY_LIMIT': 	errorMsg = 'El servidor de mapas está teniendo sobrecarga. Intente más tarde'; break;
-									case 'REQUEST_DENIED': 		errorMsg = 'La página en donde esta no tiene permiso para cargar el mapa'; break;
-									case 'UNKNOWN_ERROR': 		errorMsg = 'Hubo un error en el servidor. Intente de nuevo'; break;
-									case 'ZERO_RESULTS': 		errorMsg = 'No se encontraron resultados para la dirección ingresada'; break;
-									default: 					errorMsg = 'Hubo un error desconocido en el servidor';
-		
-								}				
-			
-								if(DEBUG){
-									console.warn("Mapas: ", status, errorMsg);
-								}
-
-								document.getElementById( Ext.get(panel.id).dom.childNodes[1].id).innerHTML = '<div style="text-align:center; padding-top:30%;">'+ errorMsg +'.</div>';
-							
-								return null;
-							}
-						});
-				    }
-				}
-			}
-	});
-	
-	return mapPanel;
-};
-
-
-//Imprime un div, el parametro es el id del div que quieres imprimir
-POS.print = function (divID){
-
-	var divToPrint = document.getElementById(divID);
-
-	var popWin = window.open(' ', 'popwindow');
-	popWin.document.write( divToPrint.innerHTML );
-	popWin.document.close();
-	popWin.print( );
-        //popWin.close();
-};
-
-//Funcion para dar formato de un numero a moneda
-POS.currencyFormat = function (num){
-
-	num = num.toString().replace(/\$|\,/g,'');
-	if(isNaN(num)){
-		num = "0";
-	}
-
-	sign = (num == (num = Math.abs(num)));
-	num = Math.floor(num*100+0.50000000001);
-	cents = num%100;
-	num = Math.floor(num/100).toString();
-	if(cents<10){
-		cents = "0" + cents;
-	}
-
-	for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)
-	{
-	num = num.substring(0,num.length-(4*i+3))+','+num.substring(num.length-(4*i+3));
-	}
-
-	return (((sign)?'':'-') + '$' + num + '.' + cents);
-
-};
-
-
-POS.datePicker = function( pickerConfig ){
-
-	var posPicker = pickerConfig;
-
-	posPicker.xtype = "datepicker";
-	
-	var months = [
-	
-		{ key: "Enero"		, value: 0 },
-		{ key: "Febrero"	, value: 1 },
-		{ key: "Marzo"		, value: 2 },
-		{ key: "Abril"		, value: 3 },
-		{ key: "Mayo"		, value: 4 },
-		{ key: "Junio"		, value: 5 },
-		{ key: "Julio"		, value: 6 },
-		{ key: "Agosto"		, value: 7 },
-		{ key: "Septiembre"	, value: 8 },
-		{ key: "Octubre"	, value: 9 },
-		{ key: "Noviembre"	, value: 10 },
-		{ key: "Diciembre"	, value: 11 }
-	];
-	
-	var days = [];
-	
-	for(var i=1; i < 32; i++)
-	{
-		days.push({ key: i , value: i });
-	}
-
-
-
-	var years = [];
-
-	for(var j=1987; j < 2101; j++)
-	{
-		years.push({ key: j , value: j });
-	}
-
-
-	/*var posSlot = [
-		{
-			name : 'month',
-			align: 'left',
-			items  : months, 
-			title : 'Mes'
-		},
-		{
-			
-			name : 'day',
-			align: 'center',			
-			name : 'day',
-			title : 'Día'			
-		},
-		{
-			name : 'year',
-			align: 'right',
-			items  : years,
-			title : 'Año'			
-		}
-	];*/
-
-
-	var posSlot = [{
-            text: 'Month',
-            name: 'month',
-            align: 'left',
-            items: months
-        },{
-            text: 'Day',
-            name: 'day',
-            align: 'center',
-            items: days
-        },{
-            text: 'Year',
-            name: 'year',
-            align: 'right',
-            items: years
-        }];
-
-	posPicker.slots = posSlot;
-
-	POS.pickerSlots = posSlot;
-	//console.log(posPicker);
-
-	//return posPicker;	
-
-	extPicker = new Ext.DatePicker();
-	extPicker.slots[0].items[0].key = 'Enero';
-
-	//POS.pickerSlots = extPicker.slots;
-};
-
-
-//POS.pickerSlots = null;
-
-
-
-POS.doPrintTicket = function ()
-{
-	
-	
-	
-};
-
 
 //	--------------------------------------------------------------------------------------
 //		Application Main Entry Point
@@ -559,6 +382,9 @@ POS.doPrintTicket = function ()
 sink.Main = {
     init : function() {
 	
+		if(DEBUG){
+			console.log("sink.Main init started !");			
+		}
 	
 		//boton de ayuda
         this.ayudaButton = new Ext.Button({
@@ -568,9 +394,6 @@ sink.Main = {
             handler: this.onAyudaButtonTap,
             scope: this
         });
-
-
-
         
         this.codeBox = new Ext.ux.CodeBox({scroll: false});
         
@@ -581,8 +404,7 @@ sink.Main = {
 
 
 		//que no sea iphone
-        if (!Ext.platform.isPhone) {
-
+        if (!Ext.is.Phone) {
             Ext.apply(ayudaConfig, {
                 width: 500,
                 height: 500,
@@ -595,11 +417,14 @@ sink.Main = {
 
 
 
-		
+		if(DEBUG){
+			console.log("Create User Interface");			
+		}
+
 
 		//crear el UI
         this.ui = new Ext.ux.UniversalUI({
-            title: Ext.platform.isPhone ? 'POS iPhone' : '<b>Sucursal</b> ' + POS_SUCURSAL_NOMBRE + '   <b>Usuario</b> ' + POS_CAJERO_NOMBRE,
+            title: Ext.is.Phone ? 'POS iPhone' : '<b>Sucursal</b> ' + POS_SUCURSAL_NOMBRE + '   <b>Usuario</b> ' + POS_CAJERO_NOMBRE,
             navigationItems: Apps,
             buttons: [{xtype: 'spacer'}, this.ayudaButton ],
             listeners: {
@@ -607,16 +432,37 @@ sink.Main = {
                 scope: this
             }
         });
-
-
+ 
 
     },
     
 
 	//al navegar en cualquier opcion
-    onNavigate : function(ui, item) {
+    onNavigate : function(ui, record) {
+		if (record.data && record.data.source) {
+            var source = record.get('source');
+            if (this.sourceButton.hidden) {
+                this.sourceButton.show();
+                ui.navigationBar.doComponentLayout();
+            }
 
+            /*Ext.Ajax.request({
+                url: source,
+                success: function(response) {
+                    this.codeBox.setValue(Ext.htmlEncode(response.responseText));
+                },
+                scope: this
+            });*/
+        }
+        else {
 
+            //this.codeBox.setValue('No source for this example.');
+            //this.sourceButton.hide();
+            //this.sourceActive = false;
+            //this.sourceButton.setText('Source');
+            ui.navigationBar.doComponentLayout();
+        }
+		/*
         if (item.ayuda) {
 
 
@@ -636,7 +482,7 @@ sink.Main = {
             this.ayudaButton.setText('Ayuda');
             ui.navigationBar.doComponentLayout();
 
-        }
+        }*/
 
     },
     
@@ -648,7 +494,7 @@ sink.Main = {
 		
 		//console.log("tapped help");
 		
-        if (!Ext.platform.isPhone) {
+        if (!Ext.is.Phone) {
 			
             this.ayudaPanel.showBy( this.ayudaButton.el, 'fade');
 
@@ -678,6 +524,7 @@ sink.Main = {
 
 
 Ext.setup({
+	
     tabletStartupScreen: 'resources/img/tablet_startup.png',
     phoneStartupScreen: 'resources/img/phone_startup.png',
     icon: 'resources/img/icon.png',
@@ -690,28 +537,34 @@ Ext.setup({
 
 
 		
-		POS.AJAXandDECODE({ action : "2003" }, 
-		function (response){
-			if(response.sucess){
-				if(DEBUG){
-					console.log("Loading config... ok ", response);
-				}
-				MOSTRADOR_IVA = response.payload.iva ;
-				POS_SUCURSAL_NOMBRE = response.payload.sucursal;
-				POS_CAJERO_NOMBRE = response.payload.cajero_nombre;
-				POS_CAJERO_TIPO = response.payload.tipo;
+		POS.AJAXandDECODE({ 
+				
+			action : "2003" 
+			},
+		
+			function (response){
+				if(response.sucess){
+					if(DEBUG){
+						console.log("Loading config...  ", response);
+					}
+					MOSTRADOR_IVA = response.payload.iva ;
+					POS_SUCURSAL_NOMBRE = response.payload.sucursal;
+					POS_CAJERO_NOMBRE = response.payload.cajero_nombre;
+					POS_CAJERO_TIPO = response.payload.tipo;
 
-				if(POS_CAJERO_TIPO == "Gerente"){
-					AppInstaller( new ApplicationUsuarios() );
-					AppInstaller( new ApplicationGastos() );
+					if(POS_CAJERO_TIPO == "Gerente"){
+						AppInstaller( new ApplicationUsuarios() );
+						AppInstaller( new ApplicationGastos() );
+					}
+					if(DEBUG){
+						console.log("Done loading config !");			
+					}
 				}
-					
-			}
 
-        	sink.Main.init();
-		}, 
-		function (response){
-			alert(response);
+        		sink.Main.init();
+			}, 
+			function (response){
+				alert(response);
 		});
 		
     }
