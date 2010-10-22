@@ -127,8 +127,8 @@ ApplicationProveedores.prototype.proveedoresWelcome = new Ext.Panel({
 
 /**
  * Crea un Ext.Panel que contiene un formulario para agregar un nuevo proveedor.
- * @return Ext.Panel
- * @type void
+ * @type Ext.Panel
+ * @return void
  */
 ApplicationProveedores.prototype.agregarProveedor =  new Ext.form.FormPanel({
 		scroll: 'vertical',
@@ -375,7 +375,14 @@ ApplicationProveedores.prototype.doVerProvedor = function (provedor)
 	
 };
 
-
+/**
+ *Establece el proveedor actual y lo guarda en {@link ApplicationProveedores#proveedorSelected}
+ *
+ *@param (Object)
+ *@see ApplicationProveedores#listarCompras
+ *@see ApplicationProveedores#listarComprasCredito
+ *@return void
+ */
 ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 {
 	if( !this.carousel ){
@@ -469,10 +476,13 @@ ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 
 
 
-/*------------------------------------------------------------------
-			COMPRAS HECHAS A UN PROVEEDOR
-------------------------------------------------------------------------*/
-
+/**
+ *Raliza una consulta a la BD y obtiene una lista de todas las 
+ *compras realizadas (a credito y en efectivo) al proveedor actual y las muestra en el panel
+ *'comprasProveedorSucursal'.
+ *@see ApplicationProveedores#proveedorSelected
+ *@return void
+ */
 ApplicationProveedores.prototype.listarCompras = function (){
 	
 	//guarda en record_proveedor los datos del proveedor actual
@@ -508,7 +518,7 @@ ApplicationProveedores.prototype.listarCompras = function (){
 			    comprasProveedor.loadData(datos.datos);
 					
 				html += "<div class='ApplicationClientes-Item'>";
-			    html += "   <div class='trash' ></div>";
+			    html += "   <div class='trash'></div>";
 			    html += "   <div class='id'>No. Compra</div>";
 				html += "   <div class='tipo'>Tipo Venta</div>";
 				html += "   <div class='fecha'>Fecha</div>";
@@ -525,7 +535,7 @@ ApplicationProveedores.prototype.listarCompras = function (){
 				{
 				    
 					html += "<div class='ApplicationClientes-Item' >";
-					html += "   <div class='trash' onclick='ApplicationProveedores.currentInstance.verCompra(" + comprasProveedor.data.items[a].data.id_compra +  ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>";
+					html += "   <div class='trash' onclick='ApplicationProveedores.currentInstance.verCompra(" + comprasProveedor.data.items[a].data.id_compra +  ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png' /></div>";
 				    html += "   <div class='id'>" + comprasProveedor.data.items[a].data.id_compra +"</div>";
 				    html += "   <div class='tipo'>" + comprasProveedor.data.items[a].data.tipo_compra+"</div>";
 					html += "   <div class='fecha'>"+ comprasProveedor.data.items[a].data.fecha +"</div>";
@@ -561,9 +571,13 @@ ApplicationProveedores.prototype.listarCompras = function (){
 	
 };
 
-/*-----------------------------------------------------------------
-	COMPRAS A CREDITO HECHAS A UN PROVEEDOR
--------------------------------------------------------------------*/
+/**
+ *Raliza una consulta a la BD y obtiene una lista de todas las 
+ *compras a credito (que no se han liquidado) al proveedor actual y las muestra en el panel
+ *'comprasProveedorCredito'.
+ *@see ApplicationProveedores#proveedorSelected
+ *@return void
+ */
 ApplicationProveedores.prototype.listarComprasCredito = function (){
 	
 	//guarda en record_proveedor los datos del proveedor actual 
@@ -623,8 +637,8 @@ ApplicationProveedores.prototype.listarComprasCredito = function (){
 					}
 					
 					html += "<div class='ApplicationClientes-Item'>";
-					html +=	"   <div class='trash' onclick='ApplicationProveedores.currentInstance.verCompra(" + compra.data.id_compra+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>";
-					html += "<  div class='id'>" + compra.data.id_compra +"</div>";
+					html +=	"   <div class='trash' onclick='ApplicationProveedores.currentInstance.verCompra(" + compra.data.id_compra+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png' /></div>";
+					html += "   <div class='id'>" + compra.data.id_compra +"</div>";
 					html += "   <div class='fecha'>"+ compra.data.fecha +"</div>";
 					html += "   <div class='sucursal'>"+ compra.data.sucursal +"</div>";
 					html += "   <div class='vendedor'>"+ compra.data.comprador +"</div>";
@@ -663,20 +677,27 @@ ApplicationProveedores.prototype.listarComprasCredito = function (){
 
 
 
-
+/**
+ *Construye bloque de código formateado que muestra los datos del proveedor solicitado.
+ *@param {Object} Objeto con los datos del proveedor
+ *@type String
+ *@return Un bloque de código HTML
+ */
 ApplicationProveedores.prototype.renderProvedorDetalles = function ( provedor )
 {
 
 	var html = "";
 	
-	html += "<div class='nombre'>" 		+provedor.nombre 		+ "</div>";
-	html += "<div class='direccion'>" 	+provedor.direccion 	+ "</div>";
-	html += "<div class='mail'>" 		+provedor.e_mail		+ "</div>";
-	html += "<div class='id_provedor'>" +provedor.id_proveedor	+ "</div>";
-	html += "<div class='rfc'>"  		+provedor.rfc			+ "</div>";
-	html += "<div class='telefono'>"  	+provedor.telefono		+ "</div>";
-
-	return "<div class='ApplicationProveedores-Detalles'>"+html+"</div>";
+	html = "<div class='ApplicationProveedores-Detalles'>";
+	html += "   <div class='nombre'>" + provedor.nombre + "</div>";
+	html += "   <div class='direccion'>" + provedor.direccion + "</div>";
+	html += "   <div class='mail'>" + provedor.e_mail + "</div>";
+	html += "   <div class='id_provedor'>" + provedor.id_proveedor + "</div>";
+	html += "   <div class='rfc'>" + provedor.rfc + "</div>";
+	html += "   <div class='telefono'>" + provedor.telefono + "</div>";
+    html += "</div>";
+    
+	return html;
 	
 };
 
