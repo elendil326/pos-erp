@@ -145,3 +145,9 @@
 .ApplicationProveedores-CarrouselBackgroud {
     background-image:url(media/g3.png);	
 }
+
+.panel_render {
+    width:100%;
+    height:100%;
+
+}
