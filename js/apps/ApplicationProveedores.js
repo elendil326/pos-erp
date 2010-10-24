@@ -524,9 +524,9 @@ ApplicationProveedores.prototype.listarCompras = function (){
                 //carga los datos al store
 			    comprasProveedor.loadData(datos.datos);
 					
-				html += "<div class='ApplicationClientes-Item'>";
-			    html += "   <div class='trash'></div>";
-			    html += "   <div class='id'>No. Compra</div>";
+				html += "<div class='ApplicationProveedores-Item'>";
+			    html += "   <div class='trash'><div style = 'width:20px; height:20px;'></div></div>";
+			    html += "   <div class='id'>No.</div>";
 				html += "   <div class='tipo'>Tipo Venta</div>";
 				html += "   <div class='fecha'>Fecha</div>";
 				html += "   <div class='sucursal'>Sucursal</div>";
@@ -541,7 +541,7 @@ ApplicationProveedores.prototype.listarCompras = function (){
 				for( a = 0; a < comprasProveedor.getCount(); a++ )
 				{
 				    
-					html += "<div class='ApplicationClientes-Item' >";
+					html += "<div class='ApplicationProveedores-Item' >";
 					html += "   <div class='trash' onclick='ApplicationProveedores.currentInstance.verCompra(" + comprasProveedor.data.items[a].data.id_compra +  ")'>";
 					html += "       <img height=20 width=20 src='media/themes/default/icons/search.png' />";
 					html +=     "</div>";
@@ -614,9 +614,9 @@ ApplicationProveedores.prototype.listarComprasCredito = function (){
 			{
 				comprasProveedorCredito.loadData(datos.datos);
 					
-				html += "<div class='ApplicationClientes-Item' >";
-				html += "   <div class='trash' ></div>";
-				html += "   <div class='id'>No. Compra</div>";
+				html += "<div class='ApplicationProveedores-Item' >";
+				html += "   <div class='trash'><div style = 'width:20px; height:20px;'></div></div>";
+			    html += "   <div class='id'>No.</div>";
 				html += "   <div class='fecha'>Fecha</div>";
 				html += "   <div class='sucursal'>Sucursal</div>";
 				html += "   <div class='vendedor'>Realizo compra</div>";
@@ -645,7 +645,7 @@ ApplicationProveedores.prototype.listarComprasCredito = function (){
 					    status ="<div class='abonar' onclick='ApplicationProveedores.currentInstance.abonarCompra(" + compra.data.id_compra + " , "+ tot +" , "+ adeudo +", "+ compra.data.abonado +")'>ABONAR</div>";
 					}
 					
-					html += "<div class='ApplicationClientes-Item'>";
+					html += "<div class='ApplicationProveedores-Item'>";
 					html +=	"   <div class='trash' onclick='ApplicationProveedores.currentInstance.verCompra(" + compra.data.id_compra+ ")'>";
 					html += "       <img height=20 width=20 src='media/themes/default/icons/search.png' />";
 					html += "   </div>";
@@ -657,7 +657,7 @@ ApplicationProveedores.prototype.listarComprasCredito = function (){
 					html += "   <div class='total' id='abonadoCompra_"+compra.data.id_compra+"'>$"+ compra.data.abonado +"</div>";
 					html += "   <div class='total' id='adeudoCompra_"+compra.data.id_compra+"'>$"+ adeudo +"</div>";
 					html += "   <div class='subtotal' onclick='ApplicationProveedores.currentInstance.verPagosCompra(" + compra.data.id_compra+ ")'>";
-					html += "       <img height=20 width=20 src='media/themes/default/icons/compose.png' />";
+					html += "       <img style = 'margin-top:-2px;' height=20 width=20 src='media/themes/default/icons/compose.png' />";
 					html += "   </div>";
 					html +=     status;
 					html += "</div>";
@@ -754,7 +754,7 @@ ApplicationProveedores.prototype.verPagosCompra = function( idCompra ){
 	
     
 
-	if (Ext.platform.isPhone) 
+	if (Ext.is.Phone) 
 	{
         formBase.fullscreen = true;
     } 
@@ -1008,7 +1008,7 @@ ApplicationProveedores.prototype.abonarCompra = function( idCompra , total , ade
 	
    
 
-    if (Ext.platform.isPhone) 
+    if (Ext.is.Phone) 
     {
         abonaPanel.fullscreen = true;
     } 
@@ -1101,8 +1101,8 @@ ApplicationProveedores.prototype.EliminarabonoCompra = function (id_Pago){
         floating: true,
         modal: true,
         centered: true,
-        width: Ext.platform.isPhone ? 260 : 400,
-        height: Ext.platform.isPhone ? 115 : 210,
+        width: Ext.is.Phone ? 260 : 400,
+        height: Ext.is.Phone ? 115 : 210,
         styleHtmlContent: true,
 	    dockedItems: [overlayTb, btns],
         scroll: 'vertical',
@@ -1148,7 +1148,7 @@ ApplicationProveedores.prototype.verCompra = function( idCompra ){
 		}]
 	});//formBase	    
 
-	if (Ext.platform.isPhone)   
+	if (Ext.is.Phone)   
 	{
         formBase.fullscreen = true;
     } 
