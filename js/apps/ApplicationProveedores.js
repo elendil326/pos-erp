@@ -524,6 +524,8 @@ ApplicationProveedores.prototype.listarCompras = function (){
                 //carga los datos al store
 			    comprasProveedor.loadData(datos.datos);
 					
+				html += "<div class = 'ApplicationProveedores-Title'> Todas las Compras </div>"	
+					
 				html += "<div class='ApplicationProveedores-Item'>";
 			    html += "   <div class='trash'><div style = 'width:20px; height:20px;'></div></div>";
 			    html += "   <div class='id'>No.</div>";
@@ -534,6 +536,7 @@ ApplicationProveedores.prototype.listarCompras = function (){
 				html += "   <div class='subtotal'>Subtotal</div>";
 				html += "   <div class='iva'>IVA</div>";
 				html += "   <div class='total'>TOTAL</div>";
+				html += "   <div class='total'>SALDO</div>";
 				html += "</div>";
 					
 				//renderear el html
@@ -553,6 +556,12 @@ ApplicationProveedores.prototype.listarCompras = function (){
 					html += "   <div class='subtotal'>$"+ comprasProveedor.data.items[a].data.subtotal +"</div>";
 					html += "   <div class='iva'>$"+ comprasProveedor.data.items[a].data.iva +"</div>";
 					html += "   <div class='total'>$"+ comprasProveedor.data.items[a].data.total +"</div>";
+					
+					if(comprasProveedor.data.items[a].data.tipo_compra == "credito")
+					{
+					    html += comprasProveedor.data.items[a].data.adeudo > 0 ? "<div class='saldo'>$"+ comprasProveedor.data.items[a].data.adeudo +"</div>" : "";
+					}
+					
 					html += "</div>";
 				}//fin for
 										
@@ -613,6 +622,8 @@ ApplicationProveedores.prototype.listarComprasCredito = function (){
 			if(datos.success === true)
 			{
 				comprasProveedorCredito.loadData(datos.datos);
+				
+				html += "<div class = 'ApplicationProveedores-Title'> Compras a Credito</div>"	
 					
 				html += "<div class='ApplicationProveedores-Item' >";
 				html += "   <div class='trash'><div style = 'width:20px; height:20px;'></div></div>";

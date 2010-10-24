@@ -674,7 +674,7 @@ function list_sucursal_purchases( $id_proveedor ){
 
 	$sucursal = $_SESSION['sucursal'];
 	//$sucursal = 2;
-	
+			
 	$compras = new Compras();
 	$compras->setIdProveedor( $id_proveedor );
 	$compras->setIdSucursal( $sucursal );
@@ -690,8 +690,31 @@ function list_sucursal_purchases( $id_proveedor ){
 			$usuario = UsuarioDAO::getByPK( $compra->getIdUsuario() );
 			
 			$foo .= substr($compra,1,-2);
+            
+            $adeudo = 0;
+            
+            if($compra->getTipoCompra() == 'credito')
+            {
+                
+                $total_pagos = 0;
+                $purchase_payments = new PagosCompra();
+			    $purchase_payments->setIdCompra( $compra->getIdCompra() );
+			    $pc = PagosCompraDAO::search( $purchase_payments );
 
-			$foo.=',"total":"'.$total.'","nombre":"'.$usuario->getNombre().'","descripcion":"'.$sc->getDescripcion().'"},';
+			    if ( count($pc) > 0 ){
+				    foreach( $pc as $pago )
+				    {
+					    $total_pagos += $pago->getMonto();
+				    }
+			    }
+                
+                $totCompra = $compra->getSubtotal() + $compra->getIva();
+			    $adeudo = $totCompra - $total_pagos;
+                
+            }
+            
+			$foo.=',"total":"'.$total.'","nombre":"'.$usuario->getNombre().'","descripcion":"'.$sc->getDescripcion().'","adeudo":"'.$adeudo.'"},';
+						
 		}//fin for
 		$foo = substr($foo,0,-1);
 		return " { success : true, datos : [".$foo."] }";
