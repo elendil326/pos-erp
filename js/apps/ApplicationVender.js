@@ -185,7 +185,7 @@ ApplicationVender.prototype._initToolBar = function (){
 	            listeners:{
 	                render: function (a){
 						//sencha 0.97
-	                    //Ext.getCmp("_cliente_cajacomun_btn").setActive(0);
+	                    //Ext.getCmp("_cliente_cajacomun_btn").setPressed(0);
 	                }
 	            },
 	            handler : function (){
@@ -280,12 +280,11 @@ ApplicationVender.prototype.venderMainPanel = new Ext.Panel({
     
     //items del formpanel
     items: [{
-            html: '',
-            id : 'detallesCliente'
+            html: "<div id='detallesCliente'></div>"
+		
         },{
             
-            html: ApplicationVender.emptyText,
-            id : 'carritoDeCompras'
+            html: "<div id='carritoDeCompras'>" + ApplicationVender.emptyText + "</div>"
             
         }]
 });
@@ -441,7 +440,7 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 
         //actual creation of html
         html += "<div class='ApplicationVender-item' >" +
-        "<div class='trash' onclick='ApplicationVender.currentInstance.doDeleteItem(" +a+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/trash.png'></div>" +
+        "<div class='trash' onclick='ApplicationVender.currentInstance.doDeleteItem(" +a+ ")'><img height=20 width=20 src='sencha/resources/themes/images/default/pictos/trash.png'></div>" +
         "<div class='id'>" + this.htmlCart_items[a].id +"</div>" +
         "<div class='name'><b>" + nombre +"</b></div>" +
         "<div class='description'>"+ descripcion +"</div>" +
@@ -470,8 +469,8 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
     //total de totales
     totals_html += "<span>Total " +  POS.currencyFormat(total) + "</span> ";
 
-    // wrap divs
-    html = "<div class='ApplicationVender-itemsBox' style='overflow: hidden'>" + html +"</div>" ;
+    // wrap divs --style='overflow: hidden'
+    html = "<div class='ApplicationVender-itemsBox' >" + html +"</div>" ;
     totals_html = "<div class='ApplicationVender-totalesBox' >" + totals_html +"</div>" ;
     
     var endhtml = html + totals_html;
@@ -1404,11 +1403,12 @@ ApplicationVender.prototype.swapClienteComun = function (val)
     if(val===0){
         //buscar cliente
         ApplicationVender.currentInstance.buscarCliente();
-
-        ApplicationVender.currentInstance.CLIENTE_COMUN = false;
-
+       	ApplicationVender.currentInstance.CLIENTE_COMUN = false;
     }else{
-        Ext.getCmp("_cliente_cajacomun_btn").setActive(0);
+		//es cliente comun 
+	    //Ext.get("detallesCliente").removeClass( "ApplicationVender-clienteBox" );
+	
+        Ext.getCmp("_cliente_cajacomun_btn").setPressed(0);
         Ext.get("detallesCliente").update("");
         this.cliente = null;
         ApplicationVender.currentInstance.CLIENTE_COMUN = true;
@@ -1439,7 +1439,6 @@ ApplicationVender.prototype.actualizarDetallesCliente = function ( cliente )
     var html = "";
     html += " <div class='ApplicationVender-clienteBox'> ";
         html += " <div class='nombre'>" + cliente.nombre + "</div>";
-
         html += "<table border='0' class='tabla_detalles_cliente'>";
         html +=     "<tr><td style='text-align: right'>RFC</td><td>" + cliente.rfc + "</td></tr>";
         html +=     "<tr><td style='text-align: right'>Direccion</td><td>" + cliente.direccion + "</td></tr>";
@@ -1453,7 +1452,8 @@ ApplicationVender.prototype.actualizarDetallesCliente = function ( cliente )
     
 	//cambiar el contenido de detallesCliente
     Ext.get("detallesCliente").update( html );
-    
+    //Ext.get("detallesCliente").addClass( "" );
+	
     //actualizar tambien la lista de productos, ya que se deben actualizar
 	//los descuentos que cada cliente trae consigo
     this.doRefreshItemList();

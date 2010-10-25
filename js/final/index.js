@@ -200,7 +200,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
         }
 
         if (title) {
-            this.navigationBar.setTitle(title);
+            //this.navigationBar.setTitle(title);
         }
         this.toggleUiBackButton();
         this.fireEvent('navigate', this, record);
