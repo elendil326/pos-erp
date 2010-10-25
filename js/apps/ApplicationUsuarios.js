@@ -189,7 +189,7 @@ ApplicationUsuarios.prototype.loadHomePanel = function()
 			loadingText: 'Cargando datos...',
 			emptyText: '<div class="no-data">No se encontraron usuarios para esta sucursal.</div>',
         	store: ApplicationUsuarios.currentInstance.UserListStore,
-        	tpl: String.format('<tpl for="."><div class="usuarios">ID: {id_usuario} <strong>{nombre}</strong> &nbsp;Usuario: {usuario} </div></tpl>' ),
+        	tpl: '<tpl for="."><div class="usuarios">ID: {id_usuario} <strong>{nombre}</strong> &nbsp;Usuario: {usuario} </div></tpl>',
 			//tplWriteMode: 'insertFirst',
         	itemSelector: 'div.usuarios',
 			grouped: true,

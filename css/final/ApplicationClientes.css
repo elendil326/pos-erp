@@ -256,8 +256,8 @@
 
 .cliente-buscar{
 	background-image: url(media/search-icon.jpeg) !important;
-	background-repeat: no-repeat;
-	background-position: 6px 1px;
+	background-repeat: no-repeat !important;
+	background-position: 6px 3px !important;
 	padding-left: 35px !important;
 }
 

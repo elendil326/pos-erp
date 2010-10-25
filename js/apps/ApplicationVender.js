@@ -625,6 +625,10 @@ ApplicationVender.prototype.doAddProductById = function ( prodID )
     if(DEBUG){
         console.log("ApplicationVender: Agregando producto " + id);
     }
+
+	if( prodID.length == 0 ){
+		return;
+	}
     
     //buscar si este producto existe
     POS.AJAXandDECODE({
@@ -845,6 +849,7 @@ ApplicationVender.prototype.doVentaContadoPanel = function (  )
             xtype:'button', 
             text:'Cancelar Venta',
             handler : function (){
+
                 ApplicationVender.currentInstance.doLimpiarCarrito();
                 sink.Main.ui.setCard( ApplicationVender.currentInstance.venderMainPanel, 'fade' );
             }

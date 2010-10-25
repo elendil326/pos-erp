@@ -152,8 +152,8 @@ ApplicacionClientes.prototype._initToolBar = function (){
         }]    
     }];
 
+
     var campoBusqueda = new Ext.form.TextField({
-        //xtype: 'textfield',
         inputCls: 'cliente-buscar',
         id: 'btnBuscarCliente'
         
@@ -161,13 +161,11 @@ ApplicacionClientes.prototype._initToolBar = function (){
 
     campoBusqueda.on('keyup', function() {
       ApplicacionClientes.currentInstance.doSearch();
-        
     });
 
 
    
    if (!Ext.is.Phone) {
-      
         this.dockedItems = [ new Ext.Toolbar({
             ui: 'light',
             dock: 'top',
@@ -478,14 +476,14 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 	            xtype: 'panel',
 	            title: 'ventas',
 	            id: 'customerHistorial',
-	            items: [ {id:'datosCliente'}, {id: 'customerHistorialSlide' }],
+	            items: [ {html:'<div id="datosCliente"></div>'}, { html: '<div id="customerHistorialSlide"></div>' }],
 	          
 	        }, { 
 	            scroll: 'vertical',
 	            xtype: 'panel',
 	            title: 'creditos',
 	            id: 'customerCreditHistorial',
-	            items: [{id:'datosClienteCredito'},{id: 'customerCreditHistorialSlide'}]
+	            items: [{html:'<div id="datosClienteCredito"></div>'},{html: '<div id="customerCreditHistorialSlide"></div>'}]
 	        }],
 			listeners: {
 				cardswitch : function( a ){
@@ -713,9 +711,7 @@ var ClientesListStore = new Ext.data.Store({
     }   
 });
 
-/*  ------------------------------------------------------------------------------------
-        Filtrado de busqueda en el store HAY BUG AQUI, DESPUES DE 1 FILTRO CUANDO SE REGRESA A CLIENTES NO LOS MUESTRA TODOS A MENOS QUE SE TECLE EN EL TEXT DE BUSQUEDA ALGO O SE DEJE EN ''
----------------------------------------------------------------------------------------*/
+
 /**
  * Funcion que filtra dentro de la lista de clientes por el campo 'nombre'
  * y refresca la interfaz grafica de la lista para ver el resultado del filtrado
@@ -723,13 +719,18 @@ var ClientesListStore = new Ext.data.Store({
  */
 ApplicacionClientes.prototype.doSearch = function(  ){
  
+	if(DEBUG){
+		console.log("Doing search....");
+	}
+	
     if (Ext.getCmp('btnBuscarCliente').getValue().length === 0){
 	
         ClientesListStore.clearFilter();
+
         try{
-        	ClientesListStore.sync(); //marca error pero si lo meto en try catch o no lo llamo la vista no coincide con el store
+        	//ClientesListStore.sync(); //marca error pero si lo meto en try catch o no lo llamo la vista no coincide con el store
         }catch(e){
-			console.warn("Error sync -> "+e);
+			console.warn("Error:  "+e);
 		}
 
 	}else{
@@ -739,14 +740,16 @@ ApplicacionClientes.prototype.doSearch = function(  ){
 		}
         try{
         	ClientesListStore.filter('nombre', Ext.getCmp('btnBuscarCliente').getValue()  );
-			ClientesListStore.sync();
+			//ClientesListStore.sync();
         }catch(e){
-			console.warn("Error -> "+e);
+			console.warn("Error "+e);
 		}		
 		
 	}
         
 };
+
+
 
 
 /**
@@ -768,7 +771,7 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
         },
         listeners: {
             beforeshow : function(component){
-                
+
                 Ext.getBody().mask(false, '<div class="demos-loading">Loading&hellip;</div>');
                 POS.AJAXandDECODE({
                         action: '1005'
@@ -786,58 +789,60 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
                         }
                 );//AJAXandDECODE
                 Ext.getBody().unmask();
-            }//fin beforef
+            },
+			show : function (){
+				//cambiar el tamano de la lista segun el form
+				Ext.getCmp('panelClientesList').setHeight( Ext.getCmp('panelClientes').getHeight() );
+			}
         },
         items: [{
-            width: '100%',
-            height: '100%',
-            xtype: 'list',
-            store: ClientesListStore,
-            id: 'listaClientes',
-            tpl: '<tpl for="."><div class="contact"><strong>{nombre}</strong> {rfc} {direccion}</div></tpl>',
-            itemSelector: 'div.contact',
-            singleSelect: true,
-            grouped: true,
-            indexBar: true,
-            listeners: {
-                selectionchange: function(){
-	
-                        if (this.getSelectionCount() == 1) {
+					id: 'panelClientesList',
+					width : '100%',
+		            height: 500,
+		            xtype: 'list',
+		            store: ClientesListStore,
+		            tpl: '<tpl for="."><div class="contact"><strong>{nombre}</strong> {rfc} {direccion}</div></tpl>',
+	            	itemSelector: 'div.contact',
+		            singleSelect: true,
+		            grouped: true,
+		            indexBar: true,
+					listeners: {
+						selectionchange: function(){
 
-                            var recor = this.getSelectedRecords();
-							
-							recor = recor[0].data;
-							
-							if(DEBUG){
-								console.log("Seleccionano cliente", recor  );
+							if (this.getSelectionCount() == 1) {
+
+								var recor = this.getSelectedRecords();
+
+								recor = recor[0].data;
+
+								if(DEBUG){
+									console.log("Seleccionano cliente", recor  );
+								}
+
+								ApplicacionClientes.currentInstance.clienteSeleccionado = recor;
+
+								//La funcion addClientDetailsPanel regresa un panel con el carrusel de 3 cards 
+								var detalles = ApplicacionClientes.currentInstance.addClientDetailsPanel( recor ); 
+
+								ApplicacionClientes.currentInstance.listarVentas( recor );
+
+								ApplicacionClientes.currentInstance.listarVentasCredito( recor );
+
+								//Se desliza para mostrar el panel que contiene el carrusel con las 3 cards (detalles del cliente, ventas al cliente, ventas a credito al cliente).
+								sink.Main.ui.setCard( detalles , 'slide');
 							}
 
-                            ApplicacionClientes.currentInstance.clienteSeleccionado = recor;
 
-
-							
-							//La funcion addClientDetailsPanel regresa un panel con el carrusel de 3 cards 
-                            var detalles = ApplicacionClientes.currentInstance.addClientDetailsPanel( recor ); 
-
-
-						   	ApplicacionClientes.currentInstance.listarVentas( recor );
-
-						    ApplicacionClientes.currentInstance.listarVentasCredito( recor );
-
-							//Se desliza para mostrar el panel que contiene el carrusel con las 3 cards (detalles del cliente, ventas al cliente, ventas a credito al cliente).
-                            sink.Main.ui.setCard( detalles , 'slide');
-                        }
-
-
-                }
-            }//fin listener
+						}
+					}//fin listener
         }]
 
 });
 
 
+
 /*  ------------------------------------------------------------------------------------------
-        AGREGAR Nuevo Cliente
+         Nuevo Cliente
 ------------------------------------------------------------------------------------------*/
 /**
  * Regresa un formulario vacio con los campos necesarios para dar de alta 
@@ -850,20 +855,20 @@ ApplicacionClientes.prototype.formAgregarCliente  = new Ext.form.FormPanel({
 		baseCls: 'formAgregarCliente',
         items: [{
             xtype: 'fieldset',
-            title: 'Cliente Info',
-            instructions: 'Los campos que contienen * son obligatorios',
+            title: 'Informacion de nuevo cliente',
+            instructions: 'Todos los campos son obligatorios.',
             items: [
                     nombreCliente = new Ext.form.TextField({
                         id: 'nombreCliente',
-                        label: '*Nombre'
+                        label: 'Nombre'
                     }),
                     rfcCliente = new Ext.form.TextField({
                         id: 'rfcCliente',
-                        label: '*RFC'
+                        label: 'RFC'
                     }),
                     direccionCliente = new Ext.form.TextField({
                         id: 'direccionCliente',
-                        label: '*Direccion'
+                        label: 'Direccion'
                     }),
                     emailCliente = new Ext.form.TextField({
                         id: 'emailCliente',
@@ -875,7 +880,7 @@ ApplicacionClientes.prototype.formAgregarCliente  = new Ext.form.FormPanel({
                     }),
                     limite_creditoCliente = new Ext.form.NumberField({
                         id: 'limite_creditoCliente',
-                        label: '*Max Credito'
+                        label: 'Max Credito'
                     })
                 ]//fin items form
                 },
@@ -1018,7 +1023,7 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 			//Se genera el contenido en html de los datos de cada venta, en cada venta se genera una div con 
 			//fondo una imagen para que se pueda visualizar los detalles de esa venta {@link ApplicacionClientes#verVenta} mediante el ID de la venta.
 			html += "<div class='ApplicationClientes-Item' >" 
-				+ "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" +ventasCliente.data.items[a].data.id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'/></div>" 
+				+ "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" +ventasCliente.data.items[a].data.id_venta+ ")'><img height=20 width=20 src='sencha/resources/themes/images/default/pictos/search.png'/></div>" 
 				+ "<div class='id'>" + ventasCliente.data.items[a].data.id_venta +"</div>" 
 				+ "<div class='tipo'>" + ventasCliente.data.items[a].data.tipo_venta +"</div>" 
 				+ "<div class='fecha'>"+ ventasCliente.data.items[a].data.fecha +"</div>" 
@@ -1037,7 +1042,6 @@ ApplicacionClientes.prototype.listarVentas = function ( record_cliente ){
 
 		//Si no hay ventas solo se muestra un mensaje estilizado al centro del panel
 		if(!datos.success){
-			
 			html="<div class=\"no-data\">Este cliente no ha hecho ninguna compra.</div>";
 		}
 
@@ -1095,13 +1099,7 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
             });
     
        
-       if (Ext.platform.isAndroidOS) {
-            formBase.items.unshift({
-                xtype: 'component',
-                styleHtmlContent: true,
-                html: '<span style="color: red">Forms on Android are currently under development. We are working hard to improve this in upcoming releases.</span>'
-            });
-        }
+
 
     if (Ext.is.Phone) {
             formBase.fullscreen = true;
@@ -1245,7 +1243,7 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
                             status ="<div onclick='ApplicacionClientes.currentInstance.abonarVenta(" + ven.data.id_venta + " , "+ ven.data.total +" , "+ ven.data.adeudo +")'>ABONAR</div>";
                         }
                         html+= "<div class='ApplicationClientes-Item' >" 
-                        + "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" + ven.data.id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/search.png'></div>"   
+                        + "<div class='trash' onclick='ApplicacionClientes.currentInstance.verVenta(" + ven.data.id_venta+ ")'><img height=20 width=20 src='sencha/resources/themes/images/default/pictos/search.png'></div>"   
                         + "<div class='id'>" + ven.data.id_venta +"</div>" 
                         + "<div class='fecha'>"+ ven.data.fecha +"</div>" 
                         + "<div class='sucursal'>"+ ven.data.sucursal +"</div>"
@@ -1253,7 +1251,7 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
                         + "<div class='total'>"+ POS.currencyFormat(ven.data.total) +"</div>"
                         + "<div class='total'>"+ POS.currencyFormat(ven.data.abonado) +"</div>"
                         + "<div class='total'>"+ POS.currencyFormat(ven.data.adeudo) +"</div>"
-                        + "<div class='total' style='height:15px;'  onclick='ApplicacionClientes.currentInstance.verPagosVenta(" + ven.data.id_venta+ ")'><img height=20 width=20 src='sencha/resources/img/toolbaricons/compose.png'></div>"
+                        + "<div class='total' style='height:15px;'  onclick='ApplicacionClientes.currentInstance.verPagosVenta(" + ven.data.id_venta+ ")'><img height=20 width=20 src='sencha/resources/themes/images/default/pictos/compose.png'></div>"
                         + status
                         + "</div>";
                                                         
@@ -1320,13 +1318,7 @@ ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
             });
     
        
-       if (Ext.platform.isAndroidOS) {
-            formBase.items.unshift({
-                xtype: 'component',
-                styleHtmlContent: true,
-                html: '<span style="color: red">Forms on Android are currently under development. We are working hard to improve this in upcoming releases.</span>'
-            });
-        }
+
 
     if (Ext.is.Phone) {
             formBase.fullscreen = true;
@@ -1563,13 +1555,7 @@ ApplicacionClientes.prototype.abonarVenta = function( idVenta , total , adeudo )
             });
     
        
-       if (Ext.platform.isAndroidOS) {
-            abonaPanel.items.unshift({
-                xtype: 'component',
-                styleHtmlContent: true,
-                html: '<span style="color: red">Forms on Android are currently under development. We are working hard to improve this in upcoming releases.</span>'
-            });
-        }
+
 
     if (Ext.is.Phone) {
             abonaPanel.fullscreen = true;

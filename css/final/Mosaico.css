@@ -67,7 +67,7 @@ background-image: -webkit-gradient(linear, 0% 0, 0% 100%, from(#7E8E9B), color-s
 
 .caja-buscar{
 	background-image: url(media/search-icon.jpeg) !important;
-	background-repeat: no-repeat;
-	background-position: 6px 1px;
+	background-repeat: no-repeat !important;
+	background-position: 6px 3px !important;
 	padding-left: 35px !important;
 }
