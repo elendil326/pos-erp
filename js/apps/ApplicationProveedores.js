@@ -557,9 +557,15 @@ ApplicationProveedores.prototype.listarCompras = function (){
 					html += "   <div class='iva'>$"+ comprasProveedor.data.items[a].data.iva +"</div>";
 					html += "   <div class='total'>$"+ comprasProveedor.data.items[a].data.total +"</div>";
 					
+					var id_compra = " id = 'compra_" + comprasProveedor.data.items[a].data.id_compra + "'";
+					
 					if(comprasProveedor.data.items[a].data.tipo_compra == "credito")
 					{
-					    html += comprasProveedor.data.items[a].data.adeudo > 0 ? "<div class='saldo'>$"+ comprasProveedor.data.items[a].data.adeudo +"</div>" : "";
+					    html += comprasProveedor.data.items[a].data.adeudo > 0 ? "<div class='saldo'" + id_compra + ">$" + comprasProveedor.data.items[a].data.adeudo + "</div>" : "<div class = 'pagado'" + id_compra + ">PAGADO</div>";
+					}
+					else
+					{
+					    html += "<div class = 'pagado'" + id_compra + ">PAGADO</div>";
 					}
 					
 					html += "</div>";
@@ -855,10 +861,12 @@ ApplicationProveedores.prototype.verPagosCompra = function( idCompra ){
 };
 
 
-/*------------------------------------------------------------
-	ABONAR A UNA COMPRA QUE LA SUCURSAL ADEUDA
---------------------------------------------------------------*/
-
+/**
+ *Realiza un abono a una compra en especifico.
+ *@params idCompra {integer}, total {double}, adeudo {double}, totalAbonado {double}
+ *@type String
+ *@return void
+ */
 ApplicationProveedores.prototype.abonarCompra = function( idCompra , total , adeudo ,totalAbonado ){
 	
 	var clienteHtml = "";
@@ -870,12 +878,13 @@ ApplicationProveedores.prototype.abonarCompra = function( idCompra , total , ade
 	clienteHtml += "        <div class='nombre'> Adeuda: " + adeudo + "</div>";
 	clienteHtml += "    </div>";
 	clienteHtml += "</div>";
+
 	clienteHtml += "<br>";
 		
 		
     var abonaPanel = new Ext.form.FormPanel({
         id: 'abonarCompraPanel',
-        scroll: 'vertical',        
+        scroll: 'vertical',      
         items: [
             {
 		        id: 'abonarCompraProveedor',
@@ -972,7 +981,7 @@ ApplicationProveedores.prototype.abonarCompra = function( idCompra , total , ade
 			        ui: 'action',
 			        handler: function(){				            
 			            POS.AJAXandDECODE({
-			                	action: '1301',
+			                	action: '1301',			                	
 					            id_compra: idCompra,
 				        	    monto: Ext.getCmp("montoAbonoCompra").getValue()
 				            },
@@ -980,13 +989,21 @@ ApplicationProveedores.prototype.abonarCompra = function( idCompra , total , ade
 					        {
 					            if(datos.success == true)
 					            {										
-						            ApplicationProveedores.currentInstance.listarComprasCredito();
+						            
+						         	var saldo = Ext.getCmp("restariaCompra").getValue();
+						         	update = saldo > 0 ? "$" + saldo : "PAGADO"
+						         	Ext.get('compra_' + idCompra).update(update);
+						         	
+						         	ApplicationProveedores.currentInstance.listarComprasCredito();
 							        Ext.getCmp("abonarCompraPanel").destroy();
 						         	Ext.getBody().unmask();
+						         	
+						         	POS.aviso("Provedores","<div class = 'ApplicationProveedores-AvisoTitle'>Abono registrado correctamente</div>");
+						         	
 						        }
 						        else
 						        {
-						            POS.aviso("Abono Compra",""+datos.reason);		
+						            POS.aviso("Abono Compra" , ""+datos.reason);		
 						        }
 					        },
 					        function ()
@@ -1005,13 +1022,10 @@ ApplicationProveedores.prototype.abonarCompra = function( idCompra , total , ade
 					//-------------------------------------------------------------------------------
 					text: 'X Cancelar',
 					handler: function() 
-					{
-						//regresar el boton de cliente comun a 1
-						Ext.getCmp("abonarCompraPanel").destroy();
-						 Ext.getBody().unmask();
-						//ocultar este form
-						//form.hide();							
-                       }
+					{						
+					    Ext.getCmp("abonarCompraPanel").destroy();
+						Ext.getBody().unmask();						
+                    }
 				}
 			]//items
     	}]//dockedItems
@@ -1037,22 +1051,7 @@ ApplicationProveedores.prototype.abonarCompra = function( idCompra , total , ade
     }
         						
 	abonaPanel.show();
-        
-	/*
-		Se le da un fono al panel contenedor
-	*/
-	
-	Ext.get("abonar-compraP").setStyle({
-					'background-image':'url("media/g3.png")'								   
-	});
-	
-	Ext.get("abonar-compraP").parent().parent().setStyle({
-					'background-image':'url("media/g2.png")'								   
-	});
-	
-	Ext.get("abonarCompraProveedor").parent().parent().setStyle({
-					'background-image':'url("media/g2.png")'								   
-	});
+        	
 };
 
 /*-------------------------------------------------------------------

@@ -828,7 +828,7 @@ function credit_providerPurchases( $id_proveedor ){
 			
 			$out .= substr($c,1,-2);
 
-			$out.=',"total":"'.$totalCompra.'","abonado":"'.$total_pagos.'","adeudo":"'.$adeudo.'","nombre":"'.$proveedor->getNombre().'","comprador":"'.$usuario->getNombre().'","sucursal":"'.$sc->getDescripcion().'"},';
+			$out.=',"total":"'.$totCompra.'","abonado":"'.$total_pagos.'","adeudo":"'.$adeudo.'","nombre":"'.$proveedor->getNombre().'","comprador":"'.$usuario->getNombre().'","sucursal":"'.$sc->getDescripcion().'"},';
 	
 		}//fin foreach compras
 		$out = substr($out,0,-1);
