@@ -991,7 +991,18 @@ ApplicationProveedores.prototype.abonarCompra = function( idCompra , total , ade
 					            {										
 						            
 						         	var saldo = Ext.getCmp("restariaCompra").getValue();
-						         	update = saldo > 0 ? "$" + saldo : "PAGADO"
+						         	var update = null;
+						         	
+						         	if (saldo > 0)
+						         	{
+						         	   update = "$" + saldo;
+						         	}
+						         	else
+						         	{
+						         	    update = "PAGADO";
+						         	    Ext.get('compra_' + idCompra).replaceClass("saldo","pagado");
+						         	}
+						         	
 						         	Ext.get('compra_' + idCompra).update(update);
 						         	
 						         	ApplicationProveedores.currentInstance.listarComprasCredito();
