@@ -579,27 +579,48 @@ function list_client_sales( $id_cliente ){
  */
 function sale_details( $id_venta ){
 
-	$detalles = new DetalleVenta();
-	$detalles->setIdVenta( $id_venta );
+
+	$venta = VentasDAO::getByPK( $id_venta );
 	
-	$detalles_venta = DetalleVentaDAO::search( $detalles );
-	$out = "";
+	//obtener el nombre del vendedor
+	$vendedor = UsuarioDAO::getByPK( $venta->getIdUsuario() )->getNombre();
 	
-	if( count($detalles_venta) > 0 ){
+	//obetner los items de la venta
+	$query = new DetalleVenta();
+	$query->setIdVenta( $id_venta );
+	$detalles_venta = DetalleVentaDAO::search( $query );
+	$items = array();
+	
+	foreach( $detalles_venta as $detail ){
+
+		$producto = InventarioDAO::getByPK( $detail->getIdProducto() );
 		
-		foreach( $detalles_venta as $detail ){
-			$inventario = new Inventario();
-			$inventario->setIdProducto( $detail->getIdProducto() );
-			$producto = InventarioDAO::search( $inventario );
-			$subtot = $detail->getCantidad() * $detail->getPrecio();
-			$out .= substr($detail,1,-2);
-			$out .=',"denominacion":"'.$producto[0]->getDenominacion().'","subtotal":"'.$subtot.'"},';
-		}//fin foreach
-		$out = substr($out,0,-1);
-		return " { success : true, datos : [".$out."]}";
-	}else{
-		return " { success : false , reason: 'Esta venta no tiene productos'}";
+		array_push( $items, array(
+				"id_producto" => $detail->getIdProducto(),
+				"cantidad" => $detail->getCantidad(),
+				"precio" => $detail->getPrecio(),
+				"denominacion" => $producto->getDenominacion(),
+				"nombre" => $producto->getNombre()				
+			));
 	}
+	
+	//crear el master json
+	echo json_encode(  array(
+		 		"success" => true,
+				"id_venta" => $venta->getIdVenta(),
+				"id_cliente" => $venta->getIdCliente(),
+				"tipo_venta" => $venta->getTipoVenta(),
+				"fecha" => $venta->getFecha(),
+				"iva" => $venta->getIva(),				
+				"subtotal" => $venta->getSubtotal(),
+				"descuento" => $venta->getDescuento(),	
+				"total" => $venta->getTotal(),	
+				"id_sucursal" => $venta->getIdSucursal(),
+				"vendedor" => $vendedor,	
+				"pagado" => $venta->getPagado(),
+				"items" => $items																																										
+			));
+
 }//fin sale_details
 
 /**
@@ -755,11 +776,8 @@ switch ($args['action']) {
 	break;
 	
 	case '1402':
-		$id_venta = $args['id_venta'];
-        
-		
-		$ans = sale_details( $id_venta );
-        echo $ans;
+		echo sale_details( $args['id_venta'] );
+
 	break;
 	
 	case '1403':

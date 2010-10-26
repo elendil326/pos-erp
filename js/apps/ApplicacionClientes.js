@@ -42,6 +42,21 @@ ApplicacionClientes= function ()
 };
 
 
+//create regmodel para busqueda por nombre
+Ext.regModel('ApplicacionClientes_nombre', {
+	fields: [ 'nombre']
+});
+        
+//create regmodel para busqueda por rfc
+Ext.regModel('ApplicacionClientes_rfc', {
+	fields: [ 'rfc', 'nombre','direccion']
+});
+        
+//create regmodel para busqueda por direccion
+Ext.regModel('ApplicacionClientes_direccion', {
+	fields: [ 'direccion' ]
+});
+
 
 /**
  * Contiene el panel principal de la aplicacion clientes
@@ -394,6 +409,7 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 				},
 				//utliizare un css que ya tenia por ahi
 				baseCls: "ApplicationVender-ventaListaPanel",
+				
 		        items: [idClienteM = new Ext.form.HiddenField({
 		                    id: 'idClienteM',
 		                    value: recor.id_cliente
@@ -568,10 +584,16 @@ ApplicacionClientes.prototype.handlerModificarCliente = function(id,rfc,nombre,d
     
     
 	//revisar los datos de la forma e intentar guardarlos, si estan vacios no hace nada y retorna
-
+	if(DEBUG){
+		console.warn("TODO: Esta validacion es muy simple...");
+	}
+	
+	
     if( nombre === '' || rfc === '' || limite_credito === ''){
 		return;
     }
+
+
 	//se pone una capa negra con el texto Guardando Cambios mientras se procesa la peticion, si el servidor responde rapido esta capa no se alcanza a visualizar.
     Ext.getBody().mask(false, '<div class="demos-loading">Guardando cambios</div>');
 
@@ -592,17 +614,24 @@ ApplicacionClientes.prototype.handlerModificarCliente = function(id,rfc,nombre,d
                 	console.log("AppClientes: Datos guardados correctamente");					
 				}
 				
+				//todo salio bien !
+				Ext.Msg.alert("Los datos se han modificado.");
+				
+				//recalcular el credito restante si es que se modifico el maximo credito
+				
+				
 				//actualizar la lista de los clientes
                 POS.AJAXandDECODE({
                     action: '1005'
                 },
-                function (datos){//mientras responda
+                function (datos){
+					//respondend
                     ClientesListStore.loadData(datos.datos); 
                 },
-                function (){//no responde       
-                    POS.aviso("ERROR!!","NO SE PUDO CARGAR LA LISTA DE CLIENTES ERROR EN LA CONEXION :(");  
-
-                });
+                function (){
+					//no response
+					
+	            });
 
             }else{
                   	POS.aviso("No se guardaron los datos",""+datos.reason);
@@ -633,29 +662,20 @@ ApplicacionClientes.prototype.handlerModificarCliente = function(id,rfc,nombre,d
         Buscar Clientes 
 ------------------------------------------------------------------------------------------*/
 
-/**
+/* ---- los comentarios solo son p
  * Se crean Modelos para un Store para así poder filtrar los datos que estan contenidos en el.
  * ES IMPORTANTE SABER QUE PARA QUE SE PUEDA SORTEAR EL CONTENIDO DEL STORE TODOS LOS VALORES
  * QUE ESTEN CARGADOS EN ÉL SEAN DIFERENTES DE NULO O NO SEAN CADENAS VACIAS, DE LO CONTRARIO NO SE CARGARAN
  * LOS DATOS, ES DECIR NO DEBE DE HABER CAMPOS VACIOS.
  * @param {String} Nombre del modelo {Array} Arreglo de cadenas que representan los campos por los q se filtrara
  * @return Ext.regModel
- */
+ -----  */
 
-//create regmodel para busqueda por nombre
-Ext.regModel('ApplicacionClientes_nombre', {
-	fields: [ 'nombre']
-});
-        
-//create regmodel para busqueda por rfc
-Ext.regModel('ApplicacionClientes_rfc', {
-	fields: [ 'rfc', 'nombre','direccion']
-});
-        
-//create regmodel para busqueda por direccion
-Ext.regModel('ApplicacionClientes_direccion', {
-	fields: [ 'direccion' ]
-});
+
+
+
+
+
 
 /**
  * Variable de tipo String que indica por que campo se sorteara (ordenara) en la lista de clientes
@@ -1087,10 +1107,10 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
                         xtype: 'spacer'
                         },{
                         
-                        text: 'X Cerrar',
+                        text: 'Cerrar',
                         handler: function() {
                             //Elimina el formulario actual para regresar a la lista de ventas
-                            Ext.getCmp("detalleVentaPanel").destroy();
+                             Ext.getCmp("detalleVentaPanel").destroy();
                              Ext.getBody().unmask();
                                                    
                             }
@@ -1115,51 +1135,70 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
             });
         }
         
+/*
         Ext.regModel('ventasDetalleStore', {
-        fields: ['nombre', 'rfc']
+        	fields: ['nombre', 'rfc']
         });
 
         var ventasDetalle= new Ext.data.Store({
-        model: 'ventasDetalleStore'
-        
+        	model: 'ventasDetalleStore'
         }); 
-        
+        */
         POS.AJAXandDECODE({
             action: '1402',
             id_venta: idVenta
             },
-            function (datos){//mientras responda AJAXDECODE MOSTRAR CLIENTE
+            function (datos){
+		
                 if(datos.success){
-                    //Se llena el store con los productos pertenecientes a esta venta
-                    ventasDetalle.loadData(datos.datos);
-                    //Se genera el HTML para la cabecera 
+					//generar html
                     var html = "";
+
+                    html += "<table>"
+					+ "<tr><td>ID Venta</td><td>"+ datos.id_venta +"</td></tr>"
+					+ "<tr><td>ID Cliente</td><td>"+ datos.id_cliente +"</td></tr>"
+					+ "<tr><td>Tipo Venta</td><td>"+datos.tipo_venta+"</td></tr>"
+					+ "<tr><td>Fecha</td><td>"+datos.fecha+"</td></tr>"
+					+ "<tr><td>Vendedor</td><td>"+datos.vendedor+"</td></tr>"
+					+ "</table>";
+
+
                     html += "<div class='ApplicationClientes-Item' >" 
-                    + "<div class='vendedor'>PRODUCTO</div>" 
-                    + "<div class='sucursal'>CANTIDAD</div>" 
-                    + "<div class='subtotal'>PRECIO</div>" 
-                    + "<div class='subtotal'>SUBTOTAL</div>"
+                    + "<div class='vendedor'>Producto</div>"
+                    + "<div class='vendedor'>Denominacion</div>"
+                    + "<div class='sucursal'>Cantidad</div>" 
+                    + "<div class='subtotal'>Precio</div>" 
+                    + "<div class='subtotal'>Subtotal</div>"
                     + "</div>";
-                                
-                    for( a = 0; a < ventasDetalle.getCount(); a++ ){
-                       //HTML de cada producto                     
+                     
+  					
+                    for( a = 0; a < datos.items.length; a++ ){
                         html += "<div class='ApplicationClientes-Item' >" 
-                        + "<div class='vendedor'>" + ventasDetalle.data.items[a].data.denominacion +"</div>" 
-                        + "<div class='sucursal'>"+ ventasDetalle.data.items[a].data.cantidad +"</div>" 
-                        + "<div class='subtotal'>$ "+ ventasDetalle.data.items[a].data.precio+"</div>"
-                        + "<div class='subtotal'>$ "+ ventasDetalle.data.items[a].data.subtotal +"</div>"
+                        + "<div class='vendedor'>" + datos.items[a].id_producto +"</div>" 
+                        + "<div class='vendedor'>" + datos.items[a].denominacion +"</div>" 
+                        + "<div class='sucursal'>"+ datos.items[a].cantidad +"</div>" 
+                        + "<div class='subtotal'> "+ POS.currencyFormat( datos.items[a].precio ) +"</div>"
+                        + "<div class='subtotal'> "+ POS.currencyFormat(datos.items[a].precio*datos.items[a].cantidad) +"</div>"
                         + "</div>";
                     }
-                                
+
+					
+                    html += "<table>"
+					+ "<tr><td>Subtotal</td><td>"+ POS.currencyFormat(datos.subtotal) +"</td></tr>"
+					+ "<tr><td>Descuento</td><td>"+ POS.currencyFormat(datos.descuento) +"</td></tr>"
+					+ "<tr><td>IVA</td><td>"+datos.iva+"</td></tr>"
+					+ "<tr><td>Total</td><td>"+POS.currencyFormat(datos.total)+"</td></tr>"
+					+ "</table>";
+
                     //Se actualiza la parte de este formulario con el HTML generado
                     Ext.get("detalleVentaCliente").update("<div class='ApplicationClientes-itemsBox'>" + html +"</div>");
                         
                 }//FIN DATOS.SUCCES TRUE MOSTRAR CLIENTE
                 if(!datos.success){
-                    POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS PROBABLEMENTE ESTE CLIENTE NO HA COMPRADO");
+					Ext.Msg.alert("Porfavor intente de nuevo.")
                     return;
                 }
-                },
+            },
             function (){//no responde  AJAXDECODE MOSTRAR CLIENTE     
                 POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS   ERROR EN LA CONEXION :("); 
                 return;
