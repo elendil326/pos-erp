@@ -82,6 +82,8 @@ Utils.editar = function(id, action, row){
 	var tds = $(sel).children(); // contiene las columnas de la fila especificada en el selector
 	
 	var i = 0;
+	
+	//Iteramos por todas las columnasn del renglon
 	tds.each( function(){
 	
 		if(i < 3 && i != 0)
@@ -113,9 +115,31 @@ Utils.editar = function(id, action, row){
 		}
 		
 		//si es la columna de administracion
-		
+		if(i == 4)
+		{
+			var valorSel = $(this).html();
+			//var selSelect = "option [text="+valorSel+"]";
+			$(this).html("<select >"+$('#acceso').html()+"</select>");
 			
-		if(i == 5) $(this).append("<button  id='boton-ok-editar-row-"+row+"' >OK</button><button id='boton-cancel-editar-row-"+row+"'>Cancelar</button>");
+			//console.log($(this).children()[0].options);
+			$(this).children().each(function(){
+			
+				//iteramos por las opciones
+				$(this).children().each(function(){
+				
+					console.log($(this).html()+"=="+valorSel);					
+					if( $(this).html() == valorSel ) { 
+
+						
+						$(this).attr("selected", true); 
+					}
+					
+				});
+			
+			});
+		}
+			
+		if(i == 6) $(this).append("<button  id='boton-ok-editar-row-"+row+"' >OK</button><button id='boton-cancel-editar-row-"+row+"'>Cancelar</button>");
 		i++;
 	});
 	
@@ -139,14 +163,28 @@ Utils.editar = function(id, action, row){
 				//console.log($(this).children()[0].value);
 			}
 			
-			/*
-			if(j == 3)
-			{
-				//console.log($(this).children()[0].display);
-				$(this).html($(this).children()[0].display);
-			}*/
 			
-			if(j == 5) {
+			if(j == 3 || j == 4)
+			{
+				
+				var val = $(this).children()[0].value;
+				var display = "";
+				console.log(val);
+				//$(this).html($(this).children()[0].display);
+				
+				//iteramos por las opciones del select para checar cual esta seleccionada
+				$(this).children().children().each(function(){
+				
+					if($(this).val() == val){
+						display = $(this).html();
+					}
+				
+				});
+				
+				$(this).html(display);
+			}
+			
+			if(j == 6) {
 				$(this).children()[0].style.display = "block";
 				$(this).html($(this).children()[0]);
 				//console.log("cell[5] children: ");
@@ -174,6 +212,7 @@ Utils.editar = function(id, action, row){
 		var usuario;
 		var sucursal;
 		var id;
+		var grupo;
 		
 		tds_.each(function(){
 		
@@ -183,30 +222,66 @@ Utils.editar = function(id, action, row){
 			}
 		
 			//si son las celdas de datos
-			if(j < 4 && j != 0)
+			if(j < 5 && j != 0)
 			{
 				
 				switch(j){
 					case 1:
 						nombre = $(this).children()[0].value;
+						$(this).html($(this).children()[0].value);
 					break;
 					
 					case 2:
 						usuario = $(this).children()[0].value;
+						$(this).html($(this).children()[0].value);
 					break;
 					
 					case 3:
 						sucursal = $(this).children()[0].value;
+						var val = $(this).children()[0].value;
+						var display = "";
+						console.log(val);
+						//$(this).html($(this).children()[0].display);
+				
+						//iteramos por las opciones del select para checar cual esta seleccionada
+						$(this).children().children().each(function(){
+				
+							if($(this).val() == val){
+								display = $(this).html();
+							}
+				
+						});
+				
+						$(this).html(display);
+					break;
+					
+					case 4:
+						grupo = $(this).children()[0].value;
+						var val = $(this).children()[0].value;
+						var display = "";
+						console.log(val);
+						//$(this).html($(this).children()[0].display);
+				
+						//iteramos por las opciones del select para checar cual esta seleccionada
+						$(this).children().children().each(function(){
+				
+							if($(this).val() == val){
+								display = $(this).html();
+							}
+				
+						});
+				
+						$(this).html(display);
 					break;
 				}
 				
 				
-				$(this).html($(this).children()[0].value);
+				
 				//console.log($(this).children()[0].value);
 			}
 			
 			//si es la celda de los botones
-			if(j == 5) {
+			if(j == 6) {
 				$(this).children()[0].style.display = "block";
 				$(this).html($(this).children()[0]);
 			}
@@ -217,10 +292,18 @@ Utils.editar = function(id, action, row){
 		
 		Utils.request({
 			url: "../proxy.php",
-			data: { action: action, nombre: nombre, username: usuario, id_sucursal: sucursal, id_usuario : id },
+			data: { action: action, nombre: nombre, username: usuario, id_sucursal: sucursal, id_usuario : id, id_grupo: grupo },
 			success: function(data){
 				
 				console.log(data);
+				if(!data.success)
+				{
+					alert(data.error);
+				}
+				else
+				{
+					alert(data.datos);
+				}
 			}
 		
 		});

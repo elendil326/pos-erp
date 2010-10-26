@@ -137,11 +137,15 @@ function actualizarUsuario( $id_usuario, $nombre, $username, $id_sucursal, $id_g
 	
 	//var_dump($gruposUsuarios);
 	$gs = array_pop($gruposUsuarios);
-	$gs->setIdGrupo($id_grupo);
 	
+	$insertGS = new GruposUsuarios();
+	$insertGS->setIdGrupo($id_grupo);
+	$insertGS->setIdUsuario($id_usuario);
+	 
 	try{
 		UsuarioDAO::save( $usuario );
-		GruposUsuariosDAO::save( $gs );
+		GruposUsuariosDAO::delete( $gs );
+		GruposUsuariosDAO::save( $insertGS );
 	}
 	catch( Exception $e )
 	{
@@ -185,6 +189,7 @@ function getDataGridUsuarios($page, $rp, $sortname, $sortorder){
 	$usuarios = UsuarioDAO::getAll($page, $rp, $sortname, $sortorder);
 	
 	$arrayDatos = array();
+	$userSearch = new GruposUsuarios();
 	
 	foreach($usuarios as $usuario)
 	{
@@ -197,12 +202,33 @@ function getDataGridUsuarios($page, $rp, $sortname, $sortorder){
 		if($usuario->getActivo() == 1)
 		{		
 			$sucursal = SucursalDAO::getByPK($usuario->getIdSucursal());
+			
+			$userSearch->setIdUsuario($usuario->getIdUsuario());
+			$gruposUsuarios = GruposUsuariosDAO::search($userSearch);
+	
+			//var_dump($gruposUsuarios);
+			$gs = array_pop($gruposUsuarios);
+			//var_dump($gs);
+			
+			
+			if(!$gs) $idgrupo = "No definido";
+			else{
+				 $idgrupo = $gs->getIdGrupo();
+				 
+				 switch($idgrupo){
+				 	
+				 	case "1": $idgrupo = "Administrador"; break;
+				 	case "2": $idgrupo = "Gerente"; break;
+				 	case "3": $idgrupo = "Cajero"; break;
+				 }
+			}
 					
 			array_push($arrayDatos, array(
 							$usuario->getIdUsuario(),
 							$usuario->getNombre(),
 							$usuario->getUsuario(),
-							$sucursal->getDescripcion()
+							$sucursal->getDescripcion(),
+							$idgrupo
 						));
 		}
 	}

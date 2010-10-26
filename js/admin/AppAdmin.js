@@ -226,7 +226,7 @@ AppAdmin.prototype.loadPersonal = function(){
 				renderTo: "content-2",
 				deleteAction: "2305",
 				editAction: "2307",
-				columns: ["ID", "Nombre", "Usuario", "Sucursal"],
+				columns: ["ID", "Nombre", "Usuario", "Sucursal", "Acceso"],
 				success: function(msg){
 			
 					//alert(msg.success);
