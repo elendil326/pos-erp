@@ -148,7 +148,7 @@ ApplicacionClientes.prototype._initToolBar = function (){
         text: 'Nuevo Cliente',
         handler: function(){
 			sink.Main.ui.setCard( ApplicacionClientes.currentInstance.formAgregarCliente, 'slide' );
-		},//this.addnewClientPanel
+		},
         ui: 'action'
     }];
 
@@ -217,9 +217,9 @@ ApplicacionClientes.prototype._initToolBar = function (){
             sink.Main.ui.setCard( Ext.getCmp('panelClientes'), { type: 'slide', direction: 'right'} );
 						
             Ext.getCmp('btn_agregarCliente').setVisible(true);
-        }//fin handler cancelar cliente
+        }
                 
-    }];//fin boton regresar
+    }];
     
     this.saveClientTool = [ new Ext.Toolbar ({ 
         ui: 'dark',
@@ -243,20 +243,23 @@ ApplicacionClientes.prototype._initToolBar = function (){
 /**
  * Funcion que hablilita/deshabilita las cajas de texto del formulario Detalles del Cliente 
  * {@link ApplicacionClientes#addClientDetailsPanel} .
- * Cambia el texto del Boton que inicialemente dice 'Modificar' (Habilita cajas de texto) 
- * por 'Guardar' (Deshabilita cajas de texto), el boton esta en la Toolbar Inferior. 
- * Cuando el Boton dice 'Guardar' se llama al evento que realiza los cambios en la BD
- * {@link ApplicacionClientes#handlerModificarCliente} con los valores de las cajas de texto.
+ * Al llamarse, oculta el boton Modificar, e inserta dos nuevos botones al toolbar: Cancelar y Modificar....
+ * Cancelar revierte el proceso que hizo esta funcion y Modificar hace una llamda a {@link ApplicacionClientes#handlerModificarCliente}.
+ * @param Button El boton que llamo a esta funcion
  * @return void
  */
-ApplicacionClientes.prototype.editClient = function (){
+
+ApplicacionClientes.prototype.editClient = function ( btn ){
 	
 	if(DEBUG){
-	    console.log("AppClientes: Editar Cliente");
-		
+	    console.log("AppClientes: Editar Cliente", btn);
 	}
-		
 	
+
+	alert("aqui me quede :P");
+	
+	
+/*	
     switch(Ext.getCmp('btn_EditCliente').getText()){
 
         case 'Modificar': 
@@ -270,7 +273,7 @@ ApplicacionClientes.prototype.editClient = function (){
             Ext.getCmp('telefonoClienteM').setDisabled(false);  
             Ext.getCmp('limite_creditoClienteM').setDisabled(false);
             Ext.getCmp('descuentoClienteM').setDisabled(false);
-            Ext.getCmp('btn_CancelEditCliente').setDisabled(false);
+            //Ext.getCmp('btn_CancelEditCliente').setDisabled(false);
             break;
 
         case 'Guardar': 
@@ -284,14 +287,14 @@ ApplicacionClientes.prototype.editClient = function (){
             Ext.getCmp('telefonoClienteM').setDisabled(true);   
             Ext.getCmp('limite_creditoClienteM').setDisabled(true);
             Ext.getCmp('descuentoClienteM').setDisabled(true);
-            Ext.getCmp('btn_CancelEditCliente').setDisabled(true);
+            //Ext.getCmp('btn_CancelEditCliente').setDisabled(true);
 			
 			//se ejecuta el metodo que realiza los cambios en la BD (handlerModificarCliente)
             
 			ApplicacionClientes.currentInstance.handlerModificarCliente(idClienteM.getValue(),rfcClienteM.getValue(),nombreClienteM.getValue(),direccionClienteM.getValue(),telefonoClienteM.getValue(),emailClienteM.getValue(),limite_creditoClienteM.getValue());    
             break;
     }
-
+*/
 };
 
 /**
@@ -310,7 +313,7 @@ ApplicacionClientes.prototype.cancelEditClient = function(){
     Ext.getCmp('telefonoClienteM').setDisabled(true);   
     Ext.getCmp('limite_creditoClienteM').setDisabled(true);
     Ext.getCmp('descuentoClienteM').setDisabled(true);
-    Ext.getCmp('btn_CancelEditCliente').setDisabled(true);
+    //Ext.getCmp('btn_CancelEditCliente').setDisabled(true);
 	
 };
 
@@ -327,64 +330,44 @@ ApplicacionClientes.prototype.cancelEditClient = function(){
  * @param {Ext.data.Model} Un record con los datos del cliente seleccionado de la lista de clientes.
  * @return Ext.Panel
  */
-ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
+ApplicacionClientes.prototype.addClientDetailsPanel= function( record ){
 
-	/*	
-	 *	DOCKED ITEMS PARA EL PANEL QUE CONTIENE EL FORM CON LOS DATOS DEL CLIENTE SELECCIONADO
-	 */
 	
-	if( !this.btnBackCliente2 ){
-		
-		this.btnBackCliente2 = [{
-			id: 'btn_BackCliente',
-			text: 'Regresar',
-			handler: function(){
-				Ext.getCmp('btn_EditCliente').setText("Modificar");
-				sink.Main.ui.setCard( Ext.getCmp('panelClientes'), { type: 'slide', direction: 'right' } );
-			},
-			ui: 'back'
-		}];
-		
-	}
 
-    
-	if( !this.btnEditCliente2 ){
-
-		this.btnEditCliente2 = [{
-			id: 'btn_EditCliente',
-			text: 'Modificar',
-			handler: ApplicacionClientes.currentInstance.editClient,
-			ui: 'action'
-		}];
-	}
-	
-	if( !this.btnCancelEditCliente2 ){
-		
-		this.btnCancelEditCliente2 = [{
-			id: 'btn_CancelEditCliente',
-			text: 'Cancelar',
-			handler: ApplicacionClientes.currentInstance.cancelEditClient,
-			//hidden: true,
-			ui: 'action'
-		}];
-	}
     
 	//si no existe se crea el Toolbar del carrusel
 	if( !this.dockedItemsFormCliente2 ){
-		
-		this.dockedItemsFormCliente2;
-		
+
+		regresar = [{
+			id: 'btn_BackCliente',
+			text: 'Regresar',
+			ui: 'back',			
+			handler: function(){
+				sink.Main.ui.setCard( Ext.getCmp('panelClientes'), { type: 'slide', direction: 'right' } );
+			}
+		}];
+
+
+		editar = [{
+			id: 'btn_EditCliente',
+			text: 'Modificar',
+			ui: 'action',
+			handler: ApplicacionClientes.currentInstance.editClient
+		}];
+
+
+
 		if (!Ext.is.Phone) {
-		   
-			this.dockedItemsFormCliente2 =[ new Ext.Toolbar({
-				ui: 'dark',
-				dock: 'bottom',
-				items:  this.btnBackCliente2.concat({xtype:'spacer'}).concat(this.btnCancelEditCliente2).concat(this.btnEditCliente2)
-					 
-			})];
-			
-		}else {
-			
+			this.dockedItemsFormCliente2 = [ 
+				new Ext.Toolbar({
+					ui: 'dark',
+					dock: 'bottom',
+					items:  regresar.concat({xtype:'spacer'}).concat(editar)
+				})
+			];
+
+		} else {
+
 			this.dockedItemsFormCliente2 = [{
 				xtype: 'toolbar',
 				ui: 'dark',
@@ -399,7 +382,7 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 	//se crea el carrusel si es que no existe, contiene el formulario de los datos del cliente, las ventas, y ventas a credito
 	if(!this.carousel){
 		
-		//crear el formulario de los detalles del cliente, los datos del cliente se obtienen del record que recibe como parametro éste método (recor).
+		//crear el formulario de los detalles del cliente, los datos del cliente se obtienen del record que recibe como parametro éste método (record).
 		formaDeDetalles = {                                                       
 		        xtype: 'fieldset',
 		        title: 'Detalles del Cliente',
@@ -412,60 +395,60 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 				
 		        items: [idClienteM = new Ext.form.HiddenField({
 		                    id: 'idClienteM',
-		                    value: recor.id_cliente
+		                    value: record.id_cliente
 		                }),
 		                nombreClienteM = new Ext.form.TextField({
 		                    id: 'nombreClienteM',
 		                    label: 'Nombre',
 		                    required: true,
-		                    value: recor.nombre,
+		                    value: record.nombre,
 		                    disabled: true
 		                }),
 		                rfcClienteM = new Ext.form.TextField({
 		                    id: 'rfcClienteM',
 		                    label: 'RFC',
 		                    required: true,
-		                    value: recor.rfc,
+		                    value: record.rfc,
 		                    disabled: true
 		                }),
 		                direccionClienteM = new Ext.form.TextField({
 		                    id: 'direccionClienteM',
 		                    label: 'Direccion',
 		                    required: true,
-		                    value: recor.direccion,
+		                    value: record.direccion,
 		                    disabled: true
 		                }),
 		                emailClienteM = new Ext.form.TextField({
 		                    id: 'emailClienteM',
 		                    label: 'E-mail',
-		                    value: recor.e_mail,
+		                    value: record.e_mail,
 		                    disabled: true
 		                }),
 		                telefonoClienteM = new Ext.form.TextField({
 		                    id: 'telefonoClienteM',
 		                    label: 'Telefono',
-		                    value: recor.telefono,
+		                    value: record.telefono,
 		                    disabled: true
 		                }),
 						limite_creditoClienteM = new Ext.form.TextField({
 		                    id: 'descuentoClienteM',
 		                    label: 'Descuento',
 		                    required: false,
-		                    value: recor.descuento,
+		                    value: record.descuento,
 		                    disabled: true
 		                }),
 		                    new Ext.form.TextField({
 		                    id: 'limite_creditoClienteM',
 		                    label: 'Credito Max',
 		                    required: false,
-		                    value: POS.currencyFormat(recor.limite_credito),
+		                    value: POS.currencyFormat(record.limite_credito),
 		                    disabled: true
 		                })	,
 			            	new Ext.form.TextField({
 			                    id: 'creditoRestanteClienteM',
 			                    label: 'Credito Res',
 			                    required: false,
-			                    value: POS.currencyFormat(recor.credito_restante),
+			                    value: POS.currencyFormat(record.credito_restante),
 			                    disabled: true
 			                })
 		        ]};
@@ -481,7 +464,7 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 				listeners:{
 					show: function(){
 
-						Ext.getCmp('btn_CancelEditCliente').setDisabled( true );
+						//Ext.getCmp('btn_CancelEditCliente').setDisabled( true );
 						Ext.getCmp('btn_EditCliente').setText("Modificar");
 					}
 				}
@@ -506,12 +489,12 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 					
 					if( Ext.getCmp("carruselDetallesCliente").getActiveIndex() == 0 ){
 						
-						Ext.getCmp('btn_CancelEditCliente').setDisabled( true );
+						//Ext.getCmp('btn_CancelEditCliente').setDisabled( true );
 	                    Ext.getCmp('btn_EditCliente').setDisabled( false );
 						
 					}else{
 						
-						Ext.getCmp('btn_CancelEditCliente').setDisabled( true );
+						//Ext.getCmp('btn_CancelEditCliente').setDisabled( true );
 	                    Ext.getCmp('btn_EditCliente').setDisabled( true );
 						
 					}
@@ -522,15 +505,15 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( recor ){
 	}else{
 		
 		//Si si existe el carrusel, solo actualizar los datos de los campos de texto del formulario
-		Ext.getCmp("idClienteM").setValue(recor.id_cliente);
-		Ext.getCmp("nombreClienteM").setValue(recor.nombre);
-		Ext.getCmp("rfcClienteM").setValue(recor.rfc);
-		Ext.getCmp("direccionClienteM").setValue(recor.direccion);
-		Ext.getCmp("emailClienteM").setValue(recor.e_mail);
-		Ext.getCmp("telefonoClienteM").setValue(recor.telefono);		
-		Ext.getCmp("descuentoClienteM").setValue(recor.descuento);				
-		Ext.getCmp("limite_creditoClienteM").setValue( POS.currencyFormat(recor.limite_credito));
-		Ext.getCmp("creditoRestanteClienteM").setValue( POS.currencyFormat(recor.credito_restante));		
+		Ext.getCmp("idClienteM").setValue(record.id_cliente);
+		Ext.getCmp("nombreClienteM").setValue(record.nombre);
+		Ext.getCmp("rfcClienteM").setValue(record.rfc);
+		Ext.getCmp("direccionClienteM").setValue(record.direccion);
+		Ext.getCmp("emailClienteM").setValue(record.e_mail);
+		Ext.getCmp("telefonoClienteM").setValue(record.telefono);		
+		Ext.getCmp("descuentoClienteM").setValue(record.descuento);				
+		Ext.getCmp("limite_creditoClienteM").setValue( POS.currencyFormat(record.limite_credito));
+		Ext.getCmp("creditoRestanteClienteM").setValue( POS.currencyFormat(record.credito_restante));		
 		
 	
 	}
@@ -621,17 +604,7 @@ ApplicacionClientes.prototype.handlerModificarCliente = function(id,rfc,nombre,d
 				
 				
 				//actualizar la lista de los clientes
-                POS.AJAXandDECODE({
-                    action: '1005'
-                },
-                function (datos){
-					//respondend
-                    ClientesListStore.loadData(datos.datos); 
-                },
-                function (){
-					//no response
-					
-	            });
+                ApplicacionClientes.currentInstance.updateClientsStore();
 
             }else{
                   	POS.aviso("No se guardaron los datos",""+datos.reason);
@@ -793,21 +766,7 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
             beforeshow : function(component){
 
                 Ext.getBody().mask(false, '<div class="demos-loading">Loading&hellip;</div>');
-                POS.AJAXandDECODE({
-                        action: '1005'
-                        },
-                        function (datos){//mientras responda
-                            if(!datos.success){
-                                POS.aviso("ERROR", ""+datos.reason);    
-                                return;
-                            }
-							//llena el store con los datos enviados del servidor
-                            ClientesListStore.loadData(datos.datos);          
-                        },
-                        function (){//no responde       
-                                POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE CLIENTES       ERROR EN LA CONEXION :(");      
-                        }
-                );//AJAXandDECODE
+                ApplicacionClientes.currentInstance.updateClientsStore();
                 Ext.getBody().unmask();
             },
 			show : function (){
@@ -872,11 +831,12 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
 ApplicacionClientes.prototype.formAgregarCliente  = new Ext.form.FormPanel({
         scroll: 'vertical',
         id:'formAgregarCliente', 
+		scroll: false,
 		baseCls: 'formAgregarCliente',
         items: [{
             xtype: 'fieldset',
             title: 'Informacion de nuevo cliente',
-            instructions: 'Todos los campos son obligatorios.',
+            instructions: 'Todos los campos son obligatorios. Para continuar, necesitara la presencia de un gerente.',
             items: [
                     nombreCliente = new Ext.form.TextField({
                         id: 'nombreCliente',
@@ -898,24 +858,71 @@ ApplicacionClientes.prototype.formAgregarCliente  = new Ext.form.FormPanel({
                         id: 'telefonoCliente',
                         label: 'Telefono'
                     }),
-                    limite_creditoCliente = new Ext.form.NumberField({
+                    limite_creditoCliente = new Ext.form.TextField({
                         id: 'limite_creditoCliente',
                         label: 'Max Credito'
                     })
-                ]//fin items form
-                },
+                ]},
+
                 {
-                xtype: 'button',
+                	xtype: 'button',
                     id: 'guardarCliente',
                     text: 'Guardar',
                     ui: 'action',
-                    maxWidth:150,
                     handler: function(event,button) {
-                        if( nombreCliente.getValue() ==='' || rfcCliente.getValue() ==='' || limite_creditoCliente.getValue() ===''){
-                            POS.aviso("ERROR!!","LLENAR ALMENOS LOS CAMPOS CON  *");                                        
-                        }else{
-                            Ext.getBody().mask(false, '<div class="demos-loading">Loading&hellip;</div>');
-                            POS.AJAXandDECODE({
+	
+						//validar campos
+						campos = Ext.getCmp("formAgregarCliente").getValues();
+						
+						if(campos.nombreCliente.length < 5){
+							Ext.Msg.alert( "Agregar Cliente", "Este nombre es muy corto." );
+							return;
+						}
+						
+
+						if(campos.direccionCliente.length < 5){
+							Ext.Msg.alert( "Agregar Cliente", "La direccion es muy corta." );
+							return;
+						}
+						
+
+						var n = campos.limite_creditoCliente;
+						if( !(n.length > 0 && !(/[^0-9]/).test(n) )){
+							Ext.Msg.alert( "Agregar Cliente" , "El limite de credito debe ser un numero entero." )
+							return;								
+						}
+						
+						if( campos.limite_creditoCliente < 0 || campos.limite_creditoCliente > 50000){
+							Ext.Msg.alert( "Agregar Cliente" , "El limite de credito debe ser entre $0.00 y $50,000.00" )
+							return;
+						}
+						
+
+						if(campos.rfcCliente.length < 5){
+							Ext.Msg.alert( "Agregar Cliente", "Este RFC es muy corto." );
+							return;
+						}
+						
+
+						if(campos.telefonoCliente.length < 5){
+							Ext.Msg.alert( "Agregar Cliente", "Este telefono es muy corto." );
+							return;
+						}
+
+						if(campos.emailCliente.length < 5){
+							Ext.Msg.alert( "Agregar Cliente", "Este correo electronico es muy corto." );
+							return;
+						}
+
+						//campos validos, revisar si soy gerente, si no lo soy entonces pedir autorizacion
+						
+						
+						
+                        Ext.getBody().mask(false, '<div class="demos-loading">Loading&hellip;</div>');
+
+
+						//guardar los datos
+                        POS.AJAXandDECODE({
                                 action: '1001',
                                 rfc: rfcCliente.getValue(),
                                 nombre: nombreCliente.getValue(),
@@ -923,40 +930,35 @@ ApplicacionClientes.prototype.formAgregarCliente  = new Ext.form.FormPanel({
                                 telefono: telefonoCliente.getValue(),
                                 e_mail: emailCliente.getValue(),
                                 limite_credito: limite_creditoCliente.getValue()
-                            },
-                            function (datos){//mientras responda
-                                if(datos.success === true){//
-                                    POS.aviso("NUEVO CLIENTE","LOS DATOS DEL CLIENTE FUERON GUARDADOS CORRECTAMENTE :)");
-                                    rfcCliente.setValue('');
-                                    nombreCliente.setValue('');
-                                    direccionCliente.setValue('');
-                                    telefonoCliente.setValue('');
-                                    emailCliente.setValue('');
-                                    limite_creditoCliente.setValue('');
+                        },
+                        function (datos){
+							//responded !
+                        	if(datos.success === true){
+								Ext.Msg.alert("Agregra Cliente", "El cliente se ha creado exitosamente.");
+									
+								//limpiar los campos
+                                rfcCliente.setValue('');
+                                nombreCliente.setValue('');
+                                direccionCliente.setValue('');
+                                telefonoCliente.setValue('');
+                                emailCliente.setValue('');
+                                limite_creditoCliente.setValue('');
                                  
-                                    POS.AJAXandDECODE({
-                                            action: '1005'
-                                        },
-                                        function (datos){//mientras responda
-											//se vuelve a cargar el store de la lista de clientes para asi incluir el nuevo registro agregado
-                                            ClientesListStore.loadData(datos.datos); 
-                                        },
-                                        function (){//no responde       
-                                            POS.aviso("ERROR!","NO SE PUDO CARGAR LA LISTA DE CLIENTES ERROR EN LA CONEXION :(");  
-                                        }
-                                    );//AJAXandDECODE refrescar lista clientes
-                                }else{
-                                    POS.aviso("ERROR!!","NO SE INSERTO EL CLIENTE <br>Detalles:"+datos.reason);
-                                }
+								ApplicacionClientes.currentInstance.updateClientsStore();
+																		
+                             }else{
+                                    //algo salio mal
+								Ext.Msg.alert("Agregra Cliente", "Porfavor intente de nuevo...");
+                             }
                                  
-                                },
-                            function (){//no responde       
-                                POS.aviso("ERROR","NO SE PUDO INSERTAR CLIENTE, ERROR EN LA CONEXION");      
-                            }
-                            );//AJAXandDECODE insertar cliente
-                                Ext.getBody().unmask();
+                        },
+                        function (){//no responde       
+                        	POS.aviso("ERROR","NO SE PUDO INSERTAR CLIENTE, ERROR EN LA CONEXION");      
+                        }); //AJAXandDECODE insertar cliente
+
+ 						Ext.getBody().unmask();
                          
-                        }//else de validar vacios
+                        
                                         
                                         
                     }//fin handler
@@ -964,7 +966,33 @@ ApplicacionClientes.prototype.formAgregarCliente  = new Ext.form.FormPanel({
                 }//fin boton
                
         ]
-});//fin formPanel
+});
+
+
+
+
+ApplicacionClientes.prototype.updateClientsStore = function (){
+	
+	if(DEBUG){
+		console.log("Actualizando lista de clientes ....");
+	}
+	
+	POS.AJAXandDECODE({
+		action: '1005'
+	},
+	function (datos){
+		ClientesListStore.loadData(datos.datos); 
+	},
+	function (){
+		if(DEBUG){
+			console.log("Failed to update clients from server ! Reintentando.... ");
+		}
+		
+		//volver a intentar
+		ApplicacionClientes.currentInstance.updateClientsStore();
+		
+	});
+};
 
 
 /*------------------------------------------------------------------
@@ -1107,6 +1135,13 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
                         xtype: 'spacer'
                         },{
                         
+                        text: 'Imprimir comprobante',
+                        handler: function() {
+                            	//imprimir ticket
+							   alert("esto falta");
+                            }
+                        },{
+                        
                         text: 'Cerrar',
                         handler: function() {
                             //Elimina el formulario actual para regresar a la lista de ventas
@@ -1135,15 +1170,6 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
             });
         }
         
-/*
-        Ext.regModel('ventasDetalleStore', {
-        	fields: ['nombre', 'rfc']
-        });
-
-        var ventasDetalle= new Ext.data.Store({
-        	model: 'ventasDetalleStore'
-        }); 
-        */
         POS.AJAXandDECODE({
             action: '1402',
             id_venta: idVenta
@@ -1195,12 +1221,12 @@ ApplicacionClientes.prototype.verVenta = function( idVenta ){
                         
                 }//FIN DATOS.SUCCES TRUE MOSTRAR CLIENTE
                 if(!datos.success){
-					Ext.Msg.alert("Porfavor intente de nuevo.")
+					Ext.Msg.alert("Porfavor intente de nuevo.");
                     return;
                 }
             },
             function (){//no responde  AJAXDECODE MOSTRAR CLIENTE     
-                POS.aviso("ERROR","NO SE PUDO CARGAR LA LISTA DE VENTAS   ERROR EN LA CONEXION :("); 
+				Ext.Msg.alert("Porfavor intente de nuevo.");
                 return;
             }
         );//AJAXandDECODE MOSTRAR CLIENTE                       
@@ -1249,6 +1275,7 @@ ApplicacionClientes.prototype.listarVentasCredito = function ( record_cliente ){
                 if(datos.success === true){
 					//Carga el store con las ventas a credito
                     ventasClienteCredito.loadData(datos.datos);
+
 					//Cabecera del panel que contendra las ventas a credito
 					var html = "<div class='AC-Title'>Ventas a Credito para este cliente</div>";
                     
@@ -1345,7 +1372,7 @@ ApplicacionClientes.prototype.verPagosVenta = function( idVenta ){
                         xtype: 'spacer'
                         },{
                         
-                        text: 'X Cerrar',
+                        text: 'Cerrar',
                         handler: function() {
                             //Elimina este panel
                             Ext.getCmp("pagosVentaPanel").destroy();

@@ -849,9 +849,12 @@ ApplicationVender.prototype.doVentaContadoPanel = function (  )
             xtype:'button', 
             text:'Cancelar Venta',
             handler : function (){
+				Ext.Msg.confirm("Mostrador", "&iquest; Esta seguro ?", function (){ 
+						//contesto que si
+						ApplicationVender.currentInstance.doLimpiarCarrito();
+		                sink.Main.ui.setCard( ApplicationVender.currentInstance.venderMainPanel, 'fade' );
+					})
 
-                ApplicationVender.currentInstance.doLimpiarCarrito();
-                sink.Main.ui.setCard( ApplicationVender.currentInstance.venderMainPanel, 'fade' );
             }
         },{
             xtype:'spacer'
