@@ -121,7 +121,7 @@ ApplicationUsuarios.prototype.loadHomePanel = function()
 			{
 				xtype: 'button',
 				ui: 'action',
-				text: 'Agregar nuevo usuario',
+				text: 'Agregar nuevo cajero',
 				handler: function(){
 					//alert("showing form..");
 					ApplicationUsuarios.currentInstance.addNewUser();
@@ -246,7 +246,7 @@ ApplicationUsuarios.prototype.addNewUser = function(){
 	
 	var addUserTB = new Ext.Toolbar({
 		dock: 'top',
-		title: 'Agregar',
+		title: 'Agregar Cajero',
 		items:[{
 			xtype: 'spacer'
 		},{
@@ -275,8 +275,21 @@ ApplicationUsuarios.prototype.addNewUser = function(){
 				}
 				
 			}
+		},{
+			xtype: 'button',
+			text: 'Cancelar',
+			ui: 'action',
+			handler: function(){
+			
+				//Ext.getCmp('ApplicationUsuarios-addNewUser-panel').destroy();					
+	
+				Ext.getCmp('ApplicationUsuarios-addNewUser-form').reset();
+				
+				Ext.getCmp('ApplicationUsuarios-addNewUser-panel').hide();	
+			}
 		}]
 	});
+	
 	
 	
 	var addUserPanel = new Ext.Panel({
@@ -286,7 +299,7 @@ ApplicationUsuarios.prototype.addNewUser = function(){
 		centered: true,
 		modal: true,
 		height: 400,
-		width: 450,
+		width: 600,
 		layout: 'fit',
 		dockedItems: addUserTB,
 		items: [new Ext.form.FormPanel({
@@ -701,7 +714,7 @@ ApplicationUsuarios.prototype.removeUser = function(){
 			{
 				xtype: 'button',
 				ui: 'action',
-				text: 'Agregar nuevo usuario',
+				text: 'Agregar nuevo cajero',
 				handler: function(){
 					//alert("showing form..");
 					ApplicationUsuarios.currentInstance.addNewUser();
