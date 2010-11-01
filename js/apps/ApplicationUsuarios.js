@@ -279,13 +279,9 @@ ApplicationUsuarios.prototype.addNewUser = function(){
 			xtype: 'button',
 			text: 'Cancelar',
 			ui: 'action',
-			handler: function(){
-			
-				//Ext.getCmp('ApplicationUsuarios-addNewUser-panel').destroy();					
-	
-				Ext.getCmp('ApplicationUsuarios-addNewUser-form').reset();
-				
-				Ext.getCmp('ApplicationUsuarios-addNewUser-panel').hide();	
+			handler: function(){			
+				Ext.getCmp('ApplicationUsuarios-addNewUser-form').reset();				
+				Ext.getCmp('ApplicationUsuarios-addNewUser-panel').hide();					
 			}
 		}]
 	});

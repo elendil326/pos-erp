@@ -170,8 +170,8 @@ ApplicationGastos.prototype.loadGastosPanel = function(){
 				xtype: 'fieldset',
 				title: 'Gasto nuevo',
 				instructions: '* Estos campos son requeridos',
-				items:
-					[{
+				items:[
+				    {
 						id: 'ApplicationGastos-gastosForm-concepto',
 						xtype: 'textfield',
 						label: 'Concepto',
@@ -185,7 +185,7 @@ ApplicationGastos.prototype.loadGastosPanel = function(){
 						name: 'monto',
 						required: true
 					},
-					{
+					/*{
 						id: 'ApplicationGastos-gastosForm-fecha',
 						xtype: 'textfield',
 						label: 'Fecha',
@@ -196,7 +196,21 @@ ApplicationGastos.prototype.loadGastosPanel = function(){
 								ApplicationGastos.currentInstance.getDate( 'top' );
 							}
 						}
-					}] 	
+					}*/
+					new Ext.form.DatePickerField({
+					    id:'ApplicationGastos-gastosForm-fecha',
+					    label:'fecha',
+					    name: 'fecha',
+					    required: true,
+					    listeners: {
+							afterrender: function(){
+								this.setValue(new Date());
+							
+							}
+						}
+					
+					})
+				] 	
 			},{
 				xtype: 'button',
 				text: 'Agregar',
@@ -245,7 +259,7 @@ ApplicationGastos.prototype.loadIngresosPanel = function(){
 						name: 'monto',
 						required: true
 					},
-					{
+					/*{
 						id: 'ApplicationGastos-ingresosForm-fecha',
 						xtype: 'textfield',
 						label: 'Fecha',
@@ -256,7 +270,21 @@ ApplicationGastos.prototype.loadIngresosPanel = function(){
 								ApplicationGastos.currentInstance.getDate( 'bottom' );
 							}
 						}
-					}] 	
+					}*/
+					new Ext.form.DatePickerField({
+					    id:'ApplicationGastos-ingresosForm-fecha',
+					    label:'fecha',
+					    required: true,
+					    name: 'fecha',
+					    listeners: {
+							afterrender: function(){
+								this.setValue(new Date());
+							
+							}
+						}
+					
+					})
+				] 	
 			},{
 				xtype: 'button',
 				text: 'Agregar',
@@ -313,8 +341,10 @@ ApplicationGastos.prototype.getDate = function( textfield ){
 	    items: [ new Ext.DatePicker({
 			id: 'ApplicationGastos-getDate-picker',
 			//xtype: 'datepicker',
-	        width: (!Ext.platform.isPhone ? 400 : 320),
-	        height: Ext.platform.isAndroidOS ? 320 : (!Ext.platform.isPhone ? 356 : 300),
+	        //width: (!Ext.platform.isPhone ? 400 : 320),
+	        width: 320,
+	        //height: Ext.platform.isAndroidOS ? 320 : (!Ext.platform.isPhone ? 356 : 300),
+	        height:300,
 	        useTitles: false,
 			floating: true,
 			//slots: [POS.pickerSlots],
