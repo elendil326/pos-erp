@@ -285,19 +285,25 @@ ApplicacionClientes.prototype.editClient = function ( btn ){
 
         case 'Guardar': 
             //habilita las cajas de texto del formulario y cambia el texto a 'Modificar'
-			
-            Ext.getCmp('btn_EditCliente').setText("Modificar");
-            Ext.getCmp('nombreClienteM').setDisabled(true); 
-            Ext.getCmp('direccionClienteM').setDisabled(true);
-            Ext.getCmp('rfcClienteM').setDisabled(true);    
-            Ext.getCmp('emailClienteM').setDisabled(true);
-            Ext.getCmp('telefonoClienteM').setDisabled(true);   
-            Ext.getCmp('limite_creditoClienteM').setDisabled(true);
-            Ext.getCmp('descuentoClienteM').setDisabled(true);
+
+
+			if ( !ApplicacionClientes.currentInstance.handlerModificarCliente() ){
+				//si regresa falso, es que algo salio mal, entonces no cambiar 
+				// el estado de disabled
+	            Ext.getCmp('btn_EditCliente').setText("Modificar");
+	            Ext.getCmp('nombreClienteM').setDisabled(true); 
+	            Ext.getCmp('direccionClienteM').setDisabled(true);
+	            Ext.getCmp('rfcClienteM').setDisabled(true);    
+	            Ext.getCmp('emailClienteM').setDisabled(true);
+	            Ext.getCmp('telefonoClienteM').setDisabled(true);   
+	            Ext.getCmp('limite_creditoClienteM').setDisabled(true);
+	            Ext.getCmp('descuentoClienteM').setDisabled(true);				
+			}   
+
             //Ext.getCmp('btn_CancelEditCliente').setDisabled(true);
 			
 			//se ejecuta el metodo que realiza los cambios en la BD (handlerModificarCliente)
-			ApplicacionClientes.currentInstance.handlerModificarCliente();    
+
 			
             break;
     }
@@ -574,34 +580,63 @@ ApplicacionClientes.prototype.handlerModificarCliente = function( ){
     
     
 	//validar datos
-	datos = Ext.getCmp("ClienteUpdateForm").getValues();
+	campos = Ext.getCmp("ClienteUpdateForm").getValues();
+	
+	if(campos.nombreClienteM.length < 5){
+		Ext.Msg.alert( "Agregar Cliente", "Este nombre es muy corto." );
+		return false;
+	}
 	
 
+	if(campos.direccionClienteM.length < 5){
+		Ext.Msg.alert( "Agregar Cliente", "La direccion es muy corta." );
+		return false;
+	}
 	
-	return;
 
+
+/*	
+	if( campos.limite_creditoClienteM < 0 || campos.limite_creditoClienteM > 50000){
+		Ext.Msg.alert( "Agregar Cliente" , "El limite de credito debe ser entre $0.00 y $50,000.00" )
+		return false;
+	}
+*/	
+
+	if(campos.rfcClienteM.length < 5){
+		Ext.Msg.alert( "Agregar Cliente", "Este RFC es muy corto." );
+		return false;
+	}
+	
+
+	if(campos.telefonoClienteM.length < 5){
+		Ext.Msg.alert( "Agregar Cliente", "Este telefono es muy corto." );
+		return false;
+	}
+
+	if(campos.emailClienteM.length < 5){
+		Ext.Msg.alert( "Agregar Cliente", "Este correo electronico es muy corto." );
+		return false;
+	}
+	
+	
+	
+	
 	//se pone una capa negra con el texto Guardando Cambios mientras se procesa la peticion, si el servidor responde rapido esta capa no se alcanza a visualizar.
     Ext.getBody().mask(false, '<div class="demos-loading">Guardando cambios</div>');
 
    	POS.AJAXandDECODE({
             action: '1002',
-            id: id,
-            rfc: rfc,
-            nombre: nombre,
-            direccion: direccion,
-            telefono: telefono,
-            e_mail: email,
-            limite_credito: limite_credito,
-			descuento : 0
+			load : Ext.encode ( campos )
         },
-        function (datos){//mientras responda
+        function (datos){
+			
             if(datos.success === true){
 				if(DEBUG){
                 	console.log("AppClientes: Datos guardados correctamente");					
 				}
 				
 				//todo salio bien !
-				Ext.Msg.alert("Edita Cliente" , "Los datos se han modificado.");
+				Ext.Msg.alert("Editar Cliente" , "Los datos se han modificado correctamente.");
 				
 				//recalcular el credito restante si es que se modifico el maximo credito
 				
@@ -610,11 +645,12 @@ ApplicacionClientes.prototype.handlerModificarCliente = function( ){
                 ApplicacionClientes.currentInstance.updateClientsStore();
 
             }else{
-                  	POS.aviso("No se guardaron los datos",""+datos.reason);
+	
+				Ext.Msg.alert("Editar Cliente" , datos.reason);
 
-				  	if(DEBUG){
-						console.warn("No se pudieron guardar los datos del cliente");
-					}
+			  	if(DEBUG){
+					console.warn("No se pudieron guardar los datos del cliente");
+				}
                   
             }
 
@@ -626,6 +662,7 @@ ApplicacionClientes.prototype.handlerModificarCliente = function( ){
 		//se quita la capa negra con el texto Guardando Cambios
         Ext.getBody().unmask();
 
+		return true;
 
 };
 

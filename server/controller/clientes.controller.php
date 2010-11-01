@@ -68,49 +68,75 @@ function save_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefon
     }
 }
 
-/**
- *
- * @param <type> $id
- * @param <type> $rfc
- * @param <type> $nombre
- * @param <type> $direccion
- * @param <type> $limite_credito
- * @param <type> $descuento
- * @param <type> $telefono
- * @param <type> $e_mail
- */
-function update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento = 0) {
+
+
+
+     
+function update_customer( $load ) {
+	
+	$data = json_decode(  $load );
+
+
+	
+	//validar que sea un gerente o administardor el que quiere editar
+	if( isset($_SESSION['grupo']) && $_SESSION['grupo'] > 2 ){
+		
+		return "{ 'success' : false , 'reason': 'Usted no tiene privilegios para hacer editar clientes.'}";
+		
+	}
+	
+	
+	//validar nombre
+	if( strlen( $data->nombreClienteM ) < 12){
+		return "{ 'success' : false , 'reason': 'Ese nombre es muy corto.'}";
+	}
+	
+	//validar rfc
+	if( strlen( $data->rfcClienteM ) < 10){
+		return "{ 'success' : false , 'reason': 'Ese rfc es muy corto.'}";
+	}
+	
+	//validar descuento
+	if(  ($data->descuentoClienteM  < 0  ) || ( $data->descuentoClienteM  > 100 )){
+		return "{ 'success' : false , 'reason': 'El descuento debe estar entre 0 y 100'}";
+	}
+	
+	//convertir dinero de credito y credito restante en flotante
+	$data->limite_creditoClienteM = str_replace ( "," , "" ,  $data->limite_creditoClienteM );
+	$data->limite_creditoClienteM = str_replace ( "$" , "" ,  $data->limite_creditoClienteM );
+
+	$data->creditoRestanteClienteM = str_replace ( "," , "" ,  $data->creditoRestanteClienteM );
+	$data->creditoRestanteClienteM = str_replace ( "$" , "" ,  $data->creditoRestanteClienteM );
+
+	//que hacer con el credito restante ?
+
+	$cliente = ClienteDAO::getByPK( $data->idClienteM );
+	
+	if(!$cliente){
+		return "{ 'success': false, 'reason': 'este cliente no existe' }";
+	}
+
+	
+	$cliente->setRfc( $data->rfcClienteM );
+	$cliente->setNombre( $data->nombreClienteM );
+	$cliente->setDireccion( $data->direccionClienteM );
+	$cliente->setLimiteCredito( $data->limite_creditoClienteM );
+	$cliente->setDescuento( $data->descuentoClienteM );
+	$cliente->setTelefono( $data->telefonoClienteM );
+	$cliente->setEMail( $data->emailClienteM );
+	$cliente->setActivo( 1 );
 	
 
-    if ($descuento < 0 || $descuento > 100) {
-        return "{success: false, reason: 'El descuento debe ser entre 0 y 100' }";
-    }
-
-    //validar RFC
-	$cliente = new Cliente();
-	$cliente->setIdCliente( $id );
-
-    $cliente->setRfc( $rfc );
-	$cliente->setNombre( $nombre );
-	$cliente->setDireccion( $direccion );
-	$cliente->setLimiteCredito( $limite_credito );
-	$cliente->setDescuento( $descuento );
-	$cliente->setTelefono( $telefono );
-	$cliente->setEMail( $e_mail );
-	$cliente->setActivo( 1 );	
 	try{
-		$ans = ClienteDAO::save($cliente);
-		if ($ans) {
-        return "{success: true, reason: 'Se modifico el cliente correctamente. AR:".$ans."'}";
-		} else {
-        return "{success: false, reason: 'No se modifico el cliente. AR:".$ans."' }";
-		}
-	}
-	catch(Exception $e)
-	{
-		return "{success: false, reason: 'No se modifico el cliente. AR:".$e->getMessage()."' }";
+		ClienteDAO::save($cliente);
+	}catch(Exception $e){
+		return "{ 'success': false, 'reason': '" . $e->getMessage() . "' }";
 	}
 	
+   	return "{'success': true }";
+
+	
+
    
 }
 
@@ -309,36 +335,7 @@ switch ($args['action']) {
 	break;
 	
 	case '1002':
-	
-		$id = $args['id'];
-        $rfc = $args['rfc'];
-        $nombre = $args['nombre'];
-        $direccion = $args['direccion'];
-        $limite_credito = $args['limite_credito'];
-        $telefono = $args['telefono'];
-        $e_mail = $args['e_mail'];
-		$descuento = $args['descuento'];
-
-		/*
-		* COMPROBAMOS QUE NO LOS DATOS NO TENGAN ESPACIOS BLANCOS AL INICIO O AL FINAL
-		* O QUE SEAN CADENAS EN BLANCO, Y SE QUITAN LOS TAGS DE HTML
-		*/
-		$params = array(
-					&$rfc,
-					&$nombre,
-					&$direccion,
-					&$telefono,
-					&$e_mail,
-					&$limite_credito,
-					&$descuento
-		);
-		sanitize( $params );
-
-
-		//===========================================
-		
-        $ans = update_customer($id, $rfc, $nombre, $direccion, $limite_credito, $telefono, $e_mail, $descuento);
-        echo $ans;
+       	echo update_customer( $args[ 'load' ] );
 	break;
 	
 	case '1003':
