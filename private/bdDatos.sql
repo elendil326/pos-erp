@@ -1,50 +1,50 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.7
+-- version 3.2.0.1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Oct 16, 2010 at 01:34 AM
--- Server version: 5.0.51
--- PHP Version: 5.2.6-1+lenny9
+-- Servidor: localhost
+-- Tiempo de generación: 31-10-2010 a las 21:10:06
+-- Versión del servidor: 5.1.37
+-- Versión de PHP: 5.3.0
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 --
--- Database: `pos`
+-- Base de datos: `pos`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cliente`
+-- Estructura de tabla para la tabla `cliente`
 --
 
 CREATE TABLE IF NOT EXISTS `cliente` (
-  `id_cliente` int(11) NOT NULL auto_increment COMMENT 'identificador del cliente',
-  `rfc` varchar(20) collate utf8_unicode_ci NOT NULL COMMENT 'rfc del cliente si es que tiene',
-  `nombre` varchar(100) collate utf8_unicode_ci NOT NULL COMMENT 'nombre del cliente',
-  `direccion` varchar(300) collate utf8_unicode_ci NOT NULL COMMENT 'domicilio del cliente calle, no, colonia',
-  `telefono` varchar(25) collate utf8_unicode_ci default NULL COMMENT 'Telefono del cliete',
-  `e_mail` varchar(60) collate utf8_unicode_ci NOT NULL default '0' COMMENT 'dias de credito para que pague el cliente',
-  `limite_credito` float NOT NULL default '0' COMMENT 'Limite de credito otorgado al cliente',
-  `descuento` tinyint(4) NOT NULL default '0' COMMENT 'Taza porcentual de descuento de 0 a 100',
-  `activo` tinyint(2) NOT NULL default '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
-  PRIMARY KEY  (`id_cliente`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=201 ;
+  `id_cliente` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del cliente',
+  `rfc` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'rfc del cliente si es que tiene',
+  `nombre` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre del cliente',
+  `direccion` varchar(300) COLLATE utf8_unicode_ci NOT NULL COMMENT 'domicilio del cliente calle, no, colonia',
+  `telefono` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Telefono del cliete',
+  `e_mail` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0' COMMENT 'dias de credito para que pague el cliente',
+  `limite_credito` float NOT NULL DEFAULT '0' COMMENT 'Limite de credito otorgado al cliente',
+  `descuento` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Taza porcentual de descuento de 0 a 100',
+  `activo` tinyint(2) DEFAULT NULL COMMENT 'Indica si la cuenta esta activada o desactivada',
+  PRIMARY KEY (`id_cliente`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=204 ;
 
 --
--- Dumping data for table `cliente`
+-- Volcar la base de datos para la tabla `cliente`
 --
 
 INSERT INTO `cliente` (`id_cliente`, `rfc`, `nombre`, `direccion`, `telefono`, `e_mail`, `limite_credito`, `descuento`, `activo`) VALUES
-(-28, '', '', '', NULL, '0', 0, 0, 1),
 (-6, '', '', '', NULL, '0', 0, 0, 1),
-(1, 'AFJ19INT3JI', 'Clementine Manning', '992-3353 Euismod Street', '(777) 586-8657', 'adipiscing.elit.Curabitur@elitelit.edu', 25563, 0, 1),
+(-5, '', '', '', NULL, '0', 0, 0, 1),
+(1, 'AFJ19INT3JI', 'Clementine Manning', '992-3353 Euismod Street', '(777) 586-8657', 'adipiscing.elit.Curabitur@elitelit.edu', 25563, 0, 0),
 (2, 'EEN95XGS4ZA', 'September Whitaker', 'Ap #147-755 Montes, Rd.', '(569) 226-0218', 'gravida.non@lacusEtiambibendum.edu', 10101, 26, 1),
 (3, 'SFV46VKN7TB', 'Kimberly Rocha', '154-2822 Non, St.', '(772) 180-4981', 'mollis@vitaerisusDuis.com', 17321, 9, 1),
 (4, 'DKP61IRR1UT', 'MacKenzie Shelton', 'Ap #375-3459 Urna. Street', '(538) 429-4572', 'amet.ornare.lectus@egetodio.org', 2454, 34, 1),
-(5, 'WKK55EHC0IL', 'Madeson Moon', 'P.O. Box 659, 4605 Etiam St.', '(369) 832-8679', 'a@augueidante.edu', 3219, 33, 1),
-(6, 'THA83JHY9CZ', 'Alana Parker', '454-1969 Faucibus Road', '(660) 339-5167', 'tortor.dictum@Integermollis.edu', 15257, 42, 1),
+(5, 'WKK55EHC0IL', 'Madeson Moon', 'P.O. Box 659, 4605 Etiam St.', '(369) 832-8679', 'a@augueidante.edu', 33, 0, 1),
+(6, 'THA83JHY9CZ', 'Alana Parker', '454-1969 Faucibus Road', '(660) 339-5167', 'tortor.dictum@Integermollis.edu', 15257, 0, 1),
 (7, 'KWF38HIW0TF', 'Germane Chan', '4262 Aliquet. Avenue', '(313) 820-5680', 'Nunc.ac.sem@pretiumaliquet.com', 12906, 38, 1),
 (8, 'QHD91DTJ4XT', 'Irma Odom', '5688 Purus. Rd.', '(406) 164-0336', 'quis@iaculis.com', 10734, 44, 1),
 (9, 'INC08OYP9QU', 'Maggy House', 'Ap #971-755 Ac St.', '(241) 687-5584', 'faucibus.orci.luctus@ornareFusce.org', 15693, 13, 1),
@@ -104,7 +104,7 @@ INSERT INTO `cliente` (`id_cliente`, `rfc`, `nombre`, `direccion`, `telefono`, `
 (63, 'DBN50INF2VW', 'Velma Manning', 'Ap #803-4380 Erat. Rd.', '(244) 546-4675', 'dui.Fusce@euenimEtiam.edu', 6791, 8, 1),
 (64, 'AOR28NCT0CH', 'Nyssa Terry', '278-3066 Cubilia Av.', '(887) 453-8504', 'luctus.ut@nullaante.ca', 10336, 35, 1),
 (65, 'QWW39ZRR8KN', 'Chanda Mcfarland', '627-4051 Velit Avenue', '(992) 597-0135', 'dui.Suspendisse.ac@Nullam.org', 5151, 44, 1),
-(66, 'PDQ20AUE6PD', 'Alisa Church', 'P.O. Box 841, 5000 Sed St.', '(155) 290-1737', 'dictum@Curabiturconsequatlectus.org', 10311, 7, 1),
+(66, 'PDQ20AUE6PD', 'Alisa Church', 'P.O. Box 841, 5000 Sed St.', '(155) 290-1737', 'dictum@Curabiturconsequatlectus.org', 10311, 0, 1),
 (67, 'SJY89NAA6PA', 'Quynn Hebert', '210 Risus. Ave', '(990) 264-8995', 'penatibus.et.magnis@etarcuimperdiet.com', 8993, 43, 1),
 (68, 'FHL22DVH8GU', 'Minerva Dale', 'P.O. Box 884, 7324 Risus, Rd.', '(826) 721-6916', 'consequat@maurisSuspendisse.org', 81, 34, 1),
 (69, 'ZDP20VBR0WH', 'Colleen Ray', 'P.O. Box 676, 7483 Semper Avenue', '(383) 399-4459', 'mauris@estmollisnon.org', 8700, 17, 1),
@@ -127,7 +127,7 @@ INSERT INTO `cliente` (`id_cliente`, `rfc`, `nombre`, `direccion`, `telefono`, `
 (86, 'DAM71XGC8CS', 'Anjolie Wall', '9174 Est St.', '(169) 702-7064', 'risus.at@adipiscing.ca', 7480, 36, 1),
 (87, 'RLS95OBF6ZV', 'Moana Strickland', '745-4828 Egestas Ave', '(692) 667-2495', 'Aliquam.adipiscing@convallisdolor.org', 2039, 44, 1),
 (88, 'EQA32ZFY8YR', 'Heidi Norton', 'Ap #475-5783 Sem Avenue', '(318) 703-0270', 'aliquam.iaculis.lacus@orci.com', 874, 22, 1),
-(89, 'TAS68RJF3NE', 'Adele Webster', 'P.O. Box 606, 9686 Vel Street', '(290) 570-4515', 'semper@risusDuisa.edu', 20753, 22, 1),
+(89, 'TAS68RJF3NE', 'Adele Webster', 'P.O. Box 606, 9686 Vel Street', '(290) 570-4515', 'semper@risusDuisa.edu', 20753, 0, 1),
 (90, 'AJW26KKR3DZ', 'Jessamine Parker', 'Ap #947-1402 Mi Rd.', '(405) 910-0208', 'tellus.id@orci.edu', 4686, 29, 1),
 (91, 'UOB49FLJ8JZ', 'Leila Frank', '708-9260 Nam Avenue', '(579) 787-0505', 'ligula.Aenean.euismod@sagittis.ca', 6148, 43, 1),
 (92, 'RKJ02TZW0CV', 'Ima Roman', 'Ap #712-5336 Congue. Av.', '(446) 941-6721', 'Ut.sagittis@Donec.ca', 13619, 6, 1),
@@ -156,7 +156,7 @@ INSERT INTO `cliente` (`id_cliente`, `rfc`, `nombre`, `direccion`, `telefono`, `
 (115, 'KEW13PGZ1SM', 'Deanna Lynn', '6347 Magnis St.', '(721) 416-0471', 'nisi.dictum.augue@dolor.ca', 11664, 38, 1),
 (116, 'DSK46PDD8RM', 'Tallulah Houston', 'Ap #314-9748 Non, Rd.', '(889) 361-0230', 'odio@nonsapienmolestie.com', 8807, 31, 1),
 (117, 'DWU26MTO9WE', 'McKenzie Brown', 'P.O. Box 231, 7261 Ipsum Rd.', '(637) 867-0462', 'a.arcu.Sed@tinciduntaliquamarcu.ca', 23321, 16, 1),
-(118, 'NGD01ZGV1KH', 'Breanna Marquez', '7692 Interdum Ave', '(655) 602-8928', 'Fusce@eleifendCras.org', 26971, 25, 1),
+(118, 'NGD01ZGV1KH', 'Breanna Marquez', '7692 Interdum Ave', '(655) 602-8928', 'Fusce@eleifendCras.org', 25, 0, 1),
 (119, 'QBO98QIE7XD', 'Kiona Richardson', '537-7442 Dapibus St.', '(476) 395-3917', 'vitae.orci@vulputate.edu', 25587, 4, 1),
 (120, 'ANL12IIU1GX', 'Jamalia Phillips', '359-911 Nascetur Ave', '(484) 492-8050', 'aliquet@turpis.ca', 16733, 14, 1),
 (121, 'DXQ99WVK6LE', 'Angelica Randolph', 'Ap #735-7644 Imperdiet Road', '(596) 546-6778', 'ridiculus.mus@aliquet.edu', 23922, 31, 1),
@@ -181,14 +181,14 @@ INSERT INTO `cliente` (`id_cliente`, `rfc`, `nombre`, `direccion`, `telefono`, `
 (140, 'BQY17DRX6TE', 'Clio Downs', '296 Iaculis Rd.', '(336) 682-6416', 'tristique.neque@consequatnec.org', 9335, 8, 1),
 (141, 'WBI59AHC2OM', 'Scarlett Hays', 'Ap #210-6395 Tempor, St.', '(532) 159-6169', 'gravida.Aliquam.tincidunt@Nullam.ca', 12474, 14, 1),
 (142, 'YLQ06ENM5AO', 'Fiona Burton', '495-8316 Phasellus Av.', '(134) 293-0948', 'libero.lacus.varius@sagittis.com', 23077, 40, 1),
-(143, 'ZYK45KAU5EP', 'Abigail Melendez', 'P.O. Box 934, 2048 Vel St.', '(132) 971-8626', 'dolor@sitamet.ca', 28386, 20, 1),
+(143, 'ZYK45KAU5EP', 'Abigail Melendez', 'P.O. Box 934, 2048 Vel St.', '(132) 971-8626', 'dolor@sitamet.ca', 28386, 0, 1),
 (144, 'MIL28QXW2IW', 'Desiree Elliott', 'Ap #410-1791 Et Street', '(440) 176-0720', 'aliquet.vel.vulputate@diameu.org', 28659, 24, 1),
 (145, 'JPK28TCB0EI', 'Maia Lambert', '4892 Suspendisse Avenue', '(171) 143-1256', 'magna.a@purusaccumsan.com', 6115, 19, 1),
 (146, 'RAE70FYK8MW', 'Rhoda House', 'P.O. Box 571, 9343 Quis, Av.', '(690) 847-3533', 'ligula.eu.enim@ornareplaceratorci.org', 28106, 20, 1),
 (147, 'SDK19WZT3JO', 'Karen Stone', '5990 Tellus. St.', '(923) 377-6734', 'Suspendisse.dui@laoreetipsum.org', 15087, 14, 1),
 (148, 'TLE71NCT9ZG', 'Bethany Riggs', 'P.O. Box 287, 4222 Netus St.', '(890) 625-0289', 'dapibus.ligula.Aliquam@sed.ca', 12919, 18, 1),
 (149, 'AYN79MAA2WC', 'Fiona Boone', 'P.O. Box 645, 7129 Nascetur St.', '(317) 697-4391', 'Maecenas@euelit.com', 1359, 45, 1),
-(150, 'GOA28XJC9WF', 'Aileen Juarez', 'Ap #706-9084 Nunc Road', '(633) 934-1703', 'neque@Sedmolestie.org', 10975, 23, 1),
+(150, 'GOA28XJC9WF', 'Aileen Juarez', 'Ap #706-9084 Nunc Road', '(633) 934-1703', 'neque@Sedmolestie.org', 1, 0, 1),
 (151, 'KGW52TSG2QP', 'Scarlett Frost', 'Ap #876-3867 Ac Road', '(135) 738-7429', 'aliquet@lectusrutrum.ca', 10956, 0, 1),
 (152, 'CCT33JYE6LP', 'Illana Finley', 'Ap #552-1224 Gravida Road', '(148) 568-5230', 'arcu@eget.ca', 24365, 27, 1),
 (153, 'EEN38YXG2WR', 'Sylvia Hardin', '6289 Donec Avenue', '(444) 978-0851', 'Nullam@arcuvelquam.org', 3837, 11, 1),
@@ -222,9 +222,9 @@ INSERT INTO `cliente` (`id_cliente`, `rfc`, `nombre`, `direccion`, `telefono`, `
 (181, 'OKT86WIF7OP', 'India Tate', 'Ap #928-1115 Tellus Av.', '(595) 183-9008', 'primis@elitpretium.org', 10174, 20, 1),
 (182, 'GFT49IBJ2RE', 'Wendy Mccarty', 'Ap #886-5189 Risus. Road', '(524) 523-5580', 'sit@pellentesquea.com', 9147, 41, 1),
 (183, 'LQY78PZT1GF', 'Petra Burris', '258-6675 Quis St.', '(641) 232-3677', 'ipsum@nibhenim.org', 17306, 14, 1),
-(184, 'NEH23NMD6FI', 'Alana Hardin', '1562 Morbi Rd.', '(823) 281-8924', 'enim.nisl@a.org', 7900, 0, 1),
+(184, 'NEH23NMD6FI', 'Alana Hardin', '1562 Morbi Rd.', '(823) 281-a', 'enim.nisl@a.org', 7900, 0, 1),
 (185, 'VQP37GNC2XB', 'Ursa Rogers', 'P.O. Box 643, 8775 Mi Ave', '(977) 902-3031', 'magna.et@non.edu', 23731, 34, 1),
-(186, 'ZAH02ECF9HY', 'Alana Trevino', 'Ap #608-8401 Egestas. Avenue', '(872) 813-4658', 'ligula.consectetuer.rhoncus@elita.com', 26624, 40, 1),
+(186, 'ZAH02ECF9HY', 'Alana Trevino', 'Ap #608-8401 Egestas. Avenue', '(872) 813-4658', 'ligula.consectetuer.rhoncus@elita.com', 26624, 0, 1),
 (187, 'QBZ80HUB1QA', 'Susan Collins', '584 Morbi Rd.', '(503) 979-8624', 'venenatis.lacus@nuncsed.com', 12410, 13, 1),
 (188, 'ELO95TPN6UJ', 'Florence Riddle', '8183 A, Av.', '(767) 620-0674', 'Ut@lectuspedeultrices.edu', 8249, 40, 1),
 (189, 'DUQ73GNR5HC', 'Holly Carlson', '6929 Mattis St.', '(797) 864-2740', 'dui@pede.ca', 2998, 23, 1),
@@ -238,45 +238,48 @@ INSERT INTO `cliente` (`id_cliente`, `rfc`, `nombre`, `direccion`, `telefono`, `
 (197, 'LKI39VRE6TI', 'Mia Valenzuela', '893-3621 Nunc Road', '(927) 375-0930', 'aliquam.adipiscing.lacus@Curae;Phasellus.com', 20409, 26, 1),
 (198, 'JMG51AXU9ZF', 'Haley Stanley', 'P.O. Box 418, 6043 Magna Street', '(896) 827-5208', 'Sed.nec.metus@Aliquamultrices.com', 19731, 29, 1),
 (199, 'JRN16NJY3XG', 'Kessie Estrada', 'P.O. Box 575, 1628 Pellentesque Road', '(527) 735-4195', 'non.lacinia@egestas.com', 21817, 41, 1),
-(200, 'YGG86EDD4ZN', 'McKenzie Knight', '4182 Tempus, St.', '(819) 329-8560', 'lectus.ante@nislsemconsequat.ca', 672, 23, 1);
+(200, 'YGG86EDD4ZN', 'McKenzie Knight', '4182 Tempus, St.', '(819) 329-8560', 'lectus.ante@nislsemconsequat.ca', 672, 23, 1),
+(201, 'GOHE8823987', 'Alan Gonzalez Hernandez', 'Monte Balcanes #107 2da Secc Arboledas', '614994', 'alanboy@alanboy.com', 25, 0, 1),
+(202, 'MOR24235455', 'Dilba Monica Del Moral Cuevas', 'Celaya, Guanajuato', '1741449', 'dilbis_@hotmail.com', 0, 0, NULL),
+(203, 'adsfasdf', 'asdfasdf', 'asdfasdf', 'adsfadfs', 'asdfasdf', 23, 0, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `compras`
+-- Estructura de tabla para la tabla `compras`
 --
 
 CREATE TABLE IF NOT EXISTS `compras` (
-  `id_compra` int(11) NOT NULL auto_increment COMMENT 'id de la compra',
+  `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de la compra',
   `id_proveedor` int(11) NOT NULL COMMENT 'PROVEEDOR AL QUE SE LE COMPRO',
-  `tipo_compra` enum('credito','contado') collate utf8_unicode_ci NOT NULL COMMENT 'tipo de compra, contado o credito',
-  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha de compra',
+  `tipo_compra` enum('credito','contado') COLLATE utf8_unicode_ci NOT NULL COMMENT 'tipo de compra, contado o credito',
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de compra',
   `subtotal` float NOT NULL COMMENT 'subtotal de compra',
   `iva` float NOT NULL COMMENT 'iva de la compra',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal en que se compro',
   `id_usuario` int(11) NOT NULL COMMENT 'quien realizo la compra',
-  PRIMARY KEY  (`id_compra`),
+  PRIMARY KEY (`id_compra`),
   KEY `compras_proveedor` (`id_proveedor`),
   KEY `compras_sucursal` (`id_sucursal`),
   KEY `compras_usuario` (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
--- Dumping data for table `compras`
+-- Volcar la base de datos para la tabla `compras`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `corte`
+-- Estructura de tabla para la tabla `corte`
 --
 
 CREATE TABLE IF NOT EXISTS `corte` (
-  `num_corte` int(11) NOT NULL auto_increment COMMENT 'numero de corte',
+  `num_corte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'numero de corte',
   `anio` year(4) NOT NULL COMMENT 'año del corte',
-  `inicio` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'año del corte',
-  `fin` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'fecha de fin del corte',
+  `inicio` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'año del corte',
+  `fin` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'fecha de fin del corte',
   `ventas` float NOT NULL COMMENT 'ventas al contado en ese periodo',
   `abonosVentas` float NOT NULL COMMENT 'pagos de abonos en este periodo',
   `compras` float NOT NULL COMMENT 'compras realizadas en ese periodo',
@@ -284,11 +287,11 @@ CREATE TABLE IF NOT EXISTS `corte` (
   `gastos` float NOT NULL COMMENT 'gastos echos en ese periodo',
   `ingresos` float NOT NULL COMMENT 'ingresos obtenidos en ese periodo',
   `gananciasNetas` float NOT NULL COMMENT 'ganancias netas dentro del periodo',
-  PRIMARY KEY  (`num_corte`)
+  PRIMARY KEY (`num_corte`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
 --
--- Dumping data for table `corte`
+-- Volcar la base de datos para la tabla `corte`
 --
 
 INSERT INTO `corte` (`num_corte`, `anio`, `inicio`, `fin`, `ventas`, `abonosVentas`, `compras`, `AbonosCompra`, `gastos`, `ingresos`, `gananciasNetas`) VALUES
@@ -306,32 +309,32 @@ INSERT INTO `corte` (`num_corte`, `anio`, `inicio`, `fin`, `ventas`, `abonosVent
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cotizacion`
+-- Estructura de tabla para la tabla `cotizacion`
 --
 
 CREATE TABLE IF NOT EXISTS `cotizacion` (
-  `id_cotizacion` int(11) NOT NULL auto_increment COMMENT 'id de la cotizacion',
+  `id_cotizacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de la cotizacion',
   `id_cliente` int(11) NOT NULL COMMENT 'id del cliente',
-  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha de cotizacion',
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de cotizacion',
   `subtotal` float NOT NULL COMMENT 'subtotal de la cotizacion',
   `iva` float NOT NULL COMMENT 'iva sobre el subtotal',
   `id_sucursal` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
-  PRIMARY KEY  (`id_cotizacion`),
+  PRIMARY KEY (`id_cotizacion`),
   KEY `cotizacion_cliente` (`id_cliente`),
   KEY `fk_cotizacion_1` (`id_sucursal`),
   KEY `fk_cotizacion_2` (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
--- Dumping data for table `cotizacion`
+-- Volcar la base de datos para la tabla `cotizacion`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `detalle_compra`
+-- Estructura de tabla para la tabla `detalle_compra`
 --
 
 CREATE TABLE IF NOT EXISTS `detalle_compra` (
@@ -339,21 +342,21 @@ CREATE TABLE IF NOT EXISTS `detalle_compra` (
   `id_producto` int(11) NOT NULL COMMENT 'id del producto',
   `cantidad` float NOT NULL COMMENT 'cantidad comprada',
   `precio` float NOT NULL COMMENT 'costo de compra',
-  `peso_arpillaPagado` float default '0',
-  `peso_arpillaReal` float default '0',
-  PRIMARY KEY  (`id_compra`,`id_producto`),
+  `peso_arpillaPagado` float DEFAULT '0',
+  `peso_arpillaReal` float DEFAULT '0',
+  PRIMARY KEY (`id_compra`,`id_producto`),
   KEY `detalle_compra_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `detalle_compra`
+-- Volcar la base de datos para la tabla `detalle_compra`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `detalle_corte`
+-- Estructura de tabla para la tabla `detalle_corte`
 --
 
 CREATE TABLE IF NOT EXISTS `detalle_corte` (
@@ -361,12 +364,12 @@ CREATE TABLE IF NOT EXISTS `detalle_corte` (
   `nombre` varchar(100) NOT NULL COMMENT 'nombre del encargado de sucursal al momento del corte',
   `total` float NOT NULL COMMENT 'total que le corresponde al encargado al momento del corte',
   `deben` float NOT NULL COMMENT 'lo que deben en la sucursal del encargado al momento del corte',
-  PRIMARY KEY  (`num_corte`,`nombre`),
+  PRIMARY KEY (`num_corte`,`nombre`),
   KEY `corte_detalleCorte` (`num_corte`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `detalle_corte`
+-- Volcar la base de datos para la tabla `detalle_corte`
 --
 
 INSERT INTO `detalle_corte` (`num_corte`, `nombre`, `total`, `deben`) VALUES
@@ -403,7 +406,7 @@ INSERT INTO `detalle_corte` (`num_corte`, `nombre`, `total`, `deben`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `detalle_cotizacion`
+-- Estructura de tabla para la tabla `detalle_cotizacion`
 --
 
 CREATE TABLE IF NOT EXISTS `detalle_cotizacion` (
@@ -411,33 +414,33 @@ CREATE TABLE IF NOT EXISTS `detalle_cotizacion` (
   `id_producto` int(11) NOT NULL COMMENT 'id del producto',
   `cantidad` float NOT NULL COMMENT 'cantidad cotizado',
   `precio` float NOT NULL COMMENT 'precio al que cotizo el producto',
-  PRIMARY KEY  (`id_cotizacion`,`id_producto`),
+  PRIMARY KEY (`id_cotizacion`,`id_producto`),
   KEY `detalle_cotizacion_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `detalle_cotizacion`
+-- Volcar la base de datos para la tabla `detalle_cotizacion`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `detalle_inventario`
+-- Estructura de tabla para la tabla `detalle_inventario`
 --
 
 CREATE TABLE IF NOT EXISTS `detalle_inventario` (
   `id_producto` int(11) NOT NULL COMMENT 'id del producto al que se refiere',
   `id_sucursal` int(11) NOT NULL COMMENT 'id de la sucursal',
   `precio_venta` float NOT NULL COMMENT 'precio al que se vendera al publico',
-  `min` float NOT NULL default '0' COMMENT 'cantidad minima que debe de haber del producto en almacen de esta sucursal',
-  `existencias` float NOT NULL default '0' COMMENT 'cantidad de producto que hay actualmente en almacen de esta sucursal',
-  PRIMARY KEY  (`id_producto`,`id_sucursal`),
+  `min` float NOT NULL DEFAULT '0' COMMENT 'cantidad minima que debe de haber del producto en almacen de esta sucursal',
+  `existencias` float NOT NULL DEFAULT '0' COMMENT 'cantidad de producto que hay actualmente en almacen de esta sucursal',
+  PRIMARY KEY (`id_producto`,`id_sucursal`),
   KEY `id_sucursal` (`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `detalle_inventario`
+-- Volcar la base de datos para la tabla `detalle_inventario`
 --
 
 INSERT INTO `detalle_inventario` (`id_producto`, `id_sucursal`, `precio_venta`, `min`, `existencias`) VALUES
@@ -471,11 +474,11 @@ INSERT INTO `detalle_inventario` (`id_producto`, `id_sucursal`, `precio_venta`, 
 (8, 38, 308, 69, 345),
 (8, 40, 333, 81, 60),
 (8, 42, 49, 73, 116),
-(9, 5, 203, 79, 196),
+(9, 5, 203, 79, 115.3),
 (9, 12, 150, 79, 225),
 (9, 23, 102, 80, 339),
 (9, 24, 189, 56, 95),
-(9, 29, 431, 77, 96),
+(9, 29, 431, 77, 89),
 (9, 38, 165, 72, 186),
 (9, 40, 267, 79, 87),
 (10, 14, 233, 86, 282),
@@ -519,7 +522,7 @@ INSERT INTO `detalle_inventario` (`id_producto`, `id_sucursal`, `precio_venta`, 
 (19, 16, 270, 85, 245),
 (19, 33, 281, 85, 50),
 (19, 42, 233, 80, 396),
-(20, 6, 36, 71, 325),
+(20, 6, 36, 71, 324),
 (20, 51, 275, 71, 131),
 (21, 8, 370, 53, 98),
 (21, 15, 27, 53, 310),
@@ -545,7 +548,7 @@ INSERT INTO `detalle_inventario` (`id_producto`, `id_sucursal`, `precio_venta`, 
 (25, 42, 404, 82, 379),
 (26, 4, 125, 89, 10),
 (26, 27, 444, 86, 313),
-(26, 29, 63, 79, 121),
+(26, 29, 63, 79, 115),
 (27, 13, 142, 71, 146),
 (27, 28, 260, 81, 106),
 (28, 15, 259, 65, 41),
@@ -585,7 +588,7 @@ INSERT INTO `detalle_inventario` (`id_producto`, `id_sucursal`, `precio_venta`, 
 (37, 18, 323, 56, 216),
 (37, 19, 308, 52, 41),
 (37, 45, 229, 68, 97),
-(38, 5, 343, 85, 31),
+(38, 5, 343, 85, 27),
 (38, 8, 81, 50, 320),
 (38, 10, 485, 65, 19),
 (38, 21, 48, 90, 90),
@@ -632,12 +635,13 @@ INSERT INTO `detalle_inventario` (`id_producto`, `id_sucursal`, `precio_venta`, 
 (49, 35, 62, 60, 227),
 (50, 31, 320, 53, 234),
 (50, 35, 380, 69, 81),
+(80, 5, 11, 11, 0),
 (201, 28, 2.65, 200, 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `detalle_venta`
+-- Estructura de tabla para la tabla `detalle_venta`
 --
 
 CREATE TABLE IF NOT EXISTS `detalle_venta` (
@@ -645,12 +649,12 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
   `id_producto` int(11) NOT NULL COMMENT 'producto de la venta',
   `cantidad` float NOT NULL COMMENT 'cantidad que se vendio',
   `precio` float NOT NULL COMMENT 'precio al que se vendio',
-  PRIMARY KEY  (`id_venta`,`id_producto`),
+  PRIMARY KEY (`id_venta`,`id_producto`),
   KEY `detalle_venta_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `detalle_venta`
+-- Volcar la base de datos para la tabla `detalle_venta`
 --
 
 INSERT INTO `detalle_venta` (`id_venta`, `id_producto`, `cantidad`, `precio`) VALUES
@@ -911,24 +915,46 @@ INSERT INTO `detalle_venta` (`id_venta`, `id_producto`, `cantidad`, `precio`) VA
 (112, 48, 11, 30),
 (113, 27, 2, 260),
 (113, 44, 4, 44),
-(113, 48, 4, 30);
+(113, 48, 4, 30),
+(114, 38, 1, 343),
+(115, 9, 1, 203),
+(116, 9, 1, 203),
+(117, 9, 1, 203),
+(117, 38, 1, 343),
+(118, 9, 1, 203),
+(119, 9, 1, 203),
+(120, 9, 12.75, 203),
+(121, 9, 1, 203),
+(121, 38, 1, 343),
+(122, 9, 39, 203),
+(123, 9, 1.25, 203),
+(124, 9, 1, 203),
+(125, 9, 7, 431),
+(125, 26, 6, 63),
+(126, 9, 14.7, 203),
+(127, 9, 2, 203),
+(128, 9, 2, 203),
+(129, 9, 1, 203),
+(130, 20, 1, 36),
+(131, 9, 1, 203),
+(131, 38, 1, 343);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `encargado`
+-- Estructura de tabla para la tabla `encargado`
 --
 
 CREATE TABLE IF NOT EXISTS `encargado` (
   `id_usuario` int(11) NOT NULL COMMENT 'Este id es el del usuario encargado de su sucursal',
   `porciento` float NOT NULL COMMENT 'este es el porciento de las ventas que le tocan al encargado',
-  PRIMARY KEY  (`id_usuario`),
+  PRIMARY KEY (`id_usuario`),
   KEY `fk_encargado_1` (`id_usuario`),
   KEY `usuario_encargado` (`id_usuario`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `encargado`
+-- Volcar la base de datos para la tabla `encargado`
 --
 
 INSERT INTO `encargado` (`id_usuario`, `porciento`) VALUES
@@ -953,40 +979,40 @@ INSERT INTO `encargado` (`id_usuario`, `porciento`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `factura_compra`
+-- Estructura de tabla para la tabla `factura_compra`
 --
 
 CREATE TABLE IF NOT EXISTS `factura_compra` (
-  `folio` varchar(15) collate utf8_unicode_ci NOT NULL,
+  `folio` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
   `id_compra` int(11) NOT NULL COMMENT 'COMPRA A LA QUE CORRESPONDE LA FACTURA',
-  PRIMARY KEY  (`folio`),
+  PRIMARY KEY (`folio`),
   KEY `factura_compra_compra` (`id_compra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `factura_compra`
+-- Volcar la base de datos para la tabla `factura_compra`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `factura_venta`
+-- Estructura de tabla para la tabla `factura_venta`
 --
 
 CREATE TABLE IF NOT EXISTS `factura_venta` (
-  `folio` varchar(15) collate utf8_unicode_ci NOT NULL COMMENT 'folio que tiene la factura',
+  `folio` varchar(15) COLLATE utf8_unicode_ci NOT NULL COMMENT 'folio que tiene la factura',
   `id_venta` int(11) NOT NULL COMMENT 'venta a la cual corresponde la factura',
-  PRIMARY KEY  (`folio`),
+  PRIMARY KEY (`folio`),
   KEY `factura_venta_venta` (`id_venta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `factura_venta`
+-- Volcar la base de datos para la tabla `factura_venta`
 --
 
 INSERT INTO `factura_venta` (`folio`, `id_venta`) VALUES
-('ALGUNFOLIO74296', 4),
+('ALGUNFOLIO74296', 1),
 ('ALGUNFOLIO75640', 8),
 ('ALGUNFOLIO73694', 9),
 ('ALGUNFOLIO79049', 13),
@@ -1005,24 +1031,24 @@ INSERT INTO `factura_venta` (`folio`, `id_venta`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `gastos`
+-- Estructura de tabla para la tabla `gastos`
 --
 
 CREATE TABLE IF NOT EXISTS `gastos` (
-  `id_gasto` int(11) NOT NULL auto_increment COMMENT 'id para identificar el gasto',
+  `id_gasto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id para identificar el gasto',
   `concepto` varchar(100) NOT NULL COMMENT 'concepto en lo que se gasto',
   `monto` float NOT NULL COMMENT 'lo que costo este gasto',
-  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'fecha del gasto',
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'fecha del gasto',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal en la que se hizo el gasto',
   `id_usuario` int(11) NOT NULL COMMENT 'usuario que registro el gasto',
-  PRIMARY KEY  (`id_gasto`),
+  PRIMARY KEY (`id_gasto`),
   KEY `fk_gastos_1` (`id_usuario`),
   KEY `usuario_gasto` (`id_usuario`),
   KEY `sucursal_gasto` (`id_sucursal`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=211 ;
 
 --
--- Dumping data for table `gastos`
+-- Volcar la base de datos para la tabla `gastos`
 --
 
 INSERT INTO `gastos` (`id_gasto`, `concepto`, `monto`, `fecha`, `id_sucursal`, `id_usuario`) VALUES
@@ -1240,18 +1266,18 @@ INSERT INTO `gastos` (`id_gasto`, `concepto`, `monto`, `fecha`, `id_sucursal`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `grupos`
+-- Estructura de tabla para la tabla `grupos`
 --
 
 CREATE TABLE IF NOT EXISTS `grupos` (
   `id_grupo` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL COMMENT 'Nombre del Grupo',
   `descripcion` varchar(256) NOT NULL,
-  PRIMARY KEY  (`id_grupo`)
+  PRIMARY KEY (`id_grupo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `grupos`
+-- Volcar la base de datos para la tabla `grupos`
 --
 
 INSERT INTO `grupos` (`id_grupo`, `nombre`, `descripcion`) VALUES
@@ -1262,74 +1288,77 @@ INSERT INTO `grupos` (`id_grupo`, `nombre`, `descripcion`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `grupos_usuarios`
+-- Estructura de tabla para la tabla `grupos_usuarios`
 --
 
 CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
   `id_grupo` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
-  PRIMARY KEY  (`id_grupo`,`id_usuario`),
+  PRIMARY KEY (`id_grupo`,`id_usuario`),
   KEY `fk_grupos_usuarios_1` (`id_grupo`),
   KEY `fk_grupos_usuarios_2` (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `grupos_usuarios`
+-- Volcar la base de datos para la tabla `grupos_usuarios`
 --
 
 INSERT INTO `grupos_usuarios` (`id_grupo`, `id_usuario`) VALUES
 (1, 1),
 (2, 2),
-(3, 27),
+(3, 3),
+(3, 4),
 (3, 28),
 (3, 29),
 (3, 30),
 (3, 31),
 (3, 32),
 (3, 33),
-(3, 34);
+(3, 34),
+(3, 35),
+(3, 36);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `impuesto`
+-- Estructura de tabla para la tabla `impuesto`
 --
 
 CREATE TABLE IF NOT EXISTS `impuesto` (
-  `id_impuesto` int(11) NOT NULL auto_increment,
-  `descripcion` varchar(100) collate utf8_unicode_ci NOT NULL,
+  `id_impuesto` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `valor` int(11) NOT NULL,
   `id_sucursal` int(11) NOT NULL,
-  PRIMARY KEY  (`id_impuesto`),
+  PRIMARY KEY (`id_impuesto`),
   KEY `fk_impuesto_1` (`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
--- Dumping data for table `impuesto`
+-- Volcar la base de datos para la tabla `impuesto`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ingresos`
+-- Estructura de tabla para la tabla `ingresos`
 --
 
 CREATE TABLE IF NOT EXISTS `ingresos` (
-  `id_ingreso` int(11) NOT NULL auto_increment COMMENT 'id para identificar el ingreso',
+  `id_ingreso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id para identificar el ingreso',
   `concepto` varchar(100) NOT NULL COMMENT 'concepto en lo que se ingreso',
   `monto` float NOT NULL COMMENT 'lo que costo este ingreso',
-  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'fecha del ingreso',
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'fecha del ingreso',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal en la que se hizo el ingreso',
   `id_usuario` int(11) NOT NULL COMMENT 'usuario que registro el ingreso',
-  PRIMARY KEY  (`id_ingreso`),
+  PRIMARY KEY (`id_ingreso`),
   KEY `fk_ingresos_1` (`id_usuario`),
   KEY `usuario_ingreso` (`id_usuario`),
   KEY `sucursal_ingreso` (`id_sucursal`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=202 ;
 
 --
--- Dumping data for table `ingresos`
+-- Volcar la base de datos para la tabla `ingresos`
 --
 
 INSERT INTO `ingresos` (`id_ingreso`, `concepto`, `monto`, `fecha`, `id_sucursal`, `id_usuario`) VALUES
@@ -1538,18 +1567,18 @@ INSERT INTO `ingresos` (`id_ingreso`, `concepto`, `monto`, `fecha`, `id_sucursal
 -- --------------------------------------------------------
 
 --
--- Table structure for table `inventario`
+-- Estructura de tabla para la tabla `inventario`
 --
 
 CREATE TABLE IF NOT EXISTS `inventario` (
-  `id_producto` int(11) NOT NULL auto_increment COMMENT 'id del producto',
-  `nombre` varchar(90) collate utf8_unicode_ci NOT NULL COMMENT 'Descripcion o nombre del producto',
-  `denominacion` varchar(30) collate utf8_unicode_ci NOT NULL COMMENT 'es lo que se le mostrara a los clientes',
-  PRIMARY KEY  (`id_producto`)
+  `id_producto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del producto',
+  `nombre` varchar(90) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Descripcion o nombre del producto',
+  `denominacion` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT 'es lo que se le mostrara a los clientes',
+  PRIMARY KEY (`id_producto`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=202 ;
 
 --
--- Dumping data for table `inventario`
+-- Volcar la base de datos para la tabla `inventario`
 --
 
 INSERT INTO `inventario` (`id_producto`, `nombre`, `denominacion`) VALUES
@@ -1757,40 +1786,40 @@ INSERT INTO `inventario` (`id_producto`, `nombre`, `denominacion`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pagos_compra`
+-- Estructura de tabla para la tabla `pagos_compra`
 --
 
 CREATE TABLE IF NOT EXISTS `pagos_compra` (
-  `id_pago` int(11) NOT NULL auto_increment COMMENT 'identificador del pago',
+  `id_pago` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del pago',
   `id_compra` int(11) NOT NULL COMMENT 'identificador de la compra a la que pagamos',
-  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha en que se abono',
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha en que se abono',
   `monto` float NOT NULL COMMENT 'monto que se abono',
-  PRIMARY KEY  (`id_pago`),
+  PRIMARY KEY (`id_pago`),
   KEY `pagos_compra_compra` (`id_compra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
--- Dumping data for table `pagos_compra`
+-- Volcar la base de datos para la tabla `pagos_compra`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pagos_venta`
+-- Estructura de tabla para la tabla `pagos_venta`
 --
 
 CREATE TABLE IF NOT EXISTS `pagos_venta` (
-  `id_pago` int(11) NOT NULL auto_increment COMMENT 'id de pago del cliente',
+  `id_pago` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de pago del cliente',
   `id_venta` int(11) NOT NULL COMMENT 'id de la venta a la que se esta pagando',
-  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'Fecha en que se registro el pago',
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha en que se registro el pago',
   `monto` float NOT NULL COMMENT 'total de credito del cliente',
-  PRIMARY KEY  (`id_pago`),
+  PRIMARY KEY (`id_pago`),
   KEY `pagos_venta_venta` (`id_venta`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=207 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=212 ;
 
 --
--- Dumping data for table `pagos_venta`
+-- Volcar la base de datos para la tabla `pagos_venta`
 --
 
 INSERT INTO `pagos_venta` (`id_pago`, `id_venta`, `fecha`, `monto`) VALUES
@@ -1999,40 +2028,27 @@ INSERT INTO `pagos_venta` (`id_pago`, `id_venta`, `fecha`, `monto`) VALUES
 (203, 65, '2010-07-26 21:08:50', 76),
 (204, 65, '2010-07-26 21:08:50', 12),
 (205, 105, '2010-08-27 02:34:03', 100),
-(206, 112, '2010-08-28 06:55:20', 1000);
+(206, 112, '2010-08-28 06:55:20', 1000),
+(207, 116, '2010-09-01 04:37:10', 200),
+(208, 121, '2010-10-02 15:58:26', 500),
+(209, 122, '2010-10-02 19:19:42', 500),
+(210, 122, '2010-10-02 19:21:15', 5000),
+(211, 123, '2010-10-02 19:47:23', 253.75);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `permisos`
---
-
-CREATE TABLE IF NOT EXISTS `permisos` (
-  `id_permiso` int(11) NOT NULL,
-  `nombre` varchar(45) NOT NULL,
-  `descripcion` varchar(45) NOT NULL,
-  PRIMARY KEY  (`id_permiso`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `permisos`
---
-
-
--- --------------------------------------------------------
-
---
--- Table structure for table `productos_proveedor`
+-- Estructura de tabla para la tabla `productos_proveedor`
 --
 
 CREATE TABLE IF NOT EXISTS `productos_proveedor` (
-  `id_producto` int(11) NOT NULL auto_increment COMMENT 'identificador del producto',
-  `clave_producto` varchar(20) collate utf8_unicode_ci NOT NULL COMMENT 'clave de producto para el proveedor',
+  `id_producto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del producto',
+  `clave_producto` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'clave de producto para el proveedor',
   `id_proveedor` int(11) NOT NULL COMMENT 'clave del proveedor',
   `id_inventario` int(11) NOT NULL COMMENT 'clave con la que entra a nuestro inventario',
-  `descripcion` varchar(200) collate utf8_unicode_ci NOT NULL COMMENT 'Descripcion del producto que nos vende el proveedor',
+  `descripcion` varchar(200) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Descripcion del producto que nos vende el proveedor',
   `precio` int(11) NOT NULL COMMENT 'precio al que se compra el producto (sin descuento)',
-  PRIMARY KEY  (`id_producto`),
+  PRIMARY KEY (`id_producto`),
   UNIQUE KEY `clave_producto` (`clave_producto`,`id_proveedor`),
   UNIQUE KEY `id_proveedor` (`id_proveedor`,`id_inventario`),
   KEY `productos_proveedor_proveedor` (`id_proveedor`),
@@ -2040,7 +2056,7 @@ CREATE TABLE IF NOT EXISTS `productos_proveedor` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=43 ;
 
 --
--- Dumping data for table `productos_proveedor`
+-- Volcar la base de datos para la tabla `productos_proveedor`
 --
 
 INSERT INTO `productos_proveedor` (`id_producto`, `clave_producto`, `id_proveedor`, `id_inventario`, `descripcion`, `precio`) VALUES
@@ -2090,22 +2106,22 @@ INSERT INTO `productos_proveedor` (`id_producto`, `clave_producto`, `id_proveedo
 -- --------------------------------------------------------
 
 --
--- Table structure for table `proveedor`
+-- Estructura de tabla para la tabla `proveedor`
 --
 
 CREATE TABLE IF NOT EXISTS `proveedor` (
-  `id_proveedor` int(11) NOT NULL auto_increment COMMENT 'identificador del proveedor',
-  `rfc` varchar(20) collate utf8_unicode_ci NOT NULL COMMENT 'rfc del proveedor',
-  `nombre` varchar(30) collate utf8_unicode_ci NOT NULL COMMENT 'nombre del proveedor',
-  `direccion` varchar(100) collate utf8_unicode_ci default NULL COMMENT 'direccion del proveedor',
-  `telefono` varchar(20) collate utf8_unicode_ci default NULL COMMENT 'telefono',
-  `e_mail` varchar(60) collate utf8_unicode_ci default NULL COMMENT 'email del provedor',
-  `activo` tinyint(2) default NULL COMMENT 'Indica si la cuenta esta activada o desactivada',
-  PRIMARY KEY  (`id_proveedor`)
+  `id_proveedor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del proveedor',
+  `rfc` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'rfc del proveedor',
+  `nombre` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre del proveedor',
+  `direccion` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'direccion del proveedor',
+  `telefono` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'telefono',
+  `e_mail` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'email del provedor',
+  `activo` tinyint(2) DEFAULT NULL COMMENT 'Indica si la cuenta esta activada o desactivada',
+  PRIMARY KEY (`id_proveedor`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=51 ;
 
 --
--- Dumping data for table `proveedor`
+-- Volcar la base de datos para la tabla `proveedor`
 --
 
 INSERT INTO `proveedor` (`id_proveedor`, `rfc`, `nombre`, `direccion`, `telefono`, `e_mail`, `activo`) VALUES
@@ -2163,106 +2179,107 @@ INSERT INTO `proveedor` (`id_proveedor`, `rfc`, `nombre`, `direccion`, `telefono
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sucursal`
+-- Estructura de tabla para la tabla `sucursal`
 --
 
 CREATE TABLE IF NOT EXISTS `sucursal` (
-  `id_sucursal` int(11) NOT NULL auto_increment COMMENT 'Identificador de cada sucursal',
-  `descripcion` varchar(100) collate utf8_unicode_ci NOT NULL COMMENT 'nombre o descripcion de sucursal',
-  `direccion` varchar(200) collate utf8_unicode_ci NOT NULL COMMENT 'direccion de la sucursal',
-  `e_mail` varchar(200) collate utf8_unicode_ci default NULL COMMENT 'La dirección de correo electrónico',
-  `rfc` varchar(20) collate utf8_unicode_ci default NULL COMMENT 'El RFC de la sucursal',
-  `telefono` varchar(20) collate utf8_unicode_ci default NULL COMMENT 'El telefono de la sucursal',
-  `token` varchar(512) collate utf8_unicode_ci default NULL COMMENT 'Token de seguridad para esta sucursal',
-  `letras_factura` varchar(10) collate utf8_unicode_ci NOT NULL,
-  PRIMARY KEY  (`id_sucursal`)
+  `id_sucursal` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identificador de cada sucursal',
+  `descripcion` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre o descripcion de sucursal',
+  `direccion` varchar(200) COLLATE utf8_unicode_ci NOT NULL COMMENT 'direccion de la sucursal',
+  `e_mail` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'La dirección de correo electrónico',
+  `rfc` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'El RFC de la sucursal',
+  `telefono` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'El telefono de la sucursal',
+  `token` varchar(512) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Token de seguridad para esta sucursal',
+  `letras_factura` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `activo` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id_sucursal`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=54 ;
 
 --
--- Dumping data for table `sucursal`
+-- Volcar la base de datos para la tabla `sucursal`
 --
 
-INSERT INTO `sucursal` (`id_sucursal`, `descripcion`, `direccion`, `e_mail`, `rfc`, `telefono`, `token`, `letras_factura`) VALUES
-(3, 'Descripcion de la sucural 3', '2127 A Street', NULL, NULL, NULL, NULL, ''),
-(4, 'Descripcion de la sucural 4', '673-8005 Non Road', NULL, NULL, NULL, NULL, ''),
-(5, 'Descripcion de la sucural 5', 'P.O. Box 211, 4360 Sem Street', NULL, NULL, NULL, NULL, ''),
-(6, 'Descripcion de la sucural 6', 'Ap #141-3279 Amet, St.', NULL, NULL, NULL, NULL, ''),
-(7, 'Descripcion de la sucural 7', 'P.O. Box 434, 401 Adipiscing. St.', NULL, NULL, NULL, NULL, ''),
-(8, 'Descripcion de la sucural 8', 'P.O. Box 777, 3956 Ridiculus Road', NULL, NULL, NULL, NULL, ''),
-(9, 'Descripcion de la sucural 9', '4582 Nulla Rd.', NULL, NULL, NULL, NULL, ''),
-(10, 'Descripcion de la sucural 10', 'P.O. Box 820, 3880 Magna. St.', NULL, NULL, NULL, NULL, ''),
-(11, 'Descripcion de la sucural 11', '947-7151 Lorem Rd.', NULL, NULL, NULL, NULL, ''),
-(12, 'Descripcion de la sucural 12', 'Ap #575-9024 Sodales Road', NULL, NULL, NULL, NULL, ''),
-(13, 'Descripcion de la sucural 13', 'P.O. Box 892, 9492 Congue, Av.', NULL, NULL, NULL, NULL, ''),
-(14, 'Descripcion de la sucural 14', 'Ap #910-9538 Integer Avenue', NULL, NULL, NULL, NULL, ''),
-(15, 'Descripcion de la sucural 15', 'P.O. Box 905, 963 Aliquam Street', NULL, NULL, NULL, NULL, ''),
-(16, 'Descripcion de la sucural 16', 'P.O. Box 661, 1219 Nullam Street', NULL, NULL, NULL, NULL, ''),
-(17, 'Descripcion de la sucural 17', 'Ap #830-2370 Tempus Street', NULL, NULL, NULL, NULL, ''),
-(18, 'Descripcion de la sucural 18', 'Ap #212-8071 Est. Street', NULL, NULL, NULL, NULL, ''),
-(19, 'Descripcion de la sucural 19', 'Ap #721-7537 Lorem, Av.', NULL, NULL, NULL, NULL, ''),
-(20, 'Descripcion de la sucural 20', 'Ap #281-1584 Lobortis Street', NULL, NULL, NULL, NULL, ''),
-(21, 'Descripcion de la sucural 21', '783-4525 Diam Rd.', NULL, NULL, NULL, NULL, ''),
-(22, 'Descripcion de la sucural 22', '6202 Enim. Road', NULL, NULL, NULL, NULL, ''),
-(23, 'Descripcion de la sucural 23', 'P.O. Box 340, 5890 Imperdiet Av.', NULL, NULL, NULL, NULL, ''),
-(24, 'Descripcion de la sucural 24', 'P.O. Box 257, 1071 Curabitur Rd.', NULL, NULL, NULL, NULL, ''),
-(25, 'Descripcion de la sucural 25', 'Ap #104-6388 Sapien. Avenue', NULL, NULL, NULL, NULL, ''),
-(26, 'Descripcion de la sucural 26', 'P.O. Box 586, 4244 Auctor Ave', NULL, NULL, NULL, NULL, ''),
-(27, 'Descripcion de la sucural 27', 'P.O. Box 993, 1394 Vel Ave', NULL, NULL, NULL, NULL, ''),
-(28, 'Descripcion de la sucural 28', 'Ap #234-2072 Sodales Road', NULL, NULL, NULL, NULL, ''),
-(29, 'Descripcion de la sucural 29', 'P.O. Box 425, 4026 Pellentesque St.', NULL, NULL, NULL, NULL, ''),
-(30, 'Descripcion de la sucural 30', '6696 Fermentum Street', NULL, NULL, NULL, NULL, ''),
-(31, 'Descripcion de la sucural 31', '4215 Consequat Avenue', NULL, NULL, NULL, NULL, ''),
-(32, 'Descripcion de la sucural 32', 'P.O. Box 895, 5667 Dictum Av.', NULL, NULL, NULL, NULL, ''),
-(33, 'Descripcion de la sucural 33', '7331 Ornare, Road', NULL, NULL, NULL, NULL, ''),
-(34, 'Descripcion de la sucural 34', 'Ap #320-8103 Aliquam St.', NULL, NULL, NULL, NULL, ''),
-(35, 'Descripcion de la sucural 35', '3680 At Avenue', NULL, NULL, NULL, NULL, ''),
-(36, 'Descripcion de la sucural 36', '586-4893 Cursus. St.', NULL, NULL, NULL, NULL, ''),
-(37, 'Descripcion de la sucural 37', '781-2443 Orci. Av.', NULL, NULL, NULL, NULL, ''),
-(38, 'Descripcion de la sucural 38', 'Ap #964-3699 Eleifend Rd.', NULL, NULL, NULL, NULL, ''),
-(39, 'Descripcion de la sucural 39', '9932 Orci, Av.', NULL, NULL, NULL, NULL, ''),
-(40, 'Descripcion de la sucural 40', 'Ap #445-9226 Quam Avenue', NULL, NULL, NULL, NULL, ''),
-(41, 'Descripcion de la sucural 41', 'Ap #648-5372 Sit Rd.', NULL, NULL, NULL, NULL, ''),
-(42, 'Descripcion de la sucural 42', 'Ap #798-4104 Velit. Avenue', NULL, NULL, NULL, NULL, ''),
-(43, 'Descripcion de la sucural 43', '147-6410 Dictum Street', NULL, NULL, NULL, NULL, ''),
-(44, 'Descripcion de la sucural 44', 'P.O. Box 829, 9426 Placerat, Street', NULL, NULL, NULL, NULL, ''),
-(45, 'Descripcion de la sucural 45', 'Ap #830-1087 Proin St.', NULL, NULL, NULL, NULL, ''),
-(46, 'Descripcion de la sucural 46', 'P.O. Box 425, 4690 At, St.', NULL, NULL, NULL, NULL, ''),
-(47, 'Descripcion de la sucural 47', 'P.O. Box 692, 4235 Mattis Av.', NULL, NULL, NULL, NULL, ''),
-(48, 'Descripcion de la sucural 48', '402-1322 Elit Road', NULL, NULL, NULL, NULL, ''),
-(49, 'Descripcion de la sucural 49', '359-6446 In Rd.', NULL, NULL, NULL, NULL, ''),
-(50, 'Descripcion de la sucural 50', '367 Erat. Rd.', NULL, NULL, NULL, NULL, ''),
-(51, 'Descripcion de la sucural 51', '5295 Rutrum Av.', NULL, NULL, NULL, NULL, ''),
-(52, 'Descripcion de la sucural 52', 'Ap #240-8862 Penatibus Av.', NULL, NULL, NULL, NULL, ''),
-(53, 'Abarrotes La esquina', 'leandro valle 100 celaya guanajuato', NULL, NULL, NULL, NULL, '324245');
+INSERT INTO `sucursal` (`id_sucursal`, `descripcion`, `direccion`, `e_mail`, `rfc`, `telefono`, `token`, `letras_factura`, `activo`) VALUES
+(3, 'Descripcion de la sucural 3', '2127 A Street', NULL, NULL, NULL, NULL, '', 1),
+(4, 'Descripcion de la sucural 4', '673-8005 Non Road', NULL, NULL, NULL, NULL, '', 1),
+(5, 'Descripcion de la sucural 5', 'P.O. Box 211, 4360 Sem Street', NULL, NULL, NULL, NULL, '', 1),
+(6, 'Descripcion de la sucural 6', 'Ap #141-3279 Amet, St.', NULL, NULL, NULL, NULL, '', 1),
+(7, 'Descripcion de la sucural 7', 'P.O. Box 434, 401 Adipiscing. St.', NULL, NULL, NULL, NULL, '', 1),
+(8, 'Descripcion de la sucural 8', 'P.O. Box 777, 3956 Ridiculus Road', NULL, NULL, NULL, NULL, '', 1),
+(9, 'Descripcion de la sucural 9', '4582 Nulla Rd.', NULL, NULL, NULL, NULL, '', 1),
+(10, 'Descripcion de la sucural 10', 'P.O. Box 820, 3880 Magna. St.', NULL, NULL, NULL, NULL, '', 1),
+(11, 'Descripcion de la sucural 11', '947-7151 Lorem Rd.', NULL, NULL, NULL, NULL, '', 1),
+(12, 'Descripcion de la sucural 12', 'Ap #575-9024 Sodales Road', NULL, NULL, NULL, NULL, '', 1),
+(13, 'Descripcion de la sucural 13', 'P.O. Box 892, 9492 Congue, Av.', NULL, NULL, NULL, NULL, '', 1),
+(14, 'Descripcion de la sucural 14', 'Ap #910-9538 Integer Avenue', NULL, NULL, NULL, NULL, '', 1),
+(15, 'Descripcion de la sucural 15', 'P.O. Box 905, 963 Aliquam Street', NULL, NULL, NULL, NULL, '', 1),
+(16, 'Descripcion de la sucural 16', 'P.O. Box 661, 1219 Nullam Street', NULL, NULL, NULL, NULL, '', 1),
+(17, 'Descripcion de la sucural 17', 'Ap #830-2370 Tempus Street', NULL, NULL, NULL, NULL, '', 1),
+(18, 'Descripcion de la sucural 18', 'Ap #212-8071 Est. Street', NULL, NULL, NULL, NULL, '', 1),
+(19, 'Descripcion de la sucural 19', 'Ap #721-7537 Lorem, Av.', NULL, NULL, NULL, NULL, '', 1),
+(20, 'Descripcion de la sucural 20', 'Ap #281-1584 Lobortis Street', NULL, NULL, NULL, NULL, '', 1),
+(21, 'Descripcion de la sucural 21', '783-4525 Diam Rd.', NULL, NULL, NULL, NULL, '', 1),
+(22, 'Descripcion de la sucural 22', '6202 Enim. Road', NULL, NULL, NULL, NULL, '', 1),
+(23, 'Descripcion de la sucural 23', 'P.O. Box 340, 5890 Imperdiet Av.', NULL, NULL, NULL, NULL, '', 1),
+(24, 'Descripcion de la sucural 24', 'P.O. Box 257, 1071 Curabitur Rd.', NULL, NULL, NULL, NULL, '', 1),
+(25, 'Descripcion de la sucural 25', 'Ap #104-6388 Sapien. Avenue', NULL, NULL, NULL, NULL, '', 1),
+(26, 'Descripcion de la sucural 26', 'P.O. Box 586, 4244 Auctor Ave', NULL, NULL, NULL, NULL, '', 1),
+(27, 'Descripcion de la sucural 27', 'P.O. Box 993, 1394 Vel Ave', NULL, NULL, NULL, NULL, '', 1),
+(28, 'Descripcion de la sucural 28', 'Ap #234-2072 Sodales Road', NULL, NULL, NULL, NULL, '', 1),
+(29, 'Descripcion de la sucural 29', 'P.O. Box 425, 4026 Pellentesque St.', NULL, NULL, NULL, NULL, '', 1),
+(30, 'Descripcion de la sucural 30', '6696 Fermentum Street', NULL, NULL, NULL, NULL, '', 1),
+(31, 'Descripcion de la sucural 31', '4215 Consequat Avenue', NULL, NULL, NULL, NULL, '', 1),
+(32, 'Descripcion de la sucural 32', 'P.O. Box 895, 5667 Dictum Av.', NULL, NULL, NULL, NULL, '', 1),
+(33, 'Descripcion de la sucural 33', '7331 Ornare, Road', NULL, NULL, NULL, NULL, '', 1),
+(34, 'Descripcion de la sucural 34', 'Ap #320-8103 Aliquam St.', NULL, NULL, NULL, NULL, '', 1),
+(35, 'Descripcion de la sucural 35', '3680 At Avenue', NULL, NULL, NULL, NULL, '', 1),
+(36, 'Descripcion de la sucural 36', '586-4893 Cursus. St.', NULL, NULL, NULL, NULL, '', 1),
+(37, 'Descripcion de la sucural 37', '781-2443 Orci. Av.', NULL, NULL, NULL, NULL, '', 1),
+(38, 'Descripcion de la sucural 38', 'Ap #964-3699 Eleifend Rd.', NULL, NULL, NULL, NULL, '', 1),
+(39, 'Descripcion de la sucural 39', '9932 Orci, Av.', NULL, NULL, NULL, NULL, '', 1),
+(40, 'Descripcion de la sucural 40', 'Ap #445-9226 Quam Avenue', NULL, NULL, NULL, NULL, '', 1),
+(41, 'Descripcion de la sucural 41', 'Ap #648-5372 Sit Rd.', NULL, NULL, NULL, NULL, '', 1),
+(42, 'Descripcion de la sucural 42', 'Ap #798-4104 Velit. Avenue', NULL, NULL, NULL, NULL, '', 1),
+(43, 'Descripcion de la sucural 43', '147-6410 Dictum Street', NULL, NULL, NULL, NULL, '', 1),
+(44, 'Descripcion de la sucural 44', 'P.O. Box 829, 9426 Placerat, Street', NULL, NULL, NULL, NULL, '', 1),
+(45, 'Descripcion de la sucural 45', 'Ap #830-1087 Proin St.', NULL, NULL, NULL, NULL, '', 1),
+(46, 'Descripcion de la sucural 46', 'P.O. Box 425, 4690 At, St.', NULL, NULL, NULL, NULL, '', 1),
+(47, 'Descripcion de la sucural 47', 'P.O. Box 692, 4235 Mattis Av.', NULL, NULL, NULL, NULL, '', 1),
+(48, 'Descripcion de la sucural 48', '402-1322 Elit Road', NULL, NULL, NULL, NULL, '', 1),
+(49, 'Descripcion de la sucural 49', '359-6446 In Rd.', NULL, NULL, NULL, NULL, '', 1),
+(50, 'Descripcion de la sucural 50', '367 Erat. Rd.', NULL, NULL, NULL, NULL, '', 1),
+(51, 'Descripcion de la sucural 51', '5295 Rutrum Av.', NULL, NULL, NULL, NULL, '', 1),
+(52, 'Descripcion de la sucural 52', 'Ap #240-8862 Penatibus Av.', NULL, NULL, NULL, NULL, '', 1),
+(53, 'Abarrotes La esquina', 'leandro valle 100 celaya guanajuato', NULL, NULL, NULL, NULL, '324245', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `usuario`
+-- Estructura de tabla para la tabla `usuario`
 --
 
 CREATE TABLE IF NOT EXISTS `usuario` (
-  `id_usuario` int(11) NOT NULL auto_increment COMMENT 'identificador del usuario',
-  `nombre` varchar(100) collate utf8_unicode_ci NOT NULL COMMENT 'nombre del empleado',
-  `usuario` varchar(50) collate utf8_unicode_ci NOT NULL,
-  `contrasena` varchar(128) collate utf8_unicode_ci NOT NULL,
+  `id_usuario` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del usuario',
+  `nombre` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre del empleado',
+  `usuario` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `contrasena` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   `id_sucursal` int(11) NOT NULL COMMENT 'Id de la sucursal a que pertenece',
   `activo` tinyint(1) NOT NULL COMMENT 'Guarda el estado de la cuenta del usuario',
-  `finger_token` varchar(1024) collate utf8_unicode_ci default NULL COMMENT 'Una cadena que sera comparada con el token que mande el scanner de huella digital',
-  `last_check` timestamp NULL default NULL COMMENT 'Ultima vez que este usuario hizo una peticion al servidor',
-  PRIMARY KEY  (`id_usuario`),
+  `finger_token` varchar(1024) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Una cadena que sera comparada con el token que mande el scanner de huella digital',
+  `last_check` timestamp NULL DEFAULT NULL COMMENT 'Ultima vez que este usuario hizo una peticion al servidor',
+  PRIMARY KEY (`id_usuario`),
   KEY `fk_usuario_1` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=35 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=37 ;
 
 --
--- Dumping data for table `usuario`
+-- Volcar la base de datos para la tabla `usuario`
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre`, `usuario`, `contrasena`, `id_sucursal`, `activo`, `finger_token`, `last_check`) VALUES
-(1, 'Paul Wilkinson', 'Alecsssss', '123', 28, 1, NULL, NULL),
-(2, 'Ferris Delgado', 'lacota', '456', 6, 1, NULL, NULL),
-(3, 'Barry Stevenson', 'Wade', '123', 5, 1, NULL, NULL),
-(4, 'Buckminster Cantrell', 'Hoyt', '123', 46, 1, NULL, NULL),
+(1, 'Paul Wilkinson', 'Alecs', '202cb962ac59075b964b07152d234b70', 28, 1, NULL, '2010-10-31 20:51:47'),
+(2, 'Ferris Delgado', 'lacota', '202cb962ac59075b964b07152d234b70', 6, 1, NULL, NULL),
+(3, 'Barry Stevenson', 'Wade', '202cb962ac59075b964b07152d234b70', 5, 1, NULL, NULL),
+(4, 'Buckminster Cantrell', 'manuel', '123', 29, 1, NULL, '2010-10-02 19:46:05'),
 (5, 'Kasimir Alexander', 'Xanthus', '123', 29, 1, NULL, NULL),
 (6, 'Hayden Hendricks', 'Madison', '123', 47, 1, NULL, NULL),
 (7, 'Theodore Christian', 'Jane', '123', 16, 1, NULL, NULL),
@@ -2287,44 +2304,46 @@ INSERT INTO `usuario` (`id_usuario`, `nombre`, `usuario`, `contrasena`, `id_sucu
 (26, 'Colby Santana', 'Kalia', '123', 49, 1, NULL, NULL),
 (27, 'Luis Michel', 'luismichel', '1234', 6, 1, NULL, NULL),
 (28, 'Rene Michel', 'reneOOOO', '123', 6, 1, NULL, NULL),
-(29, '', '', '', 6, 1, NULL, NULL),
+(29, 'Dilba Monica Del Moral', 'dilbiwis', '', 6, 1, NULL, '2010-10-31 21:38:50'),
 (30, 'Alan Gonzales', 'alanboy', '123', 6, 1, NULL, NULL),
-(31, 'Manuel', 'mane', '123', 6, 1, NULL, NULL),
+(31, 'Manuel', 'mane', '123', 6, 0, NULL, NULL),
 (32, 'Luis Alberto Michel Morales', 'luismm', '123', 53, 1, NULL, NULL),
 (33, 'Rene Michel', 'renem', '123', 6, 0, NULL, NULL),
-(34, 'Generic', 'blas', '123', 6, 0, NULL, NULL);
+(34, 'Generic', 'blas', '123', 6, 0, NULL, NULL),
+(35, 'Alan Gonzalez', 'alanboy', '123', 6, 1, NULL, NULL),
+(36, 'AA2', 'aa2', 'asdf', 6, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ventas`
+-- Estructura de tabla para la tabla `ventas`
 --
 
 CREATE TABLE IF NOT EXISTS `ventas` (
-  `id_venta` int(11) NOT NULL auto_increment COMMENT 'id de venta',
+  `id_venta` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de venta',
   `id_cliente` int(11) NOT NULL COMMENT 'cliente al que se le vendio',
-  `tipo_venta` enum('credito','contado') collate utf8_unicode_ci NOT NULL COMMENT 'tipo de venta, contado o credito',
-  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha de venta',
-  `subtotal` float default NULL COMMENT 'subtotal de la venta, puede ser nulo',
-  `iva` float default NULL COMMENT 'iva agregado por la venta, depende de cada sucursal',
-  `descuento` float NOT NULL default '0' COMMENT 'descuento aplicado a esta venta',
-  `total` float NOT NULL default '0' COMMENT 'total de esta venta',
+  `tipo_venta` enum('credito','contado') COLLATE utf8_unicode_ci NOT NULL COMMENT 'tipo de venta, contado o credito',
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de venta',
+  `subtotal` float DEFAULT NULL COMMENT 'subtotal de la venta, puede ser nulo',
+  `iva` float DEFAULT NULL COMMENT 'iva agregado por la venta, depende de cada sucursal',
+  `descuento` float NOT NULL DEFAULT '0' COMMENT 'descuento aplicado a esta venta',
+  `total` float NOT NULL DEFAULT '0' COMMENT 'total de esta venta',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal de la venta',
   `id_usuario` int(11) NOT NULL COMMENT 'empleado que lo vendio',
-  `pagado` float NOT NULL default '0' COMMENT 'porcentaje pagado de esta venta',
-  `ip` varchar(16) collate utf8_unicode_ci NOT NULL default '0.0.0.0' COMMENT 'ip de donde provino esta compra',
-  PRIMARY KEY  (`id_venta`),
+  `pagado` float NOT NULL DEFAULT '0' COMMENT 'porcentaje pagado de esta venta',
+  `ip` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0.0.0.0' COMMENT 'ip de donde provino esta compra',
+  PRIMARY KEY (`id_venta`),
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`id_sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=114 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=132 ;
 
 --
--- Dumping data for table `ventas`
+-- Volcar la base de datos para la tabla `ventas`
 --
 
 INSERT INTO `ventas` (`id_venta`, `id_cliente`, `tipo_venta`, `fecha`, `subtotal`, `iva`, `descuento`, `total`, `id_sucursal`, `id_usuario`, `pagado`, `ip`) VALUES
-(1, 65, 'credito', '2010-07-24 07:16:10', 2826, 0, 0, 0, 35, 14, 0, '0.0.0.0'),
+(1, 6, 'contado', '2010-07-24 07:16:10', 2826, 45, 54, 4545, 35, 14, 4545, '0.0.0.0'),
 (2, 74, 'credito', '2010-07-24 07:16:17', 537, 0, 0, 0, 13, 19, 0, '0.0.0.0'),
 (3, 77, 'credito', '2010-07-24 07:16:19', NULL, NULL, 0, 0, 13, 19, 0, '0.0.0.0'),
 (4, 112, 'contado', '2010-07-24 07:16:20', 904, 0, 0, 0, 23, 9, 0, '0.0.0.0'),
@@ -2431,17 +2450,35 @@ INSERT INTO `ventas` (`id_venta`, `id_cliente`, `tipo_venta`, `fecha`, `subtotal
 (105, 94, 'credito', '2010-08-25 04:26:29', 1088, 0, 33, 1088, 6, 27, 100, '127.0.0.1'),
 (106, -6, 'contado', '2010-08-26 20:50:18', 2065, 0, 0, 2065, 6, 2, 2065, '127.0.0.1'),
 (107, 178, 'contado', '2010-08-27 00:25:42', 3645, 0, 6, 3645, 53, 32, 3645, '127.0.0.1'),
-(108, -28, 'contado', '2010-08-28 02:36:30', 880, 0, 0, 880, 28, 1, 880, '127.0.0.1'),
+(108, -5, 'contado', '2010-08-28 02:36:30', 880, 0, 0, 880, 28, 1, 880, '127.0.0.1'),
 (109, 174, 'credito', '2010-08-28 02:44:04', NULL, NULL, 3, 0, 28, 1, 0, '127.0.0.1'),
 (110, 174, 'contado', '2010-08-28 02:44:33', 1608, 0, 3, 1608, 28, 1, 1608, '127.0.0.1'),
 (111, 167, 'contado', '2010-08-28 02:47:45', 424, 0, 3, 424, 28, 1, 424, '127.0.0.1'),
 (112, 160, 'credito', '2010-08-28 06:53:44', 3846, 0, 25, 3846, 28, 1, 1000, '127.0.0.1'),
-(113, 76, 'contado', '2010-08-28 10:53:56', 816, 0, 7, 816, 28, 1, 816, '127.0.0.1');
+(113, 76, 'contado', '2010-08-28 10:53:56', 816, 0, 7, 816, 28, 1, 816, '127.0.0.1'),
+(114, -5, 'contado', '2010-08-31 00:49:57', 343, 0, 0, 343, 5, 3, 343, '127.0.0.1'),
+(115, 6, 'contado', '2010-08-31 03:17:27', 203, 0, 42, 203, 5, 3, 203, '127.0.0.1'),
+(116, 6, 'credito', '2010-09-01 02:01:31', 203, 0, 0, 203, 5, 3, 200, '127.0.0.1'),
+(117, 6, 'credito', '2010-09-01 02:09:40', 546, 0, 0, 546, 5, 3, 0, '127.0.0.1'),
+(118, -5, 'contado', '2010-09-01 03:19:42', 203, 0, 0, 203, 5, 3, 203, '192.168.1.137'),
+(119, -5, 'contado', '2010-09-09 23:01:57', 203, 0, 0, 203, 5, 3, 203, '127.0.0.1'),
+(120, 28, 'credito', '2010-09-24 21:38:07', 2588.25, 0, 0, 2588.25, 5, 3, 0, '192.168.1.150'),
+(121, 201, 'credito', '2010-10-02 14:51:11', 546, 0, 0, 546, 5, 3, 500, '127.0.0.1'),
+(122, 201, 'credito', '2010-10-02 18:50:54', 7917, 0, 0, 7917, 5, 3, 5500, '127.0.0.1'),
+(123, 201, 'credito', '2010-10-02 18:53:10', 253.75, 0, 0, 253.75, 5, 3, 253.75, '127.0.0.1'),
+(124, 201, 'contado', '2010-10-02 19:23:50', 203, 0, 0, 203, 5, 3, 203, '127.0.0.1'),
+(125, 201, 'credito', '2010-10-02 19:50:50', 3395, 0, 0, 3395, 29, 4, 0, '192.168.1.67'),
+(126, 201, 'contado', '2010-10-15 15:39:16', 2984.1, 0, 0, 2984.1, 5, 3, 2984.1, '192.168.1.101'),
+(127, 6, 'contado', '2010-10-24 23:06:24', 406, 0, 0, 406, 5, 3, 406, '127.0.0.1'),
+(128, 186, 'contado', '2010-10-24 23:21:31', 406, 0, 0, 406, 5, 3, 406, '127.0.0.1'),
+(129, -5, 'contado', '2010-10-24 23:39:28', 203, 0, 0, 203, 5, 3, 203, '127.0.0.1'),
+(130, -6, 'contado', '2010-10-25 23:53:37', 36, 0, 0, 36, 6, 2, 36, '127.0.0.1'),
+(131, -5, 'contado', '2010-10-31 02:42:22', 546, 0, 0, 546, 5, 3, 546, '192.168.1.2');
 
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `view_compras`
+-- Estructura Stand-in para la vista `view_compras`
 --
 CREATE TABLE IF NOT EXISTS `view_compras` (
 `id_compra` int(11)
@@ -2459,7 +2496,7 @@ CREATE TABLE IF NOT EXISTS `view_compras` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `view_detalle_compra`
+-- Estructura Stand-in para la vista `view_detalle_compra`
 --
 CREATE TABLE IF NOT EXISTS `view_detalle_compra` (
 `id_compra` int(11)
@@ -2474,7 +2511,7 @@ CREATE TABLE IF NOT EXISTS `view_detalle_compra` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `view_detalle_venta`
+-- Estructura Stand-in para la vista `view_detalle_venta`
 --
 CREATE TABLE IF NOT EXISTS `view_detalle_venta` (
 `id_venta` int(11)
@@ -2489,7 +2526,7 @@ CREATE TABLE IF NOT EXISTS `view_detalle_venta` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `view_gastos`
+-- Estructura Stand-in para la vista `view_gastos`
 --
 CREATE TABLE IF NOT EXISTS `view_gastos` (
 `id_gasto` int(11)
@@ -2502,7 +2539,7 @@ CREATE TABLE IF NOT EXISTS `view_gastos` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `view_ingresos`
+-- Estructura Stand-in para la vista `view_ingresos`
 --
 CREATE TABLE IF NOT EXISTS `view_ingresos` (
 `id_ingreso` int(11)
@@ -2515,7 +2552,7 @@ CREATE TABLE IF NOT EXISTS `view_ingresos` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `view_ventas`
+-- Estructura Stand-in para la vista `view_ventas`
 --
 CREATE TABLE IF NOT EXISTS `view_ventas` (
 `id_venta` int(11)
@@ -2533,7 +2570,7 @@ CREATE TABLE IF NOT EXISTS `view_ventas` (
 -- --------------------------------------------------------
 
 --
--- Structure for view `view_compras`
+-- Estructura para la vista `view_compras`
 --
 DROP TABLE IF EXISTS `view_compras`;
 
@@ -2542,7 +2579,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Structure for view `view_detalle_compra`
+-- Estructura para la vista `view_detalle_compra`
 --
 DROP TABLE IF EXISTS `view_detalle_compra`;
 
@@ -2551,7 +2588,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Structure for view `view_detalle_venta`
+-- Estructura para la vista `view_detalle_venta`
 --
 DROP TABLE IF EXISTS `view_detalle_venta`;
 
@@ -2560,7 +2597,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Structure for view `view_gastos`
+-- Estructura para la vista `view_gastos`
 --
 DROP TABLE IF EXISTS `view_gastos`;
 
@@ -2569,7 +2606,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Structure for view `view_ingresos`
+-- Estructura para la vista `view_ingresos`
 --
 DROP TABLE IF EXISTS `view_ingresos`;
 
@@ -2578,18 +2615,18 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Structure for view `view_ventas`
+-- Estructura para la vista `view_ventas`
 --
 DROP TABLE IF EXISTS `view_ventas`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_ventas` AS select `v`.`id_venta` AS `id_venta`,`c`.`nombre` AS `cliente`,`v`.`id_cliente` AS `id_cliente`,`v`.`tipo_venta` AS `tipo_venta`,`v`.`fecha` AS `fecha`,`v`.`subtotal` AS `subtotal`,`v`.`iva` AS `iva`,`s`.`descripcion` AS `sucursal`,`v`.`id_sucursal` AS `id_sucursal`,`u`.`nombre` AS `usuario`,`v`.`id_usuario` AS `id_usuario` from (`ventas` `v` join ((`cliente` `c` join `sucursal` `s`) join `usuario` `u`) on(((`v`.`id_cliente` = `c`.`id_cliente`) and (`v`.`id_sucursal` = `s`.`id_sucursal`) and (`v`.`id_usuario` = `u`.`id_usuario`))));
 
 --
--- Constraints for dumped tables
+-- Filtros para las tablas descargadas (dump)
 --
 
 --
--- Constraints for table `compras`
+-- Filtros para la tabla `compras`
 --
 ALTER TABLE `compras`
   ADD CONSTRAINT `compras_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id_proveedor`) ON UPDATE CASCADE,
@@ -2597,7 +2634,7 @@ ALTER TABLE `compras`
   ADD CONSTRAINT `compras_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `cotizacion`
+-- Filtros para la tabla `cotizacion`
 --
 ALTER TABLE `cotizacion`
   ADD CONSTRAINT `cotizacion_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON UPDATE CASCADE,
@@ -2605,87 +2642,86 @@ ALTER TABLE `cotizacion`
   ADD CONSTRAINT `cotizacion_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `detalle_compra`
+-- Filtros para la tabla `detalle_compra`
 --
 ALTER TABLE `detalle_compra`
   ADD CONSTRAINT `detalle_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE,
   ADD CONSTRAINT `detalle_compra_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `detalle_corte`
+-- Filtros para la tabla `detalle_corte`
 --
 ALTER TABLE `detalle_corte`
   ADD CONSTRAINT `corte_detalleCorte` FOREIGN KEY (`num_corte`) REFERENCES `corte` (`num_corte`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `detalle_cotizacion`
+-- Filtros para la tabla `detalle_cotizacion`
 --
 ALTER TABLE `detalle_cotizacion`
   ADD CONSTRAINT `detalle_cotizacion_ibfk_1` FOREIGN KEY (`id_cotizacion`) REFERENCES `cotizacion` (`id_cotizacion`) ON UPDATE CASCADE,
   ADD CONSTRAINT `detalle_cotizacion_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `detalle_inventario`
+-- Filtros para la tabla `detalle_inventario`
 --
 ALTER TABLE `detalle_inventario`
   ADD CONSTRAINT `detalle_inventario_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `detalle_inventario_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `factura_compra`
+-- Filtros para la tabla `factura_compra`
 --
 ALTER TABLE `factura_compra`
   ADD CONSTRAINT `factura_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `factura_venta`
+-- Filtros para la tabla `factura_venta`
 --
 ALTER TABLE `factura_venta`
   ADD CONSTRAINT `factura_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `grupos_usuarios`
+-- Filtros para la tabla `grupos_usuarios`
 --
 ALTER TABLE `grupos_usuarios`
   ADD CONSTRAINT `grupos_usuarios_ibfk_1` FOREIGN KEY (`id_grupo`) REFERENCES `grupos` (`id_grupo`) ON UPDATE CASCADE,
   ADD CONSTRAINT `grupos_usuarios_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `impuesto`
+-- Filtros para la tabla `impuesto`
 --
 ALTER TABLE `impuesto`
   ADD CONSTRAINT `impuesto_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `pagos_compra`
+-- Filtros para la tabla `pagos_compra`
 --
 ALTER TABLE `pagos_compra`
   ADD CONSTRAINT `pagos_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `pagos_venta`
+-- Filtros para la tabla `pagos_venta`
 --
 ALTER TABLE `pagos_venta`
   ADD CONSTRAINT `pagos_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `productos_proveedor`
+-- Filtros para la tabla `productos_proveedor`
 --
 ALTER TABLE `productos_proveedor`
   ADD CONSTRAINT `productos_proveedor_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id_proveedor`) ON UPDATE CASCADE,
   ADD CONSTRAINT `productos_proveedor_ibfk_2` FOREIGN KEY (`id_inventario`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `usuario`
+-- Filtros para la tabla `usuario`
 --
 ALTER TABLE `usuario`
   ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `ventas`
+-- Filtros para la tabla `ventas`
 --
 ALTER TABLE `ventas`
   ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
-
