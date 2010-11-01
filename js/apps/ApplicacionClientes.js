@@ -109,6 +109,15 @@ ApplicacionClientes.prototype.dockedItemsFormCliente = null;
 ApplicacionClientes.prototype.clienteSeleccionado = null;
 
 
+
+/**
+ * Contiene un panel con los detalles del cliente
+ */
+ApplicacionClientes.prototype.clienteDetallePanel = null;
+
+
+
+
 /**
  * Funcion que se ejecuta para inicializar la Toolbar de la mainCard y
  * y la Toolbar de la card que contiene el formulario de Nuevo Cliente,
@@ -183,8 +192,9 @@ ApplicacionClientes.prototype._initToolBar = function (){
    if (!Ext.is.Phone) {
         this.dockedItems = [ new Ext.Toolbar({
             ui: 'light',
-            dock: 'top',
-            items: [campoBusqueda,{xtype: 'spacer'},detallesDeBusqueda,{xtype: 'spacer'}, btnagregarCliente]
+            dock: 'bottom',
+            //items: [campoBusqueda,{xtype: 'spacer'},detallesDeBusqueda,{xtype: 'spacer'}, btnagregarCliente]
+			items: [ {xtype: 'spacer'}, btnagregarCliente]
         })];
     }else {
         this.dockedItems = [{
@@ -255,11 +265,8 @@ ApplicacionClientes.prototype.editClient = function ( btn ){
 	    console.log("AppClientes: Editar Cliente", btn);
 	}
 	
+	
 
-	alert("aqui me quede :P");
-	
-	
-/*	
     switch(Ext.getCmp('btn_EditCliente').getText()){
 
         case 'Modificar': 
@@ -290,11 +297,11 @@ ApplicacionClientes.prototype.editClient = function ( btn ){
             //Ext.getCmp('btn_CancelEditCliente').setDisabled(true);
 			
 			//se ejecuta el metodo que realiza los cambios en la BD (handlerModificarCliente)
-            
-			ApplicacionClientes.currentInstance.handlerModificarCliente(idClienteM.getValue(),rfcClienteM.getValue(),nombreClienteM.getValue(),direccionClienteM.getValue(),telefonoClienteM.getValue(),emailClienteM.getValue(),limite_creditoClienteM.getValue());    
+			ApplicacionClientes.currentInstance.handlerModificarCliente();    
+			
             break;
     }
-*/
+
 };
 
 /**
@@ -330,129 +337,146 @@ ApplicacionClientes.prototype.cancelEditClient = function(){
  * @param {Ext.data.Model} Un record con los datos del cliente seleccionado de la lista de clientes.
  * @return Ext.Panel
  */
-ApplicacionClientes.prototype.addClientDetailsPanel= function( record ){
+ApplicacionClientes.prototype.addClientDetailsPanel = function(  ){
 
+	var record = ApplicacionClientes.currentInstance.clienteSeleccionado ;
 	
-
-    
-	//si no existe se crea el Toolbar del carrusel
-	if( !this.dockedItemsFormCliente2 ){
-
-		regresar = [{
-			id: 'btn_BackCliente',
-			text: 'Regresar',
-			ui: 'back',			
-			handler: function(){
-				sink.Main.ui.setCard( Ext.getCmp('panelClientes'), { type: 'slide', direction: 'right' } );
-			}
-		}];
-
-
-		editar = [{
-			id: 'btn_EditCliente',
-			text: 'Modificar',
-			ui: 'action',
-			handler: ApplicacionClientes.currentInstance.editClient
-		}];
-
-
-
-		if (!Ext.is.Phone) {
-			this.dockedItemsFormCliente2 = [ 
-				new Ext.Toolbar({
-					ui: 'dark',
-					dock: 'bottom',
-					items:  regresar.concat({xtype:'spacer'}).concat(editar)
-				})
-			];
-
-		} else {
-
-			this.dockedItemsFormCliente2 = [{
-				xtype: 'toolbar',
-				ui: 'dark',
-				items: this.btnBackCliente2.concat(this.btnCancelEditCliente2).concat(this.btnEditCliente2),
-				dock: 'bottom'
-			}];
-		}
-	
-	}
-
-
-	//se crea el carrusel si es que no existe, contiene el formulario de los datos del cliente, las ventas, y ventas a credito
-	if(!this.carousel){
+	//si ya existe el panel, solo editar sus contenidos
+	if(ApplicacionClientes.currentInstance.clienteDetallePanel){
 		
-		//crear el formulario de los detalles del cliente, los datos del cliente se obtienen del record que recibe como parametro éste método (record).
-		formaDeDetalles = {                                                       
-		        xtype: 'fieldset',
-		        title: 'Detalles del Cliente',
-		        id: 'updateForm',
-				defaults: {
-					disabledClass: '',
-				},
-				//utliizare un css que ya tenia por ahi
-				baseCls: "ApplicationVender-ventaListaPanel",
-				
-		        items: [idClienteM = new Ext.form.HiddenField({
-		                    id: 'idClienteM',
-		                    value: record.id_cliente
-		                }),
-		                nombreClienteM = new Ext.form.TextField({
-		                    id: 'nombreClienteM',
-		                    label: 'Nombre',
-		                    required: true,
-		                    value: record.nombre,
-		                    disabled: true
-		                }),
-		                rfcClienteM = new Ext.form.TextField({
-		                    id: 'rfcClienteM',
-		                    label: 'RFC',
-		                    required: true,
-		                    value: record.rfc,
-		                    disabled: true
-		                }),
-		                direccionClienteM = new Ext.form.TextField({
-		                    id: 'direccionClienteM',
-		                    label: 'Direccion',
-		                    required: true,
-		                    value: record.direccion,
-		                    disabled: true
-		                }),
-		                emailClienteM = new Ext.form.TextField({
-		                    id: 'emailClienteM',
-		                    label: 'E-mail',
-		                    value: record.e_mail,
-		                    disabled: true
-		                }),
-		                telefonoClienteM = new Ext.form.TextField({
-		                    id: 'telefonoClienteM',
-		                    label: 'Telefono',
-		                    value: record.telefono,
-		                    disabled: true
-		                }),
-						limite_creditoClienteM = new Ext.form.TextField({
-		                    id: 'descuentoClienteM',
-		                    label: 'Descuento',
-		                    required: false,
-		                    value: record.descuento,
-		                    disabled: true
-		                }),
-		                    new Ext.form.TextField({
-		                    id: 'limite_creditoClienteM',
-		                    label: 'Credito Max',
-		                    required: false,
-		                    value: POS.currencyFormat(record.limite_credito),
-		                    disabled: true
-		                })	,
-			            	new Ext.form.TextField({
-			                    id: 'creditoRestanteClienteM',
-			                    label: 'Credito Res',
-			                    required: false,
-			                    value: POS.currencyFormat(record.credito_restante),
-			                    disabled: true
-			                })
-		        ]};
-		//se crea el carrusel con el formulario arriba creado, ademas de las 2 cards que contienen las ventas y ventas a credtio (estas 2 ultimas cards no contienen nada mas que divs a las que posteriormente se les actualizara codigo HTML)
+		//editar los campos y regresar el panel ya modificado
+		
+		//editar compras
+		ApplicacionClientes.currentInstance.listarVentas( record );
+		ApplicacionClientes.currentInstance.listarVentasCredito( record );		
+		
+		//editar los campos de la forma
+		Ext.getCmp("idClienteM").setValue(record.id_cliente);
+		Ext.getCmp("nombreClienteM").setValue(record.nombre);
+		Ext.getCmp("rfcClienteM").setValue(record.rfc);
+		Ext.getCmp("direccionClienteM").setValue(record.direccion);
+		Ext.getCmp("emailClienteM").setValue(record.e_mail);
+		Ext.getCmp("telefonoClienteM").setValue(record.telefono);		
+		Ext.getCmp("descuentoClienteM").setValue(record.descuento);				
+		Ext.getCmp("limite_creditoClienteM").setValue( POS.currencyFormat(record.limite_credito));
+		Ext.getCmp("creditoRestanteClienteM").setValue( POS.currencyFormat(record.credito_restante));
+		
+		//regresar la forma
+		return ApplicacionClientes.currentInstance.clienteDetallePanel;
+	}
+	
+	
+	//cuando la forma no existe, crearla, y volver a llamar a esta funcion
+	
+	regresar = [{
+		id: 'btn_BackCliente',
+		text: 'Regresar',
+		ui: 'back',			
+		handler: function(){
+			sink.Main.ui.setCard( Ext.getCmp('panelClientes'), { type: 'slide', direction: 'right' } );
+		}
+	}];
+
+
+	editar = [{
+		id: 'btn_EditCliente',
+		text: 'Modificar',
+		ui: 'action',
+		handler: ApplicacionClientes.currentInstance.editClient
+	}];
+
+
+
+	if (!Ext.is.Phone) {
+		this.dockedItemsFormCliente2 = [ 
+			new Ext.Toolbar({
+				ui: 'dark',
+				dock: 'bottom',
+				items:  regresar.concat({xtype:'spacer'}).concat(editar)
+			})
+		];
+	} else {
+		this.dockedItemsFormCliente2 = [{
+			xtype: 'toolbar',
+			ui: 'dark',
+			items: this.btnBackCliente2.concat(this.btnCancelEditCliente2).concat(this.btnEditCliente2),
+			dock: 'bottom'
+		}];
+	}
+	
+	
+
+
+
+		
+	//crear el formulario de los detalles del cliente
+	formaDeDetalles = new Ext.form.FormPanel({                                                       
+	title: 'Detalles del Cliente',
+	id: 'ClienteUpdateForm',
+	baseCls: 'formAgregarCliente',			
+	items: [{
+		xtype: 'fieldset',
+	    title: 'Detalles de Cliente',
+		defaults: {
+			disabledClass : ''
+		},
+	    //instructions: 'Todos los campos son obligatorios. Para continuar, necesitara la presencia de un gerente.',
+		items: [
+				new Ext.form.HiddenField({
+			    id: 'idClienteM'
+			}),
+			new Ext.form.TextField({
+			    id: 'nombreClienteM',
+			    label: 'Nombre',
+			    required: true,
+			    disabled: true
+			}),
+			new Ext.form.TextField({
+			    id: 'rfcClienteM',
+			    label: 'RFC',
+			    required: true,
+			    disabled: true
+			}),
+			new Ext.form.TextField({
+			    id: 'direccionClienteM',
+			    label: 'Direccion',
+			    required: true,
+			    disabled: true
+			}),
+			new Ext.form.TextField({
+			    id: 'emailClienteM',
+			    label: 'E-mail',
+			    disabled: true
+			}),
+			new Ext.form.TextField({
+			    id: 'telefonoClienteM',
+			    label: 'Telefono',
+			    disabled: true
+			}),
+			new Ext.form.TextField({
+			    id: 'descuentoClienteM',
+			    label: 'Descuento',
+			    required: false,
+			    disabled: true
+			}),
+			new Ext.form.TextField({
+			    id: 'limite_creditoClienteM',
+			    label: 'Credito Max',
+			    required: false,
+			    disabled: true
+			}),
+			new Ext.form.TextField({
+			    id: 'creditoRestanteClienteM',
+			    label: 'Credito Restante',
+			    required: false,
+			    disabled: true
+			})
+		]}
+	]});
+		
+		//se crea el carrusel con el formulario arriba creado, ademas de las 2 cards que contienen 
+		//las ventas y ventas a credtio (estas 2 ultimas cards no contienen nada mas que divs a las
+		// que posteriormente se les actualizara codigo HTML)
 		this.carousel = new Ext.Carousel({
 			id: 'carruselDetallesCliente',
 	        items: [{
@@ -501,32 +525,11 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( record ){
 				}
 			}
 	    });
-		
-	}else{
-		
-		//Si si existe el carrusel, solo actualizar los datos de los campos de texto del formulario
-		Ext.getCmp("idClienteM").setValue(record.id_cliente);
-		Ext.getCmp("nombreClienteM").setValue(record.nombre);
-		Ext.getCmp("rfcClienteM").setValue(record.rfc);
-		Ext.getCmp("direccionClienteM").setValue(record.direccion);
-		Ext.getCmp("emailClienteM").setValue(record.e_mail);
-		Ext.getCmp("telefonoClienteM").setValue(record.telefono);		
-		Ext.getCmp("descuentoClienteM").setValue(record.descuento);				
-		Ext.getCmp("limite_creditoClienteM").setValue( POS.currencyFormat(record.limite_credito));
-		Ext.getCmp("creditoRestanteClienteM").setValue( POS.currencyFormat(record.credito_restante));		
-		
-	
-	}
+
 
     
 
-	/*
-	 * Se retorna un panel que tiene dockeada la Toolbar arriba creada en esta misma funcion,
-	 * y el carrusel creado anteriormente.
-	 */
-	
-
-    return new Ext.Panel({
+    ApplicacionClientes.currentInstance.clienteDetallePanel = new Ext.Panel({
 	
 		cls: "ApplicationClientes-addClientDetailsPanel",
 		
@@ -544,6 +547,10 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( record ){
         items: [ this.carousel ]
 	
     });
+
+	//ya cree el panel, volver a llamar a esta funcion
+	return ApplicacionClientes.currentInstance.addClientDetailsPanel();
+
 };
 
 
@@ -563,19 +570,15 @@ ApplicacionClientes.prototype.addClientDetailsPanel= function( record ){
  * Id, RFC, nombre, direccion, telefono, email, limite de credito 
  * @return Ext.Panel
  */
-ApplicacionClientes.prototype.handlerModificarCliente = function(id,rfc,nombre,direccion,telefono,email,limite_credito){
+ApplicacionClientes.prototype.handlerModificarCliente = function( ){
     
     
-	//revisar los datos de la forma e intentar guardarlos, si estan vacios no hace nada y retorna
-	if(DEBUG){
-		console.warn("TODO: Esta validacion es muy simple...");
-	}
+	//validar datos
+	datos = Ext.getCmp("ClienteUpdateForm").getValues();
 	
-	
-    if( nombre === '' || rfc === '' || limite_credito === ''){
-		return;
-    }
 
+	
+	return;
 
 	//se pone una capa negra con el texto Guardando Cambios mientras se procesa la peticion, si el servidor responde rapido esta capa no se alcanza a visualizar.
     Ext.getBody().mask(false, '<div class="demos-loading">Guardando cambios</div>');
@@ -598,7 +601,7 @@ ApplicacionClientes.prototype.handlerModificarCliente = function(id,rfc,nombre,d
 				}
 				
 				//todo salio bien !
-				Ext.Msg.alert("Los datos se han modificado.");
+				Ext.Msg.alert("Edita Cliente" , "Los datos se han modificado.");
 				
 				//recalcular el credito restante si es que se modifico el maximo credito
 				
@@ -790,22 +793,15 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
 
 							if (this.getSelectionCount() == 1) {
 
-								var recor = this.getSelectedRecords();
-
-								recor = recor[0].data;
+								ApplicacionClientes.currentInstance.clienteSeleccionado = this.getSelectedRecords()[0].data;
 
 								if(DEBUG){
 									console.log("Seleccionano cliente", recor  );
 								}
 
-								ApplicacionClientes.currentInstance.clienteSeleccionado = recor;
-
-								//La funcion addClientDetailsPanel regresa un panel con el carrusel de 3 cards 
-								var detalles = ApplicacionClientes.currentInstance.addClientDetailsPanel( recor ); 
-
-								ApplicacionClientes.currentInstance.listarVentas( recor );
-
-								ApplicacionClientes.currentInstance.listarVentasCredito( recor );
+								//La funcion addClientDetailsPanel regresa un panel con el carrusel de 3 cards y con los datos
+								// del cliente que este en ApplicacionClientes.currentInstance.clienteSeleccionado
+								var detalles = ApplicacionClientes.currentInstance.addClientDetailsPanel( ); 
 
 								//Se desliza para mostrar el panel que contiene el carrusel con las 3 cards (detalles del cliente, ventas al cliente, ventas a credito al cliente).
 								sink.Main.ui.setCard( detalles , 'slide');

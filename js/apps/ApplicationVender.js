@@ -414,12 +414,13 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
         
         if( this.htmlCart_items[a].cantidad > existencias ){
             if(existencias === 0 ){
-                POS.aviso("Mostrador", "No hay mas existencias del producto " + this.htmlCart_items[a].description +".");
+	
+				Ext.Msg.alert("Mostrador", "No hay mas existencias del producto " + this.htmlCart_items[a].description +"." );
                 return this.doDeleteItem( a );
                 
             }else{
                 this.htmlCart_items[a].cantidad = existencias;
-                POS.aviso("Mostrador", "Solamente queda en existencia " +existencias+  " productos "+ this.htmlCart_items[a].description + ".");    
+				Ext.Msg.alert("Mostrador", "Solamente queda en existencia " +existencias+  " productos "+ this.htmlCart_items[a].description + "." );
             }
 
         }

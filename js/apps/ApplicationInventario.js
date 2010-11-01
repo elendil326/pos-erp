@@ -444,7 +444,7 @@ ApplicationInventario.prototype.initSucursalPanel = function(sucursal_id, sucurs
 			loadingText: 'Cargando datos...',
 			emptyText: '<div class="no-data">No se encontraron productos para esta sucursal.</div>',
         	store: ApplicationInventario.currentInstance.InvProductsListStore,
-        	tpl: '<tpl for="."><div class="products"><strong>ID</strong>{id_producto} <strong>Nombre</strong> {nombre} <strong>Denominacion</strong>&nbsp;{denominacion}&nbsp;<strong>Existencias</strong>&nbsp;{existencias}&nbsp;<strong>Precio Venta</strong>&nbsp;${precio_venta}</div></tpl>',
+        	tpl: '<tpl for="."><div class="products"><b>ID</b>&nbsp;{id_producto}<br><strong>Nombre</strong>&nbsp;{nombre}<br><strong>Denominacion</strong>&nbsp;{denominacion}<br><strong>Existencias</strong>&nbsp;{existencias}<br><strong>Precio Venta</strong>&nbsp;${precio_venta}</div></tpl>',
         	itemSelector: 'div.products',
         	//singleSelect: true,
 			multiSelect: true,
@@ -599,7 +599,7 @@ ApplicationInventario.prototype.addNewProductLogic = function(){
 						{
 							denominacion: formData['denominacion'],
 							existencias: 0,
-							precio_venta: formData['precio_venta'],
+							precio_venta: formData['precio_venta'] ,
 							min: formData['min']
 						}
 					
