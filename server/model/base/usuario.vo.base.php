@@ -22,6 +22,7 @@ class Usuario extends VO
 		if(isset($data))
 		{
 			$this->id_usuario = $data['id_usuario'];
+			$this->RFC = $data['RFC'];
 			$this->nombre = $data['nombre'];
 			$this->usuario = $data['usuario'];
 			$this->contrasena = $data['contrasena'];
@@ -44,6 +45,7 @@ class Usuario extends VO
 		$vec = array();
 		array_push($vec, array( 
 		"id_usuario" => $this->id_usuario,
+		"RFC" => $this->RFC,
 		"nombre" => $this->nombre,
 		"usuario" => $this->usuario,
 		"contrasena" => $this->contrasena,
@@ -65,6 +67,15 @@ class Usuario extends VO
 	  * @var int(11)
 	  */
 	protected $id_usuario;
+
+	/**
+	  * RFC
+	  * 
+	  * RFC de este usuario<br>
+	  * @access protected
+	  * @var varchar(40)
+	  */
+	protected $RFC;
 
 	/**
 	  * nombre
@@ -155,6 +166,30 @@ class Usuario extends VO
 	final public function setIdUsuario( $id_usuario )
 	{
 		$this->id_usuario = $id_usuario;
+	}
+
+	/**
+	  * getRFC
+	  * 
+	  * Get the <i>RFC</i> property for this object. Donde <i>RFC</i> es RFC de este usuario
+	  * @return varchar(40)
+	  */
+	final public function getRFC()
+	{
+		return $this->RFC;
+	}
+
+	/**
+	  * setRFC( $RFC )
+	  * 
+	  * Set the <i>RFC</i> property for this object. Donde <i>RFC</i> es RFC de este usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>RFC</i> es de tipo <i>varchar(40)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(40)
+	  */
+	final public function setRFC( $RFC )
+	{
+		$this->RFC = $RFC;
 	}
 
 	/**

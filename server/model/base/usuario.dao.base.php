@@ -120,6 +120,11 @@ abstract class UsuarioDAOBase extends TablaDAO
 			array_push( $val, $usuario->getIdUsuario() );
 		}
 
+		if( $usuario->getRFC() != NULL){
+			$sql .= " RFC = ? AND";
+			array_push( $val, $usuario->getRFC() );
+		}
+
 		if( $usuario->getNombre() != NULL){
 			$sql .= " nombre = ? AND";
 			array_push( $val, $usuario->getNombre() );
@@ -188,8 +193,9 @@ abstract class UsuarioDAOBase extends TablaDAO
 	  **/
 	private static final function update( $usuario )
 	{
-		$sql = "UPDATE usuario SET  nombre = ?, usuario = ?, contrasena = ?, id_sucursal = ?, activo = ?, finger_token = ?, last_check = ? WHERE  id_usuario = ?;";
+		$sql = "UPDATE usuario SET  RFC = ?, nombre = ?, usuario = ?, contrasena = ?, id_sucursal = ?, activo = ?, finger_token = ?, last_check = ? WHERE  id_usuario = ?;";
 		$params = array( 
+			$usuario->getRFC(), 
 			$usuario->getNombre(), 
 			$usuario->getUsuario(), 
 			$usuario->getContrasena(), 
@@ -220,8 +226,9 @@ abstract class UsuarioDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$usuario )
 	{
-		$sql = "INSERT INTO usuario ( nombre, usuario, contrasena, id_sucursal, activo, finger_token, last_check ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO usuario ( RFC, nombre, usuario, contrasena, id_sucursal, activo, finger_token, last_check ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
+			$usuario->getRFC(), 
 			$usuario->getNombre(), 
 			$usuario->getUsuario(), 
 			$usuario->getContrasena(), 
@@ -282,6 +289,17 @@ abstract class UsuarioDAOBase extends TablaDAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " id_usuario = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $usuarioA->getRFC()) != NULL) & ( ($b = $usuarioB->getRFC()) != NULL) ){
+				$sql .= " RFC >= ? AND RFC <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " RFC = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 31-10-2010 a las 21:10:34
+-- Tiempo de generación: 31-10-2010 a las 21:43:21
 -- Versión del servidor: 5.1.37
 -- Versión de PHP: 5.3.0
 
@@ -368,7 +368,7 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
   `direccion` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'direccion del proveedor',
   `telefono` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'telefono',
   `e_mail` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'email del provedor',
-  `activo` tinyint(2) DEFAULT NULL COMMENT 'Indica si la cuenta esta activada o desactivada',
+  `activo` tinyint(2) NOT NULL DEFAULT '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
   PRIMARY KEY (`id_proveedor`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=51 ;
 
@@ -399,6 +399,7 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
 
 CREATE TABLE IF NOT EXISTS `usuario` (
   `id_usuario` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del usuario',
+  `RFC` varchar(40) COLLATE utf8_unicode_ci NOT NULL COMMENT 'RFC de este usuario',
   `nombre` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre del empleado',
   `usuario` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `contrasena` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
