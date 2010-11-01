@@ -1,0 +1,914 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Compras</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Compras</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Value Object file for table compras.</p>
+<p class="description"><p>VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).</p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Alan Gonzalez &lt;<a href="mailto:alan@caffeina.mx">alan@caffeina.mx</a>&gt;</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_dao---base---compras.vo.base.php.html">/dao/base/compras.vo.base.php</a> (line <span class="field"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a10">10</a></span>)
+		</p>
+		
+				
+		<pre><a href="../POS/VO.html">VO</a>
+   |
+   --Compras</pre>
+	
+			</div>
+</div>
+
+
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+																																																																																<div class="var-title">
+					<span class="var-type">timestamp</span>
+					<a href="#$fecha" title="details" class="var-name">$fecha</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">int(11)</span>
+					<a href="#$id_compra" title="details" class="var-name">$id_compra</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">int(11)</span>
+					<a href="#$id_proveedor" title="details" class="var-name">$id_proveedor</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">int(11)</span>
+					<a href="#$id_sucursal" title="details" class="var-name">$id_sucursal</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">int(11)</span>
+					<a href="#$id_usuario" title="details" class="var-name">$id_usuario</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">float</span>
+					<a href="#$iva" title="details" class="var-name">$iva</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">float</span>
+					<a href="#$subtotal" title="details" class="var-name">$subtotal</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">enum('credito','contado')</span>
+					<a href="#$tipo_compra" title="details" class="var-name">$tipo_compra</a>
+				</div>
+											</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																																																				
+												<div class="method-definition">
+											<span class="method-result"><a href="../POS/Compras.html">Compras</a></span>
+										<a href="#__construct" title="details" class="method-name">__construct</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$data</span> = <span class="var-default">NULL</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">timestamp</span>
+										<a href="#getFecha" title="details" class="method-name">getFecha</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">int(11)</span>
+										<a href="#getIdCompra" title="details" class="method-name">getIdCompra</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">int(11)</span>
+										<a href="#getIdProveedor" title="details" class="method-name">getIdProveedor</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">int(11)</span>
+										<a href="#getIdSucursal" title="details" class="method-name">getIdSucursal</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">int(11)</span>
+										<a href="#getIdUsuario" title="details" class="method-name">getIdUsuario</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">float</span>
+										<a href="#getIva" title="details" class="method-name">getIva</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">float</span>
+										<a href="#getSubtotal" title="details" class="method-name">getSubtotal</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">enum('credito','contado')</span>
+										<a href="#getTipoCompra" title="details" class="method-name">getTipoCompra</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setFecha" title="details" class="method-name">setFecha</a>
+											(<span class="var-type">timestamp</span>&nbsp;<span class="var-name">$fecha</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setIdCompra" title="details" class="method-name">setIdCompra</a>
+											(<span class="var-type">int(11)</span>&nbsp;<span class="var-name">$id_compra</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setIdProveedor" title="details" class="method-name">setIdProveedor</a>
+											(<span class="var-type">int(11)</span>&nbsp;<span class="var-name">$id_proveedor</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setIdSucursal" title="details" class="method-name">setIdSucursal</a>
+											(<span class="var-type">int(11)</span>&nbsp;<span class="var-name">$id_sucursal</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setIdUsuario" title="details" class="method-name">setIdUsuario</a>
+											(<span class="var-type">int(11)</span>&nbsp;<span class="var-name">$id_usuario</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setIva" title="details" class="method-name">setIva</a>
+											(<span class="var-type">float</span>&nbsp;<span class="var-name">$iva</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setSubtotal" title="details" class="method-name">setSubtotal</a>
+											(<span class="var-type">float</span>&nbsp;<span class="var-name">$subtotal</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setTipoCompra" title="details" class="method-name">setTipoCompra</a>
+											(<span class="var-type">enum('credito','contado')</span>&nbsp;<span class="var-name">$tipo_compra</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">String</span>
+										<a href="#__toString" title="details" class="method-name">__toString</a>
+										()
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="var$fecha" id="$fecha"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">timestamp</span>
+			<span class="var-name">$fecha</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a94">94</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">fecha</p>
+<p class="description"><p>fecha de compra<br /></p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$id_compra" id="$id_compra"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">int(11)</span>
+			<span class="var-name">$id_compra</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a67">67</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">id_compra</p>
+<p class="description"><p>id de la compra<br />  <strong>Llave Primaria</strong><br />  <strong>Auto Incremento</strong><br /></p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$id_proveedor" id="$id_proveedor"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">int(11)</span>
+			<span class="var-name">$id_proveedor</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a76">76</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">id_proveedor</p>
+<p class="description"><p>PROVEEDOR AL QUE SE LE COMPRO<br /></p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$id_sucursal" id="$id_sucursal"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">int(11)</span>
+			<span class="var-name">$id_sucursal</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a121">121</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">id_sucursal</p>
+<p class="description"><p>sucursal en que se compro<br /></p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$id_usuario" id="$id_usuario"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">int(11)</span>
+			<span class="var-name">$id_usuario</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a130">130</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">id_usuario</p>
+<p class="description"><p>quien realizo la compra<br /></p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$iva" id="$iva"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">float</span>
+			<span class="var-name">$iva</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a112">112</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">iva</p>
+<p class="description"><p>iva de la compra<br /></p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$subtotal" id="$subtotal"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">float</span>
+			<span class="var-name">$subtotal</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a103">103</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">subtotal</p>
+<p class="description"><p>subtotal de compra<br /></p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$tipo_compra" id="$tipo_compra"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">enum('credito','contado')</span>
+			<span class="var-name">$tipo_compra</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a85">85</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">tipo_compra</p>
+<p class="description"><p>tipo de compra, contado o credito<br /></p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+						
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a20">20</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Constructor de Compras</p>
+<p class="description"><p>Para construir un objeto de tipo Compras debera llamarse a el constructor  sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo  cuyos campos son iguales a las variables que constituyen a este objeto.</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../POS/Compras.html">Compras</a></span>
+		<span class="method-name">
+			__construct
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$data</span> = <span class="var-default">NULL</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$data</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetFecha" id="getFecha"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getFecha</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a214">214</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">getFecha</p>
+<p class="description"><p>Get the <em>fecha</em> property for this object. Donde <em>fecha</em> es fecha de compra</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">timestamp</span>
+		<span class="method-name">
+			getFecha
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetIdCompra" id="getIdCompra"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getIdCompra</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a138">138</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">getIdCompra</p>
+<p class="description"><p>Get the <em>id_compra</em> property for this object. Donde <em>id_compra</em> es id de la compra</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int(11)</span>
+		<span class="method-name">
+			getIdCompra
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetIdProveedor" id="getIdProveedor"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getIdProveedor</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a166">166</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">getIdProveedor</p>
+<p class="description"><p>Get the <em>id_proveedor</em> property for this object. Donde <em>id_proveedor</em> es PROVEEDOR AL QUE SE LE COMPRO</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int(11)</span>
+		<span class="method-name">
+			getIdProveedor
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetIdSucursal" id="getIdSucursal"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getIdSucursal</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a286">286</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">getIdSucursal</p>
+<p class="description"><p>Get the <em>id_sucursal</em> property for this object. Donde <em>id_sucursal</em> es sucursal en que se compro</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int(11)</span>
+		<span class="method-name">
+			getIdSucursal
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetIdUsuario" id="getIdUsuario"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getIdUsuario</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a310">310</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">getIdUsuario</p>
+<p class="description"><p>Get the <em>id_usuario</em> property for this object. Donde <em>id_usuario</em> es quien realizo la compra</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int(11)</span>
+		<span class="method-name">
+			getIdUsuario
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetIva" id="getIva"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getIva</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a262">262</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">getIva</p>
+<p class="description"><p>Get the <em>iva</em> property for this object. Donde <em>iva</em> es iva de la compra</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">float</span>
+		<span class="method-name">
+			getIva
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetSubtotal" id="getSubtotal"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getSubtotal</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a238">238</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">getSubtotal</p>
+<p class="description"><p>Get the <em>subtotal</em> property for this object. Donde <em>subtotal</em> es subtotal de compra</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">float</span>
+		<span class="method-name">
+			getSubtotal
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetTipoCompra" id="getTipoCompra"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getTipoCompra</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a190">190</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">getTipoCompra</p>
+<p class="description"><p>Get the <em>tipo_compra</em> property for this object. Donde <em>tipo_compra</em> es tipo de compra, contado o credito</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">enum('credito','contado')</span>
+		<span class="method-name">
+			getTipoCompra
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodsetFecha" id="setFecha"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setFecha</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a227">227</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">setFecha( $fecha )</p>
+<p class="description"><p>Set the <em>fecha</em> property for this object. Donde <em>fecha</em> es fecha de compra.  Una validacion basica se hara aqui para comprobar que <em>fecha</em> es de tipo <em>timestamp</em>.  Si esta validacion falla, se arrojara... algo.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setFecha
+		</span>
+					(<span class="var-type">timestamp</span>&nbsp;<span class="var-name">$fecha</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">timestamp</span>
+				<span class="var-name">$fecha</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetIdCompra" id="setIdCompra"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setIdCompra</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a155">155</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">setIdCompra( $id_compra )</p>
+<p class="description"><p>Set the <em>id_compra</em> property for this object. Donde <em>id_compra</em> es id de la compra.  Una validacion basica se hara aqui para comprobar que <em>id_compra</em> es de tipo <em>int(11)</em>.  Si esta validacion falla, se arrojara... algo.  <br /><br />Esta propiedad se mapea con un campo que es de <strong>Auto Incremento</strong> !<br />  No deberias usar setIdCompra( ) a menos que sepas exactamente lo que estas haciendo.<br />  <br /><br />Esta propiedad se mapea con un campo que es una <strong>Llave Primaria</strong> !<br />  No deberias usar setIdCompra( ) a menos que sepas exactamente lo que estas haciendo.<br /></p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setIdCompra
+		</span>
+					(<span class="var-type">int(11)</span>&nbsp;<span class="var-name">$id_compra</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int(11)</span>
+				<span class="var-name">$id_compra</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetIdProveedor" id="setIdProveedor"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setIdProveedor</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a179">179</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">setIdProveedor( $id_proveedor )</p>
+<p class="description"><p>Set the <em>id_proveedor</em> property for this object. Donde <em>id_proveedor</em> es PROVEEDOR AL QUE SE LE COMPRO.  Una validacion basica se hara aqui para comprobar que <em>id_proveedor</em> es de tipo <em>int(11)</em>.  Si esta validacion falla, se arrojara... algo.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setIdProveedor
+		</span>
+					(<span class="var-type">int(11)</span>&nbsp;<span class="var-name">$id_proveedor</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int(11)</span>
+				<span class="var-name">$id_proveedor</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetIdSucursal" id="setIdSucursal"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setIdSucursal</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a299">299</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">setIdSucursal( $id_sucursal )</p>
+<p class="description"><p>Set the <em>id_sucursal</em> property for this object. Donde <em>id_sucursal</em> es sucursal en que se compro.  Una validacion basica se hara aqui para comprobar que <em>id_sucursal</em> es de tipo <em>int(11)</em>.  Si esta validacion falla, se arrojara... algo.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setIdSucursal
+		</span>
+					(<span class="var-type">int(11)</span>&nbsp;<span class="var-name">$id_sucursal</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int(11)</span>
+				<span class="var-name">$id_sucursal</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetIdUsuario" id="setIdUsuario"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setIdUsuario</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a323">323</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">setIdUsuario( $id_usuario )</p>
+<p class="description"><p>Set the <em>id_usuario</em> property for this object. Donde <em>id_usuario</em> es quien realizo la compra.  Una validacion basica se hara aqui para comprobar que <em>id_usuario</em> es de tipo <em>int(11)</em>.  Si esta validacion falla, se arrojara... algo.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setIdUsuario
+		</span>
+					(<span class="var-type">int(11)</span>&nbsp;<span class="var-name">$id_usuario</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int(11)</span>
+				<span class="var-name">$id_usuario</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetIva" id="setIva"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setIva</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a275">275</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">setIva( $iva )</p>
+<p class="description"><p>Set the <em>iva</em> property for this object. Donde <em>iva</em> es iva de la compra.  Una validacion basica se hara aqui para comprobar que <em>iva</em> es de tipo <em>float</em>.  Si esta validacion falla, se arrojara... algo.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setIva
+		</span>
+					(<span class="var-type">float</span>&nbsp;<span class="var-name">$iva</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">float</span>
+				<span class="var-name">$iva</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetSubtotal" id="setSubtotal"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setSubtotal</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a251">251</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">setSubtotal( $subtotal )</p>
+<p class="description"><p>Set the <em>subtotal</em> property for this object. Donde <em>subtotal</em> es subtotal de compra.  Una validacion basica se hara aqui para comprobar que <em>subtotal</em> es de tipo <em>float</em>.  Si esta validacion falla, se arrojara... algo.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setSubtotal
+		</span>
+					(<span class="var-type">float</span>&nbsp;<span class="var-name">$subtotal</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">float</span>
+				<span class="var-name">$subtotal</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetTipoCompra" id="setTipoCompra"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setTipoCompra</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a203">203</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">setTipoCompra( $tipo_compra )</p>
+<p class="description"><p>Set the <em>tipo_compra</em> property for this object. Donde <em>tipo_compra</em> es tipo de compra, contado o credito.  Una validacion basica se hara aqui para comprobar que <em>tipo_compra</em> es de tipo <em>enum('credito','contado')</em>.  Si esta validacion falla, se arrojara... algo.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setTipoCompra
+		</span>
+					(<span class="var-type">enum('credito','contado')</span>&nbsp;<span class="var-name">$tipo_compra</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">enum('credito','contado')</span>
+				<span class="var-name">$tipo_compra</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method__toString" id="__toString"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">__toString</span> (line <span class="line-number"><a href="../__filesource/fsource_POS__daobasecompras.vo.base.php.html#a42">42</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Obtener una representacion en String</p>
+<p class="description"><p>Este metodo permite tratar a un objeto Compras en forma de cadena.  La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">String</span>
+		<span class="method-name">
+			__toString
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Sun, 31 Oct 2010 21:56:13 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>
