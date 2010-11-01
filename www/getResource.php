@@ -7,7 +7,7 @@ if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandl
 
 /* 
  * Este archivo es para el JSloader, recibe un parametro que es la carpeta dentro de js,
- * y regresa todos los archivos dentro de esa carpeta para que javascript los cargue de .... awebo
+ * y regresa todos los archivos dentro de esa carpeta para que javascript los cargue 
  */
 
 
@@ -25,6 +25,7 @@ if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandl
 		}
 
 		$salida = JSMin::minify($data);
+		
 		echo $salida;
 	}
 
@@ -127,9 +128,21 @@ if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandl
 	
 	switch($module)
 	{
-		case 'shared' : loadDir( $module, $type ); break;
-		case 'admin' : loadDir( $module, $type ); break;
-		case 'apps' : loadDir( $module, $type ); break;
+		
+		case 'admin' :
+			if(isset($_SESSION['grupo']) && $_SESSION['grupo'] == 1)
+				loadDir( $module, $type );
+			else
+				die(" document.location = '../'; ");
+		break;
+		case 'apps'  :  
+			if(isset($_SESSION['grupo']) && $_SESSION['grupo'] >= 2)
+				loadDir( $module, $type );
+			else
+				die(" document.location = '.'; ");
+		break;
+		
+		case 'shared': loadDir( $module, $type ); break;
 		case 'final' : loadDir( $module, $type ); break;
 		case 'login' : loadDir( $module, $type ); break;
 		default : die("{success: false}");

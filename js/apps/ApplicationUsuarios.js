@@ -163,6 +163,9 @@ ApplicationUsuarios.prototype.loadHomePanel = function()
 									ApplicationUsuarios.currentInstance.UserListStore.loadData(usuarios, false);
 									
 								} else {
+									if(DEBUG){
+										console.warn("Could not load users from this store.");
+									}
 									ApplicationUsuarios.currentInstance.UserListStore.loadData(0);
 									return 0;
 								}
@@ -182,8 +185,8 @@ ApplicationUsuarios.prototype.loadHomePanel = function()
 		},
 		items: [{
 			id: 'ApplicationUsuarios-lista',
-        	width: '100%',
-        	height: '100%',
+        	width: '50%',
+        	height: '50%',
         	xtype: 'list',
 			baseCls : 'ApplicationUsuarios-homePanel',
 			loadingText: 'Cargando datos...',
@@ -192,7 +195,7 @@ ApplicationUsuarios.prototype.loadHomePanel = function()
         	tpl: '<tpl for="."><div class="usuarios">ID: {id_usuario} <strong>{nombre}</strong> &nbsp;Usuario: {usuario} </div></tpl>',
 			//tplWriteMode: 'insertFirst',
         	itemSelector: 'div.usuarios',
-			grouped: true,
+			grouped: false,
         	singleSelect: true,
 			listeners: {
 				selectionchange: function(){

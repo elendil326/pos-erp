@@ -99,9 +99,36 @@ AppLogin.prototype.createBasicHTML = function ()
 	html_content += '	<div><input type="button" id="login2" style="width: 70px" value="aceptar" onclick="login.checkCurrentLoginInfo()"></div>';
 	html_content += "</div>";
 
+	if(DEBUG){
+		html_content += '<div  >';
+		html_content += '	<div><input type="button" value="insertar admin" onclick="login.insertar(\'admin\')"></div>';
+		html_content += '	<div><input type="button" value="insertar gerente" onclick="login.insertar(\'gerente\')"></div>';	
+		html_content += '	<div><input type="button" value="insertar cajero" onclick="login.insertar(\'cajero\')"></div>';					
+		html_content += "</div>";
+	}
 
 	document.getElementById("work_zone").innerHTML = html_content;	
 };
+
+
+AppLogin.prototype.insertar = function ( tipo ){
+	
+	switch(tipo){
+		case 'admin' : 
+			$("#login0").val("Alecs"); 
+			$("#login1").val("123");
+		break;
+		case 'gerente' : 
+			$("#login0").val("lacota"); 
+			$("#login1").val("123");
+		break;
+		case 'cajero' : 
+			$("#login0").val("wade"); 
+			$("#login1").val("123");
+		break;
+	}
+	
+}
 
 
 AppLogin.prototype.checkCurrentLoginInfo = function ()
@@ -114,7 +141,7 @@ AppLogin.prototype.checkCurrentLoginInfo = function ()
 	//Comprobacion que no haya datos invalidos
 	if(user.length > 2 && pwd.length > 2 )
 	{
-		this.submitData( user, pwd );
+		this.submitData( user, hex_md5(pwd) );
 	}
 	else
 	{
