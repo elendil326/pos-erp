@@ -1,30 +1,30 @@
+
+
 ApplicationComprasProveedor = function(  ){
+
 	if(DEBUG){
 		console.log("ApplicationComprasProveedor: construyendo");
 	}
-	
-	this._init(  );
-	
+			
 	ApplicationComprasProveedor.currentInstance = this;
 	
 	return this;
 };
 
 
-ApplicationComprasProveedor.prototype.surtir = null;
-ApplicationComprasProveedor.prototype.providerId = null;
+ApplicationComprasProveedor.prototype.providerId = null; // se le da valor desde ApplicationProveedores.js
+ApplicationComprasProveedor.prototype.nombreProv = ""; // se le da valor desde ApplicationProveedores.js
+
+ApplicationComprasProveedor.prototype.surtir = null; // es un panel
+
 ApplicationComprasProveedor.prototype._BANDERA = false;//false = toño mode true = general mode (x piezas)
+
 ApplicationComprasProveedor.prototype._BANDERATOGGLES = false;
 ApplicationComprasProveedor.prototype._BANDERATOGGLES2 = false;
 ApplicationComprasProveedor.prototype.toggleBtns = [];
 ApplicationComprasProveedor.prototype.toggleBtns2 = [];
 ApplicationComprasProveedor.prototype.compraItems = [];
 ApplicationComprasProveedor.prototype.inventarioItems = [];
-ApplicationComprasProveedor.prototype.nombreProv = "";
-
-ApplicationComprasProveedor.prototype._init = function(  ){
-
-};
 
 
 /*
@@ -42,102 +42,122 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 	this.pesoArpilla = 0;
 	this.totalArpillas = 0;
 
-	if( !this.regresarB ){
-
-		this.regresarB = [{
+	if( !this.btn_regresar_comprarPanel )
+	{
+        
+		this.btn_regresar_comprarPanel = [{
 			xtype: 'button',
 			text: 'Regresar',
 			ui: 'back',
 			id:'regresarComprasProveedor',
-			handler:	function( ){
+			handler : function( ){
 
-							ApplicationComprasProveedor.currentInstance.toggleBtns.length = 0;
-							ApplicationComprasProveedor.currentInstance.toggleBtns2.length = 0;
-							ApplicationComprasProveedor.currentInstance.compraItems.length = 0;
-							ApplicationComprasProveedor.currentInstance.inventarioItems.length = 0;
-							ApplicationComprasProveedor.currentInstance.pesoArpilla = 0;
-							ApplicationComprasProveedor.currentInstance.totalArpillas = 0;
+			    ApplicationComprasProveedor.currentInstance.toggleBtns.length = 0;
+				ApplicationComprasProveedor.currentInstance.toggleBtns2.length = 0;
+				ApplicationComprasProveedor.currentInstance.compraItems.length = 0;
+				ApplicationComprasProveedor.currentInstance.inventarioItems.length = 0;
+				ApplicationComprasProveedor.currentInstance.pesoArpilla = 0;
+				ApplicationComprasProveedor.currentInstance.totalArpillas = 0;
 							
-							/*Ext.get("productosProvSucursal").update("");*/
-							Ext.get("totalesCompra").update("");
-							Ext.get("Productos-Proveedor").update("");
+				/*Ext.get("productosProvSucursal").update("");*/
+				Ext.get("totalesCompra").update("");
+				Ext.get("Productos-Proveedor").update("");
 							
-							sink.Main.ui.setCard( ApplicationProveedores.currentInstance.mainCard, { type: 'slide', direction: 'right' } );
+				sink.Main.ui.setCard(ApplicationProveedores.currentInstance.mainCard, {type : 'slide', direction : 'right' });
 							
-						}
-					
-			}];
-	}
+			}					
+        }];
+        
+	}//if !this.btn_regresar_comprarPanel
 	
-	if( !this.agregar ){
-		this.agregar = [{
+	
+	if(!this.btn_comprar_comprarPanel)
+	{
+		
+		this.btn_comprar_comprarPanel = [{
 			xtype: 'button',
 			text: 'Comprar',
 			ui: 'action',
 			id: '_btnComprarProducto',
 			disabled: true,
-			handler: function(){
-					
-					ApplicationComprasProveedor.currentInstance.doComprar();
-				}
-			}];
-	}
+			handler: function(){					
+			    ApplicationComprasProveedor.currentInstance.doComprar();
+			}
+		}];
+			
+	}//if !this.btn_comprar_comprarPanel
 	
-	if( !this.agregarInventario ){
-		this.agregarInventario = [{
+	if( !this.btn_agregarProducto_comprarPanel )
+	{
+	
+		this.btn_agregarProducto_comprarPanel = [{
 			xtype: 'button',
 			text: 'Agregar Producto',
 			ui: 'action',
 			id: '_btnAgregarProducto',
 			disabled: true,
-			handler: function(){
-					//console.log("@@@@@@@@@@@@ 0) Desencandenando este pedo");
-					
+			handler: function(){								
 					ApplicationComprasProveedor.currentInstance.do_agregarInventario();
-				}
-			}];
-	}
+			}			
+		}];
+		
+	}//if !this.btn_agregarProducto_comprarPanel
 	
-	if( !this.dockedItems ){
+	if(!this.dockedItems)
+	{
+    
         this.dockedItems = [ new Ext.Toolbar({
             ui: 'dark',
             dock: 'bottom',
-            items: this.regresarB.concat({xtype:'spacer'}).concat(this.agregar).concat(this.agregarInventario)
+            items: this.btn_regresar_comprarPanel.concat({xtype:'spacer'}).concat(this.btn_comprar_comprarPanel).concat(this.btn_agregarProducto_comprarPanel)
         })];
-	}
+	
+	}//if !this.dockedItems
 	
 	
-	if( !this.panelCompras ){	
+	if(!this.panelCompras)
+	{	
 
 		this.panelCompras = new Ext.Panel({
-			id: 'surtir_proveedor',
-			
+			id: 'surtir_proveedor',			
 			items: [
-					{
-					id: 'embarqueDatos',
+				{
+				    id: 'embarqueDatos',
+				    style: {
+                        height: '40px'
+                    },
 					html: '',
 					items:[
 						{
-						xtype: 'textfield',
-						label: 'No. Kgs del Embarque:',
-						id: 'pesoEmbarque',
-						cls: 'ApplicationComprasProveedor-pesoEmbarque',
-						value: 0,
-						hidden : true,
-						listeners: {
-							change: function(){
-									
-							ApplicationComprasProveedor.currentInstance.pesoEmbarque();
-										
-									
-							}//function
-						}//listener
+						    xtype: 'textfield',
+						    label: 'No. Kgs:',
+						    id: 'pesoEmbarque',
+						    fieldClass: 'ApplicationComprasProveedor-pesoEmbarque',
+						    styleHtmlContent: 'ApplicationComprasProveedor-pesoEmbarque',
+						    styleHtmlCls: 'ApplicationComprasProveedor-pesoEmbarque',
+						    cls: 'ApplicationComprasProveedor-pesoEmbarque',
+						    maxHeight:35,
+						    height:30,
+						    /*style: {
+                                width: '48%',
+                                height: '35px',
+                                color: 'FF0000',
+                                padding: '5px'
+                            },*/
+						    value: 0,
+						    hidden : true,
+						    listeners: {
+							    change: function(){									
+							        ApplicationComprasProveedor.currentInstance.pesoEmbarque();
+								}//function
+						    }//listener
 						}//item textfield
 					]
-					},
-					{
-						id:'arpillasDatos',
-						html: "<div class='ApplicationComprasProveedor-pesoEmbarque' >" 
+				},
+				{
+				    xtype: 'panel',
+				    id:'arpillasDatos',
+					html: "<div class='ApplicationComprasProveedor-pesoEmbarque' >" 
 								+ "<div class='ApplicationComprasProveedor-numeroArpillas'>Numero Arpillas: </div>" 
 								+ "<div id='totalArps' class='ApplicationComprasProveedor-totalArpillas'>0</div>" 
 								
@@ -145,81 +165,84 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 								
 								+ "<div id='pesoArpillas' class= 'ApplicationComprasProveedor-pesoArpillas'>0</div>" 
 								
-							+ "</div>",
-						hidden : true
-						
-					}
-					,
-					
-					{
-	
+						+ "</div>",
+					hidden : true						
+				},					
+				{	
 					xtype: 'panel',
 					title: 'panelLeft',
 					id: 'proveedorProductos_SucursalContainer',
 					cls: 'ApplicationComprasProveedor-proveedorProductos_Sucursal',
-					items:[{ html: '<div id="proveedorProductos_Sucursal" class="ApplicationComprasProveedor-proveedorProductos_Sucursal2"><div class="ApplicationComprasProveedor-itemsBox" id="productosProvSucursal"></div>' }]
-					}
-					,
-					{
+					items:[
+					    { 
+					        html: '<div id="proveedorProductos_Sucursal" class="ApplicationComprasProveedor-proveedorProductos_Sucursal2"><div class="ApplicationComprasProveedor-itemsBox" id="productosProvSucursal"></div>' 
+					    }
+					]
+				},
+				{
 					scroll: 'vertical',
 					xtype: 'panel',
 					title: 'panelRi',
 					cls:'ApplicationComprasProveedor-proveedorProductos_Sucursal',
-					items:[{
-					id: 'totales_Compras',  
-					html: "<div id = 'totalesCompra' class='ApplicationComprasProveedor-proveedorProductos_Sucursal2' >"
-							+"</div>"
-					}]
-					}
-					],
+					items:[
+					    {
+					        id: 'totales_Compras',  
+					        html: "<div id = 'totalesCompra' class='ApplicationComprasProveedor-proveedorProductos_Sucursal2' ></div>"
+					    }
+					]
+				}
+			],
 			listeners: {
-				afterrender: function(){
+			    afterrender: function(){
 	
-					if(!ApplicationComprasProveedor.currentInstance._BANDERA){
+					if(!ApplicationComprasProveedor.currentInstance._BANDERA)
+					{
 						console.log("MODO DE COMPRA: 'TOÑO MODE'");
 						Ext.getCmp("pesoEmbarque").show();
 						Ext.getCmp("arpillasDatos").show();
 						
-					}else{
-						console.log("MODO DE COMPRA: 'GENERAL MODE' (X PIEZAS)");
-						Ext.getCmp("embarqueDatos").update(
-							"<div class='ApplicationComprasProveedor-item-GeneralMode' >" 
-							+ "<div class='cabecera-producto_nombre'>PRODUCTO</div>" 
-							
-							+ "<div class='cabecera-compra'>PRECIO</div>" 
-							
-							+ "<div class='cabecera-compra'>CANTIDAD</div>" 
-							
-							+ "<div class='cabecera-compra'>SUBTOTAL</div>" 
-						+ "</div>"
-						+"<div class='ApplicationComprasProveedor-item-GeneralMode' >" 
-							+ "<div class='cabecera-subtotales-compra'>SUBTOTAL:</div>"						
-							+ "<div class='cabecera-subtotales-compra' id ='subtotal_compraProducto'>$ 0</div>"
-							
-							+ "<div class='cabecera-subtotales-compra' >IVA:</div>" 
-							+ "<div class='cabecera-subtotales-compra' id= 'iva_compraProducto'>$ 0</div>" 
-							
-							+ "<div class='cabecera-subtotales-compra'>TOTAL:</div>" 
-							+ "<div class='cabecera-subtotales-compra' id='total_compraProducto'>$ 0</div>" 
-							
-						+ "</div>"
-						);
 					}
-				}
-			}
+					else
+					{
+					
+						console.log("MODO DE COMPRA: 'GENERAL MODE' (X PIEZAS)");
+						
+						
+						var html = "";
+						
+						html += "<div class='ApplicationComprasProveedor-item-GeneralMode' >"; 
+						html +=     "<div class='cabecera-producto_nombre'>PRODUCTO</div>"; 							
+						html +=     "<div class='cabecera-compra'>PRECIO</div>" 							
+						html +=     "<div class='cabecera-compra'>CANTIDAD</div>" 							
+						html +=     "<div class='cabecera-compra'>SUBTOTAL</div>" 
+						html += "</div>"
+						html += "<div class='ApplicationComprasProveedor-item-GeneralMode' >" 
+						html +=     "<div class='cabecera-subtotales-compra'>SUBTOTAL:</div>"						
+						html +=     "<div class='cabecera-subtotales-compra' id ='subtotal_compraProducto'>$ 0</div>"							
+						html +=     "<div class='cabecera-subtotales-compra' >IVA:</div>" 
+						html +=     "<div class='cabecera-subtotales-compra' id= 'iva_compraProducto'>$ 0</div>" 							
+						html +=     "<div class='cabecera-subtotales-compra'>TOTAL:</div>" 
+						html +=     "<div class='cabecera-subtotales-compra' id='total_compraProducto'>$ 0</div>" 							
+						html += "</div>"
+						
+						Ext.getCmp("embarqueDatos").update(html);
+					}
+				}//afterrender
+			}//listeners
 		});
-	}
+	}//if !this.panelCompras
 	
 	/*
 		Se llama a funcion q ejecuta ajax para llenar con html las divs del panel compras
 	*/
-	if( !this._BANDERA ){
-		this.llenarPanelComprasXarpillas( idProveedor ); 
-	}else{
-		this.llenarPanelComprasXpiezas( idProveedor ); 
+	if(!this._BANDERA)
+	{
+	    this.llenarPanelComprasXarpillas( idProveedor ); 
 	}
-	
-	
+	else
+	{
+		this.llenarPanelComprasXpiezas( idProveedor ); 
+	}		
 	
 	/*
 	
@@ -227,43 +250,41 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 	if( !this.carousel ){
 
 		this.carousel = new Ext.Carousel({
-			id: 'CarruselSurtirProductosSucursal',
-			items: [{
-				scroll: 'vertical',
-				xtype: 'panel',
-				title: 'panel_compra_Proveedor',
-				id: 'compraProveedorPanel',
-				
-				items: [this.panelCompras]
-			}, {
-
-				xtype: 'panel',
-				scroll: 'vertical',
-				title: 'producto_proveedor',
-				id: 'nuevoProductoProveedor',
-				items: [ {	id:'listaProductosAgregar',	html: '<div id="Productos-Proveedor"></div>' }	]
-			}			
+		    id: 'CarruselSurtirProductosSucursal',
+			items: [
+			    {
+				    scroll: 'vertical',
+				    xtype: 'panel',
+				    title: 'panel_compra_Proveedor',
+				    id: 'compraProveedorPanel',
+				    items: [this.panelCompras]
+			    }, 
+			    {
+				    xtype: 'panel',
+				    scroll: 'vertical',
+				    title: 'producto_proveedor',
+				    id: 'nuevoProductoProveedor',
+				    items: [ {	id:'listaProductosAgregar',	html: '<div id="Productos-Proveedor"></div>' }	]
+			    }			
 			],
 			listeners:{
-					cardswitch : function( a ){
-						
-						ApplicationComprasProveedor.currentInstance.hideButtons();
-						
-					}//fin cardswitch
-					
-				}//fin listeners
-		});
-		
+			    cardswitch : function( a ){						
+				    ApplicationComprasProveedor.currentInstance.hideButtons();						
+				}//fin cardswitch					
+			}//fin listeners
+		});		
 		
 	}//fin if !this.carousel
+	
 	/*
 		Se llama a la funcion que renderea el html del panel con los productos que ofrece el proveedor
 	*/
 	this.llenarPanelProductosProveedor( idProveedor );
-	
-	
-	
-	var panelP = new Ext.Panel({
+				
+		
+	/*
+	*/
+	this.surtir = new Ext.Panel({
 		dockedItems: this.dockedItems,
 		layout: {
 			type: 'vbox',
@@ -273,17 +294,9 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 	      flex: 1
 		},
 		items: [this.carousel]
-
-	});
+	});;
 	
-		
-	/*
-	*/
-	this.surtir = panelP;
-	
-	
-
-};
+};//comprarPanel
 
 
 /*
@@ -292,22 +305,17 @@ ApplicationComprasProveedor.prototype.comprarPanel = function( idProveedor ){
 */
 ApplicationComprasProveedor.prototype.botonComprar = function(){
 
-	//if( ApplicationComprasProveedor.currentInstance._BANDERA == false ){ 
-		
 		Ext.getCmp("_btnComprarProducto").setDisabled(true);
 		
-		if ( Ext.fly("productosProvSucursal").first().dom.childElementCount < 2 ) {
-		
+		if ( Ext.fly("productosProvSucursal").first().dom.childElementCount < 2 ) 
+		{
 			Ext.getCmp("_btnComprarProducto").setDisabled(true);
-		}else{
-		
+		}
+		else
+		{		
 			Ext.getCmp("_btnComprarProducto").setDisabled(false);
 		}
-		
-	//}else{
-		
-		
-	//}
+
 };
 
 
@@ -321,9 +329,10 @@ ApplicationComprasProveedor.prototype.hideButtons = function (){
 
 	//if( ApplicationComprasProveedor.currentInstance._BANDERA == false ){ 
 
-		switch( Ext.getCmp("CarruselSurtirProductosSucursal").getActiveIndex() ){
+		switch(Ext.getCmp("CarruselSurtirProductosSucursal").getActiveIndex())
+		{
 					
-		case 0	:
+		    case 0	:
 									
 			Ext.getCmp("_btnAgregarProducto").setDisabled(true);
 			if ( Ext.fly("productosProvSucursal").first().dom.childElementCount < 2 ) {
@@ -647,22 +656,24 @@ ApplicationComprasProveedor.prototype.llenarPanelComprasXarpillas = function( id
 			id_proveedor: idProveedor
 			},
 			function (datos){//mientras responda
-				if(!datos.success){
+				if(!datos.success)
+				{
 									
-					Ext.get("productosProvSucursal").update(
-					"<div class='ApplicationComprasProveedor-item' >" 
-							+ "<div class='cabecera-producto_nombre'>PRODUCTO</div>" 
-							
-							+ "<div class='cabecera-compra-ARP'>No. Arpillas</div>" 
-							
-							+ "<div class='cabecera-compra-ARP'>Kgs Menos</div>" 
-							
-							+ "<div class='cabecera-compra-ARP'>Precio x Kg</div>" 
-							
-						+ "</div>"	
-						+ "<div class='ApplicationClientes-itemsBox' id='no_ProdComprarProv' ><div class='no-data'>"+datos.reason
-						+"</div></div>"
-					);
+				    var html = "";
+				    
+				    html += "<div class='ApplicationComprasProveedor-item'>";
+					html += "   <div class='cabecera-producto_nombre'>PRODUCTO</div>";							
+					html += "   <div class='cabecera-compra-ARP'>No. Arpillas</div>";						
+					html += "   <div class='cabecera-compra-ARP'>Kgs Menos</div>";					
+					html += "   <div class='cabecera-compra-ARP'>Precio x Kg</div>"; 							
+					html += "</div>";	
+					html += "<div class='ApplicationClientes-itemsBox' id='no_ProdComprarProv' >";
+					html += "   <div class='no-data'>"; 
+					html +=         datos.reason;
+					html += "   </div>";
+					html += "</div>";	
+									
+					Ext.get("productosProvSucursal").update(html);
 					
 					Ext.get("totalesCompra").update("<div class='ApplicationComprasProveedor-item' >" 
 							+ "<div class='cabecera-producto_nombre'>PRODUCTO</div>" 

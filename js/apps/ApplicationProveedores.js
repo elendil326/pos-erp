@@ -445,7 +445,7 @@ ApplicationProveedores.prototype.createPanelForProvedor = function ( provedor )
 				
 			appComProv.providerId = provedor.id_proveedor;
 			appComProv.nombreProv = provedor.nombre;
-			appComProv.comprarPanel( provedor.id_proveedor);
+			appComProv.comprarPanel( provedor.id_proveedor); // no es necesario m,andarle el provedor.id_proveedor
 			sink.Main.ui.setCard( appComProv.surtir, 'slide' );
 				
 			Ext.get("CarruselSurtirProductosSucursal").setStyle({
@@ -995,7 +995,7 @@ ApplicationProveedores.prototype.abonarCompra = function( idCompra , total , ade
 						         	
 						         	if (saldo > 0)
 						         	{
-						         	   update = "$" + saldo;
+						         	    update = "$" + saldo;
 						         	}
 						         	else
 						         	{

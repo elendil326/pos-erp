@@ -10,8 +10,6 @@
 	width:48%;
 	height:100%;
 
-	/*border:solid;
-	border-color:#F00;*/
 }
 .ApplicationComprasProveedor-proveedorProductos_Sucursal2{
 	position:relative;
@@ -26,7 +24,6 @@
 	margin: 5px;
 	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
 	font-size: 11px;
-
 }
 
 .ApplicationComprasProveedor-item{
@@ -102,14 +99,17 @@
 	/*margin:-5px;*/
 	/*line-height:35px;*/
 }
+
+
 .ApplicationComprasProveedor-pesoEmbarque{
 	/*margin: 5px;*/
-	-moz-border-radius: 5px;
+	/*-moz-border-radius: 5px;
     -webkit-border-radius: 5px;
-    -khtml-border-radius: 5px;
+    -khtml-border-radius: 5px;*/
+    font-size:10px;
 	float:left;
-	width: 48%;
-	height: 35px;
+	width: 50%;
+	height: 100%;
 	color:#F00;
 	text-shadow: black 0px 1px 1px;
 	background-image:url(media/g2.png);
@@ -119,6 +119,7 @@
 	/*text-align:center;*/
 
 }
+
 
 .ApplicationComprasProveedor-numeroArpillas{
 	float:left;
@@ -130,6 +131,8 @@
 	text-align:center;
 	line-height:35px;
 }
+
+
 .ApplicationComprasProveedor-PesoArpilla{
 	float:left;
 	width: 25%;
@@ -352,3 +355,4 @@ div.ApplicationClientes-clienteBox  {
 	background-image:url(media/g2.png);
 
 }
+
