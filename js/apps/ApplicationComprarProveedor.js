@@ -46,9 +46,13 @@ ApplicationComprarProveedor.prototype.buildCardBuyProduct = function(){
 
     var card = null;
 
+    
+
     return card;
 
 }//buildCardBuyProduct
+
+
 
 
 

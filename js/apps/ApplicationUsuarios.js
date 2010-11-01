@@ -276,7 +276,7 @@ ApplicationUsuarios.prototype.addNewUser = function(){
 				
 			}
 		}]
-	})
+	});
 	
 	
 	var addUserPanel = new Ext.Panel({
@@ -351,7 +351,7 @@ ApplicationUsuarios.prototype.addNewUserLogic = function(){
 				action: 2301,//'insertUser',
 				nombre: formData['nombre'],
 				user2: formData['user2'],
-				password: formData['password'],
+				password: hex_md5(formData['password']),
 				sucursal: ApplicationUsuarios.currentInstance.id_sucursal,
 				acceso: 3
 			},
