@@ -233,98 +233,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
 
         Ext.ux.UniversalUI.superclass.layoutOrientation.call(this, orientation, w, h);
     }
-	/*
 
-	onNavPanelItemTap: function(subList, subIdx, el, e) {
-        var store      = subList.getStore(),
-            record     = store.getAt(subIdx),
-            recordNode = record.node,
-            nestedList = this.navigationPanel,
-            title      = nestedList.renderTitleText(recordNode),
-            card, preventHide, anim;
-
-        if (record) {
-            card        = record.get('card');
-            anim        = record.get('animation');
-            preventHide = record.get('preventHide');
-        }
-
-        if (Ext.orientation == 'portrait' && !Ext.is.Phone && !recordNode.childNodes.length && !preventHide) {
-            //this.navigationPanel.hide();
-        }
-
-        if (card) {
-            this.setCard(card, anim || 'slide');
-            this.currentCard = card;
-        }
-
-        if (title) {
-            //this.navigationBar.setTitle(title);
-        }
-        //this.toggleUiBackButton();
-        this.fireEvent('navigate', this, record);
-    },
-    
-    onListChange : function(list, item) {
-
-		return;
-        if (Ext.orientation == 'portrait' && !Ext.is.Phone && !item.items && !item.preventHide) {
-            this.navigationPanel.hide();
-        }
-        
-        if (item.card) {
-            this.setCard(item.card, item.animation || 'slide');
-            this.currentCard = item.card;
-            if (item.text) {
-                //this.navigationBar.setTitle(item.text);
-            }
-            if (Ext.is.Phone) {
-                this.backButton.show();
-                this.navigationBar.doLayout();
-            }
-        }     
-       
-        this.fireEvent('navigate', this, item, list);
-    },
-    
-    onNavButtonTap : function() {
-        this.navigationPanel.showBy(this.navigationButton, 'fade');
-    },
-    
-    onBackButtonTap : function() {
-		
-        this.setCard(this.navigationPanel, {type: 'slide', direction: 'right'});
-
-        this.currentCard = this.navigationPanel;
-        if (Ext.is.Phone) {
-            this.backButton.hide();
-            //this.navigationBar.setTitle(this.title);
-            this.navigationBar.doLayout();
-        }
-        this.fireEvent('navigate', this, this.navigationPanel.activeItem, this.navigationPanel);
-    },
-    
-    onOrientationChange : function(orientation, w, h) {
-        Ext.ux.UniversalUI.superclass.onOrientationChange.call(this, orientation, w, h);
-        
-        if (!Ext.is.Phone) {
-            if (orientation == 'portrait') {
-                this.removeDocked(this.navigationPanel, false);
-                this.navigationPanel.hide();
-                this.navigationPanel.setFloating(true);
-                this.navigationButton.show();
-            }
-            else {                
-                this.navigationPanel.setFloating(false);
-                this.navigationPanel.show();
-                this.navigationButton.hide();
-                this.insertDocked(0, this.navigationPanel);                
-            }
-
-            this.doComponentLayout();
-            this.navigationBar.doComponentLayout();
-        }
-    }*/
 });
 
 
@@ -439,6 +348,10 @@ sink.Main = {
 
 	//al navegar en cualquier opcion
     onNavigate : function(ui, record) {
+	
+		//ocultar el teclado por si se quedo por ahi
+		POS.Keyboard.hide(); 
+	
 		if (record.data && record.data.source) {
             var source = record.get('source');
             if (this.sourceButton.hidden) {

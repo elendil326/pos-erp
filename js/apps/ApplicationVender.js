@@ -156,7 +156,7 @@ ApplicationVender.prototype._initToolBar = function (){
     var buttonsGroup1 = [{
             xtype: 'textfield',
             id: 'APaddProductByID',
-            startValue: 'ID del producto',
+            placeHolder: 'Agregar Producto',
             listeners:
                     {
                     'afterrender': function( ){
@@ -164,17 +164,25 @@ ApplicationVender.prototype._initToolBar = function (){
                         //document.getElementById( Ext.get("APaddProductByID").first().id ).focus();
                             
                         //medio feo, pero bueno
-                        Ext.get("APaddProductByID").first().dom.setAttribute("onkeyup","ApplicationVender.currentInstance.addProductByIDKeyUp( this, this.value )");
+                        //Ext.get("APaddProductByID").first().dom.setAttribute("onkeyup","ApplicationVender.currentInstance.addProductByIDKeyUp( this, this.value )");
 					
                     },
-					'focus' : POS.keyboardNum 
+					'focus' : function ( btn ) {
+						config = {
+							type : 'num',
+							submitText : 'Agregar',
+							callback : ApplicationVender.currentInstance.doAddProduct,
+							cancel : true
+						};
+						POS.Keyboard.Keyboard (btn, config);
+					}
 
                 }
-        },{
+        }/*,{
             text: 'Agregar producto',
             ui: 'round',
             handler: this.doAddProduct
-        }];
+        }*/];
 
 
     //grupo 2, caja comun o cliente
@@ -188,6 +196,8 @@ ApplicationVender.prototype._initToolBar = function (){
                     render: function (a){
                         //sencha 0.97
                         //Ext.getCmp("_cliente_cajacomun_btn").setPressed(0);
+                        //ApplicationVender.currentInstance.swapClienteComun(1);
+        				//Ext.getCmp("_cliente_cajacomun_btn").setPressed(0);
                     }
                 },
                 handler : function (){
@@ -507,78 +517,10 @@ ApplicationVender.prototype.doCambiarCantidad = function(item, n)
     }
     
     //sino, mostrar una ventana para ingresar una cantidad especifica
-    if (Ext.getCmp('ApplicationVender-doCambiarCantidad-panel') === null ) {
-
-        var cantidadToolbar = new Ext.Toolbar({
-            title: 'Cantidad',
-            dock: 'top',
-            items: [{
-                xtype: 'spacer'
-            }, {
-                xtype: 'button',
-                text: 'Aceptar',
-                ui: 'action',
-                handler: function(){
-                    
-                    var spinValue = Ext.getCmp('ApplicationVender-doCambiarCantidad-cantidad').getValue();
-
-                    if(spinValue.length > 0){
-                    
-                        spinValue = parseFloat(spinValue);
-
-                        if(isNaN(spinValue)){
-                            cantidadPanel.hide();
-                            cantidadPanel.destroy();
-                            return;
-                        }
-
-                        if(spinValue <= 0){
-                            
-                            cantidadPanel.hide();
-                            cantidadPanel.destroy();
-                            return;
-                        }
-                        
-
-                        ApplicationVender.currentInstance.htmlCart_items[item].cantidad = spinValue;                        
-                    }
-
-                    cantidadPanel.hide();
-                    cantidadPanel.destroy();
-                    
-                    ApplicationVender.currentInstance.doRefreshItemList();
-                }
-            }]
-        });
-    
-        
-        var cantidadPanel = new Ext.Panel({
-            id: 'ApplicationVender-doCambiarCantidad-panel',
-            floating: true,
-            modal: true,
-            centered: true,
-            height: 150,
-            width: 400,
-            dockedItems: cantidadToolbar,
-            items: [new Ext.form.FormPanel({
-                items: [{
-                    activeItem: 0,
-                    xtype: 'fieldset',
-                    label: 'Cantidad',
-                    items: [{
-                        id: 'ApplicationVender-doCambiarCantidad-cantidad',
-                        xtype: 'textfield',
-                        label: 'Cantidad',
-                        name: 'cantidad',
-                        defaultValue: 1,
-                        minValue: 0.01
-                    }]
-                }]
-            })]
-        });
-    }
-    
-    Ext.getCmp('ApplicationVender-doCambiarCantidad-panel').show();
+    Ext.Msg.prompt("Mostrador", "Cantidad especifica", function (a) {
+        ApplicationVender.currentInstance.htmlCart_items[item].cantidad = parseFloat( a );
+        ApplicationVender.currentInstance.doRefreshItemList();
+	});
     
     
     
@@ -669,8 +611,8 @@ ApplicationVender.prototype.doAddProductById = function ( prodID )
                 //clear the textbox
                 Ext.get("APaddProductByID").first().dom.value = "";
 
-                //give focus again
-                document.getElementById( Ext.get("APaddProductByID").first().id ).focus();                
+                //give focus again, ya no
+                //document.getElementById( Ext.get("APaddProductByID").first().id ).focus();                
             }
 
 
