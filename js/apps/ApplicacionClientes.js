@@ -833,7 +833,7 @@ ApplicacionClientes.prototype.ClientesList = new Ext.Panel({
 								ApplicacionClientes.currentInstance.clienteSeleccionado = this.getSelectedRecords()[0].data;
 
 								if(DEBUG){
-									console.log("Seleccionano cliente", recor  );
+									console.log("Cliente seleccionado", ApplicacionClientes.currentInstance.clienteSeleccionado  );
 								}
 
 								//La funcion addClientDetailsPanel regresa un panel con el carrusel de 3 cards y con los datos

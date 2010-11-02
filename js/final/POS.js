@@ -419,8 +419,9 @@ POS.Keyboard.Keyboard = function ( campo, config ){
 		POS.Keyboard.KeyboardObj.setWidth(internalConfig.width);
 		POS.Keyboard.KeyboardObj.setHeight(internalConfig.height);
 		
-		POS.Keyboard.KeyboardObj.setCentered(false);
-        POS.Keyboard.KeyboardObj.showBy(campo);
+		POS.Keyboard.KeyboardObj.setCentered(true);
+        POS.Keyboard.KeyboardObj.showBy(campo, true, false);
+
 		POS.Keyboard.campo = campo;
 
 		return POS.Keyboard.Keyboard;
@@ -431,7 +432,7 @@ POS.Keyboard.Keyboard = function ( campo, config ){
 		ui : "dark",
         modal: false,
 		showAnimation : Ext.anims.fade ,
-        centered: false,
+        centered: true,
 		hideOnMaskTap : false,
 		bodyPadding : 0,
 		bodyMargin : 0,
@@ -518,9 +519,7 @@ POS.Keyboard.genHTML = function (config) {
 };
 
 POS.Keyboard._genHTMLalfa = function (config){
-	if( POS.Keyboard._HTMLalfa ) {
-		return POS.Keyboard._HTMLalfa;
-	}
+
 	
 	
 	var html = "";
@@ -570,18 +569,13 @@ POS.Keyboard._genHTMLalfanum = function (config){
 
 POS.Keyboard._genHTMLnum = function (config){
 	
-	if( POS.Keyboard._HTMLnum ) {
-		return POS.Keyboard._HTMLnum;
-	}
-	
-	
 	var html = "";
 	
 	for( a = 0 ; a < 10 ; a++)
 		html += "<div class='Keyboard-key' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>" +a+ "</div>";
 
 	html += "<div class='Keyboard-key' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>.</div>"
-	html += "<div class='Keyboard-key long' onclick='POS.Keyboard.callbackFn( null, true)'>" +config.submitText+ "</div>";
+	html += "<div id='Keyboard-key-num-submit' class='Keyboard-key long' onclick='POS.Keyboard.callbackFn( null, true)'>" +config.submitText+ "</div>";
 	
 	return POS.Keyboard._HTMLnum = {
 		html: html,

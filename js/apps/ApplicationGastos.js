@@ -176,27 +176,38 @@ ApplicationGastos.prototype.loadGastosPanel = function(){
 						xtype: 'textfield',
 						label: 'Concepto',
 						name: 'concepto',
-						required: true
+						required: true,
+						listeners : {
+							'focus' : function ( btn ) {
+								config = {
+									type : 'alfa',
+									submitText : 'Aceptar',
+									callback : function (){ },
+									cancel : true
+								};
+								POS.Keyboard.Keyboard (btn, config);
+							}
+						}
 					},
 					{
 						id: 'ApplicationGastos-gastosForm-monto',
 						xtype: 'textfield',
 						label: 	'Monto',
 						name: 'monto',
-						required: true
-					},
-					/*{
-						id: 'ApplicationGastos-gastosForm-fecha',
-						xtype: 'textfield',
-						label: 'Fecha',
-						name: 'fecha',
 						required: true,
-						listeners: {
-							focus: function( field ){
-								ApplicationGastos.currentInstance.getDate( 'top' );
+						listeners : {
+							'focus' : function ( btn ) {
+								config = {
+									type : 'num',
+									submitText : 'Aceptar',
+									callback : function (){ },
+									cancel : true
+								};
+								POS.Keyboard.Keyboard (btn, config);
 							}
 						}
-					}*/
+					},
+
 					new Ext.form.DatePickerField({
 					    id:'ApplicationGastos-gastosForm-fecha',
 					    label:'fecha',

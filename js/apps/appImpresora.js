@@ -108,7 +108,7 @@ appImpresora.ImprimirTicket = function ( cliente, items, ventaTotales )
 			
 	if(cliente !== null){
 		//cliente definido
-		ventanaImpresion.document.write("<div >Descuento "+ POS.currencyFormat(ventaTotales.descuento) +"</div>");	
+		ventanaImpresion.document.write("<div >Descuento "+ ventaTotales.descuento +" %</div>");	
 	}	
 		
 	ventanaImpresion.document.write("<div ><b>Total "+ POS.currencyFormat(ventaTotales.total) +"</b></div>");		

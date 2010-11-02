@@ -283,21 +283,20 @@ ApplicationVender.prototype.venderMainPanel = new Ext.Panel({
             if(DEBUG){
                 console.log("Rendereo de el mostrador...");
             }
-            
+            //al renderear el mostrador, refrescar la lista de items
             ApplicationVender.currentInstance.doRefreshItemList();
-        }
+        },
+		'show' : function (){
+            ApplicationVender.currentInstance.doRefreshItemList();
+		}
         
     },
     cls: "ApplicationVender-mainPanel",
     
-    //items del formpanel
     items: [{
-            html: "<div id='detallesCliente'></div>"
+
+            html: "<span id='MostradorDetallesCliente'><div class='nombre'>Caja Comun</div></span><span id='MostradorDetallesTotales'></span><div id='MostradorCarritoDeCompras'>" + ApplicationVender.emptyText + "</div>"
         
-        },{
-            
-            html: "<div id='carritoDeCompras'>" + ApplicationVender.emptyText + "</div>"
-            
         }]
 });
 
@@ -313,6 +312,8 @@ ApplicationVender.prototype.venderMainPanel = new Ext.Panel({
 
 
 
+/* Carrito de compras
+   ------------------------------------------------------------------------------------ */
 
 
 
@@ -340,10 +341,6 @@ ApplicationVender.prototype.doLimpiarCarrito = function ( )
     
 };
 
-
-
-
-
 /**
  * Elimina un elemento en el arreglo de articulos a comprar. 
  * Despues de eliminarlo, refresca la lista de articulos en mostrador.
@@ -359,9 +356,62 @@ ApplicationVender.prototype.doDeleteItem = function ( item )
     
 };
 
+ApplicationVender.prototype.doRefreshTotals = function () {
+	if(DEBUG){
+		console.log("Actualizando los totales");
+	}
+	
+	
+	if(!Ext.get("MostradorDetallesTotales")){
+		return;
+	}
+	
+	ventaTotales = ApplicationVender.currentInstance.ventaTotales;
+
+	if(!ventaTotales){
+		return;
+	}
 
 
 
+	if(Ext.get("MostradorTotal")){
+		
+		Ext.Anim.run(Ext.get("MostradorSubtotal"), "fade", {duration: 250, after : function () {
+			ventaTotales = ApplicationVender.currentInstance.ventaTotales;
+			Ext.get("MostradorSubtotal").update( POS.currencyFormat( ventaTotales.subtotal )  );
+			//animar iva
+			Ext.Anim.run(Ext.get("MostradorDescuento"), "fade", {duration: 250, after : function () {
+				ventaTotales = ApplicationVender.currentInstance.ventaTotales;
+				Ext.get("MostradorDescuento").update( POS.currencyFormat( ventaTotales.descuento * (ventaTotales.subtotal/100) )  + " ( "+ventaTotales.descuento+" % )" );
+				//animar descuento
+				Ext.Anim.run(Ext.get("MostradorIVA"), "fade", {duration: 250, after : function () {
+					ventaTotales = ApplicationVender.currentInstance.ventaTotales;
+					Ext.get("MostradorIVA").update(  POS.currencyFormat( ventaTotales.iva )   );
+					//animar total
+					Ext.Anim.run(Ext.get("MostradorTotal"), "fade", {duration: 250, after : function () {
+						ventaTotales = ApplicationVender.currentInstance.ventaTotales;
+						Ext.get("MostradorTotal").update( POS.currencyFormat( ventaTotales.total )  );
+					} });//animar total
+				} });//animar descuento
+			} });//animar iva
+		} });//animar subtotal
+		
+
+
+		return;
+	}
+	
+	html = "";
+      html += "<table border='0' class='Tabla'>";
+      html +=     "<tr><td style='text-align: right'>Subtotal</td><td> <div id='MostradorSubtotal'>" + POS.currencyFormat( ventaTotales.subtotal )  + "</div></td></tr>";
+      html +=     "<tr><td style='text-align: right'>Descuento</td><td> <div id='MostradorDescuento'>"  + POS.currencyFormat( ventaTotales.descuento * (ventaTotales.subtotal/100) )  + " ( "+ventaTotales.descuento+" % )</div></td></tr>";
+      html +=     "<tr><td style='text-align: right'>IVA</td><td> <div id='MostradorIVA'>"  + POS.currencyFormat( ventaTotales.iva )  + "</div></td></tr>";
+      html +=     "<tr><td style='text-align: right'>Total</td><td> <div id='MostradorTotal'>"  + POS.currencyFormat( ventaTotales.total )  + "</div></td></tr>";
+      html += "</table>";
+	
+	Ext.get("MostradorDetallesTotales").update(html);
+
+};
 
 /**
  * Refresca la lista de articulos a comprar.
@@ -377,15 +427,25 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
     }
 
     
-    if(Ext.get("carritoDeCompras") === null){
+    if(Ext.get("MostradorCarritoDeCompras") === null){
         if(DEBUG){
             console.log("Application Mostrador: carritoDeCompras es nulo.");
         }
+
         return;
     }
     
     if( this.htmlCart_items.length === 0){
-        Ext.get("carritoDeCompras").update(ApplicationVender.emptyText);
+        Ext.get("MostradorCarritoDeCompras").update(ApplicationVender.emptyText);
+	    ApplicationVender.currentInstance.ventaTotales = {
+	        subtotal : 0,
+	        iva: 0,
+	        descuento: 0,
+	        total : 0,
+	        efectivo : null,
+	        cambio : null
+	    };
+		this.doRefreshTotals();
         return;
     }
     
@@ -409,9 +469,9 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
     var totals_html = "";
 
     //valores conocidos
-    var subtotal = 0;
-    var iva = MOSTRADOR_IVA;
-    var descuento = this.cliente ? this.cliente.descuento : 0;
+    var subtotal = 0.0;
+    var iva = parseFloat( MOSTRADOR_IVA );
+    var descuento = this.cliente ? parseFloat( this.cliente.descuento ): 0;
     
     
     
@@ -424,13 +484,16 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
         //revisar que haya en existencia ese pedido
         var existencias = parseFloat( this.htmlCart_items[a].existencias );
         
+		//si quiero mas de lo que hay
         if( this.htmlCart_items[a].cantidad > existencias ){
+			//si ya no hay nada de esto
             if(existencias === 0 ){
     
                 Ext.Msg.alert("Mostrador", "No hay mas existencias del producto " + this.htmlCart_items[a].description +"." );
                 return this.doDeleteItem( a );
                 
             }else{
+			//si hay algunas existencias, entonces... poner el maximo que hay
                 this.htmlCart_items[a].cantidad = existencias;
                 Ext.Msg.alert("Mostrador", "Solamente queda en existencia " +existencias+  " productos "+ this.htmlCart_items[a].description + "." );
             }
@@ -442,14 +505,22 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
     }
     
     
-    
+    //actualizar el ventatotales con estos nuevos datos
+    ApplicationVender.currentInstance.ventaTotales = {
+        subtotal : subtotal,
+        iva: iva,
+        descuento: descuento,
+        total : calcularTotal( subtotal, iva, descuento ),
+        efectivo : null,
+        cambio : null
+    };
 
     //    rendereo de cada item
     for( a = 0; a < this.htmlCart_items.length; a++ ){
 
         //size of text for small screen
         nombre = this.htmlCart_items[a].name.length > 7 ? this.htmlCart_items[a].name.substring(0,7) : this.htmlCart_items[a].name ;
-        descripcion = this.htmlCart_items[a].description.length > 18 ? this.htmlCart_items[a].description.substring(0,18) + "..." : this.htmlCart_items[a].description  ;
+        descripcion = this.htmlCart_items[a].description.length > 15 ? this.htmlCart_items[a].description.substring(0,15) + "..." : this.htmlCart_items[a].description  ;
 
         //actual creation of html
         html += "<div class='ApplicationVender-item' >" +
@@ -467,44 +538,15 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
 
 
 
+	
+ 
 
-    totals_html = "<span>Subtotal " +  POS.currencyFormat(subtotal) + "</span> " +
-               "<span>IVA " +  POS.currencyFormat(subtotal* (iva/100)) + "</span> ";
-
-    //calculo del total
-    total = calcularTotal(subtotal, iva, descuento) ;
-
-    //si tiene descuento
-    if(descuento > 0){
-        totals_html += "<span>Descuento " +  POS.currencyFormat(total *(descuento / 100)) + "</span> ";
-    }
-
-    //total de totales
-    totals_html += "<span>Total " +  POS.currencyFormat(total) + "</span> ";
-
-    // wrap divs --style='overflow: hidden'
-    html = "<div class='ApplicationVender-itemsBox' >" + html +"</div>" ;
-    totals_html = "<div class='ApplicationVender-totalesBox' >" + totals_html +"</div>" ;
-    
-    var endhtml = html + totals_html;
-
-    Ext.get("carritoDeCompras").update("<div >" + endhtml + "</div>");
-    
-    //actualizar el ventatotales con estos nuevos datos
-    this.ventaTotales = {
-        subtotal : subtotal,
-        iva: iva,
-        descuento: descuento,
-        total : total,
-        efectivo : null,
-        cambio : null
-    };
-
+	//refrescar los totales
+	this.doRefreshTotals();
+	
+	//poner este html en el carrito de compras
+    Ext.get("MostradorCarritoDeCompras").update(html);
 };
-
-
-
-
 
 ApplicationVender.prototype.doCambiarCantidad = function(item, n)
 {
@@ -525,7 +567,6 @@ ApplicationVender.prototype.doCambiarCantidad = function(item, n)
     
     
 };
-
 
 ApplicationVender.prototype.htmlCart_addItem = function( item )
 {
@@ -560,15 +601,10 @@ ApplicationVender.prototype.htmlCart_addItem = function( item )
     this.doRefreshItemList();
 };
 
-
-
-
-
-
 ApplicationVender.prototype.doAddProductById = function ( prodID )
 {
     if(DEBUG){
-        console.log("ApplicationVender: Agregando producto " + id);
+        console.log("ApplicationVender: Agregando producto " + prodID);
     }
 
     if( prodID.length === 0 ){
@@ -644,8 +680,6 @@ ApplicationVender.prototype.doAddProduct = function (button, event)
     
 };
 
-
-
 /**
  * Esta funcion atrapa el evento de KeyUp en la caja
  * de texto de agregar producto. Ya que atrapa todas
@@ -696,8 +730,7 @@ ApplicationVender.prototype.addProductByIDKeyUp = function (a, b)
 
 
 
-/* ------------------------------------------------------------------------------------
-                    vender
+/* Realizar Venta
    ------------------------------------------------------------------------------------ */
 
 
@@ -726,10 +759,6 @@ ApplicationVender.prototype.doVender = function ()
 
 };
 
-
-/**
- * 
- */
 ApplicationVender.prototype.doVentaForms = function()
 {
     
@@ -757,7 +786,6 @@ ApplicationVender.prototype.doVentaForms = function()
     sink.Main.ui.setCard( this.panelContado, 'slide' );
 };
 
-
 ApplicationVender.prototype.swapPayingMethod = function ( tipo )
 {
     if(DEBUG){
@@ -777,6 +805,151 @@ ApplicationVender.prototype.swapPayingMethod = function ( tipo )
     }
 };
 
+
+
+
+
+
+/*	Ventas a contado
+--------------------------------------------------------------------------*/
+
+
+ApplicationVender.prototype.doVentaLogic = function ()
+{
+    
+    total = ApplicationVender.currentInstance.ventaTotales.total;
+    
+    
+    var pago = Ext.getCmp("mostrador_pago_id").getValue();
+    
+    if( pago != parseFloat(pago) ){
+        Ext.getCmp("mostrador_cambio_id").setValue(  );
+        return;
+    }
+    
+    if( pago < total ){
+        if(DEBUG){
+            console.log("Necesito:" +total, " Pagado:" + pago);
+        }
+        Ext.getCmp("mostrador_cambio_id").setValue( "Dinero insuficiente."  );
+        return;
+    }
+
+    var cambio =  ( parseFloat(pago) - total );
+    
+    cambio = POS.currencyFormat(cambio);
+
+    Ext.getCmp("mostrador_cambio_id").setValue( cambio );
+    
+    
+    //disable the pago 
+    //Ext.getCmp("mostrador_pago_id").disable();
+
+    //hacer la venta en el lado del servidor
+    
+    var jsonItems = Ext.util.JSON.encode(ApplicationVender.currentInstance.htmlCart_items);
+    
+    var cliente = ApplicationVender.currentInstance.cliente === null ? 'caja_comun' : ApplicationVender.currentInstance.cliente.iden;
+    
+    POS.AJAXandDECODE(
+                    //Parametros
+                    {
+                        action: '2103',
+                        id_cliente: cliente,
+                        tipo_venta: 'contado',
+                        jsonItems: jsonItems
+                    },
+                    //Funcion success
+                    function(result){
+                        
+                        if (result.success)
+                        {
+
+                            if(DEBUG){
+                                console.log("Mostrador: Venta Exitosa !", result);    
+                            }
+
+                            ApplicationVender.currentInstance.ventaContadoExitosa();
+                            
+                        }else{
+                            if(DEBUG){
+                                console.warn("Mostrador: Venta no exitosa ", result);
+                            }
+                            
+                            POS.aviso( "Mostrador", "Venta no exitosa<br>" + result.reason );
+                        }
+                    },
+                    //Funcion failure
+                    function(){
+                        if(DEBUG){
+                            console.warn("ApplicationVender: Error al realizar la venta");
+                        }
+                        
+                    }
+    );
+    
+
+    
+};
+
+ApplicationVender.prototype.ventaContadoExitosa = function ()
+{
+
+    items =  copy(ApplicationVender.currentInstance.htmlCart_items);
+    cliente = ApplicationVender.currentInstance.cliente;
+
+
+    //print this shit
+    appImpresora.ImprimirTicket( cliente, items, this.ventaTotales );
+
+    
+    //quitar el menu de cancelar venta y eso
+    Ext.getCmp("doVentaContadoPanel").getDockedItems()[0].hide();
+    
+    
+    if( this.cliente ){
+        Ext.getCmp("doVentaContadoPanel").add({ 
+                xtype:'button', 
+                text:'Requerir Factura',
+                style: "margin-left: 45%; margin-top: 20px; width: 150px;",
+                ui: 'action'
+            });
+
+            
+    }
+    
+    Ext.getCmp("doVentaContadoPanel").add({ 
+            xtype:'button', 
+            text:'Nueva venta',
+            style: "margin-left: 45%; margin-top: 20px; width: 150px;",
+            ui: 'back',
+            handler: function (){
+                sink.Main.ui.setCard( ApplicationVender.currentInstance.venderMainPanel, 'fade' );
+            }
+        });
+        
+    Ext.getCmp("doVentaContadoPanel").doLayout();
+    
+    //limpiar el carrito
+    this.doLimpiarCarrito();
+    
+};
+
+ApplicationVender.prototype.doPayContadoKeyUp = function (  )
+{
+    if(event.keyCode == 13 )
+    {
+        var val = Ext.getCmp("mostrador_cambio_id").getValue( );
+        
+        if( (val.length > 0) &&  ( val != "Dinero insuficiente." ) ){
+            sink.Main.ui.setCard( ApplicationVender.currentInstance.venderMainPanel, 'fade' );
+        }else{
+            ApplicationVender.currentInstance.doVentaLogic(  );
+        }
+        
+
+    }
+};
 
 ApplicationVender.prototype.doVentaContadoPanel = function (  )
 {
@@ -855,23 +1028,23 @@ ApplicationVender.prototype.doVentaContadoPanel = function (  )
                 xtype: 'textfield',
                 label: 'Subtotal',
                 value : POS.currencyFormat(this.ventaTotales.subtotal),
-                disabled: true
+                disabled: false
                },{
     
                 xtype: 'textfield',
                 label: 'IVA',
                 value : (this.ventaTotales.iva) + "%" ,
-                disabled: true
+                disabled: false
               },{
                 xtype: 'textfield',
                 label: 'Descuento',
                 value : (this.ventaTotales.descuento)+"%",
-                disabled: true
+                disabled: false
             },{
                 xtype: 'textfield',
                 label: 'Total',
                 value : POS.currencyFormat(this.ventaTotales.total),
-                disabled: true
+                disabled: false
             },{
                 xtype: 'textfield',
                 label: 'Pago',
@@ -886,14 +1059,23 @@ ApplicationVender.prototype.doVentaContadoPanel = function (  )
 
                         //Focus a cantidad por pagar
                         document.getElementById( this.el.dom.childNodes[1].id ).focus();
-                    }
+                    },
+					'focus' : function ( btn ) {
+						config = {
+							type : 'num',
+							submitText : 'Cobrar',
+							callback : ApplicationVender.currentInstance.doVentaLogic,
+							cancel : true
+						};
+						POS.Keyboard.Keyboard (btn, config);
+					}
                 }
             },{
                 xtype: 'textfield',
                 label: 'Cambio',
                 id: 'mostrador_cambio_id',
                 value: '',
-                disabled: true
+                disabled: false
             }]
         }]
     });
@@ -902,23 +1084,103 @@ ApplicationVender.prototype.doVentaContadoPanel = function (  )
 
 
 
-
-ApplicationVender.prototype.doPayContadoKeyUp = function (  )
+/*	Ventas a Credito
+--------------------------------------------------------------------------*/
+ApplicationVender.prototype.doVentaLogicCredito = function ()
 {
-    if(event.keyCode == 13 )
-    {
-        var val = Ext.getCmp("mostrador_cambio_id").getValue( );
-        
-        if( (val.length > 0) &&  ( val != "Dinero insuficiente." ) ){
-            sink.Main.ui.setCard( ApplicationVender.currentInstance.venderMainPanel, 'fade' );
-        }else{
-            ApplicationVender.currentInstance.doVentaLogic(  );
-        }
-        
+    
+    //hacer la venta en el lado del servidor
+    var jsonItems = Ext.util.JSON.encode(ApplicationVender.currentInstance.htmlCart_items);
+    
+    var cliente = ApplicationVender.currentInstance.cliente.iden;
+    
+    POS.AJAXandDECODE({
+            action: '2103',
+            id_cliente: cliente,
+            tipo_venta: 'credito',
+            jsonItems: jsonItems
+        }, function(result){
 
-    }
+                if (result.success)
+                {
+
+                        if(DEBUG){
+                            console.log("Mostrador: Venta a credito Exitosa !", result);    
+                        }
+                        
+                        ApplicationVender.currentInstance.ventaCreditoExitosa();
+                        
+                    }else{
+                        if(DEBUG){
+                            console.warn("Mostrador: Venta a credito no exitosa ", result);    
+                        }
+                    }
+                },
+        function(){
+            if(DEBUG){
+                console.warn("ApplicationVender: Error al realizar la venta");    
+            }
+                        
+        });
 };
 
+ApplicationVender.prototype.ventaCreditoExitosa = function ()
+{
+    
+    items =  copy(ApplicationVender.currentInstance.htmlCart_items);
+    cliente = ApplicationVender.currentInstance.cliente;
+    
+    appImpresora.ImprimirTicket( cliente, items, this.ventaTotales );
+    
+    //quitar el menu de cancelar venta y eso
+    Ext.getCmp("doVentaCreditoPanel").getDockedItems()[0].hide();
+    
+    Ext.getCmp("doVentaCreditoPanel").add({ 
+            html : '<div align="center">Venta a credito exitosa !</div>'
+    });
+        
+
+    
+    Ext.getCmp("doVentaCreditoPanel").add({ 
+            xtype:'button', 
+            text:'Nueva venta',
+            style: "margin-left: 45%; margin-top: 20px; width: 150px;",
+            ui: 'back',
+            handler: function (){
+                sink.Main.ui.setCard( ApplicationVender.currentInstance.venderMainPanel, 'fade' );
+            }
+        });
+    
+    /*
+    Ext.getCmp("doVentaCreditoPanel").add({ 
+            xtype:'button', 
+            text:'Abonar a esta compra',
+            style: "margin-left: 45%; margin-top: 20px; width: 200px;",
+            ui: 'action',
+            handler : function (){
+                if(DEBUG){
+                    console.log("Abonar a esta compra!");
+                    
+                }
+                
+                try{
+                    ApplicacionClientes.currentInstance.abonarVenta(9,9,9); 
+                }catch(e){
+                    if(DEBUG){
+                        console.log("Error al abonar a esta venta");
+                    }
+                }
+                
+            }
+        });
+    */
+    
+    Ext.getCmp("doVentaCreditoPanel").doLayout();
+    
+    //limpiar el carrito
+    this.doLimpiarCarrito();
+    
+};
 
 ApplicationVender.prototype.doVentaCreditoPanel = function ( cantidadPago )
 {
@@ -1031,205 +1293,6 @@ ApplicationVender.prototype.doVentaCreditoPanel = function ( cantidadPago )
 
 
 
-
-ApplicationVender.prototype.doVentaLogicCredito = function ()
-{
-    
-    //hacer la venta en el lado del servidor
-    var jsonItems = Ext.util.JSON.encode(ApplicationVender.currentInstance.htmlCart_items);
-    
-    var cliente = ApplicationVender.currentInstance.cliente.iden;
-    
-    POS.AJAXandDECODE({
-            action: '2103',
-            id_cliente: cliente,
-            tipo_venta: 'credito',
-            jsonItems: jsonItems
-        }, function(result){
-
-                if (result.success)
-                {
-
-                        if(DEBUG){
-                            console.log("Mostrador: Venta a credito Exitosa !", result);    
-                        }
-                        
-                        ApplicationVender.currentInstance.ventaCreditoExitosa();
-                        
-                    }else{
-                        if(DEBUG){
-                            console.warn("Mostrador: Venta a credito no exitosa ", result);    
-                        }
-                    }
-                },
-        function(){
-            if(DEBUG){
-                console.warn("ApplicationVender: Error al realizar la venta");    
-            }
-                        
-        });
-};
-
-
-
-
-
-ApplicationVender.prototype.ventaCreditoExitosa = function ()
-{
-    
-    items =  copy(ApplicationVender.currentInstance.htmlCart_items);
-    cliente = ApplicationVender.currentInstance.cliente;
-    
-    appImpresora.ImprimirTicket( cliente, items, this.ventaTotales );
-    
-    //quitar el menu de cancelar venta y eso
-    Ext.getCmp("doVentaCreditoPanel").getDockedItems()[0].hide();
-    
-    Ext.getCmp("doVentaCreditoPanel").add({ 
-            html : '<div align="center">Venta a credito exitosa !</div>'
-    });
-        
-
-    
-    Ext.getCmp("doVentaCreditoPanel").add({ 
-            xtype:'button', 
-            text:'Nueva venta',
-            style: "margin-left: 45%; margin-top: 20px; width: 150px;",
-            ui: 'back',
-            handler: function (){
-                sink.Main.ui.setCard( ApplicationVender.currentInstance.venderMainPanel, 'fade' );
-            }
-        });
-    
-    /*
-    Ext.getCmp("doVentaCreditoPanel").add({ 
-            xtype:'button', 
-            text:'Abonar a esta compra',
-            style: "margin-left: 45%; margin-top: 20px; width: 200px;",
-            ui: 'action',
-            handler : function (){
-                if(DEBUG){
-                    console.log("Abonar a esta compra!");
-                    
-                }
-                
-                try{
-                    ApplicacionClientes.currentInstance.abonarVenta(9,9,9); 
-                }catch(e){
-                    if(DEBUG){
-                        console.log("Error al abonar a esta venta");
-                    }
-                }
-                
-            }
-        });
-    */
-    
-    Ext.getCmp("doVentaCreditoPanel").doLayout();
-    
-    //limpiar el carrito
-    this.doLimpiarCarrito();
-    
-};
-
-
-
-
-
-
-
-
-
-/*
-    solo para ventas a contado
-*/
-
-
-
-
-
-ApplicationVender.prototype.doVentaLogic = function ()
-{
-    
-    total = this.ventaTotales.total;
-    
-    
-    var pago = Ext.getCmp("mostrador_pago_id").getValue();
-    
-    if( pago != parseFloat(pago) ){
-        Ext.getCmp("mostrador_cambio_id").setValue(  );
-        return;
-    }
-    
-    if( pago < total ){
-        if(DEBUG){
-            console.log("Necesito:" +total, " Pagado:" + pago);
-        }
-        Ext.getCmp("mostrador_cambio_id").setValue( "Dinero insuficiente."  );
-        return;
-    }
-
-    var cambio =  -1 * ( parseFloat(pago) - total );
-    
-    cambio = POS.currencyFormat(cambio);
-
-    Ext.getCmp("mostrador_cambio_id").setValue( cambio );
-    
-    
-    //disable the pago 
-    Ext.getCmp("mostrador_pago_id").disable();
-
-    //hacer la venta en el lado del servidor
-    
-    var jsonItems = Ext.util.JSON.encode(ApplicationVender.currentInstance.htmlCart_items);
-    
-    var cliente = ApplicationVender.currentInstance.cliente === null ? 'caja_comun' : ApplicationVender.currentInstance.cliente.iden;
-    
-    POS.AJAXandDECODE(
-                    //Parametros
-                    {
-                        action: '2103',
-                        id_cliente: cliente,
-                        tipo_venta: 'contado',
-                        jsonItems: jsonItems
-                    },
-                    //Funcion success
-                    function(result){
-                        
-                        if (result.success)
-                        {
-
-                            if(DEBUG){
-                                console.log("Mostrador: Venta Exitosa !", result);    
-                            }
-
-                            ApplicationVender.currentInstance.ventaContadoExitosa();
-                            
-                        }else{
-                            if(DEBUG){
-                                console.warn("Mostrador: Venta no exitosa ", result);
-                            }
-                            
-                            POS.aviso( "Mostrador", "Venta no exitosa<br>" + result.reason );
-                        }
-                    },
-                    //Funcion failure
-                    function(){
-                        if(DEBUG){
-                            console.warn("ApplicationVender: Error al realizar la venta");
-                        }
-                        
-                    }
-    );
-    
-
-    
-};
-
-
-
-
-
 /**
 * regresa una copia de lo que le manden 
 */
@@ -1241,55 +1304,6 @@ function copy (o) {
     }
     return r;
 }
-
-ApplicationVender.prototype.ventaContadoExitosa = function ()
-{
-
-    items =  copy(ApplicationVender.currentInstance.htmlCart_items);
-    cliente = ApplicationVender.currentInstance.cliente;
-
-
-    //print this shit
-    appImpresora.ImprimirTicket( cliente, items, this.ventaTotales );
-
-    
-    //quitar el menu de cancelar venta y eso
-    Ext.getCmp("doVentaContadoPanel").getDockedItems()[0].hide();
-    
-    
-    if( this.cliente ){
-        Ext.getCmp("doVentaContadoPanel").add({ 
-                xtype:'button', 
-                text:'Requerir Factura',
-                style: "margin-left: 45%; margin-top: 20px; width: 150px;",
-                ui: 'action'
-            });
-
-            
-    }
-    
-    Ext.getCmp("doVentaContadoPanel").add({ 
-            xtype:'button', 
-            text:'Nueva venta',
-            style: "margin-left: 45%; margin-top: 20px; width: 150px;",
-            ui: 'back',
-            handler: function (){
-                sink.Main.ui.setCard( ApplicationVender.currentInstance.venderMainPanel, 'fade' );
-            }
-        });
-        
-    Ext.getCmp("doVentaContadoPanel").doLayout();
-    
-    //limpiar el carrito
-    this.doLimpiarCarrito();
-    
-};
-
-
-
-
-
-
 
 /**
  * Accion de boton cotizar, verifica que exista
@@ -1309,7 +1323,7 @@ ApplicationVender.prototype.doCotizar = function ()
     
     //revisar que exista por lo menos un item
     if(items.length === 0){
-        POS.aviso("Mostrador", "Agregue primero al menos un arituclo para poder cotizar.");
+        Ext.Msg.alert("Mostrador", "Agregue primero al menos un arituclo para poder cotizar.");
         return;
     }
     
@@ -1324,7 +1338,8 @@ ApplicationVender.prototype.doCotizar = function ()
     //imprimir el ticket, ojo, la accion de la computadora es abrir
     //la caja de dinero al imprimir algo, por consiguiente, la caja
     //de dinero se abrira al imprimir una cotizacion
-    appImpresora.ImprimirTicket( cliente, items, this.ventaTotales );
+    appImpresora.ImprimirTicket( cliente, items, ApplicationVender.currentInstance.ventaTotales );
+
 };
 
 
@@ -1335,9 +1350,8 @@ ApplicationVender.prototype.doCotizar = function ()
 
 
 
-/* ------------------------------------------------------------------------------------
-                    buscar cliente
-   ------------------------------------------------------------------------------------ */
+/* Busqueda de clientes
+ ------------------------------------------------------------------------------------ */
 
 
 /**
@@ -1362,16 +1376,12 @@ ApplicationVender.prototype.swapClienteComun = function (val)
         //Ext.get("detallesCliente").removeClass( "ApplicationVender-clienteBox" );
     
         Ext.getCmp("_cliente_cajacomun_btn").setPressed(0);
-        Ext.get("detallesCliente").update("");
+        Ext.get("MostradorDetallesCliente").update("<div class='nombre'>Caja Comun</div>");
         this.cliente = null;
         ApplicationVender.currentInstance.CLIENTE_COMUN = true;
         this.doRefreshItemList();
     }
 };
-
-
-
-
 
 /**
  * Funcion que recibe un cliente que ha sido seleccionado
@@ -1390,21 +1400,24 @@ ApplicationVender.prototype.actualizarDetallesCliente = function ( cliente )
     
     //crear el contenido html
     var html = "";
-    html += " <div class='ApplicationVender-clienteBox'> ";
-        html += " <div class='nombre'>" + cliente.nombre + "</div>";
-        html += "<table border='0' class='tabla_detalles_cliente'>";
-        html +=     "<tr><td style='text-align: right'>RFC</td><td>" + cliente.rfc + "</td></tr>";
-        html +=     "<tr><td style='text-align: right'>Direccion</td><td>" + cliente.direccion + "</td></tr>";
-        html +=     "<tr><td style='text-align: right'>Telefono</td><td>" + cliente.telefono + "</td></tr>";
+
+        html += "<div class='nombre'>" + cliente.nombre + "</div>";
+        html += "<table border='0' class='Tabla'>";
+        html +=     "<tr><td style='text-align: right'>RFC</td><td>" + cliente.rfc + "</td>";
+        html +=     "<td style='text-align: right'>Descuento</td><td>" + cliente.descuento + " %</td></tr>";
+
+        html +=     "<tr><td style='text-align: right; ' >Direccion</td><td style='width: 100px;'>" + cliente.direccion + "</td>";
+        html +=     "<td style='text-align: right'>Limite de Credito</td><td>" + POS.currencyFormat(cliente.limite_credito) + "</td></tr>";
+
+        html +=     "<tr><td style='text-align: right'>Telefono</td><td>" + cliente.telefono + "</td>";
+        html +=     "<td style='text-align: right'>Credito Restante</td><td>" + POS.currencyFormat(cliente.credito_restante) + "</td></tr>";
+
         html +=     "<tr><td style='text-align: right'>Correo Electronico</td><td>" + cliente.e_mail + "</td></tr>";
-        html +=     "<tr><td style='text-align: right'>Descuento</td><td>" + cliente.descuento + " %</td></tr>";
-        html +=     "<tr><td style='text-align: right'>Limite de Credito</td><td>" + POS.currencyFormat(cliente.limite_credito) + "</td></tr>";
-        html +=     "<tr><td style='text-align: right'>Credito Restante</td><td>" + POS.currencyFormat(cliente.credito_restante) + "</td></tr>";
         html += "</table>";
-    html += " </div> ";
+
     
     //cambiar el contenido de detallesCliente
-    Ext.get("detallesCliente").update( html );
+    Ext.get("MostradorDetallesCliente").update( html );
     //Ext.get("detallesCliente").addClass( "" );
     
     //actualizar tambien la lista de productos, ya que se deben actualizar
@@ -1412,10 +1425,6 @@ ApplicationVender.prototype.actualizarDetallesCliente = function ( cliente )
     this.doRefreshItemList();
     
 };
-
-
-
-
 
 ApplicationVender.prototype.buscarCliente = function ()
 {
@@ -1493,14 +1502,6 @@ ApplicationVender.prototype.buscarCliente = function ()
 
 };
 
-
-
-
-
-
-
-//thi shit wont work
-
 ApplicationVender.prototype.buscarClienteFormSearchTemplate = function ()
 {
     
@@ -1510,11 +1511,6 @@ ApplicationVender.prototype.buscarClienteFormSearchTemplate = function ()
         case 'direccion':     return '<tpl for="."><div class="contact">{direccion}<strong> {nombre}</strong></div></tpl>';
     }
 };
-
-
-
-var alanboy = '<tpl for="."><div class="contact"><strong>{nombre}</strong> {rfc} {direccion}</div></tpl>';
-
 
 ApplicationVender.prototype.buscarClienteShowForm = function ( clientesStore )
 {
@@ -1659,12 +1655,6 @@ ApplicationVender.prototype.buscarClienteShowForm = function ( clientesStore )
 
 };
 
-
-
-
-ApplicationVender.prototype.ventaLista = new Ext.Panel({
-    
-});
 
 
 

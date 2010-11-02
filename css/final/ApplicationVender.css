@@ -5,6 +5,11 @@
 
 }
 
+
+
+
+/* 	Venta Lista
+   ------------------------------------------------------------------------ */
 .ApplicationVender-ventaListaPanel{
 	padding: 5px !important;
 	margin : 5px !important;
@@ -15,14 +20,43 @@
 	text-shadow: black 0px 1px 1px;	
 }
 
-/* ------------------------------------------------------------------------
-	Items del carrito
-   ------------------------------------------------------------------------ */
-.ApplicationVender-itemsBox {
 
+
+
+/* 	MostradorCarritoDeCompras
+   ------------------------------------------------------------------------ */
+#MostradorCarritoDeCompras {
 	font-size: 16px;
 	text-shadow: black 0px 1px 1px;
 	width: 100%;
+	float: right;
+}
+
+
+/* No datos, mostrar un subtitulo en el cuadro */
+#MostradorCarritoDeCompras .no-data{
+	width: 300px;
+
+	text-align: center;
+	
+	color: red !important;
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+
+	border-style : solid;
+	border-width:1px;
+	border-right-color: #60656b;
+	border-left-color: #61666c;
+	border-top-color: #474a4f !important;
+	border-bottom-color: #959a9f !important;
+
+	color: white !important;
+	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+	text-shadow: black 0px 1px 1px;
+	
+	margin-left: 35%;
+	margin-top: 25%;
 
 }
 
@@ -139,135 +173,61 @@ div.trash{
 }
 
 
-/* ------------------------------------------------------------------------
-	Totales del carrito
+/* MostradorDetallesTotales
    ------------------------------------------------------------------------ */
-div.ApplicationVender-totalesBox  {
-∫
-/*	
-	background-image: url(media/dark2.png);
-	border-style : solid;
-	border-width: 1px;
-	border-right-color: #60656b;
-	border-left-color: #61666c;
-	border-top-color: #474a4f;
-	border-bottom-width: 0px;
-*/
-
-	margin : 5px;
-
-	
-	-moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -khtml-border-radius: 5px;
-
+#MostradorDetallesTotales {
+	float : left;
 	color: white;
-	text-shadow: black 0px 1px 1px;
-
+	margin: 15px;
 	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
-	font-weight: normal;
-	font-size: 19px;
-	padding : 10px;
-	text-align: right;
-}
-
-div.ApplicationVender-Totales{
-	
-	font-size:19px;
-	text-shadow: black 0px 1px 1px;
+	text-shadow: black 0px 1px 1px;	
 }
 
 
 
+#MostradorDetallesTotales .Tabla{
+	border-spacing: 5px 2px;
+	border-collapse: separate;
+	margin: 0px;
 
-
-
-.gracias{
-	color: white;
-	text-align: center;
-	font-size: 40px;
-	text-shadow: black 0px 1px 1px;
 }
 
-
-/* ------------------------------------------------------------------------
-	Detalles del cliente
+/* MostradorDetallesCliente
    ------------------------------------------------------------------------ */
 
 
-.tabla_detalles_cliente{
+#MostradorDetallesCliente .Tabla{
 	border-spacing: 5px 2px;
 	border-collapse: separate;
 	margin: 0px;
 	padding: 5px;
 }
 
-.ApplicationVender-clienteDetalle{
 
-}
-
-
-div.ApplicationVender-clienteBox .nombre{
-	font-size: 20px;
+#MostradorDetallesCliente .nombre{
+	font-size: 25px;
 	text-shadow: black 0px 1px 1px;
+
 }
 
-
-
-
-div.ApplicationVender-clienteBox  {
-	padding-left: 15px;
+#MostradorDetallesCliente  {
+	padding-left: 10px;
 	padding-top: 5px;
-	padding-bottom: 5px;
+
 	margin: 5px;
-	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
+	width: 60%;
 	font-size: 13px;
-	text-shadow: black 0px 1px 1px;
-	height : 150px !important;
-	-moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -khtml-border-radius: 5px;
-/*
-	border-style : solid;
-	border-width:1px;
-	border-right-color: #60656b;
-	border-left-color: #61666c;
-	border-top-color: #474a4f;
-	border-bottom-color: #959a9f;
-	*/
-	color: white;
-
-
-}
-
-
-
-
-
-
-#carritoDeCompras .no-data{
-	width: 300px;
-
-	text-align: center;
-	
-	color: red !important;
-	-moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -khtml-border-radius: 5px;
-
-	border-style : solid;
-	border-width:1px;
-	border-right-color: #60656b;
-	border-left-color: #61666c;
-	border-top-color: #474a4f !important;
-	border-bottom-color: #959a9f !important;
-
-	color: white !important;
 	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, sans-serif;
 	text-shadow: black 0px 1px 1px;
-	
-	margin-left: 35%;
-	margin-top: 25%;
+	color: white;
+	float : left;
 
 }
+
+
+
+
+
+
+
 
