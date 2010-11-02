@@ -161,12 +161,14 @@ ApplicationVender.prototype._initToolBar = function (){
                     {
                     'afterrender': function( ){
                         //focus
-                        document.getElementById( Ext.get("APaddProductByID").first().id ).focus();
+                        //document.getElementById( Ext.get("APaddProductByID").first().id ).focus();
                             
                         //medio feo, pero bueno
                         Ext.get("APaddProductByID").first().dom.setAttribute("onkeyup","ApplicationVender.currentInstance.addProductByIDKeyUp( this, this.value )");
-                            
-                    }
+					
+                    },
+					'focus' : POS.keyboardNum 
+
                 }
         },{
             text: 'Agregar producto',
@@ -177,27 +179,27 @@ ApplicationVender.prototype._initToolBar = function (){
 
     //grupo 2, caja comun o cliente
     var buttonsGroup2 = [{
-        	xtype: 'segmentedbutton',
-        	id:'_cliente_cajacomun_btn',
-        	activeItem: '0',
-        	items: [{
-	            text: 'Caja Comun',
-	            listeners:{
-	                render: function (a){
-						//sencha 0.97
-	                    //Ext.getCmp("_cliente_cajacomun_btn").setPressed(0);
-	                }
-	            },
-	            handler : function (){
-	                    ApplicationVender.currentInstance.swapClienteComun(1);
-	            }
-	        }, {
-	            text: 'Cliente',
-	            handler : function (){
-	                    ApplicationVender.currentInstance.swapClienteComun(0);
-	            }
-	        }]    
-    	}];
+            xtype: 'segmentedbutton',
+            id:'_cliente_cajacomun_btn',
+            activeItem: '0',
+            items: [{
+                text: 'Caja Comun',
+                listeners:{
+                    render: function (a){
+                        //sencha 0.97
+                        //Ext.getCmp("_cliente_cajacomun_btn").setPressed(0);
+                    }
+                },
+                handler : function (){
+                        ApplicationVender.currentInstance.swapClienteComun(1);
+                }
+            }, {
+                text: 'Cliente',
+                handler : function (){
+                        ApplicationVender.currentInstance.swapClienteComun(0);
+                }
+            }]    
+        }];
 
 
     //grupo 3, listo para vender
@@ -281,7 +283,7 @@ ApplicationVender.prototype.venderMainPanel = new Ext.Panel({
     //items del formpanel
     items: [{
             html: "<div id='detallesCliente'></div>"
-		
+        
         },{
             
             html: "<div id='carritoDeCompras'>" + ApplicationVender.emptyText + "</div>"
@@ -414,13 +416,13 @@ ApplicationVender.prototype.doRefreshItemList = function (  )
         
         if( this.htmlCart_items[a].cantidad > existencias ){
             if(existencias === 0 ){
-	
-				Ext.Msg.alert("Mostrador", "No hay mas existencias del producto " + this.htmlCart_items[a].description +"." );
+    
+                Ext.Msg.alert("Mostrador", "No hay mas existencias del producto " + this.htmlCart_items[a].description +"." );
                 return this.doDeleteItem( a );
                 
             }else{
                 this.htmlCart_items[a].cantidad = existencias;
-				Ext.Msg.alert("Mostrador", "Solamente queda en existencia " +existencias+  " productos "+ this.htmlCart_items[a].description + "." );
+                Ext.Msg.alert("Mostrador", "Solamente queda en existencia " +existencias+  " productos "+ this.htmlCart_items[a].description + "." );
             }
 
         }
@@ -627,9 +629,9 @@ ApplicationVender.prototype.doAddProductById = function ( prodID )
         console.log("ApplicationVender: Agregando producto " + id);
     }
 
-	if( prodID.length == 0 ){
-		return;
-	}
+    if( prodID.length === 0 ){
+        return;
+    }
     
     //buscar si este producto existe
     POS.AJAXandDECODE({
@@ -651,10 +653,10 @@ ApplicationVender.prototype.doAddProductById = function ( prodID )
 
             //crear el item
             var item = {
-                id			: datos.id_producto,
-                name		: datos.nombre,
+                id          : datos.id_producto,
+                name        : datos.nombre,
                 description : datos.denominacion,
-                cost		: datos.precio_venta,
+                cost        : datos.precio_venta,
                 existencias : datos.existencias,
                 cantidad    : 1
             };
@@ -695,9 +697,9 @@ ApplicationVender.prototype.doAddProduct = function (button, event)
 {
     //obtener el id del producto y enviarselo a doAddProductById
     ApplicationVender.currentInstance.doAddProductById(
-		Ext.get("APaddProductByID").first().getValue()
-	);
-	
+        Ext.get("APaddProductByID").first().getValue()
+    );
+    
 };
 
 
@@ -723,14 +725,14 @@ ApplicationVender.prototype.addProductByIDKeyUp = function (a, b)
     {
         //si teclea enter, pero hay un pop up visible, ocultarlo con este enter
         if(POS.aviso.visible){
-			
+            
             POS.aviso.hide();
             return;
         }
         
         //si no hay nada escrito y hay mas de un item, intentar vender
         if( (Ext.get("APaddProductByID").first().getValue().length === 0) &&
-            	(ApplicationVender.currentInstance.htmlCart_items.length > 0))
+                (ApplicationVender.currentInstance.htmlCart_items.length > 0))
         {
 
             ApplicationVender.currentInstance.doVender();
@@ -739,9 +741,9 @@ ApplicationVender.prototype.addProductByIDKeyUp = function (a, b)
         
 
         if(Ext.get("APaddProductByID").first().getValue().length !== 0){
-	        //Agregar el producto en la caja de texto.
-	        ApplicationVender.currentInstance.doAddProduct();	
-		}
+            //Agregar el producto en la caja de texto.
+            ApplicationVender.currentInstance.doAddProduct();   
+        }
 
     }
 };
@@ -768,8 +770,8 @@ ApplicationVender.prototype.doVender = function ()
     items = ApplicationVender.currentInstance.htmlCart_items;
     
     //revisar que exista por lo menos un item
-    if(items.length == 0){
-        POS.aviso("Mostrador", "Agregue al menos un artículo para poder vender.");
+    if(items.length === 0){
+		Ext.Msg.alert("Mostrador", "Agregue al menos un artículo para poder vender.");
         return;
     }
     
@@ -788,24 +790,24 @@ ApplicationVender.prototype.doVender = function ()
  */
 ApplicationVender.prototype.doVentaForms = function()
 {
-	
-	try{
-	    if(this.panelContado === null){
-	        this.panelContado = this.doVentaContadoPanel();
-	    }else{
-	        this.panelContado.destroy();
-	        this.panelContado = this.doVentaContadoPanel();
-	    }
+    
+    try{
+        if(this.panelContado === null){
+            this.panelContado = this.doVentaContadoPanel();
+        }else{
+            this.panelContado.destroy();
+            this.panelContado = this.doVentaContadoPanel();
+        }
 
-	    if(!this.CLIENTE_COMUN && this.panelCredito === null){
-	        this.panelCredito = this.doVentaCreditoPanel();            
-	    }else{
-	        this.panelCredito.destroy();
-	        this.panelCredito = this.doVentaCreditoPanel();        
-	    }		
-	}catch( e){
-		console.log(e);
-	}
+        if(!this.CLIENTE_COMUN && this.panelCredito === null){
+            this.panelCredito = this.doVentaCreditoPanel();            
+        }else{
+            this.panelCredito.destroy();
+            this.panelCredito = this.doVentaCreditoPanel();        
+        }       
+    }catch( e){
+        console.log(e);
+    }
 
     
     this.payingMethod = 'contado';
@@ -850,11 +852,11 @@ ApplicationVender.prototype.doVentaContadoPanel = function (  )
             xtype:'button', 
             text:'Cancelar Venta',
             handler : function (){
-				Ext.Msg.confirm("Mostrador", "&iquest; Esta seguro ?", function (){ 
-						//contesto que si
-						ApplicationVender.currentInstance.doLimpiarCarrito();
-		                sink.Main.ui.setCard( ApplicationVender.currentInstance.venderMainPanel, 'fade' );
-					})
+                Ext.Msg.confirm("Mostrador", "&iquest; Esta seguro ?", function (){ 
+                        //contesto que si
+                        ApplicationVender.currentInstance.doLimpiarCarrito();
+                        sink.Main.ui.setCard( ApplicationVender.currentInstance.venderMainPanel, 'fade' );
+                    });
 
             }
         },{
@@ -1296,7 +1298,7 @@ function copy (o) {
         r[i] = copy(o[i]);
     }
     return r;
-};
+}
 
 ApplicationVender.prototype.ventaContadoExitosa = function ()
 {
@@ -1369,17 +1371,17 @@ ApplicationVender.prototype.doCotizar = function ()
         return;
     }
     
-	//listo para imprimir un ticket
-	
-	//hacer una copia del arreglo que hay en htmlCart_items
+    //listo para imprimir un ticket
+    
+    //hacer una copia del arreglo que hay en htmlCart_items
     items =  copy( ApplicationVender.currentInstance.htmlCart_items );
 
-	//seleccionar al cliente, puede ser nulo para denotar una caja comun
+    //seleccionar al cliente, puede ser nulo para denotar una caja comun
     cliente = ApplicationVender.currentInstance.cliente;
 
     //imprimir el ticket, ojo, la accion de la computadora es abrir
- 	//la caja de dinero al imprimir algo, por consiguiente, la caja
-	//de dinero se abrira al imprimir una cotizacion
+    //la caja de dinero al imprimir algo, por consiguiente, la caja
+    //de dinero se abrira al imprimir una cotizacion
     appImpresora.ImprimirTicket( cliente, items, this.ventaTotales );
 };
 
@@ -1412,11 +1414,11 @@ ApplicationVender.prototype.swapClienteComun = function (val)
     if(val===0){
         //buscar cliente
         ApplicationVender.currentInstance.buscarCliente();
-       	ApplicationVender.currentInstance.CLIENTE_COMUN = false;
+        ApplicationVender.currentInstance.CLIENTE_COMUN = false;
     }else{
-		//es cliente comun 
-	    //Ext.get("detallesCliente").removeClass( "ApplicationVender-clienteBox" );
-	
+        //es cliente comun 
+        //Ext.get("detallesCliente").removeClass( "ApplicationVender-clienteBox" );
+    
         Ext.getCmp("_cliente_cajacomun_btn").setPressed(0);
         Ext.get("detallesCliente").update("");
         this.cliente = null;
@@ -1444,7 +1446,7 @@ ApplicationVender.prototype.actualizarDetallesCliente = function ( cliente )
     //mostrar los detalles del cliente
     this.cliente = cliente;
     
-	//crear el contenido html
+    //crear el contenido html
     var html = "";
     html += " <div class='ApplicationVender-clienteBox'> ";
         html += " <div class='nombre'>" + cliente.nombre + "</div>";
@@ -1459,12 +1461,12 @@ ApplicationVender.prototype.actualizarDetallesCliente = function ( cliente )
         html += "</table>";
     html += " </div> ";
     
-	//cambiar el contenido de detallesCliente
+    //cambiar el contenido de detallesCliente
     Ext.get("detallesCliente").update( html );
     //Ext.get("detallesCliente").addClass( "" );
-	
+    
     //actualizar tambien la lista de productos, ya que se deben actualizar
-	//los descuentos que cada cliente trae consigo
+    //los descuentos que cada cliente trae consigo
     this.doRefreshItemList();
     
 };
@@ -1482,7 +1484,7 @@ ApplicationVender.prototype.buscarCliente = function ()
         function(response){
             
             //success
-            if((typeof(response.success) !== 'undefined') && (response.success == false)){
+            if((typeof(response.success) !== 'undefined') && (response.success === false)){
                 POS.aviso("Mostrador", "Error al traer la lista de clintes.");
                 return;
             }
@@ -1651,7 +1653,7 @@ ApplicationVender.prototype.buscarClienteShowForm = function ( clientesStore )
                         handler: function() {
 
                         
-                            if(Ext.getCmp("buscarClientesLista").selected.elements.length == 0){
+                            if(Ext.getCmp("buscarClientesLista").selected.elements.length === 0){
                                 //no haseleccionado a nadie
                                 return;
                             

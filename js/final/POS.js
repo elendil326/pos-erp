@@ -4,9 +4,7 @@
 //	--------------------------------------------------------------------------------------
 
 POS = {
-	aviso : null,
-	AJAXandDECODE: null
-		
+	
 };
 
 
@@ -363,5 +361,150 @@ POS.doPrintTicket = function ()
 {
 	
 	
+	
+};
+
+
+
+
+
+
+POS.keyboardAlfa = function (btn) {
+	config = {
+		html :  POS._genKeyboard("alfa"),
+		width : 700,
+		height : 400
+	}
+	POS.keyboard(btn, config);
+};
+
+POS.keyboardAlfaNum = function (btn) {
+	config = {
+		html :  POS._genKeyboard("alfaNum"),
+		width : 600,
+		height : 400		
+	}
+	POS.keyboard(btn, config);
+};
+
+POS.keyboardNum = function (btn) {
+	config = {
+		html :  POS._genKeyboard( "num" ),
+		width : 450,
+		height : 300	
+	}
+	POS.keyboard(btn, config);
+};
+
+
+POS.keyboard = function ( btn, config ){
+	
+		//si existe, solo mostrarlo
+		if(POS._keyboard){
+			POS._keyboard.update(config.html);
+			POS._keyboard.setWidth(config.width);
+			POS._keyboard.setHeight(config.height);
+			POS._keyboard.setCentered(false);
+	        POS._keyboard.showBy(btn);
+			POS._keyboard_boton = btn;
+			return;
+		}
+	 
+	
+		we = 450;
+		he = 300;
+		
+ 		html = config.html;
+	
+        POS._keyboard = new Ext.Panel({
+            floating: true,
+			ui : "dark",
+            modal: false,
+			showAnimation : Ext.anims.fade ,
+            centered: false,
+			hideOnMaskTap : false,
+			bodyPadding : 0,
+			bodyMargin : 0,
+            width: we,
+            height: he,
+            styleHtmlContent: false,
+			html : html,
+            scroll: 'none'
+        });
+
+		return POS.keyboard(btn, config);
+};
+
+POS._keyboard_callback = function ( val ){
+	POS._keyboard_boton.setValue( POS._keyboard_boton.getValue() + val )
+};
+
+POS._keyboard_boton = null;
+
+POS._hideKeyboard = function () {
+	
+	if(POS._keyboard){
+        POS._keyboard.hide(Ext.anims.fade);
+		return;
+	}
+	
+	
+};
+
+POS._genKeyboard = function ( t ){
+	html = "<div class='Keyboard'>";
+	
+	switch (t){
+		
+		case "alfa" : 
+			html += "<div class='Keyboard-key small' >Q</div>"
+				+ "<div class='Keyboard-key small' >W</div>"
+				+ "<div class='Keyboard-key small'>E</div>"
+				+ "<div class='Keyboard-key small'>R</div>"
+				+ "<div class='Keyboard-key small'>T</div>"
+				+ "<div class='Keyboard-key small'>Y</div>"
+				+ "<div class='Keyboard-key small'>U</div>"
+				+ "<div class='Keyboard-key small'>I</div>"				
+				+ "<div class='Keyboard-key small'>O</div>"				
+				+ "<div class='Keyboard-key small'>P</div>"				
+				+ "<div class='Keyboard-key small'>DEL</div>"				
+				+ "<div class='Keyboard-key small' style='margin-left:30px'>A</div>"
+				+ "<div class='Keyboard-key small'>S</div>"				
+				+ "<div class='Keyboard-key small'>D</div>"				
+				+ "<div class='Keyboard-key small'>F</div>"				
+				+ "<div class='Keyboard-key small'>G</div>"				
+				+ "<div class='Keyboard-key small'>H</div>"
+				+ "<div class='Keyboard-key small'>J</div>"
+				+ "<div class='Keyboard-key small'>K</div>"
+				+ "<div class='Keyboard-key small'>L</div>"
+				+ "<div class='Keyboard-key small'>&Ntilde;</div>"
+				+ "<div class='Keyboard-key small'>Z</div>"
+				+ "<div class='Keyboard-key small'>X</div>"
+				+ "<div class='Keyboard-key small'>C</div>"
+				+ "<div class='Keyboard-key small'>V</div>"
+				+ "<div class='Keyboard-key small'>B</div>"				
+				+ "<div class='Keyboard-key small'>N</div>"
+				+ "<div class='Keyboard-key small'>M</div>"
+				+ "<div class='Keyboard-key long'></div>";
+			html += "<div class='Keyboard-key long' onclick='POS._hideKeyboard()'>ACEPTAR</div>";
+		break;
+		
+		case "alfaNum" : 
+		break;
+		
+		case "num" : 
+			for( a = 0 ; a < 10 ; a++)
+				html += "<div class='Keyboard-key' onclick='POS._keyboard_callback( " +a+" )'>" +a+ "</div>";
+
+			html += "<div class='Keyboard-key'>.</div>"
+
+			html += "<div class='Keyboard-key long' onclick='POS._hideKeyboard()'>ACEPTAR</div>";
+		break;
+		
+	}
+
+	html += "</div>";
+	
+	return html;
 	
 };
