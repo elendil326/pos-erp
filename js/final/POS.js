@@ -415,13 +415,20 @@ POS.Keyboard.Keyboard = function ( campo, config ){
 	if(POS.Keyboard.KeyboardObj){
 		var internalConfig = POS.Keyboard.genHTML( config );
 		POS.Keyboard.callback = config.callback;
+
 		POS.Keyboard.KeyboardObj.update( internalConfig.html );
 		POS.Keyboard.KeyboardObj.setWidth(internalConfig.width);
 		POS.Keyboard.KeyboardObj.setHeight(internalConfig.height);
 		
-		POS.Keyboard.KeyboardObj.setCentered(true);
+		POS.Keyboard.KeyboardObj.setCentered(false);
         POS.Keyboard.KeyboardObj.showBy(campo, true, false);
 
+		if( POS.Keyboard.KeyboardObj.getWidth() != internalConfig.width )
+			POS.Keyboard.KeyboardObj.setWidth(internalConfig.width);
+		
+		if( POS.Keyboard.KeyboardObj.getHeight() != internalConfig.height )
+			POS.Keyboard.KeyboardObj.setHeight(internalConfig.height);
+		
 		POS.Keyboard.campo = campo;
 
 		return POS.Keyboard.Keyboard;
@@ -467,6 +474,12 @@ POS.Keyboard.callbackFn = function ( val, isSubmit ) {
 	if(val == "_DEL_"){
 		var str = POS.Keyboard.campo.getValue();
 		POS.Keyboard.campo.setValue( str.substring(0, str.length -1) );
+		return;
+	}
+	
+	if(val == '_CANCEL_'){
+		POS.Keyboard.campo.setValue( "" );
+		POS.Keyboard.hide();
 		return;
 	}
 	
@@ -571,15 +584,25 @@ POS.Keyboard._genHTMLnum = function (config){
 	
 	var html = "";
 	
-	for( a = 0 ; a < 10 ; a++)
-		html += "<div class='Keyboard-key' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>" +a+ "</div>";
+	for( a = 1 ; a < 10 ; a++){
+		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>" +a+ "</div>";
+		if( a == 3)
+			html += "<div id='Keyboard-key-num-submit' class='Keyboard-key long' onclick='POS.Keyboard.callbackFn( null, true)'>" +config.submitText+ "</div>";
 
-	html += "<div class='Keyboard-key' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>.</div>"
-	html += "<div id='Keyboard-key-num-submit' class='Keyboard-key long' onclick='POS.Keyboard.callbackFn( null, true)'>" +config.submitText+ "</div>";
+		if( a == 6)
+			html += "<div id='Keyboard-key-num-submit' class='Keyboard-key long' onclick='POS.Keyboard.callbackFn( \"_CANCEL_\", null)'>Cancelar</div>";
+			
+		//if( a == 9)
+		//	html += "<div id='Keyboard-key-num-submit' class='Keyboard-key long' onclick='POS.Keyboard.callbackFn( '_CANCEL_', null)'>CANCELAR</div>";
+	}
 	
+
+	html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>0</div>";
+	html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>.</div>";
+
 	return POS.Keyboard._HTMLnum = {
 		html: html,
-		w : 450,
+		w : 350,
 		h : 300 
 	};
 };
