@@ -100,12 +100,13 @@ POS.Keyboard.callbackFn = function ( val, isSubmit ) {
 
 
 	if( isSubmit === true){
-
+		
 		POS.Keyboard.hide();
 		if(POS.Keyboard.callback){
+			
 			POS.Keyboard.callback.call();			
 		}
-
+		POS.Keyboard.campo.blur();
 		return;
 	}
 	
@@ -116,6 +117,7 @@ POS.Keyboard.callbackFn = function ( val, isSubmit ) {
 	}
 	
 	if(val == '_CANCEL_'){
+		POS.Keyboard.campo.blur();
 		POS.Keyboard.campo.setValue( "" );
 		POS.Keyboard.hide();
 		return;

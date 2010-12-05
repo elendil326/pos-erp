@@ -20,8 +20,8 @@ Aplicacion.Mostrador.prototype._init = function (){
 	//crear la forma de la busqueda de clientes
 	this.buscarClienteFormCreator();
 	
-
-	
+	//crear la forma de ventas
+	this.doVentaPanelCreator();
 	
 	Aplicacion.Mostrador.currentInstance = this;
 	
@@ -49,6 +49,9 @@ Aplicacion.Mostrador.prototype.getConfig = function (){
 	Funciones de carrito
 ******************************************************** */
 
+
+
+
 Aplicacion.Mostrador.prototype.cancelarVenta = function ()
 {
 	
@@ -56,45 +59,52 @@ Aplicacion.Mostrador.prototype.cancelarVenta = function ()
 	
 	Aplicacion.Mostrador.currentInstance.refrescarMostrador();
 	
+	Aplicacion.Mostrador.currentInstance.setCajaComun();
+	
 };
 
 
 
 
-//estructura donde se guardan los datos de la venta actual
+/*
+ *	Estructura donde se guardaran los detalles de la venta actual.
+ * */
 Aplicacion.Mostrador.prototype.carrito = {
 	tipoDeVenta : null,
-	items : [  ]
+	items : [  ],
+	cliente : null
 };
 
 
 
-Aplicacion.Mostrador.prototype.carritoCambiarCantidadPanel = null;
 
-Aplicacion.Mostrador.prototype.carritoCambiarCantidad = function ( id )
+
+
+
+
+Aplicacion.Mostrador.prototype.carritoCambiarCantidad = function ( id, qty, forceNewValue )
 {
-
-	if(DEBUG){
-		console.log("cambiar la cantidad del producto "+id+", mostrando panel");
-	}
 	
-	if(!this.carritoCambiarCantidadPanel){
-		this.carritoCambiarCantidadPanel = new Ext.Panel({
-			autoRender: true,
-			floating: true,
-			modal: true,
-			centered: true,
-			hideOnMaskTap: true,
-			height: 100,
-			width: 200,
-			items: [
-				
-			]
-		});
-
-	}
+	carrito = Aplicacion.Mostrador.currentInstance.carrito.items;
 	
-	this.carritoCambiarCantidadPanel.show();
+	for (var i = carrito.length - 1; i >= 0; i--){
+		if( carrito[i].productoID == id ){
+			
+			if(forceNewValue){
+				carrito[i].cantidad = qty;
+			}else{
+				carrito[i].cantidad += qty;
+			}
+			
+			if(carrito[i].cantidad <= 0){
+				carrito[i].cantidad = 1;
+			}
+			
+			this.refrescarMostrador();
+			break;
+		}
+	};
+	
 };
 
 
@@ -107,7 +117,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (  )
 	
 	html += "<tr class='top'>";
 	html += "<td>Descripcion</td>";
-	html += "<td>Cantidad</td>";	
+	html += "<td colspan=3>Cantidad</td>";	
 	html += "<td>Precio</td>";
 	html += "<td>Total</td>";
 
@@ -122,17 +132,74 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (  )
 		
 		html += "<td>" + carrito.items[i].productoID + " " + carrito.items[i].descripcion+ "</td>";
 
-		//html += "<td onclick='Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad("+ carrito.items[i].productoID +")'>" + carrito.items[i].cantidad + "</td>";
-		html += "<td > <span class='boton'>&nbsp;-&nbsp;</span> <span style='width:100px'> " + carrito.items[i].cantidad + " </span> <span class='boton'>&nbsp;+&nbsp;</span> </td>";
+		html += "<td > <span class='boton' onClick='Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad("+ carrito.items[i].productoID +", -1, false)'>&nbsp;-&nbsp;</span></td>";
 
-		html += "<td>" + POS.currencyFormat ( carrito.items[i].precioVenta ) + "</td>";
+		html += "<td> <div id='Mostrador-carritoCantidad"+ carrito.items[i].productoID +"'></div></td>"
+
+		html += "<td > <span class='boton' onClick='Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad("+ carrito.items[i].productoID +", 1, false)'>&nbsp;+&nbsp;</span></td>";
+
+		html += "<td> <div id='Mostrador-carritoPrecio"+ carrito.items[i].productoID +"'></div></td>"
+		
 		html += "<td>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioVenta )+"</td>";
+		
 		html += "</tr>";
 	};
 	
 	html += "</table>";
 	
 	Ext.getCmp("MostradorHtmlPanel").update(html);
+	
+	
+	
+	for (var i=0; i < carrito.items.length; i++){
+		
+	    if(Ext.get("Mostrador-carritoCantidad"+ carrito.items[i].productoID + "Text")){
+			continue;
+		}
+	
+		a = new Ext.form.Text({
+			renderTo : "Mostrador-carritoCantidad"+ carrito.items[i].productoID ,
+			id : "Mostrador-carritoCantidad"+ carrito.items[i].productoID + "Text",
+			value : carrito.items[i].cantidad,
+			placeHolder : "Agregar Producto",
+			listeners : {
+				'focus' : function (){
+
+					kconf = {
+						type : 'num',
+						submitText : 'Aceptar',
+						callback : Aplicacion.Mostrador.currentInstance.refrescarMostrador
+					};
+					
+					POS.Keyboard.Keyboard( this, kconf );
+				}
+			}
+		
+		});
+
+		b = new Ext.form.Text({
+			renderTo : "Mostrador-carritoPrecio"+ carrito.items[i].productoID ,
+			id : "Mostrador-carritoPrecio"+ carrito.items[i].productoID + "Text",
+			value : carrito.items[i].precioVenta,
+			placeHolder : "Precio de Venta",
+			listeners : {
+				'focus' : function (){
+
+					kconf = {
+						type : 'num',
+						submitText : 'Cambiar precio',
+						callback : function () {
+							console.log(this)
+							Aplicacion.Mostrador.currentInstance.refrescarMostrador();
+						}
+					};
+					
+					POS.Keyboard.Keyboard( this, kconf );
+				}
+			}
+		
+		});
+	};	
 };
 
 Aplicacion.Mostrador.prototype.agregarProducto = function (  )
@@ -235,17 +302,20 @@ Aplicacion.Mostrador.prototype.mostradorPanelCreator = function (){
 		handler : this.cancelarVenta
     },{
         xtype: 'segmentedbutton',
+		id : 'Mostrador-tipoCliente',
         allowDepress: false,
         items: [{
             text: 'Caja Comun',
-            pressed: true
+            pressed: true,
+			handler : this.setCajaComun
         }, {
             text: 'Cliente',
 			handler : this.buscarClienteFormShow
         }]    
     },{
         text: 'Vender',
-        ui: 'forward'
+        ui: 'forward',
+		handler : this.doVentaPanelShow
     }];
 
 
@@ -293,23 +363,38 @@ Aplicacion.Mostrador.prototype.mostradorPanelCreator = function (){
 
 Aplicacion.Mostrador.prototype.buscarClienteForm = null;
 
-Aplicacion.Mostrador.prototype.cliente = null;
+
 
 Aplicacion.Mostrador.prototype.clienteSeleccionado = function ( cliente )
 {
 	
 	if(DEBUG){
 		console.log("cliente seleccionado", cliente);
-		this.buscarClienteFormShow();
 	}
 	
+	this.buscarClienteFormShow();
 	
+	Aplicacion.Mostrador.currentInstance.carrito.cliente = cliente;
+		
 };
 
 
 
 
+Aplicacion.Mostrador.prototype.setCajaComun = function ()
+{
 
+
+	
+	if(Ext.getCmp('Mostrador-tipoCliente').getPressed()){
+		Ext.getCmp('Mostrador-tipoCliente').setPressed( Ext.getCmp('Mostrador-tipoCliente').getPressed() );
+	}
+		
+	Ext.getCmp('Mostrador-tipoCliente').setPressed(0);
+
+	Aplicacion.Mostrador.currentInstance.carrito.cliente = null;
+	
+};
 
 
 Aplicacion.Mostrador.prototype.buscarClienteFormCreator = function ()
@@ -320,7 +405,10 @@ Aplicacion.Mostrador.prototype.buscarClienteFormCreator = function ()
 	var dockedCancelar = {
 		xtype : 'button',		
         text: 'Cancelar',
-		handler : this.buscarClienteFormShow
+		handler : function(){
+			Aplicacion.Mostrador.currentInstance.setCajaComun();
+			Aplicacion.Mostrador.currentInstance.buscarClienteFormShow();
+		}
     };
 
 
@@ -397,13 +485,81 @@ Aplicacion.Mostrador.prototype.buscarClienteFormShow = function (  )
 
 		//invertir la visibilidad de la forma
 		Aplicacion.Mostrador.currentInstance.buscarClienteForm.setVisible( !Aplicacion.Mostrador.currentInstance.buscarClienteForm.isVisible() );
-
+		
 	}else{
 		Aplicacion.Mostrador.currentInstance.buscarClienteFormCreator();
 		Aplicacion.Mostrador.currentInstance.buscarClienteFormShow();		
 	}
 
     
+};
+
+
+
+
+
+
+/* ********************************************************
+	Formas y funciones de venta (paso2)
+******************************************************** */
+
+/*
+ * Guarda el panel donde estan la forma de venta
+ **/
+Aplicacion.Mostrador.prototype.doVentaPanel = null;
+
+
+
+
+
+/*
+ * Es la funcion de entrada para mostrar el panel de venta
+ **/
+Aplicacion.Mostrador.prototype.doVentaPanelShow = function ( ){
+
+	//hacer un update de la nueva informacion en el panel
+	Aplicacion.Mostrador.currentInstance.doVentaPanelUpdater();
+	
+	//hacer un setcard manual
+	sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.doVentaPanel , 'slide');
+};
+
+
+
+
+Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
+{
+	
+	//obtener los datos del objeto en this.carrito
+	console.log(this.carrito)
+	
+};
+
+
+/*
+ * Se llama para crear por primera vez el panel de venta
+ **/
+Aplicacion.Mostrador.prototype.doVentaPanelCreator = function (  ){
+	
+	this.doVentaPanel = new Ext.form.FormPanel({                                                       
+
+		items: [{
+			xtype: 'fieldset',
+		    title: 'Datos de la venta',
+			items: [
+				new Ext.form.Text({ label : 'Cliente', 			id: 'Mostrador-doVentaCliente' }),
+				new Ext.form.Text({ label : 'Tipo de Venta', 	id: 'Mostrador-doVentaTipo' }),
+				new Ext.form.Text({ label : 'Subtotal', 		id: 'Mostrador-doVentaSub' }),
+				new Ext.form.Text({ label : 'IVA', 				id: 'Mostrador-doVentaIva' }),
+				new Ext.form.Text({ label : 'Descuento',		id: 'Mostrador-doVentaDesc' }),
+				new Ext.form.Text({ label : 'Total', 			id: 'Mostrador-doVentaTotal' })
+			]},
+			
+			new Ext.Button({ ui  : 'action', text: 'Vender', margin : 5,  handler : null }),
+	]});
+
+
+	
 };
 
 
@@ -418,15 +574,4 @@ Aplicacion.Mostrador.prototype.buscarClienteFormShow = function (  )
 
 
 
-
-
-
-
-
 POS.Apps.push( new Aplicacion.Mostrador() );
-
-
-
-
-
-
