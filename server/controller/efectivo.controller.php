@@ -388,7 +388,7 @@ require_once("../server/model/autorizacion.dao.php");
  }
  
  
-switch($args['action'])
+switch( $args['action'] )
 {
     case '601':
         insertarGasto( $args );

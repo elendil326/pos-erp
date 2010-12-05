@@ -60,20 +60,8 @@ switch($args['action']){
         detalleProductoSucursal( $args );
     break;
 
-    case 402:
-        //solicitarProducto(  );
-    break;
-
-    case 403:
-
-    break;
-
-    case 404:
-
-    break;
-
-    case 405:
-
+    default:
+        printf( '{ "success" : "false" }' );
     break;
 
 }
