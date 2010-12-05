@@ -142,7 +142,7 @@ function vender( $args ){
     $venta->setTotal( $total );
 
     //si la venta es de contado, hay que liquidarla
-    if($venta->getTipoVenta() == "contado")
+    if( $venta->getTipoVenta() == "contado" )
     {
         $venta->setPagado( $total );
     }
@@ -167,7 +167,7 @@ function vender( $args ){
 
 switch( $args['action'] ){
 
-    case 100://realzar una venta
+    case 100://realizar una venta
         vender($args);
     break;
 
