@@ -63,7 +63,7 @@ function crearCliente( $args ){
 
 	    if (ClienteDAO::save($cliente)) 
         {
-	        echo sprintf('{"success": true, "id": "%s"}' , $cliente->getIdCliente());
+	        printf('{"success": true, "id": "%s"}' , $cliente->getIdCliente());
 	    } 
         else 
         {
