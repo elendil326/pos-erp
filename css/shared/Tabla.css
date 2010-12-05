@@ -1,0 +1,47 @@
+.Tabla{
+
+
+}
+
+
+.Tabla table{
+
+	background-color : white;
+	width : 99%;
+
+	border: 1px solid #DDD;
+	border-bottom-left-radius: 0.4em 0.4em;
+	border-bottom-right-radius: 0.4em 0.4em;
+	border-top-left-radius: 0.4em 0.4em;
+	border-top-right-radius: 0.4em 0.4em;
+	/*overflow: hidden;*/
+	margin: 5px;
+	
+}
+
+
+.Tabla table td{
+
+	padding : 5px;
+	
+}
+
+
+
+.Tabla table .top{
+	background-color: #F7F7F7;
+	/* border-top: 1px solid white; */
+	color: #333;
+	text-shadow: rgba(255, 255, 255, 0.246094) 0px 0.08em 0px;
+}
+
+
+.Tabla table tr {
+	border-bottom: 1px solid #DDD;
+}
+
+
+.Tabla table .last{
+	border-bottom: 0px !important;
+
+}
