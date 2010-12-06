@@ -19,8 +19,10 @@ require_once("../server/model/autorizacion.dao.php");
  * 	
  **/
 
- function insertarGasto( $args ) //601
+ function insertarGasto( $args ) //600
  {
+
+    //TODO:Falta contemplar el campo nota
 
     if( !isset($args['data']) )
     {
@@ -137,7 +139,7 @@ require_once("../server/model/autorizacion.dao.php");
 
 *	
 */
- function actualizarGasto( $args )//603
+ function actualizarGasto( $args )//602
  {
 
     if( !isset($args['data']) )
@@ -212,7 +214,7 @@ require_once("../server/model/autorizacion.dao.php");
 *	@see IngresosDAO::save() 
 *	
 */
- function insertarIngreso( $args ) //604
+ function insertarIngreso( $args ) //603
  {
 
     if( !isset($args['data']) )
@@ -280,7 +282,7 @@ require_once("../server/model/autorizacion.dao.php");
 *	@see IngresosDAO::search(), IngresosDAO::delete() 
 *	
 */
- function eliminarIngreso( $args )//605
+ function eliminarIngreso( $args )//604
  {
 
     if( !isset( $args['id_ingreso'] ) )
@@ -333,7 +335,7 @@ require_once("../server/model/autorizacion.dao.php");
 
 *	
 */
- function actualizarIngreso( $args )//606
+ function actualizarIngreso( $args )//605
  {
 
     if( !isset($args['data']) )
@@ -390,31 +392,31 @@ require_once("../server/model/autorizacion.dao.php");
  
 switch( $args['action'] )
 {
-    case '601':
+    case '600':
         insertarGasto( $args );
     break;
 
-    case '602':
+    case '601':
         eliminarGasto( $args );
     break;
 
-    case '603':
+    case '602':
         actualizarGasto( $args );
     break;
 
-    case '604':
+    case '603':
         insertarIngreso( $args );
     break;
 
-    case '605':
+    case '604':
         eliminarIngreso( $args );
     break;
 
-    case '606':
+    case '605':
         actualizarIngreso( $args );
     break;
 
-    case '607':
+    case '606':
         printf( '{ "success" : true , "id_sucursal" : "%s" }', $_SESSION['sucursal'] );
     break;
 
