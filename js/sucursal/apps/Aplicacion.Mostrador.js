@@ -23,6 +23,9 @@ Aplicacion.Mostrador.prototype._init = function (){
 	//crear la forma de ventas
 	this.doVentaPanelCreator();
 	
+	//crear la forma de que todo salio bien en la venta
+	this.finishedPanelCreator();
+	
 	Aplicacion.Mostrador.currentInstance = this;
 	
 	return this;
@@ -54,13 +57,15 @@ Aplicacion.Mostrador.prototype.getConfig = function (){
 
 Aplicacion.Mostrador.prototype.cancelarVenta = function ()
 {
-	
+
+
 	Aplicacion.Mostrador.currentInstance.carrito.items = [];
 	
 	Aplicacion.Mostrador.currentInstance.refrescarMostrador();
 	
 	Aplicacion.Mostrador.currentInstance.setCajaComun();
 	
+
 };
 
 
@@ -70,9 +75,10 @@ Aplicacion.Mostrador.prototype.cancelarVenta = function ()
  *	Estructura donde se guardaran los detalles de la venta actual.
  * */
 Aplicacion.Mostrador.prototype.carrito = {
-	tipoDeVenta : null,
+	tipoDeVenta : "contado",
 	items : [  ],
-	cliente : null
+	cliente : null,
+	factura : false
 };
 
 
@@ -161,6 +167,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (  )
 			renderTo : "Mostrador-carritoCantidad"+ carrito.items[i].productoID ,
 			id : "Mostrador-carritoCantidad"+ carrito.items[i].productoID + "Text",
 			value : carrito.items[i].cantidad,
+			prodID : carrito.items[i].productoID,
+			width: 50,
 			placeHolder : "Agregar Producto",
 			listeners : {
 				'focus' : function (){
@@ -168,7 +176,17 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (  )
 					kconf = {
 						type : 'num',
 						submitText : 'Aceptar',
-						callback : Aplicacion.Mostrador.currentInstance.refrescarMostrador
+						callback : function ( campo ){
+							//buscar el producto en la estructura y ponerle esa nueva cantidad
+							for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
+								if(Aplicacion.Mostrador.currentInstance.carrito.items[i].productoID == campo.prodID){
+									Aplicacion.Mostrador.currentInstance.carrito.items[i].cantidad = parseFloat( campo.getValue() );
+									break;
+								}
+							};
+							
+							Aplicacion.Mostrador.currentInstance.refrescarMostrador();
+						}
 					};
 					
 					POS.Keyboard.Keyboard( this, kconf );
@@ -181,6 +199,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (  )
 			renderTo : "Mostrador-carritoPrecio"+ carrito.items[i].productoID ,
 			id : "Mostrador-carritoPrecio"+ carrito.items[i].productoID + "Text",
 			value : carrito.items[i].precioVenta,
+			prodID : carrito.items[i].productoID,			
 			placeHolder : "Precio de Venta",
 			listeners : {
 				'focus' : function (){
@@ -188,8 +207,15 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (  )
 					kconf = {
 						type : 'num',
 						submitText : 'Cambiar precio',
-						callback : function () {
-							console.log(this)
+						callback : function ( campo ){
+							//buscar el producto en la estructura y ponerle esa nueva cantidad
+							for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
+								if(Aplicacion.Mostrador.currentInstance.carrito.items[i].productoID == campo.prodID){
+									Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta = parseFloat( campo.getValue() );
+									break;
+								}
+							};
+							
 							Aplicacion.Mostrador.currentInstance.refrescarMostrador();
 						}
 					};
@@ -199,7 +225,18 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (  )
 			}
 		
 		});
-	};	
+	};
+	
+	
+	//si hay mas de un producto, mostrar el boton de vender
+	if(carrito.items.length > 0){
+		Ext.getCmp("Mostrador-mostradorVender").show( Ext.anims.slide );
+	}else{
+		Ext.getCmp("Mostrador-mostradorVender").hide( Ext.anims.slide );
+	}
+	
+	
+	
 };
 
 Aplicacion.Mostrador.prototype.agregarProducto = function (  )
@@ -305,14 +342,17 @@ Aplicacion.Mostrador.prototype.mostradorPanelCreator = function (){
 		id : 'Mostrador-tipoCliente',
         allowDepress: false,
         items: [{
-            text: 'Caja Comun',
+            text: 'Venta a Caja Comun',
             pressed: true,
 			handler : this.setCajaComun
         }, {
-            text: 'Cliente',
-			handler : this.buscarClienteFormShow
+            text: 'Venta a Cliente',
+			handler : this.buscarClienteFormShow,
+			badgeText : ""
         }]    
     },{
+		id: 'Mostrador-mostradorVender',
+		hidden: true,
         text: 'Vender',
         ui: 'forward',
 		handler : this.doVentaPanelShow
@@ -374,6 +414,8 @@ Aplicacion.Mostrador.prototype.clienteSeleccionado = function ( cliente )
 	
 	this.buscarClienteFormShow();
 	
+	Ext.getCmp("Mostrador-tipoCliente").getComponent(1).setBadge(cliente.nombre);
+	
 	Aplicacion.Mostrador.currentInstance.carrito.cliente = cliente;
 		
 };
@@ -389,9 +431,11 @@ Aplicacion.Mostrador.prototype.setCajaComun = function ()
 	if(Ext.getCmp('Mostrador-tipoCliente').getPressed()){
 		Ext.getCmp('Mostrador-tipoCliente').setPressed( Ext.getCmp('Mostrador-tipoCliente').getPressed() );
 	}
-		
+
+	Ext.getCmp("Mostrador-tipoCliente").getComponent(1).setBadge( );		
 	Ext.getCmp('Mostrador-tipoCliente').setPressed(0);
 
+	Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta = "contado";
 	Aplicacion.Mostrador.currentInstance.carrito.cliente = null;
 	
 };
@@ -485,16 +529,188 @@ Aplicacion.Mostrador.prototype.buscarClienteFormShow = function (  )
 
 		//invertir la visibilidad de la forma
 		Aplicacion.Mostrador.currentInstance.buscarClienteForm.setVisible( !Aplicacion.Mostrador.currentInstance.buscarClienteForm.isVisible() );
-		
+
 	}else{
 		Aplicacion.Mostrador.currentInstance.buscarClienteFormCreator();
-		Aplicacion.Mostrador.currentInstance.buscarClienteFormShow();		
+		Aplicacion.Mostrador.currentInstance.buscarClienteFormShow();
 	}
 
     
 };
 
 
+/* ********************************************************
+	ThankYou for your bussiness
+******************************************************** */
+Aplicacion.Mostrador.prototype.finishedPanel = null;
+
+
+Aplicacion.Mostrador.prototype.finishedPanelShow = function()
+{
+	//update panel
+	this.finishedPanelUpdater();
+	
+	//resetear los formularios
+	this.cancelarVenta();
+	
+	sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.finishedPanel , 'fade');
+	
+};
+
+
+
+Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
+{
+	carrito = Aplicacion.Mostrador.currentInstance.carrito;
+	
+	
+	html = "";
+	
+	html += "<table class='Mostrador-ThankYou'>";
+	html += "	<tr>";	
+	html += "		<td>Venta existosa</td>";
+	html += "		<td></td>";
+	html += "	</tr>";	
+	
+	if(carrito.tipoDeVenta == "credito"){
+		//mostrar un boton para abonar
+		html += "	<tr>";	
+		html += "		<td>Abonar</td>";
+		html += "		<td></td>";
+		html += "	</tr>";
+	}else{
+		//mostrar el cambio
+		html += "	<tr>";	
+		html += "		<td>cambio=</td>";
+		html += "		<td></td>";
+		html += "	</tr>";
+	}	
+	
+	html += "	<tr>";	
+	html += "		<td>Nueva Venta</td>";
+	html += "		<td></td>";
+	html += "	</tr>";
+	
+	html += "</table>";
+	
+	this.finishedPanel.update(html);
+
+};
+
+
+
+Aplicacion.Mostrador.prototype.finishedPanelCreator = function()
+{
+
+	this.finishedPanel = new Ext.Panel({
+		html : ""
+	});
+	
+};
+
+
+/* ********************************************************
+	Hacer la venta
+******************************************************** */
+
+Aplicacion.Mostrador.prototype.doVenta = function ()
+{
+	
+	
+	carrito = Aplicacion.Mostrador.currentInstance.carrito;
+
+	
+	if(carrito.tipoDeVenta == 'contado'){
+		if(DEBUG){
+			console.log("revisando venta a contado...");
+		}
+		
+		//ver si pago lo suficiente
+		pagado = Ext.getCmp("Mostrador-doVentaEfectivo").getValue(); 
+		
+		if( (pagado.length == 0) || (parseFloat(pagado) < parseFloat(carrito.total)) ){
+			
+			//no pago lo suficiente
+			Ext.Msg.alert("Mostrador", "Cantidad insuficiente de efectivo.");
+			
+			return;
+		}
+		
+		this.carrito.pagado = pagado;
+		this.vender();
+
+		
+	}else{
+		
+		if(DEBUG){
+			console.log("revisando venta a credito...");
+		}
+		//ver si si puede comprar a credito
+		//aunque se supone que si debe poder
+
+		this.vender();
+		
+	}
+
+};
+
+
+Aplicacion.Mostrador.prototype.vender = function ()
+{
+	carrito = Aplicacion.Mostrador.currentInstance.carrito;
+	json = Ext.util.JSON.encode( carrito );
+	
+	if(DEBUG){
+		console.log("Enviando venta ....");
+	}
+	
+	Ext.Ajax.request({
+		url: 'proxy.php',
+		scope : this,
+		params : {
+			action : 100,
+			payload : json
+		},
+		success: function(response, opts) {
+			try{
+				venta = Ext.util.JSON.decode( response.responseText );				
+			}catch(e){
+				return POS.error(e);
+			}
+			
+			if( !venta.success ){
+				//volver a intentar
+				if(DEBUG){
+					console.log("resultado de la venta sin exito ",venta )
+				}
+				Ext.Msg.alert("Mostrador", venta.reason);
+				return;
+
+			}
+			
+			if(DEBUG){
+				console.log("resultado de la venta exitosa ",venta )
+			}
+			
+			//recargar el inventario
+			Aplicacion.Inventario.currentInstance.cargarInventario();
+			
+			
+			//recargar la lista de clientes y de compras
+			if( Aplicacion.Mostrador.currentInstance.carrito.cliente != null){
+				Aplicacion.Clientes.currentInstance.listaDeClientesLoad();
+				Aplicacion.Clientes.currentInstance.listaDeComprasLoad();
+			}
+
+			//mostrar el panel final
+			Aplicacion.Mostrador.currentInstance.finishedPanelShow();
+
+		},
+		failure: function( response ){
+			POS.error( response );
+		}
+	});
+};
 
 
 
@@ -530,8 +746,95 @@ Aplicacion.Mostrador.prototype.doVentaPanelShow = function ( ){
 Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
 {
 	
-	//obtener los datos del objeto en this.carrito
-	console.log(this.carrito)
+
+	if(DEBUG){
+		console.log("Haciendo update en el formulario de la venta", this.carrito);
+	}
+	
+	
+	//mostrar los totales
+	subtotal = 0;
+	total = 0;
+	for (var i=0; i < this.carrito.items.length; i++) {
+		subtotal += (this.carrito.items[i].precioVenta * this.carrito.items[i].cantidad);
+	};
+	
+	
+	
+	if( this.carrito.cliente == null ){
+		
+		//si es caja comun
+		Ext.getCmp('Mostrador-doVentaCliente').setValue("Caja Comun");
+		Ext.getCmp('Mostrador-doVentaClienteCredito' ).setVisible(false);
+		Ext.getCmp('Mostrador-doVentaClienteCreditoRestante').setVisible(false);
+		Ext.getCmp('Mostrador-doVentaTipoContado').setVisible(true);
+		Ext.getCmp('Mostrador-doVentaTipoCredito').setVisible(false);		
+		Ext.getCmp('Mostrador-doVentaFacturar').setVisible(false);
+		Ext.getCmp('Mostrador-doVentaDesc' ).setVisible(false);
+		total = subtotal;
+		Ext.getCmp('Mostrador-doVentaNuevoCliente' ).setVisible(true);
+		Aplicacion.Mostrador.currentInstance.carrito.factura = false;
+		Ext.getCmp('Mostrador-doVentaCobrar').setVisible(true);
+		
+	}else{
+		
+		//es un cliente
+		Ext.getCmp('Mostrador-doVentaNuevoCliente' ).setVisible(false);		
+		Ext.getCmp('Mostrador-doVentaCliente').setValue( this.carrito.cliente.nombre + "  " + this.carrito.cliente.rfc );
+		
+		Ext.getCmp('Mostrador-doVentaClienteCredito' ).setVisible(true);
+		Ext.getCmp('Mostrador-doVentaClienteCredito').setValue( POS.currencyFormat(this.carrito.cliente.limite_credito) );
+
+		if(this.carrito.cliente.limite_credito > 0){
+			Ext.getCmp('Mostrador-doVentaClienteCreditoRestante').setVisible(true);
+			Ext.getCmp('Mostrador-doVentaClienteCreditoRestante').setValue( POS.currencyFormat( this.carrito.cliente.credito_restante ));
+		}else{
+			Ext.getCmp('Mostrador-doVentaClienteCreditoRestante').setVisible(false);			
+			Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta = "contado";
+			Ext.getCmp('Mostrador-doVentaCobrar').setVisible(true);
+		}
+
+
+		Ext.getCmp('Mostrador-doVentaFacturar').setVisible(true);
+		
+		if( this.carrito.cliente.descuento > 0 ){
+			Ext.getCmp('Mostrador-doVentaDesc' ).setVisible(true);
+			Ext.getCmp('Mostrador-doVentaDesc').setValue( POS.currencyFormat ( subtotal * (this.carrito.cliente.descuento / 100)) + " ( " + this.carrito.cliente.descuento+"% )" );			
+		}else{
+			Ext.getCmp('Mostrador-doVentaDesc' ).setVisible(false);			
+		}
+
+
+		total = subtotal - ( subtotal * (this.carrito.cliente.descuento / 100));
+
+		if( total <= this.carrito.cliente.credito_restante){
+			Ext.getCmp('Mostrador-doVentaTipoContado').setVisible(false);
+			Ext.getCmp('Mostrador-doVentaTipoCredito').setVisible(true);
+			Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta = Ext.getCmp('Mostrador-doVentaTipoCredito').getValue();
+			
+			if( Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta == "contado" ){
+				Ext.getCmp('Mostrador-doVentaCobrar').setVisible(true);
+			}else{
+				Ext.getCmp('Mostrador-doVentaCobrar').setVisible(false);
+			}
+
+		}else{
+			Ext.getCmp('Mostrador-doVentaTipoContado').setVisible(true);
+			Ext.getCmp('Mostrador-doVentaTipoCredito').setVisible(false);
+			Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta = "contado";
+			
+			Ext.getCmp('Mostrador-doVentaCobrar').setVisible(true);
+			
+		}
+		
+	}
+	
+	
+	Ext.getCmp('Mostrador-doVentaSub' ).setValue( POS.currencyFormat( subtotal ) );
+	Ext.getCmp('Mostrador-doVentaTotal' ).setValue( POS.currencyFormat( total ) );
+
+	this.carrito.subtotal = subtotal;
+	this.carrito.total = total;
 	
 };
 
@@ -541,21 +844,124 @@ Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
  **/
 Aplicacion.Mostrador.prototype.doVentaPanelCreator = function (  ){
 	
-	this.doVentaPanel = new Ext.form.FormPanel({                                                       
+	
+	//cancelar busqueda
+	dockedCancelar = {
+		xtype : 'button',		
+        text: 'Regresar',
+		ui :'back',
+		handler : function(){
+			sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.mostradorPanel , 'slide');
+		}
+    };
 
+
+	//cancelar busqueda
+	dockedNuevo = {
+		xtype : 'button',
+		id : 'Mostrador-doVentaNuevoCliente',
+        text: 'Nuevo Cliente',
+		ui :'normal',
+		handler : function(){
+			sink.Main.ui.setActiveItem( Aplicacion.Clientes.currentInstance.nuevoClientePanel , 'fade');
+		}
+    };
+
+	//hacer la venta
+	dockedVender = {
+		xtype : 'button',		
+        text: 'Vender',
+		ui :'confirm',
+		handler : function (){
+			Aplicacion.Mostrador.currentInstance.doVenta();
+		} 
+
+    };
+
+	//toolbar
+	dockedItems = {
+		xtype: 'toolbar',
+        dock: 'bottom',
+        items: [ dockedCancelar , { xtype: 'spacer' }, dockedNuevo, dockedVender ]
+	};
+	
+	this.doVentaPanel = new Ext.form.FormPanel({                                                       
+		dockedItems : dockedItems,
 		items: [{
 			xtype: 'fieldset',
 		    title: 'Datos de la venta',
 			items: [
-				new Ext.form.Text({ label : 'Cliente', 			id: 'Mostrador-doVentaCliente' }),
-				new Ext.form.Text({ label : 'Tipo de Venta', 	id: 'Mostrador-doVentaTipo' }),
+
+				
+				new Ext.form.Text({ label : 'Cliente', 			 id: 'Mostrador-doVentaCliente' }),
+				new Ext.form.Text({ label : 'Limite de Credito', id: 'Mostrador-doVentaClienteCredito' }),
+				new Ext.form.Text({ label : 'Credito restante',  id: 'Mostrador-doVentaClienteCreditoRestante' }),
+				
+				new Ext.form.Text({ label : 'Tipo de Venta',  id: 'Mostrador-doVentaTipoContado', value : "Contado" }),
+				new Ext.form.Select({
+					listeners : {
+						"change" : function ( a, val ){
+							Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta = val;
+							if(val == "credito"){
+								Ext.getCmp("Mostrador-doVentaFacturar").hide( Ext.anims.fade );
+								Aplicacion.Mostrador.currentInstance.carrito.factura = false;
+								Ext.getCmp('Mostrador-doVentaCobrar').hide( Ext.anims.fade );
+							}else{
+								Ext.getCmp("Mostrador-doVentaFacturar").show( Ext.anims.fade );
+								Aplicacion.Mostrador.currentInstance.carrito.factura = Ext.getCmp("Mostrador-doVentaFacturar").getValue() == 1;
+								Ext.getCmp('Mostrador-doVentaCobrar').show( Ext.anims.fade );								
+							}
+						},
+						"show" : function (){
+							Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta = Ext.getCmp('Mostrador-doVentaTipoCredito').getValue();
+						}
+					},
+					label : 'Tipo de Venta', 
+					id: 'Mostrador-doVentaTipoCredito', 
+					options: [{text: 'Contado',  value: 'contado'},{text: 'Credito', value: 'credito'}] 
+				}),
+
+				new Ext.form.Toggle({ 
+					listeners : {
+						"change" : function ( a, b, newVal, oldVal ){
+							Aplicacion.Mostrador.currentInstance.carrito.factura = newVal == 1;
+						}
+					},
+					id : 'Mostrador-doVentaFacturar', 
+					label : 'Facturar' 
+				}),
+				
+				
 				new Ext.form.Text({ label : 'Subtotal', 		id: 'Mostrador-doVentaSub' }),
-				new Ext.form.Text({ label : 'IVA', 				id: 'Mostrador-doVentaIva' }),
+
 				new Ext.form.Text({ label : 'Descuento',		id: 'Mostrador-doVentaDesc' }),
 				new Ext.form.Text({ label : 'Total', 			id: 'Mostrador-doVentaTotal' })
 			]},
-			
-			new Ext.Button({ ui  : 'action', text: 'Vender', margin : 5,  handler : null }),
+			{
+				id : "Mostrador-doVentaCobrar",
+				xtype: 'fieldset',
+				hidden : true,
+				items: [
+					new Ext.form.Text({ 
+						label : 'Efectivo', 
+						id: 'Mostrador-doVentaEfectivo',
+						listeners : {
+							"focus" : function (){
+								kconf = {
+									type : 'num',
+									submitText : 'Realizar venta',
+									callback : function ( campo ){
+										Aplicacion.Mostrador.currentInstance.doVenta();
+									}
+								};
+
+								POS.Keyboard.Keyboard( this, kconf );								
+							}
+						}
+						})
+				]
+			}
+
 	]});
 
 

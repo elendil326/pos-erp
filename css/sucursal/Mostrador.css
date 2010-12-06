@@ -16,3 +16,19 @@
 	width: 80px;
 
 }
+
+
+
+.Mostrador-ThankYou {
+
+	margin: 100px;
+	font-size: 30px;
+}
+
+.Mostrador-ThankYou tr{
+	margin: 10px;
+}
+
+.Mostrador-ThankYou td{
+	padding: 10px;
+}
