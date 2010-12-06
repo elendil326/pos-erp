@@ -193,6 +193,14 @@ Aplicacion.Clientes.prototype.listaDeClientesLoad = function (){
 			
 			//agregarlo en el store
 			this.listaDeClientesStore.loadData( clientes.datos );
+			
+			if( Aplicacion.Mostrador && ( Aplicacion.Mostrador.currentInstance.buscarClienteForm.getComponent(0).getStore() == null ) ){
+				if(DEBUG){
+					console.log("Mostrador existe ya y no tiene el store, se lo cargare dese clientes...");
+				}
+				Aplicacion.Mostrador.currentInstance.buscarClienteForm.getComponent(0).store = this.listaDeClientesStore;
+			}
+			
 
 		},
 		failure: function( response ){
