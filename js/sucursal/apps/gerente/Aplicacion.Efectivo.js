@@ -398,7 +398,7 @@ Aplicacion.Efectivo.prototype.nuevoGastoValidator = function ()
 	//obtener los valores de la forma
 	var values = Aplicacion.Efectivo.currentInstance.nuevoGastoPanel.getValues();
 	
-	if( isNaN(values.monto) || values.monto.length == 0 ){
+	if( !( values.monto && /^-?\d+(\.\d+)?$/.test(values.monto + '') ) ){
 
         Ext.Anim.run(Ext.getCmp( 'Efectivo-nuevoGastoPanel-monto' ), 
             'fade', {duration: 250,
@@ -507,13 +507,14 @@ Aplicacion.Efectivo.prototype.nuevoGastoPanelCreator = function (){
                 title: 'Ingrese los detalles del nuevo gasto',
                 instructions: 'Si desea agregar un gasto que no se encuentre en la lista debera pedir una autorizacion.',
                 items: [
-                    new Ext.form.Text({ id:'Efectivo-nuevoGastoPanel-monto', name: 'monto', label: 'Monto' }),
-                    new Ext.form.Text({ id:'Efectivo-nuevoGastoPanel-folio', name: 'folio', label: 'Folio' }),
-                    new Ext.form.DatePicker({ id:'Efectivo-nuevoGastoPanel-fecha', name : 'fecha', label: 'Fecha', picker : { yearFrom : 2010, yearTo : 2011 } }),
+                    new Ext.form.Text({ id:'Efectivo-nuevoGastoPanel-monto', name: 'monto', label: 'Monto', required:true }),
+                    new Ext.form.Text({ id:'Efectivo-nuevoGastoPanel-folio', name: 'folio', label: 'Folio', required:true }),
+                    new Ext.form.DatePicker({ id:'Efectivo-nuevoGastoPanel-fecha', name : 'fecha', label: 'Fecha', picker : { yearFrom : 2010, yearTo : 2011 }, required:true }),
                     new Ext.form.Select({ 
                         id:'Efectivo-nuevoGastoPanel-concepto',
                         name : 'concepto',
                         label: 'Concepto',
+                        required:true,
                         options : [
                             {
                                 text : "Luz",
@@ -597,28 +598,87 @@ Aplicacion.Efectivo.prototype.nuevoGastoPanelCreator = function (){
 
 
 /**
- * Validar los datos de la forma de nuevo ingreso
+ * Validar los datos de la forma de nuevo gasto
  */
 Aplicacion.Efectivo.prototype.nuevoIngresoValidator = function ()
 {
     //obtener los valores de la forma
     var values = Aplicacion.Efectivo.currentInstance.nuevoIngresoPanel.getValues();
     
-    if( isNaN(values.monto) || values.monto.length == 0 ){
-        console.log("no ok");       
+    if( !( values.monto && /^-?\d+(\.\d+)?$/.test(values.monto + '') ) ){
+
+        Ext.Anim.run(Ext.getCmp( 'Efectivo-nuevoIngresoPanel-monto' ), 
+            'fade', {duration: 250,
+            out: true,
+            autoClear: true
+        });
+
         return;
     }
     
-    console.log("ok");
-    
-    /*
-    
-    Ext.Anim.run( Ext.getCmp("Efectivo-CrearGasto"), "fade", { duration: 250, out: false, autoClear : false , after : function (){ }});
-    
-    
-    Ext.Anim.run( Ext.getCmp("Efectivo-CrearGasto"), "fade", { duration: 250, out: false, autoClear : false }); //in
-    Ext.Anim.run( Ext.getCmp("Efectivo-CrearGasto"), "fade", { duration: 250, out: true, autoClear : false }); //out
-    */
+
+    if( !values.fecha )
+    {
+        Ext.Anim.run(Ext.getCmp( 'Efectivo-nuevoIngresoPanel-fecha' ), 
+            'fade', {duration: 250,
+            out: true,
+            autoClear: true
+        });
+
+        return;
+    }
+
+    if( values.concepto.length < 3 )
+    {
+        Ext.Anim.run(Ext.getCmp( 'Efectivo-nuevoIngresoPanel-concepto' ), 
+            'fade', {duration: 250,
+            out: true,
+            autoClear: true
+        });
+
+        return;
+    }
+
+    Aplicacion.Efectivo.currentInstance.nuevoIngreso( values );
+
+};
+
+
+/**
+ * Inserta el nuevo gasto en la BD
+ */
+Aplicacion.Efectivo.prototype.nuevoIngreso = function( data ){
+
+    Ext.getBody().mask('Guardando nuevo ingreso ...', 'x-mask-loading', true);
+
+    Ext.Ajax.request({
+        url: 'proxy.php',
+        scope : this,
+        params : {
+            action : 603,
+            data : Ext.util.JSON.encode( data )
+        },
+        success: function(response, opts) {
+            try{
+                r = Ext.util.JSON.decode( response.responseText );
+            }catch(e){
+                POS.error(e);
+            }
+
+            Ext.getBody().unmask(); 
+
+            //limpiar la forma      
+            Aplicacion.Efectivo.currentInstance.nuevoIngresoPanel.reset();
+
+            //informamos que todo salio bien
+            Ext.Msg.alert("Efectivo","Se ha registrado el nuevo ingreso"); 
+
+        },
+        failure: function( response ){
+            POS.error( response );
+        }
+    }); 
+
 };
 
 
@@ -629,106 +689,25 @@ Aplicacion.Efectivo.prototype.nuevoIngresoValidator = function ()
 Aplicacion.Efectivo.prototype.nuevoIngresoPanel = null;
 
 
-
-
-
-
 /*
  * Se llama para crear por primera vez el panel de nuevo cliente
  **/
 Aplicacion.Efectivo.prototype.nuevoIngresoPanelCreator = function (  ){
 
-    if(DEBUG){ console.log ("creando panel de historial de autorizaciones"); }
-
-     var menu = [{
-        xtype : "spacer"
-    },{
-        id : "Efectivo-CrearIngreso",
-        text: 'Crear Ingreso',
-        ui: 'forward',
-        hidden : false
-
-    }];
-
-
-
-
-    var dockedItems = [new Ext.Toolbar({
-        ui: 'light',
-        dock: 'bottom',
-        items: menu
-    })];
-    
-    this.nuevoIngresoPanel = new Ext.form.FormPanel({                                                       
-        dockedItems: dockedItems,
-            items: [{
-
+    this.nuevoIngresoPanel = new Ext.form.FormPanel({
+        items: [{
                 xtype: 'fieldset',
-                title: 'Nuevo Ingreso',
-                instructions: 'Todos los campos son necesarios para registrar un nuevo ingreso.',
-                defaults : {
-                    listeners : {
-                        "change" : function (){
-                            Aplicacion.Efectivo.currentInstance.nuevoIngresoValidator();
-                        }
-                    }
-                },
+                title: 'Ingrese los detalles del nuevo ingreso',
+                instructions: 'Si desea agregar un gasto que no se encuentre en la lista debera pedir una autorizacion.',
                 items: [
-                    {
-                        xtype : "textfield",
-                        label : "Monto",
-                        name : "monto",
-                        listeners : {
-                            'focus' : function (){
-
-                                kconf = {
-                                    type : 'num',
-                                    submitText : 'Aceptar',
-                                    callback : Aplicacion.Efectivo.currentInstance.nuevoIngresoValidator
-                                };
-                                POS.Keyboard.Keyboard( this, kconf );
-                            }
-                        }
-                        
-                    },{
-                        xtype : "datepickerfield",
-                        label : "Fecha",
-                        picker : { yearFrom : 2010 },
-                        name : "fecha"
-                    },{
-                        
-                        xtype : "textfield",
-                        label : "Concepto",
-                        name : "concepto",
-                        listeners : {
-                            'focus' : function (){
-
-                                kconf = {
-                                    type : 'num',
-                                    submitText : 'Aceptar',
-                                    callback : Aplicacion.Efectivo.currentInstance.nuevoIngresoValidator
-                                };
-                                POS.Keyboard.Keyboard( this, kconf );
-                            }
-                        }
-                    },{
-                        xtype : "textfield",
-                        label : "Nota",
-                        name : "nota",
-                        listeners : {
-                            'focus' : function (){
-
-                                kconf = {
-                                    type : 'alfa',
-                                    submitText : 'Aceptar',
-                                    callback : Aplicacion.Efectivo.currentInstance.nuevoIngresoValidator
-                                };
-                                POS.Keyboard.Keyboard( this, kconf );
-                            }
-                        }
-                    }
-                ]}
-        ]});
+                    new Ext.form.Text({ id:'Efectivo-nuevoIngresoPanel-monto', name: 'monto', label: 'Monto', required:true }),
+                    new Ext.form.DatePicker({ id:'Efectivo-nuevoIngresoPanel-fecha', name : 'fecha', label: 'Fecha', picker : { yearFrom : 2010, yearTo : 2011 }, required:true }),
+                    new Ext.form.Text({ id:'Efectivo-nuevoIngresoPanel-concepto', name: 'concepto', label: 'Concepto', required:true }),
+                    new Ext.form.Text({ id:'Efectivo-nuevoIngresoPanel-nota', name : 'nota', label: 'Nota' }),
+                ]},
+                new Ext.Button({ id : 'Efectivo-NuevoIngreso', ui  : 'action', text: 'Registrar Ingreso', margin : 5,  handler : this.nuevoIngresoValidator, disabled : false }),
+        ]
+    });
 
 };
 
