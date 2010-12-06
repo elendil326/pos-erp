@@ -169,7 +169,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (  )
 			value : carrito.items[i].cantidad,
 			prodID : carrito.items[i].productoID,
 			width: 50,
-			placeHolder : "Agregar Producto",
+			placeHolder : "",
 			listeners : {
 				'focus' : function (){
 
@@ -330,7 +330,13 @@ Aplicacion.Mostrador.prototype.mostradorPanelCreator = function (){
 				POS.Keyboard.Keyboard( this, kconf );
 			}
 		}
-    }];
+    },{
+		xtype : "button",
+		text : "Buscar",
+		handler : function(){
+			sink.Main.ui.setActiveItem( Aplicacion.Inventario.currentInstance.listaInventarioPanel , 'fade');			
+		}
+	}];
 
 
     var venta = [{

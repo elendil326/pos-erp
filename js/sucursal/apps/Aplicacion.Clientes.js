@@ -915,8 +915,8 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 			disabled : true
 		},
 		items: [
-			new Ext.form.Text({ name: 'id_cliente', label: 'ID'	, disabled : true}),
 			new Ext.form.Text({ name: 'nombre', label: 'Nombre' }),
+			new Ext.form.Text({ name: 'id_cliente', label: 'ID'	, hidden : true}),
 			new Ext.form.Text({ name: 'rfc', label: 'RFC' }),
 			new Ext.form.Text({ name : 'direccion', label: 'Direccion' }),
 			new Ext.form.Text({ name : 'ciudad', label: 'Ciudad' }),

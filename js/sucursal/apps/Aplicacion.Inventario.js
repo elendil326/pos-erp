@@ -264,7 +264,6 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelUpdater = function( produc
 	if(DEBUG){
 		console.log("updating detalles del producto", producto );
 	}
-	
 
 	detallesPanel = Aplicacion.Inventario.currentInstance.detalleInventarioPanel;
 	detallesPanel.loadRecord( producto );
@@ -276,43 +275,63 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelUpdater = function( produc
 Aplicacion.Inventario.prototype.detalleInventarioPanelCreator = function()
 {
 	
-	this.detalleInventarioPanel = new Ext.form.FormPanel({                                                       
+    opciones = [{
+        text: 'Agregar a Mostrador',
+        ui: 'normal',
+		handler : function (){
+			Aplicacion.Mostrador.currentInstance.agregarProductoPorID( Aplicacion.Inventario.currentInstance.detalleInventarioPanel.getRecord().data.productoID );
+		}
+    },{
+	    text: 'Ir a Mostrador',
+	    ui: 'drastic',
+		handler : function(){
+			sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.mostradorPanel , 'slide');
+		}
+	},{
+        text: 'Surtir',
+        ui: 'action',
+		handler : this.detalleInventarioSurtirEsteProd
+    }];
+
+
+	var dockedItems = [new Ext.Toolbar({
+		ui: 'dark',
+		dock: 'bottom',
+		items: opciones
+	})];	
 	
-	items: [{
-		xtype: 'fieldset',
-	    title: 'Detalles de Producto',
-		scroll: 'vertical',
-	    instructions: '',
-		defaults : {
-			disabled : false
-		},
+	
+	this.detalleInventarioPanel = new Ext.form.FormPanel({                                                       
+		dockedItems: dockedItems,
+		items: [{
+			xtype: 'fieldset',
+		    title: 'Detalles de Producto',
+			scroll: 'vertical',
+		    instructions: '',
+			defaults : {
+				disabled : true
+			},
 		
-		items: [
-			new Ext.form.Text({ name: 'productoID', label: 'ID'	}),
-			new Ext.form.Text({ name: 'descripcion', label: 'Descripcion' }),
-			new Ext.form.Text({ name: 'precioVenta', label: 'Venta' }),
-			new Ext.form.Text({ name : 'existencias', label: 'Existencias' }),
-			new Ext.form.Text({ name : 'existenciasMinimas', label: 'Minimas' })
-		]},
-		
-		new Ext.Button({ ui  : 'action', text: 'Agregar a venta', margin : 5, handler : this.detalleInventarioAgregarACarro }),
-		new Ext.Button({ ui  : 'confirm', text: 'Surtir', margin : 5, handler : this.detalleInventarioSurtirEsteProd  })
+			items: [
+				new Ext.form.Text({ name: 'productoID', label: 'ID'	}),
+				new Ext.form.Text({ name: 'descripcion', label: 'Descripcion' }),
+				new Ext.form.Text({ name: 'precioVenta', label: 'Venta' }),
+				new Ext.form.Text({ name : 'existencias', label: 'Existencias' }),
+				new Ext.form.Text({ name : 'existenciasMinimas', label: 'Minimas' })
+			]}
 	]});
 
 };
 
 
 
-Aplicacion.Inventario.prototype.detalleInventarioAgregarACarro = function()
-{
-	console.warn("TODO : Agregar este producto a carrito ");
-};
-
 
 
 Aplicacion.Inventario.prototype.detalleInventarioSurtirEsteProd = function()
 {
-
+	if(DEBUG){
+		console.log("surtiendo este producto")
+	}
 };
 
 
@@ -322,11 +341,108 @@ Aplicacion.Inventario.prototype.detalleInventarioSurtirEsteProd = function()
    *************************************************************************** */
 
 
+Aplicacion.Inventario.prototype.carritoSurtir = {
+		items : [],
+		otherData: null
+	};
+
+
+Aplicacion.Inventario.prototype.surtirAddItem = function ( item )
+{
+	if(DEBUG){
+		console.log("Agregnado producto " + item + " a la peticion");
+	}
+	this.carritoSurtir.items.push( item );
+	
+	this.refreshSurtir();
+	
+};
+
+
+
+Aplicacion.Inventario.prototype.refreshSurtir = function ()
+{
+	
+	carrito = this.carritoSurtir;
+	
+	var html = "<table border=0>";
+	
+	html += "<tr class='top'>";
+	html += "<td>Descripcion</td>";
+	html += "<td colspan=3>Cantidad</td>";	
+	html += "<td>Precio Intersucursal</td>";
+	html += "<td>Total</td>";
+
+	html += "</tr>";
+	
+	for (var i=0; i < carrito.items.length; i++){
+		
+		if( i == carrito.items.length - 1 )
+			html += "<tr class='last'>";
+		else
+			html += "<tr >";		
+		
+		html += "<td>" + carrito.items[i].productoID + " " + carrito.items[i].descripcion+ "</td>";
+
+		html += "<td > </td>";
+
+		html += "<td> <div id='Inventario-carritoCantidad"+ carrito.items[i].productoID +"'></div></td>"
+
+		html += "<td > </td>";
+
+		html += "<td> <div style='color: green'>"+ POS.currencyFormat(carrito.items[i].precioIntersucursal) +"</div></td>"
+		
+		html += "<td>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioVenta )+"</td>";
+		
+		html += "</tr>";
+	};
+	
+	html += "</table>";
+	
+	Ext.getCmp("Inventario-surtirTabla").update(html);
+	
+	
+	
+	for (var i=0; i < carrito.items.length; i++){
+		
+	    if(Ext.get("Inventario-carritoCantidad"+ carrito.items[i].productoID + "Text")){
+			continue;
+		}
+	
+		a = new Ext.form.Text({
+			renderTo : "Inventario-carritoCantidad"+ carrito.items[i].productoID ,
+			id : "Inventario-carritoCantidad"+ carrito.items[i].productoID + "Text",
+			value : carrito.items[i].cantidad,
+			prodID : carrito.items[i].productoID,
+			width: 50,
+			placeHolder : "",
+			listeners : {
+				'focus' : function (){
+
+					kconf = {
+						type : 'num',
+						submitText : 'Aceptar',
+						callback : function ( campo ){
+							
+						}
+					};
+					
+					POS.Keyboard.Keyboard( this, kconf );
+				}
+			}
+		
+		});
+
+
+	};
+
+};
+
+
 
 Aplicacion.Inventario.prototype.surtirWizardPanel = null;
 
 Aplicacion.Inventario.prototype.surtirWizardPopUpPanel = null;
-
 
 Aplicacion.Inventario.prototype.surtirWizardCreator = function ()
 {
@@ -347,7 +463,9 @@ Aplicacion.Inventario.prototype.surtirWizardCreator = function ()
 					dock: 'bottom',
 					items: bar
 				}),
-			html : "asdf"
+			html : "",
+			id : "Inventario-surtirTabla",
+			cls : "Tabla"
 		});
 	
 	
@@ -379,15 +497,19 @@ Aplicacion.Inventario.prototype.surtirWizardCreator = function ()
 		    },{
 		        text: 'Seleccionar',
 		        ui: 'action',
-		        handler: function() {
+		        handler: function () {
+					r = Aplicacion.Inventario.currentInstance.surtirWizardPopUpPanel.getComponent(0).getSelectedRecords();
+					
+					for( a = 0 ; a < r.length ; a ++ ){
+						Aplicacion.Inventario.currentInstance.surtirAddItem( r[a].data );
+					}
 
+					Aplicacion.Inventario.currentInstance.surtirWizardPopUpPanel.hide();					
 		        }
 		    }]
 		}],
 		items: [{
-			width : 450,
-			multiSelect : false,
-			height: 350,
+			multiSelect : true,
 			xtype: 'list',
 			ui: 'dark',
 			store: this.inventarioListaStore,
