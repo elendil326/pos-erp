@@ -1,17 +1,17 @@
 
 
-Aplicacion.Inventario = function (  ){
+Aplicacion.Inventario = function (	){
 
 	return this._init();
-}
+};
 
 
 
 
 Aplicacion.Inventario.prototype._init = function (){
-    if(DEBUG){
+	if(DEBUG){
 		console.log("Inventario: construyendo");
-    }
+	}
 
 
 	//cargar el inventario existente desde el servidor
@@ -39,25 +39,25 @@ Aplicacion.Inventario.prototype._init = function (){
 
 Aplicacion.Inventario.prototype.getConfig = function (){
 	return {
-	    text: 'Inventario',
-	    cls: 'launchscreen',
-	    items: [{
-	        text: 'Inventario Actual',
-			card : 	this.listaInventarioPanel,
-	        leaf: true
-	    },
-	    {
-	        text: 'Surtir',
-	        items: [{
-		        text: 'Solicitar Producto',
-      			card : 	this.surtirWizardPanel,
-		        leaf: true
-		    },
-		    {
-		        text: 'Reportar Merma',
-		        leaf: true
-		    }]
-	    }]
+		text: 'Inventario',
+		cls: 'launchscreen',
+		items: [{
+			text: 'Inventario Actual',
+			card :	this.listaInventarioPanel,
+			leaf: true
+		},
+		{
+			text: 'Surtir',
+			items: [{
+				text: 'Solicitar Producto',
+				card :	this.surtirWizardPanel,
+				leaf: true
+			},
+			{
+				text: 'Reportar Merma',
+				leaf: true
+			}]
+		}]
 	};
 };
 
@@ -75,8 +75,8 @@ Aplicacion.Inventario.prototype.getConfig = function (){
  */
 Ext.regModel('listaInventarioModel', {
 	fields: [
-		{name: 'descripcion',     type: 'string'},
-		{name: 'productoID',     type: 'float'}	
+		{name: 'descripcion',	  type: 'string'},
+		{name: 'productoID',	 type: 'float'} 
 	]
 });
 
@@ -86,12 +86,12 @@ Ext.regModel('listaInventarioModel', {
  * store con la lista del inventario
  */
 Aplicacion.Inventario.prototype.inventarioListaStore = new Ext.data.Store({
-    model: 'listaInventarioModel',
-    sorters: 'descripcion',
-           
-    getGroupString : function(record) {
-        return record.get('descripcion')[0];
-    }
+	model: 'listaInventarioModel',
+	sorters: 'descripcion',
+		   
+	getGroupString : function(record) {
+		return record.get('descripcion')[0];
+	}
 });
 
 //escructura que contiene el inventario que se cargo por ultima vez
@@ -144,7 +144,7 @@ Aplicacion.Inventario.prototype.cargarInventario = function ()
 		failure: function( response ){
 			POS.error( response );
 		}
-	});	
+	}); 
 
 };
 
@@ -183,28 +183,28 @@ Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 				POS.Keyboard.Keyboard( this, kconf );
 			}
 		}
-    };
+	};
 
 
 
 	//toolbar
 	var dockedItems = {
 		xtype: 'toolbar',
-        dock: 'bottom',
-        items: [ buscar , { xtype: 'spacer' } ]
+		dock: 'bottom',
+		items: [ buscar , { xtype: 'spacer' } ]
 	};
 	
 
 
 	this.listaInventarioPanel = new Ext.Panel({
 		dockedItems : dockedItems,
-        layout: Ext.is.Phone ? 'fit' : {
-            type: 'vbox',
-            align: 'center',
-            pack: 'center'
-        },
-        
-        items: [{
+		layout: Ext.is.Phone ? 'fit' : {
+			type: 'vbox',
+			align: 'center',
+			pack: 'center'
+		},
+		
+		items: [{
 			
 			width : '100%',
 			height: '100%',
@@ -225,7 +225,7 @@ Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 				}
 			}
 			
-        }]
+		}]
 	});
 
 	
@@ -253,7 +253,7 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelShow = function( producto 
 	}
 	
 	this.detalleInventarioPanelUpdater( producto );
-	sink.Main.ui.setActiveItem( this.detalleInventarioPanel , 'slide');	
+	sink.Main.ui.setActiveItem( this.detalleInventarioPanel , 'slide'); 
 };
 
 
@@ -268,6 +268,7 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelUpdater = function( produc
 	detallesPanel = Aplicacion.Inventario.currentInstance.detalleInventarioPanel;
 	detallesPanel.loadRecord( producto );
 	
+
 };
 
 
@@ -275,45 +276,45 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelUpdater = function( produc
 Aplicacion.Inventario.prototype.detalleInventarioPanelCreator = function()
 {
 	
-    opciones = [{
-        text: 'Agregar a Mostrador',
-        ui: 'normal',
+	opciones = [{
+		text: 'Agregar a Mostrador',
+		ui: 'normal',
 		handler : function (){
 			Aplicacion.Mostrador.currentInstance.agregarProductoPorID( Aplicacion.Inventario.currentInstance.detalleInventarioPanel.getRecord().data.productoID );
 		}
-    },{
-	    text: 'Ir a Mostrador',
-	    ui: 'drastic',
+	},{
+		text: 'Ir a Mostrador',
+		ui: 'drastic',
 		handler : function(){
 			sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.mostradorPanel , 'slide');
 		}
 	},{
-        text: 'Surtir',
-        ui: 'action',
+		text: 'Surtir',
+		ui: 'action',
 		handler : this.detalleInventarioSurtirEsteProd
-    }];
+	}];
 
 
 	var dockedItems = [new Ext.Toolbar({
 		ui: 'dark',
 		dock: 'bottom',
-		items: opciones
+		items: [{xtype:"spacer"}].concat( opciones )
 	})];	
 	
 	
-	this.detalleInventarioPanel = new Ext.form.FormPanel({                                                       
+	this.detalleInventarioPanel = new Ext.form.FormPanel({														 
 		dockedItems: dockedItems,
 		items: [{
 			xtype: 'fieldset',
-		    title: 'Detalles de Producto',
+			title: 'Detalles de Producto',
 			scroll: 'vertical',
-		    instructions: '',
+			instructions: '',
 			defaults : {
 				disabled : true
 			},
 		
 			items: [
-				new Ext.form.Text({ name: 'productoID', label: 'ID'	}),
+				new Ext.form.Text({ name: 'productoID', label: 'ID' }),
 				new Ext.form.Text({ name: 'descripcion', label: 'Descripcion' }),
 				new Ext.form.Text({ name: 'precioVenta', label: 'Venta' }),
 				new Ext.form.Text({ name : 'existencias', label: 'Existencias' }),
@@ -330,8 +331,11 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelCreator = function()
 Aplicacion.Inventario.prototype.detalleInventarioSurtirEsteProd = function()
 {
 	if(DEBUG){
-		console.log("surtiendo este producto")
+		console.log("surtiendo producto " + Aplicacion.Inventario.currentInstance.detalleInventarioPanel.getRecord().data.productoID);
 	}
+	
+	sink.Main.ui.setActiveItem( Aplicacion.Inventario.currentInstance.surtirWizardPanel , 'fade');	
+	Aplicacion.Inventario.currentInstance.surtirAddItem( Aplicacion.Inventario.currentInstance.detalleInventarioPanel.getRecord().data );	
 };
 
 
@@ -350,8 +354,20 @@ Aplicacion.Inventario.prototype.carritoSurtir = {
 Aplicacion.Inventario.prototype.surtirAddItem = function ( item )
 {
 	if(DEBUG){
-		console.log("Agregnado producto " + item + " a la peticion");
+		console.log("Agregnado producto ",	item , " a la peticion");
 	}
+	
+	
+	for (var i = this.carritoSurtir.items.length - 1; i >= 0; i--){
+		if( this.carritoSurtir.items[i].productoID == item.productoID ){
+			if(DEBUG){
+				console.log( "este producto ya existe en el carrito para surtir" );
+			}
+			this.refreshSurtir();
+			return ;
+		}
+	}
+	
 	this.carritoSurtir.items.push( item );
 	
 	this.refreshSurtir();
@@ -362,6 +378,10 @@ Aplicacion.Inventario.prototype.surtirAddItem = function ( item )
 
 Aplicacion.Inventario.prototype.refreshSurtir = function ()
 {
+	
+	if(DEBUG){
+		console.log("Regrescanco el carrito para surtir...");
+	}
 	
 	carrito = this.carritoSurtir;
 	
@@ -376,6 +396,10 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 	html += "</tr>";
 	
 	for (var i=0; i < carrito.items.length; i++){
+
+		if(carrito.items[i].cantidad === null){
+			carrito.items[i].cantidad = 1;
+		}
 		
 		if( i == carrito.items.length - 1 )
 			html += "<tr class='last'>";
@@ -386,16 +410,16 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 
 		html += "<td > </td>";
 
-		html += "<td> <div id='Inventario-carritoCantidad"+ carrito.items[i].productoID +"'></div></td>"
+		html += "<td> <div id='Inventario-carritoCantidad"+ carrito.items[i].productoID +"'></div></td>";
 
 		html += "<td > </td>";
 
-		html += "<td> <div style='color: green'>"+ POS.currencyFormat(carrito.items[i].precioIntersucursal) +"</div></td>"
+		html += "<td> <div style='color: green'>"+ POS.currencyFormat(carrito.items[i].precioIntersucursal) +"</div></td>";
 		
-		html += "<td>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioVenta )+"</td>";
+		html += "<td>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioIntersucursal )+"</td>";
 		
 		html += "</tr>";
-	};
+	}
 	
 	html += "</table>";
 	
@@ -403,11 +427,16 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 	
 	
 	
-	for (var i=0; i < carrito.items.length; i++){
-		
-	    if(Ext.get("Inventario-carritoCantidad"+ carrito.items[i].productoID + "Text")){
+	for (i=0; i < carrito.items.length; i++){
+		/*
+		if(Ext.getCmp("Inventario-carritoCantidad"+ carrito.items[i].productoID + "Text") != null){
+			if(DEBUG){
+				console.log("Ya existe este campo de texto para el carrito")
+			}
 			continue;
-		}
+		}*/
+		
+		
 	
 		a = new Ext.form.Text({
 			renderTo : "Inventario-carritoCantidad"+ carrito.items[i].productoID ,
@@ -415,7 +444,7 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 			value : carrito.items[i].cantidad,
 			prodID : carrito.items[i].productoID,
 			width: 50,
-			placeHolder : "",
+			placeHolder : "Cantidad",
 			listeners : {
 				'focus' : function (){
 
@@ -423,7 +452,16 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 						type : 'num',
 						submitText : 'Aceptar',
 						callback : function ( campo ){
-							
+									//console.log(campo, this)
+									
+									carrito = Aplicacion.Inventario.currentInstance.carritoSurtir;
+									
+									for (var i=0; i < carrito.items.length; i++) {
+										carrito.items[i].cantidad = parseFloat( campo.getValue() );
+										break;
+									}
+									
+									Aplicacion.Inventario.currentInstance.refreshSurtir();
 						}
 					};
 					
@@ -434,7 +472,7 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 		});
 
 
-	};
+	}
 
 };
 
@@ -447,13 +485,21 @@ Aplicacion.Inventario.prototype.surtirWizardPopUpPanel = null;
 Aplicacion.Inventario.prototype.surtirWizardCreator = function ()
 {
 	bar = [{
-        text: 'Agregar producto',
-        ui: 'normal',
+		text: 'Agregar producto',
+		ui: 'normal',
 		handler : function( t ){
 			//iniciar wizard
 			Aplicacion.Inventario.currentInstance.surtirWizardPopUpPanel.show();
 		}
-    }];
+	},{
+		xtype : 'spacer'
+	},{
+		text: 'Confirmar pedido',
+		ui: 'action',
+		handler : function( t ){
+
+		}		
+	}];
 
 
 	//crear el panel
@@ -481,23 +527,23 @@ Aplicacion.Inventario.prototype.surtirWizardCreator = function ()
 		width: 475,
 		height: 450,
 		dockedItems: [{
-		    dock: 'top',
-		    xtype: 'toolbar',
-		    title: 'Seleccione el producto'
+			dock: 'top',
+			xtype: 'toolbar',
+			title: 'Seleccione el producto'
 		},{
-		    dock: 'bottom',
-		    xtype: 'toolbar',
-		    items: [{
-		        text: 'Cancelar',
-		        handler: function() {
+			dock: 'bottom',
+			xtype: 'toolbar',
+			items: [{
+				text: 'Cancelar',
+				handler: function() {
 					Aplicacion.Inventario.currentInstance.surtirWizardPopUpPanel.hide();
-		        }
-		    },{
-		        xtype: 'spacer'
-		    },{
-		        text: 'Seleccionar',
-		        ui: 'action',
-		        handler: function () {
+				}
+			},{
+				xtype: 'spacer'
+			},{
+				text: 'Seleccionar',
+				ui: 'action',
+				handler: function () {
 					r = Aplicacion.Inventario.currentInstance.surtirWizardPopUpPanel.getComponent(0).getSelectedRecords();
 					
 					for( a = 0 ; a < r.length ; a ++ ){
@@ -505,8 +551,8 @@ Aplicacion.Inventario.prototype.surtirWizardCreator = function ()
 					}
 
 					Aplicacion.Inventario.currentInstance.surtirWizardPopUpPanel.hide();					
-		        }
-		    }]
+				}
+			}]
 		}],
 		items: [{
 			multiSelect : true,
@@ -516,7 +562,7 @@ Aplicacion.Inventario.prototype.surtirWizardCreator = function ()
 			itemTpl: '<div class=""><b>{productoID}</b> {descripcion}</div>',
 			grouped: true,
 			indexBar: true	
-        }]
+		}]
 	});
 	
 	

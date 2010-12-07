@@ -10,7 +10,7 @@
 Aplicacion.Clientes = function (  ){
 
 	return this._init();
-}
+};
 
 
 
@@ -194,7 +194,7 @@ Aplicacion.Clientes.prototype.listaDeClientesLoad = function (){
 			//agregarlo en el store
 			this.listaDeClientesStore.loadData( clientes.datos );
 			
-			if( Aplicacion.Mostrador && ( Aplicacion.Mostrador.currentInstance.buscarClienteForm.getComponent(0).getStore() == null ) ){
+			if( Aplicacion.Mostrador && ( Aplicacion.Mostrador.currentInstance.buscarClienteForm.getComponent(0).getStore() === null ) ){
 				if(DEBUG){
 					console.log("Mostrador existe ya y no tiene el store, se lo cargare dese clientes...");
 				}
@@ -307,7 +307,7 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelShow = function ( venta ){
 	}
 	
 	this.detallesDeVentaPanel.setCentered(true);
-	this.detallesDeVentaPanel.show( Ext.anims.slide );
+	this.detallesDeVentaPanel.show( Ext.anims.fade );
 
 };
 
@@ -327,9 +327,9 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
 	for (var i = ventas.length - 1; i >= 0; i--){
 		if(ventas[i].id_venta == venta){
 			detalleVenta = ventas[i].detalle_venta;
-			break
+			break;
 		}
-	};
+	}
 	
 
 	var html = "";
@@ -341,7 +341,7 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
 	html += "<td>Total</td>";
 	html += "</tr>";
 	
-	for (var i=0; i < detalleVenta.length; i++) {
+	for (i=0; i < detalleVenta.length; i++) {
 
 	
 		if( i == detalleVenta.length - 1 )
@@ -353,14 +353,14 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
 		html += "<td>" + detalleVenta[i].cantidad + "</td>";
 		html += "<td>" + POS.currencyFormat ( detalleVenta[i].precio ) + "</td>";		
 		html += "</tr>";
-	};
+	}
 	
 	html += "</table>";
 	
 	
 	this.detallesDeVentaPanel.update( html );
-	this.detallesDeVentaPanel.setWidth( 700 );
-	this.detallesDeVentaPanel.setHeight( 600 );
+	this.detallesDeVentaPanel.setWidth( 600 );
+	this.detallesDeVentaPanel.setHeight( 400 );
 };
 
 
@@ -368,13 +368,15 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelCreator = function ()
 {
 
 
-    var venta = [{
+    venta = [{
         text: 'Regresar',
-        ui: 'normal',
+        ui: 'back',
 		handler : function( t ){
-			Aplicacion.Clientes.currentInstance.detallesDeVentaPanel.hide( Ext.anims.slide );
+			Aplicacion.Clientes.currentInstance.detallesDeVentaPanel.hide( Ext.anims.fade );
 		}
-    },{
+    },{ 
+		xtype: 'spacer' 
+	},{
 	    text: 'Devoluciones',
 	    ui: 'drastic'
 	},{
@@ -383,7 +385,7 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelCreator = function ()
     }];
 
 
-	var dockedItems = [new Ext.Toolbar({
+	dockedItems = [new Ext.Toolbar({
 		ui: 'dark',
 		dock: 'bottom',
 		items: venta
@@ -430,7 +432,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanel = null;
  **/
 Aplicacion.Clientes.prototype.detallesDeClientesPanelShow = function ( cliente ){
 	if(DEBUG){
-		console.log("mostrando detalles", cliente)
+		console.log("mostrando detalles", cliente);
 	}
 	
 	if( this.detallesDeClientesPanel ){
@@ -445,9 +447,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelShow = function ( cliente )
 	
 	//mostrar la primer pantalla en el carrusel de detalles
 	Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.setActiveItem(0);
-	
-	
-	
+
 };
 
 
@@ -518,7 +518,7 @@ Aplicacion.Clientes.prototype.comprasDeClientesPanelUpdater = function ( cliente
 			continue;
 		}
 		
-		if( i == 0 )
+		if( i === 0 )
 			html += "<tr class='last' onClick='Aplicacion.Clientes.currentInstance.detallesDeVentaPanelShow(" +lista[i].id_venta+ ");'>";
 		else
 			html += "<tr onClick='Aplicacion.Clientes.currentInstance.detallesDeVentaPanelShow(" +lista[i].id_venta+ ");'>";		
@@ -528,7 +528,7 @@ Aplicacion.Clientes.prototype.comprasDeClientesPanelUpdater = function ( cliente
 		html += "<td>" + lista[i].tipo_venta + "</td>";
 		html += "<td>" + POS.currencyFormat ( lista[i].total ) + "</td>";		
 		html += "</tr>";
-	};
+	}
 	
 	html += "</table>";
 
@@ -554,7 +554,6 @@ Aplicacion.Clientes.prototype.editarClienteCancelarBoton = function (  )
 	//cargar los valores que tenia por default antes de modificar
 	var cliente = Aplicacion.Clientes.currentInstance.CLIENTE_EDIT;
 	Aplicacion.Clientes.currentInstance.CLIENTE_EDIT = null;
-	
 	
 	if(DEBUG){
 		console.log("cancelando: ", cliente);
@@ -626,58 +625,52 @@ Aplicacion.Clientes.prototype.editarCliente = function ( data )
 
 Aplicacion.Clientes.prototype.editarClienteGuardarBoton = function (  )
 {
+
 	var detallesPanel = Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0];
 
-	
 	//validar los nuevos datos
 	v = detallesPanel.getValues();
 
 	//validar los datos antes de enviar
-
-	var response = "";
+	campo = Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0].items.items[0];
 	
 	//nombre
 	if(v.nombre.length < 10){
-		response += "La nombre no es valida.<br>";
+		return campo.setInstructions("El nombre debe ser mayor de diez caracteres.");
 	}
 	
 	//rfc
 	if(v.rfc.length < 10){
-		response += "La rfc no es valida.<br>";
+		return campo.setInstructions("El RFC debe ser mayor de diez caracteres.");
 	}
 	
 	//direccion
 	if(v.direccion.length < 10){
-		response += "La direccion no es valida.<br>";
+		return campo.setInstructions("La direccion es muy corta.");
 	}
 	
 	//ciudad
 	if(v.ciudad.length < 3){
-		response += "La ciudad no es valida.<br>";
+		return campo.setInstructions("La ciudad es muy corta.");
 	}
 	
 	//e_mail
 	
 	//telefono
-	if(v.telefono.length < 10){
-		response += "La telefono no es valida.<br>";
+	if(v.telefono.length < 5){
+		return campo.setInstructions("El telefono debe ser mayor de 5 caracteres.");
 	}
 	
 	//descuento
-	if(  v.descuento.length == 0 || isNaN ( v.descuento ) ){
-		response += "El descuento debe ser un numero.<br>";
+	if(  v.descuento.length === 0 || isNaN( v.descuento ) || (v.descuento > 50 && v.descuento < 0) ){
+		return campo.setInstructions("El descuento debe ser un numero entre 0 y 50.");
 	}
 	
 	//limite_credito
-	if( v.limite_credito.length == 0 || isNaN ( v.limite_credito ) ){
-		response += "El limite de credito debe ser un numero.<br>";
+	if( v.limite_credito.length === 0 || isNaN( v.limite_credito ) ){
+		return campo.setInstructions("El limite de credito debe ser un numero.");
 	}
 
-	
-	if(response.length > 0){
-		Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0].items.items[0].setInstructions(response);
-		return;
-	}
 
 
 	detallesPanel.disable();
@@ -696,9 +689,6 @@ Aplicacion.Clientes.prototype.editarClienteGuardarBoton = function (  )
  *  regresar a los valores originales
  */
 Aplicacion.Clientes.prototype.CLIENTE_EDIT = null;
-
-
-
 
 
 Aplicacion.Clientes.prototype.editarClienteBoton = function (  )
@@ -730,22 +720,36 @@ Aplicacion.Clientes.prototype.editarClienteBoton = function (  )
 
 
 /*
- *
+ *	hacer un abono
  */
 Aplicacion.Clientes.prototype.doAbonar = function (  )
 {
+	if(DEBUG){
+		console.log("Abonando... a venta : " + Ext.getCmp("Clentes-CreditoVentasLista").getValue());
+	}
+	
+	abonado = Ext.getCmp("Clientes-DetallesVentaAbonarCredito" ).getComponent('Cliente-abonarMonto').getValue();
+	
 	Ext.Ajax.request({
 		url: 'proxy.php',
 		scope : this,
 		params : {
-			action : 301
+			action : 305,
+			data : Ext.util.JSON.encode({
+						id_venta : parseFloat( Ext.getCmp("Clentes-CreditoVentasLista").getValue() ),
+			    		monto : parseFloat( abonado )
+					})
 		},
 		success: function(response, opts) {
+			Ext.Msg.alert("Abono", "El abono se ha realizado con exito.");
 			
-
+			//cargar la lista de compras de los clientes
+			Aplicacion.Clientes.currentInstance.listaDeComprasLoad();
+			Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange( null, Ext.getCmp("Clentes-CreditoVentasLista").getValue() );
+			setTimeout( "Aplicacion.Clientes.currentInstance.abonarVentaCancelarBoton();", 1000);
 		},
 		failure: function( response ){
-			POS.error( response );
+			return POS.error( response );
 		}
 	});
 };
@@ -821,8 +825,8 @@ Aplicacion.Clientes.prototype.creditoDeClientesOptionChange = function ( a, v  )
 	for (var i = lista.length - 1; i >= 0; i--){
 		if (  lista[i].id_venta  == v ) {
 			venta = lista[i];
-		};
-	};	
+		}
+	}
 
 
 
@@ -875,9 +879,9 @@ Aplicacion.Clientes.prototype.creditoDeClientesPanelUpdater = function ( cliente
 				text : "Venta " + lista[i].id_venta,
 				value : lista[i].id_venta
 				
-			} );
-		};
-	};
+			});
+		}
+	}
 	
 	Ext.getCmp("Clientes-DetallesVentaCredito").hide();
 	Ext.getCmp("Clientes-AbonarVentaBoton").hide();
@@ -886,19 +890,72 @@ Aplicacion.Clientes.prototype.creditoDeClientesPanelUpdater = function ( cliente
 	if( ventasCredito.length == 1 ){
 		//no hay ventas a credito
 		Ext.getCmp("Clentes-CreditoVentasLista").hide();
-		Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getTabBar().getComponent(2).hide()
+		Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getTabBar().getComponent(2).hide();
 	}else{
 		//si hay ventas a credito
 		Ext.getCmp("Clentes-CreditoVentasLista").show();
 		Ext.getCmp("Clentes-CreditoVentasLista").setOptions( ventasCredito );		
-		Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getTabBar().getComponent(2).show()
+		Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getTabBar().getComponent(2).show();
 	}
 	
 };
 
 
 
+Aplicacion.Clientes.prototype.eliminarCliente = function ( respuesta )
+{
+		
+	if(respuesta != 'yes'){
+		return;
+	}
 
+	cliente = Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0].getRecord().data;
+
+	if(DEBUG){
+		console.log("Eliminando al cliente", cliente );
+	}
+
+	cliente.activo = 0;
+
+	Ext.Ajax.request({
+		url: 'proxy.php',
+		scope : this,
+		params : {
+			action : 302,
+			data : Ext.util.JSON.encode( cliente )
+		},
+		success: function(response, opts) {
+			try{
+				res = Ext.util.JSON.decode( response.responseText );				
+			}catch(e){
+				return POS.error(e);
+			}
+			
+			if( !res.success ){
+				//volver a intentar
+				Ext.Msg.alert("Mostrador", res.reason);
+				return;
+
+			}
+			
+			if(DEBUG){
+				console.log( "Eliminado cliente OK", res );
+			}
+			
+
+			Aplicacion.Clientes.currentInstance.listaDeClientesLoad();
+			Aplicacion.Clientes.currentInstance.listaDeComprasLoad();
+
+			sink.Main.ui.setActiveItem( Aplicacion.Clientes.currentInstance.listaDeClientesPanel , 'fade');
+			
+
+		},
+		failure: function( response ){
+			POS.error( response );
+		}
+	});
+	
+};
 
 
 
@@ -908,41 +965,66 @@ Aplicacion.Clientes.prototype.creditoDeClientesPanelUpdater = function ( cliente
  **/
 Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 	
-	if(DEBUG){ console.log ("creando panel de detalles de cliente por primera vez"); }
-	
+	if(DEBUG){ 
+		console.log("creando panel de detalles de cliente por primera vez"); 
+	}
+
+	opciones = [
+		new Ext.Button({ id : 'Clientes-EliminarCliente', ui  : 'action', text: 'Eliminar cliente',  handler : function(){
+			cliente = Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0].getRecord().data;
+			if(DEBUG){
+				console.log("intentando eliminar el cliente" , cliente);
+			}
+			
+			//revisar que el cliente no deba dinero
+			if( parseFloat(cliente.credito_restante) != parseFloat(cliente.limite_credito) ){
+				Ext.Msg.alert("Mostrador", "Este cliente aun tiene un saldo pendiente. No puede eliminarlo.");
+			}else{
+				Ext.Msg.confirm("Mostrador","&iquest; Esta completamente seguro de que desea desactivar a este cliente ?", Aplicacion.Clientes.currentInstance.eliminarCliente );
+			}
+			
+
+		}}),	
+		new Ext.Button({ id : 'Clientes-EditarDetalles', ui  : 'action', text: 'Editar',  handler : this.editarClienteBoton }),
+		new Ext.Button({ id : 'Clientes-EditarDetallesCancelar', ui  : 'decline', text: 'Cancelar', handler : this.editarClienteCancelarBoton, hidden : true }),
+		new Ext.Button({ id : 'Clientes-EditarDetallesGuardar', ui  : 'confirm', text: 'Guardar', handler : this.editarClienteGuardarBoton, hidden : true })
+
+	];
+
+
+	var dockedItems = [new Ext.Toolbar({
+		ui: 'light',
+		dock: 'top',
+		items: [{xtype:"spacer"}].concat( opciones )
+	})];
 	
 	detallesDelCliente = new Ext.form.FormPanel({                                                       
-	title: 'Detalles del Cliente',
-	
-	items: [{
-		xtype: 'fieldset',
-	    title: 'Detalles de Cliente',
-
-	    instructions: 'Todos los campos son obligatorios. Serciorese de que todos los campos sean correctos.',
-		defaults : {
-			disabled : true
-		},
-		items: [
-			new Ext.form.Text({ name: 'nombre', label: 'Nombre' }),
-			new Ext.form.Text({ name: 'id_cliente', label: 'ID'	, hidden : true}),
-			new Ext.form.Text({ name: 'rfc', label: 'RFC' }),
-			new Ext.form.Text({ name : 'direccion', label: 'Direccion' }),
-			new Ext.form.Text({ name : 'ciudad', label: 'Ciudad' }),
-			new Ext.form.Text({ name : 'e_mail', label: 'E-mail' }),
-			new Ext.form.Text({ name : 'telefono',     label: 'Telefono' }),
-			new Ext.form.Text({ name : 'descuento',     label: 'Descuento',     required: false }),
-			new Ext.form.Text({ name : 'limite_credito',     label: 'Lim. Credito',     required: false }),
-			new Ext.form.Text({ name : 'credito_restante',     label: 'Restante',     required: false }),
-			new Ext.form.Text({ name : 'activo',     hidden: true }),
-			new Ext.form.Text({ name : 'id_usuario',     hidden: true }),			
-			new Ext.form.Text({ name : 'id_sucursal',     hidden: true })
-			
-		]},
-		
-		new Ext.Button({ id : 'Clientes-EditarDetalles', ui  : 'action', text: 'Editar', margin : 5, handler : this.editarClienteBoton, disabled : false }),
-		new Ext.Button({ id : 'Clientes-EditarDetallesGuardar', ui  : 'confirm', text: 'Guardar', margin : 5, handler : this.editarClienteGuardarBoton, disabled : false, hidden : true }),
-		new Ext.Button({ id : 'Clientes-EditarDetallesCancelar', ui  : 'decline', text: 'Cancelar', margin : 5,  handler : this.editarClienteCancelarBoton, disabled : false, hidden : true })
-	]});
+		title: 'Detalles del Cliente',
+		dockedItems : dockedItems,
+		items: [{
+			xtype: 'fieldset',
+		    title: 'Detalles de Cliente',
+		    instructions: 'Todos los campos son obligatorios. Serciorese de que todos los campos sean correctos.',
+			defaults : {
+				disabled : true
+			},
+			items: [
+				new Ext.form.Text({ name: 'nombre', label: 'Nombre' }),
+				new Ext.form.Text({ name: 'id_cliente', label: 'ID'	, hidden : true}),
+				new Ext.form.Text({ name : 'activo',     hidden: true }),
+				new Ext.form.Text({ name : 'id_usuario',     hidden: true }),			
+				new Ext.form.Text({ name : 'id_sucursal',     hidden: true }),
+				new Ext.form.Text({ name: 'rfc', label: 'RFC' }),
+				new Ext.form.Text({ name : 'direccion', label: 'Direccion' }),
+				new Ext.form.Text({ name : 'ciudad', label: 'Ciudad' }),
+				new Ext.form.Text({ name : 'e_mail', label: 'E-mail' }),
+				new Ext.form.Text({ name : 'telefono',     label: 'Telefono' }),
+				new Ext.form.Text({ name : 'descuento',     label: 'Descuento',     required: false }),
+				new Ext.form.Text({ name : 'limite_credito',     label: 'Lim. Credito',     required: false }),
+				new Ext.form.Text({ name : 'credito_restante',     label: 'Restante',     required: false })
+			]}
+		]
+	});
 
 
 
@@ -952,63 +1034,53 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 
 	//abonar a una compra a credito
 	abonar = [ new Ext.form.FormPanel({
-		                                                      
-		
 		items: [{
 			xtype: 'fieldset',
-		    title: 'Creditos y Saldos',
+			title: 'Creditos y Saldos',
 			id : 'Clientes-SeleccionVentaCredito',
-		    instructions: 'Seleccine una venta para ver sus detalles.',
-			items: [
-				{
-					id : "Clentes-CreditoVentasLista",
-					xtype: 'selectfield',
-					name: 'options',
-					label : "Venta", 
-					options: [  ],
-					listeners : {
+			instructions: 'Seleccine una venta para ver sus detalles.',
+			items: [{
+				id : "Clentes-CreditoVentasLista",
+				xtype: 'selectfield',
+				name: 'options',
+				label : "Venta", 
+				options: [  ],
+				listeners : {
 						"change" : function(a,b) {Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange(a,b);} 
 					}
 				}]
-		},{
-			xtype: 'fieldset',
-		    title: 'Detalles de la venta',
-			id : 'Clientes-DetallesVentaCredito',
-			items: [
+			},{
+				xtype: 'fieldset',
+				title: 'Detalles de la venta',
+				id : 'Clientes-DetallesVentaCredito',
+				items: [
 					new Ext.form.Text({ name: 'fecha', label: 'Fecha'  }),
 					new Ext.form.Text({ name: 'sucursal', label: 'Sucursal'  }),
 					new Ext.form.Text({ name: 'user_id', label: 'Vendedor'  }),
 					new Ext.form.Text({ name: 'total', label: 'Total'  }),
 					new Ext.form.Text({ name: 'abonado', label: 'Abonado'  }),
-					new Ext.form.Text({ name: 'saldo', label: 'Saldo'  })
-			]
-		},{
-			xtype: 'fieldset',
-		    title: 'Abonar a la venta',
-			id : 'Clientes-DetallesVentaAbonarCredito',
-			hidden : true,
-			items: [
+					new Ext.form.Text({ name: 'saldo', label: 'Saldo'  }) 
+					]
+			},{
+				xtype: 'fieldset',
+				title: 'Abonar a la venta',
+				id : 'Clientes-DetallesVentaAbonarCredito',
+				hidden : true,
+				items: [
 					new Ext.form.Text({ name: 'saldo', label: 'Saldo'  }),
-					new Ext.form.Text({ name: 'monto', label: 'Monto'  })
-			]
-		},
+					new Ext.form.Text({ id: 'Cliente-abonarMonto', name: 'monto', label: 'Monto'  })
+				]
+			},
 
-		new Ext.Button({ id : 'Clientes-AbonarVentaBoton', ui  : 'action', text: 'Abonar', margin : 15, handler : this.abonarVentaBoton, hidden : true }),
-		new Ext.Button({ id : 'Clientes-AbonarVentaBotonAceptar', ui  : 'action', text: 'Abonar', margin : 15, handler : this.doAbonar, hidden : true }),
-		new Ext.Button({ id : 'Clientes-AbonarVentaBotonCancelar', ui  : 'drastic', text: 'Cancelar', margin : 15, handler : this.abonarVentaCancelarBoton, hidden : true }),				
-		new Ext.Button({ id : 'Clientes-ImprimirSaldoBoton', ui  : 'confirm', text: 'Imprimir Detalles', margin : 15, handler : this.imprimirSaldoVentaBoton, hidden : true }),
-		
-		new Ext.Button({ id : 'Clientes-VerProductosBoton', ui  : 'confirm', text: 'Ver Productos de esta venta', margin : 5, handler : this.imprimirSaldoVentaBoton, hidden : true })			
+			new Ext.Button({ id : 'Clientes-AbonarVentaBoton', ui  : 'action', text: 'Abonar', margin : 15, handler : this.abonarVentaBoton, hidden : true }),
+			new Ext.Button({ id : 'Clientes-AbonarVentaBotonAceptar', ui  : 'action', text: 'Abonar', margin : 15, handler : this.doAbonar, hidden : true }),
+			new Ext.Button({ id : 'Clientes-AbonarVentaBotonCancelar', ui  : 'drastic', text: 'Cancelar', margin : 15, handler : this.abonarVentaCancelarBoton, hidden : true }),				
+			new Ext.Button({ id : 'Clientes-ImprimirSaldoBoton', ui  : 'confirm', text: 'Imprimir Detalles', margin : 15, handler : this.imprimirSaldoVentaBoton, hidden : true }),
+			new Ext.Button({ id : 'Clientes-VerProductosBoton', ui  : 'confirm', text: 'Ver Productos de esta venta', margin : 5, handler : this.imprimirSaldoVentaBoton, hidden : true })			
 
-		]
-	})
-	];
+		]}
+	)];
 	
-
-
-
-
-
 
 	//crear el panel, y asignarselo a detallesDeClientesPanel
 	this.detallesDeClientesPanel = new Ext.TabPanel({
@@ -1072,7 +1144,7 @@ Aplicacion.Clientes.prototype.nuevoClientePanel = null;
  **/
 Aplicacion.Clientes.prototype.nuevoClientePanelShow = function ( ){
 	if(DEBUG){
-		console.log("mostrando nuevo cliente")
+		console.log("mostrando nuevo cliente");
 	}
 	
 	//hacer un setcard manual
@@ -1089,7 +1161,7 @@ Aplicacion.Clientes.prototype.nuevoClientePanelShow = function ( ){
  * Se llama para crear por primera vez el panel de nuevo cliente
  **/
 Aplicacion.Clientes.prototype.nuevoClientePanelCreator = function (  ){
-	if(DEBUG){ console.log ("creando panel de nuevo cliente"); }
+	if(DEBUG){ console.log("creando panel de nuevo cliente"); }
 	
 	
 	this.nuevoClientePanel = new Ext.form.FormPanel({                                                       
@@ -1109,7 +1181,7 @@ Aplicacion.Clientes.prototype.nuevoClientePanelCreator = function (  ){
 				new Ext.form.Text({ name : 'limite_credito',     label: 'Lim. Credito',     required: false })
 			]},
 			
-			new Ext.Button({ id : 'Clientes-CrearCliente', ui  : 'action', text: 'Crear Cliente', margin : 5,  handler : this.crearClienteBoton, disabled : false }),
+			new Ext.Button({ id : 'Clientes-CrearCliente', ui  : 'action', text: 'Crear Cliente', margin : 5,  handler : this.crearClienteBoton, disabled : false })
 	]});
 
 
@@ -1166,55 +1238,48 @@ Aplicacion.Clientes.prototype.crearCliente = function ( data )
 Aplicacion.Clientes.prototype.crearClienteBoton = function ()
 {
 
+	//validar los nuevos datos
 	v = Aplicacion.Clientes.currentInstance.nuevoClientePanel.getValues();
-
-	//validar los datos antes de enviar
-
-	var response = "";
+	campo = Aplicacion.Clientes.currentInstance.nuevoClientePanel.items.items[0];
 	
 	//nombre
 	if(v.nombre.length < 10){
-		response += "La nombre no es valida.<br>";
+		return campo.setInstructions("El nombre debe ser mayor de diez caracteres.");
 	}
 	
 	//rfc
 	if(v.rfc.length < 10){
-		response += "La rfc no es valida.<br>";
+		return campo.setInstructions("El RFC debe ser mayor de diez caracteres.");
 	}
 	
 	//direccion
 	if(v.direccion.length < 10){
-		response += "La direccion no es valida.<br>";
+		return campo.setInstructions("La direccion es muy corta.");
 	}
 	
 	//ciudad
 	if(v.ciudad.length < 3){
-		response += "La ciudad no es valida.<br>";
+		return campo.setInstructions("La ciudad es muy corta.");
 	}
 	
 	//e_mail
 	
 	//telefono
-	if(v.telefono.length < 10){
-		response += "La telefono no es valida.<br>";
+	if(v.telefono.length < 5){
+		return campo.setInstructions("El telefono debe ser mayor de 5 caracteres.");
 	}
 	
 	//descuento
-	if(  v.descuento.length == 0 || isNaN ( v.descuento ) ){
-		response += "El descuento debe ser un numero.<br>";
+	if(  v.descuento.length === 0 || isNaN( v.descuento ) || (v.descuento > 50 && v.descuento < 0) ){
+		return campo.setInstructions("El descuento debe ser un numero entre 0 y 50.");
 	}
 	
 	//limite_credito
-	if( v.limite_credito.length == 0 || isNaN ( v.limite_credito ) ){
-		response += "El limite de credito debe ser un numero.<br>";
+	if( v.limite_credito.length === 0 || isNaN( v.limite_credito ) ){
+		return campo.setInstructions("El limite de credito debe ser un numero.");
 	}
+	
 
-	
-	if(response.length > 0){
-		Aplicacion.Clientes.currentInstance.nuevoClientePanel.items.items[0].setInstructions(response);
-		return;
-	}
-	
 	Aplicacion.Clientes.currentInstance.crearCliente( v );
 };
 

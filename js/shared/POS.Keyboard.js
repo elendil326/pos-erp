@@ -224,8 +224,7 @@ POS.Keyboard._genHTMLnum = function (config){
 	
 	var html = "";
 	
-		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>0</div>";
-		
+	
 		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>1</div>";
 		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>2</div>";
 		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>3</div>";
@@ -239,7 +238,7 @@ POS.Keyboard._genHTMLnum = function (config){
 		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>8</div>";
 		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>9</div>";
 
-
+		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>0</div>";
 
 		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>.</div>";			
 

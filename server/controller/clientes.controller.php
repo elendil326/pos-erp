@@ -274,31 +274,20 @@ function abonarCompra( $args ){
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
-    if(!isset($data->id_venta))
+    if(!isset($data->id_venta) )
     {
         die('{"success": false, "reason": "Parametros invalidos." }');
     }
 
-    if(!isset($data->id_sucursal))
-    {
-        die('{"success": false, "reason": "Parametros invalidos." }');
-    }
-
-    if(!isset($data->id_usuario))
-    {
-        die('{"success": false, "reason": "Parametros invalidos." }');
-    }
-
-    if(!isset($data->monto))
+    if(!isset($data->monto) )
     {
         die('{"success": false, "reason": "Parametros invalidos." }');
     }
 
     $pagosVenta = new PagosVenta();
-    
     $pagosVenta->setIdVenta( $data->id_venta );
-    $pagosVenta->setIdSucursal( $data->id_sucursal );
-    $pagosVenta->setIdUsuario( $data->id_usuario );
+    $pagosVenta->setIdSucursal( $_SESSION['sucursal'] );
+    $pagosVenta->setIdUsuario(  $_SESSION['userid'] );
     $pagosVenta->setMonto( $data->monto );
 
     try
