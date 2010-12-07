@@ -5,9 +5,6 @@ Aplicacion.Inventario = function (	){
 	return this._init();
 };
 
-
-
-
 Aplicacion.Inventario.prototype._init = function (){
 	if(DEBUG){
 		console.log("Inventario: construyendo");
@@ -33,9 +30,6 @@ Aplicacion.Inventario.prototype._init = function (){
 	
 	return this;
 };
-
-
-
 
 Aplicacion.Inventario.prototype.getConfig = function (){
 	return {
@@ -94,7 +88,9 @@ Aplicacion.Inventario.prototype.inventarioListaStore = new Ext.data.Store({
 	}
 });
 
-//escructura que contiene el inventario que se cargo por ultima vez
+/* 
+ * escructura que contiene el inventario que se cargo por ultima vez
+ * */
 Aplicacion.Inventario.prototype.Inventario = {
 	lista : null,
 	lastUpdate : null
@@ -148,9 +144,7 @@ Aplicacion.Inventario.prototype.cargarInventario = function ()
 
 };
 
-
 Aplicacion.Inventario.prototype.listaInventarioPanel = null;
-
 
 Aplicacion.Inventario.prototype.listaInventarioPanelShow = function ()
 {
@@ -162,8 +156,6 @@ Aplicacion.Inventario.prototype.listaInventarioPanelShow = function ()
 	
 	sink.Main.ui.setActiveItem( this.listaInventarioPanel , 'slide');
 };
-
-
 
 Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 {
@@ -325,9 +317,6 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelCreator = function()
 };
 
 
-
-
-
 Aplicacion.Inventario.prototype.detalleInventarioSurtirEsteProd = function()
 {
 	if(DEBUG){
@@ -339,6 +328,8 @@ Aplicacion.Inventario.prototype.detalleInventarioSurtirEsteProd = function()
 };
 
 
+
+
 /* ***************************************************************************
    * Surtir productos 
    * 
@@ -348,7 +339,7 @@ Aplicacion.Inventario.prototype.detalleInventarioSurtirEsteProd = function()
 Aplicacion.Inventario.prototype.carritoSurtir = {
 		items : [],
 		otherData: null
-	};
+};
 
 
 Aplicacion.Inventario.prototype.surtirAddItem = function ( item )
@@ -374,13 +365,11 @@ Aplicacion.Inventario.prototype.surtirAddItem = function ( item )
 	
 };
 
-
-
 Aplicacion.Inventario.prototype.refreshSurtir = function ()
 {
 	
 	if(DEBUG){
-		console.log("Regrescanco el carrito para surtir...");
+		console.log("Refrescanco el carrito para surtir...");
 	}
 	
 	carrito = this.carritoSurtir;
@@ -428,15 +417,7 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 	
 	
 	for (i=0; i < carrito.items.length; i++){
-		/*
-		if(Ext.getCmp("Inventario-carritoCantidad"+ carrito.items[i].productoID + "Text") != null){
-			if(DEBUG){
-				console.log("Ya existe este campo de texto para el carrito")
-			}
-			continue;
-		}*/
-		
-		
+	
 	
 		a = new Ext.form.Text({
 			renderTo : "Inventario-carritoCantidad"+ carrito.items[i].productoID ,
@@ -456,9 +437,11 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 									
 									carrito = Aplicacion.Inventario.currentInstance.carritoSurtir;
 									
-									for (var i=0; i < carrito.items.length; i++) {
-										carrito.items[i].cantidad = parseFloat( campo.getValue() );
-										break;
+									for (var j=0; j < carrito.items.length; j++) {
+										if(campo.prodID == carrito.items[j].productoID){
+											carrito.items[j].cantidad = parseFloat( campo.getValue() );
+											break;											
+										}
 									}
 									
 									Aplicacion.Inventario.currentInstance.refreshSurtir();
@@ -477,10 +460,7 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 };
 
 
-
 Aplicacion.Inventario.prototype.surtirWizardPanel = null;
-
-Aplicacion.Inventario.prototype.surtirWizardPopUpPanel = null;
 
 Aplicacion.Inventario.prototype.surtirWizardCreator = function ()
 {
@@ -493,6 +473,15 @@ Aplicacion.Inventario.prototype.surtirWizardCreator = function ()
 		}
 	},{
 		xtype : 'spacer'
+	},{
+		text: 'Cancelar pedido',
+		ui: 'normal',
+		handler : function( t ){
+			
+			Aplicacion.Inventario.currentInstance.carritoSurtir.items = [];
+			Aplicacion.Inventario.currentInstance.refreshSurtir();
+			
+		}		
 	},{
 		text: 'Confirmar pedido',
 		ui: 'action',
@@ -572,6 +561,7 @@ Aplicacion.Inventario.prototype.surtirWizardCreator = function ()
 };
 
 
+Aplicacion.Inventario.prototype.surtirWizardPopUpPanel = null;
 
 
 

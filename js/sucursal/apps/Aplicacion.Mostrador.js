@@ -1,6 +1,7 @@
+/*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, regexp: true, newcap: true, immed: true, maxerr: 1590, maxlen: 80 */
 
-
-Aplicacion.Mostrador = function (  ){
+Aplicacion.Mostrador = function ()
+{
 
 	return this._init();
 };
@@ -8,7 +9,7 @@ Aplicacion.Mostrador = function (  ){
 
 
 
-Aplicacion.Mostrador.prototype._init = function (){
+Aplicacion.Mostrador.prototype._init = function () {
 	if(DEBUG){
 		console.log("Mostrador: construyendo");
 	}
@@ -49,28 +50,8 @@ Aplicacion.Mostrador.prototype.getConfig = function (){
 
 
 /* ********************************************************
-	Funciones de carrito
+	Funciones del carrito
 ******************************************************** */
-
-
-
-
-Aplicacion.Mostrador.prototype.cancelarVenta = function ()
-{
-
-
-	Aplicacion.Mostrador.currentInstance.carrito.items = [];
-	
-	Aplicacion.Mostrador.currentInstance.refrescarMostrador();
-	
-	Aplicacion.Mostrador.currentInstance.setCajaComun();
-	
-
-};
-
-
-
-
 /*
  *	Estructura donde se guardaran los detalles de la venta actual.
  * */
@@ -82,16 +63,21 @@ Aplicacion.Mostrador.prototype.carrito = {
 };
 
 
+Aplicacion.Mostrador.prototype.cancelarVenta = function ()
+{
 
+	Aplicacion.Mostrador.currentInstance.carrito.items = [];
 
+	Aplicacion.Mostrador.currentInstance.refrescarMostrador();
+	
+	Aplicacion.Mostrador.currentInstance.setCajaComun();
 
-
-
+};
 
 Aplicacion.Mostrador.prototype.carritoCambiarCantidad = function ( id, qty, forceNewValue )
 {
 	
-	carrito = Aplicacion.Mostrador.currentInstance.carrito.items;
+	var carrito = Aplicacion.Mostrador.currentInstance.carrito.items;
 	
 	for (var i = carrito.length - 1; i >= 0; i--){
 		if( carrito[i].productoID == id ){
@@ -112,8 +98,6 @@ Aplicacion.Mostrador.prototype.carritoCambiarCantidad = function ( id, qty, forc
 	}
 	
 };
-
-
 
 Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 {	
@@ -138,18 +122,20 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		}
 		html += "<td>" + carrito.items[i].productoID + " " + carrito.items[i].descripcion+ "</td>";
 
-		html += "<td > <span class='boton' onClick='Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad("+ carrito.items[i].productoID +", -1, false)'>&nbsp;-&nbsp;</span></td>";
+		html += "<td > <span class='boton' onClick='Aplicacion.Mostrador.currentInstance.quitarDelCarrito("+ carrito.items[i].productoID +")'>&nbsp;DEL&nbsp;</span>&nbsp;";
+		
+		html += "<span class='boton' onClick='Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad("+ carrito.items[i].productoID +", -1, false)'>&nbsp;-&nbsp;</span></td>";
 
-		html += "<td> <div id='Mostrador-carritoCantidad"+ carrito.items[i].productoID +"'></div></td>"
+		html += "<td> <div id='Mostrador-carritoCantidad"+ carrito.items[i].productoID +"'></div></td>";
 
 		html += "<td > <span class='boton' onClick='Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad("+ carrito.items[i].productoID +", 1, false)'>&nbsp;+&nbsp;</span></td>";
 
-		html += "<td> <div id='Mostrador-carritoPrecio"+ carrito.items[i].productoID +"'></div></td>"
+		html += "<td> <div id='Mostrador-carritoPrecio"+ carrito.items[i].productoID +"'></div></td>";
 		
 		html += "<td>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioVenta )+"</td>";
 		
 		html += "</tr>";
-	};
+	}
 	
 	html += "</table>";
 	
@@ -157,7 +143,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 	
 	
 	
-	for (var i=0; i < carrito.items.length; i++){
+	for (i=0; i < carrito.items.length; i++){
 		
 		if(Ext.get("Mostrador-carritoCantidad"+ carrito.items[i].productoID + "Text")){
 			continue;
@@ -183,7 +169,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 									Aplicacion.Mostrador.currentInstance.carrito.items[i].cantidad = parseFloat( campo.getValue() );
 									break;
 								}
-							};
+							}
 							
 							Aplicacion.Mostrador.currentInstance.refrescarMostrador();
 						}
@@ -222,7 +208,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 											precioVenta = Aplicacion.Inventario.currentInstance.Inventario.productos[j].data.precioVenta;
 											break;
 										}
-									};
+									}
 									
 									if( parseFloat(campo.getValue()) < parseFloat( precioVenta) ){
 										Ext.Msg.alert("Mostrador", "No puede bajar un precio por debajo del preestablecido.");
@@ -232,7 +218,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 									Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta = parseFloat( campo.getValue() );
 									break;
 								}
-							};
+							}
 							
 							Aplicacion.Mostrador.currentInstance.refrescarMostrador();
 						}
@@ -315,7 +301,25 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 	this.refrescarMostrador();
 };
 
-
+/*
+ * Quita un articulo del carrito dado su id
+ * */
+Aplicacion.Mostrador.prototype.quitarDelCarrito = function ( id )
+{
+	if(DEBUG){
+		console.log("Removiendo del carrito.");
+	}
+	
+	carrito = Aplicacion.Mostrador.currentInstance.carrito;
+	for (var i = carrito.items.length - 1; i >= 0; i--){
+		if( carrito.items[i].productoID == id ){
+			carrito.items.splice( i ,1 );
+			break;
+		}
+	}
+	Aplicacion.Mostrador.currentInstance.refrescarMostrador();
+	
+};
 
 /* ********************************************************
 	Panel principal del mostrador
@@ -326,7 +330,6 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
  * Contiene el panel con la forma del mostrador
  */
 Aplicacion.Mostrador.prototype.mostradorPanel = null;
-
 
 /**
  * Pone un panel en mostradorPanel
@@ -417,17 +420,12 @@ Aplicacion.Mostrador.prototype.mostradorPanelCreator = function (){
 
 
 
-
-
-
 /* ********************************************************
 	Buscar y seleccionar cliente para la venta
 ******************************************************** */
 
 
 Aplicacion.Mostrador.prototype.buscarClienteForm = null;
-
-
 
 Aplicacion.Mostrador.prototype.clienteSeleccionado = function ( cliente )
 {
@@ -443,9 +441,6 @@ Aplicacion.Mostrador.prototype.clienteSeleccionado = function ( cliente )
 	Aplicacion.Mostrador.currentInstance.carrito.cliente = cliente;
 		
 };
-
-
-
 
 Aplicacion.Mostrador.prototype.setCajaComun = function ()
 {
@@ -463,7 +458,6 @@ Aplicacion.Mostrador.prototype.setCajaComun = function ()
 	Aplicacion.Mostrador.currentInstance.carrito.cliente = null;
 	
 };
-
 
 Aplicacion.Mostrador.prototype.buscarClienteFormCreator = function ()
 {
@@ -539,12 +533,6 @@ Aplicacion.Mostrador.prototype.buscarClienteFormCreator = function ()
 
 };
 
-
-
-
-
-
-
 Aplicacion.Mostrador.prototype.buscarClienteFormShow = function (  )
 {
 
@@ -563,11 +551,12 @@ Aplicacion.Mostrador.prototype.buscarClienteFormShow = function (  )
 };
 
 
+
+
 /* ********************************************************
-	ThankYou for your bussiness
+	Thank You for your bussiness
 ******************************************************** */
 Aplicacion.Mostrador.prototype.finishedPanel = null;
-
 
 Aplicacion.Mostrador.prototype.finishedPanelShow = function()
 {
@@ -580,8 +569,6 @@ Aplicacion.Mostrador.prototype.finishedPanelShow = function()
 	sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.finishedPanel , 'fade');
 	
 };
-
-
 
 Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 {
@@ -613,8 +600,6 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 
 };
 
-
-
 Aplicacion.Mostrador.prototype.finishedPanelCreator = function()
 {
 
@@ -623,6 +608,11 @@ Aplicacion.Mostrador.prototype.finishedPanelCreator = function()
 	});
 	
 };
+
+
+
+
+
 
 
 /* ********************************************************
@@ -669,7 +659,6 @@ Aplicacion.Mostrador.prototype.doVenta = function ()
 	}
 
 };
-
 
 Aplicacion.Mostrador.prototype.vender = function ()
 {
@@ -732,17 +721,13 @@ Aplicacion.Mostrador.prototype.vender = function ()
 
 
 /* ********************************************************
-	Formas y funciones de venta (paso2)
+	Seleccion de Pago y Vender
 ******************************************************** */
 
 /*
  * Guarda el panel donde estan la forma de venta
  **/
 Aplicacion.Mostrador.prototype.doVentaPanel = null;
-
-
-
-
 
 /*
  * Es la funcion de entrada para mostrar el panel de venta
@@ -755,9 +740,6 @@ Aplicacion.Mostrador.prototype.doVentaPanelShow = function ( ){
 	//hacer un setcard manual
 	sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.doVentaPanel , 'slide');
 };
-
-
-
 
 Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
 {
@@ -853,7 +835,6 @@ Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
 	this.carrito.total = total;
 	
 };
-
 
 /*
  * Se llama para crear por primera vez el panel de venta
@@ -983,14 +964,6 @@ Aplicacion.Mostrador.prototype.doVentaPanelCreator = function (	 ){
 
 	
 };
-
-
-
-
-
-
-
-
 
 
 
