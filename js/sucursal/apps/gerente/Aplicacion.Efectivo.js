@@ -13,6 +13,11 @@ Aplicacion.Efectivo.prototype._init = function (){
 		console.log("Efectivo: construyendo");
     }
 
+    //cargar las sucursales
+    this.cargarSucursales();
+
+    //cargas los encargados de las sucursales
+    //this.cargarEncargadosSucursales();
 	
 	//crear el panel de nuevo gasto
 	this.nuevoGastoPanelCreator();
@@ -67,6 +72,73 @@ Aplicacion.Efectivo.prototype.getConfig = function (){
 };
 
 
+Aplicacion.Efectivo.prototype.sucursalesLista = null;
+
+/*
+ * Cargar la lista de las sucursales
+ *  
+ **/
+Aplicacion.Efectivo.prototype.cargarSucursales = function ( )
+{
+    Ext.Ajax.request({
+        url: 'proxy.php',
+        scope : this,
+        params : {
+            action : 700
+        },
+        success: function(response, opts) {
+            try{
+                r = Ext.util.JSON.decode( response.responseText );
+            }catch(e){
+                return POS.error(e);
+            }
+
+            if( !r.success ){
+                return;
+            }
+            Aplicacion.Efectivo.currentInstance.sucursalesLista = r.datos;
+
+        },
+        failure: function( response ){
+            POS.error( response );
+        }
+    });
+};
+
+/*
+ * Cargar la lista de los empleados en cierta sucursal
+ *  
+ **/
+Aplicacion.Efectivo.prototype.cargarEmpleados = function ( a, b )
+{
+
+    Ext.Ajax.request({
+        url: 'proxy.php',
+        scope : this,
+        params : {
+            action : 505,
+            id_sucursal : b
+        },
+        success: function(response, opts) {
+            try{
+                r = Ext.util.JSON.decode( response.responseText );
+            }catch(e){
+                return POS.error(e);
+            }
+
+            if( !r.success ){
+                return;
+            }
+
+            Ext.getCmp("Efectivo-operacionInterSucursalEfectivo-responsable").setOptions( r.datos );
+
+        },
+        failure: function( response ){
+            POS.error( response );
+        }
+    });
+};
+
 
 /* ********************************************************
 	Operacion Inter Sucursales
@@ -86,27 +158,13 @@ Aplicacion.Efectivo.prototype.operacionInterSucursalEfectivoPanel = null;
  */
 Aplicacion.Efectivo.prototype.operacionInterSucursalEfectivoPanelCreator = function (){
 
-    var menu = [{
-        xtype : "spacer"
-    },{
-        id : "Efectivo-PrestamoEfectivo",
-        text: 'Nuevo Prestamo',
-        ui: 'forward',
-        hidden : false
 
-    }];
-
-
-
-
-    var dockedItems = [new Ext.Toolbar({
-        ui: 'light',
-        dock: 'bottom',
-        items: menu
-    })];
-    
-    this.operacionInterSucursalEfectivoPanel = new Ext.form.FormPanel({                                                       
-        dockedItems: dockedItems,
+    this.operacionInterSucursalEfectivoPanel = new Ext.form.FormPanel({
+            listeners : {
+                    "show" : function (){
+                        Ext.getCmp("Efectivo-operacionInterSucursalEfectivo-sucursal").setOptions( Aplicacion.Efectivo.currentInstance.sucursalesLista );
+                    }
+                },
             items: [{
 
                 xtype: 'fieldset',
@@ -120,48 +178,26 @@ Aplicacion.Efectivo.prototype.operacionInterSucursalEfectivoPanelCreator = funct
                     }
                 },
                 items: [
-                    {
-                        xtype : "selectfield",
-                        label : "Sucursal",
-                        name : "sucursal",
-                        options : [
-                            {
-                                text : "Sucursal 1",
-                                value : "Sucursal 1"
-                            },{
-                                text : "Sucursal 2",
-                                value : "Sucursal 2"
-                            },{
-                                text : "Sucursal 3",
-                                value : "Sucursal 3"
-                            },{
-                                text : "Sucursal 4",
-                                value : "Sucursal 4"
-                            }
-                        ]
-                    },{
-                        xtype : "selectfield",
-                        label : "Responsable",
-                        name : "responsable",
-                        options : [
-                            {
-                                text : "Juan",
-                                value : "Sucursal 1"
-                            },{
-                                text : "Pedro",
-                                value : "Sucursal 2"
-                            },{
-                                text : "Pablo",
-                                value : "Sucursal 3"
-                            },{
-                                text : "Omar",
-                                value : "Sucursal 4"
-                            }
-                        ]
-                    },{
-                        xtype : "textfield",
-                        label : "Monto",
-                        name : "monto",
+                    new Ext.form.Select({ 
+                        id:'Efectivo-operacionInterSucursalEfectivo-sucursal',
+                        name : 'sucursal',
+                        label: 'Sucursal',
+                        required:true,
+                        options: [ {text : "Seleccione una sucursal", value : null } ],
+                        listeners : {
+                            "change" : function(a,b) {Aplicacion.Efectivo.currentInstance.cargarEmpleados(a,b);}
+                        }
+                    }),
+                    new Ext.form.Select({ 
+                        id:'Efectivo-operacionInterSucursalEfectivo-responsable',
+                        name : 'responsable',
+                        label: 'Responsable',
+                        required:true,
+                        options: [ {text : "Seleccione un responsable", value : null } ]
+                    }),
+                    new Ext.form.Text({
+                        id: 'Efectivo-operacionInterSucursalEfectivo-monto',
+                        label: 'Monto',
                         listeners : {
                             'focus' : function (){
 
@@ -173,10 +209,11 @@ Aplicacion.Efectivo.prototype.operacionInterSucursalEfectivoPanelCreator = funct
                                 POS.Keyboard.Keyboard( this, kconf );
                             }
                         }
-                    },{
-                        xtype : "textfield",
-                        label : "Nota",
-                        name : "nota",
+                    }),
+                    new Ext.form.Text({
+                        id: 'Efectivo-operacionInterSucursalEfectivo-nota',
+                        label: 'Nota',
+                        name: 'nota',
                         listeners : {
                             'focus' : function (){
 
@@ -188,7 +225,7 @@ Aplicacion.Efectivo.prototype.operacionInterSucursalEfectivoPanelCreator = funct
                                 POS.Keyboard.Keyboard( this, kconf );
                             }
                         }
-                    }
+                    })
                 ]}
         ]});
 

@@ -1,6 +1,34 @@
 <?php
 
+require_once('../server/model/sucursal.dao.php');
+
 function listarSucursales( $args ){
+
+    $s = new Sucursal();
+    $s->setActivo(1);
+
+    $sucursales = SucursalDAO::search($s);
+
+    $array_sucursales = array();
+
+    /*array_push( $array_sucursales , array(
+            'id_sucursal' => null,
+            'descripcion' => "seleccione una sucursal",
+            'text' => "seleccione una sucursal",
+            'value' => null
+    ) );*/
+
+    foreach( $sucursales as $sucursal )
+    {
+        array_push( $array_sucursales , array(
+            'id_sucursal' => $sucursal->getIdSucursal(),
+            'descripcion' => $sucursal->getDescripcion(),
+            'text' => $sucursal->getDescripcion(),
+            'value' => $sucursal->getIdSucursal()
+        ) );
+    }
+
+    printf('{"success" :" true", "datos": %s}', json_encode( $array_sucursales ) );
 
 }
 
@@ -48,7 +76,7 @@ function inventarioSucursal(){
 switch( $args['action'] )
 {
     case 700://listar sucursales
-        listarSucursales(  );
+        listarSucursales( $args );
     break;
 
     case 701://abrir sucursal

@@ -302,54 +302,51 @@ function listarBajoPerfil(){
 
 }
 
+
 /**
- 
- **/
+ * Esta funcion es empleada para que regrese una lista con los posibles responsables de
+ * la caja en la sucursal, se emplea para cuando se va a prestar dinero a una sucursal y hacer
+ * responsable a una persona por ese dinero.
+ */
+function listarResponsables( $args ){
 
-function getDataGridUsuarios($page, $nro_registros, $sortname, $sortorder){
+    if( !isset( $args['id_sucursal'] ) )
+    {
+        die( ' { "success" : false, "reason" : "Faltan parametros" } ' );
+    }
 
-	$todos = UsuarioDAO::getAll();
-	$usuarios = UsuarioDAO::getAll($page, $nro_registros, $sortname, $sortorder);
-	
-	$arrayDatos = array();
-	$userSearch = new GruposUsuarios();
-	
-	foreach($usuarios as $usuario)
-	{
+    $gr1 = new GruposUsuarios();
+    $gr1->setIdGrupo(2);
+    $gr2 = new GruposUsuarios();
+    $gr2->setIdGrupo(3);
 
-		if($usuario->getActivo() == 1)
-		{		
-			$sucursal = SucursalDAO::getByPK( $usuario->getIdSucursal() );
-			
-			$userSearch->setIdUsuario($usuario->getIdUsuario());
-			$gruposUsuarios = GruposUsuariosDAO::search($userSearch);
-	
-			$gs = array_pop($gruposUsuarios);
-			
-			if(!$gs) $idgrupo = "No definido";
-			else{
-				 $idgrupo = $gs->getIdGrupo();
-				 
-				 switch($idgrupo){
-				 	
-				 	case "1": $idgrupo = "Administrador"; break;
-				 	case "2": $idgrupo = "Gerente"; break;
-				 	case "3": $idgrupo = "Cajero"; break;
-				 }
-			}
-					
-			array_push($arrayDatos, array(
-							$usuario->getIdUsuario(),
-							$usuario->getNombre(),
-							$sucursal->getDescripcion(),
-							$idgrupo
-						));
-		}
-	}
+    //obtenemos todos los cajeros y gerentes
+    $responsables = GruposUsuariosDAO::byRange($gr1, $gr2);
 
-	return '{ "success": true, "page": '.$page.', "total": '.count($todos).', "data" : '.json_encode($arrayDatos).' }';
+    $array_responsables = array();
+
+    //los filtramos por sucursal
+    foreach( $responsables as  $responsable )
+    {
+
+        $empleado = UsuarioDAO::getByPK( $responsable->getIdUsuario() );
+        $descripcion_tipo = GruposDAOBase::getByPK( $responsable->getIdGrupo() );
+
+        if( $empleado->getIdSucursal() ==  $args['id_sucursal'] && $empleado->getActivo())
+        {
+            array_push( $array_responsables, array(
+                'text' => $empleado->getNombre(),
+                'value' => $empleado->getIdUsuario(),
+                'id_sucursal' => $empleado->getIdSucursal(),
+                'activo' => $empleado->getActivo(),
+                'descripcion' => $descripcion_tipo->getIdGrupo()
+            ) );
+        }
+    }
+
+    printf( '{"success": true, "datos": %s}' , json_encode( $array_responsables ) );
+
 }
-
 
 switch($args['action']){
 
@@ -375,7 +372,7 @@ switch($args['action']){
     break;
 
     case 505:
-        //listar
+        listarResponsables( $args );
     break;
 
     case 506://verEstadisticasVenta
