@@ -198,12 +198,14 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (  )
 		b = new Ext.form.Text({
 			renderTo : "Mostrador-carritoPrecio"+ carrito.items[i].productoID ,
 			id : "Mostrador-carritoPrecio"+ carrito.items[i].productoID + "Text",
-			value : carrito.items[i].precioVenta,
+			value : POS.currencyFormat( carrito.items[i].precioVenta ),
 			prodID : carrito.items[i].productoID,			
 			placeHolder : "Precio de Venta",
 			listeners : {
-				'focus' : function (){
-
+				'focus' : function (a){
+					
+					this.setValue( this.getValue().replace("$", '').replace(",", "") );
+					
 					kconf = {
 						type : 'num',
 						submitText : 'Cambiar precio',
@@ -211,6 +213,22 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (  )
 							//buscar el producto en la estructura y ponerle esa nueva cantidad
 							for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
 								if(Aplicacion.Mostrador.currentInstance.carrito.items[i].productoID == campo.prodID){
+									
+									//buscar el preoducto en el arreglo de 
+									precioVenta = null;
+									
+									for (var j=0; j < Aplicacion.Inventario.currentInstance.Inventario.productos.length; j++) {
+										if( Aplicacion.Inventario.currentInstance.Inventario.productos[j].data.productoID == campo.prodID ){
+											precioVenta = Aplicacion.Inventario.currentInstance.Inventario.productos[j].data.precioVenta;
+											break;
+										}
+									};
+									
+									if( parseFloat(campo.getValue()) < parseFloat( precioVenta) ){
+										Ext.Msg.alert("Mostrador", "No puede bajar un precio por debajo del preestablecido.");
+										break;
+									}
+									
 									Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta = parseFloat( campo.getValue() );
 									break;
 								}
