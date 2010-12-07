@@ -1,11 +1,9 @@
 
-<h2>Clientes activos</h2>
+<h2>Clientes deudores</h2>
 
 <?php
-
-
 /*
- * Lista de Clientes
+ * Lista de Clientes deudores
  */ 
 
 

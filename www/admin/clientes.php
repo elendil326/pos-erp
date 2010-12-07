@@ -1,6 +1,7 @@
 <?php
 
 	require_once("includes/checkSession.php");
+	require_once("includes/static.php");	
 	require_once("../../server/config.php");	
 	require_once("../../server/db/DBConnection.php");
 ?>
