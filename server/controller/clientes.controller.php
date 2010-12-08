@@ -1,12 +1,10 @@
 <?php 
 
-require_once('../server/model/cliente.dao.php');
-require_once('../server/model/ventas.dao.php');
-require_once('../server/model/pagos_venta.dao.php');
-require_once('../server/model/detalle_venta.dao.php');
-require_once('../server/model/factura_venta.dao.php');
-
-
+require_once('model/cliente.dao.php');
+require_once('model/ventas.dao.php');
+require_once('model/pagos_venta.dao.php');
+require_once('model/detalle_venta.dao.php');
+require_once('model/factura_venta.dao.php');
 
 
 function crearCliente( $args ){
@@ -113,7 +111,9 @@ function listarClientes(  ){
 		
         array_push($total_customers, $c );
 	}
-	printf('{ "success": true, "datos": %s }',  json_encode($total_customers));
+	
+	return $total_customers;
+
 }
 
 
@@ -352,7 +352,8 @@ function listarClientesDeudores(  )
         array_push($total_customers, $c );
     }
 
-    printf('{ "success": true, "datos": [%s] }',  json_encode($total_customers));
+	return $total_customers;
+
 }
 
 function facturarVenta( $args ){
@@ -420,60 +421,70 @@ function imprimirSaldo( $args ){
 
 }
 
-switch($args['action'])
-{
-	case 300:
-        //lista todos los clientes
-		listarClientes(  );
-	break;
+
+
+/*
+ * 
+ * 	Case dispatching for proxy
+ * 
+ * */
+if(isset($args['action'])){
+	switch($args['action'])
+	{
+		case 300:
+	        //lista todos los clientes
+			printf('{ "success": true, "datos": %s }',  json_encode(listarClientes(  ) ));
+		break;
+
+		case 301:
+	        //crea un nuevo cliente
+			if($_SESSION['grupo'] > 2)
+	        {
+				die( '{ "success": false, "reason": "No tiene privilegios para hacer esto." }' ) ;
+			}
+
+			crearCliente( $args );
+		break;
+
+		case 302:
+	        //edita un cliente
+			if($_SESSION['grupo'] > 2)
+	        {
+				die( '{ "success": false, "reason": "No tiene privilegios para hacer esto." }' ) ;
+			}
+			modificarCliente( $args );
+		break;
+
+	    case 303:
+	        //lista las ventas de un cliente en especidico (puede ser de contado o a credito si se especifica)
+	        listarVentaCliente( $args );
+	    break;
+
+	    case 304:
+	        //lista todas las ventas
+	        listarVentasClientes(  );
+	    break;
+
+	    case 305:
+	        //agrega un pago a una venta
+	        abonarCompra( $args );
+	    break;
+
+	    case 306:
+	        //clientes deudores
+	    	printf('{ "success": true, "datos": [%s] }',  json_encode( listarClientesDeudores(  ) ));
+	    break;
+
+	    case 307:
+	        //factura una venta
+	        facturarVenta( $args );
+	    break;
+
+	    case 308:
+	        //imprime el saldo de una venta a credito
+	        imprimirSaldo( $args );
+	    break;
+
+	}
 	
-	case 301:
-        //crea un nuevo cliente
-		if($_SESSION['grupo'] > 2)
-        {
-			die( '{ "success": false, "reason": "No tiene privilegios para hacer esto." }' ) ;
-		}
-		
-		crearCliente( $args );
-	break;
-	
-	case 302:
-        //edita un cliente
-		if($_SESSION['grupo'] > 2)
-        {
-			die( '{ "success": false, "reason": "No tiene privilegios para hacer esto." }' ) ;
-		}
-		modificarCliente( $args );
-	break;
-
-    case 303:
-        //lista las ventas de un cliente en especidico (puede ser de contado o a credito si se especifica)
-        listarVentaCliente( $args );
-    break;
-
-    case 304:
-        //lista todas las ventas
-        listarVentasClientes(  );
-    break;
-
-    case 305:
-        //agrega un pago a una venta
-        abonarCompra( $args );
-    break;
-
-    case 306:
-        //clientes deudores
-        listarClientesDeudores(  );
-    break;
-
-    case 307:
-        //factura una venta
-        facturarVenta( $args );
-    break;
-
-    case 308:
-        //imprime el saldo de una venta a credito
-        imprimirSaldo( $args );
-    break;
-
 }

@@ -1,75 +1,59 @@
 ﻿<?php
-/*
-
-
-	Configuracion del sistema 
+	/* *******************************
+		Configuracion Basica
+	 ********************************* */
 	
 	
+	/*
+	To add a path to the already existing value (not just replace) do something like this:
+		ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '/path/to/add')
 	*/
-	
-	
 
+	//carpeta donde se encuentran los scripts del servidor
+	ini_set("include_path", "/Applications/XAMPP/xamppfiles/htdocs/svn/pos/trunk/server");
 	
-	/* BASE DE DATOS 
+	//mimificar o no el javascript que se carga
+	define("_POS_JSMINIFY", false);
 	
-	*/
+	//titulo de la aplicacion
+	define("_POS_HTMLTITLE", "Papas Supremas");
 	
 	
+	
+	
+	
+	/* *******************************
+		BASE DE DATOS 
+	 ********************************* */
 
-	/**
-	* Usuario de la base de datos.
-	*/
-	define('DB_USER', 'pos');
-
-	/**
-	* Contraseña de la base de datos.
-	*/
-	define('DB_PASSWORD', 'pos');
-
-	/**
-	* Nombre de la base de datos.
-	*/
-	define('DB_NAME', 'pos');
-
-	/**
-	* Nombre del driver para conectar al DBMS.
-	*/
-	define('DB_DRIVER', 'mysql');
-
-	/**
-	* Donde se encuentra el DBMS.
-	*
-	* IP | domain | localhost
-	*/
-	define('DB_HOST', 'localhost');
-
-
-	/**
-	* Habilitar o no el debug de ADOdb.
-	*
-	* true habilita debug. false deshabilita debug. 
-	*
-	* Default false.
-	*/
-	define('DB_DEBUG', false);
+	define('DB_USER', 		'pos');
+	define('DB_PASSWORD', 	'pos');
+	define('DB_NAME', 		'pos');
+	define('DB_DRIVER', 	'mysql');
+	define('DB_HOST', 		'localhost');
+	define('DB_DEBUG', 		false);
 	
 	
 	
 	
-	//serguridad
-	//timeout's
+	/* *******************************
+		Seguridad
+	 ********************************* */
 	//cada que una sesion sobrepase de este valor, volvera a pedir las credenciales
 	$__ADMIN_TIME_OUT 	= 3600;
 	$__GERENTE_TIME_OUT = 3600;
 	$__CAJERO_TIME_OUT 	= 3600;
 	
-	//calculos
-	//funcion para calular el total
-	//subtotal - pesos
-	//iva - porcentaje
-	//descuento - porcentaje
+
+
+
+
 	function __pos__calcularTotal($subtotal, $iva, $descuento)
 	{
+		//funcion para calular el total
+		//subtotal - pesos
+		//iva - porcentaje
+		//descuento - porcentaje
 		$iva /= 100;
 		$descuento /= 100;
 		//descuento sobre iva
@@ -78,13 +62,13 @@
 
 	}
 	
-	define("_POS_JSMINIFY", false);
-	define("_POS_HTMLTITLE", "Papas Supremas");
 
 
 
 
-	//util function
+	/* *******************************
+		Funciones de ayuda
+	 ********************************* */
 	function endsWith( $str, $sub ) {
 		return ( substr( $str, strlen( $str ) - strlen( $sub ) ) == $sub );
 	}

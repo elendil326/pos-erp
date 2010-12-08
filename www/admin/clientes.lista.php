@@ -1,28 +1,18 @@
 
-<h2>Clientes activos</h2>
-
-<?php
-
+<h2>Clientes activos</h2><?php
 
 /*
  * Lista de Clientes
  */ 
 
-
-require_once("../../server/model/cliente.dao.php");
-
-$q = new Cliente();
-$q->setActivo("1");
-$q->setIdCliente("0");
-
-$q2 = new Cliente();
-$q2->setIdCliente("10000");
-
-$clientes = ClienteDAO::byRange($q, $q2);
+require_once("model/cliente.dao.php");
+require_once("controller/clientes.controller.php");
 
 
+//obtener los clientes del controller de clientes
+$clientes = listarClientes();
 
-//crar la tabla
-$header = array( "ID", "RFC", "Nombre", "Direccion", "Ciudad", "Telefono", "Email", "a", "a", "a", "a", "a", "a" );
+//render the table
+$header = array(  "nombre" => "Nombre", "rfc" => "RFC", "direccion" => "Direccion" );
 $tabla = new Tabla( $header, $clientes );
 $tabla->render();

@@ -32,5 +32,8 @@
 		abstract class VO
 		{
 
-
+			function asArray(){
+				return get_object_vars($this);
+			}
+			
 		}

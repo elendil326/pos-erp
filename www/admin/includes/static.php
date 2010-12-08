@@ -1,4 +1,8 @@
 <?php 
+
+
+
+
 class Tabla {
 	
 
@@ -24,20 +28,30 @@ class Tabla {
 		
 		$html .= '<table border="1">';
 		$html .= '<tr>';
-		for( $a = 0; $a < sizeof($this->header) - 1 ; $a++ ){
-			$html .= '<th>' . $this->header[$a] . '</th>';
+		
+		foreach ( $this->header  as $key => $value){
+			$html .= '<th>' . $value . '</th>';			
 		}
+		
 
 		$html .= '</tr>';
 		
+		//cicle trough rows
 		for( $a = 0; $a < sizeof($this->rows) - 1 ; $a++ ){
 			$html .= '<tr>';
 			
+			if( !is_array($this->rows[$a]) ){
+				$row = $this->rows[$a]->asArray();
+			}else{
+				$row = $this->rows[$a];
+			}
 
-			$arr = (array)$this->rows[$a];
 			
-			foreach( $arr as $col ){
-				$html .= '<td>' . $col .'</td>';
+			
+			foreach ( $this->header  as $key => $value){
+				if( array_key_exists( $key , $row )){
+					$html .=  "<td>" . $row[ $key ] . "</td>";
+				}				
 			}
 			
 			$html .='</tr>';
@@ -48,8 +62,7 @@ class Tabla {
 
 		
 		if($write){
-			echo $html;
-			return true;
+			return print( $html);
 		}else{
 			return $html;			
 		}
