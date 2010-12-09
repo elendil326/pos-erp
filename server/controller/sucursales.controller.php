@@ -1,8 +1,11 @@
 <?php
 
-require_once('../server/model/sucursal.dao.php');
+//require_once('../server/model/sucursal.dao.php');
+require_once('model/sucursal.dao.php');
 
-function listarSucursales( $args ){
+
+
+function listarSucursales(  ){
 
     $s = new Sucursal();
     $s->setActivo(1);
@@ -11,13 +14,6 @@ function listarSucursales( $args ){
 
     $array_sucursales = array();
 
-    /*array_push( $array_sucursales , array(
-            'id_sucursal' => null,
-            'descripcion' => "seleccione una sucursal",
-            'text' => "seleccione una sucursal",
-            'value' => null
-    ) );*/
-
     foreach( $sucursales as $sucursal )
     {
         array_push( $array_sucursales , array(
@@ -25,11 +21,10 @@ function listarSucursales( $args ){
             'descripcion' => $sucursal->getDescripcion(),
             'text' => $sucursal->getDescripcion(),
             'value' => $sucursal->getIdSucursal()
-        ) );
+        ));
     }
 
-    printf('{"success" :" true", "datos": %s}', json_encode( $array_sucursales ) );
-
+	return $array_sucursales;
 }
 
 function abrirSucursal(){
@@ -73,56 +68,59 @@ function inventarioSucursal(){
 }
 
 
-switch( $args['action'] )
-{
-    case 700://listar sucursales
-        listarSucursales( $args );
-    break;
 
-    case 701://abrir sucursal
-        abrirSucursal( $args );
-    break;
+if(isset($args['action'])){
 
-    case 702://editar detalle sucursal
-        editarSucursal( $args );
-    break;
+	switch( $args['action'] )
+	{
+		case 700://listar sucursales
+		    printf('{"success" :" true", "datos": %s}', json_encode( listarSucursales(  ) ) );
+		break;
 
-    case 703://cerrar sucursal
-        cerrarSucursal( $args );
-    break;
+		case 701://abrir sucursal
+		    abrirSucursal( $args );
+		break;
 
-    case 704://listar personal
-        listarPersonal(  );
-    break;
+		case 702://editar detalle sucursal
+		    editarSucursal( $args );
+		break;
 
-    case 705://estadisticas de venta por empleado
-        estadisticasVentas( $args );
-    break;
+		case 703://cerrar sucursal
+		    cerrarSucursal( $args );
+		break;
 
-    case 706://presindir empleado
-        presindirEmpleado( $args );
-    break;
+		case 704://listar personal
+		    listarPersonal(  );
+		break;
 
-    case 707://agregar gerentes
-        agregarGerente( $args );
-    break;
+		case 705://estadisticas de venta por empleado
+		    estadisticasVentas( $args );
+		break;
 
-    case 708://hacer corte
-        corte( $args );
-    break;
+		case 706://presindir empleado
+		    presindirEmpleado( $args );
+		break;
 
-    case 709://clientes deudores sucursal (arrojara le total de las deudas de la sucursal)
-        clientesDeudores( $args );
-    break;
+		case 707://agregar gerentes
+		    agregarGerente( $args );
+		break;
 
-    case 710://flujo de efectivo
-        
-    break;
+		case 708://hacer corte
+		    corte( $args );
+		break;
 
-    case 711://inventario por sucursal
-        inventarioSucursal( $args );
-    break;
+		case 709://clientes deudores sucursal (arrojara le total de las deudas de la sucursal)
+		    clientesDeudores( $args );
+		break;
 
+		case 710://flujo de efectivo
+		    
+		break;
+
+		case 711://inventario por sucursal
+		    inventarioSucursal( $args );
+		break;
+
+	}
 }
 
-?>

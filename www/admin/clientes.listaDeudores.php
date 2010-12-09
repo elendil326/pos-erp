@@ -15,3 +15,7 @@ $clientes = listarClientesDeudores();
 $header = array(  "nombre" => "Nombre", "rfc" => "RFC", "direccion" => "Direccion" );
 $tabla = new Tabla( $header, $clientes );
 $tabla->render();
+
+
+
+

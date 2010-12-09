@@ -26,10 +26,10 @@
       <a class="drop" >SUCURSALES</a>
       <ul>
         <li class="ga-side-nav-off">
-          <a >Lista de Sucursales</a>
+          <a href="sucursales.php?action=lista">Lista de Sucursales</a>
         </li>
         <li class="ga-side-nav-off">
-          <a >Abrir sucursal</a>
+          <a href="sucursales.php?action=abrir">Abrir sucursal</a>
         </li>
       </ul>
     </li>
