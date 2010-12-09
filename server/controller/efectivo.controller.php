@@ -38,7 +38,7 @@ require_once("../server/model/autorizacion.dao.php");
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
-    if( !isset( $data->folio ) || !isset( $data->concepto ) || !isset( $data->monto ) || !isset( $data->fecha ))
+    if( !isset( $data->folio ) || !isset( $data->concepto ) || !isset( $data->monto ) /*|| !isset( $data->fecha )*/)
     {
         die('{"success": false, "reason": "Faltan parametros." }');
     }

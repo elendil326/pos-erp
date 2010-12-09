@@ -16,9 +16,6 @@ Aplicacion.Efectivo.prototype._init = function (){
     //cargar las sucursales
     this.cargarSucursales();
 
-    //cargas los encargados de las sucursales
-    //this.cargarEncargadosSucursales();
-	
 	//crear el panel de nuevo gasto
 	this.nuevoGastoPanelCreator();
 	
@@ -144,6 +141,106 @@ Aplicacion.Efectivo.prototype.cargarEmpleados = function ( a, b )
 	Operacion Inter Sucursales
 ******************************************************** */
 
+/**
+ * Inserta un nuevo prestamo de efectivo a la BD
+ */
+Aplicacion.Efectivo.prototype.nuevaOperacionInterSucursalEfectivo = function( data ){
+
+    Ext.getBody().mask('Guardando nuevo prestamo de efectivo ...', 'x-mask-loading', true);
+
+    Ext.Ajax.request({
+        url: 'proxy.php',
+        scope : this,
+        params : {
+            action : 600,
+            data : Ext.util.JSON.encode( data )
+        },
+        success: function(response, opts) {
+            try{
+                r = Ext.util.JSON.decode( response.responseText );
+            }catch(e){
+                POS.error(e);
+            }
+
+            Ext.getBody().unmask(); 
+
+            //limpiar la forma      
+            Aplicacion.Efectivo.currentInstance.operacionInterSucursalEfectivoPanel.reset();
+
+
+            //informamos lo que sucedio
+            if( r.success == "true" )
+            {
+                Ext.Msg.alert("Efectivo","Se ha registrado el nuevo prestamo de efectivo"); 
+            }
+            else
+            {
+                Ext.Msg.alert("Efectivo","Error: " + r.success); 
+            }
+        },
+        failure: function( response ){
+            POS.error( response );
+        }
+    }); 
+
+};
+
+/**
+ * Validar los datos de la forma de nuevo prestamps de efectivo
+ */
+Aplicacion.Efectivo.prototype.nuevoPrestamoEfectivoValidator = function ()
+{
+    //obtener los valores de la forma
+    var values = Aplicacion.Efectivo.currentInstance.operacionInterSucursalEfectivoPanel.getValues();
+
+    if( !( Ext.getCmp( 'Efectivo-operacionInterSucursalEfectivo-sucursal' ).getValue() ) )
+    {
+        Ext.Anim.run(Ext.getCmp( 'Efectivo-operacionInterSucursalEfectivo-sucursal' ),
+            'fade', {duration: 250,
+            out: true,
+            autoClear: true
+        });
+
+        return;
+    }
+
+
+    if( !( Ext.getCmp( 'Efectivo-operacionInterSucursalEfectivo-responsable' ).getValue() ) )
+    {
+        Ext.Anim.run(Ext.getCmp( 'Efectivo-operacionInterSucursalEfectivo-responsable' ),
+            'fade', {duration: 250,
+            out: true,
+            autoClear: true
+        });
+
+        return;
+    }
+
+    if( values.concepto == "" )
+    {
+        Ext.Anim.run(Ext.getCmp( 'Efectivo-operacionInterSucursalEfectivo-concepto' ),
+            'fade', {duration: 250,
+            out: true,
+            autoClear: true
+        });
+
+        return;
+    }
+
+    if( !( values.monto && /^-?\d+(\.\d+)?$/.test(values.monto + '') ) ){
+
+        Ext.Anim.run(Ext.getCmp( 'Efectivo-operacionInterSucursalEfectivo-monto' ), 
+            'fade', {duration: 250,
+            out: true,
+            autoClear: true
+        });
+
+        return;
+    }
+
+    Aplicacion.Efectivo.currentInstance.nuevaOperacionInterSucursalEfectivo( values );
+
+};
 
 
 /**
@@ -170,13 +267,6 @@ Aplicacion.Efectivo.prototype.operacionInterSucursalEfectivoPanelCreator = funct
                 xtype: 'fieldset',
                 title: 'Nuevo prestamo de efectivo',
                 instructions: 'Todos los campos son necesarios para una nueva autorizacion.',
-                defaults : {
-                    listeners : {
-                        "change" : function (){
-                            Aplicacion.Efectivo.currentInstance.nuevoGastoValidator();
-                        }
-                    }
-                },
                 items: [
                     new Ext.form.Select({ 
                         id:'Efectivo-operacionInterSucursalEfectivo-sucursal',
@@ -196,15 +286,31 @@ Aplicacion.Efectivo.prototype.operacionInterSucursalEfectivoPanelCreator = funct
                         options: [ {text : "Seleccione un responsable", value : null } ]
                     }),
                     new Ext.form.Text({
-                        id: 'Efectivo-operacionInterSucursalEfectivo-monto',
-                        label: 'Monto',
+                        id: 'Efectivo-operacionInterSucursalEfectivo-concepto',
+                        label: 'Concepto',
+                        name: 'concepto',
+                        required:true,
                         listeners : {
                             'focus' : function (){
 
                                 kconf = {
+                                    type : 'alfa',
+                                    submitText : 'Aceptar'
+                                };
+                                POS.Keyboard.Keyboard( this, kconf );
+                            }
+                        }
+                    }),
+                    new Ext.form.Text({
+                        id: 'Efectivo-operacionInterSucursalEfectivo-monto',
+                        label: 'Monto',
+                        name: 'monto',
+                        required:true,
+                        listeners : {
+                            'focus' : function (){
+                                kconf = {
                                     type : 'num',
-                                    submitText : 'Aceptar',
-                                    callback : Aplicacion.Efectivo.currentInstance.nuevoGastoValidator
+                                    submitText : 'Aceptar'
                                 };
                                 POS.Keyboard.Keyboard( this, kconf );
                             }
@@ -214,19 +320,24 @@ Aplicacion.Efectivo.prototype.operacionInterSucursalEfectivoPanelCreator = funct
                         id: 'Efectivo-operacionInterSucursalEfectivo-nota',
                         label: 'Nota',
                         name: 'nota',
+                        required:true,
                         listeners : {
                             'focus' : function (){
 
                                 kconf = {
                                     type : 'alfa',
-                                    submitText : 'Aceptar',
-                                    callback : Aplicacion.Efectivo.currentInstance.nuevoGastoValidator
+                                    submitText : 'Aceptar'
                                 };
                                 POS.Keyboard.Keyboard( this, kconf );
                             }
                         }
+                    }),
+                    new Ext.form.HiddenField({
+                        name: 'folio',
+                        value:'-1'
                     })
-                ]}
+                ]},
+                new Ext.Button({ ui  : 'action', text: 'Registrar Prestamo de Efectivo', margin : 5,  handler : this.nuevoPrestamoEfectivoValidator, disabled : false })
         ]});
 
 }
@@ -245,27 +356,8 @@ Aplicacion.Efectivo.prototype.operacionInterSucursalProductoPanel = null;
  */
 Aplicacion.Efectivo.prototype.operacionIntersucursalProductoPanelCreator = function (){
 
-    var menu = [{
-        xtype : "spacer"
-    },{
-        id : "Efectivo-PrestamoEfectivo",
-        text: 'Crear Gasto',
-        ui: 'forward',
-        hidden : false
-
-    }];
-
-
-
-
-    var dockedItems = [new Ext.Toolbar({
-        ui: 'light',
-        dock: 'bottom',
-        items: menu
-    })];
     
-    this.operacionInterSucursalProductoPanel = new Ext.form.FormPanel({                                                       
-        dockedItems: dockedItems,
+    this.operacionInterSucursalProductoPanel = new Ext.form.FormPanel({
             items: [{
 
                 xtype: 'fieldset',
@@ -355,70 +447,6 @@ Aplicacion.Efectivo.prototype.operacionIntersucursalProductoPanelCreator = funct
         ]});
 
 }
-
-
-
-
-
-
-
-
-/**
- * Contiene el panel con la forma de nuevo gasto
- */
-Aplicacion.Efectivo.prototype.operacionesInterSucursalesPanel = null;
-
-
-/**
- * Pone un panel en nuevoGastoPanel
- */
-Aplicacion.Efectivo.prototype.operacionesInterSucursalesPanelCreator = function (){
-	this.operacionesInterSucursalesPanel = new Ext.form.FormPanel({                                                       
-
-			items: [{
-				xtype: 'fieldset',
-			    title: 'Nueva autorizacion',
-			    instructions: 'Todos los campos son necesarios para una nueva autorizacion.',
-				items: [
-					new Ext.form.Text({
-					    id: 'nombreClienteM',
-					    label: 'Nombre'
-					}),
-					new Ext.form.Text({
-					    id: 'rfcClienteM',
-					    label: 'RFC'
-					}),
-					new Ext.form.Text({
-					    id: 'direccionClienteM',
-					    label: 'Direccion'
-					}),
-					new Ext.form.Text({
-					    label: 'Ciudad'
-					}),
-					new Ext.form.Text({
-					    id: 'emailClienteM',
-					    label: 'E-mail'
-					}),
-					new Ext.form.Text({
-					    id: 'telefonoClienteM',
-					    label: 'Telefono'
-					}),
-					new Ext.form.Text({
-					    id: 'descuentoClienteM',
-					    label: 'Descuento'
-					}),
-					new Ext.form.Text({
-					    id: 'limite_creditoClienteM',
-					    label: 'Lim. Credito'
-					})
-				]}
-		]});
-};
-
-
-
-
-
 
 
 
@@ -515,8 +543,15 @@ Aplicacion.Efectivo.prototype.nuevoGasto = function( data ){
                 });
             }
 
-            //informamos que todo salio bien
-            Ext.Msg.alert("Efectivo","Se ha registrado el nuevo gasto"); 
+            //informamos lo que sucedio
+            if( r.success == "true" )
+            {
+                Ext.Msg.alert("Efectivo","Se ha registrado el nuevo gasto"); 
+            }
+            else
+            {
+                Ext.Msg.alert("Efectivo","Error: " + r.success); 
+            }
 
         },
         failure: function( response ){
@@ -544,8 +579,28 @@ Aplicacion.Efectivo.prototype.nuevoGastoPanelCreator = function (){
                 title: 'Ingrese los detalles del nuevo gasto',
                 instructions: 'Si desea agregar un gasto que no se encuentre en la lista debera pedir una autorizacion.',
                 items: [
-                    new Ext.form.Text({ id:'Efectivo-nuevoGastoPanel-monto', name: 'monto', label: 'Monto', required:true }),
-                    new Ext.form.Text({ id:'Efectivo-nuevoGastoPanel-folio', name: 'folio', label: 'Folio', required:true }),
+                    new Ext.form.Text({ id:'Efectivo-nuevoGastoPanel-monto', name: 'monto', label: 'Monto', required:true,
+                    listeners : {
+                        'focus' : function (){
+                                kconf = {
+                                type : 'num',
+                                submitText : 'Aceptar',
+                                callback : Aplicacion.Efectivo.currentInstance.nuevoGastoValidator
+                            };
+                        POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }}),
+                    new Ext.form.Text({ id:'Efectivo-nuevoGastoPanel-folio', name: 'folio', label: 'Folio', required:true,
+                    listeners : {
+                        'focus' : function (){
+                                kconf = {
+                                type : 'alfa',
+                                submitText : 'Aceptar',
+                                callback : Aplicacion.Efectivo.currentInstance.nuevoGastoValidator
+                            };
+                        POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }}),
                     new Ext.form.DatePicker({ id:'Efectivo-nuevoGastoPanel-fecha', name : 'fecha', label: 'Fecha', picker : { yearFrom : 2010, yearTo : 2011 }, required:true }),
                     new Ext.form.Select({ 
                         id:'Efectivo-nuevoGastoPanel-concepto',
@@ -602,9 +657,23 @@ Aplicacion.Efectivo.prototype.nuevoGastoPanelCreator = function (){
                             }
                         }
                     }),
-                    new Ext.form.Text({ id:'Efectivo-nuevoGastoPanel-nota', name : 'nota', label: 'Nota' }),
+                    new Ext.form.Text({ 
+                        id:'Efectivo-nuevoGastoPanel-nota', 
+                        name : 'nota', 
+                        label: 'Nota',
+                        listeners : {
+                            'focus' : function (){
+
+                                kconf = {
+                                    type : 'alfa',
+                                    submitText : 'Aceptar'
+                                };
+                                POS.Keyboard.Keyboard( this, kconf );
+                            }
+                        }
+                     }),
                 ]},
-                new Ext.Button({ id : 'Efectivo-NuevoGasto', ui  : 'action', text: 'Registrar Gasto', margin : 5,  handler : this.nuevoGastoValidator, disabled : false }),
+                new Ext.Button({ id : 'Efectivo-NuevoGasto', ui  : 'action', text: 'Registrar Gasto', margin : 5,  handler : this.nuevoGastoValidator, disabled : false })
         ]
     });
 };
@@ -737,12 +806,68 @@ Aplicacion.Efectivo.prototype.nuevoIngresoPanelCreator = function (  ){
                 title: 'Ingrese los detalles del nuevo ingreso',
                 instructions: 'Si desea agregar un gasto que no se encuentre en la lista debera pedir una autorizacion.',
                 items: [
-                    new Ext.form.Text({ id:'Efectivo-nuevoIngresoPanel-monto', name: 'monto', label: 'Monto', required:true }),
-                    new Ext.form.DatePicker({ id:'Efectivo-nuevoIngresoPanel-fecha', name : 'fecha', label: 'Fecha', picker : { yearFrom : 2010, yearTo : 2011 }, required:true }),
-                    new Ext.form.Text({ id:'Efectivo-nuevoIngresoPanel-concepto', name: 'concepto', label: 'Concepto', required:true }),
-                    new Ext.form.Text({ id:'Efectivo-nuevoIngresoPanel-nota', name : 'nota', label: 'Nota' }),
+                    new Ext.form.Text({ 
+                        id:'Efectivo-nuevoIngresoPanel-monto', 
+                        name: 'monto', 
+                        label: 'Monto', 
+                        required:true,
+                        listeners : {
+                            'focus' : function (){
+
+                                kconf = {
+                                    type : 'num',
+                                    submitText : 'Aceptar'
+                                };
+                                POS.Keyboard.Keyboard( this, kconf );
+                            }
+                        } 
+                    }),
+                    new Ext.form.DatePicker({ 
+                        id:'Efectivo-nuevoIngresoPanel-fecha', 
+                        name : 'fecha', 
+                        label: 'Fecha', 
+                        picker : { yearFrom : 2010, yearTo : 2011 }, 
+                        required:true 
+                    }),
+                    new Ext.form.Text({ 
+                        id:'Efectivo-nuevoIngresoPanel-concepto', 
+                        name: 'concepto', 
+                        label: 'Concepto', 
+                        required:true,
+                        listeners : {
+                            'focus' : function (){
+
+                                kconf = {
+                                    type : 'alfa',
+                                    submitText : 'Aceptar'
+                                };
+                                POS.Keyboard.Keyboard( this, kconf );
+                            }
+                        }
+                    }),
+                    new Ext.form.Text({ 
+                        id:'Efectivo-nuevoIngresoPanel-nota', 
+                        name : 'nota', 
+                        label: 'Nota',
+                        listeners : {
+                            'focus' : function (){
+
+                                kconf = {
+                                    type : 'alfa',
+                                    submitText : 'Aceptar'
+                                };
+                                POS.Keyboard.Keyboard( this, kconf );
+                            }
+                        }
+                    }),
                 ]},
-                new Ext.Button({ id : 'Efectivo-NuevoIngreso', ui  : 'action', text: 'Registrar Ingreso', margin : 5,  handler : this.nuevoIngresoValidator, disabled : false }),
+                new Ext.Button({ 
+                    id : 'Efectivo-NuevoIngreso', 
+                    ui  : 'action', text: 'Registrar Ingreso', 
+                    margin : 5,  
+                    handler : this.nuevoIngresoValidator, 
+                    disabled : false 
+                })
         ]
     });
 
@@ -750,24 +875,4 @@ Aplicacion.Efectivo.prototype.nuevoIngresoPanelCreator = function (  ){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 POS.Apps.push( new Aplicacion.Efectivo() );
-
-
-
-
-
-
