@@ -42,9 +42,9 @@ function autorizacionesPendientes(  ){
     $autorizacion = new Autorizacion();
     $autorizacion->setEstado('0');
 
-    $json =  AutorizacionDAO::search($autorizacion, true);
+    $array =  AutorizacionDAO::search( $autorizacion );
 
-    printf( '{ "success" : "true", "payload" : %s }', $json ); 
+    return $array;
 
 }//autorizacionesPendientes
 
@@ -302,7 +302,7 @@ switch( $args['action'] ){
     break;
 
     case 206://ver autorizaciones pendientes de todas las sucursales (admin)
-        autorizacionesPendientes(  );
+        autorizacionesPendientes( );
     break;
 
     case 207://ver autorizaciones de su sucursal (gerente)

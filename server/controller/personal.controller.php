@@ -74,7 +74,7 @@ function insertarEmpleado($args)
             }
             else
             {
-                printf(' { "success" : "false" } ' );
+                die(' { "success" : "false", "reason" : "Error al enrolar al empleado a su grupo" } ' );
             }
         }
     }
@@ -136,7 +136,7 @@ function listarEmpleados( )
         
     }
 
-    printf( '{"success": true, "empleados": %s}' , json_encode( $array_empleados ) );
+    return $array_empleados;
 
 }
 
@@ -298,7 +298,7 @@ function listarBajoPerfil(){
         ) );
     }
 
-    printf( '{"success": true, "datos": %s}' , json_encode( $perfiles ) );
+    return $perfiles;
 
 }
 
@@ -344,7 +344,7 @@ function listarResponsables( $args ){
         }
     }
 
-    printf( '{"success": true, "datos": %s}' , json_encode( $array_responsables ) );
+    return $array_responsables;
 
 }
 
@@ -356,7 +356,8 @@ switch($args['action']){
     break;
 
     case 501:
-        listarEmpleados(  );
+        $listaEmpleados = listarEmpleados( );
+        printf( '{"success": true, "empleados": %s}' , json_encode( $listaEmpleados ) );
     break;
 
     case 502:
@@ -368,11 +369,13 @@ switch($args['action']){
     break;
 
     case 504:
-        listarBajoPerfil(  );
+        $listaBajoPerfil = listarBajoPerfil( );
+        printf( '{"success": true, "datos": %s}' , json_encode( $listaBajoPerfil ) );
     break;
 
     case 505:
-        listarResponsables( $args );
+        $listaResponsables = listarResponsables( $args );
+        printf( '{"success": true, "datos": %s}' , json_encode( $listaResponsables ) );
     break;
 
     case 506://verEstadisticasVenta

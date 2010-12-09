@@ -33,7 +33,7 @@ require_once("../server/model/autorizacion.dao.php");
     {
         $data = json_decode( $args['data'] );
     }
-    catch(Exception $e)
+    catch(Exception $e)autorizacionPendiate
     {
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
@@ -53,7 +53,12 @@ require_once("../server/model/autorizacion.dao.php");
     $gasto -> setFolio( $data->folio );
     $gasto->setConcepto( $data->concepto );
     $gasto->setMonto( $data->monto );
-    $gasto->setFechaIngreso( $data->fecha );
+
+    if( isset( $data->fecha ) )
+    {
+        $gasto->setFechaIngreso( $data->fecha );
+    }
+
     $gasto->setIdSucursal( $_SESSION['sucursal'] );
     $gasto->setIdUsuario( $_SESSION['userid'] );
 
