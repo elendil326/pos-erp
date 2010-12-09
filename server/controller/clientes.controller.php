@@ -75,8 +75,6 @@ function crearCliente( $args ){
 
 }
 
-
-
 function listarClientes(  ){
 	$total_customers = array();
 	
@@ -198,7 +196,7 @@ function modificarCliente( $args ){
 	
 }
 
-
+//lista las ventas de un cliente en especidico (puede ser de contado o a credito si se especifica)
 function listarVentasClientes( ){
     
     $ventas = VentasDAOBase::getAll();
@@ -228,35 +226,31 @@ function listarVentasClientes( ){
         $decode_venta->{"detalle_venta"} = $array_detalle;
         array_push( $tot_ventas, $decode_venta );
     }
-    
-    printf('{ "success": true, "datos": %s }',  json_encode($tot_ventas));
 
+	return $tot_ventas;
+    
 }
 
-
-function listarVentaCliente( $args ){
+function listarVentaCliente( $id_cliente, $tipo_venta = null ){
     
-    if(!isset($args['id_cliente'])){
+    if(!isset($id_cliente)){
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
-    $id_cliente = $args['id_cliente'];
-   
+  
     $ventas = new Ventas();
     $ventas->setIdCliente($id_cliente);
     
-    if(isset($args['tipo_venta']))
+    if(isset($tipo_venta))
     {
-        $ventas->setTipoVenta($args['tipo_venta']);
+        $ventas->setTipoVenta($tipo_venta);
     }
 
-    $comprasCliente = VentasDAO::search($ventas,true);
+    $comprasCliente = VentasDAO::search($ventas);
 
-    printf('{ "success": true, "datos": %s }',  json_encode($comprasCliente));
+	return $comprasCliente;
 
 }
-
-
 
 function abonarCompra( $args ){
 
@@ -317,8 +311,7 @@ function abonarCompra( $args ){
     }
 }
 
-function listarClientesDeudores(  )
-{
+function listarClientesDeudores(  ){
     $total_customers = array();
     
     //buscar clientes que esten activos
@@ -457,12 +450,12 @@ if(isset($args['action'])){
 
 	    case 303:
 	        //lista las ventas de un cliente en especidico (puede ser de contado o a credito si se especifica)
-	        listarVentaCliente( $args );
+	    	printf('{ "success": true, "datos": %s }',  json_encode( listarVentasCliente( $args['id_cliente'], $args['tipo_venta']) ));
 	    break;
 
 	    case 304:
 	        //lista todas las ventas
-	        listarVentasClientes(  );
+	    	printf('{ "success": true, "datos": %s }',  json_encode( listarVentasClientes() ));
 	    break;
 
 	    case 305:

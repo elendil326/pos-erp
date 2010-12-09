@@ -4,7 +4,7 @@
  * Lista de Clientes deudores
  */ 
 
-require_once("model/cliente.dao.php");
+
 require_once("controller/clientes.controller.php");
 
 
