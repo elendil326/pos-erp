@@ -46,9 +46,14 @@ function insertarEmpleado($args)
     $user->setRFC( $data->RFC );
 
     //buscar que no exista ya un empleado con este RFC
-    if( count(UsuarioDAO::search( $user )) > 0 )
+    if( count($us = UsuarioDAO::search( $user )) > 0 )
     {
-        die ( '{"success": false, "reason": "Ya existe un empleado con este RFC." }' );
+        foreach($us as $u)
+        {
+            $id = $u->getIdUsuario();
+            break;
+        }
+        die ( '{"success": false, "id":"' . $id . '", "reason": "Ya existe un empleado con este RFC." }' );
     }
     
 	$user->setRFC( $data->RFC );
@@ -218,8 +223,44 @@ function modificarEmpleado( $args )
 
 	try
     {
-		if(UsuarioDAO::save( $usuario ) )
+
+		if( UsuarioDAO::save( $usuario ) )
         {
+
+            
+            if( isset( $data->grupo ) )
+            {
+                //entra aqui en caso de que se mande el dato grupo, para cambiar de puesto al empleado
+
+                if( !( $grupoUsuarios = GruposUsuariosDAO::getByPK( $data->grupo, $usuario->getIdUsuario() ) ) )
+                {
+                    //si entro aqui significa que el puesto que se le va a asegnar es distinto al que ya tenia
+                    // y por lo tanto hay que eliminar el registro
+
+                    $gruposUsuarios = new GruposUsuarios();
+                    $gruposUsuarios->setIdUsuario( $usuario->getIdUsuario() );
+
+                    $find = GruposUsuariosDAO::search( $gruposUsuarios );
+
+                    foreach( $find as $f )
+                    {
+                        //eliminamos todos los registros donde este ese usuario enrolado en un puesto
+                        GruposUsuariosDAO::delete( $f );
+                    }
+                    
+                }
+
+
+                $gruposUsuarios = new GruposUsuarios();
+                $gruposUsuarios->setIdGrupo( $data->grupo );
+                $gruposUsuarios->setIdUsuario( $usuario->getIdUsuario() );
+                if( !GruposUsuariosDAO::save( $gruposUsuarios) )
+                {
+                    die(' { "success" : "false", "reason" : "Se actualizaron los datos del empleado, pero se origino un error al enrolar al empleado a su nuevo grupo" } ' );
+                }
+
+            }
+
             printf ( ' { "success" : "true", "info": "Se actualizaron correctamente los datos de '.$usuario->getNombre().'" } ' );
         }
         else

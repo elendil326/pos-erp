@@ -345,7 +345,9 @@ Aplicacion.Personal.prototype.editarDetallesEmpleadoGuardarBoton = function ()
 			Ext.getBody().unmask();	
 						
 			if( !r.success ){
+                
 				Aplicacion.Personal.currentInstance.detallesDeEmpleadoPanel.getComponent(0).getComponent(0).setInstructions(r.reason);
+
 				return;
 			}
 
@@ -365,8 +367,6 @@ Aplicacion.Personal.prototype.editarDetallesEmpleadoGuardarBoton = function ()
 	});
 	
 };
-
-
 
 
 Aplicacion.Personal.prototype.detallesDeEmpleadoPanel = null;
@@ -531,7 +531,10 @@ Aplicacion.Personal.prototype.crearEmpleadoBoton = function (  )
 			Ext.getBody().unmask();	
 						
 			if( !r.success ){
-				Aplicacion.Personal.currentInstance.nuevoEmpleadoPanel.getComponent(0).setInstructions(r.reason);					
+                //aqui entra si el usuario qeu se quiere dar de alta ya habia sido contratado en algun momento
+				Aplicacion.Personal.currentInstance.nuevoEmpleadoPanel.getComponent(0).setInstructions(r.reason);
+               
+                Aplicacion.Personal.currentInstance.reincorporarEmpleado( v, r.id );
 				return;
 			}
 			
@@ -556,6 +559,53 @@ Aplicacion.Personal.prototype.crearEmpleadoBoton = function (  )
 	});
 	
 }
+
+Aplicacion.Personal.prototype.reincorporarEmpleado = function ( v, id_usuario )
+{
+
+    Ext.Msg.confirm( "Nuevo Empleado", "&iquest; Ya se tiene registro de este empleado, desea reincorporarlo nuevamente? ", function (a){
+        if(a=="yes"){
+
+            v.id_usuario = id_usuario;
+            v.activo = 1;
+
+            Ext.Ajax.request({
+                url: 'proxy.php',
+                scope : this,
+                params : {
+                    action : 502,
+                    data : Ext.util.JSON.encode( v )
+                },
+                success: function(response, opts) {
+                    try{
+                        r = Ext.util.JSON.decode( response.responseText );              
+                    }catch(e){
+                        Ext.getBody().mask('Error Interno', '', false);
+                        return POS.error(e);
+                    }
+
+                    if( !r.success ){
+                        return POS.error(r);
+                    }
+
+                    //limpiar
+                    Aplicacion.Personal.currentInstance.nuevoEmpleadoPanel.reset();
+
+                    //volver a cargar los datos del personal
+                    Aplicacion.Personal.currentInstance.listaDePersonalLoad();
+                    
+                    setTimeout( "sink.Main.ui.setActiveItem( Aplicacion.Personal.currentInstance.listaDePersonalPanel , 'fade');", 500 );
+                    
+
+                },
+                failure: function( response ){
+                    POS.error( response );
+                }
+            });
+        }
+    });
+    
+};
 
 /*
  * Gurada una estructura con los tipos de empleado que hay en el sistema
