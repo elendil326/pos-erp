@@ -5,7 +5,8 @@ require_once('model/ventas.dao.php');
 require_once('model/pagos_venta.dao.php');
 require_once('model/detalle_venta.dao.php');
 require_once('model/factura_venta.dao.php');
-
+require_once('model/sucursal.dao.php');
+require_once('model/usuario.dao.php');
 
 function crearCliente( $args ){
 
@@ -114,7 +115,6 @@ function listarClientes(  ){
 
 }
 
-
 function modificarCliente( $args ){
 
 	if( !isset($args['data']) )
@@ -196,7 +196,7 @@ function modificarCliente( $args ){
 	
 }
 
-//lista las ventas de un cliente en especidico (puede ser de contado o a credito si se especifica)
+
 function listarVentasClientes( ){
     
     $ventas = VentasDAOBase::getAll();
@@ -231,12 +231,16 @@ function listarVentasClientes( ){
     
 }
 
+
+
+//lista las ventas de un cliente en especidico (puede ser de contado o a credito si se especifica)
 function listarVentaCliente( $id_cliente, $tipo_venta = null ){
     
     if(!isset($id_cliente)){
-        die( '{"success": false, "reason": "Parametros invalidos." }' );
+        return null;
     }
 
+	$cC = array();
   
     $ventas = new Ventas();
     $ventas->setIdCliente($id_cliente);
@@ -248,9 +252,43 @@ function listarVentaCliente( $id_cliente, $tipo_venta = null ){
 
     $comprasCliente = VentasDAO::search($ventas);
 
-	return $comprasCliente;
+
+	foreach( $comprasCliente as $c )
+	{
+		//make readable data
+	
+		$sucursal = SucursalDAO::getByPK( $c->getIdSucursal() );
+		$cajero = UsuarioDAO::getByPK( $c->getIdUsuario() );
+		
+		$data = array(
+			"cajero" => $cajero ? $cajero->getNombre() : "<b>Error</b>",
+			"sucursal" => $sucursal ? $sucursal->getDescripcion() : "<b>Error</b>",
+		
+			"descuento" => $c->getDescuento(),
+			"fecha" => $c->getFecha(),
+			"id_cliente" => $c->getIdCliente(),
+			"id_sucursal" => $c->getIdSucursal(),
+			"id_usuario" => $c->getIdUsuario(),
+			"id_venta" => $c->getIdVenta(),
+			"ip" => $c->getIp(),
+			"iva" => $c->getIva(),
+			"pagado" => $c->getPagado(),
+			"subtotal" => $c->getSubtotal(),
+			"tipo_venta" => $c->getTipoVenta(),
+			"total" => $c->getTotal()
+		);
+		
+
+		
+		array_push( $cC, $data );
+	}
+
+	return $cC;
 
 }
+
+
+
 
 function abonarCompra( $args ){
 
@@ -342,7 +380,12 @@ function listarClientesDeudores(  ){
         $c = json_decode($cliente, true);
 
         $c["credito_restante"] = $cliente->getLimiteCredito() - $por_pagar;
-        array_push($total_customers, $c );
+        $c["saldo"] = $por_pagar;	
+
+		if($por_pagar > 0){
+        	array_push($total_customers, $c );			
+		}
+
     }
 
 	return $total_customers;
@@ -414,7 +457,54 @@ function imprimirSaldo( $args ){
 
 }
 
+/*
+ * Lista los abonos de un cliente especifico
+ * */
+function listarAbonos( $cid )
+{
 
+	$abonos = array();
+
+    $ventas = new Ventas();
+    $ventas->setIdCliente($cid);
+    $ventas->setTipoVenta('credito');
+    $comprasCliente = VentasDAO::search($ventas);
+
+	foreach( $comprasCliente as $venta )
+	{
+		
+		$pago = new PagosVenta();
+		$pago->setIdVenta( $venta->getIdVenta() );
+		
+		$pagosVenta = PagosVentaDAO::search( $pago );
+		
+		foreach( $pagosVenta as $p )
+		{
+			//make readable data
+		
+			$sucursal = SucursalDAO::getByPK( $p->getIdSucursal() );
+			$cajero = UsuarioDAO::getByPK( $p->getIdUsuario() );
+			
+			$data = array(
+				"cajero" => $cajero ? $cajero->getNombre() : "<b>Error</b>",
+				"sucursal" => $sucursal ? $sucursal->getDescripcion() : "<b>Error</b>",
+				"fecha" => $p->getFecha(),
+				"id_pago" => $p->getIdPago(),
+				"id_sucursal" => $p->getIdSucursal(),
+				"id_usuario" => $p->getIdUsuario(),
+				"id_venta" => $p->getIdVenta(),
+				"monto" => $p->getMonto()
+			);
+			
+
+			
+			array_push( $abonos, $data );
+		}
+		
+	}
+
+	return $abonos;
+}
 
 /*
  * 

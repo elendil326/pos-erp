@@ -55,10 +55,9 @@ $(document).ready(function() {
 	<tr><td><b>Direccion</b></td><td><?php echo $cliente->getDireccion(); ?></td></tr>
 	<tr><td><b>Ciudad</b></td><td><?php echo $cliente->getCiudad(); ?></td></tr>
 	<tr><td><b>Telefono</b></td><td><?php echo $cliente->getTelefono(); ?></td></tr>	
-	
 	<tr><td><b>E Mail</b></td><td><?php echo $cliente->getEMail(); ?></td></tr>	
 	<tr><td><b>Limite de Credito</b></td><td><?php echo moneyFormat($cliente->getLimiteCredito()); ?></td></tr>	
-	<tr><td><b>Descuento</b></td><td><?php echo $cliente->getDescuento(); ?></td></tr>			
+	<tr><td><b>Descuento</b></td><td><?php echo percentFormat( $cliente->getDescuento() ); ?></td></tr>			
 	
 </table>
 
@@ -74,22 +73,29 @@ $ventas = listarVentaCliente($_REQUEST['id'], 'contado');
 
 //render the table
 $header = array( 
-	"id_venta" => "Venta ID", 
+	"id_venta" => "Venta", 
 	"fecha" => "Fecha", 
-	"id_sucursal" => "Sucursal",
-	"id_usuario" => "Usuario",
-	"tipo_venta" => "Tipo",
+	"sucursal" => "Sucursal",
+	"cajero" => "Cajero",
 	"subtotal" => "Subtotal",
-	"iva" => "IVA",
 	"descuento" => "Descuento",
-	"total" => "Total",
-	"pagado" => "Pagado" );
-	
-$tabla = new Tabla( $header, $ventas );
-$tabla->render();
+	"total" => "Total");
 
+
+$tabla = new Tabla( $header, $ventas );
+$tabla->addColRender( array('subtotal' => function($a){return sprintf( "<b>$</b>%.2f", $a);})  );
+$tabla->addColRender( array('total' => function($a){return sprintf( "<b>$</b>%.2f", $a);})  );
+$tabla->addColRender( array('descuento' => function($a){return sprintf( "%.2f<b>%%</b>", $a);})  );
+$tabla->addNoData("Este cliente no tiene ventas a contado.");
+$tabla->render();	
 
 ?>
+
+
+
+
+
+
 
 
 
@@ -100,22 +106,22 @@ $tabla->render();
 
 $ventas = listarVentaCliente($_REQUEST['id'], 'credito');
 
-
-
-//render the table
 $header = array( 
-	"id_venta" => "Venta ID", 
+	"id_venta" => "Venta", 
 	"fecha" => "Fecha", 
-	"id_sucursal" => "Sucursal",
-	"id_usuario" => "Usuario",
-	"tipo_venta" => "Tipo",
+	"sucursal" => "Sucursal",
+	"cajero" => "Cajero",
 	"subtotal" => "Subtotal",
-	"iva" => "IVA",
 	"descuento" => "Descuento",
 	"total" => "Total",
 	"pagado" => "Pagado" );
 	
 $tabla = new Tabla( $header, $ventas );
+$tabla->addColRender( array('subtotal' => function($a){return sprintf( "<b>$</b>%.2f", $a);})  );
+$tabla->addColRender( array('total' => function($a){return sprintf( "<b>$</b>%.2f", $a);})  );
+$tabla->addColRender( array('pagado' => function($a){return sprintf( "<b>$</b>%.2f", $a);})  );
+$tabla->addColRender( array('descuento' => function($a){return sprintf( "%.2f<b>%%</b>", $a);})  );
+$tabla->addNoData("Este cliente no tiene ventas a credito.");
 $tabla->render();
 
 
@@ -125,3 +131,38 @@ $tabla->render();
 
 
 
+
+
+
+
+
+
+<h2>Abonos</h2><?php
+
+$abonos = listarAbonos( $_REQUEST['id'] );
+
+$header = array( 
+	"id_pago" => "Pago", 
+	"id_venta" => "Venta", 
+	"sucursal" => "Sucursal",
+	"cajero" => "Cajero",
+	"fecha" => "Fecha",
+	"monto" => "Monto" );
+
+$tabla = new Tabla( $header, $abonos );
+$tabla->addColRender( array('monto' => function($a){return sprintf( "<b>$</b>%.2f", $a);})  );
+$tabla->addNoData("Este cliente no ha realizado ningun abono.");
+$tabla->render();
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+?>

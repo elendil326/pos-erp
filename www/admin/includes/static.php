@@ -2,8 +2,14 @@
 
 
 function moneyFormat( $val ){
+
+	return sprintf( "<b>$</b>%.2f", $val);
+}
+
+
+function percentFormat( $val ){
 	
-	return "$" . $val;
+	return sprintf( "%.2f<b>%%</b>", $val);
 	
 }
 
@@ -15,13 +21,20 @@ class Tabla {
 	private $actionFunction;
 	private $actionField;
 	
+	
+	private $specialRender;
+	private $noDataText;
+	
 	public function __construct($header = array(), $rows = array()){
 		$this->header = $header;
 		$this->rows = $rows;
+		$this->specialRender = array();
 	}
 	
-	
-	
+	public function addNoData ( $msg ){
+		$this->noDataText = $msg;
+	}
+
 	public function addRow( $row ){
 		
 	}
@@ -32,12 +45,29 @@ class Tabla {
 		$this->actionFunction = $actionFunction;
 	}
 	
+
+	
+	public function addColRender( $data ){
+		
+		array_push( $this->specialRender, $data );
+	}
+	
 	public function render( $write = true ){
 		
-
-		$html = " ";
 		
-		$html .= '<table border="1">';
+		if(sizeof($this->rows) == 0){
+			if($write){
+				return print( $this->noDataText );
+			}else{
+				return $this->noDataText;			
+			}
+		}
+		
+		
+		
+		$html = "";
+		
+		$html .= '<table border="1" style="width:100%">';
 		$html .= '<tr>';
 		
 		foreach ( $this->header  as $key => $value){
@@ -66,8 +96,24 @@ class Tabla {
 
 			foreach ( $this->header  as $key => $value){
 				if( array_key_exists( $key , $row )){
-					$html .=  "<td>" . $row[ $key ] . "</td>";
-				}				
+
+					//ver si necesita rendereo especial
+					$found = null;
+					for( $k = 0; $k < sizeof($this->specialRender); $k++ ){
+						if( array_key_exists( $key, $this->specialRender[$k] )){
+								$found = $this->specialRender[$k];
+						}
+					}
+					
+					
+					if( $found ){
+						$html .=  "<td>" . $found[$key]( $row[ $key ] ) . "</td>";
+					}else{
+						$html .=  "<td>" . $row[ $key ] . "</td>";
+					}
+					
+
+				}
 			}
 			
 			$html .='</tr>';
