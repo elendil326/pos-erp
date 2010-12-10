@@ -59,6 +59,15 @@ function detalleProductoSucursal( $args ){
 
 
 
+function listarInventarioMaestro ()
+{
+	
+	return InventarioDAO::getAll();
+	
+	
+}
+
+
 if(isset($args['action'])){
 	switch($args['action']){
 	    case 400:

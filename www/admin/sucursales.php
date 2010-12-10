@@ -35,7 +35,9 @@
 			case "lista" : 
 				require_once("sucursales.lista.php"); 
 			break;
-
+			case "detalles" : 
+				require_once("sucursales.detalles.php"); 
+			break;
 
 			default : echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
 		} 

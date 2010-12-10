@@ -68,7 +68,7 @@ class Tabla {
 		$html = "";
 		
 		$html .= '<table border="1" style="width:100%">';
-		$html .= '<tr>';
+		$html .= '<tr >';
 		
 		foreach ( $this->header  as $key => $value){
 			$html .= '<th>' . $value . '</th>';			

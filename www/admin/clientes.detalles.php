@@ -32,7 +32,8 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
     var myOptions = {
       zoom: 18,
       center: myLatlng,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+      mapTypeId: google.maps.MapTypeId.HYBRID,
+	navigationControl : true
     }
 	try{
 	var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
