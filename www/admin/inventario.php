@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>Punto de venta | Clientes</title>
+    <title>Punto de venta | Inventario</title>
 	
 
 
@@ -27,28 +27,19 @@
     <div class="g-doc-800" id="g-doc">
         
     <?php include_once("includes/mainMenu.php"); ?>
-
-	<div class="g-section g-tpl-160 main"> 
-		<!--
-		<div class="g-unit g-first nav"> 
-			<div class="ga-container-nav-side"> 
-			Menu
-			</div> 
-		</div>
-		-->
-
+	
+	<div class="g-section g-tpl-160 main">
+	
 	<?php 
 		switch( $_GET["action"] )
 		{
-			case "lista" : require_once("clientes.lista.php"); break;
-			case "listaDeudores" : require_once("clientes.listaDeudores.php"); break;			
-			case "nuevo" : require_once("clientes.nuevo.php"); break;
-			case "detalles" : require_once("clientes.detalles.php"); break;			
+			case "lista" : require_once("inventario.lista.php"); break;
+			case "nuevo" : require_once("inventario.nuevo.php"); break;
+			case "surtir" : require_once("inventario.surtir.php"); break;			
 			default : echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
 		} 
 	?>
-
-	</div>
+    </div>
 	<?php include_once("includes/footer.php"); ?>
     </div>
   

@@ -1,16 +1,20 @@
 <?php 
 
-require_once('../server/model/inventario.dao.php');
-require_once('../server/model/detalle_inventario.dao.php');
+require_once('model/inventario.dao.php');
+require_once('model/detalle_inventario.dao.php');
 
 
 /*
- * listar las existencias para ESTA sucursal
+ * listar las existencias para la sucursal dada sucursal
  * */
-function listarInventario(  ){
+function listarInventario( $sucID = null){
     
+	if(!$sucID){
+		return null; 
+	}
+
     $q = new DetalleInventario();
-    $q->setIdSucursal( $_SESSION["sucursal"] ); 
+    $q->setIdSucursal( $sucID ); 
     
     $results = DetalleInventarioDAO::search( $q );
     
@@ -29,8 +33,10 @@ function listarInventario(  ){
             "precioIntersucursal" => $productoData->getPrecioIntersucursal()
         ));
     }
+
+	return $json;
     
-    printf('{ "success": true, "datos": %s }',  json_encode($json));
+
 
 }
 
@@ -51,17 +57,22 @@ function detalleProductoSucursal( $args ){
 
 }
 
-switch($args['action']){
-    case 400:
-        listarInventario(  );
-    break;
 
-    case 401://regresa el detalle del producto en la sucursal actual
-        detalleProductoSucursal( $args );
-    break;
 
-    default:
-        printf( '{ "success" : "false" }' );
-    break;
+if(isset($args['action'])){
+	switch($args['action']){
+	    case 400:
+	    	printf('{ "success": true, "datos": %s }',  json_encode( listarInventario( $_SESSION["sucursal"] ) ));
+	    break;
 
+	    case 401://regresa el detalle del producto en la sucursal actual
+	        detalleProductoSucursal( $args );
+	    break;
+
+	    default:
+	        printf( '{ "success" : "false" }' );
+	    break;
+
+	}
 }
+

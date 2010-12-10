@@ -47,9 +47,9 @@ class Tabla {
 	
 
 	
-	public function addColRender( $data ){
+	public function addColRender( $id, $fn ){
 		
-		array_push( $this->specialRender, $data );
+		array_push( $this->specialRender, array( $id => $fn ) );
 	}
 	
 	public function render( $write = true ){
@@ -107,7 +107,7 @@ class Tabla {
 					
 					
 					if( $found ){
-						$html .=  "<td>" . $found[$key]( $row[ $key ] ) . "</td>";
+						$html .=  "<td>" . call_user_func( $found[$key] , $row[ $key ]) . "</td>";
 					}else{
 						$html .=  "<td>" . $row[ $key ] . "</td>";
 					}

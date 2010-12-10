@@ -14,9 +14,6 @@
           <a href="clientes.php?action=lista" >Lista de Clientes</a>
         </li>
         <li class="ga-side-nav-off">
-          <a  href="clientes.php?action=listaDeudores" >Clientes Deudores</a>
-        </li>
-        <li class="ga-side-nav-off">
           <a  href="clientes.php?action=nuevo" >Nuevo Cliente</a>
         </li>
       </ul>
@@ -71,10 +68,13 @@
       <a class="drop" >INVENTARIO</a>
       <ul>
         <li class="ga-side-nav-off">
-          <a  >Surtir sucursal</a>
+          <a href="inventario.php?action=lista">Lista de Inventario</a>
         </li>
         <li>
-          <a  >Productos</a>
+          <a href="inventario.php?action=surtir">Surtir Sucursal</a>
+        </li>
+        <li>
+          <a href="inventario.php?action=nuevo">Nuevo Producto</a>
         </li>
       </ul>
     </li>
