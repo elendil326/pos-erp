@@ -417,8 +417,8 @@ Aplicacion.Autorizaciones.prototype.listaDetalleCompra = function( id_compra )
                     html += "   <td>" + r.datos[ i ].id_compra + "</td>";
                     html += "   <td>" + r.datos[ i ].id_producto + "</td>";
                     html += "   <td>" + r.datos[ i ].descripcion + "</td>";
-                    html += "   <td>" + POS.currencyFormat( r.datos[ i ].cantidad ) + "</td>";
-                    html += "   <td>" + r.datos[ i ].precio + "</td>";
+                    html += "   <td>" + r.datos[ i ].cantidad + "</td>";
+                    html += "   <td>" + POS.currencyFormat( r.datos[ i ].precio ) + "</td>";
                     html += "</tr>";
                 }
 
