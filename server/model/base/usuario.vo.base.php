@@ -31,6 +31,7 @@ class Usuario extends VO
 			$this->salario = $data['salario'];
 			$this->direccion = $data['direccion'];
 			$this->telefono = $data['telefono'];
+			$this->fecha_inicio = $data['fecha_inicio'];
 		}
 	}
 
@@ -53,7 +54,8 @@ class Usuario extends VO
 		"finger_token" => $this->finger_token,
 		"salario" => $this->salario,
 		"direccion" => $this->direccion,
-		"telefono" => $this->telefono
+		"telefono" => $this->telefono,
+		"fecha_inicio" => $this->fecha_inicio
 		); 
 	return json_encode($vec); 
 	}
@@ -148,6 +150,15 @@ class Usuario extends VO
 	  * @var varchar(16)
 	  */
 	protected $telefono;
+
+	/**
+	  * fecha_inicio
+	  * 
+	  * Fecha cuando este usuario comenzo a laborar<br>
+	  * @access protected
+	  * @var timestamp
+	  */
+	protected $fecha_inicio;
 
 	/**
 	  * getIdUsuario
@@ -391,6 +402,30 @@ class Usuario extends VO
 	final public function setTelefono( $telefono )
 	{
 		$this->telefono = $telefono;
+	}
+
+	/**
+	  * getFechaInicio
+	  * 
+	  * Get the <i>fecha_inicio</i> property for this object. Donde <i>fecha_inicio</i> es Fecha cuando este usuario comenzo a laborar
+	  * @return timestamp
+	  */
+	final public function getFechaInicio()
+	{
+		return $this->fecha_inicio;
+	}
+
+	/**
+	  * setFechaInicio( $fecha_inicio )
+	  * 
+	  * Set the <i>fecha_inicio</i> property for this object. Donde <i>fecha_inicio</i> es Fecha cuando este usuario comenzo a laborar.
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_inicio</i> es de tipo <i>timestamp</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param timestamp
+	  */
+	final public function setFechaInicio( $fecha_inicio )
+	{
+		$this->fecha_inicio = $fecha_inicio;
 	}
 
 }

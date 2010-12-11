@@ -28,6 +28,7 @@ class Ingresos extends VO
 			$this->fecha_ingreso = $data['fecha_ingreso'];
 			$this->id_sucursal = $data['id_sucursal'];
 			$this->id_usuario = $data['id_usuario'];
+			$this->nota = $data['nota'];
 		}
 	}
 
@@ -47,7 +48,8 @@ class Ingresos extends VO
 		"fecha" => $this->fecha,
 		"fecha_ingreso" => $this->fecha_ingreso,
 		"id_sucursal" => $this->id_sucursal,
-		"id_usuario" => $this->id_usuario
+		"id_usuario" => $this->id_usuario,
+		"nota" => $this->nota
 		); 
 	return json_encode($vec); 
 	}
@@ -115,6 +117,15 @@ class Ingresos extends VO
 	  * @var int(11)
 	  */
 	protected $id_usuario;
+
+	/**
+	  * nota
+	  * 
+	  * nota adicional para complementar la descripcion del ingreso<br>
+	  * @access protected
+	  * @var varchar(512)
+	  */
+	protected $nota;
 
 	/**
 	  * getIdIngreso
@@ -286,6 +297,30 @@ class Ingresos extends VO
 	final public function setIdUsuario( $id_usuario )
 	{
 		$this->id_usuario = $id_usuario;
+	}
+
+	/**
+	  * getNota
+	  * 
+	  * Get the <i>nota</i> property for this object. Donde <i>nota</i> es nota adicional para complementar la descripcion del ingreso
+	  * @return varchar(512)
+	  */
+	final public function getNota()
+	{
+		return $this->nota;
+	}
+
+	/**
+	  * setNota( $nota )
+	  * 
+	  * Set the <i>nota</i> property for this object. Donde <i>nota</i> es nota adicional para complementar la descripcion del ingreso.
+	  * Una validacion basica se hara aqui para comprobar que <i>nota</i> es de tipo <i>varchar(512)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(512)
+	  */
+	final public function setNota( $nota )
+	{
+		$this->nota = $nota;
 	}
 
 }

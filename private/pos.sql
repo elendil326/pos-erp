@@ -1,19 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.2deb1
+-- version 3.2.0.1
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 28-11-2010 a las 20:54:52
--- Versión del servidor: 5.1.41
--- Versión de PHP: 5.3.2-1ubuntu4.5
+-- Tiempo de generación: 10-12-2010 a las 23:38:54
+-- Versión del servidor: 5.1.37
+-- Versión de PHP: 5.3.0
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
 
 --
 -- Base de datos: `pos`
@@ -86,23 +80,27 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   `activo` tinyint(2) NOT NULL DEFAULT '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
   `id_usuario` int(11) NOT NULL COMMENT 'Identificador del usuario que dio de alta a este cliente',
   `id_sucursal` int(11) NOT NULL COMMENT 'Identificador de la sucursal donde se dio de alta este cliente',
+  `fecha_ingreso` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha cuando este cliente se registro en una sucursal',
   PRIMARY KEY (`id_cliente`),
   UNIQUE KEY `id_cliente` (`id_cliente`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=212 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=214 ;
 
 --
 -- Volcar la base de datos para la tabla `cliente`
 --
 
-INSERT INTO `cliente` (`id_cliente`, `rfc`, `nombre`, `direccion`, `ciudad`, `telefono`, `e_mail`, `limite_credito`, `descuento`, `activo`, `id_usuario`, `id_sucursal`) VALUES
-(204, 'DIL34534DFF', 'Dilba Monica del Moral Cuevas', 'Gardenias #123 Rosalinda, 2da Seccion.', 'Celaya', '0444611744149', 'dilbis_@hotmail.com', 1000, 0, 1, 37, 54),
-(205, 'asdfasdf', 'Oscar Wilde', 'Monte Balcanes 107 2da Secc Arboledas', 'Celaya', '1741449', 'lisa_ff@hotmail.com', 0, 0, 1, 37, 54),
-(206, 'GOH3489234234', 'Elizabeth Gonzalez Hernandez', 'Monte Balcanes 107 2da Secc Arboledas', 'Celaya', '1741449', 'lisa_ff@hotmail.com', 0, 0, 1, 37, 54),
-(207, 'GOHs3489234234', 'Elizabeth Gonzalez Hernandez', 'Monte Balcanes 107 2da Secc Arboledas', 'Celaya', '1741449', 'lisa_ff@hotmail.com', 0, 0, 1, 37, 54),
-(208, 'GOHs34s89234234', 'Elizabeth Gonzalez Hernandez', 'Monte Balcanes 107 2da Secc Arboledas', 'Celaya', '1741449', 'lisa_ff@hotmail.com', 0, 0, 1, 37, 54),
-(209, 'GOHs3s4s89234234', 'Elizabeth Gonzalez Hernandez', 'Monte Balcanes 107 2da Secc Arboledas', 'Celaya', '1741449', 'lisa_ff@hotmail.com', 0, 0, 1, 37, 54),
-(210, 'sdfsdf', 'sdfg', 'sdfsdf', 'sdfsdf', '324324', 'sdfsdf', 234, 234234, 1, 38, 54),
-(211, 'aSAs', 'saaSAs', 'ASAs', 'ASAs', '123123', 'ASAs', 121, 123123, 1, 38, 54);
+INSERT INTO `cliente` (`id_cliente`, `rfc`, `nombre`, `direccion`, `ciudad`, `telefono`, `e_mail`, `limite_credito`, `descuento`, `activo`, `id_usuario`, `id_sucursal`, `fecha_ingreso`) VALUES
+(-54, '', 'sucursal', '', '', NULL, '0', 0, 0, 1, 0, 0, '0000-00-00 00:00:00'),
+(204, 'DIL34534DFFs', 'Dilba Monica del Moral Cuevas', 'Gardenias #123 Rosalinda, 2da Seccion.', 'Celaya', '0444611744149', 'dilbis_@hotmail.com', 1000, 50, 1, 37, 54, '0000-00-00 00:00:00'),
+(205, 'asdfasdf', 'Oscar Wilde', 'Monte Balcanes 107 2da Secc Arboledas', 'Celaya', '1741449', 'lisa_ff@hotmail.com', 0, 0, 1, 37, 54, '0000-00-00 00:00:00'),
+(206, 'J453324234ASD', 'Julia Andrade', 'Monte Balcanes 107 2da Secc Arboledas', 'Celaya', '1741449ds123', 'lisa_ff@hotmail.com', 0, 0, 1, 37, 54, '0000-00-00 00:00:00'),
+(207, 'CGFA324234234', 'Cynthia Castro Gonzalez', 'Monte Balcanes 107 2da Secc Arboledas', 'Celaya', '1741449234234', 'lisa_ff@hotmail.com', 0, 0, 1, 37, 54, '0000-00-00 00:00:00'),
+(208, 'GOHs34s89234234', 'Elizabeth Gonzalez Hernandez', 'Monte Balcanes 107 2da Secc Arboledas', 'Celaya', '1741449', 'lisa_ff@hotmail.com', 0, 0, 1, 37, 54, '0000-00-00 00:00:00'),
+(209, 'Padls7896789ds', 'Pablo Milanes ', 'Monte Balcanes 107 2da Secc Arboledas', 'Celaya', '21741449234', 'liasdfsa_ff@hotmail.com', 0, 0, 1, 37, 54, '0000-00-00 00:00:00'),
+(210, 'sdfsdf', 'sdfg', 'sdfsdf', 'sdfsdf', '324324', 'sdfsdf', 234, 234234, 0, 38, 54, '0000-00-00 00:00:00'),
+(211, 'aSAs', 'saaSAs', 'ASAs', 'ASAs', '123123', 'ASAs', 121, 123123, 0, 38, 54, '0000-00-00 00:00:00'),
+(212, 'ads456f4as6d54f', 'alan Gonzalez', 'Monte Balcnaces #107', 'Celaya', '+1 5261-49974', 'alanboy@alanboy.com', 0, 0, 0, 38, 54, '0000-00-00 00:00:00'),
+(213, '2345234hjkh234', 'Juan Manuel Garcia Carmona', 'Diego Rivera #308 Col. Centro', 'Celaya', '461147845445', 'zonademanel@caffeina.mx', 0, 0, 1, 38, 54, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -262,8 +260,8 @@ CREATE TABLE IF NOT EXISTS `detalle_inventario` (
 --
 
 INSERT INTO `detalle_inventario` (`id_producto`, `id_sucursal`, `precio_venta`, `min`, `existencias`) VALUES
-(1, 54, 500, 100, 200),
-(2, 54, 550, 100, 200);
+(1, 54, 500, 100, 160),
+(2, 54, 550, 100, 178);
 
 -- --------------------------------------------------------
 
@@ -284,6 +282,35 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
 -- Volcar la base de datos para la tabla `detalle_venta`
 --
 
+INSERT INTO `detalle_venta` (`id_venta`, `id_producto`, `cantidad`, `precio`) VALUES
+(10, 1, 1, 500),
+(11, 1, 1, 500),
+(12, 1, 1, 500),
+(12, 2, 20, 500),
+(13, 1, 1, 500),
+(13, 2, 20, 500),
+(14, 2, 20, 500),
+(15, 1, 1, 500),
+(15, 2, 20, 500),
+(16, 1, 9, 500),
+(17, 1, 10, 450),
+(18, 1, 1, 500),
+(19, 1, 1, 500),
+(20, 1, 1, 500),
+(21, 1, 1, 500),
+(22, 1, 1, 500),
+(23, 1, 1, 500),
+(24, 1, 1, 500),
+(25, 1, 1, 500),
+(26, 1, 1, 500),
+(27, 1, 1, 500),
+(28, 1, 1, 500),
+(29, 1, 1, 500),
+(30, 1, 1, 500),
+(31, 1, 2, 500),
+(32, 1, 1, 500),
+(33, 1, 4, 500),
+(33, 2, 2, 550);
 
 -- --------------------------------------------------------
 
@@ -314,7 +341,7 @@ CREATE TABLE IF NOT EXISTS `factura_venta` (
   `id_venta` int(11) NOT NULL COMMENT 'venta a la cual corresponde la factura',
   PRIMARY KEY (`folio`),
   KEY `factura_venta_venta` (`id_venta`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
 
 --
 -- Volcar la base de datos para la tabla `factura_venta`
@@ -325,7 +352,9 @@ INSERT INTO `factura_venta` (`folio`, `id_venta`) VALUES
 (2, 1),
 (3, 1),
 (4, 1),
-(5, 1);
+(5, 1),
+(6, 23),
+(7, 33);
 
 -- --------------------------------------------------------
 
@@ -342,13 +371,16 @@ CREATE TABLE IF NOT EXISTS `gastos` (
   `fecha_ingreso` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Fecha que selecciono el empleado en el sistema',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal en la que se hizo el gasto',
   `id_usuario` int(11) NOT NULL COMMENT 'usuario que registro el gasto',
+  `nota` varchar(512) NOT NULL COMMENT 'nota adicional para complementar la descripcion del gasto',
   PRIMARY KEY (`id_gasto`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=211 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=212 ;
 
 --
 -- Volcar la base de datos para la tabla `gastos`
 --
 
+INSERT INTO `gastos` (`id_gasto`, `folio`, `concepto`, `monto`, `fecha`, `fecha_ingreso`, `id_sucursal`, `id_usuario`, `nota`) VALUES
+(211, '', 'luz', 15951, '2010-12-06 00:42:20', '2010-01-01 06:00:00', 54, 38, '');
 
 -- --------------------------------------------------------
 
@@ -369,7 +401,11 @@ CREATE TABLE IF NOT EXISTS `grupos` (
 
 INSERT INTO `grupos` (`id_grupo`, `nombre`, `descripcion`) VALUES
 (1, 'admin', 'Administrador del Sistema'),
-(2, 'gerente', '');
+(2, 'gerente', ''),
+(3, 'cajero', 'maneja las cajas'),
+(4, 'limpieza', 'maneja la limpieza'),
+(5, 'contador', 'maneja los dineros'),
+(6, 'audi', 'maneja el audi de la empresa');
 
 -- --------------------------------------------------------
 
@@ -391,36 +427,23 @@ CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
 
 INSERT INTO `grupos_usuarios` (`id_grupo`, `id_usuario`) VALUES
 (1, 37),
-(1, 39),
-(1, 40),
-(1, 41),
-(1, 42),
 (1, 54),
-(1, 55),
 (2, 38),
 (2, 46),
-(2, 47),
 (2, 50),
 (2, 51),
-(2, 52);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `horario`
---
-
-CREATE TABLE IF NOT EXISTS `horario` (
-  `id_usuario` int(11) NOT NULL COMMENT 'Usuario',
-  `accion` enum('entrada','salida') NOT NULL COMMENT 'Accion de entrada o salida',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de accion',
-  PRIMARY KEY (`id_usuario`,`fecha`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Volcar la base de datos para la tabla `horario`
---
-
+(2, 52),
+(3, 39),
+(3, 42),
+(3, 57),
+(3, 59),
+(3, 60),
+(4, 40),
+(4, 55),
+(4, 56),
+(4, 58),
+(5, 41),
+(5, 47);
 
 -- --------------------------------------------------------
 
@@ -436,6 +459,7 @@ CREATE TABLE IF NOT EXISTS `ingresos` (
   `fecha_ingreso` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Fecha que selecciono el empleado en el sistema',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal en la que se hizo el ingreso',
   `id_usuario` int(11) NOT NULL COMMENT 'usuario que registro el ingreso',
+  `nota` varchar(512) NOT NULL COMMENT 'nota adicional para complementar la descripcion del ingreso',
   PRIMARY KEY (`id_ingreso`),
   KEY `usuario_ingreso` (`id_usuario`),
   KEY `sucursal_ingreso` (`id_sucursal`)
@@ -504,7 +528,7 @@ CREATE TABLE IF NOT EXISTS `pagos_venta` (
   `monto` float NOT NULL COMMENT 'total de credito del cliente',
   PRIMARY KEY (`id_pago`),
   KEY `pagos_venta_venta` (`id_venta`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=28 ;
 
 --
 -- Volcar la base de datos para la tabla `pagos_venta`
@@ -521,7 +545,15 @@ INSERT INTO `pagos_venta` (`id_pago`, `id_venta`, `id_sucursal`, `id_usuario`, `
 (15, 3, 54, 37, '2010-11-27 15:09:59', 50),
 (16, 3, 54, 37, '2010-11-27 15:49:03', 50),
 (17, 3, 53, 37, '2010-11-27 15:49:08', 50),
-(19, 1, 53, 37, '2010-11-27 15:49:21', 50);
+(19, 1, 53, 37, '2010-11-27 15:49:21', 50),
+(20, 21, 54, 38, '2010-12-06 20:53:17', 100),
+(21, 21, 54, 38, '2010-12-06 20:58:42', 50),
+(22, 21, 54, 38, '2010-12-06 20:58:52', 50),
+(23, 21, 54, 38, '2010-12-06 21:00:36', 25),
+(24, 31, 54, 38, '2010-12-06 22:15:11', 50.5),
+(25, 31, 54, 38, '2010-12-07 00:16:50', 100),
+(26, 31, 54, 38, '2010-12-08 23:59:36', 0.5),
+(27, 31, 54, 38, '2010-12-09 01:38:54', 4);
 
 -- --------------------------------------------------------
 
@@ -586,6 +618,7 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   `token` varchar(512) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Token de seguridad para esta sucursal',
   `letras_factura` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `activo` tinyint(1) NOT NULL DEFAULT '1',
+  `fecha_apertura` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de apertura de esta sucursal',
   PRIMARY KEY (`id_sucursal`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=55 ;
 
@@ -593,8 +626,8 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
 -- Volcar la base de datos para la tabla `sucursal`
 --
 
-INSERT INTO `sucursal` (`id_sucursal`, `gerente`, `descripcion`, `direccion`, `rfc`, `telefono`, `token`, `letras_factura`, `activo`) VALUES
-(54, 5, 'Sucursal Arboledas', 'Monte Balcanes #107 2da Secc Arboledas. Celaya, Guanajuato.', 'GOH345345G', '6149974', '127.0.0.1', 'A', 1);
+INSERT INTO `sucursal` (`id_sucursal`, `gerente`, `descripcion`, `direccion`, `rfc`, `telefono`, `token`, `letras_factura`, `activo`, `fecha_apertura`) VALUES
+(54, 5, 'Sucursal Arboledas', 'Monte Balcanes #107 2da Secc Arboledas. Celaya, Guanajuato.', 'GOH345345G', '6149974', '127.0.0.1', 'A', 1, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -613,30 +646,36 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `salario` float NOT NULL COMMENT 'Salario actual',
   `direccion` varchar(512) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Direccion del empleado',
   `telefono` varchar(16) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Telefono del empleado',
+  `fecha_inicio` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha cuando este usuario comenzo a laborar',
   PRIMARY KEY (`id_usuario`),
   KEY `fk_usuario_1` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=56 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=61 ;
 
 --
 -- Volcar la base de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `RFC`, `nombre`, `contrasena`, `id_sucursal`, `activo`, `finger_token`, `salario`, `direccion`, `telefono`) VALUES
-(37, 'GOH345GA3', 'Alan Gonzalez Hernandez', 'a5bfc9e07964f8dddeb95fc584cd965d', 54, 1, '', 5000, '', ''),
-(38, '234534ASDFADS', 'Rodolfo Gonzalez', 'a5bfc9e07964f8dddeb95fc584cd965d', 54, 1, NULL, 5000, '', ''),
-(39, 'GACJ841106', 'Juan Manuel Garcia', 'mane', 54, 1, NULL, 10000, '', ''),
-(40, 'GACJ841106', 'Juan Manuel Garcia', 'mane', 54, 1, NULL, 10000, '', ''),
-(41, 'GACJ841106', 'Juan Manuel Garcia', '202cb962ac59075b964b07152d234b70', 54, 1, NULL, 10000, '', ''),
-(42, 'GACJ841106', 'Juan Manuel Garcia', '123', 54, 1, NULL, 10000, '', ''),
-(43, 'GACJ841106', 'Juan Manuel Garcia', '123', 54, 1, NULL, 10000, '', ''),
-(46, 'GACJ841106', 'Juan Manuel Garcia', '123', 54, 1, NULL, 10000, '', ''),
-(47, 'GACJ841106', 'Juan Manuel Garcia', '123', 54, 1, NULL, 10000, '', ''),
-(50, 'hhhhhhhhhh', 'jjjjjjjjjjj', '123', 54, 1, NULL, 100, '', ''),
-(51, 'GACJ841106', 'Juan Manuel Garcia', '123', 54, 1, NULL, 10000, '', ''),
-(52, 'GACJ841106', 'Juan Manuel Garcia', '123', 54, 0, NULL, 10000, '', ''),
-(53, 'josejose', 'jose nose', '123', 54, 0, NULL, 5000, '', ''),
-(54, 'josejose2', 'jose nose', '123', 54, 1, NULL, 5000, '', ''),
-(55, 'josejose2ss', 'jose nose', '123', 54, 1, NULL, 5000, '', '');
+INSERT INTO `usuario` (`id_usuario`, `RFC`, `nombre`, `contrasena`, `id_sucursal`, `activo`, `finger_token`, `salario`, `direccion`, `telefono`, `fecha_inicio`) VALUES
+(37, 'GOH345GA3', 'Alan Gonzalez Hernandez', 'a5bfc9e07964f8dddeb95fc584cd965d', 54, 1, '', 5000, '', '', '0000-00-00 00:00:00'),
+(38, '234534ASDFADS', 'Rodolfo Gonzalez', 'a5bfc9e07964f8dddeb95fc584cd965d', 54, 1, NULL, 5000, '', '', '0000-00-00 00:00:00'),
+(39, 'GACJ841106', 'Juan Manuel Garcia Carmona', 'mane', 54, 1, '', 10000, '', '', '0000-00-00 00:00:00'),
+(40, 'GACJ841106', 'Juan Manuel Garcia', 'mane', 54, 0, '', 10000, '', '', '0000-00-00 00:00:00'),
+(41, 'GACJ841106', 'Juan Manuel Garcia', '202cb962ac59075b964b07152d234b70', 54, 0, '', 10000, '', '', '0000-00-00 00:00:00'),
+(42, 'GACJ841106', 'Juan Manuel Garcia', '123', 54, 0, '', 10000, '', '', '0000-00-00 00:00:00'),
+(43, 'GACJ841106', 'Juan Manuel Garcia', '123', 54, 1, NULL, 10000, '', '', '0000-00-00 00:00:00'),
+(46, 'GACJ841106', 'Juan Manuel Garcia', '123', 54, 1, NULL, 10000, '', '', '0000-00-00 00:00:00'),
+(47, 'D82374978973', 'Dilba Monica del Moral', '123', 54, 1, '', 555, 'Rosalida #123897 $2347868 ?asdf', '6149974', '0000-00-00 00:00:00'),
+(50, 'hhhhhhhhhh', 'jjjjjjjjjjj', '123', 54, 1, NULL, 100, '', '', '0000-00-00 00:00:00'),
+(51, 'GACJ841106', 'Juan Manuel Garcia', '123', 54, 1, NULL, 10000, '', '', '0000-00-00 00:00:00'),
+(52, 'GACJ841106', 'Juan Manuel Garcia', '123', 54, 0, NULL, 10000, '', '', '0000-00-00 00:00:00'),
+(53, 'josejose', 'jose nose', '123', 54, 0, NULL, 5000, '', '', '0000-00-00 00:00:00'),
+(54, 'josejose2', 'jose nose', '123', 54, 1, NULL, 5000, '', '', '0000-00-00 00:00:00'),
+(55, 'josejose2ss', 'jose nose', '123', 54, 1, NULL, 5000, '', '', '0000-00-00 00:00:00'),
+(56, 'adsfasdfasdf', 'John Mayer', '', 54, 1, '', 1.23423e+06, 'asdf', 'asdf', '0000-00-00 00:00:00'),
+(57, '456464564564', 'John Lennon', 'alanboy', 54, 1, NULL, 123, 'Monte Balcanes #107', '6149974', '0000-00-00 00:00:00'),
+(58, 'adsfasdfasdfd', 'asdfasdf', '', 54, 0, '', 123, 'asdfasdf', 'asdfadsf', '0000-00-00 00:00:00'),
+(59, 'ASDfa98sd7fija', 'Alan Gonzalez', 'alanboy', 54, 1, '', 123, 'asdfadsfadsf', '65456464', '0000-00-00 00:00:00'),
+(60, 'l29034789ewuju89uj', 'juan manuel serrat', 'fb8f8877373f7b68f31904470a3b6019', 54, 1, NULL, 1234, 'asdklfjadklsfj alsdfj aosdjfi8', '8972457', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -661,7 +700,7 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`id_sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=34 ;
 
 --
 -- Volcar la base de datos para la tabla `ventas`
@@ -670,7 +709,37 @@ CREATE TABLE IF NOT EXISTS `ventas` (
 INSERT INTO `ventas` (`id_venta`, `id_cliente`, `tipo_venta`, `fecha`, `subtotal`, `iva`, `descuento`, `total`, `id_sucursal`, `id_usuario`, `pagado`, `ip`) VALUES
 (1, 204, 'contado', '2010-11-27 13:30:53', 300, 0, 0, 300, 54, 38, 300, '127.0.0.1'),
 (2, 205, 'contado', '2010-11-27 13:30:53', 200, 0, 0, 200, 54, 39, 100, '120.0.0.1'),
-(3, 204, 'credito', '2010-11-27 13:52:33', 500, 0, 50, 250, 54, 37, 240, '127.0.0.1');
+(3, 204, 'credito', '2010-11-27 13:52:33', 500, 0, 50, 250, 54, 37, 240, '127.0.0.1'),
+(4, -54, 'contado', '2010-12-05 20:42:28', 0, NULL, 0, 0, 54, 38, 0, '127.0.0.1'),
+(5, -54, 'contado', '2010-12-05 20:42:39', 0, NULL, 0, 0, 54, 38, 0, '127.0.0.1'),
+(6, -54, 'contado', '2010-12-05 20:42:39', 0, NULL, 0, 0, 54, 38, 0, '127.0.0.1'),
+(7, -54, 'contado', '2010-12-05 20:42:40', 0, NULL, 0, 0, 54, 38, 0, '127.0.0.1'),
+(8, -54, 'contado', '2010-12-05 20:43:48', NULL, NULL, 0, 0, 54, 38, 0, '127.0.0.1'),
+(9, -54, 'contado', '2010-12-05 20:44:51', NULL, NULL, 0, 0, 54, 38, 0, '127.0.0.1'),
+(10, -54, 'contado', '2010-12-05 20:45:18', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
+(11, -54, 'contado', '2010-12-05 20:49:34', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
+(12, -54, 'contado', '2010-12-05 21:15:59', NULL, NULL, 0, 0, 54, 38, 0, '127.0.0.1'),
+(13, -54, 'contado', '2010-12-05 21:18:14', 10500, NULL, 0, 10500, 54, 38, 10500, '127.0.0.1'),
+(14, -54, 'contado', '2010-12-05 21:22:57', NULL, NULL, 0, 0, 54, 38, 0, '127.0.0.1'),
+(15, -54, 'contado', '2010-12-05 21:23:14', 10500, NULL, 0, 10500, 54, 38, 10500, '127.0.0.1'),
+(16, -54, 'contado', '2010-12-05 21:25:15', 4500, NULL, 0, 4500, 54, 38, 4500, '127.0.0.1'),
+(17, -54, 'contado', '2010-12-05 21:28:37', 4500, NULL, 0, 4500, 54, 38, 4500, '127.0.0.1'),
+(18, 204, 'contado', '2010-12-05 21:35:52', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
+(19, 204, 'contado', '2010-12-05 21:36:46', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
+(20, 204, 'contado', '2010-12-05 21:37:01', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
+(21, 204, 'credito', '2010-12-05 21:48:06', 500, NULL, 0, 500, 54, 38, 225, '127.0.0.1'),
+(22, 206, 'contado', '2010-12-05 21:53:17', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
+(23, 207, 'contado', '2010-12-05 22:05:04', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
+(24, 208, 'contado', '2010-12-05 23:05:11', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
+(25, -54, 'contado', '2010-12-05 23:05:57', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
+(26, -54, 'contado', '2010-12-05 23:06:25', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
+(27, -54, 'contado', '2010-12-05 23:15:46', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
+(28, -54, 'contado', '2010-12-05 23:18:15', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
+(29, -54, 'contado', '2010-12-05 23:20:18', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
+(30, -54, 'contado', '2010-12-05 23:22:01', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
+(31, 204, 'credito', '2010-12-06 21:36:42', 1000, NULL, 50, 500, 54, 38, 155, '127.0.0.1'),
+(32, -54, 'contado', '2010-12-06 21:41:24', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
+(33, 208, 'contado', '2010-12-07 00:18:37', 3100, NULL, 0, 3100, 54, 38, 3100, '127.0.0.1');
 
 --
 -- Filtros para las tablas descargadas (dump)

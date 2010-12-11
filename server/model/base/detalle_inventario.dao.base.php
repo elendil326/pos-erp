@@ -113,7 +113,7 @@ abstract class DetalleInventarioDAOBase extends TablaDAO
 	  **/
 	public static final function search( $detalle_inventario , $json = false)
 	{
-		$sql = "SELECT DISTINCT * from detalle_inventario WHERE ("; 
+		$sql = "SELECT * from detalle_inventario WHERE ("; 
 		$val = array();
 		if( $detalle_inventario->getIdProducto() != NULL){
 			$sql .= " id_producto = ? AND";

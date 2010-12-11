@@ -165,6 +165,11 @@ abstract class UsuarioDAOBase extends TablaDAO
 			array_push( $val, $usuario->getTelefono() );
 		}
 
+		if( $usuario->getFechaInicio() != NULL){
+			$sql .= " fecha_inicio = ? AND";
+			array_push( $val, $usuario->getFechaInicio() );
+		}
+
 		$sql = substr($sql, 0, -3) . " )";
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
@@ -198,7 +203,7 @@ abstract class UsuarioDAOBase extends TablaDAO
 	  **/
 	private static final function update( $usuario )
 	{
-		$sql = "UPDATE usuario SET  RFC = ?, nombre = ?, contrasena = ?, id_sucursal = ?, activo = ?, finger_token = ?, salario = ?, direccion = ?, telefono = ? WHERE  id_usuario = ?;";
+		$sql = "UPDATE usuario SET  RFC = ?, nombre = ?, contrasena = ?, id_sucursal = ?, activo = ?, finger_token = ?, salario = ?, direccion = ?, telefono = ?, fecha_inicio = ? WHERE  id_usuario = ?;";
 		$params = array( 
 			$usuario->getRFC(), 
 			$usuario->getNombre(), 
@@ -209,6 +214,7 @@ abstract class UsuarioDAOBase extends TablaDAO
 			$usuario->getSalario(), 
 			$usuario->getDireccion(), 
 			$usuario->getTelefono(), 
+			$usuario->getFechaInicio(), 
 			$usuario->getIdUsuario(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -232,7 +238,7 @@ abstract class UsuarioDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$usuario )
 	{
-		$sql = "INSERT INTO usuario ( RFC, nombre, contrasena, id_sucursal, activo, finger_token, salario, direccion, telefono ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO usuario ( RFC, nombre, contrasena, id_sucursal, activo, finger_token, salario, direccion, telefono, fecha_inicio ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$usuario->getRFC(), 
 			$usuario->getNombre(), 
@@ -243,6 +249,7 @@ abstract class UsuarioDAOBase extends TablaDAO
 			$usuario->getSalario(), 
 			$usuario->getDireccion(), 
 			$usuario->getTelefono(), 
+			$usuario->getFechaInicio(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -395,6 +402,17 @@ abstract class UsuarioDAOBase extends TablaDAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " telefono = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $usuarioA->getFechaInicio()) != NULL) & ( ($b = $usuarioB->getFechaInicio()) != NULL) ){
+				$sql .= " fecha_inicio >= ? AND fecha_inicio <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " fecha_inicio = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

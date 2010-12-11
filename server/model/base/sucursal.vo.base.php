@@ -30,6 +30,7 @@ class Sucursal extends VO
 			$this->token = $data['token'];
 			$this->letras_factura = $data['letras_factura'];
 			$this->activo = $data['activo'];
+			$this->fecha_apertura = $data['fecha_apertura'];
 		}
 	}
 
@@ -51,7 +52,8 @@ class Sucursal extends VO
 		"telefono" => $this->telefono,
 		"token" => $this->token,
 		"letras_factura" => $this->letras_factura,
-		"activo" => $this->activo
+		"activo" => $this->activo,
+		"fecha_apertura" => $this->fecha_apertura
 		); 
 	return json_encode($vec); 
 	}
@@ -137,6 +139,15 @@ class Sucursal extends VO
 	  * @var tinyint(1)
 	  */
 	protected $activo;
+
+	/**
+	  * fecha_apertura
+	  * 
+	  * Fecha de apertura de esta sucursal<br>
+	  * @access protected
+	  * @var timestamp
+	  */
+	protected $fecha_apertura;
 
 	/**
 	  * getIdSucursal
@@ -356,6 +367,30 @@ class Sucursal extends VO
 	final public function setActivo( $activo )
 	{
 		$this->activo = $activo;
+	}
+
+	/**
+	  * getFechaApertura
+	  * 
+	  * Get the <i>fecha_apertura</i> property for this object. Donde <i>fecha_apertura</i> es Fecha de apertura de esta sucursal
+	  * @return timestamp
+	  */
+	final public function getFechaApertura()
+	{
+		return $this->fecha_apertura;
+	}
+
+	/**
+	  * setFechaApertura( $fecha_apertura )
+	  * 
+	  * Set the <i>fecha_apertura</i> property for this object. Donde <i>fecha_apertura</i> es Fecha de apertura de esta sucursal.
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_apertura</i> es de tipo <i>timestamp</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param timestamp
+	  */
+	final public function setFechaApertura( $fecha_apertura )
+	{
+		$this->fecha_apertura = $fecha_apertura;
 	}
 
 }

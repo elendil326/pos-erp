@@ -160,6 +160,11 @@ abstract class SucursalDAOBase extends TablaDAO
 			array_push( $val, $sucursal->getActivo() );
 		}
 
+		if( $sucursal->getFechaApertura() != NULL){
+			$sql .= " fecha_apertura = ? AND";
+			array_push( $val, $sucursal->getFechaApertura() );
+		}
+
 		$sql = substr($sql, 0, -3) . " )";
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
@@ -193,7 +198,7 @@ abstract class SucursalDAOBase extends TablaDAO
 	  **/
 	private static final function update( $sucursal )
 	{
-		$sql = "UPDATE sucursal SET  gerente = ?, descripcion = ?, direccion = ?, rfc = ?, telefono = ?, token = ?, letras_factura = ?, activo = ? WHERE  id_sucursal = ?;";
+		$sql = "UPDATE sucursal SET  gerente = ?, descripcion = ?, direccion = ?, rfc = ?, telefono = ?, token = ?, letras_factura = ?, activo = ?, fecha_apertura = ? WHERE  id_sucursal = ?;";
 		$params = array( 
 			$sucursal->getGerente(), 
 			$sucursal->getDescripcion(), 
@@ -203,6 +208,7 @@ abstract class SucursalDAOBase extends TablaDAO
 			$sucursal->getToken(), 
 			$sucursal->getLetrasFactura(), 
 			$sucursal->getActivo(), 
+			$sucursal->getFechaApertura(), 
 			$sucursal->getIdSucursal(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -226,7 +232,7 @@ abstract class SucursalDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$sucursal )
 	{
-		$sql = "INSERT INTO sucursal ( gerente, descripcion, direccion, rfc, telefono, token, letras_factura, activo ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO sucursal ( gerente, descripcion, direccion, rfc, telefono, token, letras_factura, activo, fecha_apertura ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$sucursal->getGerente(), 
 			$sucursal->getDescripcion(), 
@@ -236,6 +242,7 @@ abstract class SucursalDAOBase extends TablaDAO
 			$sucursal->getToken(), 
 			$sucursal->getLetrasFactura(), 
 			$sucursal->getActivo(), 
+			$sucursal->getFechaApertura(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -377,6 +384,17 @@ abstract class SucursalDAOBase extends TablaDAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " activo = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $sucursalA->getFechaApertura()) != NULL) & ( ($b = $sucursalB->getFechaApertura()) != NULL) ){
+				$sql .= " fecha_apertura >= ? AND fecha_apertura <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " fecha_apertura = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

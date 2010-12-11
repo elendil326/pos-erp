@@ -175,6 +175,11 @@ abstract class ClienteDAOBase extends TablaDAO
 			array_push( $val, $cliente->getIdSucursal() );
 		}
 
+		if( $cliente->getFechaIngreso() != NULL){
+			$sql .= " fecha_ingreso = ? AND";
+			array_push( $val, $cliente->getFechaIngreso() );
+		}
+
 		$sql = substr($sql, 0, -3) . " )";
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
@@ -208,7 +213,7 @@ abstract class ClienteDAOBase extends TablaDAO
 	  **/
 	private static final function update( $cliente )
 	{
-		$sql = "UPDATE cliente SET  rfc = ?, nombre = ?, direccion = ?, ciudad = ?, telefono = ?, e_mail = ?, limite_credito = ?, descuento = ?, activo = ?, id_usuario = ?, id_sucursal = ? WHERE  id_cliente = ?;";
+		$sql = "UPDATE cliente SET  rfc = ?, nombre = ?, direccion = ?, ciudad = ?, telefono = ?, e_mail = ?, limite_credito = ?, descuento = ?, activo = ?, id_usuario = ?, id_sucursal = ?, fecha_ingreso = ? WHERE  id_cliente = ?;";
 		$params = array( 
 			$cliente->getRfc(), 
 			$cliente->getNombre(), 
@@ -221,6 +226,7 @@ abstract class ClienteDAOBase extends TablaDAO
 			$cliente->getActivo(), 
 			$cliente->getIdUsuario(), 
 			$cliente->getIdSucursal(), 
+			$cliente->getFechaIngreso(), 
 			$cliente->getIdCliente(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -244,7 +250,7 @@ abstract class ClienteDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$cliente )
 	{
-		$sql = "INSERT INTO cliente ( rfc, nombre, direccion, ciudad, telefono, e_mail, limite_credito, descuento, activo, id_usuario, id_sucursal ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO cliente ( rfc, nombre, direccion, ciudad, telefono, e_mail, limite_credito, descuento, activo, id_usuario, id_sucursal, fecha_ingreso ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$cliente->getRfc(), 
 			$cliente->getNombre(), 
@@ -257,6 +263,7 @@ abstract class ClienteDAOBase extends TablaDAO
 			$cliente->getActivo(), 
 			$cliente->getIdUsuario(), 
 			$cliente->getIdSucursal(), 
+			$cliente->getFechaIngreso(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -431,6 +438,17 @@ abstract class ClienteDAOBase extends TablaDAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " id_sucursal = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $clienteA->getFechaIngreso()) != NULL) & ( ($b = $clienteB->getFechaIngreso()) != NULL) ){
+				$sql .= " fecha_ingreso >= ? AND fecha_ingreso <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " fecha_ingreso = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

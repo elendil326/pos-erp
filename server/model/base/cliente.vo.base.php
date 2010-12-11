@@ -33,6 +33,7 @@ class Cliente extends VO
 			$this->activo = $data['activo'];
 			$this->id_usuario = $data['id_usuario'];
 			$this->id_sucursal = $data['id_sucursal'];
+			$this->fecha_ingreso = $data['fecha_ingreso'];
 		}
 	}
 
@@ -57,7 +58,8 @@ class Cliente extends VO
 		"descuento" => $this->descuento,
 		"activo" => $this->activo,
 		"id_usuario" => $this->id_usuario,
-		"id_sucursal" => $this->id_sucursal
+		"id_sucursal" => $this->id_sucursal,
+		"fecha_ingreso" => $this->fecha_ingreso
 		); 
 	return json_encode($vec); 
 	}
@@ -170,6 +172,15 @@ class Cliente extends VO
 	  * @var int(11)
 	  */
 	protected $id_sucursal;
+
+	/**
+	  * fecha_ingreso
+	  * 
+	  * Fecha cuando este cliente se registro en una sucursal<br>
+	  * @access protected
+	  * @var timestamp
+	  */
+	protected $fecha_ingreso;
 
 	/**
 	  * getIdCliente
@@ -461,6 +472,30 @@ class Cliente extends VO
 	final public function setIdSucursal( $id_sucursal )
 	{
 		$this->id_sucursal = $id_sucursal;
+	}
+
+	/**
+	  * getFechaIngreso
+	  * 
+	  * Get the <i>fecha_ingreso</i> property for this object. Donde <i>fecha_ingreso</i> es Fecha cuando este cliente se registro en una sucursal
+	  * @return timestamp
+	  */
+	final public function getFechaIngreso()
+	{
+		return $this->fecha_ingreso;
+	}
+
+	/**
+	  * setFechaIngreso( $fecha_ingreso )
+	  * 
+	  * Set the <i>fecha_ingreso</i> property for this object. Donde <i>fecha_ingreso</i> es Fecha cuando este cliente se registro en una sucursal.
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_ingreso</i> es de tipo <i>timestamp</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param timestamp
+	  */
+	final public function setFechaIngreso( $fecha_ingreso )
+	{
+		$this->fecha_ingreso = $fecha_ingreso;
 	}
 
 }

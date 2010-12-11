@@ -155,6 +155,11 @@ abstract class GastosDAOBase extends TablaDAO
 			array_push( $val, $gastos->getIdUsuario() );
 		}
 
+		if( $gastos->getNota() != NULL){
+			$sql .= " nota = ? AND";
+			array_push( $val, $gastos->getNota() );
+		}
+
 		$sql = substr($sql, 0, -3) . " )";
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
@@ -188,7 +193,7 @@ abstract class GastosDAOBase extends TablaDAO
 	  **/
 	private static final function update( $gastos )
 	{
-		$sql = "UPDATE gastos SET  folio = ?, concepto = ?, monto = ?, fecha = ?, fecha_ingreso = ?, id_sucursal = ?, id_usuario = ? WHERE  id_gasto = ?;";
+		$sql = "UPDATE gastos SET  folio = ?, concepto = ?, monto = ?, fecha = ?, fecha_ingreso = ?, id_sucursal = ?, id_usuario = ?, nota = ? WHERE  id_gasto = ?;";
 		$params = array( 
 			$gastos->getFolio(), 
 			$gastos->getConcepto(), 
@@ -197,6 +202,7 @@ abstract class GastosDAOBase extends TablaDAO
 			$gastos->getFechaIngreso(), 
 			$gastos->getIdSucursal(), 
 			$gastos->getIdUsuario(), 
+			$gastos->getNota(), 
 			$gastos->getIdGasto(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -220,7 +226,7 @@ abstract class GastosDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$gastos )
 	{
-		$sql = "INSERT INTO gastos ( folio, concepto, monto, fecha, fecha_ingreso, id_sucursal, id_usuario ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO gastos ( folio, concepto, monto, fecha, fecha_ingreso, id_sucursal, id_usuario, nota ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$gastos->getFolio(), 
 			$gastos->getConcepto(), 
@@ -229,6 +235,7 @@ abstract class GastosDAOBase extends TablaDAO
 			$gastos->getFechaIngreso(), 
 			$gastos->getIdSucursal(), 
 			$gastos->getIdUsuario(), 
+			$gastos->getNota(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -359,6 +366,17 @@ abstract class GastosDAOBase extends TablaDAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " id_usuario = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $gastosA->getNota()) != NULL) & ( ($b = $gastosB->getNota()) != NULL) ){
+				$sql .= " nota >= ? AND nota <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " nota = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
