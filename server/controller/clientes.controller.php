@@ -95,7 +95,7 @@ function listarClientes(  ){
 		//buscar a este cliente en las ventas a credito
 		$qventa = new Ventas();
 		$qventa->setIdCliente( $cliente->getIdCliente() );
-		$qventa->setTipoVenta( "credito" );				
+		$qventa->setTipoVenta( "credito" );
 		$res = VentasDAO::search($qventa);
 			
 		$por_pagar = 0;
