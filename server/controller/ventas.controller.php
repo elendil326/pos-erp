@@ -1,7 +1,7 @@
 <?php
 
-require_once("../server/model/ventas.dao.php");
-require_once("../server/model/factura_venta.dao.php");
+require_once("model/ventas.dao.php");
+require_once("model/factura_venta.dao.php");
 
 function insertarFactura( $args ){
 
@@ -72,15 +72,33 @@ function eliminarFactura( $args ){
     }
 }
 
-switch( $args['action'] )
-{
-    case '800':
-        insertarFactura( $args );
-    break;
 
-    case '801':
-        eliminarFactura( $args );
-    break;
+
+function listarVentas( $sid = null ){
+	
+	if(!$sid){
+		return VentasDAO::getAll();		
+	}else{
+		$v = new Ventas();
+		$v->setIdSucursal($sid);
+		return VentasDAO::search($v);
+	}
+
+	
 }
+
+if(isset($args['action'])){
+	switch( $args['action'] )
+	{
+	    case '800':
+	        insertarFactura( $args );
+	    break;
+
+	    case '801':
+	        eliminarFactura( $args );
+	    break;
+	}	
+}
+
 
 ?>

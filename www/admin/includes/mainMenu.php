@@ -36,7 +36,16 @@
       <a class="drop" >VENTAS</a>
       <ul style="top: 33px; left: 246px; width: 200px; display: none; ">
         <li class="ga-side-nav-off">
-          <a  >Mostrador</a>
+          <a  href="ventas.php?action=lista">Ver Todas</a>
+        </li>
+        <li>
+          <a  >Por producto</a>
+        </li>
+        <li>
+          <a  >Por empleado</a>
+        </li>
+        <li>
+          <a  >Por cliente</a>
         </li>
         <li>
           <a  >Historial y Proyecciones</a>

@@ -136,7 +136,7 @@ var HumbleFinance = {
         var area = {
             x1: 0, 
             y1: this.bounds.ymin, 
-            x2: 100, 
+            x2: 5, 
             y2: this.bounds.ymax
         };
         this.graphs.summary = this.summaryGraph(this.summaryData, this.bounds);
@@ -151,9 +151,11 @@ var HumbleFinance = {
         var container = $(this.id);
 
         // Build DOM element
-        this.containers.price = new Element('div', {id: 'priceGraph', style: 'width: 100%; height: 240px;'});
-        this.containers.volume = new Element('div', {id: 'volumeGraph', style: 'width: 100%; height: 80px;'});
-        this.containers.summary = new Element('div', {id: 'summaryGraph', style: 'width: 100%; height: 60px;'});
+        this.containers.price = new Element('div', {id: 'priceGraph', style: 'margin-bottom: 10px; width: 100%; height: 240px;'});
+//        this.containers.volume = new Element('div', {id: 'volumeGraph', style: 'width: 100%; height: 80px;'});
+
+        this.containers.summary = new Element('div', {id: 'summaryGraph', style: ' width: 100%; height: 60px;'});
+
         this.containers.flags = new Element('div', {id: 'flagContainer'/*, style: 'width: 0px; height: 0px;'*/});
         this.handles.left = new Element('div', {id: 'leftHandle', 'class': 'handle zoomHandle', style: 'display: none;'});
         this.handles.right = new Element('div', {id: 'rightHandle', 'class': 'handle zoomHandle', style: 'display: none;'});
@@ -165,7 +167,7 @@ var HumbleFinance = {
         
         // Insert into container
         container.insert(this.containers.price);
-        container.insert(this.containers.volume);
+//        container.insert(this.containers.volume);
         container.insert(this.containers.summary);
         container.insert(this.containers.flags);
         container.insert(this.handles.left);
@@ -182,8 +184,8 @@ var HumbleFinance = {
         Event.observe(this.containers.summary, 'flotr:click', this.reset.bind(this));
         
         // Attach observers for hit tracking on price and volume points
-        Event.observe(this.containers.volume, 'flotr:hit', this.volumeHitObserver.bind(this));
-        Event.observe(this.containers.volume, 'flotr:clearhit', this.clearHit.bind(this));
+//        Event.observe(this.containers.volume, 'flotr:hit', this.volumeHitObserver.bind(this));
+//        Event.observe(this.containers.volume, 'flotr:clearhit', this.clearHit.bind(this));
         Event.observe(this.containers.price, 'flotr:hit', this.priceHitObserver.bind(this));
         Event.observe(this.containers.price, 'flotr:clearhit', this.clearHit.bind(this));
         
@@ -214,8 +216,8 @@ var HumbleFinance = {
         
         var newBounds = {'xmin': xmin, 'xmax': xmax, 'ymin': null, 'ymax': null};
         
-        this.graphs.price = this.priceGraph(this.priceData.slice(xmin, xmax+1), newBounds);
-        this.graphs.volume = this.volumeGraph(this.volumeData.slice(xmin, xmax+1), newBounds);
+        this.graphs.price = this.priceGraph(this.priceData.slice(xmin, xmax+1), this.volumeData.slice(xmin, xmax+1), newBounds);
+        //this.graphs.volume = this.volumeGraph(this.volumeData.slice(xmin, xmax+1), newBounds);
         
         this.drawFlags();
     },
@@ -225,7 +227,7 @@ var HumbleFinance = {
      */
     reset: function () {
         this.graphs.price = this.priceGraph(this.priceData, this.bounds);
-        this.graphs.volume = this.volumeGraph(this.volumeData, this.bounds);
+//        this.graphs.volume = this.volumeGraph(this.volumeData, this.bounds);
         this.handles.left.hide();
         this.handles.right.hide();
         this.handles.scroll.hide();
@@ -493,7 +495,7 @@ var HumbleFinance = {
      */
     clearHit: function(e) {
         this.graphs.price.clearHit();//.mouseTrack.hide();
-        this.graphs.volume.clearHit();
+//        this.graphs.volume.clearHit();
     },
     
     /**
@@ -502,15 +504,15 @@ var HumbleFinance = {
      * @param e MouseEvent
      */
     volumeHitObserver: function (e) {
-        
+        return;
         // Hide mouse track on volume graph
-        this.graphs.volume.mouseTrack.hide();
+//        this.graphs.volume.mouseTrack.hide();
         
         // Display hit on price graph
         var point = this.priceData[e.memo[0].x];
-        Event.stopObserving(this.containers.volume, 'flotr:hit');
-        this.doHit(this.graphs.price, point, this.containers.volume);
-        Event.observe(this.containers.volume, 'flotr:hit', this.volumeHitObserver.bind(this));
+//        Event.stopObserving(this.containers.volume, 'flotr:hit');
+//        this.doHit(this.graphs.price, point, this.containers.volume);
+//        Event.observe(this.containers.volume, 'flotr:hit', this.volumeHitObserver.bind(this));
     },
     
     /**
@@ -523,11 +525,11 @@ var HumbleFinance = {
         // Display hit on volume graph
         var point = this.volumeData[e.memo[0].x];
         Event.stopObserving(this.containers.price, 'flotr:hit');
-        this.doHit(this.graphs.volume, point, this.containers.price);
+//        this.doHit(this.graphs.volume, point, this.containers.price);
         Event.observe(this.containers.price, 'flotr:hit', this.priceHitObserver.bind(this));
         
         // Hide mouse track on volume graph
-        this.graphs.volume.mouseTrack.hide();
+//        this.graphs.volume.mouseTrack.hide();
     },
     
     /**
@@ -570,6 +572,8 @@ var HumbleFinance = {
      */
     drawFlags: function () {
         
+		if(!this.graphs.price)return;
+
         var xAxis = this.graphs.price.axes.x;
         var yAxis = this.graphs.price.axes.y;
         var min = xAxis.datamin;
@@ -613,8 +617,10 @@ var HumbleFinance = {
      * @param Array bounds
      * @return Flotr.Graph
      */
-    priceGraph: function (data, bounds) {
-        
+    priceGraph: function ( data1, data2, bounds) {
+		
+		if(!bounds) return;
+
         var xmin = bounds.xmin;
         var xmax = bounds.xmax;
         var ymin = bounds.ymin;
@@ -622,51 +628,27 @@ var HumbleFinance = {
         
         var p = Flotr.draw(
             $('priceGraph'),
-            [data],
+            [data1, data2],
             {
-                lines: {show: true, fill: true, fillOpacity: .1, lineWidth: 1},
+                lines: {show: true, fill: true, fillOpacity: .1, lineWidth: 2},
                 yaxis: {min: ymin, max: ymax, tickFormatter: this.yTickFormatter, noTicks: 3, autoscaleMargin: .5,  tickDecimals: 0},
                 xaxis: {min: xmin, max: xmax, showLabels: false},
-                grid: {outlineWidth: 0, labelMargin: 0},
+                grid: {outlineWidth: 0, labelMargin: 1},
                 mouse: {track: true, sensibility: 1, trackDecimals: 4, trackFormatter: this.trackFormatter, position: 'ne'},
                 shadowSize: false,
-                HtmlText: true
+                HtmlText: true,
+				selection: {
+					mode: 'x',		// => one of null, 'x', 'y' or 'xy'
+					color: '#cb4b4b',	// => selection box color
+					fps: 24			// => frames-per-second
+				}
             }
         );
         
         return p;
     },
 
-    /**
-     * Draw the volume graph
-     * 
-     * @param Array data
-     * @param Array bounds
-     * @return Flotr.Graph
-     */
-    volumeGraph: function (data, bounds) {
-        
-        var xmin = bounds.xmin;
-        var xmax = bounds.xmax;
-        var ymin = bounds.ymin;
-        var ymax = bounds.ymax;
 
-        var v = Flotr.draw(
-            $('volumeGraph'),
-            [data],
-            {
-                bars: {show: true, 'barWidth': .5, 'fill': true, 'lineWidth': 2, 'fillOpacity': 1},
-                yaxis: {min: ymin, max: ymax, autoscaleMargin: .5, showLabels: false, tickDecimals: 0},
-                xaxis: {min: xmin, max: xmax, showLabels: false, labelsAngle: 60},
-                grid: {verticalLines: false, horizontalLines: false, outlineWidth: 0, labelMargin: 0},
-                mouse: {track: true, sensibility: .3, position: 'ne', trackDecimals: 0},
-                shadowSize: false,
-                HtmlText: true
-            }
-        );
-        
-        return v;
-    },
 
     /**
      * Draw the summary graph
