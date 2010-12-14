@@ -4,6 +4,9 @@
  * Lista de Clientes deudores
  */ 
 
+
+require_once("model/sucursal.dao.php");
+require_once("model/usuario.dao.php");
 require_once("controller/clientes.controller.php");
 
 
@@ -18,10 +21,15 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
  	}
 </style>
 
-  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script> 
+  <!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>  -->
   <script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script> 
 
 <script type="text/javascript"> 
+
+
+    function editarCliente (){
+
+    }
 
 
   var drawMap = function ( result, status ) {
@@ -68,7 +76,7 @@ $(document).ready(function() {
 
 
 <table border="0" cellspacing="5" cellpadding="5">
-	<tr><td><b>Nombre</b></td><td><?php echo $cliente->getNombre(); ?></td><td rowspan=9><div id="map_canvas"></div></td></tr>
+	<tr><td><b>Nombre</b></td><td><?php echo $cliente->getNombre(); ?></td><td rowspan=12><div id="map_canvas"></div></td></tr>
 	<tr><td><b>RFC</b></td><td><?php echo $cliente->getRFC(); ?></td></tr>
 	<tr><td><b>Direccion</b></td><td><?php echo $cliente->getDireccion(); ?></td></tr>
 	<tr><td><b>Ciudad</b></td><td><?php echo $cliente->getCiudad(); ?></td></tr>
@@ -76,7 +84,12 @@ $(document).ready(function() {
 	<tr><td><b>E Mail</b></td><td><?php echo $cliente->getEMail(); ?></td></tr>	
 	<tr><td><b>Limite de Credito</b></td><td><?php echo moneyFormat($cliente->getLimiteCredito()); ?></td></tr>	
 	<tr><td><b>Descuento</b></td><td><?php echo percentFormat( $cliente->getDescuento() ); ?></td></tr>
-	<tr><td colspan=2><input type=button value="Editar detalles"><input type=button value="Imprmir detalles"></td> </tr>
+	<tr><td><b>Fecha Ingreso</b></td><td><?php echo $cliente->getFechaIngreso() ; ?></td></tr>
+
+	<tr><td><b>Cajero que dio de alta</b></td><td><?php echo UsuarioDAO::getByPK( $cliente->getIdUsuario() )->getNombre() ; ?></td></tr>
+	<tr><td><b>Sucursal donde se dio de alta</b></td><td><?php echo SucursalDAO::getByPK( $cliente->getIdSucursal() )->getDescripcion(); ?></td></tr>
+
+	<tr><td colspan=2><input type=button value="Editar detalles" onclick="editarCliente()"><input type=button value="Imprmir detalles"></td> </tr>
 </table>
 
 

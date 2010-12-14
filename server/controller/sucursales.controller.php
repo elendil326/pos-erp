@@ -104,9 +104,49 @@ function detallesSucursal( $sid = null ){
 
 
 
-function abrirSucursal(){
+function abrirSucursal( $detalles )
+{
+
+
+
+    $exito = true;
+    
+    $sucursal = new Sucursal();
+
+
+    //validar los datos
+    //revisar que no sea gerente ya de una sucursal
+    $suc = new Sucursal();
+    $suc->setGerente($detalles['gerente']);
+
+    if(sizeof(SucursalDAO::search( $suc )) > 0 ){
+       return array( 'success' => $exito, 'reason' =>  "Este empleado ya es gerente de una sucursal." );            
+    }
+
+    $sucursal->setActivo ("1");
+    $sucursal->setDescripcion( $detalles['descripcion'] );
+    $sucursal->setDireccion ($detalles['direccion']);
+    $sucursal->setGerente ($detalles['gerente']);
+    $sucursal->setLetrasFactura ($detalles['prefijo_factura']);
+    $sucursal->setRfc ($detalles['rfc']);
+    $sucursal->setTelefono ($detalles['telefono']);
+
+
+    try{
+        $err = SucursalDAO::save( $sucursal );
+    }catch( Exception $e ){
+        $exito = false;
+        return array( 'success' => $exito, 'reason' => $err );    
+    }
+
+
+    return array( 'success' => $exito, 'reason' => $reason, 'nid' => $sucursal->getIdSucursal() );
 
 }
+
+
+
+
 
 function editarSucursal(){
 
@@ -151,11 +191,11 @@ if(isset($args['action'])){
 	switch( $args['action'] )
 	{
 		case 700://listar sucursales
-		    printf('{"success" :" true", "datos": %s}', json_encode( listarSucursales(  ) ) );
+		    printf('{"success" : "true", "datos": %s}', json_encode( listarSucursales(  ) ) );
 		break;
 
 		case 701://abrir sucursal
-		    abrirSucursal( $args );
+		    printf('%s', json_encode( abrirSucursal( $args ) ) );
 		break;
 
 		case 702://editar detalle sucursal
