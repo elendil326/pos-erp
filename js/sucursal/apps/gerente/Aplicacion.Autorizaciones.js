@@ -1048,7 +1048,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                 text: 'Cancelar',
                 ui: 'action',
                 handler: function() {
-                   Ext.getCmp('detalleAutorizacionPanel').hide();
+                   Ext.getCmp('detalleAutorizacionPanel').destroy();
                 }
             },{
                 xtype: 'spacer'
@@ -1109,9 +1109,6 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanelCreator = function
         }]
     });
 };
-
-
-
 
 
 

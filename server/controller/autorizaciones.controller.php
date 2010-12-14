@@ -61,6 +61,7 @@ function autorizacionesSucursal( ){
 }//autorizacionesSucursal
 
 
+//TODO:No se que paso aqui, hay qeu revisar por qeu esta harcodeado la linea 79
 function respuestaAutorizacionGasto( $args ){
 
     if( !isset( $args['reply'] ) || !isset( $args['id_autorizacion'] )  )
@@ -82,6 +83,33 @@ function respuestaAutorizacionGasto( $args ){
     }
     
 }
+
+function eliminarAutorizacion( $args ){
+
+    if(!isset($args['id_autorizacion'])) 
+    {
+        die('{"success": false, "reason": "No hay parametros para ingresar." }');
+    }
+
+    $autorizacion = new Autorizacion();
+    $autorizacion->setIdAutorizacion( $args['id_autorizacion'] );
+
+    try{
+        if( AutorizacionDAOBase::delete( $autorizacion ) < 1 )
+        {
+            die('{"success": false, "reason": "Verifique que exista la autorizacion ' . $args['id_autorizacion'] . '." }');
+        }
+        else
+        {
+            printf( '{ "success" : "true" }' );
+        }
+    }
+    catch(Exception $e)
+    {
+        die('{"success": false, "reason": "' . $e . '" }');
+    }
+}
+
 
 function surtirProducto($args){
 
@@ -158,30 +186,71 @@ function surtirProducto($args){
     
 }
 
-function eliminarAutorizacion( $args ){
+function respuestaAutorizacionSurtir( $args ){
 
-    if(!isset($args['id_autorizacion'])) 
+    //SUPER IMPORTANTE QUE DATA TENGA PARENTESIS CUADRADO 
+    //data=[{"id_pruducto":"1","cantidad":"55.5"},{"id_pruducto":"1","cantidad":"2"}]
+
+    //estado puede valer:
+    // 0->sin revisar
+    // 1->aprovado
+    // 2->denegado                               <------ESTO ES LO NORMAL PARA EL CASO DE RESPUESTA DE SURTIR
+    // 3->aprovado y sin surtir por el gerente   <------ESTO ES LO NORMAL PARA EL CASO DE RESPUESTA DE SURTIR
+    // 4->aprovado y surtido por el gerente
+
+    if(!isset($args['data']) || !isset($args['id_autorizacion']) || !isset($args['estado']))
     {
-        die('{"success": false, "reason": "No hay parametros para ingresar." }');
+        die('{"success": false, "reason": "Faltan parametros." }');
     }
 
-    $autorizacion = new Autorizacion();
-    $autorizacion->setIdAutorizacion( $args['id_autorizacion'] );
+    try
+    {
+        $data = json_decode( $args['data']);
+    }
+    catch(Exception $e)
+    {
+        die( '{"success": false, "reason": "Parametros invalidos." }' );
+    }
 
-    try{
-        if( AutorizacionDAOBase::delete( $autorizacion ) < 1 )
+    if( !( $autorizacion = AutorizacionDAO::getByPK( $args['id_autorizacion'] ) ) )
+    {
+        die('{"success": false, "reason": "Verifique que exista la autorizacion ' . $args['id_autorizacion'] . '." }');
+    }
+
+    $autorizacion->setEstado( $args['estado'] );
+
+    try
+    {
+        $parametros = json_decode( $autorizacion->getParametros() );
+    }
+    catch(Exception $e)
+    {
+        die( '{"success": false, "reason": "Error en la lectura de los parametros de la autorización." }' );
+    }
+
+    $parametros->estado = $args['estado'];
+    $parametros->productos = $args['data'];
+
+    $autorizacion->setParametros( json_encode( $parametros ) );
+
+    //var_dump($parametros);
+
+    try
+    {
+        if( AutorizacionDAO::save( $autorizacion ) > 0 )
         {
-            die('{"success": false, "reason": "Verifique que exista la autorizacion ' . $args['id_autorizacion'] . '." }');
+            printf( '{ "success" : "true" }' );
         }
         else
         {
-            printf( '{ "success" : "true" }' );
+            die( '{ "success" : "false" , "reason" : "Error al cambiar el estado de la autorización."}' );
         }
     }
     catch(Exception $e)
     {
-        die('{"success": false, "reason": "' . $e . '" }');
+        die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorización."}' );
     }
+
 }
 
 switch( $args['action'] ){
@@ -352,9 +421,10 @@ switch( $args['action'] ){
             die( '{"success": false, "reason": "Parametros invalidos." }' );
         }
 
-        $descripcion = json_encode(array( 
+        $descripcion = json_encode(array(
             'clave'=>$args['action'],
             'descripcion'=>'Solicitud de producto',
+            'estado'=>'0',
             'productos'=>$args['data']
         ));
 
@@ -363,8 +433,7 @@ switch( $args['action'] ){
     break;
 
     case 210://respuesta de solicitud de producto (admin)
-        //debe de modificar el json donde estaba la descripcion de los productos que solicito
-        //y crear uno nuevo con la descripcion de lo que se envio a la sucursal para surtir
+        respuestaAutorizacionSurtir( $args );
     break;
 
     case 211://surtir producto (gerente)
