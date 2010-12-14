@@ -45,7 +45,9 @@ print( "<h1>" . $sucursal->getDescripcion() . "</h1>");
 
 
 <script type="text/javascript" charset="utf-8">
-
+    function mostrarDetallesVenta (vid){
+        window.location = "ventas.php?action=detalles&id=" + vid;
+    }
 
 	Event.observe(document, 'dom:loaded', function() {
 
@@ -166,6 +168,7 @@ $header = array(
 
 
 $tabla = new Tabla( $header, $ventas );
+$tabla->addOnClick("id_venta", "mostrarDetallesVenta");
 $tabla->render();
 
 

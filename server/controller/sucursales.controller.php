@@ -149,7 +149,7 @@ function abrirSucursal( $detalles )
 
 
 function editarSucursal(){
-
+    
 }
 
 function cerrarSucursal(){

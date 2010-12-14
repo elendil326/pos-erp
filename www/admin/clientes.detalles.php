@@ -7,6 +7,7 @@
 
 require_once("model/sucursal.dao.php");
 require_once("model/usuario.dao.php");
+require_once("model/factura_venta.dao.php");
 require_once("controller/clientes.controller.php");
 
 
@@ -26,6 +27,9 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 
 <script type="text/javascript"> 
 
+    function mostrarDetallesVenta (vid){
+        window.location = "ventas.php?action=detalles&id=" + vid;
+    }
 
     function editarCliente (){
 
@@ -118,6 +122,7 @@ $tabla->addColRender( "subtotal", "moneyFormat" );
 $tabla->addColRender( "total", "moneyFormat" ); 
 $tabla->addColRender( "descuento", "percentFormat" ); 
 $tabla->addNoData("Este cliente no tiene ventas a contado.");
+$tabla->addOnClick("id_venta", "mostrarDetallesVenta");
 $tabla->render();	
 
 ?>
@@ -127,6 +132,60 @@ $tabla->render();
 
 
 
+
+
+<h2>Ventas facturadas</h2><?php
+
+$ventas = listarVentaCliente($_REQUEST['id']);
+
+$ventasFacturadas = array();
+
+foreach( $ventas as $venta ){
+
+       $fv = new FacturaVenta();
+       $fv->setIdVenta( $venta['id_venta'] );
+
+       if(sizeof(FacturaVentaDAO::search($fv))> 0){
+            array_push($ventasFacturadas, $venta);
+       }
+    
+}
+
+
+function buscarFolio($id){
+       $fv = new FacturaVenta();
+       $fv->setIdVenta( $id );
+       $r = FacturaVentaDAO::search($fv);
+       if(sizeof($r) > 0)
+        return $r[0]->getFolio();
+       else
+        return null;
+}
+
+$header = array( 
+	"id_venta" => "Folio",
+	"fecha" => "Fecha", 
+	"sucursal" => "Sucursal",
+	"cajero" => "Cajero",
+	"subtotal" => "Subtotal",
+	"descuento" => "Descuento",
+	"total" => "Total",
+	"pagado" => "Pagado");
+	
+$tabla = new Tabla( $header, $ventasFacturadas );
+$tabla->addColRender( "subtotal", "moneyFormat" ); 
+$tabla->addColRender( "saldo", "moneyFormat" ); 
+$tabla->addColRender( "total", "moneyFormat" ); 
+$tabla->addColRender( "pagado", "moneyFormat" ); 
+$tabla->addColRender( "id_venta", "buscarFolio" ); 
+$tabla->addColRender( "descuento", "percentFormat" );
+
+$tabla->addOnClick("id_venta", "mostrarDetallesVenta");
+$tabla->addNoData("Este cliente no tiene ventas a credito.");
+$tabla->render();
+
+
+?>
 
 
 
@@ -145,14 +204,17 @@ $header = array(
 	"subtotal" => "Subtotal",
 	"descuento" => "Descuento",
 	"total" => "Total",
-	"pagado" => "Pagado" );
+	"pagado" => "Pagado",
+	"saldo" => "Saldo");
 	
 $tabla = new Tabla( $header, $ventas );
 $tabla->addColRender( "subtotal", "moneyFormat" ); 
+$tabla->addColRender( "saldo", "moneyFormat" ); 
 $tabla->addColRender( "total", "moneyFormat" ); 
 $tabla->addColRender( "pagado", "moneyFormat" ); 
 $tabla->addColRender( "descuento", "percentFormat" );
 
+$tabla->addOnClick("id_venta", "mostrarDetallesVenta");
 $tabla->addNoData("Este cliente no tiene ventas a credito.");
 $tabla->render();
 
@@ -186,15 +248,5 @@ $tabla->addColRender( "monto", "moneyFormat" );
 $tabla->addNoData("Este cliente no ha realizado ningun abono.");
 $tabla->render();
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 ?>

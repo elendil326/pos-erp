@@ -25,14 +25,50 @@
       $("input, select").uniform();
     });
 
-
+    var currentSuc = null;
 
 	function seleccionarSucursal(){
-		console.log($('#sucursal').val())
+
+
+        if(currentSuc != null){
+    		$("#actual" + currentSuc).slideUp();
+        }
+
 		$("#actual" + $('#sucursal').val()).slideDown();
-		$("#InvMaestro").slideDown();		
-		
+		$("#InvMaestro").slideDown();
+		$("#ASurtir").slideDown();
+        currentSuc = $('#sucursal').val();		
 	}
+
+    carrito = [];
+
+    function agregarProducto(pid){
+
+
+        if($("#ASurtirItem"+pid).length == 0){
+            $("#ASurtirTabla").append('<tr id="ASurtirItem'+pid+'"><td>'+pid+'</td><td><input type="text" id="ASurtirItemQty'+pid+'"></td></tr>');
+            carrito.push( pid );
+        }
+
+    }
+
+
+    function doSurtir(){
+        //valida campos
+
+        for(i = 0; i < carrito.length; i++ ){
+             item = carrito[i];
+            console.log("revisando " + item)
+            if( isNaN($("#ASurtirItemQty"+item ).val()) || $("#ASurtirItemQty"+item ).val().length == 0){
+                alert("La cantidad a surtir del producto " + item + " debe ser un numero." );
+                return;
+            }
+        }
+
+        //hacer ajaxaso
+
+        //avisar resultado
+    }
 
 </script>
 
@@ -127,7 +163,27 @@ foreach( $sucursales as $sucursal ){
 	$tabla = new Tabla( $header, $inventario );
 	$tabla->addColRender( "precioVenta", "moneyFormat" ); 
 	$tabla->addColRender( "precioIntersucursal", "moneyFormat" ); 
+    $tabla->addOnClick( "id_producto", "agregarProducto");
 	$tabla->render();
 
 ?> 
 </div>
+
+
+
+
+
+
+
+<div id="ASurtir" style="display: none;">
+<h2>Productos a surtir</h2><h3>Seleccione la cantidad del proucto que desea surtir.</h3>
+
+<table id="ASurtirTabla">
+    <tr><th>Descripcion</th><th>Cantidad</th></tr>
+
+</table>
+
+<input type="button" value="Surtir" onclick="doSurtir()">
+</div>
+
+

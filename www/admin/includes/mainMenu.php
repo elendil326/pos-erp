@@ -13,9 +13,11 @@
         <li class="ga-side-nav-off">
           <a href="clientes.php?action=lista" >Lista de Clientes</a>
         </li>
+        <!--
         <li class="ga-side-nav-off">
           <a  href="clientes.php?action=nuevo" >Nuevo Cliente</a>
         </li>
+        -->
       </ul>
     </li>
 

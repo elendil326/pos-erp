@@ -1,6 +1,8 @@
 <?php
 
 require_once("model/ventas.dao.php");
+require_once("model/inventario.dao.php");
+require_once("model/detalle_venta.dao.php");
 require_once("model/factura_venta.dao.php");
 
 function insertarFactura( $args ){
@@ -86,6 +88,55 @@ function listarVentas( $sid = null ){
 
 	
 }
+
+
+
+
+function detalleVenta( $vid ){
+
+
+    $venta = VentasDAO::getByPK( $vid );
+
+
+
+    $q = new DetalleVenta();
+    $q->setIdVenta( $vid ); 
+    
+    $detallesVenta = DetalleVentaDAO::search( $q );
+    
+    $items = array();
+    
+    foreach( $detallesVenta as $dV )
+    {
+    
+        $productoData = InventarioDAO::getByPK( $dV->getIdProducto() );
+        
+        array_push( $items , array(
+            "id_producto" => $dV->getIdProducto(),
+            "descripcion" => $productoData->getDescripcion(),
+            "cantidad" => $dV->getCantidad(),
+            "precio" => $dV->getPrecio()
+        ));
+    }
+
+    $results = array(
+            'detalles' => $venta,
+            'items' => $items
+        );
+
+    return $results;
+    
+
+
+}
+
+
+
+
+
+
+
+
 
 if(isset($args['action'])){
 	switch( $args['action'] )
