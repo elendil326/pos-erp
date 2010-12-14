@@ -234,12 +234,21 @@ switch( $args['action'] ){
 
     case 203://solicitud de autorizacion de devolucion (gerente)
 
-        if( !isset( $args['id_venta'] ) || !isset( $args['id_producto'] ) || !isset( $args['cantidad'] ) )
+        if( !isset($args['data']) )
         {
-            die( '{ "success" : "false" , "reason" : "Faltan datos" }' );
+            die('{"success": false, "reason": "No hay parametros para ingresar." }');
+        }
+        
+        try
+        {
+            $data = json_decode( $args['data'] ); //$data = json_decode( $data);
+        }
+        catch(Exception $e)
+        {
+            die( '{"success": false, "reason": "Parametros invalidos." }' );
         }
 
-        if( !is_numeric( $args['cantidad'] ) )
+        if(!is_numeric( $data -> cantidad ))
         {
             die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' ); 
         }
@@ -247,8 +256,9 @@ switch( $args['action'] ){
         $descripcion = json_encode(array( 
             'clave'=>$args['action'], 
             'descripcion'=>'Autorización de devolución',
-            'id_venta'=>$args['id_venta'],
-            'cantidad'=>$args['cantidad']
+            'id_compra'=>$data -> id_venta,
+            'id_producto'=>$data -> id_producto,
+            'cantidad'=>$data -> cantidad
         ));
 
         solicitudDeAutorizacion( $descripcion );
@@ -280,12 +290,21 @@ switch( $args['action'] ){
 
     case 205:////solicitud de autorizacion de merma (gerente)
 
-        if( !isset( $args['id_producto'] ) || !isset( $args['cantidad'] ) )
+        if( !isset($args['data']) )
         {
-            die( '{ "success" : "false" , "reason" : "Faltan datos" }' );
+            die('{"success": false, "reason": "No hay parametros para ingresar." }');
+        }
+        
+        try
+        {
+            $data = json_decode( $args['data'] ); //$data = json_decode( $data);
+        }
+        catch(Exception $e)
+        {
+            die( '{"success": false, "reason": "Parametros invalidos." }' );
         }
 
-        if(!is_numeric( $args['cantidad'] ))
+        if(!is_numeric( $data -> cantidad ))
         {
             die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' ); 
         }
@@ -293,8 +312,9 @@ switch( $args['action'] ){
         $descripcion = json_encode(array( 
             'clave'=>$args['action'], 
             'descripcion'=>'Autorización de merma',
-            'id_producto'=>$args['id_producto'],
-            'cantidad'=>$args['cantidad']
+            'id_compra'=>$data -> id_compra,
+            'id_producto'=>$data -> id_producto,
+            'cantidad'=>$data -> cantidad
         ));
 
         solicitudDeAutorizacion( $descripcion );

@@ -2,3 +2,9 @@
 .Autorizaciones-row {
     height:40px;
 }
+.Autorizaciones-Total {
+    font-weight:bold;
+    position:relative;
+    float:right;
+    margin-right:40px;
+}

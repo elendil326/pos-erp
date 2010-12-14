@@ -3,7 +3,9 @@
 require_once('model/inventario.dao.php');
 require_once('model/detalle_inventario.dao.php');
 require_once('model/detalle_compra.dao.php');
+require_once('model/detalle_venta.dao.php');
 require_once('model/compras.dao.php');
+require_once('model/ventas.dao.php');
 require_once('model/proveedor.dao.php');
 /*
  * listar las existencias para la sucursal dada sucursal
@@ -123,28 +125,85 @@ function detalleCompra( $args ){
         die('{"success": false, "reason": "Verifique los datos." }');
     }
 
+    //verificamos que exista esa compra
+    if( !( $compra = ComprasDAO::getByPK( $args['id_compra'] ) ) )
+    {
+        die('{"success": false, "reason": "No se tiene registro de esa compra." }');
+    }
+
     $q = new DetalleCompra();
     $q->setIdCompra( $args['id_compra'] ); 
     
-    $compras = DetalleCompraDAO::search( $q );
+    $detalle_compra = DetalleCompraDAO::search( $q );
     
     $array_detalle_compra = array();
     
-    foreach( $compras as $compra )
+    foreach( $detalle_compra as $producto )
     {
     
-        $productoData = InventarioDAO::getByPK( $compra->getIdProducto() );
+        $productoData = InventarioDAO::getByPK( $producto -> getIdProducto() );
         
         array_push( $array_detalle_compra , array(
-            "id_compra" => $compra->getIdCompra(),
-            "id_producto" => $compra->getIdProducto(),
+            "id_producto" => $producto->getIdProducto(),
             "descripcion" => $productoData->getDescripcion(),
-            "cantidad" => $compra->getCantidad(),
-            "precio" => $compra->getPrecio()
+            "cantidad" => $producto->getCantidad(),
+            "precio" => $producto->getPrecio()
         ));
     }
 
-    return $array_detalle_compra;
+    $info_compra -> id_compra = $compra -> getIdCompra();
+    $info_compra -> total = $compra -> getSubtotal();
+    $info_compra -> num_compras = count( $array_detalle_compra );
+    $info_compra -> compras = $array_detalle_compra;
+
+    return $info_compra; 
+
+}
+
+
+function detalleVenta( $args ){
+
+    if( !isset( $args['id_venta'] ) )
+    {
+        die('{"success": false, "reason": "No hay parametros para ingresar." }');
+    }
+    elseif( empty( $args['id_venta'] ) )
+    {
+        die('{"success": false, "reason": "Verifique los datos." }');
+    }
+
+    //verificamos que exista esa compra
+    if( !( $venta = VentasDAO::getByPK( $args['id_venta'] ) ) )
+    {
+        die('{"success": false, "reason": "No se tiene registro de esa venta." }');
+    }
+
+    $q = new DetalleVenta();
+    $q->setIdVenta( $args['id_venta'] ); 
+    
+    $detalle_venta = DetalleVentaDAO::search( $q );
+    
+    $array_detalle_venta = array();
+    
+    foreach( $detalle_venta as $producto )
+    {
+    
+        $productoData = InventarioDAO::getByPK( $producto -> getIdProducto() );
+        
+        array_push( $array_detalle_venta , array(
+            "id_producto" => $producto->getIdProducto(),
+            "descripcion" => $productoData->getDescripcion(),
+            "cantidad" => $producto->getCantidad(),
+            "precio" => $producto->getPrecio()
+        ));
+    }
+
+    $info_venta -> id_venta = $venta -> getIdVenta();
+    $info_venta -> total = $venta -> getTotal();
+    $info_venta -> num_ventas = count( $array_detalle_venta );
+    $info_venta -> ventas = $array_detalle_venta;
+
+    return $info_venta; 
 
 }
 
@@ -164,6 +223,10 @@ if(isset($args['action'])){
 
         case 403://regresa el detalle de la compra
             printf('{ "success": true, "datos": %s }',  json_encode( detalleCompra( $args ) ) );
+        break;
+
+        case 404://regresa el detalle de la venta
+            printf('{ "success": true, "datos": %s }',  json_encode( detalleVenta( $args ) ) );
         break;
 
 	    default:
