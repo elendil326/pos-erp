@@ -324,7 +324,7 @@ Aplicacion.Inventario.prototype.detalleInventarioSurtirEsteProd = function()
 	}
 	
 	sink.Main.ui.setActiveItem( Aplicacion.Inventario.currentInstance.surtirWizardPanel , 'fade');	
-	Aplicacion.Inventario.currentInstance.surtirAddItem( Aplicacion.Inventario.currentInstance.detalleInventarioPanel.getRecord().data );	
+	Aplicacion.Inventario.currentInstance.surtirAddItem( Aplicacion.Inventario.currentInstance.detalleInventarioPanel.getRecord().data );
 };
 
 
@@ -397,11 +397,11 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 		
 		html += "<td>" + carrito.items[i].productoID + " " + carrito.items[i].descripcion+ "</td>";
 
-		html += "<td > </td>";
+		html += "<td > <div>Del</div> </td>";
 
-		html += "<td> <div id='Inventario-carritoCantidad"+ carrito.items[i].productoID +"'></div></td>";
+		html += "<td colspan=2 > <div id='Inventario-carritoCantidad"+ carrito.items[i].productoID +"'></div></td>";
 
-		html += "<td > </td>";
+		//html += "<td > </td>";
 
 		html += "<td> <div style='color: green'>"+ POS.currencyFormat(carrito.items[i].precioIntersucursal) +"</div></td>";
 		
@@ -486,7 +486,7 @@ Aplicacion.Inventario.prototype.surtirWizardCreator = function ()
 		text: 'Confirmar pedido',
 		ui: 'action',
 		handler : function( t ){
-
+            Aplicacion.Inventario.currentInstance.surtirCarritoValidator();
 		}		
 	}];
 
@@ -562,6 +562,74 @@ Aplicacion.Inventario.prototype.surtirWizardCreator = function ()
 
 
 Aplicacion.Inventario.prototype.surtirWizardPopUpPanel = null;
+
+//valida que esten escritas las cantidades de cada producto qeu se va a surtir
+Aplicacion.Inventario.prototype.surtirCarritoValidator = function(){
+
+    for( var i = 0; i < this.carritoSurtir.items.length; i++)
+    {
+        //valida que al cantidad sea numerica y >= 0 TODO: hay que ver como eliminar el 0
+        if( !( this.carritoSurtir.items[i].cantidad && /^\d+(\.\d+)?$/.test(this.carritoSurtir.items[i].cantidad + '') ) ){
+            Ext.Msg.alert("Inventario","Error: verifique la cantidad del producto: " + this.carritoSurtir.items[i].descripcion);
+
+            return;
+
+        }
+    }
+
+    Aplicacion.Inventario.currentInstance.surtirCarrito();
+}
+
+//manda una solicitud al admin para que le surta a la sucursal, lo que haya en el carrito
+Aplicacion.Inventario.prototype.surtirCarrito = function(){
+
+    //data=[{"id_pruducto":"1","cantidad":"55.5"},{"id_pruducto":"1","cantidad":"2"}]
+
+    //damos in tratamiento a this.carritoSurtir.items, para agregar la propiedad id_producto, ya que
+    //es empleada en el servidor
+
+    for( var i = 0; i < this.carritoSurtir.items.length; i++)
+    {
+        this.carritoSurtir.items[i].id_producto = this.carritoSurtir.items[i].productoID;
+    }
+
+    Ext.Ajax.request({
+        url: 'proxy.php',
+        scope : this,
+        params : {
+            action : 209,
+            data : Ext.util.JSON.encode( this.carritoSurtir.items )
+        },
+        success: function(response, opts) {
+            try{
+                r = Ext.util.JSON.decode( response.responseText );
+            }catch(e){
+                POS.error(e);
+            }
+
+            
+            if( !r.success ){
+                Ext.Msg.alert("Inventario","Error: no se registro la solicitud de producto, porngase en contacto con el administrador o envie nuevamente una solicitud");
+                Aplicacionlicacion.Inventario.currentInstance.carritoSurtir.items = [];
+                Aplicacion.Inventario.currentInstance.refreshSurtir();
+                return;
+            }
+
+            Ext.Msg.alert("Inventario","Solicitu enviada con exito");
+
+            Aplicacion.Inventario.currentInstance.carritoSurtir.items = [];
+            Aplicacion.Inventario.currentInstance.refreshSurtir();
+
+
+
+        },
+        failure: function( response ){
+            POS.error( response );
+        }
+    }); 
+
+
+};
 
 
 
