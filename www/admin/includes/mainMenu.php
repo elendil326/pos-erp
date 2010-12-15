@@ -33,6 +33,16 @@
       </ul>
     </li>
 
+    <li class="product">
+      <a class="drop" >GERENTES</a>
+      <ul>
+        <li class="ga-side-nav-off">
+          <a href="gerentes.php?action=lista">Lista de Gerentes</a>
+        </li>
+      </ul>
+    </li>
+
+
 
     <li class="support">
       <a class="drop" >VENTAS</a>

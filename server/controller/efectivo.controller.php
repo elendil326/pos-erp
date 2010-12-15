@@ -1,8 +1,63 @@
 <?php 
 
-require_once("../server/model/ingresos.dao.php");
-require_once("../server/model/gastos.dao.php");
-require_once("../server/model/autorizacion.dao.php");
+require_once("model/ingresos.dao.php");
+require_once("model/gastos.dao.php");
+require_once("model/autorizacion.dao.php");
+
+
+
+
+
+
+/**
+ *
+ * 	listarGastosPorSucursal
+ *
+ *  Regresa un arreglo con objetos Gasto para esta sucursal
+ *
+ *  @access public
+ *  @return array
+ *	@params int [$id_sucursal] sucursal
+ * 	
+ **/
+function listarGastosSucursal( $sid = null)
+{
+    if(!$sid) return null;
+
+    $gastos = new Gastos();
+    $gastos->setIdSucursal( $sid );
+
+    return GastosDAO::search( $gastos );
+}
+
+
+
+
+/**
+ *
+ * 	listarIngresosPorSucursal
+ *
+ *  Regresa un arreglo con objetos Ingresos para esta sucursal
+ *
+ *  @access public
+ *  @return array
+ *	@params int [$id_sucursal] sucursal
+ * 	
+ **/
+function listarIngresosSucursal( $sid = null)
+{
+    if(!$sid) return null;
+
+    $Ingresos = new Ingresos( array( 'id_sucursal' => $sid ) );
+
+    return IngresosDAO::search( $Ingresos );
+}
+
+
+
+
+
+
 
 /**
  *
@@ -33,7 +88,7 @@ require_once("../server/model/autorizacion.dao.php");
     {
         $data = json_decode( $args['data'] );
     }
-    catch(Exception $e)autorizacionPendiate
+    catch(Exception $e)//autorizacionPendiate
     {
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
@@ -394,41 +449,46 @@ require_once("../server/model/autorizacion.dao.php");
     }
  }
  
- 
-switch( $args['action'] )
-{
-    case '600':
-        insertarGasto( $args );
-    break;
 
-    case '601':
-        eliminarGasto( $args );
-    break;
 
-    case '602':
-        actualizarGasto( $args );
-    break;
 
-    case '603':
-        insertarIngreso( $args );
-    break;
+if(isset($args['action'])){
+    switch( $args['action'] )
+    {
+        case '600':
+            insertarGasto( $args );
+        break;
 
-    case '604':
-        eliminarIngreso( $args );
-    break;
+        case '601':
+            eliminarGasto( $args );
+        break;
 
-    case '605':
-        actualizarIngreso( $args );
-    break;
+        case '602':
+            actualizarGasto( $args );
+        break;
 
-    case '606':
-        printf( '{ "success" : true , "id_sucursal" : "%s" }', $_SESSION['sucursal'] );
-    break;
+        case '603':
+            insertarIngreso( $args );
+        break;
 
-    default:
-        printf( '{ "success" : "false" }' );
-    break;
+        case '604':
+            eliminarIngreso( $args );
+        break;
 
-}//switch
+        case '605':
+            actualizarIngreso( $args );
+        break;
+
+        case '606':
+            printf( '{ "success" : true , "id_sucursal" : "%s" }', $_SESSION['sucursal'] );
+        break;
+
+        default:
+            printf( '{ "success" : "false" }' );
+        break;
+
+    }//switch
+}
+
 
 ?>

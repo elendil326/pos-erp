@@ -7,7 +7,7 @@
 require_once("controller/sucursales.controller.php");
 require_once("controller/ventas.controller.php");
 require_once("controller/personal.controller.php");
-
+require_once("controller/efectivo.controller.php");
 
 //obtener los clientes deudores del controller de clientes
 $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
@@ -201,9 +201,23 @@ print( "<h1>" . $sucursal->getDescripcion() . "</h1>");
 
 </script>
 
-<h2>Ventas en las ultimas 24 horas</h2><?php
+<h2>Ventas en el ultimo dia</h2><?php
 
-$ventas = ventasSucursal(  $sucursal->getIdSucursal() );
+                $date = new DateTime("now");
+
+			    $date->setTime ( 0 , 0, 1 );
+
+
+			    $v1 = new Ventas();
+			    $v1->setFecha( $date->format('Y-m-d H:i:s') );
+			    $v1->setIdSucursal( $_REQUEST['id'] );
+
+			    $date->setTime ( 23, 59, 59 );
+			    $v2 = new Ventas();
+			    $v2->setFecha( $date->format('Y-m-d H:i:s') );
+
+			    $ventas = VentasDAO::byRange($v1, $v2);
+
 
 
 $header = array( 
@@ -220,6 +234,7 @@ $header = array(
 
 $tabla = new Tabla( $header, $ventas );
 $tabla->addOnClick("id_venta", "mostrarDetallesVenta");
+$tabla->addNoData("El dia de hoy se han hecho ventas en esta sucursal.");
 $tabla->render();
 
 
@@ -264,7 +279,8 @@ $tabla->render();
 <h2>Gastos E Ingresos</h2><?php
 
 
-
+var_dump(listarGastosSucursal( $_REQUEST['id'] ));
+var_dump(listarIngresosSucursal( $_REQUEST['id'] ));
 
 
 ?>

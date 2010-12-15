@@ -114,6 +114,9 @@ function vender( $args ){
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
+    if($data == null){
+        die( '{"success": false, "reason": "Parametros invalidos. El resultado es nulo." }' );
+    }
 
 	//verificamos que todos estos productos esten en existencias
 	//creamos un arreglo de objetos DetalleVenta
@@ -122,6 +125,11 @@ function vender( $args ){
 	$detallesVenta = array();
 	$subtotal = 0.0;
 	
+    //verificar que $productos sea un array
+    if(!is_array($productos)){
+        die( '{"success": false, "reason": "Parametros invalidos." }' );
+    }
+
     foreach($productos as $producto)
     {
 		$subtotal += ( $producto->cantidad * $producto->precioVenta );
