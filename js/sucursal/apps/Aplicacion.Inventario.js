@@ -397,7 +397,7 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 		
 		html += "<td>" + carrito.items[i].productoID + " " + carrito.items[i].descripcion+ "</td>";
 
-		html += "<td > <div>Del</div> </td>";
+		html += "<td > <span class = 'boton' onClick = 'Aplicacion.Inventario.currentInstance.quitarDelCarrito(" + carrito.items[i].productoID + ")'>Del</span> </td>";
 
 		html += "<td colspan=2 > <div id='Inventario-carritoCantidad"+ carrito.items[i].productoID +"'></div></td>";
 
@@ -459,6 +459,23 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 
 };
 
+//quita del carrito el producto indicado
+Aplicacion.Inventario.prototype.quitarDelCarrito = function ( id_producto )
+{
+    if(DEBUG){
+        console.log("Removiendo del carrito.");
+    }
+    
+    carrito = Aplicacion.Inventario.currentInstance.carritoSurtir;
+    for (var i = carrito.items.length - 1; i >= 0; i--){
+        if( carrito.items[i].productoID == id_producto ){
+            carrito.items.splice( i ,1 );
+            break;
+        }
+    }
+    Aplicacion.Inventario.currentInstance.refreshSurtir();
+    
+};
 
 Aplicacion.Inventario.prototype.surtirWizardPanel = null;
 
