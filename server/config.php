@@ -20,8 +20,11 @@
 	define("_POS_HTMLTITLE", "Papas Supremas");
 	
 	
-	
-	
+    /* *******************************
+		ZONA HORARIA
+	 ********************************* */
+	date_default_timezone_set("America/Mexico_City");
+
 	
 	/* *******************************
 		BASE DE DATOS 

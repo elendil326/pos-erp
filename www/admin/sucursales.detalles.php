@@ -37,9 +37,9 @@ print( "<h1>" . $sucursal->getDescripcion() . "</h1>");
 <script type="text/javascript" charset="utf-8" src="../frameworks/humblefinance/humble/HumbleFinance.js"></script>
 <link rel="stylesheet" href="../frameworks/humblefinance/humble/finance.css" type="text/css" media="screen" title="no title" charset="utf-8">
 
-<h2>Ventas</h2>
+<h2>Mapa de ventas</h2>
 <div id="finance">
-    <div id="labels">
+    <div id="fechas">
     </div>
 </div>
 
@@ -49,11 +49,99 @@ print( "<h1>" . $sucursal->getDescripcion() . "</h1>");
         window.location = "ventas.php?action=detalles&id=" + vid;
     }
 
+<?php
+
+
+			//obtener la fecha de la primera venta de esta sucursal
+            $primeraVenta = SucursalDAO::getByPK( $_REQUEST['id'] )->getFechaApertura();
+            $date = new DateTime($primeraVenta);
+
+            $now = new DateTime("now");
+       
+            $offset = $date->diff($now);
+
+
+            $ventasEstaSucursal = array();
+            $todasLasVentas = array();
+            $fechas = array();
+                    
+            while($offset->format("%r%a") > -1){
+
+
+        /*        if($offset->format("%r%a") > -1){
+                    echo "OK !\n";
+                }
+                echo $date->format('Y-m-d') . ":\n";
+                echo $offset->format("%r%a") . "\n\n";*/
+
+
+                //buscar las ventas de todas las sucursales
+			    $date->setTime ( 0 , 0, 1 );
+
+			    $v1 = new Ventas();
+			    $v1->setFecha( $date->format('Y-m-d H:i:s') );
+
+
+			    $date->setTime ( 23, 59, 59 );
+			    $v2 = new Ventas();
+			    $v2->setFecha( $date->format('Y-m-d H:i:s') );
+
+			    $results = VentasDAO::byRange($v1, $v2);
+                array_push( $todasLasVentas, count($results) );
+
+
+                //ventas de esta sucursal
+			    $v1->setIdSucursal( $_REQUEST['id'] );
+			    $results = VentasDAO::byRange($v1, $v2);
+                array_push( $ventasEstaSucursal, count($results) );
+
+                array_push( $fechas, $date->format('Y-m-d') );
+
+                //siguiente dia
+                $date->add( new DateInterval("P1D") );
+                $offset = $date->diff($now);
+            }
+
+
+            echo "\nvar estaSucursal = [";
+            for($i = 0; $i < sizeof($ventasEstaSucursal); $i++ ){
+                echo  "[" . $i . "," . $ventasEstaSucursal[$i] . "]";
+                if($i < sizeof($ventasEstaSucursal) - 1){
+                    echo ",";
+                }
+            }
+            echo "];\n";
+
+
+            echo "var todasSucursales = [";
+            for($i = 0; $i < sizeof($todasLasVentas); $i++ ){
+                echo  "[" . $i . "," . $todasLasVentas[$i] . "]";
+                if($i < sizeof($todasLasVentas) - 1){
+                    echo ",";
+                }
+            }
+            echo "];\n";			
+			
+
+
+            echo "var fechasVentas = [";
+            for($i = 0; $i < sizeof($fechas); $i++ ){
+                echo  "{ fecha : '" . $fechas[$i] . "'}";
+                if($i < sizeof($fechas) - 1){
+                    echo ",";
+                }
+            }
+            echo "];\n";			
+		?>
+
+
+
+
 	Event.observe(document, 'dom:loaded', function() {
 
 
 	    HumbleFinance.trackFormatter = function (obj) {
-			return "Hola" + obj.x+"," + obj.y;
+            return fechasVentas[ parseInt(obj.x) ].fecha + "\nVentas:" + obj.y ;
 
 	    };
 
@@ -61,7 +149,7 @@ print( "<h1>" . $sucursal->getDescripcion() . "</h1>");
 	        if (n == this.axes.y.max) {
 	            return false;
 	        }
-	        return '$'+n;
+	        return n + " ventas";
 	    };
 
 	    HumbleFinance.xTickFormatter = function (n) { 
@@ -70,61 +158,16 @@ print( "<h1>" . $sucursal->getDescripcion() . "</h1>");
 	            return false;
 	        }
 			
-			return n;
-	        var date = jsonData[n].date;
-	        date = date.split(' ');
-	        date = date[2];
+
+	        var date = fechasVentas[ parseInt(n) ].fecha;
+            return date;
+	        date = date.split('-');
+            date = date[2];
 
 	        return date; 
 	    }
-		
-		<?php
-			echo "/*";
 
-			//obtener la fecha de la primera venta de esta sucursal
-			$primeraVenta = new Ventas();
-			$primeraVenta->setIdSucursal( $_REQUEST['id'] );
-
-			
-
-
-			$day = 27;
-			$month = 11;
-			$year = 2010;
-
-			$d = new DateTime();
-			$d->setTimezone( new DateTimeZone("America/Mexico_City"));			
-			$d->setDate ( $year , $month , $day );
-			$d->setTime ( 0 , 0, 1 );
-
-			$v1 = new Ventas();
-			$v1->setFecha( $d->format('Y-m-d H:i:s') );
-			$v1->setIdSucursal( $_REQUEST['id'] );
-
-			$d->setTime ( 23, 59, 59 );
-			$v2 = new Ventas();
-			$v2->setFecha( $d->format('Y-m-d H:i:s') );
-
-			$results = VentasDAO::byRange($v1, $v2);
-			echo count($results);
-			
-			
-			
-			//strtotime("10 September 2000")
-
-			//var_dump( $ventasSuc );
-
-
-
-			echo "*/";			
-		?>
-
-		data1 = [[0,100.34],[1,108.31],[2,109.40],[3,104.87],[4,106.00],[5,107.91],[6,100.34],[7,108.31],[8,109.40],[9,104.87],[10,106.00],[11,107.91]];
-		data2 =   [[0,50],[1,100],[2,25],[3,75],[4,45],[5,35],[6,33.34],[7,44.31],[8,22.40],[9,122.87],[10,33.00],[11,107.91]];
-		sum =   [[0,100.34],[1,108.31],[2,109.40],[3,104.87],[4,106.00],[5,107.91],[6,100.34],[7,108.31],[8,109.40],[9,104.87],[10,106.00],[11,107.91]];
-		
-
-	    HumbleFinance.init('finance', data1, data2, sum);
+	    HumbleFinance.init('finance', estaSucursal, todasSucursales, todasSucursales);
 		
 
 		
@@ -134,23 +177,24 @@ print( "<h1>" . $sucursal->getDescripcion() . "</h1>");
 	    var xmax = xaxis.p2d(prevSelection.second.x);
 
 	    Event.observe(HumbleFinance.containers.summary, 'flotr:select', function (e) {
-/*
+
 			var area = e.memo[0];
 	        xmin = Math.floor(area.x1);
 	        xmax = Math.ceil(area.x2);
 
-	        var date1 = jsonData[xmin].date;
-	        var date2 = jsonData[xmax].date;
+	        var date1 = fechasVentas[xmin].fecha;
+	        var date2 = fechasVentas[xmax].fecha;
 
-	        $('dateRange').update(jsonData[xmin].date + ' - ' + jsonData[xmax].date);
-*/
+
+	        $('fechas').update("Mostrando rango <b>" + date1 + '</b> al <b>' + date2 + "</b>");
+
 	    });
 
 	});
 
 </script>
 
-<h2>Ventas</h2><?php
+<h2>Ventas en las ultimas 24 horas</h2><?php
 
 $ventas = ventasSucursal(  $sucursal->getIdSucursal() );
 
