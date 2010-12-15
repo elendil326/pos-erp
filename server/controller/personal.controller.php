@@ -5,10 +5,10 @@
  */
  
 
-require_once('../server/model/usuario.dao.php');
-require_once('../server/model/grupos_usuarios.dao.php');
-require_once('../server/model/grupos.dao.php');
-require_once('../server/model/sucursal.dao.php');
+require_once('model/usuario.dao.php');
+require_once('model/grupos_usuarios.dao.php');
+require_once('model/grupos.dao.php');
+require_once('model/sucursal.dao.php');
 
 
 /**
@@ -98,7 +98,7 @@ function insertarEmpleado($args)
  * @return cadena en formato JSON que contiene los datos de los empleados.
  **/
 
-function listarEmpleados( )
+function listarEmpleados( $sid )
 {
 
 	$gru1 = new GruposUsuarios();
@@ -114,7 +114,7 @@ function listarEmpleados( )
     foreach($result as $r)
     {
         $usuario = new Usuario();
-        $usuario->setIdSucursal( $_SESSION['sucursal'] );
+        $usuario->setIdSucursal( $sid );
         $usuario->setActivo( 1 );
         $usuario->setIdUsuario( $r->getIdUsuario() );
         
@@ -135,7 +135,8 @@ function listarEmpleados( )
                 'direccion' => $empleado->getDireccion(),
                 'telefono' => $empleado->getTelefono(),
                 'tipo' => $r->getIdGrupo(),
-                'puesto' => $descripcion_tipo->getNombre()
+                'puesto' => $descripcion_tipo->getNombre(),
+                'fecha_inicio' => $empleado->getFechaInicio()
             ) );
         }
         
@@ -389,75 +390,83 @@ function listarResponsables( $args ){
 
 }
 
-switch($args['action']){
 
 
-    case 500:
-        insertarEmpleado( $args );
-    break;
 
-    case 501:
-        $listaEmpleados = listarEmpleados( );
-        printf( '{"success": true, "empleados": %s}' , json_encode( $listaEmpleados ) );
-    break;
 
-    case 502:
-        modificarEmpleado( $args );
-    break;
+if(isset($args['action'])){
 
-    case 503:
-        cambiarEstadoEmpleado( $args );
-    break;
 
-    case 504:
-        $listaBajoPerfil = listarBajoPerfil( );
-        printf( '{"success": true, "datos": %s}' , json_encode( $listaBajoPerfil ) );
-    break;
+    switch($args['action']){
 
-    case 505:
-        $listaResponsables = listarResponsables( $args );
-        printf( '{"success": true, "datos": %s}' , json_encode( $listaResponsables ) );
-    break;
 
-    case 506://verEstadisticasVenta
-        
-    break;
+        case 500:
+            insertarEmpleado( $args );
+        break;
 
-    case 507://verHorario
-        
-    break;
+        case 501:
+            $listaEmpleados = listarEmpleados($_SESSION['sucursal'] );
+            printf( '{"success": true, "empleados": %s}' , json_encode( $listaEmpleados ) );
+        break;
+
+        case 502:
+            modificarEmpleado( $args );
+        break;
+
+        case 503:
+            cambiarEstadoEmpleado( $args );
+        break;
+
+        case 504:
+            $listaBajoPerfil = listarBajoPerfil( );
+            printf( '{"success": true, "datos": %s}' , json_encode( $listaBajoPerfil ) );
+        break;
+
+        case 505:
+            $listaResponsables = listarResponsables( $args );
+            printf( '{"success": true, "datos": %s}' , json_encode( $listaResponsables ) );
+        break;
+
+        case 506://verEstadisticasVenta
+            
+        break;
+
+        case 507://verHorario
+            
+        break;
 	
-    case 599://para que era esto?
+        case 599://para que era esto?
 
-        $page = $nro_registros = $sortname = $sortorder = null; 
+            $page = $nro_registros = $sortname = $sortorder = null; 
 
-        if(isset($args['pagina']))
-        {
-            $page = $args['pagina'];
-        }
+            if(isset($args['pagina']))
+            {
+                $page = $args['pagina'];
+            }
 
-        if(isset($args['nro_reg']))
-        {
-            $nro_registros = $args['nro_reg'];
-        }
+            if(isset($args['nro_reg']))
+            {
+                $nro_registros = $args['nro_reg'];
+            }
 
-        if(isset($args['sortname']))
-        {
-            $sortname = $args['sortname'];
-        }
+            if(isset($args['sortname']))
+            {
+                $sortname = $args['sortname'];
+            }
 
-        if(isset($args['sortorder']))
-        {
-            $sortorder = $args['sortorder'];
-        }
+            if(isset($args['sortorder']))
+            {
+                $sortorder = $args['sortorder'];
+            }
 
 
-        echo getDataGridUsuarios($page, $nro_registros, $sortname, $sortorder);
+            echo getDataGridUsuarios($page, $nro_registros, $sortname, $sortorder);
 
-    break;
+        break;
 
-    default:
-        printf ( '{ "success" : "false" }' );
-    break;
+        default:
+            printf ( '{ "success" : "false" }' );
+        break;
+    }
 }
 ?>

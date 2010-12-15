@@ -6,6 +6,8 @@
 
 require_once("controller/sucursales.controller.php");
 require_once("controller/ventas.controller.php");
+require_once("controller/personal.controller.php");
+
 
 //obtener los clientes deudores del controller de clientes
 $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
@@ -149,6 +151,11 @@ print( "<h1>" . $sucursal->getDescripcion() . "</h1>");
 	        if (n == this.axes.y.max) {
 	            return false;
 	        }
+
+            if(n == 0 ){
+                return false;
+            }
+
 	        return n + " ventas";
 	    };
 
@@ -223,6 +230,44 @@ $tabla->render();
 
 
 
+
+<h2>Personal</h2><?php
+
+
+
+$empleados = listarEmpleados($_REQUEST['id']);
+ 
+$header = array( 
+    "id_usuario" => "ID",
+    "nombre" => "Nombre",
+    "direccion" => "Direccion",
+    "telefono" => "Telefono",
+    "RFC" => "RFC",
+    "puesto" => "Puesto",
+    "salario" => "Salario",
+    "fecha_inicio"=> "Fecha de Inicio");
+
+
+$tabla = new Tabla( $header, $empleados );
+$tabla->addColRender("salario", "moneyFormat");
+$tabla->render();
+
+
+?>
+
+
+
+
+
+
+
+<h2>Gastos E Ingresos</h2><?php
+
+
+
+
+
+?>
 
 
 
