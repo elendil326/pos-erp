@@ -48,7 +48,8 @@ function listarIngresosSucursal( $sid = null)
 {
     if(!$sid) return null;
 
-    $Ingresos = new Ingresos( array( 'id_sucursal' => $sid ) );
+    $Ingresos = new Ingresos(  );
+    $Ingresos->setIdSucursal($sid);
 
     return IngresosDAO::search( $Ingresos );
 }

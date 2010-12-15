@@ -147,6 +147,95 @@ function listarEmpleados( $sid )
 }
 
 
+
+
+
+
+
+
+
+function listarGerentes($asignados = null)
+{
+    $array_empleados = array();
+
+
+    //todos
+    if($asignados === null){
+        //todos los gerentes
+        $gru1 = new GruposUsuarios();
+        $gru1->setIdGrupo('2');
+        $result = GruposUsuariosDAO::search($gru1);
+
+        foreach($result as $r)
+        {
+            $gerente = UsuarioDAO::getByPK($r->getIdUsuario());
+            array_push($array_empleados, $gerente );
+        }
+
+
+
+    }
+
+
+
+
+    //asignados o no asignados
+    if($asignados){
+
+        $suc = new Sucursal();
+        $suc->setActivo(1);
+        $sucursales = SucursalDAO::search($suc);
+
+        foreach ($sucursales as $s )
+        {
+            $gerenteSuc = $s->getGerente();
+
+            if($gerenteSuc != null){
+
+                $data = UsuarioDAO::getByPK($gerenteSuc)->asArray();
+                $data['gerencia_sucursal_desc'] = SucursalDAO::getByPK($s->getIdSucursal())->getDescripcion();
+                $data['gerencia_sucursal_id'] = $s->getIdSucursal();
+
+
+                array_push( $array_empleados, $data ) ;
+            }
+
+        }
+    }else{
+        //no asignados
+        $gru1 = new GruposUsuarios();
+        $gru1->setIdGrupo('2');
+        $result = GruposUsuariosDAO::search($gru1);
+
+        foreach($result as $r)
+        {
+
+            $suc = new Sucursal();
+            $suc->setActivo(1);
+            $suc->setGerente($r->getIdUsuario());
+
+            //buscar una sucursal con este gerente
+            if(count(SucursalDAO::search($suc)) < 1){
+                $gerente = UsuarioDAO::getByPK($r->getIdUsuario());
+                array_push($array_empleados, $gerente );
+            }
+
+        }
+    }
+
+
+
+    return $array_empleados;
+}
+
+
+
+
+
+
+
+
+
 /**
  * Modifica los datos de un empleado.
  *  
@@ -435,34 +524,7 @@ if(isset($args['action'])){
             
         break;
 	
-        case 599://para que era esto?
 
-            $page = $nro_registros = $sortname = $sortorder = null; 
-
-            if(isset($args['pagina']))
-            {
-                $page = $args['pagina'];
-            }
-
-            if(isset($args['nro_reg']))
-            {
-                $nro_registros = $args['nro_reg'];
-            }
-
-            if(isset($args['sortname']))
-            {
-                $sortname = $args['sortname'];
-            }
-
-            if(isset($args['sortorder']))
-            {
-                $sortorder = $args['sortorder'];
-            }
-
-
-            echo getDataGridUsuarios($page, $nro_registros, $sortname, $sortorder);
-
-        break;
 
         default:
             printf ( '{ "success" : "false" }' );

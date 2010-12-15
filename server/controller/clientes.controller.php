@@ -236,6 +236,7 @@ function listarVentasClientes( ){
 //lista las ventas de un cliente en especidico (puede ser de contado o a credito si se especifica)
 function listarVentaCliente( $id_cliente, $tipo_venta = null ){
     
+
     if(!isset($id_cliente)){
         return null;
     }
