@@ -332,7 +332,3 @@ var_dump(listarIngresosSucursal( $_REQUEST['id'] ));
 
 ?>
 
-
-
-
-

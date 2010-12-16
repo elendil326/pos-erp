@@ -44,6 +44,7 @@
 			case "listaDeudores" : require_once("clientes.listaDeudores.php"); break;			
 			case "nuevo" : require_once("clientes.nuevo.php"); break;
 			case "detalles" : require_once("clientes.detalles.php"); break;			
+			case "editar" : require_once("clientes.editar.php"); break;			
 			default : echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
 		} 
 	?>
