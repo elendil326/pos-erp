@@ -1,3 +1,5 @@
+<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
+
 <?php
 
 require_once("model/usuario.dao.php");
@@ -48,8 +50,6 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
         }else{
             $sucursal = $sucursal[0];
             echo "Actualmente <b>" . $gerente->getNombre() . "</b> es gerente de <b>" . $sucursal->getDescripcion() . "</b>.";
-            echo "<br><input type=button value='Desasignar de sucursal'> ";
-            echo "<input type=button value='Ver detalles de la sucursal'> ";
             $aCargo = true;
         }
 ?>
@@ -132,6 +132,45 @@ if($aCargo){
 	function editarGerente(){
 		window.location = "gerentes.php?action=editar&id=<?php echo $_REQUEST['id']; ?>";
 	}
+
+
+
+
+    function despedir()
+    {
+        var r = confirm("Esta seguro que desea despedir a <?php echo $gerente->getNombre(); ?> ?");
+        
+        if(r){
+            //enviar confirmacion
+            jQuery.ajaxSettings.traditional = true;
+
+
+        $.ajax({
+	      url: "../proxy.php",
+	      data: { 
+                action : 503, 
+                id_empleado : <?php echo $gerente->getIdUsuario(); ?>, 
+                activo : 0
+           },
+	      cache: false,
+	      success: function(data){
+		        response = jQuery.parseJSON(data);
+
+                if(response.success == "false"){
+                    alert(response.reason);
+                    return;
+                }
+
+
+                alert(response.info);
+          		window.location = "gerentes.php?action=lista";
+	      }
+	    });
+        }
+    }
+
+
+
 </script>
 <?php
 

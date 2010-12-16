@@ -206,6 +206,7 @@ function listarGerentes($asignados = null)
 
     //todos
     if($asignados === null){
+
         //todos los gerentes
         $gru1 = new GruposUsuarios();
         $gru1->setIdGrupo('2');
@@ -214,10 +215,35 @@ function listarGerentes($asignados = null)
         foreach($result as $r)
         {
             $gerente = UsuarioDAO::getByPK($r->getIdUsuario());
-            array_push($array_empleados, $gerente );
+            if($gerente->getActivo() == "0") continue;
+                    
+            $suc = new Sucursal();
+            $suc->setActivo(1);
+            $suc->setGerente($r->getIdUsuario());
+
+            //buscar una sucursal con este gerente
+            $tSuc = SucursalDAO::search($suc);
+            if(count($tSuc) ==  0){
+                //no es gerente
+                $gerente = $gerente->asArray();
+                $gerente['gerencia_sucursal_desc'] = null;
+                $gerente['gerencia_sucursal_id'] = null;
+                $gerente['contrasena'] = null;
+              
+                array_push($array_empleados, $gerente );
+            }else{
+                //si es gerente
+                $gerente = $gerente->asArray();
+                $gerente['gerencia_sucursal_desc'] = SucursalDAO::getByPK($tSuc[0]->getIdSucursal())->getDescripcion();
+                $gerente['gerencia_sucursal_id'] = $tSuc[0]->getIdSucursal();
+                $gerente['contrasena'] = null;
+                array_push($array_empleados, $gerente );
+            }
+
+            
         }
 
-
+        return $array_empleados;
 
     }
 
@@ -238,9 +264,10 @@ function listarGerentes($asignados = null)
             if($gerenteSuc != null){
 
                 $data = UsuarioDAO::getByPK($gerenteSuc)->asArray();
+                if($data['activo'] == 0) continue;
                 $data['gerencia_sucursal_desc'] = SucursalDAO::getByPK($s->getIdSucursal())->getDescripcion();
                 $data['gerencia_sucursal_id'] = $s->getIdSucursal();
-
+                $data['contrasena'] = null;
 
                 array_push( $array_empleados, $data ) ;
             }
@@ -263,6 +290,7 @@ function listarGerentes($asignados = null)
             if(count(SucursalDAO::search($suc)) < 1){
                 $gerente = UsuarioDAO::getByPK($r->getIdUsuario());
                 if($gerente->getActivo() == "0") continue;
+                $gerente->setContrasena(null);
                 array_push($array_empleados, $gerente );
             }
 
@@ -338,10 +366,12 @@ function modificarEmpleado( $args )
         $usuario->setIdSucursal( $data->id_sucursal );
     }
 
+    //PARA ESTOY HAY UNA FUNCION ENTERA QUE SE ENCARGA DE LO NECESARIO
+    /*
     if( isset( $data->activo ) )
     {
         $usuario->setActivo( $data->activo );
-    }
+    }*/
 	
     if( isset( $data->finger_token ) )
     {
@@ -427,10 +457,10 @@ function modificarEmpleado( $args )
  * @param $status indica en nuevo estadod el empleado 1 = activo, 0 = inactivo
  * @return cadena en formato JSON que informa si la operacion se realizo con exito. { "success" : "true", "info" :"mensaje"  } o { "success" : "false", "reason" : "mensaje"}
  **/
-
+//AQUI FALTA QUITARLO DE LA GERENCIA DE UNA SUCURSAL SI ES QUE ES UN GERENTE CON UNA SUCURSAL
 function cambiarEstadoEmpleado( $args )
 {
-
+    //
     if( ( !isset( $args['id_empleado'] ) && !isset( $args['activo'] ) ) ||  $args['activo'] == null)
     {
         die( ' { "success" : false, "reason" : "Faltan parametros" } ' );
@@ -453,11 +483,32 @@ function cambiarEstadoEmpleado( $args )
 		die( ' { "success" : false, "reason" : "No se pudo modificar el estado del usuario" } ' );
 	}
 
-	$action = ( $args['activo'] == 1)? 'activado':'desactivado';
 
-	printf ( ' { "success" : true, "info": "La cuenta del empleado se ha  %s " } ', $action );
+    //todo bien, ahora hay que ver que pedo con su gerencia
+
+
+    $suc = new Sucursal();
+    $suc->setGerente($args['id_empleado']);
+    $res = SucursalDAO::search($suc);
+
+    $msg = "";
+
+    if(count($res) == 1){
+        //es gerente de una sucursal
+        $suc = $res[0];
+        $suc->setGerente(null);
+        SucursalDAO::save( $suc );
+        $msg = "La sucursal " . $suc->getDescripcion() . " se ha quedado sin gerente.";
+    }
+
+
+	$action = ( $args['activo'] == 1)? 'activado':'desactivado';
+	printf ( ' { "success" : true, "info": "La cuenta del empleado se ha %s. %s" } ', $action, $msg );
 
 }
+
+
+
 
 function listarBajoPerfil(){
 
@@ -531,7 +582,41 @@ function listarResponsables( $args ){
 
 }
 
+function editarGerencias ($data){
+    $success = false;
+    $reason = null;
 
+    $arg = json_decode($data['data']);
+
+    foreach ($arg as $k => $v)
+    {
+
+        $gerente = explode( '_', $k);
+        $gerente = UsuarioDAO::getByPK($gerente[1]);
+
+        $nuevaSucursal = SucursalDAO::getByPK($v);
+
+        if($nuevaSucursal === null){
+            continue;
+        }
+
+        //asignarle a esa sucursal... ese gerente
+        $nuevaSucursal->setGerente( $gerente->getIdUsuario() );
+
+        try{
+            SucursalDAO::save($nuevaSucursal);    
+        }catch(Exception $e){
+            $reason = $e;
+            return array('success' => $success, 'reason' => $reason);            
+        }
+
+    } 
+
+
+    $success = true;
+    return array('success' => $success, 'reason' => $reason);
+
+}
 
 
 
@@ -568,8 +653,9 @@ if(isset($args['action'])){
             printf( '{"success": true, "datos": %s}' , json_encode( $listaResponsables ) );
         break;
 
-        case 506://verEstadisticasVenta
-            
+        case 506: //editarGerencias
+
+            echo json_encode(editarGerencias($args));
         break;
 
         case 507://verHorario

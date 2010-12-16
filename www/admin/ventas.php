@@ -42,6 +42,9 @@
 		{
 			case "lista" : require_once("ventas.lista.php"); break;
 			case "detalles" : require_once("ventas.detalles.php"); break;
+			case "porProducto" : require_once("ventas.porProducto.php"); break;
+			case "porEmpleado" : require_once("ventas.porEmpleado.php"); break;
+			case "proyecciones" : require_once("ventas.proyecciones.php"); break;
 			default : echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
 		} 
 	?>

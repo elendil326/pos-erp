@@ -2,6 +2,7 @@
 
 
 require_once("controller/ventas.controller.php");
+require_once("controller/clientes.controller.php");
 require_once("model/cliente.dao.php");
 require_once("model/sucursal.dao.php");
 require_once("model/usuario.dao.php");
@@ -65,7 +66,7 @@ $venta = $detalles['detalles'];
 
     <tr>
         <td><b>Descuento</b></td>
-        <td><?php echo $venta->getDescuento(); ?></td>
+        <td><?php echo percentFormat($venta->getDescuento()); ?></td>
     </tr>
 
     <tr>
@@ -77,6 +78,13 @@ $venta = $detalles['detalles'];
         <td><b>Pagado</b></td>
         <td><?php echo moneyFormat($venta->getPagado()); ?></td>
     </tr>
+
+    <?php if($venta->getTipoVenta() == 'credito'){ ?>
+    <tr>
+        <td><b>Saldo</b></td>
+        <td><b><?php echo moneyFormat($venta->getPagado()-$venta->getTotal()); ?></b></td>
+    </tr>
+    <?php } ?>
 
 </table>
 
@@ -90,4 +98,31 @@ $header = array( "id_producto" => "ID", "descripcion" => "Descripcion", "cantida
 $tabla = new Tabla( $header, $detalles['items'] );
 $tabla->addColRender( 'precio', "moneyFormat" );
 $tabla->render();
+
+
+
+
+
+
+
+
+if($venta->getTipoVenta() == 'credito'){
+    ?><h2>Abonos a esta venta</h2><?php
+
+    $abonos = listarAbonos($venta->getIdCliente(), $venta->getIdVenta() );
+
+    $header = array( 
+	    "id_pago" => "Pago", 
+	    "id_venta" => "Venta", 
+	    "sucursal" => "Sucursal",
+	    "cajero" => "Cajero",
+	    "fecha" => "Fecha",
+	    "monto" => "Monto" );
+
+    $tabla = new Tabla( $header, $abonos );
+    $tabla->addColRender( 'precio', "moneyFormat" );
+    $tabla->addColRender( 'monto', "moneyFormat" );
+    $tabla->render();
+}
+
 ?>

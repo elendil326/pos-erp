@@ -24,9 +24,10 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
  	}
 </style>
 
+<!--
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script> 
+-->
 
-<!-- <script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>  -->
 <script type="text/javascript" charset="utf-8" src="../frameworks/prototype/prototype.js"></script>
 <script src="../frameworks/humblefinance/flotr/flotr.js" type="text/javascript" charset="utf-8"></script>
 <script src="../frameworks/humblefinance/flotr/excanvas.js" type="text/javascript" charset="utf-8"></script>

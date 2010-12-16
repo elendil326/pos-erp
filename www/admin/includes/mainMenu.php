@@ -37,7 +37,10 @@
       <a class="drop" >GERENTES</a>
       <ul>
         <li class="ga-side-nav-off">
-          <a href="gerentes.php?action=lista">Lista de Gerentes</a>
+          <a href="gerentes.php?action=lista">Lista de gerentes</a>
+        </li>
+        <li class="ga-side-nav-off">
+          <a href="gerentes.php?action=asignar">Asignar gerencias</a>
         </li>
       </ul>
     </li>
@@ -51,16 +54,14 @@
           <a  href="ventas.php?action=lista">Ver Todas</a>
         </li>
         <li>
-          <a  >Por producto</a>
+          <a  href="ventas.php?action=porProducto">Por producto</a>
         </li>
         <li>
-          <a  >Por empleado</a>
+          <a  href="ventas.php?action=porEmpleado">Por empleado</a>
         </li>
+
         <li>
-          <a  >Por cliente</a>
-        </li>
-        <li>
-          <a  >Historial y Proyecciones</a>
+          <a  href="ventas.php?action=proyecciones">Historial y Proyecciones</a>
         </li>
 
       </ul>

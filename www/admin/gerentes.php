@@ -36,6 +36,7 @@
 			case "lista" : require_once("gerentes.lista.php"); break;
 			case "detalles" : require_once("gerentes.detalles.php"); break;
 			case "editar" : require_once("gerentes.editar.php"); break;
+			case "asignar" : require_once("gerentes.asignar.php"); break;			
 			default : echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
 		} 
 	?>
