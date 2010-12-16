@@ -51,9 +51,9 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 <h2>Editar Contrase&ntilde;a</h2>
 <form id="editpass">
 <table border="0" cellspacing="5" cellpadding="5">
-	<tr><td>Nueva Contrase&ntilde;a</td><td><input type="password" name="pass1" size="40" /></td></tr>
-	<tr><td>Repetir Contrase&ntilde;a</td><td><input type="password" name="pass2" size="40" /></td></tr>
-	<tr><td></td><td><input type="button" onClick="cambiarPass()" value="Cambiar Contrase&ntilde;a"/> </td></tr>
+	<tr><td>Nueva Contrase&ntilde;a</td><td><input type="password" id="pass1" size="40" /></td></tr>
+	<tr><td>Repetir Contrase&ntilde;a</td><td><input type="password" id="pass2" size="40" /></td></tr>
+	<tr><td></td><td><input type="button" onClick="editPass()" value="Cambiar Contrase&ntilde;a"/> </td></tr>
 </table>
 </form>
 
@@ -72,8 +72,30 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 <form id="editsucursal">
     <?php
         //ver si tiene una sucursal a su cargo
+        //$gerente = UsuarioDAO::getByPK($_REQUEST['id']);
         
+        $suc = new Sucursal();
+        $suc->setGerente( $gerente->getIdUsuario() );
+        $sucursal = SucursalDAO::search($suc);
 
+        if(count($sucursal) == 0){
+            echo "Este gerente no tiene a su cargo ninguna sucursal.";
+            
+        }else{
+            $sucursal = $sucursal[0];
+            echo "Actualmente <b>" . $gerente->getNombre() . "</b> es gerente de <b>" . $sucursal->getDescripcion() . "</b>.";
+
+        }
+
+
+       $suc = new Sucursal();
+       $suc->setActivo( "1" );
+       $sucursal = SucursalDAO::search($suc);
+
+
+       foreach($sucursal as $s){
+                        
+       }
 
     ?>
 </form>
@@ -82,6 +104,29 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 
 
 <script type="text/javascript" charset="utf-8">
+
+    function editPass()
+    {
+        if($('#pass1').val() != $('#pass2').val()){
+            alert("Las claves no coinciden.");
+            return;
+        }
+
+        if($('#pass1').val().length < 4){
+            alert("La nueva clave debe ser por lo menos mayor a 4 caracteres.");
+            return;
+        }        
+        
+
+       obj = {
+            contrasena : hex_md5($('#pass1').val()),
+            id_usuario : <?php echo $_REQUEST['id']; ?>
+        };      
+
+        guardar(obj);
+    }
+
+
 
     function validar(){
 
@@ -118,43 +163,46 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
         }
 
 
-        guardar();
-        
 
+            obj = {
+                nombre : $('#nombre').val(), 
+                direccion : $("#direccion").val(), 
+                RFC : $("#rfc").val(), 
+                telefono : $("#telefono").val(),
+                id_usuario : <?php echo $_REQUEST['id']; ?>,
+                salario : $("#salario").val()
+        };        
+
+        guardar(obj);
     }
 
-    function limpiar(){
-        $('#telefono').val("");
-        $('#direccion').val("");
-        $('#nombre').val("");
-        $('#rfc').val("");
-    }
 
-    //TODO !!!
-    function guardar(  )
+
+
+
+
+    function guardar( data )
     {
+
+        jQuery.ajaxSettings.traditional = true;
+
+
         $.ajax({
 	      url: "../proxy.php",
 	      data: { 
             action : 502, 
-            data : {
-                nombre : $('#nombre').val(), 
-                direccion : $("#direccion").val(), 
-                rfc : $("#rfc").val(), 
-                telefono : $("#telefono").val(),
-                id_usuario : <?php echo $_REQUEST['id']; ?>
-            }
+            data : $.JSON.encode(data)
            },
 	      cache: false,
 	      success: function(data){
 		        response = jQuery.parseJSON(data);
 
-                if(!response.success){
+                if(response.success == "false"){
                     alert(response.reason);
                     return;
                 }
 
-                limpiar();
+
                 alert("Los datos se han editado con exito !");
 	      }
 	    });

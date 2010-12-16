@@ -52,6 +52,8 @@ class Tabla {
 		array_push( $this->specialRender, array( $id => $fn ) );
 	}
 	
+
+
 	public function render( $write = true ){
 		
 		

@@ -1,12 +1,20 @@
 <?php
 
 require_once("model/usuario.dao.php");
-
+require_once("model/sucursal.dao.php");
+require_once("model/grupos.dao.php");
+require_once("model/grupos_usuarios.dao.php");
 
 $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 
 
-?><h1><?php echo $gerente->getNombre(); ?></h1>
+?>
+
+<?php  if($gerente->getActivo() != 0) {  ?>
+  <h1><?php echo $gerente->getNombre(); ?></h1>  
+<?php  }else{  ?>
+  <h1><?php echo $gerente->getNombre(); ?> (Despedido)</h1>  
+<?php  }  ?>
 
 <table border="0" cellspacing="5" cellpadding="5">
 	<tr><td><b>Nombre</b></td><td><?php echo $gerente->getNombre(); ?></td><td rowspan=12><div id="map_canvas"></div></td></tr>
@@ -17,9 +25,109 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 	<tr><td><b>Salario Mensual</b></td><td><?php echo moneyFormat($gerente->getSalario()) ; ?></td></tr>
 
 
-
-	<tr><td colspan=2><input type=button value="Editar detalles" onclick="editarGerente()"><input type=button value="Imprmir detalles"></td> </tr>
+    <?php  if($gerente->getActivo() != 0) {  ?>
+    	<tr><td colspan=2><input type=button value="Editar detalles" onclick="editarGerente()"><input type=button onclick="despedir()" value="Despedir"></td> </tr>
+    <?php  }else{  ?>
+    	<tr><td colspan=2><input type=button value="Recontratar" onclick="recontratar()"></td> </tr>
+    <?php  }  ?>
 </table>
+
+
+
+
+<?php $aCargo = false; ?>
+
+<?php  if($gerente->getActivo() != 0) {  ?>
+<h2>Sucursal a cargo</h2><?php
+        $suc = new Sucursal();
+        $suc->setGerente( $gerente->getIdUsuario() );
+        $sucursal = SucursalDAO::search($suc);
+
+        if(count($sucursal) == 0){
+            echo "Este gerente no tiene a su cargo ninguna sucursal.";
+        }else{
+            $sucursal = $sucursal[0];
+            echo "Actualmente <b>" . $gerente->getNombre() . "</b> es gerente de <b>" . $sucursal->getDescripcion() . "</b>.";
+            echo "<br><input type=button value='Desasignar de sucursal'> ";
+            echo "<input type=button value='Ver detalles de la sucursal'> ";
+            $aCargo = true;
+        }
+?>
+<?php  }  ?>
+
+
+<?php
+if($aCargo){
+
+    ?><h2>Personal a cargo</h2><?php
+
+        $empleados = new Usuario();
+        $empleados->setIdSucursal( $sucursal->getIdSucursal() );
+        $empleados->setActivo("1"); 
+
+
+        $empleados = UsuarioDAO::search($empleados);
+
+
+
+        //calcular totales, y agregar el campo de puesto al array de objetos
+        $total = 0;
+        $empleadosArray = array();
+
+        foreach($empleados as $e){
+
+            //si es el gerente, a la verga
+
+            $foo = $e->asArray();
+
+            $grupo = new GruposUsuarios();
+            $grupo->setIdUsuario( $e->getIdUsuario() );
+
+            $searchGrupo = GruposUsuariosDAO::search( $grupo );
+
+            if(count($searchGrupo) == 0){
+                //no esta asignado
+                $foo['puesto'] = "No asignado";
+
+            }else{
+
+                if($searchGrupo[0]->getIdGrupo() <= 2){
+                    //no motrar administradores ni gerentes
+                    continue;
+                }
+
+                $foo['puesto'] = GruposDAO::getByPK( $searchGrupo[0]->getIdGrupo() )->getDescripcion();;
+            }
+
+            $total += $e->getSalario();
+            array_push( $empleadosArray, $foo );
+            
+        }
+
+        $header = array(
+            "id_usuario" => "ID",
+            "nombre" => "Nombre",
+            "puesto" => "Puesto",
+            "RFC" => "RFC",
+//            "direccion" => "Direccion",
+            "telefono" => "Telefono",
+            "fecha_inicio" => "Inicio",
+            "salario" => "Salario" );
+
+
+        $tabla = new Tabla( $header, $empleadosArray );
+        $tabla->addColRender( 'salario', "moneyFormat" );
+        $tabla->render();
+
+
+
+
+        echo "Total de salarios mensuales : <b>" . moneyFormat($total) . "</b>";
+
+}?>
+
+
+
 <script type="text/javascript" charset="utf-8">
 	function editarGerente(){
 		window.location = "gerentes.php?action=editar&id=<?php echo $_REQUEST['id']; ?>";

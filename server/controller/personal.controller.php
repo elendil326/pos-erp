@@ -101,6 +101,51 @@ function insertarEmpleado($args)
 function listarEmpleados( $sid )
 {
 
+
+
+
+        $empleados = new Usuario();
+        $empleados->setIdSucursal( $sid );
+        $empleados->setActivo("1"); 
+
+
+        $empleados = UsuarioDAO::search($empleados);
+
+
+        $empleadosArray = array();
+
+        foreach($empleados as $e){
+
+            //si es el gerente, a la verga
+
+            $foo = $e->asArray();
+
+            $grupo = new GruposUsuarios();
+            $grupo->setIdUsuario( $e->getIdUsuario() );
+
+            $searchGrupo = GruposUsuariosDAO::search( $grupo );
+
+            if(count($searchGrupo) == 0){
+                //no esta asignado
+                $foo['puesto'] = "No asignado";
+
+            }else{
+
+                if($searchGrupo[0]->getIdGrupo() <= 2){
+                    //no motrar administradores ni gerentes
+                    continue;
+                }
+                $foo['tipo'] = $searchGrupo[0]->getIdGrupo();
+                $foo['puesto'] = GruposDAO::getByPK( $searchGrupo[0]->getIdGrupo() )->getDescripcion();;
+            }
+
+
+            array_push( $empleadosArray, $foo );
+            
+        }
+
+    return $empleadosArray;
+/*
 	$gru1 = new GruposUsuarios();
     $gru1->setIdGrupo('3');
 
@@ -143,7 +188,7 @@ function listarEmpleados( $sid )
     }
 
     return $array_empleados;
-
+*/
 }
 
 
@@ -217,6 +262,7 @@ function listarGerentes($asignados = null)
             //buscar una sucursal con este gerente
             if(count(SucursalDAO::search($suc)) < 1){
                 $gerente = UsuarioDAO::getByPK($r->getIdUsuario());
+                if($gerente->getActivo() == "0") continue;
                 array_push($array_empleados, $gerente );
             }
 
@@ -261,6 +307,12 @@ function modificarEmpleado( $args )
     }
     catch(Exception $e)
     {
+        die( '{"success": false, "reason": "Parametros invalidos." }' );
+    }
+
+
+
+    if($data === null){
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 

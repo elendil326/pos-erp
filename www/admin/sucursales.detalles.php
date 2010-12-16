@@ -8,6 +8,8 @@ require_once("controller/sucursales.controller.php");
 require_once("controller/ventas.controller.php");
 require_once("controller/personal.controller.php");
 require_once("controller/efectivo.controller.php");
+require_once("controller/inventario.controller.php");
+
 
 //obtener los clientes deudores del controller de clientes
 $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
@@ -252,15 +254,15 @@ $tabla->render();
 
 $empleados = listarEmpleados($_REQUEST['id']);
  
-$header = array( 
-    "id_usuario" => "ID",
-    "nombre" => "Nombre",
-    "direccion" => "Direccion",
-    "telefono" => "Telefono",
-    "RFC" => "RFC",
-    "puesto" => "Puesto",
-    "salario" => "Salario",
-    "fecha_inicio"=> "Fecha de Inicio");
+        $header = array(
+            "id_usuario" => "ID",
+            "nombre" => "Nombre",
+            "puesto" => "Puesto",
+            "RFC" => "RFC",
+            //"direccion" => "Direccion",
+            "telefono" => "Telefono",
+            "fecha_inicio" => "Inicio",
+            "salario" => "Salario" );
 
 
 $tabla = new Tabla( $header, $empleados );
@@ -268,7 +270,52 @@ $tabla->addColRender("salario", "moneyFormat");
 $tabla->render();
 
 
+$total = 0;
+
+foreach ($empleados as $e)
+{
+     $total += $e['salario'];
+}
+
+echo "Total de salarios mensuales : <b>" . moneyFormat($total) . "</b>";
 ?>
+
+
+
+
+
+
+
+
+
+
+
+<h2>Inventario actual</h2><?php
+	
+	//obtener los clientes del controller de clientes
+	$inventario = listarInventario( $_REQUEST['id'] );
+
+	//render the table
+	$header = array( 
+		"productoID" => "ID",
+		"descripcion"=> "Descripcion",
+		"precioVenta"=> "Precio Venta",
+		"existenciasMinimas"=> "Minimas",
+		"existencias"=> "Existencias",
+		"medida"=> "Tipo",
+		"precioIntersucursal"=> "Precio Intersucursal" );
+		
+
+	
+	$tabla = new Tabla( $header, $inventario );
+	$tabla->addColRender( "precioVenta", "moneyFormat" ); 
+	$tabla->addColRender( "precioIntersucursal", "moneyFormat" ); 
+	$tabla->render();
+?>
+
+
+
+
 
 
 
