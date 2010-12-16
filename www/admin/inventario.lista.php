@@ -9,6 +9,35 @@ require_once("controller/inventario.controller.php");
 require_once("controller/sucursales.controller.php");
 
 
+
+
+
+?><h2>Productos disponibles</h2><?php
+
+	//obtener los clientes del controller de clientes
+	$inventario = listarInventarioMaestro( );
+
+	//render the table
+	$header = array( 
+		"id_producto" => "ID",
+		"descripcion"=> "Descripcion",
+		"precio_intersucursal"=> "Precio Intersucursal",
+		"costo"=> "Costo",
+		"medida"=> "Medida");
+		
+
+	
+	$tabla = new Tabla( $header, $inventario );
+	$tabla->addColRender( "precioVenta", "moneyFormat" ); 
+	$tabla->addColRender( "precioIntersucursal", "moneyFormat" ); 
+    $tabla->addOnClick( "id_producto", "detalles");
+	$tabla->render();
+
+
+
+
+
+
 //get sucursales
 $sucursales = listarSucursales();
 
@@ -35,6 +64,7 @@ foreach( $sucursales as $sucursal ){
 	$tabla = new Tabla( $header, $inventario );
 	$tabla->addColRender( "precioVenta", "moneyFormat" ); 
 	$tabla->addColRender( "precioIntersucursal", "moneyFormat" ); 
+    $tabla->addOnClick( "productoID", "detalles");
 	$tabla->render();
 }
 
@@ -42,7 +72,7 @@ foreach( $sucursales as $sucursal ){
 
 ?>
 <script type="text/javascript" charset="utf-8">
-	function mostrarDetalles( a ){
-		window.location = "clientes.php?action=detalles&id=" + a;
+	function detalles( a ){
+		window.location = "inventario.php?action=detalle&id=" + a;
 	}
 </script>

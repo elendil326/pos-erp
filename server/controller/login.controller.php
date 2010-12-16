@@ -136,7 +136,7 @@ function logOut(  )
 	unset( $_SESSION['token'] );
 	unset( $_SESSION['HTTP_USER_AGENT'] );
 	
-	die ('{"success": true }');
+	die ('<script>window.location= "."</script>');
 
 }
 

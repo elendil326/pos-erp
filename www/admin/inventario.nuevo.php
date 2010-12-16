@@ -35,20 +35,19 @@
 
 <form id="newClient">
 <table border="0" cellspacing="5" cellpadding="5">
-	<tr><td>Nombre</td><td><input type="text" name="productoID" size="40"/></td></tr>
-	<tr><td>Descripcion</td><td><input type="text" name="descripcion" size="40"/></td></tr>
-	<tr><td>Precio Venta</td><td><input type="text" name="precioVenta" size="40"/></td></tr>
-	<tr><td>Existencias Minimas</td><td><input type="text" name="existenciasMinimas" size="40"/></td></tr>
-	<tr><td>Precio Intersucursal</td><td><input type="text" name="precioIntersucursal" size="40"/></td></tr>
+	<tr><td>Descripcion</td><td><input type="text" id="descripcion" size="40"/></td></tr>
+	<tr><td>Precio Venta</td><td><input type="text" id="precioVenta" size="40"/></td></tr>
+	<tr><td>Existencias Minimas</td><td><input type="text" id="existenciasMinimas" size="40"/></td></tr>
+	<tr><td>Precio Intersucursal/Costo</td><td><input type="text" id="precioIntersucursal" size="40"/></td></tr>
 	<tr><td>Medida</td>
 		<td>
-			<select name="medida"> 
+			<select id="medida"> 
 				<option value='fraccion' >Fraccion</option>
 				<option value='unidad' >Unidad</option>
 	        </select>
 		</td>
 	</tr>
-	<tr><td></td><td><input type="button" value="Cancelar"/><input type="button" onClick="save()" value="Guardar"/> </td></tr>
+	<tr><td></td><td><input type="button" onClick="save()" value="Guardar"/> </td></tr>
 </table>
 </form>
 
@@ -56,36 +55,40 @@
 
 <script type="text/javascript" charset="utf-8">
 
-	function validate ( args ){
-		
-		
-		return true;
-		
-		
-	}
+    function save(){
+        //validar
+        data = {
+                descripcion : $('#descripcion').val(),
+                precio_venta : $('#precioVenta').val(),
+                exitencias_minimas : $('#existenciasMinimas').val(),
+                precio_intersucursal : $('#precioIntersucursal').val(),
+                medida : $('#medida').val()
+            };
 
-	function returned( ok ){
-		if(!ok){
-			alert("Ha ocurrido un error porfavor intente de nuevo.");
-		}else{
-			
-			//limpiar forma
-			alert("El cliente se ha guardado satisfactoriamente.");
-		}
-		
-	}
+        jQuery.ajaxSettings.traditional = true;
 
-	function save(){
-		console.log($('#newClient'))
-		forma = $('#newClient');
-		if(!validate(forma)){
-			return;
-		}
-		
-		//encode data to json format
-		
-		//make ajax call to save and show result
-	}
+
+        $.ajax({
+	      url: "../proxy.php",
+	      data: { 
+            action : 405, 
+            data : $.JSON.encode(data)
+           },
+	      cache: false,
+	      success: function(data){
+		        response = jQuery.parseJSON(data);
+
+                if(response.success == "false"){
+                    alert(response.reason);
+                    return;
+                }
+
+
+                alert("Los datos se han editado con exito !");
+                window.location = "inventario.php?action=detalle&id=" response.id ;
+	      }
+	    });
+    }
 </script>
 
 

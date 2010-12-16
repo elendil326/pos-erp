@@ -7,6 +7,9 @@ require_once('model/detalle_venta.dao.php');
 require_once('model/compras.dao.php');
 require_once('model/ventas.dao.php');
 require_once('model/proveedor.dao.php');
+require_once('model/actualizacion_de_precio.dao.php');
+
+
 /*
  * listar las existencias para la sucursal dada sucursal
  * */
@@ -208,6 +211,54 @@ function detalleVenta( $id ){
 
 }*/
 
+
+
+function nuevoProducto($data)
+{
+
+    try{
+        $jsonData = json_decode($data);
+    }catch(Exception $e){
+        return array( "success" => false, "reason" => "bad json" );
+    }
+
+    $inventario = new Inventario();
+    $inventario->setCosto ( $jsonData->precio_intersucursal );
+    $inventario->setDescripcion ($jsonData->descripcion);
+    $inventario->setMedida ($jsonData->medida);
+    $inventario->setPrecioIntersucursal ($jsonData->precio_intersucursal);
+
+
+
+    try{
+        InventarioDAO::save( $inventario );
+    }catch(Exception $e){
+        return array( "success" => false, "reason" => $e );
+    }
+
+
+    //insertar actualizacion de precio
+    $actualizacion = new ActualizacionDePrecio();
+
+    $actualizacion->setIdProducto ( $inventario->getIdProducto() );
+    $actualizacion->setIdUsuario ( $_SESSION['userid'] );
+    $actualizacion->setPrecioCompra ( $inventario->getPrecioIntersucursal() );
+    $actualizacion->setPrecioIntersucursal ( $inventario->getPrecioIntersucursal() );
+    $actualizacion->setPrecioVenta ( $jsonData->precio_venta );
+
+
+    try{
+        ActualizacionDePrecioDAO::save( $actualizacion );
+    }catch(Exception $e){
+        //quitar el producto que ya haviamos metido para que se pueda volver a itnentar
+        return array( "success" => false, "reason" => $e );
+    }
+
+    return array( "success" => true , "id" => $inventario->getIdProducto() );
+}
+
+
+
 if(isset($args['action'])){
 	switch($args['action']){
 	    case 400:
@@ -228,6 +279,10 @@ if(isset($args['action'])){
 
         case 404://regresa el detalle de la venta
             printf('{ "success": false, "reason": "Estas llamando a inventario ! para obtener las ventas deberas llamar al controller de ventas." ,"datos": %s }',  json_encode( detalleVenta( $args['id_venta'] ) ) );
+        break;
+
+        case 405://nuevo producto
+            echo json_encode( nuevoProducto($args['data']) );
         break;
 
 	    default:
