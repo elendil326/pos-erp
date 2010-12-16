@@ -425,7 +425,7 @@ switch( $args['action'] ){
             'clave'=>$args['action'],
             'descripcion'=>'Solicitud de producto',
             'estado'=>'0',
-            'productos'=>$args['data']
+            'productos'=>$data
         ));
 
         solicitudDeAutorizacion( $descripcion );

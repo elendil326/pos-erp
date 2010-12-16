@@ -485,6 +485,15 @@ Aplicacion.Mostrador.prototype.buscarClienteFormCreator = function ()
 
 	var formBase = {
 		autoRender: true,
+        listeners:{
+            'show':function(){
+                //TODO: verificar que esto solo se haga una sola vez
+                if( !Aplicacion.Mostrador.currentInstance.buscarClienteForm.getComponent(0).getStore() )
+                {
+                    Aplicacion.Mostrador.currentInstance.buscarClienteForm.getComponent(0).bindStore(Aplicacion.Clientes.currentInstance.listaDeClientesStore);
+                }
+            }
+        },
 		floating: true,
 		modal: true,
 		centered: true,

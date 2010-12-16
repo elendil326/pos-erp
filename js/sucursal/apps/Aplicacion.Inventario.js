@@ -33,24 +33,18 @@ Aplicacion.Inventario.prototype._init = function (){
 
 Aplicacion.Inventario.prototype.getConfig = function (){
 	return {
-		text: 'Inventario',
-		cls: 'launchscreen',
-		items: [{
-			text: 'Inventario Actual',
-			card :	this.listaInventarioPanel,
-			leaf: true
-		},
-		{
+		    text: 'Inventario',
+		    cls: 'launchscreen',
+		    items: [{
+			    text: 'Inventario Actual',
+			    card :	this.listaInventarioPanel,
+			    leaf: true
+		},{
 			text: 'Surtir',
-			items: [{
-				text: 'Solicitar Producto',
+
 				card :	this.surtirWizardPanel,
 				leaf: true
-			},
-			{
-				text: 'Reportar Merma',
-				leaf: true
-			}]
+
 		}]
 	};
 };
@@ -378,7 +372,8 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 	
 	html += "<tr class='top'>";
 	html += "<td>Descripcion</td>";
-	html += "<td colspan=3>Cantidad</td>";	
+    html += "<td></td>";
+	html += "<td colspan=2>Cantidad</td>";
 	html += "<td>Precio Intersucursal</td>";
 	html += "<td>Total</td>";
 

@@ -840,7 +840,7 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizaciones = {
  */
 Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesStore = new Ext.data.Store({
     model: 'listaDeAutorizacionesModel',
-    sorters: 'estado',
+    sorters: 'fecha_peticion',
            
     getGroupString : function(record) {
         return record.get('id_autorizacion');

@@ -678,6 +678,7 @@ Aplicacion.Clientes.prototype.editarClienteGuardarBoton = function (  )
 	Ext.getCmp("Clientes-EditarDetallesGuardar").setVisible(false);
 	Ext.getCmp("Clientes-EditarDetallesCancelar").setVisible(false);
 	Aplicacion.Clientes.currentInstance.editarCliente ( v );
+
 };
 
 
@@ -715,20 +716,57 @@ Aplicacion.Clientes.prototype.editarClienteBoton = function (  )
 
 
 
+Aplicacion.Clientes.prototype.doAbonarValidator = function (  )
+{
+    
+    var monto = Ext.getCmp('Cliente-abonarMonto').getValue();
 
+    //validamos que sea un numero positivo el abono
+    if( !( monto && /^\d+(\.\d+)?$/.test(monto + '') ) ){
+         Ext.Anim.run(Ext.getCmp('Cliente-abonarMonto'), 
+            'fade', {duration: 250,
+            out: true,
+            autoClear: true
+        });
+        return;
+    }
+
+    var detalleVenta = Aplicacion.Clientes.currentInstance.detalleVentaCredito;
+
+    //validamos que si el abono excede el saldo, solos e abone a la cuenta lo qeu resta del saldo
+
+    var transaccion = {
+        abono : null,
+        cambio : null,
+        saldo : detalleVenta.total - detalleVenta.pagado
+    }
+
+    if( monto > transaccion.saldo )
+    {
+        transaccion.abono = transaccion.saldo;
+        transaccion.cambio = monto -transaccion.saldo;
+    }
+    else
+    {
+        transaccion.abono = monto;
+        transaccion.cambio = 0;
+        transaccion.saldo = 0;
+    }
+
+    Aplicacion.Clientes.currentInstance.doAbonar( transaccion );
+
+}
 
 
 
 /*
  *	hacer un abono
  */
-Aplicacion.Clientes.prototype.doAbonar = function (  )
+Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 {
 	if(DEBUG){
 		console.log("Abonando... a venta : " + Ext.getCmp("Clentes-CreditoVentasLista").getValue());
 	}
-	
-	abonado = Ext.getCmp("Clientes-DetallesVentaAbonarCredito" ).getComponent('Cliente-abonarMonto').getValue();
 	
 	Ext.Ajax.request({
 		url: 'proxy.php',
@@ -737,12 +775,13 @@ Aplicacion.Clientes.prototype.doAbonar = function (  )
 			action : 305,
 			data : Ext.util.JSON.encode({
 						id_venta : parseFloat( Ext.getCmp("Clentes-CreditoVentasLista").getValue() ),
-			    		monto : parseFloat( abonado )
+			    		monto : parseFloat( transaccion.abono )
 					})
 		},
 		success: function(response, opts) {
-			Ext.Msg.alert("Abono", "El abono se ha realizado con exito.");
-			
+
+            Ext.Msg.alert( "Clientes: Operación realizada con exito","Abono: " + transaccion.abono + " \nCambio: " + transaccion.cambio + "\nSaldo: " + transaccion.saldo );
+
 			//cargar la lista de compras de los clientes
 			Aplicacion.Clientes.currentInstance.listaDeComprasLoad();
 			Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange( null, Ext.getCmp("Clentes-CreditoVentasLista").getValue() );
@@ -774,7 +813,12 @@ Aplicacion.Clientes.prototype.abonarVentaBoton = function (  )
 	Ext.getCmp("Clientes-AbonarVentaBoton").hide();
 
 	Ext.getCmp("Clientes-SeleccionVentaCredito").hide();
-	
+
+    Ext.getCmp('Clientes-DetallesVentaAbonarCredito-saldo').setValue(
+        POS.currencyFormat(
+            Aplicacion.Clientes.currentInstance.detalleVentaCredito.total - Aplicacion.Clientes.currentInstance.detalleVentaCredito.pagado
+        )
+    );
 	
 };
 
@@ -790,15 +834,28 @@ Aplicacion.Clientes.prototype.abonarVentaCancelarBoton = function ()
 	Ext.getCmp("Clientes-AbonarVentaBotonAceptar").hide();
 	
 	Ext.getCmp("Clientes-ImprimirSaldoBoton").show();
-	Ext.getCmp("Clientes-AbonarVentaBoton").show();
+
+    //ocultamos el boton de abonar a venta si la venta a credito esta liquidada
+    var detalleVenta = Aplicacion.Clientes.currentInstance.detalleVentaCredito;
+
+    if( ( detalleVenta.total - detalleVenta.pagado ) > 0 )
+    {
+        Ext.getCmp("Clientes-AbonarVentaBoton").show();
+    }
+    else
+    {
+        Ext.getCmp("Clientes-AbonarVentaBoton").hide();
+    }
 
 	Ext.getCmp("Clientes-SeleccionVentaCredito").show();
 };
 
 
+//almacenara los datos del detalle de una venta a credito
+//se le data valor en creditoDeClientesOptionChange()
+Aplicacion.Clientes.prototype.detalleVentaCredito = null;
 
-
-
+//es lo que sucede al dar click al escoger una vent a acredito
 Aplicacion.Clientes.prototype.creditoDeClientesOptionChange = function ( a, v  )
 {
 	
@@ -848,9 +905,27 @@ Aplicacion.Clientes.prototype.creditoDeClientesOptionChange = function ( a, v  )
 	//saldo
 	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(5).setValue( POS.currencyFormat(venta.total - venta.pagado));
 	
-	Ext.getCmp("Clientes-DetallesVentaCredito").show();
-	Ext.getCmp("Clientes-AbonarVentaBoton").show();
-	Ext.getCmp("Clientes-ImprimirSaldoBoton").show();
+
+    //almacenamos el valor de la venta a credito
+    Aplicacion.Clientes.currentInstance.detalleVentaCredito = venta;
+
+
+    Ext.getCmp("Clientes-DetallesVentaCredito").show();
+
+    //ocultamos el boton de abonar a venta si la venta a credito esta liquidada
+
+    if( (venta.total - venta.pagado ) > 0 )
+    {
+        Ext.getCmp("Clientes-AbonarVentaBoton").show();
+    }
+    else
+    {
+        Ext.getCmp("Clientes-AbonarVentaBoton").hide();
+    }
+
+    Ext.getCmp("Clientes-ImprimirSaldoBoton").show();
+
+
 };
 
 
@@ -1009,19 +1084,143 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 				disabled : true
 			},
 			items: [
-				new Ext.form.Text({ name: 'nombre', label: 'Nombre' }),
-				new Ext.form.Text({ name: 'id_cliente', label: 'ID'	, hidden : true}),
-				new Ext.form.Text({ name : 'activo',     hidden: true }),
-				new Ext.form.Text({ name : 'id_usuario',     hidden: true }),			
-				new Ext.form.Text({ name : 'id_sucursal',     hidden: true }),
-				new Ext.form.Text({ name: 'rfc', label: 'RFC' }),
-				new Ext.form.Text({ name : 'direccion', label: 'Direccion' }),
-				new Ext.form.Text({ name : 'ciudad', label: 'Ciudad' }),
-				new Ext.form.Text({ name : 'e_mail', label: 'E-mail' }),
-				new Ext.form.Text({ name : 'telefono',     label: 'Telefono' }),
-				new Ext.form.Text({ name : 'descuento',     label: 'Descuento',     required: false }),
-				new Ext.form.Text({ name : 'limite_credito',     label: 'Lim. Credito',     required: false }),
-				new Ext.form.Text({ name : 'credito_restante',     label: 'Restante',     required: false })
+				new Ext.form.Text({
+                    name: 'nombre',
+                    label: 'Nombre',
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'alfa',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),
+				new Ext.form.Text({
+                    name: 'id_cliente',
+                    label: 'ID'	,
+                    hidden : true
+                }),
+				new Ext.form.Text({
+                    name : 'activo',
+                    hidden: true
+                }),
+				new Ext.form.Text({
+                    name : 'id_usuario',
+                    hidden: true
+                }),			
+				new Ext.form.Text({
+                    name : 'id_sucursal',
+                    hidden: true
+                }),
+				new Ext.form.Text({
+                    name: 'rfc',
+                    label: 'RFC',
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'alfa',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),
+				new Ext.form.Text({
+                    name : 'direccion',
+                    label: 'Direccion',
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'alfa',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),
+				new Ext.form.Text({
+                    name : 'ciudad',
+                    label: 'Ciudad',
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'alfa',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),
+				new Ext.form.Text({
+                    name : 'e_mail',
+                    label: 'E-mail',
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'alfa',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),
+				new Ext.form.Text({
+                    name : 'telefono',
+                    label: 'Telefono',
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'num',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),
+				new Ext.form.Text({
+                    name : 'descuento',
+                    label: 'Descuento',
+                    required: false,
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'num',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),
+				new Ext.form.Text({
+                    name : 'limite_credito',
+                    label: 'Lim. Credito',
+                    required: false,
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'num',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),
+				new Ext.form.Text({
+                    name : 'credito_restante',
+                    label: 'Restante',
+                    required: false,
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'num',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                })
 			]}
 		]
 	});
@@ -1038,7 +1237,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 			xtype: 'fieldset',
 			title: 'Creditos y Saldos',
 			id : 'Clientes-SeleccionVentaCredito',
-			instructions: 'Seleccine una venta para ver sus detalles.',
+			instructions: 'Seleccione una venta para ver sus detalles.',
 			items: [{
 				id : "Clentes-CreditoVentasLista",
 				xtype: 'selectfield',
@@ -1059,21 +1258,42 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 					new Ext.form.Text({ name: 'user_id', label: 'Vendedor'  }),
 					new Ext.form.Text({ name: 'total', label: 'Total'  }),
 					new Ext.form.Text({ name: 'abonado', label: 'Abonado'  }),
-					new Ext.form.Text({ name: 'saldo', label: 'Saldo'  }) 
-					]
+					new Ext.form.Text({
+                        name: 'saldo',
+                        label: 'Saldo',
+                        id:'Clientes-DetallesVentaCredito-saldo'
+                    }) 
+			    ]
 			},{
 				xtype: 'fieldset',
 				title: 'Abonar a la venta',
 				id : 'Clientes-DetallesVentaAbonarCredito',
 				hidden : true,
 				items: [
-					new Ext.form.Text({ name: 'saldo', label: 'Saldo'  }),
-					new Ext.form.Text({ id: 'Cliente-abonarMonto', name: 'monto', label: 'Monto'  })
+					new Ext.form.Text({
+                        name: 'saldo',
+                        label: 'Saldo',
+                        id: 'Clientes-DetallesVentaAbonarCredito-saldo'
+                    }),
+					new Ext.form.Text({
+                        id: 'Cliente-abonarMonto',
+                        name: 'monto',
+                        label: 'Monto',
+                        listeners : {
+                            'focus' : function (){
+                                kconf = {
+                                    type : 'num',
+                                    submitText : 'Aceptar'
+                                };
+                                POS.Keyboard.Keyboard( this, kconf );
+                            }
+                        }
+                    })
 				]
 			},
 
 			new Ext.Button({ id : 'Clientes-AbonarVentaBoton', ui  : 'action', text: 'Abonar', margin : 15, handler : this.abonarVentaBoton, hidden : true }),
-			new Ext.Button({ id : 'Clientes-AbonarVentaBotonAceptar', ui  : 'action', text: 'Abonar', margin : 15, handler : this.doAbonar, hidden : true }),
+			new Ext.Button({ id : 'Clientes-AbonarVentaBotonAceptar', ui  : 'action', text: 'Abonar', margin : 15, handler : this.doAbonarValidator, hidden : true }),
 			new Ext.Button({ id : 'Clientes-AbonarVentaBotonCancelar', ui  : 'drastic', text: 'Cancelar', margin : 15, handler : this.abonarVentaCancelarBoton, hidden : true }),				
 			new Ext.Button({ id : 'Clientes-ImprimirSaldoBoton', ui  : 'confirm', text: 'Imprimir Detalles', margin : 15, handler : this.imprimirSaldoVentaBoton, hidden : true }),
 			new Ext.Button({ id : 'Clientes-VerProductosBoton', ui  : 'confirm', text: 'Ver Productos de esta venta', margin : 5, handler : this.imprimirSaldoVentaBoton, hidden : true })			
@@ -1171,17 +1391,115 @@ Aplicacion.Clientes.prototype.nuevoClientePanelCreator = function (  ){
 		    title: 'Ingrese los detalles del nuevo cliente',
 		    instructions: 'Si desea ofrecer un limite de credito que exceda los $20,000.00 debera pedir una autorizacion.',
 			items: [
-				new Ext.form.Text({ name: 'nombre', label: 'Nombre' }),
-				new Ext.form.Text({ name: 'rfc', label: 'RFC' }),
-				new Ext.form.Text({ name : 'direccion', label: 'Direccion' }),
-				new Ext.form.Text({ name : 'ciudad', label: 'Ciudad' }),
-				new Ext.form.Text({ name : 'e_mail', label: 'E-mail' }),
-				new Ext.form.Text({ name : 'telefono',     label: 'Telefono' }),
-				new Ext.form.Text({ name : 'descuento',     label: 'Descuento',     required: false }),
-				new Ext.form.Text({ name : 'limite_credito',     label: 'Lim. Credito',     required: false })
+				new Ext.form.Text({
+                    name: 'nombre',
+                    label: 'Nombre',
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'alfa',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),
+				new Ext.form.Text({
+                    name: 'rfc',
+                    label: 'RFC',
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'alfa',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),
+				new Ext.form.Text({
+                    name : 'direccion',
+                    label: 'Direccion',
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'alfa',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),
+				new Ext.form.Text({
+                    name : 'ciudad',
+                    label: 'Ciudad',
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'alfa',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),
+				new Ext.form.Text({
+                    name : 'e_mail',
+                    label: 'E-mail',
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'alfa',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),
+				new Ext.form.Text({
+                    name : 'telefono',
+                    label: 'Telefono',
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'num',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),
+				new Ext.form.Text({
+                    name : 'descuento',
+                    label: 'Descuento',
+                    required: false,
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'num',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),
+				new Ext.form.Text({
+                    name : 'limite_credito',
+                    label: 'Lim. Credito',
+                    required: false,
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'num',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                })
 			]},
 			
-			new Ext.Button({ id : 'Clientes-CrearCliente', ui  : 'action', text: 'Crear Cliente', margin : 5,  handler : this.crearClienteBoton, disabled : false })
+			new Ext.Button({ id : 'Clientes-CrearCliente', ui  : 'action', text: 'Crear Cliente', margin : 5,  handler : this.crearClienteValidator, disabled : false })
 	]});
 
 
@@ -1216,6 +1534,8 @@ Aplicacion.Clientes.prototype.crearCliente = function ( data )
 				return;
 			}
 
+            Ext.Msg.alert("Clientes","Se creo correctamente el nuevo cliente")
+
 			//actualizar la lista de los clientes
 			Aplicacion.Clientes.currentInstance.listaDeClientesLoad();
 			
@@ -1234,8 +1554,8 @@ Aplicacion.Clientes.prototype.crearCliente = function ( data )
 	});	
 };
 
-
-Aplicacion.Clientes.prototype.crearClienteBoton = function ()
+//Accion a realizar al presionar el boton de crear cliente
+Aplicacion.Clientes.prototype.crearClienteValidator = function ()
 {
 
 	//validar los nuevos datos

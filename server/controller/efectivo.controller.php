@@ -6,9 +6,6 @@ require_once("model/autorizacion.dao.php");
 
 
 
-
-
-
 /**
  *
  * 	listarGastosPorSucursal
@@ -20,6 +17,7 @@ require_once("model/autorizacion.dao.php");
  *	@params int [$id_sucursal] sucursal
  * 	
  **/
+
 function listarGastosSucursal( $sid = null)
 {
     if(!$sid) return null;
