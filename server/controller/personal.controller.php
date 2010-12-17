@@ -59,11 +59,21 @@ function insertarEmpleado($args)
 	$user->setRFC( $data->RFC );
 	$user->setNombre( $data->nombre );
 	$user->setContrasena( $data->contrasena );
-	$user->setIdSucursal( $_SESSION['sucursal'] );
+
+    //si soy admin ponerle null
+    if($_SESSION['grupo'] == 1){
+    	$user->setIdSucursal( null );
+    }else{
+    	$user->setIdSucursal( $_SESSION['sucursal'] );
+    }
+
+
 	$user->setActivo( 1 );
 	$user->setSalario( $data->salario) ;
     $user->setTelefono( $data->telefono );
     $user->setDireccion( $data->direccion );
+    $now = new DateTime("now");
+    $user->setFechaInicio( $now->format('Y-m-d') );
 	
 	$gruposUsuarios = new GruposUsuarios();
 	$gruposUsuarios->setIdGrupo( $data->grupo );

@@ -197,7 +197,7 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 	      success: function(data){
 		        response = jQuery.parseJSON(data);
 
-                if(response.success == "false"){
+                if(response.success == false){
                     alert(response.reason);
                     return;
                 }

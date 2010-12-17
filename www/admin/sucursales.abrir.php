@@ -156,8 +156,8 @@
 
     }else{
 
-        ?>No existe  ningun gerente disponible. Para abrir la sucursal, primero cree un nuevo gerente.<?php
-
+        ?>No existe  ningun gerente disponible. Para abrir la sucursal, haga click <a href="gerentes.php?action=nuevo">aqui</a> para crear un nuevo gerente.<?php
+    
     }
 
 ?>

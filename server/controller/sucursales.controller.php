@@ -140,7 +140,7 @@ function abrirSucursal( $detalles )
     }
 
 
-    return array( 'success' => $exito, 'reason' => $reason, 'nid' => $sucursal->getIdSucursal() );
+    return array( 'success' => $exito, 'nid' => $sucursal->getIdSucursal() );
 
 }
 
