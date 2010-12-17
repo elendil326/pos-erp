@@ -621,7 +621,7 @@ function editarGerencias ($data){
             return array('success' => false, 'reason' => $e);
         }
 
-
+/*
         //quitar al anterior gerente de esa sucursal
         $oldGerente = UsuarioDAO::getByPK( $oldGerente );
         if($oldGerente){
@@ -633,7 +633,7 @@ function editarGerencias ($data){
                 return array('success' => false, 'reason' => $e);
             }
         }
-
+*/
     } 
 
 
@@ -652,7 +652,7 @@ function editarGerencias ($data){
 
         $suc = new Sucursal();
         $suc->setGerente( $ger['id_usuario'] );
-        $sucursal = SucursalDAO::getByPK($suc);
+        $sucursal = SucursalDAO::search($suc);
 
         if(sizeof($sucursal) == 0){
              $gerente->setIdSucursal( null );
@@ -661,7 +661,9 @@ function editarGerencias ($data){
         }
 
         try{
-            UsuarioDAO::save($gerente);    
+            if(!UsuarioDAO::save($gerente)){
+                //return array('success' => false, 'reason' => $gerente->getIdUsuario());
+            }
         }catch(Exception $e){
             return array('success' => false, 'reason' => $e);
         }

@@ -241,10 +241,11 @@ $(document).ready(function() {
 	        }
 			
 
-	        var date = fechas[ parseInt(n) ].fecha;
-            return date;
-	        date = date.split('-');
-            date = date[2];
+            try{
+    	        var date = fechas[ parseInt(n) ].fecha;
+            }catch(e){
+                return "";
+            }
 
 	        return date; 
 	    }

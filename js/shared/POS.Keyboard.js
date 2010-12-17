@@ -116,6 +116,11 @@ POS.Keyboard.callbackFn = function ( val, isSubmit ) {
 		return;
 	}
 	
+	if(val == "_SPACE_"){
+    	POS.Keyboard.campo.setValue( POS.Keyboard.campo.getValue() + " " );
+		return;
+	}
+
 	if(val == '_CANCEL_'){
 		POS.Keyboard.campo.blur();
 		POS.Keyboard.campo.setValue( POS.Keyboard.campo.startValue );
@@ -205,7 +210,7 @@ POS.Keyboard._genHTMLalfa = function (config){
 			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>B</div>"				
 			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>N</div>"
 			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>M</div>"
-			+ "<div class='Keyboard-key long'></div>";
+			+ "<div class='Keyboard-key long'  onclick='POS.Keyboard.callbackFn( \"_SPACE_\", false  )'></div>";
 
 	html += "<div class='Keyboard-key long' onclick='POS.Keyboard.callbackFn( null, true)'>" +config.submitText+ "</div>";
 	

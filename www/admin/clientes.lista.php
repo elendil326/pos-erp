@@ -141,13 +141,15 @@ require_once("controller/inventario.controller.php");
 	            return false;
 	        }
 			
-
-	        var date = fechas[ parseInt(n) ].fecha;
+            try{
+    	        var date = fechas[ parseInt(n) ].fecha;
+            }catch(e){
+                return "";
+            }
             return date;
-	        date = date.split('-');
-            date = date[2];
 
-	        return date; 
+
+
 	    }
 
 	    HumbleFinance.init('finance', numClientes, [], numClientes);

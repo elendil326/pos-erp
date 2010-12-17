@@ -53,12 +53,20 @@ function login( $args )
 	$_SESSION['token'] = crypt( $grpu->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina" );
 	$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
 
-	if( $grpu->getIdGrupo() != 1 )
-    	$override = ($user->getIdSucursal() != $_SESSION['sucursal']) ? "true" : "false";
-    else
-        $override = 'null';
 
-	echo "{\"success\": true , \"payload\": { \"sucursaloverride\": " . $override . ", \"type\": \"" . $grpu->getIdGrupo() . "\" }}";
+	if( $grpu->getIdGrupo() == 1 ){
+        //si es gerente dejarlo pasar
+    	echo "{\"success\": true , \"payload\": { \"sucursaloverride\": true , \"type\": \"" . $grpu->getIdGrupo() . "\" }}";
+        return;
+    }
+
+
+    if($user->getIdSucursal() != $_SESSION['sucursal']){
+        //no perteneces a esta sucursal
+        die( "{\"success\": false , \"reason\": 101,  \"text\" : \"No perteneces a esta sucursal.\" }" );
+    }
+
+	echo "{\"success\": true , \"payload\": { \"sucursaloverride\": false , \"type\": \"" . $grpu->getIdGrupo() . "\" }}";
 		
 	return;
 
@@ -129,7 +137,7 @@ function checkCurrentSession()
 }
 
 
-function logOut(  )
+function logOut( $verbose = true  )
 {
 
     $grupo = $_SESSION['grupo'];
@@ -142,10 +150,13 @@ function logOut(  )
 	unset( $_SESSION['token'] );
 	unset( $_SESSION['HTTP_USER_AGENT'] );
 
-    if($grupo == 1)	
-    	die ('<script>window.location= "./admin/"</script>');
-    else
-    	die ('<script>window.location= "."</script>');        
+    if($verbose){
+        if($grupo == 1)	
+        	die ('<script>window.location= "./admin/"</script>');
+        else
+        	die ('<script>window.location= "."</script>');        
+    }
+
 
 }
 
@@ -156,7 +167,7 @@ function logOut(  )
 /* 
 revisar si el token que me esta enviando pertenece a una sucursal valida
 */
-function basicTest( ){
+function basicTest( $verbose = true ){
 	
 	//revisar ip's
 	$ext_ip = getip();
@@ -166,16 +177,19 @@ function basicTest( ){
     $res = SucursalDAO::search( $sucursal);
 	
 	if(sizeof( $res ) != 1){
-		die(  "{\"success\": false , \"response\" : \"Para acceder al punto de venta. Debes estar conectado desde una computadora dentro de la sucursal.\" }" ) ;
+		die(  "{\"success\": false, \"from\": \"".$ext_ip."\", \"response\" : \"Para acceder al punto de venta. Debes estar conectado desde una computadora dentro de la sucursal.\"  }" ) ;
 	}
 	$sucursal_actual = $res[0];
 	
-	//revisar si hay una sesion activa
-	if( checkCurrentSession() ){
-		echo  "{\"success\": true , \"sesion\" : true,  \"sucursal\" : " . $sucursal_actual . " }";
-	}else{
-		echo  "{\"success\": true , \"sesion\" : false, \"reason\" : \"Sesion invalida, o no iniciada.\",  \"sucursal\" : " . $sucursal_actual . " }";
-	}
+    if($verbose){
+	    //revisar si hay una sesion activa
+	    if( checkCurrentSession() ){
+		    echo  "{\"success\": true , \"sesion\" : true,  \"sucursal\" : " . $sucursal_actual . " }";
+	    }else{
+		    echo  "{\"success\": true , \"sesion\" : false, \"reason\" : \"Sesion invalida, o no iniciada.\",  \"sucursal\" : " . $sucursal_actual . " }";
+	    }
+    }
+
 	
 	$_SESSION['sucursal'] = $sucursal_actual->getIdSucursal();
 	

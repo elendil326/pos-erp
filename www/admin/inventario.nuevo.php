@@ -85,7 +85,7 @@
 
 
                 alert("Los datos se han editado con exito !");
-                window.location = "inventario.php?action=detalle&id=" response.id ;
+                window.location = "inventario.php?action=detalle&id="+ response.id ;
 	      }
 	    });
     }

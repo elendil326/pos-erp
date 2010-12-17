@@ -1,9 +1,0 @@
-	Clientes
-+ No dejar que los cajeros creen nuevos clientes
-+ No dejar que los cajeros editen clientes
-
-
-	Personal
-+ Poder editar el rol de un usuario
-+ Editar passwords de los usuarios
-+ Mostrar el estado actual del empleado (in/out) en la lista de personal

@@ -140,6 +140,16 @@ function abrirSucursal( $detalles )
     }
 
 
+    //mover a este gerente a la nueva sucursal
+    $gerente = PersonalDAO::getByPK( $detalles['gerente'] );
+    $gerente->setIdSucursal($sucursal->getIdSucursal());
+
+    try{
+        $err = PersonalDAO::save( $gerente );
+    }catch( Exception $e ){
+        return array( 'success' => $false, 'reason' => $err );    
+    }
+
     return array( 'success' => $exito, 'nid' => $sucursal->getIdSucursal() );
 
 }
