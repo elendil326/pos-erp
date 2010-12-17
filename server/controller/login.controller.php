@@ -52,8 +52,12 @@ function login( $args )
 	$_SESSION['grupo'] = $grpu->getIdGrupo();			
 	$_SESSION['token'] = crypt( $grpu->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina" );
 	$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
-	
-	$override = ($user->getIdSucursal() != $_SESSION['sucursal']) ? "true" : "false";
+
+	if( $grpu->getIdGrupo() != 1 )
+    	$override = ($user->getIdSucursal() != $_SESSION['sucursal']) ? "true" : "false";
+    else
+        $override = 'null';
+
 	echo "{\"success\": true , \"payload\": { \"sucursaloverride\": " . $override . ", \"type\": \"" . $grpu->getIdGrupo() . "\" }}";
 		
 	return;
@@ -128,6 +132,8 @@ function checkCurrentSession()
 function logOut(  )
 {
 
+    $grupo = $_SESSION['grupo'];
+
 	unset( $_SESSION['token'] ); 
 	unset( $_SESSION['userid'] );
 	unset( $_SESSION['sucursal'] );
@@ -135,8 +141,11 @@ function logOut(  )
 	unset( $_SESSION['timeout'] );
 	unset( $_SESSION['token'] );
 	unset( $_SESSION['HTTP_USER_AGENT'] );
-	
-	die ('<script>window.location= "."</script>');
+
+    if($grupo == 1)	
+    	die ('<script>window.location= "./admin/"</script>');
+    else
+    	die ('<script>window.location= "."</script>');        
 
 }
 
