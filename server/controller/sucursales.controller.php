@@ -5,6 +5,7 @@ require_once('model/ventas.dao.php');
 require_once('model/usuario.dao.php');
 require_once('model/cliente.dao.php');
 
+
 function listarSucursales(  ){
 
     $s = new Sucursal();
@@ -141,11 +142,11 @@ function abrirSucursal( $detalles )
 
 
     //mover a este gerente a la nueva sucursal
-    $gerente = PersonalDAO::getByPK( $detalles['gerente'] );
+    $gerente = UsuarioDAO::getByPK( $detalles['gerente'] );
     $gerente->setIdSucursal($sucursal->getIdSucursal());
 
     try{
-        $err = PersonalDAO::save( $gerente );
+        $err = UsuarioDAO::save( $gerente );
     }catch( Exception $e ){
         return array( 'success' => $false, 'reason' => $err );    
     }
