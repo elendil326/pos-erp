@@ -583,38 +583,82 @@ function listarResponsables( $args ){
 }
 
 function editarGerencias ($data){
-    $success = false;
-    $reason = null;
 
-    $arg = json_decode($data['data']);
+    $sucursales = json_decode($data['data']);
 
-    foreach ($arg as $k => $v)
+    foreach ($sucursales as $sucursalData)
     {
 
-        $gerente = explode( '_', $k);
-        $gerente = UsuarioDAO::getByPK($gerente[1]);
+        $id_gerente = $sucursalData->id_gerente;
+        $id_sucursal = $sucursalData->id_sucursal;
 
-        $nuevaSucursal = SucursalDAO::getByPK($v);
+        $sucursal = SucursalDAO::getByPK($id_sucursal);
+        $oldGerente = $sucursal->getGerente();
 
-        if($nuevaSucursal === null){
-            continue;
+
+        //asignar el nuevo gerente a la sucursal
+        if($id_gerente == -1 ){
+            $sucursal->setGerente( null );
+        }else{
+            $gerente = UsuarioDAO::getByPK($id_gerente);
+            $sucursal->setGerente( $id_gerente );
         }
 
-        //asignarle a esa sucursal... ese gerente
-        $nuevaSucursal->setGerente( $gerente->getIdUsuario() );
 
         try{
-            SucursalDAO::save($nuevaSucursal);    
+            SucursalDAO::save($sucursal);    
         }catch(Exception $e){
-            $reason = $e;
-            return array('success' => $success, 'reason' => $reason);            
+            return array('success' => false, 'reason' => $e);
+        }
+
+
+        //quitar al anterior gerente de esa sucursal
+        $oldGerente = UsuarioDAO::getByPK( $oldGerente );
+        if($oldGerente){
+            $oldGerente->setIdSucursal(null);
+
+            try{
+                UsuarioDAO::save($oldGerente);    
+            }catch(Exception $e){
+                return array('success' => false, 'reason' => $e);
+            }
         }
 
     } 
 
 
-    $success = true;
-    return array('success' => $success, 'reason' => $reason);
+    //ya esta todo hecho en la tabla de sucursales,
+    //ahora hay que sincronizar el campo de sucursal en usuario
+
+    //buscar todos los gerentes
+    $tGerentes = listarGerentes();
+
+    //ver si tienes sucursal a su cargo
+    //y asignarsela, de lo contrario asignarle null
+    //en id_sucursal
+    foreach($tGerentes as $ger){
+
+        $gerente = UsuarioDAO::GetByPK($ger['id_usuario']);
+
+        $suc = new Sucursal();
+        $suc->setGerente( $ger['id_usuario'] );
+        $sucursal = SucursalDAO::getByPK($suc);
+
+        if(sizeof($sucursal) == 0){
+             $gerente->setIdSucursal( null );
+        }else{
+             $gerente->setIdSucursal( $sucursal[0]->getIdSucursal() );
+        }
+
+        try{
+            UsuarioDAO::save($gerente);    
+        }catch(Exception $e){
+            return array('success' => false, 'reason' => $e);
+        }
+    }
+
+
+    return array('success' => true );
 
 }
 
@@ -654,7 +698,6 @@ if(isset($args['action'])){
         break;
 
         case 506: //editarGerencias
-
             echo json_encode(editarGerencias($args));
         break;
 

@@ -1,100 +1,110 @@
-<h1>Asignar gerentes</h1><?php
+<h1>Asignar gerentes</h1>
+
+
+<h2>Asignacion mediante sucursales</h2><?php
 
 
 require_once('model/usuario.dao.php');
 require_once("controller/personal.controller.php");
+require_once("controller/sucursales.controller.php");
+
+
+
+
+
+
+//listar sucursales
+$s = new Sucursal();
+$s->setActivo(1);
+
+$sucursales = SucursalDAO::search($s);
+
 
 //listar todos los gerentes
 $gerentes = listarGerentes();
 
+//crear la tabla
+?><table><tr><th>ID Sucursal</th><th>Descripcion</th><th>Gerente</th></tr><?php
 
-
-
-function doMenu($s, $gid)
-{
-
-    $h = '<select id="gerente_'.$gid.'">';
-	$sucursales = SucursalDAO::getAll();
-
-
-		$h .= "<option value='null'";
-        if($s === null) $h .= ' selected ';
-        $h .= " >Sin sucursal</option>";
-
-	foreach( $sucursales as $suc ){
-		$h .= "<option value='" . $suc->getIdSucursal() . "'";
-        if($suc->getIdSucursal() == $s) $h .= ' selected ';
-        $h .= " >" .  $suc->getDescripcion()  . "</option>";
-	}
-    $h .= '</select>';
-
-    return $h;
-
-}
-
-
-
-
-?><table><tr><th>ID Gerente</th><th>Nombre</th><th>Sucursal a cargo</th></tr><?php
-
-$lookForThese = array();
-
-foreach ($gerentes as $gerente)
+foreach ($sucursales as $sucursal)
 {
     echo "<tr>";
-    echo "<td>" . $gerente['id_usuario'] . "</td><td>" . $gerente['nombre'] . "</td><td>";
-    echo doMenu($gerente['gerencia_sucursal_id'], $gerente['id_usuario']) ."</td>";
-    echo "</tr>";
-    
-    array_push($lookForThese, "gerente_" . $gerente['id_usuario'] );
+    echo "<td>" . $sucursal->getIdSucursal() . "</td>";
+    echo "<td>" . $sucursal->getDescripcion() . "</td>";
+    echo "<td><select id='sucursal_{$sucursal->getIdSucursal()}'>";
+
+    if($sucursal->getGerente() === null)
+        echo "<option value='-1' selected>Sin gerente</option>";
+    else
+        echo "<option value='-1' >Sin gerente</option>";    
+
+    foreach ($gerentes as $gerente)
+    {
+        if($gerente['id_usuario'] == $sucursal->getGerente())
+            echo "<option value='{$gerente['id_usuario']}' selected>{$gerente['nombre']}</option>";
+        else
+            echo "<option value='{$gerente['id_usuario']}' >{$gerente['nombre']}</option>";    
+    }
+        
+    echo "</select></td>";
+    echo "</tr>";    
 }
+
 echo "</table>";
 
 
-
-
-
-
-
-
+//crear el javascript para enviar
 ?>
-
-<input type='button' value="Guardar cambios" onclick="save()">
-
-
-
-
-
-
-
-
-
-
-
-
-
 <script>
-    function save(){
-        obj = {
-        <?php
-            foreach ($lookForThese as $option )
-            {
-                echo $option . " : $('#". $option . "').val(),";
+    function guardarCambios()
+    {
+
+        sucursales = [
+            <?php
+            foreach ($sucursales as $sucursal){
+                echo "{";
+                echo "id_sucursal : {$sucursal->getIdSucursal()}," ;
+                echo "id_gerente : parseInt( $('#sucursal_{$sucursal->getIdSucursal()}').val() )," ;
+                echo "},";
+            }  
+            ?>
+        ];
+
+        //validar que no haya sucursales con el mismo gerente
+        busyManangers = [];
+        imSure = false;
+        for ($a = 0; $a < sucursales.length; $a++)
+        {
+            if(sucursales[$a].id_gerente != -1){
+                //buscar si no esta ocupado
+                for (var m in busyManangers)
+                {
+
+                    if(busyManangers[m] == sucursales[$a].id_gerente ){
+                        alert("Un gerente no puede ocuparse de mas de una sucursal.");
+                        return;
+                    }
+                }
+
+                busyManangers.push( sucursales[$a].id_gerente );
+
+            }else{
+                if(!imSure){
+                    imSure = confirm("Esta seguro que desea dejar sucursales sin gerencia ?");
+                    if(!imSure)return;
+                }
+
             }
-        ?>
-        };
+        }
 
-
-
-
-        jQuery.ajaxSettings.traditional = true;
-
+        //enviar los resultados
+       jQuery.ajaxSettings.traditional = true;
 
         $.ajax({
 	      url: "../proxy.php",
 	      data: { 
             action : 506, 
-            data : $.JSON.encode(obj)
+            data : $.JSON.encode(sucursales)
            },
 	      cache: false,
 	      success: function(data){
@@ -109,12 +119,20 @@ echo "</table>";
                 alert("Los datos se han editado con exito !");
 	      }
 	    });
-
-
-
-
     }
 </script>
+<?php
+
+
+
+
+
+
+
+?>
+
+<input type='button' value="Guardar cambios" onclick="guardarCambios()">
+
 
 <script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../frameworks/uniform/jquery.uniform.js" type="text/javascript" charset="utf-8"></script> 
