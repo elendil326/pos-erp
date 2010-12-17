@@ -54,9 +54,9 @@ function autorizacionesSucursal( ){
     $autorizacion = new Autorizacion();
     $autorizacion->setIdSucursal( $_SESSION['sucursal'] );
 
-    $json = AutorizacionDAO::search($autorizacion, false);
+    $json = AutorizacionDAO::search($autorizacion, true);
 
-    printf( '{ "success" : "true",  "payload" : %s }', json_encode($json) ); 
+    printf( '{ "success" : "true", "payload" : %s }', $json ); 
 
 }//autorizacionesSucursal
 
@@ -252,6 +252,8 @@ function respuestaAutorizacionSurtir( $args ){
     }
 
 }
+
+
 
 switch( $args['action'] ){
 
@@ -457,3 +459,6 @@ switch( $args['action'] ){
 
 }
 
+//sigue inventario
+
+?>

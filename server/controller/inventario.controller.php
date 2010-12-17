@@ -164,7 +164,7 @@ function detalleCompra( $args ){
 }
 
 
-/*
+
 function detalleVenta( $id ){
 
     if( !isset( $id ) )
@@ -176,7 +176,7 @@ function detalleVenta( $id ){
         die('{"success": false, "reason": "Verifique los datos." }');
     }
 
-    //verificamos que exista esa compra
+    //verificamos que exista esa venta
     if( !( $venta = VentasDAO::getByPK( $id ) ) )
     {
         die('{"success": false, "reason": "No se tiene registro de esa venta." }');
@@ -209,7 +209,7 @@ function detalleVenta( $id ){
 
     return $info_venta; 
 
-}*/
+}
 
 
 
@@ -278,7 +278,7 @@ if(isset($args['action'])){
         break;
 
         case 404://regresa el detalle de la venta
-            printf('{ "success": false, "reason": "Estas llamando a inventario ! para obtener las ventas deberas llamar al controller de ventas." ,"datos": %s }',  json_encode( detalleVenta( $args['id_venta'] ) ) );
+            printf('{ "success": false, "datos": %s }',  json_encode( detalleVenta( $args['id_venta'] ) ) );
         break;
 
         case 405://nuevo producto

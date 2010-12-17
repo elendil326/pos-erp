@@ -110,9 +110,13 @@ Aplicacion.Clientes.prototype.listaDeComprasLoad = function (){
 				//volver a intentar
 				return this.listaDeComprasLoad();
 			}
-			
+
+            //refresca la lista de compras
 			this.listaDeCompras.lista = compras.datos;
 			this.listaDeCompras.lastUpdate = Math.round(new Date().getTime()/1000.0);
+
+            //refrescar el panel de detalle de venta
+            
 			
 
 		},
@@ -510,8 +514,12 @@ Aplicacion.Clientes.prototype.comprasDeClientesPanelUpdater = function ( cliente
 	html += "<td>Fecha</td>";
 	html += "<td>Tipo</td>";
 	html += "<td>Total</td>";
+    html += "<td>Saldo</td>";
 	html += "</tr>";
-	
+
+    var saldo = null;
+    var style = null;
+
 	for (var i = lista.length - 1; i >= 0; i--){
 		
 		if(lista[i].id_cliente != cid){
@@ -526,8 +534,20 @@ Aplicacion.Clientes.prototype.comprasDeClientesPanelUpdater = function ( cliente
 		html += "<td>" + lista[i].id_venta + "</td>";
 		html += "<td>" + lista[i].fecha + "</td>";
 		html += "<td>" + lista[i].tipo_venta + "</td>";
-		html += "<td>" + POS.currencyFormat ( lista[i].total ) + "</td>";		
+		html += "<td>" + POS.currencyFormat ( lista[i].total ) + "</td>";
+
+        saldo = lista[i].total - lista[i].pagado;
+
+        if(saldo > 0)
+        {
+            style = "style = 'color:red'"
+        }
+
+        html += "<td " + style + " >" + POS.currencyFormat ( saldo ) + "</td>";		
 		html += "</tr>";
+
+        style = null;
+
 	}
 	
 	html += "</table>";
@@ -738,6 +758,7 @@ Aplicacion.Clientes.prototype.doAbonarValidator = function (  )
     var transaccion = {
         abono : null,
         cambio : null,
+        abonado: detalleVenta.pagado,
         saldo : detalleVenta.total - detalleVenta.pagado
     }
 
@@ -745,12 +766,14 @@ Aplicacion.Clientes.prototype.doAbonarValidator = function (  )
     {
         transaccion.abono = transaccion.saldo;
         transaccion.cambio = monto -transaccion.saldo;
+        transaccion.abonado = transaccion.abonado + transaccion.abono;
     }
     else
     {
         transaccion.abono = monto;
         transaccion.cambio = 0;
-        transaccion.saldo = 0;
+        transaccion.saldo = transaccion.saldo - monto;
+        transaccion.abonado = ( parseFloat( transaccion.abonado ) + parseFloat( monto ) );
     }
 
     Aplicacion.Clientes.currentInstance.doAbonar( transaccion );
@@ -782,10 +805,20 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 
             Ext.Msg.alert( "Clientes: Operación realizada con exito","Abono: " + transaccion.abono + " \nCambio: " + transaccion.cambio + "\nSaldo: " + transaccion.saldo );
 
-			//cargar la lista de compras de los clientes
+			//cargar la lista de compras de los clientes con los nuevos detalles de las ventas
 			Aplicacion.Clientes.currentInstance.listaDeComprasLoad();
-			Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange( null, Ext.getCmp("Clentes-CreditoVentasLista").getValue() );
-			setTimeout( "Aplicacion.Clientes.currentInstance.abonarVentaCancelarBoton();", 1000);
+
+            
+			Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange( null, Ext.getCmp("Clentes-CreditoVentasLista").getValue(), true );
+
+            //Actualizamos los valores de lso campos Abonado y saldo amnualmente ya que se ejecuta primero
+            //creditoDeClientesOptionChange y no alcanza a cargarse la lista de compras conn los nuevo valores
+
+            Ext.getCmp( "Clientes-DetallesVentaCredito-abonado" ).setValue( POS.currencyFormat( transaccion.abonado ) );
+            Ext.getCmp( "Clientes-DetallesVentaCredito-saldo" ).setValue( POS.currencyFormat( transaccion.saldo ) );
+
+            //mostramos el panel de detalle de venta
+			Aplicacion.Clientes.currentInstance.abonarVentaCancelarBoton();
 		},
 		failure: function( response ){
 			return POS.error( response );
@@ -856,10 +889,9 @@ Aplicacion.Clientes.prototype.abonarVentaCancelarBoton = function ()
 Aplicacion.Clientes.prototype.detalleVentaCredito = null;
 
 //es lo que sucede al dar click al escoger una vent a acredito
-Aplicacion.Clientes.prototype.creditoDeClientesOptionChange = function ( a, v  )
+Aplicacion.Clientes.prototype.creditoDeClientesOptionChange = function ( a, v )
 {
-	
-	
+
 	//el valor de -1 es para el mensaje de seleccionar, todo el que este arriba
 	//de eso equivale al id de la venta
 	
@@ -886,7 +918,6 @@ Aplicacion.Clientes.prototype.creditoDeClientesOptionChange = function ( a, v  )
 	}
 
 
-
 	//fecha
 	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(0).setValue(venta.fecha);
 	
@@ -901,10 +932,9 @@ Aplicacion.Clientes.prototype.creditoDeClientesOptionChange = function ( a, v  )
 	
 	//abonado
 	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(4).setValue( POS.currencyFormat(venta.pagado));
-	
+
 	//saldo
 	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(5).setValue( POS.currencyFormat(venta.total - venta.pagado));
-	
 
     //almacenamos el valor de la venta a credito
     Aplicacion.Clientes.currentInstance.detalleVentaCredito = venta;
@@ -1257,7 +1287,11 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 					new Ext.form.Text({ name: 'sucursal', label: 'Sucursal'  }),
 					new Ext.form.Text({ name: 'user_id', label: 'Vendedor'  }),
 					new Ext.form.Text({ name: 'total', label: 'Total'  }),
-					new Ext.form.Text({ name: 'abonado', label: 'Abonado'  }),
+					new Ext.form.Text({
+                        name: 'abonado',
+                        label: 'Abonado',
+                        id:'Clientes-DetallesVentaCredito-abonado'
+                    }),
 					new Ext.form.Text({
                         name: 'saldo',
                         label: 'Saldo',
@@ -1296,7 +1330,8 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 			new Ext.Button({ id : 'Clientes-AbonarVentaBotonAceptar', ui  : 'action', text: 'Abonar', margin : 15, handler : this.doAbonarValidator, hidden : true }),
 			new Ext.Button({ id : 'Clientes-AbonarVentaBotonCancelar', ui  : 'drastic', text: 'Cancelar', margin : 15, handler : this.abonarVentaCancelarBoton, hidden : true }),				
 			new Ext.Button({ id : 'Clientes-ImprimirSaldoBoton', ui  : 'confirm', text: 'Imprimir Detalles', margin : 15, handler : this.imprimirSaldoVentaBoton, hidden : true }),
-			new Ext.Button({ id : 'Clientes-VerProductosBoton', ui  : 'confirm', text: 'Ver Productos de esta venta', margin : 5, handler : this.imprimirSaldoVentaBoton, hidden : true })			
+			new Ext.Button({ id : 'Clientes-VerProductosBoton', ui  : 'confirm', text: 'Ver Productos de esta venta', margin : 5, handler : this.imprimirSaldoVentaBoton, hidden : true }),
+            { xtype: 'spacer' }
 
 		]}
 	)];
@@ -1304,6 +1339,8 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 
 	//crear el panel, y asignarselo a detallesDeClientesPanel
 	this.detallesDeClientesPanel = new Ext.TabPanel({
+
+        scroll:'vertical',
 
 		//NO MOVER EL ORDEN DEL MENU !!
 	    items: [{

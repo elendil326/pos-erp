@@ -948,6 +948,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
         }
     }
 
+    //almacenara los items del formulario
     var itemsForm = [];
 
     itemsForm.push(
@@ -1003,8 +1004,30 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
         break;
 
         case '209'://solicitud de uno o mas productos (gerente)
+
+            //creamos la tabla
+            html = "";
+            html += "<table border = 0>";
+            html += "   <tr class = 'top'>";
+            html += "       <td>id_venta</td>";
+            html += "       <td>id_producto</td>";
+            html += "       <td>descripcion</td>";
+            html += "       <td>cantidad</td>";
+            html += "       <td>precio</td>";
+            html += "   </tr>";
+
+
             itemsForm.push(
-                new Ext.form.Text({label: 'Productos', disabled: true, value:'hay que poner una lista aqui' })
+                new Ext.form.Text({
+                    label: 'Productos',
+                    disabled: true,
+                    value:'hay que poner una lista aqui'
+                }),
+                {
+                    id:'detalleAutorizacionFormPanel-Tabla',
+                    html:html,
+                    cls : 'Tabla',
+                }
             );
             height = 490;
         break;
