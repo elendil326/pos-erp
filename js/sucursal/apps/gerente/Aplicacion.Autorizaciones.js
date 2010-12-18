@@ -933,7 +933,6 @@ Aplicacion.Autorizaciones.prototype.eliminarAutorizacion = function(){
 
 }
 
-
 Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( autorizacion ){
 
     autorizaciones = Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lista
@@ -1098,9 +1097,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
             title: (!detalleAutorizacion.descripcion)?detalleAutorizacion.concepto:detalleAutorizacion.descripcion,
             //instructions: 'Ingrese la cantidad de Devolución.',
             items: [
-                
                 itemsForm
-                
             ]}
         ]
     });

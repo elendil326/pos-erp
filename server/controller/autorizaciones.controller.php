@@ -22,7 +22,7 @@ function solicitudDeAutorizacion( $auth ){
     {
         if( AutorizacionDAO::save( $autorizacion ) > 0 )
         {
-            printf( '{ "success" : "true" }' );            
+            printf( '{ "success" : "true" }' );
         }
         else
         {
@@ -54,14 +54,14 @@ function autorizacionesSucursal( ){
     $autorizacion = new Autorizacion();
     $autorizacion->setIdSucursal( $_SESSION['sucursal'] );
 
-    $json = AutorizacionDAO::search($autorizacion, false);
+    $json = AutorizacionDAO::search($autorizacion, true);
 
-    printf( '{ "success" : "true",  "payload" : %s }', json_encode($json) );
+    printf( '{ "success" : "true", "payload" : %s }', $json );
 
 }//autorizacionesSucursal
 
 
-//TODO:No se que paso aqui, hay qeu revisar por qeu esta harcodeado la linea 79
+//responder autorizacion de gasto (admin)
 function respuestaAutorizacionGasto( $args ){
 
     if( !isset( $args['reply'] ) || !isset( $args['id_autorizacion'] )  )
@@ -74,14 +74,12 @@ function respuestaAutorizacionGasto( $args ){
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
-    if( $args['reply'] == 2 )//significa que no se autorizo
-    {
-        $autorizacion = AutorizacionDAOBase::getByPK(8);
-        $autorizacion->setFechaRespuesta( strftime( "%Y-%m-%d-%H-%M-%S", time() ) );
-        $autorizacion->setEstado( 2 );
-        AutorizacionDAO::save( $autorizacion );
-    }
-    
+    $autorizacion = AutorizacionDAOBase::getByPK( $args['id_autorizacion'] );
+    $autorizacion->setFechaRespuesta( strftime( "%Y-%m-%d-%H-%M-%S", time() ) );
+    $autorizacion->setEstado( $args['reply'] );
+
+    AutorizacionDAO::save( $autorizacion );
+
 }
 
 function eliminarAutorizacion( $args ){
@@ -186,6 +184,8 @@ function surtirProducto($args){
     
 }
 
+
+//responder autorizacion surtir (admin)
 function respuestaAutorizacionSurtir( $args ){
 
     //SUPER IMPORTANTE QUE DATA TENGA PARENTESIS CUADRADO 
@@ -197,6 +197,34 @@ function respuestaAutorizacionSurtir( $args ){
     // 2->denegado                               <------ESTO ES LO NORMAL PARA EL CASO DE RESPUESTA DE SURTIR
     // 3->aprovado y sin surtir por el gerente   <------ESTO ES LO NORMAL PARA EL CASO DE RESPUESTA DE SURTIR
     // 4->aprovado y surtido por el gerente
+
+    //FORMATO DE UNA AUTORIZACION DE SURTIR
+
+    /*  {
+            "id_autorizacion":"1",
+            "id_usuario":"38",
+            "id_sucursal":"54",
+            "fecha_peticion":"2010-12-17 19:33:56",
+            "fecha_respuesta":"2010-12-17 22:38:14",
+            "estado":"2",
+            "parametros":"{
+                \"clave\":\"209\",
+                \"descripcion\":\"Solicitud de producto\",
+                \"productos\":[
+                    {
+                        \"id_producto\":\"1\",
+                        \"cantidad\":\"55.5\"
+                    },
+                    {
+                        \"id_producto\":\"1\",
+                        \"cantidad\":\"2\"
+                    }
+                ]
+            }"
+        }  */
+
+
+
 
     if(!isset($args['data']) || !isset($args['id_autorizacion']) || !isset($args['estado']))
     {
@@ -217,23 +245,19 @@ function respuestaAutorizacionSurtir( $args ){
         die('{"success": false, "reason": "Verifique que exista la autorizacion ' . $args['id_autorizacion'] . '." }');
     }
 
+    //establecemos el nuevo estado
     $autorizacion->setEstado( $args['estado'] );
 
-    try
-    {
-        $parametros = json_decode( $autorizacion->getParametros() );
-    }
-    catch(Exception $e)
-    {
-        die( '{"success": false, "reason": "Error en la lectura de los parametros de la autorización." }' );
-    }
+    $parametros = json_encode(array(
+            'clave'=>'209',
+            'descripcion'=>'Solicitud de producto',
+            'productos'=>$data
+        ));
 
-    $parametros->estado = $args['estado'];
-    $parametros->productos = $args['data'];
+var_dump($data);
 
-    $autorizacion->setParametros( json_encode( $parametros ) );
-
-    //var_dump($parametros);
+    //definimos los nuevos parametros
+    $autorizacion->setParametros( $parametros );
 
     try
     {
@@ -254,6 +278,22 @@ function respuestaAutorizacionSurtir( $args ){
 }
 
 
+//funcion que regresa el detalle de una autorizacion
+function detalleAutorizacion( $args ){
+
+    if( !isset ($args['id_autorizacion'] ) )
+    {
+        die('{"success": false, "reason": "Faltan parametros." }');
+    }
+
+    if( !( $autorizacion = AutorizacionDAO::getByPK( $args['id_autorizacion'] ) ) )
+    {
+        die('{"success": false, "reason": "Verifique que exista la autorizacion ' . $args['id_autorizacion'] . '." }');
+    }
+
+    return $autorizacion;
+
+}
 
 switch( $args['action'] ){
 
@@ -426,7 +466,6 @@ switch( $args['action'] ){
         $descripcion = json_encode(array(
             'clave'=>$args['action'],
             'descripcion'=>'Solicitud de producto',
-            'estado'=>'0',
             'productos'=>$data
         ));
 
@@ -453,6 +492,12 @@ switch( $args['action'] ){
         eliminarAutorizacion( $args );
     break;
 
+    case 213://detalle de autorizacion (admin)
+        detalleAutorizacion( $args );
+    break;
+
+    case 214://surtir productos sucursal (admin)
+        surtirProductosSucursal( $args );
     default:
         printf ('{ "success" : "false" }');
     break;
