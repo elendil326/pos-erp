@@ -164,8 +164,8 @@ function detalleCompra( $args ){
 }
 
 
-/*
-function detalleVenta( $id ){
+
+function detalleVentas( $id ){
 
     if( !isset( $id ) )
     {
@@ -210,7 +210,7 @@ function detalleVenta( $id ){
     return $info_venta; 
 
 }
-*/
+
 
 
 function nuevoProducto($data)
@@ -278,7 +278,7 @@ if(isset($args['action'])){
         break;
 
         case 404://regresa el detalle de la venta
-            printf('{ "success": false, "datos": %s }',  json_encode( detalleVenta( $args['id_venta'] ) ) );
+            printf('{ "success": false, "datos": %s }',  json_encode( detalleVentas( $args['id_venta'] ) ) );
         break;
 
         case 405://nuevo producto

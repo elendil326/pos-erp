@@ -573,7 +573,7 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVentaPanelValidator = fun
     values = Aplicacion.Autorizaciones.currentInstance.solicitarDevolucionVentaPanel.getValues();
 
     //verificamos que el id_compra sea un numero entero
-    if( !( values.cantidad && /^\d+$/.test(values.cantidad + '') ) ){
+    /*if( !( values.cantidad && /^\d+$/.test(values.cantidad + '') ) ){
 
         Ext.Anim.run(Ext.getCmp( 'Autorizacion-DevolucionVentaPanel-cantidad' ), 
             'fade', {duration: 250,
@@ -593,10 +593,14 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVentaPanelValidator = fun
         });
 
         return;
-    }
+    }*/
+
+if(DEBUG){console.log("enviadno solicitud",values);}
 
     //ya que se esta seguro de que la informacion es correcta se envia la informacion
     Aplicacion.Autorizaciones.currentInstance.solicitudAutorizacionDevolucion( values );
+
+
 };
 
 //construye un panel emergente donde el gerente indicaria la cantidad de merma de cierto producto
@@ -990,7 +994,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                     label:'ID Autorización',
                     name:'id_autorizacion',
                     value:autorizacion.data.id_autorizacion
-                }),new Ext.form.Text({label: 'ID Compra', value:detalleAutorizacion.id_venta }),
+                }),new Ext.form.Text({label: 'ID Venta', value:detalleAutorizacion.id_venta }),
                 new Ext.form.Text({label: 'ID Producto', value:detalleAutorizacion.id_producto }),
                 new Ext.form.Text({label: 'Cantidad', value:detalleAutorizacion.cantidad })
             );
