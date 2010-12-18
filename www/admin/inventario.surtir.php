@@ -55,6 +55,11 @@
 
     function doSurtir(){
         //valida campos
+        if(carrito.length == 0){
+               alert("Debe seleccionar al menos un proudcto para surtir.");
+               return;
+        }
+
 
         for(i = 0; i < carrito.length; i++ ){
              item = carrito[i];
@@ -66,6 +71,31 @@
         }
 
         //hacer ajaxaso
+        jQuery.ajaxSettings.traditional = true;
+
+
+        $.ajax({
+	      url: "../proxy.php",
+	      data: { 
+            action : 210, 
+            data : null,
+            estado : null
+           },
+	      cache: false,
+	      success: function(data){
+		        response = jQuery.parseJSON(data);
+
+                if(response.success == false){
+                    alert(response.reason);
+                    return;
+                }
+
+
+                alert("Los datos se han editado con exito !");
+	      }
+	    });
+
+
 
         //avisar resultado
     }
@@ -91,8 +121,8 @@
 	
 	        </select>
 		</td>
+        <td><input type="button" onClick="seleccionarSucursal()" value="Seleccionar"/> </td>
 	</tr>
-	<tr><td></td><td><input type="button" onClick="seleccionarSucursal()" value="Seleccionar"/> </td></tr>
 </table>
 </form>
 
@@ -112,7 +142,7 @@ $sucursales = listarSucursales();
 foreach( $sucursales as $sucursal ){
 	
 	print ("<div id='actual" . $sucursal["id_sucursal"] . "' style='display: none'>");
-	print ("<h2>Inventario actual</h2><h3>" . $sucursal["descripcion"] . "</h3>");
+	print ("<h2>Inventario actual de " . $sucursal["descripcion"] . "</h2>");
 	
 	//obtener los clientes del controller de clientes
 	$inventario = listarInventario( $sucursal["id_sucursal"] );
@@ -132,6 +162,7 @@ foreach( $sucursales as $sucursal ){
 	$tabla = new Tabla( $header, $inventario );
 	$tabla->addColRender( "precioVenta", "moneyFormat" ); 
 	$tabla->addColRender( "precioIntersucursal", "moneyFormat" ); 
+    $tabla->addNoData("Esta sucursal no tiene nigun registro de productos en su inventario");
 	$tabla->render();
 	printf("</div>");
 }
@@ -164,6 +195,7 @@ foreach( $sucursales as $sucursal ){
 	$tabla->addColRender( "precioVenta", "moneyFormat" ); 
 	$tabla->addColRender( "precioIntersucursal", "moneyFormat" ); 
     $tabla->addOnClick( "id_producto", "agregarProducto");
+    $tabla->addNoData("No existe ningun producto en el inventario maestro.");
 	$tabla->render();
 
 ?> 

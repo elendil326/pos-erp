@@ -4,8 +4,8 @@
  *  Controller para autorizaciones
  */
  
-require_once("../server/model/autorizacion.dao.php");
-require_once("../server/model/detalle_inventario.dao.php");
+require_once("model/autorizacion.dao.php");
+require_once("model/detalle_inventario.dao.php");
 
 
 function solicitudDeAutorizacion( $auth ){
@@ -299,6 +299,7 @@ function surtirProductosSucursal(){
 
 }
 
+if(isset($args['action'])){
 switch( $args['action'] ){
 
     case 201://solicitud de autorizacion de gasto (gerente)
@@ -507,7 +508,7 @@ switch( $args['action'] ){
     break;
 
 }
-
+}
 //sigue inventario
 
 ?>

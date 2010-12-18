@@ -76,10 +76,10 @@
       <a class="drop" >AUTORIZACIONES</a>
       <ul>
         <li class="ga-side-nav-off">
-          <a  >Pendientes</a>
+          <a href="autorizaciones.php?action=pendientes" >Pendientes</a>
         </li>
         <li>
-          <a  >Todas las autorizaciones</a>
+          <a href="autorizaciones.php?action=historial" >Todas las autorizaciones</a>
         </li>
       </ul>
     </li>
