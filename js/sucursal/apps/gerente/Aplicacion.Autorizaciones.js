@@ -952,7 +952,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
     var itemsForm = [];
 
     itemsForm.push(
-        new Ext.form.Text({name:'clave', label: 'Clave', disabled: true, value:detalleAutorizacion.clave })
+        new Ext.form.Text({name:'clave', label: 'Clave', value:detalleAutorizacion.clave })
     );
 
     //altura del panel qeu contendra el form panel
@@ -963,67 +963,103 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
     {
         case '201'://solicitud de autorizacion de gasto (gerente)
             itemsForm.push(
-                new Ext.form.Text({label: 'Concepto', disabled: true, value:detalleAutorizacion.concepto }), 
-                new Ext.form.Text({label: 'Monto', disabled: true, value:detalleAutorizacion.monto })
+                new Ext.form.Text({
+                    label:'ID Autorización',
+                    name:'id_autorizacion',
+                    value:autorizacion.data.id_autorizacion
+                }),new Ext.form.Text({label: 'Concepto', value:detalleAutorizacion.concepto }),
+                new Ext.form.Text({label: 'Monto', value:detalleAutorizacion.monto })
             );
-            height = 325;
+            height = 375;
         break;
 
         case '202'://solicitud de autorizacion de cambio de limite de credito (gerente)
             itemsForm.push(
-                new Ext.form.Text({label: 'ID Cliente', disabled: true, value:detalleAutorizacion.cliente }), 
-                new Ext.form.Text({label: 'Cantidad', disabled: true, value:detalleAutorizacion.cantidad })
+                new Ext.form.Text({
+                    label:'ID Autorización',
+                    name:'id_autorizacion',
+                    value:autorizacion.data.id_autorizacion
+                }),new Ext.form.Text({label: 'ID Cliente', value:detalleAutorizacion.id_cliente }),
+                new Ext.form.Text({label: 'Cantidad', value:detalleAutorizacion.cantidad })
             );
-            height = 360;
+            height = 375;
         break;
 
         case '203'://solicitud de autorizacion de devolucion (gerente)
             itemsForm.push(
-                new Ext.form.Text({label: 'ID Compra', disabled: true, value:detalleAutorizacion.id_compra }), 
-                new Ext.form.Text({label: 'ID Producto', disabled: true, value:detalleAutorizacion.id_producto }),
-                new Ext.form.Text({label: 'Cantidad', disabled: true, value:detalleAutorizacion.cantidad })
+                new Ext.form.Text({
+                    label:'ID Autorización',
+                    name:'id_autorizacion',
+                    value:autorizacion.data.id_autorizacion
+                }),new Ext.form.Text({label: 'ID Compra', value:detalleAutorizacion.id_venta }),
+                new Ext.form.Text({label: 'ID Producto', value:detalleAutorizacion.id_producto }),
+                new Ext.form.Text({label: 'Cantidad', value:detalleAutorizacion.cantidad })
             );
-            height = 410;
+            height = 425;
         break;
 
         case '204'://solicitud de autorizacion de cambio de precio (gerente)
             itemsForm.push(
-                new Ext.form.Text({label: 'ID Producto', disabled: true, value:detalleAutorizacion.id_producto }), 
-                new Ext.form.Text({label: 'Precio', disabled: true, value:detalleAutorizacion.precio })
+                new Ext.form.Text({
+                    label:'ID Autorización',
+                    name:'id_autorizacion',
+                    value:autorizacion.data.id_autorizacion
+                }),new Ext.form.Text({label: 'ID Producto', value:detalleAutorizacion.id_producto }),
+                new Ext.form.Text({label: 'Precio', value:detalleAutorizacion.precio })
             );
             height = 360;
         break;
 
         case '205':////solicitud de autorizacion de merma (gerente)
             itemsForm.push(
-                new Ext.form.Text({label: 'ID Compra', disabled: true, value:detalleAutorizacion.id_compra }), 
-                new Ext.form.Text({label: 'ID Producto', disabled: true, value:detalleAutorizacion.id_producto }),
-                new Ext.form.Text({label: 'Cantidad', disabled: true, value:detalleAutorizacion.cantidad })
+                new Ext.form.Text({
+                    label:'ID Autorización',
+                    name:'id_autorizacion',
+                    value:autorizacion.data.id_autorizacion
+                }),new Ext.form.Text({label: 'ID Compra', value:detalleAutorizacion.id_compra }),
+                new Ext.form.Text({label: 'ID Producto', value:detalleAutorizacion.id_producto }),
+                new Ext.form.Text({label: 'Cantidad', value:detalleAutorizacion.cantidad })
             );
-            height = 410;
+            height = 425;
         break;
 
         case '209'://solicitud de uno o mas productos (gerente)
+
+            //lista que contiene los productos de esta solicitud alert(listaProductos.length);
 
             //creamos la tabla
             html = "";
             html += "<table border = 0>";
             html += "   <tr class = 'top'>";
-            html += "       <td>id_venta</td>";
             html += "       <td>id_producto</td>";
-            html += "       <td>descripcion</td>";
+           // html += "       <td>descripcion</td>";
             html += "       <td>cantidad</td>";
-            html += "       <td>precio</td>";
+           // html += "       <td>precio compra</td>";
             html += "   </tr>";
 
+            for ( var i = 0; i < detalleAutorizacion.productos.length; i++ )
+            {
+
+                class = ( i == detalleAutorizacion.productos.length - 1 )? " 'last Autorizaciones-row' " : " 'Autorizaciones-row' ";
+
+                html += "<tr class = '" + class + "' onClick = '' >";
+
+                html += "   <td>" + detalleAutorizacion.productos[i].id_producto + "</td>";
+             //   html += "   <td>" + detalleAutorizacion.productos[i].descripcion + "</td>";
+                html += "   <td>" + detalleAutorizacion.productos[i].cantidad + "</td>";
+               // html += "   <td>" + POS.currencyFormat( detalleAutorizacion.productos[i].precio ) + "</td>";
+                html += "</tr>";
+
+            }
+
+            html += "</table>";
 
             itemsForm.push(
                 new Ext.form.Text({
-                    label: 'Productos',
-                    disabled: true,
-                    value:'hay que poner una lista aqui'
-                }),
-                {
+                    label:'ID Autorización',
+                    name:'id_autorizacion',
+                    value:autorizacion.data.id_autorizacion
+                }),{
                     id:'detalleAutorizacionFormPanel-Tabla',
                     html:html,
                     cls : 'Tabla',
@@ -1034,10 +1070,10 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
 
     }
 
-    if( autorizacion.data.estado == '1' || autorizacion.data.estado == '2' || autorizacion.data.estado == '4')
+    if( autorizacion.data.estado == '1' || autorizacion.data.estado == '2' || autorizacion.data.estado == '4' )
     {
         itemsForm.push(
-            new Ext.form.Hidden({name:'id_autorizacion', value:autorizacion.data.id_autorizacion }),
+            
             new Ext.Button({ ui  : 'action', text: 'Eliminar de Historial', margin : 15, handler: this.eliminarAutorizacion })
         );
 
@@ -1045,13 +1081,24 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
 
     }
 
+    if( autorizacion.data.estado == '3')
+    {
+        itemsForm.push(
+            
+            new Ext.Button({ ui  : 'action', text: 'Surtir Envio', margin : 15, handler: this.eliminarAutorizacion })
+        );
+
+        height += 50;
+
+    }
+
     Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionFormPanel = new Ext.form.FormPanel({
-        scroll: 'none',
         items: [{
             xtype: 'fieldset',
             title: (!detalleAutorizacion.descripcion)?detalleAutorizacion.concepto:detalleAutorizacion.descripcion,
             //instructions: 'Ingrese la cantidad de Devolución.',
             items: [
+                
                 itemsForm
                 
             ]}
@@ -1063,7 +1110,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
         dockedItems: [{
             dock: 'top',
             xtype: 'toolbar',
-            title: 'Detalle de venta'
+            title: 'Detalle de Autorización'
         },{
             dock: 'bottom',
             xtype: 'toolbar',
@@ -1081,7 +1128,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
         modal:true,
         centered:true,
         height: height,
-        width: 680,
+        width: 750,
         scroll:'none',
         items:[
             this.detalleAutorizacionFormPanel
@@ -1114,7 +1161,7 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanelCreator = function
                 padding : 2,
                 xtype: 'list',
                 store: this.listaDeAutorizacionesStore,
-                itemTpl: '<div class="listaDeAutorizacionesAutorizacion"><strong>ID: {id_autorizacion} </strong>   Estado: {estado} Fecha: {fecha_peticion}</div>',
+                itemTpl: '<div class="listaDeAutorizacionesAutorizacion"><b class = "Autorizaciones-margin ">ID:</b>{id_autorizacion}   <b class = "Autorizaciones-margin ">Estado:</b> {estado} <b class = "Autorizaciones-margin ">Fecha:</b> {fecha_peticion}</div>',
                 grouped: true,
                 indexBar: true,
                 listeners : {

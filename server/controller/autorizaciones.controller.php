@@ -327,7 +327,7 @@ switch( $args['action'] ){
         $descripcion = json_encode(array( 
             'clave'=>$args['action'], 
             'descripcion'=>'Autorización de devolución',
-            'id_compra'=>$data -> id_venta,
+            'id_venta'=>$data -> id_venta,
             'id_producto'=>$data -> id_producto,
             'cantidad'=>$data -> cantidad
         ));
@@ -407,7 +407,7 @@ switch( $args['action'] ){
     case 209://solicitud de uno o mas productos (gerente)
 
         //SUPER IMPORTANTE QUE DATA TENGA PARENTESIS CUADRADO 
-        //data=[{"id_pruducto":"1","cantidad":"55.5"},{"id_pruducto":"1","cantidad":"2"}]
+        //data=[{"id_producto":"1","cantidad":"55.5"},{"id_producto":"1","cantidad":"2"}]
 
         if(!isset($args['data']))
         {
