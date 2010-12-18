@@ -42,6 +42,7 @@
 		{
 			case "historial" :  require_once("autorizaciones.historial.php"); break;
 			case "pendientes" : require_once("autorizaciones.pendientes.php"); break;			
+			case "detalle" : require_once("autorizaciones.detalle.php"); break;			
 			default : echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
 		} 
 	?>
