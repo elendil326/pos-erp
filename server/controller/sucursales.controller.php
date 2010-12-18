@@ -159,13 +159,125 @@ function abrirSucursal( $detalles )
 
 
 
-function editarSucursal(){
+function editarSucursal($sid, $payloadJSON, $verbose = true ){
+
+    $suc = SucursalDAO::getByPK($sid);
+
+    if(sizeof($suc) < 1){
+        if($verbose){
+            echo '{ "success" : false, "reason" : "Esta sucursal no existe." }';
+        }
+
+        return false;
+    }
+
+    try{
+        $payload = json_decode( $payloadJSON );
+    }catch(Exception $e){
+        if($verbose){
+            echo '{ "success" : false, "reason" : "Invalid JSON." }';
+        }
+
+        return false;
+    }
+
+    if($payload === null){
+        if($verbose){
+            echo '{ "success" : false, "reason" : "Invalid DATA." }';
+        }
+
+        return false;
+    }
+
+    if(isset($payload->descripcion)){
+        $suc->setDescripcion($payload->descripcion);
+    }
+
+    if(isset($payload->direccion)){
+        $suc->setDireccion($payload->direccion);
+    }
+
+    if(isset($payload->letras_factura)){
+        $suc->setLetrasFactura($payload->letras_factura);
+    }
+
+    if(isset($payload->rfc)){
+        $suc->setRFC($payload->rfc);
+    }
+
+    if(isset($payload->telefono)){
+        $suc->setTelefono($payload->telefono);
+    }
+
+    try{
+        SucursalDAO::save($suc);
+    }catch(Exception $e){
+        if($verbose){
+            echo '{ "success" : false, "reason" : "'.$e.'" }';
+        }
+
+        return false;
+    }
+
+    if($verbose){
+        echo '{ "success" : true }';
+    }
+
+    return true;
+}
+
+
+
+
+
+function cerrarSucursal($sid, $verbose = true){
+    $suc = SucursalDAO::getByPK($sid);
+
+    if(sizeof($suc) < 1){
+        if($verbose){
+            echo '{ "success" : false, "reason" : "Esta sucursal no existe." }';
+        }
+
+        return false;
+    }
+
+    //verificar que no este ya cerrada
+    if($suc->getActivo() == "0"){
+        if($verbose){
+            echo '{ "success" : false, "reason" : "Esta sucursal ya esta cerrada." }';
+        }
+
+        return false;
+    }
     
+    //obtener el gerente de esta sucursal
+    $gerente = $suc->getGerente();
+
+    if($gerente !== null){
+        //desasignar a este gerente
+        $gU = UsuarioDAO::getByPK( $gerente );
+        $gU->setIdSucursal(null);
+        UsuarioDAO::save($gU);
+    }
+
+
+
+    $suc->setGerente(null);
+    $suc->setActivo(0);
+    SucursalDAO::save( $suc );
+
+
+    if($verbose){
+        echo '{ "success" : true }';
+    }
+
+    return true;
 }
 
-function cerrarSucursal(){
 
-}
+
+
+
 
 function listarPersonal(){
 
@@ -210,11 +322,11 @@ if(isset($args['action'])){
 		break;
 
 		case 702://editar detalle sucursal
-		    editarSucursal( $args );
+		    editarSucursal( $args['sid'], $args['payload'] );
 		break;
 
 		case 703://cerrar sucursal
-		    cerrarSucursal( $args );
+		    cerrarSucursal( $args['sid'] );
 		break;
 
 		case 704://listar personal

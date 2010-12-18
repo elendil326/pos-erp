@@ -29,7 +29,7 @@ print( "<h1>" . $sucursal->getDescripcion() . "</h1>");
 	<tr><td><b>RFC</b></td><td><?php echo $sucursal->getRfc(); ?></td></tr>	
 	<tr><td><b>Telefono</b></td><td><?php echo $sucursal->getTelefono(); ?></td></tr>	
 
-	<tr><td colspan=2><input type=button value="Editar detalles"><input type=button value="Imprmir detalles"></td> </tr>
+	<tr><td colspan=2><input type=button value="Editar detalles" onclick="editar()"></td> </tr>
 </table>
 
 <script type="text/javascript" charset="utf-8" src="../frameworks/prototype/prototype.js"></script>
@@ -53,6 +53,10 @@ print( "<h1>" . $sucursal->getDescripcion() . "</h1>");
         window.location = "ventas.php?action=detalles&id=" + vid;
     }
 
+
+    function editar(){
+        window.location = "sucursales.php?action=editar&sid=<?php echo $_REQUEST['id'] ?>";
+    }
 <?php
 
 

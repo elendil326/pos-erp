@@ -42,6 +42,8 @@
 				require_once("sucursales.abrir.php");
 			break;
 
+			case "editar" : require_once("sucursales.editar.php"); break;
+			case "cerrar" : require_once("sucursales.cerrar.php"); break;
 			default : echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
 		} 
 	?>
