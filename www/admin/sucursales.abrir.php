@@ -85,6 +85,7 @@
 
                 limpiar();
                 alert("La nueva sucursal se ha creado con exito.");
+                window.location = "sucursales.php?action=lista";
 	      }
 	    });
 
