@@ -164,7 +164,7 @@ function detalleCompra( $args ){
 }
 
 
-
+/*
 function detalleVenta( $id ){
 
     if( !isset( $id ) )
@@ -210,7 +210,7 @@ function detalleVenta( $id ){
     return $info_venta; 
 
 }
-
+*/
 
 
 function nuevoProducto($data)

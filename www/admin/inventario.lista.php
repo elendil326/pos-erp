@@ -24,12 +24,10 @@ require_once("controller/sucursales.controller.php");
 		"precio_intersucursal"=> "Precio Intersucursal",
 		"costo"=> "Costo",
 		"medida"=> "Medida");
-		
 
-	
 	$tabla = new Tabla( $header, $inventario );
-	$tabla->addColRender( "precioVenta", "moneyFormat" ); 
-	$tabla->addColRender( "precioIntersucursal", "moneyFormat" ); 
+	$tabla->addColRender( "precio_intersucursal", "moneyFormat" ); 
+	$tabla->addColRender( "costo", "moneyFormat" ); 
     $tabla->addOnClick( "id_producto", "detalles");
 	$tabla->render();
 
@@ -64,6 +62,7 @@ foreach( $sucursales as $sucursal ){
 	$tabla = new Tabla( $header, $inventario );
 	$tabla->addColRender( "precioVenta", "moneyFormat" ); 
 	$tabla->addColRender( "precioIntersucursal", "moneyFormat" ); 
+	$tabla->addNoData( "<h3>Esta sucursal no tiene inventario.</h3>"); 
     $tabla->addOnClick( "productoID", "detalles");
 	$tabla->render();
 }

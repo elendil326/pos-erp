@@ -116,6 +116,8 @@ var HumbleFinance = {
      */
     init: function(id, priceData, volumeData, summaryData) {
         
+        
+        
         // Set members
         this.id = id;
         this.priceData = priceData;
@@ -124,7 +126,7 @@ var HumbleFinance = {
         
         // Set bounds to scale automatically in the y direction
         this.bounds.xmin = 0;
-        this.bounds.xmax = this.priceData.length - 1;
+        this.bounds.xmax = this.priceData.length -1;
         this.bounds.ymin = null;
         this.bounds.ymax = null;
         
@@ -136,7 +138,7 @@ var HumbleFinance = {
         var area = {
             x1: 0, 
             y1: this.bounds.ymin, 
-            x2: 5, 
+            x2: priceData.length, 
             y2: this.bounds.ymax
         };
         this.graphs.summary = this.summaryGraph(this.summaryData, this.bounds);
@@ -152,7 +154,6 @@ var HumbleFinance = {
 
         // Build DOM element
         this.containers.price = new Element('div', {id: 'priceGraph', style: 'margin-bottom: 10px; width: 100%; height: 240px;'});
-//        this.containers.volume = new Element('div', {id: 'volumeGraph', style: 'width: 100%; height: 80px;'});
 
         this.containers.summary = new Element('div', {id: 'summaryGraph', style: ' width: 100%; height: 60px;'});
 
@@ -167,7 +168,6 @@ var HumbleFinance = {
         
         // Insert into container
         container.insert(this.containers.price);
-//        container.insert(this.containers.volume);
         container.insert(this.containers.summary);
         container.insert(this.containers.flags);
         container.insert(this.handles.left);
@@ -184,8 +184,6 @@ var HumbleFinance = {
         Event.observe(this.containers.summary, 'flotr:click', this.reset.bind(this));
         
         // Attach observers for hit tracking on price and volume points
-//        Event.observe(this.containers.volume, 'flotr:hit', this.volumeHitObserver.bind(this));
-//        Event.observe(this.containers.volume, 'flotr:clearhit', this.clearHit.bind(this));
         Event.observe(this.containers.price, 'flotr:hit', this.priceHitObserver.bind(this));
         Event.observe(this.containers.price, 'flotr:clearhit', this.clearHit.bind(this));
         
@@ -217,17 +215,16 @@ var HumbleFinance = {
         var newBounds = {'xmin': xmin, 'xmax': xmax, 'ymin': null, 'ymax': null};
         
         this.graphs.price = this.priceGraph(this.priceData.slice(xmin, xmax+1), this.volumeData.slice(xmin, xmax+1), newBounds);
-        //this.graphs.volume = this.volumeGraph(this.volumeData.slice(xmin, xmax+1), newBounds);
         
         this.drawFlags();
     },
+    
     
     /**
      * Reset to null selection
      */
     reset: function () {
         this.graphs.price = this.priceGraph(this.priceData, this.bounds);
-//        this.graphs.volume = this.volumeGraph(this.volumeData, this.bounds);
         this.handles.left.hide();
         this.handles.right.hide();
         this.handles.scroll.hide();
@@ -506,13 +503,11 @@ var HumbleFinance = {
     volumeHitObserver: function (e) {
         return;
         // Hide mouse track on volume graph
-//        this.graphs.volume.mouseTrack.hide();
+
         
         // Display hit on price graph
         var point = this.priceData[e.memo[0].x];
-//        Event.stopObserving(this.containers.volume, 'flotr:hit');
-//        this.doHit(this.graphs.price, point, this.containers.volume);
-//        Event.observe(this.containers.volume, 'flotr:hit', this.volumeHitObserver.bind(this));
+
     },
     
     /**
@@ -525,11 +520,8 @@ var HumbleFinance = {
         // Display hit on volume graph
         var point = this.volumeData[e.memo[0].x];
         Event.stopObserving(this.containers.price, 'flotr:hit');
-//        this.doHit(this.graphs.volume, point, this.containers.price);
         Event.observe(this.containers.price, 'flotr:hit', this.priceHitObserver.bind(this));
-        
-        // Hide mouse track on volume graph
-//        this.graphs.volume.mouseTrack.hide();
+
     },
     
     /**

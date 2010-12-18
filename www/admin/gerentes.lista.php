@@ -46,10 +46,6 @@ if(sizeof($gerentes)>0){
 
 
 
-
-
-?><h2>Gerentes despedidos</h2><?php
-
 $gru1 = new GruposUsuarios();
 $gru1->setIdGrupo('2');
 $result = GruposUsuariosDAO::search($gru1);
@@ -58,20 +54,19 @@ $fired = array();
 
 foreach($result as $r)
 {
+	$usr = UsuarioDAO::getByPK( $r->getIdUsuario() );
 
-    $usr = UsuarioDAO::getByPK( $r->getIdUsuario() );
-
-    if( $usr->getActivo() == "0"){
-        array_push($fired, $usr );
-    }
-
+	if( $usr->getActivo() == "0"){
+	    array_push($fired, $usr );
+	}
 }
 
-
-
-$tabla = new Tabla( $header, $fired );
-$tabla->addOnClick("id_usuario", "mostrarDetalles");
-$tabla->render();
+if(sizeof($fired) > 0){
+	?><h2>Gerentes despedidos</h2><?php
+	$tabla = new Tabla( $header, $fired );
+	$tabla->addOnClick("id_usuario", "mostrarDetalles");
+	$tabla->render();
+}
 
 
 ?>
