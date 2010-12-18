@@ -101,6 +101,9 @@
         <li>
           <a href="inventario.php?action=nuevo">Nuevo Producto</a>
         </li>
+        <li>
+          <a href="inventario.php?action=transit">En transito</a>
+        </li>
       </ul>
     </li>
 

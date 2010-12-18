@@ -1,4 +1,8 @@
-<h1>Autorizaciones pendientes</h1><?php
+<h1>Autorizaciones pendientes</h1>
+
+
+
+<h2>Autorizaciones pendientes</h2><?php
 
 
 
@@ -27,6 +31,7 @@ function renderParam( $json )
 $tabla = new Tabla($header, $autorizaciones );
 $tabla->addColRender("parametros", "renderParam");
 $tabla->addOnClick("id_autorizacion", "detalle");
+$tabla->addNoData("No hay autorizaciones pendientes");
 $tabla->render();
 
 

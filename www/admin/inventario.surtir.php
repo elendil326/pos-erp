@@ -3,7 +3,7 @@
 
 
 <div class="content"> 
-<h2>Seleccione la sucursal que desea surtir</h2><?php
+<?php
 
 /*
  * Nuevo Cliente
@@ -23,6 +23,11 @@
 <script type="text/javascript" charset="utf-8">
 	$(function(){
       $("input, select").uniform();
+        <?php 
+            if(isset($_REQUEST['sid'])) { 
+                echo "seleccionarSucursal();";
+            }?>
+
     });
 
     var currentSuc = null;
@@ -99,7 +104,8 @@
                 }
 
 
-                alert("Los datos se han editado con exito !");
+                window.location = "inventario.php?action=transit";
+                
 	      }
 	    });
 
@@ -112,7 +118,8 @@
 
 
 
-
+<?php if(!isset($_REQUEST['sid'])) { ?>
+<h2>Seleccione la sucursal que desea surtir</h2>
 <form id="newClient">
 <table border="0" cellspacing="5" cellpadding="5">
 	<tr><td>Sucursal</td>
@@ -133,9 +140,10 @@
 	</tr>
 </table>
 </form>
+<?php }else{ ?>
+<input type="hidden" name="" value="<?php echo $_REQUEST['sid']; ?>" id="sucursal" />
 
-
-
+<?php } ?>
 
 
 

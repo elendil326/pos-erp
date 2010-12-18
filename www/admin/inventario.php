@@ -37,6 +37,7 @@
 			case "nuevo" : require_once("inventario.nuevo.php"); break;
 			case "surtir" : require_once("inventario.surtir.php"); break;			
 			case "detalle" : require_once("inventario.detalle.php"); break;
+			case "transit" : require_once("inventario.transit.php"); break;
 			default : echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
 		} 
 	?>

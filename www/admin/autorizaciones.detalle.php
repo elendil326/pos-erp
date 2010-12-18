@@ -103,7 +103,7 @@ switch( $autorizacionDetalles->clave ){
                     ?><tr><td><?php echo $producto->id_producto; ?></td><td><?php echo $producto->cantidad; ?></td></tr><?php
                 }
                 ?>
-                <tr><td></td><td><input type=button value="Surtir sucursal" ></td></tr>
+                <tr><td></td><td><input type=button value="Surtir sucursal" onclick="surtirSuc(<?php echo $autorizacion->getIdSucursal(); ?>)" ></td></tr>
             </table>
         <?php
 
@@ -146,6 +146,12 @@ function contestar(id, response){
                 window.location = "autorizaciones.php?action=pendientes";
 	      }
 	    });
+}
+
+
+function surtirSuc(id)
+{
+    window.location = "inventario.php?action=surtir&sid=" + id;
 }
 </script>
 
