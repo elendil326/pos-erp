@@ -94,13 +94,13 @@ switch( $autorizacionDetalles->clave ){
     case "209": 
         //solicitud de surtir
         ?>
-            <h2>Solicitud de merma</h2>
+            <h2>Solicitud de surtir</h2>
             <table>
-                <tr><td>Producto</td><td>Cantidad solicitada</td></tr><?php
+                <tr><td>Producto</td><td>Cantidad solicitada</td></tr>
                 <?php
                 foreach ($autorizacionDetalles->productos as $producto)
                 {
-                    ?><tr><td><?php echo $autorizacionDetalles->id_producto; ?></td><td><?php echo $autorizacionDetalles->cantidad; ?></td></tr><?php
+                    ?><tr><td><?php echo $producto->id_producto; ?></td><td><?php echo $producto->cantidad; ?></td></tr><?php
                 }
                 ?>
                 <tr><td></td><td><input type=button value="Surtir sucursal" ></td></tr>
@@ -148,3 +148,7 @@ function contestar(id, response){
 	    });
 }
 </script>
+
+<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../frameworks/uniform/jquery.uniform.js" type="text/javascript" charset="utf-8"></script> 
+<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
