@@ -4,8 +4,8 @@
  *  Controller para autorizaciones
  */
  
-require_once("../server/model/autorizacion.dao.php");
-require_once("../server/model/detalle_inventario.dao.php");
+require_once("model/autorizacion.dao.php");
+require_once("model/detalle_inventario.dao.php");
 
 
 function solicitudDeAutorizacion( $auth ){
@@ -354,217 +354,219 @@ function surtirProductosSucursal( $args ){
 
 }
 
-switch( $args['action'] ){
 
-    case 201://solicitud de autorizacion de gasto (gerente)
 
-        if( !isset( $args['concepto'] ) || !isset( $args['monto'] ) )
-        {
-            die( '{ "success" : "false" , "reason" : "Faltan datos" }' );
-        }
-    
-        if( !is_numeric( $args['monto'] ) )
-        {
-            die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' ); 
-        }
-    
-        $descripcion = json_encode(array( 
-            'clave'=>$args['action'],
-            'descripcion'=>'Autorización de gasto', 
-            'concepto'=>$args['concepto'], 
-            'monto'=>$args['monto'] 
-        ));
-    
-        solicitudDeAutorizacion( $descripcion );
+if(isset($args['action'])){
+    switch( $args['action'] ){
 
-    break;
+        case 201://solicitud de autorizacion de gasto (gerente)
 
-    case 202://solicitud de autorizacion de cambio de limite de credito (gerente)
-
-        if( !isset( $args['id_cliente'] ) || !isset( $args['cantidad'] ) )
-        {
-            die( '{ "success" : "false" , "reason" : "Faltan datos" }' );
-        }
-
-        if( !is_numeric( $args['cantidad'] ) )
-        {
-            die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' ); 
-        }
-
-        $descripcion = json_encode(array( 
-            'clave'=>$args['action'], 
-            'descripcion'=>'Autorización de limite de crédito',
-            'id_cliente'=>$args['id_cliente'],
-            'cantidad'=>$args['cantidad']
-        ));
-
-        solicitudDeAutorizacion( $descripcion );
-
-    break;
-
-    case 203://solicitud de autorizacion de devolucion (gerente)
-
-        if( !isset($args['data']) )
-        {
-            die('{"success": false, "reason": "No hay parametros para ingresar." }');
-        }
+            if( !isset( $args['concepto'] ) || !isset( $args['monto'] ) )
+            {
+                die( '{ "success" : "false" , "reason" : "Faltan datos" }' );
+            }
         
-        try
-        {
-            $data = json_decode( $args['data'] ); //$data = json_decode( $data);
-        }
-        catch(Exception $e)
-        {
-            die( '{"success": false, "reason": "Parametros invalidos." }' );
-        }
-
-        if(!is_numeric( $data -> cantidad ))
-        {
-            die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' ); 
-        }
-
-        $descripcion = json_encode(array( 
-            'clave'=>$args['action'], 
-            'descripcion'=>'Autorización de devolución',
-            'id_venta'=>$data -> id_venta,
-            'id_producto'=>$data -> id_producto,
-            'cantidad'=>$data -> cantidad
-        ));
-
-        solicitudDeAutorizacion( $descripcion );
-
-    break;
-
-    case 204://solicitud de autorizacion de cambio de precio (gerente)
+            if( !is_numeric( $args['monto'] ) )
+            {
+                die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' ); 
+            }
         
-        if( !isset( $args['id_producto'] ) || !isset( $args['precio'] ) )
-        {
-            die( '{ "success" : "false" , "reason" : "Faltan datos" }' );
-        }
-
-        if( !is_numeric( $args['precio'] ) )
-        {
-            die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' ); 
-        }
-
-        $descripcion = json_encode(array( 
-            'clave'=>$args['action'], 
-            'descripcion'=>'Autorización de cambio de precio',
-            'id_producto'=>$args['id_producto'],
-            'precio'=>$args['precio']
-        ));
-
-        solicitudDeAutorizacion( $descripcion );
-
-    break;
-
-    case 205:////solicitud de autorizacion de merma (gerente)
-
-        if( !isset($args['data']) )
-        {
-            die('{"success": false, "reason": "No hay parametros para ingresar." }');
-        }
+            $descripcion = json_encode(array( 
+                'clave'=>$args['action'],
+                'descripcion'=>'Autorización de gasto', 
+                'concepto'=>$args['concepto'], 
+                'monto'=>$args['monto'] 
+            ));
         
-        try
-        {
-            $data = json_decode( $args['data'] ); //$data = json_decode( $data);
-        }
-        catch(Exception $e)
-        {
-            die( '{"success": false, "reason": "Parametros invalidos." }' );
-        }
+            solicitudDeAutorizacion( $descripcion );
 
-        if(!is_numeric( $data -> cantidad ))
-        {
-            die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' ); 
-        }
+        break;
 
-        $descripcion = json_encode(array( 
-            'clave'=>$args['action'], 
-            'descripcion'=>'Autorización de merma',
-            'id_compra'=>$data -> id_compra,
-            'id_producto'=>$data -> id_producto,
-            'cantidad'=>$data -> cantidad
-        ));
+        case 202://solicitud de autorizacion de cambio de limite de credito (gerente)
 
-        solicitudDeAutorizacion( $descripcion );
+            if( !isset( $args['id_cliente'] ) || !isset( $args['cantidad'] ) )
+            {
+                die( '{ "success" : "false" , "reason" : "Faltan datos" }' );
+            }
 
-    break;
+            if( !is_numeric( $args['cantidad'] ) )
+            {
+                die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' ); 
+            }
 
-    case 206://ver autorizaciones pendientes de todas las sucursales (admin)
-        autorizacionesPendientes( );
-    break;
+            $descripcion = json_encode(array( 
+                'clave'=>$args['action'], 
+                'descripcion'=>'Autorización de limite de crédito',
+                'id_cliente'=>$args['id_cliente'],
+                'cantidad'=>$args['cantidad']
+            ));
 
-    case 207://ver autorizaciones de su sucursal (gerente)
-        autorizacionesSucursal(  );
-    break;
+            solicitudDeAutorizacion( $descripcion );
 
-    case 208://responder autorizacion de gasto (admin)
-        respuestaAutorizacionGasto( $args );
-    break;
+        break;
 
-    case 209://solicitud de uno o mas productos (gerente)
+        case 203://solicitud de autorizacion de devolucion (gerente)
 
-        //SUPER IMPORTANTE QUE DATA TENGA PARENTESIS CUADRADO 
-        //data=[{"id_producto":"1","cantidad":"55.5"},{"id_producto":"1","cantidad":"2"}]
+            if( !isset($args['data']) )
+            {
+                die('{"success": false, "reason": "No hay parametros para ingresar." }');
+            }
+            
+            try
+            {
+                $data = json_decode( $args['data'] ); //$data = json_decode( $data);
+            }
+            catch(Exception $e)
+            {
+                die( '{"success": false, "reason": "Parametros invalidos." }' );
+            }
 
-        if(!isset($args['data']))
-        {
-            die('{"success": false, "reason": "No hay parametros para ingresar." }');
-        }
+            if(!is_numeric( $data -> cantidad ))
+            {
+                die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' ); 
+            }
 
-        try
-        {
-            $data = json_decode( $args['data']);
-        }
-        catch(Exception $e)
-        {
-            die( '{"success": false, "reason": "Parametros invalidos." }' );
-        }
+            $descripcion = json_encode(array( 
+                'clave'=>$args['action'], 
+                'descripcion'=>'Autorización de devolución',
+                'id_venta'=>$data -> id_venta,
+                'id_producto'=>$data -> id_producto,
+                'cantidad'=>$data -> cantidad
+            ));
 
-        $descripcion = json_encode(array(
-            'clave'=>$args['action'],
-            'descripcion'=>'Solicitud de producto',
-            'productos'=>$data
-        ));
+            solicitudDeAutorizacion( $descripcion );
 
-        solicitudDeAutorizacion( $descripcion );
+        break;
 
-    break;
+        case 204://solicitud de autorizacion de cambio de precio (gerente)
+            
+            if( !isset( $args['id_producto'] ) || !isset( $args['precio'] ) )
+            {
+                die( '{ "success" : "false" , "reason" : "Faltan datos" }' );
+            }
 
-    case 210://respuesta de solicitud de producto (admin)
-        respuestaAutorizacionSurtir( $args );
-    break;
+            if( !is_numeric( $args['precio'] ) )
+            {
+                die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' ); 
+            }
 
-    case 211://surtir producto (gerente)
-        //ya que el admin envio la mercancia a la sucursal y esta ha llegado a la
-        //sucursal del gerente, este debera de verificar que conicida con lo enviado
-        //por el admin, cuando todo este aclarado y listo, el gerente debera de liberar
-        //la solicitud de producto para que se cargue al inventario lo que surtio el 
-        //admin.
+            $descripcion = json_encode(array( 
+                'clave'=>$args['action'], 
+                'descripcion'=>'Autorización de cambio de precio',
+                'id_producto'=>$args['id_producto'],
+                'precio'=>$args['precio']
+            ));
 
-        surtirProducto( $args );
+            solicitudDeAutorizacion( $descripcion );
 
-    break;
+        break;
 
-    case 212://eliminar autorizacion de la lista de autorizaciones (gerente)
-        eliminarAutorizacion( $args );
-    break;
+        case 205:////solicitud de autorizacion de merma (gerente)
 
-    case 213://detalle de autorizacion (admin)
-        detalleAutorizacion( $args );
-    break;
+            if( !isset($args['data']) )
+            {
+                die('{"success": false, "reason": "No hay parametros para ingresar." }');
+            }
+            
+            try
+            {
+                $data = json_decode( $args['data'] ); //$data = json_decode( $data);
+            }
+            catch(Exception $e)
+            {
+                die( '{"success": false, "reason": "Parametros invalidos." }' );
+            }
 
-    case 214://surtir productos sucursal (admin)
-        surtirProductosSucursal( $args );
-    break;
+            if(!is_numeric( $data -> cantidad ))
+            {
+                die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' ); 
+            }
 
-    default:
-        printf ('{ "success" : "false" }');
-    break;
+            $descripcion = json_encode(array( 
+                'clave'=>$args['action'], 
+                'descripcion'=>'Autorización de merma',
+                'id_compra'=>$data -> id_compra,
+                'id_producto'=>$data -> id_producto,
+                'cantidad'=>$data -> cantidad
+            ));
 
+            solicitudDeAutorizacion( $descripcion );
+
+        break;
+
+        case 206://ver autorizaciones pendientes de todas las sucursales (admin)
+            autorizacionesPendientes( );
+        break;
+
+        case 207://ver autorizaciones de su sucursal (gerente)
+            autorizacionesSucursal(  );
+        break;
+
+        case 208://responder autorizacion de gasto (admin)
+            respuestaAutorizacionGasto( $args );
+        break;
+
+        case 209://solicitud de uno o mas productos (gerente)
+
+            //SUPER IMPORTANTE QUE DATA TENGA PARENTESIS CUADRADO 
+            //data=[{"id_producto":"1","cantidad":"55.5"},{"id_producto":"1","cantidad":"2"}]
+
+            if(!isset($args['data']))
+            {
+                die('{"success": false, "reason": "No hay parametros para ingresar." }');
+            }
+
+            try
+            {
+                $data = json_decode( $args['data']);
+            }
+            catch(Exception $e)
+            {
+                die( '{"success": false, "reason": "Parametros invalidos." }' );
+            }
+
+            $descripcion = json_encode(array(
+                'clave'=>$args['action'],
+                'descripcion'=>'Solicitud de producto',
+                'productos'=>$data
+            ));
+
+            solicitudDeAutorizacion( $descripcion );
+
+        break;
+
+        case 210://respuesta de solicitud de producto (admin)
+            respuestaAutorizacionSurtir( $args );
+        break;
+
+        case 211://surtir producto (gerente)
+            //ya que el admin envio la mercancia a la sucursal y esta ha llegado a la
+            //sucursal del gerente, este debera de verificar que conicida con lo enviado
+            //por el admin, cuando todo este aclarado y listo, el gerente debera de liberar
+            //la solicitud de producto para que se cargue al inventario lo que surtio el 
+            //admin.
+
+            surtirProducto( $args );
+
+        break;
+
+        case 212://eliminar autorizacion de la lista de autorizaciones (gerente)
+            eliminarAutorizacion( $args );
+        break;
+
+        case 213://detalle de autorizacion (admin)
+            detalleAutorizacion( $args );
+        break;
+
+        case 214://surtir productos sucursal (admin)
+            surtirProductosSucursal( $args );
+        break;
+
+        default:
+            printf ('{ "success" : "false" }');
+        break;
+
+    }
 }
-
-//sigue inventario
 
 ?>
