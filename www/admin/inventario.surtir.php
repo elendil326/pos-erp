@@ -60,26 +60,34 @@
                return;
         }
 
+        var peticion = [];
 
         for(i = 0; i < carrito.length; i++ ){
              item = carrito[i];
-            console.log("revisando " + item)
+            //console.log("revisando " + item)
             if( isNaN($("#ASurtirItemQty"+item ).val()) || $("#ASurtirItemQty"+item ).val().length == 0){
                 alert("La cantidad a surtir del producto " + item + " debe ser un numero." );
                 return;
             }
+
+            peticion.push({
+                id_producto : item,
+                cantidad : $("#ASurtirItemQty"+item ).val()
+            });
         }
 
         //hacer ajaxaso
         jQuery.ajaxSettings.traditional = true;
 
 
+        
+
         $.ajax({
 	      url: "../proxy.php",
 	      data: { 
-            action : 210, 
-            data : null,
-            estado : null
+                action : 214, 
+                data : $.JSON.encode( peticion ),
+                id_sucursal : currentSuc
            },
 	      cache: false,
 	      success: function(data){
