@@ -6,7 +6,9 @@
  
 require_once("model/autorizacion.dao.php");
 require_once("model/detalle_inventario.dao.php");
-
+require_once("model/cliente.dao.php");
+require_once("model/detalle_compra.dao.php");
+require_once("model/compras.dao.php");
 
 function solicitudDeAutorizacion( $auth ){
 
@@ -60,41 +62,6 @@ function autorizacionesSucursal( ){
 
 }//autorizacionesSucursal
 
-
-//responder autorizacion de gasto (admin)
-function respuestaAutorizacion( $args ){
-
-    if( !isset( $args['reply'] ) || !isset( $args['id_autorizacion'] )  )
-    {
-        die( '{"success": false, "reason": "Faltan parametros." }' );
-    }
-
-    if( !( $args['reply'] == 1 || $args['reply'] == 2 ) )
-    {
-        die( '{"success": false, "reason": "Parametros invalidos." }' );
-    }
-
-    $autorizacion = AutorizacionDAOBase::getByPK( $args['id_autorizacion'] );
-    $autorizacion->setFechaRespuesta( strftime( "%Y-%m-%d-%H-%M-%S", time() ) );
-    $autorizacion->setEstado( $args['reply'] );
-
-    try
-    {
-        if( AutorizacionDAO::save( $autorizacion ) > 0 )
-        {
-            printf( '{ "success" : "true" }' );
-        }
-        else
-        {
-            die( '{ "success" : "false" , "reason" : "No se pudo responder la autorizacion."}' );
-        }
-    }
-    catch(Exception $e)
-    {
-        die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorizacion."}' );
-    }
-
-}
 
 function eliminarAutorizacion( $args ){
 
@@ -365,6 +332,424 @@ function surtirProductosSucursal( $args ){
 
 
 }
+
+
+//responder autorizacion de gasto (admin)
+function respuestaAutorizacionGasto( $args ){
+
+    if( !isset( $args['reply'] ) || !isset( $args['id_autorizacion'] )  )
+    {
+        die( '{"success": false, "reason": "Faltan parametros." }' );
+    }
+
+    if( !( $args['reply'] == 1 || $args['reply'] == 2 ) )
+    {
+        die( '{"success": false, "reason": "Parametros invalidos." }' );
+    }
+
+    $autorizacion = AutorizacionDAOBase::getByPK( $args['id_autorizacion'] );
+    $autorizacion->setFechaRespuesta( strftime( "%Y-%m-%d-%H-%M-%S", time() ) );
+    $autorizacion->setEstado( $args['reply'] );
+
+    try
+    {
+        if( AutorizacionDAO::save( $autorizacion ) > 0 )
+        {
+            printf( '{ "success" : "true" }' );
+        }
+        else
+        {
+            die( '{ "success" : "false" , "reason" : "No se pudo responder la autorizacion."}' );
+        }
+    }
+    catch(Exception $e)
+    {
+        die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorizacion."}' );
+    }
+
+}
+
+
+function respuestaAutorizacionDevolucion( $args ){
+
+    //pido los datos en data, para ahorrarle carga al servidor de decodearlos al buscar por id, la autorizacion en un getByPK
+
+    if( !isset( $args['data'] ) )
+    {
+        die('{"success": false, "reason": "Faltan parametros." }');
+    }
+
+    try
+    {
+        $data = json_decode( $args['data']);
+    }
+    catch(Exception $e)
+    {
+        die( '{"success": false, "reason": "Parametros invalidos." }' );
+    }
+
+
+
+    if( !isset( $data->reply ) || !isset( $data->id_autorizacion ) || !isset( $data->id_producto ) || !isset( $data->cantidad ) || !isset( $data->id_venta ) || !isset( $data->id_sucursal ) )
+    {
+        die( '{"success": false, "reason": "Faltan parametros." }' );
+    }
+
+    if( !( $data->reply == 1 || $data->reply == 2 ) )
+    {
+        die( '{"success": false, "reason": "Parametros invalidos." }' );
+    }
+    
+    
+
+    $autorizacion = AutorizacionDAOBase::getByPK( $data->id_autorizacion );
+    $autorizacion->setFechaRespuesta( strftime( "%Y-%m-%d-%H-%M-%S", time() ) );
+    $autorizacion->setEstado( $data->reply );
+
+    try
+    {
+        if( AutorizacionDAO::save( $autorizacion ) > 0 )
+        {
+            //aqui entra en caso de qeu se haya cambiado el estado de la autorizacion
+            if($data->reply == 1)
+            {
+                //aqui entra en caso de que se haya aprobado la autorizacion de merma
+                
+                //hay que modificar el limite de credito del cliente
+                if( !( $detalle_inventario = DetalleInventarioDAO::getByPK( $data->id_producto, $data->id_sucursal ) ) )
+                {
+                    die('{"success": false, "reason": "Verifique que exista el producto ' . $data->id_producto . ' en la sucursal ' . $data->id_sucursal . '." }');
+                }
+                
+                //cambiamos las existencias en el inventario
+                $detalle_inventario->setExistencias( $detalle_inventario->getExistencias() + $data->cantidad );
+                
+                
+                try
+                {
+                    if( DetalleInventarioDAO::save( $detalle_inventario ) > 0 )
+                    {
+                        //modificamos el detalle de la venta
+                        if( !( $detalle_venta = DetalleCompraDAO::getByPK( $data->id_venta, $data->id_producto ) ) )
+                        {
+                            die('{"success": false, "reason": "Verifique que exista el producto ' . $data->id_producto . ' en la venta' . $data->id_venta . '." }');
+                        }
+                        
+                        //cambiamos las existencias en el detalle compra
+                        $detalle_venta->setCantidad( $detalle_venta->getCantidad() - $data->cantidad );
+                        
+                        
+                        try
+                        {
+                            if( DetalleVentaDAO::save( $detalle_venta ) > 0 )
+                            {
+                                //modificamos el total de la venta
+                                if( !( $venta = ComprasDAO::getByPK( $data->id_venta ) ) )
+                                {
+                                    die('{"success": false, "reason": "Verifique que exista la venta ' . $data->id_venta . '." }');
+                                }
+                                
+                                //recalculamos el total de la venta
+                                $valor_mercancia_devuelta =  $detalle_venta->getPrecio() * $data->cantidad;
+                                $venta->setSubtotal( $venta->getSubtotal() - $valor_mercancia_devuelta );
+                                $venta->setTotal( ($venta->getSubtotal() + $venta->getIva() ) * $venta->getDescuento() );
+                                
+                                try
+                                {
+                                    if( VentasDAO::save( $venta ) > 0 )
+                                    {
+                                        printf( '{ "success" : "true" }' );
+                                    }
+                                    else
+                                    {
+                                        die( '{ "success" : "false" , "reason" : "No se pudo modificar el total de la venta."}' );
+                                    }
+                                }
+                                catch(Exception $e)
+                                {
+                                    die( '{ "success" : "false" , "reason" : "Exception al modificar el valor de la venta."}' );
+                                }
+                                
+                                
+                            }
+                            else
+                            {
+                                die( '{ "success" : "false" , "reason" : "No se pudo modificar el detalle de la venta."}' );
+                            }
+                        }
+                        catch(Exception $e)
+                        {
+                            die( '{ "success" : "false" , "reason" : "Exception al modificar el detalle de la venta."}' );
+                        }
+ 
+                        
+                    }
+                    else
+                    {
+                        die( '{ "success" : "false" , "reason" : "No se pudo modificar las existencias en el inventario."}' );
+                    }
+                }
+                catch(Exception $e)
+                {
+                    die( '{ "success" : "false" , "reason" : "Exception al modificar las existencias en el inventario."}' );
+                }
+                   
+            }
+            else
+            {
+                //entra si no se aprovo el cambio de limite de credito
+                printf( '{ "success" : "true" }' );
+            }
+            
+        }
+        else
+        {
+            die( '{ "success" : "false" , "reason" : "No se pudo responder la autorizacion."}' );
+        }
+    }
+    catch(Exception $e)
+    {
+        die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorizacion."}' );
+    }
+
+}
+
+
+function respuestaAutorizacionMerma( $args ){
+    
+    //pido los datos en data, para ahorrarle carga al servidor de decodearlos al buscar por id, la autorizacion en un getByPK
+
+    if( !isset( $args['data'] ) )
+    {
+        die('{"success": false, "reason": "Faltan parametros." }');
+    }
+
+    try
+    {
+        $data = json_decode( $args['data']);
+    }
+    catch(Exception $e)
+    {
+        die( '{"success": false, "reason": "Parametros invalidos." }' );
+    }
+
+
+
+    if( !isset( $data->reply ) || !isset( $data->id_autorizacion ) || !isset( $data->id_producto ) || !isset( $data->cantidad ) || !isset( $data->id_compra ) || !isset( $data->id_sucursal ) )
+    {
+        die( '{"success": false, "reason": "Faltan parametros." }' );
+    }
+
+    if( !( $data->reply == 1 || $data->reply == 2 ) )
+    {
+        die( '{"success": false, "reason": "Parametros invalidos." }' );
+    }
+    
+    
+
+    $autorizacion = AutorizacionDAOBase::getByPK( $data->id_autorizacion );
+    $autorizacion->setFechaRespuesta( strftime( "%Y-%m-%d-%H-%M-%S", time() ) );
+    $autorizacion->setEstado( $data->reply );
+
+    try
+    {
+        if( AutorizacionDAO::save( $autorizacion ) > 0 )
+        {
+            //aqui entra en caso de qeu se haya cambiado el estado de la autorizacion
+            if($data->reply == 1)
+            {
+                //aqui entra en caso de que se haya aprobado la autorizacion de merma
+                
+                //hay que modificar el limite de credito del cliente
+                if( !( $detalle_inventario = DetalleInventarioDAO::getByPK( $data->id_producto, $data->id_sucursal ) ) )
+                {
+                    die('{"success": false, "reason": "Verifique que exista el producto ' . $data->id_producto . ' en la sucursal ' . $data->id_sucursal . '." }');
+                }
+                
+                //cambiamos las existencias en el inventario
+                $detalle_inventario->setExistencias( $detalle_inventario->getExistencias() + $data->cantidad );
+                
+                
+                try
+                {
+                    if( DetalleInventarioDAO::save( $detalle_inventario ) > 0 )
+                    {
+                        //modificamos el detalle de la compra
+                        if( !( $detalle_compra = DetalleCompraDAO::getByPK( $data->id_compra, $data->id_producto ) ) )
+                        {
+                            die('{"success": false, "reason": "Verifique que exista el producto ' . $data->id_producto . ' en la compra' . $data->id_compra . '." }');
+                        }
+                        
+                        //cambiamos las existencias en el detalle compra
+                        $detalle_compra->setCantidad( $detalle_compra->getCantidad() - $data->cantidad );
+                        
+                        
+                        try
+                        {
+                            if( DetalleCompraDAO::save( $detalle_compra ) > 0 )
+                            {
+                                //modificamos el total de la compra
+                                if( !( $compra = ComprasDAO::getByPK( $data->id_compra ) ) )
+                                {
+                                    die('{"success": false, "reason": "Verifique que exista la compra ' . $data->id_compra . '." }');
+                                }
+                                
+                                //recalculamos el total de la compra
+                                $valor_mercancia_devuelta =  $detalle_compra->getPrecio() * $data->cantidad;
+                                $compra->setSubtotal( $compra->getSubtotal() - $valor_mercancia_devuelta );
+                                
+                                
+                                try
+                                {
+                                    if( ComprasDAO::save( $compra ) > 0 )
+                                    {
+                                        printf( '{ "success" : "true" }' );
+                                    }
+                                    else
+                                    {
+                                        die( '{ "success" : "false" , "reason" : "No se pudo modificar el total de la compra."}' );
+                                    }
+                                }
+                                catch(Exception $e)
+                                {
+                                    die( '{ "success" : "false" , "reason" : "Exception al modificar el valor de la comrpa."}' );
+                                }
+                                
+                                
+                            }
+                            else
+                            {
+                                die( '{ "success" : "false" , "reason" : "No se pudo modificar el detalle de la compra."}' );
+                            }
+                        }
+                        catch(Exception $e)
+                        {
+                            die( '{ "success" : "false" , "reason" : "Exception al modificar el detalle de la compra."}' );
+                        }
+ 
+                        
+                    }
+                    else
+                    {
+                        die( '{ "success" : "false" , "reason" : "No se pudo modificar las existencias en el inventario."}' );
+                    }
+                }
+                catch(Exception $e)
+                {
+                    die( '{ "success" : "false" , "reason" : "Exception al modificar las existencias en el inventario."}' );
+                }
+                   
+            }
+            else
+            {
+                //entra si no se aprovo el cambio de limite de credito
+                printf( '{ "success" : "true" }' );
+            }
+            
+        }
+        else
+        {
+            die( '{ "success" : "false" , "reason" : "No se pudo responder la autorizacion."}' );
+        }
+    }
+    catch(Exception $e)
+    {
+        die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorizacion."}' );
+    }
+
+}
+
+
+
+function respuestaAutorizacionLimiteCredito( $args ){
+
+    //pido los datos en data, para ahorrarle carga al servidor de decodearlos al buscar por id, la autorizacion en un getByPK
+
+    if( !isset( $args['data'] ) )
+    {
+        die('{"success": false, "reason": "Faltan parametros." }');
+    }
+
+    try
+    {
+        $data = json_decode( $args['data']);
+    }
+    catch(Exception $e)
+    {
+        die( '{"success": false, "reason": "Parametros invalidos." }' );
+    }
+
+
+
+    if( !isset( $data->reply ) || !isset( $data->id_autorizacion ) || !isset( $data->limite_credito ) || !isset( $data->id_cliente ) )
+    {
+        die( '{"success": false, "reason": "Faltan parametros." }' );
+    }
+
+    if( !( $data->reply == 1 || $data->reply == 2 ) )
+    {
+        die( '{"success": false, "reason": "Parametros invalidos." }' );
+    }
+
+    $autorizacion = AutorizacionDAOBase::getByPK( $data->id_autorizacion );
+    $autorizacion->setFechaRespuesta( strftime( "%Y-%m-%d-%H-%M-%S", time() ) );
+    $autorizacion->setEstado( $data->reply );
+
+    try
+    {
+        if( AutorizacionDAO::save( $autorizacion ) > 0 )
+        {
+            //aqui entra en caso de qeu se haya cambiado el estado de la autorizacion
+            if($data->reply == 1)
+            {
+                //aqui estra en caso de que se haya aprobado el cambio de limite de credito 
+                
+                //hay que modificar el limite de credito del cliente
+                if( !( $cliente = ClienteDAO::getByPK( $data->id_cliente ) ) )
+                {
+                    die('{"success": false, "reason": "Verifique que exista el cliente ' . $data->id_cliente . '." }');
+                }
+                
+                $cliente->setLimiteCredito( $data->limite_credito );
+                
+                try
+                {
+                    if( ClienteDAO::save( $cliente ) > 0 )
+                    {
+                        printf( '{ "success" : "true" }' );
+                    }
+                    else
+                    {
+                        die( '{ "success" : "false" , "reason" : "No se pudo responder la autorizacion."}' );
+                    }
+                }
+                catch(Exception $e)
+                {
+                    die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorizacion."}' );
+                }
+                   
+            }
+            else
+            {
+                //entra si no se aprovo el cambio de limite de credito
+                printf( '{ "success" : "true" }' );
+            }
+            
+        }
+        else
+        {
+            die( '{ "success" : "false" , "reason" : "No se pudo responder la autorizacion."}' );
+        }
+    }
+    catch(Exception $e)
+    {
+        die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorizacion."}' );
+    }
+
+}
+
+
+
 if( isset( $args['action'] ) ){
 
     switch( $args['action'] ){
@@ -512,8 +897,8 @@ if( isset( $args['action'] ) ){
             autorizacionesSucursal(  );
         break;
 
-        case 208://responder autorizacion
-            respuestaAutorizacion( $args );
+        case 208:
+        
         break;
 
         case 209://solicitud de uno o mas productos (gerente)
@@ -570,6 +955,22 @@ if( isset( $args['action'] ) ){
 
         case 214://surtir productos sucursal (admin)
             surtirProductosSucursal( $args );
+        break;
+        
+        case 215://respuesta de autorizacion de gasto
+            respuestaAutorizacionGasto( $args );
+        break;
+
+        case 216://respuesta de devolucion
+            respuestaAutorizacionDevolucion( $args );
+        break;
+        
+        case 217://respuesta de merma
+            respuestaAutorizacionMerma( $args );
+        break;
+        
+        case 218://respuesta de limite de credito
+            respuestaAutorizacionLimiteCredito( $args );
         break;
 
         default:

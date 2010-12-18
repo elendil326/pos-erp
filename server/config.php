@@ -65,8 +65,6 @@
 		return ( ($subtotal- ($subtotal*$descuento)) + (($subtotal-($subtotal*$descuento))*$iva) );
 
 	}
-	
-
 
 
 
