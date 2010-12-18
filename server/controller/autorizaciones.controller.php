@@ -249,12 +249,11 @@ function respuestaAutorizacionSurtir( $args ){
     $autorizacion->setEstado( $args['estado'] );
 
     $parametros = json_encode(array(
-            'clave'=>'209',
-            'descripcion'=>'Solicitud de producto',
-            'productos'=>$data
-        ));
+        'clave'=>'209',
+        'descripcion'=>'Respuesta de producto',
+        'productos'=>$data
+    ));
 
-var_dump($data);
 
     //definimos los nuevos parametros
     $autorizacion->setParametros( $parametros );
@@ -292,6 +291,11 @@ function detalleAutorizacion( $args ){
     }
 
     return $autorizacion;
+
+}
+
+//el admin puede surtir productos de la nada a las sucursales
+function surtirProductosSucursal(){
 
 }
 
