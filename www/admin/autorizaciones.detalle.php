@@ -52,10 +52,17 @@ switch( $autorizacionDetalles->clave ){
 
     case "203": 
         //devoluciones
+        ?>
+            <h2>Solicitud de devolucion</h2>
+            <table>
+                <tr><td>Venta</td><td><?php echo $autorizacionDetalles->id_venta; ?></td></tr>
+                <tr><td>Producto</td><td><?php echo $autorizacionDetalles->id_producto; ?></td></tr>
+                <tr><td>Cantidad</td><td><?php echo $autorizacionDetalles->cantidad; ?></td></tr>
+                <tr><td></td><td><input type=button value="Autorizar" onClick="contestar(<?php echo $_REQUEST['id'] ?>, true)"><input onClick="contestar(<?php echo $_REQUEST['id'] ?>, false)" type=button value="Rechazar"></td></tr>
+            </table>
+        <?php
 
-        echo $autorizacionDetalles->id_venta;
-        echo $autorizacionDetalles->id_producto;
-        echo $autorizacionDetalles->cantidad;
+
     break;
 
     case "204": 
