@@ -78,7 +78,21 @@ function respuestaAutorizacion( $args ){
     $autorizacion->setFechaRespuesta( strftime( "%Y-%m-%d-%H-%M-%S", time() ) );
     $autorizacion->setEstado( $args['reply'] );
 
-    AutorizacionDAO::save( $autorizacion );
+    try
+    {
+        if( AutorizacionDAO::save( $autorizacion ) > 0 )
+        {
+            printf( '{ "success" : "true" }' );
+        }
+        else
+        {
+            die( '{ "success" : "false" , "reason" : "No se pudo responder la autorizacion."}' );
+        }
+    }
+    catch(Exception $e)
+    {
+        die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorizacion."}' );
+    }
 
 }
 
