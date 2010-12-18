@@ -23,7 +23,12 @@ print( "<h1>" . $sucursal->getDescripcion() . "</h1>");
 <table border="0" cellspacing="5" cellpadding="5">
 	<tr><td><b>Descripcion</b></td><td><?php echo $sucursal->getDescripcion(); ?></td><td rowspan=9><div id="map_canvas"></div></td></tr>
 	<tr><td><b>Direccion</b></td><td><?php echo $sucursal->getDireccion(); ?></td></tr>
-	<tr><td><b>Gerente</b></td><td><?php echo $sucursal->getGerente(); ?></td></tr>
+	<tr><td><b>Gerente</b></td><td>
+        <?php 
+            $gn = UsuarioDAO::getByPK( $sucursal->getGerente() );
+            echo $gn->getNombre();
+        ?>
+    </td></tr>
 	<tr><td><b>ID</b></td><td><?php echo $sucursal->getIdSucursal(); ?></td></tr>
 	<tr><td><b>Letras factura</b></td><td><?php echo $sucursal->getLetrasFactura(); ?></td></tr>	
 	<tr><td><b>RFC</b></td><td><?php echo $sucursal->getRfc(); ?></td></tr>	
@@ -323,6 +328,64 @@ echo "Total de salarios mensuales : <b>" . moneyFormat($total) . "</b>";
 
 
 
+
+
+<h2>Autorizaciones pendientes</h2><?php
+	
+
+    $autorizacion = new Autorizacion();
+    $autorizacion->setIdSucursal($_REQUEST['id'] );
+
+    $autorizaciones = AutorizacionDAO::search($autorizacion);
+
+
+    $header = array(
+               "id_autorizacion" => "ID",
+               "fecha_peticion" => "Fecha",
+               "id_usuario" => "Usuario que realizo la peticion",
+               "parametros" => "Descripcion",
+               "id_sucursal" => "Sucursal" );
+
+
+    function renderParam( $json )
+    {
+        $obj = json_decode($json);
+
+        return $obj->descripcion;
+    }
+
+    $tabla = new Tabla($header, $autorizaciones );
+    $tabla->addColRender("parametros", "renderParam");
+    $tabla->addOnClick("id_autorizacion", "detalle");
+    $tabla->addNoData("No hay autorizaciones pendientes");
+    $tabla->render();
+
+
+?>
+
+
+
+
+
+
+
+
+
+<h2>Clientes que se registraron en esta sucursal</h2><?php
+	
+	$tcliente = new Cliente();
+	$tcliente->setActivo(1);
+	$tcliente->setIdSucursal( $_REQUEST['id'] );
+	$clientes = ClienteDAO::search($tcliente);
+
+    //render the table
+    $header = array(  "nombre" => "Nombre", "rfc" => "RFC", "direccion" => "Direccion", "ciudad" => "Ciudad"  );
+    $tabla = new Tabla( $header, $clientes );
+    $tabla->addOnClick("id_cliente", "mostrarDetalles");
+    $tabla->render();
+
+
+?>
 
 
 

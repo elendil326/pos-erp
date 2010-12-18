@@ -148,8 +148,33 @@ function abrirSucursal( $detalles )
     try{
         $err = UsuarioDAO::save( $gerente );
     }catch( Exception $e ){
-        return array( 'success' => $false, 'reason' => $err );    
+        return array( 'success' => false, 'reason' => $err );    
     }
+
+
+    //crear su caaja comun
+    $cajaComun = new Cliente();
+
+    $cajaComun->setActivo (1);
+    $cajaComun->setCiudad ("");
+    $cajaComun->setDescuento (0);
+    $cajaComun->setDireccion ($detalles['direccion']);
+    $cajaComun->setEMail ("");
+
+    $cajaComun->setIdCliente ( "-" . $sucursal->getIdSucursal() );
+    $cajaComun->setIdSucursal( $sucursal->getIdSucursal() );
+    $cajaComun->setIdUsuario ( -1 );
+    $cajaComun->setLimiteCredito (0);
+    $cajaComun->setNombre ("Caja Comun");
+    $cajaComun->setRfc ($detalles['rfc']);
+    $cajaComun->setTelefono ( $detalles['telefono'] );
+
+    try{
+        $err = ClienteDAO::save( $cajaComun );
+    }catch( Exception $e ){
+        return array( 'success' => false, 'reason' => $err );    
+    }
+
 
     return array( 'success' => $exito, 'nid' => $sucursal->getIdSucursal() );
 
