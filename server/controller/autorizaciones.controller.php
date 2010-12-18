@@ -4,8 +4,8 @@
  *  Controller para autorizaciones
  */
  
-require_once("model/autorizacion.dao.php");
-require_once("model/detalle_inventario.dao.php");
+require_once("../server/model/autorizacion.dao.php");
+require_once("../server/model/detalle_inventario.dao.php");
 
 
 function solicitudDeAutorizacion( $auth ){
@@ -295,11 +295,65 @@ function detalleAutorizacion( $args ){
 }
 
 //el admin puede surtir productos de la nada a las sucursales
-function surtirProductosSucursal(){
+function surtirProductosSucursal( $args ){
+
+
+    if( !isset($args['data']) || !isset($args['id_sucursal']) )
+    {
+        die('{"success": false, "reason": "Faltan parametros." }');
+    }
+
+    try
+    {
+        $data = json_decode( $args['data']);
+    }
+    catch(Exception $e)
+    {
+        die( '{"success": false, "reason": "Parametros invalidos." }' );
+    }
+
+    $autorizacion = new Autorizacion();
+
+    $autorizacion->setIdUsuario( '-1' );
+
+    $autorizacion->setEstado( '3' );
+
+    $autorizacion->setIdSucursal( $args['id_sucursal'] );
+
+    $time = strftime( "%Y-%m-%d-%H-%M-%S", time() );
+
+    $autorizacion->setFechaPeticion( $time  );
+    $autorizacion->setFechaRespuesta( $time );
+
+    $parametros = json_encode(array(
+        'clave'=>'209',
+        'descripcion'=>'Envio de productos',
+        'productos'=>$data
+    ));
+
+
+    //definimos los nuevos parametros
+    $autorizacion->setParametros( $parametros );
+
+    try
+    {
+        if( AutorizacionDAO::save( $autorizacion ) > 0 )
+        {
+            printf( '{ "success" : "true" }' );
+        }
+        else
+        {
+            die( '{ "success" : "false" , "reason" : "Error al cambiar el estado de la autorización."}' );
+        }
+    }
+    catch(Exception $e)
+    {
+        die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorización."}' );
+    }
+
 
 }
 
-if(isset($args['action'])){
 switch( $args['action'] ){
 
     case 201://solicitud de autorizacion de gasto (gerente)
@@ -503,12 +557,14 @@ switch( $args['action'] ){
 
     case 214://surtir productos sucursal (admin)
         surtirProductosSucursal( $args );
+    break;
+
     default:
         printf ('{ "success" : "false" }');
     break;
 
 }
-}
+
 //sigue inventario
 
 ?>
