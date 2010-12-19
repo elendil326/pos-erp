@@ -14,7 +14,7 @@ require_once('model/detalle_venta.dao.php');
 require_once('model/factura_venta.dao.php');
 require_once('model/sucursal.dao.php');
 require_once('model/usuario.dao.php');
-
+require_once('logger.php');
 
 
 

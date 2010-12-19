@@ -64,7 +64,7 @@ function login( $args )
     	$_SESSION['token'] = crypt($user->getIdUsuario() ."-". $grpu->getIdGrupo() . "kaffeina" . "/" . $_SERVER['HTTP_USER_AGENT'] );
     }else{
         //es cajero o gerente
-    	$_SESSION['token'] = crypt($user->getIdUsuario() ."-". $grpu->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina". "/" . $_SERVER['HTTP_USER_AGENT'] );
+    	$_SESSION['token'] = crypt($user->getIdUsuario() ."-". $grpu->getIdGrupo() . "-" . $_SESSION['sucursal'] . "kaffeina". "/" . $_SERVER['HTTP_USER_AGENT'] );
     }
 
 
@@ -78,8 +78,10 @@ function login( $args )
 
     if($user->getIdSucursal() != $_SESSION['sucursal']){
         //no perteneces a esta sucursal
-        Logger::log("Usuario  " . $args['u'] . " no pertenence a sucursal " . $_SESSION['sucursal'] , 1);
-        die( "{\"success\": false , \"reason\": 101,  \"text\" : \"No perteneces a esta sucursal.\" }" );
+        Logger::log("gerente  " . $args['u'] . " ingreso a sucursal " . $_SESSION['sucursal'] . " que no es suya" , 1);
+
+        //si no es gerente, mandarlo al pilin
+        if( $_SESSION['grupo'] > 2 ) die( "{\"success\": false , \"reason\": 101,  \"text\" : \"No perteneces a esta sucursal.\" }" );
     }
 
     Logger::log("Accesso autorizado para usuario  " . $args['u'] );
