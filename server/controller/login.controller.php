@@ -4,27 +4,34 @@ require_once("../server/model/usuario.dao.php");
 require_once("../server/model/grupos_usuarios.dao.php");
 require_once("../server/model/grupos.dao.php");
 require_once("../server/model/sucursal.dao.php");
+require_once("logger.php");
 
 function login( $args )
 {
-	
-	$u = $args['u'];
-	$p = $args['p'];
+
+
 
 	$user = new Usuario();
-	$user->setIdUsuario( $u );
-	$user->setContrasena( $p );	
+	$user->setIdUsuario( $args['u'] );
+	$user->setContrasena( $args['p'] );	
+
+
 
 	try{
 		$res = UsuarioDAO::search( $user );		
 	}catch(Exception $e){
 		echo "{\"success\": false , \"reason\": 101, \"text\" : \"Error interno.\" }";
+        Logger::log("Error en la busqueda de usuario " . $e);
 		return;		
 	}
 
-	//este usuario no existe
+
 	if(count($res) != 1){
-		if( isset( $_SESSION[ 'c' ] )) $_SESSION[ 'c' ] ++; else $_SESSION[ 'c' ] = 1;
+    	//este usuario no existe
+		if( isset( $_SESSION[ 'c' ] )) $_SESSION[ 'c' ] ++; else $_SESSION[ 'c' ] = 0;
+
+        Logger::log("Credenciales invalidas para el usuario " . $args['u'], 1);
+
 		die(  "{\"success\": false , \"reason\": \"Invalidas\", \"text\" : \"Credenciales invalidas. Intento numero <b>". $_SESSION[ 'c' ] . "</b>. \" }" );
 	}
 	
@@ -41,6 +48,7 @@ function login( $args )
 	
 	if(count($res) < 1){
 		echo "{\"success\": false , \"reason\": 101,  \"text\" : \"Aun no perteneces a ningun grupo.\" }";
+        Logger::log("Usuario  " . $args['u'] . " no pertenence a ningun grupo." , 1);
 		return;
 	}
 
@@ -60,21 +68,21 @@ function login( $args )
     }
 
 
-	//$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
-
-
 	if( $grpu->getIdGrupo() == 1 ){
         //si es gerente dejarlo pasar
     	echo "{\"success\": true , \"payload\": { \"sucursaloverride\": true , \"type\": \"" . $grpu->getIdGrupo() . "\" }}";
+        Logger::log("Accesso autorizado para admin uid=" . $args['u'] );
         return;
     }
 
 
     if($user->getIdSucursal() != $_SESSION['sucursal']){
         //no perteneces a esta sucursal
+        Logger::log("Usuario  " . $args['u'] . " no pertenence a sucursal " . $_SESSION['sucursal'] , 1);
         die( "{\"success\": false , \"reason\": 101,  \"text\" : \"No perteneces a esta sucursal.\" }" );
     }
 
+    Logger::log("Accesso autorizado para usuario  " . $args['u'] );
 	echo "{\"success\": true , \"payload\": { \"sucursaloverride\": false , \"type\": \"" . $grpu->getIdGrupo() . "\" }}";
 		
 	return;
@@ -113,8 +121,15 @@ function dispatch($args){
 function checkSecurityToken()
 {
 	
-    return true;
-		
+
+    if($_SESSION['grupo'] == 1){
+        //es amdin
+    	$current_token = $_SESSION['userid'] ."-". $_SESSION['grupo']. "kaffeina" . "/" . $_SERVER['HTTP_USER_AGENT'] ;
+    }else{
+        //es cajero o gerente
+    	$current_token = $_SESSION['userid'] ."-". $_SESSION['grupo'] . "-" . $_SESSION['sucursal'] . "kaffeina". "-" . $_SERVER['HTTP_USER_AGENT'] ;
+    }
+
 	if (crypt($current_token, $_SESSION['token']) == $_SESSION['token']) {
 	 	return true;
 	}else{

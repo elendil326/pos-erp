@@ -78,22 +78,18 @@ if ( !isset($_REQUEST['action']) )
 //para ver si es el ip que esta guardado en la base de datos
 if( ! ($_REQUEST['action']  == "2001" || $_REQUEST['action']  == "2004") )
 {
-    /*
-	if ( !isset($_SESSION['HTTP_USER_AGENT']) )
-	{
-		//si no tiene ni el valor de sesion en http_user_agent a la verga
-		echo "{\"succes\": false , \"reason\": \"Sesion invalida\", \"text\" : \"Sesion invalida\" }";
-		exit;
+
+    if($_SESSION['grupo'] == 1){
+        //es amdin
+    	$current_token = $_SESSION['userid'] ."-". $_SESSION['grupo']. "kaffeina" . "/" . $_SERVER['HTTP_USER_AGENT'] ;
+    }else{
+        //es cajero o gerente
+    	$current_token = $_SESSION['userid'] ."-". $_SESSION['grupo'] . "-" . $_SESSION['sucursal'] . "kaffeina". "/" . $_SERVER['HTTP_USER_AGENT'] ;
+    }
+
+	if (crypt($current_token, $_SESSION['token']) != $_SESSION['token']) {
+		die ("{\"succes\": false , \"reason\": \"Sesion invalida\", \"text\" : \"Sesion invalida\" }");
 	}
-	
-	//verificar que no se haya modificado el user agent, el user agent esta encriptado para que no pueda 
-	//ver cual es, asi como los demas datos
-	if ( ($_SESSION['HTTP_USER_AGENT'] != md5($_SERVER['HTTP_USER_AGENT'])) )
-	{
-		//log security breach
-		echo "{\"succes\": false , \"reason\": \"Sesion invalida\", \"text\" : \"Sesion invalida\" }";
-		exit;
-	}	*/
     
 }
 
@@ -152,9 +148,6 @@ switch( ((int)($args['action'] / 100))*100 )
 	break;
 	
 	case 2000:
-		/* alan : login 
-		 * funciones de inicio de sesion
-		 */
 		require_once('controller/login.controller.php');
 	break;
 	

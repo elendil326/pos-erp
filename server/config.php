@@ -19,8 +19,20 @@
 	
 	//titulo de la aplicacion
 	define("_POS_HTMLTITLE", "Papas Supremas");
+
+
+
+
 	
+    /* *******************************
+		LOG
+	 ********************************* */
+	define("_POS_LOG_TO_FILE", true);
+	define("_POS_LOG_TO_FILE_FILENAME", "/var/log/mx.caffeina.pos/pos.log");
+
+
 	
+
     /* *******************************
 		ZONA HORARIA
 	 ********************************* */
