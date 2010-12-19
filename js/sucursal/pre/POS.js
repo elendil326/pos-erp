@@ -39,4 +39,4 @@ POS.error = function (ajaxResponse, catchedError)
 };
 
 
-POS.CHECK_DB_TIMEOUT = 5000;
+POS.CHECK_DB_TIMEOUT = 25000;

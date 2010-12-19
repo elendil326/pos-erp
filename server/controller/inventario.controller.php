@@ -8,7 +8,7 @@ require_once('model/compras.dao.php');
 require_once('model/ventas.dao.php');
 require_once('model/proveedor.dao.php');
 require_once('model/actualizacion_de_precio.dao.php');
-
+require_once('logger.php');
 
 /*
  * listar las existencias para la sucursal dada sucursal
@@ -219,6 +219,7 @@ function nuevoProducto($data)
     try{
         $jsonData = json_decode($data);
     }catch(Exception $e){
+        Logger::log("json invalido para nuevo producto" . $e);
         return array( "success" => false, "reason" => "bad json" );
     }
 
@@ -254,6 +255,7 @@ function nuevoProducto($data)
         return array( "success" => false, "reason" => $e );
     }
 
+    Logger::log("Nuevo producto creado !");
     return array( "success" => true , "id" => $inventario->getIdProducto() );
 }
 

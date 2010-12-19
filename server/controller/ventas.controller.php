@@ -4,6 +4,8 @@ require_once("model/ventas.dao.php");
 require_once("model/inventario.dao.php");
 require_once("model/detalle_venta.dao.php");
 require_once("model/factura_venta.dao.php");
+require_once('logger.php');
+
 
 function insertarFactura( $args ){
 
