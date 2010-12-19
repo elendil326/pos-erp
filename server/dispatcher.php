@@ -78,7 +78,7 @@ if ( !isset($_REQUEST['action']) )
 //para ver si es el ip que esta guardado en la base de datos
 if( ! ($_REQUEST['action']  == "2001" || $_REQUEST['action']  == "2004") )
 {
-	
+    /*
 	if ( !isset($_SESSION['HTTP_USER_AGENT']) )
 	{
 		//si no tiene ni el valor de sesion en http_user_agent a la verga
@@ -93,7 +93,8 @@ if( ! ($_REQUEST['action']  == "2001" || $_REQUEST['action']  == "2004") )
 		//log security breach
 		echo "{\"succes\": false , \"reason\": \"Sesion invalida\", \"text\" : \"Sesion invalida\" }";
 		exit;
-	}	
+	}	*/
+    
 }
 
 

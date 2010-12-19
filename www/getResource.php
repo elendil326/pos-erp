@@ -16,7 +16,7 @@ require ( "../server/config.php" );
 
 	//incluir jsmin
 	if(_POS_JSMINIFY){
-		include_once("../server/misc/JSMin.php");		
+		require_once("misc/JSMin.php");		
 	}
 
 
@@ -86,6 +86,10 @@ require ( "../server/config.php" );
 		
 		//y al final del archivo llamar al javascript que dice que ha terminado, solo si es javascript
 		if($type=="js"){
+            //imprimir que tipo de usuario soy
+            if(isset($_SESSION['grupo']))
+                echo "POS.U.g = " . (($_SESSION['grupo'] == 2) ? "true" : "false" ) . ";";
+
 			?> if(window.JSLoader !== undefined) {	JSLoader.callback(); }	<?php			
 		}
 

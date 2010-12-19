@@ -138,7 +138,7 @@ var HumbleFinance = {
         var area = {
             x1: 0, 
             y1: this.bounds.ymin, 
-            x2: priceData.length, 
+            x2: priceData.length -1, 
             y2: this.bounds.ymax
         };
         this.graphs.summary = this.summaryGraph(this.summaryData, this.bounds);

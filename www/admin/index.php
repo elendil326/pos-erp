@@ -37,7 +37,11 @@
         anuncios más orientados, a mejorar sus iniciativas de marketing y a crear sitios web que
         generen más conversiones.
       </p>
-     
+
+    <pre><?php
+        var_dump($_SESSION);
+     ?></pre>
+
 	<?php include_once("includes/footer.php"); ?>
     </div>
   

@@ -49,9 +49,18 @@ function login( $args )
 
 
 	$_SESSION['userid'] =  $user->getIdUsuario();
-	$_SESSION['grupo'] = $grpu->getIdGrupo();			
-	$_SESSION['token'] = crypt( $grpu->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina" );
-	$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
+	$_SESSION['grupo'] = $grpu->getIdGrupo();
+
+    if($grpu->getIdGrupo() == 1){
+        //es amdin
+    	$_SESSION['token'] = crypt($user->getIdUsuario() ."-". $grpu->getIdGrupo() . "kaffeina" . "/" . $_SERVER['HTTP_USER_AGENT'] );
+    }else{
+        //es cajero o gerente
+    	$_SESSION['token'] = crypt($user->getIdUsuario() ."-". $grpu->getIdGrupo() . "-" . $user->getIdSucursal() . "kaffeina". "/" . $_SERVER['HTTP_USER_AGENT'] );
+    }
+
+
+	//$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']);
 
 
 	if( $grpu->getIdGrupo() == 1 ){
@@ -71,6 +80,13 @@ function login( $args )
 	return;
 
 }
+
+
+function getUserType(){
+    echo $_SESSION['grupo'];
+    return;
+}
+
 
 function dispatch($args){
 	
@@ -97,8 +113,7 @@ function dispatch($args){
 function checkSecurityToken()
 {
 	
-	return true;
-	$current_token = $_SESSION['userid']."-".$_SESSION['grupo']."-".$_SESSION['sucursal']."kaffeina";
+    return true;
 		
 	if (crypt($current_token, $_SESSION['token']) == $_SESSION['token']) {
 	 	return true;
@@ -120,7 +135,7 @@ function checkCurrentSession()
 		isset( $_SESSION['HTTP_USER_AGENT'] )
 	){
 
-		$_SESSION[ 'c' ] = 1;
+		$_SESSION[ 'c' ] = 0;
 		return checkSecurityToken();
 		
 	}else{
@@ -129,7 +144,7 @@ function checkCurrentSession()
 		{
 			$_SESSION[ 'c' ] ++;
 		}else{
-			$_SESSION[ 'c' ] = 1;
+			$_SESSION[ 'c' ] = 0;
 		}
 		return false;
 	}
@@ -277,6 +292,7 @@ function getip() {
 
 }
 
+
 switch($args['action'])
 {
 	 
@@ -298,6 +314,10 @@ switch($args['action'])
 	
 	case '2005':
 		dispatch($args);
+	break;
+
+	case '2007':
+		getUserType();
 	break;
 }
 

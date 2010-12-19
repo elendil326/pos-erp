@@ -549,8 +549,8 @@ Aplicacion.Personal.prototype.crearEmpleadoBoton = function (  )
 			//mostrar un mensaje de alegria
 			Ext.Msg.alert( "Nueva contratacion", "El nuevo usuario se ha creado satisfactoriamente con el ID <b>"+ r.id_usuario + "</b>" );
 			Aplicacion.Personal.currentInstance.nuevoEmpleadoPanel.getComponent(0).setInstructions("El nuevo empleado se ha creado satisfactoriamente con el ID <b>"+ r.id_usuario + "</b>.");	
-
-
+        	sink.Main.ui.setActiveItem( this.listaDePersonalPanel , 'slide');
+    
 
 		},
 		failure: function( response ){
@@ -681,7 +681,7 @@ Aplicacion.Personal.prototype.nuevoEmpleadoPanelCreator = function (  ){
 			"show" : function (){
 				//cargar los tipos
 				Ext.getCmp("Personal-NuevoEmpleadoTipoSelector").setOptions( Aplicacion.Personal.currentInstance.nuevoEmpleadoTipos );
-				Ext.getCmp("Personal-NuevoEmpleadoTipoSelector").setOptions( Aplicacion.Personal.currentInstance.nuevoEmpleadoTipos );
+				//Ext.getCmp("Personal-NuevoEmpleadoTipoSelector").setOptions( Aplicacion.Personal.currentInstance.nuevoEmpleadoTipos );
 			}
 		},
 		items: [{
@@ -699,13 +699,102 @@ Aplicacion.Personal.prototype.nuevoEmpleadoPanelCreator = function (  ){
 						"change" : function(a,b) {Aplicacion.Personal.currentInstance.nuevoEmpleadoCambiarTipo(a,b);}
 					}
 				},
-				new Ext.form.Text({ name: 'nombre', label: 'Nombre' }),
-				new Ext.form.Text({ name: 'RFC', label: 'RFC' }),
-				new Ext.form.Text({ id : "Personal-NuevoEmpleadoPass", name : 'contrasena', label: 'Contrase&ntilde;a' , hidden : true }),
-				new Ext.form.Text({ id : "Personal-NuevoEmpleadoPass2", name : 'contrasena2', label: 'Repetir contrase&ntilde;a', hidden : true }),				
-				new Ext.form.Text({ name : 'salario',     label: 'Salario' }),
-				new Ext.form.Text({ name : 'direccion',     label: 'direccion' }),
-				new Ext.form.Text({ name : 'telefono',     label: 'telefono' })
+				new Ext.form.Text({ 
+                    name: 'nombre', 
+                    label: 'Nombre',
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'alfa',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+
+                }),
+				new Ext.form.Text({ 
+                    name: 'RFC', 
+                    label: 'RFC',
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'alfanum',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),
+				new Ext.form.Password({ 
+                    id : "Personal-NuevoEmpleadoPass",          
+                    name : 'contrasena', 
+                    label: 'Contrase&ntilde;a' , 
+                    hidden : true,
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'alfanum',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    } 
+                }),
+				new Ext.form.Password({ 
+                    id : "Personal-NuevoEmpleadoPass2", 
+                    name : 'contrasena2', 
+                    label: 'Repetir contrase&ntilde;a', 
+                    hidden : true,
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'alfanum',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),				
+				new Ext.form.Text({
+                    name : 'salario',     
+                    label: 'Salario',
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'num',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                }),
+				new Ext.form.Text({ 
+                    name : 'direccion',     
+                    label: 'direccion',
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'complete',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                 }),
+				new Ext.form.Text({ 
+                    name : 'telefono',     
+                    label: 'telefono',
+                    listeners : {
+                        'focus' : function (){
+                            kconf = {
+                                type : 'num',
+                                submitText : 'Aceptar'
+                            };
+                            POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }
+                })
 
 
 			]},

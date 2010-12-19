@@ -73,9 +73,10 @@ function parseLoginResults( args ){
 		//login invalido
 		
 
-		Ext.Msg.alert("Inicio de sesion", args.text , function (){
-			form.show();			
-		});
+        form.getComponent(0).setInstructions(args.text);
+        form.show();
+    
+
 		return;
 	}
 	
@@ -179,7 +180,7 @@ function createLoginForm( sucursal ){
 					listeners : {
 						"focus" : function(){
 							kconf = {
-								type : 'num',
+								type : 'alfanum',
 								submitText : 'Aceptar',
 								callback : null
 							};
@@ -204,17 +205,11 @@ function createLoginForm( sucursal ){
                 xtype: 'toolbar',
                 dock: 'bottom',
                 items: [
-                    {
-                        text: 'Administracion',
-                        ui: 'round',
-                        handler: function() {
-
-                        }
-                    },
                     {xtype: 'spacer'},
                     {
                         text: 'Vaciar',
                         handler: function() {
+                            form.getComponent(0).setInstructions( "Porfavor llene la informacion apropiada." );
                             form.reset();
                         }
                     },

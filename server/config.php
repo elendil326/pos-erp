@@ -13,6 +13,7 @@
 	ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/Applications/XAMPP/xamppfiles/htdocs/svn/pos/trunk/server");
 	ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/caffeina/pos/trunk/server");
     ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/pos/trunk/server");
+
 	//mimificar o no el javascript que se carga
 	define("_POS_JSMINIFY", false);
 	
@@ -38,7 +39,10 @@
 	define('DB_DEBUG', 		false);
 	
 	
-	
+	define('POS_MAX_LIMITE_DE_CREDITO', 20000);
+	define('POS_MAX_LIMITE_DESCUENTO', 35.0);
+	define('POS_ENABLE_GMAPS', false);	
+    
 	
 	/* *******************************
 		Seguridad

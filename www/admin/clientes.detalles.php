@@ -24,8 +24,11 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
  	}
 </style>
 
-
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script> 
+<?php 
+if(POS_ENABLE_GMAPS){
+    ?><script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script><?php
+}
+?>
 
 
 <script type="text/javascript" charset="utf-8" src="../frameworks/prototype/prototype.js"></script>

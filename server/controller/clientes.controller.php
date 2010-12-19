@@ -1,13 +1,36 @@
 <?php 
-
+/** Clientes Controller.
+  * 
+  * Este archivo es la capa entre la interfaz de usuario y peticiones ajaxa y los 
+  * procedimientos para realizar las operaciones sobre Clientes. 
+  * @author Alan Gonzalez <alan@caffeina.mx>, Manuel Garcia Carmona <manuel@caffeina.mx>
+  * 
+  */
 require_once('model/cliente.dao.php');
 require_once('model/ventas.dao.php');
+require_once('model/inventario.dao.php');
 require_once('model/pagos_venta.dao.php');
 require_once('model/detalle_venta.dao.php');
 require_once('model/factura_venta.dao.php');
 require_once('model/sucursal.dao.php');
 require_once('model/usuario.dao.php');
 
+
+
+
+
+
+
+/**
+  *	Crea un cliente. 
+  *	
+  * Este metodo intentara crear un cliente dado un arreglo de datos proporcionado.
+  *	
+  *	@static
+  * @throws Exception si la operacion fallo.
+  * @param Autorizacion [$autorizacion] El objeto de tipo Autorizacion
+  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
+  **/
 function crearCliente( $args ){
 
 	if(!isset($args['data']))
@@ -76,21 +99,31 @@ function crearCliente( $args ){
 
 }
 
+
+
+
+
+
+
+
+
+
 function listarClientes(  ){
 	$total_customers = array();
 	
 	//buscar clientes que esten activos
-	$tcliente = new Cliente();
-	$tcliente->setActivo(1);
-	$clientes = ClienteDAO::search($tcliente);
+	$foo = new Cliente();
+	$foo->setIdCliente("0");
+	$foo->setActivo(1);
+
+
+	$bar = new Cliente();
+	$bar->setIdCliente("9999");
+
+	$clientes = ClienteDAO::byRange($foo, $bar);
 
 	foreach ($clientes as $cliente)
     {
-	    //si es una caja comun, continuar
-		if( $cliente->getIdCliente() < 0 )
-        {
-			continue;
-		}
 			
 		//buscar a este cliente en las ventas a credito
 		$qventa = new Ventas();
@@ -114,6 +147,13 @@ function listarClientes(  ){
 	return $total_customers;
 
 }
+
+
+
+
+
+
+
 
 function modificarCliente( $args ){
 
@@ -149,11 +189,37 @@ function modificarCliente( $args ){
 	if( isset($data->direccion) )
 		$cliente->setDireccion( $data->direccion );		
 
-	if( isset($data->limite_credito) )	
+
+	if( isset($data->limite_credito) ){
+        //validar limite de credito
+        if( $data->limite_credito < 0 ){
+    		die ( '{"success": false, "reason": "El limite de credito no puede ser negativo." }' );
+        }
+
+        if( $data->limite_credito >= POS_MAX_LIMITE_DE_CREDITO && $_SESSION['grupo'] == 2 ){
+
+            // @TODO
+            //revisar que no exista una autorizacion que avale que este cliente tiene un limite de credito extendido
+
+
+            $max = POS_MAX_LIMITE_DE_CREDITO;
+    		die ( '{"success": false, "reason": "Si desea asignar un limite de credito mayor a ' . $max . ' debera pedir una autorizacion."  }' );
+        }
+
 		$cliente->setLimiteCredito( $data->limite_credito );
+    }
+
 	
-	if( isset($data->descuento) )		
+	if( isset($data->descuento) ){
+
+        if( $data->descuento > POS_MAX_LIMITE_DESCUENTO ){
+            $max = POS_MAX_LIMITE_DESCUENTO;
+       		die ( '{"success": false, "reason": "No se puede asignar un descuento mayor al ' . $max . '%."  }' );
+        }
+
 		$cliente->setDescuento( $data->descuento );
+    }	
+
 	
 	if( isset($data->telefono) )		
 		$cliente->setTelefono( $data->telefono );
@@ -197,6 +263,13 @@ function modificarCliente( $args ){
 }
 
 
+
+
+
+
+
+
+
 function listarVentasClientes( ){
     
     $ventas = VentasDAOBase::getAll();
@@ -220,16 +293,30 @@ function listarVentasClientes( ){
         foreach($detalles_venta as $detalle_venta)
         {
             $detalle = json_decode($detalle_venta);
+            $descripcion = InventarioDAO::getByPK( $detalle_venta->getIdProducto() );
+            $detalle->descripcion = $descripcion->getDescripcion();
             array_push($array_detalle,$detalle); //inserta los detalles de las ventas
         } 
         
         $decode_venta->{"detalle_venta"} = $array_detalle;
+
+        $suc = SucursalDAO::getByPK( $venta->getIdSucursal() );
+        $decode_venta->sucursal = $suc->getDescripcion();
+
+        $cajero = UsuarioDAO::getByPK( $venta->getIdUsuario() );
+        $decode_venta->cajero = $cajero->getNombre();
         array_push( $tot_ventas, $decode_venta );
     }
 
 	return $tot_ventas;
     
 }
+
+
+
+
+
+
 
 
 
@@ -288,6 +375,13 @@ function listarVentaCliente( $id_cliente, $tipo_venta = null ){
 	return $cC;
 
 }
+
+
+
+
+
+
+
 
 
 
@@ -351,6 +445,15 @@ function abonarCompra( $args ){
     }
 }
 
+
+
+
+
+
+
+
+
+
 function listarClientesDeudores(  ){
     $total_customers = array();
     
@@ -393,6 +496,17 @@ function listarClientesDeudores(  ){
 	return $total_customers;
 
 }
+
+
+
+
+
+
+
+
+
+
+
 
 function facturarVenta( $args ){
 
@@ -437,6 +551,16 @@ function facturarVenta( $args ){
 
 }
 
+
+
+
+
+
+
+
+
+
+
 function imprimirSaldo( $args ){
 
     if( !isset($args['id_venta']) )
@@ -458,6 +582,18 @@ function imprimirSaldo( $args ){
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
  * Lista los abonos de un cliente especifico y de ser necesario una venta especifica
@@ -521,7 +657,16 @@ if(isset($args['action'])){
 	{
 		case 300:
 	        //lista todos los clientes
-			printf('{ "success": true, "datos": %s }',  json_encode(listarClientes(  ) ));
+            $json = json_encode( listarClientes() );
+            
+            if(isset($args['hashCheck'])){
+                //revisar hashes
+                if(md5( $json ) == $args['hashCheck'] ){
+                    return;
+                }
+            }
+
+	    	printf('{ "success": true, "hash" : "%s" , "datos": %s }',  md5($json), $json );
 		break;
 
 		case 301:
@@ -550,7 +695,16 @@ if(isset($args['action'])){
 
 	    case 304:
 	        //lista todas las ventas
-	    	printf('{ "success": true, "datos": %s }',  json_encode( listarVentasClientes() ));
+            $json = json_encode( listarVentasClientes() );
+            
+            if(isset($args['hashCheck'])){
+                //revisar hashes
+                if(md5( $json ) == $args['hashCheck'] ){
+                    return;
+                }
+            }
+
+	    	printf('{ "success": true, "hash" : "%s" , "datos": %s }',  md5($json), $json );
 	    break;
 
 	    case 305:

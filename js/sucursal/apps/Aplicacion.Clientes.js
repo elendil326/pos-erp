@@ -47,7 +47,12 @@ Aplicacion.Clientes.prototype._init = function (){
 
 
 Aplicacion.Clientes.prototype.getConfig = function (){
-	return {
+
+    if(POS.U.g === null){
+        window.location = "sucursal.html";
+    }
+
+	return POS.U.g ? {
 	    text: 'Clientes',
 	    cls: 'launchscreen',
 	    items: [{
@@ -60,7 +65,16 @@ Aplicacion.Clientes.prototype.getConfig = function (){
 	        card: this.nuevoClientePanel,
 	        leaf: true
 	    }]
+	} : {
+	    text: 'Clientes',
+	    cls: 'launchscreen',
+	    items: [{
+	        text: 'Lista de Clientes',
+	        card: this.listaDeClientesPanel,
+	        leaf: true
+	    }]
 	};
+
 };
 
 
@@ -80,7 +94,8 @@ Aplicacion.Clientes.prototype.getConfig = function (){
  */
 Aplicacion.Clientes.prototype.listaDeCompras = {
 	lista : null,
-	lastUpdate : null
+	lastUpdate : null,
+    hash: null
 };
 
 
@@ -101,7 +116,7 @@ Aplicacion.Clientes.prototype.listaDeComprasLoad = function (){
 		},
 		success: function(response, opts) {
 			try{
-				compras = Ext.util.JSON.decode( response.responseText );				
+				compras = Ext.util.JSON.decode( response.responseText );
 			}catch(e){
 				POS.error(e);
 			}
@@ -114,11 +129,10 @@ Aplicacion.Clientes.prototype.listaDeComprasLoad = function (){
             //refresca la lista de compras
 			this.listaDeCompras.lista = compras.datos;
 			this.listaDeCompras.lastUpdate = Math.round(new Date().getTime()/1000.0);
-
-            //refrescar el panel de detalle de venta
+            this.listaDeCompras.hash = compras.hash;
             
-			
-
+            setTimeout( "Aplicacion.Clientes.currentInstance.checkVentasDbDiff()", POS.CHECK_DB_TIMEOUT );
+            
 		},
 		failure: function( response ){
 			POS.error( response );
@@ -126,6 +140,65 @@ Aplicacion.Clientes.prototype.listaDeComprasLoad = function (){
 	});
 
 };
+
+
+
+
+
+
+Aplicacion.Clientes.prototype.checkVentasDbDiff = function ()
+{
+    
+    
+	Ext.Ajax.request({
+		url: 'proxy.php',
+		scope : this,
+		params : {
+			action : 304,
+            hashCheck : this.listaDeCompras.hash
+		},
+		success: function(response, opts) {
+
+			
+            if(response.responseText.length > 0){
+
+                if(DEBUG){
+                    console.log("new db update ! installing ...");
+                }
+
+
+		        try{
+			        compras = Ext.util.JSON.decode( response.responseText );
+		        }catch(e){
+			        POS.error(e); 
+                    return;
+		        }
+
+                if(DEBUG){
+                    console.log("new hash : " ,compras.hash );
+                }
+
+			    Aplicacion.Clientes.currentInstance.listaDeCompras.lista = compras.datos;
+			    Aplicacion.Clientes.currentInstance.listaDeCompras.lastUpdate = Math.round(new Date().getTime()/1000.0);
+                Aplicacion.Clientes.currentInstance.listaDeCompras.hash = compras.hash;
+
+
+                //cargar de nuevo la lista de clientes
+
+            }else{
+
+            }
+
+            setTimeout( "Aplicacion.Clientes.currentInstance.checkVentasDbDiff()", POS.CHECK_DB_TIMEOUT );
+		},
+		failure: function( response ){
+			POS.error( response );
+		}
+	});
+};
+
+
+
 
 
 
@@ -159,7 +232,8 @@ Ext.regModel('listaDeClientesModel', {
  */
 Aplicacion.Clientes.prototype.listaDeClientes = {
 	lista : null,
-	lastUpdate : null
+	lastUpdate : null,
+    hash : null
 };
 
 
@@ -194,6 +268,7 @@ Aplicacion.Clientes.prototype.listaDeClientesLoad = function (){
 			
 			this.listaDeClientes.lista = clientes.datos;
 			this.listaDeClientes.lastUpdate = Math.round(new Date().getTime()/1000.0);
+			this.listaDeClientes.hash = clientes.hash;
 			
 			//agregarlo en el store
 			this.listaDeClientesStore.loadData( clientes.datos );
@@ -205,7 +280,7 @@ Aplicacion.Clientes.prototype.listaDeClientesLoad = function (){
 				Aplicacion.Mostrador.currentInstance.buscarClienteForm.getComponent(0).store = this.listaDeClientesStore;
 			}
 			
-
+            setTimeout( "Aplicacion.Clientes.currentInstance.checkClientesDbDiff()", POS.CHECK_DB_TIMEOUT );
 		},
 		failure: function( response ){
 			POS.error( response );
@@ -215,6 +290,60 @@ Aplicacion.Clientes.prototype.listaDeClientesLoad = function (){
 };
 
 
+
+Aplicacion.Clientes.prototype.checkClientesDbDiff = function ()
+{
+    
+    
+	Ext.Ajax.request({
+		url: 'proxy.php',
+		scope : this,
+		params : {
+			action : 300,
+            hashCheck : this.listaDeClientes.hash
+		},
+		success: function(response, opts) {
+
+			
+            if(response.responseText.length > 0){
+
+                if(DEBUG){
+                    console.log("new db update on clientes ! installing ...");
+                }
+
+
+		        try{
+			        clientes = Ext.util.JSON.decode( response.responseText );
+		        }catch(e){
+			        POS.error(e); 
+                    return;
+		        }
+
+                if(DEBUG){
+                    console.log("new hash : " ,compras.hash );
+                }
+
+			    this.listaDeClientes.lista = clientes.datos;
+			    this.listaDeClientes.lastUpdate = Math.round(new Date().getTime()/1000.0);
+			    this.listaDeClientes.hash = clientes.hash;
+			
+			    //agregarlo en el store
+			    this.listaDeClientesStore.loadData( clientes.datos );
+
+
+                //cargar de nuevo la lista de clientes
+
+            }else{
+
+            }
+
+            setTimeout( "Aplicacion.Clientes.currentInstance.checkClientesDbDiff()", POS.CHECK_DB_TIMEOUT );
+		},
+		failure: function( response ){
+			POS.error( response );
+		}
+	});
+};
 
 
 
@@ -341,8 +470,10 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
 	
 	html += "<tr class='top'>";
 	html += "<td>Producto</td>";
+	html += "<td>Descripcion</td>";
 	html += "<td>Cantidad</td>";
-	html += "<td>Total</td>";
+	html += "<td>Precio</td>";
+	html += "<td>Subtotal</td>";
 	html += "</tr>";
 	
 	for (i=0; i < detalleVenta.length; i++) {
@@ -354,8 +485,10 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
 			html += "<tr >";		
 		
 		html += "<td>" + detalleVenta[i].id_producto + "</td>";
+		html += "<td>" + detalleVenta[i].descripcion + "</td>";
 		html += "<td>" + detalleVenta[i].cantidad + "</td>";
 		html += "<td>" + POS.currencyFormat ( detalleVenta[i].precio ) + "</td>";		
+		html += "<td>" + POS.currencyFormat ( detalleVenta[i].precio * detalleVenta[i].cantidad ) + "</td>";		
 		html += "</tr>";
 	}
 	
@@ -380,10 +513,12 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelCreator = function ()
 		}
     },{ 
 		xtype: 'spacer' 
-	},{
+	},
+    /*{
 	    text: 'Devoluciones',
 	    ui: 'drastic'
-	},{
+	},
+    */{
         text: 'Imprimir Ticket',
         ui: 'normal'
     }];
@@ -512,6 +647,7 @@ Aplicacion.Clientes.prototype.comprasDeClientesPanelUpdater = function ( cliente
 	html += "<tr class='top'>";
 	html += "<td>ID</td>";
 	html += "<td>Fecha</td>";
+	html += "<td>Sucursal</td>";
 	html += "<td>Tipo</td>";
 	html += "<td>Total</td>";
     html += "<td>Saldo</td>";
@@ -533,6 +669,7 @@ Aplicacion.Clientes.prototype.comprasDeClientesPanelUpdater = function ( cliente
 		
 		html += "<td>" + lista[i].id_venta + "</td>";
 		html += "<td>" + lista[i].fecha + "</td>";
+		html += "<td>" + lista[i].sucursal + "</td>";
 		html += "<td>" + lista[i].tipo_venta + "</td>";
 		html += "<td>" + POS.currencyFormat ( lista[i].total ) + "</td>";
 
@@ -586,6 +723,7 @@ Aplicacion.Clientes.prototype.editarClienteCancelarBoton = function (  )
 	Ext.getCmp("Clientes-EditarDetalles").setVisible(true);
 	Ext.getCmp("Clientes-EditarDetallesGuardar").setVisible(false);
 	Ext.getCmp("Clientes-EditarDetallesCancelar").setVisible(false);
+	Ext.getCmp("Clientes-credito-restante").show( Ext.anims.slide );
 };
 
 
@@ -615,10 +753,21 @@ Aplicacion.Clientes.prototype.editarCliente = function ( data )
 			Ext.getBody().unmask();	
 						
 			if( !r.success ){
+                Ext.Msg.alert("Editar cliente", r.reason);
 				Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0].items.items[0].setInstructions(r.reason);
+                
 				return;
 			}
 
+            //salio bien, poner las cosas como estaban
+        	var detallesPanel = Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0];
+	        detallesPanel.disable();
+	        Ext.getCmp("Clientes-EditarDetalles").setVisible(true);
+	        Ext.getCmp("Clientes-EditarDetallesGuardar").setVisible(false);
+	        Ext.getCmp("Clientes-EditarDetallesCancelar").setVisible(false);
+
+            //mostrar el credito de nuevo
+	        Ext.getCmp("Clientes-credito-restante").show( Ext.anims.slide );
 
 
 			//poner las instrucciones originales
@@ -692,11 +841,6 @@ Aplicacion.Clientes.prototype.editarClienteGuardarBoton = function (  )
 	}
 
 
-
-	detallesPanel.disable();
-	Ext.getCmp("Clientes-EditarDetalles").setVisible(true);
-	Ext.getCmp("Clientes-EditarDetallesGuardar").setVisible(false);
-	Ext.getCmp("Clientes-EditarDetallesCancelar").setVisible(false);
 	Aplicacion.Clientes.currentInstance.editarCliente ( v );
 
 };
@@ -715,10 +859,6 @@ Aplicacion.Clientes.prototype.CLIENTE_EDIT = null;
 Aplicacion.Clientes.prototype.editarClienteBoton = function (  )
 {
 	
-	if(!POS.pos.gerente){
-		return;
-	}
-	
 
 	
 	var detallesPanel = Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0];
@@ -728,7 +868,11 @@ Aplicacion.Clientes.prototype.editarClienteBoton = function (  )
 
 	Ext.getCmp("Clientes-EditarDetalles").hide( Ext.anims.slide );
 	Ext.getCmp("Clientes-EditarDetallesGuardar").show( Ext.anims.slide );
-	Ext.getCmp("Clientes-EditarDetallesCancelar").show( Ext.anims.slide );		
+	Ext.getCmp("Clientes-EditarDetallesCancelar").show( Ext.anims.slide );
+
+    //quitar el credito restante
+	Ext.getCmp("Clientes-credito-restante").hide( Ext.anims.slide );
+    	
 
 };
 
@@ -803,12 +947,14 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 		},
 		success: function(response, opts) {
 
-            Ext.Msg.alert( "Clientes: Operación realizada con exito","Abono: " + transaccion.abono + " \nCambio: " + transaccion.cambio + "\nSaldo: " + transaccion.saldo );
+            Ext.Msg.alert( "Abono a venta","Abonado: " + POS.currencyFormat(transaccion.abono) + "<br>Su cambio: " + POS.currencyFormat(transaccion.cambio) + "<br>Saldo Pendiente: " + POS.currencyFormat(transaccion.saldo) );
+
+            console.warn("IMPRMIR TICKET");
 
 			//cargar la lista de compras de los clientes con los nuevos detalles de las ventas
 			Aplicacion.Clientes.currentInstance.listaDeComprasLoad();
 
-            
+           
 			Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange( null, Ext.getCmp("Clentes-CreditoVentasLista").getValue(), true );
 
             //Actualizamos los valores de lso campos Abonado y saldo amnualmente ya que se ejecuta primero
@@ -816,9 +962,13 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 
             Ext.getCmp( "Clientes-DetallesVentaCredito-abonado" ).setValue( POS.currencyFormat( transaccion.abonado ) );
             Ext.getCmp( "Clientes-DetallesVentaCredito-saldo" ).setValue( POS.currencyFormat( transaccion.saldo ) );
+            Ext.getCmp('Cliente-abonarMonto').setValue("");
 
             //mostramos el panel de detalle de venta
 			Aplicacion.Clientes.currentInstance.abonarVentaCancelarBoton();
+
+
+
 		},
 		failure: function( response ){
 			return POS.error( response );
@@ -842,7 +992,7 @@ Aplicacion.Clientes.prototype.abonarVentaBoton = function (  )
 	Ext.getCmp("Clientes-AbonarVentaBotonCancelar").show();
 	Ext.getCmp("Clientes-AbonarVentaBotonAceptar").show();
 	
-	Ext.getCmp("Clientes-ImprimirSaldoBoton").hide();
+
 	Ext.getCmp("Clientes-AbonarVentaBoton").hide();
 
 	Ext.getCmp("Clientes-SeleccionVentaCredito").hide();
@@ -866,7 +1016,7 @@ Aplicacion.Clientes.prototype.abonarVentaCancelarBoton = function ()
 	Ext.getCmp("Clientes-AbonarVentaBotonCancelar").hide();
 	Ext.getCmp("Clientes-AbonarVentaBotonAceptar").hide();
 	
-	Ext.getCmp("Clientes-ImprimirSaldoBoton").show();
+
 
     //ocultamos el boton de abonar a venta si la venta a credito esta liquidada
     var detalleVenta = Aplicacion.Clientes.currentInstance.detalleVentaCredito;
@@ -898,7 +1048,7 @@ Aplicacion.Clientes.prototype.creditoDeClientesOptionChange = function ( a, v )
 	if(v == -1){
 		Ext.getCmp("Clientes-DetallesVentaCredito").hide();
 		Ext.getCmp("Clientes-AbonarVentaBoton").hide();
-		Ext.getCmp("Clientes-ImprimirSaldoBoton").hide();
+
 		return;
 	}
 	
@@ -922,10 +1072,10 @@ Aplicacion.Clientes.prototype.creditoDeClientesOptionChange = function ( a, v )
 	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(0).setValue(venta.fecha);
 	
 	//sucursal
-	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(1).setValue(venta.id_sucursal);
+	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(1).setValue(venta.sucursal);
 	
 	//vendedor
-	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(2).setValue(venta.id_usuario);
+	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(2).setValue(venta.cajero);
 	
 	//total
 	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(3).setValue( POS.currencyFormat(venta.total));
@@ -953,7 +1103,7 @@ Aplicacion.Clientes.prototype.creditoDeClientesOptionChange = function ( a, v )
         Ext.getCmp("Clientes-AbonarVentaBoton").hide();
     }
 
-    Ext.getCmp("Clientes-ImprimirSaldoBoton").show();
+
 
 
 };
@@ -977,20 +1127,24 @@ Aplicacion.Clientes.prototype.creditoDeClientesPanelUpdater = function ( cliente
 		value : -1
 	}];
 
+    //buscar en todas la ventas
 	for (var i = lista.length - 1; i >= 0; i--){
+        //si la venta es de este cliente, y es a credito y tiene algun saldo, mostrarla en la lista
 		if ( lista[i].id_cliente == cid && lista[i].tipo_venta  == "credito" ) {
-			ventasCredito.push( {
-				
-				text : "Venta " + lista[i].id_venta,
-				value : lista[i].id_venta
-				
-			});
+            
+            if(parseFloat(lista[i].total) != parseFloat(lista[i].pagado)){
+			    ventasCredito.push( {
+				    text : "Venta " + lista[i].id_venta + " ( "+lista[i].fecha+" ) ",
+				    value : lista[i].id_venta
+			    });    
+            }
+
 		}
 	}
 	
 	Ext.getCmp("Clientes-DetallesVentaCredito").hide();
 	Ext.getCmp("Clientes-AbonarVentaBoton").hide();
-	Ext.getCmp("Clientes-ImprimirSaldoBoton").hide();
+
 	
 	if( ventasCredito.length == 1 ){
 		//no hay ventas a credito
@@ -1090,7 +1244,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 			
 
 		}}),	
-		new Ext.Button({ id : 'Clientes-EditarDetalles', ui  : 'action', text: 'Editar',  handler : this.editarClienteBoton }),
+		new Ext.Button({ id : 'Clientes-EditarDetalles', ui  : 'action', text: 'Editar Detalles del Cliente',  handler : this.editarClienteBoton }),
 		new Ext.Button({ id : 'Clientes-EditarDetallesCancelar', ui  : 'decline', text: 'Cancelar', handler : this.editarClienteCancelarBoton, hidden : true }),
 		new Ext.Button({ id : 'Clientes-EditarDetallesGuardar', ui  : 'confirm', text: 'Guardar', handler : this.editarClienteGuardarBoton, hidden : true })
 
@@ -1105,10 +1259,10 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 	
 	detallesDelCliente = new Ext.form.FormPanel({                                                       
 		title: 'Detalles del Cliente',
-		dockedItems : dockedItems,
+		dockedItems : POS.U.g ? dockedItems : null,
+
 		items: [{
 			xtype: 'fieldset',
-		    title: 'Detalles de Cliente',
 		    instructions: 'Todos los campos son obligatorios. Serciorese de que todos los campos sean correctos.',
 			defaults : {
 				disabled : true
@@ -1150,7 +1304,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
                     listeners : {
                         'focus' : function (){
                             kconf = {
-                                type : 'alfa',
+                                type : 'alfanum',
                                 submitText : 'Aceptar'
                             };
                             POS.Keyboard.Keyboard( this, kconf );
@@ -1163,7 +1317,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
                     listeners : {
                         'focus' : function (){
                             kconf = {
-                                type : 'alfa',
+                                type : 'complete',
                                 submitText : 'Aceptar'
                             };
                             POS.Keyboard.Keyboard( this, kconf );
@@ -1189,7 +1343,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
                     listeners : {
                         'focus' : function (){
                             kconf = {
-                                type : 'alfa',
+                                type : 'complete',
                                 submitText : 'Aceptar'
                             };
                             POS.Keyboard.Keyboard( this, kconf );
@@ -1224,22 +1378,14 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
                     }
                 }),
 				new Ext.form.Text({
-                    name : 'limite_credito',
-                    label: 'Lim. Credito',
-                    required: false,
-                    listeners : {
-                        'focus' : function (){
-                            kconf = {
-                                type : 'num',
-                                submitText : 'Aceptar'
-                            };
-                            POS.Keyboard.Keyboard( this, kconf );
-                        }
-                    }
-                }),
-				new Ext.form.Text({
+                    id : 'Clientes-credito-restante',
                     name : 'credito_restante',
                     label: 'Restante',
+                    required: false
+                }),
+				new Ext.form.Text({
+                    name : 'limite_credito',
+                    label: 'Lim. Credito',
                     required: false,
                     listeners : {
                         'focus' : function (){
@@ -1265,7 +1411,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 	abonar = [ new Ext.form.FormPanel({
 		items: [{
 			xtype: 'fieldset',
-			title: 'Creditos y Saldos',
+			title: 'Abonar a venta',
 			id : 'Clientes-SeleccionVentaCredito',
 			instructions: 'Seleccione una venta para ver sus detalles.',
 			items: [{
@@ -1280,7 +1426,6 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 				}]
 			},{
 				xtype: 'fieldset',
-				title: 'Detalles de la venta',
 				id : 'Clientes-DetallesVentaCredito',
 				items: [
 					new Ext.form.Text({ name: 'fecha', label: 'Fecha'  }),
@@ -1328,10 +1473,8 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 
 			new Ext.Button({ id : 'Clientes-AbonarVentaBoton', ui  : 'action', text: 'Abonar', margin : 15, handler : this.abonarVentaBoton, hidden : true }),
 			new Ext.Button({ id : 'Clientes-AbonarVentaBotonAceptar', ui  : 'action', text: 'Abonar', margin : 15, handler : this.doAbonarValidator, hidden : true }),
-			new Ext.Button({ id : 'Clientes-AbonarVentaBotonCancelar', ui  : 'drastic', text: 'Cancelar', margin : 15, handler : this.abonarVentaCancelarBoton, hidden : true }),				
-			new Ext.Button({ id : 'Clientes-ImprimirSaldoBoton', ui  : 'confirm', text: 'Imprimir Detalles', margin : 15, handler : this.imprimirSaldoVentaBoton, hidden : true }),
-			new Ext.Button({ id : 'Clientes-VerProductosBoton', ui  : 'confirm', text: 'Ver Productos de esta venta', margin : 5, handler : this.imprimirSaldoVentaBoton, hidden : true }),
-            { xtype: 'spacer' }
+			new Ext.Button({ id : 'Clientes-AbonarVentaBotonCancelar', ui  : 'drastic', text: 'Cancelar', margin : 15, handler : this.abonarVentaCancelarBoton, hidden : true })
+
 
 		]}
 	)];
@@ -1340,7 +1483,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 	//crear el panel, y asignarselo a detallesDeClientesPanel
 	this.detallesDeClientesPanel = new Ext.TabPanel({
 
-        scroll:'vertical',
+
 
 		//NO MOVER EL ORDEN DEL MENU !!
 	    items: [{
@@ -1350,6 +1493,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 	    },{
 			iconCls: 'bookmarks',
 	        title: 'Ventas',
+            scroll: 'vertical',
 			cls : "Tabla",
 	        html: 'Lista de compras'
 	    },{
@@ -1447,7 +1591,7 @@ Aplicacion.Clientes.prototype.nuevoClientePanelCreator = function (  ){
                     listeners : {
                         'focus' : function (){
                             kconf = {
-                                type : 'alfa',
+                                type : 'alfanum',
                                 submitText : 'Aceptar'
                             };
                             POS.Keyboard.Keyboard( this, kconf );
@@ -1460,7 +1604,7 @@ Aplicacion.Clientes.prototype.nuevoClientePanelCreator = function (  ){
                     listeners : {
                         'focus' : function (){
                             kconf = {
-                                type : 'alfa',
+                                type : 'complete',
                                 submitText : 'Aceptar'
                             };
                             POS.Keyboard.Keyboard( this, kconf );
@@ -1486,7 +1630,7 @@ Aplicacion.Clientes.prototype.nuevoClientePanelCreator = function (  ){
                     listeners : {
                         'focus' : function (){
                             kconf = {
-                                type : 'alfa',
+                                type : 'complete',
                                 submitText : 'Aceptar'
                             };
                             POS.Keyboard.Keyboard( this, kconf );
@@ -1582,7 +1726,8 @@ Aplicacion.Clientes.prototype.crearCliente = function ( data )
 			//poner las instrucciones originales
 			Aplicacion.Clientes.currentInstance.nuevoClientePanel.items.items[0].setInstructions("Si desea ofrecer un limite de credito que exceda los $20,000.00 debera pedir una autorizacion.");
 			
-			
+    		//hacer un setcard manual hacia la lista de clientes
+        	sink.Main.ui.setActiveItem( this.listaDeClientesPanel , 'slide');
 
 		},
 		failure: function( response ){

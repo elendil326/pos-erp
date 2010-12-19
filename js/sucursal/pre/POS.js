@@ -24,14 +24,19 @@ POS.currencyFormat = function (num){
 
 
 
-POS.pos = {
-	gerente : true
+POS.U = {
+	g : null
 };
 
 
-POS.error = function (e)
+POS.error = function (ajaxResponse, catchedError)
 {
-	
-	console.warn( "POS ERROR:", e );
-	
+	Ext.Msg.alert("Error ", catchedError);
+
+	console.warn( "POS ERROR ! ");
+	console.warn( "ajaxResponse", ajaxResponse );
+	console.warn( "catchedError", catchedError);	
 };
+
+
+POS.CHECK_DB_TIMEOUT = 5000;

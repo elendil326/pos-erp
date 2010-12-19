@@ -137,7 +137,7 @@ Ext.getBody().mask('Guardando nuevo gasto ...', 'x-mask-loading', true);
             try{
                 r = Ext.util.JSON.decode( response.responseText );
             }catch(e){
-                POS.error(e);
+                return POS.error(response, e);
             }
 
             Ext.getBody().unmask(); 
@@ -272,7 +272,7 @@ Aplicacion.Autorizaciones.prototype.solicitudAutorizacionMerma = function( value
             try{
                 r = Ext.util.JSON.decode( response.responseText );
             }catch(e){
-                POS.error(e);
+                return POS.error(response, e);
             }
 
             Aplicacion.Autorizaciones.currentInstance.panelSolicitudMerma.hide('pop');
@@ -391,7 +391,7 @@ Aplicacion.Autorizaciones.prototype.listaDetalleCompra = function( id_compra )
             try{
                 r = Ext.util.JSON.decode( response.responseText );
             }catch(e){
-                POS.error(e);
+                return POS.error(response, e);
             }
 
             if(!r.success)
@@ -545,7 +545,7 @@ Aplicacion.Autorizaciones.prototype.solicitudAutorizacionDevolucion = function( 
             try{
                 r = Ext.util.JSON.decode( response.responseText );
             }catch(e){
-                POS.error(e);
+                return POS.error(response, e);
             }
             
             //ocultamos el panelSolicitudDevolucion
@@ -671,7 +671,7 @@ Aplicacion.Autorizaciones.prototype.listaDetalleVenta = function( id_venta )
             try{
                 r = Ext.util.JSON.decode( response.responseText );
             }catch(e){
-                POS.error(e);
+                return POS.error(response, e);
             }
 
             if(!r.success)

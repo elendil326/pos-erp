@@ -87,7 +87,7 @@ Aplicacion.Efectivo.prototype.cargarSucursales = function ( )
             try{
                 r = Ext.util.JSON.decode( response.responseText );
             }catch(e){
-                return POS.error(e);
+                return POS.error(response, e);
             }
 
             if( !r.success ){
@@ -120,7 +120,7 @@ Aplicacion.Efectivo.prototype.cargarEmpleados = function ( a, b )
             try{
                 r = Ext.util.JSON.decode( response.responseText );
             }catch(e){
-                return POS.error(e);
+                return POS.error(response, e);
             }
 
             if( !r.success ){
@@ -159,7 +159,7 @@ Aplicacion.Efectivo.prototype.nuevaOperacionInterSucursalEfectivo = function( da
             try{
                 r = Ext.util.JSON.decode( response.responseText );
             }catch(e){
-                POS.error(e);
+                return POS.error(response, e);
             }
 
             Ext.getBody().unmask(); 
@@ -332,7 +332,7 @@ Aplicacion.Efectivo.prototype.operacionInterSucursalEfectivoPanelCreator = funct
                             }
                         }
                     }),
-                    new Ext.form.HiddenField({
+                    new Ext.form.Hidden({
                         name: 'folio',
                         value:'-1'
                     })
@@ -522,7 +522,7 @@ Aplicacion.Efectivo.prototype.nuevoGasto = function( data ){
             try{
                 r = Ext.util.JSON.decode( response.responseText );
             }catch(e){
-                POS.error(e);
+                return POS.error(response, e);
             }
 
             Ext.getBody().unmask(); 
@@ -768,7 +768,7 @@ Aplicacion.Efectivo.prototype.nuevoIngreso = function( data ){
             try{
                 r = Ext.util.JSON.decode( response.responseText );
             }catch(e){
-                POS.error(e);
+                return POS.error(response, e);
             }
 
             Ext.getBody().unmask(); 

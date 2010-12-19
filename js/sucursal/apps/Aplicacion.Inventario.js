@@ -32,7 +32,14 @@ Aplicacion.Inventario.prototype._init = function (){
 };
 
 Aplicacion.Inventario.prototype.getConfig = function (){
-	return {
+
+
+    if(POS.U.g === null){
+        window.location = "sucursal.html";
+    }
+
+
+	return POS.U.g ? {
 		    text: 'Inventario',
 		    cls: 'launchscreen',
 		    items: [{
@@ -45,6 +52,14 @@ Aplicacion.Inventario.prototype.getConfig = function (){
 				card :	this.surtirWizardPanel,
 				leaf: true
 
+		}]
+	} : {
+		    text: 'Inventario',
+		    cls: 'launchscreen',
+		    items: [{
+			    text: 'Inventario Actual',
+			    card :	this.listaInventarioPanel,
+			    leaf: true
 		}]
 	};
 };
@@ -108,7 +123,7 @@ Aplicacion.Inventario.prototype.cargarInventario = function ()
 			try{
 				inventario = Ext.util.JSON.decode( response.responseText );				
 			}catch(e){
-				POS.error(e);
+				return POS.error(response, e);
 			}
 
 			
@@ -124,12 +139,11 @@ Aplicacion.Inventario.prototype.cargarInventario = function ()
 			this.Inventario.productos = inventario.datos;
 			this.Inventario.productos2 = inventario.datos;
 			this.Inventario.lastUpdate = Math.round(new Date().getTime()/1000.0);
+            this.Inventario.hash = inventario.hash;
 
 			//agregarlo en el store
 			this.inventarioListaStore.loadData( inventario.datos );
-
-
-
+            setTimeout( "Aplicacion.Inventario.currentInstance.checkInventarioDbDiff()", POS.CHECK_DB_TIMEOUT );
 		},
 		failure: function( response ){
 			POS.error( response );
@@ -137,6 +151,67 @@ Aplicacion.Inventario.prototype.cargarInventario = function ()
 	}); 
 
 };
+
+
+
+
+
+
+
+
+Aplicacion.Inventario.prototype.checkInventarioDbDiff = function ()
+{
+	
+	Ext.Ajax.request({
+		url: 'proxy.php',
+		scope : this,
+		params : {
+			action : 400,
+            hashCheck : this.Inventario.hash
+		},
+		success: function(response, opts) {
+
+         if(response.responseText.length > 0){
+			try{
+				inventario = Ext.util.JSON.decode( response.responseText );				
+			}catch(e){
+				return POS.error(response, e);
+			}
+
+			
+			if( !inventario.success ){
+				//volver a intentar
+				return this.cargarInventario();
+			}
+			
+			if(DEBUG){
+				console.log("Inventario retrived !", inventario);
+			}
+			
+			this.Inventario.productos = inventario.datos;
+			this.Inventario.productos2 = inventario.datos;
+			this.Inventario.lastUpdate = Math.round(new Date().getTime()/1000.0);
+            this.Inventario.hash = inventario.hash;
+
+			//agregarlo en el store
+			this.inventarioListaStore.loadData( inventario.datos );
+            }
+            setTimeout( "Aplicacion.Inventario.currentInstance.checkInventarioDbDiff()", POS.CHECK_DB_TIMEOUT * 20 );
+		},
+		failure: function( response ){
+			POS.error( response );
+		}
+	}); 
+
+};
+
+
+
+
+
+
+
+
 
 Aplicacion.Inventario.prototype.listaInventarioPanel = null;
 
@@ -267,18 +342,14 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelCreator = function()
 		ui: 'normal',
 		handler : function (){
 			Aplicacion.Mostrador.currentInstance.agregarProductoPorID( Aplicacion.Inventario.currentInstance.detalleInventarioPanel.getRecord().data.productoID );
+            sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.mostradorPanel , 'slide');
 		}
-	},{
-		text: 'Ir a Mostrador',
-		ui: 'drastic',
-		handler : function(){
-			sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.mostradorPanel , 'slide');
-		}
-	},{
-		text: 'Surtir',
-		ui: 'action',
-		handler : this.detalleInventarioSurtirEsteProd
 	}];
+
+    if(POS.U.g) {
+        opciones.push({ text: 'Surtir', ui: 'action', handler : this.detalleInventarioSurtirEsteProd });
+   }
+
 
 
 	var dockedItems = [new Ext.Toolbar({
@@ -296,7 +367,7 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelCreator = function()
 			scroll: 'vertical',
 			instructions: '',
 			defaults : {
-				disabled : true
+				disabled : false
 			},
 		
 			items: [
@@ -616,7 +687,7 @@ Aplicacion.Inventario.prototype.surtirCarrito = function(){
             try{
                 r = Ext.util.JSON.decode( response.responseText );
             }catch(e){
-                POS.error(e);
+                return POS.error(response, e);
             }
 
             

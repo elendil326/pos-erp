@@ -214,38 +214,74 @@ print( "<h1>" . $sucursal->getDescripcion() . "</h1>");
 
 <h2>Ventas en el ultimo dia</h2><?php
 
-                $date = new DateTime("now");
+$date = new DateTime("now");
 
-			    $date->setTime ( 0 , 0, 1 );
-
-
-			    $v1 = new Ventas();
-			    $v1->setFecha( $date->format('Y-m-d H:i:s') );
-			    $v1->setIdSucursal( $_REQUEST['id'] );
-
-			    $date->setTime ( 23, 59, 59 );
-			    $v2 = new Ventas();
-			    $v2->setFecha( $date->format('Y-m-d H:i:s') );
-
-			    $ventas = VentasDAO::byRange($v1, $v2);
+$date->setTime ( 0 , 0, 1 );
 
 
+$v1 = new Ventas();
+$v1->setFecha( $date->format('Y-m-d H:i:s') );
+$v1->setIdSucursal( $_REQUEST['id'] );
 
-$header = array( 
-	"id_venta" =>  "Venta",
-	"fecha" =>  "Fecha",
-	"cliente" =>  "Cliente",
-	"cajero" => "Cajero",
-	"tipo_venta" =>  "Tipo",
-	"subtotal" =>  "Subtotal",	
-	"descuento" => "Descuento",
-	"total" =>  "Total",
-	"pagado" =>  "Pagado");
+$date->setTime ( 23, 59, 59 );
+$v2 = new Ventas();
+$v2->setFecha( $date->format('Y-m-d H:i:s') );
+
+$ventas = VentasDAO::byRange($v1, $v2);
+
+//render the table
+$header = array(
+	"id_venta"=>  "Venta",
+	"id_sucursal"=>  "Sucursal",
+	"id_cliente"=>  "Cliente",
+	"tipo_venta"=>  "Tipo",
+	"fecha"=>  "Fecha",
+	"subtotal"=>  "Subtotal",
+	//"iva"=>  "IVA",
+	"descuento"=>  "Descuento",
+	"total"=>  "Total",
+
+	//"pagado"=>  "Pagado" 
+    );
+
+function getNombrecliente($id)
+{
+    if($id < 0){
+         return "Caja Comun";
+    }
+    return ClienteDAO::getByPK( $id )->getNombre();
+}
+
+
+
+
+function getDescSuc($sid)
+{
+
+    return SucursalDAO::getByPK( $sid )->getDescripcion();
+
+}
+
+function setTipocolor($tipo)
+{
+        if($tipo =="credito")
+            return "<b>Credito</b>";
+        return "Contado";
+}
+
+
 
 
 $tabla = new Tabla( $header, $ventas );
+$tabla->addColRender( "subtotal", "moneyFormat" ); 
+$tabla->addColRender( "saldo", "moneyFormat" ); 
+$tabla->addColRender( "total", "moneyFormat" ); 
+$tabla->addColRender( "pagado", "moneyFormat" ); 
+$tabla->addColRender( "tipo_venta", "setTipoColor" ); 
+$tabla->addColRender( "id_cliente", "getNombreCliente" ); 
+$tabla->addColRender( "id_sucursal", "getDescSuc" ); 
 $tabla->addOnClick("id_venta", "mostrarDetallesVenta");
-$tabla->addNoData("El dia de hoy se han hecho ventas en esta sucursal.");
+$tabla->addColRender( "descuento", "percentFormat" );
 $tabla->render();
 
 

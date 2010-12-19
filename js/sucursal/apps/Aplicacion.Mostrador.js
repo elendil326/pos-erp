@@ -187,14 +187,14 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			value : POS.currencyFormat( carrito.items[i].precioVenta ),
 			prodID : carrito.items[i].productoID,			
 			placeHolder : "Precio de Venta",
-			listeners : {
+			listeners : POS.U.g ? {
 				'focus' : function (a){
 					
 					this.setValue( this.getValue().replace("$", '').replace(",", "") );
 					
 					kconf = {
 						type : 'num',
-						submitText : 'Cambiar precio',
+						submitText : 'Cambiar',
 						callback : function ( campo ){
 							//buscar el producto en la estructura y ponerle esa nueva cantidad
 							for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
@@ -226,7 +226,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 					
 					POS.Keyboard.Keyboard( this, kconf );
 				}
-			}
+			} : null
 		
 		});
 	}
@@ -606,6 +606,7 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 	html += "</table>";
 	
 	this.finishedPanel.update(html);
+    Ext.getCmp("Mostrador-mostradorVender").hide( Ext.anims.slide );
 
 };
 
@@ -689,7 +690,7 @@ Aplicacion.Mostrador.prototype.vender = function ()
 			try{
 				venta = Ext.util.JSON.decode( response.responseText );				
 			}catch(e){
-				return POS.error(e);
+				return POS.error(response, e);
 			}
 			
 			if( !venta.success ){
@@ -718,6 +719,7 @@ Aplicacion.Mostrador.prototype.vender = function ()
 
 			//mostrar el panel final
 			Aplicacion.Mostrador.currentInstance.finishedPanelShow();
+			Aplicacion.Mostrador.currentInstance.cancelarVenta();
 
 		},
 		failure: function( response ){
@@ -955,7 +957,7 @@ Aplicacion.Mostrador.prototype.doVentaPanelCreator = function (	 ){
 							"focus" : function (){
 								kconf = {
 									type : 'num',
-									submitText : 'Realizar venta',
+									submitText : 'Cobrar',
 									callback : function ( campo ){
 										Aplicacion.Mostrador.currentInstance.doVenta();
 									}

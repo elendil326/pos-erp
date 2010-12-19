@@ -217,48 +217,148 @@ POS.Keyboard._genHTMLalfa = function (config){
 	return POS.Keyboard._HTMLalfa = {
 		html: html,
 		w : 720,
-		h : 300 
+		h : 180 
 	};	
 };
 
 POS.Keyboard._genHTMLalfanum = function (config){
 	
+	
+	var html = "";
+	
+		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>1</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>2</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>3</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>4</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>5</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>6</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>7</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>8</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>9</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>0</div>"
+			+ "<div class='Keyboard-key' onclick='POS.Keyboard.callbackFn( \"_DEL_\", false )'>&#8592;</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>Q</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>W</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>E</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>R</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>T</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>Y</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>U</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>I</div>"				
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>O</div>"				
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>P</div>"				
+            + "<div class='Keyboard-key ' onclick='POS.Keyboard.callbackFn( null, true)'>" +config.submitText+ "</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )' style='margin-left:30px'>A</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>S</div>"				
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>D</div>"				
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>F</div>"				
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>G</div>"				
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>H</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>J</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>K</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>L</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>&Ntilde;</div>"
+
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )' style='margin-left:60px'>Z</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>X</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>C</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>V</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>B</div>"				
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>N</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )' >M</div>"
+			+ "<div class='Keyboard-key long'  onclick='POS.Keyboard.callbackFn( \"_SPACE_\", false  )'></div>";
+
+
+	
+	return POS.Keyboard._HTMLalfa = {
+		html: html,
+		w : 715,
+		h : 230 
+	};	
 };
 
 POS.Keyboard._genHTMLnum = function (config){
 	
 	var html = "";
 	
-	
-		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>1</div>";
-		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>2</div>";
-		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>3</div>";
-			
-	
-		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>4</div>";
-		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>5</div>";
-		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>6</div>";
-		
 		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>7</div>";
 		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>8</div>";
 		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>9</div>";
+		html += "<div class='Keyboard-key ' onclick='POS.Keyboard.callbackFn(  \"_DEL_\", false )'>&#8592;</div>";	
 
-		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>0</div>";
+		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>4</div>";
+		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>5</div>";
+		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>6</div>";
+		html += "<div class='Keyboard-key ' onclick='POS.Keyboard.callbackFn(  \"_CANCEL_\", false )'>&#9587;</div>";
+		
+		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>1</div>";
+		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>2</div>";
+		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>3</div>";
+		html += "<div class='Keyboard-key ' onclick='POS.Keyboard.callbackFn(  null, true )'>" +config.submitText+ "</div>";
 
+		html += "<div class='Keyboard-key ' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>0</div>";
 		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>.</div>";			
-
-		html += "<div class='Keyboard-key long' onclick='POS.Keyboard.callbackFn(  \"_CANCEL_\", false )'>Cancelar</div>";
-		html += "<div class='Keyboard-key long' onclick='POS.Keyboard.callbackFn(  \"_DEL_\", false )'>DEL</div>";
-		html += "<div class='Keyboard-key long' onclick='POS.Keyboard.callbackFn(  null, true )'>" +config.submitText+ "</div>";
 
 	return POS.Keyboard._HTMLnum = {
 		html: html,
-		w : 625,
-		h : 205 
+		w : 305,
+		h : 225 
 	};
 };
 
 POS.Keyboard._genHTMLcomplete = function (config){
+		
 	
+	var html = "";
+	
+		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>1</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>2</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>3</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>4</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>5</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>6</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>7</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>8</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>9</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>0</div>"
+			+ "<div class='Keyboard-key' onclick='POS.Keyboard.callbackFn( \"_DEL_\", false )'>&#8592;</div>"
+            + "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>Q</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>W</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>E</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>R</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>T</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>Y</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>U</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>I</div>"				
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>O</div>"				
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>P</div>"				
+            + "<div class='Keyboard-key ' onclick='POS.Keyboard.callbackFn( null, true)'>" +config.submitText+ "</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )' style='margin-left:30px'>A</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>S</div>"				
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>D</div>"				
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>F</div>"				
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>G</div>"				
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>H</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>J</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>K</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>L</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>&Ntilde;</div>"
+
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )' style='margin-left:60px'>Z</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>X</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>C</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>V</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>B</div>"				
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>N</div>"
+			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )' >M</div>"
+			+ "<div class='Keyboard-key long'  onclick='POS.Keyboard.callbackFn( \"_SPACE_\", false  )'></div>";
+
+
+	
+	return POS.Keyboard._HTMLalfa = {
+		html: html,
+		w : 715,
+		h : 230 
+	};	
 };
 

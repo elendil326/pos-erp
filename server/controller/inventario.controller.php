@@ -262,7 +262,18 @@ function nuevoProducto($data)
 if(isset($args['action'])){
 	switch($args['action']){
 	    case 400:
-	    	printf('{ "success": true, "datos": %s }',  json_encode( listarInventario( $_SESSION["sucursal"] ) ));
+            $json = json_encode( listarInventario( $_SESSION["sucursal"] ) );
+            
+            if(isset($args['hashCheck'])){
+                //revisar hashes
+                if(md5( $json ) == $args['hashCheck'] ){
+                    return;
+                }
+            }
+
+	    	printf('{ "success": true, "hash" : "%s" , "datos": %s }',  md5($json), $json );
+
+
 	    break;
 
 	    case 401://regresa el detalle del producto en la sucursal actual
