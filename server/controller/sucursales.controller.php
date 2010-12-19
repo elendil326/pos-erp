@@ -108,7 +108,7 @@ function detallesSucursal( $sid = null ){
 function abrirSucursal( $detalles )
 {
 
-
+    Logger::log("Abrir sucursal iniciado...");
 
     $exito = true;
     
@@ -186,13 +186,15 @@ function abrirSucursal( $detalles )
 
 function editarSucursal($sid, $payloadJSON, $verbose = true ){
 
+    Logger::log("editar detalles de sucursal iniciado...");
+
     $suc = SucursalDAO::getByPK($sid);
 
     if(sizeof($suc) < 1){
         if($verbose){
             echo '{ "success" : false, "reason" : "Esta sucursal no existe." }';
         }
-
+        Logger::log("intentando editar una sucursal que no existe");
         return false;
     }
 
@@ -202,7 +204,7 @@ function editarSucursal($sid, $payloadJSON, $verbose = true ){
         if($verbose){
             echo '{ "success" : false, "reason" : "Invalid JSON." }';
         }
-
+        Logger::log("json invalido " . $e);
         return false;
     }
 
@@ -240,7 +242,7 @@ function editarSucursal($sid, $payloadJSON, $verbose = true ){
         if($verbose){
             echo '{ "success" : false, "reason" : "'.$e.'" }';
         }
-
+        Logger::log("error al editar sucursal " . $e);
         return false;
     }
 
@@ -248,6 +250,7 @@ function editarSucursal($sid, $payloadJSON, $verbose = true ){
         echo '{ "success" : true }';
     }
 
+    Logger::log("detalles de sucursal editados !");
     return true;
 }
 
@@ -256,6 +259,9 @@ function editarSucursal($sid, $payloadJSON, $verbose = true ){
 
 
 function cerrarSucursal($sid, $verbose = true){
+
+    Logger::log("CERRANDO SUCURSAL INICIADO", 2);
+
     $suc = SucursalDAO::getByPK($sid);
 
     if(sizeof($suc) < 1){

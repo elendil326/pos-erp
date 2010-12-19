@@ -9,7 +9,7 @@ require_once('model/usuario.dao.php');
 require_once('model/grupos_usuarios.dao.php');
 require_once('model/grupos.dao.php');
 require_once('model/sucursal.dao.php');
-
+require_once('logger.php');
 
 /**
  * Funcion para insertar usuarios a la base de datos incluyendo permisos de acceso.
@@ -26,18 +26,22 @@ require_once('model/sucursal.dao.php');
 function insertarEmpleado($args)
 {	
 
+    Logger::log("insertar empleado iniciado...");
+
     if( !isset($args['data']) )
     {
+        Logger::log("no hay parametros para insertar nuevo empleado");
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
     
     try
     {
         $data = json_decode( $args['data'] );
-        //$data = json_decode( $data);
+
     }
     catch(Exception $e)
     {
+        Logger::log("json invalido " . $e);
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
@@ -53,6 +57,7 @@ function insertarEmpleado($args)
             $id = $u->getIdUsuario();
             break;
         }
+        Logger::log("ya existe un empleado con el rfc:" . $data->RFC );
         die ( '{"success": false, "id":"' . $id . '", "reason": "Ya existe un empleado con este RFC." }' );
     }
     
@@ -334,8 +339,11 @@ function listarGerentes($asignados = null)
 function modificarEmpleado( $args )
 {
 
+
+
     if( !isset($args['data']) )
     {
+        Logger::log("no hay parametros para modificar empleado");
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
     
@@ -345,6 +353,7 @@ function modificarEmpleado( $args )
     }
     catch(Exception $e)
     {
+        Logger::log("json invalido " . $e);
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
@@ -453,6 +462,7 @@ function modificarEmpleado( $args )
 	}
 	catch( Exception $e )
 	{
+        Logger::log($e);
 		die ( ' { "success" : "false", "reason" : "' . $e . '" } ' );
 	}
 	
@@ -495,7 +505,7 @@ function cambiarEstadoEmpleado( $args )
 
 
     //todo bien, ahora hay que ver que pedo con su gerencia
-
+    Logger::log("cambiando estado de user=".$args['id_empleado']." a " . $args['activo'] );
 
     $suc = new Sucursal();
     $suc->setGerente($args['id_empleado']);
@@ -507,8 +517,14 @@ function cambiarEstadoEmpleado( $args )
         //es gerente de una sucursal
         $suc = $res[0];
         $suc->setGerente(null);
-        SucursalDAO::save( $suc );
+        try{
+            SucursalDAO::save( $suc );
+        }catch(Exception $e){
+            Logger::log($e);
+        }
         $msg = "La sucursal " . $suc->getDescripcion() . " se ha quedado sin gerente.";
+
+        Logger::log("La sucursal " . $suc->getDescripcion() . " se ha quedado sin gerente.", 1);
     }
 
 

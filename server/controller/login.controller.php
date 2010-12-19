@@ -104,6 +104,7 @@ function dispatch($args){
 	
 	if(!isset($_SERVER['HTTP_REFERER'])){
 		//este request tiene que venir de alguien mas
+        Logger::log("No hay HTTP_REFERER para esta solicitud de dispatching !", 1);
 		die( "Acceso no autorizado." );		
 	}
 	
@@ -133,6 +134,7 @@ function checkSecurityToken()
 	if (crypt($current_token, $_SESSION['token']) == $_SESSION['token']) {
 	 	return true;
 	}else{
+        Logger::log("Security token rechadado !" , 2);
 		return false;
 	}
 }
@@ -169,7 +171,7 @@ function checkCurrentSession()
 
 function logOut( $verbose = true  )
 {
-
+    Logger::log("Cerrando sesion");
     $grupo = $_SESSION['grupo'];
 
 	unset( $_SESSION['token'] ); 

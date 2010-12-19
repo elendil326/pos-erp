@@ -9,7 +9,7 @@ require_once("../server/model/cliente.dao.php");
 require_once("../server/model/detalle_venta.dao.php");
 require_once("../server/model/detalle_inventario.dao.php");
 require_once("../server/model/factura_venta.dao.php");
-
+require_once("logger.php");
 
 /*
  * Crea una factura para este objeto venta
@@ -28,7 +28,12 @@ function insertarFacturaVenta ( $venta )
 		return false;
 	}
 	
-	FacturaVentaDAO::save( $fv );
+    try{
+    	FacturaVentaDAO::save( $fv );
+    }catch(Exception $e){
+        Logger::log("Error al salvar la factura a la venta");
+    }
+
 	
 }
 
@@ -102,15 +107,18 @@ function descontarInventario ( $productos )
  * */
 function vender( $args ){
 
+    Logger::log("Iniciando proceso de venta...");
 
     if(!isset($args['payload']))
     {
+        Logger::log("Sin parametros para realizar venta");
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
 
     try{
         $data = json_decode( $args['payload'] );
     }catch(Exception $e){
+        Logger::log("json invalido para realizar venta" . $e);
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
@@ -127,6 +135,7 @@ function vender( $args ){
 	
     //verificar que $productos sea un array
     if(!is_array($productos)){
+        Logger::log("parametro de producotos invalido, no es un arreglo");
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
@@ -143,6 +152,7 @@ function vender( $args ){
 	
 	
 	if(!revisarExistencias( $detallesVenta )){
+        Logger::log("No hay existencias para satisface la demanda");
 		die('{"success": false, "reason": "No hay suficiente producto para satisfacer la demanda. Intente de nuevo." }');
 	}
 	
@@ -171,11 +181,12 @@ function vender( $args ){
             if (VentasDAO::save($venta)){
                 $id_venta =  $venta->getIdVenta();
             }else{
+                Logger::log("No se afectaron columnas al insertar venta");
                 die( '{"success": false, "reason": "No se pudo registrar la venta" }' );
             }
 
         }catch(Exception $e){
-	
+	        Logger::log("Error al insertar la venta " . $e);
             die( '{"success": false, "reason": "' . $e . '" }' );
 
         }
@@ -275,6 +286,8 @@ function vender( $args ){
         die( '{"success": false, "reason": "' . $e . '" }' );
     }
 
+
+    Logger::log("Venta exitosa !");
 }
 
 switch( $args['action'] ){

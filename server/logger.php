@@ -38,7 +38,13 @@ class Logger
             $out .= " | SUC:" . $_SESSION['sucursal'];
         }
 
+        $d = debug_backtrace();
+
+        $out .= " | TRACE:" . $d[0]["file"].":" .$d[1]["function"] . "()";
+
         $out .= " | MSG:" . $msg;
+
+
 
         fwrite($log, $out . "\n");
 
