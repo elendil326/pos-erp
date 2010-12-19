@@ -116,7 +116,7 @@ function surtirProducto($args){
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
-    $productos = json_decode( $data->productos );
+    $productos = $data->productos;
 
     foreach( $productos as $producto )
     {

@@ -937,7 +937,61 @@ Aplicacion.Autorizaciones.prototype.eliminarAutorizacion = function(){
 
 }
 
+
+//surte al inventario los productos mandados por le admin
+Aplicacion.Autorizaciones.prototype.surtirAutorizacion = function(  ){
+
+    //Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionFormPanel.remove();
+    Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionPanel.hide();
+    
+    //obtenemos al autorizacion actual
+    autorizacion = Aplicacion.Autorizaciones.currentInstance.detalleAutorizacion;
+
+    if(DEBUG){console.log("autorizacion",autorizacion);}
+
+    Ext.Ajax.request({
+        url: 'proxy.php',
+        scope : this,
+        params : {
+            action : 211,
+            id_autorizacion : autorizacion.data.id_autorizacion
+        },
+        success: function(response, opts) {
+            try{
+                autorizaciones = Ext.util.JSON.decode( response.responseText );             
+            }catch(e){
+                return POS.error(e);
+            }
+            
+            if( !autorizaciones.success ){
+                //volver a intentar
+                //return POS.error(autorizaciones);
+                Ext.Msg.alert("Autorizaciones","Error: " + autorizaciones.reason);
+                return;
+            }
+
+            //Ext.getCmp('detalleAutorizacionPanel').hide();
+
+            //Ext.Msg.alert("Autorizaciones","Se agrego correctamente los productos al inventario");
+
+            //recargamos la lista de aurorizaciones
+            Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesLoad();
+
+        },
+        failure: function( response ){
+            POS.error( response );
+        }
+    });
+
+}
+
+//guardara los detalles de la autorizacion actual
+Aplicacion.Autorizaciones.prototype.detalleAutorizacion = null;
+
+//muestra una ventana emergente donde se muestran los detalles de la autorizacion
 Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( autorizacion ){
+
+    Aplicacion.Autorizaciones.currentInstance.detalleAutorizacion = autorizacion;
 
     autorizaciones = Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lista
     var detalleAutorizacion;
@@ -1088,7 +1142,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
     {
         itemsForm.push(
             
-            new Ext.Button({ ui  : 'action', text: 'Surtir Envio', margin : 15, handler: this.eliminarAutorizacion })
+            new Ext.Button({ ui  : 'action', text: 'Surtir Envio', margin : 15, handler: this.surtirAutorizacion })
         );
 
         height += 50;
@@ -1118,15 +1172,15 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
             items: [{
                 text: 'Cancelar',
                 ui: 'action',
-                handler: function() {
-                   Ext.getCmp('detalleAutorizacionPanel').destroy();
+                handler: function() {                   
+                   sink.Main.ui.setActiveItem( this.listaDeAutorizacionesPanel , 'slide');
                 }
             },{
                 xtype: 'spacer'
             }]
         }],
-        floating:true,
-        modal:true,
+        //floating:true,
+        //modal:true,
         centered:true,
         height: height,
         width: 750,
@@ -1136,9 +1190,9 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
         ]
     });
 
-    this.detalleAutorizacionPanel.show('pop');
-
-}
+    //this.detalleAutorizacionPanel.show('pop');
+    sink.Main.ui.setActiveItem( this.detalleAutorizacionPanel , 'slide');
+};
 
 /*
  * Contiene el panel con la lista de autorizaciones
