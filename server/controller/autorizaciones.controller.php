@@ -54,12 +54,25 @@ function autorizacionesPendientes(  ){
 
 function autorizacionesSucursal( ){
 
-    $autorizacion = new Autorizacion();
-    $autorizacion->setIdSucursal( $_SESSION['sucursal'] );
+    $a = new Autorizacion();
+    $a->setIdSucursal( $_SESSION['sucursal'] );
 
-    $json = AutorizacionDAO::search($autorizacion );
+    /*$json = AutorizacionDAO::search($autorizacion);
 
-    printf( '{ "success" : "true", "payload" : %s }', json_encode( $json ));
+    printf( '{ "success" : "true", "payload" : %s }', json_encode( $json ));*/
+    
+    $array_autorizaciones = array();
+    
+    $autorizaciones = AutorizacionDAO::search($a);
+    
+    foreach($autorizaciones as $autorizacion)
+    {
+        $auth = $autorizacion->asArray();
+        array_push( $array_autorizaciones,$auth );
+    }
+    
+
+    printf( '{ "success" : "true", "payload" : %s }', json_encode( $array_autorizaciones ));
 
 }//autorizacionesSucursal
 
@@ -105,7 +118,7 @@ function surtirProducto($args){
 
     if( $autorizacion->getEstado() != 3 )
     {
-         die('{"success": false, "reason": "El administrador no ha aprovado esta solicitud." }');
+        die('{"success": false, "reason": "El administrador no ha aprovado esta solicitud." }');
     }
 
     try

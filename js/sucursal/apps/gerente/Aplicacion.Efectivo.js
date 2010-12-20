@@ -218,7 +218,7 @@ Aplicacion.Efectivo.prototype.nuevoPrestamoEfectivoValidator = function ()
     }
 
 
-    if( !( Ext.getCmp( 'Efectivo-operacionInterSucursalEfectivo-responsable' ).getValue() ) )
+    /*if( !( Ext.getCmp( 'Efectivo-operacionInterSucursalEfectivo-responsable' ).getValue() ) )
     {
         Ext.Anim.run(Ext.getCmp( 'Efectivo-operacionInterSucursalEfectivo-responsable' ),
             'fade', {duration: 250,
@@ -227,7 +227,7 @@ Aplicacion.Efectivo.prototype.nuevoPrestamoEfectivoValidator = function ()
         });
 
         return;
-    }
+    }*/
 
     if( values.concepto == "" )
     {
@@ -243,6 +243,17 @@ Aplicacion.Efectivo.prototype.nuevoPrestamoEfectivoValidator = function ()
     if( !( values.monto && /^-?\d+(\.\d+)?$/.test(values.monto + '') ) ){
 
         Ext.Anim.run(Ext.getCmp( 'Efectivo-operacionInterSucursalEfectivo-monto' ), 
+            'fade', {duration: 250,
+            out: true,
+            autoClear: true
+        });
+
+        return;
+    }
+    
+    if( values.nota == "" )
+    {
+        Ext.Anim.run(Ext.getCmp( 'Efectivo-operacionInterSucursalEfectivo-nota' ),
             'fade', {duration: 250,
             out: true,
             autoClear: true
@@ -291,13 +302,13 @@ Aplicacion.Efectivo.prototype.operacionInterSucursalEfectivoPanelCreator = funct
                             "change" : function(a,b) {Aplicacion.Efectivo.currentInstance.cargarEmpleados(a,b);}
                         }
                     }),
-                    new Ext.form.Select({ 
+                    /*new Ext.form.Select({ 
                         id:'Efectivo-operacionInterSucursalEfectivo-responsable',
                         name : 'responsable',
                         label: 'Responsable',
                         required:true,
                         options: [ {text : "Seleccione un responsable", value : null } ]
-                    }),
+                    }),*/
                     new Ext.form.Text({
                         id: 'Efectivo-operacionInterSucursalEfectivo-concepto',
                         label: 'Concepto',
