@@ -4,7 +4,7 @@ require_once('model/sucursal.dao.php');
 require_once('model/ventas.dao.php');
 require_once('model/usuario.dao.php');
 require_once('model/cliente.dao.php');
-
+require_once('logger.php');
 
 function listarSucursales(  ){
 
@@ -131,13 +131,14 @@ function abrirSucursal( $detalles )
     $sucursal->setLetrasFactura ($detalles['prefijo_factura']);
     $sucursal->setRfc ($detalles['rfc']);
     $sucursal->setTelefono ($detalles['telefono']);
-
+    $sucursal->setSaldoAfavor (0);
 
     try{
         $err = SucursalDAO::save( $sucursal );
     }catch( Exception $e ){
         $exito = false;
-        return array( 'success' => $exito, 'reason' => $err );    
+        Logger::log("Error al insertar nueva sucursal " . $e);
+        return array( 'success' => $exito, 'reason' => $e );    
     }
 
 

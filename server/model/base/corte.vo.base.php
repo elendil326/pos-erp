@@ -21,17 +21,42 @@ class Corte extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->num_corte = $data['num_corte'];
-			$this->anio = $data['anio'];
-			$this->inicio = $data['inicio'];
-			$this->fin = $data['fin'];
-			$this->ventas = $data['ventas'];
-			$this->abonosVentas = $data['abonosVentas'];
-			$this->compras = $data['compras'];
-			$this->AbonosCompra = $data['AbonosCompra'];
-			$this->gastos = $data['gastos'];
-			$this->ingresos = $data['ingresos'];
-			$this->gananciasNetas = $data['gananciasNetas'];
+			if( isset($data['id_corte']) ){
+				$this->id_corte = $data['id_corte'];
+			}
+			if( isset($data['fecha']) ){
+				$this->fecha = $data['fecha'];
+			}
+			if( isset($data['id_sucursal']) ){
+				$this->id_sucursal = $data['id_sucursal'];
+			}
+			if( isset($data['total_ventas']) ){
+				$this->total_ventas = $data['total_ventas'];
+			}
+			if( isset($data['total_ventas_abonado']) ){
+				$this->total_ventas_abonado = $data['total_ventas_abonado'];
+			}
+			if( isset($data['total_ventas_saldo']) ){
+				$this->total_ventas_saldo = $data['total_ventas_saldo'];
+			}
+			if( isset($data['total_compras']) ){
+				$this->total_compras = $data['total_compras'];
+			}
+			if( isset($data['total_compras_abonado']) ){
+				$this->total_compras_abonado = $data['total_compras_abonado'];
+			}
+			if( isset($data['total_gastos']) ){
+				$this->total_gastos = $data['total_gastos'];
+			}
+			if( isset($data['total_gastos_abonado']) ){
+				$this->total_gastos_abonado = $data['total_gastos_abonado'];
+			}
+			if( isset($data['total_ingresos']) ){
+				$this->total_ingresos = $data['total_ingresos'];
+			}
+			if( isset($data['total_ganancia_neta']) ){
+				$this->total_ganancia_neta = $data['total_ganancia_neta'];
+			}
 		}
 	}
 
@@ -42,390 +67,426 @@ class Corte extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
-		"num_corte" => $this->num_corte,
-		"anio" => $this->anio,
-		"inicio" => $this->inicio,
-		"fin" => $this->fin,
-		"ventas" => $this->ventas,
-		"abonosVentas" => $this->abonosVentas,
-		"compras" => $this->compras,
-		"AbonosCompra" => $this->AbonosCompra,
-		"gastos" => $this->gastos,
-		"ingresos" => $this->ingresos,
-		"gananciasNetas" => $this->gananciasNetas
-		); 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
+		"id_corte" => $this->id_corte,
+		"fecha" => $this->fecha,
+		"id_sucursal" => $this->id_sucursal,
+		"total_ventas" => $this->total_ventas,
+		"total_ventas_abonado" => $this->total_ventas_abonado,
+		"total_ventas_saldo" => $this->total_ventas_saldo,
+		"total_compras" => $this->total_compras,
+		"total_compras_abonado" => $this->total_compras_abonado,
+		"total_gastos" => $this->total_gastos,
+		"total_gastos_abonado" => $this->total_gastos_abonado,
+		"total_ingresos" => $this->total_ingresos,
+		"total_ganancia_neta" => $this->total_ganancia_neta
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
-	  * num_corte
+	  * id_corte
 	  * 
-	  * numero de corte<br>
+	  * identificador del corte<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
 	  * @access protected
-	  * @var int(11)
+	  * @var int(12)
 	  */
-	protected $num_corte;
+	protected $id_corte;
 
 	/**
-	  * anio
+	  * fecha
 	  * 
-	  * año del corte<br>
-	  * @access protected
-	  * @var year(4)
-	  */
-	protected $anio;
-
-	/**
-	  * inicio
-	  * 
-	  * año del corte<br>
+	  * fecha de este corte<br>
 	  * @access protected
 	  * @var timestamp
 	  */
-	protected $inicio;
+	protected $fecha;
 
 	/**
-	  * fin
+	  * id_sucursal
 	  * 
-	  * fecha de fin del corte<br>
+	  * sucursal a la que se realizo este corte<br>
 	  * @access protected
-	  * @var timestamp
+	  * @var int(12)
 	  */
-	protected $fin;
+	protected $id_sucursal;
 
 	/**
-	  * ventas
+	  * total_ventas
 	  * 
-	  * ventas al contado en ese periodo<br>
-	  * @access protected
-	  * @var float
-	  */
-	protected $ventas;
-
-	/**
-	  * abonosVentas
-	  * 
-	  * pagos de abonos en este periodo<br>
+	  * total de activo realizado en ventas para esta sucursal incluyendo ventas a credito y ventas a contado aunque no esten saldadas<br>
 	  * @access protected
 	  * @var float
 	  */
-	protected $abonosVentas;
+	protected $total_ventas;
 
 	/**
-	  * compras
+	  * total_ventas_abonado
 	  * 
-	  * compras realizadas en ese periodo<br>
+	  * total de efectivo adquirido gracias a ventas, incluye ventas a contado y los abonos de las ventas a credito<br>
 	  * @access protected
 	  * @var float
 	  */
-	protected $compras;
+	protected $total_ventas_abonado;
 
 	/**
-	  * AbonosCompra
+	  * total_ventas_saldo
 	  * 
-	  * pagos realizados en ese periodo<br>
+	  * total de dinero que se le debe a esta sucursal por ventas a credito<br>
 	  * @access protected
 	  * @var float
 	  */
-	protected $AbonosCompra;
+	protected $total_ventas_saldo;
 
 	/**
-	  * gastos
+	  * total_compras
 	  * 
-	  * gastos echos en ese periodo<br>
+	  * total de gastado en compras<br>
 	  * @access protected
 	  * @var float
 	  */
-	protected $gastos;
+	protected $total_compras;
 
 	/**
-	  * ingresos
+	  * total_compras_abonado
 	  * 
-	  * ingresos obtenidos en ese periodo<br>
+	  * total de abonado en compras<br>
 	  * @access protected
 	  * @var float
 	  */
-	protected $ingresos;
+	protected $total_compras_abonado;
 
 	/**
-	  * gananciasNetas
+	  * total_gastos
 	  * 
-	  * ganancias netas dentro del periodo<br>
+	  * total de gastos con saldo o sin salgo<br>
 	  * @access protected
 	  * @var float
 	  */
-	protected $gananciasNetas;
+	protected $total_gastos;
 
 	/**
-	  * getNumCorte
+	  * total_gastos_abonado
 	  * 
-	  * Get the <i>num_corte</i> property for this object. Donde <i>num_corte</i> es numero de corte
-	  * @return int(11)
+	  * total de gastos pagados ya<br>
+	  * @access protected
+	  * @var float
 	  */
-	final public function getNumCorte()
+	protected $total_gastos_abonado;
+
+	/**
+	  * total_ingresos
+	  * 
+	  * total de ingresos para esta sucursal desde el ultimo corte<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $total_ingresos;
+
+	/**
+	  * total_ganancia_neta
+	  * 
+	  * calculo de ganancia neta<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $total_ganancia_neta;
+
+	/**
+	  * getIdCorte
+	  * 
+	  * Get the <i>id_corte</i> property for this object. Donde <i>id_corte</i> es identificador del corte
+	  * @return int(12)
+	  */
+	final public function getIdCorte()
 	{
-		return $this->num_corte;
+		return $this->id_corte;
 	}
 
 	/**
-	  * setNumCorte( $num_corte )
+	  * setIdCorte( $id_corte )
 	  * 
-	  * Set the <i>num_corte</i> property for this object. Donde <i>num_corte</i> es numero de corte.
-	  * Una validacion basica se hara aqui para comprobar que <i>num_corte</i> es de tipo <i>int(11)</i>. 
+	  * Set the <i>id_corte</i> property for this object. Donde <i>id_corte</i> es identificador del corte.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_corte</i> es de tipo <i>int(12)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
-	  * No deberias usar setNumCorte( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * No deberias usar setIdCorte( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
-	  * No deberias usar setNumCorte( ) a menos que sepas exactamente lo que estas haciendo.<br>
-	  * @param int(11)
+	  * No deberias usar setIdCorte( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * @param int(12)
 	  */
-	final public function setNumCorte( $num_corte )
+	final public function setIdCorte( $id_corte )
 	{
-		$this->num_corte = $num_corte;
+		$this->id_corte = $id_corte;
 	}
 
 	/**
-	  * getAnio
+	  * getFecha
 	  * 
-	  * Get the <i>anio</i> property for this object. Donde <i>anio</i> es año del corte
-	  * @return year(4)
-	  */
-	final public function getAnio()
-	{
-		return $this->anio;
-	}
-
-	/**
-	  * setAnio( $anio )
-	  * 
-	  * Set the <i>anio</i> property for this object. Donde <i>anio</i> es año del corte.
-	  * Una validacion basica se hara aqui para comprobar que <i>anio</i> es de tipo <i>year(4)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param year(4)
-	  */
-	final public function setAnio( $anio )
-	{
-		$this->anio = $anio;
-	}
-
-	/**
-	  * getInicio
-	  * 
-	  * Get the <i>inicio</i> property for this object. Donde <i>inicio</i> es año del corte
+	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha de este corte
 	  * @return timestamp
 	  */
-	final public function getInicio()
+	final public function getFecha()
 	{
-		return $this->inicio;
+		return $this->fecha;
 	}
 
 	/**
-	  * setInicio( $inicio )
+	  * setFecha( $fecha )
 	  * 
-	  * Set the <i>inicio</i> property for this object. Donde <i>inicio</i> es año del corte.
-	  * Una validacion basica se hara aqui para comprobar que <i>inicio</i> es de tipo <i>timestamp</i>. 
+	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha de este corte.
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>timestamp</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param timestamp
 	  */
-	final public function setInicio( $inicio )
+	final public function setFecha( $fecha )
 	{
-		$this->inicio = $inicio;
+		$this->fecha = $fecha;
 	}
 
 	/**
-	  * getFin
+	  * getIdSucursal
 	  * 
-	  * Get the <i>fin</i> property for this object. Donde <i>fin</i> es fecha de fin del corte
-	  * @return timestamp
+	  * Get the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es sucursal a la que se realizo este corte
+	  * @return int(12)
 	  */
-	final public function getFin()
+	final public function getIdSucursal()
 	{
-		return $this->fin;
+		return $this->id_sucursal;
 	}
 
 	/**
-	  * setFin( $fin )
+	  * setIdSucursal( $id_sucursal )
 	  * 
-	  * Set the <i>fin</i> property for this object. Donde <i>fin</i> es fecha de fin del corte.
-	  * Una validacion basica se hara aqui para comprobar que <i>fin</i> es de tipo <i>timestamp</i>. 
+	  * Set the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es sucursal a la que se realizo este corte.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_sucursal</i> es de tipo <i>int(12)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param timestamp
+	  * @param int(12)
 	  */
-	final public function setFin( $fin )
+	final public function setIdSucursal( $id_sucursal )
 	{
-		$this->fin = $fin;
+		$this->id_sucursal = $id_sucursal;
 	}
 
 	/**
-	  * getVentas
+	  * getTotalVentas
 	  * 
-	  * Get the <i>ventas</i> property for this object. Donde <i>ventas</i> es ventas al contado en ese periodo
+	  * Get the <i>total_ventas</i> property for this object. Donde <i>total_ventas</i> es total de activo realizado en ventas para esta sucursal incluyendo ventas a credito y ventas a contado aunque no esten saldadas
 	  * @return float
 	  */
-	final public function getVentas()
+	final public function getTotalVentas()
 	{
-		return $this->ventas;
+		return $this->total_ventas;
 	}
 
 	/**
-	  * setVentas( $ventas )
+	  * setTotalVentas( $total_ventas )
 	  * 
-	  * Set the <i>ventas</i> property for this object. Donde <i>ventas</i> es ventas al contado en ese periodo.
-	  * Una validacion basica se hara aqui para comprobar que <i>ventas</i> es de tipo <i>float</i>. 
+	  * Set the <i>total_ventas</i> property for this object. Donde <i>total_ventas</i> es total de activo realizado en ventas para esta sucursal incluyendo ventas a credito y ventas a contado aunque no esten saldadas.
+	  * Una validacion basica se hara aqui para comprobar que <i>total_ventas</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
-	final public function setVentas( $ventas )
+	final public function setTotalVentas( $total_ventas )
 	{
-		$this->ventas = $ventas;
+		$this->total_ventas = $total_ventas;
 	}
 
 	/**
-	  * getAbonosVentas
+	  * getTotalVentasAbonado
 	  * 
-	  * Get the <i>abonosVentas</i> property for this object. Donde <i>abonosVentas</i> es pagos de abonos en este periodo
+	  * Get the <i>total_ventas_abonado</i> property for this object. Donde <i>total_ventas_abonado</i> es total de efectivo adquirido gracias a ventas, incluye ventas a contado y los abonos de las ventas a credito
 	  * @return float
 	  */
-	final public function getAbonosVentas()
+	final public function getTotalVentasAbonado()
 	{
-		return $this->abonosVentas;
+		return $this->total_ventas_abonado;
 	}
 
 	/**
-	  * setAbonosVentas( $abonosVentas )
+	  * setTotalVentasAbonado( $total_ventas_abonado )
 	  * 
-	  * Set the <i>abonosVentas</i> property for this object. Donde <i>abonosVentas</i> es pagos de abonos en este periodo.
-	  * Una validacion basica se hara aqui para comprobar que <i>abonosVentas</i> es de tipo <i>float</i>. 
+	  * Set the <i>total_ventas_abonado</i> property for this object. Donde <i>total_ventas_abonado</i> es total de efectivo adquirido gracias a ventas, incluye ventas a contado y los abonos de las ventas a credito.
+	  * Una validacion basica se hara aqui para comprobar que <i>total_ventas_abonado</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
-	final public function setAbonosVentas( $abonosVentas )
+	final public function setTotalVentasAbonado( $total_ventas_abonado )
 	{
-		$this->abonosVentas = $abonosVentas;
+		$this->total_ventas_abonado = $total_ventas_abonado;
 	}
 
 	/**
-	  * getCompras
+	  * getTotalVentasSaldo
 	  * 
-	  * Get the <i>compras</i> property for this object. Donde <i>compras</i> es compras realizadas en ese periodo
+	  * Get the <i>total_ventas_saldo</i> property for this object. Donde <i>total_ventas_saldo</i> es total de dinero que se le debe a esta sucursal por ventas a credito
 	  * @return float
 	  */
-	final public function getCompras()
+	final public function getTotalVentasSaldo()
 	{
-		return $this->compras;
+		return $this->total_ventas_saldo;
 	}
 
 	/**
-	  * setCompras( $compras )
+	  * setTotalVentasSaldo( $total_ventas_saldo )
 	  * 
-	  * Set the <i>compras</i> property for this object. Donde <i>compras</i> es compras realizadas en ese periodo.
-	  * Una validacion basica se hara aqui para comprobar que <i>compras</i> es de tipo <i>float</i>. 
+	  * Set the <i>total_ventas_saldo</i> property for this object. Donde <i>total_ventas_saldo</i> es total de dinero que se le debe a esta sucursal por ventas a credito.
+	  * Una validacion basica se hara aqui para comprobar que <i>total_ventas_saldo</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
-	final public function setCompras( $compras )
+	final public function setTotalVentasSaldo( $total_ventas_saldo )
 	{
-		$this->compras = $compras;
+		$this->total_ventas_saldo = $total_ventas_saldo;
 	}
 
 	/**
-	  * getAbonosCompra
+	  * getTotalCompras
 	  * 
-	  * Get the <i>AbonosCompra</i> property for this object. Donde <i>AbonosCompra</i> es pagos realizados en ese periodo
+	  * Get the <i>total_compras</i> property for this object. Donde <i>total_compras</i> es total de gastado en compras
 	  * @return float
 	  */
-	final public function getAbonosCompra()
+	final public function getTotalCompras()
 	{
-		return $this->AbonosCompra;
+		return $this->total_compras;
 	}
 
 	/**
-	  * setAbonosCompra( $AbonosCompra )
+	  * setTotalCompras( $total_compras )
 	  * 
-	  * Set the <i>AbonosCompra</i> property for this object. Donde <i>AbonosCompra</i> es pagos realizados en ese periodo.
-	  * Una validacion basica se hara aqui para comprobar que <i>AbonosCompra</i> es de tipo <i>float</i>. 
+	  * Set the <i>total_compras</i> property for this object. Donde <i>total_compras</i> es total de gastado en compras.
+	  * Una validacion basica se hara aqui para comprobar que <i>total_compras</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
-	final public function setAbonosCompra( $AbonosCompra )
+	final public function setTotalCompras( $total_compras )
 	{
-		$this->AbonosCompra = $AbonosCompra;
+		$this->total_compras = $total_compras;
 	}
 
 	/**
-	  * getGastos
+	  * getTotalComprasAbonado
 	  * 
-	  * Get the <i>gastos</i> property for this object. Donde <i>gastos</i> es gastos echos en ese periodo
+	  * Get the <i>total_compras_abonado</i> property for this object. Donde <i>total_compras_abonado</i> es total de abonado en compras
 	  * @return float
 	  */
-	final public function getGastos()
+	final public function getTotalComprasAbonado()
 	{
-		return $this->gastos;
+		return $this->total_compras_abonado;
 	}
 
 	/**
-	  * setGastos( $gastos )
+	  * setTotalComprasAbonado( $total_compras_abonado )
 	  * 
-	  * Set the <i>gastos</i> property for this object. Donde <i>gastos</i> es gastos echos en ese periodo.
-	  * Una validacion basica se hara aqui para comprobar que <i>gastos</i> es de tipo <i>float</i>. 
+	  * Set the <i>total_compras_abonado</i> property for this object. Donde <i>total_compras_abonado</i> es total de abonado en compras.
+	  * Una validacion basica se hara aqui para comprobar que <i>total_compras_abonado</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
-	final public function setGastos( $gastos )
+	final public function setTotalComprasAbonado( $total_compras_abonado )
 	{
-		$this->gastos = $gastos;
+		$this->total_compras_abonado = $total_compras_abonado;
 	}
 
 	/**
-	  * getIngresos
+	  * getTotalGastos
 	  * 
-	  * Get the <i>ingresos</i> property for this object. Donde <i>ingresos</i> es ingresos obtenidos en ese periodo
+	  * Get the <i>total_gastos</i> property for this object. Donde <i>total_gastos</i> es total de gastos con saldo o sin salgo
 	  * @return float
 	  */
-	final public function getIngresos()
+	final public function getTotalGastos()
 	{
-		return $this->ingresos;
+		return $this->total_gastos;
 	}
 
 	/**
-	  * setIngresos( $ingresos )
+	  * setTotalGastos( $total_gastos )
 	  * 
-	  * Set the <i>ingresos</i> property for this object. Donde <i>ingresos</i> es ingresos obtenidos en ese periodo.
-	  * Una validacion basica se hara aqui para comprobar que <i>ingresos</i> es de tipo <i>float</i>. 
+	  * Set the <i>total_gastos</i> property for this object. Donde <i>total_gastos</i> es total de gastos con saldo o sin salgo.
+	  * Una validacion basica se hara aqui para comprobar que <i>total_gastos</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
-	final public function setIngresos( $ingresos )
+	final public function setTotalGastos( $total_gastos )
 	{
-		$this->ingresos = $ingresos;
+		$this->total_gastos = $total_gastos;
 	}
 
 	/**
-	  * getGananciasNetas
+	  * getTotalGastosAbonado
 	  * 
-	  * Get the <i>gananciasNetas</i> property for this object. Donde <i>gananciasNetas</i> es ganancias netas dentro del periodo
+	  * Get the <i>total_gastos_abonado</i> property for this object. Donde <i>total_gastos_abonado</i> es total de gastos pagados ya
 	  * @return float
 	  */
-	final public function getGananciasNetas()
+	final public function getTotalGastosAbonado()
 	{
-		return $this->gananciasNetas;
+		return $this->total_gastos_abonado;
 	}
 
 	/**
-	  * setGananciasNetas( $gananciasNetas )
+	  * setTotalGastosAbonado( $total_gastos_abonado )
 	  * 
-	  * Set the <i>gananciasNetas</i> property for this object. Donde <i>gananciasNetas</i> es ganancias netas dentro del periodo.
-	  * Una validacion basica se hara aqui para comprobar que <i>gananciasNetas</i> es de tipo <i>float</i>. 
+	  * Set the <i>total_gastos_abonado</i> property for this object. Donde <i>total_gastos_abonado</i> es total de gastos pagados ya.
+	  * Una validacion basica se hara aqui para comprobar que <i>total_gastos_abonado</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
-	final public function setGananciasNetas( $gananciasNetas )
+	final public function setTotalGastosAbonado( $total_gastos_abonado )
 	{
-		$this->gananciasNetas = $gananciasNetas;
+		$this->total_gastos_abonado = $total_gastos_abonado;
+	}
+
+	/**
+	  * getTotalIngresos
+	  * 
+	  * Get the <i>total_ingresos</i> property for this object. Donde <i>total_ingresos</i> es total de ingresos para esta sucursal desde el ultimo corte
+	  * @return float
+	  */
+	final public function getTotalIngresos()
+	{
+		return $this->total_ingresos;
+	}
+
+	/**
+	  * setTotalIngresos( $total_ingresos )
+	  * 
+	  * Set the <i>total_ingresos</i> property for this object. Donde <i>total_ingresos</i> es total de ingresos para esta sucursal desde el ultimo corte.
+	  * Una validacion basica se hara aqui para comprobar que <i>total_ingresos</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setTotalIngresos( $total_ingresos )
+	{
+		$this->total_ingresos = $total_ingresos;
+	}
+
+	/**
+	  * getTotalGananciaNeta
+	  * 
+	  * Get the <i>total_ganancia_neta</i> property for this object. Donde <i>total_ganancia_neta</i> es calculo de ganancia neta
+	  * @return float
+	  */
+	final public function getTotalGananciaNeta()
+	{
+		return $this->total_ganancia_neta;
+	}
+
+	/**
+	  * setTotalGananciaNeta( $total_ganancia_neta )
+	  * 
+	  * Set the <i>total_ganancia_neta</i> property for this object. Donde <i>total_ganancia_neta</i> es calculo de ganancia neta.
+	  * Una validacion basica se hara aqui para comprobar que <i>total_ganancia_neta</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setTotalGananciaNeta( $total_ganancia_neta )
+	{
+		$this->total_ganancia_neta = $total_ganancia_neta;
 	}
 
 }

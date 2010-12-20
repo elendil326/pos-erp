@@ -21,18 +21,42 @@ class Ventas extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->id_venta = $data['id_venta'];
-			$this->id_cliente = $data['id_cliente'];
-			$this->tipo_venta = $data['tipo_venta'];
-			$this->fecha = $data['fecha'];
-			$this->subtotal = $data['subtotal'];
-			$this->iva = $data['iva'];
-			$this->descuento = $data['descuento'];
-			$this->total = $data['total'];
-			$this->id_sucursal = $data['id_sucursal'];
-			$this->id_usuario = $data['id_usuario'];
-			$this->pagado = $data['pagado'];
-			$this->ip = $data['ip'];
+			if( isset($data['id_venta']) ){
+				$this->id_venta = $data['id_venta'];
+			}
+			if( isset($data['id_cliente']) ){
+				$this->id_cliente = $data['id_cliente'];
+			}
+			if( isset($data['tipo_venta']) ){
+				$this->tipo_venta = $data['tipo_venta'];
+			}
+			if( isset($data['fecha']) ){
+				$this->fecha = $data['fecha'];
+			}
+			if( isset($data['subtotal']) ){
+				$this->subtotal = $data['subtotal'];
+			}
+			if( isset($data['iva']) ){
+				$this->iva = $data['iva'];
+			}
+			if( isset($data['descuento']) ){
+				$this->descuento = $data['descuento'];
+			}
+			if( isset($data['total']) ){
+				$this->total = $data['total'];
+			}
+			if( isset($data['id_sucursal']) ){
+				$this->id_sucursal = $data['id_sucursal'];
+			}
+			if( isset($data['id_usuario']) ){
+				$this->id_usuario = $data['id_usuario'];
+			}
+			if( isset($data['pagado']) ){
+				$this->pagado = $data['pagado'];
+			}
+			if( isset($data['ip']) ){
+				$this->ip = $data['ip'];
+			}
 		}
 	}
 
@@ -43,9 +67,10 @@ class Ventas extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"id_venta" => $this->id_venta,
 		"id_cliente" => $this->id_cliente,
 		"tipo_venta" => $this->tipo_venta,
@@ -58,9 +83,10 @@ class Ventas extends VO
 		"id_usuario" => $this->id_usuario,
 		"pagado" => $this->pagado,
 		"ip" => $this->ip
-		); 
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * id_venta
 	  * 

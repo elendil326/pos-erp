@@ -21,13 +21,27 @@ class Autorizacion extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->id_autorizacion = $data['id_autorizacion'];
-			$this->id_usuario = $data['id_usuario'];
-			$this->id_sucursal = $data['id_sucursal'];
-			$this->fecha_peticion = $data['fecha_peticion'];
-			$this->fecha_respuesta = $data['fecha_respuesta'];
-			$this->estado = $data['estado'];
-			$this->parametros = $data['parametros'];
+			if( isset($data['id_autorizacion']) ){
+				$this->id_autorizacion = $data['id_autorizacion'];
+			}
+			if( isset($data['id_usuario']) ){
+				$this->id_usuario = $data['id_usuario'];
+			}
+			if( isset($data['id_sucursal']) ){
+				$this->id_sucursal = $data['id_sucursal'];
+			}
+			if( isset($data['fecha_peticion']) ){
+				$this->fecha_peticion = $data['fecha_peticion'];
+			}
+			if( isset($data['fecha_respuesta']) ){
+				$this->fecha_respuesta = $data['fecha_respuesta'];
+			}
+			if( isset($data['estado']) ){
+				$this->estado = $data['estado'];
+			}
+			if( isset($data['parametros']) ){
+				$this->parametros = $data['parametros'];
+			}
 		}
 	}
 
@@ -38,9 +52,10 @@ class Autorizacion extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"id_autorizacion" => $this->id_autorizacion,
 		"id_usuario" => $this->id_usuario,
 		"id_sucursal" => $this->id_sucursal,
@@ -48,13 +63,14 @@ class Autorizacion extends VO
 		"fecha_respuesta" => $this->fecha_respuesta,
 		"estado" => $this->estado,
 		"parametros" => $this->parametros
-		); 
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * id_autorizacion
 	  * 
-	  * Campo no documentado<br>
+	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * @access protected
 	  * @var int(11)
@@ -118,7 +134,7 @@ class Autorizacion extends VO
 	/**
 	  * getIdAutorizacion
 	  * 
-	  * Get the <i>id_autorizacion</i> property for this object. Donde <i>id_autorizacion</i> es Campo no documentado
+	  * Get the <i>id_autorizacion</i> property for this object. Donde <i>id_autorizacion</i> es  [Campo no documentado]
 	  * @return int(11)
 	  */
 	final public function getIdAutorizacion()
@@ -129,7 +145,7 @@ class Autorizacion extends VO
 	/**
 	  * setIdAutorizacion( $id_autorizacion )
 	  * 
-	  * Set the <i>id_autorizacion</i> property for this object. Donde <i>id_autorizacion</i> es Campo no documentado.
+	  * Set the <i>id_autorizacion</i> property for this object. Donde <i>id_autorizacion</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>id_autorizacion</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>

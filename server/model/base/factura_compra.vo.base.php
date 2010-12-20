@@ -21,8 +21,12 @@ class FacturaCompra extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->folio = $data['folio'];
-			$this->id_compra = $data['id_compra'];
+			if( isset($data['folio']) ){
+				$this->folio = $data['folio'];
+			}
+			if( isset($data['id_compra']) ){
+				$this->id_compra = $data['id_compra'];
+			}
 		}
 	}
 
@@ -33,18 +37,20 @@ class FacturaCompra extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"folio" => $this->folio,
 		"id_compra" => $this->id_compra
-		); 
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * folio
 	  * 
-	  * Campo no documentado<br>
+	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * @access protected
 	  * @var varchar(15)
@@ -63,7 +69,7 @@ class FacturaCompra extends VO
 	/**
 	  * getFolio
 	  * 
-	  * Get the <i>folio</i> property for this object. Donde <i>folio</i> es Campo no documentado
+	  * Get the <i>folio</i> property for this object. Donde <i>folio</i> es  [Campo no documentado]
 	  * @return varchar(15)
 	  */
 	final public function getFolio()
@@ -74,7 +80,7 @@ class FacturaCompra extends VO
 	/**
 	  * setFolio( $folio )
 	  * 
-	  * Set the <i>folio</i> property for this object. Donde <i>folio</i> es Campo no documentado.
+	  * Set the <i>folio</i> property for this object. Donde <i>folio</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>folio</i> es de tipo <i>varchar(15)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>

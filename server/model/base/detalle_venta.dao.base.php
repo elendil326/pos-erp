@@ -7,7 +7,7 @@
   * @access private
   * 
   */
-abstract class DetalleVentaDAOBase extends TablaDAO
+abstract class DetalleVentaDAOBase extends DAO
 {
 
 	/**
@@ -21,7 +21,7 @@ abstract class DetalleVentaDAOBase extends TablaDAO
 	  *	@static
 	  * @throws Exception si la operacion fallo.
 	  * @param DetalleVenta [$detalle_venta] El objeto de tipo DetalleVenta
-	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
 	public static final function save( &$detalle_venta )
 	{
@@ -41,7 +41,7 @@ abstract class DetalleVentaDAOBase extends TablaDAO
 	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link DetalleVenta}. NULL si no hay tal registro.
+	  * @return @link DetalleVenta Un objeto del tipo {@link DetalleVenta}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_venta, $id_producto )
 	{
@@ -109,9 +109,10 @@ abstract class DetalleVentaDAOBase extends TablaDAO
 	  * </code>
 	  *	@static
 	  * @param DetalleVenta [$detalle_venta] El objeto de tipo DetalleVenta
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function search( $detalle_venta , $json = false)
+	public static final function search( $detalle_venta , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from detalle_venta WHERE ("; 
 		$val = array();
@@ -136,22 +137,17 @@ abstract class DetalleVentaDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new DetalleVenta($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new DetalleVenta($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new DetalleVenta($foo));
 		}
+		return $ar;
 	}
 
 
@@ -242,9 +238,10 @@ abstract class DetalleVentaDAOBase extends TablaDAO
 	  *	@static
 	  * @param DetalleVenta [$detalle_venta] El objeto de tipo DetalleVenta
 	  * @param DetalleVenta [$detalle_venta] El objeto de tipo DetalleVenta
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function byRange( $detalle_ventaA , $detalle_ventaB , $json = false)
+	public static final function byRange( $detalle_ventaA , $detalle_ventaB , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from detalle_venta WHERE ("; 
 		$val = array();
@@ -293,22 +290,17 @@ abstract class DetalleVentaDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new DetalleVenta($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new DetalleVenta($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new DetalleVenta($foo));
 		}
+		return $ar;
 	}
 
 

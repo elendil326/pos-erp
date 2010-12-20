@@ -7,7 +7,7 @@
   * @access private
   * 
   */
-abstract class GruposUsuariosDAOBase extends TablaDAO
+abstract class GruposUsuariosDAOBase extends DAO
 {
 
 	/**
@@ -21,11 +21,11 @@ abstract class GruposUsuariosDAOBase extends TablaDAO
 	  *	@static
 	  * @throws Exception si la operacion fallo.
 	  * @param GruposUsuarios [$grupos_usuarios] El objeto de tipo GruposUsuarios
-	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
 	public static final function save( &$grupos_usuarios )
 	{
-		if( self::getByPK(  $grupos_usuarios->getIdGrupo() , $grupos_usuarios->getIdUsuario() ) === NULL )
+		if( self::getByPK(  $grupos_usuarios->getIdUsuario() ) === NULL )
 		{
 			try{ return GruposUsuariosDAOBase::create( $grupos_usuarios) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -41,12 +41,12 @@ abstract class GruposUsuariosDAOBase extends TablaDAO
 	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link GruposUsuarios}. NULL si no hay tal registro.
+	  * @return @link GruposUsuarios Un objeto del tipo {@link GruposUsuarios}. NULL si no hay tal registro.
 	  **/
-	public static final function getByPK(  $id_grupo, $id_usuario )
+	public static final function getByPK(  $id_usuario )
 	{
-		$sql = "SELECT * FROM grupos_usuarios WHERE (id_grupo = ? AND id_usuario = ? ) LIMIT 1;";
-		$params = array(  $id_grupo, $id_usuario );
+		$sql = "SELECT * FROM grupos_usuarios WHERE (id_usuario = ? ) LIMIT 1;";
+		$params = array(  $id_usuario );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
@@ -109,9 +109,10 @@ abstract class GruposUsuariosDAOBase extends TablaDAO
 	  * </code>
 	  *	@static
 	  * @param GruposUsuarios [$grupos_usuarios] El objeto de tipo GruposUsuarios
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function search( $grupos_usuarios , $json = false)
+	public static final function search( $grupos_usuarios , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from grupos_usuarios WHERE ("; 
 		$val = array();
@@ -126,22 +127,17 @@ abstract class GruposUsuariosDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new GruposUsuarios($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new GruposUsuarios($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new GruposUsuarios($foo));
 		}
+		return $ar;
 	}
 
 
@@ -158,6 +154,14 @@ abstract class GruposUsuariosDAOBase extends TablaDAO
 	  **/
 	private static final function update( $grupos_usuarios )
 	{
+		$sql = "UPDATE grupos_usuarios SET  id_grupo = ? WHERE  id_usuario = ?;";
+		$params = array( 
+			$grupos_usuarios->getIdGrupo(), 
+			$grupos_usuarios->getIdUsuario(), );
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ throw new Exception ($e->getMessage()); }
+		return $conn->Affected_Rows();
 	}
 
 
@@ -221,9 +225,10 @@ abstract class GruposUsuariosDAOBase extends TablaDAO
 	  *	@static
 	  * @param GruposUsuarios [$grupos_usuarios] El objeto de tipo GruposUsuarios
 	  * @param GruposUsuarios [$grupos_usuarios] El objeto de tipo GruposUsuarios
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function byRange( $grupos_usuariosA , $grupos_usuariosB , $json = false)
+	public static final function byRange( $grupos_usuariosA , $grupos_usuariosB , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from grupos_usuarios WHERE ("; 
 		$val = array();
@@ -250,22 +255,17 @@ abstract class GruposUsuariosDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new GruposUsuarios($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new GruposUsuarios($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new GruposUsuarios($foo));
 		}
+		return $ar;
 	}
 
 
@@ -284,9 +284,9 @@ abstract class GruposUsuariosDAOBase extends TablaDAO
 	  **/
 	public static final function delete( &$grupos_usuarios )
 	{
-		if(self::getByPK($grupos_usuarios->getIdGrupo(), $grupos_usuarios->getIdUsuario()) === NULL) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM grupos_usuarios WHERE  id_grupo = ? AND id_usuario = ?;";
-		$params = array( $grupos_usuarios->getIdGrupo(), $grupos_usuarios->getIdUsuario() );
+		if(self::getByPK($grupos_usuarios->getIdUsuario()) === NULL) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM grupos_usuarios WHERE  id_usuario = ?;";
+		$params = array( $grupos_usuarios->getIdUsuario() );
 		global $conn;
 
 		$conn->Execute($sql, $params);

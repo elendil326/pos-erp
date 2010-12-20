@@ -7,7 +7,7 @@
   * @access private
   * 
   */
-abstract class ActualizacionDePrecioDAOBase extends TablaDAO
+abstract class ActualizacionDePrecioDAOBase extends DAO
 {
 
 	/**
@@ -21,11 +21,11 @@ abstract class ActualizacionDePrecioDAOBase extends TablaDAO
 	  *	@static
 	  * @throws Exception si la operacion fallo.
 	  * @param ActualizacionDePrecio [$actualizacion_de_precio] El objeto de tipo ActualizacionDePrecio
-	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
 	public static final function save( &$actualizacion_de_precio )
 	{
-		if( self::getByPK(  $actualizacion_de_precio->getIdProducto() ) === NULL )
+		if( self::getByPK(  $actualizacion_de_precio->getIdActualizacion() ) === NULL )
 		{
 			try{ return ActualizacionDePrecioDAOBase::create( $actualizacion_de_precio) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -41,12 +41,12 @@ abstract class ActualizacionDePrecioDAOBase extends TablaDAO
 	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link ActualizacionDePrecio}. NULL si no hay tal registro.
+	  * @return @link ActualizacionDePrecio Un objeto del tipo {@link ActualizacionDePrecio}. NULL si no hay tal registro.
 	  **/
-	public static final function getByPK(  $id_producto )
+	public static final function getByPK(  $id_actualizacion )
 	{
-		$sql = "SELECT * FROM actualizacion_de_precio WHERE (id_producto = ? ) LIMIT 1;";
-		$params = array(  $id_producto );
+		$sql = "SELECT * FROM actualizacion_de_precio WHERE (id_actualizacion = ? ) LIMIT 1;";
+		$params = array(  $id_actualizacion );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
@@ -109,12 +109,18 @@ abstract class ActualizacionDePrecioDAOBase extends TablaDAO
 	  * </code>
 	  *	@static
 	  * @param ActualizacionDePrecio [$actualizacion_de_precio] El objeto de tipo ActualizacionDePrecio
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function search( $actualizacion_de_precio , $json = false)
+	public static final function search( $actualizacion_de_precio , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from actualizacion_de_precio WHERE ("; 
 		$val = array();
+		if( $actualizacion_de_precio->getIdActualizacion() != NULL){
+			$sql .= " id_actualizacion = ? AND";
+			array_push( $val, $actualizacion_de_precio->getIdActualizacion() );
+		}
+
 		if( $actualizacion_de_precio->getIdProducto() != NULL){
 			$sql .= " id_producto = ? AND";
 			array_push( $val, $actualizacion_de_precio->getIdProducto() );
@@ -146,22 +152,17 @@ abstract class ActualizacionDePrecioDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new ActualizacionDePrecio($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new ActualizacionDePrecio($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new ActualizacionDePrecio($foo));
 		}
+		return $ar;
 	}
 
 
@@ -178,14 +179,15 @@ abstract class ActualizacionDePrecioDAOBase extends TablaDAO
 	  **/
 	private static final function update( $actualizacion_de_precio )
 	{
-		$sql = "UPDATE actualizacion_de_precio SET  id_usuario = ?, precio_venta = ?, precio_compra = ?, precio_intersucursal = ?, fecha = ? WHERE  id_producto = ?;";
+		$sql = "UPDATE actualizacion_de_precio SET  id_producto = ?, id_usuario = ?, precio_venta = ?, precio_compra = ?, precio_intersucursal = ?, fecha = ? WHERE  id_actualizacion = ?;";
 		$params = array( 
+			$actualizacion_de_precio->getIdProducto(), 
 			$actualizacion_de_precio->getIdUsuario(), 
 			$actualizacion_de_precio->getPrecioVenta(), 
 			$actualizacion_de_precio->getPrecioCompra(), 
 			$actualizacion_de_precio->getPrecioIntersucursal(), 
 			$actualizacion_de_precio->getFecha(), 
-			$actualizacion_de_precio->getIdProducto(), );
+			$actualizacion_de_precio->getIdActualizacion(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
@@ -208,8 +210,9 @@ abstract class ActualizacionDePrecioDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$actualizacion_de_precio )
 	{
-		$sql = "INSERT INTO actualizacion_de_precio ( id_producto, id_usuario, precio_venta, precio_compra, precio_intersucursal, fecha ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO actualizacion_de_precio ( id_actualizacion, id_producto, id_usuario, precio_venta, precio_compra, precio_intersucursal, fecha ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
+			$actualizacion_de_precio->getIdActualizacion(), 
 			$actualizacion_de_precio->getIdProducto(), 
 			$actualizacion_de_precio->getIdUsuario(), 
 			$actualizacion_de_precio->getPrecioVenta(), 
@@ -222,7 +225,7 @@ abstract class ActualizacionDePrecioDAOBase extends TablaDAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		
+		$actualizacion_de_precio->setIdActualizacion( $conn->Insert_ID() );
 		return $ar;
 	}
 
@@ -257,12 +260,24 @@ abstract class ActualizacionDePrecioDAOBase extends TablaDAO
 	  *	@static
 	  * @param ActualizacionDePrecio [$actualizacion_de_precio] El objeto de tipo ActualizacionDePrecio
 	  * @param ActualizacionDePrecio [$actualizacion_de_precio] El objeto de tipo ActualizacionDePrecio
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function byRange( $actualizacion_de_precioA , $actualizacion_de_precioB , $json = false)
+	public static final function byRange( $actualizacion_de_precioA , $actualizacion_de_precioB , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from actualizacion_de_precio WHERE ("; 
 		$val = array();
+		if( (($a = $actualizacion_de_precioA->getIdActualizacion()) != NULL) & ( ($b = $actualizacion_de_precioB->getIdActualizacion()) != NULL) ){
+				$sql .= " id_actualizacion >= ? AND id_actualizacion <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " id_actualizacion = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
 		if( (($a = $actualizacion_de_precioA->getIdProducto()) != NULL) & ( ($b = $actualizacion_de_precioB->getIdProducto()) != NULL) ){
 				$sql .= " id_producto >= ? AND id_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
@@ -330,22 +345,17 @@ abstract class ActualizacionDePrecioDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new ActualizacionDePrecio($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new ActualizacionDePrecio($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new ActualizacionDePrecio($foo));
 		}
+		return $ar;
 	}
 
 
@@ -364,9 +374,9 @@ abstract class ActualizacionDePrecioDAOBase extends TablaDAO
 	  **/
 	public static final function delete( &$actualizacion_de_precio )
 	{
-		if(self::getByPK($actualizacion_de_precio->getIdProducto()) === NULL) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM actualizacion_de_precio WHERE  id_producto = ?;";
-		$params = array( $actualizacion_de_precio->getIdProducto() );
+		if(self::getByPK($actualizacion_de_precio->getIdActualizacion()) === NULL) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM actualizacion_de_precio WHERE  id_actualizacion = ?;";
+		$params = array( $actualizacion_de_precio->getIdActualizacion() );
 		global $conn;
 
 		$conn->Execute($sql, $params);

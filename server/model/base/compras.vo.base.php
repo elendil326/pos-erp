@@ -21,14 +21,36 @@ class Compras extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->id_compra = $data['id_compra'];
-			$this->id_proveedor = $data['id_proveedor'];
-			$this->tipo_compra = $data['tipo_compra'];
-			$this->fecha = $data['fecha'];
-			$this->subtotal = $data['subtotal'];
-			$this->iva = $data['iva'];
-			$this->id_sucursal = $data['id_sucursal'];
-			$this->id_usuario = $data['id_usuario'];
+			if( isset($data['id_compra']) ){
+				$this->id_compra = $data['id_compra'];
+			}
+			if( isset($data['id_proveedor']) ){
+				$this->id_proveedor = $data['id_proveedor'];
+			}
+			if( isset($data['tipo_compra']) ){
+				$this->tipo_compra = $data['tipo_compra'];
+			}
+			if( isset($data['fecha']) ){
+				$this->fecha = $data['fecha'];
+			}
+			if( isset($data['subtotal']) ){
+				$this->subtotal = $data['subtotal'];
+			}
+			if( isset($data['iva']) ){
+				$this->iva = $data['iva'];
+			}
+			if( isset($data['id_sucursal']) ){
+				$this->id_sucursal = $data['id_sucursal'];
+			}
+			if( isset($data['id_usuario']) ){
+				$this->id_usuario = $data['id_usuario'];
+			}
+			if( isset($data['pagado']) ){
+				$this->pagado = $data['pagado'];
+			}
+			if( isset($data['liquidado']) ){
+				$this->liquidado = $data['liquidado'];
+			}
 		}
 	}
 
@@ -39,9 +61,10 @@ class Compras extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"id_compra" => $this->id_compra,
 		"id_proveedor" => $this->id_proveedor,
 		"tipo_compra" => $this->tipo_compra,
@@ -49,10 +72,13 @@ class Compras extends VO
 		"subtotal" => $this->subtotal,
 		"iva" => $this->iva,
 		"id_sucursal" => $this->id_sucursal,
-		"id_usuario" => $this->id_usuario
-		); 
+		"id_usuario" => $this->id_usuario,
+		"pagado" => $this->pagado,
+		"liquidado" => $this->liquidado
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * id_compra
 	  * 
@@ -126,6 +152,24 @@ class Compras extends VO
 	  * @var int(11)
 	  */
 	protected $id_usuario;
+
+	/**
+	  * pagado
+	  * 
+	  * total de pago abonado a esta compra<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $pagado;
+
+	/**
+	  * liquidado
+	  * 
+	  * indica si la cuenta ha sido liquidada o no<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $liquidado;
 
 	/**
 	  * getIdCompra
@@ -321,6 +365,54 @@ class Compras extends VO
 	final public function setIdUsuario( $id_usuario )
 	{
 		$this->id_usuario = $id_usuario;
+	}
+
+	/**
+	  * getPagado
+	  * 
+	  * Get the <i>pagado</i> property for this object. Donde <i>pagado</i> es total de pago abonado a esta compra
+	  * @return float
+	  */
+	final public function getPagado()
+	{
+		return $this->pagado;
+	}
+
+	/**
+	  * setPagado( $pagado )
+	  * 
+	  * Set the <i>pagado</i> property for this object. Donde <i>pagado</i> es total de pago abonado a esta compra.
+	  * Una validacion basica se hara aqui para comprobar que <i>pagado</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setPagado( $pagado )
+	{
+		$this->pagado = $pagado;
+	}
+
+	/**
+	  * getLiquidado
+	  * 
+	  * Get the <i>liquidado</i> property for this object. Donde <i>liquidado</i> es indica si la cuenta ha sido liquidada o no
+	  * @return tinyint(1)
+	  */
+	final public function getLiquidado()
+	{
+		return $this->liquidado;
+	}
+
+	/**
+	  * setLiquidado( $liquidado )
+	  * 
+	  * Set the <i>liquidado</i> property for this object. Donde <i>liquidado</i> es indica si la cuenta ha sido liquidada o no.
+	  * Una validacion basica se hara aqui para comprobar que <i>liquidado</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setLiquidado( $liquidado )
+	{
+		$this->liquidado = $liquidado;
 	}
 
 }

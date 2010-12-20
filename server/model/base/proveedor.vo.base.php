@@ -21,13 +21,27 @@ class Proveedor extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->id_proveedor = $data['id_proveedor'];
-			$this->rfc = $data['rfc'];
-			$this->nombre = $data['nombre'];
-			$this->direccion = $data['direccion'];
-			$this->telefono = $data['telefono'];
-			$this->e_mail = $data['e_mail'];
-			$this->activo = $data['activo'];
+			if( isset($data['id_proveedor']) ){
+				$this->id_proveedor = $data['id_proveedor'];
+			}
+			if( isset($data['rfc']) ){
+				$this->rfc = $data['rfc'];
+			}
+			if( isset($data['nombre']) ){
+				$this->nombre = $data['nombre'];
+			}
+			if( isset($data['direccion']) ){
+				$this->direccion = $data['direccion'];
+			}
+			if( isset($data['telefono']) ){
+				$this->telefono = $data['telefono'];
+			}
+			if( isset($data['e_mail']) ){
+				$this->e_mail = $data['e_mail'];
+			}
+			if( isset($data['activo']) ){
+				$this->activo = $data['activo'];
+			}
 		}
 	}
 
@@ -38,9 +52,10 @@ class Proveedor extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"id_proveedor" => $this->id_proveedor,
 		"rfc" => $this->rfc,
 		"nombre" => $this->nombre,
@@ -48,9 +63,10 @@ class Proveedor extends VO
 		"telefono" => $this->telefono,
 		"e_mail" => $this->e_mail,
 		"activo" => $this->activo
-		); 
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * id_proveedor
 	  * 

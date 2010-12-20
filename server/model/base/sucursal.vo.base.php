@@ -21,16 +21,39 @@ class Sucursal extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->id_sucursal = $data['id_sucursal'];
-			$this->gerente = $data['gerente'];
-			$this->descripcion = $data['descripcion'];
-			$this->direccion = $data['direccion'];
-			$this->rfc = $data['rfc'];
-			$this->telefono = $data['telefono'];
-			$this->token = $data['token'];
-			$this->letras_factura = $data['letras_factura'];
-			$this->activo = $data['activo'];
-			$this->fecha_apertura = $data['fecha_apertura'];
+			if( isset($data['id_sucursal']) ){
+				$this->id_sucursal = $data['id_sucursal'];
+			}
+			if( isset($data['gerente']) ){
+				$this->gerente = $data['gerente'];
+			}
+			if( isset($data['descripcion']) ){
+				$this->descripcion = $data['descripcion'];
+			}
+			if( isset($data['direccion']) ){
+				$this->direccion = $data['direccion'];
+			}
+			if( isset($data['rfc']) ){
+				$this->rfc = $data['rfc'];
+			}
+			if( isset($data['telefono']) ){
+				$this->telefono = $data['telefono'];
+			}
+			if( isset($data['token']) ){
+				$this->token = $data['token'];
+			}
+			if( isset($data['letras_factura']) ){
+				$this->letras_factura = $data['letras_factura'];
+			}
+			if( isset($data['activo']) ){
+				$this->activo = $data['activo'];
+			}
+			if( isset($data['fecha_apertura']) ){
+				$this->fecha_apertura = $data['fecha_apertura'];
+			}
+			if( isset($data['saldo_a_favor']) ){
+				$this->saldo_a_favor = $data['saldo_a_favor'];
+			}
 		}
 	}
 
@@ -41,9 +64,10 @@ class Sucursal extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"id_sucursal" => $this->id_sucursal,
 		"gerente" => $this->gerente,
 		"descripcion" => $this->descripcion,
@@ -53,10 +77,12 @@ class Sucursal extends VO
 		"token" => $this->token,
 		"letras_factura" => $this->letras_factura,
 		"activo" => $this->activo,
-		"fecha_apertura" => $this->fecha_apertura
-		); 
+		"fecha_apertura" => $this->fecha_apertura,
+		"saldo_a_favor" => $this->saldo_a_favor
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * id_sucursal
 	  * 
@@ -125,7 +151,7 @@ class Sucursal extends VO
 	/**
 	  * letras_factura
 	  * 
-	  * Campo no documentado<br>
+	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var varchar(10)
 	  */
@@ -134,7 +160,7 @@ class Sucursal extends VO
 	/**
 	  * activo
 	  * 
-	  * Campo no documentado<br>
+	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var tinyint(1)
 	  */
@@ -148,6 +174,15 @@ class Sucursal extends VO
 	  * @var timestamp
 	  */
 	protected $fecha_apertura;
+
+	/**
+	  * saldo_a_favor
+	  * 
+	  * es el saldo a favor que tiene la sucursal encuanto a los abonos de sus compras<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $saldo_a_favor;
 
 	/**
 	  * getIdSucursal
@@ -324,7 +359,7 @@ class Sucursal extends VO
 	/**
 	  * getLetrasFactura
 	  * 
-	  * Get the <i>letras_factura</i> property for this object. Donde <i>letras_factura</i> es Campo no documentado
+	  * Get the <i>letras_factura</i> property for this object. Donde <i>letras_factura</i> es  [Campo no documentado]
 	  * @return varchar(10)
 	  */
 	final public function getLetrasFactura()
@@ -335,7 +370,7 @@ class Sucursal extends VO
 	/**
 	  * setLetrasFactura( $letras_factura )
 	  * 
-	  * Set the <i>letras_factura</i> property for this object. Donde <i>letras_factura</i> es Campo no documentado.
+	  * Set the <i>letras_factura</i> property for this object. Donde <i>letras_factura</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>letras_factura</i> es de tipo <i>varchar(10)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(10)
@@ -348,7 +383,7 @@ class Sucursal extends VO
 	/**
 	  * getActivo
 	  * 
-	  * Get the <i>activo</i> property for this object. Donde <i>activo</i> es Campo no documentado
+	  * Get the <i>activo</i> property for this object. Donde <i>activo</i> es  [Campo no documentado]
 	  * @return tinyint(1)
 	  */
 	final public function getActivo()
@@ -359,7 +394,7 @@ class Sucursal extends VO
 	/**
 	  * setActivo( $activo )
 	  * 
-	  * Set the <i>activo</i> property for this object. Donde <i>activo</i> es Campo no documentado.
+	  * Set the <i>activo</i> property for this object. Donde <i>activo</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>activo</i> es de tipo <i>tinyint(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param tinyint(1)
@@ -391,6 +426,30 @@ class Sucursal extends VO
 	final public function setFechaApertura( $fecha_apertura )
 	{
 		$this->fecha_apertura = $fecha_apertura;
+	}
+
+	/**
+	  * getSaldoAFavor
+	  * 
+	  * Get the <i>saldo_a_favor</i> property for this object. Donde <i>saldo_a_favor</i> es es el saldo a favor que tiene la sucursal encuanto a los abonos de sus compras
+	  * @return float
+	  */
+	final public function getSaldoAFavor()
+	{
+		return $this->saldo_a_favor;
+	}
+
+	/**
+	  * setSaldoAFavor( $saldo_a_favor )
+	  * 
+	  * Set the <i>saldo_a_favor</i> property for this object. Donde <i>saldo_a_favor</i> es es el saldo a favor que tiene la sucursal encuanto a los abonos de sus compras.
+	  * Una validacion basica se hara aqui para comprobar que <i>saldo_a_favor</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setSaldoAFavor( $saldo_a_favor )
+	{
+		$this->saldo_a_favor = $saldo_a_favor;
 	}
 
 }

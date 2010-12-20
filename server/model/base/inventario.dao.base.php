@@ -7,7 +7,7 @@
   * @access private
   * 
   */
-abstract class InventarioDAOBase extends TablaDAO
+abstract class InventarioDAOBase extends DAO
 {
 
 	/**
@@ -21,7 +21,7 @@ abstract class InventarioDAOBase extends TablaDAO
 	  *	@static
 	  * @throws Exception si la operacion fallo.
 	  * @param Inventario [$inventario] El objeto de tipo Inventario
-	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
 	public static final function save( &$inventario )
 	{
@@ -41,7 +41,7 @@ abstract class InventarioDAOBase extends TablaDAO
 	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link Inventario}. NULL si no hay tal registro.
+	  * @return @link Inventario Un objeto del tipo {@link Inventario}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_producto )
 	{
@@ -109,9 +109,10 @@ abstract class InventarioDAOBase extends TablaDAO
 	  * </code>
 	  *	@static
 	  * @param Inventario [$inventario] El objeto de tipo Inventario
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function search( $inventario , $json = false)
+	public static final function search( $inventario , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from inventario WHERE ("; 
 		$val = array();
@@ -141,22 +142,17 @@ abstract class InventarioDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new Inventario($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new Inventario($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new Inventario($foo));
 		}
+		return $ar;
 	}
 
 
@@ -202,8 +198,9 @@ abstract class InventarioDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$inventario )
 	{
-		$sql = "INSERT INTO inventario ( descripcion, precio_intersucursal, costo, medida ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO inventario ( id_producto, descripcion, precio_intersucursal, costo, medida ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
+			$inventario->getIdProducto(), 
 			$inventario->getDescripcion(), 
 			$inventario->getPrecioIntersucursal(), 
 			$inventario->getCosto(), 
@@ -249,9 +246,10 @@ abstract class InventarioDAOBase extends TablaDAO
 	  *	@static
 	  * @param Inventario [$inventario] El objeto de tipo Inventario
 	  * @param Inventario [$inventario] El objeto de tipo Inventario
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function byRange( $inventarioA , $inventarioB , $json = false)
+	public static final function byRange( $inventarioA , $inventarioB , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from inventario WHERE ("; 
 		$val = array();
@@ -311,22 +309,17 @@ abstract class InventarioDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new Inventario($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new Inventario($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new Inventario($foo));
 		}
+		return $ar;
 	}
 
 

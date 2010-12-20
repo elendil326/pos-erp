@@ -21,10 +21,18 @@ class PagosCompra extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->id_pago = $data['id_pago'];
-			$this->id_compra = $data['id_compra'];
-			$this->fecha = $data['fecha'];
-			$this->monto = $data['monto'];
+			if( isset($data['id_pago']) ){
+				$this->id_pago = $data['id_pago'];
+			}
+			if( isset($data['id_compra']) ){
+				$this->id_compra = $data['id_compra'];
+			}
+			if( isset($data['fecha']) ){
+				$this->fecha = $data['fecha'];
+			}
+			if( isset($data['monto']) ){
+				$this->monto = $data['monto'];
+			}
 		}
 	}
 
@@ -35,16 +43,18 @@ class PagosCompra extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"id_pago" => $this->id_pago,
 		"id_compra" => $this->id_compra,
 		"fecha" => $this->fecha,
 		"monto" => $this->monto
-		); 
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * id_pago
 	  * 

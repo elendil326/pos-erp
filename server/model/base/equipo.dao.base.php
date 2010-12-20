@@ -1,56 +1,56 @@
 <?php
-/** FacturaCompra Data Access Object (DAO) Base.
+/** Equipo Data Access Object (DAO) Base.
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
-  * almacenar de forma permanente y recuperar instancias de objetos {@link FacturaCompra }. 
+  * almacenar de forma permanente y recuperar instancias de objetos {@link Equipo }. 
   * @author Alan Gonzalez <alan@caffeina.mx> 
   * @access private
   * 
   */
-abstract class FacturaCompraDAOBase extends DAO
+abstract class EquipoDAOBase extends DAO
 {
 
 	/**
 	  *	Guardar registros. 
 	  *	
-	  *	Este metodo guarda el estado actual del objeto {@link FacturaCompra} pasado en la base de datos. La llave 
+	  *	Este metodo guarda el estado actual del objeto {@link Equipo} pasado en la base de datos. La llave 
 	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
 	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
 	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @throws Exception si la operacion fallo.
-	  * @param FacturaCompra [$factura_compra] El objeto de tipo FacturaCompra
+	  * @param Equipo [$equipo] El objeto de tipo Equipo
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	public static final function save( &$factura_compra )
+	public static final function save( &$equipo )
 	{
-		if( self::getByPK(  $factura_compra->getFolio() ) === NULL )
+		if( self::getByPK(  $equipo->getIdEquipo() ) === NULL )
 		{
-			try{ return FacturaCompraDAOBase::create( $factura_compra) ; } catch(Exception $e){ throw $e; }
+			try{ return EquipoDAOBase::create( $equipo) ; } catch(Exception $e){ throw $e; }
 		}else{
-			try{ return FacturaCompraDAOBase::update( $factura_compra) ; } catch(Exception $e){ throw $e; }
+			try{ return EquipoDAOBase::update( $equipo) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
 
 	/**
-	  *	Obtener {@link FacturaCompra} por llave primaria. 
+	  *	Obtener {@link Equipo} por llave primaria. 
 	  *	
-	  * Este metodo cargara un objeto {@link FacturaCompra} de la base de datos 
+	  * Este metodo cargara un objeto {@link Equipo} de la base de datos 
 	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return @link FacturaCompra Un objeto del tipo {@link FacturaCompra}. NULL si no hay tal registro.
+	  * @return @link Equipo Un objeto del tipo {@link Equipo}. NULL si no hay tal registro.
 	  **/
-	public static final function getByPK(  $folio )
+	public static final function getByPK(  $id_equipo )
 	{
-		$sql = "SELECT * FROM factura_compra WHERE (folio = ? ) LIMIT 1;";
-		$params = array(  $folio );
+		$sql = "SELECT * FROM equipo WHERE (id_equipo = ? ) LIMIT 1;";
+		$params = array(  $id_equipo );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new FacturaCompra( $rs );
+		return new Equipo( $rs );
 	}
 
 
@@ -58,7 +58,7 @@ abstract class FacturaCompraDAOBase extends DAO
 	  *	Obtener todas las filas.
 	  *	
 	  * Esta funcion leera todos los contenidos de la tabla en la base de datos y construira
-	  * un vector que contiene objetos de tipo {@link FacturaCompra}. Tenga en cuenta que este metodo
+	  * un vector que contiene objetos de tipo {@link Equipo}. Tenga en cuenta que este metodo
 	  * consumen enormes cantidades de recursos si la tabla tiene muchas filas. 
 	  * Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos o se usan sus parametros para obtener un menor numero de filas.
 	  *	
@@ -67,11 +67,11 @@ abstract class FacturaCompraDAOBase extends DAO
 	  * @param $columnas_por_pagina Columnas por pagina.
 	  * @param $orden Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $tipo_de_orden 'ASC' o 'DESC' el default es 'ASC'
-	  * @return Array Un arreglo que contiene objetos del tipo {@link FacturaCompra}.
+	  * @return Array Un arreglo que contiene objetos del tipo {@link Equipo}.
 	  **/
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
-		$sql = "SELECT * from factura_compra";
+		$sql = "SELECT * from equipo";
 		if($orden != NULL)
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
 		if($pagina != NULL)
@@ -82,7 +82,7 @@ abstract class FacturaCompraDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-    		array_push( $allData, new FacturaCompra($foo));
+    		array_push( $allData, new Equipo($foo));
 		}
 		return $allData;
 	}
@@ -91,7 +91,7 @@ abstract class FacturaCompraDAOBase extends DAO
 	/**
 	  *	Buscar registros.
 	  *	
-	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link FacturaCompra} de la base de datos. 
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Equipo} de la base de datos. 
 	  * Consiste en buscar todos los objetos que coinciden con las variables permanentes instanciadas de objeto pasado como argumento. 
 	  * Aquellas variables que tienen valores NULL seran excluidos en busca de criterios.
 	  *	
@@ -108,22 +108,22 @@ abstract class FacturaCompraDAOBase extends DAO
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param FacturaCompra [$factura_compra] El objeto de tipo FacturaCompra
+	  * @param Equipo [$equipo] El objeto de tipo Equipo
 	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function search( $factura_compra , $orderBy = null, $orden = 'ASC')
+	public static final function search( $equipo , $orderBy = null, $orden = 'ASC')
 	{
-		$sql = "SELECT * from factura_compra WHERE ("; 
+		$sql = "SELECT * from equipo WHERE ("; 
 		$val = array();
-		if( $factura_compra->getFolio() != NULL){
-			$sql .= " folio = ? AND";
-			array_push( $val, $factura_compra->getFolio() );
+		if( $equipo->getIdEquipo() != NULL){
+			$sql .= " id_equipo = ? AND";
+			array_push( $val, $equipo->getIdEquipo() );
 		}
 
-		if( $factura_compra->getIdCompra() != NULL){
-			$sql .= " id_compra = ? AND";
-			array_push( $val, $factura_compra->getIdCompra() );
+		if( $equipo->getToken() != NULL){
+			$sql .= " token = ? AND";
+			array_push( $val, $equipo->getToken() );
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
@@ -135,7 +135,7 @@ abstract class FacturaCompraDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new FacturaCompra($foo));
+    		array_push( $ar, new Equipo($foo));
 		}
 		return $ar;
 	}
@@ -150,14 +150,14 @@ abstract class FacturaCompraDAOBase extends DAO
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
-	  * @param FacturaCompra [$factura_compra] El objeto de tipo FacturaCompra a actualizar.
+	  * @param Equipo [$equipo] El objeto de tipo Equipo a actualizar.
 	  **/
-	private static final function update( $factura_compra )
+	private static final function update( $equipo )
 	{
-		$sql = "UPDATE factura_compra SET  id_compra = ? WHERE  folio = ?;";
+		$sql = "UPDATE equipo SET  token = ? WHERE  id_equipo = ?;";
 		$params = array( 
-			$factura_compra->getIdCompra(), 
-			$factura_compra->getFolio(), );
+			$equipo->getToken(), 
+			$equipo->getIdEquipo(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
@@ -169,28 +169,28 @@ abstract class FacturaCompraDAOBase extends DAO
 	  *	Crear registros.
 	  *	
 	  * Este metodo creara una nueva fila en la base de datos de acuerdo con los 
-	  * contenidos del objeto FacturaCompra suministrado. Asegurese
+	  * contenidos del objeto Equipo suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto FacturaCompra dentro de la misma transaccion.
+	  * primaria generada en el objeto Equipo dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
-	  * @param FacturaCompra [$factura_compra] El objeto de tipo FacturaCompra a crear.
+	  * @param Equipo [$equipo] El objeto de tipo Equipo a crear.
 	  **/
-	private static final function create( &$factura_compra )
+	private static final function create( &$equipo )
 	{
-		$sql = "INSERT INTO factura_compra ( folio, id_compra ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO equipo ( id_equipo, token ) VALUES ( ?, ?);";
 		$params = array( 
-			$factura_compra->getFolio(), 
-			$factura_compra->getIdCompra(), 
+			$equipo->getIdEquipo(), 
+			$equipo->getToken(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		
+		$equipo->setIdEquipo( $conn->Insert_ID() );
 		return $ar;
 	}
 
@@ -198,8 +198,8 @@ abstract class FacturaCompraDAOBase extends DAO
 	/**
 	  *	Buscar por rango.
 	  *	
-	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link FacturaCompra} de la base de datos siempre y cuando 
-	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link FacturaCompra}.
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Equipo} de la base de datos siempre y cuando 
+	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Equipo}.
 	  * 
 	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
@@ -223,32 +223,32 @@ abstract class FacturaCompraDAOBase extends DAO
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param FacturaCompra [$factura_compra] El objeto de tipo FacturaCompra
-	  * @param FacturaCompra [$factura_compra] El objeto de tipo FacturaCompra
+	  * @param Equipo [$equipo] El objeto de tipo Equipo
+	  * @param Equipo [$equipo] El objeto de tipo Equipo
 	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function byRange( $factura_compraA , $factura_compraB , $orderBy = null, $orden = 'ASC')
+	public static final function byRange( $equipoA , $equipoB , $orderBy = null, $orden = 'ASC')
 	{
-		$sql = "SELECT * from factura_compra WHERE ("; 
+		$sql = "SELECT * from equipo WHERE ("; 
 		$val = array();
-		if( (($a = $factura_compraA->getFolio()) != NULL) & ( ($b = $factura_compraB->getFolio()) != NULL) ){
-				$sql .= " folio >= ? AND folio <= ? AND";
+		if( (($a = $equipoA->getIdEquipo()) != NULL) & ( ($b = $equipoB->getIdEquipo()) != NULL) ){
+				$sql .= " id_equipo >= ? AND id_equipo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " folio = ? AND"; 
+			$sql .= " id_equipo = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $factura_compraA->getIdCompra()) != NULL) & ( ($b = $factura_compraB->getIdCompra()) != NULL) ){
-				$sql .= " id_compra >= ? AND id_compra <= ? AND";
+		if( (($a = $equipoA->getToken()) != NULL) & ( ($b = $equipoB->getToken()) != NULL) ){
+				$sql .= " token >= ? AND token <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " id_compra = ? AND"; 
+			$sql .= " token = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
@@ -263,7 +263,7 @@ abstract class FacturaCompraDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new FacturaCompra($foo));
+    		array_push( $ar, new Equipo($foo));
 		}
 		return $ar;
 	}
@@ -273,20 +273,20 @@ abstract class FacturaCompraDAOBase extends DAO
 	  *	Eliminar registros.
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
-	  * en el objeto FacturaCompra suministrado. Una vez que se ha suprimido un objeto, este no 
+	  * en el objeto Equipo suministrado. Una vez que se ha suprimido un objeto, este no 
 	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
 	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
 	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return int El numero de filas afectadas.
-	  * @param FacturaCompra [$factura_compra] El objeto de tipo FacturaCompra a eliminar
+	  * @param Equipo [$equipo] El objeto de tipo Equipo a eliminar
 	  **/
-	public static final function delete( &$factura_compra )
+	public static final function delete( &$equipo )
 	{
-		if(self::getByPK($factura_compra->getFolio()) === NULL) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM factura_compra WHERE  folio = ?;";
-		$params = array( $factura_compra->getFolio() );
+		if(self::getByPK($equipo->getIdEquipo()) === NULL) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM equipo WHERE  id_equipo = ?;";
+		$params = array( $equipo->getIdEquipo() );
 		global $conn;
 
 		$conn->Execute($sql, $params);

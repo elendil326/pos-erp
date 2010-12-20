@@ -7,7 +7,7 @@
   * @access private
   * 
   */
-abstract class FacturaVentaDAOBase extends TablaDAO
+abstract class FacturaVentaDAOBase extends DAO
 {
 
 	/**
@@ -21,7 +21,7 @@ abstract class FacturaVentaDAOBase extends TablaDAO
 	  *	@static
 	  * @throws Exception si la operacion fallo.
 	  * @param FacturaVenta [$factura_venta] El objeto de tipo FacturaVenta
-	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
 	public static final function save( &$factura_venta )
 	{
@@ -41,7 +41,7 @@ abstract class FacturaVentaDAOBase extends TablaDAO
 	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link FacturaVenta}. NULL si no hay tal registro.
+	  * @return @link FacturaVenta Un objeto del tipo {@link FacturaVenta}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $folio )
 	{
@@ -109,9 +109,10 @@ abstract class FacturaVentaDAOBase extends TablaDAO
 	  * </code>
 	  *	@static
 	  * @param FacturaVenta [$factura_venta] El objeto de tipo FacturaVenta
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function search( $factura_venta , $json = false)
+	public static final function search( $factura_venta , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from factura_venta WHERE ("; 
 		$val = array();
@@ -126,22 +127,17 @@ abstract class FacturaVentaDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new FacturaVenta($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new FacturaVenta($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new FacturaVenta($foo));
 		}
+		return $ar;
 	}
 
 
@@ -184,8 +180,9 @@ abstract class FacturaVentaDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$factura_venta )
 	{
-		$sql = "INSERT INTO factura_venta ( id_venta ) VALUES ( ?);";
+		$sql = "INSERT INTO factura_venta ( folio, id_venta ) VALUES ( ?, ?);";
 		$params = array( 
+			$factura_venta->getFolio(), 
 			$factura_venta->getIdVenta(), 
 		 );
 		global $conn;
@@ -228,9 +225,10 @@ abstract class FacturaVentaDAOBase extends TablaDAO
 	  *	@static
 	  * @param FacturaVenta [$factura_venta] El objeto de tipo FacturaVenta
 	  * @param FacturaVenta [$factura_venta] El objeto de tipo FacturaVenta
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function byRange( $factura_ventaA , $factura_ventaB , $json = false)
+	public static final function byRange( $factura_ventaA , $factura_ventaB , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from factura_venta WHERE ("; 
 		$val = array();
@@ -257,22 +255,17 @@ abstract class FacturaVentaDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new FacturaVenta($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new FacturaVenta($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new FacturaVenta($foo));
 		}
+		return $ar;
 	}
 
 

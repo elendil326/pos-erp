@@ -7,7 +7,7 @@
   * @access private
   * 
   */
-abstract class ComprasDAOBase extends TablaDAO
+abstract class ComprasDAOBase extends DAO
 {
 
 	/**
@@ -21,7 +21,7 @@ abstract class ComprasDAOBase extends TablaDAO
 	  *	@static
 	  * @throws Exception si la operacion fallo.
 	  * @param Compras [$compras] El objeto de tipo Compras
-	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
 	public static final function save( &$compras )
 	{
@@ -41,7 +41,7 @@ abstract class ComprasDAOBase extends TablaDAO
 	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link Compras}. NULL si no hay tal registro.
+	  * @return @link Compras Un objeto del tipo {@link Compras}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_compra )
 	{
@@ -109,9 +109,10 @@ abstract class ComprasDAOBase extends TablaDAO
 	  * </code>
 	  *	@static
 	  * @param Compras [$compras] El objeto de tipo Compras
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function search( $compras , $json = false)
+	public static final function search( $compras , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from compras WHERE ("; 
 		$val = array();
@@ -155,23 +156,28 @@ abstract class ComprasDAOBase extends TablaDAO
 			array_push( $val, $compras->getIdUsuario() );
 		}
 
+		if( $compras->getPagado() != NULL){
+			$sql .= " pagado = ? AND";
+			array_push( $val, $compras->getPagado() );
+		}
+
+		if( $compras->getLiquidado() != NULL){
+			$sql .= " liquidado = ? AND";
+			array_push( $val, $compras->getLiquidado() );
+		}
+
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new Compras($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new Compras($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new Compras($foo));
 		}
+		return $ar;
 	}
 
 
@@ -188,7 +194,7 @@ abstract class ComprasDAOBase extends TablaDAO
 	  **/
 	private static final function update( $compras )
 	{
-		$sql = "UPDATE compras SET  id_proveedor = ?, tipo_compra = ?, fecha = ?, subtotal = ?, iva = ?, id_sucursal = ?, id_usuario = ? WHERE  id_compra = ?;";
+		$sql = "UPDATE compras SET  id_proveedor = ?, tipo_compra = ?, fecha = ?, subtotal = ?, iva = ?, id_sucursal = ?, id_usuario = ?, pagado = ?, liquidado = ? WHERE  id_compra = ?;";
 		$params = array( 
 			$compras->getIdProveedor(), 
 			$compras->getTipoCompra(), 
@@ -197,6 +203,8 @@ abstract class ComprasDAOBase extends TablaDAO
 			$compras->getIva(), 
 			$compras->getIdSucursal(), 
 			$compras->getIdUsuario(), 
+			$compras->getPagado(), 
+			$compras->getLiquidado(), 
 			$compras->getIdCompra(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -220,8 +228,9 @@ abstract class ComprasDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$compras )
 	{
-		$sql = "INSERT INTO compras ( id_proveedor, tipo_compra, fecha, subtotal, iva, id_sucursal, id_usuario ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO compras ( id_compra, id_proveedor, tipo_compra, fecha, subtotal, iva, id_sucursal, id_usuario, pagado, liquidado ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
+			$compras->getIdCompra(), 
 			$compras->getIdProveedor(), 
 			$compras->getTipoCompra(), 
 			$compras->getFecha(), 
@@ -229,6 +238,8 @@ abstract class ComprasDAOBase extends TablaDAO
 			$compras->getIva(), 
 			$compras->getIdSucursal(), 
 			$compras->getIdUsuario(), 
+			$compras->getPagado(), 
+			$compras->getLiquidado(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -270,9 +281,10 @@ abstract class ComprasDAOBase extends TablaDAO
 	  *	@static
 	  * @param Compras [$compras] El objeto de tipo Compras
 	  * @param Compras [$compras] El objeto de tipo Compras
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function byRange( $comprasA , $comprasB , $json = false)
+	public static final function byRange( $comprasA , $comprasB , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from compras WHERE ("; 
 		$val = array();
@@ -364,23 +376,40 @@ abstract class ComprasDAOBase extends TablaDAO
 			
 		}
 
+		if( (($a = $comprasA->getPagado()) != NULL) & ( ($b = $comprasB->getPagado()) != NULL) ){
+				$sql .= " pagado >= ? AND pagado <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " pagado = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $comprasA->getLiquidado()) != NULL) & ( ($b = $comprasB->getLiquidado()) != NULL) ){
+				$sql .= " liquidado >= ? AND liquidado <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " liquidado = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new Compras($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new Compras($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new Compras($foo));
 		}
+		return $ar;
 	}
 
 

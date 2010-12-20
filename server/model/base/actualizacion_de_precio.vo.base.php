@@ -21,12 +21,27 @@ class ActualizacionDePrecio extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->id_producto = $data['id_producto'];
-			$this->id_usuario = $data['id_usuario'];
-			$this->precio_venta = $data['precio_venta'];
-			$this->precio_compra = $data['precio_compra'];
-			$this->precio_intersucursal = $data['precio_intersucursal'];
-			$this->fecha = $data['fecha'];
+			if( isset($data['id_actualizacion']) ){
+				$this->id_actualizacion = $data['id_actualizacion'];
+			}
+			if( isset($data['id_producto']) ){
+				$this->id_producto = $data['id_producto'];
+			}
+			if( isset($data['id_usuario']) ){
+				$this->id_usuario = $data['id_usuario'];
+			}
+			if( isset($data['precio_venta']) ){
+				$this->precio_venta = $data['precio_venta'];
+			}
+			if( isset($data['precio_compra']) ){
+				$this->precio_compra = $data['precio_compra'];
+			}
+			if( isset($data['precio_intersucursal']) ){
+				$this->precio_intersucursal = $data['precio_intersucursal'];
+			}
+			if( isset($data['fecha']) ){
+				$this->fecha = $data['fecha'];
+			}
 		}
 	}
 
@@ -37,23 +52,36 @@ class ActualizacionDePrecio extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
+		"id_actualizacion" => $this->id_actualizacion,
 		"id_producto" => $this->id_producto,
 		"id_usuario" => $this->id_usuario,
 		"precio_venta" => $this->precio_venta,
 		"precio_compra" => $this->precio_compra,
 		"precio_intersucursal" => $this->precio_intersucursal,
 		"fecha" => $this->fecha
-		); 
+		)); 
 	return json_encode($vec); 
 	}
+	
+	/**
+	  * id_actualizacion
+	  * 
+	  * id de actualizacion de precio<br>
+	  * <b>Llave Primaria</b><br>
+	  * <b>Auto Incremento</b><br>
+	  * @access protected
+	  * @var int(12)
+	  */
+	protected $id_actualizacion;
+
 	/**
 	  * id_producto
 	  * 
-	  * Campo no documentado<br>
-	  * <b>Llave Primaria</b><br>
+	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var int(11)
 	  */
@@ -62,7 +90,7 @@ class ActualizacionDePrecio extends VO
 	/**
 	  * id_usuario
 	  * 
-	  * Campo no documentado<br>
+	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var int(11)
 	  */
@@ -71,7 +99,7 @@ class ActualizacionDePrecio extends VO
 	/**
 	  * precio_venta
 	  * 
-	  * Campo no documentado<br>
+	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var float
 	  */
@@ -80,7 +108,7 @@ class ActualizacionDePrecio extends VO
 	/**
 	  * precio_compra
 	  * 
-	  * Campo no documentado<br>
+	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var float
 	  */
@@ -89,7 +117,7 @@ class ActualizacionDePrecio extends VO
 	/**
 	  * precio_intersucursal
 	  * 
-	  * Campo no documentado<br>
+	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var float
 	  */
@@ -98,16 +126,44 @@ class ActualizacionDePrecio extends VO
 	/**
 	  * fecha
 	  * 
-	  * Campo no documentado<br>
+	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var timestamp
 	  */
 	protected $fecha;
 
 	/**
+	  * getIdActualizacion
+	  * 
+	  * Get the <i>id_actualizacion</i> property for this object. Donde <i>id_actualizacion</i> es id de actualizacion de precio
+	  * @return int(12)
+	  */
+	final public function getIdActualizacion()
+	{
+		return $this->id_actualizacion;
+	}
+
+	/**
+	  * setIdActualizacion( $id_actualizacion )
+	  * 
+	  * Set the <i>id_actualizacion</i> property for this object. Donde <i>id_actualizacion</i> es id de actualizacion de precio.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_actualizacion</i> es de tipo <i>int(12)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
+	  * No deberias usar setIdActualizacion( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdActualizacion( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * @param int(12)
+	  */
+	final public function setIdActualizacion( $id_actualizacion )
+	{
+		$this->id_actualizacion = $id_actualizacion;
+	}
+
+	/**
 	  * getIdProducto
 	  * 
-	  * Get the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es Campo no documentado
+	  * Get the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es  [Campo no documentado]
 	  * @return int(11)
 	  */
 	final public function getIdProducto()
@@ -118,11 +174,9 @@ class ActualizacionDePrecio extends VO
 	/**
 	  * setIdProducto( $id_producto )
 	  * 
-	  * Set the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es Campo no documentado.
+	  * Set the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>id_producto</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
-	  * No deberias usar setIdProducto( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdProducto( $id_producto )
@@ -133,7 +187,7 @@ class ActualizacionDePrecio extends VO
 	/**
 	  * getIdUsuario
 	  * 
-	  * Get the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es Campo no documentado
+	  * Get the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es  [Campo no documentado]
 	  * @return int(11)
 	  */
 	final public function getIdUsuario()
@@ -144,7 +198,7 @@ class ActualizacionDePrecio extends VO
 	/**
 	  * setIdUsuario( $id_usuario )
 	  * 
-	  * Set the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es Campo no documentado.
+	  * Set the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>id_usuario</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
@@ -157,7 +211,7 @@ class ActualizacionDePrecio extends VO
 	/**
 	  * getPrecioVenta
 	  * 
-	  * Get the <i>precio_venta</i> property for this object. Donde <i>precio_venta</i> es Campo no documentado
+	  * Get the <i>precio_venta</i> property for this object. Donde <i>precio_venta</i> es  [Campo no documentado]
 	  * @return float
 	  */
 	final public function getPrecioVenta()
@@ -168,7 +222,7 @@ class ActualizacionDePrecio extends VO
 	/**
 	  * setPrecioVenta( $precio_venta )
 	  * 
-	  * Set the <i>precio_venta</i> property for this object. Donde <i>precio_venta</i> es Campo no documentado.
+	  * Set the <i>precio_venta</i> property for this object. Donde <i>precio_venta</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>precio_venta</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -181,7 +235,7 @@ class ActualizacionDePrecio extends VO
 	/**
 	  * getPrecioCompra
 	  * 
-	  * Get the <i>precio_compra</i> property for this object. Donde <i>precio_compra</i> es Campo no documentado
+	  * Get the <i>precio_compra</i> property for this object. Donde <i>precio_compra</i> es  [Campo no documentado]
 	  * @return float
 	  */
 	final public function getPrecioCompra()
@@ -192,7 +246,7 @@ class ActualizacionDePrecio extends VO
 	/**
 	  * setPrecioCompra( $precio_compra )
 	  * 
-	  * Set the <i>precio_compra</i> property for this object. Donde <i>precio_compra</i> es Campo no documentado.
+	  * Set the <i>precio_compra</i> property for this object. Donde <i>precio_compra</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>precio_compra</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -205,7 +259,7 @@ class ActualizacionDePrecio extends VO
 	/**
 	  * getPrecioIntersucursal
 	  * 
-	  * Get the <i>precio_intersucursal</i> property for this object. Donde <i>precio_intersucursal</i> es Campo no documentado
+	  * Get the <i>precio_intersucursal</i> property for this object. Donde <i>precio_intersucursal</i> es  [Campo no documentado]
 	  * @return float
 	  */
 	final public function getPrecioIntersucursal()
@@ -216,7 +270,7 @@ class ActualizacionDePrecio extends VO
 	/**
 	  * setPrecioIntersucursal( $precio_intersucursal )
 	  * 
-	  * Set the <i>precio_intersucursal</i> property for this object. Donde <i>precio_intersucursal</i> es Campo no documentado.
+	  * Set the <i>precio_intersucursal</i> property for this object. Donde <i>precio_intersucursal</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>precio_intersucursal</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -229,7 +283,7 @@ class ActualizacionDePrecio extends VO
 	/**
 	  * getFecha
 	  * 
-	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es Campo no documentado
+	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es  [Campo no documentado]
 	  * @return timestamp
 	  */
 	final public function getFecha()
@@ -240,7 +294,7 @@ class ActualizacionDePrecio extends VO
 	/**
 	  * setFecha( $fecha )
 	  * 
-	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es Campo no documentado.
+	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>timestamp</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param timestamp

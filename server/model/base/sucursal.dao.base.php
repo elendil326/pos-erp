@@ -7,7 +7,7 @@
   * @access private
   * 
   */
-abstract class SucursalDAOBase extends TablaDAO
+abstract class SucursalDAOBase extends DAO
 {
 
 	/**
@@ -21,7 +21,7 @@ abstract class SucursalDAOBase extends TablaDAO
 	  *	@static
 	  * @throws Exception si la operacion fallo.
 	  * @param Sucursal [$sucursal] El objeto de tipo Sucursal
-	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
 	public static final function save( &$sucursal )
 	{
@@ -41,7 +41,7 @@ abstract class SucursalDAOBase extends TablaDAO
 	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link Sucursal}. NULL si no hay tal registro.
+	  * @return @link Sucursal Un objeto del tipo {@link Sucursal}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_sucursal )
 	{
@@ -109,9 +109,10 @@ abstract class SucursalDAOBase extends TablaDAO
 	  * </code>
 	  *	@static
 	  * @param Sucursal [$sucursal] El objeto de tipo Sucursal
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function search( $sucursal , $json = false)
+	public static final function search( $sucursal , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from sucursal WHERE ("; 
 		$val = array();
@@ -165,23 +166,23 @@ abstract class SucursalDAOBase extends TablaDAO
 			array_push( $val, $sucursal->getFechaApertura() );
 		}
 
+		if( $sucursal->getSaldoAFavor() != NULL){
+			$sql .= " saldo_a_favor = ? AND";
+			array_push( $val, $sucursal->getSaldoAFavor() );
+		}
+
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new Sucursal($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new Sucursal($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new Sucursal($foo));
 		}
+		return $ar;
 	}
 
 
@@ -198,7 +199,7 @@ abstract class SucursalDAOBase extends TablaDAO
 	  **/
 	private static final function update( $sucursal )
 	{
-		$sql = "UPDATE sucursal SET  gerente = ?, descripcion = ?, direccion = ?, rfc = ?, telefono = ?, token = ?, letras_factura = ?, activo = ?, fecha_apertura = ? WHERE  id_sucursal = ?;";
+		$sql = "UPDATE sucursal SET  gerente = ?, descripcion = ?, direccion = ?, rfc = ?, telefono = ?, token = ?, letras_factura = ?, activo = ?, fecha_apertura = ?, saldo_a_favor = ? WHERE  id_sucursal = ?;";
 		$params = array( 
 			$sucursal->getGerente(), 
 			$sucursal->getDescripcion(), 
@@ -209,6 +210,7 @@ abstract class SucursalDAOBase extends TablaDAO
 			$sucursal->getLetrasFactura(), 
 			$sucursal->getActivo(), 
 			$sucursal->getFechaApertura(), 
+			$sucursal->getSaldoAFavor(), 
 			$sucursal->getIdSucursal(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -232,8 +234,9 @@ abstract class SucursalDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$sucursal )
 	{
-		$sql = "INSERT INTO sucursal ( gerente, descripcion, direccion, rfc, telefono, token, letras_factura, activo, fecha_apertura ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO sucursal ( id_sucursal, gerente, descripcion, direccion, rfc, telefono, token, letras_factura, activo, fecha_apertura, saldo_a_favor ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
+			$sucursal->getIdSucursal(), 
 			$sucursal->getGerente(), 
 			$sucursal->getDescripcion(), 
 			$sucursal->getDireccion(), 
@@ -243,6 +246,7 @@ abstract class SucursalDAOBase extends TablaDAO
 			$sucursal->getLetrasFactura(), 
 			$sucursal->getActivo(), 
 			$sucursal->getFechaApertura(), 
+			$sucursal->getSaldoAFavor(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -284,9 +288,10 @@ abstract class SucursalDAOBase extends TablaDAO
 	  *	@static
 	  * @param Sucursal [$sucursal] El objeto de tipo Sucursal
 	  * @param Sucursal [$sucursal] El objeto de tipo Sucursal
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function byRange( $sucursalA , $sucursalB , $json = false)
+	public static final function byRange( $sucursalA , $sucursalB , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from sucursal WHERE ("; 
 		$val = array();
@@ -400,23 +405,29 @@ abstract class SucursalDAOBase extends TablaDAO
 			
 		}
 
+		if( (($a = $sucursalA->getSaldoAFavor()) != NULL) & ( ($b = $sucursalB->getSaldoAFavor()) != NULL) ){
+				$sql .= " saldo_a_favor >= ? AND saldo_a_favor <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " saldo_a_favor = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new Sucursal($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new Sucursal($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new Sucursal($foo));
 		}
+		return $ar;
 	}
 
 

@@ -6,7 +6,7 @@
 		  * @access private
 		  * 
 		  */
-		abstract class TablaDAO
+		abstract class DAO
 		{
 
 		}
@@ -32,8 +32,15 @@
 		abstract class VO
 		{
 
+	        /**
+	          *	Obtener una representacion en forma de arreglo.
+	          *	
+	          * Este metodo transforma todas las propiedades este objeto en un arreglo asociativo.
+	          *	
+	          * @returns Array Un arreglo asociativo que describe a este objeto.
+	          **/
 			function asArray(){
 				return get_object_vars($this);
 			}
-			
+
 		}

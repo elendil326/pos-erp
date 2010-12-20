@@ -21,11 +21,21 @@ class Inventario extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->id_producto = $data['id_producto'];
-			$this->descripcion = $data['descripcion'];
-			$this->precio_intersucursal = $data['precio_intersucursal'];
-			$this->costo = $data['costo'];
-			$this->medida = $data['medida'];
+			if( isset($data['id_producto']) ){
+				$this->id_producto = $data['id_producto'];
+			}
+			if( isset($data['descripcion']) ){
+				$this->descripcion = $data['descripcion'];
+			}
+			if( isset($data['precio_intersucursal']) ){
+				$this->precio_intersucursal = $data['precio_intersucursal'];
+			}
+			if( isset($data['costo']) ){
+				$this->costo = $data['costo'];
+			}
+			if( isset($data['medida']) ){
+				$this->medida = $data['medida'];
+			}
 		}
 	}
 
@@ -36,17 +46,19 @@ class Inventario extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"id_producto" => $this->id_producto,
 		"descripcion" => $this->descripcion,
 		"precio_intersucursal" => $this->precio_intersucursal,
 		"costo" => $this->costo,
 		"medida" => $this->medida
-		); 
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * id_producto
 	  * 
@@ -70,7 +82,7 @@ class Inventario extends VO
 	/**
 	  * precio_intersucursal
 	  * 
-	  * Campo no documentado<br>
+	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var float
 	  */
@@ -79,7 +91,7 @@ class Inventario extends VO
 	/**
 	  * costo
 	  * 
-	  * Campo no documentado<br>
+	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var float
 	  */
@@ -88,7 +100,7 @@ class Inventario extends VO
 	/**
 	  * medida
 	  * 
-	  * Campo no documentado<br>
+	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var enum('fraccion','unidad')
 	  */
@@ -149,7 +161,7 @@ class Inventario extends VO
 	/**
 	  * getPrecioIntersucursal
 	  * 
-	  * Get the <i>precio_intersucursal</i> property for this object. Donde <i>precio_intersucursal</i> es Campo no documentado
+	  * Get the <i>precio_intersucursal</i> property for this object. Donde <i>precio_intersucursal</i> es  [Campo no documentado]
 	  * @return float
 	  */
 	final public function getPrecioIntersucursal()
@@ -160,7 +172,7 @@ class Inventario extends VO
 	/**
 	  * setPrecioIntersucursal( $precio_intersucursal )
 	  * 
-	  * Set the <i>precio_intersucursal</i> property for this object. Donde <i>precio_intersucursal</i> es Campo no documentado.
+	  * Set the <i>precio_intersucursal</i> property for this object. Donde <i>precio_intersucursal</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>precio_intersucursal</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -173,7 +185,7 @@ class Inventario extends VO
 	/**
 	  * getCosto
 	  * 
-	  * Get the <i>costo</i> property for this object. Donde <i>costo</i> es Campo no documentado
+	  * Get the <i>costo</i> property for this object. Donde <i>costo</i> es  [Campo no documentado]
 	  * @return float
 	  */
 	final public function getCosto()
@@ -184,7 +196,7 @@ class Inventario extends VO
 	/**
 	  * setCosto( $costo )
 	  * 
-	  * Set the <i>costo</i> property for this object. Donde <i>costo</i> es Campo no documentado.
+	  * Set the <i>costo</i> property for this object. Donde <i>costo</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>costo</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -197,7 +209,7 @@ class Inventario extends VO
 	/**
 	  * getMedida
 	  * 
-	  * Get the <i>medida</i> property for this object. Donde <i>medida</i> es Campo no documentado
+	  * Get the <i>medida</i> property for this object. Donde <i>medida</i> es  [Campo no documentado]
 	  * @return enum('fraccion','unidad')
 	  */
 	final public function getMedida()
@@ -208,7 +220,7 @@ class Inventario extends VO
 	/**
 	  * setMedida( $medida )
 	  * 
-	  * Set the <i>medida</i> property for this object. Donde <i>medida</i> es Campo no documentado.
+	  * Set the <i>medida</i> property for this object. Donde <i>medida</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>medida</i> es de tipo <i>enum('fraccion','unidad')</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param enum('fraccion','unidad')

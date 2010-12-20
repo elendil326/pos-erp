@@ -21,12 +21,24 @@ class ProductosProveedor extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->id_producto = $data['id_producto'];
-			$this->clave_producto = $data['clave_producto'];
-			$this->id_proveedor = $data['id_proveedor'];
-			$this->id_inventario = $data['id_inventario'];
-			$this->descripcion = $data['descripcion'];
-			$this->precio = $data['precio'];
+			if( isset($data['id_producto']) ){
+				$this->id_producto = $data['id_producto'];
+			}
+			if( isset($data['clave_producto']) ){
+				$this->clave_producto = $data['clave_producto'];
+			}
+			if( isset($data['id_proveedor']) ){
+				$this->id_proveedor = $data['id_proveedor'];
+			}
+			if( isset($data['id_inventario']) ){
+				$this->id_inventario = $data['id_inventario'];
+			}
+			if( isset($data['descripcion']) ){
+				$this->descripcion = $data['descripcion'];
+			}
+			if( isset($data['precio']) ){
+				$this->precio = $data['precio'];
+			}
 		}
 	}
 
@@ -37,18 +49,20 @@ class ProductosProveedor extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"id_producto" => $this->id_producto,
 		"clave_producto" => $this->clave_producto,
 		"id_proveedor" => $this->id_proveedor,
 		"id_inventario" => $this->id_inventario,
 		"descripcion" => $this->descripcion,
 		"precio" => $this->precio
-		); 
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * id_producto
 	  * 

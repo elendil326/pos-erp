@@ -21,12 +21,24 @@ class PagosVenta extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->id_pago = $data['id_pago'];
-			$this->id_venta = $data['id_venta'];
-			$this->id_sucursal = $data['id_sucursal'];
-			$this->id_usuario = $data['id_usuario'];
-			$this->fecha = $data['fecha'];
-			$this->monto = $data['monto'];
+			if( isset($data['id_pago']) ){
+				$this->id_pago = $data['id_pago'];
+			}
+			if( isset($data['id_venta']) ){
+				$this->id_venta = $data['id_venta'];
+			}
+			if( isset($data['id_sucursal']) ){
+				$this->id_sucursal = $data['id_sucursal'];
+			}
+			if( isset($data['id_usuario']) ){
+				$this->id_usuario = $data['id_usuario'];
+			}
+			if( isset($data['fecha']) ){
+				$this->fecha = $data['fecha'];
+			}
+			if( isset($data['monto']) ){
+				$this->monto = $data['monto'];
+			}
 		}
 	}
 
@@ -37,18 +49,20 @@ class PagosVenta extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"id_pago" => $this->id_pago,
 		"id_venta" => $this->id_venta,
 		"id_sucursal" => $this->id_sucursal,
 		"id_usuario" => $this->id_usuario,
 		"fecha" => $this->fecha,
 		"monto" => $this->monto
-		); 
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * id_pago
 	  * 

@@ -21,9 +21,15 @@ class Grupos extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->id_grupo = $data['id_grupo'];
-			$this->nombre = $data['nombre'];
-			$this->descripcion = $data['descripcion'];
+			if( isset($data['id_grupo']) ){
+				$this->id_grupo = $data['id_grupo'];
+			}
+			if( isset($data['nombre']) ){
+				$this->nombre = $data['nombre'];
+			}
+			if( isset($data['descripcion']) ){
+				$this->descripcion = $data['descripcion'];
+			}
 		}
 	}
 
@@ -34,19 +40,21 @@ class Grupos extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"id_grupo" => $this->id_grupo,
 		"nombre" => $this->nombre,
 		"descripcion" => $this->descripcion
-		); 
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * id_grupo
 	  * 
-	  * Campo no documentado<br>
+	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * @access protected
 	  * @var int(11)
@@ -65,7 +73,7 @@ class Grupos extends VO
 	/**
 	  * descripcion
 	  * 
-	  * Campo no documentado<br>
+	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var varchar(256)
 	  */
@@ -74,7 +82,7 @@ class Grupos extends VO
 	/**
 	  * getIdGrupo
 	  * 
-	  * Get the <i>id_grupo</i> property for this object. Donde <i>id_grupo</i> es Campo no documentado
+	  * Get the <i>id_grupo</i> property for this object. Donde <i>id_grupo</i> es  [Campo no documentado]
 	  * @return int(11)
 	  */
 	final public function getIdGrupo()
@@ -85,7 +93,7 @@ class Grupos extends VO
 	/**
 	  * setIdGrupo( $id_grupo )
 	  * 
-	  * Set the <i>id_grupo</i> property for this object. Donde <i>id_grupo</i> es Campo no documentado.
+	  * Set the <i>id_grupo</i> property for this object. Donde <i>id_grupo</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>id_grupo</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
@@ -124,7 +132,7 @@ class Grupos extends VO
 	/**
 	  * getDescripcion
 	  * 
-	  * Get the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es Campo no documentado
+	  * Get the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es  [Campo no documentado]
 	  * @return varchar(256)
 	  */
 	final public function getDescripcion()
@@ -135,7 +143,7 @@ class Grupos extends VO
 	/**
 	  * setDescripcion( $descripcion )
 	  * 
-	  * Set the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es Campo no documentado.
+	  * Set the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>descripcion</i> es de tipo <i>varchar(256)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(256)

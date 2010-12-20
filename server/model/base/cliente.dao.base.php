@@ -7,7 +7,7 @@
   * @access private
   * 
   */
-abstract class ClienteDAOBase extends TablaDAO
+abstract class ClienteDAOBase extends DAO
 {
 
 	/**
@@ -21,7 +21,7 @@ abstract class ClienteDAOBase extends TablaDAO
 	  *	@static
 	  * @throws Exception si la operacion fallo.
 	  * @param Cliente [$cliente] El objeto de tipo Cliente
-	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
 	public static final function save( &$cliente )
 	{
@@ -41,7 +41,7 @@ abstract class ClienteDAOBase extends TablaDAO
 	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link Cliente}. NULL si no hay tal registro.
+	  * @return @link Cliente Un objeto del tipo {@link Cliente}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_cliente )
 	{
@@ -109,9 +109,10 @@ abstract class ClienteDAOBase extends TablaDAO
 	  * </code>
 	  *	@static
 	  * @param Cliente [$cliente] El objeto de tipo Cliente
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function search( $cliente , $json = false)
+	public static final function search( $cliente , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from cliente WHERE ("; 
 		$val = array();
@@ -181,22 +182,17 @@ abstract class ClienteDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new Cliente($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new Cliente($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new Cliente($foo));
 		}
+		return $ar;
 	}
 
 
@@ -250,8 +246,9 @@ abstract class ClienteDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$cliente )
 	{
-		$sql = "INSERT INTO cliente ( rfc, nombre, direccion, ciudad, telefono, e_mail, limite_credito, descuento, activo, id_usuario, id_sucursal, fecha_ingreso ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO cliente ( id_cliente, rfc, nombre, direccion, ciudad, telefono, e_mail, limite_credito, descuento, activo, id_usuario, id_sucursal, fecha_ingreso ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
+			$cliente->getIdCliente(), 
 			$cliente->getRfc(), 
 			$cliente->getNombre(), 
 			$cliente->getDireccion(), 
@@ -305,9 +302,10 @@ abstract class ClienteDAOBase extends TablaDAO
 	  *	@static
 	  * @param Cliente [$cliente] El objeto de tipo Cliente
 	  * @param Cliente [$cliente] El objeto de tipo Cliente
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function byRange( $clienteA , $clienteB , $json = false)
+	public static final function byRange( $clienteA , $clienteB , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from cliente WHERE ("; 
 		$val = array();
@@ -455,22 +453,17 @@ abstract class ClienteDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new Cliente($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new Cliente($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new Cliente($foo));
 		}
+		return $ar;
 	}
 
 

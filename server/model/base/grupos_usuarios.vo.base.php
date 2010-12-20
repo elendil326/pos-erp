@@ -21,8 +21,12 @@ class GruposUsuarios extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->id_grupo = $data['id_grupo'];
-			$this->id_usuario = $data['id_usuario'];
+			if( isset($data['id_grupo']) ){
+				$this->id_grupo = $data['id_grupo'];
+			}
+			if( isset($data['id_usuario']) ){
+				$this->id_usuario = $data['id_usuario'];
+			}
 		}
 	}
 
@@ -33,19 +37,20 @@ class GruposUsuarios extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"id_grupo" => $this->id_grupo,
 		"id_usuario" => $this->id_usuario
-		); 
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * id_grupo
 	  * 
-	  * Campo no documentado<br>
-	  * <b>Llave Primaria</b><br>
+	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var int(11)
 	  */
@@ -54,7 +59,7 @@ class GruposUsuarios extends VO
 	/**
 	  * id_usuario
 	  * 
-	  * Campo no documentado<br>
+	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * @access protected
 	  * @var int(11)
@@ -64,7 +69,7 @@ class GruposUsuarios extends VO
 	/**
 	  * getIdGrupo
 	  * 
-	  * Get the <i>id_grupo</i> property for this object. Donde <i>id_grupo</i> es Campo no documentado
+	  * Get the <i>id_grupo</i> property for this object. Donde <i>id_grupo</i> es  [Campo no documentado]
 	  * @return int(11)
 	  */
 	final public function getIdGrupo()
@@ -75,11 +80,9 @@ class GruposUsuarios extends VO
 	/**
 	  * setIdGrupo( $id_grupo )
 	  * 
-	  * Set the <i>id_grupo</i> property for this object. Donde <i>id_grupo</i> es Campo no documentado.
+	  * Set the <i>id_grupo</i> property for this object. Donde <i>id_grupo</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>id_grupo</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
-	  * No deberias usar setIdGrupo( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdGrupo( $id_grupo )
@@ -90,7 +93,7 @@ class GruposUsuarios extends VO
 	/**
 	  * getIdUsuario
 	  * 
-	  * Get the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es Campo no documentado
+	  * Get the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es  [Campo no documentado]
 	  * @return int(11)
 	  */
 	final public function getIdUsuario()
@@ -101,7 +104,7 @@ class GruposUsuarios extends VO
 	/**
 	  * setIdUsuario( $id_usuario )
 	  * 
-	  * Set the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es Campo no documentado.
+	  * Set the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>id_usuario</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>

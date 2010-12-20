@@ -21,14 +21,30 @@ class Ingresos extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->id_ingreso = $data['id_ingreso'];
-			$this->concepto = $data['concepto'];
-			$this->monto = $data['monto'];
-			$this->fecha = $data['fecha'];
-			$this->fecha_ingreso = $data['fecha_ingreso'];
-			$this->id_sucursal = $data['id_sucursal'];
-			$this->id_usuario = $data['id_usuario'];
-			$this->nota = $data['nota'];
+			if( isset($data['id_ingreso']) ){
+				$this->id_ingreso = $data['id_ingreso'];
+			}
+			if( isset($data['concepto']) ){
+				$this->concepto = $data['concepto'];
+			}
+			if( isset($data['monto']) ){
+				$this->monto = $data['monto'];
+			}
+			if( isset($data['fecha']) ){
+				$this->fecha = $data['fecha'];
+			}
+			if( isset($data['fecha_ingreso']) ){
+				$this->fecha_ingreso = $data['fecha_ingreso'];
+			}
+			if( isset($data['id_sucursal']) ){
+				$this->id_sucursal = $data['id_sucursal'];
+			}
+			if( isset($data['id_usuario']) ){
+				$this->id_usuario = $data['id_usuario'];
+			}
+			if( isset($data['nota']) ){
+				$this->nota = $data['nota'];
+			}
 		}
 	}
 
@@ -39,9 +55,10 @@ class Ingresos extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"id_ingreso" => $this->id_ingreso,
 		"concepto" => $this->concepto,
 		"monto" => $this->monto,
@@ -50,9 +67,10 @@ class Ingresos extends VO
 		"id_sucursal" => $this->id_sucursal,
 		"id_usuario" => $this->id_usuario,
 		"nota" => $this->nota
-		); 
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * id_ingreso
 	  * 

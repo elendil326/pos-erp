@@ -7,7 +7,7 @@
   * @access private
   * 
   */
-abstract class ProductosProveedorDAOBase extends TablaDAO
+abstract class ProductosProveedorDAOBase extends DAO
 {
 
 	/**
@@ -21,7 +21,7 @@ abstract class ProductosProveedorDAOBase extends TablaDAO
 	  *	@static
 	  * @throws Exception si la operacion fallo.
 	  * @param ProductosProveedor [$productos_proveedor] El objeto de tipo ProductosProveedor
-	  * @return Un entero mayor o igual a cero denotando las filas afectadas, o un string con el error si es que hubo alguno.
+	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
 	public static final function save( &$productos_proveedor )
 	{
@@ -41,7 +41,7 @@ abstract class ProductosProveedorDAOBase extends TablaDAO
 	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return Objeto Un objeto del tipo {@link ProductosProveedor}. NULL si no hay tal registro.
+	  * @return @link ProductosProveedor Un objeto del tipo {@link ProductosProveedor}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_producto )
 	{
@@ -109,9 +109,10 @@ abstract class ProductosProveedorDAOBase extends TablaDAO
 	  * </code>
 	  *	@static
 	  * @param ProductosProveedor [$productos_proveedor] El objeto de tipo ProductosProveedor
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function search( $productos_proveedor , $json = false)
+	public static final function search( $productos_proveedor , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from productos_proveedor WHERE ("; 
 		$val = array();
@@ -146,22 +147,17 @@ abstract class ProductosProveedorDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new ProductosProveedor($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new ProductosProveedor($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new ProductosProveedor($foo));
 		}
+		return $ar;
 	}
 
 
@@ -208,8 +204,9 @@ abstract class ProductosProveedorDAOBase extends TablaDAO
 	  **/
 	private static final function create( &$productos_proveedor )
 	{
-		$sql = "INSERT INTO productos_proveedor ( clave_producto, id_proveedor, id_inventario, descripcion, precio ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO productos_proveedor ( id_producto, clave_producto, id_proveedor, id_inventario, descripcion, precio ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
+			$productos_proveedor->getIdProducto(), 
 			$productos_proveedor->getClaveProducto(), 
 			$productos_proveedor->getIdProveedor(), 
 			$productos_proveedor->getIdInventario(), 
@@ -256,9 +253,10 @@ abstract class ProductosProveedorDAOBase extends TablaDAO
 	  *	@static
 	  * @param ProductosProveedor [$productos_proveedor] El objeto de tipo ProductosProveedor
 	  * @param ProductosProveedor [$productos_proveedor] El objeto de tipo ProductosProveedor
-	  * @param bool [$json] Verdadero para obtener los resultados en forma JSON y no objetos. En caso de no presentare este parametro se tomara el valor default de false.
+	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
+	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function byRange( $productos_proveedorA , $productos_proveedorB , $json = false)
+	public static final function byRange( $productos_proveedorA , $productos_proveedorB , $orderBy = null, $orden = 'ASC')
 	{
 		$sql = "SELECT * from productos_proveedor WHERE ("; 
 		$val = array();
@@ -329,22 +327,17 @@ abstract class ProductosProveedorDAOBase extends TablaDAO
 		}
 
 		$sql = substr($sql, 0, -3) . " )";
+		if( $orderBy !== null ){
+		    $sql .= " order by " . $orderBy . " " . $orden ;
+		
+		}
 		global $conn;
 		$rs = $conn->Execute($sql, $val);
-		if($json === false){
-			$ar = array();
-			foreach ($rs as $foo) {
-    			array_push( $ar, new ProductosProveedor($foo));
-			}
-			return $ar;
-		}else{
-			$allData = '[';
-			foreach ($rs as $foo) {
-    			$allData .= new ProductosProveedor($foo) . ',';
-			}
-    		$allData = substr($allData, 0 , -1) . ']';
-			return $allData;
+		$ar = array();
+		foreach ($rs as $foo) {
+    		array_push( $ar, new ProductosProveedor($foo));
 		}
+		return $ar;
 	}
 
 

@@ -21,17 +21,39 @@ class Usuario extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->id_usuario = $data['id_usuario'];
-			$this->RFC = $data['RFC'];
-			$this->nombre = $data['nombre'];
-			$this->contrasena = $data['contrasena'];
-			$this->id_sucursal = $data['id_sucursal'];
-			$this->activo = $data['activo'];
-			$this->finger_token = $data['finger_token'];
-			$this->salario = $data['salario'];
-			$this->direccion = $data['direccion'];
-			$this->telefono = $data['telefono'];
-			$this->fecha_inicio = $data['fecha_inicio'];
+			if( isset($data['id_usuario']) ){
+				$this->id_usuario = $data['id_usuario'];
+			}
+			if( isset($data['RFC']) ){
+				$this->RFC = $data['RFC'];
+			}
+			if( isset($data['nombre']) ){
+				$this->nombre = $data['nombre'];
+			}
+			if( isset($data['contrasena']) ){
+				$this->contrasena = $data['contrasena'];
+			}
+			if( isset($data['id_sucursal']) ){
+				$this->id_sucursal = $data['id_sucursal'];
+			}
+			if( isset($data['activo']) ){
+				$this->activo = $data['activo'];
+			}
+			if( isset($data['finger_token']) ){
+				$this->finger_token = $data['finger_token'];
+			}
+			if( isset($data['salario']) ){
+				$this->salario = $data['salario'];
+			}
+			if( isset($data['direccion']) ){
+				$this->direccion = $data['direccion'];
+			}
+			if( isset($data['telefono']) ){
+				$this->telefono = $data['telefono'];
+			}
+			if( isset($data['fecha_inicio']) ){
+				$this->fecha_inicio = $data['fecha_inicio'];
+			}
 		}
 	}
 
@@ -42,9 +64,10 @@ class Usuario extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"id_usuario" => $this->id_usuario,
 		"RFC" => $this->RFC,
 		"nombre" => $this->nombre,
@@ -56,9 +79,10 @@ class Usuario extends VO
 		"direccion" => $this->direccion,
 		"telefono" => $this->telefono,
 		"fecha_inicio" => $this->fecha_inicio
-		); 
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * id_usuario
 	  * 
@@ -91,7 +115,7 @@ class Usuario extends VO
 	/**
 	  * contrasena
 	  * 
-	  * Campo no documentado<br>
+	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var varchar(128)
 	  */
@@ -239,7 +263,7 @@ class Usuario extends VO
 	/**
 	  * getContrasena
 	  * 
-	  * Get the <i>contrasena</i> property for this object. Donde <i>contrasena</i> es Campo no documentado
+	  * Get the <i>contrasena</i> property for this object. Donde <i>contrasena</i> es  [Campo no documentado]
 	  * @return varchar(128)
 	  */
 	final public function getContrasena()
@@ -250,7 +274,7 @@ class Usuario extends VO
 	/**
 	  * setContrasena( $contrasena )
 	  * 
-	  * Set the <i>contrasena</i> property for this object. Donde <i>contrasena</i> es Campo no documentado.
+	  * Set the <i>contrasena</i> property for this object. Donde <i>contrasena</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>contrasena</i> es de tipo <i>varchar(128)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param varchar(128)

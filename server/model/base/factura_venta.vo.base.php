@@ -21,8 +21,12 @@ class FacturaVenta extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->folio = $data['folio'];
-			$this->id_venta = $data['id_venta'];
+			if( isset($data['folio']) ){
+				$this->folio = $data['folio'];
+			}
+			if( isset($data['id_venta']) ){
+				$this->id_venta = $data['id_venta'];
+			}
 		}
 	}
 
@@ -33,14 +37,16 @@ class FacturaVenta extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"folio" => $this->folio,
 		"id_venta" => $this->id_venta
-		); 
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * folio
 	  * 

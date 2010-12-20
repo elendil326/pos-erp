@@ -21,10 +21,18 @@ class DetalleVenta extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->id_venta = $data['id_venta'];
-			$this->id_producto = $data['id_producto'];
-			$this->cantidad = $data['cantidad'];
-			$this->precio = $data['precio'];
+			if( isset($data['id_venta']) ){
+				$this->id_venta = $data['id_venta'];
+			}
+			if( isset($data['id_producto']) ){
+				$this->id_producto = $data['id_producto'];
+			}
+			if( isset($data['cantidad']) ){
+				$this->cantidad = $data['cantidad'];
+			}
+			if( isset($data['precio']) ){
+				$this->precio = $data['precio'];
+			}
 		}
 	}
 
@@ -35,16 +43,18 @@ class DetalleVenta extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"id_venta" => $this->id_venta,
 		"id_producto" => $this->id_producto,
 		"cantidad" => $this->cantidad,
 		"precio" => $this->precio
-		); 
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * id_venta
 	  * 

@@ -21,11 +21,21 @@ class DetalleInventario extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->id_producto = $data['id_producto'];
-			$this->id_sucursal = $data['id_sucursal'];
-			$this->precio_venta = $data['precio_venta'];
-			$this->min = $data['min'];
-			$this->existencias = $data['existencias'];
+			if( isset($data['id_producto']) ){
+				$this->id_producto = $data['id_producto'];
+			}
+			if( isset($data['id_sucursal']) ){
+				$this->id_sucursal = $data['id_sucursal'];
+			}
+			if( isset($data['precio_venta']) ){
+				$this->precio_venta = $data['precio_venta'];
+			}
+			if( isset($data['min']) ){
+				$this->min = $data['min'];
+			}
+			if( isset($data['existencias']) ){
+				$this->existencias = $data['existencias'];
+			}
 		}
 	}
 
@@ -36,17 +46,19 @@ class DetalleInventario extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"id_producto" => $this->id_producto,
 		"id_sucursal" => $this->id_sucursal,
 		"precio_venta" => $this->precio_venta,
 		"min" => $this->min,
 		"existencias" => $this->existencias
-		); 
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * id_producto
 	  * 

@@ -284,21 +284,26 @@ function modificarCliente( $args ){
 
 function listarVentasClientes( ){
     
-    $ventas = VentasDAOBase::getAll();
+    $ventas = VentasDAO::getAll();
 
     $tot_ventas = array();
 
     foreach($ventas as $venta)
     {
-
+        //var_dump($venta);
         $decode_venta = json_decode($venta);
-        
+        $decode_venta = $decode_venta[0];
+        //var_dump($decode_venta);
         //agregamos al venta al total de ventas
 
         $dventa = new DetalleVenta();
         $dventa->setIdVenta( $venta->getIdVenta() );
         //obtenemos el detalle de la venta
         $detalles_venta = DetalleVentaDAO::search($dventa);
+        
+        if(sizeof($detalles_venta)){
+            continue;
+        }
 
         $array_detalle = array(); //guarda los detalles de las ventas
 

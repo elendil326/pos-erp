@@ -21,19 +21,45 @@ class Cliente extends VO
 	{ 
 		if(isset($data))
 		{
-			$this->id_cliente = $data['id_cliente'];
-			$this->rfc = $data['rfc'];
-			$this->nombre = $data['nombre'];
-			$this->direccion = $data['direccion'];
-			$this->ciudad = $data['ciudad'];
-			$this->telefono = $data['telefono'];
-			$this->e_mail = $data['e_mail'];
-			$this->limite_credito = $data['limite_credito'];
-			$this->descuento = $data['descuento'];
-			$this->activo = $data['activo'];
-			$this->id_usuario = $data['id_usuario'];
-			$this->id_sucursal = $data['id_sucursal'];
-			$this->fecha_ingreso = $data['fecha_ingreso'];
+			if( isset($data['id_cliente']) ){
+				$this->id_cliente = $data['id_cliente'];
+			}
+			if( isset($data['rfc']) ){
+				$this->rfc = $data['rfc'];
+			}
+			if( isset($data['nombre']) ){
+				$this->nombre = $data['nombre'];
+			}
+			if( isset($data['direccion']) ){
+				$this->direccion = $data['direccion'];
+			}
+			if( isset($data['ciudad']) ){
+				$this->ciudad = $data['ciudad'];
+			}
+			if( isset($data['telefono']) ){
+				$this->telefono = $data['telefono'];
+			}
+			if( isset($data['e_mail']) ){
+				$this->e_mail = $data['e_mail'];
+			}
+			if( isset($data['limite_credito']) ){
+				$this->limite_credito = $data['limite_credito'];
+			}
+			if( isset($data['descuento']) ){
+				$this->descuento = $data['descuento'];
+			}
+			if( isset($data['activo']) ){
+				$this->activo = $data['activo'];
+			}
+			if( isset($data['id_usuario']) ){
+				$this->id_usuario = $data['id_usuario'];
+			}
+			if( isset($data['id_sucursal']) ){
+				$this->id_sucursal = $data['id_sucursal'];
+			}
+			if( isset($data['fecha_ingreso']) ){
+				$this->fecha_ingreso = $data['fecha_ingreso'];
+			}
 		}
 	}
 
@@ -44,9 +70,10 @@ class Cliente extends VO
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
-	  public function __toString( )
-	  { 
-		$vec = array( 
+	public function __toString( )
+	{ 
+		$vec = array();
+		array_push($vec, array( 
 		"id_cliente" => $this->id_cliente,
 		"rfc" => $this->rfc,
 		"nombre" => $this->nombre,
@@ -60,9 +87,10 @@ class Cliente extends VO
 		"id_usuario" => $this->id_usuario,
 		"id_sucursal" => $this->id_sucursal,
 		"fecha_ingreso" => $this->fecha_ingreso
-		); 
+		)); 
 	return json_encode($vec); 
 	}
+	
 	/**
 	  * id_cliente
 	  * 
