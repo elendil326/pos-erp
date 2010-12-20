@@ -109,6 +109,8 @@ function listarIngresosSucursal( $sid = null)
     $gasto -> setFolio( $data->folio );
     $gasto->setConcepto( $data->concepto );
     $gasto->setMonto( $data->monto );
+    //TODO: descomentar esta linea cuando este el nuevo DAO que incluya la nota
+    $gasto->setNota( $data->nota );
 
     if( isset( $data->fecha ) )
     {
@@ -309,6 +311,8 @@ function listarIngresosSucursal( $sid = null)
     $ingreso->setFechaIngreso( $data->fecha );
     $ingreso->setIdSucursal( $_SESSION['sucursal'] );
     $ingreso->setIdUsuario( $_SESSION['userid'] );
+    //TODO: descomentar esta linea cuando este el nuevo DAO que incluya la nota
+    $ingreso->setNota( $data->nota );
 
     try
     {
@@ -525,7 +529,8 @@ function doInsertarAbono( $monto ){
     $found = false;
 
     //obtenemos la compra mas reciente
-    foreach( $compras as $compra ){
+    foreach( $compras as $compra )
+    {
         $found = true;
         $compra_a_abonar = $compra;
         $saldo_compra = $compra->getTotal() - $compra->getPagado() ;
@@ -553,7 +558,7 @@ function doInsertarAbono( $monto ){
         catch(Exception $e)
         {
             die( '{ "succes" : "false" , "reason" : "' . $e . '"}' );
-        }
+        }//catch
         
     }//if
     
@@ -582,7 +587,7 @@ function doInsertarAbono( $monto ){
     {
         //significa que la compra se liquido y hay que cambia su estado liquidada        
         $compra_a_abonar->setLiquidado(1);  
-    }
+    }//if
         
     try
     {
@@ -625,6 +630,10 @@ function doInsertarAbono( $monto ){
         }
 
     }
+    catch(Exception $e)
+    {
+         die( '{ "success" : "false" , "reason" : "Exception: No se registro el nuevo abono"}' );
+    }//catch
 }
 
 

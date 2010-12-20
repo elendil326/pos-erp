@@ -245,8 +245,9 @@ Aplicacion.Personal.prototype.editarDetallesEmpleadoDespedirBoton = function ()
 				url: 'proxy.php',
 				scope : this,
 				params : {
-					action : 502,
-					data : Ext.util.JSON.encode( v )
+					action : 503,
+					activo : v.activo,
+					id_empleado : v.id_usuario
 				},
 				success: function(response, opts) {
 					try{
@@ -255,9 +256,6 @@ Aplicacion.Personal.prototype.editarDetallesEmpleadoDespedirBoton = function ()
 						Ext.getBody().mask('Error Interno', '', false);
 						return POS.error(e);
 					}
-
-
-					
 
 					if( !r.success ){
 						return POS.error(r);

@@ -386,11 +386,11 @@ function modificarEmpleado( $args )
     }
 
     //PARA ESTOY HAY UNA FUNCION ENTERA QUE SE ENCARGA DE LO NECESARIO
-    /*
+    //Si lo ocupo, cuando se recontrata un empleado y tiene un puesto DISTINTO
     if( isset( $data->activo ) )
     {
         $usuario->setActivo( $data->activo );
-    }*/
+    }
 	
     if( isset( $data->finger_token ) )
     {
@@ -423,7 +423,9 @@ function modificarEmpleado( $args )
             {
                 //entra aqui en caso de que se mande el dato grupo, para cambiar de puesto al empleado
 
-                if( !( $grupoUsuarios = GruposUsuariosDAO::getByPK( $data->grupo, $usuario->getIdUsuario() ) ) )
+
+                //TODO: Arreglar esto apra que solo trabaje con el id_usuario y solo pueda tener una cuenta a la vez
+                if( !( $grupoUsuarios = GruposUsuariosDAO::getByPK( $usuario->getIdUsuario() ) ) )
                 {
                     //si entro aqui significa que el puesto que se le va a asegnar es distinto al que ya tenia
                     // y por lo tanto hay que eliminar el registro

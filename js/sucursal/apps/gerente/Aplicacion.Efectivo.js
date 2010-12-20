@@ -500,6 +500,20 @@ Aplicacion.Efectivo.prototype.nuevoGastoValidator = function ()
             return;
         }
     }
+    else
+    {
+        //si no se requiere folio entonces se encesita ingresar una nota a fuezas
+        if(  values.nota.length == 0 )
+        {
+            Ext.Anim.run(Ext.getCmp( 'Efectivo-nuevoGastoPanel-nota' ), 
+                'fade', {duration: 250,
+                out: true,
+                autoClear: true
+            });
+
+            return;
+        }
+    }
 
     if( !values.fecha )
     {
@@ -634,14 +648,14 @@ Aplicacion.Efectivo.prototype.nuevoGastoPanelCreator = function (){
                                 text : "Nextel",
                                 value : "nextel"
                             },{
-                                text : "Comida",
-                                value : "comida"
+                                text : "Otro",
+                                value : "otros"
                             }
                         ],
                         listeners : {
                             "change" : function (){
 
-                                if(this.value == "comida")
+                                if(this.value == "otros")
                                 {
                                     Ext.Anim.run(Ext.getCmp( 'Efectivo-nuevoGastoPanel-folio' ), 
                                     'slide', 
