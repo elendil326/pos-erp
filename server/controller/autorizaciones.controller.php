@@ -9,6 +9,7 @@ require_once("model/detalle_inventario.dao.php");
 require_once("model/cliente.dao.php");
 require_once("model/detalle_compra.dao.php");
 require_once("model/compras.dao.php");
+require_once("model/inventario.dao.php");
 
 function solicitudDeAutorizacion( $auth ){
 
@@ -120,10 +121,43 @@ function surtirProducto($args){
 
     foreach( $productos as $producto )
     {
-        //obtenemos el producto
-        $p = DetalleInventarioDAO::getByPK($producto->id_producto, $_SESSION['sucursal']);
+        $p = DetalleInventarioDAO::getByPK( $producto->id_producto, $_SESSION['sucursal'] );
+        
+        if( !$p )
+        {
+            $producto_inventario = InventarioDAO::getByPK( $producto->id_producto );
+            
+            if( !$producto_inventario )
+            {
+                die( '{ "success" : "false" , "reason" : "El producto ' . $producto->id_producto . ' no se encuentra registrado en el inventario."}' );
+            }
+            
+            //aqui entra en caso de no encontrar el producto en detalle inventario
+            $nuevo_detalle_producto = new DetalleInventario();
+            $nuevo_detalle_producto->setIdProducto( $producto->id_producto );    
+            $nuevo_detalle_producto->setIdSucursal( $_SESSION['sucursal'] );
+            $nuevo_detalle_producto->setPrecioVenta( $producto_inventario->getCosto() );
+            $nuevo_detalle_producto->setMin( 100 );
+            $nuevo_detalle_producto->setExistencias( 0 );
+            
+            try
+            {
+                if( DetalleInventarioDAO::save( $nuevo_detalle_producto ) > 0 )
+                {
+                    $p = DetalleInventarioDAO::getByPK($producto->id_producto, $_SESSION['sucursal']);
+                }
+                else
+                {
+                    die( '{ "success" : "false" , "reason" : "No se pudo enviar la autorizacion."}' );
+                }
+            }
+            catch(Exception $e)
+            {
+                die( '{ "success" : "false" , "reason" : "Exception: no se pudo enviar la autorizacion."}' );
+            } 
+        }
 
-        //obtenemos las existencias
+        //obtenemos las existencias (como no hay productos, sale error)
         $existencias = $p->getExistencias();
 
         //agregamos lo que se va a surtir

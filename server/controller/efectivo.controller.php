@@ -3,6 +3,8 @@
 require_once("model/ingresos.dao.php");
 require_once("model/gastos.dao.php");
 require_once("model/autorizacion.dao.php");
+require_once("model/pagos_compra.dao.php");
+require_once("model/compras.dao.php");
 
 
 
@@ -449,6 +451,181 @@ function listarIngresosSucursal( $sid = null)
  }
  
 
+/**
+ *
+ * 	insertarAbono
+ *
+ * 	Esta funcion nos regresa un JSON el resultado de la operacion de guardado de un abono en una sucursal
+ *
+ *  @access public
+ *  @return json con el resultado del guardado
+ *	@params String [$concepto] cadena que indica la causa de el gasto
+ *	@params float [$monto] cantidad que se gasto
+ *	@params timestamp [$fecha] fecha en que se realizo el gasto
+ * 	@see GastosDAO::save() 
+ * 	
+ **/
+
+ function insertarAbono( $args ) //600
+ {
+
+    if( !isset( $_SESSION['sucursal'] ) )
+    {
+        die( '{ "succes" : "false" , "reason" : "Sesion no iniciada."}' );
+    }
+
+    doInsertarAbono( $args['monto'] );
+    
+    //si todo salio bien llegara hasta aqui nuevamenten
+    printf('{ "success": true}');
+	
+ }
+
+function doInsertarAbono( $monto ){
+
+
+
+
+    /*
+    
+     1.-Tratar de obtener la compra mas antigua sin liquidar
+        si no se encontro:
+            GOTO 2;
+        si se encontro:
+            la diferencia entre el monto y el saldo de la compra mas antigua es <= 0?
+                si:
+                    GOTO 3
+                no: 
+                    GOTO 4
+     
+     2.- Agregar el monto del abono directamente al saldo a favor de la sucursal
+            GOTO 5;
+            
+     3.- Sumar a la compra mas antigua en el campo de pagado el monto
+            GOTO 5
+            
+     4.- 
+        a)Liquidar la compra mas antigua
+        b)Igualar a monto con el resultado de la diferencia anterior 
+        c)GO TO 1
+         
+     5.- End
+     
+    */
+
+
+    //obtenemos todas las compras (de al mas antigua a la mas reciente)
+    $c = new Compras();
+    $c->setLiquidado('0');
+    
+    $compras = CompasDAO::search( $c );
+
+    $compra_a_abonar = null;
+    
+    $found = false;
+
+    //obtenemos la compra mas reciente
+    foreach( $compras as $compra ){
+        $found = true;
+        $compra_a_abonar = $compra;
+        $saldo_compra = $compra->getTotal() - $compra->getPagado() ;
+        break;
+    }//foreach
+    
+    if( !$found )
+    {
+        //si no se encontro una compra sin liquidar se abona el monto directamente al saldo a favor de la sucursal
+        $sucursal = SucursalDAO::getByPK($_SESSION['sucursal']);
+        $sucursal->setSaldoAFavor( $sucursal->getSaldoAFavor() + monto );
+        
+        try
+        {
+            if( !( SucursalDAO::save( $sucursal ) > 0 ) )
+            {
+                die( '{ "succes" : "false" , "reason" : "No se registro el nuevo abono, no cambio el saldoa  favor en la sucursal."}' );
+            }//if
+            
+            //si llegas aqui se abono directamente al saldo a favor de la sucursal
+            //FIN DE LAS OPERACIONES
+            return;
+            
+        }
+        catch(Exception $e)
+        {
+            die( '{ "succes" : "false" , "reason" : "' . $e . '"}' );
+        }
+        
+    }//if
+    
+    
+    /*
+    
+        si llega aqui es por que se encontro almenos una cuenta sin liquidar
+    
+    */
+    
+    
+    $saldo = $monto - $saldo;
+    /*
+        si $saldo < 0 : el monto no liquida la cuenta
+        si $saldo = 0 : si liquida la cuenta
+        si $saldo > 0 : si liquida la cuenta y ademas sobra dinero
+    */
+    
+        
+        
+
+    //actualizamos el campo de pagado en la compra
+    $compra_a_abonar->setPagado( $compra_a_abonar->getPagado() + $monto );
+    
+    if($saldo >= 0)
+    {
+        //significa que la compra se liquido y hay que cambia su estado liquidada        
+        $compra_a_abonar->setLiquidado(1);  
+    }
+        
+    try
+    {
+        //intentamos guardar los cambios
+        if( !( ComprasDAO::save( $compra_a_abonar ) > 0 ) )
+        {            
+            die( '{ "success" : "false" , "reason" : "No se registro el nuevo abono"}' );
+        }
+            
+        //ya que se actualizo el saldo de la compra, insertamos el abono en abonos compra
+                
+        $nuevo_abono = new PagosCompra();
+        $nuevo_abono->setIdCompra( $compra_a_abonar->getIdCompra() );
+        $nuevo_abono->setMonto( $monto );
+        
+        try
+        {       
+            //intentamos guardar el abono
+            if( !( PagosCompra::save( $nuevo_abono ) > 0 ) )
+            {
+                die( '{ "success" : "false" , "reason" : "No se registro el nuevo abono en pagos compra"}' );
+            }
+            
+            //si se registro el abono entonces verificamos que haya sobrado dinero para abonarlo y repetir el algoritmo
+            if( $saldo <= 0 )
+            {
+                //FIN DE LAS OPERACIONES
+                return;
+            }
+            else
+            {
+                //llamamos nuevamente a este metodo y le pasamos el sobrante
+                doInsertarAbono( $saldo );
+            }
+            
+        }
+        catch(Exception $e)
+        {
+            die( '{ "succes" : "false" , "reason" : "' . $e . '"}' );
+        }
+
+    }
+}
 
 
 if(isset($args['action'])){
@@ -479,7 +656,7 @@ if(isset($args['action'])){
         break;
 
         case '606':
-            printf( '{ "success" : true , "id_sucursal" : "%s" }', $_SESSION['sucursal'] );
+            insertarAbono( $args );
         break;
 
         default:

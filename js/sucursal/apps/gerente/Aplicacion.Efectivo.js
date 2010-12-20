@@ -19,6 +19,8 @@ Aplicacion.Efectivo.prototype._init = function (){
 	//crear el panel de nuevo gasto
 	this.nuevoGastoPanelCreator();
 	
+	this.nuevoAbonoPanelCreator();
+	
 	//crear el panel de nuevo ingreso
 	this.nuevoIngresoPanelCreator();
 	
@@ -42,9 +44,20 @@ Aplicacion.Efectivo.prototype.getConfig = function (){
         text: 'Efectivo',
         cls: 'launchscreen',
         items: [{
-            text: 'Gastos',
-            card: this.nuevoGastoPanel,
-            leaf: true
+            text: 'Egresos',
+            items: [{
+                text: 'Gasto',
+                card: this.nuevoGastoPanel,
+                leaf: true
+            },
+            {
+                text: 'Abono',
+                card: this.nuevoAbonoPanel,
+                leaf: true
+            }]
+            
+            
+            
         },
         {
             text: 'Ingresos',
@@ -681,9 +694,111 @@ Aplicacion.Efectivo.prototype.nuevoGastoPanelCreator = function (){
 
 
 
+/**
+ * Validar los datos de la forma de nuevo gasto
+ */
+Aplicacion.Efectivo.prototype.nuevoAbonoValidator = function ()
+{
+	//obtener los valores de la forma
+	var values = Aplicacion.Efectivo.currentInstance.nuevoAbonoPanel.getValues();
+	
+	if( !( values.monto && /^-?\d+(\.\d+)?$/.test(values.monto + '') ) ){
+
+        Ext.Anim.run(Ext.getCmp( 'Efectivo-nuevoAbonoPanel-monto' ), 
+            'fade', {duration: 250,
+            out: true,
+            autoClear: true
+        });
+
+		return;
+	}
+
+    Aplicacion.Efectivo.currentInstance.nuevoAbono( values );
+
+};
 
 
+/**
+ * Inserta el nuevo abono en la BD
+ */
+Aplicacion.Efectivo.prototype.nuevoAbono = function( data ){
 
+     Ext.Msg.alert("Efectivo","Guardando el nuevo abono");
+
+    Ext.getBody().mask('Guardando nuevo abono ...', 'x-mask-loading', true);
+
+    Ext.Ajax.request({
+        url: 'proxy.php',
+        scope : this,
+        params : {
+            action : 606,
+            data : Ext.util.JSON.encode( data )
+        },
+        success: function(response, opts) {
+            try{
+                r = Ext.util.JSON.decode( response.responseText );
+            }catch(e){
+                return POS.error(response, e);
+            }
+
+            Ext.getBody().unmask(); 
+
+            //limpiar la forma      
+            Aplicacion.Efectivo.currentInstance.nuevoAbonoPanel.reset();
+            
+            //informamos lo que sucedio
+            if( r.success == "true" )
+            {
+                Ext.Msg.alert("Efectivo","Se ha registrado el nuevo abono"); 
+            }
+            else
+            {
+                Ext.Msg.alert("Efectivo","Error: " + r.success); 
+            }
+
+        },
+        failure: function( response ){
+            POS.error( response );
+        }
+    }); 
+
+};
+
+
+/**
+ * Contiene el panel con la forma de nuevo abono
+ */
+Aplicacion.Efectivo.prototype.nuevoAbonoPanel = null;
+
+
+/**
+ * Pone un panel en nuevoAbonoPanel
+ */
+Aplicacion.Efectivo.prototype.nuevoAbonoPanelCreator = function (){
+
+	this.nuevoAbonoPanel = new Ext.form.FormPanel({
+        items: [{
+                xtype: 'fieldset',
+                title: 'Ingrese los detalles del nuevo abono',
+                instructions: 'Ingrese la cantidad a abonar a sus compras.',
+                items: [
+                    new Ext.form.Text({ id:'Efectivo-nuevoAbonoPanel-monto', name: 'monto', label: 'Monto', required:true,
+                    listeners : {
+                        'focus' : function (){
+                                kconf = {
+                                type : 'num',
+                                submitText : 'Aceptar',
+                                callback : Aplicacion.Efectivo.currentInstance.nuevoAbonoValidator
+                            };
+                        POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    }})
+                    
+                ]},
+                new Ext.Button({ id : 'Efectivo-NuevoAbono', ui  : 'action', text: 'Registrar Abono', margin : 5,  handler : this.nuevoAbonoValidator, disabled : false })
+        ]
+    });
+};
 
 
 

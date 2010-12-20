@@ -17,7 +17,8 @@ Aplicacion.Autorizaciones.prototype._init = function (){
     if(DEBUG){
 		console.log("Autorizaciones: construyendo");
     }
-
+    
+    Aplicacion.Autorizaciones.currentInstance = this;
 	
 	//funcion que crea los paneles para las nuevas autorizaciones
 	this.nueva.createPanels();
@@ -29,7 +30,7 @@ Aplicacion.Autorizaciones.prototype._init = function (){
 	this.listaDeAutorizacionesLoad();
 	
 	
-	Aplicacion.Autorizaciones.currentInstance = this;
+	
 	
 	return this;
 };
@@ -59,7 +60,7 @@ Aplicacion.Autorizaciones.prototype.getConfig = function (){
 	    },
 	    {
 	        text: 'Historial',
-	        card: this.listaDeAutorizacionesPanel,
+	        card: Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel,
 	        leaf: true
 	    }]
 	};
@@ -941,9 +942,6 @@ Aplicacion.Autorizaciones.prototype.eliminarAutorizacion = function(){
 //surte al inventario los productos mandados por le admin
 Aplicacion.Autorizaciones.prototype.surtirAutorizacion = function(  ){
 
-    //Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionFormPanel.remove();
-    Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionPanel.hide();
-    
     //obtenemos al autorizacion actual
     autorizacion = Aplicacion.Autorizaciones.currentInstance.detalleAutorizacion;
 
@@ -970,12 +968,17 @@ Aplicacion.Autorizaciones.prototype.surtirAutorizacion = function(  ){
                 return;
             }
 
-            //Ext.getCmp('detalleAutorizacionPanel').hide();
-
-            //Ext.Msg.alert("Autorizaciones","Se agrego correctamente los productos al inventario");
+             Ext.Msg.alert("Autorizaciones","Se modifico correctamente el inventario");
 
             //recargamos la lista de aurorizaciones
             Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesLoad();
+            
+            
+            //cambiamos la card
+             sink.Main.ui.setActiveItem( Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel , 'slide');
+            
+            //recargar el inventario
+            Aplicacion.Inventario.currentInstance.checkInventarioDbDiff();
 
         },
         failure: function( response ){
@@ -988,9 +991,12 @@ Aplicacion.Autorizaciones.prototype.surtirAutorizacion = function(  ){
 //guardara los detalles de la autorizacion actual
 Aplicacion.Autorizaciones.prototype.detalleAutorizacion = null;
 
-//muestra una ventana emergente donde se muestran los detalles de la autorizacion
+Aplicacion.Autorizaciones.prototype.detalleAutorizacionFormPanel = null;
+
+//se muestran los detalles de la autorizacion
 Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( autorizacion ){
 
+    //almacena los detalles de la autorizacion
     Aplicacion.Autorizaciones.currentInstance.detalleAutorizacion = autorizacion;
 
     autorizaciones = Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lista
@@ -1150,6 +1156,19 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
     }
 
     Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionFormPanel = new Ext.form.FormPanel({
+        dockedItems: [{
+            dock: 'bottom',
+            xtype: 'toolbar',
+            items: [{
+                text: 'Regresar',
+                ui: 'back',
+                handler: function() {                   
+                   sink.Main.ui.setActiveItem( Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel , 'slide');
+                }
+            },{
+                xtype: 'spacer'
+            }]
+        }],
         items: [{
             xtype: 'fieldset',
             title: (!detalleAutorizacion.descripcion)?detalleAutorizacion.concepto:detalleAutorizacion.descripcion,
@@ -1160,45 +1179,13 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
         ]
     });
 
-    this.detalleAutorizacionPanel = new Ext.Panel({
-        id:'detalleAutorizacionPanel',
-        dockedItems: [{
-            dock: 'top',
-            xtype: 'toolbar',
-            title: 'Detalle de Autorización'
-        },{
-            dock: 'bottom',
-            xtype: 'toolbar',
-            items: [{
-                text: 'Cancelar',
-                ui: 'action',
-                handler: function() {                   
-                   sink.Main.ui.setActiveItem( this.listaDeAutorizacionesPanel , 'slide');
-                }
-            },{
-                xtype: 'spacer'
-            }]
-        }],
-        //floating:true,
-        //modal:true,
-        centered:true,
-        height: height,
-        width: 750,
-        scroll:'none',
-        items:[
-            this.detalleAutorizacionFormPanel
-        ]
-    });
-
-    //this.detalleAutorizacionPanel.show('pop');
-    sink.Main.ui.setActiveItem( this.detalleAutorizacionPanel , 'slide');
+    sink.Main.ui.setActiveItem( Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionFormPanel , 'slide');
 };
 
 /*
  * Contiene el panel con la lista de autorizaciones
  */
 Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanel = null;
-
 
 /**
  * Pone un panel en listaDeAutorizacionesPanel
@@ -1233,6 +1220,9 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanelCreator = function
             }]
         }]
     });
+    
+    Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel = this.listaDeAutorizacionesPanel;
+    
 };
 
 

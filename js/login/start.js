@@ -1,7 +1,7 @@
 
 var DEBUG; 
 var login;
-POS = {};
+POS = {U:{G:null}};
 
 if(document.location.search=="?debug")
 {
