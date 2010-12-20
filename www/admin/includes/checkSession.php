@@ -1,36 +1,33 @@
 <?php
 
+
+require_once('../../server/config.php');
+require_once('logger.php');
+Logger::log("revisando sesion de admin");
 session_start();
 
+require_once('controller/login.controller.php');
 
-if(!isset($_SESSION['userid'])){
-	die('<script>window.location = "log.php"</script>');
+if(!isset( $_SESSION['grupo'] )){
+
+    logOut(true);
+  	die('<script>window.location = "./log.php"</script>');
+}
+
+if(!checkCurrentSession()){
+    logOut();
+  	die('<script>window.location = "./log.php"</script>');
 }
 
 
-if(!isset($_SESSION['grupo']) || $_SESSION['grupo'] != 1){
-	unset( $_SESSION['token'] ); 
-	unset( $_SESSION['userid'] );
-	unset( $_SESSION['sucursal'] );
-	unset( $_SESSION['grupo'] );
-	unset( $_SESSION['timeout'] );
-	unset( $_SESSION['token'] );
-
-  	die('<script>window.location = "./"</script>');
+if($_SESSION['grupo'] > 1){
+    Logger::log("agluien con grupo menor intento ingresar a admin");
+    logOut(true);
+    die('<script>window.location = "./"</script>');    
 }
 
 
-$current_token = $_SESSION['userid'] ."-". $_SESSION['grupo']. "kaffeina" . "/" . $_SERVER['HTTP_USER_AGENT'] ;
 
-if (crypt($current_token, $_SESSION['token']) != $_SESSION['token']) {
-	unset( $_SESSION['token'] ); 
-	unset( $_SESSION['userid'] );
-	unset( $_SESSION['sucursal'] );
-	unset( $_SESSION['grupo'] );
-	unset( $_SESSION['timeout'] );
-	unset( $_SESSION['token'] );
 
-  	die('<script>window.location = "./"</script>');
-}
 
 

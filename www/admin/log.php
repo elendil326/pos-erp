@@ -413,7 +413,7 @@ function bit_rol(num, cnt)
         $.ajax({
 	      url: "../proxy.php",
 	      data: { 
-            action : 2004, 
+            action : 2099, 
             u : $("#usr").val(),
             p : hex_md5( $("#pass").val() )
 

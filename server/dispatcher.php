@@ -1,4 +1,5 @@
 <?php
+
 /**
 * Archivo principal del sistema, por aquí pasan todas la peticiones del cliente.
 *
@@ -8,21 +9,6 @@
 *
 * @package pos
 */
-
-/*
- * Set time zone
- * */
-date_default_timezone_set('America/Mexico_City');
-
-/**
- * iniciar la sesion y comprobar seguridad 
- */
-$ss = session_start (  );
-
-if(!$ss){
-	echo "{\"success\": false , \"reason\": -1,  \"text\" : \"Imposible iniciar sesion. Debe habilitar las cookies para ingresar.\" }";
-	return;
-}
 
 
 
@@ -35,12 +21,30 @@ require_once('config.php');
 
 
 
+
+require_once('logger.php');
+
+
+
+
 /**
-* Conexión a la base de datos.
-*
-* @see DBConnection.php
-*/
-require_once('db/DBConnection.php');
+ * iniciar la sesion y comprobar seguridad 
+ */
+
+$ss = session_start (  );
+
+if(!$ss){
+    Logger::log("imposible iniciar sesion");
+	echo "{\"success\": false , \"reason\": -1,  \"text\" : \"Imposible iniciar sesion. Debe habilitar las cookies para ingresar.\" }";
+	return;
+}
+
+
+
+
+
+
+
 
 
 /*
@@ -49,7 +53,6 @@ require_once('db/DBConnection.php');
 if( isset($_REQUEST['action']) && ($_REQUEST['action'] == 'testDB'))
 {
 	die( '{ "success": true }') ;
-
 }
 
 
@@ -63,37 +66,20 @@ if( isset($_REQUEST['action']) && ($_REQUEST['action'] == 'testDB'))
 if ( !isset($_REQUEST['action']) )
 {
 	echo "{ \"success\": false , \"reason\" : \"Invalid method call for dispatching.\" }";
-        return;
+    Logger::log("Invalid method call for dispatching");
+    return;
 }
 
 
 
 
-/**
-* Validar el user agent
-*
-*/
-//verificar sesion, a menos que sea un action 2001, que solo verifica conectividad y conexion con la base de datos,
-//la accion 2001 tambien envia como parametro desde que ip viene este request para y lo compara en la base de datos
-//para ver si es el ip que esta guardado en la base de datos
-if( ! ($_REQUEST['action']  == "2001" || $_REQUEST['action']  == "2004") )
+
+//validar los parametros de la conexion, salvo para estos dos que necesitan llegar
+//a sus controllers, son verificar estado de sesion y hacer login, dado que al inicio
+//no hay token, pues hay que saltar esta validacion, para todas las demas se debera pasar
+if( ! ($_REQUEST['action']  == "2001" || $_REQUEST['action']  == "2004" || $_REQUEST['action']  == "2099") )
 {
-    if(!isset($_SESSION['grupo'])){
-		die ("{\"succes\": false , \"reason\": \"Sesion invalida\", \"text\" : \"Sesion invalida\" }");
-    }
-
-    if($_SESSION['grupo'] == 1){
-        //es amdin
-    	$current_token = $_SESSION['userid'] ."-". $_SESSION['grupo']. "kaffeina" . "/" . $_SERVER['HTTP_USER_AGENT'] ;
-    }else{
-        //es cajero o gerente
-    	$current_token = $_SESSION['userid'] ."-". $_SESSION['grupo'] . "-" . $_SESSION['sucursal'] . "kaffeina". "/" . $_SERVER['HTTP_USER_AGENT'] ;
-    }
-
-	if (crypt($current_token, $_SESSION['token']) != $_SESSION['token']) {
-		die ("{\"succes\": false , \"reason\": \"Sesion invalida\", \"text\" : \"Sesion invalida\" }");
-	}
-    
+    Logger::log("dispatching:" . $_REQUEST['action']);
 }
 
 

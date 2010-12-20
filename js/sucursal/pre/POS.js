@@ -28,15 +28,64 @@ POS.U = {
 	g : null
 };
 
+Ext.Ajax.timeout = 3000;
 
-POS.error = function (ajaxResponse, catchedError)
-{
-	Ext.Msg.alert("Error ", catchedError);
-
-	console.warn( "POS ERROR ! ");
-	console.warn( "ajaxResponse", ajaxResponse );
-	console.warn( "catchedError", catchedError);	
+POS.A = {
+    failure : false,
+    sendHeart : true
 };
 
 
-POS.CHECK_DB_TIMEOUT = 25000;
+
+Ext.Ajax.on("requestexception", function(){
+
+    if(!POS.A.failure){
+        POS.A.failure = true;
+        Ext.getBody().mask("Problemas de conexion, porfavor espere...");
+    }
+
+});
+
+
+
+
+Ext.Ajax.on("requestcomplete", function(){
+    if(POS.A.failure){
+        POS.A.failure = false;
+        Ext.getBody().unmask();
+    }
+
+});
+
+
+function enviarHeartTask(){
+    if(POS.A.sendHeart && !POS.A.failure){
+        Aplicacion.Clientes.currentInstance.checkVentasDbDiff();
+        Aplicacion.Clientes.currentInstance.checkClientesDbDiff();
+    }
+
+    setTimeout("enviarHeartTask()",POS.CHECK_DB_TIMEOUT );
+}
+
+    setTimeout("enviarHeartTask()",POS.CHECK_DB_TIMEOUT * 2);
+
+
+POS.error = function (ajaxResponse, catchedError)
+{
+
+/*
+			setTimeout( "Aplicacion.Clientes.currentInstance.checkVentasDbDiff()", POS.CHECK_DB_TIMEOUT );
+            setTimeout( "Aplicacion.Clientes.currentInstance.checkClientesDbDiff()", POS.CHECK_DB_TIMEOUT );
+
+*/
+//    if(ajaxResponse.request.headers && ajaxResponse.status == 0 ){   }
+/*
+	Ext.Msg.alert("Error ", catchedError);
+	console.warn( "POS ERROR ! ");
+	console.warn( "ajaxResponse", ajaxResponse );
+	console.warn( "catchedError", catchedError);	
+*/
+};
+
+
+POS.CHECK_DB_TIMEOUT = 5000;

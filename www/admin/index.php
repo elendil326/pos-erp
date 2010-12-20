@@ -38,10 +38,7 @@
         generen más conversiones.
       </p>
 
-    <pre><?php
-        var_dump($_SESSION);
-        echo $_SERVER['HTTP_USER_AGENT'];
-     ?></pre>
+
 
 	<?php include_once("includes/footer.php"); ?>
     </div>

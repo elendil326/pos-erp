@@ -1,19 +1,28 @@
 <?php
 
-require_once("../server/model/usuario.dao.php");
-require_once("../server/model/grupos_usuarios.dao.php");
-require_once("../server/model/grupos.dao.php");
-require_once("../server/model/sucursal.dao.php");
+require_once("model/usuario.dao.php");
+require_once("model/grupos_usuarios.dao.php");
+require_once("model/grupos.dao.php");
+require_once("model/sucursal.dao.php");
+require_once("model/equipo.dao.php");
+require_once("model/equipo_sucursal.dao.php");
 require_once("logger.php");
 
-function login( $args )
+
+
+
+
+
+
+
+function login( $u, $p )
 {
 
-
+    Logger::log("asking for logging...");
 
 	$user = new Usuario();
-	$user->setIdUsuario( $args['u'] );
-	$user->setContrasena( $args['p'] );	
+	$user->setIdUsuario( $u );
+	$user->setContrasena( $p );	
 
 
 
@@ -21,7 +30,7 @@ function login( $args )
 		$res = UsuarioDAO::search( $user );		
 	}catch(Exception $e){
 		echo "{\"success\": false , \"reason\": 101, \"text\" : \"Error interno.\" }";
-        Logger::log("Error en la busqueda de usuario " . $e);
+        Logger::log($e);
 		return;		
 	}
 
@@ -30,9 +39,9 @@ function login( $args )
     	//este usuario no existe
 		if( isset( $_SESSION[ 'c' ] )) $_SESSION[ 'c' ] ++; else $_SESSION[ 'c' ] = 0;
 
-        Logger::log("Credenciales invalidas para el usuario " . $args['u'], 1);
-
+        Logger::log("Credenciales invalidas para el usuario " . $u . " intento:" . $_SESSION[ 'c' ], 1);
 		die(  "{\"success\": false , \"reason\": \"Invalidas\", \"text\" : \"Credenciales invalidas. Intento numero <b>". $_SESSION[ 'c' ] . "</b>. \" }" );
+
 	}
 	
 
@@ -48,48 +57,41 @@ function login( $args )
 	
 	if(count($res) < 1){
 		echo "{\"success\": false , \"reason\": 101,  \"text\" : \"Aun no perteneces a ningun grupo.\" }";
-        Logger::log("Usuario  " . $args['u'] . " no pertenence a ningun grupo." , 1);
+        Logger::log("Usuario  " . $u . " no pertenence a ningun grupo." , 1);
 		return;
 	}
 
+
+    //usuario valido, y grupo valido
 	$grpu = $res[0];
 
-
-
+    $_SESSION['ip'] = getip();
+    $_SESSION['pass'] = $p;
+    $_SESSION['ua'] = $_SERVER['HTTP_USER_AGENT'];
+	$_SESSION['grupo']  =  $grpu->getIdGrupo();
 	$_SESSION['userid'] =  $user->getIdUsuario();
-	$_SESSION['grupo'] = $grpu->getIdGrupo();
 
-    if($grpu->getIdGrupo() == 1){
-        //es amdin
-    	$_SESSION['token'] = crypt($user->getIdUsuario() ."-". $grpu->getIdGrupo() . "kaffeina" . "/" . $_SERVER['HTTP_USER_AGENT'] );
-    }else{
-        //es cajero o gerente
-    	$_SESSION['token'] = crypt($user->getIdUsuario() ."-". $grpu->getIdGrupo() . "-" . $_SESSION['sucursal'] . "kaffeina". "/" . $_SERVER['HTTP_USER_AGENT'] );
+
+    
+
+    if($grpu->getIdGrupo() == 3){
+
+        if($user->getIdSucursal() != $_SESSION['sucursal']){
+            Logger::log("cajero intento loggearse en una sucursal que no es suya");
+            die( "{\"success\": false , \"reason\": 101,  \"text\" : \"No perteneces a esta sucursal.\" }" );
+        }
+
     }
 
 
-	if( $grpu->getIdGrupo() == 1 ){
-        //si es gerente dejarlo pasar
-    	echo "{\"success\": true , \"payload\": { \"sucursaloverride\": true , \"type\": \"" . $grpu->getIdGrupo() . "\" }}";
-        Logger::log("Accesso autorizado para admin uid=" . $args['u'] );
-        return;
-    }
-
-
-    if($user->getIdSucursal() != $_SESSION['sucursal']){
-        //no perteneces a esta sucursal
-        Logger::log("gerente  " . $args['u'] . " ingreso a sucursal " . $_SESSION['sucursal'] . " que no es suya" , 1);
-
-        //si no es gerente, mandarlo al pilin
-        if( $_SESSION['grupo'] > 2 ) die( "{\"success\": false , \"reason\": 101,  \"text\" : \"No perteneces a esta sucursal.\" }" );
-    }
-
-    Logger::log("Accesso autorizado para usuario  " . $args['u'] );
+    Logger::log("Accesso autorizado para usuario  " . $u );
 	echo "{\"success\": true , \"payload\": { \"sucursaloverride\": false , \"type\": \"" . $grpu->getIdGrupo() . "\" }}";
 		
-	return;
+	return true;
 
 }
+
+
 
 
 function getUserType(){
@@ -98,8 +100,172 @@ function getUserType(){
 }
 
 
-function dispatch($args){
+
+
+
+
+
+
+/*
+    regresa verdadero si la sesion actual 
+    es valida para el grupo de usuario dado
+    regresa falso si no hay sesion alguna
+    o bien si los parametros de session
+    no concuerdan
+ */
+function checkCurrentSession()
+{
 	
+	if( !isset( $_SESSION['grupo'] ) ){
+        Logger::log("session[grupo] not set !");
+        return false;
+	}
+
+
+    if(!isset($_SESSION['userid'])){
+        Logger::log("session[userid] not set !");
+        return false;
+    }
+
+    $ip = getip();
+    if( !(isset( $_SESSION['ip'] ) && $_SESSION['ip'] == $ip) ){
+        Logger::log("session[ip] not set or wrong!");
+        Logger::log( "session:" . $_SESSION['ip'] . " actual:" . $ip );
+        return false;
+    }
+
+    $user = UsuarioDAO::getByPK( $_SESSION['userid'] );
+
+    if($user === null){
+        return false;
+    }
+
+    $pass = $user->getContrasena();
+
+    if( !(isset( $_SESSION['pass'] ) && $_SESSION['pass'] == $pass) ){
+        Logger::log("session[pass] not set or wrong !");
+        return false;
+    }
+
+    if( !(isset( $_SESSION['ua'] ) &&  $_SESSION['ua'] == $_SERVER['HTTP_USER_AGENT']) ){
+        Logger::log("session[ua] not set or wrong!");
+        return false;
+    } 
+
+    $grupoUsuario = GruposUsuariosDAO::getByPK( $_SESSION['userid'] );
+    
+    if( $grupoUsuario->getIdGrupo() != $_SESSION['grupo'] ){
+        Logger::log("session[grupo] wrong ! !");
+        return false;
+    }
+
+
+    //si es cajero, revisar que este en su sucursal
+    if( $_SESSION['grupo'] == 3 ){
+        if( $_SESSION['sucursal'] != $user->getIdSucursal() ){
+             Logger::log("session[sucursal] wrong for cajero !");
+            return false;
+        }
+    }
+
+    return true;
+
+}
+
+
+
+
+function logOut( $verbose = true  )
+{
+    Logger::log("Cerrando sesion");
+
+    if($verbose){
+        if(isset($_SESSION['grupo'])){
+            if($_SESSION['grupo'] < 2)	
+                	print ('<script>window.location= "./admin/"</script>');
+            else
+                	print ('<script>window.location= "."</script>');
+        }else{
+        	print ('<script>window.location= "."</script>');                
+        }
+    }
+
+    
+    
+
+    session_unset ();
+
+}
+
+
+
+
+
+/* 
+    revisar si vengo de una sucursal valida
+    regresa verdadero si es una sucursal valida
+    si es una sucursal valida, la pone en
+    la variable de sesion de sucursal
+    */
+function sucursalTest( ){
+	
+    //obtener el User agent que me envian
+    $ua = $_SERVER['HTTP_USER_AGENT'];
+
+    $pos = strrpos( $ua, "sid={" );
+
+    if($pos === FALSE){
+        //no se encuentra la cadena
+        Logger::log("user agent no contiene token !", 1);
+        return false;
+    }
+
+
+    //buscar ese token en la lista de quipos
+    $equipoToken = substr($ua, stripos($ua, "sid={") + 5 , 5);
+
+    $equipo = new Equipo();
+    $equipo->setToken( $equipoToken );
+    $search = EquipoDAO::search( $equipo );
+
+    if(sizeof($search) != 1){
+        Logger::log("UA sent token { " . $equipoToken  ." } not found in DB", 2);
+        return false;
+    }
+
+    
+    $equipo = $search[0];
+
+    Logger::log("UA sent token { " . $equipoToken  ." } found for equipo={$equipo->getIdEquipo()}", 2);
+
+    $esuc = new EquipoSucursal();
+    $esuc->setIdEquipo($equipo->getIdEquipo());
+
+    $search = EquipoSucursalDAO::search( $esuc );    
+
+    if(sizeof($search) != 1){
+        Logger::log("equipo {$equipo->getIdEquipo()} no se encuentra vinculado a ninguna sucursal");
+        return false;
+    }
+
+    $suc = $search[0];
+
+    //ver que si exista esta sucursal
+    if(SucursalDAO::getByPK($suc->getIdSucursal()) === null){
+        Logger::log("equipo {$equipo->getIdEquipo()} vinculado a sucursal {$suc->getIdSucursal()} pero esta no existe !", 2);
+        return false;
+    }
+
+    Logger::log("Equipo validado !");
+    $_SESSION['sucursal'] = $suc->getIdSucursal();
+    return true;
+
+}
+
+
+
+function dispatch($args){
+	Logger::log("dispatching route...");
 	if(!isset($_SESSION['grupo'])){
 		die( "Accesso no autorizado." );
 	}
@@ -116,121 +282,11 @@ function dispatch($args){
 	switch($_SESSION['grupo']){
 		case "1" : echo "<script>window.location = 'admin.html".$debug."'</script>"; break;
 		case "2" : echo "<script>window.location = 'sucursal.html".$debug."'</script>"; break;
-		case "3" : echo "<script>window.location = 'sucursal.html".$debug."'</script>"; break;				
+		case "3" : echo "<script>window.location = 'sucursal.html".$debug."'</script>"; break;
+        case "0" : echo "<script>window.location = 'ingeniero.html".$debug."'</script>"; break;
 	}
 }
 
-
-function checkSecurityToken()
-{
-	
-
-    if($_SESSION['grupo'] == 1){
-        //es amdin
-    	$current_token = $_SESSION['userid'] ."-". $_SESSION['grupo']. "kaffeina" . "/" . $_SERVER['HTTP_USER_AGENT'] ;
-    }else{
-        //es cajero o gerente
-    	$current_token = $_SESSION['userid'] ."-". $_SESSION['grupo'] . "-" . $_SESSION['sucursal'] . "kaffeina". "-" . $_SERVER['HTTP_USER_AGENT'] ;
-    }
-
-	if (crypt($current_token, $_SESSION['token']) == $_SESSION['token']) {
-	 	return true;
-	}else{
-        Logger::log("Security token rechadado !" , 2);
-		return false;
-	}
-}
-
-
-function checkCurrentSession()
-{
-	
-	//revisar si estoy loginiiiado
-	if( isset( $_SESSION['token'] ) && 
-		isset( $_SESSION['userid'] ) &&
-		isset( $_SESSION['sucursal'] ) &&
-		isset( $_SESSION['grupo'] ) &&
-		isset( $_SESSION['token'] ) && 
-		isset( $_SESSION['HTTP_USER_AGENT'] )
-	){
-
-		$_SESSION[ 'c' ] = 0;
-		return checkSecurityToken();
-		
-	}else{
-		//si no estoy loginiiiado, revisar cuantos intentos de login llevo
-		if(isset($_SESSION[ 'c' ]))
-		{
-			$_SESSION[ 'c' ] ++;
-		}else{
-			$_SESSION[ 'c' ] = 0;
-		}
-		return false;
-	}
-	
-}
-
-
-function logOut( $verbose = true  )
-{
-    Logger::log("Cerrando sesion");
-    $grupo = $_SESSION['grupo'];
-
-	unset( $_SESSION['token'] ); 
-	unset( $_SESSION['userid'] );
-	unset( $_SESSION['sucursal'] );
-	unset( $_SESSION['grupo'] );
-	unset( $_SESSION['timeout'] );
-	unset( $_SESSION['token'] );
-	unset( $_SESSION['HTTP_USER_AGENT'] );
-
-    if($verbose){
-        if($grupo == 1)	
-        	die ('<script>window.location= "./admin/"</script>');
-        else
-        	die ('<script>window.location= "."</script>');        
-    }
-
-
-}
-
-
-
-
-
-/* 
-revisar si el token que me esta enviando pertenece a una sucursal valida
-*/
-function basicTest( $verbose = true ){
-	
-
-
-	//revisar ip's
-	$ext_ip = getip();
-
-	$sucursal = new Sucursal();
-    $sucursal->setToken( $ext_ip );
-    $res = SucursalDAO::search( $sucursal);
-	
-	if(sizeof( $res ) != 1){
-        Logger::log("inicio de sesion desde un lugar que no esta registrado !", 3);
-		die(  "{\"success\": false, \"from\": \"".$ext_ip."\", \"response\" : \"Para acceder al punto de venta. Debes estar conectado desde una computadora dentro de la sucursal.\"  }" ) ;
-	}
-	$sucursal_actual = $res[0];
-	
-    if($verbose){
-	    //revisar si hay una sesion activa
-	    if( checkCurrentSession() ){
-		    echo  "{\"success\": true , \"sesion\" : true,  \"sucursal\" : " . $sucursal_actual . " }";
-	    }else{
-		    echo  "{\"success\": true , \"sesion\" : false, \"reason\" : \"Sesion invalida, o no iniciada.\",  \"sucursal\" : " . $sucursal_actual . " }";
-	    }
-    }
-
-	Logger::log("basic test pasado !");
-	$_SESSION['sucursal'] = $sucursal_actual->getIdSucursal();
-	
-}
 
 
 function validip($ip) {
@@ -315,33 +371,85 @@ function getip() {
 }
 
 
-switch($args['action'])
-{
-	 
-	case '2001':
-		basicTest( );
-	break;
 
-	case '2002':
-		logOut();
-	break;
+function debug(){
 
-	case '2003':
-		basicTest();
-	break;
-
-	case '2004':
-		login($args);
-	break;
-	
-	case '2005':
-		dispatch($args);
-	break;
-
-	case '2007':
-		getUserType();
-	break;
+    echo "ua:<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b><br>";
+    echo "ip:<b>" . getip() . "</b><br>";
+    echo "<pre>";
+    var_dump($_SESSION);
+    echo "</pre>";
 }
+
+
+
+if(isset($args['action'])){
+
+    switch($args['action'])
+    {
+	     
+	    case '2001':
+
+            //revisar estado de sesion en sucursal
+		    if(!sucursalTest()){
+                //si no pasa el test de la sucursal...
+               print(  '{"success": false, "response" : "Para acceder al punto de venta. Debes estar conectado desde una computadora dentro de la sucursal."  }' ) ;
+
+            }else{
+
+                //la sucursal esta bien, hay que ver si esta logginiado
+                if(checkCurrentSession()){
+                   //logged in !
+                    print(  '{"success":true,"sesion":true}' );
+                }else{
+                    //not logged in
+                    $sucursal = SucursalDAO::getByPK( $_SESSION['sucursal'] );
+                    Logger::log("sesion invalida");
+                    logOut(false);
+                    print(  '{"success":true,"sesion":false,"sucursal":"' .$sucursal->getDescripcion(). '"}' );                    
+                }
+            }
+	    break;
+
+	    case '2002':
+		    logOut(true);
+	    break;
+
+	    case '2003':
+		    sucursalTest();
+	    break;
+
+	    case '2004':
+            //login desde la sucursal
+		    if(!sucursalTest()){
+                //si no pasa el test de la sucursal...
+               print(  '{"success": false, "response" : "Para acceder al punto de venta. Debes estar conectado desde una computadora dentro de la sucursal."  }' ) ;
+            }else{
+                //enviar login
+                login($args['u'], $args['p']);
+            }
+	    break;
+
+	    case '2099':
+        //login desde otro lado
+            login($args['u'], $args['p']);
+	    break;
+
+
+	    case '2005':
+		    dispatch($args);
+	    break;
+
+	    case '2007':
+		    getUserType();
+	    break;
+
+	    case '2009':
+		    debug();
+	    break;
+    }
+}
+
 
 
 

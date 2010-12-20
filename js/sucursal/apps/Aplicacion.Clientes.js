@@ -131,11 +131,8 @@ Aplicacion.Clientes.prototype.listaDeComprasLoad = function (){
 			this.listaDeCompras.lastUpdate = Math.round(new Date().getTime()/1000.0);
             this.listaDeCompras.hash = compras.hash;
             
-            setTimeout( "Aplicacion.Clientes.currentInstance.checkVentasDbDiff()", POS.CHECK_DB_TIMEOUT );
             
-		},
-		failure: function( response ){
-			POS.error( response );
+            
 		}
 	});
 
@@ -188,11 +185,7 @@ Aplicacion.Clientes.prototype.checkVentasDbDiff = function ()
             }else{
 
             }
-
-            setTimeout( "Aplicacion.Clientes.currentInstance.checkVentasDbDiff()", POS.CHECK_DB_TIMEOUT );
-		},
-		failure: function( response ){
-			POS.error( response );
+            
 		}
 	});
 };
@@ -279,11 +272,7 @@ Aplicacion.Clientes.prototype.listaDeClientesLoad = function (){
 				}
 				Aplicacion.Mostrador.currentInstance.buscarClienteForm.getComponent(0).store = this.listaDeClientesStore;
 			}
-			
-            setTimeout( "Aplicacion.Clientes.currentInstance.checkClientesDbDiff()", POS.CHECK_DB_TIMEOUT );
-		},
-		failure: function( response ){
-			POS.error( response );
+
 		}
 	});
 
@@ -337,10 +326,6 @@ Aplicacion.Clientes.prototype.checkClientesDbDiff = function ()
 
             }
 
-            setTimeout( "Aplicacion.Clientes.currentInstance.checkClientesDbDiff()", POS.CHECK_DB_TIMEOUT );
-		},
-		failure: function( response ){
-			POS.error( response );
 		}
 	});
 };
@@ -777,9 +762,6 @@ Aplicacion.Clientes.prototype.editarCliente = function ( data )
 			//volver a cargar la estructura de los clientes
 			Aplicacion.Clientes.currentInstance.listaDeClientesLoad();			
 
-		},
-		failure: function( response ){
-			POS.error( response );
 		}
 	});	
 	
@@ -1208,9 +1190,6 @@ Aplicacion.Clientes.prototype.eliminarCliente = function ( respuesta )
 			sink.Main.ui.setActiveItem( Aplicacion.Clientes.currentInstance.listaDeClientesPanel , 'fade');
 			
 
-		},
-		failure: function( response ){
-			POS.error( response );
 		}
 	});
 	
@@ -1729,9 +1708,6 @@ Aplicacion.Clientes.prototype.crearCliente = function ( data )
     		//hacer un setcard manual hacia la lista de clientes
         	sink.Main.ui.setActiveItem( this.listaDeClientesPanel , 'slide');
 
-		},
-		failure: function( response ){
-			POS.error( response );
 		}
 	});	
 };

@@ -23,8 +23,14 @@ function checkCurrentSession(){
 		},
 		
 		success: function(response, opts) {
+
+            if(response.responseText.length == 0){
+    			Ext.getBody().mask( "Error." );
+                return;
+            }
+
 			Ext.getBody().unmask();	
-			
+            
 			var results = Ext.util.JSON.decode( response.responseText );
 			
 			//algo anda mal
@@ -50,6 +56,7 @@ function checkCurrentSession(){
 				window.location = "proxy.php?DEBUG=true&action=2005";
 				return;
 			}
+
 			window.location = "proxy.php?action=2005";
 			
 		},
@@ -149,7 +156,7 @@ function createLoginForm( sucursal ){
         items: [
             {
                 xtype: 'fieldset',
-                title: 'Bienvenido a ' + sucursal[0].descripcion ,
+                title: 'Bienvenido a ' + sucursal ,
                 instructions: 'Porfavor llene la informacion apropiada.',
                 defaults: {
                     required: false,
