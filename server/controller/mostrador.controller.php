@@ -4,11 +4,11 @@
  *  Controller para mostrador
  */
  
-require_once("../server/model/ventas.dao.php");
-require_once("../server/model/cliente.dao.php");
-require_once("../server/model/detalle_venta.dao.php");
-require_once("../server/model/detalle_inventario.dao.php");
-require_once("../server/model/factura_venta.dao.php");
+require_once("model/ventas.dao.php");
+require_once("model/cliente.dao.php");
+require_once("model/detalle_venta.dao.php");
+require_once("model/detalle_inventario.dao.php");
+require_once("model/factura_venta.dao.php");
 require_once("logger.php");
 
 /*
@@ -107,22 +107,29 @@ function descontarInventario ( $productos )
  * */
 function vender( $args ){
 
-    Logger::log("Iniciando proceso de venta...");
+    //iniciar transaccion
+    DAO::transBegin();
 
     if(!isset($args['payload']))
     {
         Logger::log("Sin parametros para realizar venta");
+        DAO::transRollback();
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
+   
 
     try{
         $data = json_decode( $args['payload'] );
     }catch(Exception $e){
         Logger::log("json invalido para realizar venta" . $e);
+        DAO::transRollback();
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
+
     if($data == null){
+        Logger::log("objeto invalido para vender");
+        DAO::transRollback();
         die( '{"success": false, "reason": "Parametros invalidos. El resultado es nulo." }' );
     }
 
@@ -136,8 +143,11 @@ function vender( $args ){
     //verificar que $productos sea un array
     if(!is_array($productos)){
         Logger::log("parametro de producotos invalido, no es un arreglo");
+        DAO::transRollback();
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
+
+
 
     foreach($productos as $producto)
     {
@@ -153,6 +163,7 @@ function vender( $args ){
 	
 	if(!revisarExistencias( $detallesVenta )){
         Logger::log("No hay existencias para satisface la demanda");
+        DAO::transRollback();
 		die('{"success": false, "reason": "No hay suficiente producto para satisfacer la demanda. Intente de nuevo." }');
 	}
 	
@@ -178,19 +189,16 @@ function vender( $args ){
 		$descuento = 0;
 		
         try{
-            if (VentasDAO::save($venta)){
-                $id_venta =  $venta->getIdVenta();
-            }else{
-                Logger::log("No se afectaron columnas al insertar venta");
-                die( '{"success": false, "reason": "No se pudo registrar la venta" }' );
-            }
 
+            VentasDAO::save($venta);
         }catch(Exception $e){
-	        Logger::log("Error al insertar la venta " . $e);
-            die( '{"success": false, "reason": "' . $e . '" }' );
 
+            DAO::transRollback();
+	        Logger::log( $e);
+            die( '{"success": false, "reason": "Error, intente de nuevo." }' );
         }
 
+        $id_venta =  $venta->getIdVenta();
     }
     else
     {
@@ -207,12 +215,15 @@ function vender( $args ){
             } 
             else 
             {
+                DAO::transRollback();
                 die( '{"success": false, "reason": "No se tienen registros sobre el cliente ' . $data->cliente->id_cliente . '" }' );
             }
         }
         catch(Exception $e)
         {
-            die( '{"success": false, "reason": "' . $e . '" }' );
+            DAO::transRollback();
+            Logger::log($e);
+            die( '{"success": false, "reason": "Intente de nuevo." }' );
         }
 
         $venta->setDescuento( $descuento );
@@ -224,12 +235,15 @@ function vender( $args ){
             } 
             else 
             {
+                DAO::transRollback();
                 die( '{"success": false, "reason": "No se pudo registrar la venta" }' );
             }
         }
         catch(Exception $e)
         {
-            die( '{"success": false, "reason": "' . $e . '" }' );
+            DAO::transRollback();
+            Logger::log($e);
+            die( '{"success": false, "reason": "Intente de nuevo." }' );
         }
 
 
@@ -244,7 +258,7 @@ function vender( $args ){
     $productos = $data->items;
 
 
-    //TODO:Esto estaria muy bien si estuviera con una transaccion y si no se pudiera guardar algun producto en el detalle de la venta, se disparara un rollover
+
 	
 	//insertar el id de la venta
     foreach($detallesVenta as $dv)
@@ -255,6 +269,7 @@ function vender( $args ){
 
 	//insertar detalles de la venta y descontar de inventario
 	if(!descontarInventario( $detallesVenta )){
+        DAO::transRollback();
 		die( '{"success": false, "reason": "Porfavor intente de nuevo." }' );
 	}
 
@@ -278,16 +293,24 @@ function vender( $args ){
         }
         else 
         {
+            DAO::transRollback();
             die( '{"success": false, "reason": "No se pudo actualizar el total de la venta" }' );
         }
     }
     catch(Exception $e)
     {
-        die( '{"success": false, "reason": "' . $e . '" }' );
+        DAO::transRollback();
+        Logger::log($e);
+        die( '{"success": false, "reason": "Intente de nuevo." }' );
     }
 
 
-    Logger::log("Venta exitosa !");
+
+    DAO::transEnd();
+
+    Logger::log("Venta {$id_venta} exitosa !");
+
+
 }
 
 switch( $args['action'] ){

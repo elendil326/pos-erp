@@ -3,17 +3,11 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 17-12-2010 a las 00:17:50
+-- Tiempo de generación: 20-12-2010 a las 00:56:32
 -- Versión del servidor: 5.0.51
 -- Versión de PHP: 5.3.3-0.dotdeb.1
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
 
 --
 -- Base de datos: `pos`
@@ -26,14 +20,15 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 
 CREATE TABLE IF NOT EXISTS `actualizacion_de_precio` (
+  `id_actualizacion` int(12) NOT NULL auto_increment COMMENT 'id de actualizacion de precio',
   `id_producto` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `precio_venta` float NOT NULL,
   `precio_compra` float NOT NULL,
   `precio_intersucursal` float NOT NULL,
   `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`id_producto`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios';
+  PRIMARY KEY  (`id_actualizacion`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `actualizacion_de_precio`
@@ -82,8 +77,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   `id_usuario` int(11) NOT NULL COMMENT 'Identificador del usuario que dio de alta a este cliente',
   `id_sucursal` int(11) NOT NULL COMMENT 'Identificador de la sucursal donde se dio de alta este cliente',
   `fecha_ingreso` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'Fecha cuando este cliente se registro en una sucursal',
-  PRIMARY KEY  (`id_cliente`),
-  UNIQUE KEY `id_cliente` (`id_cliente`)
+  PRIMARY KEY  (`id_cliente`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
@@ -106,6 +100,8 @@ CREATE TABLE IF NOT EXISTS `compras` (
   `iva` float NOT NULL COMMENT 'iva de la compra',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal en que se compro',
   `id_usuario` int(11) NOT NULL COMMENT 'quien realizo la compra',
+  `pagado` float NOT NULL default '0' COMMENT 'total de pago abonado a esta compra',
+  `liquidado` tinyint(1) NOT NULL default '0' COMMENT 'indica si la cuenta ha sido liquidada o no',
   PRIMARY KEY  (`id_compra`),
   KEY `compras_proveedor` (`id_proveedor`),
   KEY `compras_sucursal` (`id_sucursal`),
@@ -124,47 +120,23 @@ CREATE TABLE IF NOT EXISTS `compras` (
 --
 
 CREATE TABLE IF NOT EXISTS `corte` (
-  `num_corte` int(11) NOT NULL auto_increment COMMENT 'numero de corte',
-  `anio` year(4) NOT NULL COMMENT 'año del corte',
-  `inicio` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'año del corte',
-  `fin` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'fecha de fin del corte',
-  `ventas` float NOT NULL COMMENT 'ventas al contado en ese periodo',
-  `abonosVentas` float NOT NULL COMMENT 'pagos de abonos en este periodo',
-  `compras` float NOT NULL COMMENT 'compras realizadas en ese periodo',
-  `AbonosCompra` float NOT NULL COMMENT 'pagos realizados en ese periodo',
-  `gastos` float NOT NULL COMMENT 'gastos echos en ese periodo',
-  `ingresos` float NOT NULL COMMENT 'ingresos obtenidos en ese periodo',
-  `gananciasNetas` float NOT NULL COMMENT 'ganancias netas dentro del periodo',
-  PRIMARY KEY  (`num_corte`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `id_corte` int(12) NOT NULL auto_increment COMMENT 'identificador del corte',
+  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha de este corte',
+  `id_sucursal` int(12) NOT NULL COMMENT 'sucursal a la que se realizo este corte',
+  `total_ventas` float NOT NULL COMMENT 'total de activo realizado en ventas para esta sucursal incluyendo ventas a credito y ventas a contado aunque no esten saldadas',
+  `total_ventas_abonado` float NOT NULL COMMENT 'total de efectivo adquirido gracias a ventas, incluye ventas a contado y los abonos de las ventas a credito',
+  `total_ventas_saldo` float NOT NULL COMMENT 'total de dinero que se le debe a esta sucursal por ventas a credito',
+  `total_compras` float NOT NULL COMMENT 'total de gastado en compras',
+  `total_compras_abonado` float NOT NULL COMMENT 'total de abonado en compras',
+  `total_gastos` float NOT NULL COMMENT 'total de gastos con saldo o sin salgo',
+  `total_gastos_abonado` float NOT NULL COMMENT 'total de gastos pagados ya',
+  `total_ingresos` float NOT NULL COMMENT 'total de ingresos para esta sucursal desde el ultimo corte',
+  `total_ganancia_neta` float NOT NULL COMMENT 'calculo de ganancia neta',
+  PRIMARY KEY  (`id_corte`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `corte`
---
-
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `cotizacion`
---
-
-CREATE TABLE IF NOT EXISTS `cotizacion` (
-  `id_cotizacion` int(11) NOT NULL auto_increment COMMENT 'id de la cotizacion',
-  `id_cliente` int(11) NOT NULL COMMENT 'id del cliente',
-  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha de cotizacion',
-  `subtotal` float NOT NULL COMMENT 'subtotal de la cotizacion',
-  `iva` float NOT NULL COMMENT 'iva sobre el subtotal',
-  `id_sucursal` int(11) NOT NULL,
-  `id_usuario` int(11) NOT NULL,
-  PRIMARY KEY  (`id_cotizacion`),
-  KEY `cotizacion_cliente` (`id_cliente`),
-  KEY `fk_cotizacion_1` (`id_sucursal`),
-  KEY `fk_cotizacion_2` (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
---
--- Volcar la base de datos para la tabla `cotizacion`
 --
 
 
@@ -185,46 +157,6 @@ CREATE TABLE IF NOT EXISTS `detalle_compra` (
 
 --
 -- Volcar la base de datos para la tabla `detalle_compra`
---
-
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `detalle_corte`
---
-
-CREATE TABLE IF NOT EXISTS `detalle_corte` (
-  `num_corte` int(11) NOT NULL COMMENT 'id del corte al que hace referencia',
-  `nombre` varchar(100) NOT NULL COMMENT 'nombre del encargado de sucursal al momento del corte',
-  `total` float NOT NULL COMMENT 'total que le corresponde al encargado al momento del corte',
-  `deben` float NOT NULL COMMENT 'lo que deben en la sucursal del encargado al momento del corte',
-  PRIMARY KEY  (`num_corte`,`nombre`),
-  KEY `corte_detalleCorte` (`num_corte`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Volcar la base de datos para la tabla `detalle_corte`
---
-
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `detalle_cotizacion`
---
-
-CREATE TABLE IF NOT EXISTS `detalle_cotizacion` (
-  `id_cotizacion` int(11) NOT NULL COMMENT 'id de la cotizacion',
-  `id_producto` int(11) NOT NULL COMMENT 'id del producto',
-  `cantidad` float NOT NULL COMMENT 'cantidad cotizado',
-  `precio` float NOT NULL COMMENT 'precio al que cotizo el producto',
-  PRIMARY KEY  (`id_cotizacion`,`id_producto`),
-  KEY `detalle_cotizacion_producto` (`id_producto`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcar la base de datos para la tabla `detalle_cotizacion`
 --
 
 
@@ -266,6 +198,41 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
 
 --
 -- Volcar la base de datos para la tabla `detalle_venta`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `equipo`
+--
+
+CREATE TABLE IF NOT EXISTS `equipo` (
+  `id_equipo` int(6) NOT NULL auto_increment COMMENT 'el identificador de este equipo',
+  `token` varchar(128) NOT NULL COMMENT 'el token de seguridad que identifica a este equipo unicamente, representado generalmente por un user-agent modificado',
+  PRIMARY KEY  (`id_equipo`),
+  UNIQUE KEY `token` (`token`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Volcar la base de datos para la tabla `equipo`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `equipo_sucursal`
+--
+
+CREATE TABLE IF NOT EXISTS `equipo_sucursal` (
+  `id_equipo` int(6) NOT NULL COMMENT 'identificador del equipo ',
+  `id_sucursal` int(6) NOT NULL COMMENT 'identifica una sucursal',
+  PRIMARY KEY  (`id_equipo`,`id_sucursal`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Volcar la base de datos para la tabla `equipo_sucursal`
 --
 
 
@@ -363,15 +330,16 @@ INSERT INTO `grupos` (`id_grupo`, `nombre`, `descripcion`) VALUES
 CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
   `id_grupo` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
-  PRIMARY KEY  (`id_grupo`,`id_usuario`),
-  KEY `fk_grupos_usuarios_1` (`id_grupo`),
-  KEY `fk_grupos_usuarios_2` (`id_usuario`)
+  PRIMARY KEY  (`id_usuario`),
+  KEY `fk_grupos_usuarios_1` (`id_grupo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcar la base de datos para la tabla `grupos_usuarios`
 --
 
+INSERT INTO `grupos_usuarios` (`id_grupo`, `id_usuario`) VALUES
+(1, 1);
 
 -- --------------------------------------------------------
 
@@ -515,7 +483,7 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
 
 CREATE TABLE IF NOT EXISTS `sucursal` (
   `id_sucursal` int(11) NOT NULL auto_increment COMMENT 'Identificador de cada sucursal',
-  `gerente` int(11) default NULL COMMENT 'Gerente de esta sucursal',
+  `gerente` int(11) NOT NULL COMMENT 'Gerente de esta sucursal',
   `descripcion` varchar(100) collate utf8_unicode_ci NOT NULL COMMENT 'nombre o descripcion de sucursal',
   `direccion` varchar(200) collate utf8_unicode_ci NOT NULL COMMENT 'direccion de la sucursal',
   `rfc` varchar(20) collate utf8_unicode_ci default NULL COMMENT 'El RFC de la sucursal',
@@ -524,6 +492,7 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   `letras_factura` varchar(10) collate utf8_unicode_ci NOT NULL,
   `activo` tinyint(1) NOT NULL default '1',
   `fecha_apertura` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'Fecha de apertura de esta sucursal',
+  `saldo_a_favor` float NOT NULL default '0' COMMENT 'es el saldo a favor que tiene la sucursal encuanto a los abonos de sus compras',
   PRIMARY KEY  (`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
@@ -549,17 +518,17 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `salario` float NOT NULL COMMENT 'Salario actual',
   `direccion` varchar(512) collate utf8_unicode_ci NOT NULL COMMENT 'Direccion del empleado',
   `telefono` varchar(16) collate utf8_unicode_ci NOT NULL COMMENT 'Telefono del empleado',
-  `fecha_inicio` date NOT NULL COMMENT 'Fecha cuando este usuario comenzo a laborar',
+  `fecha_inicio` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'Fecha cuando este usuario comenzo a laborar',
   PRIMARY KEY  (`id_usuario`),
   KEY `fk_usuario_1` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
 -- Volcar la base de datos para la tabla `usuario`
 --
 
 INSERT INTO `usuario` (`id_usuario`, `RFC`, `nombre`, `contrasena`, `id_sucursal`, `activo`, `finger_token`, `salario`, `direccion`, `telefono`, `fecha_inicio`) VALUES
-(1, 'GOHE23445453', 'Alan Gonzalez Hernandez', '827ccb0eea8a706c4c34a16891f84e7b', NULL, 1, NULL, 0, 'Monte Balcanes #107 2da Secc Arboledas', '1741449', '2010-12-16');
+(1, '12213324432', 'Alan Gonzalez Hernandez', '202cb962ac59075b964b07152d234b70', NULL, 1, NULL, 0, '', '', '2010-12-20 00:54:42');
 
 -- --------------------------------------------------------
 
@@ -604,32 +573,11 @@ ALTER TABLE `compras`
   ADD CONSTRAINT `compras_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `cotizacion`
---
-ALTER TABLE `cotizacion`
-  ADD CONSTRAINT `cotizacion_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `cotizacion_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `cotizacion_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
-
---
 -- Filtros para la tabla `detalle_compra`
 --
 ALTER TABLE `detalle_compra`
   ADD CONSTRAINT `detalle_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE,
   ADD CONSTRAINT `detalle_compra_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `detalle_corte`
---
-ALTER TABLE `detalle_corte`
-  ADD CONSTRAINT `corte_detalleCorte` FOREIGN KEY (`num_corte`) REFERENCES `corte` (`num_corte`) ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `detalle_cotizacion`
---
-ALTER TABLE `detalle_cotizacion`
-  ADD CONSTRAINT `detalle_cotizacion_ibfk_1` FOREIGN KEY (`id_cotizacion`) REFERENCES `cotizacion` (`id_cotizacion`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `detalle_cotizacion_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `detalle_inventario`
@@ -689,3 +637,4 @@ ALTER TABLE `ventas`
   ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
+

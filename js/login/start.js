@@ -149,7 +149,7 @@ function createLoginForm( sucursal ){
         items: [
             {
                 xtype: 'fieldset',
-                title: 'Bienvenido a ' + sucursal.descripcion ,
+                title: 'Bienvenido a ' + sucursal[0].descripcion ,
                 instructions: 'Porfavor llene la informacion apropiada.',
                 defaults: {
                     required: false,

@@ -46,7 +46,7 @@
 	define('DB_USER', 		'pos');
 	define('DB_PASSWORD', 	'pos');
 	define('DB_NAME', 		'pos');
-	define('DB_DRIVER', 	'mysql');
+	define('DB_DRIVER', 	'mysqlt');
 	define('DB_HOST', 		'localhost');
 	define('DB_DEBUG', 		false);
 	

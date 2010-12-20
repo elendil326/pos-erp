@@ -203,6 +203,8 @@ revisar si el token que me esta enviando pertenece a una sucursal valida
 */
 function basicTest( $verbose = true ){
 	
+
+
 	//revisar ip's
 	$ext_ip = getip();
 
@@ -211,6 +213,7 @@ function basicTest( $verbose = true ){
     $res = SucursalDAO::search( $sucursal);
 	
 	if(sizeof( $res ) != 1){
+        Logger::log("inicio de sesion desde un lugar que no esta registrado !", 3);
 		die(  "{\"success\": false, \"from\": \"".$ext_ip."\", \"response\" : \"Para acceder al punto de venta. Debes estar conectado desde una computadora dentro de la sucursal.\"  }" ) ;
 	}
 	$sucursal_actual = $res[0];
@@ -224,7 +227,7 @@ function basicTest( $verbose = true ){
 	    }
     }
 
-	
+	Logger::log("basic test pasado !");
 	$_SESSION['sucursal'] = $sucursal_actual->getIdSucursal();
 	
 }

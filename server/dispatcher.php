@@ -78,6 +78,9 @@ if ( !isset($_REQUEST['action']) )
 //para ver si es el ip que esta guardado en la base de datos
 if( ! ($_REQUEST['action']  == "2001" || $_REQUEST['action']  == "2004") )
 {
+    if(!isset($_SESSION['grupo'])){
+		die ("{\"succes\": false , \"reason\": \"Sesion invalida\", \"text\" : \"Sesion invalida\" }");
+    }
 
     if($_SESSION['grupo'] == 1){
         //es amdin

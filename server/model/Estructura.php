@@ -9,6 +9,27 @@
 		abstract class DAO
 		{
 
+            protected static $isTrans = false;
+
+            public static function transBegin (){
+        		global $conn;
+                $conn->StartTrans();
+                self::$isTrans = true;
+
+            }
+
+            public static function transEnd (  ){
+        		global $conn;
+                $conn->CompleteTrans();
+                self::$isTrans = false;
+            }
+
+
+            public static function transRollback (  ){
+        		global $conn;
+                $conn->FailTrans();
+                self::$isTrans = false;
+            }
 		}
 
 		/** Table Data Access Object.

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.2.0.1
+-- version 3.3.7
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 10-12-2010 a las 23:38:54
--- Versión del servidor: 5.1.37
--- Versión de PHP: 5.3.0
+-- Tiempo de generación: 20-12-2010 a las 00:56:32
+-- Versión del servidor: 5.0.51
+-- Versión de PHP: 5.3.3-0.dotdeb.1
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -20,14 +20,15 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 
 CREATE TABLE IF NOT EXISTS `actualizacion_de_precio` (
+  `id_actualizacion` int(12) NOT NULL auto_increment COMMENT 'id de actualizacion de precio',
   `id_producto` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `precio_venta` float NOT NULL,
   `precio_compra` float NOT NULL,
   `precio_intersucursal` float NOT NULL,
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_producto`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios';
+  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`id_actualizacion`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `actualizacion_de_precio`
@@ -41,25 +42,20 @@ CREATE TABLE IF NOT EXISTS `actualizacion_de_precio` (
 --
 
 CREATE TABLE IF NOT EXISTS `autorizacion` (
-  `id_autorizacion` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id_autorizacion` int(11) unsigned NOT NULL auto_increment,
   `id_usuario` int(11) NOT NULL COMMENT 'Usuario que solicito esta autorizacion',
   `id_sucursal` int(11) NOT NULL COMMENT 'Sucursal de donde proviene esta autorizacion',
-  `fecha_peticion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha cuando se genero esta autorizacion',
-  `fecha_respuesta` timestamp NULL DEFAULT NULL COMMENT 'Fecha de cuando se resolvio esta aclaracion',
+  `fecha_peticion` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'Fecha cuando se genero esta autorizacion',
+  `fecha_respuesta` timestamp NULL default NULL COMMENT 'Fecha de cuando se resolvio esta aclaracion',
   `estado` int(11) NOT NULL COMMENT 'Estado actual de esta aclaracion',
   `parametros` varchar(2048) NOT NULL COMMENT 'Parametros en formato JSON que describen esta autorizacion',
-  PRIMARY KEY (`id_autorizacion`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+  PRIMARY KEY  (`id_autorizacion`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `autorizacion`
 --
 
-INSERT INTO `autorizacion` (`id_autorizacion`, `id_usuario`, `id_sucursal`, `fecha_peticion`, `fecha_respuesta`, `estado`, `parametros`) VALUES
-(6, 38, 54, '2010-11-26 20:04:20', NULL, 0, '{''clave'':''203'',''id_venta'':''dd'', ''id_producto'':''aa'', ''cantidad'':''100''}'),
-(5, 38, 54, '2010-11-26 19:55:30', NULL, 0, '{''clave'':''202'',''id_cliente'':''dd'', ''cantidad'':''100'', fecha:''''}'),
-(4, 38, 54, '2010-11-26 19:54:12', NULL, 0, '{"clave":"201", "concepto":"autorizacion de gasto", "monto":"503.20"}'),
-(8, 38, 54, '2010-11-26 23:16:58', NULL, 0, '{''clave'':''203'',''id_venta'':''dd'', ''id_producto'':'''', ''cantidad'':''1111''}');
 
 -- --------------------------------------------------------
 
@@ -68,39 +64,26 @@ INSERT INTO `autorizacion` (`id_autorizacion`, `id_usuario`, `id_sucursal`, `fec
 --
 
 CREATE TABLE IF NOT EXISTS `cliente` (
-  `id_cliente` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del cliente',
-  `rfc` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'rfc del cliente si es que tiene',
-  `nombre` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre del cliente',
-  `direccion` varchar(300) COLLATE utf8_unicode_ci NOT NULL COMMENT 'domicilio del cliente calle, no, colonia',
-  `ciudad` varchar(55) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Ciudad de este cliente',
-  `telefono` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Telefono del cliete',
-  `e_mail` varchar(60) COLLATE utf8_unicode_ci DEFAULT '0' COMMENT 'dias de credito para que pague el cliente',
-  `limite_credito` float NOT NULL DEFAULT '0' COMMENT 'Limite de credito otorgado al cliente',
-  `descuento` float NOT NULL DEFAULT '0' COMMENT 'Taza porcentual de descuento de 0.0 a 100.0',
-  `activo` tinyint(2) NOT NULL DEFAULT '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
+  `id_cliente` int(11) NOT NULL auto_increment COMMENT 'identificador del cliente',
+  `rfc` varchar(20) collate utf8_unicode_ci NOT NULL COMMENT 'rfc del cliente si es que tiene',
+  `nombre` varchar(100) collate utf8_unicode_ci NOT NULL COMMENT 'nombre del cliente',
+  `direccion` varchar(300) collate utf8_unicode_ci NOT NULL COMMENT 'domicilio del cliente calle, no, colonia',
+  `ciudad` varchar(55) collate utf8_unicode_ci NOT NULL COMMENT 'Ciudad de este cliente',
+  `telefono` varchar(25) collate utf8_unicode_ci default NULL COMMENT 'Telefono del cliete',
+  `e_mail` varchar(60) collate utf8_unicode_ci default '0' COMMENT 'dias de credito para que pague el cliente',
+  `limite_credito` float NOT NULL default '0' COMMENT 'Limite de credito otorgado al cliente',
+  `descuento` float NOT NULL default '0' COMMENT 'Taza porcentual de descuento de 0.0 a 100.0',
+  `activo` tinyint(2) NOT NULL default '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
   `id_usuario` int(11) NOT NULL COMMENT 'Identificador del usuario que dio de alta a este cliente',
   `id_sucursal` int(11) NOT NULL COMMENT 'Identificador de la sucursal donde se dio de alta este cliente',
-  `fecha_ingreso` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha cuando este cliente se registro en una sucursal',
-  PRIMARY KEY (`id_cliente`),
-  UNIQUE KEY `id_cliente` (`id_cliente`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=214 ;
+  `fecha_ingreso` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'Fecha cuando este cliente se registro en una sucursal',
+  PRIMARY KEY  (`id_cliente`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `cliente`
 --
 
-INSERT INTO `cliente` (`id_cliente`, `rfc`, `nombre`, `direccion`, `ciudad`, `telefono`, `e_mail`, `limite_credito`, `descuento`, `activo`, `id_usuario`, `id_sucursal`, `fecha_ingreso`) VALUES
-(-54, '', 'sucursal', '', '', NULL, '0', 0, 0, 1, 0, 0, '0000-00-00 00:00:00'),
-(204, 'DIL34534DFFs', 'Dilba Monica del Moral Cuevas', 'Gardenias #123 Rosalinda, 2da Seccion.', 'Celaya', '0444611744149', 'dilbis_@hotmail.com', 1000, 50, 1, 37, 54, '0000-00-00 00:00:00'),
-(205, 'asdfasdf', 'Oscar Wilde', 'Monte Balcanes 107 2da Secc Arboledas', 'Celaya', '1741449', 'lisa_ff@hotmail.com', 0, 0, 1, 37, 54, '0000-00-00 00:00:00'),
-(206, 'J453324234ASD', 'Julia Andrade', 'Monte Balcanes 107 2da Secc Arboledas', 'Celaya', '1741449ds123', 'lisa_ff@hotmail.com', 0, 0, 1, 37, 54, '0000-00-00 00:00:00'),
-(207, 'CGFA324234234', 'Cynthia Castro Gonzalez', 'Monte Balcanes 107 2da Secc Arboledas', 'Celaya', '1741449234234', 'lisa_ff@hotmail.com', 0, 0, 1, 37, 54, '0000-00-00 00:00:00'),
-(208, 'GOHs34s89234234', 'Elizabeth Gonzalez Hernandez', 'Monte Balcanes 107 2da Secc Arboledas', 'Celaya', '1741449', 'lisa_ff@hotmail.com', 0, 0, 1, 37, 54, '0000-00-00 00:00:00'),
-(209, 'Padls7896789ds', 'Pablo Milanes ', 'Monte Balcanes 107 2da Secc Arboledas', 'Celaya', '21741449234', 'liasdfsa_ff@hotmail.com', 0, 0, 1, 37, 54, '0000-00-00 00:00:00'),
-(210, 'sdfsdf', 'sdfg', 'sdfsdf', 'sdfsdf', '324324', 'sdfsdf', 234, 234234, 0, 38, 54, '0000-00-00 00:00:00'),
-(211, 'aSAs', 'saaSAs', 'ASAs', 'ASAs', '123123', 'ASAs', 121, 123123, 0, 38, 54, '0000-00-00 00:00:00'),
-(212, 'ads456f4as6d54f', 'alan Gonzalez', 'Monte Balcnaces #107', 'Celaya', '+1 5261-49974', 'alanboy@alanboy.com', 0, 0, 0, 38, 54, '0000-00-00 00:00:00'),
-(213, '2345234hjkh234', 'Juan Manuel Garcia Carmona', 'Diego Rivera #308 Col. Centro', 'Celaya', '461147845445', 'zonademanel@caffeina.mx', 0, 0, 1, 38, 54, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -109,15 +92,17 @@ INSERT INTO `cliente` (`id_cliente`, `rfc`, `nombre`, `direccion`, `ciudad`, `te
 --
 
 CREATE TABLE IF NOT EXISTS `compras` (
-  `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de la compra',
+  `id_compra` int(11) NOT NULL auto_increment COMMENT 'id de la compra',
   `id_proveedor` int(11) NOT NULL COMMENT 'PROVEEDOR AL QUE SE LE COMPRO',
-  `tipo_compra` enum('credito','contado') COLLATE utf8_unicode_ci NOT NULL COMMENT 'tipo de compra, contado o credito',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de compra',
+  `tipo_compra` enum('credito','contado') collate utf8_unicode_ci NOT NULL COMMENT 'tipo de compra, contado o credito',
+  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha de compra',
   `subtotal` float NOT NULL COMMENT 'subtotal de compra',
   `iva` float NOT NULL COMMENT 'iva de la compra',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal en que se compro',
   `id_usuario` int(11) NOT NULL COMMENT 'quien realizo la compra',
-  PRIMARY KEY (`id_compra`),
+  `pagado` float NOT NULL default '0' COMMENT 'total de pago abonado a esta compra',
+  `liquidado` tinyint(1) NOT NULL default '0' COMMENT 'indica si la cuenta ha sido liquidada o no',
+  PRIMARY KEY  (`id_compra`),
   KEY `compras_proveedor` (`id_proveedor`),
   KEY `compras_sucursal` (`id_sucursal`),
   KEY `compras_usuario` (`id_usuario`)
@@ -135,47 +120,23 @@ CREATE TABLE IF NOT EXISTS `compras` (
 --
 
 CREATE TABLE IF NOT EXISTS `corte` (
-  `num_corte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'numero de corte',
-  `anio` year(4) NOT NULL COMMENT 'año del corte',
-  `inicio` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'año del corte',
-  `fin` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'fecha de fin del corte',
-  `ventas` float NOT NULL COMMENT 'ventas al contado en ese periodo',
-  `abonosVentas` float NOT NULL COMMENT 'pagos de abonos en este periodo',
-  `compras` float NOT NULL COMMENT 'compras realizadas en ese periodo',
-  `AbonosCompra` float NOT NULL COMMENT 'pagos realizados en ese periodo',
-  `gastos` float NOT NULL COMMENT 'gastos echos en ese periodo',
-  `ingresos` float NOT NULL COMMENT 'ingresos obtenidos en ese periodo',
-  `gananciasNetas` float NOT NULL COMMENT 'ganancias netas dentro del periodo',
-  PRIMARY KEY (`num_corte`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `id_corte` int(12) NOT NULL auto_increment COMMENT 'identificador del corte',
+  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha de este corte',
+  `id_sucursal` int(12) NOT NULL COMMENT 'sucursal a la que se realizo este corte',
+  `total_ventas` float NOT NULL COMMENT 'total de activo realizado en ventas para esta sucursal incluyendo ventas a credito y ventas a contado aunque no esten saldadas',
+  `total_ventas_abonado` float NOT NULL COMMENT 'total de efectivo adquirido gracias a ventas, incluye ventas a contado y los abonos de las ventas a credito',
+  `total_ventas_saldo` float NOT NULL COMMENT 'total de dinero que se le debe a esta sucursal por ventas a credito',
+  `total_compras` float NOT NULL COMMENT 'total de gastado en compras',
+  `total_compras_abonado` float NOT NULL COMMENT 'total de abonado en compras',
+  `total_gastos` float NOT NULL COMMENT 'total de gastos con saldo o sin salgo',
+  `total_gastos_abonado` float NOT NULL COMMENT 'total de gastos pagados ya',
+  `total_ingresos` float NOT NULL COMMENT 'total de ingresos para esta sucursal desde el ultimo corte',
+  `total_ganancia_neta` float NOT NULL COMMENT 'calculo de ganancia neta',
+  PRIMARY KEY  (`id_corte`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `corte`
---
-
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `cotizacion`
---
-
-CREATE TABLE IF NOT EXISTS `cotizacion` (
-  `id_cotizacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de la cotizacion',
-  `id_cliente` int(11) NOT NULL COMMENT 'id del cliente',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de cotizacion',
-  `subtotal` float NOT NULL COMMENT 'subtotal de la cotizacion',
-  `iva` float NOT NULL COMMENT 'iva sobre el subtotal',
-  `id_sucursal` int(11) NOT NULL,
-  `id_usuario` int(11) NOT NULL,
-  PRIMARY KEY (`id_cotizacion`),
-  KEY `cotizacion_cliente` (`id_cliente`),
-  KEY `fk_cotizacion_1` (`id_sucursal`),
-  KEY `fk_cotizacion_2` (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
---
--- Volcar la base de datos para la tabla `cotizacion`
 --
 
 
@@ -190,52 +151,12 @@ CREATE TABLE IF NOT EXISTS `detalle_compra` (
   `id_producto` int(11) NOT NULL COMMENT 'id del producto',
   `cantidad` float NOT NULL COMMENT 'cantidad comprada',
   `precio` float NOT NULL COMMENT 'costo de compra',
-  PRIMARY KEY (`id_compra`,`id_producto`),
+  PRIMARY KEY  (`id_compra`,`id_producto`),
   KEY `detalle_compra_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Volcar la base de datos para la tabla `detalle_compra`
---
-
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `detalle_corte`
---
-
-CREATE TABLE IF NOT EXISTS `detalle_corte` (
-  `num_corte` int(11) NOT NULL COMMENT 'id del corte al que hace referencia',
-  `nombre` varchar(100) NOT NULL COMMENT 'nombre del encargado de sucursal al momento del corte',
-  `total` float NOT NULL COMMENT 'total que le corresponde al encargado al momento del corte',
-  `deben` float NOT NULL COMMENT 'lo que deben en la sucursal del encargado al momento del corte',
-  PRIMARY KEY (`num_corte`,`nombre`),
-  KEY `corte_detalleCorte` (`num_corte`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Volcar la base de datos para la tabla `detalle_corte`
---
-
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `detalle_cotizacion`
---
-
-CREATE TABLE IF NOT EXISTS `detalle_cotizacion` (
-  `id_cotizacion` int(11) NOT NULL COMMENT 'id de la cotizacion',
-  `id_producto` int(11) NOT NULL COMMENT 'id del producto',
-  `cantidad` float NOT NULL COMMENT 'cantidad cotizado',
-  `precio` float NOT NULL COMMENT 'precio al que cotizo el producto',
-  PRIMARY KEY (`id_cotizacion`,`id_producto`),
-  KEY `detalle_cotizacion_producto` (`id_producto`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcar la base de datos para la tabla `detalle_cotizacion`
 --
 
 
@@ -249,9 +170,9 @@ CREATE TABLE IF NOT EXISTS `detalle_inventario` (
   `id_producto` int(11) NOT NULL COMMENT 'id del producto al que se refiere',
   `id_sucursal` int(11) NOT NULL COMMENT 'id de la sucursal',
   `precio_venta` float NOT NULL COMMENT 'precio al que se vendera al publico',
-  `min` float NOT NULL DEFAULT '0' COMMENT 'cantidad minima que debe de haber del producto en almacen de esta sucursal',
-  `existencias` float NOT NULL DEFAULT '0' COMMENT 'cantidad de producto que hay actualmente en almacen de esta sucursal',
-  PRIMARY KEY (`id_producto`,`id_sucursal`),
+  `min` float NOT NULL default '0' COMMENT 'cantidad minima que debe de haber del producto en almacen de esta sucursal',
+  `existencias` float NOT NULL default '0' COMMENT 'cantidad de producto que hay actualmente en almacen de esta sucursal',
+  PRIMARY KEY  (`id_producto`,`id_sucursal`),
   KEY `id_sucursal` (`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -259,9 +180,6 @@ CREATE TABLE IF NOT EXISTS `detalle_inventario` (
 -- Volcar la base de datos para la tabla `detalle_inventario`
 --
 
-INSERT INTO `detalle_inventario` (`id_producto`, `id_sucursal`, `precio_venta`, `min`, `existencias`) VALUES
-(1, 54, 500, 100, 160),
-(2, 54, 550, 100, 178);
 
 -- --------------------------------------------------------
 
@@ -274,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
   `id_producto` int(11) NOT NULL COMMENT 'producto de la venta',
   `cantidad` float NOT NULL COMMENT 'cantidad que se vendio',
   `precio` float NOT NULL COMMENT 'precio al que se vendio',
-  PRIMARY KEY (`id_venta`,`id_producto`),
+  PRIMARY KEY  (`id_venta`,`id_producto`),
   KEY `detalle_venta_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -282,35 +200,41 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
 -- Volcar la base de datos para la tabla `detalle_venta`
 --
 
-INSERT INTO `detalle_venta` (`id_venta`, `id_producto`, `cantidad`, `precio`) VALUES
-(10, 1, 1, 500),
-(11, 1, 1, 500),
-(12, 1, 1, 500),
-(12, 2, 20, 500),
-(13, 1, 1, 500),
-(13, 2, 20, 500),
-(14, 2, 20, 500),
-(15, 1, 1, 500),
-(15, 2, 20, 500),
-(16, 1, 9, 500),
-(17, 1, 10, 450),
-(18, 1, 1, 500),
-(19, 1, 1, 500),
-(20, 1, 1, 500),
-(21, 1, 1, 500),
-(22, 1, 1, 500),
-(23, 1, 1, 500),
-(24, 1, 1, 500),
-(25, 1, 1, 500),
-(26, 1, 1, 500),
-(27, 1, 1, 500),
-(28, 1, 1, 500),
-(29, 1, 1, 500),
-(30, 1, 1, 500),
-(31, 1, 2, 500),
-(32, 1, 1, 500),
-(33, 1, 4, 500),
-(33, 2, 2, 550);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `equipo`
+--
+
+CREATE TABLE IF NOT EXISTS `equipo` (
+  `id_equipo` int(6) NOT NULL auto_increment COMMENT 'el identificador de este equipo',
+  `token` varchar(128) NOT NULL COMMENT 'el token de seguridad que identifica a este equipo unicamente, representado generalmente por un user-agent modificado',
+  PRIMARY KEY  (`id_equipo`),
+  UNIQUE KEY `token` (`token`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Volcar la base de datos para la tabla `equipo`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `equipo_sucursal`
+--
+
+CREATE TABLE IF NOT EXISTS `equipo_sucursal` (
+  `id_equipo` int(6) NOT NULL COMMENT 'identificador del equipo ',
+  `id_sucursal` int(6) NOT NULL COMMENT 'identifica una sucursal',
+  PRIMARY KEY  (`id_equipo`,`id_sucursal`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Volcar la base de datos para la tabla `equipo_sucursal`
+--
+
 
 -- --------------------------------------------------------
 
@@ -319,9 +243,9 @@ INSERT INTO `detalle_venta` (`id_venta`, `id_producto`, `cantidad`, `precio`) VA
 --
 
 CREATE TABLE IF NOT EXISTS `factura_compra` (
-  `folio` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
+  `folio` varchar(15) collate utf8_unicode_ci NOT NULL,
   `id_compra` int(11) NOT NULL COMMENT 'COMPRA A LA QUE CORRESPONDE LA FACTURA',
-  PRIMARY KEY (`folio`),
+  PRIMARY KEY  (`folio`),
   KEY `factura_compra_compra` (`id_compra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -337,24 +261,16 @@ CREATE TABLE IF NOT EXISTS `factura_compra` (
 --
 
 CREATE TABLE IF NOT EXISTS `factura_venta` (
-  `folio` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'folio que tiene la factura',
+  `folio` int(11) unsigned NOT NULL auto_increment COMMENT 'folio que tiene la factura',
   `id_venta` int(11) NOT NULL COMMENT 'venta a la cual corresponde la factura',
-  PRIMARY KEY (`folio`),
+  PRIMARY KEY  (`folio`),
   KEY `factura_venta_venta` (`id_venta`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `factura_venta`
 --
 
-INSERT INTO `factura_venta` (`folio`, `id_venta`) VALUES
-(1, 1),
-(2, 1),
-(3, 1),
-(4, 1),
-(5, 1),
-(6, 23),
-(7, 33);
 
 -- --------------------------------------------------------
 
@@ -363,24 +279,22 @@ INSERT INTO `factura_venta` (`folio`, `id_venta`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `gastos` (
-  `id_gasto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id para identificar el gasto',
+  `id_gasto` int(11) NOT NULL auto_increment COMMENT 'id para identificar el gasto',
   `folio` varchar(22) NOT NULL COMMENT 'El folio de la factura para este gasto',
   `concepto` varchar(100) NOT NULL COMMENT 'concepto en lo que se gasto',
   `monto` float unsigned NOT NULL COMMENT 'lo que costo este gasto',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha del gasto',
-  `fecha_ingreso` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Fecha que selecciono el empleado en el sistema',
+  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha del gasto',
+  `fecha_ingreso` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'Fecha que selecciono el empleado en el sistema',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal en la que se hizo el gasto',
   `id_usuario` int(11) NOT NULL COMMENT 'usuario que registro el gasto',
   `nota` varchar(512) NOT NULL COMMENT 'nota adicional para complementar la descripcion del gasto',
-  PRIMARY KEY (`id_gasto`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=212 ;
+  PRIMARY KEY  (`id_gasto`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `gastos`
 --
 
-INSERT INTO `gastos` (`id_gasto`, `folio`, `concepto`, `monto`, `fecha`, `fecha_ingreso`, `id_sucursal`, `id_usuario`, `nota`) VALUES
-(211, '', 'luz', 15951, '2010-12-06 00:42:20', '2010-01-01 06:00:00', 54, 38, '');
 
 -- --------------------------------------------------------
 
@@ -392,7 +306,7 @@ CREATE TABLE IF NOT EXISTS `grupos` (
   `id_grupo` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL COMMENT 'Nombre del Grupo',
   `descripcion` varchar(256) NOT NULL,
-  PRIMARY KEY (`id_grupo`)
+  PRIMARY KEY  (`id_grupo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -401,7 +315,7 @@ CREATE TABLE IF NOT EXISTS `grupos` (
 
 INSERT INTO `grupos` (`id_grupo`, `nombre`, `descripcion`) VALUES
 (1, 'admin', 'Administrador del Sistema'),
-(2, 'gerente', ''),
+(2, 'gerente', 'Gerente'),
 (3, 'cajero', 'maneja las cajas'),
 (4, 'limpieza', 'maneja la limpieza'),
 (5, 'contador', 'maneja los dineros'),
@@ -416,9 +330,8 @@ INSERT INTO `grupos` (`id_grupo`, `nombre`, `descripcion`) VALUES
 CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
   `id_grupo` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
-  PRIMARY KEY (`id_grupo`,`id_usuario`),
-  KEY `fk_grupos_usuarios_1` (`id_grupo`),
-  KEY `fk_grupos_usuarios_2` (`id_usuario`)
+  PRIMARY KEY  (`id_usuario`),
+  KEY `fk_grupos_usuarios_1` (`id_grupo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -426,24 +339,7 @@ CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
 --
 
 INSERT INTO `grupos_usuarios` (`id_grupo`, `id_usuario`) VALUES
-(1, 37),
-(1, 54),
-(2, 38),
-(2, 46),
-(2, 50),
-(2, 51),
-(2, 52),
-(3, 39),
-(3, 42),
-(3, 57),
-(3, 59),
-(3, 60),
-(4, 40),
-(4, 55),
-(4, 56),
-(4, 58),
-(5, 41),
-(5, 47);
+(1, 1);
 
 -- --------------------------------------------------------
 
@@ -452,15 +348,15 @@ INSERT INTO `grupos_usuarios` (`id_grupo`, `id_usuario`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `ingresos` (
-  `id_ingreso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id para identificar el ingreso',
+  `id_ingreso` int(11) NOT NULL auto_increment COMMENT 'id para identificar el ingreso',
   `concepto` varchar(100) NOT NULL COMMENT 'concepto en lo que se ingreso',
   `monto` float NOT NULL COMMENT 'lo que costo este ingreso',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'fecha del ingreso',
-  `fecha_ingreso` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Fecha que selecciono el empleado en el sistema',
+  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'fecha del ingreso',
+  `fecha_ingreso` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'Fecha que selecciono el empleado en el sistema',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal en la que se hizo el ingreso',
   `id_usuario` int(11) NOT NULL COMMENT 'usuario que registro el ingreso',
   `nota` varchar(512) NOT NULL COMMENT 'nota adicional para complementar la descripcion del ingreso',
-  PRIMARY KEY (`id_ingreso`),
+  PRIMARY KEY  (`id_ingreso`),
   KEY `usuario_ingreso` (`id_usuario`),
   KEY `sucursal_ingreso` (`id_sucursal`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=202 ;
@@ -477,21 +373,18 @@ CREATE TABLE IF NOT EXISTS `ingresos` (
 --
 
 CREATE TABLE IF NOT EXISTS `inventario` (
-  `id_producto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del producto',
-  `descripcion` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT 'descripcion del producto',
+  `id_producto` int(11) NOT NULL auto_increment COMMENT 'id del producto',
+  `descripcion` varchar(30) collate utf8_unicode_ci NOT NULL COMMENT 'descripcion del producto',
   `precio_intersucursal` float NOT NULL,
   `costo` float NOT NULL,
-  `medida` enum('fraccion','unidad') COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+  `medida` enum('fraccion','unidad') collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id_producto`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `inventario`
 --
 
-INSERT INTO `inventario` (`id_producto`, `descripcion`, `precio_intersucursal`, `costo`, `medida`) VALUES
-(1, 'papas primeras', 400, 400, 'fraccion'),
-(2, 'papas segundas', 450, 450, 'fraccion');
 
 -- --------------------------------------------------------
 
@@ -500,11 +393,11 @@ INSERT INTO `inventario` (`id_producto`, `descripcion`, `precio_intersucursal`, 
 --
 
 CREATE TABLE IF NOT EXISTS `pagos_compra` (
-  `id_pago` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del pago',
+  `id_pago` int(11) NOT NULL auto_increment COMMENT 'identificador del pago',
   `id_compra` int(11) NOT NULL COMMENT 'identificador de la compra a la que pagamos',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha en que se abono',
+  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha en que se abono',
   `monto` float NOT NULL COMMENT 'monto que se abono',
-  PRIMARY KEY (`id_pago`),
+  PRIMARY KEY  (`id_pago`),
   KEY `pagos_compra_compra` (`id_compra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -520,40 +413,20 @@ CREATE TABLE IF NOT EXISTS `pagos_compra` (
 --
 
 CREATE TABLE IF NOT EXISTS `pagos_venta` (
-  `id_pago` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de pago del cliente',
+  `id_pago` int(11) NOT NULL auto_increment COMMENT 'id de pago del cliente',
   `id_venta` int(11) NOT NULL COMMENT 'id de la venta a la que se esta pagando',
   `id_sucursal` int(11) NOT NULL COMMENT 'Donde se realizo el pago',
   `id_usuario` int(11) NOT NULL COMMENT 'Quien cobro este pago',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha en que se registro el pago',
+  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'Fecha en que se registro el pago',
   `monto` float NOT NULL COMMENT 'total de credito del cliente',
-  PRIMARY KEY (`id_pago`),
+  PRIMARY KEY  (`id_pago`),
   KEY `pagos_venta_venta` (`id_venta`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=28 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `pagos_venta`
 --
 
-INSERT INTO `pagos_venta` (`id_pago`, `id_venta`, `id_sucursal`, `id_usuario`, `fecha`, `monto`) VALUES
-(8, 3, 54, 37, '2010-11-27 14:59:58', 50),
-(9, 3, 54, 37, '2010-11-27 15:00:41', 50),
-(10, 3, 54, 37, '2010-11-27 15:01:03', 50),
-(11, 3, 54, 37, '2010-11-27 15:02:00', 50),
-(12, 3, 54, 37, '2010-11-27 15:02:40', 50),
-(13, 3, 54, 37, '2010-11-27 15:04:33', 50),
-(14, 3, 54, 37, '2010-11-27 15:06:13', 50),
-(15, 3, 54, 37, '2010-11-27 15:09:59', 50),
-(16, 3, 54, 37, '2010-11-27 15:49:03', 50),
-(17, 3, 53, 37, '2010-11-27 15:49:08', 50),
-(19, 1, 53, 37, '2010-11-27 15:49:21', 50),
-(20, 21, 54, 38, '2010-12-06 20:53:17', 100),
-(21, 21, 54, 38, '2010-12-06 20:58:42', 50),
-(22, 21, 54, 38, '2010-12-06 20:58:52', 50),
-(23, 21, 54, 38, '2010-12-06 21:00:36', 25),
-(24, 31, 54, 38, '2010-12-06 22:15:11', 50.5),
-(25, 31, 54, 38, '2010-12-07 00:16:50', 100),
-(26, 31, 54, 38, '2010-12-08 23:59:36', 0.5),
-(27, 31, 54, 38, '2010-12-09 01:38:54', 4);
 
 -- --------------------------------------------------------
 
@@ -562,13 +435,13 @@ INSERT INTO `pagos_venta` (`id_pago`, `id_venta`, `id_sucursal`, `id_usuario`, `
 --
 
 CREATE TABLE IF NOT EXISTS `productos_proveedor` (
-  `id_producto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del producto',
-  `clave_producto` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'clave de producto para el proveedor',
+  `id_producto` int(11) NOT NULL auto_increment COMMENT 'identificador del producto',
+  `clave_producto` varchar(20) collate utf8_unicode_ci NOT NULL COMMENT 'clave de producto para el proveedor',
   `id_proveedor` int(11) NOT NULL COMMENT 'clave del proveedor',
   `id_inventario` int(11) NOT NULL COMMENT 'clave con la que entra a nuestro inventario',
-  `descripcion` varchar(200) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Descripcion del producto que nos vende el proveedor',
+  `descripcion` varchar(200) collate utf8_unicode_ci NOT NULL COMMENT 'Descripcion del producto que nos vende el proveedor',
   `precio` int(11) NOT NULL COMMENT 'precio al que se compra el producto (sin descuento)',
-  PRIMARY KEY (`id_producto`),
+  PRIMARY KEY  (`id_producto`),
   UNIQUE KEY `clave_producto` (`clave_producto`,`id_proveedor`),
   UNIQUE KEY `id_proveedor` (`id_proveedor`,`id_inventario`),
   KEY `productos_proveedor_proveedor` (`id_proveedor`),
@@ -587,14 +460,14 @@ CREATE TABLE IF NOT EXISTS `productos_proveedor` (
 --
 
 CREATE TABLE IF NOT EXISTS `proveedor` (
-  `id_proveedor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del proveedor',
-  `rfc` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'rfc del proveedor',
-  `nombre` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre del proveedor',
-  `direccion` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'direccion del proveedor',
-  `telefono` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'telefono',
-  `e_mail` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'email del provedor',
-  `activo` tinyint(2) NOT NULL DEFAULT '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
-  PRIMARY KEY (`id_proveedor`)
+  `id_proveedor` int(11) NOT NULL auto_increment COMMENT 'identificador del proveedor',
+  `rfc` varchar(20) collate utf8_unicode_ci NOT NULL COMMENT 'rfc del proveedor',
+  `nombre` varchar(30) collate utf8_unicode_ci NOT NULL COMMENT 'nombre del proveedor',
+  `direccion` varchar(100) collate utf8_unicode_ci default NULL COMMENT 'direccion del proveedor',
+  `telefono` varchar(20) collate utf8_unicode_ci default NULL COMMENT 'telefono',
+  `e_mail` varchar(60) collate utf8_unicode_ci default NULL COMMENT 'email del provedor',
+  `activo` tinyint(2) NOT NULL default '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
+  PRIMARY KEY  (`id_proveedor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
@@ -609,25 +482,24 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
 --
 
 CREATE TABLE IF NOT EXISTS `sucursal` (
-  `id_sucursal` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identificador de cada sucursal',
+  `id_sucursal` int(11) NOT NULL auto_increment COMMENT 'Identificador de cada sucursal',
   `gerente` int(11) NOT NULL COMMENT 'Gerente de esta sucursal',
-  `descripcion` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre o descripcion de sucursal',
-  `direccion` varchar(200) COLLATE utf8_unicode_ci NOT NULL COMMENT 'direccion de la sucursal',
-  `rfc` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'El RFC de la sucursal',
-  `telefono` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'El telefono de la sucursal',
-  `token` varchar(512) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Token de seguridad para esta sucursal',
-  `letras_factura` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `activo` tinyint(1) NOT NULL DEFAULT '1',
-  `fecha_apertura` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de apertura de esta sucursal',
-  PRIMARY KEY (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=55 ;
+  `descripcion` varchar(100) collate utf8_unicode_ci NOT NULL COMMENT 'nombre o descripcion de sucursal',
+  `direccion` varchar(200) collate utf8_unicode_ci NOT NULL COMMENT 'direccion de la sucursal',
+  `rfc` varchar(20) collate utf8_unicode_ci default NULL COMMENT 'El RFC de la sucursal',
+  `telefono` varchar(20) collate utf8_unicode_ci default NULL COMMENT 'El telefono de la sucursal',
+  `token` varchar(512) collate utf8_unicode_ci default NULL COMMENT 'Token de seguridad para esta sucursal',
+  `letras_factura` varchar(10) collate utf8_unicode_ci NOT NULL,
+  `activo` tinyint(1) NOT NULL default '1',
+  `fecha_apertura` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'Fecha de apertura de esta sucursal',
+  `saldo_a_favor` float NOT NULL default '0' COMMENT 'es el saldo a favor que tiene la sucursal encuanto a los abonos de sus compras',
+  PRIMARY KEY  (`id_sucursal`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `sucursal`
 --
 
-INSERT INTO `sucursal` (`id_sucursal`, `gerente`, `descripcion`, `direccion`, `rfc`, `telefono`, `token`, `letras_factura`, `activo`, `fecha_apertura`) VALUES
-(54, 5, 'Sucursal Arboledas', 'Monte Balcanes #107 2da Secc Arboledas. Celaya, Guanajuato.', 'GOH345345G', '6149974', '127.0.0.1', 'A', 1, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -636,46 +508,27 @@ INSERT INTO `sucursal` (`id_sucursal`, `gerente`, `descripcion`, `direccion`, `r
 --
 
 CREATE TABLE IF NOT EXISTS `usuario` (
-  `id_usuario` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del usuario',
-  `RFC` varchar(40) COLLATE utf8_unicode_ci NOT NULL COMMENT 'RFC de este usuario',
-  `nombre` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre del empleado',
-  `contrasena` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
-  `id_sucursal` int(11) NOT NULL COMMENT 'Id de la sucursal a que pertenece',
+  `id_usuario` int(11) NOT NULL auto_increment COMMENT 'identificador del usuario',
+  `RFC` varchar(40) collate utf8_unicode_ci NOT NULL COMMENT 'RFC de este usuario',
+  `nombre` varchar(100) collate utf8_unicode_ci NOT NULL COMMENT 'nombre del empleado',
+  `contrasena` varchar(128) collate utf8_unicode_ci NOT NULL,
+  `id_sucursal` int(11) default NULL COMMENT 'Id de la sucursal a que pertenece',
   `activo` tinyint(1) NOT NULL COMMENT 'Guarda el estado de la cuenta del usuario',
-  `finger_token` varchar(1024) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Una cadena que sera comparada con el token que mande el scanner de huella digital',
+  `finger_token` varchar(1024) collate utf8_unicode_ci default NULL COMMENT 'Una cadena que sera comparada con el token que mande el scanner de huella digital',
   `salario` float NOT NULL COMMENT 'Salario actual',
-  `direccion` varchar(512) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Direccion del empleado',
-  `telefono` varchar(16) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Telefono del empleado',
-  `fecha_inicio` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha cuando este usuario comenzo a laborar',
-  PRIMARY KEY (`id_usuario`),
+  `direccion` varchar(512) collate utf8_unicode_ci NOT NULL COMMENT 'Direccion del empleado',
+  `telefono` varchar(16) collate utf8_unicode_ci NOT NULL COMMENT 'Telefono del empleado',
+  `fecha_inicio` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'Fecha cuando este usuario comenzo a laborar',
+  PRIMARY KEY  (`id_usuario`),
   KEY `fk_usuario_1` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=61 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
 -- Volcar la base de datos para la tabla `usuario`
 --
 
 INSERT INTO `usuario` (`id_usuario`, `RFC`, `nombre`, `contrasena`, `id_sucursal`, `activo`, `finger_token`, `salario`, `direccion`, `telefono`, `fecha_inicio`) VALUES
-(37, 'GOH345GA3', 'Alan Gonzalez Hernandez', 'a5bfc9e07964f8dddeb95fc584cd965d', 54, 1, '', 5000, '', '', '0000-00-00 00:00:00'),
-(38, '234534ASDFADS', 'Rodolfo Gonzalez', 'a5bfc9e07964f8dddeb95fc584cd965d', 54, 1, NULL, 5000, '', '', '0000-00-00 00:00:00'),
-(39, 'GACJ841106', 'Juan Manuel Garcia Carmona', 'mane', 54, 1, '', 10000, '', '', '0000-00-00 00:00:00'),
-(40, 'GACJ841106', 'Juan Manuel Garcia', 'mane', 54, 0, '', 10000, '', '', '0000-00-00 00:00:00'),
-(41, 'GACJ841106', 'Juan Manuel Garcia', '202cb962ac59075b964b07152d234b70', 54, 0, '', 10000, '', '', '0000-00-00 00:00:00'),
-(42, 'GACJ841106', 'Juan Manuel Garcia', '123', 54, 0, '', 10000, '', '', '0000-00-00 00:00:00'),
-(43, 'GACJ841106', 'Juan Manuel Garcia', '123', 54, 1, NULL, 10000, '', '', '0000-00-00 00:00:00'),
-(46, 'GACJ841106', 'Juan Manuel Garcia', '123', 54, 1, NULL, 10000, '', '', '0000-00-00 00:00:00'),
-(47, 'D82374978973', 'Dilba Monica del Moral', '123', 54, 1, '', 555, 'Rosalida #123897 $2347868 ?asdf', '6149974', '0000-00-00 00:00:00'),
-(50, 'hhhhhhhhhh', 'jjjjjjjjjjj', '123', 54, 1, NULL, 100, '', '', '0000-00-00 00:00:00'),
-(51, 'GACJ841106', 'Juan Manuel Garcia', '123', 54, 1, NULL, 10000, '', '', '0000-00-00 00:00:00'),
-(52, 'GACJ841106', 'Juan Manuel Garcia', '123', 54, 0, NULL, 10000, '', '', '0000-00-00 00:00:00'),
-(53, 'josejose', 'jose nose', '123', 54, 0, NULL, 5000, '', '', '0000-00-00 00:00:00'),
-(54, 'josejose2', 'jose nose', '123', 54, 1, NULL, 5000, '', '', '0000-00-00 00:00:00'),
-(55, 'josejose2ss', 'jose nose', '123', 54, 1, NULL, 5000, '', '', '0000-00-00 00:00:00'),
-(56, 'adsfasdfasdf', 'John Mayer', '', 54, 1, '', 1.23423e+06, 'asdf', 'asdf', '0000-00-00 00:00:00'),
-(57, '456464564564', 'John Lennon', 'alanboy', 54, 1, NULL, 123, 'Monte Balcanes #107', '6149974', '0000-00-00 00:00:00'),
-(58, 'adsfasdfasdfd', 'asdfasdf', '', 54, 0, '', 123, 'asdfasdf', 'asdfadsf', '0000-00-00 00:00:00'),
-(59, 'ASDfa98sd7fija', 'Alan Gonzalez', 'alanboy', 54, 1, '', 123, 'asdfadsfadsf', '65456464', '0000-00-00 00:00:00'),
-(60, 'l29034789ewuju89uj', 'juan manuel serrat', 'fb8f8877373f7b68f31904470a3b6019', 54, 1, NULL, 1234, 'asdklfjadklsfj alsdfj aosdjfi8', '8972457', '0000-00-00 00:00:00');
+(1, '12213324432', 'Alan Gonzalez Hernandez', '202cb962ac59075b964b07152d234b70', NULL, 1, NULL, 0, '', '', '2010-12-20 00:54:42');
 
 -- --------------------------------------------------------
 
@@ -684,62 +537,28 @@ INSERT INTO `usuario` (`id_usuario`, `RFC`, `nombre`, `contrasena`, `id_sucursal
 --
 
 CREATE TABLE IF NOT EXISTS `ventas` (
-  `id_venta` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de venta',
+  `id_venta` int(11) NOT NULL auto_increment COMMENT 'id de venta',
   `id_cliente` int(11) NOT NULL COMMENT 'cliente al que se le vendio',
-  `tipo_venta` enum('credito','contado') COLLATE utf8_unicode_ci NOT NULL COMMENT 'tipo de venta, contado o credito',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de venta',
-  `subtotal` float DEFAULT NULL COMMENT 'subtotal de la venta, puede ser nulo',
-  `iva` float DEFAULT NULL COMMENT 'iva agregado por la venta, depende de cada sucursal',
-  `descuento` float NOT NULL DEFAULT '0' COMMENT 'descuento aplicado a esta venta',
-  `total` float NOT NULL DEFAULT '0' COMMENT 'total de esta venta',
+  `tipo_venta` enum('credito','contado') collate utf8_unicode_ci NOT NULL COMMENT 'tipo de venta, contado o credito',
+  `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha de venta',
+  `subtotal` float default NULL COMMENT 'subtotal de la venta, puede ser nulo',
+  `iva` float default NULL COMMENT 'iva agregado por la venta, depende de cada sucursal',
+  `descuento` float NOT NULL default '0' COMMENT 'descuento aplicado a esta venta',
+  `total` float NOT NULL default '0' COMMENT 'total de esta venta',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal de la venta',
   `id_usuario` int(11) NOT NULL COMMENT 'empleado que lo vendio',
-  `pagado` float NOT NULL DEFAULT '0' COMMENT 'porcentaje pagado de esta venta',
-  `ip` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0.0.0.0' COMMENT 'ip de donde provino esta compra',
-  PRIMARY KEY (`id_venta`),
+  `pagado` float NOT NULL default '0' COMMENT 'porcentaje pagado de esta venta',
+  `ip` varchar(16) collate utf8_unicode_ci NOT NULL default '0.0.0.0' COMMENT 'ip de donde provino esta compra',
+  PRIMARY KEY  (`id_venta`),
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`id_sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=34 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `ventas`
 --
 
-INSERT INTO `ventas` (`id_venta`, `id_cliente`, `tipo_venta`, `fecha`, `subtotal`, `iva`, `descuento`, `total`, `id_sucursal`, `id_usuario`, `pagado`, `ip`) VALUES
-(1, 204, 'contado', '2010-11-27 13:30:53', 300, 0, 0, 300, 54, 38, 300, '127.0.0.1'),
-(2, 205, 'contado', '2010-11-27 13:30:53', 200, 0, 0, 200, 54, 39, 100, '120.0.0.1'),
-(3, 204, 'credito', '2010-11-27 13:52:33', 500, 0, 50, 250, 54, 37, 240, '127.0.0.1'),
-(4, -54, 'contado', '2010-12-05 20:42:28', 0, NULL, 0, 0, 54, 38, 0, '127.0.0.1'),
-(5, -54, 'contado', '2010-12-05 20:42:39', 0, NULL, 0, 0, 54, 38, 0, '127.0.0.1'),
-(6, -54, 'contado', '2010-12-05 20:42:39', 0, NULL, 0, 0, 54, 38, 0, '127.0.0.1'),
-(7, -54, 'contado', '2010-12-05 20:42:40', 0, NULL, 0, 0, 54, 38, 0, '127.0.0.1'),
-(8, -54, 'contado', '2010-12-05 20:43:48', NULL, NULL, 0, 0, 54, 38, 0, '127.0.0.1'),
-(9, -54, 'contado', '2010-12-05 20:44:51', NULL, NULL, 0, 0, 54, 38, 0, '127.0.0.1'),
-(10, -54, 'contado', '2010-12-05 20:45:18', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
-(11, -54, 'contado', '2010-12-05 20:49:34', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
-(12, -54, 'contado', '2010-12-05 21:15:59', NULL, NULL, 0, 0, 54, 38, 0, '127.0.0.1'),
-(13, -54, 'contado', '2010-12-05 21:18:14', 10500, NULL, 0, 10500, 54, 38, 10500, '127.0.0.1'),
-(14, -54, 'contado', '2010-12-05 21:22:57', NULL, NULL, 0, 0, 54, 38, 0, '127.0.0.1'),
-(15, -54, 'contado', '2010-12-05 21:23:14', 10500, NULL, 0, 10500, 54, 38, 10500, '127.0.0.1'),
-(16, -54, 'contado', '2010-12-05 21:25:15', 4500, NULL, 0, 4500, 54, 38, 4500, '127.0.0.1'),
-(17, -54, 'contado', '2010-12-05 21:28:37', 4500, NULL, 0, 4500, 54, 38, 4500, '127.0.0.1'),
-(18, 204, 'contado', '2010-12-05 21:35:52', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
-(19, 204, 'contado', '2010-12-05 21:36:46', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
-(20, 204, 'contado', '2010-12-05 21:37:01', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
-(21, 204, 'credito', '2010-12-05 21:48:06', 500, NULL, 0, 500, 54, 38, 225, '127.0.0.1'),
-(22, 206, 'contado', '2010-12-05 21:53:17', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
-(23, 207, 'contado', '2010-12-05 22:05:04', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
-(24, 208, 'contado', '2010-12-05 23:05:11', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
-(25, -54, 'contado', '2010-12-05 23:05:57', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
-(26, -54, 'contado', '2010-12-05 23:06:25', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
-(27, -54, 'contado', '2010-12-05 23:15:46', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
-(28, -54, 'contado', '2010-12-05 23:18:15', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
-(29, -54, 'contado', '2010-12-05 23:20:18', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
-(30, -54, 'contado', '2010-12-05 23:22:01', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
-(31, 204, 'credito', '2010-12-06 21:36:42', 1000, NULL, 50, 500, 54, 38, 155, '127.0.0.1'),
-(32, -54, 'contado', '2010-12-06 21:41:24', 500, NULL, 0, 500, 54, 38, 500, '127.0.0.1'),
-(33, 208, 'contado', '2010-12-07 00:18:37', 3100, NULL, 0, 3100, 54, 38, 3100, '127.0.0.1');
 
 --
 -- Filtros para las tablas descargadas (dump)
@@ -754,32 +573,11 @@ ALTER TABLE `compras`
   ADD CONSTRAINT `compras_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `cotizacion`
---
-ALTER TABLE `cotizacion`
-  ADD CONSTRAINT `cotizacion_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `cotizacion_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `cotizacion_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
-
---
 -- Filtros para la tabla `detalle_compra`
 --
 ALTER TABLE `detalle_compra`
   ADD CONSTRAINT `detalle_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE,
   ADD CONSTRAINT `detalle_compra_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `detalle_corte`
---
-ALTER TABLE `detalle_corte`
-  ADD CONSTRAINT `corte_detalleCorte` FOREIGN KEY (`num_corte`) REFERENCES `corte` (`num_corte`) ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `detalle_cotizacion`
---
-ALTER TABLE `detalle_cotizacion`
-  ADD CONSTRAINT `detalle_cotizacion_ibfk_1` FOREIGN KEY (`id_cotizacion`) REFERENCES `cotizacion` (`id_cotizacion`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `detalle_cotizacion_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `detalle_inventario`
@@ -839,3 +637,4 @@ ALTER TABLE `ventas`
   ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
+
