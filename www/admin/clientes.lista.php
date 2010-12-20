@@ -195,6 +195,8 @@ require_once("controller/inventario.controller.php");
 //obtener los clientes del controller de clientes
 $clientes = listarClientes();
 
+
+
 //render the table
 $header = array(  "nombre" => "Nombre", "rfc" => "RFC", "direccion" => "Direccion", "ciudad" => "Ciudad"  );
 $tabla = new Tabla( $header, $clientes );

@@ -118,7 +118,7 @@ function listarClientes(  ){
 	//buscar clientes que esten activos
 	$foo = new Cliente();
 	$foo->setIdCliente("0");
-	$foo->setActivo(1);
+	$foo->setActivo("1");
 
 
 	$bar = new Cliente();
@@ -142,7 +142,8 @@ function listarClientes(  ){
 			$por_pagar += $venta->getTotal() - $venta->getPagado();
 		}
 			
-		$c = json_decode($cliente, true);
+
+        $c = $cliente->asArray();
 		$c["credito_restante"] = $cliente->getLimiteCredito() - $por_pagar;
 		
         array_push($total_customers, $c );
