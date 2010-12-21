@@ -74,7 +74,7 @@
     //nombre de la galleta
     //void session_set_cookie_params ( int $lifetime [, string $path [, string $domain [, bool $secure = false [, bool $httponly = false ]]]] )
     session_name("POS_ID");
-    session_set_cookie_params ( 3600 , '/' );
+    session_set_cookie_params ( 0  , '/' );
 
 
 

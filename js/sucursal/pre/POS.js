@@ -28,7 +28,7 @@ POS.U = {
 	g : null
 };
 
-Ext.Ajax.timeout = 3000;
+Ext.Ajax.timeout = 5000;
 
 POS.A = {
     failure : false,
@@ -67,7 +67,8 @@ function enviarHeartTask(){
     setTimeout("enviarHeartTask()",POS.CHECK_DB_TIMEOUT );
 }
 
-    setTimeout("enviarHeartTask()",POS.CHECK_DB_TIMEOUT * 2);
+
+setTimeout("enviarHeartTask()",POS.CHECK_DB_TIMEOUT * 2);
 
 
 POS.error = function (ajaxResponse, catchedError)
