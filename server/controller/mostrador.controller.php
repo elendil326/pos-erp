@@ -107,7 +107,8 @@ function descontarInventario ( $productos )
  * */
 function vender( $args ){
 
-    //iniciar transaccion
+    Logger::log("Iniciando proceso de venta");
+
     DAO::transBegin();
 
     if(!isset($args['payload']))
@@ -162,7 +163,7 @@ function vender( $args ){
 	
 	
 	if(!revisarExistencias( $detallesVenta )){
-        Logger::log("No hay existencias para satisface la demanda");
+        Logger::log("No hay existencias para satisfacer la demanda");
         DAO::transRollback();
 		die('{"success": false, "reason": "No hay suficiente producto para satisfacer la demanda. Intente de nuevo." }');
 	}
@@ -268,10 +269,45 @@ function vender( $args ){
 
 
 	//insertar detalles de la venta y descontar de inventario
-	if(!descontarInventario( $detallesVenta )){
-        DAO::transRollback();
-		die( '{"success": false, "reason": "Porfavor intente de nuevo." }' );
-	}
+  	foreach($detallesVenta as $dVenta)
+    {
+
+		
+		//insertar el detalle de la venta
+        try{
+            if (!DetalleVentaDAO::save($dVenta)){
+                return false;
+            } 
+        }catch(Exception $e){
+            die( '{"success": false, "reason": "' . $e . '" }' );
+        }
+
+
+
+		//descontar del inventario
+		$dInventario = DetalleInventarioDAO::getByPK( $dVenta->getIdProducto(), $_SESSION['sucursal'] );
+
+        if($dInventario->getExistencias() < $dVenta->getCantidad() ){
+            Logger::log("No hay mas existencias del producto {$dVenta->getIdProducto()}.");
+            DAO::transRollback();
+        	die('{"success": false, "reason": "No hay suficiente producto para satisfacer la demanda. Intente de nuevo." }');
+        }
+
+		$dInventario->setExistencias( $dInventario->getExistencias() - $dVenta->getCantidad() );
+
+		try{
+            Logger::log("Descontando {$dVenta->getCantidad()} productos del articulo {$dVenta->getIdProducto()}");
+			DetalleInventarioDAO::save( $dInventario );
+		}catch(Exception $e){
+            Logger::log("Imposible descontar de inventario: {$e}");
+            DAO::transRollback();
+    		die( '{"success": false, "reason": "Porfavor intente de nuevo." }' );
+		}
+
+		
+    }
+
+
 
 
     //ya que se tiene el total de la venta se actualiza el total de la venta

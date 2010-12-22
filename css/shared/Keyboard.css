@@ -1,7 +1,7 @@
 .Keyboard{
 	
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#9C9CA5), to(#44444A));
-	height: 400px;
+	height: 100%;
 	padding: 5px;
 
 }

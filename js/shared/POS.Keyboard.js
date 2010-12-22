@@ -51,19 +51,25 @@ POS.Keyboard.Keyboard = function ( campo, config ){
 		var internalConfig = POS.Keyboard.genHTML( config );
 		POS.Keyboard.callback = config.callback;
 
-		POS.Keyboard.KeyboardObj.update( internalConfig.html );
-		POS.Keyboard.KeyboardObj.setWidth(internalConfig.width);
-		POS.Keyboard.KeyboardObj.setHeight(internalConfig.height);
-		
-		POS.Keyboard.KeyboardObj.setCentered(false);
+
+
+
+        //POS.Keyboard.KeyboardObj.setCentered(false);
         POS.Keyboard.KeyboardObj.showBy(campo, true, false);
+
+
 
 		if( POS.Keyboard.KeyboardObj.getWidth() != internalConfig.width )
 			POS.Keyboard.KeyboardObj.setWidth(internalConfig.width);
 		
 		if( POS.Keyboard.KeyboardObj.getHeight() != internalConfig.height )
 			POS.Keyboard.KeyboardObj.setHeight(internalConfig.height);
-		
+
+
+		POS.Keyboard.KeyboardObj.update( internalConfig.html );
+
+
+        POS.Keyboard.KeyboardObj.showBy(campo, true, false);
 		POS.Keyboard.campo = campo;
 
 		return POS.Keyboard.Keyboard;
@@ -73,14 +79,20 @@ POS.Keyboard.Keyboard = function ( campo, config ){
         floating: true,
 		ui : "dark",
         modal: false,
+        scroll: false,
+        width: 100,
+        height:100,
 		showAnimation : Ext.anims.fade ,
-        centered: true,
-		hideOnMaskTap : false,
+		hideOnMaskTap : true,
 		bodyPadding : 0,
 		bodyMargin : 0,
         styleHtmlContent: false,
 		html : null,
-        scroll: 'none'
+        listeners:{
+            'hide' : function(){
+                POS.Keyboard.campo.blur();
+            }
+        }
     });
 
 	//ya creado, volver a llamar a esta funcion para que ponga el contenido correcto
@@ -89,12 +101,18 @@ POS.Keyboard.Keyboard = function ( campo, config ){
 	
 };
 
+
+
 POS.Keyboard.hide = function () {
 
 	if(POS.Keyboard.KeyboardObj){
         POS.Keyboard.KeyboardObj.hide( Ext.anims.fade );
+        POS.Keyboard.campo.blur();
+
 	}
 };
+
+
 
 POS.Keyboard.callbackFn = function ( val, isSubmit ) {
 

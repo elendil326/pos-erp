@@ -79,7 +79,7 @@ if ( !isset($_REQUEST['action']) )
 //no hay token, pues hay que saltar esta validacion, para todas las demas se debera pasar
 if( ! ($_REQUEST['action']  == "2001" || $_REQUEST['action']  == "2004" || $_REQUEST['action']  == "2099") )
 {
-    Logger::log("dispatching:" . $_REQUEST['action']);
+    //Logger::log("dispatching:" . $_REQUEST['action']);
 }
 
 

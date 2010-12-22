@@ -141,7 +141,12 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 	
 	Ext.getCmp("MostradorHtmlPanel").update(html);
 	
-	
+	//si hay mas de un producto, mostrar el boton de vender
+	if(carrito.items.length > 0){
+		Ext.getCmp("Mostrador-mostradorVender").show( Ext.anims.slide );
+	}else{
+		Ext.getCmp("Mostrador-mostradorVender").hide( Ext.anims.slide );
+	}
 	
 	for (i=0; i < carrito.items.length; i++){
 		
@@ -232,12 +237,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 	}
 	
 	
-	//si hay mas de un producto, mostrar el boton de vender
-	if(carrito.items.length > 0){
-		Ext.getCmp("Mostrador-mostradorVender").show( Ext.anims.slide );
-	}else{
-		Ext.getCmp("Mostrador-mostradorVender").hide( Ext.anims.slide );
-	}
+
 	
 	
 	
@@ -838,7 +838,7 @@ Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
 		
 	}
 	
-	
+	Ext.getCmp('Mostrador-doVentaEfectivo').setValue("");
 	Ext.getCmp('Mostrador-doVentaSub' ).setValue( POS.currencyFormat( subtotal ) );
 	Ext.getCmp('Mostrador-doVentaTotal' ).setValue( POS.currencyFormat( total ) );
 
