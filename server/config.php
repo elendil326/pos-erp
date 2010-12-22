@@ -1,80 +1,71 @@
 ﻿<?php
-	/* *******************************
-		Configuracion Basica
-	 ********************************* */
-	
-	
-	/*
-	To add a path to the already existing value (not just replace) do something like this:
-		ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . '/path/to/add')
-	*/
 
-	//carpeta donde se encuentran los scripts del servidor
-	ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/Applications/XAMPP/xamppfiles/htdocs/svn/pos/trunk/server");
-	ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/caffeina/pos/trunk/server");
-    ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/pos/trunk/server");
+/* *******************************
+Configuracion Basica
+********************************* */
 
-	//mimificar o no el javascript que se carga
-	define("_POS_JSMINIFY", false);
-	
-	//titulo de la aplicacion
-	define("_POS_HTMLTITLE", "Papas Supremas");
+//carpeta donde se encuentran los scripts del servidor
+ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/Applications/XAMPP/xamppfiles/htdocs/svn/pos/trunk/server");
+ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/caffeina/pos/trunk/server");
+ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/pos/trunk/server");
 
+//mimificar o no el javascript que se carga
+define("_POS_JSMINIFY", false);
+
+//titulo de la aplicacion
+define("_POS_HTMLTITLE", "Papas Supremas");
+
+define('POS_MAX_LIMITE_DE_CREDITO', 20000);
+define('POS_MAX_LIMITE_DESCUENTO', 35.0);
+define('POS_ENABLE_GMAPS', false);	
 
 
-
-	
-    /* *******************************
-		LOG
-	 ********************************* */
-	define("_POS_LOG_TO_FILE", true);
-	define("_POS_LOG_TO_FILE_FILENAME", "/var/log/mx.caffeina.pos/pos.log");
-
-
-	
-
-    /* *******************************
-		ZONA HORARIA
-	 ********************************* */
-	date_default_timezone_set("America/Mexico_City");
-
-	
-	/* *******************************
-		BASE DE DATOS 
-	 ********************************* */
-
-
-
-	define('DB_USER', 		'pos');
-	define('DB_PASSWORD', 	'pos');
-	define('DB_NAME', 		'pos');
-	define('DB_DRIVER', 	'mysqlt');
-	define('DB_HOST', 		'localhost');
-	define('DB_DEBUG', 		false);
-	
-	require_once('db/DBConnection.php');
+/* *******************************
+LOG
+********************************* */
+define("_POS_LOG_TO_FILE", true);
+define("_POS_LOG_TO_FILE_FILENAME", "/var/log/mx.caffeina.pos/pos.log");
 
 
 
 
-	define('POS_MAX_LIMITE_DE_CREDITO', 20000);
-	define('POS_MAX_LIMITE_DESCUENTO', 35.0);
-	define('POS_ENABLE_GMAPS', false);	
-    
-	
-	/* *******************************
-		Seguridad
-	 ********************************* */
-	//cada que una sesion sobrepase de este valor, volvera a pedir las credenciales
-	$__ADMIN_TIME_OUT 	= 3600;
-	$__GERENTE_TIME_OUT = 3600;
-	$__CAJERO_TIME_OUT 	= 3600;
-	
+/* *******************************
+ZONA HORARIA
+********************************* */
+date_default_timezone_set("America/Mexico_City");
 
-    //nombre de la galleta
-    //void session_set_cookie_params ( int $lifetime [, string $path [, string $domain [, bool $secure = false [, bool $httponly = false ]]]] )
-    session_name("POS_ID");
-    session_set_cookie_params ( 0  , '/' );
+
+
+/* *******************************
+BASE DE DATOS 
+********************************* */
+define('DB_USER',       'pos');
+define('DB_PASSWORD',   'pos');
+define('DB_NAME',       'pos');
+define('DB_DRIVER',     'mysqlt');
+define('DB_HOST',       'localhost');
+define('DB_DEBUG',      false);
+
+//conectarse a la base de datos
+require_once('db/DBConnection.php');
+
+
+
+/* *******************************
+Seguridad
+********************************* */
+//cada que una sesion sobrepase de este valor, volvera a pedir las credenciales
+$__ADMIN_TIME_OUT 	= 3600;
+$__GERENTE_TIME_OUT = 3600;
+$__CAJERO_TIME_OUT 	= 3600;
+
+define( 'POS_SUCURSAL_TEST_TOKEN', 'FULL_UA' );
+//define( 'POS_SUCURSAL_TEST_TOKEN', 'SID_TOKEN' ); //SID={00000} dentro del UA
+
+//nombre de la galleta
+//session_set_cookie_params ( int $lifetime [, string $path [, string $domain [, bool $secure = false [, bool $httponly = false ]]]] )
+session_name("POS_ID");
+session_set_cookie_params ( 0  , '/' );
 
 
 
@@ -82,23 +73,23 @@
 
 
 
-	/* *******************************
-		Funciones de ayuda
-	 ********************************* */
-	function endsWith( $str, $sub ) {
-		return ( substr( $str, strlen( $str ) - strlen( $sub ) ) == $sub );
-	}
+/* *******************************
+Funciones de ayuda
+********************************* */
+function endsWith( $str, $sub ) {
+return ( substr( $str, strlen( $str ) - strlen( $sub ) ) == $sub );
+}
 
-	function __pos__calcularTotal($subtotal, $iva, $descuento)
-	{
-		//funcion para calular el total
-		//subtotal - pesos
-		//iva - porcentaje
-		//descuento - porcentaje
-		$iva /= 100;
-		$descuento /= 100;
-		//descuento sobre iva
+function __pos__calcularTotal($subtotal, $iva, $descuento)
+{
+//funcion para calular el total
+//subtotal - pesos
+//iva - porcentaje
+//descuento - porcentaje
+$iva /= 100;
+$descuento /= 100;
+//descuento sobre iva
 
-		return ( ($subtotal- ($subtotal*$descuento)) + (($subtotal-($subtotal*$descuento))*$iva) );
+return ( ($subtotal- ($subtotal*$descuento)) + (($subtotal-($subtotal*$descuento))*$iva) );
 
-	}
+}

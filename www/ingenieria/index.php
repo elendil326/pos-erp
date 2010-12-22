@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>Punto de venta | Administracion</title>
+    <title>Punto de venta | Centro de Ingenieria</title>
 	
 
 
@@ -27,7 +27,7 @@
 	  <?php include_once("includes/mainMenu.php"); ?>
 
       <h1>
-       Centro de Administracion
+       Centro de Ingenieria
       </h1>
       <p>
         Este punto de venta es una solución de analítica web para empresas que proporciona información

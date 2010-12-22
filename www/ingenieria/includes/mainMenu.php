@@ -11,26 +11,19 @@
       <a  class="drop">CONFIGURACION</a>
       <ul>
         <li class="ga-side-nav-off">
-          <a href="clientes.php?action=lista" >Estado del servidor</a>
+          <a href="configuracion.php?action=actual" >Archivo de configuracion</a>
         </li>
 
         <li class="ga-side-nav-off">
-          <a  href="clientes.php?action=nuevo" >Usuarios actuales</a>
+          <a  href="configuracion.php?action=editar" >Editar configuracion</a>
         </li>
 
       </ul>
     </li>
 
     <li class="product">
-      <a class="drop" >BASE DE DATOS</a>
-      <ul>
-        <li class="ga-side-nav-off">
-          <a href="sucursales.php?action=lista">Editor</a>
-        </li>
-        <li class="ga-side-nav-off">
-          <a href="sucursales.php?action=abrir">Respaldos</a>
-        </li>
-      </ul>
+      <a class="drop" href="base.php">BASE DE DATOS</a>
+
     </li>
 
     <li class="product">
@@ -73,15 +66,7 @@
 
 
     <li class="education">
-      <a class="drop" >EQUIPOS POS</a>
-      <ul>
-        <li class="ga-side-nav-off">
-          <a href="autorizaciones.php?action=pendientes" >Listar equipos</a>
-        </li>
-        <li>
-          <a href="autorizaciones.php?action=historial" >Registrar nuevo equipo</a>
-        </li>
-      </ul>
+      <a class="drop" href="equipos.php?action=lista" >EQUIPOS</a>
     </li>
 
 

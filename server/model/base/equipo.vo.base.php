@@ -27,6 +27,9 @@ class Equipo extends VO
 			if( isset($data['token']) ){
 				$this->token = $data['token'];
 			}
+			if( isset($data['full_ua']) ){
+				$this->full_ua = $data['full_ua'];
+			}
 		}
 	}
 
@@ -42,7 +45,8 @@ class Equipo extends VO
 		$vec = array();
 		array_push($vec, array( 
 		"id_equipo" => $this->id_equipo,
-		"token" => $this->token
+		"token" => $this->token,
+		"full_ua" => $this->full_ua
 		)); 
 	return json_encode($vec); 
 	}
@@ -52,7 +56,6 @@ class Equipo extends VO
 	  * 
 	  * el identificador de este equipo<br>
 	  * <b>Llave Primaria</b><br>
-	  * <b>Auto Incremento</b><br>
 	  * @access protected
 	  * @var int(6)
 	  */
@@ -66,6 +69,15 @@ class Equipo extends VO
 	  * @var varchar(128)
 	  */
 	protected $token;
+
+	/**
+	  * full_ua
+	  * 
+	  * String de user-agent para este cliente<br>
+	  * @access protected
+	  * @var varchar(256)
+	  */
+	protected $full_ua;
 
 	/**
 	  * getIdEquipo
@@ -84,8 +96,6 @@ class Equipo extends VO
 	  * Set the <i>id_equipo</i> property for this object. Donde <i>id_equipo</i> es el identificador de este equipo.
 	  * Una validacion basica se hara aqui para comprobar que <i>id_equipo</i> es de tipo <i>int(6)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
-	  * No deberias usar setIdEquipo( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
 	  * No deberias usar setIdEquipo( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(6)
@@ -117,6 +127,30 @@ class Equipo extends VO
 	final public function setToken( $token )
 	{
 		$this->token = $token;
+	}
+
+	/**
+	  * getFullUa
+	  * 
+	  * Get the <i>full_ua</i> property for this object. Donde <i>full_ua</i> es String de user-agent para este cliente
+	  * @return varchar(256)
+	  */
+	final public function getFullUa()
+	{
+		return $this->full_ua;
+	}
+
+	/**
+	  * setFullUa( $full_ua )
+	  * 
+	  * Set the <i>full_ua</i> property for this object. Donde <i>full_ua</i> es String de user-agent para este cliente.
+	  * Una validacion basica se hara aqui para comprobar que <i>full_ua</i> es de tipo <i>varchar(256)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(256)
+	  */
+	final public function setFullUa( $full_ua )
+	{
+		$this->full_ua = $full_ua;
 	}
 
 }

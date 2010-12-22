@@ -424,7 +424,8 @@ Aplicacion.Autorizaciones.prototype.listaDetalleCompra = function( id_compra )
                 html += "       <td>precio</td>";
                 html += "   </tr>";
                 
-                class = null;
+                //class es una palabra registrada ! Tronaba en safari
+                //class = null;
 
                 for ( var i = 0; i < r.datos.num_compras; i++ )
                 {
@@ -704,7 +705,8 @@ Aplicacion.Autorizaciones.prototype.listaDetalleVenta = function( id_venta )
                 html += "       <td>precio</td>";
                 html += "   </tr>";
                 
-                class = null;
+                //Class es una palabra registrada !
+                //class = null;
 
                 for ( var i = 0; i < r.datos.num_ventas; i++ )
                 {
@@ -1103,9 +1105,9 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
             for ( var i = 0; i < detalleAutorizacion.productos.length; i++ )
             {
 
-                class = ( i == detalleAutorizacion.productos.length - 1 )? " 'last Autorizaciones-row' " : " 'Autorizaciones-row' ";
+                classe = ( i == detalleAutorizacion.productos.length - 1 )? " 'last Autorizaciones-row' " : " 'Autorizaciones-row' ";
 
-                html += "<tr class = '" + class + "' onClick = '' >";
+                html += "<tr class = '" + classe + "' onClick = '' >";
 
                 html += "   <td>" + detalleAutorizacion.productos[i].id_producto + "</td>";
              //   html += "   <td>" + detalleAutorizacion.productos[i].descripcion + "</td>";

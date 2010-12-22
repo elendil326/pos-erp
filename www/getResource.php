@@ -16,7 +16,7 @@ session_start();
 
 	//incluir jsmin
 	if(_POS_JSMINIFY){
-		require_once("misc/JSMin.php");		
+		require_once("utils/JSMin.php");		
 	}
 
 

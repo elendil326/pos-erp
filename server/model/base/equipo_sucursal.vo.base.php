@@ -61,7 +61,6 @@ class EquipoSucursal extends VO
 	  * id_sucursal
 	  * 
 	  * identifica una sucursal<br>
-	  * <b>Llave Primaria</b><br>
 	  * @access protected
 	  * @var int(6)
 	  */
@@ -110,8 +109,6 @@ class EquipoSucursal extends VO
 	  * Set the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es identifica una sucursal.
 	  * Una validacion basica se hara aqui para comprobar que <i>id_sucursal</i> es de tipo <i>int(6)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
-	  * No deberias usar setIdSucursal( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(6)
 	  */
 	final public function setIdSucursal( $id_sucursal )

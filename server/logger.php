@@ -40,9 +40,9 @@ class Logger
 
         $d = debug_backtrace();
 
-        $out .= " | TRACE:" . $d[0]["file"].":" .$d[1]["function"] . "()";
+        $out .= " | " . $d[1]["function"] . "() in " . substr( strrchr( $d[0]["file"], "/" ), 1 );
 
-        $out .= " | MSG:" . $msg;
+        $out .= " | " . $msg;
 
 
 

@@ -126,6 +126,11 @@ abstract class EquipoDAOBase extends DAO
 			array_push( $val, $equipo->getToken() );
 		}
 
+		if( $equipo->getFullUa() != NULL){
+			$sql .= " full_ua = ? AND";
+			array_push( $val, $equipo->getFullUa() );
+		}
+
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -154,9 +159,10 @@ abstract class EquipoDAOBase extends DAO
 	  **/
 	private static final function update( $equipo )
 	{
-		$sql = "UPDATE equipo SET  token = ? WHERE  id_equipo = ?;";
+		$sql = "UPDATE equipo SET  token = ?, full_ua = ? WHERE  id_equipo = ?;";
 		$params = array( 
 			$equipo->getToken(), 
+			$equipo->getFullUa(), 
 			$equipo->getIdEquipo(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -180,17 +186,18 @@ abstract class EquipoDAOBase extends DAO
 	  **/
 	private static final function create( &$equipo )
 	{
-		$sql = "INSERT INTO equipo ( id_equipo, token ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO equipo ( id_equipo, token, full_ua ) VALUES ( ?, ?, ?);";
 		$params = array( 
 			$equipo->getIdEquipo(), 
 			$equipo->getToken(), 
+			$equipo->getFullUa(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$equipo->setIdEquipo( $conn->Insert_ID() );
+		
 		return $ar;
 	}
 
@@ -249,6 +256,17 @@ abstract class EquipoDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " token = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $equipoA->getFullUa()) != NULL) & ( ($b = $equipoB->getFullUa()) != NULL) ){
+				$sql .= " full_ua >= ? AND full_ua <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " full_ua = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

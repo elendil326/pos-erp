@@ -25,7 +25,7 @@ abstract class EquipoSucursalDAOBase extends DAO
 	  **/
 	public static final function save( &$equipo_sucursal )
 	{
-		if( self::getByPK(  $equipo_sucursal->getIdEquipo() , $equipo_sucursal->getIdSucursal() ) === NULL )
+		if( self::getByPK(  $equipo_sucursal->getIdEquipo() ) === NULL )
 		{
 			try{ return EquipoSucursalDAOBase::create( $equipo_sucursal) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -43,10 +43,10 @@ abstract class EquipoSucursalDAOBase extends DAO
 	  *	@static
 	  * @return @link EquipoSucursal Un objeto del tipo {@link EquipoSucursal}. NULL si no hay tal registro.
 	  **/
-	public static final function getByPK(  $id_equipo, $id_sucursal )
+	public static final function getByPK(  $id_equipo )
 	{
-		$sql = "SELECT * FROM equipo_sucursal WHERE (id_equipo = ? AND id_sucursal = ? ) LIMIT 1;";
-		$params = array(  $id_equipo, $id_sucursal );
+		$sql = "SELECT * FROM equipo_sucursal WHERE (id_equipo = ? ) LIMIT 1;";
+		$params = array(  $id_equipo );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
@@ -154,6 +154,14 @@ abstract class EquipoSucursalDAOBase extends DAO
 	  **/
 	private static final function update( $equipo_sucursal )
 	{
+		$sql = "UPDATE equipo_sucursal SET  id_sucursal = ? WHERE  id_equipo = ?;";
+		$params = array( 
+			$equipo_sucursal->getIdSucursal(), 
+			$equipo_sucursal->getIdEquipo(), );
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ throw new Exception ($e->getMessage()); }
+		return $conn->Affected_Rows();
 	}
 
 
@@ -276,9 +284,9 @@ abstract class EquipoSucursalDAOBase extends DAO
 	  **/
 	public static final function delete( &$equipo_sucursal )
 	{
-		if(self::getByPK($equipo_sucursal->getIdEquipo(), $equipo_sucursal->getIdSucursal()) === NULL) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM equipo_sucursal WHERE  id_equipo = ? AND id_sucursal = ?;";
-		$params = array( $equipo_sucursal->getIdEquipo(), $equipo_sucursal->getIdSucursal() );
+		if(self::getByPK($equipo_sucursal->getIdEquipo()) === NULL) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM equipo_sucursal WHERE  id_equipo = ?;";
+		$params = array( $equipo_sucursal->getIdEquipo() );
 		global $conn;
 
 		$conn->Execute($sql, $params);

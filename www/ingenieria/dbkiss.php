@@ -15,7 +15,7 @@
 // todo: when dbkiss_sql dir is missing, display a message in sql editor that some features won't work (templates, pagination) currently it displays a message to create that dir and EXIT, but should allow basic operations
 // todo: "Insert" link on table view page
 
-ob_start('ob_gzhandler');
+//ob_start('ob_gzhandler');
 
 // Some of the features in the SQL editor require creating 'dbkiss_sql' directory,
 // where history of queries are kept and other data. If the script has permission
@@ -1429,11 +1429,7 @@ function layout()
 	global $sql_area;
 	?>
 		<style>
-		body,table,input,select,textarea { font-family: tahoma; font-size: 11px; }
-		body { margin: 1em; padding: 0; margin-top: 0.5em; }
-		h1, h2 { font-family: arial; margin: 1em 0; }
-		h1 { font-size: 150%; margin: 0.7em 0; }
-		h2 { font-size: 125%; }
+		
 		.ls th { background: #ccc; }
 		.ls th th { background-color: none; }
 		.ls td { background: #f5f5f5; }
@@ -2697,9 +2693,7 @@ function layout_end()
 }
 function powered_by()
 {
-	?>
-		<div style="text-align: center; margin-top: 2em; border-top: #ccc 1px solid; padding-top: 0.5em;">Powered by <a href="http://www.gosu.pl/dbkiss/" target="_blank">dbkiss</a></div>
-	<?php
+    echo "fin";
 }
 
 ?>

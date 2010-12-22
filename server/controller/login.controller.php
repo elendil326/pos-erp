@@ -212,31 +212,54 @@ function sucursalTest( ){
     //obtener el User agent que me envian
     $ua = $_SERVER['HTTP_USER_AGENT'];
 
-    $pos = strrpos( $ua, "sid={" );
+    if(POS_SUCURSAL_TEST_TOKEN == 'FULL_UA'){
 
-    if($pos === FALSE){
-        //no se encuentra la cadena
-        Logger::log("user agent no contiene token !", 1);
+            $equipo = new Equipo();
+            $equipo->setFullUa( $ua );
+            $search = EquipoDAO::search( $equipo );
+
+            if(sizeof($search) != 1){
+                Logger::log("Full UA not found in DB", 2);
+                return false;
+            }
+
+            $equipo = $search[0];
+            Logger::log("Full UA found !", 2);            
+            
+
+    }elseif(POS_SUCURSAL_TEST_TOKEN == 'SID_TOKEN'){
+            $pos = strrpos( $ua, "sid={" );
+
+            if($pos === FALSE){
+                //no se encuentra la cadena
+                Logger::log("user agent no contiene token !", 1);
+                return false;
+            }
+
+
+            //buscar ese token en la lista de quipos
+            $equipoToken = substr($ua, stripos($ua, "sid={") + 5 , 5);
+
+            $equipo = new Equipo();
+            $equipo->setToken( $equipoToken );
+            $search = EquipoDAO::search( $equipo );
+
+            if(sizeof($search) != 1){
+                Logger::log("UA sent token { " . $equipoToken  ." } not found in DB", 2);
+                return false;
+            }
+
+            $equipo = $search[0];
+            Logger::log("UA sent token { " . $equipoToken  ." } found for equipo={$equipo->getIdEquipo()}", 2);
+
+    }else{
+        Logger::log('Modo de verificacion invalido en configuracion.');
         return false;
     }
 
 
-    //buscar ese token en la lista de quipos
-    $equipoToken = substr($ua, stripos($ua, "sid={") + 5 , 5);
 
-    $equipo = new Equipo();
-    $equipo->setToken( $equipoToken );
-    $search = EquipoDAO::search( $equipo );
 
-    if(sizeof($search) != 1){
-        Logger::log("UA sent token { " . $equipoToken  ." } not found in DB", 2);
-        return false;
-    }
-
-    
-    $equipo = $search[0];
-
-    Logger::log("UA sent token { " . $equipoToken  ." } found for equipo={$equipo->getIdEquipo()}", 2);
 
     $esuc = new EquipoSucursal();
     $esuc->setIdEquipo($equipo->getIdEquipo());
