@@ -835,7 +835,8 @@ Ext.regModel('listaDeAutorizacionesModel', {
  */
 Aplicacion.Autorizaciones.prototype.listaDeAutorizaciones = {
     lista : null,
-    lastUpdate : null
+    lastUpdate : null,
+    hash: null
 };
 
 
@@ -879,14 +880,16 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesLoad = function (){
 				return POS.error(e);
 			}
 			
+			
+			//volver a intentar			
 			if( !autorizaciones.success ){
-				//volver a intentar
 				return POS.error(autorizaciones);
 			}
 			
 			
 			this.listaDeAutorizaciones.lista = autorizaciones.payload;
 			this.listaDeAutorizaciones.lastUpdate = Math.round(new Date().getTime()/1000.0);
+			this.listaDeAutorizaciones.hash = autorizaciones.hash;
 			
 			//agregarlo en el store
 			this.listaDeAutorizacionesStore.loadData( autorizaciones.payload );

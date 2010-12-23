@@ -8,7 +8,7 @@
 
 .Keyboard-key{
 		background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(238,238,240)), to(rgb(212,212,217)));
-		margin : 5px;
+		margin : 3px;
 		padding : 10px;
 		float : left;
 		border-style:solid;

@@ -77,9 +77,11 @@ Aplicacion.Inventario.prototype.getConfig = function (){
  * Registra el model para listaInventario
  */
 Ext.regModel('listaInventarioModel', {
+
+
 	fields: [
 		{name: 'descripcion',	  type: 'string'},
-		{name: 'productoID',	 type: 'float'} 
+		{name: 'productoID',	  type: 'float'} 
 	]
 });
 
@@ -137,13 +139,12 @@ Aplicacion.Inventario.prototype.cargarInventario = function ()
 			}
 			
 			this.Inventario.productos = inventario.datos;
-			this.Inventario.productos2 = inventario.datos;
 			this.Inventario.lastUpdate = Math.round(new Date().getTime()/1000.0);
             this.Inventario.hash = inventario.hash;
 
 			//agregarlo en el store
 			this.inventarioListaStore.loadData( inventario.datos );
-            setTimeout( "Aplicacion.Inventario.currentInstance.checkInventarioDbDiff()", POS.CHECK_DB_TIMEOUT );
+
 		},
 		failure: function( response ){
 			POS.error( response );
@@ -153,57 +154,6 @@ Aplicacion.Inventario.prototype.cargarInventario = function ()
 };
 
 
-
-
-
-
-
-
-Aplicacion.Inventario.prototype.checkInventarioDbDiff = function ()
-{
-	
-	Ext.Ajax.request({
-		url: 'proxy.php',
-		scope : this,
-		params : {
-			action : 400,
-            hashCheck : this.Inventario.hash
-		},
-		success: function(response, opts) {
-
-         if(response.responseText.length > 0){
-			try{
-				inventario = Ext.util.JSON.decode( response.responseText );				
-			}catch(e){
-				return POS.error(response, e);
-			}
-
-			
-			if( !inventario.success ){
-				//volver a intentar
-				return this.cargarInventario();
-			}
-			
-			if(DEBUG){
-				console.log("Inventario retrived !", inventario);
-			}
-			
-			this.Inventario.productos = inventario.datos;
-			this.Inventario.productos2 = inventario.datos;
-			this.Inventario.lastUpdate = Math.round(new Date().getTime()/1000.0);
-            this.Inventario.hash = inventario.hash;
-
-			//agregarlo en el store
-			this.inventarioListaStore.loadData( inventario.datos );
-            }
-            setTimeout( "Aplicacion.Inventario.currentInstance.checkInventarioDbDiff()", POS.CHECK_DB_TIMEOUT * 20 );
-		},
-		failure: function( response ){
-			POS.error( response );
-		}
-	}); 
-
-};
 
 
 
@@ -364,7 +314,7 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelCreator = function()
 		items: [{
 			xtype: 'fieldset',
 			title: 'Detalles de Producto',
-			scroll: 'vertical',
+			scroll: false,
 			instructions: '',
 			defaults : {
 				disabled : false

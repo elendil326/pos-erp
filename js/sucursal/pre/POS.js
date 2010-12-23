@@ -24,26 +24,19 @@ POS.currencyFormat = function (num){
 
 
 
-POS.U = {
-	g : null
-};
+
 
 Ext.Ajax.timeout = 5000;
-
-POS.A = {
-    failure : false,
-    sendHeart : true
-};
-
+POS.CHECK_DB_TIMEOUT = 15000;
+POS.A = { failure : false,  sendHeart : true };
+POS.U = { g : null };
 
 
 Ext.Ajax.on("requestexception", function(){
-
     if(!POS.A.failure){
         POS.A.failure = true;
         Ext.getBody().mask("Problemas de conexion, porfavor espere...");
     }
-
 });
 
 
@@ -54,39 +47,78 @@ Ext.Ajax.on("requestcomplete", function(){
         POS.A.failure = false;
         Ext.getBody().unmask();
     }
-
 });
 
 
-function enviarHeartTask(){
-    if(POS.A.sendHeart && !POS.A.failure){
-        Aplicacion.Clientes.currentInstance.checkVentasDbDiff();
-        Aplicacion.Clientes.currentInstance.checkClientesDbDiff();
-    }
+function task(){
 
-    setTimeout("enviarHeartTask()",POS.CHECK_DB_TIMEOUT );
+
+    //enviar hash de inventario
+    Ext.Ajax.request({
+		url: 'proxy.php',
+		scope : this,
+		params : { action : 400, hashCheck : Aplicacion.Inventario.currentInstance.Inventario.hash },
+		success: function(response, opts) {
+			try{ inventario = Ext.util.JSON.decode( response.responseText ); }catch(e){ return; }
+			if( !inventario.success ){ return; }
+			Aplicacion.Inventario.currentInstance.Inventario.productos = inventario.datos;
+			Aplicacion.Inventario.currentInstance.Inventario.lastUpdate = Math.round(new Date().getTime()/1000.0);
+			Aplicacion.Inventario.currentInstance.Inventario.hash = inventario.hash;
+			Aplicacion.Inventario.currentInstance.inventarioListaStore.loadData( inventario.datos );
+		}
+	});
+	
+	
+	
+	
+    //enviar hash de clientes
+    Ext.Ajax.request({
+		url: 'proxy.php',
+		scope : this,
+		params : { action : 300, hashCheck : Aplicacion.Clientes.currentInstance.listaDeClientes.hash },
+		success: function(response, opts) {
+			try{ clientes = Ext.util.JSON.decode( response.responseText ); }catch(e){ return; }
+			if( !clientes.success ){ return ; }
+			Aplicacion.Clientes.currentInstance.listaDeClientes.lista = clientes.datos;
+			Aplicacion.Clientes.currentInstance.listaDeClientes.lastUpdate = Math.round(new Date().getTime()/1000.0);
+			Aplicacion.Clientes.currentInstance.listaDeClientes.hash = clientes.hash;
+			Aplicacion.Clientes.currentInstance.listaDeClientesStore.loadData( clientes.datos );
+		}
+	});
+	
+	
+	
+    //enviar hash de autorizaciones
+	Ext.Ajax.request({
+		url: 'proxy.php',
+		scope : this,
+		params : { action : 207, hashCheck : Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.hash },
+		success: function(response, opts) {
+			try{ autorizaciones = Ext.util.JSON.decode( response.responseText ); }catch(e){ return; }
+			if( !autorizaciones.success ){ return ; }
+			Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lista = autorizaciones.payload;
+			Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lastUpdate = Math.round(new Date().getTime()/1000.0);
+			Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.hash = autorizaciones.hash;
+			Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesStore.loadData( autorizaciones.payload );
+		}
+	});
+	
+	
+	if(POS.A.sendHeart)setTimeout("task()", POS.CHECK_DB_TIMEOUT);
+    
+    //inventario = Aplicacion.Inventario.currentInstance.Inventario.hash;
+    //clientes = Aplicacion.Clientes.currentInstance.listaDeClientes.hash;
+    //autorizaciones = Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.hash;
 }
 
-
-setTimeout("enviarHeartTask()",POS.CHECK_DB_TIMEOUT * 2);
+//incir el heartbeat
+if(POS.A.sendHeart)setTimeout("task()", POS.CHECK_DB_TIMEOUT);
 
 
 POS.error = function (ajaxResponse, catchedError)
 {
 
-/*
-			setTimeout( "Aplicacion.Clientes.currentInstance.checkVentasDbDiff()", POS.CHECK_DB_TIMEOUT );
-            setTimeout( "Aplicacion.Clientes.currentInstance.checkClientesDbDiff()", POS.CHECK_DB_TIMEOUT );
-
-*/
-//    if(ajaxResponse.request.headers && ajaxResponse.status == 0 ){   }
-/*
-	Ext.Msg.alert("Error ", catchedError);
-	console.warn( "POS ERROR ! ");
-	console.warn( "ajaxResponse", ajaxResponse );
-	console.warn( "catchedError", catchedError);	
-*/
 };
 
 
-POS.CHECK_DB_TIMEOUT = 15000;
+

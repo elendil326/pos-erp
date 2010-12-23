@@ -36,16 +36,16 @@ POS.Keyboard.Keyboard = function ( campo, config ){
 	/*
 		campo - Es el campo de text donde se aplicara este teclado
 		config - es un objeto con distintas configuraciones como estas
-			config = {
-				//tipo del teclado a utilizar
-				type : 'alfa' || 'num' || 'alfanum' || 'complete',
+		config = {
+			//tipo del teclado a utilizar
+			type : 'alfa' || 'num' || 'alfanum' || 'complete',
 
-				//texto que tendra el boton de aceptar
-				submitText : 'Aceptar',
+			//texto que tendra el boton de aceptar
+			submitText : 'Aceptar',
 
-				//funcion que se llamara cuando se haga click en aceptar,
-				callback : function
-			}
+			//funcion que se llamara cuando se haga click en aceptar,
+			callback : function
+		}
 	*/
 	if(POS.Keyboard.KeyboardObj){
 		var internalConfig = POS.Keyboard.genHTML( config );
@@ -234,8 +234,8 @@ POS.Keyboard._genHTMLalfa = function (config){
 	
 	return POS.Keyboard._HTMLalfa = {
 		html: html,
-		w : 720,
-		h : 180 
+		w : 690,
+		h : 160 
 	};	
 };
 
@@ -290,8 +290,8 @@ POS.Keyboard._genHTMLalfanum = function (config){
 	
 	return POS.Keyboard._HTMLalfa = {
 		html: html,
-		w : 715,
-		h : 230 
+		w : 677,
+		h : 210 
 	};	
 };
 
@@ -307,7 +307,7 @@ POS.Keyboard._genHTMLnum = function (config){
 		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>4</div>";
 		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>5</div>";
 		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>6</div>";
-		html += "<div class='Keyboard-key ' onclick='POS.Keyboard.callbackFn(  \"_CANCEL_\", false )'>&#9587;</div>";
+		html += "<div class='Keyboard-key ' onclick='POS.Keyboard.callbackFn(  \"_CANCEL_\", false )' style=\"padding-left: 2px;\">Cancelar</div>";
 		
 		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>1</div>";
 		html += "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>2</div>";
@@ -319,8 +319,8 @@ POS.Keyboard._genHTMLnum = function (config){
 
 	return POS.Keyboard._HTMLnum = {
 		html: html,
-		w : 305,
-		h : 225 
+		w : 282,
+		h : 205 
 	};
 };
 

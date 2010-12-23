@@ -280,57 +280,6 @@ Aplicacion.Clientes.prototype.listaDeClientesLoad = function (){
 
 
 
-Aplicacion.Clientes.prototype.checkClientesDbDiff = function ()
-{
-    
-    
-	Ext.Ajax.request({
-		url: 'proxy.php',
-		scope : this,
-		params : {
-			action : 300,
-            hashCheck : this.listaDeClientes.hash
-		},
-		success: function(response, opts) {
-
-			
-            if(response.responseText.length > 0){
-
-                if(DEBUG){
-                    console.log("new db update on clientes ! installing ...");
-                }
-
-
-		        try{
-			        clientes = Ext.util.JSON.decode( response.responseText );
-		        }catch(e){
-			        POS.error(e); 
-                    return;
-		        }
-
-                if(DEBUG){
-                    console.log("new hash : " ,compras.hash );
-                }
-
-			    this.listaDeClientes.lista = clientes.datos;
-			    this.listaDeClientes.lastUpdate = Math.round(new Date().getTime()/1000.0);
-			    this.listaDeClientes.hash = clientes.hash;
-			
-			    //agregarlo en el store
-			    this.listaDeClientesStore.loadData( clientes.datos );
-
-
-                //cargar de nuevo la lista de clientes
-
-            }else{
-
-            }
-
-		}
-	});
-};
-
-
 
 /**
  * Es el Store que contiene la lista de clientes cargada con una peticion al servidor.

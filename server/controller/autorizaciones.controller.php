@@ -52,15 +52,11 @@ function autorizacionesPendientes(  ){
 }//autorizacionesPendientes
 
 
-function autorizacionesSucursal( ){
+function autorizacionesSucursal( $sid ){
 
     $a = new Autorizacion();
-    $a->setIdSucursal( $_SESSION['sucursal'] );
+    $a->setIdSucursal( $sid );
 
-    /*$json = AutorizacionDAO::search($autorizacion);
-
-    printf( '{ "success" : "true", "payload" : %s }', json_encode( $json ));*/
-    
     $array_autorizaciones = array();
     
     $autorizaciones = AutorizacionDAO::search($a);
@@ -68,13 +64,13 @@ function autorizacionesSucursal( ){
     foreach($autorizaciones as $autorizacion)
     {
         $auth = $autorizacion->asArray();
-        array_push( $array_autorizaciones,$auth );
+        array_push( $array_autorizaciones, $auth );
     }
-    
+    return $array_autorizaciones;
 
-    printf( '{ "success" : "true", "payload" : %s }', json_encode( $array_autorizaciones ));
+}
 
-}//autorizacionesSucursal
+
 
 
 function eliminarAutorizacion( $args ){
@@ -941,7 +937,16 @@ if( isset( $args['action'] ) ){
         break;
 
         case 207://ver autorizaciones de su sucursal (gerente)
-            autorizacionesSucursal(  );
+            $json = json_encode( autorizacionesSucursal( $_SESSION['sucursal'] ) );
+            
+            if(isset($args['hashCheck'])){
+                //revisar hashes
+                if(md5( $json ) == $args['hashCheck'] ){
+                    return;
+                }
+            }
+
+	    	printf('{ "success": true, "hash" : "%s" , "payload": %s }',  md5($json), $json );
         break;
 
         case 208:
