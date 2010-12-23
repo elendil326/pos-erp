@@ -130,13 +130,14 @@ function checkCurrentSession()
     $ip = getip();
     if( !(isset( $_SESSION['ip'] ) && $_SESSION['ip'] == $ip) ){
         Logger::log("session[ip] not set or wrong!");
-        Logger::log( "session:" . $_SESSION['ip'] . " actual:" . $ip );
+        Logger::log("session:" . $_SESSION['ip'] . " actual:" . $ip );
         return false;
     }
 
     $user = UsuarioDAO::getByPK( $_SESSION['userid'] );
 
     if($user === null){
+        Logger::log("Usuario en sesion no existe en la base de datos");
         return false;
     }
 
@@ -168,6 +169,7 @@ function checkCurrentSession()
         }
     }
 
+    Logger::log("Sesion actual valida para usuario : {$_SESSSION['userid']}" );
     return true;
 
 }
@@ -177,11 +179,15 @@ function checkCurrentSession()
 
 function logOut( $verbose = true  )
 {
-    Logger::log("Cerrando sesion");
+    
+    if(isset($_SESSION['userid']))
+        Logger::log("Cerrando sesion para {$_SESSION['userid']}");
+    else
+        Logger::log("Cerrando sesion generica");
 
     if($verbose){
         if(isset($_SESSION['grupo'])){
-            if($_SESSION['grupo'] < 2)	
+            if($_SESSION['grupo'] == 1)	
                 	print ('<script>window.location= "./admin/"</script>');
             else
                 	print ('<script>window.location= "."</script>');
