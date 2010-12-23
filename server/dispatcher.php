@@ -12,11 +12,6 @@
 
 
 
-/**
-* cargar configuracion
-*
-* @see config.php
-*/
 require_once('config.php');
 
 
@@ -27,17 +22,8 @@ require_once('logger.php');
 
 
 
-/**
- * iniciar la sesion y comprobar seguridad 
- */
 
-$ss = session_start (  );
 
-if(!$ss){
-    Logger::log("imposible iniciar sesion");
-	echo "{\"success\": false , \"reason\": -1,  \"text\" : \"Imposible iniciar sesion. Debe habilitar las cookies para ingresar.\" }";
-	return;
-}
 
 
 

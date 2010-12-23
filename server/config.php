@@ -68,7 +68,13 @@ session_name("POS_ID");
 session_set_cookie_params ( 0  , '/' );
 
 
+$ss = session_start (  );
 
+if(!$ss){
+    Logger::log("imposible iniciar sesion");
+	echo "{\"success\": false , \"reason\": -1,  \"text\" : \"Imposible iniciar sesion. Debe habilitar las cookies para ingresar.\" }";
+	return;
+}
 
 
 

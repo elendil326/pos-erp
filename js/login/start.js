@@ -51,11 +51,6 @@ function checkCurrentSession(){
 				return;
 			}
 			
-			//hay una sesion activa y valida
-			if(DEBUG){
-				window.location = "proxy.php?DEBUG=true&action=2005";
-				return;
-			}
 
 			window.location = "proxy.php?action=2005";
 			

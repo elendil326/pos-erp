@@ -5,7 +5,6 @@ if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandl
 //requerir la configuracion
 require ( "../server/config.php" );
 
-session_start();
 
 
 /* 

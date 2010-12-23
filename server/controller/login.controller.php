@@ -169,7 +169,7 @@ function checkCurrentSession()
         }
     }
 
-    Logger::log("Sesion actual valida para usuario : {$_SESSSION['userid']}" );
+    Logger::log("Sesion actual valida para usuario : {$_SESSION['userid']}" );
     return true;
 
 }
@@ -219,13 +219,14 @@ function sucursalTest( ){
     $ua = $_SERVER['HTTP_USER_AGENT'];
 
     if(POS_SUCURSAL_TEST_TOKEN == 'FULL_UA'){
-
+            Logger::log("Testing sucursal via " . POS_SUCURSAL_TEST_TOKEN);
             $equipo = new Equipo();
             $equipo->setFullUa( $ua );
             $search = EquipoDAO::search( $equipo );
 
             if(sizeof($search) != 1){
-                Logger::log("Full UA not found in DB", 2);
+                Logger::log("UA:" . $_SERVER['HTTP_USER_AGENT'] . " not found in database", 2);
+
                 return false;
             }
 
@@ -422,7 +423,7 @@ if(isset($args['action'])){
             //revisar estado de sesion en sucursal
 		    if(!sucursalTest()){
                 //si no pasa el test de la sucursal...
-               print(  '{"success": false, "response" : "Para acceder al punto de venta. Debes estar conectado desde una computadora dentro de la sucursal."  }' ) ;
+               print(  '{"success": false, "response" : "Porfavor utilize un punto de venta destinado para esta sucursal."  }' ) ;
 
             }else{
 
@@ -452,7 +453,7 @@ if(isset($args['action'])){
             //login desde la sucursal
 		    if(!sucursalTest()){
                 //si no pasa el test de la sucursal...
-               print(  '{"success": false, "response" : "Para acceder al punto de venta. Debes estar conectado desde una computadora dentro de la sucursal."  }' ) ;
+               print(  '{"success": false, "response" : "Porfavor utilize un punto de venta destinado para esta sucursal."  }' ) ;
             }else{
                 //enviar login
                 login($args['u'], $args['p']);
