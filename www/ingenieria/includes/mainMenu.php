@@ -1,5 +1,5 @@
 <div class="g-section header">
-<a href="http://www.caffeina.mx"><img alt="Caffeina Mexico" height=40 src="resources/logos.png"></a>
+<a href="http://www.caffeina.mx"><img alt="Caffeina Mexico" height=40 src="../media/logos.png"></a>
 <div id="custom-search">
   <input id="q" name="q" type="text"> <input class="cse_submit" id="cse-search-button" onclick="searchQuery()" type="button" value="Buscar">
 </div>

@@ -3,7 +3,30 @@
 
     require_once('model/inventario.dao.php');
     require_once('model/actualizacion_de_precio.dao.php');
-    
+    require_once('model/detalle_inventario.dao.php');
+
+
+
+
+    if(isset($_REQUEST['editar_detalles'])){
+
+        //cambiar los detalles en el inventario maestro
+        $prod = InventarioDAO::getByPK($_REQUEST['id']);
+        $prod->setDescripcion( $_REQUEST['descripcion'] );
+
+        try{
+
+            InventarioDAO::save($prod);
+
+            echo "<div class='success'>Descripcion de producto actualizada correctamente.</div>";
+
+        }catch(Exception $e){
+            DAO::transRollback();
+            echo "<div class='failure'>Error al actualizar: ". $e." </div>";
+        }
+
+    }
+
 
     if(isset($_REQUEST['editar'])){
         //cambiar el precio y costo del producto
@@ -13,11 +36,39 @@
         $na->setPrecioVenta($_REQUEST['venta']);
         $na->setPrecioCompra($_REQUEST['compra']);
         $na->setPrecioIntersucursal($_REQUEST['compra']);
+        
+        //cambiar todos los detalles inventario        
+        $di = new DetalleInventario();
+        $di->setIdProducto( $_REQUEST['id'] );
+        $inventariosSucursales = DetalleInventarioDAO::search( $di );
+
+        foreach ($inventariosSucursales as $i)
+        {
+            $i->setPrecioVenta( $_REQUEST['venta'] );
+        }
+
+
+        //cambiar los detalles en el inventario maestro
+        $prod = InventarioDAO::getByPK($_REQUEST['id']);
+        $prod->setPrecioIntersucursal( $_REQUEST['compra'] );
+        $prod->setCosto( $_REQUEST['compra'] );
 
         try{
+            DAO::transBegin();
+
             ActualizacionDePrecioDAO::save( $na );
+
+            InventarioDAO::save($prod);
+
+            foreach ($inventariosSucursales as $inv)
+            {
+                DetalleInventarioDAO::save($inv);
+            }
+
+            DAO::transEnd();
             echo "<div class='success'>Precio actualizado correctamente.</div>";
         }catch(Exception $e){
+            DAO::transRollback();
             echo "<div class='failure'>Error al actualizar: ". $e." </div>";
         }
 
@@ -56,10 +107,13 @@
 
 
 <h2>Editar descripcion</h2>
+<form action="inventario.php?action=editar&id=<?php echo $general->getIdProducto(); ?>" method="POST">
+<input type="hidden" name="editar_detalles" value="1">
 <table border="0" cellspacing="5" cellpadding="5">
-	<tr><td>Descripcion</td><td><input type="text" value="<?php echo $producto->getDescripcion();?>" size="40"/></td></tr>
-	<tr><td></td><td><input type="button" value="Guardar" size="40"/></td></tr>
+	<tr><td>Descripcion</td><td><input type="text" value="<?php echo $producto->getDescripcion();?>" size="40" name="descripcion"/></td></tr>
+	<tr><td></td><td><input type="submit" value="Guardar" size="40"/></td></tr>
 </table>
+</form>
 
 <h2>Editar Precio y Costo</h2>
 

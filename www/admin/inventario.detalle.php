@@ -15,9 +15,17 @@
 
 
     require_once('model/inventario.dao.php');
+    require_once('model/detalle_venta.dao.php');
     require_once('model/actualizacion_de_precio.dao.php');
-    
     $producto = InventarioDAO::getByPK($_REQUEST['id']);
+
+
+    //obtener todas las fluctuaciones de precio
+    $a = new ActualizacionDePrecio();
+    $a->setIdProducto( $_REQUEST['id'] );
+    $fluctuaciones = ActualizacionDePrecioDAO::search( $a, 'fecha', 'desc' );
+
+    
 
 ?><h2>Detalles</h2>
 
@@ -26,19 +34,52 @@
 <table border="0" cellspacing="5" cellpadding="5">
 	<tr><td>ID Producto</td><td><?php echo $producto->getIdProducto();?></td></tr>
 	<tr><td>Descripcion</td><td><?php echo $producto->getDescripcion();?></td></tr>
-	<tr><td>Costo</td><td><?php echo $producto->getPrecioIntersucursal();?></td></tr>
+	<tr><td>Costo</td><td><?php echo moneyFormat($producto->getPrecioIntersucursal()); ?></td></tr>
 	<tr><td>Medida</td><td><?php echo $producto->getMedida();?></td></tr>
 	<tr><td><input type="button" onclick="window.location='inventario.php?action=editar&id=<?php echo $producto->getIdProducto();?>' " value="Editar" id="" /></td></tr>
 </table>
 </form>
 
 
-<h2>Mapa de fluctuaciones de precio</h2>
+<h2>Fluctuaciones de precio</h2><?php
+
+
+    $header = array( 
+	    "id_actualizacion" => "ID",
+	    "fecha"=> "Descripcion",
+	    "id_producto"=> "Producto",
+	    "id_usuario"=> "Usuario",
+	    "precio_venta"=> "Precio Venta",
+	    "precio_compra"=> "Precio Compra",
+	    "precio_intersucursal"=> "Precio Intersusucursal" );
+
+    $tabla = new Tabla( $header, $fluctuaciones );
+    $tabla->addColRender( "precio_venta", "moneyFormat" ); 
+    $tabla->addColRender( "precio_compra", "moneyFormat" ); 
+    $tabla->addColRender( "precio_intersucursal", "moneyFormat" ); 
+    $tabla->render();
+
+?>
 
 
 	
 
-<h2>Mapa de ventas</h2>
+<h2>Ultimas 100 ventas de este producto</h2><?php
+
+    $dv = new DetalleVenta();
+    $dv->setIdProducto( $_REQUEST['id'] );
+    $res = DetalleVentaDAO::search( $dv, 'id_venta', 'desc' );
+    
+    $header = array( 
+	    "id_venta" => "Venta",
+	    "cantidad"=> "Cantidad",
+	    "precio"=> "Precio unitario" );
+
+    $tabla = new Tabla( $header, $res );
+    $tabla->addColRender( "precio", "moneyFormat" ); 
+    $tabla->render();    
+
+?>
 
 
 

@@ -1,16 +1,8 @@
 <h1>Inventario por sucursal</h1><?php
 
-/*
- * Lista de Clientes
- */ 
-
-
 require_once("controller/inventario.controller.php");
 require_once("controller/sucursales.controller.php");
-
-
-
-
+require_once('model/actualizacion_de_precio.php');
 
 ?><h2>Productos disponibles</h2><?php
 
@@ -36,36 +28,31 @@ require_once("controller/sucursales.controller.php");
 
 
 
-//get sucursales
-$sucursales = listarSucursales();
+    //get sucursales
+    $sucursales = listarSucursales();
 
-foreach( $sucursales as $sucursal ){
+    foreach( $sucursales as $sucursal ){
 	
-
-	print ("<h2>" . $sucursal["descripcion"] . "</h2>");
+	    print ("<h2>" . $sucursal["descripcion"] . "</h2>");
 	
-	//obtener los clientes del controller de clientes
-	$inventario = listarInventario( $sucursal["id_sucursal"] );
+	    $inventario = listarInventario( $sucursal["id_sucursal"] );
 
-	//render the table
-	$header = array( 
-		"productoID" => "ID",
-		"descripcion"=> "Descripcion",
-		"precioVenta"=> "Precio Venta",
-		"existenciasMinimas"=> "Minimas",
-		"existencias"=> "Existencias",
-		"medida"=> "Tipo",
-		"precioIntersucursal"=> "Precio Intersucursal" );
-		
-
+	    $header = array( 
+		    "productoID" => "ID",
+		    "descripcion"=> "Descripcion",
+		    "precioVenta"=> "Precio Venta",
+		    "existenciasMinimas"=> "Minimas",
+		    "existencias"=> "Existencias",
+		    "medida"=> "Tipo",
+		    "precioIntersucursal"=> "Precio Intersucursal" );
 	
-	$tabla = new Tabla( $header, $inventario );
-	$tabla->addColRender( "precioVenta", "moneyFormat" ); 
-	$tabla->addColRender( "precioIntersucursal", "moneyFormat" ); 
-	$tabla->addNoData( "<h3>Esta sucursal no tiene inventario.</h3>"); 
-    $tabla->addOnClick( "productoID", "detalles");
-	$tabla->render();
-}
+	    $tabla = new Tabla( $header, $inventario );
+	    $tabla->addColRender( "precioVenta", "moneyFormat" ); 
+	    $tabla->addColRender( "precioIntersucursal", "moneyFormat" ); 
+	    $tabla->addNoData( "<h3>Esta sucursal no tiene inventario.</h3>"); 
+        $tabla->addOnClick( "productoID", "detalles");
+	    $tabla->render();
+    }
 
 
 
