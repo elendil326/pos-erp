@@ -17,6 +17,7 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 
 
 
+
 <style type="text/css" media="screen">
 	#map_canvas { 
 		height: 200px;
@@ -53,7 +54,12 @@ if(POS_ENABLE_GMAPS){
 
 
   var drawMap = function ( result, status ) {
-	console.log( status, result)
+
+
+    if(result.length == 0){
+        document.getElementById("map_canvas").innerHTML = "<div align='center'> Imposible localizar esta direccion. </div>"; 
+        return;
+    }
 
     var myLatlng = result[0].geometry.location;
 
@@ -61,20 +67,29 @@ if(POS_ENABLE_GMAPS){
       zoom: 18,
       center: myLatlng,
       mapTypeId: google.maps.MapTypeId.HYBRID,
-	navigationControl : true
+	  navigationControl : true
     }
+
 	try{
-	var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    	var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 	}catch(e){
-		
+        document.getElementById("map_canvas").innerHTML = "<div align='center'> Imposible crear el mapa.</div>";
+        return;
 	}
     
+
+    m = new google.maps.Marker({
+        map: map,
+        position: myLatlng
+    });
+
+
   };
 
     function startMap(){
 
 	    GeocoderRequest = {
-		    address : "<?php echo $cliente->getDireccion(); ?>,<?php echo $cliente->getCiudad(); ?>, Mexico"
+		    address : "<?php echo $cliente->getDireccion(); ?>, <?php echo $cliente->getCiudad(); ?>, Mexico"
 	    };
 	    try{
 
@@ -89,14 +104,19 @@ if(POS_ENABLE_GMAPS){
 
     }
 
-		/*
-$(document).ready(function() {
 
-});*/
 
 </script>
 
+<?php
+    if(isset($_REQUEST['success'])){
+        if($_REQUEST['success'] == 'true')
+            echo "<div class='success'>Los detalles se han editado con exito.</div>";            
+        else
+            echo "<div class='failure'>Error al guardas los detalles. Intente de nuevo.</div>";
+    }
 
+?>
 
 <h2>Detalles del cliente</h2>
 <table border="0" cellspacing="5" cellpadding="5">
@@ -217,7 +237,10 @@ $(document).ready(function() {
 	Event.observe(document, 'dom:loaded', function() {
 
         //iniciar mapa
-        startMap();
+
+        <?php 
+            if(POS_ENABLE_GMAPS){ ?>startMap();<?php }
+        ?>
 
 
 	    HumbleFinance.trackFormatter = function (obj) {

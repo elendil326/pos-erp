@@ -98,12 +98,7 @@
 <script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../frameworks/uniform/jquery.uniform.js" type="text/javascript" charset="utf-8"></script> 
 <link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
-
-<script type="text/javascript" charset="utf-8">
-	$(function(){
-      $("input, select").uniform();
-    });
-</script>
+<script type="text/javascript" charset="utf-8">$(function(){$("input, select").uniform();});</script>
 
 
 <h2>Editar descripcion</h2>
@@ -115,8 +110,8 @@
 </table>
 </form>
 
-<h2>Editar Precio y Costo</h2>
 
+<h2>Editar Precio y Costo</h2>
 <form action="inventario.php?action=editar&id=<?php echo $general->getIdProducto(); ?>" method="POST">
 <input type="hidden" name="editar" value="1">
 <table border="0" cellspacing="5" cellpadding="5">

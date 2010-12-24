@@ -12,7 +12,13 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 //titulo
 ?><h1><?php echo $cliente->getNombre(); ?></h1>
 
+<?php
 
+if(isset($_REQUEST['success']) && $_REQUEST['success'] == 'false'){
+   echo "<div class='failure'>Error al guardas los detalles. " . $_REQUEST['reason'] ."</div>";    
+}
+    
+?>
 
 <script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../frameworks/uniform/jquery.uniform.js" type="text/javascript" charset="utf-8"></script> 
@@ -125,17 +131,13 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 	      success: function(data){
 		        response = jQuery.parseJSON(data);
 
-                if(response.success == false){
-                    alert(response.reason);
+
+                if(response.success == "false" || response.success === false){
+                    window.location = 'clientes.php?action=editar&id=<?php echo $_REQUEST['id']; ?>&success=false&reason=' + response.reason;
                     return;
                 }
 
-                if(response.success == "false"){
-                    alert(response.reason);
-                    return;
-                }
-
-                alert("Los datos se han editado con exito !");
+                window.location = 'clientes.php?action=detalles&id=<?php echo $_REQUEST['id']; ?>&success=true';
 	      }
 	    });
     }

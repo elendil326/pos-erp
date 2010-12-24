@@ -1,3 +1,8 @@
+<?php
+if(isset($_REQUEST['success']) && $_REQUEST['success'] == 'false'){
+   echo "<div class='failure'>Error al guardas los detalles. " . $_REQUEST['reason'] ."</div>";    
+}
+?>
 <h1>Editar detalles de sucursal</h1>
 
 
@@ -98,18 +103,13 @@
 	      success: function(data){
 		        response = jQuery.parseJSON(data);
 
-                if(response.success == false){
-                    alert(response.reason);
+                if(response.success == false || response.sucess == "false"){
+                    window.location = 'sucursales.php?action=editar&id=<?php echo $_REQUEST['sid']; ?>&success=false&reason=' + response.reason;
                     return;
                 }
 
-                if(response.success == "false"){
-                    alert(response.reason);
-                    return;
-                }
 
-                alert("Los datos se han editado con exito !");
-                window.location = "sucursales.php?action=lista";
+                window.location = "sucursales.php?action=detalles&id=<?php echo $_REQUEST['sid']; ?>&success=true";
 	      }
 	    });
     }

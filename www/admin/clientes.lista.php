@@ -9,10 +9,6 @@
 
 <h1>Clientes</h1><?php
 
-/*
- * Lista de Clientes
- */ 
-
 
 require_once("controller/clientes.controller.php");
 require_once("controller/sucursales.controller.php");
@@ -35,80 +31,80 @@ require_once("controller/inventario.controller.php");
         window.location = "ventas.php?action=detalles&id=" + vid;
     }
 
-            <?php
+    <?php
 
-            //obtener la fecha de la sucursal que abrio primero
-            $firstSuc = SucursalDAO::getAll(1, 1, 'fecha_apertura', 'ASC' );
-            
-            if(sizeof($firstSuc)!=0){
-                    $primerCliente = $firstSuc[0]->getFechaApertura();
-                    $date = new DateTime($primerCliente);
+    //obtener la fecha de la sucursal que abrio primero
+    $firstSuc = SucursalDAO::getAll(1, 1, 'fecha_apertura', 'ASC' );
+    
+    if(sizeof($firstSuc)!=0){
+            $primerCliente = $firstSuc[0]->getFechaApertura();
+            $date = new DateTime($primerCliente);
 
-                    $now = new DateTime("now");
-                    $offset = $date->diff($now);
-
-
-                    $numClientes = array();
-                    $fechas = array();
-
-                    $n = 0;
-
-                    while($offset->format("%r%a") > -1){
+            $now = new DateTime("now");
+            $offset = $date->diff($now);
 
 
-                        //if($offset->format("%r%a") > -1){
-                        //    echo "OK !\n";
-                        //}
-                        //echo $date->format('Y-m-d') . ":\n";
-                        //echo $offset->format("%r%a") . "\n\n";
+            $numClientes = array();
+            $fechas = array();
+
+            $n = 0;
+
+            while($offset->format("%r%a") > -1){
 
 
-                        //buscar las ventas de todas las sucursales
-			            $date->setTime ( 0 , 0, 0 );
-
-			            $v1 = new Cliente();
-			            $v1->setFechaIngreso( $date->format('Y-m-d H:i:s') );
-
-
-			            $date->setTime ( 23, 59, 59 );
-			            $v2 = new Cliente();
-			            $v2->setFechaIngreso( $date->format('Y-m-d H:i:s') );
-
-			            $results = ClienteDAO::byRange($v1, $v2);
-                        $n += count($results);
-                        array_push( $numClientes, $n );
+                //if($offset->format("%r%a") > -1){
+                //    echo "OK !\n";
+                //}
+                //echo $date->format('Y-m-d') . ":\n";
+                //echo $offset->format("%r%a") . "\n\n";
 
 
-                        array_push( $fechas, $date->format('Y-m-d') );
+                //buscar las ventas de todas las sucursales
+	            $date->setTime ( 0 , 0, 0 );
 
-                        //siguiente dia
-                        $date->add( new DateInterval("P1D") );
-                        $offset = $date->diff($now);
-                    }
-
-
-                    echo "\nvar numClientes = [";
-                    for($i = 0; $i < sizeof($numClientes); $i++ ){
-                        echo  "[" . $i . "," . $numClientes[$i] . "]";
-                        if($i < sizeof($numClientes) - 1){
-                            echo ",";
-                        }
-                    }
-                    echo "];\n";
+	            $v1 = new Cliente();
+	            $v1->setFechaIngreso( $date->format('Y-m-d H:i:s') );
 
 
+	            $date->setTime ( 23, 59, 59 );
+	            $v2 = new Cliente();
+	            $v2->setFechaIngreso( $date->format('Y-m-d H:i:s') );
+
+	            $results = ClienteDAO::byRange($v1, $v2);
+                $n += count($results);
+                array_push( $numClientes, $n );
 
 
-                    echo "var fechas = [";
-                    for($i = 0; $i < sizeof($fechas); $i++ ){
-                        echo  "{ fecha : '" . $fechas[$i] . "'}";
-                        if($i < sizeof($fechas) - 1){
-                            echo ",";
-                        }
-                    }
-                    echo "];\n";	
-        }
-		        ?>
+                array_push( $fechas, $date->format('Y-m-d') );
+
+                //siguiente dia
+                $date->add( new DateInterval("P1D") );
+                $offset = $date->diff($now);
+            }
+
+
+            echo "\nvar numClientes = [";
+            for($i = 0; $i < sizeof($numClientes); $i++ ){
+                echo  "[" . $i . "," . $numClientes[$i] . "]";
+                if($i < sizeof($numClientes) - 1){
+                    echo ",";
+                }
+            }
+            echo "];\n";
+
+
+
+
+            echo "var fechas = [";
+            for($i = 0; $i < sizeof($fechas); $i++ ){
+                echo  "{ fecha : '" . $fechas[$i] . "'}";
+                if($i < sizeof($fechas) - 1){
+                    echo ",";
+                }
+            }
+            echo "];\n";	
+    }
+    ?>
             
 
 
@@ -201,6 +197,7 @@ $clientes = listarClientes();
 $header = array(  "nombre" => "Nombre", "rfc" => "RFC", "direccion" => "Direccion", "ciudad" => "Ciudad"  );
 $tabla = new Tabla( $header, $clientes );
 $tabla->addOnClick("id_cliente", "mostrarDetalles");
+$tabla->addNoData("No hay clientes registrados.");
 $tabla->render();
 
 
@@ -217,6 +214,7 @@ $header = array(  "nombre" => "Nombre", "rfc" => "RFC", "direccion" => "Direccio
 $tabla = new Tabla( $header, $clientes );
 $tabla->addColRender( 'saldo', "moneyFormat" );
 $tabla->addOnClick("id_cliente", "mostrarDetalles");
+$tabla->addNoData("No hay clientes deudores.");
 $tabla->render();
 
 
