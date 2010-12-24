@@ -10,17 +10,8 @@
     <meta charset="utf-8">
     <title>Punto de venta | Ventas</title>
 	
-
-
-	<link rel="stylesheet" type="text/css" href="./../getResource.php?mod=shared&type=css">
+	<link rel="stylesheet" type="text/css" href="./../getResource.php?mod=admin&type=css">
 	<script type="text/javascript" src="./../getResource.php?mod=admin&type=js"></script>
-
-    <link href="./resources/v2.css" rel="stylesheet">
-    <link href="./resources/base.css" rel="stylesheet">
-
-
-    <script src="./resources/core.js"></script>
-    <script src="./resources/toolbar.js"></script>
 
   </head>
   <body>

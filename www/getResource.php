@@ -83,14 +83,7 @@ require ( "../server/config.php" );
 		}
 		
 		
-		//y al final del archivo llamar al javascript que dice que ha terminado, solo si es javascript
-		if($type=="js"){
-            //imprimir que tipo de usuario soy
-            if(isset($_SESSION['grupo']))
-                echo "POS.U.g = " . (($_SESSION['grupo'] == 2) ? "true" : "false" ) . ";";
-
-			?> if(window.JSLoader !== undefined) {	JSLoader.callback(); }	<?php			
-		}
+		
 
 
 	}
@@ -140,6 +133,14 @@ require ( "../server/config.php" );
 			
 			//cargar modulos de sucursal
 			loadDir( "sucursal/pre" , $type );
+
+
+		    if($type=="js"){
+                //imprimir que tipo de usuario soy
+                if(isset($_SESSION['grupo']))
+                    echo "POS.U.g = " . (($_SESSION['grupo'] == 2) ? "true" : "false" ) . ";";
+		    }   
+
 
 			loadDir( "sucursal/apps" , $type );
 						

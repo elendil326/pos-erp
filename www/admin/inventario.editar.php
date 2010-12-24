@@ -1,4 +1,46 @@
-<h1>Editar producto</h1>
+<h1>Editar producto</h1><?php
+
+
+    require_once('model/inventario.dao.php');
+    require_once('model/actualizacion_de_precio.dao.php');
+    
+
+    if(isset($_REQUEST['editar'])){
+        //cambiar el precio y costo del producto
+        $na = new ActualizacionDePrecio();
+        $na->setIdProducto($_REQUEST['id']);
+        $na->setIdUsuario($_SESSION['userid']);
+        $na->setPrecioVenta($_REQUEST['venta']);
+        $na->setPrecioCompra($_REQUEST['compra']);
+        $na->setPrecioIntersucursal($_REQUEST['compra']);
+
+        try{
+            ActualizacionDePrecioDAO::save( $na );
+            echo "<div class='success'>Precio actualizado correctamente.</div>";
+        }catch(Exception $e){
+            echo "<div class='failure'>Error al actualizar: ". $e." </div>";
+        }
+
+    }
+
+
+    $producto = InventarioDAO::getByPK($_REQUEST['id']);
+
+    //obtener la ultima actualizacion de precio para este producto
+    //esos son sus detalles "generales"
+    $a = new ActualizacionDePrecio();
+    $a->setIdProducto($producto->getIdProducto());
+    $actualizaciones = ActualizacionDePrecioDAO::search($a, 'fecha', 'desc');
+
+    if(sizeof($actualizaciones) <= 0){
+        Logger::log("No hay registro de actualizacion de precio para producto :" . $producto->getIdProducto());
+    }
+    
+    $general = $actualizaciones[0];
+
+
+
+?>
 
 
 
@@ -11,15 +53,6 @@
       $("input, select").uniform();
     });
 </script>
-<?php
-
-
-    require_once('model/inventario.dao.php');
-    require_once('model/actualizacion_de_precio.dao.php');
-    
-    $producto = InventarioDAO::getByPK($_REQUEST['id']);
-
-?>
 
 
 <h2>Editar descripcion</h2>
@@ -28,21 +61,16 @@
 	<tr><td></td><td><input type="button" value="Guardar" size="40"/></td></tr>
 </table>
 
-
-
-
-
-
-
-
 <h2>Editar Precio y Costo</h2>
 
+<form action="inventario.php?action=editar&id=<?php echo $general->getIdProducto(); ?>" method="POST">
+<input type="hidden" name="editar" value="1">
 <table border="0" cellspacing="5" cellpadding="5">
-	<tr><td>Costo / Precio intersucursal </td><td><input type="text" value="<?php echo $producto->getCosto();?>" size="40"/></td></tr>
-	<tr><td>Precio a la venta</td><td><input type="text" value="FALTA" size="40"/></td></tr>
-	<tr><td></td><td><input type="button" value="Guardar" size="40"/></td></tr>
+	<tr><td>Costo / Precio intersucursal </td><td>  <input type="text" name="compra" value="<?php echo $general->getPrecioCompra();?>" size="40"/></td></tr>
+	<tr><td>Precio a la venta</td><td>              <input type="text" name="venta" value="<?php echo $general->getPrecioVenta(); ?>" size="40"/></td></tr>
+	<tr><td></td><td>                               <input type="submit" value="Guardar" size="40"/></td></tr>
 </table>
-	
+</form>	
 
 
 
