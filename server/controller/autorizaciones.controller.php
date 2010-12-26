@@ -55,12 +55,15 @@ function autorizacionesPendientes(  ){
 function autorizacionesSucursal( $sid ){
 
     $a = new Autorizacion();
+
     $a->setIdSucursal( $sid );
 
-    $array_autorizaciones = array();
+    
     
     $autorizaciones = AutorizacionDAO::search($a);
-    
+
+    $array_autorizaciones = array();
+
     foreach($autorizaciones as $autorizacion)
     {
         $auth = $autorizacion->asArray();
@@ -72,32 +75,6 @@ function autorizacionesSucursal( $sid ){
 
 
 
-
-function eliminarAutorizacion( $args ){
-
-    if(!isset($args['id_autorizacion'])) 
-    {
-        die('{"success": false, "reason": "No hay parametros para ingresar." }');
-    }
-
-    $autorizacion = new Autorizacion();
-    $autorizacion->setIdAutorizacion( $args['id_autorizacion'] );
-
-    try{
-        if( AutorizacionDAOBase::delete( $autorizacion ) < 1 )
-        {
-            die('{"success": false, "reason": "Verifique que exista la autorizacion ' . $args['id_autorizacion'] . '." }');
-        }
-        else
-        {
-            printf( '{ "success" : "true" }' );
-        }
-    }
-    catch(Exception $e)
-    {
-        die('{"success": false, "reason": "' . $e . '" }');
-    }
-}
 
 
 function surtirProducto($args){
@@ -321,9 +298,12 @@ function detalleAutorizacion( $args ){
 //el admin puede surtir productos de la nada a las sucursales
 function surtirProductosSucursal( $args ){
 
+    DAO::transBegin();
 
     if( !isset($args['data']) || !isset($args['id_sucursal']) )
     {
+        Logger::log("Faltan parametros para surtir sucursal.");
+        DAO::transRollback();
         die('{"success": false, "reason": "Faltan parametros." }');
     }
 
@@ -333,15 +313,20 @@ function surtirProductosSucursal( $args ){
     }
     catch(Exception $e)
     {
+        Logger::log("JSON invalido para surtir sucursal.");
+        DAO::transRollback();
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
-    $autorizacion = new Autorizacion();
+    if( isset($args['responseToAut']) && $args['responseToAut'] !== "null"){
+        $autorizacion = AutorizacionDAO::getByPK( $args['responseToAut'] );
+    }else{
+        $autorizacion = new Autorizacion();        
+    }
+
 
     $autorizacion->setIdUsuario( '-1' );
-
     $autorizacion->setEstado( '3' );
-
     $autorizacion->setIdSucursal( $args['id_sucursal'] );
 
     $time = strftime( "%Y-%m-%d-%H-%M-%S", time() );
@@ -359,21 +344,21 @@ function surtirProductosSucursal( $args ){
 
     try
     {
-        if( AutorizacionDAO::save( $autorizacion ) > 0 )
-        {
-            printf( '{ "success" : "true" }' );
-        }
-        else
-        {
-            die( '{ "success" : "false" , "reason" : "Error al cambiar el estado de la autorización."}' );
-        }
+        AutorizacionDAO::save( $autorizacion );
+        printf( '{ "success" : "true" }' );
+
     }
     catch(Exception $e)
     {
+
+        DAO::transRollback();
+        Logger::log("Imposible guardar autorizacion: " . $e);
         die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorización."}' );
     }
 
 
+    DAO::transEnd();
+    Logger::log("Surtir sucursal exitoso. Autorizacion=" . $autorizacion->getIdAutorizacion() );
 }
 
 
@@ -997,9 +982,7 @@ if( isset( $args['action'] ) ){
 
         break;
 
-        case 212://eliminar autorizacion de la lista de autorizaciones (gerente)
-            eliminarAutorizacion( $args );
-        break;
+ 
 
         case 213://detalle de autorizacion (admin)
             detalleAutorizacion( $args );

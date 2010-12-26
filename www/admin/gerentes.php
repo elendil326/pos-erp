@@ -9,7 +9,6 @@
 <html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <title>Punto de venta | Gerentes</title>
-	
 
 	<link rel="stylesheet" type="text/css" href="./../getResource.php?mod=admin&type=css">
 	<script type="text/javascript" src="./../getResource.php?mod=admin&type=js"></script>
@@ -21,7 +20,16 @@
     <?php include_once("includes/mainMenu.php"); ?>
 	
 	<div class="g-section g-tpl-160 main">
-	
+	<?php
+    if(isset($_REQUEST['success'])){
+
+        if($_REQUEST['success'] == 'true'){
+            echo "<div class='success'>" . $_REQUEST['reason'] . "</div>";
+        }else{
+            echo "<div class='failure'>". $_REQUEST['reason'] ."</div>";
+        }
+    }
+    ?>
 	<?php 
 		switch( $_GET["action"] )
 		{

@@ -20,18 +20,26 @@
         
 	  <?php include_once("includes/mainMenu.php"); ?>
 
+        <table>
+        <tr>
+            <td>
+            <img src='../media/line_chart.png'>        
+            </td>
+        <td valign='top'>
       <h1>
        Centro de Administracion
       </h1>
-      <p>
-        Este punto de venta es una solución de analítica web para empresas que proporciona información
-        muy valiosa sobre el tráfico del sitio web y la eficacia del plan de marketing. Ahora,
-        gracias a unas funciones potentes, flexibles y fáciles de usar, podrá ver y analizar el
-        tráfico desde una perspectiva totalmente distinta. Google Analytics le ayudará a diseñar
-        anuncios más orientados, a mejorar sus iniciativas de marketing y a crear sitios web que
-        generen más conversiones.
-      </p>
-
+            <p>
+            Este punto de venta es una solución de analítica web para empresas que proporciona información
+            muy valiosa sobre el tráfico del sitio web y la eficacia del plan de marketing. Ahora,
+            gracias a unas funciones potentes, flexibles y fáciles de usar, podrá ver y analizar el
+            tráfico desde una perspectiva totalmente distinta. Google Analytics le ayudará a diseñar
+            anuncios más orientados, a mejorar sus iniciativas de marketing y a crear sitios web que
+            generen más conversiones.
+            </p>
+        </td>
+        </tr>
+        </table>
 
 
 	<?php include_once("includes/footer.php"); ?>

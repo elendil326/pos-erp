@@ -1,0 +1,30 @@
+.success{
+    background-image: url( media/icons/s_success.png );
+    background-color: honeyDew;
+    background-position: 10px 50%;
+    background-repeat: no-repeat;
+    border: 2px solid lime;
+    color: black;
+    margin: 0.3em 0px 0px;
+    padding: 0.1em 0.1em 0.1em 36px;
+}
+
+
+.failure{
+    background-image: url( media/icons/s_error.png );
+    background-position: 10px 50%;
+    background-repeat: no-repeat;
+    border: 2px solid #ff0000;;
+
+    margin: 0.3em 0px 0px;
+    padding: 0.1em 0.1em 0.1em 36px;
+
+/*    background-color:   #FFFFCC;
+    color:              #ff0000;*/
+
+  background-color: #c00;
+/*  padding:3px;*/
+  color:#fff;
+  font-weight:bold;
+  /*text-align:center;*/
+}

@@ -115,13 +115,13 @@
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    alert(response.reason);
+                    window.location = "gerentes.php?action=nuevo&success=false&reason=" + response.reason;
                     return;
                 }
 
 
-                alert("Los datos se han editado con exito !");
-                window.location = 'gerentes.php?action=lista';
+                reason = "Los datos se han editado con exito !";
+                window.location = 'gerentes.php?action=lista&success=true&reason=' + reason;
 	      }
 	    });
     }

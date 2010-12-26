@@ -7,7 +7,7 @@
 
 
 require_once('controller/autorizaciones.controller.php');
-
+require_once('model/usuario.dao.php');
 
 
 
@@ -28,8 +28,23 @@ function renderParam( $json )
     return $obj->descripcion;
 }
 
+function renderUsuario($id)
+{
+    $foo = UsuarioDAO::getByPK( $id );
+    return $foo->getNombre();
+}
+
+function renderSucursal($id)
+{
+    $foo = SucursalDAO::getByPK( $id );
+    return $foo->getDescripcion();
+}
+
+
 $tabla = new Tabla($header, $autorizaciones );
 $tabla->addColRender("parametros", "renderParam");
+$tabla->addColRender("id_usuario", "renderUsuario");
+$tabla->addColRender("id_sucursal", "renderSucursal");
 $tabla->addOnClick("id_autorizacion", "detalle");
 $tabla->addNoData("No hay autorizaciones pendientes");
 $tabla->render();

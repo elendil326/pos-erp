@@ -1,12 +1,5 @@
 <?php
 
-if(isset($_REQUEST['success'])){
-    if($_REQUEST['success'] == 'true')
-        echo "<div class='success'>Los detalles se han editado con exito.</div>";            
-    else
-        echo "<div class='failure'>Error al guardas los detalles. Intente de nuevo.</div>";
-}
-
 
 require_once("controller/sucursales.controller.php");
 require_once("controller/ventas.controller.php");
@@ -52,7 +45,9 @@ if(POS_ENABLE_GMAPS){
 	<tr><td><b>Gerente</b></td><td>
         <?php 
             $gerente = UsuarioDAO::getByPK( $sucursal->getGerente() );
+            echo "<a href='gerentes.php?action=detalles&id=". $sucursal->getGerente() ."'>";
             echo $gerente->getNombre();
+            echo "</a>";
         ?>
     </td></tr>
 	<tr><td><b>ID</b></td><td><?php echo $sucursal->getIdSucursal(); ?></td></tr>
@@ -271,7 +266,7 @@ if(POS_ENABLE_GMAPS){
 
 </script>
 
-<h2>Ventas en el ultimo dia</h2>
+<h2><img src='../media/icons/basket_go_32.png'>&nbsp;Ventas en el ultimo dia</h2>
 
 <?php
 
@@ -353,7 +348,7 @@ if(POS_ENABLE_GMAPS){
 
 
 
-<h2>Personal</h2><?php
+<h2><img src='../media/icons/users_business_32.png'>&nbsp;Personal</h2><?php
 
     $empleados = listarEmpleados($_REQUEST['id']);
  
@@ -370,6 +365,7 @@ if(POS_ENABLE_GMAPS){
 
     $tabla = new Tabla( $header, $empleados );
     $tabla->addColRender("salario", "moneyFormat");
+    $tabla->addNoData("Esta sucursal no cuenta con nigun empleado.");
     $tabla->render();
 
 
@@ -401,7 +397,7 @@ if(POS_ENABLE_GMAPS){
 
 
 
-<h2>Inventario actual</h2><?php
+<h2><img src='../media/icons/window_app_list_chart_32.png'>&nbsp;Inventario actual</h2><?php
 	
 	//obtener los clientes del controller de clientes
 	$inventario = listarInventario( $_REQUEST['id'] );
@@ -433,7 +429,8 @@ if(POS_ENABLE_GMAPS){
 	$tabla = new Tabla( $header, $inventario );
 	$tabla->addColRender( "precioVenta", "moneyFormat" ); 
 	$tabla->addColRender( "precioIntersucursal", "moneyFormat" ); 
-	$tabla->addColRender( "existencias", "colorExistencias" ); 
+	$tabla->addColRender( "existencias", "colorExistencias" );
+    $tabla->addNoData("Esta sucursal no cuenta con ningun producto en su inventario.");
 	$tabla->render();
 ?>
 
@@ -445,7 +442,8 @@ if(POS_ENABLE_GMAPS){
 
 
 
-<h2>Autorizaciones pendientes</h2><?php
+
+<h2><img src='../media/icons/email_forward_32.png'>&nbsp;Autorizaciones pendientes</h2><?php
 	
 
     $autorizacion = new Autorizacion();
@@ -490,7 +488,7 @@ if(POS_ENABLE_GMAPS){
 
 
 
-<h2>Clientes que se registraron en esta sucursal</h2><?php
+<h2><img src='../media/icons/user_add_32.png'>&nbsp;Clientes que se registraron en esta sucursal</h2><?php
 	
 	$foo = new Cliente();
 	$foo->setActivo(1);
@@ -506,6 +504,7 @@ if(POS_ENABLE_GMAPS){
     $header = array(  "nombre" => "Nombre", "rfc" => "RFC", "direccion" => "Direccion", "ciudad" => "Ciudad"  );
     $tabla = new Tabla( $header, $clientes );
     $tabla->addOnClick("id_cliente", "mostrarDetalles");
+    $tabla->addNoData("Ningun cliente se ha registrado en esta sucursal.");
     $tabla->render();
 
 
@@ -514,7 +513,8 @@ if(POS_ENABLE_GMAPS){
 
 
 
-<h2>Flujo de efectivo desde el ultimo corte</h2><?php
+
+<h2><img src='../media/icons/window_app_list_chart_32.png'>&nbsp;Flujo de efectivo desde el ultimo corte</h2><?php
 
     $flujo = array();
 

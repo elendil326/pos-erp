@@ -59,7 +59,7 @@ Aplicacion.Autorizaciones.prototype.getConfig = function (){
 		    }]
 	    },
 	    {
-	        text: 'Historial',
+	        text: 'Autorizaciones de hoy',
 	        card: Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel,
 	        leaf: true
 	    }]
@@ -112,7 +112,6 @@ Aplicacion.Autorizaciones.prototype.nueva.creditoModificarPanelShow = function( 
     }
 
     //poner los valores del cliente en la forma
-    console.log( cliente );
     Ext.getCmp("Autorizaciones-CreditoIdCliente").setValue(cliente.data.id_cliente);
     Ext.getCmp("Autorizaciones-CreditoCliente").setValue(cliente.data.nombre);
     Ext.getCmp("Autorizaciones-CreditoActual").setValue( POS.currencyFormat( cliente.data.limite_credito) );
@@ -848,10 +847,13 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizaciones = {
  */
 Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesStore = new Ext.data.Store({
     model: 'listaDeAutorizacionesModel',
-    sorters: 'fecha_peticion',
-           
+    sorters: 'fecha',
+
+    groupDir: 'DESC',
+
     getGroupString : function(record) {
-        return record.get('id_autorizacion');
+        json = Ext.util.JSON.decode( record.get('parametros') );
+        return json.descripcion;
     }
 });
 
@@ -903,45 +905,8 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesLoad = function (){
 };
 
 
-Aplicacion.Autorizaciones.prototype.eliminarAutorizacion = function(){
 
-    var values = Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionFormPanel.getValues();
 
-    Ext.Ajax.request({
-        url: 'proxy.php',
-        scope : this,
-        params : {
-            action : 212,
-            id_autorizacion : values.id_autorizacion
-        },
-        success: function(response, opts) {
-            try{
-                autorizaciones = Ext.util.JSON.decode( response.responseText );             
-            }catch(e){
-                return POS.error(e);
-            }
-            
-            if( !autorizaciones.success ){
-                //volver a intentar
-                //return POS.error(autorizaciones);
-                Ext.Msg.alert("Autorizaciones","Error: " + r.reason);
-                return;
-            }
-
-            Ext.getCmp('detalleAutorizacionPanel').hide();
-
-            Ext.Msg.alert("Autorizaciones","Autorizacion eliminada del Historial");
-
-            //recargamos la lista de aurorizaciones
-            Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesLoad();
-
-        },
-        failure: function( response ){
-            POS.error( response );
-        }
-    });
-
-}
 
 
 //surte al inventario los productos mandados por le admin
@@ -982,8 +947,6 @@ Aplicacion.Autorizaciones.prototype.surtirAutorizacion = function(  ){
             //cambiamos la card
              sink.Main.ui.setActiveItem( Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel , 'slide');
             
-            //recargar el inventario
-            Aplicacion.Inventario.currentInstance.checkInventarioDbDiff();
 
         },
         failure: function( response ){
@@ -997,6 +960,9 @@ Aplicacion.Autorizaciones.prototype.surtirAutorizacion = function(  ){
 Aplicacion.Autorizaciones.prototype.detalleAutorizacion = null;
 
 Aplicacion.Autorizaciones.prototype.detalleAutorizacionFormPanel = null;
+
+
+
 
 //se muestran los detalles de la autorizacion
 Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( autorizacion ){
@@ -1019,12 +985,23 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
     //almacenara los items del formulario
     var itemsForm = [];
 
+
+
+    //altura del panel qeu contendra el form panel
+    var height;
+
+    itemsForm.push(
+        new Ext.form.Text({
+            label:'Tipo de autorizacion',
+            value:detalleAutorizacion.descripcion
+        })
+    );
+
     itemsForm.push(
         new Ext.form.Text({name:'clave', label: 'Clave', value:detalleAutorizacion.clave })
     );
 
-    //altura del panel qeu contendra el form panel
-    var height;
+    height = 375;
 
     //creamos los items para el detalleAutorizacionFormPanel
     switch( detalleAutorizacion.clave )
@@ -1138,6 +1115,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
 
     }
 
+    /*
     if( autorizacion.data.estado == '1' || autorizacion.data.estado == '2' || autorizacion.data.estado == '4' )
     {
         itemsForm.push(
@@ -1147,7 +1125,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
 
         height += 50;
 
-    }
+    }*/
 
     if( autorizacion.data.estado == '3')
     {
@@ -1197,35 +1175,36 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanel = null;
  */
 Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanelCreator = function (){
 
-    this.listaDeAutorizacionesPanel = new Ext.form.FormPanel({
+
+    this.listaDeAutorizacionesPanel = new Ext.Panel({
+        layout: Ext.is.Phone ? 'fit' : {
+            type: 'vbox',
+            align: 'center',
+            pack: 'center'
+        },
         items: [{
-            xtype: 'fieldset',
-            title: 'Ver detalle de autorización',
-            instructions: 'Seleccione una autorizacón para ver su detalle.',
-            items: [{
-                width : '100%',
-                height : 350, 
-                padding : 2,
-                xtype: 'list',
-                store: this.listaDeAutorizacionesStore,
-                itemTpl: '<div class="listaDeAutorizacionesAutorizacion"><b class = "Autorizaciones-margin ">ID:</b>{id_autorizacion}   <b class = "Autorizaciones-margin ">Estado:</b> {estado} <b class = "Autorizaciones-margin ">Fecha:</b> {fecha_peticion}</div>',
-                grouped: true,
-                indexBar: true,
-                listeners : {
-                    "selectionchange"  : function ( view, nodos, c ){
-                        if(nodos.length > 0){
-                            //poner los valores del cliente en la forma
-                            Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionPanelShow( nodos[0] );
-                        }
-    
-                        //deseleccinar el cliente
-                        view.deselectAll();
-                        }
+			width : '100%',
+			height: '100%',
+            xtype: 'list',
+            store: this.listaDeAutorizacionesStore,
+            itemTpl: '<div class="listaDeAutorizacionesAutorizacion"><b class = "Autorizaciones-margin ">ID:</b>{id_autorizacion}   <b class = "Autorizaciones-margin ">Estado:</b> {estado} <b class = "Autorizaciones-margin ">Fecha:</b> {fecha_peticion}</div>',
+            grouped: true,
+            indexBar: false,
+            listeners : {
+                "selectionchange"  : function ( view, nodos, c ){
+                    if(nodos.length > 0){
+                        //poner los valores del cliente en la forma
+                        Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionPanelShow( nodos[0] );
                     }
-            }]
+
+                    //deseleccinar el cliente
+                    view.deselectAll();
+                    }
+                }
         }]
+
     });
-    
+
     Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel = this.listaDeAutorizacionesPanel;
     
 };

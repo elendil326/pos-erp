@@ -6,17 +6,33 @@
     <title>Punto de venta | Administracion</title>
 	
     <style>
-    .g-doc-800 {
-    margin: 0px auto;
-    min-width: 750px;
-    text-align: left;
-    width: 56.3em;
+        html,body,div,h1,h2,h3,h4,h5,h6,p,pre,abbr,acronym,blockquote,img,dl,dt,dd,ol,ul,li,table,caption,tbody,tfoot,thead,tr,th,td,form,fieldset,embed,object,applet {
+border:0;
+margin:0;
+padding:0;
+}
+
+body {
 direction:ltr;
 font-size:62.5%;
 font-family:arial,sans-serif;
-  color: #666;
+color:#000;
+/* background:#fff; */
 padding:1.3em 1.5em 1.5em;
-    }
+}
+
+tr:hover{
+/*	background-color: #DBDBDB; */
+}
+
+th{
+	padding-left: 5px;
+}
+
+td{
+	padding-left: 5px;
+}
+
 a {
 color:#11c;
 }
@@ -28,6 +44,18 @@ color:#c11;
 a:visited {
 color:#551a8b;
 }
+
+table {
+border-collapse:collapse;
+border-spacing:0;
+empty-cells:show;
+border-width:0;
+}
+/*
+ol {
+margin:0 0 1em 2.3em;
+}*/
+
 p,pre {
 margin:0 0 1em;
 }
@@ -35,11 +63,126 @@ margin:0 0 1em;
 li {
 margin:0 0 .5em;
 }
-
+/*
 blockquote {
 margin:0 2em 1em;
+}*/
+
+h1 {
+font-size:1.3em;
+margin:0 0 .7em;
 }
 
+h2,h3 {
+font-size:1.1em;
+margin:0 0 .9em;
+}
+
+h4,h5,h6,table {
+font-size:1em;
+margin:0 0 1em;
+}
+
+sup,sub {
+font-size:.7em;
+}
+
+input,select,textarea,option {
+font-family:inherit;
+font-size:inherit;
+}
+
+.g-doc,.g-doc-800,.g-doc-1024 {
+font-size:1.3em;
+}
+
+
+
+
+/*
+.g-doc-1024 {
+width:71.313em;
+min-width:950px;
+text-align:left;
+margin:0 auto;
+}*/
+
+.g-doc-800 {
+width:56.3em;
+min-width:750px;
+text-align:left;
+margin:0 auto;
+}
+
+.g-section:after {
+content:".";
+display:block;
+height:0;
+clear:both;
+visibility:hidden;
+}
+
+.g-unit .g-section:after {
+clear:none;
+}
+
+
+.g-section,.g-unit {
+zoom:1;
+}
+
+.header img {
+float:left;
+}
+
+.standard .header h1 {
+float:left;
+color:#333;
+font-weight:400;
+font-size:1.85em;
+margin:.62em 0 0 .5em;
+}
+
+.header span {
+float:right;
+/* margin:.4em 0 0; */
+}
+
+.standard .header span {
+margin:1.2em 0 0;
+}
+
+.footer {
+/*    background-image: url('media/logo_simbolo.png');
+    background-position: 10px 50%;
+    background-repeat: no-repeat;*/
+    text-align:center;
+    color:#777;
+    margin:3em 0 0;
+    height: 50px;
+}
+
+
+
+ul,dd {
+margin:0 0 1em 2em;
+}
+
+th,caption,.g-split .g-first,.standard .footer.side {
+text-align:left;
+}
+
+
+
+body{
+  background-image: url('media/ga2-orange-bar.gif');
+  background-repeat:repeat-x;
+  background-position:0 58px;
+  color: #666;
+}
+a{
+  color: #0083c8;
+}
 h1,h2,h4,h5,a:hover{
   color: #f70;
 }
@@ -64,6 +207,114 @@ h3{
   color: #666;
   margin:10px 0;
 }
+
+
+
+
+#customSearch,
+#custom-search,
+#languageSelector{
+  float:right;
+}
+/*TOP NAV*/
+.ga-container-nav-top{
+  position:relative;
+  top:5px;
+  height:43px;
+  clear:both;
+}
+.ga-container-nav-top ul {
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+.ga-container-nav-top ul li,
+.ga-container-nav-top ul li.last,
+.ga-container-nav-top ul li:hover.last {
+  display:inline-block;
+  float:left;
+  font-size:13px;
+  background:url('media/ga2-orange-bar-divider.gif') top left no-repeat;
+  height:33px;
+}
+.ga-container-nav-top ul li:hover,
+.ga-container-nav-top ul li.hover {
+  background:url('media/ga2-orange-bar-hover.gif') top left no-repeat;
+}
+.ga-container-nav-top ul li a {
+  padding:10px 10px 2px 15px;
+  color:#fff;
+  display:inline-block;
+  width:auto;
+  text-decoration:none;
+  font-weight:normal;
+  outline:none;
+}
+.ga-container-nav-top ul li ul {
+  -moz-box-shadow: 0 3px 7px #ccc;
+  -webkit-box-shadow: 0 3px 7px #ccc;
+  box-shadow: 0 3px 7px #ccc;
+  background:#fff;
+  display:none;
+  position:absolute;
+  z-index:1;
+  border:1px solid #dfdfdf;
+  border-top-color:#ce6000;
+}
+.ga-container-nav-top ul li ul li {
+  width:100%;
+  height:auto;
+  background:#fff;
+  margin:0;
+  padding:0;
+  overflow:hidden;
+}
+.ga-container-nav-top ul li ul li a {
+  width:100%;
+  display:block;
+  height:auto;
+  color:#5c98da;
+  font-weight:normal;
+  padding:11px 15px 10px 15px !important;
+  background-color:#fff;
+  background-position:3px 3px !important;
+  background-repeat:no-repeat;
+  outline:none;
+}
+.ga-container-nav-top ul li ul li a:hover {
+  background-color:#f70;
+  color:#fff;
+}
+.ga-container-nav-top{
+  width:100%;
+  position:relative;
+}
+.ga-container-nav-top ul li{
+  margin:0
+}
+.ga-toolbar ul li ul li ul{
+  margin-top:77px;
+  z-index:10;
+}
+
+.footer{
+  border-top: 1px solid #ccc;
+  padding-top:10px;
+}
+.ga-clear{
+  clear: both;
+}
+p.content{
+  margin-top:5px;
+}
+div.header{
+  margin-bottom:20px;
+}
+ul li {
+  margin:0;
+  padding:0;
+}
+
     </style>
 
     <script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
@@ -84,19 +335,22 @@ h3{
   <body>
     <div class="g-doc-800" id="g-doc">
         
-	  <img src="../media/logos.png">
+	  <img src="../media/logo_pos.png">
 
-      <h1>
-       Inicio de sesion
-      </h1>
-
+    
+    <div align='center'>
     <form id="login">
-    <table border="0" cellspacing="5" cellpadding="5">
-	    <tr><td>Usuario</td><td><input  type="text" id="usr" size="40"/></td></tr>
-	    <tr><td>Clave</td><td><input    type="password" id="pass" size="40"/></td></tr>
-	    <tr><td></td><td><input type="button" onClick="doStart()" value="Iniciar sesion"/> </td></tr>
-    </table>
+        <h1>Inicio de sesion</h1>
+        <table border="1" cellspacing="5" cellpadding="5">
+<!--            <tr><td rowspan=5><img src='../media/cash_register.png'></td></tr> -->
+            <tr><td rowspan=5><img src='../media/safe.png'></td></tr>
+	        <tr><td></td><td>Usuario</td>    <td><input type="text" id="usr" size="40"/></td></tr>
+	        <tr><td></td><td>Contrase&ntilde;a</td>      <td><input type="password" id="pass" size="40"/></td></tr>
+	        <tr><td></td><td></td>           <td><input type="button" onClick="doStart()" value="Iniciar sesion"/></td></tr>
+	        <tr><td></td><td></td>           <td></td></tr>
+        </table>
     </form>
+    </div>
 	<?php include_once("includes/footer.php"); ?>
     </div>
   

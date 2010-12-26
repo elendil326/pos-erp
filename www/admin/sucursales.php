@@ -18,7 +18,17 @@
     <div class="g-doc-800" id="g-doc">
         
     <?php include_once("includes/mainMenu.php"); ?>
-		
+
+    <?php
+    if(isset($_REQUEST['success'])){
+
+        if($_REQUEST['success'] == 'true'){
+            echo "<div class='success'>" . $_REQUEST['reason'] . "</div>";
+        }else{
+            echo "<div class='failure'>". $_REQUEST['reason'] ."</div>";
+        }
+    }
+    ?>		
 	<?php 
 		switch( $_GET["action"] )
 		{

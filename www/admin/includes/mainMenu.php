@@ -1,11 +1,13 @@
 <div class="g-section header">
-<a href="http://www.caffeina.mx"><img alt="Caffeina Mexico" height=40 src="../media/logos.png"></a>
+<a href="./"><img alt="Caffeina Mexico" height=40 src="../media/logo_pos.png"></a>
 <div id="custom-search">
-  <input id="q" name="q" type="text"> <input class="cse_submit" id="cse-search-button" onclick="searchQuery()" type="button" value="Buscar">
+  <form action="buscar.php">
+      <input id="q" name="q" type="text"> <input class="cse_submit" id="cse-search-button" type="submit" value="Buscar">
+   </form>
 </div>
 
 <div class="ga-container-nav-top">
-  <ul id="ga-toolbar">
+  <ul id="toolbar">
 
     <li class="product">
       <a  class="drop">CLIENTES</a>
@@ -50,7 +52,7 @@
 
 
 
-    <li class="support">
+    <li class="product">
       <a class="drop" >VENTAS</a>
       <ul style="top: 33px; left: 246px; width: 200px; display: none; ">
         <li class="ga-side-nav-off">
@@ -72,7 +74,7 @@
 
 
 
-    <li class="education">
+    <li class="product">
       <a class="drop" >AUTORIZACIONES</a>
       <ul>
         <li class="ga-side-nav-off">
@@ -89,7 +91,7 @@
 
 
 
-    <li class="partners">
+    <li class="product">
       <a class="drop" >INVENTARIO</a>
       <ul>
         <li class="ga-side-nav-off">
@@ -112,7 +114,7 @@
 
 
 
-    <li class="blog">
+    <li class="product">
       <a href="../proxy.php?action=2002" >SALIR</a>
     </li>
 
@@ -121,7 +123,7 @@
 
     <li class="last">&nbsp;
     </li>
-  </ul><script>var toolbar = new Toolbar('ga-toolbar');</script>
+  </ul><script>var toolbar = new Toolbar('toolbar');</script>
 </div>
 
 </div>

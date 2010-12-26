@@ -108,15 +108,6 @@ if(POS_ENABLE_GMAPS){
 
 </script>
 
-<?php
-    if(isset($_REQUEST['success'])){
-        if($_REQUEST['success'] == 'true')
-            echo "<div class='success'>Los detalles se han editado con exito.</div>";            
-        else
-            echo "<div class='failure'>Error al guardas los detalles. Intente de nuevo.</div>";
-    }
-
-?>
 
 <h2>Detalles del cliente</h2>
 <table border="0" cellspacing="5" cellpadding="5">

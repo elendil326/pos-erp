@@ -111,12 +111,13 @@ echo "</table>";
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    alert("Se ha sucidato un error intente de nuevo.");
+                    window.location = "gerentes.php?action=asignar&success=false&reason=" + response.reason;
                     return;
                 }
 
 
-                alert("Los datos se han editado con exito !");
+                reason = "Los cambios se han guardado con exito.";
+                window.location = 'gerentes.php?action=lista&success=true&reason=' + reason;
 	      }
 	    });
     }

@@ -1,13 +1,4 @@
-<script type="text/javascript" charset="utf-8" src="../frameworks/prototype/prototype.js"></script>
-<script src="../frameworks/humblefinance/flotr/flotr.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/humblefinance/flotr/excanvas.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/humblefinance/flotr/canvastext.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/humblefinance/flotr/canvas2image.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/humblefinance/flotr/base64.js" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript" charset="utf-8" src="../frameworks/humblefinance/humble/HumbleFinance.js"></script>
-<link rel="stylesheet" href="../frameworks/humblefinance/humble/finance.css" type="text/css" media="screen" title="no title" charset="utf-8">
-
-<h1>Clientes</h1><?php
+<?php
 
 
 require_once("controller/clientes.controller.php");
@@ -17,14 +8,34 @@ require_once("controller/personal.controller.php");
 require_once("controller/efectivo.controller.php");
 require_once("controller/inventario.controller.php");
 
-?><h2>Mapa de clientes</h2>
+?>
+
+
+<script type="text/javascript" charset="utf-8" src="../frameworks/prototype/prototype.js"></script>
+<script src="../frameworks/humblefinance/flotr/flotr.js" type="text/javascript" charset="utf-8"></script>
+<script src="../frameworks/humblefinance/flotr/excanvas.js" type="text/javascript" charset="utf-8"></script>
+<script src="../frameworks/humblefinance/flotr/canvastext.js" type="text/javascript" charset="utf-8"></script>
+<script src="../frameworks/humblefinance/flotr/canvas2image.js" type="text/javascript" charset="utf-8"></script>
+<script src="../frameworks/humblefinance/flotr/base64.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8" src="../frameworks/humblefinance/humble/HumbleFinance.js"></script>
+<link rel="stylesheet" href="../frameworks/humblefinance/humble/finance.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+<h1>Clientes</h1>
+
+
+
+<h2>Mapa de clientes</h2>
 <div id="finance">
     <div id="fechas">
     </div>
 </div>
 
 
-
+<script type="text/javascript" charset="utf-8">
+	function mostrarDetalles( a ){
+		window.location = "clientes.php?action=detalles&id=" + a;
+	}
+</script>
 
 <script type="text/javascript" charset="utf-8">
     function mostrarDetallesVenta (vid){
@@ -63,11 +74,13 @@ require_once("controller/inventario.controller.php");
 	            $date->setTime ( 0 , 0, 0 );
 
 	            $v1 = new Cliente();
+                $v1->setIdCliente("0");
 	            $v1->setFechaIngreso( $date->format('Y-m-d H:i:s') );
 
 
 	            $date->setTime ( 23, 59, 59 );
 	            $v2 = new Cliente();
+                $v2->setIdCliente("999");
 	            $v2->setFechaIngreso( $date->format('Y-m-d H:i:s') );
 
 	            $results = ClienteDAO::byRange($v1, $v2);
@@ -187,7 +200,7 @@ require_once("controller/inventario.controller.php");
     
 
 
-<h2>Todos los clientes</h2> <?php
+<h2><img src='../media/icons/users_32.png'>&nbsp;Todos los clientes</h2><?php
 //obtener los clientes del controller de clientes
 $clientes = listarClientes();
 
@@ -203,7 +216,9 @@ $tabla->render();
 
 
 
-?><h2>Clientes deudores</h2> <?php
+?>
+
+<h2><img src='../media/icons/user_warning_32.png'>&nbsp;Clientes deudores</h2> <?php
 
 //obtener los clientes deudores del controller de clientes
 $clientes = listarClientesDeudores();
@@ -219,8 +234,4 @@ $tabla->render();
 
 
 ?>
-<script type="text/javascript" charset="utf-8">
-	function mostrarDetalles( a ){
-		window.location = "clientes.php?action=detalles&id=" + a;
-	}
-</script>
+

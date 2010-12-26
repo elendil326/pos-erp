@@ -1,31 +1,20 @@
-<?php
-if(isset($_REQUEST['success']) && $_REQUEST['success'] == 'false'){
-   echo "<div class='failure'>Error al guardas los detalles. " . $_REQUEST['reason'] ."</div>";    
-}
+<?php 
+    require_once( 'model/sucursal.dao.php' );
+    $suc = SucursalDAO::getByPK($_REQUEST['sid']); 
 ?>
+
+
+
 <h1>Editar detalles de sucursal</h1>
-
-
-
-
-
-
 
 <script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../frameworks/uniform/jquery.uniform.js" type="text/javascript" charset="utf-8"></script> 
 <link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
 
-<script type="text/javascript" charset="utf-8">
-	$(function(){
-      $("input, select").uniform();
-    });
-</script>
+<script type="text/javascript" charset="utf-8">	$(function(){ $("input, select").uniform(); }); </script>
 
 
-<?php 
-    require_once( 'model/sucursal.dao.php' );
-    $suc = SucursalDAO::getByPK($_REQUEST['sid']); 
-?>
+
 
 <h2>Detalles personales</h2>
 <form id="edit">
@@ -65,12 +54,12 @@ if(isset($_REQUEST['success']) && $_REQUEST['success'] == 'false'){
                 }
 
                 if(response.success == "false"){
-                    alert(response.reason);
+                    window.location = "sucursales.php?action=editar&sid=<?php echo $_REQUEST['sid']; ?>&success=true&reason=" + response.reason;
                     return;
                 }
 
-                alert("Los datos se han editado con exito !");
-                window.location = "sucursales.php?action=lista";
+                reason = "La sucursal se ha cerrado con exito.";
+                window.location = "sucursales.php?action=lista&success=true&reason=" + reason;
 	      }
 	    });
     }
@@ -108,8 +97,8 @@ if(isset($_REQUEST['success']) && $_REQUEST['success'] == 'false'){
                     return;
                 }
 
-
-                window.location = "sucursales.php?action=detalles&id=<?php echo $_REQUEST['sid']; ?>&success=true";
+                reason = "La sucursal se ha editado correctamente";
+                window.location = "sucursales.php?action=detalles&id=<?php echo $_REQUEST['sid']; ?>&success=true&reason=" + reason;
 	      }
 	    });
     }

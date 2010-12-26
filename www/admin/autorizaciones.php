@@ -20,14 +20,16 @@
     <?php include_once("includes/mainMenu.php"); ?>
 
 	<div class="g-section g-tpl-160 main"> 
-		<!--
-		<div class="g-unit g-first nav"> 
-			<div class="ga-container-nav-side"> 
-			Menu
-			</div> 
-		</div>
-		-->
+    <?php
+    if(isset($_REQUEST['success'])){
 
+        if($_REQUEST['success'] == 'true'){
+            echo "<div class='success'>" . $_REQUEST['reason'] . "</div>";
+        }else{
+            echo "<div class='failure'>". $_REQUEST['reason'] ."</div>";
+        }
+    }
+    ?>
 	<?php 
 		switch( $_GET["action"] )
 		{

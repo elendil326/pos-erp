@@ -1,3 +1,6 @@
 <p class="footer">
-  ©2010 Caffeina - <a href="">Página principal de Caffeina</a> - <a href="">Condiciones del servicio</a> - <a href="">Política de privacidad</a> - <a href="">Envíenos un mensaje</a>
+   <a href="http://www.caffeina.mx">Página principal de Caffeina</a> - <a href="http://www.caffeina.mx/report/">Reportar una falla</a> - <a href="http://www.caffeina.mx/contacto.php">Envíenos un mensaje</a>
+    <br>
+    ©2010 Caffeina Mexico 
+<!-- <br><img src='../media/logo_simbolo.png'> -->
 </p>

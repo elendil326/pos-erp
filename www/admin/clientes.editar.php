@@ -12,23 +12,11 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 //titulo
 ?><h1><?php echo $cliente->getNombre(); ?></h1>
 
-<?php
-
-if(isset($_REQUEST['success']) && $_REQUEST['success'] == 'false'){
-   echo "<div class='failure'>Error al guardas los detalles. " . $_REQUEST['reason'] ."</div>";    
-}
-    
-?>
 
 <script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../frameworks/uniform/jquery.uniform.js" type="text/javascript" charset="utf-8"></script> 
 <link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
-
-<script type="text/javascript" charset="utf-8">
-	$(function(){
-      $("input, select").uniform();
-    });
-</script>
+<script type="text/javascript" charset="utf-8"> $(function(){ $("input, select").uniform(); }); </script>
 
 
 
@@ -136,8 +124,8 @@ if(isset($_REQUEST['success']) && $_REQUEST['success'] == 'false'){
                     window.location = 'clientes.php?action=editar&id=<?php echo $_REQUEST['id']; ?>&success=false&reason=' + response.reason;
                     return;
                 }
-
-                window.location = 'clientes.php?action=detalles&id=<?php echo $_REQUEST['id']; ?>&success=true';
+                reason = "Los cambios se han guardado correctamente.";
+                window.location = 'clientes.php?action=detalles&id=<?php echo $_REQUEST['id']; ?>&success=true&reason=' + reason;
 	      }
 	    });
     }
