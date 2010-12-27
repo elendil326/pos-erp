@@ -30,7 +30,9 @@
  * @author Carl Sutherland
  * @version 1.1.0
  */
-var HumbleFinance = {
+
+ 
+HumbleFinance = {
 
     /**
      * ID of element to attach chart

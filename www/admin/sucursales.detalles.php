@@ -119,6 +119,12 @@ if(POS_ENABLE_GMAPS){
     </div>
 </div>
 
+<h2>Mapa de rendimiento</h2>
+<div id="rendimiento">
+    <div id="fechas_rendimiento">
+    </div>
+</div>
+
 
 <script type="text/javascript" charset="utf-8">
     function mostrarDetallesVenta (vid){ window.location = "ventas.php?action=detalles&id=" + vid; }
@@ -216,7 +222,9 @@ if(POS_ENABLE_GMAPS){
         <?php 
             if(POS_ENABLE_GMAPS){ ?>startMap();<?php }
         ?>
-
+ 
+              
+/*
 	    HumbleFinance.trackFormatter = function (obj) {
             return fechasVentas[ parseInt(obj.x) ].fecha + "\nVentas:" + obj.y ;
 
@@ -242,8 +250,10 @@ if(POS_ENABLE_GMAPS){
             return date;
 	    }
 
-
+		var grafica1 = new HumbleFinance();
+	
 	    HumbleFinance.init('finance', estaSucursal, todasSucursales, todasSucursales);
+
 		
 	    var xaxis = HumbleFinance.graphs.summary.axes.x;
 	    var prevSelection = HumbleFinance.graphs.summary.prevSelection;
@@ -261,7 +271,7 @@ if(POS_ENABLE_GMAPS){
 	        $('fechas').update("Mostrando rango <b>" + date1 + '</b> al <b>' + date2 + "</b>");
 
 	    });
-
+*/
 	});
 
 </script>

@@ -2,21 +2,21 @@
 -- version 3.3.7
 -- http://www.phpmyadmin.net
 --
--- Servidor: localhost
--- Tiempo de generación: 22-12-2010 a las 04:23:52
--- Versión del servidor: 5.0.51
--- Versión de PHP: 5.3.3-0.dotdeb.1
+-- Host: localhost
+-- Generation Time: Dec 27, 2010 at 12:59 PM
+-- Server version: 5.0.51
+-- PHP Version: 5.3.3-0.dotdeb.1
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 --
--- Base de datos: `pos`
+-- Database: `pos`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `actualizacion_de_precio`
+-- Table structure for table `actualizacion_de_precio`
 --
 
 CREATE TABLE IF NOT EXISTS `actualizacion_de_precio` (
@@ -28,19 +28,31 @@ CREATE TABLE IF NOT EXISTS `actualizacion_de_precio` (
   `precio_intersucursal` float NOT NULL,
   `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id_actualizacion`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=14 ;
 
 --
--- Volcar la base de datos para la tabla `actualizacion_de_precio`
+-- Dumping data for table `actualizacion_de_precio`
 --
 
 INSERT INTO `actualizacion_de_precio` (`id_actualizacion`, `id_producto`, `id_usuario`, `precio_venta`, `precio_compra`, `precio_intersucursal`, `fecha`) VALUES
-(1, 1, 37, 8, 5, 5, '2010-12-20 01:10:35');
+(1, 1, 37, 8, 5, 5, '2010-12-20 01:10:35'),
+(2, 1, 1, 2, 5, 5, '2010-12-23 23:08:29'),
+(3, 1, 1, 8.5, 8, 8, '2010-12-23 23:09:22'),
+(4, 1, 1, 8.5, 8, 8, '2010-12-24 00:17:25'),
+(5, 1, 1, 8.5, 8, 8, '2010-12-24 00:20:58'),
+(6, 1, 1, 8.5, 8, 8, '2010-12-24 00:21:36'),
+(7, 1, 1, 8.5, 8, 8, '2010-12-24 00:26:21'),
+(8, 1, 1, 9.5, 7.5, 7.5, '2010-12-24 00:33:50'),
+(9, 1, 1, 9.5, 7.5, 7.5, '2010-12-24 00:35:03'),
+(10, 1, 1, 9.5, 7.5, 7.5, '2010-12-24 00:43:47'),
+(11, 1, 1, 9.45, 7.5, 7.5, '2010-12-24 00:47:13'),
+(12, 1, 1, 9.4, 7.5, 7.5, '2010-12-24 00:49:44'),
+(13, 1, 1, 9.5, 7.5, 7.5, '2010-12-24 03:26:12');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `autorizacion`
+-- Table structure for table `autorizacion`
 --
 
 CREATE TABLE IF NOT EXISTS `autorizacion` (
@@ -52,22 +64,28 @@ CREATE TABLE IF NOT EXISTS `autorizacion` (
   `estado` int(11) NOT NULL COMMENT 'Estado actual de esta aclaracion',
   `parametros` varchar(2048) NOT NULL COMMENT 'Parametros en formato JSON que describen esta autorizacion',
   PRIMARY KEY  (`id_autorizacion`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 --
--- Volcar la base de datos para la tabla `autorizacion`
+-- Dumping data for table `autorizacion`
 --
 
 INSERT INTO `autorizacion` (`id_autorizacion`, `id_usuario`, `id_sucursal`, `fecha_peticion`, `fecha_respuesta`, `estado`, `parametros`) VALUES
-(1, -1, 1, '2010-12-20 01:10:47', '2010-12-20 01:10:47', 4, '{"clave":"209","descripcion":"Envio de productos","productos":[{"id_producto":1,"cantidad":"500"}]}'),
-(2, -1, 1, '2010-12-22 01:08:41', '2010-12-22 01:08:41', 4, '{"clave":"209","descripcion":"Envio de productos","productos":[{"id_producto":1,"cantidad":"500"}]}'),
-(3, 2, 1, '2010-12-22 01:36:36', NULL, 0, '{"clave":"209","descripcion":"Solicitud de producto","productos":[{"productoID":1,"descripcion":"papas fritas 330g","precioVenta":"5","existenciasMinimas":"100","existencias":"0","medida":"unidad","precioIntersucursal":"5","cantidad":500,"id_producto":1}]}'),
-(4, -1, 1, '2010-12-22 01:36:57', '2010-12-22 01:36:57', 4, '{"clave":"209","descripcion":"Envio de productos","productos":[{"id_producto":1,"cantidad":"600"}]}');
+(7, 2, 1, '2010-12-24 04:05:29', NULL, 0, '{"clave":"202","descripcion":"Autorizaci\\u00f3n de limite de cr\\u00e9dito","id_cliente":"1","cantidad":"5000"}'),
+(5, -1, 1, '2010-12-26 01:30:43', '2010-12-26 01:30:43', 3, '{"clave":"209","descripcion":"Envio de productos","productos":[{"id_producto":1,"cantidad":"123"}]}'),
+(3, -1, 1, '2010-12-26 01:26:27', '2010-12-26 01:26:27', 3, '{"clave":"209","descripcion":"Envio de productos","productos":[{"id_producto":1,"cantidad":"500"}]}'),
+(4, -1, 1, '2010-12-22 01:36:57', '2010-12-22 01:36:57', 4, '{"clave":"209","descripcion":"Envio de productos","productos":[{"id_producto":1,"cantidad":"600"}]}'),
+(12, -1, 1, '2010-12-26 01:33:55', '2010-12-26 01:33:55', 3, '{"clave":"209","descripcion":"Envio de productos","productos":[{"id_producto":1,"cantidad":"12"}]}'),
+(6, -1, 1, '2010-12-24 03:28:52', '2010-12-24 03:28:52', 4, '{"clave":"209","descripcion":"Envio de productos","productos":[{"id_producto":1,"cantidad":"500"}]}'),
+(8, 2, 1, '2010-12-24 04:17:46', NULL, 0, '{"clave":"202","descripcion":"Autorizaci\\u00f3n de limite de cr\\u00e9dito","id_cliente":"1","cantidad":"8000"}'),
+(9, 2, 1, '2010-12-24 04:30:13', NULL, 0, '{"clave":"202","descripcion":"Autorizaci\\u00f3n de limite de cr\\u00e9dito","id_cliente":"1","cantidad":"5555"}'),
+(10, -1, 1, '2010-12-24 04:38:44', '2010-12-24 04:38:44', 3, '{"clave":"209","descripcion":"Envio de productos","productos":[{"id_producto":1,"cantidad":"500"}]}'),
+(11, -1, 1, '2010-12-26 01:14:36', '2010-12-26 01:14:36', 3, '{"clave":"209","descripcion":"Envio de productos","productos":[{"id_producto":1,"cantidad":"1"}]}');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `cliente`
+-- Table structure for table `cliente`
 --
 
 CREATE TABLE IF NOT EXISTS `cliente` (
@@ -88,17 +106,18 @@ CREATE TABLE IF NOT EXISTS `cliente` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
--- Volcar la base de datos para la tabla `cliente`
+-- Dumping data for table `cliente`
 --
 
 INSERT INTO `cliente` (`id_cliente`, `rfc`, `nombre`, `direccion`, `ciudad`, `telefono`, `e_mail`, `limite_credito`, `descuento`, `activo`, `id_usuario`, `id_sucursal`, `fecha_ingreso`) VALUES
+(-2, '234234324', 'Caja Comun', 'asdfasdfsadf', '', 'asdfasdf', '', 0, 0, 1, -1, 2, '2010-12-25 09:03:09'),
 (-1, 'ARBOL2349237', 'Caja Comun', 'Arboledas 2da Secc', '', '6149974', '', 0, 0, 1, -1, 1, '2010-12-20 01:00:28'),
-(1, 'AGH6666543', 'ALAN GONZAEZ HERNANDEZ', 'MONTE BALCAES 107 2DA SECC ARBOLEDAS', 'CEAYA', '1741449', 'ALABOY', 500, 0, 1, 2, 1, '2010-12-20 08:12:23');
+(1, 'AGH6666543', 'ALAN GONZAEZ HERNANDEZ', 'Monte Balcanes #107, 2Da Seccion Arboledas', 'CELAYA', '1741449', 'ALABOY', 510, 0, 1, 2, 1, '2010-12-20 08:12:23');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `compras`
+-- Table structure for table `compras`
 --
 
 CREATE TABLE IF NOT EXISTS `compras` (
@@ -119,14 +138,14 @@ CREATE TABLE IF NOT EXISTS `compras` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
--- Volcar la base de datos para la tabla `compras`
+-- Dumping data for table `compras`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `corte`
+-- Table structure for table `corte`
 --
 
 CREATE TABLE IF NOT EXISTS `corte` (
@@ -146,14 +165,14 @@ CREATE TABLE IF NOT EXISTS `corte` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
--- Volcar la base de datos para la tabla `corte`
+-- Dumping data for table `corte`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalle_compra`
+-- Table structure for table `detalle_compra`
 --
 
 CREATE TABLE IF NOT EXISTS `detalle_compra` (
@@ -166,14 +185,14 @@ CREATE TABLE IF NOT EXISTS `detalle_compra` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Volcar la base de datos para la tabla `detalle_compra`
+-- Dumping data for table `detalle_compra`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalle_inventario`
+-- Table structure for table `detalle_inventario`
 --
 
 CREATE TABLE IF NOT EXISTS `detalle_inventario` (
@@ -187,16 +206,16 @@ CREATE TABLE IF NOT EXISTS `detalle_inventario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcar la base de datos para la tabla `detalle_inventario`
+-- Dumping data for table `detalle_inventario`
 --
 
 INSERT INTO `detalle_inventario` (`id_producto`, `id_sucursal`, `precio_venta`, `min`, `existencias`) VALUES
-(1, 1, 5, 100, 0);
+(1, 1, 9.5, 100, 496);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalle_venta`
+-- Table structure for table `detalle_venta`
 --
 
 CREATE TABLE IF NOT EXISTS `detalle_venta` (
@@ -209,7 +228,7 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Volcar la base de datos para la tabla `detalle_venta`
+-- Dumping data for table `detalle_venta`
 --
 
 INSERT INTO `detalle_venta` (`id_venta`, `id_producto`, `cantidad`, `precio`) VALUES
@@ -257,12 +276,16 @@ INSERT INTO `detalle_venta` (`id_venta`, `id_producto`, `cantidad`, `precio`) VA
 (57, 1, 5, 5),
 (58, 1, 1, 5),
 (59, 1, 593, 5),
-(60, 1, 1, 5);
+(60, 1, 1, 5),
+(61, 1, 1, 9.45),
+(62, 1, 1, 9.5),
+(63, 1, 1, 9.5),
+(64, 1, 1, 9.5);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `equipo`
+-- Table structure for table `equipo`
 --
 
 CREATE TABLE IF NOT EXISTS `equipo` (
@@ -271,21 +294,22 @@ CREATE TABLE IF NOT EXISTS `equipo` (
   `full_ua` varchar(256) NOT NULL COMMENT 'String de user-agent para este cliente',
   PRIMARY KEY  (`id_equipo`),
   UNIQUE KEY `token` (`token`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
--- Volcar la base de datos para la tabla `equipo`
+-- Dumping data for table `equipo`
 --
 
 INSERT INTO `equipo` (`id_equipo`, `token`, `full_ua`) VALUES
 (1, 'X8s5z', 'sid={X8s5z} (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.10 (KHTML, like Gecko) Chrome/8.0.552.224 Safari/534.10'),
 (2, 'asdf', 'Mozilla/5.0 (Windows; U; Windows NT 6.1; es-ES) AppleWebKit/533.18.1 (KHTML, like Gecko) Version/5.0.2 Safari/533.18.5'),
-(3, 'asdfsdaf', 'fasdfa');
+(3, 'asdfsdaf', 'Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; es-es) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B367 Safari/531.21.10'),
+(4, '0000', 'Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/534.10 (KHTML, like Gecko) Chrome/8.0.552.224 Safari/534.10');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `equipo_sucursal`
+-- Table structure for table `equipo_sucursal`
 --
 
 CREATE TABLE IF NOT EXISTS `equipo_sucursal` (
@@ -295,17 +319,19 @@ CREATE TABLE IF NOT EXISTS `equipo_sucursal` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Volcar la base de datos para la tabla `equipo_sucursal`
+-- Dumping data for table `equipo_sucursal`
 --
 
 INSERT INTO `equipo_sucursal` (`id_equipo`, `id_sucursal`) VALUES
 (1, 1),
-(2, 1);
+(2, 1),
+(3, 1),
+(4, 1);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `factura_compra`
+-- Table structure for table `factura_compra`
 --
 
 CREATE TABLE IF NOT EXISTS `factura_compra` (
@@ -316,14 +342,14 @@ CREATE TABLE IF NOT EXISTS `factura_compra` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Volcar la base de datos para la tabla `factura_compra`
+-- Dumping data for table `factura_compra`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `factura_venta`
+-- Table structure for table `factura_venta`
 --
 
 CREATE TABLE IF NOT EXISTS `factura_venta` (
@@ -334,7 +360,7 @@ CREATE TABLE IF NOT EXISTS `factura_venta` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
--- Volcar la base de datos para la tabla `factura_venta`
+-- Dumping data for table `factura_venta`
 --
 
 INSERT INTO `factura_venta` (`folio`, `id_venta`) VALUES
@@ -343,7 +369,7 @@ INSERT INTO `factura_venta` (`folio`, `id_venta`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `gastos`
+-- Table structure for table `gastos`
 --
 
 CREATE TABLE IF NOT EXISTS `gastos` (
@@ -357,17 +383,20 @@ CREATE TABLE IF NOT EXISTS `gastos` (
   `id_usuario` int(11) NOT NULL COMMENT 'usuario que registro el gasto',
   `nota` varchar(512) NOT NULL COMMENT 'nota adicional para complementar la descripcion del gasto',
   PRIMARY KEY  (`id_gasto`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
--- Volcar la base de datos para la tabla `gastos`
+-- Dumping data for table `gastos`
 --
 
+INSERT INTO `gastos` (`id_gasto`, `folio`, `concepto`, `monto`, `fecha`, `fecha_ingreso`, `id_sucursal`, `id_usuario`, `nota`) VALUES
+(1, 'RE', 'agua', 55, '2010-12-24 02:25:37', '2010-12-28 06:00:00', 1, 2, 'JUMAPA'),
+(2, 'TEXSERU', 'telefono', 52.55, '2010-12-24 02:48:04', '2010-12-04 06:00:00', 1, 2, '');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `grupos`
+-- Table structure for table `grupos`
 --
 
 CREATE TABLE IF NOT EXISTS `grupos` (
@@ -378,7 +407,7 @@ CREATE TABLE IF NOT EXISTS `grupos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcar la base de datos para la tabla `grupos`
+-- Dumping data for table `grupos`
 --
 
 INSERT INTO `grupos` (`id_grupo`, `nombre`, `descripcion`) VALUES
@@ -392,7 +421,7 @@ INSERT INTO `grupos` (`id_grupo`, `nombre`, `descripcion`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `grupos_usuarios`
+-- Table structure for table `grupos_usuarios`
 --
 
 CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
@@ -403,18 +432,20 @@ CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcar la base de datos para la tabla `grupos_usuarios`
+-- Dumping data for table `grupos_usuarios`
 --
 
 INSERT INTO `grupos_usuarios` (`id_grupo`, `id_usuario`) VALUES
 (1, 1),
 (2, 2),
+(2, 4),
+(2, 5),
 (3, 3);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `ingresos`
+-- Table structure for table `ingresos`
 --
 
 CREATE TABLE IF NOT EXISTS `ingresos` (
@@ -429,17 +460,19 @@ CREATE TABLE IF NOT EXISTS `ingresos` (
   PRIMARY KEY  (`id_ingreso`),
   KEY `usuario_ingreso` (`id_usuario`),
   KEY `sucursal_ingreso` (`id_sucursal`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=202 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=203 ;
 
 --
--- Volcar la base de datos para la tabla `ingresos`
+-- Dumping data for table `ingresos`
 --
 
+INSERT INTO `ingresos` (`id_ingreso`, `concepto`, `monto`, `fecha`, `fecha_ingreso`, `id_sucursal`, `id_usuario`, `nota`) VALUES
+(202, 'PRESTAMO', 50, '2010-12-24 02:31:56', '2010-12-13 06:00:00', 1, 2, '');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `inventario`
+-- Table structure for table `inventario`
 --
 
 CREATE TABLE IF NOT EXISTS `inventario` (
@@ -452,16 +485,16 @@ CREATE TABLE IF NOT EXISTS `inventario` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
--- Volcar la base de datos para la tabla `inventario`
+-- Dumping data for table `inventario`
 --
 
 INSERT INTO `inventario` (`id_producto`, `descripcion`, `precio_intersucursal`, `costo`, `medida`) VALUES
-(1, 'papas fritas 330g', 5, 5, 'unidad');
+(1, 'papas fritas 330', 7.5, 7.5, 'unidad');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `pagos_compra`
+-- Table structure for table `pagos_compra`
 --
 
 CREATE TABLE IF NOT EXISTS `pagos_compra` (
@@ -474,14 +507,14 @@ CREATE TABLE IF NOT EXISTS `pagos_compra` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
--- Volcar la base de datos para la tabla `pagos_compra`
+-- Dumping data for table `pagos_compra`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `pagos_venta`
+-- Table structure for table `pagos_venta`
 --
 
 CREATE TABLE IF NOT EXISTS `pagos_venta` (
@@ -496,14 +529,14 @@ CREATE TABLE IF NOT EXISTS `pagos_venta` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
--- Volcar la base de datos para la tabla `pagos_venta`
+-- Dumping data for table `pagos_venta`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `productos_proveedor`
+-- Table structure for table `productos_proveedor`
 --
 
 CREATE TABLE IF NOT EXISTS `productos_proveedor` (
@@ -521,14 +554,14 @@ CREATE TABLE IF NOT EXISTS `productos_proveedor` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
--- Volcar la base de datos para la tabla `productos_proveedor`
+-- Dumping data for table `productos_proveedor`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `proveedor`
+-- Table structure for table `proveedor`
 --
 
 CREATE TABLE IF NOT EXISTS `proveedor` (
@@ -543,14 +576,14 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 --
--- Volcar la base de datos para la tabla `proveedor`
+-- Dumping data for table `proveedor`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `sucursal`
+-- Table structure for table `sucursal`
 --
 
 CREATE TABLE IF NOT EXISTS `sucursal` (
@@ -566,19 +599,20 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   `fecha_apertura` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'Fecha de apertura de esta sucursal',
   `saldo_a_favor` float NOT NULL default '0' COMMENT 'es el saldo a favor que tiene la sucursal encuanto a los abonos de sus compras',
   PRIMARY KEY  (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
 --
--- Volcar la base de datos para la tabla `sucursal`
+-- Dumping data for table `sucursal`
 --
 
 INSERT INTO `sucursal` (`id_sucursal`, `gerente`, `descripcion`, `direccion`, `rfc`, `telefono`, `token`, `letras_factura`, `activo`, `fecha_apertura`, `saldo_a_favor`) VALUES
-(1, 2, 'Sucursal Arboledas', 'Arboledas 2da Secc', 'ARBOL2349237', '6149974', '192.168.1.11', 'A', 1, '2010-12-20 01:00:28', 0);
+(1, 2, 'Sucursal Arboledas', 'Arboledas 2da Secc, Celaya', '123', '4611741449', '192.168.1.11', 'D', 1, '2010-12-20 01:00:28', 0),
+(2, 0, 'asdfasdfsdaf', 'asdfasdfsadf', '234234324', 'asdfasdf', NULL, 'b', 0, '2010-12-25 09:03:09', 0);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuario`
+-- Table structure for table `usuario`
 --
 
 CREATE TABLE IF NOT EXISTS `usuario` (
@@ -595,21 +629,23 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `fecha_inicio` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'Fecha cuando este usuario comenzo a laborar',
   PRIMARY KEY  (`id_usuario`),
   KEY `fk_usuario_1` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 --
--- Volcar la base de datos para la tabla `usuario`
+-- Dumping data for table `usuario`
 --
 
 INSERT INTO `usuario` (`id_usuario`, `RFC`, `nombre`, `contrasena`, `id_sucursal`, `activo`, `finger_token`, `salario`, `direccion`, `telefono`, `fecha_inicio`) VALUES
 (1, '12213324432', 'Alan Gonzalez Hernandez', '202cb962ac59075b964b07152d234b70', NULL, 1, NULL, 0, '', '', '2010-12-20 00:54:42'),
 (2, 'SP4598347597', 'Sancho Pansa', '202cb962ac59075b964b07152d234b70', 1, 1, NULL, 1000, 'Oliva #123', '6149974', '2010-12-20 00:00:00'),
-(3, 'AMR3345399', 'ALANISS MORRISETTE', '827ccb0eea8a706c4c34a16891f84e7b', 1, 1, NULL, 500, 'IUYTREWQASDFG66', '', '2010-12-22 00:00:00');
+(3, 'AMR3345399', 'ALANISS MORRISETTE', '827ccb0eea8a706c4c34a16891f84e7b', 1, 1, NULL, 500, 'IUYTREWQASDFG66', '', '2010-12-22 00:00:00'),
+(4, 'asdfasdf', 'asdfasdf', '202cb962ac59075b964b07152d234b70', NULL, 1, NULL, 1234, 'asdfasdfasdf', 'asdfasdf', '2010-12-25 00:00:00'),
+(5, 'sadfasdf', 'asdfasdf', '202cb962ac59075b964b07152d234b70', NULL, 1, NULL, 32, 'asdfsadfasdf', '234234234', '2010-12-25 00:00:00');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `ventas`
+-- Table structure for table `ventas`
 --
 
 CREATE TABLE IF NOT EXISTS `ventas` (
@@ -629,10 +665,10 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`id_sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=61 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=65 ;
 
 --
--- Volcar la base de datos para la tabla `ventas`
+-- Dumping data for table `ventas`
 --
 
 INSERT INTO `ventas` (`id_venta`, `id_cliente`, `tipo_venta`, `fecha`, `subtotal`, `iva`, `descuento`, `total`, `id_sucursal`, `id_usuario`, `pagado`, `ip`) VALUES
@@ -681,14 +717,18 @@ INSERT INTO `ventas` (`id_venta`, `id_cliente`, `tipo_venta`, `fecha`, `subtotal
 (57, -1, 'contado', '2010-12-22 01:45:44', 25, NULL, 0, 25, 1, 2, 25, '192.168.1.3'),
 (58, -1, 'contado', '2010-12-22 01:45:59', 5, NULL, 0, 5, 1, 3, 5, '192.168.1.67'),
 (59, 1, 'contado', '2010-12-22 01:47:18', 2965, NULL, 0, 2965, 1, 3, 2965, '192.168.1.67'),
-(60, 1, 'contado', '2010-12-22 01:47:18', 5, NULL, 0, 5, 1, 2, 5, '192.168.1.3');
+(60, 1, 'contado', '2010-12-22 01:47:18', 5, NULL, 0, 5, 1, 2, 5, '192.168.1.3'),
+(61, -1, 'contado', '2010-12-24 03:30:06', 9.45, NULL, 0, 9.45, 1, 2, 9.45, '192.168.1.67'),
+(62, -1, 'contado', '2010-12-24 03:31:23', 9.5, NULL, 0, 9.5, 1, 2, 9.5, '192.168.1.67'),
+(63, -1, 'contado', '2010-12-24 04:23:01', 9.5, NULL, 0, 9.5, 1, 2, 9.5, '192.168.1.67'),
+(64, -1, 'contado', '2010-12-24 04:26:37', 9.5, NULL, 0, 9.5, 1, 2, 9.5, '192.168.1.67');
 
 --
--- Filtros para las tablas descargadas (dump)
+-- Constraints for dumped tables
 --
 
 --
--- Filtros para la tabla `compras`
+-- Constraints for table `compras`
 --
 ALTER TABLE `compras`
   ADD CONSTRAINT `compras_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id_proveedor`) ON UPDATE CASCADE,
@@ -696,65 +736,65 @@ ALTER TABLE `compras`
   ADD CONSTRAINT `compras_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `detalle_compra`
+-- Constraints for table `detalle_compra`
 --
 ALTER TABLE `detalle_compra`
   ADD CONSTRAINT `detalle_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE,
   ADD CONSTRAINT `detalle_compra_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `detalle_inventario`
+-- Constraints for table `detalle_inventario`
 --
 ALTER TABLE `detalle_inventario`
   ADD CONSTRAINT `detalle_inventario_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `detalle_inventario_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `factura_compra`
+-- Constraints for table `factura_compra`
 --
 ALTER TABLE `factura_compra`
   ADD CONSTRAINT `factura_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `factura_venta`
+-- Constraints for table `factura_venta`
 --
 ALTER TABLE `factura_venta`
   ADD CONSTRAINT `factura_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`);
 
 --
--- Filtros para la tabla `grupos_usuarios`
+-- Constraints for table `grupos_usuarios`
 --
 ALTER TABLE `grupos_usuarios`
   ADD CONSTRAINT `grupos_usuarios_ibfk_1` FOREIGN KEY (`id_grupo`) REFERENCES `grupos` (`id_grupo`) ON UPDATE CASCADE,
   ADD CONSTRAINT `grupos_usuarios_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `pagos_compra`
+-- Constraints for table `pagos_compra`
 --
 ALTER TABLE `pagos_compra`
   ADD CONSTRAINT `pagos_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `pagos_venta`
+-- Constraints for table `pagos_venta`
 --
 ALTER TABLE `pagos_venta`
   ADD CONSTRAINT `pagos_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Filtros para la tabla `productos_proveedor`
+-- Constraints for table `productos_proveedor`
 --
 ALTER TABLE `productos_proveedor`
   ADD CONSTRAINT `productos_proveedor_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id_proveedor`) ON UPDATE CASCADE,
   ADD CONSTRAINT `productos_proveedor_ibfk_2` FOREIGN KEY (`id_inventario`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `usuario`
+-- Constraints for table `usuario`
 --
 ALTER TABLE `usuario`
   ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `ventas`
+-- Constraints for table `ventas`
 --
 ALTER TABLE `ventas`
   ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON UPDATE CASCADE,

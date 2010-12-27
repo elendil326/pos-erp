@@ -198,12 +198,12 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    alert(response.reason);
+                    window.location = "gerentes.php?action=editar&success=false&reason=" + response.reason;
                     return;
                 }
 
-
-                alert("Los datos se han editado con exito !");
+				reason = 'Los detalles del gerente se han modificado correctamente.';
+                window.location = "gerentes.php?action=detalles&id=<?php echo $_REQUEST['id'] ?>&success=true&reason=" + reason;
 	      }
 	    });
     }

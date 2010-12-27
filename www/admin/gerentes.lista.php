@@ -7,7 +7,7 @@
 
 
 
-?><h2>Gerentes asignados a una sucursal</h2><?php
+?><h2><img src='../media/icons/user_business_chart_32.png'>Gerentes asignados a una sucursal</h2><?php
 
 $gerentes = listarGerentes(true);
 
@@ -28,7 +28,7 @@ $tabla->render();
 $gerentes = listarGerentes(false);
 
 if(sizeof($gerentes)>0){
-    ?><h2>Gerentes no asignados a una sucursal</h2><?php
+    ?><h2><img src='../media/icons/user_business_warning_32.png'>Gerentes no asignados a una sucursal</h2><?php
 
 
 
@@ -62,7 +62,7 @@ foreach($result as $r)
 }
 
 if(sizeof($fired) > 0){
-	?><h2>Gerentes despedidos</h2><?php
+	?><h2><img src='../media/icons/user_business_close_32.png'>Gerentes despedidos</h2><?php
 	$tabla = new Tabla( $header, $fired );
 	$tabla->addOnClick("id_usuario", "mostrarDetalles");
 	$tabla->render();

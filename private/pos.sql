@@ -2,21 +2,21 @@
 -- version 3.3.7
 -- http://www.phpmyadmin.net
 --
--- Servidor: localhost
--- Tiempo de generación: 20-12-2010 a las 00:56:32
--- Versión del servidor: 5.0.51
--- Versión de PHP: 5.3.3-0.dotdeb.1
+-- Host: localhost
+-- Generation Time: Dec 27, 2010 at 12:58 PM
+-- Server version: 5.0.51
+-- PHP Version: 5.3.3-0.dotdeb.1
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 --
--- Base de datos: `pos`
+-- Database: `pos`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `actualizacion_de_precio`
+-- Table structure for table `actualizacion_de_precio`
 --
 
 CREATE TABLE IF NOT EXISTS `actualizacion_de_precio` (
@@ -28,17 +28,12 @@ CREATE TABLE IF NOT EXISTS `actualizacion_de_precio` (
   `precio_intersucursal` float NOT NULL,
   `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id_actualizacion`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=1 ;
-
---
--- Volcar la base de datos para la tabla `actualizacion_de_precio`
---
-
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=14 ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `autorizacion`
+-- Table structure for table `autorizacion`
 --
 
 CREATE TABLE IF NOT EXISTS `autorizacion` (
@@ -50,17 +45,12 @@ CREATE TABLE IF NOT EXISTS `autorizacion` (
   `estado` int(11) NOT NULL COMMENT 'Estado actual de esta aclaracion',
   `parametros` varchar(2048) NOT NULL COMMENT 'Parametros en formato JSON que describen esta autorizacion',
   PRIMARY KEY  (`id_autorizacion`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
---
--- Volcar la base de datos para la tabla `autorizacion`
---
-
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `cliente`
+-- Table structure for table `cliente`
 --
 
 CREATE TABLE IF NOT EXISTS `cliente` (
@@ -78,17 +68,12 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   `id_sucursal` int(11) NOT NULL COMMENT 'Identificador de la sucursal donde se dio de alta este cliente',
   `fecha_ingreso` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'Fecha cuando este cliente se registro en una sucursal',
   PRIMARY KEY  (`id_cliente`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
---
--- Volcar la base de datos para la tabla `cliente`
---
-
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `compras`
+-- Table structure for table `compras`
 --
 
 CREATE TABLE IF NOT EXISTS `compras` (
@@ -108,15 +93,10 @@ CREATE TABLE IF NOT EXISTS `compras` (
   KEY `compras_usuario` (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
---
--- Volcar la base de datos para la tabla `compras`
---
-
-
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `corte`
+-- Table structure for table `corte`
 --
 
 CREATE TABLE IF NOT EXISTS `corte` (
@@ -135,15 +115,10 @@ CREATE TABLE IF NOT EXISTS `corte` (
   PRIMARY KEY  (`id_corte`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
---
--- Volcar la base de datos para la tabla `corte`
---
-
-
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalle_compra`
+-- Table structure for table `detalle_compra`
 --
 
 CREATE TABLE IF NOT EXISTS `detalle_compra` (
@@ -155,15 +130,10 @@ CREATE TABLE IF NOT EXISTS `detalle_compra` (
   KEY `detalle_compra_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Volcar la base de datos para la tabla `detalle_compra`
---
-
-
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalle_inventario`
+-- Table structure for table `detalle_inventario`
 --
 
 CREATE TABLE IF NOT EXISTS `detalle_inventario` (
@@ -176,15 +146,10 @@ CREATE TABLE IF NOT EXISTS `detalle_inventario` (
   KEY `id_sucursal` (`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcar la base de datos para la tabla `detalle_inventario`
---
-
-
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalle_venta`
+-- Table structure for table `detalle_venta`
 --
 
 CREATE TABLE IF NOT EXISTS `detalle_venta` (
@@ -196,50 +161,36 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
   KEY `detalle_venta_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Volcar la base de datos para la tabla `detalle_venta`
---
-
-
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `equipo`
+-- Table structure for table `equipo`
 --
 
 CREATE TABLE IF NOT EXISTS `equipo` (
   `id_equipo` int(6) NOT NULL auto_increment COMMENT 'el identificador de este equipo',
   `token` varchar(128) NOT NULL COMMENT 'el token de seguridad que identifica a este equipo unicamente, representado generalmente por un user-agent modificado',
+  `full_ua` varchar(256) NOT NULL COMMENT 'String de user-agent para este cliente',
   PRIMARY KEY  (`id_equipo`),
   UNIQUE KEY `token` (`token`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
---
--- Volcar la base de datos para la tabla `equipo`
---
-
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `equipo_sucursal`
+-- Table structure for table `equipo_sucursal`
 --
 
 CREATE TABLE IF NOT EXISTS `equipo_sucursal` (
   `id_equipo` int(6) NOT NULL COMMENT 'identificador del equipo ',
   `id_sucursal` int(6) NOT NULL COMMENT 'identifica una sucursal',
-  PRIMARY KEY  (`id_equipo`,`id_sucursal`)
+  PRIMARY KEY  (`id_equipo`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Volcar la base de datos para la tabla `equipo_sucursal`
---
-
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `factura_compra`
+-- Table structure for table `factura_compra`
 --
 
 CREATE TABLE IF NOT EXISTS `factura_compra` (
@@ -249,15 +200,10 @@ CREATE TABLE IF NOT EXISTS `factura_compra` (
   KEY `factura_compra_compra` (`id_compra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Volcar la base de datos para la tabla `factura_compra`
---
-
-
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `factura_venta`
+-- Table structure for table `factura_venta`
 --
 
 CREATE TABLE IF NOT EXISTS `factura_venta` (
@@ -265,17 +211,12 @@ CREATE TABLE IF NOT EXISTS `factura_venta` (
   `id_venta` int(11) NOT NULL COMMENT 'venta a la cual corresponde la factura',
   PRIMARY KEY  (`folio`),
   KEY `factura_venta_venta` (`id_venta`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
---
--- Volcar la base de datos para la tabla `factura_venta`
---
-
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `gastos`
+-- Table structure for table `gastos`
 --
 
 CREATE TABLE IF NOT EXISTS `gastos` (
@@ -289,17 +230,12 @@ CREATE TABLE IF NOT EXISTS `gastos` (
   `id_usuario` int(11) NOT NULL COMMENT 'usuario que registro el gasto',
   `nota` varchar(512) NOT NULL COMMENT 'nota adicional para complementar la descripcion del gasto',
   PRIMARY KEY  (`id_gasto`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
---
--- Volcar la base de datos para la tabla `gastos`
---
-
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `grupos`
+-- Table structure for table `grupos`
 --
 
 CREATE TABLE IF NOT EXISTS `grupos` (
@@ -309,22 +245,10 @@ CREATE TABLE IF NOT EXISTS `grupos` (
   PRIMARY KEY  (`id_grupo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Volcar la base de datos para la tabla `grupos`
---
-
-INSERT INTO `grupos` (`id_grupo`, `nombre`, `descripcion`) VALUES
-(1, 'admin', 'Administrador del Sistema'),
-(2, 'gerente', 'Gerente'),
-(3, 'cajero', 'maneja las cajas'),
-(4, 'limpieza', 'maneja la limpieza'),
-(5, 'contador', 'maneja los dineros'),
-(6, 'audi', 'maneja el audi de la empresa');
-
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `grupos_usuarios`
+-- Table structure for table `grupos_usuarios`
 --
 
 CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
@@ -334,17 +258,10 @@ CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
   KEY `fk_grupos_usuarios_1` (`id_grupo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Volcar la base de datos para la tabla `grupos_usuarios`
---
-
-INSERT INTO `grupos_usuarios` (`id_grupo`, `id_usuario`) VALUES
-(1, 1);
-
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `ingresos`
+-- Table structure for table `ingresos`
 --
 
 CREATE TABLE IF NOT EXISTS `ingresos` (
@@ -359,17 +276,12 @@ CREATE TABLE IF NOT EXISTS `ingresos` (
   PRIMARY KEY  (`id_ingreso`),
   KEY `usuario_ingreso` (`id_usuario`),
   KEY `sucursal_ingreso` (`id_sucursal`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=202 ;
-
---
--- Volcar la base de datos para la tabla `ingresos`
---
-
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=203 ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `inventario`
+-- Table structure for table `inventario`
 --
 
 CREATE TABLE IF NOT EXISTS `inventario` (
@@ -379,17 +291,12 @@ CREATE TABLE IF NOT EXISTS `inventario` (
   `costo` float NOT NULL,
   `medida` enum('fraccion','unidad') collate utf8_unicode_ci NOT NULL,
   PRIMARY KEY  (`id_producto`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
---
--- Volcar la base de datos para la tabla `inventario`
---
-
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `pagos_compra`
+-- Table structure for table `pagos_compra`
 --
 
 CREATE TABLE IF NOT EXISTS `pagos_compra` (
@@ -401,15 +308,10 @@ CREATE TABLE IF NOT EXISTS `pagos_compra` (
   KEY `pagos_compra_compra` (`id_compra`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
---
--- Volcar la base de datos para la tabla `pagos_compra`
---
-
-
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `pagos_venta`
+-- Table structure for table `pagos_venta`
 --
 
 CREATE TABLE IF NOT EXISTS `pagos_venta` (
@@ -423,15 +325,10 @@ CREATE TABLE IF NOT EXISTS `pagos_venta` (
   KEY `pagos_venta_venta` (`id_venta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
---
--- Volcar la base de datos para la tabla `pagos_venta`
---
-
-
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `productos_proveedor`
+-- Table structure for table `productos_proveedor`
 --
 
 CREATE TABLE IF NOT EXISTS `productos_proveedor` (
@@ -448,15 +345,10 @@ CREATE TABLE IF NOT EXISTS `productos_proveedor` (
   KEY `productos_proveedor_producto` (`id_inventario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
---
--- Volcar la base de datos para la tabla `productos_proveedor`
---
-
-
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `proveedor`
+-- Table structure for table `proveedor`
 --
 
 CREATE TABLE IF NOT EXISTS `proveedor` (
@@ -470,15 +362,10 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
   PRIMARY KEY  (`id_proveedor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
---
--- Volcar la base de datos para la tabla `proveedor`
---
-
-
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `sucursal`
+-- Table structure for table `sucursal`
 --
 
 CREATE TABLE IF NOT EXISTS `sucursal` (
@@ -494,17 +381,12 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   `fecha_apertura` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'Fecha de apertura de esta sucursal',
   `saldo_a_favor` float NOT NULL default '0' COMMENT 'es el saldo a favor que tiene la sucursal encuanto a los abonos de sus compras',
   PRIMARY KEY  (`id_sucursal`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
---
--- Volcar la base de datos para la tabla `sucursal`
---
-
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuario`
+-- Table structure for table `usuario`
 --
 
 CREATE TABLE IF NOT EXISTS `usuario` (
@@ -521,19 +403,12 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `fecha_inicio` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'Fecha cuando este usuario comenzo a laborar',
   PRIMARY KEY  (`id_usuario`),
   KEY `fk_usuario_1` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
-
---
--- Volcar la base de datos para la tabla `usuario`
---
-
-INSERT INTO `usuario` (`id_usuario`, `RFC`, `nombre`, `contrasena`, `id_sucursal`, `activo`, `finger_token`, `salario`, `direccion`, `telefono`, `fecha_inicio`) VALUES
-(1, '12213324432', 'Alan Gonzalez Hernandez', '202cb962ac59075b964b07152d234b70', NULL, 1, NULL, 0, '', '', '2010-12-20 00:54:42');
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `ventas`
+-- Table structure for table `ventas`
 --
 
 CREATE TABLE IF NOT EXISTS `ventas` (
@@ -553,19 +428,14 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`id_sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=65 ;
 
 --
--- Volcar la base de datos para la tabla `ventas`
---
-
-
---
--- Filtros para las tablas descargadas (dump)
+-- Constraints for dumped tables
 --
 
 --
--- Filtros para la tabla `compras`
+-- Constraints for table `compras`
 --
 ALTER TABLE `compras`
   ADD CONSTRAINT `compras_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id_proveedor`) ON UPDATE CASCADE,
@@ -573,65 +443,65 @@ ALTER TABLE `compras`
   ADD CONSTRAINT `compras_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `detalle_compra`
+-- Constraints for table `detalle_compra`
 --
 ALTER TABLE `detalle_compra`
   ADD CONSTRAINT `detalle_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE,
   ADD CONSTRAINT `detalle_compra_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `detalle_inventario`
+-- Constraints for table `detalle_inventario`
 --
 ALTER TABLE `detalle_inventario`
   ADD CONSTRAINT `detalle_inventario_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `detalle_inventario_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `factura_compra`
+-- Constraints for table `factura_compra`
 --
 ALTER TABLE `factura_compra`
   ADD CONSTRAINT `factura_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `factura_venta`
+-- Constraints for table `factura_venta`
 --
 ALTER TABLE `factura_venta`
   ADD CONSTRAINT `factura_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`);
 
 --
--- Filtros para la tabla `grupos_usuarios`
+-- Constraints for table `grupos_usuarios`
 --
 ALTER TABLE `grupos_usuarios`
   ADD CONSTRAINT `grupos_usuarios_ibfk_1` FOREIGN KEY (`id_grupo`) REFERENCES `grupos` (`id_grupo`) ON UPDATE CASCADE,
   ADD CONSTRAINT `grupos_usuarios_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `pagos_compra`
+-- Constraints for table `pagos_compra`
 --
 ALTER TABLE `pagos_compra`
   ADD CONSTRAINT `pagos_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `pagos_venta`
+-- Constraints for table `pagos_venta`
 --
 ALTER TABLE `pagos_venta`
   ADD CONSTRAINT `pagos_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Filtros para la tabla `productos_proveedor`
+-- Constraints for table `productos_proveedor`
 --
 ALTER TABLE `productos_proveedor`
   ADD CONSTRAINT `productos_proveedor_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id_proveedor`) ON UPDATE CASCADE,
   ADD CONSTRAINT `productos_proveedor_ibfk_2` FOREIGN KEY (`id_inventario`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `usuario`
+-- Constraints for table `usuario`
 --
 ALTER TABLE `usuario`
   ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `ventas`
+-- Constraints for table `ventas`
 --
 ALTER TABLE `ventas`
   ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON UPDATE CASCADE,

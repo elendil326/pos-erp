@@ -19,17 +19,32 @@
 	  <?php include_once("includes/mainMenu.php"); ?>
 
       <h1>
-       Centro de Ingenieria
+       Estado del servidor
       </h1>
-      <p>
-        Este punto de venta es una solución de analítica web para empresas que proporciona información
-        muy valiosa sobre el tráfico del sitio web y la eficacia del plan de marketing. Ahora,
-        gracias a unas funciones potentes, flexibles y fáciles de usar, podrá ver y analizar el
-        tráfico desde una perspectiva totalmente distinta. Google Analytics le ayudará a diseñar
-        anuncios más orientados, a mejorar sus iniciativas de marketing y a crear sitios web que
-        generen más conversiones.
-      </p>
-
+		
+	<table>
+		<tr>
+			<th></th>
+			<th>Descripcion</th>
+			<th>Valor actual</th>
+		</tr>
+		<tr>
+			<td><?php echo "<img src='../media/icons/" . (version_compare(PHP_VERSION, '5.3.0') >= 0 ? "s_success.png" : "close_16.png") . "'>" ; ?></td>
+			<td>Version PHP</td>
+			<td><?php echo phpversion(); ?></td>
+		</tr>
+		
+		<tr>
+			<td><?php echo "<img src='../media/icons/" . (function_exists ( 'date_diff' ) ? "s_success.png" : "close_16.png") . "'>" ; ?></td>
+			<td>Funciones de DateTime</td>
+			<td></td>
+		</tr>		
+		<tr>
+			<td><?php echo "<img src='../media/icons/" . (is_writable( _POS_LOG_TO_FILE_FILENAME ) ? "s_success.png" : "close_16.png") . "'>" ; ?></td>
+			<td>Archivo de log</td>
+			<td><?php echo _POS_LOG_TO_FILE_FILENAME ; ?></td>
+		</tr>	
+	</table>
 
 
 	<?php include_once("includes/footer.php"); ?>

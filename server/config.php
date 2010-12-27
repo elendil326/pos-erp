@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 /* *******************************
 Configuracion Basica
@@ -7,7 +7,7 @@ Configuracion Basica
 //carpeta donde se encuentran los scripts del servidor
 //ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/Applications/XAMPP/xamppfiles/htdocs/svn/pos/trunk/server");
 //ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/caffeina/pos/trunk/server");
-ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/pos-debug/trunk/server");
+ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/alan/trunk/server");
 
 //mimificar o no el javascript que se carga
 define("_POS_JSMINIFY", false);

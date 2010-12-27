@@ -49,7 +49,7 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
             echo "Este gerente no tiene a su cargo ninguna sucursal.";
         }else{
             $sucursal = $sucursal[0];
-            echo "Actualmente <b>" . $gerente->getNombre() . "</b> es gerente de <b>" . $sucursal->getDescripcion() . "</b>.";
+            echo "Actualmente <b>" . $gerente->getNombre() . "</b> es gerente de <a href='sucursales.php?action=detalles&id=" . $sucursal->getIdSucursal() . "'>" . $sucursal->getDescripcion() . "</a>.";
             $aCargo = true;
         }
 ?>

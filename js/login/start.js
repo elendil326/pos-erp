@@ -1,4 +1,3 @@
-
 var DEBUG; 
 var login;
 POS = {U:{G:null}};
@@ -30,9 +29,13 @@ function checkCurrentSession(){
             }
 
 			Ext.getBody().unmask();	
-            
-			var results = Ext.util.JSON.decode( response.responseText );
 			
+          	try{
+				var results = Ext.util.JSON.decode( response.responseText );
+			}catch(e){
+				Ext.getBody().mask( "Error<br>Mostrando error orginal:<br>" + response.responseText );
+  				return;				
+			}
 			//algo anda mal
 			if(!results.success){
 

@@ -1,7 +1,5 @@
 
 
-
-
 POS.Keyboard = {
 	
 	//la funcion que se llamara para usar un teclado
