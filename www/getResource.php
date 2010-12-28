@@ -131,18 +131,20 @@ require ( "../server/config.php" );
 				break;
 			}
 			
+			echo "Ext.ns('POS', 'sink', 'Ext.ux');";			
+
 			//cargar modulos de sucursal
 			loadDir( "sucursal/pre" , $type );
 
 
-		    if($type=="js"){
-                //imprimir que tipo de usuario soy
-                if(isset($_SESSION['grupo']))
-                    echo "POS.U.g = " . (($_SESSION['grupo'] == 2) ? "true" : "false" ) . ";";
-		    }   
+            //imprimir que tipo de usuario soy
+            if(isset($_SESSION['grupo']))
+            	echo "POS.U.g = " . (($_SESSION['grupo'] == 2) ? "true" : "false" ) . ";";
+
 
 
 			loadDir( "sucursal/apps" , $type );
+						
 						
 			if($_SESSION['grupo'] == 2 ){
 				//si es gerente tambien cargar los de gerencia

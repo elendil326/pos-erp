@@ -224,7 +224,7 @@ if(POS_ENABLE_GMAPS){
         ?>
  
               
-/*
+
 	    HumbleFinance.trackFormatter = function (obj) {
             return fechasVentas[ parseInt(obj.x) ].fecha + "\nVentas:" + obj.y ;
 
@@ -271,7 +271,7 @@ if(POS_ENABLE_GMAPS){
 	        $('fechas').update("Mostrando rango <b>" + date1 + '</b> al <b>' + date2 + "</b>");
 
 	    });
-*/
+
 	});
 
 </script>
