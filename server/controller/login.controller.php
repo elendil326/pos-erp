@@ -10,11 +10,6 @@ require_once("logger.php");
 
 
 
-
-
-
-
-
 function login( $u, $p )
 {
 
@@ -187,7 +182,7 @@ function logOut( $verbose = true  )
 
     if($verbose){
         if(isset($_SESSION['grupo'])){
-            if($_SESSION['grupo'] == 1)	
+            if($_SESSION['grupo'] <= 1)	
                 	print ('<script>window.location= "./admin/"</script>');
             else
                 	print ('<script>window.location= "."</script>');
@@ -295,7 +290,7 @@ function sucursalTest( ){
 
 
 function dispatch($args){
-	Logger::log("dispatching route...");
+	Logger::log("Dispatching route for user group {$_SESSION['grupo']}");
 	if(!isset($_SESSION['grupo'])){
 		die( "Accesso no autorizado." );
 	}
