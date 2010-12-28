@@ -1,9 +1,10 @@
 <?php
 
-	require_once("includes/checkSession.php");
-	require_once("includes/static.php");	
 	require_once("../../server/config.php");	
 	require_once("db/DBConnection.php");
+	require_once("ingenieria/includes/checkSession.php");
+	require_once("ingenieria/includes/static.php");	
+
 ?>
 <!DOCTYPE html>
 <html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -19,7 +20,7 @@
   <body>
     <div class="g-doc-800" id="g-doc">
         
-    <?php include_once("includes/mainMenu.php"); ?>
+    <?php include_once("ingenieria/includes/mainMenu.php"); ?>
 
 	<div class="g-section g-tpl-160 main"> 
 		<!--
@@ -32,7 +33,7 @@
 
 	<?php 
 
-        require_once("dbkiss.php");
+        require_once("ingenieria/base.dbkiss.php");
         /*
 		switch( $_GET["action"] )
 		{
@@ -44,7 +45,7 @@
 	?>
 
 	</div>
-	<?php include_once("includes/footer.php"); ?>
+	<?php include_once("ingenieria/includes/footer.php"); ?>
     </div>
   
 </body>

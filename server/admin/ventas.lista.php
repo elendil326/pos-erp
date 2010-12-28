@@ -12,7 +12,7 @@ require_once('model/sucursal.dao.php');
 <script type="text/javascript" src="../frameworks/jquery-datepicker/js/daterangepicker.jQuery.js"></script>
 <link rel="stylesheet" href="../frameworks/jquery-datepicker/css/ui.daterangepicker.css" type="text/css" /> 
 <link rel="stylesheet" href="../frameworks/jquery-datepicker/css/redmond/jquery-ui-1.7.1.custom.css" type="text/css" title="ui-theme" /> 
-<script src="../frameworks/uniform/jquery.uniform.js" type="text/javascript" charset="utf-8"></script> 
+<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
 <link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
 
 <script>

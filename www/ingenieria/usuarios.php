@@ -1,9 +1,10 @@
 <?php
 
-	require_once("includes/checkSession.php");
-	require_once("includes/static.php");	
 	require_once("../../server/config.php");	
 	require_once("db/DBConnection.php");
+	require_once("ingenieria/includes/checkSession.php");
+	require_once("ingenieria/includes/static.php");	
+
 ?>
 <!DOCTYPE html>
 <html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,7 +17,7 @@
   <body>
     <div class="g-doc-800" id="g-doc">
         
-    <?php include_once("includes/mainMenu.php"); ?>
+    <?php include_once("ingenieria/includes/mainMenu.php"); ?>
     <?php
     if(isset($_REQUEST['success'])){
 
@@ -30,14 +31,14 @@
 	<?php 
 		switch( $_GET["action"] )
 		{
-			case "lista" : require_once("usuarios.lista.php"); break;
-			case "nuevo" : require_once("usuarios.nuevo.php"); break;
-			case "detalles" : require_once("usuarios.detalles.php"); break;
+			case "lista" : require_once("ingenieria/usuarios.lista.php"); break;
+			case "nuevo" : require_once("ingenieria/usuarios.nuevo.php"); break;
+			case "detalles" : require_once("ingenieria/usuarios.detalles.php"); break;
 			default : echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
 		} 
 	?>
 
-	<?php include_once("includes/footer.php"); ?>
+	<?php include_once("ingenieria/includes/footer.php"); ?>
     </div>
   
 </body>

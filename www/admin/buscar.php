@@ -1,9 +1,10 @@
 <?php
-
-	require_once("includes/checkSession.php");
-	require_once("includes/static.php");	
 	require_once("../../server/config.php");	
 	require_once("db/DBConnection.php");
+	require_once("admin/includes/checkSession.php");
+	require_once("admin/includes/static.php");	
+	require_once('model/cliente.dao.php');
+
 ?>
 <!DOCTYPE html>
 <html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -17,7 +18,7 @@
   <body>
     <div class="g-doc-800" id="g-doc">
         
-    <?php include_once("includes/mainMenu.php"); ?>
+    <?php include_once("admin/includes/mainMenu.php"); ?>
 
 	<div class="g-section g-tpl-160 main"> 
     <?php
@@ -50,7 +51,7 @@
     ?>
 
 	</div>
-	<?php include_once("includes/footer.php"); ?>
+	<?php include_once("admin/includes/footer.php"); ?>
     </div>
   
 </body>

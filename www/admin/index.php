@@ -1,6 +1,7 @@
 <?php
 
-	include_once("includes/checkSession.php");
+	require_once("../../server/config.php");
+	include_once("admin/includes/checkSession.php");
 
 ?>
 <!DOCTYPE html>
@@ -18,7 +19,7 @@
   <body>
     <div class="g-doc-800" id="g-doc">
         
-	  <?php include_once("includes/mainMenu.php"); ?>
+	  <?php include_once("admin/includes/mainMenu.php"); ?>
 
         <table>
         <tr>
@@ -42,7 +43,7 @@
         </table>
 
 
-	<?php include_once("includes/footer.php"); ?>
+	<?php include_once("admin/includes/footer.php"); ?>
     </div>
   
 </body>

@@ -1,6 +1,6 @@
 <?php
-
-	include_once("includes/checkSession.php");
+	require_once("../../server/config.php");
+	include_once("ingenieria/includes/checkSession.php");
 
 ?>
 <!DOCTYPE html>
@@ -16,7 +16,7 @@
   <body>
     <div class="g-doc-800" id="g-doc">
         
-	  <?php include_once("includes/mainMenu.php"); ?>
+	  <?php include_once("ingenieria/includes/mainMenu.php"); ?>
 
       <h1>
        Estado del servidor
@@ -47,7 +47,7 @@
 	</table>
 
 
-	<?php include_once("includes/footer.php"); ?>
+	<?php include_once("ingenieria/includes/footer.php"); ?>
     </div>
   
 </body>

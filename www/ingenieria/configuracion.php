@@ -1,9 +1,10 @@
 <?php
 
-	require_once("includes/checkSession.php");
-	require_once("includes/static.php");	
 	require_once("../../server/config.php");	
 	require_once("db/DBConnection.php");
+	require_once("ingenieria/includes/checkSession.php");
+	require_once("ingenieria/includes/static.php");	
+
 ?>
 <!DOCTYPE html>
 <html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -17,7 +18,7 @@
   <body>
     <div class="g-doc-800" id="g-doc">
         
-    <?php include_once("includes/mainMenu.php"); ?>
+    <?php include_once("ingenieria/includes/mainMenu.php"); ?>
 
 	<div class="g-section g-tpl-160 main"> 
 		<!--
@@ -31,15 +32,15 @@
 	<?php 
 		switch( $_GET["action"] )
 		{
-			case "actual" : require_once("configuracion.actual.php"); break;
-			case "listaDeudores" : require_once("clientes.listaDeudores.php"); break;			
+			case "actual" : require_once("ingenieria/configuracion.actual.php"); break;
+
 
 			default : echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
 		} 
 	?>
 
 	</div>
-	<?php include_once("includes/footer.php"); ?>
+	<?php include_once("ingenieria/includes/footer.php"); ?>
     </div>
   
 </body>
