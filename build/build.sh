@@ -1,6 +1,6 @@
 #!/bin/bash
-
 echo "Iniciando build"
+cd ..
 
 # quitando la carpeta de documentacion
 if [ -d docs ]
@@ -54,6 +54,4 @@ function parsefiles(){
 
 parsefiles js
 
-
-#312.8 KB
 

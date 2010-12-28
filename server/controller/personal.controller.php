@@ -20,6 +20,7 @@ require_once('logger.php');
  * @param $sucursal Id de la sucursal a la cual pertenece el emplado.
  * @param $salario Salario mensual que percibe el empleado.
  * @param $acceso Permisos que tiene sobre el sistema el empleado.
+ * @param $grupo
  * @return cadena en formato JSON que informa si la operacion se realizo con exito. { "success" : true } o { "success" : false }.
  **/
 
@@ -27,10 +28,12 @@ function insertarEmpleado($args)
 {	
 
     Logger::log("insertar empleado iniciado...");
-
+    DAO::transBegin();
+    
     if( !isset($args['data']) )
     {
         Logger::log("no hay parametros para insertar nuevo empleado");
+        DAO::transRollback();
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
     
@@ -42,11 +45,11 @@ function insertarEmpleado($args)
     catch(Exception $e)
     {
         Logger::log("json invalido " . $e);
+        DAO::transRollback();
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
     $user = new Usuario();
-
     $user->setRFC( $data->RFC );
 
     //buscar que no exista ya un empleado con este RFC
@@ -58,15 +61,16 @@ function insertarEmpleado($args)
             break;
         }
         Logger::log("ya existe un empleado con el rfc:" . $data->RFC );
+        DAO::transRollback();
         die ( '{"success": false, "id":"' . $id . '", "reason": "Ya existe un empleado con este RFC." }' );
     }
     
-	$user->setRFC( $data->RFC );
+	$user->setRFC( $data->RFC == null ? 0 : $data->RFC );
 	$user->setNombre( $data->nombre );
 	$user->setContrasena( $data->contrasena );
 
-    //si soy admin ponerle null
-    if($_SESSION['grupo'] == 1){
+    //si soy admin ponerle el que mando, de lo contrario, soy gerente, poner mi sucursal
+    if($_SESSION['grupo'] == 1 || $_SESSION['grupo'] == 0){
     	$user->setIdSucursal( null );
     }else{
     	$user->setIdSucursal( $_SESSION['sucursal'] );
@@ -74,36 +78,35 @@ function insertarEmpleado($args)
 
 
 	$user->setActivo( 1 );
-	$user->setSalario( $data->salario) ;
-    $user->setTelefono( $data->telefono );
-    $user->setDireccion( $data->direccion );
+	$user->setSalario( $data->salario == null ? 0 : $data->salario ) ;
+    $user->setTelefono( $data->telefono == null ? 0 : $data->telefono );
+    $user->setDireccion( $data->direccion == null ? 0 : $data->direccion );
     $now = new DateTime("now");
     $user->setFechaInicio( $now->format('Y-m-d') );
-	
+
 	$gruposUsuarios = new GruposUsuarios();
 	$gruposUsuarios->setIdGrupo( $data->grupo );
 	
     try{
-        if( UsuarioDAO::save( $user ) == 1);
-        {        
-            $gruposUsuarios->setIdUsuario( $user->getIdUsuario() );
-            if( GruposUsuariosDAO::save( $gruposUsuarios) )
-            {
-                
-                printf(' { "success" : "true", "id_usuario": "%s" } ', $user->getIdUsuario() );
-            }
-            else
-            {
-                die(' { "success" : "false", "reason" : "Error al enrolar al empleado a su grupo" } ' );
-            }
-        }
-    }
-    catch( Exception $e )
-    {
+    	UsuarioDAO::save( $user );
+        $gruposUsuarios->setIdUsuario( $user->getIdUsuario() );
+        GruposUsuariosDAO::save( $gruposUsuarios);
+        printf(' { "success" : "true", "id_usuario": "%s" } ', $user->getIdUsuario() );
+
+    }catch( Exception $e ){
+    	DAO::transRollback();
         die( ' { "success" : "false", "reason" : "' . $e . '"} ' );
     } 
    
+   
+   DAO::transEnd();
+   
 }//insertarEmpleado
+
+
+
+
+
 
 /**
  * Función para obtener una lista de usuarios en una sucursal.

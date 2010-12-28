@@ -9,8 +9,6 @@ Configuracion Basica
 //ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/caffeina/pos/trunk/server");
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/alan/trunk/server");
 
-//mimificar o no el javascript que se carga
-define("_POS_JSMINIFY", false);
 
 //titulo de la aplicacion
 define("_POS_HTMLTITLE", "Papas Supremas");

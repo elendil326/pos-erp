@@ -1,5 +1,5 @@
 <div class="g-section header">
-<a href="http://www.caffeina.mx"><img alt="Caffeina Mexico" height=40 src="../media/logos.png"></a>
+<a href="./"><img alt="Caffeina Mexico" height=40 src="../media/logo_pos.png"></a>
 <div id="custom-search">
   <input id="q" name="q" type="text"> <input class="cse_submit" id="cse-search-button" onclick="searchQuery()" type="button" value="Buscar">
 </div>
@@ -47,19 +47,11 @@
       <a class="drop" >USUARIOS</a>
       <ul style="top: 33px; left: 246px; width: 200px; display: none; ">
         <li class="ga-side-nav-off">
-          <a  href="ventas.php?action=lista">Ver Todas</a>
+          <a  href="usuarios.php?action=lista">Listar usuarios</a>
         </li>
         <li>
-          <a  href="ventas.php?action=porProducto">Por producto</a>
+          <a  href="usuarios.php?action=nuevo">Nuevo usuario</a>
         </li>
-        <li>
-          <a  href="ventas.php?action=porEmpleado">Por empleado</a>
-        </li>
-
-        <li>
-          <a  href="ventas.php?action=proyecciones">Historial y Proyecciones</a>
-        </li>
-
       </ul>
     </li>
 

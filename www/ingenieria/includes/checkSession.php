@@ -3,31 +3,18 @@
 
 require_once('../../server/config.php');
 require_once('logger.php');
-
-
-
 require_once('controller/login.controller.php');
-/*
-if(!isset( $_SESSION['grupo'] )){
-
-    logOut(true);
-  	die('<script>window.location = "./log.php"</script>');
-}
 
 if(!checkCurrentSession()){
-    logOut();
-  	die('<script>window.location = "./log.php"</script>');
+    Logger::log("Sesion invalida para ingenieria");
+    logOut(false);
+  	die('<script>window.location = "../admin/log.php"</script>');
 }
 
 
-if($_SESSION['grupo'] > 1){
-    Logger::log("agluien con grupo menor intento ingresar a admin");
-    logOut(true);
-    die('<script>window.location = "./"</script>');    
+if($_SESSION['grupo'] > 0){
+    Logger::log("Acceso no autorizado para seccion de igenieria");
+    logOut(false);
+  	die('<script>window.location = "../admin/log.php"</script>');
 }
-
-
-*/
-
-
 

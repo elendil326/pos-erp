@@ -13,40 +13,7 @@ require ( "../server/config.php" );
  */
 
 
-	//incluir jsmin
-	if(_POS_JSMINIFY){
-		require_once("utils/JSMin.php");		
-	}
 
-
-	//minificar js
-	function miniJS( $fileData ){
-		$data = "";
-		
-		foreach( $fileData as $line  ){
-			$data .= $line;
-		}
-
-		$salida = JSMin::minify($data);
-		
-		echo $salida;
-	}
-
-
-
-	//minificar css
-	function miniCSS( $fileData ){
-		$data = "";
-		
-		foreach( $fileData as $line  ){
-			$data .= $line;
-		}
-		
-		//$salida = JSMin::minify($data);
-		$salida = $data;
-		
-		echo $salida;
-	}
 
 
 	//cargar cada directorio
@@ -62,17 +29,8 @@ require ( "../server/config.php" );
 		    while ($file = readdir($handle)) {
 				
 				if( endsWith( $file, "." . $type ) ){
-					$lines = file($address . $file);
-					if(_POS_JSMINIFY) {
-						
-						if($type=="js") miniJS ($lines);
-						
-						if($type=="css") miniCSS ($lines);
+					echo file_get_contents($address . $file) . "\n";
 
-					}else{
-						foreach($lines as $line) echo  $line;
-					}
-					echo "\n";
 				}
 				
 				
@@ -114,7 +72,7 @@ require ( "../server/config.php" );
 		//cargar modulos de admin
 		case 'admin' :
 			
-			if(isset($_SESSION['grupo']) && $_SESSION['grupo'] == 1)
+			if(isset($_SESSION['grupo']) && ($_SESSION['grupo'] == 1 || $_SESSION['grupo'] == 0))
 				loadDir( $module, $type );
 			else
 				die("/* ACCESO DENEGADO */");
