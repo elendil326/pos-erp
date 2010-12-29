@@ -29,6 +29,10 @@ Aplicacion.Mostrador.prototype._init = function () {
 	
 	Aplicacion.Mostrador.currentInstance = this;
 	
+	//obtiene la informacion del carrito
+	Aplicacion.Mostrador.currentInstance.getInfoSucursal();
+	
+	
 	return this;
 };
 
@@ -45,8 +49,62 @@ Aplicacion.Mostrador.prototype.getConfig = function (){
 };
 
 
+/* ********************************************************
+	Información de la sucursal
+******************************************************** */
 
+Aplicacion.Mostrador.prototype.infoSucursal = null;
 
+Aplicacion.Mostrador.prototype.getInfoSucursal = function()
+{
+	
+	var info = null;
+	
+	if(DEBUG){
+		console.log("Obteniendo información de la sucursal ....");
+	}
+	
+	Ext.Ajax.request({
+		url: 'proxy.php',
+		scope : this,
+		params : {
+			action : 712,
+		},
+		success: function(response, opts) {
+			try{
+				informacion = Ext.util.JSON.decode( response.responseText );				
+			}catch(e){
+				return POS.error(response, e);
+			}
+			
+			if( !informacion.success ){
+				//volver a intentar
+				if(DEBUG){
+					console.log("obtenicion de la informacion sin exito ",venta );
+				}
+				Ext.Msg.alert("Mostrador", informacion.reason);
+				return;
+
+			}
+			
+			if(DEBUG){
+				console.log("obtenicion de la informacion exitosa ", venta );
+			}
+						
+			Aplicacion.Mostrador.currentInstance.infoSucursal = informacion.datos[0];		
+			
+			if(DEBUG){
+				console.log("Aplicacion.Mostrador.currentInstance.infoSucursal contiene : ", Aplicacion.Mostrador.currentInstance.infoSucursal);	
+			}
+
+		},
+		failure: function( response ){
+			POS.error( response );
+		}
+	});
+	
+	
+};
 
 
 /* ********************************************************
@@ -579,17 +637,38 @@ Aplicacion.Mostrador.prototype.finishedPanelShow = function()
 	
 };
 
+
+
 Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 {
 	carrito = Aplicacion.Mostrador.currentInstance.carrito;
-
+	//incluye los datos de la sucursal
+	carrito.sucursal = Aplicacion.Mostrador.currentInstance.infoSucursal;
+	/*indica que se quiere imprimir un ticket, ya que existen 3 casos de impresion
+		1.- solo ticket
+		2.- solo factura
+		3.- ambos
+	*/
 	
+	carrito.ticket = true;
+
+	if(DEBUG){
+		console.log("carrito : ", carrito);	
+	}
+
+	json = encodeURI( Ext.util.JSON.encode( carrito ) );
+	
+	do 
+	{
+		json = json.replace('#','%23');
+	} 
+	while(json.indexOf('#') >= 0);
 	
 	html = "";
 	
 	html += "<table class='Mostrador-ThankYou'>";
 	html += "	<tr>";	
-	html += "		<td>Venta existosa</td>";
+	html += "		<td>Venta exitosa</td>";
 	html += "		<td></td>";
 	html += "	</tr>"; 
 	
@@ -604,6 +683,7 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 	}	
 
 	html += "</table>";
+	html += "<iframe src ='./PRINTER/src/impresion.php?json=" + json + "' width='0px' height='0px'></iframe> ";
 	
 	this.finishedPanel.update(html);
     Ext.getCmp("Mostrador-mostradorVender").hide( Ext.anims.slide );
@@ -706,6 +786,12 @@ Aplicacion.Mostrador.prototype.vender = function ()
 			if(DEBUG){
 				console.log("resultado de la venta exitosa ", venta );
 			}
+						
+			//almacenamos en el carrito el id de la venta
+			Aplicacion.Mostrador.currentInstance.carrito.id_venta = venta.id_venta;
+			
+			//almacenamos en el carrito el nombre del empleado
+			Aplicacion.Mostrador.currentInstance.carrito.empleado = venta.empleado;
 			
 			//recargar el inventario
 			Aplicacion.Inventario.currentInstance.cargarInventario();
@@ -720,6 +806,8 @@ Aplicacion.Mostrador.prototype.vender = function ()
 			//mostrar el panel final
 			Aplicacion.Mostrador.currentInstance.finishedPanelShow();
 			Aplicacion.Mostrador.currentInstance.cancelarVenta();
+			
+			
 
 		},
 		failure: function( response ){
@@ -727,7 +815,6 @@ Aplicacion.Mostrador.prototype.vender = function ()
 		}
 	});
 };
-
 
 
 

@@ -9,6 +9,7 @@ require_once("model/cliente.dao.php");
 require_once("model/detalle_venta.dao.php");
 require_once("model/detalle_inventario.dao.php");
 require_once("model/factura_venta.dao.php");
+require_once("model/usuario.dao.php");
 require_once("logger.php");
 
 /*
@@ -325,7 +326,9 @@ function vender( $args ){
     {
         if ( VentasDAO::save($venta) )
         {
-            printf('{"success": true}');
+			$empleado = UsuarioDAO::getByPK( $venta->getIdUsuario() );
+			
+            printf('{"success": true, "id_venta":%s, "empleado":"%s"}', $venta->getIdVenta(), $empleado->getNombre() );
         }
         else 
         {
@@ -349,12 +352,13 @@ function vender( $args ){
 
 }
 
+
 switch( $args['action'] ){
 
     case 100:
 		//realizar una venta
         vender($args);
-    break;
+    break;	
 
 }
 

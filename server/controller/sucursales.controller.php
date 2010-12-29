@@ -339,7 +339,17 @@ function inventarioSucursal(){
 	//esta ya esta en inventario
 }
 
-
+//obtiene la informacion de la sucursal actual
+function informacionSucursal(){
+	
+	if( !( $sucursal = SucursalDAO::getByPK( $_SESSION['sucursal'] ) )  )
+    {
+        die( '{"success": false, "reason": "No se tiene registros de esa sucursal." }' );
+    }
+	
+	printf( '{ "success": true, "datos": %s }',  $sucursal );
+	
+}
 
 if(isset($args['action'])){
 
@@ -391,6 +401,10 @@ if(isset($args['action'])){
 
 		case 711://inventario por sucursal
 		    inventarioSucursal( $args );
+		break;
+		
+		case 712:
+			informacionSucursal(  );
 		break;
 
 	}
