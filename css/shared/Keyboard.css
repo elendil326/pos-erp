@@ -31,3 +31,22 @@
 .Keyboard-key.small{
 		width: 50px;
 }
+
+.Keyboard-key.tiny{
+		padding : 2px;
+		width: 50px;
+		height: 30px;
+}
+
+.Keyboard-key.tinyNormal{
+		padding : 2px;
+		width: 80px;
+		height: 30px;
+}
+
+.Keyboard-key.tinyLong{
+		padding : 2px;
+		width: 150px;
+		height: 30px;
+}
+

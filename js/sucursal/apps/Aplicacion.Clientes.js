@@ -1671,21 +1671,25 @@ Aplicacion.Clientes.prototype.crearClienteValidator = function ()
 	
 	//nombre
 	if(v.nombre.length < 10){
+	        Ext.Msg.alert("Nuevo cliente", "El nombre debe ser mayor de diez caracteres.");
 		return campo.setInstructions("El nombre debe ser mayor de diez caracteres.");
 	}
 	
 	//rfc
 	if(v.rfc.length < 10){
+	        Ext.Msg.alert("Nuevo cliente", "El RFC debe ser mayor de diez caracteres.");
 		return campo.setInstructions("El RFC debe ser mayor de diez caracteres.");
 	}
 	
 	//direccion
 	if(v.direccion.length < 10){
+	        Ext.Msg.alert("Nuevo cliente", "La direccion es muy corta.");
 		return campo.setInstructions("La direccion es muy corta.");
 	}
 	
 	//ciudad
 	if(v.ciudad.length < 3){
+	        Ext.Msg.alert("Nuevo cliente", "La ciudad es muy corta." );
 		return campo.setInstructions("La ciudad es muy corta.");
 	}
 	
@@ -1693,19 +1697,30 @@ Aplicacion.Clientes.prototype.crearClienteValidator = function ()
 	
 	//telefono
 	if(v.telefono.length < 5){
+        Ext.Msg.alert("Nuevo cliente", "El telefono debe ser mayor de 5 caracteres.");
 		return campo.setInstructions("El telefono debe ser mayor de 5 caracteres.");
 	}
+
+
 	
 	//descuento
 	if(  v.descuento.length === 0 || isNaN( v.descuento ) || (v.descuento > 50 && v.descuento < 0) ){
+	        Ext.Msg.alert("Nuevo cliente", "El descuento debe ser un numero entre 0 y 50.");
 		return campo.setInstructions("El descuento debe ser un numero entre 0 y 50.");
 	}
 	
 	//limite_credito
 	if( v.limite_credito.length === 0 || isNaN( v.limite_credito ) ){
+	    Ext.Msg.alert("Nuevo cliente", "El limite de credito debe ser un numero.");
 		return campo.setInstructions("El limite de credito debe ser un numero.");
 	}
 	
+	//limite_credito
+	if( v.limite_credito > 20000 ){
+
+	    Ext.Msg.alert("Nuevo cliente", "No puede crear un cliente con limite de credito mayor a $20,000. Necesitara pedir una autorizacion.");
+		return campo.setInstructions("No puede crear un cliente con limite de credito mayor a $20,000. Necesitara pedir una autorizacion.");
+	}
 
 	Aplicacion.Clientes.currentInstance.crearCliente( v );
 };

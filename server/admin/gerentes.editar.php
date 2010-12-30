@@ -49,6 +49,7 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 
 
 <h2>Editar Contrase&ntilde;a</h2>
+<h3>Puede utilizar numeros, signos y letras mayusculas</h3>
 <form id="editpass">
 <table border="0" cellspacing="5" cellpadding="5">
 	<tr><td>Nueva Contrase&ntilde;a</td><td><input type="password" id="pass1" size="40" /></td></tr>

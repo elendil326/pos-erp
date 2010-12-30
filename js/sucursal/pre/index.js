@@ -8,7 +8,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
     layout: 'card',
     items: [{
         cls: 'launchscreen',
-        html: '<div><h1>Punto de venta</h1><p>This is a comprehensive collection of our examples in an <br /> easy-to-navigate format. Each sample has a “view source” button which dynamically displays its associated code.<br /><br /><span>Sencha Touch &beta; (' + Ext.version +')</span></p></div>'
+        html: '<div><img src="media/logo_pos.png"></div>'
     }],
     backText: 'Regresar',
     useTitleAsBackText: false,
@@ -55,7 +55,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
         this.navigationPanel.on('back', this.onNavBack, this);
 
         if (!Ext.is.Phone) {
-            this.navigationPanel.setWidth(250);
+            this.navigationPanel.setWidth(180);
         }
 
         this.dockedItems = this.dockedItems || [];

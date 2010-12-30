@@ -185,7 +185,7 @@ function createLoginForm( sucursal ){
 					listeners : {
 						"focus" : function(){
 							kconf = {
-								type : 'alfanum',
+								type : 'complete',
 								submitText : 'Aceptar',
 								callback : null
 							};
