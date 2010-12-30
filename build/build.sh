@@ -1,11 +1,19 @@
 #!/bin/bash
 echo "Iniciando build"
-cd ..
+
+#compilar el jsminify
+gcc jsmin.c -o jsmin
 
 # quitando la carpeta de documentacion
 if [ -d docs ]
 then
 	rm -rf docs
+fi
+
+# quitando la carpeta de privado
+if [ -d private ]
+then
+	rm -rf private
 fi
 
 
@@ -19,7 +27,7 @@ function parsefiles(){
 	rm $1/*.js	
 	
 	#minificar ese archivo
-	./jslint <$1/out > $1/out.js
+	./jsmin <$1/out > $1/out.js
 
 	rm $1/out
 
@@ -30,6 +38,7 @@ function parsefiles(){
 		#quitar archivos vacios
 		rm $1/out.js
 	else
+		echo "removiendo console.log()"
 		# es un archivo con codigo, remover los if(DEBUG)
 		# if[ ]?[(]DEBUG[)][ {].*[ }]
 		
