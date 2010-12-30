@@ -494,14 +494,14 @@ if(POS_ENABLE_GMAPS){
     $cortes = CorteDAO::getAll( 1, 1, 'fecha', 'desc' );
 
     if(sizeof($cortes) == 0){
-        echo "No se han hecho cortes en esta sucursal. Mostrando flujo desde la apertura de sucursal.<br>";
+        echo "No se han hecho cortes en esta sucursal. Mostrando flujo desde la apertura de sucursal.<br><br>";
         
         $fecha = $sucursal->getFechaApertura();
 
     }else{
 
         $corte = $cortes[0];
-        echo "Fecha de ultimo corte: <b>" . $corte->getFecha() . "</b><br>";
+        echo "Fecha de ultimo corte: <b>" . $corte->getFecha() . "</b><br><br>";
         $fecha = $corte->getFecha();
 
     }
@@ -552,6 +552,29 @@ if(POS_ENABLE_GMAPS){
         ));
     }
     
+    
+	//buscar todas las ventas desde el ultimo corte
+	$foo = new Ventas();
+    $foo->setFecha( $fecha );
+    $foo->setIdSucursal( $_REQUEST['id'] );
+    $foo->setTipoVenta( 'contado' );
+
+    $bar = new Ventas();
+    $bar->setFecha($hoy);
+    
+    $ventas = VentasDAO::byRange( $foo, $bar );
+
+    foreach ($ventas as $i )
+    {
+        array_push( $flujo, array(
+            "tipo" => "venta",
+            "concepto" => "Venta de Contado",
+            "monto" => $i->getPagado(),
+            "usuario" => $i->getIdUsuario()
+        ));
+    }
+
+
 
 
     $header = array(
@@ -577,7 +600,13 @@ if(POS_ENABLE_GMAPS){
     $tabla->addNoData("No hay operaciones.");
     $tabla->render();
 
+	$enCaja = 0;
 
+	foreach($flujo as $f){
+		$enCaja += $f['monto'];
+	}
+	
+	echo "<div align=right><h3>Total en caja: " . moneyFormat($enCaja) . "</h3></div>";
 ?>
 
 
