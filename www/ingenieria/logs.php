@@ -15,7 +15,7 @@
 	<script type="text/javascript" src="./../getResource.php?mod=admin&type=js"></script>
   </head>
   <body>
-    <div class="g-doc-1024" id="g-doc">
+    <div class="g-doc-800" id="g-doc">
         
     <?php include_once("ingenieria/includes/mainMenu.php"); ?>
     <?php

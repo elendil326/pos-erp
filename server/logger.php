@@ -130,9 +130,6 @@ class Logger
 		
 	}
 	
-	function get_last_rows($file, $lines, $header) {
-
-	}
 
 	public static final function log( $msg, $level = 0 )
 	{
@@ -152,11 +149,12 @@ class Logger
 
         
 
-        $out = date(DATE_RFC822);
+        //$out = date(DATE_RFC822);
+        $out = date("g:i:sa j M");
 
         $out .= " | " . $_SERVER["REMOTE_ADDR"];
 
-        $out .= " | LEVEL:" . $level;
+        $out .= " | L:" . $level;
 
 
         if(isset($_SESSION['userid'])){

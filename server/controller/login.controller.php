@@ -164,7 +164,7 @@ function checkCurrentSession()
         }
     }
 
-    Logger::log("Sesion actual valida para usuario : {$_SESSION['userid']}" );
+    //Logger::log("Sesion actual valida para usuario : {$_SESSION['userid']}" );
     return true;
 
 }
