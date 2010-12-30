@@ -12,7 +12,7 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 ?>
 
 <script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.js" type="text/javascript" charset="utf-8"></script> 
+<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
 <link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
 
 <script type="text/javascript" charset="utf-8">

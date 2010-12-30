@@ -233,62 +233,10 @@ if(POS_ENABLE_GMAPS){
             if(POS_ENABLE_GMAPS){ ?>startMap();<?php }
         ?>
 
-
-	    HumbleFinance.trackFormatter = function (obj) {
-            return fechas[ parseInt(obj.x) ].fecha + "\nVentas:" + parseInt(obj.y) ;
-
-	    };
-
-	    HumbleFinance.yTickFormatter = function (n) {
-	        if (n == this.axes.y.max) {
-	            return false;
-	        }
-
-            if(n == 0 ){
-                return false;
-            }
-
-	        return n + " ventas";
-	    };
-
-	    HumbleFinance.xTickFormatter = function (n) { 
-
-	        if (n == 0) {
-	            return false;
-	        }
-			
-
-            try{
-    	        var date = fechas[ parseInt(n) ].fecha;
-            }catch(e){
-                return "";
-            }
-
-	        return date; 
-	    }
-
-	    HumbleFinance.init('finance', numVentas, [], numVentas);
-		
-
-		
-	    var xaxis = HumbleFinance.graphs.summary.axes.x;
-	    var prevSelection = HumbleFinance.graphs.summary.prevSelection;
-	    var xmin = xaxis.p2d(prevSelection.first.x);
-	    var xmax = xaxis.p2d(prevSelection.second.x);
-
-	    Event.observe(HumbleFinance.containers.summary, 'flotr:select', function (e) {
-
-			var area = e.memo[0];
-	        xmin = Math.floor(area.x1);
-	        xmax = Math.ceil(area.x2);
-
-	        var date1 = fechas[xmin].fecha;
-	        var date2 = fechas[xmax].fecha;
-
-
-	        $('fechas').update("Mostrando rango <b>" + date1 + '</b> al <b>' + date2 + "</b>");
-
-	    });
+		var graficaVentas = new HumbleFinance();
+        graficaVentas.addGraph( numVentas );
+        graficaVentas.addSummaryGraph( numVentas );
+        graficaVentas.render('finance');
 
 	});
 
