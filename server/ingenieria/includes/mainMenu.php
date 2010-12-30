@@ -30,7 +30,7 @@
       <a class="drop" >EVENTOS Y LOGS</a>
       <ul>
         <li class="ga-side-nav-off">
-          <a href="gerentes.php?action=lista">Accessos fallidos</a>
+          <a href="logs.php?action=ver">Ver log</a>
         </li>
         <li class="ga-side-nav-off">
           <a href="gerentes.php?action=asignar">Asignar gerencias</a>
