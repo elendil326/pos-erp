@@ -1,8 +1,19 @@
 #!/bin/bash
 echo "Iniciando build"
 
+
+
 #compilar el jsminify
-gcc jsmin.c -o jsmin
+cd build
+gcc jsmin.c -o ../jsmin
+cd ..
+
+
+# quitando la carpeta de documentacion
+if [ -d build ]
+then
+	rm -rf build
+fi
 
 # quitando la carpeta de documentacion
 if [ -d docs ]
@@ -16,6 +27,10 @@ then
 	rm -rf private
 fi
 
+#renombrar el archivo config.php a config.example.php,
+#para que al ejecutar el sistema, no encuentre el config
+#y comienze la configuracion
+mv server/config.php server/config.example.php
 
 # entrar en el directorio de los javascripts
 # y fusionar los archivos que estan dentro de la misma carpeta
