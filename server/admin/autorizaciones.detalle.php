@@ -55,16 +55,20 @@ $(function(){
 
 
 
-
-
-
+<?php
+	if($usuario){
+		$who = $usuario->getNombre();	
+	}else{
+		$who = "Admin";
+	}
+?>
 
 <h1>Detalles de autorizacion</h1>
 <h2>Detalles de la autorizacion</h2>
 
 <table border="0" cellspacing="5" cellpadding="5">
 	<tr><td><b>ID Autorizacion</b></td><td><?php    echo $autorizacion->getIdAutorizacion(); ?></td></tr>
-	<tr><td><b>Usuario</b></td><td><?php            echo $usuario->getNombre(); ?></td></tr>
+	<tr><td><b>Usuario</b></td><td><?php            echo $who; ?></td></tr>
 	<tr><td><b>Sucursal</b></td><td><?php           echo $sucursal->getDescripcion(); ?></td></tr>
 	<tr><td><b>Fecha de peticion</b></td><td><?php  echo $autorizacion->getFechaPeticion(); ?></td></tr>
 	<tr><td><b>Descripcion</b></td><td><?php        echo $autorizacionDetalles->descripcion; ?></td></tr>	
@@ -156,7 +160,12 @@ switch( $autorizacionDetalles->clave ){
                 ?>
                 <tr><td></td><td></td></tr>
             </table>
-            <input type=button value="Surtir sucursal" onclick="surtirSuc(<?php echo $autorizacion->getIdSucursal(); ?>, <?php    echo $autorizacion->getIdAutorizacion(); ?>)" >
+            <?php
+            if($autorizacion->getEstado() != 4){
+	            ?><input type=button value="Surtir sucursal" onclick="surtirSuc(<?php echo $autorizacion->getIdSucursal(); ?>, <?php    echo $autorizacion->getIdAutorizacion(); ?>)" ><?php
+            }
+            ?>
+            
         <?php
 
         

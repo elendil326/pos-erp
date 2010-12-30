@@ -938,14 +938,13 @@ Aplicacion.Autorizaciones.prototype.surtirAutorizacion = function(  ){
                 return;
             }
 
-             Ext.Msg.alert("Autorizaciones","Se modifico correctamente el inventario");
+            Ext.Msg.alert("Autorizaciones","Se modifico correctamente el inventario");
 
-            //recargamos la lista de aurorizaciones
-            Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesLoad();
-            
-            
+			//recargar todo
+			task();
+
             //cambiamos la card
-             sink.Main.ui.setActiveItem( Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel , 'slide');
+             sink.Main.ui.setActiveItem( Aplicacion.Inventario.currentInstance.listaInventarioPanel , 'fade');
             
 
         },

@@ -136,9 +136,11 @@ if(POS_ENABLE_GMAPS){
         $date = new DateTime($primeraVenta);
 
         $now = new DateTime("now");
+
+		$date->sub( new DateInterval("P1D") );
    
         $offset = $date->diff($now);
-
+		
 
         $ventasEstaSucursal = array();
         $todasLasVentas = array();

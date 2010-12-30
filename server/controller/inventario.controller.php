@@ -215,11 +215,13 @@ function detalleVentas( $id ){
 
 function nuevoProducto($data)
 {
+    DAO::transBegin();
 
     try{
         $jsonData = json_decode($data);
     }catch(Exception $e){
         Logger::log("json invalido para nuevo producto" . $e);
+        DAO::transRollback();
         return array( "success" => false, "reason" => "bad json" );
     }
 
@@ -234,7 +236,9 @@ function nuevoProducto($data)
     try{
         InventarioDAO::save( $inventario );
     }catch(Exception $e){
+	    DAO::transRollback();
         return array( "success" => false, "reason" => $e );
+        
     }
 
 
@@ -251,11 +255,12 @@ function nuevoProducto($data)
     try{
         ActualizacionDePrecioDAO::save( $actualizacion );
     }catch(Exception $e){
-        //quitar el producto que ya haviamos metido para que se pueda volver a itnentar
+        DAO::transRollback();
         return array( "success" => false, "reason" => $e );
     }
 
     Logger::log("Nuevo producto creado !");
+    DAO::transEnd();
     return array( "success" => true , "id" => $inventario->getIdProducto() );
 }
 

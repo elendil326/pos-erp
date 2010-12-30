@@ -23,10 +23,11 @@ $header = array(
 
 function renderEstado ($edo){
     switch( $edo ){
-        case "1" : return "uno";
-        case "2" : return "dos";
-        case "3" : return "tres";
-        case "4" : return "cuato";
+        case "0" : return "<div style='color:red'>Pendiente</div>";
+        case "1" : return "Aceptada";
+        case "2" : return "Rechazada";
+        case "3" : return "En transito";
+        case "4" : return "<div style='color:green'>Contestada</div>";
 
     }
 }

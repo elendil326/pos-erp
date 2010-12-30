@@ -10,6 +10,7 @@ require_once("model/cliente.dao.php");
 require_once("model/detalle_compra.dao.php");
 require_once("model/compras.dao.php");
 require_once("model/inventario.dao.php");
+require_once('model/actualizacion_de_precio.dao.php');
 
 function solicitudDeAutorizacion( $auth ){
 
@@ -79,18 +80,23 @@ function autorizacionesSucursal( $sid ){
 
 function surtirProducto($args){
 
+	DAO::transBegin();
+	
     if(!isset($args['id_autorizacion'])) 
     {
+		DAO::transRollback();    
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
 
     if( !( $autorizacion = AutorizacionDAO::getByPK( $args['id_autorizacion'] ) ) )
     {
+		DAO::transRollback();    
         die('{"success": false, "reason": "Verifique que exista la autorizacion ' . $args['id_autorizacion'] . '." }');
     }
 
     if( $autorizacion->getEstado() != 3 )
     {
+		DAO::transRollback();    
         die('{"success": false, "reason": "El administrador no ha aprovado esta solicitud." }');
     }
 
@@ -100,6 +106,7 @@ function surtirProducto($args){
     }
     catch(Exception $e)
     {
+		DAO::transRollback();    
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
@@ -115,6 +122,7 @@ function surtirProducto($args){
             
             if( !$producto_inventario )
             {
+				DAO::transRollback();    
                 die( '{ "success" : "false" , "reason" : "El producto ' . $producto->id_producto . ' no se encuentra registrado en el inventario."}' );
             }
             
@@ -122,7 +130,21 @@ function surtirProducto($args){
             $nuevo_detalle_producto = new DetalleInventario();
             $nuevo_detalle_producto->setIdProducto( $producto->id_producto );    
             $nuevo_detalle_producto->setIdSucursal( $_SESSION['sucursal'] );
-            $nuevo_detalle_producto->setPrecioVenta( $producto_inventario->getCosto() );
+            
+            
+            //buscar la ultima actualizacion de precio para este producto
+            
+            $foo = new ActualizacionDePrecio();
+            $foo->setIdProducto($producto->id_producto);
+            $actualizacion = ActualizacionDePrecioDAO::search( $foo, 'fecha', 'DESC' );
+            $actualizacion = $actualizacion[0];
+            
+            $nuevo_detalle_producto->setPrecioVenta( $actualizacion->getPrecioVenta() );
+            
+            //buscar las existencias minimas para este producto
+            $foo = InventarioDAO::getByPK($producto->id_producto);
+            
+            
             $nuevo_detalle_producto->setMin( 100 );
             $nuevo_detalle_producto->setExistencias( 0 );
             
@@ -134,11 +156,13 @@ function surtirProducto($args){
                 }
                 else
                 {
+					DAO::transRollback();    
                     die( '{ "success" : "false" , "reason" : "No se pudo enviar la autorizacion."}' );
                 }
             }
             catch(Exception $e)
             {
+				DAO::transRollback();    
                 die( '{ "success" : "false" , "reason" : "Exception: no se pudo enviar la autorizacion."}' );
             } 
         }
@@ -154,11 +178,15 @@ function surtirProducto($args){
         try{
             if ( DetalleInventarioDAO::save($p) < 1 )
             {
+            
+				DAO::transRollback();    
                 die( '{"success": false, "reason": "Error al guardar las nuevas existencias" }' );
             } 
         }
         catch(Exception $e)
         {
+        
+			DAO::transRollback();    
             die( '{"success": false, "reason": "Exception al modificar le detalle del inventario" }' );
         }
 
@@ -175,14 +203,19 @@ function surtirProducto($args){
         }
         else
         {
+        
+			DAO::transRollback();    
             die( '{ "success" : "false" , "reason" : "No se pudo cambiar el estado a surtido."}' );
         }
     }
     catch(Exception $e)
     {
+		DAO::transRollback();    
         die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorizacion."}' );
     }
     
+    
+    DAO::transEnd();
 }
 
 

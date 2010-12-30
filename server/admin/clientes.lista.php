@@ -52,6 +52,7 @@ require_once("controller/inventario.controller.php");
             $date = new DateTime($primerCliente);
 
             $now = new DateTime("now");
+            		$date->sub( new DateInterval("P1D") );
             $offset = $date->diff($now);
 
 

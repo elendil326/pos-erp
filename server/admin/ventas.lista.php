@@ -86,7 +86,7 @@ require_once('model/sucursal.dao.php');
 <h1>Ventas</h1>
 
 
-
+<!--
 <h2>Busqueda avanzada</h2>
 <table>
 <tr>
@@ -121,7 +121,7 @@ require_once('model/sucursal.dao.php');
     <td></td><td><input onclick='reload()' type='button' value='Buscar'></td>
 </tr>
 </table>
-
+-->
 
 
 
