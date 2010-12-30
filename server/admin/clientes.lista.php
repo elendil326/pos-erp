@@ -125,11 +125,15 @@ require_once("controller/inventario.controller.php");
 
 
 	Event.observe(document, 'dom:loaded', function() {
+		if(window.numClientes){
+		    var graficaVentas = new HumbleFinance();
+		    graficaVentas.addGraph( numClientes );
+		    graficaVentas.addSummaryGraph( numClientes );
+		    graficaVentas.render('finance');		
+		}else{
+			$('finance').innerHTML = "No hay clientes";
+		}
 
-        var graficaVentas = new HumbleFinance();
-        graficaVentas.addGraph( numClientes );
-        graficaVentas.addSummaryGraph( numClientes );
-        graficaVentas.render('finance');
         
          
 

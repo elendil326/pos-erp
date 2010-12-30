@@ -1,4 +1,8 @@
-<html>
+<?php
+
+date_default_timezone_set("America/Mexico_City");
+
+?><html>
   <head>
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

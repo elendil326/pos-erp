@@ -31,8 +31,8 @@
 	<tr><td>Direccion</td><td><input type="text"            id="direccion" size="40"/></td></tr>
 	<tr><td>Telefono</td><td><input type="text"             id="telefono" size="40"/></td></tr>
 	<tr><td>Salario</td><td><input type="text"              id="salario" size="40"/></td></tr>		
-	<tr><td>Contrase&ntilde;a</td><td><input type="text"    id="pass1" size="40"/></td></tr>
-	<tr><td>Repetir contrase&ntilde;a</td><td><input type="text" id="pass2" size="40"/></td></tr>
+	<tr><td>Contrase&ntilde;a</td><td><input type="password"    id="pass1" size="40"/></td></tr>
+	<tr><td>Repetir contrase&ntilde;a</td><td><input type="password" id="pass2" size="40"/></td></tr>
 
 	<tr><td></td><td><input type="button" onClick="validar()" value="Crear el nuevo gerente"/> </td></tr>
 </table>
