@@ -337,7 +337,14 @@ ul li {
     <script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
     <link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
-
+	<script>
+	function handleKeyPress(e){
+		var key=e.keyCode || e.which;
+		if (key==13){
+			doStart();
+		}
+	}
+	</script>
     <style>
         body{
             background-image: none;
@@ -368,10 +375,11 @@ ul li {
 <!--            <tr><td rowspan=5><img src='../media/cash_register.png'></td></tr> -->
             <tr><td rowspan=5><img src='../media/safe.png'></td></tr>
 	        <tr><td></td><td>Usuario</td>    <td><input type="text" id="usr" size="40"/></td></tr>
-	        <tr><td></td><td>Contrase&ntilde;a</td>      <td><input type="password" id="pass" size="40"/></td></tr>
-	        <tr><td></td><td></td>           <td><input type="button" onClick="doStart()" value="Iniciar sesion"/></td></tr>
+	        <tr><td></td><td>Contrase&ntilde;a</td>      <td><input type="password" id="pass" size="40" onkeypress="handleKeyPress(event)"/></td></tr>
+	        <tr><td></td><td></td>           <td><input type="button" onClick="doStart()" value="Iniciar sesion" onkeypress="handleKeyPress(event)"/></td></tr>
 	        <tr><td></td><td></td>           <td></td></tr>
         </table>
+
     </form>
     </div>
 	<?php include_once("admin/includes/footer.php"); ?>

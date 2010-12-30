@@ -21,6 +21,7 @@ $header = array(
 
 $tabla = new Tabla( $header, $gerentes );
 $tabla->addOnClick("id_usuario", "mostrarDetalles");
+$tabla->addNoData("No hay gerentes asignados.");
 $tabla->render();
 
 
@@ -41,6 +42,7 @@ if(sizeof($gerentes)>0){
 
     $tabla = new Tabla( $header, $gerentes );
     $tabla->addOnClick("id_usuario", "mostrarDetalles");
+    $tabla->addNoData("No hay gerentes sin asignar.");
     $tabla->render();
 }
 

@@ -9,6 +9,7 @@
     $equipo = EquipoDAO::getByPK($_REQUEST['id']);
 
     $save = false;
+    
     if(isset($_REQUEST['fua'])){
         $equipo->setFullUa($_REQUEST['fua']);
         $save = true;
@@ -21,9 +22,7 @@
 
 
     if($save){
-        $status = "Datos guardados correctamente";
-        
-
+		$success = true;
         $es = new EquipoSucursal();
         $es->setIdEquipo($_REQUEST['id']);
         $es->setIdSucursal($_REQUEST['sucursal']);
@@ -33,14 +32,15 @@
             EquipoSucursalDAO::save( $es );
             EquipoDAO::save( $equipo );
         }catch(Exception $e){
-            $status = $e;    
+        	$success = false;
+            $status = $e;
         }
     }
 
 ?>
 
 <script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.js" type="text/javascript" charset="utf-8"></script> 
+<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
 <link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
 
 <script type="text/javascript" charset="utf-8">
@@ -50,7 +50,12 @@
 
 <?php 
     if($save){
-        echo $status;
+    	if($success){
+	    	echo "<div class='success'>OK</div>";
+    	}else{
+	    	echo "<div class='failure'>".$status."</div>";    	
+    	}
+        
     }
 ?>
 

@@ -145,21 +145,24 @@
 
 
 
-<h2>Detalles de la sucursal</h2>
-<form id="detalles">
-<table border="0" cellspacing="5" cellpadding="5">
-	<tr><td>Descripcion</td><td><input type="text" id="descripcion" size="40"/></td><td><div id="descripcion_helper"></div></td></tr>
-	<tr><td>Direccion</td><td><input type="text" id="direccion" size="40"/></td><td><div id="direccion_helper"></div></td></tr>
-	<tr><td>Telefono</td><td><input type="text" id="telefono" size="40"/></td><td><div id="telefono_helper"></div></td></tr>
-	<tr><td>RFC</td><td><input type="text" id="rfc" size="40"/></td><td><div id="rfc_helper"></div></td></tr>
-	<tr><td>Prefijo Factura</td><td><input type="text" id="letras_factura" size="40"/></td><td><div id="letras_factura_helper"></div></td></tr>
 
-</table>
-</form>
 
 <?php
 
 if($posiblesGerentes > 0 ){
-    ?><div align="center"><input type="button" onClick="validar()" value="Abrir esta sucursal"/></div><?php
+    ?>
+    <h2>Detalles de la sucursal</h2>
+	<form id="detalles">
+	<table border="0" cellspacing="5" cellpadding="5">
+		<tr><td>Descripcion</td><td><input type="text" id="descripcion" size="40"/></td><td><div id="descripcion_helper"></div></td></tr>
+		<tr><td>Direccion</td><td><input type="text" id="direccion" size="40"/></td><td><div id="direccion_helper"></div></td></tr>
+		<tr><td>Telefono</td><td><input type="text" id="telefono" size="40"/></td><td><div id="telefono_helper"></div></td></tr>
+		<tr><td>RFC</td><td><input type="text" id="rfc" size="40"/></td><td><div id="rfc_helper"></div></td></tr>
+		<tr><td>Prefijo Factura</td><td><input type="text" id="letras_factura" size="40"/></td><td><div id="letras_factura_helper"></div></td></tr>
+
+	</table>
+	</form>
+	<div align="center"><input type="button" onClick="validar()" value="Abrir esta sucursal"/></div>
+<?php
 }
 

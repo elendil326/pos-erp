@@ -32,10 +32,8 @@ fi
 #y comienze la configuracion
 mv server/config.php server/config.example.php
 
-# entrar en el directorio de los javascripts
-# y fusionar los archivos que estan dentro de la misma carpeta
+
 function parsefiles(){
-	echo "escaneando $1"
 
 	#pegar todos los js en un solo archivo
 	cat $1/*.js > $1/out
@@ -75,7 +73,20 @@ function parsefiles(){
 	done
 }
 
-
+# entrar en el directorio de los javascripts
+# y fusionar los archivos que estan dentro de la misma carpeta
 parsefiles js
 
+#eliminar el jsmin y el script de build, osea este mismo
+rm jsmin
+rm build.sh
+
+#enzipar todo
+tar -pczf pos-build.tar.gz *
+
+#borrar lo que sobre para que solo quede el tar enzipado
+rm -rf www
+rm -rf css
+rm -rf server
+rm -rf js
 

@@ -32,11 +32,7 @@
       </h1>
             <p>
             Este punto de venta es una solución de analítica web para empresas que proporciona información
-            muy valiosa sobre el tráfico del sitio web y la eficacia del plan de marketing. Ahora,
-            gracias a unas funciones potentes, flexibles y fáciles de usar, podrá ver y analizar el
-            tráfico desde una perspectiva totalmente distinta. Google Analytics le ayudará a diseñar
-            anuncios más orientados, a mejorar sus iniciativas de marketing y a crear sitios web que
-            generen más conversiones.
+            muy valiosa sobre el tráfico del sitio web y la eficacia del plan de marketing. 
             </p>
         </td>
         </tr>

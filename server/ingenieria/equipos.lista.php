@@ -15,11 +15,12 @@
 
         try{
             EquipoDAO::save( $e );
+	        echo "<div class='success'>Equipo agregado correctamente</div>" ;            
         }catch(Exception $e){
-            $status = $e;
+	        echo "<div class='failure'>" . $e . "</div>" ;
         }
 
-        echo $status;
+
 
     }
 

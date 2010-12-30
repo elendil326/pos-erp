@@ -387,7 +387,7 @@ var HumbleFinance = function(  ){
         var plotOffset = e.memo[1].plotOffset;
         var height = this.containers.summary.getHeight();
         var offset = this.containers.summary.positionedOffset();
-        this.handles.left.show();
+        //this.handles.left.show();
         var dimensions = this.handles.left.getDimensions();
         
         // Set positions
@@ -397,10 +397,10 @@ var HumbleFinance = function(  ){
         var xPosRight = Math.max(xPosOne, xPosTwo);
         var yPos = Math.floor(offset[1]+height/2 - dimensions.height/2);
         
-        this.handles.left.setStyle({position: 'absolute', left: xPosLeft+'px', top: yPos+'px'});
-        this.handles.right.setStyle({position: 'absolute', left: xPosRight+'px', top: yPos+'px'});
-        this.handles.left.show();
-        this.handles.right.show();
+        //this.handles.left.setStyle({position: 'absolute', left: xPosLeft+'px', top: yPos+'px'});
+        //this.handles.right.setStyle({position: 'absolute', left: xPosRight+'px', top: yPos+'px'});
+        //this.handles.left.show();
+        //this.handles.right.show();
     };
     
     

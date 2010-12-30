@@ -35,6 +35,7 @@ $header = array(
 	"letras_factura"=> "Facturas" );
 $tabla = new Tabla( $header, $data );
 $tabla->addOnClick("id_sucursal", "mostrarDetallesSucursal");
+$tabla->addNoData("No hay sucursales.");
 $tabla->render();	
 
 

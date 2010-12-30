@@ -61,13 +61,16 @@
         <li>
           <a  href="ventas.php?action=porProducto">Por producto</a>
         </li>
+        <!--
         <li>
           <a  href="ventas.php?action=porEmpleado">Por empleado</a>
         </li>
-
+        -->
+		<!--
         <li>
           <a  href="ventas.php?action=proyecciones">Historial y Proyecciones</a>
         </li>
+        -->
 
       </ul>
     </li>

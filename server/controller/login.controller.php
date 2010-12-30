@@ -276,9 +276,15 @@ function sucursalTest( ){
     $suc = $search[0];
 
     //ver que si exista esta sucursal
-    if(SucursalDAO::getByPK($suc->getIdSucursal()) === null){
+    $suc = SucursalDAO::getByPK($suc->getIdSucursal());
+    if($suc === null){
         Logger::log("equipo {$equipo->getIdEquipo()} vinculado a sucursal {$suc->getIdSucursal()} pero esta no existe !", 2);
         return false;
+    }
+    
+    if($suc->getActivo() == 0){
+        Logger::log("equipo {$equipo->getIdEquipo()} vinculado a suc {$suc->getIdSucursal()} pero esta no esta activa !", 2);
+        return false; 
     }
 
     Logger::log("Equipo validado !");

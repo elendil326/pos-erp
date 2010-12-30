@@ -104,10 +104,11 @@
 
 
     $t = new Tabla( $header, $tabla );
-    
+    $t->addNoData("No hay ningun producto");
 
 ?>
 
 <h1>Ventas por producto</h1>
+<h2>Ventas por producto</h2>
 <?php $t->render(); ?>
 
