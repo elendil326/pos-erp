@@ -46,56 +46,44 @@ require_once("controller/inventario.controller.php");
 
     //obtener la fecha de la sucursal que abrio primero
     $firstSuc = SucursalDAO::getAll(1, 1, 'fecha_apertura', 'ASC' );
+
     
-    if(sizeof($firstSuc)!=0){
-            $primerCliente = $firstSuc[0]->getFechaApertura();
-            $date = new DateTime($primerCliente);
-
-            $now = new DateTime("now");
-            		$date->sub( new DateInterval("P1D") );
-            $offset = $date->diff($now);
-
-
+    if(sizeof($firstSuc)!=0)
+    {
+    
             $numClientes = array();
             $fechas = array();
-
             $n = 0;
+    		
+            $primerCliente = $firstSuc[0]->getFechaApertura();
+            
+            $start = date("Y-m-d", strtotime("-1 day", strtotime($primerCliente)));
+            $now = date ( "Y-m-d" );
 
-            while($offset->format("%r%a") > -1){
-
-
-                //if($offset->format("%r%a") > -1){
-                //    echo "OK !\n";
-                //}
-                //echo $date->format('Y-m-d') . ":\n";
-                //echo $offset->format("%r%a") . "\n\n";
-
-
-                //buscar las ventas de todas las sucursales
-	            $date->setTime ( 0 , 0, 0 );
+		
+			while( true ){
 
 	            $v1 = new Cliente();
                 $v1->setIdCliente("0");
-	            $v1->setFechaIngreso( $date->format('Y-m-d H:i:s') );
+	            $v1->setFechaIngreso( $start . " 00:00:00" );
 
-
-	            $date->setTime ( 23, 59, 59 );
 	            $v2 = new Cliente();
                 $v2->setIdCliente("999");
-	            $v2->setFechaIngreso( $date->format('Y-m-d H:i:s') );
-
+	            $v2->setFechaIngreso( $start . " 23:59:59" );				
+	            
 	            $results = ClienteDAO::byRange($v1, $v2);
-                $n += count($results);
+                $n += count($results);	            
+                
                 array_push( $numClientes, $n );
-
-
-                array_push( $fechas, $date->format('Y-m-d') );
-
-                //siguiente dia
-                $date->add( new DateInterval("P1D") );
-                $offset = $date->diff($now);
-            }
-
+                array_push( $fechas, $start );
+                
+   				if($start == $now){
+   					break;
+   				}
+   				
+  				$start = date("Y-m-d", strtotime("+1 day", strtotime($start)));
+			}
+			
 
             echo "\nvar numClientes = [";
             for($i = 0; $i < sizeof($numClientes); $i++ ){
@@ -116,7 +104,8 @@ require_once("controller/inventario.controller.php");
                     echo ",";
                 }
             }
-            echo "];\n";	
+            echo "];\n";
+
     }
     ?>
             

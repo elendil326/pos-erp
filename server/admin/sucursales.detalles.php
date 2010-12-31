@@ -131,41 +131,23 @@ if(POS_ENABLE_GMAPS){
     function editar(){ window.location = "sucursales.php?action=editar&sid=<?php echo $_REQUEST['id'] ?>"; }
 
     <?php
-		//obtener la fecha de la primera venta de esta sucursal
-        $primeraVenta = SucursalDAO::getByPK( $_REQUEST['id'] )->getFechaApertura();
-        $date = new DateTime($primeraVenta);
-
-        $now = new DateTime("now");
-
-		$date->sub( new DateInterval("P1D") );
-   
-        $offset = $date->diff($now);
-		
-
         $ventasEstaSucursal = array();
         $todasLasVentas = array();
         $fechas = array();
-                
-        while($offset->format("%r%a") > -1){
-
-
-            /*if($offset->format("%r%a") > -1){
-                echo "OK !\n";
-            }
-            echo $date->format('Y-m-d') . ":\n";
-            echo $offset->format("%r%a") . "\n\n";*/
-
-
-            //buscar las ventas de todas las sucursales
-		    $date->setTime ( 0 , 0, 1 );
-
+        
+		//obtener la fecha de la primera venta de esta sucursal
+        $primeraVenta = SucursalDAO::getByPK( $_REQUEST['id'] )->getFechaApertura();
+        
+		$start = date("Y-m-d", strtotime("-1 day", strtotime($primeraVenta)));
+		$now = date ( "Y-m-d" );
+        
+        while(true){
+			//buscar las ventas de todas las sucursales
 		    $v1 = new Ventas();
-		    $v1->setFecha( $date->format('Y-m-d H:i:s') );
+		    $v1->setFecha( $start . " 00:00:00" );
 
-
-		    $date->setTime ( 23, 59, 59 );
 		    $v2 = new Ventas();
-		    $v2->setFecha( $date->format('Y-m-d H:i:s') );
+		    $v2->setFecha( $start . " 23:59:59" );
 
 		    $results = VentasDAO::byRange($v1, $v2);
             array_push( $todasLasVentas, count($results) );
@@ -176,12 +158,18 @@ if(POS_ENABLE_GMAPS){
 		    $results = VentasDAO::byRange($v1, $v2);
             array_push( $ventasEstaSucursal, count($results) );
 
-            array_push( $fechas, $date->format('Y-m-d') );
+            array_push( $fechas, $start );
 
-            //siguiente dia
-            $date->add( new DateInterval("P1D") );
-            $offset = $date->diff($now);
+            
+			if($start == $now){
+				break;
+			}
+			
+			$start = date("Y-m-d", strtotime("+1 day", strtotime($start)));        
+
         }
+        
+     
 
 
         echo "\nvar estaSucursal = [";

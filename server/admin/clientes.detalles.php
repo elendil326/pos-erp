@@ -151,54 +151,43 @@ if(POS_ENABLE_GMAPS){
 
             <?php
 
-            //obtener la fecha de la sucursal que abrio primero
-
+            //graficar desde la fecha de ingreso de este cliente
             $primerVenta = $cliente->getFechaIngreso();
-            $date = new DateTime($primerVenta);
-
-            $now = new DateTime("now");
-            		$date->sub( new DateInterval("P1D") );
-            $offset = $date->diff($now);
-
-
+       		$start = date("Y-m-d", strtotime("-1 day", strtotime($primerVenta)));
+			$now = date ( "Y-m-d" );
+			
             $numVentas = array();
             $fechas = array();
-
             $n = 0;
 
-            while($offset->format("%r%a") > -1){
+            while(true){
+				//buscar las ventas de todas las sucursales
+				$v1 = new Ventas();
+				$v1->setFecha( $start . " 00:00:00" );
+				$v1->setIdCliente( $_REQUEST['id'] );
 
+				$v2 = new Ventas();
+				$v2->setFecha( $start . " 23:59:59" );
 
-                //if($offset->format("%r%a") > -1){
-                //    echo "OK !\n";
-                //}
-                //echo $date->format('Y-m-d') . ":\n";
-                //echo $offset->format("%r%a") . "\n\n";
+				$results = VentasDAO::byRange($v1, $v2);
+				
+				array_push( $numVentas, count($results) );
+		        array_push( $fechas, $start );
 
+		        $foo = explode("-", $start);
+		        $bar = explode("-", $now );
+		        
+		        if(($foo[0] > $bar[0]) && ($foo[1] > $bar[1]) && ($foo[2] > $bar[2])){
+		        	break;
+		        }
+		        
+				if($start == $now){
+					break;
+				}
+				
+				$start = date("Y-m-d", strtotime("+1 day", strtotime($start))); 
 
-                //buscar las ventas de todas las sucursales
-			    $date->setTime ( 0 , 0, 0 );
-
-			    $v1 = new Ventas();
-			    $v1->setFecha( $date->format('Y-m-d H:i:s') );
-
-
-			    $date->setTime ( 23, 59, 59 );
-			    $v2 = new Ventas();
-			    $v2->setFecha( $date->format('Y-m-d H:i:s') );
-
-			    $results = VentasDAO::byRange($v1, $v2);
-
-                array_push( $numVentas, count($results) );
-
-
-                array_push( $fechas, $date->format('Y-m-d') );
-
-                //siguiente dia
-                $date->add( new DateInterval("P1D") );
-                $offset = $date->diff($now);
-            }
-
+         	}
 
             echo "\nvar numVentas = [";
             for($i = 0; $i < sizeof($numVentas); $i++ ){
