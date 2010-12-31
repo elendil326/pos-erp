@@ -27,7 +27,8 @@ require_once('logger.php');
 function insertarEmpleado($args)
 {	
 
-    Logger::log("insertar empleado iniciado...");
+    Logger::log("Insertando empleado.");
+    
     DAO::transBegin();
     
     if( !isset($args['data']) )
@@ -37,23 +38,31 @@ function insertarEmpleado($args)
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
     
-    try
-    {
-        $data = json_decode( $args['data'] );
+    $data = parseJSON( $args['data'] );
 
-    }
-    catch(Exception $e)
-    {
-        Logger::log("json invalido " . $e);
+    if($data == NULL){
+        Logger::log("JSON invalido :" . $args['data']);
+        Logger::log(stripslashes($args['data']));
+
         DAO::transRollback();
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
+
+
     $user = new Usuario();
     $user->setRFC( $data->RFC );
+    
+    try{
+    	$us = UsuarioDAO::search( $user );
+    }catch(Exception $e){
+        Logger::log("Buscando usuario:" . $e);
+        DAO::transRollback();
+        die( '{"success": false, "reason": "Parametros invalidos." }' );    	
+    }
 
     //buscar que no exista ya un empleado con este RFC
-    if( count($us = UsuarioDAO::search( $user )) > 0 )
+    if( count($us) > 0 )
     {
         foreach($us as $u)
         {
@@ -350,16 +359,8 @@ function modificarEmpleado( $args )
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
     
-    try
-    {
-        $data = json_decode( $args['data'] );
-    }
-    catch(Exception $e)
-    {
-        Logger::log("json invalido " . $e);
-        die( '{"success": false, "reason": "Parametros invalidos." }' );
-    }
-
+    
+    $data = parseJSON( $args['data'] );
 
 
     if($data === null){
@@ -615,7 +616,7 @@ function listarResponsables( $args ){
 
 function editarGerencias ($data){
 
-    $sucursales = json_decode($data['data']);
+    $sucursales = parseJSON( $args['data'] );
 
     foreach ($sucursales as $sucursalData)
     {

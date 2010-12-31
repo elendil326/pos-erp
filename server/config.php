@@ -97,3 +97,20 @@ $descuento /= 100;
 return ( ($subtotal- ($subtotal*$descuento)) + (($subtotal-($subtotal*$descuento))*$iva) );
 
 }
+
+
+
+
+function parseJSON($json){
+
+        try{
+            	if($json != stripslashes($json)){
+                        return json_decode(stripslashes($json));
+                }else{
+                      	return json_decode($json);
+                }
+        }catch(Exception $e){
+                return null;
+        }
+}
+

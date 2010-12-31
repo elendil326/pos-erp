@@ -218,7 +218,8 @@ function nuevoProducto($data)
     DAO::transBegin();
 
     try{
-        $jsonData = json_decode($data);
+
+        $jsonData = parseJSON($data);
     }catch(Exception $e){
         Logger::log("json invalido para nuevo producto" . $e);
         DAO::transRollback();

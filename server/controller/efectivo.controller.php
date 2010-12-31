@@ -85,14 +85,8 @@ function listarIngresosSucursal( $sid = null)
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
 
-    try
-    {
-        $data = json_decode( $args['data'] );
-    }
-    catch(Exception $e)//autorizacionPendiate
-    {
-        die( '{"success": false, "reason": "Parametros invalidos." }' );
-    }
+	$data = parseJSON( $args['data'] );
+
 
     if( !isset( $data->folio ) || !isset( $data->concepto ) || !isset( $data->monto ) /*|| !isset( $data->fecha )*/)
     {
@@ -210,14 +204,8 @@ function listarIngresosSucursal( $sid = null)
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
 
-    try
-    {
-        $data = json_decode( $args['data'] );
-    }
-    catch(Exception $e)
-    {
-        die( '{"success": false, "reason": "Parametros invalidos." }' );
-    }
+	$data = parseJSON( $args['data'] );
+
 
     if( !( $gasto = GastosDAO::getByPK( $data->id_gasto ) ) )
     {
@@ -285,14 +273,7 @@ function listarIngresosSucursal( $sid = null)
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
 
-    try
-    {
-        $data = json_decode( $args['data'] );
-    }
-    catch(Exception $e)
-    {
-        die( '{"success": false, "reason": "Parametros invalidos." }' );
-    }
+	$data = parseJSON( $args['data'] );
 
     if( !isset( $data->concepto ) || !isset( $data->monto ) || !isset( $data->fecha ))
     {
@@ -408,14 +389,7 @@ function listarIngresosSucursal( $sid = null)
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
 
-    try
-    {
-        $data = json_decode( $args['data'] );
-    }
-    catch(Exception $e)
-    {
-        die( '{"success": false, "reason": "Parametros invalidos." }' );
-    }
+	$data = parseJSON( $args['data'] );
 
     if( !( $ingreso = GastosDAO::getByPK( $data->id_gasto ) ) )
     {

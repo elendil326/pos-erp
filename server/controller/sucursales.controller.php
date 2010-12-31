@@ -200,7 +200,8 @@ function editarSucursal($sid, $payloadJSON, $verbose = true ){
     }
 
     try{
-        $payload = json_decode( $payloadJSON );
+        $payload = parseJSON( $payloadJSON );
+
     }catch(Exception $e){
         if($verbose){
             echo '{ "success" : false, "reason" : "Invalid JSON." }';

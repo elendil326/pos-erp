@@ -102,7 +102,7 @@ function surtirProducto($args){
 
     try
     {
-        $data = json_decode( $autorizacion->getParametros() );
+        $data = parseJSON( $autorizacion->getParametros() );
     }
     catch(Exception $e)
     {
@@ -265,9 +265,10 @@ function respuestaAutorizacionSurtir( $args ){
         die('{"success": false, "reason": "Faltan parametros." }');
     }
 
+	
     try
     {
-        $data = json_decode( $args['data']);
+        $data = parseJSON( $args['data'] );
     }
     catch(Exception $e)
     {
@@ -342,7 +343,7 @@ function surtirProductosSucursal( $args ){
 
     try
     {
-        $data = json_decode( $args['data']);
+	    $data = parseJSON( $args['data'] );
     }
     catch(Exception $e)
     {
@@ -442,7 +443,7 @@ function respuestaAutorizacionDevolucion( $args ){
 
     try
     {
-        $data = json_decode( $args['data']);
+	    $data = parseJSON( $args['data'] );
     }
     catch(Exception $e)
     {
@@ -587,7 +588,8 @@ function respuestaAutorizacionMerma( $args ){
 
     try
     {
-        $data = json_decode( $args['data']);
+        $data = parseJSON( $args['data'] );
+
     }
     catch(Exception $e)
     {
@@ -733,7 +735,7 @@ function respuestaAutorizacionLimiteCredito( $args ){
 
     try
     {
-        $data = json_decode( $args['data']);
+        $data = parseJSON( $args['data'] );
     }
     catch(Exception $e)
     {
@@ -870,7 +872,8 @@ if( isset( $args['action'] ) ){
             
             try
             {
-                $data = json_decode( $args['data'] ); //$data = json_decode( $data);
+ 
+                $data = parseJSON( $args['data'] );
             }
             catch(Exception $e)
             {
@@ -926,7 +929,7 @@ if( isset( $args['action'] ) ){
             
             try
             {
-                $data = json_decode( $args['data'] ); //$data = json_decode( $data);
+				$data = parseJSON( $args['data'] );
             }
             catch(Exception $e)
             {
@@ -983,7 +986,7 @@ if( isset( $args['action'] ) ){
 
             try
             {
-                $data = json_decode( $args['data']);
+				$data = parseJSON( $args['data'] );
             }
             catch(Exception $e)
             {

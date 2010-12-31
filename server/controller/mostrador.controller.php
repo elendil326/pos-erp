@@ -121,7 +121,7 @@ function vender( $args ){
    
 
     try{
-        $data = json_decode( $args['payload'] );
+        $data = parseJSON( $args['payload'] );
     }catch(Exception $e){
         Logger::log("json invalido para realizar venta" . $e);
         DAO::transRollback();

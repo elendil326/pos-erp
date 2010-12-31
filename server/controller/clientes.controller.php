@@ -39,15 +39,7 @@ function crearCliente( $args ){
 		die('{"success": false, "reason": "No hay parametros para ingresar." }');
 	}	
 
-	try
-    {
-		$data = json_decode( $args['data'] );		
-	}
-    catch(Exception $e)
-    {
-        Logger::log("Error al decodificar el json" . $e);
-		die( '{"success": false, "reason": "Parametros invalidos." }' );
-	}
+	$data = parseJSON( $args['data'] );
 
 	//crear el objeto de cliente a ingresar
 	$cliente = new Cliente();
@@ -168,15 +160,7 @@ function modificarCliente( $args ){
 		die('{"success": false, "reason": "No hay parametros para ingresar." }');
 	}
 	
-	try
-    {
-		$data = json_decode( $args['data'] );		
-	}
-    catch(Exception $e)
-    {
-        Logger::log("Error al decodificar json " .$e);
-		die( '{"success": false, "reason": "Parametros invalidos." }' );
-	}
+	$data = parseJSON( $args['data'] );	
 
 	//crear el objeto de cliente a ingresar
 	$cliente = ClienteDAO::getByPK ( $data->id_cliente );
@@ -292,7 +276,7 @@ function listarVentasClientes( ){
     foreach($ventas as $venta)
     {
         //var_dump($venta);
-        $decode_venta = json_decode($venta);
+        $decode_venta = parseJSON( $venta );
         $decode_venta = $decode_venta[0];
         //var_dump($decode_venta);
         //agregamos al venta al total de ventas
@@ -310,7 +294,7 @@ function listarVentasClientes( ){
 
         foreach($detalles_venta as $detalle_venta)
         {
-            $detalle = json_decode($detalle_venta);
+            $detalle = parseJSON( $detalle_venta );
             $descripcion = InventarioDAO::getByPK( $detalle_venta->getIdProducto() );
             $detalle->descripcion = $descripcion->getDescripcion();
             array_push($array_detalle,$detalle); //inserta los detalles de las ventas
@@ -412,15 +396,8 @@ function abonarCompra( $args ){
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
 
-    try
-    {
-        $data = json_decode( $args['data'] );
-    }
-    catch(Exception $e)
-    {
-        Logger::log("Json invalido " . $e);
-        die( '{"success": false, "reason": "Parametros invalidos." }' );
-    }
+$data = parseJSON( $args['data'] );
+
 
     if(!isset($data->id_venta) )
     {
@@ -510,6 +487,7 @@ function listarClientesDeudores(  ){
         }
 
         $c = json_decode($cliente, true);
+        
 
         $c["credito_restante"] = $cliente->getLimiteCredito() - $por_pagar;
         $c["saldo"] = $por_pagar;	
