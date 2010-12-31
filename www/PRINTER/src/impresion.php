@@ -9,7 +9,7 @@ date_default_timezone_set("America/Mexico_City");
   </head>
   <body>
         <applet code="printer.Main" archive="../dist/PRINTER.jar" WIDTH=0 HEIGHT=0>
-            <param name="json" value="<?php echo urlencode($_REQUEST['json'])?>">
+            <param name="json" value="<?php echo urlencode( stripslashes($_REQUEST['json'])) ?>">
             <param name="hora" value="<?php echo urlencode(date("d/m/y H:i:s"))?>">
         </applet>
   </body>
