@@ -270,43 +270,40 @@ function modificarCliente( $args ){
 function listarVentasClientes( ){
     
     $ventas = VentasDAO::getAll();
-
     $tot_ventas = array();
 
     foreach($ventas as $venta)
     {
-        //var_dump($venta);
-        $decode_venta = parseJSON( $venta );
-        $decode_venta = $decode_venta[0];
-        //var_dump($decode_venta);
-        //agregamos al venta al total de ventas
+
+        $decode_venta = $venta->asArray();
 
         $dventa = new DetalleVenta();
         $dventa->setIdVenta( $venta->getIdVenta() );
+        
         //obtenemos el detalle de la venta
         $detalles_venta = DetalleVentaDAO::search($dventa);
         
-        if(sizeof($detalles_venta)){
-            continue;
-        }
-
         $array_detalle = array(); //guarda los detalles de las ventas
 
         foreach($detalles_venta as $detalle_venta)
         {
             $detalle = parseJSON( $detalle_venta );
+            
             $descripcion = InventarioDAO::getByPK( $detalle_venta->getIdProducto() );
-            $detalle->descripcion = $descripcion->getDescripcion();
-            array_push($array_detalle,$detalle); //inserta los detalles de las ventas
+            
+            $detalle['descripcion'] = $descripcion->getDescripcion();
+            
+            array_push($array_detalle, $detalle);
         } 
         
-        $decode_venta->{"detalle_venta"} = $array_detalle;
+        $decode_venta["detalle_venta"] = $array_detalle;
 
         $suc = SucursalDAO::getByPK( $venta->getIdSucursal() );
-        $decode_venta->sucursal = $suc->getDescripcion();
+        $decode_venta['sucursal'] = $suc->getDescripcion();
 
         $cajero = UsuarioDAO::getByPK( $venta->getIdUsuario() );
-        $decode_venta->cajero = $cajero->getNombre();
+        $decode_venta['cajero'] = $cajero->getNombre();
+        
         array_push( $tot_ventas, $decode_venta );
     }
 
@@ -486,7 +483,7 @@ function listarClientesDeudores(  ){
             $por_pagar += $venta->getTotal() - $venta->getPagado();
         }
 
-        $c = json_decode($cliente, true);
+        $c = $cliente->asArray();
         
 
         $c["credito_restante"] = $cliente->getLimiteCredito() - $por_pagar;

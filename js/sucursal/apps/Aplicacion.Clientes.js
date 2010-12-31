@@ -131,65 +131,14 @@ Aplicacion.Clientes.prototype.listaDeComprasLoad = function (){
 			this.listaDeCompras.lastUpdate = Math.round(new Date().getTime()/1000.0);
             this.listaDeCompras.hash = compras.hash;
             
-            
-            
-		}
-	});
-
-};
-
-
-
-
-
-
-Aplicacion.Clientes.prototype.checkVentasDbDiff = function ()
-{
-    
-    
-	Ext.Ajax.request({
-		url: 'proxy.php',
-		scope : this,
-		params : {
-			action : 304,
-            hashCheck : this.listaDeCompras.hash
-		},
-		success: function(response, opts) {
-
-			
-            if(response.responseText.length > 0){
-
-                if(DEBUG){
-                    console.log("new db update ! installing ...");
-                }
-
-
-		        try{
-			        compras = Ext.util.JSON.decode( response.responseText );
-		        }catch(e){
-			        POS.error(e); 
-                    return;
-		        }
-
-                if(DEBUG){
-                    console.log("new hash : " ,compras.hash );
-                }
-
-			    Aplicacion.Clientes.currentInstance.listaDeCompras.lista = compras.datos;
-			    Aplicacion.Clientes.currentInstance.listaDeCompras.lastUpdate = Math.round(new Date().getTime()/1000.0);
-                Aplicacion.Clientes.currentInstance.listaDeCompras.hash = compras.hash;
-
-
-                //cargar de nuevo la lista de clientes
-
-            }else{
-
+            if(DEBUG){
+            	console.log("Ya tengo la lista de compras !", compras.datos);
             }
             
 		}
 	});
-};
 
+};
 
 
 
@@ -1076,8 +1025,11 @@ Aplicacion.Clientes.prototype.creditoDeClientesPanelUpdater = function ( cliente
 	Ext.getCmp("Clientes-DetallesVentaCredito").hide();
 	Ext.getCmp("Clientes-AbonarVentaBoton").hide();
 
+	if(DEBUG){
+		console.log('este cliente tien ' + ventasCredito.length + ' ventas a credito');
+	}
 	
-	if( ventasCredito.length == 1 ){
+	if( ventasCredito.length == 1){
 		//no hay ventas a credito
 		Ext.getCmp("Clentes-CreditoVentasLista").hide();
 		Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getTabBar().getComponent(2).hide();
@@ -1410,9 +1362,6 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 
 	//crear el panel, y asignarselo a detallesDeClientesPanel
 	this.detallesDeClientesPanel = new Ext.TabPanel({
-
-
-
 		//NO MOVER EL ORDEN DEL MENU !!
 	    items: [{
 			iconCls: 'user',
