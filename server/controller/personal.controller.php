@@ -107,7 +107,7 @@ function insertarEmpleado($args)
         die( ' { "success" : "false", "reason" : "' . $e . '"} ' );
     } 
    
-   
+   Logger::log("Empleado insertado correctamente.");
    DAO::transEnd();
    
 }//insertarEmpleado
