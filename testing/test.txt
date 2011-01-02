@@ -1,0 +1,22 @@
+#beginTest
+	#beginDesc
+		Prueba basica del login
+	#endDesc
+	#beginInput
+		action=2099
+	#endInput
+	#beginOutput
+		{"success": false , "reason": 101, "text" : "Error interno." }
+	#endOutput
+#endTest
+#beginTest
+	#beginDesc
+		Prueba basica del login2
+	#endDesc
+	#beginInput
+		action=2099
+	#endInput
+	#beginOutput
+		{"success": false , "reason": 101, "text" : "Error interno." }
+	#endOutput
+#endTest

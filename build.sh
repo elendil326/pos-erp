@@ -80,6 +80,7 @@ parsefiles js
 #eliminar el jsmin y el script de build, osea este mismo
 rm jsmin
 rm build.sh
+rm -rf testing
 
 #enzipar todo
 tar -pczf pos-build.tar.gz *
