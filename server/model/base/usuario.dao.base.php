@@ -170,7 +170,11 @@ abstract class UsuarioDAOBase extends DAO
 			$sql .= " fecha_inicio = ? AND";
 			array_push( $val, $usuario->getFechaInicio() );
 		}
-
+		
+		if(sizeof($val) == 0){
+			return array();
+		}
+		
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;

@@ -29,7 +29,7 @@
 		-->
 
 	<?php 
-		switch( $_GET["action"] )
+		switch( $_REQUEST["action"] )
 		{
 			case "lista" : require_once("ingenieria/equipos.lista.php"); break;
 			case "editar" : require_once("ingenieria/equipos.editar.php"); break;

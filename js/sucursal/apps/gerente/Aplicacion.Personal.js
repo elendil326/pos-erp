@@ -442,6 +442,7 @@ Aplicacion.Personal.prototype.crearEmpleadoValidar = function (  )
 {
 	
 	v = Aplicacion.Personal.currentInstance.nuevoEmpleadoPanel.getValues();
+
 	
 	
 	if( isNaN(v.grupo) || v.grupo.length == 0 ){
@@ -480,6 +481,11 @@ Aplicacion.Personal.prototype.crearEmpleadoValidar = function (  )
 		return false;
 	}
 
+	if( v.salario < 0 ){
+		Aplicacion.Personal.currentInstance.nuevoEmpleadoPanel.getComponent(0).setInstructions("No puede asingar un salario negativo.");
+		return false;
+	}
+	
 	Aplicacion.Personal.currentInstance.nuevoEmpleadoPanel.getComponent(0).setInstructions("");	
 	return true;
 	
@@ -531,8 +537,9 @@ Aplicacion.Personal.prototype.crearEmpleadoBoton = function (  )
 			if( !r.success ){
                 //aqui entra si el usuario qeu se quiere dar de alta ya habia sido contratado en algun momento
 				Aplicacion.Personal.currentInstance.nuevoEmpleadoPanel.getComponent(0).setInstructions(r.reason);
-               
-                Aplicacion.Personal.currentInstance.reincorporarEmpleado( v, r.id );
+  				Ext.Msg.alert( "Nueva contratacion", r.reason );
+  				
+                //Aplicacion.Personal.currentInstance.reincorporarEmpleado( v, r.id );
 				return;
 			}
 			

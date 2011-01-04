@@ -35,20 +35,76 @@ function crearCliente( $args ){
 
 	if(!isset($args['data']))
     {
-        Logger::log("No hay parametros para ingresar ");
-		die('{"success": false, "reason": "No hay parametros para ingresar." }');
+        Logger::log("No hay parametros para ingresar nuevo cliente.");
+		die('{ "success": false, "reason" : "Parametros invalidos" }');
 	}	
 
 	$data = parseJSON( $args['data'] );
+
+	if($data == null){
+		Logger::log("Json invalido para crear cliente:" . $args['data']);
+		die('{ "success": false, "reason" : "Parametros invalidos" }');
+	}
+	
+	
+	if(!( isset($data->rfc) &&
+			isset($data->nombre) &&
+			isset($data->direccion) &&
+			isset($data->descuento) &&
+			isset($data->telefono) &&
+			isset($data->ciudad) &&
+			isset($data->limite_credito)
+		)){
+		Logger::log("Faltan parametros para crear cliente:" . $args['data']);
+		die('{ "success": false, "reason" : "Faltan parametros." }');
+	}
 
 	//crear el objeto de cliente a ingresar
 	$cliente = new Cliente();
 	$cliente->setRfc( $data->rfc );
 	
 	//buscar que no exista ya un cliente con este RFC
-	if( count(ClienteDAO::search( $cliente )) > 0)
-    {
+	if( count(ClienteDAO::search( $cliente )) > 0){
+		Logger::log("RFC ya existe en clientes.");
 		die ( '{"success": false, "reason": "Ya existe un cliente con este RFC." }' );
+	}
+
+
+
+	if(strlen($data->nombre) < 10){
+		Logger::log("Nombre muy corto para insertar cliente.");
+		die ( '{"success": false, "reason": "El nombre del cliente es muy corto." }' );		
+	}
+
+	if(strlen($data->telefono) < 5){
+		Logger::log("Telefono muy corto para insertar cliente.");
+		die ( '{"success": false, "reason": "El telefono del cliente es muy corto." }' );		
+	}
+
+	if($data->descuento < 0){
+		Logger::log("Descuento negativo para el cliente.");
+		die ( '{"success": false, "reason": "El descuento del cliente no puede ser negativo." }' );		
+	}
+
+	if($data->descuento > POS_MAX_LIMITE_DESCUENTO){
+		Logger::log("Descuento mayor a ".POS_MAX_LIMITE_DESCUENTO." para el cliente.");
+		die ( '{"success": false, "reason": "El descuento del cliente no puede ser tan grande." }' );		
+	}
+
+	if(!is_numeric($data->limite_credito)){
+		die ( '{"success": false, "reason": "El Limite de credito debe ser un numero." }' );			
+	}
+	
+	
+
+	if($data->limite_credito < 0){
+		Logger::log("Limite de credito negativo para el cliente.");
+		die ( '{"success": false, "reason": "El Limite de credito del cliente no puede ser negativo." }' );		
+	}
+
+	if($data->limite_credito > POS_MAX_LIMITE_DE_CREDITO){
+		Logger::log("Descuento mayor a ".POS_MAX_LIMITE_DESCUENTO." para el cliente.");
+		die ( '{"success": false, "reason": "El Limite de credito del cliente no puede ser tan grande." }' );		
 	}
 
     $cliente->setNombre( $data->nombre );
@@ -56,39 +112,35 @@ function crearCliente( $args ){
 	$cliente->setLimiteCredito( $data->limite_credito );
 	$cliente->setDescuento( $data->descuento );
 	$cliente->setTelefono( $data->telefono );
-	$cliente->setEMail( $data->e_mail );
+	$cliente->setCiudad ( $data->ciudad );
+		
+	if(isset($data->e_mail))
+		$cliente->setEMail( $data->e_mail );
 	
 	$cliente->setActivo ( 1 );
-	$cliente->setCiudad ( $data->ciudad );
 
 	//si esta peticion viene de un administrador, usar los 
 	// datos que vienen en el request, de lo contrario
 	// utilizar los datos que estan en la sesion
 	if($_SESSION[ 'grupo' ] <= 1)
     {
-		$cliente->setIdSucursal ( $data->id_sucursal );
-		$cliente->setIdUsuario ( $data->id_usuario );
-	}
-    else
-    {
+    	if( isset($data->id_sucursal) && isset($data->id_usuario) ){
+			$cliente->setIdSucursal ( $data->id_sucursal );
+			$cliente->setIdUsuario ( $data->id_usuario );    	
+    	}else{
+    		die('{"success": false, "reason": "Debe proporcionar una sucursal y un usuario." }');
+    	}
+
+		
+	}else{
 		$cliente->setIdSucursal ( $_SESSION['sucursal'] );
 		$cliente->setIdUsuario ( $_SESSION['userid'] );
 	}
 
 	try{
-
-	    if (ClienteDAO::save($cliente)) 
-        {
-	        printf('{"success": true, "id": "%s"}' , $cliente->getIdCliente());
-	    } 
-        else 
-        {
-            Logger::log("Error al guardar el nuevo cliente");
-	        die( '{"success": false, "reason": "Error" }' );
-	    }
-	}
-    catch(Exception $e)
-    {
+		ClienteDAO::save($cliente);
+		printf('{"success": true, "id": "%s"}' , $cliente->getIdCliente());
+	}catch(Exception $e){
         Logger::log("Error al guardar el nuevo cliente:" . $e);
 	    die( '{"success": false, "reason": "Error" }' );
 	}
@@ -154,20 +206,30 @@ function listarClientes(  ){
 
 function modificarCliente( $args ){
 
-	if( !isset($args['data']) )
-    {
-        Logger::log("No hay parametros para ingresar");
-		die('{"success": false, "reason": "No hay parametros para ingresar." }');
+	if( !isset($args['data']) ){
+        Logger::log("No hay parametros para editar cliente.");
+		die('{"success": false, "reason": "Parametros invalidos." }');
 	}
+	
 	
 	$data = parseJSON( $args['data'] );	
 
+	if($data == null){
+        Logger::log("Json invalido para modificar cliente: " . $args['data']);
+		die('{"success": false, "reason": "Parametros invalidos." }');	
+	}
+
+	//minimo debio haber mandado el id_cliente
+	if(!isset($data->id_cliente)){
+		Logger::log("Json invalido para modificar cliente: " . $args['data']);
+		die('{"success": false, "reason": "Parametros invalidos." }');	
+	}
+
 	//crear el objeto de cliente a ingresar
 	$cliente = ClienteDAO::getByPK ( $data->id_cliente );
+
 	
-	//buscar que no exista ya un cliente con este RFC
-	if( !$cliente )
-    {
+	if( !$cliente ){
         Logger::log("No existe el cliente " . $data->id_cliente);
 		die ( '{"success": false, "reason": "Este cliente no existe." }' );
 	}
@@ -184,6 +246,7 @@ function modificarCliente( $args ){
 
 	if( isset($data->limite_credito) ){
         //validar limite de credito
+        
         if( $data->limite_credito < 0 ){
             Logger::log("Intentando ingresar limite de credito negativo");
     		die ( '{"success": false, "reason": "El limite de credito no puede ser negativo." }' );
@@ -191,8 +254,6 @@ function modificarCliente( $args ){
 
         if( $data->limite_credito >= POS_MAX_LIMITE_DE_CREDITO && $_SESSION['grupo'] == 2 ){
 
-            // @TODO
-            //revisar que no exista una autorizacion que avale que este cliente tiene un limite de credito extendido
             Logger::log("gerente intentando asignar limite de credito mayor a " . POS_MAX_LIMITE_DE_CREDITO);
 
             $max = POS_MAX_LIMITE_DE_CREDITO;
@@ -227,9 +288,9 @@ function modificarCliente( $args ){
 	if( isset($data->ciudad) )		
 		$cliente->setCiudad ( $data->ciudad );	
 
+
 	//solo el admin puede editar estos campos
-	if($_SESSION[ 'grupo' ] <= 1)
-    {
+	if($_SESSION[ 'grupo' ] <= 1){
 		if( isset($data->id_sucursal) )	
 			$cliente->setIdSucursal ( $data->id_sucursal );
 			
@@ -237,24 +298,15 @@ function modificarCliente( $args ){
 			$cliente->setIdUsuario ( $data->id_usuario );
 	}
 
-	try
-    {
+	try{
+       ClienteDAO::save($cliente);
+       printf( '{"success": true, "id": "%s"}' , $cliente->getIdCliente() );
+       Logger::log("Cliente " . $cliente->getIdCliente() . " modificado !");
 
-	    if (ClienteDAO::save($cliente)) 
-        {
-	        printf( '{"success": true, "id": "%s"}' , $cliente->getIdCliente() );
-            Logger::log("Cliente " . $cliente->getIdCliente() . " modificado !");
-	    } else 
-        {
-            Logger::log("No se afectaron rows al modificar al cliente " . $cliente->getIdCliente());
-	        die( '{"success": false, "reason": "Los datos son indenticos, debe de modificar almenos un campo." }' );
-	    }
+	} catch(Exception $e) {
 	
-	}
-    catch(Exception $e)
-    {
         Logger::log("Error al guardar modificacion del cliente " . $e);
-	    die( '{"success": false, "reason": "'.$e.'" }' );
+	    die( '{"success": false, "reason": "Error. Porfavor intente de nuevo." }' );
 	}
 	
 }
@@ -384,65 +436,79 @@ function listarVentaCliente( $id_cliente, $tipo_venta = null ){
 
 
 
-
+/*
+ *  @TODO: Estea debe llamarse abonarAVenta !!
+ *
+ **/
 function abonarCompra( $args ){
 
     if(!isset($args['data']))
     {
         Logger::log("No hay parametros para abonar a la compra");
-        die('{"success": false, "reason": "No hay parametros para ingresar." }');
-    }
-
-$data = parseJSON( $args['data'] );
-
-
-    if(!isset($data->id_venta) )
-    {
-        Logger::log("no se envio un id_venta para abonar");
         die('{"success": false, "reason": "Parametros invalidos." }');
     }
 
-    if(!isset($data->monto) )
-    {
+	$data = parseJSON( $args['data'] );
+
+
+    if(!isset($data->id_venta) ){
+        Logger::log("No se envio un id_venta para abonar");
+        die('{"success": false, "reason": "Parametros invalidos." }');
+    }
+
+    if(!isset($data->monto) ){
         Logger::log("No se envio un monto para abonar");
         die('{"success": false, "reason": "Parametros invalidos." }');
     }
 
+	if(!is_numeric($data->monto )){
+        Logger::log("El monto a abonar debe ser un numero");
+        die('{"success": false, "reason": "Parametros invalidos." }');		
+	}
+
+
+	if( $data->monto < 0){
+        Logger::log("El monto a abonar no puede ser negativo");
+        die('{"success": false, "reason": "No puede abonar un monto negativo." }');
+	}
+	
+
+	if($_SESSION['grupo'] <= 1){
+	 	if(!( isset($data->sucursal) && isset($data->userid) )){
+	 		die('{"success": false, "reason": "Faltan parametros." }');
+	 	}
+	 	// TODO:validar esta sucursal y este usuario
+	 	$sid = $data->sucursal;
+	 	$uid = $data->userid;
+	}else{
+		$sid = $_SESSION['sucursal'];
+		$uid = $_SESSION['userid'];
+	}
+
     $pagosVenta = new PagosVenta();
     $pagosVenta->setIdVenta( $data->id_venta );
-    $pagosVenta->setIdSucursal( $_SESSION['sucursal'] );
-    $pagosVenta->setIdUsuario(  $_SESSION['userid'] );
+    $pagosVenta->setIdSucursal( $sid );
+    $pagosVenta->setIdUsuario ( $uid );
     $pagosVenta->setMonto( $data->monto );
 
-    try
-    {
-        //ingresamos el pago a la BD
-        if( PagosVentaDAO::save($pagosVenta) < 1)
-        {
-            Logger::log("no se afectaron filas al ingresar el abono ", 1);
-            echo '{ "success":"false", "reason":"Error" }';
-        }
-    }
-    catch(Exception $e)
-    {
-        Logger::log("Error al intentar guardar el abono "  . $e);
-        die( '{"success": false, "reason": "'.$e.'" }' );
-    }
+	DAO::transBegin();
 
-    //ya que se ingreso modificamos lo pagado a al venta
-    $venta = VentasDAOBase::getByPK( $data->id_venta );
-    $venta->setPagado( $venta->getPagado() +  $data->monto );
+    try{
     
-    if(VentasDAOBase::save($venta) == 1)
-    {
-        echo '{"success":"true"}';
-    }
-    else
-    {
-        Logger::log("Error al actualizar el total a la venta !", 1);
-        echo '{ "success":"false", "reason":"No actualizo el pago a la venta." }';
+		PagosVentaDAO::save($pagosVenta);
+    	//ya que se ingreso modificamos lo pagado a al venta
+    	$venta = VentasDAOBase::getByPK( $data->id_venta );
+	    $venta->setPagado( $venta->getPagado() +  $data->monto );
+		VentasDAOBase::save($venta);
+	    
+    }catch(Exception $e){
+        Logger::log("Error al intentar guardar el abono "  . $e);
+        DAO::transRollback();
+        die( '{"success": false, "reason": "Error, porfavor intente de nuevo." }' );
     }
 
+   
+	DAO::transEnd();
     Logger::log("Abono exitoso a la venta " . $data->id_venta);
 }
 
@@ -514,7 +580,7 @@ function facturarVenta( $args ){
 
     if( !isset($args['id_venta']) )
     {
-        die('{"success": false, "reason": "No hay parametros para ingresar." }');
+        die('{"success": false, "reason": "Parametros invalidos." }');
     }
 
     $venta = VentasDAOBase::getByPK($args['id_venta']);
@@ -567,7 +633,7 @@ function imprimirSaldo( $args ){
 
     if( !isset($args['id_venta']) )
     {
-        die('{"success": false, "reason": "No hay parametros para ingresar." }');
+        die('{"success": false, "reason": "Parametros invalidos." }');
     }
 
     $venta = VentasDAOBase::getByPK($args['id_venta']);
@@ -690,10 +756,12 @@ if(isset($args['action'])){
 			modificarCliente( $args );
 		break;
 
+		/*
 	    case 303:
 	        //lista las ventas de un cliente en especidico (puede ser de contado o a credito si se especifica)
 	    	printf('{ "success": true, "datos": %s }',  json_encode( listarVentasCliente( $args['id_cliente'], $args['tipo_venta']) ));
 	    break;
+	    */
 
 	    case 304:
 	        //lista todas las ventas

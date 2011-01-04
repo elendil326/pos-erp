@@ -27,14 +27,9 @@ require_once('logger.php');
 function insertarEmpleado($args)
 {	
 
-    Logger::log("Insertando empleado.");
-    
-    DAO::transBegin();
-    
     if( !isset($args['data']) )
     {
-        Logger::log("no hay parametros para insertar nuevo empleado");
-        DAO::transRollback();
+        Logger::log("No hay parametros para insertar nuevo empleado.");
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
     
@@ -42,23 +37,51 @@ function insertarEmpleado($args)
 
     if($data == NULL){
         Logger::log("JSON invalido :" . $args['data']);
-        Logger::log(stripslashes($args['data']));
-
-        DAO::transRollback();
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
+	//validar que vengan todos los datos
+	if( !(isset($data->RFC) &&
+		  isset($data->nombre) &&
+		  isset($data->contrasena) &&
+		  isset($data->salario) &&
+		  isset($data->telefono) &&
+		  isset($data->direccion) &&		
+		  isset($data->grupo) ))
+	{
+	  	Logger::log("Faltan parametros para insertar empleado.");
+        die( '{"success": false, "reason": "Parametros invalidos." }' );
+	}
 
 
+	if(strlen($data->contrasena) < 5){
+	        die( '{"success": false, "reason": "Contrase&ntilde;a debe ser de por lo menos 5 caracteres." }' );	
+	}
+
+	if($data->salario < 0){
+	        die( '{"success": false, "reason": "No puede asignar un salario negativo." }' );		
+	}
+	
+	if($data->salario > 10000){
+	        die( '{"success": false, "reason": "No puede asignar un salario mayor a $10,000.00." }' );		
+	}
+	
+	if(strlen($data->nombre) < 10){
+	        die( '{ "success" : false, "reason" : "El nombre debe ser cuando menos de 10 caracteres."}' );	
+	}	
+	
+
+    DAO::transBegin();
+    
     $user = new Usuario();
     $user->setRFC( $data->RFC );
     
     try{
     	$us = UsuarioDAO::search( $user );
     }catch(Exception $e){
-        Logger::log("Buscando usuario:" . $e);
+        Logger::log("Error buscando usuario : " . $e);
         DAO::transRollback();
-        die( '{"success": false, "reason": "Parametros invalidos." }' );    	
+        die( '{ "success" : false, "reason": "Parametros invalidos." }' );    	
     }
 
     //buscar que no exista ya un empleado con este RFC
@@ -69,18 +92,29 @@ function insertarEmpleado($args)
             $id = $u->getIdUsuario();
             break;
         }
-        Logger::log("ya existe un empleado con el rfc:" . $data->RFC );
+        Logger::log("Ya existe un empleado con el rfc:" . $data->RFC );
         DAO::transRollback();
         die ( '{"success": false, "id":"' . $id . '", "reason": "Ya existe un empleado con este RFC." }' );
     }
-    
+     
 	$user->setRFC( $data->RFC == null ? 0 : $data->RFC );
 	$user->setNombre( $data->nombre );
 	$user->setContrasena( $data->contrasena );
 
+
     //si soy admin ponerle el que mando, de lo contrario, soy gerente, poner mi sucursal
     if($_SESSION['grupo'] == 1 || $_SESSION['grupo'] == 0){
-    	$user->setIdSucursal( null );
+    	if(isset($data->sucursal)){
+    	
+    		if(sizeof(SucursalDAO::getByPK( $data->sucursal )) == 1){
+	    		$user->setIdSucursal( $data->sucursal );
+    		}else{
+	    		die( '{ "success" : false, "reason": "Esta sucursal no existe." }' ); 
+    		}
+	    	
+	    	
+	    }else
+		    $user->setIdSucursal( null );
     }else{
     	$user->setIdSucursal( $_SESSION['sucursal'] );
     }
@@ -100,17 +134,19 @@ function insertarEmpleado($args)
     	UsuarioDAO::save( $user );
         $gruposUsuarios->setIdUsuario( $user->getIdUsuario() );
         GruposUsuariosDAO::save( $gruposUsuarios);
-        printf(' { "success" : "true", "id_usuario": "%s" } ', $user->getIdUsuario() );
-
     }catch( Exception $e ){
     	DAO::transRollback();
-        die( ' { "success" : "false", "reason" : "' . $e . '"} ' );
+    	Logger::log("Insertando usuario en grupo inexistente.");
+    	Logger::log($e);
+    	
+        die( '{ "success" : false, "reason" : "Grupo Inexistente"}' );
     } 
-   
+
+   printf(' { "success" : true, "id_usuario": "%s" } ', $user->getIdUsuario() );   
    Logger::log("Empleado insertado correctamente.");
    DAO::transEnd();
    
-}//insertarEmpleado
+}
 
 
 
@@ -125,14 +161,15 @@ function insertarEmpleado($args)
  * @return cadena en formato JSON que contiene los datos de los empleados.
  **/
 
-function listarEmpleados( $sid )
+function listarEmpleados( $sid = null )
 {
 
 
 
 
         $empleados = new Usuario();
-        $empleados->setIdSucursal( $sid );
+        if($sid !== null)
+	        $empleados->setIdSucursal( $sid );
         $empleados->setActivo("1"); 
 
 
@@ -486,26 +523,28 @@ function modificarEmpleado( $args )
 //AQUI FALTA QUITARLO DE LA GERENCIA DE UNA SUCURSAL SI ES QUE ES UN GERENTE CON UNA SUCURSAL
 function cambiarEstadoEmpleado( $args )
 {
-    //
-    if( ( !isset( $args['id_empleado'] ) && !isset( $args['activo'] ) ) ||  $args['activo'] == null)
-    {
-        die( ' { "success" : false, "reason" : "Faltan parametros" } ' );
+	
+	if( !(isset($args['id_empleado']) &&
+		isset($args['activo'])))
+	{
+		die( ' { "success" : false, "reason" : "Parametros invalidos" }' );
+	}
+	
+    if( $args['activo'] == null){
+        die( ' { "success" : false, "reason" : "Parametros invalidos" }' );
     }
 
-	if( $usuario = UsuarioDAO::getByPK( $args['id_empleado'] ) )
-    {
+	if( $usuario = UsuarioDAO::getByPK( $args['id_empleado'] ) ) {
         $usuario->setActivo( $args['activo'] );
-    }
-    else
-    {
-        die( ' { "success" : false, "reason" : "No se tiene registro del empleado ' . $args['id_empleado'] . '" } ' );
+    }else {
+        die( '{ "success" : false, "reason" : "Este empleado no existe." }' );
     }		
 	
 	try{		
 		UsuarioDAO::save( $usuario );	
-	}
-	catch( Exception $e )
-	{		
+		
+	}catch( Exception $e ){		
+	
 		die( ' { "success" : false, "reason" : "No se pudo modificar el estado del usuario" } ' );
 	}
 
@@ -578,11 +617,16 @@ function listarResponsables( $args ){
 
     if( !isset( $args['id_sucursal'] ) )
     {
-        die( ' { "success" : false, "reason" : "Faltan parametros" } ' );
+        die( '{ "success" : false, "reason" : "Parametros invalidos" }' );
     }
+
+	if( sizeof(SucursalDAO::getByPK( $args['id_sucursal'] )) != 1){
+		die('{ "success" : false, "reason" : "Esta sucursal no existe." }');
+	}
 
     $gr1 = new GruposUsuarios();
     $gr1->setIdGrupo(2);
+    
     $gr2 = new GruposUsuarios();
     $gr2->setIdGrupo(3);
 
@@ -615,6 +659,10 @@ function listarResponsables( $args ){
 }
 
 function editarGerencias ($data){
+
+	if(!isset($args['data'])){
+		die( '{ "success" : false, "reason" : "Parametros invalidos" }' );
+	}
 
     $sucursales = parseJSON( $args['data'] );
 
@@ -709,8 +757,16 @@ if(isset($args['action'])){
         break;
 
         case 501:
-            $listaEmpleados = listarEmpleados($_SESSION['sucursal'] );
-            printf( '{"success": true, "empleados": %s}' , json_encode( $listaEmpleados ) );
+        
+			if(isset($_SESSION['sucursal'])){
+				$listaEmpleados = listarEmpleados( $_SESSION['sucursal'] );
+			}else{
+				$listaEmpleados = listarEmpleados(  );
+			}
+            if($listaEmpleados !== null)
+	            printf( '{"success": true, "empleados": %s}' , json_encode( $listaEmpleados ) );
+	        else
+		        printf( '{"success": false, "reason": "Intente de nuevo."}');
         break;
 
         case 502:
@@ -733,10 +789,6 @@ if(isset($args['action'])){
 
         case 506: //editarGerencias
             echo json_encode(editarGerencias($args));
-        break;
-
-        case 507://verHorario
-            
         break;
 	
 

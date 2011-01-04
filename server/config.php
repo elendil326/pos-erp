@@ -43,6 +43,8 @@ define('DB_NAME',       'pos');
 define('DB_DRIVER',     'mysqlt');
 define('DB_HOST',       'localhost');
 define('DB_DEBUG',      false);
+//define('ADODB_ERROR_LOG_TYPE',3);
+//define('ADODB_ERROR_LOG_DEST','/var/log/mx.caffeina.pos/pos.log');
 
 //conectarse a la base de datos
 require_once('db/DBConnection.php');
@@ -69,7 +71,7 @@ session_set_cookie_params ( 0  , '/' );
 $ss = session_start (  );
 
 if(!$ss){
-    Logger::log("imposible iniciar sesion");
+    //Logger::log("imposible iniciar sesion");
 	echo "{\"success\": false , \"reason\": -1,  \"text\" : \"Imposible iniciar sesion. Debe habilitar las cookies para ingresar.\" }";
 	return;
 }
@@ -113,4 +115,5 @@ function parseJSON($json){
                 return null;
         }
 }
+
 

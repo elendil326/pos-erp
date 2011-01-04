@@ -168,8 +168,11 @@ class Logger
 
         $d = debug_backtrace();
 
-        $out .= " | " . $d[1]["function"] . "() in " . substr( strrchr( $d[0]["file"], "/" ), 1 );
-
+		if(isset($d[1]))
+	        $out .= " | " . $d[1]["function"] . "() in " . substr( strrchr( $d[0]["file"], "/" ), 1 );
+	    else
+			$out .= " | in " . substr( strrchr( $d[0]["file"], "/" ), 1 );
+			
         $out .= " | " . $msg;
 
 

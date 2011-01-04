@@ -1,11 +1,11 @@
 <?php
 
-if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandler"); else ob_start();
+if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandler"); else ob_start();
 
 //requerir la configuracion
 require ( "../server/config.php" );
 
-
+require_once('logger.php');
 
 /* 
  * Este archivo es para el JSloader, recibe un parametro que es la carpeta dentro de js,
@@ -48,7 +48,10 @@ require ( "../server/config.php" );
 
 
 	//revisar parametros
-	if(! ( isset($_REQUEST['mod']) && isset($_REQUEST['type'] ) )) die("{success: false}");
+	if(! ( isset($_REQUEST['mod']) && isset($_REQUEST['type'] ) )) {
+		Logger::log("Solicitud de recurso incorrecto.");
+		die('{"success":false}');
+	}
 	
 	$module = $_REQUEST['mod'];
 	$type = $_REQUEST['type'];
@@ -60,8 +63,9 @@ require ( "../server/config.php" );
 	{
 		case 'js' : header('Content-Type:text/javascript'); break;
 		case 'css' : header('Content-Type:text/css'); break;
-		default : die("{success: false}");
-		
+		default : 
+			Logger::log("Solicitud de recurso con un tipo invalido:" . $type);
+			die('{"success":false}');
 	}
 	
 	
@@ -74,15 +78,21 @@ require ( "../server/config.php" );
 			
 			if(isset($_SESSION['grupo']) && ($_SESSION['grupo'] == 1 || $_SESSION['grupo'] == 0))
 				loadDir( $module, $type );
-			else
+			else{
+				Logger::log("Solicitud de recurso para admin/ingenieria sin sesion valida.");
 				die("/* ACCESO DENEGADO */");
+			}
+			
 		break;
 		
 		//cargar modulos de sucursal
 		case 'sucursal':
 		
-			if(!isset($_SESSION['grupo']))
-				die(" /* ACCESO DENEGADO */ window.location = '.'; /* ACCESSO DENEGADO */ ");
+			if(!isset($_SESSION['grupo'])){
+				Logger::log("Solicitud de recurso para sucursal sin sesion valida.");
+				die(" /* ACCESO DENEGADO */");				
+			}
+
 			
 			if($type == "css"){
 				loadDir($module, $type);
@@ -120,7 +130,9 @@ require ( "../server/config.php" );
 		//cargar login
 		case 'login' : loadDir( $module, $type ); break;
 		
-		default : die("{success: false}");
+		default : 
+			Logger::log("Solicitud de recurso de modulo inexistente: " . $module);
+			die('{"success":false}');
 		
 	}
 	

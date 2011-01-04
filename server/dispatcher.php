@@ -14,36 +14,7 @@
 
 require_once('config.php');
 
-
-
-
 require_once('logger.php');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
- * el action 'echo' es solo para probar conexion con la base de datos
- */
-if( isset($_REQUEST['action']) && ($_REQUEST['action'] == 'testDB'))
-{
-	die( '{ "success": true }') ;
-}
-
-
-
-
 
 
 
@@ -52,12 +23,12 @@ if( isset($_REQUEST['action']) && ($_REQUEST['action'] == 'testDB'))
 if ( !isset($_REQUEST['action']) )
 {
 	echo "{ \"success\": false , \"reason\" : \"Invalid method call for dispatching.\" }";
-    Logger::log("Invalid method call for dispatching");
+    Logger::log("Invalid method call for dispatching. No hay action en el request.");
     return;
 }
 
 
-
+require_once('controller/login.controller.php');
 
 
 //validar los parametros de la conexion, salvo para estos dos que necesitan llegar
@@ -65,7 +36,11 @@ if ( !isset($_REQUEST['action']) )
 //no hay token, pues hay que saltar esta validacion, para todas las demas se debera pasar
 if( ! ($_REQUEST['action']  == "2001" || $_REQUEST['action']  == "2004" || $_REQUEST['action']  == "2099") )
 {
-    //Logger::log("dispatching:" . $_REQUEST['action']);
+	if(!checkCurrentSession()){
+		Logger::log("Sesion invalida.");
+		die( '{"success": false , "reason": "Accesso denegado" }' );
+	}
+    
 }
 
 
@@ -123,7 +98,10 @@ switch( ((int)($args['action'] / 100))*100 )
 	break;
 	
 	case 2000:
-		require_once('controller/login.controller.php');
+		//ya he requerido a controller/login.controller.php
+		//llamare a su funcion especial login_controller_dispatch()
+		//que contiene su switch principal
+		login_controller_dispatch($args);
 	break;
 	
 }

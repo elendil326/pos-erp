@@ -1,22 +1,750 @@
+#startConfig
+	#codeBase http://127.0.0.1/alan/trunk/www/
+	#fileName proxy.php
+#endConfig
+
+
+
 #beginTest
-	#beginDesc
-		Prueba basica del login
-	#endDesc
-	#beginInput
-		action=2099
-	#endInput
+	#Desc Request a proxy sin parametros
+	#Input null
+	#Output { "success": false , "reason" : "Invalid method call for dispatching." }
+#endTest
+
+
+
+#beginTest
+	#Desc Envio a login sin argumentos
+	#Input action=2099
+	#Output {"success": false , "reason": "Invalidas", "text" : "Credenciales invalidas. Intento numero <b>1</b>. " }
+#endTest
+
+#beginTest
+	#Desc Enviar credenciales invalidas
+	#Input action=2099&u=aasdf&p=asdf
+	#Output {"success": false , "reason": "Invalidas", "text" : "Credenciales invalidas. Intento numero <b>2</b>. " }
+#endTest
+
+#beginTest
+	#Desc enviar solo usuario a login
+	#Input action=2099&u=aasdf
+	#Output {"success": false , "reason": "Invalidas", "text" : "Credenciales invalidas. Intento numero <b>3</b>. " }
+#endTest
+
+#beginTest
+	#Desc enviar solo contrasena a login
+	#Input action=2099&p=aasdf
+	#Output {"success": false , "reason": "Invalidas", "text" : "Credenciales invalidas. Intento numero <b>4</b>. " }
+#endTest
+
+#beginTest
+	#Desc enviar parametro desconocido al proxy
+	#Input foo=bar
+	#Output { "success": false , "reason" : "Invalid method call for dispatching." }
+#endTest
+
+#beginTest
+	#Desc revisar estado de sesion en sucursal
+	#Input action=2001
+	#Output {"success": false, "response" : "Porfavor utilize un punto de venta destinado para esta sucursal."  }
+#endTest
+
+#beginTest
+	#Desc login desde la sucursal sin parametros, y sin aun estar registrado este equipo
+	#Input action=2004
+	#Output {"success": false, "response" : "Porfavor utilize un punto de venta destinado para esta sucursal."  }
+#endTest
+
+#beginTest
+	#Desc funcion para probar a que grupo pertenesco, aunque aun no estoy loggeado
+	#Input action=2007
+	#Output {"success": false , "reason": "Accesso denegado" }
+#endTest
+
+#beginTest
+	#Desc listar empleados de esta sucursal, aunque aun no estoy loggeado
+	#Input action=501
+	#Output {"success": false , "reason": "Accesso denegado" }
+#endTest
+
+#beginTest
+	#Desc Enviar login de ingeniero solo con el usuario, u=1
+	#Input action=2099&u=1
+	#Output {"success": false , "reason": "Invalidas", "text" : "Credenciales invalidas. Intento numero <b>5</b>. " }
+#endTest
+
+#beginTest
+	#Desc Enviar login de ingeniero solo con el password p=pos
+	#Input action=2099&p=5e0bdcbddccca4d66d74ba8c1cee1a68
+	#Output {"success": false , "reason": "Invalidas", "text" : "Credenciales invalidas. Intento numero <b>6</b>. " }
+#endTest
+
+#beginTest
+	#Desc Intento leve de inyeccion en usuario y password
+	#Input action=2099&u=1&p=Alicia';%20--
+	#Output  {"success": false , "reason": "Invalidas", "text" : "Credenciales invalidas. Intento numero <b>7</b>. " }
+#endTest
+
+
+
+#beginTest
+	#Desc Solicitar paginas de ingenieria dado que no esto loggeado
+	#fileName ingenieria/equipos.php
+	#Input action=lista
 	#beginOutput
-		{"success": false , "reason": 101, "text" : "Error interno." }
+		<script>window.location = "../admin/log.php"</script>
 	#endOutput
 #endTest
+
 #beginTest
-	#beginDesc
-		Prueba basica del login2
-	#endDesc
-	#beginInput
-		action=2099
-	#endInput
-	#beginOutput
-		{"success": false , "reason": 101, "text" : "Error interno." }
-	#endOutput
+	#Desc Solicitar modulo de autorizaciones de admin sin estar loggeado
+	#fileName admin/autorizaciones.php
+	#Input null
+	#Output <script>window.location = "log.php"</script>
 #endTest
+
+#beginTest
+	#Desc Solicitar modulo de buscar de admin sin estar loggeado
+	#fileName admin/buscar.php
+	#Input null
+	#Output <script>window.location = "log.php"</script>
+#endTest
+
+#beginTest
+	#Desc Solicitar modulo de clientes de admin sin estar loggeado
+	#fileName admin/clientes.php
+	#Input null
+	#Output <script>window.location = "log.php"</script>
+#endTest
+
+
+#beginTest
+	#Desc Solicitar modulo de gerentes de admin sin estar loggeado
+	#fileName admin/gerentes.php
+	#Input null
+	#Output <script>window.location = "log.php"</script>
+#endTest
+
+
+#beginTest
+	#Desc Solicitar index de admin sin estar loggeado
+	#fileName admin/index.php
+	#Input null
+	#Output <script>window.location = "log.php"</script>
+#endTest
+
+
+#beginTest
+	#Desc Solicitar modulo de sucursales de admin sin estar loggeado
+	#fileName admin/sucursales.php
+	#Input null
+	#Output <script>window.location = "log.php"</script>
+#endTest
+
+
+#beginTest
+	#Desc Solicitar modulo de ventas de admin sin estar loggeado
+	#fileName admin/ventas.php
+	#Input null
+	#Output <script>window.location = "log.php"</script>
+#endTest
+
+
+
+#beginTest
+	#Desc Solicitar modulo de base de datos de ingenieria sin estar loggeado
+	#fileName ingenieria/base.php
+	#Input null
+	#Output <script>window.location = "../admin/log.php"</script>
+#endTest
+
+
+#beginTest
+	#Desc Solicitar modulo de configuracion de ingenieria sin estar loggeado
+	#fileName ingenieria/configuracion.php
+	#Input null
+	#Output <script>window.location = "../admin/log.php"</script>
+#endTest
+
+
+#beginTest
+	#Desc Solicitar modulo de equipos de ingenieria sin estar loggeado
+	#fileName ingenieria/equipos.php
+	#Input null
+	#Output <script>window.location = "../admin/log.php"</script>
+#endTest
+
+#beginTest
+	#Desc Solicitar inde de ingenieria sin estar loggeado
+	#fileName ingenieria/index.php
+	#Input null
+	#Output <script>window.location = "../admin/log.php"</script>
+#endTest
+
+
+#beginTest
+	#Desc Solicitar modulo de logs de ingenieria sin estar loggeado
+	#fileName ingenieria/logs.php
+	#Input null
+	#Output <script>window.location = "../admin/log.php"</script>
+#endTest
+
+
+#beginTest
+	#Desc Solicitar modulo de usuarios de ingenieria sin estar loggeado
+	#fileName ingenieria/usuarios.php
+	#Input null
+	#Output <script>window.location = "../admin/log.php"</script>
+#endTest
+
+
+
+
+
+
+
+#beginTest
+	#Desc Llamar a getResource.php sin parametros
+	#fileName getResource.php
+	#Input null
+	#Output {"success":false}
+#endTest
+
+
+
+#beginTest
+	#Desc Llamar a getResource.php solicitando mod=admin
+	#fileName getResource.php
+	#Input mod=admin
+	#Output {"success":false}
+#endTest
+
+
+
+#beginTest
+	#Desc Llamar a getResource.php solicitando type=js
+	#fileName getResource.php
+	#Input type=js
+	#Output {"success":false}
+#endTest
+
+#beginTest
+	#Desc Llamar a getResource.php solicitando un type y mod desconocidos
+	#fileName getResource.php
+	#Input type=asdfa3424s&mod=876hsadf
+	#Output {"success":false}
+#endTest
+
+
+#beginTest
+	#Desc Llamar a getResource.php solicitando modulos de admin de js
+	#fileName getResource.php
+	#Input type=js&mod=admin
+	#Output /* ACCESO DENEGADO */
+#endTest
+
+
+#beginTest
+	#Desc Llamar a getResource.php solicitando modulos de admin de css
+	#fileName getResource.php
+	#Input type=css&mod=admin
+	#Output /* ACCESO DENEGADO */
+#endTest
+
+
+
+#beginTest
+	#Desc Llamar a getResource.php solicitando modulos de sucursal de js
+	#fileName getResource.php
+	#Input type=js&mod=sucursal
+	#Output /* ACCESO DENEGADO */
+#endTest
+
+#beginTest
+	#Desc Llamar a getResource.php solicitando modulos de sucursal de css
+	#fileName getResource.php
+	#Input type=css&mod=sucursal
+	#Output /* ACCESO DENEGADO */
+#endTest
+
+
+
+
+
+
+
+
+
+
+/*
+#beginTest
+	#Desc Llamar al php de impresion no deberia dejar pasar sin sesion
+	#fileName PRINTER/src/impresion.php
+	#Input json=asdfasdf
+	#Output /* ACCESO DENEGADO */
+#endTest
+*/
+
+
+
+
+
+
+#beginTest
+	#Desc Envio correcto de usuario y password para ingeniero.
+	#Input action=2099&u=1&p=5e0bdcbddccca4d66d74ba8c1cee1a68
+	#Output {"success": true , "payload": { "sucursaloverride": false , "type": "0" }}
+#endTest
+
+/* 
+===================================================================================================
+						PERSONAL
+=================================================================================================== 
+*/
+   
+#beginTest
+	#Desc Listar a todos los empleados del sistema. 
+	#Input action=501
+	#Output {"success": true, "empleados": []}
+#endTest
+
+
+
+#beginTest
+	#Desc Llamar a insertarEmpleado sin argumentos
+	#Input action=500
+	#Output {"success": false, "reason": "No hay parametros para ingresar." }
+#endTest
+
+#beginTest
+	#Desc Llamar a insertarEmpleado con el argumento 'data' vacio
+	#Input action=500&data=
+	#Output {"success": false, "reason": "Parametros invalidos." }
+#endTest
+
+#beginTest
+	#Desc Llamar a insertarEmpleado con el argumento 'data' con un json url encoded invalido
+	#Input action=500&data=%7B%22glossary%22:%7B%22title%22:%20%22example%20glossary%22%2C%22GlossDiv%22:%7B%22title%22:%20%22S%22%2C%22GlossList%22:%7B%22GlossEntry%22:%7B%22ID%22:%20%22SGML%22%2C%22SortAs%22:%20%22SGML%22%2C%22GlossTerm%22:%20%22Standard%20Generalized%20Markup%20Language%22%2C%22Acronym%22:%20%22SGML%22%2C%20%22Abbrev%22:%20%22ISO%208879:1986%22%2C%22GlossDef%22:%20%7B%22para%22:%20%22A%20meta-markup%20language%2C%20used%20to%20create%20markup%20languages%20such%20as%20DocBook.%22%2C%20%9%9%9%9%9%9%22GlossSeeAlso%22:%20%5B%22GML%22%2C%20%22XML%22%5D%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%2C%20%9%9%9%9%9%22GlossSee%22:%20%22markup%22%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%20%20%20%20%20%20%20%20%20%7D%20%20%20%20%20%7D%20%7D
+	#Output {"success": false, "reason": "Parametros invalidos." }
+#endTest
+
+
+
+#beginTest
+	#Desc Insertar un empleado enviando un RFC que ya existe como unico parametro.
+	#Input action=500&data={"RFC":"0000000000"}
+	#Output {"success": false, "reason": "Parametros invalidos." }
+#endTest
+
+
+
+#beginTest
+	#Desc Insertar un empleado enviando un RFC que no existe como unico parametro.
+	#Input action=500&data={"RFC":"0000000001"}
+	#Output {"success": false, "reason": "Parametros invalidos." }
+#endTest
+
+
+
+#beginTest
+	#Desc Insertar un empleado enviando un JSON vacio.
+	#Input action=500&data={}
+	#Output {"success": false, "reason": "Parametros invalidos." }
+#endTest
+
+
+#beginTest
+	#Desc Insertar un empleado con un RFC existente, JSON encodeado.
+	#Input action=500&data=%7B%20%20%20%20%20%22RFC%22:%20%220000000000%22%2C%20%20%20%20%20%22nombre%22:%20%220000000000%22%2C%20%20%20%20%20%22contrasena%22:%20%22000000%22%2C%20%20%20%20%20%22salario%22:%200%2C%20%20%20%20%20%22telefono%22:%20%22000000%22%2C%20%20%20%20%20%22direccion%22:%20%220000%22%2C%20%20%20%20%20%22grupo%22:%20%220%22%20%7D
+	#Output {"success": false, "id":"1", "reason": "Ya existe un empleado con este RFC." }
+#endTest
+
+
+#beginTest
+	#Desc Insertar un empleado con un RFC existente, JSON sin encodear.
+	#Input action=500&data={"RFC":"0000000000","nombre":"0000000000","contrasena":"000000","salario":0,"telefono":"000000","direccion":"0000","grupo":"0"}
+	#Output {"success": false, "id":"1", "reason": "Ya existe un empleado con este RFC." }
+#endTest
+
+
+#beginTest
+	#Desc Insertar un empleado con un RFC existente, JSON sin encodear con slashes.
+	#Input action=500&data={\"RFC\":\"0000000000\",\"nombre\":\"0000000000\",\"contrasena\":\"000000\",\"salario\":0,\"telefono\":\"000000\",\"direccion\":\"0000\",\"grupo\":\"0\"}
+	#Output {"success": false, "id":"1", "reason": "Ya existe un empleado con este RFC." }
+#endTest
+
+
+#beginTest
+	#Desc Insertar un empleado con un grupo inexistente.
+	#Input action=500&data={"RFC":"0000000001","nombre":"0000000000","contrasena":"000000","salario":0,"telefono":"000000","direccion":"0000","grupo":"1"}
+	#Output { "success" : false, "reason" : "Grupo Inexistente"}
+#endTest
+
+
+
+
+#beginTest
+	#Desc Insertar empleado con contrasena menor a 5 caracteres.
+	#Input action=500&data={"RFC":"0000000001","nombre":"0000000000","contrasena":"1234","salario":0,"telefono":"000000","direccion":"0000","grupo":"0"}
+	#Output {"success": false, "reason": "Contrase&ntilde;a debe ser de por lo menos 5 caracteres." }
+#endTest
+
+
+#beginTest
+	#Desc Insertar empleado sin enviar RFC.
+	#Input action=500&data={ "nombre":"0000000000","contrasena":"000000","salario":0,"telefono":"000000","direccion":"0000","grupo":"0"}
+	#Output {"success": false, "reason": "Parametros invalidos." }
+#endTest
+
+
+
+#beginTest
+	#Desc Insertar empleado con salario negativo.
+	#Input action=500&data={"RFC":"0000000001","nombre":"0000000000","contrasena":"000000","salario": -50,"telefono":"000000","direccion":"0000","grupo":"0"}
+	#JSONOutput {"success": false, "reason": "No puede asignar un salario negativo." }
+#endTest
+
+
+
+
+
+
+
+
+
+#beginTest
+	#Desc Insertar empleado con nombre muy corto.
+	#Input action=500&data={"RFC":"0000000001","nombre":"0","contrasena":"000000","salario":0,"telefono":"000000","direccion":"0000","grupo":"0"}
+	#JSONOutput { "success" : false, "reason" : "El nombre debe ser cuando menos de 10 caracteres."}
+#endTest
+
+/*
+#beginTest
+	#Desc Insertar empleado con RFC muy corto.
+	#Input action=500&data={"RFC":"0000000001","nombre":"0000000","contrasena":"000000","salario":0,"telefono":"000000","direccion":"0000","grupo":"1"}
+	#JSONOutput { "success" : false, "reason" : "Grupo Inexistente"}
+#endTest
+*/
+
+
+/*
+#beginTest
+	#Desc Insertar empleado con contrasena mayor a 64 caracteres.
+	#Input action=500&data={"RFC":"0000000001","nombre":"0000000","contrasena":"000000","salario":0,"telefono":"000000","direccion":"0000","grupo":"1"}
+	#JSONOutput { "success" : false, "reason" : "Grupo Inexistente"}
+#endTest
+*/
+
+/*
+#beginTest
+	#Desc Insertar empleado con direccion muy corta.
+	#Input action=500&data={"RFC":"0000000001","nombre":"0000000","contrasena":"000000","salario":0,"telefono":"000000","direccion":"0000","grupo":"1"}
+	#JSONOutput { "success" : false, "reason" : "Grupo Inexistente"}
+#endTest
+
+
+#beginTest
+	#Desc Insertar empleado con nombre que ya esta en la base de datos.
+	#Input action=500&data={"RFC":"0000000001","nombre":"0000000","contrasena":"000000","salario":0,"telefono":"000000","direccion":"0000","grupo":"1"}
+	#JSONOutput { "success" : false, "reason" : "Grupo Inexistente"}
+#endTest
+*/
+
+#beginTest
+	#Desc Insertar empleado con salario mayor 10000.
+	#Input action=500&data={"RFC":"0000000001","nombre":"0000000000","contrasena":"000000","salario": 10001,"telefono":"000000","direccion":"0000","grupo":"0"}
+	#JSONOutput {"success": false, "reason": "No puede asignar un salario mayor a $10,000.00." }
+#endTest
+
+
+#beginTest
+	#Desc Insertar empleado en sucursal inexistente
+	#Input action=500&data={"sucursal":"1", "RFC":"0000000001","nombre":"0000000000","contrasena":"000000","salario":0,"telefono":"000000","direccion":"0000","grupo":"0"}
+	#JSONOutput { "success" : false, "reason": "Esta sucursal no existe." }
+#endTest
+
+
+
+#beginTest
+	#Desc Revisar que no se haya insertando ningun usuario con lo anterior
+	#Input action=501
+	#JSONOutput {"success": true, "empleados": []}
+#endTest
+
+
+#beginTest
+	#Desc Llamar a modificar empleado sin parametros
+	#Input action=502
+	#JSONOutput {"success": false, "reason": "No hay parametros para ingresar." }
+#endTest
+
+/*
+
+	enviar cosas negativas y asi
+	502
+
+*/
+
+
+
+#beginTest
+	#Desc Llamar a cambiarEstadoEmpleado sin parametros
+	#Input action=503
+	#JSONOutput { "success" : false, "reason" : "Parametros invalidos" }
+#endTest
+
+#beginTest
+	#Desc Llamar a cambiarEstadoEmpleado solamente con el id de un empleado que no existe
+	#Input action=503&id_empleado=123
+	#JSONOutput { "success" : false, "reason" : "Parametros invalidos" }
+#endTest
+
+#beginTest
+	#Desc Llamar a cambiarEstadoEmpleado solamente con el parametro de activo
+	#Input action=503&activo=1
+	#JSONOutput { "success" : false, "reason" : "Parametros invalidos" }
+#endTest
+
+#beginTest
+	#Desc Llamar a cambiarEstadoEmpleado correctamente, por con un usuario que no existe
+	#Input action=503&id_empleado=123&activo=1
+	#JSONOutput { "success" : false, "reason" : "Este empleado no existe." }
+#endTest
+
+
+
+#beginTest
+	#Desc Llamar a listaBajoPerfil sin parametros
+	#Input action=504
+	#JSONOutput {"success": true, "datos": []}
+#endTest
+
+#beginTest
+	#Desc Llamar a listarResponsables sin parametros
+	#Input action=505
+	#JSONOutput { "success" : false, "reason" : "Parametros invalidos" } 
+#endTest
+
+
+#beginTest
+	#Desc Llamar a listarResponsables con una sucursal inexistente
+	#Input action=505&id_sucursal=33
+	#JSONOutput { "success" : false, "reason" : "Esta sucursal no existe." } 
+#endTest
+
+
+#beginTest
+	#Desc Llamar a editarGerencias sin parametros
+	#Input action=506
+	#JSONOutput { "success" : false, "reason" : "Parametros invalidos" }
+#endTest
+
+/* 
+===================================================================================================
+						CLIENTES
+=================================================================================================== 
+*/
+
+
+
+#beginTest
+	#Desc Listar a todos los clientes
+	#Input action=300
+	#JSONOutput { "success": true, "hash" : "d751713988987e9331980363e24189ce" , "datos": [] }
+#endTest
+
+
+#beginTest
+	#Desc Llamar a crear nuevo cliente sin argumentos
+	#Input action=301
+	#JSONOutput { "success": false, "reason" : "Parametros invalidos" }
+#endTest
+
+
+#beginTest
+	#Desc Enviar un JSON invalido como parametro a nuevo cliente
+	#Input action=301&data={"this":"is", "not":"a","valid": "JSON", asdf:[0,1,3,4:34]}
+	#JSONOutput { "success": false, "reason" : "Parametros invalidos" }
+#endTest
+
+#beginTest
+	#Desc Enviar un JSON valido como parametro a nuevo cliente, un json off-topic
+	#Input action=301&data={"this":"is", "a":"valid","JSON": "Right?"}
+	#JSONOutput { "success": false, "reason" : "Faltan parametros." }
+#endTest
+
+#beginTest
+	#Desc Enviar un JSON valido como parametro a nuevo cliente, off-topic url encoded
+	#Input action=301&data=%7B%22this%22:%22is%22%2C%20%22a%22:%22valid%22%2C%22JSON%22:%20%22Right?%22%7D
+	#JSONOutput { "success": false, "reason" : "Faltan parametros." }
+#endTest
+
+
+#beginTest
+	#Desc Enviar solamente el parametros de rfc
+	#Input action=301&data={"rfc":"0101010101"}
+	#JSONOutput { "success": false, "reason" : "Faltan parametros." }
+#endTest
+
+
+#beginTest
+	#Desc Enviar nombre menor a 10 caracteres
+	#Input action=301&data={"rfc":"0101010101", "limite_credito":0, "nombre":"0", "direccion":"000000000", "descuento":0, "telefono":"000000000", "ciudad":"000000000"}
+	#JSONOutput {"success": false, "reason": "El nombre del cliente es muy corto." }
+#endTest
+
+#beginTest
+	#Desc Enviar telefono menor de un caracter
+	#Input action=301&data={"rfc":"0101010101", "limite_credito":0, "nombre":"0000000000", "direccion":"000000000", "descuento":0, "telefono":"0", "ciudad":"000000000"}
+	#JSONOutput {"success": false, "reason": "El telefono del cliente es muy corto." }
+#endTest
+
+#beginTest
+	#Desc Enviar descuento negativo
+	#Input action=301&data={"rfc":"0101010101", "limite_credito":0, "nombre":"0000000000", "direccion":"000000000", "descuento":-10, "telefono":"00000000", "ciudad":"000000000"}
+	#JSONOutput {"success": false, "reason": "El descuento del cliente no puede ser negativo." }
+#endTest
+
+
+#beginTest
+	#Desc Enviar descuento del 100%
+	#Input action=301&data={"rfc":"0101010101", "limite_credito":0, "nombre":"0000000000", "direccion":"000000000", "descuento":100, "telefono":"0000000", "ciudad":"000000000"}
+	#JSONOutput {"success": false, "reason": "El descuento del cliente no puede ser tan grande." }
+#endTest
+
+#beginTest
+	#Desc Enviar datos correctos, sin sucursal ni usuario, ya que soy ingeniero, debo proporcionarlos.
+	#Input action=301&data={"rfc":"0101010101", "limite_credito":0, "nombre":"0000000000", "direccion":"000000000", "descuento":0, "telefono":"0000000", "ciudad":"000000000"}
+	#JSONOutput {"success": false, "reason": "Debe proporcionar una sucursal y un usuario." }
+#endTest
+
+#beginTest
+	#Desc Enviar limite de credito negativo
+	#Input action=301&data={"rfc":"0101010101", "limite_credito":-10, "nombre":"0000000000", "direccion":"000000000", "descuento":0, "telefono":"0000000", "ciudad":"000000000"}
+	#JSONOutput {"success": false, "reason": "El Limite de credito del cliente no puede ser negativo." }
+#endTest
+
+#beginTest
+	#Desc Enviar limite de credito negativo como cadena
+	#Input action=301&data={"rfc":"0101010101", "limite_credito": "-10", "nombre":"0000000000", "direccion":"000000000", "descuento":0, "telefono":"0000000", "ciudad":"000000000"}
+	#JSONOutput {"success": false, "reason": "El Limite de credito del cliente no puede ser negativo." }
+#endTest
+
+
+#beginTest
+	#Desc Enviar limite de credito de $300,000
+	#Input action=301&data={"rfc":"0101010101", "limite_credito":300000, "nombre":"0000000000", "direccion":"000000000", "descuento":0, "telefono":"0000000", "ciudad":"000000000"}
+	#JSONOutput {"success": false, "reason": "El Limite de credito del cliente no puede ser tan grande." }
+#endTest
+
+/*
+#beginTest
+	#Desc Enviar limite de credito de $300,000 en hexadecimal
+	#Input action=301&data={"rfc":"0101010101", "limite_credito": 493E0, "nombre":"0000000000", "direccion":"000000000", "descuento":0, "telefono":"0000000", "ciudad":"000000000"}
+	#JSONOutput {"success": false, "reason": "El Limite de credito del cliente no puede ser tan grande." }
+#endTest
+*/
+
+#beginTest
+	#Desc Enviar limite de credito como string "ABC"
+	#Input action=301&data={"rfc":"0101010101", "limite_credito": "ABC", "nombre":"0000000000", "direccion":"000000000", "descuento":0, "telefono":"0000000", "ciudad":"000000000"}
+	#JSONOutput {"success": false, "reason": "El Limite de credito debe ser un numero." }
+#endTest
+
+#beginTest
+	#Desc Llamada a modificarCliente sin parametros
+	#Input action=302
+	#JSONOutput {"success": false, "reason": "Parametros invalidos." }
+#endTest
+
+#beginTest
+	#Desc Llamada a modificarCliente con parametro vacio
+	#Input action=302&data=
+	#JSONOutput {"success": false, "reason": "Parametros invalidos." }
+#endTest
+
+
+#beginTest
+	#Desc Llamada a modificarCliente con json valido off-topic
+	#Input action=302&data={"this":"is", "a":"valid","JSON": "Right?"}
+	#JSONOutput {"success": false, "reason": "Parametros invalidos." }
+#endTest
+
+
+
+#beginTest
+	#Desc Llamada a modificarCliente con id_cliente que no existe
+	#Input action=302&data={"id_cliente":"asdf", "a":"valid","JSON": "Right?"}
+	#JSONOutput {"success": false, "reason": "Este cliente no existe." }
+#endTest
+
+/*
+	LLAMADA A MODIFICAR CLIENTE CON DESCUENTO NEGATIVO COMO STRING
+*/
+
+
+#beginTest
+	#Desc Llamada a lista todas las ventas
+	#Input action=304
+	#JSONOutput { "success": true, "hash" : "d751713988987e9331980363e24189ce" , "datos": [] }
+#endTest
+
+
+#beginTest
+	#Desc Llamada a abonar a una venta sin parametros
+	#Input action=305
+	#JSONOutput {"success": false, "reason": "Parametros invalidos." }
+#endTest
+
+
+#beginTest
+	#Desc Llamada a abonar a una venta con parametro data vacio
+	#Input action=305&data=
+	#JSONOutput {"success": false, "reason": "Parametros invalidos." }
+#endTest
+
+
+#beginTest
+	#Desc Llamada a abonar a una venta con parametro data con un json off-topic y slasheado
+	#Input action=305&data={\"i\":\"am\", \"a\":\"valid\",\"JSON\": \"Right?\"}
+	#JSONOutput {"success": false, "reason": "Parametros invalidos." }
+#endTest
+
+
+
+#beginTest
+	#Desc Llamada a abonar a una venta con un id venta en forma de string solamente
+	#Input action=305&data={\"id_venta\":\"389accvsd54356\", \"a\":\"valid\",\"JSON\": \"Right?\"}
+	#JSONOutput {"success": false, "reason": "Parametros invalidos." }
+#endTest
+
+
+#beginTest
+	#Desc Llamada a abonar a una venta con un id venta en forma de string y un monto en string
+	#Input action=305&data={\"id_venta\":\"389accvsd54356\", \"monto\":\"un millon\"}
+	#JSONOutput {"success": false, "reason": "Parametros invalidos." }
+#endTest
+
+#beginTest
+	#Desc Llamada a abonar a una venta con un id venta en forma de string y un monto negativo
+	#Input action=305&data={\"id_venta\":\"389accvsd54356\", \"monto\":-55}
+	#JSONOutput {"success": false, "reason": "No puede abonar un monto negativo." }
+#endTest
+
+#beginTest
+	#Desc Llamada a abonar a una venta con un json invalido
+	#Input action=305&data={\"id13_venta":as2#2d\"389accvsd54356\",asdf \"monto\":-55,a,b,c,d}
+	#JSONOutput {"success": false, "reason": "Parametros invalidos." }
+#endTest
+
+
+
+
+/*
+#beginTest
+	#Desc Llamada a listarClientesDeudaores sin parametros
+	#Input action=306
+	#JSONOutput { "success": true, "datos": [] }
+#endTest
+*/
+

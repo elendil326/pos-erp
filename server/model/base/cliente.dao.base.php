@@ -180,7 +180,11 @@ abstract class ClienteDAOBase extends DAO
 			$sql .= " fecha_ingreso = ? AND";
 			array_push( $val, $cliente->getFechaIngreso() );
 		}
-
+		
+		if(sizeof($val) == 0){
+			return array();
+		}
+		
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;

@@ -13,13 +13,16 @@ require_once("logger.php");
 function login( $u, $p )
 {
 
-    Logger::log("asking for logging...");
-
 	$user = new Usuario();
 	$user->setIdUsuario( $u );
 	$user->setContrasena( $p );	
 
+	if(strlen($p) < 5 || strlen($u) < 1){
+		if( isset( $_SESSION[ 'c' ] )) $_SESSION[ 'c' ] ++; else $_SESSION[ 'c' ] = 1;
 
+        Logger::log("Credenciales muy cortas para el usuario " . $u . " intento:" . $_SESSION[ 'c' ], 1);
+		die(  "{\"success\": false , \"reason\": \"Invalidas\", \"text\" : \"Credenciales invalidas. Intento numero <b>". $_SESSION[ 'c' ] . "</b>. \" }" );	
+	}
 
 	try{
 		$res = UsuarioDAO::search( $user );		
@@ -32,7 +35,7 @@ function login( $u, $p )
 
 	if(count($res) != 1){
     	//este usuario no existe
-		if( isset( $_SESSION[ 'c' ] )) $_SESSION[ 'c' ] ++; else $_SESSION[ 'c' ] = 0;
+		if( isset( $_SESSION[ 'c' ] )) $_SESSION[ 'c' ] ++; else $_SESSION[ 'c' ] = 1;
 
         Logger::log("Credenciales invalidas para el usuario " . $u . " intento:" . $_SESSION[ 'c' ], 1);
 		die(  "{\"success\": false , \"reason\": \"Invalidas\", \"text\" : \"Credenciales invalidas. Intento numero <b>". $_SESSION[ 'c' ] . "</b>. \" }" );
@@ -90,8 +93,11 @@ function login( $u, $p )
 
 
 function getUserType(){
-    echo $_SESSION['grupo'];
-    return;
+	if(isset($_SESSION['grupo']))
+	    echo $_SESSION['grupo'];
+	else
+        die( '{"success": false , "reason": "Accesso denegado" }' );
+
 }
 
 
@@ -220,7 +226,7 @@ function sucursalTest( ){
             $search = EquipoDAO::search( $equipo );
 
             if(sizeof($search) != 1){
-                Logger::log("UA:" . $_SERVER['HTTP_USER_AGENT'] . " not found in database", 2);
+                Logger::log("UA: >" . $_SERVER['HTTP_USER_AGENT'] . "< not found in database", 2);
 
                 return false;
             }
@@ -277,8 +283,9 @@ function sucursalTest( ){
 
     //ver que si exista esta sucursal
     $suc = SucursalDAO::getByPK($suc->getIdSucursal());
+    
     if($suc === null){
-        Logger::log("equipo {$equipo->getIdEquipo()} vinculado a sucursal {$suc->getIdSucursal()} pero esta no existe !", 2);
+        Logger::log("equipo {$equipo->getIdEquipo()} vinculado a sucursal {$esuc->getIdSucursal()} pero esta no existe !", 2);
         return false;
     }
     
@@ -403,83 +410,92 @@ function getip() {
 
 
 
-function debug(){
 
-    echo "ua:<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b><br>";
-    echo "ip:<b>" . getip() . "</b><br>";
-    echo "<pre>";
-    var_dump($_SESSION);
-    echo "</pre>";
+function login_controller_dispatch($args){
+
+	if(isset($args['action'])){
+
+		switch($args['action'])
+		{
+			 
+			case '2001':
+
+		        //revisar estado de sesion en sucursal
+				if(!sucursalTest()){
+		            //si no pasa el test de la sucursal...
+		           print(  '{"success": false, "response" : "Porfavor utilize un punto de venta destinado para esta sucursal."  }' ) ;
+
+		        }else{
+
+		            //la sucursal esta bien, hay que ver si esta logginiado
+		            if(checkCurrentSession()){
+		               //logged in !
+		                print(  '{"success":true,"sesion":true}' );
+		            }else{
+		                //not logged in
+		                $sucursal = SucursalDAO::getByPK( $_SESSION['sucursal'] );
+		                Logger::log("Sesion invalida");
+		                logOut(false);
+		                print(  '{"success":true,"sesion":false,"sucursal":"' .$sucursal->getDescripcion(). '"}' );                    
+		            }
+		        }
+			break;
+
+			case '2002':
+				logOut(true);
+			break;
+
+			/*
+			case '2003':
+				sucursalTest();
+			break;
+			*/
+
+			case '2004':
+		        //login desde la sucursal
+				if(!sucursalTest()){
+		            //si no pasa el test de la sucursal...
+		           print(  '{"success": false, "response" : "Porfavor utilize un punto de venta destinado para esta sucursal."  }' ) ;
+		        }else{
+		            //enviar login
+		            login($args['u'], $args['p']);
+		        }
+			break;
+
+			case '2099':
+			    //login desde otro lado
+			    if(!isset($args['u'])){
+			    	$u = "";
+			    }else{
+			    	$u = $args['u'];
+			    }
+			    
+			    if(!isset($args['p'])){
+			    	$p = "";
+			    }else{
+			    	$p = $args['p'];
+			    }
+			    
+		        login($u, $p);
+			break;
+
+
+			case '2005':
+				dispatch($args);
+			break;
+
+			case '2007':
+				getUserType();
+			break;
+
+			case '2009':
+			   
+			break;
+		}
+	}
+
 }
 
-
-
-if(isset($args['action'])){
-
-    switch($args['action'])
-    {
-	     
-	    case '2001':
-
-            //revisar estado de sesion en sucursal
-		    if(!sucursalTest()){
-                //si no pasa el test de la sucursal...
-               print(  '{"success": false, "response" : "Porfavor utilize un punto de venta destinado para esta sucursal."  }' ) ;
-
-            }else{
-
-                //la sucursal esta bien, hay que ver si esta logginiado
-                if(checkCurrentSession()){
-                   //logged in !
-                    print(  '{"success":true,"sesion":true}' );
-                }else{
-                    //not logged in
-                    $sucursal = SucursalDAO::getByPK( $_SESSION['sucursal'] );
-                    Logger::log("sesion invalida");
-                    logOut(false);
-                    print(  '{"success":true,"sesion":false,"sucursal":"' .$sucursal->getDescripcion(). '"}' );                    
-                }
-            }
-	    break;
-
-	    case '2002':
-		    logOut(true);
-	    break;
-
-	    case '2003':
-		    sucursalTest();
-	    break;
-
-	    case '2004':
-            //login desde la sucursal
-		    if(!sucursalTest()){
-                //si no pasa el test de la sucursal...
-               print(  '{"success": false, "response" : "Porfavor utilize un punto de venta destinado para esta sucursal."  }' ) ;
-            }else{
-                //enviar login
-                login($args['u'], $args['p']);
-            }
-	    break;
-
-	    case '2099':
-        //login desde otro lado
-            login($args['u'], $args['p']);
-	    break;
-
-
-	    case '2005':
-		    dispatch($args);
-	    break;
-
-	    case '2007':
-		    getUserType();
-	    break;
-
-	    case '2009':
-		    debug();
-	    break;
-    }
-}
 
 
 
