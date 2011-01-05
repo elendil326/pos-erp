@@ -8,7 +8,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
     layout: 'card',
     items: [{
         cls: 'launchscreen',
-        html: '<div><img src="media/logo_pos.png"></div>'
+        html: '<div><img src="media/cash_register.png"><img src="media/logo_pos.png"></div>'
     }],
     backText: 'Regresar',
     useTitleAsBackText: false,
