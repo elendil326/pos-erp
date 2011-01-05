@@ -14,10 +14,6 @@
           <a href="configuracion.php?action=actual" >Archivo de configuracion</a>
         </li>
 
-        <li class="ga-side-nav-off">
-          <a  href="configuracion.php?action=editar" >Editar configuracion</a>
-        </li>
-
       </ul>
     </li>
 
@@ -31,12 +27,6 @@
       <ul>
         <li class="ga-side-nav-off">
           <a href="logs.php?action=ver">Ver log</a>
-        </li>
-        <li class="ga-side-nav-off">
-          <a href="gerentes.php?action=asignar">Asignar gerencias</a>
-        </li>
-        <li class="ga-side-nav-off">
-          <a href="gerentes.php?action=nuevo">Nuevo gerente</a>
         </li>
       </ul>
     </li>

@@ -91,10 +91,12 @@ class Tabla {
 
 
 			if( isset($this->actionField)){
-				$html .= '<tr onClick="' . $this->actionFunction. '( ' . $row[ $this->actionField ] . ' )">';
+				$html .= '<tr style="cursor: pointer;" onClick="' . $this->actionFunction. '( ' . $row[ $this->actionField ] . ' )" ';
 			}else{
-				$html .= '<tr>';
+				$html .= '<tr';
 			}			
+
+            $html .= ' onmouseover="this.style.backgroundColor = \'#D7EAFF\'" onmouseout="this.style.backgroundColor = \'white\'" >';
 
 			foreach ( $this->header  as $key => $value){
 				if( array_key_exists( $key , $row )){
