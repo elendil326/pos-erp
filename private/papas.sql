@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 03-01-2011 a las 19:45:52
+-- Tiempo de generación: 04-01-2011 a las 17:38:39
 -- Versión del servidor: 5.1.47
 -- Versión de PHP: 5.2.9
 
@@ -68,14 +68,17 @@ CREATE TABLE IF NOT EXISTS `autorizacion` (
   `estado` int(11) NOT NULL COMMENT 'Estado actual de esta aclaracion',
   `parametros` varchar(2048) NOT NULL COMMENT 'Parametros en formato JSON que describen esta autorizacion',
   PRIMARY KEY (`id_autorizacion`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Volcar la base de datos para la tabla `autorizacion`
 --
 
 INSERT INTO `autorizacion` (`id_autorizacion`, `id_usuario`, `id_sucursal`, `fecha_peticion`, `fecha_respuesta`, `estado`, `parametros`) VALUES
-(1, -1, 5, '2011-01-03 16:26:52', '2011-01-03 16:26:52', 4, '{"clave":"209","descripcion":"Envio de productos","productos":[{"id_producto":2,"cantidad":"120"},{"id_producto":3,"cantidad":"240"}]}');
+(1, -1, 5, '2011-01-03 16:26:52', '2011-01-03 16:26:52', 4, '{"clave":"209","descripcion":"Envio de productos","productos":[{"id_producto":2,"cantidad":"120"},{"id_producto":3,"cantidad":"240"}]}'),
+(2, -1, 1, '2011-01-04 15:44:08', '2011-01-04 15:44:08', 4, '{"clave":"209","descripcion":"Envio de productos","productos":[{"id_producto":1,"cantidad":"100"},{"id_producto":2,"cantidad":"100"},{"id_producto":3,"cantidad":"100"},{"id_producto":4,"cantidad":"100"}]}'),
+(3, -1, 1, '2011-01-04 16:15:28', '2011-01-04 16:15:28', 4, '{"clave":"209","descripcion":"Envio de productos","productos":[{"id_producto":9,"cantidad":"100"},{"id_producto":10,"cantidad":"100"},{"id_producto":11,"cantidad":"100"}]}'),
+(4, 11, 1, '2011-01-04 16:13:44', NULL, 0, '{"clave":"209","descripcion":"Solicitud de producto","productos":[]}');
 
 -- --------------------------------------------------------
 
@@ -107,6 +110,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
 INSERT INTO `cliente` (`id_cliente`, `rfc`, `nombre`, `direccion`, `ciudad`, `telefono`, `e_mail`, `limite_credito`, `descuento`, `activo`, `id_usuario`, `id_sucursal`, `fecha_ingreso`) VALUES
 (-5, 'GATJ740714F48', 'Caja Comun', 'CENTRAL DE ABASTOS DEL BAJIO A. C. ANDEN E, BODEGA 43, APASEO EL GRANDE, GUANAJUATO', '', '014616172030', '', 0, 0, 1, -1, 5, '2011-01-03 14:56:30'),
 (-4, 'GATJ740714F48', 'Caja Comun', 'MERCADO DE ABASTOS B JUAREZ, ANDEN D, BODEGA 120, CELAYA', '', '014616080371', '', 0, 0, 1, -1, 4, '2011-01-03 14:52:57'),
+(-1, '', '', '', '', NULL, '0', 0, 0, 1, 0, 0, '2011-01-04 14:45:42'),
 (1, 'MELA760306', 'ALVARO MERINO LANUZA', 'CENTRAL DE ABASTOS DEL BAJIO A.C. ANDEN E BODEGA 33', 'APASEO EL GRANDE, GUANAJUATO', '52*17416*1', '', 5000, 0, 1, 95, 5, '2011-01-03 15:09:14');
 
 -- --------------------------------------------------------
@@ -205,8 +209,13 @@ CREATE TABLE IF NOT EXISTS `detalle_inventario` (
 --
 
 INSERT INTO `detalle_inventario` (`id_producto`, `id_sucursal`, `precio_venta`, `min`, `existencias`) VALUES
+(1, 1, 9, 100, 87),
+(2, 1, 7.5, 100, 55),
 (2, 5, 7.5, 100, 120),
-(3, 5, 6, 100, 180);
+(3, 1, 6, 100, 4),
+(3, 5, 6, 100, 180),
+(4, 1, 4, 100, 85),
+(9, 1, 9, 100, 99);
 
 -- --------------------------------------------------------
 
@@ -228,7 +237,20 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
 --
 
 INSERT INTO `detalle_venta` (`id_venta`, `id_producto`, `cantidad`, `precio`) VALUES
-(1, 3, 60, 6);
+(1, 3, 60, 6),
+(4, 1, 1, 9),
+(5, 1, 1, 9),
+(6, 1, 1, 9),
+(7, 4, 3, 7),
+(8, 2, 20, 7.5),
+(9, 2, 5, 8),
+(10, 3, 1, 8),
+(10, 9, 1, 10),
+(11, 2, 20, 7.5),
+(12, 3, 80, 6),
+(13, 1, 10, 9),
+(14, 4, 12, 4),
+(15, 3, 15, 6);
 
 -- --------------------------------------------------------
 
@@ -251,7 +273,7 @@ CREATE TABLE IF NOT EXISTS `equipo` (
 INSERT INTO `equipo` (`id_equipo`, `token`, `full_ua`) VALUES
 (5, 'asdf', 'Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/534.10 (KHTML, like Gecko) Chrome/8.0.552.224 Safari/534.10'),
 (6, 'asdffd', 'Mozilla/5.0 (Windows; U; Windows NT 6.1; es-ES) AppleWebKit/533.19.4 (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4'),
-(7, 'Jbchkckc', 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.10 (KHTML, like Gecko) Chrome/8.0.552.224 Safari/534.10');
+(7, 'Jbchkckc', 'sid={X8s5z} (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.10 (KHTML, like Gecko) Chrome/8.0.552.224 Safari/534.10');
 
 -- --------------------------------------------------------
 
@@ -272,7 +294,7 @@ CREATE TABLE IF NOT EXISTS `equipo_sucursal` (
 INSERT INTO `equipo_sucursal` (`id_equipo`, `id_sucursal`) VALUES
 (5, 3),
 (6, 3),
-(7, 5);
+(7, 1);
 
 -- --------------------------------------------------------
 
@@ -381,8 +403,11 @@ CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
 INSERT INTO `grupos_usuarios` (`id_grupo`, `id_usuario`) VALUES
 (0, 88),
 (1, 1),
+(2, 11),
 (2, 94),
-(2, 95);
+(2, 95),
+(3, 96),
+(3, 97);
 
 -- --------------------------------------------------------
 
@@ -582,7 +607,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `fecha_inicio` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha cuando este usuario comenzo a laborar',
   PRIMARY KEY (`id_usuario`),
   KEY `fk_usuario_1` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=96 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=98 ;
 
 --
 -- Volcar la base de datos para la tabla `usuario`
@@ -590,11 +615,13 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 
 INSERT INTO `usuario` (`id_usuario`, `RFC`, `nombre`, `contrasena`, `id_sucursal`, `activo`, `finger_token`, `salario`, `direccion`, `telefono`, `fecha_inicio`) VALUES
 (1, '1', 'Juan Antonio Garcia Tapia', '202cb962ac59075b964b07152d234b70', NULL, 1, NULL, 0, '0', '0', '2010-12-30 00:00:00'),
-(11, 'EOMJ740922CY1', 'JUANA ESCOBAR MARTINEZ', '202cb962ac59075b964b07152d234b70', 1, 1, NULL, 2000, 'saltodel agua 129', '6146366', '2010-12-30 00:00:00'),
+(11, 'EOMJ740922CY1', 'JUANA ESCOBAR MARTINEZ', '2c70936fe1aa76d39425e7d801bc6e5d', 1, 1, NULL, 2000, 'saltodel agua 129', '6146366', '2010-12-30 00:00:00'),
 (12, 'FMAJ741212', 'Jose Flores Martinez', '827ccb0eea8a706c4c34a16891f84e7b', 1, 1, '', 2000, 'Salvatierra 109, Col Santa Maria, Celaya', '6165693', '2010-12-30 00:00:00'),
 (88, '0', '0', '202cb962ac59075b964b07152d234b70', NULL, 1, NULL, 0, '0', '0', '2010-12-30 20:39:17'),
 (94, 'GATJ680304', 'JUANA MARIA GARCIA TAPIA', '14d11cb5f903ae068fe3e39969db49a5', 4, 1, NULL, 2500, 'SALTO DEL AGUA #129, COL LAS FUENTES, CELAYA', '01 461 61 46366', '2011-01-03 00:00:00'),
-(95, 'LEFR870204', 'RAUL ALEJANDRO LEMUS FLORES', '76e91698d162ac84d2a3fede1e10f835', 5, 1, NULL, 2800, 'EJIDO DE LA MACHUCA #354, COL MONTE BLANCO, CELAYA', '014611604586', '2011-01-03 00:00:00');
+(95, 'LEFR870204', 'RAUL ALEJANDRO LEMUS FLORES', '76e91698d162ac84d2a3fede1e10f835', 5, 1, NULL, 2800, 'EJIDO DE LA MACHUCA #354, COL MONTE BLANCO, CELAYA', '014611604586', '2011-01-03 00:00:00'),
+(96, 'FMAJ45667666', 'JOSE FLORES MARTINEZ', '827ccb0eea8a706c4c34a16891f84e7b', 1, 1, NULL, 2000, 'CELAYA', '61477777', '2011-01-04 00:00:00'),
+(97, 'FVEJ860624', 'JUAN FLORES', '95ea3329531b734488cbe525abdf1e09', 1, 1, NULL, 1600, 'GUERRERO #7', '6082309', '2011-01-04 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -619,14 +646,26 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`id_sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=16 ;
 
 --
 -- Volcar la base de datos para la tabla `ventas`
 --
 
 INSERT INTO `ventas` (`id_venta`, `id_cliente`, `tipo_venta`, `fecha`, `subtotal`, `iva`, `descuento`, `total`, `id_sucursal`, `id_usuario`, `pagado`, `ip`) VALUES
-(1, 1, 'credito', '2011-01-03 15:31:14', 360, NULL, 0, 360, 5, 95, 360, '189.163.68.194');
+(1, 1, 'credito', '2011-01-03 15:31:14', 360, NULL, 0, 360, 5, 95, 360, '189.163.68.194'),
+(4, -1, 'contado', '2011-01-04 14:46:21', 9, NULL, 0, 9, 1, 11, 9, '187.144.80.162'),
+(5, -1, 'contado', '2011-01-04 14:47:26', 9, NULL, 0, 9, 1, 11, 9, '187.144.80.162'),
+(6, -1, 'contado', '2011-01-04 14:48:52', 9, NULL, 0, 9, 1, 11, 9, '187.144.80.162'),
+(7, -1, 'contado', '2011-01-04 15:07:16', 21, NULL, 0, 21, 1, 11, 21, '187.144.80.162'),
+(8, 1, 'contado', '2011-01-04 15:10:28', 150, NULL, 0, 150, 1, 96, 150, '187.144.80.162'),
+(9, -1, 'contado', '2011-01-04 15:13:16', 40, NULL, 0, 40, 1, 11, 40, '187.144.80.162'),
+(10, -1, 'contado', '2011-01-04 15:17:11', 18, NULL, 0, 18, 1, 11, 18, '187.144.80.162'),
+(11, -1, 'contado', '2011-01-04 15:27:52', 150, NULL, 0, 150, 1, 97, 150, '187.144.80.162'),
+(12, -1, 'contado', '2011-01-04 15:32:44', 480, NULL, 0, 480, 1, 11, 480, '187.144.80.162'),
+(13, -1, 'contado', '2011-01-04 15:34:18', 90, NULL, 0, 90, 1, 11, 90, '187.144.80.162'),
+(14, 1, 'contado', '2011-01-04 15:52:01', 48, NULL, 0, 48, 1, 96, 48, '187.144.80.162'),
+(15, -1, 'contado', '2011-01-04 15:55:49', 90, NULL, 0, 90, 1, 97, 90, '187.144.80.162');
 
 --
 -- Filtros para las tablas descargadas (dump)

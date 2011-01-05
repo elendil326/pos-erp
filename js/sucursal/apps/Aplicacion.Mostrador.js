@@ -314,6 +314,9 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 	//buscar el la estructura que esta en el Inventario
 	inventario = Aplicacion.Inventario.currentInstance.inventarioListaStore;
 	
+	if(DEBUG){
+		console.log("buscando el producto" + id);
+	}
 	
 	res = inventario.findRecord("productoID", id);
 	
