@@ -962,11 +962,6 @@
 	#JSONOutput {"success": false, "reason": "El nombre del cliente es muy corto." }
 #endTest
 
-#beginTest
-	#Desc Enviar telefono menor de un caracter
-	#Input action=301&data={"rfc":"0101010101", "limite_credito":0, "nombre":"0000000000", "direccion":"000000000", "descuento":0, "telefono":"0", "ciudad":"000000000"}
-	#JSONOutput {"success": false, "reason": "El telefono del cliente es muy corto." }
-#endTest
 
 #beginTest
 	#Desc Enviar descuento negativo

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 04-01-2011 a las 17:38:39
+-- Tiempo de generación: 04-01-2011 a las 19:49:14
 -- Versión del servidor: 5.1.47
 -- Versión de PHP: 5.2.9
 
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `actualizacion_de_precio` (
   `precio_intersucursal` float NOT NULL,
   `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_actualizacion`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=18 ;
 
 --
 -- Volcar la base de datos para la tabla `actualizacion_de_precio`
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `autorizacion` (
   `estado` int(11) NOT NULL COMMENT 'Estado actual de esta aclaracion',
   `parametros` varchar(2048) NOT NULL COMMENT 'Parametros en formato JSON que describen esta autorizacion',
   PRIMARY KEY (`id_autorizacion`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- Volcar la base de datos para la tabla `autorizacion`
@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS `corte` (
   `total_ingresos` float NOT NULL COMMENT 'total de ingresos para esta sucursal desde el ultimo corte',
   `total_ganancia_neta` float NOT NULL COMMENT 'calculo de ganancia neta',
   PRIMARY KEY (`id_corte`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `corte`
@@ -202,7 +202,7 @@ CREATE TABLE IF NOT EXISTS `detalle_inventario` (
   `existencias` float NOT NULL DEFAULT '0' COMMENT 'cantidad de producto que hay actualmente en almacen de esta sucursal',
   PRIMARY KEY (`id_producto`,`id_sucursal`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcar la base de datos para la tabla `detalle_inventario`
@@ -264,7 +264,7 @@ CREATE TABLE IF NOT EXISTS `equipo` (
   `full_ua` varchar(256) NOT NULL COMMENT 'String de user-agent para este cliente',
   PRIMARY KEY (`id_equipo`),
   UNIQUE KEY `token` (`token`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- Volcar la base de datos para la tabla `equipo`
@@ -285,7 +285,7 @@ CREATE TABLE IF NOT EXISTS `equipo_sucursal` (
   `id_equipo` int(6) NOT NULL COMMENT 'identificador del equipo ',
   `id_sucursal` int(6) NOT NULL COMMENT 'identifica una sucursal',
   PRIMARY KEY (`id_equipo`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcar la base de datos para la tabla `equipo_sucursal`
@@ -349,7 +349,7 @@ CREATE TABLE IF NOT EXISTS `gastos` (
   `id_usuario` int(11) NOT NULL COMMENT 'usuario que registro el gasto',
   `nota` varchar(512) NOT NULL COMMENT 'nota adicional para complementar la descripcion del gasto',
   PRIMARY KEY (`id_gasto`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Volcar la base de datos para la tabla `gastos`
@@ -427,7 +427,7 @@ CREATE TABLE IF NOT EXISTS `ingresos` (
   PRIMARY KEY (`id_ingreso`),
   KEY `usuario_ingreso` (`id_usuario`),
   KEY `sucursal_ingreso` (`id_sucursal`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=203 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=203 ;
 
 --
 -- Volcar la base de datos para la tabla `ingresos`
@@ -479,7 +479,7 @@ CREATE TABLE IF NOT EXISTS `pagos_compra` (
   `monto` float NOT NULL COMMENT 'monto que se abono',
   PRIMARY KEY (`id_pago`),
   KEY `pagos_compra_compra` (`id_compra`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
 -- Volcar la base de datos para la tabla `pagos_compra`
@@ -671,8 +671,21 @@ INSERT INTO `ventas` (`id_venta`, `id_cliente`, `tipo_venta`, `fecha`, `subtotal
 -- Filtros para las tablas descargadas (dump)
 --
 
+-- Constraints for table `actualizacion_de_precio`
 --
--- Filtros para la tabla `compras`
+ALTER TABLE `actualizacion_de_precio`
+  ADD CONSTRAINT `actualizacion_de_precio_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `actualizacion_de_precio_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `autorizacion`
+--
+ALTER TABLE `autorizacion`
+  ADD CONSTRAINT `autorizacion_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `autorizacion_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `compras`
 --
 ALTER TABLE `compras`
   ADD CONSTRAINT `compras_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id_proveedor`) ON UPDATE CASCADE,
@@ -680,68 +693,103 @@ ALTER TABLE `compras`
   ADD CONSTRAINT `compras_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `detalle_compra`
+-- Constraints for table `corte`
+--
+ALTER TABLE `corte`
+  ADD CONSTRAINT `corte_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `detalle_compra`
 --
 ALTER TABLE `detalle_compra`
   ADD CONSTRAINT `detalle_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE,
   ADD CONSTRAINT `detalle_compra_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `detalle_inventario`
+-- Constraints for table `detalle_inventario`
 --
 ALTER TABLE `detalle_inventario`
-  ADD CONSTRAINT `detalle_inventario_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `detalle_inventario_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `detalle_inventario_ibfk_4` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `detalle_inventario_ibfk_3` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
--- Filtros para la tabla `factura_compra`
+-- Constraints for table `detalle_venta`
+--
+ALTER TABLE `detalle_venta`
+  ADD CONSTRAINT `detalle_venta_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `detalle_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `equipo_sucursal`
+--
+ALTER TABLE `equipo_sucursal`
+  ADD CONSTRAINT `equipo_sucursal_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `equipo_sucursal_ibfk_1` FOREIGN KEY (`id_equipo`) REFERENCES `equipo` (`id_equipo`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `factura_compra`
 --
 ALTER TABLE `factura_compra`
   ADD CONSTRAINT `factura_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `factura_venta`
+-- Constraints for table `factura_venta`
 --
 ALTER TABLE `factura_venta`
   ADD CONSTRAINT `factura_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`);
 
 --
--- Filtros para la tabla `grupos_usuarios`
+-- Constraints for table `gastos`
+--
+ALTER TABLE `gastos`
+  ADD CONSTRAINT `gastos_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_sucursal`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `gastos_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `grupos_usuarios`
 --
 ALTER TABLE `grupos_usuarios`
   ADD CONSTRAINT `grupos_usuarios_ibfk_1` FOREIGN KEY (`id_grupo`) REFERENCES `grupos` (`id_grupo`) ON UPDATE CASCADE,
   ADD CONSTRAINT `grupos_usuarios_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `pagos_compra`
+-- Constraints for table `ingresos`
+--
+ALTER TABLE `ingresos`
+  ADD CONSTRAINT `ingresos_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `ingresos_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `pagos_compra`
 --
 ALTER TABLE `pagos_compra`
   ADD CONSTRAINT `pagos_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `pagos_venta`
+-- Constraints for table `pagos_venta`
 --
 ALTER TABLE `pagos_venta`
   ADD CONSTRAINT `pagos_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Filtros para la tabla `productos_proveedor`
+-- Constraints for table `productos_proveedor`
 --
 ALTER TABLE `productos_proveedor`
   ADD CONSTRAINT `productos_proveedor_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id_proveedor`) ON UPDATE CASCADE,
   ADD CONSTRAINT `productos_proveedor_ibfk_2` FOREIGN KEY (`id_inventario`) REFERENCES `inventario` (`id_producto`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `usuario`
+-- Constraints for table `usuario`
 --
 ALTER TABLE `usuario`
   ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `ventas`
+-- Constraints for table `ventas`
 --
 ALTER TABLE `ventas`
   ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE,
   ADD CONSTRAINT `ventas_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
+
 
