@@ -318,7 +318,9 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 		console.log("buscando el producto" + id);
 	}
 	
-	res = inventario.findRecord("productoID", id);
+	res = inventario.findRecord("productoID", id, 0, false, true, true);
+
+
 	
 	if(res === null){
 		Ext.Msg.alert("Mostrador", "Este producto no existe");		
@@ -327,7 +329,7 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 
 	
 	if(DEBUG){
-		console.log("Agregando el producto " + id + " al carrito.");
+		console.log("Agregando el producto " + id + " al carrito.", res);
 	}
 
 	//buscar este producto en el carrito

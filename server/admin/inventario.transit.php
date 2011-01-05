@@ -7,6 +7,7 @@
     require_once('model/autorizacion.dao.php');
     require_once('model/usuario.dao.php');
     require_once('model/sucursal.dao.php');
+    require_once('model/inventario.dao.php');
 
     $aut = new Autorizacion();
     $aut->setEstado(3);
@@ -30,7 +31,7 @@
                 <tr><td><b>Id autorizacion</b></td><td><?php echo $transito->getIdAutorizacion(); ?></td></tr>
                 <tr><td><b>Fecha enbarque</b></td><td><?php echo $transito->getFechaPeticion(); ?></td></tr>
                 <tr><td><b>Usuario</b></td><td>Administrador</td></tr>
-                <tr><td><b>Sucursal</b></td><td><?php echo $sucName; ?></td></tr>
+                <tr><td><b>Sucursal Destino</b></td><td><?php echo $sucName; ?></td></tr>
             </table>
         <?php
         }else{
@@ -40,7 +41,7 @@
                 <tr><td><b>Id autorizacion</b></td><td><?php echo $transito->getIdAutorizacion(); ?></td></tr>
                 <tr><td><b>Fecha peticion</b></td><td><?php echo $transito->getFechaPeticion(); ?></td></tr>
                 <tr><td><b>Usuario</b></td><td><?php echo $transito->getIdUsuario(); ?></td></tr>
-                <tr><td><b>Sucursal</b></td><td><?php echo $sucName; ?></td></tr>
+                <tr><td><b>Sucursal Destino</b></td><td><?php echo $sucName; ?></td></tr>
             </table>
         <?php
         }
@@ -51,12 +52,13 @@
         $items = json_decode($transito->getParametros());
 
         $items = $items->productos;
-        echo "<h3>Detalles de los productos</h3>";
-        echo "<table>";
-        echo "<tr><td>Producto</td><td>Descripcion</td><td>Cantidad en transito</td></tr>";
+        echo "<h2>Detalles de envio</h2>";
+        echo "<table width='100%'>";
+        echo "<tr><th>Producto</th><th>Descripcion</th><th>Cantidad en transito</th></tr>";
         foreach ($items as $i)
         {
-          echo "<tr><td>".$i->id_producto."</td><td>".null."</td><td>".$i->cantidad."</td></tr>";
+          $_desc = InventarioDAO::getByPK($i->id_producto);
+          echo "<tr><td>".$i->id_producto."</td><td>". $_desc->getDescripcion() ."</td><td>".$i->cantidad."</td></tr>";
         }
         echo "</table>";
     }

@@ -208,7 +208,7 @@ Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 
 
 	this.listaInventarioPanel = new Ext.Panel({
-		dockedItems : dockedItems,
+		//dockedItems : dockedItems,
 		layout: Ext.is.Phone ? 'fit' : {
 			type: 'vbox',
 			align: 'center',
@@ -291,14 +291,15 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelCreator = function()
 		text: 'Agregar a Mostrador',
 		ui: 'normal',
 		handler : function (){
+	        sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.mostradorPanel , 'slide');
 			Aplicacion.Mostrador.currentInstance.agregarProductoPorID( Aplicacion.Inventario.currentInstance.detalleInventarioPanel.getRecord().data.productoID );
-            sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.mostradorPanel , 'slide');
 		}
 	}];
 
+	
     if(POS.U.g) {
-        opciones.push({ text: 'Surtir', ui: 'action', handler : this.detalleInventarioSurtirEsteProd });
-   }
+    //    opciones.push({ text: 'Surtir', ui: 'action', handler : this.detalleInventarioSurtirEsteProd });
+   	}
 
 
 

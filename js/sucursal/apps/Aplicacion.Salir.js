@@ -38,23 +38,19 @@ Aplicacion.Salir.prototype.getConfig = function (){
 		    items: [{
 		        text: 'Salir del punto de venta',
 		        handler: function() {
-		            if (!this.actions) {
-		                this.actions = new Ext.ActionSheet({
-		                    items: [{
-		                        text: 'Salir',
-		                        ui: 'decline',
-		                        handler : Aplicacion.Salir.currentInstance.doSalir
-		                    },{
-		                        text : 'Regresar',
-		                        ui: 'confirm',
-		                        scope : this,
-		                        handler : function(){
-		                            this.actions.hide();
-		                        }
-		                    }]
-		                });
-		            }
-		            this.actions.show();
+						Ext.Ajax.request({
+							url: 'proxy.php',
+							scope : this,
+							params : {
+								action : 2002
+							},
+							success: function(response, opts) {
+								window.location = ".";
+							},
+							failure: function( response ){
+								POS.error( response );
+							}
+						});
 		        }
 		    }]
 		})
@@ -62,22 +58,6 @@ Aplicacion.Salir.prototype.getConfig = function (){
 };
 
 
-
-Aplicacion.Salir.prototype.doSalir = function (){
-	Ext.Ajax.request({
-		url: 'proxy.php',
-		scope : this,
-		params : {
-			action : 2002
-		},
-		success: function(response, opts) {
-			window.location = ".";
-		},
-		failure: function( response ){
-			POS.error( response );
-		}
-	});
-};
 
 
 POS.Apps.push( new Aplicacion.Salir() );

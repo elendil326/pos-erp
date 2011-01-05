@@ -14,6 +14,8 @@ require_once('model/actualizacion_de_precio.dao.php');
 
 function solicitudDeAutorizacion( $auth ){
 
+	Logger::log("solicitud de autorizacion");
+	
     $autorizacion = new Autorizacion();
     
     $autorizacion->setIdUsuario( $_SESSION['userid'] );

@@ -220,19 +220,19 @@ function sucursalTest( ){
     $ua = $_SERVER['HTTP_USER_AGENT'];
 
     if(POS_SUCURSAL_TEST_TOKEN == 'FULL_UA'){
-            Logger::log("Testing sucursal via " . POS_SUCURSAL_TEST_TOKEN);
+
             $equipo = new Equipo();
             $equipo->setFullUa( $ua );
             $search = EquipoDAO::search( $equipo );
 
             if(sizeof($search) != 1){
-                Logger::log("UA: >" . $_SERVER['HTTP_USER_AGENT'] . "< not found in database", 2);
+                Logger::log("Probando sucursal via ".POS_SUCURSAL_TEST_TOKEN." UA: " . $_SERVER['HTTP_USER_AGENT'] . " no encontrado !", 2);
 
                 return false;
             }
 
             $equipo = $search[0];
-            Logger::log("Full UA found !", 2);            
+            Logger::log("Probando sucursal via  " . $_SERVER['HTTP_USER_AGENT'] . " Ok !", 2);
             
 
     }elseif(POS_SUCURSAL_TEST_TOKEN == 'SID_TOKEN'){

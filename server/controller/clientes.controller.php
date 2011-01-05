@@ -141,12 +141,13 @@ function crearCliente( $args ){
 
 	try{
 		ClienteDAO::save($cliente);
-		printf('{"success": true, "id": "%s"}' , $cliente->getIdCliente());
 	}catch(Exception $e){
         Logger::log("Error al guardar el nuevo cliente:" . $e);
 	    die( '{"success": false, "reason": "Error" }' );
 	}
 
+	printf('{"success": true, "id": "%s"}' , $cliente->getIdCliente());
+	Logger::log("Cliente creado !");
 }
 
 
@@ -194,7 +195,8 @@ function listarClientes(  ){
 		
         array_push($total_customers, $c );
 	}
-	
+
+	Logger::log("Listando clientes");	
 	return $total_customers;
 
 }
@@ -302,15 +304,15 @@ function modificarCliente( $args ){
 
 	try{
        ClienteDAO::save($cliente);
-       printf( '{"success": true, "id": "%s"}' , $cliente->getIdCliente() );
-       Logger::log("Cliente " . $cliente->getIdCliente() . " modificado !");
 
 	} catch(Exception $e) {
 	
         Logger::log("Error al guardar modificacion del cliente " . $e);
 	    die( '{"success": false, "reason": "Error. Porfavor intente de nuevo." }' );
 	}
-	
+
+   printf( '{"success": true, "id": "%s"}' , $cliente->getIdCliente() );
+   Logger::log("Cliente " . $cliente->getIdCliente() . " modificado !");
 }
 
 
@@ -361,6 +363,7 @@ function listarVentasClientes( ){
         array_push( $tot_ventas, $decode_venta );
     }
 
+	Logger::log("Listando ventas de clientes");
 	return $tot_ventas;
     
 }
@@ -563,6 +566,7 @@ function listarClientesDeudores(  ){
 
     }
 
+	Logger::log("Listando clientes deudores");
 	return $total_customers;
 
 }
@@ -619,6 +623,7 @@ function facturarVenta( $args ){
         die( '{"success": false, "reason": "'.$e.'" }' );
     }
 
+	Logger::log("Facturando venta");
 }
 
 
