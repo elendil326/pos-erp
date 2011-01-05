@@ -17,15 +17,31 @@
 
 <h2>Detalles del nuevo cliente</h2>
 <form id="newClient">
-<table border="0" cellspacing="5" cellpadding="5">
-	<tr><td>Nombre</td><td><input type="text"               id="nombre" size="40"/></td></tr>
-	<tr><td>RFC</td><td><input type="text"                  id="rfc" size="40"/></td></tr>
-	<tr><td>Direccion</td><td><input type="text"            id="direccion" size="40"/></td></tr>
-	<tr><td>Ciudad</td><td><input type="text"            id="ciudad" size="40"/></td></tr>	
-	<tr><td>Telefono</td><td><input type="text"             id="telefono" size="40"/></td></tr>
-
-	<tr><td></td><td><input type="button" onClick="validar()" value="Crear el nuevo cliente"/> </td></tr>
-</table>
+	<table border="0" cellspacing="5" cellpadding="5">
+		<tr><td>Nombre</td><td><input type="text"               id="nombre" size="40"/></td></tr>
+		<tr><td>RFC</td><td><input type="text"                  id="rfc" size="40"/></td></tr>
+		<tr><td>Direccion</td><td><input type="text"            id="direccion" size="40"/></td></tr>
+		<tr><td>Ciudad</td><td><input type="text"            	id="ciudad" size="40"/></td></tr>	
+		<tr><td>Telefono</td><td><input type="text"             id="telefono" size="40"/></td></tr>
+		<tr><td>Descuento</td><td><input type="text"            id="descuento" size="40"/></td></tr>
+		<tr><td>Limite de credito</td><td><input type="text"    id="limite_credito" size="40"/></td></tr>
+		
+		<tr><td>Sucursal</td><td>
+			    <select id="sucursal"> 
+			    <?php
+			
+				    $sucursales = SucursalDAO::getAll();
+				    foreach( $sucursales as $suc ){
+					    echo "<option value='" . $suc->getIdSucursal() . "' >" .  $suc->getDescripcion()  . "</option>";
+				    }
+			
+			    ?>
+	
+	            </select>
+		    </td>
+		</tr>
+		<tr><td></td><td><input type="button" onClick="validar()" value="Crear el nuevo cliente"/> </td></tr>
+	</table>
 </form>
 
 
@@ -48,36 +64,17 @@
             return;
         }
 
-        if($('#telefono').val().length < 7){
-            alert("El telefono es muy corto.");
-            return;
-        }
 
-
-        if( isNaN($('#salario').val()) || $('#salario').val().length == 0){
-            alert("El salario debe ser un nuemero valido.");
-            return;
-        }
-
-        if( $('#salario').val() >= 10000){
-            alert("El salario mensual debe ser menor a $10,000.00");
-            return;
-        }
-
-        if( $('#pass1').val() != $('#pass1').val() ){
-            alert("Las claves no coinciden");
-            return;
-        }
-
-            obj = {
-                nombre : $('#nombre').val(), 
-                direccion : $("#direccion").val(), 
-                RFC : $("#rfc").val(), 
-                telefono : $("#telefono").val(),
-                id_usuario : null,
-                contrasena :  hex_md5( $("#pass1").val() ),
-                salario : $("#salario").val(),
-                grupo : 2
+        obj = {
+            nombre : 	$('#nombre').val(), 
+            direccion : $("#direccion").val(), 
+            rfc : 		$("#rfc").val(), 
+            descuento:	$("#descuento").val(),
+            telefono : 	$("#telefono").val(),
+            ciudad :	$("#ciudad").val(),
+            limite_credito:	$("#limite_credito").val(),
+            id_sucursal:	$('#sucursal').val(),
+            id_usuario : <?php echo $_SESSION['userid']; ?>
         };        
 
         guardar(obj);
@@ -97,7 +94,7 @@
         $.ajax({
 	      url: "../proxy.php",
 	      data: { 
-            action : 500, 
+            action : 301, 
             data : $.JSON.encode(data)
            },
 	      cache: false,
@@ -105,13 +102,13 @@
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    window.location = "gerentes.php?action=nuevo&success=false&reason=" + response.reason;
+                    window.location = "clientes.php?action=nuevo&success=false&reason=" + response.reason;
                     return;
                 }
 
 
                 reason = "Los datos se han editado con exito !";
-                window.location = 'gerentes.php?action=lista&success=true&reason=' + reason;
+                window.location = 'clientes.php?action=lista&success=true&reason=' + reason;
 	      }
 	    });
     }

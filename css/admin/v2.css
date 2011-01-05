@@ -80,6 +80,7 @@ font-size:.7em;
 }
 
 input,select,textarea,option {
+text-transform: uppercase
 font-family:inherit;
 font-size:inherit;
 }

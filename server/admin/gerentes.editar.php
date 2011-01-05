@@ -22,7 +22,18 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 	<tr><td>RFC</td><td><input type="text"              id="rfc" size="40" value="<?php echo $gerente->getRFC(); ?>"/></td></tr>
 	<tr><td>Direccion</td><td><input type="text"        id="direccion" size="40" value="<?php echo $gerente->getDireccion(); ?>"/></td></tr>
 	<tr><td>Telefono</td><td><input type="text"         id="telefono" size="40" value="<?php echo $gerente->getTelefono(); ?>"/></td></tr>
-	<tr><td>Salario Mensual</td><td><input type="text"  id="salario" size="40" value="<?php echo $gerente->getSalario(); ?>"/></td></tr>
+	
+	<?php
+		switch(POS_PERIODICIDAD_SALARIO){
+			case POS_SEMANA : 
+					echo '<tr><td>Salario Semanal</td><td><input type="text"  id="salario" size="40" value="' . $gerente->getSalario(). '"/></td></tr>';
+				break;
+			case POS_MES : 		
+					echo '<tr><td>Salario Mensual</td><td><input type="text"  id="salario" size="40" value="' . $gerente->getSalario(). '"/></td></tr>';
+				break;
+		}
+	?>
+
 	
 	<tr><td></td><td><input type="button" onClick="validar()" value="Guardar"/> </td></tr>
 

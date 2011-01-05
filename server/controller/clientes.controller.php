@@ -76,10 +76,12 @@ function crearCliente( $args ){
 		die ( '{"success": false, "reason": "El nombre del cliente es muy corto." }' );		
 	}
 
+	//un cliente puede no tener telefono
+	/*
 	if(strlen($data->telefono) < 5){
 		Logger::log("Telefono muy corto para insertar cliente.");
 		die ( '{"success": false, "reason": "El telefono del cliente es muy corto." }' );		
-	}
+	}*/
 
 	if($data->descuento < 0){
 		Logger::log("Descuento negativo para el cliente.");

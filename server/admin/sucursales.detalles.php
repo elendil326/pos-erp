@@ -110,7 +110,9 @@ if(POS_ENABLE_GMAPS){
     }
 
 
-
+	function mostrarDetalles( a ){
+		window.location = "clientes.php?action=detalles&id=" + a;
+	}
 </script>
 
 <h2>Mapa de ventas</h2>
@@ -309,7 +311,13 @@ if(POS_ENABLE_GMAPS){
 <h2><img src='../media/icons/users_business_32.png'>&nbsp;Personal</h2><?php
 
     $empleados = listarEmpleados($_REQUEST['id']);
- 
+    
+    
+	switch(POS_PERIODICIDAD_SALARIO){
+			case POS_SEMANA : $periodicidad = "semanal"; break;
+			case POS_MES 	: $periodicidad = "menusal"; break;
+	}
+	
     $header = array(
         "id_usuario" => "ID",
         "nombre" => "Nombre",
@@ -318,7 +326,7 @@ if(POS_ENABLE_GMAPS){
         //"direccion" => "Direccion",
         "telefono" => "Telefono",
         "fecha_inicio" => "Inicio",
-        "salario" => "Salario" );
+        "salario" => "Salario " . $periodicidad );
 
 
     $tabla = new Tabla( $header, $empleados );

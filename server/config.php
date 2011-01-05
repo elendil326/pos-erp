@@ -1,5 +1,8 @@
 <?php
 
+define('POS_SEMANA', 1);
+define('POS_MES', 1);
+
 /* *******************************
 Configuracion Basica
 ********************************* */
@@ -15,6 +18,8 @@ define("_POS_HTMLTITLE", "Papas Supremas");
 
 define('POS_MAX_LIMITE_DE_CREDITO', 20000);
 define('POS_MAX_LIMITE_DESCUENTO', 35.0);
+
+define('POS_PERIODICIDAD_SALARIO', POS_SEMANA);
 define('POS_ENABLE_GMAPS', true);	
 
 

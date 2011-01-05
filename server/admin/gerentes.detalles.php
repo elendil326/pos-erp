@@ -1,5 +1,3 @@
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-
 <?php
 
 require_once("model/usuario.dao.php");
@@ -9,8 +7,10 @@ require_once("model/grupos_usuarios.dao.php");
 
 $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 
-
 ?>
+
+
+<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
 
 <?php  if($gerente->getActivo() != 0) {  ?>
   <h1><?php echo $gerente->getNombre(); ?></h1>  
@@ -24,7 +24,17 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 	<tr><td><b>Direccion</b></td><td><?php echo $gerente->getDireccion(); ?></td></tr>
 	<tr><td><b>Telefono</b></td><td><?php echo $gerente->getTelefono(); ?></td></tr>
 	<tr><td><b>Fecha Ingreso</b></td><td><?php echo $gerente->getFechaInicio() ; ?></td></tr>
-	<tr><td><b>Salario Mensual</b></td><td><?php echo moneyFormat($gerente->getSalario()) ; ?></td></tr>
+	<?php
+		switch(POS_PERIODICIDAD_SALARIO){
+			case POS_SEMANA : 
+					echo "<tr><td><b>Salario Semanal</b></td><td>" . moneyFormat($gerente->getSalario()). "</td></tr>";
+				break;
+			case POS_MES : 		
+					echo "<tr><td><b>Salario Mensual</b></td><td>" . moneyFormat($gerente->getSalario()). "</td></tr>";
+				break;
+		}
+	?>
+	
 
 
     <?php  if($gerente->getActivo() != 0) {  ?>
