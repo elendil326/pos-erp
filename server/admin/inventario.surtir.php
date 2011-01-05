@@ -106,8 +106,7 @@
 		        response = jQuery.parseJSON(data);
 
                 if(response.success === false){
-                    window.location = "inventario.php?action=transit&success=false&reason=" + response.reason;
-                    return;
+                    return $("#ajax_failure").html(response.reason).show();
                 }
 
 

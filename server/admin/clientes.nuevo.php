@@ -49,18 +49,16 @@
     function validar(){
 
         if($('#nombre').val().length < 8){
-            alert("El nombre es muy corto." );
-            return;
+            return $("#ajax_failure").html("El nombre es muy corto.").show();
         }
 
 
         if($('#direccion').val().length < 10){
-            alert("La direccion es muy corta.");
-            return;
+            return $("#ajax_failure").html("La direccion es muy corta.").show();            
         }
 
         if($('#rfc').val().length < 7){
-            alert("El rfc es muy corto.");
+            return $("#ajax_failure").html("El RFC es muy corto.").show();
             return;
         }
 
@@ -102,8 +100,7 @@
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    window.location = "clientes.php?action=nuevo&success=false&reason=" + response.reason;
-                    return;
+                    return $("#ajax_failure").html(response.reason).show();
                 }
 
 

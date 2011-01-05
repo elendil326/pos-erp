@@ -80,8 +80,7 @@
 		        response = jQuery.parseJSON(data);
 
                 if(!response.success){
-                    window.location = "sucursales.php?action=abrir&success=true&reason=" + response.reason;
-                    return;
+                    return $("#ajax_failure").html(response.reason).show();
                 }
                 reason = "La nueva sucursal se ha creado con exito.";
                 window.location = "sucursales.php?action=lista&success=false&reason=" + reason;

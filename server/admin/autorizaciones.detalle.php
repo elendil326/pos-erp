@@ -34,8 +34,7 @@ function contestar(id, response){
       success: function(data){
             response = jQuery.parseJSON(data);
             if(response.success == false){
-                window.location = "autorizaciones.php?action=pendientes&success=true&reason=" + response.reason;
-                return;
+                    return $("#ajax_failure").html(response.reason).show();
             }
             reason = "Autorizacion respondida.";
             window.location = "autorizaciones.php?action=pendientes&success=true&reason=";

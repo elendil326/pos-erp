@@ -57,9 +57,8 @@
 	      success: function(data){
 		        response = jQuery.parseJSON(data);
 
-                if(response.success == "false"){
-                    window.location = "inventario.php?action=nuevo&success=false&reason=" + response.reason ;
-                    return;
+                if(response.success == false){
+                    return $("#ajax_failure").html(response.reason).show();
                 }
 
 

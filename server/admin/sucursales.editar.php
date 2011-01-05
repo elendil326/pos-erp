@@ -49,13 +49,7 @@
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    alert(response.reason);
-                    return;
-                }
-
-                if(response.success == "false"){
-                    window.location = "sucursales.php?action=editar&sid=<?php echo $_REQUEST['sid']; ?>&success=true&reason=" + response.reason;
-                    return;
+                    return $("#ajax_failure").html(response.reason).show();
                 }
 
                 reason = "La sucursal se ha cerrado con exito.";
@@ -92,9 +86,8 @@
 	      success: function(data){
 		        response = jQuery.parseJSON(data);
 
-                if(response.success == false || response.sucess == "false"){
-                    window.location = 'sucursales.php?action=editar&id=<?php echo $_REQUEST['sid']; ?>&success=false&reason=' + response.reason;
-                    return;
+                if(response.success == false){
+                    return $("#ajax_failure").html(response.reason).show();
                 }
 
                 reason = "La sucursal se ha editado correctamente";

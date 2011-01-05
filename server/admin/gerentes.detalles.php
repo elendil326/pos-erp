@@ -166,9 +166,8 @@ if($aCargo){
 	      success: function(data){
 		        response = jQuery.parseJSON(data);
 
-                if(response.success == "false"){
-                    alert(response.reason);
-                    return;
+                if(response.success == false){
+                    return $("#ajax_failure").html(response.reason).show();
                 }
 
 

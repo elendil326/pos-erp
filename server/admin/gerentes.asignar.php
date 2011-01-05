@@ -111,8 +111,7 @@ echo "</table>";
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    window.location = "gerentes.php?action=asignar&success=false&reason=" + response.reason;
-                    return;
+                    return $("#ajax_failure").html(response.reason).show();
                 }
 
 

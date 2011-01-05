@@ -199,8 +199,7 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    $("#ajax_failure").html(response.reason).show();
-                    return;
+                    return $("#ajax_failure").html(response.reason).show();
                 }
 				
 				reason = 'Los detalles del gerente se han modificado correctamente.';

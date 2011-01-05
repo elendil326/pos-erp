@@ -119,7 +119,7 @@
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    window.location = "gerentes.php?action=nuevo&success=false&reason=" + response.reason;
+                    return $("#ajax_failure").html(response.reason).show();
                     return;
                 }
 

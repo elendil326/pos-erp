@@ -42,45 +42,32 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
     function validar(){
 
         if($('#nombre').val().length < 8){
-            alert("El nombre es muy corto." );
-            return;
+            return $("#ajax_failure").html("El nombre es muy corto.").show();
         }
 
 
         if($('#direccion').val().length < 10){
-            alert("La direccion es muy corta.");
-            return;
+            return $("#ajax_failure").html("La direccion es muy corta.").show();
         }
 
         if($('#rfc').val().length < 7){
-            alert("El rfc es muy corto.");
-            return;
+            return $("#ajax_failure").html("El RFC es muy corto.").show();
         }
-
-        if($('#telefono').val().length < 7){
-            alert("El telefono es muy corto.");
-            return;
-        }
-
 
         if( isNaN($('#descuento').val()) || $('#descuento').val().length == 0){
-            alert("El descuento debe ser un nuemero valido.");
-            return;
+            return $("#ajax_failure").html("El descuento no es nu numero valido.").show();
         }
 
         if( ($('#descuento').val() >= 100) || ($('#descuento').val() < 0) ){
-            alert("El descuento debe ser la taza porcentual de descuento, entre 0% y 100%");
-            return;
+            return $("#ajax_failure").html("El descuento debe ser la taza porcentual de descuento, entre 0% y 100%").show();            
         }
 
         if( isNaN($('#limite_credito').val()) || $('#limite_credito').val().length == 0){
-            alert("El limite de credito debe ser un nuemero valido.");
-            return;
+            return $("#ajax_failure").html("El limite de credito debe ser un nuemero valido.").show();            
         }
 
         if(  ($('#limite_credito').val() < 0) ){
-            alert("El limite credito debe ser una cantidad en pesos mayor a 0.");
-            return;
+            return $("#ajax_failure").html("El limite credito debe ser una cantidad en pesos mayor a 0.").show();            
         }
 
         obj = {
@@ -120,9 +107,8 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 		        response = jQuery.parseJSON(data);
 
 
-                if(response.success == "false" || response.success === false){
-                    window.location = 'clientes.php?action=editar&id=<?php echo $_REQUEST['id']; ?>&success=false&reason=' + response.reason;
-                    return;
+                if(response.success === false){
+                    return $("#ajax_failure").html(response.reason).show();
                 }
                 reason = "Los cambios se han guardado correctamente.";
                 window.location = 'clientes.php?action=detalles&id=<?php echo $_REQUEST['id']; ?>&success=true&reason=' + reason;
