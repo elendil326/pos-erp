@@ -59,16 +59,21 @@
 
     function guardar(){
 
-	    $.ajax({
-	      url: "../proxy.php",
-	      data: { 
-            action : 701, 
-            descripcion : $('#descripcion').val(), 
+		datos = {
+			descripcion : $('#descripcion').val(), 
             direccion : $("#direccion").val(), 
             rfc : $("#rfc").val(), 
             prefijo_factura : $("#letras_factura").val(), 
             telefono : $("#telefono").val(),
             gerente : $('#gerente').val()
+        };
+        
+	    $.ajax({
+	      url: "../proxy.php",
+	      data: { 
+            action : 701, 
+            data : $.JSON.encode( datos )
+
            },
 	      cache: false,
 	      success: function(data){
@@ -79,7 +84,7 @@
                     return;
                 }
                 reason = "La nueva sucursal se ha creado con exito.";
-                window.location = "sucursales.php?action=lista&success=true&reason=" + reason;
+                window.location = "sucursales.php?action=lista&success=false&reason=" + reason;
 	      }
 	    });
 

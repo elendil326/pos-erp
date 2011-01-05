@@ -5,26 +5,15 @@ require_once("model/sucursal.dao.php");
 
 $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 
-?><h1>Editar datos de <?php echo $gerente->getNombre(); ?></h1><?php
-
-
-
 ?>
+
 
 <script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
 <link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
+<script type="text/javascript" charset="utf-8">$(function(){$("input, select").uniform();});</script>
 
-<script type="text/javascript" charset="utf-8">
-	$(function(){
-      $("input, select").uniform();
-    });
-</script>
-
-
-
-
-
+<h1>Editar datos de <?php echo $gerente->getNombre(); ?></h1>
 
 <h2>Detalles personales</h2>
 <form id="editdetalles">
@@ -114,7 +103,7 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
         }
 
         if($('#pass1').val().length < 4){
-            alert("La nueva clave debe ser por lo menos mayor a 4 caracteres.");
+            alert("La nueva clave debe ser por lo menos de 5 caracteres.");
             return;
         }        
         
@@ -132,47 +121,47 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
     function validar(){
 
         if($('#nombre').val().length < 8){
-            alert("El nombre es muy corto." );
+             $("#ajax_failure").html("El nombre es muy corto.").show();
             return;
         }
 
 
         if($('#direccion').val().length < 10){
-            alert("La direccion es muy corta.");
+             $("#ajax_failure").html("La direccion es muy corta.").show();
             return;
         }
 
         if($('#rfc').val().length < 7){
-            alert("El rfc es muy corto.");
-            return;
+             $("#ajax_failure").html("El RFC es muy corto.").show();
+            return;            
+
         }
 
         if($('#telefono').val().length < 7){
-            alert("El telefono es muy corto.");
+             $("#ajax_failure").html("El telefono es muy corto.").show();
             return;
         }
 
 
         if( isNaN($('#salario').val()) || $('#salario').val().length == 0){
-            alert("El salario debe ser un nuemero valido.");
+             $("#ajax_failure").html("El salario debe ser un nuemero.").show();
             return;
         }
 
         if( $('#salario').val() >= 10000){
-            alert("El salario mensual debe ser menor a $10,000.00");
-            return;
+			return $("#ajax_failure").html("El salario mensual debe ser menor a $10,000.00").show();
         }
 
 
 
-            obj = {
-                nombre : $('#nombre').val(), 
-                direccion : $("#direccion").val(), 
-                RFC : $("#rfc").val(), 
-                telefono : $("#telefono").val(),
-                id_usuario : <?php echo $_REQUEST['id']; ?>,
-                salario : $("#salario").val()
-        };        
+		obj = {
+			nombre : $('#nombre').val(), 
+			direccion : $("#direccion").val(), 
+			RFC : $("#rfc").val(), 
+			telefono : $("#telefono").val(),
+			id_usuario : <?php echo $_REQUEST['id']; ?>,
+			salario : $("#salario").val()
+		};        
 
         guardar(obj);
     }
@@ -199,10 +188,10 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    window.location = "gerentes.php?action=editar&success=false&reason=" + response.reason;
+                    $("#ajax_failure").html(response.reason).show();
                     return;
                 }
-
+				
 				reason = 'Los detalles del gerente se han modificado correctamente.';
                 window.location = "gerentes.php?action=detalles&id=<?php echo $_REQUEST['id'] ?>&success=true&reason=" + reason;
 	      }
@@ -211,4 +200,3 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 </script>
 
 
-<?php

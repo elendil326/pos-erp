@@ -12,7 +12,11 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 -- Database: `pos`
 --
+DROP DATABASE `pos`;
 
+CREATE DATABASE  `pos` ;
+
+USE pos;
 -- --------------------------------------------------------
 
 --
@@ -511,7 +515,9 @@ ALTER TABLE `ventas`
 
 
 -- datos frescos :P
-INSERT INTO `grupos` (`id_grupo`, `nombre`, `descripcion`) VALUES (0, 'Ingenieria', 'Ingeniero del sistema');
+INSERT INTO `grupos` (`id_grupo`, `nombre`, `descripcion`) VALUES (0, 'Ingeniero', 'Ingeniero del sistema');
+INSERT INTO `grupos` (`id_grupo`, `nombre`, `descripcion`) VALUES (1, 'Administrador', 'Administrador del punto de venta');
+INSERT INTO `grupos` (`id_grupo`, `nombre`, `descripcion`) VALUES (2, 'Gerente', 'Gerente de una sucursal');
 
 INSERT INTO `usuario` (`id_usuario`, `RFC`, `nombre`, `contrasena`, `id_sucursal`, `activo`, `finger_token`, `salario`, `direccion`, `telefono`, `fecha_inicio`) VALUES
 (1, '0000000000', 'Alan Gonzalez', '5e0bdcbddccca4d66d74ba8c1cee1a68', NULL, 1, NULL, 0, '0', '0', '2011-01-02 12:42:01');

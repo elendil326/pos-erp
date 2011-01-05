@@ -30,10 +30,10 @@
             echo "<div class='failure'>". $_REQUEST['reason'] ."</div>";
         }
     }
-    ?>
-	<?php 
-		switch( $_GET["action"] )
-		{
+    
+    	?><div id="ajax_failure" class="failure" style="display: none;"></div><?php 
+    	
+		switch( $_GET["action"] ){
 			case "historial" : 		require_once("admin/autorizaciones.historial.php"); break;
 			case "pendientes" : 	require_once("admin/autorizaciones.pendientes.php"); break;			
 			case "detalle" : 		require_once("admin/autorizaciones.detalle.php"); break;			

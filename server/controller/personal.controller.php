@@ -55,9 +55,10 @@ function insertarEmpleado($args)
 
 
 	if(strlen($data->contrasena) < 5){
-	        die( '{"success": false, "reason": "Contrase&ntilde;a debe ser de por lo menos 5 caracteres." }' );	
+	        die( '{"success": false, "reason": "Contrase%26ntilde;a debe ser de por lo menos 5 caracteres." }' );	
 	}
-
+	
+	
 	if($data->salario < 0){
 	        die( '{"success": false, "reason": "No puede asignar un salario negativo." }' );		
 	}
@@ -70,6 +71,9 @@ function insertarEmpleado($args)
 	        die( '{ "success" : false, "reason" : "El nombre debe ser cuando menos de 10 caracteres."}' );	
 	}	
 	
+	if(strlen($data->RFC) < 10){
+	        die( '{ "success" : false, "reason" : "El RFC es muy corto."}' );	
+	}	
 
     DAO::transBegin();
     
@@ -390,10 +394,9 @@ function modificarEmpleado( $args )
 
 
 
-    if( !isset($args['data']) )
-    {
-        Logger::log("no hay parametros para modificar empleado");
-        die('{"success": false, "reason": "No hay parametros para ingresar." }');
+    if( !isset($args['data']) ){
+        Logger::log("No hay parametros para modificar empleado.");
+        die('{"success": false, "reason": "Parametros invalidos." }');
     }
     
     
@@ -404,112 +407,136 @@ function modificarEmpleado( $args )
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
+
+	if(!isset($data->id_usuario)){
+		Logger::log("No se ha enviado id_usuario");
+        die( '{"success": false, "reason": "Parametros invalidos." }' );		
+	}
+
     $usuario = UsuarioDAO::getByPK($data->id_usuario);
 
-    if( isset( $data->RFC) )
-    {
+	if($usuario == null){
+        Logger::log("Empleado a modificar no existe.");
+        die('{"success": false, "reason": "Este usuario no existe." }');
+	}
+
+
+	//validar datos nuevos
+    if( isset( $data->RFC) ){
+    	if(strlen($data->RFC) < 10 ){
+    		Logger::log("El nuevo RFC es muy corto");
+	        die('{"success": false, "reason": "El nuevo RFC es muy corto." }');    	
+    	}
+
         $usuario->setRFC( $data->RFC );
     }
 
-    if( isset( $data->nombre) )
-    {
+
+	//posible error
+	if( isset( $data->rfc ) ){
+			Logger::log("Se envio parametros RFC en minisculas");
+	        die('{"success": false, "reason": "El parametros invalidos." }'); 	
+	}
+
+    if( isset( $data->nombre) ){
+    	if(strlen($data->nombre) < 10 ){
+    		Logger::log("El nuevo nombre es muy corto");
+	        die('{"success": false, "reason": "El nuevo nombre es muy corto." }');    	
+    	}
         $usuario->setNombre( $data->nombre );
     }
     
-    if( isset( $data->contrasena ) )
-    {
+    
+    if( isset( $data->contrasena ) ){
+    	if(strlen($data->contrasena) < 5){
+	        die('{"success": false, "reason": "La nueva contrase%26ntilde;a es muy corta." }');    	
+    	}
         $usuario->setContrasena( $data->contrasena );
     }
 
-    if( isset( $data->id_sucursal ) )
-    {
+
+    if( isset( $data->id_sucursal ) ){
+    	if(SucursalDAO::getByPK($data->id_sucursal) == null){
+    		die('{"success": false, "reason": "Esa sucursal no existe." }');
+    	}
         $usuario->setIdSucursal( $data->id_sucursal );
     }
 
-    //PARA ESTOY HAY UNA FUNCION ENTERA QUE SE ENCARGA DE LO NECESARIO
-    //Si lo ocupo, cuando se recontrata un empleado y tiene un puesto DISTINTO
-    if( isset( $data->activo ) )
-    {
+
+    if( isset( $data->activo ) ){
+		$foo = (int)$data->activo;
+		
+		if( !($foo == 1 || $foo == 0) ){
+    		die('{"success": false, "reason": "Parametros invalidos." }');			
+		}
+		
         $usuario->setActivo( $data->activo );
     }
-	
-    if( isset( $data->finger_token ) )
-    {
-        $usuario->setFingerToken( $data->finger_token );
-    }
 
-    if( isset( $data->salario ) )
-    {
+
+    if( isset( $data->salario ) ){
+    	$foo = (float)$data->salario;
+    	if($foo < 0){
+    		die('{"success": false, "reason": "No puede establecer un salario negativo." }');    	
+    	}
+    	Logger::log("Establenciendo nuevo salario:" . $data->salario );
         $usuario->setSalario( $data->salario );
     }
 	
-    if(isset( $data->direccion ))
-    {
+    if(isset( $data->direccion )){
+    	
         $usuario->setDireccion( $data->direccion );
     }
 
-    if(isset( $data->telefono ))
-    {
+    if(isset( $data->telefono )){
         $usuario->setTelefono( $data->telefono );
     }
 
-	try
-    {
-
-		if( UsuarioDAO::save( $usuario ) )
-        {
-
-            
-            if( isset( $data->grupo ) )
-            {
-                //entra aqui en caso de que se mande el dato grupo, para cambiar de puesto al empleado
 
 
-                //TODO: Arreglar esto apra que solo trabaje con el id_usuario y solo pueda tener una cuenta a la vez
-                if( !( $grupoUsuarios = GruposUsuariosDAO::getByPK( $usuario->getIdUsuario() ) ) )
-                {
-                    //si entro aqui significa que el puesto que se le va a asegnar es distinto al que ya tenia
-                    // y por lo tanto hay que eliminar el registro
-
-                    $gruposUsuarios = new GruposUsuarios();
-                    $gruposUsuarios->setIdUsuario( $usuario->getIdUsuario() );
-
-                    $find = GruposUsuariosDAO::search( $gruposUsuarios );
-
-                    foreach( $find as $f )
-                    {
-                        //eliminamos todos los registros donde este ese usuario enrolado en un puesto
-                        GruposUsuariosDAO::delete( $f );
-                    }
-                    
-                }
-
-
-                $gruposUsuarios = new GruposUsuarios();
-                $gruposUsuarios->setIdGrupo( $data->grupo );
-                $gruposUsuarios->setIdUsuario( $usuario->getIdUsuario() );
-                if( !GruposUsuariosDAO::save( $gruposUsuarios) )
-                {
-                    die(' { "success" : "false", "reason" : "Se actualizaron los datos del empleado, pero se origino un error al enrolar al empleado a su nuevo grupo" } ' );
-                }
-
-            }
-
-            printf ( ' { "success" : "true", "info": "Se actualizaron correctamente los datos de '.$usuario->getNombre().'" } ' );
-        }
-        else
-        {
-            die ( ' { "success" : "false", "reason" : "No se actualizaron los datos del empleado" } ' );
-        }
-        
-	}
-	catch( Exception $e )
-	{
+	try{
+        UsuarioDAO::save( $usuario );
+	}catch( Exception $e ){
         Logger::log($e);
-		die ( ' { "success" : "false", "reason" : "' . $e . '" } ' );
+		die ( ' { "success" : false, "reason" : "Error al modificar el empleado." } ' );
 	}
-	
-	
+
+	if( isset( $data->grupo ) ){
+		// TODO: Arreglar esto apra que solo trabaje 
+		// con el id_usuario y solo pueda tener una cuenta a la vez
+		
+		//validar que exista el grupo
+		if(GruposDAO::getByPK( $data->grupo ) == null ){
+		    Logger::log("Grupo {$data->grupo} no existe");
+			die ( ' { "success" : false, "reason" : "Este grupo no existe." } ' );			
+		}
+		
+		
+		if( !( $grupoUsuarios = GruposUsuariosDAO::getByPK( $usuario->getIdUsuario() ) ) ){
+			//si entro aqui significa que el puesto que se le va a asegnar es 
+			// distinto al que ya tenia y por lo tanto hay que eliminar el registro
+
+			$gruposUsuarios = new GruposUsuarios();
+			$gruposUsuarios->setIdUsuario( $usuario->getIdUsuario() );
+
+			$find = GruposUsuariosDAO::search( $gruposUsuarios );
+
+			foreach( $find as $f ){
+				//eliminamos todos los registros donde este ese usuario enrolado en un puesto	
+				GruposUsuariosDAO::delete( $f );
+			}
+
+		}
+
+
+		$gruposUsuarios = new GruposUsuarios();
+		$gruposUsuarios->setIdGrupo( $data->grupo );
+		$gruposUsuarios->setIdUsuario( $usuario->getIdUsuario() );
+		GruposUsuariosDAO::save( $gruposUsuarios);
+	}
+
+
+    printf ( ' { "success" : true } ' );
 
 }
 
@@ -657,6 +684,10 @@ function listarResponsables( $args ){
     return $array_responsables;
 
 }
+
+
+
+
 
 function editarGerencias ($data){
 

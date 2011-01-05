@@ -122,7 +122,7 @@ if(POS_ENABLE_GMAPS){
 	<tr><td><b>Descuento</b></td><td><?php echo percentFormat( $cliente->getDescuento() ); ?></td></tr>
 	<tr><td><b>Fecha Ingreso</b></td><td><?php echo $cliente->getFechaIngreso() ; ?></td></tr>
 
-	<tr><td><b>Cajero que dio de alta</b></td><td><?php echo UsuarioDAO::getByPK( $cliente->getIdUsuario() )->getNombre() ; ?></td></tr>
+	<tr><td><b>Gerente que dio de alta</b></td><td><?php echo UsuarioDAO::getByPK( $cliente->getIdUsuario() )->getNombre() ; ?></td></tr>
 	<tr><td><b>Sucursal donde se dio de alta</b></td><td><?php echo SucursalDAO::getByPK( $cliente->getIdSucursal() )->getDescripcion(); ?></td></tr>
 
 	<tr><td colspan=2><input type=button value="Editar detalles" onclick="editarCliente()"></td> </tr>

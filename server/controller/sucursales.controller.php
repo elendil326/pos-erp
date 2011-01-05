@@ -3,6 +3,7 @@
 require_once('model/sucursal.dao.php');
 require_once('model/ventas.dao.php');
 require_once('model/usuario.dao.php');
+require_once('model/grupos_usuarios.dao.php');
 require_once('model/cliente.dao.php');
 require_once('logger.php');
 
@@ -103,81 +104,145 @@ function detallesSucursal( $sid = null ){
 
 
 
+/*
+ *
+ *	@param detalles( gerente, descripcion, direccion, prefijo_factura, rfc, telefono )
+ *
+ *
+ * */
 
-
-function abrirSucursal( $detalles )
+function abrirSucursal( $json = null )
 {
 
-    Logger::log("Abrir sucursal iniciado...");
+	//solo el admin puede abrir sucursales
+	if($_SESSION['grupo'] != 1){
+		die('{"success" : false, "reason": "Accesso denegado."}');
+	}
 
-    $exito = true;
+	if(!isset($json) || $json == null){
+		Logger::log("Parametros invalidos para abrir sucursal");
+		die('{"success" : false, "reason": "Parametros invalidos."}');
+	}
+
+	$foo = $json;
+    $json = parseJSON( $json );
+
+	if($json == null){
+		Logger::log("Parametros invalidos para abrir sucursal:" . $foo );	
+		die('{"success" : false, "reason": "Parametros invalidos."}');	
+	}
+
+	if(!( isset($json->gerente) &&
+			isset($json->descripcion) &&
+			isset($json->direccion) &&			
+			isset($json->prefijo_factura) &&
+			isset($json->rfc) &&
+			isset($json->telefono)))
+	{
+		Logger::log("Parametros invalidos para abrir sucursal:" . $foo);
+		die('{"success" : false, "reason": "Parametros invalidos."}');
+	}
+	
+	
+	if(( strlen($json->gerente) < 1 ||
+			strlen($json->descripcion) < 1 ||
+			strlen($json->direccion) < 1 ||			
+			strlen($json->prefijo_factura) < 1 ||
+			strlen($json->rfc) < 1 ||
+			strlen($json->telefono) < 1 ))
+	{
+		Logger::log("Parametros invalidos para abrir sucursal:" . $foo);	
+		die('{"success" : false, "reason": "Parametros invalidos."}');
+	}	
+	
+    $gerente = UsuarioDAO::getByPK($json->gerente);
+    
+    if($gerente == null){
+   		Logger::log("Gerente no existe en lista de usuarios:" . $foo);
+		die('{"success" : false, "reason": "Este usuario no existe."}');    
+    }
+    
+    
+    //revisar que pertenesca al grupo de gerentes
+    $gu = GruposUsuariosDAO::getByPK($json->gerente);
+    if($gu->getIdGrupo() != 2){
+		die('{"success" : false, "reason": "Este usuario no pertenece al grupo de gerentes."}');    
+    }
+    
     
     $sucursal = new Sucursal();
-
 
     //validar los datos
     //revisar que no sea gerente ya de una sucursal
     $suc = new Sucursal();
-    $suc->setGerente($detalles['gerente']);
+    $suc->setGerente( $json->gerente );
 
     if(sizeof(SucursalDAO::search( $suc )) > 0 ){
-       return array( 'success' => $exito, 'reason' =>  "Este empleado ya es gerente de una sucursal." );            
+		die('{"success" : false, "reason": "Este empleado ya es gerente de una sucursal."}');
     }
 
-    $sucursal->setActivo ("1");
-    $sucursal->setDescripcion( $detalles['descripcion'] );
-    $sucursal->setDireccion ($detalles['direccion']);
-    $sucursal->setGerente ($detalles['gerente']);
-    $sucursal->setLetrasFactura ($detalles['prefijo_factura']);
-    $sucursal->setRfc ($detalles['rfc']);
-    $sucursal->setTelefono ($detalles['telefono']);
-    $sucursal->setSaldoAfavor (0);
+    $sucursal->setActivo 		( "1");
+    $sucursal->setDescripcion	( $json->descripcion );
+    $sucursal->setDireccion 	( $json->direccion);
+    $sucursal->setGerente 		( $json->gerente);
+    $sucursal->setLetrasFactura ( $json->prefijo_factura);
+    $sucursal->setRfc 			( $json->rfc);
+    $sucursal->setTelefono 		( $json->telefono);
+    $sucursal->setSaldoAfavor 	( 0 );
+
+	DAO::transBegin();
 
     try{
-        $err = SucursalDAO::save( $sucursal );
+        SucursalDAO::save( $sucursal );
     }catch( Exception $e ){
-        $exito = false;
+        DAO::transRollback();
         Logger::log("Error al insertar nueva sucursal " . $e);
-        return array( 'success' => $exito, 'reason' => $e );    
+		die('{"success" : false, "reason": "Error, intente de nuevo."}');
     }
 
 
     //mover a este gerente a la nueva sucursal
-    $gerente = UsuarioDAO::getByPK( $detalles['gerente'] );
-    $gerente->setIdSucursal($sucursal->getIdSucursal());
+    $gerente->setIdSucursal( $sucursal->getIdSucursal() );
 
     try{
-        $err = UsuarioDAO::save( $gerente );
+		UsuarioDAO::save( $gerente );
     }catch( Exception $e ){
-        return array( 'success' => false, 'reason' => $err );    
+		DAO::transRollback();
+    	Logger::log($e);
+    	die('{"success" : false, "reason": "Error, porfavor intente de nuevo."}');
     }
 
 
     //crear su caaja comun
     $cajaComun = new Cliente();
 
-    $cajaComun->setActivo (1);
-    $cajaComun->setCiudad ("");
-    $cajaComun->setDescuento (0);
-    $cajaComun->setDireccion ($detalles['direccion']);
-    $cajaComun->setEMail ("");
-
-    $cajaComun->setIdCliente ( "-" . $sucursal->getIdSucursal() );
-    $cajaComun->setIdSucursal( $sucursal->getIdSucursal() );
-    $cajaComun->setIdUsuario ( -1 );
-    $cajaComun->setLimiteCredito (0);
-    $cajaComun->setNombre ("Caja Comun");
-    $cajaComun->setRfc ($detalles['rfc']);
-    $cajaComun->setTelefono ( $detalles['telefono'] );
+    $cajaComun->setActivo 		( 1 	);
+    $cajaComun->setCiudad 		( "" 	);
+    $cajaComun->setDescuento 	( 0		);
+    $cajaComun->setDireccion 	( ""	);
+    $cajaComun->setEMail 		( ""	);
+    $cajaComun->setIdCliente 	( "-" . $sucursal->getIdSucursal() );
+    $cajaComun->setIdSucursal	( $sucursal->getIdSucursal() );
+    $cajaComun->setIdUsuario 	( $_SESSION['userid'] );
+    $cajaComun->setLimiteCredito( 0		);
+    $cajaComun->setNombre 		( "Caja Comun"		);
+    $cajaComun->setRfc 			( $json->rfc	);
+    $cajaComun->setTelefono 	( $json->telefono );
 
     try{
-        $err = ClienteDAO::save( $cajaComun );
+        ClienteDAO::save( $cajaComun );
     }catch( Exception $e ){
-        return array( 'success' => false, 'reason' => $err );    
+     	DAO::transRollback();
+     	Logger::log($e);
+        die('{"success" : false, "reason": "Error, porfavor intente de nuevo."}'); 
     }
 
 
-    return array( 'success' => $exito, 'nid' => $sucursal->getIdSucursal() );
+	DAO::transEnd();
+    echo '{"success" : true, "nid": '.$sucursal->getIdSucursal().' }'; 
+    Logger::log("Sucursal ". $sucursal->getIdSucursal(). " creada !");
+    return;
+
 
 }
 
@@ -343,6 +408,10 @@ function inventarioSucursal(){
 //obtiene la informacion de la sucursal actual
 function informacionSucursal(){
 	
+	if( !isset($_SESSION['sucursal']) ){
+		die( '{"success": false, "reason": "Su cuenta no esta ligada a una sucursal especifica." }' );	
+	}
+	
 	if( !( $sucursal = SucursalDAO::getByPK( $_SESSION['sucursal'] ) )  )
     {
         die( '{"success": false, "reason": "No se tiene registros de esa sucursal." }' );
@@ -357,29 +426,43 @@ if(isset($args['action'])){
 	switch( $args['action'] )
 	{
 		case 700://listar sucursales
-		    printf('{"success" : "true", "datos": %s}', json_encode( listarSucursales(  ) ) );
+		    printf('{"success" : true, "datos": %s}', json_encode( listarSucursales(  ) ) );
 		break;
 
 		case 701://abrir sucursal
-		    printf('%s', json_encode( abrirSucursal( $args ) ) );
+		
+			if(!isset($args['data'])){
+				die('{"success" : false, "reason": "Parametros invalidos."}');
+			}
+			
+			abrirSucursal( $args['data'] );
+			
 		break;
 
 		case 702://editar detalle sucursal
+			if(!isset($args['sid']) || !isset($args['payload'])){
+				die('{"success" : false, "reason": "Parametros invalidos."}');
+			}
+			
 		    editarSucursal( $args['sid'], $args['payload'] );
 		break;
 
 		case 703://cerrar sucursal
+			if(!isset($args['sid'])){
+				die('{"success" : false, "reason": "Parametros invalidos."}');
+			}
 		    cerrarSucursal( $args['sid'] );
 		break;
 
 		case 704://listar personal
-		    listarPersonal(  );
+		    listarPersonal();
 		break;
 
+		/*
 		case 705://estadisticas de venta por empleado
 		    estadisticasVentas( $args );
 		break;
-
+		*/
 		case 706://presindir empleado
 		    presindirEmpleado( $args );
 		break;

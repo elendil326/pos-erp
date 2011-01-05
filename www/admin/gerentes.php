@@ -31,9 +31,11 @@
         }
     }
     ?>
+   	
+   	<div id="ajax_failure" class="failure" style="display: none;"></div>
+   	
 	<?php 
-		switch( $_GET["action"] )
-		{
+		switch( $_GET["action"] ){
 			case "lista" : require_once("admin/gerentes.lista.php"); break;
 			case "detalles" : require_once("admin/gerentes.detalles.php"); break;
 			case "editar" : require_once("admin/gerentes.editar.php"); break;

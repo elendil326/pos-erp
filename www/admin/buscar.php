@@ -30,7 +30,8 @@
             echo "<div class='failure'>". $_REQUEST['reason'] ."</div>";
         }
     }
-    ?>
+    	
+    ?><div id="ajax_failure" class="failure" style="display: none;"></div>
 
     <h1>Busqueda</h1>
     <h2>Resultados de la busqueda para <b><?php echo $_REQUEST['q']; ?></b></h2>

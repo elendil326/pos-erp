@@ -29,7 +29,7 @@
             echo "<div class='failure'>". $_REQUEST['reason'] ."</div>";
         }
     }
-    ?>
+    ?><div id="ajax_failure" class="failure" style="display: none;"></div>
 	<?php 
 		switch( $_GET["action"] )
 		{

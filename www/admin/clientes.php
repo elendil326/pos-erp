@@ -30,11 +30,9 @@
             echo "<div class='failure'>". $_REQUEST['reason'] ."</div>";
         }
     }
-    ?>
-	<?php
-		
-		define('VALID_REQUEST', true);
-		
+    
+    ?><div id="ajax_failure" class="failure" style="display: none;"></div><?php
+    		
 		switch( $_GET["action"] )
 		{
 			case "lista" : 			require_once("admin/clientes.lista.php"); break;
