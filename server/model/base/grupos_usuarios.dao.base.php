@@ -5,6 +5,8 @@
   * almacenar de forma permanente y recuperar instancias de objetos {@link GruposUsuarios }. 
   * @author Alan Gonzalez <alan@caffeina.mx> 
   * @access private
+  * @abstract
+  * @package docs
   * 
   */
 abstract class GruposUsuariosDAOBase extends DAO
@@ -126,6 +128,7 @@ abstract class GruposUsuariosDAOBase extends DAO
 			array_push( $val, $grupos_usuarios->getIdUsuario() );
 		}
 
+		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;

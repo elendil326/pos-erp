@@ -146,7 +146,7 @@ function insertarEmpleado($args)
         die( '{ "success" : false, "reason" : "Grupo Inexistente"}' );
     } 
 
-   printf(' { "success" : true, "id_usuario": "%s" } ', $user->getIdUsuario() );   
+   printf(' { "success" : true, "id_usuario": %s } ', $user->getIdUsuario() );   
    Logger::log("Empleado insertado correctamente.");
    DAO::transEnd();
    

@@ -4,6 +4,7 @@
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
   * @author Alan Gonzalez <alan@caffeina.mx> 
   * @access public
+  * @package docs
   * 
   */
 
@@ -56,6 +57,7 @@ class Equipo extends VO
 	  * 
 	  * el identificador de este equipo<br>
 	  * <b>Llave Primaria</b><br>
+	  * <b>Auto Incremento</b><br>
 	  * @access protected
 	  * @var int(6)
 	  */
@@ -96,6 +98,8 @@ class Equipo extends VO
 	  * Set the <i>id_equipo</i> property for this object. Donde <i>id_equipo</i> es el identificador de este equipo.
 	  * Una validacion basica se hara aqui para comprobar que <i>id_equipo</i> es de tipo <i>int(6)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
+	  * No deberias usar setIdEquipo( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
 	  * No deberias usar setIdEquipo( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(6)

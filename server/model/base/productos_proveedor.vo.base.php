@@ -4,6 +4,7 @@
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
   * @author Alan Gonzalez <alan@caffeina.mx> 
   * @access public
+  * @package docs
   * 
   */
 

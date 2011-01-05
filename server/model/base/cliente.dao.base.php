@@ -5,6 +5,8 @@
   * almacenar de forma permanente y recuperar instancias de objetos {@link Cliente }. 
   * @author Alan Gonzalez <alan@caffeina.mx> 
   * @access private
+  * @abstract
+  * @package docs
   * 
   */
 abstract class ClienteDAOBase extends DAO
@@ -180,11 +182,8 @@ abstract class ClienteDAOBase extends DAO
 			$sql .= " fecha_ingreso = ? AND";
 			array_push( $val, $cliente->getFechaIngreso() );
 		}
-		
-		if(sizeof($val) == 0){
-			return array();
-		}
-		
+
+		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;

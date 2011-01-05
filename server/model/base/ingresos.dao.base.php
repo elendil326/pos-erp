@@ -5,6 +5,8 @@
   * almacenar de forma permanente y recuperar instancias de objetos {@link Ingresos }. 
   * @author Alan Gonzalez <alan@caffeina.mx> 
   * @access private
+  * @abstract
+  * @package docs
   * 
   */
 abstract class IngresosDAOBase extends DAO
@@ -156,6 +158,7 @@ abstract class IngresosDAOBase extends DAO
 			array_push( $val, $ingresos->getNota() );
 		}
 
+		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;

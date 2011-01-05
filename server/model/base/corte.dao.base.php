@@ -5,6 +5,8 @@
   * almacenar de forma permanente y recuperar instancias de objetos {@link Corte }. 
   * @author Alan Gonzalez <alan@caffeina.mx> 
   * @access private
+  * @abstract
+  * @package docs
   * 
   */
 abstract class CorteDAOBase extends DAO
@@ -176,6 +178,7 @@ abstract class CorteDAOBase extends DAO
 			array_push( $val, $corte->getTotalGananciaNeta() );
 		}
 
+		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;

@@ -5,6 +5,8 @@
   * almacenar de forma permanente y recuperar instancias de objetos {@link PagosVenta }. 
   * @author Alan Gonzalez <alan@caffeina.mx> 
   * @access private
+  * @abstract
+  * @package docs
   * 
   */
 abstract class PagosVentaDAOBase extends DAO
@@ -146,6 +148,7 @@ abstract class PagosVentaDAOBase extends DAO
 			array_push( $val, $pagos_venta->getMonto() );
 		}
 
+		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;

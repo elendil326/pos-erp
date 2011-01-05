@@ -5,6 +5,8 @@
   * almacenar de forma permanente y recuperar instancias de objetos {@link DetalleCompra }. 
   * @author Alan Gonzalez <alan@caffeina.mx> 
   * @access private
+  * @abstract
+  * @package docs
   * 
   */
 abstract class DetalleCompraDAOBase extends DAO
@@ -136,6 +138,7 @@ abstract class DetalleCompraDAOBase extends DAO
 			array_push( $val, $detalle_compra->getPrecio() );
 		}
 
+		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;

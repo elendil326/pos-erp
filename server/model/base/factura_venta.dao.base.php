@@ -5,6 +5,8 @@
   * almacenar de forma permanente y recuperar instancias de objetos {@link FacturaVenta }. 
   * @author Alan Gonzalez <alan@caffeina.mx> 
   * @access private
+  * @abstract
+  * @package docs
   * 
   */
 abstract class FacturaVentaDAOBase extends DAO
@@ -126,6 +128,7 @@ abstract class FacturaVentaDAOBase extends DAO
 			array_push( $val, $factura_venta->getIdVenta() );
 		}
 
+		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;

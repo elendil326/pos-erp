@@ -4,7 +4,7 @@ import com.google.gson.*;
 import com.google.gson.stream.*;
 
 /*
- javac -cp gson-1.6.jar test.java && java Test test.txt
+ javac -cp gson-1.6.jar test.java && java -cp .:gson-1.6.jar Test test.txt
 */
 
 
@@ -15,6 +15,9 @@ class Test{
 	private static final boolean verbose = false;
 	private static String configCodeBase;
 	private static String configFileName;
+	private static int currentLine = 0;
+	private static int testOnLine;	
+	private static boolean normalVerbose = true;		
 	
 	public static void main(String ... args) throws Exception{
 	
@@ -31,6 +34,10 @@ class Test{
 			if( args[1].equals("--noexit") ){
 				exitonerror = false;
 			}
+			
+			if( args[1].equals("--noverbose") ){
+				normalVerbose = false;
+			}			
 		}catch(Exception e){
 		
 		}
@@ -60,11 +67,15 @@ class Test{
 			while(true){
 			
 				l = br.readLine();
+				currentLine ++;			
 				
 				if(l == null) return null;
 
 				if( l.trim().startsWith("/*") ){
-					while(!(l = br.readLine()).trim().startsWith("*/"));
+					
+					while(!(l = br.readLine()).trim().startsWith("*/")){
+						currentLine ++;
+					}
 
 				}
 
@@ -72,6 +83,8 @@ class Test{
 				if( l.trim().startsWith("#startConfig") ){
 
 					while(!(l = br.readLine()).trim().startsWith("#endConfig")){
+						currentLine ++;
+						
 						String configOption = l.trim().substring( 0, l.indexOf(' ') );
 						
 						if( configOption.startsWith("#codeBase") ){
@@ -87,6 +100,7 @@ class Test{
 				}
 				
 				if( l.trim().equals("#beginTest") ){
+					testOnLine = currentLine;
 					break;
 				}
 			}
@@ -94,12 +108,13 @@ class Test{
 						
 			//leer la descripcion
 			while(!(l = br.readLine()).trim().equals("#endTest")){
-
+				currentLine ++;
 				
 				if( l.trim().startsWith("#beginOutput") ){
 					foo.expected = "";
 
 					while(!(l = br.readLine()).trim().startsWith("#endOutput")){
+						currentLine ++;					
 						foo.expected += l + '\n';
 					}
 					
@@ -238,25 +253,27 @@ class Test{
 		
 		
 		if( !ok ){
-		
-			System.out.println(  caso.desc + " ... [FALSE !!!]"  )  ;		
+
+			System.out.println		("============= Test failed ! ================");		
+			System.out.println		(  caso.desc )  ;		
 			
-			System.out.println("============= Request URL ================");
-			System.out.println( url + "?" + caso.input );
+			System.out.println		("============= Request URL ==================");
+			System.out.println		( url + "?" + caso.input );
 
 			if(caso.expectedJson)
-				System.out.println("============= Expected JSON ===========");					
+				System.out.println	("============= Expected JSON ================");					
 			else
-				System.out.println("============= Expected ================");					
+				System.out.println	("============= Expected response ============");					
 							
 			System.out.println( caso.expected );
 
-			System.out.println("============= Full Response ================");					
+			System.out.println		("============= Full Response ================");					
 			System.out.println( out );
 			
 			System.out.println(  );						
 		}else{
-			System.out.println(  caso.desc + " ... [OK]"  )  ;
+			if(normalVerbose)
+				System.out.println(  "[PASSED] " + caso.desc + " on line " + testOnLine )  ;
 		}
 		
 		return out.trim().equals(caso.expected.trim());
@@ -292,9 +309,6 @@ class Test{
 }
 
 
-class Data{
-
-}
 
 
 

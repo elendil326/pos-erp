@@ -5,6 +5,8 @@
   * almacenar de forma permanente y recuperar instancias de objetos {@link Equipo }. 
   * @author Alan Gonzalez <alan@caffeina.mx> 
   * @access private
+  * @abstract
+  * @package docs
   * 
   */
 abstract class EquipoDAOBase extends DAO
@@ -131,6 +133,7 @@ abstract class EquipoDAOBase extends DAO
 			array_push( $val, $equipo->getFullUa() );
 		}
 
+		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
@@ -197,7 +200,7 @@ abstract class EquipoDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		
+		$equipo->setIdEquipo( $conn->Insert_ID() );
 		return $ar;
 	}
 

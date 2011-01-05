@@ -483,10 +483,14 @@
 #beginTest
 	#Desc Insertar un admin
 	#Input action=500&data={ "RFC":"0000000001","nombre":"0000000000","contrasena":"thisismd5password","salario":0,"telefono":"000000","direccion":"0000","grupo":"1"}
-	#JSONOutput { "success" : true, "id_usuario": "3" }
+	#JSONOutput { "success" : true, "id_usuario": 3 }
 #endTest
 
-
+#beginTest
+	#Desc Insertar un gerente
+	#Input action=500&data={ "RFC":"0000000002","nombre":"0000000001","contrasena":"thisismd5password","salario":0,"telefono":"000000","direccion":"0000","grupo":"2"}
+	#JSONOutput { "success" : true, "id_usuario": 4 }
+#endTest
 
 
 
@@ -890,6 +894,13 @@
 #endTest
 
 
+#beginTest
+	#Desc Abrir una sucursal correctamente
+	#Input action=701&data={"gerente": 4,"descripcion":"0000000","direccion":"0000000", "prefijo_factura":"A", "rfc":"1000000", "telefono":"0000000"}
+	#JSONOutput {"success" : true, "nid": 1 }
+#endTest
+
+
 
 #beginTest
 	#Desc Cerrar sesion
@@ -1104,11 +1115,7 @@
 
 
 
-/*
-#beginTest
-	#Desc Llamada a listarClientesDeudaores sin parametros
-	#Input action=306
-	#JSONOutput { "success": true, "datos": [] }
-#endTest
-*/
+
+
+
 

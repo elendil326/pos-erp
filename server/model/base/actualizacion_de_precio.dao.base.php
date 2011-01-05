@@ -5,6 +5,8 @@
   * almacenar de forma permanente y recuperar instancias de objetos {@link ActualizacionDePrecio }. 
   * @author Alan Gonzalez <alan@caffeina.mx> 
   * @access private
+  * @abstract
+  * @package docs
   * 
   */
 abstract class ActualizacionDePrecioDAOBase extends DAO
@@ -151,6 +153,7 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 			array_push( $val, $actualizacion_de_precio->getFecha() );
 		}
 
+		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
 		    $sql .= " order by " . $orderBy . " " . $orden ;
