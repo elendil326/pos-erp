@@ -705,10 +705,7 @@ Aplicacion.Clientes.prototype.editarClienteGuardarBoton = function (  )
 	
 	//e_mail
 	
-	//telefono
-	if(v.telefono.length < 5){
-		return campo.setInstructions("El telefono debe ser mayor de 5 caracteres.");
-	}
+	//telefono	
 	
 	//descuento
 	if(  v.descuento.length === 0 || isNaN( v.descuento ) || (v.descuento > 50 && v.descuento < 0) ){
@@ -1645,11 +1642,6 @@ Aplicacion.Clientes.prototype.crearClienteValidator = function ()
 	//e_mail
 	
 	//telefono
-	if(v.telefono.length < 5){
-        Ext.Msg.alert("Nuevo cliente", "El telefono debe ser mayor de 5 caracteres.");
-		return campo.setInstructions("El telefono debe ser mayor de 5 caracteres.");
-	}
-
 
 	
 	//descuento
