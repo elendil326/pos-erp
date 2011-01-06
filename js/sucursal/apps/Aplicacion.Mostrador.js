@@ -692,7 +692,7 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
     Ext.getCmp("Mostrador-mostradorVender").hide( Ext.anims.slide );
 
 	action = "sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.mostradorPanel , 'fade');";
-	setTimeout(action, 5000);
+	setTimeout(action, 4000);
 
 };
 

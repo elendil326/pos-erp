@@ -40,9 +40,9 @@
 			<td></td>
 		</tr>		
 		<tr>
-			<td><?php echo "<img src='../media/icons/" . (is_writable( _POS_LOG_TO_FILE_FILENAME ) ? "s_success.png" : "close_16.png") . "'>" ; ?></td>
+			<td><?php echo "<img src='../media/icons/" . (is_writable( POS_LOG_TO_FILE_FILENAME ) ? "s_success.png" : "close_16.png") . "'>" ; ?></td>
 			<td>Archivo de log</td>
-			<td><?php echo _POS_LOG_TO_FILE_FILENAME ; ?></td>
+			<td><?php echo POS_LOG_TO_FILE_FILENAME ; ?></td>
 		</tr>	
 	</table>
 

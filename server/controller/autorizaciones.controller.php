@@ -57,13 +57,16 @@ function autorizacionesPendientes(  ){
 
 function autorizacionesSucursal( $sid ){
 
-    $a = new Autorizacion();
+	$now = date ( "Y-m-d" );
+	
+    $foo = new Autorizacion();
+    $foo->setIdSucursal( $sid );
+    $foo->setFechaPeticion( $now . " 00:00:00" );
 
-    $a->setIdSucursal( $sid );
-
+    $bar = new Autorizacion();
+    $bar->setFechaPeticion($now . " 23:59:59");
     
-    
-    $autorizaciones = AutorizacionDAO::search($a);
+    $autorizaciones = AutorizacionDAO::byRange($foo, $bar);
 
     $array_autorizaciones = array();
 
