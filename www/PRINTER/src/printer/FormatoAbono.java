@@ -17,7 +17,7 @@ import java.text.NumberFormat;
  *
  * @author manuel
  */
-class FormatoTicket implements Printable {
+public class FormatoAbono implements Printable {
 
     Font normalTicket = new Font("Tahoma", Font.PLAIN, 9);
     Font normalSmallTicket = new Font("Tahoma", Font.PLAIN, 8);
@@ -25,14 +25,13 @@ class FormatoTicket implements Printable {
     Font boldTicket = new Font("Tahoma", Font.BOLD, 9);
     Font boldSmallTicket = new Font("Tahoma", Font.BOLD, 9);
     Font smallTicket = new Font("Tahoma", Font.CENTER_BASELINE, 8);
-
-    int limite_caracteres = 33;
-
+    //configuracion de la factura
+    int anchoFactura = 836; //px
     //formato de moneda
     NumberFormat moneda = NumberFormat.getCurrencyInstance();
     Venta venta;
 
-    public FormatoTicket(Venta venta) {
+    public FormatoAbono(Venta venta) {
         this.venta = venta;
     }
 
@@ -63,7 +62,7 @@ class FormatoTicket implements Printable {
 
         //espacio entre lineas
         int y = 20; //px
-        
+        int limite_caracteres = 33;
 
 
         ticket.setFont(boldTicket);
@@ -87,12 +86,8 @@ class FormatoTicket implements Printable {
         ticket.drawString("Tel. " + this.venta.sucursal.telefono, 0, y);
         y += h_normalTicket;
 
-        ticket.drawString("========= ", 0, y);
-        ticket.setFont(boldTicket);
-        ticket.drawString(this.venta.tipoVenta, 72, y);
-        ticket.setFont(normalTicket);
-        ticket.drawString(" ==========", 120, y);
-        y += h_normalTicket;
+        ticket.drawString("==============================", 0, y);
+
 
         ticket.setFont(boldTicket);
         ticket.drawString("venta  " + this.venta.id_venta, 65, y);
@@ -117,97 +112,26 @@ class FormatoTicket implements Printable {
 
         }
 
-        ticket.drawString("-------------------------------------------------------------------------", 0, y);
-        y += h_normalTicket;
 
-        ticket.setFont(smallTicket);
-        ticket.drawString("PRODUCTO", 0, y);
-
-        ticket.drawString("CANT", 75, y);
-
-        ticket.drawString("P.U.", 107, y);
-
-        ticket.drawString("SUBTOTAL", 138, y);
-        y += h_normalTicket;
-
-        ticket.setFont(normalTicket);
-
-        for (int j = 0; j < this.venta.productos.size(); j++) {
-
-            //ticket.drawString(this.venta.productos.get(j).descripcion , 0, y);
-            if (this.venta.productos.get(j).descripcion.length() > 13) {
-                ticket.drawString(this.venta.productos.get(j).descripcion.substring(0, 13), 0, y);
-            } else {
-                ticket.drawString(this.venta.productos.get(j).descripcion, 0, y);
-            }
-
-            ticket.drawString("" + this.venta.productos.get(j).cantidad, 75, y);
-            ticket.drawString(this.moneda.format(this.venta.productos.get(j).precioVenta), 107, y);
-            ticket.drawString(this.moneda.format(this.venta.productos.get(j).subTotal), 138, y);
-            y += h_normalSmallTicket;
-
-        }//for
-
-        ticket.setFont(normalTicket);
-        ticket.drawString("------------------------------------------------------------------------", 0, y);
         y += h_normalTicket;
 
         ticket.setFont(boldSmallTicket);
 
-        ticket.drawString("SUBTOTAL:", 63, y);
-        ticket.drawString(this.moneda.format(this.venta.subtotal), 130, y);
+        ticket.drawString("ABONO:", 0, y);
+        ticket.drawString(this.moneda.format(this.venta.abono), 52, y);
         y += h_normalTicket;
 
-        if (this.venta.descuento > 0) {
-            ticket.drawString("DESCUENTO:", 63, y);
-            ticket.drawString(this.moneda.format(this.venta.descuento), 130, y);
-            y += h_normalTicket;
-        }
-
-        ticket.drawString("TOTAL:", 63, y);
-        ticket.drawString(this.moneda.format(this.venta.total), 130, y);
+        ticket.drawString("CAMBIO:", 0, y);
+        ticket.drawString(this.moneda.format(this.venta.cambio), 52, y);
         y += h_normalTicket;
 
-        if (venta.tipoVenta.equals("contado")) {
-
-            ticket.drawString("PAGO:", 63, y);
-            ticket.drawString(this.moneda.format(this.venta.efectivo), 130, y);
-            y += h_normalTicket;
-            ticket.drawString("CAMBIO:", 63, y);
-            ticket.drawString(this.moneda.format(this.venta.cambio), 130, y);
-            y += h_normalTicket;
-
-        }
-
-        ticket.setFont(normalTicket);
-        ticket.drawString("------------------------------------------------------------------------", 0, y);
+        ticket.drawString("ABONADO:", 0, y);
+        ticket.drawString(this.moneda.format(this.venta.abonado), 52, y);
         y += h_normalTicket;
 
-        y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, new Converter().getStringOfNumber(this.venta.total), ticket, 0, y, h_normalTicket);
+        ticket.drawString("SALDO:", 0, y);
+        ticket.drawString(this.moneda.format(this.venta.saldo), 52, y);
 
-        if (!venta.tipoVenta.equals("contado")) {
-
-            y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, this.venta.ficalTicket, ticket, 0, y, h_normalTicket);
-            y += h_normalTicket;
-
-            ticket.setFont(boldTicket);
-            y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, this.venta.tituloPagare, ticket, 70, y, h_normalTicket);
-
-            ticket.setFont(normalTicket);
-            y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, this.venta.leyendaPagare, ticket, 0, y, h_normalTicket);
-
-            ticket.drawString("_____________________________________________________________", 0, y + 20);
-            y += h_normalTicket;
-            ticket.drawString("Firma(s)", 70, y);
-            y += h_normalTicket;
-
-        }
-
-        ticket.drawString(this.venta.sugerencias, 0, y + 20);
-        y += h_normalTicket;
-
-        ticket.drawString(this.venta.graciasTicket, 30, y + 10);
-        y += h_normalTicket;
 
         /********/
         return PAGE_EXISTS;

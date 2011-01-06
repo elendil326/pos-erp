@@ -25,6 +25,10 @@ public class Venta {
     boolean factura = false;
     //indica si se requiere un ticket
     boolean ticket = false;
+    //indica si re requiere un ticket de abono
+    boolean ticket_abono = false;
+    //descuento
+    float descuento = 0;
     //subtotal
     float subtotal = 0;
     //total
@@ -38,20 +42,41 @@ public class Venta {
     //Coleccion de productos
     ArrayList<Producto> productos = new ArrayList<Producto>();
     //sucursal
-    Sucursal sucursal = null;;
+    Sucursal sucursal = null;
+
+    ;
     //cliente
     Cliente cliente = null;
     //hora de la venta
     String hora = null;
+    //fecha
+    String fecha = null;
     //id de la venta
     String id_venta = null;
     //vendedor
     String responsable = null;
+    //abono a venta
+    float abono = 0;
+    //abonado a venta
+    float abonado = 0;
+    //saldo
+    float saldo = 0;
+    //pie de ticket
+    static String graciasTicket = "GRACIAS POR SU COMPRA";
+    //pagare
+    static String tituloPagare = "PAGARE";
+    //leyenda
+    static String leyendaPagare = "DEBE(MOS) Y PAGARE(MOS) INCONDICIONALMENTE  A LA ORDEN DE JUAN ANTONIO GARCIA TAPIA LA CANTIDAD TOTAL ARRIBA ESPECIFICADA, VALOR DE LAS MERCANCIAS DETALLADAS Y RECIBIDAS A MI(NUESTRA)ENTERA SATISFACCION, SI LAS MERCANCIAS NO SON PAGADAS SEGUN LAS CONDICIONES CONVENIDAS CAUSARAN INTERES MORATORIOS DEL X.X% DIARIO HASTA SU TOTAL LIQUIDACION.";
+    //advertencia fiscal
+    static String ficalTicket = "Este comprobante no es valodo para Fines Fiscales";
+    //sugerencias
+    static String sugerencias = "QUEJAS Y SUGERENCIAS (01 461) 7 20 30";
 
     //constructor
-    public Venta(String json, String hora) {
+    public Venta(String json, String hora, String fecha) {
 
         this.hora = hora;
+        this.fecha = fecha;
 
         this.json = json;
 
@@ -70,7 +95,7 @@ public class Venta {
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
 
-                System.out.println( entry.getKey() + "=====>" + entry.getValue());
+                System.out.println(entry.getKey() + "=====>" + entry.getValue());
 
                 if (entry.getKey().toString().equals("tipoDeVenta")) {
 
@@ -98,7 +123,7 @@ public class Venta {
                     this.subtotal = Float.parseFloat(entry.getValue().toString());
                     System.out.println("this.subtotal: " + this.subtotal);
 
-                }
+                }                
 
                 if (entry.getKey().toString().equals("total")) {
 
@@ -111,6 +136,27 @@ public class Venta {
 
                     this.efectivo = Float.parseFloat(entry.getValue().toString());
                     System.out.println("this.efectivo: " + this.efectivo);
+                }
+
+                if (entry.getKey().toString().equals("abono")) {
+
+                    this.abono = Float.parseFloat(entry.getValue().toString());
+                    System.out.println("this.abonol: " + this.abono);
+
+                }
+
+                if (entry.getKey().toString().equals("abonado")) {
+
+                    this.abonado = Float.parseFloat(entry.getValue().toString());
+                    System.out.println("this.abonado: " + this.abonado);
+
+                }
+
+                if (entry.getKey().toString().equals("saldo")) {
+
+                    this.saldo = Float.parseFloat(entry.getValue().toString());
+                    System.out.println("this.saldo: " + this.saldo);
+
                 }
 
                 if (entry.getKey().toString().equals("items")) {
@@ -131,9 +177,9 @@ public class Venta {
 
                 if (entry.getKey().toString().equals("sucursal")) {
 
-                    if( entry.getValue() != null ){
+                    if (entry.getValue() != null) {
 
-                        this.sucursal = new Sucursal( entry.getValue().toString() );
+                        this.sucursal = new Sucursal(entry.getValue().toString());
 
                     }
 
@@ -141,9 +187,9 @@ public class Venta {
 
                 if (entry.getKey().toString().equals("cliente")) {
 
-                    if( entry.getValue() != null ){
+                    if (entry.getValue() != null) {
 
-                        this.cliente = new Cliente( entry.getValue().toString() );
+                        this.cliente = new Cliente(entry.getValue().toString());
 
                     }
 
@@ -162,6 +208,16 @@ public class Venta {
                 }//if
 
             }//while
+
+            this.descuento = this.subtotal - this.total;
+            
+            if (this.descuento > 0) {
+                this.descuento = this.subtotal - this.total;
+            }
+            
+            System.out.println("this.subtotal : " + this.subtotal);
+            System.out.println("this.total : " + this.total);
+            System.out.println("this.descuento : " + this.descuento);
 
             this.cambio = this.efectivo - this.total;
 

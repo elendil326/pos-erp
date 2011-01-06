@@ -23,6 +23,7 @@ public class Cliente {
     String rfc = null;
     float limite_credito = 0;
     float credito_restante = 0;
+    float descuento = 0;
 
     public Cliente( String json ){
         
@@ -81,6 +82,13 @@ public class Cliente {
 
                     this.credito_restante = Float.parseFloat(entry.getValue().toString());
                     System.out.println("credito_restante: " + this.credito_restante  );
+
+                }
+
+                if (entry.getKey().toString().equals("descuento")) {
+
+                    this.descuento = Float.parseFloat(entry.getValue().toString());
+                    System.out.println("this.descuento: " + this.descuento);
 
                 }
 
