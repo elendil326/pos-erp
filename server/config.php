@@ -1,47 +1,56 @@
 <?php
 
+# *******************************
+# Definiciones
+# *******************************
 define('POS_SEMANA', 1);
 define('POS_MES', 1);
 
-/* *******************************
-Configuracion Basica
-********************************* */
 
-//carpeta donde se encuentran los scripts del servidor
-//ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/Applications/XAMPP/xamppfiles/htdocs/svn/pos/trunk/server");
-//ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/caffeina/pos/trunk/server");
+# *******************************
+# Configuracion Basica
+# *******************************
+
+#carpeta donde se encuentran los scripts del servidor,
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/alan/trunk/server");
 
 
-//titulo de la aplicacion
+# titulo de la aplicacion para las paginas html
 define("_POS_HTMLTITLE", "Papas Supremas");
 
 define('POS_MAX_LIMITE_DE_CREDITO', 20000);
 define('POS_MAX_LIMITE_DESCUENTO', 35.0);
 
 define('POS_PERIODICIDAD_SALARIO', POS_SEMANA);
+
+# habilitar o deshabilitar el uso de mapas en la aplicacion
 define('POS_ENABLE_GMAPS', true);	
 
 
-/* *******************************
-LOG
-********************************* */
-define("_POS_LOG_TO_FILE", true);
-define("_POS_LOG_TO_FILE_FILENAME", "/var/log/mx.caffeina.pos/pos.log");
+# *******************************
+# Logs
+# *******************************
+
+# habilitar los logs
+define("POS_LOG_TO_FILE", true);
+
+# archivo donde se guardaran los logs
+define("POS_LOG_TO_FILE_FILENAME", "/var/log/mx.caffeina.pos/pos.log");
 
 
 
 
-/* *******************************
-ZONA HORARIA
-********************************* */
+# *******************************
+# ZONA HORARIA
+# *******************************
 date_default_timezone_set("America/Mexico_City");
 
 
 
-/* *******************************
-BASE DE DATOS 
-********************************* */
+# ******************************
+# BASE DE DATOS 
+# ******************************
+
 define('DB_USER',       'pos');
 define('DB_PASSWORD',   'pos');
 define('DB_NAME',       'pos');
@@ -56,16 +65,22 @@ require_once('db/DBConnection.php');
 
 
 
-/* *******************************
-Seguridad
-********************************* */
+# *******************************
+# Seguridad
+# *******************************
 //cada que una sesion sobrepase de este valor, volvera a pedir las credenciales
 $__ADMIN_TIME_OUT 	= 3600;
 $__GERENTE_TIME_OUT = 3600;
 $__CAJERO_TIME_OUT 	= 3600;
 
+# metodo de validacion de sucursales mediante user-agent
+# puede ser 'FULL_UA' o bien 'SID_TOKEN'
+# 'FULL_UA' validara 
+# 'SID_TOKEN' buscara la subcadena SID={00000} dentro del UA y
+# comparara esta cadena de 5 caracteres contra un equipo en la 
+# base de datos.
 define( 'POS_SUCURSAL_TEST_TOKEN', 'FULL_UA' );
-//define( 'POS_SUCURSAL_TEST_TOKEN', 'SID_TOKEN' ); //SID={00000} dentro del UA
+
 
 //nombre de la galleta
 //session_set_cookie_params ( int $lifetime [, string $path [, string $domain [, bool $secure = false [, bool $httponly = false ]]]] )
@@ -83,42 +98,6 @@ if(!$ss){
 
 
 
-
-/* *******************************
-Funciones de ayuda
-********************************* */
-function endsWith( $str, $sub ) {
-return ( substr( $str, strlen( $str ) - strlen( $sub ) ) == $sub );
-}
-
-function __pos__calcularTotal($subtotal, $iva, $descuento)
-{
-//funcion para calular el total
-//subtotal - pesos
-//iva - porcentaje
-//descuento - porcentaje
-$iva /= 100;
-$descuento /= 100;
-//descuento sobre iva
-
-return ( ($subtotal- ($subtotal*$descuento)) + (($subtotal-($subtotal*$descuento))*$iva) );
-
-}
-
-
-
-
-function parseJSON($json){
-
-        try{
-            	if($json != stripslashes($json)){
-                        return json_decode(stripslashes($json));
-                }else{
-                      	return json_decode($json);
-                }
-        }catch(Exception $e){
-                return null;
-        }
-}
+require_once('utils.php');
 
 

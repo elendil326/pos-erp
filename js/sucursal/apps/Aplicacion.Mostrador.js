@@ -164,10 +164,10 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 	var html = "<table border=0>";
 	
 	html += "<tr class='top'>";
-	html += "<td>Descripcion</td>";
-	html += "<td colspan=3>Cantidad</td>";	
-	html += "<td>Precio</td>";
-	html += "<td>Total</td>";
+	html += "<td style='width: 300px;' align='center'>Descripcion</td>";
+	html += "<td style='width: 300px;'  colspan=4 align='center'>Cantidad</td>";	
+	html += "<td align='center' style='width: 100px;' >Precio</td>";
+	html += "<td align='center' style='width: 130px;' >Sub Total</td>";
 
 	html += "</tr>";
 	
@@ -178,19 +178,19 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		}else{
 			html += "<tr >";		
 		}
-		html += "<td>" + carrito.items[i].productoID + " " + carrito.items[i].descripcion+ "</td>";
+		html += "<td><b>" + carrito.items[i].productoID + "</b> " + carrito.items[i].descripcion+ "</td>";
 
-		html += "<td > <span class='boton' onClick='Aplicacion.Mostrador.currentInstance.quitarDelCarrito("+ carrito.items[i].productoID +")'>&nbsp;DEL&nbsp;</span>&nbsp;";
+		html += "<td  style='width: 200px;' align='right'> <span class='boton'  onClick='Aplicacion.Mostrador.currentInstance.quitarDelCarrito("+ carrito.items[i].productoID +")'><img src='media/icons/close_16.png'>&nbsp;Quitar&nbsp;</span></td>";
 		
-		html += "<span class='boton' onClick='Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad("+ carrito.items[i].productoID +", -1, false)'>&nbsp;-&nbsp;</span></td>";
+		html += "<td  style='width: 100px;' align='center'> <span class='boton' onClick='Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad("+ carrito.items[i].productoID +", -1, false)'>&nbsp;-&nbsp;<img src='media/icons/arrow_down_16.png'></span></td>";
 
-		html += "<td> <div id='Mostrador-carritoCantidad"+ carrito.items[i].productoID +"'></div></td>";
+		html += "<td  style='width: 100px;'><div id='Mostrador-carritoCantidad"+ carrito.items[i].productoID +"'></div></td>";
 
-		html += "<td > <span class='boton' onClick='Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad("+ carrito.items[i].productoID +", 1, false)'>&nbsp;+&nbsp;</span></td>";
+		html += "<td  style='width: 100px;'> <span class='boton' onClick='Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad("+ carrito.items[i].productoID +", 1, false)'><img src='media/icons/arrow_up_16.png'>&nbsp;+&nbsp;</span></td>";
 
-		html += "<td> <div id='Mostrador-carritoPrecio"+ carrito.items[i].productoID +"'></div></td>";
+		html += "<td> <div  id='Mostrador-carritoPrecio"+ carrito.items[i].productoID +"'></div></td>";
 		
-		html += "<td>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioVenta )+"</td>";
+		html += "<td >" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioVenta )+"</td>";
 		
 		html += "</tr>";
 	}
@@ -217,7 +217,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			id : "Mostrador-carritoCantidad"+ carrito.items[i].productoID + "Text",
 			value : carrito.items[i].cantidad,
 			prodID : carrito.items[i].productoID,
-			width: 50,
+			width: 100,
 			placeHolder : "",
 			listeners : {
 				'focus' : function (){
@@ -250,7 +250,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			value : POS.currencyFormat( carrito.items[i].precioVenta ),
 			prodID : carrito.items[i].productoID,			
 			placeHolder : "Precio de Venta",
-			listeners : POS.U.g ? {
+			listeners : {
 				'focus' : function (a){
 					
 					this.setValue( this.getValue().replace("$", '').replace(",", "") );
@@ -289,7 +289,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 					
 					POS.Keyboard.Keyboard( this, kconf );
 				}
-			} : null
+			} 
 		
 		});
 	}
@@ -673,17 +673,15 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 	
 	html += "<table class='Mostrador-ThankYou'>";
 	html += "	<tr>";	
-	html += "		<td>Venta exitosa</td>";
+	html += "		<td><img src='media/cash_register.png'></td>";
 	html += "		<td></td>";
 	html += "	</tr>"; 
 	
 	if(carrito.tipoDeVenta != "credito"){
-
-
 		//mostrar el cambio
 		html += "	<tr>";	
-		html += "		<td>Su cambio:</td>";
-		html += "		<td>"+POS.currencyFormat( parseFloat( Ext.getCmp("Mostrador-doVentaEfectivo").getValue() ) - parseFloat( carrito.total ) )+"</td>";
+		html += "		<td>Su cambio: <b>"+POS.currencyFormat( parseFloat( Ext.getCmp("Mostrador-doVentaEfectivo").getValue() ) - parseFloat( carrito.total ) )+"</b></td>";
+		html += "		<td></td>";
 		html += "	</tr>";
 	}	
 
@@ -692,6 +690,9 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 	
 	this.finishedPanel.update(html);
     Ext.getCmp("Mostrador-mostradorVender").hide( Ext.anims.slide );
+
+	action = "sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.mostradorPanel , 'fade');";
+	setTimeout(action, 5000);
 
 };
 

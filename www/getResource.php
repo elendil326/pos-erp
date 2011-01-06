@@ -7,134 +7,128 @@ require ( "../server/config.php" );
 
 require_once('logger.php');
 
-/* 
- * Este archivo es para el JSloader, recibe un parametro que es la carpeta dentro de js,
- * y regresa todos los archivos dentro de esa carpeta para que javascript los cargue 
- */
 
 
+function writeConfig(){
 
+	
 
+}
 
-	//cargar cada directorio
-	function loadDir( $dir, $type )
-	{
+//cargar cada directorio
+function loadDir( $dir, $type )
+{
 
-
-		//leeer los archivos en ese directorio
-		$address = '../'.$type.'/'.$dir.'/';
+	//leeer los archivos en ese directorio
+	$address = '../'.$type.'/'.$dir.'/';
+	
+	if ($handle = opendir($address)) {
 		
-		if ($handle = opendir($address)) {
+	    while ($file = readdir($handle)) {
 			
-		    while ($file = readdir($handle)) {
-				
-				if( endsWith( $file, "." . $type ) ){
-					echo file_get_contents($address . $file) . "\n";
+			if( endsWith( $file, "." . $type ) ){
+				echo file_get_contents($address . $file) . "\n";
 
-				}
-				
-				
-				
-		    }//directory loop
+			}
+	    }//directory loop
 
-		    closedir($handle);
+	    closedir($handle);
+	}
+}
+
+
+
+//revisar parametros
+if(! ( isset($_REQUEST['mod']) && isset($_REQUEST['type'] ) )) {
+	Logger::log("Solicitud de recurso incorrecto.");
+	die('{"success":false}');
+}
+
+
+$module = $_REQUEST['mod'];
+$type = $_REQUEST['type'];
+
+
+//imprimir el header
+switch($type)
+{
+	case 'js' : header('Content-Type:text/javascript'); break;
+	case 'css' : header('Content-Type:text/css'); break;
+	default : 
+		Logger::log("Solicitud de recurso con un tipo invalido:" . $type);
+		die('{"success":false}');
+}
+
+
+
+
+switch($module)
+{
+	//cargar modulos de admin
+	case 'admin' :
+		
+		if(isset($_SESSION['grupo']) && ($_SESSION['grupo'] == 1 || $_SESSION['grupo'] == 0))
+			loadDir( $module, $type );
+		else{
+			Logger::log("Solicitud de recurso para admin/ingenieria sin sesion valida.");
+			die("/* ACCESO DENEGADO */");
 		}
 		
+	break;
+	
+	//cargar modulos de sucursal
+	case 'sucursal':
+	
+		if(!isset($_SESSION['grupo'])){
+			Logger::log("Solicitud de recurso para sucursal sin sesion valida.");
+			die(" /* ACCESO DENEGADO */");				
+		}
+
 		
+		if($type == "css"){
+			loadDir($module, $type);
+			break;
+		}
 		
-
-
-	}
-
-
-	//revisar parametros
-	if(! ( isset($_REQUEST['mod']) && isset($_REQUEST['type'] ) )) {
-		Logger::log("Solicitud de recurso incorrecto.");
-		die('{"success":false}');
-	}
-	
-	$module = $_REQUEST['mod'];
-	$type = $_REQUEST['type'];
-
-	
-	
-	//imprimir el header
-	switch($type)
-	{
-		case 'js' : header('Content-Type:text/javascript'); break;
-		case 'css' : header('Content-Type:text/css'); break;
-		default : 
-			Logger::log("Solicitud de recurso con un tipo invalido:" . $type);
-			die('{"success":false}');
-	}
-	
-	
-	
-	
-	switch($module)
-	{
-		//cargar modulos de admin
-		case 'admin' :
-			
-			if(isset($_SESSION['grupo']) && ($_SESSION['grupo'] == 1 || $_SESSION['grupo'] == 0))
-				loadDir( $module, $type );
-			else{
-				Logger::log("Solicitud de recurso para admin/ingenieria sin sesion valida.");
-				die("/* ACCESO DENEGADO */");
-			}
-			
-		break;
+		echo "Ext.ns('POS', 'sink', 'Ext.ux');";			
+		
+		//escribir la configuracion
+		writeConfig();
 		
 		//cargar modulos de sucursal
-		case 'sucursal':
+		loadDir( "sucursal/pre" , $type );
+
+
+        //imprimir que tipo de usuario soy
+        if(isset($_SESSION['grupo']))
+        	echo "POS.U.g = " . (($_SESSION['grupo'] == 2) ? "true" : "false" ) . ";";
+
+
+
+		loadDir( "sucursal/apps" , $type );
+					
+					
+		if($_SESSION['grupo'] == 2 ){
+			//si es gerente tambien cargar los de gerencia
+			loadDir( "sucursal/apps/gerente" , $type );
+		}
 		
-			if(!isset($_SESSION['grupo'])){
-				Logger::log("Solicitud de recurso para sucursal sin sesion valida.");
-				die(" /* ACCESO DENEGADO */");				
-			}
+		loadDir( "sucursal/post" , $type );
 
-			
-			if($type == "css"){
-				loadDir($module, $type);
-				break;
-			}
-			
-			echo "Ext.ns('POS', 'sink', 'Ext.ux');";			
-
-			//cargar modulos de sucursal
-			loadDir( "sucursal/pre" , $type );
-
-
-            //imprimir que tipo de usuario soy
-            if(isset($_SESSION['grupo']))
-            	echo "POS.U.g = " . (($_SESSION['grupo'] == 2) ? "true" : "false" ) . ";";
-
-
-
-			loadDir( "sucursal/apps" , $type );
-						
-						
-			if($_SESSION['grupo'] == 2 ){
-				//si es gerente tambien cargar los de gerencia
-				loadDir( "sucursal/apps/gerente" , $type );
-			}
-			
-			loadDir( "sucursal/post" , $type );
-
-		break;
-		
-		
-		//cargar modulos compartidos
-		case 'shared': loadDir( $module, $type ); break;
-		
-		//cargar login
-		case 'login' : loadDir( $module, $type ); break;
-		
-		default : 
-			Logger::log("Solicitud de recurso de modulo inexistente: " . $module);
-			die('{"success":false}');
-		
-	}
+	break;
+	
+	
+	//cargar modulos compartidos
+	case 'shared': loadDir( $module, $type ); break;
+	
+	//cargar login
+	case 'login' : loadDir( $module, $type ); break;
+	
+	default : 
+		Logger::log("Solicitud de recurso de modulo inexistente: " . $module);
+		die('{"success":false}');
+	
+}
 	
 
 ?>

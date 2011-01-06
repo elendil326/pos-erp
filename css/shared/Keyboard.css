@@ -14,7 +14,7 @@
 		border-style:solid;
 		border-width:1px;
 		border-color: rgb(29,29,30);
-		width: 80px;
+		width: 85px;
 		height: 40px;
 		-webkit-box-shadow: 2px 2px 3px #000;
 		-webkit-border-radius: 5px;
@@ -24,7 +24,7 @@
 
 
 .Keyboard-key.long{
-		width: 120px;	
+		width: 125px;	
 }
 
 

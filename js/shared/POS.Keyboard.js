@@ -208,7 +208,7 @@ POS.Keyboard._genHTMLalfa = function (config){
 			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>I</div>"				
 			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>O</div>"				
 			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>P</div>"				
-			+ "<div class='Keyboard-key' onclick='POS.Keyboard.callbackFn( \"_DEL_\", false )'>DEL</div>"				
+			+ "<div class='Keyboard-key' onclick='POS.Keyboard.callbackFn( \"_DEL_\", false )'>&#8592;</div>"				
 			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )' style='margin-left:30px'>A</div>"
 			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>S</div>"				
 			+ "<div class='Keyboard-key small' onclick='POS.Keyboard.callbackFn( this.innerHTML, false )'>D</div>"				

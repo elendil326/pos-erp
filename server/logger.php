@@ -7,15 +7,15 @@ class Logger
 	public static final function read($lines = 100)
 	{
 
-        if(!file_exists(_POS_LOG_TO_FILE_FILENAME)){
-            die("POS: Unable to open logfile:" ._POS_LOG_TO_FILE_FILENAME );
+        if(!file_exists(POS_LOG_TO_FILE_FILENAME)){
+            die("POS: Unable to open logfile:" .POS_LOG_TO_FILE_FILENAME );
         }
 
 		// $file: Name of file to open
 		// $lines: Number of lines to obtain from the end of the file
 		// $header: flag to indicate that the file contains a header which should not be included if the number of lines in the file is <= lines
 		
-		$file = _POS_LOG_TO_FILE_FILENAME;
+		$file = POS_LOG_TO_FILE_FILENAME;
 	 	$header = null;
 		global $error_string;
 		
@@ -133,19 +133,19 @@ class Logger
 
 	public static final function log( $msg, $level = 0 )
 	{
-        if(!_POS_LOG_TO_FILE)
+        if(!POS_LOG_TO_FILE)
             return;
         
-        if(!file_exists(_POS_LOG_TO_FILE_FILENAME)){
-            die("POS: Unable to open logfile:" ._POS_LOG_TO_FILE_FILENAME );
+        if(!file_exists(POS_LOG_TO_FILE_FILENAME)){
+            die("POS: Unable to open logfile:" .POS_LOG_TO_FILE_FILENAME );
         }
 
-        if(!is_writable(_POS_LOG_TO_FILE_FILENAME)){
-            die("POS: Unable to write to logfile:" ._POS_LOG_TO_FILE_FILENAME );
+        if(!is_writable(POS_LOG_TO_FILE_FILENAME)){
+            die("POS: Unable to write to logfile:" .POS_LOG_TO_FILE_FILENAME );
         }
 
 
-        $log = fopen( _POS_LOG_TO_FILE_FILENAME, "a" );
+        $log = fopen( POS_LOG_TO_FILE_FILENAME, "a" );
 
         
 
