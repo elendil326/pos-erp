@@ -67,20 +67,19 @@ class Sucursal extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_sucursal" => $this->id_sucursal,
-		"gerente" => $this->gerente,
-		"descripcion" => $this->descripcion,
-		"direccion" => $this->direccion,
-		"rfc" => $this->rfc,
-		"telefono" => $this->telefono,
-		"token" => $this->token,
-		"letras_factura" => $this->letras_factura,
-		"activo" => $this->activo,
-		"fecha_apertura" => $this->fecha_apertura,
-		"saldo_a_favor" => $this->saldo_a_favor
-		)); 
+		$vec = array( 
+			"id_sucursal" => $this->id_sucursal,
+			"gerente" => $this->gerente,
+			"descripcion" => $this->descripcion,
+			"direccion" => $this->direccion,
+			"rfc" => $this->rfc,
+			"telefono" => $this->telefono,
+			"token" => $this->token,
+			"letras_factura" => $this->letras_factura,
+			"activo" => $this->activo,
+			"fecha_apertura" => $this->fecha_apertura,
+			"saldo_a_favor" => $this->saldo_a_favor
+		); 
 	return json_encode($vec); 
 	}
 	

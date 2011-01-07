@@ -55,16 +55,15 @@ class Proveedor extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_proveedor" => $this->id_proveedor,
-		"rfc" => $this->rfc,
-		"nombre" => $this->nombre,
-		"direccion" => $this->direccion,
-		"telefono" => $this->telefono,
-		"e_mail" => $this->e_mail,
-		"activo" => $this->activo
-		)); 
+		$vec = array( 
+			"id_proveedor" => $this->id_proveedor,
+			"rfc" => $this->rfc,
+			"nombre" => $this->nombre,
+			"direccion" => $this->direccion,
+			"telefono" => $this->telefono,
+			"e_mail" => $this->e_mail,
+			"activo" => $this->activo
+		); 
 	return json_encode($vec); 
 	}
 	

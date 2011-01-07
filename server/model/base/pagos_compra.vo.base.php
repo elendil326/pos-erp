@@ -46,13 +46,12 @@ class PagosCompra extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_pago" => $this->id_pago,
-		"id_compra" => $this->id_compra,
-		"fecha" => $this->fecha,
-		"monto" => $this->monto
-		)); 
+		$vec = array( 
+			"id_pago" => $this->id_pago,
+			"id_compra" => $this->id_compra,
+			"fecha" => $this->fecha,
+			"monto" => $this->monto
+		); 
 	return json_encode($vec); 
 	}
 	

@@ -73,22 +73,21 @@ class Cliente extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_cliente" => $this->id_cliente,
-		"rfc" => $this->rfc,
-		"nombre" => $this->nombre,
-		"direccion" => $this->direccion,
-		"ciudad" => $this->ciudad,
-		"telefono" => $this->telefono,
-		"e_mail" => $this->e_mail,
-		"limite_credito" => $this->limite_credito,
-		"descuento" => $this->descuento,
-		"activo" => $this->activo,
-		"id_usuario" => $this->id_usuario,
-		"id_sucursal" => $this->id_sucursal,
-		"fecha_ingreso" => $this->fecha_ingreso
-		)); 
+		$vec = array( 
+			"id_cliente" => $this->id_cliente,
+			"rfc" => $this->rfc,
+			"nombre" => $this->nombre,
+			"direccion" => $this->direccion,
+			"ciudad" => $this->ciudad,
+			"telefono" => $this->telefono,
+			"e_mail" => $this->e_mail,
+			"limite_credito" => $this->limite_credito,
+			"descuento" => $this->descuento,
+			"activo" => $this->activo,
+			"id_usuario" => $this->id_usuario,
+			"id_sucursal" => $this->id_sucursal,
+			"fecha_ingreso" => $this->fecha_ingreso
+		); 
 	return json_encode($vec); 
 	}
 	

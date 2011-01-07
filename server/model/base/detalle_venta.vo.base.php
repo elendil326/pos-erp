@@ -49,14 +49,13 @@ class DetalleVenta extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_venta" => $this->id_venta,
-		"id_producto" => $this->id_producto,
-		"cantidad" => $this->cantidad,
-		"cantidad_procesada" => $this->cantidad_procesada,
-		"precio" => $this->precio
-		)); 
+		$vec = array( 
+			"id_venta" => $this->id_venta,
+			"id_producto" => $this->id_producto,
+			"cantidad" => $this->cantidad,
+			"cantidad_procesada" => $this->cantidad_procesada,
+			"precio" => $this->precio
+		); 
 	return json_encode($vec); 
 	}
 	

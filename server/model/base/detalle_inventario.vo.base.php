@@ -52,15 +52,14 @@ class DetalleInventario extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_producto" => $this->id_producto,
-		"id_sucursal" => $this->id_sucursal,
-		"precio_venta" => $this->precio_venta,
-		"min" => $this->min,
-		"existencias" => $this->existencias,
-		"exitencias_procesadas" => $this->exitencias_procesadas
-		)); 
+		$vec = array( 
+			"id_producto" => $this->id_producto,
+			"id_sucursal" => $this->id_sucursal,
+			"precio_venta" => $this->precio_venta,
+			"min" => $this->min,
+			"existencias" => $this->existencias,
+			"exitencias_procesadas" => $this->exitencias_procesadas
+		); 
 	return json_encode($vec); 
 	}
 	

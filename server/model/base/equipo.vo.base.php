@@ -43,12 +43,11 @@ class Equipo extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_equipo" => $this->id_equipo,
-		"token" => $this->token,
-		"full_ua" => $this->full_ua
-		)); 
+		$vec = array( 
+			"id_equipo" => $this->id_equipo,
+			"token" => $this->token,
+			"full_ua" => $this->full_ua
+		); 
 	return json_encode($vec); 
 	}
 	

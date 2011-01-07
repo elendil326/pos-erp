@@ -55,16 +55,15 @@ class Autorizacion extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_autorizacion" => $this->id_autorizacion,
-		"id_usuario" => $this->id_usuario,
-		"id_sucursal" => $this->id_sucursal,
-		"fecha_peticion" => $this->fecha_peticion,
-		"fecha_respuesta" => $this->fecha_respuesta,
-		"estado" => $this->estado,
-		"parametros" => $this->parametros
-		)); 
+		$vec = array( 
+			"id_autorizacion" => $this->id_autorizacion,
+			"id_usuario" => $this->id_usuario,
+			"id_sucursal" => $this->id_sucursal,
+			"fecha_peticion" => $this->fecha_peticion,
+			"fecha_respuesta" => $this->fecha_respuesta,
+			"estado" => $this->estado,
+			"parametros" => $this->parametros
+		); 
 	return json_encode($vec); 
 	}
 	

@@ -49,14 +49,13 @@ class DetalleCompraSucursal extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_compra" => $this->id_compra,
-		"id_producto" => $this->id_producto,
-		"cantidad" => $this->cantidad,
-		"precio" => $this->precio,
-		"descuento" => $this->descuento
-		)); 
+		$vec = array( 
+			"id_compra" => $this->id_compra,
+			"id_producto" => $this->id_producto,
+			"cantidad" => $this->cantidad,
+			"precio" => $this->precio,
+			"descuento" => $this->descuento
+		); 
 	return json_encode($vec); 
 	}
 	

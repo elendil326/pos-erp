@@ -70,21 +70,20 @@ class Ventas extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_venta" => $this->id_venta,
-		"id_cliente" => $this->id_cliente,
-		"tipo_venta" => $this->tipo_venta,
-		"fecha" => $this->fecha,
-		"subtotal" => $this->subtotal,
-		"iva" => $this->iva,
-		"descuento" => $this->descuento,
-		"total" => $this->total,
-		"id_sucursal" => $this->id_sucursal,
-		"id_usuario" => $this->id_usuario,
-		"pagado" => $this->pagado,
-		"ip" => $this->ip
-		)); 
+		$vec = array( 
+			"id_venta" => $this->id_venta,
+			"id_cliente" => $this->id_cliente,
+			"tipo_venta" => $this->tipo_venta,
+			"fecha" => $this->fecha,
+			"subtotal" => $this->subtotal,
+			"iva" => $this->iva,
+			"descuento" => $this->descuento,
+			"total" => $this->total,
+			"id_sucursal" => $this->id_sucursal,
+			"id_usuario" => $this->id_usuario,
+			"pagado" => $this->pagado,
+			"ip" => $this->ip
+		); 
 	return json_encode($vec); 
 	}
 	

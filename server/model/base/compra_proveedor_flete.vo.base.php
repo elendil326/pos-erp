@@ -52,15 +52,14 @@ class CompraProveedorFlete extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_compra_proveedor" => $this->id_compra_proveedor,
-		"chofer" => $this->chofer,
-		"marca_camion" => $this->marca_camion,
-		"placas_camion" => $this->placas_camion,
-		"modelo_camion" => $this->modelo_camion,
-		"costo_flete" => $this->costo_flete
-		)); 
+		$vec = array( 
+			"id_compra_proveedor" => $this->id_compra_proveedor,
+			"chofer" => $this->chofer,
+			"marca_camion" => $this->marca_camion,
+			"placas_camion" => $this->placas_camion,
+			"modelo_camion" => $this->modelo_camion,
+			"costo_flete" => $this->costo_flete
+		); 
 	return json_encode($vec); 
 	}
 	

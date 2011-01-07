@@ -46,13 +46,12 @@ class Inventario extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_producto" => $this->id_producto,
-		"descripcion" => $this->descripcion,
-		"escala" => $this->escala,
-		"tratamiento" => $this->tratamiento
-		)); 
+		$vec = array( 
+			"id_producto" => $this->id_producto,
+			"descripcion" => $this->descripcion,
+			"escala" => $this->escala,
+			"tratamiento" => $this->tratamiento
+		); 
 	return json_encode($vec); 
 	}
 	

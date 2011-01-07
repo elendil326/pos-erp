@@ -58,17 +58,16 @@ class CompraSucursal extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_compra" => $this->id_compra,
-		"fecha" => $this->fecha,
-		"subtotal" => $this->subtotal,
-		"id_sucursal" => $this->id_sucursal,
-		"id_usuario" => $this->id_usuario,
-		"pagado" => $this->pagado,
-		"liquidado" => $this->liquidado,
-		"total" => $this->total
-		)); 
+		$vec = array( 
+			"id_compra" => $this->id_compra,
+			"fecha" => $this->fecha,
+			"subtotal" => $this->subtotal,
+			"id_sucursal" => $this->id_sucursal,
+			"id_usuario" => $this->id_usuario,
+			"pagado" => $this->pagado,
+			"liquidado" => $this->liquidado,
+			"total" => $this->total
+		); 
 	return json_encode($vec); 
 	}
 	

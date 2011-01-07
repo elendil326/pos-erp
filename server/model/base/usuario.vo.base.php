@@ -67,20 +67,19 @@ class Usuario extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_usuario" => $this->id_usuario,
-		"RFC" => $this->RFC,
-		"nombre" => $this->nombre,
-		"contrasena" => $this->contrasena,
-		"id_sucursal" => $this->id_sucursal,
-		"activo" => $this->activo,
-		"finger_token" => $this->finger_token,
-		"salario" => $this->salario,
-		"direccion" => $this->direccion,
-		"telefono" => $this->telefono,
-		"fecha_inicio" => $this->fecha_inicio
-		)); 
+		$vec = array( 
+			"id_usuario" => $this->id_usuario,
+			"RFC" => $this->RFC,
+			"nombre" => $this->nombre,
+			"contrasena" => $this->contrasena,
+			"id_sucursal" => $this->id_sucursal,
+			"activo" => $this->activo,
+			"finger_token" => $this->finger_token,
+			"salario" => $this->salario,
+			"direccion" => $this->direccion,
+			"telefono" => $this->telefono,
+			"fecha_inicio" => $this->fecha_inicio
+		); 
 	return json_encode($vec); 
 	}
 	

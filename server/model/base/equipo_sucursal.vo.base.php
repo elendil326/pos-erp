@@ -40,11 +40,10 @@ class EquipoSucursal extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_equipo" => $this->id_equipo,
-		"id_sucursal" => $this->id_sucursal
-		)); 
+		$vec = array( 
+			"id_equipo" => $this->id_equipo,
+			"id_sucursal" => $this->id_sucursal
+		); 
 	return json_encode($vec); 
 	}
 	

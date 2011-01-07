@@ -40,11 +40,10 @@ class GruposUsuarios extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_grupo" => $this->id_grupo,
-		"id_usuario" => $this->id_usuario
-		)); 
+		$vec = array( 
+			"id_grupo" => $this->id_grupo,
+			"id_usuario" => $this->id_usuario
+		); 
 	return json_encode($vec); 
 	}
 	

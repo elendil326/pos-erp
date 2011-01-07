@@ -70,21 +70,20 @@ class Corte extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_corte" => $this->id_corte,
-		"fecha" => $this->fecha,
-		"id_sucursal" => $this->id_sucursal,
-		"total_ventas" => $this->total_ventas,
-		"total_ventas_abonado" => $this->total_ventas_abonado,
-		"total_ventas_saldo" => $this->total_ventas_saldo,
-		"total_compras" => $this->total_compras,
-		"total_compras_abonado" => $this->total_compras_abonado,
-		"total_gastos" => $this->total_gastos,
-		"total_gastos_abonado" => $this->total_gastos_abonado,
-		"total_ingresos" => $this->total_ingresos,
-		"total_ganancia_neta" => $this->total_ganancia_neta
-		)); 
+		$vec = array( 
+			"id_corte" => $this->id_corte,
+			"fecha" => $this->fecha,
+			"id_sucursal" => $this->id_sucursal,
+			"total_ventas" => $this->total_ventas,
+			"total_ventas_abonado" => $this->total_ventas_abonado,
+			"total_ventas_saldo" => $this->total_ventas_saldo,
+			"total_compras" => $this->total_compras,
+			"total_compras_abonado" => $this->total_compras_abonado,
+			"total_gastos" => $this->total_gastos,
+			"total_gastos_abonado" => $this->total_gastos_abonado,
+			"total_ingresos" => $this->total_ingresos,
+			"total_ganancia_neta" => $this->total_ganancia_neta
+		); 
 	return json_encode($vec); 
 	}
 	

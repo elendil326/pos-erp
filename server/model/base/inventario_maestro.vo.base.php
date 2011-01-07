@@ -46,13 +46,12 @@ class InventarioMaestro extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_producto" => $this->id_producto,
-		"id_compra_proveedor" => $this->id_compra_proveedor,
-		"existencias" => $this->existencias,
-		"existencias_procesadas" => $this->existencias_procesadas
-		)); 
+		$vec = array( 
+			"id_producto" => $this->id_producto,
+			"id_compra_proveedor" => $this->id_compra_proveedor,
+			"existencias" => $this->existencias,
+			"existencias_procesadas" => $this->existencias_procesadas
+		); 
 	return json_encode($vec); 
 	}
 	

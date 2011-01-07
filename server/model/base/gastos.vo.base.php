@@ -61,18 +61,17 @@ class Gastos extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_gasto" => $this->id_gasto,
-		"folio" => $this->folio,
-		"concepto" => $this->concepto,
-		"monto" => $this->monto,
-		"fecha" => $this->fecha,
-		"fecha_ingreso" => $this->fecha_ingreso,
-		"id_sucursal" => $this->id_sucursal,
-		"id_usuario" => $this->id_usuario,
-		"nota" => $this->nota
-		)); 
+		$vec = array( 
+			"id_gasto" => $this->id_gasto,
+			"folio" => $this->folio,
+			"concepto" => $this->concepto,
+			"monto" => $this->monto,
+			"fecha" => $this->fecha,
+			"fecha_ingreso" => $this->fecha_ingreso,
+			"id_sucursal" => $this->id_sucursal,
+			"id_usuario" => $this->id_usuario,
+			"nota" => $this->nota
+		); 
 	return json_encode($vec); 
 	}
 	

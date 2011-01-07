@@ -40,11 +40,10 @@ class FacturaCompra extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"folio" => $this->folio,
-		"id_compra" => $this->id_compra
-		)); 
+		$vec = array( 
+			"folio" => $this->folio,
+			"id_compra" => $this->id_compra
+		); 
 	return json_encode($vec); 
 	}
 	

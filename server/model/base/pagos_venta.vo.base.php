@@ -52,15 +52,14 @@ class PagosVenta extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_pago" => $this->id_pago,
-		"id_venta" => $this->id_venta,
-		"id_sucursal" => $this->id_sucursal,
-		"id_usuario" => $this->id_usuario,
-		"fecha" => $this->fecha,
-		"monto" => $this->monto
-		)); 
+		$vec = array( 
+			"id_pago" => $this->id_pago,
+			"id_venta" => $this->id_venta,
+			"id_sucursal" => $this->id_sucursal,
+			"id_usuario" => $this->id_usuario,
+			"fecha" => $this->fecha,
+			"monto" => $this->monto
+		); 
 	return json_encode($vec); 
 	}
 	

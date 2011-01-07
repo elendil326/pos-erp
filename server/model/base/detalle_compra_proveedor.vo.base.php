@@ -52,15 +52,14 @@ class DetalleCompraProveedor extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_compra_proveedor" => $this->id_compra_proveedor,
-		"id_producto" => $this->id_producto,
-		"variedad" => $this->variedad,
-		"arpillas" => $this->arpillas,
-		"kg" => $this->kg,
-		"precio_por_kg" => $this->precio_por_kg
-		)); 
+		$vec = array( 
+			"id_compra_proveedor" => $this->id_compra_proveedor,
+			"id_producto" => $this->id_producto,
+			"variedad" => $this->variedad,
+			"arpillas" => $this->arpillas,
+			"kg" => $this->kg,
+			"precio_por_kg" => $this->precio_por_kg
+		); 
 	return json_encode($vec); 
 	}
 	

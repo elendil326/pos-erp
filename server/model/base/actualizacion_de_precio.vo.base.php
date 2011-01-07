@@ -52,15 +52,14 @@ class ActualizacionDePrecio extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_actualizacion" => $this->id_actualizacion,
-		"id_producto" => $this->id_producto,
-		"id_usuario" => $this->id_usuario,
-		"precio_venta" => $this->precio_venta,
-		"precio_intersucursal" => $this->precio_intersucursal,
-		"fecha" => $this->fecha
-		)); 
+		$vec = array( 
+			"id_actualizacion" => $this->id_actualizacion,
+			"id_producto" => $this->id_producto,
+			"id_usuario" => $this->id_usuario,
+			"precio_venta" => $this->precio_venta,
+			"precio_intersucursal" => $this->precio_intersucursal,
+			"fecha" => $this->fecha
+		); 
 	return json_encode($vec); 
 	}
 	

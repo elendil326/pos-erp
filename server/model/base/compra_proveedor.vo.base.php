@@ -70,21 +70,20 @@ class CompraProveedor extends VO
 	  */
 	public function __toString( )
 	{ 
-		$vec = array();
-		array_push($vec, array( 
-		"id_compra_proveedor" => $this->id_compra_proveedor,
-		"id_proveedor" => $this->id_proveedor,
-		"fecha" => $this->fecha,
-		"folio" => $this->folio,
-		"numero_de_viaje" => $this->numero_de_viaje,
-		"peso_recibido" => $this->peso_recibido,
-		"arpillas" => $this->arpillas,
-		"peso_por_arpilla" => $this->peso_por_arpilla,
-		"productor" => $this->productor,
-		"calidad" => $this->calidad,
-		"sitio_descarga" => $this->sitio_descarga,
-		"merma_por_arpilla" => $this->merma_por_arpilla
-		)); 
+		$vec = array( 
+			"id_compra_proveedor" => $this->id_compra_proveedor,
+			"id_proveedor" => $this->id_proveedor,
+			"fecha" => $this->fecha,
+			"folio" => $this->folio,
+			"numero_de_viaje" => $this->numero_de_viaje,
+			"peso_recibido" => $this->peso_recibido,
+			"arpillas" => $this->arpillas,
+			"peso_por_arpilla" => $this->peso_por_arpilla,
+			"productor" => $this->productor,
+			"calidad" => $this->calidad,
+			"sitio_descarga" => $this->sitio_descarga,
+			"merma_por_arpilla" => $this->merma_por_arpilla
+		); 
 	return json_encode($vec); 
 	}
 	
