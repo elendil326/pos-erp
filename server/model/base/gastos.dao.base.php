@@ -27,11 +27,11 @@ abstract class GastosDAOBase extends DAO
 	  **/
 	public static final function save( &$gastos )
 	{
-		if( self::getByPK(  $gastos->getIdGasto() ) === NULL )
+		if(  self::getByPK(  $gastos->getIdGasto() ) !== NULL )
 		{
-			try{ return GastosDAOBase::create( $gastos) ; } catch(Exception $e){ throw $e; }
-		}else{
 			try{ return GastosDAOBase::update( $gastos) ; } catch(Exception $e){ throw $e; }
+		}else{
+			try{ return GastosDAOBase::create( $gastos) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
@@ -242,7 +242,7 @@ abstract class GastosDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$gastos->setIdGasto( $conn->Insert_ID() );
+		 $gastos->setIdGasto( $conn->Insert_ID() );
 		return $ar;
 	}
 

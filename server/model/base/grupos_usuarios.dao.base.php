@@ -27,11 +27,11 @@ abstract class GruposUsuariosDAOBase extends DAO
 	  **/
 	public static final function save( &$grupos_usuarios )
 	{
-		if( self::getByPK(  $grupos_usuarios->getIdUsuario() ) === NULL )
+		if(  self::getByPK(  $grupos_usuarios->getIdUsuario() ) !== NULL )
 		{
-			try{ return GruposUsuariosDAOBase::create( $grupos_usuarios) ; } catch(Exception $e){ throw $e; }
-		}else{
 			try{ return GruposUsuariosDAOBase::update( $grupos_usuarios) ; } catch(Exception $e){ throw $e; }
+		}else{
+			try{ return GruposUsuariosDAOBase::create( $grupos_usuarios) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
@@ -193,7 +193,7 @@ abstract class GruposUsuariosDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		
+		 
 		return $ar;
 	}
 

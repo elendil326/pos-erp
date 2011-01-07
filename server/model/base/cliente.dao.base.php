@@ -27,11 +27,11 @@ abstract class ClienteDAOBase extends DAO
 	  **/
 	public static final function save( &$cliente )
 	{
-		if( self::getByPK(  $cliente->getIdCliente() ) === NULL )
+		if(  self::getByPK(  $cliente->getIdCliente() ) !== NULL )
 		{
-			try{ return ClienteDAOBase::create( $cliente) ; } catch(Exception $e){ throw $e; }
-		}else{
 			try{ return ClienteDAOBase::update( $cliente) ; } catch(Exception $e){ throw $e; }
+		}else{
+			try{ return ClienteDAOBase::create( $cliente) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
@@ -270,7 +270,7 @@ abstract class ClienteDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$cliente->setIdCliente( $conn->Insert_ID() );
+		 $cliente->setIdCliente( $conn->Insert_ID() );
 		return $ar;
 	}
 

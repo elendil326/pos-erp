@@ -154,7 +154,7 @@ class Sucursal extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access protected
-	  * @var varchar(10)
+	  * @var char(1)
 	  */
 	protected $letras_factura;
 
@@ -361,7 +361,7 @@ class Sucursal extends VO
 	  * getLetrasFactura
 	  * 
 	  * Get the <i>letras_factura</i> property for this object. Donde <i>letras_factura</i> es  [Campo no documentado]
-	  * @return varchar(10)
+	  * @return char(1)
 	  */
 	final public function getLetrasFactura()
 	{
@@ -372,9 +372,9 @@ class Sucursal extends VO
 	  * setLetrasFactura( $letras_factura )
 	  * 
 	  * Set the <i>letras_factura</i> property for this object. Donde <i>letras_factura</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>letras_factura</i> es de tipo <i>varchar(10)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>letras_factura</i> es de tipo <i>char(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(10)
+	  * @param char(1)
 	  */
 	final public function setLetrasFactura( $letras_factura )
 	{

@@ -27,11 +27,11 @@ abstract class VentasDAOBase extends DAO
 	  **/
 	public static final function save( &$ventas )
 	{
-		if( self::getByPK(  $ventas->getIdVenta() ) === NULL )
+		if(  self::getByPK(  $ventas->getIdVenta() ) !== NULL )
 		{
-			try{ return VentasDAOBase::create( $ventas) ; } catch(Exception $e){ throw $e; }
-		}else{
 			try{ return VentasDAOBase::update( $ventas) ; } catch(Exception $e){ throw $e; }
+		}else{
+			try{ return VentasDAOBase::create( $ventas) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
@@ -263,7 +263,7 @@ abstract class VentasDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$ventas->setIdVenta( $conn->Insert_ID() );
+		 $ventas->setIdVenta( $conn->Insert_ID() );
 		return $ar;
 	}
 

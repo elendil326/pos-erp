@@ -27,11 +27,11 @@ abstract class FacturaCompraDAOBase extends DAO
 	  **/
 	public static final function save( &$factura_compra )
 	{
-		if( self::getByPK(  $factura_compra->getFolio() ) === NULL )
+		if(  self::getByPK(  $factura_compra->getFolio() ) !== NULL )
 		{
-			try{ return FacturaCompraDAOBase::create( $factura_compra) ; } catch(Exception $e){ throw $e; }
-		}else{
 			try{ return FacturaCompraDAOBase::update( $factura_compra) ; } catch(Exception $e){ throw $e; }
+		}else{
+			try{ return FacturaCompraDAOBase::create( $factura_compra) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
@@ -193,7 +193,7 @@ abstract class FacturaCompraDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		
+		 
 		return $ar;
 	}
 

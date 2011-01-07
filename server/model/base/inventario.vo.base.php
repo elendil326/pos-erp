@@ -28,14 +28,11 @@ class Inventario extends VO
 			if( isset($data['descripcion']) ){
 				$this->descripcion = $data['descripcion'];
 			}
-			if( isset($data['precio_intersucursal']) ){
-				$this->precio_intersucursal = $data['precio_intersucursal'];
+			if( isset($data['escala']) ){
+				$this->escala = $data['escala'];
 			}
-			if( isset($data['costo']) ){
-				$this->costo = $data['costo'];
-			}
-			if( isset($data['medida']) ){
-				$this->medida = $data['medida'];
+			if( isset($data['tratamiento']) ){
+				$this->tratamiento = $data['tratamiento'];
 			}
 		}
 	}
@@ -53,9 +50,8 @@ class Inventario extends VO
 		array_push($vec, array( 
 		"id_producto" => $this->id_producto,
 		"descripcion" => $this->descripcion,
-		"precio_intersucursal" => $this->precio_intersucursal,
-		"costo" => $this->costo,
-		"medida" => $this->medida
+		"escala" => $this->escala,
+		"tratamiento" => $this->tratamiento
 		)); 
 	return json_encode($vec); 
 	}
@@ -81,31 +77,22 @@ class Inventario extends VO
 	protected $descripcion;
 
 	/**
-	  * precio_intersucursal
+	  * escala
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access protected
-	  * @var float
+	  * @var enum('kilogramo','pieza','litro','metro')
 	  */
-	protected $precio_intersucursal;
+	protected $escala;
 
 	/**
-	  * costo
+	  * tratamiento
 	  * 
-	  *  [Campo no documentado]<br>
+	  * Tipo de tratatiento si es que existe para este producto.<br>
 	  * @access protected
-	  * @var float
+	  * @var enum('limpia')
 	  */
-	protected $costo;
-
-	/**
-	  * medida
-	  * 
-	  *  [Campo no documentado]<br>
-	  * @access protected
-	  * @var enum('fraccion','unidad')
-	  */
-	protected $medida;
+	protected $tratamiento;
 
 	/**
 	  * getIdProducto
@@ -160,75 +147,51 @@ class Inventario extends VO
 	}
 
 	/**
-	  * getPrecioIntersucursal
+	  * getEscala
 	  * 
-	  * Get the <i>precio_intersucursal</i> property for this object. Donde <i>precio_intersucursal</i> es  [Campo no documentado]
-	  * @return float
+	  * Get the <i>escala</i> property for this object. Donde <i>escala</i> es  [Campo no documentado]
+	  * @return enum('kilogramo','pieza','litro','metro')
 	  */
-	final public function getPrecioIntersucursal()
+	final public function getEscala()
 	{
-		return $this->precio_intersucursal;
+		return $this->escala;
 	}
 
 	/**
-	  * setPrecioIntersucursal( $precio_intersucursal )
+	  * setEscala( $escala )
 	  * 
-	  * Set the <i>precio_intersucursal</i> property for this object. Donde <i>precio_intersucursal</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>precio_intersucursal</i> es de tipo <i>float</i>. 
+	  * Set the <i>escala</i> property for this object. Donde <i>escala</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>escala</i> es de tipo <i>enum('kilogramo','pieza','litro','metro')</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
+	  * @param enum('kilogramo','pieza','litro','metro')
 	  */
-	final public function setPrecioIntersucursal( $precio_intersucursal )
+	final public function setEscala( $escala )
 	{
-		$this->precio_intersucursal = $precio_intersucursal;
+		$this->escala = $escala;
 	}
 
 	/**
-	  * getCosto
+	  * getTratamiento
 	  * 
-	  * Get the <i>costo</i> property for this object. Donde <i>costo</i> es  [Campo no documentado]
-	  * @return float
+	  * Get the <i>tratamiento</i> property for this object. Donde <i>tratamiento</i> es Tipo de tratatiento si es que existe para este producto.
+	  * @return enum('limpia')
 	  */
-	final public function getCosto()
+	final public function getTratamiento()
 	{
-		return $this->costo;
+		return $this->tratamiento;
 	}
 
 	/**
-	  * setCosto( $costo )
+	  * setTratamiento( $tratamiento )
 	  * 
-	  * Set the <i>costo</i> property for this object. Donde <i>costo</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>costo</i> es de tipo <i>float</i>. 
+	  * Set the <i>tratamiento</i> property for this object. Donde <i>tratamiento</i> es Tipo de tratatiento si es que existe para este producto..
+	  * Una validacion basica se hara aqui para comprobar que <i>tratamiento</i> es de tipo <i>enum('limpia')</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
+	  * @param enum('limpia')
 	  */
-	final public function setCosto( $costo )
+	final public function setTratamiento( $tratamiento )
 	{
-		$this->costo = $costo;
-	}
-
-	/**
-	  * getMedida
-	  * 
-	  * Get the <i>medida</i> property for this object. Donde <i>medida</i> es  [Campo no documentado]
-	  * @return enum('fraccion','unidad')
-	  */
-	final public function getMedida()
-	{
-		return $this->medida;
-	}
-
-	/**
-	  * setMedida( $medida )
-	  * 
-	  * Set the <i>medida</i> property for this object. Donde <i>medida</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>medida</i> es de tipo <i>enum('fraccion','unidad')</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param enum('fraccion','unidad')
-	  */
-	final public function setMedida( $medida )
-	{
-		$this->medida = $medida;
+		$this->tratamiento = $tratamiento;
 	}
 
 }

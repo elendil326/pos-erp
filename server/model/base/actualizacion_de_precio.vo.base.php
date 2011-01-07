@@ -34,9 +34,6 @@ class ActualizacionDePrecio extends VO
 			if( isset($data['precio_venta']) ){
 				$this->precio_venta = $data['precio_venta'];
 			}
-			if( isset($data['precio_compra']) ){
-				$this->precio_compra = $data['precio_compra'];
-			}
 			if( isset($data['precio_intersucursal']) ){
 				$this->precio_intersucursal = $data['precio_intersucursal'];
 			}
@@ -61,7 +58,6 @@ class ActualizacionDePrecio extends VO
 		"id_producto" => $this->id_producto,
 		"id_usuario" => $this->id_usuario,
 		"precio_venta" => $this->precio_venta,
-		"precio_compra" => $this->precio_compra,
 		"precio_intersucursal" => $this->precio_intersucursal,
 		"fecha" => $this->fecha
 		)); 
@@ -105,15 +101,6 @@ class ActualizacionDePrecio extends VO
 	  * @var float
 	  */
 	protected $precio_venta;
-
-	/**
-	  * precio_compra
-	  * 
-	  *  [Campo no documentado]<br>
-	  * @access protected
-	  * @var float
-	  */
-	protected $precio_compra;
 
 	/**
 	  * precio_intersucursal
@@ -231,30 +218,6 @@ class ActualizacionDePrecio extends VO
 	final public function setPrecioVenta( $precio_venta )
 	{
 		$this->precio_venta = $precio_venta;
-	}
-
-	/**
-	  * getPrecioCompra
-	  * 
-	  * Get the <i>precio_compra</i> property for this object. Donde <i>precio_compra</i> es  [Campo no documentado]
-	  * @return float
-	  */
-	final public function getPrecioCompra()
-	{
-		return $this->precio_compra;
-	}
-
-	/**
-	  * setPrecioCompra( $precio_compra )
-	  * 
-	  * Set the <i>precio_compra</i> property for this object. Donde <i>precio_compra</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>precio_compra</i> es de tipo <i>float</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
-	  */
-	final public function setPrecioCompra( $precio_compra )
-	{
-		$this->precio_compra = $precio_compra;
 	}
 
 	/**

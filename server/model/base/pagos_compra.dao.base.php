@@ -27,11 +27,11 @@ abstract class PagosCompraDAOBase extends DAO
 	  **/
 	public static final function save( &$pagos_compra )
 	{
-		if( self::getByPK(  $pagos_compra->getIdPago() ) === NULL )
+		if(  self::getByPK(  $pagos_compra->getIdPago() ) !== NULL )
 		{
-			try{ return PagosCompraDAOBase::create( $pagos_compra) ; } catch(Exception $e){ throw $e; }
-		}else{
 			try{ return PagosCompraDAOBase::update( $pagos_compra) ; } catch(Exception $e){ throw $e; }
+		}else{
+			try{ return PagosCompraDAOBase::create( $pagos_compra) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
@@ -207,7 +207,7 @@ abstract class PagosCompraDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$pagos_compra->setIdPago( $conn->Insert_ID() );
+		 $pagos_compra->setIdPago( $conn->Insert_ID() );
 		return $ar;
 	}
 

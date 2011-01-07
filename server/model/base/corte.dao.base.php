@@ -27,11 +27,11 @@ abstract class CorteDAOBase extends DAO
 	  **/
 	public static final function save( &$corte )
 	{
-		if( self::getByPK(  $corte->getIdCorte() ) === NULL )
+		if(  self::getByPK(  $corte->getIdCorte() ) !== NULL )
 		{
-			try{ return CorteDAOBase::create( $corte) ; } catch(Exception $e){ throw $e; }
-		}else{
 			try{ return CorteDAOBase::update( $corte) ; } catch(Exception $e){ throw $e; }
+		}else{
+			try{ return CorteDAOBase::create( $corte) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
@@ -263,7 +263,7 @@ abstract class CorteDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$corte->setIdCorte( $conn->Insert_ID() );
+		 $corte->setIdCorte( $conn->Insert_ID() );
 		return $ar;
 	}
 

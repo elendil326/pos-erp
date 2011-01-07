@@ -91,7 +91,20 @@
 
 
 
-
+    <li class="product">
+      <a class="drop" >PROVEEDORES</a>
+      <ul>
+        <li class="ga-side-nav-off">
+          <a href="proveedor.php?action=lista">Lista de proveedores</a>
+        </li>
+        <li>
+          <a href="proveedor.php?action=nuevo">Nuevo proveedor</a>
+        </li>
+        <li>
+          <a href="proveedor.php?action=abastecer">Abastecerse de proveedor</a>
+        </li>
+      </ul>
+    </li>
 
 
     <li class="product">

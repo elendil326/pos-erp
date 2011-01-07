@@ -27,11 +27,11 @@ abstract class InventarioDAOBase extends DAO
 	  **/
 	public static final function save( &$inventario )
 	{
-		if( self::getByPK(  $inventario->getIdProducto() ) === NULL )
+		if(  self::getByPK(  $inventario->getIdProducto() ) !== NULL )
 		{
-			try{ return InventarioDAOBase::create( $inventario) ; } catch(Exception $e){ throw $e; }
-		}else{
 			try{ return InventarioDAOBase::update( $inventario) ; } catch(Exception $e){ throw $e; }
+		}else{
+			try{ return InventarioDAOBase::create( $inventario) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
@@ -128,19 +128,14 @@ abstract class InventarioDAOBase extends DAO
 			array_push( $val, $inventario->getDescripcion() );
 		}
 
-		if( $inventario->getPrecioIntersucursal() != NULL){
-			$sql .= " precio_intersucursal = ? AND";
-			array_push( $val, $inventario->getPrecioIntersucursal() );
+		if( $inventario->getEscala() != NULL){
+			$sql .= " escala = ? AND";
+			array_push( $val, $inventario->getEscala() );
 		}
 
-		if( $inventario->getCosto() != NULL){
-			$sql .= " costo = ? AND";
-			array_push( $val, $inventario->getCosto() );
-		}
-
-		if( $inventario->getMedida() != NULL){
-			$sql .= " medida = ? AND";
-			array_push( $val, $inventario->getMedida() );
+		if( $inventario->getTratamiento() != NULL){
+			$sql .= " tratamiento = ? AND";
+			array_push( $val, $inventario->getTratamiento() );
 		}
 
 		if(sizeof($val) == 0){return array();}
@@ -172,12 +167,11 @@ abstract class InventarioDAOBase extends DAO
 	  **/
 	private static final function update( $inventario )
 	{
-		$sql = "UPDATE inventario SET  descripcion = ?, precio_intersucursal = ?, costo = ?, medida = ? WHERE  id_producto = ?;";
+		$sql = "UPDATE inventario SET  descripcion = ?, escala = ?, tratamiento = ? WHERE  id_producto = ?;";
 		$params = array( 
 			$inventario->getDescripcion(), 
-			$inventario->getPrecioIntersucursal(), 
-			$inventario->getCosto(), 
-			$inventario->getMedida(), 
+			$inventario->getEscala(), 
+			$inventario->getTratamiento(), 
 			$inventario->getIdProducto(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -201,20 +195,19 @@ abstract class InventarioDAOBase extends DAO
 	  **/
 	private static final function create( &$inventario )
 	{
-		$sql = "INSERT INTO inventario ( id_producto, descripcion, precio_intersucursal, costo, medida ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO inventario ( id_producto, descripcion, escala, tratamiento ) VALUES ( ?, ?, ?, ?);";
 		$params = array( 
 			$inventario->getIdProducto(), 
 			$inventario->getDescripcion(), 
-			$inventario->getPrecioIntersucursal(), 
-			$inventario->getCosto(), 
-			$inventario->getMedida(), 
+			$inventario->getEscala(), 
+			$inventario->getTratamiento(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$inventario->setIdProducto( $conn->Insert_ID() );
+		 $inventario->setIdProducto( $conn->Insert_ID() );
 		return $ar;
 	}
 
@@ -278,34 +271,23 @@ abstract class InventarioDAOBase extends DAO
 			
 		}
 
-		if( (($a = $inventarioA->getPrecioIntersucursal()) != NULL) & ( ($b = $inventarioB->getPrecioIntersucursal()) != NULL) ){
-				$sql .= " precio_intersucursal >= ? AND precio_intersucursal <= ? AND";
+		if( (($a = $inventarioA->getEscala()) != NULL) & ( ($b = $inventarioB->getEscala()) != NULL) ){
+				$sql .= " escala >= ? AND escala <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " precio_intersucursal = ? AND"; 
+			$sql .= " escala = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $inventarioA->getCosto()) != NULL) & ( ($b = $inventarioB->getCosto()) != NULL) ){
-				$sql .= " costo >= ? AND costo <= ? AND";
+		if( (($a = $inventarioA->getTratamiento()) != NULL) & ( ($b = $inventarioB->getTratamiento()) != NULL) ){
+				$sql .= " tratamiento >= ? AND tratamiento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " costo = ? AND"; 
-			$a = $a == NULL ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( (($a = $inventarioA->getMedida()) != NULL) & ( ($b = $inventarioB->getMedida()) != NULL) ){
-				$sql .= " medida >= ? AND medida <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
-			$sql .= " medida = ? AND"; 
+			$sql .= " tratamiento = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

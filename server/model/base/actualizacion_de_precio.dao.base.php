@@ -27,11 +27,11 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 	  **/
 	public static final function save( &$actualizacion_de_precio )
 	{
-		if( self::getByPK(  $actualizacion_de_precio->getIdActualizacion() ) === NULL )
+		if(  self::getByPK(  $actualizacion_de_precio->getIdActualizacion() ) !== NULL )
 		{
-			try{ return ActualizacionDePrecioDAOBase::create( $actualizacion_de_precio) ; } catch(Exception $e){ throw $e; }
-		}else{
 			try{ return ActualizacionDePrecioDAOBase::update( $actualizacion_de_precio) ; } catch(Exception $e){ throw $e; }
+		}else{
+			try{ return ActualizacionDePrecioDAOBase::create( $actualizacion_de_precio) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
@@ -138,11 +138,6 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 			array_push( $val, $actualizacion_de_precio->getPrecioVenta() );
 		}
 
-		if( $actualizacion_de_precio->getPrecioCompra() != NULL){
-			$sql .= " precio_compra = ? AND";
-			array_push( $val, $actualizacion_de_precio->getPrecioCompra() );
-		}
-
 		if( $actualizacion_de_precio->getPrecioIntersucursal() != NULL){
 			$sql .= " precio_intersucursal = ? AND";
 			array_push( $val, $actualizacion_de_precio->getPrecioIntersucursal() );
@@ -182,12 +177,11 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 	  **/
 	private static final function update( $actualizacion_de_precio )
 	{
-		$sql = "UPDATE actualizacion_de_precio SET  id_producto = ?, id_usuario = ?, precio_venta = ?, precio_compra = ?, precio_intersucursal = ?, fecha = ? WHERE  id_actualizacion = ?;";
+		$sql = "UPDATE actualizacion_de_precio SET  id_producto = ?, id_usuario = ?, precio_venta = ?, precio_intersucursal = ?, fecha = ? WHERE  id_actualizacion = ?;";
 		$params = array( 
 			$actualizacion_de_precio->getIdProducto(), 
 			$actualizacion_de_precio->getIdUsuario(), 
 			$actualizacion_de_precio->getPrecioVenta(), 
-			$actualizacion_de_precio->getPrecioCompra(), 
 			$actualizacion_de_precio->getPrecioIntersucursal(), 
 			$actualizacion_de_precio->getFecha(), 
 			$actualizacion_de_precio->getIdActualizacion(), );
@@ -213,13 +207,12 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 	  **/
 	private static final function create( &$actualizacion_de_precio )
 	{
-		$sql = "INSERT INTO actualizacion_de_precio ( id_actualizacion, id_producto, id_usuario, precio_venta, precio_compra, precio_intersucursal, fecha ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO actualizacion_de_precio ( id_actualizacion, id_producto, id_usuario, precio_venta, precio_intersucursal, fecha ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$actualizacion_de_precio->getIdActualizacion(), 
 			$actualizacion_de_precio->getIdProducto(), 
 			$actualizacion_de_precio->getIdUsuario(), 
 			$actualizacion_de_precio->getPrecioVenta(), 
-			$actualizacion_de_precio->getPrecioCompra(), 
 			$actualizacion_de_precio->getPrecioIntersucursal(), 
 			$actualizacion_de_precio->getFecha(), 
 		 );
@@ -228,7 +221,7 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$actualizacion_de_precio->setIdActualizacion( $conn->Insert_ID() );
+		 $actualizacion_de_precio->setIdActualizacion( $conn->Insert_ID() );
 		return $ar;
 	}
 
@@ -309,17 +302,6 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " precio_venta = ? AND"; 
-			$a = $a == NULL ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( (($a = $actualizacion_de_precioA->getPrecioCompra()) != NULL) & ( ($b = $actualizacion_de_precioB->getPrecioCompra()) != NULL) ){
-				$sql .= " precio_compra >= ? AND precio_compra <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
-			$sql .= " precio_compra = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

@@ -27,11 +27,11 @@ abstract class IngresosDAOBase extends DAO
 	  **/
 	public static final function save( &$ingresos )
 	{
-		if( self::getByPK(  $ingresos->getIdIngreso() ) === NULL )
+		if(  self::getByPK(  $ingresos->getIdIngreso() ) !== NULL )
 		{
-			try{ return IngresosDAOBase::create( $ingresos) ; } catch(Exception $e){ throw $e; }
-		}else{
 			try{ return IngresosDAOBase::update( $ingresos) ; } catch(Exception $e){ throw $e; }
+		}else{
+			try{ return IngresosDAOBase::create( $ingresos) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
@@ -235,7 +235,7 @@ abstract class IngresosDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$ingresos->setIdIngreso( $conn->Insert_ID() );
+		 $ingresos->setIdIngreso( $conn->Insert_ID() );
 		return $ar;
 	}
 

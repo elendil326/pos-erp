@@ -1,58 +1,58 @@
 <?php
-/** Equipo Data Access Object (DAO) Base.
+/** InventarioMaestro Data Access Object (DAO) Base.
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
-  * almacenar de forma permanente y recuperar instancias de objetos {@link Equipo }. 
+  * almacenar de forma permanente y recuperar instancias de objetos {@link InventarioMaestro }. 
   * @author Alan Gonzalez <alan@caffeina.mx> 
   * @access private
   * @abstract
   * @package docs
   * 
   */
-abstract class EquipoDAOBase extends DAO
+abstract class InventarioMaestroDAOBase extends DAO
 {
 
 	/**
 	  *	Guardar registros. 
 	  *	
-	  *	Este metodo guarda el estado actual del objeto {@link Equipo} pasado en la base de datos. La llave 
+	  *	Este metodo guarda el estado actual del objeto {@link InventarioMaestro} pasado en la base de datos. La llave 
 	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
 	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
 	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @throws Exception si la operacion fallo.
-	  * @param Equipo [$equipo] El objeto de tipo Equipo
+	  * @param InventarioMaestro [$inventario_maestro] El objeto de tipo InventarioMaestro
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	public static final function save( &$equipo )
+	public static final function save( &$inventario_maestro )
 	{
-		if(  self::getByPK(  $equipo->getIdEquipo() ) !== NULL )
+		if(  self::getByPK(  $inventario_maestro->getIdProducto() , $inventario_maestro->getIdCompraProveedor() ) !== NULL )
 		{
-			try{ return EquipoDAOBase::update( $equipo) ; } catch(Exception $e){ throw $e; }
+			try{ return InventarioMaestroDAOBase::update( $inventario_maestro) ; } catch(Exception $e){ throw $e; }
 		}else{
-			try{ return EquipoDAOBase::create( $equipo) ; } catch(Exception $e){ throw $e; }
+			try{ return InventarioMaestroDAOBase::create( $inventario_maestro) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
 
 	/**
-	  *	Obtener {@link Equipo} por llave primaria. 
+	  *	Obtener {@link InventarioMaestro} por llave primaria. 
 	  *	
-	  * Este metodo cargara un objeto {@link Equipo} de la base de datos 
+	  * Este metodo cargara un objeto {@link InventarioMaestro} de la base de datos 
 	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return @link Equipo Un objeto del tipo {@link Equipo}. NULL si no hay tal registro.
+	  * @return @link InventarioMaestro Un objeto del tipo {@link InventarioMaestro}. NULL si no hay tal registro.
 	  **/
-	public static final function getByPK(  $id_equipo )
+	public static final function getByPK(  $id_producto, $id_compra_proveedor )
 	{
-		$sql = "SELECT * FROM equipo WHERE (id_equipo = ? ) LIMIT 1;";
-		$params = array(  $id_equipo );
+		$sql = "SELECT * FROM inventario_maestro WHERE (id_producto = ? AND id_compra_proveedor = ? ) LIMIT 1;";
+		$params = array(  $id_producto, $id_compra_proveedor );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new Equipo( $rs );
+		return new InventarioMaestro( $rs );
 	}
 
 
@@ -60,7 +60,7 @@ abstract class EquipoDAOBase extends DAO
 	  *	Obtener todas las filas.
 	  *	
 	  * Esta funcion leera todos los contenidos de la tabla en la base de datos y construira
-	  * un vector que contiene objetos de tipo {@link Equipo}. Tenga en cuenta que este metodo
+	  * un vector que contiene objetos de tipo {@link InventarioMaestro}. Tenga en cuenta que este metodo
 	  * consumen enormes cantidades de recursos si la tabla tiene muchas filas. 
 	  * Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos o se usan sus parametros para obtener un menor numero de filas.
 	  *	
@@ -69,11 +69,11 @@ abstract class EquipoDAOBase extends DAO
 	  * @param $columnas_por_pagina Columnas por pagina.
 	  * @param $orden Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $tipo_de_orden 'ASC' o 'DESC' el default es 'ASC'
-	  * @return Array Un arreglo que contiene objetos del tipo {@link Equipo}.
+	  * @return Array Un arreglo que contiene objetos del tipo {@link InventarioMaestro}.
 	  **/
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
-		$sql = "SELECT * from equipo";
+		$sql = "SELECT * from inventario_maestro";
 		if($orden != NULL)
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
 		if($pagina != NULL)
@@ -84,7 +84,7 @@ abstract class EquipoDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-    		array_push( $allData, new Equipo($foo));
+    		array_push( $allData, new InventarioMaestro($foo));
 		}
 		return $allData;
 	}
@@ -93,7 +93,7 @@ abstract class EquipoDAOBase extends DAO
 	/**
 	  *	Buscar registros.
 	  *	
-	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Equipo} de la base de datos. 
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link InventarioMaestro} de la base de datos. 
 	  * Consiste en buscar todos los objetos que coinciden con las variables permanentes instanciadas de objeto pasado como argumento. 
 	  * Aquellas variables que tienen valores NULL seran excluidos en busca de criterios.
 	  *	
@@ -110,27 +110,32 @@ abstract class EquipoDAOBase extends DAO
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Equipo [$equipo] El objeto de tipo Equipo
+	  * @param InventarioMaestro [$inventario_maestro] El objeto de tipo InventarioMaestro
 	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function search( $equipo , $orderBy = null, $orden = 'ASC')
+	public static final function search( $inventario_maestro , $orderBy = null, $orden = 'ASC')
 	{
-		$sql = "SELECT * from equipo WHERE ("; 
+		$sql = "SELECT * from inventario_maestro WHERE ("; 
 		$val = array();
-		if( $equipo->getIdEquipo() != NULL){
-			$sql .= " id_equipo = ? AND";
-			array_push( $val, $equipo->getIdEquipo() );
+		if( $inventario_maestro->getIdProducto() != NULL){
+			$sql .= " id_producto = ? AND";
+			array_push( $val, $inventario_maestro->getIdProducto() );
 		}
 
-		if( $equipo->getToken() != NULL){
-			$sql .= " token = ? AND";
-			array_push( $val, $equipo->getToken() );
+		if( $inventario_maestro->getIdCompraProveedor() != NULL){
+			$sql .= " id_compra_proveedor = ? AND";
+			array_push( $val, $inventario_maestro->getIdCompraProveedor() );
 		}
 
-		if( $equipo->getFullUa() != NULL){
-			$sql .= " full_ua = ? AND";
-			array_push( $val, $equipo->getFullUa() );
+		if( $inventario_maestro->getExistencias() != NULL){
+			$sql .= " existencias = ? AND";
+			array_push( $val, $inventario_maestro->getExistencias() );
+		}
+
+		if( $inventario_maestro->getExistenciasProcesadas() != NULL){
+			$sql .= " existencias_procesadas = ? AND";
+			array_push( $val, $inventario_maestro->getExistenciasProcesadas() );
 		}
 
 		if(sizeof($val) == 0){return array();}
@@ -143,7 +148,7 @@ abstract class EquipoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Equipo($foo));
+    		array_push( $ar, new InventarioMaestro($foo));
 		}
 		return $ar;
 	}
@@ -158,15 +163,15 @@ abstract class EquipoDAOBase extends DAO
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
-	  * @param Equipo [$equipo] El objeto de tipo Equipo a actualizar.
+	  * @param InventarioMaestro [$inventario_maestro] El objeto de tipo InventarioMaestro a actualizar.
 	  **/
-	private static final function update( $equipo )
+	private static final function update( $inventario_maestro )
 	{
-		$sql = "UPDATE equipo SET  token = ?, full_ua = ? WHERE  id_equipo = ?;";
+		$sql = "UPDATE inventario_maestro SET  existencias = ?, existencias_procesadas = ? WHERE  id_producto = ? AND id_compra_proveedor = ?;";
 		$params = array( 
-			$equipo->getToken(), 
-			$equipo->getFullUa(), 
-			$equipo->getIdEquipo(), );
+			$inventario_maestro->getExistencias(), 
+			$inventario_maestro->getExistenciasProcesadas(), 
+			$inventario_maestro->getIdProducto(),$inventario_maestro->getIdCompraProveedor(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
@@ -178,29 +183,30 @@ abstract class EquipoDAOBase extends DAO
 	  *	Crear registros.
 	  *	
 	  * Este metodo creara una nueva fila en la base de datos de acuerdo con los 
-	  * contenidos del objeto Equipo suministrado. Asegurese
+	  * contenidos del objeto InventarioMaestro suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto Equipo dentro de la misma transaccion.
+	  * primaria generada en el objeto InventarioMaestro dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
-	  * @param Equipo [$equipo] El objeto de tipo Equipo a crear.
+	  * @param InventarioMaestro [$inventario_maestro] El objeto de tipo InventarioMaestro a crear.
 	  **/
-	private static final function create( &$equipo )
+	private static final function create( &$inventario_maestro )
 	{
-		$sql = "INSERT INTO equipo ( id_equipo, token, full_ua ) VALUES ( ?, ?, ?);";
+		$sql = "INSERT INTO inventario_maestro ( id_producto, id_compra_proveedor, existencias, existencias_procesadas ) VALUES ( ?, ?, ?, ?);";
 		$params = array( 
-			$equipo->getIdEquipo(), 
-			$equipo->getToken(), 
-			$equipo->getFullUa(), 
+			$inventario_maestro->getIdProducto(), 
+			$inventario_maestro->getIdCompraProveedor(), 
+			$inventario_maestro->getExistencias(), 
+			$inventario_maestro->getExistenciasProcesadas(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		 $equipo->setIdEquipo( $conn->Insert_ID() );
+		 
 		return $ar;
 	}
 
@@ -208,8 +214,8 @@ abstract class EquipoDAOBase extends DAO
 	/**
 	  *	Buscar por rango.
 	  *	
-	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Equipo} de la base de datos siempre y cuando 
-	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Equipo}.
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link InventarioMaestro} de la base de datos siempre y cuando 
+	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link InventarioMaestro}.
 	  * 
 	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
@@ -233,43 +239,54 @@ abstract class EquipoDAOBase extends DAO
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Equipo [$equipo] El objeto de tipo Equipo
-	  * @param Equipo [$equipo] El objeto de tipo Equipo
+	  * @param InventarioMaestro [$inventario_maestro] El objeto de tipo InventarioMaestro
+	  * @param InventarioMaestro [$inventario_maestro] El objeto de tipo InventarioMaestro
 	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function byRange( $equipoA , $equipoB , $orderBy = null, $orden = 'ASC')
+	public static final function byRange( $inventario_maestroA , $inventario_maestroB , $orderBy = null, $orden = 'ASC')
 	{
-		$sql = "SELECT * from equipo WHERE ("; 
+		$sql = "SELECT * from inventario_maestro WHERE ("; 
 		$val = array();
-		if( (($a = $equipoA->getIdEquipo()) != NULL) & ( ($b = $equipoB->getIdEquipo()) != NULL) ){
-				$sql .= " id_equipo >= ? AND id_equipo <= ? AND";
+		if( (($a = $inventario_maestroA->getIdProducto()) != NULL) & ( ($b = $inventario_maestroB->getIdProducto()) != NULL) ){
+				$sql .= " id_producto >= ? AND id_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " id_equipo = ? AND"; 
+			$sql .= " id_producto = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $equipoA->getToken()) != NULL) & ( ($b = $equipoB->getToken()) != NULL) ){
-				$sql .= " token >= ? AND token <= ? AND";
+		if( (($a = $inventario_maestroA->getIdCompraProveedor()) != NULL) & ( ($b = $inventario_maestroB->getIdCompraProveedor()) != NULL) ){
+				$sql .= " id_compra_proveedor >= ? AND id_compra_proveedor <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " token = ? AND"; 
+			$sql .= " id_compra_proveedor = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $equipoA->getFullUa()) != NULL) & ( ($b = $equipoB->getFullUa()) != NULL) ){
-				$sql .= " full_ua >= ? AND full_ua <= ? AND";
+		if( (($a = $inventario_maestroA->getExistencias()) != NULL) & ( ($b = $inventario_maestroB->getExistencias()) != NULL) ){
+				$sql .= " existencias >= ? AND existencias <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " full_ua = ? AND"; 
+			$sql .= " existencias = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $inventario_maestroA->getExistenciasProcesadas()) != NULL) & ( ($b = $inventario_maestroB->getExistenciasProcesadas()) != NULL) ){
+				$sql .= " existencias_procesadas >= ? AND existencias_procesadas <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " existencias_procesadas = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
@@ -284,7 +301,7 @@ abstract class EquipoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Equipo($foo));
+    		array_push( $ar, new InventarioMaestro($foo));
 		}
 		return $ar;
 	}
@@ -294,20 +311,20 @@ abstract class EquipoDAOBase extends DAO
 	  *	Eliminar registros.
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
-	  * en el objeto Equipo suministrado. Una vez que se ha suprimido un objeto, este no 
+	  * en el objeto InventarioMaestro suministrado. Una vez que se ha suprimido un objeto, este no 
 	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
 	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
 	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return int El numero de filas afectadas.
-	  * @param Equipo [$equipo] El objeto de tipo Equipo a eliminar
+	  * @param InventarioMaestro [$inventario_maestro] El objeto de tipo InventarioMaestro a eliminar
 	  **/
-	public static final function delete( &$equipo )
+	public static final function delete( &$inventario_maestro )
 	{
-		if(self::getByPK($equipo->getIdEquipo()) === NULL) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM equipo WHERE  id_equipo = ?;";
-		$params = array( $equipo->getIdEquipo() );
+		if(self::getByPK($inventario_maestro->getIdProducto(), $inventario_maestro->getIdCompraProveedor()) === NULL) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM inventario_maestro WHERE  id_producto = ? AND id_compra_proveedor = ?;";
+		$params = array( $inventario_maestro->getIdProducto(), $inventario_maestro->getIdCompraProveedor() );
 		global $conn;
 
 		$conn->Execute($sql, $params);

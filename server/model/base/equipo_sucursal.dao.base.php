@@ -27,11 +27,11 @@ abstract class EquipoSucursalDAOBase extends DAO
 	  **/
 	public static final function save( &$equipo_sucursal )
 	{
-		if( self::getByPK(  $equipo_sucursal->getIdEquipo() ) === NULL )
+		if(  self::getByPK(  $equipo_sucursal->getIdEquipo() ) !== NULL )
 		{
-			try{ return EquipoSucursalDAOBase::create( $equipo_sucursal) ; } catch(Exception $e){ throw $e; }
-		}else{
 			try{ return EquipoSucursalDAOBase::update( $equipo_sucursal) ; } catch(Exception $e){ throw $e; }
+		}else{
+			try{ return EquipoSucursalDAOBase::create( $equipo_sucursal) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
@@ -193,7 +193,7 @@ abstract class EquipoSucursalDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		
+		 
 		return $ar;
 	}
 

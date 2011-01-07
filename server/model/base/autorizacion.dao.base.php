@@ -27,11 +27,11 @@ abstract class AutorizacionDAOBase extends DAO
 	  **/
 	public static final function save( &$autorizacion )
 	{
-		if( self::getByPK(  $autorizacion->getIdAutorizacion() ) === NULL )
+		if(  self::getByPK(  $autorizacion->getIdAutorizacion() ) !== NULL )
 		{
-			try{ return AutorizacionDAOBase::create( $autorizacion) ; } catch(Exception $e){ throw $e; }
-		}else{
 			try{ return AutorizacionDAOBase::update( $autorizacion) ; } catch(Exception $e){ throw $e; }
+		}else{
+			try{ return AutorizacionDAOBase::create( $autorizacion) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
@@ -228,7 +228,7 @@ abstract class AutorizacionDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		
+		 
 		return $ar;
 	}
 

@@ -40,6 +40,7 @@ function insertarEmpleado($args)
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
+		
 	//validar que vengan todos los datos
 	if( !(isset($data->RFC) &&
 		  isset($data->nombre) &&
@@ -49,7 +50,7 @@ function insertarEmpleado($args)
 		  isset($data->direccion) &&		
 		  isset($data->grupo) ))
 	{
-	  	Logger::log("Faltan parametros para insertar empleado.");
+	  	Logger::log("Faltan parametros para insertar empleado: JSON:" .$args['data'] );
         die( '{"success": false, "reason": "Parametros invalidos." }' );
 	}
 
@@ -101,7 +102,7 @@ function insertarEmpleado($args)
         die ( '{"success": false, "id":"' . $id . '", "reason": "Ya existe un empleado con este RFC." }' );
     }
      
-	$user->setRFC( $data->RFC == null ? 0 : $data->RFC );
+	$user->setRFC( $data->RFC );
 	$user->setNombre( $data->nombre );
 	$user->setContrasena( $data->contrasena );
 
@@ -137,7 +138,7 @@ function insertarEmpleado($args)
     try{
     	UsuarioDAO::save( $user );
         $gruposUsuarios->setIdUsuario( $user->getIdUsuario() );
-        GruposUsuariosDAO::save( $gruposUsuarios);
+        GruposUsuariosDAO::save( $gruposUsuarios );
     }catch( Exception $e ){
     	DAO::transRollback();
     	Logger::log("Insertando usuario en grupo inexistente.");
@@ -145,6 +146,7 @@ function insertarEmpleado($args)
     	
         die( '{ "success" : false, "reason" : "Grupo Inexistente"}' );
     } 
+
 
    printf(' { "success" : true, "id_usuario": %s } ', $user->getIdUsuario() );   
    Logger::log("Empleado insertado correctamente.");

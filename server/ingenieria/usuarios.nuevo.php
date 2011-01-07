@@ -28,10 +28,10 @@ require_once("model/usuario.dao.php");
 			RFC : $('#rfc').val(),
 			nombre : $('#nombre').val(),
 			contrasena : hex_md5( $('#p2').val() ),
-			sucursal : null,
-			salario : null,
+			salario : 0,
+			telefono: "",
+			direccion : "",
 			grupo : $('#gpo').val()
-
 		};
        jQuery.ajaxSettings.traditional = true;
 
@@ -46,7 +46,8 @@ require_once("model/usuario.dao.php");
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    window.location = "usuarios.php?action=nuevo&success=false&reason=" + response.reason;
+
+                    alert(response.reason);
                     return;
                 }
 

@@ -27,11 +27,11 @@ abstract class DetalleVentaDAOBase extends DAO
 	  **/
 	public static final function save( &$detalle_venta )
 	{
-		if( self::getByPK(  $detalle_venta->getIdVenta() , $detalle_venta->getIdProducto() ) === NULL )
+		if(  self::getByPK(  $detalle_venta->getIdVenta() , $detalle_venta->getIdProducto() ) !== NULL )
 		{
-			try{ return DetalleVentaDAOBase::create( $detalle_venta) ; } catch(Exception $e){ throw $e; }
-		}else{
 			try{ return DetalleVentaDAOBase::update( $detalle_venta) ; } catch(Exception $e){ throw $e; }
+		}else{
+			try{ return DetalleVentaDAOBase::create( $detalle_venta) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
@@ -133,6 +133,11 @@ abstract class DetalleVentaDAOBase extends DAO
 			array_push( $val, $detalle_venta->getCantidad() );
 		}
 
+		if( $detalle_venta->getCantidadProcesada() != NULL){
+			$sql .= " cantidad_procesada = ? AND";
+			array_push( $val, $detalle_venta->getCantidadProcesada() );
+		}
+
 		if( $detalle_venta->getPrecio() != NULL){
 			$sql .= " precio = ? AND";
 			array_push( $val, $detalle_venta->getPrecio() );
@@ -167,9 +172,10 @@ abstract class DetalleVentaDAOBase extends DAO
 	  **/
 	private static final function update( $detalle_venta )
 	{
-		$sql = "UPDATE detalle_venta SET  cantidad = ?, precio = ? WHERE  id_venta = ? AND id_producto = ?;";
+		$sql = "UPDATE detalle_venta SET  cantidad = ?, cantidad_procesada = ?, precio = ? WHERE  id_venta = ? AND id_producto = ?;";
 		$params = array( 
 			$detalle_venta->getCantidad(), 
+			$detalle_venta->getCantidadProcesada(), 
 			$detalle_venta->getPrecio(), 
 			$detalle_venta->getIdVenta(),$detalle_venta->getIdProducto(), );
 		global $conn;
@@ -194,11 +200,12 @@ abstract class DetalleVentaDAOBase extends DAO
 	  **/
 	private static final function create( &$detalle_venta )
 	{
-		$sql = "INSERT INTO detalle_venta ( id_venta, id_producto, cantidad, precio ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO detalle_venta ( id_venta, id_producto, cantidad, cantidad_procesada, precio ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$detalle_venta->getIdVenta(), 
 			$detalle_venta->getIdProducto(), 
 			$detalle_venta->getCantidad(), 
+			$detalle_venta->getCantidadProcesada(), 
 			$detalle_venta->getPrecio(), 
 		 );
 		global $conn;
@@ -206,7 +213,7 @@ abstract class DetalleVentaDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		
+		 
 		return $ar;
 	}
 
@@ -276,6 +283,17 @@ abstract class DetalleVentaDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " cantidad = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $detalle_ventaA->getCantidadProcesada()) != NULL) & ( ($b = $detalle_ventaB->getCantidadProcesada()) != NULL) ){
+				$sql .= " cantidad_procesada >= ? AND cantidad_procesada <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " cantidad_procesada = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

@@ -27,11 +27,11 @@ abstract class SucursalDAOBase extends DAO
 	  **/
 	public static final function save( &$sucursal )
 	{
-		if( self::getByPK(  $sucursal->getIdSucursal() ) === NULL )
+		if(  self::getByPK(  $sucursal->getIdSucursal() ) !== NULL )
 		{
-			try{ return SucursalDAOBase::create( $sucursal) ; } catch(Exception $e){ throw $e; }
-		}else{
 			try{ return SucursalDAOBase::update( $sucursal) ; } catch(Exception $e){ throw $e; }
+		}else{
+			try{ return SucursalDAOBase::create( $sucursal) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
@@ -256,7 +256,7 @@ abstract class SucursalDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$sucursal->setIdSucursal( $conn->Insert_ID() );
+		 $sucursal->setIdSucursal( $conn->Insert_ID() );
 		return $ar;
 	}
 

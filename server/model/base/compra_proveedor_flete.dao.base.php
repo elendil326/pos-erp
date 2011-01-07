@@ -1,58 +1,58 @@
 <?php
-/** Proveedor Data Access Object (DAO) Base.
+/** CompraProveedorFlete Data Access Object (DAO) Base.
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
-  * almacenar de forma permanente y recuperar instancias de objetos {@link Proveedor }. 
+  * almacenar de forma permanente y recuperar instancias de objetos {@link CompraProveedorFlete }. 
   * @author Alan Gonzalez <alan@caffeina.mx> 
   * @access private
   * @abstract
   * @package docs
   * 
   */
-abstract class ProveedorDAOBase extends DAO
+abstract class CompraProveedorFleteDAOBase extends DAO
 {
 
 	/**
 	  *	Guardar registros. 
 	  *	
-	  *	Este metodo guarda el estado actual del objeto {@link Proveedor} pasado en la base de datos. La llave 
+	  *	Este metodo guarda el estado actual del objeto {@link CompraProveedorFlete} pasado en la base de datos. La llave 
 	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
 	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
 	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @throws Exception si la operacion fallo.
-	  * @param Proveedor [$proveedor] El objeto de tipo Proveedor
+	  * @param CompraProveedorFlete [$compra_proveedor_flete] El objeto de tipo CompraProveedorFlete
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	public static final function save( &$proveedor )
+	public static final function save( &$compra_proveedor_flete )
 	{
-		if(  self::getByPK(  $proveedor->getIdProveedor() ) !== NULL )
+		if(  self::getByPK(  $compra_proveedor_flete->getIdCompraProveedor() ) !== NULL )
 		{
-			try{ return ProveedorDAOBase::update( $proveedor) ; } catch(Exception $e){ throw $e; }
+			try{ return CompraProveedorFleteDAOBase::update( $compra_proveedor_flete) ; } catch(Exception $e){ throw $e; }
 		}else{
-			try{ return ProveedorDAOBase::create( $proveedor) ; } catch(Exception $e){ throw $e; }
+			try{ return CompraProveedorFleteDAOBase::create( $compra_proveedor_flete) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
 
 	/**
-	  *	Obtener {@link Proveedor} por llave primaria. 
+	  *	Obtener {@link CompraProveedorFlete} por llave primaria. 
 	  *	
-	  * Este metodo cargara un objeto {@link Proveedor} de la base de datos 
+	  * Este metodo cargara un objeto {@link CompraProveedorFlete} de la base de datos 
 	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return @link Proveedor Un objeto del tipo {@link Proveedor}. NULL si no hay tal registro.
+	  * @return @link CompraProveedorFlete Un objeto del tipo {@link CompraProveedorFlete}. NULL si no hay tal registro.
 	  **/
-	public static final function getByPK(  $id_proveedor )
+	public static final function getByPK(  $id_compra_proveedor )
 	{
-		$sql = "SELECT * FROM proveedor WHERE (id_proveedor = ? ) LIMIT 1;";
-		$params = array(  $id_proveedor );
+		$sql = "SELECT * FROM compra_proveedor_flete WHERE (id_compra_proveedor = ? ) LIMIT 1;";
+		$params = array(  $id_compra_proveedor );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new Proveedor( $rs );
+		return new CompraProveedorFlete( $rs );
 	}
 
 
@@ -60,7 +60,7 @@ abstract class ProveedorDAOBase extends DAO
 	  *	Obtener todas las filas.
 	  *	
 	  * Esta funcion leera todos los contenidos de la tabla en la base de datos y construira
-	  * un vector que contiene objetos de tipo {@link Proveedor}. Tenga en cuenta que este metodo
+	  * un vector que contiene objetos de tipo {@link CompraProveedorFlete}. Tenga en cuenta que este metodo
 	  * consumen enormes cantidades de recursos si la tabla tiene muchas filas. 
 	  * Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos o se usan sus parametros para obtener un menor numero de filas.
 	  *	
@@ -69,11 +69,11 @@ abstract class ProveedorDAOBase extends DAO
 	  * @param $columnas_por_pagina Columnas por pagina.
 	  * @param $orden Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $tipo_de_orden 'ASC' o 'DESC' el default es 'ASC'
-	  * @return Array Un arreglo que contiene objetos del tipo {@link Proveedor}.
+	  * @return Array Un arreglo que contiene objetos del tipo {@link CompraProveedorFlete}.
 	  **/
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
-		$sql = "SELECT * from proveedor";
+		$sql = "SELECT * from compra_proveedor_flete";
 		if($orden != NULL)
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
 		if($pagina != NULL)
@@ -84,7 +84,7 @@ abstract class ProveedorDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-    		array_push( $allData, new Proveedor($foo));
+    		array_push( $allData, new CompraProveedorFlete($foo));
 		}
 		return $allData;
 	}
@@ -93,7 +93,7 @@ abstract class ProveedorDAOBase extends DAO
 	/**
 	  *	Buscar registros.
 	  *	
-	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Proveedor} de la base de datos. 
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link CompraProveedorFlete} de la base de datos. 
 	  * Consiste en buscar todos los objetos que coinciden con las variables permanentes instanciadas de objeto pasado como argumento. 
 	  * Aquellas variables que tienen valores NULL seran excluidos en busca de criterios.
 	  *	
@@ -110,47 +110,42 @@ abstract class ProveedorDAOBase extends DAO
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Proveedor [$proveedor] El objeto de tipo Proveedor
+	  * @param CompraProveedorFlete [$compra_proveedor_flete] El objeto de tipo CompraProveedorFlete
 	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function search( $proveedor , $orderBy = null, $orden = 'ASC')
+	public static final function search( $compra_proveedor_flete , $orderBy = null, $orden = 'ASC')
 	{
-		$sql = "SELECT * from proveedor WHERE ("; 
+		$sql = "SELECT * from compra_proveedor_flete WHERE ("; 
 		$val = array();
-		if( $proveedor->getIdProveedor() != NULL){
-			$sql .= " id_proveedor = ? AND";
-			array_push( $val, $proveedor->getIdProveedor() );
+		if( $compra_proveedor_flete->getIdCompraProveedor() != NULL){
+			$sql .= " id_compra_proveedor = ? AND";
+			array_push( $val, $compra_proveedor_flete->getIdCompraProveedor() );
 		}
 
-		if( $proveedor->getRfc() != NULL){
-			$sql .= " rfc = ? AND";
-			array_push( $val, $proveedor->getRfc() );
+		if( $compra_proveedor_flete->getChofer() != NULL){
+			$sql .= " chofer = ? AND";
+			array_push( $val, $compra_proveedor_flete->getChofer() );
 		}
 
-		if( $proveedor->getNombre() != NULL){
-			$sql .= " nombre = ? AND";
-			array_push( $val, $proveedor->getNombre() );
+		if( $compra_proveedor_flete->getMarcaCamion() != NULL){
+			$sql .= " marca_camion = ? AND";
+			array_push( $val, $compra_proveedor_flete->getMarcaCamion() );
 		}
 
-		if( $proveedor->getDireccion() != NULL){
-			$sql .= " direccion = ? AND";
-			array_push( $val, $proveedor->getDireccion() );
+		if( $compra_proveedor_flete->getPlacasCamion() != NULL){
+			$sql .= " placas_camion = ? AND";
+			array_push( $val, $compra_proveedor_flete->getPlacasCamion() );
 		}
 
-		if( $proveedor->getTelefono() != NULL){
-			$sql .= " telefono = ? AND";
-			array_push( $val, $proveedor->getTelefono() );
+		if( $compra_proveedor_flete->getModeloCamion() != NULL){
+			$sql .= " modelo_camion = ? AND";
+			array_push( $val, $compra_proveedor_flete->getModeloCamion() );
 		}
 
-		if( $proveedor->getEMail() != NULL){
-			$sql .= " e_mail = ? AND";
-			array_push( $val, $proveedor->getEMail() );
-		}
-
-		if( $proveedor->getActivo() != NULL){
-			$sql .= " activo = ? AND";
-			array_push( $val, $proveedor->getActivo() );
+		if( $compra_proveedor_flete->getCostoFlete() != NULL){
+			$sql .= " costo_flete = ? AND";
+			array_push( $val, $compra_proveedor_flete->getCostoFlete() );
 		}
 
 		if(sizeof($val) == 0){return array();}
@@ -163,7 +158,7 @@ abstract class ProveedorDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Proveedor($foo));
+    		array_push( $ar, new CompraProveedorFlete($foo));
 		}
 		return $ar;
 	}
@@ -178,19 +173,18 @@ abstract class ProveedorDAOBase extends DAO
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
-	  * @param Proveedor [$proveedor] El objeto de tipo Proveedor a actualizar.
+	  * @param CompraProveedorFlete [$compra_proveedor_flete] El objeto de tipo CompraProveedorFlete a actualizar.
 	  **/
-	private static final function update( $proveedor )
+	private static final function update( $compra_proveedor_flete )
 	{
-		$sql = "UPDATE proveedor SET  rfc = ?, nombre = ?, direccion = ?, telefono = ?, e_mail = ?, activo = ? WHERE  id_proveedor = ?;";
+		$sql = "UPDATE compra_proveedor_flete SET  chofer = ?, marca_camion = ?, placas_camion = ?, modelo_camion = ?, costo_flete = ? WHERE  id_compra_proveedor = ?;";
 		$params = array( 
-			$proveedor->getRfc(), 
-			$proveedor->getNombre(), 
-			$proveedor->getDireccion(), 
-			$proveedor->getTelefono(), 
-			$proveedor->getEMail(), 
-			$proveedor->getActivo(), 
-			$proveedor->getIdProveedor(), );
+			$compra_proveedor_flete->getChofer(), 
+			$compra_proveedor_flete->getMarcaCamion(), 
+			$compra_proveedor_flete->getPlacasCamion(), 
+			$compra_proveedor_flete->getModeloCamion(), 
+			$compra_proveedor_flete->getCostoFlete(), 
+			$compra_proveedor_flete->getIdCompraProveedor(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
@@ -202,33 +196,32 @@ abstract class ProveedorDAOBase extends DAO
 	  *	Crear registros.
 	  *	
 	  * Este metodo creara una nueva fila en la base de datos de acuerdo con los 
-	  * contenidos del objeto Proveedor suministrado. Asegurese
+	  * contenidos del objeto CompraProveedorFlete suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto Proveedor dentro de la misma transaccion.
+	  * primaria generada en el objeto CompraProveedorFlete dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
-	  * @param Proveedor [$proveedor] El objeto de tipo Proveedor a crear.
+	  * @param CompraProveedorFlete [$compra_proveedor_flete] El objeto de tipo CompraProveedorFlete a crear.
 	  **/
-	private static final function create( &$proveedor )
+	private static final function create( &$compra_proveedor_flete )
 	{
-		$sql = "INSERT INTO proveedor ( id_proveedor, rfc, nombre, direccion, telefono, e_mail, activo ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO compra_proveedor_flete ( id_compra_proveedor, chofer, marca_camion, placas_camion, modelo_camion, costo_flete ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
-			$proveedor->getIdProveedor(), 
-			$proveedor->getRfc(), 
-			$proveedor->getNombre(), 
-			$proveedor->getDireccion(), 
-			$proveedor->getTelefono(), 
-			$proveedor->getEMail(), 
-			$proveedor->getActivo(), 
+			$compra_proveedor_flete->getIdCompraProveedor(), 
+			$compra_proveedor_flete->getChofer(), 
+			$compra_proveedor_flete->getMarcaCamion(), 
+			$compra_proveedor_flete->getPlacasCamion(), 
+			$compra_proveedor_flete->getModeloCamion(), 
+			$compra_proveedor_flete->getCostoFlete(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		 $proveedor->setIdProveedor( $conn->Insert_ID() );
+		 
 		return $ar;
 	}
 
@@ -236,8 +229,8 @@ abstract class ProveedorDAOBase extends DAO
 	/**
 	  *	Buscar por rango.
 	  *	
-	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Proveedor} de la base de datos siempre y cuando 
-	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Proveedor}.
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link CompraProveedorFlete} de la base de datos siempre y cuando 
+	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link CompraProveedorFlete}.
 	  * 
 	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
@@ -261,87 +254,76 @@ abstract class ProveedorDAOBase extends DAO
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param Proveedor [$proveedor] El objeto de tipo Proveedor
-	  * @param Proveedor [$proveedor] El objeto de tipo Proveedor
+	  * @param CompraProveedorFlete [$compra_proveedor_flete] El objeto de tipo CompraProveedorFlete
+	  * @param CompraProveedorFlete [$compra_proveedor_flete] El objeto de tipo CompraProveedorFlete
 	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function byRange( $proveedorA , $proveedorB , $orderBy = null, $orden = 'ASC')
+	public static final function byRange( $compra_proveedor_fleteA , $compra_proveedor_fleteB , $orderBy = null, $orden = 'ASC')
 	{
-		$sql = "SELECT * from proveedor WHERE ("; 
+		$sql = "SELECT * from compra_proveedor_flete WHERE ("; 
 		$val = array();
-		if( (($a = $proveedorA->getIdProveedor()) != NULL) & ( ($b = $proveedorB->getIdProveedor()) != NULL) ){
-				$sql .= " id_proveedor >= ? AND id_proveedor <= ? AND";
+		if( (($a = $compra_proveedor_fleteA->getIdCompraProveedor()) != NULL) & ( ($b = $compra_proveedor_fleteB->getIdCompraProveedor()) != NULL) ){
+				$sql .= " id_compra_proveedor >= ? AND id_compra_proveedor <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " id_proveedor = ? AND"; 
+			$sql .= " id_compra_proveedor = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $proveedorA->getRfc()) != NULL) & ( ($b = $proveedorB->getRfc()) != NULL) ){
-				$sql .= " rfc >= ? AND rfc <= ? AND";
+		if( (($a = $compra_proveedor_fleteA->getChofer()) != NULL) & ( ($b = $compra_proveedor_fleteB->getChofer()) != NULL) ){
+				$sql .= " chofer >= ? AND chofer <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " rfc = ? AND"; 
+			$sql .= " chofer = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $proveedorA->getNombre()) != NULL) & ( ($b = $proveedorB->getNombre()) != NULL) ){
-				$sql .= " nombre >= ? AND nombre <= ? AND";
+		if( (($a = $compra_proveedor_fleteA->getMarcaCamion()) != NULL) & ( ($b = $compra_proveedor_fleteB->getMarcaCamion()) != NULL) ){
+				$sql .= " marca_camion >= ? AND marca_camion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " nombre = ? AND"; 
+			$sql .= " marca_camion = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $proveedorA->getDireccion()) != NULL) & ( ($b = $proveedorB->getDireccion()) != NULL) ){
-				$sql .= " direccion >= ? AND direccion <= ? AND";
+		if( (($a = $compra_proveedor_fleteA->getPlacasCamion()) != NULL) & ( ($b = $compra_proveedor_fleteB->getPlacasCamion()) != NULL) ){
+				$sql .= " placas_camion >= ? AND placas_camion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " direccion = ? AND"; 
+			$sql .= " placas_camion = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $proveedorA->getTelefono()) != NULL) & ( ($b = $proveedorB->getTelefono()) != NULL) ){
-				$sql .= " telefono >= ? AND telefono <= ? AND";
+		if( (($a = $compra_proveedor_fleteA->getModeloCamion()) != NULL) & ( ($b = $compra_proveedor_fleteB->getModeloCamion()) != NULL) ){
+				$sql .= " modelo_camion >= ? AND modelo_camion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " telefono = ? AND"; 
+			$sql .= " modelo_camion = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $proveedorA->getEMail()) != NULL) & ( ($b = $proveedorB->getEMail()) != NULL) ){
-				$sql .= " e_mail >= ? AND e_mail <= ? AND";
+		if( (($a = $compra_proveedor_fleteA->getCostoFlete()) != NULL) & ( ($b = $compra_proveedor_fleteB->getCostoFlete()) != NULL) ){
+				$sql .= " costo_flete >= ? AND costo_flete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " e_mail = ? AND"; 
-			$a = $a == NULL ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( (($a = $proveedorA->getActivo()) != NULL) & ( ($b = $proveedorB->getActivo()) != NULL) ){
-				$sql .= " activo >= ? AND activo <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
-			$sql .= " activo = ? AND"; 
+			$sql .= " costo_flete = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
@@ -356,7 +338,7 @@ abstract class ProveedorDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Proveedor($foo));
+    		array_push( $ar, new CompraProveedorFlete($foo));
 		}
 		return $ar;
 	}
@@ -366,20 +348,20 @@ abstract class ProveedorDAOBase extends DAO
 	  *	Eliminar registros.
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
-	  * en el objeto Proveedor suministrado. Una vez que se ha suprimido un objeto, este no 
+	  * en el objeto CompraProveedorFlete suministrado. Una vez que se ha suprimido un objeto, este no 
 	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
 	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
 	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return int El numero de filas afectadas.
-	  * @param Proveedor [$proveedor] El objeto de tipo Proveedor a eliminar
+	  * @param CompraProveedorFlete [$compra_proveedor_flete] El objeto de tipo CompraProveedorFlete a eliminar
 	  **/
-	public static final function delete( &$proveedor )
+	public static final function delete( &$compra_proveedor_flete )
 	{
-		if(self::getByPK($proveedor->getIdProveedor()) === NULL) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM proveedor WHERE  id_proveedor = ?;";
-		$params = array( $proveedor->getIdProveedor() );
+		if(self::getByPK($compra_proveedor_flete->getIdCompraProveedor()) === NULL) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM compra_proveedor_flete WHERE  id_compra_proveedor = ?;";
+		$params = array( $compra_proveedor_flete->getIdCompraProveedor() );
 		global $conn;
 
 		$conn->Execute($sql, $params);

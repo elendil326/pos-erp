@@ -27,11 +27,11 @@ abstract class UsuarioDAOBase extends DAO
 	  **/
 	public static final function save( &$usuario )
 	{
-		if( self::getByPK(  $usuario->getIdUsuario() ) === NULL )
+		if(  self::getByPK(  $usuario->getIdUsuario() ) !== NULL )
 		{
-			try{ return UsuarioDAOBase::create( $usuario) ; } catch(Exception $e){ throw $e; }
-		}else{
 			try{ return UsuarioDAOBase::update( $usuario) ; } catch(Exception $e){ throw $e; }
+		}else{
+			try{ return UsuarioDAOBase::create( $usuario) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
@@ -256,7 +256,7 @@ abstract class UsuarioDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		$usuario->setIdUsuario( $conn->Insert_ID() );
+		 $usuario->setIdUsuario( $conn->Insert_ID() );
 		return $ar;
 	}
 
