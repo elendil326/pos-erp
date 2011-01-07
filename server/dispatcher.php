@@ -94,7 +94,7 @@ switch( ((int)($args['action'] / 100))*100 )
 	break;
 
 	case 900:
-	
+		require_once('controller/proveedor.controller.php');
 	break;
 	
 	case 2000:
