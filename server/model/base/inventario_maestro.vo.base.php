@@ -34,6 +34,9 @@ class InventarioMaestro extends VO
 			if( isset($data['existencias_procesadas']) ){
 				$this->existencias_procesadas = $data['existencias_procesadas'];
 			}
+			if( isset($data['sitio_descarga']) ){
+				$this->sitio_descarga = $data['sitio_descarga'];
+			}
 		}
 	}
 
@@ -50,7 +53,8 @@ class InventarioMaestro extends VO
 			"id_producto" => $this->id_producto,
 			"id_compra_proveedor" => $this->id_compra_proveedor,
 			"existencias" => $this->existencias,
-			"existencias_procesadas" => $this->existencias_procesadas
+			"existencias_procesadas" => $this->existencias_procesadas,
+			"sitio_descarga" => $this->sitio_descarga
 		); 
 	return json_encode($vec); 
 	}
@@ -92,6 +96,15 @@ class InventarioMaestro extends VO
 	  * @var float
 	  */
 	protected $existencias_procesadas;
+
+	/**
+	  * sitio_descarga
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $sitio_descarga;
 
 	/**
 	  * getIdProducto
@@ -191,6 +204,30 @@ class InventarioMaestro extends VO
 	final public function setExistenciasProcesadas( $existencias_procesadas )
 	{
 		$this->existencias_procesadas = $existencias_procesadas;
+	}
+
+	/**
+	  * getSitioDescarga
+	  * 
+	  * Get the <i>sitio_descarga</i> property for this object. Donde <i>sitio_descarga</i> es  [Campo no documentado]
+	  * @return int(11)
+	  */
+	final public function getSitioDescarga()
+	{
+		return $this->sitio_descarga;
+	}
+
+	/**
+	  * setSitioDescarga( $sitio_descarga )
+	  * 
+	  * Set the <i>sitio_descarga</i> property for this object. Donde <i>sitio_descarga</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>sitio_descarga</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setSitioDescarga( $sitio_descarga )
+	{
+		$this->sitio_descarga = $sitio_descarga;
 	}
 
 }

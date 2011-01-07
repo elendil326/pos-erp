@@ -2,6 +2,7 @@
 
 require_once('model/proveedor.dao.php');
 require_once('model/inventario.dao.php');
+require_once('model/sucursal.dao.php');
 
 
 ?>
@@ -54,22 +55,40 @@ require_once('model/inventario.dao.php');
     	});
     }
     
-
+	var _cart = [];
+	
     function addProd(){
 	    p = $('#addProds').val();
+
+	    for (var i = 0; i < _cart.length; i++)
+    	{
+    		if(_cart[i].id_producto == p){
+				return;
+    		}
+    	}
+	    
 	    for (var i = 0; i < prods.length; i++)
     	{
     		if(prods[i].id_producto == p){
 				break;
     		}
     	}
-    	console.log(prods);
-//   	<tr><th>Producto</th><th>Variedad</th><th>Arpillas</th><th>Promedio</th><th>Peso total</th><th>Precio KG</th><th>Importe</th></tr>
+
+		_cart.push( prods[i] );
+
 	    html = '<tr>';
-	    html += '<td>'+ prods[i].id_producto +'</td>';	    
+	    html += '<td>'+ prods[i].descripcion +'</td>';	    
+	    html += '<td><input type="text"></td>';
+	    html += '<td><input type="text"></td>';
+	    html += '<td></td>';
+	    html += '<td></td>';	    
+	    html += '<td><input type="text"></td>';
+	    html += '<td></td>';	    
+  
 	    html += '</tr>';
 	    
     	$(html).appendTo('#prodsTable');
+    	$("input:text").uniform();
     }
 </script>
 
@@ -101,6 +120,39 @@ require_once('model/inventario.dao.php');
 </div>
 
 <div id="chooseProds" style='display: block'>
+
+	<h2>Detalles del embarque</h2>
+	<table style='width:50%'>
+		<tr><td>Folio</td>				<td><input type='text' id='folio'></td></tr>
+		<tr><td>Fecha</td>				<td></td></tr>
+		<tr><td>Total arpillas</td>			<td><input type='text' id='folio'></td></tr>
+		<tr><td>Merma por arpilla</td>	<td><input type='text' id='folio'></td></tr>
+		<tr><td>Numero de viaje</td>	<td><input type='text' id='folio'></td></tr>
+		<tr><td>Peso por arpilla</td>	<td></td></tr>	
+		<tr><td>Peso origen</td>		<td><input type='text' id='folio'></td></tr>	
+		<tr><td>Peso recibido</td>		<td><input type='text' id='folio'></td></tr>			
+		<tr><td>Productor</td>			<td></td></tr>	
+		<tr>
+			<td>Sitio Descarga</td>		
+			<td>
+			<select id="descargaSucursal"> 
+					<?php
+			
+						$p = SucursalDAO::getAll();
+						foreach( $p as $s ){
+							echo "<option value='" . $s->getIdSucursal() . "' >" .  $s->getDescripcion()  . "</option>";
+						}
+			
+					?>
+	
+			        </select>
+			</td>
+	    </tr>								
+	</table>
+
+
+
+
 	<h2>Productos</h2>
 	<h3>Agregue los productos que vienen en este embarque</h3>
 	    <table border="0" cellspacing="5" cellpadding="5">

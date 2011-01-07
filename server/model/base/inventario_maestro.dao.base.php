@@ -138,6 +138,11 @@ abstract class InventarioMaestroDAOBase extends DAO
 			array_push( $val, $inventario_maestro->getExistenciasProcesadas() );
 		}
 
+		if( $inventario_maestro->getSitioDescarga() != NULL){
+			$sql .= " sitio_descarga = ? AND";
+			array_push( $val, $inventario_maestro->getSitioDescarga() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -167,10 +172,11 @@ abstract class InventarioMaestroDAOBase extends DAO
 	  **/
 	private static final function update( $inventario_maestro )
 	{
-		$sql = "UPDATE inventario_maestro SET  existencias = ?, existencias_procesadas = ? WHERE  id_producto = ? AND id_compra_proveedor = ?;";
+		$sql = "UPDATE inventario_maestro SET  existencias = ?, existencias_procesadas = ?, sitio_descarga = ? WHERE  id_producto = ? AND id_compra_proveedor = ?;";
 		$params = array( 
 			$inventario_maestro->getExistencias(), 
 			$inventario_maestro->getExistenciasProcesadas(), 
+			$inventario_maestro->getSitioDescarga(), 
 			$inventario_maestro->getIdProducto(),$inventario_maestro->getIdCompraProveedor(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -194,12 +200,13 @@ abstract class InventarioMaestroDAOBase extends DAO
 	  **/
 	private static final function create( &$inventario_maestro )
 	{
-		$sql = "INSERT INTO inventario_maestro ( id_producto, id_compra_proveedor, existencias, existencias_procesadas ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO inventario_maestro ( id_producto, id_compra_proveedor, existencias, existencias_procesadas, sitio_descarga ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$inventario_maestro->getIdProducto(), 
 			$inventario_maestro->getIdCompraProveedor(), 
 			$inventario_maestro->getExistencias(), 
 			$inventario_maestro->getExistenciasProcesadas(), 
+			$inventario_maestro->getSitioDescarga(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -287,6 +294,17 @@ abstract class InventarioMaestroDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " existencias_procesadas = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $inventario_maestroA->getSitioDescarga()) != NULL) & ( ($b = $inventario_maestroB->getSitioDescarga()) != NULL) ){
+				$sql .= " sitio_descarga >= ? AND sitio_descarga <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " sitio_descarga = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

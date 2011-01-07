@@ -52,9 +52,6 @@ class CompraProveedor extends VO
 			if( isset($data['calidad']) ){
 				$this->calidad = $data['calidad'];
 			}
-			if( isset($data['sitio_descarga']) ){
-				$this->sitio_descarga = $data['sitio_descarga'];
-			}
 			if( isset($data['merma_por_arpilla']) ){
 				$this->merma_por_arpilla = $data['merma_por_arpilla'];
 			}
@@ -81,7 +78,6 @@ class CompraProveedor extends VO
 			"peso_por_arpilla" => $this->peso_por_arpilla,
 			"productor" => $this->productor,
 			"calidad" => $this->calidad,
-			"sitio_descarga" => $this->sitio_descarga,
 			"merma_por_arpilla" => $this->merma_por_arpilla
 		); 
 	return json_encode($vec); 
@@ -178,15 +174,6 @@ class CompraProveedor extends VO
 	  * @var tinyint(3)
 	  */
 	protected $calidad;
-
-	/**
-	  * sitio_descarga
-	  * 
-	  *  [Campo no documentado]<br>
-	  * @access protected
-	  * @var int(11)
-	  */
-	protected $sitio_descarga;
 
 	/**
 	  * merma_por_arpilla
@@ -439,30 +426,6 @@ class CompraProveedor extends VO
 	final public function setCalidad( $calidad )
 	{
 		$this->calidad = $calidad;
-	}
-
-	/**
-	  * getSitioDescarga
-	  * 
-	  * Get the <i>sitio_descarga</i> property for this object. Donde <i>sitio_descarga</i> es  [Campo no documentado]
-	  * @return int(11)
-	  */
-	final public function getSitioDescarga()
-	{
-		return $this->sitio_descarga;
-	}
-
-	/**
-	  * setSitioDescarga( $sitio_descarga )
-	  * 
-	  * Set the <i>sitio_descarga</i> property for this object. Donde <i>sitio_descarga</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>sitio_descarga</i> es de tipo <i>int(11)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
-	  */
-	final public function setSitioDescarga( $sitio_descarga )
-	{
-		$this->sitio_descarga = $sitio_descarga;
 	}
 
 	/**

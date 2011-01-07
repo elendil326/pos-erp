@@ -168,11 +168,6 @@ abstract class CompraProveedorDAOBase extends DAO
 			array_push( $val, $compra_proveedor->getCalidad() );
 		}
 
-		if( $compra_proveedor->getSitioDescarga() != NULL){
-			$sql .= " sitio_descarga = ? AND";
-			array_push( $val, $compra_proveedor->getSitioDescarga() );
-		}
-
 		if( $compra_proveedor->getMermaPorArpilla() != NULL){
 			$sql .= " merma_por_arpilla = ? AND";
 			array_push( $val, $compra_proveedor->getMermaPorArpilla() );
@@ -207,7 +202,7 @@ abstract class CompraProveedorDAOBase extends DAO
 	  **/
 	private static final function update( $compra_proveedor )
 	{
-		$sql = "UPDATE compra_proveedor SET  id_proveedor = ?, fecha = ?, folio = ?, numero_de_viaje = ?, peso_recibido = ?, arpillas = ?, peso_por_arpilla = ?, productor = ?, calidad = ?, sitio_descarga = ?, merma_por_arpilla = ? WHERE  id_compra_proveedor = ?;";
+		$sql = "UPDATE compra_proveedor SET  id_proveedor = ?, fecha = ?, folio = ?, numero_de_viaje = ?, peso_recibido = ?, arpillas = ?, peso_por_arpilla = ?, productor = ?, calidad = ?, merma_por_arpilla = ? WHERE  id_compra_proveedor = ?;";
 		$params = array( 
 			$compra_proveedor->getIdProveedor(), 
 			$compra_proveedor->getFecha(), 
@@ -218,7 +213,6 @@ abstract class CompraProveedorDAOBase extends DAO
 			$compra_proveedor->getPesoPorArpilla(), 
 			$compra_proveedor->getProductor(), 
 			$compra_proveedor->getCalidad(), 
-			$compra_proveedor->getSitioDescarga(), 
 			$compra_proveedor->getMermaPorArpilla(), 
 			$compra_proveedor->getIdCompraProveedor(), );
 		global $conn;
@@ -243,7 +237,7 @@ abstract class CompraProveedorDAOBase extends DAO
 	  **/
 	private static final function create( &$compra_proveedor )
 	{
-		$sql = "INSERT INTO compra_proveedor ( id_compra_proveedor, id_proveedor, fecha, folio, numero_de_viaje, peso_recibido, arpillas, peso_por_arpilla, productor, calidad, sitio_descarga, merma_por_arpilla ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO compra_proveedor ( id_compra_proveedor, id_proveedor, fecha, folio, numero_de_viaje, peso_recibido, arpillas, peso_por_arpilla, productor, calidad, merma_por_arpilla ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$compra_proveedor->getIdCompraProveedor(), 
 			$compra_proveedor->getIdProveedor(), 
@@ -255,7 +249,6 @@ abstract class CompraProveedorDAOBase extends DAO
 			$compra_proveedor->getPesoPorArpilla(), 
 			$compra_proveedor->getProductor(), 
 			$compra_proveedor->getCalidad(), 
-			$compra_proveedor->getSitioDescarga(), 
 			$compra_proveedor->getMermaPorArpilla(), 
 		 );
 		global $conn;
@@ -410,17 +403,6 @@ abstract class CompraProveedorDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " calidad = ? AND"; 
-			$a = $a == NULL ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( (($a = $compra_proveedorA->getSitioDescarga()) != NULL) & ( ($b = $compra_proveedorB->getSitioDescarga()) != NULL) ){
-				$sql .= " sitio_descarga >= ? AND sitio_descarga <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
-			$sql .= " sitio_descarga = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
