@@ -173,6 +173,11 @@ abstract class CompraProveedorDAOBase extends DAO
 			array_push( $val, $compra_proveedor->getMermaPorArpilla() );
 		}
 
+		if( $compra_proveedor->getTotalOrigen() != NULL){
+			$sql .= " total_origen = ? AND";
+			array_push( $val, $compra_proveedor->getTotalOrigen() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -202,7 +207,7 @@ abstract class CompraProveedorDAOBase extends DAO
 	  **/
 	private static final function update( $compra_proveedor )
 	{
-		$sql = "UPDATE compra_proveedor SET  id_proveedor = ?, fecha = ?, folio = ?, numero_de_viaje = ?, peso_recibido = ?, arpillas = ?, peso_por_arpilla = ?, productor = ?, calidad = ?, merma_por_arpilla = ? WHERE  id_compra_proveedor = ?;";
+		$sql = "UPDATE compra_proveedor SET  id_proveedor = ?, fecha = ?, folio = ?, numero_de_viaje = ?, peso_recibido = ?, arpillas = ?, peso_por_arpilla = ?, productor = ?, calidad = ?, merma_por_arpilla = ?, total_origen = ? WHERE  id_compra_proveedor = ?;";
 		$params = array( 
 			$compra_proveedor->getIdProveedor(), 
 			$compra_proveedor->getFecha(), 
@@ -214,6 +219,7 @@ abstract class CompraProveedorDAOBase extends DAO
 			$compra_proveedor->getProductor(), 
 			$compra_proveedor->getCalidad(), 
 			$compra_proveedor->getMermaPorArpilla(), 
+			$compra_proveedor->getTotalOrigen(), 
 			$compra_proveedor->getIdCompraProveedor(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -237,7 +243,7 @@ abstract class CompraProveedorDAOBase extends DAO
 	  **/
 	private static final function create( &$compra_proveedor )
 	{
-		$sql = "INSERT INTO compra_proveedor ( id_compra_proveedor, id_proveedor, fecha, folio, numero_de_viaje, peso_recibido, arpillas, peso_por_arpilla, productor, calidad, merma_por_arpilla ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO compra_proveedor ( id_compra_proveedor, id_proveedor, fecha, folio, numero_de_viaje, peso_recibido, arpillas, peso_por_arpilla, productor, calidad, merma_por_arpilla, total_origen ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$compra_proveedor->getIdCompraProveedor(), 
 			$compra_proveedor->getIdProveedor(), 
@@ -250,6 +256,7 @@ abstract class CompraProveedorDAOBase extends DAO
 			$compra_proveedor->getProductor(), 
 			$compra_proveedor->getCalidad(), 
 			$compra_proveedor->getMermaPorArpilla(), 
+			$compra_proveedor->getTotalOrigen(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -414,6 +421,17 @@ abstract class CompraProveedorDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " merma_por_arpilla = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $compra_proveedorA->getTotalOrigen()) != NULL) & ( ($b = $compra_proveedorB->getTotalOrigen()) != NULL) ){
+				$sql .= " total_origen >= ? AND total_origen <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " total_origen = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

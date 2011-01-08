@@ -55,6 +55,9 @@ class CompraProveedor extends VO
 			if( isset($data['merma_por_arpilla']) ){
 				$this->merma_por_arpilla = $data['merma_por_arpilla'];
 			}
+			if( isset($data['total_origen']) ){
+				$this->total_origen = $data['total_origen'];
+			}
 		}
 	}
 
@@ -78,7 +81,8 @@ class CompraProveedor extends VO
 			"peso_por_arpilla" => $this->peso_por_arpilla,
 			"productor" => $this->productor,
 			"calidad" => $this->calidad,
-			"merma_por_arpilla" => $this->merma_por_arpilla
+			"merma_por_arpilla" => $this->merma_por_arpilla,
+			"total_origen" => $this->total_origen
 		); 
 	return json_encode($vec); 
 	}
@@ -183,6 +187,15 @@ class CompraProveedor extends VO
 	  * @var float
 	  */
 	protected $merma_por_arpilla;
+
+	/**
+	  * total_origen
+	  * 
+	  * Es lo que vale el embarque segun el proveedor<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $total_origen;
 
 	/**
 	  * getIdCompraProveedor
@@ -450,6 +463,30 @@ class CompraProveedor extends VO
 	final public function setMermaPorArpilla( $merma_por_arpilla )
 	{
 		$this->merma_por_arpilla = $merma_por_arpilla;
+	}
+
+	/**
+	  * getTotalOrigen
+	  * 
+	  * Get the <i>total_origen</i> property for this object. Donde <i>total_origen</i> es Es lo que vale el embarque segun el proveedor
+	  * @return float
+	  */
+	final public function getTotalOrigen()
+	{
+		return $this->total_origen;
+	}
+
+	/**
+	  * setTotalOrigen( $total_origen )
+	  * 
+	  * Set the <i>total_origen</i> property for this object. Donde <i>total_origen</i> es Es lo que vale el embarque segun el proveedor.
+	  * Una validacion basica se hara aqui para comprobar que <i>total_origen</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setTotalOrigen( $total_origen )
+	{
+		$this->total_origen = $total_origen;
 	}
 
 }
