@@ -2,9 +2,7 @@
 
 require_once('model/inventario.dao.php');
 require_once('model/detalle_inventario.dao.php');
-require_once('model/detalle_compra.dao.php');
 require_once('model/detalle_venta.dao.php');
-require_once('model/compras.dao.php');
 require_once('model/ventas.dao.php');
 require_once('model/proveedor.dao.php');
 require_once('model/actualizacion_de_precio.dao.php');
@@ -26,24 +24,50 @@ function listarInventario( $sucID = null){
     
     $json = array();
     
-    foreach( $results as $producto ){
-        $productoData = InventarioDAO::getByPK( $producto->getIdProducto() );
-        
+    foreach( $results as $producto )
+	{
+        $productoData = InventarioDAO::getByPK( $producto->getIdProducto() );	
+       
+		$act_precio = new ActualizacionDePrecio();
+		$act_precio -> setIdProducto( $producto->getIdProducto() );
+		
+		$resultados = ActualizacionDePrecioDAO::search( $act_precio );
+		
+		$fecha_mas_actual = strtotime("2000-1-1 00:00:00");
+		
+		//buscamos el cambio de precio mas actual (nunca enrtara si no hay una cambio de autorizacion de precio)
+		foreach( $resultados as $r ){
+		
+			$r = parseJSON( $r );
+		
+			$fecha = strtotime($r->fecha);
+			
+			//echo "comparando: <br>";
+			//echo "fecha acual :" . $fecha_mas_actual . " fecha : " . $fecha ."<br>";
+			
+			if( $fecha >  $fecha_mas_actual)
+			{
+				$fecha_mas_actual = $fecha;
+				$precioIntersucursal = $r -> precio_intersucursal;
+			}
+			
+		}
+	
+		
+			   
         Array_push( $json , array(
             "productoID" => $productoData->getIdProducto(),
             "descripcion" => $productoData->getDescripcion(),
             "precioVenta" => $producto->getPrecioVenta(),
             "existenciasMinimas" => $producto->getMin(),
             "existencias" => $producto->getExistencias(),
-            "medida" => $productoData->getMedida(),
-            "precioIntersucursal" => $productoData->getPrecioIntersucursal()
+            "medida" => $productoData->getEscala(),
+            "precioIntersucursal" => $precioIntersucursal
         ));
     }
 
 	return $json;
-    
-
-
+	
 }
 
 function detalleProductoSucursal( $args ){
@@ -100,8 +124,8 @@ function comprasSucursal( $args ){
 
         array_push( $array_compras , array(
             "id_compra" => $compra->getIdCompra(),
-            "proveedor" => $proveedor->getNombre(),
-            "tipo_compra" => $compra->getTipoCompra(),
+            //"proveedor" => $proveedor->getNombre(),
+            //"tipo_compra" => $compra->getTipoCompra(),
             "fecha" => $compra->getFecha(),
             "subtotal" => $compra->getSubtotal(),
             "id_usuario" => $compra->getIdUsuario()
@@ -270,8 +294,7 @@ function nuevoProducto($data)
 if(isset($args['action'])){
 	switch($args['action']){
 	    case 400:
-            $json = json_encode( listarInventario( $_SESSION["sucursal"] ) );
-            
+            $json = json_encode( listarInventario( $_SESSION["sucursal"] ) );            
             if(isset($args['hashCheck'])){
                 //revisar hashes
                 if(md5( $json ) == $args['hashCheck'] ){

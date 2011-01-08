@@ -97,6 +97,10 @@ switch( ((int)($args['action'] / 100))*100 )
 		require_once('controller/proveedor.controller.php');
 	break;
 	
+	case 1000:
+		require_once('controller/compras.controller.php');
+	break;
+	
 	case 2000:
 		//ya he requerido a controller/login.controller.php
 		//llamare a su funcion especial login_controller_dispatch()
