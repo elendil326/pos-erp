@@ -9,20 +9,15 @@ require_once('model/inventario_maestro.dao.php');
 require_once('logger.php');
 
 
-function nuevaCompraProveedor( $json = null ){
+function nuevaCompraProveedor( $data = null ){
 
-	if($json == null){
-        Logger::log("No hay parametros para ingresar nueva compra a proveedor.");
+	if( $data == null || empty( $data ) ){
+		 Logger::log("No hay parametros para ingresar nueva compra a proveedor.");
 		die('{ "success": false, "reason" : "Parametros invalidos" }');
 	}
 
-	$data = parseJSON( $json );
+	$data = parseJSON( $data );
 
-	if($data == null){
-		Logger::log("Json invalido para crear nueva compra proveedor:" . $json);
-		die('{ "success": false, "reason" : "Parametros invalidos" }');
-	}
-	
 	/*
 	
 	{
@@ -36,7 +31,8 @@ function nuevaCompraProveedor( $json = null ){
         "productor" : "Jorge Nolasco",
         "importe_total": 3702,
         "total_arpillas": 1,
-        "costo_flete" : 123 
+        "costo_flete" : 123,
+		"id_proveedor" : 1
     },
     "conductor" : {
         "nombre_chofer" : "Alan Gonzalez",
@@ -54,11 +50,13 @@ function nuevaCompraProveedor( $json = null ){
         } 
     ]
 }
+
+{"embarque" : {"id_proveedor":1,"folio": "456","merma_por_arpilla": 0,"numero_de_viaje": null,"peso_por_arpilla": 55.45,"peso_origen" : 12345,"peso_recibido" : 12345,"productor" : "Jorge Nolasco","importe_total": 3702,"total_arpillas": 1,"costo_flete" : 123 },"conductor" : {"nombre_chofer" : "Alan Gonzalez","placas" : "afsdf67t78","marca_camion" : "Chrysler","modelo_camion" : "1977" },"productos": [{"id_producto": 3,"variedad" : "fianas","arpillas" : 12,"precio_kg" : 5.35,"sitio_descarga" : 0}]}
 	
 	*/
 	
 	if( !( isset( $data -> embarque ) && isset( $data -> conductor ) && isset( $data -> productos ) ) ){
-		Logger::log("Json invalido para crear nueva compra proveedor:" . $json);
+		Logger::log("Json invalido para crear nueva compra proveedor:");
 		die('{ "success": false, "reason" : "Parametros invalidos" }');
 	}
 
@@ -75,6 +73,7 @@ function nuevaCompraProveedor( $json = null ){
 	ingresarDetallecompraProveedor( $data->productos, $id_compra_proveedor, $data->embarque->peso_por_arpilla);
 	
 	//isertamos en el inventario maestro
+	//($data = null, $id_compra_proveedor = null, $peso_por_arpilla = null, $sitio_descarga = null){
 	insertarProductoInventarioMaestro($data->productos, $id_compra_proveedor, $data->embarque->peso_por_arpilla);
 	
 	
@@ -461,8 +460,9 @@ function ingresarDetallecompraProveedor( $data = null, $id_compra_proveedor =nul
 
 }
 
-function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = null, $peso_por_arpilla = null, $sitio_descarga = null){
+function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = null, $peso_por_arpilla = null){
 
+	//var_dump($sitio_descarga);
 	
 	if($data == null){
 		Logger::log("Array de productos invalido:" . $data);
@@ -475,20 +475,22 @@ function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = 
 
 		$existencias = $producto -> arpillas * $peso_por_arpilla;
 	
-		$inventatio_maestro = new InventarioMaestro();
+		$inventario_maestro = new InventarioMaestro();
 		
-		$inventatio_maestro -> setIdProducto( $producto->id_producto );
-		$inventatio_maestro -> setIdCompraProveedor( $id_compra_proveedor );
-		$inventatio_maestro -> setExistencias( $existencias );
-		$inventatio_maestro -> setExistenciasProcesadas( 0 );
-		$inventario_maestro -> setSitioDescarga( $producto->sitio_descarga );
+		//var_dump($producto -> sitio_descarga);
+		
+		$inventario_maestro -> setIdProducto( $producto->id_producto );
+		$inventario_maestro -> setIdCompraProveedor( $id_compra_proveedor );
+		$inventario_maestro -> setExistencias( $existencias );
+		$inventario_maestro -> setExistenciasProcesadas( 0 );		
+		$inventario_maestro -> setSitioDescarga( $producto -> sitio_descarga );		
 		
 		try{
-			InventarioMaestroDAO::save( $inventatio_maestro );
+			InventarioMaestroDAO::save( $inventario_maestro );
 		}catch(Exception $e){
 			Logger::log("Error al guardar producto en inventario maestro:" . $e);
 			DAO::transRollback();	
-			die( '{"success": false, "reason": "Error al guardar producto en inventario maestro"}' );
+			die( '{"success": false, "reason": "Error al guardar producto en inventario maestro"' . $e .'}' );
 		}
 	
 	}
@@ -505,8 +507,14 @@ function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = 
 if(isset($args['action'])){
 	switch($args['action']){
 
-		case 1000://recibe el json para crear una compra  aproveedor		
-			nuevaCompraProveedor( $args['data'] );
+		case 1000://recibe el json para crear una compra  aproveedor
+
+			if( !isset( $args['data'] ) || empty( $args['data'] ) ){
+				Logger::log("No hay parametros para ingresar nueva compra a proveedor.");
+				die('{"success": false , "reason": "Parametros invalidos." }');
+			}else{														
+					nuevaCompraProveedor( $args['data'] );									
+			}
 		break;
 	
 		case 1001://nueva compra a proveedor (admin)		
