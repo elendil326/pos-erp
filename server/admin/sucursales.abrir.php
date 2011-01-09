@@ -83,7 +83,7 @@
                     return $("#ajax_failure").html(response.reason).show();
                 }
                 reason = "La nueva sucursal se ha creado con exito.";
-                window.location = "sucursales.php?action=lista&success=false&reason=" + reason;
+                window.location = "sucursales.php?action=lista&success=true&reason=" + reason;
 	      }
 	    });
 

@@ -36,6 +36,8 @@ function listarInventario( $sucID = null){
 		$fecha_mas_actual = strtotime("2000-1-1 00:00:00");
 		
 		//buscamos el cambio de precio mas actual (nunca enrtara si no hay una cambio de autorizacion de precio)
+		$precioIntersucursal = "No def";
+		
 		foreach( $resultados as $r ){
 		
 			$r = parseJSON( $r );

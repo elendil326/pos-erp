@@ -34,7 +34,6 @@
         $na->setIdProducto($_REQUEST['id']);
         $na->setIdUsuario($_SESSION['userid']);
         $na->setPrecioVenta($_REQUEST['venta']);
-        $na->setPrecioCompra($_REQUEST['compra']);
         $na->setPrecioIntersucursal($_REQUEST['compra']);
         
         //cambiar todos los detalles inventario        
@@ -48,17 +47,10 @@
         }
 
 
-        //cambiar los detalles en el inventario maestro
-        $prod = InventarioDAO::getByPK($_REQUEST['id']);
-        $prod->setPrecioIntersucursal( $_REQUEST['compra'] );
-        $prod->setCosto( $_REQUEST['compra'] );
-
         try{
             DAO::transBegin();
 
             ActualizacionDePrecioDAO::save( $na );
-
-            InventarioDAO::save($prod);
 
             foreach ($inventariosSucursales as $inv)
             {
@@ -115,9 +107,9 @@
 <form action="inventario.php?action=editar&id=<?php echo $general->getIdProducto(); ?>" method="POST">
 <input type="hidden" name="editar" value="1">
 <table border="0" cellspacing="5" cellpadding="5">
-	<tr><td>Costo / Precio intersucursal </td><td>  <input type="text" name="compra" value="<?php echo $general->getPrecioCompra();?>" size="40"/></td></tr>
-	<tr><td>Precio a la venta</td><td>              <input type="text" name="venta" value="<?php echo $general->getPrecioVenta(); ?>" size="40"/></td></tr>
-	<tr><td></td><td>                               <input type="submit" value="Guardar" size="40"/></td></tr>
+	<tr><td>Precio intersucursal </td><td>  <input type="text" name="compra" value="<?php echo $general->getPrecioIntersucursal();?>" size="40"/></td></tr>
+	<tr><td>Precio a la venta</td><td>      <input type="text" name="venta" value="<?php echo $general->getPrecioVenta(); ?>" size="40"/></td></tr>
+	<tr><td></td><td>                       <input type="submit" value="Guardar" size="40"/></td></tr>
 </table>
 </form>	
 

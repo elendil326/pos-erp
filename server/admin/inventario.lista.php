@@ -1,4 +1,4 @@
-<h1>Inventario por sucursal</h1><?php
+<?php
 
 require_once("controller/inventario.controller.php");
 require_once("controller/sucursales.controller.php");
@@ -7,7 +7,7 @@ require_once('model/actualizacion_de_precio.dao.php');
 
 
 
-
+?> <h1>Inventario por sucursal</h1> <?php
 
 
 

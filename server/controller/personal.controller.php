@@ -114,6 +114,7 @@ function insertarEmpleado($args)
     		if(sizeof(SucursalDAO::getByPK( $data->sucursal )) == 1){
 	    		$user->setIdSucursal( $data->sucursal );
     		}else{
+	    		DAO::transRollback();
 	    		die( '{ "success" : false, "reason": "Esta sucursal no existe." }' ); 
     		}
 	    	
@@ -139,11 +140,11 @@ function insertarEmpleado($args)
     	UsuarioDAO::save( $user );
         $gruposUsuarios->setIdUsuario( $user->getIdUsuario() );
         GruposUsuariosDAO::save( $gruposUsuarios );
+        
     }catch( Exception $e ){
+    
     	DAO::transRollback();
     	Logger::log("Insertando usuario en grupo inexistente.");
-    	Logger::log($e);
-    	
         die( '{ "success" : false, "reason" : "Grupo Inexistente"}' );
     } 
 
