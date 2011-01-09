@@ -30,17 +30,13 @@
     }
     
     ?><div id="ajax_failure" class="failure" style="display: none;"></div><?php 
-    
-		switch( $_GET["action"] )
-		{
 
-			case "lista" : 		require_once("admin/sucursales.lista.php"); break;
-			case "detalles" : 	require_once("admin/sucursales.detalles.php"); break;
-			case "abrir" : 		require_once("admin/sucursales.abrir.php"); break;
-			case "editar" : 	require_once("admin/sucursales.editar.php"); break;
-			case "cerrar" : 	require_once("admin/sucursales.cerrar.php"); break;
-			default : echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
+	   	if(is_file("../../server/admin/sucursales." . $_GET["action"] . ".php")){
+    		require_once("admin/sucursales." . $_GET["action"] . ".php");
+		}else{
+    		echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
 		} 
+
 	?>
      
 	<?php include_once("admin/includes/footer.php"); ?>

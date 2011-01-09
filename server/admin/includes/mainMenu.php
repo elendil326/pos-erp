@@ -32,12 +32,7 @@
         <li class="ga-side-nav-off">
           <a href="sucursales.php?action=abrir">Abrir sucursal</a>
         </li>
-      </ul>
-    </li>
 
-    <li class="product">
-      <a class="drop" >GERENTES</a>
-      <ul>
         <li class="ga-side-nav-off">
           <a href="gerentes.php?action=lista">Lista de gerentes</a>
         </li>
@@ -49,6 +44,11 @@
         </li>
       </ul>
     </li>
+<!--
+    <li class="product">
+      <a class="drop" >GERENTES</a>
+    </li>
+-->
 
 
 
@@ -111,7 +111,10 @@
       <a class="drop" >INVENTARIO</a>
       <ul>
         <li class="ga-side-nav-off">
-          <a href="inventario.php?action=lista">Lista de Inventario</a>
+          <a href="inventario.php?action=maestro">Inventario maestro</a>
+        </li>      
+        <li class="ga-side-nav-off">
+          <a href="inventario.php?action=lista">Inventario de sucursales</a>
         </li>
         <li>
           <a href="inventario.php?action=surtir">Surtir Sucursal</a>

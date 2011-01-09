@@ -9,10 +9,14 @@ require_once('logger.php');
 
 function listarSucursales(  ){
 
-    $s = new Sucursal();
-    $s->setActivo(1);
+    $foo = new Sucursal();
+    $foo->setActivo(1);
+    $foo->setIdSucursal(1);
 
-    $sucursales = SucursalDAO::search($s);
+    $bar = new Sucursal();
+    $bar->setIdSucursal(99);
+
+    $sucursales = SucursalDAO::byRange($foo, $bar);
 
     $array_sucursales = array();
 

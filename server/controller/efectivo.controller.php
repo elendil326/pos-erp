@@ -4,7 +4,6 @@ require_once("model/ingresos.dao.php");
 require_once("model/gastos.dao.php");
 require_once("model/autorizacion.dao.php");
 require_once("model/pagos_compra.dao.php");
-require_once("model/compras.dao.php");
 
 
 

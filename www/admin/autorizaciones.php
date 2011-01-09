@@ -33,12 +33,12 @@
     
     	?><div id="ajax_failure" class="failure" style="display: none;"></div><?php 
     	
-		switch( $_GET["action"] ){
-			case "historial" : 		require_once("admin/autorizaciones.historial.php"); break;
-			case "pendientes" : 	require_once("admin/autorizaciones.pendientes.php"); break;			
-			case "detalle" : 		require_once("admin/autorizaciones.detalle.php"); break;			
-			default : echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
-		} 
+	   	if(is_file("../../server/admin/autorizaciones." . $_GET["action"] . ".php")){
+    		require_once("admin/autorizaciones." . $_GET["action"] . ".php");
+		}else{
+    		echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
+		}
+
 	?>
 
 	</div>

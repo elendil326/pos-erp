@@ -4,24 +4,7 @@ require_once("controller/inventario.controller.php");
 require_once("controller/sucursales.controller.php");
 require_once('model/actualizacion_de_precio.dao.php');
 
-?><h2>Productos disponibles</h2><?php
 
-	//obtener los clientes del controller de clientes
-	$inventario = listarInventarioMaestro( );
-
-	//render the table
-	$header = array( 
-		"id_producto" => "ID",
-		"descripcion"=> "Descripcion",
-		"precio_intersucursal"=> "Precio Intersucursal",
-		"costo"=> "Costo",
-		"medida"=> "Medida");
-
-	$tabla = new Tabla( $header, $inventario );
-	$tabla->addColRender( "precio_intersucursal", "moneyFormat" ); 
-	$tabla->addColRender( "costo", "moneyFormat" ); 
-    $tabla->addOnClick( "id_producto", "detalles");
-	$tabla->render();
 
 
 
@@ -43,12 +26,10 @@ require_once('model/actualizacion_de_precio.dao.php');
 		    "precioVenta"=> "Precio Venta",
 		    "existenciasMinimas"=> "Minimas",
 		    "existencias"=> "Existencias",
-		    "medida"=> "Tipo",
-		    "precioIntersucursal"=> "Precio Intersucursal" );
+		    "medida"=> "Tipo" );
 	
 	    $tabla = new Tabla( $header, $inventario );
 	    $tabla->addColRender( "precioVenta", "moneyFormat" ); 
-	    $tabla->addColRender( "precioIntersucursal", "moneyFormat" ); 
 	    $tabla->addNoData( "<h3>Esta sucursal no tiene inventario.</h3>"); 
         $tabla->addOnClick( "productoID", "detalles");
 	    $tabla->render();

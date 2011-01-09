@@ -31,15 +31,12 @@
     
     ?><div id="ajax_failure" class="failure" style="display: none;"></div><?php 
     
-		switch( $_GET["action"] )
-		{
+	   	if(is_file("../../server/admin/proveedor." . $_GET["action"] . ".php")){
+    		require_once("admin/proveedor." . $_GET["action"] . ".php");
+		}else{
+    		echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
+		}    
 
-			case "lista" : 		require_once("admin/proveedor.lista.php"); break;
-			case "detalles" : 	require_once("admin/proveedor.detalles.php"); break;
-			case "nuevo" : 		require_once("admin/proveedor.nuevo.php"); break;
-			case "abastecer" : 		require_once("admin/proveedor.abastecer.php"); break;			
-			default : echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
-		} 
 	?>
      
 	<?php include_once("admin/includes/footer.php"); ?>

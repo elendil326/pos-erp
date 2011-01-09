@@ -34,15 +34,16 @@
    	
    	<div id="ajax_failure" class="failure" style="display: none;"></div>
    	
+   	
+   	
 	<?php 
-		switch( $_GET["action"] ){
-			case "lista" : require_once("admin/gerentes.lista.php"); break;
-			case "detalles" : require_once("admin/gerentes.detalles.php"); break;
-			case "editar" : require_once("admin/gerentes.editar.php"); break;
-			case "asignar" : require_once("admin/gerentes.asignar.php"); break;
-			case "nuevo" : require_once("admin/gerentes.nuevo.php"); break;
-			default : echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
-		} 
+	
+	   	if(is_file("../../server/admin/gerentes." . $_GET["action"] . ".php")){
+    		require_once("admin/gerentes." . $_GET["action"] . ".php");
+		}else{
+    		echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
+		}	
+		
 	?>
     </div>
 	<?php include_once("admin/includes/footer.php"); ?>

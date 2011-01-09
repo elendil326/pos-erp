@@ -30,16 +30,14 @@
         }
     }
     ?><div id="ajax_failure" class="failure" style="display: none;"></div>
-	<?php 
-		switch( $_GET["action"] )
-		{
-			case "lista" : require_once("admin/ventas.lista.php"); break;
-			case "detalles" : require_once("admin/ventas.detalles.php"); break;
-			case "porProducto" : require_once("admin/ventas.porProducto.php"); break;
-			case "porEmpleado" : require_once("admin/ventas.porEmpleado.php"); break;
-			case "proyecciones" : require_once("admin/ventas.proyecciones.php"); break;
-			default : echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
-		} 
+	<?php
+	
+	   	if(is_file("../../server/admin/ventas." . $_GET["action"] . ".php")){
+    		require_once("admin/ventas." . $_GET["action"] . ".php");
+		}else{
+    		echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
+		} 	 
+
 	?>
 
 	</div>

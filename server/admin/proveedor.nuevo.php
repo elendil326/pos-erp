@@ -88,7 +88,7 @@
 
 
                 reason = "Los datos se han editado con exito !";
-                window.location = 'proveedores.php?action=lista&success=true&reason=' + reason;
+                window.location = 'proveedor.php?action=lista&success=true&reason=' + reason;
 	      }
 	    });
     }

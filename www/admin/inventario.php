@@ -32,16 +32,13 @@
     }
     ?><div id="ajax_failure" class="failure" style="display: none;"></div><?php 
     
-		switch( $_GET["action"] )
-		{
-			case "lista" : require_once("admin/inventario.lista.php"); break;
-			case "nuevo" : require_once("admin/inventario.nuevo.php"); break;
-			case "surtir" : require_once("admin/inventario.surtir.php"); break;			
-			case "detalle" : require_once("admin/inventario.detalle.php"); break;
-			case "transit" : require_once("admin/inventario.transit.php"); break;
-			case "editar" : require_once("admin/inventario.editar.php"); break;
-			default : echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
-		} 
+
+	   	if(is_file("../../server/admin/inventario." . $_GET["action"] . ".php")){
+    		require_once("admin/inventario." . $_GET["action"] . ".php");
+		}else{
+    		echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
+		}
+
 	?>
     </div>
 	<?php include_once("admin/includes/footer.php"); ?>

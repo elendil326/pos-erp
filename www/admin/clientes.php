@@ -32,16 +32,16 @@
     }
     
     ?><div id="ajax_failure" class="failure" style="display: none;"></div><?php
-    		
-		switch( $_GET["action"] )
-		{
-			case "lista" : 			require_once("admin/clientes.lista.php"); break;
-			case "listaDeudores" : 	require_once("admin/clientes.listaDeudores.php"); break;			
-			case "nuevo" : 			require_once("admin/clientes.nuevo.php"); break;
-			case "detalles" : 		require_once("admin/clientes.detalles.php"); break;			
-			case "editar" : 		require_once("admin/clientes.editar.php"); break;			
-			default : echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
-		} 
+    	
+
+    	
+	   	if(is_file("../../server/admin/clientes." . $_GET["action"] . ".php")){
+    		require_once("admin/clientes." . $_GET["action"] . ".php");
+		}else{
+    		echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>" ;
+		}
+
+
 	?>
 
 	</div>
