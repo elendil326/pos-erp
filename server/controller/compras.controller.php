@@ -11,57 +11,61 @@ require_once('logger.php');
 
 function nuevaCompraProveedor( $data = null ){
 
-	if( $data == null || empty( $data ) ){
-		 Logger::log("No hay parametros para ingresar nueva compra a proveedor.");
-		die('{ "success": false, "reason" : "Parametros invalidos" }');
-	}
-
 	$data = parseJSON( $data );
 
+	//{"embarque" : {"id_proveedor":1,"folio": "456","merma_por_arpilla": 0,"numero_de_viaje": null,"peso_por_arpilla": 55.45,"peso_origen" : 12345,"peso_recibido" : 12345,"productor" : "Jorge Nolasco","importe_total": 3702,"total_arpillas": 1,"costo_flete" : 123 },"conductor" : {"nombre_chofer" : "Alan Gonzalez","placas" : "afsdf67t78","marca_camion" : "Chrysler","modelo_camion" : "1977" },"productos": [{"id_producto": 3,"variedad" : "fianas","arpillas" : 12,"precio_kg" : 5.35,"sitio_descarga" : 0}]}
+
+	if( !( isset( $data -> embarque ) && isset( $data -> conductor ) && isset( $data -> productos ) ) ){
+		Logger::log("Json invalido para crear nueva compra proveedor:");
+		die('{"success": false , "reason": "Parametros invalidos." }');
+	}
+	
+	if( $data -> embarque == null ||  $data -> conductor == null || $data -> productos == null){
+		Logger::log("Json invalido para crear nueva compra proveedor:");
+		die('{"success": false , "reason": "Parametros invalidos." }');
+	}
+	
+	
 	/*
 	
-	{
-    "embarque" : {
-        "folio": "456",
-        "merma_por_arpilla": 0,
-        "numero_de_viaje": null,
-        "peso_por_arpilla": 55.45,
-        "peso_origen" : 12345,
-        "peso_recibido" : 12345,
-        "productor" : "Jorge Nolasco",
-        "importe_total": 3702,
-        "total_arpillas": 1,
-        "costo_flete" : 123,
-		"id_proveedor" : 1
-    },
-    "conductor" : {
-        "nombre_chofer" : "Alan Gonzalez",
-        "placas" : "afsdf67t78",
-        "marca_camion" : "Chrysler",
-        "modelo_camion" : "1977" 
-    },
-    "productos": [
-        {
-            "id_producto": 3,
-            "variedad" : "fianas",
-            "arpillas" : 12,
-            "precio_kg" : 5.35,
-            "sitio_descarga" : 0 
-        } 
-    ]
-}
-
-{"embarque" : {"id_proveedor":1,"folio": "456","merma_por_arpilla": 0,"numero_de_viaje": null,"peso_por_arpilla": 55.45,"peso_origen" : 12345,"peso_recibido" : 12345,"productor" : "Jorge Nolasco","importe_total": 3702,"total_arpillas": 1,"costo_flete" : 123 },"conductor" : {"nombre_chofer" : "Alan Gonzalez","placas" : "afsdf67t78","marca_camion" : "Chrysler","modelo_camion" : "1977" },"productos": [{"id_producto": 3,"variedad" : "fianas","arpillas" : 12,"precio_kg" : 5.35,"sitio_descarga" : 0}]}
+		{
+		"embarque" : {
+			"id_proveedor": 1,
+			"folio": "456",
+			"merma_por_arpilla": 0,
+			"numero_de_viaje": null,
+			"peso_por_arpilla": 55.45,
+			"peso_origen" : 12345,
+			"peso_recibido" : 12345,
+			"productor" : "Jorge Nolasco",
+			"importe_total": 3702,
+			"total_arpillas": 1,
+			"costo_flete" : 123 
+		},
+		"conductor" : {
+			"nombre_chofer" : "Alan Gonzalez",
+			"placas" : "afsdf67t78",
+			"marca_camion" : "Chrysler",
+			"modelo_camion" : "1977" 
+		},
+		"productos": [
+			{
+				"id_producto": 3,
+				"variedad" : "fianas",
+				"arpillas" : 12,
+				"precio_kg" : 5.35,
+				"sitio_descarga" : 0
+			}
+		]
+	}
+	
+	//todos nulos
+	{"embarque" : {"id_proveedor": null,"folio": null,"merma_por_arpilla": null,"numero_de_viaje": null,"peso_por_arpilla": null,"peso_origen" : null,"peso_recibido" : null,"productor" : null,"importe_total": null,"total_arpillas": null,"costo_flete" : null },"conductor" : {"nombre_chofer" : null,"placas" : null,"marca_camion" : null,"modelo_camion" : null },"productos": [{"id_producto": null,"variedad" : null,"arpillas" : null,"precio_kg" : null,"sitio_descarga" : null}]}
 	
 	*/
 	
-	if( !( isset( $data -> embarque ) && isset( $data -> conductor ) && isset( $data -> productos ) ) ){
-		Logger::log("Json invalido para crear nueva compra proveedor:");
-		die('{ "success": false, "reason" : "Parametros invalidos" }');
-	}
-
-	Logger::log("Iniciando le proceso de registro de nueva compra a proveedor");
 	
+	Logger::log("Iniciando le proceso de registro de nueva compra a proveedor");
 	
 	//creamos la compra al proveedor
 	$id_compra_proveedor = compraProveedor( $data->embarque, $data->productos );
@@ -96,52 +100,55 @@ function compraProveedor( $data = null, $productos = null ){
 	*/
 	
 	if($data == null){
-		Logger::log("Json invalido para crear nueva compra proveedor:" . $json);
-		die('{ "success": false, "reason" : "Parametros invalidos" }');
+		Logger::log("Json invalido para crear nueva compra proveedor:");
+		die('{"success": false , "reason": "Parametros invalidos." }');
 	}
 	
 	/*
 	
 	"embarque" : {
-        "folio": "456",
-        "merma_por_arpilla": 0,
-        "numero_de_viaje": null,
-        "peso_por_arpilla": 55.45,
-        "peso_origen" : 12345,
-        "peso_recibido" : 12345,
-        "productor" : "Jorge Nolasco",
-        "importe_total": 3702,
-        "total_arpillas": 1,
-        "costo_flete" : 123 
-    }
+		"id_proveedor": 1,
+		"folio": "456",
+		"merma_por_arpilla": 0,
+		"numero_de_viaje": null,
+		"peso_por_arpilla": 55.45,
+		"peso_origen" : 12345,
+		"peso_recibido" : 12345,
+		"productor" : "Jorge Nolasco",
+		"importe_total": 3702,
+		"total_arpillas": 1,
+		"costo_flete" : 123 
+	}
 	
 	*/
 	
-	if(!( /*isset($data->id_proveedor) &&*/
-			isset($data->peso_recibido) &&
-			isset($data->total_arpillas) &&
-			isset($data->peso_por_arpilla) &&
-			isset($data->productor) &&
+	if(!(   isset($data->id_proveedor) &&
 			isset($data->merma_por_arpilla) &&
-			isset($data->peso_origen)
+			isset($data->peso_origen) &&
+			isset($data->peso_recibido) &&
+			isset($data->productor) &&
+			isset($data->total_arpillas) &&
+			isset($data->peso_por_arpilla) 
 		)){
 		Logger::log("Faltan parametros para crear la compra a proveedor");
-		die('{ "success": false, "reason" : "Faltan parametros. (compra_proveedor)" }');
+		die('{ "success": false, "reason" : "Parametros invalidos." }');
 
 	}
 	
 	//calculamos cuanto vale el viaje segun el proveedor
-	$peso_promedio_origen = ( $data->peso_origen / $data->total_arpillas );
+	/*$peso_promedio_origen = ( $data->peso_origen / $data->total_arpillas );
 	$precio_total_origen = 0;
 	
 	foreach( $productos as $producto ){
 		$precio_total_origen += $producto->precio_kg * $peso_promedio_origen;
-	}
+	}*/
 
 	//creamos el objeto compra
     $compra = new CompraProveedor();
-	//$compra -> setIdProveedor( $data->id_proveedor );
-	$compra -> setIdProveedor( 1 );
+	
+	$compra -> setIdProveedor( $data->id_proveedor );	
+	
+	$compra -> setPesoOrigen( $data->peso_origen );
 	
 	if(isset($data->folio))
 	$compra -> setFolio( $data->folio );
@@ -150,10 +157,19 @@ function compraProveedor( $data = null, $productos = null ){
 		$compra -> setNumeroDeViaje( $data->numero_de_viaje );
 	
 	$compra -> setPesoRecibido( $data->peso_recibido );
+	
 	$compra -> setArpillas( $data->total_arpillas );
+	
 	$compra -> setPesoPorArpilla( $data->peso_por_arpilla );
+	
 	$compra -> setProductor( $data->productor );
-    $compra -> setMermaPorArpilla( $data->merma_por_arpilla );	
+	
+	if(isset($data->calidad))
+	$compra -> setCalidad( $data->calidad );
+	
+    $compra -> setMermaPorArpilla( $data->merma_por_arpilla );
+	
+	if(isset($data->importe_total))
 	$compra -> setTotalOrigen( $precio_total_origen );
 	
 	DAO::transBegin();	
@@ -185,8 +201,8 @@ function compraProveedorFlete( $data = null, $id_compra_proveedor = null, $costo
 	$data = parseJSON( $json );*/
 
 	if($data == null){
-		Logger::log("Json invalido para crear un nuevo flete a compra proveedor:" . $json);
-		die('{ "success": false, "reason" : "Parametros invalidos" }');
+		Logger::log("Json invalido para crear nueva compra proveedor:");
+		die('{"success": false , "reason": "Parametros invalidos." }');
 	}
 	
 	
@@ -204,9 +220,7 @@ function compraProveedorFlete( $data = null, $id_compra_proveedor = null, $costo
 	if(!( $id_compra_proveedor != null &&
 			$costo_flete != null &&
 			isset($data->nombre_chofer) &&
-			isset($data->marca_camion) &&
-			isset($data->placas) &&
-			isset($data->marca_camion)
+			isset($data->placas)
 		)){
 		Logger::log("Faltan parametros para crear el nuevo flete a compra a proveedor:" . $json);
 		die('{ "success": false, "reason" : "Faltan parametros." }');
@@ -214,11 +228,19 @@ function compraProveedorFlete( $data = null, $id_compra_proveedor = null, $costo
 	}
 
     $compra = new CompraProveedorFlete();
+	
 	$compra -> setIdCompraProveedor( $id_compra_proveedor );
+	
 	$compra -> setChofer( $data->nombre_chofer );
-	$compra -> setMarcaCamion( $data->marca_camion );
+	
+	if( isset( $data->marca_camion ) )
+		$compra -> setMarcaCamion( $data->marca_camion );
+		
 	$compra -> setPlacasCamion( $data->placas );
+	
+	if( isset( $data->modelo_camion ) )
 	$compra -> setModeloCamion( $data->modelo_camion );
+	
 	$compra -> setCostoFlete( $costo_flete );	
 	
 	try{
@@ -418,22 +440,25 @@ function ingresarDetallecompraProveedor( $data = null, $id_compra_proveedor =nul
 
 
 	if($data == null){
-		Logger::log("Array de productos invalido:" . $data);
-		die('{ "success": false, "reason" : "Parametros invalidos" }');
+		Logger::log("Json invalido para crear nueva compra proveedor:");
+		die('{"success": false , "reason": "Parametros invalidos." }');
 	}
 	
 	Logger::log("Iniciando proceso de creacion detalle compra proveedor");
 	
 	foreach( $data as $producto ){
 		
-		if( !( isset( $producto -> id_producto ) && 
+		if( !( 
+			$id_compra_proveedor != null &&
+			isset( $producto -> id_producto ) && 
 			isset( $producto -> variedad ) &&
 			isset( $producto -> arpillas ) && 
 			isset( $producto -> precio_kg ) && 			
-			$id_compra_proveedor != null && $peso_por_arpilla != null
+			$peso_por_arpilla != null
 			) ){
 			
 			Logger::log("error al agregar producto a detalle compra proveedor");
+			die('{"success": false , "reason": "Parametros invalidos." }');
 			DAO::transRollback();		
 		}
 		
@@ -462,11 +487,10 @@ function ingresarDetallecompraProveedor( $data = null, $id_compra_proveedor =nul
 
 function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = null, $peso_por_arpilla = null){
 
-	//var_dump($sitio_descarga);
 	
 	if($data == null){
-		Logger::log("Array de productos invalido:" . $data);
-		die('{ "success": false, "reason" : "Parametros invalidos" }');
+		Logger::log("Json invalido para crear nueva compra proveedor:");
+		die('{"success": false , "reason": "Parametros invalidos." }');
 	}
 	
 	Logger::log("Iniciando proceso de insercion de producto a inventario maestro");
@@ -509,12 +533,14 @@ if(isset($args['action'])){
 
 		case 1000://recibe el json para crear una compra  aproveedor
 
-			if( !isset( $args['data'] ) || empty( $args['data'] ) ){
+			if( !( isset( $args['data'] ) && $args['data'] != null ) )
+			{
 				Logger::log("No hay parametros para ingresar nueva compra a proveedor.");
 				die('{"success": false , "reason": "Parametros invalidos." }');
-			}else{														
-					nuevaCompraProveedor( $args['data'] );									
 			}
+						
+			nuevaCompraProveedor( $args['data'] );
+			
 		break;
 	
 		case 1001://nueva compra a proveedor (admin)		
