@@ -227,11 +227,17 @@ if(POS_ENABLE_GMAPS){
         <?php 
             if(POS_ENABLE_GMAPS){ ?>startMap();<?php }
         ?>
-
-		var graficaVentas = new HumbleFinance();
-        graficaVentas.addGraph( numVentas );
-        graficaVentas.addSummaryGraph( numVentas );
-        graficaVentas.render('finance');
+$("finance").update("asdf");
+/*
+		if( numVentas.length == 0 ){
+			
+		}else{
+			var graficaVentas = new HumbleFinance();
+		    graficaVentas.addGraph( numVentas );
+		    graficaVentas.addSummaryGraph( numVentas );
+		    graficaVentas.render('finance');
+		}
+	*/	
 
 	});
 

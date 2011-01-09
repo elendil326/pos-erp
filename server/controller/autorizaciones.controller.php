@@ -362,8 +362,8 @@ function surtirProductosSucursal( $args ){
     }
 
 
-    $autorizacion->setIdUsuario( '-1' );
-    $autorizacion->setEstado( '3' );
+    $autorizacion->setIdUsuario	( $_SESSION['userid'] );
+    $autorizacion->setEstado	( '3' );
     $autorizacion->setIdSucursal( $args['id_sucursal'] );
 
     $time = strftime( "%Y-%m-%d-%H-%M-%S", time() );

@@ -196,7 +196,6 @@ function listarClientes(  ){
         array_push($total_customers, $c );
 	}
 
-	Logger::log("Listando clientes");	
 	return $total_customers;
 
 }
