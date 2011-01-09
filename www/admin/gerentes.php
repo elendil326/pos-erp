@@ -16,7 +16,7 @@
 
   </head>
   <body>
-    <div class="g-doc-800" id="g-doc">
+    <div class="g-doc-800" id="mainWindow">
         
     <?php include_once("admin/includes/mainMenu.php"); ?>
 	

@@ -130,7 +130,8 @@ if(POS_ENABLE_GMAPS){
 	?>
 	<tr><td><b>Sucursal donde se dio de alta</b></td><td><?php echo $_suc; ?></td></tr>
 
-	<tr><td colspan=2><input type=button value="Editar detalles" onclick="editarCliente()"></td> </tr>
+	<tr><td colspan=2><input type=button value="Editar detalles" onclick="editarCliente()">
+	<input type=button value="Vender" onclick="window.location='ventas.php?action=vender&cid=<?php echo $_REQUEST['id']; ?>'"></td> </tr>
 </table>
 
 
@@ -160,7 +161,7 @@ if(POS_ENABLE_GMAPS){
             $primerVenta = $cliente->getFechaIngreso();
        		$start = date("Y-m-d", strtotime("-1 day", strtotime($primerVenta)));
 			$now = date ( "Y-m-d" );
-			
+			$activo = false;
             $numVentas = array();
             $fechas = array();
             $n = 0;
@@ -176,6 +177,9 @@ if(POS_ENABLE_GMAPS){
 
 				$results = VentasDAO::byRange($v1, $v2);
 				
+				if(count($results) > 0){
+					$activo = true;
+				}
 				array_push( $numVentas, count($results) );
 		        array_push( $fechas, $start );
 
@@ -194,26 +198,32 @@ if(POS_ENABLE_GMAPS){
 
          	}
 
-            echo "\nvar numVentas = [";
-            for($i = 0; $i < sizeof($numVentas); $i++ ){
-                echo  "[" . $i . "," . $numVentas[$i] . "]";
-                if($i < sizeof($numVentas) - 1){
-                    echo ",";
-                }
-            }
-            echo "];\n";
+			echo "var actividad = " . ( $activo === true ? "true" : "false" ) . ";";
+
+			if($activo){
+				echo "\nvar numVentas = [";
+		        for($i = 0; $i < sizeof($numVentas); $i++ ){
+		            echo  "[" . $i . "," . $numVentas[$i] . "]";
+		            if($i < sizeof($numVentas) - 1){
+		                echo ",";
+		            }
+		        }
+		        echo "];\n";
 
 
 
 
-            echo "var fechas = [";
-            for($i = 0; $i < sizeof($fechas); $i++ ){
-                echo  "{ fecha : '" . $fechas[$i] . "'}";
-                if($i < sizeof($fechas) - 1){
-                    echo ",";
-                }
-            }
-            echo "];\n";	
+		        echo "var fechas = [";
+		        for($i = 0; $i < sizeof($fechas); $i++ ){
+		            echo  "{ fecha : '" . $fechas[$i] . "'}";
+		            if($i < sizeof($fechas) - 1){
+		                echo ",";
+		            }
+		        }
+		        echo "];\n";	
+			}
+
+            
 
 		?>
 
@@ -227,17 +237,16 @@ if(POS_ENABLE_GMAPS){
         <?php 
             if(POS_ENABLE_GMAPS){ ?>startMap();<?php }
         ?>
-$("finance").update("asdf");
-/*
-		if( numVentas.length == 0 ){
-			
+
+		if( !actividad ){
+			$("finance").update("<h3>Este cliente no ha realizado ninguna compra.</h3>");
 		}else{
 			var graficaVentas = new HumbleFinance();
 		    graficaVentas.addGraph( numVentas );
 		    graficaVentas.addSummaryGraph( numVentas );
 		    graficaVentas.render('finance');
 		}
-	*/	
+
 
 	});
 
@@ -264,149 +273,33 @@ $("finance").update("asdf");
 
 
 
-<h2>Ventas a contado</h2><?php
-
-$ventas = listarVentaCliente($_REQUEST['id'], 'contado');
-
-
-
-//render the table
-$header = array( 
-	"id_venta" => "Venta", 
-	"fecha" => "Fecha", 
-	"sucursal" => "Sucursal",
-	"cajero" => "Cajero",
-	"subtotal" => "Subtotal",
-	"descuento" => "Descuento",
-	"total" => "Total");
-
-
-$tabla = new Tabla( $header, $ventas );
-$tabla->addColRender( "subtotal", "moneyFormat" ); 
-$tabla->addColRender( "total", "moneyFormat" ); 
-$tabla->addColRender( "descuento", "percentFormat" ); 
-$tabla->addNoData("Este cliente no tiene ventas a contado.");
-$tabla->addOnClick("id_venta", "mostrarDetallesVenta");
-$tabla->render();	
-
-?>
-
-
-
-
-
-
-
-
-<h2>Ventas facturadas</h2><?php
-
-$ventas = listarVentaCliente($_REQUEST['id']);
-
-$ventasFacturadas = array();
-
-foreach( $ventas as $venta ){
-
-       $fv = new FacturaVenta();
-       $fv->setIdVenta( $venta['id_venta'] );
-
-       if(sizeof(FacturaVentaDAO::search($fv))> 0){
-            array_push($ventasFacturadas, $venta);
-       }
-    
-}
-
-
-function buscarFolio($id){
-       $fv = new FacturaVenta();
-       $fv->setIdVenta( $id );
-       $r = FacturaVentaDAO::search($fv);
-       if(sizeof($r) > 0)
-        return $r[0]->getFolio();
-       else
-        return null;
-}
-
-$header = array( 
-	"id_venta" => "Folio",
-	"fecha" => "Fecha", 
-	"sucursal" => "Sucursal",
-	"cajero" => "Cajero",
-	"subtotal" => "Subtotal",
-	"descuento" => "Descuento",
-	"total" => "Total",
-	/*"pagado" => "Pagado"*/);
+<?php
+if($activo){
+	$ventas = listarVentaCliente($_REQUEST['id'], 'contado');
 	
-$tabla = new Tabla( $header, $ventasFacturadas );
-$tabla->addColRender( "subtotal", "moneyFormat" ); 
-$tabla->addColRender( "saldo", "moneyFormat" ); 
-$tabla->addColRender( "total", "moneyFormat" ); 
-$tabla->addColRender( "pagado", "moneyFormat" ); 
-$tabla->addColRender( "id_venta", "buscarFolio" ); 
-$tabla->addColRender( "descuento", "percentFormat" );
+	//render the table
+	$header = array( 
+		"id_venta" => "Venta", 
+		"fecha" => "Fecha", 
+		"sucursal" => "Sucursal",
+		"cajero" => "Cajero",
+		"subtotal" => "Subtotal",
+		"descuento" => "Descuento",
+		"total" => "Total");
 
-$tabla->addOnClick("id_venta", "mostrarDetallesVenta");
-$tabla->addNoData("Este cliente no tiene ventas que se hayan facturado.");
-$tabla->render();
+
+	$tabla = new Tabla( $header, $ventas );
+	$tabla->addColRender( "subtotal", "moneyFormat" ); 
+	$tabla->addColRender( "total", "moneyFormat" ); 
+	$tabla->addColRender( "descuento", "percentFormat" ); 
+	$tabla->addNoData("Este cliente no tiene ventas a contado.");
+	$tabla->addOnClick("id_venta", "mostrarDetallesVenta");
+	echo "<h2>Ventas a contado</h2>";
+	$tabla->render();	
+}
 
 
 ?>
-
-
-
-
-
-
-<h2>Ventas a credito</h2><?php
-
-
-function checkSaldoNum( $n ){
-    if($n != 0){
-       return "<font color=red>".moneyFormat($n). "</font>";
-    }
-    return moneyFormat($n);
-}
-
-$ventasCredito = listarVentaCliente($_REQUEST['id'], 'credito');
-
-
-$header = array( 
-	"id_venta" => "Venta", 
-	"fecha" => "Fecha", 
-	"sucursal" => "Sucursal",
-	"cajero" => "Cajero",
-	"subtotal" => "Subtotal",
-	"descuento" => "Descuento",
-	"total" => "Total",
-	"pagado" => "Pagado",
-	"saldo" => "Saldo");
-	
-$tabla = new Tabla( $header, $ventasCredito );
-$tabla->addColRender( "subtotal", "moneyFormat" ); 
-$tabla->addColRender( "saldo", "checkSaldoNum" ); 
-$tabla->addColRender( "total", "moneyFormat" ); 
-$tabla->addColRender( "pagado", "moneyFormat" ); 
-$tabla->addColRender( "descuento", "percentFormat" );
-
-$tabla->addOnClick("id_venta", "mostrarDetallesVenta");
-$tabla->addNoData("Este cliente no tiene ventas a credito.");
-
-
-
-$totalDeuda = 0;
-foreach ($ventasCredito as $venta)
-{
-     
-    $totalDeuda += $venta['saldo'];
-}
-
-if(sizeof($ventasCredito) > 0){
-    echo "<h3>Saldo pendiente : " . moneyFormat($totalDeuda) . "</h3>";
-}
-
-
-$tabla->render();
-?>
-
 
 
 
@@ -416,7 +309,119 @@ $tabla->render();
 
 
 <?php
-if(sizeof($ventasCredito) > 0){
+if($activo){
+
+
+	$ventas = listarVentaCliente($_REQUEST['id']);
+
+	$ventasFacturadas = array();
+
+	foreach( $ventas as $venta ){
+
+		   $fv = new FacturaVenta();
+		   $fv->setIdVenta( $venta['id_venta'] );
+
+		   if(sizeof(FacturaVentaDAO::search($fv))> 0){
+		        array_push($ventasFacturadas, $venta);
+		   }
+		
+	}
+
+
+	function buscarFolio($id){
+		   $fv = new FacturaVenta();
+		   $fv->setIdVenta( $id );
+		   $r = FacturaVentaDAO::search($fv);
+		   if(sizeof($r) > 0)
+		    return $r[0]->getFolio();
+		   else
+		    return null;
+	}
+
+	$header = array( 
+		"id_venta" => "Folio",
+		"fecha" => "Fecha", 
+		"sucursal" => "Sucursal",
+		"cajero" => "Cajero",
+		"subtotal" => "Subtotal",
+		"descuento" => "Descuento",
+		"total" => "Total",
+		/*"pagado" => "Pagado"*/);
+	
+	$tabla = new Tabla( $header, $ventasFacturadas );
+	$tabla->addColRender( "subtotal", "moneyFormat" ); 
+	$tabla->addColRender( "saldo", "moneyFormat" ); 
+	$tabla->addColRender( "total", "moneyFormat" ); 
+	$tabla->addColRender( "pagado", "moneyFormat" ); 
+	$tabla->addColRender( "id_venta", "buscarFolio" ); 
+	$tabla->addColRender( "descuento", "percentFormat" );
+
+	$tabla->addOnClick("id_venta", "mostrarDetallesVenta");
+	$tabla->addNoData("Este cliente no tiene ventas que se hayan facturado.");
+	echo "<h2>Ventas facturadas</h2>";
+	$tabla->render();
+
+}
+
+
+function checkSaldoNum( $n ){
+    if($n != 0){
+       return "<font color=red>".moneyFormat($n). "</font>";
+    }
+    return moneyFormat($n);
+}
+
+
+if($activo){
+
+
+
+	$ventasCredito = listarVentaCliente($_REQUEST['id'], 'credito');
+
+
+	$header = array( 
+		"id_venta" => "Venta", 
+		"fecha" => "Fecha", 
+		"sucursal" => "Sucursal",
+		"cajero" => "Cajero",
+		"subtotal" => "Subtotal",
+		"descuento" => "Descuento",
+		"total" => "Total",
+		"pagado" => "Pagado",
+		"saldo" => "Saldo");
+	
+	$tabla = new Tabla( $header, $ventasCredito );
+	$tabla->addColRender( "subtotal", "moneyFormat" ); 
+	$tabla->addColRender( "saldo", "checkSaldoNum" ); 
+	$tabla->addColRender( "total", "moneyFormat" ); 
+	$tabla->addColRender( "pagado", "moneyFormat" ); 
+	$tabla->addColRender( "descuento", "percentFormat" );
+
+	$tabla->addOnClick("id_venta", "mostrarDetallesVenta");
+	$tabla->addNoData("Este cliente no tiene ventas a credito.");
+
+
+
+	$totalDeuda = 0;
+	foreach ($ventasCredito as $venta)
+	{
+		 
+		$totalDeuda += $venta['saldo'];
+	}
+
+	if(sizeof($ventasCredito) > 0){
+		echo "<h3>Saldo pendiente : " . moneyFormat($totalDeuda) . "</h3>";
+	}
+
+	echo "<h2>Ventas a credito</h2>";
+	$tabla->render();
+}
+
+
+
+
+
+if($activo && (sizeof($ventasCredito) > 0)){
 
     ?><h2>Abonos</h2><?php
 

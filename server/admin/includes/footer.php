@@ -4,3 +4,9 @@
     ©2010 Caffeina Mexico 
 <!-- <br><img src='../media/logo_simbolo.png'> -->
 </p>
+
+  	<script>
+		if(screen.width > 1024){
+			document.getElementById("mainWindow").setAttribute("class", "g-doc-1024");
+		}
+	</script>

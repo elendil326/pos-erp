@@ -14,18 +14,25 @@ require_once('model/compra_proveedor.dao.php');
 <?php
 
 
+
+$iMaestro = listarInventarioMaestro() ;
+
 $header = array(
-	"remision" 	=> "Numero de remision",
-	"descripcion" 	=> "Producto",
+	"folio" 	=> "Remision",
+	"producto_desc" 	=> "Producto",
 	"variedad" 	 	=> "Variedad",
 	"arpillas"		=> "Arpillas",
-	"promedio"		=> "Kg/Arpilla",
-	"Productor"		=> "Productor",
-	"fecha"			=> "Fecha llegada",
-	"transporte"	=> "Transporte",
-	"merma_arpilla"	=> "Merma por arpilla",
-	"descarga"		=> "Sitio de descarga",
-	"existencias"	=> "Existencias");
+	"peso_por_arpilla"		=> "Kg/Arpilla",
+	"productor"		=> "Productor",
+	"fecha"			=> "Llegada",
+	//"transporte"	=> "Transporte",
+	"merma_por_arpilla"	=> "Merma",
+	"sitio_descarga_desc"=> "Sitio de descarga",
+	"existencias"	=> "Existencias",
+	"existencias_procesadas"	=> "Limpias" );
 	
-	
+$tabla = new Tabla( $header, $iMaestro );
+$tabla->render();
+
+?>
 

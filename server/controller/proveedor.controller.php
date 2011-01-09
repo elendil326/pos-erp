@@ -59,7 +59,7 @@ function nuevoProveedor( $json = null){
 
 
 
-	if(strlen($data->nombre) < 10){
+	if(strlen($data->nombre) < 8){
 		Logger::log("Nombre muy corto para insertar proveedor.");
 		die ( '{"success": false, "reason": "El nombre del proveedor es muy corto." }' );		
 	}

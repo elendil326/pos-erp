@@ -25,6 +25,9 @@ class CompraProveedor extends VO
 			if( isset($data['id_compra_proveedor']) ){
 				$this->id_compra_proveedor = $data['id_compra_proveedor'];
 			}
+			if( isset($data['peso_origen']) ){
+				$this->peso_origen = $data['peso_origen'];
+			}
 			if( isset($data['id_proveedor']) ){
 				$this->id_proveedor = $data['id_proveedor'];
 			}
@@ -72,6 +75,7 @@ class CompraProveedor extends VO
 	{ 
 		$vec = array( 
 			"id_compra_proveedor" => $this->id_compra_proveedor,
+			"peso_origen" => $this->peso_origen,
 			"id_proveedor" => $this->id_proveedor,
 			"fecha" => $this->fecha,
 			"folio" => $this->folio,
@@ -97,6 +101,15 @@ class CompraProveedor extends VO
 	  * @var int(11)
 	  */
 	protected $id_compra_proveedor;
+
+	/**
+	  * peso_origen
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $peso_origen;
 
 	/**
 	  * id_proveedor
@@ -223,6 +236,30 @@ class CompraProveedor extends VO
 	final public function setIdCompraProveedor( $id_compra_proveedor )
 	{
 		$this->id_compra_proveedor = $id_compra_proveedor;
+	}
+
+	/**
+	  * getPesoOrigen
+	  * 
+	  * Get the <i>peso_origen</i> property for this object. Donde <i>peso_origen</i> es  [Campo no documentado]
+	  * @return float
+	  */
+	final public function getPesoOrigen()
+	{
+		return $this->peso_origen;
+	}
+
+	/**
+	  * setPesoOrigen( $peso_origen )
+	  * 
+	  * Set the <i>peso_origen</i> property for this object. Donde <i>peso_origen</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>peso_origen</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setPesoOrigen( $peso_origen )
+	{
+		$this->peso_origen = $peso_origen;
 	}
 
 	/**

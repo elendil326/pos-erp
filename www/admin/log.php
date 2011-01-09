@@ -357,7 +357,7 @@ ul li {
 
   </head>
   <body>
-    <div class="g-doc-800" id="g-doc">
+    <div class="g-doc-800" id="mainWindow">
         
 	  <img src="../media/logo_pos.png">
 

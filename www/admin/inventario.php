@@ -16,11 +16,11 @@
 
   </head>
   <body>
-    <div class="g-doc-800" id="g-doc">
+    <div class="g-doc-800" id="mainWindow">
         
     <?php include_once("admin/includes/mainMenu.php"); ?>
 	
-	<div class="g-section g-tpl-160 main">
+
     <?php
     if(isset($_REQUEST['success'])){
 
@@ -40,9 +40,9 @@
 		}
 
 	?>
-    </div>
+
 	<?php include_once("admin/includes/footer.php"); ?>
     </div>
-  
+
 </body>
 </html>

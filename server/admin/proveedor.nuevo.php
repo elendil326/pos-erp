@@ -36,7 +36,7 @@
         }
 
 
-        if($('#direccion').val().length < 10){
+        if($('#direccion').val().length < 8){
             return $("#ajax_failure").html("La direccion es muy corta.").show();            
         }
 
@@ -78,16 +78,17 @@
                     return;
 			    }
 
-                if(response.success == false){
+                if(response.success === false){
                 	$("#loader").fadeOut('fast', function (){
 						$("#submit").removeAttr('disabled');
 						$("#ajax_failure").html(response.reason).show();
 					});
-					
+					return;
                 }
 
 
                 reason = "Los datos se han editado con exito !";
+                
                 window.location = 'proveedor.php?action=lista&success=true&reason=' + reason;
 	      }
 	    });

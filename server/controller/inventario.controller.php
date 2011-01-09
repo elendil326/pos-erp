@@ -6,6 +6,9 @@ require_once('model/detalle_venta.dao.php');
 require_once('model/ventas.dao.php');
 require_once('model/proveedor.dao.php');
 require_once('model/actualizacion_de_precio.dao.php');
+require_once('model/compra_proveedor.dao.php');
+require_once('model/detalle_compra_proveedor.dao.php');
+require_once('model/inventario_maestro.dao.php');
 require_once('logger.php');
 
 /*
@@ -90,14 +93,74 @@ function detalleProductoSucursal( $args ){
 }
 
 
-
-function listarInventarioMaestro ()
+/**
+  * Obtiene las ultimas n entradas del inventario maestro ordenadas por fecha.
+  * Por default n es 50.
+  * 
+  * */
+function listarInventarioMaestro( $n = 50 )
 {
 	
-	return InventarioDAO::getAll();
+	//meter el inventario aqui, para no estar haciendo querys
+	$inventario = InventarioDAO::getAll(  );
 	
+	//meter aqui las sucursales para no estar buscando en la base
+	$sucursales = SucursalDAO::getAll();
 	
+	$registro = array();
+
+	//obtener todas las compras a proveedores
+	$compras = CompraProveedorDAO::getAll(1, $n , 'fecha', 'desc');
+
+	foreach( $compras as $compra ){
+
+		//obtener todos los productos de esa compra
+		$dc = new DetalleCompraProveedor();
+		$dc->setIdCompraProveedor( $compra->getIdCompraProveedor() );
+		$detalles = DetalleCompraProveedorDAO::search( $dc );
+
+		//ciclar por los detalles
+		foreach($detalles as $detalle){
+
+			$iM = InventarioMaestroDAO::getByPK( $detalle->getIdProducto(), $compra->getIdCompraProveedor() );
+
+			//buscar la descripcion del producto
+			foreach($inventario as $i){
+				if($i->getIdProducto() == $detalle->getIdProducto()){
+					$p = $i;
+					break;
+				}
+			}
+			
+			
+			foreach($sucursales as $s){
+				if($s->getIdSucursal() == $iM->getSitioDescarga()){
+					$sitio = $s->getDescripcion();
+					break;
+				}
+			}			
+			
+			$bar = array_merge( $compra->asArray(), $iM->asArray(),  $detalle->asArray() );
+			$bar['producto_desc'] = $p->getDescripcion();
+			
+			$bar['sitio_descarga_desc'] = $sitio;
+			
+			$fecha = explode( " ", $bar['fecha']);
+			$bar['fecha'] = $fecha[0];
+						
+			array_push( $registro,  $bar );
+		}
+
+	}
+
+	return $registro;
+
 }
+
+
+
+
+
 
 function comprasSucursal( $args ){
 
