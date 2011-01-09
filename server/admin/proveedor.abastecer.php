@@ -270,12 +270,17 @@ require_once('model/sucursal.dao.php');
         $.ajax({
 	      url: "../proxy.php",
 	      data: { 
-            action : 500, 
+            action : 1000, 
             data : $.JSON.encode(obj)
            },
 	      cache: false,
 	      success: function(data){
-		        response = jQuery.parseJSON(data);
+	      		try{
+			        response = jQuery.parseJSON(data);
+			    }catch(e){
+           			$("#loader").hide();
+                    return $("#ajax_failure").html("Error en el servidor. Intente de nuevo.").show();			    
+			    }
 
                 if(response.success == false){
            			$("#loader").hide();

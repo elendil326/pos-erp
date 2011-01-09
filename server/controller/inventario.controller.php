@@ -239,24 +239,27 @@ function detalleVentas( $id ){
 
 function nuevoProducto($data)
 {
-    DAO::transBegin();
+
 
     try{
-
         $jsonData = parseJSON($data);
     }catch(Exception $e){
-        Logger::log("json invalido para nuevo producto" . $e);
-        DAO::transRollback();
+        Logger::log("Json invalido para nuevo producto" . $e);
         return array( "success" => false, "reason" => "bad json" );
     }
 
+
+	if(!( isset($jsonData->precio_venta) && isset($jsonData->descripcion) && isset($jsonData->escala) && isset($jsonData->tratamiento) ) ){
+		Logger::log("Faltan parametros para insertar nuevo producto");
+		die('{ "success" : false, "reason" : "Datos incompletos." }');	
+	}
+
     $inventario = new Inventario();
-    $inventario->setCosto ( $jsonData->precio_intersucursal );
     $inventario->setDescripcion ($jsonData->descripcion);
-    $inventario->setMedida ($jsonData->medida);
-    $inventario->setPrecioIntersucursal ($jsonData->precio_intersucursal);
+    $inventario->setEscala 		($jsonData->escala == "null" ? null : $jsonData->escala);
+    $inventario->setTratamiento ($jsonData->tratamiento);
 
-
+    DAO::transBegin();
 
     try{
         InventarioDAO::save( $inventario );
@@ -270,11 +273,10 @@ function nuevoProducto($data)
     //insertar actualizacion de precio
     $actualizacion = new ActualizacionDePrecio();
 
-    $actualizacion->setIdProducto ( $inventario->getIdProducto() );
-    $actualizacion->setIdUsuario ( $_SESSION['userid'] );
-    $actualizacion->setPrecioCompra ( $inventario->getPrecioIntersucursal() );
-    $actualizacion->setPrecioIntersucursal ( $inventario->getPrecioIntersucursal() );
-    $actualizacion->setPrecioVenta ( $jsonData->precio_venta );
+    $actualizacion->setIdProducto 			( $inventario->getIdProducto() );
+    $actualizacion->setIdUsuario 			( $_SESSION['userid'] );
+    $actualizacion->setPrecioIntersucursal 	( $jsonData->precio_intersucursal );
+    $actualizacion->setPrecioVenta 			( $jsonData->precio_venta );
 
 
     try{

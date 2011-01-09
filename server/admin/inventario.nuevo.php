@@ -16,16 +16,25 @@
 <table border="0" cellspacing="5" cellpadding="5">
 	<tr><td>Descripcion</td><td><input type="text" id="descripcion" size="40"/></td></tr>
 	<tr><td>Precio Venta</td><td><input type="text" id="precioVenta" size="40"/></td></tr>
-	<tr><td>Existencias Minimas</td><td><input type="text" id="existenciasMinimas" size="40"/></td></tr>
-	<tr><td>Precio Intersucursal/Costo</td><td><input type="text" id="precioIntersucursal" size="40"/></td></tr>
-	<tr><td>Medida</td>
+	<tr><td>Precio Intersucursal</td><td><input type="text" id="precioIntersucursal" size="40"/></td></tr>
+	<tr><td>Escala</td>
 		<td>
-			<select id="medida"> 
-				<option value='fraccion' >Fraccion</option>
-				<option value='unidad' >Unidad</option>
+			<select id="escala">
+				<option value='kilogramo' 	>Kilogramo(s)</option>
+				<option value='pieza' 		>Pieza(s)</option>
+				<option value='litro' 		>Litro(s)</option>
+				<option value='metro' 		>Unidad(es)</option>
 	        </select>
 		</td>
 	</tr>
+	<tr><td>Proceso</td>
+		<td>
+			<select id="tratamiento">
+				<option value='null' 		>Sin tratamientos</option>
+				<option value='limpia'		>Limpia/Original</option>
+	        </select>
+		</td>
+	</tr>	
 	<tr><td></td><td><input type="button" onClick="save()" value="Guardar"/> </td></tr>
 </table>
 
@@ -37,11 +46,11 @@
     function save(){
         //validar
         data = {
-                descripcion : $('#descripcion').val(),
-                precio_venta : $('#precioVenta').val(),
-                exitencias_minimas : $('#existenciasMinimas').val(),
-                precio_intersucursal : $('#precioIntersucursal').val(),
-                medida : $('#medida').val()
+                descripcion : 			$('#descripcion').val(),
+                escala : 				$('#escala').val(),
+                tratamiento:			$('#tratamiento').val(),
+                precio_venta : 			$('#precioVenta').val(),
+                precio_intersucursal : 	$('#precioIntersucursal').val()
             };
 
         jQuery.ajaxSettings.traditional = true;
@@ -55,7 +64,11 @@
            },
 	      cache: false,
 	      success: function(data){
-		        response = jQuery.parseJSON(data);
+	      		try{
+			        response = jQuery.parseJSON(data);
+			    }catch(e){
+                    return $("#ajax_failure").html("Error").show();			    
+			    }
 
                 if(response.success == false){
                     return $("#ajax_failure").html(response.reason).show();
