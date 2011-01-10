@@ -358,6 +358,63 @@ function nuevoProducto($data)
 
 
 
+function procesarProducto( $json = null ){
+
+	Logger::log("Iniciando proceso de producto");
+
+	if($json == null){
+        Logger::log("No hay parametros para procesar el prodcuto.");
+		die('{ "success": false, "reason" : "Parametros invalidos" }');
+	}
+	
+	$data = parseJSON( $json );
+	
+	if( !( isset( $data -> id_compra ) && isset( $data -> id_producto ) && isset( $data -> cantidad_procesada ) ) ){
+		Logger::log("Json invalido para crear un nuevo proceso de producto");
+		die('{"success": false , "reason": "Parametros invalidos." }');
+	}
+	
+	if( $data -> id_compra == null ||  $data -> id_producto == null || $data -> cantidad_procesada == null){
+		Logger::log("Json invalido para crear un nuevo proceso de producto");
+		die('{"success": false , "reason": "Parametros invalidos." }');
+	}
+	
+	$inventario_maestro =  InventarioMaestroDAO::getByPK( $data -> id_producto, $data -> id_compra );			
+	
+	//verificamos que la cantidad a procesar no supere a la cantidad existente -_-!
+	
+	$existencias = $inventario_maestro -> getExistencias();	
+	
+	if( $data -> cantidad_procesada > $existencias){
+		Logger::log("Error al editar producto en inventario maestro, la cantidad a procesar supera las existencias :" . $e);
+		die( '{"success": false, "reason": "Error al editar producto en inventario maestro, la cantidad a procesar supera las existencias."}' );
+	}
+		
+	DAO::transBegin();		
+		
+	$inventario_maestro -> setExistencias( $existencias - $data -> cantidad_procesada );
+	$inventario_maestro -> setExistenciasProcesadas( $inventario_maestro -> getExistenciasProcesadas() + $data -> cantidad_procesada );
+		
+	try{
+		InventarioMaestroDAO::save( $inventario_maestro );
+	}catch(Exception $e){
+		Logger::log("Error al editar producto en inventario maestro:" . $e);
+		DAO::transRollback();	
+		die( '{"success": false, "reason": "Error al editar producto en inventario maestro"}' );
+	}	
+	
+	DAO::transEnd();
+	
+	Logger::log("Modificado el inventario maestro");
+	
+	printf('{"success":true}');
+	
+	return;
+
+}
+
+
+
 if(isset($args['action'])){
 	switch($args['action']){
 	    case 400:
@@ -393,6 +450,20 @@ if(isset($args['action'])){
         case 405://nuevo producto
             echo json_encode( nuevoProducto($args['data']) );
         break;
+		
+		case 406://procesar producto
+		
+			if( !( isset( $args['data'] ) && $args['data'] != null ) )
+			{
+				Logger::log("No hay parametros para procesar el producto.");
+				die('{"success": false , "reason": "Parametros invalidos." }');
+			}
+		
+			//{"id_compra":1,"id_producto":5,"cantidad_procesada":10}
+		
+			procesarProducto( $args['data'] );
+			
+		break;
 
 	    default:
 	        printf( '{ "success" : "false" }' );
@@ -400,4 +471,7 @@ if(isset($args['action'])){
 
 	}
 }
+
+//$objecto = new stdClass();
+
 
