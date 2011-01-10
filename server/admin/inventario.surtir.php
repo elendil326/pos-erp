@@ -11,8 +11,10 @@
         $autorizacion = AutorizacionDAO::getByPK( $_REQUEST['aut'] );
         $autorizacionDetalles = json_decode( $autorizacion->getParametros() );
     }
+	
+	$sucursales = SucursalDAO::getAll();
 
-
+	
 ?>
 
 <script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
@@ -20,10 +22,18 @@
 <link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
 
 <script type="text/javascript" charset="utf-8">
+	var sucursales = [];
+	
+	<?php 
+		foreach( $sucursales as $suc ){	
+			echo " sucursales[" . $suc->getIdSucursal() . "] = \"" .  $suc->getDescripcion()  . "\";";
+	}
+	?>
 	$(function(){
 
         $("input, select").uniform();
 
+		
         <?php 
             if(isset($_REQUEST['sid'])) { 
                 echo "seleccionarSucursal();";
@@ -48,86 +58,191 @@
 		$("#actual" + $('#sucursal').val()).slideDown();
 		$("#InvMaestro").slideDown();
 		$("#ASurtir").slideDown();
-        currentSuc = $('#sucursal').val();		
+        currentSuc = $('#sucursal').val();
+        $("#select_sucursal").slideUp();
 	}
 
     carrito = [];
 
-    function agregarProducto(pid){
 
+	function domath(){
+		totals_importe = 0;
+		totals_cantidad = 0;
 
-        if($("#ASurtirItem"+pid).length === 0){
-            $("#ASurtirTabla").append('<tr id="ASurtirItem'+pid+'"><td>'+pid+'</td><td><input type="text" id="ASurtirItemQty'+pid+'"></td></tr>');
-            carrito.push( pid );
-        }
+		values = $("#ASurtirTabla input");
+		
+		for(a = 0; a < values.length; a+=5){
+			values[ a + 4 ].value = ( values[ a ].value - values[ a + 3 ].value ) * values[ a + 2 ].value;
+			
+			totals_cantidad += ( values[ a ].value - values[ a + 3 ].value );
+			totals_importe += ( values[ a ].value - values[ a + 3 ].value ) * values[ a + 2 ].value;
+		}
 
+		$("#totales_cantidad").html( totals_cantidad );
+		$("#totales_importe").html(cf( totals_importe ));
+	}
+
+	function tr(s){return "<tr>"+s+"</tr>";}
+	function td(s){return "<td>"+s+"</td>";}
+	
+    function agregarProducto(data){
+
+		o = $.JSON.decodeSecure(Url.decode(data))
+
+		carrito.push( o );
+
+		html = "";
+		html += td( o.folio );
+		html += td( o.producto_desc );
+
+		html += td( "<input style='width: 100px' onkeyup='domath()' value='0' id='cart_table_cantidad" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='text'>" );
+		html += td( "<input style='width: 100px' id='cart_table_procesada" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='checkbox'>" );
+		html += td( "<input style='width: 100px' onkeyup='domath()' value='"+ ( o.precio_por_kg )+"' id='cart_table_precio" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='text'>" );
+		html += td( "<input style='width: 100px' onkeyup='domath()' value='0' id='cart_table_descuento" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='text'>" );
+		html += td( "<input style='width: 100px'					 		 id='cart_table_importe" + o.id_compra_proveedor + "_" + o.id_producto +"' 		type=text disabled>" );
+		
+
+		$("#ASurtirTablaHeader").after( tr(html) );		
+		$("#ASurtirTabla input").uniform();	
+		
+		return;
     }
 
+
+	function renderConfirm( obj ){
+		html = "<h1>Confirme el embarque</h1>";
+		html += "<b>Destino</b>: " + sucursales[ obj.sucursal ];
+		html += "<h2>Detalles del pedido</h2>";
+		html += "<table style='width: 100%'>";		
+		html += "<tr>";
+		
+		html += "<th>Cantidad</th>";
+		html += "<th>Descripcion</th>";
+		html += "<th>Precio</th>";
+		html += "<th>Importe</th>";
+		html += "</tr>";					
+		for(a = 0; a < obj.productos.length; a++){
+			html += "<tr>";
+			html += "<td>"+ obj.productos[a].cantidad 		+ "&nbsp;-&nbsp;" +obj.productos[a].descuento + "</td>";
+			html += "<td><b>"+ obj.productos[a].id_producto +"</b>&nbsp;" +obj.productos[a].producto_desc 	+"</td>";
+			html += "<td>"+ cf(obj.productos[a].precio) 	+"</td>";
+			html += "<td>"+ cf((obj.productos[a].cantidad - obj.productos[a].descuento)*obj.productos[a].precio) 	+"</td>";
+			html += "</tr>";			
+		}
+		html += "</table>";
+		html += "<div align='center'><input type='button' value='Aceptar' onclick='confirmed()'></div>"
+		return html;
+	}
+
+	var readyDATA = null;
 
     function doSurtir(){
-        //valida campos
-        if(carrito.length === 0){
-               alert("Debe seleccionar al menos un proudcto para surtir.");
-               return;
-        }
+		values = $("#ASurtirTabla input");
+		
+		json = {
+			sucursal : currentSuc,
+			productos : []
+		};
+		
+		foo = 0;
+		for(a = carrito.length -1 ; a >= 0; a--, foo += 5){
+			json.productos.push({
+				id_producto: 	carrito[a].id_producto,
+				producto_desc :	carrito[a].producto_desc,
+				procesada:		$(values[foo+1]).is(':checked'),
+				cantidad:		parseFloat( values[foo].value ),
+				descuento:		parseFloat( values[foo+3].value),
+				precio:			parseFloat( values[foo+2].value),
+				id_compra:		carrito[a].id_compra_proveedor
+			});
+			/*			
+			console.log("********** ******* ");
+			console.log("analizando ", carrito[a].id_producto, carrito[a].id_proveedor);
+			console.log("cantidad:" 	+ values[foo].value );
+			console.log("lavada:" 		, $(values[foo+1]).is(':checked') );
+			console.log("precio:" 		+ values[foo+2].value );
+			console.log("descuento:" 	+ values[foo+3].value );
+			console.log("importe:" 		+ values[foo+4].value );
+			*/
+		}
 
-        var peticion = [];
-
-        for(i = 0; i < carrito.length; i++ ){
-             item = carrito[i];
-            //console.log("revisando " + item)
-            if( isNaN($("#ASurtirItemQty"+item ).val()) || $("#ASurtirItemQty"+item ).val().length == 0){
-                alert("La cantidad a surtir del producto " + item + " debe ser un numero." );
-                return;
-            }
-
-            peticion.push({
-                id_producto : item,
-                cantidad : $("#ASurtirItemQty"+item ).val()
-            });
-        }
-
-        //hacer ajaxaso
-        jQuery.ajaxSettings.traditional = true;
-
-
-        
-
-        $.ajax({
-	      url: "../proxy.php",
-	      data: { 
-                action : 214, 
-                data : $.JSON.encode( peticion ),
-                id_sucursal : currentSuc,
-                responseToAut : <?php echo isset( $_REQUEST['aut'] ) ? $_REQUEST['aut'] : "null"; ?>
-           },
-	      cache: false,
-	      success: function(data){
-		        response = jQuery.parseJSON(data);
-
-                if(response.success === false){
-                    return $("#ajax_failure").html(response.reason).show();
-                }
-
-
-                reason = "El pedido se enuentra ahora en transito.";
-                window.location = "inventario.php?action=transit&success=true&reason=" + reason;
-                
-	      }
-	    });
-
+		readyDATA = json;
+		jQuery.facebox( renderConfirm( json ) );
+		return;
     }
 
-</script>
 
+function confirmed()
+{
+	//cerrar el facebox
+	jQuery(document).trigger('close.facebox');
+
+ 	//hacer ajaxaso
+        jQuery.ajaxSettings.traditional = true;
+
+		$("#submitButtons").fadeOut("slow",function(){
+			$("#loader").fadeIn();
+			
+			$.ajax({
+			url: "../proxy.php",
+			data: { 
+				action : 1005, 
+				data : $.JSON.encode( readyDATA ),
+			},
+			cache: false,
+			success: function(data){
+				try{
+			  		response = jQuery.parseJSON(data);
+			  		//console.log(response, data.responseText)
+				}catch(e){
+				
+					$("#loader").fadeOut('slow', function(){
+						$("#submitButtons").fadeIn();
+						$("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+					});                
+					return;                    
+				}
+		
+
+				if(response.success === false){
+					$("#loader").fadeOut('slow', function(){
+						$("#submitButtons").fadeIn();      				
+						$("#ajax_failure").html(response.reason).show();
+					});                
+					return ;
+				}
+
+				reason = "El caragmento se enuentra ahora en transito";
+				window.location = "inventario.php?action=transit&success=true&reason=" + reason;
+		
+			}
+			});
+		});
+}
+
+
+	function restart()
+	{
+	
+		
+		jQuery.facebox('<h1>Volver a comenzar</h1>Todos los cambios que ha realizado se perderan. &iquest; Esta seguro que desea comenzar de nuevo ?'
+				+ "<br><div align='center'>"
+				+ "			<input type='button' onclick=\"window.location = 'inventario.php?action=surtir'\" value='Si'>"
+				+ "&nbsp;	<input type='button' onclick=\"jQuery(document).trigger('close.facebox')\" value='No'></div>"
+			);
+	}
+</script>
+<link href="../frameworks/facebox/facebox.css" media="screen" rel="stylesheet" type="text/css"/>
+<script src="../frameworks/facebox/facebox.js" type="text/javascript"></script>
 
 
 <h1>Surtir una sucursal</h1>
 
-
-
-
+<!-- -----------------------------------------------------------------------
+		SELECCIONAR SUCURSAL
+  -------------------------------------------------------------------------- -->
 <?php if(!isset($_REQUEST['sid'])) { ?>
+	<div id="select_sucursal">
     <h2>Seleccione la sucursal que desea surtir</h2>
     <form id="newClient">
     <table border="0" cellspacing="5" cellpadding="5">
@@ -136,7 +251,7 @@
 			    <select id="sucursal"> 
 			    <?php
 			
-				    $sucursales = SucursalDAO::getAll();
+
 				    foreach( $sucursales as $suc ){
 					    echo "<option value='" . $suc->getIdSucursal() . "' >" .  $suc->getDescripcion()  . "</option>";
 				    }
@@ -149,6 +264,7 @@
 	    </tr>
     </table>
     </form>
+    </div>
 <?php }else{ ?>
     <input type="hidden" value="<?php echo $_REQUEST['sid']; ?>" id="sucursal" />
 <?php } ?>
@@ -173,12 +289,12 @@ foreach( $sucursales as $sucursal ){
 
 	//render the table
 	$header = array( 
-		"productoID" => "ID",
-		"descripcion"=> "Descripcion",
-		"precioVenta"=> "Precio Venta",
+		"productoID" 		=> "ID",
+		"descripcion"		=> "Descripcion",
+		"precioVenta"		=> "Precio Venta",
 		"existenciasMinimas"=> "Minimas",
-		"existencias"=> "Existencias",
-		"medida"=> "Tipo",
+		"existencias"		=> "Existencias",
+		"medida"			=> "Tipo",
 		"precioIntersucursal"=> "Precio Intersucursal" );
 		
 
@@ -195,7 +311,7 @@ foreach( $sucursales as $sucursal ){
 
 
 
-
+<!--
 <div id="Solicitud" style="display: none;">
 <h2>Solicitud de producto</h2>
 <h3>Esta es la lista de productos solicitados.</h3>
@@ -203,42 +319,47 @@ foreach( $sucursales as $sucursal ){
             <table>
                 <tr><td>Producto solicitado</td><td>Cantidad solicitada</td></tr>
                 <?php
+                /*
                 foreach ($autorizacionDetalles->productos as $producto)
                 {
-                    ?><tr><td><?php echo $producto->id_producto; ?></td><td><?php echo $producto->cantidad; ?></td></tr><?php
-                }
+                    ?><tr><td><?php //echo $producto->id_producto; ?></td><td><?php // echo $producto->cantidad; ?></td></tr><?php
+                }*/
                 ?>
                 <tr><td></td><td></td></tr>
             </table>
 
 </div>
+-->
 
 
 
-
-
+<!-- -----------------------------------------------------------------------
+		MOSTRAR INVENTARIO MAESTRO
+  -------------------------------------------------------------------------- -->
 <div id="InvMaestro" style="display: none;">
 <h2>Productos disponibles</h2><h3>Seleccione los productos que desee surtir a esta sucursal.</h3><?php
 
-	//obtener los clientes del controller de clientes
-	$inventario = listarInventarioMaestro( );
 
-	//render the table
-	$header = array( 
-		"id_producto" => "ID",
-		"descripcion"=> "Descripcion",
-		"precio_intersucursal"=> "Precio Intersucursal",
-		"costo"=> "Costo",
-		"medida"=> "Medida");
-		
+	$iMaestro = listarInventarioMaestro() ;
 
+	$header = array(
+		"folio" 	=> "Remision",
+		"producto_desc" 			=> "Producto",
+		"variedad" 	 				=> "Variedad",
+		"arpillas"					=> "Arpillas",
+		"peso_por_arpilla"			=> "Kg/Arpilla",
+		"productor"					=> "Productor",
+		"fecha"						=> "Llegada",
+		//"transporte"				=> "Transporte",
+		"merma_por_arpilla"			=> "Merma",
+		"sitio_descarga_desc"		=> "Sitio de descarga",
+		"existencias"				=> "Existencias",
+		"existencias_procesadas"	=> "Limpias" );
 	
-	$tabla = new Tabla( $header, $inventario );
-	$tabla->addColRender( "precioVenta", "moneyFormat" ); 
-	$tabla->addColRender( "precioIntersucursal", "moneyFormat" ); 
-    $tabla->addOnClick( "id_producto", "agregarProducto");
-    $tabla->addNoData("No existe ningun producto en el inventario maestro.");
+	$tabla = new Tabla( $header, $iMaestro );
+    $tabla->addOnClick( "id_producto", "agregarProducto", true);	
 	$tabla->render();
+
 
 ?> 
 </div>
@@ -247,17 +368,39 @@ foreach( $sucursales as $sucursal ){
 
 
 
-
+<!-- -----------------------------------------------------------------------
+		SELECCIONAR PRODUCTOS A SURTIR
+  -------------------------------------------------------------------------- -->
 
 <div id="ASurtir" style="display: none;">
-<h2>Productos a surtir</h2><h3>Seleccione la cantidad del proucto que desea surtir.</h3>
+<h2>Productos a surtir</h2>
 
-<table id="ASurtirTabla">
-    <tr><th>Descripcion</th><th>Cantidad</th></tr>
-
+<table id="ASurtirTabla" style="width: 100%">
+    <tr id="ASurtirTablaHeader">
+    	<th>Folio</th>
+    	<th>Producto</th>
+    	<th>Cantidad</th>
+    	<th>Procesada</th>
+    	<th>Precio unitario</th>
+    	<th>Descuento</th>
+    	<th>Importe</th>
+    </tr>
+    
+    <tr style="font-size: 15px;">
+    	<td><b>Totales</b></td>
+    	<td></td>
+    	<td  id="totales_cantidad"></td>
+    	<td></td>
+    	<td></td>
+    	<td></td>
+    	<td id="totales_importe"></td>
+    </tr>
 </table>
 
-<input type="button" value="Surtir" onclick="doSurtir()">
+	<div id="submitButtons" align='center'><input type="button" value="Surtir" onclick="doSurtir()"><input type="button" value="Volver a comenzar" onclick="restart()"></div>
+	<div style="display: none;" align="center" id="loader" ><img src="../media/loader.gif"></div>
 </div>
+
+
 
 

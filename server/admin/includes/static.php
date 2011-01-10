@@ -40,9 +40,10 @@ class Tabla {
 	}
 	
 	
-	public function addOnClick( $actionField, $actionFunction ){
+	public function addOnClick( $actionField, $actionFunction, $sendJSON = false ){
 		$this->actionField = $actionField;
 		$this->actionFunction = $actionFunction;
+		$this->actionSendJSON = $sendJSON;
 	}
 	
 
@@ -91,7 +92,13 @@ class Tabla {
 
 
 			if( isset($this->actionField)){
-				$html .= '<tr style="cursor: pointer;" onClick="' . $this->actionFunction. '( ' . $row[ $this->actionField ] . ' )" ';
+				if($this->actionSendJSON){
+					
+					$html .= '<tr style="cursor: pointer;" onClick="' . $this->actionFunction. '( \''. urlencode(json_encode($row)) . '\' )" ';
+				}else{
+					$html .= '<tr style="cursor: pointer;" onClick="' . $this->actionFunction. '( ' . $row[ $this->actionField ] . ' )" ';
+				}
+				
 			}else{
 				$html .= '<tr';
 			}			
