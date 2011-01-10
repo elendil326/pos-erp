@@ -386,7 +386,7 @@ function procesarProducto( $json = null ){
 	$existencias = $inventario_maestro -> getExistencias();	
 	
 	if( $data -> cantidad_procesada > $existencias){
-		Logger::log("Error al editar producto en inventario maestro, la cantidad a procesar supera las existencias :" . $e);
+		Logger::log("Error al editar producto en inventario maestro, la cantidad a procesar supera las existencias.");
 		die( '{"success": false, "reason": "Error al editar producto en inventario maestro, la cantidad a procesar supera las existencias."}' );
 	}
 		
