@@ -561,14 +561,12 @@ function nuevaCompraSucursal( $data = null){
 	*/
 	
 	//verificamos que exista la sucursal		
-	echo " verificamos que exista la sucursal ";
 	if( !SucursalDAO::getByPK( $data->sucursal ) ){				
 		Logger::log("Sucursal no encontrada, error al crear nueva compra sucursal ");
 		die('{"success": false , "reason": "Parametros invalidos." }');
 	}
 	
 	//verificamos que contenga almenos un producto
-	echo " verificamos que contenga almenos un producto <br>";
 	if( count( $data->productos ) <= 0 ){
 		Logger::log("Sucursal no encontrada, error al crear nueva compra sucursal ");
 		die('{"success": false , "reason": "Parametros invalidos." }');
@@ -577,19 +575,15 @@ function nuevaCompraSucursal( $data = null){
 	Logger::log("Inicial el proceso de compra sucursal");
 	
 	//mandamos los productos para editar en inventario maestro
-	echo " mandamos los productos para editar en inventario maestro <br> ";
 	editarInventarioMaestro( $data -> productos );
 	
 	//creamos la compra sucursal
-	echo " creamos la compra sucursal <br> ";
 	$id_compra = compraSucursal( $data -> productos, $data -> sucursal );
 	
 	//agregar detalle compra sucursal
-	echo " agregar detalle compra sucursal <br> ";
 	ingresarDetalleCompraSucursal( $data -> productos, $id_compra );
 	
 	//agregamos la autorizacion
-	echo " agregamos la autorizacion <br> ";
 	ingresarAutorizacion( $data -> productos, $data -> sucursal, $id_compra );
 	
 }
@@ -658,7 +652,6 @@ function editarInventarioMaestro( $data = null ){
 		}
 	
 	}
-	echo "Modificado el inventario maestro<br>";
 	Logger::log("Modificado el inventario maestro");
 	
 	return;
