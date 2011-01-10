@@ -37,6 +37,9 @@ class DetalleCompraSucursal extends VO
 			if( isset($data['descuento']) ){
 				$this->descuento = $data['descuento'];
 			}
+			if( isset($data['procesadas']) ){
+				$this->procesadas = $data['procesadas'];
+			}
 		}
 	}
 
@@ -54,7 +57,8 @@ class DetalleCompraSucursal extends VO
 			"id_producto" => $this->id_producto,
 			"cantidad" => $this->cantidad,
 			"precio" => $this->precio,
-			"descuento" => $this->descuento
+			"descuento" => $this->descuento,
+			"procesadas" => $this->procesadas
 		); 
 	return json_encode($vec); 
 	}
@@ -105,6 +109,15 @@ class DetalleCompraSucursal extends VO
 	  * @var int(11)
 	  */
 	protected $descuento;
+
+	/**
+	  * procesadas
+	  * 
+	  * verdadero si este detalle se refiere a compras procesadas (limpias)<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $procesadas;
 
 	/**
 	  * getIdCompra
@@ -228,6 +241,30 @@ class DetalleCompraSucursal extends VO
 	final public function setDescuento( $descuento )
 	{
 		$this->descuento = $descuento;
+	}
+
+	/**
+	  * getProcesadas
+	  * 
+	  * Get the <i>procesadas</i> property for this object. Donde <i>procesadas</i> es verdadero si este detalle se refiere a compras procesadas (limpias)
+	  * @return tinyint(1)
+	  */
+	final public function getProcesadas()
+	{
+		return $this->procesadas;
+	}
+
+	/**
+	  * setProcesadas( $procesadas )
+	  * 
+	  * Set the <i>procesadas</i> property for this object. Donde <i>procesadas</i> es verdadero si este detalle se refiere a compras procesadas (limpias).
+	  * Una validacion basica se hara aqui para comprobar que <i>procesadas</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setProcesadas( $procesadas )
+	{
+		$this->procesadas = $procesadas;
 	}
 
 }

@@ -143,6 +143,11 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 			array_push( $val, $detalle_compra_sucursal->getDescuento() );
 		}
 
+		if( $detalle_compra_sucursal->getProcesadas() != NULL){
+			$sql .= " procesadas = ? AND";
+			array_push( $val, $detalle_compra_sucursal->getProcesadas() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -172,11 +177,12 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	  **/
 	private static final function update( $detalle_compra_sucursal )
 	{
-		$sql = "UPDATE detalle_compra_sucursal SET  cantidad = ?, precio = ?, descuento = ? WHERE  id_compra = ? AND id_producto = ?;";
+		$sql = "UPDATE detalle_compra_sucursal SET  cantidad = ?, precio = ?, descuento = ?, procesadas = ? WHERE  id_compra = ? AND id_producto = ?;";
 		$params = array( 
 			$detalle_compra_sucursal->getCantidad(), 
 			$detalle_compra_sucursal->getPrecio(), 
 			$detalle_compra_sucursal->getDescuento(), 
+			$detalle_compra_sucursal->getProcesadas(), 
 			$detalle_compra_sucursal->getIdCompra(),$detalle_compra_sucursal->getIdProducto(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -200,13 +206,14 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	  **/
 	private static final function create( &$detalle_compra_sucursal )
 	{
-		$sql = "INSERT INTO detalle_compra_sucursal ( id_compra, id_producto, cantidad, precio, descuento ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO detalle_compra_sucursal ( id_compra, id_producto, cantidad, precio, descuento, procesadas ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$detalle_compra_sucursal->getIdCompra(), 
 			$detalle_compra_sucursal->getIdProducto(), 
 			$detalle_compra_sucursal->getCantidad(), 
 			$detalle_compra_sucursal->getPrecio(), 
 			$detalle_compra_sucursal->getDescuento(), 
+			$detalle_compra_sucursal->getProcesadas(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -305,6 +312,17 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " descuento = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $detalle_compra_sucursalA->getProcesadas()) != NULL) & ( ($b = $detalle_compra_sucursalB->getProcesadas()) != NULL) ){
+				$sql .= " procesadas >= ? AND procesadas <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " procesadas = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
