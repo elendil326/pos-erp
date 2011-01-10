@@ -632,11 +632,27 @@ function editarInventarioMaestro( $data = null ){
 		
 		if( $producto -> procesada )
 		{
+
+			//verificamos que lo que se va a surtir no supere a las existencias
+			if( $producto -> cantidad > $inventario_maestro -> getExistenciasProcesadas() ){
+				Logger::log( "Error al editar producto en inventario maestro: la cantidad requerida de producto supera las existencias" );
+				DAO::transRollback();	
+				die( '{"success": false, "reason": "Error al editar producto en inventario maestro"}' );
+			}
+		
 			//aqui entra se el producto es procesado (VALIDA LAS EXISTENCIAS)
 			$inventario_maestro -> setExistenciasProcesadas( $inventario_maestro -> getExistenciasProcesadas() - $producto -> cantidad );
 		}
 		else
 		{
+		
+			//verificamos que lo que se va a surtir no supere a las existencias
+			if( $producto -> cantidad > $inventario_maestro -> getExistencias() ){
+				Logger::log( "Error al editar producto en inventario maestro: la cantidad requerida de producto supera las existencias" );
+				DAO::transRollback();	
+				die( '{"success": false, "reason": "Error al editar producto en inventario maestro"}' );
+			}
+		
 			//aqui entra si el producto es original
 			$inventario_maestro -> setExistencias( $inventario_maestro -> getExistencias() - $producto -> cantidad );
 		}
