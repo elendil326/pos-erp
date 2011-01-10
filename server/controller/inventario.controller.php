@@ -415,6 +415,54 @@ function procesarProducto( $json = null ){
 
 
 
+function terminarCargamentoCompra( $json = null ){
+
+	Logger::log("Iniciando proceso de terminar cargamento compra ");
+
+	if($json == null){
+        Logger::log("No hay parametros para procesar el prodcuto.");
+		die('{ "success": false, "reason" : "Parametros invalidos" }');
+	}
+	
+	$data = parseJSON( $json );
+	
+	if( !( isset( $data -> id_compra ) && isset( $data -> id_producto ) ) ){
+		Logger::log("Json invalido para crear un nuevo proceso de producto");
+		die('{"success": false , "reason": "Parametros invalidos." }');
+	}
+	
+	if( $data -> id_compra == null ||  $data -> id_producto == null ){
+		Logger::log("Json invalido para crear un nuevo proceso de producto");
+		die('{"success": false , "reason": "Parametros invalidos." }');
+	}
+	
+	$inventario_maestro =  InventarioMaestroDAO::getByPK( $data -> id_producto, $data -> id_compra );			
+		
+	DAO::transBegin();		
+		
+	$inventario_maestro -> setExistencias( 0 );
+	$inventario_maestro -> setExistenciasProcesadas( 0 );
+		
+	try{
+		InventarioMaestroDAO::save( $inventario_maestro );
+	}catch(Exception $e){
+		Logger::log("Error al editar producto en inventario maestro:" . $e);
+		DAO::transRollback();	
+		die( '{"success": false, "reason": "Error al editar producto en inventario maestro"}' );
+	}	
+	
+	DAO::transEnd();
+	
+	Logger::log("termiando proceso de terminar cargamento compra con exito!");
+	
+	printf('{"success":true}');
+	
+	return;
+
+}
+
+
+
 if(isset($args['action'])){
 	switch($args['action']){
 	    case 400:
@@ -462,6 +510,20 @@ if(isset($args['action'])){
 			//{"id_compra":1,"id_producto":5,"cantidad_procesada":10}
 		
 			procesarProducto( $args['data'] );
+			
+		break;
+		
+		case 407://termianr cargamento de compra
+		
+			if( !( isset( $args['data'] ) && $args['data'] != null ) )
+			{
+				Logger::log("No hay parametros para procesar el producto.");
+				die('{"success": false , "reason": "Parametros invalidos." }');
+			}
+		
+			//{"id_compra":1,"id_producto":5,"cantidad_procesada":10}
+		
+			terminarCargamentoCompra( $args['data'] );
 			
 		break;
 
