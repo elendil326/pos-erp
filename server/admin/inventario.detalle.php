@@ -3,29 +3,40 @@
     require_once('model/inventario.dao.php');
     require_once('model/detalle_venta.dao.php');
     require_once('model/actualizacion_de_precio.dao.php');
-    $producto = InventarioDAO::getByPK($_REQUEST['id']);
+    require_once('model/compra_proveedor.dao.php');
+    
+    $producto = InventarioDAO::getByPK($_REQUEST['producto']);
+    $compra = CompraProveedorDAO::getByPK($_REQUEST['compra']);    
 
-?><h1>Detalles del producto</h1>
+	if( $producto == null || $compra == null){
+		echo "<h1>Error</h1>Estos datos no existen.";
+		return ;
+	}
 
+    //obtener todas las fluctuaciones de precio
+    $a = new ActualizacionDePrecio();
+    $a->setIdProducto( $_REQUEST['producto'] );
+    
+    $fluctuaciones = ActualizacionDePrecioDAO::search( $a, 'fecha', 'desc' );
+	$ultimaActualizacion = $fluctuaciones[0];
+	
+?>
 
 
 <script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
 <link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
 
+
+<h1><?php echo $producto->getDescripcion();  ?></h1>
+
+
+
 <script type="text/javascript" charset="utf-8">
 	$(function(){  $("input, select").uniform();  });
 </script>
-<?php
 
-    //obtener todas las fluctuaciones de precio
-    $a = new ActualizacionDePrecio();
-    $a->setIdProducto( $_REQUEST['id'] );
-    $fluctuaciones = ActualizacionDePrecioDAO::search( $a, 'fecha', 'desc' );
-	$ultimaActualizacion = $fluctuaciones[0];
-    
-
-?><h2>Detalles</h2>
+<h2>Detalles</h2>
 
 	
 <form id="detalles">
@@ -57,25 +68,6 @@
 
 ?>
 
-
-	
-
-<h2>Ultimas 100 ventas de este producto</h2><?php
-
-    $dv = new DetalleVenta();
-    $dv->setIdProducto( $_REQUEST['id'] );
-    $res = DetalleVentaDAO::search( $dv, 'id_venta', 'desc' );
-    
-    $header = array( 
-	    "id_venta" => "Venta",
-	    "cantidad"=> "Cantidad",
-	    "precio"=> "Precio unitario" );
-
-    $tabla = new Tabla( $header, $res );
-    $tabla->addColRender( "precio", "moneyFormat" ); 
-    $tabla->render();    
-
-?>
 
 
 

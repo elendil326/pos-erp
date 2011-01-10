@@ -20,6 +20,8 @@
 <script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
 <link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
+<link href="../frameworks/facebox/facebox.css" media="screen" rel="stylesheet" type="text/css"/>
+<script src="../frameworks/facebox/facebox.js" type="text/javascript"></script>
 
 <script type="text/javascript" charset="utf-8">
 	var sucursales = [];
@@ -87,7 +89,7 @@
 	
     function agregarProducto(data){
 
-		o = $.JSON.decodeSecure(Url.decode(data))
+		o = $.JSON.decodeSecure(Url.decode(data));
 
 		carrito.push( o );
 
@@ -232,8 +234,7 @@ function confirmed()
 			);
 	}
 </script>
-<link href="../frameworks/facebox/facebox.css" media="screen" rel="stylesheet" type="text/css"/>
-<script src="../frameworks/facebox/facebox.js" type="text/javascript"></script>
+
 
 
 <h1>Surtir una sucursal</h1>

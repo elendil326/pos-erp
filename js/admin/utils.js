@@ -90,8 +90,8 @@ var Url = {
 			}
  
 		}
- 
-		return string;
+
+		return string.replace("+", " ");
 	}
  
 }
