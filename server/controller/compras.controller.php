@@ -3,8 +3,11 @@
 require_once('model/inventario.dao.php');
 require_once('model/compra_proveedor.dao.php');
 require_once('model/detalle_compra_proveedor.dao.php');
+require_once('model/compra_sucursal.dao.php');
+require_once('model/detalle_compra_sucursal.dao.php');
 require_once('model/compra_proveedor_flete.dao.php');
 require_once('model/inventario_maestro.dao.php');
+require_once('model/autorizacion.dao.php');
 
 require_once('logger.php');
 
@@ -74,7 +77,7 @@ function nuevaCompraProveedor( $data = null ){
 	compraProveedorFlete($data->conductor, $id_compra_proveedor, $data->embarque->costo_flete);
 	
 	//damos de alta el detalle de la compra al proveedor
-	ingresarDetallecompraProveedor( $data->productos, $id_compra_proveedor, $data->embarque->peso_por_arpilla);
+	ingresarDetalleCompraProveedor( $data->productos, $id_compra_proveedor, $data->embarque->peso_por_arpilla);
 	
 	//isertamos en el inventario maestro
 	//($data = null, $id_compra_proveedor = null, $peso_por_arpilla = null, $sitio_descarga = null){
@@ -151,7 +154,7 @@ function compraProveedor( $data = null, $productos = null ){
 	$compra -> setPesoOrigen( $data->peso_origen );
 	
 	if(isset($data->folio))
-	$compra -> setFolio( $data->folio );
+		$compra -> setFolio( $data->folio );
 	
 	if(isset($data->numero_de_viaje))
 		$compra -> setNumeroDeViaje( $data->numero_de_viaje );
@@ -165,12 +168,12 @@ function compraProveedor( $data = null, $productos = null ){
 	$compra -> setProductor( $data->productor );
 	
 	if(isset($data->calidad))
-	$compra -> setCalidad( $data->calidad );
+		$compra -> setCalidad( $data->calidad );
 	
     $compra -> setMermaPorArpilla( $data->merma_por_arpilla );
 	
 	if(isset($data->importe_total))
-	$compra -> setTotalOrigen( $precio_total_origen );
+		$compra -> setTotalOrigen( $precio_total_origen );
 	
 	DAO::transBegin();	
 	
@@ -307,8 +310,8 @@ function editarCompraProveedor( $json ){
 	if( isset( $data->productor ) )
 		$compra -> setProductor( $data->productor );
 	
-	/*if( isset( $data->total_origen ) )
-		$compra -> setTotalOrigen( $data->total_origen );*/
+	if( isset( $data->total_origen ) )
+		$compra -> setTotalOrigen( $data->total_origen );
 		
 	try{
 		CompraProveedorDAO::save( $compra );
@@ -436,7 +439,7 @@ function editarCompraProveedorFlete( $json = null ){
 
 }
 
-function ingresarDetallecompraProveedor( $data = null, $id_compra_proveedor =null, $peso_por_arpilla = null ){
+function ingresarDetalleCompraProveedor( $data = null, $id_compra_proveedor =null, $peso_por_arpilla = null ){
 
 
 	if($data == null){
@@ -527,6 +530,305 @@ function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = 
 	
 }
 
+function nuevaCompraSucursal( $data = null){
+
+	$data = parseJSON( $data );
+	
+	if( !( isset( $data -> sucursal ) && isset( $data -> productos ) ) ){
+		Logger::log("Json invalido para crear nueva compra sucursal");
+		die('{"success": false , "reason": "Parametros invalidos." }');
+	}
+	
+	if( $data -> sucursal == null ||  $data -> productos == null ){
+		Logger::log("Json invalido para crear nueva compra sucursal");
+		die('{"success": false , "reason": "Parametros invalidos." }');
+	}
+	
+	/*
+		{
+			sucursal:1,
+			productos:[
+				{
+					id_producto:1,
+					cantidad_limpia:20,
+					cantidad:30,
+					descuento:20,
+					precio:12.4,
+					id_compra:11.5
+				}
+			]
+		}		
+	*/
+	
+	//verificamos que exista la sucursal		
+	echo " verificamos que exista la sucursal ";
+	if( !SucursalDAO::getByPK( $data->sucursal ) ){				
+		Logger::log("Sucursal no encontrada, error al crear nueva compra sucursal ");
+		die('{"success": false , "reason": "Parametros invalidos." }');
+	}
+	
+	//verificamos que contenga almenos un producto
+	echo " verificamos que contenga almenos un producto <br>";
+	if( count( $data->productos ) <= 0 ){
+		Logger::log("Sucursal no encontrada, error al crear nueva compra sucursal ");
+		die('{"success": false , "reason": "Parametros invalidos." }');
+	}
+	
+	Logger::log("Inicial el proceso de compra sucursal");
+	
+	//mandamos los productos para editar en inventario maestro
+	echo " mandamos los productos para editar en inventario maestro <br> ";
+	editarInventarioMaestro( $data -> productos );
+	
+	//creamos la compra sucursal
+	echo " creamos la compra sucursal <br> ";
+	$id_compra = compraSucursal( $data -> productos, $data -> sucursal );
+	
+	//agregar detalle compra sucursal
+	echo " agregar detalle compra sucursal <br> ";
+	ingresarDetalleCompraSucursal( $data -> productos, $id_compra );
+	
+	//agregamos la autorizacion
+	echo " agregamos la autorizacion <br> ";
+	ingresarAutorizacion( $data -> productos, $data -> sucursal, $id_compra );
+	
+}
+
+
+
+function editarInventarioMaestro( $data = null ){
+	
+	if($data == null){
+		Logger::log("editar inventario maestro, error : recibi objeto nulo");
+		die('{"success": false , "reason": "Parametros invalidos." }');
+	}
+		
+	DAO::transBegin();	
+	
+	/*
+		productos:[	
+			{						
+				id_producto:1,
+				procesada:true,
+				cantidad:30.9,
+				descuento:15, //se usa hasta el detalle compra sucursal
+				precio:10,
+				id_compra
+			}
+		]
+	*/
+
+	//decontamos del inventario maestro cada producto
+	foreach($data as $producto){
+	
+		if(!( 
+			isset( $producto -> id_producto ) &&
+			isset( $producto -> id_compra ) &&
+			isset( $producto -> cantidad ) &&
+			isset( $producto -> procesada ) 
+		)){
+			Logger::log("Faltan parametros para crear el nuevo flete a compra a proveedor");
+			die('{ "success": false, "reason" : "Faltan parametros." }');
+		}
+
+		Logger::log("Iniciando proceso de modificacion del inventario maestro");
+		
+		//obtenemos el articulo del inventario maestro 
+		$inventario_maestro =  InventarioMaestroDAO::getByPK( $producto -> id_producto, $producto -> id_compra );			
+		
+		if( $producto -> procesada )
+		{
+			//aqui entra se el producto es procesado (VALIDA LAS EXISTENCIAS)
+			$inventario_maestro -> setExistenciasProcesadas( $inventario_maestro -> getExistenciasProcesadas() - $producto -> cantidad );
+		}
+		else
+		{
+			//aqui entra si el producto es original
+			$inventario_maestro -> setExistencias( $inventario_maestro -> getExistencias() - $producto -> cantidad );
+		}
+
+		
+		
+		try{
+			InventarioMaestroDAO::save( $inventario_maestro );
+		}catch(Exception $e){
+			Logger::log("Error al editar producto en inventario maestro:" . $e);
+			DAO::transRollback();	
+			die( '{"success": false, "reason": "Error al editar producto en inventario maestro"}' );
+		}
+	
+	}
+	echo "Modificado el inventario maestro<br>";
+	Logger::log("Modificado el inventario maestro");
+	
+	return;
+	
+}
+
+
+
+function compraSucursal( $data = null, $sucursal = null ){
+
+	Logger::log("Iniciando proceso de compra sucursal");
+
+	if($data == null || $sucursal == null){
+		Logger::log("compraSucursal, error : recibi uno o mas objetos nulos");
+		DAO::transRollback();
+		die('{"success": false , "reason": "Parametros invalidos." }');
+	}
+	
+	$subtotal_compra = 0;
+	
+	//calculamos el subtotal de la compra
+	foreach( $data as $producto ){	
+		$subtotal_compra += ( $producto -> cantidad - $producto -> descuento ) * $producto -> precio;		
+	}
+	
+	$compra_sucursal = new CompraSucursal();
+	
+	$compra_sucursal -> setSubtotal( $subtotal_compra );
+	$compra_sucursal -> setIdSucursal( $sucursal );
+	$compra_sucursal -> setIdUsuario( $_SESSION['userid'] ); 
+	$compra_sucursal -> setPagado( 0 );
+	$compra_sucursal -> setLiquidado( 0 );
+	$compra_sucursal -> setTotal( $subtotal_compra );
+	
+	try{
+		CompraSucursalDAO::save( $compra_sucursal );
+	}catch(Exception $e){
+		Logger::log("Error al ingresar compra sucursal" . $e);
+		DAO::transRollback();	
+		die( '{"success": false, "reason": "Error al ingresar compra sucursal"}' );
+	}
+	
+	Logger::log("Agregado la compra sucursal!");
+	
+	//AQUI TERMINA LA TRANSACCION POR QUE PARA AGREGAR EL DETALLE COMPRA SUCURSAL DEBE DE ESTAR CREADA LA COMPRA A SUCURSAL
+	
+	DAO::transEnd();
+	
+	return $compra_sucursal -> getIdCompra();
+	
+}
+
+
+
+function ingresarDetalleCompraSucursal( $data = null, $id_compra ){
+
+	Logger::log("Iniciando proceso de creacion de detalle compra sucursal");
+
+	if($data == null || $id_compra == null){
+		Logger::log("ingresarDetalleCompraSucursal, error : recibi uno o mas objetos nulos");
+		DAO::transRollback();
+		die('{"success": false , "reason": "Parametros invalidos." }');
+	}
+	
+	foreach( $data as $producto ){	
+	
+		if(!(		
+			isset( $producto -> id_producto ) &&
+			isset( $producto -> cantidad ) &&
+			isset( $producto -> precio ) &&
+			isset( $producto -> descuento ) &&			
+			isset( $producto -> procesada ) &&
+			isset( $producto -> id_compra )
+		)){
+			Logger::log("Faltan parametros para crear el nuevo detalle compra sucursal");
+			die('{ "success": false, "reason" : "Faltan parametros." }');
+		}
+		
+		$detalle_compra_sucursal = new DetalleCompraSucursal();
+		
+		$detalle_compra_sucursal -> setIdCompra( $id_compra );
+		$detalle_compra_sucursal -> setIdProducto( $producto -> id_producto );
+		$detalle_compra_sucursal -> setCantidad( $producto -> cantidad );
+		$detalle_compra_sucursal -> setPrecio( $producto -> precio );
+		$detalle_compra_sucursal -> setDescuento( $producto -> descuento );
+		$detalle_compra_sucursal -> setProcesadas( $producto -> procesada );
+		
+	}
+	
+	DAO::transBegin();
+		
+	try{
+		DetalleCompraSucursalDAO::save( $detalle_compra_sucursal );
+	}catch(Exception $e){
+		Logger::log("Error al agregar el detalle compra sucursal" . $e);
+		
+		//TODO: ELIMINAR LA COMPRA SUCURSAL Y DESHACER EL CAMBIO AL INVENTARIO MAESTRO EN CASO DE ENTRAR AQUI
+		
+		DAO::transRollback();	
+		die( '{"success": false, "reason": "Error al ingresar el detalle compra sucursal" ' . $e . '}' );
+	}
+	
+	Logger::log("Finalizado proceso de creacion de detalle compra sucursal!");
+	
+	return;
+
+}
+
+
+
+function ingresarAutorizacion( $data = null, $sucursal = null, $id_compra = null ){
+
+	Logger::log("Iniciando proceso de ingreso de autorizacion en transito");
+
+	if( $data == null || $sucursal == null || $id_compra == null){
+		Logger::log("ingresarAutorizacionl, error : recibi uno o mas objetos nulos");
+		DAO::transRollback();
+		die('{"success": false , "reason": "Parametros invalidos." }');
+	}
+	
+	$parametros = array();
+	
+	foreach( $data as $producto ){	
+	
+		if(!(
+		
+			isset( $producto -> id_producto ) &&
+			isset( $producto -> cantidad ) &&
+			isset( $producto -> precio ) &&
+			isset( $producto -> descuento ) &&			
+			isset( $producto -> procesada ) &&
+			isset( $producto -> id_compra )
+		)){
+			Logger::log("Faltan parametros para crear el nuevo ingreso de autorizacion");
+			DAO::transRollback();
+			die('{ "success": false, "reason" : "Faltan parametros." }');
+		}
+		
+		array_push( $parametros, array( 
+			"id_compra" => $id_compra,
+			"id_producto" => $producto -> id_producto
+ 		));	
+		
+	}
+	
+	
+	$autorizacion = new Autorizacion();
+	
+	$autorizacion -> setIdUsuario( $_SESSION['userid'] );
+	$autorizacion -> setIdSucursal( $sucursal );
+	$autorizacion -> setEstado( 3 ); // en transito
+	$autorizacion -> setParametros ( json_encode( $parametros ) );
+	
+	try{
+		AutorizacionDAO::save( $autorizacion );
+	}catch(Exception $e){
+		Logger::log("Error al agregar la autorizacion de compra sucursal" . $e);
+		DAO::transRollback();	
+		die( '{"success": false, "reason": "Error al agregar la autorizacion de compra sucursal"}' );
+	}
+
+	DAO::transEnd();
+	
+	Logger::log("Proceso de venta a sucursal finalizado con exito!");
+	
+	printf('{"success": true}');
+	
+}
+
+
 
 if(isset($args['action'])){
 	switch($args['action']){
@@ -542,30 +844,53 @@ if(isset($args['action'])){
 			nuevaCompraProveedor( $args['data'] );
 			
 		break;
-	
-		case 1001://nueva compra a proveedor (admin)		
-			//http://127.0.0.1/pos/www/proxy.php?action=1000&data={%22id_proveedor%22:%221%22,%22folio%22:%22234%22,%22numero_de_viaje%22:%2212%22,%22peso_recibido%22:%2212200%22,%22arpillas%22:%22340%22,%22peso_por_arpilla%22:%2265%22,%22productor%22:%22El fenix%22,%22merma_por_arpilla%22:%225%22,%22total_origen%22:%2217900%22}
-			//printf('{ "success": true, "datos": %s }',  json_encode( compraProveedor( $args['data'] ) ) );
-			//compraProveedor( $args['data'] );
-		break;
 		
-		case 1002://modificar compra a proveedor (admin)
+		case 1001://modificar compra a proveedor (admin)
 			//http://127.0.0.1/pos/www/proxy.php?action=1001&data={"id_compra_proveedor":"2","id_proveedor":"1","folio":"234","numero_de_viaje":"12","peso_recibido":"12200","arpillas":"340","peso_por_arpilla":"65","productor":"El%20fenix de Celaya","merma_por_arpilla":"5","total_origen":"17900"}
 			//printf('{ "success": true, "datos": %s }',  json_encode( editarCompraProveedor( $args['data'] ) ) );
 			editarCompraProveedor( $args['data'] );
 		break;
 	
-        case 1003://regresa las compras realizadas por el admin
+        case 1002://regresa las compras realizadas por el admin
             printf('{ "success": true, "datos": %s }',  json_encode( listarComprasProveedor(  ) ) );
         break;
 
-        case 1004://regresa el detalle de la compra
+        case 1003://regresa el detalle de la compra
             printf('{ "success": true, "datos": %s }',  json_encode( detalleCompraProveedor( $args['id_compra_proveedor'] ) ) );
         break;
 		
-		case 1006://modificar flete
+		case 1004://modificar flete
 			editarCompraProveedorFlete( $args['data'] );
 		break;
+		
+		case 1005;//crear compra sucursal
+		
+		/*
+			{
+				sucursal:1,
+				productos:[
+					{
+						id_producto:1,
+						procesada:false,
+						cantidad:30,
+						descuento:20,
+						precio:12.4,
+						id_compra:11.5
+					}
+				]
+			}		
+			
+			{sucursal:2,productos:[{id_producto:3,procesada:false,cantidad:30,descuento:20,precio:12.4,id_compra:11.5}]}	
+			
+		*/
+		
+			if( !( isset( $args['data'] ) && $args['data'] != null ) )
+			{
+				Logger::log("No hay parametros para ingresar nueva compra a sucursal.");
+				die('{"success": false , "reason": "Parametros invalidos." }');
+			}						
+			nuevaCompraSucursal( $args['data'] );
+		break;		
 		
 	    default:
 	        printf( '{ "success" : "false" }' );
@@ -573,5 +898,7 @@ if(isset($args['action'])){
 
 	}
 }
+//java -classpath .;gson-1.6.jar Test compras.test
+//$_SESSION['userid']
 
  
