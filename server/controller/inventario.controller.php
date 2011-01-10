@@ -392,7 +392,7 @@ function procesarProducto( $json = null ){
 		
 	DAO::transBegin();		
 		
-	$inventario_maestro -> setExistencias( $existencias - $data -> cantidad_procesada );
+	//$inventario_maestro -> setExistencias( $existencias - $data -> cantidad_procesada );
 	$inventario_maestro -> setExistenciasProcesadas( $inventario_maestro -> getExistenciasProcesadas() + $data -> cantidad_procesada );
 		
 	try{
