@@ -31,7 +31,7 @@
     
     ?><div id="ajax_failure" class="failure" style="display: none;"></div><?php 
 
-	   	if(is_file("../../server/admin/sucursales." . $_GET["action"] . ".php")){
+	   	if(isset($_GET["action"]) && is_file("../../server/admin/sucursales." . $_GET["action"] . ".php")){
     		require_once("admin/sucursales." . $_GET["action"] . ".php");
 		}else{
     		echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";

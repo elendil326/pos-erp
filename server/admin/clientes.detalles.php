@@ -12,10 +12,9 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 
 
 
-//titulo
-?><h1><?php echo $cliente->getNombre(); ?></h1>
+?>
 
-
+<script>document.getElementById("MAIN_TITLE").innerHTML = "<?php echo $cliente->getNombre(); ?>";</script>
 
 
 <style type="text/css" media="screen">
@@ -110,7 +109,7 @@ if(POS_ENABLE_GMAPS){
 
 
 <h2>Detalles del cliente</h2>
-<table border="0" cellspacing="5" cellpadding="5">
+<table border="0" cellspacing="1" cellpadding="1">
 	<tr><td><b>Nombre</b></td><td><?php echo $cliente->getNombre(); ?></td><td rowspan=12><div id="map_canvas"></div></td></tr>
 	<tr><td><b>RFC</b></td><td><?php echo $cliente->getRFC(); ?></td></tr>
 	<tr><td><b>Direccion</b></td><td><?php echo $cliente->getDireccion(); ?></td></tr>

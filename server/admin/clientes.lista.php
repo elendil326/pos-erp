@@ -20,7 +20,8 @@ require_once("controller/inventario.controller.php");
 <script type="text/javascript" charset="utf-8" src="../frameworks/humblefinance/humble/HumbleFinance.js"></script>
 <link rel="stylesheet" href="../frameworks/humblefinance/humble/finance.css" type="text/css" media="screen" title="no title" charset="utf-8">
 
-<h1>Clientes</h1>
+
+<script>document.getElementById("MAIN_TITLE").innerHTML = "Lista de clientes";</script>
 
 
 

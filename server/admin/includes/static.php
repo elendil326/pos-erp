@@ -70,7 +70,7 @@ class Tabla {
 		
 		$html = "";
 		
-		$html .= '<table border="1" style="width:100%">';
+		$html .= '<table border="0" style="width:100%">';
 		$html .= '<tr >';
 		
 		foreach ( $this->header  as $key => $value){
