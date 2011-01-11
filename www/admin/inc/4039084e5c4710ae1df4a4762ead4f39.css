@@ -1,0 +1,224 @@
+.habla_window_div_position {
+bottom:10px;
+position: fixed !important;
+right:10px;
+}
+.habla_window_div_position_inline {
+}
+.habla_window_div_position_floating {
+bottom:10px;
+position: fixed !important;
+right:10px;
+}
+.habla_window_div_position_floating_ie {
+bottom:10px;
+position:absolute !important;
+right:10px;
+}
+.habla_window_div_base {
+    display:block !important;
+border:0 none !important;
+font-family:verdana,arial,helvetica;
+font-style:inherit !important;
+font-weight:inherit !important;
+line-height:1;
+margin:0 !important;
+outline-color:-moz-use-text-color;
+outline-style:none !important;
+outline-width:0;
+padding:0 !important;
+text-align:left;
+vertical-align:baseline !important;
+z-index:99999999 !important;
+}
+.habla_panel_border {
+-moz-border-radius-bottomleft:5px;
+-moz-border-radius-bottomright:5px;
+-moz-border-radius-topleft:5px;
+-moz-border-radius-topright:5px;
+background:#FFFFFF none repeat scroll 0 0 !important;
+border:1px solid black !important;
+font-family:verdana,arial,helvetica;
+font-size:14px;
+width:250px;
+}
+.habla_pre_chat_div {
+background:transparent none repeat scroll 0 0 !important;
+border-bottom:1px dotted #CCCCCC;
+height:155px;
+line-height:1.5em;
+overflow:auto !important;
+color: #000000;
+padding:3px 3px 3px 3px !important;  
+}
+
+.habla_button_a_highlighted {
+background-color:#666666;
+color:#FFFFFF;
+}
+.habla_button_a_hover {
+background-color:#666666;
+color:#FFFFFF;
+}
+.habla_button_a_normal {
+background-color:#333333;
+color:#FFFFFF;
+}
+.habla_button {
+float:right;
+font-weight:bold !important;
+margin-left:3px;
+padding:0 6px 2px !important;
+text-decoration:none !important;
+}
+.habla_conversation_message_off {
+margin:0 !important;
+padding:3px 3px 3px 23px !important;
+}
+.habla_conversation_message_on {
+margin:0 !important;
+padding:5px !important;
+}
+.habla_conversation_p_item {
+background:transparent none repeat scroll 0 0 !important;
+color:#000000;
+margin:0 !important;
+padding:0 !important;
+text-indent:-20px !important;
+}
+.habla_conversation_person1 {
+color:#FF0000;
+padding-right:5px;
+}
+.habla_conversation_person2 {
+color:#0000FF;
+padding-right:5px;
+}
+.habla_conversation_text_span {
+color:#000000;
+}
+.habla_topbar_div_highlighted {
+background:red none repeat scroll 0 0;
+color:#00FFFF;
+padding:4px !important;
+}
+.habla_topbar_div_normal {
+background:#333333 none repeat scroll 0 0;
+color:#FFFFFF;
+padding:4px !important;
+}
+.habla_topbar_div_compressed {
+cursor: pointer;
+}
+.habla_topbar_clickable {
+cursor:pointer;
+}
+.habla_oplink_a_hover {
+color:#FFFFFF;
+font-weight:normal !important;
+text-decoration:underline !important;
+}
+.habla_oplink_a_normal {
+color:#FFFFFF;
+font-weight:normal !important;
+text-decoration:none !important;
+}
+.clear_style {
+clear:both !important;
+}
+.habla_offline_message_div {
+border-bottom:1px dotted #CCCCCC;
+line-height:1.5em;
+margin:0 !important;
+padding:3px !important;
+}
+.habla_conversation_div {
+background:transparent none repeat scroll 0 0 !important;
+border-bottom:1px dotted #CCCCCC;
+height:155px;
+line-height:1.5em;
+overflow:auto !important;
+color:black;
+padding:3px 3px 3px 23px !important;
+}
+.habla_offline_message_sent_div {
+background:transparent none repeat scroll 0 0 !important;
+border-bottom:1px dotted #CCCCCC;
+height:155px;
+line-height:1.5em;
+overflow:auto !important;
+padding:3px !important;
+}
+.habla_chatform_form {
+margin:0 !important;
+padding:0 !important;
+float: none !important;
+}
+.habla_input_div {
+font-family:verdana,arial,helvetica;
+font-size:12px;
+font-weight:normal !important;
+margin:0 !important;
+padding:3px !important;
+}
+.habla_offline_body_input {
+font-family:verdana,arial,helvetica;
+font-size:12px;
+height:155px;
+vertical-align:text-top;
+width:234px;
+}
+.habla_say_text_span {
+color:#000000;
+}
+.habla_submit_button {
+font-family:verdana,arial,helvetica;
+font-size:12px;
+margin:0 !important;
+vertical-align:text-top;
+width:234px;
+}
+.habla_offline_submit_input {
+background:#E75917 none repeat scroll 0 0 !important;
+border:medium none #CCCCCC !important;
+color:white;
+float:right;
+margin-right:2px;
+}
+.habla_offline_error_span {
+float:left;
+font-family:verdana,arial,helvetica;
+font-size:12px;
+}
+.habla_wcsend_input_normal {
+border:2px solid #CCCCCC !important;
+}
+.habla_wcsend_input_pre {
+color:#707070;
+}
+.habla_wcsend_input_post {
+color:#000000;
+}
+.habla_wcsend_input_pre_highlighted {
+border:2px solid #CCCCCC !important;
+}
+.habla_wcsend_input_highlighted {
+border:2px solid !important;
+color:#000000;
+}
+.habla_wcsend_field {
+background:transparent none repeat scroll 0 0 !important;
+font-family:verdana,arial,helvetica;
+font-size:12px;
+height:24px;
+margin:0 !important;
+overflow:auto !important;
+padding:1px 3px !important;
+vertical-align:text-top;
+width:234px;
+}
+
+
+
+
+
