@@ -222,7 +222,7 @@ require_once('model/sucursal.dao.php');
  
     	var obj = {
 			embarque : {
-				fecha_origen: 		jQuery('#fecha_origen').val(),
+				fecha_origen: 		jQuery('#detalles-fecha-origen').val(),
 				id_proveedor:		jQuery('#proveedores').val(),
 				folio: 				jQuery("#detalles-folio").val(),
 				merma_por_arpilla: 	jQuery("#detalles-merma-arpilla").val(),
@@ -339,7 +339,7 @@ require_once('model/sucursal.dao.php');
 		<tr><td>Remision</td>			<td><input type='text' id='detalles-folio' ></td>
 			<td>Nombre del chofer</td>	<td><input type='text' id='detalles-chofer' ></td></tr>
 		
-		<tr><td>Fecha de origen</td>	<td><input type='text' id='detalles-fecha' value="" placeholder="dd/mm/aa"></td>
+		<tr><td>Fecha de origen</td>	<td><input type='text' id='detalles-fecha-origen' value="" placeholder="dd/mm/aa"></td>
 			<td>Placas</td>				<td><input type='text' id='detalles-placas' ></td></tr>
 			
 		<tr><td>Total arpillas</td>		<td><input type='text' id='detalles-total-arpillas' value="0" disabled>
