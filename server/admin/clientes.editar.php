@@ -13,12 +13,6 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 ?><h1><?php echo $cliente->getNombre(); ?></h1>
 
 
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
-<script type="text/javascript" charset="utf-8"> $(function(){ $("input, select").uniform(); }); </script>
-
-
 
 <h2>Detalles personales</h2>
 <form id="edit">
@@ -41,44 +35,44 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 
     function validar(){
 
-        if($('#nombre').val().length < 8){
-            return $("#ajax_failure").html("El nombre es muy corto.").show();
+        if(jQuery('#nombre').val().length < 8){
+            return jQuery("#ajax_failure").html("El nombre es muy corto.").show();
         }
 
 
-        if($('#direccion').val().length < 10){
-            return $("#ajax_failure").html("La direccion es muy corta.").show();
+        if(jQuery('#direccion').val().length < 10){
+            return jQuery("#ajax_failure").html("La direccion es muy corta.").show();
         }
 
-        if($('#rfc').val().length < 7){
-            return $("#ajax_failure").html("El RFC es muy corto.").show();
+        if(jQuery('#rfc').val().length < 7){
+            return jQuery("#ajax_failure").html("El RFC es muy corto.").show();
         }
 
-        if( isNaN($('#descuento').val()) || $('#descuento').val().length == 0){
-            return $("#ajax_failure").html("El descuento no es nu numero valido.").show();
+        if( isNaN(jQuery('#descuento').val()) || jQuery('#descuento').val().length == 0){
+            return jQuery("#ajax_failure").html("El descuento no es nu numero valido.").show();
         }
 
-        if( ($('#descuento').val() >= 100) || ($('#descuento').val() < 0) ){
-            return $("#ajax_failure").html("El descuento debe ser la taza porcentual de descuento, entre 0% y 100%").show();            
+        if( (jQuery('#descuento').val() >= 100) || (jQuery('#descuento').val() < 0) ){
+            return jQuery("#ajax_failure").html("El descuento debe ser la taza porcentual de descuento, entre 0% y 100%").show();            
         }
 
-        if( isNaN($('#limite_credito').val()) || $('#limite_credito').val().length == 0){
-            return $("#ajax_failure").html("El limite de credito debe ser un nuemero valido.").show();            
+        if( isNaN(jQuery('#limite_credito').val()) || jQuery('#limite_credito').val().length == 0){
+            return jQuery("#ajax_failure").html("El limite de credito debe ser un nuemero valido.").show();            
         }
 
-        if(  ($('#limite_credito').val() < 0) ){
-            return $("#ajax_failure").html("El limite credito debe ser una cantidad en pesos mayor a 0.").show();            
+        if(  (jQuery('#limite_credito').val() < 0) ){
+            return jQuery("#ajax_failure").html("El limite credito debe ser una cantidad en pesos mayor a 0.").show();            
         }
 
         obj = {
-            nombre : $("#nombre").val(),
-            ciudad : $("#ciudad").val(),
-            descuento : $("#descuento").val(),
-            direccion : $("#direccion").val(),
-            e_mail : $("#e_mail").val(),
-            limite_credito : $("#limite_credito").val(),
-            rfc : $("#rfc").val(),
-            telefono : $("#telefono").val(),
+            nombre : jQuery("#nombre").val(),
+            ciudad : jQuery("#ciudad").val(),
+            descuento : jQuery("#descuento").val(),
+            direccion : jQuery("#direccion").val(),
+            e_mail : jQuery("#e_mail").val(),
+            limite_credito : jQuery("#limite_credito").val(),
+            rfc : jQuery("#rfc").val(),
+            telefono : jQuery("#telefono").val(),
             id_cliente : <?php echo $_REQUEST['id']; ?>
         };        
 
@@ -96,11 +90,11 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
         jQuery.ajaxSettings.traditional = true;
 
 
-        $.ajax({
+        jQuery.ajax({
 	      url: "../proxy.php",
 	      data: { 
             action : 302, 
-            data : $.JSON.encode(data)
+            data : jQuery.JSON.encode(data)
            },
 	      cache: false,
 	      success: function(data){
@@ -108,7 +102,7 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 
 
                 if(response.success === false){
-                    return $("#ajax_failure").html(response.reason).show();
+                    return jQuery("#ajax_failure").html(response.reason).show();
                 }
                 reason = "Los cambios se han guardado correctamente.";
                 window.location = 'clientes.php?action=detalles&id=<?php echo $_REQUEST['id']; ?>&success=true&reason=' + reason;

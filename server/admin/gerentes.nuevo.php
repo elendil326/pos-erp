@@ -6,13 +6,6 @@
 ?>
 
 
-
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
-
-<script type="text/javascript" charset="utf-8">$(function(){$("input, select").uniform();});</script>
-
 <h1>Nuevo Gerente</h1>
 
 <h2>Detalles del nuevo gerente</h2>
@@ -46,51 +39,51 @@
 <script type="text/javascript" charset="utf-8">
     function validar(){
 
-        if($('#nombre').val().length < 8){
+        if(jQuery('#nombre').val().length < 8){
             alert("El nombre es muy corto." );
             return;
         }
 
 
-        if($('#direccion').val().length < 10){
+        if(jQuery('#direccion').val().length < 10){
             alert("La direccion es muy corta.");
             return;
         }
 
-        if($('#rfc').val().length < 7){
+        if(jQuery('#rfc').val().length < 7){
             alert("El rfc es muy corto.");
             return;
         }
 
-        if($('#telefono').val().length < 7){
+        if(jQuery('#telefono').val().length < 7){
             alert("El telefono es muy corto.");
             return;
         }
 
 
-        if( isNaN($('#salario').val()) || $('#salario').val().length == 0){
+        if( isNaN(jQuery('#salario').val()) || jQuery('#salario').val().length == 0){
             alert("El salario debe ser un nuemero valido.");
             return;
         }
 
-        if( $('#salario').val() >= 10000){
+        if( jQuery('#salario').val() >= 10000){
             alert("El salario mensual debe ser menor a $10,000.00");
             return;
         }
 
-        if( $('#pass1').val() != $('#pass1').val() ){
+        if( jQuery('#pass1').val() != jQuery('#pass1').val() ){
             alert("Las claves no coinciden");
             return;
         }
 
             obj = {
-                nombre : $('#nombre').val(), 
-                direccion : $("#direccion").val(), 
-                RFC : $("#rfc").val(), 
-                telefono : $("#telefono").val(),
+                nombre : jQuery('#nombre').val(), 
+                direccion : jQuery("#direccion").val(), 
+                RFC : jQuery("#rfc").val(), 
+                telefono : jQuery("#telefono").val(),
                 id_usuario : null,
-                contrasena :  hex_md5( $("#pass1").val() ),
-                salario : $("#salario").val(),
+                contrasena :  hex_md5( jQuery("#pass1").val() ),
+                salario : jQuery("#salario").val(),
                 grupo : 2
         };        
 
@@ -108,18 +101,18 @@
         jQuery.ajaxSettings.traditional = true;
 
 
-        $.ajax({
+        jQuery.ajax({
 	      url: "../proxy.php",
 	      data: { 
             action : 500, 
-            data : $.JSON.encode(data)
+            data : jQuery.JSON.encode(data)
            },
 	      cache: false,
 	      success: function(data){
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    return $("#ajax_failure").html(response.reason).show();
+                    return jQuery("#ajax_failure").html(response.reason).show();
                     return;
                 }
 

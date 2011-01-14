@@ -1,146 +1,136 @@
-<div class="g-section header">
-<a href="./"><img alt="Caffeina Mexico" height=40 src="../media/logo_pos.png"></a>
-<div id="custom-search">
-  <form action="buscar.php">
-      <input id="q" name="q" type="text"> <input class="cse_submit" id="cse-search-button" type="submit" value="Buscar">
-   </form>
-</div>
 
-<div class="ga-container-nav-top">
-  <ul id="toolbar">
+<DIV id="header-content">
+	<P class="logo"><A href="">caffeina</A></P>
+	
+	<UL class="nav">
+		<LI class="drop">
+			<A >CLIENTES</A>
+			<UL class="nav sub" >
+				<LI><A href="clientes.php?action=lista">Lista de clientes</A></LI>
+				<LI class="last"><A href="clientes.php?action=nuevo">Nuevo Cliente</A></LI>
+			</UL>	
+		</LI>
+		
+		<LI class="drop">
+			<A >SUCURSALES</A>
+			<UL  class="nav sub" >
+				<LI><A href="sucursales.php?action=lista">Sucursales</A></LI>
+				<LI><A href="sucursales.php?action=abrir">Nueva sucursal</A></LI>
+				<LI><A href="gerentes.php?action=lista">Gerentes</A></LI>
+				<LI><A href="gerentes.php?action=asignar">Asignar gerencias</A></LI>				
+				<LI class="last"><A href="gerentes.php?action=nuevo">Nuevo gerente</A></LI>
+			</UL>			
+		</LI>
+		
+		<LI class="drop">
+			<A >VENTAS</A>
+				<ul class="nav sub">
+				<li >
+				  <a  href="ventas.php?action=vender">Realizar venta</a>
+				</li>
+				<li>
+				  <a  href="ventas.php?action=lista">Ver ventas</a>
+				</li>
+				<li>
+				  <a  href="ventas.php?action=porProducto">Ventas por producto</a>
+				</li>
+				<!--
+				<li>
+				  <a  href="ventas.php?action=proyecciones">Historial y Proyecciones</a>
+				</li>
+				-->
+			  </ul>
+		</LI>
+		
+		<LI class="drop">
+			<A >AUTORIZACIONES</A>
+			<ul class="nav sub">
+		    <li >
+		      <a href="autorizaciones.php?action=pendientes" >Pendientes</a>
+		    </li>
+		    <li>
+		      <a href="autorizaciones.php?action=historial" >Todas las autorizaciones</a>
+		    </li>
+		  </ul>
+		</LI>
+		
+		<LI class="drop">
+			<A >PROVEEDORES</A>
+		  <ul class="nav sub">
+			<li >
+			  <a href="proveedor.php?action=lista">Lista de proveedores</a>
+			</li>
+			<li>
+			  <a href="proveedor.php?action=nuevo">Nuevo proveedor</a>
+			</li>
+			<li>
+			  <a href="proveedor.php?action=abastecer">Abastecerse de proveedor</a>
+			</li>
+		  </ul>			
+		</LI>
+		
+		<LI class="drop">
+			<A >INVENTARIO</A>
+			  <ul class="nav sub">
+				<li >
+				  <a href="inventario.php?action=maestro">Inventario maestro</a>
+				</li>      
+				<li >
+				  <a href="inventario.php?action=lista">Inventario de sucursales</a>
+				</li>
+				<li>
+				  <a href="inventario.php?action=surtir">Surtir Sucursal</a>
+				</li>
+				<li>
+				  <a href="inventario.php?action=nuevo">Nuevo Producto</a>
+				</li>
+				<li>
+				  <a href="inventario.php?action=transit">En transito</a>
+				</li>
+			  </ul>
+		</LI>
+					
+		<LI class="drop"><A href="../proxy.php?action=2002">SALIR</A></LI>
+	</UL>
+	
 
-    <li class="product">
-      <a  class="drop">CLIENTES</a>
-      <ul>
-        <li class="ga-side-nav-off">
-          <a href="clientes.php?action=lista" >Lista de Clientes</a>
-        </li>
+</DIV> <!-- header-content -->
 
-        <li class="ga-side-nav-off">
-          <a  href="clientes.php?action=nuevo" >Nuevo Cliente</a>
-        </li>
+<script>
+	var __current = [];
+	
+	function toolbar(){
+		for( a = 0; a < jQuery(".nav.sub").length; a++){ jQuery(jQuery(".nav.sub")[a]).hide() }
+		
+		jQuery("#header-content").hover(
+			function(){
+				if(__current)
+					__current.hide(); 
+			},
+			function(){
+			
+			});
+		
+		jQuery(".nav>.drop>a").hover( 
+			function(e){ 
 
-      </ul>
-    </li>
+				//in
+				while(__current.length > 0)__current.pop().hide();
+				
+				__currentP = jQuery(this).next();
+				__currentP.css("left", "0px")
+				__currentP.show();
+				__current.push( __currentP );
 
-    <li class="product">
-      <a class="drop" >SUCURSALES</a>
-      <ul>
-        <li class="ga-side-nav-off">
-          <a href="sucursales.php?action=lista">Lista de Sucursales</a>
-        </li>
-        <li class="ga-side-nav-off">
-          <a href="sucursales.php?action=abrir">Abrir sucursal</a>
-        </li>
+			},
+			function(e){
+				//out
+			});
+	}
+	toolbar();
 
-        <li class="ga-side-nav-off">
-          <a href="gerentes.php?action=lista">Lista de gerentes</a>
-        </li>
-        <li class="ga-side-nav-off">
-          <a href="gerentes.php?action=asignar">Asignar gerencias</a>
-        </li>
-        <li class="ga-side-nav-off">
-          <a href="gerentes.php?action=nuevo">Nuevo gerente</a>
-        </li>
-      </ul>
-    </li>
-<!--
-    <li class="product">
-      <a class="drop" >GERENTES</a>
-    </li>
--->
-
-
-
-    <li class="product">
-      <a class="drop" >VENTAS</a>
-      <ul style="top: 33px; left: 246px; width: 200px; display: none; ">
-        <li class="ga-side-nav-off">
-          <a  href="ventas.php?action=vender">Realizar venta</a>
-        </li>
-        <li>
-          <a  href="ventas.php?action=lista">Ver ventas</a>
-        </li>
-        <li>
-          <a  href="ventas.php?action=porProducto">Ventas por producto</a>
-        </li>
-		<!--
-        <li>
-          <a  href="ventas.php?action=proyecciones">Historial y Proyecciones</a>
-        </li>
-        -->
-
-      </ul>
-    </li>
-
-
-
-    <li class="product">
-      <a class="drop" >AUTORIZACIONES</a>
-      <ul>
-        <li class="ga-side-nav-off">
-          <a href="autorizaciones.php?action=pendientes" >Pendientes</a>
-        </li>
-        <li>
-          <a href="autorizaciones.php?action=historial" >Todas las autorizaciones</a>
-        </li>
-      </ul>
-    </li>
-
-
-
-    <li class="product">
-      <a class="drop" >PROVEEDORES</a>
-      <ul>
-        <li class="ga-side-nav-off">
-          <a href="proveedor.php?action=lista">Lista de proveedores</a>
-        </li>
-        <li>
-          <a href="proveedor.php?action=nuevo">Nuevo proveedor</a>
-        </li>
-        <li>
-          <a href="proveedor.php?action=abastecer">Abastecerse de proveedor</a>
-        </li>
-      </ul>
-    </li>
-
-
-    <li class="product">
-      <a class="drop" >INVENTARIO</a>
-      <ul>
-        <li class="ga-side-nav-off">
-          <a href="inventario.php?action=maestro">Inventario maestro</a>
-        </li>      
-        <li class="ga-side-nav-off">
-          <a href="inventario.php?action=lista">Inventario de sucursales</a>
-        </li>
-        <li>
-          <a href="inventario.php?action=surtir">Surtir Sucursal</a>
-        </li>
-        <li>
-          <a href="inventario.php?action=nuevo">Nuevo Producto</a>
-        </li>
-        <li>
-          <a href="inventario.php?action=transit">En transito</a>
-        </li>
-      </ul>
-    </li>
-
-
-
-
-
-
-    <li class="product">
-      <a href="../proxy.php?action=2002" >SALIR</a>
-    </li>
+</script>
 
 
+    
 
-
-    <li class="last">&nbsp;
-    </li>
-  </ul><script>var toolbar = new Toolbar('toolbar');</script>
-</div>
-
-</div>

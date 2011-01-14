@@ -7,9 +7,6 @@ require_once('model/sucursal.dao.php');
 
 ?>
 
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
 
 <script>
 
@@ -45,12 +42,7 @@ require_once('model/sucursal.dao.php');
       * */
 	var _cart = [];
 
-    /**
-      *
-      * Uniform 
-      *
-      * */
-	$(function(){   $("input, select").uniform();   });
+
     
     
     /**
@@ -60,7 +52,7 @@ require_once('model/sucursal.dao.php');
       * */
     function seleccionarProveedor()
     {
-    	p = $('#proveedores').val();
+    	p = jQuery('#proveedores').val();
     	
     	for ( i = 0; i < provs.length; i++)
     	{
@@ -69,10 +61,10 @@ require_once('model/sucursal.dao.php');
     		}
     	}
     	
-    	$('#chooseSupplier').slideUp('fast', function (){
-    		$('#chooseSupplierDetails').html("<h3>" + provs[i].nombre + "</h3>");
-    		$('#chooseSupplierDetails').slideDown(); 		
-    		$('#chooseProds').slideDown();    		
+    	jQuery('#chooseSupplier').slideUp('fast', function (){
+    		jQuery('#chooseSupplierDetails').html("<h3>" + provs[i].nombre + "</h3>");
+    		jQuery('#chooseSupplierDetails').slideDown(); 		
+    		jQuery('#chooseProds').slideDown();    		
     	});
     }
 
@@ -87,7 +79,7 @@ require_once('model/sucursal.dao.php');
       * */
     function addProd(){
     
-	    p = $('#addProds').val();
+	    p = jQuery('#addProds').val();
 
 	    for ( i = 0; i < _cart.length; i++)
     	{
@@ -145,8 +137,8 @@ require_once('model/sucursal.dao.php');
     
 	    html += '</select></td></tr>';
 	    
-    	$('#prodsTableFooter').before(html);
-    	$("input:text").uniform();
+    	jQuery('#prodsTableFooter').before(html);
+    	jQuery("input:text").uniform();
     }
     
     
@@ -172,75 +164,75 @@ require_once('model/sucursal.dao.php');
     		id = _cart[i].id_producto;
     		
     		try{
-    			globals.total_arpillas += parseFloat( $('#cart-' + id + '-arpillas').val());
+    			globals.total_arpillas += parseFloat( jQuery('#cart-' + id + '-arpillas').val());
     		}catch(e){
     			return;
     		}
     	}
     	
-    	$("#detalles-total-arpillas").val( globals.total_arpillas );
+    	jQuery("#detalles-total-arpillas").val( globals.total_arpillas );
     	
     	
     	
-    	globals.peso_origen = parseFloat( $("#detalles-peso-recibido").val() );
+    	globals.peso_origen = parseFloat( jQuery("#detalles-peso-recibido").val() );
 		globals.promedio_arpilla = globals.peso_origen / globals.total_arpillas;
     	globals.importe_total = 0;
     	globals.peso_calculado = 0;
     	
-    	$("#detalles-peso-por-arpilla").val(globals.promedio_arpilla);
+    	jQuery("#detalles-peso-por-arpilla").val(globals.promedio_arpilla);
     	
          //bucle de productos
     	for (i = 0; i < _cart.length; i++){
     		id = _cart[i].id_producto;
     		
-   			$('#cart-' + id + '-promedio').val( globals.promedio_arpilla );
+   			jQuery('#cart-' + id + '-promedio').val( globals.promedio_arpilla );
 
 
-			este_peso = globals.promedio_arpilla * parseFloat( $('#cart-' + id + '-arpillas').val() );
-   			$('#cart-' + id + '-peso').val( este_peso );
+			este_peso = globals.promedio_arpilla * parseFloat( jQuery('#cart-' + id + '-arpillas').val() );
+   			jQuery('#cart-' + id + '-peso').val( este_peso );
 			globals.peso_calculado += este_peso;
 			   			
-   			este_importe =  parseFloat( $('#cart-' + id + '-peso').val() ) * parseFloat( $('#cart-' + id + '-precio').val() );
+   			este_importe =  parseFloat( jQuery('#cart-' + id + '-peso').val() ) * parseFloat( jQuery('#cart-' + id + '-precio').val() );
 			globals.importe_total += este_importe;
 			
-   			$('#cart-' + id + '-importe').val( cf(este_importe) );
+   			jQuery('#cart-' + id + '-importe').val( cf(este_importe) );
     	}
     	
     	
     	//totales-arpillas
-    	$("#totales-arpillas").html	(globals.total_arpillas);
+    	jQuery("#totales-arpillas").html	(globals.total_arpillas);
     	
     	//totales-importe
-    	$("#totales-importe").html	( cf( globals.importe_total) );
+    	jQuery("#totales-importe").html	( cf( globals.importe_total) );
     	
     	//totales-peso
-    	$("#totales-peso").html		(globals.peso_calculado); 
+    	jQuery("#totales-peso").html		(globals.peso_calculado); 
     	
     	
-    	$("#doneButton").fadeIn();
+    	jQuery("#doneButton").fadeIn();
     }
     
     function done(){
  
     	var obj = {
 			embarque : {
-				id_proveedor:		$('#proveedores').val(),
-				folio: 				$("#detalles-folio").val(),
-				merma_por_arpilla: 	$("#detalles-merma-arpilla").val(),
-				numero_de_viaje:	$("#detalles-nuermo-viaje").val(),
-				peso_por_arpilla: 	$("#detalles-peso-por-arpilla").val(),
-				peso_origen : 		$("#detalles-peso-origen").val(),
-				peso_recibido : 	$("#detalles-peso-recibido").val(),
-				productor : 		$("#detalles-productor").val(),
+				id_proveedor:		jQuery('#proveedores').val(),
+				folio: 				jQuery("#detalles-folio").val(),
+				merma_por_arpilla: 	jQuery("#detalles-merma-arpilla").val(),
+				numero_de_viaje:	jQuery("#detalles-nuermo-viaje").val(),
+				peso_por_arpilla: 	jQuery("#detalles-peso-por-arpilla").val(),
+				peso_origen : 		jQuery("#detalles-peso-origen").val(),
+				peso_recibido : 	jQuery("#detalles-peso-recibido").val(),
+				productor : 		jQuery("#detalles-productor").val(),
 				importe_total: 		globals.importe_total,
-				total_arpillas: 	$("#totales-arpillas").html(),
-				costo_flete : 		$("#detalles-flete").val()
+				total_arpillas: 	jQuery("#totales-arpillas").html(),
+				costo_flete : 		jQuery("#detalles-flete").val()
 			},
 			conductor : {
-				nombre_chofer : 	$("#detalles-chofer").val(),
-				placas : 			$("#detalles-placas").val(),
-				marca_camion : 		$("#detalles-marca").val(),
-				modelo_camion : 	$("#detalles-modelo").val() 
+				nombre_chofer : 	jQuery("#detalles-chofer").val(),
+				placas : 			jQuery("#detalles-placas").val(),
+				marca_camion : 		jQuery("#detalles-marca").val(),
+				modelo_camion : 	jQuery("#detalles-modelo").val() 
 			},
 			productos: [ ]
 		};									
@@ -253,38 +245,38 @@ require_once('model/sucursal.dao.php');
     		id = _cart[i].id_producto;
     		prod = {
     			id_producto : id,
-    			variedad : 			$('#cart-' + id + '-variedad').val(),
-    			arpillas: 			$('#cart-' + id + '-arpillas').val(),
-    			precio_kg: 			$('#cart-' + id + '-precio').val(),
-    			sitio_descarga: 	$('#cart-' + id + '-sitio').val()
+    			variedad : 			jQuery('#cart-' + id + '-variedad').val(),
+    			arpillas: 			jQuery('#cart-' + id + '-arpillas').val(),
+    			precio_kg: 			jQuery('#cart-' + id + '-precio').val(),
+    			sitio_descarga: 	jQuery('#cart-' + id + '-sitio').val()
     		};
     		
 			obj.productos.push(prod);
 		}
 		
-		$("#loader").show();
+		jQuery("#loader").show();
 		
     	jQuery.ajaxSettings.traditional = true;
 
 
-        $.ajax({
+        jQuery.ajax({
 	      url: "../proxy.php",
 	      data: { 
             action : 1000, 
-            data : $.JSON.encode(obj)
+            data : jQuery.JSON.encode(obj)
            },
 	      cache: false,
 	      success: function(data){
 	      		try{
 			        response = jQuery.parseJSON(data);
 			    }catch(e){
-           			$("#loader").hide();
-                    return $("#ajax_failure").html("Error en el servidor. Intente de nuevo.").show();			    
+           			jQuery("#loader").hide();
+                    return jQuery("#ajax_failure").html("Error en el servidor. Intente de nuevo.").show();			    
 			    }
 
                 if(response.success == false){
-           			$("#loader").hide();
-                    return $("#ajax_failure").html(response.reason).show();
+           			jQuery("#loader").hide();
+                    return jQuery("#ajax_failure").html(response.reason).show();
                 }
 
 
@@ -333,7 +325,7 @@ require_once('model/sucursal.dao.php');
 <div id="chooseProds" style='display: none'>
 
 	<h2>Detalles del embarque</h2>
-	<table style='width:100%' border=1>
+	<table style='width:100%' border=0>
 		<tr><td colspan=2 ><h3>Detalles del producto</h3></td>
 			<td colspan=2 ><h3>Detalles del flete</h3></td></tr>
 			
@@ -353,7 +345,7 @@ require_once('model/sucursal.dao.php');
 			<td>Costo total del flete</td><td><input type='text' id='detalles-flete'  ></td></tr>
 			
 		<tr><td>Peso por arpilla</td>	<td><input type='text' id='detalles-peso-por-arpilla' value="0" disabled></td></tr>	
-		<tr><td>Peso origen</td>		<td><input type='text' id='detalles-peso-origen' onkeyup="$('#detalles-peso-recibido').val($('#detalles-peso-origen').val()); doMath();" ></td></tr>	
+		<tr><td>Peso origen</td>		<td><input type='text' id='detalles-peso-origen' onkeyup="jQuery('#detalles-peso-recibido').val(jQuery('#detalles-peso-origen').val()); doMath();" ></td></tr>	
 		<tr><td>Peso recibido</td>		<td><input type='text' id='detalles-peso-recibido' onkeyup="doMath()" ></td></tr>			
 		<tr><td>Productor</td>			<td><input type='text' id='detalles-productor'></td></tr>	
 	</table>

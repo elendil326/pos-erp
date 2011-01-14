@@ -6,44 +6,46 @@
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" class=" wf-active">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
+
 	
-	<!--<SPAN class="wf-font-watcher" style="position:absolute;left:-999px;font-size:200px;font-family:NONE,NONE">Mm</SPAN>
-	<SPAN class="wf-font-watcher" style="position:absolute;left:-999px;font-size:200px;font-family:&quot;ff-din-web-1&quot;,&quot;ff-din-web-2&quot;,sans-serif,NONE">Mm</SPAN>-->
-	
-<HEAD>
+<head>
 	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  
-  <TITLE>Caffeina</TITLE>
-	<LINK rel="stylesheet" type="text/css" href="./inc/marketingv4.css">
-	<STYLE type="text/css">.tk-ff-din-web{font-family:"ff-din-web-1","ff-din-web-2",sans-serif;}</STYLE>
-	<SCRIPT src="./inc/jquery.min.js" type="text/javascript"></SCRIPT>
-	<STYLE type="text/css">.olark-key,#hbl_code,#olark-data{display: none !important;}</STYLE>
-</HEAD>
+
+	<title>Caffeina</title>
+	<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript"></script>
+
+	<script>
+		$.noConflict();
+	</script>
+	
+	<script type="text/javascript" charset="utf-8" src="../frameworks/prototype/prototype.js"></script>		
 
 
-<BODY class="sub">
-  
-  <DIV id="wrapper">
-    
-    <DIV id="header" style="background: #fff url(inc/35598623_e726362b9f_b.jpg) no-repeat 50% -300px  ">
+	<link rel="stylesheet" type="text/css" href="./../getResource.php?mod=admin&type=css">
+	<script type="text/javascript" src="./../getResource.php?mod=admin&type=js"></script>
+
+</head>
+
+
+<body class="sub">
+  <div id="wrapper">
+
+    <div id="header" class="clientes" >
       
-      <DIV id="top-bar">
-
-        <?php include_once("inc/header.php"); ?>
+      <div id="top-bar">
         
-      </DIV> <!-- top-bar -->
+        <?php include_once("admin/includes/mainMenu.php"); ?>
+        
+      </div> 
+      <!-- /top-bar -->
 
-      <DIV id="header-main">
-		<h1 id="MAIN_TITLE"></h1> 
-      	<DIV id="hero">
-		
-		</DIV>
-      </DIV> <!-- header-main -->
-    </DIV> <!-- header -->
-
+      <div id="header-main">
+		<h1 id="MAIN_TITLE">Clientes</h1> 
+      </div>
+    </div>
     
-    <DIV id="content">
+    <div id="content">
 	
 	<?php
 	 	if(isset($_GET["action"]) && is_file("../../server/admin/clientes." . $_GET["action"] . ".php")){
@@ -54,10 +56,12 @@
 		}
 	?> 
 	
-    <?php include_once("inc/footer.php"); ?>	
-    </DIV> <!-- content -->
+    <?php include_once("admin/includes/footer.php"); ?>
+    </div> 
+    <!-- /content -->
     
     
-  </DIV> <!-- wrapper -->
+  </div> 
+  <!-- /wrapper -->
 
-</BODY></HTML>
+</body></HTML>

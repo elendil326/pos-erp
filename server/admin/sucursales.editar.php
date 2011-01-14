@@ -7,14 +7,6 @@
 
 <h1>Editar detalles de sucursal</h1>
 
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
-
-<script type="text/javascript" charset="utf-8">	$(function(){ $("input, select").uniform(); }); </script>
-
-
-
 
 <h2>Detalles personales</h2>
 <form id="edit">
@@ -38,7 +30,7 @@
 
     function cerrar(){
         
-        $.ajax({
+        jQuery.ajax({
 	      url: "../proxy.php",
 	      data: { 
             action : 703, 
@@ -49,7 +41,7 @@
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    return $("#ajax_failure").html(response.reason).show();
+                    return jQuery("#ajax_failure").html(response.reason).show();
                 }
 
                 reason = "La sucursal se ha cerrado con exito.";
@@ -61,11 +53,11 @@
 
     function validar(){
         obj = {
-            descripcion : $('#descripcion').val(),
-            direccion : $('#direccion').val(),
-            letras_factura :  $('#letras_factura').val(),
-            rfc : $('#rfc').val(),
-            telefono : $('#telefono').val()
+            descripcion : jQuery('#descripcion').val(),
+            direccion : jQuery('#direccion').val(),
+            letras_factura :  jQuery('#letras_factura').val(),
+            rfc : jQuery('#rfc').val(),
+            telefono : jQuery('#telefono').val()
         };
 
         save(obj);
@@ -75,19 +67,19 @@
                 jQuery.ajaxSettings.traditional = true;
 
 
-        $.ajax({
+        jQuery.ajax({
 	      url: "../proxy.php",
 	      data: { 
             action : 702, 
             sid : <?php echo $_REQUEST['sid']; ?>,
-            payload : $.JSON.encode(data)
+            payload : jQuery.JSON.encode(data)
            },
 	      cache: false,
 	      success: function(data){
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    return $("#ajax_failure").html(response.reason).show();
+                    return jQuery("#ajax_failure").html(response.reason).show();
                 }
 
                 reason = "La sucursal se ha editado correctamente";

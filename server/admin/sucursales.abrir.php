@@ -8,39 +8,31 @@
 
 ?>
 
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
-
 <script type="text/javascript" charset="utf-8">
-	$(function(){
-      $("input, select").uniform();
-    });
-
 
     function validar(){
 
-        if($('#descripcion').val().length < 8){
-            $('#descripcion_helper').html("La descricpcion es muy corta." );
+        if(jQuery('#descripcion').val().length < 8){
+            jQuery('#descripcion_helper').html("La descricpcion es muy corta." );
             return;
         }else{
-            $('#descripcion_helper').html( "" );
+            jQuery('#descripcion_helper').html( "" );
         }
 
 
-        if($('#direccion').val().length < 10){
-            $('#direccion_helper').html("La direccion es muy corta. Sea mas especifico");
+        if(jQuery('#direccion').val().length < 10){
+            jQuery('#direccion_helper').html("La direccion es muy corta. Sea mas especifico");
             return;
         }else{
-            $('#direccion_helper').html("");
+            jQuery('#direccion_helper').html("");
         }
 
 
-        if($('#telefono').val().length < 7){
-            $('#telefono_helper').html("El telefono es muy corto.");
+        if(jQuery('#telefono').val().length < 7){
+            jQuery('#telefono_helper').html("El telefono es muy corto.");
             return;
         }else{
-            $('#telefono_helper').html("");
+            jQuery('#telefono_helper').html("");
         }
 
 
@@ -50,29 +42,29 @@
     }
 
     function limpiar(){
-        $('#telefono').val("");
-        $('#direccion').val("");
-        $('#descripcion').val("");
-        $('#rfc').val("");
+        jQuery('#telefono').val("");
+        jQuery('#direccion').val("");
+        jQuery('#descripcion').val("");
+        jQuery('#rfc').val("");
     }
     
 
     function guardar(){
 
 		datos = {
-			descripcion : $('#descripcion').val(), 
-            direccion : $("#direccion").val(), 
-            rfc : $("#rfc").val(), 
-            prefijo_factura : $("#letras_factura").val(), 
-            telefono : $("#telefono").val(),
-            gerente : $('#gerente').val()
+			descripcion : jQuery('#descripcion').val(), 
+            direccion : jQuery("#direccion").val(), 
+            rfc : jQuery("#rfc").val(), 
+            prefijo_factura : jQuery("#letras_factura").val(), 
+            telefono : jQuery("#telefono").val(),
+            gerente : jQuery('#gerente').val()
         };
         
-	    $.ajax({
+	    jQuery.ajax({
 	      url: "../proxy.php",
 	      data: { 
             action : 701, 
-            data : $.JSON.encode( datos )
+            data : jQuery.JSON.encode( datos )
 
            },
 	      cache: false,
@@ -80,7 +72,7 @@
 		        response = jQuery.parseJSON(data);
 
                 if(!response.success){
-                    return $("#ajax_failure").html(response.reason).show();
+                    return jQuery("#ajax_failure").html(response.reason).show();
                 }
                 reason = "La nueva sucursal se ha creado con exito.";
                 window.location = "sucursales.php?action=lista&success=true&reason=" + reason;

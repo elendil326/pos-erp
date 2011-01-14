@@ -1,15 +1,13 @@
-<h1>Asignar gerentes</h1>
-
-
-<h2>Asignacion mediante sucursales</h2><?php
-
+<?php
 
 require_once('model/usuario.dao.php');
 require_once("controller/personal.controller.php");
 require_once("controller/sucursales.controller.php");
 
+?><h1>Asignar gerentes</h1>
 
 
+<h2>Asignacion mediante sucursales</h2><?php
 
 
 
@@ -64,7 +62,7 @@ echo "</table>";
             foreach ($sucursales as $sucursal){
                 echo "{";
                 echo "id_sucursal : {$sucursal->getIdSucursal()}," ;
-                echo "id_gerente : parseInt( $('#sucursal_{$sucursal->getIdSucursal()}').val() )," ;
+                echo "id_gerente : parseInt( jQuery('#sucursal_{$sucursal->getIdSucursal()}').val() )," ;
                 echo "},";
             }  
             ?>
@@ -100,18 +98,18 @@ echo "</table>";
         //enviar los resultados
        jQuery.ajaxSettings.traditional = true;
 
-        $.ajax({
+        jQuery.ajax({
 	      url: "../proxy.php",
 	      data: { 
             action : 506, 
-            data : $.JSON.encode(sucursales)
+            data : jQuery.JSON.encode(sucursales)
            },
 	      cache: false,
 	      success: function(data){
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    return $("#ajax_failure").html(response.reason).show();
+                    return jQuery("#ajax_failure").html(response.reason).show();
                 }
 
 
@@ -134,14 +132,5 @@ echo "</table>";
 <input type='button' value="Guardar cambios" onclick="guardarCambios()">
 
 
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
-
-<script type="text/javascript" charset="utf-8">
-	$(function(){
-      $("input, select").uniform();
-    });
-</script>
 
 

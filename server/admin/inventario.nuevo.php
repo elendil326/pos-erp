@@ -1,17 +1,10 @@
-<h2>Detalles del nuevo producto</h2><?php
+<?php
 
 	require_once("model/sucursal.dao.php");
 	require_once("controller/clientes.controller.php");
 ?>
 
-
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
-<script type="text/javascript" charset="utf-8">$(function(){$("input, select").uniform(); });</script>
-
-
-
+<h2>Detalles del nuevo producto</h2>
 
 <table border="0" cellspacing="5" cellpadding="5">
 	<tr><td>Descripcion</td><td><input type="text" id="descripcion" size="40"/></td></tr>
@@ -46,32 +39,32 @@
     function save(){
         //validar
         data = {
-                descripcion : 			$('#descripcion').val(),
-                escala : 				$('#escala').val(),
-                tratamiento:			$('#tratamiento').val(),
-                precio_venta : 			$('#precioVenta').val(),
-                precio_intersucursal : 	$('#precioIntersucursal').val()
+                descripcion : 			jQuery('#descripcion').val(),
+                escala : 				jQuery('#escala').val(),
+                tratamiento:			jQuery('#tratamiento').val(),
+                precio_venta : 			jQuery('#precioVenta').val(),
+                precio_intersucursal : 	jQuery('#precioIntersucursal').val()
             };
 
         jQuery.ajaxSettings.traditional = true;
 
 
-        $.ajax({
+        jQuery.ajax({
 	      url: "../proxy.php",
 	      data: { 
             action : 405, 
-            data : $.JSON.encode(data)
+            data : jQuery.JSON.encode(data)
            },
 	      cache: false,
 	      success: function(data){
 	      		try{
 			        response = jQuery.parseJSON(data);
 			    }catch(e){
-                    return $("#ajax_failure").html("Error").show();			    
+                    return jQuery("#ajax_failure").html("Error").show();			    
 			    }
 
                 if(response.success == false){
-                    return $("#ajax_failure").html(response.reason).show();
+                    return jQuery("#ajax_failure").html(response.reason).show();
                 }
 
 

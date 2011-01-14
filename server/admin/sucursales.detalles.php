@@ -19,7 +19,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 		width: 400px;
  	}
 </style>
-<script type="text/javascript" charset="utf-8" src="../frameworks/prototype/prototype.js"></script>
+
 <script src="../frameworks/humblefinance/flotr/flotr.js" type="text/javascript" charset="utf-8"></script>
 <script src="../frameworks/humblefinance/flotr/excanvas.js" type="text/javascript" charset="utf-8"></script>
 <script src="../frameworks/humblefinance/flotr/canvastext.js" type="text/javascript" charset="utf-8"></script>

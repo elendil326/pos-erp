@@ -1,30 +1,28 @@
-<h1>Gerentes</h1><?php
+<?php
 
     require_once("controller/personal.controller.php");
 
-
-    
-
+	$gerentes = listarGerentes(true);
 
 
-?><h2><img src='../media/icons/user_business_chart_32.png'>Gerentes asignados a una sucursal</h2><?php
+	$header = array(
+		"id_usuario" => "ID",
+		"nombre" => "Nombre",
+		"RFC" => "RFC",
+		"telefono" => "Telefono",
+		"gerencia_sucursal_desc" => "Sucursal" );
 
-$gerentes = listarGerentes(true);
+	$tabla = new Tabla( $header, $gerentes );
+	$tabla->addOnClick("id_usuario", "mostrarDetalles");
+	$tabla->addNoData("No hay gerentes asignados.");
+?>
 
-//render the table
-$header = array(
-    "id_usuario" => "ID",
-    "nombre" => "Nombre",
-    "RFC" => "RFC",
-    "telefono" => "Telefono",
-    "gerencia_sucursal_desc" => "Sucursal" );
 
-$tabla = new Tabla( $header, $gerentes );
-$tabla->addOnClick("id_usuario", "mostrarDetalles");
-$tabla->addNoData("No hay gerentes asignados.");
+<h2><img src='../media/icons/user_business_chart_32.png'>Gerentes asignados a una sucursal</h2>
+
+<?php 
+
 $tabla->render();
-
-
 
 $gerentes = listarGerentes(false);
 

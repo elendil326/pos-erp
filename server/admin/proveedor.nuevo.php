@@ -6,11 +6,6 @@
 ?>
 
 
-
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
-
 <h1>Nuevo Proveedor</h1>
 
 <h2>Detalles del nuevo proveedor</h2>
@@ -27,25 +22,24 @@
 
 
 <script type="text/javascript" charset="utf-8">
-	$(function(){$("input, select").uniform();});
 	
     function validar(){
 
-        if($('#nombre').val().length < 8){
-            return $("#ajax_failure").html("El nombre es muy corto.").show();
+        if(jQuery('#nombre').val().length < 8){
+            return jQuery("#ajax_failure").html("El nombre es muy corto.").show();
         }
 
 
-        if($('#direccion').val().length < 8){
-            return $("#ajax_failure").html("La direccion es muy corta.").show();            
+        if(jQuery('#direccion').val().length < 8){
+            return jQuery("#ajax_failure").html("La direccion es muy corta.").show();            
         }
 
         obj = {
-            nombre : 	$('#nombre').val(), 
-            direccion : $("#direccion").val(), 
-            rfc : 		$("#rfc").val(),
-            e_mail: 	$("e_mail").val(),
-            telefono : 	$("#telefono").val()
+            nombre : 	jQuery('#nombre').val(), 
+            direccion : jQuery("#direccion").val(), 
+            rfc : 		jQuery("#rfc").val(),
+            e_mail: 	jQuery("e_mail").val(),
+            telefono : 	jQuery("#telefono").val()
         };        
 
         guardar(obj);
@@ -55,14 +49,14 @@
     {
 
         jQuery.ajaxSettings.traditional = true;
-		$("#loader").fadeIn();
-		$("#submit").attr('disabled', true);
+		jQuery("#loader").fadeIn();
+		jQuery("#submit").attr('disabled', true);
 
-        $.ajax({
+        jQuery.ajax({
 	      url: "../proxy.php",
 	      data: { 
             action : 901, 
-            data : $.JSON.encode(data)
+            data : jQuery.JSON.encode(data)
            },
 	      cache: false,
 	      success: function(data){
@@ -70,18 +64,18 @@
 	      		try{
 			        response = jQuery.parseJSON(data);
 			    }catch(e){
-					$("#loader").fadeOut('fast', function (){
-						$("#submit").removeAttr('disabled');
-						$("#ajax_failure").html("Error, porfavor intente de nuevo.").show();
+					jQuery("#loader").fadeOut('fast', function (){
+						jQuery("#submit").removeAttr('disabled');
+						jQuery("#ajax_failure").html("Error, porfavor intente de nuevo.").show();
 					});
 					
                     return;
 			    }
 
                 if(response.success === false){
-                	$("#loader").fadeOut('fast', function (){
-						$("#submit").removeAttr('disabled');
-						$("#ajax_failure").html(response.reason).show();
+                	jQuery("#loader").fadeOut('fast', function (){
+						jQuery("#submit").removeAttr('disabled');
+						jQuery("#ajax_failure").html(response.reason).show();
 					});
 					return;
                 }

@@ -17,11 +17,7 @@
 	
 ?>
 
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
-<link href="../frameworks/facebox/facebox.css" media="screen" rel="stylesheet" type="text/css"/>
-<script src="../frameworks/facebox/facebox.js" type="text/javascript"></script>
+
 
 <script type="text/javascript" charset="utf-8">
 	var sucursales = [];
@@ -31,16 +27,7 @@
 			echo " sucursales[" . $suc->getIdSucursal() . "] = \"" .  $suc->getDescripcion()  . "\";";
 	}
 	?>
-	$(function(){
 
-        $("input, select").uniform();
-
-		
-        <?php 
-            if(isset($_REQUEST['sid'])) { 
-                echo "seleccionarSucursal();";
-        }?>
-    });
 
     var currentSuc = null;
 
@@ -48,20 +35,20 @@
 
 
         if(currentSuc !== null){
-    		$("#actual" + currentSuc).slideUp();
+    		jQuery("#actual" + currentSuc).slideUp();
         }
 
 
         <?php 
             if(isset($_REQUEST['aut'])) { 
-                echo '$("#Solicitud").slideDown();';
+                echo 'jQuery("#Solicitud").slideDown();';
         }?>            
 
-		$("#actual" + $('#sucursal').val()).slideDown();
-		$("#InvMaestro").slideDown();
-		$("#ASurtir").slideDown();
-        currentSuc = $('#sucursal').val();
-        $("#select_sucursal").slideUp();
+		jQuery("#actual" + jQuery('#sucursal').val()).slideDown();
+		jQuery("#InvMaestro").slideDown();
+		jQuery("#ASurtir").slideDown();
+        currentSuc = jQuery('#sucursal').val();
+        jQuery("#select_sucursal").slideUp();
 	}
 
     carrito = [];
@@ -71,7 +58,7 @@
 		totals_importe = 0;
 		totals_cantidad = 0;
 
-		values = $("#ASurtirTabla input");
+		values = jQuery("#ASurtirTabla input");
 		
 		for(a = 0; a < values.length; a+=5){
 			values[ a + 4 ].value = ( values[ a ].value - values[ a + 3 ].value ) * values[ a + 2 ].value;
@@ -80,8 +67,8 @@
 			totals_importe += ( values[ a ].value - values[ a + 3 ].value ) * values[ a + 2 ].value;
 		}
 
-		$("#totales_cantidad").html( totals_cantidad );
-		$("#totales_importe").html(cf( totals_importe ));
+		jQuery("#totales_cantidad").html( totals_cantidad );
+		jQuery("#totales_importe").html(cf( totals_importe ));
 	}
 
 	function tr(s){return "<tr>"+s+"</tr>";}
@@ -89,7 +76,7 @@
 	
     function agregarProducto(data){
 
-		o = $.JSON.decodeSecure(Url.decode(data));
+		o = jQuery.JSON.decodeSecure(Url.decode(data));
 
 		carrito.push( o );
 
@@ -104,8 +91,8 @@
 		html += td( "<input style='width: 100px'					 		 id='cart_table_importe" + o.id_compra_proveedor + "_" + o.id_producto +"' 		type=text disabled>" );
 		
 
-		$("#ASurtirTablaHeader").after( tr(html) );		
-		$("#ASurtirTabla input").uniform();	
+		jQuery("#ASurtirTablaHeader").after( tr(html) );		
+		jQuery("#ASurtirTabla input").uniform();	
 		
 		return;
     }
@@ -139,7 +126,7 @@
 	var readyDATA = null;
 
     function doSurtir(){
-		values = $("#ASurtirTabla input");
+		values = jQuery("#ASurtirTabla input");
 		
 		json = {
 			sucursal : currentSuc,
@@ -151,7 +138,7 @@
 			json.productos.push({
 				id_producto: 	carrito[a].id_producto,
 				producto_desc :	carrito[a].producto_desc,
-				procesada:		$(values[foo+1]).is(':checked'),
+				procesada:		jQuery(values[foo+1]).is(':checked'),
 				cantidad:		parseFloat( values[foo].value ),
 				descuento:		parseFloat( values[foo+3].value),
 				precio:			parseFloat( values[foo+2].value),
@@ -161,7 +148,7 @@
 			console.log("********** ******* ");
 			console.log("analizando ", carrito[a].id_producto, carrito[a].id_proveedor);
 			console.log("cantidad:" 	+ values[foo].value );
-			console.log("lavada:" 		, $(values[foo+1]).is(':checked') );
+			console.log("lavada:" 		, jQuery(values[foo+1]).is(':checked') );
 			console.log("precio:" 		+ values[foo+2].value );
 			console.log("descuento:" 	+ values[foo+3].value );
 			console.log("importe:" 		+ values[foo+4].value );
@@ -182,14 +169,14 @@ function confirmed()
  	//hacer ajaxaso
         jQuery.ajaxSettings.traditional = true;
 
-		$("#submitButtons").fadeOut("slow",function(){
-			$("#loader").fadeIn();
+		jQuery("#submitButtons").fadeOut("slow",function(){
+			jQuery("#loader").fadeIn();
 			
-			$.ajax({
+			jQuery.ajax({
 			url: "../proxy.php",
 			data: { 
 				action : 1005, 
-				data : $.JSON.encode( readyDATA ),
+				data : jQuery.JSON.encode( readyDATA ),
 			},
 			cache: false,
 			success: function(data){
@@ -198,18 +185,18 @@ function confirmed()
 			  		//console.log(response, data.responseText)
 				}catch(e){
 				
-					$("#loader").fadeOut('slow', function(){
-						$("#submitButtons").fadeIn();
-						$("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+					jQuery("#loader").fadeOut('slow', function(){
+						jQuery("#submitButtons").fadeIn();
+						jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
 					});                
 					return;                    
 				}
 		
 
 				if(response.success === false){
-					$("#loader").fadeOut('slow', function(){
-						$("#submitButtons").fadeIn();      				
-						$("#ajax_failure").html(response.reason).show();
+					jQuery("#loader").fadeOut('slow', function(){
+						jQuery("#submitButtons").fadeIn();      				
+						jQuery("#ajax_failure").html(response.reason).show();
 					});                
 					return ;
 				}

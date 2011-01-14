@@ -8,11 +8,6 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 ?>
 
 
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
-<script type="text/javascript" charset="utf-8">$(function(){$("input, select").uniform();});</script>
-
 <h1>Editar datos de <?php echo $gerente->getNombre(); ?></h1>
 
 <h2>Detalles personales</h2>
@@ -108,19 +103,19 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 
     function editPass()
     {
-        if($('#pass1').val() != $('#pass2').val()){
+        if(jQuery('#pass1').val() != jQuery('#pass2').val()){
             alert("Las claves no coinciden.");
             return;
         }
 
-        if($('#pass1').val().length < 4){
+        if(jQuery('#pass1').val().length < 4){
             alert("La nueva clave debe ser por lo menos de 5 caracteres.");
             return;
         }        
         
 
        obj = {
-            contrasena : hex_md5($('#pass1').val()),
+            contrasena : hex_md5(jQuery('#pass1').val()),
             id_usuario : <?php echo $_REQUEST['id']; ?>
         };      
 
@@ -131,47 +126,47 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 
     function validar(){
 
-        if($('#nombre').val().length < 8){
-             $("#ajax_failure").html("El nombre es muy corto.").show();
+        if(jQuery('#nombre').val().length < 8){
+             jQuery("#ajax_failure").html("El nombre es muy corto.").show();
             return;
         }
 
 
-        if($('#direccion').val().length < 10){
-             $("#ajax_failure").html("La direccion es muy corta.").show();
+        if(jQuery('#direccion').val().length < 10){
+             jQuery("#ajax_failure").html("La direccion es muy corta.").show();
             return;
         }
 
-        if($('#rfc').val().length < 7){
-             $("#ajax_failure").html("El RFC es muy corto.").show();
+        if(jQuery('#rfc').val().length < 7){
+             jQuery("#ajax_failure").html("El RFC es muy corto.").show();
             return;            
 
         }
 
-        if($('#telefono').val().length < 7){
-             $("#ajax_failure").html("El telefono es muy corto.").show();
+        if(jQuery('#telefono').val().length < 7){
+             jQuery("#ajax_failure").html("El telefono es muy corto.").show();
             return;
         }
 
 
-        if( isNaN($('#salario').val()) || $('#salario').val().length == 0){
-             $("#ajax_failure").html("El salario debe ser un nuemero.").show();
+        if( isNaN(jQuery('#salario').val()) || jQuery('#salario').val().length == 0){
+             jQuery("#ajax_failure").html("El salario debe ser un nuemero.").show();
             return;
         }
 
-        if( $('#salario').val() >= 10000){
-			return $("#ajax_failure").html("El salario mensual debe ser menor a $10,000.00").show();
+        if( jQuery('#salario').val() >= 10000){
+			return jQuery("#ajax_failure").html("El salario mensual debe ser menor a $10,000.00").show();
         }
 
 
 
 		obj = {
-			nombre : $('#nombre').val(), 
-			direccion : $("#direccion").val(), 
-			RFC : $("#rfc").val(), 
-			telefono : $("#telefono").val(),
+			nombre : jQuery('#nombre').val(), 
+			direccion : jQuery("#direccion").val(), 
+			RFC : jQuery("#rfc").val(), 
+			telefono : jQuery("#telefono").val(),
 			id_usuario : <?php echo $_REQUEST['id']; ?>,
-			salario : $("#salario").val()
+			salario : jQuery("#salario").val()
 		};        
 
         guardar(obj);
@@ -188,18 +183,18 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
         jQuery.ajaxSettings.traditional = true;
 
 
-        $.ajax({
+        jQuery.ajax({
 	      url: "../proxy.php",
 	      data: { 
             action : 502, 
-            data : $.JSON.encode(data)
+            data : jQuery.JSON.encode(data)
            },
 	      cache: false,
 	      success: function(data){
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    return $("#ajax_failure").html(response.reason).show();
+                    return jQuery("#ajax_failure").html(response.reason).show();
                 }
 				
 				reason = 'Los detalles del gerente se han modificado correctamente.';

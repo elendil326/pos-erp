@@ -15,15 +15,12 @@ $sucursal = SucursalDAO::getByPK( $autorizacion->getIdSucursal() );
 
 
 
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
 <script>
 function contestar(id, response){
 
     jQuery.ajaxSettings.traditional = true;
 
-    $.ajax({
+    jQuery,ajax({
       url: "../proxy.php",
       data: { 
             action : 208, 
@@ -34,7 +31,7 @@ function contestar(id, response){
       success: function(data){
             response = jQuery.parseJSON(data);
             if(response.success == false){
-                    return $("#ajax_failure").html(response.reason).show();
+                    return jQuery("#ajax_failure").html(response.reason).show();
             }
             reason = "Autorizacion respondida.";
             window.location = "autorizaciones.php?action=pendientes&success=true&reason=";
@@ -47,8 +44,8 @@ function surtirSuc(id, aut){
     window.location = "inventario.php?action=surtir&sid=" + id+"&aut="+aut;
 }
 
-$(function(){
-  $("input, select").uniform();
+jQuery(function(){
+  jQuery("input, select").uniform();
 });
 </script>
 

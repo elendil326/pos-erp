@@ -1,7 +1,3 @@
-<h1>Productos en transito</h1>
-
-
-
 <?php
 
     require_once('model/autorizacion.dao.php');
@@ -13,6 +9,7 @@
     $aut->setEstado(3);
     $autorizaciones = AutorizacionDAO::search( $aut );
     
+?><h1>Productos en transito</h1><?php
 
     foreach($autorizaciones as $transito){
         $sucName = SucursalDAO::getByPK($transito->getIdSucursal());
@@ -47,7 +44,7 @@
         }
 
 
-        
+/*        
         //detalles de los productos
         $items = json_decode($transito->getParametros());
 
@@ -61,6 +58,7 @@
           echo "<tr><td>".$i->id_producto."</td><td>". $_desc->getDescripcion() ."</td><td>".$i->cantidad."</td></tr>";
         }
         echo "</table>";
+        */
     }
  
 

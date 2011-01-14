@@ -7,12 +7,6 @@
 
 
 
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
-
-<script type="text/javascript" charset="utf-8">$(function(){$("input, select").uniform();});</script>
-
 <script>document.getElementById("MAIN_TITLE").innerHTML = "Nuevo cliente";</script>
 
 <h2>Detalles del nuevo cliente</h2>
@@ -48,30 +42,30 @@
 <script type="text/javascript" charset="utf-8">
     function validar(){
 
-        if($('#nombre').val().length < 8){
-            return $("#ajax_failure").html("El nombre es muy corto.").show();
+        if(jQuery('#nombre').val().length < 8){
+            return jQuery("#ajax_failure").html("El nombre es muy corto.").show();
         }
 
 
-        if($('#direccion').val().length < 10){
-            return $("#ajax_failure").html("La direccion es muy corta.").show();            
+        if(jQuery('#direccion').val().length < 10){
+            return jQuery("#ajax_failure").html("La direccion es muy corta.").show();            
         }
 
-        if($('#rfc').val().length < 7){
-            return $("#ajax_failure").html("El RFC es muy corto.").show();
+        if(jQuery('#rfc').val().length < 7){
+            return jQuery("#ajax_failure").html("El RFC es muy corto.").show();
             return;
         }
 
 
         obj = {
-            nombre : 	$('#nombre').val(), 
-            direccion : $("#direccion").val(), 
-            rfc : 		$("#rfc").val(), 
-            descuento:	$("#descuento").val(),
-            telefono : 	$("#telefono").val(),
-            ciudad :	$("#ciudad").val(),
-            limite_credito:	$("#limite_credito").val(),
-            id_sucursal:	$('#sucursal').val(),
+            nombre : 	jQuery('#nombre').val(), 
+            direccion : jQuery("#direccion").val(), 
+            rfc : 		jQuery("#rfc").val(), 
+            descuento:	jQuery("#descuento").val(),
+            telefono : 	jQuery("#telefono").val(),
+            ciudad :	jQuery("#ciudad").val(),
+            limite_credito:	jQuery("#limite_credito").val(),
+            id_sucursal:	jQuery('#sucursal').val(),
             id_usuario : <?php echo $_SESSION['userid']; ?>
         };        
 
@@ -89,18 +83,18 @@
         jQuery.ajaxSettings.traditional = true;
 
 
-        $.ajax({
+        jQuery.ajax({
 	      url: "../proxy.php",
 	      data: { 
             action : 301, 
-            data : $.JSON.encode(data)
+            data : jQuery.JSON.encode(data)
            },
 	      cache: false,
 	      success: function(data){
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    return $("#ajax_failure").html(response.reason).show();
+                    return jQuery("#ajax_failure").html(response.reason).show();
                 }
 
 

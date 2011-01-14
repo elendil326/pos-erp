@@ -4,38 +4,36 @@
     require_once('model/compra_proveedor.dao.php');
     require_once('model/inventario_maestro.dao.php');
     
-    $producto = 	InventarioDAO::getByPK($_REQUEST['producto']);
-    $compra = 		CompraProveedorDAO::getByPK($_REQUEST['compra']);
-    $inventario = 	InventarioMaestroDAO::getByPK($_REQUEST['producto'], $_REQUEST['compra']);
+    if( !( isset($_REQUEST['producto']) && isset($_REQUEST['compra'])) ){
+    	echo "<h1>Error</h1>Estos datos no existen.";
+    	return;
+    }
+    
+    $producto 	= 	InventarioDAO::getByPK			( $_REQUEST['producto'] );
+    $compra 	= 	CompraProveedorDAO::getByPK		( $_REQUEST['compra'] );
+    $inventario = 	InventarioMaestroDAO::getByPK	( $_REQUEST['producto'], $_REQUEST['compra'] );
 
 	if( $producto == null || $compra == null){
-		echo "<h1>Error</h1>Estos datos no existen.";
+		echo "<h1>Error</h1>Existe un problema.";
 		return ;
 	}
 
 ?>
 
 
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
-<link href="../frameworks/facebox/facebox.css" media="screen" rel="stylesheet" type="text/css"/>
-<script src="../frameworks/facebox/facebox.js" type="text/javascript"></script>
-
-
 
 <script type="text/javascript" charset="utf-8">
-	$(function(){  $("input, select").uniform();  });
+
 	
 	function showProceso(){
-		$("#reportar_limpieza_boton").fadeOut("slow", function(){
-			$("#reportar_limpieza").fadeIn();
+		jQuery("#reportar_limpieza_boton").fadeOut("slow", function(){
+			jQuery("#reportar_limpieza").fadeIn();
 		});
 	}
 	
 	function hideProceso(){
-		$("#reportar_limpieza").fadeOut("slow", function(){
-			$("#reportar_limpieza_boton").fadeIn();
+		jQuery("#reportar_limpieza").fadeOut("slow", function(){
+			jQuery("#reportar_limpieza_boton").fadeIn();
 		});	
 	}
 	
@@ -52,15 +50,15 @@
 	
 	function sendProceso(){
 		
-		$("#loader").fadeIn('slow', function(){
-			$.ajax({
+		jQuery("#loader").fadeIn('slow', function(){
+			jQuery.ajax({
 				url: "../proxy.php",
 				data: { 
 					action : 406,
-					data : $.JSON.encode( {
+					data : jQuery.JSON.encode( {
 						id_producto: 		<?php echo $_REQUEST['producto']; ?>,
 						id_compra:			<?php echo $_REQUEST['compra']; ?>,
-						cantidad_procesada: $("#cantidad_limpiada").val()					
+						cantidad_procesada: jQuery("#cantidad_limpiada").val()					
 					})
 
 				},
@@ -70,16 +68,16 @@
 				  		response = jQuery.parseJSON(data);
 					}catch(e){
 				
-						$("#loader").fadeOut('slow', function(){
-							$("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+						jQuery("#loader").fadeOut('slow', function(){
+							jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
 						});                
 						return;                    
 					}
 		
 
 					if(response.success === false){
-						$("#loader").fadeOut('slow', function(){
-							$("#ajax_failure").html(response.reason).show();
+						jQuery("#loader").fadeOut('slow', function(){
+							jQuery("#ajax_failure").html(response.reason).show();
 						});                
 						return ;
 					}
@@ -94,12 +92,12 @@
 	
 	function terminar(){
 		jQuery(document).trigger('close.facebox');
-		$("#loader").fadeIn('slow', function(){
-			$.ajax({
+		jQuery("#loader").fadeIn('slow', function(){
+			jQuery.ajax({
 				url: "../proxy.php",
 				data: { 
 					action : 407, 
-					data : $.JSON.encode( {
+					data : jQuery.JSON.encode( {
 						id_producto: 		<?php echo $_REQUEST['producto']; ?>,
 						id_compra:			<?php echo $_REQUEST['compra']; ?>					
 					})
@@ -110,16 +108,16 @@
 				  		response = jQuery.parseJSON(data);
 					}catch(e){
 				
-						$("#loader").fadeOut('slow', function(){
-							$("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+						jQuery("#loader").fadeOut('slow', function(){
+							jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
 						});                
 						return;                    
 					}
 		
 
 					if(response.success === false){
-						$("#loader").fadeOut('slow', function(){
-							$("#ajax_failure").html(response.reason).show();
+						jQuery("#loader").fadeOut('slow', function(){
+							jQuery("#ajax_failure").html(response.reason).show();
 						});                
 						return ;
 					}

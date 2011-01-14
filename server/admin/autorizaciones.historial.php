@@ -1,14 +1,18 @@
-<h1>Todas las autorizaciones</h1>
-
-
-
-<h2>Mostrando las ultimas 50 autorizaciones</h2><?php
+<?php
 
     require_once('model/autorizacion.dao.php');
     require_once('model/sucursal.dao.php');
     require_once('model/usuario.dao.php');
 
     $autorizaciones = AutorizacionDAO::getAll(1, 50, "fecha_peticion", "DESC");
+?>
+<h1>Todas las autorizaciones</h1>
+
+
+
+<h2>Mostrando las ultimas 50 autorizaciones</h2><?php
+
+
 
 
  

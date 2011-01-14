@@ -1,4 +1,11 @@
-<h1>Autorizaciones pendientes</h1>
+<?php
+
+require_once('controller/autorizaciones.controller.php');
+require_once('model/usuario.dao.php');
+
+
+
+?><h1>Autorizaciones pendientes</h1>
 
 
 
@@ -6,8 +13,6 @@
 
 
 
-require_once('controller/autorizaciones.controller.php');
-require_once('model/usuario.dao.php');
 
 
 

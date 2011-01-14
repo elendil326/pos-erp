@@ -1,10 +1,5 @@
 
-<h1>Sucursales</h1><?php
-
-/*
- * Lista de Clientes
- */ 
-
+<?php
 
 require_once("controller/sucursales.controller.php");
 require_once("controller/inventario.controller.php");

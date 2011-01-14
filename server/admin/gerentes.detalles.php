@@ -10,7 +10,7 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 ?>
 
 
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
+
 
 <?php  if($gerente->getActivo() != 0) {  ?>
   <h1><?php echo $gerente->getNombre(); ?></h1>  
@@ -155,7 +155,7 @@ if($aCargo){
             jQuery.ajaxSettings.traditional = true;
 
 
-        $.ajax({
+        jQuery.ajax({
 	      url: "../proxy.php",
 	      data: { 
                 action : 503, 
@@ -167,7 +167,7 @@ if($aCargo){
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
-                    return $("#ajax_failure").html(response.reason).show();
+                    return jQuery("#ajax_failure").html(response.reason).show();
                 }
 
 
