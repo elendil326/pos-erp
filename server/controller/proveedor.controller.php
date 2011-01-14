@@ -48,13 +48,6 @@ function nuevoProveedor( $json = null){
 		die('{ "success": false, "reason" : "Faltan parametros." }');
 	}
 
-    //admin','sucursal','ambos')
-    
-    if( $data->tipo_proveedor != "admin" || $data->tipo_proveedor != "sucursal" || $data->tipo_proveedor != "ambos"){
-        Logger::log("Tipo ptoveedor invalido" . $json);
-		die('{ "success": false, "reason" : "El tipo de proovedor es invalido" }');
-    }
-
 	//crear el objeto de proveedor a ingresar
 	$proveedor = new Proveedor();
 	$proveedor->setRfc( $data->rfc );
@@ -81,8 +74,25 @@ function nuevoProveedor( $json = null){
 		$proveedor->setEMail( $data->e_mail );
 	
 	$proveedor->setActivo ( 1 );
-	$proveedor->setTipoProveedor ( $data->tipo_proveedor );
-
+	
+	
+	 switch( $data->tipo_proveedor ){
+        case 'admin' :
+            $proveedor->setTipoProveedor ( $data->tipo_proveedor );
+        break;
+        
+        case 'sucursal' :
+            $proveedor->setTipoProveedor ( $data->tipo_proveedor );
+        break;
+        
+        case 'ambos' :
+            $proveedor->setTipoProveedor ( $data->tipo_proveedor );
+        break;
+        
+        default:
+             Logger::log("Tipo ptoveedor invalido" . $json);
+    		die('{ "success": false, "reason" : "El tipo de proovedor es invalido" }');
+    }
 
 	try{
 		ProveedorDAO::save($proveedor);
