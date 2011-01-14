@@ -335,7 +335,7 @@ require_once('model/sucursal.dao.php');
 		<tr><td colspan=2 ><h3>Detalles del producto</h3></td>
 			<td colspan=2 ><h3>Detalles del flete</h3></td></tr>
 			
-		<tr><td>Folio</td>				<td><input type='text' id='detalles-folio' ></td>
+		<tr><td>Remision</td>			<td><input type='text' id='detalles-folio' ></td>
 			<td>Nombre del chofer</td>	<td><input type='text' id='detalles-chofer' ></td></tr>
 		
 		<tr><td>Fecha</td>				<td><input type='text' id='detalles-fecha' value="<?php echo date("d/m/y") ?>" disabled></td>
