@@ -41,11 +41,19 @@ function nuevoProveedor( $json = null){
 	if(!( isset($data->rfc) &&
 			isset($data->nombre) &&
 			isset($data->direccion) &&
-			isset($data->telefono) 
+			isset($data->telefono) &&
+			isset($data->tipo_proveedor)
 		)){
 		Logger::log("Faltan parametros para crear el proveedor:" . $json);
 		die('{ "success": false, "reason" : "Faltan parametros." }');
 	}
+
+    //admin','sucursal','ambos')
+    
+    if( $data->tipo_proveedor != "admin" || $data->tipo_proveedor != "sucursal" || $data->tipo_proveedor != "ambos"){
+        Logger::log("Tipo ptoveedor invalido" . $json);
+		die('{ "success": false, "reason" : "El tipo de proovedor es invalido" }');
+    }
 
 	//crear el objeto de proveedor a ingresar
 	$proveedor = new Proveedor();
@@ -73,6 +81,7 @@ function nuevoProveedor( $json = null){
 		$proveedor->setEMail( $data->e_mail );
 	
 	$proveedor->setActivo ( 1 );
+	$proveedor->setTipoProveedor ( $data->tipo_proveedor );
 
 
 	try{
