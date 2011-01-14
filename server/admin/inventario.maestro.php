@@ -58,7 +58,7 @@ function toDateS( $d ){
 }
 $iMaestro = listarInventarioMaestro() ;
 // @TODO Existencias arpillas
-echo "<h2>Embarques</h2>";
+echo "<h2>Embarques de proveedores</h2>";
 $header = array(
 	"folio" 			=> "Remision",
 	"producto_desc" 	=> "Producto",
@@ -80,6 +80,11 @@ $tabla->addColRender( "existencias_procesadas", "toUnit" );
 $tabla->addColRender( "fecha", "toDateS" );
 $tabla->render();
 
-?>
 
+
+
+
+?>
+<h2>Embarques autonomos</h2>
+<input type="button" value="Nuevo embarque autonomo">
 

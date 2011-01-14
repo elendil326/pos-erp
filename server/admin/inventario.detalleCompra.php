@@ -24,18 +24,7 @@
 
 <script type="text/javascript" charset="utf-8">
 
-	
-	function showProceso(){
-		jQuery("#reportar_limpieza_boton").fadeOut("slow", function(){
-			jQuery("#reportar_limpieza").fadeIn();
-		});
-	}
-	
-	function hideProceso(){
-		jQuery("#reportar_limpieza").fadeOut("slow", function(){
-			jQuery("#reportar_limpieza_boton").fadeIn();
-		});	
-	}
+
 	
 
 	
@@ -132,11 +121,8 @@
 	}
 </script>
 
-
-<table style="width: 100%">
-	<tr><td>
-	<h2>Compra</h2>
-	<table border="0" cellspacing="1" cellpadding="1">
+<h2>Detalles</h2>
+	<table border="0" cellspacing="1" cellpadding="1" style="width: 100%">
 		<tr><td>Fecha de llegada</td>			<td><?php echo toDate($compra->getFecha()); ?></td></tr>
 		<tr><td>Descripcion</td>				<td><?php echo $producto->getDescripcion();?></td></tr>
 		<tr><td>Proveedor</td>					<td>
@@ -152,30 +138,92 @@
 		<tr><td>Merma por arpilla</td>			<td><?php echo $compra->getMermaPorArpilla();?></td></tr>
 		<tr><td>Promedio por arpilla</td>		<td><?php echo $compra->getPesoPorArpilla();?></td></tr>
 		<tr><td>&nbsp;</td></tr>
+	</table>
+
+		<?php
+	
+		if($producto->getTratamiento()){
 		
-		<tr style="font-size: 20px;">
-		<td colspan=2 > <?php printf("<b>%6.2f</b> %ss", ( $inventario->getExistencias () - $inventario->getExistenciasProcesadas ()), $producto->getEscala() ); ?> sin procesar</td></tr>
+			/* PRODUCTO CON TRATAMIENTO */
+			?>
+			<div style="font-size: 20px;" align="center">
+				<?php printf("<b>%6.2f</b> %ss", ( $inventario->getExistencias () - $inventario->getExistenciasProcesadas ()), $producto->getEscala() ); ?> sin procesar
+			</div>
 		
-		<tr style="font-size: 20px;">
-		<td colspan=2 > <?php printf("<b>%6.2f</b> %ss", $inventario->getExistenciasProcesadas (), $producto->getEscala() ); ?> procesados</td></tr>
+			<div style="font-size: 20px;" align="center">
+				<?php printf("<b>%6.2f</b> %ss", $inventario->getExistenciasProcesadas (), $producto->getEscala() ); ?> procesados
+			</div>
+			
+			<?php
+		}else{
+		
+			/* PRODUCTO SIN TRATAMIENTO */
+			?>
+			<div style="font-size: 20px;" align="center">
+				<?php printf("<b>%6.2f</b> %ss", ( $inventario->getExistencias () ), $producto->getEscala() ); ?> en existencia.
+			</div>
+			<?php
+		}
+
+
+
+		?>		
+
+<?php
+
+
+
+
+?>
+<h2>Dar por terminado</h2>
+		
+	<div align="center">
+		<input type='button' value="Dar por terinado" onClick="terminarProducto()">
+	</div>
+
+<?php
+if($producto->getTratamiento()){
+	/* PRODUCTO CON TRATAMIENTO */
+	?>		
+	
+	<h2>Procesar</h2>
+	<h3>Este producto puede ser procesado como <i>Limpio/Orginial</i></h3>
+	
+	
+	<table>
+		<tr>
+			<td>Cantidad tomada a procesar </td>
+			<td><input type="text" style="width:75px">&nbsp;<?php echo $producto->getEscala(); ?>s</td>
+		</tr>
+
+		<tr>
+			<td>Resultante procesada</td>
+			<td><input type="text" style="width:75px">&nbsp;<?php echo $producto->getEscala(); ?>s</td>
+		</tr>
+		
+		
+		<tr>
+			<td>Desecho resultante</td>
+			<td><input type="text" style="width:75px">&nbsp;<?php echo $producto->getEscala(); ?>s</td>
+		</tr>		
+		
+		
 		
 	</table>
-	</td>
-	<td valign='top' style="width: 300px">
-	<h2>&nbsp;<img id="loader" style="display: none;" src="../media/loader.gif"></h2>
-		<input type='button' value="Dar por terinado" onClick="terminarProducto()"><br>
-		
-		<div id="reportar_limpieza_boton">
-			<input type='button' value="Reportar proceso"  onClick="showProceso()">
+	
+	<div align="center">
+		<input type="button" value="Aceptar proceso" onClick="">
+	</div>
+<!--	<div id="reportar_limpieza" style="display: none;">
+	
 		</div>
-		<div id="reportar_limpieza" style="display: none;">
-			Cantidad limpiada <input type="text" id="cantidad_limpiada"> <br>
-			<input type="button" value="Cancelar" onClick="hideProceso()"> <input type="button" value="Aceptar" onClick="sendProceso()">
-		</div>
-		
-	</td></tr>
-</table>
-
+-->
+	
+	
+	
+	<?php
+}	
+?>
 
 
 

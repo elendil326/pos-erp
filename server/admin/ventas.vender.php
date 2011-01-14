@@ -1,14 +1,17 @@
 <?php
 
-
+	require_once("controller/inventario.controller.php");
+	require_once("controller/sucursales.controller.php");
 	require_once('controller/clientes.controller.php');
 	require_once('model/cliente.dao.php');
 
 ?>
 
-<h1>Realizar venta</h1>
+<script>
+	jQuery("#MAIN_TITLE").html("Venta a cliente");
+</script>
 
-<h2>Cliente</h2>
+<h2>Detalles del Cliente</h2>
 
 
 <?php
@@ -34,26 +37,11 @@
 		}else{
 		
 		?>
-			<table border="0" cellspacing="5" cellpadding="5">
+			<table border="0" cellspacing="1" cellpadding="1">
 				<tr><td><b>Nombre</b></td><td><?php echo $cliente->getNombre(); ?></td><td rowspan=12><div id="map_canvas"></div></td></tr>
 				<tr><td><b>RFC</b></td><td><?php echo $cliente->getRFC(); ?></td></tr>
-				<tr><td><b>Direccion</b></td><td><?php echo $cliente->getDireccion(); ?></td></tr>
-				<tr><td><b>Ciudad</b></td><td><?php echo $cliente->getCiudad(); ?></td></tr>
-				<tr><td><b>Telefono</b></td><td><?php echo $cliente->getTelefono(); ?></td></tr>	
-				<tr><td><b>E Mail</b></td><td><?php echo $cliente->getEMail(); ?></td></tr>	
 				<tr><td><b>Limite de Credito</b></td><td><?php echo moneyFormat($cliente->getLimiteCredito()); ?></td></tr>	
-
 				<tr><td><b>Descuento</b></td><td><?php echo percentFormat( $cliente->getDescuento() ); ?></td></tr>
-				<tr><td><b>Fecha Ingreso</b></td><td><?php echo $cliente->getFechaIngreso() ; ?></td></tr>
-
-				<tr><td><b>Gerente que dio de alta</b></td><td><?php echo UsuarioDAO::getByPK( $cliente->getIdUsuario() )->getNombre() ; ?></td></tr>
-	
-				<?php
-					$foo = SucursalDAO::getByPK( $cliente->getIdSucursal() );
-					$_suc = $foo == null ? "Ninguna" : $foo->getDescripcion();
-				?>
-				<tr><td><b>Sucursal donde se dio de alta</b></td><td><?php echo $_suc; ?></td></tr>
-
 			</table>
 		
 		<?php
@@ -64,8 +52,84 @@
 
 
 ?>
+<style>
+	.tabla-inventario{
+		font-size: 12px;
+	}
+</style>
 
+<script>
+	var carrito = [];
+	
+	function remove(data){
+		jQuery("#" + data).css("color", "");
+		jQuery("#" + data).css("background-color", "");	
+		
 
-<h2>Productos</h2>
+	}
+	
+	function add(data){
+	
+		//buscar en el carrito
+		
+		for( a = 0; a < carrito.length; a++){
+			if( carrito[a].tablaid == data ){
+			
+				//ya esta, hay que quitarlo
+				carrito.splice( a, 1 );
+				return remove(data);
+			}
+		}
+		
+		jQuery("#" + data).css("color", "#fff ");
+		jQuery("#" + data).css("background-color", "#3F8CE9 !important");
+		
+		carrito.push( {
+			qty : 0,
+			tablaid : data
+		});
+		
+		
+	}
+</script>
 
+<h2>Productos a vender</h2>
+<div class="tabla-inventario">
+<?php
 
+function toUnit( $e )
+{
+	return "<b>" . $e . "</b>kg";
+}
+function toDateS( $d ){
+	$foo = toDate($d);
+	$bar = explode(" ", $foo);
+	return $bar[0];
+	 
+}
+
+$iMaestro = listarInventarioMaestro() ;
+$header = array(
+	"folio" 			=> "Remision",
+	"producto_desc" 	=> "Producto",
+	"variedad" 	 		=> "Variedad",
+	"arpillas"			=> "Arpillas origen",
+	"peso_por_arpilla"	=> "Kg/Arpilla",
+	"productor"			=> "Productor",
+	"fecha"				=> "Llegada",
+	//"transporte"				=> "Transporte",
+	"merma_por_arpilla"			=> "Merma",
+	//"sitio_descarga_desc"		=> "Sitio de descarga",
+	"existencias"				=> "Existencias",
+	"existencias_procesadas"	=> "Limpias" );
+	
+$tabla = new Tabla( $header, $iMaestro );
+$tabla->renderRowId("carrito"); //darle id's a las columnas
+$tabla->addOnClick("folio", "add", false, true); //enviar el id de la columna al javascriptooor
+$tabla->addColRender( "existencias", "toUnit" );
+$tabla->addColRender( "existencias_procesadas", "toUnit" );
+$tabla->addColRender( "fecha", "toDateS" );
+$tabla->render();
+
+?>
+</div>

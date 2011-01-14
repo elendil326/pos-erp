@@ -241,9 +241,12 @@ margin: 32px 0 0 -4px;
 text-shadow: 1px 1px 4px #000;
 color: #fff;
 font-family: 'ff-din-web-1', 'ff-din-web-2', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Arial, Helvetica, sans-serif;
-width: 640px;
+width: 800px;
 letter-spacing: -3px;
+overflow: hidden;
+height: 40px;
 }
+
 
 .home #header h1 {
 width: 600px;

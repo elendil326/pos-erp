@@ -17,8 +17,8 @@
 		<tr><td>Direccion</td><td><input type="text"            id="direccion" size="40"/></td></tr>
 		<tr><td>Ciudad</td><td><input type="text"            	id="ciudad" size="40"/></td></tr>	
 		<tr><td>Telefono</td><td><input type="text"             id="telefono" size="40"/></td></tr>
-		<tr><td>Descuento</td><td><input type="text"            id="descuento" size="40"/></td></tr>
-		<tr><td>Limite de credito</td><td><input type="text"    id="limite_credito" size="40"/></td></tr>
+		<tr><td>Descuento</td><td><input type="text"            value="0" id="descuento" size="40"/></td></tr>
+		<tr><td>Limite de credito</td><td><input type="text"    value="0" id="limite_credito" size="40"/></td></tr>
 		
 		<tr><td>Sucursal</td><td>
 			    <select id="sucursal"> 
@@ -46,10 +46,11 @@
             return jQuery("#ajax_failure").html("El nombre es muy corto.").show();
         }
 
-
+/*
         if(jQuery('#direccion').val().length < 10){
             return jQuery("#ajax_failure").html("La direccion es muy corta.").show();            
         }
+*/
 
         if(jQuery('#rfc').val().length < 7){
             return jQuery("#ajax_failure").html("El RFC es muy corto.").show();

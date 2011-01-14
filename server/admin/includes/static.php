@@ -25,7 +25,8 @@ class Tabla {
 	private $actionFunction;
 	private $actionField;
 	
-	
+	private	$actionSendID;
+	private $renderRowIds;
 	private $specialRender;
 	private $noDataText;
 	
@@ -33,6 +34,12 @@ class Tabla {
 		$this->header = $header;
 		$this->rows = $rows;
 		$this->specialRender = array();
+		$renderRowIds = null;
+	}
+	
+	public function renderRowId( $prefix )
+	{
+		$this->renderRowIds = $prefix;
 	}
 	
 	public function addNoData ( $msg ){
@@ -44,10 +51,11 @@ class Tabla {
 	}
 	
 	
-	public function addOnClick( $actionField, $actionFunction, $sendJSON = false ){
-		$this->actionField = $actionField;
+	public function addOnClick( $actionField , $actionFunction, $sendJSON = false, $sendId = false ){
+		$this->actionField 	  = $actionField;
 		$this->actionFunction = $actionFunction;
 		$this->actionSendJSON = $sendJSON;
+		$this->actionSendID = $sendId;		
 	}
 	
 
@@ -98,18 +106,28 @@ class Tabla {
 			if( isset($this->actionField)){
 				if($this->actionSendJSON){
 					
-					$html .= '<tr style="cursor: pointer;" onClick="' . $this->actionFunction. '( \''. urlencode(json_encode($row)) . '\' )" ';
+					$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( \''. urlencode(json_encode($row)) . '\' )" ';
+				}elseif($this->actionSendID){
+					$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( \'' . $this->renderRowIds . $a . '\' )" ';
 				}else{
-					$html .= '<tr style="cursor: pointer;" onClick="' . $this->actionFunction. '( ' . $row[ $this->actionField ] . ' )" ';
+					$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( ' . $row[ $this->actionField ] . ' )" ';				
 				}
 				
 			}else{
-				$html .= '<tr';
+				$html .= '<tr ';
 			}			
 
-            $html .= ' onmouseover="this.style.backgroundColor = \'#D7EAFF\'" onmouseout="this.style.backgroundColor = \'white\'" >';
+			//renderear ids o no
+			if($this->renderRowIds != null)	{
+				$html .= " id=\"". $this->renderRowIds . $a ."\" ";
+			}
 
+            $html .= ' onmouseover="this.style.backgroundColor = \'#D7EAFF\'" onmouseout="this.style.backgroundColor = \'white\'" >';
+            
+			$i = 0;
+			
 			foreach ( $this->header  as $key => $value){
+			
 				if( array_key_exists( $key , $row )){
 
 					//ver si necesita rendereo especial
@@ -120,11 +138,16 @@ class Tabla {
 						}
 					}
 					
+					if($i++ % 2 == 0){
+						$bgc = "";
+					}else{
+						$bgc = ""; //"rgba(200, 200, 200, 0.199219)";
+					}
 					
 					if( $found ){
-						$html .=  "<td>" . call_user_func( $found[$key] , $row[ $key ]) . "</td>";
+						$html .=  "<td style='background-color:".$bgc.";'>" . call_user_func( $found[$key] , $row[ $key ]) . "</td>";
 					}else{
-						$html .=  "<td>" . $row[ $key ] . "</td>";
+						$html .=  "<td style='background-color:".$bgc.";'>" . $row[ $key ] . "</td>";
 					}
 					
 
