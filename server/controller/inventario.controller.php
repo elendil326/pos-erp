@@ -38,7 +38,7 @@ function listarInventario( $sucID = null){
 		
 		$fecha_mas_actual = strtotime("2000-1-1 00:00:00");
 		
-		//buscamos el cambio de precio mas actual (nunca enrtara si no hay una cambio de autorizacion de precio)
+		//buscamos el cambio de precio mas actual (nunca entrara si no hay una cambio de autorizacion de precio)
 		$precioIntersucursal = "No def";
 		
 		foreach( $resultados as $r ){
@@ -63,9 +63,11 @@ function listarInventario( $sucID = null){
         Array_push( $json , array(
             "productoID" => $productoData->getIdProducto(),
             "descripcion" => $productoData->getDescripcion(),
+            "tratamiento" => $productoData->getTratamiento(),
             "precioVenta" => $producto->getPrecioVenta(),
             "existenciasMinimas" => $producto->getMin(),
-            "existencias" => $producto->getExistencias(),
+            "existenciasOriginales" => $producto->getExistencias(),
+            "existenciasProcesadas" => $producto->getExitenciasProcesadas(),
             "medida" => $productoData->getEscala(),
             "precioIntersucursal" => $precioIntersucursal
         ));
@@ -319,7 +321,23 @@ function nuevoProducto($data)
 		die('{ "success" : false, "reason" : "Datos incompletos." }');	
 	}
 
+    if( $jsonData->descripcion == "" ){
+        Logger::log("Error : se intenta dar de alta un producto sin descripcion");
+		die('{ "success" : false, "reason" : "Producto no cuenta con una descripcion." }');	
+    }
+    
+    if(  strlen($jsonData->descripcion) < 3 ){
+        Logger::log("Error : La descripcion del producto debe ser mayor a 2 caracteres");
+		die('{ "success" : false, "reason" : "La descripcion del producto debe ser mayor a 2 caracteres." }');	
+    }
+    
+    if(  strlen($jsonData->descripcion) > 13){
+        Logger::log("Error : La descripcion del producto debe ser menor a 13 caracteres");
+		die('{ "success" : false, "reason" : "La descripcion del producto debe ser menor a 13 caracteres." }');	
+    }
+
     $inventario = new Inventario();
+
     $inventario->setDescripcion ($jsonData->descripcion);
     $inventario->setEscala 		($jsonData->escala == "null" ? null : $jsonData->escala);
     $inventario->setTratamiento ($jsonData->tratamiento);
