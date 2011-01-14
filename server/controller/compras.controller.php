@@ -43,7 +43,8 @@ function nuevaCompraProveedor( $data = null ){
 			"productor" : "Jorge Nolasco",
 			"importe_total": 3702,
 			"total_arpillas": 1,
-			"costo_flete" : 123 
+			"costo_flete" : 123 ,
+			"fecha_origen" : 
 		},
 		"conductor" : {
 			"nombre_chofer" : "Alan Gonzalez",
@@ -136,12 +137,23 @@ function compraProveedor( $data = null, $productos = null ){
 			isset($data->peso_recibido) &&
 			isset($data->productor) &&
 			isset($data->total_arpillas) &&
-			isset($data->peso_por_arpilla) 
+			isset($data->peso_por_arpilla) &&
+			isset($data->fecha_origen) 
 		)){
 		Logger::log("Faltan parametros para crear la compra a proveedor");
 		die('{ "success": false, "reason" : "Parametros invalidos." }');
 
 	}
+
+	//formateamos al fecha de origen
+	$fecha_o= explode("/",$data->fecha_origen);
+    $dia = $fecha_o[0];
+    $mes = $fecha_o[1];
+    $anio = $fecha_o[2];
+    $data->fecha_origen = $anio."/".$mes."/".$dia;
+    
+
+	
 	
 	//calculamos cuanto vale el viaje segun el proveedor
 	/*$peso_promedio_origen = ( $data->peso_origen / $data->total_arpillas );
@@ -158,8 +170,22 @@ function compraProveedor( $data = null, $productos = null ){
 	
 	$compra -> setPesoOrigen( $data->peso_origen );
 	
-	if(isset($data->folio))
+	if(isset($data->folio)){
+	
+	    //verificamos que no exista el folio
+        $comp = new CompraProveedor();
+        $comp -> setFolio( $data->folio );
+        $result = CompraProveedorDAO::search( $comp);
+	
+	    if( count( $result ) > 0  ){
+	        Logger::log("Error al guardar la nueva compra a proveedor, se tiene registro del folio : " .  $data->folio );
+		    DAO::transRollback();	
+            die( '{"success": false, "reason": "Error al guardar la nueva compra a proveedor, se tiene registro del folio : ' . $data->folio . '" }' );
+	    }
+	
 		$compra -> setFolio( $data->folio );
+		
+	}
 	
 	if(isset($data->numero_de_viaje))
 		$compra -> setNumeroDeViaje( $data->numero_de_viaje );
@@ -180,6 +206,8 @@ function compraProveedor( $data = null, $productos = null ){
 	if(isset($data->importe_total))
 		$compra -> setTotalOrigen( $data->importe_total );
 	
+	$compra ->setFechaOrigen( $data->fecha_origen );
+	
 	DAO::transBegin();	
 	
 	try{
@@ -187,7 +215,7 @@ function compraProveedor( $data = null, $productos = null ){
 	}catch(Exception $e){
         Logger::log("Error al guardar la nueva compra a proveedor:" . $e);
 		DAO::transRollback();	
-	    die( '{"success": false, "reason": "Error al guardar la compra" }' );
+	    die( '{"success": false, "reason": "Error al guardar la compra " }' );
 	}
 
 	Logger::log("Compra a proveedor creada !");
