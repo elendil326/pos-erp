@@ -67,6 +67,7 @@ function nuevaCompraProveedor( $data = null ){
 	
 	*/
 	
+	//TODO: Calcular discrepancias entre el peso por arpilla que manda alan y el que yo calculo
 	
 	Logger::log("Iniciando le proceso de registro de nueva compra a proveedor");
 	
@@ -78,13 +79,14 @@ function nuevaCompraProveedor( $data = null ){
 
     //calculamos el peso real por arpilla
     $peso_real_por_arpilla = $data->embarque->peso_por_arpilla - $data->embarque->merma_por_arpilla;
+    $otro_peso_real_por_arpilla = ( $data->embarque->peso_recibido - ( $data->embarque->total_arpillas * $data->embarque->merma_por_arpilla ) / $data->embarque->total_arpillas );
 
 	//damos de alta el detalle de la compra al proveedor
-	ingresarDetalleCompraProveedor( $data->productos, $id_compra_proveedor, $peso_real_por_arpilla );
+	ingresarDetalleCompraProveedor( $data->productos, $id_compra_proveedor, $otro_peso_real_por_arpilla );
 	
 	//isertamos en el inventario maestro
 	//($data = null, $id_compra_proveedor = null, $peso_por_arpilla = null, $sitio_descarga = null){
-	insertarProductoInventarioMaestro($data->productos, $id_compra_proveedor, $peso_real_por_arpilla);
+	insertarProductoInventarioMaestro($data->productos, $id_compra_proveedor, $otro_peso_real_por_arpilla );
 	
 	
 }
@@ -176,7 +178,7 @@ function compraProveedor( $data = null, $productos = null ){
     $compra -> setMermaPorArpilla( $data->merma_por_arpilla );
 	
 	if(isset($data->importe_total))
-		$compra -> setTotalOrigen( $precio_total_origen );
+		$compra -> setTotalOrigen( $data->importe_total );
 	
 	DAO::transBegin();	
 	
