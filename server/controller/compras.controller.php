@@ -77,7 +77,8 @@ function nuevaCompraProveedor( $data = null ){
 	compraProveedorFlete($data->conductor, $id_compra_proveedor, $data->embarque->costo_flete);
 	
 	//damos de alta el detalle de la compra al proveedor
-	ingresarDetalleCompraProveedor( $data->productos, $id_compra_proveedor, $data->embarque->peso_por_arpilla);
+	$peso_real_por_arpilla = $data->embarque->peso_por_arpilla - $data->embarque->merma_por_arpilla;
+	ingresarDetalleCompraProveedor( $data->productos, $id_compra_proveedor, $peso_real_por_arpilla );
 	
 	//isertamos en el inventario maestro
 	//($data = null, $id_compra_proveedor = null, $peso_por_arpilla = null, $sitio_descarga = null){
