@@ -40,6 +40,9 @@ class PagosVenta extends VO
 			if( isset($data['monto']) ){
 				$this->monto = $data['monto'];
 			}
+			if( isset($data['tipo_pago']) ){
+				$this->tipo_pago = $data['tipo_pago'];
+			}
 		}
 	}
 
@@ -58,7 +61,8 @@ class PagosVenta extends VO
 			"id_sucursal" => $this->id_sucursal,
 			"id_usuario" => $this->id_usuario,
 			"fecha" => $this->fecha,
-			"monto" => $this->monto
+			"monto" => $this->monto,
+			"tipo_pago" => $this->tipo_pago
 		); 
 	return json_encode($vec); 
 	}
@@ -118,6 +122,15 @@ class PagosVenta extends VO
 	  * @var float
 	  */
 	protected $monto;
+
+	/**
+	  * tipo_pago
+	  * 
+	  * tipo de pago para este abono<br>
+	  * @access protected
+	  * @var enum('efectivo','cheque','tarjeta')
+	  */
+	protected $tipo_pago;
 
 	/**
 	  * getIdPago
@@ -265,6 +278,30 @@ class PagosVenta extends VO
 	final public function setMonto( $monto )
 	{
 		$this->monto = $monto;
+	}
+
+	/**
+	  * getTipoPago
+	  * 
+	  * Get the <i>tipo_pago</i> property for this object. Donde <i>tipo_pago</i> es tipo de pago para este abono
+	  * @return enum('efectivo','cheque','tarjeta')
+	  */
+	final public function getTipoPago()
+	{
+		return $this->tipo_pago;
+	}
+
+	/**
+	  * setTipoPago( $tipo_pago )
+	  * 
+	  * Set the <i>tipo_pago</i> property for this object. Donde <i>tipo_pago</i> es tipo de pago para este abono.
+	  * Una validacion basica se hara aqui para comprobar que <i>tipo_pago</i> es de tipo <i>enum('efectivo','cheque','tarjeta')</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param enum('efectivo','cheque','tarjeta')
+	  */
+	final public function setTipoPago( $tipo_pago )
+	{
+		$this->tipo_pago = $tipo_pago;
 	}
 
 }

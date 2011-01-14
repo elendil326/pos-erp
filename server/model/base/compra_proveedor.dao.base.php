@@ -138,6 +138,11 @@ abstract class CompraProveedorDAOBase extends DAO
 			array_push( $val, $compra_proveedor->getFecha() );
 		}
 
+		if( $compra_proveedor->getFechaOrigen() != NULL){
+			$sql .= " fecha_origen = ? AND";
+			array_push( $val, $compra_proveedor->getFechaOrigen() );
+		}
+
 		if( $compra_proveedor->getFolio() != NULL){
 			$sql .= " folio = ? AND";
 			array_push( $val, $compra_proveedor->getFolio() );
@@ -212,11 +217,12 @@ abstract class CompraProveedorDAOBase extends DAO
 	  **/
 	private static final function update( $compra_proveedor )
 	{
-		$sql = "UPDATE compra_proveedor SET  peso_origen = ?, id_proveedor = ?, fecha = ?, folio = ?, numero_de_viaje = ?, peso_recibido = ?, arpillas = ?, peso_por_arpilla = ?, productor = ?, calidad = ?, merma_por_arpilla = ?, total_origen = ? WHERE  id_compra_proveedor = ?;";
+		$sql = "UPDATE compra_proveedor SET  peso_origen = ?, id_proveedor = ?, fecha = ?, fecha_origen = ?, folio = ?, numero_de_viaje = ?, peso_recibido = ?, arpillas = ?, peso_por_arpilla = ?, productor = ?, calidad = ?, merma_por_arpilla = ?, total_origen = ? WHERE  id_compra_proveedor = ?;";
 		$params = array( 
 			$compra_proveedor->getPesoOrigen(), 
 			$compra_proveedor->getIdProveedor(), 
 			$compra_proveedor->getFecha(), 
+			$compra_proveedor->getFechaOrigen(), 
 			$compra_proveedor->getFolio(), 
 			$compra_proveedor->getNumeroDeViaje(), 
 			$compra_proveedor->getPesoRecibido(), 
@@ -249,12 +255,13 @@ abstract class CompraProveedorDAOBase extends DAO
 	  **/
 	private static final function create( &$compra_proveedor )
 	{
-		$sql = "INSERT INTO compra_proveedor ( id_compra_proveedor, peso_origen, id_proveedor, fecha, folio, numero_de_viaje, peso_recibido, arpillas, peso_por_arpilla, productor, calidad, merma_por_arpilla, total_origen ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO compra_proveedor ( id_compra_proveedor, peso_origen, id_proveedor, fecha, fecha_origen, folio, numero_de_viaje, peso_recibido, arpillas, peso_por_arpilla, productor, calidad, merma_por_arpilla, total_origen ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$compra_proveedor->getIdCompraProveedor(), 
 			$compra_proveedor->getPesoOrigen(), 
 			$compra_proveedor->getIdProveedor(), 
 			$compra_proveedor->getFecha(), 
+			$compra_proveedor->getFechaOrigen(), 
 			$compra_proveedor->getFolio(), 
 			$compra_proveedor->getNumeroDeViaje(), 
 			$compra_proveedor->getPesoRecibido(), 
@@ -351,6 +358,17 @@ abstract class CompraProveedorDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " fecha = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $compra_proveedorA->getFechaOrigen()) != NULL) & ( ($b = $compra_proveedorB->getFechaOrigen()) != NULL) ){
+				$sql .= " fecha_origen >= ? AND fecha_origen <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " fecha_origen = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

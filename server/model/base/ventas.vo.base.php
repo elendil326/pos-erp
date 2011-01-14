@@ -31,6 +31,9 @@ class Ventas extends VO
 			if( isset($data['tipo_venta']) ){
 				$this->tipo_venta = $data['tipo_venta'];
 			}
+			if( isset($data['tipo_pago']) ){
+				$this->tipo_pago = $data['tipo_pago'];
+			}
 			if( isset($data['fecha']) ){
 				$this->fecha = $data['fecha'];
 			}
@@ -55,6 +58,9 @@ class Ventas extends VO
 			if( isset($data['pagado']) ){
 				$this->pagado = $data['pagado'];
 			}
+			if( isset($data['cancelada']) ){
+				$this->cancelada = $data['cancelada'];
+			}
 			if( isset($data['ip']) ){
 				$this->ip = $data['ip'];
 			}
@@ -74,6 +80,7 @@ class Ventas extends VO
 			"id_venta" => $this->id_venta,
 			"id_cliente" => $this->id_cliente,
 			"tipo_venta" => $this->tipo_venta,
+			"tipo_pago" => $this->tipo_pago,
 			"fecha" => $this->fecha,
 			"subtotal" => $this->subtotal,
 			"iva" => $this->iva,
@@ -82,6 +89,7 @@ class Ventas extends VO
 			"id_sucursal" => $this->id_sucursal,
 			"id_usuario" => $this->id_usuario,
 			"pagado" => $this->pagado,
+			"cancelada" => $this->cancelada,
 			"ip" => $this->ip
 		); 
 	return json_encode($vec); 
@@ -115,6 +123,15 @@ class Ventas extends VO
 	  * @var enum('credito','contado')
 	  */
 	protected $tipo_venta;
+
+	/**
+	  * tipo_pago
+	  * 
+	  * tipo de pago para esta venta en caso de ser a contado<br>
+	  * @access protected
+	  * @var enum('efectivo','cheque','tarjeta')
+	  */
+	protected $tipo_pago;
 
 	/**
 	  * fecha
@@ -187,6 +204,15 @@ class Ventas extends VO
 	  * @var float
 	  */
 	protected $pagado;
+
+	/**
+	  * cancelada
+	  * 
+	  * verdadero si esta venta ha sido cancelada, falso si no<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $cancelada;
 
 	/**
 	  * ip
@@ -271,6 +297,30 @@ class Ventas extends VO
 	final public function setTipoVenta( $tipo_venta )
 	{
 		$this->tipo_venta = $tipo_venta;
+	}
+
+	/**
+	  * getTipoPago
+	  * 
+	  * Get the <i>tipo_pago</i> property for this object. Donde <i>tipo_pago</i> es tipo de pago para esta venta en caso de ser a contado
+	  * @return enum('efectivo','cheque','tarjeta')
+	  */
+	final public function getTipoPago()
+	{
+		return $this->tipo_pago;
+	}
+
+	/**
+	  * setTipoPago( $tipo_pago )
+	  * 
+	  * Set the <i>tipo_pago</i> property for this object. Donde <i>tipo_pago</i> es tipo de pago para esta venta en caso de ser a contado.
+	  * Una validacion basica se hara aqui para comprobar que <i>tipo_pago</i> es de tipo <i>enum('efectivo','cheque','tarjeta')</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param enum('efectivo','cheque','tarjeta')
+	  */
+	final public function setTipoPago( $tipo_pago )
+	{
+		$this->tipo_pago = $tipo_pago;
 	}
 
 	/**
@@ -463,6 +513,30 @@ class Ventas extends VO
 	final public function setPagado( $pagado )
 	{
 		$this->pagado = $pagado;
+	}
+
+	/**
+	  * getCancelada
+	  * 
+	  * Get the <i>cancelada</i> property for this object. Donde <i>cancelada</i> es verdadero si esta venta ha sido cancelada, falso si no
+	  * @return tinyint(1)
+	  */
+	final public function getCancelada()
+	{
+		return $this->cancelada;
+	}
+
+	/**
+	  * setCancelada( $cancelada )
+	  * 
+	  * Set the <i>cancelada</i> property for this object. Donde <i>cancelada</i> es verdadero si esta venta ha sido cancelada, falso si no.
+	  * Una validacion basica se hara aqui para comprobar que <i>cancelada</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setCancelada( $cancelada )
+	{
+		$this->cancelada = $cancelada;
 	}
 
 	/**

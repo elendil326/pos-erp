@@ -43,6 +43,9 @@ class Proveedor extends VO
 			if( isset($data['activo']) ){
 				$this->activo = $data['activo'];
 			}
+			if( isset($data['tipo_proveedor']) ){
+				$this->tipo_proveedor = $data['tipo_proveedor'];
+			}
 		}
 	}
 
@@ -62,7 +65,8 @@ class Proveedor extends VO
 			"direccion" => $this->direccion,
 			"telefono" => $this->telefono,
 			"e_mail" => $this->e_mail,
-			"activo" => $this->activo
+			"activo" => $this->activo,
+			"tipo_proveedor" => $this->tipo_proveedor
 		); 
 	return json_encode($vec); 
 	}
@@ -131,6 +135,15 @@ class Proveedor extends VO
 	  * @var tinyint(2)
 	  */
 	protected $activo;
+
+	/**
+	  * tipo_proveedor
+	  * 
+	  * si este proveedor surtira al admin, a las sucursales o a ambos<br>
+	  * @access protected
+	  * @var enum('admin','sucursal','ambos')
+	  */
+	protected $tipo_proveedor;
 
 	/**
 	  * getIdProveedor
@@ -302,6 +315,30 @@ class Proveedor extends VO
 	final public function setActivo( $activo )
 	{
 		$this->activo = $activo;
+	}
+
+	/**
+	  * getTipoProveedor
+	  * 
+	  * Get the <i>tipo_proveedor</i> property for this object. Donde <i>tipo_proveedor</i> es si este proveedor surtira al admin, a las sucursales o a ambos
+	  * @return enum('admin','sucursal','ambos')
+	  */
+	final public function getTipoProveedor()
+	{
+		return $this->tipo_proveedor;
+	}
+
+	/**
+	  * setTipoProveedor( $tipo_proveedor )
+	  * 
+	  * Set the <i>tipo_proveedor</i> property for this object. Donde <i>tipo_proveedor</i> es si este proveedor surtira al admin, a las sucursales o a ambos.
+	  * Una validacion basica se hara aqui para comprobar que <i>tipo_proveedor</i> es de tipo <i>enum('admin','sucursal','ambos')</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param enum('admin','sucursal','ambos')
+	  */
+	final public function setTipoProveedor( $tipo_proveedor )
+	{
+		$this->tipo_proveedor = $tipo_proveedor;
 	}
 
 }

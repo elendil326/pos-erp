@@ -148,6 +148,11 @@ abstract class PagosVentaDAOBase extends DAO
 			array_push( $val, $pagos_venta->getMonto() );
 		}
 
+		if( $pagos_venta->getTipoPago() != NULL){
+			$sql .= " tipo_pago = ? AND";
+			array_push( $val, $pagos_venta->getTipoPago() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -177,13 +182,14 @@ abstract class PagosVentaDAOBase extends DAO
 	  **/
 	private static final function update( $pagos_venta )
 	{
-		$sql = "UPDATE pagos_venta SET  id_venta = ?, id_sucursal = ?, id_usuario = ?, fecha = ?, monto = ? WHERE  id_pago = ?;";
+		$sql = "UPDATE pagos_venta SET  id_venta = ?, id_sucursal = ?, id_usuario = ?, fecha = ?, monto = ?, tipo_pago = ? WHERE  id_pago = ?;";
 		$params = array( 
 			$pagos_venta->getIdVenta(), 
 			$pagos_venta->getIdSucursal(), 
 			$pagos_venta->getIdUsuario(), 
 			$pagos_venta->getFecha(), 
 			$pagos_venta->getMonto(), 
+			$pagos_venta->getTipoPago(), 
 			$pagos_venta->getIdPago(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -207,7 +213,7 @@ abstract class PagosVentaDAOBase extends DAO
 	  **/
 	private static final function create( &$pagos_venta )
 	{
-		$sql = "INSERT INTO pagos_venta ( id_pago, id_venta, id_sucursal, id_usuario, fecha, monto ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO pagos_venta ( id_pago, id_venta, id_sucursal, id_usuario, fecha, monto, tipo_pago ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$pagos_venta->getIdPago(), 
 			$pagos_venta->getIdVenta(), 
@@ -215,6 +221,7 @@ abstract class PagosVentaDAOBase extends DAO
 			$pagos_venta->getIdUsuario(), 
 			$pagos_venta->getFecha(), 
 			$pagos_venta->getMonto(), 
+			$pagos_venta->getTipoPago(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -324,6 +331,17 @@ abstract class PagosVentaDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " monto = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $pagos_ventaA->getTipoPago()) != NULL) & ( ($b = $pagos_ventaB->getTipoPago()) != NULL) ){
+				$sql .= " tipo_pago >= ? AND tipo_pago <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " tipo_pago = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

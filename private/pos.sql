@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 09, 2011 at 01:00 PM
+-- Generation Time: Jan 13, 2011 at 10:59 PM
 -- Server version: 5.0.51
 -- PHP Version: 5.3.3-0.dotdeb.1
 
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `actualizacion_de_precio` (
   PRIMARY KEY  (`id_actualizacion`),
   KEY `id_producto` (`id_producto`),
   KEY `id_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=10 ;
 
 -- --------------------------------------------------------
 
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `autorizacion` (
   PRIMARY KEY  (`id_autorizacion`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   PRIMARY KEY  (`id_cliente`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS `compra_proveedor` (
   `peso_origen` float NOT NULL,
   `id_proveedor` int(11) NOT NULL COMMENT 'id del proveedor a quien se le hizo esta compra',
   `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha de cuando se recibio el embarque',
+  `fecha_origen` date NOT NULL COMMENT 'fecha de cuando se envio este embarque',
   `folio` varchar(11) character set latin1 collate latin1_general_cs default NULL COMMENT 'folio de la remision',
   `numero_de_viaje` varchar(11) character set latin1 collate latin1_general_cs default NULL COMMENT 'numero de viaje',
   `peso_recibido` float NOT NULL COMMENT 'peso en kilogramos reportado en la remision',
@@ -97,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `compra_proveedor` (
   `total_origen` float default NULL COMMENT 'Es lo que vale el embarque segun el proveedor',
   PRIMARY KEY  (`id_compra_proveedor`),
   KEY `id_proveedor` (`id_proveedor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -133,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `compra_sucursal` (
   PRIMARY KEY  (`id_compra`),
   KEY `compras_sucursal` (`id_sucursal`),
   KEY `compras_usuario` (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -187,6 +188,7 @@ CREATE TABLE IF NOT EXISTS `detalle_compra_sucursal` (
   `cantidad` float NOT NULL COMMENT 'cantidad comprada',
   `precio` float NOT NULL COMMENT 'costo de compra',
   `descuento` int(11) NOT NULL,
+  `procesadas` tinyint(1) NOT NULL COMMENT 'verdadero si este detalle se refiere a compras procesadas (limpias)',
   PRIMARY KEY  (`id_compra`,`id_producto`),
   KEY `id_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -356,7 +358,7 @@ CREATE TABLE IF NOT EXISTS `inventario` (
   `escala` enum('kilogramo','pieza','litro','metro') collate utf8_unicode_ci NOT NULL,
   `tratamiento` enum('limpia') collate utf8_unicode_ci default NULL COMMENT 'Tipo de tratatiento si es que existe para este producto.',
   PRIMARY KEY  (`id_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=9 ;
 
 -- --------------------------------------------------------
 
@@ -403,6 +405,7 @@ CREATE TABLE IF NOT EXISTS `pagos_venta` (
   `id_usuario` int(11) NOT NULL COMMENT 'Quien cobro este pago',
   `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'Fecha en que se registro el pago',
   `monto` float NOT NULL COMMENT 'total de credito del cliente',
+  `tipo_pago` enum('efectivo','cheque','tarjeta') collate utf8_unicode_ci NOT NULL default 'efectivo' COMMENT 'tipo de pago para este abono',
   PRIMARY KEY  (`id_pago`),
   KEY `pagos_venta_venta` (`id_venta`),
   KEY `id_sucursal` (`id_sucursal`),
@@ -423,8 +426,9 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
   `telefono` varchar(20) collate utf8_unicode_ci default NULL COMMENT 'telefono',
   `e_mail` varchar(60) collate utf8_unicode_ci default NULL COMMENT 'email del provedor',
   `activo` tinyint(2) NOT NULL default '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
+  `tipo_proveedor` enum('admin','sucursal','ambos') collate utf8_unicode_ci NOT NULL default 'admin' COMMENT 'si este proveedor surtira al admin, a las sucursales o a ambos',
   PRIMARY KEY  (`id_proveedor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -469,7 +473,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `fecha_inicio` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'Fecha cuando este usuario comenzo a laborar',
   PRIMARY KEY  (`id_usuario`),
   KEY `fk_usuario_1` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=103 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=104 ;
 
 -- --------------------------------------------------------
 
@@ -481,6 +485,7 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   `id_venta` int(11) NOT NULL auto_increment COMMENT 'id de venta',
   `id_cliente` int(11) NOT NULL COMMENT 'cliente al que se le vendio',
   `tipo_venta` enum('credito','contado') collate utf8_unicode_ci NOT NULL COMMENT 'tipo de venta, contado o credito',
+  `tipo_pago` enum('efectivo','cheque','tarjeta') collate utf8_unicode_ci NOT NULL default 'efectivo' COMMENT 'tipo de pago para esta venta en caso de ser a contado',
   `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha de venta',
   `subtotal` float default NULL COMMENT 'subtotal de la venta, puede ser nulo',
   `iva` float default NULL COMMENT 'iva agregado por la venta, depende de cada sucursal',
@@ -489,6 +494,7 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal de la venta',
   `id_usuario` int(11) NOT NULL COMMENT 'empleado que lo vendio',
   `pagado` float NOT NULL default '0' COMMENT 'porcentaje pagado de esta venta',
+  `cancelada` tinyint(1) NOT NULL default '0' COMMENT 'verdadero si esta venta ha sido cancelada, falso si no',
   `ip` varchar(16) collate utf8_unicode_ci NOT NULL default '0.0.0.0' COMMENT 'ip de donde provino esta compra',
   PRIMARY KEY  (`id_venta`),
   KEY `ventas_cliente` (`id_cliente`),

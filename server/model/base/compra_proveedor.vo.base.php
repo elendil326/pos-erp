@@ -34,6 +34,9 @@ class CompraProveedor extends VO
 			if( isset($data['fecha']) ){
 				$this->fecha = $data['fecha'];
 			}
+			if( isset($data['fecha_origen']) ){
+				$this->fecha_origen = $data['fecha_origen'];
+			}
 			if( isset($data['folio']) ){
 				$this->folio = $data['folio'];
 			}
@@ -78,6 +81,7 @@ class CompraProveedor extends VO
 			"peso_origen" => $this->peso_origen,
 			"id_proveedor" => $this->id_proveedor,
 			"fecha" => $this->fecha,
+			"fecha_origen" => $this->fecha_origen,
 			"folio" => $this->folio,
 			"numero_de_viaje" => $this->numero_de_viaje,
 			"peso_recibido" => $this->peso_recibido,
@@ -128,6 +132,15 @@ class CompraProveedor extends VO
 	  * @var timestamp
 	  */
 	protected $fecha;
+
+	/**
+	  * fecha_origen
+	  * 
+	  * fecha de cuando se envio este embarque<br>
+	  * @access protected
+	  * @var date
+	  */
+	protected $fecha_origen;
 
 	/**
 	  * folio
@@ -308,6 +321,30 @@ class CompraProveedor extends VO
 	final public function setFecha( $fecha )
 	{
 		$this->fecha = $fecha;
+	}
+
+	/**
+	  * getFechaOrigen
+	  * 
+	  * Get the <i>fecha_origen</i> property for this object. Donde <i>fecha_origen</i> es fecha de cuando se envio este embarque
+	  * @return date
+	  */
+	final public function getFechaOrigen()
+	{
+		return $this->fecha_origen;
+	}
+
+	/**
+	  * setFechaOrigen( $fecha_origen )
+	  * 
+	  * Set the <i>fecha_origen</i> property for this object. Donde <i>fecha_origen</i> es fecha de cuando se envio este embarque.
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_origen</i> es de tipo <i>date</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param date
+	  */
+	final public function setFechaOrigen( $fecha_origen )
+	{
+		$this->fecha_origen = $fecha_origen;
 	}
 
 	/**

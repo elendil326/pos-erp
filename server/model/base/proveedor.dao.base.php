@@ -153,6 +153,11 @@ abstract class ProveedorDAOBase extends DAO
 			array_push( $val, $proveedor->getActivo() );
 		}
 
+		if( $proveedor->getTipoProveedor() != NULL){
+			$sql .= " tipo_proveedor = ? AND";
+			array_push( $val, $proveedor->getTipoProveedor() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -182,7 +187,7 @@ abstract class ProveedorDAOBase extends DAO
 	  **/
 	private static final function update( $proveedor )
 	{
-		$sql = "UPDATE proveedor SET  rfc = ?, nombre = ?, direccion = ?, telefono = ?, e_mail = ?, activo = ? WHERE  id_proveedor = ?;";
+		$sql = "UPDATE proveedor SET  rfc = ?, nombre = ?, direccion = ?, telefono = ?, e_mail = ?, activo = ?, tipo_proveedor = ? WHERE  id_proveedor = ?;";
 		$params = array( 
 			$proveedor->getRfc(), 
 			$proveedor->getNombre(), 
@@ -190,6 +195,7 @@ abstract class ProveedorDAOBase extends DAO
 			$proveedor->getTelefono(), 
 			$proveedor->getEMail(), 
 			$proveedor->getActivo(), 
+			$proveedor->getTipoProveedor(), 
 			$proveedor->getIdProveedor(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -213,7 +219,7 @@ abstract class ProveedorDAOBase extends DAO
 	  **/
 	private static final function create( &$proveedor )
 	{
-		$sql = "INSERT INTO proveedor ( id_proveedor, rfc, nombre, direccion, telefono, e_mail, activo ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO proveedor ( id_proveedor, rfc, nombre, direccion, telefono, e_mail, activo, tipo_proveedor ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$proveedor->getIdProveedor(), 
 			$proveedor->getRfc(), 
@@ -222,6 +228,7 @@ abstract class ProveedorDAOBase extends DAO
 			$proveedor->getTelefono(), 
 			$proveedor->getEMail(), 
 			$proveedor->getActivo(), 
+			$proveedor->getTipoProveedor(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -342,6 +349,17 @@ abstract class ProveedorDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " activo = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $proveedorA->getTipoProveedor()) != NULL) & ( ($b = $proveedorB->getTipoProveedor()) != NULL) ){
+				$sql .= " tipo_proveedor >= ? AND tipo_proveedor <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " tipo_proveedor = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
