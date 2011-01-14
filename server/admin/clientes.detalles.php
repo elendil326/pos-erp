@@ -31,7 +31,6 @@ if(POS_ENABLE_GMAPS){
 ?>
 
 
-<script type="text/javascript" charset="utf-8" src="../frameworks/prototype/prototype.js"></script>
 <script src="../frameworks/humblefinance/flotr/flotr.js" type="text/javascript" charset="utf-8"></script>
 <script src="../frameworks/humblefinance/flotr/excanvas.js" type="text/javascript" charset="utf-8"></script>
 <script src="../frameworks/humblefinance/flotr/canvastext.js" type="text/javascript" charset="utf-8"></script>
@@ -40,7 +39,6 @@ if(POS_ENABLE_GMAPS){
 <script type="text/javascript" charset="utf-8" src="../frameworks/humblefinance/humble/HumbleFinance.js"></script>
 <link rel="stylesheet" href="../frameworks/humblefinance/humble/finance.css" type="text/css" media="screen" title="no title" charset="utf-8">
 <script type="text/javascript"> 
-
     
 
     function mostrarDetallesVenta (vid){
@@ -110,17 +108,15 @@ if(POS_ENABLE_GMAPS){
 
 <h2>Detalles del cliente</h2>
 <table border="0" cellspacing="1" cellpadding="1">
-	<tr><td><b>Nombre</b></td><td><?php echo $cliente->getNombre(); ?></td><td rowspan=12><div id="map_canvas"></div></td></tr>
-	<tr><td><b>RFC</b></td><td><?php echo $cliente->getRFC(); ?></td></tr>
-	<tr><td><b>Direccion</b></td><td><?php echo $cliente->getDireccion(); ?></td></tr>
-	<tr><td><b>Ciudad</b></td><td><?php echo $cliente->getCiudad(); ?></td></tr>
-	<tr><td><b>Telefono</b></td><td><?php echo $cliente->getTelefono(); ?></td></tr>	
-	<tr><td><b>E Mail</b></td><td><?php echo $cliente->getEMail(); ?></td></tr>	
-	<tr><td><b>Limite de Credito</b></td><td><?php echo moneyFormat($cliente->getLimiteCredito()); ?></td></tr>	
-
-	<tr><td><b>Descuento</b></td><td><?php echo percentFormat( $cliente->getDescuento() ); ?></td></tr>
-	<tr><td><b>Fecha Ingreso</b></td><td><?php echo $cliente->getFechaIngreso() ; ?></td></tr>
-
+	<tr><td><b>Nombre</b></td><td>			<?php 	echo $cliente->getNombre(); ?></td><td valign="top" rowspan=12><div id="map_canvas"></div></td></tr>
+	<tr><td><b>RFC</b></td><td>				<?php 	echo $cliente->getRFC(); ?></td></tr>
+	<tr><td><b>Direccion</b></td><td>		<?php 	echo $cliente->getDireccion(); ?></td></tr>
+	<tr><td><b>Ciudad</b></td><td>			<?php 	echo $cliente->getCiudad(); ?></td></tr>
+	<tr><td><b>Telefono</b></td><td>		<?php 	echo $cliente->getTelefono(); ?></td></tr>	
+	<tr><td><b>E Mail</b></td><td>			<?php 	echo $cliente->getEMail(); ?></td></tr>	
+	<tr><td><b>Limite de Credito</b></td><td><?php 	echo moneyFormat($cliente->getLimiteCredito()); ?></td></tr>	
+	<tr><td><b>Descuento</b></td><td>		<?php 	echo percentFormat( $cliente->getDescuento() ); ?></td></tr>
+	<tr><td><b>Fecha Ingreso</b></td><td>	<?php 	echo toDate( $cliente->getFechaIngreso() ); ?></td></tr>
 	<tr><td><b>Gerente que dio de alta</b></td><td><?php echo UsuarioDAO::getByPK( $cliente->getIdUsuario() )->getNombre() ; ?></td></tr>
 	
 	<?php
@@ -290,24 +286,14 @@ if($activo){
 	$tabla = new Tabla( $header, $ventas );
 	$tabla->addColRender( "subtotal", "moneyFormat" ); 
 	$tabla->addColRender( "total", "moneyFormat" ); 
-	$tabla->addColRender( "descuento", "percentFormat" ); 
+	$tabla->addColRender( "descuento", "percentFormat" );
 	$tabla->addNoData("Este cliente no tiene ventas a contado.");
 	$tabla->addOnClick("id_venta", "mostrarDetallesVenta");
+	
 	echo "<h2>Ventas a contado</h2>";
 	$tabla->render();	
 }
 
-
-?>
-
-
-
-
-
-
-
-
-<?php
 if($activo){
 
 

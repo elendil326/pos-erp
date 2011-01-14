@@ -1,25 +1,57 @@
 <?php
+	require_once("../../server/config.php");	
+	require_once("db/DBConnection.php");
+	require_once("admin/includes/checkSession.php");
+	require_once("admin/includes/static.php");	
 
-	require_once("../../server/config.php");
-	include_once("admin/includes/checkSession.php");
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-?>
-<!DOCTYPE html>
-<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <title>Punto de venta | Administracion</title>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
+
 	
+<head>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
+	<title>POS | Inventario</title>
+	<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript"></script>
 
+	<script>
+		$.noConflict();
+	</script>
+	
+	<script type="text/javascript" charset="utf-8" src="../frameworks/prototype/prototype.js"></script>		
+
+	<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
+	<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
+	<script type="text/javascript" charset="utf-8">jQuery(function(){jQuery("input, select").uniform();});</script>
+		
 	<link rel="stylesheet" type="text/css" href="./../getResource.php?mod=admin&type=css">
 	<script type="text/javascript" src="./../getResource.php?mod=admin&type=js"></script>
 
+	<link href="../frameworks/facebox/facebox.css" media="screen" rel="stylesheet" type="text/css"/>
+	<script src="../frameworks/facebox/facebox.js" type="text/javascript"></script>
+</head>
 
-  </head>
-  <body>
-    <div class="g-doc-800" id="mainWindow">
+
+<body class="sub">
+  <div id="wrapper">
+
+    <div id="header" class="clientes" >
+      
+      <div id="top-bar">
         
-	  <?php include_once("admin/includes/mainMenu.php"); ?>
+        <?php include_once("admin/includes/mainMenu.php"); ?>
+            
+      </div> 
+      <!-- /top-bar -->
+
+      <div id="header-main">
+		<h1 id="MAIN_TITLE">Centro de distribucion</h1> 
+      </div>
+    </div>
+    
+    <div id="content">
+
 
         <table>
         <tr>
@@ -27,9 +59,6 @@
             <img src='../media/line_chart.png'>        
             </td>
         <td valign='top'>
-      <h1>
-       Centro de Administracion
-      </h1>
             <p>
             Este punto de venta es una solución de analítica web para empresas que proporciona información
             muy valiosa sobre el tráfico del sitio web y la eficacia del plan de marketing. 
@@ -37,10 +66,13 @@
         </td>
         </tr>
         </table>
+	
+    <?php include_once("admin/includes/footer.php"); ?>
+    </div> 
+    <!-- /content -->
+    
+    
+  </div> 
+  <!-- /wrapper -->
 
-
-	<?php include_once("admin/includes/footer.php"); ?>
-    </div>
-  
-</body>
-</html>
+</body></HTML>

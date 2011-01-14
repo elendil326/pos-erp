@@ -63,6 +63,12 @@ foreach($result as $r)
 
 if(sizeof($fired) > 0){
 	?><h2><img src='../media/icons/user_business_close_32.png'>Gerentes despedidos</h2><?php
+	
+    $header = array(
+	    "id_usuario" => "ID",
+	    "nombre" => "Nombre",
+	    "telefono" => "Telefono",
+	    "RFC" => "RFC" );
 	$tabla = new Tabla( $header, $fired );
 	$tabla->addOnClick("id_usuario", "mostrarDetalles");
 	$tabla->render();

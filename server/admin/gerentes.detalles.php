@@ -23,7 +23,7 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 	<tr><td><b>RFC</b></td><td><?php echo $gerente->getRFC(); ?></td></tr>
 	<tr><td><b>Direccion</b></td><td><?php echo $gerente->getDireccion(); ?></td></tr>
 	<tr><td><b>Telefono</b></td><td><?php echo $gerente->getTelefono(); ?></td></tr>
-	<tr><td><b>Fecha Ingreso</b></td><td><?php echo $gerente->getFechaInicio() ; ?></td></tr>
+	<tr><td><b>Fecha Ingreso</b></td><td><?php echo toDate( $gerente->getFechaInicio() ) ; ?></td></tr>
 	<?php
 		switch(POS_PERIODICIDAD_SALARIO){
 			case POS_SEMANA : 

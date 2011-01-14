@@ -13,6 +13,10 @@ function percentFormat( $val ){
 	
 }
 
+function toDate($fecha){
+	return date( POS_DATE_FORMAT, strtotime($fecha) );
+}
+
 class Tabla {
 	
 
@@ -74,7 +78,7 @@ class Tabla {
 		$html .= '<tr >';
 		
 		foreach ( $this->header  as $key => $value){
-			$html .= '<th>' . $value . '</th>';			
+			$html .= '<th align="left">' . $value . '</th>';			
 		}
 		
 

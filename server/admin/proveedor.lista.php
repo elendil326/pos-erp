@@ -5,7 +5,7 @@ require_once('model/proveedor.dao.php');
 $data = ProveedorDAO::getAll();
 
 $header = array( 
-	"id_proveedor" => "ID",
+	//"id_proveedor" => "ID",
 	"nombre"=> "Nombre",
 	"direccion"=> "Direccion",
 	"rfc"=> "RFC",
@@ -20,9 +20,7 @@ $tabla->addNoData("No hay sucursales.");
 ?>
 
 
-<h1>Proveedores</h1>
 <h2>Lista de proveedores</h2>
-
 <?php $tabla->render();	?>
 
 <script type="text/javascript" charset="utf-8">

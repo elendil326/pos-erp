@@ -26,6 +26,8 @@ define('POS_PERIODICIDAD_SALARIO', POS_SEMANA);
 # habilitar o deshabilitar el uso de mapas en la aplicacion
 define('POS_ENABLE_GMAPS', true);	
 
+#estilo para las fechas
+define('POS_DATE_FORMAT', 'j/m/y h:i:s A');
 
 # *******************************
 # Logs

@@ -1,5 +1,5 @@
 <?php
-
+	require_once('model/proveedor.dao.php');
     require_once('model/inventario.dao.php');
     require_once('model/compra_proveedor.dao.php');
     require_once('model/inventario_maestro.dao.php');
@@ -133,16 +133,19 @@
 </script>
 
 
-<h1>Detalles de compra</h1>
-Estos son los detalles de una compra
-
 <table style="width: 100%">
 	<tr><td>
 	<h2>Compra</h2>
-	<table border="0" cellspacing="5" cellpadding="5">
-		<tr><td>Fecha</td>						<td><?php echo $compra->getFecha();?></td></tr>
+	<table border="0" cellspacing="1" cellpadding="1">
+		<tr><td>Fecha de llegada</td>			<td><?php echo toDate($compra->getFecha()); ?></td></tr>
 		<tr><td>Descripcion</td>				<td><?php echo $producto->getDescripcion();?></td></tr>
-		<tr><td>Proveedor</td>					<td><?php echo $compra->getIdProveedor();?></td></tr>
+		<tr><td>Proveedor</td>					<td>
+			<?php 
+			
+				$p = ProveedorDAO::getByPK($compra->getIdProveedor());
+				echo $p->getNombre();
+			
+			?></td></tr>
 		<tr><td>Productor</td>					<td><?php echo $compra->getProductor();?></td></tr>
 		<tr><td>Folio</td>						<td><?php echo $compra->getFolio();?></td></tr>
 		<tr><td>Arpillas de este producto</td>	<td><?php echo $compra->getArpillas();?></td></tr>
@@ -151,10 +154,11 @@ Estos son los detalles de una compra
 		<tr><td>&nbsp;</td></tr>
 		
 		<tr style="font-size: 20px;">
-		<td><div >Existencias</div></td> <td><?php printf("<b>%6.2f</b> %ss", $inventario->getExistencias (), $producto->getEscala() ); ?></td></tr>
+		<td colspan=2 > <?php printf("<b>%6.2f</b> %ss", $inventario->getExistencias (), $producto->getEscala() ); ?> sin procesar</td></tr>
 		
 		<tr style="font-size: 20px;">
-		<td><div >Existencias Limpias</div></td> <td><?php printf("<b>%6.2f</b> %ss", $inventario->getExistenciasProcesadas (), $producto->getEscala() ); ?></td></tr>
+		<td colspan=2 > <?php printf("<b>%6.2f</b> %ss", $inventario->getExistenciasProcesadas (), $producto->getEscala() ); ?> procesados</td></tr>
+		
 	</table>
 	</td>
 	<td valign='top' style="width: 300px">
@@ -162,7 +166,7 @@ Estos son los detalles de una compra
 		<input type='button' value="Dar por terinado" onClick="terminarProducto()"><br>
 		
 		<div id="reportar_limpieza_boton">
-			<input type='button' value="Reportar producto limpio"  onClick="showProceso()">
+			<input type='button' value="Reportar proceso"  onClick="showProceso()">
 		</div>
 		<div id="reportar_limpieza" style="display: none;">
 			Cantidad limpiada <input type="text" id="cantidad_limpiada"> <br>

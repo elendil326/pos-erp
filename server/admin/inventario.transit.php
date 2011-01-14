@@ -8,8 +8,8 @@
     $aut = new Autorizacion();
     $aut->setEstado(3);
     $autorizaciones = AutorizacionDAO::search( $aut );
-    
-?><h1>Productos en transito</h1><?php
+
+	?><script>jQuery("#MAIN_TITLE").html("Embarques en transito");</script><?php    
 
     foreach($autorizaciones as $transito){
         $sucName = SucursalDAO::getByPK($transito->getIdSucursal());
@@ -35,10 +35,9 @@
         //resultado de una peticion
         ?>
             <table> 
-                <tr><td><b>Id autorizacion</b></td><td><?php echo $transito->getIdAutorizacion(); ?></td></tr>
-                <tr><td><b>Fecha peticion</b></td><td><?php echo $transito->getFechaPeticion(); ?></td></tr>
-                <tr><td><b>Usuario</b></td><td><?php echo $transito->getIdUsuario(); ?></td></tr>
-                <tr><td><b>Sucursal Destino</b></td><td><?php echo $sucName; ?></td></tr>
+                <tr><td><b>ID autorizacion</b></td><td><?php 	echo $transito->getIdAutorizacion(); ?></td></tr>
+                <tr><td><b>Fecha peticion</b></td><td><?php 	echo toDate( $transito->getFechaPeticion() ); ?></td></tr>
+                <tr><td><b>Sucursal Destino</b></td><td><?php 	echo $sucName; ?></td></tr>
             </table>
         <?php
         }

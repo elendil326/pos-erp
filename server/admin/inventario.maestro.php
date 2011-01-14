@@ -9,11 +9,20 @@ require_once('model/compra_proveedor.dao.php');
 
 ?>
 
+<style>
+	table{
+		font-size: 11px;
+	}
+</style>
 
-<h1>Inventario Maestro</h1>
+<script>
+	jQuery("#MAIN_TITLE").html("Inventario Maestro");
+</script>
+
+
 <script>
 	function d( json ){
-		o = $.JSON.decodeSecure(Url.decode(json));
+		o = jQuery.JSON.decodeSecure(Url.decode(json));
 		window.location = "inventario.php?action=detalleCompra&compra=" + o. id_compra_proveedor + "&producto=" + o.id_producto;
 	}
 </script>
@@ -39,10 +48,9 @@ $header = array(
 	
 $tabla = new Tabla( $header, $iMaestro );
 $tabla->addOnClick("folio", "d", true);
+$tabla->addColRender( "fecha", "toDate" );
 $tabla->render();
 
 ?>
 
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
+

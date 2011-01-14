@@ -38,10 +38,10 @@ if(POS_ENABLE_GMAPS){
 
 
 <h2>Detalles</h2>
-<table border="0" cellspacing="5" cellpadding="5">
-	<tr><td><b>Descripcion</b></td><td><?php echo $sucursal->getDescripcion(); ?></td><td rowspan=9><div id="map_canvas"></div></td></tr>
-	<tr><td><b>Direccion</b></td><td><?php echo $sucursal->getDireccion(); ?></td></tr>
-	<tr><td><b>Apertura</b></td><td><?php echo $sucursal->getFechaApertura(); ?></td></tr>
+<table style="width:100%" border="0" cellspacing="1" cellpadding="1">
+	<tr><td><b>Descripcion</b></td><td>		<?php echo $sucursal->getDescripcion(); ?></td><td valign="top" align="right" rowspan=9><div  id="map_canvas"></div></td></tr>
+	<tr><td><b>Direccion</b></td><td>		<?php echo $sucursal->getDireccion(); ?></td></tr>
+	<tr><td><b>Apertura</b></td><td>		<?php echo toDate($sucursal->getFechaApertura()); ?></td></tr>
 	<tr><td><b>Gerente</b></td><td>
         <?php 
             $gerente = UsuarioDAO::getByPK( $sucursal->getGerente() );
@@ -50,10 +50,10 @@ if(POS_ENABLE_GMAPS){
             echo "</a>";
         ?>
     </td></tr>
-	<tr><td><b>ID</b></td><td><?php echo $sucursal->getIdSucursal(); ?></td></tr>
-	<tr><td><b>Letras factura</b></td><td><?php echo $sucursal->getLetrasFactura(); ?></td></tr>
-	<tr><td><b>RFC</b></td><td><?php echo $sucursal->getRfc(); ?></td></tr>	
-	<tr><td><b>Telefono</b></td><td><?php echo $sucursal->getTelefono(); ?></td></tr>	
+	<tr><td><b>ID</b></td><td>				<?php echo $sucursal->getIdSucursal(); ?></td></tr>
+	<tr><td><b>Letras factura</b></td><td>	<?php echo $sucursal->getLetrasFactura(); ?></td></tr>
+	<tr><td><b>RFC</b></td><td>				<?php echo $sucursal->getRfc(); ?></td></tr>	
+	<tr><td><b>Telefono</b></td><td>		<?php echo $sucursal->getTelefono(); ?></td></tr>	
 
 	<tr><td colspan=2><input type=button value="Editar detalles" onclick="editar()"></td> </tr>
 </table>

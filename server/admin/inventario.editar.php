@@ -1,4 +1,4 @@
-<h1>Editar producto</h1><?php
+<?php
 
 
     require_once('model/inventario.dao.php');
@@ -9,11 +9,12 @@
 
 
     if(isset($_REQUEST['editar_detalles'])){
-
+		
         //cambiar los detalles en el inventario maestro
         $prod = InventarioDAO::getByPK($_REQUEST['id']);
         $prod->setDescripcion( $_REQUEST['descripcion'] );
-
+        $prod->setEscala( $_REQUEST['escala'] );
+		$prod->setTratamiento( $_REQUEST['tratamiento'] );
         try{
 
             InventarioDAO::save($prod);
@@ -87,17 +88,51 @@
 
 
 
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
-<script type="text/javascript" charset="utf-8">$(function(){$("input, select").uniform();});</script>
-
 
 <h2>Editar descripcion</h2>
 <form action="inventario.php?action=editar&id=<?php echo $general->getIdProducto(); ?>" method="POST">
 <input type="hidden" name="editar_detalles" value="1">
 <table border="0" cellspacing="5" cellpadding="5">
 	<tr><td>Descripcion</td><td><input type="text" value="<?php echo $producto->getDescripcion();?>" size="40" name="descripcion"/></td></tr>
+	<tr><td>Escala</td>
+		<td>
+			<?php
+				$escala = $producto->getEscala();
+				$e0 = $e1 = $e2 = $e3 = "";
+				
+				switch($escala){
+					case "kilogramo" : $e0 = "selected"; break;
+					case "pieza" : $e1 = "selected"; break;
+					case "litro" : $e2 = "selected"; break;
+					case "unidad" : $e3 = "selected"; break;					
+				}
+			?>
+			<select name="escala">
+				<option value='kilogramo' 	<?php echo $e0; ?>>Kilogramo(s)</option>
+				<option value='pieza' 		<?php echo $e1; ?>>Pieza(s)</option>
+				<option value='litro' 		<?php echo $e2; ?>>Litro(s)</option>
+				<option value='unidad' 		<?php echo $e3; ?>>Unidad(es)</option>
+	        </select>
+		</td>
+	</tr>
+	<tr><td>Proceso</td>
+		<td>
+			<?php
+				$proc = $producto->getTratamiento();
+				$p0 = $p1 = "";
+				
+				switch( $proc ){
+					case "": $p0 = "selected" ; break;
+					case "limpia": $p1 = "selected" ; break;
+				}
+			?>
+			
+			<select name="tratamiento">
+				<option value='null' 		<?php echo $p0; ?>>Sin tratamientos</option>
+				<option value='limpia'		<?php echo $p1; ?>>Limpia/Original</option>
+	        </select>
+		</td>
+	</tr>	
 	<tr><td></td><td><input type="submit" value="Guardar" size="40"/></td></tr>
 </table>
 </form>

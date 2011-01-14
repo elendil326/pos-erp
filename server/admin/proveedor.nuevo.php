@@ -6,7 +6,7 @@
 ?>
 
 
-<h1>Nuevo Proveedor</h1>
+
 
 <h2>Detalles del nuevo proveedor</h2>
 <form id="newClient">
@@ -16,13 +16,24 @@
 		<tr><td>RFC</td><td><input type="text"                  id="rfc" size="40"/></td></tr>
 		<tr><td>Telefono</td><td><input type="text"             id="telefono" size="40"/></td></tr>
 		<tr><td>E Mail</td><td><input type="text"               id="e_mail" size="40"/></td></tr>		
+		<tr><td>Tipo de proveedor</td>
+			<td>
+			<select id="tipo_proveedor">
+				<option value='admin' 	>Surte a centro de distribucion</option>
+				<option value='sucursal'>Surte a sucursales</option>
+				<option value='ambos' 	>Surte a ambos</option>
+
+	        </select>
+			</td></tr>
 		<tr><td></td><td><input id="submit" type="button" onClick="validar()" value="Crear el nuevo proveedor"/></td><td><div id="loader" style='display:none'><img src="../media/loader.gif"></div></td></tr>
 	</table>
 </form>
 
 
 <script type="text/javascript" charset="utf-8">
-	
+
+	jQuery("#MAIN_TITLE").html("Nuevo proveedor");
+		
     function validar(){
 
         if(jQuery('#nombre').val().length < 8){
@@ -39,7 +50,8 @@
             direccion : jQuery("#direccion").val(), 
             rfc : 		jQuery("#rfc").val(),
             e_mail: 	jQuery("e_mail").val(),
-            telefono : 	jQuery("#telefono").val()
+            telefono : 	jQuery("#telefono").val(),
+            tipo_proveedor : 	jQuery("#tipo_proveedor").val()            
         };        
 
         guardar(obj);
