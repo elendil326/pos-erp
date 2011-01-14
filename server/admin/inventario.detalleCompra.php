@@ -154,7 +154,7 @@
 		<tr><td>&nbsp;</td></tr>
 		
 		<tr style="font-size: 20px;">
-		<td colspan=2 > <?php printf("<b>%6.2f</b> %ss", $inventario->getExistencias (), $producto->getEscala() ); ?> sin procesar</td></tr>
+		<td colspan=2 > <?php printf("<b>%6.2f</b> %ss", ( $inventario->getExistencias () - $inventario->getExistenciasProcesadas ()), $producto->getEscala() ); ?> sin procesar</td></tr>
 		
 		<tr style="font-size: 20px;">
 		<td colspan=2 > <?php printf("<b>%6.2f</b> %ss", $inventario->getExistenciasProcesadas (), $producto->getEscala() ); ?> procesados</td></tr>

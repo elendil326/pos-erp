@@ -66,6 +66,10 @@
 			<li>
 			  <a href="proveedor.php?action=abastecer">Abastecerse de proveedor</a>
 			</li>
+			<li>
+			  <a href="proveedor.php?action=compras_lista">Compras a proveedor</a>
+			</li>			
+
 		  </ul>			
 		</LI>
 		

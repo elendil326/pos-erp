@@ -175,9 +175,11 @@ require_once('model/sucursal.dao.php');
     	
     	
     	globals.peso_origen = parseFloat( jQuery("#detalles-peso-recibido").val() );
-		globals.promedio_arpilla = globals.peso_origen / globals.total_arpillas;
+		globals.promedio_arpilla = (globals.peso_origen -(globals.total_arpillas* parseFloat(jQuery('#detalles-merma-arpilla').val()))) / globals.total_arpillas;
     	globals.importe_total = 0;
     	globals.peso_calculado = 0;
+    	
+    	jQuery("#detalles-peso-real").val(globals.peso_origen -(globals.total_arpillas* parseFloat(jQuery('#detalles-merma-arpilla').val())));
     	
     	jQuery("#detalles-peso-por-arpilla").val(globals.promedio_arpilla);
     	
@@ -211,6 +213,10 @@ require_once('model/sucursal.dao.php');
     	
     	jQuery("#doneButton").fadeIn();
     }
+    
+    
+    
+    
     
     function done(){
  
@@ -332,21 +338,27 @@ require_once('model/sucursal.dao.php');
 		<tr><td>Folio</td>				<td><input type='text' id='detalles-folio' ></td>
 			<td>Nombre del chofer</td>	<td><input type='text' id='detalles-chofer' ></td></tr>
 		
-		<tr><td>Fecha</td>				<td><input type='text' id='detalles-fecha' value="0" disabled></td>
+		<tr><td>Fecha</td>				<td><input type='text' id='detalles-fecha' value="<?php echo date("d/m/y") ?>" disabled></td>
 			<td>Placas</td>				<td><input type='text' id='detalles-placas' ></td></tr>
 			
 		<tr><td>Total arpillas</td>		<td><input type='text' id='detalles-total-arpillas' value="0" disabled>
 			<td>Marca camion</td>		<td><input type='text' id='detalles-marca'  ></td></tr>
 			
-		<tr><td>Merma por arpilla</td>	<td><input type='text' id='detalles-merma-arpilla'></td>
+		<tr><td>Merma por arpilla</td>	<td><input type='text' id='detalles-merma-arpilla' onkeyup="doMath()"></td>
 			<td>Modelo camion</td>		<td><input type='text' id='detalles-modelo'  ></td></tr>
 			
 		<tr><td>Numero de viaje</td>	<td><input type='text' id='detalles-nuermo-viaje'></td>
 			<td>Costo total del flete</td><td><input type='text' id='detalles-flete'  ></td></tr>
 			
 		<tr><td>Peso por arpilla</td>	<td><input type='text' id='detalles-peso-por-arpilla' value="0" disabled></td></tr>	
-		<tr><td>Peso origen</td>		<td><input type='text' id='detalles-peso-origen' onkeyup="jQuery('#detalles-peso-recibido').val(jQuery('#detalles-peso-origen').val()); doMath();" ></td></tr>	
-		<tr><td>Peso recibido</td>		<td><input type='text' id='detalles-peso-recibido' onkeyup="doMath()" ></td></tr>			
+		
+		<tr><td>Peso origen</td>		<td><input type='text' id='detalles-peso-origen'
+				 onkeyup="jQuery('#detalles-peso-recibido').val(jQuery('#detalles-peso-origen').val()); doMath();" ></td></tr>	
+				 
+		<tr><td>Peso recibido</td>		<td><input type='text' id='detalles-peso-recibido' onkeyup="doMath()" ></td></tr>
+		
+		<tr><td>Peso real</td>			<td><input type='text' id='detalles-peso-real' disabled></td></tr>
+		
 		<tr><td>Productor</td>			<td><input type='text' id='detalles-productor'></td></tr>	
 	</table>
 

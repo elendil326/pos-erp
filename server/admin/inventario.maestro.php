@@ -28,15 +28,42 @@ require_once('model/compra_proveedor.dao.php');
 </script>
 <?php
 
+$productos = InventarioDAO::getAll();
+
+echo "<h2>Productos</h2>";
+$header = array(
+	"id_producto" 		=> "ID Producto",
+	"descripcion" 		=> "Producto" );
+	
+$tabla = new Tabla( $header, $productos );
+$tabla->addOnClick("id_producto", "detalle_inventario");
+$tabla->render();
+
+?><script>
+	function detalle_inventario(id){
+		window.location = "inventario.php?action=detalle&id="+ id;
+	}
+</script><?php
 
 
+function toUnit( $e )
+{
+	return "<b>" . $e . "</b>kg";
+}
+function toDateS( $d ){
+	$foo = toDate($d);
+	$bar = explode(" ", $foo);
+	return $bar[0];
+	 
+}
 $iMaestro = listarInventarioMaestro() ;
-
+// @TODO Existencias arpillas
+echo "<h2>Embarques</h2>";
 $header = array(
 	"folio" 			=> "Remision",
 	"producto_desc" 	=> "Producto",
 	"variedad" 	 		=> "Variedad",
-	"arpillas"			=> "Arpillas",
+	"arpillas"			=> "Arpillas origen",
 	"peso_por_arpilla"	=> "Kg/Arpilla",
 	"productor"			=> "Productor",
 	"fecha"				=> "Llegada",
@@ -48,7 +75,9 @@ $header = array(
 	
 $tabla = new Tabla( $header, $iMaestro );
 $tabla->addOnClick("folio", "d", true);
-$tabla->addColRender( "fecha", "toDate" );
+$tabla->addColRender( "existencias", "toUnit" );
+$tabla->addColRender( "existencias_procesadas", "toUnit" );
+$tabla->addColRender( "fecha", "toDateS" );
 $tabla->render();
 
 ?>

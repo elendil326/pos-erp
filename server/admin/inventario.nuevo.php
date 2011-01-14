@@ -41,6 +41,23 @@
 	
     function save(){
         //validar
+
+        if(jQuery('#descripcion').val().length < 2 ){
+	        return jQuery("#ajax_failure").html("La descripcion debe ser cuando menos de de 3 caracteres.").show();
+        }
+        
+        if(jQuery('#descripcion').val().length > 13 ){
+	        return jQuery("#ajax_failure").html("La descripcion debe ser menor a 13 caracteres, dado que no cabria en el ticket de venta.").show();
+        }
+
+        if(jQuery('#precioVenta').val().length ==  0 ){
+	        return jQuery("#ajax_failure").html("El precio sugerido no puede dejarse vacio.").show();
+        }
+
+        if(jQuery('#precioIntersucursal').val().length ==  0 ){
+	        return jQuery("#ajax_failure").html("El precio intersucursal no puede dejarse vacio.").show();
+        }
+        
         data = {
                 descripcion : 			jQuery('#descripcion').val(),
                 escala : 				jQuery('#escala').val(),
@@ -63,7 +80,7 @@
 	      		try{
 			        response = jQuery.parseJSON(data);
 			    }catch(e){
-                    return jQuery("#ajax_failure").html("Error").show();			    
+                    return jQuery("#ajax_failure").html("Error").show();
 			    }
 
                 if(response.success == false){
