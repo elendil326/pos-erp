@@ -146,12 +146,16 @@ function compraProveedor( $data = null, $productos = null ){
 	}
 
 	//formateamos al fecha de origen
-	$fecha_o= explode("/",$data->fecha_origen);
-    $dia = $fecha_o[0];
-    $mes = $fecha_o[1];
-    $anio = $fecha_o[2];
-    $data->fecha_origen = $anio."/".$mes."/".$dia;
-    
+	try{
+	    $fecha_o= explode("/",$data->fecha_origen);
+        $dia = $fecha_o[0];
+        $mes = $fecha_o[1];
+        $anio = $fecha_o[2];
+        $data->fecha_origen = $anio."/".$mes."/".$dia;
+    }catch(Exception $e ){
+        Logger::log("Error en el formato de fecha : " . $e);
+		die('{ "success": false, "reason" : "Verifiqeu que la fecha tenga el formato DD/MM/AA." }');
+    }
 
 	
 	
@@ -180,7 +184,7 @@ function compraProveedor( $data = null, $productos = null ){
 	    if( count( $result ) > 0  ){
 	        Logger::log("Error al guardar la nueva compra a proveedor, se tiene registro del folio : " .  $data->folio );
 		    DAO::transRollback();	
-            die( '{"success": false, "reason": "Error al guardar la nueva compra a proveedor, se tiene registro del folio : ' . $data->folio . '" }' );
+            die( '{"success": false, "reason": "Error al guardar la nueva compra a proveedor, ya se tiene registro del folio : ' . $data->folio . '" }' );
 	    }
 	
 		$compra -> setFolio( $data->folio );
@@ -215,7 +219,7 @@ function compraProveedor( $data = null, $productos = null ){
 	}catch(Exception $e){
         Logger::log("Error al guardar la nueva compra a proveedor:" . $e);
 		DAO::transRollback();	
-	    die( '{"success": false, "reason": "Error al guardar la compra " }' );
+	    die( '{"success": false, "reason": "Error interno al guardar la compra al proveedor, intente nuevamente." }' );
 	}
 
 	Logger::log("Compra a proveedor creada !");
@@ -237,8 +241,8 @@ function compraProveedorFlete( $data = null, $id_compra_proveedor = null, $costo
 	$data = parseJSON( $json );*/
 
 	if($data == null){
-		Logger::log("Json invalido para crear nueva compra proveedor:");
-		die('{"success": false , "reason": "Parametros invalidos." }');
+		Logger::log("Json invalido para crear nueva compra proveedor");
+		die('{"success": false , "reason": "Error : Parametros invalidos." }');
 	}
 	
 	
@@ -258,8 +262,8 @@ function compraProveedorFlete( $data = null, $id_compra_proveedor = null, $costo
 			isset($data->nombre_chofer) &&
 			isset($data->placas)
 		)){
-		Logger::log("Faltan parametros para crear el nuevo flete a compra a proveedor:" . $json);
-		die('{ "success": false, "reason" : "Faltan parametros." }');
+		Logger::log("Faltan parametros para crear el nuevo flete a compra a proveedor : " . $json);
+		die('{ "success": false, "reason" : "Error : Verifique los datos del flete. " }');
 
 	}
 
@@ -284,7 +288,7 @@ function compraProveedorFlete( $data = null, $id_compra_proveedor = null, $costo
 	}catch(Exception $e){
         Logger::log("Error al guardar el nuevo flete a compra a proveedor:" . $e);
 		DAO::transRollback();
-	    die( '{"success": false, "reason": "Error al guardar el flete" }' );
+	    die( '{"success": false, "reason": "Error interno al guardar el flete, intente nuevamente." }' );
 	}
 
 	Logger::log("Flete a compra a proveedor creado !");
@@ -362,20 +366,20 @@ function detalleCompraProveedor( $id_compra ){
 
     if( !isset( $id_compra ) )
     {
-		Logger::log("Error : no se especifico el id_compra");
-        die('{"success": false, "reason": "No hay parametros para ingresar." }');
+		Logger::log("Error interno : el id de la compra no esta disponible para dar de alta el detalle compra proveedor.");
+        die('{"success": false, "reason": "Error interno : el id de la compra no esta disponible para dar de alta el detalle compra proveedor." }');
     }
     elseif( empty( $id_compra ) )
     {
-		Logger::log("Error : el id_compra esta vacio");
-        die('{"success": false, "reason": "Verifique los datos." }');
+		Logger::log("Error interno : el id de la compra que se envia para dar de alta el detalle compra proveedor esta vacio.");
+        die('{"success": false, "reason": "Error interno : el id de la compra que se envia para dar de alta el detalle compra proveedor esta vacio." }');
     }
 
     //verificamos que exista esa compra
     if( !( $compra = CompraProveedorDAO::getByPK( $id_compra ) ) )
     {
-		Logger::log("Error : no se tiene registro de la compra a proveedor " . $id_compra);
-        die('{"success": false, "reason": "No se tiene registro de esa compra a proveedor." }');
+		Logger::log("Error interno : no se tiene registro de la compra a proveedor " . $id_compra);
+        die('{"success": false, "reason": "Error interno : no se tiene registro de la compra a proveedor." }');
     }
 
     $q = new DetalleCompraProveedor();
@@ -476,8 +480,9 @@ function ingresarDetalleCompraProveedor( $data = null, $id_compra_proveedor =nul
 
 
 	if($data == null){
-		Logger::log("Json invalido para crear nueva compra proveedor:");
-		die('{"success": false , "reason": "Parametros invalidos." }');
+		Logger::log("Error : el juego de productos empleado para dar de alta el detalle compra proveedor es nulo.");
+		DAO::transRollback();
+		die('{"success": false , "reason": "Error : el juego de productos empleado para dar de alta el detalle compra proveedor es nulo." }');
 	}
 	
 	Logger::log("Iniciando proceso de creacion detalle compra proveedor");
@@ -493,9 +498,9 @@ function ingresarDetalleCompraProveedor( $data = null, $id_compra_proveedor =nul
 			$peso_por_arpilla != null
 			) ){
 			
-			Logger::log("error al agregar producto a detalle compra proveedor");
-			die('{"success": false , "reason": "Parametros invalidos." }');
-			DAO::transRollback();		
+			Logger::log("Error : verifique que los datos de los productos a surtir esten completos.");
+			DAO::transRollback();	
+			die('{"success": false , "reason": "Error : verifique que los datos de los productos a surtir esten completos." }');				
 		}
 		
 		$detalle_compra_proveedor = new DetalleCompraProveedor();
@@ -510,9 +515,9 @@ function ingresarDetalleCompraProveedor( $data = null, $id_compra_proveedor =nul
 		try{
 			DetalleCompraProveedorDAO::save( $detalle_compra_proveedor );
 		}catch(Exception $e){
-			Logger::log("Error al guardar producto en detalle compra proveedor:" . $e);
+			Logger::log("Error interno : no se guardo el detalle compra proveedor, intente nuevamente." . $e);
 			DAO::transRollback();	
-			die( '{"success": false, "reason": "Error al guardar detalle compra proveedor"}' );
+			die( '{"success": false, "reason": "Error interno : no se guardo el detalle compra proveedor, intente nuevamente."}' );
 		}
 	
 	}
@@ -525,8 +530,8 @@ function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = 
 
 	
 	if($data == null){
-		Logger::log("Json invalido para crear nueva compra proveedor:");
-		die('{"success": false , "reason": "Parametros invalidos." }');
+		Logger::log("Error : el juego de productos empleado para dar de alta en el inventario maestro es nulo.");
+		die('{"success": false , "reason": "Error : el juego de productos empleado para dar de alta en el inventario maestro es nulo." }');
 	}
 	
 	Logger::log("Iniciando proceso de insercion de producto a inventario maestro");
@@ -548,9 +553,9 @@ function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = 
 		try{
 			InventarioMaestroDAO::save( $inventario_maestro );
 		}catch(Exception $e){
-			Logger::log("Error al guardar producto en inventario maestro:" . $e);
+			Logger::log("Error interno : al modificar las existencias del producto " . $producto->id_producto . " en el inventario maestro.");
 			DAO::transRollback();	
-			die( '{"success": false, "reason": "Error al guardar producto en inventario maestro"' . $e .'}' );
+			die('{"success": false , "reason": "Error interno : al modificar las existencias del producto ' . $producto->id_producto . ' en el inventario maestro." }');		
 		}
 	
 	}
