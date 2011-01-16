@@ -31,6 +31,12 @@ class Equipo extends VO
 			if( isset($data['full_ua']) ){
 				$this->full_ua = $data['full_ua'];
 			}
+			if( isset($data['descripcion']) ){
+				$this->descripcion = $data['descripcion'];
+			}
+			if( isset($data['locked']) ){
+				$this->locked = $data['locked'];
+			}
 		}
 	}
 
@@ -46,7 +52,9 @@ class Equipo extends VO
 		$vec = array( 
 			"id_equipo" => $this->id_equipo,
 			"token" => $this->token,
-			"full_ua" => $this->full_ua
+			"full_ua" => $this->full_ua,
+			"descripcion" => $this->descripcion,
+			"locked" => $this->locked
 		); 
 	return json_encode($vec); 
 	}
@@ -79,6 +87,24 @@ class Equipo extends VO
 	  * @var varchar(256)
 	  */
 	protected $full_ua;
+
+	/**
+	  * descripcion
+	  * 
+	  * descripcion de este equipo<br>
+	  * @access protected
+	  * @var varchar(254)
+	  */
+	protected $descripcion;
+
+	/**
+	  * locked
+	  * 
+	  * si este equipo esta lockeado para prevenir los cambios<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $locked;
 
 	/**
 	  * getIdEquipo
@@ -154,6 +180,54 @@ class Equipo extends VO
 	final public function setFullUa( $full_ua )
 	{
 		$this->full_ua = $full_ua;
+	}
+
+	/**
+	  * getDescripcion
+	  * 
+	  * Get the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es descripcion de este equipo
+	  * @return varchar(254)
+	  */
+	final public function getDescripcion()
+	{
+		return $this->descripcion;
+	}
+
+	/**
+	  * setDescripcion( $descripcion )
+	  * 
+	  * Set the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es descripcion de este equipo.
+	  * Una validacion basica se hara aqui para comprobar que <i>descripcion</i> es de tipo <i>varchar(254)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(254)
+	  */
+	final public function setDescripcion( $descripcion )
+	{
+		$this->descripcion = $descripcion;
+	}
+
+	/**
+	  * getLocked
+	  * 
+	  * Get the <i>locked</i> property for this object. Donde <i>locked</i> es si este equipo esta lockeado para prevenir los cambios
+	  * @return tinyint(1)
+	  */
+	final public function getLocked()
+	{
+		return $this->locked;
+	}
+
+	/**
+	  * setLocked( $locked )
+	  * 
+	  * Set the <i>locked</i> property for this object. Donde <i>locked</i> es si este equipo esta lockeado para prevenir los cambios.
+	  * Una validacion basica se hara aqui para comprobar que <i>locked</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setLocked( $locked )
+	{
+		$this->locked = $locked;
 	}
 
 }

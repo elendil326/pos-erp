@@ -101,15 +101,16 @@
 </DIV> <!-- header-content -->
 
 <script>
-	var __current = [];
+var __current = [];
 	
 	function toolbar(){
-		for( a = 0; a < jQuery(".nav.sub").length; a++){ jQuery(jQuery(".nav.sub")[a]).hide() }
+		for( a = 0; a < jQuery(".nav.sub").length; a++){ jQuery(jQuery(".nav.sub")[a]).hide(); }
 		
 		jQuery("#header-content").hover(
 			function(){
-				if(__current)
-					__current.hide(); 
+				if(__current) {
+					__current.hide();
+				}
 			},
 			function(){
 			
@@ -119,10 +120,12 @@
 			function(e){ 
 
 				//in
-				while(__current.length > 0)__current.pop().hide();
+				while(__current.length > 0) {
+					__current.pop().hide();
+				}
 				
 				__currentP = jQuery(this).next();
-				__currentP.css("left", "0px")
+				__currentP.css("left", "0px");
 				__currentP.show();
 				__current.push( __currentP );
 

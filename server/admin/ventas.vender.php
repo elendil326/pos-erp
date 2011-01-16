@@ -64,7 +64,7 @@
 	function remove(data){
 		jQuery("#" + data).css("color", "");
 		jQuery("#" + data).css("background-color", "");	
-		
+		renderCarrito();
 
 	}
 	
@@ -85,15 +85,54 @@
 		jQuery("#" + data).css("background-color", "#3F8CE9 !important");
 		
 		carrito.push( {
-			qty : 0,
+			qty : 1,
 			tablaid : data
 		});
 		
+		renderCarrito();
+	}
+	
+	function doMath(){
+	
+		for(a = 0; a < carrito.length; a++){
+			foo = jQuery("#" + carrito[a].tablaid).children();
+			
+			
+		}
+	}
+	
+	function renderCarrito (){
+		html = "<table style='width:100%'>";
+		html += "<tr align=left ><th>Remision</th><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Importe</th></tr>";
+		//<tr id='prodsTableFooter'><td colspan=2 align="right"><b>Totales</b></td><td><div id='totales-arpillas'></div></td><td></td><td><div id='totales-peso'></div></td><td></td><td><div id='totales-importe'></div></td></tr>    	
+		for(a = 0; a < carrito.length; a++){
 		
+			foo = jQuery("#" + carrito[a].tablaid).children();
+			
+			
+			
+			html += "<tr><td>" + 	foo[0].innerHTML +"</td>";
+			html += "<td>" + 		foo[1].innerHTML +"</td>";
+			html += "<td><input type='text' value='"+ carrito[a].qty +"'></td>";
+			html += "<td><input type='text'>"  +"</td>";			
+			
+			html += "</tr>";
+			
+		}
+		
+		html += "</table>";
+		
+		doMath();
+		
+		jQuery("#cart").html(html);
+		jQuery("#cart input:text").uniform();
 	}
 </script>
 
-<h2>Productos a vender</h2>
+
+
+
+<h2>Inventario maestro</h2>
 <div class="tabla-inventario">
 <?php
 
@@ -101,6 +140,7 @@ function toUnit( $e )
 {
 	return "<b>" . $e . "</b>kg";
 }
+
 function toDateS( $d ){
 	$foo = toDate($d);
 	$bar = explode(" ", $foo);
@@ -109,6 +149,15 @@ function toDateS( $d ){
 }
 
 $iMaestro = listarInventarioMaestro() ;
+
+echo "<script>";
+echo " var inventario_maestro = [";
+foreach($iMaestro as $i){
+	echo json_encode($i) . ",";
+}
+echo "];";
+echo "</script>";
+
 $header = array(
 	"folio" 			=> "Remision",
 	"producto_desc" 	=> "Producto",
@@ -133,3 +182,15 @@ $tabla->render();
 
 ?>
 </div>
+
+
+
+
+	<!-- -------------------------------
+			TABALA DE PRODUCTOS SELECCIONADOS
+	  ------------------------------- -->    
+<h2>Productos a vender</h2>
+    <div id='cart'>
+
+    </div>
+    

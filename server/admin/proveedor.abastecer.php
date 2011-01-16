@@ -395,7 +395,7 @@ require_once('model/sucursal.dao.php');
 			TABALA DE PRODUCTOS SELECCIONADOS
 	  ------------------------------- -->    
 	 
-    <table id='prodsTable' style="width:100%;" id='cart'>
+    <table id='prodsTable' style="width:100%;" >
     	<tr id='prodsTableHeader' ><th>Producto</th><th>Variedad</th><th>Arpillas</th><th>Promedio</th><th>Peso</th><th>Precio KG</th><th>Importe</th><th>Sitio de descarga</th></tr>
     	<tr id='prodsTableFooter'>					   <td colspan=2 align="right"><b>Totales</b></td><td><div id='totales-arpillas'></div></td><td></td><td><div id='totales-peso'></div></td><td></td><td><div id='totales-importe'></div></td></tr>    	
     </table>

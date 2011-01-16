@@ -133,6 +133,16 @@ abstract class EquipoDAOBase extends DAO
 			array_push( $val, $equipo->getFullUa() );
 		}
 
+		if( $equipo->getDescripcion() != NULL){
+			$sql .= " descripcion = ? AND";
+			array_push( $val, $equipo->getDescripcion() );
+		}
+
+		if( $equipo->getLocked() != NULL){
+			$sql .= " locked = ? AND";
+			array_push( $val, $equipo->getLocked() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -162,10 +172,12 @@ abstract class EquipoDAOBase extends DAO
 	  **/
 	private static final function update( $equipo )
 	{
-		$sql = "UPDATE equipo SET  token = ?, full_ua = ? WHERE  id_equipo = ?;";
+		$sql = "UPDATE equipo SET  token = ?, full_ua = ?, descripcion = ?, locked = ? WHERE  id_equipo = ?;";
 		$params = array( 
 			$equipo->getToken(), 
 			$equipo->getFullUa(), 
+			$equipo->getDescripcion(), 
+			$equipo->getLocked(), 
 			$equipo->getIdEquipo(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -189,11 +201,13 @@ abstract class EquipoDAOBase extends DAO
 	  **/
 	private static final function create( &$equipo )
 	{
-		$sql = "INSERT INTO equipo ( id_equipo, token, full_ua ) VALUES ( ?, ?, ?);";
+		$sql = "INSERT INTO equipo ( id_equipo, token, full_ua, descripcion, locked ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$equipo->getIdEquipo(), 
 			$equipo->getToken(), 
 			$equipo->getFullUa(), 
+			$equipo->getDescripcion(), 
+			$equipo->getLocked(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -270,6 +284,28 @@ abstract class EquipoDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " full_ua = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $equipoA->getDescripcion()) != NULL) & ( ($b = $equipoB->getDescripcion()) != NULL) ){
+				$sql .= " descripcion >= ? AND descripcion <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " descripcion = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $equipoA->getLocked()) != NULL) & ( ($b = $equipoB->getLocked()) != NULL) ){
+				$sql .= " locked >= ? AND locked <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " locked = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

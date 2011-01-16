@@ -1,7 +1,4 @@
-<h1>Equipos</h1>
-
-
-    <?php
+<?php
 
     require_once('model/equipo.dao.php');
 
@@ -20,8 +17,6 @@
 	        echo "<div class='failure'>" . $e . "</div>" ;
         }
 
-
-
     }
 
 
@@ -32,7 +27,13 @@
     
         
     //render the table
-    $header = array(  "id_equipo" => "ID Equipo", "token" => "SID Token", "full_ua" => "Full UA");
+    $header = array(  
+    	"id_equipo" => "ID Equipo", 
+    	"token" => "SID Token",
+    	"descripcion"=> "Descripcion" ,
+    	"locked" => "locked",
+    	"full_ua" => "Full UA");
+    	
     $tabla = new Tabla( $header, $todos );
     $tabla->addOnClick( 'id_equipo', 'e' );
     $tabla->render();

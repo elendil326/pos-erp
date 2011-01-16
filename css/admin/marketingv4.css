@@ -156,6 +156,11 @@ height: 294px;
 	/* http://www.flickr.com/photos/14282357@N07/2101237066/ */
 }
 
+#header.control{
+	background: #fff url(media/banners/4588859259_33aa185586_b.jpg) no-repeat 50% -275px  ;
+
+}
+
 #header p {
 margin: 0;
 }
@@ -244,7 +249,7 @@ font-family: 'ff-din-web-1', 'ff-din-web-2', 'HelveticaNeue-Light', 'Helvetica N
 width: 800px;
 letter-spacing: -3px;
 overflow: hidden;
-height: 40px;
+height: 45px;
 }
 
 

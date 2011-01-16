@@ -1,71 +1,78 @@
-<div class="g-section header">
-<a href="./"><img alt="Caffeina Mexico" height=40 src="../media/logo_pos.png"></a>
-<div id="custom-search">
-  <input id="q" name="q" type="text"> <input class="cse_submit" id="cse-search-button" onclick="searchQuery()" type="button" value="Buscar">
-</div>
+<DIV id="header-content">
+	<P class="logo"><A href="">caffeina</A></P>
+	
+	<UL class="nav">
+	
+			<LI class="drop">
+			<A href="configuracion.php?action=actual">configuracion</A>
+			</LI>
+	
+		
+			<LI class="drop">
+			<A href="base.php?action=dbkiss">base de datos</A>
+			</LI>
+			
+				
+			<LI class="drop">
+			<A href="logs.php?action=ver">logs</A>
+			</LI>
+	
+			<LI class="drop">
+			<A href="equipos.php?action=lista">equipos</A>
+				<!-- <UL  class="nav sub" >
+				<LI><A >Ver equipos</A></LI>
+				<LI class="last"><A href="equipos.php?action=nuevo">Nuevo equipo</A></LI>
+				</UL> -->			
+			</LI>
+			
+						
+			<LI class="drop">
+			<a href="../proxy.php?action=2002" >SALIR</a>
+			</LI>		
+				
 
-<div class="ga-container-nav-top">
-  <ul id="ga-toolbar">
+	</UL>
+	
+</DIV> <!-- header-content -->
 
-    <li class="product">
-      <a  class="drop">CONFIGURACION</a>
-      <ul>
-        <li class="ga-side-nav-off">
-          <a href="configuracion.php?action=actual" >Archivo de configuracion</a>
-        </li>
+<script>
+	var __current = [];
+	
+	function toolbar(){
+		for( a = 0; a < jQuery(".nav.sub").length; a++){ jQuery(jQuery(".nav.sub")[a]).hide(); }
+		
+		jQuery("#header-content").hover(
+			function(){
+				if(__current) {
+					__current.hide();
+				}
+			},
+			function(){
+			
+			});
+		
+		jQuery(".nav>.drop>a").hover( 
+			function(e){ 
 
-      </ul>
-    </li>
+				//in
+				while(__current.length > 0) {
+					__current.pop().hide();
+				}
+				
+				__currentP = jQuery(this).next();
+				__currentP.css("left", "0px");
+				__currentP.show();
+				__current.push( __currentP );
 
-    <li class="product">
-      <a class="drop" href="base.php">BASE DE DATOS</a>
+			},
+			function(e){
+				//out
+			});
+	}
+	toolbar();
 
-    </li>
-
-    <li class="product">
-      <a class="drop" >EVENTOS Y LOGS</a>
-      <ul>
-        <li class="ga-side-nav-off">
-          <a href="logs.php?action=ver">Ver log</a>
-        </li>
-      </ul>
-    </li>
-
-
-
-    <li class="support">
-      <a class="drop" >USUARIOS</a>
-      <ul style="top: 33px; left: 246px; width: 200px; display: none; ">
-        <li class="ga-side-nav-off">
-          <a  href="usuarios.php?action=lista">Listar usuarios</a>
-        </li>
-        <li>
-          <a  href="usuarios.php?action=nuevo">Nuevo usuario</a>
-        </li>
-      </ul>
-    </li>
-
-
-
-    <li class="education">
-      <a class="drop" href="equipos.php?action=lista" >EQUIPOS</a>
-    </li>
+</script>
 
 
+    
 
-
-
-
-    <li class="blog">
-      <a href="../proxy.php?action=2002" >SALIR</a>
-    </li>
-
-
-
-
-    <li class="last">&nbsp;
-    </li>
-  </ul><script>var toolbar = new Toolbar('ga-toolbar');</script>
-</div>
-
-</div>

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 13, 2011 at 10:59 PM
+-- Generation Time: Jan 15, 2011 at 01:28 PM
 -- Server version: 5.0.51
 -- PHP Version: 5.3.3-0.dotdeb.1
 
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `actualizacion_de_precio` (
   PRIMARY KEY  (`id_actualizacion`),
   KEY `id_producto` (`id_producto`),
   KEY `id_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=17 ;
 
 -- --------------------------------------------------------
 
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   PRIMARY KEY  (`id_cliente`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `compra_proveedor` (
   `total_origen` float default NULL COMMENT 'Es lo que vale el embarque segun el proveedor',
   PRIMARY KEY  (`id_compra_proveedor`),
   KEY `id_proveedor` (`id_proveedor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -236,8 +236,11 @@ CREATE TABLE IF NOT EXISTS `equipo` (
   `id_equipo` int(6) NOT NULL auto_increment COMMENT 'el identificador de este equipo',
   `token` varchar(128) NOT NULL COMMENT 'el token de seguridad que identifica a este equipo unicamente, representado generalmente por un user-agent modificado',
   `full_ua` varchar(256) NOT NULL COMMENT 'String de user-agent para este cliente',
+  `descripcion` varchar(254) NOT NULL COMMENT 'descripcion de este equipo',
+  `locked` tinyint(1) NOT NULL default '0' COMMENT 'si este equipo esta lockeado para prevenir los cambios',
   PRIMARY KEY  (`id_equipo`),
-  UNIQUE KEY `token` (`token`)
+  UNIQUE KEY `token` (`token`),
+  UNIQUE KEY `full_ua` (`full_ua`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -355,10 +358,10 @@ CREATE TABLE IF NOT EXISTS `ingresos` (
 CREATE TABLE IF NOT EXISTS `inventario` (
   `id_producto` int(11) NOT NULL auto_increment COMMENT 'id del producto',
   `descripcion` varchar(30) collate utf8_unicode_ci NOT NULL COMMENT 'descripcion del producto',
-  `escala` enum('kilogramo','pieza','litro','metro') collate utf8_unicode_ci NOT NULL,
+  `escala` enum('kilogramo','pieza','litro','unidad') collate utf8_unicode_ci NOT NULL,
   `tratamiento` enum('limpia') collate utf8_unicode_ci default NULL COMMENT 'Tipo de tratatiento si es que existe para este producto.',
   PRIMARY KEY  (`id_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=13 ;
 
 -- --------------------------------------------------------
 
@@ -428,7 +431,7 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
   `activo` tinyint(2) NOT NULL default '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
   `tipo_proveedor` enum('admin','sucursal','ambos') collate utf8_unicode_ci NOT NULL default 'admin' COMMENT 'si este proveedor surtira al admin, a las sucursales o a ambos',
   PRIMARY KEY  (`id_proveedor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -485,7 +488,7 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   `id_venta` int(11) NOT NULL auto_increment COMMENT 'id de venta',
   `id_cliente` int(11) NOT NULL COMMENT 'cliente al que se le vendio',
   `tipo_venta` enum('credito','contado') collate utf8_unicode_ci NOT NULL COMMENT 'tipo de venta, contado o credito',
-  `tipo_pago` enum('efectivo','cheque','tarjeta') collate utf8_unicode_ci NOT NULL default 'efectivo' COMMENT 'tipo de pago para esta venta en caso de ser a contado',
+  `tipo_pago` enum('efectivo','cheque','tarjeta') collate utf8_unicode_ci default 'efectivo' COMMENT 'tipo de pago para esta venta en caso de ser a contado',
   `fecha` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'fecha de venta',
   `subtotal` float default NULL COMMENT 'subtotal de la venta, puede ser nulo',
   `iva` float default NULL COMMENT 'iva agregado por la venta, depende de cada sucursal',

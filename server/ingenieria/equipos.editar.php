@@ -39,13 +39,9 @@
 
 ?>
 
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
 
 <script type="text/javascript" charset="utf-8">
-	$(function(){$("input, select").uniform();});
-    function i(){$('#fua').val("<?php echo $_SERVER['HTTP_USER_AGENT']; ?>");}
+    function i(){jQuery('#fua').val("<?php echo $_SERVER['HTTP_USER_AGENT']; ?>");}
 </script>
 
 <?php 
@@ -66,6 +62,8 @@
 	<tr><td>ID Equipo</td><td><input type="text" value="<?php echo $equipo->getIdEquipo(); ?>" id="id" disabled="true" size="40"/></td></tr>
 	<tr><td>Full User-Agent</td><td><input type="text" value="<?php echo $equipo->getFullUa(); ?>" name="fua" id="fua" size="40"/></td></tr>
 	<tr><td>SID Token</td><td><input type="text" value="<?php echo $equipo->getToken(); ?>" name="token" id="token" size="40"/></td></tr>
+	<tr><td>Descripcion</td><td><input type="text" value="<?php echo $equipo->getDescripcion(); ?>" name="token" id="token" size="40"/></td></tr>
+	<tr><td>Locked</td><td><input type="text" value="<?php echo $equipo->getLocked(); ?>" name="token" id="token" size="40" disabled/></td></tr>		
 	<tr><td>Sucursal asociada</td>
         <td>
 
@@ -88,8 +86,24 @@
 
 
 
-<h2>Insertar UA Actual</h2>
-UA Actual: <b><?php echo $_SERVER['HTTP_USER_AGENT']; ?></b><br><br>
-<input type="button" onClick="i()" value="Insertar"/>
+<h2>Insertar UA de esta maquina</h2>
+<?php
+	$ua = $_SERVER['HTTP_USER_AGENT'];
+	$foo = new Equipo();
+	$foo->setFullUA($ua);
+	$res = EquipoDAO::search($foo);
+	
+	if(count($res) > 0){
+		?>Ya existe un equipo registrado con el UA <b><i><?php  echo $_SERVER['HTTP_USER_AGENT'];  ?></i></b><?php
+	}else{
+		?>
+		UA Actual: <b><?php echo $_SERVER['HTTP_USER_AGENT']; ?></b><br><br>
+		<input type="button" onClick="i()" value="Insertar"/>	
+		<?php
+	}
+?>
 
 
+
+<h2>Eliminar este equipo</h2>
+<input type="button" onClick="i()" value="Eliminar"/>
