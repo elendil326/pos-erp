@@ -308,7 +308,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			style:{
 		         width: '100%'
 		    },
-            options : [ 
+            options : [
                 {
                     text : "Limpia",
                     value : "procesado"
