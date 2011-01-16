@@ -134,11 +134,12 @@ Aplicacion.Mostrador.prototype.cancelarVenta = function ()
 
 Aplicacion.Mostrador.prototype.carritoCambiarCantidad = function ( id, qty, forceNewValue )
 {
-	
 	var carrito = Aplicacion.Mostrador.currentInstance.carrito.items;
 	
 	for (var i = carrito.length - 1; i >= 0; i--){
-		if( carrito[i].productoID == id ){
+	
+	
+		if( carrito[i].idUnique == id ){
 			
 			if(forceNewValue){
 				carrito[i].cantidad = qty;
@@ -164,11 +165,11 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 	var html = "<table border=0>";
 	
 	html += "<tr class='top'>";
-	html += "<td style='width: 300px;' align='center'>Descripcion</td>";
-	html += "<td style='width: 300px;'  colspan=4 align='center'>Cantidad</td>";	
-	html += "<td align='center' style='width: 100px;' >Precio</td>";
-	html += "<td align='center' style='width: 130px;' >Sub Total</td>";
-
+	html +=     "<td align='left'>Descripcion</td>";
+	html +=     "<td colspan=2>&nbsp</td>";
+	html +=     "<td align='center' colspan=3>Cantidad</td>";	
+	html +=     "<td align='left' >Precio</td>";
+	html +=     "<td align='left' >Sub Total</td>";
 	html += "</tr>";
 	
 	for (var i=0; i < carrito.items.length; i++){
@@ -178,19 +179,21 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		}else{
 			html += "<tr >";		
 		}
-		html += "<td><b>" + carrito.items[i].productoID + "</b> " + carrito.items[i].descripcion+ "</td>";
-
-		html += "<td  style='width: 200px;' align='right'> <span class='boton'  onClick='Aplicacion.Mostrador.currentInstance.quitarDelCarrito("+ carrito.items[i].productoID +")'><img src='media/icons/close_16.png'>&nbsp;Quitar&nbsp;</span></td>";
+		html += "<td style='width: 25.5%;' ><b>" + carrito.items[i].productoID + "</b> " + carrito.items[i].descripcion+ "</td>";
 		
-		html += "<td  style='width: 100px;' align='center'> <span class='boton' onClick='Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad("+ carrito.items[i].productoID +", -1, false)'>&nbsp;-&nbsp;<img src='media/icons/arrow_down_16.png'></span></td>";
+		html += "<td style='width: 15.2%;' ><div id='Mostrador-carritoTratamiento"+ carrito.items[i].idUnique +"'></div></td>";
 
-		html += "<td  style='width: 100px;'><div id='Mostrador-carritoCantidad"+ carrito.items[i].productoID +"'></div></td>";
+		html += "<td  align='right' style='width: 9.2%;'> <span class='boton'  onClick=\"Aplicacion.Mostrador.currentInstance.quitarDelCarrito('"+ carrito.items[i].idUnique +"')\"><img src='media/icons/close_16.png'>&nbsp;Quitar&nbsp;</span></td>";
 
-		html += "<td  style='width: 100px;'> <span class='boton' onClick='Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad("+ carrito.items[i].productoID +", 1, false)'><img src='media/icons/arrow_up_16.png'>&nbsp;+&nbsp;</span></td>";
+		html += "<td  align='center'  style='width: 8.2%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique + "', -1, false)\">&nbsp;-&nbsp;<img src='media/icons/arrow_down_16.png'></span></td>";
 
-		html += "<td> <div  id='Mostrador-carritoPrecio"+ carrito.items[i].productoID +"'></div></td>";
+		html += "<td  align='center'  style='width: 10.2%;' ><div id='Mostrador-carritoCantidad"+ carrito.items[i].idUnique +"'></div></td>";
+
+		html += "<td  align='center'  style='width: 8.2%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique +"', 1, false)\"><img src='media/icons/arrow_up_16.png'>&nbsp;+&nbsp;</span></td>";
+
+		html += "<td style='width: 10.2%;'> <div  id='Mostrador-carritoPrecio"+ carrito.items[i].idUnique +"'></div></td>";
 		
-		html += "<td >" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioVenta )+"</td>";
+		html += "<td  style='width: 11.3%;'>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioVenta )+"</td>";
 		
 		html += "</tr>";
 	}
@@ -213,11 +216,14 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		}
 	
 		a = new Ext.form.Text({
-			renderTo : "Mostrador-carritoCantidad"+ carrito.items[i].productoID ,
-			id : "Mostrador-carritoCantidad"+ carrito.items[i].productoID + "Text",
+			renderTo : "Mostrador-carritoCantidad"+ carrito.items[i].idUnique ,
+			id : "Mostrador-carritoCantidad"+ carrito.items[i].idUnique + "Text",
 			value : carrito.items[i].cantidad,
 			prodID : carrito.items[i].productoID,
 			width: 100,
+			style:{
+		         textAlign: 'center'
+		    },
 			placeHolder : "",
 			listeners : {
 				'focus' : function (){
@@ -245,8 +251,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		});
 
 		b = new Ext.form.Text({
-			renderTo : "Mostrador-carritoPrecio"+ carrito.items[i].productoID ,
-			id : "Mostrador-carritoPrecio"+ carrito.items[i].productoID + "Text",
+			renderTo : "Mostrador-carritoPrecio"+ carrito.items[i].idUnique ,
+			id : "Mostrador-carritoPrecio"+ carrito.items[i].idUnique + "Text",
 			value : POS.currencyFormat( carrito.items[i].precioVenta ),
 			prodID : carrito.items[i].productoID,			
 			placeHolder : "Precio de Venta",
@@ -292,21 +298,61 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			} 
 		
 		});
+		
+		c = new Ext.form.Select({
+			renderTo : "Mostrador-carritoTratamiento"+ carrito.items[i].idUnique ,
+			id : "Mostrador-carritoTratamiento"+ carrito.items[i].idUnique + "Select",
+			productoID : carrito.items[i].productoID,
+			idUnique : carrito.items[i].idUnique,
+			value : carrito.items[i].tipoProducto,
+			style:{
+		         width: '100%'
+		    },
+            options : [
+                {
+                    text : "Limpia",
+                    value : "procesado"
+                },{
+                    text : "Original",
+                    value : "original"
+                }
+            ],
+            listeners : {
+                "change" : function (){
+                 
+                 
+                 for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
+                        if(Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == this.idUnique){
+					
+					        Aplicacion.Mostrador.currentInstance.carrito.items[i].tipoProducto = this.value;			
+					        
+					         if(DEBUG){
+		                            //console.log("buscando el producto" + id);
+		                            console.log("El producto " + this.productoID + " esta  "  + Aplicacion.Mostrador.currentInstance.carrito.items[i].tipoProducto );	
+		                            console.log( "Todos los productos : " + Aplicacion.Mostrador.currentInstance.carrito.items );	                            
+	                            }	
+					
+					    }
+				    }
+				    
+                }//change
+            }//listeners
+	
+		});
+		
 	}
-	
-	
-
-	
-	
 	
 };
 
+
+	
 Aplicacion.Mostrador.prototype.agregarProducto = function (	 )
 {	
 	val = Aplicacion.Mostrador.currentInstance.mostradorPanel.getDockedComponent(0).getComponent(0).getValue();
 	Aplicacion.Mostrador.currentInstance.mostradorPanel.getDockedComponent(0).getComponent(0).setValue("");
 	Aplicacion.Mostrador.currentInstance.agregarProductoPorID(val);
 };
+
 
 Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 {
@@ -316,6 +362,7 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 	
 	if(DEBUG){
 		console.log("buscando el producto" + id);
+		console.log("Aplicacion.Inventario.currentInstance.inventarioListaStore es : "  + Aplicacion.Inventario.currentInstance.inventarioListaStore );
 	}
 	
 	res = inventario.findRecord("productoID", id, 0, false, true, true);
@@ -332,7 +379,7 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 		console.log("Agregando el producto " + id + " al carrito.", res);
 	}
 
-	//buscar este producto en el carrito
+	/*//buscar este producto en el carrito
 	for(var a = 0, found = false ; a < this.carrito.items.length; a++)
 	{
 		if(this.carrito.items[a].productoID == id)
@@ -346,23 +393,35 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 	
 	//si no, agregarlo al carrito
 	if(!found)
-	{
+	{*/
+	
+	var len = this.carrito.items.length;
+	
 		this.carrito.items.push({
 			descripcion: res.data.descripcion,
-			existencias: res.data.existencias,
+			existenciasOriginales: res.data.existenciasOriginales,
+			existenciasProcesadas: res.data.existenciasProcesadas,
+			tratamiento:res.data.tratamiento,
 			existenciasMinimas: res.data.existenciasMinimas,
 			precioVenta: res.data.precioVenta,
 			productoID: res.data.productoID,
 			medida: res.data.medida,
 			precioIntersucursal : res.data.precioIntersucursal,
-			cantidad : 1
+			tipoProducto : 'procesado',
+			cantidad : 1,
+			idUnique : res.data.productoID + "_" +  Aplicacion.Mostrador.currentInstance.uniqueIndex
 		});
-	}
+		
+		Aplicacion.Mostrador.currentInstance.uniqueIndex++;
+		
+	//}
 	
 
 	//refrescar el html
 	this.refrescarMostrador();
 };
+
+Aplicacion.Mostrador.prototype.uniqueIndex = 0;
 
 /*
  * Quita un articulo del carrito dado su id
@@ -375,7 +434,7 @@ Aplicacion.Mostrador.prototype.quitarDelCarrito = function ( id )
 	
 	carrito = Aplicacion.Mostrador.currentInstance.carrito;
 	for (var i = carrito.items.length - 1; i >= 0; i--){
-		if( carrito.items[i].productoID == id ){
+		if( carrito.items[i].idUnique == id ){
 			carrito.items.splice( i ,1 );
 			break;
 		}
@@ -518,7 +577,9 @@ Aplicacion.Mostrador.prototype.setCajaComun = function ()
 	Ext.getCmp('Mostrador-tipoCliente').setPressed(0);
 
 	Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta = "contado";
+	Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = "efectivo";
 	Aplicacion.Mostrador.currentInstance.carrito.cliente = null;
+	Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
 	
 };
 
@@ -861,7 +922,7 @@ Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
 		subtotal += (this.carrito.items[i].precioVenta * this.carrito.items[i].cantidad);
 	}
 	
-	
+	Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
 	
 	if( this.carrito.cliente === null ){
 		
@@ -877,10 +938,14 @@ Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
 		Ext.getCmp('Mostrador-doVentaNuevoCliente' ).setVisible(true);
 		Aplicacion.Mostrador.currentInstance.carrito.factura = false;
 		Ext.getCmp('Mostrador-doVentaCobrar').setVisible(true);
+		Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
 		
 	}else{
 		
 		//es un cliente
+		
+		Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
+		
 		Ext.getCmp('Mostrador-doVentaNuevoCliente' ).setVisible(false);		
 		Ext.getCmp('Mostrador-doVentaCliente').setValue( this.carrito.cliente.nombre + "  " + this.carrito.cliente.rfc );
 		
@@ -893,6 +958,7 @@ Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
 		}else{
 			Ext.getCmp('Mostrador-doVentaClienteCreditoRestante').setVisible(false);			
 			Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta = "contado";
+			Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
 			Ext.getCmp('Mostrador-doVentaCobrar').setVisible(true);
 		}
 
@@ -913,6 +979,7 @@ Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
 			Ext.getCmp('Mostrador-doVentaTipoContado').setVisible(false);
 			Ext.getCmp('Mostrador-doVentaTipoCredito').setVisible(true);
 			Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta = Ext.getCmp('Mostrador-doVentaTipoCredito').getValue();
+			Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
 			
 			if( Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta == "contado" ){
 				Ext.getCmp('Mostrador-doVentaCobrar').setVisible(true);
@@ -1007,10 +1074,19 @@ Aplicacion.Mostrador.prototype.doVentaPanelCreator = function (	 ){
 								Ext.getCmp("Mostrador-doVentaFacturar").hide( Ext.anims.fade );
 								Aplicacion.Mostrador.currentInstance.carrito.factura = false;
 								Ext.getCmp('Mostrador-doVentaCobrar').hide( Ext.anims.fade );
+								
+								Ext.getCmp('Mostrador-doVentaTipoPago').hide( Ext.anims.fade );
+								Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = false;
+								
+								
 							}else{
 								Ext.getCmp("Mostrador-doVentaFacturar").show( Ext.anims.fade );
 								Aplicacion.Mostrador.currentInstance.carrito.factura = Ext.getCmp("Mostrador-doVentaFacturar").getValue() == 1;
-								Ext.getCmp('Mostrador-doVentaCobrar').show( Ext.anims.fade );								
+								Ext.getCmp('Mostrador-doVentaCobrar').show( Ext.anims.fade );			
+								
+								Ext.getCmp('Mostrador-doVentaTipoPago').show( Ext.anims.fade );
+								Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue() == 1;
+													
 							}
 						},
 						"show" : function (){
@@ -1020,6 +1096,21 @@ Aplicacion.Mostrador.prototype.doVentaPanelCreator = function (	 ){
 					label : 'Tipo de Venta', 
 					id: 'Mostrador-doVentaTipoCredito', 
 					options: [{text: 'Contado',	 value: 'contado'},{text: 'Credito', value: 'credito'}] 
+				}),
+
+                new Ext.form.Select({
+					listeners : {
+						"change" : function ( a, val ){
+							Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = val;							
+						},
+						"show" : function (){
+						       
+							Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
+						}
+					},
+					label : 'Tipo de Pago', 
+					id: 'Mostrador-doVentaTipoPago', 
+					options: [{text: 'Efectivo',	 value: 'efectivo'},{text: 'Cheque',	 value: 'cheque'},{text: 'Targeta', value: 'targeta'}] 
 				}),
 
 				new Ext.form.Toggle({ 

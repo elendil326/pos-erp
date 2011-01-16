@@ -343,10 +343,8 @@ function listarVentasClientes( ){
         foreach($detalles_venta as $detalle_venta)
         {
             $detalle = parseJSON( $detalle_venta );
-            
             $descripcion = InventarioDAO::getByPK( $detalle_venta->getIdProducto() );
-            
-            $detalle['descripcion'] = $descripcion->getDescripcion();
+            $detalle->descripcion = $descripcion->getDescripcion();
             
             array_push($array_detalle, $detalle);
         } 

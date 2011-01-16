@@ -48,9 +48,30 @@ function revisarExistencias ( $productos )
 
 	foreach( $productos as $p ){
 		$i = DetalleInventarioDAO::getByPK( $p->getIdProducto(), $_SESSION['sucursal'] );
-		if( $i->getExistencias() < $p->getCantidad() ){
+		/*if( $i->getExistencias() < $p->getCantidad() ){
 			return false;
+		}*/
+		
+		
+		if( $p->getCantidad() > 0){
+		
+		//    echo '$p->getCantidad() > 0 : ' . $p->getCantidad();
+		
+		    //si entra aqui requiere existencias originales
+		    if( $i->getExistencias() < $p->getCantidad() )
+			    return false;
 		}
+		
+		if(  $p->getCantidadProcesada() > 0 ){
+		
+		    //echo '$p->getCantidadProcesada() > 0 : ' . $p->getCantidadProcesada();
+		
+		    //si entra aqui requiere existencias procesadas
+		    if( $i->getExitenciasProcesadas() < $p->getCantidadProcesada() )
+			    return false;
+		}
+		
+		
 	}
 	
 	return true;
@@ -85,7 +106,11 @@ function descontarInventario ( $productos )
 
 		//descontar del inventario
 		$dInventario = DetalleInventarioDAO::getByPK( $dVenta->getIdProducto(), $_SESSION['sucursal'] );
+		
 		$dInventario->setExistencias( $dInventario->getExistencias() - $dVenta->getCantidad() );
+		
+		$dInventario->setExitenciasProcesadas( $dInventario->getExitenciasProcesadas() - $dVenta->getCantidadProcesada() );
+		
 		try{
 			DetalleInventarioDAO::save( $dInventario );			
 		}catch(Exception $e){
@@ -117,8 +142,7 @@ function vender( $args ){
         Logger::log("Sin parametros para realizar venta");
         DAO::transRollback();
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
-    }
-   
+    } 
 
     try{
         $data = parseJSON( $args['payload'] );
@@ -128,6 +152,8 @@ function vender( $args ){
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
+    //var_dump( $args['payload'] );  
+    //var_dump( json_decode( $args['payload']  ) );  
 
     if($data == null){
         Logger::log("objeto invalido para vender");
@@ -156,12 +182,19 @@ function vender( $args ){
 		$subtotal += ( $producto->cantidad * $producto->precioVenta );
         $dv = new DetalleVenta();
         $dv->setIdProducto( $producto->productoID );
-        $dv->setCantidad( $producto->cantidad );
+        
+        if( $producto-> tipoProducto == "procesado" ){
+            $dv->setCantidad( 0 );
+            $dv->setCantidadProcesada( $producto->cantidad );
+        }else{
+            $dv->setCantidad( $producto->cantidad );
+            $dv->setCantidadProcesada( 0  );
+        }
+        
         $dv->setPrecio( $producto->precioVenta );
 
 		array_push($detallesVenta, $dv );
     }
-	
 	
 	if(!revisarExistencias( $detallesVenta )){
         Logger::log("No hay existencias para satisfacer la demanda");
@@ -178,6 +211,12 @@ function vender( $args ){
     $venta->setIdSucursal( $_SESSION['sucursal'] );
     $venta->setIp( $_SERVER['REMOTE_ADDR']  );
     $venta->setPagado( 0 );
+    
+    $venta->setCancelada( 0 );
+    
+     if ( isset($data->tipoDePago) &&  $data->tipoDePago =! null ){
+        $venta->setTipoPago( $data->tipoDePago );
+     }
 
     /*
      * Si el cliente es nulo, entonces es caja comun
@@ -275,20 +314,37 @@ function vender( $args ){
 
 		
 		//insertar el detalle de la venta
-        try{
+      
+       /* try{
             if (!DetalleVentaDAO::save($dVenta)){
                 return false;
             } 
         }catch(Exception $e){
             die( '{"success": false, "reason": "' . $e . '" }' );
-        }
+        }*/
 
+
+         try{
+
+            DetalleVentaDAO::save($dVenta);
+        }catch(Exception $e){
+
+            DAO::transRollback();
+	        Logger::log( $e);
+            die( '{"success": false, "reason": "Error, al guardar el detalle venta." }' );
+        }
 
 
 		//descontar del inventario
 		$dInventario = DetalleInventarioDAO::getByPK( $dVenta->getIdProducto(), $_SESSION['sucursal'] );
 
         if($dInventario->getExistencias() < $dVenta->getCantidad() ){
+            Logger::log("No hay mas existencias del producto {$dVenta->getIdProducto()}.");
+            DAO::transRollback();
+        	die('{"success": false, "reason": "No hay suficiente producto para satisfacer la demanda. Intente de nuevo." }');
+        }
+        
+         if($dInventario->getExitenciasProcesadas() < $dVenta->getCantidadProcesada() ){
             Logger::log("No hay mas existencias del producto {$dVenta->getIdProducto()}.");
             DAO::transRollback();
         	die('{"success": false, "reason": "No hay suficiente producto para satisfacer la demanda. Intente de nuevo." }');
@@ -363,3 +419,6 @@ switch( $args['action'] ){
 }
 
 ?>
+
+
+
