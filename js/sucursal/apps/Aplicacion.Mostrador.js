@@ -307,7 +307,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			value : carrito.items[i].tipoProducto,
 			style:{
 		         width: '100%'
-		    },
+		    }, 
             options : [
                 {
                     text : "Limpia",
