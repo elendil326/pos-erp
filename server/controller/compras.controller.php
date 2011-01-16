@@ -19,13 +19,13 @@ function nuevaCompraProveedor( $data = null ){
 	//{"embarque" : {"id_proveedor":1,"folio": "456","merma_por_arpilla": 0,"numero_de_viaje": null,"peso_por_arpilla": 55.45,"peso_origen" : 12345,"peso_recibido" : 12345,"productor" : "Jorge Nolasco","importe_total": 3702,"total_arpillas": 1,"costo_flete" : 123 },"conductor" : {"nombre_chofer" : "Alan Gonzalez","placas" : "afsdf67t78","marca_camion" : "Chrysler","modelo_camion" : "1977" },"productos": [{"id_producto": 3,"variedad" : "fianas","arpillas" : 12,"precio_kg" : 5.35,"sitio_descarga" : 0}]}
 
 	if( !( isset( $data -> embarque ) && isset( $data -> conductor ) && isset( $data -> productos ) ) ){
-		Logger::log("Json invalido para crear nueva compra proveedor:");
-		die('{"success": false , "reason": "Parametros invalidos." }');
+		Logger::log("Uno o mas objetos necesarios para crear una nueva compra proveedor estan incompletos.");
+		die('{"success": false , "reason": "Especifique los datos basicos." }');
 	}
 	
 	if( $data -> embarque == null ||  $data -> conductor == null || $data -> productos == null){
-		Logger::log("Json invalido para crear nueva compra proveedor:");
-		die('{"success": false , "reason": "Parametros invalidos." }');
+		Logger::log("Uno o mas objetos necesarios para crear una nueva compra proveedor estan vacios.");
+		die('{"success": false , "reason": "Especifique los datos basicos." }');
 	}
 	
 	
@@ -72,15 +72,20 @@ function nuevaCompraProveedor( $data = null ){
 	
 	Logger::log("Iniciando le proceso de registro de nueva compra a proveedor");
 	
+	 //calculamos el peso real por arpilla
+    $peso_real_por_arpilla = $data->embarque->peso_por_arpilla - $data->embarque->merma_por_arpilla;
+    $otro_peso_real_por_arpilla = ( $data->embarque->peso_recibido - ( $data->embarque->total_arpillas * $data->embarque->merma_por_arpilla ) / $data->embarque->total_arpillas );
+	
+	if( $otro_peso_real_por_arpilla <= 0 ){
+	     Logger::log("Error : verifique el valor de la merma por arpilla : " . $data->embarque->merma_por_arpilla . " ya que");
+		die('{ "success": false, "reason" : "Error : verifique la merma por arpilla :' .  $data->embarque->merma_por_arpilla. '"}');
+	}
+	
 	//creamos la compra al proveedor
 	$id_compra_proveedor = compraProveedor( $data->embarque, $data->productos );
 	
 	//damos de alta el flete
 	compraProveedorFlete($data->conductor, $id_compra_proveedor, $data->embarque->costo_flete);
-
-    //calculamos el peso real por arpilla
-    $peso_real_por_arpilla = $data->embarque->peso_por_arpilla - $data->embarque->merma_por_arpilla;
-    $otro_peso_real_por_arpilla = ( $data->embarque->peso_recibido - ( $data->embarque->total_arpillas * $data->embarque->merma_por_arpilla ) / $data->embarque->total_arpillas );
 
 	//damos de alta el detalle de la compra al proveedor
 	ingresarDetalleCompraProveedor( $data->productos, $id_compra_proveedor, $otro_peso_real_por_arpilla );
@@ -145,16 +150,59 @@ function compraProveedor( $data = null, $productos = null ){
 
 	}
 
+    //verificamos que el numero de arpillas sea > 0
+    if(  !(is_numeric ( $data->total_arpillas) &&  $data->total_arpillas > 0) ){
+        Logger::log("Error : verifique el numero total de arpillas : " . $data->total_arpillas . ".");
+		die('{ "success": false, "reason" : "Error: verifique el numero total de arpillas : '. $data->total_arpillas .'." }');
+    }
+    
+    //verificamos la merma por arpilla
+    if(  !(is_numeric ( $data->merma_por_arpilla) &&  $data->merma_por_arpilla >= 0) ){
+        Logger::log("Error : verifique la merma por arpilla : " . $data->merma_por_arpilla);
+		die('{ "success": false, "reason" : "Error : verifique la merma por arpilla : ' .  $data->merma_por_arpilla . '." }');
+    }
+    
+    
+    //verificamos el peso de origen
+    if(  !(is_numeric ( $data->peso_origen) &&  $data->peso_origen > 0) ){
+        Logger::log("Error : verifique el peso de origen : " . $data->peso_origen);
+		die('{ "success": false, "reason" : "Error : verifique el peso de origen : ' .  $data->peso_origen . '." }');
+    }
+    
+    //verificamos el peso recibido
+    if(  !(is_numeric ( $data->peso_recibido) &&  $data->peso_recibido > 0) ){
+        Logger::log("Error : verifique el peso recibido : " . $data->peso_recibido);
+		die('{ "success": false, "reason" : "Error : verifique el peso recibido : ' .  $data->peso_recibido. '." }');
+    }
+
 	//formateamos al fecha de origen
 	try{
 	    $fecha_o= explode("/",$data->fecha_origen);
         $dia = $fecha_o[0];
         $mes = $fecha_o[1];
         $anio = $fecha_o[2];
+        
+        if(  !(is_numeric ( $dia ) &&  $dia  > 0 && $dia <= 31 ) ){
+            Logger::log("Error en el formato de fecha : " . $e);
+		    die('{ "success": false, "reason" : "Verifique que la fecha tenga el formato DD/MM/AA." }');
+        }
+        
+        if(  !(is_numeric ( $mes ) &&  $mes  > 0 && $mes <= 12 ) ){
+            Logger::log("Error en el formato de fecha : " . $e);
+		    die('{ "success": false, "reason" : "Verifique que la fecha tenga el formato DD/MM/AA." }');
+        }
+        
+        if(  !(is_numeric ( $anio ) &&  $anio  >= 0  ) ){
+            Logger::log("Error en el formato de fecha : " . $e);
+		    die('{ "success": false, "reason" : "Verifique que la fecha tenga el formato DD/MM/AA." }');
+        }
+        
+        
         $data->fecha_origen = $anio."/".$mes."/".$dia;
+        //var_dump($data->fecha_origen);
     }catch(Exception $e ){
         Logger::log("Error en el formato de fecha : " . $e);
-		die('{ "success": false, "reason" : "Verifiqeu que la fecha tenga el formato DD/MM/AA." }');
+		die('{ "success": false, "reason" : "Verifique que la fecha tenga el formato DD/MM/AA." }');
     }
 
 	
@@ -241,8 +289,8 @@ function compraProveedorFlete( $data = null, $id_compra_proveedor = null, $costo
 	$data = parseJSON( $json );*/
 
 	if($data == null){
-		Logger::log("Json invalido para crear nueva compra proveedor");
-		die('{"success": false , "reason": "Error : Parametros invalidos." }');
+		Logger::log("Error : el juego de datos del flete esta vacio.");
+		die('{"success": false , "reason": "Error : el juego de datos del flete esta vacio." }');
 	}
 	
 	
@@ -631,8 +679,8 @@ function nuevaCompraSucursal( $data = null){
 function editarInventarioMaestro( $data = null ){
 	
 	if($data == null){
-		Logger::log("editar inventario maestro, error : recibi objeto nulo");
-		die('{"success": false , "reason": "Parametros invalidos." }');
+		Logger::log("Error : el juego de objetos empleado para modificar el inventario amestro es nulo.");
+		die('{"success": false , "reason": "Error : el juego de objetos empleado para modificar el inventario amestro es nulo." }');
 	}
 		
 	DAO::transBegin();	
@@ -821,7 +869,7 @@ function ingresarAutorizacion( $data = null, $sucursal = null, $id_compra = null
 	Logger::log("Iniciando proceso de ingreso de autorizacion en transito");
 
 	if( $data == null || $sucursal == null || $id_compra == null){
-		Logger::log("ingresarAutorizacionl, error : recibi uno o mas objetos nulos");
+		Logger::log("Error : recibi uno o mas objetos nulos");
 		DAO::transRollback();
 		die('{"success": false , "reason": "Parametros invalidos." }');
 	}
@@ -885,7 +933,7 @@ if(isset($args['action'])){
 			if( !( isset( $args['data'] ) && $args['data'] != null ) )
 			{
 				Logger::log("No hay parametros para ingresar nueva compra a proveedor.");
-				die('{"success": false , "reason": "Parametros invalidos." }');
+				die('{"success": false , "reason": "No hay parametros para ingresar nueva compra a proveedor."}');
 			}
 						
 			nuevaCompraProveedor( $args['data'] );
