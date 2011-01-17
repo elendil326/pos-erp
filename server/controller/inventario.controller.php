@@ -556,6 +556,8 @@ function insertarSubproducto( $json = null ){
         $inventario_maestro =  InventarioMaestroDAO::getByPK( $subproducto -> id_producto, $subproducto -> id_compra_proveedor );
        
         $inventario_maestro -> setExistenciasProcesadas( $inventario_maestro -> getExistenciasProcesadas( ) + $subproducto  -> cantidad_procesada );
+        
+        $inventario_maestro -> setExistencias( $inventario_maestro -> getExistenciasProcesadas( ) + $subproducto  -> cantidad_procesada );
        
        try{
 		    InventarioMaestroDAO::save( $inventario_maestro );
