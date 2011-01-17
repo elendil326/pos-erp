@@ -572,7 +572,7 @@ if(isset($args['action'])){
 		
 			//{"id_compra_proveedor":1,"id_producto":5,"resultante":10.12,"desecho":23.14,"subproducto":[{"id_producto":1,"id_compra_proveedor":2,"cantidad_procesada":10.45}]}
 		
-			insertarSubproducto( $args['data'] );
+			procesarProducto( $args['data'] );
 			
 		break;
 		
