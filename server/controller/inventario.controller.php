@@ -382,19 +382,19 @@ function procesarProducto( $json = null ){
 
 	if($json == null){
         Logger::log("No hay parametros para procesar el producto.");
-		die('{ "success": false, "reason" : "Parametros invalidos" }');
+		die('{ "success": false, "reason" : "No hay parametros para procesar el producto." }');
 	}
 	
 	$data = parseJSON( $json );
 	
 	if( !( isset( $data -> id_compra_proveedor ) && isset( $data -> id_producto )  && isset( $data -> resultante )  && isset( $data -> desecho )  && isset( $data -> subproducto )    ) ){
 		Logger::log("Json invalido para iniciar el procesado de producto");
-		die('{"success": false , "reason": "Parametros invalidos." }');
+		die('{"success": false , "reason": "Uno o mas parametros no esta presente." }');
 	}
 	
-	if(  $data -> id_compra_proveedor == null || $data -> id_producto  == null || $data -> resultante  == null || $data -> desecho  == null || $data -> subproducto  == null ){
+	if(  $data -> id_compra_proveedor == null || $data -> id_producto  == null || $data -> resultante  == null ){
 		Logger::log("Json invalido para crear un nuevo proceso de producto");
-		die('{"success": false , "reason": "Parametros invalidos." }');
+		die('{"success": false , "reason": "Uno o mas procesos son nnulos." }');
 	}
 	
 	//http://127.0.0.1/pos/trunk/www/proxy.php?action=408&data={%22id_compra_proveedor%22:2,%22id_producto%22:2,%22resultante%22:200,%22desecho%22:10.5,%22subproducto%22:[{%22id_producto%22:2,%22id_compra_proveedor%22:0,%22cantidad_procesada%22:50}]}
@@ -418,6 +418,8 @@ function procesarProducto( $json = null ){
 	    
 	*/
     
+  
+    
     $inventario_maestro =  InventarioMaestroDAO::getByPK( $data -> id_producto, $data -> id_compra_proveedor );
     
     //  1.- Restar en inventario maestro a sus existencias : el deshecho + la suma de las cantidades procesadas de los subproductos
@@ -428,7 +430,12 @@ function procesarProducto( $json = null ){
         $suma += $subproducto -> cantidad_procesada;
     }
     
-    $suma +=  $subproducto -> desecho;
+    if( $suma > $data -> resultante ){
+        Logger::log("La cantidad de producto de otro tamaño supera la cantidad del producto original, verifique sus datos." . $e);
+		die( '{"success": false, "reason": "La cantidad de producto de otro tamaño supera la cantidad del producto original, verifique sus datos."}' );
+    }
+    
+    $suma +=  $subproducto -> desecho + $data -> resultante;
     
     $inventario_maestro -> setExistencias( $inventario_maestro -> getExistencias() - $suma );
     
@@ -440,7 +447,7 @@ function procesarProducto( $json = null ){
     */    
     
     $inventario_maestro -> setExistenciasProcesadas( $inventario_maestro -> getExistenciasProcesadas( ) + $data -> resultante );
-    
+      DAO::transBegin();
     try{
 		InventarioMaestroDAO::save( $inventario_maestro );
 	}catch(Exception $e){
@@ -457,7 +464,7 @@ function procesarProducto( $json = null ){
        
         $inventario_maestro -> setExistenciasProcesadas( $inventario_maestro -> getExistenciasProcesadas( ) + $subproducto  -> cantidad_procesada );
         
-        $inventario_maestro -> setExistencias( $inventario_maestro -> getExistenciasProcesadas( ) + $subproducto  -> cantidad_procesada );
+        $inventario_maestro -> setExistencias( $inventario_maestro -> getExistencias( ) + $subproducto  -> cantidad_procesada );
        
        try{
 		    InventarioMaestroDAO::save( $inventario_maestro );
