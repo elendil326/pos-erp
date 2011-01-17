@@ -21,6 +21,7 @@
 #facebox .content {
   display:table;
   width: 370px;
+  font-size: 12px;
   padding: 10px;
   background: #fff;
   -webkit-border-radius:4px;

@@ -85,6 +85,4 @@ $tabla->render();
 
 
 ?>
-<h2>Embarques autonomos</h2>
-<input type="button" value="Nuevo embarque autonomo">
 

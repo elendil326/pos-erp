@@ -36,48 +36,7 @@
 			+ "&nbsp;	<input type='button' onclick=\"jQuery(document).trigger('close.facebox')\" value='No'></div>"
 		);
 	}
-	
-	function sendProceso(){
 		
-		jQuery("#loader").fadeIn('slow', function(){
-			jQuery.ajax({
-				url: "../proxy.php",
-				data: { 
-					action : 406,
-					data : jQuery.JSON.encode( {
-						id_producto: 		<?php echo $_REQUEST['producto']; ?>,
-						id_compra:			<?php echo $_REQUEST['compra']; ?>,
-						cantidad_procesada: jQuery("#cantidad_limpiada").val()					
-					})
-
-				},
-				cache: false,
-				success: function(data){
-					try{
-				  		response = jQuery.parseJSON(data);
-					}catch(e){
-				
-						jQuery("#loader").fadeOut('slow', function(){
-							jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
-						});                
-						return;                    
-					}
-		
-
-					if(response.success === false){
-						jQuery("#loader").fadeOut('slow', function(){
-							jQuery("#ajax_failure").html(response.reason).show();
-						});                
-						return ;
-					}
-					
-					reason = "Se han actualizado las existencias";
-					window.location = "inventario.php?action=detalleCompra&compra=<?php echo $_REQUEST['compra']; ?>&producto=<?php echo $_REQUEST['producto']; ?>&success=true&reason=" + reason;
-		
-				}
-				});
-		});
-	}
 	
 	function terminar(){
 		jQuery(document).trigger('close.facebox');
@@ -177,9 +136,9 @@
 ?>
 <h2>Dar por terminado</h2>
 		
-	<div align="center">
+	<h4 align="center">
 		<input type='button' value="Dar por terinado" onClick="terminarProducto()">
-	</div>
+	</h4>
 
 <?php
 if($producto->getTratamiento()){
@@ -190,30 +149,66 @@ if($producto->getTratamiento()){
 	<h3>Este producto puede ser procesado como <i>Limpio/Orginial</i></h3>
 	
 	
-	<table>
-		<tr>
-			<td>Cantidad tomada a procesar </td>
-			<td><input type="text" style="width:75px">&nbsp;<?php echo $producto->getEscala(); ?>s</td>
-		</tr>
+	<table width="100%">
 
 		<tr>
 			<td>Resultante procesada</td>
-			<td><input type="text" style="width:75px">&nbsp;<?php echo $producto->getEscala(); ?>s</td>
+			<td><input class="wrong" type="text" style="width:75px" id="procesada" onKeyUp="doMath()" >&nbsp;<?php echo $producto->getEscala(); ?>s</td>
 		</tr>
 		
 		
 		<tr>
 			<td>Desecho resultante</td>
-			<td><input type="text" style="width:75px">&nbsp;<?php echo $producto->getEscala(); ?>s</td>
+			<td><input class="wrong" type="text" style="width:75px" id="desecho" onKeyUp="doMath()">&nbsp;<?php echo $producto->getEscala(); ?>s</td>
 		</tr>		
 		
+		<tr id="totals-a-procesar">
+			<td>Cantidad total tomada a procesar </td>
+			<td><input type="text" style="width:75px" disabled id="total">&nbsp;<?php echo $producto->getEscala(); ?>s</td>
+		</tr>
+
 		
+		<tr>
+			<td colspan=2 align=left style="padding-top: 15px ">
+			El proceso ha resultado en otro producto:<br/>
+			
+			
+			Cantidad:<input type="text" style="width: 50px" id="subprodqty">
+				
+
+			Mover a:<select id="subprodselector">
+				<?php
+				$inventario = InventarioMaestroDAO::getAll();
+				
+			    foreach( $inventario as $i ){
+				    // tengo la compra
+				    // tengo el inventario maestro
+				    // tengo el inventario
+			    	$compra = CompraProveedorDAO::getByPK	( $i->getIdCompraProveedor() );
+			    	$producto = InventarioDAO::getByPK		( $i->getIdProducto() );
+			    	
+				    echo "<option value='{ \"id_compra_proveedor\" : " . $compra->getIdCompraProveedor() . ", ";
+					echo "\"descripcion\" : \"". $producto->getDescripcion() ."\", ";
+					echo "\"folio\" : \"". $compra->getFolio() ."\", ";
+					echo "\"id_producto\" : ". $producto->getIdProducto() ;
+
+				    echo " }' >" ;
+				    echo  $producto->getDescripcion() ." / ". $compra->getFolio() . "</option>";
+			    }	
+			    ?>				
+			</select>
+			
+			<input type="button" value="Agregar" onclick="addSubProd()">
+			
+			</td>
+		</tr>
 		
 	</table>
 	
-	<div align="center">
-		<input type="button" value="Aceptar proceso" onClick="">
-	</div>
+	<h4 align="center">
+		<input type="button" value="Aceptar proceso" onClick="ask()"><img src="../media/loader.gif" id="loader2" style="display: none;">
+	</h4>
+	
 <!--	<div id="reportar_limpieza" style="display: none;">
 	
 		</div>
@@ -225,6 +220,129 @@ if($producto->getTratamiento()){
 }	
 ?>
 
+<script>
+	var subprods = [];
+	
 
+	
+	function addSubProd(){
+	
+		if(isNaN(jQuery("#subprodqty").val()) || jQuery("#subprodqty").val().length == 0){
+			jQuery("#subprodqty").addClass("wrong");
+			return;
+		}else{
+			jQuery("#subprodqty").removeClass("wrong");		
+		}
+
+		
+	
+		prod = jQuery.JSON.decode( jQuery("#subprodselector").val() );
+		qty = jQuery("#subprodqty").val();
+		code = "<tr><td><b>*</b>"+prod.descripcion+" <b>/</b> " +prod.folio+"</td><td><input type='text' value='"+qty+"' disabled></td></tr>";
+		
+		jQuery("#totals-a-procesar").before(code);
+		jQuery("input:text").uniform();
+		
+		subprods.push({
+			id_producto : prod.id_producto,
+			id_compra_proveedor : prod.id_compra_proveedor,
+			cantidad_procesada: qty
+		});
+		
+		jQuery("#subprodqty").val("");
+		
+		doMath();
+	}
+	
+	function doMath(){
+	
+		if( isNaN(jQuery("#procesada").val()) ){
+			jQuery("#procesada").addClass("wrong");
+			jQuery("#procesada").removeClass("ok");
+		}else{
+			jQuery("#procesada").addClass("ok");
+			jQuery("#procesada").removeClass("wrong");		
+		}
+
+		if( isNaN(jQuery("#desecho").val()) ){
+			jQuery("#procesada").addClass("wrong");
+			jQuery("#procesada").removeClass("ok");
+		}else{
+			jQuery("#procesada").addClass("ok");
+			jQuery("#procesada").removeClass("wrong");		
+		}
+	
+		t = 0;
+		for(a= 0; a < subprods.length; a++){
+			t += parseFloat( subprods[a].cantidad_procesada );
+		}
+		
+		t += parseFloat( jQuery("#procesada").val() );
+		t += parseFloat( jQuery("#desecho").val() );
+		
+		jQuery("#total").val(parseFloat(t));
+	}
+
+
+
+	function ask()
+	{
+		jQuery.facebox('<h1>Procesar producto</h1> &iquest; Esta seguro que desea procesar el producto ?'
+			+ "<br><div align='center'>"
+			+ "			<input type='button' onclick=\"doSendProc()\" value='Si'>"
+			+ "&nbsp;	<input type='button' onclick=\"jQuery(document).trigger('close.facebox')\" value='No'></div>"
+		);
+	}
+	
+	
+
+	
+	function doSendProc(){
+		jQuery(document).trigger('close.facebox');
+		
+		endobj = {
+			id_compra_proveedor : <?php echo $_REQUEST['compra']; ?>,
+			id_producto: <?php echo $_REQUEST['producto']; ?> ,
+			resultante: parseFloat( jQuery("#procesada").val() ),
+			desecho: parseFloat ( jQuery("#desecho").val() ),
+			subproducto : subprods
+		};
+		
+		jQuery("#loader2").fadeIn('slow', function(){
+			jQuery.ajax({
+				url: "../proxy.php",
+				data: { 
+					action : 406,
+					data : jQuery.JSON.encode( endobj )
+
+				},
+				cache: false,
+				success: function(data){
+					try{
+				  		response = jQuery.parseJSON(data);
+					}catch(e){
+				
+						jQuery("#loader2").fadeOut('slow', function(){
+							jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+						});                
+						return;                    
+					}
+		
+
+					if(response.success === false){
+						jQuery("#loader2").fadeOut('slow', function(){
+							jQuery("#ajax_failure").html(response.reason).show();
+						});                
+						return ;
+					}
+					
+					reason = "Se han actualizado las existencias correctamente";
+					window.location = "inventario.php?action=detalleCompra&compra=<?php echo $_REQUEST['compra']; ?>&producto=<?php echo $_REQUEST['producto']; ?>&success=true&reason=" + reason;
+		
+				}
+				});
+		});
+	}
+</script>
 
 

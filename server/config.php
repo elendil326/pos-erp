@@ -12,8 +12,8 @@ define('POS_MES', 1);
 # *******************************
 
 #carpeta donde se encuentran los scripts del servidor,
-//ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/alan/trunk/server");
-ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/pos/trunk/server");
+ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/alan/trunk/server");
+//ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/pos/trunk/server");
 
 
 # titulo de la aplicacion para las paginas html

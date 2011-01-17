@@ -62,7 +62,9 @@ require_once('model/sucursal.dao.php');
     	}
     	
     	jQuery('#chooseSupplier').slideUp('fast', function (){
-    		jQuery('#chooseSupplierDetails').html("<h3>" + provs[i].nombre + "</h3>");
+    		html = "<h3>" + provs[i].nombre + "</h3>";
+    		html += provs[i].direccion;
+    		jQuery('#chooseSupplierDetails').html(html);
     		jQuery('#chooseSupplierDetails').slideDown(); 		
     		jQuery('#chooseProds').slideDown();    		
     	});
@@ -103,13 +105,13 @@ require_once('model/sucursal.dao.php');
     	//     Producto | Variedad | Arpillas | Promedio | Peso total | Precio KG | Importe | Sitio de descarga
     	
     	//Producto
-	    html += '<td><img style="margin-right: 5px;" src="../media/icons/close_16.png" onClick="removeMe(' + prods[i].id_producto + ')">'+ prods[i].descripcion +'</td>';	    
+	    html += '<td><!--<img style="margin-right: 5px;" src="../media/icons/close_16.png" onClick="removeMe(' + prods[i].id_producto + ')">-->'+ prods[i].descripcion +'</td>';	    
 	    id = prods[i].id_producto;
 	    // Variedad
 	    html += '<td><input id="cart-' + id + '-variedad" style="width: 50px;" type="text" ></td>';
 	    
 	    //Arpillas
-	    html += '<td><input id="cart-' + id + '-arpillas" style="width: 50px;" type="text" onKeyUp="doMath()"></td>';
+	    html += '<td><input id="cart-' + id + '-arpillas" style="width: 50px;" type="text" value="0" onKeyUp="doMath()"></td>';
 	    
 	    //Promedio
 	    html += '<td><input id="cart-' + id + '-promedio" disabled style="width: 70px;" value="0" type="text"></td>';
@@ -336,27 +338,27 @@ require_once('model/sucursal.dao.php');
 		<tr><td colspan=2 ><h3>Detalles del producto</h3></td>
 			<td colspan=2 ><h3>Detalles del flete</h3></td></tr>
 			
-		<tr><td>Remision</td>			<td><input type='text' id='detalles-folio' ></td>
+		<tr><td>Remision</td>			<td><input type='text' id='detalles-folio' class="wrong"></td>
 			<td>Nombre del chofer</td>	<td><input type='text' id='detalles-chofer' ></td></tr>
 		
-		<tr><td>Fecha de origen</td>	<td><input type='text' id='detalles-fecha-origen' value="" placeholder="dd/mm/aa"></td>
+		<tr><td>Fecha de origen</td>	<td><input type='text' id='detalles-fecha-origen'  value="" placeholder="dd/mm/aa"></td>
 			<td>Placas</td>				<td><input type='text' id='detalles-placas' ></td></tr>
 			
-		<tr><td>Total arpillas</td>		<td><input type='text' id='detalles-total-arpillas' value="0" disabled>
+		<tr><td>Total arpillas</td>		<td><input type='text' id='detalles-total-arpillas' value="0.0" disabled>
 			<td>Marca camion</td>		<td><input type='text' id='detalles-marca'  ></td></tr>
 			
-		<tr><td>Merma por arpilla</td>	<td><input type='text' id='detalles-merma-arpilla' onkeyup="doMath()"></td>
+		<tr><td>Merma por arpilla</td>	<td><input type='text' id='detalles-merma-arpilla' class="wrong" onkeyup="doMath()"></td>
 			<td>Modelo camion</td>		<td><input type='text' id='detalles-modelo'  ></td></tr>
 			
 		<tr><td>Numero de viaje</td>	<td><input type='text' id='detalles-nuermo-viaje'></td>
-			<td>Costo total del flete</td><td><input type='text' id='detalles-flete'  ></td></tr>
+			<td>Costo total del flete</td><td><input type='text' id='detalles-flete' class="wrong" ></td></tr>
 			
-		<tr><td>Peso por arpilla</td>	<td><input type='text' id='detalles-peso-por-arpilla' value="0" disabled></td></tr>	
+		<tr><td>Peso por arpilla</td>	<td><input type='text' id='detalles-peso-por-arpilla' value="0.0" disabled></td></tr>	
 		
-		<tr><td>Peso origen</td>		<td><input type='text' id='detalles-peso-origen'
+		<tr><td>Peso origen</td>		<td><input type='text' id='detalles-peso-origen' class="wrong"
 				 onkeyup="jQuery('#detalles-peso-recibido').val(jQuery('#detalles-peso-origen').val()); doMath();" ></td></tr>	
 				 
-		<tr><td>Peso recibido</td>		<td><input type='text' id='detalles-peso-recibido' onkeyup="doMath()" ></td></tr>
+		<tr><td>Peso recibido</td>		<td><input type='text' id='detalles-peso-recibido' class="wrong" onkeyup="doMath()" ></td></tr>
 		
 		<tr><td>Peso real</td>			<td><input type='text' id='detalles-peso-real' disabled></td></tr>
 		
@@ -404,9 +406,9 @@ require_once('model/sucursal.dao.php');
     <!-- -------------------------------
 			BOTON CONFIRMAR
 	  ------------------------------- -->
-    <div id='doneButton' align="center" style="display:none;">
+    <h4 id='doneButton' align="center" style="display:none;">
     	<input type='button' value='Confirmar' onClick='done()'>
     	<img id="loader" style="display:none;" src="../media/loader.gif">
-    </div>
+    </h4>
 </div>
 
