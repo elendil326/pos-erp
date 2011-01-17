@@ -178,12 +178,18 @@ function compraProveedor( $data = null, $productos = null ){
 	//formateamos al fecha de origen
 	try{
 	    $fecha_o= explode("/",$data->fecha_origen);
+
+        if( count( $fecha_o ) < 3 ){
+            Logger::log("Error en el formato de fecha");
+		    die('{ "success": false, "reason" : "Verifique que la fecha tenga el formato DD/MM/AA." }');    
+        }	    
+	    	    
         $dia = $fecha_o[0];
         $mes = $fecha_o[1];
         $anio = $fecha_o[2];
         
         if(  !(is_numeric ( $dia ) &&  $dia  > 0 && $dia <= 31 ) ){
-            Logger::log("Error en el formato de fecha : " . $e);
+            Logger::log("Error en el formato de fecha");
 		    die('{ "success": false, "reason" : "Verifique que la fecha tenga el formato DD/MM/AA." }');
         }
         

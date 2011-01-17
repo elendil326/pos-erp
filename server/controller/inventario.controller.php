@@ -393,19 +393,19 @@ function procesarProducto( $json = null ){
 
 	if($json == null){
         Logger::log("No hay parametros para procesar el producto.");
-		die('{ "success": false, "reason" : "No hay parametros para procesar el producto." }');
+		die('{ "success": false, "reason" : "Error : no hay suficientes datos para procesar el producto." }');
 	}
 	
 	$data = parseJSON( $json );
 	
 	if( !( isset( $data -> id_compra_proveedor ) && isset( $data -> id_producto )  && isset( $data -> resultante )  && isset( $data -> desecho )  && isset( $data -> subproducto )    ) ){
 		Logger::log("Json invalido para iniciar el procesado de producto");
-		die('{"success": false , "reason": "Uno o mas parametros no esta presente." }');
+		die('{"success": false , "reason": "Error : verifique que esten llenos todos los campos necesarios." }');
 	}
 	
 	if(  $data -> id_compra_proveedor == null || $data -> id_producto  == null || $data -> resultante  == null ){
 		Logger::log("Json invalido para crear un nuevo proceso de producto");
-		die('{"success": false , "reason": "Uno o mas procesos son nnulos." }');
+		die('{"success": false , "reason": "Error : verifique que esten llenos todos los campos necesarios." }');
 	}
 	
 	//http://127.0.0.1/pos/trunk/www/proxy.php?action=408&data={%22id_compra_proveedor%22:2,%22id_producto%22:2,%22resultante%22:200,%22desecho%22:10.5,%22subproducto%22:[{%22id_producto%22:2,%22id_compra_proveedor%22:0,%22cantidad_procesada%22:50}]}
@@ -429,11 +429,19 @@ function procesarProducto( $json = null ){
 	    
 	*/
     
-  
+    //verificar que exista el id_compra_proveedor
+    if( !( CompraProveedorDAO::getByPK( $data -> id_compra_proveedor ) ) ){
+        Logger::log( "No se tiene registro de la compra a proveedor : " . $data -> id_compra_proveedor );
+		die( '{"success": false, "reason": "No se tiene registro de la compra a proveedor : ' . $data -> id_compra_proveedor . '"}' );
+    }    
     
-    $inventario_maestro =  InventarioMaestroDAO::getByPK( $data -> id_producto, $data -> id_compra_proveedor );
+    //verificar que existan el producto en esa compora a proveedor
+    if( !( $detalle_compra_proveedor = DetalleCompraProveedorDAO::getByPK( $data -> id_compra_proveedor, $data -> id_producto ) ) ){
+        Logger::log( "No se tiene registro de la compra del producto : " .  $data -> id_producto . " en la compra a proveedor : " . $data -> id_compra_proveedor );
+		die( '{"success": false, "reason": "No se tiene registro de la compra del producto : ' . $data -> id_producto  . ' en la compra a proveedor : ' . $data -> id_compra_proveedor . '"}' );
+    }   
     
-    //  1.- Restar en inventario maestro a sus existencias : el deshecho + la suma de las cantidades procesadas de los subproductos
+    //verificar que el resultante + desecho + ( resultante * subproducto ) <= existencias 
     
     $suma = 0;
     
@@ -441,12 +449,20 @@ function procesarProducto( $json = null ){
         $suma += $subproducto -> cantidad_procesada;
     }
     
-    if( $suma > $data -> resultante ){
-        Logger::log("La cantidad de producto de otro tamaño supera la cantidad del producto original, verifique sus datos." . $e);
-		die( '{"success": false, "reason": "La cantidad de producto de otro tamaño supera la cantidad del producto original, verifique sus datos."}' );
+    $consecuente = $data -> resultante + $data -> desecho + $suma;
+    
+    if( $consecuente > $detalle_compra_proveedor -> getExistencias() ){
+        Logger::log( "Error : verifique la cantidad de otros productos" );
+		die( '{"success": false, "reason": "Error : verifique la cantidad de otros productos"}' );
     }
     
-    $suma +=  $subproducto -> desecho + $data -> resultante;
+    $inventario_maestro =  InventarioMaestroDAO::getByPK( $data -> id_producto, $data -> id_compra_proveedor );
+    
+    //  1.- Restar en inventario maestro a sus existencias : el deshecho + la suma de las cantidades procesadas de los subproductos
+    
+    
+    
+    $suma +=  $data -> desecho + $data -> resultante;
     
     $inventario_maestro -> setExistencias( $inventario_maestro -> getExistencias() - $suma );
     
@@ -523,6 +539,9 @@ function terminarCargamentoCompra( $json = null ){
 	$inventario_maestro =  InventarioMaestroDAO::getByPK( $data -> id_producto, $data -> id_compra );			
 		
 	DAO::transBegin();		
+	
+	$existencias = $inventario_maestro -> getExistencias( );
+	$existencias_procesadas = $inventario_maestro -> getExistenciasProcesadas( );
 		
 	$inventario_maestro -> setExistencias( 0 );
 	$inventario_maestro -> setExistenciasProcesadas( 0 );
@@ -534,6 +553,25 @@ function terminarCargamentoCompra( $json = null ){
 		DAO::transRollback();	
 		die( '{"success": false, "reason": "Error al editar producto en inventario maestro"}' );
 	}	
+
+	
+	if( $data -> restante != null ){
+	
+	    $inventario_maestro =  InventarioMaestroDAO::getByPK( $data -> restante  -> id_producto,$data -> restante  -> id_compra );	
+	    $inventario_maestro -> setExistencias( $inventario_maestro -> getExistencias( ) + $existencias  );
+	    $inventario_maestro -> setExistenciasProcesadas( $inventario_maestro -> getExistenciasProcesadas() + $existencias_procesadas );
+	    
+	    try{
+		    InventarioMaestroDAO::save( $inventario_maestro );
+	    }catch(Exception $e){
+		    Logger::log("Error al transferir producto en inventario maestro : " . $e);
+		    DAO::transRollback();	
+		    die( '{"success": false, "reason": "Error al transferir el producto en la otra compra."}' );
+	    }
+	    
+	}
+	
+	
 	
 	DAO::transEnd();
 	
