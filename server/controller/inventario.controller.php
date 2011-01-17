@@ -480,6 +480,103 @@ function terminarCargamentoCompra( $json = null ){
 }
 
 
+function insertarSubproducto( $json = null ){
+
+    Logger::log("Iniciando el proceso de procesado de producto");
+
+	if($json == null){
+        Logger::log("No hay parametros para procesar el producto.");
+		die('{ "success": false, "reason" : "Parametros invalidos" }');
+	}
+	
+	$data = parseJSON( $json );
+	
+	if( !( isset( $data -> id_compra_proveedor ) && isset( $data -> id_producto )  && isset( $data -> resultante )  && isset( $data -> desecho )  && isset( $data -> subproducto )    ) ){
+		Logger::log("Json invalido para iniciar el procesado de producto");
+		die('{"success": false , "reason": "Parametros invalidos." }');
+	}
+	
+	if(  $data -> id_compra_proveedor == null || $data -> id_producto  == null || $data -> resultante  == null || $data -> desecho  == null || $data -> subproducto  == null ){
+		Logger::log("Json invalido para crear un nuevo proceso de producto");
+		die('{"success": false , "reason": "Parametros invalidos." }');
+	}
+	
+	/*{
+	        "id_compra_proveedor":1,
+	        "id_producto":5,
+	        "resultante":10.12,
+	        "desecho":23.14,
+	        "subproducto":[
+	            {"id_producto":1,"id_compra_proveedor":2,"cantidad_procesada":10.45}
+	        ]
+	    }
+	    
+	    1.- Restar en inventario maestro a sus existencias : el deshecho + la suma de las cantidades procesadas de los subproductos
+	    2.- Sumar en IM a existencias_procesadas : 
+	            "id_compra_proveedor":1,
+	            "id_producto":5,
+	            "resultante":10.12,
+	    3.- Sumar a existencia y existencias procesadas en el inventario del subproducto
+	    
+	*/
+    
+    $inventario_maestro =  InventarioMaestroDAO::getByPK( $data -> id_producto, $data -> id_compra_proveedor );
+    
+    //  1.- Restar en inventario maestro a sus existencias : el deshecho + la suma de las cantidades procesadas de los subproductos
+    
+    $suma = 0;
+    
+    foreach( $data -> subproducto as $subproducto){
+        $suma += $subproducto -> cantidad_procesada;
+    }
+    
+    $inventario_maestro -> setExistencias( $inventario_maestro -> getExistencias() + $suma  );
+    
+    /*
+         2.- Sumar en IM a existencias_procesadas : 
+	            "id_compra_proveedor":1,
+	            "id_producto":5,
+	            "resultante":10.12,
+    */    
+    
+    $inventario_maestro -> setExistenciasProcesadas( $inventario_maestro -> getExistenciasProcesadas( ) + $data -> resultante );
+    
+    try{
+		InventarioMaestroDAO::save( $inventario_maestro );
+	}catch(Exception $e){
+		Logger::log("Error al editar producto en inventario maestro:" . $e);
+		DAO::transRollback();	
+		die( '{"success": false, "reason": "Error al editar producto en inventario maestro"}' );
+	}	
+    
+    //3.- Sumar a existencia y existencias procesadas en el inventario del subproducto
+    
+    foreach( $data -> subproducto as $subproducto){
+       
+        $inventario_maestro =  InventarioMaestroDAO::getByPK( $subproducto -> id_producto, $subproducto -> id_compra_proveedor );
+       
+        $inventario_maestro -> setExistenciasProcesadas( $inventario_maestro -> getExistenciasProcesadas( ) + $subproducto  -> cantidad_procesada );
+       
+       try{
+		    InventarioMaestroDAO::save( $inventario_maestro );
+	    }catch(Exception $e){
+		    Logger::log("Error  la guardar producto procesado" . $e);
+		    DAO::transRollback();	
+		    die( '{"success": false, "reason": "Error  la guardar producto procesado"}' );
+	    }	
+       
+    }
+    
+    DAO::transEnd();
+    
+    Logger::log("termiando proceso de lavar producto con exito!");
+	
+	printf('{"success":true}');
+	
+	return;
+
+}
+
 
 if(isset($args['action'])){
 	switch($args['action']){
@@ -493,7 +590,6 @@ if(isset($args['action'])){
             }
 
 	    	printf('{ "success": true, "hash" : "%s" , "datos": %s }',  md5($json), $json );
-
 
 	    break;
 
@@ -543,6 +639,20 @@ if(isset($args['action'])){
 		
 			terminarCargamentoCompra( $args['data'] );
 			
+		break;
+		
+		case 408://porocesar producto (lavar)
+		    
+		    if( !( isset( $args['data'] ) && $args['data'] != null ) )
+			{
+				Logger::log("No hay parametros para procesar el producto.");
+				die('{"success": false , "reason": "Parametros invalidos." }');
+			}
+		
+			//{"id_compra_proveedor":1,"id_producto":5,"resultante":10.12,"desecho":23.14,"subproducto":[{"id_producto":1,"id_compra_proveedor":2,"cantidad_procesada":10.45}]}
+		
+			insertarSubproducto( $args['data'] );
+		    
 		break;
 
 	    default:
