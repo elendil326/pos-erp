@@ -197,7 +197,8 @@ text-decoration: none;
 }
 
 #content {
-width: 940px;
+/*width: 940px;*/
+width: 1024px;
 margin: 10px auto 0 auto;
 }
 
@@ -462,10 +463,11 @@ float: left;
 position: relative;
 }
 
-#content .four-col {
-width: 300px;
+#content .ayuda {
+width: 150px;
 margin-right: 20px;
 float: left;
+padding-left: 10px;
 }
 
 #content .six-col {
@@ -481,7 +483,7 @@ float: left;
 }
 
 #content .eight-col {
-width: 620px;
+width: 810px;
 margin-right: 20px;
 float: left;
 }
@@ -592,45 +594,29 @@ background-image: url(/images/analytics-box.png);
 background-image: url(/images/content-box.png);
 }
 
-.sub #content .four-col.feature {
+.sub #content .ayuda {
 padding-bottom: 230px;
 background-repeat: no-repeat;
 position: relative;
 height: 100px;
 }
 
-.sub #content .four-col.feature.design {
-background-image: url(blueleft.jpg);
-background-position: 121px 00px;
-}
-
-.sub #content .four-col.feature.analytics {
-background-image: url(/images/analytics-large.png);
-background-position: 121px 75px;
-}
-
-.sub #content .four-col.feature.delivery {
-background-image: url(/images/delivery-large.png);
-background-position: 113px 74px;
-}
-
-.sub #content .four-col.feature.contact {
-background-image: url(/images/contact-large.png);
-background-position: 123px 60px;
-}
 
 
-.sub #content .four-col.feature h2 {
-font-size: 33px;
+.sub #content .ayuda h2 {
+border: 0px;
+margin: 0px;
+/*font-size: 33px;
 font-family: 'ff-din-web-1', 'ff-din-web-2', "Helvetica Neue", Arial, Helvetica, sans-serif;
 width: 180px;
 line-height: 36px;
 margin: -11px 0 14px -2px;
 letter-spacing: -1px;
 color: #ccc;
+*/
 }
 
-.sub #content .four-col.feature p {
+.sub #content .ayuda p {
 font-weight: 600;
 color: #777;
 padding-right: 20px;
@@ -644,7 +630,7 @@ background-color: rgba(255, 255, 255, 0.7);
 background: transparent;
 }
 
-.sub #content .feature img.shadow {
+.sub #content .ayuda img.shadow {
 position: absolute;
 right: 0px;
 top: 0;
@@ -714,7 +700,7 @@ margin-bottom: 10px;
 #content h4 {
 font-family: 'ff-din-web-1', 'ff-din-web-2', "Helvetica Neue", Arial, Helvetica, sans-serif;
 margin: 24px 0 0 0;
-background: #E5E8EB url(media/bg-code.png) no-repeat 0px 0px;
+background: white url(media/bg-code.png) no-repeat 45px 0px;
 color: #46596C;
 display: block;
 left: -120px;
@@ -899,7 +885,7 @@ line-height: 18px;
 }
 
 
-
+/*
 div.preview {
 background-color: #eee;
 padding: 20px 20px 0 20px;
@@ -983,3 +969,5 @@ display: block;
 margin: 0 0 0 0;
 padding: 8px 0 0 0;
 }
+
+*/

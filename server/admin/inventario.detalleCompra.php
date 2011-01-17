@@ -3,6 +3,8 @@
     require_once('model/inventario.dao.php');
     require_once('model/compra_proveedor.dao.php');
     require_once('model/inventario_maestro.dao.php');
+
+	require_once("controller/inventario.controller.php");
     
     if( !( isset($_REQUEST['producto']) && isset($_REQUEST['compra'])) ){
     	echo "<h1>Error</h1>Estos datos no existen.";
@@ -40,14 +42,34 @@
 	
 	function terminar(){
 		jQuery(document).trigger('close.facebox');
+		
+		//ver que voy a hacer con los restantes
+		w = jQuery("#movetoselector").val();
+		
+		restante = null;
+		
+		if( w == '-1'){
+			//descartalos
+			restante = null;
+			
+		}else{
+
+			restante = jQuery.JSON.decode(w);
+
+		}
+		
+
+		
 		jQuery("#loader").fadeIn('slow', function(){
+		
 			jQuery.ajax({
 				url: "../proxy.php",
 				data: { 
 					action : 407, 
 					data : jQuery.JSON.encode( {
-						id_producto: 		<?php echo $_REQUEST['producto']; ?>,
-						id_compra:			<?php echo $_REQUEST['compra']; ?>					
+						id_producto: 		 <?php echo $_REQUEST['producto']; ?>,
+						id_compra_proveedor: <?php echo $_REQUEST['compra']; ?>,
+						restante : 	restante
 					})
 				},
 				cache: false,
@@ -92,7 +114,7 @@
 			
 			?></td></tr>
 		<tr><td>Productor</td>					<td><?php echo $compra->getProductor();?></td></tr>
-		<tr><td>Folio</td>						<td><?php echo $compra->getFolio();?></td></tr>
+		<tr><td>Remision</td>						<td><?php echo $compra->getFolio();?></td></tr>
 		<tr><td>Arpillas de este producto</td>	<td><?php echo $compra->getArpillas();?></td></tr>
 		<tr><td>Merma por arpilla</td>			<td><?php echo $compra->getMermaPorArpilla();?></td></tr>
 		<tr><td>Promedio por arpilla</td>		<td><?php echo $compra->getPesoPorArpilla();?></td></tr>
@@ -143,6 +165,10 @@ if($inventario->getExistencias() != 0){
 	?>
 	<h2>Dar por terminado</h2>
 					Mover a <select id="movetoselector">
+					
+							<option value="-1">
+								Descartar restante
+							</option>
 					<?php
 					$foo = new InventarioMaestro();
 					$foo->setIdProducto( $producto->getIdProducto() );
@@ -155,13 +181,9 @@ if($inventario->getExistencias() != 0){
 						$compra = CompraProveedorDAO::getByPK	( $i->getIdCompraProveedor() );
 						$producto = InventarioDAO::getByPK		( $i->getIdProducto() );
 						
-						echo "<option value='{ \"id_compra_proveedor\" : " . $compra->getIdCompraProveedor() . ", ";
-						echo "\"descripcion\" : \"". $producto->getDescripcion() ."\", ";
-						echo "\"folio\" : \"". $compra->getFolio() ."\", ";
-						echo "\"id_producto\" : ". $producto->getIdProducto() ;
-
-						echo " }' >" ;
-						echo  $producto->getDescripcion() ." / ". $compra->getFolio() . "</option>";
+						?>
+						<option value='{ "id_compra_proveedor" : <?php echo $compra->getIdCompraProveedor(); ?>, "id_producto" : <?php echo $producto->getIdProducto(); ?> }'><?php echo $producto->getDescripcion(); ?> / <?php echo $compra->getFolio(); ?></option>
+						<?php
 					}	
 					?>				
 				</select>
@@ -205,7 +227,7 @@ if($inventario->getExistencias() != 0 && $producto->getTratamiento()){
 		
 		<tr>
 			<td colspan=2 align=left style="padding-top: 15px ">
-			El proceso ha resultado en otro producto:<br/>
+			*El proceso ha resultado en otro producto:<br/>
 			
 			
 			Cantidad:<input type="text" style="width: 50px" id="subprodqty">
@@ -213,14 +235,15 @@ if($inventario->getExistencias() != 0 && $producto->getTratamiento()){
 
 			Mover a:<select id="subprodselector">
 				<?php
-				$inventario = InventarioMaestroDAO::getAll();
+				//$inventario = InventarioMaestroDAO::getAll();
+				$inventario = listarInventarioMaestro(200, POS_SOLO_ACTIVOS);
 				
 			    foreach( $inventario as $i ){
 				    // tengo la compra
 				    // tengo el inventario maestro
 				    // tengo el inventario
-			    	$compra = CompraProveedorDAO::getByPK	( $i->getIdCompraProveedor() );
-			    	$producto = InventarioDAO::getByPK		( $i->getIdProducto() );
+			    	$compra = CompraProveedorDAO::getByPK	( $i['id_compra_proveedor'] );//->getIdCompraProveedor() );
+			    	$producto = InventarioDAO::getByPK		( $i['id_producto'] );//->getIdProducto() );
 			    	
 				    echo "<option value='{ \"id_compra_proveedor\" : " . $compra->getIdCompraProveedor() . ", ";
 					echo "\"descripcion\" : \"". $producto->getDescripcion() ."\", ";
@@ -290,8 +313,10 @@ if($inventario->getExistencias() != 0 && $producto->getTratamiento()){
 	}
 	
 	function doMath(){
+		jQuery("#procesada").val(jQuery("#procesada").val().replace(/^\s*|\s*$/g,''));
+		jQuery("#desecho").val(jQuery("#desecho").val().replace(/^\s*|\s*$/g,''));
 	
-		if( isNaN(jQuery("#procesada").val()) ){
+		if(jQuery("#procesada").val().length == 0 || isNaN(jQuery("#procesada").val()) ){
 			jQuery("#procesada").addClass("wrong");
 			jQuery("#procesada").removeClass("ok");
 		}else{
@@ -299,12 +324,12 @@ if($inventario->getExistencias() != 0 && $producto->getTratamiento()){
 			jQuery("#procesada").removeClass("wrong");		
 		}
 
-		if( isNaN(jQuery("#desecho").val()) ){
-			jQuery("#procesada").addClass("wrong");
-			jQuery("#procesada").removeClass("ok");
+		if( jQuery("#desecho").val().length == 0 || isNaN(jQuery("#desecho").val()) ){
+			jQuery("#desecho").addClass("wrong");
+			jQuery("#desecho").removeClass("ok");
 		}else{
-			jQuery("#procesada").addClass("ok");
-			jQuery("#procesada").removeClass("wrong");		
+			jQuery("#desecho").addClass("ok");
+			jQuery("#desecho").removeClass("wrong");		
 		}
 	
 		t = 0;
@@ -315,7 +340,12 @@ if($inventario->getExistencias() != 0 && $producto->getTratamiento()){
 		t += parseFloat( jQuery("#procesada").val() );
 		t += parseFloat( jQuery("#desecho").val() );
 		
-		jQuery("#total").val(parseFloat(t));
+		if(!isNaN(t)){
+			jQuery("#total").val(parseFloat(t));
+		}else{
+			jQuery("#total").val("");
+		}
+		
 	}
 
 

@@ -7,12 +7,19 @@ require_once("controller/sucursales.controller.php");
 require_once('model/actualizacion_de_precio.dao.php');
 require_once('model/compra_proveedor.dao.php');
 
+
+$iMaestro = listarInventarioMaestro(200, POS_SOLO_ACTIVOS) ;
+
 ?>
 
 
 
 <script>
 	jQuery("#MAIN_TITLE").html("Inventario Maestro");
+	help = "<h2>Invenario Maestro</h2>";
+	help += "El inventario maestro es donde se concentra la informacion sobre ";
+	help += "todos los proudcotos y camiones..";
+	jQuery("#ayuda").html(help);
 </script>
 
 
@@ -27,23 +34,32 @@ require_once('model/compra_proveedor.dao.php');
 $productos = InventarioDAO::getAll();
 
 echo "<h2>Productos</h2>";
-$header = array(
-	"id_producto" 		=> "ID Producto",
-	"descripcion" 		=> "Producto" );
-	
-$tabla = new Tabla( $header, $productos );
-$tabla->addOnClick("id_producto", "detalle_inventario");
-//$tabla->render();
-
-
-echo "<table style='width: 100%; font-size: 14px;'>";
+echo "<table border=0 style='width: 100%; font-size: 14px;'>";
 	echo "<tr>";
 	for($a = 0; $a < sizeof($productos); $a++){
+		
+		//buscar su precio sugerido actual
+		$act = new ActualizacionDePrecio();
+		$act->setIdProducto( $productos[$a]->getIdProducto() );
+		$res = ActualizacionDePrecioDAO::search($act, "fecha", "desc");
+		$lastOne = $res[0];
+		
+		//buscar todas las existencias
+		$totals = 0;
+		for($i = 0; $i < sizeof($iMaestro); $i++){
+			if($iMaestro[$i]['id_producto'] == $productos[$a]->getIdProducto()){
+				$totals +=  $iMaestro[$i]['existencias'];
+			}
+		
+		}
 		if($a % 5 == 0){
 			echo "</tr><tr>";
 		}
 		
-		echo "<td ><a href='inventario.php?action=detalle&id=". $productos[$a]->getIdProducto() ."'>" . $productos[$a]->getDescripcion() . "</a><br>$2.44</td>";
+		echo "<td ><a href='inventario.php?action=detalle&id=". $productos[$a]->getIdProducto() ."'>" . $productos[$a]->getDescripcion() . "</a><br>";
+		echo "<b>" . $totals ."</b>" .$productos[$a]->getEscala() . "s<br/>";
+		echo "" . moneyFormat($lastOne->getPrecioVenta()) ;
+		echo "</td>";
 	}
 	echo "</tr>";
 echo "</table>";
@@ -73,7 +89,16 @@ function toDateS( $d ){
 	return $bar[0];
 	 
 }
-$iMaestro = listarInventarioMaestro(100, POS_SOLO_ACTIVOS) ;
+
+function tachar($s){
+	return "<strike>".$s."</strike>";
+}
+
+
+
+
+
+
 // @TODO Existencias arpillas
 echo "<h2>Embarques activos de proveedores</h2>";
 $header = array(
@@ -118,6 +143,7 @@ $tabla->addOnClick("folio", "d", true);
 $tabla->addColRender( "existencias", "toUnit" );
 $tabla->addColRender( "existencias_procesadas", "toUnit" );
 $tabla->addColRender( "fecha", "toDateS" );
+$tabla->addColRender( "folio", "tachar" );
 $tabla->render();
 ?>
 

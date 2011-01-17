@@ -280,17 +280,19 @@ require_once('model/sucursal.dao.php');
 			        response = jQuery.parseJSON(data);
 			    }catch(e){
            			jQuery("#loader").hide();
+					window.scroll(0,0);           			
                     return jQuery("#ajax_failure").html("Error en el servidor. Intente de nuevo.").show();			    
 			    }
 
                 if(response.success == false){
            			jQuery("#loader").hide();
+					window.scroll(0,0);           			
                     return jQuery("#ajax_failure").html(response.reason).show();
                 }
 
 
-                reason = "El cargamento se ha registrado con exito.";
-                window.location = 'inventario.php?action=lista&success=true&reason=' + reason;
+                reason = "El cargamento se ha registrado con exito";
+                window.location = 'inventario.php?action=maestro&success=true&reason=' + reason;
 	      }
 	    });
    	
