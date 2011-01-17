@@ -526,17 +526,17 @@ function terminarCargamentoCompra( $json = null ){
 	
 	$data = parseJSON( $json );
 	
-	if( !( isset( $data -> id_compra ) && isset( $data -> id_producto ) ) ){
+	if( !( isset( $data -> id_compra_proveedor ) && isset( $data -> id_producto ) ) ){
 		Logger::log("Json invalido para crear un nuevo proceso de producto");
 		die('{"success": false , "reason": "Parametros invalidos." }');
 	}
 	
-	if( $data -> id_compra == null ||  $data -> id_producto == null ){
+	if( $data -> id_compra_proveedor == null ||  $data -> id_producto == null ){
 		Logger::log("Json invalido para crear un nuevo proceso de producto");
 		die('{"success": false , "reason": "Parametros invalidos." }');
 	}
 	
-	$inventario_maestro =  InventarioMaestroDAO::getByPK( $data -> id_producto, $data -> id_compra );			
+	$inventario_maestro =  InventarioMaestroDAO::getByPK( $data -> id_producto, $data -> id_compra_proveedor );			
 		
 	DAO::transBegin();		
 	
@@ -557,7 +557,7 @@ function terminarCargamentoCompra( $json = null ){
 	
 	if( $data -> restante != null ){
 	
-	    $inventario_maestro =  InventarioMaestroDAO::getByPK( $data -> restante  -> id_producto,$data -> restante  -> id_compra );	
+	    $inventario_maestro =  InventarioMaestroDAO::getByPK( $data -> restante  -> id_producto,$data -> restante  -> id_compra_proveedor );	
 	    $inventario_maestro -> setExistencias( $inventario_maestro -> getExistencias( ) + $existencias  );
 	    $inventario_maestro -> setExistenciasProcesadas( $inventario_maestro -> getExistenciasProcesadas() + $existencias_procesadas );
 	    
