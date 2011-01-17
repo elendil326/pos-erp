@@ -428,7 +428,9 @@ function procesarProducto( $json = null ){
         $suma += $subproducto -> cantidad_procesada;
     }
     
-    $inventario_maestro -> setExistencias( $inventario_maestro -> getExistencias() + $suma  );
+    $suma +=  $subproducto -> desecho;
+    
+    $inventario_maestro -> setExistencias( $inventario_maestro -> getExistencias() - $suma );
     
     /*
          2.- Sumar en IM a existencias_procesadas : 
