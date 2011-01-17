@@ -100,7 +100,10 @@ function detalleProductoSucursal( $args ){
   * Por default n es 50.
   * 
   * */
-function listarInventarioMaestro( $n = 50 )
+define("POS_TODOS", 	0);
+define("POS_SOLO_VACIOS", 	1);
+define("POS_SOLO_ACTIVOS", 	2);
+function listarInventarioMaestro( $n = 50, $show = POS_TODOS )
 {
 	
 	//meter el inventario aqui, para no estar haciendo querys
@@ -126,6 +129,14 @@ function listarInventarioMaestro( $n = 50 )
 
 			$iM = InventarioMaestroDAO::getByPK( $detalle->getIdProducto(), $compra->getIdCompraProveedor() );
 
+			
+
+			if($iM->getExistencias() == 0 ){
+				if($show == POS_SOLO_ACTIVOS)continue;
+			}else{
+				if($show == POS_SOLO_VACIOS)continue;			
+			}
+
 			//buscar la descripcion del producto
 			foreach($inventario as $i){
 				if($i->getIdProducto() == $detalle->getIdProducto()){
@@ -149,7 +160,7 @@ function listarInventarioMaestro( $n = 50 )
 			
 			$fecha = explode( " ", $bar['fecha']);
 			$bar['fecha'] = $fecha[0];
-						
+
 			array_push( $registro,  $bar );
 		}
 

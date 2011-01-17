@@ -100,30 +100,37 @@
 	</table>
 
 		<?php
+		if($inventario->getExistencias () == 0){
+			?>
+				<div style="font-size: 20px;" align="center">
+					<h1>Embarque agotado</h2>
+				</div>
+			<?php
 	
-		if($producto->getTratamiento()){
-		
-			/* PRODUCTO CON TRATAMIENTO */
-			?>
-			<div style="font-size: 20px;" align="center">
-				<?php printf("<b>%6.2f</b> %ss", ( $inventario->getExistencias () - $inventario->getExistenciasProcesadas ()), $producto->getEscala() ); ?> sin procesar
-			</div>
-		
-			<div style="font-size: 20px;" align="center">
-				<?php printf("<b>%6.2f</b> %ss", $inventario->getExistenciasProcesadas (), $producto->getEscala() ); ?> procesados
-			</div>
-			
-			<?php
 		}else{
+			if($producto->getTratamiento()){
 		
-			/* PRODUCTO SIN TRATAMIENTO */
-			?>
-			<div style="font-size: 20px;" align="center">
-				<?php printf("<b>%6.2f</b> %ss", ( $inventario->getExistencias () ), $producto->getEscala() ); ?> en existencia.
-			</div>
-			<?php
+				/* PRODUCTO CON TRATAMIENTO */
+				?>
+				<div style="font-size: 20px;" align="center">
+					<?php printf("<b>%6.2f</b> %ss", ( $inventario->getExistencias () - $inventario->getExistenciasProcesadas ()), $producto->getEscala() ); ?> sin procesar
+				</div>
+		
+				<div style="font-size: 20px;" align="center">
+					<?php printf("<b>%6.2f</b> %ss", $inventario->getExistenciasProcesadas (), $producto->getEscala() ); ?> procesados
+				</div>
+			
+				<?php
+			}else{
+		
+				/* PRODUCTO SIN TRATAMIENTO */
+				?>
+				<div style="font-size: 20px;" align="center">
+					<?php printf("<b>%6.2f</b> %ss", ( $inventario->getExistencias () ), $producto->getEscala() ); ?> en existencia.
+				</div>
+				<?php
+			}
 		}
-
 
 
 		?>		
@@ -132,16 +139,44 @@
 
 
 
+if($inventario->getExistencias() != 0){
+	?>
+	<h2>Dar por terminado</h2>
+					Mover a <select id="movetoselector">
+					<?php
+					$foo = new InventarioMaestro();
+					$foo->setIdProducto( $producto->getIdProducto() );
+					$moveto = InventarioMaestroDAO::search( $foo );
+				
+					foreach( $moveto as $i ){
+						// tengo la compra
+						// tengo el inventario maestro
+						// tengo el inventario
+						$compra = CompraProveedorDAO::getByPK	( $i->getIdCompraProveedor() );
+						$producto = InventarioDAO::getByPK		( $i->getIdProducto() );
+						
+						echo "<option value='{ \"id_compra_proveedor\" : " . $compra->getIdCompraProveedor() . ", ";
+						echo "\"descripcion\" : \"". $producto->getDescripcion() ."\", ";
+						echo "\"folio\" : \"". $compra->getFolio() ."\", ";
+						echo "\"id_producto\" : ". $producto->getIdProducto() ;
 
-?>
-<h2>Dar por terminado</h2>
-		
-	<h4 align="center">
-		<input type='button' value="Dar por terinado" onClick="terminarProducto()">
-	</h4>
+						echo " }' >" ;
+						echo  $producto->getDescripcion() ." / ". $compra->getFolio() . "</option>";
+					}	
+					?>				
+				</select>
+		<h4 align="center">
+			<input type='button' value="Dar por terinado" onClick="terminarProducto()"><img src="../media/loader.gif" id="loader" style="display: none;">
+		</h4>
 
-<?php
-if($producto->getTratamiento()){
+	<?php
+}
+
+
+
+
+
+if($inventario->getExistencias() != 0 && $producto->getTratamiento()){
 	/* PRODUCTO CON TRATAMIENTO */
 	?>		
 	
@@ -324,6 +359,7 @@ if($producto->getTratamiento()){
 				
 						jQuery("#loader2").fadeOut('slow', function(){
 							jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+							window.scroll(0,0);
 						});                
 						return;                    
 					}
@@ -332,6 +368,7 @@ if($producto->getTratamiento()){
 					if(response.success === false){
 						jQuery("#loader2").fadeOut('slow', function(){
 							jQuery("#ajax_failure").html(response.reason).show();
+							window.scroll(0,0);							
 						});                
 						return ;
 					}

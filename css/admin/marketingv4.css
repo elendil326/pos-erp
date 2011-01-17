@@ -161,6 +161,13 @@ height: 294px;
 
 }
 
+#header.inventario{
+	background: #fff url(media/banners/2474716389_b6433e764f_b.jpg) no-repeat 50% -415px  ;
+	/* http://www.flickr.com/photos/lnewman333/2474716389/ */
+
+}
+
+
 #header p {
 margin: 0;
 }

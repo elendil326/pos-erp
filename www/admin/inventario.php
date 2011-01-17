@@ -36,7 +36,7 @@
 <body class="sub">
   <div id="wrapper">
 
-    <div id="header" class="clientes" >
+    <div id="header" class="inventario" >
       
       <div id="top-bar">
         
