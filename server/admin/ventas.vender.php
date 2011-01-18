@@ -5,6 +5,9 @@
 	require_once('controller/clientes.controller.php');
 	require_once('model/cliente.dao.php');
 
+
+
+	$iMaestro = listarInventarioMaestro(200, POS_SOLO_ACTIVOS) ;
 ?>
 
 <script>
@@ -148,7 +151,7 @@ function toDateS( $d ){
 	 
 }
 
-$iMaestro = listarInventarioMaestro() ;
+
 
 echo "<script>";
 echo " var inventario_maestro = [";
@@ -194,3 +197,7 @@ $tabla->render();
 
     </div>
     
+    <h4 align="center" id="do-sell">
+    	<input type="button" value="Vender">
+    	<img src="../media/loader.gif" id="loader" style="display: none;">
+    </h4>

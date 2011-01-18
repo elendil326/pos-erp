@@ -199,7 +199,7 @@ text-decoration: none;
 #content {
 /*width: 940px;*/
 width: 1024px;
-margin: 10px auto 0 auto;
+margin: 5px auto 0 auto;
 }
 
 h1 {
@@ -464,10 +464,12 @@ position: relative;
 }
 
 #content .ayuda {
-width: 150px;
-margin-right: 20px;
+font-size: 12px;
+width: 100px;
+margin-right: 10px;
 float: left;
 padding-left: 10px;
+padding-right: 5px;
 }
 
 #content .six-col {
