@@ -71,6 +71,9 @@ function login( $u, $p )
 
 
     if($grpu->getIdGrupo() == 1){
+        if( $user->getIdSucursal()  == null){
+            Logger::log("Este administrador no tiene vinculada ninguna sucursal !", 2);
+        }
         $_SESSION['sucursal'] = $user->getIdSucursal();
     }
 
