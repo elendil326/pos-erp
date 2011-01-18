@@ -70,7 +70,9 @@ function login( $u, $p )
 	$_SESSION['userid'] =  $user->getIdUsuario();
 
 
-    
+    if($grpu->getIdGrupo() == 1){
+        $_SESSION['sucursal'] = $usr->getIdSucursal();
+    }
 
     if($grpu->getIdGrupo() == 3){
 
@@ -476,7 +478,7 @@ function login_controller_dispatch($args){
 			    	$p = $args['p'];
 			    }
 			    
-		        login($u, $p);
+		        loginlogin($u, $p);
 			break;
 
 
