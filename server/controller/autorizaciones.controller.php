@@ -820,7 +820,7 @@ function cancelarAutorizacion($args){
 	$autorizacion->setEstado(5);
 	try{
 		$result=AutorizacionDAO::save($autorizacion);
-		echo '{"success"	:	true	,	"resultado"	:	"'.$result.'"}';
+		echo '{"success"	:	true	}';
 	}catch(Exception $e)
 	{
 		Logger::log($e);
