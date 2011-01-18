@@ -442,7 +442,7 @@ function listarVentaCliente( $id_cliente, $tipo_venta = null ){
  *  @TODO: Estea debe llamarse abonarAVenta !!
  *
  **/
-function abonarCompra( $args ){
+function abonarVenta( $args ){
 
     if(!isset($args['data']))
     {
@@ -474,37 +474,54 @@ function abonarCompra( $args ){
         die('{"success": false, "reason": "No puede abonar un monto negativo." }');
 	}
 	
+	if( !isset( $data -> tipo_pago ) ){
+	    Logger::log("No se envio el tipo de pago");
+        die('{"success": false, "reason": "Parametros invalidos. }');
+	}
 
-	if($_SESSION['grupo'] <= 1){
-	 	if(!( isset($data->sucursal) && isset($data->userid) )){
+	if( $_SESSION['grupo'] <= 1 ){
+	 	if( !( isset( $data->sucursal )  ) ){
 	 		die('{"success": false, "reason": "Faltan parametros." }');
 	 	}
 	 	// TODO:validar esta sucursal y este usuario
 	 	$sid = $data->sucursal;
-	 	$uid = $data->userid;
 	}else{
 		$sid = $_SESSION['sucursal'];
-		$uid = $_SESSION['userid'];
 	}
 
     $pagosVenta = new PagosVenta();
-    $pagosVenta->setIdVenta( $data->id_venta );
-    $pagosVenta->setIdSucursal( $sid );
-    $pagosVenta->setIdUsuario ( $uid );
-    $pagosVenta->setMonto( $data->monto );
-
+    $pagosVenta -> setIdVenta( $data -> id_venta );
+    $pagosVenta -> setIdSucursal( $sid );
+    $pagosVenta -> setIdUsuario ( $_SESSION['userid'] );
+    $pagosVenta -> setMonto( $data -> monto );
+    
+    switch( $data -> tipo_pago ){
+	    case "efectivo" :
+	        $pagosVenta -> setTipoPago( $data -> tipo_pago );
+	    break;
+	    case "cheque" :
+	        $pagosVenta -> setTipoPago( $data -> tipo_pago );
+	    break;
+	    case "targeta" :
+	        $pagosVenta -> setTipoPago( $data -> tipo_pago );
+	    break;
+	    default:
+	        Logger::log("El tipo de pago no es compatible");
+            die('{"success": false, "reason": "Parametros invalidos. }');
+	}
+    
 	DAO::transBegin();
 
     try{
     
-		PagosVentaDAO::save($pagosVenta);
+		PagosVentaDAO::save( $pagosVenta );
     	//ya que se ingreso modificamos lo pagado a al venta
     	$venta = VentasDAOBase::getByPK( $data->id_venta );
 	    $venta->setPagado( $venta->getPagado() +  $data->monto );
-		VentasDAOBase::save($venta);
+		VentasDAOBase::save( $venta );
 	    
     }catch(Exception $e){
-        Logger::log("Error al intentar guardar el abono "  . $e);
+        Logger::log("Error al intentar guardar el abono : "  . $e);
         DAO::transRollback();
         die( '{"success": false, "reason": "Error, porfavor intente de nuevo." }' );
     }
@@ -512,6 +529,8 @@ function abonarCompra( $args ){
    
 	DAO::transEnd();
     Logger::log("Abono exitoso a la venta " . $data->id_venta);
+    printf( '{ "success": true, }' );
+    
 }
 
 
@@ -783,7 +802,7 @@ if(isset($args['action'])){
 
 	    case 305:
 	        //agrega un pago a una venta
-	        abonarCompra( $args );
+	        abonarVenta( $args );
 	    break;
 
 	    case 306:
