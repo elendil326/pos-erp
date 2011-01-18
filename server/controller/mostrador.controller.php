@@ -677,7 +677,7 @@ function venderAdmin( $args ){
 		   $inventario_maestro-> setExistenciasProcesadas( $inventario_maestro-> getExistenciasProcesadas() - $producto -> cantidad ); 
 		}else{		
 		    //requiere producto sin procesar
-		  $inventario_maestro -> setExistencias( $inventario_maestro -> getExistencias() - $producto -> cantidad
+		  $inventario_maestro -> setExistencias( $inventario_maestro -> getExistencias() - $producto -> cantidad);
 		}					
 		try{
             InventarioMaestroDAO::save( $inventario_maestro );

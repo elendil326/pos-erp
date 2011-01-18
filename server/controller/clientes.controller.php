@@ -479,19 +479,14 @@ function abonarVenta( $args ){
         die('{"success": false, "reason": "Parametros invalidos. }');
 	}
 
-	if( $_SESSION['grupo'] <= 1 ){
-	 	if( !( isset( $data->sucursal )  ) ){
-	 		die('{"success": false, "reason": "Faltan parametros." }');
-	 	}
-	 	// TODO:validar esta sucursal y este usuario
-	 	$sid = $data->sucursal;
-	}else{
-		$sid = $_SESSION['sucursal'];
-	}
+    if( !( $venta = VentasDAOBase::getByPK( $data->id_venta ) ) ){
+        Logger::log("No se tieen registro de la venta : " . $data -> id_venta  );
+        die('{"success": false, "reason": "No se tiene registro de la venta ' . $data -> id_venta . '. }');
+    }
 
     $pagosVenta = new PagosVenta();
     $pagosVenta -> setIdVenta( $data -> id_venta );
-    $pagosVenta -> setIdSucursal( $sid );
+    $pagosVenta -> setIdSucursal( $_SESSION['sucursal']);
     $pagosVenta -> setIdUsuario ( $_SESSION['userid'] );
     $pagosVenta -> setMonto( $data -> monto );
     
@@ -512,12 +507,15 @@ function abonarVenta( $args ){
     
 	DAO::transBegin();
 
-    try{
-    
+    try{    
 		PagosVentaDAO::save( $pagosVenta );
     	//ya que se ingreso modificamos lo pagado a al venta
-    	$venta = VentasDAOBase::getByPK( $data->id_venta );
 	    $venta->setPagado( $venta->getPagado() +  $data->monto );
+	    
+	    if( $venta -> getPagado() >= $venta -> getTotal() ){
+	        $venta -> setLiquidada( 1 );
+	    }
+	    
 		VentasDAOBase::save( $venta );
 	    
     }catch(Exception $e){
@@ -526,6 +524,7 @@ function abonarVenta( $args ){
         die( '{"success": false, "reason": "Error, porfavor intente de nuevo." }' );
     }
 
+    
    
 	DAO::transEnd();
     Logger::log("Abono exitoso a la venta " . $data->id_venta);
