@@ -37,6 +37,9 @@ class DetalleVenta extends VO
 			if( isset($data['precio']) ){
 				$this->precio = $data['precio'];
 			}
+			if( isset($data['precio_procesada']) ){
+				$this->precio_procesada = $data['precio_procesada'];
+			}
 		}
 	}
 
@@ -54,7 +57,8 @@ class DetalleVenta extends VO
 			"id_producto" => $this->id_producto,
 			"cantidad" => $this->cantidad,
 			"cantidad_procesada" => $this->cantidad_procesada,
-			"precio" => $this->precio
+			"precio" => $this->precio,
+			"precio_procesada" => $this->precio_procesada
 		); 
 	return json_encode($vec); 
 	}
@@ -105,6 +109,15 @@ class DetalleVenta extends VO
 	  * @var float
 	  */
 	protected $precio;
+
+	/**
+	  * precio_procesada
+	  * 
+	  * el precio de los articulos procesados en esta venta<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $precio_procesada;
 
 	/**
 	  * getIdVenta
@@ -228,6 +241,30 @@ class DetalleVenta extends VO
 	final public function setPrecio( $precio )
 	{
 		$this->precio = $precio;
+	}
+
+	/**
+	  * getPrecioProcesada
+	  * 
+	  * Get the <i>precio_procesada</i> property for this object. Donde <i>precio_procesada</i> es el precio de los articulos procesados en esta venta
+	  * @return float
+	  */
+	final public function getPrecioProcesada()
+	{
+		return $this->precio_procesada;
+	}
+
+	/**
+	  * setPrecioProcesada( $precio_procesada )
+	  * 
+	  * Set the <i>precio_procesada</i> property for this object. Donde <i>precio_procesada</i> es el precio de los articulos procesados en esta venta.
+	  * Una validacion basica se hara aqui para comprobar que <i>precio_procesada</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setPrecioProcesada( $precio_procesada )
+	{
+		$this->precio_procesada = $precio_procesada;
 	}
 
 }

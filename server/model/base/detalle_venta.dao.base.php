@@ -143,6 +143,11 @@ abstract class DetalleVentaDAOBase extends DAO
 			array_push( $val, $detalle_venta->getPrecio() );
 		}
 
+		if( $detalle_venta->getPrecioProcesada() != NULL){
+			$sql .= " precio_procesada = ? AND";
+			array_push( $val, $detalle_venta->getPrecioProcesada() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -172,11 +177,12 @@ abstract class DetalleVentaDAOBase extends DAO
 	  **/
 	private static final function update( $detalle_venta )
 	{
-		$sql = "UPDATE detalle_venta SET  cantidad = ?, cantidad_procesada = ?, precio = ? WHERE  id_venta = ? AND id_producto = ?;";
+		$sql = "UPDATE detalle_venta SET  cantidad = ?, cantidad_procesada = ?, precio = ?, precio_procesada = ? WHERE  id_venta = ? AND id_producto = ?;";
 		$params = array( 
 			$detalle_venta->getCantidad(), 
 			$detalle_venta->getCantidadProcesada(), 
 			$detalle_venta->getPrecio(), 
+			$detalle_venta->getPrecioProcesada(), 
 			$detalle_venta->getIdVenta(),$detalle_venta->getIdProducto(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -200,13 +206,14 @@ abstract class DetalleVentaDAOBase extends DAO
 	  **/
 	private static final function create( &$detalle_venta )
 	{
-		$sql = "INSERT INTO detalle_venta ( id_venta, id_producto, cantidad, cantidad_procesada, precio ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO detalle_venta ( id_venta, id_producto, cantidad, cantidad_procesada, precio, precio_procesada ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$detalle_venta->getIdVenta(), 
 			$detalle_venta->getIdProducto(), 
 			$detalle_venta->getCantidad(), 
 			$detalle_venta->getCantidadProcesada(), 
 			$detalle_venta->getPrecio(), 
+			$detalle_venta->getPrecioProcesada(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -305,6 +312,17 @@ abstract class DetalleVentaDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " precio = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $detalle_ventaA->getPrecioProcesada()) != NULL) & ( ($b = $detalle_ventaB->getPrecioProcesada()) != NULL) ){
+				$sql .= " precio_procesada >= ? AND precio_procesada <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " precio_procesada = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

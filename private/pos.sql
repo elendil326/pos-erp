@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.5
+-- version 3.3.7
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 17-01-2011 a las 22:45:17
+-- Tiempo de generación: 18-01-2011 a las 12:18:55
 -- Versión del servidor: 5.0.51
 -- Versión de PHP: 5.3.3-0.dotdeb.1
 
@@ -222,6 +222,7 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
   `cantidad` float NOT NULL COMMENT 'cantidad que se vendio',
   `cantidad_procesada` float NOT NULL,
   `precio` float NOT NULL COMMENT 'precio al que se vendio',
+  `precio_procesada` float NOT NULL COMMENT 'el precio de los articulos procesados en esta venta',
   PRIMARY KEY  (`id_venta`,`id_producto`),
   KEY `detalle_venta_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

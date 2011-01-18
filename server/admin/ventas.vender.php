@@ -117,7 +117,7 @@
 			html += "<tr><td>" + 	foo[0].innerHTML +"</td>";
 			html += "<td>" + 		foo[1].innerHTML +"</td>";
 			html += "<td><input type='text' value='"+ carrito[a].qty +"'></td>";
-			html += "<td><input type='text'>"  +"</td>";			
+			html += "<td><input type='text' >"  +"</td>";			
 			
 			html += "</tr>";
 			
