@@ -188,6 +188,11 @@ abstract class VentasDAOBase extends DAO
 			array_push( $val, $ventas->getIp() );
 		}
 
+		if( $ventas->getLiquidada() != NULL){
+			$sql .= " liquidada = ? AND";
+			array_push( $val, $ventas->getLiquidada() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -217,7 +222,7 @@ abstract class VentasDAOBase extends DAO
 	  **/
 	private static final function update( $ventas )
 	{
-		$sql = "UPDATE ventas SET  id_cliente = ?, tipo_venta = ?, tipo_pago = ?, fecha = ?, subtotal = ?, iva = ?, descuento = ?, total = ?, id_sucursal = ?, id_usuario = ?, pagado = ?, cancelada = ?, ip = ? WHERE  id_venta = ?;";
+		$sql = "UPDATE ventas SET  id_cliente = ?, tipo_venta = ?, tipo_pago = ?, fecha = ?, subtotal = ?, iva = ?, descuento = ?, total = ?, id_sucursal = ?, id_usuario = ?, pagado = ?, cancelada = ?, ip = ?, liquidada = ? WHERE  id_venta = ?;";
 		$params = array( 
 			$ventas->getIdCliente(), 
 			$ventas->getTipoVenta(), 
@@ -232,6 +237,7 @@ abstract class VentasDAOBase extends DAO
 			$ventas->getPagado(), 
 			$ventas->getCancelada(), 
 			$ventas->getIp(), 
+			$ventas->getLiquidada(), 
 			$ventas->getIdVenta(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -255,7 +261,7 @@ abstract class VentasDAOBase extends DAO
 	  **/
 	private static final function create( &$ventas )
 	{
-		$sql = "INSERT INTO ventas ( id_venta, id_cliente, tipo_venta, tipo_pago, fecha, subtotal, iva, descuento, total, id_sucursal, id_usuario, pagado, cancelada, ip ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO ventas ( id_venta, id_cliente, tipo_venta, tipo_pago, fecha, subtotal, iva, descuento, total, id_sucursal, id_usuario, pagado, cancelada, ip, liquidada ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$ventas->getIdVenta(), 
 			$ventas->getIdCliente(), 
@@ -271,6 +277,7 @@ abstract class VentasDAOBase extends DAO
 			$ventas->getPagado(), 
 			$ventas->getCancelada(), 
 			$ventas->getIp(), 
+			$ventas->getLiquidada(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -468,6 +475,17 @@ abstract class VentasDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " ip = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $ventasA->getLiquidada()) != NULL) & ( ($b = $ventasB->getLiquidada()) != NULL) ){
+				$sql .= " liquidada >= ? AND liquidada <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " liquidada = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

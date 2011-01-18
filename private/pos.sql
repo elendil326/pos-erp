@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 18-01-2011 a las 12:18:55
+-- Tiempo de generación: 18-01-2011 a las 12:40:05
 -- Versión del servidor: 5.0.51
 -- Versión de PHP: 5.3.3-0.dotdeb.1
 
@@ -500,6 +500,7 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   `pagado` float NOT NULL default '0' COMMENT 'porcentaje pagado de esta venta',
   `cancelada` tinyint(1) NOT NULL default '0' COMMENT 'verdadero si esta venta ha sido cancelada, falso si no',
   `ip` varchar(16) collate utf8_unicode_ci NOT NULL default '0.0.0.0' COMMENT 'ip de donde provino esta compra',
+  `liquidada` tinyint(1) NOT NULL default '0' COMMENT 'Verdadero si esta venta ha sido liquidada, falso si hay un saldo pendiente',
   PRIMARY KEY  (`id_venta`),
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`id_sucursal`),

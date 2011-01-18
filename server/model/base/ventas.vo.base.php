@@ -64,6 +64,9 @@ class Ventas extends VO
 			if( isset($data['ip']) ){
 				$this->ip = $data['ip'];
 			}
+			if( isset($data['liquidada']) ){
+				$this->liquidada = $data['liquidada'];
+			}
 		}
 	}
 
@@ -90,7 +93,8 @@ class Ventas extends VO
 			"id_usuario" => $this->id_usuario,
 			"pagado" => $this->pagado,
 			"cancelada" => $this->cancelada,
-			"ip" => $this->ip
+			"ip" => $this->ip,
+			"liquidada" => $this->liquidada
 		); 
 	return json_encode($vec); 
 	}
@@ -222,6 +226,15 @@ class Ventas extends VO
 	  * @var varchar(16)
 	  */
 	protected $ip;
+
+	/**
+	  * liquidada
+	  * 
+	  * Verdadero si esta venta ha sido liquidada, falso si hay un saldo pendiente<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $liquidada;
 
 	/**
 	  * getIdVenta
@@ -561,6 +574,30 @@ class Ventas extends VO
 	final public function setIp( $ip )
 	{
 		$this->ip = $ip;
+	}
+
+	/**
+	  * getLiquidada
+	  * 
+	  * Get the <i>liquidada</i> property for this object. Donde <i>liquidada</i> es Verdadero si esta venta ha sido liquidada, falso si hay un saldo pendiente
+	  * @return tinyint(1)
+	  */
+	final public function getLiquidada()
+	{
+		return $this->liquidada;
+	}
+
+	/**
+	  * setLiquidada( $liquidada )
+	  * 
+	  * Set the <i>liquidada</i> property for this object. Donde <i>liquidada</i> es Verdadero si esta venta ha sido liquidada, falso si hay un saldo pendiente.
+	  * Una validacion basica se hara aqui para comprobar que <i>liquidada</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setLiquidada( $liquidada )
+	{
+		$this->liquidada = $liquidada;
 	}
 
 }
