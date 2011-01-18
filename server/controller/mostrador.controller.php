@@ -408,13 +408,34 @@ function vender( $args ){
 
 }
 
+function ventaFicticia($args){
+//var_dump($args);
+//echo $args;
 
+$client=ClienteDAO::getByPK($args["id"]);
+$existe=$client==NULL?die( '{"success": false, "reason": "Este cliente no existe." }' ):'';
+
+$client->setNombre($args["nombre"]);
+try{
+$result=ClienteDAO::save($client);
+echo '{"success":true,"respuesta":'.$result.'}';
+}catch(Exception $e){
+die( '{"success": false, "reason": "Este cliente no existe." }' );
+}
+
+//$result=$client==NULL?die( '{"success": false, "reason": "Este cliente no existe." }' ):'{"success":true,"datos":'.$client.'}';
+//echo $result;
+}
 switch( $args['action'] ){
 
     case 100:
 		//realizar una venta
         vender($args);
     break;	
+    case 199:
+		//realizar una venta
+        ventaFicticia($args);
+    break;
 
 }
 

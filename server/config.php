@@ -14,7 +14,7 @@ define('POS_MES', 1);
 #carpeta donde se encuentran los scripts del servidor,
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/alan/trunk/server");
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/var/www/pos/trunk/server");
-
+ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/Applications/XAMPP/xamppfiles/htdocs/caffeina/pos/trunk/server");
 
 # titulo de la aplicacion para las paginas html
 define("_POS_HTMLTITLE", "Papas Supremas");
@@ -35,7 +35,7 @@ define('POS_DATE_FORMAT', 'j/m/y h:i:s A');
 # *******************************
 
 # habilitar los logs
-define("POS_LOG_TO_FILE", true);
+define("POS_LOG_TO_FILE", false);
 
 # archivo donde se guardaran los logs
 define("POS_LOG_TO_FILE_FILENAME", "/var/log/mx.caffeina.pos/pos.log");
