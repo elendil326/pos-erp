@@ -813,16 +813,22 @@ function respuestaAutorizacionLimiteCredito( $args ){
     }
 
 }
+	/**Cancelar autorizacion.
+	  *
+	  * Este metodo cambia el estado actual de la autorizacion cuyo id se pasa como argumento. Si dicha autorizacion no
+	  * existe se regresara success false en JSON. Si la autorizacion existe se cambiara el estado a 5 y se regresara 
+	  * success true en JSON.
+	  *
+	  * @param int(11) id_autorizacion
+	  * @return void
+	  **/
 
 function cancelarAutorizacion($args){
-	$autorizacion=AutorizacionDAO::getByPK($args["id_autorizacion"]);
+	$autorizacion=AutorizacionDAO::getByPK($args);
 	$existe=$autorizacion==NULL?die('{"success"	:	false	,	"reason"	:	"No existe esa autorizacion"}'):"";
 	$autorizacion->setEstado(5);
-	try{
-		$result=AutorizacionDAO::save($autorizacion);
-		echo '{"success"	:	true	}';
-	}catch(Exception $e)
-	{
+	try{	$result=AutorizacionDAO::save($autorizacion);	echo '{"success"	:	true	}';
+	}catch(Exception $e){	
 		Logger::log($e);
 		die('{"success"	:	false	,	"reason"	:	"No se realizo el cambio de estado, intente de nuevo."}');
 	}
@@ -1062,7 +1068,7 @@ if( isset( $args['action'] ) ){
         break;
         
         case 219://cancelar autorizacion, cambiar a estado 5
-        	cancelarAutorizacion($args);
+        	cancelarAutorizacion($args["id_autorizacion"]);
         
         break;
         
