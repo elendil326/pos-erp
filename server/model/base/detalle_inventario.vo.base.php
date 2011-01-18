@@ -37,8 +37,8 @@ class DetalleInventario extends VO
 			if( isset($data['existencias']) ){
 				$this->existencias = $data['existencias'];
 			}
-			if( isset($data['exitencias_procesadas']) ){
-				$this->exitencias_procesadas = $data['exitencias_procesadas'];
+			if( isset($data['existencias_procesadas']) ){
+				$this->existencias_procesadas = $data['existencias_procesadas'];
 			}
 		}
 	}
@@ -58,7 +58,7 @@ class DetalleInventario extends VO
 			"precio_venta" => $this->precio_venta,
 			"min" => $this->min,
 			"existencias" => $this->existencias,
-			"exitencias_procesadas" => $this->exitencias_procesadas
+			"existencias_procesadas" => $this->existencias_procesadas
 		); 
 	return json_encode($vec); 
 	}
@@ -111,13 +111,13 @@ class DetalleInventario extends VO
 	protected $existencias;
 
 	/**
-	  * exitencias_procesadas
+	  * existencias_procesadas
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var float
 	  */
-	protected $exitencias_procesadas;
+	protected $existencias_procesadas;
 
 	/**
 	  * getIdProducto
@@ -244,27 +244,27 @@ class DetalleInventario extends VO
 	}
 
 	/**
-	  * getExitenciasProcesadas
+	  * getExistenciasProcesadas
 	  * 
-	  * Get the <i>exitencias_procesadas</i> property for this object. Donde <i>exitencias_procesadas</i> es  [Campo no documentado]
+	  * Get the <i>existencias_procesadas</i> property for this object. Donde <i>existencias_procesadas</i> es  [Campo no documentado]
 	  * @return float
 	  */
-	final public function getExitenciasProcesadas()
+	final public function getExistenciasProcesadas()
 	{
-		return $this->exitencias_procesadas;
+		return $this->existencias_procesadas;
 	}
 
 	/**
-	  * setExitenciasProcesadas( $exitencias_procesadas )
+	  * setExistenciasProcesadas( $existencias_procesadas )
 	  * 
-	  * Set the <i>exitencias_procesadas</i> property for this object. Donde <i>exitencias_procesadas</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>exitencias_procesadas</i> es de tipo <i>float</i>. 
+	  * Set the <i>existencias_procesadas</i> property for this object. Donde <i>existencias_procesadas</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>existencias_procesadas</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
-	final public function setExitenciasProcesadas( $exitencias_procesadas )
+	final public function setExistenciasProcesadas( $existencias_procesadas )
 	{
-		$this->exitencias_procesadas = $exitencias_procesadas;
+		$this->existencias_procesadas = $existencias_procesadas;
 	}
 
 }
