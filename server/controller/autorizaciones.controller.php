@@ -814,6 +814,20 @@ function respuestaAutorizacionLimiteCredito( $args ){
 
 }
 
+function cancelarAutorizacion($args){
+	$autorizacion=AutorizacionDAO::getByPK($args["id_autorizacion"]);
+	$existe=$autorizacion==NULL?die('{"success"	:	false	,	"reason"	:	"No existe esa autorizacion"}'):"";
+	$autorizacion->setEstado(5);
+	try{
+		$result=AutorizacionDAO::save($autorizacion);
+		echo '{"success"	:	true	,	"resultado"	:	"'.$result.'"}';
+	}catch(Exception $e)
+	{
+		Logger::log($e);
+		die('{"success"	:	false	,	"reason"	:	"No se realizo el cambio de estado, intente de nuevo."}');
+	}
+
+}
 
 
 if( isset( $args['action'] ) ){
@@ -1046,7 +1060,12 @@ if( isset( $args['action'] ) ){
         case 218://respuesta de limite de credito
             respuestaAutorizacionLimiteCredito( $args );
         break;
-
+        
+        case 219://cancelar autorizacion, cambiar a estado 5
+        	cancelarAutorizacion($args);
+        
+        break;
+        
         default:
             printf ('{ "success" : "false" }');
         break;
