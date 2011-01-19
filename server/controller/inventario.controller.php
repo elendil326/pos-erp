@@ -585,25 +585,88 @@ function terminarCargamentoCompra( $json = null ){
 
 	/**Procesar producto sucursal.
 	  *
-	  * Este metodo procesa un producto de DetalleInventario. Recibe como argumento un JSON
-	  * del cual se obtiene id_producto, procesado y desecho, a las existencias se les resta el desecho
-	  * y a las existencias procesadas se les suma procesado.
-	  * @param string Es un JSON que contiene {"success": true,"id_producto": 1,"procesado": 3,"desecho": 2}.
+	  * Este metodo procesa un producto de DetalleInventario. Recibe como argumento un JSON con un producto primario
+	  * y uno o varios productos secundarios (subproductos). El producto primario tiene "id_producto", "procesado" y "desecho"
+	  * y los subproductos contienen "id_producto" y "procesado". Se comprueba que existan los productos.
+	  * Se valida que (existencias-existenciasProcesado) sean mayor que la suma de "procesado"+"desecho" del producto primario
+	  * mas la sumatoria del valor "procesado" de los productos secundarios. A las existencias del producto primario se
+	  * resta "desecho" y a las existenciasProcesadas se les suma "procesado". A los subproductos se suma "procesado" a 
+	  * las existencias y a existenciasProcesadas
+	  * Ejemplo de JSON.
+	  * <code>
+	  * {
+ 	  *	   "id_producto": 1,
+	  *	    "procesado": 25,
+	  *	    "desecho": 5,
+	  *	    "subproducto": [{
+      *      					"id_producto": 2,
+	  *		            		"procesado":10
+	  *		        		},
+	  *		        		{
+      *      					"id_producto": 3,
+	  *		            		"procesado": 11
+	  *		        		}]
+	  * }
+	  * 
+	  * </code>
+	  * @param string es un JSON 
 	  * @return void
 	  **/
 	function procesarProductoSucursal($json){
+		DetalleInventarioDAO::transBegin();
 		$datos=parseJSON($json);
+		$subproducto=$datos->subproducto;
 		$di=DetalleInventarioDAO::getByPK($datos->id_producto,$_SESSION["sucursal"]);
-		$existe=$di==NULL?die('{"success":false,"reason":"No existe el producto"}'):"";
+		if($di==NULL){
+			DetalleInventarioDAO::transRollback();
+			die('{"success":false,"reason":"No existe el producto"}');
+		}
+		$suma=$datos->procesado+$datos->desecho;
+		for($i=0;$i<sizeof($subproducto);$i++){
+			$suma+=$subproducto[$i]->procesado;
+		}
+		if($suma>($di->getExistencias()-$di->getExistenciasProcesadas())){
+			DetalleInventarioDAO::transRollback();
+			die('{"success":false,"reason":"No se pudo procesar el producto, hay menos existencias de las que se pretenden procesar."}');
+		}
 		$di->setExistencias($di->getExistencias()-$datos->desecho);
 		$di->setExistenciasProcesadas($di->getExistenciasProcesadas()+$datos->procesado);
+		
 		try{
 			DetalleInventarioDAO::save($di);
-			echo '{"success":true}';
+
 		}catch(Exception $e){
 			Logger::log($e);
+			DetalleInventarioDAO::transRollback();
 			die('{"success":false,"reason":"No se pudo procesar el producto, intente de nuevo."}');
 		}
+		
+
+		//echo $subproducto[0]->id_producto;
+		for($i=0;$i<sizeof($subproducto);$i++){
+
+				$dis[$i]=DetalleInventarioDAO::getByPK($subproducto[$i]->id_producto,$_SESSION["sucursal"]);
+				if($dis[$i]==NULL){
+					DetalleInventarioDAO::transRollback();
+					die('{"success":false,"reason":"No existe el subproducto"}');
+				}
+			
+				$dis[$i]->setExistencias($dis[$i]->getExistencias()+$subproducto[$i]->procesado);
+				$dis[$i]->setExistenciasProcesadas($dis[$i]->getExistenciasProcesadas()+$subproducto[$i]->procesado);
+
+				try{
+
+					DetalleInventarioDAO::save($dis[$i]);
+
+				}catch(Exception $e){
+					Logger::log($e);
+					DetalleInventarioDAO::transRollback();
+					die('{"success":false,"reason":"No se pudo procesar el producto, intente de nuevo."}');
+				}
+			
+		}
+				DetalleInventarioDAO::transEnd();
+				echo '{"success":true}';
 	}
 
 if(isset($args['action'])){
