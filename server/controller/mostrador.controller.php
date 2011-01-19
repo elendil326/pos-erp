@@ -98,7 +98,7 @@ function revisarExistenciasAdmin ( $productos )
 		    }
 		}else{
 		    //requiere producto sin procesar
-		    if( $cantidad > $i-> getExistencias() ){
+		    if( $p -> cantidad > $i-> getExistencias() ){
 		        return false;
 		    }
 		}
@@ -581,7 +581,7 @@ function venderAdmin( $args ){
                 }                                
             }else{
             
-                var_dump($item);
+                //var_dump($item);
                 //si no se encuentra el producto en el arreglo de objetos hay que crearlo
                 $_item = new stdClass();
                 $_item -> id_compra_proveedor = $data->items[$i] -> id_compra_proveedor;
@@ -729,7 +729,7 @@ function venderAdmin( $args ){
     //descontamos del inventario el pedido
     foreach( $productos as $producto ){	
 		$inventario_maestro = InventarioMaestroDAO::getByPK( $producto -> id_producto, $producto -> id_compra_proveedor);		
-		if( $p -> procesado == true ){		
+		if( $producto -> procesado == true ){		
 		    //requiere producto procesado
 		   $inventario_maestro-> setExistenciasProcesadas( $inventario_maestro-> getExistenciasProcesadas() - $producto -> cantidad ); 
 		}else{		
@@ -747,7 +747,7 @@ function venderAdmin( $args ){
         
     //ya que se tiene el total de la venta se actualiza el total de la venta
     $venta->setSubtotal( $subtotal );
-    $total = ( $subtotal - ( ($subtotal * $descuento) / 100 ) );
+    $total = ( $subtotal - ( ( $subtotal * $cliente->getDescuento() ) / 100 ) );
     $venta->setTotal( $total );
 
     //si la venta es de contado, hay que liquidarla
