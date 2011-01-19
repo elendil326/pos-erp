@@ -10,6 +10,7 @@ require_once("model/detalle_venta.dao.php");
 require_once("model/detalle_inventario.dao.php");
 require_once("model/factura_venta.dao.php");
 require_once("model/usuario.dao.php");
+require_once("model/inventario_maestro.dao.php");
 require_once("logger.php");
 
 /*
@@ -92,7 +93,7 @@ function revisarExistenciasAdmin ( $productos )
 		
 		if( $p -> procesado == true ){
 		    //requiere producto procesado
-		    if( $cantidad > $i-> getExistenciasProcesadas() ){
+		    if( $p -> cantidad > $i-> getExistenciasProcesadas() ){
 		        return false;
 		    }
 		}else{
@@ -437,16 +438,17 @@ function vender( $args ){
 
 }//vender
 
+
+
 function venderAdmin( $args ){
 
     Logger::log("Iniciando proceso de venta (admin)");
 
-    DAO::transBegin();
+   //http://127.0.0.1/pos/trunk/www/proxy.php?action=101&payload={%22id_cliente%22:1,%22tipo_venta%22:%22contado%22,%22tipo_pago%22:%22targeta%22,%22factura%22:false,%22items%22:[{%22id_producto%22:1,%22id_compra_proveedor%22:1,%22procesado%22:true,%22precio%22:10.5,%22cantidad%22:4},{%22id_producto%22:1,%22id_compra_proveedor%22:1,%22procesado%22:false,%22precio%22:8.5,%22cantidad%22:2}]}
 
-    if(!isset($args['payload']))
+    if( ! isset ( $args['payload'] ) )
     {
-        Logger::log("Sin parametros para realizar venta (admin)");
-        DAO::transRollback();
+        Logger::log( "Sin parametros para realizar venta (admin)" );
         die('{"success": false, "reason": "No hay parametros para realizar la venta." }');
     } 
 
@@ -454,22 +456,41 @@ function venderAdmin( $args ){
         $data = parseJSON( $args['payload'] );
     }catch(Exception $e){
         Logger::log("json invalido para realizar venta : " . $e);
-        DAO::transRollback();
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
     if($data == null){
         Logger::log("el parseo del json de la venta resulto en un objeto nulo");
-        DAO::transRollback();
         die( '{"success": false, "reason": "Parametros invalidos. El objeto es nulo." }' );
     }
 	
-    //verificar que $productos sea un array
-    if(!is_array($productos)){
-        Logger::log("parametro de productos invalido, no es un arreglo");
-        DAO::transRollback();
+	//verificamos que se manden todos los parametros necesarios
+	
+	if( !( isset( $data -> id_cliente ) && isset( $data -> tipo_venta ) && isset( $data -> tipo_pago ) && isset( $data -> factura ) && isset( $data -> items ) ) ){	
+	    Logger::log("Falta uno o mas parametros");
+        die( '{"success": false, "reason": "Parametros invalidos 1." }' );
+    
+	}
+	
+    //verificar que $data->items  sea un array
+    if(!is_array( $data->items )){
+        Logger::log("data -> items no es un array de productos");
+        die( '{"success": false, "reason": "Parametros invalidos 2." }' );
+    }
+    
+    //verificamos que $data->items almenos tenga un producto
+    if( count( $data->items ) <= 0 ){
+        Logger::log("data -> items no contiene ningun producto");
+        die( '{"success": false, "reason": "Parametros invalidos 3. " }' );
+    }
+    
+    
+    //verificamos que el cliente exista
+    if( !( $cliente = ClienteDAO::getByPK( $data -> id_cliente) ) ){
+        Logger::log("No se tiene registro del cliente : " . $data -> id_cliente );
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
+    
 
     /*
     * Condensamos los productos
@@ -480,102 +501,103 @@ function venderAdmin( $args ){
     * de producto procesado o sin procesar.
     */
 
-   /* $array_items = array();
+    $array_items = array();
     //insertamos el primer producto de item
     
     $item = new stdClass();
     $item -> id_compra_proveedor = $data->items[0] -> id_compra_proveedor;
     $item -> id_producto = $data->items[0] -> id_producto;
     
-    if( items[0] ->procesado == true ){
+    if( $data -> items[0] -> procesado == true ){
          $item -> cantidad_procesada = $data->items[0] -> cantidad;
-         $item -> precio = $data->items[0] -> 0;
-         $item -> precio_procesado = $data->items[0] -> precio;
+         $item -> precio_procesada = $data->items[0] -> precio;
+         $item -> cantidad = 0;
+         $item -> precio = 0;
     }else{
+        $item -> cantidad_procesada = 0;
+        $item -> precio_procesada = 0;
         $item -> cantidad = $data->items[0] -> cantidad;
         $item -> precio = $data->items[0] -> precio;
-        $item -> precio_procesado = 0;
     }
    
-    
+   //echo $data->items[0] -> cantidad . " - " . $data->items[0] -> precio . "<br>";
+   
     array_push( $array_items, $item  );
     
-    for( $i = 1; i < count($data->items); $i++ ){
+    for( $i = 1; $i < count($data->items); $i++ ){
     
         //iteramos el $obj_items 
+        
         foreach( $array_items as $item ){
+            //echo "comprarando " . $data->items[$i]  -> id_producto . " vs " . $item -> id_producto . "<br>";
             if(  $data->items[$i]  -> id_producto == $item -> id_producto ){
-
+            //echo " son iguales";
+            //var_dump($item);
                   //si se encuentra ese producto en el arreglo de objetos
                 if( $data->items[$i]->procesado == true ){
-                
-                     $item -> cantidad_procesada += $data->items[$i] -> cantidad;                     
-                     $item -> precio_procesado = $data->items[$i]-> precio;
+                    //echo "es un producto procesado  <br>";
+                     $item -> cantidad_procesada += $data->items[$i] -> cantidad_procesada;                     
+                     $item -> precio_procesada += $data->items[$i]-> precio_procesada;
                      
                 }else{
-                
+                    //echo "es un producto original  <br>";
+                    //echo $data->items[$i] -> cantidad . " - " . $data->items[$i] -> precio;
                     $item -> cantidad += $data->items[$i] -> cantidad;
-                    $item -> precio = $data->items[$i]] -> precio;
+                    $item -> precio += $data->items[$i] -> precio;
                     
-                }
-                
+                }                                
+            }else{
+            
+                var_dump($item);
                 //si no se encuentra el producto en el arreglo de objetos hay que crearlo
-                $item = new stdClass();
-                $item -> id_compra_proveedor = $data->items[$i] -> id_compra_proveedor;
-                $item -> id_producto = $data->items[$i -> id_producto;
+                $_item = new stdClass();
+                $_item -> id_compra_proveedor = $data->items[$i] -> id_compra_proveedor;
+                $_item -> id_producto = $data->items[$i]-> id_producto;
                 
-                if( items[$i] ->procesado == true ){
-                     $item -> cantidad_procesada = $data->items[$i] -> cantidad;
-                     $item -> precio = $data->items[$i] -> 0;
-                     $item -> precio_procesado = $data->items[$i] -> precio;
+                if( $data->items[$i]->procesado == true ){
+                     $_item -> cantidad_procesada = $data->items[$i] -> cantidad;
+                     $_item -> precio_procesada = $data->items[$i] -> precio;
+                     $_item -> cantidad = 0;
+                     $_item -> precio = 0;
                 }else{
-                    $item -> cantidad = $data->items[$i] -> cantidad;
-                    $item -> precio = $data->items[$i] -> precio;
-                    $item -> precio_procesado = 0;
-                }
-                
-                array_push( $array_items, $item  );
-                
+                    $_item -> cantidad_procesada = 0;
+                    $_item -> precio_procesada = 0;
+                    $_item -> cantidad = $data->items[$i] -> cantidad;
+                    $_item -> precio = $data->items[$i] -> precio;
+                }                                
+                array_push( $array_items, $_item  );
             }
+            
         }
-    
-        $objecto = new stdClass();
         
     }
-    */
+    
 
-    //revisamos si las existencias en el inventario maestro satisfacen a las reqeuridas en la venta
+    //revisamos si las existencias en el inventario maestro satisfacen a las requeridas en la venta
     if(!revisarExistenciasAdmin( $data->items )){
         Logger::log("No hay existencias suficientes en el Inventario maestro para satisfacer la demanda");
-        DAO::transRollback();
 		die('{"success": false, "reason": "No hay suficiente producto en el Inventario Maestro para satisfacer la demanda. Intente de nuevo." }');
 	}
 
-    $productos = $data->items;
+    $productos = $array_items;
 	$detallesVenta = array();
 	$subtotal = 0.0;
 
     foreach($productos as $producto)
     {
     
-		$subtotal += (  $producto -> cantidad * $producto -> precio  );
+		$subtotal += (  ( $producto -> cantidad * $producto -> precio ) + ( $producto -> cantidad_procesada * $producto -> precio_procesada ) );
         $dv = new DetalleVenta();
         $dv -> setIdProducto( $producto -> id_producto );
         
-        if( $producto-> procesado == true ){
-            $dv->setCantidad( 0 );
-            $dv->setCantidadProcesada( $producto->cantidad );
-        }else{
-            $dv->setCantidad( $producto->cantidad );
-            $dv->setCantidadProcesada( 0 );
-        }
+        $dv->setCantidad( $producto -> cantidad );
+        $dv->setPrecio( $producto -> precio );
+        $dv->setCantidadProcesada( $producto->cantidad_procesada );
+        $dv->setPrecioProcesada( $producto->precio_procesada );
         
-        $dv->setPrecio( $producto->precioVenta );
-
 		array_push($detallesVenta, $dv );
 		
     }//foreach
-	
 
     //inicializamos un objeto venta
     $venta = new Ventas();
@@ -584,69 +606,71 @@ function venderAdmin( $args ){
     $venta->setIdSucursal( $_SESSION['sucursal'] );
     $venta->setIp( $_SERVER['REMOTE_ADDR']  );
     $venta->setPagado( 0 );
+    $venta->setLiquidada( 0 );
     
     $venta->setCancelada( 0 );
    
-    $venta -> setTipoVenta( $data -> tipo_venta );
-    
-     if( isset($data -> tipo_pago  ) )
-        $venta -> setTipoPago( $data -> tipo_pago );
-
-    /*
-     * Si el cliente es nulo, entonces es caja comun
-     * */
-    
-
-        //entra si es un cliente corriente
-
-        $venta->setIdCliente( $data->id_cliente );
-
-        try{
-            if ( $cliente = ClienteDAOBase::getByPK( $data->cliente->id_cliente ) ) 
-            {
-                $descuento = $cliente->getDescuento();
-            } 
-            else 
-            {
-                Logger::log( "No se tiene registro del cliente : " . $data->id_cliente );
-                DAO::transRollback();
-                die( '{"success": false, "reason": "No se tienen registros sobre el cliente ' . $data -> id_cliente . '" }' );
-            }
-        }
-        catch(Exception $e)
-        {
-            DAO::transRollback();
-            Logger::log($e);
-            die( '{"success": false, "reason": "Intente de nuevo." }' );
-        }
-
-        $venta->setDescuento( $descuento );
-
-        try{
-            if (VentasDAO::save($venta)) 
-        {
-            $id_venta =  $venta->getIdVenta();
-        } 
-        else 
-        {
-            DAO::transRollback();
-            die( '{"success": false, "reason": "No se pudo registrar la venta" }' );
-        }
+   //verificamos que el tipo de venta sea valido
+    switch( $data -> tipo_venta ){
+   
+        case 'credito':
+            $venta -> setTipoVenta( $data -> tipo_venta );
+        break;
+        
+        case 'contado':
+            $venta -> setTipoVenta( $data -> tipo_venta );
+        break;
+        
+        default:
+            Logger::log( "El tipo de venta no es valido : " . $data -> tipo_venta );
+            die( '{"success": false, "reason": "El tipo de venta no es valido ' . $data -> tipo_venta . '." }' );
+   
     }
+    
+    
+      //verificamos que el tipo de pago sea valido
+    switch( $data -> tipo_pago ){
+   
+        case 'efectivo':
+            $venta -> setTipoPago( $data -> tipo_pago );
+        break;
+        
+        case 'cheque':
+            $venta -> setTipoPago( $data -> tipo_pago );
+        break;
+        
+        case 'targeta':
+            $venta -> setTipoPago( $data -> tipo_pago );
+        break;
+        
+        default:
+            Logger::log( "El tipo de pago no es valido : " . $data -> tipo_pago );
+            die( '{"success": false, "reason": "El tipo de pago no es valido : ' . $data -> tipo_pago . '." }' );
+   
+    }
+
+
+    $venta->setIdCliente( $data->id_cliente );
+
+    $venta->setDescuento( $cliente->getDescuento() );
+
+    DAO::transBegin();	
+        
+    try
+    {
+        VentasDAO::save($venta);
+        $id_venta =  $venta->getIdVenta();
+    }          
     catch(Exception $e)
     {
+        Logger::log( $e);
         DAO::transRollback();
-        Logger::log($e);
-        die( '{"success": false, "reason": "Intente de nuevo." }' );
+        die( '{"success": false, "reason": "No se pudo registrar la venta : ' . $e . '" }' );       
     }
-
-
 
     if($data->factura){
-        nsertarFacturaVenta($venta);
+        insertarFacturaVenta($venta);
     }
-		
-
 
     //hasta aqui ya esta creada la venta, ahora sigue llenar el detalle de la venta
     $productos = $data->items;
@@ -718,8 +742,6 @@ function venderAdmin( $args ){
         Logger::log($e);
         die( '{"success": false, "reason": "Intente de nuevo." }' );
     }
-
-
 
     DAO::transEnd();
 
