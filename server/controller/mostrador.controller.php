@@ -439,12 +439,45 @@ function vender( $args ){
 }//vender
 
 
-
+/**
+  * Venta desde centro de distribucion.
+  *
+  * Realiza una venta desde el centro de distribucion, descontando
+  * los productos a vender del inventario maestro.
+  *
+  *
+  * Ejemplo de json.
+  * <code>
+  *        {
+  *             "id_cliente": 1,
+  *             "tipo_venta": "contado",
+  *             "tipo_pago": "targeta",
+  *             "factura": false,
+  *             "items": [
+  *                 {
+  *                     "id_producto": 1,
+  *                     "id_compra_proveedor": 1,
+  *                     "procesado": true,
+  *                     "precio": 10.5,
+  *                     "cantidad": 4
+  *                 },
+  *                 {
+  *                     "id_producto": 1,
+  *                     "id_compra_proveedor": 1,
+  *                     "procesado": false,
+  *                     "precio": 8.5,
+  *                     "cantidad": 2
+  *                 }
+  *             ]
+  *        }
+  * </code>
+  * 
+  **/
 function venderAdmin( $args ){
 
     Logger::log("Iniciando proceso de venta (admin)");
 
-   //http://127.0.0.1/pos/trunk/www/proxy.php?action=101&payload={%22id_cliente%22:1,%22tipo_venta%22:%22contado%22,%22tipo_pago%22:%22targeta%22,%22factura%22:false,%22items%22:[{%22id_producto%22:1,%22id_compra_proveedor%22:1,%22procesado%22:true,%22precio%22:10.5,%22cantidad%22:4},{%22id_producto%22:1,%22id_compra_proveedor%22:1,%22procesado%22:false,%22precio%22:8.5,%22cantidad%22:2}]}
+
 
     if( ! isset ( $args['payload'] ) )
     {

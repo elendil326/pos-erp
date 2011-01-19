@@ -87,48 +87,160 @@
 		jQuery("#" + data).css("color", "#fff ");
 		jQuery("#" + data).css("background-color", "#3F8CE9 !important");
 		
+        //buscar este producto en el arreglo de inventario maestro
+        producto = inventario_maestro[ data.substring(7) ];
+
 		carrito.push( {
 			qty : 1,
-			tablaid : data
+			tablaid : data,
+            id_producto : producto.id_producto,
+            id_compra_proveedor : producto.id_compra_proveedor,
+            procesado : false,
+            precio : producto.precio_por_kg
 		});
 		
 		renderCarrito();
 	}
 	
 	function doMath(){
-	
-		for(a = 0; a < carrito.length; a++){
-			foo = jQuery("#" + carrito[a].tablaid).children();
-			
-			
-		}
+
+
+        //total de importe, y cantidad
+        var t_qty = 0, t_importe = 0;
+
+        for(a =0; a < carrito.length; a++){
+            
+            //recorreer los inputs
+            inputs = jQuery("#finalcart" + carrito[a].tablaid).children().children();
+
+
+            procesada  =    jQuery( inputs[0] ).val();
+            cantidad =      parseFloat( jQuery( inputs[1] ).val() );
+            precio =        parseFloat( jQuery( inputs[2] ).val() );
+            
+            carrito[a].qty = cantidad;
+            carrito[a].precio = precio;
+
+            t_qty += cantidad;
+            t_importe += ( cantidad * precio );
+
+            jQuery( inputs[3] ).val( cf(cantidad * precio) );
+
+        }
+
+
+           jQuery("#total_importe").html( cf( t_importe ) )
+           jQuery("#total_qty").html( t_qty )
 	}
 	
+    function dovender(){
+
+
+
+        json = {
+            id_cliente: 1,
+            tipo_venta:  1,
+            tipo_pago: 1,
+            factura: 1,
+            items: []
+        };
+
+
+        for(a =0; a < carrito.length; a++){
+            d = jQuery("#finalcart" + carrito[a].tablaid).children();
+
+            //recorreer los inputs
+            jQuery( jQuery("#finalcart" + carrito[a].tablaid).children().children()[0] ).val()
+
+            json.items.push({
+                id_producto: carrito[a].id_producto,
+                id_compra_proveedor: carrito[a].id_compra_proveedor,
+                procesado: carrito[a].procesado,
+                precio: carrito[a].precio,
+                cantidad: carrito[a].qty
+            });
+
+        }
+
+
+        console.log(json);
+    	jQuery.ajaxSettings.traditional = true;
+
+
+        jQuery.ajax({
+	      url: "../proxy.php",
+	      data: { 
+            action : 101, 
+            payload : jQuery.JSON.encode(json)
+           },
+	      cache: false,
+	      success: function(data){
+	      		try{
+			        response = jQuery.parseJSON(data);
+			    }catch(e){
+           			jQuery("#loader").hide();
+					window.scroll(0,0);           			
+                    return jQuery("#ajax_failure").html("Error en el servidor. Intente de nuevo.").show();			    
+			    }
+
+                if(response.success == false){
+           			jQuery("#loader").hide();
+					window.scroll(0,0);           			
+                    return jQuery("#ajax_failure").html(response.reason).show();
+                }
+
+
+                reason = "El cargamento se ha registrado con exito";
+                window.location = 'inventario.php?action=maestro&success=true&reason=' + reason;
+	      }
+	    });
+
+    }
+
+
+
+
 	function renderCarrito (){
 		html = "<table style='width:100%'>";
-		html += "<tr align=left ><th>Remision</th><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Importe</th></tr>";
-		//<tr id='prodsTableFooter'><td colspan=2 align="right"><b>Totales</b></td><td><div id='totales-arpillas'></div></td><td></td><td><div id='totales-peso'></div></td><td></td><td><div id='totales-importe'></div></td></tr>    	
+		html += "<tr align=left ><th>Remision</th><th>Producto</th><th>Procesada</th><th>Cantidad</th><th>Precio</th><th>Importe</th></tr>";
+
+        tots_qty = 0;
+        tots_importe = 0;
+
 		for(a = 0; a < carrito.length; a++){
 		
 			foo = jQuery("#" + carrito[a].tablaid).children();
-			
-			
-			
-			html += "<tr><td>" + 	foo[0].innerHTML +"</td>";
-			html += "<td>" + 		foo[1].innerHTML +"</td>";
-			html += "<td><input type='text' value='"+ carrito[a].qty +"'></td>";
-			html += "<td><input type='text' >"  +"</td>";			
-			
+
+			html += "<tr id='finalcart"+ carrito[a].tablaid +"' ><td >" + 	foo[0].innerHTML +"</td>";
+			html += "<td>" + foo[1].innerHTML +"</td>";
+			html += "<td><input type='checkbox' >" + "</td>";
+			html += "<td><input type='text'     onKeyUp='doMath()' value='"+ carrito[a].qty +"'></td>";
+			html += "<td><input type='text'     onKeyUp='doMath()' value='"+ carrito[a].precio +"'>" + "</td>";
+			html += "<td><input type='text'                        value='"+ cf(carrito[a].precio * carrito[a].qty) +"' disabled></td>";
 			html += "</tr>";
+
+            tots_qty += carrito[a].qty;
+            tots_importe += (carrito[a].qty) * carrito[a].precio;
 			
 		}
-		
+
+        //totales
+		html += "<tr>";
+        html += "<td colspan=3></td>";
+        html += "<td id='total_qty'>" + tots_qty +"</td>";
+        html += "<td ></td>";
+        html += "<td id='total_importe'>" + cf(tots_importe) + "</td>";
+		html += "</tr>";
+
 		html += "</table>";
 		
-		doMath();
+        
+
+
 		
 		jQuery("#cart").html(html);
-		jQuery("#cart input:text").uniform();
+		jQuery("#cart input").uniform();
+
 	}
 </script>
 
@@ -160,6 +272,7 @@ foreach($iMaestro as $i){
 }
 echo "];";
 echo "</script>";
+
 
 $header = array(
 	"folio" 			=> "Remision",
@@ -198,6 +311,6 @@ $tabla->render();
     </div>
     
     <h4 align="center" id="do-sell">
-    	<input type="button" value="Vender">
+    	<input type="button" value="Vender" onClick="dovender()">
     	<img src="../media/loader.gif" id="loader" style="display: none;">
     </h4>
