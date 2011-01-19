@@ -11,6 +11,7 @@ require_once("model/detalle_inventario.dao.php");
 require_once("model/factura_venta.dao.php");
 require_once("model/usuario.dao.php");
 require_once("model/inventario_maestro.dao.php");
+require_once("model/compra_proveedor.dao.php");
 require_once("logger.php");
 
 /*
@@ -86,10 +87,23 @@ function revisarExistencias ( $productos )
  * */
 function revisarExistenciasAdmin ( $productos )
 {
-
+   
 	foreach( $productos as $p ){
 	
-		$i = InventarioMaestroDAO::getByPK( $p->id_producto, $p->id_compra_proveedor);
+	    //verificamos que exista la compra al proveedor
+	    if( !( CompraProveedorDAO::getByPK( $p->id_compra_proveedor) ) ){
+            Logger::log("No se tiene registro de la compra " . $p->id_compra_proveedor . " al proveedor." );
+            DAO::transRollback();
+            die( '{"success": false, "reason": "No se tiene registro de la compra ' . $p->id_compra_proveedor . ' al proveedor." }' );
+        }
+	
+	    //verificamos que en la comrpa se haya comprado el producto
+		if( !( $i = InventarioMaestroDAO::getByPK( $p->id_producto, $p->id_compra_proveedor) ) ){
+            Logger::log("No se tiene registro de la compra del producto " . $p->id_producto . " en la compra " . $p->id_compra_proveedor );
+            DAO::transRollback();
+            die( '{"success": false, "reason": "No se tiene registro de la compra del producto ' .  $p->id_producto . ' en la compra ' . $p->id_compra_proveedor . '." }' );
+        }
+		
 		
 		if( $p -> procesado == true ){
 		    //requiere producto procesado
@@ -98,6 +112,7 @@ function revisarExistenciasAdmin ( $productos )
 		    }
 		}else{
 		    //requiere producto sin procesar
+		        var_dump( $i-> getExistencias() );
 		    if( $p -> cantidad > $i-> getExistencias() ){
 		        return false;
 		    }
