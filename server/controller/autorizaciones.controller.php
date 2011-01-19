@@ -824,11 +824,17 @@ function respuestaAutorizacionLimiteCredito( $args ){
 	  **/
 
 function cancelarAutorizacion($args){
+
 	$autorizacion=AutorizacionDAO::getByPK($args);
+	
 	$existe=$autorizacion==NULL?die('{"success"	:	false	,	"reason"	:	"No existe esa autorizacion"}'):"";
+	
 	$autorizacion->setEstado(5);
+	
 	try{	$result=AutorizacionDAO::save($autorizacion);	echo '{"success"	:	true	}';
+	
 	}catch(Exception $e){	
+	
 		Logger::log($e);
 		die('{"success"	:	false	,	"reason"	:	"No se realizo el cambio de estado, intente de nuevo."}');
 	}

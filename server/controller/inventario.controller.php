@@ -583,6 +583,29 @@ function terminarCargamentoCompra( $json = null ){
 
 }
 
+	/**Procesar producto sucursal.
+	  *
+	  * Este metodo procesa un producto de DetalleInventario. Recibe como argumento un JSON
+	  * del cual se obtiene id_producto, procesado y desecho, a las existencias se les resta el desecho
+	  * y a las existencias procesadas se les suma procesado.
+	  * @param string Es un JSON que contiene {"success": true,"id_producto": 1,"procesado": 3,"desecho": 2}.
+	  * @return void
+	  **/
+	function procesarProductoSucursal($json){
+		$datos=parseJSON($json);
+		$di=DetalleInventarioDAO::getByPK($datos->id_producto,$_SESSION["sucursal"]);
+		$existe=$di==NULL?die('{"success":false,"reason":"No existe el producto"}'):"";
+		$di->setExistencias($di->getExistencias()-$datos->desecho);
+		$di->setExistenciasProcesadas($di->getExistenciasProcesadas()+$datos->procesado);
+		try{
+			DetalleInventarioDAO::save($di);
+			echo '{"success":true}';
+		}catch(Exception $e){
+			Logger::log($e);
+			die('{"success":false,"reason":"No se pudo procesar el producto, intente de nuevo."}');
+		}
+	}
+
 if(isset($args['action'])){
 	switch($args['action']){
 	    case 400:
@@ -646,6 +669,10 @@ if(isset($args['action'])){
 		
 			terminarCargamentoCompra( $args['data'] );
 			
+		break;
+		
+		case 408://procesar producto sucursal
+			procesarProductoSucursal($args["data"]);
 		break;
 
 	    default:
