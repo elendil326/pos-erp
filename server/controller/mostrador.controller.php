@@ -112,7 +112,6 @@ function revisarExistenciasAdmin ( $productos )
 		    }
 		}else{
 		    //requiere producto sin procesar
-		        var_dump( $i-> getExistencias() );
 		    if( $p -> cantidad > $i-> getExistencias() ){
 		        return false;
 		    }
@@ -171,14 +170,35 @@ function descontarInventario ( $productos )
 
 
 
-/*
- * Realizar una venta a un cliente
- * 
- * 
- * */
+/**
+  * Venta desde la sucursal.
+  *
+  * Realiza una venta desde la sucursal, descontando
+  * los productos a vender del inventario de la sucursal.
+  *
+  *
+  * Formato de json.
+  * <code>
+  *        {
+  *             "id_cliente": int | null,
+  *             "tipo_venta": "contado" | "credito",
+  *             "tipo_pago": "targeta" | "cheque" | "efectivo",
+  *             "factura": false | true,
+  *             "items": [
+  *                 {
+  *                     "id_producto": int,
+  *                     "procesado": true | false,
+  *                     "precio":float,
+  *                     "cantidad": float
+  *                 }
+  *             ]
+  *        }
+  * </code>
+  * 
+  **/
 function vender( $args ){
 
-    Logger::log("Iniciando proceso de venta");
+    Logger::log("Iniciando proceso de venta (sucursal)");
 
     DAO::transBegin();
 
@@ -197,8 +217,6 @@ function vender( $args ){
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
-    //var_dump( $args['payload'] );  
-    //var_dump( json_decode( $args['payload']  ) );  
 
     if($data == null){
         Logger::log("objeto invalido para vender");
@@ -461,27 +479,20 @@ function vender( $args ){
   * los productos a vender del inventario maestro.
   *
   *
-  * Ejemplo de json.
+  * Formato de json.
   * <code>
   *        {
-  *             "id_cliente": 1,
-  *             "tipo_venta": "contado",
-  *             "tipo_pago": "targeta",
-  *             "factura": false,
+  *             "id_cliente": int,
+  *             "tipo_venta": "contado" | "credito",
+  *             "tipo_pago": "targeta" | "cheque" | "efectivo",
+  *             "factura": false | true,
   *             "items": [
   *                 {
-  *                     "id_producto": 1,
-  *                     "id_compra_proveedor": 1,
-  *                     "procesado": true,
-  *                     "precio": 10.5,
-  *                     "cantidad": 4
-  *                 },
-  *                 {
-  *                     "id_producto": 1,
-  *                     "id_compra_proveedor": 1,
-  *                     "procesado": false,
-  *                     "precio": 8.5,
-  *                     "cantidad": 2
+  *                     "id_producto": int,
+  *                     "id_compra_proveedor": int,
+  *                     "procesado": true | false,
+  *                     "precio": float,
+  *                     "cantidad": float
   *                 }
   *             ]
   *        }
@@ -532,6 +543,15 @@ function venderAdmin( $args ){
         die( '{"success": false, "reason": "Parametros invalidos 3. " }' );
     }
     
+    //verificamos que cada objeto de producto tenga los parametros necesarios
+    foreach( $data->items as $item ){
+    
+        if( !( isset( $item -> id_producto ) && isset( $item -> id_compra_proveedor ) && isset( $item -> procesado ) && isset( $item -> precio ) && isset( $item -> cantidad ) ) ){
+            Logger::log("Uno o mas objetos de data -> items no tiene el formato correcto");
+            die( '{"success": false, "reason": "Error : uno o mas objetos de data -> items no tiene el formato correcto." }' );
+        }
+    
+    }
     
     //verificamos que el cliente exista
     if( !( $cliente = ClienteDAO::getByPK( $data -> id_cliente) ) ){
@@ -577,26 +597,20 @@ function venderAdmin( $args ){
         //iteramos el $obj_items 
         
         foreach( $array_items as $item ){
-            //echo "comprarando " . $data->items[$i]  -> id_producto . " vs " . $item -> id_producto . "<br>";
+            
             if(  $data->items[$i]  -> id_producto == $item -> id_producto ){
-            //echo " son iguales";
-            //var_dump($item);
+
                   //si se encuentra ese producto en el arreglo de objetos
                 if( $data->items[$i]->procesado == true ){
-                    //echo "es un producto procesado  <br>";
                      $item -> cantidad_procesada += $data->items[$i] -> cantidad_procesada;                     
                      $item -> precio_procesada += $data->items[$i]-> precio_procesada;
                      
                 }else{
-                    //echo "es un producto original  <br>";
-                    //echo $data->items[$i] -> cantidad . " - " . $data->items[$i] -> precio;
                     $item -> cantidad += $data->items[$i] -> cantidad;
                     $item -> precio += $data->items[$i] -> precio;
-                    
                 }                                
             }else{
             
-                //var_dump($item);
                 //si no se encuentra el producto en el arreglo de objetos hay que crearlo
                 $_item = new stdClass();
                 $_item -> id_compra_proveedor = $data->items[$i] -> id_compra_proveedor;
@@ -793,7 +807,7 @@ function venderAdmin( $args ){
 
     DAO::transEnd();
 
-    Logger::log("Venta {$id_venta} exitosa !");
+    Logger::log("Proveso de venta (admin), termino con exito!! id_venta : {$id_venta}.");
 
 
 }//venderAdmin
