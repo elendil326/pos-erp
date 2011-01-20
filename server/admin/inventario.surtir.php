@@ -18,6 +18,11 @@
 ?>
 
 
+<style>
+    table{
+		font-size: 11px;
+    }
+</style>
 
 <script type="text/javascript" charset="utf-8">
 	var sucursales = [];
@@ -109,17 +114,23 @@
 		html += "<th>Descripcion</th>";
 		html += "<th>Precio</th>";
 		html += "<th>Importe</th>";
-		html += "</tr>";					
+		html += "</tr>";
+        stotal = 0;				
 		for(a = 0; a < obj.productos.length; a++){
 			html += "<tr>";
 			html += "<td>"+ obj.productos[a].cantidad 		+ "&nbsp;-&nbsp;" +obj.productos[a].descuento + "</td>";
 			html += "<td><b>"+ obj.productos[a].id_producto +"</b>&nbsp;" +obj.productos[a].producto_desc 	+"</td>";
 			html += "<td>"+ cf(obj.productos[a].precio) 	+"</td>";
 			html += "<td>"+ cf((obj.productos[a].cantidad - obj.productos[a].descuento)*obj.productos[a].precio) 	+"</td>";
-			html += "</tr>";			
+			html += "</tr>";
+            stotal += (obj.productos[a].cantidad - obj.productos[a].descuento)*obj.productos[a].precio;
 		}
+        html += "<tr style=\"border-top: 1px solid #3F8CE9;\">"
+        +"<td></td><td></td><td><b>Total:</b></td>"
+        +"<td>"+ cf(stotal) +"</td>"
+        +"</tr>";
 		html += "</table>";
-		html += "<div align='center'><input type='button' value='Aceptar' onclick='confirmed()'></div>"
+		html += "<div align='center'><input type='button' value='Aceptar' onclick='confirmed()'><input type='button' value='Cancelar' onclick='jQuery(document).trigger(\"close.facebox\");'></div>"
 		return html;
 	}
 

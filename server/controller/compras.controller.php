@@ -971,7 +971,7 @@ if(isset($args['action'])){
 			editarCompraProveedorFlete( $args['data'] );
 		break;
 		
-		case 1005;//funcion utilizada por el admin para vender producto a una sucursal 
+		case 1005://funcion utilizada por el admin para vender producto a una sucursal 
 		
 		/*
 			{

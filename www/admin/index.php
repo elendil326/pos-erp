@@ -46,22 +46,28 @@
       <!-- /top-bar -->
 
       <div id="header-main">
-		<h1 id="MAIN_TITLE">Centro de distribucion</h1> 
+		<h1 id="MAIN_TITLE">Centro de distribuci&oacute;n</h1> 
       </div>
     </div>
     
     <div id="content">
 
 
-        <table>
+        <table cellpadding=15>
         <tr>
             <td>
             <img src='../media/line_chart.png'>        
             </td>
         <td valign='top'>
+            <h1>Bienvendio al centro de administracion</h1>
             <p>
             Este punto de venta es una solución de analítica web para empresas que proporciona información
             muy valiosa sobre el tráfico del sitio web y la eficacia del plan de marketing. 
+            Desde su ultima visita :
+                <ul>
+                    <li>Se realizaron <i>344</i> ventas.</li>
+                    <li>Se ha solicituado su autorizacion para <i>4</i> operaciones.</li>
+                </ul>
             </p>
         </td>
         </tr>
