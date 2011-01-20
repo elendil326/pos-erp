@@ -155,8 +155,9 @@
 	
     function dovender(){
 
+        cliente = 
         json = {
-            id_cliente: CLIENTE !== null ? CLIENTE : jQuery("cliente_selector").val() ,
+            id_cliente: CLIENTE !== null ? CLIENTE : jQuery("#cliente_selector").val() ,
             tipo_venta: venta.tipo_de_venta,
             tipo_pago:  venta.tipo_de_pago,
             factura:    venta.factura,
