@@ -476,17 +476,17 @@ function abonarVenta( $args ){
 	
 	if( !isset( $data -> tipo_pago ) ){
 	    Logger::log("No se envio el tipo de pago");
-        die('{"success": false, "reason": "No se envio el tipo de pago. }');
+        die('{"success": false, "reason": "No se envio el tipo de pago."}');
 	}
 
     if( !( $venta = VentasDAOBase::getByPK( $data->id_venta ) ) ){
         Logger::log("No se tiene registro de la venta : " . $data -> id_venta  );
-        die('{"success": false, "reason": "No se tiene registro de la venta ' . $data -> id_venta . '. }');
+        die('{"success": false, "reason": "No se tiene registro de la venta ' . $data -> id_venta . '." }');
     }
 
     if( $venta -> getLiquidada() != 0 ){
          Logger::log("La venta : " . $data -> id_venta . " esta liquidada."  );
-        die('{"success": false, "reason": "La venta : ' . $data -> id_venta . ' esta liquidada. }');
+        die('{"success": false, "reason": "La venta : ' . $data -> id_venta . ' esta liquidada. "}');
     }
 
     $pagosVenta = new PagosVenta();
@@ -507,7 +507,7 @@ function abonarVenta( $args ){
 	    break;
 	    default:
 	        Logger::log("El tipo de pago no es compatible");
-            die('{"success": false, "reason": "Parametros invalidos. }');
+            die('{"success": false, "reason": "Parametros invalidos." }');
 	}
     
 	DAO::transBegin();
