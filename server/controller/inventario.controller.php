@@ -67,7 +67,7 @@ function listarInventario( $sucID = null){
             "precioVenta" => $producto->getPrecioVenta(),
             "existenciasMinimas" => $producto->getMin(),
             "existenciasOriginales" => $producto->getExistencias(),
-            "existenciasProcesadas" => $producto->getExitenciasProcesadas(),
+            "existenciasProcesadas" => $producto->getExistenciasProcesadas(),
             "medida" => $productoData->getEscala(),
             "precioIntersucursal" => $precioIntersucursal
         ));
