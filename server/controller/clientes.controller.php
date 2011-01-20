@@ -528,7 +528,7 @@ function abonarVenta( $args ){
    
 	DAO::transEnd();
     Logger::log("Abono exitoso a la venta " . $data->id_venta);
-    printf( '{ "success": true" }' );
+    printf( '{ "success": "true" }' );
     
 }
 
