@@ -13,12 +13,23 @@ require_once('logger.php');
 
 /*
  * Regresa el precio intersucursal de la ultima actualizacion de precio
- * @param 
- * @return verdadero si tuvo exito, falso si no fue asi
+ * @param $id_producto es el id del producto al cual nos referimos
+ * @return float El precio intersucursal de ese producto
  * 
  * */
 function obtenerPrecioIntersucursal( $id_producto ){
 
+    //verificamos que el producto este registrado en el inventario
+    /*if( InventarioDAO::getByPK( $id_producto ) ){
+        
+    }*/
+
+    $act_precio = new ActualizacionDePrecio();
+    $act_precio -> setIdProducto(  $id_producto );
+    $result = ActualizacionDePrecioDAO::search( $act_precio, 'fecha', 'desc' );
+    
+    return $result[0] -> getPrecioIntersucursal();
+    
 }
 
 /*
@@ -750,7 +761,6 @@ if(isset($args['action'])){
 			procesarProductoSucursal($args["data"]);
 		break;
 
-	   
 	}
 }
 
