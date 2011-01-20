@@ -138,7 +138,7 @@ function descontarInventario ( $productos )
                 return false;
             } 
         }catch(Exception $e){
-            die( '{"success": false, "reason": "' . $e . '" }' );
+            die( '{"success": false, "reason": "Error al guardar el detalle venta." }' );
         }
 
 
@@ -414,7 +414,7 @@ function vender( $args ){
     {
         Logger::log( $e);
         DAO::transRollback();
-        die( '{"success": false, "reason": "No se pudo registrar la venta : ' . $e . '" }' );       
+        die( '{"success": false, "reason": "No se pudo registrar la venta." }' );       
     }
 
     $subtotal = 0;
@@ -531,20 +531,20 @@ function venderAdmin( $args ){
 	
 	if( !( isset( $data -> id_cliente ) && isset( $data -> tipo_venta ) && isset( $data -> factura ) && isset( $data -> items ) ) ){	
 	    Logger::log("Falta uno o mas parametros");
-        die( '{"success": false, "reason": "Parametros invalidos 1." }' );
+        die( '{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }' );
     
 	}
 	
     //verificar que $data->items  sea un array
     if(!is_array( $data->items )){
         Logger::log("data -> items no es un array de productos");
-        die( '{"success": false, "reason": "Parametros invalidos 2." }' );
+        die( '{"success": false, "reason": "Error : No se generaron correctamente las descripciones de los productos para la venta." }' );
     }
     
     //verificamos que $data->items almenos tenga un producto
     if( count( $data->items ) <= 0 ){
         Logger::log("data -> items no contiene ningun producto");
-        die( '{"success": false, "reason": "Parametros invalidos 3." }' );
+        die( '{"success": false, "reason": "No se envio ningun producto para generar una nueva venta." }' );
     }
     
     //verificamos que cada objeto de producto tenga los parametros necesarios
@@ -552,7 +552,7 @@ function venderAdmin( $args ){
     
         if( !( isset( $item -> id_producto ) && isset( $item -> id_compra_proveedor ) && isset( $item -> procesado ) && isset( $item -> precio ) && isset( $item -> cantidad ) ) ){
             Logger::log("Uno o mas objetos de data -> items no tiene el formato correcto");
-            die( '{"success": false, "reason": "Parametros invalidos 4." }' );
+            die( '{"success": false, "reason": "Error : No se generaron correctamente la descripcion de uno o mas productos." }' );
         }
     
     }
@@ -560,7 +560,7 @@ function venderAdmin( $args ){
     //verificamos que el cliente exista
     if( !( $cliente = ClienteDAO::getByPK( $data -> id_cliente) ) ){
         Logger::log("No se tiene registro del cliente : " . $data -> id_cliente );
-        die( '{"success": false, "reason": "Parametros invalidos 5." }' );
+        die( '{"success": false, "reason": "No se tiene registro del cliente ' . $data -> id_cliente . '." }' );
     }
     
 
@@ -734,7 +734,7 @@ function venderAdmin( $args ){
     {
         Logger::log( $e);
         DAO::transRollback();
-        die( '{"success": false, "reason": "No se pudo registrar la venta : ' . $e . '" }' );       
+        die( '{"success": false, "reason": "No se pudo registrar la venta." }' );       
     }
 
     if($data->factura){
