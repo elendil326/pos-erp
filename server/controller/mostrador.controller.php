@@ -56,7 +56,7 @@ function revisarExistenciasSucursal( $productos )
             DAO::transRollback();
             die( '{"success": false, "reason": "No se tiene registro del producto ' . $p -> id_producto . ' en esta sucursal.." }' );
         }
-        var_dump( $p );
+        
         if( $p -> procesado == true ){
 		    //requiere producto procesado
 		    if( $p -> cantidad_procesada > $i-> getExistenciasProcesadas() ){
@@ -218,20 +218,20 @@ function vender( $args ){
 	
 	if( !( isset( $data -> tipo_venta ) && isset( $data -> factura ) && isset( $data -> items ) ) ){	
 	    Logger::log("Falta uno o mas parametros");
-        die( '{"success": false, "reason": "Parametros invalidos 1." }' );
+        die( '{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }' );
     
 	}
 	
     //verificar que $data->items  sea un array
     if(!is_array( $data->items )){
         Logger::log("data -> items no es un array de productos");
-        die( '{"success": false, "reason": "Parametros invalidos 2." }' );
+        die( '{"success": false, "reason": "No se genero correctamente las especificaciones de los productos a vender." }' );
     }
     
     //verificamos que $data->items almenos tenga un producto
     if( count( $data->items ) <= 0 ){
         Logger::log("data -> items no contiene ningun producto");
-        die( '{"success": false, "reason": "Parametros invalidos 3." }' );
+        die( '{"success": false, "reason": "No se especifico ningun producto para generar una nueva venta." }' );
     }
     
     //verificamos que cada objeto de producto tenga los parametros necesarios
@@ -239,7 +239,7 @@ function vender( $args ){
     
         if( !( isset( $item -> id_producto ) && isset( $item -> procesado ) && isset( $item -> precio ) && isset( $item -> cantidad ) ) ){
             Logger::log("Uno o mas objetos de data -> items no tiene el formato correcto");
-            die( '{"success": false, "reason": "Parametros invalidos 4." }' );
+            die( '{"success": false, "reason": "No se genero correctamente la descripcion de uno o mas productos." }' );
         }
     
     }
@@ -334,7 +334,7 @@ function vender( $args ){
     $venta->setIp( $_SERVER['REMOTE_ADDR']  );
     $venta->setPagado( 0 );
     $venta->setLiquidada( 0 );
-    
+    $venta->setDescuento( 0 );
     $venta->setCancelada( 0 );
     
     if($data -> id_cliente == NULL)
@@ -427,7 +427,7 @@ function vender( $args ){
 		$detalle_inventario -> setExistenciasProcesadas( $detalle_inventario -> getExistenciasProcesadas() - $producto -> cantidad_procesada ); 
 	    $detalle_inventario -> setExistencias( $detalle_inventario -> getExistencias() - $producto -> cantidad);
 		
-		$subtotal = $producto;
+		$subtotal += ( ( $producto -> cantidad_procesada * $producto -> precio_procesada ) + ( $producto -> cantidad * $producto -> precio ) );
 		
 		try{
             DetalleInventarioDAO::save( $detalle_inventario );
@@ -441,7 +441,7 @@ function vender( $args ){
         
     //ya que se tiene el total de la venta se actualiza el total de la venta
     $venta->setSubtotal( $subtotal );
-    $total = ( $subtotal - ( ( $subtotal * $cliente->getDescuento() ) / 100 ) );
+    $total = ( $subtotal - ( ( $subtotal * $descuento ) / 100 ) );
     $venta->setTotal( $total );
 
     //si la venta es de contado, hay que liquidarla
@@ -538,7 +538,7 @@ function venderAdmin( $args ){
     //verificar que $data->items  sea un array
     if(!is_array( $data->items )){
         Logger::log("data -> items no es un array de productos");
-        die( '{"success": false, "reason": "Error : No se generaron correctamente las descripciones de los productos para la venta." }' );
+        die( '{"success": false, "reason": "No se generaron correctamente las descripciones de los productos para la venta." }' );
     }
     
     //verificamos que $data->items almenos tenga un producto
@@ -552,7 +552,7 @@ function venderAdmin( $args ){
     
         if( !( isset( $item -> id_producto ) && isset( $item -> id_compra_proveedor ) && isset( $item -> procesado ) && isset( $item -> precio ) && isset( $item -> cantidad ) ) ){
             Logger::log("Uno o mas objetos de data -> items no tiene el formato correcto");
-            die( '{"success": false, "reason": "Error : No se generaron correctamente la descripcion de uno o mas productos." }' );
+            die( '{"success": false, "reason": "No se genero correctamente la descripcion de uno o mas productos." }' );
         }
     
     }
