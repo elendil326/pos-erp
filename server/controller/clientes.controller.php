@@ -497,7 +497,7 @@ function abonarVenta( $args ){
 	    case "cheque" :
 	        $pagosVenta -> setTipoPago( $data -> tipo_pago );
 	    break;
-	    case "targeta" :
+	    case "tarjeta" :
 	        $pagosVenta -> setTipoPago( $data -> tipo_pago );
 	    break;
 	    default:
