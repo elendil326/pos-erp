@@ -21,8 +21,14 @@
 	if(!isset($_REQUEST['cid'])){
 	    $clientes = listarClientes();
     
+        ?>
+                <script>
+                    var CLIENTE = null;
+                </script>
+        <?php
+
 		if(sizeof($clientes ) > 0){
-			echo '<select id="sucursal"> ';    
+			echo '<select id="cliente_selector"> ';    
 			foreach( $clientes as $c ){
 				echo "<option value='" . $c['id_cliente'] . "' >" . $c['nombre']  . "</option>";
 			}
@@ -36,10 +42,16 @@
 		$cliente = ClienteDAO::getByPK( $_REQUEST['cid'] );
 		
 		if($cliente === null){
-			echo "<h3>Este cliente no existe</h3>";
+			?>
+                <h3>Este cliente no existe</h3>
+
+            <?php
 		}else{
 		
 		?>
+            <script>
+                var CLIENTE = <?php echo $cliente->getIdCliente(); ?>;
+            </script>
 			<table border="0" cellspacing="1" cellpadding="1">
 				<tr><td><b>Nombre</b></td><td><?php echo $cliente->getNombre(); ?></td><td rowspan=12><div id="map_canvas"></div></td></tr>
 				<tr><td><b>RFC</b></td><td><?php echo $cliente->getRFC(); ?></td></tr>
@@ -62,7 +74,14 @@
 </style>
 
 <script>
+
 	var carrito = [];
+    var venta = {
+           tipo_de_venta : 'credito', //{ credito, contado }
+           tipo_de_pago : null, //{ efectivo, tarjeta, cheque }           
+           factura : false,
+    };
+
 	
 	function remove(data){
 		jQuery("#" + data).css("color", "");
@@ -132,16 +151,15 @@
            jQuery("#total_importe").html( cf( t_importe ) )
            jQuery("#total_qty").html( t_qty )
 	}
+
 	
     function dovender(){
 
-
-
         json = {
-            id_cliente: 1,
-            tipo_venta:  1,
-            tipo_pago: 1,
-            factura: 1,
+            id_cliente: CLIENTE !== null ? CLIENTE : jQuery("cliente_selector").val() ,
+            tipo_venta: venta.tipo_de_venta,
+            tipo_pago:  venta.tipo_de_pago,
+            factura:    venta.factura,
             items: []
         };
 
@@ -242,6 +260,44 @@
 		jQuery("#cart input").uniform();
 
 	}
+
+
+    function setPaymentType( tipo ){
+        venta.tipo_de_venta = tipo;
+        switch(tipo){
+            case "contado" : 
+                jQuery("#tipoDePago").show();
+            break;
+
+            case "credito" : 
+            default:
+                jQuery("#tipoDePago").hide();
+                setPayment(null);
+        }
+    }
+
+    function setPayment( tipo ){
+        jQuery("#tipoDePagoInfo").show();
+        venta.tipo_de_pago = tipo;
+
+        switch(tipo){
+            case "efectivo" : 
+                jQuery("#tipoDePagoInfo").html('Efectivo <input type="text">');
+            break;
+
+            case "cheque" :
+                jQuery("#tipoDePagoInfo").html('Referencia <input type="text">');                
+            break;
+
+            case "tarjeta":
+                jQuery("#tipoDePagoInfo").html('Datos <input type="text">');
+            break;
+
+            default:
+                jQuery("#tipoDePagoInfo").hide();
+        }
+    }
+
 </script>
 
 
@@ -309,8 +365,41 @@ $tabla->render();
     <div id='cart'>
 
     </div>
-    
+
+
+	<!-- -------------------------------
+            OPCIONES DE PAGO
+	  ------------------------------- -->   
+<h2>Opciones de pago</h2>
+
+<table width="100%" border=0 align=center>
+   <tr >
+    <td valign="top" >
+        <h3>Tipo de venta</h3>
+      <input type="radio" name="tipo_venta_input" onChange="setPaymentType(this.value)" value="credito" checked="checked" /> Credito<br />
+      <input type="radio" name="tipo_venta_input" onChange="setPaymentType(this.value)" value="contado"  /> Contado<br />
+    </td>
+
+
+    <td valign="top" id="tipoDePago" style="display:none;">
+      <h3>Tipo de pago</h3>
+      <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="efectivo" /> Efectivo<br />
+      <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="cheque"  /> Cheque<br />
+      <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="tarjeta" /> Tarjeta<br />
+    </td>
+
+    <td valign="top" id="tipoDePagoInfo" style="display:none;">
+
+    </td>
+    </tr>
+</table>
+
+
+
     <h4 align="center" id="do-sell">
     	<input type="button" value="Vender" onClick="dovender()">
     	<img src="../media/loader.gif" id="loader" style="display: none;">
     </h4>
+
+
+
