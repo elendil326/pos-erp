@@ -12,6 +12,16 @@ require_once('model/inventario_maestro.dao.php');
 require_once('logger.php');
 
 /*
+ * Regresa el precio intersucursal de la ultima actualizacion de precio
+ * @param 
+ * @return verdadero si tuvo exito, falso si no fue asi
+ * 
+ * */
+function obtenerPrecioIntersucursal( $id_producto ){
+
+}
+
+/*
  * listar las existencias para la sucursal dada sucursal
  * */
 function listarInventario( $sucID = null){
@@ -445,18 +455,20 @@ function procesarProducto( $json = null ){
     
     $suma = 0;
     
+     $inventario_maestro =  InventarioMaestroDAO::getByPK( $data -> id_producto, $data -> id_compra_proveedor );
+    
     foreach( $data -> subproducto as $subproducto){
         $suma += $subproducto -> cantidad_procesada;
     }
     
     $consecuente = $data -> resultante + $data -> desecho + $suma;
     
-    if( $consecuente > $detalle_compra_proveedor -> getExistencias() ){
+    if( $consecuente > $inventario_maestro -> getExistencias() ){
         Logger::log( "Error : verifique la cantidad de otros productos" );
 		die( '{"success": false, "reason": "Error : verifique la cantidad de otros productos"}' );
     }
     
-    $inventario_maestro =  InventarioMaestroDAO::getByPK( $data -> id_producto, $data -> id_compra_proveedor );
+   
     
     //  1.- Restar en inventario maestro a sus existencias : el deshecho + la suma de las cantidades procesadas de los subproductos
     
@@ -738,10 +750,7 @@ if(isset($args['action'])){
 			procesarProductoSucursal($args["data"]);
 		break;
 
-	    default:
-	        printf( '{ "success" : "false" }' );
-	    break;
-
+	   
 	}
 }
 

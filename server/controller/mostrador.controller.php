@@ -76,7 +76,6 @@ function revisarExistenciasSucursal( $productos )
 
 
 /*
-
  * @param DetalleVenta [] 
  * @returns verdadero si existen suficientes productos para satisfacer la demanda en el inventario maestro
  * */

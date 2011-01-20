@@ -72,6 +72,12 @@ function nuevaCompraProveedor( $data = null ){
 	
 	Logger::log("Iniciando le proceso de registro de nueva compra a proveedor");
 	
+	//validamos que el data->embarque->total_arpillas sea > 0
+	if( $data->embarque->total_arpillas <= 0 ){
+	    Logger::log("Error : verifique el numeto toal de arpillas : " . $data->embarque->total_arpillas . ".");
+		die('{ "success": false, "reason" : "Error : verifique el numeto total de arpillas :' .  $data->embarque->total_arpillas . '."}');
+	}
+	
 	 //calculamos el peso real por arpilla
     $peso_real_por_arpilla = $data->embarque->peso_por_arpilla - $data->embarque->merma_por_arpilla;
     $otro_peso_real_por_arpilla = ( $data->embarque->peso_recibido - ( $data->embarque->total_arpillas * $data->embarque->merma_por_arpilla ) / $data->embarque->total_arpillas );
@@ -622,6 +628,7 @@ function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = 
 	
 }
 
+
 function nuevaCompraSucursal( $data = null){
 
 	$data = parseJSON( $data );
@@ -964,7 +971,7 @@ if(isset($args['action'])){
 			editarCompraProveedorFlete( $args['data'] );
 		break;
 		
-		case 1005;//crear compra sucursal
+		case 1005;//funcion utilizada por el admin para vender producto a una sucursal 
 		
 		/*
 			{
