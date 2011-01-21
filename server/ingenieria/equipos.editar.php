@@ -58,7 +58,7 @@
 
 <h2>Editar detalles</h2>
 <form action="equipos.php?action=editar&id=<?php echo $_GET['id']; ?>" method="POST">
-<table border="0" cellspacing="5" cellpadding="5">
+<table border="0" cellspacing="5" cellpadding="5" width="100%">
 	<tr><td>ID Equipo</td><td><input type="text" value="<?php echo $equipo->getIdEquipo(); ?>" id="id" disabled="true" size="40"/></td></tr>
 	<tr><td>Full User-Agent</td><td><input type="text" value="<?php echo $equipo->getFullUa(); ?>" name="fua" id="fua" size="40"/></td></tr>
 	<tr><td>SID Token</td><td><input type="text" value="<?php echo $equipo->getToken(); ?>" name="token" id="token" size="40"/></td></tr>

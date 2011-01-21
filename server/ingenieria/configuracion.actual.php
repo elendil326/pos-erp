@@ -7,6 +7,8 @@ $contents = htmlspecialchars($contents);
 
 ?>
 
+
+
 <h2>Contenido del archivo</h2>
 <pre style='overflow: hidden; padding: 5px; width: 100%; background: whiteSmoke;' >
 
