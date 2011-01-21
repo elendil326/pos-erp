@@ -28,11 +28,13 @@ try{
     $conn->PConnect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
     if(!$conn) {
-        throw new Exception("Error en la conexión a la base de datos.");
-    }
-} catch (exception $e) {
 
-	echo '{ "success" : false, "reason" : "NO_DB" }';	
-	exit;
+	    die( '{ "success" : false, "reason" : "NO_DB" }' );	
+    }
+
+} catch (Exception $e) {
+
+	die( '{ "success" : false, "reason" : "NO_DB" }' );	
+
 }
 ?>

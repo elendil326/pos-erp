@@ -109,7 +109,7 @@ Aplicacion.Clientes.prototype.listaDeComprasLoad = function (){
 	}
 	
 	Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		scope : this,
 		params : {
 			action : 304
@@ -191,7 +191,7 @@ Aplicacion.Clientes.prototype.listaDeClientesLoad = function (){
 	}
 	
 	Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		scope : this,
 		params : {
 			action : 300
@@ -619,7 +619,7 @@ Aplicacion.Clientes.prototype.editarCliente = function ( data )
 	Ext.getBody().mask('Guardando...', 'x-mask-loading', true);
 
 	Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		scope : this,
 		params : {
 			action : 302,
@@ -813,7 +813,7 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 	}
 	
 	Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		scope : this,
 		params : {
 			action : 305,
@@ -1057,7 +1057,7 @@ Aplicacion.Clientes.prototype.eliminarCliente = function ( respuesta )
 	cliente.activo = 0;
 
 	Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		scope : this,
 		params : {
 			action : 302,
@@ -1568,7 +1568,7 @@ Aplicacion.Clientes.prototype.crearCliente = function ( data )
 	Ext.getBody().mask('Creando cliente ...', 'x-mask-loading', true);
 
 	Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		scope : this,
 		params : {
 			action : 301,

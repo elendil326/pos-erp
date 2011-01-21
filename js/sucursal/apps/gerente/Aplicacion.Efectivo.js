@@ -91,7 +91,7 @@ Aplicacion.Efectivo.prototype.sucursalesLista = null;
 Aplicacion.Efectivo.prototype.cargarSucursales = function ( )
 {
     Ext.Ajax.request({
-        url: 'proxy.php',
+        url: '../proxy.php',
         scope : this,
         params : {
             action : 700
@@ -123,7 +123,7 @@ Aplicacion.Efectivo.prototype.cargarEmpleados = function ( a, b )
 {
 
     Ext.Ajax.request({
-        url: 'proxy.php',
+        url: '../proxy.php',
         scope : this,
         params : {
             action : 505,
@@ -162,7 +162,7 @@ Aplicacion.Efectivo.prototype.nuevaOperacionInterSucursalEfectivo = function( da
     Ext.getBody().mask('Guardando nuevo prestamo de efectivo ...', 'x-mask-loading', true);
 
     Ext.Ajax.request({
-        url: 'proxy.php',
+        url: '../proxy.php',
         scope : this,
         params : {
             action : 600,
@@ -550,7 +550,7 @@ Aplicacion.Efectivo.prototype.nuevoGasto = function( data ){
     Ext.getBody().mask('Guardando nuevo gasto ...', 'x-mask-loading', true);
 
     Ext.Ajax.request({
-        url: 'proxy.php',
+        url: '../proxy.php',
         scope : this,
         params : {
             action : 600,
@@ -753,7 +753,7 @@ Aplicacion.Efectivo.prototype.nuevoAbono = function( data ){
     Ext.getBody().mask('Guardando nuevo abono ...', 'x-mask-loading', true);
 
     Ext.Ajax.request({
-        url: 'proxy.php',
+        url: '../proxy.php',
         scope : this,
         params : {
             action : 606,
@@ -898,7 +898,7 @@ Aplicacion.Efectivo.prototype.nuevoIngreso = function( data ){
     Ext.getBody().mask('Guardando nuevo ingreso ...', 'x-mask-loading', true);
 
     Ext.Ajax.request({
-        url: 'proxy.php',
+        url: '../proxy.php',
         scope : this,
         params : {
             action : 603,

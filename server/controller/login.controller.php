@@ -323,10 +323,10 @@ function dispatch($args){
 
 
 	switch($_SESSION['grupo']){
-		case "1" : echo "<script>window.location = 'admin.html".$debug."'</script>"; break;
-		case "2" : echo "<script>window.location = 'sucursal.html".$debug."'</script>"; break;
-		case "3" : echo "<script>window.location = 'sucursal.html".$debug."'</script>"; break;
-        case "0" : echo "<script>window.location = 'ingenieria.html".$debug."'</script>"; break;
+		case "1" : echo "<script>window.location = 'admin/".$debug."'</script>"; break;
+		case "2" : echo "<script>window.location = 'sucursal/sucursal.html".$debug."'</script>"; break;
+		case "3" : echo "<script>window.location = 'sucursal/sucursal.html".$debug."'</script>"; break;
+        case "0" : echo "<script>window.location = 'ingenieria/".$debug."'</script>"; break;
 	}
 }
 

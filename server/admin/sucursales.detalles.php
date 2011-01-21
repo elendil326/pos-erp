@@ -28,11 +28,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 <script type="text/javascript" charset="utf-8" src="../frameworks/humblefinance/humble/HumbleFinance.js"></script>
 <link rel="stylesheet" href="../frameworks/humblefinance/humble/finance.css" type="text/css" media="screen" title="no title" charset="utf-8">
 
-<?php 
-if(POS_ENABLE_GMAPS){
-    ?><script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script><?php
-}
-?>
+
 
 <h1><?php echo $sucursal->getDescripcion(); ?></h1>
 
@@ -609,4 +605,8 @@ if(POS_ENABLE_GMAPS){
 
 
 
-
+<?php 
+if(POS_ENABLE_GMAPS){
+    ?><script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script><?php
+}
+?>

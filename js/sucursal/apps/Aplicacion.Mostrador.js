@@ -65,7 +65,7 @@ Aplicacion.Mostrador.prototype.getInfoSucursal = function()
 	}
 	
 	Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		scope : this,
 		params : {
 			action : 712,
@@ -734,7 +734,7 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 	
 	html += "<table class='Mostrador-ThankYou'>";
 	html += "	<tr>";	
-	html += "		<td><img src='media/cash_register.png'></td>";
+	html += "		<td><img src='../media/cash_register.png'></td>";
 	html += "		<td></td>";
 	html += "	</tr>"; 
 	
@@ -827,7 +827,7 @@ Aplicacion.Mostrador.prototype.vender = function ()
 	}
 	
 	Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		scope : this,
 		params : {
 			action : 100,

@@ -116,7 +116,7 @@ Aplicacion.Inventario.prototype.cargarInventario = function ()
 	}
 
 	Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		scope : this,
 		params : {
 			action : 400
@@ -629,7 +629,7 @@ Aplicacion.Inventario.prototype.surtirCarrito = function(){
     }
 
     Ext.Ajax.request({
-        url: 'proxy.php',
+        url: '../proxy.php',
         scope : this,
         params : {
             action : 209,

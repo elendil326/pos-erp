@@ -39,7 +39,7 @@ Aplicacion.Salir.prototype.getConfig = function (){
 		        text: 'Salir del punto de venta',
 		        handler: function() {
 						Ext.Ajax.request({
-							url: 'proxy.php',
+							url: '../proxy.php',
 							scope : this,
 							params : {
 								action : 2002

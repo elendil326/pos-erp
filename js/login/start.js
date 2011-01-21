@@ -16,7 +16,7 @@ if(document.location.search=="?debug")
 function checkCurrentSession(){
 	
 	Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		params : {
 			action : 2001
 		},
@@ -55,7 +55,7 @@ function checkCurrentSession(){
 			}
 			
 
-			window.location = "proxy.php?action=2005";
+			window.location = "../proxy.php?action=2005";
 			
 		},
 
@@ -86,10 +86,10 @@ function parseLoginResults( args ){
 	}
 	
 	if(DEBUG){
-		window.location = "proxy.php?DEBUG=true&action=2005";
+		window.location = "../proxy.php?DEBUG=true&action=2005";
 		return;
 	}
-	window.location = "proxy.php?action=2005";
+	window.location = "../proxy.php?action=2005";
 
 }
 
@@ -100,7 +100,7 @@ var sendLogin = function (){
 	Ext.getBody().mask('Revisando...', 'x-mask-loading', true);
 	
  	Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		params : {
 			action: 2004,
 			u : Ext.getCmp("uid").getValue(),

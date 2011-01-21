@@ -103,7 +103,7 @@ Aplicacion.Personal.prototype.listaDePersonalLoad = function ()
 	}
 	
 	Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		scope : this,
 		params : {
 			action : 501
@@ -242,7 +242,7 @@ Aplicacion.Personal.prototype.editarDetallesEmpleadoDespedirBoton = function ()
 			v.activo = 0;
 			
 			Ext.Ajax.request({
-				url: 'proxy.php',
+				url: '../proxy.php',
 				scope : this,
 				params : {
 					action : 503,
@@ -325,7 +325,7 @@ Aplicacion.Personal.prototype.editarDetallesEmpleadoGuardarBoton = function ()
 	Ext.getBody().mask('Modificando datos ...', 'x-mask-loading', true);
 
 	Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		scope : this,
 		params : {
 			action : 502,
@@ -518,7 +518,7 @@ Aplicacion.Personal.prototype.crearEmpleadoBoton = function (  )
 	json = Ext.util.JSON.encode( v );
 	
 	Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		scope : this,
 		params : {
 			action : 500,
@@ -575,7 +575,7 @@ Aplicacion.Personal.prototype.reincorporarEmpleado = function ( v, id_usuario )
             v.activo = 1;
 
             Ext.Ajax.request({
-                url: 'proxy.php',
+                url: '../proxy.php',
                 scope : this,
                 params : {
                     action : 502,
@@ -628,7 +628,7 @@ Aplicacion.Personal.prototype.nuevoEmpleadoGargarTipos = function ( )
 {
 	
 	Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		scope : this,
 		params : {
 			action : 504

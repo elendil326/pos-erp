@@ -126,7 +126,7 @@ Aplicacion.Autorizaciones.prototype.nueva.nuevoCreditoModificar = function( data
 Ext.getBody().mask('Guardando nuevo gasto ...', 'x-mask-loading', true);
 
     Ext.Ajax.request({
-        url: 'proxy.php',
+        url: '../proxy.php',
         scope : this,
         params : {
             action : 202,
@@ -262,7 +262,7 @@ Aplicacion.Autorizaciones.prototype.nueva.creditoPanelCreator = function()
 Aplicacion.Autorizaciones.prototype.solicitudAutorizacionMerma = function( values ){
 
     Ext.Ajax.request({
-        url: 'proxy.php',
+        url: '../proxy.php',
         scope : this,
         params : {
             action : 205,
@@ -381,7 +381,7 @@ Aplicacion.Autorizaciones.prototype.listaDetalleCompra = function( id_compra )
     Ext.getBody().mask('Obteniendo lista de compras ...', 'x-mask-loading', true);
 
     Ext.Ajax.request({
-        url: 'proxy.php',
+        url: '../proxy.php',
         scope : this,
         params : {
             action : 403,
@@ -536,7 +536,7 @@ Aplicacion.Autorizaciones.prototype.nueva.mermaPanelCreator = function ()
 Aplicacion.Autorizaciones.prototype.solicitudAutorizacionDevolucion = function( values ){
 
     Ext.Ajax.request({
-        url: 'proxy.php',
+        url: '../proxy.php',
         scope : this,
         params : {
             action : 203,
@@ -662,7 +662,7 @@ Aplicacion.Autorizaciones.prototype.listaDetalleVenta = function( id_venta )
     Ext.getBody().mask('Obteniendo lista de ventas ...', 'x-mask-loading', true);
 
     Ext.Ajax.request({
-        url: 'proxy.php',
+        url: '../proxy.php',
         scope : this,
         params : {
             action : 404,
@@ -870,7 +870,7 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesLoad = function (){
 	}
 	
 	Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		scope : this,
 		params : {
 			action : 207
@@ -918,7 +918,7 @@ Aplicacion.Autorizaciones.prototype.surtirAutorizacion = function(  ){
     if(DEBUG){console.log("autorizacion",autorizacion);}
 
     Ext.Ajax.request({
-        url: 'proxy.php',
+        url: '../proxy.php',
         scope : this,
         params : {
             action : 211,

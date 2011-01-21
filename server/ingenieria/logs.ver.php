@@ -21,7 +21,7 @@ $lines =  Logger::read() ;
 echo "<pre style='overflow: hidden; padding: 5px; width: 100%; background: whiteSmoke; margin-bottom:5px; font-size:9.5px;'>";
 
 for($a = sizeof($lines) - 1; $a >= 0 ; $a-- ){
-
+    
 	echo $lines[$a] . "\n" ;
 }
 echo "</pre>";

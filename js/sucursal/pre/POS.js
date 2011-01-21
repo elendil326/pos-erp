@@ -55,7 +55,7 @@ function task(){
 
     //enviar hash de inventario
     Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		scope : this,
 		params : { action : 400, hashCheck : Aplicacion.Inventario.currentInstance.Inventario.hash },
 		success: function(response, opts) {
@@ -73,7 +73,7 @@ function task(){
 	
     //enviar hash de clientes
     Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		scope : this,
 		params : { action : 300, hashCheck : Aplicacion.Clientes.currentInstance.listaDeClientes.hash },
 		success: function(response, opts) {
@@ -90,7 +90,7 @@ function task(){
 	
     //enviar hash de autorizaciones
 	Ext.Ajax.request({
-		url: 'proxy.php',
+		url: '../proxy.php',
 		scope : this,
 		params : { action : 207, hashCheck : Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.hash },
 		success: function(response, opts) {

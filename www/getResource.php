@@ -81,7 +81,11 @@ switch($module)
 	
 		if(!isset($_SESSION['grupo'])){
 			Logger::log("Solicitud de recurso para sucursal sin sesion valida.");
-			die(" /* ACCESO DENEGADO */");				
+            if( $type == "js" ){
+    			die("window.location = \".\";");
+            }
+
+			die("/* ACCESO DENEGADO */");
 		}
 
 		
