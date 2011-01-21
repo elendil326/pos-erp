@@ -218,7 +218,6 @@ function vender( $args ){
 	if( !( isset( $data -> tipo_venta ) && isset( $data -> factura ) && isset( $data -> items ) ) ){	
 	    Logger::log("Falta uno o mas parametros");
         die( '{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }' );
-    
 	}
 	
     //verificar que $data->items  sea un array
@@ -260,7 +259,18 @@ function vender( $args ){
     $item -> id_producto = $data->items[0] -> id_producto;
     $item -> procesado = $data -> items[0] -> procesado;
     
+    if( $data->items[0] -> cantidad <= 0 ){
+        Logger::log("La cantidad de los productos debe ser mayor que cero.");
+        die('{"success": false, "reason": "La cantidad de los productos debe ser mayor que cero." }');
+    }
+        
+    if(  $data->items[0] -> precio <= 0 ){
+        Logger::log("El precio de los productos debe ser mayor que cero.");
+        die('{"success": false, "reason": "El precio de los productos debe ser mayor que cero." }');
+    }
+    
     if( $data -> items[0] -> procesado == true ){
+
          $item -> cantidad_procesada = $data->items[0] -> cantidad;
          $item -> precio_procesada = $data->items[0] -> precio;
          $item -> cantidad = 0;
@@ -280,18 +290,41 @@ function vender( $args ){
     
         //iteramos el $obj_items 
         
+        if( $data->items[$i] -> cantidad <= 0 ){
+            Logger::log("La cantidad de los productos debe ser mayor que cero.");
+            die('{"success": false, "reason": "La cantidad de los productos debe ser mayor que cero." }');
+        }
+            
+        if(  $data->items[$i] -> precio <= 0 ){
+            Logger::log("El precio de los productos debe ser mayor que cero.");
+            die('{"success": false, "reason": "El precio de los productos debe ser mayor que cero." }');
+        }
+        
         foreach( $array_items as $item ){
             
             if(  $data->items[$i]  -> id_producto == $item -> id_producto ){
 
                   //si se encuentra ese producto en el arreglo de objetos
                 if( $data->items[$i]->procesado == true ){
-                     $item -> cantidad_procesada += $data->items[$i] -> cantidad_procesada;                     
-                     $item -> precio_procesada += $data->items[$i]-> precio_procesada;
+                     $item -> cantidad_procesada += $data->items[$i] -> cantidad;       
+                                   
+                     if( $item -> precio_procesada != 0 && $item -> precio_procesada != $data->items[$i]-> precio){
+                        Logger::log("Selecciono dos productos iguales, pero con diferente precio.");
+		                die('{"success": false, "reason": "Selecciono dos o mas productos ' . $item -> id_producto . ' - PROCESADO, pero con diferente precio." }');
+                     }
+                     
+                     $item -> precio_procesada = $data->items[$i]-> precio;
                      
                 }else{
                     $item -> cantidad += $data->items[$i] -> cantidad;
-                    $item -> precio += $data->items[$i] -> precio;
+                    
+                    if( $item -> precio != 0 && $item -> precio != $data->items[$i]-> precio){
+                        Logger::log("Selecciono dos productos iguales, pero con diferente precio.");
+		                die('{"success": false, "reason": "Selecciono dos o mas productos ' . $item -> id_producto . ' - ORIGINAL, pero con diferente precio." }');
+                     }
+                     
+                     $item -> precio = $data->items[$i]-> precio;
+                    
                 }                                
             }else{
             
@@ -379,7 +412,7 @@ function vender( $args ){
     
     }
     
-    if( isset( $data -> tipo_pago ) && $data -> tipo_venta == "contado" ){    
+    if( isset( $data -> tipo_pago ) &&  $venta -> getTipoVenta( ) == "contado" ){    
         //verificamos que el tipo de pago sea valido
         switch( $data -> tipo_pago ){
        
@@ -416,9 +449,30 @@ function vender( $args ){
         die( '{"success": false, "reason": "No se pudo registrar la venta." }' );       
     }
 
-    $subtotal = 0;
+
+    //insertar detalles de la venta   
+  	foreach($array_items as $producto)
+    {
+        $detalle_venta = new  DetalleVenta(); 
+        $detalle_venta -> setIdVenta( $id_venta );
+        $detalle_venta -> setIdProducto( $producto -> id_producto );
+        $detalle_venta -> setCantidad( $producto -> cantidad );
+        $detalle_venta -> setPrecio( $producto -> precio );
+        $detalle_venta -> setCantidadProcesada( $producto -> cantidad_procesada );
+        $detalle_venta -> setPrecioProcesada( $producto -> precio_procesada );
+        
+         try{
+            DetalleVentaDAO::save( $detalle_venta );
+        }catch(Exception $e){
+            DAO::transRollback();
+	        Logger::log( $e);
+            die( '{"success": false, "reason": "Error, al guardar el detalle venta." }' );
+        }
+    }
 
      //descontamos del inventario el pedido
+    $subtotal = 0;
+
     foreach( $array_items as $producto ){	
     
 		$detalle_inventario = DetalleInventarioDAO::getByPK( $producto -> id_producto, $_SESSION['sucursal'] );	
@@ -437,15 +491,16 @@ function vender( $args ){
         }
         
 	}	    
-        
+	
     //ya que se tiene el total de la venta se actualiza el total de la venta
     $venta->setSubtotal( $subtotal );
     $total = ( $subtotal - ( ( $subtotal * $descuento ) / 100 ) );
     $venta->setTotal( $total );
 
     //si la venta es de contado, hay que liquidarla
-    if( $venta->getTipoVenta() == "contado" ){
-        $venta->setPagado( $total );
+    if( $venta -> getTipoVenta() == "contado" ){
+        $venta -> setPagado( $total );
+        $venta -> setLiquidada( 1 );
     }
 
     try
@@ -460,6 +515,7 @@ function vender( $args ){
         {
             DAO::transRollback();
             die( '{"success": false, "reason": "No se pudo actualizar el total de la venta" }' );
+
         }
     }
     catch(Exception $e)
