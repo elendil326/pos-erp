@@ -20,9 +20,10 @@ require_once('logger.php');
 function obtenerPrecioIntersucursal( $id_producto ){
 
     //verificamos que el producto este registrado en el inventario
-    /*if( InventarioDAO::getByPK( $id_producto ) ){
-        
-    }*/
+    if( ! InventarioDAO::getByPK( $id_producto ) ){
+        Logger::log("el producto : {$id_producto} no se tiene registrado en el inventario");
+        die( '{"success": false, "reason": "el producto : ' . $id_producto . ' no se tiene registrado en el inventario" }' );
+    }
 
     $act_precio = new ActualizacionDePrecio();
     $act_precio -> setIdProducto(  $id_producto );
@@ -35,7 +36,7 @@ function obtenerPrecioIntersucursal( $id_producto ){
 /*
  * listar las existencias para la sucursal dada sucursal
  * */
-function listarInventario( $sucID = null){
+function listarInventario( $sucID = null ){
     
 	if(!$sucID){
 		return null; 
@@ -51,36 +52,7 @@ function listarInventario( $sucID = null){
     foreach( $results as $producto )
 	{
         $productoData = InventarioDAO::getByPK( $producto->getIdProducto() );	
-       
-		$act_precio = new ActualizacionDePrecio();
-		$act_precio -> setIdProducto( $producto->getIdProducto() );
-		
-		$resultados = ActualizacionDePrecioDAO::search( $act_precio );
-		
-		$fecha_mas_actual = strtotime("2000-1-1 00:00:00");
-		
-		//buscamos el cambio de precio mas actual (nunca entrara si no hay una cambio de autorizacion de precio)
-		$precioIntersucursal = "No def";
-		
-		foreach( $resultados as $r ){
-		
-			$r = parseJSON( $r );
-		
-			$fecha = strtotime($r->fecha);
-			
-			//echo "comparando: <br>";
-			//echo "fecha acual :" . $fecha_mas_actual . " fecha : " . $fecha ."<br>";
-			
-			if( $fecha >  $fecha_mas_actual)
-			{
-				$fecha_mas_actual = $fecha;
-				$precioIntersucursal = $r -> precio_intersucursal;
-			}
-			
-		}
-	
-		
-			   
+
         Array_push( $json , array(
             "productoID" => $productoData->getIdProducto(),
             "descripcion" => $productoData->getDescripcion(),
@@ -90,7 +62,7 @@ function listarInventario( $sucID = null){
             "existenciasOriginales" => $producto->getExistencias(),
             "existenciasProcesadas" => $producto->getExistenciasProcesadas(),
             "medida" => $productoData->getEscala(),
-            "precioIntersucursal" => $precioIntersucursal
+            "precioIntersucursal" => obtenerPrecioIntersucursal( $producto->getIdProducto() )
         ));
     }
 
@@ -761,6 +733,9 @@ if(isset($args['action'])){
 			procesarProductoSucursal($args["data"]);
 		break;
 
+	   case 499:
+        echo obtenerPrecioIntersucursal( $args['id_producto'] );
+	   break;
 	}
 }
 
