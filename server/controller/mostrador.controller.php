@@ -369,7 +369,7 @@ function vender( $args ){
     $venta->setDescuento( 0 );
     $venta->setCancelada( 0 );
     
-    if($data -> id_cliente == NULL)
+    if( !isset( $data -> id_cliente ) )
     {
 
         $venta->setIdCliente( $_SESSION['sucursal'] * -1 );

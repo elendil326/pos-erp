@@ -222,6 +222,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			id : "Mostrador-carritoCantidad"+ carrito.items[i].idUnique + "Text",
 			value : carrito.items[i].cantidad,
 			prodID : carrito.items[i].id_producto,
+			idUnique : carrito.items[i].idUnique,
 			width: 100,
 			style:{
 		         textAlign: 'center'
@@ -234,9 +235,14 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 						type : 'num',
 						submitText : 'Aceptar',
 						callback : function ( campo ){
+
 							//buscar el producto en la estructura y ponerle esa nueva cantidad
 							for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
-								if(Aplicacion.Mostrador.currentInstance.carrito.items[i].productoID == campo.prodID){
+								if(Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique  == campo.idUnique ){
+								
+								    
+								
+								
 									Aplicacion.Mostrador.currentInstance.carrito.items[i].cantidad = parseFloat( campo.getValue() );
 									break;
 								}
@@ -339,6 +345,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 					                    Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaSinProcesar;
 					                }
 					                
+					                
                                 if(DEBUG){
                                     //console.log("buscando el producto" + id);
                                     console.log("El producto " + this.idUnique + " esta  procesado ?"  + Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado );	
@@ -395,7 +402,7 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 		console.log("Agregando el producto " + id + " al carrito.", res);
 	}
 
-	//buscar este producto en el carrito
+	//buscar este producto en el carrito (solo se permiten 2 articulos iguales)
 	for(var a = 0, found = false, incidencias = 0 ; a < this.carrito.items.length; a++)
 	{
 	
@@ -428,7 +435,7 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 			tratamiento:res.data.tratamiento,   //si es !null  entonces el producto puede ser original o procesado
 			precioVenta: res.data.precioVenta,
 			precioVentaSinProcesar: res.data.precioVentaSinProcesar,
-			precio: res.data.precioVenta, //precio al que se vendera (por default trae el de producto procesado)
+			precio: res.data.precioVenta, //precio al que se vendera (el producto, por default tiene el precio del producto procesado)
 			id_producto: res.data.productoID,
 			escala: res.data.medida,
 			precioIntersucursal : res.data.precioIntersucursal,
@@ -543,6 +550,7 @@ Aplicacion.Mostrador.prototype.mostradorPanelCreator = function (){
 	})];
    
 	this.mostradorPanel = new Ext.Panel({
+
 		listeners : {
 			"show" : this.refrescarMostrador
 		},
