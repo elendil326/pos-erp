@@ -194,7 +194,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 
 		html += "<td style='width: 10.2%;'> <div  id='Mostrador-carritoPrecio"+ carrito.items[i].idUnique +"'></div></td>";
 		
-		html += "<td  style='width: 11.3%;'>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioVenta )+"</td>";
+		html += "<td  style='width: 11.3%;'>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precio )+"</td>";
 		
 		html += "</tr>";
 	}
@@ -255,7 +255,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		b = new Ext.form.Text({
 			renderTo : "Mostrador-carritoPrecio"+ carrito.items[i].idUnique ,
 			id : "Mostrador-carritoPrecio"+ carrito.items[i].idUnique + "Text",
-			value : POS.currencyFormat( carrito.items[i].precioVenta ),
+			value : POS.currencyFormat( carrito.items[i].precio ),
 			prodID : carrito.items[i].id_producto,
 			idUnique : carrito.items[i].idUnique,			
 			placeHolder : "Precio de Venta",
@@ -268,6 +268,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 						type : 'num',
 						submitText : 'Cambiar',
 						callback : function ( campo ){
+						
 							//buscar el producto en la estructura y ponerle esa nueva cantidad
 							for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
 								if(Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == campo.idUnique){
@@ -282,12 +283,15 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 										}
 									}
 									
+									
+									
+									//verificamos que no intente cambiar el precio por un precio mas bajo del preestablecido
 									if( parseFloat(campo.getValue()) < parseFloat( precioVenta) ){
 										Ext.Msg.alert("Mostrador", "No puede bajar un precio por debajo del preestablecido.");
 										break;
 									}
 									
-									Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta = parseFloat( campo.getValue() );
+									Aplicacion.Mostrador.currentInstance.carrito.items[i].precio= parseFloat( campo.getValue() );
 									break;
 								}
 							}
@@ -324,19 +328,27 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                 listeners : {
                     "change" : function (){
                      
-                     for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
+                        for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
                             if(Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == this.idUnique){
 					
-					            Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado = this.value;			
-					            
-					             if(DEBUG){
-		                                //console.log("buscando el producto" + id);
-		                                console.log("El producto " + this.idUnique + " esta  procesado ?"  + Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado );	
-		                                console.log( "Todos los productos : " + Aplicacion.Mostrador.currentInstance.carrito.items );	                            
-	                                }	
-					
-					        }
-				        }
+					                Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado = this.value;		
+					                
+					                if( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true" ){
+					                    Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta;
+					                }else{
+					                    Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaSinProcesar;
+					                }
+					                
+                                if(DEBUG){
+                                    //console.log("buscando el producto" + id);
+                                    console.log("El producto " + this.idUnique + " esta  procesado ?"  + Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado );	
+                                    console.log( "Todos los productos : " + Aplicacion.Mostrador.currentInstance.carrito.items );	                            
+                                }	
+                            }
+                        }
+                        
+                        //refrescar el html
+	                    Aplicacion.Mostrador.currentInstance.refrescarMostrador();
 				        
                     }//change
                 }//listeners
@@ -383,42 +395,52 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 		console.log("Agregando el producto " + id + " al carrito.", res);
 	}
 
-	/*//buscar este producto en el carrito
-	for(var a = 0, found = false ; a < this.carrito.items.length; a++)
+	//buscar este producto en el carrito
+	for(var a = 0, found = false, incidencias = 0 ; a < this.carrito.items.length; a++)
 	{
-		if(this.carrito.items[a].productoID == id)
+	
+		if(this.carrito.items[a].id_producto == id)
 		{
 			//ya esta en el carrito, aumentar su cuenta
-			found = true;
-			this.carrito.items[a].cantidad++;
-			break;
+			incidencias ++;
+			//found = true;
+			//this.carrito.items[a].cantidad++;
+			//break;
+			if( incidencias > 1 ){
+			    Ext.Msg.alert("Alerta","El producto '" + res.data.descripcion + "' ya existe en el carrito.");
+			    found = true;
+			    break;
+			}
+
 		}
 	}
 	
 	//si no, agregarlo al carrito
 	if(!found)
-	{*/
+	{
 	
-	var len = this.carrito.items.length;
+	    var len = this.carrito.items.length;
 	
 		this.carrito.items.push({
 			descripcion: res.data.descripcion,
 			existencias: res.data.existenciasOriginales,
 			existencias_procesadas: res.data.existenciasProcesadas,
 			tratamiento:res.data.tratamiento,   //si es !null  entonces el producto puede ser original o procesado
-			//existenciasMinimas: res.data.existenciasMinimas,
 			precioVenta: res.data.precioVenta,
+			precioVentaSinProcesar: res.data.precioVentaSinProcesar,
+			precio: res.data.precioVenta, //precio al que se vendera (por default trae el de producto procesado)
 			id_producto: res.data.productoID,
-			medida: res.data.medida,
+			escala: res.data.medida,
 			precioIntersucursal : res.data.precioIntersucursal,
+			precioIntersucursalSinProcesar : res.data.precioIntersucursalSinProcesar,
 			procesado : "true",
 			cantidad : 1,
 			idUnique : res.data.productoID + "_" +  Aplicacion.Mostrador.currentInstance.uniqueIndex
 		});
 		
-		Aplicacion.Mostrador.currentInstance.uniqueIndex++;
+		Aplicacion.Mostrador.currentInstance.uniqueIndex++; //identificador unico e irepetible
 		
-	//}
+	}
 	
 
 	//refrescar el html

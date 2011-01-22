@@ -12,12 +12,12 @@ require_once('model/inventario_maestro.dao.php');
 require_once('logger.php');
 
 /*
- * Regresa el precio intersucursal de la ultima actualizacion de precio
+ * Regresa un obeto ActualizacionDePrecio con la informacion de la ultima actualizacion de precio
  * @param $id_producto es el id del producto al cual nos referimos
- * @return float El precio intersucursal de ese producto
+ * @return ActualizacionDePrecio objeto de tipo ActualizacionDePrecio que contiene la informacion mas actualizada de los precios del producto
  * 
  * */
-function obtenerPrecioIntersucursal( $id_producto ){
+function obtenerActualizacionDePrecio( $id_producto ){
 
     //verificamos que el producto este registrado en el inventario
     if( ! InventarioDAO::getByPK( $id_producto ) ){
@@ -29,7 +29,7 @@ function obtenerPrecioIntersucursal( $id_producto ){
     $act_precio -> setIdProducto(  $id_producto );
     $result = ActualizacionDePrecioDAO::search( $act_precio, 'fecha', 'desc' );
     
-    return $result[0] -> getPrecioIntersucursal();
+    return $result[0] ;
     
 }
 
@@ -53,17 +53,21 @@ function listarInventario( $sucID = null ){
 	{
         $productoData = InventarioDAO::getByPK( $producto->getIdProducto() );	
 
+        $actualizacion_de_precio =  obtenerActualizacionDePrecio( $producto->getIdProducto() );
+
         Array_push( $json , array(
             "productoID" => $productoData->getIdProducto(),
             "descripcion" => $productoData->getDescripcion(),
             "tratamiento" => $productoData->getTratamiento(),
             "precioVenta" => $producto->getPrecioVenta(),
-
+            "precioVentaSinProcesar" => $actualizacion_de_precio ->  getPrecioVentaSinProcesar(),
             "existenciasOriginales" => $producto->getExistencias(),
             "existenciasProcesadas" => $producto->getExistenciasProcesadas(),
             "medida" => $productoData->getEscala(),
-            "precioIntersucursal" => obtenerPrecioIntersucursal( $producto->getIdProducto() )
+            "precioIntersucursal" => $actualizacion_de_precio -> getPrecioIntersucursal(),
+            "precioIntersucursalSinProcesar" => $actualizacion_de_precio -> getPrecioIntersucursalSinProcesar()
         ));
+        
     }
 
 	return $json;
