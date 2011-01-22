@@ -10,33 +10,42 @@ require_once("model/cliente.dao.php");
 require_once("model/inventario.dao.php");
 require_once('model/actualizacion_de_precio.dao.php');
 
-function solicitudDeAutorizacion( $auth ){
 
-	Logger::log("solicitud de autorizacion");
+
+
+
+/**
+  * Sucursal solicita autorizacion.
+  * 
+  * Cuando una sucursal solicita una autorizacion se pasa
+  * por aqui, y se inserta tal cual.
+  * 
+  * 
+  **/
+function solicitudDeAutorizacion( $auth, $tipo ){
+
+
 	
     $autorizacion = new Autorizacion();
     
     $autorizacion->setIdUsuario( $_SESSION['userid'] );
     $autorizacion->setIdSucursal( $_SESSION['sucursal'] );
     $autorizacion->setEstado('0');
+    $autorizacion->setTipo( $tipo );    
 
     $autorizacion->setParametros( $auth );
 
-    try
-    {
-        if( AutorizacionDAO::save( $autorizacion ) > 0 )
-        {
-            printf( '{ "success" : "true" }' );
-        }
-        else
-        {
-            die( '{ "success" : "false" , "reason" : "No se pudo enviar la autorizacion."}' );
-        }
+    try{
+        AutorizacionDAO::save( $autorizacion );
+
+    }catch(Exception $e){
+
+        Logger::log($e);
+        die( '{ "success" : false , "reason" : "No se pudo enviar la autorizacion."}' );
     }
-    catch(Exception $e)
-    {
-        die( '{ "success" : "false" , "reason" : "No se pudo enviar la autorizacion."}' );
-    }
+
+    echo '{"success": true }';
+	Logger::log("Solicitud de sucursal creada satisfactoriamente.");
 
 }//solicitudDeAutorizacion
 
@@ -74,7 +83,9 @@ function autorizacionesSucursal( $sid ){
         
         //si la autorizacion contiene productos, agregarles,
         //la descripcion
-        if($autorizacion->getTipo() == 'envioDeProductosASucursal'){
+        if($autorizacion->getTipo() == 'envioDeProductosASucursal'
+            || $autorizacion->getTipo() == 'solicitudDeProductos'
+            ){
 
             $params = json_decode($autorizacion->getParametros());
 
@@ -155,7 +166,7 @@ function surtirProducto($id_autorizacion){
             if( !$producto_inventario ){
                Logger::log("Se ha intentado surtir un producto que no existe");
 				DAO::transRollback();    
-                die( '{ "success" : "false" , "reason" : "El producto ' . $producto->id_producto . ' no se encuentra registrado en el inventario."}' );
+                die( '{ "success" : false , "reason" : "El producto ' . $producto->id_producto . ' no se encuentra registrado en el inventario."}' );
             }
             
             //el producto existe en el inventario global pero no en la sucursal, insertarlo
@@ -220,7 +231,7 @@ function surtirProducto($id_autorizacion){
     }catch(Exception $e){
 		DAO::transRollback();    
         Logger::log($e);
-        die( '{ "success" : "false" , "reason" : "Error al surtir esta autorizacion, intente de nuevo."}' );
+        die( '{ "success" : false , "reason" : "Error al surtir esta autorizacion, intente de nuevo."}' );
     }
 
     echo '{"success" : true }';    
@@ -312,16 +323,16 @@ function respuestaAutorizacionSurtir( $args ){
     {
         if( AutorizacionDAO::save( $autorizacion ) > 0 )
         {
-            printf( '{ "success" : "true" }' );
+            printf( '{ "success" : true }' );
         }
         else
         {
-            die( '{ "success" : "false" , "reason" : "Error al cambiar el estado de la autorización."}' );
+            die( '{ "success" : false , "reason" : "Error al cambiar el estado de la autorización."}' );
         }
     }
     catch(Exception $e)
     {
-        die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorización."}' );
+        die( '{ "success" : false , "reason" : "Exception al cambiar estado de la autorización."}' );
     }
 
 }
@@ -394,7 +405,7 @@ function surtirProductosSucursal( $args ){
     try
     {
         AutorizacionDAO::save( $autorizacion );
-        printf( '{ "success" : "true" }' );
+        printf( '{ "success" : true }' );
 
     }
     catch(Exception $e)
@@ -402,7 +413,7 @@ function surtirProductosSucursal( $args ){
 
         DAO::transRollback();
         Logger::log("Imposible guardar autorizacion: " . $e);
-        die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorización."}' );
+        die( '{ "success" : false , "reason" : "Exception al cambiar estado de la autorización."}' );
     }
 
 
@@ -432,16 +443,16 @@ function respuestaAutorizacionGasto( $args ){
     {
         if( AutorizacionDAO::save( $autorizacion ) > 0 )
         {
-            printf( '{ "success" : "true" }' );
+            printf( '{ "success" : true }' );
         }
         else
         {
-            die( '{ "success" : "false" , "reason" : "No se pudo responder la autorizacion."}' );
+            die( '{ "success" : false , "reason" : "No se pudo responder la autorizacion."}' );
         }
     }
     catch(Exception $e)
     {
-        die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorizacion."}' );
+        die( '{ "success" : false , "reason" : "Exception al cambiar estado de la autorizacion."}' );
     }
 
 }
@@ -535,58 +546,58 @@ function respuestaAutorizacionDevolucion( $args ){
                                 {
                                     if( VentasDAO::save( $venta ) > 0 )
                                     {
-                                        printf( '{ "success" : "true" }' );
+                                        printf( '{ "success" : true }' );
                                     }
                                     else
                                     {
-                                        die( '{ "success" : "false" , "reason" : "No se pudo modificar el total de la venta."}' );
+                                        die( '{ "success" : false , "reason" : "No se pudo modificar el total de la venta."}' );
                                     }
                                 }
                                 catch(Exception $e)
                                 {
-                                    die( '{ "success" : "false" , "reason" : "Exception al modificar el valor de la venta."}' );
+                                    die( '{ "success" : false , "reason" : "Exception al modificar el valor de la venta."}' );
                                 }
                                 
                                 
                             }
                             else
                             {
-                                die( '{ "success" : "false" , "reason" : "No se pudo modificar el detalle de la venta."}' );
+                                die( '{ "success" : false , "reason" : "No se pudo modificar el detalle de la venta."}' );
                             }
                         }
                         catch(Exception $e)
                         {
-                            die( '{ "success" : "false" , "reason" : "Exception al modificar el detalle de la venta."}' );
+                            die( '{ "success" : false , "reason" : "Exception al modificar el detalle de la venta."}' );
                         }
  
                         
                     }
                     else
                     {
-                        die( '{ "success" : "false" , "reason" : "No se pudo modificar las existencias en el inventario."}' );
+                        die( '{ "success" : false , "reason" : "No se pudo modificar las existencias en el inventario."}' );
                     }
                 }
                 catch(Exception $e)
                 {
-                    die( '{ "success" : "false" , "reason" : "Exception al modificar las existencias en el inventario."}' );
+                    die( '{ "success" : false , "reason" : "Exception al modificar las existencias en el inventario."}' );
                 }
                    
             }
             else
             {
                 //entra si no se aprovo el cambio de limite de credito
-                printf( '{ "success" : "true" }' );
+                printf( '{ "success" : true }' );
             }
             
         }
         else
         {
-            die( '{ "success" : "false" , "reason" : "No se pudo responder la autorizacion."}' );
+            die( '{ "success" : false , "reason" : "No se pudo responder la autorizacion."}' );
         }
     }
     catch(Exception $e)
     {
-        die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorizacion."}' );
+        die( '{ "success" : false , "reason" : "Exception al cambiar estado de la autorizacion."}' );
     }
 
 }
@@ -681,58 +692,58 @@ function respuestaAutorizacionMerma( $args ){
                                 {
                                     if( ComprasDAO::save( $compra ) > 0 )
                                     {
-                                        printf( '{ "success" : "true" }' );
+                                        printf( '{ "success" : true }' );
                                     }
                                     else
                                     {
-                                        die( '{ "success" : "false" , "reason" : "No se pudo modificar el total de la compra."}' );
+                                        die( '{ "success" : false , "reason" : "No se pudo modificar el total de la compra."}' );
                                     }
                                 }
                                 catch(Exception $e)
                                 {
-                                    die( '{ "success" : "false" , "reason" : "Exception al modificar el valor de la comrpa."}' );
+                                    die( '{ "success" : false , "reason" : "Exception al modificar el valor de la comrpa."}' );
                                 }
                                 
                                 
                             }
                             else
                             {
-                                die( '{ "success" : "false" , "reason" : "No se pudo modificar el detalle de la compra."}' );
+                                die( '{ "success" : false , "reason" : "No se pudo modificar el detalle de la compra."}' );
                             }
                         }
                         catch(Exception $e)
                         {
-                            die( '{ "success" : "false" , "reason" : "Exception al modificar el detalle de la compra."}' );
+                            die( '{ "success" : false , "reason" : "Exception al modificar el detalle de la compra."}' );
                         }
  
                         
                     }
                     else
                     {
-                        die( '{ "success" : "false" , "reason" : "No se pudo modificar las existencias en el inventario."}' );
+                        die( '{ "success" : false , "reason" : "No se pudo modificar las existencias en el inventario."}' );
                     }
                 }
                 catch(Exception $e)
                 {
-                    die( '{ "success" : "false" , "reason" : "Exception al modificar las existencias en el inventario."}' );
+                    die( '{ "success" : false , "reason" : "Exception al modificar las existencias en el inventario."}' );
                 }
                    
             }
             else
             {
                 //entra si no se aprovo el cambio de limite de credito
-                printf( '{ "success" : "true" }' );
+                printf( '{ "success" : true }' );
             }
             
         }
         else
         {
-            die( '{ "success" : "false" , "reason" : "No se pudo responder la autorizacion."}' );
+            die( '{ "success" : false , "reason" : "No se pudo responder la autorizacion."}' );
         }
     }
     catch(Exception $e)
     {
-        die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorizacion."}' );
+        die( '{ "success" : false , "reason" : "Exception al cambiar estado de la autorizacion."}' );
     }
 
 }
@@ -794,34 +805,34 @@ function respuestaAutorizacionLimiteCredito( $args ){
                 {
                     if( ClienteDAO::save( $cliente ) > 0 )
                     {
-                        printf( '{ "success" : "true" }' );
+                        printf( '{ "success" : true }' );
                     }
                     else
                     {
-                        die( '{ "success" : "false" , "reason" : "No se pudo responder la autorizacion."}' );
+                        die( '{ "success" : false , "reason" : "No se pudo responder la autorizacion."}' );
                     }
                 }
                 catch(Exception $e)
                 {
-                    die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorizacion."}' );
+                    die( '{ "success" : false , "reason" : "Exception al cambiar estado de la autorizacion."}' );
                 }
                    
             }
             else
             {
                 //entra si no se aprovo el cambio de limite de credito
-                printf( '{ "success" : "true" }' );
+                printf( '{ "success" : true }' );
             }
             
         }
         else
         {
-            die( '{ "success" : "false" , "reason" : "No se pudo responder la autorizacion."}' );
+            die( '{ "success" : false , "reason" : "No se pudo responder la autorizacion."}' );
         }
     }
     catch(Exception $e)
     {
-        die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorizacion."}' );
+        die( '{ "success" : false , "reason" : "Exception al cambiar estado de la autorizacion."}' );
     }
 
 }
@@ -862,12 +873,12 @@ if( isset( $args['action'] ) ){
 
             if( !isset( $args['concepto'] ) || !isset( $args['monto'] ) )
             {
-                die( '{ "success" : "false" , "reason" : "Faltan datos" }' );
+                die( '{ "success" : false , "reason" : "Faltan datos" }' );
             }
         
             if( !is_numeric( $args['monto'] ) )
             {
-                die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' );
+                die( '{ "success" : false , "reason" : "No es una cantidad valida." }' );
             }
         
             $descripcion = json_encode(array(
@@ -885,12 +896,12 @@ if( isset( $args['action'] ) ){
 
             if( !isset( $args['id_cliente'] ) || !isset( $args['cantidad'] ) )
             {
-                die( '{ "success" : "false" , "reason" : "Faltan datos" }' );
+                die( '{ "success" : false , "reason" : "Faltan datos" }' );
             }
 
             if( !is_numeric( $args['cantidad'] ) )
             {
-                die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' );
+                die( '{ "success" : false , "reason" : "No es una cantidad valida." }' );
             }
 
             $descripcion = json_encode(array(
@@ -923,7 +934,7 @@ if( isset( $args['action'] ) ){
 
             if(!is_numeric( $data -> cantidad ))
             {
-                die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' );
+                die( '{ "success" : false , "reason" : "No es una cantidad valida." }' );
             }
 
             $descripcion = json_encode(array(
@@ -942,12 +953,12 @@ if( isset( $args['action'] ) ){
             
             if( !isset( $args['id_producto'] ) || !isset( $args['precio'] ) )
             {
-                die( '{ "success" : "false" , "reason" : "Faltan datos" }' );
+                die( '{ "success" : false , "reason" : "Faltan datos" }' );
             }
 
             if( !is_numeric( $args['precio'] ) )
             {
-                die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' );
+                die( '{ "success" : false , "reason" : "No es una cantidad valida." }' );
             }
 
             $descripcion = json_encode(array(
@@ -979,7 +990,7 @@ if( isset( $args['action'] ) ){
 
             if(!is_numeric( $data -> cantidad ))
             {
-                die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' );
+                die( '{ "success" : false , "reason" : "No es una cantidad valida." }' );
             }
 
             $descripcion = json_encode(array(
@@ -1035,12 +1046,12 @@ if( isset( $args['action'] ) ){
             }
 
             $descripcion = json_encode(array(
-                'clave'=>$args['action'],
+                'clave'=> 210,
                 'descripcion'=>'Solicitud de producto',
                 'productos'=>$data
             ));
 
-            solicitudDeAutorizacion( $descripcion );
+            solicitudDeAutorizacion( $descripcion, "solicitudDeProductos" );
 
         break;
 
@@ -1095,7 +1106,7 @@ if( isset( $args['action'] ) ){
         break;
         
         default:
-            printf ('{ "success" : "false" }');
+            printf ('{ "success" : false }');
         break;
 
     }

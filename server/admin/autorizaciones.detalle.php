@@ -43,10 +43,6 @@ function contestar(id, response){
 function surtirSuc(id, aut){
     window.location = "inventario.php?action=surtir&sid=" + id+"&aut="+aut;
 }
-
-jQuery(function(){
-  jQuery("input, select").uniform();
-});
 </script>
 
 

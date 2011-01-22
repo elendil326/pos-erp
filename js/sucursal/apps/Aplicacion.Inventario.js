@@ -277,8 +277,18 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelUpdater = function( produc
 	}
 
 	detallesPanel = Aplicacion.Inventario.currentInstance.detalleInventarioPanel;
-	detallesPanel.loadRecord( producto );
-	
+//	detallesPanel.loadRecord( producto );
+
+	detallesPanel.setValues({
+
+        productoID  :   producto.get('productoID'),
+        descripcion :   producto.get('descripcion'),
+        precioVenta :   POS.currencyFormat( producto.get('precioVenta') ),
+        existenciasOriginales : producto.get('existenciasOriginales') + " " + producto.get('medida')+"s",
+        existenciasProcesadas : producto.get('existenciasProcesadas') + " " + producto.get('medida')+"s"
+
+
+    });
 
 };
 
@@ -322,12 +332,12 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelCreator = function()
 			},
 		
 			items: [
-				new Ext.form.Text({ name: 'productoID', label: 'ID' }),
+				new Ext.form.Text({ name: 'productoID', label: 'ID del producto' }),
 				new Ext.form.Text({ name: 'descripcion', label: 'Descripcion' }),
-				new Ext.form.Text({ name: 'precioVenta', label: 'Precio a la venta' }),
+				new Ext.form.Text({ name: 'precioVenta', label: 'Precio sugerido' }),
 				new Ext.form.Text({ name : 'existenciasOriginales', label: 'Existencias Originales' }),
 				new Ext.form.Text({ name : 'existenciasProcesadas', label: 'Existencias' }),
-				new Ext.form.Text({ name : 'existenciasMinimas', label: 'Existencias Minimas' })
+	//			new Ext.form.Text({ name : 'existenciasMinimas', label: 'Existencias Minimas' })
 			]}
 	]});
 
@@ -390,15 +400,22 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 	}
 	
 	carrito = this.carritoSurtir;
-	
+
+    if(carrito.items.length > 0){
+    	Ext.getCmp("Inventario-confirmarPedido").show( Ext.anims.slide );
+    }else{
+    	Ext.getCmp("Inventario-confirmarPedido").hide( Ext.anims.slide );
+    }
+
+
 	var html = "<table border=0>";
 	
 	html += "<tr class='top'>";
 	html += "<td>Descripcion</td>";
     html += "<td></td>";
 	html += "<td colspan=2>Cantidad</td>";
-	html += "<td>Precio Intersucursal</td>";
-	html += "<td>Total</td>";
+//	html += "<td>Precio Intersucursal</td>";
+	//html += "<td>Total</td>";
 
 	html += "</tr>";
 	
@@ -414,16 +431,12 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 			html += "<tr >";		
 		
 		html += "<td>" + carrito.items[i].productoID + " " + carrito.items[i].descripcion+ "</td>";
-
-		html += "<td > <span class = 'boton' onClick = 'Aplicacion.Inventario.currentInstance.quitarDelCarrito(" + carrito.items[i].productoID + ")'>Del</span> </td>";
-
+		html += "<td > <span class = 'boton' onClick = 'Aplicacion.Inventario.currentInstance.quitarDelCarrito(" + carrito.items[i].productoID + ")'>Quitar</span> </td>";
 		html += "<td colspan=2 > <div id='Inventario-carritoCantidad"+ carrito.items[i].productoID +"'></div></td>";
 
 		//html += "<td > </td>";
-
-		html += "<td> <div style='color: green'>"+ POS.currencyFormat(carrito.items[i].precioIntersucursal) +"</div></td>";
-		
-		html += "<td>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioIntersucursal )+"</td>";
+//		html += "<td> <div style='color: green'>"+ POS.currencyFormat(carrito.items[i].precioIntersucursal) +"</div></td>";
+//		html += "<td>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioIntersucursal )+"</td>";
 		
 		html += "</tr>";
 	}
@@ -442,7 +455,7 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 			id : "Inventario-carritoCantidad"+ carrito.items[i].productoID + "Text",
 			value : carrito.items[i].cantidad,
 			prodID : carrito.items[i].productoID,
-			width: 50,
+			width: 150,
 			placeHolder : "Cantidad",
 			listeners : {
 				'focus' : function (){
@@ -520,6 +533,8 @@ Aplicacion.Inventario.prototype.surtirWizardCreator = function ()
 	},{
 		text: 'Confirmar pedido',
 		ui: 'action',
+        hidden: true,
+        id : 'Inventario-confirmarPedido',
 		handler : function( t ){
             Aplicacion.Inventario.currentInstance.surtirCarritoValidator();
 		}		
@@ -644,13 +659,13 @@ Aplicacion.Inventario.prototype.surtirCarrito = function(){
 
             
             if( !r.success ){
-                Ext.Msg.alert("Inventario","Error: no se registro la solicitud de producto, porngase en contacto con el administrador o envie nuevamente una solicitud");
-                Aplicacionlicacion.Inventario.currentInstance.carritoSurtir.items = [];
+                Ext.Msg.alert("Inventario","Intente de nuevo");
+                Aplicacion.Inventario.currentInstance.carritoSurtir.items = [];
                 Aplicacion.Inventario.currentInstance.refreshSurtir();
                 return;
             }
 
-            Ext.Msg.alert("Inventario","Solicitu enviada con exito");
+            Ext.Msg.alert("Inventario","Solicitud enviada con exito");
 
             Aplicacion.Inventario.currentInstance.carritoSurtir.items = [];
             Aplicacion.Inventario.currentInstance.refreshSurtir();

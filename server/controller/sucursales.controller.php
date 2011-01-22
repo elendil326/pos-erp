@@ -5,7 +5,7 @@ require_once('model/ventas.dao.php');
 require_once('model/usuario.dao.php');
 require_once('model/grupos_usuarios.dao.php');
 require_once('model/cliente.dao.php');
-require_once('logger.php');
+
 
 function listarSucursales(  ){
 

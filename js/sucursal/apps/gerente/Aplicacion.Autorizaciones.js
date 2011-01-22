@@ -847,7 +847,7 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizaciones = {
 Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesStore = new Ext.data.Store({
     model: 'listaDeAutorizacionesModel' ,
     sorters: 'fecha_peticion',
-    groupDir: 'DESC',
+    
 
     getGroupString : function(record) {
 
@@ -909,6 +909,56 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesLoad = function (){
 
 
 
+/*
+ * Contiene el panel con la lista de autorizaciones
+ */
+Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanel = null;
+
+/**
+ * Pone un panel en listaDeAutorizacionesPanel
+ */
+Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanelCreator = function (){
+
+
+    this.listaDeAutorizacionesPanel = new Ext.Panel({
+        layout: Ext.is.Phone ? 'fit' : {
+            type: 'vbox',
+            align: 'center',
+            pack: 'center'
+        },
+        items: [{
+
+			width : '100%',
+			height: '100%',
+            xtype: 'list',
+            store: this.listaDeAutorizacionesStore,
+            itemTpl: '<div class="listaDeAutorizacionesAutorizacion">ID de autorizacion : {id_autorizacion}&nbsp; Enviada el {fecha_peticion}</div>',
+            grouped: true,
+            indexBar: false,
+            listeners : {
+                "selectionchange"  : function ( view, nodos, c ){
+                    if(nodos.length > 0){
+                        //if(DEBUG){console.log(nodos, c, view);}
+                        Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionPanelShow( nodos[0] );
+                        console.error("bug ! cuando haces un tap el orden de nodos[0] no es el correcto");
+                        //console.log(view.getSelectedRecords());
+                    }
+
+
+                    view.deselectAll();
+                    },
+                "itemtap" : function(a,b,c,d){
+                        //console.log(a,b,c,d)
+                        //console.log(a.getSelectedRecords())    
+                    }
+                }
+        }]
+
+    });
+
+    Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel = this.listaDeAutorizacionesPanel;
+    
+};
 
 
 
@@ -1085,9 +1135,47 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
             });
 
 
-            
+            if(autorizacion.get('estado') == 3){
+                instrucciones = "Hay un embarque en transito con estos productos.";
+            }else{
+                instrucciones = "Usted ya ha recibido este embarque.";
+            }
+
         break;
 
+
+        /*
+         *
+         * El gerente de esta sucursal a solicitado producto.
+         */
+        case '210':
+
+            //creamos la tabla
+            html = "";
+            html += "<table border = 0>";
+            html += "   <tr class = 'top'>";
+            html += "       <td>Producto</td>";
+            html += "       <td>Cantidad solicitada</td>";
+            html += "   </tr>";
+
+            for ( var i = 0; i < parametros.productos.length; i++ ){
+                html += "<tr  >";
+                html += "   <td>" + parametros.productos[i].id_producto + " " + parametros.productos[i].descripcion +  "</td>";
+                html += "   <td>" + parametros.productos[i].cantidad + " " + parametros.productos[i].escala + "s</td>";
+                html += "</tr>";
+            }
+
+            html += "</table>";
+
+            itemsForm.push({
+                id:     'detalleAutorizacionFormPanel-Tabla',
+                html:   html,
+                cls :   'Tabla',
+            });
+
+            instrucciones = "Esta es una solicitud de producto al centro de distribucion.";
+
+        break;
     }//switch
 
 
@@ -1118,7 +1206,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
         items: [{
                 xtype: 'fieldset',
                 title: (!parametros.descripcion)?parametros.concepto:parametros.descripcion,
-                //instructions: 'Ingrese la cantidad de Devolución.',
+                instructions: instrucciones,
                 items:  itemsForm 
             }
         ]
@@ -1136,50 +1224,6 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
 
 
 
-/*
- * Contiene el panel con la lista de autorizaciones
- */
-Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanel = null;
-
-/**
- * Pone un panel en listaDeAutorizacionesPanel
- */
-Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanelCreator = function (){
-
-
-    this.listaDeAutorizacionesPanel = new Ext.Panel({
-        layout: Ext.is.Phone ? 'fit' : {
-            type: 'vbox',
-            align: 'center',
-            pack: 'center'
-        },
-        items: [{
-
-			width : '100%',
-			height: '100%',
-            xtype: 'list',
-            store: this.listaDeAutorizacionesStore,
-            itemTpl: '<div class="listaDeAutorizacionesAutorizacion">ID de autorizacion : {id_autorizacion}&nbsp; Enviada el {fecha_peticion}</div>',
-            grouped: true,
-            indexBar: false,
-            listeners : {
-                "selectionchange"  : function ( view, nodos, c ){
-                    if(nodos.length > 0){
-                        //poner los valores del cliente en la forma
-                        Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionPanelShow( nodos[0] );
-                    }
-
-                    //deseleccinar el cliente
-                    view.deselectAll();
-                    }
-                }
-        }]
-
-    });
-
-    Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel = this.listaDeAutorizacionesPanel;
-    
-};
 
 
 
