@@ -114,10 +114,11 @@ Aplicacion.Mostrador.prototype.getInfoSucursal = function()
  *	Estructura donde se guardaran los detalles de la venta actual.
  * */
 Aplicacion.Mostrador.prototype.carrito = {
-	tipoDeVenta : "contado",
-	items : [  ],
+	tipo_venta : "null",
+	items : [],
 	cliente : null,
-	factura : false
+	factura : false,
+	tipo_pago: null
 };
 
 
@@ -179,17 +180,17 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		}else{
 			html += "<tr >";		
 		}
-		html += "<td style='width: 25.5%;' ><b>" + carrito.items[i].productoID + "</b> " + carrito.items[i].descripcion+ "</td>";
+		html += "<td style='width: 25.5%;' ><b>" + carrito.items[i].id_producto + "</b> " + carrito.items[i].descripcion+ "</td>";
 		
 		html += "<td style='width: 15.2%;' ><div id='Mostrador-carritoTratamiento"+ carrito.items[i].idUnique +"'></div></td>";
 
-		html += "<td  align='right' style='width: 9.2%;'> <span class='boton'  onClick=\"Aplicacion.Mostrador.currentInstance.quitarDelCarrito('"+ carrito.items[i].idUnique +"')\"><img src='media/icons/close_16.png'>&nbsp;Quitar&nbsp;</span></td>";
+		html += "<td  align='right' style='width: 9.2%;'> <span class='boton'  onClick=\"Aplicacion.Mostrador.currentInstance.quitarDelCarrito('"+ carrito.items[i].idUnique +"')\"><img src='../media/icons/close_16.png'>&nbsp;Quitar&nbsp;</span></td>";
 
-		html += "<td  align='center'  style='width: 8.2%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique + "', -1, false)\">&nbsp;-&nbsp;<img src='media/icons/arrow_down_16.png'></span></td>";
+		html += "<td  align='center'  style='width: 8.2%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique + "', -1, false)\">&nbsp;-&nbsp;<img src='../media/icons/arrow_down_16.png'></span></td>";
 
 		html += "<td  align='center'  style='width: 10.2%;' ><div id='Mostrador-carritoCantidad"+ carrito.items[i].idUnique +"'></div></td>";
 
-		html += "<td  align='center'  style='width: 8.2%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique +"', 1, false)\"><img src='media/icons/arrow_up_16.png'>&nbsp;+&nbsp;</span></td>";
+		html += "<td  align='center'  style='width: 8.2%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique +"', 1, false)\"><img src='../media/icons/arrow_up_16.png'>&nbsp;+&nbsp;</span></td>";
 
 		html += "<td style='width: 10.2%;'> <div  id='Mostrador-carritoPrecio"+ carrito.items[i].idUnique +"'></div></td>";
 		
@@ -215,11 +216,12 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			continue;
 		}
 	
+	   
 		a = new Ext.form.Text({
 			renderTo : "Mostrador-carritoCantidad"+ carrito.items[i].idUnique ,
 			id : "Mostrador-carritoCantidad"+ carrito.items[i].idUnique + "Text",
 			value : carrito.items[i].cantidad,
-			prodID : carrito.items[i].productoID,
+			prodID : carrito.items[i].id_producto,
 			width: 100,
 			style:{
 		         textAlign: 'center'
@@ -254,7 +256,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			renderTo : "Mostrador-carritoPrecio"+ carrito.items[i].idUnique ,
 			id : "Mostrador-carritoPrecio"+ carrito.items[i].idUnique + "Text",
 			value : POS.currencyFormat( carrito.items[i].precioVenta ),
-			prodID : carrito.items[i].productoID,			
+			prodID : carrito.items[i].id_producto,
+			idUnique : carrito.items[i].idUnique,			
 			placeHolder : "Precio de Venta",
 			listeners : {
 				'focus' : function (a){
@@ -267,7 +270,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 						callback : function ( campo ){
 							//buscar el producto en la estructura y ponerle esa nueva cantidad
 							for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
-								if(Aplicacion.Mostrador.currentInstance.carrito.items[i].productoID == campo.prodID){
+								if(Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == campo.idUnique){
 									
 									//buscar el preoducto en el arreglo de 
 									precioVenta = null;
@@ -299,46 +302,47 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		
 		});
 		
-		c = new Ext.form.Select({
-			renderTo : "Mostrador-carritoTratamiento"+ carrito.items[i].idUnique ,
-			id : "Mostrador-carritoTratamiento"+ carrito.items[i].idUnique + "Select",
-			productoID : carrito.items[i].productoID,
-			idUnique : carrito.items[i].idUnique,
-			value : carrito.items[i].tipoProducto,
-			style:{
-		         width: '100%'
-		    }, 
-            options : [
-                {
-                    text : "Limpia",
-                    value : "procesado"
-                },{
-                    text : "Original",
-                    value : "original"
-                }
-            ],
-            listeners : {
-                "change" : function (){
-                 
-                 
-                 for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
-                        if(Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == this.idUnique){
+		 if(carrito.items[i].tratamiento != ""){
+		 
+		    c = new Ext.form.Select({
+			    renderTo : "Mostrador-carritoTratamiento"+ carrito.items[i].idUnique ,
+			    id : "Mostrador-carritoTratamiento"+ carrito.items[i].idUnique + "Select",
+			    idUnique : carrito.items[i].idUnique,
+			    value : carrito.items[i].procesado,
+			    style:{
+		             width: '100%'
+		        }, 
+                options : [
+                    {
+                        text : "Limpia",
+                        value : "true"
+                    },{
+                        text : "Original",
+                        value : "false"
+                    }
+                ],
+                listeners : {
+                    "change" : function (){
+                     
+                     for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
+                            if(Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == this.idUnique){
 					
-					        Aplicacion.Mostrador.currentInstance.carrito.items[i].tipoProducto = this.value;			
-					        
-					         if(DEBUG){
-		                            //console.log("buscando el producto" + id);
-		                            console.log("El producto " + this.productoID + " esta  "  + Aplicacion.Mostrador.currentInstance.carrito.items[i].tipoProducto );	
-		                            console.log( "Todos los productos : " + Aplicacion.Mostrador.currentInstance.carrito.items );	                            
-	                            }	
+					            Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado = this.value;			
+					            
+					             if(DEBUG){
+		                                //console.log("buscando el producto" + id);
+		                                console.log("El producto " + this.idUnique + " esta  procesado ?"  + Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado );	
+		                                console.log( "Todos los productos : " + Aplicacion.Mostrador.currentInstance.carrito.items );	                            
+	                                }	
 					
-					    }
-				    }
-				    
-                }//change
-            }//listeners
+					        }
+				        }
+				        
+                    }//change
+                }//listeners
 	
-		});
+		    });
+        }
 		
 	}
 	
@@ -399,15 +403,15 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 	
 		this.carrito.items.push({
 			descripcion: res.data.descripcion,
-			existenciasOriginales: res.data.existenciasOriginales,
-			existenciasProcesadas: res.data.existenciasProcesadas,
-			tratamiento:res.data.tratamiento,
-			existenciasMinimas: res.data.existenciasMinimas,
+			existencias: res.data.existenciasOriginales,
+			existencias_procesadas: res.data.existenciasProcesadas,
+			tratamiento:res.data.tratamiento,   //si es !null  entonces el producto puede ser original o procesado
+			//existenciasMinimas: res.data.existenciasMinimas,
 			precioVenta: res.data.precioVenta,
-			productoID: res.data.productoID,
+			id_producto: res.data.productoID,
 			medida: res.data.medida,
 			precioIntersucursal : res.data.precioIntersucursal,
-			tipoProducto : 'procesado',
+			procesado : "true",
 			cantidad : 1,
 			idUnique : res.data.productoID + "_" +  Aplicacion.Mostrador.currentInstance.uniqueIndex
 		});
@@ -576,7 +580,7 @@ Aplicacion.Mostrador.prototype.setCajaComun = function ()
 	Ext.getCmp("Mostrador-tipoCliente").getComponent(1).setBadge( );		
 	Ext.getCmp('Mostrador-tipoCliente').setPressed(0);
 
-	Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta = "contado";
+	Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";
 	Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = "efectivo";
 	Aplicacion.Mostrador.currentInstance.carrito.cliente = null;
 	Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
@@ -738,7 +742,7 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 	html += "		<td></td>";
 	html += "	</tr>"; 
 	
-	if(carrito.tipoDeVenta != "credito"){
+	if(carrito.tipo_venta != "credito"){
 		//mostrar el cambio
 		html += "	<tr>";	
 		html += "		<td>Su cambio: <b>"+POS.currencyFormat( parseFloat( Ext.getCmp("Mostrador-doVentaEfectivo").getValue() ) - parseFloat( carrito.total ) )+"</b></td>";
@@ -783,7 +787,7 @@ Aplicacion.Mostrador.prototype.doVenta = function ()
 	carrito = Aplicacion.Mostrador.currentInstance.carrito;
 
 	
-	if(carrito.tipoDeVenta == 'contado'){
+	if(carrito.tipo_venta == 'contado'){
 		if(DEBUG){
 			console.log("revisando venta a contado...");
 		}
@@ -957,7 +961,7 @@ Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
 			Ext.getCmp('Mostrador-doVentaClienteCreditoRestante').setValue( POS.currencyFormat( this.carrito.cliente.credito_restante ));
 		}else{
 			Ext.getCmp('Mostrador-doVentaClienteCreditoRestante').setVisible(false);			
-			Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta = "contado";
+			Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";
 			Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
 			Ext.getCmp('Mostrador-doVentaCobrar').setVisible(true);
 		}
@@ -978,10 +982,10 @@ Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
 		if( total <= this.carrito.cliente.credito_restante){
 			Ext.getCmp('Mostrador-doVentaTipoContado').setVisible(false);
 			Ext.getCmp('Mostrador-doVentaTipoCredito').setVisible(true);
-			Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta = Ext.getCmp('Mostrador-doVentaTipoCredito').getValue();
+			Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = Ext.getCmp('Mostrador-doVentaTipoCredito').getValue();
 			Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
 			
-			if( Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta == "contado" ){
+			if( Aplicacion.Mostrador.currentInstance.carrito.tipo_venta == "contado" ){
 				Ext.getCmp('Mostrador-doVentaCobrar').setVisible(true);
 			}else{
 				Ext.getCmp('Mostrador-doVentaCobrar').setVisible(false);
@@ -990,7 +994,7 @@ Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
 		}else{
 			Ext.getCmp('Mostrador-doVentaTipoContado').setVisible(true);
 			Ext.getCmp('Mostrador-doVentaTipoCredito').setVisible(false);
-			Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta = "contado";
+			Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";
 			
 			Ext.getCmp('Mostrador-doVentaCobrar').setVisible(true);
 			
@@ -1069,7 +1073,7 @@ Aplicacion.Mostrador.prototype.doVentaPanelCreator = function (	 ){
 				new Ext.form.Select({
 					listeners : {
 						"change" : function ( a, val ){
-							Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta = val;
+							Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = val;
 							if(val == "credito"){
 								Ext.getCmp("Mostrador-doVentaFacturar").hide( Ext.anims.fade );
 								Aplicacion.Mostrador.currentInstance.carrito.factura = false;
@@ -1090,7 +1094,7 @@ Aplicacion.Mostrador.prototype.doVentaPanelCreator = function (	 ){
 							}
 						},
 						"show" : function (){
-							Aplicacion.Mostrador.currentInstance.carrito.tipoDeVenta = Ext.getCmp('Mostrador-doVentaTipoCredito').getValue();
+							Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = Ext.getCmp('Mostrador-doVentaTipoCredito').getValue();
 						}
 					},
 					label : 'Tipo de Venta', 
