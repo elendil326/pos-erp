@@ -34,8 +34,14 @@ class ActualizacionDePrecio extends VO
 			if( isset($data['precio_venta']) ){
 				$this->precio_venta = $data['precio_venta'];
 			}
+			if( isset($data['precio_venta_sin_procesar']) ){
+				$this->precio_venta_sin_procesar = $data['precio_venta_sin_procesar'];
+			}
 			if( isset($data['precio_intersucursal']) ){
 				$this->precio_intersucursal = $data['precio_intersucursal'];
+			}
+			if( isset($data['precio_intersucursal_sin_procesar']) ){
+				$this->precio_intersucursal_sin_procesar = $data['precio_intersucursal_sin_procesar'];
 			}
 			if( isset($data['fecha']) ){
 				$this->fecha = $data['fecha'];
@@ -57,7 +63,9 @@ class ActualizacionDePrecio extends VO
 			"id_producto" => $this->id_producto,
 			"id_usuario" => $this->id_usuario,
 			"precio_venta" => $this->precio_venta,
+			"precio_venta_sin_procesar" => $this->precio_venta_sin_procesar,
 			"precio_intersucursal" => $this->precio_intersucursal,
+			"precio_intersucursal_sin_procesar" => $this->precio_intersucursal_sin_procesar,
 			"fecha" => $this->fecha
 		); 
 	return json_encode($vec); 
@@ -102,6 +110,15 @@ class ActualizacionDePrecio extends VO
 	protected $precio_venta;
 
 	/**
+	  * precio_venta_sin_procesar
+	  * 
+	  * El precio a que se vende este producto sin procesar si es que se procesa<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $precio_venta_sin_procesar;
+
+	/**
 	  * precio_intersucursal
 	  * 
 	  *  [Campo no documentado]<br>
@@ -109,6 +126,15 @@ class ActualizacionDePrecio extends VO
 	  * @var float
 	  */
 	protected $precio_intersucursal;
+
+	/**
+	  * precio_intersucursal_sin_procesar
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $precio_intersucursal_sin_procesar;
 
 	/**
 	  * fecha
@@ -220,6 +246,30 @@ class ActualizacionDePrecio extends VO
 	}
 
 	/**
+	  * getPrecioVentaSinProcesar
+	  * 
+	  * Get the <i>precio_venta_sin_procesar</i> property for this object. Donde <i>precio_venta_sin_procesar</i> es El precio a que se vende este producto sin procesar si es que se procesa
+	  * @return float
+	  */
+	final public function getPrecioVentaSinProcesar()
+	{
+		return $this->precio_venta_sin_procesar;
+	}
+
+	/**
+	  * setPrecioVentaSinProcesar( $precio_venta_sin_procesar )
+	  * 
+	  * Set the <i>precio_venta_sin_procesar</i> property for this object. Donde <i>precio_venta_sin_procesar</i> es El precio a que se vende este producto sin procesar si es que se procesa.
+	  * Una validacion basica se hara aqui para comprobar que <i>precio_venta_sin_procesar</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setPrecioVentaSinProcesar( $precio_venta_sin_procesar )
+	{
+		$this->precio_venta_sin_procesar = $precio_venta_sin_procesar;
+	}
+
+	/**
 	  * getPrecioIntersucursal
 	  * 
 	  * Get the <i>precio_intersucursal</i> property for this object. Donde <i>precio_intersucursal</i> es  [Campo no documentado]
@@ -241,6 +291,30 @@ class ActualizacionDePrecio extends VO
 	final public function setPrecioIntersucursal( $precio_intersucursal )
 	{
 		$this->precio_intersucursal = $precio_intersucursal;
+	}
+
+	/**
+	  * getPrecioIntersucursalSinProcesar
+	  * 
+	  * Get the <i>precio_intersucursal_sin_procesar</i> property for this object. Donde <i>precio_intersucursal_sin_procesar</i> es  [Campo no documentado]
+	  * @return float
+	  */
+	final public function getPrecioIntersucursalSinProcesar()
+	{
+		return $this->precio_intersucursal_sin_procesar;
+	}
+
+	/**
+	  * setPrecioIntersucursalSinProcesar( $precio_intersucursal_sin_procesar )
+	  * 
+	  * Set the <i>precio_intersucursal_sin_procesar</i> property for this object. Donde <i>precio_intersucursal_sin_procesar</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>precio_intersucursal_sin_procesar</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setPrecioIntersucursalSinProcesar( $precio_intersucursal_sin_procesar )
+	{
+		$this->precio_intersucursal_sin_procesar = $precio_intersucursal_sin_procesar;
 	}
 
 	/**

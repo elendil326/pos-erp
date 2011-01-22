@@ -80,7 +80,7 @@ class Inventario extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access protected
-	  * @var enum('kilogramo','pieza','litro','metro')
+	  * @var enum('kilogramo','pieza','litro','unidad')
 	  */
 	protected $escala;
 
@@ -149,7 +149,7 @@ class Inventario extends VO
 	  * getEscala
 	  * 
 	  * Get the <i>escala</i> property for this object. Donde <i>escala</i> es  [Campo no documentado]
-	  * @return enum('kilogramo','pieza','litro','metro')
+	  * @return enum('kilogramo','pieza','litro','unidad')
 	  */
 	final public function getEscala()
 	{
@@ -160,9 +160,9 @@ class Inventario extends VO
 	  * setEscala( $escala )
 	  * 
 	  * Set the <i>escala</i> property for this object. Donde <i>escala</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>escala</i> es de tipo <i>enum('kilogramo','pieza','litro','metro')</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>escala</i> es de tipo <i>enum('kilogramo','pieza','litro','unidad')</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param enum('kilogramo','pieza','litro','metro')
+	  * @param enum('kilogramo','pieza','litro','unidad')
 	  */
 	final public function setEscala( $escala )
 	{

@@ -133,11 +133,6 @@ abstract class DetalleInventarioDAOBase extends DAO
 			array_push( $val, $detalle_inventario->getPrecioVenta() );
 		}
 
-		if( $detalle_inventario->getMin() != NULL){
-			$sql .= " min = ? AND";
-			array_push( $val, $detalle_inventario->getMin() );
-		}
-
 		if( $detalle_inventario->getExistencias() != NULL){
 			$sql .= " existencias = ? AND";
 			array_push( $val, $detalle_inventario->getExistencias() );
@@ -177,10 +172,9 @@ abstract class DetalleInventarioDAOBase extends DAO
 	  **/
 	private static final function update( $detalle_inventario )
 	{
-		$sql = "UPDATE detalle_inventario SET  precio_venta = ?, min = ?, existencias = ?, existencias_procesadas = ? WHERE  id_producto = ? AND id_sucursal = ?;";
+		$sql = "UPDATE detalle_inventario SET  precio_venta = ?, existencias = ?, existencias_procesadas = ? WHERE  id_producto = ? AND id_sucursal = ?;";
 		$params = array( 
 			$detalle_inventario->getPrecioVenta(), 
-			$detalle_inventario->getMin(), 
 			$detalle_inventario->getExistencias(), 
 			$detalle_inventario->getExistenciasProcesadas(), 
 			$detalle_inventario->getIdProducto(),$detalle_inventario->getIdSucursal(), );
@@ -206,12 +200,11 @@ abstract class DetalleInventarioDAOBase extends DAO
 	  **/
 	private static final function create( &$detalle_inventario )
 	{
-		$sql = "INSERT INTO detalle_inventario ( id_producto, id_sucursal, precio_venta, min, existencias, existencias_procesadas ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO detalle_inventario ( id_producto, id_sucursal, precio_venta, existencias, existencias_procesadas ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$detalle_inventario->getIdProducto(), 
 			$detalle_inventario->getIdSucursal(), 
 			$detalle_inventario->getPrecioVenta(), 
-			$detalle_inventario->getMin(), 
 			$detalle_inventario->getExistencias(), 
 			$detalle_inventario->getExistenciasProcesadas(), 
 		 );
@@ -290,17 +283,6 @@ abstract class DetalleInventarioDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " precio_venta = ? AND"; 
-			$a = $a == NULL ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( (($a = $detalle_inventarioA->getMin()) != NULL) & ( ($b = $detalle_inventarioB->getMin()) != NULL) ){
-				$sql .= " min >= ? AND min <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
-			$sql .= " min = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

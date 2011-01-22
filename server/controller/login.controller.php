@@ -231,13 +231,13 @@ function sucursalTest( ){
             $search = EquipoDAO::search( $equipo );
 
             if(sizeof($search) != 1){
-                Logger::log("Probando sucursal via ".POS_SUCURSAL_TEST_TOKEN." UA: " . $_SERVER['HTTP_USER_AGENT'] . " no encontrado !", 2);
+                Logger::log("Equipo: " . $_SERVER['HTTP_USER_AGENT'] . " no encontrado !", 2);
 
                 return false;
             }
 
             $equipo = $search[0];
-            Logger::log("Probando sucursal via  " . $_SERVER['HTTP_USER_AGENT'] . " Ok !", 2);
+            
             
 
     }elseif(POS_SUCURSAL_TEST_TOKEN == 'SID_TOKEN'){
@@ -299,8 +299,11 @@ function sucursalTest( ){
         return false; 
     }
 
-    Logger::log("Equipo validado !");
+
+    Logger::log("Equipo {$equipo->getIdEquipo()} validado. Descripcion de equipo: {$equipo->getDescripcion()}");
+    Logger::log("Sucursal para esta sesion: " . $suc->getIdSucursal() . ", " . $suc->getDescripcion() );
     $_SESSION['sucursal'] = $suc->getIdSucursal();
+
     return true;
 
 }

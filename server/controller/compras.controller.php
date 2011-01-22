@@ -907,7 +907,11 @@ function ingresarAutorizacion( $data = null, $sucursal = null, $id_compra = null
 		
 		array_push( $parametros, array( 
 			"id_compra" => $id_compra,
-			"id_producto" => $producto -> id_producto
+			"id_producto" => $producto -> id_producto,
+            "cantidad" => $producto -> cantidad,
+            "procesada" => $producto -> procesada,
+            "descuento" => $producto -> descuento,
+            "precio" => $producto -> precio
  		));	
 		
 	}
@@ -918,7 +922,12 @@ function ingresarAutorizacion( $data = null, $sucursal = null, $id_compra = null
 	$autorizacion -> setIdUsuario( $_SESSION['userid'] );
 	$autorizacion -> setIdSucursal( $sucursal );
 	$autorizacion -> setEstado( 3 ); // en transito
-	$autorizacion -> setParametros ( json_encode( $parametros ) );
+	$autorizacion -> setTipo( "envioDeProductosASucursal" ); 
+	$autorizacion -> setParametros ( json_encode( array(
+        "clave" => "209",
+        "descripcion"=>"Envio de productos",
+        "productos"=> $parametros ) ) );
+
 	
 	try{
 		AutorizacionDAO::save( $autorizacion );

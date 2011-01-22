@@ -153,6 +153,11 @@ abstract class AutorizacionDAOBase extends DAO
 			array_push( $val, $autorizacion->getParametros() );
 		}
 
+		if( $autorizacion->getTipo() != NULL){
+			$sql .= " tipo = ? AND";
+			array_push( $val, $autorizacion->getTipo() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -182,7 +187,7 @@ abstract class AutorizacionDAOBase extends DAO
 	  **/
 	private static final function update( $autorizacion )
 	{
-		$sql = "UPDATE autorizacion SET  id_usuario = ?, id_sucursal = ?, fecha_peticion = ?, fecha_respuesta = ?, estado = ?, parametros = ? WHERE  id_autorizacion = ?;";
+		$sql = "UPDATE autorizacion SET  id_usuario = ?, id_sucursal = ?, fecha_peticion = ?, fecha_respuesta = ?, estado = ?, parametros = ?, tipo = ? WHERE  id_autorizacion = ?;";
 		$params = array( 
 			$autorizacion->getIdUsuario(), 
 			$autorizacion->getIdSucursal(), 
@@ -190,6 +195,7 @@ abstract class AutorizacionDAOBase extends DAO
 			$autorizacion->getFechaRespuesta(), 
 			$autorizacion->getEstado(), 
 			$autorizacion->getParametros(), 
+			$autorizacion->getTipo(), 
 			$autorizacion->getIdAutorizacion(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -213,7 +219,7 @@ abstract class AutorizacionDAOBase extends DAO
 	  **/
 	private static final function create( &$autorizacion )
 	{
-		$sql = "INSERT INTO autorizacion ( id_autorizacion, id_usuario, id_sucursal, fecha_peticion, fecha_respuesta, estado, parametros ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO autorizacion ( id_autorizacion, id_usuario, id_sucursal, fecha_peticion, fecha_respuesta, estado, parametros, tipo ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$autorizacion->getIdAutorizacion(), 
 			$autorizacion->getIdUsuario(), 
@@ -222,6 +228,7 @@ abstract class AutorizacionDAOBase extends DAO
 			$autorizacion->getFechaRespuesta(), 
 			$autorizacion->getEstado(), 
 			$autorizacion->getParametros(), 
+			$autorizacion->getTipo(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -342,6 +349,17 @@ abstract class AutorizacionDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " parametros = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $autorizacionA->getTipo()) != NULL) & ( ($b = $autorizacionB->getTipo()) != NULL) ){
+				$sql .= " tipo >= ? AND tipo <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " tipo = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

@@ -70,6 +70,27 @@ function autorizacionesSucursal( $sid ){
 
     foreach($autorizaciones as $autorizacion)
     {
+
+        
+        //si la autorizacion contiene productos, agregarles,
+        //la descripcion
+        if($autorizacion->getTipo() == 'envioDeProductosASucursal'){
+
+            $params = json_decode($autorizacion->getParametros());
+
+            foreach($params->productos as $key => $prod){
+
+                $foo = InventarioDAO::getByPK( $prod->id_producto );
+
+                $params->productos[$key]->descripcion = $foo->getDescripcion();
+                $params->productos[$key]->escala = $foo->getEscala();
+                
+            }
+            
+            $autorizacion->setParametros(json_encode( $params ));
+
+        }
+
         $auth = $autorizacion->asArray();
         array_push( $array_autorizaciones, $auth );
     }
@@ -80,56 +101,64 @@ function autorizacionesSucursal( $sid ){
 
 
 
+/**
+  * Surtir una sucursal dada una autorizacion.
+  *
+  * Surtir una autorizacion en transtio, esta funcion se llama
+  * cuando el admin surte una sucursal de su inventario maestro,
+  * y el cargamento ha llegado a la sucursal. Se encarga de poner
+  * esa autorizacion como contestada y modificar el inventario de 
+  * esa sucursal sumandole lo que viene en ese cargamento. Si uno
+  * o mas productos no se encuentran ya en el inventario {DetalleInventario}
+  * entonces esta funcion los insertan.
+  *
+  * @param id_autorizacion El id de una autorizacion existente en estado 3
+  *
+  **/
+function surtirProducto($id_autorizacion){
 
-function surtirProducto($args){
 
-	DAO::transBegin();
 	
-    if(!isset($args['id_autorizacion'])) 
-    {
-		DAO::transRollback();    
-        die('{"success": false, "reason": "No hay parametros para ingresar." }');
+
+    if( !( $autorizacion = AutorizacionDAO::getByPK( $id_autorizacion ) ) ){
+        die('{"success": false, "reason": "La autorizacion no existe. El administrador pudo haber eliminado esta autorizacion." }');
     }
 
-    if( !( $autorizacion = AutorizacionDAO::getByPK( $args['id_autorizacion'] ) ) )
-    {
-		DAO::transRollback();    
-        die('{"success": false, "reason": "Verifique que exista la autorizacion ' . $args['id_autorizacion'] . '." }');
+    if( $autorizacion->getEstado() != 3 ){
+        die('{"success": false, "reason": "Esta autorizacion ya ha sido aprovada." }');
     }
 
-    if( $autorizacion->getEstado() != 3 )
-    {
-		DAO::transRollback();    
-        die('{"success": false, "reason": "El administrador no ha aprovado esta solicitud." }');
-    }
-
-    try
-    {
+    try{
         $data = parseJSON( $autorizacion->getParametros() );
-    }
-    catch(Exception $e)
-    {
-		DAO::transRollback();    
+    }catch(Exception $e){
+        Logger::log($e);
         die( '{"success": false, "reason": "Parametros invalidos." }' );
     }
 
+
+
     $productos = $data->productos;
 
-    foreach( $productos as $producto )
-    {
+	DAO::transBegin();
+
+    foreach( $productos as $producto ){
+
+        //buscar la existencia de cada producto en la sucursal en la que voy
+        //a insertar
         $p = DetalleInventarioDAO::getByPK( $producto->id_producto, $_SESSION['sucursal'] );
         
         if( !$p )
         {
+            //no existe en la sucursal, voy a ver si existe en el inventario global
             $producto_inventario = InventarioDAO::getByPK( $producto->id_producto );
             
-            if( !$producto_inventario )
-            {
+            if( !$producto_inventario ){
+               Logger::log("Se ha intentado surtir un producto que no existe");
 				DAO::transRollback();    
                 die( '{ "success" : "false" , "reason" : "El producto ' . $producto->id_producto . ' no se encuentra registrado en el inventario."}' );
             }
             
-            //aqui entra en caso de no encontrar el producto en detalle inventario
+            //el producto existe en el inventario global pero no en la sucursal, insertarlo
             $nuevo_detalle_producto = new DetalleInventario();
             $nuevo_detalle_producto->setIdProducto( $producto->id_producto );    
             $nuevo_detalle_producto->setIdSucursal( $_SESSION['sucursal'] );
@@ -148,7 +177,6 @@ function surtirProducto($args){
             $foo = InventarioDAO::getByPK($producto->id_producto);
             
             
-            $nuevo_detalle_producto->setMin( 100 );
             $nuevo_detalle_producto->setExistencias( 0 );
             
             try
@@ -1042,8 +1070,12 @@ if( isset( $args['action'] ) ){
             //por el admin, cuando todo este aclarado y listo, el gerente debera de liberar
             //la solicitud de producto para que se cargue al inventario lo que surtio el
             //admin.
+            
+            if(!(isset($args['id_autorizacion']))){
+                die('{"success" : false , "reason" : "Parametros invalidos" }');
+            }
 
-            surtirProducto( $args );
+            surtirProducto( $args['id_autorizacion'] );
 
         break;
 

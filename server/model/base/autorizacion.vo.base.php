@@ -43,6 +43,9 @@ class Autorizacion extends VO
 			if( isset($data['parametros']) ){
 				$this->parametros = $data['parametros'];
 			}
+			if( isset($data['tipo']) ){
+				$this->tipo = $data['tipo'];
+			}
 		}
 	}
 
@@ -62,7 +65,8 @@ class Autorizacion extends VO
 			"fecha_peticion" => $this->fecha_peticion,
 			"fecha_respuesta" => $this->fecha_respuesta,
 			"estado" => $this->estado,
-			"parametros" => $this->parametros
+			"parametros" => $this->parametros,
+			"tipo" => $this->tipo
 		); 
 	return json_encode($vec); 
 	}
@@ -130,6 +134,15 @@ class Autorizacion extends VO
 	  * @var varchar(2048)
 	  */
 	protected $parametros;
+
+	/**
+	  * tipo
+	  * 
+	  * El tipo de autorizacion<br>
+	  * @access protected
+	  * @var enum('envioDeProductosASucursal')
+	  */
+	protected $tipo;
 
 	/**
 	  * getIdAutorizacion
@@ -299,6 +312,30 @@ class Autorizacion extends VO
 	final public function setParametros( $parametros )
 	{
 		$this->parametros = $parametros;
+	}
+
+	/**
+	  * getTipo
+	  * 
+	  * Get the <i>tipo</i> property for this object. Donde <i>tipo</i> es El tipo de autorizacion
+	  * @return enum('envioDeProductosASucursal')
+	  */
+	final public function getTipo()
+	{
+		return $this->tipo;
+	}
+
+	/**
+	  * setTipo( $tipo )
+	  * 
+	  * Set the <i>tipo</i> property for this object. Donde <i>tipo</i> es El tipo de autorizacion.
+	  * Una validacion basica se hara aqui para comprobar que <i>tipo</i> es de tipo <i>enum('envioDeProductosASucursal')</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param enum('envioDeProductosASucursal')
+	  */
+	final public function setTipo( $tipo )
+	{
+		$this->tipo = $tipo;
 	}
 
 }

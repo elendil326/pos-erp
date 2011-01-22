@@ -132,7 +132,7 @@ Ext.setup({
         
         
         
-        Ext.getBody().mask('Revisando...', 'x-mask-loading', false);
+        Ext.getBody().mask('Iniciando', 'x-mask-loading', false);
 
 
 		checkCurrentSession();
@@ -151,6 +151,7 @@ function createLoginForm( sucursal ){
 	var formBase = {
         scroll: null,
         standardSubmit : false,
+        submitOnAction : false,
         items: [
             {
                 xtype: 'fieldset',
@@ -197,7 +198,7 @@ function createLoginForm( sucursal ){
         ],
         listeners : {
             submit : function(form, result){
-                //console.log('success', Ext.toArray(arguments));
+                console.log('success', Ext.toArray(result, form));
 				return;
             },
             exception : function(form, result){

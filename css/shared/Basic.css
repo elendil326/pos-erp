@@ -1,0 +1,5 @@
+.x-mask-loading{
+    /*background-image: url( ../www/media/loader.gif ) !important ; */
+    background: rgba(0, 0, 0, 0.246094) url( ../www/media/l.gif ) no-repeat center center !important;
+    width: 19.5em !important;
+}

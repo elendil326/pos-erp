@@ -31,9 +31,6 @@ class DetalleInventario extends VO
 			if( isset($data['precio_venta']) ){
 				$this->precio_venta = $data['precio_venta'];
 			}
-			if( isset($data['min']) ){
-				$this->min = $data['min'];
-			}
 			if( isset($data['existencias']) ){
 				$this->existencias = $data['existencias'];
 			}
@@ -56,7 +53,6 @@ class DetalleInventario extends VO
 			"id_producto" => $this->id_producto,
 			"id_sucursal" => $this->id_sucursal,
 			"precio_venta" => $this->precio_venta,
-			"min" => $this->min,
 			"existencias" => $this->existencias,
 			"existencias_procesadas" => $this->existencias_procesadas
 		); 
@@ -91,15 +87,6 @@ class DetalleInventario extends VO
 	  * @var float
 	  */
 	protected $precio_venta;
-
-	/**
-	  * min
-	  * 
-	  * cantidad minima que debe de haber del producto en almacen de esta sucursal<br>
-	  * @access protected
-	  * @var float
-	  */
-	protected $min;
 
 	/**
 	  * existencias
@@ -193,30 +180,6 @@ class DetalleInventario extends VO
 	final public function setPrecioVenta( $precio_venta )
 	{
 		$this->precio_venta = $precio_venta;
-	}
-
-	/**
-	  * getMin
-	  * 
-	  * Get the <i>min</i> property for this object. Donde <i>min</i> es cantidad minima que debe de haber del producto en almacen de esta sucursal
-	  * @return float
-	  */
-	final public function getMin()
-	{
-		return $this->min;
-	}
-
-	/**
-	  * setMin( $min )
-	  * 
-	  * Set the <i>min</i> property for this object. Donde <i>min</i> es cantidad minima que debe de haber del producto en almacen de esta sucursal.
-	  * Una validacion basica se hara aqui para comprobar que <i>min</i> es de tipo <i>float</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
-	  */
-	final public function setMin( $min )
-	{
-		$this->min = $min;
 	}
 
 	/**
