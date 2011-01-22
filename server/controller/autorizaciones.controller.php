@@ -162,63 +162,52 @@ function surtirProducto($id_autorizacion){
             $nuevo_detalle_producto = new DetalleInventario();
             $nuevo_detalle_producto->setIdProducto( $producto->id_producto );    
             $nuevo_detalle_producto->setIdSucursal( $_SESSION['sucursal'] );
-            
-            
+            $nuevo_detalle_producto->setExistencias( 0 );            
+            $nuevo_detalle_producto->setExistenciasProcesadas( 0 );             
+
             //buscar la ultima actualizacion de precio para este producto
-            
             $foo = new ActualizacionDePrecio();
             $foo->setIdProducto($producto->id_producto);
             $actualizacion = ActualizacionDePrecioDAO::search( $foo, 'fecha', 'DESC' );
             $actualizacion = $actualizacion[0];
             
             $nuevo_detalle_producto->setPrecioVenta( $actualizacion->getPrecioVenta() );
+
             
-            //buscar las existencias minimas para este producto
-            $foo = InventarioDAO::getByPK($producto->id_producto);
-            
-            
-            $nuevo_detalle_producto->setExistencias( 0 );
-            
-            try
-            {
-                if( DetalleInventarioDAO::save( $nuevo_detalle_producto ) > 0 )
-                {
-                    $p = DetalleInventarioDAO::getByPK($producto->id_producto, $_SESSION['sucursal']);
-                }
-                else
-                {
-					DAO::transRollback();    
-                    die( '{ "success" : "false" , "reason" : "No se pudo enviar la autorizacion."}' );
-                }
-            }
-            catch(Exception $e)
-            {
+            try{
+                DetalleInventarioDAO::save( $nuevo_detalle_producto );
+
+            }catch(Exception $e){
+
 				DAO::transRollback();    
-                die( '{ "success" : "false" , "reason" : "Exception: no se pudo enviar la autorizacion."}' );
-            } 
+                Logger::log($e);
+                die( '{ "success" : false , "reason" : "Error al surtir esta autorizacion, intente de nuevo."}' );
+            }
+
+            $p = $nuevo_detalle_producto;
         }
 
-        //obtenemos las existencias (como no hay productos, sale error)
-        $existencias = $p->getExistencias();
+    
+        
+        if($producto->procesada){
+            $existencias = $p->getExistenciasProcesadas();
+            $existencias += $producto->cantidad;
+            $p->setExistenciasProcesadas( $existencias );
+        }else{
+            $existencias = $p->getExistencias();
+            $existencias += $producto->cantidad;
+            $p->setExistencias( $existencias );
+        }
 
-        //agregamos lo que se va a surtir
-        $existencias += $producto->cantidad;
-        $p->setExistencias( $existencias );
 
        //guardamos los cambios
         try{
-            if ( DetalleInventarioDAO::save($p) < 1 )
-            {
-            
-				DAO::transRollback();    
-                die( '{"success": false, "reason": "Error al guardar las nuevas existencias" }' );
-            } 
-        }
-        catch(Exception $e)
-        {
-        
+            DetalleInventarioDAO::save($p);
+
+        }catch(Exception $e){
+            Logger::log($e);        
 			DAO::transRollback();    
-            die( '{"success": false, "reason": "Exception al modificar le detalle del inventario" }' );
+            die( '{"success": false, "reason": "Error al surtir esta autorizacion, intente de nuevo." }' );
         }
 
     }
@@ -226,28 +215,23 @@ function surtirProducto($id_autorizacion){
     //cambiamos el estado de la autorizacion a surtido
     $autorizacion->setEstado(4);
 
-    try
-    {
-        if( AutorizacionDAO::save( $autorizacion ) > 0 )
-        {
-            printf( '{ "success" : "true" }' );
-        }
-        else
-        {
-        
-			DAO::transRollback();    
-            die( '{ "success" : "false" , "reason" : "No se pudo cambiar el estado a surtido."}' );
-        }
-    }
-    catch(Exception $e)
-    {
+    try{
+        AutorizacionDAO::save( $autorizacion );
+    }catch(Exception $e){
 		DAO::transRollback();    
-        die( '{ "success" : "false" , "reason" : "Exception al cambiar estado de la autorizacion."}' );
+        Logger::log($e);
+        die( '{ "success" : "false" , "reason" : "Error al surtir esta autorizacion, intente de nuevo."}' );
     }
-    
-    
+
+    echo '{"success" : true }';    
+    Logger::log("Atuorizacion surtida satisfactoriamente");
     DAO::transEnd();
 }
+
+
+
+
+
 
 
 //responder autorizacion surtir (admin)

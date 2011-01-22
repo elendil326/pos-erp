@@ -58,7 +58,7 @@ function listarInventario( $sucID = null ){
             "descripcion" => $productoData->getDescripcion(),
             "tratamiento" => $productoData->getTratamiento(),
             "precioVenta" => $producto->getPrecioVenta(),
-            "existenciasMinimas" => $producto->getMin(),
+
             "existenciasOriginales" => $producto->getExistencias(),
             "existenciasProcesadas" => $producto->getExistenciasProcesadas(),
             "medida" => $productoData->getEscala(),

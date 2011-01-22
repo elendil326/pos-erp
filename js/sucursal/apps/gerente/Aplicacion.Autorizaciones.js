@@ -850,9 +850,7 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesStore = new Ext.data.St
     groupDir: 'DESC',
 
     getGroupString : function(record) {
-    //    console.log(record)
-  //      console.log(record.get('parametros'));
-//        return 'a';
+
         json = Ext.util.JSON.decode( record.get('parametros') );
         return json.descripcion;
     }
@@ -922,7 +920,7 @@ Aplicacion.Autorizaciones.prototype.surtirAutorizacion = function( aid ){
     autorizacion = Aplicacion.Autorizaciones.currentInstance.detalleAutorizacion;
 
     if(DEBUG){console.log("Surtir inventario dada una autorizacion ", aid );}
-    return;
+
 
     Ext.Ajax.request({
         url: '../proxy.php',
@@ -1106,6 +1104,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
             },{
                 xtype: 'spacer'
             },
+            //cuando esta autorizacion es estado 3, mostrar un boton para aceptar el embarque
             autorizacion.get('estado') == '3' ? 
                 new Ext.Button({ 
                     ui  : 'forward', 
@@ -1113,7 +1112,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                     handler: function(){
                         Aplicacion.Autorizaciones.currentInstance.surtirAutorizacion(autorizacion.get('id_autorizacion'))
                     }
-                }) : null 
+                }) : {  xtype: 'spacer' } 
             ]
         }],
         items: [{
@@ -1160,7 +1159,7 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanelCreator = function
 			height: '100%',
             xtype: 'list',
             store: this.listaDeAutorizacionesStore,
-            itemTpl: '<div class="listaDeAutorizacionesAutorizacion"><b class = "Autorizaciones-margin ">ID:</b>{id_autorizacion}   <b class = "Autorizaciones-margin ">Estado:</b> {estado} <b class = "Autorizaciones-margin ">Fecha:</b> {fecha_peticion}</div>',
+            itemTpl: '<div class="listaDeAutorizacionesAutorizacion">ID de autorizacion : {id_autorizacion}&nbsp; Enviada el {fecha_peticion}</div>',
             grouped: true,
             indexBar: false,
             listeners : {
