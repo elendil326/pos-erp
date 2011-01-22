@@ -424,6 +424,93 @@ function informacionSucursal(){
 	printf( '{ "success": true, "datos": %s }',  $sucursal );
 	
 }
+//operaciones intersucursales
+function venderASucursal( $json ){
+if($json==NULL){die('{"success":false,"reason":"No se ha agregado ningun producto para la operacion."}');}
+		DAO::transBegin();
+		$datos=parseJSON($json);
+		$productos=$datos->items;
+		//iniciar la venta
+		$venta=new Ventas();
+		$venta->setCancelada(0);
+		$venta->setDescuento(0);
+		$venta->setFecha(time());
+		$venta->setIdCliente("-".$_SESSION["sucursal"]);
+		$venta->setIdSucursal($_SESSION["sucursal"]);
+		$venta->setIdUsuario($_SESSION["userid"]);
+		$venta->setIp(getip());
+		$venta->setPagado(0);
+		$venta->setTipoVenta("credito");
+		$venta->setLiquidada(0);
+		
+		$cantidad=0;
+		$cantidadprocesada=0;
+		$subtotalcantidad=0;
+		$subtotalcantidadprocesada=0;
+		
+	for($i=0;$i<sizeof($productos);$i++){
+
+			$existe=$di[$i]=DetalleInventarioDAO::getByPK($productos[$i]->id_producto,$_SESSION["sucursal"]);
+			if($existe==NULL){DAO::transRollback();die('{"success":false,"reason":"No existe el producto"}');}
+			if($productos[$i]->cantidad>$di[$i]->getExistencias()){DAO::transRollback();die('{"success":false,"reason":"Existencias insuficientes"}');}
+			if($productos[$i]->cantidad_procesada>$di[$i]->getExistenciasProcesadas()){DAO::transRollback();die('{"success":false,"reason":"Existencias procesadas insuficientes"}');}
+
+			$di[$i]->setExistencias($di[$i]->getExistencias()-$productos[$i]->cantidad);
+			$di[$i]->setExistenciasProcesadas($di[$i]->getExistenciasProcesadas()-$productos[$i]->cantidad_procesada);
+			try{
+				DetalleInventarioDAO::save($di[$i]);
+			}catch(Exception $e){
+				Logger::log($e);
+				DAO::transRollback();
+				die('{"success":false,"reason":"No se pudo hacer la venta a sucursal. Intente de nuevo."}');
+			}
+
+			//aki obtengo el precio de cada producto
+			$cantidad+=$productos[$i]->cantidad;
+			$cantidadprocesada+=$productos[$i]->cantidad_procesada;
+			$pu=obtenerPrecioIntersucursal($productos[$i]->id_producto);
+			$subtotalcantidad+=$pu*$productos[$i]->cantidad;
+			$subtotalcantidadprocesada+=$pu*$productos[$i]->cantidad_procesada;
+
+		}
+ 		$subtotal=$subtotalcantidad+$subtotalcantidadprocesada;
+ 		$total=$subtotal;
+ 		$totalcantidad=$subtotalcantidad;
+ 		$totalcantidadprocesada=$subtotalcantidadprocesada;
+		
+		$venta->setSubtotal($subtotal);
+		$venta->setIva(0);
+		$venta->setTotal($total);
+		try{
+			VentasDAO::save($venta);
+			$id_venta =  $venta->getIdVenta()."idventa";
+		}catch(Exception $e){
+			Logger::log($e);
+			DAO::transRollback();
+			die('{"success":false,"reason":"No se pudo realizar la venta. Intente de nuevo."}');
+		}
+		
+//		DetalleVentaDAO::transBegin();
+		$detalleventa=new DetalleVenta();
+		$detalleventa->setIdVenta($id_venta);
+		for($i=0;$i<sizeof($productos);$i++){
+			$detalleventa->setIdProducto($productos[$i]->id_producto);
+			$detalleventa->setCantidad($productos[$i]->cantidad);
+			$detalleventa->setCantidadProcesada($productos[$i]->cantidad_procesada);
+			$pu=obtenerPrecioIntersucursal($productos[$i]->id_producto);
+			$detalleventa->setPrecio($productos[$i]->cantidad*$pu);
+			$detalleventa->setPrecioProcesada($productos[$i]->cantidad_procesada*$pu);
+			try{
+			DetalleVentaDAO::save($detalleventa);
+			}catch(Exception $e){
+			Logger::log($e);
+			DAO::transRollback();
+			die('{"success":false,"reason":"No se pudo realizar la venta. Intente de nuevo."}');
+			}
+		}
+		DAO::transEnd();
+		echo '{"success":true}';
+}//venderASucursal
 
 if(isset($args['action'])){
 
@@ -493,6 +580,10 @@ if(isset($args['action'])){
 		
 		case 712:
 			informacionSucursal(  );
+		break;
+		
+		case 713:
+			venderASucursal( $args["data"] );
 		break;
 
 	}
