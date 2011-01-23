@@ -180,19 +180,19 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		}else{
 			html += "<tr >";		
 		}
-		html += "<td style='width: 25.5%;' ><b>" + carrito.items[i].id_producto + "</b> " + carrito.items[i].descripcion+ "</td>";
+		html += "<td style='width: 25%;' ><b>" + carrito.items[i].id_producto + "</b> " + carrito.items[i].descripcion+ "</td>";
 		
-		html += "<td style='width: 15.2%;' ><div id='Mostrador-carritoTratamiento"+ carrito.items[i].idUnique +"'></div></td>";
+		html += "<td style='width: 15%;' ><div id='Mostrador-carritoTratamiento"+ carrito.items[i].idUnique +"'></div></td>";
 
-		html += "<td  align='right' style='width: 9.2%;'> <span class='boton'  onClick=\"Aplicacion.Mostrador.currentInstance.quitarDelCarrito('"+ carrito.items[i].idUnique +"')\"><img src='../media/icons/close_16.png'>&nbsp;Quitar&nbsp;</span></td>";
+		html += "<td  align='right' style='width: 12%;'> <span class='boton'  onClick=\"Aplicacion.Mostrador.currentInstance.quitarDelCarrito('"+ carrito.items[i].idUnique +"')\"><img src='../media/icons/close_16.png'>&nbsp;Quitar&nbsp;</span></td>";
 
-		html += "<td  align='center'  style='width: 8.2%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique + "', -1, false)\">&nbsp;-&nbsp;<img src='../media/icons/arrow_down_16.png'></span></td>";
+		html += "<td  align='center'  style='width: 8.1%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique + "', -1, false)\">&nbsp;-&nbsp;<img src='../media/icons/arrow_down_16.png'></span></td>";
 
-		html += "<td  align='center'  style='width: 10.2%;' ><div id='Mostrador-carritoCantidad"+ carrito.items[i].idUnique +"'></div></td>";
+		html += "<td  align='center'  style='width: 6.3%;' ><div id='Mostrador-carritoCantidad"+ carrito.items[i].idUnique +"'></div></td>";
 
-		html += "<td  align='center'  style='width: 8.2%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique +"', 1, false)\"><img src='../media/icons/arrow_up_16.png'>&nbsp;+&nbsp;</span></td>";
+		html += "<td  align='center'  style='width: 8.1%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique +"', 1, false)\"><img src='../media/icons/arrow_up_16.png'>&nbsp;+&nbsp;</span></td>";
 
-		html += "<td style='width: 10.2%;'> <div  id='Mostrador-carritoPrecio"+ carrito.items[i].idUnique +"'></div></td>";
+		html += "<td style='width: 10.4%;'> <div  id='Mostrador-carritoPrecio"+ carrito.items[i].idUnique +"'></div></td>";
 		
 		html += "<td  style='width: 11.3%;'>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precio )+"</td>";
 		
@@ -223,7 +223,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			value : carrito.items[i].cantidad,
 			prodID : carrito.items[i].id_producto,
 			idUnique : carrito.items[i].idUnique,
-			width: 100,
+			//width: 100,
 			style:{
 		         textAlign: 'center'
 		    },
@@ -276,20 +276,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 							for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
 								if(Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == campo.idUnique){
 									
-									//buscar el preoducto en el arreglo de 
-									precioVenta = null;
-									
-									/*for (var j=0; j < Aplicacion.Inventario.currentInstance.Inventario.productos.length; j++) {
-										if( Aplicacion.Inventario.currentInstance.Inventario.productos[j].data.productoID == campo.prodID ){
-											precioVenta = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado  )?Aplicacion.Inventario.currentInstance.Inventario.productos[j].data.precioVenta : Aplicacion.Inventario.currentInstance.Inventario.productos[j].data.precioVentaSinProcesar ;
-											break;
-										}
-									}*/
-
-                                    
                                     precioVenta = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true"  )?Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaSinProcesar ;
 											
-
 									//verificamos que no intente cambiar el precio por un precio mas bajo del preestablecido
 									if( parseFloat(campo.getValue()) < parseFloat( precioVenta) ){
 										Ext.Msg.alert("Mostrador", "No puede bajar un precio por debajo del preestablecido.");
@@ -324,8 +312,6 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 							            }
 									
 									}
-									
-									
 									
 									Aplicacion.Mostrador.currentInstance.carrito.items[i].precio= parseFloat( campo.getValue() );
 									break;
@@ -367,19 +353,19 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                         //iteramos el arreglo de productos
                         for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
                         
-                            //obtemeteomos 
+                            //obtemeteomos el producto
                             if(Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == this.idUnique){
 					
+					                //guardamos la seleccion
 					                Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado = this.value;		
 					                
+					                //reconocemos si es un producto procesado o no
 					                if( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true" ){
 
-					                    //buscar el producto ya esta en el carrito y en caso de estarlo toma el mismo valor
-					                
+                                        //verificamos que no existan 2 productos con las mismas caracteristicas pero con precio diferente
                                         var found = false;
-									
-									    //verificamos que no exista 2 productos con las mismas caracteristicas pero con precio diferente
-							            for(var j=0; j < Aplicacion.Mostrador.currentInstance.carrito.items.length; j++){
+									    
+							            for(var j = 0; j < Aplicacion.Mostrador.currentInstance.carrito.items.length; j++){
 							                
 							                if( Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == Aplicacion.Mostrador.currentInstance.carrito.items[j].idUnique ){
                                                 continue;
@@ -388,7 +374,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                                             if( 
                                                 Aplicacion.Mostrador.currentInstance.carrito.items[i].id_producto == Aplicacion.Mostrador.currentInstance.carrito.items[j].id_producto &&
                                                 Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == Aplicacion.Mostrador.currentInstance.carrito.items[j].procesado                                                
-                                             ){                                                
+                                             ){              
+                                                //si encuentra un producto con las mismas caracteristicas, entonces a este producto le asignamos el mismo precio, para que no haya 2 productos iguales pero con diferente precio                                  
                                                 Aplicacion.Mostrador.currentInstance.carrito.items[i].precio= parseFloat(Aplicacion.Mostrador.currentInstance.carrito.items[j].precio)
                                                 found = true;
                                                 break;
@@ -399,24 +386,15 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 							            if(found ){
 							                break;
 							            }else{
+							                //si no se encontro un producto con las mismas propiedades entonces le asignamos el valos por default
 							                Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta;
 							            }
 					                    
-					                    
-					                    
-					                    
-					                    
-					                
-					                    /////
-					                    
 					                }else{
 					                
-					                    ////
-					                //buscar el producto ya esta en el carrito y en caso de estarlo toma el mismo valor
-					                
+					                    //verificamos que no existan 2 productos con las mismas caracteristicas pero con precio diferente					                    
                                         var found  = false;
-									
-									    //verificamos que no exista 2 productos con las mismas caracteristicas pero con precio diferente
+
 							            for(var j=0; j < Aplicacion.Mostrador.currentInstance.carrito.items.length; j++){
 							                
 							                if( Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == Aplicacion.Mostrador.currentInstance.carrito.items[j].idUnique ){
@@ -426,7 +404,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                                             if( 
                                                 Aplicacion.Mostrador.currentInstance.carrito.items[i].id_producto == Aplicacion.Mostrador.currentInstance.carrito.items[j].id_producto &&
                                                 Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == Aplicacion.Mostrador.currentInstance.carrito.items[j].procesado                                
-                                             ){                                                
+                                             ){            
+                                                 //si encuentra un producto con las mismas caracteristicas, entonces a este producto le asignamos el mismo precio, para que no haya 2 productos iguales pero con diferente precio                                                                         
                                                 Aplicacion.Mostrador.currentInstance.carrito.items[i].precio= parseFloat(Aplicacion.Mostrador.currentInstance.carrito.items[j].precio)
                                                 found = true;
                                                 break;
@@ -437,13 +416,13 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 							            if(found ){
 							                break;
 							            }else{
-					                    Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaSinProcesar;
+							                 //si no se encontro un producto con las mismas propiedades entonces le asignamos el valos por default
+					                        Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaSinProcesar;
 					                    }
 					                }
 					                
 					                
                                 if(DEBUG){
-                                    //console.log("buscando el producto" + id);
                                     console.log("El producto " + this.idUnique + " esta  procesado ?"  + Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado );	
                                     console.log( "Todos los productos : " + Aplicacion.Mostrador.currentInstance.carrito.items );	                            
                                 }	
@@ -456,10 +435,11 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                     }//change
                 }//listeners
 	
-		    });
-        }
+		    });//c
+		    
+        }//if
 		
-	}
+	}//for
 	
 };
 
@@ -506,9 +486,14 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 		{
 			//ya esta en el carrito, aumentar su cuenta
 			incidencias ++;
-			//found = true;
-			//this.carrito.items[a].cantidad++;
-			//break;
+
+			
+			if( this.carrito.items[a].tratamiento == "" ){
+			    found = true;
+			    this.carrito.items[a].cantidad++;
+			    break;
+			}
+			
 			if( incidencias > 1 ){
 			    Ext.Msg.alert("Alerta","El producto '" + res.data.descripcion + "' ya existe en el carrito.");
 			    found = true;
@@ -1034,6 +1019,7 @@ Aplicacion.Mostrador.prototype.doVentaPanelShow = function ( ){
 	
 	//hacer un setcard manual
 	sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.doVentaPanel , 'slide');
+	
 };
 
 Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
