@@ -945,6 +945,118 @@ function ingresarAutorizacion( $data = null, $sucursal = null, $id_compra = null
 	
 }
 
+/**
+ * Listar las compras de una sucursal.
+ * 
+ * Regresa la lista de compras de una sucursal dado su id, ordenada
+ * por fecha y mostrando solo las ultimas <i>n</i> compras.
+ * Esta funcion recolectara todos los datos de la compra, calculando, 
+ * saldos de cada compra y detalles de cada compra.
+ *
+ * @param sid El id de la sucursal a listar
+ * @param n El numero de registros a regresar. Por default sera n = 10
+ * @return Array Un arreglo que contendra por cada indice, un objeto 
+ * {@link CompraSucursal} en forma de arreglo asociativo, junto con un indice
+ * llamado <i>productos</i> que contendra objetos {@link DetalleCompraSucursal}
+ * en forma de arreglo asociativo. Si la sucursal no se encuentra o se 
+ * encontro un error, se regresara null.
+ *
+ **/
+function comprasDeSucursal( $sid = null, $n = 10 ){
+	
+	if(!$sid){
+		return null;
+	}
+	
+
+	if(!SucursalDAO::getByPK($sid)){
+		return null;
+	}
+	
+	$foo = new CompraSucursal();
+	$foo->setIdSucursal( $sid );
+	$compras = CompraSucursalDAO::search($foo, "fecha", "desc");
+	
+	$result = array();
+	
+	foreach($compras as $compra){
+		
+		if($n-- == 0){
+			break;
+		}
+		
+		//buscar los detalles de esta compra
+		$detalleQuery = new DetalleCompraSucursal();
+		$detalleQuery->setIdCompra( $compra->getIdCompra() );
+		
+		$detalles = DetalleCompraSucursalDAO::search( $detalleQuery );
+		
+		$compraArray = $compra->asArray();
+		$compraArray['productos'] = array();
+		
+		foreach($detalles as $detalle){
+			array_push(	$compraArray['productos'] , $detalle->asArray() );
+		}
+		
+		array_push( $result, $compraArray );
+	}
+	
+	return $result;
+	
+}
+
+
+/**
+ * Listar compras por saldar de sucursal.
+ * 
+ * Regresa todas las compras de una o todas las sucursales que no
+ * han sido saldadas.
+ *
+ * @param sid El id de una sucursal, si es nulo, se regresaran los 
+ * resultados de todas las sucursales.
+ *
+ **/
+function comprasDeSucursalSinSaldar( $sid = null ){
+
+	$foo = new CompraSucursal();
+		
+	//si se envio una sucursal, verificar que exista
+	if( $sid && !SucursalDAO::getByPK($sid)){
+		return null;
+	}
+	
+	if($sid){
+		$foo->setIdSucursal( $sid );
+	}
+	
+	$foo->setLiquidado( 0 );
+	
+	$compras = CompraSucursalDAO::search($foo, "fecha", "desc");
+	
+	$result = array();
+	
+	foreach($compras as $compra){
+		
+		//buscar los detalles de esta compra
+		$detalleQuery = new DetalleCompraSucursal();
+		$detalleQuery->setIdCompra( $compra->getIdCompra() );
+		
+		$detalles = DetalleCompraSucursalDAO::search( $detalleQuery );
+		
+		$compraArray = $compra->asArray();
+		$compraArray['productos'] = array();
+		
+		foreach($detalles as $detalle){
+			array_push(	$compraArray['productos'] , $detalle->asArray() );
+		}
+		
+		array_push( $result, $compraArray );
+	}
+	
+	return $result;
+	
+}
+
 
 
 if(isset($args['action'])){

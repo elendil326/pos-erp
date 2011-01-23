@@ -1,6 +1,6 @@
 <?php
 
-
+require_once("controller/compras.controller.php");
 require_once("controller/sucursales.controller.php");
 require_once("controller/ventas.controller.php");
 require_once("controller/personal.controller.php");
@@ -242,10 +242,10 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
     //render the table
     $header = array(
 	    "id_venta"=>  "Venta",
-	    "id_sucursal"=>  "Sucursal",
+	    //"id_sucursal"=>  "Sucursal",
 	    "id_cliente"=>  "Cliente",
 	    "tipo_venta"=>  "Tipo",
-	    "fecha"=>  "Fecha",
+	    "fecha"=>  "Hora",
 	    "subtotal"=>  "Subtotal",
 	    //"iva"=>  "IVA",
 	    "descuento"=>  "Descuento",
@@ -265,10 +265,12 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 
 
 
-    function getDescSuc($sid)
+    function pDate($fecha)
     {
 
-        return SucursalDAO::getByPK( $sid )->getDescripcion();
+		$foo = toDate($fecha);
+		$bar = explode( " " , $foo);
+        return $bar[1] . " " . $bar[2];
 
     }
 
@@ -289,7 +291,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
     $tabla->addColRender( "pagado", "moneyFormat" ); 
     $tabla->addColRender( "tipo_venta", "setTipoColor" ); 
     $tabla->addColRender( "id_cliente", "getNombreCliente" ); 
-    $tabla->addColRender( "id_sucursal", "getDescSuc" ); 
+    $tabla->addColRender( "fecha", "pDate" ); 
     $tabla->addOnClick("id_venta", "mostrarDetallesVenta");
     $tabla->addColRender( "descuento", "percentFormat" );
     $tabla->addNoData("Esta sucursal no ha realizado ventas este dia.");
@@ -301,6 +303,33 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 
 
 
+<h2>Compras no saldadas de esta sucursal</h2><?php
+
+	function rSaldo( $pagado ){
+		return moneyFormat( $pagado );
+	}
+
+	$compras = comprasDeSucursalSinSaldar( $_REQUEST['id'] );	
+	
+	$header = array(
+			"id_compra" => "ID Compra",
+		    "fecha"=> "Fecha",
+		    "total"=> "Total",
+		    "pagado"=> "Pagado" );
+	
+	$tabla = new Tabla($header, $compras);
+	$tabla->addColRender( "fecha", "toDate" );
+	$tabla->addColRender("total", "moneyFormat");
+	$tabla->addColRender("pagado", "rSaldo");	
+	$tabla->addOnClick("id_compra", "detalleCompraSucursal" );
+	$tabla->render();
+
+?>
+<script>
+	function detalleCompraSucursal(id){
+		window.location = "inventario.php?action=detalleCompraSucursal&cid=" + id;
+	}
+</script>
 
 
 
@@ -380,18 +409,14 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 	$header = array( 
 		"productoID" => "ID",
 		"descripcion"=> "Descripcion",
-		"precioVenta"=> "Precio Venta",
-		"existenciasMinimas"=> "Minimas",
-		"existencias"=> "Existencias",
-		"medida"=> "Tipo",
-		"precioIntersucursal"=> "Precio Intersucursal" );
+		"precioVenta"=> "Precio sugerido",
+		"existenciasOriginales"=> "Existencias Originales",
+		"existenciasProcesadas"=> "Existencias Procesadas");
 		
 
 	
 	$tabla = new Tabla( $header, $inventario );
 	$tabla->addColRender( "precioVenta", "moneyFormat" ); 
-	$tabla->addColRender( "precioIntersucursal", "moneyFormat" ); 
-	$tabla->addColRender( "existencias", "colorExistencias" );
     $tabla->addNoData("Esta sucursal no cuenta con ningun producto en su inventario.");
 	$tabla->render();
 ?>
