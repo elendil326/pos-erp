@@ -279,12 +279,16 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 									//buscar el preoducto en el arreglo de 
 									precioVenta = null;
 									
-									for (var j=0; j < Aplicacion.Inventario.currentInstance.Inventario.productos.length; j++) {
+									/*for (var j=0; j < Aplicacion.Inventario.currentInstance.Inventario.productos.length; j++) {
 										if( Aplicacion.Inventario.currentInstance.Inventario.productos[j].data.productoID == campo.prodID ){
-											precioVenta = Aplicacion.Inventario.currentInstance.Inventario.productos[j].data.precioVenta;
+											precioVenta = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado  )?Aplicacion.Inventario.currentInstance.Inventario.productos[j].data.precioVenta : Aplicacion.Inventario.currentInstance.Inventario.productos[j].data.precioVentaSinProcesar ;
 											break;
 										}
-									}
+									}*/
+
+                                    
+                                    precioVenta = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true"  )?Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaSinProcesar ;
+											
 
 									//verificamos que no intente cambiar el precio por un precio mas bajo del preestablecido
 									if( parseFloat(campo.getValue()) < parseFloat( precioVenta) ){
@@ -306,7 +310,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                                                 Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == Aplicacion.Mostrador.currentInstance.carrito.items[j].procesado &&
                                                 parseFloat( campo.getValue() ) != Aplicacion.Mostrador.currentInstance.carrito.items[j].precio
                                              ){
-                                                descripcion = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado = "true" )?"Limpia":"Original";
+                                                descripcion = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true" )?"Limpia":"Original";
                                                 Ext.Msg.alert( "Alerta","Existen 2 procuctos " + Aplicacion.Mostrador.currentInstance.carrito.items[i].descripcion + " " + descripcion + " con diferente precio.");
                                                 Aplicacion.Mostrador.currentInstance.carrito.items[i].precio= parseFloat(Aplicacion.Mostrador.currentInstance.carrito.items[j].precio)
                                                 error = true;
@@ -360,15 +364,19 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                 listeners : {
                     "change" : function (){
                      
+                        //iteramos el arreglo de productos
                         for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
+                        
+                            //obtemeteomos 
                             if(Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == this.idUnique){
 					
 					                Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado = this.value;		
 					                
 					                if( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true" ){
-					                    /////
+
+					                    //buscar el producto ya esta en el carrito y en caso de estarlo toma el mismo valor
 					                
-					                   /* var error = false;
+                                        var found = false;
 									
 									    //verificamos que no exista 2 productos con las mismas caracteristicas pero con precio diferente
 							            for(var j=0; j < Aplicacion.Mostrador.currentInstance.carrito.items.length; j++){
@@ -379,31 +387,58 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 							                
                                             if( 
                                                 Aplicacion.Mostrador.currentInstance.carrito.items[i].id_producto == Aplicacion.Mostrador.currentInstance.carrito.items[j].id_producto &&
-                                                Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == Aplicacion.Mostrador.currentInstance.carrito.items[j].procesado &&
-                                                parseFloat( campo.getValue() ) != Aplicacion.Mostrador.currentInstance.carrito.items[j].precio
-                                             ){
-                                                descripcion = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado = "true" )?"Limpia":"Original";
-                                                Ext.Msg.alert( "Alerta","Existen 2 procuctos " + Aplicacion.Mostrador.currentInstance.carrito.items[i].descripcion + " " + descripcion + " con diferente precio.");
+                                                Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == Aplicacion.Mostrador.currentInstance.carrito.items[j].procesado                                                
+                                             ){                                                
                                                 Aplicacion.Mostrador.currentInstance.carrito.items[i].precio= parseFloat(Aplicacion.Mostrador.currentInstance.carrito.items[j].precio)
-                                                error = true;
+                                                found = true;
                                                 break;
                                             }
 							                
 							            }
 							            
-							            if(error){
+							            if(found ){
 							                break;
-							            }*/
+							            }else{
+							                Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta;
+							            }
+					                    
+					                    
+					                    
+					                    
+					                    
 					                
 					                    /////
-					                    Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta;
+					                    
 					                }else{
 					                
 					                    ////
+					                //buscar el producto ya esta en el carrito y en caso de estarlo toma el mismo valor
 					                
-					                
-					                    ////
+                                        var found  = false;
+									
+									    //verificamos que no exista 2 productos con las mismas caracteristicas pero con precio diferente
+							            for(var j=0; j < Aplicacion.Mostrador.currentInstance.carrito.items.length; j++){
+							                
+							                if( Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == Aplicacion.Mostrador.currentInstance.carrito.items[j].idUnique ){
+                                                continue;
+                                            }
+							                
+                                            if( 
+                                                Aplicacion.Mostrador.currentInstance.carrito.items[i].id_producto == Aplicacion.Mostrador.currentInstance.carrito.items[j].id_producto &&
+                                                Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == Aplicacion.Mostrador.currentInstance.carrito.items[j].procesado                                
+                                             ){                                                
+                                                Aplicacion.Mostrador.currentInstance.carrito.items[i].precio= parseFloat(Aplicacion.Mostrador.currentInstance.carrito.items[j].precio)
+                                                found = true;
+                                                break;
+                                            }
+							                
+							            }
+							            
+							            if(found ){
+							                break;
+							            }else{
 					                    Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaSinProcesar;
+					                    }
 					                }
 					                
 					                
