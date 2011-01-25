@@ -60,16 +60,20 @@ Aplicacion.Clientes.prototype.getConfig = function (){
 	        text: 'Nuevo Cliente',
 	        card: this.nuevoClientePanel,
 	        leaf: true
+	    },{
+	        text: 'Lista de Clientes',
+	        card: this.listaDeClientesPanel,
+	        leaf: true
 	    }]
 	} : {
 	    text: 'Clientes',
 	    cls: 'launchscreen',
-		card: this.listaDeClientesPanel
-	    //items: [{
-	    //    text: 'Lista de Clientes',
-	    //    card: this.listaDeClientesPanel,
-	    //    leaf: true
-	    //}]
+		card: this.listaDeClientesPanel,
+	    items: [{
+	        text: 'Lista de Clientes',
+	        card: this.listaDeClientesPanel,
+	        leaf: true
+	    }]
 	};
 
 };
@@ -236,9 +240,9 @@ Aplicacion.Clientes.prototype.listaDeClientesLoad = function (){
 Aplicacion.Clientes.prototype.listaDeClientesStore = new Ext.data.Store({
     model: 'listaDeClientesModel',
     sorters: 'nombre',
-           
+
     getGroupString : function(record) {
-        return record.get('nombre')[0];
+        return record.get('nombre')[0].toUpperCase();
     }
 });
 
@@ -256,22 +260,17 @@ Aplicacion.Clientes.prototype.listaDeClientesPanel = null;
  */
 Aplicacion.Clientes.prototype.listaDeClientesPanelCreator = function (){
 	this.listaDeClientesPanel =  new Ext.Panel({
-        layout: Ext.is.Phone ? 'fit' : {
-            type: 'vbox',
-            align: 'center',
-            pack: 'center'
-        },
-        
+        layout: 'fit',
         items: [{
-			
-			width : '100%',
-			height: '100%',
 			xtype: 'list',
 			store: this.listaDeClientesStore,
 			itemTpl: '<div class="listaDeClientesCliente"><strong>{nombre}</strong> {rfc}</div>',
 			grouped: true,
 			indexBar: true,
 			listeners : {
+				"beforerender" : function (){
+					//Aplicacion.Clientes.currentInstance.listaDeClientesPanel.getComponent(0).setHeight(sink.Main.ui.getSize().height - sink.Main.ui.navigationBar.getSize().height );
+				},
 				"selectionchange"  : function ( view, nodos, c ){
 					
 					if(nodos.length > 0){

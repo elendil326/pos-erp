@@ -42,6 +42,7 @@ Aplicacion.Autorizaciones.prototype.getConfig = function (){
 	return {
 	    text: 'Autorizaciones',
 	    cls: 'launchscreen',
+        card: Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel,	
 	    items: [{
 		    text: 'Nueva Autorizacion',
 			items: [{
@@ -921,16 +922,10 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanelCreator = function
 
 
     this.listaDeAutorizacionesPanel = new Ext.Panel({
-        layout: Ext.is.Phone ? 'fit' : {
-            type: 'vbox',
-            align: 'center',
-            pack: 'center'
-        },
+        layout: 'fit' ,
         items: [{
-
-			width : '100%',
-			height: '100%',
-            xtype: 'list',
+			xtype: 'list',
+			emptyText: "vacio",
             store: this.listaDeAutorizacionesStore,
             itemTpl: '<div class="listaDeAutorizacionesAutorizacion">ID de autorizacion : {id_autorizacion}&nbsp; Enviada el {fecha_peticion}</div>',
             grouped: true,

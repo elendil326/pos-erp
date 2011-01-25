@@ -12,6 +12,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
     }],
     backText: 'Regresar',
     useTitleAsBackText: false,
+
     initComponent : function() {
         this.navigationButton = new Ext.Button({
             hidden: Ext.is.Phone || Ext.Viewport.orientation == 'landscape',
@@ -55,7 +56,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
         this.navigationPanel.on('back', this.onNavBack, this);
 
         if (!Ext.is.Phone) {
-            this.navigationPanel.setWidth(180);
+            this.navigationPanel.setWidth(190);
         }
 
         this.dockedItems = this.dockedItems || [];
@@ -170,6 +171,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
 
     layoutOrientation : function(orientation, w, h) {
         if (!Ext.is.Phone) {
+			//no es telefono
             if (orientation == 'portrait') {
                 this.navigationPanel.hide(false);
                 this.removeDocked(this.navigationPanel, false);
@@ -179,8 +181,7 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
                 this.navigationPanel.setFloating(true);
                 this.navigationPanel.setHeight(400);
                 this.navigationButton.show(false);
-            }
-            else {
+            } else {
                 this.navigationPanel.setFloating(false);
                 this.navigationPanel.show(false);
                 this.navigationButton.hide(false);
@@ -227,11 +228,15 @@ sink.Main = {
 
 
 Ext.setup({
-    tabletStartupScreen: 'resources/img/tablet_startup.png',
-    phoneStartupScreen: 'resources/img/phone_startup.png',
-    icon: 'resources/img/icon.png',
-    glossOnIcon: false,
+    glossOnIcon: true,
     onReady: function() {
+	
+		Ext.EventManager.onWindowResize(function (a,b,c) {
+			if(DEBUG){
+				console.log('resize',a,b,c);
+			}
+		});
+	
         sink.Main.init();
     }
 });

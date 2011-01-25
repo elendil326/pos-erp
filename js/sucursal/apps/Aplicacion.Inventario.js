@@ -42,6 +42,7 @@ Aplicacion.Inventario.prototype.getConfig = function (){
 	return POS.U.g ? {
 		    text: 'Inventario',
 		    cls: 'launchscreen',
+		    card :	this.listaInventarioPanel,		
 		    items: [{
 			    text: 'Inventario Actual',
 			    card :	this.listaInventarioPanel,
@@ -56,6 +57,7 @@ Aplicacion.Inventario.prototype.getConfig = function (){
 	} : {
 		    text: 'Inventario',
 		    cls: 'launchscreen',
+		    card :	this.listaInventarioPanel,		
 		    items: [{
 			    text: 'Inventario Actual',
 			    card :	this.listaInventarioPanel,
@@ -208,17 +210,8 @@ Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 
 
 	this.listaInventarioPanel = new Ext.Panel({
-		//dockedItems : dockedItems,
-		layout: Ext.is.Phone ? 'fit' : {
-			type: 'vbox',
-			align: 'center',
-			pack: 'center'
-		},
-		
+		layout: 'fit',
 		items: [{
-			
-			width : '100%',
-			height: '100%',
 			xtype: 'list',
 			store: this.inventarioListaStore,
 			itemTpl: '<div class=""><b>{productoID}</b>&nbsp;{descripcion}</div>',
