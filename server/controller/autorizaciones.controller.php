@@ -1104,10 +1104,7 @@ if( isset( $args['action'] ) ){
         	cancelarAutorizacion($args["id_autorizacion"]);
         
         break;
-        
-        default:
-            printf ('{ "success" : false }');
-        break;
+
 
     }
 }

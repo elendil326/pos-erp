@@ -55,12 +55,8 @@ Aplicacion.Clientes.prototype.getConfig = function (){
 	return POS.U.g ? {
 	    text: 'Clientes',
 	    cls: 'launchscreen',
+        card: this.listaDeClientesPanel,	
 	    items: [{
-	        text: 'Lista de Clientes',
-	        card: this.listaDeClientesPanel,
-	        leaf: true
-	    },
-	    {
 	        text: 'Nuevo Cliente',
 	        card: this.nuevoClientePanel,
 	        leaf: true
@@ -68,11 +64,12 @@ Aplicacion.Clientes.prototype.getConfig = function (){
 	} : {
 	    text: 'Clientes',
 	    cls: 'launchscreen',
-	    items: [{
-	        text: 'Lista de Clientes',
-	        card: this.listaDeClientesPanel,
-	        leaf: true
-	    }]
+		card: this.listaDeClientesPanel
+	    //items: [{
+	    //    text: 'Lista de Clientes',
+	    //    card: this.listaDeClientesPanel,
+	    //    leaf: true
+	    //}]
 	};
 
 };
@@ -1106,7 +1103,8 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 	}
 
 	opciones = [
-		new Ext.Button({ id : 'Clientes-EliminarCliente', ui  : 'action', text: 'Eliminar cliente',  handler : function(){
+		//no se pueden eliminar clientes
+/*		new Ext.Button({ id : 'Clientes-EliminarCliente', ui  : 'action', text: 'Eliminar cliente',  handler : function(){
 			cliente = Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0].getRecord().data;
 			if(DEBUG){
 				console.log("intentando eliminar el cliente" , cliente);
@@ -1121,6 +1119,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 			
 
 		}}),	
+		*/
 		new Ext.Button({ id : 'Clientes-EditarDetalles', ui  : 'action', text: 'Editar Detalles del Cliente',  handler : this.editarClienteBoton }),
 		new Ext.Button({ id : 'Clientes-EditarDetallesCancelar', ui  : 'decline', text: 'Cancelar', handler : this.editarClienteCancelarBoton, hidden : true }),
 		new Ext.Button({ id : 'Clientes-EditarDetallesGuardar', ui  : 'confirm', text: 'Guardar', handler : this.editarClienteGuardarBoton, hidden : true })

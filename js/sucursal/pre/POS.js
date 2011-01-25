@@ -27,30 +27,94 @@ POS.currencyFormat = function (num){
 
 
 Ext.Ajax.timeout = 5000;
-POS.CHECK_DB_TIMEOUT = 15000;
-POS.A = { failure : false,  sendHeart : false };
+POS.CHECK_DB_TIMEOUT = 5000;
+POS.A = { failure : false,  sendHeart : true };
 POS.U = { g : null };
 
 
-Ext.Ajax.on("requestexception", function(){
+Ext.Ajax.on("requestexception", function(a,b,c){
     if(!POS.A.failure){
         POS.A.failure = true;
-        Ext.getBody().mask("Problemas de conexion, porfavor espere...");
+        //Ext.getBody().mask("Problemas de conexion, porfavor espere...");
+
+		setTimeout("dummyRequest()", 500);
+		
+		if(DEBUG){
+			console.warn("SERVER UNREACHABLE");
+		}
     }
 });
 
 
-
+Ext.Ajax.on("beforerequest", function( conn, options ){
+	
+    if(POS.A.failure && options.params.action != "dummy"){
+		if(DEBUG){
+			console.warn("server request on unreachable server" );
+			console.log( "parametros:", options.params)
+		}
+	}
+	
+});
 
 Ext.Ajax.on("requestcomplete", function(){
     if(POS.A.failure){
         POS.A.failure = false;
-        Ext.getBody().unmask();
+        //Ext.getBody().unmask();
     }
 });
 
 
+function dummyRequest(){
+	//enviar hash de inventario
+	
+    Ext.Ajax.request({
+		url: '../proxy.php',
+		params : { action : 'dummy' },
+		failure: function() {
+			setTimeout("dummyRequest()", 500);
+		}
+	});
+	
+}
+
 function task(){
+	
+	//enviar hash de inventario
+    Ext.Ajax.request({
+		url: '../proxy.php',
+		scope : this,
+		params : { action : 1101, hash : heartHash },
+		success: function(response, opts) {
+			
+			setTimeout("task()", POS.CHECK_DB_TIMEOUT);
+			
+			if(response.responseText.length == 0){
+				return;
+			}
+			
+			try{ r = Ext.util.JSON.decode( response.responseText ); }catch(e){ return; }
+			
+			if( r.success && r.hash != heartHash){
+
+				if(DEBUG){
+					console.log( "Main hash has changed, reloading !" );
+				}
+				
+				heartHash = r.hash;
+				reload();
+
+			}
+			
+
+		}
+	});
+	
+}
+
+
+
+function reload(){
 
 
     //enviar hash de inventario
@@ -103,16 +167,13 @@ function task(){
 		}
 	});
 	
-	
-	if(POS.A.sendHeart)setTimeout("task()", POS.CHECK_DB_TIMEOUT);
-    
-    //inventario = Aplicacion.Inventario.currentInstance.Inventario.hash;
-    //clientes = Aplicacion.Clientes.currentInstance.listaDeClientes.hash;
-    //autorizaciones = Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.hash;
 }
 
-//incir el heartbeat
-if(POS.A.sendHeart)setTimeout("task()", POS.CHECK_DB_TIMEOUT);
+
+var heartHash = null;
+if(POS.A.sendHeart){
+			setTimeout("task()", POS.CHECK_DB_TIMEOUT);
+}
 
 
 POS.error = function (ajaxResponse, catchedError)
