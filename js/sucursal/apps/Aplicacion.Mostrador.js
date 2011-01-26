@@ -92,7 +92,7 @@ Aplicacion.Mostrador.prototype.getInfoSucursal = function()
 				console.log("obtenicion de la informacion exitosa ", venta );
 			}
 						
-			Aplicacion.Mostrador.currentInstance.infoSucursal = informacion.datos[0];		
+			Aplicacion.Mostrador.currentInstance.infoSucursal = informacion.datos.id_sucursal;		
 			
 			if(DEBUG){
 				console.log("Aplicacion.Mostrador.currentInstance.infoSucursal contiene : ", Aplicacion.Mostrador.currentInstance.infoSucursal);	
@@ -831,6 +831,7 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 	carrito = Aplicacion.Mostrador.currentInstance.carrito;
 	//incluye los datos de la sucursal
 	carrito.sucursal = Aplicacion.Mostrador.currentInstance.infoSucursal;
+	                                
 	/*indica que se quiere imprimir un ticket, ya que existen 3 casos de impresion
 		1.- solo ticket
 		2.- solo factura
@@ -1051,267 +1052,6 @@ Aplicacion.Mostrador.prototype.doVentaPanelShow = function ( ){
 
 
 
-/*Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
-{
-	
-
-	if(DEBUG){
-		console.log("Haciendo update en el formulario de la venta", this.carrito);
-	}
-	
-	
-	//mostrar los totales
-	subtotal = 0;
-	total = 0;
-	for (var i=0; i < this.carrito.items.length; i++) {
-		subtotal += (this.carrito.items[i].precioVenta * this.carrito.items[i].cantidad);
-	}
-	
-	Aplicacion.Mostrador.currentInstance.carrito.tipo_pago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
-	
-	if( this.carrito.cliente === null ){
-		
-		//si es caja comun
-		Ext.getCmp('Mostrador-doVentaCliente').setValue("Caja Comun");
-		Ext.getCmp('Mostrador-doVentaClienteCredito' ).setVisible(false);
-		Ext.getCmp('Mostrador-doVentaClienteCreditoRestante').setVisible(false);
-		Ext.getCmp('Mostrador-doVentaTipoContado').setVisible(true);
-		Ext.getCmp('Mostrador-doVentaTipoCredito').setVisible(false);		
-		Ext.getCmp('Mostrador-doVentaFacturar').setVisible(false);
-		Ext.getCmp('Mostrador-doVentaDesc' ).setVisible(false);
-		total = subtotal;
-		Ext.getCmp('Mostrador-doVentaNuevoCliente' ).setVisible(true);
-		Aplicacion.Mostrador.currentInstance.carrito.factura = false;
-		Ext.getCmp('Mostrador-doVentaCobrar').setVisible(true);
-		Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
-		
-	}else{
-		
-		//es un cliente
-		
-		Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
-		
-		Ext.getCmp('Mostrador-doVentaNuevoCliente' ).setVisible(false);		
-		Ext.getCmp('Mostrador-doVentaCliente').setValue( this.carrito.cliente.nombre + "  " + this.carrito.cliente.rfc );
-		
-		Ext.getCmp('Mostrador-doVentaClienteCredito' ).setVisible(true);
-		Ext.getCmp('Mostrador-doVentaClienteCredito').setValue( POS.currencyFormat(this.carrito.cliente.limite_credito) );
-
-		if(this.carrito.cliente.limite_credito > 0){
-			Ext.getCmp('Mostrador-doVentaClienteCreditoRestante').setVisible(true);
-			Ext.getCmp('Mostrador-doVentaClienteCreditoRestante').setValue( POS.currencyFormat( this.carrito.cliente.credito_restante ));
-		}else{
-			Ext.getCmp('Mostrador-doVentaClienteCreditoRestante').setVisible(false);			
-			Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";
-			Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
-			Ext.getCmp('Mostrador-doVentaCobrar').setVisible(true);
-		}
-
-
-		Ext.getCmp('Mostrador-doVentaFacturar').setVisible(true);
-		
-		if( this.carrito.cliente.descuento > 0 ){
-			Ext.getCmp('Mostrador-doVentaDesc' ).setVisible(true);
-			Ext.getCmp('Mostrador-doVentaDesc').setValue( POS.currencyFormat( subtotal * (this.carrito.cliente.descuento / 100)) + " ( " + this.carrito.cliente.descuento+"% )" );			
-		}else{
-			Ext.getCmp('Mostrador-doVentaDesc' ).setVisible(false);			
-		}
-
-
-		total = subtotal - ( subtotal * (this.carrito.cliente.descuento / 100));
-
-		if( total <= this.carrito.cliente.credito_restante){
-			Ext.getCmp('Mostrador-doVentaTipoContado').setVisible(false);
-			Ext.getCmp('Mostrador-doVentaTipoCredito').setVisible(true);
-			Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = Ext.getCmp('Mostrador-doVentaTipoCredito').getValue();
-			Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
-			
-			if( Aplicacion.Mostrador.currentInstance.carrito.tipo_venta == "contado" ){
-				Ext.getCmp('Mostrador-doVentaCobrar').setVisible(true);
-			}else{
-				Ext.getCmp('Mostrador-doVentaCobrar').setVisible(false);
-			}
-
-		}else{
-			Ext.getCmp('Mostrador-doVentaTipoContado').setVisible(true);
-			Ext.getCmp('Mostrador-doVentaTipoCredito').setVisible(false);
-			Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";
-			
-			Ext.getCmp('Mostrador-doVentaCobrar').setVisible(true);
-			
-		}
-		
-	}
-	
-	Ext.getCmp('Mostrador-doVentaEfectivo').setValue("");
-	Ext.getCmp('Mostrador-doVentaSub' ).setValue( POS.currencyFormat( subtotal ) );
-	Ext.getCmp('Mostrador-doVentaTotal' ).setValue( POS.currencyFormat( total ) );
-
-	this.carrito.subtotal = subtotal;
-	this.carrito.total = total;
-	
-};*/
-
-/*
- * Se llama para crear por primera vez el panel de venta
- **/
-/*Aplicacion.Mostrador.prototype.doVentaPanelCreator = function (	 ){
-	
-	
-	//cancelar busqueda
-	dockedCancelar = {
-		xtype : 'button',		
-		text: 'Regresar',
-		ui :'back',
-		handler : function(){
-			sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.mostradorPanel , 'slide');
-		}
-	};
-
-
-	//cancelar busqueda
-	dockedNuevo = {
-		xtype : 'button',
-		id : 'Mostrador-doVentaNuevoCliente',
-		text: 'Nuevo Cliente',
-		ui :'normal',
-		handler : function(){
-			sink.Main.ui.setActiveItem( Aplicacion.Clientes.currentInstance.nuevoClientePanel , 'fade');
-		}
-	};
-
-	//hacer la venta
-	dockedVender = {
-		xtype : 'button',		
-		text: 'Vender',
-		ui :'confirm',
-		handler : function (){
-			Aplicacion.Mostrador.currentInstance.doVenta();
-		} 
-
-	};
-
-	//toolbar
-	dockedItems = {
-		xtype: 'toolbar',
-		dock: 'bottom',
-		items: [ dockedCancelar , { xtype: 'spacer' }, dockedNuevo, dockedVender ]
-	};
-	
-	this.doVentaPanel = new Ext.form.FormPanel({													   
-		dockedItems : dockedItems,
-		items: [{
-			xtype: 'fieldset',
-			title: 'Datos de la venta',
-			items: [
-
-				
-				new Ext.form.Text({ label : 'Cliente',			 id: 'Mostrador-doVentaCliente' }),
-				new Ext.form.Text({ label : 'Limite de Credito', id: 'Mostrador-doVentaClienteCredito' }),
-				new Ext.form.Text({ label : 'Credito restante',	 id: 'Mostrador-doVentaClienteCreditoRestante' }),
-				
-				new Ext.form.Text({ label : 'Tipo de Venta',  id: 'Mostrador-doVentaTipoContado', value : "Contado" }),
-				new Ext.form.Select({
-					listeners : {
-						"change" : function ( a, val ){
-							Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = val;
-							if(val == "credito"){
-								Ext.getCmp("Mostrador-doVentaFacturar").hide( Ext.anims.fade );
-								Aplicacion.Mostrador.currentInstance.carrito.factura = false;
-								Ext.getCmp('Mostrador-doVentaCobrar').hide( Ext.anims.fade );
-								
-								Ext.getCmp('Mostrador-doVentaTipoPago').hide( Ext.anims.fade );
-								Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = false;
-								
-								
-							}else{
-								Ext.getCmp("Mostrador-doVentaFacturar").show( Ext.anims.fade );
-								Aplicacion.Mostrador.currentInstance.carrito.factura = Ext.getCmp("Mostrador-doVentaFacturar").getValue() == 1;
-								Ext.getCmp('Mostrador-doVentaCobrar').show( Ext.anims.fade );			
-								
-								Ext.getCmp('Mostrador-doVentaTipoPago').show( Ext.anims.fade );
-								Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue() == 1;
-													
-							}
-						},
-						"show" : function (){
-							Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = Ext.getCmp('Mostrador-doVentaTipoCredito').getValue();
-						}
-					},
-					label : 'Tipo de Venta', 
-					id: 'Mostrador-doVentaTipoCredito', 
-					options: [{text: 'Contado',	 value: 'contado'},{text: 'Credito', value: 'credito'}] 
-				}),
-
-                new Ext.form.Select({
-					listeners : {
-						"change" : function ( a, val ){
-							Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = val;							
-						},
-						"show" : function (){
-						       
-							Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
-						}
-					},
-					label : 'Tipo de Pago', 
-					id: 'Mostrador-doVentaTipoPago', 
-					options: [{text: 'Efectivo',	 value: 'efectivo'},{text: 'Cheque',	 value: 'cheque'},{text: 'Targeta', value: 'targeta'}] 
-				}),
-
-				new Ext.form.Toggle({ 
-					listeners : {
-						"change" : function ( a, b, newVal, oldVal ){
-							Aplicacion.Mostrador.currentInstance.carrito.factura = newVal == 1;
-						}
-					},
-					id : 'Mostrador-doVentaFacturar', 
-					label : 'Facturar' 
-				}),
-				
-				
-				new Ext.form.Text({ label : 'Subtotal',			id: 'Mostrador-doVentaSub' }),
-
-				new Ext.form.Text({ label : 'Descuento',		id: 'Mostrador-doVentaDesc' }),
-				new Ext.form.Text({ label : 'Total',			id: 'Mostrador-doVentaTotal' })
-			]},
-			{
-				id : "Mostrador-doVentaCobrar",
-				xtype: 'fieldset',
-				hidden : true,
-				items: [
-
-					new Ext.form.Text({ 
-						label : 'Efectivo', 
-						id: 'Mostrador-doVentaEfectivo',
-						listeners : {
-							"focus" : function (){
-								kconf = {
-
-
-									type : 'num',
-									submitText : 'Cobrar',
-									callback : function ( campo ){
-										Aplicacion.Mostrador.currentInstance.doVenta();
-									}
-								};
-
-								POS.Keyboard.Keyboard( this, kconf );								
-							}
-						}
-						})
-				]
-			}
-
-	]});
-
-
-	
-};*/
-
-
-
-
-
 /**
     Esta funcion se llama cuando el usuario presioan el boton de tipo de venta Efectivo o Credito
     dependiendo de la seleccion se ocultan los botones de Efectivo o Cheque, si es que selecciono Credito
@@ -1445,6 +1185,10 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelUpdater = function ()
     Ext.getCmp('Mostrador-doNuevaVentaDescuento').setValue( "" );			
 		
     //ocultamos el boton de factura
+    if( Ext.getCmp('Mostrador-doNuevaVentaFacturar').rendered ){
+        Ext.getCmp('Mostrador-doNuevaVentaFacturar').reset();
+    }
+    
     Ext.getCmp('Mostrador-doNuevaVentaFacturar').setVisible(false);
 
 	//mostrar los totales
