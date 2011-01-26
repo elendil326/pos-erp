@@ -12,6 +12,15 @@ Aplicacion.Proveedores = function(){
 	  **/
 	var listaDeProveedores;
 	
+	
+	/**
+	  * Para hacer referencia a este objeto desde fuera
+	  *
+	  *
+	  *
+	  **/
+	Aplicacion.Proveedores.ci = this;
+	
 	/**
 	  * Referencia a todas las tarjetas de esta aplicacion.
 	  *
@@ -22,7 +31,10 @@ Aplicacion.Proveedores = function(){
 		lista : null,
 		
 		//detalles del proveedor
-		detalles : null
+		detalles : null,
+		
+		//carrito para surtirse
+		carrito : null
 	}
 	
 	
@@ -69,8 +81,44 @@ Aplicacion.Proveedores = function(){
 
 
 	this.mostrarDetalles = function( id_proveedor){
-		console.log("mostrando los detalles del proveeedor " + id_proveedor)
+
+		if(DEBUG){
+			console.log("mostrando los detalles del proveeedor " , id_proveedor);
+		}
+
+
+		thiz = Aplicacion.Proveedores.ci;
+
+		//actualizar los datos en la tarjeta de detalles
+		var tarjeta = thiz.cards.detalles;
+		
+		//buscar este proveedor en el arreglo
+		for(var a = 0; a < listaDeProveedores.length; a++){
+			if( listaDeProveedores[a].id_proveedor == id_proveedor ){
+				break;
+			}
+		}
+
+		if( a == listaDeProveedores.length ){
+			return;
+		}
+		
+		var proveedor = listaDeProveedores[a];
+		
+		tarjeta.setValues({
+			nombre : proveedor.nombre,
+			direccion : proveedor.direccion,
+			telefono : proveedor.telefono
+		});
+		
+        sink.Main.ui.setActiveItem( tarjeta , 'slide');
 	}
+
+
+
+
+
+
 
 
 
@@ -87,28 +135,45 @@ Aplicacion.Proveedores = function(){
 	
 
 	
-	
-	/**
-	  * Registrar el modelo que utilizara este store
-	  **/
-	Ext.regModel('listaDeProveedoresModel', {
-	    fields: [
-	        { name: 'id_autorizacion',     type: 'int'},
-	        { name: 'estado',              type: 'int'},
-	        { name: 'fecha_peticion',      type: 'date'}
-	    ]
-	});
-	
-	//declarar el store
-	listaDeProveedores = new Ext.data.Store({
-	    model: 'listaDeProveedoresModel' ,
-	    sorters: 'fecha_peticion',
-	    getGroupString : function(record) {
-	        return record.nombre;
-	    }
-	});
+
 	
 	cargarListaDeProveedores();
+
+
+	//crear la tarjeta de detalles del proveedor
+	this.cards.detalles = new Ext.form.FormPanel({  
+			dockedItems: [{
+	            dock: 'bottom',
+	            xtype: 'toolbar',
+	            items: [{
+	                text: 'Regresar a lista de proveedores',
+	                ui: 'back',
+	                handler: function() {
+	                   sink.Main.ui.setActiveItem( Aplicacion.Proveedores.ci.cards.lista , 'slide');
+	                }
+	            },{
+	                xtype: 'spacer'
+	            },{
+		            text: 'Surtirse de este proveedor',
+	                ui: 'action',
+	                handler: function() {
+					   Aplicacion.Inventario.currentInstance.surtirWizardFromProveedor = true;
+	                   sink.Main.ui.setActiveItem( Aplicacion.Inventario.currentInstance.surtirWizardPanel , 'slide');
+	                }
+				}]
+	        }],                                                    
+            items: [{
+                xtype: 'fieldset',
+                items: [
+                    new Ext.form.Text({ name: 'nombre', 	label: 'Nombre'    }),
+                    new Ext.form.Text({ name: 'direccion', 	label: 'Direccion' }),
+                    new Ext.form.Text({ name: 'telefono', 	label: 'Telefono'  }), 
+            ]}
+        ]});
+
+
+
+
 
 	//crar la tarjeta de la lista de proveedores
 	this.cards.lista = new Ext.Panel({
@@ -117,19 +182,24 @@ Aplicacion.Proveedores = function(){
 		listeners : {
 			"show" : function (){
 				
+				if(DEBUG){
+					console.log("Creando mosaico para proveedores" , this );
+				}
+				
 				items = [];
 				
 				for( a = 0 ; a < listaDeProveedores.length ; a++ ){
 					items.push({
 						title : listaDeProveedores[a].nombre,
+						id : listaDeProveedores[a].id_proveedor,
 						image : '../media/LorryGreen128.png'
 					});
 				};
 				
-				m = new Mosaico({
+				new Mosaico({
 					renderTo : 'MosaicoProveedores',
-					callBack : this.mostrarDetalles,
-					items: items
+					callBack : Aplicacion.Proveedores.ci.mostrarDetalles,
+					items    : items
 				});
 			}
 		}
@@ -137,8 +207,7 @@ Aplicacion.Proveedores = function(){
 
 
 
-	//crear la tarjeta de detalles del proveedor
-	this.cards.detalles = new Ext.Panel();
+
 }
 
 

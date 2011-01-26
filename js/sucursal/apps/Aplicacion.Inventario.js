@@ -344,6 +344,7 @@ Aplicacion.Inventario.prototype.detalleInventarioSurtirEsteProd = function()
 	}
 	
 	sink.Main.ui.setActiveItem( Aplicacion.Inventario.currentInstance.surtirWizardPanel , 'fade');	
+	
 	Aplicacion.Inventario.currentInstance.surtirAddItem( Aplicacion.Inventario.currentInstance.detalleInventarioPanel.getRecord().data );
 };
 
@@ -503,8 +504,14 @@ Aplicacion.Inventario.prototype.quitarDelCarrito = function ( id_producto )
 
 Aplicacion.Inventario.prototype.surtirWizardPanel = null;
 
-Aplicacion.Inventario.prototype.surtirWizardCreator = function ()
-{
+Aplicacion.Inventario.prototype.surtirWizardFromProveedor = false;
+
+Aplicacion.Inventario.prototype.surtirWizardCreator = function (){
+	
+	if(DEBUG){
+		console.log("Creando wizard par surtir")
+	}
+	
 	bar = [{
 		text: 'Agregar producto',
 		ui: 'normal',
@@ -624,12 +631,16 @@ Aplicacion.Inventario.prototype.surtirCarritoValidator = function(){
 }
 
 //manda una solicitud al admin para que le surta a la sucursal, lo que haya en el carrito
+//data=[{"id_pruducto":"1","cantidad":"55.5"},{"id_pruducto":"1","cantidad":"2"}]
+//damos in tratamiento a this.carritoSurtir.items, para agregar la propiedad id_producto, ya que
+//es empleada en el servidor
 Aplicacion.Inventario.prototype.surtirCarrito = function(){
 
-    //data=[{"id_pruducto":"1","cantidad":"55.5"},{"id_pruducto":"1","cantidad":"2"}]
-
-    //damos in tratamiento a this.carritoSurtir.items, para agregar la propiedad id_producto, ya que
-    //es empleada en el servidor
+	if(this.surtirWizardFromProveedor){
+		console.log("Surtiendo para proveedor ");
+	}else{
+		console.log("Surtiendo para centro de distribucion ");		
+	}
 
     for( var i = 0; i < this.carritoSurtir.items.length; i++)
     {
@@ -640,7 +651,7 @@ Aplicacion.Inventario.prototype.surtirCarrito = function(){
         url: '../proxy.php',
         scope : this,
         params : {
-            action : 209,
+            action : this.surtirWizardFromProveedor ? 903 : 209,
             data : Ext.util.JSON.encode( this.carritoSurtir.items )
         },
         success: function(response, opts) {

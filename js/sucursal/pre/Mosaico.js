@@ -5,6 +5,8 @@ Array.prototype.has=function(v){for (i=0;i<this.length;i++){if (this[i]==v) retu
 
 Mosaico = function ( config )
 {
+	Mosaico.currentInstance = this;
+	
 	this.uniqueID = "mosaic-" + parseInt( Math.random() * 1000 ) ;
 
 	this.config = config;
@@ -43,10 +45,12 @@ Mosaico.prototype.createHtml = function ()
 
 		item = document.createElement('div');
 		item.setAttribute('id', 'mosaico-item-' + a );
+		item.setAttribute('name', Mosaico.currentInstance.config.items[a].id);
 		item.setAttribute('class', 'mosaico-item');
-		item.onclick = function( a, b){
-			console.log("WAAA" , a , b )
-		};
+		
+		item.onclick = function(){
+			Mosaico.currentInstance.config.callBack( this.getAttribute("name") );
+		}
 		
 		wrapper.appendChild(item);
 
