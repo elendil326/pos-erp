@@ -18,6 +18,11 @@ Aplicacion.Operaciones.prototype._init = function (){
     }
     
     Aplicacion.Operaciones.currentInstance = this;
+    
+   
+    
+    Aplicacion.Operaciones.currentInstance.cancelarVentaPanelCreator();
+     
 	
 	return this;
 };
@@ -43,6 +48,11 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
 	        text: 'Prestar efectivo',
 	        card: null,
 	        leaf: true
+	    },
+	    {
+	        text: 'Cancelar venta',
+	        card: Aplicacion.Operaciones.currentInstance.cancelarVentaPanel,
+	        leaf: true
 	    }]
 	};
 };
@@ -51,7 +61,132 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
 
 
 
+/* ***************************************************************************
+   * Cancelar Venta
+   * 
+   *************************************************************************** */
 
+    Aplicacion.Operaciones.prototype.detalle_venta =null;
+    
+    
+   Aplicacion.Operaciones.prototype.cancelarVentaPanelUpdater = function(){
+    
+         Ext.Ajax.request({
+            url: '../proxy.php',
+            scope : this,
+            params : {
+                action : 803
+            },
+            success: function(response, opts) {
+                try{
+                    r = Ext.util.JSON.decode( response.responseText );
+                }catch(e){
+                    return POS.error(response, e);
+                }
+
+                if( r.success ){
+                    Aplicacion.Operaciones.currentInstance.detalle_venta  = r.detalle_venta;      
+                    
+                    var html = "<div style='margin-top:20px; margin-bottom:10px;position:relative; width:100%; color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:15px; position:relative;float:left;' > Venta  " + r.id_venta  + " - Cliente " + r.cliente.nombre  + " </div>";                   
+                    
+                    html += "<table border=0 style = 'margin-top:10px;' >";
+	
+	                html += "<tr class='top'>";
+	                html +=     "<td align='center'>Descripcion</td>";
+
+	                html +=     "<td align='center'>Cantidad Original</td>";	
+	                html +=     "<td align='center' >Precio Original</td>";
+	                html +=     "<td align='center'>Cantidad  Procesado</td>";	
+
+	                html +=     "<td align='center' >Precio Procesado</td>";
+	                html +=     "<td align='center' >Sub Total</td>";
+	                html += "</tr>";
+	                
+	               detalle_venta = Aplicacion.Operaciones.currentInstance.detalle_venta;
+	               
+	               subtotal = 0;
+	                
+	                for (var i=0; i < detalle_venta.length  ; i++){
+		
+		                if( i == detalle_venta.length - 1 ){
+			                html += "<tr class='last'>";
+		                }else{
+			                html += "<tr >";		
+		                }
+		                
+		                html += "<td style='width: 30%;' ><b>" + detalle_venta[i].id_producto + "</b> " + detalle_venta[i].descripcion+ "</td>";
+
+		                html += "<td  align='center' style='width: 14%;'> " + detalle_venta[i].cantidad + "  </td>";
+
+		                html += "<td  align='center'  style='width: 14%;'> " + detalle_venta[i].precio + "  </td>";
+
+		                html += "<td  align='center'  style='width: 14%;' > " + detalle_venta[i].cantidad_procesada + "  </td>";
+
+		                html += "<td  align='center'  style='width: 14%;'> " + detalle_venta[i].precio_procesada + " </td>";	 
+		                
+		                _subtotal = ( detalle_venta[i].cantidad * detalle_venta[i].precio ) + ( detalle_venta[i].cantidad_procesada * detalle_venta[i].precio_procesada ) ;
+		                
+		                subtotal += _subtotal;
+		                
+		                html += "<td  align='center'  style='width: 14%;'> " + POS.currencyFormat( _subtotal )+ " </td>";	 
+		
+		                html += "</tr>";
+	                }
+	
+	
+	                var descuento = ( subtotal * r.cliente.descuento / 100 );
+	
+	                html += "</table>";
+	                
+	                html += "<div style='margin-top:20px; margin-bottom:20px;position:relative; width:100%; color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:15px; position:relative;float:left;' > SubTotal " + POS.currencyFormat( subtotal )  + " - Descuento " + POS.currencyFormat( descuento ) + " - Total " + POS.currencyFormat( subtotal - descuento )  + "</div>";
+	                
+	                //html += "<div style='margin-top:10px; margin-bottom:0px;position:relative; width:100%; color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:15px; position:relative;float:left;' > Descuento  " + POS.currencyFormat( descuento ) + "</div>";
+	                
+	                //html += "<div style='margin-top:10px; margin-bottom:10px;position:relative; width:100%; color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:15px; position:relative;float:left;' > Total  " + POS.currencyFormat( subtotal - descuento )  + "</div>";
+                    
+                    Ext.getCmp('Operaciones-cancelarVentaPanel-Tabla').update(html);     
+                    
+                }
+
+            },
+            failure: function( response ){
+                POS.error( response );
+            }
+        }); 
+        
+        
+       
+        
+    };
+
+    Aplicacion.Operaciones.prototype.cancelarVentaPanelCreator = function(){
+    
+        this.cancelarVentaPanel = new Ext.Panel({         
+            ui : "dark",
+		    modal: false,
+            floating: false,
+            scroll:true,    
+            listeners : {
+			    "show" : function(){
+			        Aplicacion.Operaciones.currentInstance.cancelarVentaPanelUpdater();
+			    }
+		    },      
+            items: [{
+                title :"",
+                cls : "Tabla",
+                items:[{
+                    id: 'Operaciones-cancelarVentaPanel-Tabla',				
+			        html : null
+            }]
+                //instructions: 'Ingrese el nuevo limite de credito para este cliente.',
+            },
+            new Ext.Button({ ui  : 'action', text: 'Cancelar venta', margin : 5,handler : Aplicacion.Operaciones.currentInstance.cancelarVentaPanelUpdater  })
+        ]}); 
+        
+       // Ext.getCmp('Operaciones-cancelarVentaPanel').update(html);
+    
+    };
+    
 
 
 
