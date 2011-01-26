@@ -1,0 +1,38 @@
+/*
+check this out later
+background-image: -webkit-gradient(linear, 0% 0, 0% 100%, from(#7E8E9B), color-stop(0.02, #4E5B65), to(#2D343A));
+*/
+.mosaico-wrapper{
+ 	background-image:url(media/g2.png) !important; 
+	width: 100%;
+	height: 100%;
+	padding: 10px;
+}
+
+
+.mosaico-item{
+	margin: 5px;
+	width: 132px;
+	height: 80px;
+	float: left;
+	text-align: center;
+}
+
+.mosaico-image{
+	margin-left: 20px;
+	width: 100%;
+	height: 132px;
+
+}
+
+.mosaico-title{
+	width: 100%;
+	height: 25px;
+	color: black;
+	font-family: 'Helvetica Neue', HelveticaNeue, Helvetica-Neue, Helvetica, 'BBAlpha Sans', sans-serif;
+	font-weight: normal;
+	font-size: 12px;
+	text-align: center;
+	text-shadow: black 0px 0px 25px;
+	
+}
