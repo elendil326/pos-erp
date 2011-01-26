@@ -22,7 +22,8 @@ Aplicacion.Mostrador.prototype._init = function () {
 	this.buscarClienteFormCreator();
 	
 	//crear la forma de ventas
-	this.doVentaPanelCreator();
+	//this.doVentaPanelCreator();
+	this.doNuevaVentaPanelCreator();
 	
 	//crear la forma de que todo salio bien en la venta
 	this.finishedPanelCreator();
@@ -107,6 +108,13 @@ Aplicacion.Mostrador.prototype.getInfoSucursal = function()
 };
 
 
+
+/* ********************************************************
+	Panel Forma de pago
+******************************************************** */
+
+
+
 /* ********************************************************
 	Funciones del carrito
 ******************************************************** */
@@ -114,7 +122,7 @@ Aplicacion.Mostrador.prototype.getInfoSucursal = function()
  *	Estructura donde se guardaran los detalles de la venta actual.
  * */
 Aplicacion.Mostrador.prototype.carrito = {
-	tipo_venta : "null",
+	tipo_venta : null,
 	items : [],
 	cliente : null,
 	factura : false,
@@ -692,9 +700,7 @@ Aplicacion.Mostrador.prototype.setCajaComun = function ()
 	Ext.getCmp('Mostrador-tipoCliente').setPressed(0);
 
 	Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";
-	Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = "efectivo";
 	Aplicacion.Mostrador.currentInstance.carrito.cliente = null;
-	Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
 	
 };
 
@@ -856,13 +862,13 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 	if(carrito.tipo_venta != "credito"){
 		//mostrar el cambio
 		html += "	<tr>";	
-		html += "		<td>Su cambio: <b>"+POS.currencyFormat( parseFloat( Ext.getCmp("Mostrador-doVentaEfectivo").getValue() ) - parseFloat( carrito.total ) )+"</b></td>";
+		html += "		<td>Su cambio: <b>"+POS.currencyFormat( parseFloat( Ext.getCmp("Mostrador-doNuevaVentaImporte").getValue() ) - parseFloat( carrito.total ) )+"</b></td>";
 		html += "		<td></td>";
 		html += "	</tr>";
 	}	
 
 	html += "</table>";
-	html += "<iframe src ='./PRINTER/src/impresion.php?json=" + json + "' width='0px' height='0px'></iframe> ";
+	//html += "<iframe src ='../PRINTER/src/impresion.php?json=" + json + "' width='0px' height='0px'></iframe> ";
 	
 	this.finishedPanel.update(html);
     Ext.getCmp("Mostrador-mostradorVender").hide( Ext.anims.slide );
@@ -904,12 +910,12 @@ Aplicacion.Mostrador.prototype.doVenta = function ()
 		}
 		
 		//ver si pago lo suficiente
-		pagado = Ext.getCmp("Mostrador-doVentaEfectivo").getValue(); 
+		pagado = Ext.getCmp("Mostrador-doNuevaVentaImporte").getValue(); 
 		
 		if( (pagado.length === 0) || (parseFloat(pagado) < parseFloat(carrito.total)) ){
 			
 			//no pago lo suficiente
-			Ext.Msg.alert("Mostrador", "Cantidad insuficiente de efectivo.");
+			Ext.Msg.alert("Mostrador", "Verifique al cantidad del importe.");
 			
 			return;
 		}
@@ -934,8 +940,27 @@ Aplicacion.Mostrador.prototype.doVenta = function ()
 
 Aplicacion.Mostrador.prototype.vender = function ()
 {
-	carrito = Aplicacion.Mostrador.currentInstance.carrito;
-	json = Ext.util.JSON.encode( carrito );
+
+    /**
+    
+      *     {
+      *             "id_cliente": int | null,
+      *             "tipo_venta": "contado" | "credito",
+      *             "tipo_pago": "tarjeta" | "cheque" | "efectivo",
+      *             "factura": false | true,
+      *             "items": [
+      *                 {
+      *                     "id_producto": int,
+      *                     "procesado": true | false,
+      *                     "precio":float,
+      *                     "cantidad": float
+      *                 }
+      *             ]
+      *     }
+        */
+
+
+	json = Ext.util.JSON.encode( Aplicacion.Mostrador.currentInstance.carrito );
 	
 	if(DEBUG){
 		console.log("Enviando venta ....");
@@ -1008,6 +1033,7 @@ Aplicacion.Mostrador.prototype.vender = function ()
  * Guarda el panel donde estan la forma de venta
  **/
 Aplicacion.Mostrador.prototype.doVentaPanel = null;
+Aplicacion.Mostrador.prototype.doNuevaVentaPanel = null;
 
 /*
  * Es la funcion de entrada para mostrar el panel de venta
@@ -1015,14 +1041,17 @@ Aplicacion.Mostrador.prototype.doVentaPanel = null;
 Aplicacion.Mostrador.prototype.doVentaPanelShow = function ( ){
 
 	//hacer un update de la nueva informacion en el panel
-	Aplicacion.Mostrador.currentInstance.doVentaPanelUpdater();
+	Aplicacion.Mostrador.currentInstance.doNuevaVentaPanelUpdater();
 	
 	//hacer un setcard manual
-	sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.doVentaPanel , 'slide');
+	sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel , 'slide');
 	
 };
 
-Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
+
+
+
+/*Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
 {
 	
 
@@ -1038,7 +1067,7 @@ Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
 		subtotal += (this.carrito.items[i].precioVenta * this.carrito.items[i].cantidad);
 	}
 	
-	Aplicacion.Mostrador.currentInstance.carrito.tipoDePago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
+	Aplicacion.Mostrador.currentInstance.carrito.tipo_pago = Ext.getCmp('Mostrador-doVentaTipoPago').getValue();
 	
 	if( this.carrito.cliente === null ){
 		
@@ -1121,12 +1150,12 @@ Aplicacion.Mostrador.prototype.doVentaPanelUpdater = function ()
 	this.carrito.subtotal = subtotal;
 	this.carrito.total = total;
 	
-};
+};*/
 
 /*
  * Se llama para crear por primera vez el panel de venta
  **/
-Aplicacion.Mostrador.prototype.doVentaPanelCreator = function (	 ){
+/*Aplicacion.Mostrador.prototype.doVentaPanelCreator = function (	 ){
 	
 	
 	//cancelar busqueda
@@ -1250,9 +1279,418 @@ Aplicacion.Mostrador.prototype.doVentaPanelCreator = function (	 ){
 				xtype: 'fieldset',
 				hidden : true,
 				items: [
+
 					new Ext.form.Text({ 
 						label : 'Efectivo', 
 						id: 'Mostrador-doVentaEfectivo',
+						listeners : {
+							"focus" : function (){
+								kconf = {
+
+
+									type : 'num',
+									submitText : 'Cobrar',
+									callback : function ( campo ){
+										Aplicacion.Mostrador.currentInstance.doVenta();
+									}
+								};
+
+								POS.Keyboard.Keyboard( this, kconf );								
+							}
+						}
+						})
+				]
+			}
+
+	]});
+
+
+	
+};*/
+
+
+
+
+
+/**
+    Esta funcion se llama cuando el usuario presioan el boton de tipo de venta Efectivo o Credito
+    dependiendo de la seleccion se ocultan los botones de Efectivo o Cheque, si es que selecciono Credito
+    ademas se construye la estructura del formulario de la venta(subtotal, total, cambio etc)
+*/
+Aplicacion.Mostrador.prototype.setTipoVenta = function ( tipo_venta ){
+
+    subtotal = 0;
+	total = 0;
+	for (var i=0; i < this.carrito.items.length; i++) {
+		subtotal += (this.carrito.items[i].precioVenta * this.carrito.items[i].cantidad);
+	}
+
+    if( tipo_venta == "contado" ){
+    
+        //mostramos botones
+        if( !Ext.getCmp('Mostrador-doNuevaVenta-Menu-Efectivo').isVisible( ))
+        {
+             Ext.getCmp('Mostrador-doNuevaVenta-Menu-Efectivo').show();
+        }
+        
+        if( !Ext.getCmp('Mostrador-doNuevaVenta-Menu-Cheque').isVisible())
+        {
+             Ext.getCmp('Mostrador-doNuevaVenta-Menu-Cheque').show();
+        }
+
+        //inicializamos valores
+        Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";               
+        
+        //construimos la estructura basica del formulario
+
+    }
+
+    if( tipo_venta == "credito" ){
+    
+        //ocultamos los botones de tipo de pago
+        Ext.getCmp('Mostrador-doNuevaVenta-Menu-Efectivo').hide();
+        Ext.getCmp('Mostrador-doNuevaVenta-Menu-Cheque').hide();
+        
+        //inicializamos valores
+        Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "credito";
+        
+        //ocultamos el boton de factura
+        Ext.getCmp('Mostrador-doNuevaVentaFacturar').setVisible(false);
+        
+        //ocultamos el formulario de importe
+        Ext.getCmp('Mostrador-doNuevaVentaCobrar').setVisible(false);
+        
+        //establecemos nulo el tipo de pago
+        Aplicacion.Mostrador.currentInstance.carrito.tipo_pago = null;  
+        
+    }
+    
+    this.carrito.subtotal = subtotal;
+	this.carrito.total = total;
+
+};
+
+
+
+Aplicacion.Mostrador.prototype.setTipoPago = function( tipoPago ){
+
+    switch( tipoPago ){
+        case 'efectivo':
+            Aplicacion.Mostrador.currentInstance.carrito.tipo_pago = "efectivo";            		
+		    //mostramos el formualrio de importe
+            Ext.getCmp('Mostrador-doNuevaVentaCobrar').setVisible(true);
+            Ext.getCmp('Mostrador-doNuevaVentaCobrar').setTitle("Tipo de pago : Efectivo");
+             //verificamos si es un cliente para mostrar el boton de factura
+            if( Aplicacion.Mostrador.currentInstance.carrito.cliente != null )
+            {
+                Ext.getCmp('Mostrador-doNuevaVentaFacturar').setVisible(true);
+            }
+        break; 
+        
+        case 'cheque':
+            Aplicacion.Mostrador.currentInstance.carrito.tipo_pago = "cheque";
+            //mostramos el formualrio de importe
+            Ext.getCmp('Mostrador-doNuevaVentaCobrar').setVisible(true);
+            Ext.getCmp('Mostrador-doNuevaVentaCobrar').setTitle("Tipo de pago : Cheque");
+            //verificamos si es un cliente para mostrar el boton de factura
+            if( Aplicacion.Mostrador.currentInstance.carrito.cliente != null )
+            {
+                Ext.getCmp('Mostrador-doNuevaVentaFacturar').setVisible(true);
+            }
+        break; 
+        
+        default:
+            Aplicacion.Mostrador.currentInstance.carrito.tipo_pago = null;
+            Ext.Msg.alert("Alerta","Tipo de Pago Invalido.");
+    }
+    
+};
+
+
+
+/**
+* Actualiza el panel de la venta, mostrando u ocultando los campos que se requieran
+*/
+Aplicacion.Mostrador.prototype.doNuevaVentaPanelUpdater = function ()
+{
+
+    if(DEBUG){
+		console.log("Haciendo update en el formulario de la venta", this.carrito);
+	}
+
+    //ocultar el formulario de Importe
+    Ext.getCmp('Mostrador-doNuevaVentaCobrar').setVisible(false);
+    Ext.getCmp('Mostrador-doNuevaVentaCobrar').setTitle("");
+    Ext.getCmp('Mostrador-doNuevaVentaImporte').setValue("");
+
+    //ocultamos todos los botones
+    Ext.getCmp('Mostrador-doNuevaVenta-Menu-Contado').hide();
+    Ext.getCmp('Mostrador-doNuevaVenta-Menu-Credito').hide();
+    Ext.getCmp('Mostrador-doNuevaVenta-Menu-Efectivo').hide();
+    Ext.getCmp('Mostrador-doNuevaVenta-Menu-Cheque').hide();	
+    
+    //ocultamos los datos de  cliente
+    Ext.getCmp('Mostrador-doVentaNuevoCliente' ).setVisible(false);		
+		
+    Ext.getCmp('Mostrador-doNuevaVentaCliente').setValue( "" );
+    Ext.getCmp('Mostrador-doNuevaVentaCliente').hide();
+		
+    Ext.getCmp('Mostrador-doNuevaVentaClienteCredito' ).setVisible(false);
+    Ext.getCmp('Mostrador-doNuevaVentaClienteCredito').setValue( "" );
+		
+    Ext.getCmp('Mostrador-doNuevaVentaClienteCreditoRestante').setVisible(false);
+    Ext.getCmp('Mostrador-doNuevaVentaClienteCreditoRestante').setValue( "" );
+	    
+    Ext.getCmp('Mostrador-doNuevaVentaDescuento' ).setVisible(false);
+    Ext.getCmp('Mostrador-doNuevaVentaDescuento').setValue( "" );			
+		
+    //ocultamos el boton de factura
+    Ext.getCmp('Mostrador-doNuevaVentaFacturar').setVisible(false);
+
+	//mostrar los totales
+	subtotal = 0;
+	total = 0;
+	for (var i=0; i < this.carrito.items.length; i++) {
+		subtotal += (this.carrito.items[i].precio * this.carrito.items[i].cantidad);
+	}
+	
+	if( this.carrito.cliente === null ){
+		
+		//si es caja comun
+		
+		total = subtotal;
+		
+		Aplicacion.Mostrador.currentInstance.carrito.factura = false;
+		
+		//establecemos en elcarrito el tipod e venta contado
+		Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";
+
+        //mostramos los botones de tipo de pago
+        Ext.getCmp('Mostrador-doNuevaVenta-Menu-Efectivo').show();
+        Ext.getCmp('Mostrador-doNuevaVenta-Menu-Cheque').show();	
+        
+		
+	}else{
+		
+		//es un cliente
+		
+		//mostramos los datos del cliente
+		Ext.getCmp('Mostrador-doVentaNuevoCliente' ).setVisible(false);		
+		Ext.getCmp('Mostrador-doNuevaVentaCliente').setVisible(true);
+		Ext.getCmp('Mostrador-doNuevaVentaCliente').setValue( this.carrito.cliente.nombre + "  " + this.carrito.cliente.rfc );
+		
+
+        //verificamos si el cliente tiene asignado un limite de credito
+		if(this.carrito.cliente.limite_credito > 0){
+		
+		    //mostramos el credito restante
+		    Ext.getCmp('Mostrador-doNuevaVentaClienteCredito' ).setVisible(true);
+		    Ext.getCmp('Mostrador-doNuevaVentaClienteCredito').setValue( POS.currencyFormat(this.carrito.cliente.limite_credito) );
+			Ext.getCmp('Mostrador-doNuevaVentaClienteCreditoRestante').setVisible(true);
+			Ext.getCmp('Mostrador-doNuevaVentaClienteCreditoRestante').setValue( POS.currencyFormat( this.carrito.cliente.credito_restante ));			
+			
+		}else{
+		    //ocultamos el limite de credito
+			Ext.getCmp('Mostrador-doNuevaVentaClienteCreditoRestante').setVisible(false);			
+			
+			//establecemos el tipo de venta manualmente a contado ya que no tiene la posibilidad de pagar a credito
+			Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";
+            
+		}
+
+        
+		//Ext.getCmp('Mostrador-doNuevaVentaFacturar').setVisible(true);
+		
+		
+		//verificamos si este cliente tiene asignado un descuento
+		if( this.carrito.cliente.descuento > 0 ){
+			Ext.getCmp('Mostrador-doNuevaVentaDescuento' ).setVisible(true);
+			Ext.getCmp('Mostrador-doNuevaVentaDescuento').setValue( POS.currencyFormat( subtotal * (this.carrito.cliente.descuento / 100)) + " ( " + this.carrito.cliente.descuento+"% )" );			
+		}else{
+			Ext.getCmp('Mostrador-doNuevaVentaDescuento' ).setVisible(false);			
+		}
+
+		total = subtotal - ( subtotal * (this.carrito.cliente.descuento / 100));
+
+        //verificamos que tipos de venta se le aplican
+		if( total <= this.carrito.cliente.credito_restante){
+		    //mostramos los botones de tipo de venta
+			Ext.getCmp('Mostrador-doNuevaVenta-Menu-Contado').show();
+			Ext.getCmp('Mostrador-doNuevaVenta-Menu-Credito').show();
+		}else{
+		    //establecemos el tipo de venta manualmente a contado ya que no tiene la posibilidad de pagar a credito
+			Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";
+			//mostramos manualmente los botones de tipo de pago
+			Ext.getCmp('Mostrador-doNuevaVenta-Menu-Efectivo').show();
+			Ext.getCmp('Mostrador-doNuevaVenta-Menu-Cheque').show();
+		}
+		
+	}//if cliente
+
+	
+	Ext.getCmp('Mostrador-doNuevaVentaSubTotal' ).setValue( POS.currencyFormat( subtotal ) );
+	Ext.getCmp('Mostrador-doNuevaVentaTotal' ).setValue( POS.currencyFormat( total ) );
+
+	this.carrito.subtotal = subtotal;
+	this.carrito.total = total;
+	
+};
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+ * Se llama para crear por primera vez el nuevo panel de venta
+ **/
+Aplicacion.Mostrador.prototype.doNuevaVentaPanelCreator = function (	 ){
+	
+	
+	//cancelar busqueda
+	dockedCancelar = {
+		xtype : 'button',		
+		text: 'Regresar',
+		ui :'back',
+		handler : function(){
+			sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.mostradorPanel , 'slide');
+		}
+	};
+
+
+	//cancelar busqueda
+	dockedNuevo = {
+		xtype : 'button',
+		id : 'Mostrador-doVentaNuevoCliente',
+		text: 'Nuevo Cliente',
+		ui :'normal',
+		handler : function(){
+			sink.Main.ui.setActiveItem( Aplicacion.Clientes.currentInstance.nuevoClientePanel , 'fade');
+		}
+	};
+
+	//hacer la venta
+	dockedVender = {
+		xtype : 'button',
+		text: 'Vender',
+		ui :'confirm',
+		handler : function (){
+			Aplicacion.Mostrador.currentInstance.doVenta();
+		} 
+
+	};
+
+	//toolbar
+	dockedItems = {
+		xtype: 'toolbar',
+		dock: 'bottom',
+		items: [ dockedCancelar , { xtype: 'spacer' }, dockedNuevo, dockedVender ]
+	};
+	
+	_html = '';
+	_html += '<div style=" position:relative; width:100%; float:left;color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:-7px; position:relative;float:left;">'; 
+	_html += '   Menu de Opciones'; 
+	_html += '</div>';
+	
+	_html += '<table style=" position:relative; width:100%; float:left;" >';
+	_html += '   <tr style=" height:75px;" >';
+	_html += '       <td>';
+	_html += '           <span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Contado" onClick="Aplicacion.Mostrador.currentInstance.iniciaVenta (\'contado\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Contado &nbsp; </span>';
+	_html += '       </td>';
+	_html += '       <td>';
+	_html += '           <span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Credito" onClick="Aplicacion.Mostrador.currentInstance.iniciaVenta(\'credito\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Credito &nbsp; </span>';
+	_html += '       </td>';
+	_html += '       <td>';
+	_html += '           <span  style=" position:relative; width:8Aplicacion.Mostrador.currentInstance.carrito.tipo_pago = 0%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Efectivo" onClick="Aplicacion.Mostrador.currentInstance.alerta(\'efectivo\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Efectivo &nbsp; </span>';
+	_html += '       </td>';
+	_html += '       <td>';
+	_html += '           <span i style=" position:relative; width:80%; float:left; left:10%" d="Mostrador-doNuevaVenta-Menu-Cheque" onClick="Aplicacion.Mostrador.currentInstance.alerta(\'cheque\')" ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Cheque &nbsp; </span>';
+	_html += '       </td>';
+	_html += '   </tr>';
+	_html+= '</table>';
+	
+	this.doNuevaVentaPanel = new Ext.form.FormPanel({													   
+		dockedItems : dockedItems,
+		items: [
+		{		    
+		    id:'Mostrador-doNuevaVenta-Menu',
+		    layout:'hbox',
+		    style:{
+		        width:'100%',
+		        marginBottom: '5px'
+		    },
+		    html:'<div style=" color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:-7px; position:relative;float:left;"> Menu de Opciones </div>',
+		    //html:'<div style=" position:relative; width:100%; float:left;color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:-7px; position:relative;float:left;">Menu de Opciones</div><table style=" position:relative; width:100%; float:left;" ><tr style=" height:75px;" ><td><span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Contado" onClick="Aplicacion.Mostrador.currentInstance.iniciaVenta (\'contado\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Contado &nbsp; </span></td><td><span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Credito" onClick="Aplicacion.Mostrador.currentInstance.iniciaVenta(\'credito\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Credito &nbsp; </span></td><td><span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Efectivo" onClick="Aplicacion.Mostrador.currentInstance.alerta(\'Efectivo\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Efectivo &nbsp; </span></td><td><span  style=" position:relative; width:80%; float:left; left:10%" d="Mostrador-doNuevaVenta-Menu-Cheque" onClick="Aplicacion.Mostrador.currentInstance.alerta(\'Cheque\')" ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Cheque &nbsp; </span></td></tr></table>',
+		    items:[
+		    
+		        {
+		            id:'Mostrador-doNuevaVenta-Menu-Contado',
+                    width:200,
+                    height:75,
+		            html:'<span onClick="Aplicacion.Mostrador.currentInstance.setTipoVenta(\'contado\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Contado &nbsp; </span>'
+		        },
+		        {
+		            id:'Mostrador-doNuevaVenta-Menu-Credito',
+                    width:200,
+                    height:75,
+		            html:'<span onClick="Aplicacion.Mostrador.currentInstance.setTipoVenta(\'credito\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Credito &nbsp; </span>'
+		        },
+		        {
+		            id:'Mostrador-doNuevaVenta-Menu-Efectivo',
+                    width:200,
+                    height:75,
+		            html:'<span onClick="Aplicacion.Mostrador.currentInstance.setTipoPago(\'efectivo\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Efectivo &nbsp; </span>'
+		        },
+		        {
+		            id:'Mostrador-doNuevaVenta-Menu-Cheque',
+		            width:200,
+                    height:75,
+		            html:'<span onClick="Aplicacion.Mostrador.currentInstance.setTipoPago(\'cheque\')" ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Cheque &nbsp; </span>'
+		        }
+		    
+		    ]
+		},
+		{
+			xtype: 'fieldset',
+			title: 'Datos de la venta',
+			id:'Mostrador-doNuevaVentaForm',
+			items: [
+
+				
+				new Ext.form.Text({ label : 'Cliente',			 id: 'Mostrador-doNuevaVentaCliente' }),
+				new Ext.form.Text({ label : 'Limite de Credito', id: 'Mostrador-doNuevaVentaClienteCredito' }),
+				new Ext.form.Text({ label : 'Credito restante',	 id: 'Mostrador-doNuevaVentaClienteCreditoRestante' }),
+				
+                new Ext.form.Toggle({ 
+					listeners : {
+						"change" : function ( a, b, newVal, oldVal ){
+							Aplicacion.Mostrador.currentInstance.carrito.factura = newVal == 1;
+						}
+					},
+					id : 'Mostrador-doNuevaVentaFacturar', 
+					label : 'Facturar' 
+				}),
+				
+				
+				new Ext.form.Text({ label : 'Subtotal',			id: 'Mostrador-doNuevaVentaSubTotal' }),
+
+				new Ext.form.Text({ label : 'Descuento',		id: 'Mostrador-doNuevaVentaDescuento' }),
+				new Ext.form.Text({ label : 'Total',			id: 'Mostrador-doNuevaVentaTotal' })
+			]},
+			{
+				id : "Mostrador-doNuevaVentaCobrar",
+				xtype: 'fieldset',
+				hidden : true,
+				items: [
+					new Ext.form.Text({ 
+						label : 'Importe', 
+						id: 'Mostrador-doNuevaVentaImporte',
 						listeners : {
 							"focus" : function (){
 								kconf = {
@@ -1275,7 +1713,6 @@ Aplicacion.Mostrador.prototype.doVentaPanelCreator = function (	 ){
 
 	
 };
-
 
 
 

@@ -57,7 +57,7 @@ function revisarExistenciasSucursal( $productos )
             die( '{"success": false, "reason": "No se tiene registro del producto ' . $p -> id_producto . ' en esta sucursal.." }' );
         }
         
-        if( $p -> procesado == true ){
+        if( $p -> procesado == "true" ){
 		    //requiere producto procesado
 		    if( $p -> cantidad_procesada > $i-> getExistenciasProcesadas() ){
 		        return false;
@@ -202,7 +202,8 @@ function vender( $args ){
     } 
 
     try{
-        $data = parseJSON( $args['payload'] );
+        $data = parseJSON( $args['payload'] );       
+        
     }catch(Exception $e){
         Logger::log("json invalido para realizar venta : " . $e);
         die( '{"success": false, "reason": "Parametros invalidos." }' );
@@ -269,7 +270,7 @@ function vender( $args ){
         die('{"success": false, "reason": "El precio de los productos debe ser mayor que cero." }');
     }
     
-    if( $data -> items[0] -> procesado == true ){
+    if( $data -> items[0] -> procesado == "true" ){
 
          $item -> cantidad_procesada = $data->items[0] -> cantidad;
          $item -> precio_procesada = $data->items[0] -> precio;
@@ -305,7 +306,7 @@ function vender( $args ){
             if(  $data->items[$i]  -> id_producto == $item -> id_producto ){
 
                   //si se encuentra ese producto en el arreglo de objetos
-                if( $data->items[$i]->procesado == true ){
+                if( $data->items[$i]->procesado == "true" ){
                      $item -> cantidad_procesada += $data->items[$i] -> cantidad;       
                                    
                      if( $item -> precio_procesada != 0 && $item -> precio_procesada != $data->items[$i]-> precio){
@@ -333,7 +334,7 @@ function vender( $args ){
                 $_item -> id_compra_proveedor = $data->items[$i] -> id_compra_proveedor;
                 $_item -> id_producto = $data->items[$i]-> id_producto;
                 
-                if( $data->items[$i]->procesado == true ){
+                if( $data->items[$i]->procesado == "true" ){
                      $_item -> cantidad_procesada = $data->items[$i] -> cantidad;
                      $_item -> precio_procesada = $data->items[$i] -> precio;
                      $_item -> cantidad = 0;
@@ -369,7 +370,7 @@ function vender( $args ){
     $venta->setDescuento( 0 );
     $venta->setCancelada( 0 );
     
-    if( !isset( $data -> id_cliente ) )
+    if( !isset( $data -> cliente ) )
     {
 
         $venta->setIdCliente( $_SESSION['sucursal'] * -1 );
@@ -380,12 +381,12 @@ function vender( $args ){
     }else{
     
         //verificamos que el cliente exista
-        if( !( $cliente = ClienteDAO::getByPK( $data -> id_cliente) ) ){
+        if( !( $cliente = ClienteDAO::getByPK( $data -> cliente -> id_cliente) ) ){
             Logger::log("No se tiene registro del cliente : " . $data -> id_cliente );
             die( '{"success": false, "reason": "Parametros invalidos 5." }' );
         }
         
-        $venta->setIdCliente( $data->id_cliente );
+        $venta->setIdCliente( $data -> cliente -> id_cliente );
         
         //verificamos que el tipo de venta sea valido
         switch( $data -> tipo_venta ){
@@ -406,7 +407,7 @@ function vender( $args ){
         
         $descuento = $cliente->getDescuento();
         
-        if($data->factura){
+        if($data -> factura){
             insertarFacturaVenta($venta);
         }
     
@@ -441,6 +442,12 @@ function vender( $args ){
     {
         VentasDAO::save($venta);
         $id_venta =  $venta->getIdVenta();
+        
+        //si se requiere factura hay que crearla
+        if( $data->factura && isset( $data -> cliente ) ){
+            insertarFacturaVenta($venta);
+        }
+        
     }          
     catch(Exception $e)
     {

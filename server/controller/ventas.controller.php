@@ -81,10 +81,12 @@ function eliminarFactura( $args ){
 function listarVentas( $sid = null ){
 	
 	if(!$sid){
+	    Logger::log('listarVentas : No esta definida $_SESSION[sucursal], se regresaran todas las ventas de todas las sucursales');
 		return VentasDAO::getAll();		
 	}else{
 		$v = new Ventas();
 		$v->setIdSucursal($sid);
+		Logger::log("listarVentas : Listando ventas de la sucursal {$_SESSION[sucursal]}");
 		return VentasDAO::search($v);
 	}
 
@@ -150,6 +152,11 @@ if(isset($args['action'])){
 	    case '801':
 	        eliminarFactura( $args );
 	    break;
+	    
+	    case '802':
+	        printf( '{ "succes" : true, "datos": [%s] }',  json_encode( listarVentas( $_SESSION['sucursal'] ) ));
+	    break;
+	    
 	}	
 }
 
