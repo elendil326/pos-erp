@@ -123,7 +123,9 @@ function nuevoProveedor( $json = null){
  * @return boolean True si hubo exito, o false si la operacion fallo.
  * 
  * */
-
+function surtirSucursalProveedor($id_proveedor,$jsonProductos){
+if($id_proveedor==NULL){die('{"success":false,"reason":"I"}');}
+}
 
 
 /*
@@ -137,24 +139,31 @@ function nuevoProveedor( $json = null){
  * @return Proveedor[] Un arreglo de objetos Proveedor.
  * 
  * */
-function listarProveedores( $sucursal = false ){
+function listarProveedores( $sucursal = true ){
+
+
 	$total_customers = array();
 	
 	//buscar clientes que esten activos
 	$foo = new Proveedor();
-	$foo->setIdProveedor("0");
 	$foo->setActivo("1");
-
+	$foo->setTipoProveedor("ambos");
+	$arrAmbos=ProveedorDAO::search($foo);
 
 	$bar = new Proveedor();
-	$bar->setIdProveedor("9999");
 	$bar->setActivo("1");
-
-	$proveedores = ProveedorDAO::byRange($foo, $bar);
-
-	Logger::log("Listando ´proveedores");
-	
-	return $proveedores;
+	$bar->setTipoProveedor("sucursal");
+	$arrSucursal=ProveedorDAO::search($bar);
+	$proveedores=array_merge($arrAmbos,$arrSucursal);
+	$prov='[';
+//	$proveedores = ProveedorDAO::byRange($foo, $bar);
+		for($i=0;$i<sizeof($proveedores);$i++){
+			if($i==sizeof($proveedores)-1){$prov.=$proveedores[$i];
+			}else{$prov.=$proveedores[$i].',';}
+		}
+	Logger::log("Listando Yproveedores");
+	$prov.=']';
+	return $prov;
 
 }
 
@@ -241,7 +250,7 @@ if(isset($args['action'])){
 		#lista de proveedores
 		case 900:
 			try{
-				printf('{ "success": true, "payload": %s }',  json_encode(listarProveedores()) );
+				printf('{ "success": true, "payload": %s }',  listarProveedores() );
 	    	}catch(Exception $e){
 	    		Logger::log($e);
 				printf('{ "success": false, "reason": "Error, porfavor intente de nuevo." }' );	    	
@@ -282,6 +291,10 @@ if(isset($args['action'])){
 			}
 			
 			editarProveedor( $args['data'] );
+		break;
+		
+		case 903:
+			surtirSucursalProveedor($args["id_proveedor"],$args["productos"]);
 		break;
 
 	}

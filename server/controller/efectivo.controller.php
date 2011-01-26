@@ -4,6 +4,7 @@ require_once("model/ingresos.dao.php");
 require_once("model/gastos.dao.php");
 require_once("model/autorizacion.dao.php");
 require_once("model/pagos_compra.dao.php");
+require_once("model/compra_sucursal.dao.php");
 
 
 
@@ -492,11 +493,11 @@ function doInsertarAbono( $monto ){
 
 
     //obtenemos todas las compras (de al mas antigua a la mas reciente)
-    $c = new Compras();
+    $c = new CompraSucursal();
     $c->setLiquidado('0');
     
-    $compras = CompasDAO::search( $c );
-
+    $compras = CompraSucursalDAO::search( $c );
+//echo sizeof($compras)."  eee";
     $compra_a_abonar = null;
     
     $found = false;
@@ -520,7 +521,7 @@ function doInsertarAbono( $monto ){
         {
             if( !( SucursalDAO::save( $sucursal ) > 0 ) )
             {
-                die( '{ "succes" : "false" , "reason" : "No se registro el nuevo abono, no cambio el saldoa  favor en la sucursal."}' );
+                die( '{ "succes" : "false" , "reason" : "No se registro el nuevo abono, no cambio el saldo a  favor en la sucursal."}' );
             }//if
             
             //si llegas aqui se abono directamente al saldo a favor de la sucursal
@@ -565,7 +566,7 @@ function doInsertarAbono( $monto ){
     try
     {
         //intentamos guardar los cambios
-        if( !( ComprasDAO::save( $compra_a_abonar ) > 0 ) )
+        if( !( CompraSucursalDAO::save( $compra_a_abonar ) > 0 ) )
         {            
             die( '{ "success" : "false" , "reason" : "No se registro el nuevo abono"}' );
         }
@@ -579,7 +580,7 @@ function doInsertarAbono( $monto ){
         try
         {       
             //intentamos guardar el abono
-            if( !( PagosCompra::save( $nuevo_abono ) > 0 ) )
+            if( !( PagosCompraDAO::save( $nuevo_abono ) > 0 ) )
             {
                 die( '{ "success" : "false" , "reason" : "No se registro el nuevo abono en pagos compra"}' );
             }
