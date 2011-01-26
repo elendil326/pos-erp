@@ -143,6 +143,11 @@ abstract class CompraSucursalDAOBase extends DAO
 			array_push( $val, $compra_sucursal->getIdUsuario() );
 		}
 
+		if( $compra_sucursal->getIdProveedor() != NULL){
+			$sql .= " id_proveedor = ? AND";
+			array_push( $val, $compra_sucursal->getIdProveedor() );
+		}
+
 		if( $compra_sucursal->getPagado() != NULL){
 			$sql .= " pagado = ? AND";
 			array_push( $val, $compra_sucursal->getPagado() );
@@ -187,12 +192,13 @@ abstract class CompraSucursalDAOBase extends DAO
 	  **/
 	private static final function update( $compra_sucursal )
 	{
-		$sql = "UPDATE compra_sucursal SET  fecha = ?, subtotal = ?, id_sucursal = ?, id_usuario = ?, pagado = ?, liquidado = ?, total = ? WHERE  id_compra = ?;";
+		$sql = "UPDATE compra_sucursal SET  fecha = ?, subtotal = ?, id_sucursal = ?, id_usuario = ?, id_proveedor = ?, pagado = ?, liquidado = ?, total = ? WHERE  id_compra = ?;";
 		$params = array( 
 			$compra_sucursal->getFecha(), 
 			$compra_sucursal->getSubtotal(), 
 			$compra_sucursal->getIdSucursal(), 
 			$compra_sucursal->getIdUsuario(), 
+			$compra_sucursal->getIdProveedor(), 
 			$compra_sucursal->getPagado(), 
 			$compra_sucursal->getLiquidado(), 
 			$compra_sucursal->getTotal(), 
@@ -219,13 +225,14 @@ abstract class CompraSucursalDAOBase extends DAO
 	  **/
 	private static final function create( &$compra_sucursal )
 	{
-		$sql = "INSERT INTO compra_sucursal ( id_compra, fecha, subtotal, id_sucursal, id_usuario, pagado, liquidado, total ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO compra_sucursal ( id_compra, fecha, subtotal, id_sucursal, id_usuario, id_proveedor, pagado, liquidado, total ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$compra_sucursal->getIdCompra(), 
 			$compra_sucursal->getFecha(), 
 			$compra_sucursal->getSubtotal(), 
 			$compra_sucursal->getIdSucursal(), 
 			$compra_sucursal->getIdUsuario(), 
+			$compra_sucursal->getIdProveedor(), 
 			$compra_sucursal->getPagado(), 
 			$compra_sucursal->getLiquidado(), 
 			$compra_sucursal->getTotal(), 
@@ -327,6 +334,17 @@ abstract class CompraSucursalDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " id_usuario = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $compra_sucursalA->getIdProveedor()) != NULL) & ( ($b = $compra_sucursalB->getIdProveedor()) != NULL) ){
+				$sql .= " id_proveedor >= ? AND id_proveedor <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " id_proveedor = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

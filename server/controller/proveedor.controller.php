@@ -109,12 +109,35 @@ function nuevoProveedor( $json = null){
 
 
 
+/*
+ * Surtir Sucursal de un proveedor.
+ * 
+ * Surte productos a una sucursal. Recibe el id del proveedor que surtira esta
+ * sucursal, y un arreglo de objetos que describen el producto, la cantidad
+ * que se ha surtido, y el precio de cada producto. Esta funcion se encarga de
+ * incrementar el inventario de esta sucursal, e insertar los datos de la compra
+ * en la tabla compra_sucursal, asi como insertar sus detalles en detalle_compra_sucursal
+ *
+ * @param int id_proveedor El id del proveedor que surtira esta sucursal
+ * @param Object[] items La descripcion de los detalles de la compra.
+ * @return boolean True si hubo exito, o false si la operacion fallo.
+ * 
+ * */
 
 
 
-
-
-function listarProveedores(  ){
+/*
+ * Listar proveedores.
+ * 
+ * Regresa un arreglo de objetos {@link Proveedor}. Si su argumento
+ * <i>sucursal</i> esta en verdadero. Solo regresara los proveedores 
+ * que pueden surtir una sucursal.
+ * 
+ * @param sucursal Verdadero para regresar solo los proveedores que pueden surtir una sucursal
+ * @return Proveedor[] Un arreglo de objetos Proveedor.
+ * 
+ * */
+function listarProveedores( $sucursal = false ){
 	$total_customers = array();
 	
 	//buscar clientes que esten activos
@@ -203,6 +226,8 @@ function editarProveedor( $json = null ){
    printf( '{"success": true, "id": "%s"}' , $proveedor->getIdProveedor() );
    Logger::log("Proveedor " . $proveedor->getIdProveedor() . " modificado !");
 }
+
+
 
 
 /*

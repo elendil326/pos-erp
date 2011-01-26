@@ -37,6 +37,9 @@ class CompraSucursal extends VO
 			if( isset($data['id_usuario']) ){
 				$this->id_usuario = $data['id_usuario'];
 			}
+			if( isset($data['id_proveedor']) ){
+				$this->id_proveedor = $data['id_proveedor'];
+			}
 			if( isset($data['pagado']) ){
 				$this->pagado = $data['pagado'];
 			}
@@ -64,6 +67,7 @@ class CompraSucursal extends VO
 			"subtotal" => $this->subtotal,
 			"id_sucursal" => $this->id_sucursal,
 			"id_usuario" => $this->id_usuario,
+			"id_proveedor" => $this->id_proveedor,
 			"pagado" => $this->pagado,
 			"liquidado" => $this->liquidado,
 			"total" => $this->total
@@ -117,6 +121,15 @@ class CompraSucursal extends VO
 	  * @var int(11)
 	  */
 	protected $id_usuario;
+
+	/**
+	  * id_proveedor
+	  * 
+	  * En caso de ser una compra a un proveedor externo, contendra el id de ese proveedor, en caso de ser una compra a centro de distribucion este campo sera null.<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_proveedor;
 
 	/**
 	  * pagado
@@ -267,6 +280,30 @@ class CompraSucursal extends VO
 	final public function setIdUsuario( $id_usuario )
 	{
 		$this->id_usuario = $id_usuario;
+	}
+
+	/**
+	  * getIdProveedor
+	  * 
+	  * Get the <i>id_proveedor</i> property for this object. Donde <i>id_proveedor</i> es En caso de ser una compra a un proveedor externo, contendra el id de ese proveedor, en caso de ser una compra a centro de distribucion este campo sera null.
+	  * @return int(11)
+	  */
+	final public function getIdProveedor()
+	{
+		return $this->id_proveedor;
+	}
+
+	/**
+	  * setIdProveedor( $id_proveedor )
+	  * 
+	  * Set the <i>id_proveedor</i> property for this object. Donde <i>id_proveedor</i> es En caso de ser una compra a un proveedor externo, contendra el id de ese proveedor, en caso de ser una compra a centro de distribucion este campo sera null..
+	  * Una validacion basica se hara aqui para comprobar que <i>id_proveedor</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdProveedor( $id_proveedor )
+	{
+		$this->id_proveedor = $id_proveedor;
 	}
 
 	/**

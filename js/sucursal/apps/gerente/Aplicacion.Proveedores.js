@@ -1,26 +1,27 @@
 
 Aplicacion.Proveedores = function (  ){
 
+	
+	this.constructor = function (){
+		cargarListaDeProveedores();
+	}
+	
+	
+	var listaDeProveedores;
+	
+	var cargarListaDeProveedores = function(){
+		
+		this.listaDeProveedores = 8;
+		
+	}
+	
 
 
-
-
-	return this._init();
+	return this;
 }
 
 
 
-
-Aplicacion.Proveedores.prototype._init = function (){
-
-    if(DEBUG){
-		console.log("Proveedores: construyendo");
-    }
-    
-    Aplicacion.Proveedores.currentInstance = this;
-	
-	return this;
-};
 
 
 
