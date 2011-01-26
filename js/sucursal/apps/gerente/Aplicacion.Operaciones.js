@@ -180,7 +180,7 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
             }]
                 //instructions: 'Ingrese el nuevo limite de credito para este cliente.',
             },
-            new Ext.Button({ ui  : 'action', text: 'Cancelar venta', margin : 5,handler : Aplicacion.Operaciones.currentInstance.cancelarVentaPanelUpdater  })
+            new Ext.Button({ ui  : 'action', text: 'Cancelar venta', margin : 5,handler : Aplicacion.Operaciones.currentInstance.doCancelarVenta  })
         ]}); 
         
        // Ext.getCmp('Operaciones-cancelarVentaPanel').update(html);
@@ -188,6 +188,12 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
     };
     
 
+
+    Aplicacion.Operaciones.prototype.doCancelarVenta = function(){
+    
+        alert("under construction");
+    
+    };
 
 
 /*
