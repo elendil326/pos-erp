@@ -8,6 +8,10 @@
   */
 
 require_once('model/proveedor.dao.php');
+require_once('model/detalle_inventario.dao.php');
+require_once('model/compra_sucursal.dao.php');
+require_once('model/detalle_compra_sucursal.dao.php');
+//require_once('model/base/compra_sucursal.dao.base.php');
 require_once('logger.php');
 
 
@@ -124,7 +128,74 @@ function nuevoProveedor( $json = null){
  * 
  * */
 function surtirSucursalProveedor($id_proveedor,$jsonProductos){
-if($id_proveedor==NULL){die('{"success":false,"reason":"I"}');}
+
+	if($id_proveedor==NULL){die('{"success":false,"reason":"Faltan datos."}');}
+	if($jsonProductos==NULL){die('{"success":false,"reason":"Faltan productos."}');}
+	
+	$productos=parseJSON($jsonProductos);
+	$arrProductos=$productos->productos;
+	DAO::transBegin();
+			$compra_sucursal=new CompraSucursal();
+		$compra_sucursal->setFecha(time());
+		$compra_sucursal->setIdUsuario($_SESSION["userid"]);
+		$compra_sucursal->setIdSucursal($_SESSION["sucursal"]);
+		$compra_sucursal->setIdProveedor($id_proveedor);
+		$cantExistencias=0;
+		$cantExistenciasProc=0;
+		$subtotal=0;
+		$total=0;
+		
+	for($i=0;$i<sizeof($arrProductos);$i++)
+	{
+		$existe=$inventario=DetalleInventarioDAO::getByPK($arrProductos[$i]->id_producto,$_SESSION["sucursal"]);
+		if($existe==NULL){
+			die('{"success":false,"reason":"No existe el producto"}');
+			DAO::transRollback();
+		}
+ 		$cantExistencias+=$arrProductos[$i]->existenciasOriginales+$arrProductos[$i]->existenciasProcesadas;
+		$cantExistenciasProc+=$arrProductos[$i]->existenciasProcesadas;
+		$inventario->setExistencias($inventario->getExistencias()+$cantExistencias);
+		$inventario->setExistenciasProcesadas($inventario->getExistenciasProcesadas()+$cantExistenciasProc);
+		$subtotal+=$arrProductos[$i]->precioVenta*($cantExistencias+$cantExistenciasProc);
+
+		try{
+			DetalleInventarioDAO::save($inventario);
+		}catch(Exception $e){
+		Logger::log($e);
+		die('{"success":false,"reason":"Error al intentar surtir la sucursal, intente de nuevo."}');
+		}
+	}
+ 			$total=$subtotal;
+			$compra_sucursal->setSubtotal($subtotal);
+			$compra_sucursal->setTotal($total);
+			$compra_sucursal->setLiquidado(0);
+			$compra_sucursal->setPagado(0);
+			try{
+				CompraSucursalDAO::save($compra_sucursal);
+
+				$id_compra=$compra_sucursal->getIdCompra();
+				$detalleCompraSucursal=new DetalleCompraSucursal();
+				$detalleCompraSucursal->setIdCompra($id_compra);
+					for($i=0;$i<sizeof($arrProductos);$i++)
+					{
+					$detalleCompraSucursal->setCantidad($arrProductos[$i]->existenciasOriginales);
+					$detalleCompraSucursal->setDescuento(0);
+					$detalleCompraSucursal->setIdProducto($arrProductos[$i]->id_producto);
+				echo	$detalleCompraSucursal->setPrecio($arrProductos[$i]->precioVenta);
+					$detalleCompraSucursal->setProcesadas($arrProductos[$i]->existenciasProcesadas);
+						try{
+							DetalleCompraSucursalDAO::save($detalleCompraSucursal);
+						}catch(Exception $f){
+							die('{"success":false,"reason":"Error al guardar detalle de compra."}');
+						}
+					}
+				}catch(Exception $e){
+				Logger::log($e);
+				DAO::transRollback();
+				die('{"success":false,"reason":"Error al intentar guardar la compra, intente de nuevo."}');
+				}
+DAO::transEnd();
+echo '{"success":true}';
 }
 
 
