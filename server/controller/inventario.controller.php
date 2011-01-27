@@ -283,9 +283,9 @@ function detalleVentas( $id ){
 
     $q = new DetalleVenta();
     $q->setIdVenta( $id ); 
-    
+
     $detalle_venta = DetalleVentaDAO::search( $q );
-    
+
     $array_detalle_venta = array();
     
     foreach( $detalle_venta as $producto )
@@ -300,7 +300,8 @@ function detalleVentas( $id ){
             "precio" => $producto->getPrecio()
         ));
     }
-
+    
+    $info_venta=new stdClass();
     $info_venta -> id_venta = $venta -> getIdVenta();
     $info_venta -> total = $venta -> getTotal();
     $info_venta -> num_ventas = count( $array_detalle_venta );
