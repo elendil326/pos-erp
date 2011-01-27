@@ -49,11 +49,15 @@ Aplicacion.Autorizaciones.prototype.getConfig = function (){
 		        text: 'Limite de Credito',
 	        	card: Aplicacion.Autorizaciones.currentInstance.nueva.creditoPanel,
 	        	leaf: true
-		    }, {
+		    },{
+		        text: 'Venta con descuento',
+	        	card: Aplicacion.Autorizaciones.currentInstance.nueva.ventaConDescuentoPanel,
+	        	leaf: true
+		    }, /*{
 	        	text: 'Merma de producto',
 	        	card: Aplicacion.Autorizaciones.currentInstance.nueva.mermaPanel,
 		        leaf: true
-		    }, {
+		    }, */ {
 	        	text: 'Devoluciones',
 	        	card: Aplicacion.Autorizaciones.currentInstance.nueva.devolucionesPanel,
 		        leaf: true
@@ -124,8 +128,10 @@ Aplicacion.Autorizaciones.prototype.nueva.creditoModificarPanelShow = function( 
 
 Aplicacion.Autorizaciones.prototype.nueva.nuevoCreditoModificar = function( data ){
 
-Ext.getBody().mask('Guardando nuevo gasto ', 'x-mask-loading', true);
-
+Ext.getBody().mask('Enviando autorizacion de credito', 'x-mask-loading', true);
+	if(DEBUG){
+		console.log("Enviando autorizacion de credito extendido", data);
+	}
     Ext.Ajax.request({
         url: '../proxy.php',
         scope : this,
@@ -908,6 +914,11 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesLoad = function (){
 
 };
 
+
+
+Aplicacion.Autorizaciones.prototype.checkForNewAuts = function(  ){
+	
+}
 
 
 /*

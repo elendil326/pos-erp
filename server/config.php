@@ -36,7 +36,7 @@ define('POS_DATE_FORMAT', 'j/m/y h:i:s A');
 # *******************************
 
 # habilitar los logs
-define("POS_LOG_TO_FILE", false);
+define("POS_LOG_TO_FILE", true);
 
 # archivo donde se guardaran los logs
 define("POS_LOG_TO_FILE_FILENAME", "/var/log/mx.caffeina.pos/pos.log");

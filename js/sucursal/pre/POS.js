@@ -160,6 +160,12 @@ function reload(){
 		success: function(response, opts) {
 			try{ autorizaciones = Ext.util.JSON.decode( response.responseText ); }catch(e){ return; }
 			if( !autorizaciones.success ){ return ; }
+			
+			if(Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lista.length != autorizaciones.payload.length ){
+            	Ext.Msg.alert("Autorizaciones","Tiene autorizaciones nuevas por atender");				
+			}
+
+			
 			Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lista = autorizaciones.payload;
 			Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lastUpdate = Math.round(new Date().getTime()/1000.0);
 			Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.hash = autorizaciones.hash;

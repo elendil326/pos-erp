@@ -217,7 +217,8 @@ Aplicacion.Proveedores = function(){
 Aplicacion.Proveedores.prototype.getConfig = function (){
 	return {
 	    text: 'Proveedores',
-        card: this.cards.lista,	
+        card: this.cards.lista,
+		leaf : true,
 	    items: [{
 	        text: 'Lista de proveedores',
 	        card: this.cards.lista,
