@@ -3,6 +3,7 @@
 require_once("model/ventas.dao.php");
 require_once("model/inventario.dao.php");
 require_once("model/detalle_venta.dao.php");
+require_once("model/detalle_inventario.dao.php");
 require_once("model/factura_venta.dao.php");
 require_once("model/cliente.dao.php");
 require_once('logger.php');
@@ -148,6 +149,7 @@ function listarUltimaVentaSucursal( $id_sucursal ){
     //obtenemos un objeto con todas las ventas de la sucursal actual
     $ventas = new Ventas();
     $ventas -> setIdSucursal( $id_sucursal );
+    $ventas -> setCancelada( "0" );
     $ventas = VentasDAO::search( $ventas, 'id_venta', 'desc' );
     
     $id_ultima_venta =  $ventas[0]  -> getIdVenta();;
@@ -191,6 +193,69 @@ function listarUltimaVentaSucursal( $id_sucursal ){
 
 
 
+/**
+* elimina la venta indicada
+*/
+
+function cancelarVenta( $args ){
+
+    Logger::log( "Iniciando proceso de cancelacion de venta." );
+    
+    if( !isset( $args['id_venta'] ) )
+    {
+        Logger::log( "No se especifico la venta que desea eliminar." );
+        die( '{ "success" : false , "reason" : "No se especifico la venta que desea eliminar."}' );
+    }
+
+    //verificamos qeu la venta exista
+    try{
+			
+			if( !$venta = VentasDAO::getByPK( $args['id_venta'] ) )
+			{
+			    Logger::log( "No se encontro registro de la venta a eliminar" );
+                die( '{ "success" : false , "reason" : "No se encontro registro de la venta ' . $args['id_venta'] . '"}' );
+			}
+			
+			//almacenamos el detalle de la venta para cargarlo nuevamente al inventario
+			$detalle_venta = new DetalleVenta();
+			$detalle_venta -> setIdVenta( $venta -> getIdVenta() );
+			$detalle = DetalleVentaDAO::search( $detalle_venta  );
+			
+			DAO::transBegin();	
+			
+			//iteramos el detalle de la venta
+			foreach( $detalle as $venta_producto )
+			{
+			    //por cada producto en el detalle de la venta se lo cargaremos nuevamente al detalle del inventario de la sucursal			    
+			    if( !$detalle_inventario = DetalleInventarioDAO::getByPK( $venta_producto -> getIdProducto(), $_SESSION['sucursal'] ) )
+			    {
+			        Logger::log( "No se encontro registro del producto vendido en el inventario de la sucursal." );
+                    DAO::transRollback();
+                    die( '{ "success" : false , "reason" : "No se encontro registro del producto vendido en el inventario de la sucursal."}' );
+			    }
+			    
+			    $detalle_inventario -> setExistencias(  $detalle_inventario -> getExistencias() + $venta_producto -> getCantidad() ); 
+			    $detalle_inventario -> setExistenciasProcesadas( $detalle_inventario -> getExistenciasProcesadas() + $venta_producto -> getCantidadProcesada() );
+			    
+			    DetalleInventarioDAO::save( $detalle_inventario );
+			    
+			}			
+		    
+		    $venta -> setCancelada( 1 );
+		    VentasDAO::save( $venta );	
+            DAO::transEnd();
+            Logger::log( "Venta cancelada con exito." );
+            printf( '{ "success" : true }' );
+            
+			
+    }catch(Exception $e){
+        Logger::log( $e);
+        DAO::transRollback();
+        die( '{ "success" : false , "reason" : "No se encontro registro de la venta ' . $args['id_venta'] . '."}' );
+	}
+
+}
+
 
 if(isset($args['action'])){
 	switch( $args['action'] )
@@ -212,6 +277,10 @@ if(isset($args['action'])){
 	        $detalle_venta = listarUltimaVentaSucursal($_SESSION['sucursal'] );
 	    
 	         printf( '{ "success" : true, "detalle_venta": %s, "id_venta": %s, "cliente": %s }',  json_encode( $detalle_venta -> detalle_venta ), $detalle_venta -> id_venta, $detalle_venta -> cliente );
+	    break;
+	    
+	    case '804':
+             cancelarVenta( $args );
 	    break;
 	    
 	}	
