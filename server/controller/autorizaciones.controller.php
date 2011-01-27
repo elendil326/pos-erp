@@ -888,7 +888,8 @@ if( isset( $args['action'] ) ){
                 'monto'=>$args['monto']
             ));
         
-            solicitudDeAutorizacion( $descripcion );
+//            solicitudDeAutorizacion( $descripcion,"" );
+            solicitudDeAutorizacion( $descripcion, "solicitudDeGasto" );
 
         break;
 
@@ -911,7 +912,8 @@ if( isset( $args['action'] ) ){
                 'cantidad'=>$args['cantidad']
             ));
 
-            solicitudDeAutorizacion( $descripcion );
+//            solicitudDeAutorizacion( $descripcion,"" );
+            solicitudDeAutorizacion( $descripcion, "solicitudDeCambioLimiteDeCredito" );
 
         break;
 
@@ -945,7 +947,8 @@ if( isset( $args['action'] ) ){
                 'cantidad'=>$data -> cantidad
             ));
 
-            solicitudDeAutorizacion( $descripcion );
+//            solicitudDeAutorizacion( $descripcion );
+            solicitudDeAutorizacion( $descripcion, "solicitudDeDevolucion" );
 
         break;
 
@@ -968,7 +971,9 @@ if( isset( $args['action'] ) ){
                 'precio'=>$args['precio']
             ));
 
-            solicitudDeAutorizacion( $descripcion );
+//            solicitudDeAutorizacion( $descripcion );
+            solicitudDeAutorizacion( $descripcion, "solicitudDeCambioPrecio" );
+
 
         break;
 
@@ -1001,7 +1006,8 @@ if( isset( $args['action'] ) ){
                 'cantidad'=>$data -> cantidad
             ));
 
-            solicitudDeAutorizacion( $descripcion );
+//            solicitudDeAutorizacion( $descripcion );
+            solicitudDeAutorizacion( $descripcion, "solicitudDeMerma" );
 
         break;
 
