@@ -152,7 +152,7 @@ $clientes = listarClientes();
 
 
 //render the table
-$header = array(  "nombre" => "Nombre", "rfc" => "RFC", "direccion" => "Direccion", "ciudad" => "Ciudad"  );
+$header = array(  "nombre" => "Nombre", "rfc" => "RFC", /* "direccion" => "Direccion",*/  "ciudad" => "Ciudad"  );
 $tabla = new Tabla( $header, $clientes );
 $tabla->addOnClick("id_cliente", "mostrarDetalles");
 $tabla->addNoData("No hay clientes registrados.");
@@ -169,7 +169,7 @@ $tabla->render();
 $clientes = listarClientesDeudores();
 
 //render the table
-$header = array(  "nombre" => "Nombre", "rfc" => "RFC", "direccion" => "Direccion", "saldo" => "Saldo" );
+$header = array(  "nombre" => "Nombre", "rfc" => "RFC", /* "direccion" => "Direccion", */ "saldo" => "Saldo" );
 
 $tabla = new Tabla( $header, $clientes );
 $tabla->addColRender( 'saldo', "moneyFormat" );

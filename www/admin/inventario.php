@@ -53,18 +53,6 @@
     <div id="content">
     
     
-          <div class="ayuda"> 
-    
-			<div id="ayuda">
-
-			</div>
-          
-          <img src="../media/gradual-shadow.png" alt="" class="shadow" /> 
- 
-      	  </div> <!-- four-col feature --> 
-
-     <div class="eight-col last"> 
-    
 	<?php
     if(isset($_REQUEST['success'])){
 
@@ -89,7 +77,7 @@
 
 	
     <?php include_once("admin/includes/footer.php"); ?>
-	</div>    
+   
     </div> 
     <!-- /content -->
     

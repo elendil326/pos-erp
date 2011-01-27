@@ -290,11 +290,9 @@ foreach( $sucursales as $sucursal ){
 	$header = array( 
 		"productoID" 		=> "ID",
 		"descripcion"		=> "Descripcion",
-		"precioVenta"		=> "Precio Venta",
-		"existenciasMinimas"=> "Minimas",
-		"existencias"		=> "Existencias",
-		"medida"			=> "Tipo",
-		"precioIntersucursal"=> "Precio Intersucursal" );
+		"precioVenta"		=> "Precio a la venta",
+		"existenciasOriginales"		=> "Originales",
+		"existenciasProcesadas"		=> "Procesadas" );
 		
 
 	

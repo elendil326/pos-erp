@@ -295,7 +295,9 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelCreator = function()
 		ui: 'normal',
 		handler : function (){
 	        sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.mostradorPanel , 'slide');
-			Aplicacion.Mostrador.currentInstance.agregarProductoPorID( Aplicacion.Inventario.currentInstance.detalleInventarioPanel.getRecord().data.productoID );
+
+			var id = Aplicacion.Inventario.currentInstance.detalleInventarioPanel.getValues().productoID;
+			Aplicacion.Mostrador.currentInstance.agregarProductoPorID( id );
 		}
 	}];
 
