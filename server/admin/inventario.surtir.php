@@ -90,7 +90,16 @@
 		html += td( o.producto_desc );
 
 		html += td( "<input style='width: 100px' onkeyup='domath()' value='0' id='cart_table_cantidad" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='text'>" );
-		html += td( "<input style='width: 100px' id='cart_table_procesada" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='checkbox'>" );
+
+		console.log( o)
+		var procesadas = parseFloat( o.existencias_procesadas );
+		if(procesadas > 0){
+			html += td( "<input style='width: 100px' id='cart_table_procesada" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='checkbox'>" );			
+		}else{
+			html += td( "<input style='width: 100px' id='cart_table_procesada" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='checkbox' disabled>" );
+		}
+
+
 		html += td( "<input style='width: 100px' onkeyup='domath()' value='"+ ( o.precio_por_kg )+"' id='cart_table_precio" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='text'>" );
 		html += td( "<input style='width: 100px' onkeyup='domath()' value='0' id='cart_table_descuento" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='text'>" );
 		html += td( "<input style='width: 100px'					 		 id='cart_table_importe" + o.id_compra_proveedor + "_" + o.id_producto +"' 		type=text disabled>" );
@@ -330,14 +339,15 @@ foreach( $sucursales as $sucursal ){
 
 
 
-<!-- -----------------------------------------------------------------------
+<!-- 
 		MOSTRAR INVENTARIO MAESTRO
-  -------------------------------------------------------------------------- -->
+ -->
 <div id="InvMaestro" style="display: none;">
 <h2>Productos disponibles</h2><h3>Seleccione los productos que desee surtir a esta sucursal.</h3><?php
 
 
-	$iMaestro = listarInventarioMaestro() ;
+	
+	$iMaestro = listarInventarioMaestro(50, POS_SOLO_ACTIVOS) ;
 
 	$header = array(
 		"folio" 	=> "Remision",
