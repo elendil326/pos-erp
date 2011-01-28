@@ -804,7 +804,7 @@ function compraSucursal( $data = null, $sucursal = null ){
 	try{
 		CompraSucursalDAO::save( $compra_sucursal );
 	}catch(Exception $e){
-		Logger::log("Error al ingresar compra sucursal" . $e);
+		Logger::log("Error al ingresar compra sucursal : " . $e);
 		DAO::transRollback();	
 		die( '{"success": false, "reason": "Error al ingresar compra sucursal"}' );
 	}

@@ -1035,15 +1035,49 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
     //decodificar el json de parametros
     var parametros = Ext.util.JSON.decode( autorizacion.get('parametros') );
     
+    //estado de la autorizacion
+    var _estado = autorizacion.data.estado;
+    
+    //establecemos una descripcion del estado legible para el cliente
+    switch( _estado ){
+    
+        case 0 :
+            estado = 'No ha sido revisado por el administrador';
+        break;
+        
+        case 1 :
+            estado = "Autorización aprovada";
+        break;
+        
+        case 2 :
+            estado = "Autorizacón denegada";
+        break;
+        
+        case 3 :
+            estado = "Producto en transito";
+        break;
+        
+        case 4 :
+            estado = "El embarque ha sido surtido";
+        break;
+        
+        default:
+            estado = "Indefinido.";        
+    
+    }
+    
+    instrucciones = null;
+    
+    console.log("////////////////PARAMETROSwwwwwwwwwwwwwwwwww");
+        console.log(parametros);
+    console.log("/////////////////wwwwwwwwwwwwwwwwwwwwwwww");
     console.log("/////////////////wwwwwwwwwwwwwwwwwwwwwwww");
         console.log(parametros);
     console.log("/////////////////wwwwwwwwwwwwwwwwwwwwwwww");
+    
     //almacenara los items del formulario
     var itemsForm = [
-        new Ext.form.Text({
-            label:'ID Autorización',
-            value: autorizacion.get('id_autorizacion')
-        })];
+    ];
 
 
     //creamos los items para el detalleAutorizacionFormPanel
@@ -1055,8 +1089,8 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                     label:'ID Autorización',
                     name:'id_autorizacion',
                     value:autorizacion.data.id_autorizacion
-                }),new Ext.form.Text({label: 'Concepto', value:autorizacion.data.concepto }),
-                new Ext.form.Text({label: 'Monto', value:autorizacion.data.monto })
+                }),new Ext.form.Text({label: 'Concepto', value:parametros.concepto }),
+                new Ext.form.Text({label: 'Monto', value:parametros.monto })
             );
             height = 375;
         break;
@@ -1079,9 +1113,9 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                     label:'ID Autorización',
                     name:'id_autorizacion',
                     value:autorizacion.data.id_autorizacion
-                }),new Ext.form.Text({label: 'ID Venta', value:autorizacion.data.id_venta }),
-                new Ext.form.Text({label: 'ID Producto', value:autorizacion.data.id_producto }),
-                new Ext.form.Text({label: 'Cantidad', value:autorizacion.data.cantidad })
+                }),new Ext.form.Text({label: 'ID Venta', value:parametros.id_venta }),
+                new Ext.form.Text({label: 'ID Producto', value:parametros.id_producto }),
+                new Ext.form.Text({label: 'Cantidad', value:parametros.cantidad })
             );
             height = 425;
         break;
@@ -1202,7 +1236,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                 xtype: 'spacer'
             },
             //cuando esta autorizacion es estado 3, mostrar un boton para aceptar el embarque
-            autorizacion.get('estado') == '3' ? 
+            autorizacion.get('estado') == 3 ? 
                 new Ext.Button({ 
                     ui  : 'forward', 
                     text: 'He recibido el embarque', 
@@ -1214,8 +1248,8 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
         }],
         items: [{
                 xtype: 'fieldset',
-                title: (!parametros.descripcion)?"":parametros.descripcion,
-                //instructions: instrucciones,
+                title: (!parametros.descripcion)?"(" + estado +")" : parametros.descripcion + ".  ( " + estado + ")",
+                instructions: (instrucciones != null)?instrucciones:"",
                 items:  itemsForm 
             }
         ]

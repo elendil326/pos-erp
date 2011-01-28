@@ -36,17 +36,17 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
 	    cls: 'launchscreen',
 	    items: [{
 	        text: 'Vender a sucursal',
-	        card: null,
+	        card: Aplicacion.Operaciones.currentInstance.cancelarVentaPanel,
 	        leaf: true
 	    },
 	    {
 	        text: 'Cobrar a sucursal',
-	        card: null,
+	        card: Aplicacion.Operaciones.currentInstance.cancelarVentaPanel,
 	        leaf: true
 	    },
 		{
 	        text: 'Prestar efectivo',
-	        card: null,
+	        card: Aplicacion.Efectivo.prototype.operacionInterSucursalEfectivoPanel,
 	        leaf: true
 	    },
 	    {
@@ -72,7 +72,10 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
         cliente : null
     };
     
-    
+    /**
+      * obtiene informacion acerca de la ultima venta y actualiza los paneles donde se despliega la informacion
+      * de la venta
+      */    
    Aplicacion.Operaciones.prototype.cancelarVentaPanelUpdater = function(){
     
          Ext.Ajax.request({
@@ -144,12 +147,6 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
 	
 	                html += "</table>";
 	                
-	                //html += "<div style='font-size:15px; margin-top:20px; margin-bottom:15px;position:relative; width:100%; color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:15px; position:relative;float:left;' > SubTotal " + POS.currencyFormat( subtotal ) + "</div>";
-	                
-	                //html += "<div style='font-size:15px; margin-top:0px; margin-bottom:0px;position:relative; width:100%; color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:15px; position:relative;float:left;' > Descuento  " + POS.currencyFormat( descuento ) + "</div>";
-	                
-	                //html += "<div style='margin-top:15px; margin-bottom:10px;position:relative; width:100%; color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:15px; position:relative;float:left;' > Total  " + POS.currencyFormat( subtotal - descuento )  + "</div>";
-                    
                     Ext.getCmp('Operaciones-cancelarVentaPanel-Tabla').update(html);     
                     
                    Ext.getCmp('Operaciones-cancelarVentaPanel-Form-Cliente').setValue(  r.cliente.nombre );
@@ -278,7 +275,15 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
     };
 
 
-/*
+
+
+
+
+/* ***************************************************************************
+   * Prestar Efectivo
+   * 
+   *************************************************************************** */
+
 
 
 Aplicacion.Efectivo.prototype.nuevaOperacionInterSucursalEfectivo = function( data ){
@@ -466,7 +471,7 @@ Aplicacion.Efectivo.prototype.operacionInterSucursalEfectivoPanelCreator = funct
 
 }
 
-
+/*
 
 
 Aplicacion.Efectivo.prototype.operacionInterSucursalProductoPanel = null;
