@@ -22,7 +22,7 @@ $sucursales = SucursalDAO::search($s);
 $gerentes = listarGerentes();
 
 //crear la tabla
-?><table><tr><th>ID Sucursal</th><th>Descripcion</th><th>Gerente</th></tr><?php
+?><table style="width: 100%"><tr style="text-align: left;"><th>ID Sucursal</th><th>Descripcion</th><th>Gerente</th></tr><?php
 
 foreach ($sucursales as $sucursal)
 {

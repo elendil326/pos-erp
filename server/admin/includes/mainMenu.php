@@ -15,9 +15,12 @@
 			<A >SUCURSALES</A>
 			<UL  class="nav sub" >
 				<LI><A href="sucursales.php?action=lista">Sucursales</A></LI>
+				<li>
+				  <a href="inventario.php?action=surtir">Surtir Sucursal</a>
+				</li>
 				<LI><A href="sucursales.php?action=abrir">Nueva sucursal</A></LI>
 				<LI><A href="gerentes.php?action=lista">Gerentes</A></LI>
-				<LI><A href="gerentes.php?action=asignar">Asignar gerencias</A></LI>				
+<!-- 				<LI><A href="gerentes.php?action=asignar">Asignar gerencias</A></LI>				-->
 				<LI class="last"><A href="gerentes.php?action=nuevo">Nuevo gerente</A></LI>
 			</UL>			
 		</LI>
@@ -82,9 +85,7 @@
 				<li >
 				  <a href="inventario.php?action=lista">Inventario de sucursales</a>
 				</li>
-				<li>
-				  <a href="inventario.php?action=surtir">Surtir Sucursal</a>
-				</li>
+
 				<li>
 				  <a href="inventario.php?action=nuevo">Nuevo Producto</a>
 				</li>
