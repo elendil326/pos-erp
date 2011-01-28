@@ -278,7 +278,7 @@ Aplicacion.Efectivo.prototype.nuevoGastoPanelCreator = function (){
                     listeners : {
                         'focus' : function (){
                                 kconf = {
-                                type : 'alfa',
+                                type : 'alfanum',
                                 submitText : 'Aceptar',
                                 callback : Aplicacion.Efectivo.currentInstance.nuevoGastoValidator
                             };

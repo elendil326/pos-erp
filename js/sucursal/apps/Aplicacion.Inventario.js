@@ -413,7 +413,7 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 	html += "<td>Descripcion</td>";
     html += "<td></td>";
 	html += "<td colspan=2>Cantidad</td>";
-//	html += "<td>Precio Intersucursal</td>";
+	html += "<td>Tipo</td>";
 	//html += "<td>Total</td>";
 
 	html += "</tr>";
@@ -432,7 +432,7 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 		html += "<td>" + carrito.items[i].productoID + " " + carrito.items[i].descripcion+ "</td>";
 		html += "<td > <span class = 'boton' onClick = 'Aplicacion.Inventario.currentInstance.quitarDelCarrito(" + carrito.items[i].productoID + ")'>Quitar</span> </td>";
 		html += "<td colspan=2 > <div id='Inventario-carritoCantidad"+ carrito.items[i].productoID +"'></div></td>";
-
+		html += "<td > <div id='Inventario-carritoTipo"+ carrito.items[i].productoID +"'></div></td>";
 		//html += "<td > </td>";
 //		html += "<td> <div style='color: green'>"+ POS.currencyFormat(carrito.items[i].precioIntersucursal) +"</div></td>";
 //		html += "<td>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioIntersucursal )+"</td>";
@@ -485,6 +485,17 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 		});
 
 
+
+		b = new Ext.form.Checkbox({
+			renderTo : "Inventario-carritoTipo"+ carrito.items[i].productoID ,
+			id : "Inventario-carritoTipo"+ carrito.items[i].productoID + "Value",
+			label : "Procesada",
+			value : 1,
+			disabled: false
+		});
+		
+		
+		
 	}
 
 };
