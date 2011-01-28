@@ -398,7 +398,7 @@ Aplicacion.Proveedores = function(){
 					},{
 						text: 'Cancelar pedido',
 						ui: 'normal',
-						id : 'Proveedores-cancelarPedido'
+						id : 'Proveedores-cancelarPedido',
 						handler : function( t ){
 								Aplicacion.Proveedores.ci.cancelarPedido();
 						}		

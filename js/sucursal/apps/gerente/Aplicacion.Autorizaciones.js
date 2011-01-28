@@ -1036,10 +1036,10 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
     var parametros = Ext.util.JSON.decode( autorizacion.get('parametros') );
     
     //estado de la autorizacion
-    var _estado = autorizacion.data.estado;
+    var estado = autorizacion.data.estado;
     
     //establecemos una descripcion del estado legible para el cliente
-    switch( _estado ){
+    switch( estado ){
     
         case 0 :
             estado = 'No ha sido revisado por el administrador';
@@ -1101,8 +1101,8 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                     label:'ID Autorización',
                     name:'id_autorizacion',
                     value:autorizacion.data.id_autorizacion
-                }),new Ext.form.Text({label: 'ID Cliente', value:autorizacion.data.id_cliente }),
-                new Ext.form.Text({label: 'Cantidad', value:autorizacion.data.cantidad })
+                }),new Ext.form.Text({label: 'ID Cliente', value : parametros.id_cliente }),
+                new Ext.form.Text({label: 'Cantidad', value : parametros.cantidad })
             );
             height = 375;
         break;
@@ -1126,8 +1126,8 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                     label:'ID Autorización',
                     name:'id_autorizacion',
                     value:autorizacion.data.id_autorizacion
-                }),new Ext.form.Text({label: 'ID Producto', value:autorizacion.data.id_producto }),
-                new Ext.form.Text({label: 'Precio', value:autorizacion.data.precio })
+                }),new Ext.form.Text({label: 'ID Producto', value : parametros.id_producto }),
+                new Ext.form.Text({label: 'Precio', value : parametros.precio })
             );
             height = 360;
         break;
@@ -1138,9 +1138,9 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                     label:'ID Autorización',
                     name:'id_autorizacion',
                     value:autorizacion.data.id_autorizacion
-                }),new Ext.form.Text({label: 'ID Compra', value:autorizacion.data.id_compra }),
-                new Ext.form.Text({label: 'ID Producto', value:autorizacion.data.id_producto }),
-                new Ext.form.Text({label: 'Cantidad', value:autorizacion.data.cantidad })
+                }),new Ext.form.Text({label: 'ID Compra', value : parametros.id_compra }),
+                new Ext.form.Text({label: 'ID Producto', value : parametros.id_producto }),
+                new Ext.form.Text({label: 'Cantidad', value : parametros.cantidad })
             );
             height = 425;
         break;
@@ -1198,7 +1198,8 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
             html += "<table border = 0>";
             html += "   <tr class = 'top'>";
             html += "       <td>Producto</td>";
-            html += "       <td>Cantidad solicitada</td>";
+            html += "       <td>Cantidad Original</td>";
+            html += "       <td>Cantidad Procesada</td>";
             html += "   </tr>";
 
             for ( var i = 0; i < parametros.productos.length; i++ ){
