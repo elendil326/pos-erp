@@ -1034,7 +1034,10 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
 
     //decodificar el json de parametros
     var parametros = Ext.util.JSON.decode( autorizacion.get('parametros') );
-
+    
+    console.log("/////////////////wwwwwwwwwwwwwwwwwwwwwwww");
+        console.log(parametros);
+    console.log("/////////////////wwwwwwwwwwwwwwwwwwwwwwww");
     //almacenara los items del formulario
     var itemsForm = [
         new Ext.form.Text({
@@ -1052,8 +1055,8 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                     label:'ID Autorización',
                     name:'id_autorizacion',
                     value:autorizacion.data.id_autorizacion
-                }),new Ext.form.Text({label: 'Concepto', value:detalleAutorizacion.concepto }),
-                new Ext.form.Text({label: 'Monto', value:detalleAutorizacion.monto })
+                }),new Ext.form.Text({label: 'Concepto', value:autorizacion.data.concepto }),
+                new Ext.form.Text({label: 'Monto', value:autorizacion.data.monto })
             );
             height = 375;
         break;
@@ -1064,8 +1067,8 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                     label:'ID Autorización',
                     name:'id_autorizacion',
                     value:autorizacion.data.id_autorizacion
-                }),new Ext.form.Text({label: 'ID Cliente', value:detalleAutorizacion.id_cliente }),
-                new Ext.form.Text({label: 'Cantidad', value:detalleAutorizacion.cantidad })
+                }),new Ext.form.Text({label: 'ID Cliente', value:autorizacion.data.id_cliente }),
+                new Ext.form.Text({label: 'Cantidad', value:autorizacion.data.cantidad })
             );
             height = 375;
         break;
@@ -1076,9 +1079,9 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                     label:'ID Autorización',
                     name:'id_autorizacion',
                     value:autorizacion.data.id_autorizacion
-                }),new Ext.form.Text({label: 'ID Venta', value:detalleAutorizacion.id_venta }),
-                new Ext.form.Text({label: 'ID Producto', value:detalleAutorizacion.id_producto }),
-                new Ext.form.Text({label: 'Cantidad', value:detalleAutorizacion.cantidad })
+                }),new Ext.form.Text({label: 'ID Venta', value:autorizacion.data.id_venta }),
+                new Ext.form.Text({label: 'ID Producto', value:autorizacion.data.id_producto }),
+                new Ext.form.Text({label: 'Cantidad', value:autorizacion.data.cantidad })
             );
             height = 425;
         break;
@@ -1089,8 +1092,8 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                     label:'ID Autorización',
                     name:'id_autorizacion',
                     value:autorizacion.data.id_autorizacion
-                }),new Ext.form.Text({label: 'ID Producto', value:detalleAutorizacion.id_producto }),
-                new Ext.form.Text({label: 'Precio', value:detalleAutorizacion.precio })
+                }),new Ext.form.Text({label: 'ID Producto', value:autorizacion.data.id_producto }),
+                new Ext.form.Text({label: 'Precio', value:autorizacion.data.precio })
             );
             height = 360;
         break;
@@ -1101,9 +1104,9 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                     label:'ID Autorización',
                     name:'id_autorizacion',
                     value:autorizacion.data.id_autorizacion
-                }),new Ext.form.Text({label: 'ID Compra', value:detalleAutorizacion.id_compra }),
-                new Ext.form.Text({label: 'ID Producto', value:detalleAutorizacion.id_producto }),
-                new Ext.form.Text({label: 'Cantidad', value:detalleAutorizacion.cantidad })
+                }),new Ext.form.Text({label: 'ID Compra', value:autorizacion.data.id_compra }),
+                new Ext.form.Text({label: 'ID Producto', value:autorizacion.data.id_producto }),
+                new Ext.form.Text({label: 'Cantidad', value:autorizacion.data.cantidad })
             );
             height = 425;
         break;
@@ -1211,8 +1214,8 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
         }],
         items: [{
                 xtype: 'fieldset',
-                title: (!parametros.descripcion)?parametros.concepto:parametros.descripcion,
-                instructions: instrucciones,
+                title: (!parametros.descripcion)?"":parametros.descripcion,
+                //instructions: instrucciones,
                 items:  itemsForm 
             }
         ]
