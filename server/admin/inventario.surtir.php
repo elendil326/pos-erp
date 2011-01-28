@@ -12,7 +12,14 @@
         $autorizacionDetalles = json_decode( $autorizacion->getParametros() );
     }
 	
-	$sucursales = SucursalDAO::getAll();
+	$foo = new Sucursal();
+    $foo->setActivo(1);
+    $foo->setIdSucursal(1);
+
+    $bar = new Sucursal();
+    $bar->setIdSucursal(99);
+
+    $sucursales = SucursalDAO::byRange($foo, $bar);
 
 	
 ?>
@@ -91,8 +98,8 @@
 
 		html += td( "<input style='width: 100px' onkeyup='domath()' value='0' id='cart_table_cantidad" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='text'>" );
 
-		console.log( o)
 		var procesadas = parseFloat( o.existencias_procesadas );
+		
 		if(procesadas > 0){
 			html += td( "<input style='width: 100px' id='cart_table_procesada" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='checkbox'>" );			
 		}else{
@@ -146,6 +153,11 @@
 	var readyDATA = null;
 
     function doSurtir(){
+	
+		if(carrito.length == 0){
+			jQuery("#ajax_failure").html("Seleccione uno o mas prouductos para surtir a esta sucursal").show();
+		}
+	
 		values = jQuery("#ASurtirTabla input");
 		
 		json = {
@@ -153,8 +165,10 @@
 			productos : []
 		};
 		
-		foo = 0;
+		var foo = 0, vacio = false;
+		
 		for(a = carrito.length -1 ; a >= 0; a--, foo += 5){
+			
 			json.productos.push({
 				id_producto: 	carrito[a].id_producto,
 				producto_desc :	carrito[a].producto_desc,
@@ -164,6 +178,12 @@
 				precio:			parseFloat( values[foo+2].value),
 				id_compra:		carrito[a].id_compra_proveedor
 			});
+			
+			if( values[foo].value == 0  ){
+				jQuery("#ajax_failure").html("No puede hacer un embarque con algun producto vacio").show();
+				return;
+			}
+			
 			/*			
 			console.log("********** ******* ");
 			console.log("analizando ", carrito[a].id_producto, carrito[a].id_proveedor);
@@ -174,6 +194,9 @@
 			console.log("importe:" 		+ values[foo+4].value );
 			*/
 		}
+
+
+		
 
 		readyDATA = json;
 		jQuery.facebox( renderConfirm( json ) );

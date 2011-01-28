@@ -20,8 +20,8 @@ function listarSucursales(  ){
 
     $array_sucursales = array();
 
-    foreach( $sucursales as $sucursal )
-    {
+    foreach( $sucursales as $sucursal ){
+	
         array_push( $array_sucursales , array(
             'id_sucursal' => $sucursal->getIdSucursal(),
             'descripcion' => $sucursal->getDescripcion(),
