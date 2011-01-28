@@ -39,30 +39,11 @@ Aplicacion.Inventario.prototype.getConfig = function (){
     }
 
 
-	return POS.U.g ? {
+	return {
 		    text: 'Inventario',
 		    cls: 'launchscreen',
-		    card :	this.listaInventarioPanel,		
-		    items: [{
-			    text: 'Inventario Actual',
-			    card :	this.listaInventarioPanel,
-			    leaf: true
-		},{
-			text: 'Surtir',
-
-				card :	this.surtirWizardPanel,
-				leaf: true
-
-		}]
-	} : {
-		    text: 'Inventario',
-		    cls: 'launchscreen',
-		    card :	this.listaInventarioPanel,		
-		    items: [{
-			    text: 'Inventario Actual',
-			    card :	this.listaInventarioPanel,
-			    leaf: true
-		}]
+		    card :	this.listaInventarioPanel,	
+			leaf : true
 	};
 };
 

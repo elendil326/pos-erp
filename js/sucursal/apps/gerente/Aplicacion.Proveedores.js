@@ -97,6 +97,11 @@ Aplicacion.Proveedores = function(){
 			console.log("mostrando los detalles del proveeedor " , id_proveedor);
 		}
 
+		if(id_proveedor == -1){
+			//se ha seleccionado al centro de distribuicion
+        	sink.Main.ui.setActiveItem( Aplicacion.Inventario.currentInstance.surtirWizardPanel , 'slide');
+			return;
+		}
 
 		thiz = Aplicacion.Proveedores.ci;
 
@@ -362,6 +367,14 @@ Aplicacion.Proveedores = function(){
 				
 				items = [];
 				
+				
+				//empujar el proveedor de centro de distribucion
+				items.push({
+					title : "Centro de distribucion",
+					id : -1,
+					image : '../media/TruckYellow128.png'
+				});				
+				
 				for( a = 0 ; a < listaDeProveedores.length ; a++ ){
 					items.push({
 						title : listaDeProveedores[a].nombre,
@@ -369,6 +382,8 @@ Aplicacion.Proveedores = function(){
 						image : '../media/LorryGreen128.png'
 					});
 				};
+				
+
 				
 				new Mosaico({
 					renderTo : 'MosaicoProveedores',
