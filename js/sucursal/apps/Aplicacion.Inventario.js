@@ -270,7 +270,13 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelUpdater = function( produc
 	}
 
 	detallesPanel = Aplicacion.Inventario.currentInstance.detalleInventarioPanel;
-//	detallesPanel.loadRecord( producto );
+
+	if(producto.get("tratamiento")) {
+		//Ext.get("procesarProductoBoton").show();		
+	}else{
+		//este producto no se procesa
+		//Ext.get("procesarProductoBoton").hide();
+	}
 
 	detallesPanel.setValues({
 
@@ -303,7 +309,23 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelCreator = function()
 
 	
     if(POS.U.g) {
-    //    opciones.push({ text: 'Surtir', ui: 'action', handler : this.detalleInventarioSurtirEsteProd });
+	  	opciones.push({ 
+			text: 'Procesar este producto', 
+			id : "procesarProductoBoton" , 
+			ui:  "action", 
+			handler : this.procesarProductoPanelShow ,
+			listeners : {
+				"show" : function(){
+					console.log("weeee");
+					var vals = Aplicacion.Inventario.currentInstance.detalleInventarioPanel.getValues();
+					if(vals.tratamiento){
+						Ext.get("procesarProductoBoton").hide();
+					}else{
+						Ext.get("procesarProductoBoton").show();						
+					}
+				}
+			}
+		});
    	}
 
 
