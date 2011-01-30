@@ -96,8 +96,6 @@ require_once("logger.php");
          
     function autorizacionesSucursal( $sid ){
 
-        Logger::log("Iniciando proceso Autorizaciones Sucursal.");
-
 	    $now = date ( "Y-m-d" );
 	
         $foo = new Autorizacion();
@@ -139,7 +137,6 @@ require_once("logger.php");
             array_push( $array_autorizaciones, $auth );
         }
         
-         Logger::log("Termiando proceso Autorizaciones Sucursal, preparando valores para regresar..");
         
         return $array_autorizaciones;
 
