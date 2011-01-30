@@ -150,6 +150,9 @@ Aplicacion.Inventario.prototype.listaInventarioPanel = null;
 
 Aplicacion.Inventario.prototype.listaInventarioPanelShow = function ()
 {
+	
+
+	
 	if( this.listaInventarioPanel ){
 		this.listaInventarioPanelShow();
 	}else{
@@ -712,15 +715,75 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 	
 	/**
 	  *
-	  * @access Private
+	  * panel general que contiene dos paneles
+	  * y el docked items para esta sub-aplicacion
+	  * esos dos paneles son los detalles del proceso
+	  * y un panel con html vacio para poder crear una
+	  * tabla donde se iran insertando los productos
+	  * que tambien resultaron de este proceso
 	  **/
 	var panel,
+	
+	/**
+	  * El store del producto a procesar
+	  **/
 		producto,
-		lisaDeProductos,
+		
+	/**
+	  * Panel con la lista de productos
+	  **/		
+		listaDeProductos,
+		
+	/**
+	  * crear el panel de productos y el 
+	  * panel principal que tiene el ingreso
+	  * de detalles
+	  **/		
 		crearPanel,
+		
+	/**
+	  * actualizar los detalles de panel,
+	  * con el producto que se encuentra en 
+	  * <i>producto</i>
+	  **/		
 		updatePanel,
+		
+	/**
+	  * validar la informacion para revisar 
+	  * existencias
+	  **/		
 		validar,
-		panelDetalles;
+		
+	/**
+	  * panel que va dentro de <i>panel</i>
+	  * con los detalles, es un field 
+	  * para accesso rapido a sus detalles
+	  **/		
+		panelDetalles,
+		
+	/**
+	  *
+	  *
+	  **/
+		otrosProductos,
+		
+	/**
+	  *
+	  **/
+		foo,
+		
+	/**
+	  * arreglo con los productos derivados
+	  **/
+		carritoDeDerivados = [],
+		
+	/**
+	  * 
+	  *
+	  **/	
+		renderCarrito;
+	
+	
 	
 	/**
 	  * Crear el panel.
@@ -780,7 +843,9 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 		
 		
 		//panel de botones
-		var otrosProductos = new Ext.Panel({		
+		otrosProductos = new Ext.Panel({
+			padding : "20%",
+			cls: "Tabla",
 			html : ""
 		});
 		
@@ -806,7 +871,7 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 	                text: 'Agregar producto resultante',
 	                ui: 'nomral',
 	                handler: function() { 
-						Aplicacion.Inventario.currentInstance.procesarProducto.mostrarLista(this);
+						Aplicacion.Inventario.currentInstance.procesarProducto.mostrarLista( this );
 	                }
 		
 				},{
@@ -825,20 +890,91 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 		
 		
 		/**
+		  * panel de seleccion de producto derivado
+		  *
+		  **/
+		var productoDerivadoDetallesPanel = new Ext.form.FormPanel({
+			dockedItems: [{
+	            dock: 'bottom',
+	            xtype: 'toolbar',
+	            items: [{
+	                text: 'Cancelar',
+	                handler: function() {                   
+						Aplicacion.Inventario.currentInstance.procesarProducto.getListaDeProductosPanel().hide();
+	                }
+	            },{
+	                xtype: 'spacer'
+	            },{
+	                text: 'Aceptar',
+	                ui: 'action',
+	                handler: function() { 
+						var pp = Aplicacion.Inventario.currentInstance.procesarProducto;
+				
+						pp.agregarProductoDerivado( Ext.getCmp("inventario_producto_derivado_qty").getValue() );
+						pp.getListaDeProductosPanel( ).hide( );
+	                }
+				}]
+	        }],														 
+			items: [{
+				xtype: 'fieldset',
+				title: 'Detalles de producto derivado',
+				instructions: '',
+				defaults : {
+					disabled : false,
+					labelAlign : "top",
+					labelWidth: "100%"
+				},
+				items: [
+					new Ext.form.Text({ 
+						name: 'derivado_resultante', 
+						id : 'inventario_producto_derivado_qty',
+						label: 'Resultante',
+						labelAlign : "top",
+						listeners: {
+							"focus" : function (){
+								kconf = {
+									type : 'num',
+									submitText : 'Aceptar',
+									callback : null
+								};
+
+								POS.Keyboard.Keyboard( this, kconf );								
+							}
+						}
+					})
+				]}
+		]});
+		
+		
+		/**
 		  * Lista de productos
 		  **/
 		listaDeProductos = new Ext.Panel({
 			floating: true,
 			ui : "dark",
+			layout : "card",
 	        modal: false,
 	        scroll: false,
 	        width: 300,
 	        height: 500,
 			showAnimation : Ext.anims.fade ,
-			hideOnMaskTap : true,
+			hideOnMaskTap : false,
 			bodyPadding : 0,
 			bodyMargin : 0,
 	        styleHtmlContent: false,
+			listeners : {
+				"show" : function (){
+					updatePanel();
+					this.setActiveItem(0);
+				},
+				"hide" : function (){
+					var store;
+
+					store = Aplicacion.Inventario.currentInstance.inventarioListaStore;
+
+					store.clearFilter();
+				}
+			},
 			items : [{
 				multiSelect : true,
 				xtype: 'list',
@@ -849,17 +985,23 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 				indexBar: false,
 				listeners : {
 					"selectionchange"  : function ( view, nodos, c ){
-
+						var panel;
+						
 						if(nodos.length > 0){
-
+							
+							panel = Aplicacion.Inventario.currentInstance.procesarProducto.getListaDeProductosPanel( );
+							
+							panel.setActiveItem( productoDerivadoDetallesPanel,	Ext.anims.slide ); 
+							
+							foo = nodos[0];
 						}
 
-						//deseleccinar
-						view.deselectAll();
+						
 					}
 				}
 			}]
 		});
+		
 		if(DEBUG){
 			console.log("Creando panel de procesado con ", panelDetalles, otrosProductos, panel);
 		}
@@ -867,16 +1009,38 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 	};
 	
 
-
+	
 		
 	/**
 	  *
 	  *
 	  **/
 	updatePanel = function(  ){
-        //recargar la lista por si cambiaron los productos
-		listaDeProductos.getComponent(0).bindStore(Aplicacion.Inventario.currentInstance.inventarioListaStore);
-		//TODO filtrar el store y quitar el procuto de ahorita
+
+		var store;
+		
+		store = Aplicacion.Inventario.currentInstance.inventarioListaStore;
+		
+		store.clearFilter();
+		
+		store.filterBy( function( record ){
+			
+			if(record.get("productoID") == producto.get("productoID")){
+				return false;
+			}
+			
+			for (var i = carritoDeDerivados.length - 1; i >= 0; i--){
+				
+				if( record.get("productoID") == carritoDeDerivados[i].get("productoID") ){
+					return false;
+				}
+			};
+
+			return true;
+		});
+		
+		listaDeProductos.getComponent(0).bindStore(store);
+
 		return true;
 	};
 	
@@ -901,10 +1065,8 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 		//totalTomado += 
 		
 		if( parseFloat( producto.get("existenciasOriginales") ) < totalTomado){
+			
 			//no hay suficiente producto
-			if(DEBUG){
-				console.log( detalles.merma , detalles.resultante, totalTomado, producto.get("existenciasOriginales") );
-			}
 			return false;
 		}
 		
@@ -914,6 +1076,62 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 	
 	
 	
+	renderCarrito = function(){
+		var html;
+		
+		//re-rendereando el carrito
+		if(DEBUG){
+			console.log("Re-rendereando el carrito", otrosProductos);
+		}
+		
+		html = '<table style="width: 100%" >';
+		html += '<tr> <th> Producto </th><th> Cantidad resultante del proceso </th> </tr>';
+		for (var i = carritoDeDerivados.length - 1; i >= 0; i--){
+
+			html += '<tr>';
+			html += '<td><b>' + carritoDeDerivados[i].get("productoID") +  '</b> ' + carritoDeDerivados[i].get("descripcion") + '</td>';
+			html += '<td>' + carritoDeDerivados[i].get("cantidad") + carritoDeDerivados[i].get("medida") + 's</td>';			
+			html += '</tr>';	
+		};
+
+		html += '</table>';		
+		otrosProductos.update(html);
+	};
+	
+	
+	
+	/** 
+	  * Usa FOO !!
+	  **/
+	this.agregarProductoDerivado = function( qty ){
+		
+		console.log("Agregando producto derivado" , foo);
+		
+		for (var i = carritoDeDerivados.length - 1; i >= 0; i--){
+			if ( carritoDeDerivados[i].get("productoID") == foo.get("productoID")){
+				//ya tiene agregado este all carrito
+				return;
+			}
+		};
+		
+		foo.set("cantidad", qty )
+		
+		carritoDeDerivados.push(foo);
+		
+		renderCarrito();
+		
+	}
+	
+	
+	
+	
+	/**
+	  * regresar el panel con lista de productos para 
+	  * manipularlo desde fuera
+	  **/
+	this.getListaDeProductosPanel = function(){
+		return listaDeProductos;
+	};
 	
 	/**
 	  * Mostrar la lista de productos restantes del proceso
@@ -963,7 +1181,6 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 			return false;
 		}
 		
-		//todo esta bien, voy a enviar los datos
 		Ext.getBody().mask('Enviando proceso', 'x-mask-loading', true);
 		
 		detalles = panelDetalles.getValues();
@@ -1008,6 +1225,9 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 	        }
 	    });
 	}
+	
+	
+	
 	
 	/**
 	  * Init

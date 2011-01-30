@@ -634,7 +634,7 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_vent
                                 kconf = {
                                 type : 'num',
                                 submitText : 'Aceptar',
-                                callback : Aplicacion.Efectivo.currentInstance.nuevoGastoValidator
+                                callback : null
                             };
                         POS.Keyboard.Keyboard( this, kconf );
                         }
@@ -646,7 +646,7 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_vent
 
     this.panelSolicitudDevolucion = new Ext.Panel({
         floating:true,
-        modal:true,
+        modal: false,
         centered:true,
         height: 390,
         width: 680,
