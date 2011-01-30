@@ -613,7 +613,9 @@ function terminarCargamentoCompra( $json = null ){
 	  * @return void
 	  **/
 	function procesarProductoSucursal($json){
+		
 		DetalleInventarioDAO::transBegin();
+		
 		$datos=parseJSON($json);
 		$subproducto=$datos->subproducto;
 		$di=DetalleInventarioDAO::getByPK($datos->id_producto,$_SESSION["sucursal"]);
@@ -625,10 +627,15 @@ function terminarCargamentoCompra( $json = null ){
 		for($i=0;$i<sizeof($subproducto);$i++){
 			$suma+=$subproducto[$i]->procesado;
 		}
-		if($suma>($di->getExistencias()-$di->getExistenciasProcesadas())){
+		
+		if($suma > ( $di->getExistencias() - $di->getExistenciasProcesadas() ) ){
+			
+			Logger::log( "Imposible procesar producto, " . $suma . " <= " . $di->getExistencias() . " - " . $di->getExistenciasProcesadas() );
+			
 			DetalleInventarioDAO::transRollback();
 			die('{"success":false,"reason":"No se pudo procesar el producto, hay menos existencias de las que se pretenden procesar."}');
 		}
+		
 		$di->setExistencias($di->getExistencias()-$datos->desecho);
 		$di->setExistenciasProcesadas($di->getExistenciasProcesadas()+$datos->procesado);
 		

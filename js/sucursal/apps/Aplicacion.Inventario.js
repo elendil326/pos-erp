@@ -24,7 +24,7 @@ Aplicacion.Inventario.prototype._init = function (){
 	//crar los paneles para sutir del wizard
 	this.surtirWizardCreator();
 
-
+	this.procesarProducto = new Aplicacion.Inventario.ProcesarProducto();
 
 	Aplicacion.Inventario.currentInstance = this;
 	
@@ -259,15 +259,14 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelUpdater = function( produc
 		//Ext.get("procesarProductoBoton").hide();
 	}
 
-	detallesPanel.setValues({
+	Aplicacion.Inventario.currentInstance.procesarProducto.setProducto( producto );
 
+	detallesPanel.setValues({
         productoID  :   producto.get('productoID'),
         descripcion :   producto.get('descripcion'),
         precioVenta :   POS.currencyFormat( producto.get('precioVenta') ),
         existenciasOriginales : producto.get('existenciasOriginales') + " " + producto.get('medida')+"s",
         existenciasProcesadas : producto.get('existenciasProcesadas') + " " + producto.get('medida')+"s"
-
-
     });
 
 };
@@ -294,10 +293,14 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelCreator = function()
 			text: 'Procesar este producto', 
 			id : "procesarProductoBoton" , 
 			ui:  "action", 
-			handler : this.procesarProductoPanelShow ,
+			handler : function(){
+					var thiz = Aplicacion.Inventario.currentInstance;
+
+					sink.Main.ui.setActiveItem( thiz.procesarProducto.getPanel() , 'slide');				
+			} ,
 			listeners : {
 				"show" : function(){
-					console.log("weeee");
+
 					var vals = Aplicacion.Inventario.currentInstance.detalleInventarioPanel.getValues();
 					if(vals.tratamiento){
 						Ext.get("procesarProductoBoton").hide();
@@ -333,8 +336,8 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelCreator = function()
 				new Ext.form.Text({ name: 'productoID', label: 'ID del producto' }),
 				new Ext.form.Text({ name: 'descripcion', label: 'Descripcion' }),
 				new Ext.form.Text({ name: 'precioVenta', label: 'Precio sugerido' }),
-				new Ext.form.Text({ name : 'existenciasOriginales', label: 'Existencias Originales' }),
-				new Ext.form.Text({ name : 'existenciasProcesadas', label: 'Existencias' }),
+				new Ext.form.Text({ name : 'existenciasOriginales', label: 'Existencias' }),
+				new Ext.form.Text({ name : 'existenciasProcesadas', label: 'Existencias Procesadas' }),
 	//			new Ext.form.Text({ name : 'existenciasMinimas', label: 'Existencias Minimas' })
 			]}
 	]});
@@ -533,7 +536,7 @@ Aplicacion.Inventario.prototype.surtirWizardCreator = function (){
 		ui: 'normal',
 		handler : function( t ){
 			//iniciar wizard
-			Aplicacion.Inventario.currentInstance.surtirWizardPopUpPanel.show();
+			Aplicacion.Inventario.currentInstance.surtirWizardPopUpPanel.showBy(this);
 		}
 	},{
 		xtype : 'spacer'
@@ -613,10 +616,11 @@ Aplicacion.Inventario.prototype.surtirWizardCreator = function (){
 			multiSelect : true,
 			xtype: 'list',
 			ui: 'dark',
+			layout: 'fit',
 			store: this.inventarioListaStore,
 			itemTpl: '<div class=""><b>{productoID}</b> {descripcion}</div>',
 			grouped: true,
-			indexBar: true	
+			indexBar: false	
 		}]
 	});
 	
@@ -699,6 +703,318 @@ Aplicacion.Inventario.prototype.surtirCarrito = function(){
     }); 
 
 
+};
+
+
+
+
+Aplicacion.Inventario.ProcesarProducto = function(){
+	
+	/**
+	  *
+	  * @access Private
+	  **/
+	var panel,
+		producto,
+		lisaDeProductos,
+		crearPanel,
+		updatePanel,
+		validar,
+		panelDetalles;
+	
+	/**
+	  * Crear el panel.
+	  * Crea el panel y lo guarda internamente asi como crea la el
+	  * panel de la lista de productos
+	  *	
+	  * @return void
+	  **/
+	crearPanel = function (){
+
+		
+		panelDetalles = new Ext.form.FormPanel({														 
+			items: [{
+				xtype: 'fieldset',
+				title: 'Detalles de Proceso',
+				instructions: '',
+				defaults : {
+					disabled : false
+				},
+				items: [
+					new Ext.form.Text({ 
+						name: 'tomado', 
+						label: 'Tomado para procesar'
+					}),
+					new Ext.form.Text({ 
+						name: 'resultante', 
+						label: 'Resultante procesado',
+						listeners: {
+							"focus" : function (){
+								kconf = {
+									type : 'num',
+									submitText : 'Aceptar',
+									callback : null
+								};
+								console.log(this)
+								POS.Keyboard.Keyboard( this, kconf );								
+							}
+						}
+					}),
+					new Ext.form.Text({ 
+						name: 'merma', 
+						label: 'Merma resultante',
+						listeners: {
+							"focus" : function (){
+								kconf = {
+									type : 'num',
+									submitText : 'Aceptar',
+									callback : null
+								};
+								console.log(this)
+								POS.Keyboard.Keyboard( this, kconf );								
+							}
+						}
+					})
+				]}
+		]});
+		
+		
+		//panel de botones
+		var otrosProductos = new Ext.Panel({		
+			html : ""
+		});
+		
+	
+		panel = new Ext.Panel({
+			layout: {
+			    type: 'vbox',
+			    padding: '5',
+			    align: 'left'
+			},
+			dockedItems: [{
+	            dock: 'bottom',
+	            xtype: 'toolbar',
+	            items: [{
+	                text: 'Regresar a detalles de producto',
+	                ui: 'back',
+	                handler: function() {                   
+	                   sink.Main.ui.setActiveItem( Aplicacion.Inventario.currentInstance.detalleInventarioPanel , 'slide');
+	                }
+	            },{
+	                xtype: 'spacer'
+	            },{
+	                text: 'Agregar producto resultante',
+	                ui: 'nomral',
+	                handler: function() { 
+						Aplicacion.Inventario.currentInstance.procesarProducto.mostrarLista(this);
+	                }
+		
+				},{
+	                text: 'Registar proceso',
+	                ui: 'action',
+	                handler: function() {                   
+						Aplicacion.Inventario.currentInstance.procesarProducto.send();
+	                }
+
+				}]
+	        }],
+			items  : [ panelDetalles, otrosProductos ]
+		});
+		
+		
+		
+		
+		/**
+		  * Lista de productos
+		  **/
+		listaDeProductos = new Ext.Panel({
+			floating: true,
+			ui : "dark",
+	        modal: false,
+	        scroll: false,
+	        width: 300,
+	        height: 500,
+			showAnimation : Ext.anims.fade ,
+			hideOnMaskTap : true,
+			bodyPadding : 0,
+			bodyMargin : 0,
+	        styleHtmlContent: false,
+			items : [{
+				multiSelect : true,
+				xtype: 'list',
+				ui: 'dark',
+				store: null,
+				itemTpl: '<div class=""><b>{productoID}</b> {descripcion}</div>',
+				grouped: true,
+				indexBar: false,
+				listeners : {
+					"selectionchange"  : function ( view, nodos, c ){
+
+						if(nodos.length > 0){
+
+						}
+
+						//deseleccinar
+						view.deselectAll();
+					}
+				}
+			}]
+		});
+		if(DEBUG){
+			console.log("Creando panel de procesado con ", panelDetalles, otrosProductos, panel);
+		}
+		
+	};
+	
+
+
+		
+	/**
+	  *
+	  *
+	  **/
+	updatePanel = function(  ){
+        //recargar la lista por si cambiaron los productos
+		listaDeProductos.getComponent(0).bindStore(Aplicacion.Inventario.currentInstance.inventarioListaStore);
+		//TODO filtrar el store y quitar el procuto de ahorita
+		return true;
+	};
+	
+	
+	
+	/** Validar los campos
+	  *	 
+	  *
+	  *
+	  **/			
+	validar = function (){
+
+		var detalles = panelDetalles.getValues();
+		if(DEBUG){
+			console.log("Validando detalles ", detalles , producto);
+		}
+		
+		//revisar que el total no sobrepase las existencias de ese producto
+		var totalTomado = parseFloat(detalles.merma) + parseFloat( detalles.resultante);
+		
+		//TODO: ir por cada subproducto que salio y sumarlo a totalTomado
+		//totalTomado += 
+		
+		if( parseFloat( producto.get("existenciasOriginales") ) < totalTomado){
+			//no hay suficiente producto
+			if(DEBUG){
+				console.log( detalles.merma , detalles.resultante, totalTomado, producto.get("existenciasOriginales") );
+			}
+			return false;
+		}
+		
+		return true;
+		
+	};
+	
+	
+	
+	
+	/**
+	  * Mostrar la lista de productos restantes del proceso
+	  *
+	  **/
+	this.mostrarLista = function( where ){
+		listaDeProductos.showBy(where);
+	}
+	
+	
+
+	
+	/**
+	  * Obtener el panel de procesar producto
+	  *
+	  **/
+	this.getPanel = function(){
+		updatePanel();
+		return panel;
+	};
+	
+	
+	
+	
+	/** Establecer de que producto estamos hablando
+	  * 
+	  * @access Public
+	  *
+	  **/
+	this.setProducto = function ( productoStore ){
+		producto = productoStore;
+	}
+	
+	
+	/** Enviar los resultados al servidor
+	  *
+	  *
+	  *
+	  **/
+	this.send = function(){
+		
+		var detalles,
+			data;
+		
+		if( !validar() ){
+			Ext.Msg.alert("Procesar producto", "No hay suficiente producto orginal para procesar esta cantidad");
+			return false;
+		}
+		
+		//todo esta bien, voy a enviar los datos
+		Ext.getBody().mask('Enviando proceso', 'x-mask-loading', true);
+		
+		detalles = panelDetalles.getValues();
+		
+		data = {
+			id_producto : producto.get("productoID"),
+			procesado : detalles.resultante,
+			desecho : detalles.merma,
+			subproducto : [] // { id_producto : , procesado : }
+		};
+		
+	    Ext.Ajax.request({
+	        url: '../proxy.php',
+	        scope : this,
+	        params : {
+	            action : 408,
+	            data : Ext.util.JSON.encode( data )
+	        },
+	        success: function(response, opts) {
+		
+				Ext.getBody().unmask();
+				
+				try{
+		        	respuesta = Ext.util.JSON.decode( response.responseText );             
+		        }catch(e){
+		            return POS.error(e);
+		        }
+				
+				if(respuesta.success){
+					Ext.Msg.alert( "Procesar producto", "Producto procesado correctamente" );
+				}else{
+					Ext.Msg.alert("Procesar producto", respuesta.reason);
+					return;
+				}
+		
+				if(DEBUG){
+					console.log("Regrese de procesar producto en suscursal", respuesta);
+				}
+			
+				//mostrar los detalles del producto
+				Aplicacion.Inventario.currentInstance.detalleInventarioPanelShow(producto);
+	        }
+	    });
+	}
+	
+	/**
+	  * Init
+	  * 
+	  **/
+	crearPanel();
+	
 };
 
 
