@@ -6,7 +6,10 @@
  
 require_once("model/autorizacion.dao.php");
 require_once("model/detalle_inventario.dao.php");
+require_once("model/detalle_venta.dao.php");
 require_once("model/cliente.dao.php");
+require_once("model/ventas.dao.php");
+require_once("model/compra_sucursal.dao.php");
 require_once("model/inventario.dao.php");
 require_once('model/actualizacion_de_precio.dao.php');
 require_once("logger.php");
@@ -435,12 +438,20 @@ require_once("logger.php");
 
     function responderAutorizacionDevolucionCliente( $args ){
 
-        Logger::log("Iniciando proceso de Respuesta Autorizacion Devolución.");
+        Logger::log("Iniciando proceso de Respuesta de Autorizacion Devolución.");
         
-        $autorizacion = AutorizacionDAOBase::getByPK( $args['id_autorizacion'] );
+        if( !$autorizacion = AutorizacionDAOBase::getByPK( $args['id_autorizacion'] ))
+        {
+            Logger::log( "Error, no se encontro la autorizacion {$args['id_autorizacion'] }." );
+            DAO::transRollback();
+            die( '{"success": false, "reason": "No se pudo guardar la autorizacion 0." }' );   
+        }
+        
+        
         $autorizacion->setFechaRespuesta( strftime( "%Y-%m-%d-%H-%M-%S", time() ) );
         $autorizacion->setEstado( $args['reply'] );    
 
+        DAO::transBegin();
        
         //guardamos el nuevo estado de la autorización
         try
@@ -451,7 +462,7 @@ require_once("logger.php");
         {
             Logger::log( "Error : " . $e);
             DAO::transRollback();
-            die( '{"success": false, "reason": "No se pudo guardar la autorizacion." }' );       
+            die( '{"success": false, "reason": "No se pudo guardar la autorizacion 1." }' );       
         }
         
         //obtenemos los parametros de la autorizacion
@@ -463,7 +474,7 @@ require_once("logger.php");
         {
             Logger::log( "Error : " . $e);
             DAO::transRollback();
-            die( '{"success": false, "reason": "Parametros invalidos." }' );
+            die( '{"success": false, "reason": "Parametros invalidos 1." }' );
         }
 
         //modificamos el limite de credito del cliente en caso de que se haya autorizado
@@ -504,8 +515,8 @@ require_once("logger.php");
             }
                             
             //cambiamos las existencias en el detalle venta
-            $detalle_venta->setCantidad( $detalle_venta->getCantidad() - $data->cantidad );
-            $detalle_venta->setCantidadProcesada( $detalle_venta->getCantidadProcesada() - $data->cantidad_procesada );
+            $detalle_venta->setCantidad( $detalle_venta->getCantidad() - $parametros -> cantidad );
+            $detalle_venta->setCantidadProcesada( $detalle_venta->getCantidadProcesada() - $parametros ->cantidad_procesada );
             
             //guardamos el detalle de la venta
             try
@@ -519,16 +530,31 @@ require_once("logger.php");
                 die( '{"success": false, "reason": "No se pudo guardar el detalle de la venta.." }' );       
             }
                             
-            //modificamos el total de la venta
-             if( !( $venta = ComprasDAO::getByPK( $parametros -> id_venta ) ) )
+            //modificamos el lod datos de la venta
+             if( !( $venta = VentasDAO::getByPK( $parametros -> id_venta ) ) )
             {
+                Logger::log( "Error : No se tiene registro de la venta {$parametros -> id_venta}.");
+                DAO::transRollback();
                 die('{"success": false, "reason": "Verifique que exista la venta ' . $parametros -> id_venta . '." }');
             }
-            
+                        
             $valor_mercancia_devuelta =  $detalle_venta -> getPrecio() * $parametros -> cantidad;
             $valor_mercancia_devuelta_procesada =  $detalle_venta -> getPrecioProcesada() * $parametros -> cantidad_procesada;
-            $venta->setSubtotal( $venta->getSubtotal() - ( $valor_mercancia_devuelta + $valor_mercancia_devuelta_procesada  ) );
-            $venta->setTotal( ($venta->getSubtotal() + $venta->getIva() ) * $venta->getDescuento() );
+            $venta -> setSubtotal( $venta -> getSubtotal() - ( $valor_mercancia_devuelta + $valor_mercancia_devuelta_procesada  ) );
+            $venta -> setTotal( $venta->getSubtotal() - ( ( $venta->getSubtotal() + $venta->getIva() ) * $venta -> getDescuento() ) );
+            
+            if( $venta -> getLiquidada() == 1 )
+            {
+                $venta -> setPagado( $venta -> getTotal() );
+            }
+            else
+            {
+                
+                if( $venta -> getPagado >= $venta -> getTotal ){                
+                    $venta -> setLiquidada("1");
+                }
+                
+            }
                                     
             //guardamos el detalle de la venta
             try
@@ -540,6 +566,29 @@ require_once("logger.php");
                 Logger::log( "Error : " . $e);
                 DAO::transRollback();
                 die( '{"success": false, "reason": "No se pudo guardar los detalle de la venta.." }' );       
+            }
+            
+            //modificamos el inventario de la sucursal
+            if( !( $detalle_inventario = DetalleInventarioDAO::getByPK( $parametros -> id_producto, $autorizacion -> getIdSucursal()) ) )
+            {
+                Logger::log( "Error : No se tiene registro del producto {$parametros -> id_producto} en la sucursal {$autorizacion -> id_sucursal}.");
+                DAO::transRollback();
+                die('{"success": false, "reason": "Verifique que el producto ' . $parametros -> id_producto . ' en la venta ' . $autorizacion -> getIdSucursal() . '." }');
+            }
+            
+            $detalle_inventario -> setExistencias( $detalle_inventario -> getExistencias() + $parametros -> cantidad );
+            $detalle_inventario -> setExistenciasProcesadas( $detalle_inventario -> getExistenciasProcesadas() + $parametros -> cantidad_procesada);
+            
+            //guardamos el detalle del inventario de la sucursal
+            try
+            {
+                DetalleInventarioDAO::save( $detalle_inventario );                     
+            }          
+            catch(Exception $e)
+            {
+                Logger::log( "Error : " . $e);
+                DAO::transRollback();
+                die( '{"success": false, "reason": "No se pudo guardar el detalle del inventario." }' );       
             }
             
         }
@@ -572,7 +621,8 @@ require_once("logger.php");
         $autorizacion->setFechaRespuesta( strftime( "%Y-%m-%d-%H-%M-%S", time() ) );
         $autorizacion->setEstado( $args['reply'] );    
 
-       
+        DAO::transBegin();
+        
         //guardamos el nuevo estado de la autorización
         try
         {
@@ -722,9 +772,7 @@ require_once("logger.php");
         catch(Exception $e)
         {
             die( '{"success": false, "reason": "Parametros invalidos." }' );
-        }
-        
-        DAO::transBegin();
+        }               
           
         switch( $parametros -> clave ){
         
@@ -865,7 +913,12 @@ require_once("logger.php");
                     die( '{"success": false, "reason": "Parametros invalidos." }' );
                 }
 
-                if(!is_numeric( $data -> cantidad ))
+                if(!is_numeric( $data -> cantidadDevuelta ))
+                {
+                    die( '{ "success" : false , "reason" : "No es una cantidad valida." }' );
+                }
+                
+                if(!is_numeric( $data -> cantidadProcesadaDevuelta ))
                 {
                     die( '{ "success" : false , "reason" : "No es una cantidad valida." }' );
                 }
@@ -875,8 +928,8 @@ require_once("logger.php");
                     'descripcion'=>'Autorización de devolución',
                     'id_venta'=>$data -> id_venta,
                     'id_producto'=>$data -> id_producto,
-                    'cantidad'=>$data -> cantidad,
-                    'cantidad_procesada'=>$data -> cantidad
+                    'cantidad'=>$data -> cantidadDevuelta,
+                    'cantidad_procesada'=>$data -> cantidadProcesadaDevuelta
                 ));
 
                 solicitudDeAutorizacion( $descripcion, "solicitudDeDevolucion" );

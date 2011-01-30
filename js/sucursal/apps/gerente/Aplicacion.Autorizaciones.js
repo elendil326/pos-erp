@@ -575,41 +575,7 @@ Aplicacion.Autorizaciones.prototype.solicitudAutorizacionDevolucion = function( 
     }); 
 }
 
-//valida los datos del formulario de solicitarMermaCompraPanel
-Aplicacion.Autorizaciones.prototype.solicitarDevolucionVentaPanelValidator = function()
-{
-    values = Aplicacion.Autorizaciones.currentInstance.solicitarDevolucionVentaPanel.getValues();
 
-    //verificamos que el id_compra sea un numero entero
-    /*if( !( values.cantidad && /^\d+$/.test(values.cantidad + '') ) ){
-
-        Ext.Anim.run(Ext.getCmp( 'Autorizacion-DevolucionVentaPanel-cantidad' ), 
-            'fade', {duration: 250,
-            out: true,
-            autoClear: true
-        });
-
-        return;
-    }
-
-    if( values.cantidadOriginal < values.cantidad ){
-
-        Ext.Anim.run(Ext.getCmp( 'Autorizacion-DevolucionVentaPanel-cantidad' ), 
-            'fade', {duration: 250,
-            out: true,
-            autoClear: true
-        });
-
-        return;
-    }*/
-
-if(DEBUG){console.log("enviadno solicitud",values);}
-
-    //ya que se esta seguro de que la informacion es correcta se envia la informacion
-    Aplicacion.Autorizaciones.currentInstance.solicitudAutorizacionDevolucion( values );
-
-
-};
 
 //construye un panel emergente donde el gerente indicaria la cantidad de merma de cierto producto
 Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_venta, id_producto, cantidad, cantidad_procesada )
@@ -621,6 +587,7 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_vent
             xtype: 'fieldset',
             title: 'Reportar devolucion en venta',
             instructions: 'Ingrese la cantidad de Devolución.',
+            id : 'Autorizacion-DevolucionVentaPanel-Form',
             items: [
                 new Ext.form.Text({name:'id_venta', label: 'ID Venta', disabled: true, value : id_venta }),
                 new Ext.form.Text({name:'id_producto', label: 'ID Producto', disabled: true, value : id_producto }),
@@ -628,8 +595,9 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_vent
                 new Ext.form.Text({name:'cantidadProcesada', value : cantidad_procesada, disabled: true, label:'Cantidad procesada'}),
                 new Ext.form.Text({
                     id:'Autorizacion-DevolucionVentaPanel-cantidad',
-                    name:'cantidad', 
+                    name:'cantidadDevuelta', 
                     label: 'De origen a devolver',
+                    disabled : ( cantidad )? false : true ,
                     listeners : {
                         'focus' : function (){
                                 kconf = {
@@ -642,8 +610,9 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_vent
                     } }),
                 new Ext.form.Text({
                     id:'Autorizacion-DevolucionVentaPanel-cantidadProcesada',
-                    name:'cantidadProcesada', 
+                    name:'cantidadProcesadaDevuelta', 
                     label: 'Procesada a devolver',
+                    disabled : ( cantidad_procesada )? false : true ,
                     listeners : {
                         'focus' : function (){
                                 kconf = {
@@ -676,6 +645,51 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_vent
     this.panelSolicitudDevolucion.show('pop');
 
 };
+
+
+
+
+//valida los datos del formulario de solicitarDevolucionVentaPanel
+Aplicacion.Autorizaciones.prototype.solicitarDevolucionVentaPanelValidator = function()
+{
+
+    
+    var values = Aplicacion.Autorizaciones.currentInstance.solicitarDevolucionVentaPanel.getValues();
+
+    // isNaN si es un numero devuelve falso
+
+    if( !Ext.getCmp('Autorizacion-DevolucionVentaPanel-cantidad').isDisabled() ){
+        if( isNaN( parseFloat( values.cantidadDevuelta) ) || parseFloat( values.cantidadDevuelta) < 0 ) {
+
+                Ext.Anim.run( Ext.getCmp('Autorizacion-DevolucionVentaPanel-cantidad'), 
+                    'fade', {duration: 250,
+                    out: true,
+                    autoClear: true
+                });
+                return;
+        }
+    }
+
+    if( !Ext.getCmp('Autorizacion-DevolucionVentaPanel-cantidadProcesada').isDisabled() ){
+        if( isNaN( parseFloat( values.cantidadProcesadaDevuelta ) ) || parseFloat( values.cantidadProcesadaDevuelta) < 0  ) {
+
+                Ext.Anim.run( Ext.getCmp('Autorizacion-DevolucionVentaPanel-cantidadProcesada'), 
+                    'fade', {duration: 250,
+                    out: true,
+                    autoClear: true
+                });
+                return;
+                
+        }
+    }
+
+    if(DEBUG){console.log("enviando solicitud de devolucion",values);}
+
+    //ya que se esta seguro de que la informacion es correcta se envia la informacion
+    Aplicacion.Autorizaciones.currentInstance.solicitudAutorizacionDevolucion( values );
+
+};
+
 
 
 //construye una lista con el detalle de una venta
@@ -1050,7 +1064,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionFormPanel = null;
 Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( autorizacion ){
 
     if(DEBUG){
-        console.log("Mostrando autorizacion : " , autorizacion);
+        console.log("Mostrando autorizacion : " , autorizacion.data.parametros);
     }
 
     //decodificar el json de parametros
@@ -1136,7 +1150,8 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                     value:autorizacion.data.id_autorizacion
                 }),new Ext.form.Text({label: 'ID Venta', value:parametros.id_venta }),
                 new Ext.form.Text({label: 'ID Producto', value:parametros.id_producto }),
-                new Ext.form.Text({label: 'Cantidad', value:parametros.cantidad })
+                new Ext.form.Text({label: 'Cantidad de origen', value:parametros.cantidad }),
+                new Ext.form.Text({label: 'Cantidad procesada', value:parametros.cantidad })
             );
             height = 425;
         break;
@@ -1271,7 +1286,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
         }],
         items: [{
                 xtype: 'fieldset',
-                title: (!parametros.descripcion)?"(" + estado +")" : parametros.descripcion + ".  ( " + estado + ")",
+                title: (!parametros.descripcion)?"(" + estado +")" : parametros.descripcion + ".  (" + estado + ")",
                 instructions: (instrucciones != null)?instrucciones:"",
                 items:  itemsForm 
             }
