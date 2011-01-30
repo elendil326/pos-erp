@@ -17,6 +17,11 @@
 			<A href="logs.php?action=ver">logs</A>
 			</LI>
 	
+	
+			<LI class="drop">
+			<A href="usuarios.php?action=lista">usuarios</A>
+			</LI>	
+	
 			<LI class="drop">
 			<A href="equipos.php?action=lista">equipos</A>
 				<!-- <UL  class="nav sub" >

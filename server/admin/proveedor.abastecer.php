@@ -331,8 +331,8 @@ require_once('model/sucursal.dao.php');
 
 
 		<!-- -------------------------------
-				DETALLES DEL PRODUCTO Y DETALLES DEL FLETE
-		  ------------------------------- -->
+		DETALLES DEL PRODUCTO Y DETALLES DEL FLETE
+		------------------------------- -->
 <div id="chooseProds" style='display: none'>
 
 	<h2>Detalles del embarque</h2>
@@ -343,7 +343,7 @@ require_once('model/sucursal.dao.php');
 		<tr><td>Remision</td>			<td><input type='text' id='detalles-folio' class="wrong"></td>
 			<td>Nombre del chofer</td>	<td><input type='text' id='detalles-chofer' ></td></tr>
 		
-		<tr><td>Fecha de origen</td>	<td><input type='text' id='detalles-fecha-origen'  value="" placeholder="dd/mm/aa"></td>
+		<tr><td>Fecha de origen</td>	<td><input type='text' id='detalles-fecha-origen'  class="wrong" value="" placeholder="dd/mm/aa"></td>
 			<td>Placas</td>				<td><input type='text' id='detalles-placas' ></td></tr>
 			
 		<tr><td>Total arpillas</td>		<td><input type='text' id='detalles-total-arpillas' value="0.0" disabled>

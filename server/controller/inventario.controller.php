@@ -342,9 +342,9 @@ function nuevoProducto($data)
 		die('{ "success" : false, "reason" : "La descripcion del producto debe ser mayor a 2 caracteres." }');	
     }
     
-    if(  strlen($jsonData->descripcion) > 13){
+    if(  strlen($jsonData->descripcion) > 15){
         Logger::log("Error : La descripcion del producto debe ser menor a 13 caracteres");
-		die('{ "success" : false, "reason" : "La descripcion del producto debe ser menor a 13 caracteres." }');	
+		die('{ "success" : false, "reason" : "La descripcion del producto debe ser menor a 15 caracteres." }');	
     }
 
     $inventario = new Inventario();
@@ -359,6 +359,7 @@ function nuevoProducto($data)
         InventarioDAO::save( $inventario );
     }catch(Exception $e){
 	    DAO::transRollback();
+		Logger::log("Imposible crear nuevo producto:" . $e);
         return array( "success" => false, "reason" => $e );
         
     }
@@ -367,16 +368,20 @@ function nuevoProducto($data)
     //insertar actualizacion de precio
     $actualizacion = new ActualizacionDePrecio();
 
-    $actualizacion->setIdProducto 			( $inventario->getIdProducto() );
-    $actualizacion->setIdUsuario 			( $_SESSION['userid'] );
-    $actualizacion->setPrecioIntersucursal 	( $jsonData->precio_intersucursal );
-    $actualizacion->setPrecioVenta 			( $jsonData->precio_venta );
+    $actualizacion->setIdProducto 			 ( $inventario->getIdProducto() );
+    $actualizacion->setIdUsuario 			 ( $_SESSION['userid'] );
+    $actualizacion->setPrecioIntersucursal 	 ( $jsonData->precio_intersucursal );
+    $actualizacion->setPrecioVenta 			 ( $jsonData->precio_venta );
 
-
+	//nuevo campos
+	$actualizacion->setPrecioVentaSinProcesar( $jsonData->precio_intersucursal );
+	$actualizacion->setPrecioIntersucursalSinProcesar( $jsonData->precio_intersucursal );
+	
     try{
         ActualizacionDePrecioDAO::save( $actualizacion );
     }catch(Exception $e){
         DAO::transRollback();
+		Logger::log("Imposible crear nuevo producto:" . $e);
         return array( "success" => false, "reason" => $e );
     }
 

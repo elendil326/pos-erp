@@ -17,12 +17,23 @@
 <h2>Ultimas 100 lineas del log</h2>
 <?php
 
-$lines =  Logger::read() ;
+$lines =  Logger::read();
+
 echo "<pre style='overflow: hidden; padding: 5px; width: 100%; background: whiteSmoke; margin-bottom:5px; font-size:9.5px;'>";
 
 for($a = sizeof($lines) - 1; $a >= 0 ; $a-- ){
-    
-	echo $lines[$a] . "\n" ;
+    $linea = explode(  "|", $lines[$a] );
+
+	if( sizeof($linea) > 1 ){
+		$ip = $linea[1];
+		$octetos = explode(".", $ip);
+		
+		echo "<div style='color: white; background-color: rgb( " . $octetos[1] . " , " . $octetos[2] . " , " . $octetos[3] . ")'>" . $lines[$a] . "\n</div>" ;		
+				
+	}else{
+		
+		echo "<div>" . $lines[$a] . "\n</div>" ;		
+	}
 }
 echo "</pre>";
 

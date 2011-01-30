@@ -57,7 +57,7 @@ echo "<table border=0 style='width: 100%; font-size: 14px;'>";
 		}
 		
 		echo "<td ><a href='inventario.php?action=detalle&id=". $productos[$a]->getIdProducto() ."'>" . $productos[$a]->getDescripcion() . "</a><br>";
-		echo "<b>" . $totals ."</b>" .$productos[$a]->getEscala() . "s<br/>";
+		echo "<b>" . number_format( $totals , 2) ."</b>" .$productos[$a]->getEscala() . "s<br/>";
 		echo "" . moneyFormat($lastOne->getPrecioVenta()) ;
 		echo "</td>";
 	}
@@ -81,8 +81,10 @@ echo "</table>";
 
 function toUnit( $e )
 {
-	return "<b>" . $e . "</b>kg";
+	return "<b>" . number_format($e, 2) . "</b>kg";
 }
+
+
 function toDateS( $d ){
 	$foo = toDate($d);
 	$bar = explode(" ", $foo);

@@ -63,11 +63,11 @@
             <p>
             Este punto de venta es una solución de analítica web para empresas que proporciona información
             muy valiosa sobre el tráfico del sitio web y la eficacia del plan de marketing. 
-            Desde su ultima visita :
+            <!-- Desde su ultima visita :
                 <ul>
                     <li>Se realizaron <i>344</i> ventas.</li>
                     <li>Se ha solicituado su autorizacion para <i>4</i> operaciones.</li>
-                </ul>
+                </ul> -->
             </p>
         </td>
         </tr>

@@ -80,7 +80,9 @@ function nuevaCompraProveedor( $data = null ){
 	
 	 //calculamos el peso real por arpilla
     $peso_real_por_arpilla = $data->embarque->peso_por_arpilla - $data->embarque->merma_por_arpilla;
-    $otro_peso_real_por_arpilla = ( $data->embarque->peso_recibido - ( $data->embarque->total_arpillas * $data->embarque->merma_por_arpilla ) / $data->embarque->total_arpillas );
+    $otro_peso_real_por_arpilla = ( ($data->embarque->peso_recibido - ( $data->embarque->total_arpillas * $data->embarque->merma_por_arpilla )) / $data->embarque->total_arpillas );
+	
+	Logger::log( "Insertando peso real por arpilla:" . $peso_real_por_arpilla . ", otro peso real por arpilla: " . $otro_peso_real_por_arpilla  );
 	
 	if( $otro_peso_real_por_arpilla <= 0 ){
 	     Logger::log("Error : verifique el valor de la merma por arpilla : " . $data->embarque->merma_por_arpilla . " ya que");
@@ -598,30 +600,36 @@ function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = 
 		
 	foreach( $data as $producto ){
 
-		$existencias = $producto -> arpillas * $peso_por_arpilla;
-	
+		$existencias = $producto->arpillas * $peso_por_arpilla;
+		
+		Logger::log("Insertando " . $existencias . "(" .  $producto->arpillas . " * " . $peso_por_arpilla .  ") al producto " . $producto->id_producto );
+		
 		$inventario_maestro = new InventarioMaestro();
 		
 		//var_dump($producto -> sitio_descarga);
 		
-		$inventario_maestro -> setIdProducto( $producto->id_producto );
-		$inventario_maestro -> setIdCompraProveedor( $id_compra_proveedor );
-		$inventario_maestro -> setExistencias( $existencias );
-		$inventario_maestro -> setExistenciasProcesadas( 0 );		
-		$inventario_maestro -> setSitioDescarga( $producto -> sitio_descarga );		
+		$inventario_maestro -> setIdProducto		( $producto->id_producto );
+		$inventario_maestro -> setIdCompraProveedor	( $id_compra_proveedor );
+		$inventario_maestro -> setExistencias		( $existencias );
+		$inventario_maestro -> setExistenciasProcesadas( 0 );
+		$inventario_maestro -> setSitioDescarga		( $producto->sitio_descarga );
 		
 		try{
 			InventarioMaestroDAO::save( $inventario_maestro );
+			
 		}catch(Exception $e){
-			Logger::log("Error interno : al modificar las existencias del producto " . $producto->id_producto . " en el inventario maestro.");
-			DAO::transRollback();	
-			die('{"success": false , "reason": "Error interno : al modificar las existencias del producto ' . $producto->id_producto . ' en el inventario maestro." }');		
+			Logger::log("Imposible modificar las existencias del producto " . $producto->id_producto . " en el inventario maestro: " . $e, 2);
+			DAO::transRollback();
+			die('{"success": false , "reason": "Imposible insertar producto en inventario maestro. Por favor intente de nuevO." }');
+			
 		}
-	
+
+
 	}
 	
 	DAO::transEnd();
 	
+
 	Logger::log("Proceso de alta a inventario maestro finalizado con exito!");
 	
 	printf('{"success": true}');

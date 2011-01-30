@@ -14,7 +14,7 @@ $header = array(
 	
 $tabla = new Tabla( $header, $data );
 $tabla->addOnClick("id_proveedor", "mostrarDetallesProveedor");
-$tabla->addNoData("No hay sucursales.");
+$tabla->addNoData("No hay proveedores.");
 
 
 ?>

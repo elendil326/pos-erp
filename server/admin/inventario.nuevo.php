@@ -46,8 +46,8 @@
 	        return jQuery("#ajax_failure").html("La descripcion debe ser cuando menos de de 3 caracteres.").show();
         }
         
-        if(jQuery('#descripcion').val().length > 13 ){
-	        return jQuery("#ajax_failure").html("La descripcion debe ser menor a 13 caracteres, dado que no cabria en el ticket de venta.").show();
+        if(jQuery('#descripcion').val().length > 15 ){
+	        return jQuery("#ajax_failure").html("La descripcion debe ser menor a 15 caracteres, dado que no cabria en el ticket de venta.").show();
         }
 
         if(jQuery('#precioVenta').val().length ==  0 ){
