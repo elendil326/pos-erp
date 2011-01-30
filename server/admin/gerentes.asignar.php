@@ -21,11 +21,18 @@ $sucursales = SucursalDAO::search($s);
 //listar todos los gerentes
 $gerentes = listarGerentes();
 
+
+
 //crear la tabla
-?><table style="width: 100%"><tr style="text-align: left;"><th>ID Sucursal</th><th>Descripcion</th><th>Gerente</th></tr><?php
+?><table style="width: 100%;  "><tr style="text-align: left;"><th>ID Sucursal</th><th>Descripcion</th><th>Gerente</th></tr><?php
 
 foreach ($sucursales as $sucursal)
 {
+	//omitir sucursal 0
+	if($sucursal->getIdSucursal() == 0){
+		continue;
+	}
+	
     echo "<tr>";
     echo "<td>" . $sucursal->getIdSucursal() . "</td>";
     echo "<td>" . $sucursal->getDescripcion() . "</td>";
@@ -126,10 +133,12 @@ echo "</table>";
 
 
 
+if(sizeof($sucursales) > 1){
+	?><h4><input type='button' value="Guardar cambios" onclick="guardarCambios()"></h4> <?php
+}
 
-?>
 
-<input type='button' value="Guardar cambios" onclick="guardarCambios()">
+
 
 
 
