@@ -20,7 +20,7 @@ function contestar(id, response){
 
     jQuery.ajaxSettings.traditional = true;
 
-    jQuery,ajax({
+    jQuery.ajax({
       url: "../proxy.php",
       data: { 
             action : 208, 

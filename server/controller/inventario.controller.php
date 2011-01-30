@@ -297,7 +297,9 @@ function detalleVentas( $id ){
             "id_producto" => $producto->getIdProducto(),
             "descripcion" => $productoData->getDescripcion(),
             "cantidad" => $producto->getCantidad(),
-            "precio" => $producto->getPrecio()
+            "precio" => $producto->getPrecio(),
+            "cantidad_procesada" => $producto->getCantidadProcesada(),
+            "precio_procesada" => $producto->getPrecioProcesada()
         ));
     }
     

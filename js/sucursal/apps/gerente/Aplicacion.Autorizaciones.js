@@ -153,7 +153,7 @@ Ext.getBody().mask('Enviando autorizacion de credito', 'x-mask-loading', true);
             Aplicacion.Autorizaciones.currentInstance.nueva.creditoModificarPanel.reset();
 
             //informamos lo que sucedio
-            if( r.success == "true" )
+            if( r.success == true )
             {
                 Ext.Msg.alert("Autorizacion","Se ha enviado su autorización"); 
             }
@@ -612,7 +612,7 @@ if(DEBUG){console.log("enviadno solicitud",values);}
 };
 
 //construye un panel emergente donde el gerente indicaria la cantidad de merma de cierto producto
-Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_venta, id_producto, cantidadOriginal )
+Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_venta, id_producto, cantidad, cantidad_procesada )
 {
    
     this.solicitarDevolucionVentaPanel = new Ext.form.FormPanel({
@@ -622,13 +622,14 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_vent
             title: 'Reportar devolucion en venta',
             instructions: 'Ingrese la cantidad de Devolución.',
             items: [
-                new Ext.form.Text({name:'id_venta', label: 'ID Venta', disabled: true, value:id_venta }),
-                new Ext.form.Text({name:'id_producto', label: 'ID Producto', disabled: true, value:id_producto }),
-                new Ext.form.Text({name:'cantidadOriginal', value:cantidadOriginal, disabled: true, label:'Cantidad comprada'}),
+                new Ext.form.Text({name:'id_venta', label: 'ID Venta', disabled: true, value : id_venta }),
+                new Ext.form.Text({name:'id_producto', label: 'ID Producto', disabled: true, value : id_producto }),
+                new Ext.form.Text({name:'cantidadOriginal', value : cantidad, disabled: true, label:'Cantidad  origen'}),
+                new Ext.form.Text({name:'cantidadProcesada', value : cantidad_procesada, disabled: true, label:'Cantidad procesada'}),
                 new Ext.form.Text({
                     id:'Autorizacion-DevolucionVentaPanel-cantidad',
                     name:'cantidad', 
-                    label: 'Cantidad a devolver',
+                    label: 'De origen a devolver',
                     listeners : {
                         'focus' : function (){
                                 kconf = {
@@ -638,7 +639,21 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_vent
                             };
                         POS.Keyboard.Keyboard( this, kconf );
                         }
-                    } })
+                    } }),
+                new Ext.form.Text({
+                    id:'Autorizacion-DevolucionVentaPanel-cantidadProcesada',
+                    name:'cantidadProcesada', 
+                    label: 'Procesada a devolver',
+                    listeners : {
+                        'focus' : function (){
+                                kconf = {
+                                type : 'num',
+                                submitText : 'Aceptar',
+                                callback : null
+                            };
+                        POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    } })     
             ]}, 
             new Ext.Button({ ui  : 'action', text: 'Enviar Solicitud', margin : 15,  handler : this.solicitarDevolucionVentaPanelValidator })
         ]
@@ -648,7 +663,7 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_vent
         floating:true,
         modal: false,
         centered:true,
-        height: 390,
+        height: 465,
         width: 680,
         scroll:'none',
         //styleHtmlContent:true,
@@ -709,6 +724,9 @@ Aplicacion.Autorizaciones.prototype.listaDetalleVenta = function( id_venta )
                 html += "       <td>descripcion</td>";  
                 html += "       <td>cantidad</td>";
                 html += "       <td>precio</td>";
+                html += "       <td>cantidad procesada</td>";
+                html += "       <td>precio procesada</td>";
+                html += "       <td>subtotal</td>";
                 html += "   </tr>";
                 
                 //Class es una palabra registrada !
@@ -718,20 +736,23 @@ Aplicacion.Autorizaciones.prototype.listaDetalleVenta = function( id_venta )
                 {
 
                     //class = ( i == r.datos.num_compras - 1 )? " 'last Autorizaciones-row' " : " 'Autorizaciones-row' ";
-
-                    html += "<tr class = 'Autorizaciones-row' onClick = ' Aplicacion.Autorizaciones.currentInstance.solicitarDevolucionVenta(" + r.datos.id_venta + "," + r.datos.ventas[ i ].id_producto + "," + r.datos.ventas[ i ].cantidad + ") ' >";
+                   
+                    html += "<tr class = 'Autorizaciones-row' onClick = ' Aplicacion.Autorizaciones.currentInstance.solicitarDevolucionVenta(" + r.datos.id_venta + "," + r.datos.ventas[ i ].id_producto + "," + r.datos.ventas[ i ].cantidad + "," + r.datos.ventas[ i ].cantidad_procesada + ") ' >";
 
                     html += "   <td>" + r.datos.id_venta + "</td>";
                     html += "   <td>" + r.datos.ventas[ i ].id_producto + "</td>";
                     html += "   <td>" + r.datos.ventas[ i ].descripcion + "</td>";
                     html += "   <td>" + r.datos.ventas[ i ].cantidad + "</td>";
                     html += "   <td>" + POS.currencyFormat( r.datos.ventas[ i ].precio ) + "</td>";
+                    html += "   <td>" + r.datos.ventas[ i ].cantidad_procesada + "</td>";
+                    html += "   <td>" + POS.currencyFormat( r.datos.ventas[ i ].precio_procesada ) + "</td>";
+                    html += "   <td>" + POS.currencyFormat( (  r.datos.ventas[ i ].cantidad * r.datos.ventas[ i ].precio  ) + (  r.datos.ventas[ i ].cantidad_procesada * r.datos.ventas[ i ].precio_procesada  ) ) + "</td>";
                     html += "</tr>";
 
                 }
 
                 html += "   <tr class = ' last Autorizaciones-row ' >";
-                html += "       <td colspan = '5'> Total: " + POS.currencyFormat( r.datos.total ) + "</td>";
+                html += "       <td colspan = '8'> Total: " + POS.currencyFormat( r.datos.total ) + "</td>";
                 html += "   </tr>";
                 html += "</table>";
 
@@ -1206,6 +1227,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                 html += "<tr  >";
                 html += "   <td>" + parametros.productos[i].id_producto + " " + parametros.productos[i].descripcion +  "</td>";
                 html += "   <td>" + parametros.productos[i].cantidad + " " + parametros.productos[i].escala + "s</td>";
+                html += "   <td>" + parametros.productos[i].cantidad + " " + parametros.productos[i].escala + "s</td>";
                 html += "</tr>";
             }
 
@@ -1286,6 +1308,21 @@ POS.Apps.push( new Aplicacion.Autorizaciones() );
 
 
 
+/**
+*    PENDIENTES
+*
+*   --Cuando se poide al autorizacion de devolucion de un producto, al seleccionar el producto a devolver, se debe
+*      de tomar en cuenta si fue un producto procesado o sin procesar
+*   
+*   -- que pasa cuandos e hace una solicitud de cambio de limite de credito
+*
+*   -- el gerente ya no puede hacer unas olicitud de producto?
+*
+*   -- el action 210 la respuesta de la autorizacion de surtir producto, pero cuando se geenra por vez primera essta autorizacion 
+*       no se ha modificado para que especifiqeu si es producto procesado o sin procesar
+*
+*   -- que podemos hacer con respecto a eliminar las soliocitud de autorizaciones
+*/
 
 
 

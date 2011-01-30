@@ -285,7 +285,9 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
    *************************************************************************** */
 
 
-
+/**
+*
+*/
 Aplicacion.Efectivo.prototype.nuevaOperacionInterSucursalEfectivo = function( data ){
 
     Ext.getBody().mask('Guardando nuevo prestamo de efectivo ...', 'x-mask-loading', true);
@@ -328,6 +330,9 @@ Aplicacion.Efectivo.prototype.nuevaOperacionInterSucursalEfectivo = function( da
 };
 
 
+/**
+*
+*/
 Aplicacion.Efectivo.prototype.nuevoPrestamoEfectivoValidator = function ()
 {
     //obtener los valores de la forma
@@ -469,7 +474,7 @@ Aplicacion.Efectivo.prototype.operacionInterSucursalEfectivoPanelCreator = funct
                 new Ext.Button({ ui  : 'action', text: 'Registrar Prestamo de Efectivo', margin : 5,  handler : this.nuevoPrestamoEfectivoValidator, disabled : false })
         ]});
 
-}
+};
 
 /*
 
