@@ -21,7 +21,10 @@
 
     $sucursales = SucursalDAO::byRange($foo, $bar);
 
-	
+	function toUnit( $e )
+	{
+		return "<b>" . number_format($e, 2) . "</b>kg";
+	}
 ?>
 
 
@@ -269,9 +272,9 @@ function confirmed()
 
 <h1>Surtir una sucursal</h1>
 
-<!-- -----------------------------------------------------------------------
+<!-- 
 		SELECCIONAR SUCURSAL
-  -------------------------------------------------------------------------- -->
+ -->
 <?php if(!isset($_REQUEST['sid'])) { ?>
 	<div id="select_sucursal">
     <h2>Seleccione la sucursal que desea surtir</h2>
@@ -309,6 +312,9 @@ function confirmed()
 
 //get sucursales
 $sucursales = listarSucursales();
+
+
+
 
 foreach( $sucursales as $sucursal ){
 	
@@ -388,6 +394,8 @@ foreach( $sucursales as $sucursal ){
 	
 	$tabla = new Tabla( $header, $iMaestro );
     $tabla->addOnClick( "id_producto", "agregarProducto", true);	
+	$tabla->addColRender("existencias", "toUnit");
+	$tabla->addColRender("existencias_procesadas", "toUnit");	
 	$tabla->render();
 
 
@@ -398,9 +406,9 @@ foreach( $sucursales as $sucursal ){
 
 
 
-<!-- -----------------------------------------------------------------------
+<!-- 
 		SELECCIONAR PRODUCTOS A SURTIR
-  -------------------------------------------------------------------------- -->
+   -->
 
 <div id="ASurtir" style="display: none;">
 <h2>Productos a surtir</h2>

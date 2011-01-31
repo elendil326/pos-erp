@@ -4,7 +4,10 @@ require_once("controller/inventario.controller.php");
 require_once("controller/sucursales.controller.php");
 require_once('model/actualizacion_de_precio.dao.php');
 
-
+function toUnit( $e )
+{
+	return "<b>" . number_format($e, 2) . "</b>kg";
+}
 
 
 ?> <h1>Inventario por sucursal</h1> <?php
@@ -18,21 +21,25 @@ require_once('model/actualizacion_de_precio.dao.php');
 	
 	    print ("<h2>" . $sucursal["descripcion"] . "</h2>");
 	
-	    $inventario = listarInventario( $sucursal["id_sucursal"] );
+		//obtener los clientes del controller de clientes
+		$inventario = listarInventario( $sucursal["id_sucursal"] );
 
-	    $header = array( 
-		    "productoID" => "ID",
-		    "descripcion"=> "Descripcion",
-		    "precioVenta"=> "Precio Venta",
-		    "existenciasMinimas"=> "Minimas",
-		    "existencias"=> "Existencias",
-		    "medida"=> "Tipo" );
-	
-	    $tabla = new Tabla( $header, $inventario );
-	    $tabla->addColRender( "precioVenta", "moneyFormat" ); 
-	    $tabla->addNoData( "<h3>Esta sucursal no tiene inventario.</h3>"); 
-        $tabla->addOnClick( "productoID", "detalles");
-	    $tabla->render();
+		//render the table
+		$header = array( 
+			"productoID" 		=> "ID",
+			"descripcion"		=> "Descripcion",
+			"precioVenta"		=> "Precio a la venta",
+			"existenciasOriginales"		=> "Originales",
+			"existenciasProcesadas"		=> "Procesadas" );
+
+
+
+		$tabla = new Tabla( $header, $inventario );
+		$tabla->addColRender( "precioVenta", "moneyFormat" ); 
+		$tabla->addColRender( "existenciasOriginales", "toUnit" ); 
+		$tabla->addColRender( "existenciasProcesadas", "toUnit" ); 		
+	    $tabla->addNoData("Esta sucursal no tiene nigun registro de productos en su inventario");
+		$tabla->render();
     }
 
 
