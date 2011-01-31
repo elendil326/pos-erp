@@ -151,27 +151,29 @@ function reload(){
 	});
 	
 	
-	
-    //enviar hash de autorizaciones
-	Ext.Ajax.request({
-		url: '../proxy.php',
-		scope : this,
-		params : { action : 207, hashCheck : Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.hash },
-		success: function(response, opts) {
-			try{ autorizaciones = Ext.util.JSON.decode( response.responseText ); }catch(e){ return; }
-			if( !autorizaciones.success ){ return ; }
-			
-			if(Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lista.length != autorizaciones.payload.length ){
-            	Ext.Msg.alert("Autorizaciones","Tiene autorizaciones nuevas por atender");				
-			}
+	if(POS.U.g){
+	    //enviar hash de autorizaciones
+		Ext.Ajax.request({
+			url: '../proxy.php',
+			scope : this,
+			params : { action : 207, hashCheck : Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.hash },
+			success: function(response, opts) {
+				try{ autorizaciones = Ext.util.JSON.decode( response.responseText ); }catch(e){ return; }
+				if( !autorizaciones.success ){ return ; }
 
-			
-			Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lista = autorizaciones.payload;
-			Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lastUpdate = Math.round(new Date().getTime()/1000.0);
-			Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.hash = autorizaciones.hash;
-			Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesStore.loadData( autorizaciones.payload );
-		}
-	});
+				if(Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lista.length != autorizaciones.payload.length ){
+	            	Ext.Msg.alert("Autorizaciones","Tiene autorizaciones nuevas por atender");				
+				}
+
+
+				Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lista = autorizaciones.payload;
+				Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lastUpdate = Math.round(new Date().getTime()/1000.0);
+				Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.hash = autorizaciones.hash;
+				Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesStore.loadData( autorizaciones.payload );
+			}
+		});		
+	}
+
 	
 }
 

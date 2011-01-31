@@ -6,6 +6,8 @@ require_once("controller/inventario.controller.php");
 
 $sucursales = listarSucursales();
 
+print ("<h1>Lista de sucursales</h1>");
+
 print ("<h2>Sucursales Activas</h2>");
 
 $data = array();
@@ -40,3 +42,11 @@ $tabla->render();
 		window.location = "sucursales.php?action=detalles&id=" + sid;
 	}
 </script>
+
+
+
+<?php
+
+	include( "admin/sucursales.abrir.php" );
+
+?>

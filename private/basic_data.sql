@@ -4,7 +4,8 @@ INSERT INTO `usuario` (`id_usuario`, `RFC`, `nombre`, `contrasena`, `id_sucursal
 INSERT INTO `grupos` (`id_grupo`, `nombre`, `descripcion`) VALUES
 (0, 'Ingeniero', 'Ingeniero'),
 (1, 'Administrador', 'Administrador'),
-(2, 'gerente', 'Gerente');
+(2, 'Gerente', 'Gerente'),
+(3, 'Cajero', 'Cajero');
 
 INSERT INTO `grupos_usuarios` (`id_grupo`, `id_usuario`) VALUES
 (0, 77);

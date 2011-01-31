@@ -69,11 +69,7 @@ Aplicacion.Clientes.prototype.getConfig = function (){
 	    text: 'Clientes',
 	    cls: 'launchscreen',
 		card: this.listaDeClientesPanel,
-	    items: [{
-	        text: 'Lista de Clientes',
-	        card: this.listaDeClientesPanel,
-	        leaf: true
-	    }]
+		leaf: true
 	};
 
 };
