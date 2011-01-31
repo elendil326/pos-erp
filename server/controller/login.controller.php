@@ -65,7 +65,8 @@ function login( $u, $p )
 
     $_SESSION['ip'] = getip();
     $_SESSION['pass'] = $p;
-    $_SESSION['ua'] = $_SERVER['HTTP_USER_AGENT'];
+	$_fua = $_SERVER['HTTP_USER_AGENT'];
+    $_SESSION['ua'] = $_fua;
 	$_SESSION['grupo']  =  $grpu->getIdGrupo();
 	$_SESSION['userid'] =  $user->getIdUsuario();
 
