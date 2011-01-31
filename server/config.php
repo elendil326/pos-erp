@@ -57,7 +57,7 @@ date_default_timezone_set("America/Mexico_City");
 
 define('DB_USER',       'pos');
 define('DB_PASSWORD',   'pos');
-define('DB_NAME',       'pos7');
+define('DB_NAME',       'pos');
 define('DB_DRIVER',     'mysqlt');
 define('DB_HOST',       'localhost');
 define('DB_DEBUG',      false);

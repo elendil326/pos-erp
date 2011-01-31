@@ -440,7 +440,6 @@ require_once("logger.php");
         if( !$autorizacion = AutorizacionDAOBase::getByPK( $args['id_autorizacion'] ))
         {
             Logger::log( "Error, no se encontro la autorizacion {$args['id_autorizacion'] }." );
-            DAO::transRollback();
             die( '{"success": false, "reason": "No se pudo guardar la autorizacion 0." }' );   
         }
         
@@ -459,7 +458,7 @@ require_once("logger.php");
         {
             Logger::log( "Error : " . $e);
             DAO::transRollback();
-            die( '{"success": false, "reason": "No se pudo guardar la autorizacion 1." }' );       
+            die( '{"success": false, "reason": "No se pudo guardar la autorizacion." }' );       
         }
         
         //obtenemos los parametros de la autorizacion
@@ -471,7 +470,7 @@ require_once("logger.php");
         {
             Logger::log( "Error : " . $e);
             DAO::transRollback();
-            die( '{"success": false, "reason": "Parametros invalidos 1." }' );
+            die( '{"success": false, "reason": "Parametros invalidos." }' );
         }
 
         //modificamos el limite de credito del cliente en caso de que se haya autorizado
@@ -942,11 +941,12 @@ require_once("logger.php");
 
                 $descripcion = json_encode(array(
                     'clave'=>$args['action'],
-                    'descripcion'=>'Autorización de precios especiales',
-                    'id_cliente'=>$args['id_cliente']
+                    'descripcion'=>'Autorización de venta preferencial',
+                    'id_cliente'=>$args['id_cliente'],
+                    'nombre' => $args['nombre']
                 ));
 
-                solicitudDeAutorizacion( $descripcion, "solicitudDePreciosEspeciales" );
+                solicitudDeAutorizacion( $descripcion, "solicitudDeVentaPreferencial" );
 
             break;
 

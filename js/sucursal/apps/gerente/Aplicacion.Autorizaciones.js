@@ -50,8 +50,8 @@ Aplicacion.Autorizaciones.prototype.getConfig = function (){
 	        	card: Aplicacion.Autorizaciones.currentInstance.nueva.creditoPanel,
 	        	leaf: true
 		    },{
-		        text: 'Venta con descuento',
-	        	card: Aplicacion.Autorizaciones.currentInstance.nueva.ventaConDescuentoPanel,
+		        text: 'Venta Preferencial',
+	        	card: Aplicacion.Autorizaciones.currentInstance.nueva.ventaPreferencialPanel,
 	        	leaf: true
 		    }, /*{
 	        	text: 'Merma de producto',
@@ -97,9 +97,196 @@ Aplicacion.Autorizaciones.prototype.nueva.createPanels = function ()
 	this.creditoPanelCreator();
 	
 	this.mermaPanelCreator();
+	
+	this.ventaPreferencialPanelCreator();
+	
 };
 
 
+
+/* ********************************************************
+*    Venta preferencial
+******************************************************** */
+
+//panel de la venta preferencial
+Aplicacion.Autorizaciones.prototype.nueva.ventaPreferencialPanel = null;
+
+
+/**
+    *
+    *
+    */
+Aplicacion.Autorizaciones.prototype.nueva.ventaPreferencialPanelCreator = function()
+{
+
+
+
+
+
+
+    clientesPanel = {
+        xtype: 'fieldset',
+        title: 'Autorización de Venta Preferencial',
+        //autoRender: true,
+        instructions:'Seleccione un cliente de la lista.',
+        listeners:{
+            'show':function(){
+                //TODO: verificar que esto solo se haga una sola vez
+                if( !Aplicacion.Mostrador.currentInstance.buscarClienteForm.getComponent(0).getStore() )
+                {
+                    Aplicacion.Mostrador.currentInstance.buscarClienteForm.getComponent(0).bindStore(Aplicacion.Clientes.currentInstance.listaDeClientesStore);
+                }
+            }
+        },
+		centered: true,
+		items: [{
+			
+			width : '100%',
+			height: 345,
+			xtype: 'list',
+			store: Aplicacion.Clientes ? Aplicacion.Clientes.currentInstance.listaDeClientesStore : null ,
+			itemTpl: '<div class="listaDeClientesCliente"><strong>{nombre}</strong> {rfc}</div>',
+			grouped: true,
+			indexBar: true,
+			listeners : {
+				"selectionchange"  : function ( view, nodos, c ){				
+					
+					if(nodos.length > 0){
+						//Aplicacion.Mostrador.currentInstance.clienteSeleccionado( nodos[0].data );
+						//console.log(nodos[0].data)
+						Ext.getCmp('Autorizaciones-ventaPreferencial-cliente').setValue( nodos[0].data.nombre );
+						Ext.getCmp('Autorizaciones-ventaPreferencial-clienteID').setValue( nodos[0].data.id_cliente );
+						
+					}
+
+					//deseleccinar el cliente
+					view.deselectAll();
+				}
+			}
+			
+		}]
+        
+    
+    };
+    
+    this.ventaPreferencialPanel = new Ext.Panel({
+        title:'Autorización de Venta Preferencial',        
+        items:[
+            clientesPanel,
+            {
+                xtype: 'fieldset',
+                title: 'Nombre del Cliente',        
+                name:'nombre',
+                items:[ 
+                    new Ext.form.Text({ id: 'Autorizaciones-ventaPreferencial-cliente', label: 'Cliente' }),     
+                    new Ext.form.Hidden({ id: 'Autorizaciones-ventaPreferencial-clienteID', value : "" }) 
+                ]
+            },
+            {xtype: 'spacer'},
+            new Ext.Button({ id : 'Autorizaciones-ventaPreferencial-action', ui  : 'action', text: 'Solicitar Autorización',  handler : this.ventaPreferencialPanelValidator })
+        ]
+    });
+    
+};
+
+
+
+/**
+    *
+    *
+    */
+Aplicacion.Autorizaciones.prototype.nueva.ventaPreferencialPanelShow = function( cliente )
+{
+
+    //crear este panel on-demand ya que no sera muy utilizado
+    if( !this.ventaPreferencialPanel ){
+        this.ventaPreferencialPanelCreator();
+    }
+    
+    sink.Main.ui.setActiveItem( this.ventaPreferencialPanel, 'slide');
+
+};
+
+
+/**
+    *
+    *
+    */
+Aplicacion.Autorizaciones.prototype.nueva.ventaPreferencialPanelValidator = function(){
+
+    var cliente = { id_cliente : null, nombre : null };
+
+    cliente.id_cliente = Ext.getCmp('Autorizaciones-ventaPreferencial-clienteID').getValue();
+    
+    cliente.nombre = Ext.getCmp('Autorizaciones-ventaPreferencial-cliente').getValue();
+
+    if( cliente.id_cliente== "" )
+    {
+        Ext.Anim.run(Ext.getCmp( 'Autorizaciones-ventaPreferencial-cliente' ), 
+            'fade', {duration: 250,
+            out: true,
+            autoClear: true
+        });        
+        
+        return;
+    }
+
+
+    Aplicacion.Autorizaciones.currentInstance.nueva.autorizacionVentaPreferencial( cliente );
+
+};
+
+
+
+/**
+    *
+    *
+    */
+Aplicacion.Autorizaciones.prototype.nueva.autorizacionVentaPreferencial = function ( cliente ){
+
+    Ext.getBody().mask('Enviando autorizacion de venta preferencial', 'x-mask-loading', true);
+    
+	if(DEBUG){
+		console.log("Enviando autorizacion de venta preferencial");
+	}
+	
+    Ext.Ajax.request({
+        url: '../proxy.php',
+        scope : this,
+        params : {
+            action : 204,
+            id_cliente : cliente.id_cliente,
+            nombre : cliente.nombre
+        },
+        success: function(response, opts) {
+            try{
+                r = Ext.util.JSON.decode( response.responseText );
+            }catch(e){
+                return POS.error(response, e);
+            }
+
+            Ext.getBody().unmask(); 
+
+            
+            //informamos lo que sucedio
+            if( r.success == true )
+            {
+                Ext.Msg.alert("Autorizacion","Se ha enviado su autorización"); 
+                sink.Main.ui.setActiveItem( Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel , 'fade');
+            
+            }
+            else
+            {
+                Ext.Msg.alert("Autorizacion","Error: " + r.success); 
+            }
+
+        },
+        failure: function( response ){
+            POS.error( response );
+        }
+    }); 
+
+};
 
 
 /* ********************************************************
@@ -128,10 +315,12 @@ Aplicacion.Autorizaciones.prototype.nueva.creditoModificarPanelShow = function( 
 
 Aplicacion.Autorizaciones.prototype.nueva.nuevoCreditoModificar = function( data ){
 
-Ext.getBody().mask('Enviando autorizacion de credito', 'x-mask-loading', true);
+    Ext.getBody().mask('Enviando autorizacion de credito', 'x-mask-loading', true);
+    
 	if(DEBUG){
 		console.log("Enviando autorizacion de credito extendido", data);
 	}
+	
     Ext.Ajax.request({
         url: '../proxy.php',
         scope : this,
@@ -168,7 +357,7 @@ Ext.getBody().mask('Enviando autorizacion de credito', 'x-mask-loading', true);
         }
     }); 
 
-}
+};
 
 
 Aplicacion.Autorizaciones.prototype.nueva.nuevoCreditoModificarValidator = function(){
@@ -188,7 +377,7 @@ Aplicacion.Autorizaciones.prototype.nueva.nuevoCreditoModificarValidator = funct
 
     Aplicacion.Autorizaciones.currentInstance.nueva.nuevoCreditoModificar( values );
 
-}
+};
 
 
 Aplicacion.Autorizaciones.prototype.nueva.creditoModificarPanelCreator = function()
@@ -1064,11 +1253,15 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionFormPanel = null;
 Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( autorizacion ){
 
     if(DEBUG){
-        console.log("Mostrando autorizacion : " , autorizacion.data.parametros);
+        console.log("Mostrando autorizacion : " , autorizacion);
     }
 
     //decodificar el json de parametros
     var parametros = Ext.util.JSON.decode( autorizacion.get('parametros') );
+    
+    console.log("------------------------------------");
+    console.log(parametros);
+    console.log("------------------------------------");
     
     //estado de la autorizacion
     var estado = autorizacion.data.estado;
@@ -1101,14 +1294,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
     
     }
     
-    instrucciones = null;
-    
-    console.log("////////////////PARAMETROSwwwwwwwwwwwwwwwwww");
-        console.log(parametros);
-    console.log("/////////////////wwwwwwwwwwwwwwwwwwwwwwww");
-    console.log("/////////////////wwwwwwwwwwwwwwwwwwwwwwww");
-        console.log(parametros);
-    console.log("/////////////////wwwwwwwwwwwwwwwwwwwwwwww");
+    instrucciones = null;   
     
     //almacenara los items del formulario
     var itemsForm = [
@@ -1156,14 +1342,15 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
             height = 425;
         break;
 
-        case '204'://solicitud de autorizacion de cambio de precio (gerente)
+        case '204'://solicitud de venta preferencial (gerente)
             itemsForm.push(
                 new Ext.form.Text({
                     label:'ID Autorización',
                     name:'id_autorizacion',
                     value:autorizacion.data.id_autorizacion
-                }),new Ext.form.Text({label: 'ID Producto', value : parametros.id_producto }),
-                new Ext.form.Text({label: 'Precio', value : parametros.precio })
+                }),
+                new Ext.form.Text({label: 'ID Cliente', value : parametros.id_cliente }),
+                new Ext.form.Text({label: 'Nombre', value : parametros.nombre })
             );
             height = 360;
         break;
@@ -1337,6 +1524,8 @@ POS.Apps.push( new Aplicacion.Autorizaciones() );
 *       no se ha modificado para que especifiqeu si es producto procesado o sin procesar
 *
 *   -- que podemos hacer con respecto a eliminar las soliocitud de autorizaciones
+*
+*   --. se pueden cancelar las autorizaciones?
 */
 
 
