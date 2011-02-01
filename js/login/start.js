@@ -165,7 +165,7 @@ function createLoginForm( sucursal ){
                 {
                     xtype: 'textfield',
                     id : 'uid',
-                    label: 'Identifiacion',
+                    label: 'Identifiaci&oacute;n',
                     useClearIcon: true,
                     autoCapitalize : false,
 					listeners : {
