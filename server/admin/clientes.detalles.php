@@ -211,6 +211,7 @@ if($activo){
 	$tabla->addColRender( "subtotal", "moneyFormat" ); 
 	$tabla->addColRender( "total", "moneyFormat" ); 
 	$tabla->addColRender( "descuento", "percentFormat" );
+	$tabla->addColRender( "fecha", "toDate" );	
 	$tabla->addNoData("Este cliente no tiene ventas a contado.");
 	$tabla->addOnClick("id_venta", "mostrarDetallesVenta");
 	
@@ -263,6 +264,7 @@ if($activo){
 	$tabla->addColRender( "total", "moneyFormat" ); 
 	$tabla->addColRender( "pagado", "moneyFormat" ); 
 	$tabla->addColRender( "id_venta", "buscarFolio" ); 
+	$tabla->addColRender( "fecha", "toDate" );		
 	$tabla->addColRender( "descuento", "percentFormat" );
 
 	$tabla->addOnClick("id_venta", "mostrarDetallesVenta");
@@ -293,19 +295,19 @@ if($activo){
 		"fecha" => "Fecha", 
 		"sucursal" => "Sucursal",
 		"cajero" => "Cajero",
-		"subtotal" => "Subtotal",
-		"descuento" => "Descuento",
+//		"subtotal" => "Subtotal",
+//		"descuento" => "Descuento",
 		"total" => "Total",
 		"pagado" => "Pagado",
 		"saldo" => "Saldo");
 	
 	$tabla = new Tabla( $header, $ventasCredito );
-	$tabla->addColRender( "subtotal", "moneyFormat" ); 
+//	$tabla->addColRender( "subtotal", "moneyFormat" ); 
 	$tabla->addColRender( "saldo", "checkSaldoNum" ); 
 	$tabla->addColRender( "total", "moneyFormat" ); 
 	$tabla->addColRender( "pagado", "moneyFormat" ); 
-	$tabla->addColRender( "descuento", "percentFormat" );
-
+//	$tabla->addColRender( "descuento", "percentFormat" );
+	$tabla->addColRender( "fecha", "toDate" );	
 	$tabla->addOnClick("id_venta", "mostrarDetallesVenta");
 	$tabla->addNoData("Este cliente no tiene ventas a credito.");
 

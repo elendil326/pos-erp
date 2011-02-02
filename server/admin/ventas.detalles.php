@@ -13,7 +13,7 @@ $venta = $detalles['detalles'];
 ?><h2>Detalles</h2>
 
 
-<table>
+<table cellspacing="5" cellpadding="5">
     <tr>
         <td><b>ID Venta</b></td>
         <td><?php echo $venta->getIdVenta(); ?></td>
@@ -198,11 +198,13 @@ if($venta->getTipoVenta() == 'credito'){
 
 
 <div id="abonar">
+<h2>Abonar a esta venta</h2>
 <h4><input type="button" value="Abonar a esta venta" onClick="abonar()" ></h4>
 </div>
 
 
 <div id="abonar_detalles" style="display:none;">
+	<h2>Detalles del abono</h2>
     <table>
         <tr>
             <td>Cantidad </td>
@@ -217,9 +219,9 @@ if($venta->getTipoVenta() == 'credito'){
             </td>
         </tr>
         <tr>
-            <td>
-                <input type="button" value="Cancelar" onClick="cancelar()" >
-                <input type="button" value="Abonar" onClick="doAbonar()" >
+            <td colspan=2>
+                <h4><input type="button" value="Cancelar" onClick="cancelar()" >
+                <input type="button" value="Abonar" onClick="doAbonar()" ></h4> 
             </td>
         </tr>
     </table>
