@@ -319,7 +319,7 @@ function editarSucursal($sid, $payloadJSON, $verbose = true ){
         SucursalDAO::save($suc);
     }catch(Exception $e){
         if($verbose){
-            echo '{ "success" : false, "reason" : "'.$e.'" }';
+            echo '{ "success" : false, "reason" : "Error al editar la sucursal. Intente de nuevo." }';
         }
         Logger::log("error al editar sucursal " . $e);
         return false;

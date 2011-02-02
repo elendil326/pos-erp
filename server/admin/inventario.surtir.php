@@ -420,10 +420,10 @@ foreach( $sucursales as $sucursal ){
     <tr id="ASurtirTablaHeader">
     	<th>Folio</th>
     	<th>Producto</th>
-    	<th>Cantidad</th>
+    	<th>Cantidad KG</th>
     	<th>Procesada</th>
     	<th>Precio unitario</th>
-    	<th>Descuento</th>
+    	<th>Descuento KG</th>
     	<th>Importe</th>
     </tr>
     

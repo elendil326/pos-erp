@@ -7,7 +7,7 @@ require_once('controller/login.controller.php');
 if(isset($_REQUEST['action'])){
 	Logger::log("Admin ha solicitado " . $_SERVER["PHP_SELF"] . " modulo " . $_REQUEST['action']);	
 }else{
-	Logger::log("Admin ha solicitado " . $_SERVER["PHP_SELF"]);	
+	Logger::log("Admin ha solicitado " . $_SERVER["PHP_SELF"] .  " sin modulo !");	
 }
 
 

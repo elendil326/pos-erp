@@ -339,8 +339,8 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelCreator = function()
 				new Ext.form.Text({ name: 'productoID', label: 'ID del producto' }),
 				new Ext.form.Text({ name: 'descripcion', label: 'Descripcion' }),
 				new Ext.form.Text({ name: 'precioVenta', label: 'Precio sugerido' }),
-				new Ext.form.Text({ name : 'existenciasOriginales', label: 'Existencias' }),
-				new Ext.form.Text({ name : 'existenciasProcesadas', label: 'Existencias Procesadas' }),
+				new Ext.form.Text({ name : 'existenciasOriginales', label: 'Existencias originales' }),
+				new Ext.form.Text({ name : 'existenciasProcesadas', label: 'Existencias procesadas' }),
 	//			new Ext.form.Text({ name : 'existenciasMinimas', label: 'Existencias Minimas' })
 			]}
 	]});

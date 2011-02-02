@@ -5,6 +5,7 @@ require_once('model/autorizacion.dao.php');
 require_once('model/usuario.dao.php');
 require_once('model/sucursal.dao.php');
 require_once('model/inventario.dao.php');
+require_once('model/cliente.dao.php');
 
 $autorizacion = AutorizacionDAO::getByPK( $_REQUEST['id'] );
 $autorizacionDetalles = json_decode( $autorizacion->getParametros() );
@@ -35,7 +36,7 @@ function contestar(id, response){
                     return jQuery("#ajax_failure").html(response.reason).show();
             }
             reason = "Autorizacion respondida.";
-            window.location = "autorizaciones.php?action=pendientes&success=true&reason=";
+            window.location = "autorizaciones.php?action=historial&success=true&reason=" + reason;
       }
     });
 }
@@ -91,9 +92,22 @@ switch( $autorizacionDetalles->clave ){
         ?>
             <h2>Solicitud de limite de credito</h2>
             <table>
-                <tr><td>Cliente</td><td><?php echo $autorizacionDetalles->id_cliente; ?></td></tr>
-                <tr><td>Cantidad</td><td><?php echo $autorizacionDetalles->cantidad; ?></td></tr>
-                <tr><td></td><td><input type=button value="Autorizar" onClick="contestar(<?php echo $_REQUEST['id'] ?>, true)"><input onClick="contestar(<?php echo $_REQUEST['id'] ?>, false)" type=button value="Rechazar"></td></tr>
+                <tr><td>Cliente</td><td><?php 
+						$foo = ClienteDAO::getByPK($autorizacionDetalles->id_cliente); 
+						echo $foo->getNombre(); //$autorizacionDetalles->id_cliente; 
+					?></td></tr>
+                <tr><td>Cantidad</td><td><?php echo moneyFormat( $autorizacionDetalles->cantidad ); ?></td></tr>
+                <tr><td></td><td>
+						<?php
+						if($autorizacion->getEstado() == "0" ){
+							?>
+							<h4><input type=button value="Autorizar" onClick="contestar(<?php echo $_REQUEST['id'] ?>, true)">
+							<input onClick="contestar(<?php echo $_REQUEST['id'] ?>, false)" type=button value="Rechazar"></h4>							
+							<?php
+						}
+
+						?>
+					</td></tr>
             </table>
         <?php
     break;

@@ -209,8 +209,8 @@
                 }
 
 
-                reason = "El cargamento se ha registrado con exito";
-                window.location = 'inventario.php?action=maestro&success=true&reason=' + reason;
+                reason = "Venta exitosa";
+                window.location = 'clientes.php?action=lista&success=true&reason=' + reason;
 	      }
 	    });
 

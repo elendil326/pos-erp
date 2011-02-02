@@ -1171,7 +1171,7 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanelCreator = function
                     if(nodos.length > 0){
                         //if(DEBUG){console.log(nodos, c, view);}
                         Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionPanelShow( nodos[0] );
-                        console.error("bug ! cuando haces un tap el orden de nodos[0] no es el correcto");
+                        //console.error("bug ! cuando haces un tap el orden de nodos[0] no es el correcto");
                         //console.log(view.getSelectedRecords());
                     }
 
@@ -1259,6 +1259,13 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
 
     //decodificar el json de parametros
     var parametros = Ext.util.JSON.decode( autorizacion.get('parametros') );
+
+    if(DEBUG){
+	    console.log("------------------------------------");
+	    console.log(parametros);
+	    console.log("------------------------------------");	
+	}
+
     
     //estado de la autorizacion
     var estado = autorizacion.data.estado;

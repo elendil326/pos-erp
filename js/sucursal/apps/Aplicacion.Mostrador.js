@@ -1337,6 +1337,7 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelCreator = function (	 ){
 		items: [ dockedCancelar , { xtype: 'spacer' }, dockedNuevo, dockedVender ]
 	};
 	
+	/*
 	_html = '';
 	_html += '<div style=" position:relative; width:100%; float:left;color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:-7px; position:relative;float:left;">'; 
 	_html += '   Menu de Opciones'; 
@@ -1345,19 +1346,20 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelCreator = function (	 ){
 	_html += '<table style=" position:relative; width:100%; float:left;" >';
 	_html += '   <tr style=" height:75px;" >';
 	_html += '       <td>';
-	_html += '           <span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Contado" onClick="Aplicacion.Mostrador.currentInstance.iniciaVenta (\'contado\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Contado &nbsp; </span>';
+	_html += '           <span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Contado" onClick="Aplicacion.Mostrador.currentInstance.iniciaVenta (\'contado\')"  ><img src="../media/Money.png" style="position:absolute;left:2px; " />&nbsp; Contado &nbsp; </span>';
 	_html += '       </td>';
 	_html += '       <td>';
-	_html += '           <span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Credito" onClick="Aplicacion.Mostrador.currentInstance.iniciaVenta(\'credito\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Credito &nbsp; </span>';
+	_html += '           <span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Credito" onClick="Aplicacion.Mostrador.currentInstance.iniciaVenta(\'credito\')"  ><img src="../media/SpreadsheetEmpty128.png" style="position:absolute;left:2px;" />&nbsp; Credito &nbsp; </span>';
 	_html += '       </td>';
 	_html += '       <td>';
-	_html += '           <span  style=" position:relative; width:8Aplicacion.Mostrador.currentInstance.carrito.tipo_pago = 0%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Efectivo" onClick="Aplicacion.Mostrador.currentInstance.alerta(\'efectivo\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Efectivo &nbsp; </span>';
+	_html += '           <span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Efectivo" onClick="Aplicacion.Mostrador.currentInstance.alerta(\'efectivo\')"  ><img src="../media/Money.png" style="position:absolute;left:2px;" />&nbsp; Efectivo &nbsp; </span>';
 	_html += '       </td>';
 	_html += '       <td>';
-	_html += '           <span i style=" position:relative; width:80%; float:left; left:10%" d="Mostrador-doNuevaVenta-Menu-Cheque" onClick="Aplicacion.Mostrador.currentInstance.alerta(\'cheque\')" ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Cheque &nbsp; </span>';
+	_html += '           <span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Cheque" onClick="Aplicacion.Mostrador.currentInstance.alerta(\'cheque\')" ><img src="../media/CheckBook128.png" style="position:absolute;left:2px;" />&nbsp; Cheque &nbsp; </span>';
 	_html += '       </td>';
 	_html += '   </tr>';
 	_html+= '</table>';
+	*/
 	
 	this.doNuevaVentaPanel = new Ext.form.FormPanel({													   
 		dockedItems : dockedItems,
@@ -1370,32 +1372,32 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelCreator = function (	 ){
 		        marginBottom: '5px'
 		    },
 		    html:'<div style=" color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:-7px; position:relative;float:left;"> Menu de Opciones </div>',
-		    //html:'<div style=" position:relative; width:100%; float:left;color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:-7px; position:relative;float:left;">Menu de Opciones</div><table style=" position:relative; width:100%; float:left;" ><tr style=" height:75px;" ><td><span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Contado" onClick="Aplicacion.Mostrador.currentInstance.iniciaVenta (\'contado\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Contado &nbsp; </span></td><td><span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Credito" onClick="Aplicacion.Mostrador.currentInstance.iniciaVenta(\'credito\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Credito &nbsp; </span></td><td><span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Efectivo" onClick="Aplicacion.Mostrador.currentInstance.alerta(\'Efectivo\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Efectivo &nbsp; </span></td><td><span  style=" position:relative; width:80%; float:left; left:10%" d="Mostrador-doNuevaVenta-Menu-Cheque" onClick="Aplicacion.Mostrador.currentInstance.alerta(\'Cheque\')" ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Cheque &nbsp; </span></td></tr></table>',
+
 		    items:[
 		    
 		        {
 		            id:'Mostrador-doNuevaVenta-Menu-Contado',
                     width:200,
-                    height:75,
-		            html:'<span onClick="Aplicacion.Mostrador.currentInstance.setTipoVenta(\'contado\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Contado &nbsp; </span>'
+                    height:150,
+		            html:'<span   ><img onClick="Aplicacion.Mostrador.currentInstance.setTipoVenta(\'contado\')" src="../media/Money.png" style="position:absolute;left:2px;" />&nbsp; Contado &nbsp; </span>'
 		        },
 		        {
 		            id:'Mostrador-doNuevaVenta-Menu-Credito',
                     width:200,
-                    height:75,
-		            html:'<span onClick="Aplicacion.Mostrador.currentInstance.setTipoVenta(\'credito\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Credito &nbsp; </span>'
+                    height:150,
+		            html:'<span  ><img onClick="Aplicacion.Mostrador.currentInstance.setTipoVenta(\'credito\')" src="../media/SpreadsheetEmpty128.png" style="position:absolute;left:2px;" />&nbsp; Credito &nbsp; </span>'
 		        },
 		        {
 		            id:'Mostrador-doNuevaVenta-Menu-Efectivo',
                     width:200,
-                    height:75,
-		            html:'<span onClick="Aplicacion.Mostrador.currentInstance.setTipoPago(\'efectivo\')"  ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Efectivo &nbsp; </span>'
+                    height:150,
+		            html:'<span ><img onClick="Aplicacion.Mostrador.currentInstance.setTipoPago(\'efectivo\')" src="../media/Money.png" style="position:absolute;left:2px;" />&nbsp; Efectivo &nbsp; </span>'
 		        },
 		        {
 		            id:'Mostrador-doNuevaVenta-Menu-Cheque',
 		            width:200,
-                    height:75,
-		            html:'<span onClick="Aplicacion.Mostrador.currentInstance.setTipoPago(\'cheque\')" ><img src="" style="position:absolute;left:2px;height;2px;" />&nbsp; Cheque &nbsp; </span>'
+                    height:150,
+		            html:'<span ><img onClick="Aplicacion.Mostrador.currentInstance.setTipoPago(\'cheque\')" src="../media/CheckBook128.png" style="position:absolute;left:2px;" />&nbsp; Cheque &nbsp; </span>'
 		        }
 		    
 		    ]

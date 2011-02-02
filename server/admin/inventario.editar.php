@@ -20,10 +20,10 @@
             InventarioDAO::save($prod);
 
             echo "<div class='success'>Descripcion de producto actualizada correctamente.</div>";
-
+			Logger::log("Editando producto " . $_REQUEST['id']. ": OK" ); 
         }catch(Exception $e){
             DAO::transRollback();
-            echo "<div class='failure'>Error al actualizar: ". $e." </div>";
+            echo "<div class='failure'>Error al actualizar</div>";
         }
 
     }
