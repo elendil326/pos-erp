@@ -272,28 +272,29 @@ function cancelarVenta( $args ){
 if(isset($args['action'])){
 	switch( $args['action'] )
 	{
-	    case '800':
+	    case 800:
 	        insertarFactura( $args );
 	    break;
 
-	    case '801':
+	    case 801:
 	        eliminarFactura( $args );
 	    break;
 	    
-	    case '802':
+	    case 802:
 	        printf( '{ "succes" : true, "datos": [%s] }',  json_encode( listarVentas( $_SESSION['sucursal'] ) ));
 	    break;
 	    
-	    case '803':
+	    case 803:
 	        
 	        $detalle_venta = listarUltimaVentaSucursal($_SESSION['sucursal'] );
 	    
 	         printf( '{ "success" : true, "detalle_venta": %s, "id_venta": %s, "cliente": %s }',  json_encode( $detalle_venta -> detalle_venta ), $detalle_venta -> id_venta, $detalle_venta -> cliente );
 	    break;
 	    
-	    case '804':
+	    case 804:
              cancelarVenta( $args );
 	    break;
+	   
 	    
 	}	
 }

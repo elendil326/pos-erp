@@ -804,6 +804,11 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
 
 
         this.abonarVentaSucursalPanel = new Ext.form.FormPanel({
+            listeners : {
+			    "show" : function(){
+			        Aplicacion.Operaciones.currentInstance.abonarVentaSucursalPanelLoadVentas ();
+			    }
+		    },   
 		    items: [{
 			    xtype: 'fieldset',
 			    title: 'Abonar a venta',
@@ -822,6 +827,7 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
 			    },{
 				    xtype: 'fieldset',
 				    id : 'Operaciones-DetallesVentaCredito',
+				    hidden : true,
 				    items: [
 					    new Ext.form.Text({ name: 'fecha', label: 'Fecha'  }),
 					    new Ext.form.Text({ name: 'sucursal', label: 'Sucursal'  }),
@@ -877,6 +883,15 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
     };
 
 
+    /**
+        *
+        *
+        */
+    Aplicacion.Operaciones.prototype.abonarVentaSucursalPanelLoadVentas = function(){
+    
+        Ext.getCmp('Operaciones-CreditoVentasLista').setOptions(Aplicacion.Clientes.currentInstance.listaDeCompras.lista);
+    
+    };        
 
     /**
         *
@@ -946,235 +961,15 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
             Ext.getCmp("Operaciones-AbonarVentaBoton").hide();
         }
 
-
-
-
-    };        
-
-
-    /**
-        *
-        *
-        */
-    Aplicacion.Clientes.prototype.detallesDeClientesPanelUpdater = function ( cliente )
-    {
-
-	    //actualizar los detalles del cliente
-	    var detallesPanel = Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0];
-	    detallesPanel.loadRecord( cliente );
-	
-	    //actualizar las compras del cliente
-	    Aplicacion.Clientes.currentInstance.comprasDeClientesPanelUpdater( cliente );
-	
-	
-	    //actualizar el panel de credito y abonos
-	    Aplicacion.Clientes.currentInstance.creditoDeClientesPanelUpdater( cliente );
-    };
-
-    /**
-        *
-        *
-        */
-    Aplicacion.Clientes.prototype.creditoDeClientesPanelUpdater = function ( cliente  ) 
-    {
-
-	    cid = cliente.data.id_cliente;
-
-	    lista = Aplicacion.Clientes.currentInstance.listaDeCompras.lista;
-
-	    ventasCredito  = [{
-		    text : "Seleccione una venta a credito de la lista",
-		    value : -1
-	    }];
-
-        //buscar en todas la ventas
-	    for (var i = lista.length - 1; i >= 0; i--){
-            //si la venta es de este cliente, y es a credito y tiene algun saldo, mostrarla en la lista
-		    if ( lista[i].id_cliente == cid && lista[i].tipo_venta  == "credito" ) {
-                
-                if(parseFloat(lista[i].total) != parseFloat(lista[i].pagado)){
-			        ventasCredito.push( {
-				        text : "Venta " + lista[i].id_venta + " ( "+lista[i].fecha+" ) ",
-				        value : lista[i].id_venta
-			        });    
-                }
-
-		    }
-	    }
-	
-	    Ext.getCmp("Clientes-DetallesVentaCredito").hide();
-	    Ext.getCmp("Clientes-AbonarVentaBoton").hide();
-
-	    if(DEBUG){
-		    console.log('este cliente tien ' + ventasCredito.length + ' ventas a credito');
-	    }
-	
-	    if( ventasCredito.length == 1){
-		    //no hay ventas a credito
-		    Ext.getCmp("Clentes-CreditoVentasLista").hide();
-		    Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getTabBar().getComponent(2).hide();
-	    }else{
-		    //si hay ventas a credito
-		    Ext.getCmp("Clentes-CreditoVentasLista").show();
-		    Ext.getCmp("Clentes-CreditoVentasLista").setOptions( ventasCredito );		
-		    Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getTabBar().getComponent(2).show();
-	    }
-	
-    };        
+    };   
     
     
-    
-    
-
-
-/**
-
-abonar = [ new Ext.form.FormPanel({
-		items: [{
-			xtype: 'fieldset',
-			title: 'Abonar a venta',
-			id : 'Clientes-SeleccionVentaCredito',
-			instructions: 'Seleccione una venta para ver sus detalles.',
-			items: [{
-				id : "Clentes-CreditoVentasLista",
-				xtype: 'selectfield',
-				name: 'options',
-				label : "Venta", 
-				options: [  ],
-				listeners : {
-						"change" : function(a,b) {Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange(a,b);} 
-					}
-				}]
-			},{
-				xtype: 'fieldset',
-				id : 'Clientes-DetallesVentaCredito',
-				items: [
-					new Ext.form.Text({ name: 'fecha', label: 'Fecha'  }),
-					new Ext.form.Text({ name: 'sucursal', label: 'Sucursal'  }),
-					new Ext.form.Text({ name: 'user_id', label: 'Vendedor'  }),
-					new Ext.form.Text({ name: 'total', label: 'Total'  }),
-					new Ext.form.Text({
-                        name: 'abonado',
-                        label: 'Abonado',
-                        id:'Clientes-DetallesVentaCredito-abonado'
-                    }),
-					new Ext.form.Text({
-                        name: 'saldo',
-                        label: 'Saldo',
-                        id:'Clientes-DetallesVentaCredito-saldo'
-                    }) 
-			    ]
-			},{
-				xtype: 'fieldset',
-				title: 'Abonar a la venta',
-				id : 'Clientes-DetallesVentaAbonarCredito',
-				hidden : true,
-				items: [
-					new Ext.form.Text({
-                        name: 'saldo',
-                        label: 'Saldo',
-                        id: 'Clientes-DetallesVentaAbonarCredito-saldo'
-                    }),
-					new Ext.form.Text({
-                        id: 'Cliente-abonarMonto',
-                        name: 'monto',
-                        label: 'Monto',
-                        listeners : {
-                            'focus' : function (){
-                                kconf = {
-                                    type : 'num',
-                                    submitText : 'Aceptar'
-                                };
-                                POS.Keyboard.Keyboard( this, kconf );
-                            }
-                        }
-                    })
-				]
-			},
-
-			new Ext.Button({ id : 'Clientes-AbonarVentaBoton', ui  : 'action', text: 'Abonar', margin : 15, handler : this.abonarVentaBoton, hidden : true }),
-			new Ext.Button({ id : 'Clientes-AbonarVentaBotonAceptar', ui  : 'action', text: 'Abonar', margin : 15, handler : this.doAbonarValidator, hidden : true }),
-			new Ext.Button({ id : 'Clientes-AbonarVentaBotonCancelar', ui  : 'drastic', text: 'Cancelar', margin : 15, handler : this.abonarVentaCancelarBoton, hidden : true })
-
-
-		]}
-	)];
-	
-	
-	
-	
-	Aplicacion.Clientes.prototype.creditoDeClientesOptionChange = function ( a, v )
-{
-
-	//el valor de -1 es para el mensaje de seleccionar, todo el que este arriba
-	//de eso equivale al id de la venta
-	
-	if(v == -1){
-		Ext.getCmp("Clientes-DetallesVentaCredito").hide();
-		Ext.getCmp("Clientes-AbonarVentaBoton").hide();
-
-		return;
-	}
-	
-	
-
-	
-	
-	
-	//buscar esta venta especifica en la estructura
-	lista = Aplicacion.Clientes.currentInstance.listaDeCompras.lista;
-	var venta = null;
-	
-	for (var i = lista.length - 1; i >= 0; i--){
-		if (  lista[i].id_venta  == v ) {
-			venta = lista[i];
-		}
-	}
-
-
-	//fecha
-	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(0).setValue(venta.fecha);
-	
-	//sucursal
-	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(1).setValue(venta.sucursal);
-	
-	//vendedor
-	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(2).setValue(venta.cajero);
-	
-	//total
-	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(3).setValue( POS.currencyFormat(venta.total));
-	
-	//abonado
-	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(4).setValue( POS.currencyFormat(venta.pagado));
-
-	//saldo
-	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(5).setValue( POS.currencyFormat(venta.total - venta.pagado));
-
-    //almacenamos el valor de la venta a credito
-    Aplicacion.Clientes.currentInstance.detalleVentaCredito = venta;
-
-
-    Ext.getCmp("Clientes-DetallesVentaCredito").show();
-
-    //ocultamos el boton de abonar a venta si la venta a credito esta liquidada
-
-    if( (venta.total - venta.pagado ) > 0 )
-    {
-        Ext.getCmp("Clientes-AbonarVentaBoton").show();
-    }
-    else
-    {
-        Ext.getCmp("Clientes-AbonarVentaBoton").hide();
-    }
+        
 
 
 
 
-};
-	
-	
 
-*/
 
 POS.Apps.push( new Aplicacion.Operaciones() );
 
