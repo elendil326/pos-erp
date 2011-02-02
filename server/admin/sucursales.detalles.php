@@ -117,12 +117,13 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
     </div>
 </div>
 
+<!--
 <h2>Mapa de rendimiento</h2>
 <div id="rendimiento">
     <div id="fechas_rendimiento">
     </div>
 </div>
-
+-->
 
 <script type="text/javascript" charset="utf-8">
     function mostrarDetallesVenta (vid){ window.location = "ventas.php?action=detalles&id=" + vid; }
@@ -308,7 +309,11 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 	function rSaldo( $pagado ){
 		return moneyFormat( $pagado );
 	}
-
+	function toDateS( $d ){
+		$foo = toDate($d);
+		$bar = explode(" ", $foo);
+		return $bar[0];
+	}
 	$compras = comprasDeSucursalSinSaldar( $_REQUEST['id'] );	
 	
 	$header = array(
@@ -349,14 +354,16 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
         "puesto" => "Puesto",
         "RFC" => "RFC",
         //"direccion" => "Direccion",
-        "telefono" => "Telefono",
+        //"telefono" => "Telefono",
         "fecha_inicio" => "Inicio",
         "salario" => "Salario " . $periodicidad );
 
 
     $tabla = new Tabla( $header, $empleados );
     $tabla->addColRender("salario", "moneyFormat");
+	$tabla->addColRender("fecha_inicio", "toDateS");
     $tabla->addNoData("Esta sucursal no cuenta con nigun empleado.");
+	$tabla->addOnClick( "id_usuario", "(function(id){window.location='personal.php?action=detalles&uid=' + id;})" );
     $tabla->render();
 
 

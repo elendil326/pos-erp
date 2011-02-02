@@ -24,86 +24,6 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
  	}
 </style>
 
-<?php 
-if(POS_ENABLE_GMAPS){
-    ?><script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script><?php
-}
-?>
-
-
-<script src="../frameworks/humblefinance/flotr/flotr.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/humblefinance/flotr/excanvas.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/humblefinance/flotr/canvastext.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/humblefinance/flotr/canvas2image.js" type="text/javascript" charset="utf-8"></script>
-<script src="../frameworks/humblefinance/flotr/base64.js" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript" charset="utf-8" src="../frameworks/humblefinance/humble/HumbleFinance.js"></script>
-<link rel="stylesheet" href="../frameworks/humblefinance/humble/finance.css" type="text/css" media="screen" title="no title" charset="utf-8">
-<script type="text/javascript"> 
-    
-
-    function mostrarDetallesVenta (vid){
-        window.location = "ventas.php?action=detalles&id=" + vid;
-    }
-
-    function editarCliente (){
-        window.location = "clientes.php?action=editar&id=<?php echo $_REQUEST['id']; ?>";
-    }
-
-
-  var drawMap = function ( result, status ) {
-
-
-    if(result.length == 0){
-        document.getElementById("map_canvas").innerHTML = "<div align='center'> Imposible localizar esta direccion. </div>"; 
-        return;
-    }
-
-    var myLatlng = result[0].geometry.location;
-
-    var myOptions = {
-      zoom: 18,
-      center: myLatlng,
-      mapTypeId: google.maps.MapTypeId.HYBRID,
-	  navigationControl : true
-    }
-
-	try{
-    	var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-	}catch(e){
-        document.getElementById("map_canvas").innerHTML = "<div align='center'> Imposible crear el mapa.</div>";
-        return;
-	}
-    
-
-    m = new google.maps.Marker({
-        map: map,
-        position: myLatlng
-    });
-
-
-  };
-
-    function startMap(){
-
-	    GeocoderRequest = {
-		    address : "<?php echo $cliente->getDireccion(); ?>, <?php echo $cliente->getCiudad(); ?>, Mexico"
-	    };
-	    try{
-
-		    gc = new google.maps.Geocoder( );
-
-		    gc.geocode(GeocoderRequest,  drawMap);
-		
-	    }catch(e){
-		    console.log(e)
-	    }
-
-
-    }
-
-
-
-</script>
 
 
 <h2>Detalles del cliente</h2>
@@ -125,8 +45,12 @@ if(POS_ENABLE_GMAPS){
 	?>
 	<tr><td><b>Sucursal donde se dio de alta</b></td><td><?php echo $_suc; ?></td></tr>
 
-	<tr><td colspan=2><input type=button value="Editar detalles" onclick="editarCliente()">
-	<input type=button value="Vender" onclick="window.location='ventas.php?action=vender&cid=<?php echo $_REQUEST['id']; ?>'"></td> </tr>
+	<tr><td colspan=3>
+		<h4>
+		<input type=button value="Editar detalles de cliente" onclick="editarCliente()">
+		<input type=button value="Vender a este cliente" onclick="window.location='ventas.php?action=vender&cid=<?php echo $_REQUEST['id']; ?>'">
+		</h4>
+	</td> </tr>
 </table>
 
 
@@ -427,3 +351,86 @@ if($activo && (sizeof($ventasCredito) > 0)){
  } 
 
 ?>
+
+
+
+<?php 
+if(POS_ENABLE_GMAPS){
+    ?><script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script><?php
+}
+?>
+
+
+<script src="../frameworks/humblefinance/flotr/flotr.js" type="text/javascript" charset="utf-8"></script>
+<script src="../frameworks/humblefinance/flotr/excanvas.js" type="text/javascript" charset="utf-8"></script>
+<script src="../frameworks/humblefinance/flotr/canvastext.js" type="text/javascript" charset="utf-8"></script>
+<script src="../frameworks/humblefinance/flotr/canvas2image.js" type="text/javascript" charset="utf-8"></script>
+<script src="../frameworks/humblefinance/flotr/base64.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8" src="../frameworks/humblefinance/humble/HumbleFinance.js"></script>
+<link rel="stylesheet" href="../frameworks/humblefinance/humble/finance.css" type="text/css" media="screen" title="no title" charset="utf-8">
+<script type="text/javascript"> 
+    
+
+    function mostrarDetallesVenta (vid){
+        window.location = "ventas.php?action=detalles&id=" + vid;
+    }
+
+    function editarCliente (){
+        window.location = "clientes.php?action=editar&id=<?php echo $_REQUEST['id']; ?>";
+    }
+
+
+  var drawMap = function ( result, status ) {
+
+
+    if(result.length == 0){
+        document.getElementById("map_canvas").innerHTML = "<div align='center'> Imposible localizar esta direccion. </div>"; 
+        return;
+    }
+
+    var myLatlng = result[0].geometry.location;
+
+    var myOptions = {
+      zoom: 18,
+      center: myLatlng,
+      mapTypeId: google.maps.MapTypeId.HYBRID,
+	  navigationControl : true
+    }
+
+	try{
+    	var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+	}catch(e){
+        document.getElementById("map_canvas").innerHTML = "<div align='center'> Imposible crear el mapa.</div>";
+        return;
+	}
+    
+
+    m = new google.maps.Marker({
+        map: map,
+        position: myLatlng
+    });
+
+
+  };
+
+    function startMap(){
+
+	    GeocoderRequest = {
+		    address : "<?php echo $cliente->getDireccion(); ?>, <?php echo $cliente->getCiudad(); ?>, Mexico"
+	    };
+	    try{
+
+		    gc = new google.maps.Geocoder( );
+
+		    gc.geocode(GeocoderRequest,  drawMap);
+		
+	    }catch(e){
+		    console.log(e)
+	    }
+
+
+    }
+
+
+
+</script>

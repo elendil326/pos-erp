@@ -89,7 +89,6 @@ function toDateS( $d ){
 	$foo = toDate($d);
 	$bar = explode(" ", $foo);
 	return $bar[0];
-	 
 }
 
 function tachar($s){

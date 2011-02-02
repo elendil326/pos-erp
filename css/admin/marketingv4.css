@@ -701,20 +701,20 @@ margin-bottom: 10px;
 }
 
 #content h4 {
-font-family: 'ff-din-web-1', 'ff-din-web-2', "Helvetica Neue", Arial, Helvetica, sans-serif;
-margin: 24px 0 0 0;
-background: white url(media/bg-code-original.png) no-repeat 45px 0px;
-color: #46596C;
-display: block;
-/* left: -120px; */
-text-align : center;
-margin-bottom: 1.5em;
-padding: 10px 120px;
-padding-left: 120px;
-padding-right: 120px;
+	font-family: 'ff-din-web-1', 'ff-din-web-2', "Helvetica Neue", Arial, Helvetica, sans-serif;
+	margin: 0px 0 0 0;
+	background: white url(media/bg-code-original.png) no-repeat 0px 0px;
+	color: #46596C;
+	display: block;
+	/* left: -120px; */
+	text-align : center;
+	margin-bottom: 1.5em;
+	padding: 10px 120px;
+	padding-left: 120px;
+	padding-right: 120px;
 
-text-shadow: rgba(255, 255, 255, 0.296875) 0px 1px 0px;
-width: 710px;
+	text-shadow: rgba(255, 255, 255, 0.296875) 0px 1px 0px;
+	width: 710px;
 }
 
 

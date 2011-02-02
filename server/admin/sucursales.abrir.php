@@ -158,7 +158,9 @@ if($posiblesGerentes > 0 ){
 
 	</table>
 	</form>
-	<div align="center"><input type="button" onClick="validar()" value="Abrir esta sucursal"/></div>
+	<div align="center">
+		<h4><input type="button" onClick="validar()" value="Abrir esta sucursal"/></h4>
+	</div>
 <?php
 }
 

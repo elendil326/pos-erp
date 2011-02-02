@@ -310,7 +310,7 @@
 
 function toUnit( $e )
 {
-	return "<b>" . $e . "</b>kg";
+	return "<b>" . number_format($e, 2) . "</b>kg";
 }
 
 function toDateS( $d ){
