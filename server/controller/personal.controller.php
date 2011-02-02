@@ -694,11 +694,12 @@ function listarResponsables( $args ){
 
 function editarGerencias ($data){
 
-	if(!isset($args['data'])){
+	if(!isset($data['data'])){
+		Logger::log("Parametros invalidos para editar gerencias");
 		die( '{ "success" : false, "reason" : "Parametros invalidos" }' );
 	}
 
-    $sucursales = parseJSON( $args['data'] );
+    $sucursales = parseJSON( $data['data'] );
 
     foreach ($sucursales as $sucursalData)
     {
@@ -722,8 +723,11 @@ function editarGerencias ($data){
         try{
             SucursalDAO::save($sucursal);    
         }catch(Exception $e){
+	
+			Logger::log($e);
             return array('success' => false, 'reason' => $e);
         }
+
 
 /*
         //quitar al anterior gerente de esa sucursal
@@ -773,7 +777,7 @@ function editarGerencias ($data){
         }
     }
 
-
+	Logger::log("gerencias editadas satisfactoriamente");
     return array('success' => true );
 
 }

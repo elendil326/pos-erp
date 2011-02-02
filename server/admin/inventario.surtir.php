@@ -159,6 +159,7 @@
 	
 		if(carrito.length == 0){
 			jQuery("#ajax_failure").html("Seleccione uno o mas prouductos para surtir a esta sucursal").show();
+			return;
 		}
 	
 		values = jQuery("#ASurtirTabla input");

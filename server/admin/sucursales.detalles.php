@@ -41,9 +41,15 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 	<tr><td><b>Gerente</b></td><td>
         <?php 
             $gerente = UsuarioDAO::getByPK( $sucursal->getGerente() );
-            echo "<a href='gerentes.php?action=detalles&id=". $sucursal->getGerente() ."'>";
-            echo $gerente->getNombre();
-            echo "</a>";
+			if($gerente === null){
+				echo "Esta sucursa no tiene gerente !";
+			}else{
+	            echo "<a href='gerentes.php?action=detalles&id=". $sucursal->getGerente() ."'>";
+	            echo $gerente->getNombre();
+	            echo "</a>";				
+			}
+
+
         ?>
     </td></tr>
 	<tr><td><b>ID</b></td><td>				<?php echo $sucursal->getIdSucursal(); ?></td></tr>
@@ -374,7 +380,10 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
          $totalEmpleados += $e['salario'];
     }
 
-    $salarioGerente  = $gerente->getSalario();
+   	$salarioGerente  = 0;
+	if($gerente !== null)
+    	$salarioGerente  = $gerente->getSalario();
+
 
 
 ?>
