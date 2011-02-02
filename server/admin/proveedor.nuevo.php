@@ -41,11 +41,13 @@
     function validar(){
 
         if(jQuery('#nombre').val().length < 8){
+	window.scroll(0,0); 
             return jQuery("#ajax_failure").html("El nombre es muy corto.").show();
         }
 
 
         if(jQuery('#direccion').val().length < 8){
+	window.scroll(0,0); 
             return jQuery("#ajax_failure").html("La direccion es muy corta.").show();            
         }
 
@@ -93,7 +95,7 @@
                 	jQuery("#loader").fadeOut('fast', function (){
 						jQuery("#submit").removeAttr('disabled');
 						jQuery("#ajax_failure").html(response.reason).show();
-					window.scroll(0,0);           									
+						window.scroll(0,0);           									
 					});
 					return;
                 }

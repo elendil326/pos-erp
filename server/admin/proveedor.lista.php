@@ -10,7 +10,7 @@ $header = array(
 	"direccion"=> "Direccion",
 	"rfc"=> "RFC",
 	"telefono"=> "Telefono",
-	"e_mail"=> "E Mail" );
+	/* "e_mail"=> "E Mail" */);
 	
 $tabla = new Tabla( $header, $data );
 $tabla->addOnClick("id_proveedor", "mostrarDetallesProveedor");

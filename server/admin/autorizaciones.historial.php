@@ -63,6 +63,7 @@ function renderUsuario ($usr){
 $tabla = new Tabla($header, $autorizaciones );
 $tabla->addColRender("parametros", "renderParam");
 $tabla->addColRender("estado", "renderEstado");
+$tabla->addColRender("fecha_peticion", "toDate");
 $tabla->addColRender("id_sucursal", "renderSucursal");
 $tabla->addColRender("id_usuario", "renderUsuario");
 $tabla->addOnClick("id_autorizacion", "detalle");

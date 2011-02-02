@@ -49,7 +49,8 @@
 		</LI>
 		
 		<LI class="drop">
-			<A >AUTORIZACIONES</A>
+			<A href="autorizaciones.php?action=historial">AUTORIZACIONES</A>
+			<!--
 			<ul class="nav sub">
 		    <li >
 		      <a href="autorizaciones.php?action=pendientes" >Pendientes</a>
@@ -58,6 +59,7 @@
 		      <a href="autorizaciones.php?action=historial" >Todas las autorizaciones</a>
 		    </li>
 		  </ul>
+		-->
 		</LI>
 		
 		<LI class="drop">

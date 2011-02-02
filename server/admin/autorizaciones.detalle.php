@@ -4,6 +4,7 @@
 require_once('model/autorizacion.dao.php');
 require_once('model/usuario.dao.php');
 require_once('model/sucursal.dao.php');
+require_once('model/inventario.dao.php');
 
 $autorizacion = AutorizacionDAO::getByPK( $_REQUEST['id'] );
 $autorizacionDetalles = json_decode( $autorizacion->getParametros() );
@@ -62,7 +63,7 @@ function surtirSuc(id, aut){
 	<tr><td><b>ID Autorizacion</b></td><td><?php    echo $autorizacion->getIdAutorizacion(); ?></td></tr>
 	<tr><td><b>Usuario</b></td><td><?php            echo $who; ?></td></tr>
 	<tr><td><b>Sucursal</b></td><td><?php           echo $sucursal->getDescripcion(); ?></td></tr>
-	<tr><td><b>Fecha de peticion</b></td><td><?php  echo $autorizacion->getFechaPeticion(); ?></td></tr>
+	<tr><td><b>Fecha de peticion</b></td><td><?php  echo toDate($autorizacion->getFechaPeticion()); ?></td></tr>
 	<tr><td><b>Descripcion</b></td><td><?php        echo $autorizacionDetalles->descripcion; ?></td></tr>	
 
 </table>
@@ -142,12 +143,17 @@ switch( $autorizacionDetalles->clave ){
         //solicitud de surtir
         ?>
             <h2>Solicitud para surtir sucursal</h2>
-            <table>
-                <tr><td>Producto solicitado</td><td>Cantidad solicitada</td></tr>
+            <table style="width:100%">
+                <tr style="text-align: left;"><th>Producto solicitado</th><th>Cantidad solicitada</th></tr>
                 <?php
                 foreach ($autorizacionDetalles->productos as $producto)
                 {
-                    ?><tr><td><?php echo $producto->id_producto; ?></td><td><?php echo $producto->cantidad; ?></td></tr><?php
+                    ?><tr>
+						<td><?php 
+								$p = InventarioDAO::getByPK( $producto->id_producto ) ;
+								 echo $p->getDescripcion(); 
+							?></td>
+						<td><?php echo $producto->cantidad; ?></td></tr><?php
                 }
                 ?>
                 <tr><td></td><td></td></tr>
@@ -155,7 +161,9 @@ switch( $autorizacionDetalles->clave ){
             <?php
             if($autorizacion->getEstado() != 4){
 	            ?><input type=button value="Surtir sucursal" onclick="surtirSuc(<?php echo $autorizacion->getIdSucursal(); ?>, <?php    echo $autorizacion->getIdAutorizacion(); ?>)" ><?php
-            }
+            }else{
+				?><div align=center><h3>Usted ya ha respondido a esta autorizacion.</h3></div><?php
+			}
             ?>
             
         <?php
