@@ -6,6 +6,8 @@ require_once("controller/ventas.controller.php");
 require_once("controller/personal.controller.php");
 require_once("controller/efectivo.controller.php");
 require_once("controller/inventario.controller.php");
+
+require_once('model/pagos_venta.dao.php');
 require_once('model/corte.dao.php');
 
 
@@ -522,11 +524,15 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
     $flujo = array();
 
 
-    //obtener la fecha del ultimo corte
+	/*******************************************
+	 * Fecha desde el ultimo corte
+	 * *******************************************/
     $corte = new Corte();
     $corte->setIdSucursal($_REQUEST['id']);
 
     $cortes = CorteDAO::getAll( 1, 1, 'fecha', 'desc' );
+
+
 
     if(sizeof($cortes) == 0){
         echo "No se han hecho cortes en esta sucursal. Mostrando flujo desde la apertura de sucursal.<br><br>";
@@ -545,8 +551,10 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
     $now = new DateTime("now");
     $hoy = $now->format("Y-m-d H:i:s");
 
-    
-    //buscar todos los gastos desde el ultimo corte
+	/*******************************************
+	 * Buscar los gastos
+	 * Buscar todos los gastos desde la fecha inicial
+	 * *****************************************/
     $foo = new Gastos();
     $foo->setFecha( $fecha );
     $foo->setIdSucursal( $_REQUEST['id'] );
@@ -567,7 +575,11 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
         ));
     }
 
-    //buscar todos los ingresos desde el ultimo corte
+
+	/*******************************************
+	 * Ingresos
+	 * Buscar todos los ingresos desde la fecha inicial
+	 * *******************************************/
     $foo = new Ingresos();
     $foo->setFecha( $fecha );
     $foo->setIdSucursal( $_REQUEST['id'] );
@@ -588,7 +600,10 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
     }
     
     
-	//buscar todas las ventas desde el ultimo corte
+	/*******************************************
+	 * Ventas
+	 * Buscar todas la ventas a contado para esta sucursal desde esa fecha
+	 * *******************************************/
 	$foo = new Ventas();
     $foo->setFecha( $fecha );
     $foo->setIdSucursal( $_REQUEST['id'] );
@@ -599,6 +614,8 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
     
     $ventas = VentasDAO::byRange( $foo, $bar );
 
+
+	//las ventas
     foreach ($ventas as $i )
     {
         array_push( $flujo, array(
@@ -611,7 +628,33 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 
 
 
+	/*******************************************
+	 * Abonos
+	 * Buscar todos los abonos para esta sucursal que se hicierond espues de esa fecha
+	 * *******************************************/
+	$query = new PagosVenta();
+	$query->setIdSucursal($_REQUEST["id"]);
+	$query->setFecha($fecha);
+	
+	$queryE = new PagosVenta();
+	$queryE->setFecha($hoy);
 
+
+	$results = PagosVentaDAO::byRange( $query, $queryE );
+	
+	foreach( $results as $pago ){
+		array_push($flujo, array(
+			"tipo" => "abono",
+			"concepto" => "Abono a venta",
+			"monto" => $pago->getMonto(),
+			"usuario" => $pago->getIdUsuario()
+		));
+	}
+
+
+	/*******************************************
+	 * DIBUJAR LA GRAFICA
+	 * *******************************************/
     $header = array(
                "tipo" => "Tipo",
                "concepto" => "Concepto",

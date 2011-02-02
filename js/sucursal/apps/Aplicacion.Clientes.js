@@ -802,6 +802,7 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 {
 	if(DEBUG){
 		console.log("Abonando... a venta : " + Ext.getCmp("Clentes-CreditoVentasLista").getValue());
+		console.warn("EL TIPO DE PAGO ESTA HARDCODEADO !!!");
 	}
 	
 	Ext.Ajax.request({
@@ -811,19 +812,22 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 			action : 305,
 			data : Ext.util.JSON.encode({
 						id_venta : parseFloat( Ext.getCmp("Clentes-CreditoVentasLista").getValue() ),
-			    		monto : parseFloat( transaccion.abono )
+			    		monto : parseFloat( transaccion.abono ),
+						tipo_pago: "efectivo"
 					})
 		},
 		success: function(response, opts) {
 
             Ext.Msg.alert( "Abono a venta","Abonado: " + POS.currencyFormat(transaccion.abono) + "<br>Su cambio: " + POS.currencyFormat(transaccion.cambio) + "<br>Saldo Pendiente: " + POS.currencyFormat(transaccion.saldo) );
 
-            console.warn("IMPRMIR TICKET");
+			if(DEBUG){
+            	console.warn("IMPRMIR TICKET");				
+			}
+
 
 			//cargar la lista de compras de los clientes con los nuevos detalles de las ventas
 			Aplicacion.Clientes.currentInstance.listaDeComprasLoad();
 
-           
 			Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange( null, Ext.getCmp("Clentes-CreditoVentasLista").getValue(), true );
 
             //Actualizamos los valores de lso campos Abonado y saldo amnualmente ya que se ejecuta primero
@@ -835,8 +839,6 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 
             //mostramos el panel de detalle de venta
 			Aplicacion.Clientes.currentInstance.abonarVentaCancelarBoton();
-
-
 
 		},
 		failure: function( response ){
