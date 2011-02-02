@@ -151,6 +151,14 @@ $clientes = listarClientes();
 
 
 
+function sortClientes( $a, $b ){
+	
+	return strcasecmp($a["nombre"] , $b["nombre"]);
+	
+}
+
+usort( $clientes, "sortClientes" );
+
 //render the table
 $header = array(  "nombre" => "Nombre", "rfc" => "RFC", /* "direccion" => "Direccion",*/  "ciudad" => "Ciudad"  );
 $tabla = new Tabla( $header, $clientes );

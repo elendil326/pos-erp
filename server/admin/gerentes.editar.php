@@ -194,6 +194,7 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
+					window.scroll(0,0);           				
                     return jQuery("#ajax_failure").html(response.reason).show();
                 }
 				

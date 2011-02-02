@@ -50,16 +50,24 @@
 	<h2>Productos en el embarque</h2>
 	
 	<?php
+	
+	
+function toUnit( $e )
+{
+	return "<b>" . number_format($e, 2) . "</b>kg";
+}
+	
 		$header = array( 
 			"id_producto" 			=> "Producto",
 			"variedad" 				=> "Variedad",
 			"arpillas" 				=> "Arpillas",
-			"kg" 					=> "KG",
+			"kg" 					=> "Peso",
 			"precio_por_kg" 		=> "Precio / KG");
 
 		
 		$t = new Tabla($header, $detalles);
 		$t->addColRender("precio_por_kg", "moneyFormat");
+		$t->addColRender("kg", "toUnit");	
 		$t->render();
 	?>
 	

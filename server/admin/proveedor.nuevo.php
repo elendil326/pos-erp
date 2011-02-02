@@ -7,7 +7,7 @@
 
 
 
-
+<h1>Registrar nuevo proveedor</h1>
 <h2>Detalles del nuevo proveedor</h2>
 <form id="newClient">
 	<table border="0" cellspacing="5" cellpadding="5">
@@ -25,14 +25,18 @@
 
 	        </select>
 			</td></tr>
-		<tr><td></td><td><input id="submit" type="button" onClick="validar()" value="Crear el nuevo proveedor"/></td><td><div id="loader" style='display:none'><img src="../media/loader.gif"></div></td></tr>
+		<tr><td colspan=2>
+			<h4>
+				<input id="submit" type="button" onClick="validar()" value="Crear el nuevo proveedor"/><div id="loader" style='display:none'><img src="../media/loader.gif"></div>
+			</h4>	
+			</td></tr>
 	</table>
 </form>
 
 
 <script type="text/javascript" charset="utf-8">
 
-	jQuery("#MAIN_TITLE").html("Nuevo proveedor");
+
 		
     function validar(){
 
@@ -79,6 +83,7 @@
 					jQuery("#loader").fadeOut('fast', function (){
 						jQuery("#submit").removeAttr('disabled');
 						jQuery("#ajax_failure").html("Error, porfavor intente de nuevo.").show();
+					window.scroll(0,0);           									
 					});
 					
                     return;
@@ -88,6 +93,7 @@
                 	jQuery("#loader").fadeOut('fast', function (){
 						jQuery("#submit").removeAttr('disabled');
 						jQuery("#ajax_failure").html(response.reason).show();
+					window.scroll(0,0);           									
 					});
 					return;
                 }

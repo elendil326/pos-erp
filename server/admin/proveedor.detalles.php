@@ -15,20 +15,28 @@
 	$compras = CompraProveedorDAO::search($foo, "fecha", "desc");
 	
 	
-	
+	function renderTipoProv($tipo){
+		
+		switch($tipo){
+			case "admin" : return "Este proveedor surte al centro de administracion.";
+		}
+		
+	}
 	
 ?>
 <script>	jQuery("#MAIN_TITLE").html( "<?php echo $proveedor->getNombre(); ?>");	</script>
 
 <h2>Detalles del proveedor</h2>
-<table border="0" cellspacing="1" cellpadding="1">
+<table border="0" cellspacing="5" cellpadding="5">
 	<tr><td>Nombre</td>				<td><?php echo $proveedor->getNombre(); ?></td></tr>
 	<tr><td>Direccion</td>			<td><?php echo $proveedor->getDireccion(); ?></td></tr>
 	<tr><td>RFC</td>				<td><?php echo $proveedor->getRFC(); ?></td></tr>
 	<tr><td>Telefono</td>			<td><?php echo $proveedor->getTelefono(); ?></td></tr>
 	<tr><td>E Mail</td>				<td><?php echo $proveedor->getEMail(); ?></td></tr>		
-	<tr><td>Tipo de proveedor</td>	<td><?php echo $proveedor->getTipoProveedor(); ?></td></tr>
-	<tr><td colspan=3><input id="submit" type="button" onClick="editar()" value="Editar proveedor"/></td></tr>
+	<tr><td>Tipo de proveedor</td>	<td><?php echo renderTipoProv( $proveedor->getTipoProveedor() ); ?></td></tr>
+	<tr><td colspan=3>
+		<h4><input id="submit" type="button" onClick="editar()" value="Editar proveedor"/></h4>
+	</td></tr>
 </table>
 
 
@@ -45,6 +53,7 @@
 
 	$tabla = new Tabla($header, $compras);
 	$tabla->addColRender("fecha", "toDate");
+	$tabla->addNoData("No se han hecho compras a este proveedor.");	
 	$tabla->render();
 
 ?>

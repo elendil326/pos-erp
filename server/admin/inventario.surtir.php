@@ -234,6 +234,7 @@ function confirmed()
 				
 					jQuery("#loader").fadeOut('slow', function(){
 						jQuery("#submitButtons").fadeIn();
+										window.scroll(0,0);           				
 						jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
 					});                
 					return;                    
@@ -242,7 +243,8 @@ function confirmed()
 
 				if(response.success === false){
 					jQuery("#loader").fadeOut('slow', function(){
-						jQuery("#submitButtons").fadeIn();      				
+						jQuery("#submitButtons").fadeIn();    
+					window.scroll(0,0);           									  				
 						jQuery("#ajax_failure").html(response.reason).show();
 					});                
 					return ;

@@ -27,6 +27,9 @@
     $fluctuaciones = ActualizacionDePrecioDAO::search( $a, 'fecha', 'desc' );
 	$ultimaActualizacion = $fluctuaciones[0];
 	
+	
+	
+	
 ?>
 
 <script>

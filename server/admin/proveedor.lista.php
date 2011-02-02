@@ -28,3 +28,10 @@ $tabla->addNoData("No hay proveedores.");
 		window.location = "proveedor.php?action=detalles&id=" + sid;
 	}
 </script>
+
+
+<?php
+
+require_once( "admin/proveedor.nuevo.php");
+
+?>
