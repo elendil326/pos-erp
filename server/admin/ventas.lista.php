@@ -7,23 +7,20 @@ require_once('model/sucursal.dao.php');
 ?>
 
 
-<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" src="../frameworks/jquery-datepicker/js/jquery-ui-1.7.1.custom.min.js"></script>
 <script type="text/javascript" src="../frameworks/jquery-datepicker/js/daterangepicker.jQuery.js"></script>
 <link rel="stylesheet" href="../frameworks/jquery-datepicker/css/ui.daterangepicker.css" type="text/css" /> 
 <link rel="stylesheet" href="../frameworks/jquery-datepicker/css/redmond/jquery-ui-1.7.1.custom.css" type="text/css" title="ui-theme" /> 
-<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
+
 
 <script>
     function mostrarDetallesVenta (vid){
         window.location = "ventas.php?action=detalles&id=" + vid;
     }
-	$(function(){
 
-        $("input, select").uniform();
+	jQuery(function(){
 
-		$('#datePicker').daterangepicker({
+		jQuery('#datePicker').daterangepicker({
                 arrows:true,
                 onChange: function(a,b){
                     dateStart = a;
@@ -85,8 +82,8 @@ require_once('model/sucursal.dao.php');
 
 <h1>Ventas</h1>
 
-
 <!--
+
 <h2>Busqueda avanzada</h2>
 <table>
 <tr>
@@ -121,8 +118,8 @@ require_once('model/sucursal.dao.php');
     <td></td><td><input onclick='reload()' type='button' value='Buscar'></td>
 </tr>
 </table>
--->
 
+-->
 
 
 
@@ -140,9 +137,9 @@ $header = array(
 	"id_cliente"=>  "Cliente",
 	"tipo_venta"=>  "Tipo",
 	"fecha"=>  "Fecha",
-	"subtotal"=>  "Subtotal",
+	//"subtotal"=>  "Subtotal",
 	//"iva"=>  "IVA",
-	"descuento"=>  "Descuento",
+	//"descuento"=>  "Descuento",
 	"total"=>  "Total",
 
 	//"pagado"=>  "Pagado" 
@@ -184,6 +181,7 @@ $tabla->addColRender( "subtotal", "moneyFormat" );
 $tabla->addColRender( "saldo", "moneyFormat" ); 
 $tabla->addColRender( "total", "moneyFormat" ); 
 $tabla->addColRender( "pagado", "moneyFormat" ); 
+$tabla->addColRender( "fecha", "toDate" ); 
 $tabla->addColRender( "tipo_venta", "setTipoColor" ); 
 $tabla->addColRender( "id_cliente", "getNombreCliente" ); 
 $tabla->addColRender( "id_sucursal", "getDescSuc" ); 

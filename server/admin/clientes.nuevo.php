@@ -6,8 +6,8 @@
 ?>
 
 
-
-<script>document.getElementById("MAIN_TITLE").innerHTML = "Nuevo cliente";</script>
+<h1>Nuevo Cliente</h1>
+<script> //document.getElementById("MAIN_TITLE").innerHTML = "Nuevo cliente"; </script>
 
 <h2>Detalles del nuevo cliente</h2>
 <form id="newClient">

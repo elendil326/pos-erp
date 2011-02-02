@@ -38,7 +38,7 @@ $venta = $detalles['detalles'];
 
     <tr>
         <td><b>Fecha</b></td>
-        <td><?php echo $venta->getFecha(); ?></td>
+        <td><?php echo toDate($venta->getFecha()); ?></td>
     </tr>
 
 
@@ -191,9 +191,16 @@ if($venta->getTipoVenta() == 'credito'){
 </script>
 
 
+
+
+<?php if($venta->getTipoVenta() == 'credito'){ ?>
+
+
+
 <div id="abonar">
-<input type="button" value="Abonar a esta venta" onClick="abonar()" >
+<h4><input type="button" value="Abonar a esta venta" onClick="abonar()" ></h4>
 </div>
+
 
 <div id="abonar_detalles" style="display:none;">
     <table>
@@ -217,4 +224,4 @@ if($venta->getTipoVenta() == 'credito'){
         </tr>
     </table>
 </div>
-
+<?php } ?>

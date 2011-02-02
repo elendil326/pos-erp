@@ -13,9 +13,7 @@ print ("<h2>Sucursales Activas</h2>");
 $data = array();
 
 foreach( $sucursales as $sucursal ){
-	
-	
-	
+
 	//obtener los clientes del controller de clientes
 	$detalles = detallesSucursal( $sucursal["id_sucursal"] );
 	array_push($data, $detalles); 

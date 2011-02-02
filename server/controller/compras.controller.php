@@ -1129,6 +1129,11 @@ if(isset($args['action'])){
 			nuevaCompraSucursal( $args['data'] );
 		break;		
 		
+		case 1006:
+			//listar compras de sucursal a proveedores
+			
+		break;
+		
 	    default:
 	        printf( '{ "success" : "false" }' );
 	    break;

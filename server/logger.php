@@ -163,7 +163,12 @@ class Logger
 
 
         if(isset($_SESSION['sucursal'])){
-            $out .= " | SUC:" . $_SESSION['sucursal'];
+			try{
+            	$out .= " | SUC:" . $_SESSION['sucursal'];				
+			}catch(Exception $e){
+				Logger::log($e);
+			}
+
         }
 
         $d = debug_backtrace();

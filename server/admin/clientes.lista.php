@@ -22,7 +22,7 @@ require_once("controller/inventario.controller.php");
 <link rel="stylesheet" href="../frameworks/humblefinance/humble/finance.css" type="text/css" media="screen" title="no title" charset="utf-8">
 
 
-<script>document.getElementById("MAIN_TITLE").innerHTML = "Lista de clientes";</script>
+<script>//document.getElementById("MAIN_TITLE").innerHTML = "Lista de clientes";</script>
 
 
 
@@ -145,7 +145,7 @@ require_once("controller/inventario.controller.php");
     
 
 
-<h2><img src='../media/icons/users_32.png'>&nbsp;Todos los clientes</h2><?php
+<h2><!-- <img src='../media/icons/users_32.png'>&nbsp; -->Todos los clientes</h2><?php
 //obtener los clientes del controller de clientes
 $clientes = listarClientes();
 
@@ -163,7 +163,7 @@ $tabla->render();
 
 ?>
 
-<h2><img src='../media/icons/user_warning_32.png'>&nbsp;Clientes deudores</h2> <?php
+<h2><!-- <img src='../media/icons/user_warning_32.png'>&nbsp;-->Clientes deudores</h2> <?php
 
 //obtener los clientes deudores del controller de clientes
 $clientes = listarClientesDeudores();
@@ -177,6 +177,9 @@ $tabla->addOnClick("id_cliente", "mostrarDetalles");
 $tabla->addNoData("No hay clientes deudores.");
 $tabla->render();
 
+
+
+include ("admin/clientes.nuevo.php");
 
 ?>
 
