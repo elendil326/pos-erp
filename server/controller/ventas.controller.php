@@ -152,7 +152,13 @@ function listarUltimaVentaSucursal( $id_sucursal ){
     $ventas -> setCancelada( "0" );
     $ventas = VentasDAO::search( $ventas, 'id_venta', 'desc' );
     
-    $id_ultima_venta =  $ventas[0]  -> getIdVenta();;
+    //verificamos que haya mas ventas
+    if( count( $ventas ) <= 0 ){
+        Logger::log('No hay ninguna venta registrada.');
+        die ( '"success" : false, "reason": "No se ha registrado ninguna venta"');
+    }
+    
+    $id_ultima_venta =  $ventas[0]  -> getIdVenta();
     
     //obtenemos el detalle de la ultima venta
     $detalle_venta = new DetalleVenta();
@@ -214,6 +220,12 @@ function cancelarVenta( $args ){
 			{
 			    Logger::log( "No se encontro registro de la venta a eliminar" );
                 die( '{ "success" : false , "reason" : "No se encontro registro de la venta ' . $args['id_venta'] . '"}' );
+			}
+			
+			if(  $venta -> getCancelada() == "1" )
+			{
+			    Logger::log( "La venta ya estaba cancelada" );
+                die( '{ "success" : false , "reason" : "La venta ' . $args['id_venta'] . ' ya estaba cancelada."}' );
 			}
 			
 			//almacenamos el detalle de la venta para cargarlo nuevamente al inventario

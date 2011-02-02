@@ -6,6 +6,8 @@ require_once('model/usuario.dao.php');
 require_once('model/grupos_usuarios.dao.php');
 require_once('model/cliente.dao.php');
 
+require_once('logger.php');
+
 
 function listarSucursales(  ){
 
@@ -22,12 +24,18 @@ function listarSucursales(  ){
 
     foreach( $sucursales as $sucursal ){
 	
+	   if( $_SESSION['sucursal'] == $sucursal->getIdSucursal() )
+	   {	             
+            continue;
+	   }
+	
         array_push( $array_sucursales , array(
             'id_sucursal' => $sucursal->getIdSucursal(),
             'descripcion' => $sucursal->getDescripcion(),
             'text' => $sucursal->getDescripcion(),
             'value' => $sucursal->getIdSucursal()
         ));
+        
     }
 
 	return $array_sucursales;

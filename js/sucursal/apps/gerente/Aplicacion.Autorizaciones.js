@@ -7,6 +7,7 @@
 Aplicacion.Autorizaciones = function (  ){
 
 	return this._init();
+	
 }
 
 
@@ -1142,7 +1143,7 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesLoad = function (){
 
 Aplicacion.Autorizaciones.prototype.checkForNewAuts = function(  ){
 	
-}
+};
 
 
 /*
@@ -1258,10 +1259,6 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
 
     //decodificar el json de parametros
     var parametros = Ext.util.JSON.decode( autorizacion.get('parametros') );
-    
-    console.log("------------------------------------");
-    console.log(parametros);
-    console.log("------------------------------------");
     
     //estado de la autorizacion
     var estado = autorizacion.data.estado;

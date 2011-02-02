@@ -17,12 +17,17 @@ Aplicacion.Operaciones.prototype._init = function (){
 		console.log("Operaciones: construyendo");
     }
     
-    Aplicacion.Operaciones.currentInstance = this;
-    
-   
+    Aplicacion.Operaciones.currentInstance = this;       
     
     Aplicacion.Operaciones.currentInstance.cancelarVentaPanelCreator();
-     
+    
+    Aplicacion.Operaciones.currentInstance.prestamoEfectivoPanelCreator(); 
+    
+    Aplicacion.Operaciones.currentInstance.abonarPrestamoEfectivoSucursalPanelCreator();
+    
+    Aplicacion.Operaciones.currentInstance.listaDePrestamosSucursalLoad();
+    
+    Aplicacion.Operaciones.currentInstance.abonarVentaSucursalPanelCreator();
 	
 	return this;
 };
@@ -41,12 +46,20 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
 	    },
 	    {
 	        text: 'Cobrar a sucursal',
-	        card: Aplicacion.Operaciones.currentInstance.cancelarVentaPanel,
-	        leaf: true
+	        items: [{
+		        text: 'Abono a Prestamo',
+	        	card: Aplicacion.Operaciones.currentInstance.abonarPrestamoEfectivoSucursalPanel,
+	        	leaf: true
+		    },{
+		        text: 'Abono a Venta',
+	        	card: Aplicacion.Operaciones.currentInstance.abonarVentaSucursalPanel,
+	        	leaf: true
+		    }]   
+	        
 	    },
 		{
 	        text: 'Prestar efectivo',
-	        card: Aplicacion.Efectivo.prototype.operacionInterSucursalEfectivoPanel,
+	        card: Aplicacion.Operaciones.currentInstance.prestamoEfectivoPanel, 
 	        leaf: true
 	    },
 	    {
@@ -91,7 +104,25 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
                     return POS.error(response, e);
                 }
 
-                if( r.success ){
+                if( r.success ==  false ){
+                
+                    //TODO: Verificar por que aqui no entra nunca
+                    
+                    Aplicacion.Operaciones.currentInstance.venta.id_venta = null;      
+                    Aplicacion.Operaciones.currentInstance.venta.cliente = null;    
+                
+                    var html = "<div style='margin-top:20px; margin-bottom:10px;position:relative; width:100%; color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:5px; position:relative;float:left;' >No se tiene registro de ninguna venta. </div>";                   
+				    
+				    Ext.getCmp('Operaciones-cancelarVentaPanel-Tabla').update(html);     
+
+                   Ext.getCmp('Operaciones-cancelarVentaPanel-Form-Cliente').setValue(  "" );
+                   
+                   Ext.getCmp('Operaciones-cancelarVentaPanel-Form-Subtotal').setValue( "" );
+                   
+                   Ext.getCmp('Operaciones-cancelarVentaPanel-Form-Descuento').setValue( POS.currencyFormat( "" ) );
+                   
+                   Ext.getCmp('Operaciones-cancelarVentaPanel-Form-Total').setValue( POS.currencyFormat( "" ) );
+                }
                 
                     Aplicacion.Operaciones.currentInstance.venta.id_venta = r.id_venta;      
                     Aplicacion.Operaciones.currentInstance.venta.cliente = r.cliente;      
@@ -157,11 +188,12 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
                    
                    Ext.getCmp('Operaciones-cancelarVentaPanel-Form-Total').setValue( POS.currencyFormat( subtotal - descuento ) );
                     
-                }
+
 
             },
             failure: function( response ){
-                POS.error( response );
+                POS.error( response );                                
+                
             }
         }); 
         
@@ -192,7 +224,7 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
                 cls : "Tabla",
                 items:[{
                     id: 'Operaciones-cancelarVentaPanel-Tabla',				
-			        html : null
+			        html : "<div style='margin-top:20px; margin-bottom:10px;position:relative; width:100%; color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:5px; position:relative;float:left;' >No se tiene registro de ninguna venta. </div>"
                 }]
                 
                 },
@@ -221,7 +253,7 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
             
             if( action == "yes" )
             {
-                Aplicacion.Operaciones.prototype.eliminarVenta();
+                Aplicacion.Operaciones.currentInstance.eliminarVenta();
             }           
             
         });
@@ -252,8 +284,20 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
 				    //volver a intentar
 				    if(DEBUG){
 					    console.log("obtenicion de la informacion sin exito.");
-				    }
-				    Ext.Msg.alert("Operaciones", informacion.reason);
+				    }				    
+				    
+				    var html = "<div style='margin-top:20px; margin-bottom:10px;position:relative; width:100%; color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:5px; position:relative;float:left;' >No se tiene registro de ninguna venta. </div>";                   
+				    
+				    Ext.getCmp('Operaciones-cancelarVentaPanel-Tabla').update(html);     
+
+                   Ext.getCmp('Operaciones-cancelarVentaPanel-Form-Cliente').setValue(  "" );
+                   
+                   Ext.getCmp('Operaciones-cancelarVentaPanel-Form-Subtotal').setValue( "" );
+                   
+                   Ext.getCmp('Operaciones-cancelarVentaPanel-Form-Descuento').setValue( POS.currencyFormat( "" ) );
+                   
+                   Ext.getCmp('Operaciones-cancelarVentaPanel-Form-Total').setValue( POS.currencyFormat( "" ) );
+                   
 				    return;
 
 			    }
@@ -284,162 +328,757 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
    * 
    *************************************************************************** */
 
+    //panel de 
+    Aplicacion.Operaciones.prototype.prestamoEfectivoPanel = null;
+
+    /**
+        *
+        *
+        */
+    Aplicacion.Operaciones.prototype.prestamoEfectivoPanelCreator = function (){
+
+
+        this.prestamoEfectivoPanel = new Ext.form.FormPanel({
+                listeners : {
+                        "show" : function (){
+                            Ext.getCmp("Operaciones-prestamoEfectivo-sucursal").setOptions( Aplicacion.Efectivo.currentInstance.sucursalesLista );
+                        }
+                    },
+                items: [{
+
+                    xtype: 'fieldset',
+                    title: 'Nuevo prestamo de efectivo',
+                    instructions: 'Todos los campos son necesarios para una nueva autorizacion.',
+                    items: [
+                        new Ext.form.Select({ 
+                            id:'Operaciones-prestamoEfectivo-sucursal',
+                            name : 'sucursal',
+                            label: 'Sucursal',
+                            required:true,
+                            options: [ {text : "Seleccione una sucursal", value : null } ]
+                        }),
+                        new Ext.form.Text({
+                            id: 'Operaciones-prestamoEfectivo-concepto',
+                            label: 'Concepto',
+                            name: 'concepto',
+                            required:true,
+                            listeners : {
+                                'focus' : function (){
+
+                                    kconf = {
+                                        type : 'alfa',
+                                        submitText : 'Aceptar'
+                                    };
+                                    POS.Keyboard.Keyboard( this, kconf );
+                                }
+                            }
+                        }),
+                        new Ext.form.Text({
+                            id: 'Operaciones-prestamoEfectivo-monto',
+                            label: 'Monto',
+                            name: 'monto',
+                            required:true,
+                            listeners : {
+                                'focus' : function (){
+                                    kconf = {
+                                        type : 'num',
+                                        submitText : 'Aceptar'
+                                    };
+                                    POS.Keyboard.Keyboard( this, kconf );
+                                }
+                            }
+                        })          
+                    ]},
+                    new Ext.Button({ ui  : 'action', text: 'Registrar Prestamo de Efectivo', margin : 5,  handler : this.nuevoPrestamoEfectivoValidator, disabled : false })
+            ]});
+
+    };
+
+
 
 /**
-*
-*/
-Aplicacion.Efectivo.prototype.nuevaOperacionInterSucursalEfectivo = function( data ){
+        *
+        *
+        */
+    Aplicacion.Operaciones.prototype.nuevoPrestamoEfectivoValidator = function ()
+    {
+        //obtener los valores de la forma
+        var values = Aplicacion.Operaciones.currentInstance.prestamoEfectivoPanel.getValues();
 
-    Ext.getBody().mask('Guardando nuevo prestamo de efectivo ...', 'x-mask-loading', true);
+        //validamos si selecciono una sucursal
+        if( !( values.sucursal != "") )
+        {
+            Ext.Anim.run(Ext.getCmp( 'Operaciones-prestamoEfectivo-sucursal' ),
+                'fade', {duration: 250,
+                out: true,
+                autoClear: true
+            });
 
-    Ext.Ajax.request({
-        url: '../proxy.php',
-        scope : this,
-        params : {
-            action : 600,
-            data : Ext.util.JSON.encode( data )
-        },
-        success: function(response, opts) {
-            try{
-                r = Ext.util.JSON.decode( response.responseText );
-            }catch(e){
-                return POS.error(response, e);
-            }
-
-            Ext.getBody().unmask(); 
-
-            //limpiar la forma      
-            Aplicacion.Efectivo.currentInstance.operacionInterSucursalEfectivoPanel.reset();
-
-
-            //informamos lo que sucedio
-            if( r.success == "true" )
-            {
-                Ext.Msg.alert("Efectivo","Se ha registrado el nuevo prestamo de efectivo"); 
-            }
-            else
-            {
-                Ext.Msg.alert("Efectivo","Error: " + r.success); 
-            }
-        },
-        failure: function( response ){
-            POS.error( response );
+            return;
         }
-    }); 
 
-};
+        //valdamos si selecciono un concepto
+        if( values.concepto == "" )
+        {
+            Ext.Anim.run(Ext.getCmp( 'Operaciones-prestamoEfectivo-concepto' ),
+                'fade', {duration: 250,
+                out: true,
+                autoClear: true
+            });
+
+            return;
+        }
+
+        if( isNaN( parseFloat( values.monto) ) || parseFloat( values.monto) <= 0){
+
+            Ext.Anim.run(Ext.getCmp( 'Operaciones-prestamoEfectivo-monto' ), 
+                'fade', {duration: 250,
+                out: true,
+                autoClear: true
+            });
+
+            return;
+        }        
+
+        Aplicacion.Operaciones.currentInstance.nuevaOperacionInterSucursalEfectivo( values );
+
+    };
+
+
+
+    /**
+        *
+        *
+        */
+    Aplicacion.Operaciones.prototype.nuevaOperacionInterSucursalEfectivo = function( data ){
+
+        Ext.getBody().mask('Guardando nuevo prestamo de efectivo ...', 'x-mask-loading', true);
+
+        Ext.Ajax.request({
+            url: '../proxy.php',
+            scope : this,
+            params : {
+                action : 607,
+                data : Ext.util.JSON.encode( data )
+            },
+            success: function(response, opts) {
+                try{
+                    r = Ext.util.JSON.decode( response.responseText );
+                }catch(e){
+                    return POS.error(response, e);
+                }
+
+                Ext.getBody().unmask(); 
+
+                //limpiar la forma      
+                Aplicacion.Operaciones.currentInstance.prestamoEfectivoPanel.reset();
+
+
+                //informamos lo que sucedio
+                if( r.success)
+                {
+                    Ext.Msg.alert("Operaciones","Se ha registrado el nuevo prestamo de efectivo"); 
+                }
+                else
+                {
+                    Ext.Msg.alert("Operaciones","Error: " + r.success); 
+                }
+            },
+            failure: function( response ){
+                POS.error( response );
+            }
+        }); 
+
+    };
+    
+    
+    
+    
+    
+   /* ***************************************************************************
+   * Abonar a Prestamo Sucursal
+   * 
+   *************************************************************************** */
+
+    /**
+     * Registra el model para listaDePrestamosSucursal
+     */
+    Ext.regModel('listaDePrestamosSucursalModel', {
+        fields: [
+            { name: 'id_prestamo',     type: 'int'},
+            { name: 'concepto',      type: 'string'}
+        ]
+    });
+
+
+
+    /**
+     * Contiene un objeto con la lista de autorizaciones actual, para no estar
+     * haciendo peticiones a cada rato
+     */
+    Aplicacion.Operaciones.prototype.listaDePrestamosSucursal = {
+        lista : null,
+        lastUpdate : null,
+        hash: null
+    };
+
+    /**
+     * Es el Store que contiene la lista de prestamos a sucursales cargada con una peticion al servidor.
+     * Recibe como parametros un modelo y una cadena que indica por que se va a sortear (ordenar) 
+     * en este caso ese filtro es dado por 
+     * @return Ext.data.Store
+     */
+    Aplicacion.Operaciones.prototype.listaDePrestamosSucursalStore = new Ext.data.Store({
+        model: 'listaDePrestamosSucursalModel' ,
+        sorters: 'sucursal',
+        
+
+        getGroupString : function(record) {
+            return record.get("sucursal");
+        }
+    });
+
+
+
+    /**
+     * Leer la lista de autorizaciones del servidor mediante AJAX
+     */
+
+    Aplicacion.Operaciones.prototype.listaDePrestamosSucursalLoad = function (){
+	
+	    if(DEBUG){
+		    console.log("Actualizando lista de autorizaciones ....");
+	    }
+	
+	    Ext.Ajax.request({
+		    url: '../proxy.php',
+		    scope : this,
+		    params : {
+			    action : 609
+		    },
+		    success: function(response, opts) {
+			    try{
+				    prestamos = Ext.util.JSON.decode( response.responseText );				
+			    }catch(e){
+				    return POS.error(e);
+			    }
+			
+			
+			    //volver a intentar			
+			    if( !prestamos.success ){
+				    return POS.error(prestamos);
+			    }
+			
+			
+			    this.listaDePrestamosSucursal.lista = prestamos.data;
+			    this.listaDePrestamosSucursal.lastUpdate = Math.round(new Date().getTime()/1000.0);
+			    this.listaDePrestamosSucursal.hash = prestamos.hash;
+
+			    //agregarlo en el store
+			    //console.log( response.responseText )
+			    //console.log( "ya", prestamos.data , this.listaDePrestamosSucursalStore    )
+			    
+			    this.listaDePrestamosSucursalStore.loadData( prestamos.data );
+
+			    if(DEBUG){
+                    console.log("Lista de prestamos retrived !", prestamos, this.listaDePrestamosSucursalStore );
+                }
+		    },
+		    failure: function( response ){
+			    POS.error( response );
+		    }
+	    });
+
+    };
+
+    //panel de 
+    Aplicacion.Operaciones.prototype.abonarPrestamoEfectivoSucursalPanel = null;
+
+    /**
+        *
+        *
+        */
+    Aplicacion.Operaciones.prototype.abonarPrestamoEfectivoSucursalPanelCreator = function (){
+
+
+        this.abonarPrestamoEfectivoSucursalPanel = new Ext.Panel({
+            items: [{
+			    xtype: 'list',
+			    width : '100%',
+    			height: 220,
+			    emptyText: "vacio",
+                store: this.listaDePrestamosSucursalStore,
+                itemTpl: '<div class="listaDeAutorizacionesAutorizacion">ID del prestamo : {id_prestamo}&nbsp; Se presto el {concepto}</div>',
+                grouped: true,
+                indexBar: false,
+                listeners : {
+                    "selectionchange"  : function ( view, nodos, c ){
+                        if(nodos.length > 0){
+                            Aplicacion.Operaciones.currentInstance.abonarPrestamosEfectivoSucursalUpdateDetallesPrestamo( nodos[0].data );                            
+                        }
+                        view.deselectAll();
+                    }
+                }
+            },{
+                    xtype: 'fieldset',
+                    title: 'Detalles del Prestamo a Sucursal',
+                    //instructions: 'Todos los campos son necesarios para una nueva autorizacion.',
+                    items: [                       
+                        new Ext.form.Text({
+                            id: 'Operaciones-abonarPrestamoEfectivoSucursal-prestamo',
+                            label: 'ID Prestamo',
+                            name: 'prestamo'
+                        }),
+                        new Ext.form.Text({
+                            id: 'Operaciones-abonarPrestamoEfectivoSucursal-sucursal',
+                            label: 'Sucursal',
+                            name: 'sucursal'
+                        }),
+                        new Ext.form.Text({
+                            id: 'Operaciones-abonarPrestamoEfectivoSucursal-saldo',
+                            label: 'Saldo',
+                            name: 'saldo'
+                        }),
+                        new Ext.form.Text({
+                            id: 'Operaciones-abonarPrestamoEfectivoSucursal-concepto',
+                            label: 'Concepto',
+                            name: 'concepto'
+                        }),
+                        new Ext.form.Text({
+                            id: 'Operaciones-abonarPrestamoEfectivoSucursal-monto',
+                            label: 'Monto',
+                            name: 'monto',
+                            required:true,
+                            listeners : {
+                                'focus' : function (){
+                                    kconf = {
+                                        type : 'num',
+                                        submitText : 'Aceptar'
+                                    };
+                                    POS.Keyboard.Keyboard( this, kconf );
+                                }
+                            }
+                        })          
+                    ]},
+                new Ext.Button({ ui  : 'action', text: 'Abonar', margin : 5,  handler : this.abonarPrestamosEfectivoSucursalValidator, disabled : false })
+            ]            
+        });
+    };
+
+
+
+
+    /**
+        *
+        *
+        */
+    Aplicacion.Operaciones.prototype.abonarPrestamosEfectivoSucursalUpdateDetallesPrestamo = function( prestamo ){
+        
+        Ext.getCmp('Operaciones-abonarPrestamoEfectivoSucursal-prestamo').setValue( prestamo.id_prestamo );
+        Ext.getCmp('Operaciones-abonarPrestamoEfectivoSucursal-sucursal').setValue( prestamo.sucursal );
+        Ext.getCmp('Operaciones-abonarPrestamoEfectivoSucursal-concepto').setValue( prestamo.concepto );
+        Ext.getCmp('Operaciones-abonarPrestamoEfectivoSucursal-saldo').setValue( prestamo.saldo ); 
+        Ext.getCmp('Operaciones-abonarPrestamoEfectivoSucursal-monto').setValue("");
+        
+    }; 
+
+
+    
+    /**
+        *
+        *
+        */        
+    Aplicacion.Operaciones.prototype.abonarPrestamosEfectivoSucursalValidator = function(){                
+               
+        var transaccion = {
+            monto: null,
+            id_prestamo : null,
+            saldo : null,
+            cambio : null
+        };
+        
+        transaccion.monto = parseFloat( Ext.getCmp('Operaciones-abonarPrestamoEfectivoSucursal-monto').getValue() );
+        transaccion.id_prestamo = Ext.getCmp('Operaciones-abonarPrestamoEfectivoSucursal-prestamo').getValue();
+        transaccion.saldo = parseFloat( Ext.getCmp('Operaciones-abonarPrestamoEfectivoSucursal-saldo').getValue() );      
+        
+        if( transaccion.monto >= transaccion.saldo )
+        {
+            transaccion.cambio =  parseFloat( transaccion.monto - transaccion.saldo );
+            transaccion.monto = transaccion.saldo;            
+            transaccion.saldo =  parseFloat( 0 );
+        }
+        else
+        {
+             transaccion.cambio =  parseFloat( 0 );        
+            transaccion.saldo = parseFloat( transaccion.saldo - transaccion.monto );
+        }
+          
+       
+        
+        //validamos el monto
+        if( isNaN( parseFloat( transaccion.monto) ) || parseFloat( transaccion.monto) <= 0 ){
+
+            Ext.Anim.run(Ext.getCmp('Operaciones-abonarPrestamoEfectivoSucursal-monto'), 
+                'fade', {duration: 250,
+                out: true,
+                autoClear: true
+            });
+
+            return;
+        }
+        
+        Aplicacion.Operaciones.currentInstance.abonarPrestamosEfectivoSucursalNuevoAbono( transaccion );
+                
+    };
+
+
+    /**
+        *
+        *
+        */
+    Aplicacion.Operaciones.prototype.abonarPrestamosEfectivoSucursalNuevoAbono = function( transaccion ){
+    
+        if(DEBUG){
+		    console.log("Ingresando nuevo Abono a prestamo sucursal..");
+	    }
+	
+	    Ext.Ajax.request({
+		    url: '../proxy.php',
+		    scope : this,
+		    params : {
+			    action : 608,
+			    monto : transaccion.monto,
+			    id_prestamo : transaccion.id_prestamo
+		    },
+		    success: function(response, opts) {
+		    
+			    try{
+				    abono = Ext.util.JSON.decode( response.responseText );				
+			    }catch(e){
+				    return POS.error(e);
+			    }
+			
+			
+			    //volver a intentar			
+			    if( !abono.success ){
+				    //return POS.error(abono);
+				    Ext.Msg.alert("Operaciones",abono.reason);
+				    
+			    }
+			
+			        if(DEBUG){
+                        console.warn("IMPRMIR TICKET");
+			        }
+			
+			    Ext.Msg.alert( "Operaciones","Abonado: " + POS.currencyFormat(transaccion.monto) + "<br>Su cambio: " + POS.currencyFormat(transaccion.cambio) + "<br>Saldo Pendiente: " + POS.currencyFormat(transaccion.saldo) );
+                
+                //actualizamos la lista
+                Aplicacion.Operaciones.currentInstance.listaDePrestamosSucursalLoad();
+                
+                //limpiamos el formulario
+                Ext.getCmp('Operaciones-abonarPrestamoEfectivoSucursal-prestamo').setValue( "" );
+                Ext.getCmp('Operaciones-abonarPrestamoEfectivoSucursal-sucursal').setValue( "" );
+                Ext.getCmp('Operaciones-abonarPrestamoEfectivoSucursal-concepto').setValue( "" );
+                Ext.getCmp('Operaciones-abonarPrestamoEfectivoSucursal-saldo').setValue( "" ); 
+                Ext.getCmp('Operaciones-abonarPrestamoEfectivoSucursal-monto').setValue("");
+			   
+		    },
+		    failure: function( response ){
+			    POS.error( response );
+		    }
+	    });
+    
+    };
+
+
+
+
+/* ***************************************************************************
+   * Abonar a Venta Sucursal
+   * 
+   *************************************************************************** */
+   
+    Aplicacion.Operaciones.prototype.abonarVentaSucursalPanel = null;
+
+    Aplicacion.Operaciones.prototype.abonarVentaSucursalPanelCreator = function (){
+
+
+        this.abonarVentaSucursalPanel = new Ext.form.FormPanel({
+		    items: [{
+			    xtype: 'fieldset',
+			    title: 'Abonar a venta',
+			    id : 'Operaciones-SeleccionVentaCredito',
+			    instructions: 'Seleccione una venta para ver sus detalles.',
+			    items: [{
+				    id : "Operaciones-CreditoVentasLista",
+				    xtype: 'selectfield',
+				    name: 'options',
+				    label : "Venta", 
+				    options: [  ],
+				    listeners : {
+						    "change" : function(a,b) {Aplicacion.Operaciones.currentInstance.creditoDeClientesOptionChange(a,b);} 
+					    }
+				    }]
+			    },{
+				    xtype: 'fieldset',
+				    id : 'Operaciones-DetallesVentaCredito',
+				    items: [
+					    new Ext.form.Text({ name: 'fecha', label: 'Fecha'  }),
+					    new Ext.form.Text({ name: 'sucursal', label: 'Sucursal'  }),
+					    new Ext.form.Text({ name: 'user_id', label: 'Vendedor'  }),
+					    new Ext.form.Text({ name: 'total', label: 'Total'  }),
+					    new Ext.form.Text({
+                            name: 'abonado',
+                            label: 'Abonado',
+                            id:'Operaciones-DetallesVentaCredito-abonado'
+                        }),
+					    new Ext.form.Text({
+                            name: 'saldo',
+                            label: 'Saldo',
+                            id:'Operaciones-DetallesVentaCredito-saldo'
+                        }) 
+			        ]
+			    },{
+				    xtype: 'fieldset',
+				    title: 'Abonar a la venta',
+				    id : 'Operaciones-DetallesVentaAbonarCredito',
+				    hidden : true,
+				    items: [
+					    new Ext.form.Text({
+                            name: 'saldo',
+                            label: 'Saldo',
+                            id: 'Operaciones-DetallesVentaAbonarCredito-saldo'
+                        }),
+					    new Ext.form.Text({
+                            id: 'Operaciones-abonarMonto',
+                            name: 'monto',
+                            label: 'Monto',
+                            listeners : {
+                                'focus' : function (){
+                                    kconf = {
+                                        type : 'num',
+                                        submitText : 'Aceptar'
+                                    };
+                                    POS.Keyboard.Keyboard( this, kconf );
+                                }
+                            }
+                        })
+				    ]
+			    },
+
+			    new Ext.Button({ id : 'Operaciones-AbonarVentaBoton', ui  : 'action', text: 'Abonar', margin : 15, handler : this.abonarVentaBoton, hidden : true }),
+			    new Ext.Button({ id : 'OperacionesAbonarVentaBotonAceptar', ui  : 'action', text: 'Abonar', margin : 15, handler : this.doAbonarValidator, hidden : true }),
+			    new Ext.Button({ id : 'Operaciones-AbonarVentaBotonCancelar', ui  : 'drastic', text: 'Cancelar', margin : 15, handler : this.abonarVentaCancelarBoton, hidden : true })
+
+
+		    ]
+		});
+
+    };
+
+
+
+    /**
+        *
+        *
+        */        
+    Aplicacion.Operaciones.prototype.creditoDeClientesOptionChange = function ( a, v )
+    {
+
+	    //el valor de -1 es para el mensaje de seleccionar, todo el que este arriba
+	    //de eso equivale al id de la venta
+	
+	    if(v == -1){
+		    Ext.getCmp("Operaciones-DetallesVentaCredito").hide();
+		    Ext.getCmp("Operaciones-AbonarVentaBoton").hide();
+
+		    return;
+	    }
+	
+	
+
+	
+	
+	
+	    //buscar esta venta especifica en la estructura
+	    lista = Aplicacion.Clientes.currentInstance.listaDeCompras.lista;
+	    var venta = null;
+	
+	    for (var i = lista.length - 1; i >= 0; i--){
+		    if (  lista[i].id_venta  == v ) {
+			    venta = lista[i];
+		    }
+	    }
+
+
+	    //fecha
+	    Ext.getCmp("Operaciones-DetallesVentaCredito").getComponent(0).setValue(venta.fecha);
+	
+	    //sucursal
+	    Ext.getCmp("Operaciones-DetallesVentaCredito").getComponent(1).setValue(venta.sucursal);
+	
+	    //vendedor
+	    Ext.getCmp("Operaciones-DetallesVentaCredito").getComponent(2).setValue(venta.cajero);
+	
+	    //total
+	    Ext.getCmp("Operaciones-DetallesVentaCredito").getComponent(3).setValue( POS.currencyFormat(venta.total));
+	
+	    //abonado
+	    Ext.getCmp("Operaciones-DetallesVentaCredito").getComponent(4).setValue( POS.currencyFormat(venta.pagado));
+
+	    //saldo
+	    Ext.getCmp("Operaciones-DetallesVentaCredito").getComponent(5).setValue( POS.currencyFormat(venta.total - venta.pagado));
+
+        //almacenamos el valor de la venta a credito
+        Aplicacion.Operaciones.currentInstance.detalleVentaCredito = venta;
+
+
+        Ext.getCmp("Operaciones-DetallesVentaCredito").show();
+
+        //ocultamos el boton de abonar a venta si la venta a credito esta liquidada
+
+        if( (venta.total - venta.pagado ) > 0 )
+        {
+            Ext.getCmp("Operaciones-AbonarVentaBoton").show();
+        }
+        else
+        {
+            Ext.getCmp("Operaciones-AbonarVentaBoton").hide();
+        }
+
+
+
+
+    };        
+
+
+    /**
+        *
+        *
+        */
+    Aplicacion.Clientes.prototype.detallesDeClientesPanelUpdater = function ( cliente )
+    {
+
+	    //actualizar los detalles del cliente
+	    var detallesPanel = Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0];
+	    detallesPanel.loadRecord( cliente );
+	
+	    //actualizar las compras del cliente
+	    Aplicacion.Clientes.currentInstance.comprasDeClientesPanelUpdater( cliente );
+	
+	
+	    //actualizar el panel de credito y abonos
+	    Aplicacion.Clientes.currentInstance.creditoDeClientesPanelUpdater( cliente );
+    };
+
+    /**
+        *
+        *
+        */
+    Aplicacion.Clientes.prototype.creditoDeClientesPanelUpdater = function ( cliente  ) 
+    {
+
+	    cid = cliente.data.id_cliente;
+
+	    lista = Aplicacion.Clientes.currentInstance.listaDeCompras.lista;
+
+	    ventasCredito  = [{
+		    text : "Seleccione una venta a credito de la lista",
+		    value : -1
+	    }];
+
+        //buscar en todas la ventas
+	    for (var i = lista.length - 1; i >= 0; i--){
+            //si la venta es de este cliente, y es a credito y tiene algun saldo, mostrarla en la lista
+		    if ( lista[i].id_cliente == cid && lista[i].tipo_venta  == "credito" ) {
+                
+                if(parseFloat(lista[i].total) != parseFloat(lista[i].pagado)){
+			        ventasCredito.push( {
+				        text : "Venta " + lista[i].id_venta + " ( "+lista[i].fecha+" ) ",
+				        value : lista[i].id_venta
+			        });    
+                }
+
+		    }
+	    }
+	
+	    Ext.getCmp("Clientes-DetallesVentaCredito").hide();
+	    Ext.getCmp("Clientes-AbonarVentaBoton").hide();
+
+	    if(DEBUG){
+		    console.log('este cliente tien ' + ventasCredito.length + ' ventas a credito');
+	    }
+	
+	    if( ventasCredito.length == 1){
+		    //no hay ventas a credito
+		    Ext.getCmp("Clentes-CreditoVentasLista").hide();
+		    Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getTabBar().getComponent(2).hide();
+	    }else{
+		    //si hay ventas a credito
+		    Ext.getCmp("Clentes-CreditoVentasLista").show();
+		    Ext.getCmp("Clentes-CreditoVentasLista").setOptions( ventasCredito );		
+		    Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getTabBar().getComponent(2).show();
+	    }
+	
+    };        
+    
+    
+    
+    
 
 
 /**
-*
-*/
-Aplicacion.Efectivo.prototype.nuevoPrestamoEfectivoValidator = function ()
-{
-    //obtener los valores de la forma
-    var values = Aplicacion.Efectivo.currentInstance.operacionInterSucursalEfectivoPanel.getValues();
 
-    if( !( Ext.getCmp( 'Efectivo-operacionInterSucursalEfectivo-sucursal' ).getValue() ) )
-    {
-        Ext.Anim.run(Ext.getCmp( 'Efectivo-operacionInterSucursalEfectivo-sucursal' ),
-            'fade', {duration: 250,
-            out: true,
-            autoClear: true
-        });
-
-        return;
-    }
-
-
-
-
-    if( values.concepto == "" )
-    {
-        Ext.Anim.run(Ext.getCmp( 'Efectivo-operacionInterSucursalEfectivo-concepto' ),
-            'fade', {duration: 250,
-            out: true,
-            autoClear: true
-        });
-
-        return;
-    }
-
-    if( !( values.monto && /^-?\d+(\.\d+)?$/.test(values.monto + '') ) ){
-
-        Ext.Anim.run(Ext.getCmp( 'Efectivo-operacionInterSucursalEfectivo-monto' ), 
-            'fade', {duration: 250,
-            out: true,
-            autoClear: true
-        });
-
-        return;
-    }
-    
-    if( values.nota == "" )
-    {
-        Ext.Anim.run(Ext.getCmp( 'Efectivo-operacionInterSucursalEfectivo-nota' ),
-            'fade', {duration: 250,
-            out: true,
-            autoClear: true
-        });
-
-        return;
-    }
-
-    Aplicacion.Efectivo.currentInstance.nuevaOperacionInterSucursalEfectivo( values );
-
-};
-
-
-
-Aplicacion.Efectivo.prototype.operacionInterSucursalEfectivoPanel = null;
-
-
-Aplicacion.Efectivo.prototype.operacionInterSucursalEfectivoPanelCreator = function (){
-
-
-    this.operacionInterSucursalEfectivoPanel = new Ext.form.FormPanel({
-            listeners : {
-                    "show" : function (){
-                        Ext.getCmp("Efectivo-operacionInterSucursalEfectivo-sucursal").setOptions( Aplicacion.Efectivo.currentInstance.sucursalesLista );
-                    }
-                },
-            items: [{
-
-                xtype: 'fieldset',
-                title: 'Nuevo prestamo de efectivo',
-                instructions: 'Todos los campos son necesarios para una nueva autorizacion.',
-                items: [
-                    new Ext.form.Select({ 
-                        id:'Efectivo-operacionInterSucursalEfectivo-sucursal',
-                        name : 'sucursal',
-                        label: 'Sucursal',
-                        required:true,
-                        options: [ {text : "Seleccione una sucursal", value : null } ],
-                        listeners : {
-                            "change" : function(a,b) {Aplicacion.Efectivo.currentInstance.cargarEmpleados(a,b);}
-                        }
+abonar = [ new Ext.form.FormPanel({
+		items: [{
+			xtype: 'fieldset',
+			title: 'Abonar a venta',
+			id : 'Clientes-SeleccionVentaCredito',
+			instructions: 'Seleccione una venta para ver sus detalles.',
+			items: [{
+				id : "Clentes-CreditoVentasLista",
+				xtype: 'selectfield',
+				name: 'options',
+				label : "Venta", 
+				options: [  ],
+				listeners : {
+						"change" : function(a,b) {Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange(a,b);} 
+					}
+				}]
+			},{
+				xtype: 'fieldset',
+				id : 'Clientes-DetallesVentaCredito',
+				items: [
+					new Ext.form.Text({ name: 'fecha', label: 'Fecha'  }),
+					new Ext.form.Text({ name: 'sucursal', label: 'Sucursal'  }),
+					new Ext.form.Text({ name: 'user_id', label: 'Vendedor'  }),
+					new Ext.form.Text({ name: 'total', label: 'Total'  }),
+					new Ext.form.Text({
+                        name: 'abonado',
+                        label: 'Abonado',
+                        id:'Clientes-DetallesVentaCredito-abonado'
                     }),
-                    new Ext.form.Text({
-                        id: 'Efectivo-operacionInterSucursalEfectivo-concepto',
-                        label: 'Concepto',
-                        name: 'concepto',
-                        required:true,
-                        listeners : {
-                            'focus' : function (){
-
-                                kconf = {
-                                    type : 'alfa',
-                                    submitText : 'Aceptar'
-                                };
-                                POS.Keyboard.Keyboard( this, kconf );
-                            }
-                        }
+					new Ext.form.Text({
+                        name: 'saldo',
+                        label: 'Saldo',
+                        id:'Clientes-DetallesVentaCredito-saldo'
+                    }) 
+			    ]
+			},{
+				xtype: 'fieldset',
+				title: 'Abonar a la venta',
+				id : 'Clientes-DetallesVentaAbonarCredito',
+				hidden : true,
+				items: [
+					new Ext.form.Text({
+                        name: 'saldo',
+                        label: 'Saldo',
+                        id: 'Clientes-DetallesVentaAbonarCredito-saldo'
                     }),
-                    new Ext.form.Text({
-                        id: 'Efectivo-operacionInterSucursalEfectivo-monto',
-                        label: 'Monto',
+					new Ext.form.Text({
+                        id: 'Cliente-abonarMonto',
                         name: 'monto',
-                        required:true,
+                        label: 'Monto',
                         listeners : {
                             'focus' : function (){
                                 kconf = {
@@ -449,149 +1088,93 @@ Aplicacion.Efectivo.prototype.operacionInterSucursalEfectivoPanelCreator = funct
                                 POS.Keyboard.Keyboard( this, kconf );
                             }
                         }
-                    }),
-                    new Ext.form.Text({
-                        id: 'Efectivo-operacionInterSucursalEfectivo-nota',
-                        label: 'Nota',
-                        name: 'nota',
-                        required:true,
-                        listeners : {
-                            'focus' : function (){
-
-                                kconf = {
-                                    type : 'alfa',
-                                    submitText : 'Aceptar'
-                                };
-                                POS.Keyboard.Keyboard( this, kconf );
-                            }
-                        }
-                    }),
-                    new Ext.form.Hidden({
-                        name: 'folio',
-                        value:'-1'
                     })
-                ]},
-                new Ext.Button({ ui  : 'action', text: 'Registrar Prestamo de Efectivo', margin : 5,  handler : this.nuevoPrestamoEfectivoValidator, disabled : false })
-        ]});
+				]
+			},
+
+			new Ext.Button({ id : 'Clientes-AbonarVentaBoton', ui  : 'action', text: 'Abonar', margin : 15, handler : this.abonarVentaBoton, hidden : true }),
+			new Ext.Button({ id : 'Clientes-AbonarVentaBotonAceptar', ui  : 'action', text: 'Abonar', margin : 15, handler : this.doAbonarValidator, hidden : true }),
+			new Ext.Button({ id : 'Clientes-AbonarVentaBotonCancelar', ui  : 'drastic', text: 'Cancelar', margin : 15, handler : this.abonarVentaCancelarBoton, hidden : true })
+
+
+		]}
+	)];
+	
+	
+	
+	
+	Aplicacion.Clientes.prototype.creditoDeClientesOptionChange = function ( a, v )
+{
+
+	//el valor de -1 es para el mensaje de seleccionar, todo el que este arriba
+	//de eso equivale al id de la venta
+	
+	if(v == -1){
+		Ext.getCmp("Clientes-DetallesVentaCredito").hide();
+		Ext.getCmp("Clientes-AbonarVentaBoton").hide();
+
+		return;
+	}
+	
+	
+
+	
+	
+	
+	//buscar esta venta especifica en la estructura
+	lista = Aplicacion.Clientes.currentInstance.listaDeCompras.lista;
+	var venta = null;
+	
+	for (var i = lista.length - 1; i >= 0; i--){
+		if (  lista[i].id_venta  == v ) {
+			venta = lista[i];
+		}
+	}
+
+
+	//fecha
+	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(0).setValue(venta.fecha);
+	
+	//sucursal
+	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(1).setValue(venta.sucursal);
+	
+	//vendedor
+	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(2).setValue(venta.cajero);
+	
+	//total
+	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(3).setValue( POS.currencyFormat(venta.total));
+	
+	//abonado
+	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(4).setValue( POS.currencyFormat(venta.pagado));
+
+	//saldo
+	Ext.getCmp("Clientes-DetallesVentaCredito").getComponent(5).setValue( POS.currencyFormat(venta.total - venta.pagado));
+
+    //almacenamos el valor de la venta a credito
+    Aplicacion.Clientes.currentInstance.detalleVentaCredito = venta;
+
+
+    Ext.getCmp("Clientes-DetallesVentaCredito").show();
+
+    //ocultamos el boton de abonar a venta si la venta a credito esta liquidada
+
+    if( (venta.total - venta.pagado ) > 0 )
+    {
+        Ext.getCmp("Clientes-AbonarVentaBoton").show();
+    }
+    else
+    {
+        Ext.getCmp("Clientes-AbonarVentaBoton").hide();
+    }
+
+
+
 
 };
+	
+	
 
-/*
-
-
-Aplicacion.Efectivo.prototype.operacionInterSucursalProductoPanel = null;
-
-
-
-Aplicacion.Efectivo.prototype.operacionIntersucursalProductoPanelCreator = function (){
-
-    
-    this.operacionInterSucursalProductoPanel = new Ext.form.FormPanel({
-            items: [{
-
-                xtype: 'fieldset',
-                title: 'Nueva venta de producto',
-                instructions: 'Todos los campos son necesarios para una nueva autorizacion.',
-                defaults : {
-                    listeners : {
-                        "change" : function (){
-                            Aplicacion.Efectivo.currentInstance.nuevoGastoValidator();
-                        }
-                    }
-                },
-                items: [
-                    {
-                        xtype : "textfield",
-                        label : "Monto",
-                        name : "monto",
-                        listeners : {
-                            'focus' : function (){
-
-                                kconf = {
-                                    type : 'num',
-                                    submitText : 'Aceptar',
-                                    callback : Aplicacion.Efectivo.currentInstance.nuevoGastoValidator
-                                };
-                                POS.Keyboard.Keyboard( this, kconf );
-                            }
-                        }
-                        
-                    },{
-                        xtype : "textfield",
-                        label : "Folio",
-                        name : "folio",
-                        listeners : {
-                            'focus' : function (){
-
-                                kconf = {
-                                    type : 'alfa',
-                                    submitText : 'Aceptar',
-                                    callback : Aplicacion.Efectivo.currentInstance.nuevoGastoValidator
-                                };
-                                POS.Keyboard.Keyboard( this, kconf );
-                            }
-                        }
-
-                    },{
-                        xtype : "datepickerfield",
-                        label : "Fecha",
-                        picker : { yearFrom : 2010 },
-                        name : "fecha"
-                    },{
-                        xtype : "selectfield",
-                        label : "Concepto",
-                        name : "concepto",
-                        options : [
-                            {
-                                text : "Luz",
-                                value : "luz"
-                            },{
-                                text : "Predial",
-                                value : "predial"
-                            },{
-                                text : "Sueldo",
-                                value : "sueldo"
-                            },{
-                                text : "Otro",
-                                value : "otro"
-                            }
-                        ]
-                    },{
-                        xtype : "textfield",
-                        label : "Nota",
-                        name : "nota",
-                        listeners : {
-                            'focus' : function (){
-
-                                kconf = {
-                                    type : 'alfa',
-                                    submitText : 'Aceptar',
-                                    callback : Aplicacion.Efectivo.currentInstance.nuevoGastoValidator
-                                };
-                                POS.Keyboard.Keyboard( this, kconf );
-                            }
-                        }
-                    }
-                ]}
-        ]});
-
-}*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+*/
 
 POS.Apps.push( new Aplicacion.Operaciones() );
 
