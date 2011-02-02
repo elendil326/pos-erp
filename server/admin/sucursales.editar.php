@@ -23,11 +23,18 @@
 
 
 <h2>Cerrar Sucursal</h2>
-<input type="button" onClick="cerrar()" value="Cerrar"/>
+<h4><input type="button" onClick="seguroDeCerrar()" value="Cerrar esta sucursal"/></h4>
 
 
 <script>
+	function seguroDeCerrar(){
+			html = "<h1>Cerrar sucursal</h1>";
+			html += "&iquest; Esta seguro de que desea cerrar esta sucursal ?<br><br>";
+			html += "<div align='center'><input type='button' value='Aceptar' onclick='cerrar()'><input type='button' value='Cancelar' onclick='jQuery(document).trigger(\"close.facebox\");'></div>"
 
+			jQuery.facebox( html );
+	}
+	
     function cerrar(){
         
         jQuery.ajax({
