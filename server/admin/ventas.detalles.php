@@ -193,7 +193,7 @@ if($venta->getTipoVenta() == 'credito'){
 
 
 
-<?php if($venta->getTipoVenta() == 'credito'){ ?>
+<?php if($venta->getTipoVenta() == 'credito' && $venta->getLiquidada() != 1 ){ ?>
 
 
 

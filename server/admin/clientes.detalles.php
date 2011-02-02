@@ -349,6 +349,7 @@ if($activo && (sizeof($ventasCredito) > 0)){
     $tabla = new Tabla( $header, $abonos );
     $tabla->addColRender( "monto", "moneyFormat" ); 
     $tabla->addNoData("Este cliente no ha realizado ningun abono.");
+	$tabla->addColRender( "fecha", "toDate" );	
     $tabla->render();
  } 
 

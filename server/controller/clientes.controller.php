@@ -485,6 +485,9 @@ function abonarVenta( $args ){
         die('{"success": false, "reason": "La venta : ' . $data -> id_venta . ' esta liquidada. "}');
     }
 
+	//si pago mas de lo que debo
+
+
     $pagosVenta = new PagosVenta();
     $pagosVenta -> setIdVenta( $data -> id_venta );
     $pagosVenta -> setIdSucursal( $_SESSION['sucursal']);
@@ -515,6 +518,7 @@ function abonarVenta( $args ){
 	    
 	    if( $venta -> getPagado() >= $venta -> getTotal() ){
 	        $venta -> setLiquidada( 1 );
+
 	    }
 	    
 		VentasDAOBase::save( $venta );

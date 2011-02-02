@@ -620,7 +620,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
     {
         array_push( $flujo, array(
             "tipo" => "venta",
-            "concepto" => "Venta de Contado",
+            "concepto" => "<a href='ventas.php?action=detalles&id=" . $i->getIdVenta() . "'>Venta de contado</a>",
             "monto" => $i->getPagado(),
             "usuario" => $i->getIdUsuario()
         ));
@@ -645,7 +645,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 	foreach( $results as $pago ){
 		array_push($flujo, array(
 			"tipo" => "abono",
-			"concepto" => "Abono a venta",
+			"concepto" => "<a href='ventas.php?action=detalles&id=" . $pago->getIdVenta() . "'>Abono a venta</a>",
 			"monto" => $pago->getMonto(),
 			"usuario" => $pago->getIdUsuario()
 		));
@@ -658,7 +658,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
     $header = array(
                "tipo" => "Tipo",
                "concepto" => "Concepto",
-               "usuario" => "Descripcion",
+               "usuario" => "Usuario",
                "monto" => "Monto" );
 
 

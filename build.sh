@@ -30,7 +30,7 @@ fi
 #renombrar el archivo config.php a config.example.php,
 #para que al ejecutar el sistema, no encuentre el config
 #y comienze la configuracion
-mv server/config.php server/config.example.php
+#mv server/config.php server/config.example.php
 
 
 function parsefiles(){

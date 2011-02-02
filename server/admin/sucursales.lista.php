@@ -11,10 +11,6 @@ print ("<h1>Lista de sucursales</h1>");
 print ("<h2>Sucursales Activas</h2>");
 
 $data = array();
-function toUnit( $e )
-{
-	return "<b>" . number_format($e, 2) . "</b>kg";
-}
 
 foreach( $sucursales as $sucursal ){
 
