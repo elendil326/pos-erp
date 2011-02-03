@@ -28,6 +28,8 @@ Aplicacion.Operaciones.prototype._init = function (){
     Aplicacion.Operaciones.currentInstance.listaDePrestamosSucursalLoad();
     
     Aplicacion.Operaciones.currentInstance.abonarVentaSucursalPanelCreator();
+    
+    Aplicacion.Operaciones.currentInstance.ventaCreditoSucursalPanelCreator();
 	
 	return this;
 };
@@ -41,7 +43,7 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
 	    cls: 'launchscreen',
 	    items: [{
 	        text: 'Vender a sucursal',
-	        card: Aplicacion.Operaciones.currentInstance.cancelarVentaPanel,
+	        card: Aplicacion.Operaciones.currentInstance.ventaCreditoSucursalPanel,
 	        leaf: true
 	    },
 	    {
@@ -1154,11 +1156,41 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
         Ext.getCmp('Operaciones-abonarVentaSucursalPanel-abono').hide();
         Ext.getCmp('Operaciones-abonarVentaSucursalPanelBotonAceptar').hide();
 		Ext.getCmp('Operaciones-abonarVentaSucursalPanelBotonCancelar').hide();				 
-
-        //resetear ese formulario
         
         
     };      
+        
+        
+        
+
+/* ***************************************************************************
+   * Venta a Credito a Sucursal
+   * 
+   *************************************************************************** */
+
+    //panel de 
+    Aplicacion.Operaciones.prototype.ventaCreditoSucursalPanel = null;
+
+    /**
+        *
+        *
+        */
+    Aplicacion.Operaciones.prototype.ventaCreditoSucursalPanelCreator = function (){
+
+        //TODO:Poner algun tipo de bandera
+
+        this.ventaCreditoSucursalPanel = new Ext.form.FormPanel({
+        
+            items: [{ xtype: 'fieldset', title: 'Mostrador'}]
+        
+        });
+
+    };
+
+
+
+        
+        //Aplicacion.Operaciones.currentInstance.ventaCreditoSucursal
         
 
 POS.Apps.push( new Aplicacion.Operaciones() );

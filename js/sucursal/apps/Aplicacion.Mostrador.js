@@ -92,7 +92,7 @@ Aplicacion.Mostrador.prototype.getInfoSucursal = function()
 				console.log("obtenicion de la informacion exitosa ", venta );
 			}
 						
-			Aplicacion.Mostrador.currentInstance.infoSucursal = informacion.datos.id_sucursal;		
+			Aplicacion.Mostrador.currentInstance.infoSucursal = informacion.datos;		
 			
 			if(DEBUG){
 				console.log("Aplicacion.Mostrador.currentInstance.infoSucursal contiene : ", Aplicacion.Mostrador.currentInstance.infoSucursal);	
@@ -869,7 +869,7 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 	}	
 
 	html += "</table>";
-	//html += "<iframe src ='../PRINTER/src/impresion.php?json=" + json + "' width='0px' height='0px'></iframe> ";
+	html += "<iframe src ='PRINTER/src/impresion.php?json=" + json + "' width='0px' height='0px'></iframe> ";
 	
 	this.finishedPanel.update(html);
     Ext.getCmp("Mostrador-mostradorVender").hide( Ext.anims.slide );
@@ -1000,6 +1000,7 @@ Aplicacion.Mostrador.prototype.vender = function ()
 			
 			//almacenamos en el carrito el nombre del empleado
 			Aplicacion.Mostrador.currentInstance.carrito.empleado = venta.empleado;
+			
 			
 			//recargar el inventario
 			Aplicacion.Inventario.currentInstance.cargarInventario();
