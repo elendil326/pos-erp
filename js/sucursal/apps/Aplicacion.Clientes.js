@@ -836,6 +836,8 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
             Ext.getCmp( "Clientes-DetallesVentaCredito-abonado" ).setValue( POS.currencyFormat( transaccion.abonado ) );
             Ext.getCmp( "Clientes-DetallesVentaCredito-saldo" ).setValue( POS.currencyFormat( transaccion.saldo ) );
             Ext.getCmp('Cliente-abonarMonto').setValue("");
+            
+            Ext.getCmp('Clentes-CreditoVentasLista').setValue("");
 
             //mostramos el panel de detalle de venta
 			Aplicacion.Clientes.currentInstance.abonarVentaCancelarBoton();
@@ -867,6 +869,7 @@ Aplicacion.Clientes.prototype.abonarVentaBoton = function (  )
 	Ext.getCmp("Clientes-AbonarVentaBoton").hide();
 
 	Ext.getCmp("Clientes-SeleccionVentaCredito").hide();
+		    
 
     Ext.getCmp('Clientes-DetallesVentaAbonarCredito-saldo').setValue(
         POS.currencyFormat(
@@ -922,9 +925,6 @@ Aplicacion.Clientes.prototype.creditoDeClientesOptionChange = function ( a, v )
 
 		return;
 	}
-	
-	
-
 	
 	
 	

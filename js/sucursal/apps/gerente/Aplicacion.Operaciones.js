@@ -355,7 +355,7 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
                             name : 'sucursal',
                             label: 'Sucursal',
                             required:true,
-                            options: [ {text : "Seleccione una sucursal", value : null } ]
+                            options: [ {text : "Seleccione una sucursal", value : "" } ]
                         }),
                         new Ext.form.Text({
                             id: 'Operaciones-prestamoEfectivo-concepto',
@@ -608,7 +608,7 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
     			height: 220,
 			    emptyText: "vacio",
                 store: this.listaDePrestamosSucursalStore,
-                itemTpl: '<div class="listaDeAutorizacionesAutorizacion">ID del prestamo : {id_prestamo}&nbsp; Se presto el {concepto}</div>',
+                itemTpl: '<div class="listaDeAutorizacionesAutorizacion">ID del prestamo : {id_prestamo}&nbsp; Concepto :  {concepto}</div>',
                 grouped: true,
                 indexBar: false,
                 listeners : {
@@ -703,14 +703,14 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
         
         if( transaccion.monto >= transaccion.saldo )
         {
-            transaccion.cambio =  parseFloat( transaccion.monto - transaccion.saldo );
+            transaccion.cambio = transaccion.monto - transaccion.saldo;
             transaccion.monto = transaccion.saldo;            
             transaccion.saldo =  parseFloat( 0 );
         }
         else
         {
              transaccion.cambio =  parseFloat( 0 );        
-            transaccion.saldo = parseFloat( transaccion.saldo - transaccion.monto );
+            transaccion.saldo = transaccion.saldo - transaccion.monto;
         }
           
        
@@ -800,66 +800,86 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
    
     Aplicacion.Operaciones.prototype.abonarVentaSucursalPanel = null;
 
+
+    /**
+        *
+        *
+        */
     Aplicacion.Operaciones.prototype.abonarVentaSucursalPanelCreator = function (){
 
 
         this.abonarVentaSucursalPanel = new Ext.form.FormPanel({
             listeners : {
 			    "show" : function(){
-			        Aplicacion.Operaciones.currentInstance.abonarVentaSucursalPanelLoadVentas ();
+			        Ext.getCmp("Operaciones-abonarVentaSucursalPanel-abonar-selectSucursal").setOptions( Aplicacion.Efectivo.currentInstance.sucursalesLista );
 			    }
 		    },   
 		    items: [{
 			    xtype: 'fieldset',
 			    title: 'Abonar a venta',
-			    id : 'Operaciones-SeleccionVentaCredito',
+			    id : 'Operaciones-abonarVentaSucursalPanel-abonar',
 			    instructions: 'Seleccione una venta para ver sus detalles.',
-			    items: [{
-				    id : "Operaciones-CreditoVentasLista",
-				    xtype: 'selectfield',
-				    name: 'options',
-				    label : "Venta", 
-				    options: [  ],
-				    listeners : {
-						    "change" : function(a,b) {Aplicacion.Operaciones.currentInstance.creditoDeClientesOptionChange(a,b);} 
+			    items: [
+			        {
+				        xtype: 'selectfield',
+				        id : "Operaciones-abonarVentaSucursalPanel-abonar-selectSucursal",
+				        name: 'optionsSucursal',
+				        label : 'Sucursal', 
+				        options: [{text : "Seleccione una sucursal", value : "" }],
+				        listeners : {
+						        "change" : function(a,b) {
+						            Aplicacion.Operaciones.currentInstance.abonarVentaSucursalPanelLoadVentas( b );
+						        } 
+					    }
+				    },{
+				        xtype: 'selectfield',
+				        id : "Operaciones-abonarVentaSucursalPanel-abonar-selectVenta",
+				        name: 'optionsVenta',
+				        label : "Venta",
+				        options: [ {text : "Seleccione una venta a credito de la lista", value : ""} ],
+				        listeners : {
+						        "change" : function(a,b) {
+						            Aplicacion.Operaciones.currentInstance.abonarVentaSucursalPanelDetalleVenta( b );
+						        } 
 					    }
 				    }]
 			    },{
-				    xtype: 'fieldset',
-				    id : 'Operaciones-DetallesVentaCredito',
+				    xtype: 'fieldset',				    
 				    hidden : true,
+				    title: 'Detalle de la Venta',
+				    id : 'Operaciones-abonarVentaSucursalPanel-detalleVenta',
 				    items: [
-					    new Ext.form.Text({ name: 'fecha', label: 'Fecha'  }),
-					    new Ext.form.Text({ name: 'sucursal', label: 'Sucursal'  }),
-					    new Ext.form.Text({ name: 'user_id', label: 'Vendedor'  }),
-					    new Ext.form.Text({ name: 'total', label: 'Total'  }),
-					    new Ext.form.Text({
-                            name: 'abonado',
-                            label: 'Abonado',
-                            id:'Operaciones-DetallesVentaCredito-abonado'
-                        }),
-					    new Ext.form.Text({
-                            name: 'saldo',
-                            label: 'Saldo',
-                            id:'Operaciones-DetallesVentaCredito-saldo'
-                        }) 
+					    new Ext.form.Text({ name: 'fecha', label: 'Fecha',  id : 'Operaciones-abonarVentaSucursalPanel-detalleVenta-fecha' }),
+					    new Ext.form.Text({ name: 'sucursal', label: 'Sucursal', id : 'Operaciones-abonarVentaSucursalPanel-detalleVenta-sucursal' }),
+					    new Ext.form.Text({ name: 'cajero', label: 'Vendedor', id : 'Operaciones-abonarVentaSucursalPanel-detalleVenta-cajero' }),
+					    new Ext.form.Text({ name: 'total', label: 'Total', id: 'Operaciones-abonarVentaSucursalPanel-detalleVenta-total' }),
+					    new Ext.form.Text({ name: 'abonado', label: 'Abonado', id:'Operaciones-DetallesVentaCredito-detalleVenta-abonado' }),
+					    new Ext.form.Text({ name: 'detalleVentaSaldo', label: 'Saldo', id:'Operaciones-DetallesVentaCredito-detalleVenta-saldo' }) 
 			        ]
 			    },{
 				    xtype: 'fieldset',
 				    title: 'Abonar a la venta',
-				    id : 'Operaciones-DetallesVentaAbonarCredito',
+				    id : 'Operaciones-abonarVentaSucursalPanel-abono',
 				    hidden : true,
 				    items: [
-					    new Ext.form.Text({
-                            name: 'saldo',
-                            label: 'Saldo',
-                            id: 'Operaciones-DetallesVentaAbonarCredito-saldo'
-                        }),
-					    new Ext.form.Text({
-                            id: 'Operaciones-abonarMonto',
-                            name: 'monto',
-                            label: 'Monto',
-                            listeners : {
+					    new Ext.form.Text({ name: 'abonoSaldo', label: 'Saldo', id: 'Operaciones-abonarVentaSucursalPanel-abono-saldo' }),
+					    {
+				            xtype: 'selectfield',
+				            id : 'Operaciones-abonarVentaSucursalPanel-abono-tipoPago',
+				            name: 'abonoTipoPago',
+				            label : 'Tipo de pago',
+				            options: [ 
+				                {
+				                    text : "Seleccione un tipo de pago", value : ""
+				                },{
+				                    text : "Efectivo", value : "efectivo"
+				                },{
+				                    text : "Cheque", value : "cheque"
+				                } 
+				            ]
+				        },
+					    new Ext.form.Text({ id: 'Operaciones-abonarVentaSucursalPanel-abono-monto', name: 'monto', label: 'Monto',
+					        listeners : {
                                 'focus' : function (){
                                     kconf = {
                                         type : 'num',
@@ -872,9 +892,9 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
 				    ]
 			    },
 
-			    new Ext.Button({ id : 'Operaciones-AbonarVentaBoton', ui  : 'action', text: 'Abonar', margin : 15, handler : this.abonarVentaBoton, hidden : true }),
-			    new Ext.Button({ id : 'OperacionesAbonarVentaBotonAceptar', ui  : 'action', text: 'Abonar', margin : 15, handler : this.doAbonarValidator, hidden : true }),
-			    new Ext.Button({ id : 'Operaciones-AbonarVentaBotonCancelar', ui  : 'drastic', text: 'Cancelar', margin : 15, handler : this.abonarVentaCancelarBoton, hidden : true })
+			    new Ext.Button({ id : 'Operaciones-abonarVentaSucursalPanelBoton', ui  : 'action', text: 'Abonar', margin : 15, handler : this.abonarVentaSucursalShowPanelAbonar, hidden : true }),
+			    new Ext.Button({ id : 'Operaciones-abonarVentaSucursalPanelBotonAceptar', ui  : 'action', text: 'Abonar', margin : 15, handler : this.abonarVentaSucursalValidator, hidden : true }),
+			    new Ext.Button({ id : 'Operaciones-abonarVentaSucursalPanelBotonCancelar', ui  : 'drastic', text: 'Cancelar', margin : 15, handler : this.abonarVentaSucursalCancelar, hidden : true })
 
 
 		    ]
@@ -882,94 +902,264 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
 
     };
 
+    //almacena los detalels de la venta a credito de la sucursal
+    Aplicacion.Operaciones.prototype.detalleVentaCreditoSucursal = null;
 
     /**
         *
         *
         */
-    Aplicacion.Operaciones.prototype.abonarVentaSucursalPanelLoadVentas = function(){
+    Aplicacion.Operaciones.prototype.abonarVentaSucursalPanelLoadVentas = function( id_cliente ){
     
-        Ext.getCmp('Operaciones-CreditoVentasLista').setOptions(Aplicacion.Clientes.currentInstance.listaDeCompras.lista);
+    
+        cid = id_cliente * -1;
+
+	    lista = Aplicacion.Clientes.currentInstance.listaDeCompras.lista;
+
+	    ventasCredito  = [{
+		    text : "Seleccione una venta a credito de la lista",
+		    value : ""
+	    }];
+
+        //buscar en todas la ventas
+	    for (var i = lista.length - 1; i >= 0; i--){
+            //si la venta es de este cliente, y es a credito y tiene algun saldo, mostrarla en la lista
+		    if ( lista[i].id_cliente == cid && lista[i].tipo_venta  == "credito" ) {
+                
+                if(parseFloat(lista[i].total) != parseFloat(lista[i].pagado)){
+			        ventasCredito.push( {
+				        text : "Venta " + lista[i].id_venta + " ( "+lista[i].fecha+" ) ",
+				        value : lista[i].id_venta
+			        });    
+                }
+
+		    }
+	    }
+    
+        //actualizamos el combo de las ventas
+        Ext.getCmp('Operaciones-abonarVentaSucursalPanel-abonar-selectVenta').setOptions( ventasCredito );
     
     };        
+
+
 
     /**
         *
         *
-        */        
-    Aplicacion.Operaciones.prototype.creditoDeClientesOptionChange = function ( a, v )
-    {
-
-	    //el valor de -1 es para el mensaje de seleccionar, todo el que este arriba
-	    //de eso equivale al id de la venta
-	
-	    if(v == -1){
-		    Ext.getCmp("Operaciones-DetallesVentaCredito").hide();
-		    Ext.getCmp("Operaciones-AbonarVentaBoton").hide();
-
-		    return;
-	    }
-	
-	
-
-	
-	
-	
-	    //buscar esta venta especifica en la estructura
-	    lista = Aplicacion.Clientes.currentInstance.listaDeCompras.lista;
-	    var venta = null;
-	
-	    for (var i = lista.length - 1; i >= 0; i--){
-		    if (  lista[i].id_venta  == v ) {
-			    venta = lista[i];
-		    }
-	    }
-
-
-	    //fecha
-	    Ext.getCmp("Operaciones-DetallesVentaCredito").getComponent(0).setValue(venta.fecha);
-	
-	    //sucursal
-	    Ext.getCmp("Operaciones-DetallesVentaCredito").getComponent(1).setValue(venta.sucursal);
-	
-	    //vendedor
-	    Ext.getCmp("Operaciones-DetallesVentaCredito").getComponent(2).setValue(venta.cajero);
-	
-	    //total
-	    Ext.getCmp("Operaciones-DetallesVentaCredito").getComponent(3).setValue( POS.currencyFormat(venta.total));
-	
-	    //abonado
-	    Ext.getCmp("Operaciones-DetallesVentaCredito").getComponent(4).setValue( POS.currencyFormat(venta.pagado));
-
-	    //saldo
-	    Ext.getCmp("Operaciones-DetallesVentaCredito").getComponent(5).setValue( POS.currencyFormat(venta.total - venta.pagado));
-
-        //almacenamos el valor de la venta a credito
-        Aplicacion.Operaciones.currentInstance.detalleVentaCredito = venta;
-
-
-        Ext.getCmp("Operaciones-DetallesVentaCredito").show();
-
-        //ocultamos el boton de abonar a venta si la venta a credito esta liquidada
-
-        if( (venta.total - venta.pagado ) > 0 )
+        */
+    Aplicacion.Operaciones.prototype.abonarVentaSucursalPanelDetalleVenta = function( id_venta ){    
+    
+        if( id_venta == "" ){
+            //ocultamos el panel del detalle de la venta
+            Ext.getCmp('Operaciones-abonarVentaSucursalPanel-detalleVenta').hide();
+            Ext.getCmp('Operaciones-abonarVentaSucursalPanelBoton').hide();
+            return;
+        }
+    
+        //obtenemos el formualrio del detalle de la venta a sucursal
+        var values = Aplicacion.Operaciones.currentInstance.abonarVentaSucursalPanel.getFields();
+        
+        //obtenemos todas las ventas
+        //TODO: hay qeu optimizar esta lista, ya qeu se jala todas las ventas co un getAll
+        var ventas = Aplicacion.Clientes.currentInstance.listaDeCompras.lista;
+                
+        
+        //iteramos todas las ventas en busca de la venta que selecciono
+        for( var i = 0; i < ventas.length; i++ )
         {
-            Ext.getCmp("Operaciones-AbonarVentaBoton").show();
+            if( ventas[i].id_venta == id_venta )
+            {
+                break;
+            }    
+        }
+        
+        //guardamos el detalle de la venta
+        Aplicacion.Operaciones.currentInstance.detalleVentaCreditoSucursal = ventas[i];
+                
+        //llenamos el formulario del detalle de la venta
+        values.fecha.setValue( ventas[i].fecha );
+        values.sucursal.setValue( ventas[i].sucursal );
+        values.cajero.setValue( ventas[i].cajero );
+        values.total.setValue( POS.currencyFormat( ventas[i].total ) );
+        values.abonado.setValue( POS.currencyFormat( ventas[i].pagado ) );
+        values.abonoSaldo.setValue( POS.currencyFormat( ventas[i].total - ventas[i].pagado ) );
+        values.detalleVentaSaldo.setValue( POS.currencyFormat( ventas[i].total - ventas[i].pagado ) );
+    
+        //mostramos el panel del detalle de la venta
+        Ext.getCmp('Operaciones-abonarVentaSucursalPanel-detalleVenta').show()
+        Ext.getCmp('Operaciones-abonarVentaSucursalPanelBoton').show();
+        
+        
+    };
+
+
+    /**
+        *
+        *
+        */
+    Aplicacion.Operaciones.prototype.abonarVentaSucursalShowPanelAbonar = function(){
+    
+        //ocultamos el formulario de abonar a la venta
+        Ext.getCmp('Operaciones-abonarVentaSucursalPanel-abonar').hide();
+    
+         //ocultamos el panel del detalle de la venta
+        Ext.getCmp('Operaciones-abonarVentaSucursalPanel-detalleVenta').hide();
+        Ext.getCmp('Operaciones-abonarVentaSucursalPanelBoton').hide();
+    
+        //mostramos el panel del abono a la venta  acredito a sucursal
+        Ext.getCmp('Operaciones-abonarVentaSucursalPanel-abono').show();
+        Ext.getCmp('Operaciones-abonarVentaSucursalPanelBotonAceptar').show();
+		Ext.getCmp('Operaciones-abonarVentaSucursalPanelBotonCancelar').show();
+        
+    };        
+
+
+    /**
+        *
+        *
+        */
+    Aplicacion.Operaciones.prototype.abonarVentaSucursalValidator = function(){
+    
+    
+        if( Ext.getCmp('Operaciones-abonarVentaSucursalPanel-abono-tipoPago').getValue() == ""  )
+        {
+            Ext.Anim.run(Ext.getCmp('Operaciones-abonarVentaSucursalPanel-abono-tipoPago'),
+                'fade', {duration: 250,
+                out: true,
+                autoClear: true
+            });
+
+            return;
+        }
+    
+       var monto = parseFloat( Ext.getCmp('Operaciones-abonarVentaSucursalPanel-abono-monto').getValue() );
+       
+       if( isNaN( parseFloat( monto) ) || parseFloat( monto) <= 0){
+
+            Ext.Anim.run(Ext.getCmp('Operaciones-abonarVentaSucursalPanel-abono-monto'),
+                'fade', {duration: 250,
+                out: true,
+                autoClear: true
+            });
+
+            return;
+        }        
+        
+        
+        //obtenemos el formualrio del detalle de la venta a sucursal
+        var values = Aplicacion.Operaciones.currentInstance.abonarVentaSucursalPanel.getFields();
+        
+        //validamos que si el abono excede el saldo, solos e abone a la cuenta lo qeu resta del saldo
+
+        var transaccion = {
+            abono : null,
+            cambio : null,
+            abonado: parseFloat( Aplicacion.Operaciones.currentInstance.detalleVentaCreditoSucursal.pagado ),
+            saldo : parseFloat( Aplicacion.Operaciones.currentInstance.detalleVentaCreditoSucursal.total ) - parseFloat( Aplicacion.Operaciones.currentInstance.detalleVentaCreditoSucursal.pagado )
+        }
+
+        if( monto > transaccion.saldo )
+        {
+            transaccion.abono = transaccion.saldo;
+            transaccion.cambio = monto -transaccion.saldo;
+            transaccion.abonado = parseFloat(transaccion.abonado + transaccion.abono );
+            transaccion.saldo = parseFloat(0);
         }
         else
         {
-            Ext.getCmp("Operaciones-AbonarVentaBoton").hide();
+            transaccion.abono = monto;
+            transaccion.cambio = 0;
+            transaccion.saldo = transaccion.saldo - monto;
+            transaccion.abonado =  parseFloat(transaccion.abonado +  monto );
         }
-
-    };   
-    
-    
         
+        
+        Aplicacion.Operaciones.currentInstance.doAbonarVentaSucursal ( transaccion );
+       
+    };        
+    
+    
+    /**
+        *
+        *
+        */
+    Aplicacion.Operaciones.prototype.doAbonarVentaSucursal = function( transaccion ){        
+    
+        Ext.Ajax.request({
+		    url: '../proxy.php',
+		    scope : this,
+		    params : {
+			    action : 305,
+			    data : Ext.util.JSON.encode({
+						    id_venta : Aplicacion.Operaciones.currentInstance.detalleVentaCreditoSucursal.id_venta,
+			        		monto : parseFloat( transaccion.abono ),
+						    tipo_pago: Ext.getCmp("Operaciones-abonarVentaSucursalPanel-abono-tipoPago").getValue()
+					    })
+		    },
+		    success: function(response, opts) {
+
+                Ext.Msg.alert( "Abono a venta","Abona: " + POS.currencyFormat(transaccion.abono) + "<br>Su cambio: " + POS.currencyFormat(transaccion.cambio) + "<br>Saldo Pendiente: " + POS.currencyFormat(transaccion.saldo) );
+
+			    if(DEBUG){
+                	console.warn("IMPRMIR TICKET");				
+			    }
 
 
+			    //cargar la lista de compras de los clientes con los nuevos detalles de las ventas
+			    Aplicacion.Clientes.currentInstance.listaDeComprasLoad();
 
 
+                //Actualizamos los valores de lso campos Abonado y saldo amnualmente ya que se ejecuta primero
+                //creditoDeClientesOptionChange y no alcanza a cargarse la lista de compras conn los nuevo valores
+                
+                //Aplicacion.Operaciones.currentInstance.abonarVentaSucursalPanelLoadVentas( Ext.getCmp('Operaciones-abonarVentaSucursalPanel-abonar-selectVenta').getValue() );
+                //Aplicacion.Operaciones.currentInstance.abonarVentaSucursalPanelDetalleVenta ( Ext.getCmp('Operaciones-abonarVentaSucursalPanel-abonar-selectSucursal').getValue() );
+                Aplicacion.Operaciones.currentInstance.abonarVentaSucursalPanelDetalleVenta( Aplicacion.Operaciones.currentInstance.detalleVentaCreditoSucursal.id_venta );
+                
+                //Ext.getCmp( "Operaciones-abonarVentaSucursalPanel-detalleVenta-total" ).setValue( POS.currencyFormat( Aplicacion.Operaciones.currentInstance.detalleVentaCreditoSucursal.total ) );
+                Ext.getCmp( "Operaciones-DetallesVentaCredito-detalleVenta-abonado" ).setValue( POS.currencyFormat( transaccion.abonado ) );
+                Ext.getCmp( "Operaciones-DetallesVentaCredito-detalleVenta-saldo" ).setValue( POS.currencyFormat(transaccion.saldo) );
+                Ext.getCmp( "Operaciones-abonarVentaSucursalPanel-abono-saldo" ).setValue( POS.currencyFormat(transaccion.saldo) );
+                Ext.getCmp('Operaciones-abonarVentaSucursalPanel-abono-monto').setValue("");
 
+                Ext.getCmp('Operaciones-abonarVentaSucursalPanel-abonar-selectVenta').setValue("");
+                Ext.getCmp('Operaciones-abonarVentaSucursalPanel-abonar-selectSucursal').setValue("");
+
+                //mostramos el panel de detalle de venta
+			    Aplicacion.Operaciones.currentInstance.abonarVentaSucursalCancelar();
+
+		    },
+		    failure: function( response ){
+			    return POS.error( response );
+		    }
+	    });
+    
+    };
+    
+    
+    /**
+        *
+        *
+        */
+    Aplicacion.Operaciones.prototype.abonarVentaSucursalCancelar= function(){
+        
+        //
+        Ext.getCmp('Operaciones-abonarVentaSucursalPanel-abonar').show();
+        
+        //mostramos el panel del detalle de la venta
+        Ext.getCmp('Operaciones-abonarVentaSucursalPanel-detalleVenta').show();
+        Ext.getCmp('Operaciones-abonarVentaSucursalPanelBoton').hide();
+
+         //ocultamos el panel del abono a la venta  acredito a sucursal
+        Ext.getCmp('Operaciones-abonarVentaSucursalPanel-abono').hide();
+        Ext.getCmp('Operaciones-abonarVentaSucursalPanelBotonAceptar').hide();
+		Ext.getCmp('Operaciones-abonarVentaSucursalPanelBotonCancelar').hide();				 
+
+        //resetear ese formulario
+        
+        
+    };      
+        
 
 POS.Apps.push( new Aplicacion.Operaciones() );
 

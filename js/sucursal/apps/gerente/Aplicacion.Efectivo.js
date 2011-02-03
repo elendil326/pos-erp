@@ -73,7 +73,35 @@ Aplicacion.Efectivo.prototype.cargarSucursales = function ( )
             if( !r.success ){
                 return;
             }
-            Aplicacion.Efectivo.currentInstance.sucursalesLista = r.datos;
+            
+            if(DEBUG){
+                console.log("----r datos-----");
+                console.log(r.datos);
+                /**
+                    descripcion: "sucursal papas 9"
+                    id_sucursal: "2"
+                    text: "sucursal papas 9"
+                    value: "2"
+                */
+                console.log("---------");
+            }
+            
+            sucursales  = [{
+		        text : "Seleccione una sucursal de la lista",
+		        value : ""
+	        }];
+            
+            for( var i = 0; i < r.datos.length; i++ ){
+                sucursales.push(
+                    {
+		                text : r.datos[i].descripcion,
+		                value : r.datos[i].id_sucursal
+	                }
+                );
+            }
+            
+            //Aplicacion.Efectivo.currentInstance.sucursalesLista = r.datos;
+            Aplicacion.Efectivo.currentInstance.sucursalesLista = sucursales;
 
         },
         failure: function( response ){

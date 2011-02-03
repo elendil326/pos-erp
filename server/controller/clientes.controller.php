@@ -505,7 +505,7 @@ function abonarVenta( $args ){
 	        $pagosVenta -> setTipoPago( $data -> tipo_pago );
 	    break;
 	    default:
-	        Logger::log("El tipo de pago no es compatible");
+	        Logger::log("El tipo de pago no es compatible : {$data -> tipo_pago}");
             die('{"success": false, "reason": "Parametros invalidos." }');
 	}
     
