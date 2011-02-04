@@ -912,6 +912,8 @@ Aplicacion.Mostrador.prototype.doVenta = function ()
 		
 		//ver si pago lo suficiente
 		pagado = Ext.getCmp("Mostrador-doNuevaVentaImporte").getValue(); 
+		//quitamos el signo de pesos
+		pagado = pagado.substring(1, pagado.length);
 		
 		if( (pagado.length === 0) || (parseFloat(pagado) < parseFloat(carrito.total)) ){
 			
@@ -1060,24 +1062,22 @@ Aplicacion.Mostrador.prototype.doVentaPanelShow = function ( ){
 */
 Aplicacion.Mostrador.prototype.setTipoVenta = function ( tipo_venta ){
 
-    subtotal = 0;
-	total = 0;
-	for (var i=0; i < this.carrito.items.length; i++) {
-		subtotal += (this.carrito.items[i].precioVenta * this.carrito.items[i].cantidad);
-	}
 
     if( tipo_venta == "contado" ){
     
         //mostramos botones
         if( !Ext.getCmp('Mostrador-doNuevaVenta-Menu-Efectivo').isVisible( ))
         {
-             Ext.getCmp('Mostrador-doNuevaVenta-Menu-Efectivo').show();
+            Ext.getCmp('Mostrador-doNuevaVenta-Menu-Efectivo').show( Ext.anims.fade );            
         }
         
         if( !Ext.getCmp('Mostrador-doNuevaVenta-Menu-Cheque').isVisible())
         {
-             Ext.getCmp('Mostrador-doNuevaVenta-Menu-Cheque').show();
+            Ext.getCmp('Mostrador-doNuevaVenta-Menu-Cheque').show( Ext.anims.fade );            
         }
+        
+        Ext.getCmp('Mostrador-doNuevaVentaClienteCredito').hide( Ext.anims.slide );
+        Ext.getCmp('Mostrador-doNuevaVentaClienteCreditoRestante').hide( Ext.anims.slide );
 
         //inicializamos valores
         Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";               
@@ -1089,8 +1089,8 @@ Aplicacion.Mostrador.prototype.setTipoVenta = function ( tipo_venta ){
     if( tipo_venta == "credito" ){
     
         //ocultamos los botones de tipo de pago
-        Ext.getCmp('Mostrador-doNuevaVenta-Menu-Efectivo').hide();
-        Ext.getCmp('Mostrador-doNuevaVenta-Menu-Cheque').hide();
+        Ext.getCmp('Mostrador-doNuevaVenta-Menu-Efectivo').hide( Ext.anims.fade );
+        Ext.getCmp('Mostrador-doNuevaVenta-Menu-Cheque').hide( Ext.anims.fade );
         
         //inicializamos valores
         Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "credito";
@@ -1104,10 +1104,12 @@ Aplicacion.Mostrador.prototype.setTipoVenta = function ( tipo_venta ){
         //establecemos nulo el tipo de pago
         Aplicacion.Mostrador.currentInstance.carrito.tipo_pago = null;  
         
+        Ext.getCmp('Mostrador-doNuevaVentaClienteCredito').show( Ext.anims.slide );
+        Ext.getCmp('Mostrador-doNuevaVentaClienteCreditoRestante').show( Ext.anims.slide );
+        
     }
     
-    this.carrito.subtotal = subtotal;
-	this.carrito.total = total;
+
 
 };
 
@@ -1126,6 +1128,10 @@ Aplicacion.Mostrador.prototype.setTipoPago = function( tipoPago ){
             {
                 Ext.getCmp('Mostrador-doNuevaVentaFacturar').setVisible(true);
             }
+            
+            //fijamo el importe en ceros
+            Ext.getCmp('Mostrador-doNuevaVentaImporte').setValue( POS.currencyFormat( 0) );
+            
         break; 
         
         case 'cheque':
@@ -1138,6 +1144,10 @@ Aplicacion.Mostrador.prototype.setTipoPago = function( tipoPago ){
             {
                 Ext.getCmp('Mostrador-doNuevaVentaFacturar').setVisible(true);
             }
+            
+            //fijamos el importe igual al total
+             Ext.getCmp('Mostrador-doNuevaVentaImporte').setValue( POS.currencyFormat( this.carrito.total ) );
+            
         break; 
         
         default:
@@ -1229,9 +1239,9 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelUpdater = function ()
 		if(this.carrito.cliente.limite_credito > 0){
 		
 		    //mostramos el credito restante
-		    Ext.getCmp('Mostrador-doNuevaVentaClienteCredito' ).setVisible(true);
+		    //Ext.getCmp('Mostrador-doNuevaVentaClienteCredito' ).setVisible(true);
 		    Ext.getCmp('Mostrador-doNuevaVentaClienteCredito').setValue( POS.currencyFormat(this.carrito.cliente.limite_credito) );
-			Ext.getCmp('Mostrador-doNuevaVentaClienteCreditoRestante').setVisible(true);
+			//Ext.getCmp('Mostrador-doNuevaVentaClienteCreditoRestante').setVisible(true);
 			Ext.getCmp('Mostrador-doNuevaVentaClienteCreditoRestante').setValue( POS.currencyFormat( this.carrito.cliente.credito_restante ));			
 			
 		}else{
@@ -1338,29 +1348,6 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelCreator = function (	 ){
 		items: [ dockedCancelar , { xtype: 'spacer' }, dockedNuevo, dockedVender ]
 	};
 	
-	/*
-	_html = '';
-	_html += '<div style=" position:relative; width:100%; float:left;color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:-7px; position:relative;float:left;">'; 
-	_html += '   Menu de Opciones'; 
-	_html += '</div>';
-	
-	_html += '<table style=" position:relative; width:100%; float:left;" >';
-	_html += '   <tr style=" height:75px;" >';
-	_html += '       <td>';
-	_html += '           <span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Contado" onClick="Aplicacion.Mostrador.currentInstance.iniciaVenta (\'contado\')"  ><img src="../media/Money.png" style="position:absolute;left:2px; " />&nbsp; Contado &nbsp; </span>';
-	_html += '       </td>';
-	_html += '       <td>';
-	_html += '           <span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Credito" onClick="Aplicacion.Mostrador.currentInstance.iniciaVenta(\'credito\')"  ><img src="../media/SpreadsheetEmpty128.png" style="position:absolute;left:2px;" />&nbsp; Credito &nbsp; </span>';
-	_html += '       </td>';
-	_html += '       <td>';
-	_html += '           <span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Efectivo" onClick="Aplicacion.Mostrador.currentInstance.alerta(\'efectivo\')"  ><img src="../media/Money.png" style="position:absolute;left:2px;" />&nbsp; Efectivo &nbsp; </span>';
-	_html += '       </td>';
-	_html += '       <td>';
-	_html += '           <span  style=" position:relative; width:80%; float:left; left:10%" id="Mostrador-doNuevaVenta-Menu-Cheque" onClick="Aplicacion.Mostrador.currentInstance.alerta(\'cheque\')" ><img src="../media/CheckBook128.png" style="position:absolute;left:2px;" />&nbsp; Cheque &nbsp; </span>';
-	_html += '       </td>';
-	_html += '   </tr>';
-	_html+= '</table>';
-	*/
 	
 	this.doNuevaVentaPanel = new Ext.form.FormPanel({													   
 		dockedItems : dockedItems,
@@ -1378,27 +1365,43 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelCreator = function (	 ){
 		    
 		        {
 		            id:'Mostrador-doNuevaVenta-Menu-Contado',
-                    width:200,
-                    height:150,
-		            html:'<span   ><img onClick="Aplicacion.Mostrador.currentInstance.setTipoVenta(\'contado\')" src="../media/Money.png" style="position:absolute;left:2px;" />&nbsp; Contado &nbsp; </span>'
+                    width:180,
+                    height:190,
+                    style:{
+                        width:'190px !important',
+                        height:'100px !important'
+                    },
+		            html:'&nbsp<img width = 100 height = 100 onClick="Aplicacion.Mostrador.currentInstance.setTipoVenta(\'contado\')" src="../media/venta_contado.png"  />&nbsp'
 		        },
 		        {
 		            id:'Mostrador-doNuevaVenta-Menu-Credito',
-                    width:200,
-                    height:150,
-		            html:'<span  ><img onClick="Aplicacion.Mostrador.currentInstance.setTipoVenta(\'credito\')" src="../media/SpreadsheetEmpty128.png" style="position:absolute;left:2px;" />&nbsp; Credito &nbsp; </span>'
+                    width:190,
+                    height:180,
+                    style:{
+                        width:'190px !important',
+                        height:'100px !important'
+                    },
+		            html:'&nbsp<img width = 100 height = 100 onClick="Aplicacion.Mostrador.currentInstance.setTipoVenta(\'credito\')" src="../media/venta_credito.png"  />&nbsp'
 		        },
 		        {
 		            id:'Mostrador-doNuevaVenta-Menu-Efectivo',
-                    width:200,
-                    height:150,
-		            html:'<span ><img onClick="Aplicacion.Mostrador.currentInstance.setTipoPago(\'efectivo\')" src="../media/Money.png" style="position:absolute;left:2px;" />&nbsp; Efectivo &nbsp; </span>'
+                    width:190,
+                    height:180,
+                    style:{
+                        width:'190px !important',
+                        height:'100px !important'
+                    },
+		            html:'&nbsp<img width = 100 height = 100 onClick="Aplicacion.Mostrador.currentInstance.setTipoPago(\'efectivo\')" src="../media/pago_efectivo.png"  />&nbsp'
 		        },
 		        {
 		            id:'Mostrador-doNuevaVenta-Menu-Cheque',
-		            width:200,
-                    height:150,
-		            html:'<span ><img onClick="Aplicacion.Mostrador.currentInstance.setTipoPago(\'cheque\')" src="../media/CheckBook128.png" style="position:absolute;left:2px;" />&nbsp; Cheque &nbsp; </span>'
+		            width:180,
+                    height:190,
+                    style:{
+                        width:'190px !important',
+                        height:'100px !important'
+                    },
+		            html:'&nbsp<img width = 100 height = 100 onClick="Aplicacion.Mostrador.currentInstance.setTipoPago(\'cheque\')" src="../media/pago_cheque.png"  />&nbsp'
 		        }
 		    
 		    ]
@@ -1411,8 +1414,8 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelCreator = function (	 ){
 
 				
 				new Ext.form.Text({ label : 'Cliente',			 id: 'Mostrador-doNuevaVentaCliente' }),
-				new Ext.form.Text({ label : 'Limite de Credito', id: 'Mostrador-doNuevaVentaClienteCredito' }),
-				new Ext.form.Text({ label : 'Credito restante',	 id: 'Mostrador-doNuevaVentaClienteCreditoRestante' }),
+				new Ext.form.Text({ label : 'Limite de Credito', id: 'Mostrador-doNuevaVentaClienteCredito', hidden : true }),
+				new Ext.form.Text({ label : 'Credito restante',	 id: 'Mostrador-doNuevaVentaClienteCreditoRestante', hidden : true }),
 				
                 new Ext.form.Toggle({ 
 					listeners : {
