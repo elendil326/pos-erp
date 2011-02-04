@@ -13,13 +13,17 @@
 	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 	<title>POS | Inventario</title>
-	<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript"></script>
+<!--	<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript"></script> -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript"></script>	
+	
 
 	<script>
 		$.noConflict();
 	</script>
 	
-	<script type="text/javascript" charset="utf-8" src="../frameworks/prototype/prototype.js"></script>		
+<!--	<script type="text/javascript" charset="utf-8" src="../frameworks/prototype/prototype.js"></script> -->
+	<script type="text/javascript" charset="utf-8" src="https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js"></script>			
+	
 
 	<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
 	<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">

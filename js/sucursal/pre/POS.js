@@ -70,7 +70,7 @@ function dummyRequest(){
 	
     Ext.Ajax.request({
 		url: '../proxy.php',
-		params : { action : 'dummy' },
+		params : { action : 1105 },
 		failure: function() {
 			setTimeout("dummyRequest()", 500);
 		}

@@ -90,5 +90,11 @@ if(isset($args['action'])){
 			else
 				echo '{ "success" : false }';
 		break;
+		
+		
+		
+		case 1105 : 
+			Logger::log("Conexion reestablecida");
+		break;
 	}
 }

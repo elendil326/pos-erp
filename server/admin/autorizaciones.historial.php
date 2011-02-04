@@ -80,3 +80,8 @@ $tabla->render();
         window.location = "autorizaciones.php?action=detalle&id=" + id;
     }
 </script>
+<style>
+table{
+	font-size: 12px;;
+}
+</style>
