@@ -1,6 +1,5 @@
-<body onload="javascript:window.print();">
 <?php
-require('/fpdf16/fpdf.php');
+require('fpdf16/fpdf.php');
 require "conversor.php";
 
 $par=$_REQUEST["json"];
@@ -77,6 +76,6 @@ $resultado = convertir($json->subtotal);
 //$pdf->Cell(150,10,'                                                      $ ');
 
 //$pdf->Cell(190,50,date("d M Y"),0,0,'R');
+//echo "<body onload='javascript:window.print();'>";
 $pdf->Output();
 ?>
-</body>
