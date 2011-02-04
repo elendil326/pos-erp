@@ -19,18 +19,21 @@ foreach( $sucursales as $sucursal ){
 	array_push($data, $detalles); 
 }
 
-
+function bold($s){
+	return "<b>" . $s . "</b>";
+}
 //render the table
 $header = array( 
-	"id_sucursal" => "ID",
+	//"id_sucursal" => "ID",
 	"descripcion"=> "Descripcion",
 	"direccion"=> "Direccion",
-	"rfc"=> "RFC",
-	"telefono"=> "Telefono",
+	//"rfc"=> "RFC",
+	//"telefono"=> "Telefono",
 	"letras_factura"=> "Facturas" );
 $tabla = new Tabla( $header, $data );
 $tabla->addOnClick("id_sucursal", "mostrarDetallesSucursal");
 $tabla->addNoData("No hay sucursales.");
+$tabla->addColRender("descripcion", "bold");
 $tabla->render();	
 
 

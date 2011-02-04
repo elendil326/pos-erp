@@ -31,9 +31,9 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 <link rel="stylesheet" href="../frameworks/humblefinance/humble/finance.css" type="text/css" media="screen" title="no title" charset="utf-8">
 
 
-
+<!--
 <h1><?php echo $sucursal->getDescripcion(); ?></h1>
-
+-->
 
 <h2>Detalles</h2>
 <table style="width:100%" border="0" cellspacing="1" cellpadding="1">
@@ -64,6 +64,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 
 <script type="text/javascript"> 
 
+	jQuery("#MAIN_TITLE").html( "<?php echo $sucursal->getDescripcion(); ?>" )
 
     var drawMap = function ( result, status ) {
         if(result.length == 0){
@@ -335,6 +336,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 	$tabla->addColRender("total", "moneyFormat");
 	$tabla->addColRender("pagado", "rSaldo");	
 	$tabla->addOnClick("id_compra", "detalleCompraSucursal" );
+	$tabla->addNoData("Esta sucursal no tiene cuentas sin saldar");
 	$tabla->render();
 
 ?>
@@ -506,7 +508,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 	$clientes = ClienteDAO::byRange($foo, $bar);
 
     //render the table
-    $header = array(  "nombre" => "Nombre", "rfc" => "RFC", "direccion" => "Direccion", "ciudad" => "Ciudad"  );
+    $header = array(  "nombre" => "Nombre", "rfc" => "RFC", /* "direccion" => "Direccion", */ "ciudad" => "Ciudad"  );
     $tabla = new Tabla( $header, $clientes );
     $tabla->addOnClick("id_cliente", "mostrarDetalles");
     $tabla->addNoData("Ningun cliente se ha registrado en esta sucursal.");

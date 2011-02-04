@@ -21,8 +21,12 @@
 
     $sucursales = SucursalDAO::byRange($foo, $bar);
 
+
 	function toUnit( $e )
 	{
+		if($e == "NA"){
+			return  "<i>N/A</i>";
+		}
 		return "<b>" . number_format($e, 2) . "</b>kg";
 	}
 ?>
@@ -92,7 +96,7 @@
     function agregarProducto(data){
 
 		o = jQuery.JSON.decodeSecure(Url.decode(data));
-
+		o.producto_desc = o.producto_desc.replace( "+", " " );
 		carrito.push( o );
 
 		html = "";
@@ -103,11 +107,18 @@
 
 		var procesadas = parseFloat( o.existencias_procesadas );
 		
-		if(procesadas > 0){
-			html += td( "<input style='width: 100px' id='cart_table_procesada" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='checkbox'>" );			
+
+		
+		if(o.producto_tratamiento !== null){
+			if(procesadas > 0){
+				html += td( "<input style='width: 100px' id='cart_table_procesada" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='checkbox'>" );			
+			}else{
+				html += td( "<input style='width: 100px' id='cart_table_procesada" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='checkbox' disabled>" );
+			}			
 		}else{
-			html += td( "<input style='width: 100px' id='cart_table_procesada" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='checkbox' disabled>" );
+				html += td( "<input type='hidden'><i>N/A</i>" );			
 		}
+
 
 
 		html += td( "<input style='width: 100px' onkeyup='domath()' value='"+ ( o.precio_por_kg )+"' id='cart_table_precio" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='text'>" );

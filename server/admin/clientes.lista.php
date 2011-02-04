@@ -144,7 +144,7 @@ require_once("controller/inventario.controller.php");
 
     
 
-
+<br>
 <h2><!-- <img src='../media/icons/users_32.png'>&nbsp; -->Todos los clientes</h2><?php
 //obtener los clientes del controller de clientes
 $clientes = listarClientes();

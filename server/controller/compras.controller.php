@@ -831,7 +831,7 @@ function compraSucursal( $data = null, $sucursal = null ){
 
 function ingresarDetalleCompraSucursal( $data = null, $id_compra ){
 
-	Logger::log("Iniciando proceso de creacion de detalle compra sucursal");
+	Logger::log("Creacion de detalle compra sucursal de compra " . $id_compra);
 
 	if($data == null || $id_compra == null){
 		Logger::log("ingresarDetalleCompraSucursal, error : recibi uno o mas objetos nulos");
@@ -862,20 +862,19 @@ function ingresarDetalleCompraSucursal( $data = null, $id_compra ){
 		$detalle_compra_sucursal -> setDescuento( $producto -> descuento );
 		$detalle_compra_sucursal -> setProcesadas( $producto -> procesada );
 		
+		DAO::transBegin();
+
+		try{
+			DetalleCompraSucursalDAO::save( $detalle_compra_sucursal );
+			Logger::log( "Detalle compra sucursal agregado correctamente para el articulo " . $producto->id_producto );
+		}catch(Exception $e){
+			Logger::log("Error al agregar el detalle compra sucursal" . $e);
+			DAO::transRollback();	
+			die( '{"success": false, "reason": "Error al ingresar el detalle compra sucursal"}' );
+		}
 	}
 	
-	DAO::transBegin();
-		
-	try{
-		DetalleCompraSucursalDAO::save( $detalle_compra_sucursal );
-	}catch(Exception $e){
-		Logger::log("Error al agregar el detalle compra sucursal" . $e);
-		
-		//TODO: ELIMINAR LA COMPRA SUCURSAL Y DESHACER EL CAMBIO AL INVENTARIO MAESTRO EN CASO DE ENTRAR AQUI
-		
-		DAO::transRollback();	
-		die( '{"success": false, "reason": "Error al ingresar el detalle compra sucursal" ' . $e . '}' );
-	}
+
 	
 	Logger::log("Finalizado proceso de creacion de detalle compra sucursal!");
 	

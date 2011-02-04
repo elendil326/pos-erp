@@ -310,6 +310,9 @@
 
 function toUnit( $e )
 {
+	if($e == "NA"){
+		return  "<i>N/A</i>";
+	}
 	return "<b>" . number_format($e, 2) . "</b>kg";
 }
 
