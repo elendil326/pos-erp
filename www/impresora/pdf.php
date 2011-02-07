@@ -1,3 +1,4 @@
+<body onload="javascript:window.print();">
 <?php
 require('fpdf16/fpdf.php');
 require "conversor.php";
@@ -79,3 +80,4 @@ $resultado = convertir($json->subtotal);
 //echo "<body onload='javascript:window.print();'>";
 $pdf->Output();
 ?>
+</body>
