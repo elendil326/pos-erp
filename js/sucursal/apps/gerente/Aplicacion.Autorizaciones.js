@@ -732,6 +732,12 @@ Aplicacion.Autorizaciones.prototype.nueva.mermaPanelCreator = function ()
 //ingresa la solicitud de la autorizaciond e la merma a la BD
 Aplicacion.Autorizaciones.prototype.solicitudAutorizacionDevolucion = function( values ){
 
+    if(DEBUG){
+        console.log(" ---------------------- QUIERO DEVOLEVER ----------------------------- ");    
+        console.log(values);
+        console.log(" ---------------------- QUIERO DEVOLEVER ----------------------------- ");
+    }
+
     Ext.Ajax.request({
         url: '../proxy.php',
         scope : this,
@@ -1041,6 +1047,80 @@ Aplicacion.Autorizaciones.prototype.nueva.devolucionesPanelCreator = function()
 
 
 /* ***************************************************************************
+   * Panel de impresion de ticket de recepcion de producto
+   *************************************************************************** */
+
+Aplicacion.Autorizaciones.prototype.finishedPanel = null;
+
+Aplicacion.Autorizaciones.prototype.finishedPanelShow = function( productos )
+{
+	//update panel
+	this.finishedPanelUpdater( productos );
+	
+	sink.Main.ui.setActiveItem( Aplicacion.Autorizaciones.currentInstance.finishedPanel , 'fade');
+	
+            
+
+    //Ext.Msg.alert("Autorizaciones","Se modifico correctamente el inventario");
+	
+	
+};
+
+
+
+Aplicacion.Autorizaciones.prototype.finishedPanelUpdater = function( productos )
+{
+	carrito = productos ;
+	//incluye los datos de la sucursal
+	carrito.sucursal = Aplicacion.Mostrador.currentInstance.infoSucursal;	                                
+	
+	json = encodeURI( Ext.util.JSON.encode( carrito ) );
+	
+	
+	html = "";
+	
+	html += "<table class='Mostrador-ThankYou'>";
+	html += "	<tr>";	
+	html += "		<td><img src='../media/cash_register.png'></td>";
+	html += "		<td></td>";
+	html += "	</tr>"; 
+	
+    html += "	<tr>";	
+    html += "		<td align = center> El producto ha sido agregado a su inventario.. </td>";
+    html += "		<td></td>";
+    html += "	</tr>";
+
+
+	html += "</table>";
+	html += "<iframe src ='PRINTER/src/impresion.php?json=" + json + "' width='0px' height='0px'></iframe> ";
+	
+	this.finishedPanel.update(html);
+	
+	//la siguiente linea la cambiamos por el panel que donde se pinto los productos
+    //Ext.getCmp("Mostrador-mostradorVender").hide( Ext.anims.slide );
+    Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionFormPanel.hide( Ext.anims.slide );
+
+	//action = "sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.mostradorPanel , 'fade');";
+	action = "sink.Main.ui.setActiveItem( Aplicacion.Inventario.currentInstance.listaInventarioPanel , 'fade');";
+                    
+	setTimeout(action, 4000);
+
+};
+
+Aplicacion.Mostrador.prototype.finishedPanelCreator = function()
+{
+
+	this.finishedPanel = new Ext.Panel({
+		html : ""
+	});
+	
+};
+
+
+
+
+
+/* ***************************************************************************
    * Historial de autorizacones
    * Es una lista con las distintas autorizaciones, que pueden ordenarse por 
    * sus distintas caracteristicas
@@ -1194,7 +1274,7 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanelCreator = function
 
 
 //surte al inventario los productos mandados por le admin
-Aplicacion.Autorizaciones.prototype.surtirAutorizacion = function( aid ){
+Aplicacion.Autorizaciones.prototype.surtirAutorizacion = function( aid , productos){
 
 
     //obtenemos al autorizacion actual
@@ -1229,11 +1309,19 @@ Aplicacion.Autorizaciones.prototype.surtirAutorizacion = function( aid ){
 			//recargar todo
 			task();
 
+
+            //mandamos llamar al paner que imprimira el ticket
+            Aplicacion.Autorizaciones.currentInstance.finishedPanelShow( productos );
+
+            /*
             //cambiamos la card
             sink.Main.ui.setActiveItem( Aplicacion.Inventario.currentInstance.listaInventarioPanel , 'fade');
-            
+            */
 
             Ext.Msg.alert("Autorizaciones","Se modifico correctamente el inventario");
+            
+            
+            
         },
         failure: function( response ){
             POS.error( response );
@@ -1470,7 +1558,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                     ui  : 'forward', 
                     text: 'He recibido el embarque', 
                     handler: function(){
-                        Aplicacion.Autorizaciones.currentInstance.surtirAutorizacion(autorizacion.get('id_autorizacion'))
+                        Aplicacion.Autorizaciones.currentInstance.surtirAutorizacion(autorizacion.get('id_autorizacion'), parametros.productos )
                     }
                 }) : {  xtype: 'spacer' } 
             ]

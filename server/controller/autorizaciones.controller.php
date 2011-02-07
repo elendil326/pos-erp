@@ -250,6 +250,9 @@ require_once("logger.php");
         //cambiamos el estado de la autorizacion a surtido
         $autorizacion->setEstado(4);
 
+        //guardamos quien surtio el envio
+        $autorizacion -> setIdUsuario( $_SESSION['userid'] );
+
         try{
             AutorizacionDAO::save( $autorizacion );
         }catch(Exception $e){
@@ -258,9 +261,9 @@ require_once("logger.php");
             die( '{ "success" : false , "reason" : "Error al surtir esta autorizacion, intente de nuevo."}' );
         }
 
-        echo '{"success" : true }';    
-        Logger::log("Autorizacion surtida satisfactoriamente");
         DAO::transEnd();
+        Logger::log("Autorizacion surtida satisfactoriamente");
+        echo '{"success" : true }';
         
     }
 

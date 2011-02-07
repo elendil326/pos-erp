@@ -386,7 +386,7 @@ foreach( $sucursales as $sucursal ){
 		MOSTRAR INVENTARIO MAESTRO
  -->
 <div id="InvMaestro" style="display: none;">
-<h2>Productos disponibles</h2><h3>Seleccione los productos que desee surtir a esta sucursal.</h3><?php
+<h2>Inventario Maestro</h2><h3>Seleccione los productos que desee surtir.</h3><?php
 
 
 	

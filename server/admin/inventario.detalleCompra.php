@@ -115,7 +115,7 @@
 			?></td></tr>
 		<tr><td>Productor</td>					<td><?php echo $compra->getProductor();?></td></tr>
 		<tr><td>Remision</td>						<td><?php echo $compra->getFolio();?></td></tr>
-		<tr><td>Arpillas de este producto</td>	<td><?php echo $compra->getArpillas();?></td></tr>
+		<tr><td>Arpillas de este producto</td>	<td><?php echo $compra->getArpillas(); /*mostrar arpillas de este producto, no totales*/ ?></td></tr> 
 		<tr><td>Merma por arpilla</td>			<td><?php echo $compra->getMermaPorArpilla();?></td></tr>
 		<tr><td>Promedio por arpilla</td>		<td><?php echo $compra->getPesoPorArpilla();?></td></tr>
 		<tr><td>&nbsp;</td></tr>

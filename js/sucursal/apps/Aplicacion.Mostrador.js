@@ -713,6 +713,7 @@ Aplicacion.Mostrador.prototype.buscarClienteFormCreator = function ()
 		xtype : 'button',		
 		text: 'Cancelar',
 		handler : function(){
+
 			Aplicacion.Mostrador.currentInstance.setCajaComun();
 			Aplicacion.Mostrador.currentInstance.buscarClienteFormShow();
 		}
@@ -856,7 +857,7 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 	
 	html += "<table class='Mostrador-ThankYou'>";
 	html += "	<tr>";	
-	html += "		<td><img src='../media/cash_register.png'></td>";
+	html += "		<td><img src='../media/Receipt128.png'></td>";
 	html += "		<td></td>";
 	html += "	</tr>"; 
 	
@@ -869,9 +870,22 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 	}	
 
 	html += "</table>";
-	html += "<iframe src ='PRINTER/src/impresion.php?json=" + json + "' width='0px' height='0px'></iframe> ";
+	
+	if( carrito.factura )
+	{
+	    html += "<iframe id = 'frame' src ='../impresora/pdf.php?json=" + json + "' width='0px' height='0px'></iframe> ";
+	    window.open("../impresora/pdf.php?json=" + json);
+	}
+	else
+	{
+	    html += "<iframe src ='PRINTER/src/impresion.php?json=" + json + "' width='0px' height='0px'></iframe> ";
+	}
+	
 	
 	this.finishedPanel.update(html);
+	
+	
+	
     Ext.getCmp("Mostrador-mostradorVender").hide( Ext.anims.slide );
 
 	action = "sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.mostradorPanel , 'fade');";
@@ -913,7 +927,9 @@ Aplicacion.Mostrador.prototype.doVenta = function ()
 		//ver si pago lo suficiente
 		pagado = Ext.getCmp("Mostrador-doNuevaVentaImporte").getValue(); 
 		//quitamos el signo de pesos
-		pagado = pagado.substring(1, pagado.length);
+		//pagado = pagado.substring(1, pagado.length);
+		
+		//alert("pago : " + pagado +" debe : " + carrito.total);
 		
 		if( (pagado.length === 0) || (parseFloat(pagado) < parseFloat(carrito.total)) ){
 			
@@ -1066,7 +1082,7 @@ Aplicacion.Mostrador.prototype.setTipoVenta = function ( tipo_venta ){
     if( tipo_venta == "contado" ){
         //inicializamos valores
         Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";    
-  		Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(1, Ext.anims.flip);           
+  		Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(1, Ext.anims.slide);           
     }
 
     if( tipo_venta == "credito" ){
@@ -1082,7 +1098,7 @@ Aplicacion.Mostrador.prototype.setTipoVenta = function ( tipo_venta ){
         
         Ext.getCmp('Mostrador-doNuevaVentaClienteCredito').show( Ext.anims.slide );
         Ext.getCmp('Mostrador-doNuevaVentaClienteCreditoRestante').show( Ext.anims.slide );
-  		Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(3, Ext.anims.flip);
+  		Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(3, Ext.anims.slide);
     }
     
 
@@ -1107,7 +1123,7 @@ Aplicacion.Mostrador.prototype.setTipoPago = function( tipoPago ){
             Ext.getCmp('Mostrador-doNuevaVentaImporte').setValue( "" );
 
 			//mostrar la tarjeta de ingresar el dinero
-       		Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(2, Ext.anims.flip);
+       		Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(2, Ext.anims.slide);
         break; 
         
         case 'cheque':
@@ -1173,6 +1189,9 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelUpdater = function ()
 	
 	if( this.carrito.cliente === null ){
 		
+		//mandamos la
+		//Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(1, Ext.anims.slide);        
+		
 		//si es caja comun
 		total = subtotal;
 		
@@ -1182,7 +1201,8 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelUpdater = function ()
 		Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";
 
 		//hacemos visible el panel 2 que es el de tipo de pago
-		//Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(1);
+		if( Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).rendered )
+    		Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(1);
 
 	}else{
 		
@@ -1198,16 +1218,17 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelUpdater = function ()
 			//Ext.getCmp('Mostrador-doNuevaVentaClienteCreditoRestante').setVisible(true);
 			Ext.getCmp('Mostrador-doNuevaVentaClienteCreditoRestante').setValue( POS.currencyFormat( this.carrito.cliente.credito_restante ));			
 			
-		}else{
-		    //ocultamos el limite de credito
-			Ext.getCmp('Mostrador-doNuevaVentaClienteCreditoRestante').setVisible(false);			
+		    }else{
+		        //ocultamos el limite de credito
+			    Ext.getCmp('Mostrador-doNuevaVentaClienteCreditoRestante').setVisible(false);			
 			
-			//establecemos el tipo de venta manualmente a contado ya que no tiene la posibilidad de pagar a credito
-			Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";
-		}
+			    //establecemos el tipo de venta manualmente a contado ya que no tiene la posibilidad de pagar a credito
+			    Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";
+		    }
 
 		//hacemos visible la tarjeta 0 que es el tipo de compra
-		//Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(0);        
+		if(Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).rendered)
+		Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(0);        
 	
 		//verificamos si este cliente tiene asignado un descuento
 		if( this.carrito.cliente.descuento > 0 ){
@@ -1230,13 +1251,12 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelUpdater = function ()
 		
 	}//if cliente
 
-			alanboy = Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1);
+	// alanboy = Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1);
 	Ext.getCmp('Mostrador-doNuevaVentaSubTotal' ).setValue( POS.currencyFormat( subtotal ) );
-	Ext.getCmp('Mostrador-doNuevaVentaTotal' ).setValue( POS.currencyFormat( total ) );
+	Ext.getCmp('Mostrador-doNuevaVentaTotal' ).setValue( POS.currencyFormat( total ) );    
 
 	this.carrito.subtotal = subtotal;
 	this.carrito.total = total;
-	
 };
 
 
@@ -1323,6 +1343,17 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelCreator = function (	 ){
 			 ** ************************ **/
 	        xtype: 'carousel',
 	        direction: 'vertical',
+	        listeners : {
+	            "afterrender" : function (){
+	                console.log( "show" , this);
+	                
+	                if(Aplicacion.Mostrador.currentInstance.carrito.tipo_venta == "contado"){
+	                  //  this.setActiveItem(1);
+	                }else{
+	                   //this.setActiveItem(0);
+	                }
+	            }
+	        },
 	        items: [
 				/** ************************ **
 				 **		Primera tarjeta, CONTADO/CREDITO
@@ -1416,12 +1447,14 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelCreator = function (	 ){
 				{
 					xtype: 'fieldset',
 					bodyPadding: 20,					
-					items: [
-						new Ext.form.Text({ 
-							label : 'BOTON', 
-							id: 'Mostrador-doNuevaVentaImporte'
-						})
-					]
+					items:[new Ext.Button({ 
+                        ui  : 'action', 
+                        text: 'Vender', 
+                        handler: function(){
+                            Aplicacion.Mostrador.currentInstance.doVenta();
+                        }
+                    }) ]
+			
 				}
 				// *** terminan las tarjetas *** //
 				]
