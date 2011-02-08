@@ -5,6 +5,7 @@ require "conversor.php";
 
 $par=$_REQUEST["json"];
 $json = json_decode($par);
+
 $cliente=$json->cliente;
 //var_dump($json);
 //return;
@@ -43,13 +44,21 @@ for($i=0;$i<sizeof($productos);$i++){
 $pdf->Cell(5,$valor,''.$productos[$i]->cantidad);
 $pdf->Cell(15,$valor,'  '.$productos[$i]->descripcion);
 $pdf->Cell(-15);
+
+
+
+$pdf->Cell( 155,$valor,'    '.$productos[$i]->precioVenta,0,0,'R');
+$pu = $productos[$i]->precioVenta;
+	
+/*
 if($procesado[$i]->procesado=='true'){
-$pdf->Cell(155,$valor,'    '.$productos[$i]->precioVenta,0,0,'R');
-$pu=$productos[$i]->precioVenta;
-}else{
-$pdf->Cell(155,$valor,'    '.$productos[$i]->precioVentaSinProcesar,0,0,'R');
-$pu=$productos[$i]->precioVentaSinProcesar;
-}
+	$pdf->Cell(155,$valor,'    '.$productos[$i]->precioVenta,0,0,'R');
+	$pu=$productos[$i]->precioVenta;
+	}else{
+	$pdf->Cell(155,$valor,'    '.$productos[$i]->precioVentaSinProcesar,0,0,'R');
+	$pu=$productos[$i]->precioVentaSinProcesar;
+}*/
+
 $pdf->Cell(-155);
 $pdf->Cell(6,$valor,'                                                                                                                    $ '.$productos[$i]->cantidad*$pu);
 $pdf->Cell(-11);

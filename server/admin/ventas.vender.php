@@ -155,13 +155,12 @@
 	
     function dovender(){
 
-        cliente = 
         json = {
             id_cliente: CLIENTE !== null ? CLIENTE : jQuery("#cliente_selector").val() ,
             tipo_venta: venta.tipo_de_venta,
             tipo_pago:  venta.tipo_de_pago,
             factura:    venta.factura,
-            items: []
+            items: [  ]
         };
 
 
@@ -182,7 +181,7 @@
         }
 
 
-        console.log(json);
+        
     	jQuery.ajaxSettings.traditional = true;
 
 
@@ -209,8 +208,13 @@
                 }
 
 
-                reason = "Venta exitosa";
-                window.location = 'clientes.php?action=lista&success=true&reason=' + reason;
+
+
+				window.open( "../impresora/pdf.php?json=%7B%22tipo_venta%22%3A%20%22contado%22%2C%22items%22%3A%20%5B%7B%22descripcion%22%3A%20%22papas%20primeras%22%2C%22existencias%22%3A%20%221123%22%2C%22existencias_procesadas%22%3A%20%22462%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%2211%22%2C%22precioVentaSinProcesar%22%3A%20%228.5%22%2C%22precio%22%3A%20%2211%22%2C%22id_producto%22%3A%201%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%2210%22%2C%22precioIntersucursalSinProcesar%22%3A%20%229%22%2C%22procesado%22%3A%20%22true%22%2C%22cantidad%22%3A%204%2C%22idUnique%22%3A%20%221_1%22%7D%2C%7B%22descripcion%22%3A%20%22papas%20primeras%22%2C%22existencias%22%3A%20%221123%22%2C%22existencias_procesadas%22%3A%20%22462%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%2211%22%2C%22precioVentaSinProcesar%22%3A%20%228.5%22%2C%22precio%22%3A%20%2211%22%2C%22id_producto%22%3A%201%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%2210%22%2C%22precioIntersucursalSinProcesar%22%3A%20%229%22%2C%22procesado%22%3A%20%22true%22%2C%22cantidad%22%3A%204%2C%22idUnique%22%3A%20%221_1%22%7D%2C%7B%22descripcion%22%3A%20%22papas%20primeras%22%2C%22existencias%22%3A%20%221123%22%2C%22existencias_procesadas%22%3A%20%22462%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%2211%22%2C%22precioVentaSinProcesar%22%3A%20%228.5%22%2C%22precio%22%3A%20%2211%22%2C%22id_producto%22%3A%201%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%2210%22%2C%22precioIntersucursalSinProcesar%22%3A%20%229%22%2C%22procesado%22%3A%20%22true%22%2C%22cantidad%22%3A%204%2C%22idUnique%22%3A%20%221_1%22%7D%2C%7B%22descripcion%22%3A%20%22papas%20primeras%22%2C%22existencias%22%3A%20%221123%22%2C%22existencias_procesadas%22%3A%20%22462%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%2211%22%2C%22precioVentaSinProcesar%22%3A%20%228.5%22%2C%22precio%22%3A%20%2211%22%2C%22id_producto%22%3A%201%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%2210%22%2C%22precioIntersucursalSinProcesar%22%3A%20%229%22%2C%22procesado%22%3A%20%22true%22%2C%22cantidad%22%3A%204%2C%22idUnique%22%3A%20%221_1%22%7D%2C%7B%22descripcion%22%3A%20%22papas%20primeras%22%2C%22existencias%22%3A%20%221123%22%2C%22existencias_procesadas%22%3A%20%22462%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%2211%22%2C%22precioVentaSinProcesar%22%3A%20%228.5%22%2C%22precio%22%3A%20%2211%22%2C%22id_producto%22%3A%201%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%2210%22%2C%22precioIntersucursalSinProcesar%22%3A%20%229%22%2C%22procesado%22%3A%20%22true%22%2C%22cantidad%22%3A%204%2C%22idUnique%22%3A%20%221_1%22%7D%2C%7B%22descripcion%22%3A%20%22papas%20primeras%22%2C%22existencias%22%3A%20%221123%22%2C%22existencias_procesadas%22%3A%20%22462%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%2211%22%2C%22precioVentaSinProcesar%22%3A%20%228.5%22%2C%22precio%22%3A%20%2211%22%2C%22id_producto%22%3A%201%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%2210%22%2C%22precioIntersucursalSinProcesar%22%3A%20%229%22%2C%22procesado%22%3A%20%22true%22%2C%22cantidad%22%3A%204%2C%22idUnique%22%3A%20%221_1%22%7D%2C%7B%22descripcion%22%3A%20%22papa%20segunda%22%2C%22existencias%22%3A%20%221984%22%2C%22existencias_procesadas%22%3A%20%221477%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%229%22%2C%22precioVentaSinProcesar%22%3A%20%220%22%2C%22precio%22%3A%20%229%22%2C%22id_producto%22%3A%202%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%229%22%2C%22precioIntersucursalSinProcesar%22%3A%20%220%22%2C%22procesado%22%3A%20%22true%22%2C%22cantidad%22%3A%206%2C%22idUnique%22%3A%20%222_2%22%7D%2C%7B%22descripcion%22%3A%20%22papas%20primeras%22%2C%22existencias%22%3A%20%221123%22%2C%22existencias_procesadas%22%3A%20%22462%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%2211%22%2C%22precioVentaSinProcesar%22%3A%20%228.5%22%2C%22precio%22%3A%20%228.5%22%2C%22id_producto%22%3A%201%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%2210%22%2C%22precioIntersucursalSinProcesar%22%3A%20%229%22%2C%22procesado%22%3A%20%22false%22%2C%22cantidad%22%3A%204%2C%22idUnique%22%3A%20%221_3%22%7D%2C%7B%22descripcion%22%3A%20%22papa%20segunda%22%2C%22existencias%22%3A%20%221984%22%2C%22existencias_procesadas%22%3A%20%221477%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%229%22%2C%22precioVentaSinProcesar%22%3A%20%220%22%2C%22precio%22%3A%206%2C%22id_producto%22%3A%202%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%229%22%2C%22precioIntersucursalSinProcesar%22%3A%20%220%22%2C%22procesado%22%3A%20%22false%22%2C%22cantidad%22%3A%202%2C%22idUnique%22%3A%20%222_4%22%7D%5D%2C%22cliente%22%3A%20%7B%22id_cliente%22%3A%20%221%22%2C%22rfc%22%3A%20%22jija6778787%22%2C%22nombre%22%3A%20%22Jose%20alfredo%20jimenez%22%2C%22direccion%22%3A%20%22monte%20alban%20123%20col%20rosalinda%22%2C%22ciudad%22%3A%20%22celayaa%22%2C%22telefono%22%3A%20%22%22%2C%22e_mail%22%3A%20%22%22%2C%22limite_credito%22%3A%20%2219000%22%2C%22descuento%22%3A%20%220%22%2C%22activo%22%3A%20%221%22%2C%22id_usuario%22%3A%20%22101%22%2C%22id_sucursal%22%3A%20%221%22%2C%22fecha_ingreso%22%3A%20%222011-01-09%2002%3A11%3A30%22%2C%22credito_restante%22%3A%2015991%7D%2C%22factura%22%3A%20false%2C%22tipo_pago%22%3A%20%22efectivo%22%2C%22subtotal%22%3A%205250%2C%22total%22%3A%200%2C%22pagado%22%3A%20%22150%22%2C%22id_venta%22%3A%2060%2C%22empleado%22%3A%20%22Alan%20gonzalez%20hernandez%22%2C%22sucursal%22%3A%20%7B%22id_sucursal%22%3A%20%221%22%2C%22gerente%22%3A%20null%2C%22descripcion%22%3A%20%22papas%20supremas%201%22%2C%22direccion%22%3A%20%22monte%20radiante%20123%20col%20centro%2C%20celaya%22%2C%22rfc%22%3A%20%22alskdfjlasdj8787%22%2C%22telefono%22%3A%20%221726376672%22%2C%22token%22%3A%20null%2C%22letras_factura%22%3A%20%22c%22%2C%22activo%22%3A%20%221%22%2C%22fecha_apertura%22%3A%20%222011-01-09%2001%3A38%3A26%22%2C%22saldo_a_favor%22%3A%20%220%22%7D%2C%22ticket%22%3A%20true%7D" );
+
+
+                reason = "Venta exitosa.";
+                window.location = 'ventas.php?action=lista&success=true&reason=' + reason;
 	      }
 	    });
 

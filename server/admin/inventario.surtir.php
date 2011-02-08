@@ -119,8 +119,7 @@
 				html += td( "<input type='hidden'><i>N/A</i>" );			
 		}
 
-
-
+		//SUMAR FLETE FALTA !!!
 		html += td( "<input style='width: 100px' onkeyup='domath()' value='"+ ( o.precio_por_kg )+"' id='cart_table_precio" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='text'>" );
 		html += td( "<input style='width: 100px' onkeyup='domath()' value='0' id='cart_table_descuento" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='text'>" );
 		html += td( "<input style='width: 100px'					 		 id='cart_table_importe" + o.id_compra_proveedor + "_" + o.id_producto +"' 		type=text disabled>" );
