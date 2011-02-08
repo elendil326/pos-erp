@@ -903,14 +903,21 @@ require_once("logger.php");
                 }
                 
                 try
-                {
-     
+                {     
                     $data = parseJSON( $args['data'] );
                 }
                 catch(Exception $e)
                 {
                     die( '{"success": false, "reason": "Parametros invalidos." }' );
+                }               
+                
+                if( !( isset($data -> id_venta) && isset($data -> id_producto) && isset($data -> cantidadDevuelta) && isset($data -> cantidadProcesadaDevuelta) ) )
+                {
+                     die( '{"success": false, "reason": "Faltan parametros." }' );
                 }
+                
+                $data -> cantidadDevuelta += 0;
+                $data -> cantidadProcesadaDevuelta += 0;               
 
                 if(!is_numeric( $data -> cantidadDevuelta ))
                 {

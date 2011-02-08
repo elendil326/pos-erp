@@ -738,6 +738,8 @@ Aplicacion.Autorizaciones.prototype.solicitudAutorizacionDevolucion = function( 
         console.log(" ---------------------- QUIERO DEVOLEVER ----------------------------- ");
     }
 
+    Ext.getBody().mask(); 
+
     Ext.Ajax.request({
         url: '../proxy.php',
         scope : this,
@@ -758,11 +760,13 @@ Aplicacion.Autorizaciones.prototype.solicitudAutorizacionDevolucion = function( 
             if(!r.success)
             {
                 Ext.Msg.alert("Autorizaciones","Error: " + r.reason);
+                Ext.getBody().unmask(); 
+                return;
             }
 
             Ext.Msg.alert("Autorizaciones","Solicitud enviada con exito.");
 
-            //Ext.getBody().unmask(); 
+            Ext.getBody().unmask(); 
 
         },
         failure: function( response ){
@@ -778,6 +782,7 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_vent
 {
    
     this.solicitarDevolucionVentaPanel = new Ext.form.FormPanel({
+        style:{zIndex:'100 !important'},
         scroll: 'none',
         items: [{
             xtype: 'fieldset',
@@ -826,7 +831,7 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_vent
 
     this.panelSolicitudDevolucion = new Ext.Panel({
         floating:true,
-        modal: false,
+        //modal: false,
         centered:true,
         height: 465,
         width: 680,
@@ -850,30 +855,34 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVentaPanelValidator = fun
 {
 
     
-    var values = Aplicacion.Autorizaciones.currentInstance.solicitarDevolucionVentaPanel.getValues();
+    values = Aplicacion.Autorizaciones.currentInstance.solicitarDevolucionVentaPanel.getValues();
 
     // isNaN si es un numero devuelve falso
 
     if( !Ext.getCmp('Autorizacion-DevolucionVentaPanel-cantidad').isDisabled() ){
-        if( isNaN( parseFloat( values.cantidadDevuelta) ) || parseFloat( values.cantidadDevuelta) < 0 ) {
-
+    
+        if( isNaN( parseFloat( values.cantidadDevuelta) ) || parseFloat( values.cantidadDevuelta) < 0  ||  parseFloat( values.cantidadDevuelta) >  parseFloat( values.cantidadOriginal ) ) {
+                                                              
                 Ext.Anim.run( Ext.getCmp('Autorizacion-DevolucionVentaPanel-cantidad'), 
                     'fade', {duration: 250,
                     out: true,
                     autoClear: true
                 });
+                
                 return;
         }
+        
     }
 
     if( !Ext.getCmp('Autorizacion-DevolucionVentaPanel-cantidadProcesada').isDisabled() ){
-        if( isNaN( parseFloat( values.cantidadProcesadaDevuelta ) ) || parseFloat( values.cantidadProcesadaDevuelta) < 0  ) {
-
+        if( isNaN( parseFloat( values.cantidadProcesadaDevuelta ) ) || parseFloat( values.cantidadProcesadaDevuelta) < 0   ||  parseFloat( values.cantidadProcesadaDevuelta) >  parseFloat( values.cantidadProcesada ) ) {
+                                                          
                 Ext.Anim.run( Ext.getCmp('Autorizacion-DevolucionVentaPanel-cantidadProcesada'), 
                     'fade', {duration: 250,
                     out: true,
                     autoClear: true
                 });
+                
                 return;
                 
         }

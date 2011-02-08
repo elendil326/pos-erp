@@ -45,6 +45,7 @@ Aplicacion.Inventario.prototype.getConfig = function (){
 		    card :	this.listaInventarioPanel,	
 			leaf : true
 	};
+	
 };
 
 
@@ -798,7 +799,7 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 		panelDetalles = new Ext.form.FormPanel({														 
 			items: [{
 				xtype: 'fieldset',
-				title: 'Detalles de Proceso',
+				title: 'Detalles de proceso',
 				instructions: '',
 				defaults : {
 					disabled : false
@@ -894,6 +895,9 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 		  *
 		  **/
 		var productoDerivadoDetallesPanel = new Ext.form.FormPanel({
+		    style:{
+		        zIndex:'100 !important'
+		    },
 			dockedItems: [{
 	            dock: 'bottom',
 	            xtype: 'toolbar',
