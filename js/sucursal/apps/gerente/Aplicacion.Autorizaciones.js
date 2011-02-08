@@ -733,9 +733,7 @@ Aplicacion.Autorizaciones.prototype.nueva.mermaPanelCreator = function ()
 Aplicacion.Autorizaciones.prototype.solicitudAutorizacionDevolucion = function( values ){
 
     if(DEBUG){
-        console.log(" ---------------------- QUIERO DEVOLEVER ----------------------------- ");    
-        console.log(values);
-        console.log(" ---------------------- QUIERO DEVOLEVER ----------------------------- ");
+        console.log(" Iniciando proceso de solicitud de devolucion de produeto :  ", values);           
     }
 
     Ext.getBody().mask(); 
@@ -1240,6 +1238,8 @@ Aplicacion.Autorizaciones.prototype.checkForNewAuts = function(  ){
  */
 Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanel = null;
 
+Aplicacion.Autorizaciones.prototype.xxx = null;
+
 /**
  * Pone un panel en listaDeAutorizacionesPanel
  */
@@ -1252,15 +1252,21 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanelCreator = function
 			xtype: 'list',
 			emptyText: "vacio",
             store: this.listaDeAutorizacionesStore,
-            itemTpl: '<div class="listaDeAutorizacionesAutorizacion">ID de autorizacion : {id_autorizacion}&nbsp; Enviada el {fecha_peticion}</div>',
+            itemTpl: '<div class="listaDeAutorizacionesAutorizacion" >ID de autorizacion : {id_autorizacion}&nbsp; Enviada el {fecha_peticion}</div>',
             grouped: true,
             indexBar: false,
             listeners : {
                 "selectionchange"  : function ( view, nodos, c ){
                     if(nodos.length > 0){
-                        //if(DEBUG){console.log(nodos, c, view);}
+                    
+                        if(DEBUG){
+                            console.log(nodos, c, view);
+                            console.log(  "selecciono : ", this.getSelectedNodes()     );
+                        }
+                        
                         Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionPanelShow( nodos[0] );
-                        //console.error("bug ! cuando haces un tap el orden de nodos[0] no es el correcto");
+
+                        console.error("bug ! cuando haces un tap el orden de nodos[0] no es el correcto");
                         //console.log(view.getSelectedRecords());
                     }
 
@@ -1390,6 +1396,10 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
             estado = "El embarque ha sido surtido";
         break;
         
+        case 6 :
+            estado = "La venta preferencial ya se ha realizado";
+        break;
+        
         default:
             estado = "Indefinido.";        
     
@@ -1453,7 +1463,13 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                 new Ext.form.Text({label: 'ID Cliente', value : parametros.id_cliente }),
                 new Ext.form.Text({label: 'Nombre', value : parametros.nombre })
             );
+            
+           
+            
             height = 360;
+            
+            autorizacion.venta_preferencial = autorizacion.get('estado') == 1 ? true : false;
+            
         break;
 
         case '205':////solicitud de autorizacion de merma (gerente)
@@ -1568,6 +1584,32 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                     text: 'He recibido el embarque', 
                     handler: function(){
                         Aplicacion.Autorizaciones.currentInstance.surtirAutorizacion(autorizacion.get('id_autorizacion'), parametros.productos )
+                    }
+                }) : {  xtype: 'spacer' } ,
+                autorizacion.venta_preferencial ? new Ext.Button({ 
+                    ui  : 'forward', 
+                    text: 'Aplicar Venta Preferencial', 
+                    handler: function(){
+                    
+                        //obtenemos al cliente
+                        for( var i = 0; i < Aplicacion.Clientes.currentInstance.listaDeClientesStore.data.items.length; i++ )
+                        {
+                            if( Aplicacion.Clientes.currentInstance.listaDeClientesStore.data.items[i].data.id_cliente ==  parametros.id_cliente )
+                            {
+                                Aplicacion.Mostrador.currentInstance.carrito.cliente_preferencial = Aplicacion.Clientes.currentInstance.listaDeClientesStore.data.items[i].data;
+                                break;
+                            }
+                        }
+                    
+                        
+                        if(DEBUG){
+                            console.log("se aplico la venta preferencial a el cliente : ", parametros.id_cliente);
+                            console.log("El carrito contiene : ", Aplicacion.Mostrador.currentInstance.carrito);
+                        }
+                        
+                        //seleccionamos al cliente para la venta preferencial
+                        Aplicacion.Mostrador.currentInstance.clientePreferencialSeleccionado( Aplicacion.Mostrador.currentInstance.carrito.cliente_preferencial );
+                        
                     }
                 }) : {  xtype: 'spacer' } 
             ]

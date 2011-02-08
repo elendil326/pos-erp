@@ -127,11 +127,7 @@ Aplicacion.Clientes.prototype.listaDeComprasLoad = function (){
 			this.listaDeCompras.lista = compras.datos;
 			this.listaDeCompras.lastUpdate = Math.round(new Date().getTime()/1000.0);
             this.listaDeCompras.hash = compras.hash;
-            
-            if(DEBUG){
-            	console.log("Ya tengo la lista de compras !", compras.datos);
-            }
-            
+                       
 		}
 	});
 

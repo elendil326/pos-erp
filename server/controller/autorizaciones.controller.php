@@ -735,6 +735,7 @@ require_once("logger.php");
          *             |        3        | En transito                      | 214                                             |
          *             |        4        | Surtido                            | 214                                             |
          *             |        5        | Eliminada                         | TODAS                                      |
+         *             |        6        | Aplicada                          | 204                                             |
          *             -------------------------------------------------------------------------------
          *
          *  @param Array $args( 'id_autorizacion' => int )
@@ -743,7 +744,7 @@ require_once("logger.php");
          */
     function  responderAutorizacion( $args ){
       
-        Logger::log( "Error : Iniciando proceso de respuesta de autorizacion." );             
+        Logger::log( "Iniciando proceso de respuesta de autorizacion." );             
 
         if( !isset( $args['reply'] ) || !isset( $args['id_autorizacion'] ) )
         {
@@ -821,6 +822,8 @@ require_once("logger.php");
     function  responderAutorizacionPreciosEspeciales( $args ){
         
          Logger::log("Iniciando proceso de Respuesta Autorizacion Precios Especiales");
+         
+          DAO::transBegin();
 
         $autorizacion = AutorizacionDAOBase::getByPK( $args['id_autorizacion'] );
         $autorizacion->setFechaRespuesta( strftime( "%Y-%m-%d-%H-%M-%S", time() ) );
@@ -1038,6 +1041,12 @@ require_once("logger.php");
             case 219://cancelar autorizacion, cambiar a estado 5
             
             	cancelarAutorizacion( $args );
+            	
+            break;
+            
+            case 220://
+            
+            	//cancelarAutorizacion( $args );
             	
             break;
 

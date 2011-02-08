@@ -125,6 +125,7 @@ Aplicacion.Mostrador.prototype.carrito = {
 	tipo_venta : null,
 	items : [],
 	cliente : null,
+	cliente_preferencial : null,
 	factura : false,
 	tipo_pago: null
 };
@@ -286,11 +287,26 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 									
                                     precioVenta = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true"  )?Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaSinProcesar ;
 											
-									//verificamos que no intente cambiar el precio por un precio mas bajo del preestablecido
-									if( parseFloat(campo.getValue()) < parseFloat( precioVenta) ){
-										Ext.Msg.alert("Mostrador", "No puede bajar un precio por debajo del preestablecido.");
-										break;
-									}else{
+									//verificamos que sea una venta preferencial
+									//haya un cliente_preferencial y un cliente y el id
+											
+									if( 
+									        !( 
+									        Aplicacion.Mostrador.currentInstance.carrito.cliente != null &&  
+									        Aplicacion.Mostrador.currentInstance.carrito.cliente_preferencial != null &&
+									        Aplicacion.Mostrador.currentInstance.carrito.cliente.id_cliente == Aplicacion.Mostrador.currentInstance.carrito.cliente_preferencial.id_cliente
+									        )
+									    )
+									{
+									    //aqui no entra a la venta preferencial 
+									    if( parseFloat(campo.getValue()) < parseFloat( precioVenta) ){
+										    Ext.Msg.alert("Mostrador", "No puede bajar un precio por debajo del preestablecido.");
+										    Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = precioVenta;
+										    break;
+									    }
+									}		
+											
+									
 									
 									    var error = false;
 									
@@ -319,7 +335,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 							                break;
 							            }
 									
-									}
+									
 									
 									Aplicacion.Mostrador.currentInstance.carrito.items[i].precio= parseFloat( campo.getValue() );
 									break;
@@ -687,6 +703,20 @@ Aplicacion.Mostrador.prototype.clienteSeleccionado = function ( cliente )
 		
 };
 
+Aplicacion.Mostrador.prototype.clientePreferencialSeleccionado = function ( cliente )
+{
+	
+	if(DEBUG){
+		console.log("cliente preferencial seleccionado", cliente);
+	}
+	
+	
+	Ext.getCmp("Mostrador-tipoCliente").getComponent(1).setBadge(cliente.nombre);
+	
+	Aplicacion.Mostrador.currentInstance.carrito.cliente = cliente;
+		
+};
+
 Aplicacion.Mostrador.prototype.setCajaComun = function ()
 {
 
@@ -702,7 +732,27 @@ Aplicacion.Mostrador.prototype.setCajaComun = function ()
 	Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";
 	Aplicacion.Mostrador.currentInstance.carrito.cliente = null;
 	
+	Aplicacion.Mostrador.currentInstance.restaurarPrecios();
+	
 };
+
+//se llama cuando se han modificado los valores de los precios de los prcutos y afinal de cuenta no se realiza la venta preferencial
+Aplicacion.Mostrador.prototype.restaurarPrecios = function()
+{
+
+    if(DEBUG){
+        console.log("restaurando precios");
+    }
+
+    for( var i = 0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++ )
+    {
+        precioVenta = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true"  )?Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaSinProcesar ;
+        Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = precioVenta;
+    }
+
+    Aplicacion.Mostrador.currentInstance.refrescarMostrador();
+
+}
 
 Aplicacion.Mostrador.prototype.buscarClienteFormCreator = function ()
 {
@@ -714,9 +764,11 @@ Aplicacion.Mostrador.prototype.buscarClienteFormCreator = function ()
 		text: 'Cancelar',
 		handler : function(){
 
+
 			Aplicacion.Mostrador.currentInstance.setCajaComun();
 			Aplicacion.Mostrador.currentInstance.buscarClienteFormShow();
 		}
+		
 	};
 
 
@@ -915,21 +967,16 @@ Aplicacion.Mostrador.prototype.finishedPanelCreator = function()
 Aplicacion.Mostrador.prototype.doVenta = function ()
 {
 	
-	
 	carrito = Aplicacion.Mostrador.currentInstance.carrito;
 
-	
 	if(carrito.tipo_venta == 'contado'){
+	
 		if(DEBUG){
 			console.log("revisando venta a contado...");
 		}
 		
 		//ver si pago lo suficiente
 		pagado = Ext.getCmp("Mostrador-doNuevaVentaImporte").getValue(); 
-		//quitamos el signo de pesos
-		//pagado = pagado.substring(1, pagado.length);
-		
-		//alert("pago : " + pagado +" debe : " + carrito.total);
 		
 		if( (pagado.length === 0) || (parseFloat(pagado) < parseFloat(carrito.total)) ){
 			
@@ -1012,6 +1059,18 @@ Aplicacion.Mostrador.prototype.vender = function ()
 			if(DEBUG){
 				console.log("resultado de la venta exitosa ", venta );
 			}
+			
+			//verioficamos si se hiso una venta preferencial			
+			if( 
+                Aplicacion.Mostrador.currentInstance.carrito.cliente != null &&  
+                Aplicacion.Mostrador.currentInstance.carrito.cliente_preferencial != null &&
+                Aplicacion.Mostrador.currentInstance.carrito.cliente.id_cliente == Aplicacion.Mostrador.currentInstance.carrito.cliente_preferencial.id_cliente
+            )
+            {		
+                Aplicacion.Mostrador.currentInstance.carrito.cliente_preferencial = null;
+                //hacemos una jaxaso para 
+                
+            }
 						
 			//almacenamos en el carrito el id de la venta
 			Aplicacion.Mostrador.currentInstance.carrito.id_venta = venta.id_venta;

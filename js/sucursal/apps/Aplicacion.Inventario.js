@@ -6,10 +6,10 @@ Aplicacion.Inventario = function (	){
 };
 
 Aplicacion.Inventario.prototype._init = function (){
+
 	if(DEBUG){
 		console.log("Inventario: construyendo");
 	}
-
 
 	//cargar el inventario existente desde el servidor
 	this.cargarInventario();
