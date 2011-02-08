@@ -153,6 +153,7 @@ function listarInventarioMaestro( $n = 50, $show = POS_TODOS )
 			$bar = array_merge( $compra->asArray(), $iM->asArray(),  $detalle->asArray() );
 			$bar['producto_desc'] = $p->getDescripcion();
 			$bar['producto_tratamiento'] = $p->getTratamiento();
+			$bar['medida'] = $p->getEscala();
 			
 			if( $p->getTratamiento() === null) {
 				$bar["existencias_procesadas"] = "NA";

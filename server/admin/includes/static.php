@@ -3,8 +3,10 @@
 
 function moneyFormat( $val ){
 
-	return sprintf( "<b>$</b>%.2f", $val);
+	return sprintf( "$&nbsp;<b>%.2f</b>", $val );
 }
+
+
 
 
 function percentFormat( $val ){
@@ -28,6 +30,7 @@ class Tabla {
 	private	$actionSendID;
 	private $renderRowIds;
 	private $specialRender;
+	
 	private $noDataText;
 	
 	public function __construct($header = array(), $rows = array()){
@@ -36,6 +39,7 @@ class Tabla {
 		$this->specialRender = array();
 		$renderRowIds = null;
 	}
+	
 	
 	public function renderRowId( $prefix )
 	{
@@ -61,8 +65,7 @@ class Tabla {
 
 	
 	public function addColRender( $id, $fn ){
-		
-		array_push( $this->specialRender, array( $id => $fn ) );
+			array_push( $this->specialRender, array( $id => $fn ) );
 	}
 	
 
@@ -132,7 +135,9 @@ class Tabla {
 
 					//ver si necesita rendereo especial
 					$found = null;
+				
 					for( $k = 0; $k < sizeof($this->specialRender); $k++ ){
+						
 						if( array_key_exists( $key, $this->specialRender[$k] )){
 								$found = $this->specialRender[$k];
 						}
@@ -145,7 +150,9 @@ class Tabla {
 					}
 					
 					if( $found ){
-						$html .=  "<td style='background-color:".$bgc.";'>" . call_user_func( $found[$key] , $row[ $key ]) . "</td>";
+						
+						$html .=  "<td style='background-color:".$bgc.";'>" . call_user_func( $found[$key] , $row[ $key ], $row ) . "</td>";							
+
 					}else{
 						$html .=  "<td style='background-color:".$bgc.";'>" . $row[ $key ] . "</td>";
 					}
