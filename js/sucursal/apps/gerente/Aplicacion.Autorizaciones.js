@@ -1326,7 +1326,7 @@ Aplicacion.Autorizaciones.prototype.surtirAutorizacion = function( aid , product
 
 
             //mandamos llamar al paner que imprimira el ticket
-            Aplicacion.Autorizaciones.currentInstance.finishedPanelShow( productos );
+            //Aplicacion.Autorizaciones.currentInstance.finishedPanelShow( productos );
 
             /*
             //cambiamos la card

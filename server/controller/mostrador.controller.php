@@ -57,6 +57,8 @@ function revisarExistenciasSucursal( $productos )
             die( '{"success": false, "reason": "No se tiene registro del producto ' . $p -> id_producto . ' en esta sucursal.." }' );
         }
         
+        //Logger::log("Se busca el producto : {$p->id_producto}");
+        
         if( $p -> procesado == "true" ){
 		    //requiere producto procesado
 		    if( $p -> cantidad_procesada > $i-> getExistenciasProcesadas() ){
@@ -242,7 +244,7 @@ function vender( $args ){
         }
     
     }
-    
+   
    
     /*
     * Condensamos los productos
@@ -286,11 +288,11 @@ function vender( $args ){
     //insertamos el primer producto
     array_push( $array_items, $item  );
     
+
+    
     //recorremos a $data->items para condensar el array de productos
     for( $i = 1; $i < count($data->items); $i++ ){
-    
-        //iteramos el $obj_items 
-        
+
         if( $data->items[$i] -> cantidad <= 0 ){
             Logger::log("La cantidad de los productos debe ser mayor que cero.");
             die('{"success": false, "reason": "La cantidad de los productos debe ser mayor que cero." }');
@@ -301,11 +303,18 @@ function vender( $args ){
             die('{"success": false, "reason": "El precio de los productos debe ser mayor que cero." }');
         }
         
+        //bandera para verificar si el producto no esta dentro de array_items
+        $found = false; 
+        
+        //iteramos el array_items y lo comparamos cada elementod e el con el producto actual
         foreach( $array_items as $item ){
             
+            //comparamos haber si ya existe el producto en array_items
             if(  $data->items[$i]  -> id_producto == $item -> id_producto ){
-
-                  //si se encuentra ese producto en el arreglo de objetos
+            
+                $found = true;
+            
+                //(el producto se encontro) y es un producto procesado            
                 if( $data->items[$i]->procesado == "true" ){
                      $item -> cantidad_procesada += $data->items[$i] -> cantidad;       
                                    
@@ -317,6 +326,7 @@ function vender( $args ){
                      $item -> precio_procesada = $data->items[$i]-> precio;
                      
                 }else{
+                 //(el producto se encontro) y es un producto original
                     $item -> cantidad += $data->items[$i] -> cantidad;
                     
                     if( $item -> precio != 0 && $item -> precio != $data->items[$i]-> precio){
@@ -326,13 +336,19 @@ function vender( $args ){
                      
                      $item -> precio = $data->items[$i]-> precio;
                     
-                }                                
-            }else{
+                }                                       
+                
+            }
             
-                //si no se encuentra el producto en el arreglo de objetos hay que crearlo
+        }//for each del array_items
+        
+        if( !$found ){
+        
+            //si no se encuentra el producto en el arreglo de objetos hay que crearlo
                 $_item = new stdClass();
-                $_item -> id_compra_proveedor = $data->items[$i] -> id_compra_proveedor;
-                $_item -> id_producto = $data->items[$i]-> id_producto;
+                //$_item -> id_compra_proveedor = $data->items[$i] -> id_compra_proveedor;    
+                $_item -> id_producto = $data->items[$i]-> id_producto;            
+                $_item -> procesado = $data -> items[$i] -> procesado;                
                 
                 if( $data->items[$i]->procesado == "true" ){
                      $_item -> cantidad_procesada = $data->items[$i] -> cantidad;
@@ -346,11 +362,13 @@ function vender( $args ){
                     $_item -> precio = $data->items[$i] -> precio;
                 }                                
                 array_push( $array_items, $_item  );
-            }
-            
+                
         }
+                
         
-    }
+    }//for de $data->items
+	
+	    //var_dump( $array_items );
 	
 	 //revisamos si las existencias en el inventario de la sucursal para ver si satisfacen a las requeridas en la venta
     if(!revisarExistenciasSucursal( $array_items )){
