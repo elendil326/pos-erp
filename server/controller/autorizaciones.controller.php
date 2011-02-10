@@ -848,6 +848,46 @@ require_once("logger.php");
 
 
 
+    /**
+        *   Finalizar Venta Preferencial
+        *
+        *  Cuando ya se realizo la venta preferencial, entonces se cambia su estado de la autorizacion
+        *
+        */
+    function finalizarVentaPreferencial( $args ){
+    
+        Logger::log( "Iniciando proceso de finalizar venta preferencial");
+        
+        DAO::transBegin();
+
+        if( !isset( $args['id_autorizacion'] ) ){
+            Logger::log( "Error : No se especifico el id de la autorizacion.");
+            DAO::transRollback();
+            die( '{"success": false, "reason": "No se pudoguardar la autorizacion." }' );       
+        }
+
+        $autorizacion = AutorizacionDAOBase::getByPK( $args['id_autorizacion'] );
+        $autorizacion->setFechaRespuesta( strftime( "%Y-%m-%d-%H-%M-%S", time() ) );
+        $autorizacion->setEstado( 6 );    
+                    
+        try
+        {
+            AutorizacionDAO::save( $autorizacion );                   
+        }          
+        catch(Exception $e)
+        {
+            Logger::log( "Error : " . $e);
+            DAO::transRollback();
+            die( '{"success": false, "reason": "No se pudoguardar la autorizacion." }' );       
+        }
+        
+        DAO::transEnd();
+        Logger::log( "Terminado proceso de finalizar venta preferencial");
+        printf('{"success" : true}');
+        
+    }//finalizarVentaPreferencial
+
+
     if( isset( $args['action'] ) ){
 
         switch( $args['action'] ){
@@ -1044,9 +1084,9 @@ require_once("logger.php");
             	
             break;
             
-            case 220://
+            case 220://finalizar venta prefereicial, cambiar al estado 6
             
-            	//cancelarAutorizacion( $args );
+            	finalizarVentaPreferencial( $args );
             	
             break;
 

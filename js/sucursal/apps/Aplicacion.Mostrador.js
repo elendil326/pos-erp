@@ -125,7 +125,7 @@ Aplicacion.Mostrador.prototype.carrito = {
 	tipo_venta : null,
 	items : [],
 	cliente : null,
-	cliente_preferencial : null,
+	venta_preferencial : { cliente : null, id_autorizacion : null },
 	factura : false,
 	tipo_pago: null
 };
@@ -283,6 +283,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 						
 							//buscar el producto en la estructura y ponerle esa nueva cantidad
 							for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
+
 								if(Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == campo.idUnique){
 									
                                     precioVenta = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true"  )?Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaSinProcesar ;
@@ -293,8 +294,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 									if( 
 									        !( 
 									        Aplicacion.Mostrador.currentInstance.carrito.cliente != null &&  
-									        Aplicacion.Mostrador.currentInstance.carrito.cliente_preferencial != null &&
-									        Aplicacion.Mostrador.currentInstance.carrito.cliente.id_cliente == Aplicacion.Mostrador.currentInstance.carrito.cliente_preferencial.id_cliente
+									        Aplicacion.Mostrador.currentInstance.carrito.venta_preferencial.cliente != null &&
+									        Aplicacion.Mostrador.currentInstance.carrito.cliente.id_cliente == Aplicacion.Mostrador.currentInstance.carrito.venta_preferencial.cliente.id_cliente
 									        )
 									    )
 									{
@@ -1060,16 +1061,16 @@ Aplicacion.Mostrador.prototype.vender = function ()
 				console.log("resultado de la venta exitosa ", venta );
 			}
 			
-			//verioficamos si se hiso una venta preferencial			
-			if( 
-                Aplicacion.Mostrador.currentInstance.carrito.cliente != null &&  
-                Aplicacion.Mostrador.currentInstance.carrito.cliente_preferencial != null &&
-                Aplicacion.Mostrador.currentInstance.carrito.cliente.id_cliente == Aplicacion.Mostrador.currentInstance.carrito.cliente_preferencial.id_cliente
-            )
-            {		
-                Aplicacion.Mostrador.currentInstance.carrito.cliente_preferencial = null;
-                //hacemos una jaxaso para 
+			carrito = Aplicacion.Mostrador.currentInstance.carrito;
+			
+			//verificamos si se hiso una venta preferencial			
+			if(  carrito.cliente != null &&  carrito.venta_preferencial.cliente != null &&
+                carrito.cliente.id_cliente == carrito.venta_preferencial.cliente.id_cliente )
+            {		                
                 
+                //hacemos una jaxaso para modificar la autorizacion de venta preferencial e indicarle que ya se hiso la venta preferencial                
+                Aplicacion.Autorizaciones.currentInstance.finalizarAutorizacionVentaPreferencial();
+                                
             }
 						
 			//almacenamos en el carrito el id de la venta
@@ -1091,6 +1092,8 @@ Aplicacion.Mostrador.prototype.vender = function ()
 
 			//mostrar el panel final
 			Aplicacion.Mostrador.currentInstance.finishedPanelShow();
+			
+			//reseteamos el carrito
 			Aplicacion.Mostrador.currentInstance.cancelarVenta();
 			
 			

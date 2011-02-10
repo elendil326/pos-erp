@@ -1328,10 +1328,10 @@ Aplicacion.Autorizaciones.prototype.surtirAutorizacion = function( aid , product
             //mandamos llamar al paner que imprimira el ticket
             //Aplicacion.Autorizaciones.currentInstance.finishedPanelShow( productos );
 
-            /*
+            
             //cambiamos la card
             sink.Main.ui.setActiveItem( Aplicacion.Inventario.currentInstance.listaInventarioPanel , 'fade');
-            */
+            
 
             Ext.Msg.alert("Autorizaciones","Se modifico correctamente el inventario");
             
@@ -1578,40 +1578,24 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                 xtype: 'spacer'
             },
             //cuando esta autorizacion es estado 3, mostrar un boton para aceptar el embarque
-            autorizacion.get('estado') == 3 ? 
+            
                 new Ext.Button({ 
                     ui  : 'forward', 
                     text: 'He recibido el embarque', 
+                    hidden : autorizacion.get('estado') == 3 ? false : true,
                     handler: function(){
                         Aplicacion.Autorizaciones.currentInstance.surtirAutorizacion(autorizacion.get('id_autorizacion'), parametros.productos )
                     }
-                }) : {  xtype: 'spacer' } ,
-                autorizacion.venta_preferencial ? new Ext.Button({ 
+                }) ,
+                new Ext.Button({ 
                     ui  : 'forward', 
                     text: 'Aplicar Venta Preferencial', 
-                    handler: function(){
-                    
-                        //obtenemos al cliente
-                        for( var i = 0; i < Aplicacion.Clientes.currentInstance.listaDeClientesStore.data.items.length; i++ )
-                        {
-                            if( Aplicacion.Clientes.currentInstance.listaDeClientesStore.data.items[i].data.id_cliente ==  parametros.id_cliente )
-                            {
-                                Aplicacion.Mostrador.currentInstance.carrito.cliente_preferencial = Aplicacion.Clientes.currentInstance.listaDeClientesStore.data.items[i].data;
-                                break;
-                            }
-                        }
-                    
-                        
-                        if(DEBUG){
-                            console.log("se aplico la venta preferencial a el cliente : ", parametros.id_cliente);
-                            console.log("El carrito contiene : ", Aplicacion.Mostrador.currentInstance.carrito);
-                        }
-                        
+                    hidden : autorizacion.venta_preferencial ? false : true,
+                    handler: function(){                                                                    
                         //seleccionamos al cliente para la venta preferencial
-                        Aplicacion.Mostrador.currentInstance.clientePreferencialSeleccionado( Aplicacion.Mostrador.currentInstance.carrito.cliente_preferencial );
-                        
+                        Aplicacion.Autorizaciones.currentInstance.seleccionarClientePreferencial( parametros.id_cliente, autorizacion.data.id_autorizacion );                        
                     }
-                }) : {  xtype: 'spacer' } 
+                })
             ]
         }],
         items: [{
@@ -1627,11 +1611,84 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
 };
 
 
+/**
+   *  Indicamos al carrito que se ha seleccionado a un cliente para la venta preferencial
+   **/
+Aplicacion.Autorizaciones.prototype.seleccionarClientePreferencial = function ( id_cliente, id_autorizacion ){
+
+    //obtenemos al cliente
+    for( var i = 0; i < Aplicacion.Clientes.currentInstance.listaDeClientesStore.data.items.length; i++ )
+    {
+        if( Aplicacion.Clientes.currentInstance.listaDeClientesStore.data.items[i].data.id_cliente ==  id_cliente )
+        {
+            Aplicacion.Mostrador.currentInstance.carrito.venta_preferencial.cliente= Aplicacion.Clientes.currentInstance.listaDeClientesStore.data.items[i].data;
+            Aplicacion.Mostrador.currentInstance.carrito.venta_preferencial.id_autorizacion = id_autorizacion;
+            
+            //mostramos en el mostrador el nombre del cliente
+            Aplicacion.Mostrador.currentInstance.clientePreferencialSeleccionado( Aplicacion.Mostrador.currentInstance.carrito.venta_preferencial.cliente );
+                     
+            sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.mostradorPanel , 'slide');                       
+            
+            break;
+        }
+    }
+                    
+                        
+    if(DEBUG){
+        console.log("se aplico la venta preferencial a el cliente : ", Aplicacion.Mostrador.currentInstance.carrito.venta_preferencial.cliente.nombre );
+        console.log("El carrito contiene : ", Aplicacion.Mostrador.currentInstance.carrito);
+    }
+
+};
 
 
+/**
+    * Hace una jaxaso para modificar la autorizacion de venta preferenciale indicarle que ya se realizo la venta preferencial
+    **/
+Aplicacion.Autorizaciones.prototype.finalizarAutorizacionVentaPreferencial = function (){
+
+    Ext.getBody().mask('Modificando estado de la autorizacion de venta preferencial', 'x-mask-loading', true);
+
+    carrito = Aplicacion.Mostrador.currentInstance.carrito;
+    
+    Ext.Ajax.request({
+		url: '../proxy.php',
+		scope : this,
+		params : {
+			action : 220,
+			id_autorizacion : carrito.venta_preferencial.id_autorizacion
+		},
+		success: function(response, opts) {
+			try{
+				autorizacion = Ext.util.JSON.decode( response.responseText );				
+			}catch(e){
+				return POS.error(response, e);
+			}
+			
+			Ext.getBody().unmask();
+			
+			if( !autorizacion.success ){
+				//volver a intentar
+				if(DEBUG){
+					console.log("Fallo del cambio del estado de la autorizacion ", autorizacion );
+				}
+				Ext.Msg.alert("Autorizaciones", autorizacion.reason);
+				return;
+
+			}
+			
+			//si se acmbio el estado de la autorizacion reseteamos la venta preferencial
+			carrito.venta_preferencial.cliente = null;
+            carrito.venta_preferencial.id_autorizacion = null;
+
+		},
+		failure: function( response ){
+			POS.error( response );
+		}
+	});
 
 
-
+};
 
 
 
