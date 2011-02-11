@@ -11,8 +11,11 @@
 		{
 
 		    protected static $isTrans = false;
-
+			protected static $transCount = 0;
+			
             public static function transBegin (){
+				self::$transCount ++;
+
 				if(self::$isTrans){
 					Logger::log("Transaccion ya ha sido iniciada antes.");
 					return;
@@ -30,6 +33,12 @@
 					Logger::log("Transaccion commit pero no hay transaccion activa !!.");
 					return;
 				}
+
+				self::$transCount --;
+				
+				if(self::$transCount > 0){
+					return;
+				}
 				
                 global $conn;
                 $conn->CompleteTrans();
@@ -43,6 +52,8 @@
 					Logger::log("Transaccion rollback pero no hay transaccion activa !!.");
 					return;
 				}
+				
+				self::$transCount = 0;
 				
                 global $conn;
                 $conn->FailTrans();
