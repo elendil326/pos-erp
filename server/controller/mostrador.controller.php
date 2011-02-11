@@ -368,8 +368,6 @@ function vender( $args ){
         
     }//for de $data->items
 	
-	    //var_dump( $array_items );
-	
 	 //revisamos si las existencias en el inventario de la sucursal para ver si satisfacen a las requeridas en la venta
     if(!revisarExistenciasSucursal( $array_items )){
         Logger::log("No hay existencias suficientes en el inventario de la suursal para satisfacer la demanda");
@@ -549,6 +547,28 @@ function vender( $args ){
         Logger::log($e);
         die( '{"success": false, "reason": "Intente de nuevo." }' );
     }
+
+    //verificamos si la venta se hiso a una sucursal, si es asi entonces se poner en transito el producto    
+    if( isset( $data -> cliente ) &&  $data -> cliente -> id_cliente < 0)
+    {
+        $en_transito = array(
+            'id_sucursal' => $data -> cliente -> id_cliente,
+            'data' => json_encode( $array_items );
+        );
+        
+        responderAutorizacionSolicitudProductos( $en_transito ); 
+        
+    }
+    
+     /** @param Array $args( 
+         *                                        'data' => [ {"id_producto" : int, "cantidad" : int, "cantidad_procesada" : int }[, {"id_producto" : int, "cantidad" : int, "cantidad_procesada" : int } ] ],
+         *                                        'id_sucursal' => int[,
+         *                                        'responseToAut' => int ]
+         *                                      )
+         array_push( $array_items, $item  );
+         */         
+        
+         
 
     DAO::transEnd();
 

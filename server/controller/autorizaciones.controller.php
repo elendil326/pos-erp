@@ -317,6 +317,8 @@ require_once("logger.php");
          * */     
     function responderAutorizacionSolicitudProductos( $args ){
 
+        Logger::log("Iniciando proceso de responder autorizacion de solicitud de productos.");
+
         DAO::transBegin();
 
         if( !isset($args['data']) || !isset($args['id_sucursal']) )
@@ -385,7 +387,8 @@ require_once("logger.php");
 
 
         DAO::transEnd();
-        Logger::log("Surtir sucursal exitoso. Autorizacion=" . $autorizacion->getIdAutorizacion() );
+        Logger::log("Terminado proceso de responder autorizacion de solicitud de productos. Autorizacion = {$autorizacion->getIdAutorizacion()}.");
+        
     }
 
 

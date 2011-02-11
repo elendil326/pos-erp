@@ -182,8 +182,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 	html +=     "<td align='left' >Sub Total</td>";
 	html += "</tr>";
 	
-	var venta_intersucursal = false;
 	//verificamos si se trata de una venta intersucursal
+	var venta_intersucursal = false;	
 	if( carrito.cliente != null && carrito.cliente.id_cliente < 0 ){
 	    venta_intersucursal = true;
 	}
