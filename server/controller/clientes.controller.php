@@ -160,7 +160,7 @@ function listarClientes(  ){
 	
 	//buscar clientes que esten activos
 	$foo = new Cliente();
-	$foo->setIdCliente("0");
+	$foo->setIdCliente("-9999");
 	$foo->setActivo("1");
 
 

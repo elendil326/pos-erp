@@ -29,7 +29,6 @@ Aplicacion.Operaciones.prototype._init = function (){
     
     Aplicacion.Operaciones.currentInstance.abonarVentaSucursalPanelCreator();
     
-    Aplicacion.Operaciones.currentInstance.ventaCreditoSucursalPanelCreator();
 	
 	return this;
 };
@@ -41,11 +40,7 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
 	return {
 	    text: 'Operaciones',
 	    cls: 'launchscreen',
-	    items: [{
-	        text: 'Vender a sucursal',
-	        card: Aplicacion.Operaciones.currentInstance.ventaCreditoSucursalPanel,
-	        leaf: true
-	    },
+	    items: [
 	    {
 	        text: 'Cobrar a sucursal',
 	        items: [{
@@ -1168,29 +1163,12 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
    * 
    *************************************************************************** */
 
-    //panel de 
-    Aplicacion.Operaciones.prototype.ventaCreditoSucursalPanel = null;
-
-    /**
-        *
-        *
-        */
-    Aplicacion.Operaciones.prototype.ventaCreditoSucursalPanelCreator = function (){
-
-        //TODO:Poner algun tipo de bandera
-
-        this.ventaCreditoSucursalPanel = new Ext.form.FormPanel({
-        
-            items: [{ xtype: 'fieldset', title: 'Mostrador'}]
-        
-        });
-
-    };
-
-
-
-        
-        //Aplicacion.Operaciones.currentInstance.ventaCreditoSucursal
+    
+    
+    
+    
+    
+    
         
 
 POS.Apps.push( new Aplicacion.Operaciones() );

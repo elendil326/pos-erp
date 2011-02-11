@@ -182,7 +182,15 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 	html +=     "<td align='left' >Sub Total</td>";
 	html += "</tr>";
 	
+	var venta_intersucursal = false;
+	//verificamos si se trata de una venta intersucursal
+	if( carrito.cliente != null && carrito.cliente.id_cliente < 0 ){
+	    venta_intersucursal = true;
+	}
+	
+	//iteramos los productos que hay en el carrito para crear la tabla dond se muestran los productos
 	for (var i=0; i < carrito.items.length; i++){
+		
 		
 		if( i == carrito.items.length - 1 ){
 			html += "<tr class='last'>";
@@ -206,10 +214,12 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		html += "<td  style='width: 11.3%;'>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precio )+"</td>";
 		
 		html += "</tr>";
-	}
+		
+	}//for
 	
 	html += "</table>";
 	
+	//mostramos al tabla
 	Ext.getCmp("MostradorHtmlPanel").update(html);
 	
 	//si hay mas de un producto, mostrar el boton de vender
@@ -219,13 +229,14 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		Ext.getCmp("Mostrador-mostradorVender").hide( Ext.anims.slide );
 	}
 	
+	//creamos los controles de la tabla
 	for (i=0; i < carrito.items.length; i++){
 		
 		if(Ext.get("Mostrador-carritoCantidad"+ carrito.items[i].productoID + "Text")){
 			continue;
 		}
 	
-	   
+        //control donde se muestra la cantidad de producto
 		a = new Ext.form.Text({
 			renderTo : "Mostrador-carritoCantidad"+ carrito.items[i].idUnique ,
 			id : "Mostrador-carritoCantidad"+ carrito.items[i].idUnique + "Text",
@@ -264,6 +275,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		
 		});
 
+        //control donde se muestra el precio del producto
 		b = new Ext.form.Text({
 			renderTo : "Mostrador-carritoPrecio"+ carrito.items[i].idUnique ,
 			id : "Mostrador-carritoPrecio"+ carrito.items[i].idUnique + "Text",
@@ -287,7 +299,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 								if(Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == campo.idUnique){
 									
                                     precioVenta = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true"  )?Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaSinProcesar ;
-											
+									precioVentaIntersucursal = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true"  )?Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursal : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursalSinProcesar ;
 									//verificamos que sea una venta preferencial
 									//haya un cliente_preferencial y un cliente y el id
 											
@@ -307,7 +319,16 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 									    }
 									}		
 											
-									
+									//si es una venta intersucursal, validamos que no le cambie el precio		
+									if( venta_intersucursal )
+									{
+									    if( parseFloat(campo.getValue()) != parseFloat( precioVentaIntersucursal ) )
+									    {
+									        Ext.Msg.alert("Mostrador", "No puede modificar el precio de un producto en una venta intersucursal.");
+										    Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = precioVentaIntersucursal;
+										    break;
+									    }
+									}
 									
 									    var error = false;
 									
@@ -412,7 +433,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 							                break;
 							            }else{
 							                //si no se encontro un producto con las mismas propiedades entonces le asignamos el valos por default
-							                Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta;
+							                Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = venta_intersucursal ?  Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursal : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta;
 							            }
 					                    
 					                }else{
@@ -442,7 +463,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 							                break;
 							            }else{
 							                 //si no se encontro un producto con las mismas propiedades entonces le asignamos el valos por default
-					                        Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaSinProcesar;
+					                        Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = venta_intersucursal ? Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursalSinProcesar : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaSinProcesar;
 					                    }
 					                }
 					                
@@ -528,6 +549,14 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 		}
 	}
 	
+
+	//verificamos si se trata de una venta intersucursal
+	var venta_intersucursal = false;
+	
+	if( carrito.cliente != null && carrito.cliente.id_cliente < 0 ){
+	    venta_intersucursal = true;
+	}
+		 
 	//si no, agregarlo al carrito
 	if(!found)
 	{
@@ -535,15 +564,15 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 	    var len = this.carrito.items.length;
 	
 		this.carrito.items.push({
-			descripcion: res.data.descripcion,
-			existencias: res.data.existenciasOriginales,
-			existencias_procesadas: res.data.existenciasProcesadas,
-			tratamiento:res.data.tratamiento,   //si es !null  entonces el producto puede ser original o procesado
-			precioVenta: res.data.precioVenta,
-			precioVentaSinProcesar: res.data.precioVentaSinProcesar,
-			precio: res.data.precioVenta, 
-			id_producto: res.data.productoID,
-			escala: res.data.medida,
+			descripcion : res.data.descripcion,
+			existencias : res.data.existenciasOriginales,
+			existencias_procesadas : res.data.existenciasProcesadas,
+			tratamiento : res.data.tratamiento,   //si es !null  entonces el producto puede ser original o procesado
+			precioVenta : venta_intersucursal? res.data.precioIntersucursal : res.data.precioVenta,
+			precioVentaSinProcesar : res.data.precioVentaSinProcesar,
+			precio : res.data.precioVenta, 
+			id_producto : res.data.productoID,
+			escala : res.data.medida,
 			precioIntersucursal : res.data.precioIntersucursal,
 			precioIntersucursalSinProcesar : res.data.precioIntersucursalSinProcesar,
 			procesado : "true",
@@ -701,6 +730,22 @@ Aplicacion.Mostrador.prototype.clienteSeleccionado = function ( cliente )
 	Ext.getCmp("Mostrador-tipoCliente").getComponent(1).setBadge(cliente.nombre);
 	
 	Aplicacion.Mostrador.currentInstance.carrito.cliente = cliente;
+	
+	//verificamos si se trata de una venta intersucursal
+	if( cliente.id_cliente < 0 )
+	{
+	    if(DEBUG){
+	        console.log("Seleccionamos una sucursal como cliente : restaurando precios intersucursal");
+	    }
+	    Aplicacion.Mostrador.currentInstance.restaurarPreciosIntersucursal(); 
+	}
+	else
+	{
+	    if(DEBUG){
+	        console.log("Seleccionamos un cliente normal : restaurando precios originales");
+	    }
+	    Aplicacion.Mostrador.currentInstance.restaurarPreciosOriginales();
+    }	
 		
 };
 
@@ -715,6 +760,8 @@ Aplicacion.Mostrador.prototype.clientePreferencialSeleccionado = function ( clie
 	Ext.getCmp("Mostrador-tipoCliente").getComponent(1).setBadge(cliente.nombre);
 	
 	Aplicacion.Mostrador.currentInstance.carrito.cliente = cliente;
+	
+	Aplicacion.Mostrador.currentInstance.refrescarMostrador()
 		
 };
 
@@ -733,21 +780,39 @@ Aplicacion.Mostrador.prototype.setCajaComun = function ()
 	Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";
 	Aplicacion.Mostrador.currentInstance.carrito.cliente = null;
 	
-	Aplicacion.Mostrador.currentInstance.restaurarPrecios();
+	Aplicacion.Mostrador.currentInstance.restaurarPreciosOriginales ();
 	
 };
 
 //se llama cuando se han modificado los valores de los precios de los prcutos y afinal de cuenta no se realiza la venta preferencial
-Aplicacion.Mostrador.prototype.restaurarPrecios = function()
+Aplicacion.Mostrador.prototype.restaurarPreciosOriginales = function()
 {
 
     if(DEBUG){
-        console.log("restaurando precios");
+        console.log("restaurando precios originales");
     }
 
     for( var i = 0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++ )
     {
         precioVenta = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true"  )?Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaSinProcesar ;
+        Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = precioVenta;
+    }
+
+    Aplicacion.Mostrador.currentInstance.refrescarMostrador();
+
+}
+
+Aplicacion.Mostrador.prototype.restaurarPreciosIntersucursal = function()
+{
+
+    if(DEBUG){
+        console.log("restaurando precios intersucursales");
+    }
+
+    for( var i = 0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++ )
+
+    {
+        precioVenta = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true"  )?Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursal : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursalSinProcesar ;
         Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = precioVenta;
     }
 

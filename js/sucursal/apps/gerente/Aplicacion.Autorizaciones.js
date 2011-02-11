@@ -780,7 +780,6 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_vent
 {
    
     this.solicitarDevolucionVentaPanel = new Ext.form.FormPanel({
-        style:{zIndex:'100 !important'},
         scroll: 'none',
         items: [{
             xtype: 'fieldset',
