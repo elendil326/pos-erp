@@ -186,6 +186,9 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 	var venta_intersucursal = false;	
 	if( carrito.cliente != null && carrito.cliente.id_cliente < 0 ){
 	    venta_intersucursal = true;
+	    if(DEBUG){
+	        console.log("venta_ intersucursal activada");
+	    }
 	}
 	
 	//iteramos los productos que hay en el carrito para crear la tabla dond se muestran los productos
@@ -555,6 +558,9 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 	
 	if( carrito.cliente != null && carrito.cliente.id_cliente < 0 ){
 	    venta_intersucursal = true;
+	    if( DEBUG ){
+	        consle.log("venta intesucursal activadan al insertar el producto");
+	    }
 	}
 		 
 	//si no, agregarlo al carrito
@@ -568,9 +574,9 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 			existencias : res.data.existenciasOriginales,
 			existencias_procesadas : res.data.existenciasProcesadas,
 			tratamiento : res.data.tratamiento,   //si es !null  entonces el producto puede ser original o procesado
-			precioVenta : venta_intersucursal? res.data.precioIntersucursal : res.data.precioVenta,
+			precioVenta : res.data.precioVenta, 
 			precioVentaSinProcesar : res.data.precioVentaSinProcesar,
-			precio : res.data.precioVenta, 
+			precio : venta_intersucursal? res.data.precioIntersucursal : res.data.precioVenta,
 			id_producto : res.data.productoID,
 			escala : res.data.medida,
 			precioIntersucursal : res.data.precioIntersucursal,
