@@ -32,6 +32,7 @@ class FormatoTicket implements Printable {
     NumberFormat moneda = NumberFormat.getCurrencyInstance();
     Venta venta;
 
+
     public FormatoTicket(Venta venta) {
         this.venta = venta;
     }
@@ -71,192 +72,438 @@ class FormatoTicket implements Printable {
         y += h_italicTicket + 5;
 
         ticket.setFont(normalTicket);
-        
-        ticket.drawString("R.F.C. " + this.venta.sucursal.rfc.toString(), 0, y);
-        y += h_normalTicket;
-//javax.swing.JOptionPane.showMessageDialog(null, this.venta.sucursal.rfc);
-
-        y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, this.venta.sucursal.descripcion, ticket, 0, y, h_normalTicket);
-        //ticket.drawString(this.venta.sucursal.descripcion, 0, y);
-        //y += h_normalTicket;
-
-        y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, this.venta.sucursal.direccion, ticket, 0, y, h_normalTicket);
-        //ticket.drawString(this.venta.sucursal.direccion, 0, y);
-        //y += h_normalTicket;
-
-        ticket.drawString("Tel. " + this.venta.sucursal.telefono, 0, y);
-        y += h_normalTicket;
-
-        ticket.drawString("========= ", 0, y);
-        ticket.setFont(boldTicket);
-        ticket.drawString(this.venta.tipoVenta, 72, y);
-        ticket.setFont(normalTicket);
-        ticket.drawString(" ==========", 120, y);
-        y += h_normalTicket;
-//javax.swing.JOptionPane.showMessageDialog(null, this.venta.id_venta);
-        ticket.setFont(boldTicket);
-        ticket.drawString("venta  " + this.venta.id_venta, 65, y);
-        y += h_normalTicket;
-
-        ticket.setFont(normalTicket);
-        ticket.drawString("==============================", 0, y);
-        y += h_normalTicket;
-
-        ticket.drawString("Fecha : " + this.venta.fecha + " " + this.venta.hora, 0, y);
-        y += h_normalTicket;
-
-        y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, "Cajero : " + this.venta.responsable, ticket, 0, y, h_normalTicket);
-        //ticket.drawString("Cajero : " + this.venta.responsable, 0, y);
-        //y += h_normalTicket;
-
-        if (this.venta.cliente != null) {
-
-            y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, "Cliente : " + this.venta.cliente.nombre, ticket, 0, y, h_normalTicket);
-            //ticket.drawString("Cliente : " + this.venta.cliente.nombre, 0, y);
-            //y += h_normalTicket;
-
-        }
-
-        ticket.drawString("-------------------------------------------------------------------------", 0, y);
-        y += h_normalTicket;
-
-        ticket.setFont(smallTicket);
-        ticket.drawString("PRODUCTO", 0, y);
-
-        ticket.drawString("CANT", 75, y);
-
-        ticket.drawString("P.U.", 107, y);
-
-        ticket.drawString("SUBTOTAL", 138, y);
-        y += h_normalTicket;
-
-        ticket.setFont(normalTicket);
+        if(this.venta.ticket){
 
 
-        for (int j = 0; j < this.venta.productos.size(); j++) {
-            if (this.venta.productos.get(j).descripcion.length() > 13) {
-                String [] cadena=this.venta.productos.get(j).descripcion.split(" ");
-                String prod=cadena[0];
-                for (int k = 1; k < cadena.length; k++) {
-                    if((prod.length()+" ".length()+cadena[k].length())<13){
-                        prod+=" "+cadena[k];
-                        
-                    }else{
+                ticket.drawString("R.F.C. " + this.venta.sucursal.rfc.toString(), 0, y);
+                y += h_normalTicket;
+        //javax.swing.JOptionPane.showMessageDialog(null, this.venta.sucursal.rfc);
+
+                y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, this.venta.sucursal.descripcion, ticket, 0, y, h_normalTicket);
+                //ticket.drawString(this.venta.sucursal.descripcion, 0, y);
+                //y += h_normalTicket;
+
+                y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, this.venta.sucursal.direccion, ticket, 0, y, h_normalTicket);
+                //ticket.drawString(this.venta.sucursal.direccion, 0, y);
+                //y += h_normalTicket;
+
+                ticket.drawString("Tel. " + this.venta.sucursal.telefono, 0, y);
+                y += h_normalTicket;
+
+                ticket.drawString("========= ", 0, y);
+                ticket.setFont(boldTicket);
+                ticket.drawString(this.venta.tipoVenta, 72, y);
+                ticket.setFont(normalTicket);
+                ticket.drawString(" ==========", 120, y);
+                y += h_normalTicket;
+        //javax.swing.JOptionPane.showMessageDialog(null, this.venta.id_venta);
+                ticket.setFont(boldTicket);
+                ticket.drawString("venta  " + this.venta.id_venta, 65, y);
+                y += h_normalTicket;
+
+                ticket.setFont(normalTicket);
+                ticket.drawString("==============================", 0, y);
+                y += h_normalTicket;
+
+                ticket.drawString("Fecha : " + this.venta.fecha + " " + this.venta.hora, 0, y);
+                y += h_normalTicket;
+
+                y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, "Cajero : " + this.venta.responsable, ticket, 0, y, h_normalTicket);
+                //ticket.drawString("Cajero : " + this.venta.responsable, 0, y);
+                //y += h_normalTicket;
+
+                if (this.venta.cliente != null) {
+
+                    y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, "Cliente : " + this.venta.cliente.nombre, ticket, 0, y, h_normalTicket);
+                    //ticket.drawString("Cliente : " + this.venta.cliente.nombre, 0, y);
+                    //y += h_normalTicket;
+
+                }
+
+                ticket.drawString("-------------------------------------------------------------------------", 0, y);
+                y += h_normalTicket;
+
+                ticket.setFont(smallTicket);
+                ticket.drawString("PRODUCTO", 0, y);
+
+                ticket.drawString("CANT", 75, y);
+
+                ticket.drawString("P.U.", 107, y);
+
+                ticket.drawString("SUBTOTAL", 138, y);
+                y += h_normalTicket;
+
+                ticket.setFont(normalTicket);
+
+
+                for (int j = 0; j < this.venta.productos.size(); j++) {
+                    if (this.venta.productos.get(j).descripcion.length() > 13) {
+                        String [] cadena=this.venta.productos.get(j).descripcion.split(" ");
+                        String prod=cadena[0];
+                        for (int k = 1; k < cadena.length; k++) {
+                            if((prod.length()+" ".length()+cadena[k].length())<13){
+                                prod+=" "+cadena[k];
+
+                            }else{
+                                ticket.drawString(prod, 0, y);
+                                y+=h_normalTicket;
+
+                                prod=cadena[k];
+
+                            }
+
+                        }
                         ticket.drawString(prod, 0, y);
-                        y+=h_normalTicket;
-                        
-                        prod=cadena[k];
-                        
+
+                    } else {
+                        ticket.drawString(this.venta.productos.get(j).descripcion, 0, y);
                     }
-                    
+
+                    ticket.drawString("" + this.venta.productos.get(j).cantidad, 75, y);
+                    ticket.drawString(this.moneda.format(this.venta.productos.get(j).precioVenta), 107, y);
+                    ticket.drawString(this.moneda.format(this.venta.productos.get(j).subTotal), 138, y);
+                    y += h_normalSmallTicket;
+
+                }//for
+
+
+
+                ticket.setFont(normalTicket);
+                ticket.drawString("------------------------------------------------------------------------", 0, y);
+                y += h_normalTicket;
+
+                ticket.setFont(boldSmallTicket);
+
+                ticket.drawString("SUBTOTAL:", 63, y);
+                ticket.drawString(this.moneda.format(this.venta.subtotal), 130, y);
+                y += h_normalTicket;
+
+                if (this.venta.descuento > 0) {
+                    ticket.drawString("DESCUENTO:", 63, y);
+                    ticket.drawString(this.moneda.format(this.venta.descuento), 130, y);
+                    y += h_normalTicket;
                 }
-                ticket.drawString(prod, 0, y);
-                
-            } else {
-                ticket.drawString(this.venta.productos.get(j).descripcion, 0, y);
-            }
-            
-            ticket.drawString("" + this.venta.productos.get(j).cantidad, 75, y);
-            ticket.drawString(this.moneda.format(this.venta.productos.get(j).precioVenta), 107, y);
-            ticket.drawString(this.moneda.format(this.venta.productos.get(j).subTotal), 138, y);
-            y += h_normalSmallTicket;
 
-        }//for
+                ticket.drawString("TOTAL:", 63, y);
+                ticket.drawString(this.moneda.format(this.venta.total), 130, y);
+                y += h_normalTicket;
 
+                //javax.swing.JOptionPane.showMessageDialog(null, this.venta.tipoVenta);
+                if (this.venta.tipoVenta.equals("contado")) {
 
+                    ticket.drawString("PAGO:", 63, y);
+                    ticket.drawString(this.moneda.format(this.venta.efectivo), 130, y);
+                    y += h_normalTicket;
+                    ticket.drawString("CAMBIO:", 63, y);
+                    ticket.drawString(this.moneda.format(this.venta.cambio), 130, y);
+                    y += h_normalTicket;
 
-        ticket.setFont(normalTicket);
-        ticket.drawString("------------------------------------------------------------------------", 0, y);
-        y += h_normalTicket;
+                }
 
-        ticket.setFont(boldSmallTicket);
+                ticket.setFont(normalTicket);
+                ticket.drawString("------------------------------------------------------------------------", 0, y);
+                y += h_normalTicket;
 
-        ticket.drawString("SUBTOTAL:", 63, y);
-        ticket.drawString(this.moneda.format(this.venta.subtotal), 130, y);
-        y += h_normalTicket;
+                y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, new Converter().getStringOfNumber(this.venta.total), ticket, 0, y, h_normalTicket);
 
-        if (this.venta.descuento > 0) {
-            ticket.drawString("DESCUENTO:", 63, y);
-            ticket.drawString(this.moneda.format(this.venta.descuento), 130, y);
-            y += h_normalTicket;
-        }
-
-        ticket.drawString("TOTAL:", 63, y);
-        ticket.drawString(this.moneda.format(this.venta.total), 130, y);
-        y += h_normalTicket;
-
-        //javax.swing.JOptionPane.showMessageDialog(null, this.venta.tipoVenta);
-        if (this.venta.tipoVenta.equals("contado")) {
-
-            ticket.drawString("PAGO:", 63, y);
-            ticket.drawString(this.moneda.format(this.venta.efectivo), 130, y);
-            y += h_normalTicket;
-            ticket.drawString("CAMBIO:", 63, y);
-            ticket.drawString(this.moneda.format(this.venta.cambio), 130, y);
-            y += h_normalTicket;
-
-        }
-
-        ticket.setFont(normalTicket);
-        ticket.drawString("------------------------------------------------------------------------", 0, y);
-        y += h_normalTicket;
-
-        y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, new Converter().getStringOfNumber(this.venta.total), ticket, 0, y, h_normalTicket);
-
-        if (!venta.tipoVenta.equals("contado")) {
+                if (!venta.tipoVenta.equals("contado")) {
 
 
-            //////////////////
-            String [] fiscal=this.venta.ficalTicket.split(" ");
-                String fistiq=fiscal[0];
-                for (int k = 1; k < fiscal.length; k++) {
-                    if((fistiq.length()+" ".length()+fiscal[k].length())<limite_caracteres){
-                        fistiq+=" "+fiscal[k];
+                    //////////////////
+                    String [] fiscal=this.venta.ficalTicket.split(" ");
+                        String fistiq=fiscal[0];
+                        for (int k = 1; k < fiscal.length; k++) {
+                            if((fistiq.length()+" ".length()+fiscal[k].length())<limite_caracteres){
+                                fistiq+=" "+fiscal[k];
 
-                    }else{
+                            }else{
+                                ticket.drawString(fistiq, 0, y);
+                                y+=h_normalTicket;
+                                fistiq=fiscal[k];
+                            }
+                        }
                         ticket.drawString(fistiq, 0, y);
-                        y+=h_normalTicket;
-                        fistiq=fiscal[k];
-                    }
-                }
-                ticket.drawString(fistiq, 0, y);
-            y += h_normalTicket;
+                    y += h_normalTicket;
 
-            ticket.setFont(boldTicket);
-            y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, this.venta.tituloPagare, ticket, 70, y, h_normalTicket);
+                    ticket.setFont(boldTicket);
+                    y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, this.venta.tituloPagare, ticket, 70, y, h_normalTicket);
 
-            ticket.setFont(normalTicket);
+                    ticket.setFont(normalTicket);
 
-            String [] cadena=this.venta.leyendaPagare.split(" ");
-                String leypag=cadena[0];
-                for (int k = 1; k < cadena.length; k++) {
-                    if((leypag.length()+" ".length()+cadena[k].length())<limite_caracteres){
-                        leypag+=" "+cadena[k];
+                    String [] cadena=this.venta.leyendaPagare.split(" ");
+                        String leypag=cadena[0];
+                        for (int k = 1; k < cadena.length; k++) {
+                            if((leypag.length()+" ".length()+cadena[k].length())<limite_caracteres){
+                                leypag+=" "+cadena[k];
 
-                    }else{
+                            }else{
+                                ticket.drawString(leypag, 0, y);
+
+                            y+=h_normalTicket;
+
+                                leypag=cadena[k];
+
+                            }
+                        }
                         ticket.drawString(leypag, 0, y);
-            
-                    y+=h_normalTicket;
-            
-                        leypag=cadena[k];
-            
-                    }
+                        y += h_normalTicket+10;
+                    ticket.drawString("_____________________________________________________________", 0, y);
+                    y += h_normalTicket;
+                    ticket.drawString("Firma(s)", 70, y);
+                    y += h_normalTicket + 15;
+
                 }
-                ticket.drawString(leypag, 0, y);
-                y += h_normalTicket+10;
-            ticket.drawString("_____________________________________________________________", 0, y);
-            y += h_normalTicket;
-            ticket.drawString("Firma(s)", 70, y);
-            y += h_normalTicket + 15;
+
+                ticket.drawString(this.venta.sugerencias, 0, y);
+                y += h_normalTicket;
+
+                ticket.drawString(this.venta.graciasTicket, 30, y);
+                y += h_normalTicket;
 
         }
 
-        ticket.drawString(this.venta.sugerencias, 0, y);
-        y += h_normalTicket;
 
-        ticket.drawString(this.venta.graciasTicket, 30, y);
-        y += h_normalTicket;
+        ////abono venta
+        if(this.venta.abono_venta){
+  //          this.venta.abono_prestamo=false;
 
+//this.venta.tipoVenta="contado";
+                ticket.drawString("R.F.C. " + this.venta.sucursal_origen.rfc.toString(), 0, y);
+                y += h_normalTicket;
+        //javax.swing.JOptionPane.showMessageDialog(null, this.venta.sucursal.rfc);
+
+                y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, this.venta.sucursal_origen.descripcion, ticket, 0, y, h_normalTicket);
+                //ticket.drawString(this.venta.sucursal.descripcion, 0, y);
+                //y += h_normalTicket;
+
+                y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, this.venta.sucursal_origen.direccion, ticket, 0, y, h_normalTicket);
+                //ticket.drawString(this.venta.sucursal.direccion, 0, y);
+                //y += h_normalTicket;
+
+                ticket.drawString("Tel. " + this.venta.sucursal_origen.telefono, 0, y);
+                y += h_normalTicket;
+
+                ticket.drawString("========= ", 0, y);
+                ticket.setFont(boldTicket);
+                ticket.drawString("Abono", 72, y);
+                ticket.setFont(normalTicket);
+                ticket.drawString(" ==========", 120, y);
+                y += h_normalTicket;
+        //javax.swing.JOptionPane.showMessageDialog(null, this.venta.id_venta);
+                ticket.setFont(boldTicket);
+                ticket.drawString("Venta  " + this.venta.id_prestamo, 65, y);
+                y += h_normalTicket;
+
+                ticket.setFont(normalTicket);
+                ticket.drawString("==============================", 0, y);
+                y += h_normalTicket;
+
+                ticket.drawString("Fecha : " + this.venta.fecha + " " + this.venta.hora, 0, y);
+                y += h_normalTicket;
+
+                y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, "Cajero : " + this.venta.responsable, ticket, 0, y, h_normalTicket);
+                //ticket.drawString("Cajero : " + this.venta.responsable, 0, y);
+                //y += h_normalTicket;
+
+                //if (this.venta.cliente != null) {
+
+                    y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, "Cliente : " + this.venta.sucursal_destino.descripcion, ticket, 0, y, h_normalTicket);
+                    //ticket.drawString("Cliente : " + this.venta.cliente.nombre, 0, y);
+                    //y += h_normalTicket;
+
+                //}
+
+                ticket.drawString("-------------------------------------------------------------------------", 0, y);
+                y += h_normalTicket;
+
+                ticket.setFont(smallTicket);
+                ticket.drawString("CONCEPTO", 0, y);
+
+                //ticket.drawString("CANT", 75, y);
+
+                //ticket.drawString("P.U.", 107, y);
+
+                ticket.drawString("MONTO", 138, y);
+                y += h_normalTicket;
+
+                ticket.setFont(normalTicket);
+
+
+                if (this.venta.concepto_prestamo.length() > 13) {
+                        String [] cadena=this.venta.concepto_prestamo.split(" ");
+                        String prod=cadena[0];
+                        for (int k = 1; k < cadena.length; k++) {
+                            if((prod.length()+" ".length()+cadena[k].length())<13){
+                                prod+=" "+cadena[k];
+
+                            }else{
+                                ticket.drawString(prod, 0, y);
+                                y+=h_normalTicket;
+
+                                prod=cadena[k];
+
+                            }
+
+                        }
+                        ticket.drawString(prod, 0, y);
+
+                    } else {
+                        ticket.drawString(this.venta.concepto_prestamo, 0, y);
+                    }
+
+ticket.drawString(this.moneda.format(this.venta.monto_abono), 138, y);
+y += h_normalTicket;
+                ticket.setFont(normalTicket);
+                ticket.drawString("------------------------------------------------------------------------", 0, y);
+                y += h_normalTicket;
+
+                ticket.setFont(boldSmallTicket);
+
+                ticket.drawString("SALDO :", 63, y);
+                if(this.venta.saldo_prestamo==0){
+                    ticket.drawString("Pagado", 130, y);
+                }else{
+                    ticket.drawString(this.moneda.format(this.venta.saldo_prestamo), 130, y);
+                }
+                y += h_normalTicket;
+
+                ticket.setFont(normalTicket);
+                ticket.drawString("------------------------------------------------------------------------", 0, y);
+                y += h_normalTicket;
+
+                y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, new Converter().getStringOfNumber(this.venta.monto_abono), ticket, 0, y, h_normalTicket);
+
+
+
+                ticket.drawString(this.venta.sugerencias, 0, y);
+                y += h_normalTicket;
+
+                ticket.drawString(this.venta.graciasTicket, 30, y);
+                y += h_normalTicket;
+
+        }
+ ////abono prestamo
+        if(this.venta.abono_prestamo){
+
+this.venta.tipoVenta="contado";
+                ticket.drawString("R.F.C. " + this.venta.sucursal_origen.rfc.toString(), 0, y);
+                y += h_normalTicket;
+        //javax.swing.JOptionPane.showMessageDialog(null, this.venta.sucursal.rfc);
+
+                y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, this.venta.sucursal_origen.descripcion, ticket, 0, y, h_normalTicket);
+                //ticket.drawString(this.venta.sucursal.descripcion, 0, y);
+                //y += h_normalTicket;
+
+                y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, this.venta.sucursal_origen.direccion, ticket, 0, y, h_normalTicket);
+                //ticket.drawString(this.venta.sucursal.direccion, 0, y);
+                //y += h_normalTicket;
+
+                ticket.drawString("Tel. " + this.venta.sucursal_origen.telefono, 0, y);
+                y += h_normalTicket;
+
+                ticket.drawString("========= ", 0, y);
+                ticket.setFont(boldTicket);
+                ticket.drawString("Abono", 72, y);
+                ticket.setFont(normalTicket);
+                ticket.drawString(" ==========", 120, y);
+                y += h_normalTicket;
+        //javax.swing.JOptionPane.showMessageDialog(null, this.venta.id_venta);
+                ticket.setFont(boldTicket);
+                ticket.drawString("Prestamo  " + this.venta.id_prestamo, 65, y);
+                y += h_normalTicket;
+
+                ticket.setFont(normalTicket);
+                ticket.drawString("==============================", 0, y);
+                y += h_normalTicket;
+
+                ticket.drawString("Fecha : " + this.venta.fecha + " " + this.venta.hora, 0, y);
+                y += h_normalTicket;
+
+                y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, "Cajero : " + this.venta.responsable, ticket, 0, y, h_normalTicket);
+                //ticket.drawString("Cajero : " + this.venta.responsable, 0, y);
+                //y += h_normalTicket;
+
+                //if (this.venta.cliente != null) {
+
+                    y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, "Cliente : " + this.venta.sucursal_destino.descripcion, ticket, 0, y, h_normalTicket);
+                    //ticket.drawString("Cliente : " + this.venta.cliente.nombre, 0, y);
+                    //y += h_normalTicket;
+
+                //}
+
+                ticket.drawString("-------------------------------------------------------------------------", 0, y);
+                y += h_normalTicket;
+
+                ticket.setFont(smallTicket);
+                ticket.drawString("CONCEPTO", 0, y);
+
+                //ticket.drawString("CANT", 75, y);
+
+                //ticket.drawString("P.U.", 107, y);
+
+                ticket.drawString("MONTO", 138, y);
+                y += h_normalTicket;
+
+                ticket.setFont(normalTicket);
+
+
+                if (this.venta.concepto_prestamo.length() > 13) {
+                        String [] cadena=this.venta.concepto_prestamo.split(" ");
+                        String prod=cadena[0];
+                        for (int k = 1; k < cadena.length; k++) {
+                            if((prod.length()+" ".length()+cadena[k].length())<13){
+                                prod+=" "+cadena[k];
+
+                            }else{
+                                ticket.drawString(prod, 0, y);
+                                y+=h_normalTicket;
+
+                                prod=cadena[k];
+
+                            }
+
+                        }
+                        ticket.drawString(prod, 0, y);
+
+                    } else {
+                        ticket.drawString(this.venta.concepto_prestamo, 0, y);
+                    }
+
+ticket.drawString(this.moneda.format(this.venta.monto_abono), 138, y);
+y += h_normalTicket;
+                ticket.setFont(normalTicket);
+                ticket.drawString("------------------------------------------------------------------------", 0, y);
+                y += h_normalTicket;
+
+                ticket.setFont(boldSmallTicket);
+
+                ticket.drawString("SALDO :", 63, y);
+                if(this.venta.saldo_prestamo==0){
+                    ticket.drawString("Pagado", 130, y);
+                }else{
+                    ticket.drawString(this.moneda.format(this.venta.saldo_prestamo), 130, y);
+                }
+                y += h_normalTicket;
+
+                //ticket.drawString("TOTAL:", 63, y);
+                //ticket.drawString(this.moneda.format(this.venta.monto_abono), 130, y);
+                //y += h_normalTicket;
+
+                ticket.setFont(normalTicket);
+                ticket.drawString("------------------------------------------------------------------------", 0, y);
+                y += h_normalTicket;
+
+                y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, new Converter().getStringOfNumber(this.venta.monto_abono), ticket, 0, y, h_normalTicket);
+
+                
+
+                ticket.drawString(this.venta.sugerencias, 0, y);
+                y += h_normalTicket;
+
+                ticket.drawString(this.venta.graciasTicket, 30, y);
+                y += h_normalTicket;
+
+        }
         /********/
         return PAGE_EXISTS;
     }

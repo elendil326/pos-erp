@@ -27,6 +27,18 @@ public class Venta {
     boolean factura = false;
     //indica si se requiere un ticket
     boolean ticket = false;
+    //contendra el tipo id del prestamo
+    String id_prestamo= null;
+    //contendra el concepto de prestamo
+    String concepto_prestamo= null;
+    //contendra el concepto de prestamo
+    float saldo_prestamo= 0;
+    //contendra el concepto de prestamo
+    float monto_abono= 0;
+    //indica si se requiere un ticket de abono a prestamo
+    boolean abono_prestamo = false;
+    //indica si se requiere un ticket de abono a venta
+    boolean abono_venta = false;
     //indica si re requiere un ticket de abono
     boolean ticket_abono = false;
     //descuento
@@ -45,6 +57,8 @@ public class Venta {
     ArrayList<Producto> productos = new ArrayList<Producto>();
     //sucursal
     Sucursal sucursal = null;
+    Sucursal sucursal_origen = null;
+    Sucursal sucursal_destino = null;
 
     ;
     //cliente
@@ -72,7 +86,7 @@ public class Venta {
     //advertencia fiscal
     static String ficalTicket = "Este comprobante no es valido para Fines Fiscales";
     //sugerencias
-    static String sugerencias = "QUEJAS Y SUGERENCIAS (01 461)61 7 20 30";
+    static String sugerencias = "QUEJAS Y SUGERENCIAS (461)61 7 20 30";
 
     //constructor
     public Venta(String json, String hora, String fecha) {
@@ -202,6 +216,24 @@ public class Venta {
                     }
 
                 }//if
+                if (entry.getKey().toString().equals("sucursal_origen")) {
+
+                    if (entry.getValue() != null) {
+
+                        this.sucursal_origen = new Sucursal(entry.getValue().toString());
+
+                    }
+
+                }
+                if (entry.getKey().toString().equals("sucursal_destino")) {
+
+                    if (entry.getValue() != null) {
+
+                        this.sucursal_destino = new Sucursal(entry.getValue().toString());
+
+                    }
+
+                }
 
                 if (entry.getKey().toString().equals("cliente")) {
 
@@ -225,6 +257,44 @@ public class Venta {
                     System.out.println("this.responsable : " + this.responsable);
                 }//if
 
+                //abono a prestamo
+                if (entry.getKey().toString().equals("abono_prestamo")) {
+
+                    this.abono_prestamo = entry.getValue().toString().equals("true") ? true : false;
+                    System.out.println("this.abono_prestamo: " + this.abono_prestamo);
+
+                }
+                //abono a prestamo
+                if (entry.getKey().toString().equals("abono_venta")) {
+
+                    this.abono_venta = entry.getValue().toString().equals("true") ? true : false;
+                    System.out.println("this.abono_prestamo: " + this.abono_venta);
+
+                }
+            
+                if (entry.getKey().toString().equals("id_prestamo")) {
+
+                    this.id_prestamo = entry.getValue().toString();
+                    System.out.println("this.responsable : " + this.id_prestamo);
+                }
+                if (entry.getKey().toString().equals("concepto_prestamo")) {
+
+                    this.concepto_prestamo = entry.getValue().toString();
+                    System.out.println("this.responsable : " + this.concepto_prestamo);
+                }
+
+                if (entry.getKey().toString().equals("saldo_prestamo")) {
+
+                    this.saldo_prestamo = Float.parseFloat(entry.getValue().toString());
+                    System.out.println("this.responsable : " + this.saldo_prestamo);
+                }
+                if (entry.getKey().toString().equals("monto_abono")) {
+
+                    this.monto_abono = Float.parseFloat(entry.getValue().toString());
+                    System.out.println("this.responsable : " + this.monto_abono);
+                }
+            //abono a prestamo
+                
             }//while
 
             this.descuento = this.subtotal - this.total;

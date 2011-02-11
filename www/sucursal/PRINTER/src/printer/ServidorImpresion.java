@@ -65,8 +65,12 @@ class ServidorImpresion {
             job.print();
             
             //imprimir segundo ticket en caso de ser a credito
-            if( venta.tipoVenta.equals("credito")){
-                job.print();
+            if(venta.tipoVenta==null){
+
+            }else{
+                if( venta.tipoVenta.equals("credito")){
+                    job.print();
+                }
             }
 
         }
