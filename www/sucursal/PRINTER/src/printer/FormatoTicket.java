@@ -71,10 +71,10 @@ class FormatoTicket implements Printable {
         y += h_italicTicket + 5;
 
         ticket.setFont(normalTicket);
-
-        ticket.drawString("R.F.C. " + this.venta.sucursal.rfc, 0, y);
+        
+        ticket.drawString("R.F.C. " + this.venta.sucursal.rfc.toString(), 0, y);
         y += h_normalTicket;
-
+//javax.swing.JOptionPane.showMessageDialog(null, this.venta.sucursal.rfc);
 
         y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, this.venta.sucursal.descripcion, ticket, 0, y, h_normalTicket);
         //ticket.drawString(this.venta.sucursal.descripcion, 0, y);
@@ -93,7 +93,7 @@ class FormatoTicket implements Printable {
         ticket.setFont(normalTicket);
         ticket.drawString(" ==========", 120, y);
         y += h_normalTicket;
-
+//javax.swing.JOptionPane.showMessageDialog(null, this.venta.id_venta);
         ticket.setFont(boldTicket);
         ticket.drawString("venta  " + this.venta.id_venta, 65, y);
         y += h_normalTicket;
@@ -138,36 +138,24 @@ class FormatoTicket implements Printable {
                 String [] cadena=this.venta.productos.get(j).descripcion.split(" ");
                 String prod=cadena[0];
                 for (int k = 1; k < cadena.length; k++) {
-                    //javax.swing.JOptionPane.showMessageDialog(null, cadena[k]);
-
-                    
-                    //prod+=" "+cadena[k];
                     if((prod.length()+" ".length()+cadena[k].length())<13){
                         prod+=" "+cadena[k];
                         
                     }else{
                         ticket.drawString(prod, 0, y);
-                        //ticket.drawString(cadena[k], 0, y);
-                    y+=h_normalTicket;
-                        //javax.swing.JOptionPane.showMessageDialog(null, prod);
+                        y+=h_normalTicket;
+                        
                         prod=cadena[k];
-                        //k++;
+                        
                     }
-                    //javax.swing.JOptionPane.showMessageDialog(null, prod);
-/*                    if(prod.length()>13){
-                        //producto de una sola palabra mayor a 13 caracteres
-                    }else{
-                    prod=cadena[k]+cadena[k+1];
-                    }*/
-                    //javax.swing.JOptionPane.showMessageDialog(null, prod);
+                    
                 }
                 ticket.drawString(prod, 0, y);
-                //ticket.drawString(this.venta.productos.get(j).descripcion.substring(0, 13), 0, y);
+                
             } else {
                 ticket.drawString(this.venta.productos.get(j).descripcion, 0, y);
             }
-            //ticket.drawString(this.venta.productos.get(j).descripcion, 0, y);
-//javax.swing.JOptionPane.showMessageDialog(null, this.venta.productos.get(j).descripcion);
+            
             ticket.drawString("" + this.venta.productos.get(j).cantidad, 75, y);
             ticket.drawString(this.moneda.format(this.venta.productos.get(j).precioVenta), 107, y);
             ticket.drawString(this.moneda.format(this.venta.productos.get(j).subTotal), 138, y);
@@ -197,7 +185,8 @@ class FormatoTicket implements Printable {
         ticket.drawString(this.moneda.format(this.venta.total), 130, y);
         y += h_normalTicket;
 
-        if (venta.tipoVenta.equals("contado")) {
+        //javax.swing.JOptionPane.showMessageDialog(null, this.venta.tipoVenta);
+        if (this.venta.tipoVenta.equals("contado")) {
 
             ticket.drawString("PAGO:", 63, y);
             ticket.drawString(this.moneda.format(this.venta.efectivo), 130, y);
@@ -221,32 +210,16 @@ class FormatoTicket implements Printable {
             String [] fiscal=this.venta.ficalTicket.split(" ");
                 String fistiq=fiscal[0];
                 for (int k = 1; k < fiscal.length; k++) {
-                    //javax.swing.JOptionPane.showMessageDialog(null, cadena[k]);
-
-
-                    //prod+=" "+cadena[k];
                     if((fistiq.length()+" ".length()+fiscal[k].length())<limite_caracteres){
                         fistiq+=" "+fiscal[k];
 
                     }else{
                         ticket.drawString(fistiq, 0, y);
-                        //ticket.drawString(cadena[k], 0, y);
-                    y+=h_normalTicket;
-                        //javax.swing.JOptionPane.showMessageDialog(null, prod);
+                        y+=h_normalTicket;
                         fistiq=fiscal[k];
-                        //k++;
                     }
-                    //javax.swing.JOptionPane.showMessageDialog(null, prod);
-/*                    if(prod.length()>13){
-                        //producto de una sola palabra mayor a 13 caracteres
-                    }else{
-                    prod=cadena[k]+cadena[k+1];
-                    }*/
-                    //javax.swing.JOptionPane.showMessageDialog(null, prod);
                 }
                 ticket.drawString(fistiq, 0, y);
-            ///////////////
-            //y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, this.venta.ficalTicket, ticket, 0, y, h_normalTicket);
             y += h_normalTicket;
 
             ticket.setFont(boldTicket);
@@ -254,39 +227,23 @@ class FormatoTicket implements Printable {
 
             ticket.setFont(normalTicket);
 
-
             String [] cadena=this.venta.leyendaPagare.split(" ");
                 String leypag=cadena[0];
                 for (int k = 1; k < cadena.length; k++) {
-                    //javax.swing.JOptionPane.showMessageDialog(null, cadena[k]);
-
-
-                    //prod+=" "+cadena[k];
                     if((leypag.length()+" ".length()+cadena[k].length())<limite_caracteres){
                         leypag+=" "+cadena[k];
 
                     }else{
                         ticket.drawString(leypag, 0, y);
-                        //ticket.drawString(cadena[k], 0, y);
+            
                     y+=h_normalTicket;
-                        //javax.swing.JOptionPane.showMessageDialog(null, prod);
+            
                         leypag=cadena[k];
-                        //k++;
+            
                     }
-                    //javax.swing.JOptionPane.showMessageDialog(null, prod);
-/*                    if(prod.length()>13){
-                        //producto de una sola palabra mayor a 13 caracteres
-                    }else{
-                    prod=cadena[k]+cadena[k+1];
-                    }*/
-                    //javax.swing.JOptionPane.showMessageDialog(null, prod);
                 }
                 ticket.drawString(leypag, 0, y);
-
-
-
-            //y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, this.venta.leyendaPagare, ticket, 0, y, h_normalTicket);
-y += h_normalTicket+10;
+                y += h_normalTicket+10;
             ticket.drawString("_____________________________________________________________", 0, y);
             y += h_normalTicket;
             ticket.drawString("Firma(s)", 70, y);

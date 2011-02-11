@@ -54,6 +54,7 @@ class ServidorImpresion {
             //HP Photosmart D110 series
             //EPSON TM-U220 Receipt
             //HP Photosmart Prem C310 series
+            //Microsoft XPS Document Writer
             if (printServices[i].getName().equals("EPSON TM-U220 Receipt")) {
                 selectedService = printServices[i];
                 break;

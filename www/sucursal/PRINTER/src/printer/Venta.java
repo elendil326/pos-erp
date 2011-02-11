@@ -106,12 +106,19 @@ public class Venta {
 
                 }
 
+                //if(this.tipoVenta.equals("credito")){
                 if (entry.getKey().toString().equals("tipo_pago")) {
+                    if (entry.getValue() == null) {
+                        this.tipo_pago = "";
+                    } else {
 
-                    this.tipoVenta = entry.getValue().toString();
+                        this.tipoVenta = entry.getValue().toString();
+                    }
+
                     System.out.println("this.tipo_pago: " + this.tipo_pago);
 
                 }
+                //}
 
                 if (entry.getKey().toString().equals("factura")) {
 
@@ -132,7 +139,7 @@ public class Venta {
                     this.subtotal = Float.parseFloat(entry.getValue().toString());
                     System.out.println("this.subtotal: " + this.subtotal);
 
-                }                
+                }
 
                 if (entry.getKey().toString().equals("total")) {
 
@@ -140,13 +147,15 @@ public class Venta {
                     System.out.println("this.total: " + this.total);
 
                 }
-
+////
+                // if(this.tipoVenta.equals("contado")){
                 if (entry.getKey().toString().equals("pagado")) {
 
                     this.efectivo = Float.parseFloat(entry.getValue().toString());
                     System.out.println("this.efectivo: " + this.efectivo);
                 }
-
+                //}
+///
                 if (entry.getKey().toString().equals("abono")) {
 
                     this.abono = Float.parseFloat(entry.getValue().toString());
@@ -219,11 +228,11 @@ public class Venta {
             }//while
 
             this.descuento = this.subtotal - this.total;
-            
+
             if (this.descuento > 0) {
                 this.descuento = this.subtotal - this.total;
             }
-            
+
             System.out.println("this.subtotal : " + this.subtotal);
             System.out.println("this.total : " + this.total);
             System.out.println("this.descuento : " + this.descuento);
