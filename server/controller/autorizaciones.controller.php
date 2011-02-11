@@ -221,9 +221,14 @@ require_once("logger.php");
 
                 $p = $nuevo_detalle_producto;
             }
-
-        
             
+            //actualizamos el inventario
+            $p -> setExistenciasProcesadas( $p -> getExistenciasProcesadas() + $producto -> cantidad_procesada );
+            $p -> setExistencias( $p -> getExistencias() + $producto -> cantidad );
+  
+
+
+            /*
             if($producto->procesada){
                 $existencias = $p->getExistenciasProcesadas();
                 $existencias += $producto->cantidad;
@@ -232,7 +237,8 @@ require_once("logger.php");
                 $existencias = $p->getExistencias();
                 $existencias += $producto->cantidad;
                 $p->setExistencias( $existencias );
-            }
+            }            
+            */
 
 
            //guardamos los cambios
@@ -374,7 +380,11 @@ require_once("logger.php");
         try
         {
             AutorizacionDAO::save( $autorizacion );
-            printf( '{ "success" : true }' );
+            
+            if( !( isset( $args['venta_intersucursal'] )  &&  $args['venta_intersucursal'] == true ) )
+            {
+                printf( '{ "success" : true }' );
+            }
 
         }
         catch(Exception $e)

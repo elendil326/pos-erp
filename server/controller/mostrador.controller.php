@@ -13,6 +13,7 @@ require_once("model/usuario.dao.php");
 require_once("model/inventario_maestro.dao.php");
 require_once("model/compra_proveedor.dao.php");
 require_once("logger.php");
+require_once('autorizaciones.controller.php');
 
 /*
  * Crea una factura para este objeto venta
@@ -549,26 +550,18 @@ function vender( $args ){
     }
 
     //verificamos si la venta se hiso a una sucursal, si es asi entonces se poner en transito el producto    
-    if( isset( $data -> cliente ) &&  $data -> cliente -> id_cliente < 0)
+    if( isset( $data -> cliente ) &&  $data -> cliente -> id_cliente < 0 && $venta -> getTipoVenta( ) != "contado" && $data -> cliente -> id_cliente != ( $_SESSION['sucursal'] * -1 ) )
     {
         $en_transito = array(
-            'id_sucursal' => $data -> cliente -> id_cliente,
-            'data' => json_encode( $array_items );
+            'id_sucursal' => $data -> cliente -> id_cliente * -1,
+            'data' => json_encode( $array_items ),
+            'venta_intersucursal' => true
         );
         
         responderAutorizacionSolicitudProductos( $en_transito ); 
         
     }
-    
-     /** @param Array $args( 
-         *                                        'data' => [ {"id_producto" : int, "cantidad" : int, "cantidad_procesada" : int }[, {"id_producto" : int, "cantidad" : int, "cantidad_procesada" : int } ] ],
-         *                                        'id_sucursal' => int[,
-         *                                        'responseToAut' => int ]
-         *                                      )
-         array_push( $array_items, $item  );
-         */         
-        
-         
+                 
 
     DAO::transEnd();
 
