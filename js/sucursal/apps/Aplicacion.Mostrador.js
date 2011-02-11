@@ -559,7 +559,7 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 	if( carrito.cliente != null && carrito.cliente.id_cliente < 0 ){
 	    venta_intersucursal = true;
 	    if( DEBUG ){
-	        consle.log("venta intesucursal activadan al insertar el producto");
+	        console.log("venta intesucursal activadan al insertar el producto");
 	    }
 	}
 		 
