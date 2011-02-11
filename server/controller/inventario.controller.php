@@ -8,6 +8,7 @@ require_once('model/proveedor.dao.php');
 require_once('model/actualizacion_de_precio.dao.php');
 require_once('model/compra_proveedor.dao.php');
 require_once('model/detalle_compra_proveedor.dao.php');
+require_once('model/compra_proveedor_flete.dao.php');
 require_once('model/inventario_maestro.dao.php');
 require_once('logger.php');
 
@@ -120,6 +121,9 @@ function listarInventarioMaestro( $n = 50, $show = POS_TODOS )
 		$dc = new DetalleCompraProveedor();
 		$dc->setIdCompraProveedor( $compra->getIdCompraProveedor() );
 		$detalles = DetalleCompraProveedorDAO::search( $dc );
+		
+		$flete = CompraProveedorFleteDAO::getByPK( $compra->getIdCompraProveedor()  );
+
 
 		//ciclar por los detalles
 		foreach($detalles as $detalle){
@@ -150,7 +154,7 @@ function listarInventarioMaestro( $n = 50, $show = POS_TODOS )
 				}
 			}			
 			
-			$bar = array_merge( $compra->asArray(), $iM->asArray(),  $detalle->asArray() );
+			$bar = array_merge( $compra->asArray(), $iM->asArray(),  $detalle->asArray(), $flete->asArray() );
 			$bar['producto_desc'] = $p->getDescripcion();
 			$bar['producto_tratamiento'] = $p->getTratamiento();
 			$bar['medida'] = $p->getEscala();

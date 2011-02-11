@@ -8,6 +8,7 @@
 	require_once("controller/inventario.controller.php");
 
 	$productos = InventarioDAO::getAll();
+	
 	$iMaestro = listarInventarioMaestro(50, POS_SOLO_ACTIVOS) ;
 
     if(isset( $_REQUEST['aut'])){
@@ -24,36 +25,577 @@
 
     $sucursales = SucursalDAO::byRange($foo, $bar);
 
-
-	function toUnit( $e )
-	{
-		if($e == "NA"){
-			return  "<i>N/A</i>";
-		}
-		return "<b>" . number_format($e, 2) . "</b>kg";
-	}
-	
-	
-	
 ?>
 
 
-<style>
-    table{
-		font-size: 11px;
-    }
-</style>
 
 <script type="text/javascript" charset="utf-8">
 
 
-var sucursales = [];
-var currentSuc = null;
-var carrito = [];
-var readyDATA = null;
+	/**
+	  *	Arreglo con un objeto por cada sucursal
+	  **/
+var sucursales = [],
 
-function tr(s){return "<tr>"+s+"</tr>";}
-function td(s){return "<td>"+s+"</td>";}
+	/**
+	  *	Sucursal que se esta surtiendo en este momento
+	  **/
+	currentSuc = null,
+	
+	/**
+	  *	El carrito final de productos que voy a surtir
+	  **/
+	carrito = [],
+	
+	/**
+	  *	Un objeto de la clase inventario
+	  **/
+	inventario,
+	
+	tablaInventario,
+	
+	composicionTabla,
+	
+	/**
+	  * Un arreglo que contiene toda la informacion de las composiciones
+	  **/ 
+	composiciones = [];
+
+
+
+
+/**
+  *
+  * Main
+  *
+  **/
+jQuery(document).ready(function(){
+
+	//construir el objeto de inventario
+	inventario = new InventarioMaestro();
+	
+	
+	tablaInventario = new InventarioMaestroTabla({ 
+		inventario : inventario, 
+		renderTo : "InventarioMaestroTabla"
+	});
+	
+	
+	//seleccionar sucursal si es que se envio un id de sucursal
+	<?php if(isset($_REQUEST['sid'])){ echo " seleccionarSucursal(); "; } ?>
+
+	
+	jQuery("#MAIN_TITLE").html("Surtir sucursal");
+});
+
+function round( n ){
+	return  Math.round(parseFloat(n)*Math.pow(10,4))/Math.pow(10,4); 
+}
+
+function tr(s, o){
+	if(o)
+	return "<tr "+o+">"+s+"</tr>";
+	return "<tr >"+s+"</tr>";
+}
+
+function td(s, o){
+	if(o)
+	return "<td "+o+">"+s+"</td>";
+	return "<td >"+s+"</td>";
+}
+
+function div(s, o){
+	if(o)
+	return "<div "+o+">"+s+"</div>";
+	return "<div >"+s+"</div>";
+}
+
+/**
+  * Clase InventarioMaestro 
+  *
+  **/
+InventarioMaestro = function( ){
+	
+	var estructura = [];
+
+	//revisar si existe este producto en el inventario maestro
+	function existeProducto( producto ){
+		for( var z = 0; z < estructura.length; z++ ){
+			if( estructura[z].compare(producto) ){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	//agregar un producto al inventario maestro
+	function agregarProducto( producto ){
+		if( existeProducto(producto) ){
+			throw ("Este producto ya existe en el inventario maestro");
+		}else{
+			estructura.push(producto);
+		}
+	};
+
+	this.getProductos = function(){
+		return estructura;
+	};
+
+	this.getProducto = function (id_compra, id_producto){
+		for( var z = 0; z < estructura.length; z++ ){
+			if(estructura[z].id_compra_proveedor === id_compra && 
+				estructura[z].id_producto === id_producto){
+					return estructura[z];
+				}
+		}
+		return null;
+	}
+
+	this.getProductoDesc = function(id_producto){
+		for( var z = 0; z < estructura.length; z++ ){
+			if( estructura[z].id_producto === id_producto){
+					return {
+						id_producto : estructura[z].id_producto,
+						descripcion : estructura[z].producto_desc
+					};
+				}
+		}
+		throw("No encontre el producto " + id_producto);
+		return null;
+	}
+
+	/**
+	  * Constructor
+	  *
+	  *
+	  **/
+	var foo;
+	<?php
+	foreach( $iMaestro as $i ){	
+		echo " 	foo = new Producto (" . json_encode($i) . ") ;";
+		echo "	agregarProducto( foo );";
+	} ?>
+	
+
+
+};
+
+
+
+
+
+/**
+  * Clase Producto
+  *
+  **/
+Producto = function( json_rep ){
+
+	//compara si este producto es igual a *producto*
+	this.compare = function ( producto ){
+		return this.id_compra_proveedor === producto.id_compra_proveedor && 
+			this.id_producto === producto.id_producto;
+	}
+	
+	
+	//constructor a partir de un json
+	this.id_compra_proveedor	= parseInt( json_rep.id_compra_proveedor ); 
+	this.id_producto 			= parseInt( json_rep.id_producto );	
+	this.peso_origen 			= parseFloat( json_rep.peso_origen );
+	this.id_proveedor 			= parseInt( json_rep.id_proveedor );
+	this.fecha 					= json_rep.fecha;
+	this.fecha_origen 			= json_rep.fecha_origen;
+	this.folio 					= json_rep.folio;   
+	this.numero_de_viaje 		= json_rep.numero_de_viaje;
+	this.peso_recibido			= parseFloat( json_rep.peso_recibido );
+	this.arpillas 				= parseFloat( json_rep.arpillas );
+	this.peso_por_arpilla 		= parseFloat( json_rep.peso_por_arpilla );
+	this.productor 				= json_rep.productor;
+	this.calidad 				= json_rep.calidad;           
+	this.merma_por_arpilla 		= parseFloat( json_rep.merma_por_arpilla );
+	this.total_origen 			= parseFloat( json_rep.total_origen );
+	this.existencias  			= parseFloat( json_rep.existencias );
+	this.existencias_procesadas = parseFloat( json_rep.existencias_procesadas );
+	this.sitio_descarga 		= json_rep.sitio_descarga;
+	this.variedad 				= json_rep.variedad;  
+	this.kg 					= json_rep.kg;        
+	this.precio_por_kg 			= json_rep.precio_por_kg;
+	this.producto_desc 			= json_rep.producto_desc;         
+	this.producto_tratamiento 	= json_rep.producto_tratamiento;
+	this.escala 				= json_rep.medida;
+	this.sitio_descarga_desc 	= json_rep.sitio_descarga_desc;
+	this.costo_flete 			= parseFloat( json_rep.costo_flete );
+}
+
+
+
+
+
+/**
+  * Clase para dibujar el inventario maestro
+  *
+  **/
+InventarioMaestroTabla = function( config ) {
+	
+	/**
+	  * 
+	  **/
+	var inventario,
+
+	/**
+	  * id del elemento donde se dibujara esta tabla
+	  **/
+		renderTo;
+	
+	
+	function render(){
+		var html,
+			row_html;
+			
+		html = '';	
+		html += '<table style="width: 100%">';
+		html += '<tr>';
+		html += '<th>Remision</th>';
+		html += '<th>Producto</th>';
+		html += '<th>Variedad</th>';
+		html += '<th>Arpillas en embarque</th>';
+		html += '<th>Promedio</th>';		
+		html += '<th>Productor</th>';
+		html += '<th>Llegada</th>';		
+		html += '<th>Existencias</th>';		
+		html += '<th>Procesadas</th>';		
+		html += '</tr>';
+		
+		var productos = inventario.getProductos();
+		for(var a = 0; a < productos.length; a++){
+			row_html = '';
+			
+			row_html += td( productos[a].folio )
+				+ td( productos[a].producto_desc )
+				+ td( productos[a].variedad )
+				+ td( productos[a].arpillas )
+				+ td( productos[a].peso_por_arpilla )
+				+ td( productos[a].productor )
+				+ td( productos[a].fecha )
+				+ td( div("<b>" + productos[a].existencias + "</b>&nbsp;" + productos[a].escala + "s", "id='"
+					+ productos[a].id_compra_proveedor + "-" 
+					+ productos[a].id_producto + "-existencias"
+				 	+ "'"));
+				
+			if(productos[a].producto_tratamiento){
+				row_html += td( div("<b>" + productos[a].existencias_procesadas + "</b>&nbsp;" + productos[a].escala + "s", "id='"
+						+ productos[a].id_compra_proveedor + "-" 
+						+ productos[a].id_producto + "-existencias-procesadas"
+				 		+ "'"));
+				//td( "<b>" + productos[a].existencias_procesadas + "</b>&nbsp;" + productos[a].escala + "s");				
+			}else{
+				row_html += td( "NA");
+			}
+
+			html += tr( row_html, "onClick='composicionTabla.agregarProducto( "+  productos[a].id_compra_proveedor +", "+ productos[a].id_producto +" );'" );
+		}
+		
+			
+		html += '</table>';		
+		
+		jQuery("#" + renderTo).html( html );
+	}
+
+	function __init(config){
+		if( !config.inventario instanceof InventarioMaestro ){
+			throw ("Configuracion contiene algo que no es un inventario maestro");
+		}
+		
+		inventario = config.inventario;
+		
+		
+		renderTo = config.renderTo;
+		
+		render();
+	}
+
+	this.tomarProducto = function (id_compra, id_producto, cantidadATomar, procesadas ){
+
+		var producto = inventario.getProducto(id_compra, id_producto);
+		
+		var newQty = producto.existencias - cantidadATomar,
+			newQtyProc = producto.existencias_procesadas - cantidadATomar;
+			
+		if(newQty < 0){
+			newQty = "<b style='color: #AB443B'>" + round(newQty) + "</b>&nbsp;" + producto.escala + "s";
+		}else{
+			newQty = "<b style='color: #3F8CE9'>" + round(newQty) + "</b>&nbsp;" + producto.escala + "s";			
+		}
+		
+
+		jQuery("#"+id_compra+"-"+id_producto+"-existencias").html(newQty);
+		jQuery("#"+id_compra+"-"+id_producto+"-existencias").slideUp(
+			250,
+			function (){
+				jQuery("#"+id_compra+"-"+id_producto+"-existencias").slideDown(  );
+			}
+		);
+		
+		
+		if(procesadas){
+
+			
+			if(newQtyProc < 0){
+				newQtyProc = "<b style='color: #AB443B'>" + round(newQtyProc) + "</b>&nbsp;" + producto.escala + "s";
+			}else{
+				newQtyProc = "<b style='color: #3F8CE9'>" + round(newQtyProc) + "</b>&nbsp;" + producto.escala + "s";
+			}
+
+			jQuery("#"+id_compra+"-"+id_producto+"-existencias-procesadas").html(newQtyProc);			
+			jQuery("#"+id_compra+"-"+id_producto+"-existencias-procesadas").slideUp(
+				250,
+				function (){
+
+					jQuery("#"+id_compra+"-"+id_producto+"-existencias-procesadas").slideDown(  );
+				}
+			);
+		}else{
+			newQtyProc = "<b>" + producto.existencias_procesadas + "</b>&nbsp;" + producto.escala + "s";
+			jQuery("#"+id_compra+"-"+id_producto+"-existencias-procesadas").html(newQtyProc);			
+			
+		}
+	}
+	
+	__init(config);
+	
+};
+
+
+
+
+
+/**
+  * Clase de Composicion Tabla
+  *
+  **/
+ComposicionTabla = function( config ){
+	var renderTo,
+	
+		composicion = [],
+		
+		id_producto;
+	
+	function render(){
+		var html = '';
+		html += '<table style="width:100%">';
+		html += '<tr id="ASurtirTablaHeader">';
+			html += td("");
+			html += td("Remision");
+			html += td("Producto");
+			html += td("Cantidad");
+			html += td("Procesada");						
+			html += td("Precio");		
+			html += td("Descuento");		
+			html += td("Importe");		
+		html += '</tr>';
+		html += '</table>';		
+		jQuery("#" + renderTo).html( html );
+	}
+	
+	function __init(config){
+		renderTo = config.renderTo;
+		id_producto = config.id_producto;
+		render();
+	}
+	
+	
+	this.doMath = function( id_compra, id_producto, campo, valor ){
+		
+		//console.log("doing some math !", campo, valor);
+		
+		//buscar este producto en el inventario
+		var prod = inventario.getProducto( id_compra, id_producto );
+		var comp;
+		
+		for (var i = composicion.length - 1; i >= 0; i--){
+			if( composicion[i].id_compra === id_compra && composicion[i].id_producto === id_producto ){
+				comp = composicion[i];
+				break;
+			}
+		}
+
+		if(valor.length == 0){
+			valor = 0;
+		}
+
+		switch( campo ){
+			case "proc" : 
+				comp.procesada =  valor ;
+				tablaInventario.tomarProducto( id_compra, id_producto, comp.cantidad, comp.procesada );
+			break;
+			
+			case "cantidad":
+				comp.cantidad = parseFloat( valor );
+				tablaInventario.tomarProducto( id_compra, id_producto, comp.cantidad, comp.procesada );
+			break;
+			
+			case "precio" :
+				comp.precio = parseFloat( valor );
+			break;
+			
+			case "descuento":
+				comp.descuento = parseFloat( valor );
+			break;
+		}
+
+		
+		jQuery( "#" + comp.id_compra + "-" + comp.id_producto + "-importe" ).val( cf(comp.precio * (comp.cantidad - comp.descuento) ) );
+		
+		
+	}
+	
+	this.quitarProducto = function (id_compra, id_producto){
+		jQuery("#" +  id_compra + "-" + id_producto + "-composicion").remove();
+		
+		var index = null;
+		
+		//buscar esa composicion el arreglo
+		for (var i = composicion.length - 1; i >= 0; i--){
+			if( composicion[i].id_compra === id_compra 
+					&& composicion[i].id_producto === id_producto){
+						index = i;
+						break;
+					}
+		}
+		
+		if(composicion[index].cantidad != 0){
+			this.doMath( id_compra, id_producto, "cantidad", 0 );
+		}
+		
+		composicion.splice(index,1);
+		
+	}
+	
+	
+	this.agregarProducto = function( id_compra, id_producto ){
+		
+		producto = inventario.getProducto( id_compra, id_producto );
+		
+		var html = "";
+		
+		html += td( "<img onClick='composicionTabla.quitarProducto(" + id_compra + "," + id_producto + ")' src='../media/icons/close_16.png'>" );
+		html += td( producto.folio );
+		html += td( producto.producto_desc );
+		
+		var keyup = "onkeyup='composicionTabla.doMath(" + id_compra + "," + id_producto + ", this.name, this.value )'";
+		var click = "onClick='composicionTabla.doMath(" + id_compra + "," + id_producto + ", this.name, this.value )'";
+				
+		html += td( "<input name='cantidad' "+keyup+" value='0' type='text'>" );
+
+		var procesadas = parseFloat( producto.existencias_procesadas );
+
+		if( producto.producto_tratamiento !== null){
+			if(procesadas > 0){
+				html += td( "<input style='width: 100px' name='proc' "+click+" type='checkbox'>" );			
+			}else{
+				html += td( "<input style='width: 100px'  type='checkbox' disabled>" );
+			}			
+		}else{
+				html += td( "<input type='hidden'><i>NA</i>" );			
+		}
+
+	
+		//sumar el flete !!
+		//console.log(producto, producto.peso_origen, producto.costo_flete)
+		
+		var costo_flete = 0;
+		
+		if( parseFloat (producto.costo_flete) != 0){
+			 costo_flete =  producto.peso_origen / producto.costo_flete;
+		}
+		
+		html += td( "<input   	name='precio'     value='"+ ( producto.precio_por_kg + costo_flete )+"' "	+keyup+"	type='text'>" );
+		html += td( "<input 	name='descuento'  value='0'	  					    	"	+keyup+" 	type='text'>" );
+		html += td( "<input  	id='" +id_compra+"-"+ id_producto+ "-importe'							type='text' disabled>" );
+
+	
+		composicion.push({
+			id_compra 	: producto.id_compra_proveedor,
+			id_producto	: producto.id_producto, 
+			cantidad	: 0,
+			desc 		: producto.producto_desc,
+			procesada	: false,
+			precio		: producto.precio_por_kg,
+			descuento	: 0
+		});
+
+		jQuery("#ASurtirTablaHeader").after( tr(html, "id='" + id_compra + "-" + id_producto + "-composicion'") );		
+	}
+	
+	
+	this.doneWithMix = function (){
+		var c, total_qty = 0;
+		
+		//revisar que todo concuerde
+		for (var i = composicion.length - 1; i >= 0; i--){
+			c = composicion[i];
+			total_qty += parseFloat( c.cantidad - c.descuento );
+		}
+
+		if(composicion.length == 0){
+			error("No ha agregado ningun producto", "El producto debe conmponerse de por lo menos un producto. Agregue un producto de su inventario maestro para continuar.");
+			return;
+		}
+
+		if(total_qty == 0){
+			error("El peso total es cero", "No puede componer un producto a surtir cuando el peso total es igual a cero. ");
+			return;
+		}
+
+		composiciones.push({
+			items : composicion,
+			producto : id_producto
+		});
+	
+		jQuery("#listaDeProductos").slideDown('fast', function (){
+
+			jQuery('#InvMaestro').slideUp();
+			jQuery('#ASurtir').slideUp('fast', function (){
+
+
+				//jQuery('html,body').animate({scrollTop: jQuery('#InvMaestro').position().top }, 1000);
+			});		
+
+		});
+		
+		renderFinalShip();
+
+	}
+	
+	this.rollbackMix = function(){
+		
+		renderFinalShip();
+		
+		jQuery("#listaDeProductos").slideDown('fast', function (){
+
+			jQuery('#InvMaestro').slideUp();
+			jQuery('#ASurtir').slideUp('fast', function (){
+
+
+
+			});		
+
+		});
+	}
+	
+	__init(config);
+}
+
+
+
+
+function error(title, msg){
+	
+	var html = '<h1><img src="../media/icons/warning_32.png">&nbsp;' + title + '</h1>';
+	html += msg;
+	html += "<div align='center'><input type='button' value='Aceptar' onclick='jQuery(document).trigger(\"close.facebox\");'></div>"
+	jQuery.facebox( html );
+	
+}
 
 
 <?php 
@@ -65,18 +607,6 @@ function td(s){return "<td>"+s+"</td>";}
 		echo " sucursales[" . $suc->getIdSucursal() . "] = \"" .  $suc->getDescripcion()  . "\";";
 	}
 ?>
-
-jQuery(document).ready(function(){
-	<?php 
-		if(isset($_REQUEST['sid'])){
-			echo " seleccionarSucursal(); ";
-		}
-	?>
-	
-	jQuery("#MAIN_TITLE").html("Surtir sucursal");
-});
-
-
 
 function seleccionarSucursal(){
 
@@ -101,8 +631,15 @@ function seleccionarSucursal(){
 
 
 function seleccionDeProd( id ){
+	console.log("Seleccione el producto "  + id);
+	
+	composicionTabla = new ComposicionTabla({
+		renderTo : "ComposicionTabla",
+		id_producto : id
+	});
+	
 	jQuery("#listaDeProductos").slideUp('fast', function (){
-		
+		jQuery("#FinalShip").slideUp();
 		jQuery('#InvMaestro').slideDown();
 		jQuery('#ASurtir').slideDown('fast', function (){
 			
@@ -115,171 +652,75 @@ function seleccionDeProd( id ){
 }
 
 
-function doneWithMix(){
-	jQuery("#listaDeProductos").slideDown('fast', function (){
-		
-		jQuery('#InvMaestro').slideUp();
-		jQuery('#ASurtir').slideUp('fast', function (){
-			
-
-			jQuery('html,body').animate({scrollTop: jQuery('#listaDeProductos').position().top }, 1000);
-		});		
-		
-	});
+function renderFinalShip(){
 	
-}
-
-function domath(){
-
-	totals_importe = 0;
-	totals_cantidad = 0;
-
-	values = jQuery("#ASurtirTabla input");
-	
-	for(a = 0; a < values.length; a+=7){
-		values[ a + 4 ].value = ( values[ a ].value - values[ a + 3 ].value ) * values[ a + 2 ].value;
-		
-		totals_cantidad += ( values[ a ].value - values[ a + 3 ].value );
-		totals_importe += ( values[ a ].value - values[ a + 3 ].value ) * values[ a + 2 ].value;
-		
-
-	}
-	
-	
-	
-	jQuery("#totales_cantidad").html( totals_cantidad );
-	jQuery("#totales_importe").html(cf( totals_importe ));
-}
-
-
-
-
-function agregarProducto(data){
-
-	o = jQuery.JSON.decodeSecure(Url.decode(data));
-	o.producto_desc = o.producto_desc.replace( "+", " " );
-	carrito.push( o );
-
-	html = "";
-	html += td( o.folio );
-	html += td( o.producto_desc );
-
-	html += td( "<input style='width: 100px' onkeyup='domath()' value='0' id='cart_table_cantidad" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='text'>" );
-
-	var procesadas = parseFloat( o.existencias_procesadas );
-	
-
-	
-	if(o.producto_tratamiento !== null){
-		if(procesadas > 0){
-			html += td( "<input style='width: 100px' id='cart_table_procesada" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='checkbox'>" );			
-		}else{
-			html += td( "<input style='width: 100px' id='cart_table_procesada" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='checkbox' disabled>" );
-		}			
-	}else{
-			html += td( "<input type='hidden'><i>N/A</i>" );			
-	}
-
-	//SUMAR FLETE FALTA !!!
-	html += td( "<input style='width: 100px' onkeyup='domath()' value='"+ ( o.precio_por_kg )+"' id='cart_table_precio" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='text'>" );
-	html += td( "<input style='width: 100px' onkeyup='domath()' value='0'	 id='cart_table_descuento" + o.id_compra_proveedor + "_" + o.id_producto +"' 	type='text'>" );
-	html += td( "<input style='width: 100px'					 			 id='cart_table_importe" + o.id_compra_proveedor + "_" + o.id_producto +"' 		type=text disabled>" );
-	html += td( "<input 										value='"+o.id_producto+"'	 id='cart_table_importe" + o.id_compra_proveedor + "_" + o.id_producto +"' 		type=hidden >" );	
-	html += td( "<input 										value='"+o.id_compra_proveedor+"'	 id='cart_table_importe" + o.id_compra_proveedor + "_" + o.id_producto +"' 		type=hidden >" );	
-	
-	jQuery("#ASurtirTablaHeader").after( tr(html) );		
-	jQuery("#ASurtirTabla input").uniform();	
-	
-	return;
-   }
-
-
-function renderConfirm( obj ){
-	html = "<h1>Confirme el embarque</h1>";
-	html += "<b>Destino</b>: " + sucursales[ obj.sucursal ];
-	html += "<h2>Detalles del pedido</h2>";
-	html += "<table style='width: 100%'>";		
-	html += "<tr>";
-	
-	html += "<th>Cantidad</th>";
-	html += "<th>Descripcion</th>";
-	html += "<th>Precio</th>";
-	html += "<th>Importe</th>";
-	html += "</tr>";
-       stotal = 0;				
-	for(a = 0; a < obj.productos.length; a++){
-		html += "<tr>";
-		html += "<td>"+ obj.productos[a].cantidad 		+ "&nbsp;-&nbsp;" +obj.productos[a].descuento + "</td>";
-		html += "<td><b>"+ obj.productos[a].id_producto +"</b>&nbsp;" +obj.productos[a].producto_desc 	+"</td>";
-		html += "<td>"+ cf(obj.productos[a].precio) 	+"</td>";
-		html += "<td>"+ cf((obj.productos[a].cantidad - obj.productos[a].descuento)*obj.productos[a].precio) 	+"</td>";
-		html += "</tr>";
-           stotal += (obj.productos[a].cantidad - obj.productos[a].descuento)*obj.productos[a].precio;
-	}
-       html += "<tr style=\"border-top: 1px solid #3F8CE9;\">"
-       +"<td></td><td></td><td><b>Total:</b></td>"
-       +"<td>"+ cf(stotal) +"</td>"
-       +"</tr>";
-	html += "</table>";
-	html += "<div align='center'><input type='button' value='Aceptar' onclick='confirmed()'><input type='button' value='Cancelar' onclick='jQuery(document).trigger(\"close.facebox\");'></div>"
-	return html;
-}
-
-
-
-function doSurtir(){
-
-	if(carrito.length == 0){
-		jQuery("#ajax_failure").html("Seleccione uno o mas prouductos para surtir a esta sucursal").show();
+	if(composiciones.length == 0 )
 		return;
-	}
+		
+	var global_qty = 0, global_qty_real = 0, global_importe = 0;
+	
+	var html = '<table style="width: 100%">';
+	html += '<tr align=left>'
+		+ '<th>Producto</th>'
+		+ '<th>Peso real</th>'
+		+ '<th>Peso a cobrar</th>'		
+		+ '<th>Composicion</th>'
+		+ '<th>Importe</th>';
+			
+	for (var i=0; i < composiciones.length; i++) {
+		
+		jQuery("#producto-" + composiciones[i].producto ).css("text-decoration", "line-through");
+		jQuery("#producto-" + composiciones[i].producto ).fadeTo(250, .25);
+		
+		desc = inventario.getProductoDesc( composiciones[i].producto );
+		
+		var total_qty = 0;
+		var total_qty_with_desc = 0;		
+		var total_money = 0;
+		var composition = '';
+		
 
-	values = jQuery("#ASurtirTabla input");
-	
-	json = {
-		sucursal : currentSuc,
-		productos : []
-	};
-	
-	var foo = 0, vacio = false;
-	
-	for(a = carrito.length -1 ; a >= 0; a--, foo += 5){
 		
-		json.productos.push({
-			id_producto: 	carrito[a].id_producto,
-			producto_desc :	carrito[a].producto_desc,
-			procesada:		jQuery(values[foo+1]).is(':checked'),
-			cantidad:		parseFloat( values[foo].value ),
-			descuento:		parseFloat( values[foo+3].value),
-			precio:			parseFloat( values[foo+2].value),
-			id_compra:		carrito[a].id_compra_proveedor
-		});
-		
-		if( values[foo].value == 0  ){
-			jQuery("#ajax_failure").html("No puede hacer un embarque con algun producto vacio").show();
-			return;
+		for (var j = composiciones[i].items.length - 1; j >= 0; j--){
+			total_qty += composiciones[i].items[j].cantidad  ;
+			total_qty_with_desc += composiciones[i].items[j].cantidad   - composiciones[i].items[j].descuento ;			
+			total_money += ( composiciones[i].items[j].cantidad - composiciones[i].items[j].descuento ) * composiciones[i].items[j].precio ;
+			composition += composiciones[i].items[j].cantidad + "<b> / </b>" + composiciones[i].items[j].descuento + " &nbsp; <b>"+ composiciones[i].items[j].desc + "</b><br>";
 		}
 		
-		/*			
-		console.log("********** ******* ");
-		console.log("analizando ", carrito[a].id_producto, carrito[a].id_proveedor);
-		console.log("cantidad:" 	+ values[foo].value );
-		console.log("lavada:" 		, jQuery(values[foo+1]).is(':checked') );
-		console.log("precio:" 		+ values[foo+2].value );
-		console.log("descuento:" 	+ values[foo+3].value );
-		console.log("importe:" 		+ values[foo+4].value );
-		*/
-	}
+		var color = i % 2 == 0 ? 'style="background-color: #D7EAFF"' : "";
+		
+		html += tr(
+					td("<img src='../media/icons/basket_32.png'>"+ desc.descripcion )
+		 			+ td( total_qty )
+		 			+ td( total_qty_with_desc )		
+					+ td( composition)
+					+ td( cf(total_money)) , color);
+					
+		global_qty += total_qty;
+		global_qty_real += total_qty_with_desc;
+		global_importe += total_money;
+	};
 
 
+
+	html += tr(
+				  td( "Totales", "style='padding-top: 10px'" )
+	 			+ td( global_qty )
+	 			+ td( global_qty_real )		
+				+ td( "")
+				+ td( cf(global_importe) ) ,
+				
+				"style='border-top: 1px solid #3F8CE9; font-size: 15px;'");
+
+	html += '</html>';
 	
+	jQuery("#FinalShipTabla").html(html);
+	jQuery("#FinalShip").fadeIn();
+	
+}
 
-	readyDATA = json;
-	jQuery.facebox( renderConfirm( json ) );
-	return;
-   }
-
-
+/*
 function confirmed()
 {
 //cerrar el facebox
@@ -342,11 +783,12 @@ function restart()
 			+ "&nbsp;	<input type='button' onclick=\"jQuery(document).trigger('close.facebox')\" value='No'></div>"
 		);
 }
+
+**************************************************************/
 </script>
 
 
 
-<h1>Surtir una sucursal</h1>
 
 <!-- 
 		SELECCIONAR SUCURSAL
@@ -392,7 +834,6 @@ function renderProducto( $val ,$row){
 	return "<b>" . number_format($val, 2) . "</b>&nbsp;" . $row['medida'] . "s";
 }
 
-
 function renderProductoSmall( $val ,$row){
 	
 	$medida = "";
@@ -404,7 +845,6 @@ function renderProductoSmall( $val ,$row){
 	
 	return "<b>" . number_format( (float)$val, 2) . "</b>&nbsp;" . $medida ;
 }
-
 
 foreach( $sucursales as $sucursal ){
 	
@@ -468,9 +908,9 @@ foreach( $sucursales as $sucursal ){
 					echo "</tr><tr>";
 				}
 
-				echo "<td onClick='seleccionDeProd( " .  $productos[$a]->getIdProducto() . " )' onmouseover=\"this.style.backgroundColor = '#D7EAFF'\" onmouseout=\"this.style.backgroundColor = 'white'\"><a >" . $productos[$a]->getDescripcion() . "</a><br>";
-				echo "<b>" . number_format( $totals , 2) ."</b>" .$productos[$a]->getEscala() . "s<br/><br/>";
-				//echo "" . moneyFormat($lastOne->getPrecioVenta()) ;
+				echo "<td id='producto-" . $productos[$a]->getIdProducto() . "'  onClick='seleccionDeProd( " .  $productos[$a]->getIdProducto() . " )' onmouseover=\"this.style.backgroundColor = '#D7EAFF'\" onmouseout=\"this.style.backgroundColor = 'white'\"><img style='float:left;' src='../media/icons/basket_add_32.png'>" . $productos[$a]->getDescripcion() . "<br>";
+				//echo "<b>" . number_format( $totals , 2) ."</b>&nbsp;" .$productos[$a]->getEscala() . "s<br/><br/>";
+				echo " " . moneyFormat($lastOne->getPrecioVenta()) .  "<br><br>";
 				echo "</td>";
 			}
 			echo "</tr>";
@@ -478,40 +918,17 @@ foreach( $sucursales as $sucursal ){
 		?>
 </div>
 
+
+
+
+
 <!-- 
 		MOSTRAR INVENTARIO MAESTRO
  -->
 <div id="InvMaestro" style="display: none;">
-<h2>Inventario Maestro</h2>
-<h3>&iquest; Como se conformara este producto ?</h3><?php
-
-	function renderFechaChica($date){
-		return $date;
-	}
-
-	$header = array(
-		"folio" 					=> "Remision",
-		"producto_desc" 			=> "Producto",
-		"variedad" 	 				=> "Variedad",
-		"arpillas"					=> "Arpillas",
-		"peso_por_arpilla"			=> "Kg/Arpilla",
-		"productor"					=> "Productor",
-		"fecha"						=> "Llegada",
-		//"transporte"				=> "Transporte",
-		//"merma_por_arpilla"			=> "Merma",
-		//"sitio_descarga_desc"		=> "Sitio de descarga",
-		"existencias"				=> "Existencias",
-		"existencias_procesadas"	=> "Limpias" );
-	
-	$tabla = new Tabla( $header, $iMaestro );
-	$tabla->renderRowId("masterTabla");
-    $tabla->addOnClick( "id_producto", "agregarProducto", true);	
-	$tabla->addColRender("existencias", "renderProductoSmall");
-	$tabla->addColRender("existencias_procesadas", "renderProductoSmall");
-	$tabla->addColRender("fecha", "renderFechaChica");	
-	$tabla->render();
-?> 
-
+	<h2>Inventario Maestro</h2>
+	<h3>&iquest; Como se conformara este producto ?</h3>
+	<div id="InventarioMaestroTabla"></div>
 </div>
 
 
@@ -520,36 +937,15 @@ foreach( $sucursales as $sucursal ){
 
 <!-- 
 		SELECCIONAR PRODUCTOS A SURTIR
-   -->
-
+ -->
 <div id="ASurtir" style="display: none;">
 <h2>Composicion del producto</h2>
 
-<table id="ASurtirTabla" style="width: 100%">
-    <tr id="ASurtirTablaHeader">
-    	<th>Folio</th>
-    	<th>Producto</th>
-    	<th>Cantidad KG</th>
-    	<th>Procesada</th>
-    	<th>Precio unitario</th>
-    	<th>Descuento KG</th>
-    	<th>Importe</th>
-    </tr>
-    
-    <tr style="font-size: 15px;">
-    	<td><b>Totales</b></td>
-    	<td></td>
-    	<td id="totales_cantidad"></td>
-    	<td></td>
-    	<td></td>
-    	<td></td>
-    	<td id="totales_importe"></td>
-    </tr>
-</table>
+	<div id="ComposicionTabla"></div>
 
 	<div id="listoMezclarProducto" align='center'  >
-		<input type="button" value="Terminar de componer producto" onclick="doneWithMix()">
-		<input type="button" value="Cancelar de componer este producto" onclick="restart()">
+		<input type="button" value="Terminar de componer producto" onclick="composicionTabla.doneWithMix()">
+		<input type="button" value="Cancelar de componer este producto" onclick="composicionTabla.rollbackMix()">
 	</div>
 		
 
@@ -557,14 +953,28 @@ foreach( $sucursales as $sucursal ){
 
 
 
-<div id="submitButtons" style="display: none;" align='center'  >
-	<input type="button" value="Surtir" onclick="doSurtir()">
-	<input type="button" value="Volver a comenzar" onclick="restart()">
+
+<div id="FinalShip" style="display: none;">
+<h2>Productos a surtir</h2>
+
+	<div id="FinalShipTabla"></div>
+
+
+	<h4 id="submitButtons" align='center'  >
+		<input type="button" value="Surtir" onclick="doSurtir()">
+		<!-- <input type="button" value="Volver a comenzar" onclick="restart()"> -->
+	</h4>
+
+	<div id="loader" 		style="display: none;" align="center"  >
+		<img src="../media/loader.gif">
+	</div>
+
+
 </div>
-	
-<div id="loader" 		style="display: none;" align="center"  >
-	<img src="../media/loader.gif">
-</div>
 
 
-
+<style>
+    table{
+		font-size: 11px;
+    }
+</style>
