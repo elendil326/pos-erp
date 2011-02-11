@@ -177,6 +177,11 @@ function listarClientes(  ){
 		$qventa->setIdCliente( $cliente->getIdCliente() );
 		$qventa->setTipoVenta( "credito" );
 		$res = VentasDAO::search($qventa);
+		
+		if( $cliente->getIdCliente() == ( $_SESSION['sucursal'] * -1 ) )
+		{
+		    continue;
+		}
 			
 		$por_pagar = 0;
 		foreach($res as $venta)
