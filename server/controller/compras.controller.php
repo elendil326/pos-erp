@@ -790,12 +790,23 @@ function nuevaCompraSucursal( $json = null){
 		
 		//vamos generando los datos de los parametros la autorizacion de envio de productos
 		
+		/*
+		    {
+                "id_producto": 1,
+                "procesado": "true",
+                "cantidad_procesada": 100,
+                "precio_procesada": "10.5",
+                "cantidad": 100,
+                "precio": "9.5"
+            }
+		*/
+		
 		array_push( $parametros, array( 
-			"id_compra" => $detalle->getIdCompra(),
 			"id_producto" => $detalle-> getIdProducto(),
+			"procesado" => $detalle-> getProcesadas(),
+			"cantidad_procesada" = ;
+			"precio_procesada" = ;
 			"cantidad" => $detalle-> getCantidad(),
-			"procesada" => $detalle-> getProcesadas(),
-			"descuento" => $detalle-> getDescuento(),
 			"precio" => $detalle-> getPrecio()
 		));	
 		
