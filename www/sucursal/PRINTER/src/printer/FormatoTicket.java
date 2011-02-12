@@ -291,7 +291,7 @@ class FormatoTicket implements Printable {
                 y += h_normalTicket;
         //javax.swing.JOptionPane.showMessageDialog(null, this.venta.id_venta);
                 ticket.setFont(boldTicket);
-                ticket.drawString("Venta  " + this.venta.id_prestamo, 65, y);
+                ticket.drawString("Venta  " + this.venta.id_venta, 65, y);
                 y += h_normalTicket;
 
                 ticket.setFont(normalTicket);
@@ -307,7 +307,7 @@ class FormatoTicket implements Printable {
 
                 //if (this.venta.cliente != null) {
 
-                    y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, "Cliente : " + this.venta.sucursal_destino.descripcion, ticket, 0, y, h_normalTicket);
+                    y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, "Cliente : " + this.venta.cliente.nombre, ticket, 0, y, h_normalTicket);
                     //ticket.drawString("Cliente : " + this.venta.cliente.nombre, 0, y);
                     //y += h_normalTicket;
 

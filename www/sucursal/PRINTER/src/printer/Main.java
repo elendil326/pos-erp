@@ -11,12 +11,7 @@ import java.net.URLDecoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.RepaintManager;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.*;
+
 
 /**
  *
@@ -39,7 +34,7 @@ public class Main extends Applet {
  currentManager.setDoubleBufferingEnabled (false);
 
        
-     /*   String json_dec="{\"tipoDeVenta\":\"contado\",\"tipo_venta\":\"contado\",\"items\":[{\"descripcion\":"+
+ /*       String json_dec="{\"tipoDeVenta\":\"contado\",\"tipo_venta\":\"contado\",\"items\":[{\"descripcion\":"+
          "\"PAPA PRIMERA ORIGINAL\",\"existencias\":\"2847\",\"existenciasMinimas\":\"100\","+
          "\"precioVenta\":\"7.5\",\"productoID\":1,\"medida\":\"fraccion\","+
          "\"precioIntersucursal\":\"7.5\",\"cantidad\":1},{\"descripcion\":"+
