@@ -855,7 +855,7 @@ function descontarDeInventarioMaestro ($id_compra, $id_producto, $cantidad, $pro
 	if( $procesada ){
 
 		//verificamos que lo que se va a surtir no supere a las existencias
-		if( $producto->cantidad > $inventario_maestro->getExistenciasProcesadas() ){
+		if( $cantidad > $inventario_maestro->getExistenciasProcesadas() ){
 			Logger::log( "Error al editar producto en inventario maestro: la cantidad requerida de producto supera las existencias" );
 			DAO::transRollback();	
 			die( '{"success": false, "reason": "Error al editar producto en inventario maestro: la cantidad requerida de producto supera las existencias"}' );
