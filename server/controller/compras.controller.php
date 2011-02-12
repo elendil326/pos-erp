@@ -819,7 +819,7 @@ function nuevaCompraSucursal( $json = null){
 	$autorizacion = new Autorizacion();
 	
 	$autorizacion -> setIdUsuario( $_SESSION['userid'] );
-	$autorizacion -> setIdSucursal( $_SESSION['sucursal'] );
+	$autorizacion -> setIdSucursal( $data->sucursal );
 	$autorizacion -> setEstado( 3 ); // en transito
 	$autorizacion -> setTipo( "envioDeProductosASucursal" ); 
 	$autorizacion -> setParametros ( json_encode( array(
