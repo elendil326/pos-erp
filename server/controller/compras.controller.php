@@ -747,8 +747,28 @@ function nuevaCompraSucursal( $json = null){
 		$detalle -> setPrecio( $precio / count( $producto->items ) );
 		$detalle -> setProcesadas( $producto-> procesado );
 		
-		array_push( $detalles_de_compra, $detalle );
-		
+		array_push( $detalles_de_compra, $detalle );	
+        
+        //vamos generando los datos de los parametros la autorizacion de envio de productos
+        //este es el formato de como deberia de quedar
+        /*
+		    {
+                "id_producto": 1,
+                "procesado": "true",
+                "cantidad_procesada": 100,
+                "precio_procesada": "10.5",
+                "cantidad": 100,
+                "precio": "9.5"
+            }
+		*/
+        array_push( $parametros, array( 
+			"id_producto" => $producto -> producto,
+			"procesado" => $producto -> procesado,
+			"cantidad_procesada" => $producto -> procesado ? $detalle -> getCantidad() : 0,
+			"precio_procesada" => $producto -> procesado ? $detalle -> getPrecio() : 0,
+			"cantidad" => $producto -> procesado ? 0 : $detalle -> getCantidad() ,
+			"precio" => $producto -> procesado ? 0 : $detalle -> getPrecio()
+		));	
 		
 	}//foreach
 	
@@ -787,29 +807,7 @@ function nuevaCompraSucursal( $json = null){
 		}
 		
 		Logger::log("Ingresando detalle de compra {$compraSucursal->getIdCompra()}  producto {$detalle->getIdProducto()} ");
-		
-		//vamos generando los datos de los parametros la autorizacion de envio de productos
-		
-		/*
-		    {
-                "id_producto": 1,
-                "procesado": "true",
-                "cantidad_procesada": 100,
-                "precio_procesada": "10.5",
-                "cantidad": 100,
-                "precio": "9.5"
-            }
-		*/
-		
-		array_push( $parametros, array( 
-			"id_producto" => $detalle-> getIdProducto(),
-			"procesado" => $detalle-> getProcesadas(),
-			"cantidad_procesada" = ;
-			"precio_procesada" = ;
-			"cantidad" => $detalle-> getCantidad(),
-			"precio" => $detalle-> getPrecio()
-		));	
-		
+
 	}
 	
 	Logger::log("Termiando de ingresar los detalle de la compra " .  $compraSucursal->getIdCompra() . ".");
