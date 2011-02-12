@@ -199,7 +199,8 @@ Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 		items: [{
 			xtype: 'list',
 			store: this.inventarioListaStore,
-			itemTpl: '<div class=""><b>{productoID}</b>&nbsp;{descripcion}</div>',
+			//itemTpl: '<div class=""><b>{productoID}</b>&nbsp;{descripcion} </div>',
+			itemTpl: '<div class=""><table width = 100% ><tr width = 100%><td width = 20%><b>{productoID}</b> &nbsp; {descripcion}</td><td width = 30%><b>Original</b> &nbsp; {existenciasOriginales} {medida}</td><td width = 10% >${precioVentaSinProcesar}</td><td width = 30%><b>Procesado</b> &nbsp; {existenciasProcesadas} {medida}</td><td width = 10% > ${precioVenta} </td></tr></table></div>',
 			grouped: true,
 			indexBar: true,
 			listeners : {
@@ -895,9 +896,6 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 		  *
 		  **/
 		var productoDerivadoDetallesPanel = new Ext.form.FormPanel({
-		    style:{
-		        zIndex:'100 !important'
-		    },
 			dockedItems: [{
 	            dock: 'bottom',
 	            xtype: 'toolbar',

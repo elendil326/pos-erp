@@ -1498,6 +1498,8 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
             html += "       <td>Producto</td>";
             html += "       <td>Cantidad</td>";
             html += "       <td>Costo</td>";
+            html += "       <td>Cantidad procesada</td>";
+            html += "       <td>Costo procesada</td>";
             html += "   </tr>";
 
             for ( var i = 0; i < parametros.productos.length; i++ ){
@@ -1505,6 +1507,8 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                 html += "   <td>" + parametros.productos[i].id_producto + " " + parametros.productos[i].descripcion +  "</td>";
                 html += "   <td>" + parametros.productos[i].cantidad + " " + parametros.productos[i].escala + "s</td>";
                 html += "   <td>" + POS.currencyFormat( parametros.productos[i].precio ) + "</td>";
+                html += "   <td>" + parametros.productos[i].cantidad_procesada + " " + parametros.productos[i].escala + "s</td>";
+                html += "   <td>" + POS.currencyFormat( parametros.productos[i].precio_procesada ) + "</td>";
                 html += "</tr>";
             }
 

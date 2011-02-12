@@ -591,26 +591,32 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
 
 
         this.abonarPrestamoEfectivoSucursalPanel = new Ext.Panel({
+            
             items: [{
-			    xtype: 'list',
-			    width : '100%',
-    			height: 220,
-			    emptyText: "vacio",
-                store: this.listaDePrestamosSucursalStore,
-                itemTpl: '<div class="listaDeAutorizacionesAutorizacion">ID del prestamo : {id_prestamo}&nbsp; Concepto :  {concepto}</div>',
-                grouped: true,
-                indexBar: false,
-                listeners : {
-                    "selectionchange"  : function ( view, nodos, c ){
-                        if(nodos.length > 0){
-                            Aplicacion.Operaciones.currentInstance.abonarPrestamosEfectivoSucursalUpdateDetallesPrestamo( nodos[0].data );                            
+                    xtype:'fieldset',
+                    title:'Seleccione un prestamo para realizar un abono',
+                    items:[{
+			            xtype: 'list',
+			            width : '100%',
+            			height: 235,
+			            emptyText: "vacio",
+                        store: this.listaDePrestamosSucursalStore,
+                        itemTpl: '<div class="listaDeAutorizacionesAutorizacion">ID del prestamo : {id_prestamo}&nbsp; Concepto :  {concepto}</div>',
+                        grouped: true,
+                        indexBar: false,
+                        listeners : {
+                            "selectionchange"  : function ( view, nodos, c ){
+                                if(nodos.length > 0){
+                                    Aplicacion.Operaciones.currentInstance.abonarPrestamosEfectivoSucursalUpdateDetallesPrestamo( nodos[0].data );                            
+                                }
+                                view.deselectAll();
+                            }
                         }
-                        view.deselectAll();
                     }
-                }
-            },{
+                    ]
+                },{
                     xtype: 'fieldset',
-                    title: 'Detalles del Prestamo a Sucursal',
+                    title: 'Detalles del prestamo a sucursal',
                     //instructions: 'Todos los campos son necesarios para una nueva autorizacion.',
                     items: [                       
                         new Ext.form.Text({
