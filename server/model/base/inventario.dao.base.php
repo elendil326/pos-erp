@@ -12,6 +12,16 @@
 abstract class InventarioDAOBase extends DAO
 {
 
+		private static $loadedRecords = array();
+		private static function recordExists( $id ){
+			return array_key_exists ( $id , self::$loadedRecords );
+		}
+		private static function pushRecord( $inventario, $id ){
+			self::$loadedRecords [$id] = $inventario;
+		}
+		private static function getRecord( $id ){
+			return self::$loadedRecords[$id];
+		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -47,12 +57,17 @@ abstract class InventarioDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_producto )
 	{
+		if(self::recordExists(  $id_producto)){
+			return self::getRecord( $id_producto );
+		}
 		$sql = "SELECT * FROM inventario WHERE (id_producto = ? ) LIMIT 1;";
 		$params = array(  $id_producto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new Inventario( $rs );
+			$foo = new Inventario( $rs );
+			self::pushRecord( $foo,  $id_producto );
+			return $foo;
 	}
 
 

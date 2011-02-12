@@ -63,7 +63,15 @@
 				Logger::log("Transaccion rollback !");
                 self::$isTrans = false;
             }
+
+
+	
+
 		}
+		
+		
+		
+		
 		/** Value Object.
 		  * 
 		  * Esta clase abstracta comprende metodos comunes para todas los objetos VO

@@ -12,6 +12,16 @@
 abstract class FacturaVentaDAOBase extends DAO
 {
 
+		private static $loadedRecords = array();
+		private static function recordExists( $id ){
+			return array_key_exists ( $id , self::$loadedRecords );
+		}
+		private static function pushRecord( $inventario, $id ){
+			self::$loadedRecords [$id] = $inventario;
+		}
+		private static function getRecord( $id ){
+			return self::$loadedRecords[$id];
+		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -47,12 +57,17 @@ abstract class FacturaVentaDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $folio )
 	{
+		if(self::recordExists(  $folio)){
+			return self::getRecord( $folio );
+		}
 		$sql = "SELECT * FROM factura_venta WHERE (folio = ? ) LIMIT 1;";
 		$params = array(  $folio );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new FacturaVenta( $rs );
+			$foo = new FacturaVenta( $rs );
+			self::pushRecord( $foo,  $folio );
+			return $foo;
 	}
 
 

@@ -12,6 +12,16 @@
 abstract class GruposDAOBase extends DAO
 {
 
+		private static $loadedRecords = array();
+		private static function recordExists( $id ){
+			return array_key_exists ( $id , self::$loadedRecords );
+		}
+		private static function pushRecord( $inventario, $id ){
+			self::$loadedRecords [$id] = $inventario;
+		}
+		private static function getRecord( $id ){
+			return self::$loadedRecords[$id];
+		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -47,12 +57,17 @@ abstract class GruposDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_grupo )
 	{
+		if(self::recordExists(  $id_grupo)){
+			return self::getRecord( $id_grupo );
+		}
 		$sql = "SELECT * FROM grupos WHERE (id_grupo = ? ) LIMIT 1;";
 		$params = array(  $id_grupo );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new Grupos( $rs );
+			$foo = new Grupos( $rs );
+			self::pushRecord( $foo,  $id_grupo );
+			return $foo;
 	}
 
 

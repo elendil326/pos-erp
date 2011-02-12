@@ -56,6 +56,7 @@ $args = $_REQUEST;
 unset($_POST);
 unset($_GET);
 
+Logger::log("Iniciando peticion (".$args['action'].") !");
 
 //main dispatching
 switch( ((int)($args['action'] / 100))*100 )

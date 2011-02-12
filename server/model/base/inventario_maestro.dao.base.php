@@ -12,6 +12,16 @@
 abstract class InventarioMaestroDAOBase extends DAO
 {
 
+		private static $loadedRecords = array();
+		private static function recordExists( $id ){
+			return array_key_exists ( $id , self::$loadedRecords );
+		}
+		private static function pushRecord( $inventario, $id ){
+			self::$loadedRecords [$id] = $inventario;
+		}
+		private static function getRecord( $id ){
+			return self::$loadedRecords[$id];
+		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -47,12 +57,17 @@ abstract class InventarioMaestroDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_producto, $id_compra_proveedor )
 	{
+		if(self::recordExists(  $id_producto, $id_compra_proveedor)){
+			return self::getRecord( $id_producto, $id_compra_proveedor );
+		}
 		$sql = "SELECT * FROM inventario_maestro WHERE (id_producto = ? AND id_compra_proveedor = ? ) LIMIT 1;";
 		$params = array(  $id_producto, $id_compra_proveedor );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new InventarioMaestro( $rs );
+			$foo = new InventarioMaestro( $rs );
+			self::pushRecord( $foo,  $id_producto, $id_compra_proveedor );
+			return $foo;
 	}
 
 

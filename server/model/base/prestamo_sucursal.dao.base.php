@@ -12,6 +12,16 @@
 abstract class PrestamoSucursalDAOBase extends DAO
 {
 
+		private static $loadedRecords = array();
+		private static function recordExists( $id ){
+			return array_key_exists ( $id , self::$loadedRecords );
+		}
+		private static function pushRecord( $inventario, $id ){
+			self::$loadedRecords [$id] = $inventario;
+		}
+		private static function getRecord( $id ){
+			return self::$loadedRecords[$id];
+		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -47,12 +57,17 @@ abstract class PrestamoSucursalDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_prestamo )
 	{
+		if(self::recordExists(  $id_prestamo)){
+			return self::getRecord( $id_prestamo );
+		}
 		$sql = "SELECT * FROM prestamo_sucursal WHERE (id_prestamo = ? ) LIMIT 1;";
 		$params = array(  $id_prestamo );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new PrestamoSucursal( $rs );
+			$foo = new PrestamoSucursal( $rs );
+			self::pushRecord( $foo,  $id_prestamo );
+			return $foo;
 	}
 
 
@@ -153,6 +168,11 @@ abstract class PrestamoSucursalDAOBase extends DAO
 			array_push( $val, $prestamo_sucursal->getConcepto() );
 		}
 
+		if( $prestamo_sucursal->getFecha() != NULL){
+			$sql .= " fecha = ? AND";
+			array_push( $val, $prestamo_sucursal->getFecha() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -182,7 +202,7 @@ abstract class PrestamoSucursalDAOBase extends DAO
 	  **/
 	private static final function update( $prestamo_sucursal )
 	{
-		$sql = "UPDATE prestamo_sucursal SET  prestamista = ?, deudor = ?, monto = ?, saldo = ?, liquidado = ?, concepto = ? WHERE  id_prestamo = ?;";
+		$sql = "UPDATE prestamo_sucursal SET  prestamista = ?, deudor = ?, monto = ?, saldo = ?, liquidado = ?, concepto = ?, fecha = ? WHERE  id_prestamo = ?;";
 		$params = array( 
 			$prestamo_sucursal->getPrestamista(), 
 			$prestamo_sucursal->getDeudor(), 
@@ -190,6 +210,7 @@ abstract class PrestamoSucursalDAOBase extends DAO
 			$prestamo_sucursal->getSaldo(), 
 			$prestamo_sucursal->getLiquidado(), 
 			$prestamo_sucursal->getConcepto(), 
+			$prestamo_sucursal->getFecha(), 
 			$prestamo_sucursal->getIdPrestamo(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -213,7 +234,7 @@ abstract class PrestamoSucursalDAOBase extends DAO
 	  **/
 	private static final function create( &$prestamo_sucursal )
 	{
-		$sql = "INSERT INTO prestamo_sucursal ( id_prestamo, prestamista, deudor, monto, saldo, liquidado, concepto ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO prestamo_sucursal ( id_prestamo, prestamista, deudor, monto, saldo, liquidado, concepto, fecha ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$prestamo_sucursal->getIdPrestamo(), 
 			$prestamo_sucursal->getPrestamista(), 
@@ -222,6 +243,7 @@ abstract class PrestamoSucursalDAOBase extends DAO
 			$prestamo_sucursal->getSaldo(), 
 			$prestamo_sucursal->getLiquidado(), 
 			$prestamo_sucursal->getConcepto(), 
+			$prestamo_sucursal->getFecha(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -342,6 +364,17 @@ abstract class PrestamoSucursalDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " concepto = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $prestamo_sucursalA->getFecha()) != NULL) & ( ($b = $prestamo_sucursalB->getFecha()) != NULL) ){
+				$sql .= " fecha >= ? AND fecha <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " fecha = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

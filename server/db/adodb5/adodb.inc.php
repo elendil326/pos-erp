@@ -995,8 +995,11 @@
 						if ($i+1 != sizeof($sqlarr)) $this->outp_throw( "Input Array does not match ?: ".htmlspecialchars($sql),'Execute');
 					} else if ($i != sizeof($sqlarr))	
 						$this->outp_throw( "Input array does not match ?: ".htmlspecialchars($sql),'Execute');
+
 		
-					Logger::log($sql);
+					Logger::logSQL($sql);
+
+
 		
 					$ret = $this->_Execute($sql);
 					if (!$ret) return $ret;

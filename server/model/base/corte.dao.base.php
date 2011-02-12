@@ -12,6 +12,16 @@
 abstract class CorteDAOBase extends DAO
 {
 
+		private static $loadedRecords = array();
+		private static function recordExists( $id ){
+			return array_key_exists ( $id , self::$loadedRecords );
+		}
+		private static function pushRecord( $inventario, $id ){
+			self::$loadedRecords [$id] = $inventario;
+		}
+		private static function getRecord( $id ){
+			return self::$loadedRecords[$id];
+		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -47,12 +57,17 @@ abstract class CorteDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_corte )
 	{
+		if(self::recordExists(  $id_corte)){
+			return self::getRecord( $id_corte );
+		}
 		$sql = "SELECT * FROM corte WHERE (id_corte = ? ) LIMIT 1;";
 		$params = array(  $id_corte );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new Corte( $rs );
+			$foo = new Corte( $rs );
+			self::pushRecord( $foo,  $id_corte );
+			return $foo;
 	}
 
 

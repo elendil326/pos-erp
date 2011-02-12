@@ -4,6 +4,8 @@
 class Logger
 {
 
+	private static $db_querys = 0;
+
 	public static final function read($lines = 100)
 	{
 
@@ -130,6 +132,16 @@ class Logger
 		
 	}
 	
+	
+	
+	public static final function logSQL( $sql ){
+		
+		if(POS_LOG_DB_QUERYS){
+			self::$db_querys ++;
+			self::log( "SQL(" . self::$db_querys . "): " . $sql );
+			
+		}
+	}
 
 	public static final function log( $msg, $level = 0 )
 	{
@@ -154,7 +166,7 @@ class Logger
 
         $out .= " | " . $_SERVER["REMOTE_ADDR"];
 
-        $out .= " | L:" . $level;
+        //$out .= " | L:" . $level;
 
 
         if(isset($_SESSION['userid'])){
@@ -166,7 +178,7 @@ class Logger
 			try{
             	$out .= " | SUC:" . $_SESSION['sucursal'];				
 			}catch(Exception $e){
-				Logger::log($e);
+				return Logger::log($e);
 			}
 
         }

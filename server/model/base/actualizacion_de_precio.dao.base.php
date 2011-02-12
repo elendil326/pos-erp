@@ -12,6 +12,16 @@
 abstract class ActualizacionDePrecioDAOBase extends DAO
 {
 
+		private static $loadedRecords = array();
+		private static function recordExists( $id ){
+			return array_key_exists ( $id , self::$loadedRecords );
+		}
+		private static function pushRecord( $inventario, $id ){
+			self::$loadedRecords [$id] = $inventario;
+		}
+		private static function getRecord( $id ){
+			return self::$loadedRecords[$id];
+		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -47,12 +57,17 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_actualizacion )
 	{
+		if(self::recordExists(  $id_actualizacion)){
+			return self::getRecord( $id_actualizacion );
+		}
 		$sql = "SELECT * FROM actualizacion_de_precio WHERE (id_actualizacion = ? ) LIMIT 1;";
 		$params = array(  $id_actualizacion );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new ActualizacionDePrecio( $rs );
+			$foo = new ActualizacionDePrecio( $rs );
+			self::pushRecord( $foo,  $id_actualizacion );
+			return $foo;
 	}
 
 

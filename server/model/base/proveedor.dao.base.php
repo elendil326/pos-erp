@@ -12,6 +12,16 @@
 abstract class ProveedorDAOBase extends DAO
 {
 
+		private static $loadedRecords = array();
+		private static function recordExists( $id ){
+			return array_key_exists ( $id , self::$loadedRecords );
+		}
+		private static function pushRecord( $inventario, $id ){
+			self::$loadedRecords [$id] = $inventario;
+		}
+		private static function getRecord( $id ){
+			return self::$loadedRecords[$id];
+		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -47,12 +57,17 @@ abstract class ProveedorDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_proveedor )
 	{
+		if(self::recordExists(  $id_proveedor)){
+			return self::getRecord( $id_proveedor );
+		}
 		$sql = "SELECT * FROM proveedor WHERE (id_proveedor = ? ) LIMIT 1;";
 		$params = array(  $id_proveedor );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new Proveedor( $rs );
+			$foo = new Proveedor( $rs );
+			self::pushRecord( $foo,  $id_proveedor );
+			return $foo;
 	}
 
 

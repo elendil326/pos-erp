@@ -12,6 +12,16 @@
 abstract class SucursalDAOBase extends DAO
 {
 
+		private static $loadedRecords = array();
+		private static function recordExists( $id ){
+			return array_key_exists ( $id , self::$loadedRecords );
+		}
+		private static function pushRecord( $inventario, $id ){
+			self::$loadedRecords [$id] = $inventario;
+		}
+		private static function getRecord( $id ){
+			return self::$loadedRecords[$id];
+		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -47,12 +57,17 @@ abstract class SucursalDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_sucursal )
 	{
+		if(self::recordExists(  $id_sucursal)){
+			return self::getRecord( $id_sucursal );
+		}
 		$sql = "SELECT * FROM sucursal WHERE (id_sucursal = ? ) LIMIT 1;";
 		$params = array(  $id_sucursal );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new Sucursal( $rs );
+			$foo = new Sucursal( $rs );
+			self::pushRecord( $foo,  $id_sucursal );
+			return $foo;
 	}
 
 

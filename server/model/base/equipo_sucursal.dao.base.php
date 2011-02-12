@@ -12,6 +12,16 @@
 abstract class EquipoSucursalDAOBase extends DAO
 {
 
+		private static $loadedRecords = array();
+		private static function recordExists( $id ){
+			return array_key_exists ( $id , self::$loadedRecords );
+		}
+		private static function pushRecord( $inventario, $id ){
+			self::$loadedRecords [$id] = $inventario;
+		}
+		private static function getRecord( $id ){
+			return self::$loadedRecords[$id];
+		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -47,12 +57,17 @@ abstract class EquipoSucursalDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_equipo )
 	{
+		if(self::recordExists(  $id_equipo)){
+			return self::getRecord( $id_equipo );
+		}
 		$sql = "SELECT * FROM equipo_sucursal WHERE (id_equipo = ? ) LIMIT 1;";
 		$params = array(  $id_equipo );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new EquipoSucursal( $rs );
+			$foo = new EquipoSucursal( $rs );
+			self::pushRecord( $foo,  $id_equipo );
+			return $foo;
 	}
 
 

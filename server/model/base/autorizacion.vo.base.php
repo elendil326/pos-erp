@@ -140,7 +140,7 @@ class Autorizacion extends VO
 	  * 
 	  * El tipo de autorizacion<br>
 	  * @access protected
-	  * @var enum('envioDeProductosASucursal')
+	  * @var enum('envioDeProductosASucursal','solicitudDeProductos','solicitudDeMerma','solicitudDeCambioPrecio','solicitudDeDevolucion','solicitudDeCambioLimiteDeCredito','solicitudDeGasto')
 	  */
 	protected $tipo;
 
@@ -318,7 +318,7 @@ class Autorizacion extends VO
 	  * getTipo
 	  * 
 	  * Get the <i>tipo</i> property for this object. Donde <i>tipo</i> es El tipo de autorizacion
-	  * @return enum('envioDeProductosASucursal')
+	  * @return enum('envioDeProductosASucursal','solicitudDeProductos','solicitudDeMerma','solicitudDeCambioPrecio','solicitudDeDevolucion','solicitudDeCambioLimiteDeCredito','solicitudDeGasto')
 	  */
 	final public function getTipo()
 	{
@@ -329,9 +329,9 @@ class Autorizacion extends VO
 	  * setTipo( $tipo )
 	  * 
 	  * Set the <i>tipo</i> property for this object. Donde <i>tipo</i> es El tipo de autorizacion.
-	  * Una validacion basica se hara aqui para comprobar que <i>tipo</i> es de tipo <i>enum('envioDeProductosASucursal')</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>tipo</i> es de tipo <i>enum('envioDeProductosASucursal','solicitudDeProductos','solicitudDeMerma','solicitudDeCambioPrecio','solicitudDeDevolucion','solicitudDeCambioLimiteDeCredito','solicitudDeGasto')</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param enum('envioDeProductosASucursal')
+	  * @param enum('envioDeProductosASucursal','solicitudDeProductos','solicitudDeMerma','solicitudDeCambioPrecio','solicitudDeDevolucion','solicitudDeCambioLimiteDeCredito','solicitudDeGasto')
 	  */
 	final public function setTipo( $tipo )
 	{

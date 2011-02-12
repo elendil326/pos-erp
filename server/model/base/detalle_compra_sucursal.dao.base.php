@@ -12,6 +12,16 @@
 abstract class DetalleCompraSucursalDAOBase extends DAO
 {
 
+		private static $loadedRecords = array();
+		private static function recordExists( $id ){
+			return array_key_exists ( $id , self::$loadedRecords );
+		}
+		private static function pushRecord( $inventario, $id ){
+			self::$loadedRecords [$id] = $inventario;
+		}
+		private static function getRecord( $id ){
+			return self::$loadedRecords[$id];
+		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -47,12 +57,17 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_compra, $id_producto )
 	{
+		if(self::recordExists(  $id_compra, $id_producto)){
+			return self::getRecord( $id_compra, $id_producto );
+		}
 		$sql = "SELECT * FROM detalle_compra_sucursal WHERE (id_compra = ? AND id_producto = ? ) LIMIT 1;";
 		$params = array(  $id_compra, $id_producto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new DetalleCompraSucursal( $rs );
+			$foo = new DetalleCompraSucursal( $rs );
+			self::pushRecord( $foo,  $id_compra, $id_producto );
+			return $foo;
 	}
 
 

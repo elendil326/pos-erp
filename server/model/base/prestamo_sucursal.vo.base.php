@@ -43,6 +43,9 @@ class PrestamoSucursal extends VO
 			if( isset($data['concepto']) ){
 				$this->concepto = $data['concepto'];
 			}
+			if( isset($data['fecha']) ){
+				$this->fecha = $data['fecha'];
+			}
 		}
 	}
 
@@ -62,7 +65,8 @@ class PrestamoSucursal extends VO
 			"monto" => $this->monto,
 			"saldo" => $this->saldo,
 			"liquidado" => $this->liquidado,
-			"concepto" => $this->concepto
+			"concepto" => $this->concepto,
+			"fecha" => $this->fecha
 		); 
 	return json_encode($vec); 
 	}
@@ -131,6 +135,15 @@ class PrestamoSucursal extends VO
 	  * @var varchar(256)
 	  */
 	protected $concepto;
+
+	/**
+	  * fecha
+	  * 
+	  * Fecha de cuando se ingreso ese prestamo<br>
+	  * @access protected
+	  * @var timestamp
+	  */
+	protected $fecha;
 
 	/**
 	  * getIdPrestamo
@@ -302,6 +315,30 @@ class PrestamoSucursal extends VO
 	final public function setConcepto( $concepto )
 	{
 		$this->concepto = $concepto;
+	}
+
+	/**
+	  * getFecha
+	  * 
+	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es Fecha de cuando se ingreso ese prestamo
+	  * @return timestamp
+	  */
+	final public function getFecha()
+	{
+		return $this->fecha;
+	}
+
+	/**
+	  * setFecha( $fecha )
+	  * 
+	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es Fecha de cuando se ingreso ese prestamo.
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>timestamp</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param timestamp
+	  */
+	final public function setFecha( $fecha )
+	{
+		$this->fecha = $fecha;
 	}
 
 }
