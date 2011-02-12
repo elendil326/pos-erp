@@ -76,7 +76,7 @@
 		}
 	?> 
 	
-    <?php include_once("admin/includes/footer.php"); ?>
+    <?php include_once("admin/includes/footerInge.php"); ?>
     </div> 
     <!-- /content -->
     

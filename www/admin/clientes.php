@@ -34,7 +34,7 @@
 <body class="sub">
   <div id="wrapper">
 
-    <div id="header" class="clientes" >
+    <div id="header" class="clientes2" >
       
       <div id="top-bar">
         

@@ -152,6 +152,10 @@ height: 294px;
 	background: #fff url(media/banners/2474716389_b6433e764f_b.jpg) no-repeat 50% -415px  ;
 }
 
+#header.clientes2{
+
+	background: #fff url(media/banners/clientes.jpeg) no-repeat 50% -575px
+}
 
 #header.proveedor{
 	background: #fff url(media/banners/2101237066_7eabf6b3c8_b.jpg) no-repeat 50% -275px  ;

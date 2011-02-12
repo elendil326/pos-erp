@@ -184,10 +184,10 @@ a{
   color: #0083c8;
 }
 h1,h2,h4,h5,a:hover{
-  color: #f70;
+  color: #3F8CE9;
 }
 h2{
-  border-bottom: 1px solid #f70;
+  border-bottom: 1px solid #3F8CE9;
 }
 h1,h2{
   font-weight: normal;
@@ -209,93 +209,6 @@ h3{
 }
 
 
-
-
-#customSearch,
-#custom-search,
-#languageSelector{
-  float:right;
-}
-/*TOP NAV*/
-.ga-container-nav-top{
-  position:relative;
-  top:5px;
-  height:43px;
-  clear:both;
-}
-.ga-container-nav-top ul {
-  margin:0;
-  padding:0;
-  list-style:none;
-}
-.ga-container-nav-top ul li,
-.ga-container-nav-top ul li.last,
-.ga-container-nav-top ul li:hover.last {
-  display:inline-block;
-  float:left;
-  font-size:13px;
-  background:url('media/ga2-orange-bar-divider.gif') top left no-repeat;
-  height:33px;
-}
-.ga-container-nav-top ul li:hover,
-.ga-container-nav-top ul li.hover {
-  background:url('media/ga2-orange-bar-hover.gif') top left no-repeat;
-}
-.ga-container-nav-top ul li a {
-  padding:10px 10px 2px 15px;
-  color:#fff;
-  display:inline-block;
-  width:auto;
-  text-decoration:none;
-  font-weight:normal;
-  outline:none;
-}
-.ga-container-nav-top ul li ul {
-  -moz-box-shadow: 0 3px 7px #ccc;
-  -webkit-box-shadow: 0 3px 7px #ccc;
-  box-shadow: 0 3px 7px #ccc;
-  background:#fff;
-  display:none;
-  position:absolute;
-  z-index:1;
-  border:1px solid #dfdfdf;
-  border-top-color:#ce6000;
-}
-.ga-container-nav-top ul li ul li {
-  width:100%;
-  height:auto;
-  background:#fff;
-  margin:0;
-  padding:0;
-  overflow:hidden;
-}
-.ga-container-nav-top ul li ul li a {
-  width:100%;
-  display:block;
-  height:auto;
-  color:#5c98da;
-  font-weight:normal;
-  padding:11px 15px 10px 15px !important;
-  background-color:#fff;
-  background-position:3px 3px !important;
-  background-repeat:no-repeat;
-  outline:none;
-}
-.ga-container-nav-top ul li ul li a:hover {
-  background-color:#f70;
-  color:#fff;
-}
-.ga-container-nav-top{
-  width:100%;
-  position:relative;
-}
-.ga-container-nav-top ul li{
-  margin:0
-}
-.ga-toolbar ul li ul li ul{
-  margin-top:77px;
-  z-index:10;
-}
 
 .footer{
   border-top: 1px solid #ccc;
@@ -359,30 +272,43 @@ ul li {
   <body>
     <div class="g-doc-800" id="mainWindow">
         
-	  <img src="../media/logo_pos.png">
+	  <!-- ><img src="../media/logo_pos.png"> -->
 
     
     <div align='center'>
     <form id="login">
-        <h1>Inicio de sesion</h1>
+       
         <?php
         if(isset($_REQUEST['success']) && $_REQUEST['success'] == 'false'){
         	echo "<div class='failure' style='background-image: none; margin: 20px;'>Usuario y/o contrase&ntilde;a invalidos.</div>";
         }
         ?>
 
-        <table border="1" cellspacing="5" cellpadding="5">
-<!--            <tr><td rowspan=5><img src='../media/cash_register.png'></td></tr> -->
+        <table border="0" cellspacing="5" cellpadding="5">
+<!--        <tr><td rowspan=5><img src='../media/cash_register.png'></td></tr> -->
+
             <tr><td rowspan=5><img src='../media/safe.png'></td></tr>
-	        <tr><td></td><td>Usuario</td>    <td><input type="text" id="usr" size="40"/></td></tr>
-	        <tr><td></td><td>Contrase&ntilde;a</td>      <td><input type="password" id="pass" size="40" onkeypress="handleKeyPress(event)"/></td></tr>
-	        <tr><td></td><td></td>           <td><input type="button" onClick="doStart()" value="Iniciar sesion" onkeypress="handleKeyPress(event)"/></td></tr>
+ 
+	        <tr><td></td><td></td>    <td><br><h1>Bienvenido de regreso</h1>
+						<h2>Inicio de sesion</h2>
+					</td></tr>
+	        <tr><td></td><td align=right>Usuario</td>    <td><input type="text" id="usr" size="40"/></td></tr>
+	        <tr><td></td><td align=right>Contrase&ntilde;a</td>      <td>
+					<input type="password" id="pass" size="40" onkeypress="handleKeyPress(event)"/></td></tr>
+	        <tr valign=top><td></td><td></td> <td >
+					<input type="button" onClick="doStart()" value="Ingresar" onkeypress="handleKeyPress(event)"/></td></tr>
 	        <tr><td></td><td></td>           <td></td></tr>
         </table>
 
     </form>
     </div>
-	<?php include_once("admin/includes/footer.php"); ?>
+	
+	
+	<br>
+	<div align=center style="padding-bottom: 10px;">
+		 <img src='../media/logo_simbolo.png'> <br>
+    ©2010 Caffeina Mexico 
+	</div>
     </div>
   
 </body>
