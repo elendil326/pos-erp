@@ -27,8 +27,10 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 
 
 <h2>Detalles del cliente</h2>
-<table border="0" cellspacing="1" cellpadding="1">
-	<tr><td><b>Nombre</b></td><td>			<?php 	echo $cliente->getNombre(); ?></td><td valign="top" rowspan=12><div id="map_canvas"></div></td></tr>
+<table border="0" cellspacing="1" cellpadding="1" >
+	
+	<tr><td style="width:200px"><b>Nombre</b></td><td style="width:200px">			<?php 	echo $cliente->getNombre(); ?></td>
+			<td valign="top" rowspan=12><div id="map_canvas"></div></td></tr>
 	<tr><td><b>RFC</b></td><td>				<?php 	echo $cliente->getRFC(); ?></td></tr>
 	<tr><td><b>Direccion</b></td><td>		<?php 	echo $cliente->getDireccion(); ?></td></tr>
 	<tr><td><b>Ciudad</b></td><td>			<?php 	echo $cliente->getCiudad(); ?></td></tr>
@@ -203,19 +205,19 @@ if($activo){
 		"sucursal" => "Sucursal",
 		"cajero" => "Cajero",
 		"subtotal" => "Subtotal",
-		"descuento" => "Descuento",
+		//"descuento" => "Descuento",
 		"total" => "Total");
 
 
 	$tabla = new Tabla( $header, $ventas );
 	$tabla->addColRender( "subtotal", "moneyFormat" ); 
 	$tabla->addColRender( "total", "moneyFormat" ); 
-	$tabla->addColRender( "descuento", "percentFormat" );
+	//$tabla->addColRender( "descuento", "percentFormat" );
 	$tabla->addColRender( "fecha", "toDate" );	
 	$tabla->addNoData("Este cliente no tiene ventas a contado.");
 	$tabla->addOnClick("id_venta", "mostrarDetallesVenta");
 	
-	echo "<h2>Ventas a contado</h2>";
+	echo "<br><h2>Ventas a contado</h2>";
 	$tabla->render();	
 }
 
@@ -320,12 +322,13 @@ if($activo){
 		$totalDeuda += $venta['saldo'];
 	}
 
-	if(sizeof($ventasCredito) > 0){
-		echo "<h3>Saldo pendiente : " . moneyFormat($totalDeuda) . "</h3>";
-	}
+
 
 	echo "<h2>Ventas a credito</h2>";
 	$tabla->render();
+	if(sizeof($ventasCredito) > 0){
+		echo "<h4>Saldo pendiente : " . moneyFormat($totalDeuda) . "</h4>";
+	}
 }
 
 

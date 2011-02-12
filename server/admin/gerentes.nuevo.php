@@ -6,9 +6,7 @@
 ?>
 
 
-<h1>Nuevo Gerente</h1>
-
-<h2>Detalles del nuevo gerente</h2>
+<h2>Nuevo Gerente</h2>
 <form id="newClient">
 <table border="0" cellspacing="5" cellpadding="5">
 	<tr><td>Nombre</td><td><input type="text"               id="nombre" size="40"/></td></tr>
@@ -28,12 +26,12 @@
 	?>
 
 	
-	<tr><td>Contrase&ntilde;a</td><td><input type="password"    id="pass1" size="40"/></td><td rowspan=2>La contrase&ntilde;a consistira de letras mayusculas, y numeros.</td></tr>
+	<tr><td>Contrase&ntilde;a</td><td><input type="password"    id="pass1" size="40"/></td></tr>
 	<tr><td>Repetir contrase&ntilde;a</td><td><input type="password" id="pass2" size="40"/></td><td></td></tr>
 
-	<tr><td></td><td><input type="button" onClick="validar()" value="Crear el nuevo gerente"/> </td></tr>
 </table>
 </form>
+<h4><input type="button" onClick="validar()" value="Crear el nuevo gerente"/></h4>
 
 
 <script type="text/javascript" charset="utf-8">

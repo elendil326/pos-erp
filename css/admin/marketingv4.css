@@ -510,17 +510,23 @@ margin-right: 0px;
 
 
 .footer  {
-    text-align:center;
+    text-align:left;
     color:#777;
     margin:3em 0 0 !important;
     height: 50px;
 	border-top: 1px solid #CCC;
 	padding-top: 10px;
+	width: 100%;
+	font-size: 11px;
 /*text-align: right;
 font-size: 12px;
 margin-top: 24px;
 margin-bottom: 48px;
 color: #777;*/
+}
+
+.footer a{
+	text-decoration: none;
 }
 
 #content .four-col.about {

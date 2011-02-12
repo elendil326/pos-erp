@@ -53,24 +53,10 @@
     <div id="content" align=center>
 
             <!-- <img src='../media/intro.png'>  -->
-			<!--
-        <table cellpadding=15>
-        <tr>
-            <td>
-            <img src='../media/line_chart.png'>        
-            </td>
-        <td valign='top'>
 
-            <h1>Bienvendio al centro de administracion</h1>
-            <p>
-            Este punto de venta es una solución de analítica web para empresas que proporciona información
-            muy valiosa sobre el tráfico del sitio web y la eficacia del plan de marketing. 
-            </p>
-			
-        </td>
-        </tr>
-        </table>
--->
+        <h1>Bienvendio al centro de administracion</h1>
+        
+
 	
     <?php include_once("admin/includes/footer.php"); ?>
     </div> 

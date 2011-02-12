@@ -19,7 +19,7 @@
         else
             $sucName = $sucName->getDescripcion();
 
-        echo "<h2>Destino : ". $sucName ."</h2>";
+        echo "<h2>Destino ". $sucName ."</h2>";
 
 
         if($transito->getIdUsuario() == -1){
@@ -28,16 +28,28 @@
                 <tr><td><b>Id autorizacion</b></td><td><?php echo $transito->getIdAutorizacion(); ?></td></tr>
                 <tr><td><b>Fecha enbarque</b></td><td><?php echo $transito->getFechaPeticion(); ?></td></tr>
                 <tr><td><b>Usuario</b></td><td>Administrador</td></tr>
-                <tr><td><b>Sucursal Destino</b></td><td><?php echo $sucName; ?></td></tr>
+                <!-- <tr><td><b>Sucursal Destino</b></td><td><?php echo $sucName; ?></td></tr> -->
+				
             </table>
         <?php
         }else{
         //resultado de una peticion
         ?>
-            <table> 
-                <tr><td><b>ID autorizacion</b></td><td><?php 	echo $transito->getIdAutorizacion(); ?></td></tr>
-                <tr><td><b>Fecha peticion</b></td><td><?php 	echo toDate( $transito->getFechaPeticion() ); ?></td></tr>
-                <tr><td><b>Sucursal Destino</b></td><td><?php 	echo $sucName; ?></td></tr>
+            <table style="width:100%" border=0> 
+                <tr align = left>
+					<td rowspan=2 width=68>
+						<a href="autorizaciones.php?action=detalle&id=<?php echo $transito->getIdAutorizacion(); ?>">
+							<img src="../media/TruckYellow64.png">
+						</a>
+					</td>
+					<th>ID Autorizacion</th>
+					<th>Fecha envio</th>
+				</tr>
+				<tr valign=top>
+
+                	<td ><?php echo $transito->getIdAutorizacion(); ?></td>
+					<td><?php 	echo toDate( $transito->getFechaPeticion() ); ?></td></tr>
+                	<!--<tr><td><b>Sucursal Destino</b></td><td><?php 	echo $sucName; ?></td></tr> -->
             </table>
         <?php
         }

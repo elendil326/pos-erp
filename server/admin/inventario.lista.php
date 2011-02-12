@@ -10,7 +10,9 @@ function toUnit( $e )
 }
 
 
-?> <h1>Inventario por sucursal</h1> <?php
+?> <script>
+	jQuery("#MAIN_TITLE").html("Inventario de sucursales");
+</script> <?php
 
 
 

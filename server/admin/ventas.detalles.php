@@ -1,4 +1,6 @@
-<h1>Detalles de la venta</h1><?php
+<script>
+	jQuery("#MAIN_TITLE").html( "Detalles de la venta");
+</script><?php
 
 
 require_once("controller/ventas.controller.php");
@@ -13,10 +15,12 @@ $venta = $detalles['detalles'];
 ?><h2>Detalles</h2>
 
 
-<table cellspacing="5" cellpadding="5">
+<table cellspacing="2" cellpadding="2" border=0 style="width:100%">
     <tr>
-        <td><b>ID Venta</b></td>
+        <td ><b>ID Venta</b></td>
         <td><?php echo $venta->getIdVenta(); ?></td>
+        <td><b>Subtotal</b></td>
+        <td><?php echo moneyFormat($venta->getSubtotal()); ?></td>
     </tr>
 
     <tr>
@@ -29,16 +33,23 @@ $venta = $detalles['detalles'];
             }
 
         ?></td>
+		    <td><b>Descuento</b></td>
+	        <td><?php echo percentFormat($venta->getDescuento()); ?></td>
+
     </tr>
 
     <tr>
         <td><b>Tipo Venta</b></td>
         <td><?php echo $venta->getTipoVenta(); ?></td>
+        <td><b>Total</b></td>
+        <td><?php echo moneyFormat($venta->getTotal()); ?></td>
     </tr>
 
     <tr>
         <td><b>Fecha</b></td>
         <td><?php echo toDate($venta->getFecha()); ?></td>
+        <td><b>Pagado</b></td>
+        <td><?php echo moneyFormat($venta->getPagado()); ?></td>
     </tr>
 
 
@@ -50,6 +61,11 @@ $venta = $detalles['detalles'];
         <td><?php 
             echo SucursalDAO::getByPK( $venta->getIdSucursal() )->getDescripcion();
         ?></td>
+
+	    <?php if($venta->getTipoVenta() == 'credito'){ ?>
+	        <td><b>Saldo pendiente</b></td>
+	        <td><b style="color: red"><?php echo moneyFormat($venta->getPagado()-$venta->getTotal()); ?></b></td>
+	    <?php } ?>
     </tr>
 
     <tr>
@@ -59,32 +75,7 @@ $venta = $detalles['detalles'];
         ?></td>
     </tr>
 
-    <tr>
-        <td><b>Subtotal</b></td>
-        <td><?php echo moneyFormat($venta->getSubtotal()); ?></td>
-    </tr>
 
-    <tr>
-        <td><b>Descuento</b></td>
-        <td><?php echo percentFormat($venta->getDescuento()); ?></td>
-    </tr>
-
-    <tr>
-        <td><b>Total</b></td>
-        <td><?php echo moneyFormat($venta->getTotal()); ?></td>
-    </tr>
-
-    <tr>
-        <td><b>Pagado</b></td>
-        <td><?php echo moneyFormat($venta->getPagado()); ?></td>
-    </tr>
-
-    <?php if($venta->getTipoVenta() == 'credito'){ ?>
-    <tr>
-        <td><b>Saldo</b></td>
-        <td><b><?php echo moneyFormat($venta->getPagado()-$venta->getTotal()); ?></b></td>
-    </tr>
-    <?php } ?>
 
 </table>
 
@@ -93,7 +84,11 @@ $venta = $detalles['detalles'];
 
 
 //render the table
-$header = array( "id_producto" => "ID", "descripcion" => "Descripcion", "cantidad" => "Cantidad", "precio" => "Precio" );
+$header = array( 
+	"id_producto" => "ID", 
+	"descripcion" => "Descripcion", 
+	"cantidad" => "Cantidad",
+	"precio" => "Precio" );
 
 $tabla = new Tabla( $header, $detalles['items'] );
 $tabla->addColRender( 'precio', "moneyFormat" );
@@ -122,6 +117,7 @@ if($venta->getTipoVenta() == 'credito'){
     $tabla = new Tabla( $header, $abonos );
     $tabla->addColRender( 'precio', "moneyFormat" );
     $tabla->addColRender( 'monto', "moneyFormat" );
+	$tabla->addNoData("No se han hecho abonos a esta venta");
     $tabla->render();
 }
 
@@ -196,16 +192,15 @@ if($venta->getTipoVenta() == 'credito'){
 <?php if($venta->getTipoVenta() == 'credito' && $venta->getLiquidada() != 1 ){ ?>
 
 
-
+<br><br><br>
 <div id="abonar">
-<h2>Abonar a esta venta</h2>
 <h4><input type="button" value="Abonar a esta venta" onClick="abonar()" ></h4>
 </div>
 
 
 <div id="abonar_detalles" style="display:none;">
-	<h2>Detalles del abono</h2>
-    <table>
+	<h2>Detalles del nuevo abono</h2>
+    <table >
         <tr>
             <td>Cantidad </td>
             <td><input type="text" id="abonar_cantidad" ></td>

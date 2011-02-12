@@ -77,11 +77,6 @@ require_once('model/sucursal.dao.php');
 </script>
 
 
-
-
-
-<h1>Ventas</h1>
-
 <!--
 
 <h2>Busqueda avanzada</h2>

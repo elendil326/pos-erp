@@ -25,13 +25,13 @@ require_once("controller/inventario.controller.php");
 <script>//document.getElementById("MAIN_TITLE").innerHTML = "Lista de clientes";</script>
 
 
-
+<!--
 <h2>Mapa de clientes</h2>
 <div id="finance">
     <div id="fechas">
     </div>
 </div>
-
+-->
 
 <script type="text/javascript" charset="utf-8">
 	function mostrarDetalles( a ){
@@ -45,7 +45,7 @@ require_once("controller/inventario.controller.php");
     }
 
     <?php
-
+	/*
     //obtener la fecha de la sucursal que abrio primero
     $firstSuc = SucursalDAO::getAll(1, 1, 'fecha_apertura', 'ASC' );
 
@@ -109,13 +109,14 @@ require_once("controller/inventario.controller.php");
             echo "];\n";
 
     }
+    * */
     ?>
             
 
 
 
 
-
+	/*
 	Event.observe(document, 'dom:loaded', function() {
 		if(window.numClientes){
 		    var graficaVentas = new HumbleFinance();
@@ -125,12 +126,8 @@ require_once("controller/inventario.controller.php");
 		}else{
 			$('finance').innerHTML = "No hay clientes";
 		}
-
-        
-         
-
 	});
-
+	*/
 </script>
 
 
@@ -147,9 +144,13 @@ require_once("controller/inventario.controller.php");
 <br>
 <h2><!-- <img src='../media/icons/users_32.png'>&nbsp; -->Todos los clientes</h2><?php
 //obtener los clientes del controller de clientes
-$clientes = listarClientes();
+$clientesFoo = listarClientes();
+$clientes = array();
 
-
+foreach($clientesFoo as $c){
+	if($c["id_cliente"] <= 0)continue;
+	array_push( $clientes, $c);
+}
 
 function sortClientes( $a, $b ){
 	
@@ -161,6 +162,7 @@ usort( $clientes, "sortClientes" );
 
 //render the table
 $header = array(  "nombre" => "Nombre", "rfc" => "RFC", /* "direccion" => "Direccion",*/  "ciudad" => "Ciudad"  );
+
 $tabla = new Tabla( $header, $clientes );
 $tabla->addOnClick("id_cliente", "mostrarDetalles");
 $tabla->addNoData("No hay clientes registrados.");

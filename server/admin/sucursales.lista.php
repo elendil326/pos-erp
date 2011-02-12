@@ -30,7 +30,7 @@ foreach( $sucursales as $sucursal ){
  * Grafica 
  *****************************/
 ?>
-<h2>Ventas por sucursales</h2>
+<h2>Ventas por sucursales</h2><br>
 <div id="graph">
     <div id="fechas">
     </div>
@@ -138,11 +138,11 @@ function bold($s){
 //render the table
 $header = array( 
 	//"id_sucursal" => "ID",
-	"descripcion"=> "Descripcion",
-	"direccion"=> "Direccion",
+	"descripcion"=> "",
+	"direccion"=> "" );
 	//"rfc"=> "RFC",
 	//"telefono"=> "Telefono",
-	"letras_factura"=> "Facturas" );
+	//"letras_factura"=> "Facturas" );
 $tabla = new Tabla( $header, $data );
 $tabla->addOnClick("id_sucursal", "mostrarDetallesSucursal");
 $tabla->addNoData("No hay sucursales.");

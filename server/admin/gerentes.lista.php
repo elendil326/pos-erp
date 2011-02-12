@@ -17,7 +17,9 @@
 	$tabla->addNoData("No hay gerentes asignados.");
 ?>
 
-<h1>Lista de gerentes</h1>
+<script>
+	jQuery("#MAIN_TITLE").html("Gerencias	");
+</script>
 <h2><img src='../media/icons/user_business_chart_32.png'>Gerentes asignados a una sucursal</h2>
 
 <?php 
@@ -96,4 +98,4 @@ if(sizeof($fired) > 0){
 require_once('admin/gerentes.asignar.php');
 
 
-
+require_once('admin/gerentes.nuevo.php');

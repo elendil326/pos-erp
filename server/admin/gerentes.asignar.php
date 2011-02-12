@@ -4,10 +4,10 @@ require_once('model/usuario.dao.php');
 require_once("controller/personal.controller.php");
 require_once("controller/sucursales.controller.php");
 
-?><h1>Asignar gerentes</h1>
+?>
 
 
-<h2>Asignacion mediante sucursales</h2><?php
+<h2>Asignar gerencias</h2><?php
 
 
 

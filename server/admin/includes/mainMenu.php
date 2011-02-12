@@ -1,6 +1,6 @@
 
 <DIV id="header-content">
-	<P class="logo"><A href="">caffeina</A></P>
+	<P class="logo"><A href="index.php">caffeina</A></P>
 	
 	<UL class="nav">
 		<LI class="drop">
@@ -24,7 +24,7 @@
 				<LI><A href="sucursales.php?action=ventas">Ventas a sucursales</A></LI>
 				<LI><A href="gerentes.php?action=lista">Gerentes</A></LI>
 <!-- 				<LI><A href="gerentes.php?action=asignar">Asignar gerencias</A></LI>				-->
-				<LI class="last"><A href="gerentes.php?action=nuevo">Nuevo gerente</A></LI>
+<!--				<LI class="last"><A href="gerentes.php?action=nuevo">Nuevo gerente</A></LI> 		-->
 			</UL>			
 		</LI>
 		

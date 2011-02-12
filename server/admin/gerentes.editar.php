@@ -7,8 +7,12 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 
 ?>
 
-
+<!--
 <h1>Editar datos de <?php echo $gerente->getNombre(); ?></h1>
+-->
+<script>
+	jQuery("#MAIN_TITLE").html("Editar empleado");
+</script>
 
 <h2>Detalles personales</h2>
 <form id="editdetalles">
@@ -28,13 +32,9 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 				break;
 		}
 	?>
-
-	
-	<tr><td></td><td><input type="button" onClick="validar()" value="Guardar"/> </td></tr>
-
 </table>
 </form>
-
+<h4><input type="button" onClick="validar()" value="Guardar"/></h4>
 
 
 
@@ -44,14 +44,14 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 
 
 <h2>Editar Contrase&ntilde;a</h2>
-<h3>Puede utilizar numeros, signos y letras mayusculas</h3>
+<h3>Recuerde utilizar numeros, signos y letras mayusculas</h3>
 <form id="editpass">
 <table border="0" cellspacing="5" cellpadding="5">
 	<tr><td>Nueva Contrase&ntilde;a</td><td><input type="password" id="pass1" size="40" /></td></tr>
 	<tr><td>Repetir Contrase&ntilde;a</td><td><input type="password" id="pass2" size="40" /></td></tr>
-	<tr><td></td><td><input type="button" onClick="editPass()" value="Cambiar Contrase&ntilde;a"/> </td></tr>
 </table>
 </form>
+<h4><input type="button" onClick="editPass()" value="Cambiar Contrase&ntilde;a"/></h4>
 
 
 
@@ -62,11 +62,11 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 
 
 
-
-
+<!--
 <h2>Editar Gerencia</h2>
 <form id="editsucursal">
     <?php
+		/*
         //ver si tiene una sucursal a su cargo
         //$gerente = UsuarioDAO::getByPK($_REQUEST['id']);
         
@@ -92,11 +92,11 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
        foreach($sucursal as $s){
                         
        }
-
+		*/
     ?>
 </form>
 
-
+-->
 
 
 <script type="text/javascript" charset="utf-8">

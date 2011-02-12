@@ -1,5 +1,5 @@
 
-<h1>Abrir una sucursal</h1><?php
+<h2>Abrir una sucursal</h2><?php
 
 	require_once("model/sucursal.dao.php");
 	require_once("model/grupos_usuarios.dao.php");
@@ -84,7 +84,7 @@
 </script>
 
 
-<h2>Gerencia</h2>
+
 <?php
     $posiblesGerentes = 0;
     $html = "";
@@ -119,7 +119,7 @@
     if($posiblesGerentes > 0 ){
 
         ?><form id="gerencia">
-        <table border="0" cellspacing="5" cellpadding="5">
+        <table border="0" cellspacing="2" cellpadding="2">
 	        <tr><td>Gerente</td>
 		        <td>
 			        <select id="gerente"> 

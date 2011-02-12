@@ -6,10 +6,10 @@
 ?>
 
 
-<h1>Nuevo Cliente</h1>
+
 <script> //document.getElementById("MAIN_TITLE").innerHTML = "Nuevo cliente"; </script>
 
-<h2>Detalles del nuevo cliente</h2>
+<h2>Nuevo cliente</h2>
 <form id="newClient">
 	<table border="0" cellspacing="5" cellpadding="5">
 		<tr><td>Nombre</td><td><input type="text"               id="nombre" size="40"/></td></tr>
@@ -34,7 +34,9 @@
 	            </select>
 		    </td>
 		</tr>
-		<tr><td></td><td><input type="button" onClick="validar()" value="Crear el nuevo cliente"/> </td></tr>
+		<tr><td colspan=2>
+			<h4><input type="button" onClick="validar()" value="Crear el nuevo cliente"/> </h4>
+		</td></tr>
 	</table>
 </form>
 
@@ -43,6 +45,7 @@
     function validar(){
 
         if(jQuery('#nombre').val().length < 8){
+			jQuery('html,body').animate({scrollTop: 0 }, 1000);
             return jQuery("#ajax_failure").html("El nombre es muy corto.").show();
         }
 
@@ -53,8 +56,9 @@
 */
 
         if(jQuery('#rfc').val().length < 7){
+			jQuery('html,body').animate({scrollTop: 0 }, 1000);	
             return jQuery("#ajax_failure").html("El RFC es muy corto.").show();
-            return;
+
         }
 
 
@@ -95,6 +99,7 @@
 		        response = jQuery.parseJSON(data);
 
                 if(response.success == false){
+					jQuery('html,body').animate({scrollTop: 0 }, 1000);	
                     return jQuery("#ajax_failure").html(response.reason).show();
                 }
 

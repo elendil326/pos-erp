@@ -156,9 +156,9 @@ switch( $autorizacionDetalles->clave ){
     case "209": 
         //solicitud de surtir
         ?>
-            <h2>Solicitud para surtir sucursal</h2>
+            <h2>Solicitud para surtir sucursal / envio de productos</h2>
             <table style="width:100%">
-                <tr style="text-align: left;"><th>Producto solicitado</th><th>Cantidad solicitada</th></tr>
+                <tr style="text-align: left;"><th>Producto solicitado</th><th>Cantidad</th></tr>
                 <?php
                 foreach ($autorizacionDetalles->productos as $producto)
                 {
@@ -172,9 +172,10 @@ switch( $autorizacionDetalles->clave ){
                 ?>
                 <tr><td></td><td></td></tr>
             </table>
+
             <?php
             if($autorizacion->getEstado() != 4){
-	            ?><input type=button value="Surtir sucursal" onclick="surtirSuc(<?php echo $autorizacion->getIdSucursal(); ?>, <?php    echo $autorizacion->getIdAutorizacion(); ?>)" ><?php
+	            ?><h4><input type=button value="Surtir sucursal" onclick="surtirSuc(<?php echo $autorizacion->getIdSucursal(); ?>, <?php    echo $autorizacion->getIdAutorizacion(); ?>)" ></h4><?php
             }else{
 				?><div align=center><h3>Usted ya ha respondido a esta autorizacion.</h3></div><?php
 			}

@@ -10,23 +10,31 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 
 
 //titulo
-?><h1><?php echo $cliente->getNombre(); ?></h1>
+?><script>
+	jQuery("#MAIN_TITLE").html("Editar Cliente");
+</script>
 
 
 
 <h2>Detalles personales</h2>
 <form id="edit">
-<table border="0" cellspacing="5" cellpadding="5">
-	<tr><td>Nombre</td><td><input type="text"           id="nombre"     value="<?php echo $cliente->getNombre(); ?>" size="40"/></td></tr>
-	<tr><td>Ciudad</td><td><input type="text"           id="ciudad"     value="<?php echo $cliente->getCiudad(); ?>" size="40"/></td></tr>
-	<tr><td>Descuento</td><td><input type="text"        id="descuento"  value="<?php echo $cliente->getDescuento(); ?>" size="40"/></td></tr>
-	<tr><td>Direccion</td><td><input type="text"        id="direccion"  value="<?php echo $cliente->getDireccion(); ?>" size="40"/></td></tr>
-	<tr><td>E Mail</td><td><input type="text"           id="e_mail"     value="<?php echo $cliente->getEMail(); ?>" size="40"/></td></tr>
-	<tr><td>Limite de credito</td><td><input type="text" id="limite_credito" value="<?php echo $cliente->getLimiteCredito(); ?>"  size="40"/></td></tr>
-	<tr><td>RFC</td><td><input type="text"              id="rfc"        value="<?php echo $cliente->getRFC(); ?>" size="40"/></td></tr>
-	<tr><td>Telefono</td><td><input type="text"         id="telefono"   value="<?php echo $cliente->getTelefono(); ?>" size="40"/></td></tr>
-	<tr><td></td><td><input type="button" onClick="validar()" value="Guardar Cambios"/> </td></tr>
+<table border="0" cellspacing="5" cellpadding="5" style="width:100%">
+	<tr><td>Nombre</td><td><input type="text"           id="nombre"     value="<?php echo $cliente->getNombre(); ?>" size="40"/></td>
+		<td>E Mail</td><td><input type="text"           id="e_mail"     value="<?php echo $cliente->getEMail(); ?>" size="40"/></td></tr>
+	
+	<tr><td>Ciudad</td><td><input type="text"           id="ciudad"     value="<?php echo $cliente->getCiudad(); ?>" size="40"/></td>
+		<td>Limite de credito</td><td><input type="text" id="limite_credito" value="<?php echo $cliente->getLimiteCredito(); ?>"  size="40"/></td></tr>
+	
+	<tr><td>Descuento</td><td><input type="text"        id="descuento"  value="<?php echo $cliente->getDescuento(); ?>" size="40"/></td>
+		<td>RFC</td><td><input type="text"              id="rfc"        value="<?php echo $cliente->getRFC(); ?>" size="40"/></td></tr>
+	
+	<tr><td>Direccion</td><td><input type="text"        id="direccion"  value="<?php echo $cliente->getDireccion(); ?>" size="40"/></td>
+		<td>Telefono</td><td><input type="text"         id="telefono"   value="<?php echo $cliente->getTelefono(); ?>" size="40"/></td></tr>
+	
+
+	
 </table>
+	<h4><input type="button" onClick="validar()" value="Guardar Cambios"/></h4>
 </form>
 
 

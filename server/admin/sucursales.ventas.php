@@ -58,6 +58,8 @@ require_once("controller/inventario.controller.php");
 
 $tabla = new Tabla($header, $proveedores);
 $tabla->addNoData("No hay compras a proveedores por parte de las sucursales");
+$tabla->addColRender("pagado", "moneyFormat");
+$tabla->addColRender("total", "moneyFormat");
 $tabla->render();
 
 ?>

@@ -10,15 +10,18 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 ?>
 
 
-
-
+<script>
+	
 <?php  if($gerente->getActivo() != 0) {  ?>
-  <h1><?php echo $gerente->getNombre(); ?></h1>  
+  jQuery("#MAIN_TITLE").html("<?php echo $gerente->getNombre(); ?>");
 <?php  }else{  ?>
-  <h1><?php echo $gerente->getNombre(); ?> (Despedido)</h1>  
+  jQuery("#MAIN_TITLE").html("<?php echo $gerente->getNombre(); ?> (Despedido)");	
 <?php  }  ?>
+</script>
 
-<table border="0" cellspacing="5" cellpadding="5">
+
+<h2>Detalles</h2>
+<table border="0" cellspacing="2" cellpadding="2">
 	<tr><td><b>Nombre</b></td><td><?php echo $gerente->getNombre(); ?></td><td rowspan=12><div id="map_canvas"></div></td></tr>
 	<tr><td><b>RFC</b></td><td><?php echo $gerente->getRFC(); ?></td></tr>
 	<tr><td><b>Direccion</b></td><td><?php echo $gerente->getDireccion(); ?></td></tr>
@@ -34,17 +37,14 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 				break;
 		}
 	?>
-	
-
-
-    <?php  if($gerente->getActivo() != 0) {  ?>
-    	<tr><td colspan=2><input type=button value="Editar detalles" onclick="editarGerente()"><input type=button onclick="despedir()" value="Despedir"></td> </tr>
-    <?php  }else{  ?>
-    	<tr><td colspan=2><input type=button value="Recontratar" onclick="recontratar()"></td> </tr>
-    <?php  }  ?>
 </table>
-
-
+<h4>
+<?php  if($gerente->getActivo() != 0) {  ?>
+	<input type=button value="Editar detalles" onclick="editarGerente()"><input type=button onclick="despedir()" value="Despedir">
+<?php  }else{  ?>
+	<input type=button value="Recontratar" onclick="recontratar()">
+<?php  }  ?>
+</h4>
 
 
 <?php $aCargo = false; ?>

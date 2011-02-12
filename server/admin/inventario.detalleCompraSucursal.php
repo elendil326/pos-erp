@@ -2,6 +2,7 @@
 	require_once('model/proveedor.dao.php');
     require_once('model/inventario.dao.php');
     require_once('model/compra_sucursal.dao.php');
+	require_once('model/sucursal.dao.php');
     require_once('model/detalle_compra_sucursal.dao.php');
     require_once('model/inventario_maestro.dao.php');
 
@@ -19,15 +20,19 @@
 </script>
 
 <h2>Detalles de la compra de esta sucursal</h2>
-	<table border="0" cellspacing="5" cellpadding="5" style="width: 100%">
-		<tr><td>Fecha de compra</td>			<td><?php echo toDate($compra->getFecha()); ?></td></tr>
-		<tr><td>Proveedor</td>					<td>Centro de distribucion</td></tr>
-
-		<tr><td>Sucursal</td>	<td><?php echo $compra->getIdSucursal();?></td></tr>
-		<tr><td>Total</td>	<td><?php echo moneyFormat( $compra->getTotal() ); ?></td></tr>
-		<tr><td>Pagado</td>	<td><?php echo moneyFormat( $compra->getPagado() );?></td></tr>
-		<tr><td>Saldo</td>	<td> - <b><?php echo moneyFormat($compra->getTotal()  - $compra->getPagado()); ?></b></td></tr>
-
+	<table border="0" cellspacing="2" cellpadding="2" style="width: 100%">
+		<tr><td>Fecha de compra</td>			<td><?php echo toDate($compra->getFecha()); ?></td>
+			<td>Total</td>	<td><?php echo moneyFormat( $compra->getTotal() ); ?></td></tr>
+		
+		<tr><td>Proveedor</td>					<td>Centro de distribucion</td>
+			<td>Pagado</td>	<td><?php echo moneyFormat( $compra->getPagado() );?></td></tr>
+		
+		<tr><td>Sucursal</td>	<td><?php 
+										$c = SucursalDAO::getByPK($compra->getIdSucursal());
+										echo $c->getDescripcion();
+									?></td>
+			<td>Saldo</td>	<td> - <b><?php echo moneyFormat($compra->getTotal()  - $compra->getPagado()); ?></b></td></tr>
+		
 	</table>
 
 
@@ -73,6 +78,7 @@ function toUnit( $e )
 	$tabla = new Tabla($header, $detalles);
 	$tabla->addColRender("precio", "moneyFormat");
 	$tabla->addColRender("cantidad", "toUnit");
+	$tabla->addColRender("id_producto", "renderProd");
 	$tabla->addColRender("descuento", "toUnit");	
 	$tabla->addColRender("procesada", "toUnit");	
 	$tabla->render();
