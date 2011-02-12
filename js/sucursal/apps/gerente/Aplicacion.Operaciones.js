@@ -607,6 +607,9 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
                         listeners : {
                             "selectionchange"  : function ( view, nodos, c ){
                                 if(nodos.length > 0){
+                                    if(DEBUG){
+                                        console.log("selecciono realizar abono a : ", nodos[0].data);
+                                    }
                                     Aplicacion.Operaciones.currentInstance.abonarPrestamosEfectivoSucursalUpdateDetallesPrestamo( nodos[0].data );                            
                                 }
                                 view.deselectAll();
