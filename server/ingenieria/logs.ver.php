@@ -17,7 +17,7 @@
 <h2>Ultimas 100 lineas del log</h2>
 <?php
 
-$lines =  Logger::read();
+$lines =  Logger::read(1500);
 
 echo "<pre style='overflow: hidden; padding: 5px; width: 100%; background: whiteSmoke; margin-bottom:5px; font-size:9.5px;'>";
 

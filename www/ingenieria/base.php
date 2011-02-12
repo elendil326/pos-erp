@@ -44,7 +44,7 @@
       <!-- /top-bar -->
 
       <div id="header-main">
-		<h1 id="MAIN_TITLE">Archivo de configuracion</h1> 
+		<h1 id="MAIN_TITLE">Base de datos</h1> 
       </div>
     </div>
     
@@ -65,8 +65,9 @@
 	 	if(isset($_GET["action"]) && is_file("../../server/ingenieria/base." . $_GET["action"] . ".php")){
     		require_once("ingenieria/base." . $_GET["action"] . ".php");
 		}else{
-    		echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
-    		echo '<script>document.getElementById("MAIN_TITLE").innerHTML = "Error";</script>';
+			require_once("ingenieria/base.dbkiss.php");
+			//    		echo "<h1>Error</h1><p>El sitio ha encontrado un error, porfavor intente de nuevo usando el menu en la parte de arriba.</p>";
+  			//  		echo '<script>document.getElementById("MAIN_TITLE").innerHTML = "Error";</script>';
 		}
 	?> 
 	

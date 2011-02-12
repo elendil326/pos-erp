@@ -30,6 +30,7 @@ foreach( $sucursales as $sucursal ){
  * Grafica 
  *****************************/
 ?>
+<h2>Ventas por sucursales</h2>
 <div id="graph">
     <div id="fechas">
     </div>
@@ -147,7 +148,7 @@ $tabla->addOnClick("id_sucursal", "mostrarDetallesSucursal");
 $tabla->addNoData("No hay sucursales.");
 $tabla->addColRender("descripcion", "bold");
 
-print ("<h2>Sucursales Activas</h2>");
+print ("<br><h2>Sucursales Activas</h2>");
 $tabla->render();	
 
 

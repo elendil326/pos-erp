@@ -31,15 +31,18 @@ if (!defined('DBKISS_SQL_DIR')) {
 	An example configuration script that will automatically connect to localhost database.
 	This is useful on localhost if you don't want to see the "Connect" screen.
 
+	
+	
+*/
 	define('COOKIE_PREFIX', str_replace('.php', '', basename(__FILE__)).'_');
-	define('DBKISS_SQL_DIR', 'dbkiss_mysql');
+	//define('DBKISS_SQL_DIR', 'dbkiss_mysql');
 
 	$cookie = array(
 		'db_driver' => 'mysql',
 		'db_server' => 'localhost',
-		'db_name' => 'test',
-		'db_user' => 'root',
-		'db_pass' => 'toor',
+		'db_name' => DB_NAME,
+		'db_user' => DB_USER,
+		'db_pass' => DB_PASSWORD,
 		'db_charset' => 'latin2',
 		'page_charset' => 'iso-8859-2',
 		'remember' => 1
@@ -52,45 +55,12 @@ if (!defined('DBKISS_SQL_DIR')) {
 			$_COOKIE[$k] = $v;
 		}
 	}
-
+/*
 	require 'dbkiss.php';
 */
 
 /*
 	Changelog:
-	1.08
-	* date.timezone E_STRICT error fixed
-	1.07
-	* mysql tables with dash in the name generated errors, now all tables in mysql driver are
-		enquoted with backtick.
-	1.06
-	* postgresql fix
-	1.05
-	* export of all structure and data does take into account the table name filter on the main page,
-		so you can filter the tables that you want to export.
-	1.04
-	* exporting all structure/data didn't work (ob_gzhandler flush bug)
-	* cookies are now set using httponly option
-	* text editor complained about bad cr/lf in exported sql files
-		(mysql create table uses \n, so insert queries need to be seperated by \n and not \r\n)
-	1.03
-	* re-created array_walk_recursive for php4 compatibility
-	* removed stripping slashes from displayed content
-	* added favicon (using base64_encode to store the icon in php code, so it is still one-file database browser)
-	1.02
-	* works with short_open_tag disabled
-	* code optimizations/fixes
-	* postgresql error fix for large tables
-	1.01
-	* fix for mysql 3.23, which doesnt understand "LIMIT x OFFSET z"
-	1.00
-	* bug fixes
-	* minor feature enhancements
-	* this release is stable and can be used in production environment
-	0.61
-	* upper casing keywords in submitted sql is disabled (it also modified quoted values)
-	* sql error when displaying table with 0 rows
-	* could not connect to database that had upper case characters
 
 */
 
@@ -464,6 +434,7 @@ if (isset($_POST['sqlfile']) && $_POST['sqlfile'])
 }
 if (isset($_POST['drop_table']) && $_POST['drop_table'])
 {
+	exit;
 	$drop_table_enq = quote_table($_POST['drop_table']);
 	db_exe('DROP TABLE '.$drop_table_enq);
 	header('Location: '.$_SERVER['PHP_SELF']);
@@ -2693,7 +2664,7 @@ function layout_end()
 }
 function powered_by()
 {
-    echo "fin";
+    echo "<h2></h2>";
 }
 
 ?>
@@ -2747,7 +2718,7 @@ function powered_by()
 
 	<?php powered_by(); ?>
 
-	</body></html>
+
 
 <?php exit; endif; ?>
 <?php if ('editrow' == get('action')): ?>
@@ -4459,10 +4430,11 @@ $get = get(array('table_filter'=>'string'));
 	<td align="right"><?php echo number_format(ceil($status[$table]['size']/1024),0,'',',').' KB';?></td>
 	<td>
 		<a href="<?php echo $_SERVER['PHP_SELF'];?>?dump_table=<?php echo $table;?>">Export</a>
-		&nbsp;-&nbsp;
+		<!-- &nbsp;-&nbsp;
 		<?php $table_enq = quote_table($table); ?>
 		<form action="<?php echo $_SERVER['PHP_SELF'];?>" name="drop_<?php echo $table;?>" method="post" style="display: inline;"><input type="hidden" name="drop_table" value="<?php echo $table;?>"></form>
 		<a href="javascript:void(0)" onclick="if (confirm('DROP TABLE <?php echo $table_enq;?> ?')) document.forms['drop_<?php echo $table;?>'].submit();">Drop</a>
+		-->
 	</td>
 </tr>
 <?php endforeach; ?>

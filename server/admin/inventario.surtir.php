@@ -854,7 +854,7 @@ function doSurtir()
 			}
 
 			reason = "El caragmento se enuentra ahora en transito";
-			//window.location = "inventario.php?action=transit&success=true&reason=" + reason;
+			window.location = "inventario.php?action=transit&success=true&reason=" + reason;
 	
 		}
 		});
