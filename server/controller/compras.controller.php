@@ -636,6 +636,41 @@ function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = 
 	
 }
 
+/**
+*
+*	{
+		"productos": [
+			{
+				"items": [
+					{
+						"id_compra": 6,
+						"id_producto": 2,
+						"cantidad": 400,
+						"desc": "papa segunda",
+						"procesada": false,
+						"escala": "kilogramo",
+						"precio": 7,
+						"descuento": 0
+					},
+					{
+						"id_compra": 10,
+						"id_producto": 1,
+						"cantidad": 200,
+						"desc": "papas primeras",
+						"procesada": false,
+						"escala": "kilogramo",
+						"precio": 7,
+						"descuento": 0
+					}
+				],
+				"producto": 1,
+				"procesado": true
+			}
+		],
+		"sucursal": "1"
+	}
+	*
+	**/
 
 function nuevaCompraSucursal( $json = null){
 
@@ -670,77 +705,133 @@ function nuevaCompraSucursal( $json = null){
 
 	$detalles_de_compra = array();
 	
-	$global_total_cantidad = 0;
+	$parametros = array();
+	
+	$preparametros = array();
+	
 	$global_total_importe = 0;
-		
+	
+	
+	
+	//iteramos todos los productos a surtie
 	foreach( $data->productos as $producto ){
 
 		Logger::log("Producto a surtir : "  . $producto->producto . " con " . sizeof($producto->items) . " subproductos");
 		
-		$total_cantidad = 0;
-		$total_importe = 0;
+		$cantidad = 0;
+		$precio = 0;
+		$descuento = 0;
 		
+		//iteramos todos los subproductos que componen al producto actual
 		foreach( $producto->items as $subproducto  ){
 			
-			$total_cantidad += $subproducto->cantidad - $subproducto->descuento;
-			$total_importe += ($subproducto->cantidad - $subproducto->descuento) * $subproducto->precio;
+			$cantidad += $subproducto->cantidad;
+			$descuento += $subproducto->descuento;
+			//calculamos el precio del producto sumando todos los precios de los subproductos
+			//y dividiendo estasuma entre el numero de subproductos que componen este producto
+			$precio += $subproducto->precio;
 			
 			descontarDeInventarioMaestro( $subproducto->id_compra, 
 											$subproducto->id_producto, 
 											$subproducto->cantidad,
 											$subproducto->procesada   );
-		}
+		}//foreach
 		
 		
+		$global_total_importe += $precio / count( $producto->items );
 		
 		$detalle = new DetalleCompraSucursal();
-		$detalle->setIdProducto( $producto->producto );
-		$detalle->setCantidad( $total_cantidad );
+		$detalle -> setIdProducto( $producto->producto );
+		$detalle -> setCantidad( $cantidad );
+		$detalle -> setDescuento( $descuento );
+		$detalle -> setPrecio( $precio / count( $producto->items ) );
+		$detalle -> setProcesadas( $producto-> procesado );
 		
 		array_push( $detalles_de_compra, $detalle );
 		
-	}
+		
+	}//foreach
 	
 	//insertar la nueva compra sucursal
 	$compraSucursal = new CompraSucursal();
-	$compraSucursal->setSubtotal( $total_importe );
+	$compraSucursal->setSubtotal( $global_total_importe );
 	$compraSucursal->setIdSucursal( $data->sucursal );
 	$compraSucursal->setIdUsuario( $_SESSION['userid'] );
 	$compraSucursal->setIdProveedor( 0 );
 	$compraSucursal->setPagado( 0 );
 	$compraSucursal->setLiquidado( 0 );		
-	$compraSucursal->setTotal( $total_importe );
+	$compraSucursal->setTotal( $global_total_importe );
 
 	try{
 		CompraSucursalDAO::save($compraSucursal);		
 	}catch( Exception $e ){
 		Logger::log($e);
 		DAO::transRollback();
-		die('{"success": false , "reason": "Parametros invalidos." }');
+		die('{"success": false , "reason": "Error al salvar la compra sucursal." }');
 	}
 
 	Logger::log("Compra con id " .  $compraSucursal->getIdCompra() . " insertada ");
 
+	
 	//poner el id de compra sucursal en los detalles de la compra
-	for ($i=0; $i < sizeof($detalles_de_compra); $i++) { 
-		$detalles_de_compra[$i]->setIdCompra( $compraSucursal->getIdCompra() );
+	foreach( $detalles_de_compra as $detalle ) {
+	
+		$detalle -> setIdCompra( $compraSucursal->getIdCompra() );
+	
+		try{
+			DetalleCompraSucursalDAO::save( $detalle );		
+		}catch( Exception $e ){
+			Logger::log($e);
+			DAO::transRollback();
+			die('{"success": false , "reason": "Error al guardar el detalle de compra sucursal." }');
+		}
+		
+		Logger::log("Ingresando detalle de compra {$compraSucursal->getIdCompra()}  producto {$detalle->getIdProducto()} ");
+		
+		//vamos generando los datos de los parametros la autorizacion de envio de productos
+		
+		array_push( $parametros, array( 
+			"id_compra" => $detalle->getIdCompra(),
+			"id_producto" => $detalle-> getIdProducto(),
+			"cantidad" => $detalle-> getCantidad(),
+			"procesada" => $detalle-> getProcesadas(),
+			"descuento" => $detalle-> getDescuento(),
+			"precio" => $detalle-> getPrecio()
+		));	
+		
+	}
+	
+	Logger::log("Termiando de ingresar los detalle de la compra " .  $compraSucursal->getIdCompra() . ".");
+	
+	
+	//ahora generamos la autorizacion de envio de producto para la sucursal
+	
+	
+	$autorizacion = new Autorizacion();
+	
+	$autorizacion -> setIdUsuario( $_SESSION['userid'] );
+	$autorizacion -> setIdSucursal( $_SESSION['sucursal'] );
+	$autorizacion -> setEstado( 3 ); // en transito
+	$autorizacion -> setTipo( "envioDeProductosASucursal" ); 
+	$autorizacion -> setParametros ( json_encode( array(
+        "clave" => "209",
+        "descripcion"=>"Envio de productos",
+        "productos"=> $parametros ) ) );
+
+	
+	try{
+		AutorizacionDAO::save( $autorizacion );
+	}catch(Exception $e){
+		Logger::log("Error al agregar la autorizacion de compra sucursal" . $e);
+		DAO::transRollback();	
+		die( '{"success": false, "reason": "Error al agregar la autorizacion de compra sucursal"}' );
 	}
 
-	//insertar la compra sucursal
-	//$compra = insertarCompraSucursal( $data->productos, $data->sucursal );	
-	Logger::log("El total es de " . $total_importe);
-	
 	DAO::transEnd();
 	
-	return;
+	Logger::log("Proceso de venta a sucursal finalizado con exito!");
 	
-
-	
-	//agregar detalle compra sucursal
-	ingresarDetalleCompraSucursal( $data->productos, $id_compra );
-	
-	//agregamos la autorizacion
-	ingresarAutorizacion( $data->productos, $data->sucursal, $id_compra );
+	printf('{"success": true}');
 	
 }
 
@@ -758,7 +849,7 @@ function descontarDeInventarioMaestro ($id_compra, $id_producto, $cantidad, $pro
 		if( $producto->cantidad > $inventario_maestro->getExistenciasProcesadas() ){
 			Logger::log( "Error al editar producto en inventario maestro: la cantidad requerida de producto supera las existencias" );
 			DAO::transRollback();	
-			die( '{"success": false, "reason": "Error al editar producto en inventario maestro"}' );
+			die( '{"success": false, "reason": "Error al editar producto en inventario maestro: la cantidad requerida de producto supera las existencias"}' );
 		}
 	
 		//aqui entra se el producto es procesado (VALIDA LAS EXISTENCIAS)
