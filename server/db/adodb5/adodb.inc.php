@@ -943,6 +943,9 @@
 	 */
 	function Execute($sql,$inputarr=false) 
 	{
+		
+		
+		
 		if ($this->fnExecute) {
 			$fn = $this->fnExecute;
 			$ret = $fn($this,$sql,$inputarr);
@@ -992,6 +995,8 @@
 						if ($i+1 != sizeof($sqlarr)) $this->outp_throw( "Input Array does not match ?: ".htmlspecialchars($sql),'Execute');
 					} else if ($i != sizeof($sqlarr))	
 						$this->outp_throw( "Input array does not match ?: ".htmlspecialchars($sql),'Execute');
+		
+					Logger::log($sql);
 		
 					$ret = $this->_Execute($sql);
 					if (!$ret) return $ret;

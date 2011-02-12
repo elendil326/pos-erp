@@ -637,39 +637,24 @@ function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = 
 }
 
 
-function nuevaCompraSucursal( $data = null){
+function nuevaCompraSucursal( $json = null){
 
-	$data = parseJSON( $data );
+	$data = parseJSON( $json );
 	
-	if( !( isset( $data -> sucursal ) && isset( $data -> productos ) ) ){
-		Logger::log("Json invalido para crear nueva compra sucursal");
+	if( !( isset( $data->sucursal ) && isset( $data ->productos ) ) ){
+		Logger::log("Json invalido para crear nueva compra sucursal:" . $json);
 		die('{"success": false , "reason": "Parametros invalidos." }');
 	}
 	
-	if( $data -> sucursal == null ||  $data -> productos == null ){
-		Logger::log("Json invalido para crear nueva compra sucursal");
+	if( $data->sucursal == null ||  $data->productos == null ){
+		Logger::log("Json invalido para crear nueva compra sucursal:" . $json );
 		die('{"success": false , "reason": "Parametros invalidos." }');
 	}
 	
-	/*
-		{
-			sucursal:1,
-			productos:[
-				{
-					id_producto:1,
-					cantidad_limpia:20,
-					cantidad:30,
-					descuento:20,
-					precio:12.4,
-					id_compra:11.5
-				}
-			]
-		}		
-	*/
 	
 	//verificamos que exista la sucursal		
 	if( !SucursalDAO::getByPK( $data->sucursal ) ){				
-		Logger::log("Sucursal no encontrada, error al crear nueva compra sucursal ");
+		Logger::log("Sucursal no encontrada ");
 		die('{"success": false , "reason": "Parametros invalidos." }');
 	}
 	
@@ -680,116 +665,138 @@ function nuevaCompraSucursal( $data = null){
 	}
 	
 	Logger::log("Inicial el proceso de compra sucursal");
+	DAO::transBegin();
 	
-	//mandamos los productos para editar en inventario maestro
-	editarInventarioMaestro( $data -> productos );
+
+	$detalles_de_compra = array();
 	
-	//creamos la compra sucursal
-	$id_compra = compraSucursal( $data -> productos, $data -> sucursal );
+	$global_total_cantidad = 0;
+	$global_total_importe = 0;
+		
+	foreach( $data->productos as $producto ){
+
+		Logger::log("Producto a surtir : "  . $producto->producto . " con " . sizeof($producto->items) . " subproductos");
+		
+		$total_cantidad = 0;
+		$total_importe = 0;
+		
+		foreach( $producto->items as $subproducto  ){
+			
+			$total_cantidad += $subproducto->cantidad - $subproducto->descuento;
+			$total_importe += ($subproducto->cantidad - $subproducto->descuento) * $subproducto->precio;
+			
+			descontarDeInventarioMaestro( $subproducto->id_compra, 
+											$subproducto->id_producto, 
+											$subproducto->cantidad,
+											$subproducto->procesada   );
+		}
+		
+		
+		
+		$detalle = new DetalleCompraSucursal();
+		$detalle->setIdProducto( $producto->producto );
+		$detalle->setCantidad( $total_cantidad );
+		
+		array_push( $detalles_de_compra, $detalle );
+		
+	}
+	
+	//insertar la nueva compra sucursal
+	$compraSucursal = new CompraSucursal();
+	$compraSucursal->setSubtotal( $total_importe );
+	$compraSucursal->setIdSucursal( $data->sucursal );
+	$compraSucursal->setIdUsuario( $_SESSION['userid'] );
+	$compraSucursal->setIdProveedor( 0 );
+	$compraSucursal->setPagado( 0 );
+	$compraSucursal->setLiquidado( 0 );		
+	$compraSucursal->setTotal( $total_importe );
+
+	try{
+		CompraSucursalDAO::save($compraSucursal);		
+	}catch( Exception $e ){
+		Logger::log($e);
+		DAO::transRollback();
+		die('{"success": false , "reason": "Parametros invalidos." }');
+	}
+
+	Logger::log("Compra con id " .  $compraSucursal->getIdCompra() . " insertada ");
+
+	//poner el id de compra sucursal en los detalles de la compra
+	for ($i=0; $i < sizeof($detalles_de_compra); $i++) { 
+		$detalles_de_compra[$i]->setIdCompra( $compraSucursal->getIdCompra() );
+	}
+
+	//insertar la compra sucursal
+	//$compra = insertarCompraSucursal( $data->productos, $data->sucursal );	
+	Logger::log("El total es de " . $total_importe);
+	
+	DAO::transEnd();
+	
+	return;
+	
+
 	
 	//agregar detalle compra sucursal
-	ingresarDetalleCompraSucursal( $data -> productos, $id_compra );
+	ingresarDetalleCompraSucursal( $data->productos, $id_compra );
 	
 	//agregamos la autorizacion
-	ingresarAutorizacion( $data -> productos, $data -> sucursal, $id_compra );
+	ingresarAutorizacion( $data->productos, $data->sucursal, $id_compra );
 	
 }
 
 
-
-function editarInventarioMaestro( $data = null ){
+function descontarDeInventarioMaestro ($id_compra, $id_producto, $cantidad, $procesada ){
+	Logger::log("Descontando ".$cantidad." de (". $id_compra .",". $id_producto .") de inventario maestro");
+	DAO::transBegin();
 	
-	if($data == null){
-		Logger::log("Error : el juego de objetos empleado para modificar el inventario amestro es nulo.");
-		die('{"success": false , "reason": "Error : el juego de objetos empleado para modificar el inventario amestro es nulo." }');
-	}
-		
-	DAO::transBegin();	
+	//obtenemos el articulo del inventario maestro 
+	$inventario_maestro =  InventarioMaestroDAO::getByPK( $id_producto, $id_compra );			
 	
-	/*
-		productos:[	
-			{						
-				id_producto:1,
-				procesada:true,
-				cantidad:30.9,
-				descuento:15, //se usa hasta el detalle compra sucursal
-				precio:10,
-				id_compra
-			}
-		]
-	*/
+	if( $procesada ){
 
-	//decontamos del inventario maestro cada producto
-	foreach($data as $producto){
-	
-		if(!( 
-			isset( $producto -> id_producto ) &&
-			isset( $producto -> id_compra ) &&
-			isset( $producto -> cantidad ) &&
-			isset( $producto -> procesada ) 
-		)){
-			Logger::log("Faltan parametros para crear el nuevo flete a compra a proveedor");
-			die('{ "success": false, "reason" : "Faltan parametros." }');
-		}
-
-		Logger::log("Iniciando proceso de modificacion del inventario maestro");
-		
-		//obtenemos el articulo del inventario maestro 
-		$inventario_maestro =  InventarioMaestroDAO::getByPK( $producto -> id_producto, $producto -> id_compra );			
-		
-		if( $producto -> procesada )
-		{
-
-			//verificamos que lo que se va a surtir no supere a las existencias
-			if( $producto -> cantidad > $inventario_maestro -> getExistenciasProcesadas() ){
-				Logger::log( "Error al editar producto en inventario maestro: la cantidad requerida de producto supera las existencias" );
-				DAO::transRollback();	
-				die( '{"success": false, "reason": "Error al editar producto en inventario maestro"}' );
-			}
-		
-			//aqui entra se el producto es procesado (VALIDA LAS EXISTENCIAS)
-			$inventario_maestro -> setExistenciasProcesadas( $inventario_maestro -> getExistenciasProcesadas() - $producto -> cantidad );
-		}
-		else
-		{
-		
-			//verificamos que lo que se va a surtir no supere a las existencias
-			if( $producto -> cantidad > $inventario_maestro -> getExistencias() ){
-				Logger::log( "Error al editar producto en inventario maestro: la cantidad requerida de producto supera las existencias" );
-				DAO::transRollback();	
-				die( '{"success": false, "reason": "Error al editar producto en inventario maestro"}' );
-			}
-		
-			//aqui entra si el producto es original
-			$inventario_maestro -> setExistencias( $inventario_maestro -> getExistencias() - $producto -> cantidad );
-		}
-
-		
-		
-		try{
-			InventarioMaestroDAO::save( $inventario_maestro );
-		}catch(Exception $e){
-			Logger::log("Error al editar producto en inventario maestro:" . $e);
+		//verificamos que lo que se va a surtir no supere a las existencias
+		if( $producto->cantidad > $inventario_maestro->getExistenciasProcesadas() ){
+			Logger::log( "Error al editar producto en inventario maestro: la cantidad requerida de producto supera las existencias" );
 			DAO::transRollback();	
 			die( '{"success": false, "reason": "Error al editar producto en inventario maestro"}' );
 		}
 	
-	}
-	Logger::log("Modificado el inventario maestro");
+		//aqui entra se el producto es procesado (VALIDA LAS EXISTENCIAS)
+		$inventario_maestro->setExistenciasProcesadas( $inventario_maestro->getExistenciasProcesadas() - $cantidad );
+	}else{
 	
-	return;
+		//verificamos que lo que se va a surtir no supere a las existencias
+		if( $cantidad > $inventario_maestro->getExistencias() ){
+			Logger::log( "Error al editar producto en inventario maestro: la cantidad requerida de producto supera las existencias" );
+			DAO::transRollback();	
+			die( '{"success": false, "reason": "Error al editar producto en inventario maestro"}' );
+		}
+	
+		//aqui entra si el producto es original
+		$inventario_maestro -> setExistencias( $inventario_maestro -> getExistencias() - $cantidad );
+	}
+
+	
+	
+	try{
+		InventarioMaestroDAO::save( $inventario_maestro );
+	}catch(Exception $e){
+		Logger::log("Error al editar producto en inventario maestro:" . $e);
+		DAO::transRollback();	
+		die( '{"success": false, "reason": "Error al editar producto en inventario maestro"}' );
+	}
+
+	Logger::log("Se ha descontado satisfactoriamente");
+	DAO::transEnd();
 	
 }
 
-
-
-function compraSucursal( $data = null, $sucursal = null ){
+function insertarCompraSucursal( $data = null, $sucursal = null ){
 
 	Logger::log("Iniciando proceso de compra sucursal");
 
 	if($data == null || $sucursal == null){
 		Logger::log("compraSucursal, error : recibi uno o mas objetos nulos");
-		DAO::transRollback();
 		die('{"success": false , "reason": "Parametros invalidos." }');
 	}
 	
@@ -823,11 +830,9 @@ function compraSucursal( $data = null, $sucursal = null ){
 	
 	DAO::transEnd();
 	
-	return $compra_sucursal -> getIdCompra();
+	return $compra_sucursal;
 	
 }
-
-
 
 function ingresarDetalleCompraSucursal( $data = null, $id_compra ){
 
@@ -881,8 +886,6 @@ function ingresarDetalleCompraSucursal( $data = null, $id_compra ){
 	return;
 
 }
-
-
 
 function ingresarAutorizacion( $data = null, $sucursal = null, $id_compra = null ){
 
@@ -951,6 +954,17 @@ function ingresarAutorizacion( $data = null, $sucursal = null, $id_compra = null
 	printf('{"success": true}');
 	
 }
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * Listar las compras de una sucursal.

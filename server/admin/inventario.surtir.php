@@ -156,13 +156,39 @@ InventarioMaestro = function( ){
 			if( estructura[z].id_producto === id_producto){
 					return {
 						id_producto : estructura[z].id_producto,
-						descripcion : estructura[z].producto_desc
+						descripcion : estructura[z].producto_desc,
+						escala 		: estructura[z].escala
 					};
 				}
 		}
 		throw("No encontre el producto " + id_producto);
 		return null;
 	}
+
+	this.descontarProducto = function( prod ){
+
+		var p = this.getProducto( prod.id_compra, prod.id_producto );
+
+		p.existencias = p.existencias - prod.cantidad;
+		
+		if(prod.procesada){
+			p.existencias_procesadas = p.existencias_procesadas - prod.cantidad;
+		}
+		
+		//console.log("ya cambie el inventario maestro");
+		
+		/*
+		id_compra 	: producto.id_compra_proveedor,
+		id_producto	: producto.id_producto, 
+		cantidad	: 0,
+		desc 		: producto.producto_desc,
+		procesada	: false,
+		precio		: producto.precio_por_kg,
+		descuento	: 0*/
+
+	}
+
+
 
 	/**
 	  * Constructor
@@ -360,6 +386,10 @@ InventarioMaestroTabla = function( config ) {
 		}
 	}
 	
+	this.regresarProducto = function(prod){
+		this.tomarProducto( prod.id_compra, prod.id_producto, prod.cantidad * -1, prod.procesadas );
+	}
+	
 	__init(config);
 	
 };
@@ -396,12 +426,11 @@ ComposicionTabla = function( config ){
 		jQuery("#" + renderTo).html( html );
 	}
 	
-	function __init(config){
+	function __init( config){
 		renderTo = config.renderTo;
 		id_producto = config.id_producto;
 		render();
 	}
-	
 	
 	this.doMath = function( id_compra, id_producto, campo, valor ){
 		
@@ -445,10 +474,31 @@ ComposicionTabla = function( config ){
 		
 		jQuery( "#" + comp.id_compra + "-" + comp.id_producto + "-importe" ).val( cf(comp.precio * (comp.cantidad - comp.descuento) ) );
 		
+		//console.log(composicion)
+		
+		var obj = {
+			peso_real : 0,
+			peso_a_cobrar: 0,
+			importe_por_unidad : 0,
+			importe_total : 0
+		};
+		
+		for (var i = composicion.length - 1; i >= 0; i--){
+			obj.peso_real += parseFloat(composicion[i].cantidad);
+			obj.peso_a_cobrar += parseFloat(composicion[i].cantidad - composicion[i].descuento);
+			obj.importe_por_unidad += parseFloat(composicion[i].precio);
+		}
+		
+		obj.importe_por_unidad /= composicion.length
+		
+		jQuery("#compuesto-peso-real").val ( obj.peso_real );
+		jQuery("#compuesto-peso-a-cobrar").val ( obj.peso_a_cobrar );
+		jQuery("#compuesto-importe-por-unidad").val ( cf(obj.importe_por_unidad) );
+		jQuery("#compuesto-importe-total").val ( cf(obj.importe_por_unidad * obj.peso_a_cobrar) );		
 		
 	}
 	
-	this.quitarProducto = function (id_compra, id_producto){
+	this.quitarProducto = function( id_compra, id_producto ){
 		jQuery("#" +  id_compra + "-" + id_producto + "-composicion").remove();
 		
 		var index = null;
@@ -469,7 +519,6 @@ ComposicionTabla = function( config ){
 		composicion.splice(index,1);
 		
 	}
-	
 	
 	this.agregarProducto = function( id_compra, id_producto ){
 		
@@ -498,9 +547,6 @@ ComposicionTabla = function( config ){
 				html += td( "<input type='hidden'><i>NA</i>" );			
 		}
 
-	
-		//sumar el flete !!
-		//console.log(producto, producto.peso_origen, producto.costo_flete)
 		
 		var costo_flete = 0;
 		
@@ -508,9 +554,11 @@ ComposicionTabla = function( config ){
 			 costo_flete =  producto.peso_origen / producto.costo_flete;
 		}
 		
-		html += td( "<input   	name='precio'     value='"+ ( producto.precio_por_kg + costo_flete )+"' "	+keyup+"	type='text'>" );
-		html += td( "<input 	name='descuento'  value='0'	  					    	"	+keyup+" 	type='text'>" );
-		html += td( "<input  	id='" +id_compra+"-"+ id_producto+ "-importe'							type='text' disabled>" );
+		html += td( "<input name='precio'     value='"+ ( parseFloat(producto.precio_por_kg) 
+													+ parseFloat(costo_flete) )+"' "	+keyup+"	type='text'>" );
+			
+		html += td( "<input name='descuento'  value='0'	  					"	+keyup+" 	type='text'>" );
+		html += td( "<input id='" +id_compra+"-"+ id_producto+ "-importe'					type='text' disabled>" );
 
 	
 		composicion.push({
@@ -519,6 +567,7 @@ ComposicionTabla = function( config ){
 			cantidad	: 0,
 			desc 		: producto.producto_desc,
 			procesada	: false,
+			escala 		: producto.escala,
 			precio		: producto.precio_por_kg,
 			descuento	: 0
 		});
@@ -526,14 +575,18 @@ ComposicionTabla = function( config ){
 		jQuery("#ASurtirTablaHeader").after( tr(html, "id='" + id_compra + "-" + id_producto + "-composicion'") );		
 	}
 	
-	
-	this.doneWithMix = function (){
+	this.commitMix = function( ){
 		var c, total_qty = 0;
 		
 		//revisar que todo concuerde
 		for (var i = composicion.length - 1; i >= 0; i--){
 			c = composicion[i];
 			total_qty += parseFloat( c.cantidad - c.descuento );
+			
+			if((c.cantidad - c.descuento) <= 0 ){
+				error( "Hay productos sin cantidad", " El producto " + c.desc + " tiene una cantidad de cero.");
+				return;
+			}
 		}
 
 		if(composicion.length == 0){
@@ -548,7 +601,8 @@ ComposicionTabla = function( config ){
 
 		composiciones.push({
 			items : composicion,
-			producto : id_producto
+			producto : id_producto,
+			procesado : (jQuery("#compuesto-procesado:checked").length == 1)
 		});
 	
 		jQuery("#listaDeProductos").slideDown('fast', function (){
@@ -562,13 +616,23 @@ ComposicionTabla = function( config ){
 
 		});
 		
+		var c;
+		for (var i=0; i < composicion.length; i++) {
+			inventario.descontarProducto( composicion[i] );			
+		};
+
 		renderFinalShip();
 
 	}
 	
-	this.rollbackMix = function(){
+	this.rollbackMix = function( ){
 		
 		renderFinalShip();
+		
+		for (var i=0; i < composicion.length; i++) {
+			tablaInventario.regresarProducto( composicion[i] );			
+		};
+		
 		
 		jQuery("#listaDeProductos").slideDown('fast', function (){
 
@@ -629,9 +693,9 @@ function seleccionarSucursal(){
     jQuery("#select_sucursal").slideUp();
 }
 
-
 function seleccionDeProd( id ){
-	console.log("Seleccione el producto "  + id);
+	
+	//console.log("Seleccione el producto "  + id);
 	
 	composicionTabla = new ComposicionTabla({
 		renderTo : "ComposicionTabla",
@@ -651,6 +715,12 @@ function seleccionDeProd( id ){
 	
 }
 
+function getEscalaCorta(escala){
+	switch(escala){
+		case "kilogramo": return "Kgs"; break;
+		case "pieza": return "Pzas"; break;
+	}
+}
 
 function renderFinalShip(){
 	
@@ -685,15 +755,19 @@ function renderFinalShip(){
 			total_qty += composiciones[i].items[j].cantidad  ;
 			total_qty_with_desc += composiciones[i].items[j].cantidad   - composiciones[i].items[j].descuento ;			
 			total_money += ( composiciones[i].items[j].cantidad - composiciones[i].items[j].descuento ) * composiciones[i].items[j].precio ;
-			composition += composiciones[i].items[j].cantidad + "<b> / </b>" + composiciones[i].items[j].descuento + " &nbsp; <b>"+ composiciones[i].items[j].desc + "</b><br>";
+			
+			composition += composiciones[i].items[j].cantidad  + getEscalaCorta( composiciones[i].items[j].escala )
+						+ "<b> / </b>" + composiciones[i].items[j].descuento + getEscalaCorta( composiciones[i].items[j].escala )
+						+ " &nbsp; <b>"+ composiciones[i].items[j].desc 
+						+ "</b><br>";
 		}
 		
 		var color = i % 2 == 0 ? 'style="background-color: #D7EAFF"' : "";
 		
 		html += tr(
 					td("<img src='../media/icons/basket_32.png'>"+ desc.descripcion )
-		 			+ td( total_qty )
-		 			+ td( total_qty_with_desc )		
+		 			+ td( total_qty + getEscalaCorta( desc.escala ) )
+		 			+ td( total_qty_with_desc + getEscalaCorta( desc.escala ) )		
 					+ td( composition)
 					+ td( cf(total_money)) , color);
 					
@@ -718,16 +792,29 @@ function renderFinalShip(){
 	jQuery("#FinalShipTabla").html(html);
 	jQuery("#FinalShip").fadeIn();
 	
+	jQuery("#compuesto-peso-real").val ( 0 );
+	jQuery("#compuesto-peso-a-cobrar").val ( 0 );
+	jQuery("#compuesto-importe-por-unidad").val ( cf(0) );
+	jQuery("#compuesto-importe-total").val ( cf(0) );
+	
 }
 
-/*
-function confirmed()
-{
-//cerrar el facebox
-jQuery(document).trigger('close.facebox');
 
+function doSurtir()
+{
+
+	if(!currentSuc){
+		error("&iquest; A que sucursal ?", "No ha seleccionado a que sucural desea surtir este pedido.");
+		return;
+	}
+
+	var readyDATA = {
+		productos : composiciones,
+		sucursal : currentSuc
+	};
+	
 	//hacer ajaxaso
-       jQuery.ajaxSettings.traditional = true;
+    jQuery.ajaxSettings.traditional = true;
 
 	jQuery("#submitButtons").fadeOut("slow",function(){
 		jQuery("#loader").fadeIn();
@@ -747,8 +834,9 @@ jQuery(document).trigger('close.facebox');
 			
 				jQuery("#loader").fadeOut('slow', function(){
 					jQuery("#submitButtons").fadeIn();
-									window.scroll(0,0);           				
+					window.scroll(0,0);           				
 					jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+					jQuery("#submitButtons").fadeIn();
 				});                
 				return;                    
 			}
@@ -760,19 +848,20 @@ jQuery(document).trigger('close.facebox');
 					//jQuery("#submitButtons").fadeIn();    
 					window.scroll(0,0);           									  				
 					jQuery("#ajax_failure").html(response.reason).show();
+					jQuery("#submitButtons").fadeIn();					
 				});                
 				return ;
 			}
 
 			reason = "El caragmento se enuentra ahora en transito";
-			window.location = "inventario.php?action=transit&success=true&reason=" + reason;
+			//window.location = "inventario.php?action=transit&success=true&reason=" + reason;
 	
 		}
 		});
 	});
 }
 
-
+/*
 function restart()
 {
 
@@ -943,10 +1032,29 @@ foreach( $sucursales as $sucursal ){
 
 	<div id="ComposicionTabla"></div>
 
-	<div id="listoMezclarProducto" align='center'  >
-		<input type="button" value="Terminar de componer producto" onclick="composicionTabla.doneWithMix()">
-		<input type="button" value="Cancelar de componer este producto" onclick="composicionTabla.rollbackMix()">
-	</div>
+
+	<h2>Detalles del producto a surtir</h2>
+	<table>
+		<tr><td>Enviar producto procesado</td><td>
+			<input style="width: 100px" id="compuesto-procesado" type="checkbox">
+		</td></tr>		
+		<tr><td>Peso real</td><td>
+			<input style="width: 100px" id="compuesto-peso-real" type="text" disabled>
+		</td></tr>
+		<tr><td>Peso a cobrar</td><td>
+			<input style="width: 100px" id="compuesto-peso-a-cobrar" type="text" disabled>			
+		</td></tr>		
+		<tr><td>Importe por unidad</td><td>
+			<input style="width: 100px" id="compuesto-importe-por-unidad" type="text" disabled>
+		</td></tr>
+		<tr><td>Importe total por este producto</td><td>
+			<input style="width: 100px" id="compuesto-importe-total" type="text" disabled>
+		</td></tr>
+	</table>
+	<h4 >
+		<input type="button" value="Aceptar" onclick="composicionTabla.commitMix()">
+		<input type="button" value="Cancelar" onclick="composicionTabla.rollbackMix()">
+	</h4>
 		
 
 </div>

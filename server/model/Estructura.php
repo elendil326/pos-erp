@@ -14,15 +14,17 @@
 			protected static $transCount = 0;
 			
             public static function transBegin (){
-				self::$transCount ++;
 
+				self::$transCount ++;
+				Logger::log("Iniciando transaccion (".self::$transCount.")");
+				
 				if(self::$isTrans){
-					Logger::log("Transaccion ya ha sido iniciada antes.");
+					//Logger::log("Transaccion ya ha sido iniciada antes.");
 					return;
 				}
+				
                 global $conn;
                 $conn->StartTrans();
-				Logger::log("Transccion inciada !");
                 self::$isTrans = true;
 
             }
@@ -35,14 +37,15 @@
 				}
 
 				self::$transCount --;
-				
+				Logger::log("Terminando transaccion (".self::$transCount.")");
+								
 				if(self::$transCount > 0){
 					return;
 				}
 				
                 global $conn;
                 $conn->CompleteTrans();
-				Logger::log("Transaccion commit !");
+				Logger::log("Transaccion commit !!");
                 self::$isTrans = false;
             }
 
