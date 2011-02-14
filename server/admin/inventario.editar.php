@@ -34,8 +34,11 @@
         $na = new ActualizacionDePrecio();
         $na->setIdProducto($_REQUEST['id']);
         $na->setIdUsuario($_SESSION['userid']);
-        $na->setPrecioVenta($_REQUEST['venta']);
-        $na->setPrecioIntersucursal($_REQUEST['compra']);
+        $na->setPrecioVenta($_REQUEST['precio_venta']);
+        $na->setPrecioVentaSinProcesar($_REQUEST['precio_venta_sin_procesar']);
+        $na->setPrecioIntersucursal($_REQUEST['precio_interusucursal']);
+        $na->setPrecioIntersucursalSinProcesar($_REQUEST['precio_intersucursal_sin_procesar']);
+		
         
         //cambiar todos los detalles inventario        
         $di = new DetalleInventario();
@@ -44,7 +47,7 @@
 
         foreach ($inventariosSucursales as $i)
         {
-            $i->setPrecioVenta( $_REQUEST['venta'] );
+            $i->setPrecioVenta( $_REQUEST['precio_venta'] );
         }
 
 
@@ -61,8 +64,9 @@
             DAO::transEnd();
             echo "<div class='success'>Precio actualizado correctamente.</div>";
         }catch(Exception $e){
+			Logger::log($e);
             DAO::transRollback();
-            echo "<div class='failure'>Error al actualizar: ". $e." </div>";
+            echo "<div class='failure'>Error al actualizar</div>";
         }
 
     }
@@ -133,19 +137,32 @@
 	        </select>
 		</td>
 	</tr>	
-	<tr><td></td><td><input type="submit" value="Guardar" size="40"/></td></tr>
+
 </table>
+
+<h4><input type="submit" value="Guardar" size="40"/></h4>
 </form>
 
 
-<h2>Editar Precio y Costo</h2>
+<h2>Editar Precios</h2>
 <form action="inventario.php?action=editar&id=<?php echo $general->getIdProducto(); ?>" method="POST">
 <input type="hidden" name="editar" value="1">
 <table border="0" cellspacing="5" cellpadding="5">
-	<tr><td>Precio intersucursal </td><td>  <input type="text" name="compra" value="<?php echo $general->getPrecioIntersucursal();?>" size="40"/></td></tr>
-	<tr><td>Precio a la venta</td><td>      <input type="text" name="venta" value="<?php echo $general->getPrecioVenta(); ?>" size="40"/></td></tr>
-	<tr><td></td><td>                       <input type="submit" value="Guardar" size="40"/></td></tr>
+	
+	<tr><td>Precio sugerido a la venta ( procesado )</td>
+		<td><input type="text" name="precio_venta" value="<?php echo $general->getPrecioVenta(); ?>" size="40"/></td></tr>
+		
+	<tr><td>Precio sugerido a la venta ( sin procesar ) </td>
+		<td>  <input type="text" name="precio_venta_sin_procesar" value="<?php echo $general->getPrecioVentaSinProcesar();?>" size="40"/></td></tr>
+
+		<tr><td>Precio intersucursal ( procesado ) </td>
+			<td>  <input type="text" name="precio_interusucursal" value="<?php echo $general->getPrecioIntersucursal();?>" size="40"/></td></tr>
+		
+	<tr><td>Precio intersucursal ( sin procesar ) </td>
+		<td>  <input type="text" name="precio_intersucursal_sin_procesar" value="<?php echo $general->getPrecioIntersucursalSinProcesar();?>" size="40"/></td></tr>
+	
 </table>
+ <h4> <input type="submit" value="Guardar nuevo precio" size="40"/> </h4>
 </form>	
 
 
