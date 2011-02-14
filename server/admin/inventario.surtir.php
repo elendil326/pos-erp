@@ -285,7 +285,6 @@ InventarioMaestroTabla = function( config ) {
 		html += '<th>Variedad</th>';
 		html += '<th>Arpillas en embarque</th>';
 		html += '<th>Promedio</th>';		
-		html += '<th>Productor</th>';
 		html += '<th>Llegada</th>';		
 		html += '<th>Existencias</th>';		
 		html += '<th>Procesadas</th>';		
@@ -300,17 +299,17 @@ InventarioMaestroTabla = function( config ) {
 				+ td( productos[a].variedad )
 				+ td( productos[a].arpillas )
 				+ td( productos[a].peso_por_arpilla )
-				+ td( productos[a].productor )
 				+ td( productos[a].fecha )
-				+ td( div("<b>" + productos[a].existencias + "</b>&nbsp;" + productos[a].escala + "s", "id='"
-					+ productos[a].id_compra_proveedor + "-" 
-					+ productos[a].id_producto + "-existencias"
+				
+				+ td( div("<b>" + productos[a].existencias + "</b>&nbsp;" + toSmallUnit ( productos[a].escala ) , "id='"
+						+ productos[a].id_compra_proveedor + "-" 
+						+ productos[a].id_producto + "-existencias"
 				 	+ "'"));
 				
 			if(productos[a].producto_tratamiento){
-				row_html += td( div("<b>" + productos[a].existencias_procesadas + "</b>&nbsp;" + productos[a].escala + "s", "id='"
-						+ productos[a].id_compra_proveedor + "-" 
-						+ productos[a].id_producto + "-existencias-procesadas"
+				row_html += td( div("<b>" + productos[a].existencias_procesadas + "</b>&nbsp;" + toSmallUnit ( productos[a].escala ), "id='"
+							+ productos[a].id_compra_proveedor + "-" 
+							+ productos[a].id_producto + "-existencias-procesadas"
 				 		+ "'"));
 				//td( "<b>" + productos[a].existencias_procesadas + "</b>&nbsp;" + productos[a].escala + "s");				
 			}else{
@@ -347,9 +346,9 @@ InventarioMaestroTabla = function( config ) {
 			newQtyProc = producto.existencias_procesadas - cantidadATomar;
 			
 		if(newQty < 0){
-			newQty = "<b style='color: #AB443B'>" + round(newQty) + "</b>&nbsp;" + producto.escala + "s";
+			newQty = "<b style='color: #AB443B'>" + round(newQty) + "</b>&nbsp;" + toSmallUnit (producto.escala );
 		}else{
-			newQty = "<b style='color: #3F8CE9'>" + round(newQty) + "</b>&nbsp;" + producto.escala + "s";			
+			newQty = "<b style='color: #3F8CE9'>" + round(newQty) + "</b>&nbsp;" + toSmallUnit (producto.escala );			
 		}
 		
 
@@ -366,9 +365,9 @@ InventarioMaestroTabla = function( config ) {
 
 			
 			if(newQtyProc < 0){
-				newQtyProc = "<b style='color: #AB443B'>" + round(newQtyProc) + "</b>&nbsp;" + producto.escala + "s";
+				newQtyProc = "<b style='color: #AB443B'>" + round(newQtyProc) + "</b>&nbsp;" + toSmallUnit (producto.escala );
 			}else{
-				newQtyProc = "<b style='color: #3F8CE9'>" + round(newQtyProc) + "</b>&nbsp;" + producto.escala + "s";
+				newQtyProc = "<b style='color: #3F8CE9'>" + round(newQtyProc) + "</b>&nbsp;" + toSmallUnit (producto.escala );
 			}
 
 			jQuery("#"+id_compra+"-"+id_producto+"-existencias-procesadas").html(newQtyProc);			
@@ -380,7 +379,7 @@ InventarioMaestroTabla = function( config ) {
 				}
 			);
 		}else{
-			newQtyProc = "<b>" + producto.existencias_procesadas + "</b>&nbsp;" + producto.escala + "s";
+			newQtyProc = "<b>" + producto.existencias_procesadas + "</b>&nbsp;" + toSmallUnit (producto.escala );
 			jQuery("#"+id_compra+"-"+id_producto+"-existencias-procesadas").html(newQtyProc);			
 			
 		}
@@ -395,7 +394,14 @@ InventarioMaestroTabla = function( config ) {
 };
 
 
-
+function toSmallUnit(unit){
+	switch(unit){
+		case "kilogramo" : return "Kgs";
+		case "pieza" : return "Pzs";		
+		case "unidad" : return "Uds";				
+	}
+	
+}
 
 
 /**
@@ -551,10 +557,10 @@ ComposicionTabla = function( config ){
 		var costo_flete = 0;
 		
 		if( parseFloat (producto.costo_flete) != 0){
-			 costo_flete =  producto.peso_origen / producto.costo_flete;
+			 costo_flete =   producto.costo_flete / producto.peso_origen;
 		}
 		
-		html += td( "<input name='precio'     value='"+ ( parseFloat(producto.precio_por_kg) 
+		html += td( "<input name='precio'     value='"+ roundNumber( parseFloat(producto.precio_por_kg) 
 													+ parseFloat(costo_flete) )+"' "	+keyup+"	type='text'>" );
 			
 		html += td( "<input name='descuento'  value='0'	  					"	+keyup+" 	type='text'>" );
@@ -650,7 +656,11 @@ ComposicionTabla = function( config ){
 }
 
 
-
+function roundNumber(num) {
+	var dec = 2;
+	var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
+	return result;
+}
 
 function error(title, msg){
 	

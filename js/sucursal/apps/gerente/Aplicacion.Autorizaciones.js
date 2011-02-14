@@ -1252,7 +1252,7 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanelCreator = function
 			emptyText: "vacio",
             store: this.listaDeAutorizacionesStore,
             itemTpl: '<div class="listaDeAutorizacionesAutorizacion" >ID de autorizacion : {id_autorizacion}&nbsp; Enviada el {fecha_peticion}</div>',
-            grouped: true,
+            grouped: false,
             indexBar: false,
             listeners : {
                 "selectionchange"  : function ( view, nodos, c ){
@@ -1265,7 +1265,7 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanelCreator = function
                         
                         Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionPanelShow( nodos[0] );
 
-                        console.error("bug ! cuando haces un tap el orden de nodos[0] no es el correcto");
+                        //console.error("bug ! cuando haces un tap el orden de nodos[0] no es el correcto");
                         //console.log(view.getSelectedRecords());
                     }
 

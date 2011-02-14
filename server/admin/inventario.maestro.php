@@ -33,36 +33,46 @@ $iMaestro = listarInventarioMaestro(200, POS_SOLO_ACTIVOS) ;
 
 $productos = InventarioDAO::getAll();
 
-echo "<h2>Productos</h2>";
-echo "<table border=0 style='width: 100%; font-size: 14px;'>";
-	echo "<tr>";
-	for($a = 0; $a < sizeof($productos); $a++){
-		
-		//buscar su precio sugerido actual
-		$act = new ActualizacionDePrecio();
-		$act->setIdProducto( $productos[$a]->getIdProducto() );
-		$res = ActualizacionDePrecioDAO::search($act, "fecha", "desc");
-		$lastOne = $res[0];
-		
-		//buscar todas las existencias
-		$totals = 0;
-		for($i = 0; $i < sizeof($iMaestro); $i++){
-			if($iMaestro[$i]['id_producto'] == $productos[$a]->getIdProducto()){
-				$totals +=  $iMaestro[$i]['existencias'];
+
+?>
+<!--
+	Seleccion de producto a surtir
+-->
+<div  >
+	<h2>Productos</h2>
+		<?php
+		echo "<table border=0 style='width: 100%; font-size: 14px; cursor: pointer;'>";
+			echo "<tr>";
+			for($a = 0; $a < sizeof($productos); $a++){
+
+				//buscar su precio sugerido actual
+				$act = new ActualizacionDePrecio();
+				$act->setIdProducto( $productos[$a]->getIdProducto() );
+				$res = ActualizacionDePrecioDAO::search($act, "fecha", "desc");
+				$lastOne = $res[0];
+
+				//buscar todas las existencias
+				$totals = 0;
+				for($i = 0; $i < sizeof($iMaestro); $i++){
+					if($iMaestro[$i]['id_producto'] == $productos[$a]->getIdProducto()){
+						$totals +=  $iMaestro[$i]['existencias'];
+					}
+
+				}
+				if($a % 5 == 0){
+					echo "</tr><tr>";
+				}
+
+				echo "<td id='producto-" . $productos[$a]->getIdProducto() . "'  onClick='detalle_inventario( " .  $productos[$a]->getIdProducto() . " )' onmouseover=\"this.style.backgroundColor = '#D7EAFF'\" onmouseout=\"this.style.backgroundColor = 'white'\"><img style='float:left;' src='../media/icons/basket_32.png'>" . $productos[$a]->getDescripcion() . "<br>";
+				//echo "<b>" . number_format( $totals , 2) ."</b>&nbsp;" .$productos[$a]->getEscala() . "s<br/><br/>";
+				echo " " . moneyFormat($lastOne->getPrecioVenta()) .  "<br><br>";
+				echo "</td>";
 			}
-		
-		}
-		if($a % 5 == 0){
-			echo "</tr><tr>";
-		}
-		
-		echo "<td ><a href='inventario.php?action=detalle&id=". $productos[$a]->getIdProducto() ."'>" . $productos[$a]->getDescripcion() . "</a><br>";
-		echo "<b>" . number_format( $totals , 2) ."</b>" .$productos[$a]->getEscala() . "s<br/>";
-		echo "" . moneyFormat($lastOne->getPrecioVenta()) ;
-		echo "</td>";
-	}
-	echo "</tr>";
-echo "</table>";
+			echo "</tr>";
+		echo "</table>";
+		?>
+</div>
+<?php
 
 
 ?><script>
@@ -79,11 +89,16 @@ echo "</table>";
 <?php
 
 
-function toUnit( $e )
+function toUnit( $e, $row )
 {
 	if($e == "NA"){
 		return  "<i>N/A</i>";
 	}
+	
+	if(isset($row['peso_por_arpilla'])){
+		return "<b>" . number_format($e/$row['peso_por_arpilla'], 2) . "</b>Arp | " . "<b>" . number_format($e, 2) . "</b>kg ";
+	}
+	
 	return "<b>" . number_format($e, 2) . "</b>kg";
 }
 
@@ -110,14 +125,14 @@ $header = array(
 	"producto_desc" 	=> "Producto",
 	"variedad" 	 		=> "Variedad",
 	"arpillas"			=> "Arpillas origen",
-	"peso_por_arpilla"	=> "Kg/Arpilla",
-	"productor"			=> "Productor",
+	"peso_por_arpilla"	=> "Promedio",
+	//"productor"			=> "Productor",
 	"fecha"				=> "Llegada",
 	//"transporte"				=> "Transporte",
 	"merma_por_arpilla"			=> "Merma",
-	"sitio_descarga_desc"		=> "Sitio de descarga",
+	//"sitio_descarga_desc"		=> "Sitio de descarga",
 	"existencias"				=> "Existencias",
-	"existencias_procesadas"	=> "Limpias" );
+	"existencias_procesadas"	=> "Procesadas" );
 
 $tabla = new Tabla( $header, $iMaestro );
 $tabla->addOnClick("folio", "d", true);
@@ -135,7 +150,7 @@ $header = array(
 	"producto_desc" 	=> "Producto",
 	"variedad" 	 		=> "Variedad",
 	"arpillas"			=> "Arpillas origen",
-	"peso_por_arpilla"	=> "Kg/Arpilla",
+	"peso_por_arpilla"	=> "Promedio",
 	"productor"			=> "Productor",
 	"fecha"				=> "Llegada",
 	//"transporte"				=> "Transporte",

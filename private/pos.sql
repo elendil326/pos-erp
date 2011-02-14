@@ -36,18 +36,18 @@ CREATE TABLE IF NOT EXISTS `actualizacion_de_precio` (
 --
 -- (Evento) desencadenante `actualizacion_de_precio`
 --
-DROP TRIGGER IF EXISTS `pos8`.`inserta_actualizacion_precio`;
-DELIMITER //
-CREATE TRIGGER `pos8`.`inserta_actualizacion_precio` AFTER INSERT ON `pos8`.`actualizacion_de_precio`
- FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
-//
-DELIMITER ;
-DROP TRIGGER IF EXISTS `pos8`.`actualiza_actualizacion_precio`;
-DELIMITER //
-CREATE TRIGGER `pos8`.`actualiza_actualizacion_precio` AFTER UPDATE ON `pos8`.`actualizacion_de_precio`
- FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
-//
-DELIMITER ;
+-- DROP TRIGGER IF EXISTS `pos8`.`inserta_actualizacion_precio`;
+-- DELIMITER //
+-- CREATE TRIGGER `pos8`.`inserta_actualizacion_precio` AFTER INSERT ON `pos8`.`actualizacion_de_precio`
+--  FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
+-- //
+-- DELIMITER ;
+-- DROP TRIGGER IF EXISTS `pos8`.`actualiza_actualizacion_precio`;
+-- DELIMITER //
+-- CREATE TRIGGER `pos8`.`actualiza_actualizacion_precio` AFTER UPDATE ON `pos8`.`actualizacion_de_precio`
+--  FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
+-- //
+-- DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -72,18 +72,18 @@ CREATE TABLE IF NOT EXISTS `autorizacion` (
 --
 -- (Evento) desencadenante `autorizacion`
 --
-DROP TRIGGER IF EXISTS `pos8`.`inserta_autorizacion`;
-DELIMITER //
-CREATE TRIGGER `pos8`.`inserta_autorizacion` AFTER INSERT ON `pos8`.`autorizacion`
- FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
-//
-DELIMITER ;
-DROP TRIGGER IF EXISTS `pos8`.`actualiza_autorizacion`;
-DELIMITER //
-CREATE TRIGGER `pos8`.`actualiza_autorizacion` AFTER UPDATE ON `pos8`.`autorizacion`
- FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
-//
-DELIMITER ;
+-- DROP TRIGGER IF EXISTS `pos8`.`inserta_autorizacion`;
+-- DELIMITER //
+-- CREATE TRIGGER `pos8`.`inserta_autorizacion` AFTER INSERT ON `pos8`.`autorizacion`
+--  FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
+-- //
+-- DELIMITER ;
+-- DROP TRIGGER IF EXISTS `pos8`.`actualiza_autorizacion`;
+-- DELIMITER //
+-- CREATE TRIGGER `pos8`.`actualiza_autorizacion` AFTER UPDATE ON `pos8`.`autorizacion`
+--  FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
+-- //
+-- DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -113,18 +113,18 @@ CREATE TABLE IF NOT EXISTS `cliente` (
 --
 -- (Evento) desencadenante `cliente`
 --
-DROP TRIGGER IF EXISTS `pos8`.`inserta_cliente`;
-DELIMITER //
-CREATE TRIGGER `pos8`.`inserta_cliente` AFTER INSERT ON `pos8`.`cliente`
- FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
-//
-DELIMITER ;
-DROP TRIGGER IF EXISTS `pos8`.`actualiza_cliente`;
-DELIMITER //
-CREATE TRIGGER `pos8`.`actualiza_cliente` AFTER UPDATE ON `pos8`.`cliente`
- FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
-//
-DELIMITER ;
+-- DROP TRIGGER IF EXISTS `pos8`.`inserta_cliente`;
+-- DELIMITER //
+-- CREATE TRIGGER `pos8`.`inserta_cliente` AFTER INSERT ON `pos8`.`cliente`
+--  FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
+-- //
+-- DELIMITER ;
+-- DROP TRIGGER IF EXISTS `pos8`.`actualiza_cliente`;
+-- DELIMITER //
+-- CREATE TRIGGER `pos8`.`actualiza_cliente` AFTER UPDATE ON `pos8`.`cliente`
+--  FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
+-- //
+-- DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -264,12 +264,12 @@ CREATE TABLE IF NOT EXISTS `detalle_inventario` (
 --
 -- (Evento) desencadenante `detalle_inventario`
 --
-DROP TRIGGER IF EXISTS `pos8`.`inserta_detalle_inventario`;
-DELIMITER //
-CREATE TRIGGER `pos8`.`inserta_detalle_inventario` AFTER INSERT ON `pos8`.`detalle_inventario`
- FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
-//
-DELIMITER ;
+-- DROP TRIGGER IF EXISTS `pos8`.`inserta_detalle_inventario`;
+-- DELIMITER //
+-- CREATE TRIGGER `pos8`.`inserta_detalle_inventario` AFTER INSERT ON `pos8`.`detalle_inventario`
+--  FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
+-- //
+-- DELIMITER ;
 
 -- --------------------------------------------------------
 
