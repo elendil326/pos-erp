@@ -138,8 +138,8 @@ CREATE TABLE IF NOT EXISTS `compra_proveedor` (
   `id_proveedor` int(11) NOT NULL COMMENT 'id del proveedor a quien se le hizo esta compra',
   `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de cuando se recibio el embarque',
   `fecha_origen` date NOT NULL COMMENT 'fecha de cuando se envio este embarque',
-  `folio` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_cs DEFAULT NULL COMMENT 'folio de la remision',
-  `numero_de_viaje` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_cs DEFAULT NULL COMMENT 'numero de viaje',
+  `folio` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'folio de la remision',
+  `numero_de_viaje` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT 'numero de viaje',
   `peso_recibido` float NOT NULL COMMENT 'peso en kilogramos reportado en la remision',
   `arpillas` float NOT NULL COMMENT 'numero de arpillas en el camion',
   `peso_por_arpilla` float NOT NULL COMMENT 'peso promedio en kilogramos por arpilla',
@@ -303,7 +303,7 @@ CREATE TABLE IF NOT EXISTS `equipo` (
   PRIMARY KEY (`id_equipo`),
   UNIQUE KEY `full_ua` (`full_ua`),
   UNIQUE KEY `token` (`token`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT= 1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT= 1 ;
 
 -- --------------------------------------------------------
 
