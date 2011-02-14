@@ -14,6 +14,7 @@ require_once('model/detalle_venta.dao.php');
 require_once('model/factura_venta.dao.php');
 require_once('model/sucursal.dao.php');
 require_once('model/usuario.dao.php');
+require_once('logger.php');
 
 
 
@@ -748,6 +749,73 @@ function listarAbonos( $cid, $vid = null )
 	return $abonos;
 }
 
+
+
+
+/***
+   * lista las ventas de un cliente en especifico
+   **/
+function listarVentasCliente( $args ){
+    
+   
+    
+    if( !isset( $args['id_cliente'] ) )
+    {
+        Logger::log( "Error al listar ventas del cliente, no se ha especificado un cliente." ); 
+        die( '{"success": false, "reason": "Error al listar ventas del cliente, no se ha especificado un cliente."}' );
+    }
+    
+    Logger::log( "Listando ventas del cliente : {$args['id_cliente'] }." );
+    
+    $ventas = new Ventas();
+    $ventas -> setIdCliente( $args['id_cliente'] );
+    $ventas -> setLiquidada(0);
+    
+    $ventas = VentasDAO::search( $ventas );
+    
+    $tot_ventas = array();
+
+    foreach($ventas as $venta)
+    {
+
+        $decode_venta = $venta->asArray();
+
+        $dventa = new DetalleVenta();
+        $dventa->setIdVenta( $venta->getIdVenta() );
+        
+        //obtenemos el detalle de la venta
+        $detalles_venta = DetalleVentaDAO::search($dventa);
+        
+        $array_detalle = array(); //guarda los detalles de las ventas
+
+        foreach($detalles_venta as $detalle_venta)
+        {
+            $detalle = parseJSON( $detalle_venta );
+            $descripcion = InventarioDAO::getByPK( $detalle_venta->getIdProducto() );
+            $detalle->descripcion = $descripcion->getDescripcion();
+            
+            array_push($array_detalle, $detalle);
+        } 
+        
+        $decode_venta["detalle_venta"] = $array_detalle;
+
+        $suc = SucursalDAO::getByPK( $venta->getIdSucursal() );
+        $decode_venta['sucursal'] = $suc->getDescripcion();
+
+        $cajero = UsuarioDAO::getByPK( $venta->getIdUsuario() );
+        $decode_venta['cajero'] = $cajero->getNombre();
+        
+        array_push( $tot_ventas, $decode_venta );
+    }
+
+	 Logger::log( "Listando ventas del cliente  {$args['id_cliente']}, se encontraron " . count( $tot_ventas ) . " coincidencias." );
+	return $tot_ventas;
+    
+}
+
+
+
+
 /*
  * 
  * 	Case dispatching for proxy
@@ -830,6 +898,10 @@ if(isset($args['action'])){
 	        imprimirSaldo( $args );
 	    break;
 
+        case 309:
+	        //lista todas las ventas de un cliente en especifico
+            printf( '{ "success": true, "datos": %s }',  json_encode( listarVentasCliente( $args ) ) );
+	    break;
 
 	}
 	

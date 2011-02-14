@@ -200,7 +200,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		}else{
 			html += "<tr >";		
 		}
-		html += "<td style='width: 25%;' ><b>" + carrito.items[i].id_producto + "</b> " + carrito.items[i].descripcion+ "</td>";
+		html += "<td style='width: 25%;' ><b>" + carrito.items[i].id_producto + "</b> &nbsp;" + carrito.items[i].descripcion+ "</td>";
 		
 		html += "<td style='width: 15%;' ><div id='Mostrador-carritoTratamiento"+ carrito.items[i].idUnique +"'></div></td>";
 

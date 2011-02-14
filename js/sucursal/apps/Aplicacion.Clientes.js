@@ -32,9 +32,6 @@ Aplicacion.Clientes.prototype._init = function (){
 	//crear el panel de nuevo cliente
 	this.nuevoClientePanelCreator();
 	
-	//cargar la lista de compras de los clientes
-	this.listaDeComprasLoad();
-	
 	//cargar el panel que contiene los detalles de las ventas
 	this.detallesDeVentaPanelCreator();
 	
@@ -90,26 +87,26 @@ Aplicacion.Clientes.prototype.getConfig = function (){
  * haciendo peticiones a cada rato
  */
 Aplicacion.Clientes.prototype.listaDeCompras = {
-	lista : null,
-	lastUpdate : null,
-    hash: null
+	lista : null
 };
+
 
 
 /**
  * Leer la lista de clientes del servidor mediante AJAX
  */
-Aplicacion.Clientes.prototype.listaDeComprasLoad = function (){
+Aplicacion.Clientes.prototype.listaDeComprasClienteLoad = function ( cliente ){
 
 	if(DEBUG){
-		console.log("Actualizando lista de compras de los clientes ....");
+		console.log("Actualizando lista de compras del cliente " + cliente.data.id_cliente);
 	}
-	/*
+	
 	Ext.Ajax.request({
 		url: '../proxy.php',
 		scope : this,
 		params : {
-			action : 304
+			action : 309,
+			id_cliente : cliente.data.id_cliente
 		},
 		success: function(response, opts) {
 			try{
@@ -120,23 +117,30 @@ Aplicacion.Clientes.prototype.listaDeComprasLoad = function (){
 			
 			if( !compras.success ){
 				//volver a intentar
-				return this.listaDeComprasLoad();
+				return this.listaDeComprasClienteLoad( cliente );
 			}
 
             //refresca la lista de compras
 			this.listaDeCompras.lista = compras.datos;
-			this.listaDeCompras.lastUpdate = Math.round(new Date().getTime()/1000.0);
-            this.listaDeCompras.hash = compras.hash;
+
+            if(DEBUG){
+                console.log("cargando la nueva lista mejorada ajax : ", this.listaDeCompras.lista);
+            }                        
+            
+
+            //cargamos los detalles del cliente
+            Aplicacion.Clientes.currentInstance.detallesDeClientesPanelShow( cliente );
+            
+            //cargamos la lista de ventas a credito de este cliente
+            Aplicacion.Clientes.currentInstance.creditoDeClientesPanelUpdater( cliente );
+
+            
+            
                        
 		}
 	});
-	*/
+	
 };
-
-
-
-
-
 
 
 
@@ -251,6 +255,7 @@ Aplicacion.Clientes.prototype.listaDeClientesPanel = null;
  * Pone un panel en listaDeClientesPanel
  */
 Aplicacion.Clientes.prototype.listaDeClientesPanelCreator = function (){
+
 	this.listaDeClientesPanel =  new Ext.Panel({
         layout: 'fit',
         items: [{
@@ -265,8 +270,10 @@ Aplicacion.Clientes.prototype.listaDeClientesPanelCreator = function (){
 				},
 				"selectionchange"  : function ( view, nodos, c ){
 					
-					if(nodos.length > 0){
-						Aplicacion.Clientes.currentInstance.detallesDeClientesPanelShow( nodos[0] );
+					if(nodos.length > 0){										    
+					
+                        Aplicacion.Clientes.currentInstance.listaDeComprasClienteLoad( nodos[0] ) 
+						
 					}
 
 					//deseleccinar el cliente
@@ -474,9 +481,6 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelUpdater = function ( client
 	//actualizar las compras del cliente
 	Aplicacion.Clientes.currentInstance.comprasDeClientesPanelUpdater( cliente );
 	
-	
-	//actualizar el panel de credito y abonos
-	Aplicacion.Clientes.currentInstance.creditoDeClientesPanelUpdater( cliente );
 };
 
 
@@ -508,6 +512,10 @@ Aplicacion.Clientes.prototype.comprasDeClientesPanelUpdater = function ( cliente
 	var comprasPanel = Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(1);
 	
 	var cid = cliente.data.id_cliente;
+
+	if(DEBUG){
+	    console.log("leyendo la lista mejorada : ", this.listaDeCompras.lista);
+	}
 	
 	//buscar este cliente en la estructura
 	var lista = Aplicacion.Clientes.currentInstance.listaDeCompras.lista;
@@ -798,7 +806,7 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 {
 	if(DEBUG){
 		console.log("Abonando... a venta : " + Ext.getCmp("Clentes-CreditoVentasLista").getValue());
-		console.warn("EL TIPO DE PAGO ESTA HARDCODEADO !!!");
+		
 	}
 	
 	Ext.Ajax.request({
@@ -809,7 +817,7 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 			data : Ext.util.JSON.encode({
 						id_venta : parseFloat( Ext.getCmp("Clentes-CreditoVentasLista").getValue() ),
 			    		monto : parseFloat( transaccion.abono ),
-						tipo_pago: "efectivo"
+						tipo_pago: Ext.getCmp('Clentes-abonarTipoPago').getValue()
 					})
 		},
 		success: function(response, opts) {
@@ -821,21 +829,21 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 			}
 
 
-			//cargar la lista de compras de los clientes con los nuevos detalles de las ventas
-			Aplicacion.Clientes.currentInstance.listaDeComprasLoad();
+            //buscar esta venta especifica en la estructura (MODIFICAMOS LA LISTA DE VENTAS)
+	        lista = Aplicacion.Clientes.currentInstance.listaDeCompras.lista;
+	        var venta = null;
+	
+	        for (var i = lista.length - 1; i >= 0; i--){
+		        if (  lista[i].id_venta  == Ext.getCmp("Clentes-CreditoVentasLista").getValue() ) {
+			        venta = lista[i];
+		        }
+	        }
 
-			Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange( null, Ext.getCmp("Clentes-CreditoVentasLista").getValue(), true );
+            venta.pagado = transaccion.abonado;
 
-            //Actualizamos los valores de lso campos Abonado y saldo amnualmente ya que se ejecuta primero
-            //creditoDeClientesOptionChange y no alcanza a cargarse la lista de compras conn los nuevo valores
-
-            Ext.getCmp( "Clientes-DetallesVentaCredito-abonado" ).setValue( POS.currencyFormat( transaccion.abonado ) );
-            Ext.getCmp( "Clientes-DetallesVentaCredito-saldo" ).setValue( POS.currencyFormat( transaccion.saldo ) );
-            Ext.getCmp('Cliente-abonarMonto').setValue("");
-            
-            Ext.getCmp('Clentes-CreditoVentasLista').setValue("");
-
-            //mostramos el panel de detalle de venta
+            //recargamos el formulario con los detalles de la venta
+			Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange( "", Ext.getCmp("Clentes-CreditoVentasLista").getValue() );
+           
 			Aplicacion.Clientes.currentInstance.abonarVentaCancelarBoton();
 
 		},
@@ -847,7 +855,9 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 
 
 
-
+/**
+* Muestra el panel para ingresar la cantidad del abono
+*/
 
 Aplicacion.Clientes.prototype.abonarVentaBoton = function (  )
 {
@@ -872,6 +882,9 @@ Aplicacion.Clientes.prototype.abonarVentaBoton = function (  )
             Aplicacion.Clientes.currentInstance.detalleVentaCredito.total - Aplicacion.Clientes.currentInstance.detalleVentaCredito.pagado
         )
     );
+    
+    //reseteamos el campo de abono
+    Ext.getCmp('Cliente-abonarMonto').setValue("");
 	
 };
 
@@ -1071,9 +1084,6 @@ Aplicacion.Clientes.prototype.eliminarCliente = function ( respuesta )
 				console.log( "Eliminado cliente OK", res );
 			}
 			
-
-			Aplicacion.Clientes.currentInstance.listaDeClientesLoad();
-			Aplicacion.Clientes.currentInstance.listaDeComprasLoad();
 
 			sink.Main.ui.setActiveItem( Aplicacion.Clientes.currentInstance.listaDeClientesPanel , 'fade');
 			
@@ -1322,7 +1332,15 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
                         name: 'saldo',
                         label: 'Saldo',
                         id: 'Clientes-DetallesVentaAbonarCredito-saldo'
-                    }),
+                    }),{
+				        id : "Clentes-abonarTipoPago",
+				        xtype: 'selectfield',
+				        name: 'tipo_pago',
+				        label : "Tipo de pago", 
+				        options: [ 
+				            {text:'Efectivo', value:'efectivo'},{text:'Cheque', value:'cheque'}
+				         ]
+				    },
 					new Ext.form.Text({
                         id: 'Cliente-abonarMonto',
                         name: 'monto',
