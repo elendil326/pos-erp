@@ -275,9 +275,16 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
 					    console.log("obtenicion de la informacion sin exito.");
 				    }				    
 				    
+				    if( informacion.info && informacion.info == "elimination_time" ){
+				    
+				        Ext.Msg.alert("Eliminar Venta", informacion.reason);
+				    
+				        return;
+				    }
+				    
 				    var html = "<div style='margin-top:20px; margin-bottom:10px;position:relative; width:100%; color: #333; font-weight: bold;text-shadow: white 0px 1px 1px;left:5px; position:relative;float:left;' >No se tiene registro de ninguna venta. </div>";                   
 				    
-				    Ext.getCmp('Operaciones-cancelarVentaPanel-Tabla').update(html);     
+				   Ext.getCmp('Operaciones-cancelarVentaPanel-Tabla').update(html);     
 
                    Ext.getCmp('Operaciones-cancelarVentaPanel-Form-Cliente').setValue(  "" );
                    
@@ -286,6 +293,9 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
                    Ext.getCmp('Operaciones-cancelarVentaPanel-Form-Descuento').setValue( POS.currencyFormat( "" ) );
                    
                    Ext.getCmp('Operaciones-cancelarVentaPanel-Form-Total').setValue( POS.currencyFormat( "" ) );
+                   
+                   
+                   
                    
 				    return;
 

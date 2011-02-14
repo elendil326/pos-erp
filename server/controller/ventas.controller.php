@@ -13,37 +13,34 @@ function insertarFactura( $args ){
 
     if( !isset( $args['id_venta'] ) )
     {
+        Logger::log('Error al insertar factual, no se ha especificado el id de la venta');
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
 
     if( !( $venta = VentasDAOBase::getByPK( $args['id_venta'] ) ) )
     {
+        Logger::log('Error la insertar factura, no se tiene registro de la venta id_venta');
         die( '{"success": false, "reason": "No se tiene registro de esa venta." }' );
     }
 
     if( $venta->getTotal() != $venta->getPagado() )
     {
-        die( '{"success": false, "reason": "No se ha liquidado esa venta." }' );
+        Logger::log("Error al insertat factura, no se ha liqueidado la venta {$args['id_venta']}");
+        die( '{"success": false, "reason": "No se ha liquidado la venta ' . $args['id_venta'] . '" }' );
     }
 
     $factura_venta = new FacturaVenta();
     $factura_venta->setIdVenta( $args['id_venta'] );
 
-    try
-    {
-        if( FacturaVentaDAO::save( $factura_venta) > 0 )
-        {
-            printf( '{ "succes" : true }' );
-        }
-        else
-        {
-             die( '{"success": false, "reason": "No se pudo guardar la factura." }' );
-        }
-    }
-    catch (Exception $e)
-    {
-        die( '{ "succes" : "false" , "reason" : "Error al intentar guardar la factura."}' );
-    }
+    try{
+		FacturaVentaDAO::save( $factura_venta);
+	}catch(Exception $e){
+        Logger::log("Error al guardar la factura : " . $e);
+	    die( '{"success": false, "reason": "Error al guardar la factura" }' );
+	}
+    
+    Logger::log("Se ha creado la factura {$factura_venta->getFolio()} para la venta {$args['id_venta']}.");
+    printf( '{ "succes" : true }' );
 
 }
 
@@ -51,31 +48,32 @@ function eliminarFactura( $args ){
 
     if( !isset( $args['folio'] ) )
     {
-        die('{ "success" : "false" , "reason" : "Faltan datos" }' );
+        Logger::log("Error al eliminar factura, no se ha especificado el folio.");
+        die('{ "success" : "false" , "reason" : "Error al eliminar factura, no se ha especificao el folio." }' );
     }
 
-    try
-    {
-        $factura = FacturaVentaDAO::getByPK( $args['folio'] );
 
-        if( is_null( $factura ) )
-        {
-            die( '{ "succes" : "false" , "reason" : "La factura que desea eliminar no existe."}' );
-        }
+    $factura = FacturaVentaDAO::getByPK( $args['folio'] );
+
+    if( is_null( $factura ) )
+    {
+        Logger::log("Error al eliminar factura, no se tiene registro del folio {$args['folio']}.");
+        die( '{ "succes" : "false" , "reason" : "La factura que desea eliminar no existe."}' );
+    }
         
-        if( FacturaVentaDAO::delete( $factura ) > 0)
-        {
-            printf( '{ "succes" : true }' );
-        }
-        else
-        {
-            die( '{ "succes" : "false" , "reason" : "No se pudo eliminar la factura."}' );
-        }
-    }
-    catch (Exception $e)
+         
+    if( FacturaVentaDAO::delete( $factura ) > 0)
     {
-        die( '{ "succes" : "false" , "reason" : "Error al intentar borrar la factura."}' );
+        Logger::log("Se elimino correctamente la factura.");
+        printf( '{ "succes" : true }' );
     }
+    else
+    {
+        Logger::log("Error al eliminar la factura, se ejecuto la consulta, pero no se afecto ningun registro.");
+        die( '{ "succes" : "false" , "reason" : "No se pudo eliminar la factura."}' );
+    }
+    
+    
 }
 
 
@@ -170,20 +168,13 @@ function listarUltimaVentaSucursal( $id_sucursal ){
     
     
     foreach( $detalle_venta as $producto ){
-        
-        $productoData = InventarioDAO::getByPK( $producto->getIdProducto() );	
-        
-        array_push(
-            $array_detalle_venta, array(
-                "id_producto" => $producto -> getIdProducto(),
-                "descripcion" => $productoData -> getDescripcion(),
-                "cantidad" => $producto -> getCantidad(),
-                "cantidad_procesada" => $producto -> getCantidadProcesada(),
-                "precio" => $producto -> getPrecio(),
-                "precio_procesada" => $producto -> getPrecioProcesada(),
-            )
-        );
-        
+
+        $productoData = InventarioDAO::getByPK( $producto->getIdProducto() );
+
+        $producto -> descripcion = $productoData -> getDescripcion();
+
+        array_push( $array_detalle_venta, $producto -> asArray() );
+
     }
     
     $cliente = ClienteDAO::getByPK( $ventas[0]  -> getIdCliente() );
@@ -213,7 +204,7 @@ function cancelarVenta( $args ){
         die( '{ "success" : false , "reason" : "No se especifico la venta que desea eliminar."}' );
     }
 
-    //verificamos qeu la venta exista
+    //verificamos que la venta exista
     try{
 			
 			if( !$venta = VentasDAO::getByPK( $args['id_venta'] ) )
@@ -227,6 +218,19 @@ function cancelarVenta( $args ){
 			    Logger::log( "La venta ya estaba cancelada" );
                 die( '{ "success" : false , "reason" : "La venta ' . $args['id_venta'] . ' ya estaba cancelada."}' );
 			}
+			
+			//validamos que no haya transcurrido mas del tiempo debido para poder eliminar la venta
+			
+		    $fecha_ultima_venta =  strtotime( $venta -> getFecha() );
+		    
+		    $fecha_actual = time();
+
+		    
+		    if( ( $fecha_actual  - $fecha_ultima_venta ) >  POS_ELIMINATION_TIME  )
+		    {
+		        Logger::log( 'Error al eliminar la venta, han pasado mas de ' . ( POS_ELIMINATION_TIME / 60 ) . ' minutos desde que se realizo la venta.' );
+                die( '{ "success" : false , "info" : "elimination_time", "reason" : "Error al eliminar la venta, han pasado mas de ' . ( POS_ELIMINATION_TIME / 60 ) . ' minutos desde que se realizo la venta ' . $venta -> getIdVenta() . '."}' );
+		    }
 			
 			//almacenamos el detalle de la venta para cargarlo nuevamente al inventario
 			$detalle_venta = new DetalleVenta();
@@ -289,12 +293,12 @@ if(isset($args['action'])){
 	        $detalle_venta = listarUltimaVentaSucursal($_SESSION['sucursal'] );
 	    
 	         printf( '{ "success" : true, "detalle_venta": %s, "id_venta": %s, "cliente": %s }',  json_encode( $detalle_venta -> detalle_venta ), $detalle_venta -> id_venta, $detalle_venta -> cliente );
+	         
 	    break;
 	    
 	    case 804:
              cancelarVenta( $args );
 	    break;
-	   
 	    
 	}	
 }
