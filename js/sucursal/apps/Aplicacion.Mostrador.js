@@ -1191,10 +1191,7 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanel = null;
 /*
  * Es la funcion de entrada para mostrar el panel de venta
  **/
-Aplicacion.Mostrador.prototype.doVentaPanelShow = function ( ){
-
-	//hacer un update de la nueva informacion en el panel
-	Aplicacion.Mostrador.currentInstance.doNuevaVentaPanelUpdater();
+Aplicacion.Mostrador.prototype.doVentaPanelShow = function ( ){	
 	
 	//hacer un setcard manual
 	sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel , 'slide');
@@ -1235,7 +1232,13 @@ Aplicacion.Mostrador.prototype.setTipoVenta = function ( tipo_venta ){
         
         Ext.getCmp('Mostrador-doNuevaVentaClienteCredito').show( Ext.anims.slide );
         Ext.getCmp('Mostrador-doNuevaVentaClienteCreditoRestante').show( Ext.anims.slide );
-  		Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(3, Ext.anims.slide);
+        
+        //ocultamos el campo de importe
+  		Ext.getCmp('Mostrador-doNuevaVentaImporte').hide();
+  		
+  		//mostramos la card donde muestra el boton de vender
+  		Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(2, Ext.anims.slide);
+
     }
     
 
@@ -1318,6 +1321,8 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelUpdater = function ()
     
     Ext.getCmp('Mostrador-doNuevaVentaFacturar').setVisible(false);                                                  
 
+    //mostramos el campo de importe
+    Ext.getCmp('Mostrador-doNuevaVentaImporte').show();
 
 	//mostrar los totales
 	subtotal = 0;   
@@ -1326,10 +1331,7 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelUpdater = function ()
 		subtotal += (this.carrito.items[i].precio * this.carrito.items[i].cantidad);
 	}
 	
-	if( this.carrito.cliente === null ){
-		
-		//mandamos la
-		//Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(1, Ext.anims.slide);        
+	if( this.carrito.cliente === null ){    
 		
 		//si es caja comun
 		total = subtotal;
@@ -1338,19 +1340,16 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelUpdater = function ()
 		
 		//establecemos en elcarrito el tipod e venta contado
 		Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";            
-    		
-        //hacemos visible la tarjeta 1 que es el tipo de pago
-        if(Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).rendered)
-        {
-            Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(1);
-                
-           //deshabilitamos el boton de venta a credito
-            Ext.getCmp('Mostrador-doNuevaVenta-Menu-Credito').setDisabled(true);
-                 
-        }	    		
+
+        //ocultamos el boton tipo de venta a credito
+         Ext.getCmp('Mostrador-doNuevaVenta-Menu-Credito').hide( );
+         
+         //mostramos el menu de tipo de pago
+         Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(1, Ext.anims.slide);    		
+                  
 
 	}else{
-		
+				
 		//es un cliente
 		Ext.getCmp('Mostrador-doNuevaVentaCliente').setValue( this.carrito.cliente.nombre + "  " + this.carrito.cliente.rfc );
 		
@@ -1386,37 +1385,32 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelUpdater = function ()
 			//si puede comprar a credito
 
 			//hacemos visible la tarjeta 0 que es el tipo de compra
-			if(Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(0).rendered)
-			{
-		        Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(0);        
-		    }    
+            Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(0);        
+		        
+            //restauramos el boton de pago credito
+            Ext.getCmp('Mostrador-doNuevaVenta-Menu-Credito').show();
 
 		}else{
+		
 		    //establecemos el tipo de venta manualmente a contado ya que no tiene la posibilidad de pagar a credito
 			Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "contado";
 
-             //alert("no alcanza a pagar");
-
-            //hacemos visible la tarjeta 1 que es el tipo de pago
-            if(Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).rendered)
-            {
-                Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(1);
-                
-                //deshabilitamos el boton de venta a credito
-                 Ext.getCmp('Mostrador-doNuevaVenta-Menu-Credito').setDisabled(true);
-                 
-            }		    
+            //ocultamos el boton tipo de venta a credito
+             Ext.getCmp('Mostrador-doNuevaVenta-Menu-Credito').hide( );
+             
+             //mostramos el menu de tipo de pago
+             Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(1, Ext.anims.slide);    		
 			
 		}
 		
 	}//if cliente
 
-	// alanboy = Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1);
 	Ext.getCmp('Mostrador-doNuevaVentaSubTotal' ).setValue( POS.currencyFormat( subtotal ) );
 	Ext.getCmp('Mostrador-doNuevaVentaTotal' ).setValue( POS.currencyFormat( total ) );    
 
 	this.carrito.subtotal = subtotal;
 	this.carrito.total = total;
+	
 };
 
 
@@ -1462,6 +1456,13 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelCreator = function (	 ){
 	
 	
 	this.doNuevaVentaPanel = new Ext.Panel({
+	    listeners : {
+			    "show" : function(){			
+			            
+			        Aplicacion.Mostrador.currentInstance.doNuevaVentaPanelUpdater();			        			        
+			   
+			    }
+		    },
 	    cls: 'cards',
 		dockedItems : dockedItems,	
 	    layout: {
@@ -1503,25 +1504,14 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelCreator = function (	 ){
 			 ** ************************ **/
 	        xtype: 'carousel',
 	        direction: 'vertical',
-	        ui: 'light',	   
-	        listeners:{
-	            "cardswitch": function(container, newCard, oldCard, index){
-                    //verifcamos si se cambio a el panel de tipo de pago y si no le alcanza
-                    if(index == 0)
-                    {
-                        alert("soy");
-                        carrito = Aplicacion.Mostrador.currentInstance.carrito;
-                        if( carrito.total <= carrito.cliente.credito_restante ){
-                            Ext.getCmp('Mostrador-doNuevaVenta-Menu-Credito').setDisabled(true);
-                        }
-                    }
-                }    
-	        },     
+	        draggable : false,
+	        ui: 'light',	   	           
 	        items: [
-				/** ************************ **
+				/****************************
 				 **		Primera tarjeta, CONTADO/CREDITO
 				 ** ************************ **/
-				{		    
+				{
+				    		    
 				    layout:'hbox',
 				    style:{
 				        width:'100%',
@@ -1581,28 +1571,7 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelCreator = function (	 ){
 				 **		Tercera tarjeta, ASKS FOR DA MONEY !
 				 ** ************************ **/		
 		        new Ext.form.FormPanel({
-    /************************************************************************************************************************/    
-		           //Esta validacion se hace aqui, por que en este momento ya existe 
-		           //Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(1, Ext.anims.slide);
-		           //y si se mete directamente sobre el carrusel no funciona por que cuando se renderiza el carrusel, aun no se renderizan las cards
-		           //podria a hacerse desde la card anteriror a esta, pero no antes
-		            listeners : {
-	                    "afterrender" : function (){
-	                        
-	                        /*
-	                            verificamos si la primera vez que se llama a doNuevaVentaPanel es una caja comun
-	                            y en caso de serlo mostramos directamente la card del tipo de pago y no dejamos que
-	                            se muestre la card de tipo de venta, ya que una caja comun el tipo de venta predefinido
-	                            es efectivo.
-	                          */  
-	                        
-	                        if(Aplicacion.Mostrador.currentInstance.carrito.cliente == null ){
-	                            Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel.getComponent(1).setActiveItem(1, Ext.anims.slide);
-	                        }
-	                        
-	                    }
-	                },
-        /**********************************************************************************************************************/
+ 
 		            style:{
 		                width:'100% !important'
 		            },
@@ -1637,23 +1606,22 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelCreator = function (	 ){
                             }) 
 					]
 					 
-				}),
-				/** ************************ **
-				 **		TERMINAN TARJETAS DE ABAJO
-				 ** ************************ **/
-				/*{
-					xtype: 'fieldset',
-					bodyPadding: 20,					
-					items:[new Ext.Button({ 
-                        ui  : 'action', 
-                        text: 'Vender', 
-                        handler: function(){
-                            Aplicacion.Mostrador.currentInstance.doVenta();
-                        }
-                    }) ]
-			
-				}*/
-				// *** terminan las tarjetas *** //
+				})/*,
+				
+				new Ext.Button({     
+                                ui  : 'action', 
+                                text: 'Venta a credito', 
+                                handler: function(){
+                                    Aplicacion.Mostrador.currentInstance.doVenta();
+                                },
+                                style:{
+                                    marginTop:'30px',
+                                    left:'1.5% !important',
+                                    width:'97% !important',
+                                    height:'30px !important'
+                                }
+                            }) */
+				
 				]
 	    }]
 	});
