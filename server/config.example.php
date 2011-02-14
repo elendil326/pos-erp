@@ -11,6 +11,9 @@ define('POS_MES', 1);
 # Configuracion Basica
 # *******************************
 
+#segundos que deben de pasar antes de negar la eliminacion de la ultima venta
+define('POS_ELIMINATION_TIME', 7200);
+
 #carpeta donde se encuentran los scripts del servidor,
 ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/path/to/server/folder");
 
