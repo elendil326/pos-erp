@@ -179,6 +179,7 @@ function reload(){
 
 
 var heartHash = null;
+
 if(POS.A.sendHeart){
 			setTimeout("task()", POS.CHECK_DB_TIMEOUT);
 }

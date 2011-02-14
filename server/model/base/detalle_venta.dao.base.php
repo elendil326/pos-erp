@@ -13,14 +13,24 @@ abstract class DetalleVentaDAOBase extends DAO
 {
 
 		private static $loadedRecords = array();
-		private static function recordExists( $id ){
-			return array_key_exists ( $id , self::$loadedRecords );
+
+		private static function recordExists(  $id_venta, $id_producto ){
+			$pk = "";
+			$pk .= $id_venta . "-";
+			$pk .= $id_producto . "-";
+			return array_key_exists ( $pk , self::$loadedRecords );
 		}
-		private static function pushRecord( $inventario, $id ){
-			self::$loadedRecords [$id] = $inventario;
+		private static function pushRecord( $inventario,  $id_venta, $id_producto){
+			$pk = "";
+			$pk .= $id_venta . "-";
+			$pk .= $id_producto . "-";
+			self::$loadedRecords [$pk] = $inventario;
 		}
-		private static function getRecord( $id ){
-			return self::$loadedRecords[$id];
+		private static function getRecord(  $id_venta, $id_producto ){
+			$pk = "";
+			$pk .= $id_venta . "-";
+			$pk .= $id_producto . "-";
+			return self::$loadedRecords[$pk];
 		}
 	/**
 	  *	Guardar registros. 
@@ -99,7 +109,11 @@ abstract class DetalleVentaDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-    		array_push( $allData, new DetalleVenta($foo));
+			$bar = new DetalleVenta($foo);
+    		array_push( $allData, $bar);
+			//id_venta
+			//id_producto
+    		self::pushRecord( $bar, $foo["id_venta"],$foo["id_producto"] );
 		}
 		return $allData;
 	}
@@ -173,7 +187,9 @@ abstract class DetalleVentaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new DetalleVenta($foo));
+			$bar =  new DetalleVenta($foo);
+    		array_push( $ar,$bar);
+    		self::pushRecord( $bar, $foo["id_venta"],$foo["id_producto"] );
 		}
 		return $ar;
 	}

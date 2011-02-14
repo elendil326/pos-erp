@@ -166,7 +166,7 @@ class Logger
 
         $out .= " | " . $_SERVER["REMOTE_ADDR"];
 
-        //$out .= " | L:" . $level;
+        
 
 
         if(isset($_SESSION['userid'])){
@@ -183,18 +183,21 @@ class Logger
 
         }
 
-        $d = debug_backtrace();
+		if(POS_LOG_TRACKBACK){
+	        $d = debug_backtrace();
+			$track = " | TRACK : ";
+			for ($i= 1; $i < sizeof($d) -1 ; $i++) { 
+//				$track .= isset($d[$i]["function"]) ? "->" . $d[$i]["function"] : "*" ;
+				$track .= isset($d[$i]["file"]) ? substr( strrchr( $d[$i]["file"], "/" ), 1 )  : "*"; 
+				$track .= isset($d[$i]["line"]) ? ":" .  $d[$i]["line"] ." "  : "* " ;
+			}
+			$out .=  $track ;			
+		}
 
-		if(isset($d[1]))
-	        $out .= " | " . $d[1]["function"] . "() in " . substr( strrchr( $d[0]["file"], "/" ), 1 );
-	    else
-			$out .= " | in " . substr( strrchr( $d[0]["file"], "/" ), 1 );
-			
-        $out .= " | " . $msg;
+				
+        
 
-
-
-        fwrite($log, $out . "\n");
+        fwrite($log, $out. " | " . $msg . "\n");
 
         fclose($log);
 

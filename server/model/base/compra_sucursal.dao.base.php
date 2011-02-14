@@ -13,14 +13,21 @@ abstract class CompraSucursalDAOBase extends DAO
 {
 
 		private static $loadedRecords = array();
-		private static function recordExists( $id ){
-			return array_key_exists ( $id , self::$loadedRecords );
+
+		private static function recordExists(  $id_compra ){
+			$pk = "";
+			$pk .= $id_compra . "-";
+			return array_key_exists ( $pk , self::$loadedRecords );
 		}
-		private static function pushRecord( $inventario, $id ){
-			self::$loadedRecords [$id] = $inventario;
+		private static function pushRecord( $inventario,  $id_compra){
+			$pk = "";
+			$pk .= $id_compra . "-";
+			self::$loadedRecords [$pk] = $inventario;
 		}
-		private static function getRecord( $id ){
-			return self::$loadedRecords[$id];
+		private static function getRecord(  $id_compra ){
+			$pk = "";
+			$pk .= $id_compra . "-";
+			return self::$loadedRecords[$pk];
 		}
 	/**
 	  *	Guardar registros. 
@@ -99,7 +106,10 @@ abstract class CompraSucursalDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-    		array_push( $allData, new CompraSucursal($foo));
+			$bar = new CompraSucursal($foo);
+    		array_push( $allData, $bar);
+			//id_compra
+    		self::pushRecord( $bar, $foo["id_compra"] );
 		}
 		return $allData;
 	}
@@ -188,7 +198,9 @@ abstract class CompraSucursalDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new CompraSucursal($foo));
+			$bar =  new CompraSucursal($foo);
+    		array_push( $ar,$bar);
+    		self::pushRecord( $bar, $foo["id_compra"] );
 		}
 		return $ar;
 	}

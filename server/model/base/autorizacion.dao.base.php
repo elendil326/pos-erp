@@ -13,14 +13,21 @@ abstract class AutorizacionDAOBase extends DAO
 {
 
 		private static $loadedRecords = array();
-		private static function recordExists( $id ){
-			return array_key_exists ( $id , self::$loadedRecords );
+
+		private static function recordExists(  $id_autorizacion ){
+			$pk = "";
+			$pk .= $id_autorizacion . "-";
+			return array_key_exists ( $pk , self::$loadedRecords );
 		}
-		private static function pushRecord( $inventario, $id ){
-			self::$loadedRecords [$id] = $inventario;
+		private static function pushRecord( $inventario,  $id_autorizacion){
+			$pk = "";
+			$pk .= $id_autorizacion . "-";
+			self::$loadedRecords [$pk] = $inventario;
 		}
-		private static function getRecord( $id ){
-			return self::$loadedRecords[$id];
+		private static function getRecord(  $id_autorizacion ){
+			$pk = "";
+			$pk .= $id_autorizacion . "-";
+			return self::$loadedRecords[$pk];
 		}
 	/**
 	  *	Guardar registros. 
@@ -99,7 +106,10 @@ abstract class AutorizacionDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-    		array_push( $allData, new Autorizacion($foo));
+			$bar = new Autorizacion($foo);
+    		array_push( $allData, $bar);
+			//id_autorizacion
+    		self::pushRecord( $bar, $foo["id_autorizacion"] );
 		}
 		return $allData;
 	}
@@ -183,7 +193,9 @@ abstract class AutorizacionDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Autorizacion($foo));
+			$bar =  new Autorizacion($foo);
+    		array_push( $ar,$bar);
+    		self::pushRecord( $bar, $foo["id_autorizacion"] );
 		}
 		return $ar;
 	}

@@ -322,7 +322,9 @@ function modificarCliente( $args ){
 
 
 
-
+/***
+   * Esta funcion debe ser erradicada por el bien del performance 
+   **/
 function listarVentasClientes( ){
     
     $ventas = VentasDAO::getAll();

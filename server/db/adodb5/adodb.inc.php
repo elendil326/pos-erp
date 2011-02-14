@@ -997,7 +997,7 @@
 						$this->outp_throw( "Input array does not match ?: ".htmlspecialchars($sql),'Execute');
 
 		
-					Logger::logSQL($sql);
+
 
 
 		
@@ -1036,6 +1036,8 @@
 		} else {
 			$this->_queryID = @$this->_query($sql,$inputarr);
 		}
+		
+		Logger::logSQL($sql);
 		
 		/************************
 		// OK, query executed

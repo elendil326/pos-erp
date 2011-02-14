@@ -13,14 +13,21 @@ abstract class PagoPrestamoSucursalDAOBase extends DAO
 {
 
 		private static $loadedRecords = array();
-		private static function recordExists( $id ){
-			return array_key_exists ( $id , self::$loadedRecords );
+
+		private static function recordExists(  $id_pago ){
+			$pk = "";
+			$pk .= $id_pago . "-";
+			return array_key_exists ( $pk , self::$loadedRecords );
 		}
-		private static function pushRecord( $inventario, $id ){
-			self::$loadedRecords [$id] = $inventario;
+		private static function pushRecord( $inventario,  $id_pago){
+			$pk = "";
+			$pk .= $id_pago . "-";
+			self::$loadedRecords [$pk] = $inventario;
 		}
-		private static function getRecord( $id ){
-			return self::$loadedRecords[$id];
+		private static function getRecord(  $id_pago ){
+			$pk = "";
+			$pk .= $id_pago . "-";
+			return self::$loadedRecords[$pk];
 		}
 	/**
 	  *	Guardar registros. 
@@ -99,7 +106,10 @@ abstract class PagoPrestamoSucursalDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-    		array_push( $allData, new PagoPrestamoSucursal($foo));
+			$bar = new PagoPrestamoSucursal($foo);
+    		array_push( $allData, $bar);
+			//id_pago
+    		self::pushRecord( $bar, $foo["id_pago"] );
 		}
 		return $allData;
 	}
@@ -168,7 +178,9 @@ abstract class PagoPrestamoSucursalDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new PagoPrestamoSucursal($foo));
+			$bar =  new PagoPrestamoSucursal($foo);
+    		array_push( $ar,$bar);
+    		self::pushRecord( $bar, $foo["id_pago"] );
 		}
 		return $ar;
 	}

@@ -100,11 +100,11 @@ Aplicacion.Clientes.prototype.listaDeCompras = {
  * Leer la lista de clientes del servidor mediante AJAX
  */
 Aplicacion.Clientes.prototype.listaDeComprasLoad = function (){
-	
+
 	if(DEBUG){
 		console.log("Actualizando lista de compras de los clientes ....");
 	}
-	
+	/*
 	Ext.Ajax.request({
 		url: '../proxy.php',
 		scope : this,
@@ -130,7 +130,7 @@ Aplicacion.Clientes.prototype.listaDeComprasLoad = function (){
                        
 		}
 	});
-
+	*/
 };
 
 

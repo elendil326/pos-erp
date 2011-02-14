@@ -13,14 +13,24 @@ abstract class DetalleCompraProveedorDAOBase extends DAO
 {
 
 		private static $loadedRecords = array();
-		private static function recordExists( $id ){
-			return array_key_exists ( $id , self::$loadedRecords );
+
+		private static function recordExists(  $id_compra_proveedor, $id_producto ){
+			$pk = "";
+			$pk .= $id_compra_proveedor . "-";
+			$pk .= $id_producto . "-";
+			return array_key_exists ( $pk , self::$loadedRecords );
 		}
-		private static function pushRecord( $inventario, $id ){
-			self::$loadedRecords [$id] = $inventario;
+		private static function pushRecord( $inventario,  $id_compra_proveedor, $id_producto){
+			$pk = "";
+			$pk .= $id_compra_proveedor . "-";
+			$pk .= $id_producto . "-";
+			self::$loadedRecords [$pk] = $inventario;
 		}
-		private static function getRecord( $id ){
-			return self::$loadedRecords[$id];
+		private static function getRecord(  $id_compra_proveedor, $id_producto ){
+			$pk = "";
+			$pk .= $id_compra_proveedor . "-";
+			$pk .= $id_producto . "-";
+			return self::$loadedRecords[$pk];
 		}
 	/**
 	  *	Guardar registros. 
@@ -99,7 +109,11 @@ abstract class DetalleCompraProveedorDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-    		array_push( $allData, new DetalleCompraProveedor($foo));
+			$bar = new DetalleCompraProveedor($foo);
+    		array_push( $allData, $bar);
+			//id_compra_proveedor
+			//id_producto
+    		self::pushRecord( $bar, $foo["id_compra_proveedor"],$foo["id_producto"] );
 		}
 		return $allData;
 	}
@@ -173,7 +187,9 @@ abstract class DetalleCompraProveedorDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new DetalleCompraProveedor($foo));
+			$bar =  new DetalleCompraProveedor($foo);
+    		array_push( $ar,$bar);
+    		self::pushRecord( $bar, $foo["id_compra_proveedor"],$foo["id_producto"] );
 		}
 		return $ar;
 	}

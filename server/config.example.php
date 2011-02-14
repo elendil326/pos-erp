@@ -12,7 +12,8 @@ define('POS_MES', 1);
 # *******************************
 
 #carpeta donde se encuentran los scripts del servidor,
-ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/path/to/pos/server/folder");
+ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . "/path/to/server/folder");
+
 
 # titulo de la aplicacion para las paginas html
 define("_POS_HTMLTITLE", "Papas Supremas");
@@ -36,7 +37,12 @@ define('POS_DATE_FORMAT', 'j/m/y h:i:s A');
 define("POS_LOG_TO_FILE", false);
 
 # archivo donde se guardaran los logs
-define("POS_LOG_TO_FILE_FILENAME", "/var/log/mx.caffeina.pos/pos.log");
+define("POS_LOG_TO_FILE_FILENAME", "/path/to/log");
+
+define("POS_LOG_TRACKBACK", false);
+
+define("POS_LOG_DB_QUERYS", false);
+
 
 
 
@@ -51,19 +57,13 @@ date_default_timezone_set("America/Mexico_City");
 # ******************************
 # BASE DE DATOS 
 # ******************************
+define('DB_USER',       '');
+define('DB_PASSWORD',   '');
+define('DB_NAME',       '');
 
-define('DB_USER',       'pos');
-define('DB_PASSWORD',   'pos');
-define('DB_NAME',       'pos');
 define('DB_DRIVER',     'mysqlt');
 define('DB_HOST',       'localhost');
 define('DB_DEBUG',      false);
-//define('ADODB_ERROR_LOG_TYPE',3);
-//define('ADODB_ERROR_LOG_DEST','/var/log/mx.caffeina.pos/pos.log');
-
-//conectarse a la base de datos
-require_once('db/DBConnection.php');
-
 
 
 # *******************************
@@ -86,18 +86,22 @@ define( 'POS_SUCURSAL_TEST_TOKEN', 'FULL_UA' );
 //nombre de la galleta
 //session_set_cookie_params ( int $lifetime [, string $path [, string $domain [, bool $secure = false [, bool $httponly = false ]]]] )
 session_name("POS_ID");
+
 session_set_cookie_params ( 0  , '/' );
 
 
 $ss = session_start (  );
 
 if(!$ss){
-    //Logger::log("imposible iniciar sesion");
-	echo "{\"success\": false , \"reason\": -1,  \"text\" : \"Imposible iniciar sesion. Debe habilitar las cookies para ingresar.\" }";
+	echo '{"success": false,"reason": "Imposible iniciar sesion." }';
 	return;
 }
 
+//logger
+require_once("logger.php");
 
+//conectarse a la base de datos
+require_once('db/DBConnection.php');
 
 require_once('utils.php');
 
