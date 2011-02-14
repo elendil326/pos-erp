@@ -3,14 +3,14 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 04-02-2011 a las 00:45:17
+-- Tiempo de generación: 13-02-2011 a las 23:02:03
 -- Versión del servidor: 5.1.37
 -- Versión de PHP: 5.3.0
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 --
--- Base de datos: `pos7`
+-- Base de datos: `pos8`
 --
 
 -- --------------------------------------------------------
@@ -31,7 +31,23 @@ CREATE TABLE IF NOT EXISTS `actualizacion_de_precio` (
   PRIMARY KEY (`id_actualizacion`),
   KEY `id_producto` (`id_producto`),
   KEY `id_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=29 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Actualizaciones de precios' AUTO_INCREMENT= 1 ;
+
+--
+-- (Evento) desencadenante `actualizacion_de_precio`
+--
+DROP TRIGGER IF EXISTS `pos8`.`inserta_actualizacion_precio`;
+DELIMITER //
+CREATE TRIGGER `pos8`.`inserta_actualizacion_precio` AFTER INSERT ON `pos8`.`actualizacion_de_precio`
+ FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
+//
+DELIMITER ;
+DROP TRIGGER IF EXISTS `pos8`.`actualiza_actualizacion_precio`;
+DELIMITER //
+CREATE TRIGGER `pos8`.`actualiza_actualizacion_precio` AFTER UPDATE ON `pos8`.`actualizacion_de_precio`
+ FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
+//
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -51,7 +67,23 @@ CREATE TABLE IF NOT EXISTS `autorizacion` (
   PRIMARY KEY (`id_autorizacion`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT= 1 ;
+
+--
+-- (Evento) desencadenante `autorizacion`
+--
+DROP TRIGGER IF EXISTS `pos8`.`inserta_autorizacion`;
+DELIMITER //
+CREATE TRIGGER `pos8`.`inserta_autorizacion` AFTER INSERT ON `pos8`.`autorizacion`
+ FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
+//
+DELIMITER ;
+DROP TRIGGER IF EXISTS `pos8`.`actualiza_autorizacion`;
+DELIMITER //
+CREATE TRIGGER `pos8`.`actualiza_autorizacion` AFTER UPDATE ON `pos8`.`autorizacion`
+ FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
+//
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -76,7 +108,23 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   PRIMARY KEY (`id_cliente`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT= 1 ;
+
+--
+-- (Evento) desencadenante `cliente`
+--
+DROP TRIGGER IF EXISTS `pos8`.`inserta_cliente`;
+DELIMITER //
+CREATE TRIGGER `pos8`.`inserta_cliente` AFTER INSERT ON `pos8`.`cliente`
+ FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
+//
+DELIMITER ;
+DROP TRIGGER IF EXISTS `pos8`.`actualiza_cliente`;
+DELIMITER //
+CREATE TRIGGER `pos8`.`actualiza_cliente` AFTER UPDATE ON `pos8`.`cliente`
+ FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
+//
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -90,8 +138,8 @@ CREATE TABLE IF NOT EXISTS `compra_proveedor` (
   `id_proveedor` int(11) NOT NULL COMMENT 'id del proveedor a quien se le hizo esta compra',
   `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de cuando se recibio el embarque',
   `fecha_origen` date NOT NULL COMMENT 'fecha de cuando se envio este embarque',
-  `folio` varchar(11) CHARACTER SET latin1 COLLATE latin1_general_cs DEFAULT NULL COMMENT 'folio de la remision',
-  `numero_de_viaje` varchar(11) CHARACTER SET latin1 COLLATE latin1_general_cs DEFAULT NULL COMMENT 'numero de viaje',
+  `folio` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_cs DEFAULT NULL COMMENT 'folio de la remision',
+  `numero_de_viaje` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_cs DEFAULT NULL COMMENT 'numero de viaje',
   `peso_recibido` float NOT NULL COMMENT 'peso en kilogramos reportado en la remision',
   `arpillas` float NOT NULL COMMENT 'numero de arpillas en el camion',
   `peso_por_arpilla` float NOT NULL COMMENT 'peso promedio en kilogramos por arpilla',
@@ -101,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `compra_proveedor` (
   `total_origen` float DEFAULT NULL COMMENT 'Es lo que vale el embarque segun el proveedor',
   PRIMARY KEY (`id_compra_proveedor`),
   KEY `id_proveedor` (`id_proveedor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT= 1 ;
 
 -- --------------------------------------------------------
 
@@ -117,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `compra_proveedor_flete` (
   `modelo_camion` varchar(64) DEFAULT NULL,
   `costo_flete` float NOT NULL,
   PRIMARY KEY (`id_compra_proveedor`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -138,7 +186,7 @@ CREATE TABLE IF NOT EXISTS `compra_sucursal` (
   PRIMARY KEY (`id_compra`),
   KEY `compras_sucursal` (`id_sucursal`),
   KEY `compras_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT= 1 ;
 
 -- --------------------------------------------------------
 
@@ -161,7 +209,7 @@ CREATE TABLE IF NOT EXISTS `corte` (
   `total_ganancia_neta` float NOT NULL COMMENT 'calculo de ganancia neta',
   PRIMARY KEY (`id_corte`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT= 1 ;
 
 -- --------------------------------------------------------
 
@@ -175,10 +223,10 @@ CREATE TABLE IF NOT EXISTS `detalle_compra_proveedor` (
   `variedad` varchar(64) NOT NULL,
   `arpillas` int(11) NOT NULL,
   `kg` int(11) NOT NULL,
-  `precio_por_kg` int(11) NOT NULL,
+  `precio_por_kg` float NOT NULL COMMENT 'precio por kg para este producto',
   PRIMARY KEY (`id_compra_proveedor`,`id_producto`),
   KEY `id_producto` (`id_producto`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -211,7 +259,17 @@ CREATE TABLE IF NOT EXISTS `detalle_inventario` (
   `existencias_procesadas` float NOT NULL,
   PRIMARY KEY (`id_producto`,`id_sucursal`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- (Evento) desencadenante `detalle_inventario`
+--
+DROP TRIGGER IF EXISTS `pos8`.`inserta_detalle_inventario`;
+DELIMITER //
+CREATE TRIGGER `pos8`.`inserta_detalle_inventario` AFTER INSERT ON `pos8`.`detalle_inventario`
+ FOR EACH ROW UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.opcion='DB_VER'
+//
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -245,7 +303,7 @@ CREATE TABLE IF NOT EXISTS `equipo` (
   PRIMARY KEY (`id_equipo`),
   UNIQUE KEY `full_ua` (`full_ua`),
   UNIQUE KEY `token` (`token`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT= 1 ;
 
 -- --------------------------------------------------------
 
@@ -258,7 +316,7 @@ CREATE TABLE IF NOT EXISTS `equipo_sucursal` (
   `id_sucursal` int(6) NOT NULL COMMENT 'identifica una sucursal',
   PRIMARY KEY (`id_equipo`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -284,7 +342,7 @@ CREATE TABLE IF NOT EXISTS `factura_venta` (
   `id_venta` int(11) NOT NULL COMMENT 'venta a la cual corresponde la factura',
   PRIMARY KEY (`folio`),
   KEY `factura_venta_venta` (`id_venta`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT= 1 ;
 
 -- --------------------------------------------------------
 
@@ -305,7 +363,7 @@ CREATE TABLE IF NOT EXISTS `gastos` (
   PRIMARY KEY (`id_gasto`),
   KEY `id_sucursal` (`id_sucursal`),
   KEY `id_usuario` (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT= 1 ;
 
 -- --------------------------------------------------------
 
@@ -351,7 +409,7 @@ CREATE TABLE IF NOT EXISTS `ingresos` (
   PRIMARY KEY (`id_ingreso`),
   KEY `usuario_ingreso` (`id_usuario`),
   KEY `sucursal_ingreso` (`id_sucursal`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT= 1 ;
 
 -- --------------------------------------------------------
 
@@ -365,7 +423,7 @@ CREATE TABLE IF NOT EXISTS `inventario` (
   `escala` enum('kilogramo','pieza','litro','unidad') COLLATE utf8_unicode_ci NOT NULL,
   `tratamiento` enum('limpia') COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Tipo de tratatiento si es que existe para este producto.',
   PRIMARY KEY (`id_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=30 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT= 1 ;
 
 -- --------------------------------------------------------
 
@@ -382,7 +440,7 @@ CREATE TABLE IF NOT EXISTS `inventario_maestro` (
   PRIMARY KEY (`id_producto`,`id_compra_proveedor`),
   KEY `id_compra_proveedor` (`id_compra_proveedor`),
   KEY `sitio_descarga` (`sitio_descarga`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -397,7 +455,7 @@ CREATE TABLE IF NOT EXISTS `pagos_compra` (
   `monto` float NOT NULL COMMENT 'monto que se abono',
   PRIMARY KEY (`id_pago`),
   KEY `pagos_compra_compra` (`id_compra`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT= 1 ;
 
 -- --------------------------------------------------------
 
@@ -417,7 +475,7 @@ CREATE TABLE IF NOT EXISTS `pagos_venta` (
   KEY `pagos_venta_venta` (`id_venta`),
   KEY `id_sucursal` (`id_sucursal`),
   KEY `id_usuario` (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT= 1 ;
 
 -- --------------------------------------------------------
 
@@ -432,7 +490,20 @@ CREATE TABLE IF NOT EXISTS `pago_prestamo_sucursal` (
   `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'La fecha cuando se realizo este pago',
   `monto` float NOT NULL COMMENT 'El monto a abonar',
   PRIMARY KEY (`id_pago`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT= 1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pos_config`
+--
+
+CREATE TABLE IF NOT EXISTS `pos_config` (
+  `opcion` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
+  `value` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`opcion`),
+  UNIQUE KEY `opcion` (`opcion`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -450,7 +521,7 @@ CREATE TABLE IF NOT EXISTS `prestamo_sucursal` (
   `concepto` varchar(256) NOT NULL COMMENT 'El concepto de este prestamo',
   `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de cuando se ingreso ese prestamo',
   PRIMARY KEY (`id_prestamo`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT= 1 ;
 
 -- --------------------------------------------------------
 
@@ -468,7 +539,7 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
   `activo` tinyint(2) NOT NULL DEFAULT '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
   `tipo_proveedor` enum('admin','sucursal','ambos') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'admin' COMMENT 'si este proveedor surtira al admin, a las sucursales o a ambos',
   PRIMARY KEY (`id_proveedor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT= 1 ;
 
 -- --------------------------------------------------------
 
@@ -491,7 +562,7 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   PRIMARY KEY (`id_sucursal`),
   UNIQUE KEY `letras_factura` (`letras_factura`),
   KEY `gerente` (`gerente`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT= 1 ;
 
 -- --------------------------------------------------------
 
@@ -513,7 +584,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `fecha_inicio` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha cuando este usuario comenzo a laborar',
   PRIMARY KEY (`id_usuario`),
   KEY `fk_usuario_1` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=111 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT= 1 ;
 
 -- --------------------------------------------------------
 
@@ -541,7 +612,7 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`id_sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT= 1 ;
 
 --
 -- Filtros para las tablas descargadas (dump)
@@ -702,61 +773,3 @@ ALTER TABLE `ventas`
   ADD CONSTRAINT `ventas_ibfk_4` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`),
   ADD CONSTRAINT `ventas_ibfk_5` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`),
   ADD CONSTRAINT `ventas_ibfk_6` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
-
-  
---
--- Triggers para actualizar la tabla 'pos_config' en el registro DB_VER
--- 
-
-DELIMITER |
-CREATE TRIGGER inserta_actualizacion_precio AFTER INSERT ON actualizacion_de_precio
-FOR EACH ROW
-UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.option='DB_VER'
-|
-DELIMITER ;
-DELIMITER |
-CREATE TRIGGER actualiza_actualizacion_precio AFTER UPDATE ON actualizacion_de_precio
-FOR EACH ROW
-UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.option='DB_VER'
-|
-DELIMITER ;
-
-DELIMITER |
-CREATE TRIGGER inserta_autorizacion AFTER INSERT ON autorizacion
-FOR EACH ROW
-UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.option='DB_VER'
-|
-DELIMITER ;
-DELIMITER |
-CREATE TRIGGER actualiza_autorizacion AFTER UPDATE ON autorizacion
-FOR EACH ROW
-UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.option='DB_VER'
-|
-DELIMITER ;
-
-
-DELIMITER |
-CREATE TRIGGER inserta_cliente AFTER INSERT ON cliente
-FOR EACH ROW
-UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.option='DB_VER'
-|
-DELIMITER ;
-DELIMITER |
-CREATE TRIGGER actualiza_cliente AFTER UPDATE ON cliente
-FOR EACH ROW
-UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.option='DB_VER'
-|
-DELIMITER ;
-
-DELIMITER |
-CREATE TRIGGER inserta_detalle_inventario AFTER INSERT ON detalle_inventario
-FOR EACH ROW
-UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.option='DB_VER'
-|
-DELIMITER ;
-DELIMITER |
-CREATE TRIGGER actualiza_detalle_inventario AFTER UPDATE ON detalle_inventario
-FOR EACH ROW
-UPDATE pos_config SET pos_config.value = pos_config.value+1 where pos_config.option='DB_VER'
-|
-DELIMITER ;

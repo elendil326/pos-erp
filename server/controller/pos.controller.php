@@ -3,6 +3,7 @@
 require_once("controller/clientes.controller.php");
 require_once("controller/inventario.controller.php");
 require_once("controller/autorizaciones.controller.php");
+require_once("model/pos_config.dao.php");
 
 class POS{
 	
@@ -40,10 +41,12 @@ class POS{
       **/
 	public static function getPersistencyHash(){
 		try{
-			$hash = md5( json_encode( listarClientesDeudores() )
+			/*$hash = md5( json_encode( listarClientesDeudores() )
 			 		. json_encode( listarClientes() )
 			 		. json_encode( listarInventario( $_SESSION["sucursal"] ) )
-			 		. json_encode( autorizacionesSucursal( $_SESSION["sucursal"] ) ) );
+			 		. json_encode( autorizacionesSucursal( $_SESSION["sucursal"] ) ) ); */
+			$foo = PosConfigDAO::getByPK("DB_VER");
+			$hash = $foo->getValue();
 		}catch(Exception $e){
 			Logger::log( $e );
 			$hash = null;
