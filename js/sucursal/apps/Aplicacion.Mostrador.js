@@ -1157,8 +1157,7 @@ Aplicacion.Mostrador.prototype.vender = function ()
 			
 			//recargar la lista de clientes y de compras
 			if( Aplicacion.Mostrador.currentInstance.carrito.cliente !== null){
-				Aplicacion.Clientes.currentInstance.listaDeClientesLoad();
-				Aplicacion.Clientes.currentInstance.listaDeComprasLoad();
+				Aplicacion.Clientes.currentInstance.listaDeClientesLoad();				
 			}
 
 			//mostrar el panel final
