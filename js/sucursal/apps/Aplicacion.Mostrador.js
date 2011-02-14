@@ -177,7 +177,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 	html += "<tr class='top'>";
 	html +=     "<td align='left'>Descripcion</td>";
 	html +=     "<td colspan=2>&nbsp</td>";
-	html +=     "<td align='center' colspan=3>Cantidad</td>";	
+	html +=     "<td align='center' colspan=3>Cantidad</td>";
+	html +=     "<td align='center' ></td>";		
 	html +=     "<td align='left' >Precio</td>";
 	html +=     "<td align='left' >Sub Total</td>";
 	html += "</tr>";
@@ -195,20 +196,96 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 	for (var i=0; i < carrito.items.length; i++){
 		
 		
-		if( i == carrito.items.length - 1 ){
-			html += "<tr class='last'>";
-		}else{
-			html += "<tr >";		
+		
+		
+		
+		var productoI = inventario.findRecord("productoID", carrito.items[i].id_producto, 0, false, true, true);
+		
+		
+		
+		//revisar si es por pieza o unidad
+		switch(productoI.get("medida")){
+			case "pieza" : 
+				carrito.items[i].cantidad  = Math.round(carrito.items[i].cantidad );
+				console.log( "ROUNDING:", carrito.items[i].cantidad, Math.round(carrito.items[i].cantidad ) )
+			break;
+			default:
 		}
+		
+		
+		if( parseFloat(productoI.get("existenciasOriginales")) == 0){
+			if(DEBUG){console.log("no hay originales !!");}
+			carrito.items[i].procesado = "true";
+		}
+	
+	
+		if( parseFloat(productoI.get("existenciasProcesadas")) == 0){
+			if(DEBUG){console.log("no hay procesadas !!");}
+			carrito.items[i].procesado = "false";
+		}
+
+			
+		if(carrito.items[i].tratamiento != null){
+			//si se pueden procesar
+			if(carrito.items[i].procesado == "true"){
+		
+				if(DEBUG){
+					console.log( "quiero "+carrito.items[i].cantidad + " procesadas y hay "+ productoI.get("existenciasProcesadas") );						
+				}
+
+		
+				if( parseFloat(productoI.get("existenciasProcesadas") ) < parseFloat(carrito.items[i].cantidad)){
+					carrito.items[i].cantidad = parseFloat(productoI.get("existenciasProcesadas") );
+					Ext.Msg.alert("Mostrador", "No hay suficientes existencias de " + productoI.get("descripcion") );
+				}
+			}else{
+				if(DEBUG){
+					console.log("quiero "+carrito.items[i].cantidad + " originales y hay "+ productoI.get("existenciasOriginales") );						
+				}
+
+		
+				if( parseFloat(productoI.get("existenciasOriginales") ) < parseFloat(carrito.items[i].cantidad)){
+					carrito.items[i].cantidad = parseFloat(productoI.get("existenciasOriginales") );		
+					Ext.Msg.alert("Mostrador", "No hay suficientes existencias de " + productoI.get("descripcion") );										
+				}
+			}
+		
+		
+		
+		}else{
+			// no se pueden procesar
+			
+				if( parseFloat(productoI.get("existenciasOriginales") ) < parseFloat(carrito.items[i].cantidad)){
+					carrito.items[i].cantidad = parseFloat(productoI.get("existenciasOriginales") );		
+					Ext.Msg.alert("Mostrador", "No hay suficientes existencias de " + productoI.get("descripcion") );										
+				}
+		}
+
+		
+		var color = i % 2 == 0 ? "" : "style='background-color:#f7f7f7;'";
+		
+		if( i == carrito.items.length - 1 ){
+			html += "<tr " + color + " class='last'>";
+		}else{
+			html += "<tr " + color + ">";		
+		}
+		
 		html += "<td style='width: 25%;' ><b>" + carrito.items[i].id_producto + "</b> &nbsp;" + carrito.items[i].descripcion+ "</td>";
 		
-		html += "<td style='width: 15%;' ><div id='Mostrador-carritoTratamiento"+ carrito.items[i].idUnique +"'></div></td>";
+		html += "<td style='width: 12%;' ><div id='Mostrador-carritoTratamiento"+ carrito.items[i].idUnique +"'></div></td>";
 
-		html += "<td  align='right' style='width: 12%;'> <span class='boton'  onClick=\"Aplicacion.Mostrador.currentInstance.quitarDelCarrito('"+ carrito.items[i].idUnique +"')\"><img src='../media/icons/close_16.png'>&nbsp;Quitar&nbsp;</span></td>";
+		html += "<td  align='right' style='width: 12%;'> <span class='boton'  onClick=\"Aplicacion.Mostrador.currentInstance.quitarDelCarrito('"+ carrito.items[i].idUnique +"')\"><img src='../media/icons/close_16.png'></span></td>";
 
 		html += "<td  align='center'  style='width: 8.1%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique + "', -1, false)\">&nbsp;-&nbsp;<img src='../media/icons/arrow_down_16.png'></span></td>";
-
-		html += "<td  align='center'  style='width: 6.3%;' ><div id='Mostrador-carritoCantidad"+ carrito.items[i].idUnique +"'></div></td>";
+		
+		var m ;
+		switch(productoI.get("medida")){
+			case "kilogramo": m = "kgs"; break;
+			case "pieza": m = "pzas"; break;
+			case "litro": m = "lts"; break;						
+		}
+		
+		html += "<td  align='center'  style='width: 6.3%;' ><div id='Mostrador-carritoCantidad"+ carrito.items[i].idUnique +"'></div></td><td>"+m+"</td>";
 
 		html += "<td  align='center'  style='width: 8.1%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique +"', 1, false)\"><img src='../media/icons/arrow_up_16.png'>&nbsp;+&nbsp;</span></td>";
 
@@ -223,7 +300,9 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 	html += "</table>";
 	
 	//mostramos al tabla
+	//Ext.getCmp("MostradorHtmlPanel").hide();
 	Ext.getCmp("MostradorHtmlPanel").update(html);
+	//Ext.getCmp("MostradorHtmlPanel").show(Ext.anims.fade);	
 	
 	//si hay mas de un producto, mostrar el boton de vender
 	if(carrito.items.length > 0){
@@ -377,12 +456,29 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		
 		});
 
-		 if(carrito.items[i].tratamiento != null){
+		 if(carrito.items[i].tratamiento != null  ){
 		 
+			var dis = false;
+			var productoI = inventario.findRecord("productoID", carrito.items[i].id_producto, 0, false, true, true);
+			
+			if( parseFloat(productoI.get("existenciasOriginales")) == 0){
+				if(DEBUG){console.log("no hay originales !!");}
+				carrito.items[i].procesado = "true";
+				dis  = true;
+			}
+		
+		
+			if( parseFloat(productoI.get("existenciasProcesadas")) == 0){
+				if(DEBUG){console.log("no hay procesadas !!");}
+				carrito.items[i].procesado = "false";
+				dis  = true;
+			}
+		
 		    c = new Ext.form.Select({
 			    renderTo : "Mostrador-carritoTratamiento"+ carrito.items[i].idUnique ,
 			    id : "Mostrador-carritoTratamiento"+ carrito.items[i].idUnique + "Select",
 			    idUnique : carrito.items[i].idUnique,
+				disabled : dis,
 			    value : carrito.items[i].procesado,
 			    style:{
 		             width: '100%'
