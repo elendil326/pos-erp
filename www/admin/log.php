@@ -289,7 +289,7 @@ ul li {
 
             <tr><td rowspan=5><img src='../media/safe.png'></td></tr>
  
-	        <tr><td></td><td></td>    <td><br><h1>Bienvenido de regreso</h1>
+	        <tr><td></td><td></td>    <td>
 						<h2>Inicio de sesion</h2>
 					</td></tr>
 	        <tr><td></td><td align=right>Usuario</td>    <td><input type="text" id="usr" size="40"/></td></tr>

@@ -173,7 +173,9 @@ function createLoginForm( sucursal ){
 							kconf = {
 								type : 'num',
 								submitText : 'Aceptar',
-								callback : null
+								callback : function(){
+									setTimeout('Ext.getCmp("pswd").focus();', 250);
+								}
 							};
 							POS.Keyboard.Keyboard( this, kconf );
 						}
@@ -187,8 +189,10 @@ function createLoginForm( sucursal ){
 						"focus" : function(){
 							kconf = {
 								type : 'complete',
-								submitText : 'Aceptar',
-								callback : null
+								submitText : 'Ingresar',
+								callback : function(a,b){
+									sendLogin();//console.log(a,b,this)
+								}
 							};
 							POS.Keyboard.Keyboard( this, kconf );
 						}
@@ -198,7 +202,7 @@ function createLoginForm( sucursal ){
         ],
         listeners : {
             submit : function(form, result){
-                console.log('success', Ext.toArray(result, form));
+                if(DEBUG){console.log('success', Ext.toArray(result, form));}
 				return;
             },
             exception : function(form, result){
@@ -229,13 +233,6 @@ function createLoginForm( sucursal ){
         ]
     };
     
-    if (Ext.is.AndroidOS) {
-        formBase.items.unshift({
-            xtype: 'component',
-            styleHtmlContent: true,
-            html: '<span style="color: red">Forms on Android are currently under development. We are working hard to improve this in upcoming releases.</span>'
-        });
-    }
     
     if (Ext.is.Phone) {
         formBase.fullscreen = true;
