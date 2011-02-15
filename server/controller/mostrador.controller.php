@@ -539,7 +539,6 @@ function vender( $args ){
         {
             DAO::transRollback();
             die( '{"success": false, "reason": "No se pudo actualizar el total de la venta" }' );
-
         }
     }
     catch(Exception $e)

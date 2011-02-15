@@ -28,7 +28,7 @@ Aplicacion.Operaciones.prototype._init = function (){
     Aplicacion.Operaciones.currentInstance.listaDePrestamosSucursalLoad();
     
     //Aplicacion.Operaciones.currentInstance.abonarVentaSucursalPanelCreator();
-    
+    Aplicacion.Operaciones.currentInstance.finishedPanelCreator();
 	
 	return this;
 };
@@ -319,6 +319,87 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
 
 
 
+/* ***************************************************************************
+   * Panel de impresion de ticket de recepcion de producto
+   *************************************************************************** */
+
+Aplicacion.Operaciones.prototype.finishedPanel = null;
+
+Aplicacion.Operaciones.prototype.finishedPanelCreator = function()
+{
+
+	this.finishedPanel = new Ext.Panel({
+		html : ""
+	});
+	
+};
+
+Aplicacion.Operaciones.prototype.finishedPanelShow = function( data_prestamo )
+{
+	//update panel
+	this.finishedPanelUpdater( data_prestamo );
+	
+	//mostramos el panel del inventario
+	//action = "sink.Main.ui.setActiveItem( Aplicacion.Inventario.currentInstance.listaInventarioPanel , 'fade');";
+                    
+	//setTimeout(action, 4000);
+	
+	
+};
+
+
+
+Aplicacion.Operaciones.prototype.finishedPanelUpdater = function( data_prestamo )
+{
+
+	
+	if(DEBUG){
+	    console.log( "se mando a imprimir : ", Ext.util.JSON.encode( data_prestamo  ) );
+	}                              
+	
+	json = encodeURI( Ext.util.JSON.encode( prestamo ) );
+	
+	do 
+	{
+		json = json.replace('#','%23');
+	} 
+	while(json.indexOf('#') >= 0);
+	
+	
+	html = "";
+	
+	html += "<table class='Mostrador-ThankYou' style = 'margin : 0 !important;' >";
+	
+	html += "	<tr>";	
+	html += "		<td align = center ><img align = center  src='../media/cash_register.png'></td>";
+	html += "	</tr>"; 
+	
+    html += "	<tr>";	
+    html += "		<td align = center> El prestamo ha sido registrado con exito.. </td>";
+    html += "	</tr>";
+
+	html += "</table>";
+
+	
+	html += "<iframe src ='PRINTER/src/impresion.php?json=" + json + "' width='0px' height='0px'></iframe> ";
+	
+	//actualiza el panel de la impresion
+	this.finishedPanel.update(html);
+	
+	//muestra el panel donde se embebe el iframe para la impresion
+    sink.Main.ui.setActiveItem( this.finishedPanel , 'fade');		
+
+};
+
+Aplicacion.Operaciones.prototype.finishedPanelCreator = function()
+{
+
+	this.finishedPanel = new Ext.Panel({
+		html : ""
+	});
+	
+};
+
 
 
 
@@ -451,7 +532,7 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
         */
     Aplicacion.Operaciones.prototype.nuevaOperacionInterSucursalEfectivo = function( data ){
 
-        Ext.getBody().mask('Guardando nuevo prestamo de efectivo ...', 'x-mask-loading', true);
+        Ext.getBody().mask('Guardando nuevo prestamo de efectivo ...', 'x-mask-loading', true);        
 
         Ext.Ajax.request({
             url: '../proxy.php',
@@ -462,7 +543,7 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
             },
             success: function(response, opts) {
                 try{
-                    r = Ext.util.JSON.decode( response.responseText );
+                    prestamo = Ext.util.JSON.decode( response.responseText );
                 }catch(e){
                     return POS.error(response, e);
                 }
@@ -474,14 +555,28 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
 
 
                 //informamos lo que sucedio
-                if( r.success)
+                if( !prestamo.success)               
                 {
-                    Ext.Msg.alert("Operaciones","Se ha registrado el nuevo prestamo de efectivo"); 
+                    Ext.Msg.alert("Operaciones","Error: " + prestamo.reason); 
                 }
-                else
-                {
-                    Ext.Msg.alert("Operaciones","Error: " + r.success); 
+                
+                //contiene la informacion asociada al prestamo para enviarla a la sucursal
+                data_prestamo = {
+                    ticket_prestamo : true,
+                    empelado : prestamo.empleado,
+                    concepto_prestamo : data.concepto,
+                    saldo_prestamo : data.monto,
+                    monto_abono : data.monto,
+                    sucursal_origen : prestamo.sucursal_origen,
+                    sucursal_destino : prestamo.sucursal_destino
+                };
+                
+                if(DEBUG){
+                    console.log("Enviando prestamo de efectivo : ", data_prestamo);
                 }
+                
+                Aplicacion.Operaciones.currentInstance.finishedPanelShow( data_prestamo );
+                
             },
             failure: function( response ){
                 POS.error( response );

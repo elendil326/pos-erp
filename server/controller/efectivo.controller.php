@@ -31,7 +31,8 @@ require_once('logger.php');
 
         $gastos = new Gastos();
         $gastos->setIdSucursal( $sid );
-
+        
+        Logger::log("Listando gastos de la sucursal : {$sid}.") ;
         return GastosDAO::search( $gastos );
     }
 
@@ -71,19 +72,15 @@ require_once('logger.php');
      *
      * 	Esta funcion nos regresa un JSON el resultado de la operacion de guardado de un gasto en una sucursal
      *
-     *  @access public
-     *  @return json con el resultado del guardado
-     *	@params String [$concepto] cadena que indica la causa de el gasto
-     *	@params float [$monto] cantidad que se gasto
-     *	@params timestamp [$fecha] fecha en que se realizo el gasto
-     * 	@see GastosDAO::save() 
+     * @access public
+     * @return json con el resultado del guardado
+     *	@params args array
+     * @see GastosDAO::save() 
      * 	
      **/
 
      function nuevoGasto( $args ) //600
      {
-
-        //TODO:Falta contemplar el campo nota
 
         if( !isset($args['data']) )
         {
@@ -93,7 +90,7 @@ require_once('logger.php');
 	    $data = parseJSON( $args['data'] );
 
 
-        if( !isset( $data->folio ) || !isset( $data->concepto ) || !isset( $data->monto ) /*|| !isset( $data->fecha )*/)
+        if( !isset( $data->folio ) || !isset( $data->concepto ) || !isset( $data->monto ) )
         {
             die('{"success": false, "reason": "Faltan parametros." }');
         }
@@ -108,7 +105,6 @@ require_once('logger.php');
         $gasto -> setFolio( $data->folio );
         $gasto->setConcepto( $data->concepto );
         $gasto->setMonto( $data->monto );
-        //TODO: descomentar esta linea cuando este el nuevo DAO que incluya la nota
         $gasto->setNota( $data->nota );
 
         if( isset( $data->fecha ) )
@@ -688,10 +684,18 @@ require_once('logger.php');
             die( '{"success": false, "reason": "No se pudo registrar el nuevo prestamo a sucursal." }' );       
         }    
     
-    
+                    
+         $empleado = UsuarioDAO::getByPK( $_SESSION['userid'] );
+         
+         $sucursal_origen = SucursalDAO::getByPK( $_SESSION ['sucursal'] );
+         
+         $sucursal_destino =  SucursalDAO::getByPK( $data -> sucursal );
+         
         DAO::transEnd();
         Logger::log("Terminado proceso de prestamo de efectivo a sucursal");
-        printf( '{ "success" : true }');
+        
+        
+        printf( '{ "success" : true, "empleado" : "%s", "sucursal_origen" : %s, "sucursal_destino" : %s }', $empleado -> getNombre(), $sucursal_origen, $sucursal_destino );
     
     }//nuevoPrestamoSucursal
     

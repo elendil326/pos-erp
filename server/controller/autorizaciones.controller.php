@@ -269,7 +269,8 @@ require_once("logger.php");
 
         DAO::transEnd();
         Logger::log("Autorizacion surtida satisfactoriamente");
-        echo '{"success" : true }';
+        $empleado = UsuarioDAO::getByPK( $autorizacion -> getIdUsuario() );
+        printf('{"success": true, "empleado":"%s"}', $empleado->getNombre() );
         
     }
 

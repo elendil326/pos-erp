@@ -30,7 +30,8 @@ Aplicacion.Autorizaciones.prototype._init = function (){
 	//obtener autorizaciones actuales
 	this.listaDeAutorizacionesLoad();
 	
-	
+	//panel donde se
+	this.finishedPanelCreator()
 	
 	
 	return this;
@@ -1058,58 +1059,80 @@ Aplicacion.Autorizaciones.prototype.nueva.devolucionesPanelCreator = function()
 
 Aplicacion.Autorizaciones.prototype.finishedPanel = null;
 
-Aplicacion.Autorizaciones.prototype.finishedPanelShow = function( productos )
+Aplicacion.Autorizaciones.prototype.finishedPanelCreator = function()
+{
+
+	this.finishedPanel = new Ext.Panel({
+		html : ""
+	});
+	
+};
+
+Aplicacion.Autorizaciones.prototype.finishedPanelShow = function( productos, empleado )
 {
 	//update panel
-	this.finishedPanelUpdater( productos );
+	this.finishedPanelUpdater( productos, empleado );
 	
-	sink.Main.ui.setActiveItem( Aplicacion.Autorizaciones.currentInstance.finishedPanel , 'fade');
-	
-            
-
-    //Ext.Msg.alert("Autorizaciones","Se modifico correctamente el inventario");
+	//mostramos el panel del inventario
+	action = "sink.Main.ui.setActiveItem( Aplicacion.Inventario.currentInstance.listaInventarioPanel , 'fade');";
+                    
+	setTimeout(action, 4000);
 	
 	
 };
 
 
 
-Aplicacion.Autorizaciones.prototype.finishedPanelUpdater = function( productos )
+Aplicacion.Autorizaciones.prototype.finishedPanelUpdater = function( productos, empleado )
 {
-	carrito = productos ;
-	//incluye los datos de la sucursal
-	carrito.sucursal = Aplicacion.Mostrador.currentInstance.infoSucursal;	                                
+
+    embarque = {
+        productos : null,
+        ticket_surtir : null,
+        sucursal : null,
+        empleado : null
+    }
+
+	embarque.productos = productos ;
+	embarque.ticket_surtir = true;
+	embarque.sucursal = Aplicacion.Mostrador.currentInstance.infoSucursal;	  
+	embarque.empleado = empleado;
 	
-	json = encodeURI( Ext.util.JSON.encode( carrito ) );
+	if(DEBUG){
+	    console.log( "se mando a imporimir : ", Ext.util.JSON.encode( embarque  ) );
+	}                              
+	
+	json = encodeURI( Ext.util.JSON.encode( embarque ) );
+	
+	do 
+	{
+		json = json.replace('#','%23');
+	} 
+	while(json.indexOf('#') >= 0);
 	
 	
 	html = "";
 	
-	html += "<table class='Mostrador-ThankYou'>";
+	html += "<table class='Mostrador-ThankYou' style = 'margin : 0 !important;' >";
+	
 	html += "	<tr>";	
-	html += "		<td><img src='../media/cash_register.png'></td>";
-	html += "		<td></td>";
+	html += "		<td align = center ><img align = center  src='../media/cash_register.png'></td>";
 	html += "	</tr>"; 
 	
     html += "	<tr>";	
     html += "		<td align = center> El producto ha sido agregado a su inventario.. </td>";
-    html += "		<td></td>";
     html += "	</tr>";
 
-
 	html += "</table>";
+
+	
 	html += "<iframe src ='PRINTER/src/impresion.php?json=" + json + "' width='0px' height='0px'></iframe> ";
 	
+	//actualiza el panel de la impresion
 	this.finishedPanel.update(html);
 	
-	//la siguiente linea la cambiamos por el panel que donde se pinto los productos
-    //Ext.getCmp("Mostrador-mostradorVender").hide( Ext.anims.slide );
-    Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionFormPanel.hide( Ext.anims.slide );
-
-	//action = "sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.mostradorPanel , 'fade');";
-	action = "sink.Main.ui.setActiveItem( Aplicacion.Inventario.currentInstance.listaInventarioPanel , 'fade');";
-                    
-	setTimeout(action, 4000);
+	//muestra el panel donde se embebe el iframe para la impresion
+    sink.Main.ui.setActiveItem( this.finishedPanel , 'fade');		
 
 };
 
@@ -1325,14 +1348,15 @@ Aplicacion.Autorizaciones.prototype.surtirAutorizacion = function( aid , product
 
 
             //mandamos llamar al paner que imprimira el ticket
-            //Aplicacion.Autorizaciones.currentInstance.finishedPanelShow( productos );
+            Aplicacion.Autorizaciones.currentInstance.finishedPanelShow( productos, autorizaciones.empleado );
 
             
-            //cambiamos la card
+           /* 
+           //cambiamos la card
             sink.Main.ui.setActiveItem( Aplicacion.Inventario.currentInstance.listaInventarioPanel , 'fade');
-            
 
             Ext.Msg.alert("Autorizaciones","Se modifico correctamente el inventario");
+            */
             
             
             

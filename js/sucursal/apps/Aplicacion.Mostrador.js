@@ -1209,11 +1209,14 @@ Aplicacion.Mostrador.prototype.vender = function ()
       *     }
         */
 
+    if(DEBUG){
+        console.log("El carrito que se enviara para registrar la venta sera  : ", Aplicacion.Mostrador.currentInstance.carrito);
+    }
 
 	json = Ext.util.JSON.encode( Aplicacion.Mostrador.currentInstance.carrito );
 	
 	if(DEBUG){
-		console.log("Enviando venta ....");
+		console.log("Enviando venta ....", json);
 	}
 	
 	Ext.Ajax.request({
