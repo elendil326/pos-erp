@@ -561,14 +561,14 @@ Aplicacion.Operaciones.prototype.finishedPanelCreator = function()
                 }
                 
                 //contiene la informacion asociada al prestamo para enviarla a la sucursal
-                data_prestamo = {
-                    ticket_prestamo : true,
-                    empelado : prestamo.empleado,
+                data_prestamo = {                    
+                    empleado : prestamo.empleado,
                     concepto_prestamo : data.concepto,
                     saldo_prestamo : data.monto,
                     monto_abono : data.monto,
                     sucursal_origen : prestamo.sucursal_origen,
-                    sucursal_destino : prestamo.sucursal_destino
+                    sucursal_destino : prestamo.sucursal_destino,
+                    ticket_prestamo : true
                 };
                 
                 if(DEBUG){
