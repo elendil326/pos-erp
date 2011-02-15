@@ -334,6 +334,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			continue;
 		}
 	
+	 
+	
         //control donde se muestra la cantidad de producto
 		a = new Ext.form.Text({
 			renderTo : "Mostrador-carritoCantidad"+ carrito.items[i].idUnique ,
@@ -341,7 +343,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			value : carrito.items[i].cantidad,
 			prodID : carrito.items[i].id_producto,
 			idUnique : carrito.items[i].idUnique,
-			//width: 100,
+			fieldCls:'Mostrador-input',
 			style:{
 		         textAlign: 'center'
 		    },

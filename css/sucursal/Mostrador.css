@@ -32,3 +32,7 @@
 .Mostrador-ThankYou td{
 	padding: 10px;
 }
+
+.Mostrador-input {
+    background-color:"#7f7f7f !important";
+}
