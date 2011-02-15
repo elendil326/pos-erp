@@ -217,7 +217,12 @@ sink.Main = {
 
 
     onNavigate : function(ui, record) {
-			
+		if(DEBUG){
+			console.log("Navegando !");
+		}
+		
+		Aplicacion.Inventario.currentInstance.inventarioListaStore.clearFilter();
+		
     }
 
 };

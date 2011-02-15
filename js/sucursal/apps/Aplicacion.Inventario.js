@@ -79,7 +79,8 @@ Aplicacion.Inventario.prototype.inventarioListaStore = new Ext.data.Store({
 	sorters: 'descripcion',
 		   
 	getGroupString : function(record) {
-		return record.get('descripcion')[0];
+		var s = record.get('descripcion');
+		return s.split(" ")[0];
 	}
 });
 
@@ -152,7 +153,7 @@ Aplicacion.Inventario.prototype.listaInventarioPanel = null;
 Aplicacion.Inventario.prototype.listaInventarioPanelShow = function ()
 {
 	
-
+	
 	
 	if( this.listaInventarioPanel ){
 		this.listaInventarioPanelShow();
@@ -200,10 +201,16 @@ Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 			xtype: 'list',
 			store: this.inventarioListaStore,
 			//itemTpl: '<div class=""><b>{productoID}</b>&nbsp;{descripcion} </div>',
-			itemTpl: '<div class=""><table width = 100% ><tr width = 100%><td width = 20%><b>{productoID}</b> &nbsp; {descripcion}</td><td width = 30%><b>Original</b> &nbsp; {existenciasOriginales} {medida}</td><td width = 10% >${precioVentaSinProcesar}</td><td width = 30%><b>Procesado</b> &nbsp; {existenciasProcesadas} {medida}</td><td width = 10% > ${precioVenta} </td></tr></table></div>',
+			itemTpl: '<div class=""><table width = 100% ><tr width = 100%><td width = 20%><b>{productoID}</b> &nbsp; {descripcion}</td><td width = 30%><b>Original</b> &nbsp; {existenciasOriginales} {medida}s</td><td width = 10% >${precioVentaSinProcesar}</td><td width = 30%><b>Procesado</b> &nbsp; {existenciasProcesadas} {medida}s</td><td width = 10% > ${precioVenta} </td></tr></table></div>',
 			grouped: true,
 			indexBar: true,
 			listeners : {
+				"activate" : function(){
+					if(DEBUG){
+						console.log("Mostrando lista de inventario*************");
+					}
+					Aplicacion.Inventario.currentInstance.inventarioListaStore.clearFilter();
+				},
 				"selectionchange"  : function ( view, nodos, c ){
 					
 					if(nodos.length > 0){
