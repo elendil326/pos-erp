@@ -192,6 +192,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 	    }
 	}
 	
+	var stotal = 0;
+	
 	//iteramos los productos que hay en el carrito para crear la tabla dond se muestran los productos
 	for (var i=0; i < carrito.items.length; i++){
 		
@@ -294,10 +296,24 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		html += "<td  style='width: 11.3%;'>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precio )+"</td>";
 		
 		html += "</tr>";
-		
+		stotal += (carrito.items[i].cantidad * carrito.items[i].precio);
 	}//for
 	
 	html += "</table>";
+	
+	var style = "";
+	style += "font-size: 35px;";
+	style += "font-weight: bold;";
+	style += "margin: 32px 0 0 -4px;";
+	style += "text-shadow: 1px 1px 4px black;";
+	style += "color: #073e80;";
+	style += "font-family: 'ff-din-web-1', 'ff-din-web-2', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Arial, Helvetica, sans-serif;";
+	style += "letter-spacing: -3px;";
+	
+	if(carrito.items.length > 0){
+		html += "<div style='"+style+"' align=right>Total "+POS.currencyFormat( stotal )+"&nbsp;</div>";	
+	}
+	
 	
 	//mostramos al tabla
 	//Ext.getCmp("MostradorHtmlPanel").hide();
