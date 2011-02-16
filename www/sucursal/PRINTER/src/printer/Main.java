@@ -46,6 +46,8 @@ public class Main extends Applet {
         //
         String json_dec = URLDecoder.decode(getParameter("json"));
 
+        System.out.println("json_dev vale : " + json_dec);
+
         String hora = URLDecoder.decode(getParameter("hora"));
         //String hora = "22:12:02";
         String fecha = URLDecoder.decode(getParameter("fecha"));

@@ -529,11 +529,7 @@ this.venta.tipoVenta="contado";
                 ticket.drawString("Tel. " + this.venta.sucursal_origen.telefono, 0, y);
                 y += h_normalTicket;
 
-                ticket.drawString("========= ", 0, y);
-                ticket.setFont(boldTicket);
-                ticket.drawString("", 72, y);
-                ticket.setFont(normalTicket);
-                ticket.drawString(" ==========", 120, y);
+                ticket.drawString("==============================", 0, y);
                 y += h_normalTicket;
         //javax.swing.JOptionPane.showMessageDialog(null, this.venta.id_venta);
                 ticket.setFont(boldTicket);
@@ -603,7 +599,7 @@ y += h_normalTicket;
                 ticket.drawString("------------------------------------------------------------------------", 0, y);
                 y += h_normalTicket;
 
-                ticket.setFont(boldSmallTicket);
+                /*ticket.setFont(boldSmallTicket);
 
                 ticket.drawString("SALDO :", 63, y);
                 if(this.venta.saldo_prestamo==0){
@@ -619,13 +615,13 @@ y += h_normalTicket;
 
                 ticket.setFont(normalTicket);
                 ticket.drawString("------------------------------------------------------------------------", 0, y);
-                y += h_normalTicket;
+                y += h_normalTicket;*/
 
                 y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, new Converter().getStringOfNumber(this.venta.monto_abono), ticket, 0, y, h_normalTicket);
 
-ticket.drawString("_____________________________________________________________", 0, y);
+ticket.drawString("_____________________________________________________________", 0, y + 20);
                     y += h_normalTicket;
-                    ticket.drawString("Firma(s)", 70, y);
+                    ticket.drawString("Firma", 70, y);
                     y += h_normalTicket;
 
                 ticket.drawString(this.venta.sugerencias, 0, y);
