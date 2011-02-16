@@ -357,7 +357,7 @@ Aplicacion.Operaciones.prototype.finishedPanelUpdater = function( data_prestamo 
 	    console.log( "se mando a imprimir : ", Ext.util.JSON.encode( data_prestamo  ) );
 	}                              
 	
-	json = encodeURI( Ext.util.JSON.encode( prestamo ) );
+	json = encodeURI( Ext.util.JSON.encode( data_prestamo ) );
 	
 	do 
 	{
@@ -561,15 +561,17 @@ Aplicacion.Operaciones.prototype.finishedPanelCreator = function()
                 }
                 
                 //contiene la informacion asociada al prestamo para enviarla a la sucursal
-                data_prestamo = {                    
+                data_prestamo = {                
+                    ticket_prestamo : true,           
+                    id_prestamo : prestamo.id_prestamo,         
                     empleado : prestamo.empleado,
                     concepto_prestamo : data.concepto,
                     saldo_prestamo : data.monto,
                     monto_abono : data.monto,
                     sucursal_origen : prestamo.sucursal_origen,
                     sucursal_destino : prestamo.sucursal_destino,
-                    ticket_prestamo : true
                 };
+                                
                 
                 if(DEBUG){
                     console.log("Enviando prestamo de efectivo : ", data_prestamo);

@@ -695,7 +695,7 @@ require_once('logger.php');
         Logger::log("Terminado proceso de prestamo de efectivo a sucursal");
         
         
-        printf( '{ "success" : true, "empleado" : "%s", "sucursal_origen" : %s, "sucursal_destino" : %s }', $empleado -> getNombre(), $sucursal_origen, $sucursal_destino );
+        printf( '{ "success" : true, "id_prestamo": %s , "empleado" : "%s", "sucursal_origen" : %s, "sucursal_destino" : %s }', $prestamo_sucursal -> getIdPrestamo(), $empleado -> getNombre(), $sucursal_origen, $sucursal_destino );
     
     }//nuevoPrestamoSucursal
     
