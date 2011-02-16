@@ -619,7 +619,7 @@ class FormatoTicket implements Printable {
             
             ticket.drawString("_____________________________________________________________", 0, y);
             y += h_normalTicket;
-            ticket.drawString("Firma", 70, y);
+            ticket.drawString("Firma", 75, y);
             y += h_normalTicket;
 
             ticket.drawString(this.venta.sugerencias, 0, y);
