@@ -76,12 +76,12 @@ Ext.regModel('listaInventarioModel', {
  */
 Aplicacion.Inventario.prototype.inventarioListaStore = new Ext.data.Store({
 	model: 'listaInventarioModel',
-	sorters: 'descripcion',
+	sorters: 'descripcion'/*,
 		   
 	getGroupString : function(record) {
 		var s = record.get('descripcion');
 		return s.split(" ")[0];
-	}
+	}*/
 });
 
 /* 
@@ -202,7 +202,7 @@ Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 			store: this.inventarioListaStore,
 			//itemTpl: '<div class=""><b>{productoID}</b>&nbsp;{descripcion} </div>',
 			itemTpl: '<div class=""><table width = 100% ><tr width = 100%><td width = 20%><b>{productoID}</b> &nbsp; {descripcion}</td><td width = 30%><b>Original</b> &nbsp; {existenciasOriginales} {medida}s</td><td width = 10% >${precioVentaSinProcesar}</td><td width = 30%><b>Procesado</b> &nbsp; {existenciasProcesadas} {medida}s</td><td width = 10% > ${precioVenta} </td></tr></table></div>',
-			grouped: true,
+			//grouped: true,
 			indexBar: true,
 			listeners : {
 				"activate" : function(){
@@ -631,7 +631,7 @@ Aplicacion.Inventario.prototype.surtirWizardCreator = function (){
 			layout: 'fit',
 			store: this.inventarioListaStore,
 			itemTpl: '<div class=""><b>{productoID}</b> {descripcion}</div>',
-			grouped: true,
+			//grouped: true,
 			indexBar: false	
 		}]
 	});

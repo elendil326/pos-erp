@@ -135,15 +135,15 @@ Aplicacion.Proveedores = function(){
 
 
 	this.addToCart = function( item ){
+	
 		if(DEBUG){
-			console.log("agregnaod item" , item);
+			console.log("agregnaod item" , item.data);			
 		}
+				
 		
-		var pid = item.get("productoID");
-		var i;
+		for (var i = carritoItems.length - 1; i >= 0; i--){		
 		
-		for (i = carritoItems.length - 1; i >= 0; i--){
-			if( carritoItems[i].productoID == item.productoID ){
+			if( carritoItems[i].get("productoID") == item.get("productoID") ){
 				if(DEBUG){
 					console.log( "este producto ya existe en el carrito para surtir" );
 				}
@@ -151,14 +151,14 @@ Aplicacion.Proveedores = function(){
 				return ;
 			}
 		}
-		
-		item.cantidad = 1;
-		
-		if(DEBUG){
-			console.log("Agregando nuevo", item)
-		}
+
+		item.cantidad = 1;		
 		
 		carritoItems.push( item );
+		
+		if(DEBUG){
+			console.log("Agregando nuevo", item);
+		}
 	
 		refreshSurtir();		
 		
@@ -213,8 +213,8 @@ Aplicacion.Proveedores = function(){
 		html += "	<td>Descripcion</td>";
 	    html += "	<td></td>";
 		html += "	<td colspan=2>Cantidad</td>";
-		html += "	<td>Costo</td>";
-		//html += "<td>Total</td>";
+		html += "	<td >Costo</td>";
+		html += "<td>Sub Total</td>";
 
 		html += "</tr>";
 
@@ -225,17 +225,19 @@ Aplicacion.Proveedores = function(){
 			}
 
 			if( i == carritoItems.length - 1 )
+			{
 				html += "<tr class='last'>";
+			}
 			else
+			{
 				html += "<tr >";		
+			}
 
-			html += "	<td>" + carritoItems[i].get("productoID") + " " + carritoItems[i].get("descripcion") + "</td>";
+			html += "	<td><b>" + carritoItems[i].get("productoID") + "</b> &nbsp; " + carritoItems[i].get("descripcion") + "</td>";
 			html += "	<td > <span class = 'boton' onClick = 'Aplicacion.Proveedores.ci.quitarDelCarrito(" + carritoItems[i].get("productoID") + ")'>Quitar</span> </td>";
 			html += "	<td colspan=2 > <div id='Proveedores-carritoCantidad"+ carritoItems[i].get("productoID") +"'></div></td>";
 			html += "	<td > <div id='Proveedores-carritoCosto"+ carritoItems[i].get("productoID") +"'></div></td>";
-			//html += "<td > </td>";
-			//html += "<td> <div style='color: green'>"+ POS.currencyFormat(carrito.items[i].precioIntersucursal) +"</div></td>";
-			//html += "<td>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioIntersucursal )+"</td>";
+			html += "<td >" +  POS.currencyFormat( carritoItems[i].cantidad * carritoItems[i].get("precioVenta") ) + "</td>";
 
 			html += "</tr>";
 		}
@@ -246,7 +248,6 @@ Aplicacion.Proveedores = function(){
 
 
 		for (i=0; i < carritoItems.length; i++){
-
 
 			a = new Ext.form.Text({
 				renderTo : "Proveedores-carritoCantidad"+ carritoItems[i].get("productoID") ,
@@ -263,6 +264,25 @@ Aplicacion.Proveedores = function(){
 							submitText : 'Aceptar',
 							callback : function ( campo ){
 									//refrescar el carrito
+									
+									//buscar el producto en la estructura y ponerle esa nueva cantidad
+							        for (i=0; i < carritoItems.length; i++){
+							
+								        if(carritoItems[i].get("productoID")  == campo.prodID ){
+									        carritoItems[i].cantidad = parseFloat( campo.getValue() );
+									        
+									        if( isNaN( campo.getValue() ) || campo.getValue() <= 0 )
+									        {
+									            carritoItems[i].cantidad = 1;									            
+									        }
+									        
+									        break;
+								        }
+								        
+							        }
+							
+							        refreshSurtir();
+									
 							}
 						};
 
@@ -272,29 +292,15 @@ Aplicacion.Proveedores = function(){
 
 			});
 
-			a = new Ext.form.Text({
+			b = new Ext.form.Text({
 				renderTo : "Proveedores-carritoCosto"+ carritoItems[i].get("productoID") ,
 				id : "Proveedores-carritoCosto"+ carritoItems[i].get("productoID") + "Text",
-				value : carritoItems[i].cantidad,
+				value : POS.currencyFormat( carritoItems[i].get("precioVenta") ),
 				prodID : carritoItems[i].get("productoID"),
 				width: 150,
-				placeHolder : "Costo",
-				listeners : {
-					'focus' : function (){
-
-						kconf = {
-							type : 'num',
-							submitText : 'Aceptar',
-							callback : function ( campo ){
-									//refrescar el carrito
-							}
-						};
-
-						POS.Keyboard.Keyboard( this, kconf );
-					}
-				}
-
+				placeHolder : "Costo"
 			});
+						
 
 			
 		}// for de cada elemento
@@ -403,7 +409,7 @@ Aplicacion.Proveedores = function(){
 					ui: 'dark',
 					dock: 'bottom',
 					items: [{
-						text: 'Agregar producto',
+						text: 'Agregar  producto',
 						ui: 'normal',
 						handler : function( t ){
 							Aplicacion.Proveedores.ci.popups.listaDeProductos.showBy(this);
@@ -452,7 +458,7 @@ Aplicacion.Proveedores = function(){
 				ui: 'dark',
 				store: Aplicacion.Inventario.currentInstance.inventarioListaStore,
 				itemTpl: '<div class=""><b>{productoID}</b> {descripcion}</div>',
-				grouped: true,
+				//grouped: true,
 				indexBar: false,
 				listeners : {
 					"selectionchange"  : function ( view, nodos, c ){
@@ -462,14 +468,21 @@ Aplicacion.Proveedores = function(){
 							Aplicacion.Proveedores.ci.addToCart( nodos[0] );
 						}
 
-						//deseleccinar
+						//deseleccionar
 						view.deselectAll();
+						
 					}
 				}
 			}]
 		});
+		
+		
+		this.confirmar = function(){
+		
+		    alert("confirmando");
+		};
 
-}
+};
 
 
 
