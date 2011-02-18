@@ -189,6 +189,31 @@ Aplicacion.Proveedores = function(){
 	    refreshSurtir();
 	};
 
+    this.carritoCambiarCantidad = function( id, qty, forceNewValue ){
+    
+        
+	
+	    for (var i = carritoItems.length - 1; i >= 0; i--){
+	
+	
+		    if( carritoItems[i].get("productoID") == id ){
+			
+			    if(forceNewValue){
+				    carritoItems[i].cantidad = qty;
+			    }else{
+				    carritoItems[i].cantidad += qty;
+			    }
+			
+			    if(carritoItems[i].cantidad <= 0){
+				    carritoItems[i].cantidad = 1;
+			    }
+			
+			    refreshSurtir();
+			    break;
+		    }
+	    }
+    
+    };
 
 	var refreshSurtir = function (){
 
@@ -210,11 +235,12 @@ Aplicacion.Proveedores = function(){
 		var html = "<table border=0>";
 
 		html += "<tr class='top'>";
-		html += "	<td>Descripcion</td>";
-	    html += "	<td></td>";
-		html += "	<td colspan=2>Cantidad</td>";
-		html += "	<td >Costo</td>";
-		html += "<td>Sub Total</td>";
+		
+		html += "   <td>Descripcion</td>";
+	    html += "   <td>&nbsp;</td>";
+		html += "   <td colspan=4 align = center>Cantidad</td>";
+		html += "   <td >Costo</td>";
+		html += "   <td>Sub Total</td>";
 
 		html += "</tr>";
 
@@ -233,11 +259,21 @@ Aplicacion.Proveedores = function(){
 				html += "<tr >";		
 			}
 
-			html += "	<td><b>" + carritoItems[i].get("productoID") + "</b> &nbsp; " + carritoItems[i].get("descripcion") + "</td>";
-			html += "	<td > <span class = 'boton' onClick = 'Aplicacion.Proveedores.ci.quitarDelCarrito(" + carritoItems[i].get("productoID") + ")'>Quitar</span> </td>";
-			html += "	<td colspan=2 > <div id='Proveedores-carritoCantidad"+ carritoItems[i].get("productoID") +"'></div></td>";
-			html += "	<td > <div id='Proveedores-carritoCosto"+ carritoItems[i].get("productoID") +"'></div></td>";
-			html += "<td >" +  POS.currencyFormat( carritoItems[i].cantidad * carritoItems[i].get("precioVenta") ) + "</td>";
+            var m ;
+		    switch(carritoItems[i].get("medida")){
+			    case "kilogramo": m = "kgs"; break;
+			    case "pieza": m = "pzas"; break;
+			    case "litro": m = "lts"; break;						
+		    }
+
+			html += "   <td style='width: 27%;' ><b>" + carritoItems[i].get("productoID") + "</b> &nbsp; " + carritoItems[i].get("descripcion") + "</td>";
+			html += "   <td style='width: 12%;'> <span class = 'boton' onClick = 'Aplicacion.Proveedores.ci.quitarDelCarrito(" + carritoItems[i].get("productoID") + ")'><img src='../media/icons/close_16.png'></span></span> </td>";
+			html += "   <td style='width: 8.1%;'> <span class='boton' onClick=\"Aplicacion.Proveedores.ci.carritoCambiarCantidad('"+ carritoItems[i].get("productoID") + "', -1, false)\">&nbsp;-&nbsp;<img src='../media/icons/arrow_down_16.png'></span></td>";
+			html += "   <td style='width: 8.1%;' > <div id='Proveedores-carritoCantidad"+ carritoItems[i].get("productoID") +"'></div> </td>";
+			html += "   <td style='width: 6%;'>" + m +  "</td>";
+			html += "   <td style='width: 8.1%;'> <span class='boton' onClick=\"Aplicacion.Proveedores.ci.carritoCambiarCantidad('"+ carritoItems[i].get("productoID") +"', 1, false)\"><img src='../media/icons/arrow_up_16.png'>&nbsp;+&nbsp;</span></td>";
+			html += "   <td style='width: 10.4%;'> <div id='Proveedores-carritoCosto"+ carritoItems[i].get("productoID") +"'></div></td>";
+			html += "   <td style='width: 12.3%;'>" +  POS.currencyFormat( carritoItems[i].cantidad * carritoItems[i].get("precioVenta") ) + "</td>";
 
 			html += "</tr>";
 		}
@@ -254,7 +290,7 @@ Aplicacion.Proveedores = function(){
 				id : "Proveedores-carritoCantidad"+ carritoItems[i].get("productoID") + "Text",
 				value : carritoItems[i].cantidad,
 				prodID : carritoItems[i].get("productoID"),
-				width: 150,
+				//width: 150,
 				placeHolder : "Cantidad",
 				listeners : {
 					'focus' : function (){
@@ -295,7 +331,7 @@ Aplicacion.Proveedores = function(){
 			b = new Ext.form.Text({
 				renderTo : "Proveedores-carritoCosto"+ carritoItems[i].get("productoID") ,
 				id : "Proveedores-carritoCosto"+ carritoItems[i].get("productoID") + "Text",
-				value : POS.currencyFormat( carritoItems[i].get("precioVenta") ),
+				value : POS.currencyFormat( carritoItems[i].get("precioIntersucursal") ),
 				prodID : carritoItems[i].get("productoID"),
 				width: 150,
 				placeHolder : "Costo"
