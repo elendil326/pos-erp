@@ -272,7 +272,7 @@ Aplicacion.Proveedores = function(){
 			html += "   <td style='width: 8.1%;' > <div id='Proveedores-carritoCantidad"+ carritoItems[i].get("productoID") +"'></div> </td>";
 			html += "   <td style='width: 6%;'>" + m +  "</td>";
 			html += "   <td style='width: 8.1%;'> <span class='boton' onClick=\"Aplicacion.Proveedores.ci.carritoCambiarCantidad('"+ carritoItems[i].get("productoID") +"', 1, false)\"><img src='../media/icons/arrow_up_16.png'>&nbsp;+&nbsp;</span></td>";
-			html += "   <td style='width: 10.4%;'> <div id='Proveedores-carritoCosto"+ carritoItems[i].get("productoID") +"'></div></td>";
+			html += "   <td style='width: 10.4%;'> <div id='Proveedores-carritoCosto"+ carritoItems[i].get("productoID") +"'> " + POS.currencyFormat( carritoItems[i].get("precioIntersucursal") ) + " </div></td>";
 			html += "   <td style='width: 12.3%;'>" +  POS.currencyFormat( carritoItems[i].cantidad * carritoItems[i].get("precioVenta") ) + "</td>";
 
 			html += "</tr>";
@@ -328,14 +328,14 @@ Aplicacion.Proveedores = function(){
 
 			});
 
-			b = new Ext.form.Text({
+			/*b = new Ext.form.Text({
 				renderTo : "Proveedores-carritoCosto"+ carritoItems[i].get("productoID") ,
 				id : "Proveedores-carritoCosto"+ carritoItems[i].get("productoID") + "Text",
 				value : POS.currencyFormat( carritoItems[i].get("precioIntersucursal") ),
 				prodID : carritoItems[i].get("productoID"),
 				width: 150,
 				placeHolder : "Costo"
-			});
+			});*/
 						
 
 			
