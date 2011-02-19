@@ -51,14 +51,14 @@
     <div id="content">
 	
 	
-      <h1>
+      <h2>
        Estado del servidor
-      </h1>
+      </h2>
 		
-	<table>
+	<table >
 		<tr>
 			<th></th>
-			<th>Descripcion</th>
+			<th>Descripcion&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 			<th>Valor actual</th>
 		</tr>
 		<tr>
@@ -73,6 +73,11 @@
 			<td><?php echo POS_LOG_TO_FILE_FILENAME ; ?></td>
 		</tr>	
 	</table>
+	
+	
+	<h2>Nueva version</h2>
+
+	
 	
     <?php include_once("admin/includes/footerInge.php"); ?>
     </div> 

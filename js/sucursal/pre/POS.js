@@ -27,7 +27,7 @@ POS.currencyFormat = function (num){
 
 
 Ext.Ajax.timeout = 25000;
-POS.CHECK_DB_TIMEOUT = 5000;
+POS.CHECK_DB_TIMEOUT = 60000;
 POS.A = { failure : false,  sendHeart : true };
 POS.U = { g : null };
 
