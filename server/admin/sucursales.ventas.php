@@ -25,7 +25,7 @@ require_once("controller/inventario.controller.php");
 	$centro = array();
 	
 	foreach($comprasSucursal as $compra){
-		if($compra->getIdProveedor() === null){
+		if($compra->getIdProveedor() === 0){
 			array_push( $centro, $compra );
 		}else{
 			array_push( $proveedores, $compra );			
@@ -60,6 +60,7 @@ $tabla = new Tabla($header, $proveedores);
 $tabla->addNoData("No hay compras a proveedores por parte de las sucursales");
 $tabla->addColRender("pagado", "moneyFormat");
 $tabla->addColRender("total", "moneyFormat");
+	$tabla->addColRender("fecha", "toDate");
 $tabla->render();
 
 ?>

@@ -59,6 +59,9 @@ function login( $u, $p )
 		return;
 	}
 
+	if($grpu->getIdGrupo() > 1 && !sucursalTest()){
+		die( "{\"success\": false , \"reason\": 101,  \"text\" : \"Este equipo no es una sucursal valida.\" }" );
+	}
 
     //usuario valido, y grupo valido
 	$grpu = $res[0];
@@ -77,6 +80,8 @@ function login( $u, $p )
         }
         $_SESSION['sucursal'] = $user->getIdSucursal();
     }
+
+
 
     if($grpu->getIdGrupo() == 3){
 
@@ -473,6 +478,8 @@ function login_controller_dispatch($args){
 
 			case '2099':
 			    //login desde otro lado
+				
+				
 			    if(!isset($args['u'])){
 			    	$u = "";
 			    }else{

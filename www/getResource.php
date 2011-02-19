@@ -7,7 +7,7 @@ require ( "../server/config.php" );
 
 require_once('logger.php');
 
-
+require_once('controller/login.controller.php');
 
 function writeConfig(){
 
@@ -79,6 +79,11 @@ switch($module)
 	//cargar modulos de sucursal
 	case 'sucursal':
 	
+		if(!sucursalTest()){
+			logOut(false);
+			die("window.location = \".\";");
+		}
+		
 		if(!isset($_SESSION['grupo'])){
 			Logger::log("Solicitud de recurso para sucursal sin sesion valida.");
             if( $type == "js" ){
