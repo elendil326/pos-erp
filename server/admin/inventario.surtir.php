@@ -945,6 +945,31 @@ function renderProductoSmall( $val ,$row){
 	return "<b>" . number_format( (float)$val, 2) . "</b>&nbsp;" . $medida ;
 }
 
+function toUnit( $e, $row )
+{
+	//$row["tratamiento"]
+	switch($row["medida"]){
+		case "kilogramo" : $escala = "Kgs"; break;
+		case "pieza" : $escala = "Pzas"; break;		
+	}
+
+	return "<b>" . number_format( $e / 60, 2 ) . "</b>Arp. / <b>" . number_format($e, 2) . "</b>" . $escala ;
+}
+
+function toUnitProc( $e, $row )
+{
+	if($row["tratamiento"] == null){
+		return "<i>NA</i>";
+	}
+
+	switch($row["medida"]){
+		case "kilogramo" : $escala = "Kgs"; break;
+		case "pieza" : $escala = "Pzas"; break;		
+	}
+
+	return "<b>" . number_format( $e / 60, 2 ) . "</b>Arp. / <b>" . number_format($e, 2) . "</b>" . $escala ;
+}
+
 foreach( $sucursales as $sucursal ){
 	
 	print ("<div id='actual" . $sucursal["id_sucursal"] . "' style='display: none'>");
@@ -967,8 +992,8 @@ foreach( $sucursales as $sucursal ){
 	
 	$tabla = new Tabla( $header, $inventario );
 	$tabla->addColRender( "precioVenta", "moneyFormat" );
-	$tabla->addColRender( "existenciasOriginales", "renderProducto" );	
-	$tabla->addColRender( "existenciasProcesadas", "renderProducto" );		
+	$tabla->addColRender( "existenciasOriginales", "toUnit" );	
+	$tabla->addColRender( "existenciasProcesadas", "toUnitProc" );		
     $tabla->addNoData("Esta sucursal no tiene nigun registro de productos en su inventario");
 	$tabla->render();
 	printf("</div>");
