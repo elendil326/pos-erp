@@ -68,9 +68,10 @@
 			<li >
 			  <a href="proveedor.php?action=lista">Lista de proveedores</a>
 			</li>
-			<li>
+<!--			<li>
 			  <a href="proveedor.php?action=nuevo">Nuevo proveedor</a>
 			</li>
+-->
 			<li>
 			  <a href="proveedor.php?action=abastecer">Abastecerse de proveedor</a>
 			</li>

@@ -20,13 +20,20 @@
         $save = true;
     }
 
+	if($save){
+		if($_REQUEST['sucursal'] == 0){
+			$save = 0;
+			$status = "No puedes vincular un equipo al centro de distribucion.";
+		}
+	}
 
     if($save){
+	
 		$success = true;
         $es = new EquipoSucursal();
         $es->setIdEquipo($_REQUEST['id']);
         $es->setIdSucursal($_REQUEST['sucursal']);
-
+		
 
         try{
             EquipoSucursalDAO::save( $es );

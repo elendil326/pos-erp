@@ -16,7 +16,9 @@ $toWrite .= $_REQUEST['contents'];
 
 
 $c = fopen(  "../../server/config.php", "w" );
-fwrite($c, $toWrite);
+
+//aqui quitarle los \' y \"
+fwrite($c, stripslashes($toWrite));
 fclose($c);
 
 ?>
