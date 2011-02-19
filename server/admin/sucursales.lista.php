@@ -36,6 +36,17 @@ foreach( $sucursales as $sucursal ){
     </div>
 </div>
 
+<br><br>
+<?php
+
+	$ventas = array();
+	
+	foreach( $sucursales as $sucursal ){
+		$ventas[$sucursal['id_sucursal']] = (object)VentasDAO::contarVentasPorDia($sucursal['id_sucursal'] , 180);
+	}
+
+	//echo json_encode($ventas);
+?>
 <script type="text/javascript" charset="utf-8">
 
 <?php
@@ -115,11 +126,19 @@ Event.observe(document, 'dom:loaded', function() {
 
 	<?php
 		foreach($ventas as $suc => $key){
- 			echo "graficaVentas.addGraph( ventas[$suc] ); 	";
+ 			echo "graficaVentas.addGraph( ventas[$suc], 'suc'); 	";
 		}
 	?>
+	/*
+	HumbleFinance.trackFormatter = function (obj) {
 
+	        var x = Math.floor(obj.x);
+	        var data = jsonData[x];
+	        var text = data.date + " Price: " + data.close + " Vol: " + data.volume;
 
+	        return text;
+	    };
+	*/
     graficaVentas.addSummaryGraph( todas );
     graficaVentas.render('graph');
     
@@ -131,10 +150,10 @@ Event.observe(document, 'dom:loaded', function() {
 <?php
 
 
-
 function bold($s){
 	return "<b>" . $s . "</b>";
 }
+
 //render the table
 $header = array( 
 	//"id_sucursal" => "ID",
@@ -143,13 +162,13 @@ $header = array(
 	//"rfc"=> "RFC",
 	//"telefono"=> "Telefono",
 	//"letras_factura"=> "Facturas" );
-$tabla = new Tabla( $header, $data );
-$tabla->addOnClick("id_sucursal", "mostrarDetallesSucursal");
-$tabla->addNoData("No hay sucursales.");
-$tabla->addColRender("descripcion", "bold");
+	$tabla = new Tabla( $header, $data );
+	$tabla->addOnClick("id_sucursal", "mostrarDetallesSucursal");
+	$tabla->addNoData("No hay sucursales.");
+	$tabla->addColRender("descripcion", "bold");
 
-print ("<br><h2>Sucursales Activas</h2>");
-$tabla->render();	
+	print ("<br><h2>Sucursales Activas</h2>");
+	$tabla->render();	
 
 
 ?>
