@@ -377,6 +377,34 @@ Aplicacion.Inventario.prototype.detalleInventarioSurtirEsteProd = function()
    *************************************************************************** */
 
 
+Aplicacion.Inventario.prototype.carritoCambiarCantidad = function ( id, qty, forceNewValue )
+{
+
+	carrito = this.carritoSurtir;
+		
+	
+	for (var i = carrito.items.length - 1; i >= 0; i--){
+	
+	
+		if( carrito.items[i].productoID == id ){
+			
+			if(forceNewValue){
+				carrito.items[i].cantidad = qty;
+			}else{
+				carrito.items[i].cantidad += qty;
+			}
+			
+			if(carrito.items[i].cantidad <= 0){
+				carrito.items[i].cantidad = 1;
+			}
+			
+			this.refreshSurtir();
+			break;
+		}
+	}
+	
+};
+
 Aplicacion.Inventario.prototype.carritoSurtir = {
 		items : [],
 		otherData: null
@@ -399,6 +427,9 @@ Aplicacion.Inventario.prototype.surtirAddItem = function ( item )
 			return ;
 		}
 	}
+	
+	item.cantidad = 1;
+	item.procesado = "true";
 	
 	this.carritoSurtir.items.push( item );
 	
@@ -426,9 +457,9 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 	
 	html += "<tr class='top'>";
 	html += "<td>Descripcion</td>";
-    html += "<td></td>";
-	html += "<td colspan=2>Cantidad</td>";
-	html += "<td>Tipo</td>";
+	html += "<td>&nbsp;</td>";
+    html += "<td>&nbsp;</td>";
+	html += "<td align='center'  colspan=4>Cantidad</td>";
 	//html += "<td>Total</td>";
 
 	html += "</tr>";
@@ -444,10 +475,20 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 		else
 			html += "<tr >";		
 		
-		html += "<td>" + carrito.items[i].productoID + " " + carrito.items[i].descripcion+ "</td>";
-		html += "<td > <span class = 'boton' onClick = 'Aplicacion.Inventario.currentInstance.quitarDelCarrito(" + carrito.items[i].productoID + ")'>Quitar</span> </td>";
-		html += "<td colspan=2 > <div id='Inventario-carritoCantidad"+ carrito.items[i].productoID +"'></div></td>";
-		html += "<td > <div id='Inventario-carritoTipo"+ carrito.items[i].productoID +"'></div></td>";
+		
+		var m ;
+		switch(carrito.items[i].medida){
+			case "kilogramo": m = "kgs"; break;
+			case "pieza": m = "pzas"; break;
+			case "litro": m = "lts"; break;						
+		}
+		
+		html += "<td style='width: 45%;' ><b>" + carrito.items[i].productoID + "</b> &nbsp; " + carrito.items[i].descripcion+ "</td>";
+		html += "<td style='width: 15%;' > <div id='Inventario-carritoTipo"+ carrito.items[i].productoID +"'></div></td>";
+		html += "<td style='width: 8%;' > <span class = 'boton' onClick = 'Aplicacion.Inventario.currentInstance.quitarDelCarrito(" + carrito.items[i].productoID + ")'><img src='../media/icons/close_16.png'></span> </td>";		
+		html += "<td  align='center'  style='width: 5.1%;'> <span class='boton' onClick=\"Aplicacion.Inventario.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].productoID + "', -1, false)\">&nbsp;-&nbsp;<img src='../media/icons/arrow_down_16.png'></span></td>";
+		html += "<td style='width: 6.8%;' > <div id='Inventario-carritoCantidad"+ carrito.items[i].productoID +"'></div></td><td>"+m+"</td>";
+		html += "<td  align='center'  style='width: 5.1%;'> <span class='boton' onClick=\"Aplicacion.Inventario.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].productoID +"', 1, false)\"><img src='../media/icons/arrow_up_16.png'>&nbsp;+&nbsp;</span></td>";
 		//html += "<td > </td>";
 //		html += "<td> <div style='color: green'>"+ POS.currencyFormat(carrito.items[i].precioIntersucursal) +"</div></td>";
 //		html += "<td>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioIntersucursal )+"</td>";
@@ -469,7 +510,6 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 			id : "Inventario-carritoCantidad"+ carrito.items[i].productoID + "Text",
 			value : carrito.items[i].cantidad,
 			prodID : carrito.items[i].productoID,
-			width: 150,
 			placeHolder : "Cantidad",
 			listeners : {
 				'focus' : function (){
@@ -501,12 +541,28 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 
 
 
-		b = new Ext.form.Checkbox({
+		b = new Ext.form.Select({
 			renderTo : "Inventario-carritoTipo"+ carrito.items[i].productoID ,
 			id : "Inventario-carritoTipo"+ carrito.items[i].productoID + "Value",
-			label : "Procesada",
-			value : 1,
-			disabled: false
+			productoID : carrito.items[i].productoID ,
+			options: [
+                {text: 'Procesada',  value: 'true'},
+                {text: 'Original', value: 'false'}
+            ],
+              listeners : {
+                    "change" : function (){
+                         
+                        carrito = Aplicacion.Inventario.currentInstance.carritoSurtir
+
+	                    for (var i = carrito.items.length - 1; i >= 0; i--){
+                        
+		                    if( carrito.items[i].productoID == this.productoID ){                 
+                                carrito.items[i].procesado = this.getValue();
+                            }
+                                        
+                        }
+                   }
+              }
 		});
 		
 		

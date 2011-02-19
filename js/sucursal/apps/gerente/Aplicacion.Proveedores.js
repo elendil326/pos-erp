@@ -128,11 +128,15 @@ Aplicacion.Proveedores = function(){
 			telefono : proveedor.telefono
 		});
 		
+		Aplicacion.Proveedores.ci.currentProveedor = id_proveedor;
+		
         sink.Main.ui.setActiveItem( tarjeta , 'slide');
 	};
 
-
-
+    /**
+    * id del proveedor seleccionado
+    */
+    this.currentProveedor = null;
 
 	this.addToCart = function( item ){
 	
@@ -513,9 +517,56 @@ Aplicacion.Proveedores = function(){
 		});
 		
 		
-		this.confirmar = function(){
-		
-		    alert("confirmando");
+		this.confirmar = function(){					  
+		    
+		    var carrito = {
+		        id_proveedor : Aplicacion.Proveedores.ci.currentProveedor,
+		        productos : []
+		    };
+		    
+		    
+		    for( var i = 0; i < carritoItems.length; i++ ){
+		        
+		        carrito.productos.push({
+		            id_producto : carritoItems[i].get("productoID"),
+		            cantidad : carritoItems[i].cantidad
+		        });
+		        
+		    }
+		    
+		    console.log("EL carrito chingon es : ",carrito );
+		    
+		/*
+		    Ext.getBody().mask('Registrando Compra...', 'x-mask-loading', true);
+		    		    		    
+		    Ext.Ajax.request({
+		        url: '../proxy.php',
+		        scope : this,
+		        params : {
+			        action : 302,
+			        data : Ext.util.JSON.encode( data )
+		        },
+		        success: function(response, opts) {
+			        try{
+				        r = Ext.util.JSON.decode( response.responseText );				
+			        }catch(e){
+				        POS.error(e);
+			        }
+			
+
+			        Ext.getBody().unmask();	
+						
+			        if( !r.success ){
+                        
+				        return;
+			        }
+
+                   
+
+		        }
+	        });	*/
+		    
+		    
 		};
 
 };
