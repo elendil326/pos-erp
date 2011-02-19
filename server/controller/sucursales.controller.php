@@ -202,8 +202,17 @@ function abrirSucursal( $json = null )
     $sucursal->setTelefono 		( $json->telefono);
     $sucursal->setSaldoAfavor 	( 0 );
 
-	DAO::transBegin();
 
+	
+	$buscarSucursal=new Sucursal();
+	$buscarSucursal->setLetrasFactura($json->prefijo_factura);
+      $resultados = SucursalDAO::search($buscarSucursal);
+	if(sizeof($resultados)>0){
+		Logger::log("Prefijo de factura duplicado");
+		die('{"success" : false, "reason": "Este prefijo de factura ya esta siendo utilizado por otra sucursal."}');
+	}
+	
+	DAO::transBegin();
     try{
         SucursalDAO::save( $sucursal );
     }catch( Exception $e ){

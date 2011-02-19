@@ -11,6 +11,7 @@ require_once('model/proveedor.dao.php');
 require_once('model/detalle_inventario.dao.php');
 require_once('model/compra_sucursal.dao.php');
 require_once('model/detalle_compra_sucursal.dao.php');
+require_once('model/autorizacion.dao.php');
 //require_once('model/base/compra_sucursal.dao.base.php');
 require_once('logger.php');
 
@@ -194,8 +195,113 @@ function surtirSucursalProveedor($id_proveedor,$jsonProductos){
 				DAO::transRollback();
 				die('{"success":false,"reason":"Error al intentar guardar la compra, intente de nuevo."}');
 				}
-DAO::transEnd();
-echo '{"success":true}';
+
+	DAO::transEnd();
+	echo '{"success":true}';
+}
+
+/*Surtir Sucursal de Proveedor
+*/
+function surtirSucursalDeProveedor($json){
+
+	if($json==NULL){die('{"success":false,"reason":"Faltan datos."}');}
+	
+	$datos=parseJSON($json);
+	$arrProductos=$datos->productos;
+	DAO::transBegin();
+			$compra_sucursal=new CompraSucursal();
+		$compra_sucursal->setFecha(time());
+		$compra_sucursal->setIdUsuario($_SESSION["userid"]);
+		$compra_sucursal->setIdSucursal($_SESSION["sucursal"]);
+		$compra_sucursal->setIdProveedor($datos->id_proveedor);
+		$cantExistencias=0;
+		$cantExistenciasProc=0;
+		$subtotal=0;
+		$total=0;
+		
+	for($i=0;$i<sizeof($arrProductos);$i++)
+	{
+		$existe=$inventario=DetalleInventarioDAO::getByPK($arrProductos[$i]->id_producto,$_SESSION["sucursal"]);
+		if($existe==NULL){
+			die('{"success":false,"reason":"No existe el producto"}');
+			DAO::transRollback();
+		}
+ 		//$cantExistencias+=$arrProductos[$i]->existenciasOriginales+$arrProductos[$i]->existenciasProcesadas;
+		//$cantExistenciasProc+=$arrProductos[$i]->existenciasProcesadas;
+		//$inventario->setExistencias($inventario->getExistencias()+$arrProductos[$i]->cantidad);
+		$inventario->setExistenciasProcesadas($inventario->getExistenciasProcesadas()+$arrProductos[$i]->cantidad);
+		$subtotal+=$arrProductos[$i]->precio*($arrProductos[$i]->cantidad);
+
+		try{
+			DetalleInventarioDAO::save($inventario);
+		}catch(Exception $e){
+		Logger::log($e);
+		die('{"success":false,"reason":"Error al intentar surtir la sucursal, intente de nuevo."}');
+		}
+	}
+ 			$total=$subtotal;
+			$compra_sucursal->setSubtotal($subtotal);
+			$compra_sucursal->setTotal($total);
+			$compra_sucursal->setLiquidado(0);
+			$compra_sucursal->setPagado(0);
+			try{
+				CompraSucursalDAO::save($compra_sucursal);
+
+				$id_compra=$compra_sucursal->getIdCompra();
+				$detalleCompraSucursal=new DetalleCompraSucursal();
+				$detalleCompraSucursal->setIdCompra($id_compra);
+					for($i=0;$i<sizeof($arrProductos);$i++)
+					{
+					$detalleCompraSucursal->setCantidad($arrProductos[$i]->cantidad);
+					$detalleCompraSucursal->setDescuento(0);
+					$detalleCompraSucursal->setIdProducto($arrProductos[$i]->id_producto);
+					$detalleCompraSucursal->setPrecio($arrProductos[$i]->precio);
+					$detalleCompraSucursal->setProcesadas($arrProductos[$i]->cantidad);
+						try{
+							DetalleCompraSucursalDAO::save($detalleCompraSucursal);
+						}catch(Exception $f){
+							die('{"success":false,"reason":"Error al guardar detalle de compra."}');
+						}
+					}
+				}catch(Exception $e){
+				Logger::log($e);
+				DAO::transRollback();
+				die('{"success":false,"reason":"Error al intentar guardar la compra, intente de nuevo."}');
+				}
+
+	$autorizacion=new Autorizacion();
+	$autorizacion->setEstado(3);
+	$autorizacion->setFechaPeticion(time());
+	$autorizacion->setFechaRespuesta(time());
+	$autorizacion->setIdSucursal($_SESSION["sucursal"]);
+	$autorizacion->setIdUsuario($_SESSION["userid"]);
+	$products='[';
+	for($i=0;$i<sizeof($arrProductos);$i++)
+	{
+		$products.='{"id_producto":'.$arrProductos[$i]->id_producto.',';
+		$products.='"procesado":true,';
+		$products.='"cantidad_procesada":'.$arrProductos[$i]->cantidad.',';
+		$products.='"cantidad":0,';
+		$products.='"precio":'.$arrProductos[$i]->precio;
+		$products.='}';
+		if($i==(sizeof($arrProductos)-1)){
+		}else{
+			$products.=',';
+		}
+	}
+	$products.=']';
+	$parametros='{"clave":209,"descripcion":"Envio de Productos","productos":'.$products.'}';
+	$autorizacion->setParametros($parametros);
+	$autorizacion->setTipo("envioDeProductos");
+	
+	try{
+		AutorizacionDAO::save($autorizacion);
+	}catch(Exception $f){
+		DAO::transEnd();
+		die('{"success":false,"reason":"Error al guardar autorizacion."}');
+	}
+	DAO::transEnd();
+	echo '{"success":true}';
 }
 
 
@@ -365,7 +471,23 @@ if(isset($args['action'])){
 		break;
 		
 		case 903:
+			if(!isset($args["id_proveedor"])){
+				Logger::log("Surtir sucursal : Faltan parametros para surtir sucursal");
+				die( '{ "success": false, "reason": "Parametros invalidos." }' ) ;
+			}
+			if(!isset($args["productos"])){
+				Logger::log("Surtir sucursal : Faltan parametros para surtir sucursal");
+				die( '{ "success": false, "reason": "Parametros invalidos." }' ) ;
+			}
 			surtirSucursalProveedor($args["id_proveedor"],$args["productos"]);
+		break;
+		
+		case 904:
+			if(!isset($args["data"])){
+				Logger::log("Surtir sucursal : Faltan parametros para surtir sucursal");
+				die( '{ "success": false, "reason": "Parametros invalidos." }' ) ;
+			}
+			surtirSucursalDeProveedor($args["data"]);
 		break;
 
 	}

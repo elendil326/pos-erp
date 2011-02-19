@@ -573,7 +573,8 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
             "tipo" => "gasto",
             "concepto" => $g->getConcepto(),
             "monto" => $g->getMonto() * -1,
-            "usuario" => $g->getIdUsuario()
+            "usuario" => $g->getIdUsuario(),
+  			"fecha"=>$g->getFecha()
         ));
     }
 
@@ -597,7 +598,8 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
             "tipo" => "ingreso",
             "concepto" => $i->getConcepto(),
             "monto" => $i->getMonto(),
-            "usuario" => $i->getIdUsuario()
+            "usuario" => $i->getIdUsuario(),
+   			"fecha"=>$i->getFecha()
         ));
     }
     
@@ -624,7 +626,8 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
             "tipo" => "venta",
             "concepto" => "<a href='ventas.php?action=detalles&id=" . $i->getIdVenta() . "'>Venta de contado</a>",
             "monto" => $i->getPagado(),
-            "usuario" => $i->getIdUsuario()
+            "usuario" => $i->getIdUsuario(),
+   			"fecha"=>$i->getFecha()
         ));
     }
 
@@ -649,7 +652,8 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 			"tipo" => "abono",
 			"concepto" => "<a href='ventas.php?action=detalles&id=" . $pago->getIdVenta() . "'>Abono a venta</a>",
 			"monto" => $pago->getMonto(),
-			"usuario" => $pago->getIdUsuario()
+			"usuario" => $pago->getIdUsuario(),
+			"fecha"=>$pago->getFecha()
 		));
 	}
 
@@ -661,6 +665,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
                "tipo" => "Tipo",
                "concepto" => "Concepto",
                "usuario" => "Usuario",
+               "fecha"=> "Fecha",
                "monto" => "Monto" );
 
 
@@ -673,9 +678,18 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
     }
 
 
+function cmpFecha($a, $b)
+{
+    if ($a["fecha"] == $b["fecha"]) {
+        return 0;
+    }
+    return ($a["fecha"] <$b["fecha"]) ? -1 : 1;
+}
+usort($flujo, "cmpFecha");
 
     $tabla = new Tabla($header, $flujo );
     $tabla->addColRender("usuario", "renderUsuario");
+    $tabla->addColRender("fecha", "toDate");
     $tabla->addColRender("monto", "renderMonto");
     $tabla->addNoData("No hay operaciones.");
     $tabla->render();
