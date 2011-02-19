@@ -85,6 +85,8 @@ rm -rf testing
 #enzipar todo
 tar -pczf pos-build.tar.gz *
 
+mv pos-build.tar.gz "pos-build-`date +%Y_%m_%d`.tar.gz"
+
 #borrar lo que sobre para que solo quede el tar enzipado
 rm -rf www
 rm -rf css
