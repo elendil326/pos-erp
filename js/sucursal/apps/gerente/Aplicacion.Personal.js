@@ -371,7 +371,7 @@ Aplicacion.Personal.prototype.detallesDeEmpleadoPanel = null;
 
 
 /*
- * Se llama para crear por primera vez el panel de detalles de cliente
+ * Se llama para crear por primera vez el panel de detalles de empleado
  **/
 Aplicacion.Personal.prototype.detallesDeEmpleadoPanelCreator = function (  ){
 	
@@ -391,7 +391,7 @@ Aplicacion.Personal.prototype.detallesDeEmpleadoPanelCreator = function (  ){
 				},
 				items: [{
 					xtype: 'fieldset',
-				    title: 'Detalles de Cliente',
+				    title: 'Detalles del nuevo empleado',
 				    instructions: '',
 					defaults : {
 						disabled : true

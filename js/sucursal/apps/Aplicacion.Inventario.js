@@ -386,7 +386,7 @@ Aplicacion.Inventario.prototype.carritoCambiarCantidad = function ( id, qty, for
 	for (var i = carrito.items.length - 1; i >= 0; i--){
 	
 	
-		if( carrito.items[i].productoID == id ){
+		if( carrito.items[i].idUnique == id ){
 			
 			if(forceNewValue){
 				carrito.items[i].cantidad = qty;
@@ -410,6 +410,17 @@ Aplicacion.Inventario.prototype.carritoSurtir = {
 		otherData: null
 };
 
+Aplicacion.Inventario.prototype.idUnique = 0;
+
+
+Aplicacion.Inventario.prototype.copy = function( o ) {
+	if (typeof o != "object" || o === null) return o;
+	var r = o.constructor == Array ? [] : {};
+	for (var i in o) {
+		r[i] = this.copy(o[i]);
+	}
+	return r;
+};
 
 Aplicacion.Inventario.prototype.surtirAddItem = function ( item )
 {
@@ -417,21 +428,48 @@ Aplicacion.Inventario.prototype.surtirAddItem = function ( item )
 		console.log("Agregnado producto ",	item , " a la peticion");
 	}
 	
+	var cont_prod = 0;
 	
 	for (var i = this.carritoSurtir.items.length - 1; i >= 0; i--){
+	
 		if( this.carritoSurtir.items[i].productoID == item.productoID ){
-			if(DEBUG){
-				console.log( "este producto ya existe en el carrito para surtir" );
-			}
-			this.refreshSurtir();
-			return ;
+			cont_prod++;
 		}
+		
+		if( cont_prod >= 2 ){
+		
+		    if( DEBUG ){
+				console.log( "este producto ya existe en el carrito para surtir" );
+			}						
+			
+			Ext.Msg.alert("Proveedores", "El producto " + item.descripcion + " ya se encuentra en el carrito");
+			
+			return ;
+		
+		}
+		
+		this.refreshSurtir();
+		
 	}
 	
 	item.cantidad = 1;
 	item.procesado = "true";
 	
-	this.carritoSurtir.items.push( item );
+	this.idUnique++;
+	
+	if( DEBUG ){
+	    console.log("Aplicacion.Inventario.currentInstance.idUnique : ", this.idUnique );
+	}
+	
+	var _item = this.copy( item );
+	
+	_item.idUnique = _item.productoID + "_" + this.idUnique;
+	
+	this.carritoSurtir.items.push( _item );
+	
+	if( DEBUG ){
+	    console.log("Agregado al carrito : ", _item );
+	}
 	
 	this.refreshSurtir();
 	
@@ -484,11 +522,11 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 		}
 		
 		html += "<td style='width: 45%;' ><b>" + carrito.items[i].productoID + "</b> &nbsp; " + carrito.items[i].descripcion+ "</td>";
-		html += "<td style='width: 15%;' > <div id='Inventario-carritoTipo"+ carrito.items[i].productoID +"'></div></td>";
-		html += "<td style='width: 8%;' > <span class = 'boton' onClick = 'Aplicacion.Inventario.currentInstance.quitarDelCarrito(" + carrito.items[i].productoID + ")'><img src='../media/icons/close_16.png'></span> </td>";		
-		html += "<td  align='center'  style='width: 5.1%;'> <span class='boton' onClick=\"Aplicacion.Inventario.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].productoID + "', -1, false)\">&nbsp;-&nbsp;<img src='../media/icons/arrow_down_16.png'></span></td>";
-		html += "<td style='width: 6.8%;' > <div id='Inventario-carritoCantidad"+ carrito.items[i].productoID +"'></div></td><td>"+m+"</td>";
-		html += "<td  align='center'  style='width: 5.1%;'> <span class='boton' onClick=\"Aplicacion.Inventario.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].productoID +"', 1, false)\"><img src='../media/icons/arrow_up_16.png'>&nbsp;+&nbsp;</span></td>";
+		html += "<td style='width: 15%;' > <div id='Inventario-carritoTipo"+ carrito.items[i].idUnique +"'></div></td>";
+		html += "<td style='width: 8%;' > <span class = 'boton' onClick = 'Aplicacion.Inventario.currentInstance.quitarDelCarrito(" + carrito.items[i].idUnique+ ")'><img src='../media/icons/close_16.png'></span> </td>";		
+		html += "<td  align='center'  style='width: 5.1%;'> <span class='boton' onClick=\"Aplicacion.Inventario.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique + "', -1, false)\">&nbsp;-&nbsp;<img src='../media/icons/arrow_down_16.png'></span></td>";
+		html += "<td style='width: 6.8%;' > <div id='Inventario-carritoCantidad"+ carrito.items[i].idUnique +"'></div></td><td>"+m+"</td>";
+		html += "<td  align='center'  style='width: 5.1%;'> <span class='boton' onClick=\"Aplicacion.Inventario.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique +"', 1, false)\"><img src='../media/icons/arrow_up_16.png'>&nbsp;+&nbsp;</span></td>";
 		//html += "<td > </td>";
 //		html += "<td> <div style='color: green'>"+ POS.currencyFormat(carrito.items[i].precioIntersucursal) +"</div></td>";
 //		html += "<td>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioIntersucursal )+"</td>";
@@ -506,10 +544,10 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 	
 	
 		a = new Ext.form.Text({
-			renderTo : "Inventario-carritoCantidad"+ carrito.items[i].productoID ,
-			id : "Inventario-carritoCantidad"+ carrito.items[i].productoID + "Text",
+			renderTo : "Inventario-carritoCantidad"+ carrito.items[i].idUnique ,
+			id : "Inventario-carritoCantidad"+ carrito.items[i].idUnique + "Text",
 			value : carrito.items[i].cantidad,
-			prodID : carrito.items[i].productoID,
+			idUnique : carrito.items[i].idUnique,
 			placeHolder : "Cantidad",
 			listeners : {
 				'focus' : function (){
@@ -523,7 +561,7 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 									carrito = Aplicacion.Inventario.currentInstance.carritoSurtir;
 									
 									for (var j=0; j < carrito.items.length; j++) {
-										if(campo.prodID == carrito.items[j].productoID){
+										if(campo.idUnique== carrito.items[j].idUnique){
 											carrito.items[j].cantidad = parseFloat( campo.getValue() );
 											break;											
 										}
@@ -542,9 +580,10 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 
 
 		b = new Ext.form.Select({
-			renderTo : "Inventario-carritoTipo"+ carrito.items[i].productoID ,
-			id : "Inventario-carritoTipo"+ carrito.items[i].productoID + "Value",
-			productoID : carrito.items[i].productoID ,
+			renderTo : "Inventario-carritoTipo"+ carrito.items[i].idUnique ,
+			id : "Inventario-carritoTipo"+ carrito.items[i].idUnique + "Value",
+			idUnique : carrito.items[i].idUnique ,
+			value : carrito.items[i].procesado,
 			options: [
                 {text: 'Procesada',  value: 'true'},
                 {text: 'Original', value: 'false'}
@@ -556,7 +595,7 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 
 	                    for (var i = carrito.items.length - 1; i >= 0; i--){
                         
-		                    if( carrito.items[i].productoID == this.productoID ){                 
+		                    if( carrito.items[i].idUnique == this.idUnique ){                 
                                 carrito.items[i].procesado = this.getValue();
                             }
                                         
@@ -580,7 +619,7 @@ Aplicacion.Inventario.prototype.quitarDelCarrito = function ( id_producto )
     
     carrito = Aplicacion.Inventario.currentInstance.carritoSurtir;
     for (var i = carrito.items.length - 1; i >= 0; i--){
-        if( carrito.items[i].productoID == id_producto ){
+        if( carrito.items[i].idUnique == iidUnique ){
             carrito.items.splice( i ,1 );
             break;
         }
@@ -725,9 +764,13 @@ Aplicacion.Inventario.prototype.surtirCarritoValidator = function(){
 Aplicacion.Inventario.prototype.surtirCarrito = function(){
 
 	if(this.surtirWizardFromProveedor){
-		console.log("Surtiendo para proveedor ");
+	    if(DEBUG){
+		    console.log("Surtiendo para proveedor ");
+		}
 	}else{
-		console.log("Surtiendo para centro de distribucion ");		
+	    if(DEBUG){
+		    console.log("Surtiendo para centro de distribucion ");		
+		}
 	}
 
     for( var i = 0; i < this.carritoSurtir.items.length; i++)
@@ -883,7 +926,9 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 									submitText : 'Aceptar',
 									callback : null
 								};
-								console.log(this)
+								if(DEBUG){
+								    console.log(this)
+								}    
 								POS.Keyboard.Keyboard( this, kconf );								
 							}
 						}
@@ -898,7 +943,9 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 									submitText : 'Aceptar',
 									callback : null
 								};
-								console.log(this)
+								if(DEBUG){
+								    console.log(this)
+								}
 								POS.Keyboard.Keyboard( this, kconf );								
 							}
 						}
@@ -1169,8 +1216,9 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 	  * Usa FOO !!
 	  **/
 	this.agregarProductoDerivado = function( qty ){
-		
-		console.log("Agregando producto derivado" , foo);
+		if(DEBUG){
+		    console.log("Agregando producto derivado" , foo);
+		}
 		
 		for (var i = carritoDeDerivados.length - 1; i >= 0; i--){
 			if ( carritoDeDerivados[i].get("productoID") == foo.get("productoID")){

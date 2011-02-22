@@ -1394,7 +1394,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
 
     
     //estado de la autorizacion
-    var estado = autorizacion.data.estado;
+    var estado = autorizacion.data.estado;        
     
     //establecemos una descripcion del estado legible para el cliente
     switch( estado ){
@@ -1428,12 +1428,19 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
     
     }
     
+    if(DEBUG){    
+	    console.log("El estado de la autorizacion es : ", estado);
+	}
+    
     instrucciones = null;   
     
     //almacenara los items del formulario
     var itemsForm = [
     ];
 
+    if(DEBUG){    
+	    console.log("La clave de la autorizacion es : ", parametros.clave);
+	}
 
     //creamos los items para el detalleAutorizacionFormPanel
     switch( parametros.clave )
@@ -1513,26 +1520,26 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
          *
          * El gerente ha enviado productos desde el centro de administracion
          */
-        case '209':
+        case 209:
+
+            if( DEBUG ){
+                console.log("Entre al case 209");
+            }
 
             //creamos la tabla
             html = "";
             html += "<table border = 0>";
             html += "   <tr class = 'top'>";
             html += "       <td>Producto</td>";
+            html += "       <td>Procesado</td>";
             html += "       <td>Cantidad</td>";
-            html += "       <td>Costo</td>";
-            html += "       <td>Cantidad procesada</td>";
-            html += "       <td>Costo procesada</td>";
             html += "   </tr>";
 
             for ( var i = 0; i < parametros.productos.length; i++ ){
                 html += "<tr  >";
                 html += "   <td>" + parametros.productos[i].id_producto + " " + parametros.productos[i].descripcion +  "</td>";
+                html += "   <td>" +  (parametros.productos[i].procesado == "true"? "Si":"No") +  "</td>";
                 html += "   <td>" + parametros.productos[i].cantidad + " " + parametros.productos[i].escala + "s</td>";
-                html += "   <td>" + POS.currencyFormat( parametros.productos[i].precio ) + "</td>";
-                html += "   <td>" + parametros.productos[i].cantidad_procesada + " " + parametros.productos[i].escala + "s</td>";
-                html += "   <td>" + POS.currencyFormat( parametros.productos[i].precio_procesada ) + "</td>";
                 html += "</tr>";
             }
 
@@ -1544,11 +1551,18 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                 cls :   'Tabla',
             });
 
-
-            if(autorizacion.get('estado') == 3){
-                instrucciones = "Hay un embarque en transito con estos productos.";
-            }else{
-                instrucciones = "Usted ya ha recibido este embarque.";
+            switch( autorizacion.get('estado') )
+            {
+                case 0:
+                    instrucciones = "";
+                break;
+                
+                case 3:
+                    instrucciones = "Hay un embarque en transito con estos productos.";
+                break;
+                
+                default:
+                    instrucciones = "Usted ya ha recibido este embarque.";
             }
 
         break;

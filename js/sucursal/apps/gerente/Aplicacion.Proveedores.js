@@ -533,8 +533,9 @@ Aplicacion.Proveedores = function(){
 		        });
 		        
 		    }
-		    
-		    console.log("EL carrito chingon es : ",carrito );
+		    if(DEBUG){
+		        console.log("El JSON de productos a comprar es : ",carrito );
+		    }
 		    
 		/*
 		    Ext.getBody().mask('Registrando Compra...', 'x-mask-loading', true);
