@@ -82,16 +82,30 @@ $venta = $detalles['detalles'];
 
 <h2>Articulos en la venta</h2><?php
 
+function renderProd($qty, $row){
+	if($qty == 0) return "";
+	return number_format($qty, 2) . "&nbsp;" . $row['escala'] . "s";
+}
+
+function renderMoney($money, $row){
+	if($money == 0) return "";
+	return moneyFormat($money) ;
+}
 
 //render the table
 $header = array( 
 	"id_producto" => "ID", 
 	"descripcion" => "Descripcion", 
-	"cantidad" => "Cantidad",
-	"precio" => "Precio" );
+	"cantidad" => "Cantidad orignal",
+	"precio" => "Precio original",
+	"cantidadProc" => "Cantidad procesada",
+	"precioProc" => "Precio procesada" );
 
 $tabla = new Tabla( $header, $detalles['items'] );
-$tabla->addColRender( 'precio', "moneyFormat" );
+$tabla->addColRender( 'precio', "renderMoney" );
+$tabla->addColRender( 'precioProc', "renderMoney" );
+$tabla->addColRender( 'cantidad', 'renderProd');
+$tabla->addColRender( 'cantidadProc', 'renderProd');
 $tabla->render();
 
 

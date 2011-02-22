@@ -104,8 +104,7 @@ function detalleVenta( $vid ){
 
 
     $q = new DetalleVenta();
-    $q->setIdVenta( $vid ); 
-    
+    $q->setIdVenta( $vid );
     $detallesVenta = DetalleVentaDAO::search( $q );
     
     $items = array();
@@ -117,9 +116,12 @@ function detalleVenta( $vid ){
         
         array_push( $items , array(
             "id_producto" => $dV->getIdProducto(),
+			"escala" => $productoData->getEscala(),
             "descripcion" => $productoData->getDescripcion(),
             "cantidad" => $dV->getCantidad(),
-            "precio" => $dV->getPrecio()
+            "cantidadProc" => $dV->getCantidadProcesada(),
+            "precio" => $dV->getPrecio(),
+            "precioProc" => $dV->getPrecioProcesada()
         ));
     }
 
