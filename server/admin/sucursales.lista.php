@@ -59,62 +59,68 @@ foreach( $sucursales as $sucursal ){
 	//obtener la fecha de la primera venta de esta sucursal
     $primeraVenta = VentasDAO::getByPK( 1 )->getFecha();
 
-	$start = date("Y-m-d", strtotime("-1 day", strtotime($primeraVenta)));
-	$now = date ( "Y-m-d" );
-    
-	$v1 = new Ventas();
-	$v2 = new Ventas();
-	
-	$todas = "var todas = [";
-	$foo =  0;
-	
-    while(true){
-    	
-	    $v1->setFecha( $start . " 00:00:00" );
-	    $v2->setFecha( $start . " 23:59:59" );
-		
-        array_push( $fechas, $start );
+	if($primeraVenta){
+		$start = date("Y-m-d", strtotime("-1 day", strtotime($primeraVenta)));
+		$now = date ( "Y-m-d" );
 
-		$sum = 0;
-		
-		foreach( $sucursales as $sucursal ){
+		$v1 = new Ventas();
+		$v2 = new Ventas();
 
-	    	$v1->setIdSucursal( $sucursal['id_sucursal']  );
-	
-		    $results = VentasDAO::byRange($v1, $v2);
-		
-			if( !isset($ventas[$sucursal['id_sucursal'] ] ))
-				$ventas[ $sucursal['id_sucursal'] ] = array();
-				
-	        array_push( $ventas[ $sucursal['id_sucursal'] ], count($results) );			
-			$sum += count($results);
-		}
+		$todas = "var todas = [";
+		$foo =  0;
 
-		$todas .= "[ $foo, $sum ], ";
-		$foo++;
-		
-		if($start == $now){
-			break;
-		}
-		
-		$start = date("Y-m-d", strtotime("+1 day", strtotime($start)));        
+	    while(true){
 
-    }
+		    $v1->setFecha( $start . " 00:00:00" );
+		    $v2->setFecha( $start . " 23:59:59" );
 
-	$todas .= "]";
-    
-	echo "var ventas = [];";
- 
-	foreach($ventas as $suc => $key){
+	        array_push( $fechas, $start );
 
-        echo  "ventas[$suc] = [];";
-		for($i = 0; $i < sizeof($key); $i++ ){
-	        echo  "ventas[$suc].push([" . $i . "," . $key[$i] . "]);\n";
-	   
+			$sum = 0;
+
+			foreach( $sucursales as $sucursal ){
+
+		    	$v1->setIdSucursal( $sucursal['id_sucursal']  );
+
+			    $results = VentasDAO::byRange($v1, $v2);
+
+				if( !isset($ventas[$sucursal['id_sucursal'] ] ))
+					$ventas[ $sucursal['id_sucursal'] ] = array();
+
+		        array_push( $ventas[ $sucursal['id_sucursal'] ], count($results) );			
+				$sum += count($results);
+			}
+
+			$todas .= "[ $foo, $sum ], ";
+			$foo++;
+
+			if($start == $now){
+				break;
+			}
+
+			$start = date("Y-m-d", strtotime("+1 day", strtotime($start)));        
+
 	    }
+
+		$todas .= "]";
+
+		echo "var ventas = [];";
+
+		foreach($ventas as $suc => $key){
+
+	        echo  "ventas[$suc] = [];";
+			for($i = 0; $i < sizeof($key); $i++ ){
+		        echo  "ventas[$suc].push([" . $i . "," . $key[$i] . "]);\n";
+
+		    }
+		}
+
+		echo $todas;
+	}else{
+		echo " var sinventas = true; "
 	}
 	
-	echo $todas;
+	
 ?>
 
 
@@ -122,25 +128,28 @@ var graficaVentas;
 
 Event.observe(document, 'dom:loaded', function() {
 
-	graficaVentas = new HumbleFinance();
+	if(!sinventas){
+		graficaVentas = new HumbleFinance();
 
-	<?php
-		foreach($ventas as $suc => $key){
- 			echo "graficaVentas.addGraph( ventas[$suc], 'suc'); 	";
-		}
-	?>
-	/*
-	HumbleFinance.trackFormatter = function (obj) {
+		<?php
+			foreach($ventas as $suc => $key){
+	 			echo "graficaVentas.addGraph( ventas[$suc], 'suc'); 	";
+			}
+		?>
+		/*
+		HumbleFinance.trackFormatter = function (obj) {
 
-	        var x = Math.floor(obj.x);
-	        var data = jsonData[x];
-	        var text = data.date + " Price: " + data.close + " Vol: " + data.volume;
+		        var x = Math.floor(obj.x);
+		        var data = jsonData[x];
+		        var text = data.date + " Price: " + data.close + " Vol: " + data.volume;
 
-	        return text;
-	    };
-	*/
-    graficaVentas.addSummaryGraph( todas );
-    graficaVentas.render('graph');
+		        return text;
+		    };
+		*/
+	    graficaVentas.addSummaryGraph( todas );
+	    graficaVentas.render('graph');
+	}
+
     
 
 });

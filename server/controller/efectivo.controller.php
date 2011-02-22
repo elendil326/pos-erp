@@ -445,12 +445,12 @@ require_once('logger.php');
      * 	
      **/
 
-     function nuevoAbono( $args ) //600
+     function nuevoAbono( $args ) //606
      {
 
-        if( !isset( $_SESSION['sucursal'] ) )
+        if( !isset( $_SESSION['monto'] ) )
         {
-            die( '{ "succes" : "false" , "reason" : "Sesion no iniciada."}' );
+            die( '{ "succes" : "false" , "reason" : "Faltan parametros."}' );
         }
 
         doNuevoAbono( $args['monto'] );
