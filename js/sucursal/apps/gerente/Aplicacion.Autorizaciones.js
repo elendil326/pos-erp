@@ -156,9 +156,14 @@ Aplicacion.Autorizaciones.prototype.nueva.ventaPreferencialPanelCreator = functi
 					if(nodos.length > 0){
 						//Aplicacion.Mostrador.currentInstance.clienteSeleccionado( nodos[0].data );
 						//console.log(nodos[0].data)
-						Ext.getCmp('Autorizaciones-ventaPreferencial-cliente').setValue( nodos[0].data.nombre );
-						Ext.getCmp('Autorizaciones-ventaPreferencial-clienteID').setValue( nodos[0].data.id_cliente );
-						
+                        if( nodos[0].get("id_cliente") <= 0 ){
+                            Ext.Msg.alert("Autorizaciones","No puede realizar una solicitud de venta preferencial para una sucursal.");
+                        }
+                        else{
+                            Ext.getCmp('Autorizaciones-ventaPreferencial-cliente').setValue( nodos[0].data.nombre );
+						    Ext.getCmp('Autorizaciones-ventaPreferencial-clienteID').setValue( nodos[0].data.id_cliente );
+                        }
+												
 					}
 
 					//deseleccinar el cliente
@@ -329,7 +334,8 @@ Aplicacion.Autorizaciones.prototype.nueva.nuevoCreditoModificar = function( data
         params : {
             action : 202,
             id_cliente : data.id_cliente,
-            cantidad : data.limite
+            cantidad : data.limite,
+            nombre : data.nombre
         },
         success: function(response, opts) {
             try{
@@ -391,7 +397,7 @@ Aplicacion.Autorizaciones.prototype.nueva.creditoModificarPanelCreator = functio
                 instructions: 'Ingrese el nuevo limite de credito para este cliente.',
                 items: [
                     new Ext.form.Hidden({ id: 'Autorizaciones-CreditoIdCliente', name: 'id_cliente'}),
-                    new Ext.form.Text({ id: 'Autorizaciones-CreditoCliente', label: 'Cliente', disabled : true }),
+                    new Ext.form.Text({ id: 'Autorizaciones-CreditoCliente', name:'nombre',  label: 'Cliente', disabled : true }),
                     new Ext.form.Text({ id: 'Autorizaciones-CreditoActual', label: 'Actual', disabled : true }),
                     new Ext.form.Text({ id: 'Autorizaciones-CreditoUsado', label: 'Usado', disabled : true }),  
                     new Ext.form.Text({ id: 'Autorizaciones-CreditoNuevo', label: 'Nuevo limite', name:'limite',  required:true,
@@ -399,8 +405,7 @@ Aplicacion.Autorizaciones.prototype.nueva.creditoModificarPanelCreator = functio
                         'focus' : function (){
                                 kconf = {
                                 type : 'num',
-                                submitText : 'Aceptar',
-                                callback : Aplicacion.Efectivo.currentInstance.nuevoGastoValidator
+                                submitText : 'Aceptar'
                             };
                         POS.Keyboard.Keyboard( this, kconf );
                         }
@@ -435,8 +440,15 @@ Aplicacion.Autorizaciones.prototype.nueva.creditoPanelCreator = function()
                         "selectionchange"  : function ( view, nodos, c ){
                     
                                 if(nodos.length > 0){
-                                    //poner los valores del cliente en la forma
-                                    Aplicacion.Autorizaciones.currentInstance.nueva.creditoModificarPanelShow( nodos[0] );
+                                    //poner los valores del cliente en la forma                                    
+                                    
+                                    if( nodos[0].get("id_cliente") <= 0 ){
+                                        Ext.Msg.alert("Autorizaciones","No puede realizar una solicitud de limite de credito extendido para una sucursal.");
+                                    }
+                                    else{
+                                        Aplicacion.Autorizaciones.currentInstance.nueva.creditoModificarPanelShow( nodos[0] );
+                                    }
+                                                                        
                                 }
 
                                 //deseleccinar el cliente
@@ -1458,13 +1470,18 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
         break;
 
         case '202'://solicitud de autorizacion de cambio de limite de credito (gerente)
+            
+            if( DEBUG ){
+                console.log("N");
+            }             
+        
             itemsForm.push(
                 new Ext.form.Text({
                     label:'ID Autorización',
                     name:'id_autorizacion',
                     value:autorizacion.data.id_autorizacion
-                }),new Ext.form.Text({label: 'ID Cliente', value : parametros.id_cliente }),
-                new Ext.form.Text({label: 'Cantidad', value : parametros.cantidad })
+                }),new Ext.form.Text({label: 'Nombre', value : parametros.nombre }),
+                new Ext.form.Text({label: 'Cantidad', value : POS.currencyFormat( parametros.cantidad ) })
             );
             height = 375;
         break;
@@ -1489,8 +1506,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                     label:'ID Autorización',
                     name:'id_autorizacion',
                     value:autorizacion.data.id_autorizacion
-                }),
-                new Ext.form.Text({label: 'ID Cliente', value : parametros.id_cliente }),
+                }),               
                 new Ext.form.Text({label: 'Nombre', value : parametros.nombre })
             );
             

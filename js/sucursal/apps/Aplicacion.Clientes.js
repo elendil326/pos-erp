@@ -459,6 +459,14 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelShow = function ( cliente )
 		this.detallesDeClientesPanelUpdater(cliente);		
 	}
 	
+	//deshabilitamos el boton de editar cliente en caso de que sea una sucursal
+	if( cliente.get( "id_cliente" ) <= 0 ){
+	    Ext.getCmp("Clientes-EditarDetalles").setVisible(false);
+	}
+	else{
+	    Ext.getCmp("Clientes-EditarDetalles").setVisible(true);
+	}    
+	
 	//hacer un setcard manual
 	sink.Main.ui.setActiveItem( this.detallesDeClientesPanel , 'slide');
 	
@@ -737,8 +745,6 @@ Aplicacion.Clientes.prototype.CLIENTE_EDIT = null;
 
 Aplicacion.Clientes.prototype.editarClienteBoton = function (  )
 {
-	
-
 	
 	var detallesPanel = Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0];
 	Aplicacion.Clientes.currentInstance.CLIENTE_EDIT = detallesPanel.getRecord();

@@ -945,6 +945,7 @@ require_once("logger.php");
                     'clave'=>$args['action'],
                     'descripcion'=>'Autorización de limite de crédito',
                     'id_cliente'=>$args['id_cliente'],
+                    'nombre' =>$args['nombre'],
                     'cantidad'=>$args['cantidad']
                 ));
 
