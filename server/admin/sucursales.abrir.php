@@ -72,6 +72,7 @@
 		        response = jQuery.parseJSON(data);
 
                 if(!response.success){
+					jQuery('html,body').animate({scrollTop: 0 }, 1000);
                     return jQuery("#ajax_failure").html(response.reason).show();
                 }
                 reason = "La nueva sucursal se ha creado con exito.";
@@ -120,7 +121,7 @@
 
         ?><form id="gerencia">
         <table border="0" cellspacing="2" cellpadding="2">
-	        <tr><td>Gerente</td>
+	        <tr><td>Gerente&nbsp;&nbsp;</td>
 		        <td>
 			        <select id="gerente"> 
 	                    <?php echo $html; ?>
@@ -147,7 +148,6 @@
 
 if($posiblesGerentes > 0 ){
     ?>
-    <h2>Detalles de la sucursal</h2>
 	<form id="detalles">
 	<table border="0" cellspacing="5" cellpadding="5">
 		<tr><td>Descripcion</td><td><input type="text" id="descripcion" size="40"/></td><td><div id="descripcion_helper"></div></td></tr>

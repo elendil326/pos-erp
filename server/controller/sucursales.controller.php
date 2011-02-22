@@ -152,7 +152,7 @@ function abrirSucursal( $json = null )
 			isset($json->telefono)))
 	{
 		Logger::log("Parametros invalidos para abrir sucursal:" . $foo);
-		die('{"success" : false, "reason": "Parametros invalidos."}');
+		die('{"success" : false, "reason": "Por favor llene todos los campos para abrir una sucursal."}');
 	}
 	
 	
@@ -163,8 +163,8 @@ function abrirSucursal( $json = null )
 			strlen($json->rfc) < 1 ||
 			strlen($json->telefono) < 1 ))
 	{
-		Logger::log("Parametros invalidos para abrir sucursal:" . $foo);	
-		die('{"success" : false, "reason": "Parametros invalidos."}');
+		Logger::log("Hay campos muy cortos para abrir sucursal" . $foo);	
+		die('{"success" : false, "reason": "Por favor llene todos los campos para abrir una sucursal."}');
 	}	
 	
     $gerente = UsuarioDAO::getByPK($json->gerente);
