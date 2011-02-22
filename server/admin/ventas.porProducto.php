@@ -4,11 +4,6 @@
     require_once('model/inventario.dao.php');
     require_once('model/detalle_venta.dao.php');
 
-
-
-
-
-
     //obtener todos los productos
     $inventario = InventarioDAO::getAll(  );
     
@@ -16,7 +11,7 @@
 
     foreach ($inventario as $producto)
     {
-
+		/*
         $prodData = array();
 
         $prodData['id_producto'] = $producto->getIdProducto();
@@ -105,7 +100,7 @@
 
     $t = new Tabla( $header, $tabla );
     $t->addNoData("No hay ningun producto");
-
+	*/
 ?>
 
 <h1>Ventas por producto</h1>

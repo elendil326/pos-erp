@@ -37,9 +37,11 @@
 				<li>
 				  <a  href="ventas.php?action=lista">Ver ventas</a>
 				</li>
+				<!--
 				<li>
 				  <a  href="ventas.php?action=porProducto">Ventas por producto</a>
 				</li>
+				-->
 				<!--
 				<li>
 				  <a  href="ventas.php?action=proyecciones">Historial y Proyecciones</a>
