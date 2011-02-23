@@ -116,8 +116,9 @@ foreach( $sucursales as $sucursal ){
 		}
 
 		echo $todas;
+			echo "; var sinventas = false; ";
 	}else{
-		echo " var sinventas = true; "
+		echo " var sinventas = true; ";
 	}
 	
 	
