@@ -324,6 +324,14 @@ function editarSucursal($sid, $payloadJSON, $verbose = true ){
         $suc->setTelefono($payload->telefono);
     }
 
+	$buscarSucursal=new Sucursal();
+	$buscarSucursal->setLetrasFactura($payload->letras_factura);
+      $resultados = SucursalDAO::search($buscarSucursal);
+	if(sizeof($resultados)>0){
+		Logger::log("Prefijo de factura duplicado");
+		die('{"success" : false, "reason": "Este prefijo de factura ya esta siendo utilizado por otra sucursal."}');
+	}
+
     try{
         SucursalDAO::save($suc);
     }catch(Exception $e){
