@@ -537,6 +537,69 @@ if($json==NULL){die('{"success":false,"reason":"No se ha agregado ningun product
 		echo '{"success":true}';
 }//venderASucursal
 
+/*
+
+Detalle Gasto
+
+
+*/
+function detalleGasto( $gid ){
+
+    $gasto = GastosDAO::getByPK( $gid );
+    $items = array();
+	if($gasto==null){
+		$items=null;
+	}else{
+  
+	    $usuario=UsuarioDAO::getByPK($gasto->getIdUsuario());
+    	$sucursal=SucursalDAO::getByPK($gasto->getIdSucursal());
+    
+       array_push( $items , array(
+            "id_gasto" => $gasto->getIdGasto(),
+			"id_sucursal" => $sucursal->getDescripcion(),
+            "id_usuario" => $usuario->getNombre(),
+            "folio"=> $gasto->getFolio(),
+            "concepto" => $gasto->getConcepto(),
+            "monto" => $gasto->getMonto(),
+            "nota" => $gasto->getNota(),
+            "fecha" => $gasto->getFecha(),
+            "fecha_ingreso" => $gasto->getFechaIngreso()
+        ));
+	 }
+	 return $items;
+}
+
+/*
+
+Detalle Ingreso
+
+
+*/
+function detalleIngreso( $iid ){
+
+    $ingreso = IngresosDAO::getByPK( $iid );
+    $items = array();
+	if($ingreso==null){
+		$items=null;
+	}else{
+  
+	    $usuario=UsuarioDAO::getByPK($ingreso->getIdUsuario());
+    	$sucursal=SucursalDAO::getByPK($ingreso->getIdSucursal());
+    
+       array_push( $items , array(
+            "id_ingreso" => $ingreso->getIdIngreso(),
+			"id_sucursal" => $sucursal->getDescripcion(),
+            "id_usuario" => $usuario->getNombre(),
+            "concepto" => $ingreso->getConcepto(),
+            "monto" => $ingreso->getMonto(),
+            "nota" => $ingreso->getNota(),
+            "fecha" => $ingreso->getFecha(),
+            "fecha_ingreso" => $ingreso->getFechaIngreso()
+        ));
+	 }
+	 return $items;
+}
+
 if(isset($args['action'])){
 
 	switch( $args['action'] )
@@ -610,7 +673,6 @@ if(isset($args['action'])){
 		case 713:
 			venderASucursal( $args["data"] );
 		break;
-
 	}
 }
 
