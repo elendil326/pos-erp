@@ -369,7 +369,8 @@ function editarProveedor( $json = null ){
 
 	//minimo debio haber mandado el id_proveedor
 	if(!isset($data->id_proveedor)){
-		Logger::log("Json invalido para modificar proveedor: " . $data);
+//	var_dump($data);
+		Logger::log("Json invalido para modificar proveedor: " . $data->id_proveedor);
 		die('{"success": false, "reason": "Parametros invalidos. json invalido 2" }');	
 	}
 
@@ -395,7 +396,7 @@ function editarProveedor( $json = null ){
 		$proveedor->setTelefono( $data->telefono );
 	
 	if( isset($data->e_mail) )		
-		$proveedore->setEMail( $data->e_mail );
+		$proveedor->setEMail( $data->e_mail );
 	
 	if( isset($data->activo) )		
 		$proveedor->setActivo ( $data->activo );

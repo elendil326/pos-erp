@@ -25,7 +25,18 @@
 	
 ?>
 <script>	jQuery("#MAIN_TITLE").html( "<?php echo $proveedor->getNombre(); ?>");	</script>
+<script type="text/javascript"> 
+    
 
+    function mostrarDetallesVenta (vid){
+        window.location = "ventas.php?action=detalles&id=" + vid;
+    }
+
+    function editarProveedor (){
+        window.location = "proveedor.php?action=editar&id=<?php echo $_REQUEST['id']; ?>";
+    }
+    
+    </script>
 <h2>Detalles del proveedor</h2>
 <table border="0" cellspacing="5" cellpadding="5">
 	<tr><td>Nombre</td>				<td><?php echo $proveedor->getNombre(); ?></td></tr>
@@ -35,7 +46,7 @@
 	<tr><td>E Mail</td>				<td><?php echo $proveedor->getEMail(); ?></td></tr>		
 	<tr><td>Tipo de proveedor</td>	<td><?php echo renderTipoProv( $proveedor->getTipoProveedor() ); ?></td></tr>
 	<tr><td colspan=3>
-		<h4><input id="submit" type="button" onClick="editar()" value="Editar proveedor"/></h4>
+		<h4><input id="submit" type="button" onClick="editarProveedor()" value="Editar proveedor"/></h4>
 	</td></tr>
 </table>
 
