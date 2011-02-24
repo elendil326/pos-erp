@@ -35,6 +35,9 @@ Aplicacion.Clientes.prototype._init = function (){
 	//cargar el panel que contiene los detalles de las ventas
 	this.detallesDeVentaPanelCreator();
 	
+	//crea el panel donde se embebera el iframe para la impresion
+	this.finishedPanelCreator();
+	
 	Aplicacion.Clientes.currentInstance = this;
 	
 	return this;
@@ -743,7 +746,7 @@ Aplicacion.Clientes.prototype.editarClienteGuardarBoton = function (  )
 Aplicacion.Clientes.prototype.CLIENTE_EDIT = null;
 
 
-Aplicacion.Clientes.prototype.editarClienteBoton = function (  )
+Aplicacion.Clientes.prototype.editarClienteBoton = function ( )
 {
 	
 	var detallesPanel = Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0];
@@ -834,12 +837,13 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 		},
 		success: function(response, opts) {
 
-            Ext.Msg.alert( "Abono a venta","Abonado: " + POS.currencyFormat(transaccion.abono) + "<br>Su cambio: " + POS.currencyFormat(transaccion.cambio) + "<br>Saldo Pendiente: " + POS.currencyFormat(transaccion.saldo) );
+            //Ext.Msg.alert( "Abono a venta","Abonado: " + POS.currencyFormat(transaccion.abono) + "<br>Su cambio: " + POS.currencyFormat(transaccion.cambio) + "<br>Saldo Pendiente: " + POS.currencyFormat(transaccion.saldo) );
 
 			if(DEBUG){
-            	console.warn("IMPRMIR TICKET");				
+            	//console.warn("IMPRMIR TICKET");				
 			}
 
+            
 
             //buscar esta venta especifica en la estructura (MODIFICAMOS LA LISTA DE VENTAS)
 	        lista = Aplicacion.Clientes.currentInstance.listaDeCompras.lista;
@@ -854,9 +858,17 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
             venta.pagado = transaccion.abonado;
 
             //recargamos el formulario con los detalles de la venta
-			Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange( "", Ext.getCmp("Clentes-CreditoVentasLista").getValue() );
-           
-			Aplicacion.Clientes.currentInstance.abonarVentaCancelarBoton();
+			Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange( "", Ext.getCmp("Clentes-CreditoVentasLista").getValue() );                                 			
+			
+			var data_abono = {
+			    abono_venta : true,
+			    id_venta : Ext.getCmp("Clentes-CreditoVentasLista").getValue(),
+			    saldo_prestamo : transaccion.saldo,
+			    monto_abono : transaccion.abono,
+			    sucursal_origen : Aplicacion.Mostrador.currentInstance.infoSucursal
+			};
+			
+			Aplicacion.Clientes.currentInstance.finishedPanelShow( data_abono );
 
 		},
 		failure: function( response ){
@@ -1336,7 +1348,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 			    ]
 			},{
 				xtype: 'fieldset',
-				title: 'Abonar a la venta',
+				title: 'Detalles del abono',
 				id : 'Clientes-DetallesVentaAbonarCredito',
 				hidden : true,
 				items: [
@@ -1382,6 +1394,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 	//crear el panel, y asignarselo a detallesDeClientesPanel
 	this.detallesDeClientesPanel = new Ext.TabPanel({
 		//NO MOVER EL ORDEN DEL MENU !!
+		id : 'detallesDeClientesPanel',
 	    items: [{
 			iconCls: 'user',
 	        title: 'Detalles',
@@ -1689,6 +1702,79 @@ Aplicacion.Clientes.prototype.crearClienteValidator = function ()
 };
 
 
+/* ***************************************************************************
+   * Panel de impresion de ticket de recepcion de producto
+   *************************************************************************** */
+
+Aplicacion.Clientes.prototype.finishedPanel = null;
+
+Aplicacion.Clientes.prototype.finishedPanelCreator = function()
+{
+
+	this.finishedPanel = new Ext.Panel({
+		html : ""
+	});
+	
+};
+
+Aplicacion.Clientes.prototype.finishedPanelShow = function( data_abono )
+{
+
+	//update panel
+	this.finishedPanelUpdater( data_abono );
+	
+	Aplicacion.Clientes.currentInstance.abonarVentaCancelarBoton();
+	
+	//mostramos el panel del inventario
+	action = "sink.Main.ui.setActiveItem( Aplicacion.Clientes.currentInstance.detallesDeClientesPanel , 'slide');";
+                    
+	setTimeout(action, 4000);	
+	//sink.Main.ui.setActiveItem( Aplicacion.Clientes.currentInstance.detallesDeClientesPanel , 'slide');
+	
+};
+
+
+
+Aplicacion.Clientes.prototype.finishedPanelUpdater = function( data_abono )
+{   
+	
+	if(DEBUG){
+	    console.log( "se mando a imporimir : ", Ext.util.JSON.encode( data_abono  ) );
+	}                              
+	
+	json = encodeURI( Ext.util.JSON.encode( data_abono ) );
+	
+	do 
+	{
+		json = json.replace('#','%23');
+	} 
+	while(json.indexOf('#') >= 0);
+	
+	
+	html = "";
+	
+	html += "<table class='Mostrador-ThankYou' style = 'margin : 0 !important;' >";
+	
+	html += "	<tr>";	
+	html += "		<td align = center ><img align = center  src='../media/cash_register.png'></td>";
+	html += "	</tr>"; 
+	
+    html += "	<tr>";	
+    html += "		<td align = center> El abono ha sido registrado.. </td>";
+    html += "	</tr>";
+
+	html += "</table>";
+
+	
+	html += "<iframe src ='PRINTER/src/impresion.php?json=" + json + "' width='0px' height='0px'></iframe> ";
+	
+	//actualiza el panel de la impresion
+	this.finishedPanel.update(html);
+	
+	//muestra el panel donde se embebe el iframe para la impresion
+    sink.Main.ui.setActiveItem( this.finishedPanel , 'fade');		
+
+};
 
 
 
