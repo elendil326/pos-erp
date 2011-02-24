@@ -616,7 +616,7 @@ class FormatoTicket implements Printable {
             y += h_normalTicket;*/
 
             y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, new Converter().getStringOfNumber(this.venta.monto_abono), ticket, 0, y, h_normalTicket) + 20;
-            
+
             ticket.drawString("_____________________________________________________________", 0, y);
             y += h_normalTicket;
             ticket.drawString("Firma", 75, y);
@@ -695,6 +695,7 @@ class FormatoTicket implements Printable {
             cantidad = 0;
             preciounitario = 0;
 
+            float total = 0; //subtotal de toda la venta
 
             for (int j = 0; j < this.venta.productos.size(); j++) {
                 if (this.venta.productos.get(j).descripcion.length() > 13) {
@@ -721,7 +722,10 @@ class FormatoTicket implements Printable {
 
                 ticket.drawString("" + this.venta.productos.get(j).cantidad, 75, y);
                 ticket.drawString(this.moneda.format(this.venta.productos.get(j).precio), 107, y);
-                ticket.drawString(this.moneda.format(this.venta.productos.get(j).subTotal), 138, y);
+
+                total += this.venta.productos.get(j).cantidad * this.venta.productos.get(j).precio;
+
+                ticket.drawString(this.moneda.format( this.venta.productos.get(j).cantidad * this.venta.productos.get(j).precio ), 138, y);
                 y += h_normalSmallTicket;
 
             }//for
@@ -732,20 +736,10 @@ class FormatoTicket implements Printable {
             ticket.drawString("------------------------------------------------------------------------", 0, y);
             y += h_normalTicket;
 
-            ticket.setFont(boldSmallTicket);
-
-            ticket.drawString("SUBTOTAL:", 63, y);
-            ticket.drawString(this.moneda.format(this.venta.subtotal), 130, y);
-            y += h_normalTicket;
-
-            if (this.venta.descuento > 0) {
-                ticket.drawString("DESCUENTO:", 63, y);
-                ticket.drawString(this.moneda.format(this.venta.descuento), 130, y);
-                y += h_normalTicket;
-            }
+            ticket.setFont(boldSmallTicket);           
 
             ticket.drawString("TOTAL:", 63, y);
-            ticket.drawString(this.moneda.format(this.venta.total), 130, y);
+            ticket.drawString(this.moneda.format(total), 130, y);
             y += h_normalTicket;
 
             //javax.swing.JOptionPane.showMessageDialog(null, this.venta.tipoVenta);
@@ -754,7 +748,7 @@ class FormatoTicket implements Printable {
             ticket.drawString("------------------------------------------------------------------------", 0, y);
             y += h_normalTicket;
 
-            y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, new Converter().getStringOfNumber(this.venta.total), ticket, 0, y, h_normalTicket);
+            y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, new Converter().getStringOfNumber(total), ticket, 0, y, h_normalTicket);
 
 
 
