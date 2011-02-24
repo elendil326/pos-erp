@@ -835,15 +835,20 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 						tipo_pago: Ext.getCmp('Clentes-abonarTipoPago').getValue()
 					})
 		},
-		success: function(response, opts) {
+		success: function(response, opts) {           
 
-            //Ext.Msg.alert( "Abono a venta","Abonado: " + POS.currencyFormat(transaccion.abono) + "<br>Su cambio: " + POS.currencyFormat(transaccion.cambio) + "<br>Saldo Pendiente: " + POS.currencyFormat(transaccion.saldo) );
-
-			if(DEBUG){
-            	//console.warn("IMPRMIR TICKET");				
+            try{
+				r = Ext.util.JSON.decode( response.responseText );				
+			}catch(e){
+				POS.error(e);
+			}
+						
+			if( !r.success ){
+                Ext.Msg.alert("Error", r.reason);				                
+				return;
 			}
 
-            
+
 
             //buscar esta venta especifica en la estructura (MODIFICAMOS LA LISTA DE VENTAS)
 	        lista = Aplicacion.Clientes.currentInstance.listaDeCompras.lista;
@@ -863,6 +868,7 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 			var data_abono = {
 			    abono_venta : true,
 			    id_venta : Ext.getCmp("Clentes-CreditoVentasLista").getValue(),
+			    empleado : r.empleado,
 			    saldo_prestamo : transaccion.saldo,
 			    monto_abono : transaccion.abono,
 			    sucursal_origen : Aplicacion.Mostrador.currentInstance.infoSucursal
@@ -1729,7 +1735,6 @@ Aplicacion.Clientes.prototype.finishedPanelShow = function( data_abono )
 	action = "sink.Main.ui.setActiveItem( Aplicacion.Clientes.currentInstance.detallesDeClientesPanel , 'slide');";
                     
 	setTimeout(action, 4000);	
-	//sink.Main.ui.setActiveItem( Aplicacion.Clientes.currentInstance.detallesDeClientesPanel , 'slide');
 	
 };
 
