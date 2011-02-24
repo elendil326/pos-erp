@@ -822,12 +822,22 @@ function nuevaCompraSucursal( $json = null){
 	$autorizacion -> setIdSucursal( $data->sucursal );
 	$autorizacion -> setEstado( 3 ); // en transito
 	$autorizacion -> setTipo( "envioDeProductosASucursal" ); 
-	$autorizacion -> setParametros ( json_encode( array(
-        "clave" => "209",
-        "descripcion"=>"Envio de productos",
-        "productos"=> $parametros ) ) );
-
 	
+	if( !isset( $data -> conductor ) || $data -> conductor == "" ){
+        $conductor = "No especificado";
+    }else{
+        $conductor = $data -> conductor ;
+    }
+	
+	
+	$autorizacion -> setParametros ( json_encode( array(
+        "clave" => 209,
+        "descripcion"=>"Envio de productos",
+        "conductor" => $conductor,
+        "productos"=> $parametros ) ) 
+        );
+
+    
 	try{
 		AutorizacionDAO::save( $autorizacion );
 	}catch(Exception $e){
@@ -1218,6 +1228,7 @@ if(isset($args['action'])){
 		/*
 			{
 				sucursal:1,
+				copnductor:'pedro'
 				productos:[
 					{
 						id_producto:1,

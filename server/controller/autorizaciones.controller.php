@@ -316,6 +316,7 @@ require_once("logger.php");
          *
          * @param Array $args( 
          *                                        'data' => [ {"id_producto" : int, "cantidad" : int, "cantidad_procesada" : int }[, {"id_producto" : int, "cantidad" : int, "cantidad_procesada" : int } ] ],
+         *                                        'conductor' => string,
          *                                        'id_sucursal' => int[,
          *                                        'responseToAut' => int ]
          *                                      )
@@ -370,9 +371,17 @@ require_once("logger.php");
         $autorizacion->setFechaPeticion( $time  );
         $autorizacion->setFechaRespuesta( $time );
 
+        if( !isset($args['conductor']) || $args['conductor'] == "" ){
+            $conductor = "No especificado";
+        }else{
+            $conductor = $args['conductor'] ;
+        }
+        
+
         $parametros = json_encode(array(
-            'clave'=>'209',
+            'clave'=>209,
             'descripcion'=>'Envio de productos',
+            'conductor' => $conductor,
             'productos'=>$data
         ));
 

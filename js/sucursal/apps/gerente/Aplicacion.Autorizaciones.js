@@ -1442,6 +1442,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
     
     if(DEBUG){    
 	    console.log("El estado de la autorizacion es : ", estado);
+	    console.log("Los parametros de la autorizacion son : ", parametros)
 	}
     
     instrucciones = null;   
@@ -1450,8 +1451,10 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
     var itemsForm = [
     ];
 
+    //parametros.clave = parseInt(parametros.clave );
+
     if(DEBUG){    
-	    console.log("La clave de la autorizacion es : ", parametros.clave);
+	    console.log("La clave de la autorizacion es : ", parametros.clave);	    
 	}
 
     //creamos los items para el detalleAutorizacionFormPanel
@@ -1561,11 +1564,17 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
 
             html += "</table>";
 
-            itemsForm.push({
+            itemsForm.push(
+                new Ext.form.Text({
+                    label:'Conductor',
+                    name:'conductor',
+                    value:parametros.conductor
+                }),{
                 id:     'detalleAutorizacionFormPanel-Tabla',
                 html:   html,
                 cls :   'Tabla',
-            });
+                }
+            );
 
             switch( autorizacion.get('estado') )
             {
