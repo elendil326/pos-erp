@@ -310,7 +310,7 @@ class FormatoTicket implements Printable {
 
             //if (this.venta.cliente != null) {
 
-            y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, "", ticket, 0, y, h_normalTicket);
+            //y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, "", ticket, 0, y, h_normalTicket);
             //ticket.drawString("Cliente : " + this.venta.cliente.nombre, 0, y);
             //y += h_normalTicket;
 
@@ -330,7 +330,7 @@ class FormatoTicket implements Printable {
             y += h_normalTicket;
 
             ticket.setFont(normalTicket);
-            String conceptoAbonoVenta = "Abono a venta a credito: " + venta.id_venta;
+            String conceptoAbonoVenta = "Abono a venta";
 
             if (conceptoAbonoVenta.length() > 13) {
                 String[] cadena = conceptoAbonoVenta.split(" ");
