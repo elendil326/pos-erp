@@ -76,7 +76,7 @@ POS.Keyboard.Keyboard = function ( campo, config ){
 	POS.Keyboard.KeyboardObj = new Ext.Panel({
         floating: true,
 		style : {
-			zIndex : '20000'
+			zIndex : '20000 !important'
 		},
 		ui : "dark",
         modal: false,

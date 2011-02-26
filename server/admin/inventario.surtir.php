@@ -820,7 +820,8 @@ function doSurtir()
 
 	var readyDATA = {
 		productos : composiciones,
-		sucursal : currentSuc
+		sucursal : currentSuc,
+		conductor : jQuery('#conductor').val()
 	};
 	
 	//hacer ajaxaso
@@ -920,8 +921,22 @@ function restart()
 <?php } ?>
 
 
-
-
+<!--
+    Seleccion de chofer
+-->
+<div id="select_sucursal">
+    <h2>Indique quien entragara el embarque</h2>
+    <form >
+    <table border="0" cellspacing="5" cellpadding="5">
+	    <tr><td>Conductor</td>
+		    <td>
+			   <input type="text" value="" id="conductor" />
+		    </td>
+            <td> </td>
+	    </tr>
+    </table>
+    </form>
+</div>
 
 
 <?php
@@ -1000,8 +1015,6 @@ foreach( $sucursales as $sucursal ){
 }
 
 ?>
-
-
 
 <!--
 	Seleccion de producto a surtir

@@ -280,7 +280,8 @@ Aplicacion.Autorizaciones.prototype.nueva.autorizacionVentaPreferencial = functi
             {
                 Ext.Msg.alert("Autorizacion","Se ha enviado su autorización"); 
                 sink.Main.ui.setActiveItem( Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel , 'fade');
-            
+                 //recargamos la lista de autorizaciones
+                Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesLoad();
             }
             else
             {
@@ -353,6 +354,8 @@ Aplicacion.Autorizaciones.prototype.nueva.nuevoCreditoModificar = function( data
             if( r.success == true )
             {
                 Ext.Msg.alert("Autorizacion","Se ha enviado su autorización"); 
+                //recargamos la lista de autorizaciones
+                Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesLoad();
             }
             else
             {
@@ -495,6 +498,9 @@ Aplicacion.Autorizaciones.prototype.solicitudAutorizacionMerma = function( value
             Ext.Msg.alert("Autorizaciones","Solicitud enviada con exito.");
 
             //Ext.getBody().unmask(); 
+            
+             //recargamos la lista de autorizaciones
+             Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesLoad();
 
         },
         failure: function( response ){
@@ -778,6 +784,9 @@ Aplicacion.Autorizaciones.prototype.solicitudAutorizacionDevolucion = function( 
             Ext.Msg.alert("Autorizaciones","Solicitud enviada con exito.");
 
             Ext.getBody().unmask(); 
+            
+            //regresamos al panel para selccionar otra venta
+            Aplicacion.Autorizaciones.currentInstance.limpiarDevolucionesPanel();
 
         },
         failure: function( response ){
@@ -789,7 +798,7 @@ Aplicacion.Autorizaciones.prototype.solicitudAutorizacionDevolucion = function( 
 
 
 //construye un panel emergente donde el gerente indicaria la cantidad de merma de cierto producto
-Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_venta, id_producto, cantidad, cantidad_procesada )
+Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_venta, id_producto, cantidad, cantidad_procesada, descripcion )
 {
    
     this.solicitarDevolucionVentaPanel = new Ext.form.FormPanel({
@@ -833,15 +842,30 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_vent
                             };
                         POS.Keyboard.Keyboard( this, kconf );
                         }
-                    } })     
-            ]}, 
-            new Ext.Button({ ui  : 'action', text: 'Enviar Solicitud', margin : 15,  handler : this.solicitarDevolucionVentaPanelValidator })
+                    } }),
+                new Ext.form.Hidden({ id: 'Autorizacion-DevolucionVentaPanel-descripcion', name : "descripcion", value : descripcion })  
+            ]}
         ]
     });
 
+
+
+    
+
+
+	var dockedItems = [new Ext.Toolbar({
+		ui: 'light',
+		dock: 'bottom',
+		items: [new Ext.Button({ ui  : 'back', text: 'Regresar', handler : this.limpiarDevolucionesPanel  })].concat({ 
+		xtype: 'spacer'}).concat(new Ext.Button({ ui  : 'forward', text: 'Enviar Solicitud',  handler : this.solicitarDevolucionVentaPanelValidator }))
+	})];
+
+
+
     this.panelSolicitudDevolucion = new Ext.Panel({
-        floating:true,
+        //floating:true,
         //modal: false,
+        dockedItems : dockedItems,
         centered:true,
         height: 465,
         width: 680,
@@ -852,12 +876,25 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_vent
             this.solicitarDevolucionVentaPanel
         ]
     });
-
-    this.panelSolicitudDevolucion.show('pop');
+  
+  
+    sink.Main.ui.setActiveItem( this.panelSolicitudDevolucion, 'slide');
 
 };
 
+//regresa al panel donde se seleccionan las ventas pare una nueva devolucion
+Aplicacion.Autorizaciones.prototype.limpiarDevolucionesPanel = function(){
 
+    //limpiamos el panel
+    Ext.getCmp('DevolucionHtmlPanel').update("");
+    
+    //limpiamos el campo de la venta
+    Ext.getCmp('Aurotizacion-devolucionesIdVenta').setValue("");
+    
+    //lo mostramos
+    sink.Main.ui.setActiveItem(Aplicacion.Autorizaciones.currentInstance.nueva.devolucionesPanel, 'slide');
+    
+};
 
 
 //valida los datos del formulario de solicitarDevolucionVentaPanel
@@ -966,7 +1003,7 @@ Aplicacion.Autorizaciones.prototype.listaDetalleVenta = function( id_venta )
 
                     //class = ( i == r.datos.num_compras - 1 )? " 'last Autorizaciones-row' " : " 'Autorizaciones-row' ";
                    
-                    html += "<tr class = 'Autorizaciones-row' onClick = ' Aplicacion.Autorizaciones.currentInstance.solicitarDevolucionVenta(" + r.datos.id_venta + "," + r.datos.ventas[ i ].id_producto + "," + r.datos.ventas[ i ].cantidad + "," + r.datos.ventas[ i ].cantidad_procesada + ") ' >";
+                    html += "<tr class = 'Autorizaciones-row' onClick = ' Aplicacion.Autorizaciones.currentInstance.solicitarDevolucionVenta(" + r.datos.id_venta + "," + r.datos.ventas[ i ].id_producto + "," + r.datos.ventas[ i ].cantidad + "," + r.datos.ventas[ i ].cantidad_procesada + "," + "\"" + r.datos.ventas[ i ].descripcion + "\"" + ") ' >";
 
                     html += "   <td>" + r.datos.id_venta + "</td>";
                     html += "   <td>" + r.datos.ventas[ i ].id_producto + "</td>";
@@ -1035,6 +1072,11 @@ Aplicacion.Autorizaciones.prototype.nueva.devolucionesPanelCreator = function()
     this.devolucionesPanel = new Ext.form.FormPanel({
             scroll: 'none',
             cls : "Tabla",
+            listeners:{
+                "show":function(){                    
+                    Aplicacion.Autorizaciones.currentInstance.limpiarDevolucionesPanel();
+                }
+            },
             items: [{
                 xtype: 'fieldset',
                 title: 'Autorizar devolucion',
@@ -1490,6 +1532,14 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
         break;
 
         case '203'://solicitud de autorizacion de devolucion (gerente)
+        
+            if( DEBUG ){
+                console.log("entre al case 203, parametros : ", parametros);
+            }
+        
+            parametros.cantidad = parametros.cantidad == 0 ? "0" : parametros.cantidad;
+            parametros.cantidad_procesada = parametros.cantidad_procesada == 0 ? "0" : parametros.cantidad_procesada;
+        
             itemsForm.push(
                 new Ext.form.Text({
                     label:'ID Autorización',
@@ -1498,7 +1548,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                 }),new Ext.form.Text({label: 'ID Venta', value:parametros.id_venta }),
                 new Ext.form.Text({label: 'ID Producto', value:parametros.id_producto }),
                 new Ext.form.Text({label: 'Cantidad de origen', value:parametros.cantidad }),
-                new Ext.form.Text({label: 'Cantidad procesada', value:parametros.cantidad })
+                new Ext.form.Text({label: 'Cantidad procesada', value:parametros.cantidad_procesada })
             );
             height = 425;
         break;

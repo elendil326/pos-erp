@@ -537,7 +537,7 @@ function abonarVenta( $args ){
         die( '{"success": false, "reason": "Error, porfavor intente de nuevo." }' );
     }
 
-    $empleado = UsuarioDAO::getByPK( $_SESSION['userid'] );
+    $empleado = UsuarioDAO::getByPK( $_SESSION['userid']  );
    
 	DAO::transEnd();
     Logger::log("Abono exitoso a la venta " . $data->id_venta);

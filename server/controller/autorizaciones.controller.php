@@ -999,6 +999,7 @@ require_once("logger.php");
                 $descripcion = json_encode(array(
                     'clave'=>$args['action'],
                     'descripcion'=>'Autorización de devolución',
+                    'producto_descripcion' => $data -> descripcion,
                     'id_venta'=>$data -> id_venta,
                     'id_producto'=>$data -> id_producto,
                     'cantidad'=>$data -> cantidadDevuelta,

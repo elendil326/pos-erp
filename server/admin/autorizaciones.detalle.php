@@ -66,6 +66,33 @@ function surtirSuc(id, aut){
 	<tr><td><b>Sucursal</b></td><td><?php           echo $sucursal->getDescripcion(); ?></td></tr>
 	<tr><td><b>Fecha de peticion</b></td><td><?php  echo toDate($autorizacion->getFechaPeticion()); ?></td></tr>
 	<tr><td><b>Descripcion</b></td><td><?php        echo $autorizacionDetalles->descripcion; ?></td></tr>	
+	<tr><td><b>Estado</b></td><td> <?php        
+	    switch( $autorizacion->getEstado() ){
+	        case 0:
+	            echo "Sin contestar";
+	        break;
+	        case 1:
+	            echo "Aceptada";
+	        break;
+	        case 2:
+	            echo "Rechazada";
+	        break;
+	        case 3:
+	            echo "En transito";
+	        break;
+	        case 4:
+	            echo "Embarque recibido";
+	        break;
+	        case 5:
+	            echo "Eliminada";
+	        break;
+	        case 6:
+	            echo "Aplicada";
+	        break;
+	        default:
+	            echo "Indefinido (estado {$autorizacion->getEstado()}) ";
+	    }
+	 ?></td></tr>	
 
 </table>
 
@@ -118,8 +145,9 @@ switch( $autorizacionDetalles->clave ){
             <h2>Solicitud de devolucion</h2>
             <table>
                 <tr><td>Venta</td><td><?php echo $autorizacionDetalles->id_venta; ?></td></tr>
-                <tr><td>Producto</td><td><?php echo $autorizacionDetalles->id_producto; ?></td></tr>
+                <tr><td>Producto</td><td><?php echo $autorizacionDetalles->producto_descripcion; ?></td></tr>                
                 <tr><td>Cantidad</td><td><?php echo $autorizacionDetalles->cantidad; ?></td></tr>
+                <tr><td>Cantidad Procesada</td><td><?php echo $autorizacionDetalles->cantidad_procesada; ?></td></tr>
                 <tr><td></td><td><input type=button value="Autorizar" onClick="contestar(<?php echo $_REQUEST['id'] ?>, true)"><input onClick="contestar(<?php echo $_REQUEST['id'] ?>, false)" type=button value="Rechazar"></td></tr>
             </table>
         <?php
@@ -130,11 +158,11 @@ switch( $autorizacionDetalles->clave ){
     case "204": 
         //cambio de precio
         ?>
-            <h2>Solicitud de cambio de precio a producto</h2>
+            <h2>Solicitud de autorización de venta preferencial</h2>
             <table>
-                <tr><td>Cliente</td><td><?php echo $autorizacionDetalles->id_producto; ?></td></tr>
-                <tr><td>Cantidad</td><td><?php echo $autorizacionDetalles->precio; ?></td></tr>
-                <tr><td></td><td><input type=button value="Autorizar" onClick="contestar(<?php echo $_REQUEST['id'] ?>, true)"><input onClick="contestar(<?php echo $_REQUEST['id'] ?>, false)" type=button value="Rechazar"></td></tr>
+                <tr><td><b>Cliente</b</td><td><?php echo $autorizacionDetalles->nombre; ?></td></tr>
+                <tr><td colspan = 2>&nbsp;</td></tr>
+                <tr><td></td><td><input type=button value="Autorizar" onClick="contestar(<?php echo $_REQUEST['id'] ?>, true)"><input onClick="contestar(<?php echo $_REQUEST['id'] ?>, false)" type=button value="Rechazar"></td></tr>                
             </table>
         <?php
 

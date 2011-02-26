@@ -612,6 +612,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 Aplicacion.Mostrador.prototype.agregarProducto = function (	 )
 {	
 	val = Aplicacion.Mostrador.currentInstance.mostradorPanel.getDockedComponent(0).getComponent(0).getValue();
+
 	Aplicacion.Mostrador.currentInstance.mostradorPanel.getDockedComponent(0).getComponent(0).setValue("");
 	Aplicacion.Mostrador.currentInstance.agregarProductoPorID(val);
 };
@@ -970,6 +971,9 @@ Aplicacion.Mostrador.prototype.buscarClienteFormCreator = function ()
 
 	var formBase = {
 		autoRender: true,
+		style : {
+			zIndex : '10000 !important'
+		},
         listeners:{
             'show':function(){
                 //TODO: verificar que esto solo se haga una sola vez

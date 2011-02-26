@@ -31,7 +31,10 @@ function renderEstado ($edo){
         case "1" : return "Aceptada";
         case "2" : return "Rechazada";
         case "3" : return "En transito";
-        case "4" : return "<div style='color:green'>Contestada</div>";
+        case "4" : return "<div style='color:green'>Embarque recibido</div>";
+        case "5" : return "<div style='color:red'>Eliminada</div>";
+        case "6" : return "<div style='color:green'>Aplicada</div>";
+        default : return "Indefinido {$edo}";
 
     }
 }
