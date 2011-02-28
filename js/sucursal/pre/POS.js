@@ -161,9 +161,17 @@ function reload(){
 				try{ autorizaciones = Ext.util.JSON.decode( response.responseText ); }catch(e){ return; }
 				if( !autorizaciones.success ){ return ; }
 
-				if(Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lista.length != autorizaciones.payload.length ){
-	            	Ext.Msg.alert("Autorizaciones","Tiene autorizaciones nuevas por atender");				            		            
-				}
+
+				Ext.Msg.confirm("Autorizaciones", "Tiene autorizaciones por atender. &iquest; Desea verlas ahora ?<br>", 
+					function(a){
+							if(a == "yes"){
+								sink.Main.ui.setActiveItem( Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel , 'fade');
+							}
+						}
+					);
+				/*if(Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lista.length != autorizaciones.payload.length ){
+	            	;				            		            
+				}*/
               
 				Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lista = autorizaciones.payload;
 				Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lastUpdate = Math.round(new Date().getTime()/1000.0);
