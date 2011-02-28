@@ -1679,10 +1679,13 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
             html += "       <td>Cantidad</td>";
             html += "   </tr>";
 
-            var cantidad = parametros.productos[i].procesado == "true"?  parametros.productos[i].cantidad_procesada :  parametros.productos[i].cantidad;
-            var procesado = parametros.productos[i].procesado == "true"? "Si":"No";
-
+            
             for ( var i = 0; i < parametros.productos.length; i++ ){
+            
+                var cantidad = parametros.productos[i].procesado == "true"?  parametros.productos[i].cantidad_procesada :  parametros.productos[i].cantidad;
+                var procesado = parametros.productos[i].procesado == "true"? "Si":"No";
+
+            
                 html += "<tr  >";
                 html += "   <td>" + parametros.productos[i].id_producto + " " + parametros.productos[i].descripcion +  "</td>";
                 html += "   <td>" + procesado +  "</td>";
