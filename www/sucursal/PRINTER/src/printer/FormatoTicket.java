@@ -196,7 +196,10 @@ class FormatoTicket implements Printable {
 
                 ticket.drawString("" + this.venta.productos.get(j).cantidad, 75, y);
                 ticket.drawString(this.moneda.format(this.venta.productos.get(j).precio), 107, y);
-                ticket.drawString(this.moneda.format(this.venta.productos.get(j).subTotal), 138, y);
+
+                float subtotal = this.venta.productos.get(j).cantidad * this.venta.productos.get(j).precio ;
+
+                ticket.drawString(this.moneda.format( subtotal ), 138, y);
                 y += h_normalSmallTicket;
 
             }//for
