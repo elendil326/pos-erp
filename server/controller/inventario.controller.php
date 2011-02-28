@@ -648,14 +648,16 @@ function terminarCargamentoCompra( $json = null ){
 		}
 		
 		//sumamos el desecho y los otros productos resultantes
-		$suma =$datos->desecho;
+		$suma =$datos->procesado + $datos->desecho;
 		
 		for($i=0;$i<sizeof($subproducto);$i++){
 			$suma+=$subproducto[$i]->procesado;
 		}
 		
+		Logger::log( "El desecho mas los productos resultantes son : " . $suma );
+		
 		//verificamos que los productos no sean mayores qeu los insumos
-		if( ( $suma + $datos->procesado ) > ( $di->getExistencias() - $di->getExistenciasProcesadas() ) ){
+		if( $suma  > ( $di->getExistencias() - $di->getExistenciasProcesadas() ) ){
 			
 			Logger::log( "Imposible procesar producto, " . $suma . " <= " . $di->getExistencias() . " - " . $di->getExistenciasProcesadas() );
 			
@@ -683,18 +685,9 @@ function terminarCargamentoCompra( $json = null ){
 				if($dis[$i]==NULL){
 					DetalleInventarioDAO::transRollback();
 					die('{"success":false,"reason":"Error : No se tiene registro de uno o mas subproductos, verifique sus datos."}');
-				}
-					
-                //verificamos si el los productos son por unidad (papa verde)		
-                $pi = InventarioDAO::getByPK( $subproducto[$i]->id_producto ); 				
-			    if( $pi -> getEscala() == "pieza" ){
-			        $catidad_procesada = $subproducto[$i]->procesado / 63;
-			    }else{
-                    $catidad_procesada = $subproducto[$i]->procesado; 			    
-			    }
-			
-				$dis[$i]->setExistencias($dis[$i]->getExistencias() + $catidad_procesada );
-				$dis[$i]->setExistenciasProcesadas($dis[$i]->getExistenciasProcesadas() + $catidad_procesada );
+				}					
+							
+				$dis[$i]->setExistenciasProcesadas($dis[$i]->getExistenciasProcesadas() + $subproducto[$i]->procesado );
 
 				try{
 

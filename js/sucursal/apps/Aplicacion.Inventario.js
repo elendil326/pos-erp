@@ -219,7 +219,7 @@ Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 					+'</tr>'
 				+'</table>'
 				+'</div>',
-			grouped: true,
+			grouped: false,
 			indexBar: true,
 			listeners : {
 				"activate" : function(){
@@ -998,7 +998,7 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 	                xtype: 'spacer'
 	            },{
 	                text: 'Agregar producto resultante',
-	                ui: 'nomral',
+	                ui: 'normal',
 	                handler: function() { 
 						Aplicacion.Inventario.currentInstance.procesarProducto.mostrarLista( this );
 	                }
@@ -1110,7 +1110,7 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 				ui: 'dark',
 				store: null,
 				itemTpl: '<div class=""><b>{productoID}</b> {descripcion}</div>',
-				grouped: true,
+				grouped: false,
 				indexBar: false,
 				listeners : {
 					"selectionchange"  : function ( view, nodos, c ){
@@ -1123,6 +1123,7 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 							panel.setActiveItem( productoDerivadoDetallesPanel,	Ext.anims.slide ); 
 							
 							foo = nodos[0];
+							
 						}
 
 						
@@ -1315,11 +1316,28 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 		
 		detalles = panelDetalles.getValues();
 		
+		if(DEBUG){
+		    console.log( "carritoDeDerivados : ", carritoDeDerivados );
+		}
+		
+		//creamos el array de los subproductos
+		var array_derivados = [];
+		
+		for( var i = 0; i < carritoDeDerivados.length; i++ ){
+		    array_derivados.push(
+                {id_producto : carritoDeDerivados[i].data.productoID, procesado : carritoDeDerivados[i].data.cantidad }
+		    );
+		}
+		
+		if(DEBUG){
+		    console.log( "array_derivados  : ", array_derivados  );
+		}
+		
 		data = {
 			id_producto : producto.get("productoID"),
 			procesado : detalles.resultante,
 			desecho : detalles.merma,
-			subproducto : [] // { id_producto : , procesado : }
+			subproducto : array_derivados 
 		};
 		
 	    Ext.Ajax.request({
