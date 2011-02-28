@@ -27,7 +27,7 @@
 <script type="text/javascript" charset="utf-8">
 
 
-	
+	jQuery("#MAIN_TITLE").html("REMISION <?php echo $compra->getFolio();?> : <?php echo $producto->getDescripcion();?>");
 
 	
 	function terminarProducto()
@@ -104,20 +104,31 @@
 
 <h2>Detalles</h2>
 	<table border="0" cellspacing="1" cellpadding="1" style="width: 100%">
-		<tr><td>Fecha de llegada</td>			<td><?php echo toDate($compra->getFecha()); ?></td></tr>
-		<tr><td>Descripcion</td>				<td><?php echo $producto->getDescripcion();?></td></tr>
-		<tr><td>Proveedor</td>					<td>
+		<tr>
+			<td>Fecha de llegada</td>			<td><?php echo toDate($compra->getFecha()); ?></td>
+			<td>Remision</td>						<td><?php echo $compra->getFolio();?></td>
+		</tr>
+			
+		<tr>
+			<td>Descripcion</td>				<td><?php echo $producto->getDescripcion();?></td>
+			<td>Arpillas de origen</td>	<td><?php echo $compra->getArpillas(); /*mostrar arpillas de este producto, no totales*/ ?></td>
+		</tr>
+			
+		<tr>
+			<td>Proveedor</td>					<td>
 			<?php 
 			
 				$p = ProveedorDAO::getByPK($compra->getIdProveedor());
 				echo $p->getNombre();
 			
-			?></td></tr>
-		<tr><td>Productor</td>					<td><?php echo $compra->getProductor();?></td></tr>
-		<tr><td>Remision</td>						<td><?php echo $compra->getFolio();?></td></tr>
-		<tr><td>Arpillas de este producto</td>	<td><?php echo $compra->getArpillas(); /*mostrar arpillas de este producto, no totales*/ ?></td></tr> 
-		<tr><td>Merma por arpilla</td>			<td><?php echo $compra->getMermaPorArpilla();?></td></tr>
-		<tr><td>Promedio por arpilla</td>		<td><?php echo $compra->getPesoPorArpilla();?></td></tr>
+			?></td>
+			<td>Merma por arpilla</td>			<td><?php echo $compra->getMermaPorArpilla();?></td>
+		</tr>
+			
+		<tr><td>Productor</td>					<td><?php echo $compra->getProductor();?></td>
+			<td>Promedio por arpilla</td>		<td><?php echo $compra->getPesoPorArpilla();?></td>
+			</tr>
+	
 		<tr><td>&nbsp;</td></tr>
 	</table>
 
@@ -134,13 +145,35 @@
 		
 				/* PRODUCTO CON TRATAMIENTO */
 				?>
-				<div style="font-size: 20px;" align="center">
-					<?php printf("<b>%6.2f</b> %ss", ( $inventario->getExistencias () - $inventario->getExistenciasProcesadas ()), $producto->getEscala() ); ?> sin procesar
+				<div align=center style="font-size: 20px;" >
+					<table border=0>
+						<tr>
+							<td>Original</td>
+							<td>&nbsp;</td>
+							<td>Procesado</td>
+						</tr>
+						<tr>
+							<?php
+								//originales
+								$o = $inventario->getExistencias () - $inventario->getExistenciasProcesadas ();
+								//procesadas
+								$p = $inventario->getExistenciasProcesadas();
+								//escala
+								$e = $producto->getEscala();
+							
+							?>
+							<td><?php echo "<b>". number_format( $o / $compra->getPesoPorArpilla(), 2 ) ."</b> arpillas"; ?></td>
+							<td>&nbsp;</td>
+							<td><?php echo "<b>". number_format( $p / 60, 2  ) ."</b> arpillas"; ?></td>
+						</tr>
+						<tr style="font-size: 16px;">
+							<td><?php echo "<b>". number_format( $o , 2 ) ."</b> " . $e . "s"; ?></td>
+							<td>&nbsp;</td>
+							<td><?php echo "<b>". number_format( $p , 2 ) ."</b> " . $e . "s"; ?></td>
+						</tr>					
+					</table>
 				</div>
-		
-				<div style="font-size: 20px;" align="center">
-					<?php printf("<b>%6.2f</b> %ss", $inventario->getExistenciasProcesadas (), $producto->getEscala() ); ?> procesados
-				</div>
+
 			
 				<?php
 			}else{
