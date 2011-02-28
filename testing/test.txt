@@ -1,5 +1,5 @@
 #startConfig
-	#codeBase http://127.0.0.1/alan/trunk/www/
+	#codeBase http://127.0.0.1/trunk/www/
 	#fileName proxy.php
 #endConfig
 

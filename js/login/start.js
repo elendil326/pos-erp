@@ -174,7 +174,7 @@ function createLoginForm( sucursal ){
 								type : 'num',
 								submitText : 'Aceptar',
 								callback : function(){
-									setTimeout('Ext.getCmp("pswd").focus();', 250);
+									//setTimeout('Ext.getCmp("pswd").focus();', 250);
 								}
 							};
 							POS.Keyboard.Keyboard( this, kconf );
