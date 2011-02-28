@@ -739,7 +739,7 @@ function nuevaCompraSucursal( $json = null){
 		}//foreach
 		
 		
-		$global_total_importe += $precio / count( $producto->items );
+		$global_total_importe += ($precio / count( $producto->items )) * ($cantidad - $descuento) ;
 		
 		$detalle = new DetalleCompraSucursal();
 		$detalle -> setIdProducto( $producto->producto );
