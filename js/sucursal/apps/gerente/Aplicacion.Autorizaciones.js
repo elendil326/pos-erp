@@ -1290,6 +1290,8 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesLoad = function (){
 			//agregarlo en el store
 			this.listaDeAutorizacionesStore.loadData( autorizaciones.payload );
 
+            //modifica el row de cada autorizacion
+            Aplicacion.Autorizaciones.currentInstance.updateListaAutorizaciones();
 
 			if(DEBUG){
                 console.log("Lista de autorizaciones retrived !", autorizaciones, this.listaDeAutorizacionesStore );
@@ -1328,41 +1330,105 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanelCreator = function
 			xtype: 'list',
 			emptyText: "vacio",
             store: this.listaDeAutorizacionesStore,
-            itemTpl: '<div class="listaDeAutorizacionesAutorizacion" >ID de autorizacion : {id_autorizacion}&nbsp; Enviada el {fecha_peticion}</div>',
-            grouped: false,
+            itemTpl: '<div style = "float:left; position:relative;" class="listaDeAutorizacionesAutorizacion" onClick = "Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionPanelShow({id_autorizacion})">ID de autorizacion : {id_autorizacion}&nbsp; Enviada el {fecha_peticion}</div><div style = "margin-left:5px;float:left; position:relative;" id = "autorizacion_{id_autorizacion}"></div>',
+            grouped: true,
             indexBar: false,
             listeners : {
                 "selectionchange"  : function ( view, nodos, c ){
-                    if(nodos.length > 0){
-                    
-                        if(DEBUG){
-                            console.log(nodos, c, view);
-                            console.log(  "selecciono : ", this.getSelectedNodes()     );
-                        }
-                        
-                        Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionPanelShow( nodos[0] );
-
-                        //console.error("bug ! cuando haces un tap el orden de nodos[0] no es el correcto");
-                        //console.log(view.getSelectedRecords());
-                    }
-
-
                     view.deselectAll();
-                    },
-                "itemtap" : function(a,b,c,d){
-                        //console.log(a,b,c,d)
-                        //console.log(a.getSelectedRecords())    
-                    }
-                }
+                 }
+                                  
+            }
         }]
 
     });
 
     Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel = this.listaDeAutorizacionesPanel;
+    Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel.addListener("show", this.updateListaAutorizaciones)
     
 };
 
+//modifica cada row de la lista de las autorizaciones para que indiqeu el estado de cada autorizacion
+Aplicacion.Autorizaciones.prototype.updateListaAutorizaciones = function(){
+    
+        if(DEBUG){
+            console.log("actualizando la lista");
+        }
+    
+//        var color = null;
+    
+        for( var i = 0; i < Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesStore.data.items.length; i++ ){
+        
+            switch( Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesStore.data.items[i].data.estado ){
+                case 0 :
+                    desc = "Sin revisar";
+                    color = "grey";
+                break;
 
+                case 1 :
+                    desc = "Aceptada";                
+                    color = "green";
+                break;
+                
+                case 2 :
+                    desc = "Rechazada";
+                    color = "red";
+                break;
+                
+                case 3 :
+                    desc = "En transito";
+                    color = "blue";
+                break;
+                
+                case 4 :
+                    desc = "Surtido";
+                    color = "green";
+                break;                
+                
+                case 5 :
+                    desc = "Eliminada";
+                    color = "red";
+                break;
+                
+                case 6 :
+                    desc = "Aplicada";
+                    color = "green";
+                break;
+            }
+        
+            upTo=document.createTextNode('( ' + desc + ' )');
+//---------
+
+            var div = document.createElement('div');
+            div.style.color = color;
+            div.appendChild( upTo );      
+//----------
+        
+            if(DEBUG){
+                //upTo=document.createTextNode('autorizacion_' + Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesStore.data.items[i].data.id_autorizacion);
+                //upTo = 'autorizacion_' + Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesStore.data.items[i].data.id_autorizacion;
+                console.log("vamos a autualizar a : " + upTo);
+            }
+        
+        
+             var element = document.getElementById( 'autorizacion_' + Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesStore.data.items[i].data.id_autorizacion );
+             
+             //removemos sus hijos
+             if( element != null )
+             {
+             
+                while (element.firstChild) {
+                  element.removeChild(element.firstChild);
+                }
+                
+                //agregamos solo el estadod e la autorizaxion
+                element.appendChild( div );            
+            }
+            
+            
+             
+        }
+ };
 
 //surte al inventario los productos mandados por le admin
 Aplicacion.Autorizaciones.prototype.surtirAutorizacion = function( aid , productos){
@@ -1433,12 +1499,21 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionFormPanel = null;
 //se muestran los detalles de la autorizacion
 Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( autorizacion ){
 
+   
+    for( var i = 0; i < this.listaDeAutorizacionesStore.data.items.length; i++){
+        if( this.listaDeAutorizacionesStore.data.items[i].data.id_autorizacion == autorizacion )
+        {
+            autorizacion = this.listaDeAutorizacionesStore.data.items[i].data;
+            break;
+        }
+    }
+
     if(DEBUG){
         console.log("Mostrando autorizacion : " , autorizacion);
     }
 
     //decodificar el json de parametros
-    var parametros = Ext.util.JSON.decode( autorizacion.get('parametros') );
+    var parametros = Ext.util.JSON.decode( autorizacion.parametros );
 
     if(DEBUG){
 	    console.log("------------------------------------");
@@ -1448,7 +1523,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
 
     
     //estado de la autorizacion
-    var estado = autorizacion.data.estado;        
+    var estado = autorizacion.estado;        
     
     //establecemos una descripcion del estado legible para el cliente
     switch( estado ){
@@ -1507,7 +1582,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                 new Ext.form.Text({
                     label:'ID Autorización',
                     name:'id_autorizacion',
-                    value:autorizacion.data.id_autorizacion
+                    value:autorizacion.id_autorizacion
                 }),new Ext.form.Text({label: 'Concepto', value:parametros.concepto }),
                 new Ext.form.Text({label: 'Monto', value:parametros.monto })
             );
@@ -1524,7 +1599,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                 new Ext.form.Text({
                     label:'ID Autorización',
                     name:'id_autorizacion',
-                    value:autorizacion.data.id_autorizacion
+                    value:autorizacion.id_autorizacion
                 }),new Ext.form.Text({label: 'Nombre', value : parametros.nombre }),
                 new Ext.form.Text({label: 'Cantidad', value : POS.currencyFormat( parametros.cantidad ) })
             );
@@ -1544,7 +1619,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                 new Ext.form.Text({
                     label:'ID Autorización',
                     name:'id_autorizacion',
-                    value:autorizacion.data.id_autorizacion
+                    value:autorizacion.id_autorizacion
                 }),new Ext.form.Text({label: 'ID Venta', value:parametros.id_venta }),
                 new Ext.form.Text({label: 'ID Producto', value:parametros.id_producto }),
                 new Ext.form.Text({label: 'Cantidad de origen', value:parametros.cantidad }),
@@ -1558,7 +1633,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                 new Ext.form.Text({
                     label:'ID Autorización',
                     name:'id_autorizacion',
-                    value:autorizacion.data.id_autorizacion
+                    value:autorizacion.id_autorizacion
                 }),               
                 new Ext.form.Text({label: 'Nombre', value : parametros.nombre })
             );
@@ -1567,7 +1642,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
             
             height = 360;
             
-            autorizacion.venta_preferencial = autorizacion.get('estado') == 1 ? true : false;
+            autorizacion.venta_preferencial = autorizacion.estado == 1 ? true : false;
             
         break;
 
@@ -1576,7 +1651,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                 new Ext.form.Text({
                     label:'ID Autorización',
                     name:'id_autorizacion',
-                    value:autorizacion.data.id_autorizacion
+                    value:autorizacion.id_autorizacion
                 }),new Ext.form.Text({label: 'ID Compra', value : parametros.id_compra }),
                 new Ext.form.Text({label: 'ID Producto', value : parametros.id_producto }),
                 new Ext.form.Text({label: 'Cantidad', value : parametros.cantidad })
@@ -1626,7 +1701,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                 }
             );
 
-            switch( autorizacion.get('estado') )
+            switch( autorizacion.estado )
             {
                 case 0:
                     instrucciones = "";
@@ -1698,9 +1773,9 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                 new Ext.Button({ 
                     ui  : 'forward', 
                     text: 'He recibido el embarque', 
-                    hidden : autorizacion.get('estado') == 3 ? false : true,
+                    hidden : autorizacion.estado == 3 ? false : true,
                     handler: function(){
-                        Aplicacion.Autorizaciones.currentInstance.surtirAutorizacion(autorizacion.get('id_autorizacion'), parametros.productos )
+                        Aplicacion.Autorizaciones.currentInstance.surtirAutorizacion(autorizacion.id_autorizacion, parametros.productos )
                     }
                 }) ,
                 new Ext.Button({ 
@@ -1709,7 +1784,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                     hidden : autorizacion.venta_preferencial ? false : true,
                     handler: function(){                                                                    
                         //seleccionamos al cliente para la venta preferencial
-                        Aplicacion.Autorizaciones.currentInstance.seleccionarClientePreferencial( parametros.id_cliente, autorizacion.data.id_autorizacion );                        
+                        Aplicacion.Autorizaciones.currentInstance.seleccionarClientePreferencial( parametros.id_cliente, autorizacion.id_autorizacion );                        
                     }
                 })
             ]
