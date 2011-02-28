@@ -657,9 +657,9 @@ function terminarCargamentoCompra( $json = null ){
 		Logger::log( "El desecho mas los productos resultantes son : " . $suma );
 		
 		//verificamos que los productos no sean mayores qeu los insumos
-		if( $suma  > ( $di->getExistencias() - $di->getExistenciasProcesadas() ) ){
+		if( $suma  >  $di->getExistencias() ){
 			
-			Logger::log( "Imposible procesar producto, " . $suma . " <= " . $di->getExistencias() . " - " . $di->getExistenciasProcesadas() );
+			Logger::log( "Imposible procesar producto, " . $suma . " <= " . $di->getExistencias() );
 			
 			DetalleInventarioDAO::transRollback();
 			die('{"success":false,"reason":"No se pudo procesar el producto, hay menos existencias de las que se pretenden procesar."}');

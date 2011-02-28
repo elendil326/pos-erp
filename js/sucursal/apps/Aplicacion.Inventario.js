@@ -1357,10 +1357,16 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 		        	respuesta = Ext.util.JSON.decode( response.responseText );             
 		        }catch(e){
 		            return POS.error(e);
-		        }
+		        }								
 				
 				if(respuesta.success){
-					Ext.Msg.alert( "Procesar producto", "Producto procesado correctamente" );
+					Ext.Msg.alert( "Procesar producto", "Producto procesado correctamente" );										
+					//recargamos el inventario
+				
+			        action = Aplicacion.Inventario.currentInstance.cargarInventario();			 
+			        
+			        setTimeout(action, 2000);      
+			       
 				}else{
 					Ext.Msg.alert("Procesar producto", respuesta.reason);
 					return;
