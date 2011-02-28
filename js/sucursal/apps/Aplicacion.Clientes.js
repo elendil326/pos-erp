@@ -1245,7 +1245,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
                             POS.Keyboard.Keyboard( this, kconf );
                         }
                     }
-                }),
+                }), /*
 				new Ext.form.Text({
                     name : 'e_mail',
                     label: 'E-mail',
@@ -1258,7 +1258,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
                             POS.Keyboard.Keyboard( this, kconf );
                         }
                     }
-                }),
+                }), */
 				new Ext.form.Text({
                     name : 'telefono',
                     label: 'Telefono',
@@ -1538,7 +1538,7 @@ Aplicacion.Clientes.prototype.nuevoClientePanelCreator = function (  ){
                             POS.Keyboard.Keyboard( this, kconf );
                         }
                     }
-                }),
+                }), /*
 				new Ext.form.Text({
                     name : 'e_mail',
                     label: 'E-mail',
@@ -1551,7 +1551,7 @@ Aplicacion.Clientes.prototype.nuevoClientePanelCreator = function (  ){
                             POS.Keyboard.Keyboard( this, kconf );
                         }
                     }
-                }),
+                }), */
 				new Ext.form.Text({
                     name : 'telefono',
                     label: 'Telefono',

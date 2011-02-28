@@ -266,12 +266,13 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 
 		
 		var color = i % 2 == 0 ? "" : "style='background-color:#f7f7f7;'";
-		
+		/*
 		if( i == carrito.items.length - 1 ){
 			html += "<tr " + color + " class='last'>";
 		}else{
-			html += "<tr " + color + ">";		
-		}
+			
+		}*/
+		html += "<tr " + color + ">";	
 		
 		html += "<td style='width: 25%;' ><b>" + carrito.items[i].id_producto + "</b> &nbsp;" + carrito.items[i].descripcion+ "</td>";
 		
@@ -300,20 +301,24 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		stotal += (carrito.items[i].cantidad * carrito.items[i].precio);
 	}//for
 	
-	html += "</table>";
 	
 	var style = "";
-	style += "font-size: 35px;";
+	//style += "font-size: 35px;";
 	style += "font-weight: bold;";
 	style += "margin: 32px 0 0 -4px;";
 	style += "text-shadow: 1px 1px 4px black;";
-	style += "color: #073e80;";
+	style += "color: white;";
 	style += "font-family: 'ff-din-web-1', 'ff-din-web-2', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Arial, Helvetica, sans-serif;";
 	style += "letter-spacing: -3px;";
 	
+	
 	if(carrito.items.length > 0){
-		html += "<div style='"+style+"' align=right>Total "+POS.currencyFormat( stotal )+"&nbsp;</div>";	
+		//html += "<div style='"+style+"' align=right>Total "+POS.currencyFormat( stotal )+"&nbsp;</div>";	
+		html += "<tr class='last' style='"+style+"'><td colspan=8 style='text-align:right'>Total</td><td>" +POS.currencyFormat( stotal )+ "</td></tr>" ;
 	}
+	
+	html += "</table>";
+	
 	
 	
 	//mostramos al tabla

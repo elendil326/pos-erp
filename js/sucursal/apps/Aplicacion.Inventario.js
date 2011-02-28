@@ -538,15 +538,15 @@ Aplicacion.Inventario.prototype.refreshSurtir = function ()
 			case "litro": m = "lts"; break;						
 		}
 		
-		html += "<td style='width: 45%;' ><b>" + carrito.items[i].productoID + "</b> &nbsp; " + carrito.items[i].descripcion+ "</td>";
+		html += "<td style='width: 25%;' ><b>" + carrito.items[i].productoID + "</b> &nbsp; " + carrito.items[i].descripcion+ "</td>";
 		html += "<td style='width: 15%;' > <div id='Inventario-carritoTipo"+ carrito.items[i].idUnique +"'></div></td>";
 		html += "<td style='width: 8%;' > <span class = 'boton' onClick = 'Aplicacion.Inventario.currentInstance.quitarDelCarrito(" + carrito.items[i].idUnique+ ")'><img src='../media/icons/close_16.png'></span> </td>";		
-		html += "<td  align='center'  style='width: 5.1%;'> <span class='boton' onClick=\"Aplicacion.Inventario.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique + "', -1, false)\">&nbsp;-&nbsp;<img src='../media/icons/arrow_down_16.png'></span></td>";
+		html += "<td  align='center'  style='width: 6.1%;'> <span class='boton' onClick=\"Aplicacion.Inventario.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique + "', -1, false)\">&nbsp;-&nbsp;<img src='../media/icons/arrow_down_16.png'></span></td>";
 		html += "<td style='width: 6.8%;' > <div id='Inventario-carritoCantidad"+ carrito.items[i].idUnique +"'></div></td><td>"+m+"</td>";
-		html += "<td  align='center'  style='width: 5.1%;'> <span class='boton' onClick=\"Aplicacion.Inventario.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique +"', 1, false)\"><img src='../media/icons/arrow_up_16.png'>&nbsp;+&nbsp;</span></td>";
+		html += "<td  align='center'  style='width: 6.1%;'> <span class='boton' onClick=\"Aplicacion.Inventario.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique +"', 1, false)\"><img src='../media/icons/arrow_up_16.png'>&nbsp;+&nbsp;</span></td>";
 		//html += "<td > </td>";
-//		html += "<td> <div style='color: green'>"+ POS.currencyFormat(carrito.items[i].precioIntersucursal) +"</div></td>";
-//		html += "<td>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioIntersucursal )+"</td>";
+		//html += "<td> <div style='color: green'>"+ POS.currencyFormat(carrito.items[i].precioIntersucursal) +"</div></td>";
+		//html += "<td>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precioIntersucursal )+"</td>";
 		
 		html += "</tr>";
 	}

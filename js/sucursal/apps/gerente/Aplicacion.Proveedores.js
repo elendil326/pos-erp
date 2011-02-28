@@ -270,7 +270,7 @@ Aplicacion.Proveedores = function(){
 			    case "litro": m = "lts"; break;						
 		    }
 
-			html += "   <td style='width: 27%;' ><b>" + carritoItems[i].get("productoID") + "</b> &nbsp; " + carritoItems[i].get("descripcion") + "</td>";
+			html += "   <td style='width: 17%;' ><b>" + carritoItems[i].get("productoID") + "</b> &nbsp; " + carritoItems[i].get("descripcion") + "</td>";
 			html += "   <td style='width: 12%;'> <span class = 'boton' onClick = 'Aplicacion.Proveedores.ci.quitarDelCarrito(" + carritoItems[i].get("productoID") + ")'><img src='../media/icons/close_16.png'></span></span> </td>";
 			html += "   <td style='width: 8.1%;'> <span class='boton' onClick=\"Aplicacion.Proveedores.ci.carritoCambiarCantidad('"+ carritoItems[i].get("productoID") + "', -1, false)\">&nbsp;-&nbsp;<img src='../media/icons/arrow_down_16.png'></span></td>";
 			html += "   <td style='width: 8.1%;' > <div id='Proveedores-carritoCantidad"+ carritoItems[i].get("productoID") +"'></div> </td>";
