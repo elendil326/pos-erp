@@ -92,16 +92,40 @@ $productos = InventarioDAO::getAll();
 function toUnit( $e, $row )
 {
 	if($e == "NA"){
-		return  "<i>N/A</i>";
+		return  "";
 	}
 	
 	if(isset($row['peso_por_arpilla'])){
-		return "<b>" . number_format($e/$row['peso_por_arpilla'], 2) . "</b>Arp | " . "<b>" . number_format($e, 2) . "</b>kg ";
+		
+		if( $row["medida"] == "kilogramo" ){
+			return "<b>" . number_format($e/$row['peso_por_arpilla'], 2) . "</b>Arp  " . "(<b>" . number_format($e, 2) . "</b>".smallUnit($row["medida"]).") ";			
+		}
+
+		return "<b>" . number_format($e, 2) . "</b>".smallUnit($row["medida"]) ;
 	}
 	
 	return "<b>" . number_format($e, 2) . "</b>kg";
 }
 
+
+function toUnitProc($e, $row){
+	if($e == "NA"){
+		return  "";
+	}
+	
+
+	return "<b>" . number_format($e/60, 2) . "</b>Arp  " . "(<b>" . number_format($e, 2) . "</b> ".smallUnit($row["medida"]).") ";
+
+	
+}
+
+
+function smallUnit($unit){
+	switch( $unit ){
+		case "kilogramo": return "Kgs";
+		case "pieza": return "Pzas";
+	}
+}
 
 function toDateS( $d ){
 	$foo = toDate($d);
@@ -122,14 +146,14 @@ function tachar($s){
 echo "<h2>Embarques activos de proveedores</h2>";
 $header = array(
 	"folio" 			=> "Remision",
+	"fecha"				=> "Llegada",
 	"producto_desc" 	=> "Producto",
 	"variedad" 	 		=> "Variedad",
 	"arpillas"			=> "Arpillas origen",
 	"peso_por_arpilla"	=> "Promedio",
 	//"productor"			=> "Productor",
-	"fecha"				=> "Llegada",
 	//"transporte"				=> "Transporte",
-	"merma_por_arpilla"			=> "Merma",
+	//"merma_por_arpilla"			=> "Merma",
 	//"sitio_descarga_desc"		=> "Sitio de descarga",
 	"existencias"				=> "Existencias",
 	"existencias_procesadas"	=> "Procesadas" );
@@ -137,7 +161,7 @@ $header = array(
 $tabla = new Tabla( $header, $iMaestro );
 $tabla->addOnClick("folio", "d", true);
 $tabla->addColRender( "existencias", "toUnit" );
-$tabla->addColRender( "existencias_procesadas", "toUnit" );
+$tabla->addColRender( "existencias_procesadas", "toUnitProc" );
 $tabla->addColRender( "fecha", "toDateS" );
 $tabla->render();
 
