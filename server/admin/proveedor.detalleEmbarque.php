@@ -21,7 +21,7 @@
 	<script>
 		jQuery("#MAIN_TITLE").html("Detalles del embarque <?php echo $compra->getFolio(); ?>");
 	</script>
-	<h2></h2>
+
 	<table style='width:100%' border=0>
 		<tr><td colspan=2 ><h3>Detalles del producto</h3></td>
 			<td colspan=2 ><h3>Detalles del flete</h3></td></tr>
@@ -59,7 +59,7 @@
 	
 function toUnit( $e )
 {
-	return "<b>" . number_format($e, 2) . "</b>kg";
+	return "<b>" . number_format($e, 2) . "</b> Kgs";
 }
 
 function renderProd( $pid ){
@@ -80,7 +80,27 @@ $t->addColRender("precio_por_kg", "moneyFormat");
 $t->addColRender("id_producto", "renderProd");		
 
 $t->addColRender("kg", "toUnit");	
+
+echo "<div id='productos'>";
 $t->render();
+echo "</div>";
+
+$totalKilos = 0;
+$totalImporte = 0;
+$totalArpillas = 0;
+
+foreach( $detalles as $d ){
+	$totalKilos += $d->getKg();
+	$totalImporte += $d->getKg() * $d->getPrecioPorKg();
+	$totalArpillas += $d->getArpillas();
+}
+
 
 
 ?>
+<script>
+	jQuery("#productos table tbody").after("<tr style='color:#3F8CE9 '><td colspan=4></td><td style='border-top: 1px solid #3F8CE9; color:#3F8CE9 '><?php echo moneyFormat($flete->getCostoFlete() + $totalImporte); ?> Total</td></tr>");	
+	jQuery("#productos table tbody").after("<tr style='color:#3F8CE9 '><td colspan=4></td><td><?php echo moneyFormat($flete->getCostoFlete()); ?> Flete</td></tr>");	
+	jQuery("#productos table tbody").after("<tr style='border-top: 1px solid #3F8CE9; color:#3F8CE9 '><td colspan=2></td><td><?php echo $totalArpillas; ?></td><td><?php echo number_format($totalKilos, 2); ?></td><td><?php echo moneyFormat($totalImporte); ?></td></tr>");
+
+</script>

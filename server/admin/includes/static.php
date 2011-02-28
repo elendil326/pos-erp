@@ -3,8 +3,8 @@
 
 function moneyFormat( $val ){
 	
-	//return "$&nbsp;<b>" . money_format( $val, 2 ) . "</b>";
-	return sprintf( "$&nbsp;<b>%.2f</b>", $val );
+	return "$&nbsp;<b>" . number_format( (float)$val, 2 ) . "</b>";
+	//return sprintf( "$&nbsp;<b>%.2f</b>", $val );
 }
 
 
