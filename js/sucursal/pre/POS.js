@@ -23,7 +23,8 @@ POS.currencyFormat = function (num){
 };
 
 
-
+//poner el boton de yes, con si 
+Ext.MessageBox.YESNO[1].text = "Si";
 
 
 Ext.Ajax.timeout = 25000;
@@ -162,7 +163,7 @@ function reload(){
 				if( !autorizaciones.success ){ return ; }
 
 
-				Ext.Msg.confirm("Autorizaciones", "Tiene autorizaciones por atender. &iquest; Desea verlas ahora ?<br>", 
+				Ext.Msg.confirm("Autorizaciones", "Tiene autorizaciones por atender. &iquest; Desea verlas ahora ?<br><br>", 
 					function(a){
 							if(a == "yes"){
 								sink.Main.ui.setActiveItem( Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel , 'fade');
