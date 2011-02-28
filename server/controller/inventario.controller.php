@@ -631,21 +631,31 @@ function terminarCargamentoCompra( $json = null ){
 	  **/
 	function procesarProductoSucursal($json){
 		
+		Logger::log( "iniciando proceso de lavado en sucursal." );
+		
 		DetalleInventarioDAO::transBegin();
 		
 		$datos=parseJSON($json);
+		
 		$subproducto=$datos->subproducto;
+		
 		$di=DetalleInventarioDAO::getByPK($datos->id_producto,$_SESSION["sucursal"]);
-		if($di==NULL){
+		
+		if($di==NULL)
+		{
 			DetalleInventarioDAO::transRollback();
 			die('{"success":false,"reason":"No existe el producto"}');
 		}
-		$suma=$datos->procesado+$datos->desecho;
+		
+		//sumamos el desecho y los otros productos resultantes
+		$suma =$datos->desecho;
+		
 		for($i=0;$i<sizeof($subproducto);$i++){
 			$suma+=$subproducto[$i]->procesado;
 		}
 		
-		if($suma > ( $di->getExistencias() - $di->getExistenciasProcesadas() ) ){
+		//verificamos que los productos no sean mayores qeu los insumos
+		if( ( $suma + $datos->procesado ) > ( $di->getExistencias() - $di->getExistenciasProcesadas() ) ){
 			
 			Logger::log( "Imposible procesar producto, " . $suma . " <= " . $di->getExistencias() . " - " . $di->getExistenciasProcesadas() );
 			
@@ -653,16 +663,16 @@ function terminarCargamentoCompra( $json = null ){
 			die('{"success":false,"reason":"No se pudo procesar el producto, hay menos existencias de las que se pretenden procesar."}');
 		}
 		
-		$di->setExistencias($di->getExistencias()-$datos->desecho);
-		$di->setExistenciasProcesadas($di->getExistenciasProcesadas()+$datos->procesado);
+		//a las existencias le restamos los otros productos y el desecho				
+		$di->setExistencias( $di->getExistencias() - $suma );
+		$di->setExistenciasProcesadas( $di->getExistenciasProcesadas() + $datos->procesado );
 		
 		try{
 			DetalleInventarioDAO::save($di);
-
 		}catch(Exception $e){
 			Logger::log($e);
 			DetalleInventarioDAO::transRollback();
-			die('{"success":false,"reason":"No se pudo procesar el producto, intente de nuevo."}');
+			die('{"success" : false, "reason" : "Error : Los productos no pueden superar a los insumos, verifique sus datos."}');
 		}
 		
 
@@ -672,7 +682,7 @@ function terminarCargamentoCompra( $json = null ){
 				$dis[$i]=DetalleInventarioDAO::getByPK($subproducto[$i]->id_producto,$_SESSION["sucursal"]);
 				if($dis[$i]==NULL){
 					DetalleInventarioDAO::transRollback();
-					die('{"success":false,"reason":"No existe el subproducto"}');
+					die('{"success":false,"reason":"Error : No se tiene registro de uno o mas subproductos, verifique sus datos."}');
 				}
 			
 				$dis[$i]->setExistencias($dis[$i]->getExistencias()+$subproducto[$i]->procesado);
@@ -685,13 +695,15 @@ function terminarCargamentoCompra( $json = null ){
 				}catch(Exception $e){
 					Logger::log($e);
 					DetalleInventarioDAO::transRollback();
-					die('{"success":false,"reason":"No se pudo procesar el producto, intente de nuevo."}');
+					die('{"success":false,"reason":"Error al procesar el producto, verifique sus datos e intente de nuevo."}');
 				}
 			
 		}
 				DetalleInventarioDAO::transEnd();
+				Logger::log( "termiando proceso de lavado en sucursal." );
 				echo '{"success":true}';
 	}
+
 
 if(isset($args['action'])){
 	switch($args['action']){

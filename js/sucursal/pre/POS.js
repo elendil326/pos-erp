@@ -170,8 +170,8 @@ function reload(){
 				Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.hash = autorizaciones.hash;
 				Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesStore.loadData( autorizaciones.payload );
 				
-				//actualizamos cada row de la lisat de autorizaciones mostrando su estado actual
-				Aplicacion.Autorizaciones.currentInstance.updateListaAutorizaciones()
+				//actualizamos cada row de la lista de autorizaciones mostrando su estado actual
+				Aplicacion.Autorizaciones.currentInstance.updateListaAutorizaciones();
 			}
 		});		
 	}
