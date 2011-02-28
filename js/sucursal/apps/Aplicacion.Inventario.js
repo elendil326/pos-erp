@@ -1061,6 +1061,8 @@ Aplicacion.Inventario.ProcesarProducto = function(){
 						labelAlign : "top",
 						listeners: {
 							"focus" : function (){
+								POS.Keyboard.KeyboardObj = null; 
+								
 								kconf = {
 									type : 'num',
 									submitText : 'Aceptar',
