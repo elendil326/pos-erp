@@ -25,7 +25,7 @@ require_once("controller/inventario.controller.php");
 	$centro = array();
 	
 	foreach($comprasSucursal as $compra){
-		if($compra->getIdProveedor() === 0){
+		if($compra->getIdProveedor() == 0){
 			array_push( $centro, $compra );
 		}else{
 			array_push( $proveedores, $compra );			
