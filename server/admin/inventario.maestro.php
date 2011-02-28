@@ -104,7 +104,7 @@ function toUnit( $e, $row )
 		return "<b>" . number_format($e, 2) . "</b>".smallUnit($row["medida"]) ;
 	}
 	
-	return "<b>" . number_format($e, 2) . "</b>kg";
+	return "<b>" . number_format($e, 2) . "</b>" . smallUnit($row["medida"]);
 }
 
 
