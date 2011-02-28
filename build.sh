@@ -93,3 +93,6 @@ rm -rf css
 rm -rf server
 rm -rf js
 
+#firmar el applet de printer.jar, debes cambiar la ruta por que sera diferente en tu lap alan
+#keytool -genkey -alias Caffeina -validity 365 -v
+#echo caffeina  | jarsigner /Applications/XAMPP/htdocs/caffeina/pos/trunk/www/sucursal/PRINTER/dist/PRINTER.jar  Caffeina -verbose
