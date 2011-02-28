@@ -112,14 +112,46 @@ class FormatoTicket implements Printable {
             y += h_normalTicket;
 
             y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, "Cajero : " + this.venta.responsable, ticket, 0, y, h_normalTicket);
+            /*
+            String[] cadenaCajero = ("Cajero : " + this.venta.responsable).split(" ");
+                String acomodaCadena = cadenaCajero[0];
+                for (int k = 1; k < cadenaCajero.length; k++) {
+                    if ((acomodaCadena.length() + " ".length() + cadenaCajero[k].length()) < limite_caracteres) {
+                        acomodaCadena += " " + cadenaCajero[k];
+
+                    } else {
+                        ticket.drawString(acomodaCadena, 0, y);
+
+                        y += h_normalTicket;
+
+                        acomodaCadena = cadenaCajero[k];
+
+                    }
+                }
+             * 
+             */
             //ticket.drawString("Cajero : " + this.venta.responsable, 0, y);
             //y += h_normalTicket;
 
             if (this.venta.cliente != null) {
+                /*
+                String[] cadena = ("Cliente : " + this.venta.cliente.nombre).split(" ");
+                String leypag = cadena[0];
+                for (int k = 1; k < cadena.length; k++) {
+                    if ((leypag.length() + " ".length() + cadena[k].length()) < limite_caracteres) {
+                        leypag += " " + cadena[k];
 
+                    } else {
+                        ticket.drawString(leypag, 0, y);
+
+                        y += h_normalTicket;
+
+                        leypag = cadena[k];
+
+                    }
+                }
+                */
                 y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, "Cliente : " + this.venta.cliente.nombre, ticket, 0, y, h_normalTicket);
-                //ticket.drawString("Cliente : " + this.venta.cliente.nombre, 0, y);
-                //y += h_normalTicket;
 
             }
 
