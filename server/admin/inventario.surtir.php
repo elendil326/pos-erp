@@ -278,7 +278,7 @@ InventarioMaestroTabla = function( config ) {
 			row_html;
 			
 		html = '';	
-		html += '<table style="width: 100%">';
+		html += '<table style="width: 100% ; text-align:left;">';
 		html += '<tr>';
 		html += '<th>Remision</th>';
 		html += '<th>Producto</th>';

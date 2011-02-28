@@ -7,6 +7,8 @@
 	require_once('model/proveedor.dao.php');
 	require_once('model/inventario.dao.php');
 
+	
+
 	$compra = CompraProveedorDAO::getByPK( $_REQUEST['cid'] );
 	$flete  = CompraProveedorFleteDAO::getByPK($_REQUEST['cid']);
 	
@@ -16,6 +18,8 @@
 	$foo->setIdCompraProveedor($_REQUEST['cid']);
 	$detalles = DetalleCompraProveedorDAO::search( $foo );
 	
+	
+
 ?>
 
 	<script>
@@ -104,3 +108,25 @@ foreach( $detalles as $d ){
 	jQuery("#productos table tbody").after("<tr style='border-top: 1px solid #3F8CE9; color:#3F8CE9 '><td colspan=2></td><td><?php echo $totalArpillas; ?></td><td><?php echo number_format($totalKilos, 2); ?></td><td><?php echo moneyFormat($totalImporte); ?></td></tr>");
 
 </script>
+
+
+<?php
+
+if(isset($_REQUEST['askForPrint'])){
+	?>
+	<script>
+		function printme(){
+			jQuery(".success").hide();
+			window.print();
+			
+		}
+	
+		var html = '<div align=center><h1>Caramento registrado existosamente</h1>';
+		html += "&iquest; Desea imprimir un comprobante ?";
+		html += "<br><br><input type='button' value='Si' onclick='jQuery(document).trigger(\"close.facebox\"); setTimeout(\"printme()\", 750)'><input type='button' value='No' onclick='jQuery(document).trigger(\"close.facebox\");'></div>"
+		jQuery.facebox( html );
+	</script>
+	<?php
+}
+
+?>

@@ -159,6 +159,10 @@ require_once('model/sucursal.dao.php');
       * */
     function doMath(){
 
+		//calcular el costo total del flete
+		
+		jQuery("#detalles-flete").val(parseFloat(jQuery("#detalles-flete-ton").val())* (jQuery("#detalles-peso-origen").val() / 1000));
+		
 	    globals.total_arpillas = 0.0;
 	    
      	//bucle de productos
@@ -290,9 +294,9 @@ require_once('model/sucursal.dao.php');
                     return jQuery("#ajax_failure").html(response.reason).show();
                 }
 
-
+				
                 reason = "El cargamento se ha registrado con exito";
-                window.location = 'inventario.php?action=maestro&success=true&reason=' + reason;
+                window.location = 'proveedor.php?action=detalleEmbarque&cid=' + response.id_compra + '&success=true&askForPrint=1&reason=' + reason;
 	      }
 	    });
    	
@@ -353,9 +357,10 @@ require_once('model/sucursal.dao.php');
 			<td>Modelo camion</td>		<td><input type='text' id='detalles-modelo'  ></td></tr>
 			
 		<tr><td>Numero de viaje</td>	<td><input type='text' id='detalles-nuermo-viaje'></td>
-			<td>Costo total del flete</td><td><input type='text' id='detalles-flete' class="wrong" ></td></tr>
+			<td>Costo flete por tonelada</td><td><input onkeyup="doMath();" type='text' id='detalles-flete-ton' class="wrong" ></td></tr>
 			
-		<tr><td>Peso por arpilla</td>	<td><input type='text' id='detalles-peso-por-arpilla' value="0.0" disabled></td></tr>	
+		<tr><td>Peso por arpilla</td>	<td><input type='text' id='detalles-peso-por-arpilla' value="0.0" disabled></td>
+			<td>Costo total del flete</td><td><input type='text' id='detalles-flete' value=0 disabled></td></tr>	
 		
 		<tr><td>Peso origen</td>		<td><input type='text' id='detalles-peso-origen' class="wrong"
 				 onkeyup="jQuery('#detalles-peso-recibido').val(jQuery('#detalles-peso-origen').val()); doMath();" ></td></tr>	

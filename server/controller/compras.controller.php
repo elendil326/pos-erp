@@ -102,6 +102,7 @@ function nuevaCompraProveedor( $data = null ){
 	//($data = null, $id_compra_proveedor = null, $peso_por_arpilla = null, $sitio_descarga = null){
 	insertarProductoInventarioMaestro($data->productos, $id_compra_proveedor, $otro_peso_real_por_arpilla );
 	
+	printf('{"success": true, "id_compra" : '. $id_compra_proveedor .'}');
 	
 }
 
@@ -632,7 +633,7 @@ function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = 
 
 	Logger::log("Proceso de alta a inventario maestro finalizado con exito!");
 	
-	printf('{"success": true}');
+	
 	
 }
 
