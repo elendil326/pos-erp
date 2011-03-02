@@ -6,7 +6,7 @@ import com.google.gson.stream.*;
 /*
  javac -cp gson-1.6.jar test.java && java -cp .:gson-1.6.jar Test test.txt
 */
-
+//esto es un comentario
 
 class Test{
 
