@@ -49,6 +49,8 @@ public class Venta {
     boolean abono_venta = false;
     //indica si re requiere un ticket de abono
     boolean ticket_abono = false;
+    //indica si es una reimpresion de ticket
+    boolean reimpresion = false;
     //descuento
     float descuento = 0;
     //subtotal
@@ -153,6 +155,13 @@ public class Venta {
 
                     this.ticket = entry.getValue().toString().equals("true") ? true : false;
                     System.out.println("this.ticket: " + this.ticket);
+
+                }
+
+                if (entry.getKey().toString().equals("reimpresion")) {
+
+                    this.reimpresion = entry.getValue().toString().equals("true") ? true : false;
+                    System.out.println("this.reimpresion: " + this.reimpresion);
 
                 }
 

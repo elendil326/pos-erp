@@ -244,14 +244,20 @@ class FormatoTicket implements Printable {
                 {
                     ticket.drawString(this.moneda.format(this.venta.subtotal), 130, y);
                 }else{
-                    ticket.drawString(this.moneda.format(this.venta.efectivo), 130, y);
+                    
+                    if( !this.venta.reimpresion ){
+                        ticket.drawString(this.moneda.format(this.venta.efectivo), 130, y);
+                        y += h_normalTicket;
+                    }
+
                 }
 
                 
-                y += h_normalTicket;
-                ticket.drawString("CAMBIO:", 63, y);
-                ticket.drawString(this.moneda.format(this.venta.cambio), 130, y);
-                y += h_normalTicket;
+                if( !this.venta.reimpresion ){
+                    ticket.drawString("CAMBIO:", 63, y);
+                    ticket.drawString(this.moneda.format(this.venta.cambio), 130, y);
+                    y += h_normalTicket;
+                }
 
             }
 
