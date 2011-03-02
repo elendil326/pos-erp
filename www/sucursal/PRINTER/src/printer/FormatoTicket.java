@@ -237,15 +237,15 @@ class FormatoTicket implements Printable {
 
             //javax.swing.JOptionPane.showMessageDialog(null, this.venta.tipoVenta);
             if (this.venta.tipoVenta.equals("contado")) {
-
-                ticket.drawString("PAGO:", 63, y);
-
+               
                 if(this.venta.tipo_pago == "cheque")
                 {
+                    ticket.drawString("PAGO:", 63, y);
                     ticket.drawString(this.moneda.format(this.venta.subtotal), 130, y);
                 }else{
                     
                     if( !this.venta.reimpresion ){
+                        ticket.drawString("PAGO:", 63, y);
                         ticket.drawString(this.moneda.format(this.venta.efectivo), 130, y);
                         y += h_normalTicket;
                     }
