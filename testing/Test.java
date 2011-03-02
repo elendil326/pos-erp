@@ -70,7 +70,9 @@ public class Test{
             		br = new BufferedReader(new FileReader(file));
             		exitonerror = _exitonerror;
 			verbose=(_verbose > 3 || _verbose < 1) ? _verbose : 2 ;
-        	} catch (Exception e) {}
+        	} catch (Exception e) {
+			data.concat("No se pudo abrir el archivo");
+		}
     	}
 
 	/*
