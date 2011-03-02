@@ -113,9 +113,9 @@ class DetalleCompraProveedor extends VO
 	/**
 	  * precio_por_kg
 	  * 
-	  * precio por kg para este producto<br>
+	  *  [Campo no documentado]<br>
 	  * @access protected
-	  * @var float
+	  * @var int(11)
 	  */
 	protected $precio_por_kg;
 
@@ -246,8 +246,8 @@ class DetalleCompraProveedor extends VO
 	/**
 	  * getPrecioPorKg
 	  * 
-	  * Get the <i>precio_por_kg</i> property for this object. Donde <i>precio_por_kg</i> es precio por kg para este producto
-	  * @return float
+	  * Get the <i>precio_por_kg</i> property for this object. Donde <i>precio_por_kg</i> es  [Campo no documentado]
+	  * @return int(11)
 	  */
 	final public function getPrecioPorKg()
 	{
@@ -257,10 +257,10 @@ class DetalleCompraProveedor extends VO
 	/**
 	  * setPrecioPorKg( $precio_por_kg )
 	  * 
-	  * Set the <i>precio_por_kg</i> property for this object. Donde <i>precio_por_kg</i> es precio por kg para este producto.
-	  * Una validacion basica se hara aqui para comprobar que <i>precio_por_kg</i> es de tipo <i>float</i>. 
+	  * Set the <i>precio_por_kg</i> property for this object. Donde <i>precio_por_kg</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>precio_por_kg</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
+	  * @param int(11)
 	  */
 	final public function setPrecioPorKg( $precio_por_kg )
 	{

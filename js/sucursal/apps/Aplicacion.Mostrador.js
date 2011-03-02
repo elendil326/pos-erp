@@ -173,11 +173,14 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 {	
 	carrito = Aplicacion.Mostrador.currentInstance.carrito;
 	
-	var html = "<table border=0>";
+	var html = "<table border = 0>";
 	
 	html += "<tr class='top'>";
 	html +=     "<td align='left'>Descripcion</td>";
-	html +=     "<td colspan=2>&nbsp</td>";
+	html +=     "<td>&nbsp</td>";
+	html +=     "<td>Descuento</td>";
+	html +=     "<td>&nbsp</td>";
+	
 	html +=     "<td align='center' colspan=3>Cantidad</td>";
 	html +=     "<td align='center' ></td>";		
 	html +=     "<td align='left' >Precio</td>";
@@ -277,8 +280,10 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		html += "<td style='width: 25%;' ><b>" + carrito.items[i].id_producto + "</b> &nbsp;" + carrito.items[i].descripcion+ "</td>";
 		
 		html += "<td style='width: 12%;' ><div id='Mostrador-carritoTratamiento"+ carrito.items[i].idUnique +"'></div></td>";
+        		
+		html += "<td style='width: 8%;' ><div id='Mostrador-carritoDescuento"+ carrito.items[i].idUnique +"'></div></td>";
 
-		html += "<td  align='right' style='width: 12%;'> <span class='boton'  onClick=\"Aplicacion.Mostrador.currentInstance.quitarDelCarrito('"+ carrito.items[i].idUnique +"')\"><img src='../media/icons/close_16.png'></span></td>";
+		html += "<td  align='right' style='width:4%;'> <span class='boton'  onClick=\"Aplicacion.Mostrador.currentInstance.quitarDelCarrito('"+ carrito.items[i].idUnique +"')\"><img src='../media/icons/close_16.png'></span></td>";
 
 		html += "<td  align='center'  style='width: 8.1%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique + "', -1, false)\">&nbsp;-&nbsp;<img src='../media/icons/arrow_down_16.png'></span></td>";
 		
@@ -352,7 +357,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			idUnique : carrito.items[i].idUnique,
 			fieldCls:'Mostrador-input',
 			style:{
-		         textAlign: 'center'
+		         textAlign: 'center',
+		         width: '100%'
 		    },
 			placeHolder : "",
 			listeners : {
@@ -390,6 +396,9 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			prodID : carrito.items[i].id_producto,
 			idUnique : carrito.items[i].idUnique,			
 			placeHolder : "Precio de Venta",
+			style:{
+		             width: '100%'
+		        }, 
 			listeners : {
 				'focus' : function (a){
 					
@@ -531,7 +540,11 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 					                
 					                //reconocemos si es un producto procesado o no
 					                if( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true" ){
-
+                                    
+                                       /* //desahbilitamos el campo de proceso
+                                        Ext.getCmp("Mostrador-carritoDescuento"+ carrito.items[i].idUnique + "Text").setDisabled( true );
+                                        Ext.getCmp("Mostrador-carritoDescuento"+ carrito.items[i].idUnique + "Text").setValue("");*/
+                                    
                                         //verificamos que no existan 2 productos con las mismas caracteristicas pero con precio diferente
                                         var found = false;
 									    
@@ -561,6 +574,10 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 							            }
 					                    
 					                }else{
+					                
+					                    /*//habilitamos el campo de proceso
+                                        Ext.getCmp("Mostrador-carritoDescuento"+ carrito.items[i].idUnique + "Text").setDisabled( false );
+                                        alert("Tomando a  : " + "Mostrador-carritoDescuento"+ carrito.items[i].idUnique + "Text" );*/
 					                
 					                    //verificamos que no existan 2 productos con las mismas caracteristicas pero con precio diferente					                    
                                         var found  = false;
@@ -606,6 +623,45 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                 }//listeners
 	
 		    });//c
+		    
+		    //control donde se muestra el decuento
+		    d = new Ext.form.Text({
+			    renderTo : "Mostrador-carritoDescuento"+ carrito.items[i].idUnique ,
+			    id : "Mostrador-carritoDescuento"+ carrito.items[i].idUnique + "Text",
+			    value : "0",
+			    prodID : carrito.items[i].id_producto,
+			    idUnique : carrito.items[i].idUnique,			
+			    //placeHolder : "0.0",
+			    disabled : carrito.items[i].procesado == "true" ? true : false,
+			    style:{
+		             width: '100%'
+		        }, 
+			    //hidden : true,
+			    listeners : {
+				    'focus' : function (a){
+										    
+					    kconf = {
+						    type : 'num',
+						    submitText : 'Cambiar',
+						    callback : function ( campo ){
+						
+						        value = campo.getValue();
+						
+						        if( !isNaN( value ) && value >= 0 ){
+						            carrito.items[i].descuento = value;
+						        }else{
+						            campo.setValue( "0" );
+						            carrito.items[i].descuento = 0;
+						        }
+						
+						    }
+					    };
+					
+					    POS.Keyboard.Keyboard( this, kconf );
+				    }
+			    } 
+		
+		    });
 		    
         }//if
 		
@@ -705,7 +761,8 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 			precioIntersucursalSinProcesar : res.data.precioIntersucursalSinProcesar,
 			procesado : "true",
 			cantidad : 1,
-			idUnique : res.data.productoID + "_" +  Aplicacion.Mostrador.currentInstance.uniqueIndex
+			idUnique : res.data.productoID + "_" +  Aplicacion.Mostrador.currentInstance.uniqueIndex,
+			descuento : "0"
 		});
 		
 		Aplicacion.Mostrador.currentInstance.uniqueIndex++; //identificador unico e irepetible

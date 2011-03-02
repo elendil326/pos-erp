@@ -12,23 +12,6 @@
 abstract class PagosCompraDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_pago ){
-			$pk = "";
-			$pk .= $id_pago . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_pago){
-			$pk = "";
-			$pk .= $id_pago . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_pago ){
-			$pk = "";
-			$pk .= $id_pago . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,17 +47,12 @@ abstract class PagosCompraDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_pago )
 	{
-		if(self::recordExists(  $id_pago)){
-			return self::getRecord( $id_pago );
-		}
 		$sql = "SELECT * FROM pagos_compra WHERE (id_pago = ? ) LIMIT 1;";
 		$params = array(  $id_pago );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-			$foo = new PagosCompra( $rs );
-			self::pushRecord( $foo,  $id_pago );
-			return $foo;
+		return new PagosCompra( $rs );
 	}
 
 
@@ -106,10 +84,7 @@ abstract class PagosCompraDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-			$bar = new PagosCompra($foo);
-    		array_push( $allData, $bar);
-			//id_pago
-    		self::pushRecord( $bar, $foo["id_pago"] );
+    		array_push( $allData, new PagosCompra($foo));
 		}
 		return $allData;
 	}
@@ -173,9 +148,7 @@ abstract class PagosCompraDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-			$bar =  new PagosCompra($foo);
-    		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_pago"] );
+    		array_push( $ar, new PagosCompra($foo));
 		}
 		return $ar;
 	}

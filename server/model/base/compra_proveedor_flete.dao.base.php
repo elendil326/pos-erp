@@ -12,23 +12,6 @@
 abstract class CompraProveedorFleteDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_compra_proveedor ){
-			$pk = "";
-			$pk .= $id_compra_proveedor . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_compra_proveedor){
-			$pk = "";
-			$pk .= $id_compra_proveedor . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_compra_proveedor ){
-			$pk = "";
-			$pk .= $id_compra_proveedor . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,17 +47,12 @@ abstract class CompraProveedorFleteDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_compra_proveedor )
 	{
-		if(self::recordExists(  $id_compra_proveedor)){
-			return self::getRecord( $id_compra_proveedor );
-		}
 		$sql = "SELECT * FROM compra_proveedor_flete WHERE (id_compra_proveedor = ? ) LIMIT 1;";
 		$params = array(  $id_compra_proveedor );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-			$foo = new CompraProveedorFlete( $rs );
-			self::pushRecord( $foo,  $id_compra_proveedor );
-			return $foo;
+		return new CompraProveedorFlete( $rs );
 	}
 
 
@@ -106,10 +84,7 @@ abstract class CompraProveedorFleteDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-			$bar = new CompraProveedorFlete($foo);
-    		array_push( $allData, $bar);
-			//id_compra_proveedor
-    		self::pushRecord( $bar, $foo["id_compra_proveedor"] );
+    		array_push( $allData, new CompraProveedorFlete($foo));
 		}
 		return $allData;
 	}
@@ -183,9 +158,7 @@ abstract class CompraProveedorFleteDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-			$bar =  new CompraProveedorFlete($foo);
-    		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_compra_proveedor"] );
+    		array_push( $ar, new CompraProveedorFlete($foo));
 		}
 		return $ar;
 	}

@@ -12,26 +12,6 @@
 abstract class DetalleVentaDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_venta, $id_producto ){
-			$pk = "";
-			$pk .= $id_venta . "-";
-			$pk .= $id_producto . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_venta, $id_producto){
-			$pk = "";
-			$pk .= $id_venta . "-";
-			$pk .= $id_producto . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_venta, $id_producto ){
-			$pk = "";
-			$pk .= $id_venta . "-";
-			$pk .= $id_producto . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -67,17 +47,12 @@ abstract class DetalleVentaDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_venta, $id_producto )
 	{
-		if(self::recordExists(  $id_venta, $id_producto)){
-			return self::getRecord( $id_venta, $id_producto );
-		}
 		$sql = "SELECT * FROM detalle_venta WHERE (id_venta = ? AND id_producto = ? ) LIMIT 1;";
 		$params = array(  $id_venta, $id_producto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-			$foo = new DetalleVenta( $rs );
-			self::pushRecord( $foo,  $id_venta, $id_producto );
-			return $foo;
+		return new DetalleVenta( $rs );
 	}
 
 
@@ -109,11 +84,7 @@ abstract class DetalleVentaDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-			$bar = new DetalleVenta($foo);
-    		array_push( $allData, $bar);
-			//id_venta
-			//id_producto
-    		self::pushRecord( $bar, $foo["id_venta"],$foo["id_producto"] );
+    		array_push( $allData, new DetalleVenta($foo));
 		}
 		return $allData;
 	}
@@ -177,6 +148,11 @@ abstract class DetalleVentaDAOBase extends DAO
 			array_push( $val, $detalle_venta->getPrecioProcesada() );
 		}
 
+		if( $detalle_venta->getDescuento() != NULL){
+			$sql .= " descuento = ? AND";
+			array_push( $val, $detalle_venta->getDescuento() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -187,9 +163,7 @@ abstract class DetalleVentaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-			$bar =  new DetalleVenta($foo);
-    		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_venta"],$foo["id_producto"] );
+    		array_push( $ar, new DetalleVenta($foo));
 		}
 		return $ar;
 	}
@@ -208,12 +182,13 @@ abstract class DetalleVentaDAOBase extends DAO
 	  **/
 	private static final function update( $detalle_venta )
 	{
-		$sql = "UPDATE detalle_venta SET  cantidad = ?, cantidad_procesada = ?, precio = ?, precio_procesada = ? WHERE  id_venta = ? AND id_producto = ?;";
+		$sql = "UPDATE detalle_venta SET  cantidad = ?, cantidad_procesada = ?, precio = ?, precio_procesada = ?, descuento = ? WHERE  id_venta = ? AND id_producto = ?;";
 		$params = array( 
 			$detalle_venta->getCantidad(), 
 			$detalle_venta->getCantidadProcesada(), 
 			$detalle_venta->getPrecio(), 
 			$detalle_venta->getPrecioProcesada(), 
+			$detalle_venta->getDescuento(), 
 			$detalle_venta->getIdVenta(),$detalle_venta->getIdProducto(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -237,7 +212,7 @@ abstract class DetalleVentaDAOBase extends DAO
 	  **/
 	private static final function create( &$detalle_venta )
 	{
-		$sql = "INSERT INTO detalle_venta ( id_venta, id_producto, cantidad, cantidad_procesada, precio, precio_procesada ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO detalle_venta ( id_venta, id_producto, cantidad, cantidad_procesada, precio, precio_procesada, descuento ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$detalle_venta->getIdVenta(), 
 			$detalle_venta->getIdProducto(), 
@@ -245,6 +220,7 @@ abstract class DetalleVentaDAOBase extends DAO
 			$detalle_venta->getCantidadProcesada(), 
 			$detalle_venta->getPrecio(), 
 			$detalle_venta->getPrecioProcesada(), 
+			$detalle_venta->getDescuento(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -354,6 +330,17 @@ abstract class DetalleVentaDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " precio_procesada = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $detalle_ventaA->getDescuento()) != NULL) & ( ($b = $detalle_ventaB->getDescuento()) != NULL) ){
+				$sql .= " descuento >= ? AND descuento <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " descuento = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

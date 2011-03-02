@@ -1892,7 +1892,7 @@ Aplicacion.Clientes.prototype.finishedPanelReimpresionTicketUpdater = function( 
 	
 	html += "<table class='Mostrador-ThankYou'>";
 	html += "	<tr>";	
-	html += "		<td align = center ><img width = 200px height = 200px src='../media/Receipt128.png'></td>";
+	html += "		<td ><img width = 200px height = 200px src='../media/Receipt128.png'></td>";
 	html += "		<td></td>";
 	html += "	</tr>"; 
     html += "	<tr>";	

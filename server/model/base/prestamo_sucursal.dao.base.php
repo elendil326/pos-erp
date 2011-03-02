@@ -12,23 +12,6 @@
 abstract class PrestamoSucursalDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_prestamo ){
-			$pk = "";
-			$pk .= $id_prestamo . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_prestamo){
-			$pk = "";
-			$pk .= $id_prestamo . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_prestamo ){
-			$pk = "";
-			$pk .= $id_prestamo . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,17 +47,12 @@ abstract class PrestamoSucursalDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_prestamo )
 	{
-		if(self::recordExists(  $id_prestamo)){
-			return self::getRecord( $id_prestamo );
-		}
 		$sql = "SELECT * FROM prestamo_sucursal WHERE (id_prestamo = ? ) LIMIT 1;";
 		$params = array(  $id_prestamo );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-			$foo = new PrestamoSucursal( $rs );
-			self::pushRecord( $foo,  $id_prestamo );
-			return $foo;
+		return new PrestamoSucursal( $rs );
 	}
 
 
@@ -106,10 +84,7 @@ abstract class PrestamoSucursalDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-			$bar = new PrestamoSucursal($foo);
-    		array_push( $allData, $bar);
-			//id_prestamo
-    		self::pushRecord( $bar, $foo["id_prestamo"] );
+    		array_push( $allData, new PrestamoSucursal($foo));
 		}
 		return $allData;
 	}
@@ -193,9 +168,7 @@ abstract class PrestamoSucursalDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-			$bar =  new PrestamoSucursal($foo);
-    		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_prestamo"] );
+    		array_push( $ar, new PrestamoSucursal($foo));
 		}
 		return $ar;
 	}
