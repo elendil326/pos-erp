@@ -288,6 +288,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			case "pieza": m = "pzas"; break;
 			case "litro": m = "lts"; break;						
 		}
+
 		
 		html += "<td  align='center'  style='width: 6.3%;' ><div id='Mostrador-carritoCantidad"+ carrito.items[i].idUnique +"'></div></td><td>"+m+"</td>";
 
@@ -301,7 +302,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		stotal += (carrito.items[i].cantidad * carrito.items[i].precio);
 	}//for
 	
-	
+	 
 	var style = "";
 	//style += "font-size: 35px;";
 	style += "font-weight: bold;";
