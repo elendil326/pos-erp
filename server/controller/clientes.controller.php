@@ -342,8 +342,8 @@ function listarVentasClientes( ){
         //obtenemos el detalle de la venta
         $detalles_venta = DetalleVentaDAO::search($dventa);
         
-        $array_detalle = array(); //guarda los detalles de las ventas
-
+        $array_detalle = array(); //guarda los detalles de las ventas              
+        
         foreach($detalles_venta as $detalle_venta)
         {
             $detalle = parseJSON( $detalle_venta );
@@ -360,7 +360,7 @@ function listarVentasClientes( ){
 
         $cajero = UsuarioDAO::getByPK( $venta->getIdUsuario() );
         $decode_venta['cajero'] = $cajero->getNombre();
-        
+              
         array_push( $tot_ventas, $decode_venta );
     }
 
@@ -804,6 +804,9 @@ function listarVentasCliente( $args ){
 
         $cajero = UsuarioDAO::getByPK( $venta->getIdUsuario() );
         $decode_venta['cajero'] = $cajero->getNombre();
+        
+        $cliente = ClienteDAO::getByPK( $venta -> getIdCliente() );        
+        $decode_venta["cliente"] = $cliente -> getNombre();
         
         array_push( $tot_ventas, $decode_venta );
     }

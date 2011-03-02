@@ -37,6 +37,7 @@ Aplicacion.Clientes.prototype._init = function (){
 	
 	//crea el panel donde se embebera el iframe para la impresion
 	this.finishedPanelCreator();
+	this.finishedPanelCreatorReimpresionTicket();
 	
 	Aplicacion.Clientes.currentInstance = this;
 	
@@ -90,7 +91,8 @@ Aplicacion.Clientes.prototype.getConfig = function (){
  * haciendo peticiones a cada rato
  */
 Aplicacion.Clientes.prototype.listaDeCompras = {
-	lista : null
+	lista : null,
+	compraActual : null
 };
 
 
@@ -341,6 +343,8 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
 	for (var i = ventas.length - 1; i >= 0; i--){
 		if(ventas[i].id_venta == venta){
 			detalleVenta = ventas[i].detalle_venta;
+			//establecemos la venta que se selecciono para reimprimir
+        	Aplicacion.Clientes.currentInstance.listaDeCompras.compraActual = ventas[i];
 			break;
 		}
 	}
@@ -354,6 +358,8 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
 	html += "<td>Descripcion</td>";
 	html += "<td>Cantidad</td>";
 	html += "<td>Precio</td>";
+	html += "<td>Cantidad procesada</td>";
+	html += "<td>Precio procesada</td>";
 	html += "<td>Subtotal</td>";
 	html += "</tr>";
 	
@@ -365,22 +371,32 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
 		else
 			html += "<tr >";		
 		
+		if(DEBUG){
+		    console.log("El detalle de la venta consiste en : ", detalleVenta[i]);
+		}
+		
 		html += "<td>" + detalleVenta[i].id_producto + "</td>";
 		html += "<td>" + detalleVenta[i].descripcion + "</td>";
 		html += "<td>" + detalleVenta[i].cantidad + "</td>";
 		html += "<td>" + POS.currencyFormat ( detalleVenta[i].precio ) + "</td>";		
-		html += "<td>" + POS.currencyFormat ( detalleVenta[i].precio * detalleVenta[i].cantidad ) + "</td>";		
+		html += "<td>" + detalleVenta[i].cantidad_procesada + "</td>";
+		html += "<td>" + POS.currencyFormat ( detalleVenta[i].precio_procesada ) + "</td>";		
+		
+		var subtotal = parseFloat( detalleVenta[i].precio ) * parseFloat( detalleVenta[i].cantidad );
+		var subtotal_procesada = parseFloat(  detalleVenta[i].precio_procesada) * parseFloat( detalleVenta[i].cantidad_procesada );
+		
+		subtotal = subtotal + subtotal_procesada;
+
+		html += "<td>" + POS.currencyFormat ( subtotal ) + "</td>";		
 		html += "</tr>";
 	}
 	
-	html += "</table>";
-	
+	html += "</table>";		
 	
 	this.detallesDeVentaPanel.update( html );
-	this.detallesDeVentaPanel.setWidth( 600 );
+	this.detallesDeVentaPanel.setWidth( 800 );
 	this.detallesDeVentaPanel.setHeight( 400 );
 };
-
 
 Aplicacion.Clientes.prototype.detallesDeVentaPanelCreator = function ()
 {
@@ -401,7 +417,17 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelCreator = function ()
 	},
     */{
         text: 'Imprimir Ticket',
-        ui: 'normal'
+        ui: 'normal',
+        handler : function(){
+            if(DEBUG){
+                console.log("venta actual es : ", Aplicacion.Clientes.currentInstance.listaDeCompras.compraActual );
+            }
+            
+            Aplicacion.Clientes.currentInstance.detallesDeVentaPanel.hide( Ext.anims.fade );
+            
+            Aplicacion.Clientes.currentInstance.finishedPanelShowReimpresionTicket(Aplicacion.Clientes.currentInstance.listaDeCompras.compraActual );
+            
+        }
     }];
 
 
@@ -1761,7 +1787,7 @@ Aplicacion.Clientes.prototype.finishedPanelUpdater = function( data_abono )
 	html += "<table class='Mostrador-ThankYou' style = 'margin : 0 !important;' >";
 	
 	html += "	<tr>";	
-	html += "		<td align = center ><img align = center  src='../media/cash_register.png'></td>";
+	html += "		<td ><img width = 200px height = 200px src='../media/Receipt128.png'></td>";
 	html += "	</tr>"; 
 	
     html += "	<tr>";	
@@ -1783,7 +1809,117 @@ Aplicacion.Clientes.prototype.finishedPanelUpdater = function( data_abono )
 
 
 
+/* ********************************************************
+	Panel de reimpresion de ticket
+******************************************************** */
+Aplicacion.Clientes.prototype.finishedPanelReimpresionTicket = null;
 
+Aplicacion.Clientes.prototype.finishedPanelShowReimpresionTicket = function( venta )
+{
+
+	//update panel
+	this.finishedPanelReimpresionTicketUpdater( venta );			
+	
+	action = "sink.Main.ui.setActiveItem( Aplicacion.Clientes.currentInstance.detallesDeClientesPanel , 'slide');";
+	setTimeout(action, 4000);
+	
+};
+
+
+//
+Aplicacion.Clientes.prototype.finishedPanelReimpresionTicketUpdater = function( venta )
+{
+
+    var items = [];
+
+    for( var i = 0; i < venta.detalle_venta.length; i++){
+            
+            //verificamos si se vendio producto original
+            if( venta.detalle_venta[i].cantidad > 0 ){
+                items.push(
+                    {
+                        cantidad : venta.detalle_venta[i].cantidad,
+                        descripcion : venta.detalle_venta[i].descripcion,
+                        precio : venta.detalle_venta[i].precio                    
+                    }
+                );
+            }
+            
+            //verificamos si se vendio producto procesado
+            if( venta.detalle_venta[i].cantidad_procesada > 0 ){
+                items.push(
+                    {
+                        cantidad : venta.detalle_venta[i].cantidad_procesada,
+                        descripcion : venta.detalle_venta[i].descripcion,
+                        precio : venta.detalle_venta[i].precio_procesada                    
+                    }
+                );
+            }
+            
+    }
+
+   
+
+    var reimprimirVenta = {
+        tipo_venta : venta.tipo_venta,
+        id_venta : venta.id_venta,
+        cliente : { nombre : venta.cliente},
+        items : items,
+        tipo_pago : venta.tipo_pago,
+        subtotal : venta.subtotal,
+        empleado : venta.cajero, 
+        sucursal : Aplicacion.Mostrador.currentInstance.infoSucursal,
+        total : venta.total,
+        subtotal : venta.subtotal,
+        ticket : true,
+        reimpresion : true
+    }
+	
+
+	if(DEBUG){
+		console.log("reimpresion de venta : ", reimprimirVenta);	
+	}
+
+	json = encodeURI( Ext.util.JSON.encode( reimprimirVenta ) );
+	
+	do 
+	{
+		json = json.replace('#','%23');
+	} 
+	while(json.indexOf('#') >= 0);
+	
+	html = "";
+	
+	html += "<table class='Mostrador-ThankYou'>";
+	html += "	<tr>";	
+	html += "		<td align = center ><img width = 200px height = 200px src='../media/Receipt128.png'></td>";
+	html += "		<td></td>";
+	html += "	</tr>"; 
+    html += "	<tr>";	
+    html += "		<td align center >Reimprimendo ticket de venta...</td>";
+	html += "		<td></td>";
+	html += "	</tr>";
+
+	html += "</table>";
+		
+    html += "<iframe src ='PRINTER/src/impresion.php?json=" + json + "' width='0px' height='0px'></iframe> ";
+
+	
+	
+	this.finishedPanelReimpresionTicket.update(html);	
+
+    sink.Main.ui.setActiveItem( this.finishedPanelReimpresionTicket , 'fade');
+
+};
+
+Aplicacion.Clientes.prototype.finishedPanelCreatorReimpresionTicket = function()
+{
+
+	this.finishedPanelReimpresionTicket = new Ext.Panel({
+		html : ""
+	});
+	
+};
 
 
 
