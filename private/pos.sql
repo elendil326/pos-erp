@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 02-03-2011 a las 16:07:46
+-- Tiempo de generación: 03-03-2011 a las 00:39:22
 -- Versión del servidor: 5.1.41
 -- Versión de PHP: 5.3.2-1ubuntu4.7
 
@@ -251,7 +251,7 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
   `cantidad_procesada` float NOT NULL,
   `precio` float NOT NULL COMMENT 'precio al que se vendio',
   `precio_procesada` float NOT NULL COMMENT 'el precio de los articulos procesados en esta venta',
-  `descuento` float unsigned DEFAULT '0' COMMENT 'indica cuanto producto se va a descontar de ese producto en esa venta',
+  `descuento` float unsigned DEFAULT '0' COMMENT 'indica cuanto producto original se va a descontar de ese producto en esa venta',
   PRIMARY KEY (`id_venta`,`id_producto`),
   KEY `detalle_venta_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -580,7 +580,7 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`id_sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=217 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=221 ;
 
 --
 -- Filtros para las tablas descargadas (dump)

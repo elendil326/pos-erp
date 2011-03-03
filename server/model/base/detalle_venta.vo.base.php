@@ -126,7 +126,7 @@ class DetalleVenta extends VO
 	/**
 	  * descuento
 	  * 
-	  * indica cuanto producto se va a descontar de ese producto en esa venta<br>
+	  * indica cuanto producto original se va a descontar de ese producto en esa venta<br>
 	  * @access protected
 	  * @var float
 	  */
@@ -283,7 +283,7 @@ class DetalleVenta extends VO
 	/**
 	  * getDescuento
 	  * 
-	  * Get the <i>descuento</i> property for this object. Donde <i>descuento</i> es indica cuanto producto se va a descontar de ese producto en esa venta
+	  * Get the <i>descuento</i> property for this object. Donde <i>descuento</i> es indica cuanto producto original se va a descontar de ese producto en esa venta
 	  * @return float
 	  */
 	final public function getDescuento()
@@ -294,7 +294,7 @@ class DetalleVenta extends VO
 	/**
 	  * setDescuento( $descuento )
 	  * 
-	  * Set the <i>descuento</i> property for this object. Donde <i>descuento</i> es indica cuanto producto se va a descontar de ese producto en esa venta.
+	  * Set the <i>descuento</i> property for this object. Donde <i>descuento</i> es indica cuanto producto original se va a descontar de ese producto en esa venta.
 	  * Una validacion basica se hara aqui para comprobar que <i>descuento</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float

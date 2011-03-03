@@ -301,10 +301,11 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 
 		html += "<td style='width: 10.4%;'> <div  id='Mostrador-carritoPrecio"+ carrito.items[i].idUnique +"'></div></td>";
 		
-		html += "<td  style='width: 11.3%;'>" + POS.currencyFormat( carrito.items[i].cantidad * carrito.items[i].precio )+"</td>";
+		html += "<td  style='width: 11.3%;'>" + POS.currencyFormat( ( carrito.items[i].cantidad - carrito.items[i].descuento ) * carrito.items[i].precio )+"</td>";
 		
 		html += "</tr>";
-		stotal += (carrito.items[i].cantidad * carrito.items[i].precio);
+				
+		stotal += ( ( carrito.items[i].cantidad - carrito.items[i].descuento ) * carrito.items[i].precio );
 	}//for
 	
 	 
@@ -541,9 +542,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 					                //reconocemos si es un producto procesado o no
 					                if( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true" ){
                                     
-                                       /* //desahbilitamos el campo de proceso
-                                        Ext.getCmp("Mostrador-carritoDescuento"+ carrito.items[i].idUnique + "Text").setDisabled( true );
-                                        Ext.getCmp("Mostrador-carritoDescuento"+ carrito.items[i].idUnique + "Text").setValue("");*/
+                                        Aplicacion.Mostrador.currentInstance.carrito.items[i].descuento = "0";
                                     
                                         //verificamos que no existan 2 productos con las mismas caracteristicas pero con precio diferente
                                         var found = false;
@@ -559,7 +558,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                                                 Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == Aplicacion.Mostrador.currentInstance.carrito.items[j].procesado                                                
                                              ){              
                                                 //si encuentra un producto con las mismas caracteristicas, entonces a este producto le asignamos el mismo precio, para que no haya 2 productos iguales pero con diferente precio                                  
-                                                Aplicacion.Mostrador.currentInstance.carrito.items[i].precio= parseFloat(Aplicacion.Mostrador.currentInstance.carrito.items[j].precio)
+                                                Aplicacion.Mostrador.currentInstance.carrito.items[i].precio= parseFloat(Aplicacion.Mostrador.currentInstance.carrito.items[j].precio);                                                
                                                 found = true;
                                                 break;
                                             }
@@ -575,9 +574,6 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 					                    
 					                }else{
 					                
-					                    /*//habilitamos el campo de proceso
-                                        Ext.getCmp("Mostrador-carritoDescuento"+ carrito.items[i].idUnique + "Text").setDisabled( false );
-                                        alert("Tomando a  : " + "Mostrador-carritoDescuento"+ carrito.items[i].idUnique + "Text" );*/
 					                
 					                    //verificamos que no existan 2 productos con las mismas caracteristicas pero con precio diferente					                    
                                         var found  = false;
@@ -593,7 +589,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                                                 Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == Aplicacion.Mostrador.currentInstance.carrito.items[j].procesado                                
                                              ){            
                                                  //si encuentra un producto con las mismas caracteristicas, entonces a este producto le asignamos el mismo precio, para que no haya 2 productos iguales pero con diferente precio                                                                         
-                                                Aplicacion.Mostrador.currentInstance.carrito.items[i].precio= parseFloat(Aplicacion.Mostrador.currentInstance.carrito.items[j].precio)
+                                                Aplicacion.Mostrador.currentInstance.carrito.items[i].precio= parseFloat(Aplicacion.Mostrador.currentInstance.carrito.items[j].precio);
+                                                Aplicacion.Mostrador.currentInstance.carrito.items[i].descuento = parseFloat(Aplicacion.Mostrador.currentInstance.carrito.items[j].descuento);
                                                 found = true;
                                                 break;
                                             }
@@ -628,7 +625,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		    d = new Ext.form.Text({
 			    renderTo : "Mostrador-carritoDescuento"+ carrito.items[i].idUnique ,
 			    id : "Mostrador-carritoDescuento"+ carrito.items[i].idUnique + "Text",
-			    value : "0",
+			    value : carrito.items[i].descuento,
 			    prodID : carrito.items[i].id_producto,
 			    idUnique : carrito.items[i].idUnique,			
 			    //placeHolder : "0.0",
@@ -645,14 +642,55 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 						    submitText : 'Cambiar',
 						    callback : function ( campo ){
 						
-						        value = campo.getValue();
-						
-						        if( !isNaN( value ) && value >= 0 ){
-						            carrito.items[i].descuento = value;
-						        }else{
-						            campo.setValue( "0" );
-						            carrito.items[i].descuento = 0;
-						        }
+						        							//buscar el producto en la estructura y ponerle esa nueva cantidad
+							for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
+
+								if(Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == campo.idUnique){									                                  																									
+								
+									    var error = false;
+									
+									    //verificamos que no exista 2 productos con las mismas caracteristicas pero con descuento diferente
+
+							            for(var j=0; j < Aplicacion.Mostrador.currentInstance.carrito.items.length; j++){
+							                
+							                if( Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == Aplicacion.Mostrador.currentInstance.carrito.items[j].idUnique ){
+                                                continue;
+                                            }
+							                
+                                            if( 
+                                                Aplicacion.Mostrador.currentInstance.carrito.items[i].id_producto == Aplicacion.Mostrador.currentInstance.carrito.items[j].id_producto &&
+                                                Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == Aplicacion.Mostrador.currentInstance.carrito.items[j].procesado &&
+                                                parseFloat( campo.getValue() ) != Aplicacion.Mostrador.currentInstance.carrito.items[j].descuento
+                                             ){
+                                                descripcion = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true" )?"Limpia":"Original";
+                                                Ext.Msg.alert( "Alerta","Existen 2 procuctos " + Aplicacion.Mostrador.currentInstance.carrito.items[i].descripcion + " " + descripcion + " con diferente descuento.");
+                                                Aplicacion.Mostrador.currentInstance.carrito.items[i].descuento= parseFloat( Aplicacion.Mostrador.currentInstance.carrito.items[j].descuento )
+                                                error = true;
+                                                break;
+                                            }
+							                
+							            }
+							            
+							            if(error){
+							                break;
+							            }
+									
+									
+									    var value = campo.getValue();
+									    
+									    if( !isNaN( value ) && value >= 0 && value < carrito.items[i].cantidad ){
+						                    carrito.items[i].descuento= value;
+						                }else{
+						                    campo.setValue( "0" );
+						                    carrito.items[i].descuento = "0";
+						                }
+									
+									   
+									break;
+								}
+							}
+							
+							Aplicacion.Mostrador.currentInstance.refrescarMostrador();
 						
 						    }
 					    };
