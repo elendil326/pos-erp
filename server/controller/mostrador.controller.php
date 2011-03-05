@@ -279,11 +279,13 @@ function vender( $args ){
          $item -> precio_procesada = $data->items[0] -> precio;
          $item -> cantidad = 0;
          $item -> precio = 0;
+         $item -> descuento = $data->items[0] -> descuento;
     }else{
         $item -> cantidad_procesada = 0;
         $item -> precio_procesada = 0;
         $item -> cantidad = $data->items[0] -> cantidad;
         $item -> precio = $data->items[0] -> precio;
+        $item -> descuento = 0;
     }
 
     //insertamos el primer producto
@@ -323,8 +325,8 @@ function vender( $args ){
                         Logger::log("Selecciono dos productos iguales, pero con diferente precio.");
 		                die('{"success": false, "reason": "Selecciono dos o mas productos ' . $item -> id_producto . ' - PROCESADO, pero con diferente precio." }');
                      }
-                     
-                     $item -> precio_procesada = $data->items[$i]-> precio;
+                                          
+                     $item -> precio_procesada = $data->items[$i]-> precio;                                          
                      
                 }else{
                  //(el producto se encontro) y es un producto original
@@ -336,6 +338,13 @@ function vender( $args ){
                      }
                      
                      $item -> precio = $data->items[$i]-> precio;
+                     
+                     if( $item -> descuento != 0 && $item -> descuento != $data->items[$i]-> descuento){
+                        Logger::log("Selecciono dos productos iguales, pero con diferente descuento.");
+		                die('{"success": false, "reason": "Selecciono dos o mas productos ' . $item -> id_producto . ' - PROCESADO, pero con diferente descuento." }');
+                     }
+                                         
+                     $item -> descuento = $data->items[$i]-> descuento;
                     
                 }                                       
                 
@@ -356,11 +365,13 @@ function vender( $args ){
                      $_item -> precio_procesada = $data->items[$i] -> precio;
                      $_item -> cantidad = 0;
                      $_item -> precio = 0;
+                     $_item -> descuento = 0;
                 }else{
                     $_item -> cantidad_procesada = 0;
                     $_item -> precio_procesada = 0;
                     $_item -> cantidad = $data->items[$i] -> cantidad;
                     $_item -> precio = $data->items[$i] -> precio;
+                    $_item -> descuento = $data->items[$i] -> descuento;
                 }                                
                 array_push( $array_items, $_item  );
                 
@@ -484,6 +495,7 @@ function vender( $args ){
         $detalle_venta -> setPrecio( $producto -> precio );
         $detalle_venta -> setCantidadProcesada( $producto -> cantidad_procesada );
         $detalle_venta -> setPrecioProcesada( $producto -> precio_procesada );
+         $detalle_venta -> setDescuento( $producto -> descuento );
         
          try{
             DetalleVentaDAO::save( $detalle_venta );
@@ -928,6 +940,3 @@ if( isset( $args['action'] ) ){
 }
 
 ?>
-
-
-

@@ -1,4 +1,3 @@
-
 /**
  * Construir un nuevo objeto de tipo ApplicacionClientes.
  * @class Esta clase se encarga de la creacion de interfacez
@@ -1849,7 +1848,7 @@ Aplicacion.Clientes.prototype.finishedPanelReimpresionTicketUpdater = function( 
             if( venta.detalle_venta[i].cantidad_procesada > 0 ){
                 items.push(
                     {
-                        cantidad : venta.detalle_venta[i].cantidad_procesada,
+                        cantidad : venta.detalle_venta[i].cantidad_procesada - venta.detalle_venta[i].descuento,
                         descripcion : venta.detalle_venta[i].descripcion,
                         precio : venta.detalle_venta[i].precio_procesada                    
                     }
@@ -1927,4 +1926,3 @@ Aplicacion.Clientes.prototype.finishedPanelCreatorReimpresionTicket = function()
 
 
 POS.Apps.push( new Aplicacion.Clientes() );
-

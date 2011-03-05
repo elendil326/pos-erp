@@ -650,7 +650,6 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 									    var error = false;
 									
 									    //verificamos que no exista 2 productos con las mismas caracteristicas pero con descuento diferente
-
 							            for(var j=0; j < Aplicacion.Mostrador.currentInstance.carrito.items.length; j++){
 							                
 							                if( Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == Aplicacion.Mostrador.currentInstance.carrito.items[j].idUnique ){
@@ -1177,6 +1176,11 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 	//incluye los datos de la sucursal
 	carrito.sucursal = Aplicacion.Mostrador.currentInstance.infoSucursal;
 	                                
+    //restamos a la cantidad el descuento	                                
+    for( var i = 0; i < carrito.items.length; i++ ){
+        carrito.items[i].cantidad -= carrito.items[i].descuento;
+    }
+    	                                
 	/*indica que se quiere imprimir un ticket, ya que existen 3 casos de impresion
 		1.- solo ticket
 		2.- solo factura
@@ -1320,6 +1324,7 @@ Aplicacion.Mostrador.prototype.vender = function ()
     if(DEBUG){
         console.log("El carrito que se enviara para registrar la venta sera  : ", Aplicacion.Mostrador.currentInstance.carrito);
     }
+        
 
 	json = Ext.util.JSON.encode( Aplicacion.Mostrador.currentInstance.carrito );
 	
