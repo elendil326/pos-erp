@@ -183,6 +183,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 	
 	html +=     "<td align='center' colspan=3>Cantidad</td>";
 	html +=     "<td align='center' ></td>";		
+	html +=     "<td align='left' >Total</td>";
 	html +=     "<td align='left' >Precio</td>";
 	html +=     "<td align='left' >Sub Total</td>";
 	html += "</tr>";
@@ -213,7 +214,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		switch(productoI.get("medida")){
 			case "pieza" : 
 				carrito.items[i].cantidad  = Math.round(carrito.items[i].cantidad );
-				console.log( "ROUNDING:", carrito.items[i].cantidad, Math.round(carrito.items[i].cantidad ) )
+				if(DEBUG){console.log( "ROUNDING:", carrito.items[i].cantidad, Math.round(carrito.items[i].cantidad ) ); }
 			break;
 			default:
 		}
@@ -277,7 +278,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		}*/
 		html += "<tr " + color + ">";	
 		
-		html += "<td style='width: 25%;' ><b>" + carrito.items[i].id_producto + "</b> &nbsp;" + carrito.items[i].descripcion+ "</td>";
+		html += "<td style='width: 18.7%;' ><b>" + carrito.items[i].id_producto + "</b> &nbsp;" + carrito.items[i].descripcion+ "</td>";
 		
 		html += "<td style='width: 12%;' ><div id='Mostrador-carritoTratamiento"+ carrito.items[i].idUnique +"'></div></td>";
         		
@@ -299,6 +300,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 
 		html += "<td  align='center'  style='width: 8.1%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique +"', 1, false)\"><img src='../media/icons/arrow_up_16.png'>&nbsp;+&nbsp;</span></td>";
 
+		html += "<td  align='center'  style='width: 6.3%;' ><div id='Mostrador-carritoTotalProductos"+ carrito.items[i].idUnique +"'></div></td>";
+		
 		html += "<td style='width: 10.4%;'> <div  id='Mostrador-carritoPrecio"+ carrito.items[i].idUnique +"'></div></td>";
 		
 		html += "<td  style='width: 11.3%;'>" + POS.currencyFormat( ( carrito.items[i].cantidad - carrito.items[i].descuento ) * carrito.items[i].precio )+"</td>";
@@ -700,6 +703,16 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		
 		    });
 		    
+		    e = new Ext.form.Text({
+			    renderTo : "Mostrador-carritoTotalProductos"+ carrito.items[i].idUnique ,
+			    id : "Mostrador-carritoTotalProductos"+ carrito.items[i].idUnique + "Text",
+			    value : carrito.items[i].cantidad - carrito.items[i].descuento,			  
+			    disabled : true,
+			    style:{
+		             width: '100%'
+		        }		
+		    });
+		    
         }//if
 		
 	}//for
@@ -826,6 +839,7 @@ Aplicacion.Mostrador.prototype.quitarDelCarrito = function ( id )
 	for (var i = carrito.items.length - 1; i >= 0; i--){
 		if( carrito.items[i].idUnique == id ){
 			carrito.items.splice( i ,1 );
+
 			break;
 		}
 	}
