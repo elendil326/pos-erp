@@ -126,6 +126,10 @@ jQuery(document).ready(function(){
 
     
     jQuery("#MAIN_TITLE").html("Surtir sucursal");
+
+	if(DEBUG){
+		seleccionDeProd(1 );
+	}
 });
 
 function round( n ){
@@ -330,6 +334,8 @@ InventarioMaestroTabla = function( config ) {
         renderTo;
     
     
+
+
     function render(){
         var html,
             row_html,
@@ -338,12 +344,13 @@ InventarioMaestroTabla = function( config ) {
         html = '';  
         html += '<table style="width: 100% ; text-align:left;">';
         html += '<tr>';
+        html += '<th>Llegada</th>';     
         html += '<th>Remision</th>';
+        html += '<th>Arpillas origen</th>';
         html += '<th>Producto</th>';
         html += '<th>Variedad</th>';
-        html += '<th>Arpillas en embarque</th>';
+
         html += '<th>Promedio</th>';        
-        html += '<th>Llegada</th>';     
         html += '<th>Existencias</th>';     
         html += '<th>Procesadas</th>';      
         html += '</tr>';
@@ -352,12 +359,12 @@ InventarioMaestroTabla = function( config ) {
         for(a = 0; a < productos.length; a++){
             row_html = '';
             
-            row_html += td( productos[a].folio )
+            row_html += td( productos[a].fecha )
+                + td( productos[a].folio )
+                + td( productos[a].arpillas )
                 + td( productos[a].producto_desc )
                 + td( productos[a].variedad )
-                + td( productos[a].arpillas )
-                + td( productos[a].peso_por_arpilla )
-                + td( productos[a].fecha )
+                + td( productos[a].peso_por_arpilla.toFixed(4) + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "style='text-align:right;'" )
                 
                 + td( div("<b>" + productos[a].existencias + "</b>&nbsp;" + toSmallUnit ( productos[a].escala ) , "id='"
                         + productos[a].id_compra_proveedor + "-" 
@@ -374,7 +381,9 @@ InventarioMaestroTabla = function( config ) {
                 row_html += td( "NA");
             }
 
-            html += tr( row_html, "onClick='composicionTabla.agregarProducto( "+  productos[a].id_compra_proveedor +", "+ productos[a].id_producto +" );'" );
+            html += tr( row_html, 
+				"onClick='composicionTabla.agregarProducto( "+  productos[a].id_compra_proveedor +", "+ productos[a].id_producto +" );' class='im_pid_"+ productos[a].id_producto +"' "
+				+ "onmouseover='this.style.backgroundColor = \"#D7EAFF\"' onmouseout='this.style.backgroundColor = \"white\"'" );
         }
         
             
@@ -404,9 +413,9 @@ InventarioMaestroTabla = function( config ) {
             newQtyProc = producto.existencias_procesadas - cantidadATomar;
             
         if(newQty < 0){
-            newQty = "<b style='color: #AB443B'>" + round(newQty) + "</b>&nbsp;" + toSmallUnit (producto.escala );
+            newQty = "<b style='color: #AB443B'>" + round(newQty) + "&nbsp;" + toSmallUnit (producto.escala ) +  "</b>" ;
         }else{
-            newQty = "<b style='color: #3F8CE9'>" + round(newQty) + "</b>&nbsp;" + toSmallUnit (producto.escala );          
+            newQty = "<b style='color: green'>" + round(newQty) + "&nbsp;" + toSmallUnit (producto.escala ) +  "</b>" ;    
         }
         
 
@@ -421,7 +430,6 @@ InventarioMaestroTabla = function( config ) {
         
         if(procesadas){
 
-            
             if(newQtyProc < 0){
                 newQtyProc = "<b style='color: #AB443B'>" + round(newQtyProc) + "</b>&nbsp;" + toSmallUnit (producto.escala );
             }else{
@@ -446,6 +454,16 @@ InventarioMaestroTabla = function( config ) {
     this.regresarProducto = function(prod){
         this.tomarProducto( prod.id_compra, prod.id_producto, prod.cantidad * -1, prod.procesadas );
     };
+
+
+	this.highlight = function (id_prod){
+		if(DEBUG){
+			console.log("haciendo highlight a " + id_prod);
+		}
+		jQuery("#InventarioMaestroTabla tr").css("color", "rgb(68, 68, 68)");		
+		jQuery(".im_pid_" + id_prod).css("color", "#3F8CE9");
+	};
+
     
     __init(config);
     
@@ -485,6 +503,7 @@ ComposicionTabla = function( config ){
     function __init( config){
         renderTo = config.renderTo;
         id_producto = config.id_producto;
+		tablaInventario.highlight(id_producto);
         render();
     }
     

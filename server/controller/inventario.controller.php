@@ -165,7 +165,7 @@ function listarInventarioMaestro( $n = 50, $show = POS_TODOS )
 			
 			$bar['sitio_descarga_desc'] = $sitio;
 			
-			$fecha = explode( " ", $bar['fecha']);
+			$fecha = explode( " ", toDate($bar['fecha']));
 			$bar['fecha'] = $fecha[0];
 
 			array_push( $registro,  $bar );
