@@ -12,11 +12,11 @@
 	<tr><td>Precio intersucursal</td><td><input type="text" id="precioIntersucursal" size="40"/></td></tr>
 	<tr><td>Escala</td>
 		<td>
-			<select id="escala">
-				<option value='kilogramo' 	>Kilogramo(s)</option>
-				<option value='pieza' 		>Pieza(s)</option>
-				<option value='litro' 		>Litro(s)</option>
-				<option value='unidad' 		>Unidad(es)</option>
+			<select id="escala" onChange="escalaSeleccionada(this.value)">
+				<option value='kilogramo' 	>Kilogramos</option>
+				<option value='pieza' 		>Piezas</option>
+				<option value='litro' 		>Litros</option>
+				<option value='unidad' 		>Unidades</option>
 	        </select>
 		</td>
 	</tr>
@@ -27,14 +27,48 @@
 				<option value='limpia'		>Limpia/Original</option>
 	        </select>
 		</td>
-	</tr>	
-	<tr><td></td><td><input type="button" onClick="save()" value="Guardar"/> </td></tr>
+	</tr>
+	<tr><td>Agrupacion</td>
+		<td>
+			<select id="agrupacion" onChange="agrupacionSeleccionada(this.value)">
+				<option value='null' 		>Sin agrupacion</option>
+				<option value='arpilla'	>Arpillas</option>
+				<option value='bulto'		>Bultos</option>
+				<option value='costal'	>Costales</option>
+				<option value='caja'		>Cajas</option>
+	        </select>
+		</td>
+		<td id="agrupacionBox" style="display:none">
+			<input type="text" id="agrupacionTam" size="20"/><span id="agrupacionCaption"></span>
+		</td>
+	</tr>
+	<tr><td></td><td> </td></tr>
 </table>
-
+<h4><input type="button" onClick="save()" value="Guardar"/></h4>
 
 
 
 <script type="text/javascript" charset="utf-8">
+
+	function agrupacionSeleccionada(val){
+		if(val != "null"){
+			//mostrar la caja
+			if(!jQuery( "#agrupacionBox" ).is(":visible")){
+				jQuery( "#agrupacionBox" ).fadeIn();	
+			}
+
+			jQuery( "#agrupacionCaption" ).html(" " + jQuery("#escala").val() + "s por " + val);
+
+		}else{
+			//ocultar la caja
+			jQuery( "#agrupacionBox" ).fadeOut();
+		}
+		
+	}
+	
+	function escalaSeleccionada(val){
+		agrupacionSeleccionada( jQuery("#agrupacion").val() );
+	}
 
 	jQuery("#MAIN_TITLE").html("Nuevo producto");
 	
@@ -63,7 +97,9 @@
                 escala : 				jQuery('#escala').val(),
                 tratamiento:			jQuery('#tratamiento').val(),
                 precio_venta : 			jQuery('#precioVenta').val(),
-                precio_intersucursal : 	jQuery('#precioIntersucursal').val()
+                precio_intersucursal : 	jQuery('#precioIntersucursal').val(),
+				agrupacion : 			jQuery('#agrupacion').val(),
+				agrupacionTam: 			jQuery('#agrupacionTam').val() 
             };
 
         jQuery.ajaxSettings.traditional = true;

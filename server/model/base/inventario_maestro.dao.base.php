@@ -12,6 +12,26 @@
 abstract class InventarioMaestroDAOBase extends DAO
 {
 
+		private static $loadedRecords = array();
+
+		private static function recordExists(  $id_producto, $id_compra_proveedor ){
+			$pk = "";
+			$pk .= $id_producto . "-";
+			$pk .= $id_compra_proveedor . "-";
+			return array_key_exists ( $pk , self::$loadedRecords );
+		}
+		private static function pushRecord( $inventario,  $id_producto, $id_compra_proveedor){
+			$pk = "";
+			$pk .= $id_producto . "-";
+			$pk .= $id_compra_proveedor . "-";
+			self::$loadedRecords [$pk] = $inventario;
+		}
+		private static function getRecord(  $id_producto, $id_compra_proveedor ){
+			$pk = "";
+			$pk .= $id_producto . "-";
+			$pk .= $id_compra_proveedor . "-";
+			return self::$loadedRecords[$pk];
+		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -47,12 +67,17 @@ abstract class InventarioMaestroDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_producto, $id_compra_proveedor )
 	{
+		if(self::recordExists(  $id_producto, $id_compra_proveedor)){
+			return self::getRecord( $id_producto, $id_compra_proveedor );
+		}
 		$sql = "SELECT * FROM inventario_maestro WHERE (id_producto = ? AND id_compra_proveedor = ? ) LIMIT 1;";
 		$params = array(  $id_producto, $id_compra_proveedor );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new InventarioMaestro( $rs );
+			$foo = new InventarioMaestro( $rs );
+			self::pushRecord( $foo,  $id_producto, $id_compra_proveedor );
+			return $foo;
 	}
 
 
@@ -84,7 +109,11 @@ abstract class InventarioMaestroDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-    		array_push( $allData, new InventarioMaestro($foo));
+			$bar = new InventarioMaestro($foo);
+    		array_push( $allData, $bar);
+			//id_producto
+			//id_compra_proveedor
+    		self::pushRecord( $bar, $foo["id_producto"],$foo["id_compra_proveedor"] );
 		}
 		return $allData;
 	}
@@ -153,7 +182,9 @@ abstract class InventarioMaestroDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new InventarioMaestro($foo));
+			$bar =  new InventarioMaestro($foo);
+    		array_push( $ar,$bar);
+    		self::pushRecord( $bar, $foo["id_producto"],$foo["id_compra_proveedor"] );
 		}
 		return $ar;
 	}

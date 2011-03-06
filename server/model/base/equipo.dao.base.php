@@ -12,6 +12,23 @@
 abstract class EquipoDAOBase extends DAO
 {
 
+		private static $loadedRecords = array();
+
+		private static function recordExists(  $id_equipo ){
+			$pk = "";
+			$pk .= $id_equipo . "-";
+			return array_key_exists ( $pk , self::$loadedRecords );
+		}
+		private static function pushRecord( $inventario,  $id_equipo){
+			$pk = "";
+			$pk .= $id_equipo . "-";
+			self::$loadedRecords [$pk] = $inventario;
+		}
+		private static function getRecord(  $id_equipo ){
+			$pk = "";
+			$pk .= $id_equipo . "-";
+			return self::$loadedRecords[$pk];
+		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -47,12 +64,17 @@ abstract class EquipoDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_equipo )
 	{
+		if(self::recordExists(  $id_equipo)){
+			return self::getRecord( $id_equipo );
+		}
 		$sql = "SELECT * FROM equipo WHERE (id_equipo = ? ) LIMIT 1;";
 		$params = array(  $id_equipo );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new Equipo( $rs );
+			$foo = new Equipo( $rs );
+			self::pushRecord( $foo,  $id_equipo );
+			return $foo;
 	}
 
 
@@ -84,7 +106,10 @@ abstract class EquipoDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-    		array_push( $allData, new Equipo($foo));
+			$bar = new Equipo($foo);
+    		array_push( $allData, $bar);
+			//id_equipo
+    		self::pushRecord( $bar, $foo["id_equipo"] );
 		}
 		return $allData;
 	}
@@ -153,7 +178,9 @@ abstract class EquipoDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Equipo($foo));
+			$bar =  new Equipo($foo);
+    		array_push( $ar,$bar);
+    		self::pushRecord( $bar, $foo["id_equipo"] );
 		}
 		return $ar;
 	}

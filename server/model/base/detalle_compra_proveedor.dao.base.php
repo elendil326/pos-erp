@@ -12,6 +12,26 @@
 abstract class DetalleCompraProveedorDAOBase extends DAO
 {
 
+		private static $loadedRecords = array();
+
+		private static function recordExists(  $id_compra_proveedor, $id_producto ){
+			$pk = "";
+			$pk .= $id_compra_proveedor . "-";
+			$pk .= $id_producto . "-";
+			return array_key_exists ( $pk , self::$loadedRecords );
+		}
+		private static function pushRecord( $inventario,  $id_compra_proveedor, $id_producto){
+			$pk = "";
+			$pk .= $id_compra_proveedor . "-";
+			$pk .= $id_producto . "-";
+			self::$loadedRecords [$pk] = $inventario;
+		}
+		private static function getRecord(  $id_compra_proveedor, $id_producto ){
+			$pk = "";
+			$pk .= $id_compra_proveedor . "-";
+			$pk .= $id_producto . "-";
+			return self::$loadedRecords[$pk];
+		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -47,12 +67,17 @@ abstract class DetalleCompraProveedorDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_compra_proveedor, $id_producto )
 	{
+		if(self::recordExists(  $id_compra_proveedor, $id_producto)){
+			return self::getRecord( $id_compra_proveedor, $id_producto );
+		}
 		$sql = "SELECT * FROM detalle_compra_proveedor WHERE (id_compra_proveedor = ? AND id_producto = ? ) LIMIT 1;";
 		$params = array(  $id_compra_proveedor, $id_producto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new DetalleCompraProveedor( $rs );
+			$foo = new DetalleCompraProveedor( $rs );
+			self::pushRecord( $foo,  $id_compra_proveedor, $id_producto );
+			return $foo;
 	}
 
 
@@ -84,7 +109,11 @@ abstract class DetalleCompraProveedorDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-    		array_push( $allData, new DetalleCompraProveedor($foo));
+			$bar = new DetalleCompraProveedor($foo);
+    		array_push( $allData, $bar);
+			//id_compra_proveedor
+			//id_producto
+    		self::pushRecord( $bar, $foo["id_compra_proveedor"],$foo["id_producto"] );
 		}
 		return $allData;
 	}
@@ -158,7 +187,9 @@ abstract class DetalleCompraProveedorDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new DetalleCompraProveedor($foo));
+			$bar =  new DetalleCompraProveedor($foo);
+    		array_push( $ar,$bar);
+    		self::pushRecord( $bar, $foo["id_compra_proveedor"],$foo["id_producto"] );
 		}
 		return $ar;
 	}

@@ -12,6 +12,23 @@
 abstract class CompraProveedorFragmentacionDAOBase extends DAO
 {
 
+		private static $loadedRecords = array();
+
+		private static function recordExists(  $id_fragmentacion ){
+			$pk = "";
+			$pk .= $id_fragmentacion . "-";
+			return array_key_exists ( $pk , self::$loadedRecords );
+		}
+		private static function pushRecord( $inventario,  $id_fragmentacion){
+			$pk = "";
+			$pk .= $id_fragmentacion . "-";
+			self::$loadedRecords [$pk] = $inventario;
+		}
+		private static function getRecord(  $id_fragmentacion ){
+			$pk = "";
+			$pk .= $id_fragmentacion . "-";
+			return self::$loadedRecords[$pk];
+		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -47,12 +64,17 @@ abstract class CompraProveedorFragmentacionDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_fragmentacion )
 	{
+		if(self::recordExists(  $id_fragmentacion)){
+			return self::getRecord( $id_fragmentacion );
+		}
 		$sql = "SELECT * FROM compra_proveedor_fragmentacion WHERE (id_fragmentacion = ? ) LIMIT 1;";
 		$params = array(  $id_fragmentacion );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new CompraProveedorFragmentacion( $rs );
+			$foo = new CompraProveedorFragmentacion( $rs );
+			self::pushRecord( $foo,  $id_fragmentacion );
+			return $foo;
 	}
 
 
@@ -84,7 +106,10 @@ abstract class CompraProveedorFragmentacionDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-    		array_push( $allData, new CompraProveedorFragmentacion($foo));
+			$bar = new CompraProveedorFragmentacion($foo);
+    		array_push( $allData, $bar);
+			//id_fragmentacion
+    		self::pushRecord( $bar, $foo["id_fragmentacion"] );
 		}
 		return $allData;
 	}
@@ -173,7 +198,9 @@ abstract class CompraProveedorFragmentacionDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new CompraProveedorFragmentacion($foo));
+			$bar =  new CompraProveedorFragmentacion($foo);
+    		array_push( $ar,$bar);
+    		self::pushRecord( $bar, $foo["id_fragmentacion"] );
 		}
 		return $ar;
 	}

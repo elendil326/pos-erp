@@ -12,6 +12,23 @@
 abstract class InventarioDAOBase extends DAO
 {
 
+		private static $loadedRecords = array();
+
+		private static function recordExists(  $id_producto ){
+			$pk = "";
+			$pk .= $id_producto . "-";
+			return array_key_exists ( $pk , self::$loadedRecords );
+		}
+		private static function pushRecord( $inventario,  $id_producto){
+			$pk = "";
+			$pk .= $id_producto . "-";
+			self::$loadedRecords [$pk] = $inventario;
+		}
+		private static function getRecord(  $id_producto ){
+			$pk = "";
+			$pk .= $id_producto . "-";
+			return self::$loadedRecords[$pk];
+		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -47,12 +64,17 @@ abstract class InventarioDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_producto )
 	{
+		if(self::recordExists(  $id_producto)){
+			return self::getRecord( $id_producto );
+		}
 		$sql = "SELECT * FROM inventario WHERE (id_producto = ? ) LIMIT 1;";
 		$params = array(  $id_producto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new Inventario( $rs );
+			$foo = new Inventario( $rs );
+			self::pushRecord( $foo,  $id_producto );
+			return $foo;
 	}
 
 
@@ -84,7 +106,10 @@ abstract class InventarioDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-    		array_push( $allData, new Inventario($foo));
+			$bar = new Inventario($foo);
+    		array_push( $allData, $bar);
+			//id_producto
+    		self::pushRecord( $bar, $foo["id_producto"] );
 		}
 		return $allData;
 	}
@@ -138,6 +163,16 @@ abstract class InventarioDAOBase extends DAO
 			array_push( $val, $inventario->getTratamiento() );
 		}
 
+		if( $inventario->getAgrupacion() != NULL){
+			$sql .= " agrupacion = ? AND";
+			array_push( $val, $inventario->getAgrupacion() );
+		}
+
+		if( $inventario->getAgrupacionTam() != NULL){
+			$sql .= " agrupacionTam = ? AND";
+			array_push( $val, $inventario->getAgrupacionTam() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -148,7 +183,9 @@ abstract class InventarioDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new Inventario($foo));
+			$bar =  new Inventario($foo);
+    		array_push( $ar,$bar);
+    		self::pushRecord( $bar, $foo["id_producto"] );
 		}
 		return $ar;
 	}
@@ -167,11 +204,13 @@ abstract class InventarioDAOBase extends DAO
 	  **/
 	private static final function update( $inventario )
 	{
-		$sql = "UPDATE inventario SET  descripcion = ?, escala = ?, tratamiento = ? WHERE  id_producto = ?;";
+		$sql = "UPDATE inventario SET  descripcion = ?, escala = ?, tratamiento = ?, agrupacion = ?, agrupacionTam = ? WHERE  id_producto = ?;";
 		$params = array( 
 			$inventario->getDescripcion(), 
 			$inventario->getEscala(), 
 			$inventario->getTratamiento(), 
+			$inventario->getAgrupacion(), 
+			$inventario->getAgrupacionTam(), 
 			$inventario->getIdProducto(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -195,12 +234,14 @@ abstract class InventarioDAOBase extends DAO
 	  **/
 	private static final function create( &$inventario )
 	{
-		$sql = "INSERT INTO inventario ( id_producto, descripcion, escala, tratamiento ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO inventario ( id_producto, descripcion, escala, tratamiento, agrupacion, agrupacionTam ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$inventario->getIdProducto(), 
 			$inventario->getDescripcion(), 
 			$inventario->getEscala(), 
 			$inventario->getTratamiento(), 
+			$inventario->getAgrupacion(), 
+			$inventario->getAgrupacionTam(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -288,6 +329,28 @@ abstract class InventarioDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " tratamiento = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $inventarioA->getAgrupacion()) != NULL) & ( ($b = $inventarioB->getAgrupacion()) != NULL) ){
+				$sql .= " agrupacion >= ? AND agrupacion <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " agrupacion = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $inventarioA->getAgrupacionTam()) != NULL) & ( ($b = $inventarioB->getAgrupacionTam()) != NULL) ){
+				$sql .= " agrupacionTam >= ? AND agrupacionTam <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " agrupacionTam = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

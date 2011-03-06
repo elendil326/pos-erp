@@ -139,7 +139,7 @@ class PrestamoSucursal extends VO
 	/**
 	  * fecha
 	  * 
-	  * fecha en la que se registro el gasto<br>
+	  * Fecha de cuando se ingreso ese prestamo<br>
 	  * @access protected
 	  * @var timestamp
 	  */
@@ -320,7 +320,7 @@ class PrestamoSucursal extends VO
 	/**
 	  * getFecha
 	  * 
-	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha en la que se registro el gasto
+	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es Fecha de cuando se ingreso ese prestamo
 	  * @return timestamp
 	  */
 	final public function getFecha()
@@ -331,7 +331,7 @@ class PrestamoSucursal extends VO
 	/**
 	  * setFecha( $fecha )
 	  * 
-	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha en la que se registro el gasto.
+	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es Fecha de cuando se ingreso ese prestamo.
 	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>timestamp</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param timestamp

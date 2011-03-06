@@ -12,6 +12,26 @@
 abstract class DetalleInventarioDAOBase extends DAO
 {
 
+		private static $loadedRecords = array();
+
+		private static function recordExists(  $id_producto, $id_sucursal ){
+			$pk = "";
+			$pk .= $id_producto . "-";
+			$pk .= $id_sucursal . "-";
+			return array_key_exists ( $pk , self::$loadedRecords );
+		}
+		private static function pushRecord( $inventario,  $id_producto, $id_sucursal){
+			$pk = "";
+			$pk .= $id_producto . "-";
+			$pk .= $id_sucursal . "-";
+			self::$loadedRecords [$pk] = $inventario;
+		}
+		private static function getRecord(  $id_producto, $id_sucursal ){
+			$pk = "";
+			$pk .= $id_producto . "-";
+			$pk .= $id_sucursal . "-";
+			return self::$loadedRecords[$pk];
+		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -47,12 +67,17 @@ abstract class DetalleInventarioDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_producto, $id_sucursal )
 	{
+		if(self::recordExists(  $id_producto, $id_sucursal)){
+			return self::getRecord( $id_producto, $id_sucursal );
+		}
 		$sql = "SELECT * FROM detalle_inventario WHERE (id_producto = ? AND id_sucursal = ? ) LIMIT 1;";
 		$params = array(  $id_producto, $id_sucursal );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-		return new DetalleInventario( $rs );
+			$foo = new DetalleInventario( $rs );
+			self::pushRecord( $foo,  $id_producto, $id_sucursal );
+			return $foo;
 	}
 
 
@@ -84,7 +109,11 @@ abstract class DetalleInventarioDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-    		array_push( $allData, new DetalleInventario($foo));
+			$bar = new DetalleInventario($foo);
+    		array_push( $allData, $bar);
+			//id_producto
+			//id_sucursal
+    		self::pushRecord( $bar, $foo["id_producto"],$foo["id_sucursal"] );
 		}
 		return $allData;
 	}
@@ -153,7 +182,9 @@ abstract class DetalleInventarioDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new DetalleInventario($foo));
+			$bar =  new DetalleInventario($foo);
+    		array_push( $ar,$bar);
+    		self::pushRecord( $bar, $foo["id_producto"],$foo["id_sucursal"] );
 		}
 		return $ar;
 	}
