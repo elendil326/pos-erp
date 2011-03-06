@@ -682,28 +682,6 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 		));
 	}
 
-	/*******************************************
-	 * Prestamos en efectivo
-	 * Buscar todos los prestamos en efectivo para esta sucursal
-	 * *******************************************/
-	$prestamo = new PrestamoSucursal();
-	$prestamo->setIdPrestamo($_REQUEST["id"]);
-	$prestamo->setFecha($fecha);
-	$prestamoE = new PrestamoSucursal();
-	$prestamoE->setFecha($hoy);
-
-
-	$resultadoPrestamo = PrestamoSucursalDAO::byRange( $prestamo, $prestamoE );
-	
-	foreach( $resultadoPrestamo as $prestado ){
-		array_push($flujo, array(
-			"tipo" => "prestamo",
-			"concepto" => "<a href='ventas.php?action=detalles&id=" . $prestado->getIdPrestamo() . "'>Prestamo de efectivo</a>",
-			"monto" => $prestado->getMonto(),
-			"usuario" => $prestado->getIdUsuario(),
-			"fecha"=>$prestado->getFecha()
-		));
-	}
 
 	/*******************************************
 	 * DIBUJAR LA GRAFICA
@@ -714,7 +692,6 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
                "usuario" => "Usuario",
                "fecha"=> "Fecha",
                "monto" => "Monto" );
-
 
     function renderMonto( $monto )
     {

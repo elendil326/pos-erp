@@ -731,7 +731,7 @@ function nuevaCompraSucursal( $json = null){
 			$descuento += $subproducto->descuento;
 			//calculamos el precio del producto sumando todos los precios de los subproductos
 			//y dividiendo estasuma entre el numero de subproductos que componen este producto
-			$precio += ($subproducto->precio*$subproducto->cantidad);
+			$precio += $subproducto->precio;
 			
 			descontarDeInventarioMaestro( $subproducto->id_compra, 
 											$subproducto->id_producto, 
@@ -763,6 +763,7 @@ function nuevaCompraSucursal( $json = null){
                 "precio": "9.5"
             }
 		*/
+		
         array_push( $parametros, array( 
 			"id_producto" => $producto -> producto,
 			"procesado" => $producto -> procesado,
@@ -841,7 +842,7 @@ function nuevaCompraSucursal( $json = null){
 
     
 	try{
-		//AutorizacionDAO::save( $autorizacion );
+		AutorizacionDAO::save( $autorizacion );
 	}catch(Exception $e){
 		Logger::log("Error al agregar la autorizacion de compra sucursal" . $e);
 		DAO::transRollback();	

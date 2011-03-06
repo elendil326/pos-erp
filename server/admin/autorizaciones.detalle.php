@@ -201,6 +201,7 @@ switch( $autorizacionDetalles->clave ){
                 <tr><td></td><td></td></tr>
             </table>
 
+
             <?php
             if($autorizacion->getEstado()==3){
             ?>
