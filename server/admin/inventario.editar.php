@@ -12,12 +12,12 @@
 		
         //cambiar los detalles en el inventario maestro
         $prod = InventarioDAO::getByPK($_REQUEST['id']);
-        $prod->setDescripcion( $_REQUEST['descripcion'] );
-        $prod->setEscala( $_REQUEST['escala'] );
-		$prod->setTratamiento( $_REQUEST['tratamiento'] );
+        $prod->setDescripcion( 			$_REQUEST['descripcion'] );
+        $prod->setEscala( 				$_REQUEST['escala'] );
+		$prod->setTratamiento( 			$_REQUEST['tratamiento'] == "null" ? null : $_REQUEST['tratamiento'] );
 
-		$prod->setAgrupacion( $_REQUEST['agrupacion'] );
-		$prod->setAgrupacionTam( $_REQUEST['agrupacionTam'] );
+		$prod->setAgrupacion( 			$_REQUEST['agrupacion'] == "null" ? null : $_REQUEST['agrupacion']);
+		$prod->setAgrupacionTam( 		$_REQUEST['agrupacion'] == "null" ? null : $_REQUEST['agrupacionTam'] );
 
         try{
 

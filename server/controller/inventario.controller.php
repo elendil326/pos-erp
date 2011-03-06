@@ -364,7 +364,6 @@ function nuevoProducto($data)
     $inventario->setEscala 		( $jsonData->escala == "null" ? null : $jsonData->escala );
     $inventario->setTratamiento ( $jsonData->tratamiento == "null" ? null : $jsonData->tratamiento );
     $inventario->setAgrupacion  ( $jsonData->agrupacion == "null" ? null : $jsonData->agrupacion );
-
     $inventario->setAgrupacionTam (  $jsonData->agrupacion == "null" ? null : $jsonData->agrupacionTam );
 
     DAO::transBegin();
