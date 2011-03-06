@@ -333,7 +333,7 @@ function nuevoProducto($data)
         $jsonData = parseJSON($data);
     }catch(Exception $e){
         Logger::log("Json invalido para nuevo producto" . $e);
-        return array( "success" => false, "reason" => "bad json" );
+        return array( "success" => false, "reason" => "Datos invalidos" );
     }
 
 
@@ -357,15 +357,17 @@ function nuevoProducto($data)
 		die('{ "success" : false, "reason" : "La descripcion del producto debe ser menor a 15 caracteres." }');	
     }
 
-    $inventario = new Inventario();
 
+
+    $inventario = new Inventario();
     $inventario->setDescripcion ($jsonData->descripcion);
     $inventario->setEscala 		($jsonData->escala == "null" ? null : $jsonData->escala);
-    $inventario->setTratamiento ($jsonData->tratamiento);
+    $inventario->setTratamiento ($jsonData->tratamiento == "null" ? null : $jsonData->tratamiento );
 
     DAO::transBegin();
 
     try{
+		Logger::log("Insertando nuevo producto: " . $jsonData->descripcion . ", " . $jsonData->escala . ", ". $jsonData->tratamiento  );
         InventarioDAO::save( $inventario );
     }catch(Exception $e){
 	    DAO::transRollback();
