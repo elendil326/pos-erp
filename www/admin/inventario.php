@@ -11,7 +11,7 @@
 	
 <head>
 	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-3.3.1/resources/css/ext-all.css" /> 
 	<title>POS | Inventario</title>
 	<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript"></script>
 
@@ -31,7 +31,7 @@
 	<link href="../frameworks/facebox/facebox.css" media="screen" rel="stylesheet" type="text/css"/>
 	<script src="../frameworks/facebox/facebox.js" type="text/javascript"></script>
 	
- 	<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-3.3.1/resources/css/ext-all.css" /> 
+ 	
 	
 	<!-- ExtJS library: base/adapter --> 
     <script type="text/javascript" src="http://api.caffeina.mx/ext-3.3.1/adapter/ext/ext-base.js"></script> 
