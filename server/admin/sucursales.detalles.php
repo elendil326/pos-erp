@@ -14,6 +14,7 @@ require_once('model/corte.dao.php');
 $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 
 
+
 ?>
 <style type="text/css" media="screen">
 	#map_canvas { 
@@ -692,6 +693,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
                "usuario" => "Usuario",
                "fecha"=> "Fecha",
                "monto" => "Monto" );
+
 
     function renderMonto( $monto )
     {

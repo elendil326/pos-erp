@@ -88,3 +88,4 @@ $resultado = convertir($json->subtotal);
 //echo "<body onload='javascript:window.print();'>";
 $pdf->Output();
 
+?>
