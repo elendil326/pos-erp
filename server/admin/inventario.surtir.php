@@ -9,7 +9,7 @@
 
 	$productos = InventarioDAO::getAll();
 	
-	$iMaestro = listarInventarioMaestro(50, POS_SOLO_ACTIVOS) ;
+	$iMaestro = listarInventarioMaestro(150, POS_SOLO_ACTIVOS) ;
 
     if(isset( $_REQUEST['aut'])){
         $autorizacion = AutorizacionDAO::getByPK( $_REQUEST['aut'] );
@@ -211,6 +211,7 @@ InventarioMaestro = function( ){
     this.getProductoDesc = function(id_producto){
         var z;
         for( z = 0; z < estructura.length; z++ ){
+			console.log(estructura[z].id_producto, id_producto , estructura[z].id_producto === id_producto)
             if( estructura[z].id_producto === id_producto){
                     return {
                         id_producto : estructura[z].id_producto,
@@ -219,7 +220,32 @@ InventarioMaestro = function( ){
                     };
                 }
         }
-        
+        //no encontre el producto porque no esta en el inventario 
+ 		//maestro, y como solo quiero la descripcion, lo sacare
+		//de la lista de productos
+		var other_prods = [];
+
+		<?php
+				$i = 0;
+				foreach($productos as $prod){
+					echo " other_prods[".$i."] = " . json_encode( $prod->asArray() ) . ";\n";
+					$i++;
+				}
+		?>
+		
+		for (var j = other_prods.length - 1; j >= 0; j--){
+			if(other_prods[j].id_producto == id_producto){
+				console.log("found !", other_prods[j].descripcion)
+				 return {
+                    id_producto : id_producto,
+                    descripcion : other_prods[j].descripcion,
+                    escala      : other_prods[j].escala
+                };
+			}
+		};
+
+		
+		
         throw("No encontre el producto " + id_producto);
     };
 
@@ -336,7 +362,7 @@ InventarioMaestroTabla = function( config ) {
     
 
 
-    function render(){
+    function render(){ /*
         var html,
             row_html,
 			a;
@@ -389,7 +415,7 @@ InventarioMaestroTabla = function( config ) {
             
         html += '</table>';     
         
-        jQuery("#" + renderTo).html( html );
+        jQuery("#" + renderTo).html( html ); */
     }
 
     function __init(config){
@@ -398,7 +424,6 @@ InventarioMaestroTabla = function( config ) {
         }
         
         inventario = config.inventario;
-        
         
         renderTo = config.renderTo;
         
@@ -412,13 +437,26 @@ InventarioMaestroTabla = function( config ) {
         var newQty = producto.existencias - cantidadATomar,
             newQtyProc = producto.existencias_procesadas - cantidadATomar;
             
-        if(newQty < 0){
-            newQty = "<b style='color: #AB443B'>" + round(newQty) + "&nbsp;" + toSmallUnit (producto.escala ) +  "</b>" ;
-        }else{
-            newQty = "<b style='color: green'>" + round(newQty) + "&nbsp;" + toSmallUnit (producto.escala ) +  "</b>" ;    
-        }
-        
+		var gridRow = MasterGrid.getStore().findBy(function(r){
+			 //console.log(this,id_compra, id_producto, "comparando", r.get("id_compra_proveedor"), r)
+			 return (r.get("id_compra_proveedor") == id_compra && r.get("id_producto") == id_producto);
+		}, this);
+		
+		console.log(gridRow)
+		MasterGrid.getStore().getAt( gridRow ).set("existencias", newQty);
+/*        if(newQty < 0){
 
+            //newQty = "<b style='color: #AB443B'>" + round(newQty) + "&nbsp;" + toSmallUnit (producto.escala ) +  "</b>" ;
+
+
+        }else{
+			MasterGrid.getStore().getAt(gridRow).set("existencias", newQty);	
+            //newQty = "<b style='color: green'>" + round(newQty) + "&nbsp;" + toSmallUnit (producto.escala ) +  "</b>" ;    
+
+			
+        }
+  */      
+/*
         jQuery("#"+id_compra+"-"+id_producto+"-existencias").html(newQty);
         jQuery("#"+id_compra+"-"+id_producto+"-existencias").slideUp(
             250,
@@ -426,11 +464,11 @@ InventarioMaestroTabla = function( config ) {
                 jQuery("#"+id_compra+"-"+id_producto+"-existencias").slideDown(  );
             }
         );
-        
+  */      
         
         if(procesadas){
-
-            if(newQtyProc < 0){
+			MasterGrid.getStore().getAt( gridRow ).set("existencias_procesadas", newQtyProc);
+/*            if(newQtyProc < 0){
                 newQtyProc = "<b style='color: #AB443B'>" + round(newQtyProc) + "</b>&nbsp;" + toSmallUnit (producto.escala );
             }else{
                 newQtyProc = "<b style='color: #3F8CE9'>" + round(newQtyProc) + "</b>&nbsp;" + toSmallUnit (producto.escala );
@@ -444,9 +482,12 @@ InventarioMaestroTabla = function( config ) {
                     jQuery("#"+id_compra+"-"+id_producto+"-existencias-procesadas").slideDown(  );
                 }
             );
+*/
         }else{
-            newQtyProc = "<b>" + producto.existencias_procesadas + "</b>&nbsp;" + toSmallUnit (producto.escala );
-            jQuery("#"+id_compra+"-"+id_producto+"-existencias-procesadas").html(newQtyProc);           
+			MasterGrid.getStore().getAt( gridRow ).set("existencias_procesadas", producto.existencias_procesadas);
+			
+            /*newQtyProc = "<b>" + producto.existencias_procesadas + "</b>&nbsp;" + toSmallUnit (producto.escala );
+            jQuery("#"+id_compra+"-"+id_producto+"-existencias-procesadas").html(newQtyProc);           */
             
         }
     };
@@ -461,6 +502,7 @@ InventarioMaestroTabla = function( config ) {
 			console.log("haciendo highlight a " + id_prod);
 		}
 		jQuery("#InventarioMaestroTabla tr").css("color", "rgb(68, 68, 68)");		
+		
 		jQuery(".im_pid_" + id_prod).css("color", "#3F8CE9");
 	};
 
@@ -509,7 +551,7 @@ ComposicionTabla = function( config ){
     
     this.doMath = function( id_compra, id_producto, campo, valor ){
         
-        //console.log("doing some math !", campo, valor);
+        console.log("doing some math !", id_compra, id_producto, campo, valor);
         
         //buscar este producto en el inventario
         var prod = inventario.getProducto( id_compra, id_producto ),
@@ -598,8 +640,10 @@ ComposicionTabla = function( config ){
         
     };
     
-    this.agregarProducto = function( id_compra, id_producto ){
-        
+    this.agregarProducto = function( id_compra, id_producto, rowIndex ){
+        console.log( "agregarProducto( " + id_compra + "," +  id_producto +","+ rowIndex + " )" );
+
+		//obtener el producto
         producto = inventario.getProducto( id_compra, id_producto );
         
         var html = "";
@@ -798,6 +842,7 @@ function renderFinalShip(){
     
     var html = '<table style="width: 100%">';
     html += '<tr align=left>'
+        + '<th></th>'
         + '<th>Producto</th>'
         + '<th>Peso real</th>'
         + '<th>Peso a cobrar</th>'      
@@ -832,7 +877,8 @@ function renderFinalShip(){
         var color = i % 2 == 0 ? 'style="background-color: #D7EAFF"' : "";
         
         html += tr(
-                    td("<img src='../media/icons/basket_32.png'>"+ desc.descripcion )
+					td( "<img src='../media/icons/basket_32.png'>" )
+                    + td( desc.descripcion )
                     + td( total_qty + getEscalaCorta( desc.escala ) )
                     + td( total_qty_with_desc + getEscalaCorta( desc.escala ) )     
                     + td( composition)
@@ -929,6 +975,304 @@ function doSurtir()
     });
 }
 
+
+
+
+
+
+
+
+<?php 
+	echo " var inventario_maestro_extjs = " . json_encode( $iMaestro ) . ";";
+?>
+
+var MasterGrid;
+
+Ext.onReady(function(){
+    Ext.QuickTips.init();
+
+    // NOTE: This is an example showing simple state management. During development,
+    // it is generally best to disable state management as dynamically-generated ids
+    // can change across page loads, leading to unpredictable results.  The developer
+    // should ensure that stable state ids are set for stateful components in real apps.    
+
+	// uncomment this on deployment !!!
+    // Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
+
+	var inventario_formateado = [  ];
+	
+	for (var i = inventario_maestro_extjs.length - 1; i >= 0; i--){
+		inventario_formateado[i] = [
+			inventario_maestro_extjs[i].arpillas,
+			inventario_maestro_extjs[i].calidad,
+			inventario_maestro_extjs[i].chofer,
+			inventario_maestro_extjs[i].costo_flete,
+			inventario_maestro_extjs[i].existencias,
+			inventario_maestro_extjs[i].existencias_procesadas,
+			inventario_maestro_extjs[i].fecha,
+			inventario_maestro_extjs[i].fecha_origen,
+			inventario_maestro_extjs[i].folio,
+			inventario_maestro_extjs[i].id_compra_proveedor,
+			inventario_maestro_extjs[i].id_producto,
+			inventario_maestro_extjs[i].id_proveedor,
+			inventario_maestro_extjs[i].kg,
+			inventario_maestro_extjs[i].marca_camion,
+			inventario_maestro_extjs[i].medida,
+			inventario_maestro_extjs[i].merma_por_arpilla,
+			inventario_maestro_extjs[i].modelo_camion,
+			inventario_maestro_extjs[i].numero_de_viaje,
+			inventario_maestro_extjs[i].peso_origen,
+			inventario_maestro_extjs[i].peso_por_arpilla,
+			inventario_maestro_extjs[i].peso_recibido,
+			inventario_maestro_extjs[i].placas_camion,
+			inventario_maestro_extjs[i].precio_por_kg,
+			inventario_maestro_extjs[i].producto_desc,
+			inventario_maestro_extjs[i].producto_tratamiento,
+			inventario_maestro_extjs[i].productor,
+			inventario_maestro_extjs[i].sitio_descarga,
+			inventario_maestro_extjs[i].sitio_descarga_desc,
+			inventario_maestro_extjs[i].total_origen,
+			inventario_maestro_extjs[i].variedad,
+			inventario_maestro_extjs[i].agrupacion,
+			inventario_maestro_extjs[i].agrupacionTam								
+		];
+
+	};
+	
+
+
+    // create the data store
+    function getNewStore () {
+		return new Ext.data.ArrayStore({
+	        fields: [
+				{ name : 'arpillas', 				type : 'float' },
+				{ name : 'calidad', 				type : 'string' },
+				{ name : 'chofer', 					type : 'string' },
+				{ name : 'costo_flete', 			type : 'float' },
+				{ name : 'existencias', 			type : 'float' },
+				{ name : 'existencias_procesadas', 	type : 'float' },
+				{ name : 'fecha', 					type : 'date', dateFormat: 'j/m/y' },
+				{ name : 'fecha_origen', 			type : 'date', dateFormat: 'Y-m-d' },
+				{ name : 'folio', 					type : 'string' },
+				{ name : 'id_compra_proveedor', 	type : 'int' },
+				{ name : 'id_producto', 			type : 'int' },
+				{ name : 'id_proveedor', 			type : 'int' },
+				{ name : 'kg', 						type : 'float' },
+				{ name : 'marca_camion', 			type : 'string' },
+				{ name : 'medida', 					type : 'string' },
+				{ name : 'merma_por_arpilla', 		type : 'float' },
+				{ name : 'modelo_camion', 			type : 'string' },
+				{ name : 'numero_de_viaje', 		type : 'string' },
+				{ name : 'peso_origen', 			type : 'float' },
+				{ name : 'peso_por_arpilla', 		type : 'float' },
+				{ name : 'peso_recibido', 			type : 'float' },
+				{ name : 'placas_camion', 			type : 'string' },
+				{ name : 'precio_por_kg', 			type : 'float' },
+				{ name : 'producto_desc', 			type : 'string' },
+				{ name : 'producto_tratamiento', 	type : 'string' },
+				{ name : 'productor', 				type : 'string' },
+				{ name : 'sitio_descarga', 			type : 'int' },
+				{ name : 'sitio_descarga_desc', 	type : 'string' },
+				{ name : 'total_origen', 			type : 'float' },
+				{ name : 'variedad', 				type : 'string' },
+				{ name : 'agrupacion', 				type : 'string' },
+				{ name : 'agrupacionTam', 			type : 'float' }						
+	        ]
+	    });
+	}
+	
+	
+ 	var store = getNewStore();
+
+
+
+	function toSmallUnit( unit ){
+		switch(unit){
+			case "kilogramo" : return "Kgs";
+			case "pieza" : return "Pzas";
+			case "arpilla" : return "Arps";
+			case "cajas" : return "Cjs";
+			case "bulto" : return "Blts";				
+		}
+	}
+
+    // manually load local data
+    store.loadData(inventario_formateado);
+	
+    // create the Grid
+    MasterGrid = new Ext.grid.GridPanel({
+        store: store,
+		header : false,
+        columns: [
+	        {
+                header   : 'Fecha', 
+                width    : 75, 
+                sortable : true, 
+                renderer : Ext.util.Format.dateRenderer('d/m/Y'),  
+                dataIndex: 'fecha'
+            },
+            {
+                header   : 'Remision', 
+                width    : 75, 
+                sortable : true, 
+                dataIndex: 'folio'
+            },	
+            {
+                id       :'descripcion',
+                header   : 'Producto', 
+                width    : 180, 
+                sortable : true, 
+                dataIndex: 'producto_desc'
+            },
+            {
+                header   : 'Variedad', 
+                width    : 85, 
+                sortable : true, 
+                dataIndex: 'variedad'
+            },	
+            {
+                header   : 'Promedio', 
+                width    : 85, 
+                sortable : true, 
+				align 	 : "right",	
+				renderer : function(n, c){
+					return n.toFixed(4);
+				},
+                dataIndex: 'peso_por_arpilla'
+            },	
+            {
+                header   : 'Merma', 
+                width    : 85, 
+                sortable : true, 
+				hidden	 : true,
+                dataIndex: 'merma_por_arpilla'
+            },
+            {
+                header   : 'peso_origen', 
+                width    : 85, 
+                sortable : true, 
+				hidden: true,
+                dataIndex: 'peso_origen'
+            },
+            {
+                header   : 'Costo', 
+                width    : 85, 
+                sortable : true, 
+				hidden: true,	
+				renderer : 'usMoney',
+                dataIndex: 'precio_por_kg'
+            },			
+            {
+                header   : 'productor', 
+                width    : 85, 
+                sortable : true, 
+				hidden: true,	
+                dataIndex: 'productor'
+            },
+            {
+                header   : 'Existencias', 
+                width    : 150, 
+                sortable : true, 
+				align 	 : "right",
+                renderer : function (n, a, row ){
+
+					if(row.data.agrupacion.length > 0){
+						//si hay agrupacion
+						var v = (parseFloat( n / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
+						+"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+						
+						if(n < 0){
+							return ( "<span style='color:red'>" + v +"</span>" );
+						}else{
+							return v;
+						}
+						
+					}else{
+						//no hay agrupacion
+						var v = n.toFixed(2) + " " +  toSmallUnit(row.data.medida);
+						
+						if(n < 0){
+							return ( "<span style='color:red'>" + v +"</span>" );
+						}else{
+							return v;
+						}
+					}
+
+				}, 
+                dataIndex: 'existencias'
+            },
+            {
+                header   : 'Procesadas', 
+                width    : 150, 
+				align 	 : "right",	
+                sortable : true, 
+                renderer : function(n,a,row){
+					if(isNaN(n)){
+						return "-";
+					}else{
+
+							if(row.data.agrupacion.length > 0){
+								//si hay agrupacion
+								var v = (parseFloat( n / row.data.agrupacionTam )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
+								+"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+
+								if(n < 0){
+									return ( "<span style='color:red'>" + v +"</span>" );
+								}else{
+									return v;
+								}
+
+							}else{
+								//no hay agrupacion
+								var v = n.toFixed(2) + " " +  toSmallUnit(row.data.medida);
+
+								if(n < 0){
+									return ( "<span style='color:red'>" + v +"</span>" );
+								}else{
+									return v;
+								}
+							}
+
+
+					}
+				}, 
+                dataIndex: 'existencias_procesadas'
+            },	
+            {
+                header   : 'sitio_descarga_desc', 
+                width    : 95, 
+                sortable : true, 
+				hidden: true,	
+                dataIndex: 'sitio_descarga_desc'
+            }
+        ],
+        stripeRows: true,
+        autoExpandColumn: 'descripcion',
+        height: 350,
+        width: "100%",
+		frame : false,
+		header: false,
+        // title: 'Array Grid',
+        // config options for stateful behavior
+        stateful: true,
+        stateId: 'grid',
+		listeners : {
+			"rowclick" : function (grid, rowIndex, e){
+				var datos = grid.getStore().getAt( rowIndex );
+				composicionTabla.agregarProducto(  datos.get("id_compra_proveedor" ), datos.get("id_producto"), rowIndex );
+				console.log( "rowclick !",  datos.get("id_compra_proveedor" ), datos.get("id_producto"), rowIndex );
+				//window.location = "inventario.php?action=detalleCompra&compra=" + datos.get("id_compra_proveedor") + "&producto=" + datos.get("id_producto");
+			}
+		}
+		
+    });
+
+
+
+    // render the grid to the specified div in the page
+    MasterGrid.render('inventario-maestro-grid');
+
+});
 /*
 function restart()
 {
@@ -941,7 +1285,7 @@ function restart()
         );
 }
 
-**************************************************************/
+****/
 </script>
 
 
@@ -978,22 +1322,7 @@ function restart()
 <?php } ?>
 
 
-<!--
-    Seleccion de chofer
--->
-<div id="select_sucursal">
-    <h2>Indique quien entragara el embarque</h2>
-    <form >
-    <table border="0" cellspacing="5" cellpadding="5">
-	    <tr><td>Conductor</td>
-		    <td>
-			   <input type="text" value="" id="conductor" />
-		    </td>
-            <td> </td>
-	    </tr>
-    </table>
-    </form>
-</div>
+
 
 
 <?php
@@ -1123,6 +1452,7 @@ foreach( $sucursales as $sucursal ){
 	<h2>Inventario Maestro</h2>
 	<h3>&iquest; Como se conformara este producto ?</h3>
 	<div id="InventarioMaestroTabla"></div>
+ 	<div id="inventario-maestro-grid" style="padding: 5px;"></div> 	
 </div>
 
 
@@ -1165,7 +1495,22 @@ foreach( $sucursales as $sucursal ){
 </div>
 
 
-
+<!--
+    Seleccion de chofer
+-->
+<div id="select_sucursal">
+    <h2>Indique quien entragara el embarque</h2>
+    <form >
+    <table border="0" cellspacing="5" cellpadding="5">
+	    <tr><td>Conductor</td>
+		    <td>
+			   <input type="text" value="" id="conductor" />
+		    </td>
+            <td> </td>
+	    </tr>
+    </table>
+    </form>
+</div>
 
 <div id="FinalShip" style="display: none;">
 <h2>Productos a surtir</h2>

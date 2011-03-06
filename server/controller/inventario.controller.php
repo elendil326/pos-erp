@@ -158,7 +158,9 @@ function listarInventarioMaestro( $n = 50, $show = POS_TODOS )
 			$bar['producto_desc'] = $p->getDescripcion();
 			$bar['producto_tratamiento'] = $p->getTratamiento();
 			$bar['medida'] = $p->getEscala();
-			
+			$bar['agrupacion'] = $p->getAgrupacion();
+			$bar['agrupacionTam'] = $p->getAgrupacionTam();
+									
 			if( $p->getTratamiento() === null) {
 				$bar["existencias_procesadas"] = "NA";
 			}

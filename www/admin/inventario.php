@@ -30,6 +30,15 @@
 
 	<link href="../frameworks/facebox/facebox.css" media="screen" rel="stylesheet" type="text/css"/>
 	<script src="../frameworks/facebox/facebox.js" type="text/javascript"></script>
+	
+ 	<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-3.3.1/resources/css/ext-all.css" /> 
+	
+	<!-- ExtJS library: base/adapter --> 
+    <script type="text/javascript" src="http://api.caffeina.mx/ext-3.3.1/adapter/ext/ext-base.js"></script> 
+ 
+    <!-- ExtJS library: all widgets --> 
+    <script type="text/javascript" src="http://api.caffeina.mx/ext-3.3.1/ext-all.js"></script> 
+    
 </head>
 
 
