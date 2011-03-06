@@ -24,6 +24,16 @@
         ?>
                 <script>
                     var CLIENTE = null;
+					var datosClientes = <?php echo json_encode( $clientes ); ?>;
+					
+					function getCliente( id_cliente ){
+						for (var c = datosClientes.length - 1; c >= 0; c--){
+							if( parseInt(datosClientes[c].id_cliente) == id_cliente){
+								return datosClientes[c];
+							}
+						}
+						return null;
+					}
                 </script>
         <?php
 
