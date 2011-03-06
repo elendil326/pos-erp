@@ -42,7 +42,6 @@
 			<input type="text" id="agrupacionTam" size="20"/><span id="agrupacionCaption"></span>
 		</td>
 	</tr>
-	<tr><td></td><td> </td></tr>
 </table>
 <h4><input type="button" onClick="save()" value="Guardar"/></h4>
 

@@ -40,6 +40,9 @@ class Inventario extends VO
 			if( isset($data['agrupacionTam']) ){
 				$this->agrupacionTam = $data['agrupacionTam'];
 			}
+			if( isset($data['activo']) ){
+				$this->activo = $data['activo'];
+			}
 		}
 	}
 
@@ -58,7 +61,8 @@ class Inventario extends VO
 			"escala" => $this->escala,
 			"tratamiento" => $this->tratamiento,
 			"agrupacion" => $this->agrupacion,
-			"agrupacionTam" => $this->agrupacionTam
+			"agrupacionTam" => $this->agrupacionTam,
+			"activo" => $this->activo
 		); 
 	return json_encode($vec); 
 	}
@@ -118,6 +122,15 @@ class Inventario extends VO
 	  * @var float
 	  */
 	protected $agrupacionTam;
+
+	/**
+	  * activo
+	  * 
+	  * si este producto esta activo o no en el sistema<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $activo;
 
 	/**
 	  * getIdProducto
@@ -265,6 +278,30 @@ class Inventario extends VO
 	final public function setAgrupacionTam( $agrupacionTam )
 	{
 		$this->agrupacionTam = $agrupacionTam;
+	}
+
+	/**
+	  * getActivo
+	  * 
+	  * Get the <i>activo</i> property for this object. Donde <i>activo</i> es si este producto esta activo o no en el sistema
+	  * @return tinyint(1)
+	  */
+	final public function getActivo()
+	{
+		return $this->activo;
+	}
+
+	/**
+	  * setActivo( $activo )
+	  * 
+	  * Set the <i>activo</i> property for this object. Donde <i>activo</i> es si este producto esta activo o no en el sistema.
+	  * Una validacion basica se hara aqui para comprobar que <i>activo</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setActivo( $activo )
+	{
+		$this->activo = $activo;
 	}
 
 }

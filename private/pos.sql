@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 05-03-2011 a las 18:45:42
+-- Tiempo de generación: 05-03-2011 a las 20:10:47
 -- Versión del servidor: 5.1.37
 -- Versión de PHP: 5.3.0
 
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `actualizacion_de_precio` (
   PRIMARY KEY (`id_actualizacion`),
   KEY `id_producto` (`id_producto`),
   KEY `id_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=70 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=77 ;
 
 -- --------------------------------------------------------
 
@@ -386,8 +386,9 @@ CREATE TABLE IF NOT EXISTS `inventario` (
   `tratamiento` enum('limpia') COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Tipo de tratatiento si es que existe para este producto.',
   `agrupacion` varchar(8) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'La agrupacion de este producto',
   `agrupacionTam` float DEFAULT NULL COMMENT 'El tamano de cada agrupacion',
+  `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'si este producto esta activo o no en el sistema',
   PRIMARY KEY (`id_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=19 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=22 ;
 
 -- --------------------------------------------------------
 

@@ -148,6 +148,11 @@ abstract class InventarioDAOBase extends DAO
 			array_push( $val, $inventario->getAgrupacionTam() );
 		}
 
+		if( $inventario->getActivo() != NULL){
+			$sql .= " activo = ? AND";
+			array_push( $val, $inventario->getActivo() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -177,13 +182,14 @@ abstract class InventarioDAOBase extends DAO
 	  **/
 	private static final function update( $inventario )
 	{
-		$sql = "UPDATE inventario SET  descripcion = ?, escala = ?, tratamiento = ?, agrupacion = ?, agrupacionTam = ? WHERE  id_producto = ?;";
+		$sql = "UPDATE inventario SET  descripcion = ?, escala = ?, tratamiento = ?, agrupacion = ?, agrupacionTam = ?, activo = ? WHERE  id_producto = ?;";
 		$params = array( 
 			$inventario->getDescripcion(), 
 			$inventario->getEscala(), 
 			$inventario->getTratamiento(), 
 			$inventario->getAgrupacion(), 
 			$inventario->getAgrupacionTam(), 
+			$inventario->getActivo(), 
 			$inventario->getIdProducto(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -207,7 +213,7 @@ abstract class InventarioDAOBase extends DAO
 	  **/
 	private static final function create( &$inventario )
 	{
-		$sql = "INSERT INTO inventario ( id_producto, descripcion, escala, tratamiento, agrupacion, agrupacionTam ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO inventario ( id_producto, descripcion, escala, tratamiento, agrupacion, agrupacionTam, activo ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$inventario->getIdProducto(), 
 			$inventario->getDescripcion(), 
@@ -215,6 +221,7 @@ abstract class InventarioDAOBase extends DAO
 			$inventario->getTratamiento(), 
 			$inventario->getAgrupacion(), 
 			$inventario->getAgrupacionTam(), 
+			$inventario->getActivo(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -324,6 +331,17 @@ abstract class InventarioDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " agrupacionTam = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $inventarioA->getActivo()) != NULL) & ( ($b = $inventarioB->getActivo()) != NULL) ){
+				$sql .= " activo >= ? AND activo <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " activo = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
