@@ -28,7 +28,7 @@ function heartbeat(){
 		    try{
                 response = jQuery.parseJSON(data);
 
-				console.log("parsed response", response)
+				//console.log("parsed response", response)
 				
 				if( response == null ){
 					return;
@@ -43,7 +43,7 @@ function heartbeat(){
 				auths_hash = response.hash;
 				
             }catch(e){
-				console.log("failed to parse", e)
+				//console.log("failed to parse", e)
             }
         	
 		}
@@ -53,4 +53,4 @@ function heartbeat(){
 };
 
 
-setInterval("heartbeat()", 5000);
+setInterval("heartbeat()", 15000);
