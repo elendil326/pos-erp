@@ -202,8 +202,14 @@ switch( $autorizacionDetalles->clave ){
             </table>
 
             <?php
+            if($autorizacion->getEstado()==3){
+            ?>
+            <h4><input type=button value="Editar" onclick="surtirSuc(<?php echo $autorizacion->getIdSucursal(); ?>, <?php    echo $autorizacion->getIdAutorizacion(); ?>)" ></h4>
+            <?php
+            }
             if($autorizacion->getEstado() != 4){
-	            ?><h4><input type=button value="Surtir sucursal" onclick="surtirSuc(<?php echo $autorizacion->getIdSucursal(); ?>, <?php    echo $autorizacion->getIdAutorizacion(); ?>)" ></h4><?php
+	            ?><h4><input type=button value="Cancelar" onclick="surtirSuc(<?php echo $autorizacion->getIdSucursal(); ?>, <?php    echo $autorizacion->getIdAutorizacion(); ?>)" ></h4>
+	    	<?php
             }else{
 				?><div align=center><h3>Usted ya ha respondido a esta autorizacion.</h3></div><?php
 			}

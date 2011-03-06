@@ -302,6 +302,52 @@ if(isset($args['action'])){
              cancelarVenta( $args );
 	    break;
 	    
+	    
+	    case 888:
+	    $arr=VentasDAO::contarVentasPorDia(5);
+		$num=0;
+		while (list($i,$Valor)=each($arr))
+		{
+			while (list($j,$Val)=each($Valor))
+			{
+				$fechas[$num]=$j;
+				$ventas[$num]=$Val;
+				echo $j." ";
+				$dia=substr($j,-2);
+				//echo $dia." ";
+				echo $Val;
+				$num++;
+			}
+			echo "<Br>";
+		}
+		$contador=0;
+		echo "dias de diferencia ".(strtotime($fechas[count($fechas)-1])-strtotime($fechas[0]))/86400;
+		echo " ".date("Y-m-d",strtotime($fechas[0])+4752000);	
+		echo "<br>";
+		$arreglo=array();
+
+		for($i=strtotime($fechas[0]);$i<=strtotime($fechas[count($fechas)-1]);$i+=86400){
+			echo $i;
+			echo " ";
+			echo date("Y-m-d",$i);
+			
+			for($j=0;$j<sizeof($fechas);$j++){
+				//if($i<sizeof($fechas)-1){
+					
+					if($i==strtotime($fechas[$j])){
+						echo "existe";
+						array_push( $arreglo, array( $i , $ventas[$j] ) );
+					}else{
+						array_push( $arreglo, array( $i , "0" ) );					
+					}
+				//}
+			}
+
+			echo "<br>";
+//			array_push( $arreglo, array( $i , "0" ) );
+		}
+		var_dump($arreglo);
+		break;
 	}	
 }
 
