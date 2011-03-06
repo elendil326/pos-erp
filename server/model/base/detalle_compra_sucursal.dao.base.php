@@ -12,26 +12,6 @@
 abstract class DetalleCompraSucursalDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_compra, $id_producto ){
-			$pk = "";
-			$pk .= $id_compra . "-";
-			$pk .= $id_producto . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_compra, $id_producto){
-			$pk = "";
-			$pk .= $id_compra . "-";
-			$pk .= $id_producto . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_compra, $id_producto ){
-			$pk = "";
-			$pk .= $id_compra . "-";
-			$pk .= $id_producto . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -67,17 +47,12 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_compra, $id_producto )
 	{
-		if(self::recordExists(  $id_compra, $id_producto)){
-			return self::getRecord( $id_compra, $id_producto );
-		}
 		$sql = "SELECT * FROM detalle_compra_sucursal WHERE (id_compra = ? AND id_producto = ? ) LIMIT 1;";
 		$params = array(  $id_compra, $id_producto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-			$foo = new DetalleCompraSucursal( $rs );
-			self::pushRecord( $foo,  $id_compra, $id_producto );
-			return $foo;
+		return new DetalleCompraSucursal( $rs );
 	}
 
 
@@ -109,11 +84,7 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-			$bar = new DetalleCompraSucursal($foo);
-    		array_push( $allData, $bar);
-			//id_compra
-			//id_producto
-    		self::pushRecord( $bar, $foo["id_compra"],$foo["id_producto"] );
+    		array_push( $allData, new DetalleCompraSucursal($foo));
 		}
 		return $allData;
 	}
@@ -187,9 +158,7 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-			$bar =  new DetalleCompraSucursal($foo);
-    		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_compra"],$foo["id_producto"] );
+    		array_push( $ar, new DetalleCompraSucursal($foo));
 		}
 		return $ar;
 	}

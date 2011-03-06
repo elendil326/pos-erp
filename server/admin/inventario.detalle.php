@@ -27,9 +27,6 @@
     $fluctuaciones = ActualizacionDePrecioDAO::search( $a, 'fecha', 'desc' );
 	$ultimaActualizacion = $fluctuaciones[0];
 	
-	
-	
-	
 ?>
 
 <script>
@@ -42,13 +39,20 @@ document.getElementById("MAIN_TITLE").innerHTML = "<?php echo $producto->getDesc
 
 	
 <form id="detalles">
-<table border="0" cellspacing="5" cellpadding="5">
+<table border="0" cellspacing="5" cellpadding="5" style="width: 50%">
 	<tr><td>ID Producto</td><td><?php echo $producto->getIdProducto();?></td></tr>
 	<tr><td>Descripcion</td><td><?php echo $producto->getDescripcion();?></td></tr>
 
-	<tr><td>Escala</td><td><?php echo $producto->getEscala();?>s</td></tr>
-	<tr><td>Tratamiento</td><td><?php echo $producto->getTratamiento();?></td></tr>	
-
+	<tr><td>Escala</td><td><?php echo ucfirst($producto->getEscala());?>s</td></tr>
+	<tr><td>Tratamiento</td><td><?php echo ucfirst($producto->getTratamiento());?></td></tr>	
+	<tr><td>Agrupacion</td><td>
+		<?php 
+			if($producto->getAgrupacion()){
+				echo $producto->getAgrupacionTam()  . " " . $producto->getEscala() .  "s por " . $producto->getAgrupacion();				
+			}else{
+				echo "Sin agrupacion";
+			}
+		?></td></tr>	
 	<tr ><td colspan=2>
 		<h4><input type="button" onclick="window.location='inventario.php?action=editar&id=<?php echo $producto->getIdProducto();?>' " value="Editar" /></h4>
 	</td></tr>

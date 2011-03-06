@@ -12,26 +12,6 @@
 abstract class DetalleVentaDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_venta, $id_producto ){
-			$pk = "";
-			$pk .= $id_venta . "-";
-			$pk .= $id_producto . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_venta, $id_producto){
-			$pk = "";
-			$pk .= $id_venta . "-";
-			$pk .= $id_producto . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_venta, $id_producto ){
-			$pk = "";
-			$pk .= $id_venta . "-";
-			$pk .= $id_producto . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -67,17 +47,12 @@ abstract class DetalleVentaDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_venta, $id_producto )
 	{
-		if(self::recordExists(  $id_venta, $id_producto)){
-			return self::getRecord( $id_venta, $id_producto );
-		}
 		$sql = "SELECT * FROM detalle_venta WHERE (id_venta = ? AND id_producto = ? ) LIMIT 1;";
 		$params = array(  $id_venta, $id_producto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-			$foo = new DetalleVenta( $rs );
-			self::pushRecord( $foo,  $id_venta, $id_producto );
-			return $foo;
+		return new DetalleVenta( $rs );
 	}
 
 
@@ -109,11 +84,7 @@ abstract class DetalleVentaDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-			$bar = new DetalleVenta($foo);
-    		array_push( $allData, $bar);
-			//id_venta
-			//id_producto
-    		self::pushRecord( $bar, $foo["id_venta"],$foo["id_producto"] );
+    		array_push( $allData, new DetalleVenta($foo));
 		}
 		return $allData;
 	}
@@ -192,9 +163,7 @@ abstract class DetalleVentaDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-			$bar =  new DetalleVenta($foo);
-    		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_venta"],$foo["id_producto"] );
+    		array_push( $ar, new DetalleVenta($foo));
 		}
 		return $ar;
 	}

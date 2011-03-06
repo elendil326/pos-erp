@@ -12,23 +12,6 @@
 abstract class CorteDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_corte ){
-			$pk = "";
-			$pk .= $id_corte . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_corte){
-			$pk = "";
-			$pk .= $id_corte . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_corte ){
-			$pk = "";
-			$pk .= $id_corte . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,17 +47,12 @@ abstract class CorteDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_corte )
 	{
-		if(self::recordExists(  $id_corte)){
-			return self::getRecord( $id_corte );
-		}
 		$sql = "SELECT * FROM corte WHERE (id_corte = ? ) LIMIT 1;";
 		$params = array(  $id_corte );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-			$foo = new Corte( $rs );
-			self::pushRecord( $foo,  $id_corte );
-			return $foo;
+		return new Corte( $rs );
 	}
 
 
@@ -106,10 +84,7 @@ abstract class CorteDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-			$bar = new Corte($foo);
-    		array_push( $allData, $bar);
-			//id_corte
-    		self::pushRecord( $bar, $foo["id_corte"] );
+    		array_push( $allData, new Corte($foo));
 		}
 		return $allData;
 	}
@@ -213,9 +188,7 @@ abstract class CorteDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-			$bar =  new Corte($foo);
-    		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_corte"] );
+    		array_push( $ar, new Corte($foo));
 		}
 		return $ar;
 	}

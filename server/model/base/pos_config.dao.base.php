@@ -12,23 +12,6 @@
 abstract class PosConfigDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $opcion ){
-			$pk = "";
-			$pk .= $opcion . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $opcion){
-			$pk = "";
-			$pk .= $opcion . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $opcion ){
-			$pk = "";
-			$pk .= $opcion . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,17 +47,12 @@ abstract class PosConfigDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $opcion )
 	{
-		if(self::recordExists(  $opcion)){
-			return self::getRecord( $opcion );
-		}
 		$sql = "SELECT * FROM pos_config WHERE (opcion = ? ) LIMIT 1;";
 		$params = array(  $opcion );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-			$foo = new PosConfig( $rs );
-			self::pushRecord( $foo,  $opcion );
-			return $foo;
+		return new PosConfig( $rs );
 	}
 
 
@@ -106,10 +84,7 @@ abstract class PosConfigDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-			$bar = new PosConfig($foo);
-    		array_push( $allData, $bar);
-			//opcion
-    		self::pushRecord( $bar, $foo["opcion"] );
+    		array_push( $allData, new PosConfig($foo));
 		}
 		return $allData;
 	}
@@ -163,9 +138,7 @@ abstract class PosConfigDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-			$bar =  new PosConfig($foo);
-    		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["opcion"] );
+    		array_push( $ar, new PosConfig($foo));
 		}
 		return $ar;
 	}

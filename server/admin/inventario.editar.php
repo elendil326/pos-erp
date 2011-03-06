@@ -15,6 +15,10 @@
         $prod->setDescripcion( $_REQUEST['descripcion'] );
         $prod->setEscala( $_REQUEST['escala'] );
 		$prod->setTratamiento( $_REQUEST['tratamiento'] );
+
+		$prod->setAgrupacion( $_REQUEST['agrupacion'] );
+		$prod->setAgrupacionTam( $_REQUEST['agrupacionTam'] );
+
         try{
 
             InventarioDAO::save($prod);
@@ -35,9 +39,20 @@
         $na->setIdProducto($_REQUEST['id']);
         $na->setIdUsuario($_SESSION['userid']);
         $na->setPrecioVenta($_REQUEST['precio_venta']);
-        $na->setPrecioVentaSinProcesar($_REQUEST['precio_venta_sin_procesar']);
         $na->setPrecioIntersucursal($_REQUEST['precio_interusucursal']);
-        $na->setPrecioIntersucursalSinProcesar($_REQUEST['precio_intersucursal_sin_procesar']);
+
+		if( isset( $_REQUEST['precio_venta_sin_procesar'] ) ){
+	        $na->setPrecioVentaSinProcesar( $_REQUEST['precio_venta_sin_procesar'] );
+		}else{
+	        $na->setPrecioVentaSinProcesar( $_REQUEST['precio_venta'] );			
+		}
+
+		if( isset( $_REQUEST['precio_intersucursal_sin_procesar'] ) ){
+	        $na->setPrecioIntersucursalSinProcesar($_REQUEST['precio_intersucursal_sin_procesar']);	
+		}else{
+			$na->setPrecioIntersucursalSinProcesar($_REQUEST['precio_interusucursal']);	
+		}
+
 		
         
         //cambiar todos los detalles inventario        
@@ -91,7 +106,40 @@
 ?>
 
 
+<script>
+	jQuery("#MAIN_TITLE").html("Editando <?php echo ucwords(strtolower($producto->getDescripcion()));?>");
+	function agrupacionSeleccionada(val){
+		if(val != "null"){
+			//mostrar la caja
+			if(!jQuery( "#agrupacionBox" ).is(":visible")){
+				jQuery( "#agrupacionBox" ).fadeIn();	
+			}
 
+			jQuery( "#agrupacionCaption" ).html(" " + jQuery("#escala").val() + "s por " + val);
+
+		}else{
+			//ocultar la caja
+			jQuery( "#agrupacionBox" ).fadeOut();
+		}
+		
+	}
+	
+	function escalaSeleccionada(val){
+		agrupacionSeleccionada( jQuery("#agrupacion").val() );
+	}
+	
+	jQuery(function(){
+
+		<?php
+			if($producto->getAgrupacion()){
+				echo  "escalaSeleccionada();";
+			}else{
+				
+			}
+		?>
+	});
+	
+</script>
 
 <h2>Editar descripcion</h2>
 <form action="inventario.php?action=editar&id=<?php echo $general->getIdProducto(); ?>" method="POST">
@@ -111,7 +159,7 @@
 					case "unidad" : $e3 = "selected"; break;					
 				}
 			?>
-			<select name="escala">
+			<select name="escala" id="escala" onChange="escalaSeleccionada(this.value)">
 				<option value='kilogramo' 	<?php echo $e0; ?>>Kilogramo(s)</option>
 				<option value='pieza' 		<?php echo $e1; ?>>Pieza(s)</option>
 				<option value='litro' 		<?php echo $e2; ?>>Litro(s)</option>
@@ -137,35 +185,56 @@
 	        </select>
 		</td>
 	</tr>	
-
+	<tr><td>Agrupacion</td>
+		<td>
+			<select id="agrupacion" name="agrupacion" onChange="agrupacionSeleccionada(this.value)">
+				<option value='null' 		<?php if($producto->getAgrupacion() == null) echo "selected"; ?>>Sin agrupacion</option>
+				<option value='arpilla'		<?php if($producto->getAgrupacion() == "arpilla") echo "selected"; ?>>Arpillas</option>
+				<option value='bulto'		<?php if($producto->getAgrupacion() == "bulto") echo "selected"; ?>>Bultos</option>
+				<option value='costal'		<?php if($producto->getAgrupacion() == "costal") echo "selected"; ?>>Costales</option>
+				<option value='caja'		<?php if($producto->getAgrupacion() == "caja") echo "selected"; ?>>Cajas</option>
+	        </select>
+		</td>
+		<td id="agrupacionBox" style="display:none"> 
+			<input type="text" id="agrupacionTam" name="agrupacionTam" size="20" value="<?php echo $producto->getAgrupacionTam(); ?>"/><span id="agrupacionCaption"></span>
+		</td>
+	</tr>
 </table>
 
 <h4><input type="submit" value="Guardar" size="40"/></h4>
 </form>
 
 
-<h2>Editar Precios</h2>
+<h2>Editar precios</h2>
 <form action="inventario.php?action=editar&id=<?php echo $general->getIdProducto(); ?>" method="POST">
 <input type="hidden" name="editar" value="1">
-<table border="0" cellspacing="5" cellpadding="5">
-	
-	<tr><td>Precio sugerido a la venta ( procesado )</td>
-		<td><input type="text" name="precio_venta" value="<?php echo $general->getPrecioVenta(); ?>" size="40"/></td></tr>
-		
-	<tr><td>Precio sugerido a la venta ( sin procesar ) </td>
-		<td>  <input type="text" name="precio_venta_sin_procesar" value="<?php echo $general->getPrecioVentaSinProcesar();?>" size="40"/></td></tr>
 
-		<tr><td>Precio intersucursal ( procesado ) </td>
-			<td>  <input type="text" name="precio_interusucursal" value="<?php echo $general->getPrecioIntersucursal();?>" size="40"/></td></tr>
+<table border="0" cellspacing="5" cellpadding="5" style="width:100%">
+	<?php if($producto->getTratamiento()) { ?>
+		<tr style="text-align:left"><th></th><th>Original</th><th>Procesado</th></tr>
+		<tr>
+			<td>Precio Sugerido</td>
+			<td><input type="text" name="precio_venta" value="<?php echo $general->getPrecioVenta(); ?>" size="40"/></td>
+			<td><input type="text" name="precio_venta_sin_procesar" value="<?php echo $general->getPrecioVentaSinProcesar();?>" size="40"/></td>
+		</tr>
+		<tr>
+			<td>Precio Intersucursal</td>	
+			<td> <input type="text" name="precio_interusucursal" value="<?php echo $general->getPrecioIntersucursal();?>" size="40"/></td>
+			<td> <input type="text" name="precio_intersucursal_sin_procesar" value="<?php echo $general->getPrecioIntersucursalSinProcesar();?>" size="40"/></td>		
+		</tr>
+	<?php } else { ?>
+		<tr style="text-align:left"><th></th><th></th></tr>
+		<tr>
+			<td>Precio Sugerido</td>
+			<td><input type="text" name="precio_venta" value="<?php echo $general->getPrecioVenta(); ?>" size="40"/></td>
+		</tr>
+		<tr>
+			<td>Precio Intersucursal</td>	
+			<td> <input type="text" name="precio_interusucursal" value="<?php echo $general->getPrecioIntersucursal();?>" size="40"/></td>
+		</tr>		
 		
-	<tr><td>Precio intersucursal ( sin procesar ) </td>
-		<td>  <input type="text" name="precio_intersucursal_sin_procesar" value="<?php echo $general->getPrecioIntersucursalSinProcesar();?>" size="40"/></td></tr>
-	
+	<?php } ?>
+
 </table>
  <h4> <input type="submit" value="Guardar nuevo precio" size="40"/> </h4>
 </form>	
-
-
-
-
-

@@ -12,23 +12,6 @@
 abstract class ActualizacionDePrecioDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_actualizacion ){
-			$pk = "";
-			$pk .= $id_actualizacion . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_actualizacion){
-			$pk = "";
-			$pk .= $id_actualizacion . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_actualizacion ){
-			$pk = "";
-			$pk .= $id_actualizacion . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,17 +47,12 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_actualizacion )
 	{
-		if(self::recordExists(  $id_actualizacion)){
-			return self::getRecord( $id_actualizacion );
-		}
 		$sql = "SELECT * FROM actualizacion_de_precio WHERE (id_actualizacion = ? ) LIMIT 1;";
 		$params = array(  $id_actualizacion );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-			$foo = new ActualizacionDePrecio( $rs );
-			self::pushRecord( $foo,  $id_actualizacion );
-			return $foo;
+		return new ActualizacionDePrecio( $rs );
 	}
 
 
@@ -106,10 +84,7 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-			$bar = new ActualizacionDePrecio($foo);
-    		array_push( $allData, $bar);
-			//id_actualizacion
-    		self::pushRecord( $bar, $foo["id_actualizacion"] );
+    		array_push( $allData, new ActualizacionDePrecio($foo));
 		}
 		return $allData;
 	}
@@ -193,9 +168,7 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-			$bar =  new ActualizacionDePrecio($foo);
-    		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_actualizacion"] );
+    		array_push( $ar, new ActualizacionDePrecio($foo));
 		}
 		return $ar;
 	}

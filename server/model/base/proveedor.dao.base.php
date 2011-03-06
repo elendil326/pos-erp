@@ -12,23 +12,6 @@
 abstract class ProveedorDAOBase extends DAO
 {
 
-		private static $loadedRecords = array();
-
-		private static function recordExists(  $id_proveedor ){
-			$pk = "";
-			$pk .= $id_proveedor . "-";
-			return array_key_exists ( $pk , self::$loadedRecords );
-		}
-		private static function pushRecord( $inventario,  $id_proveedor){
-			$pk = "";
-			$pk .= $id_proveedor . "-";
-			self::$loadedRecords [$pk] = $inventario;
-		}
-		private static function getRecord(  $id_proveedor ){
-			$pk = "";
-			$pk .= $id_proveedor . "-";
-			return self::$loadedRecords[$pk];
-		}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -64,17 +47,12 @@ abstract class ProveedorDAOBase extends DAO
 	  **/
 	public static final function getByPK(  $id_proveedor )
 	{
-		if(self::recordExists(  $id_proveedor)){
-			return self::getRecord( $id_proveedor );
-		}
 		$sql = "SELECT * FROM proveedor WHERE (id_proveedor = ? ) LIMIT 1;";
 		$params = array(  $id_proveedor );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-			$foo = new Proveedor( $rs );
-			self::pushRecord( $foo,  $id_proveedor );
-			return $foo;
+		return new Proveedor( $rs );
 	}
 
 
@@ -106,10 +84,7 @@ abstract class ProveedorDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-			$bar = new Proveedor($foo);
-    		array_push( $allData, $bar);
-			//id_proveedor
-    		self::pushRecord( $bar, $foo["id_proveedor"] );
+    		array_push( $allData, new Proveedor($foo));
 		}
 		return $allData;
 	}
@@ -193,9 +168,7 @@ abstract class ProveedorDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-			$bar =  new Proveedor($foo);
-    		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_proveedor"] );
+    		array_push( $ar, new Proveedor($foo));
 		}
 		return $ar;
 	}
