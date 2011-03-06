@@ -34,7 +34,10 @@ Aplicacion.Proveedores = function(){
 		detalles : null,
 		
 		//carrito para surtirse
-		carrito : null
+		carrito : null,
+		
+		//nuevo proveedor
+		nuevo : null
 	};
 	
 	
@@ -55,7 +58,7 @@ Aplicacion.Proveedores = function(){
 	  *
 	  * @access private
 	  **/
-	var cargarListaDeProveedores = function(){
+	var cargarListaDeProveedores = function( showPanel ){
 
 	    Ext.Ajax.request({
 	        url: '../proxy.php',
@@ -77,6 +80,9 @@ Aplicacion.Proveedores = function(){
 				
 				listaDeProveedores = proveedores.payload;
 
+                if( showPanel ){
+                    sink.Main.ui.setActiveItem( Aplicacion.Proveedores.ci.cards.lista , 'slide');
+                }
 				
 	        },
 	        failure: function( response ){
@@ -402,6 +408,19 @@ Aplicacion.Proveedores = function(){
 
 	//crar la tarjeta de la lista de proveedores
 	this.cards.lista = new Ext.Panel({
+	    dockedItems: [{
+	            dock: 'bottom',
+	            xtype: 'toolbar',
+	            items: [{
+		            text: 'Agregar Nuevo Proveedor',
+	                ui: 'action',
+	                handler: function() {
+
+	                  sink.Main.ui.setActiveItem( Aplicacion.Proveedores.ci.cards.nuevo , 'slide');
+	                   
+	                }
+				}]
+	        }],      
         layout: 'fit' ,
         items: [{ html : "<div style='height: 100%;' id='MosaicoProveedores'></div>" }],
 		listeners : {
@@ -411,8 +430,7 @@ Aplicacion.Proveedores = function(){
 					console.log("Creando mosaico para proveedores" , this );
 				}
 				
-				items = [];
-				
+				items = [];								
 				
 				//empujar el proveedor de centro de distribucion
 				items.push({
@@ -420,6 +438,10 @@ Aplicacion.Proveedores = function(){
 					id : -1,
 					image : '../media/TruckYellow128.png'
 				});				
+				
+				if(DEBUG){
+				    console.log( "Hay " + listaDeProveedores.length + " proveedores." );
+				}
 				
 				for( a = 0 ; a < listaDeProveedores.length ; a++ ){
 					items.push({
@@ -441,7 +463,173 @@ Aplicacion.Proveedores = function(){
     });
 
 
+//panel para crear un nuevo proveedor
+	this.cards.nuevo  = new Ext.form.FormPanel({      
+	    dockedItems: [{
+	            dock: 'bottom',
+	            xtype: 'toolbar',
+	            items: [{
+		            text: 'Regresar',
+	                ui: 'back',
+	                handler: function() {
 
+	                  sink.Main.ui.setActiveItem( Aplicacion.Proveedores.ci.cards.lista , 'slide');
+	                   
+	                }
+				}]
+	        }],                                                       
+            items: [{
+                xtype: 'fieldset',
+                title: 'Detalles del nuevo proveedor',
+                instructions: 'Ingrese los detalles del nuevo proveedor.',
+                items: [                                       
+                    new Ext.form.Text({ id: 'Proveedores-nombre', label: 'Nombre', name : 'nombre', required:true,
+                    listeners : {
+                        'focus' : function (){
+                                kconf = {
+                                type : 'alfa',
+                                submitText : 'Aceptar'
+                            };
+                        POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    } }),
+                    new Ext.form.Text({ id: 'Proveedores-rfc', name:'rfc',  label: 'RFC', required:true,
+                    listeners : {
+                        'focus' : function (){
+                                kconf = {
+                                type : 'alfanum',
+                                submitText : 'Aceptar'
+                            };
+                        POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    } }), 
+                    new Ext.form.Text({ id: 'Proveedores-direccion', label: 'Direccion', name : 'direccion', required:true,
+                    listeners : {
+                        'focus' : function (){
+                                kconf = {
+                                type : 'alfanum',
+                                submitText : 'Aceptar'
+                            };
+                        POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    } }),
+                    new Ext.form.Text({ id: 'Proveedores-email', label: 'Email', name : 'e_mail',
+                    listeners : {
+                        'focus' : function (){
+                                kconf = {
+                                type : 'alfanum',
+                                submitText : 'Aceptar'
+                            };
+                        POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    } }),  
+                    new Ext.form.Text({ id: 'Proveedores-telefono', label: 'Telefono', name:'telefono',  required:true,
+                    listeners : {
+                        'focus' : function (){
+                                kconf = {
+                                type : 'num',
+                                submitText : 'Aceptar'
+                            };
+                        POS.Keyboard.Keyboard( this, kconf );
+                        }
+                    } }),
+                    new Ext.form.Select({	     
+                        name : "tipo_proveedor",      
+                        label : "Tipo", 
+			            value : "sucursal",			            
+                        options : [
+                            {
+                                text : "Sucursal",
+                                value : "sucursal"
+                            },{
+                                text : "Ambos",
+                                value : "ambos"
+                            }
+                        ]
+                    })
+            ]},
+            new Ext.Button({ ui  : 'action', text: 'Registrar Proveedor', margin : 5,handler : function(){
+                Aplicacion.Proveedores.ci.registrarNuevoProveedorValidator();
+            } })
+        ]});
+
+
+    this.registrarNuevoProveedorValidator = function (){
+    
+        var values = Aplicacion.Proveedores.ci.cards.nuevo.getValues();
+
+        if( values.nombre.length < 10 ){
+
+            Ext.Anim.run(Ext.getCmp( 'Proveedores-nombre' ), 
+                'fade', {duration: 250,
+                out: true,
+                autoClear: true
+            });
+
+            return;
+        }
+        
+        if( values.rfc.length < 10 ){
+
+            Ext.Anim.run(Ext.getCmp( 'Proveedores-rfc' ), 
+                'fade', {duration: 250,
+                out: true,
+                autoClear: true
+            });
+
+            return;
+        }
+        
+        if( values.direccion.length < 10 ){
+
+            Ext.Anim.run(Ext.getCmp( 'Proveedores-direccion' ), 
+                'fade', {duration: 250,
+                out: true,
+                autoClear: true
+            });
+
+            return;
+        }
+
+        this.registrarNuevoProveedor( values );
+    
+    };
+
+    
+    //registra el nuevo proveedor en la BD
+    this.registrarNuevoProveedor = function( values ){
+    
+        Ext.Ajax.request({
+		    url: '../proxy.php',
+		    scope : this,
+		    params : {
+			    action : 901,
+			    data : Ext.util.JSON.encode( values )
+		    },
+		    success: function(response, opts) {           
+
+                try{
+				    r = Ext.util.JSON.decode( response.responseText );				
+			    }catch(e){
+				    POS.error(e);
+			    }
+						
+			    if( !r.success ){
+                    Ext.Msg.alert("Nuevo Proveedor", r.reason);				                
+				    return;
+			    }
+
+                Ext.Msg.alert("Nuevo Proveedor", "Proveedor Registrado Correctramente");
+                
+                //recargamos la lista de proveedores
+                cargarListaDeProveedores( true );                 
+		    },
+		    failure: function( response ){
+			    return POS.error( response );
+		    }
+	    });
+    
+    };
 
 	//carrito para surtir
 	this.cards.carrito = new Ext.Panel({

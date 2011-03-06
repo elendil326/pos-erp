@@ -438,7 +438,7 @@ if(isset($args['action'])){
 
 		#crear un nuevo proveedor
 		case 901:
-			if($_SESSION['grupo'] != 1)
+			if($_SESSION['grupo'] < 1 || $_SESSION['grupo'] > 2)
 	        {
 				Logger::log("Nuevo proveedor : No tiene privilegios para hacer esto");
 				die( '{ "success": false, "reason": "No tiene privilegios para hacer esto." }' ) ;

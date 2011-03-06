@@ -294,6 +294,8 @@ Aplicacion.Personal.prototype.editarDetallesEmpleadoBoton = function ()
 	
 	Ext.getCmp("Personal-DetallesEmpleadoGuardar").show(  );
 	Ext.getCmp("Personal-DetallesEmpleadoCancelar").show( );
+	
+	Ext.getCmp("Personal-DetallesEmpleadoSalario").hide();
 
 	Aplicacion.Personal.currentInstance.detallesDeEmpleadoPanel.getComponent(0).enable();
 	
@@ -313,6 +315,9 @@ Aplicacion.Personal.prototype.editarDetallesEmpleadoCancelarBoton = function ( o
 	Ext.getCmp("Personal-DetallesEmpleadoDespedir").show(  );	
 	Ext.getCmp("Personal-DetallesEmpleadoGuardar").hide( );
 	Ext.getCmp("Personal-DetallesEmpleadoCancelar").hide( );
+	
+	//msotramos el campo de salario
+    Ext.getCmp("Personal-DetallesEmpleadoSalario").hide();
 
 	Aplicacion.Personal.currentInstance.detallesDeEmpleadoPanel.getComponent(0).disable();
 	
@@ -357,6 +362,9 @@ Aplicacion.Personal.prototype.editarDetallesEmpleadoGuardarBoton = function ()
 
 			//mostrar un mensaje de que todo ha salido bien
 			Aplicacion.Personal.currentInstance.detallesDeEmpleadoPanel.getComponent(0).getComponent(0).setInstructions("Los cambios se han hecho satisfactoriamente !");
+
+            //msotramos el campo de salario
+            Ext.getCmp("Personal-DetallesEmpleadoSalario").hide();
 
 		},
 		failure: function( response ){
@@ -407,7 +415,7 @@ Aplicacion.Personal.prototype.detallesDeEmpleadoPanelCreator = function (  ){
 						new Ext.form.Text({ name: 'RFC', label: 'RFC' }),
 						new Ext.form.Text({ name : 'direccion', label: 'Direccion' }),
 						new Ext.form.Text({ name : 'telefono', label: 'Telefono' }),
-						new Ext.form.Text({ name : 'salario',     label: 'Salario' })
+						new Ext.form.Text({ id : "Personal-DetallesEmpleadoSalario", name : 'salario',  hidden: true,   label: 'Salario' })
 
 					]
 				}]

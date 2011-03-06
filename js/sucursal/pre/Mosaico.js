@@ -37,7 +37,13 @@ Mosaico.prototype.createHtml = function ()
 	wrapper.setAttribute('id', this.uniqueID );
 	wrapper.setAttribute('class', 'mosaico-wrapper');
 
-	document.getElementById( this.config.renderTo ).appendChild(wrapper);
+    var element = document.getElementById( this.config.renderTo );
+
+    while (element.firstChild) {
+        element.removeChild(element.firstChild);
+    }
+
+	element.appendChild(wrapper);
 
 	var item, title, image;
 
