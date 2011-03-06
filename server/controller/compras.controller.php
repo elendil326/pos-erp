@@ -236,7 +236,7 @@ function compraProveedor( $data = null, $productos = null ){
 	$compra -> setIdProveedor( $data->id_proveedor );	
 	
 	$compra -> setPesoOrigen( $data->peso_origen );
-	
+	/*
 	if(isset($data->folio)){
 	
 	    //verificamos que no exista el folio
@@ -250,9 +250,10 @@ function compraProveedor( $data = null, $productos = null ){
             die( '{"success": false, "reason": "Error al guardar la nueva compra a proveedor, ya se tiene registro del folio : ' . $data->folio . '" }' );
 	    }
 	
-		$compra -> setFolio( $data->folio );
 		
-	}
+		
+	}*/
+	$compra -> setFolio( $data->folio );
 	
 	if(isset($data->numero_de_viaje))
 		$compra -> setNumeroDeViaje( $data->numero_de_viaje );

@@ -121,7 +121,7 @@ if(isset($_REQUEST['askForPrint'])){
 			
 		}
 	
-		var html = '<div align=center><h1>Caramento registrado existosamente</h1>';
+		var html = '<div align=center><h1>Cargamento registrado existosamente</h1>';
 		html += "&iquest; Desea imprimir un comprobante ?";
 		html += "<br><br><input type='button' value='Si' onclick='jQuery(document).trigger(\"close.facebox\"); setTimeout(\"printme()\", 750)'><input type='button' value='No' onclick='jQuery(document).trigger(\"close.facebox\");'></div>"
 		jQuery.facebox( html );
