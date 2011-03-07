@@ -250,7 +250,7 @@ $iMaestroTerminados = listarInventarioMaestro(50, POS_SOLO_VACIOS) ;
 	                dataIndex: 'productor'
 	            },
 	            {
-	                header   : 'Existencias', 
+	                header   : 'Originales', 
 	                width    : 150, 
 	                sortable : true, 
 					align 	 : "right",
@@ -391,7 +391,7 @@ $iMaestroTerminados = listarInventarioMaestro(50, POS_SOLO_VACIOS) ;
 	                dataIndex: 'productor'
 	            },
 	            {
-	                header   : 'Existencias', 
+	                header   : 'Originales', 
 	                width    : 150, 
 	                sortable : true, 
 					hidden : true,

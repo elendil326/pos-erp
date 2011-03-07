@@ -28,7 +28,11 @@
 ?>
 
 
-
+<style>
+	#ComposicionTabla input{
+		width: 65px;
+	}
+</style>
 <script type="text/javascript" charset="utf-8">
 
 var DEBUG = true;
@@ -50,13 +54,21 @@ function roundNumber(num) {
     return result;
 }
 
-function error(title, msg){
-    
+function error(title, msg, el){
+
+	
+    Ext.MessageBox.show({
+           title: title,
+           msg: msg,
+		   animEl: el,
+           buttons: Ext.MessageBox.OK,
+       });
+	/*
     var html = '<h1><img src="../media/icons/warning_32.png">&nbsp;' + title + '</h1>';
     html += msg;
     html += "<div align='center'><input type='button' value='Aceptar' onclick='jQuery(document).trigger(\"close.facebox\");'></div>";
     jQuery.facebox( html );
-    
+    */
 }
 
 
@@ -128,7 +140,7 @@ jQuery(document).ready(function(){
     jQuery("#MAIN_TITLE").html("Surtir sucursal");
 
 	if(DEBUG){
-		seleccionDeProd(1 );
+		//seleccionDeProd(1 );
 	}
 });
 
@@ -337,6 +349,8 @@ Producto = function( json_rep ){
     this.escala                 = json_rep.medida;
     this.sitio_descarga_desc    = json_rep.sitio_descarga_desc;
     this.costo_flete            = parseFloat( json_rep.costo_flete );
+	this.agrupacion				= json_rep.agrupacion;
+	this.agrupacionTam			= json_rep.agrupacionTam;
 };
 
 
@@ -432,63 +446,22 @@ InventarioMaestroTabla = function( config ) {
 
     this.tomarProducto = function (id_compra, id_producto, cantidadATomar, procesadas ){
 
+		//el producto en el inventario
         var producto = inventario.getProducto(id_compra, id_producto);
-        
-        var newQty = producto.existencias - cantidadATomar,
-            newQtyProc = producto.existencias_procesadas - cantidadATomar;
-            
+
+        //buscar la columna a editar
 		var gridRow = MasterGrid.getStore().findBy(function(r){
-			 //console.log(this,id_compra, id_producto, "comparando", r.get("id_compra_proveedor"), r)
 			 return (r.get("id_compra_proveedor") == id_compra && r.get("id_producto") == id_producto);
 		}, this);
-		
-		console.log(gridRow)
-		MasterGrid.getStore().getAt( gridRow ).set("existencias", newQty);
-/*        if(newQty < 0){
-
-            //newQty = "<b style='color: #AB443B'>" + round(newQty) + "&nbsp;" + toSmallUnit (producto.escala ) +  "</b>" ;
-
-
-        }else{
-			MasterGrid.getStore().getAt(gridRow).set("existencias", newQty);	
-            //newQty = "<b style='color: green'>" + round(newQty) + "&nbsp;" + toSmallUnit (producto.escala ) +  "</b>" ;    
-
-			
-        }
-  */      
-/*
-        jQuery("#"+id_compra+"-"+id_producto+"-existencias").html(newQty);
-        jQuery("#"+id_compra+"-"+id_producto+"-existencias").slideUp(
-            250,
-            function (){
-                jQuery("#"+id_compra+"-"+id_producto+"-existencias").slideDown(  );
-            }
-        );
-  */      
         
         if(procesadas){
-			MasterGrid.getStore().getAt( gridRow ).set("existencias_procesadas", newQtyProc);
-/*            if(newQtyProc < 0){
-                newQtyProc = "<b style='color: #AB443B'>" + round(newQtyProc) + "</b>&nbsp;" + toSmallUnit (producto.escala );
-            }else{
-                newQtyProc = "<b style='color: #3F8CE9'>" + round(newQtyProc) + "</b>&nbsp;" + toSmallUnit (producto.escala );
-            }
-
-            jQuery("#"+id_compra+"-"+id_producto+"-existencias-procesadas").html(newQtyProc);           
-            jQuery("#"+id_compra+"-"+id_producto+"-existencias-procesadas").slideUp(
-                250,
-                function (){
-
-                    jQuery("#"+id_compra+"-"+id_producto+"-existencias-procesadas").slideDown(  );
-                }
-            );
-*/
+			//las tomare procesadas
+			MasterGrid.getStore().getAt( gridRow ).set("existencias_procesadas"	, producto.existencias_procesadas - cantidadATomar);
+			MasterGrid.getStore().getAt( gridRow ).set("existencias"			, producto.existencias);
         }else{
-			MasterGrid.getStore().getAt( gridRow ).set("existencias_procesadas", producto.existencias_procesadas);
-			
-            /*newQtyProc = "<b>" + producto.existencias_procesadas + "</b>&nbsp;" + toSmallUnit (producto.escala );
-            jQuery("#"+id_compra+"-"+id_producto+"-existencias-procesadas").html(newQtyProc);           */
-            
+			//las tomare originales
+			MasterGrid.getStore().getAt( gridRow ).set("existencias_procesadas"	, producto.existencias_procesadas);
+			MasterGrid.getStore().getAt( gridRow ).set("existencias"			, producto.existencias - cantidadATomar);			
         }
     };
     
@@ -501,9 +474,9 @@ InventarioMaestroTabla = function( config ) {
 		if(DEBUG){
 			console.log("haciendo highlight a " + id_prod);
 		}
-		jQuery("#InventarioMaestroTabla tr").css("color", "rgb(68, 68, 68)");		
+		//jQuery("#InventarioMaestroTabla tr").css("color", "rgb(68, 68, 68)");		
 		
-		jQuery(".im_pid_" + id_prod).css("color", "#3F8CE9");
+		//jQuery(".im_pid_" + id_prod).css("color", "#3F8CE9");
 	};
 
     
@@ -533,7 +506,7 @@ ComposicionTabla = function( config ){
             html += td("Remision");
             html += td("Producto");
             html += td("Cantidad");
-            html += td("Procesada");                        
+            html += td("Procesado");                        
             html += td("Precio");       
             html += td("Descuento");        
             html += td("Importe");      
@@ -571,20 +544,52 @@ ComposicionTabla = function( config ){
 
         switch( campo ){
             case "proc" : 
-                comp.procesada =  valor ;
-                tablaInventario.tomarProducto( id_compra, id_producto, comp.cantidad, comp.procesada );
+				comp.procesada = valor;
+				console.log(comp)
+				tablaInventario.tomarProducto( id_compra, id_producto, comp.cantidad, comp.procesada );	
+				break;
+			case "cantidad" :
+				if( !prod.agrupacion ){
+					//no hay agrupacion, enviar la cantidad tal cual
+					console.log( "no hay agrupacion, voy a tomar " + valor, "procesada:" + comp.procesada);
+					comp.cantidad = parseFloat(valor) ;
+                	tablaInventario.tomarProducto( id_compra, id_producto, parseFloat(valor), comp.procesada );					
+					break;
+				}
+				console.log("si hay agrupacion")
+				var qty = parseFloat(valor);
+
+                if(comp.procesada ==  "on"){
+					qty *= parseFloat(prod.agrupacionTam);
+					console.log("si hay agrupacion")
+				}else{
+					qty *= prod.peso_por_arpilla;
+				}
+				comp.cantidad = qty;
+                tablaInventario.tomarProducto( id_compra, id_producto, qty, comp.procesada );
             break;
             
-            case "cantidad":
-                comp.cantidad = parseFloat( valor );
-                tablaInventario.tomarProducto( id_compra, id_producto, comp.cantidad, comp.procesada );
-            break;
-            
+           
             case "precio" :
                 comp.precio = parseFloat( valor );
             break;
             
             case "descuento":
+				if( !prod.agrupacion ){
+					//no hay agrupacion, enviar la cantidad tal cual
+	                comp.descuento = parseFloat( valor );
+					break;
+				}
+			
+				//comp.cantidad
+				var x;
+	            if(comp.procesada ==  "on"){
+					x = comp.cantidad / prod.agrupacionTam;
+					valor = valor * x;
+				}else{
+					x = comp.cantidad / prod.peso_por_arpilla;
+					valor = valor * x;
+				}
                 comp.descuento = parseFloat( valor );
             break;
         }
@@ -608,7 +613,7 @@ ComposicionTabla = function( config ){
         }
         
         obj.importe_por_unidad /= composicion.length;
-        
+        console.log( obj );
         jQuery("#compuesto-peso-real").val ( obj.peso_real );
         jQuery("#compuesto-peso-a-cobrar").val ( obj.peso_a_cobrar );
         jQuery("#compuesto-importe-por-unidad").val ( cf(obj.importe_por_unidad) );
@@ -645,7 +650,7 @@ ComposicionTabla = function( config ){
 
 		//obtener el producto
         producto = inventario.getProducto( id_compra, id_producto );
-        
+        console.log(producto)
         var html = "";
         
         html += td( "<img onClick='composicionTabla.quitarProducto(" + id_compra + "," + id_producto + ")' src='../media/icons/close_16.png'>" );
@@ -654,19 +659,26 @@ ComposicionTabla = function( config ){
         
         var keyup = "onkeyup='composicionTabla.doMath(" + id_compra + "," + id_producto + ", this.name, this.value )'";
         var click = "onClick='composicionTabla.doMath(" + id_compra + "," + id_producto + ", this.name, this.value )'";
-                
-        html += td( "<input name='cantidad' "+keyup+" value='0' type='text'>" );
+        var escala;
+
+		if(producto.agrupacion){
+			escala = producto.agrupacion + "s";
+		}else{
+			escala = producto.escala + "s";
+		}
+
+        html += td( "<input name='cantidad' "+keyup+" value='0' type='text'>&nbsp;" + escala);
 
         var procesadas = parseFloat( producto.existencias_procesadas );
 
         if( producto.producto_tratamiento !== null){
             if(procesadas > 0){
-                html += td( "<input style='width: 100px' name='proc' "+click+" type='checkbox'>" );         
+                html += td( "<input style='width: 100px' name='proc' "+click+" type='checkbox'> " );         
             }else{
-                html += td( "<input style='width: 100px'  type='checkbox' disabled>" );
+                html += td( "<input style='width: 100px'  type='checkbox' disabled> " );
             }           
         }else{
-                html += td( "<input type='hidden'><i>NA</i>" );         
+                html += td( "<input type='hidden'><i>-</i>" );         
         }
 
         
@@ -678,8 +690,15 @@ ComposicionTabla = function( config ){
         
         html += td( "<input name='precio'     value='"+ roundNumber( parseFloat(producto.precio_por_kg) 
                                                     + parseFloat(costo_flete) )+"' "    +keyup+"    type='text'>" );
-            
-        html += td( "<input name='descuento'  value='0'                     "   +keyup+"    type='text'>" );
+        var escala_descuento;
+
+		if(producto.agrupacion){
+			escala_descuento = producto.escala + "s por " + producto.agrupacion;
+		}else{
+			escala_descuento = producto.escala + "s";
+		}
+
+        html += td( "<input name='descuento'  value='0'                     "   +keyup+"    type='text'>&nbsp;" + escala_descuento);
         html += td( "<input id='" +id_compra+"-"+ id_producto+ "-importe'                   type='text' disabled>" );
 
     
@@ -702,13 +721,17 @@ ComposicionTabla = function( config ){
         
         //revisar que todo concuerde
         for ( i = composicion.length - 1; i >= 0; i--){
+	
             c = composicion[i];
             total_qty += parseFloat( c.cantidad - c.descuento );
-            
+
+			var el = c.id_compra + "-" + c.id_producto +  "-composicion" ;
+
             if((c.cantidad - c.descuento) <= 0 ){
-                error( "Hay productos sin cantidad", " El producto " + c.desc + " tiene una cantidad de cero.");
+                error( "Hay productos sin cantidad", " El producto " + c.desc + " tiene una cantidad de cero.", el);
                 return;
             }
+
         }
 
         if(composicion.length == 0){
@@ -868,10 +891,11 @@ function renderFinalShip(){
             total_qty_with_desc += composiciones[i].items[j].cantidad   - composiciones[i].items[j].descuento ;         
             total_money += ( composiciones[i].items[j].cantidad - composiciones[i].items[j].descuento ) * composiciones[i].items[j].precio ;
             
-            composition += composiciones[i].items[j].cantidad  + getEscalaCorta( composiciones[i].items[j].escala )
-                        + "<b> / </b>" + composiciones[i].items[j].descuento + getEscalaCorta( composiciones[i].items[j].escala )
-                        + " &nbsp; <b>"+ composiciones[i].items[j].desc 
-                        + "</b><br>";
+            composition += "<b>"+ composiciones[i].items[j].desc + "</b>&nbsp;" + composiciones[i].items[j].procesada + "&nbsp;"
+						+ composiciones[i].items[j].cantidad.toFixed(4)  + getEscalaCorta( composiciones[i].items[j].escala )
+                        + "<b> - </b>" + composiciones[i].items[j].descuento.toFixed(4) + getEscalaCorta( composiciones[i].items[j].escala )+ " desc."
+
+                        + "<br>";
         }
         
         var color = i % 2 == 0 ? 'style="background-color: #D7EAFF"' : "";
@@ -879,8 +903,8 @@ function renderFinalShip(){
         html += tr(
 					td( "<img src='../media/icons/basket_32.png'>" )
                     + td( desc.descripcion )
-                    + td( total_qty + getEscalaCorta( desc.escala ) )
-                    + td( total_qty_with_desc + getEscalaCorta( desc.escala ) )     
+                    + td( total_qty.toFixed(4) + getEscalaCorta( desc.escala ) )
+                    + td( total_qty_with_desc.toFixed(4) + getEscalaCorta( desc.escala ) )     
                     + td( composition)
                     + td( cf(total_money)) , color);
                     
@@ -893,10 +917,11 @@ function renderFinalShip(){
 
     html += tr(
                   td( "Totales", "style='padding-top: 10px'" )
-                + td( global_qty )
-                + td( global_qty_real )     
                 + td( "")
-                + td( cf(global_importe) ) ,
+                + td( global_qty.toFixed(4) )
+                + td( global_qty_real.toFixed(4) )     
+                + td( "")
+                + td( cf(global_importe.toFixed(4)) ) ,
                 
                 "style='border-top: 1px solid #3F8CE9; font-size: 15px;'");
 
@@ -987,6 +1012,7 @@ function doSurtir()
 ?>
 
 var MasterGrid;
+var sm = new Ext.grid.CheckboxSelectionModel();
 
 Ext.onReady(function(){
     Ext.QuickTips.init();
@@ -1170,7 +1196,7 @@ Ext.onReady(function(){
                 dataIndex: 'productor'
             },
             {
-                header   : 'Existencias', 
+                header   : 'Originales', 
                 width    : 150, 
                 sortable : true, 
 				align 	 : "right",
@@ -1248,14 +1274,15 @@ Ext.onReady(function(){
         ],
         stripeRows: true,
         autoExpandColumn: 'descripcion',
-        height: 350,
+        height: "auto",
+		minHeight : 300,
         width: "100%",
-		frame : false,
-		header: false,
+/*		frame : false,
+		header: false, */
         // title: 'Array Grid',
         // config options for stateful behavior
-        stateful: true,
-        stateId: 'grid',
+        stateful: false,
+        stateId: 'grid2',
 		listeners : {
 			"rowclick" : function (grid, rowIndex, e){
 				var datos = grid.getStore().getAt( rowIndex );
@@ -1495,28 +1522,29 @@ foreach( $sucursales as $sucursal ){
 </div>
 
 
-<!--
-    Seleccion de chofer
--->
-<div id="select_sucursal">
-    <h2>Indique quien entragara el embarque</h2>
-    <form >
-    <table border="0" cellspacing="5" cellpadding="5">
-	    <tr><td>Conductor</td>
-		    <td>
-			   <input type="text" value="" id="conductor" />
-		    </td>
-            <td> </td>
-	    </tr>
-    </table>
-    </form>
-</div>
+
 
 <div id="FinalShip" style="display: none;">
 <h2>Productos a surtir</h2>
 
 	<div id="FinalShipTabla"></div>
 
+	<!--
+	    Seleccion de chofer
+	-->
+	<div id="select_sucursal">
+	    <h2>Indique quien entragara el embarque</h2>
+	    <form >
+	    <table border="0" cellspacing="5" cellpadding="5">
+		    <tr><td>Conductor</td>
+			    <td>
+				   <input type="text" value="" id="conductor" />
+			    </td>
+	            <td> </td>
+		    </tr>
+	    </table>
+	    </form>
+	</div>
 
 	<h4 id="submitButtons" align='center'  >
 		<input type="button" value="Surtir" onclick="doSurtir()">

@@ -34,7 +34,7 @@ function heartbeat(){
 					return;
 				}
 				
-				if(	auths_hash != response.hash){
+				if(	(auths_hash != null) && (auths_hash != response.hash)){
 					
 					notification();					
 				}
