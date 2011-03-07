@@ -338,6 +338,9 @@ require_once("logger.php");
 
         try
         {
+            
+            Logger::log("JSON BRuto vale : " + $args['data']  );
+        
 	        $data = parseJSON( $args['data'] );
         }
         catch(Exception $e)

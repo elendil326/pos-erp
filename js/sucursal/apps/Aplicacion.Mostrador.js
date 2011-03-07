@@ -368,6 +368,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			listeners : {
 				'focus' : function (){
 
+                    this.setValue( "");
+
 					kconf = {
 						type : 'num',
 						submitText : 'Aceptar',
@@ -406,7 +408,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			listeners : {
 				'focus' : function (a){
 					
-					this.setValue( this.getValue().replace("$", '').replace(",", "") );
+					//this.setValue( this.getValue().replace("$", '').replace(",", "") );
+					this.setValue( "");
 					
 					kconf = {
 						type : 'num',
@@ -639,6 +642,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			    //hidden : true,
 			    listeners : {
 				    'focus' : function (a){
+
+                        this.setValue( "");
 										    
 					    kconf = {
 						    type : 'num',
@@ -1794,6 +1799,35 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelCreator = function (	 ){
 			id : 'Mostrador-doNuevaVentaForm-Carousel', 
 	        xtype: 'carousel',
 	        direction: 'vertical',
+	        listeners:{
+	            "cardswitch":function(){
+	            
+	                /*if( this.getActiveIndex() == 2 && Ext.getCmp('Mostrador-doNuevaVentaImporte').getValue( ) == "" ){
+	                    
+	                    //aqui entra si el pago es en efectivo
+	                    
+	                    Ext.getCmp('Mostrador-doNuevaVentaCobrarButton').hide();
+	                    Ext.getCmp('Mostrador-doNuevaVentaImporte').show();
+	                    
+                        kconf = {
+                            type : 'num',
+                            ubmitText : 'Cobrar',
+                            callback : function ( campo ){
+                                Aplicacion.Mostrador.currentInstance.doVenta();
+                            }
+                        };
+
+                        POS.Keyboard.Keyboard( Ext.getCmp('Mostrador-doNuevaVentaImporte'), kconf );	
+                        		
+	                }else{
+	                    
+	                    //aqui entra si el pago es con cheque
+	                   Ext.getCmp('Mostrador-doNuevaVentaCobrarButton').show();
+	                    Ext.getCmp('Mostrador-doNuevaVentaImporte').hide();
+	                    
+	                }//if*/
+	            }
+	        },
 	        activeItem : 1,
 	        indicator:true,
 	        //draggable : false,
@@ -1873,47 +1907,35 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelCreator = function (	 ){
 						new Ext.form.Text({
 							label : 'Importe', 
 							id: 'Mostrador-doNuevaVentaImporte',
-							listeners : {
-								"focus" : function (){
-									kconf = {
-										type : 'num',
-										submitText : 'Cobrar',
-										callback : function ( campo ){
-											Aplicacion.Mostrador.currentInstance.doVenta();
-										}
-									};
+							listeners:{
+						        "focus":function(){
+						            kconf = {
+                                        type : 'num',
+                                        submitText : 'Cobrar',
+                                        callback : function ( campo ){
+                                            Aplicacion.Mostrador.currentInstance.doVenta();
+                                        }
+                                    };
 
-									POS.Keyboard.Keyboard( this, kconf );								
-								}
+                                    POS.Keyboard.Keyboard( Ext.getCmp('Mostrador-doNuevaVentaImporte'), kconf );	
+						        }	
 							}
-							}),
-							new Ext.Button({     
+						}),
+							new Ext.Button({
                                 ui  : 'action', 
                                 text: 'Vender', 
+                                id : "Mostrador-doNuevaVentaCobrarButton",
+                                //hidden : true,
                                 handler: function(){
                                     Aplicacion.Mostrador.currentInstance.doVenta();
                                 },
                                 style:{
                                     marginTop:'30px'
                                 }
-                            }) 
+                            })
 					]
 					 
-				})/*,
-				
-				new Ext.Button({     
-                                ui  : 'action', 
-                                text: 'Venta a credito', 
-                                handler: function(){
-                                    Aplicacion.Mostrador.currentInstance.doVenta();
-                                },
-                                style:{
-                                    marginTop:'30px',
-                                    left:'1.5% !important',
-                                    width:'97% !important',
-                                    height:'30px !important'
-                                }
-                            }) */
+				})
 				
 				]
 	    }]

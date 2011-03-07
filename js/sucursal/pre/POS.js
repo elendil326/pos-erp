@@ -160,19 +160,7 @@ function reload(){
 			params : { action : 207, hashCheck : Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.hash },
 			success: function(response, opts) {
 				try{ autorizaciones = Ext.util.JSON.decode( response.responseText ); }catch(e){ return; }
-				if( !autorizaciones.success ){ return ; }
-
-
-				Ext.Msg.confirm("Autorizaciones", "Tiene autorizaciones por atender. &iquest; Desea verlas ahora ?<br><br>", 
-					function(a){
-							if(a == "yes"){
-								sink.Main.ui.setActiveItem( Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel , 'fade');
-							}
-						}
-					);
-				/*if(Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lista.length != autorizaciones.payload.length ){
-	            	;				            		            
-				}*/
+				if( !autorizaciones.success ){ return ; }			
               
 				Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lista = autorizaciones.payload;
 				Aplicacion.Autorizaciones.currentInstance.listaDeAutorizaciones.lastUpdate = Math.round(new Date().getTime()/1000.0);
@@ -181,6 +169,15 @@ function reload(){
 				
 				//actualizamos cada row de la lista de autorizaciones mostrando su estado actual
 				Aplicacion.Autorizaciones.currentInstance.updateListaAutorizaciones();
+				
+				Ext.Msg.confirm("Autorizaciones", "Tiene autorizaciones por atender. &iquest; Desea verlas ahora ?<br><br>", 
+					function(a){
+							if(a == "yes"){
+								sink.Main.ui.setActiveItem( Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel , 'fade');
+							}
+						}
+                );
+				
 			}
 		});		
 	}
