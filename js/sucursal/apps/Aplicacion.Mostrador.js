@@ -1237,7 +1237,6 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 	{
 	    html += "<iframe id = 'frame' src ='../impresora/pdf.php?json=" + json + "' width='0px' height='0px'></iframe> ";
 	    window.open("../impresora/pdf.php?json=" + json);
-
 	}
 	else
 	{
