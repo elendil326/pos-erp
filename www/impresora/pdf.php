@@ -78,7 +78,7 @@ $pdf->SetY(-25);
 $pdf->Write(0,'                                                                                                                                 $ '.$json->total);
 $pdf->SetXY(30,-20);
       $pdf->SetFont('Helvetica','I',10);
-$resultado = convertir($json->subtotal);
+$resultado = numtoletras($json->subtotal);
 //print("<p>$resultado</p>");
 //echo number_format($numero);
       $pdf->Write (5, ''.$resultado);

@@ -28,18 +28,19 @@ $proveedor = ProveedorDAO::getByPK( $_REQUEST['id'] );
 	<tr><td>Direccion</td><td><input type="text"        id="direccion"  value="<?php echo $proveedor->getDireccion(); ?>" size="40"/></td>
 		<td>Telefono</td><td><input type="text"         id="telefono"   value="<?php echo $proveedor->getTelefono(); ?>" size="40"/></td></tr>
 		
-	<tr><td>Activo</td><td><input type="text"        id="activo"  value="<?php echo $proveedor->getActivo(); ?>" size="40"/></td>
+	<tr><td>Activo</td><td><select id="activo"><option value=0>Inactivo</option><option value=1>Activo</option></select></td>
 		<td></td><td></td></tr>
-
-
+	
 	
 </table>
 	<h4><input type="button" onClick="validar()" value="Guardar Cambios"/></h4>
 </form>
 
-
+	<input type="hidden"  id="estado"  value="<?php echo $proveedor->getActivo(); ?>" size="40"/>
 
 <script type="text/javascript" charset="utf-8">
+	
+		document.getElementById('activo').selectedIndex=document.getElementById('estado').value;
 
     function validar(){
 
@@ -60,7 +61,7 @@ $proveedor = ProveedorDAO::getByPK( $_REQUEST['id'] );
 
       	obj = {
             nombre : jQuery("#nombre").val(),
-            activo : jQuery("#activo").val(),
+            activo : document.getElementById('activo').selectedIndex,
             direccion : jQuery("#direccion").val(),
             e_mail : jQuery("#e_mail").val(),
             tipo : jQuery("#tipo").val(),

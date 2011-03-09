@@ -1,332 +1,187 @@
 <?php
+//------    CONVERTIR NUMEROS A LETRAS         ---------------
+//------    Máxima cifra soportada: 18 dígitos con 2 decimales
+//------    999,999,999,999,999,999.99 
+// NOVECIENTOS NOVENTA Y NUEVE MIL NOVECIENTOS NOVENTA Y NUEVE BILLONES 
+// NOVECIENTOS NOVENTA Y NUEVE MIL NOVECIENTOS NOVENTA Y NUEVE MILLONES 
+// NOVECIENTOS NOVENTA Y NUEVE MIL NOVECIENTOS NOVENTA Y NUEVE PESOS 99/100 M.N.
+//------    Creada por:                        ---------------
+//------             ULTIMINIO RAMOS GALÁN     ---------------
+//------            uramos@gmail.com           ---------------
+//------    10 de junio de 2009. México, D.F.  ---------------
+//------    PHP Version 4.3.1 o mayores (aunque podría funcionar en versiones anteriores, tendrías que probar)
+function numtoletras($xcifra)
+{ 
+$xarray = array(0 => "Cero",
+1 => "UN", "DOS", "TRES", "CUATRO", "CINCO", "SEIS", "SIETE", "OCHO", "NUEVE", 
+"DIEZ", "ONCE", "DOCE", "TRECE", "CATORCE", "QUINCE", "DIECISEIS", "DIECISIETE", "DIECIOCHO", "DIECINUEVE", 
+"VEINTI", 30 => "TREINTA", 40 => "CUARENTA", 50 => "CINCUENTA", 60 => "SESENTA", 70 => "SETENTA", 80 => "OCHENTA", 90 => "NOVENTA", 
+100 => "CIENTO", 200 => "DOSCIENTOS", 300 => "TRESCIENTOS", 400 => "CUATROCIENTOS", 500 => "QUINIENTOS", 600 => "SEISCIENTOS", 700 => "SETECIENTOS", 800 => "OCHOCIENTOS", 900 => "NOVECIENTOS"
+);
+//
+$xcifra = trim($xcifra);
+$xlength = strlen($xcifra);
+$xpos_punto = strpos($xcifra, ".");
+$xaux_int = $xcifra;
+$xdecimales = "00";
+if (!($xpos_punto === false))
+   {
+   if ($xpos_punto == 0)
+      {
+      $xcifra = "0".$xcifra;
+      $xpos_punto = strpos($xcifra, ".");
+      }
+   $xaux_int = substr($xcifra, 0, $xpos_punto); // obtengo el entero de la cifra a covertir
+   $xdecimales = substr($xcifra."00", $xpos_punto + 1, 2); // obtengo los valores decimales
+   }
 
-function unidad($numuero){
-switch ($numuero)
-{
-case 9:
-{
-$numu = "NUEVE";
-break;
-}
-case 8:
-{
-$numu = "OCHO";
-break;
-}
-case 7:
-{
-$numu = "SIETE";
-break;
-}
-case 6:
-{
-$numu = "SEIS";
-break;
-}
-case 5:
-{
-$numu = "CINCO";
-break;
-}
-case 4:
-{
-$numu = "CUATRO";
-break;
-}
-case 3:
-{
-$numu = "TRES";
-break;
-}
-case 2:
-{
-$numu = "DOS";
-break;
-}
-case 1:
-{
-$numu = "UN";
-break;
-}
-case 0:
-{
-$numu = "";
-break;
-}
-}
-return $numu;
-}
+$XAUX = str_pad($xaux_int, 18, " ", STR_PAD_LEFT); // ajusto la longitud de la cifra, para que sea divisible por centenas de miles (grupos de 6)
+$xcadena = "";
+for($xz = 0; $xz < 3; $xz++)
+   {
+   $xaux = substr($XAUX, $xz * 6, 6);
+   $xi = 0; $xlimite = 6; // inicializo el contador de centenas xi y establezco el límite a 6 dígitos en la parte entera
+   $xexit = true; // bandera para controlar el ciclo del While 
+   while ($xexit)
+      {
+      if ($xi == $xlimite) // si ya llegó al límite máximo de enteros
+         {
+         break; // termina el ciclo
+         }
+   
+      $x3digitos = ($xlimite - $xi) * -1; // comienzo con los tres primeros digitos de la cifra, comenzando por la izquierda
+      $xaux = substr($xaux, $x3digitos, abs($x3digitos)); // obtengo la centena (los tres dígitos)
+      for ($xy = 1; $xy < 4; $xy++) // ciclo para revisar centenas, decenas y unidades, en ese orden
+         {
+         switch ($xy) 
+            {
+            case 1: // checa las centenas
+               if (substr($xaux, 0, 3) < 100) // si el grupo de tres dígitos es menor a una centena ( < 99) no hace nada y pasa a revisar las decenas
+                  {
+                  }
+               else
+                  {
+                  $xseek = $xarray[substr($xaux, 0, 3)]; // busco si la centena es número redondo (100, 200, 300, 400, etc..)
+                  if ($xseek)
+                     {
+                     $xsub = subfijo($xaux); // devuelve el subfijo correspondiente (Millón, Millones, Mil o nada)
+                     if (substr($xaux, 0, 3) == 100) 
+                        $xcadena = " ".$xcadena." CIEN ".$xsub;
+                     else
+                        $xcadena = " ".$xcadena." ".$xseek." ".$xsub;
+                     $xy = 3; // la centena fue redonda, entonces termino el ciclo del for y ya no reviso decenas ni unidades
+                     }
+                  else // entra aquí si la centena no fue numero redondo (101, 253, 120, 980, etc.)
+                     {
+                     $xseek = $xarray[substr($xaux, 0, 1) * 100]; // toma el primer caracter de la centena y lo multiplica por cien y lo busca en el arreglo (para que busque 100,200,300, etc)
+                     $xcadena = " ".$xcadena." ".$xseek;
+                     } // ENDIF ($xseek)
+                  } // ENDIF (substr($xaux, 0, 3) < 100)
+               break;
+            case 2: // checa las decenas (con la misma lógica que las centenas)
+               if (substr($xaux, 1, 2) < 10)
+                  {
+                  }
+               else
+                  {
+                  $xseek = $xarray[substr($xaux, 1, 2)];
+                  if ($xseek)
+                     {
+                     $xsub = subfijo($xaux);
+                     if (substr($xaux, 1, 2) == 20)
+                        $xcadena = " ".$xcadena." VEINTE ".$xsub;
+                     else
+                        $xcadena = " ".$xcadena." ".$xseek." ".$xsub;
+                     $xy = 3;
+                     }
+                  else
+                     {
+                     $xseek = $xarray[substr($xaux, 1, 1) * 10];
+                     if (substr($xaux, 1, 1) * 10 == 20)
+                        $xcadena = " ".$xcadena." ".$xseek;
+                     else  
+                        $xcadena = " ".$xcadena." ".$xseek." Y ";
+                     } // ENDIF ($xseek)
+                  } // ENDIF (substr($xaux, 1, 2) < 10)
+               break;
+            case 3: // checa las unidades
+               if (substr($xaux, 2, 1) < 1) // si la unidad es cero, ya no hace nada
+                  {
+                  }
+               else
+                  {
+                  $xseek = $xarray[substr($xaux, 2, 1)]; // obtengo directamente el valor de la unidad (del uno al nueve)
+                  $xsub = subfijo($xaux);
+                  $xcadena = " ".$xcadena." ".$xseek." ".$xsub;
+                  } // ENDIF (substr($xaux, 2, 1) < 1)
+               break;
+            } // END SWITCH
+         } // END FOR
+         $xi = $xi + 3;
+      } // ENDDO
 
-function decena($numdero){
-
-if ($numdero >= 90 && $numdero <= 99)
-{
-$numd = "NOVENTA ";
-if ($numdero > 90)
-$numd = $numd."Y ".(unidad($numdero - 90));
-}
-else if ($numdero >= 80 && $numdero <= 89)
-{
-$numd = "OCHENTA ";
-if ($numdero > 80)
-$numd = $numd."Y ".(unidad($numdero - 80));
-}
-else if ($numdero >= 70 && $numdero <= 79)
-{
-$numd = "SETENTA ";
-if ($numdero > 70)
-$numd = $numd."Y ".(unidad($numdero - 70));
-}
-else if ($numdero >= 60 && $numdero <= 69)
-{
-$numd = "SESENTA ";
-if ($numdero > 60)
-$numd = $numd."Y ".(unidad($numdero - 60));
-}
-else if ($numdero >= 50 && $numdero <= 59)
-{
-$numd = "CINCUENTA ";
-if ($numdero > 50)
-$numd = $numd."Y ".(unidad($numdero - 50));
-}
-else if ($numdero >= 40 && $numdero <= 49)
-{
-$numd = "CUARENTA ";
-if ($numdero > 40)
-$numd = $numd."Y ".(unidad($numdero - 40));
-}
-else if ($numdero >= 30 && $numdero <= 39)
-{
-$numd = "TREINTA ";
-if ($numdero > 30)
-$numd = $numd."Y ".(unidad($numdero - 30));
-}
-else if ($numdero >= 20 && $numdero <= 29)
-{
-if ($numdero == 20)
-$numd = "VEINTE ";
-else
-$numd = "VEINTI".(unidad($numdero - 20));
-}
-else if ($numdero >= 10 && $numdero <= 19)
-{
-switch ($numdero){
-case 10:
-{
-$numd = "DIEZ ";
-break;
-}
-case 11:
-{
-$numd = "ONCE ";
-break;
-}
-case 12:
-{
-$numd = "DOCE ";
-break;
-}
-case 13:
-{
-$numd = "TRECE ";
-break;
-}
-case 14:
-{
-$numd = "CATORCE ";
-break;
-}
-case 15:
-{
-$numd = "QUINCE ";
-break;
-}
-case 16:
-{
-$numd = "DIECISEIS ";
-break;
-}
-case 17:
-{
-$numd = "DIECISIETE ";
-break;
-}
-case 18:
-{
-$numd = "DIECIOCHO ";
-break;
-}
-case 19:
-{
-$numd = "DIECINUEVE ";
-break;
-}
-}
-}
-else
-$numd = unidad($numdero);
-return $numd;
-}
-
-function centena($numc){
-if ($numc >= 100)
-{
-if ($numc >= 900 && $numc <= 999)
-{
-$numce = "NOVECIENTOS ";
-if ($numc > 900)
-$numce = $numce.(decena($numc - 900));
-}
-else if ($numc >= 800 && $numc <= 899)
-{
-$numce = "OCHOCIENTOS ";
-if ($numc > 800)
-$numce = $numce.(decena($numc - 800));
-}
-else if ($numc >= 700 && $numc <= 799)
-{
-$numce = "SETECIENTOS ";
-if ($numc > 700)
-$numce = $numce.(decena($numc - 700));
-}
-else if ($numc >= 600 && $numc <= 699)
-{
-$numce = "SEISCIENTOS ";
-if ($numc > 600)
-$numce = $numce.(decena($numc - 600));
-}
-else if ($numc >= 500 && $numc <= 599)
-{
-$numce = "QUINIENTOS ";
-if ($numc > 500)
-$numce = $numce.(decena($numc - 500));
-}
-else if ($numc >= 400 && $numc <= 499)
-{
-$numce = "CUATROCIENTOS ";
-if ($numc > 400)
-$numce = $numce.(decena($numc - 400));
-}
-else if ($numc >= 300 && $numc <= 399)
-{
-$numce = "TRESCIENTOS ";
-if ($numc > 300)
-$numce = $numce.(decena($numc - 300));
-}
-else if ($numc >= 200 && $numc <= 299)
-{
-$numce = "DOSCIENTOS ";
-if ($numc > 200)
-$numce = $numce.(decena($numc - 200));
-}
-else if ($numc >= 100 && $numc <= 199)
-{
-if ($numc == 100)
-$numce = "CIEN ";
-else
-$numce = "CIENTO ".(decena($numc - 100));
-}
-}
-else
-$numce = decena($numc);
-
-return $numce;
-}
-
-function miles($nummero){
-if ($nummero >= 1000 && $nummero < 2000){
-$numm = "MIL ".(centena($nummero%1000));
-}
-if ($nummero >= 2000 && $nummero <10000){
-$numm = unidad(Floor($nummero/1000))." MIL ".(centena($nummero%1000));
-}
-if ($nummero < 1000)
-$numm = centena($nummero);
-
-return $numm;
-}
-
-function decmiles($numdmero){
-if ($numdmero == 10000)
-$numde = "DIEZ MIL";
-if ($numdmero > 10000 && $numdmero <20000){
-$numde = decena(Floor($numdmero/1000))."MIL ".(centena($numdmero%1000));
-}
-if ($numdmero >= 20000 && $numdmero <100000){
-$numde = decena(Floor($numdmero/1000))." MIL ".(miles($numdmero%1000));
-}
-if ($numdmero < 10000)
-$numde = miles($numdmero);
-
-return $numde;
-}
-
-function cienmiles($numcmero){
-if ($numcmero == 100000)
-$num_letracm = "CIEN MIL";
-if ($numcmero >= 100000 && $numcmero <1000000){
-$num_letracm = centena(Floor($numcmero/1000))." MIL ".(centena($numcmero%1000));
-}
-if ($numcmero < 100000)
-$num_letracm = decmiles($numcmero);
-return $num_letracm;
-}
-
-function millon($nummiero){
-if ($nummiero >= 1000000 && $nummiero <2000000){
-$num_letramm = "UN MILLON ".(cienmiles($nummiero%1000000));
-}
-if ($nummiero >= 2000000 && $nummiero <10000000){
-$num_letramm = unidad(Floor($nummiero/1000000))." MILLONES ".(cienmiles($nummiero%1000000));
-}
-if ($nummiero < 1000000)
-$num_letramm = cienmiles($nummiero);
-
-return $num_letramm;
-}
-
-function decmillon($numerodm){
-if ($numerodm == 10000000)
-$num_letradmm = "DIEZ MILLONES";
-if ($numerodm > 10000000 && $numerodm <20000000){
-$num_letradmm = decena(Floor($numerodm/1000000))."MILLONES ".(cienmiles($numerodm%1000000));
-}
-if ($numerodm >= 20000000 && $numerodm <100000000){
-$num_letradmm = decena(Floor($numerodm/1000000))." MILLONES ".(millon($numerodm%1000000));
-}
-if ($numerodm < 10000000)
-$num_letradmm = millon($numerodm);
-
-return $num_letradmm;
-}
-
-function cienmillon($numcmeros){
-if ($numcmeros == 100000000)
-$num_letracms = "CIEN MILLONES";
-if ($numcmeros >= 100000000 && $numcmeros <1000000000){
-$num_letracms = centena(Floor($numcmeros/1000000))." MILLONES ".(millon($numcmeros%1000000));
-}
-if ($numcmeros < 100000000)
-$num_letracms = decmillon($numcmeros);
-return $num_letracms;
-}
-
-function milmillon($nummierod){
-if ($nummierod >= 1000000000 && $nummierod <2000000000){
-$num_letrammd = "MIL ".(cienmillon($nummierod%1000000000));
-}
-if ($nummierod >= 2000000000 && $nummierod <10000000000){
-$num_letrammd = unidad(Floor($nummierod/1000000000))." MIL ".(cienmillon($nummierod%1000000000));
-}
-if ($nummierod < 1000000000)
-$num_letrammd = cienmillon($nummierod);
-
-return $num_letrammd;
-}
+      if (substr(trim($xcadena), -5, 5) == "ILLON") // si la cadena obtenida termina en MILLON o BILLON, entonces le agrega al final la conjuncion DE
+         $xcadena.= " DE";
+         
+      if (substr(trim($xcadena), -7, 7) == "ILLONES") // si la cadena obtenida en MILLONES o BILLONES, entoncea le agrega al final la conjuncion DE
+         $xcadena.= " DE";
+      
+      // ----------- esta línea la puedes cambiar de acuerdo a tus necesidades o a tu país -------
+      if (trim($xaux) != "")
+         {
+         switch ($xz)
+            {
+            case 0:
+               if (trim(substr($XAUX, $xz * 6, 6)) == "1")
+                  $xcadena.= "UN BILLON ";
+               else
+                  $xcadena.= " BILLONES ";
+               break;
+            case 1:
+               if (trim(substr($XAUX, $xz * 6, 6)) == "1")
+                  $xcadena.= "UN MILLON ";
+               else
+                  $xcadena.= " MILLONES ";
+               break;
+            case 2:
+               if ($xcifra < 1 )
+                  {
+                  $xcadena = "CERO PESOS $xdecimales/100 M.N.";
+                  }
+               if ($xcifra >= 1 && $xcifra < 2)
+                  {
+                  $xcadena = "UN PESO $xdecimales/100 M.N. ";
+                  }
+               if ($xcifra >= 2)
+                  {
+                  $xcadena.= " PESOS $xdecimales/100 M.N. "; // 
+                  }
+               break;
+            } // endswitch ($xz)
+         } // ENDIF (trim($xaux) != "")
+      // ------------------      en este caso, para México se usa esta leyenda     ----------------
+      $xcadena = str_replace("VEINTI ", "VEINTI", $xcadena); // quito el espacio para el VEINTI, para que quede: VEINTICUATRO, VEINTIUN, VEINTIDOS, etc
+      $xcadena = str_replace("  ", " ", $xcadena); // quito espacios dobles 
+      $xcadena = str_replace("UN UN", "UN", $xcadena); // quito la duplicidad
+      $xcadena = str_replace("  ", " ", $xcadena); // quito espacios dobles 
+      $xcadena = str_replace("BILLON DE MILLONES", "BILLON DE", $xcadena); // corrigo la leyenda
+      $xcadena = str_replace("BILLONES DE MILLONES", "BILLONES DE", $xcadena); // corrigo la leyenda
+      $xcadena = str_replace("DE UN", "UN", $xcadena); // corrigo la leyenda
+   } // ENDFOR ($xz)
+   return trim($xcadena);
+} // END FUNCTION
 
 
-function convertir($numero){
-$numf = milmillon($numero);
-return $numf;
-}
+function subfijo($xx)
+   { // esta función regresa un subfijo para la cifra
+   $xx = trim($xx);
+   $xstrlen = strlen($xx);
+   if ($xstrlen == 1 || $xstrlen == 2 || $xstrlen == 3)
+      $xsub = "";
+   // 
+   if ($xstrlen == 4 || $xstrlen == 5 || $xstrlen == 6)
+      $xsub = "MIL";
+   //
+   return $xsub;
+   } // END FUNCTION
 ?>
