@@ -45,6 +45,10 @@ function contestar(id, response){
 function surtirSuc(id, aut){
     window.location = "inventario.php?action=surtir&sid=" + id+"&aut="+aut;
 }
+
+function cancelar(id, aut){
+    window.location = "autorizaciones.php?action=cancelar&sid=" + id+"&aut="+aut;
+}
 </script>
 
 
@@ -203,13 +207,18 @@ switch( $autorizacionDetalles->clave ){
 
 
             <?php
+            
+            if($autorizacion->getEstado() != 4){
+	            ?><h4>
+	            	<input type=button value="Editar" onclick="surtirSuc(<?php echo $autorizacion->getIdSucursal(); ?>, <?php    echo $autorizacion->getIdAutorizacion(); ?>)" >
+	            	<?php
             if($autorizacion->getEstado()==3){
             ?>
-            <h4><input type=button value="Editar" onclick="surtirSuc(<?php echo $autorizacion->getIdSucursal(); ?>, <?php    echo $autorizacion->getIdAutorizacion(); ?>)" ></h4>
-            <?php
-            }
-            if($autorizacion->getEstado() != 4){
-	            ?><h4><input type=button value="Cancelar" onclick="surtirSuc(<?php echo $autorizacion->getIdSucursal(); ?>, <?php    echo $autorizacion->getIdAutorizacion(); ?>)" ></h4>
+	            	<input type=button value="Cancelar" onclick="cancelar(<?php echo $autorizacion->getIdSucursal(); ?>, <?php    echo $autorizacion->getIdAutorizacion(); ?>)" >
+	            	<?php
+	            	}
+	            	?>
+	            </h4>
 	    	<?php
             }else{
 				?><div align=center><h3>Usted ya ha respondido a esta autorizacion.</h3></div><?php
