@@ -283,6 +283,21 @@ Aplicacion.Efectivo.prototype.nuevoGastoPanel = null;
 /**
  * Pone un panel en nuevoGastoPanel
  */
+ 
+ Date.monthNames = [
+  "Enero",
+  "Febrero",
+  "Marzo",
+  "Abril",
+  "Mayo",
+  "Junio",
+  "Julio",
+  "Agosto",
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre"
+];
 Aplicacion.Efectivo.prototype.nuevoGastoPanelCreator = function (){
 
 	this.nuevoGastoPanel = new Ext.form.FormPanel({
