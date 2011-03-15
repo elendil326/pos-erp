@@ -9,7 +9,9 @@ require_once('model/cliente.dao.php');
 require_once('logger.php');
 
 $autorizacion = AutorizacionDAO::getByPK( $_REQUEST['aut'] );
-
+if($autorizacion==NULL){
+die("autorizacion no existe");
+}
 //$autorizacionDetalles = json_decode( $autorizacion->getParametros() );
 
 $usuario = UsuarioDAO::getByPK( $autorizacion->getIdUsuario() );

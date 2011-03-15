@@ -46,8 +46,12 @@ function surtirSuc(id, aut){
     window.location = "inventario.php?action=surtir&sid=" + id+"&aut="+aut;
 }
 
-function cancelar(id, aut){
-    window.location = "autorizaciones.php?action=cancelar&sid=" + id+"&aut="+aut;
+function editarAutorizacion (aut){
+    window.location = "autorizaciones.php?action=editar&aut="+aut;
+    }
+
+function cancelar(aut){
+    window.location = "autorizaciones.php?action=cancelar&aut="+aut;
 }
 </script>
 
@@ -210,11 +214,11 @@ switch( $autorizacionDetalles->clave ){
             
             if($autorizacion->getEstado() != 4){
 	            ?><h4>
-	            	<input type=button value="Editar" onclick="surtirSuc(<?php echo $autorizacion->getIdSucursal(); ?>, <?php    echo $autorizacion->getIdAutorizacion(); ?>)" >
+<!--  	<input type=button value="Editar" onclick="editarAutorizacion(<?php    echo $autorizacion->getIdAutorizacion(); ?>)" > -->
 	            	<?php
             if($autorizacion->getEstado()==3){
             ?>
-	            	<input type=button value="Cancelar" onclick="cancelar(<?php echo $autorizacion->getIdSucursal(); ?>, <?php    echo $autorizacion->getIdAutorizacion(); ?>)" >
+	            	<input type=button value="Cancelar" onclick="cancelar(<?php    echo $autorizacion->getIdAutorizacion(); ?>)" >
 	            	<?php
 	            	}
 	            	?>
