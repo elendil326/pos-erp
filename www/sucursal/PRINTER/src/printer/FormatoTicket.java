@@ -9,7 +9,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.text.NumberFormat;
 
-
 /**
  * Clase que contiene funciones para formatear texto en los diferentes tipos de tickets, 
  * funciones de impresion y manipulacion de cantidades.
@@ -25,12 +24,11 @@ public class FormatoTicket {
      * Objeto grafico empleado para imprimir en el lienzo
      */
     Graphics2D grafico;
-    
     /**
      * Indica al objeto grafico donde comenzara a imprimir respecto a la parte izquierda del ticket.
-     * default : 20
+     * default : 0
      */
-    public int x = 20;
+    public int x = 0;
 
     /**
      * Establece la posicion en x donde se comenzara a imprimir
@@ -51,9 +49,11 @@ public class FormatoTicket {
     public void incrementY(int incremento) {
         this.y += incremento;
     }
-     /**
+
+    /**
      * Funcion que imprime una cadena cuidando de que no se pierda
      * informacion al momento de la impresion en el ticket.
+     * (puede llegar a cortar las palabras)
      *     
      * @param cadena Cadena a imprimir.
      * @param interlineado Espacio que se tomara entre lineas (pixeles)
@@ -63,7 +63,7 @@ public class FormatoTicket {
 
         while (cadena.length() > this.limiteCaracteres) {
 
-            //this.grafico.drawString(cadena.substring(0, this.limiteCaracteres), x, y);
+            this.grafico.drawString(cadena.substring(0, this.limiteCaracteres), x, y);
 
             cadena = cadena.substring(this.limiteCaracteres, cadena.length());
 
@@ -71,11 +71,50 @@ public class FormatoTicket {
 
         }
 
-        //this.grafico.drawString(cadena, x, y);
+        this.grafico.drawString(cadena, x, y);
 
         this.incrementY(this.y + interlineado);
 
-    }    
+    }
+
+    /**
+     * Funcion que imprime una cadena cuidando de que no se pierda
+     * informacion al momento de la impresion en el ticket, separando las cadenas de acuerdo
+     * a un separador especificado, cuidando de que no se corten las palabras y ademas que no exceda
+     * el limite de caracteres permitidos.
+     *     
+     * @param cadena Cadena a imprimir.
+     * @param interlineado Espacio que se tomara entre lineas (pixeles)
+     * @return
+     */
+    public void imprimeSinDesborde(String _cadena, String separador, int interlineado) {
+
+        String[] texto = _cadena.split(separador);
+
+        String cadena = texto[0];
+
+        for (int k = 1; k < texto.length; k++) {
+
+            if ((cadena.length() + separador.length() + texto[k].length()) < this.getLimiteCaracteres()) {
+
+                cadena += " " + texto[k];
+
+            } else {
+
+                this.grafico.drawString(cadena, this.x, this.y);
+
+                cadena = texto[k];
+
+                this.incrementY(this.y + interlineado);
+
+            }
+
+            this.grafico.drawString(cadena, this.x, this.y);
+
+            this.incrementY(this.y + interlineado);
+
+        }
+    }
     /**
      * Numero maximo de caracteres a imprimir por renglon
      * default : 33
@@ -89,10 +128,35 @@ public class FormatoTicket {
         this.limiteCaracteres = num;
     }
 
+    /**
+     * Obtiene el limite maximo de caracteres a imprimir por renglon.
+     * @return
+     */
+    public int getLimiteCaracteres() {
+        return this.limiteCaracteres;
+    }
+    /**
+     * Numero maximo de caracteres que pueden describir un producto
+     */
+    private int limiteDescripcion = 13;
+
+    /**
+     * Establece el limite maximo de caracteres a imprimir para describir un producto.
+     */
+    public void setLimiteDescripcion(int num) {
+        this.limiteDescripcion = num;
+    }
+
+    /**
+     * Obtiene el limite maximo de caracteres a imprimir para describir un producto.
+     * @return
+     */
+    public int getLimiteDescripcion() {
+        return this.limiteDescripcion;
+    }
     //--------------------------------------------------------------------//
     //     Propiedades de las fuentes                                     //
     //--------------------------------------------------------------------//
-
     /**
      * Tahoma Font Plain  9
      */
@@ -140,8 +204,9 @@ public class FormatoTicket {
     /**
      * Alto en pixeles de la fuente "italic"
      */
-    public int height_italic = 0;    
-     /**
+    public int height_italic = 0;
+
+    /**
      * Inicializa los valores de las metricas de las fuentes
      *
      * @param g
@@ -163,11 +228,9 @@ public class FormatoTicket {
         this.fontMetrics = g.getFontMetrics(this.italic);
         this.height_italic = this.fontMetrics.getHeight();
     }
-
     //--------------------------------------------------------------------//
     //     Propiedades de la moneda                                       //
     //--------------------------------------------------------------------//
-
     /**
      * Tipo de moneda usada para los tickets, ejemplo : PESOS, DOLARES, ETC..
      * default : PESOS
@@ -197,7 +260,6 @@ public class FormatoTicket {
     //-----------------------------------------------------------------------//
     //     Metodos para transformar cantidades a su descripcion en letras    //
     //-----------------------------------------------------------------------//
-
     /**
      * Regresa la cantidad en letra de una cantidad.
      *
@@ -358,11 +420,9 @@ public class FormatoTicket {
         }
         return "";
     }
-
     //--------------------------------------------------------------------//
     //     Propiedades Generales                                          //
     //--------------------------------------------------------------------//
-
     /**
      * Descripcion del JSON en bruto que llego.
      */
@@ -383,5 +443,4 @@ public class FormatoTicket {
      * Leyendas que se manejaran en el ticket
      */
     public LeyendasTicket leyendas;
-   
 }

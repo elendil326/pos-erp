@@ -28,21 +28,105 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
     //     Propiedades especificas de este ticket                         //
     //--------------------------------------------------------------------//
     /**
+     * Obtiene el estado del ticket. TRUE si es una reimpresion de este, FALSE de lo contrario
+     */
+    private boolean reimpresion = false;
+
+    /**
+     * Obtiene el estado del ticket. TRUE si es una reimpresion de este, FALSE de lo contrario
+     * @return
+     */
+    public boolean getReimpresion() {
+        return this.reimpresion;
+    }
+
+    /**
+     * Establece el estado del ticket. TRUE si es una reimpresion de este, FALSE de lo contrario
+     * @param _reimpresion
+     */
+    private void setReimpresion(boolean _reimpresion) {
+        this.reimpresion = _reimpresion;
+    }
+    /**
      * Sucursal en la cual se realizo al venta
      */
     private Sucursal sucursal = null;
+
+    /**
+     * Obtiene el objeto de tipo Sucursal de esta venta
+     * @return
+     */
+    public Sucursal getSucursal() {
+        return this.sucursal;
+    }
+
+    /**
+     * Establece el objeto tipo sucursal de esta venta
+     * @param _sucursal
+     */
+    private void setTipoSucursal(Sucursal _sucursal) {
+        this.sucursal = _sucursal;
+    }
     /**
      * Cliente al cual se le realizo la venta
      */
     private Cliente cliente = null;
+
+    /**
+     * Obtiene el objeto de tipo Cliente de esta venta
+     * @return
+     */
+    public Cliente getCliente() {
+        return this.cliente;
+    }
+
+    /**
+     * Establece el objeto tipo Cliente de esta venta
+     * @param _sucursal
+     */
+    private void setTipoSucursal(Cliente _cliente) {
+        this.cliente = _cliente;
+    }
     /**
      * Tipo de venta. "credito" | "contado"
      */
     private String tipoVenta = null;
+
+    /**
+     * Obtiene el tipo de venta
+     * @return
+     */
+    public String getTipoVenta() {
+        return this.tipoVenta;
+    }
+
+    /**
+     * Establece el tipo de venta
+     * @param _tipoVenta
+     */
+    private void setTipoVenta(String _tipoVenta) {
+        this.tipoVenta = _tipoVenta;
+    }
     /**
      * Tipo de pago de la venta. "efectivo" | "cheque" | "targeta"
      */
     private String tipoPago = null;
+
+    /**
+     * Obtiene el tipo de pago de esta venta
+     * @return
+     */
+    public String getTipoPago() {
+        return this.tipoVenta;
+    }
+
+    /**
+     * Establece el tipo de pago de esta venta
+     * @param _tipoVenta
+     */
+    private void setTipoPago(String _tipoPago) {
+        this.tipoPago = _tipoPago;
+    }
     /**
      * Almacena de registro de cada producto vendido
      */
@@ -51,26 +135,106 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
      * Subtotal de la venta
      */
     private float subtotal = -1;
+
+    /**
+     * Obtiene el subtotal de la venta
+     * @return
+     */
+    public float getSubTotal() {
+        return this.subtotal;
+    }
+
+    /**
+     * Establece el subtotal de la venta
+     * @param _subtotal
+     */
+    private void setSubTotal(float _subtotal) {
+        this.subtotal = _subtotal;
+    }
     /**
      * Total de la venta
      */
     private float total = -1;
+
     /**
-     *
+     * Obtiene el total de la venta
+     * @return
      */
-    private float pagado = -1;
+    public float getTotal() {
+        return this.total;
+    }
+
+    /**
+     * Establece el total de la venta
+     * @param _total
+     */
+    private void setTotal(float _total) {
+        this.total = _total;
+    }
+    /**
+     * Cantidad de dinero con la que se pago al cajero
+     */
+    private float dineroRecibido = -1;
+
+    /**
+     * Obtiene la cantidad de dinero con la que se pago al cajero
+     * @return
+     */
+    public float getDineroRecibido() {
+        return this.dineroRecibido;
+    }
+
+    /**
+     * Establece la cantidad de dinero con la que se pago al cajero
+     * @param _pagado
+     */
+    private void setDineroRecibido(float _dineroRecibido) {
+        this.dineroRecibido = _dineroRecibido;
+    }
     /**
      * ID de la venta actual
      */
     private String id_venta = null;
+
     /**
-     * Responsable
+     * Obtiene el id de la venta
+     * @return
+     */
+    public String getIdVenta() {
+        return this.id_venta;
+    }
+
+    /**
+     * Establece el id de la venta
+     * @param _id_venta
+     */
+    private void setIdVenta(String _id_venta) {
+        this.id_venta = _id_venta;
+    }
+    /**
+     * Cajero que realizo la operacion de la venta
      */
     private String empleado = null;
+
+    /**
+     * Obtiene el nombre del empleado que realizo venta
+     * @return
+     */
+    public String getEmpleado() {
+        return this.id_venta;
+    }
+
+    /**
+     * Establece el nombre del empleado que realizo venta
+     * @param _id_venta
+     */
+    private void setEmpleado(String _empleado) {
+        this.empleado = _empleado;
+    }
+
     //--------------------------------------------------------------------//
     //     Constructor de la clase                                        //
     //--------------------------------------------------------------------//
-
     /**
      *
      * @param json json en bruto que contiene toda la informacion del documento a imprimir
@@ -122,7 +286,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                         try {
                             this.tipoVenta = entry.getValue().toString();
-                            System.out.println("this.tipoVenta : " + this.tipoVenta);
+                            System.out.println("tipoVenta : " + this.tipoVenta);
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -167,7 +331,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                         try {
                             this.cliente = new Cliente(entry.getValue().toString());
-                            System.out.println("this.cliente : " + this.cliente.nombre);
+                            System.out.println("this.cliente : " + this.cliente.getNombre());
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -260,10 +424,10 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                     if (entry.getValue() != null && entry.getValue() != "") {
 
-                        System.out.println("this.pagado : " + this.pagado);
+                        //System.out.println("this.pagado : " + this.pagado);
 
                         try {
-                            this.pagado = Float.parseFloat(entry.getValue().toString());
+                            this.dineroRecibido = Float.parseFloat(entry.getValue().toString());
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -323,12 +487,12 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
         }
 
         if (this.total == -1) {
-            System.err.println("Error : No se definio el totañ");
+            System.err.println("Error : No se definio el total");
             cont++;
         }
 
-        if (this.pagado == -1) {
-            System.err.print("Error : No se definio pagado");
+        if (this.dineroRecibido == -1) {
+            System.err.print("Error : No se definio dineroRecibido (pagado)");
             cont++;
         }
 
@@ -429,7 +593,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
         if (this.cliente != null) {
 
-            this.imprimeSinDesborde("Cliente : " + this.cliente.nombre, this.height_normal);
+            this.imprimeSinDesborde("Cliente : " + this.cliente.getNombre(), this.height_normal);
 
         }
 
@@ -454,145 +618,135 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
         for (int j = 0; j < this.productos.size(); j++) {
 
-
-            if (this.venta.productos.get(j).descripcion.length() > 13) {
-                String[] cadena = this.venta.productos.get(j).descripcion.split(" ");
-                String prod = cadena[0];
-                for (int k = 1; k < cadena.length; k++) {
-                    if ((prod.length() + " ".length() + cadena[k].length()) < 13) {
-                        prod += " " + cadena[k];
-
-                    } else {
-                        ticket.drawString(prod, 0, y);
-                        y += h_normalTicket;
-
-                        prod = cadena[k];
-
-                    }
-
-                }
-                ticket.drawString(prod, 0, y);
-
-            } else {
-                ticket.drawString(this.venta.productos.get(j).descripcion, 0, y);
+            //cortamos la descripcion  del producto en caso de que sobrepase le limite permitido
+            if (this.productos.get(j).getDescripcion().length() > this.getLimiteDescripcion()) {
+                this.productos.get(j).setDescripcion(this.productos.get(j).getDescripcion().substring(0, this.getLimiteDescripcion()));
             }
 
-            ticket.drawString("" + this.venta.productos.get(j).cantidad, 75, y);
-            ticket.drawString(this.moneda.format(this.venta.productos.get(j).precio), 107, y);
+            this.grafico.drawString(this.productos.get(j).getDescripcion(), this.x, this.y);
 
-            float subtotal = this.venta.productos.get(j).cantidad * this.venta.productos.get(j).precio;
+            this.grafico.drawString(String.valueOf(this.productos.get(j).getCantidad()), this.x + 75, this.y);
 
-            ticket.drawString(this.moneda.format(subtotal), 138, y);
-            y += h_normalSmallTicket;
+            this.grafico.drawString(this.formatoDinero.format(this.productos.get(j).getPrecio()), this.x + 75, this.y);
+
+            this.grafico.drawString(this.formatoDinero.format(this.productos.get(j).getCantidad() * this.productos.get(j).getPrecio()), this.x + 138, this.y);
+
+            this.incrementY(this.height_normal);
 
         }//for
 
+        this.grafico.setFont(this.normal);
 
+        this.grafico.drawString("------------------------------------------------------------------------", this.x, this.y);
 
-        ticket.setFont(normalTicket);
-        ticket.drawString("------------------------------------------------------------------------", 0, y);
-        y += h_normalTicket;
+        this.incrementY(this.height_normal);
 
-        ticket.setFont(boldSmallTicket);
+        this.grafico.setFont(this.boldSmall);
 
-        ticket.drawString("SUBTOTAL:", 63, y);
-        ticket.drawString(this.moneda.format(this.venta.subtotal), 130, y);
-        y += h_normalTicket;
+        this.grafico.drawString("SUBTOTAL:", this.x + 63, this.y);
 
-        if (this.venta.descuento > 0) {
-            ticket.drawString("DESCUENTO:", 63, y);
-            ticket.drawString(this.moneda.format(this.venta.descuento), 130, y);
-            y += h_normalTicket;
+        this.grafico.drawString(this.formatoDinero.format(this.getSubTotal()), this.x + 130, this.y);
+
+        this.incrementY(this.height_normal);
+
+        if (this.getCliente() != null && this.getCliente().getDescuento() > 0) {
+
+            this.grafico.drawString("DESCUENTO:", this.x + 63, this.y);
+
+            this.grafico.drawString(this.formatoDinero.format(this.getCliente().getDescuento()), this.x + 130, this.y);
+
+            this.incrementY(this.height_normal);
+
         }
 
-        ticket.drawString("TOTAL:", 63, y);
-        ticket.drawString(this.moneda.format(this.venta.total), 130, y);
-        y += h_normalTicket;
+        this.grafico.drawString("TOTAL:", this.x + 63, this.y);
 
-        //javax.swing.JOptionPane.showMessageDialog(null, this.venta.tipoVenta);
-        if (this.venta.tipoVenta.equals("contado")) {
+        this.grafico.drawString(this.formatoDinero.format(this.getTotal()), this.x + 130, this.y);
 
-            if (this.venta.tipo_pago == "cheque") {
-                ticket.drawString("PAGO:", 63, y);
-                ticket.drawString(this.moneda.format(this.venta.subtotal), 130, y);
+        this.incrementY(this.height_normal);
+
+        if (this.getTipoVenta().equals("contado")) {
+
+            //entra si el pago es de contado
+
+            this.grafico.drawString("PAGO:", this.x + 63, this.y);
+
+            //verifica si se pago con un cheque
+
+            if (this.getTipoPago().equals("cheque")) {
+
+                this.grafico.drawString(this.formatoDinero.format(this.getTotal()), this.x + 130, this.y);
+
+                this.incrementY(this.height_normal);
+
             } else {
 
-                if (!this.venta.reimpresion) {
-                    ticket.drawString("PAGO:", 63, y);
-                    ticket.drawString(this.moneda.format(this.venta.efectivo), 130, y);
-                    y += h_normalTicket;
+                //entra si se pago de contado pero no con cheque
+
+                if (!this.getReimpresion()) {
+
+                    //entra si no es una reimpresion del ticket
+
+                    this.grafico.drawString(this.formatoDinero.format(this.getDineroRecibido()), this.x + 130, this.y);
+
+                    this.incrementY(this.height_normal);
+
                 }
 
             }
 
 
-            if (!this.venta.reimpresion) {
-                ticket.drawString("CAMBIO:", 63, y);
-                ticket.drawString(this.moneda.format(this.venta.cambio), 130, y);
-                y += h_normalTicket;
+            if (!this.getReimpresion()) {
+
+                //entra si no es una reimpresion
+
+                this.grafico.drawString("CAMBIO:", this.x + 63, this.y);
+
+                this.grafico.drawString(this.formatoDinero.format(this.getDineroRecibido() - this.getTotal()), this.x + 63, this.y);
+
+                this.incrementY(this.height_normal);
+
             }
 
         }
 
-        ticket.setFont(normalTicket);
-        ticket.drawString("------------------------------------------------------------------------", 0, y);
-        y += h_normalTicket;
+        this.grafico.setFont(this.normal);
 
-        y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, new Converter().getStringOfNumber(this.venta.total), ticket, 0, y, h_normalTicket);
+        this.grafico.drawString("------------------------------------------------------------------------", this.x + 63, this.y);
 
-        if (!venta.tipoVenta.equals("contado")) {
+        this.incrementY(this.height_normal);
 
+        this.imprimeSinDesborde(this.getCantidadEnLetra(this.getTotal()), this.height_normal);
 
-            //////////////////
-            String[] fiscal = this.venta.ficalTicket.split(" ");
-            String fistiq = fiscal[0];
-            for (int k = 1; k < fiscal.length; k++) {
-                if ((fistiq.length() + " ".length() + fiscal[k].length()) < limite_caracteres) {
-                    fistiq += " " + fiscal[k];
+        if (this.getTipoVenta().equals("credito")) {
 
-                } else {
-                    ticket.drawString(fistiq, 0, y);
-                    y += h_normalTicket;
-                    fistiq = fiscal[k];
-                }
-            }
-            ticket.drawString(fistiq, 0, y);
-            y += h_normalTicket;
+            //entra si el tipo de venta es a credito
 
-            ticket.setFont(boldTicket);
-            y = ServidorImpresion.imprimeSinDesborde(limite_caracteres, this.venta.tituloPagare, ticket, 70, y, h_normalTicket);
+            this.imprimeSinDesborde(this.leyendas.getNotaFiscal(), " ", this.height_normal);
 
-            ticket.setFont(normalTicket);
+            this.grafico.setFont(this.bold);
 
-            String[] cadena = this.venta.leyendaPagare.split(" ");
-            String leypag = cadena[0];
-            for (int k = 1; k < cadena.length; k++) {
-                if ((leypag.length() + " ".length() + cadena[k].length()) < limite_caracteres) {
-                    leypag += " " + cadena[k];
+            this.imprimeSinDesborde(this.leyendas.getCabeceraPagare(), " ", this.height_normal);
 
-                } else {
-                    ticket.drawString(leypag, 0, y);
+            this.grafico.setFont(this.normal);
 
-                    y += h_normalTicket;
+            this.imprimeSinDesborde(LeyendasTicket.getPagare(), " ", this.height_normal + 10);
 
-                    leypag = cadena[k];
+            this.grafico.drawString("_____________________________________________________________", this.x, this.y);
 
-                }
-            }
-            ticket.drawString(leypag, 0, y);
-            y += h_normalTicket + 10;
-            ticket.drawString("_____________________________________________________________", 0, y);
-            y += h_normalTicket;
-            ticket.drawString("Firma(s)", 70, y);
-            y += h_normalTicket + 15;
+            this.incrementY(this.height_normal);
+
+            this.grafico.drawString("Firma(s)", this.x + 70, this.y);
+
+            this.incrementY(this.height_normal + 15);
 
         }
 
-        ticket.drawString(this.venta.sugerencias, 0, y);
-        y += h_normalTicket;
+        this.grafico.drawString(LeyendasTicket.getContacto(), this.x, this.y);
+        this.incrementY(this.height_normal);
 
-        ticket.drawString(this.venta.graciasTicket, 30, y);
-        y += h_normalTicket;
+        this.grafico.drawString(LeyendasTicket.getGracias(), this.x + 30, this.y);
+        this.incrementY(this.height_normal);
 
 
 
@@ -603,4 +757,3 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
     }
 }//class
-
