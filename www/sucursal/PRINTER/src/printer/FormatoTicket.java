@@ -15,7 +15,7 @@ import java.text.NumberFormat;
  *
  * @author manuel
  */
-public class FormatoTicket {
+abstract class FormatoTicket {
     //--------------------------------------------------------------------//
     //     Propiedades de los graficos                                    //
     //--------------------------------------------------------------------//
@@ -428,13 +428,59 @@ public class FormatoTicket {
      */
     public String json = null;
     /**
-     * Hora que saldra impresa en el ticket.
+     * Obtiene el json en bruto que contiene la configuracion del ticket
+     * @return
+     */
+    public String getJSON(){
+        return this.json;
+    }
+    /**
+     * Establece el json que contiene la configuracion del ticket
+     * @param _json
+     */
+    public void setJSON(String _json){
+        this.json = _json;
+    }
+    /**
+     * Hora en la cual se registro la venta
      */
     public String hora = null;
+
     /**
-     * Fecha que saldra impresa en el ticket.
+     * Obtiene la hora en la cual se registro la venta
+     * @return
      */
-    public String fecha = null;
+    public String getHora() {
+        return this.hora;
+    }
+
+    /**
+     * Establece la hora en la cual se registro la venta
+     * @param _hora
+     */
+    public void setHora(String _hora) {
+        this.hora = _hora;
+    }
+    /**
+     * Fecha en la cual se registro la venta
+     */
+    private String fecha = null;
+
+    /**
+     * Obtiene la fecha en la cual se registro la venta
+     * @return
+     */
+    public String getFecha() {
+        return this.fecha;
+    }
+
+    /**
+     * Establece la fecha en la cual se registro la venta
+     * @param _fecha
+     */
+    public void setFecha(String _fecha) {
+        this.fecha = _fecha;
+    }
     /**
      * Impresora con la cual se imprimira el documento
      */
@@ -443,4 +489,8 @@ public class FormatoTicket {
      * Leyendas que se manejaran en el ticket
      */
     public LeyendasTicket leyendas;
+
+    abstract void init(String json, String hora, String fecha);
+
+    abstract void validator();
 }

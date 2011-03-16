@@ -72,7 +72,7 @@ public class Producto {
      * Establece la descripcion del producto
      * @param _descripcion
      */
-    private void setDescripcion(String _descripcion) {
+    public void setDescripcion(String _descripcion) {
         this.descripcion = _descripcion;
     }
     /**
@@ -321,11 +321,11 @@ public class Producto {
      */
     public Producto(String json) {
 
-        this.initProducto(json);
+        this.init(json);
 
     }//Producto
 
-    private void initProducto(String json) {
+    private void init(String json) {
         System.out.println("Iniciado proceso de construccion de Producto");
 
         this.setJSON(json);
@@ -449,7 +449,7 @@ public class Producto {
             System.out.println("Terminado proceso de construccion de Producto");
 
             //iniciamos al validacion de al construccion de producto
-            this.productoValidator();
+            this.validator();
 
         } catch (Exception pe) {
             System.out.println(pe);
@@ -459,7 +459,7 @@ public class Producto {
      /**
      * Verifica que se hayan establecido correctamente todos los valores que describen al producto
      */
-    private void productoValidator() {
+    private void validator() {
 
         System.out.println("Iniciando proceso de validacion de Producto");
 

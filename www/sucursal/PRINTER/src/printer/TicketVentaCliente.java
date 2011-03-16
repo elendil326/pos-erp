@@ -27,11 +27,12 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
     //--------------------------------------------------------------------//
     //     Propiedades especificas de este ticket                         //
     //--------------------------------------------------------------------//
+    
+
     /**
      * Obtiene el estado del ticket. TRUE si es una reimpresion de este, FALSE de lo contrario
      */
     private boolean reimpresion = false;
-
     /**
      * Obtiene el estado del ticket. TRUE si es una reimpresion de este, FALSE de lo contrario
      * @return
@@ -241,17 +242,11 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
      * @param hora hora en el servidor al momento que se envio el documento
      * @param fecha fecha en el servidor al momento que se envio el documento
      */
-    TicketVentaCliente(String json, String hora, String fecha) {
-
-        this.json = json;
-        this.hora = hora;
-        this.fecha = fecha;
+    TicketVentaCliente(String json, String hora, String fecha) {               
 
         //extraemos al informacion del JSON para establecer las propiedades de la venta al cliente
-        this.ventaCliente();
 
-        //valida que exista la informacion necesaria para proceguir con la construccion del ticket
-        this.ventaClienteValidator();
+        this.init(json, hora, fecha);
 
     }
 
@@ -259,9 +254,15 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
      * extrae toda la informacion necesaria del JSON y la almacena en propiedades
      * de esta clase, para que posteriormente se usen al momento de imprimir el ticket
      */
-    private void ventaCliente() {
+    void init(String json, String hora, String fecha) {
 
         System.out.println("Iniciado proceso de construccion de Venta a Cliente");
+
+        this.setJSON(json);
+
+        this.setHora(hora);
+
+        this.setFecha(fecha);
 
         JSONParser parser = new JSONParser();
 
@@ -273,11 +274,12 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
             System.out.println("Se iterara a : " + iter.toString().toString());
 
             //recorremos cada propiedad del JSON
+
             while (iter.hasNext()) {
 
                 Map.Entry entry = (Map.Entry) iter.next();
 
-                System.out.println(entry.getKey() + " => " + entry.getValue());
+                System.out.println(entry.getKey().toString() + " => " + entry.getValue().toString());
 
 
                 if (entry.getKey().toString().equals("tipo_venta")) {
@@ -285,8 +287,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
                     if (entry.getValue() != null && entry.getValue() != "") {
 
                         try {
-                            this.tipoVenta = entry.getValue().toString();
-                            System.out.println("tipoVenta : " + this.tipoVenta);
+                            this.setTipoVenta(entry.getValue().toString());
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -300,8 +301,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
                     if (entry.getValue() != null && entry.getValue() != "") {
 
                         try {
-                            this.tipoPago = entry.getValue().toString();
-                            System.out.println("this.tipoPago : " + this.tipoPago);
+                            this.setTipoPago(entry.getValue().toString());
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -331,7 +331,6 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                         try {
                             this.cliente = new Cliente(entry.getValue().toString());
-                            System.out.println("this.cliente : " + this.cliente.getNombre());
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -343,15 +342,17 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
                 if (entry.getKey().toString().equals("items")) {
 
                     String json_items = entry.getValue().toString();
-                    System.out.println("this.json_items: " + json_items);
 
                     Object obj = JSONValue.parse(json_items);
+
                     JSONArray array = (JSONArray) obj;
 
                     for (int i = 0; i < array.size(); i++) {
 
                         //metemos cada producto comprado a una coleccion de productos
+
                         this.productos.add(new Producto(array.get(i).toString()));
+
                         System.out.println(this.productos.get(i).getDescripcion() + ", Cantidad : " + this.productos.get(i).getCantidad() + ", Precio : " + this.productos.get(i).getPrecio() + ", Subtotal : " + this.productos.get(i).getSubTotal());
 
                     }//for
@@ -364,8 +365,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
                     if (entry.getValue() != null && entry.getValue() != "") {
 
                         try {
-                            this.id_venta = entry.getValue().toString();
-                            System.out.println("this.id_venta : " + this.id_venta);
+                            this.setIdVenta(entry.getValue().toString());
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -379,8 +379,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
                     if (entry.getValue() != null && entry.getValue() != "") {
 
                         try {
-                            this.empleado = entry.getValue().toString();
-                            System.out.println("this.responsable : " + this.empleado);
+                            this.setEmpleado(entry.getValue().toString());
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -394,8 +393,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
                     if (entry.getValue() != null && entry.getValue() != "") {
 
                         try {
-                            this.subtotal = Float.parseFloat(entry.getValue().toString());
-                            System.out.println("this.subtotal : " + this.subtotal);
+                            this.setSubTotal(Float.parseFloat(entry.getValue().toString()));
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -408,10 +406,8 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                     if (entry.getValue() != null && entry.getValue() != "") {
 
-                        System.out.println("this.total : " + this.total);
-
                         try {
-                            this.total = Float.parseFloat(entry.getValue().toString());
+                            this.setTotal(Float.parseFloat(entry.getValue().toString()));
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -424,10 +420,8 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                     if (entry.getValue() != null && entry.getValue() != "") {
 
-                        //System.out.println("this.pagado : " + this.pagado);
-
                         try {
-                            this.dineroRecibido = Float.parseFloat(entry.getValue().toString());
+                            this.setDineroRecibido(Float.parseFloat(entry.getValue().toString()));
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -436,42 +430,57 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                 }
 
+                if (entry.getKey().toString().equals("reimpresion")) {
+
+                    if (entry.getValue() != null && entry.getValue() != "") {
+
+                        try {
+                            this.setReimpresion(Boolean.parseBoolean(entry.getValue().toString()));
+                        } catch (Exception e) {
+                            System.err.print(e);
+                        }
+
+                    }
+
+                }
 
             }//while
 
             System.out.println("Terminado proceso de construccion de Venta a Cliente");
 
+            this.validator();
+
         } catch (Exception pe) {
             System.out.println(pe);
         }
 
-    }//ventaCliente
+    }//init
 
     /**
      * Verifica que se hayan establecedo correctamente todos los valores necesarios para construir el ticket de venta a cliente
      */
-    private void ventaClienteValidator() {
+    void validator() {
 
         System.out.println("Iniciando proceso de validacion de venta a cliente");
 
         int cont = 0;
 
-        if (this.sucursal == null) {
+        if (this.getSucursal() == null) {
             System.err.println("Error : sucursal");
             cont++;
         }
 
-        if (this.cliente == null) {
+        if (this.getCliente() == null) {
             System.err.println("Error : cliente");
             cont++;
         }
 
-        if (this.tipoVenta == null || this.tipoVenta.equals("")) {
+        if (this.getTipoVenta() == null || this.getTipoVenta().equals("")) {
             System.err.println("Error : tipoVenta");
             cont++;
         }
 
-        if (this.tipoPago == null || this.tipoPago.equals("")) {
+        if (this.getTipoPago() == null || this.getTipoPago().equals("")) {
             System.err.println("Error : tipoPago");
             cont++;
         }
@@ -481,12 +490,12 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
             cont++;
         }
 
-        if (this.subtotal == -1) {
+        if (this.getSubTotal() == -1) {
             System.err.println("Error : No se definio el subtotal");
             cont++;
         }
 
-        if (this.total == -1) {
+        if (this.getTotal() == -1) {
             System.err.println("Error : No se definio el total");
             cont++;
         }
@@ -505,6 +514,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
             System.err.println("Error : No se definio el responsable");
             cont++;
         }
+
 
         System.out.println("Terminado proceso de validacion de venta a cliente. se encontraron " + cont + " errores.");
 
@@ -531,26 +541,19 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
         this.grafico.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
 
         /*
-         *inicializamos las fuentes, esto se ahce en este momento por que para hacerlo se necesita
+         *inicializamos las fuentes, esto se hace en este momento por que para hacerlo se necesita
          *tener el objeto grafico
          */
         this.initFonts(this.grafico);
 
-        //establecemos la fuente
         this.grafico.setFont(this.bold);
 
-
-        this.grafico.drawString("Formato xtreme JUAN ANTONIO GARCIA TAPIA", this.x, this.y);
-
-        //damos un espacio entre lineas
+        this.grafico.drawString(LeyendasTicket.getCabeceraTicket(), this.x, this.y);
+        
         this.incrementY(this.height_italic);
-        //------------------------------------------------------------------------------------------------------
-
-
-
-
-
+        
         this.grafico.drawString("R.F.C. " + LeyendasTicket.getRFC(), this.x, this.y);
+
         this.incrementY(this.height_normal);
 
         this.imprimeSinDesborde(this.sucursal.getDescripcion(), this.height_normal);
@@ -585,7 +588,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
         this.incrementY(this.height_normal);
 
-        this.grafico.drawString("Fecha : " + this.fecha + " " + this.hora, this.x, this.y);
+        this.grafico.drawString("Fecha : " + this.getFecha() + " " + this.hora, this.x, this.y);
 
         this.incrementY(this.height_normal);
 
@@ -722,11 +725,11 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
             //entra si el tipo de venta es a credito
 
-            this.imprimeSinDesborde(this.leyendas.getNotaFiscal(), " ", this.height_normal);
+            this.imprimeSinDesborde(LeyendasTicket.getNotaFiscal(), " ", this.height_normal);
 
             this.grafico.setFont(this.bold);
 
-            this.imprimeSinDesborde(this.leyendas.getCabeceraPagare(), " ", this.height_normal);
+            this.imprimeSinDesborde(LeyendasTicket.getCabeceraPagare(), " ", this.height_normal);
 
             this.grafico.setFont(this.normal);
 
@@ -749,10 +752,6 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
         this.incrementY(this.height_normal);
 
 
-
-
-        //------------------------------------------------------------------------------------------------------
-        //termina con exito
         return PAGE_EXISTS;
 
     }
