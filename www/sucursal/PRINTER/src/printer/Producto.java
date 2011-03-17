@@ -341,8 +341,6 @@ public class Producto {
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
 
-                System.out.println(entry.getKey() + " => " + entry.getValue());
-
                 if (entry.getKey().toString().equals("descripcion")) {
 
                     try {
@@ -481,7 +479,7 @@ public class Producto {
         }
 
 
-        if( this.getPrecioVenta() <= 0 ){
+        if( this.getPrecioVenta() > 0 ){
             System.out.println("precioVenta : ok - " + this.getPrecioVenta());
         }else{
             System.err.println("precioVenta : fail - " + this.getPrecioVenta());
@@ -489,7 +487,7 @@ public class Producto {
         }
 
 
-        if( this.getPrecioVentaSinProcesar() <= 0 ){
+        if( this.getPrecioVentaSinProcesar() > 0 ){
             System.out.println("precioVentaSinProcesar : ok - " + this.getPrecioVentaSinProcesar());
         }else{
             System.err.println("precioVentaSinProcesar : fail - " + this.getPrecioVentaSinProcesar());
@@ -497,14 +495,14 @@ public class Producto {
         }
 
 
-        if( this.getPrecio() <= 0 ){
+        if( this.getPrecio() > 0 ){
             System.out.println("precio : ok - " + this.getPrecio());
         }else{
             System.err.println("precio : fail - " + this.getPrecio());
         }
 
 
-        if( this.getPrecioVentaIntersucursal() <= 0 ){
+        if( this.getPrecioVentaIntersucursal() > 0 ){
             System.out.println("precioVentaIntersucursal : ok - " + this.getPrecioVentaIntersucursal());
         }else{
             System.err.println("IntersprecioVentaIntersucursal : fail - " + this.getPrecioVentaIntersucursal());
@@ -512,7 +510,7 @@ public class Producto {
         }
 
         
-        if( this.getId() <= 0 ){
+        if( this.getId() >= 0 ){
             System.out.println("ID : ok - " + this.getId());
         }else{
             System.err.println("ID : fail - " + this.getId());
@@ -527,7 +525,7 @@ public class Producto {
             cont++;
         }
 
-        if( this.getCantidad() <= 0 ){
+        if( this.getCantidad() >= 0 ){
             System.out.println("cantidad : ok - " + this.getCantidad());
         }else{
             System.err.println("cantidad : fail - " + this.getCantidad());

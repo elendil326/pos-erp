@@ -59,21 +59,21 @@ abstract class FormatoTicket {
      * @param interlineado Espacio que se tomara entre lineas (pixeles)
      * @return
      */
-    public void imprimeSinDesborde(String cadena, int interlineado) {
+    public void imprimeSinDesborde(Graphics2D _grafico, String cadena, int interlineado) {
 
         while (cadena.length() > this.limiteCaracteres) {
 
-            this.grafico.drawString(cadena.substring(0, this.limiteCaracteres), x, y);
+            _grafico.drawString(cadena.substring(0, this.limiteCaracteres), x, y);
 
             cadena = cadena.substring(this.limiteCaracteres, cadena.length());
 
-            this.incrementY(this.y + interlineado);
+            this.incrementY(interlineado);
 
         }
 
-        this.grafico.drawString(cadena, x, y);
+        _grafico.drawString(cadena, x, y);
 
-        this.incrementY(this.y + interlineado);
+        this.incrementY(interlineado);
 
     }
 
@@ -87,31 +87,37 @@ abstract class FormatoTicket {
      * @param interlineado Espacio que se tomara entre lineas (pixeles)
      * @return
      */
-    public void imprimeSinDesborde(String _cadena, String separador, int interlineado) {
+    public void imprimeSinDesborde(Graphics2D _grafico, String _cadena, String separador, int interlineado) {
 
         String[] texto = _cadena.split(separador);
 
-        String cadena = texto[0];
+        String cadena = texto[0] + " ";
+
+        if (texto.length == 1) {
+            _grafico.drawString(cadena, this.x, this.y);
+            this.incrementY(interlineado);
+        }
 
         for (int k = 1; k < texto.length; k++) {
 
-            if ((cadena.length() + separador.length() + texto[k].length()) < this.getLimiteCaracteres()) {
+            if ((cadena.length() + texto[k].length()) <= this.getLimiteCaracteres()) {
 
-                cadena += " " + texto[k];
+                cadena += texto[k] + " ";
+
+                if (k + 1 >= texto.length) {
+                    _grafico.drawString(cadena, this.x, this.y);
+                    this.incrementY(interlineado);
+                } else {
+                    continue;
+                }
 
             } else {
 
-                this.grafico.drawString(cadena, this.x, this.y);
-
-                cadena = texto[k];
-
-                this.incrementY(this.y + interlineado);
+                _grafico.drawString(cadena, this.x, this.y);
+                this.incrementY(interlineado);
+                cadena = texto[k] + " ";
 
             }
-
-            this.grafico.drawString(cadena, this.x, this.y);
-
-            this.incrementY(this.y + interlineado);
 
         }
     }
@@ -427,18 +433,20 @@ abstract class FormatoTicket {
      * Descripcion del JSON en bruto que llego.
      */
     public String json = null;
+
     /**
      * Obtiene el json en bruto que contiene la configuracion del ticket
      * @return
      */
-    public String getJSON(){
+    public String getJSON() {
         return this.json;
     }
+
     /**
      * Establece el json que contiene la configuracion del ticket
      * @param _json
      */
-    public void setJSON(String _json){
+    public void setJSON(String _json) {
         this.json = _json;
     }
     /**

@@ -148,30 +148,48 @@ public class Sucursal {
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
 
-                System.out.println(entry.getKey() + " => " + entry.getValue());
-
                 if (entry.getKey().toString().equals("descripcion")) {
 
-                    this.setDescripcion(entry.getValue().toString());
+                    try {
+                        this.setDescripcion(entry.getValue().toString());
+                        System.out.println("descripcion : " + this.getDescripcion());
+                    } catch (Exception e) {
+                        System.err.println(e);
+                    }
 
                 }
 
 
                 if (entry.getKey().toString().equals("direccion")) {
 
-                    this.setDireccion(entry.getValue().toString());
+                    try {
+                        this.setDireccion(entry.getValue().toString());
+                        System.out.println("direccion : " + this.getDireccion());
+                    } catch (Exception e) {
+                        System.err.println(e);
+                    }
 
                 }
 
                 if (entry.getKey().toString().equals("rfc")) {
 
-                    this.setRFC(entry.getValue().toString());
+                    try {
+                        this.setRFC(entry.getValue().toString());
+                        System.out.println("rfc : " + this.getRFC());
+                    } catch (Exception e) {
+                        System.err.println(e);
+                    }
 
                 }
 
                 if (entry.getKey().toString().equals("telefono")) {
 
-                    this.setTelefono(entry.getValue().toString());
+                    try {
+                        this.setTelefono(entry.getValue().toString());
+                        System.out.println("telefono : " + this.getTelefono());
+                    } catch (Exception e) {
+                        System.err.println(e);
+                    }
 
                 }
 
@@ -190,28 +208,36 @@ public class Sucursal {
 
         int cont = 0;
 
-
-        if (entry.getKey().toString().equals("direccion")) {
-
-            this.setDireccion(entry.getValue().toString());
-            System.out.println("this.direccion: " + this.direccion);
-
+        if( this.getDescripcion() != null ){
+            System.out.println("descripcion : ok - " + this.getDescripcion());
+        }else{
+            System.err.println("descripcion : fail");
+            cont++;
         }
 
-        if (entry.getKey().toString().equals("rfc")) {
-
-            this.setRFC(entry.getValue().toString());
-            System.out.println("this.rfc: " + this.rfc);
+        if( this.getDireccion() != null ){
+            System.out.println("direccion : ok - " + this.getDireccion());
+        }else{
+            System.err.println("direccion : fail - " + this.getDireccion());
+            cont++;
         }
 
-        if (entry.getKey().toString().equals("telefono")) {
+       
+        if( this.getRFC() != null ){
+            System.out.println("rfc : ok - " + this.getRFC());
+        }else{
+            System.err.println("rfc : fail - " + this.getRFC());
+            cont++;
+        }
 
-            this.setTelefono(entry.getValue().toString());
-            System.out.println("this.telefono: " + this.telefono);
+        if( this.getTelefono() != null ){
+            System.out.println("telefono : ok - " + this.getTelefono());
+        }else{
+            System.err.println("telefono : fail - " + this.getTelefono());
+            cont++;
         }
 
         System.out.println("Terminado proceso de validacion de sucursal. se encontraron " + cont + " errores.");
 
     }
 }//class
-

@@ -48,7 +48,15 @@ class ServidorImpresion {
         }
         if (selectedService != null) {
             job.setPrintService(selectedService);
-            job.print();
+
+            try{
+                job.print();
+                System.exit(0);
+            }
+            catch(PrinterException exception){
+                System.err.println("La impresora no esta recibiendo documentos.");
+            }
+
         } else {
             System.err.print("Error : No se tiene disponible la impresora : " + Impresora.getDescripcion());
         }

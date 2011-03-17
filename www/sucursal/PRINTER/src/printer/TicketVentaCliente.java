@@ -534,6 +534,8 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
             return NO_SUCH_PAGE;
         }
 
+        System.out.println("Iniciando proceso de impresion de venta a cliente");
+
         //inicializamos el objeto grafico
         this.grafico = (Graphics2D) graphics;
 
@@ -551,14 +553,16 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
         this.grafico.drawString(LeyendasTicket.getCabeceraTicket(), this.x, this.y);
         
         this.incrementY(this.height_italic);
+
+        this.grafico.setFont(this.normal);
         
         this.grafico.drawString("R.F.C. " + LeyendasTicket.getRFC(), this.x, this.y);
 
         this.incrementY(this.height_normal);
 
-        this.imprimeSinDesborde(this.sucursal.getDescripcion(), this.height_normal);
+        this.imprimeSinDesborde(this.grafico, this.sucursal.getDescripcion()," ", this.height_normal);
 
-        this.imprimeSinDesborde(this.sucursal.getDireccion(), this.height_normal);
+        this.imprimeSinDesborde(this.grafico, this.sucursal.getDireccion()," ", this.height_normal);
 
         this.grafico.drawString("Tel. " + this.sucursal.getTelefono(), this.x, this.y);
 
@@ -578,7 +582,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
         this.grafico.setFont(this.bold);
 
-        this.grafico.drawString(this.id_venta, this.x + 120, this.y);
+        this.grafico.drawString(this.id_venta, this.x + 80, this.y);
 
         this.incrementY(this.height_normal);
 
@@ -592,11 +596,11 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
         this.incrementY(this.height_normal);
 
-        this.imprimeSinDesborde("Cajero : " + this.empleado, this.height_normal);
+        this.imprimeSinDesborde(this.grafico, "Cajero : " + this.empleado, this.height_normal);
 
         if (this.cliente != null) {
 
-            this.imprimeSinDesborde("Cliente : " + this.cliente.getNombre(), this.height_normal);
+            this.imprimeSinDesborde(this.grafico, "Cliente : " + this.cliente.getNombre(), this.height_normal);
 
         }
 
@@ -630,7 +634,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
             this.grafico.drawString(String.valueOf(this.productos.get(j).getCantidad()), this.x + 75, this.y);
 
-            this.grafico.drawString(this.formatoDinero.format(this.productos.get(j).getPrecio()), this.x + 75, this.y);
+            this.grafico.drawString(this.formatoDinero.format(this.productos.get(j).getPrecio()), this.x + 107, this.y);
 
             this.grafico.drawString(this.formatoDinero.format(this.productos.get(j).getCantidad() * this.productos.get(j).getPrecio()), this.x + 138, this.y);
 
@@ -656,7 +660,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
             this.grafico.drawString("DESCUENTO:", this.x + 63, this.y);
 
-            this.grafico.drawString(this.formatoDinero.format(this.getCliente().getDescuento()), this.x + 130, this.y);
+            this.grafico.drawString(this.formatoDinero.format( ( this.getCliente().getDescuento() * this.getSubTotal() / 100 ) ), this.x + 130, this.y);
 
             this.incrementY(this.height_normal);
 
@@ -705,7 +709,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                 this.grafico.drawString("CAMBIO:", this.x + 63, this.y);
 
-                this.grafico.drawString(this.formatoDinero.format(this.getDineroRecibido() - this.getTotal()), this.x + 63, this.y);
+                this.grafico.drawString(this.formatoDinero.format(this.getDineroRecibido() - this.getTotal()), this.x + 130, this.y);
 
                 this.incrementY(this.height_normal);
 
@@ -719,21 +723,21 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
         this.incrementY(this.height_normal);
 
-        this.imprimeSinDesborde(this.getCantidadEnLetra(this.getTotal()), this.height_normal);
+        this.imprimeSinDesborde(this.grafico, this.getCantidadEnLetra(this.getTotal()), this.height_normal);
 
         if (this.getTipoVenta().equals("credito")) {
 
             //entra si el tipo de venta es a credito
 
-            this.imprimeSinDesborde(LeyendasTicket.getNotaFiscal(), " ", this.height_normal);
+            this.imprimeSinDesborde(this.grafico, LeyendasTicket.getNotaFiscal(), " ", this.height_normal);
 
             this.grafico.setFont(this.bold);
 
-            this.imprimeSinDesborde(LeyendasTicket.getCabeceraPagare(), " ", this.height_normal);
+            this.imprimeSinDesborde(this.grafico, LeyendasTicket.getCabeceraPagare(), " ", this.height_normal);
 
             this.grafico.setFont(this.normal);
 
-            this.imprimeSinDesborde(LeyendasTicket.getPagare(), " ", this.height_normal + 10);
+            this.imprimeSinDesborde(this.grafico, LeyendasTicket.getPagare(), " ", this.height_normal);
 
             this.grafico.drawString("_____________________________________________________________", this.x, this.y);
 
@@ -751,6 +755,8 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
         this.grafico.drawString(LeyendasTicket.getGracias(), this.x + 30, this.y);
         this.incrementY(this.height_normal);
 
+
+        System.out.println("Terminado proceso de impresion de venta a cliente");
 
         return PAGE_EXISTS;
 

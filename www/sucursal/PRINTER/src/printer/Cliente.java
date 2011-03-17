@@ -185,8 +185,6 @@ public class Cliente {
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
 
-                System.out.println( entry.getKey() + " => " + entry.getValue());
-
                 if (entry.getKey().toString().equals("nombre")) {
 
                     this.setNombre(entry.getValue().toString());

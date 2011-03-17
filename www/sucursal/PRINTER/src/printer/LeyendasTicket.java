@@ -294,8 +294,6 @@ public class LeyendasTicket {
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
 
-                System.out.println(entry.getKey() + " => " + entry.getValue());
-
                 if (entry.getKey().toString().equals("cabeceraTicket")) {
 
                     if (entry.getValue() != null) {
@@ -303,7 +301,7 @@ public class LeyendasTicket {
                         try{
 
                             LeyendasTicket.setCabeceraTicket(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda cabeceraTicket : " + entry.getValue().toString());
+                            System.out.println("Estableciendo la leyenda cabeceraTicket : " + LeyendasTicket.getCabeceraTicket());
 
                         }catch(Exception e){
                              System.err.println(e);
@@ -320,7 +318,7 @@ public class LeyendasTicket {
                         try{
 
                             LeyendasTicket.setRFC(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda rfc : " + entry.getValue().toString());
+                            System.out.println("Estableciendo la leyenda rfc : " + LeyendasTicket.getRFC());
 
                         }catch(Exception e){
                              System.err.println(e);
@@ -336,7 +334,7 @@ public class LeyendasTicket {
                         try{
 
                             LeyendasTicket.setNombreEmpresa(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda nombreEmpresat : " + entry.getValue().toString());
+                            System.out.println("Estableciendo la leyenda nombreEmpresat : " + LeyendasTicket.getNombreEmpresa());
 
                         }catch(Exception e){
                              System.err.println(e);
@@ -352,7 +350,7 @@ public class LeyendasTicket {
                         try{
 
                             LeyendasTicket.setDireccion(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda direccion : " + entry.getValue().toString());
+                            System.out.println("Estableciendo la leyenda direccion : " + LeyendasTicket.getDireccion());
 
                         }catch(Exception e){
                              System.err.println(e);
@@ -368,7 +366,7 @@ public class LeyendasTicket {
                         try{
 
                             LeyendasTicket.setTelefono(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda telefono : " + entry.getValue().toString());
+                            System.out.println("Estableciendo la leyenda telefono : " + LeyendasTicket.getTelefono());
 
                         }catch(Exception e){
                              System.err.println(e);
@@ -384,7 +382,7 @@ public class LeyendasTicket {
                         try{
 
                             LeyendasTicket.setNotaFiscal(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda notaFiscal : " + entry.getValue().toString());
+                            System.out.println("Estableciendo la leyenda notaFiscal : " + LeyendasTicket.getNotaFiscal());
 
                         }catch(Exception e){
                              System.err.println(e);
@@ -400,7 +398,7 @@ public class LeyendasTicket {
                         try{
 
                             LeyendasTicket.setCabeceraPagare(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda cabeceraPagare : " + entry.getValue().toString());
+                            System.out.println("Estableciendo la leyenda cabeceraPagare : " + LeyendasTicket.getCabeceraPagare());
 
                         }catch(Exception e){
                              System.err.println(e);
@@ -416,7 +414,7 @@ public class LeyendasTicket {
                         try{
 
                             LeyendasTicket.setPagare(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda pagare : " + entry.getValue().toString());
+                            System.out.println("Estableciendo la leyenda pagare : " + LeyendasTicket.getPagare());
 
                         }catch(Exception e){
                              System.err.println(e);
@@ -432,7 +430,7 @@ public class LeyendasTicket {
                         try{
 
                             LeyendasTicket.setContacto(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda contacto : " + entry.getValue().toString());
+                            System.out.println("Estableciendo la leyenda contacto : " + LeyendasTicket.getContacto());
 
                         }catch(Exception e){
                              System.err.println(e);
@@ -448,7 +446,7 @@ public class LeyendasTicket {
                         try{
 
                             LeyendasTicket.setGracias(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda gracias : " + entry.getValue().toString());
+                            System.out.println("Estableciendo la leyenda gracias : " + LeyendasTicket.getGracias());
 
                         }catch(Exception e){
                              System.err.println(e);
