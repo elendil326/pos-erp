@@ -135,11 +135,6 @@ class ServidorImpresion {
                             obj = new TicketRecepcionEmbarque(json, hora, fecha);
                         }
 
-                        if (ticket.equals("reimpresion_venta_cliente")) {
-                            System.out.println("Creando objeto FormatoTicketReimpresionVentaCliente");
-                            obj = new TicketReimpresionVentaCliente(json, hora, fecha);
-                        }
-
                         if (ticket.equals("abono_venta_cliente")) {
                             System.out.println("Creando objeto FormatoTicketAbonoVentaCliente");
                             obj = new TicketAbonoVentaCliente(json, hora, fecha);

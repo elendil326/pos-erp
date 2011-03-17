@@ -27,12 +27,11 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
     //--------------------------------------------------------------------//
     //     Propiedades especificas de este ticket                         //
     //--------------------------------------------------------------------//
-    
-
     /**
      * Obtiene el estado del ticket. TRUE si es una reimpresion de este, FALSE de lo contrario
      */
     private boolean reimpresion = false;
+
     /**
      * Obtiene el estado del ticket. TRUE si es una reimpresion de este, FALSE de lo contrario
      * @return
@@ -65,7 +64,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
      * Establece el objeto tipo sucursal de esta venta
      * @param _sucursal
      */
-    private void setTipoSucursal(Sucursal _sucursal) {
+    private void setSucursal(Sucursal _sucursal) {
         this.sucursal = _sucursal;
     }
     /**
@@ -195,14 +194,14 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
     /**
      * ID de la venta actual
      */
-    private String id_venta = null;
+    private String idVenta = null;
 
     /**
      * Obtiene el id de la venta
      * @return
      */
     public String getIdVenta() {
-        return this.id_venta;
+        return this.idVenta;
     }
 
     /**
@@ -210,7 +209,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
      * @param _id_venta
      */
     private void setIdVenta(String _id_venta) {
-        this.id_venta = _id_venta;
+        this.idVenta = _id_venta;
     }
     /**
      * Cajero que realizo la operacion de la venta
@@ -222,7 +221,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
      * @return
      */
     public String getEmpleado() {
-        return this.id_venta;
+        return this.idVenta;
     }
 
     /**
@@ -242,17 +241,20 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
      * @param hora hora en el servidor al momento que se envio el documento
      * @param fecha fecha en el servidor al momento que se envio el documento
      */
-    TicketVentaCliente(String json, String hora, String fecha) {               
+    TicketVentaCliente(String json, String hora, String fecha) {
 
         //extraemos al informacion del JSON para establecer las propiedades de la venta al cliente
 
-        this.init(json, hora, fecha);
+        init(json, hora, fecha);
 
     }
 
     /**
      * extrae toda la informacion necesaria del JSON y la almacena en propiedades
      * de esta clase, para que posteriormente se usen al momento de imprimir el ticket
+     * @param json
+     * @param hora
+     * @param fecha
      */
     void init(String json, String hora, String fecha) {
 
@@ -316,7 +318,6 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                         try {
                             this.sucursal = new Sucursal(entry.getValue().toString());
-                            System.out.println("this.sucursal : " + this.sucursal);
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -500,17 +501,17 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
             cont++;
         }
 
-        if (this.dineroRecibido == -1) {
+        if (this.getDineroRecibido() == -1) {
             System.err.print("Error : No se definio dineroRecibido (pagado)");
             cont++;
         }
 
-        if (this.id_venta == null) {
+        if (this.getIdVenta() == null) {
             System.err.println("Error : No se definio el id_venta");
             cont++;
         }
 
-        if (this.empleado == null) {
+        if (this.getEmpleado() == null) {
             System.err.println("Error : No se definio el responsable");
             cont++;
         }
@@ -551,18 +552,18 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
         this.grafico.setFont(this.bold);
 
         this.grafico.drawString(LeyendasTicket.getCabeceraTicket(), this.x, this.y);
-        
+
         this.incrementY(this.height_italic);
 
         this.grafico.setFont(this.normal);
-        
+
         this.grafico.drawString("R.F.C. " + LeyendasTicket.getRFC(), this.x, this.y);
 
         this.incrementY(this.height_normal);
 
-        this.imprimeSinDesborde(this.grafico, this.sucursal.getDescripcion()," ", this.height_normal);
+        this.imprimeSinDesborde(this.grafico, this.sucursal.getDescripcion(), " ", this.height_normal);
 
-        this.imprimeSinDesborde(this.grafico, this.sucursal.getDireccion()," ", this.height_normal);
+        this.imprimeSinDesborde(this.grafico, this.sucursal.getDireccion(), " ", this.height_normal);
 
         this.grafico.drawString("Tel. " + this.sucursal.getTelefono(), this.x, this.y);
 
@@ -582,7 +583,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
         this.grafico.setFont(this.bold);
 
-        this.grafico.drawString(this.id_venta, this.x + 80, this.y);
+        this.grafico.drawString(this.idVenta, this.x + 80, this.y);
 
         this.incrementY(this.height_normal);
 
@@ -660,7 +661,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
             this.grafico.drawString("DESCUENTO:", this.x + 63, this.y);
 
-            this.grafico.drawString(this.formatoDinero.format( ( this.getCliente().getDescuento() * this.getSubTotal() / 100 ) ), this.x + 130, this.y);
+            this.grafico.drawString(this.formatoDinero.format((this.getCliente().getDescuento() * this.getSubTotal() / 100)), this.x + 130, this.y);
 
             this.incrementY(this.height_normal);
 
@@ -762,3 +763,4 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
     }
 }//class
+
