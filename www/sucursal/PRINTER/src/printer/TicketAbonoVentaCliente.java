@@ -423,36 +423,5 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
 }
 /*
  *
-{
-	\"id_venta\": \"202\",
-	\"empleado\": \"Alan gonzalez hernandez\",
-	\"saldo_prestamo\": 155,
-	\"monto_abono\": \"20.5\",
-	\"leyendasTicket\": {
-        \"cabeceraTicket\": \"JUAN ANTONIO GARCIA TAPIA\",
-        \"rfc\": \"GATJ680704DF2\",
-        \"nombreEmpresa\": \"PAPAS SUPREMAS 1\",
-        \"direccion\": \"MERCADO DE ABASTOS B. JUAREZ BODEGA 49, CELAYA GTO.\",
-        \"telefono\": \"(461) 61 28194\",
-        \"notaFiscal\": \"Este comprobante no es valido para fines fiscales.\",
-        \"cabeceraPagare\": \"PAGARE\",
-        \"pagare\": \"DEBE(MOS) Y PAGARE(MOS) INCONDICIONALMENTE A LA ORDEN DE JUAN ANTONIO GARCIA TAPIA EN LA CIUDAD DE ____________ EL ___________ LA CANTIDAD DE ___________ VALOR RECEBIDO A NUESTRA ENTERA SATISFACCION.\",
-        \"contacto\": \"QUEJAS Y SUGERENCIAS (461) 61 72030\",
-        \"gracias\": \"GRACIAS POR SU COMPRA\"
-    },
-	\"sucursal_origen\": {
-		\"id_sucursal\": \"1\",
-		\"gerente\": \"102\",
-		\"descripcion\": \"papas supremas 1\",
-        \"direccion\": \"monte radiante #123 col centro, celaya\",
-		\"rfc\": \"alskdfjlasdj8787",
-		\"telefono\": \"1726376672",
-		\"token\": null,
-		\"letras_factura\": \"c\",
-		\"activo\": \"1\",
-		\"fecha_apertura\": \"2011-01-09 01:38:26\",
-		\"saldo_a_favor\": \"0\"
-	}
 
-}
  */

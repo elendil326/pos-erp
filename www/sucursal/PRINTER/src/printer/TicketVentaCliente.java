@@ -252,7 +252,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
     }
 
     /**
-     * extrae toda la informacion necesaria del JSON y la almacena en propiedades
+     * Extrae toda la informacion necesaria del JSON y la almacena en propiedades
      * de esta clase, para que posteriormente se usen al momento de imprimir el ticket
      * @param json
      * @param hora
