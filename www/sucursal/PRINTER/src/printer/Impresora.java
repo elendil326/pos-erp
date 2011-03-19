@@ -32,7 +32,7 @@ public class Impresora {
     /**
      * Verifica que se ahyan establecido correctamte todos los valores necesarios para la impresion
      */
-    public static void impresoraValidator(){
+    public static void validator(){
 
         System.out.println("Iniciando proceso de validacion de impresora");
 

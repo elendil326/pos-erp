@@ -148,10 +148,10 @@ class ServidorImpresion {
             }//while
 
             //verificamos que se hayan establecido correctamente los valores de la impresora
-            Impresora.impresoraValidator();
+            Impresora.validator();
 
             //verificamos que se hayan establecido correctamente los valores de las leyenda
-            LeyendasTicket.leyendasTicketValidator();
+            LeyendasTicket.validator();
 
             //verificamos que se haya encontrado el tipo de ticket
             if (ticket == null) {

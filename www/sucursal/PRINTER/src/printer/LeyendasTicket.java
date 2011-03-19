@@ -20,6 +20,13 @@ public class LeyendasTicket {
      */
     private String json = null;
     /**
+     * Establece una cadena en formato de JSON que contiene informacion acerca de las leyendas
+     * @param json
+     */
+    public void setJson(String json) {
+        this.json = json;
+    }
+    /**
      * Cabecera del ticket
      */
     private static String cabeceraTicket = null;
@@ -218,7 +225,7 @@ public class LeyendasTicket {
     /**
      * Verifica que se hayan establecido correctamente todos los valores de las leyendas del ticket
      */
-    public static void leyendasTicketValidator() {
+    public static void validator() {
 
         System.out.println("Iniciando proceso de validacion de leyendas ticket");
 
@@ -279,8 +286,11 @@ public class LeyendasTicket {
     }
 
     public LeyendasTicket(String json) {
+        init(json);
+    }
 
-        this.json = json;
+    private void init(String json){
+        this.setJson(json);
 
         System.out.println("Iniciado proceso de construccion de LeyendasTicket");
 
@@ -305,7 +315,7 @@ public class LeyendasTicket {
 
                         }catch(Exception e){
                              System.err.println(e);
-                        }                       
+                        }
 
                     }
 
@@ -459,6 +469,7 @@ public class LeyendasTicket {
             }//while
 
             System.out.println("Termiando proceso de construccion de LeyendasTicket");
+            
 
         } catch (Exception pe) {
             System.out.println(pe);
