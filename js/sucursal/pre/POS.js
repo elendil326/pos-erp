@@ -22,7 +22,6 @@ POS.currencyFormat = function (num){
 
 };
 
-
 //poner el boton de yes, con si 
 Ext.MessageBox.YESNO[1].text = "Si";
 

@@ -1190,7 +1190,7 @@ Aplicacion.Autorizaciones.prototype.finishedPanelUpdater = function( productos, 
 
 };
 
-Aplicacion.Mostrador.prototype.finishedPanelCreator = function()
+Aplicacion.Autorizaciones.prototype.finishedPanelCreator = function()
 {
 
 	this.finishedPanel = new Ext.Panel({
