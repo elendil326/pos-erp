@@ -198,6 +198,13 @@ $iMaestroTerminados = listarInventarioMaestro(50, POS_SOLO_VACIOS) ;
 	                dataIndex: 'folio'
 	            },	
 	            {
+	                header   : 'productor', 
+	                width    : 85, 
+	                sortable : true, 
+					hidden: false,	
+	                dataIndex: 'productor'
+	            },	
+	            {
 	                id       :'descripcion',
 	                header   : 'Producto', 
 	                width    : 120, 
@@ -242,13 +249,6 @@ $iMaestroTerminados = listarInventarioMaestro(50, POS_SOLO_VACIOS) ;
 					renderer : 'usMoney',
 	                dataIndex: 'precio_por_kg'
 	            },			
-	            {
-	                header   : 'productor', 
-	                width    : 85, 
-	                sortable : true, 
-					hidden: true,	
-	                dataIndex: 'productor'
-	            },
 	            {
 	                header   : 'Originales', 
 	                width    : 150, 
