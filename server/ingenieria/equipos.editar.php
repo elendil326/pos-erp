@@ -79,6 +79,9 @@
 			
 				$sucursales = SucursalDAO::getAll();
 				foreach( $sucursales as $suc ){
+					if($suc->getIdSucursal() == 0)
+						continue;
+						
 					echo "<option value='" . $suc->getIdSucursal() . "' >" .  $suc->getDescripcion()  . "</option>";
 				}
 			
