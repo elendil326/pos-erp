@@ -284,7 +284,15 @@ InventarioMaestro = function( ){
 
     };
 
+	this.recontarProducto = function ( prod ){
+		var p = this.getProducto( prod.id_compra, prod.id_producto );
 
+        p.existencias = p.existencias + prod.cantidad;
+        
+        if(prod.procesada){
+            p.existencias_procesadas = p.existencias_procesadas + prod.cantidad;
+        }
+	};
 
     /**
       * Constructor
@@ -376,60 +384,8 @@ InventarioMaestroTabla = function( config ) {
     
 
 
-    function render(){ /*
-        var html,
-            row_html,
-			a;
-            
-        html = '';  
-        html += '<table style="width: 100% ; text-align:left;">';
-        html += '<tr>';
-        html += '<th>Llegada</th>';     
-        html += '<th>Remision</th>';
-        html += '<th>Arpillas origen</th>';
-        html += '<th>Producto</th>';
-        html += '<th>Variedad</th>';
-
-        html += '<th>Promedio</th>';        
-        html += '<th>Existencias</th>';     
-        html += '<th>Procesadas</th>';      
-        html += '</tr>';
-        
-        var productos = inventario.getProductos();
-        for(a = 0; a < productos.length; a++){
-            row_html = '';
-            
-            row_html += td( productos[a].fecha )
-                + td( productos[a].folio )
-                + td( productos[a].arpillas )
-                + td( productos[a].producto_desc )
-                + td( productos[a].variedad )
-                + td( productos[a].peso_por_arpilla.toFixed(4) + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "style='text-align:right;'" )
-                
-                + td( div("<b>" + productos[a].existencias + "</b>&nbsp;" + toSmallUnit ( productos[a].escala ) , "id='"
-                        + productos[a].id_compra_proveedor + "-" 
-                        + productos[a].id_producto + "-existencias"
-                    + "'"));
-                
-            if(productos[a].producto_tratamiento){
-                row_html += td( div("<b>" + productos[a].existencias_procesadas + "</b>&nbsp;" + toSmallUnit ( productos[a].escala ), "id='"
-                            + productos[a].id_compra_proveedor + "-" 
-                            + productos[a].id_producto + "-existencias-procesadas"
-                        + "'"));
-                //td( "<b>" + productos[a].existencias_procesadas + "</b>&nbsp;" + productos[a].escala + "s");              
-            }else{
-                row_html += td( "NA");
-            }
-
-            html += tr( row_html, 
-				"onClick='composicionTabla.agregarProducto( "+  productos[a].id_compra_proveedor +", "+ productos[a].id_producto +" );' class='im_pid_"+ productos[a].id_producto +"' "
-				+ "onmouseover='this.style.backgroundColor = \"#D7EAFF\"' onmouseout='this.style.backgroundColor = \"white\"'" );
-        }
-        
-            
-        html += '</table>';     
-        
-        jQuery("#" + renderTo).html( html ); */
+    function render(){ 
+		/*          */
     }
 
     function __init(config){
@@ -466,6 +422,7 @@ InventarioMaestroTabla = function( config ) {
     };
     
     this.regresarProducto = function(prod){
+		console.log("regresando " , prod)
         this.tomarProducto( prod.id_compra, prod.id_producto, prod.cantidad * -1, prod.procesadas );
     };
 
@@ -545,7 +502,7 @@ ComposicionTabla = function( config ){
         switch( campo ){
             case "proc" : 
 				comp.procesada = valor;
-				console.log(comp)
+				//console.log(comp)
 				tablaInventario.tomarProducto( id_compra, id_producto, comp.cantidad, comp.procesada );	
 				break;
 			case "cantidad" :
@@ -613,7 +570,7 @@ ComposicionTabla = function( config ){
         }
         
         obj.importe_por_unidad /= composicion.length;
-        console.log( obj );
+        //console.log( obj );
         jQuery("#compuesto-peso-real").val ( obj.peso_real );
         jQuery("#compuesto-peso-a-cobrar").val ( obj.peso_a_cobrar );
         jQuery("#compuesto-importe-por-unidad").val ( cf(obj.importe_por_unidad) );
@@ -650,7 +607,7 @@ ComposicionTabla = function( config ){
 
 		//obtener el producto
         producto = inventario.getProducto( id_compra, id_producto );
-        console.log(producto)
+//        console.log(producto)
         var html = "";
         
         html += td( "<img onClick='composicionTabla.quitarProducto(" + id_compra + "," + id_producto + ")' src='../media/icons/close_16.png'>" );
@@ -769,7 +726,40 @@ ComposicionTabla = function( config ){
 
     };
     
-    this.rollbackMix = function( ){
+    this.rollbackMixIndex = function( mix_index ){
+        var i;
+        
+        for (i=0; i < composiciones[mix_index].items.length; i++) {
+            tablaInventario.regresarProducto( composiciones[mix_index].items[i] );    
+			inventario.recontarProducto( composiciones[mix_index].items[i]  );             
+        }
+
+		/*
+		composicionTabla.doMath( //id_compra
+								composiciones[mix_index].id_compra , 
+								
+								//id_producto
+								composiciones[mix_index].id_producto, 
+								
+								//campo
+								"cantidad",
+								
+								//valor
+								"0 ");
+		*/
+		
+		
+		console.warn("Known bug #146");
+		
+		jQuery("#listaDeProductos").slideDown('fast', function (){
+            jQuery('#InvMaestro').slideUp();
+            jQuery('#ASurtir').slideUp('fast', function (){ } );     
+        });
+		composiciones.splice(mix_index, 1);
+        renderFinalShip();
+    };
+
+    this.rollbackMix = function(  ){
         var i;
         renderFinalShip();
         
@@ -781,14 +771,12 @@ ComposicionTabla = function( config ){
         jQuery("#listaDeProductos").slideDown('fast', function (){
 
             jQuery('#InvMaestro').slideUp();
-            jQuery('#ASurtir').slideUp('fast', function (){
-
-
-
-            });     
+            jQuery('#ASurtir').slideUp('fast', function (){ } );     
 
         });
     };
+
+
     
     __init(config);
 };
@@ -858,8 +846,8 @@ function getEscalaCorta(escala){
 
 function renderFinalShip(){
     
-    if(composiciones.length == 0 )
-        return;
+/*    if(composiciones.length == 0 )
+        return; */
         
     var global_qty = 0, global_qty_real = 0, global_importe = 0;
     
@@ -901,7 +889,7 @@ function renderFinalShip(){
         var color = i % 2 == 0 ? 'style="background-color: #D7EAFF"' : "";
         
         html += tr(
-					td( "<img src='../media/icons/basket_32.png'>" )
+					td( "<img src='../media/icons/basket_close_32.png' onClick='composicionTabla.rollbackMixIndex("+i+")'><img src='../media/icons/basket_32.png'>" )
                     + td( desc.descripcion )
                     + td( total_qty.toFixed(4) + getEscalaCorta( desc.escala ) )
                     + td( total_qty_with_desc.toFixed(4) + getEscalaCorta( desc.escala ) )     

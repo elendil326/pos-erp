@@ -53,9 +53,11 @@ $proveedor = ProveedorDAO::getByPK( $_REQUEST['id'] );
             return jQuery("#ajax_failure").html("La direccion es muy corta.").show();
         }
 
+		/*
         if(jQuery('#rfc').val().length < 7){
             return jQuery("#ajax_failure").html("El RFC es muy corto.").show();
         }
+		*/
 
         
 

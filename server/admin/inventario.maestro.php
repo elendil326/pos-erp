@@ -303,12 +303,13 @@ $iMaestroTerminados = listarInventarioMaestro(50, POS_SOLO_VACIOS) ;
 	        stripeRows: true,
 	        autoExpandColumn: 'descripcion',
 	        height: 350,
+			minHeight : 300,
 	        width: "100%",
 			frame : false,
 			header: false,
 	        // title: 'Array Grid',
 	        // config options for stateful behavior
-	        stateful: true,
+	        stateful: false,
 	        stateId: 'grid',
 			listeners : {
 				"rowclick" : function (grid, rowIndex, e){
@@ -445,6 +446,7 @@ $iMaestroTerminados = listarInventarioMaestro(50, POS_SOLO_VACIOS) ;
 	        stripeRows: true,
 	        autoExpandColumn: 'descripcion',
 	        height: 350,
+			minHeight : 200,
 	        width: "100%",
 			frame : false,
 			header: false,

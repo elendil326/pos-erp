@@ -29,33 +29,28 @@ POS.Keyboard = {
 	_genHTMLcomplete: null, _HTMLcomplete : null
 };
 
+/*
+	campo - Es el campo de text donde se aplicara este teclado
+	config - es un objeto con distintas configuraciones como estas
+	config = {
+		//tipo del teclado a utilizar
+		type : 'alfa' || 'num' || 'alfanum' || 'complete',
 
+		//texto que tendra el boton de aceptar
+		submitText : 'Aceptar',
+
+		//funcion que se llamara cuando se haga click en aceptar,
+		callback : function
+	}
+*/
 POS.Keyboard.Keyboard = function ( campo, config ){
-	/*
-		campo - Es el campo de text donde se aplicara este teclado
-		config - es un objeto con distintas configuraciones como estas
-		config = {
-			//tipo del teclado a utilizar
-			type : 'alfa' || 'num' || 'alfanum' || 'complete',
 
-			//texto que tendra el boton de aceptar
-			submitText : 'Aceptar',
-
-			//funcion que se llamara cuando se haga click en aceptar,
-			callback : function
-		}
-	*/
 	if(POS.Keyboard.KeyboardObj){
 		var internalConfig = POS.Keyboard.genHTML( config );
 		POS.Keyboard.callback = config.callback;
 
-
-
-
         //POS.Keyboard.KeyboardObj.setCentered(false);
         POS.Keyboard.KeyboardObj.showBy(campo, true, false);
-
-
 
 		if( POS.Keyboard.KeyboardObj.getWidth() != internalConfig.width )
 			POS.Keyboard.KeyboardObj.setWidth(internalConfig.width);
@@ -65,7 +60,6 @@ POS.Keyboard.Keyboard = function ( campo, config ){
 
 
 		POS.Keyboard.KeyboardObj.update( internalConfig.html );
-
 
         POS.Keyboard.KeyboardObj.showBy(campo, true, false);
 		POS.Keyboard.campo = campo;
