@@ -38,7 +38,7 @@ if( ! ($_REQUEST['action']  == "2001" || $_REQUEST['action']  == "2004" || $_REQ
 {
 	if(!checkCurrentSession()){
 		Logger::log("Sesion invalida.");
-		die( '{"success": false , "reason": "Accesso denegado" }' );
+		die( '{"success": false , "reason": "Accesso denegado" , "reboot" : true }' );
 	}
     
 }

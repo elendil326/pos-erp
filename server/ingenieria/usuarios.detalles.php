@@ -26,11 +26,11 @@ $usr = UsuarioDAO::getByPK( $_REQUEST['id'] );
 <script>
 	function testP()
 	{
-			if($('#p1').val() != $('#p2').val()){
+			if(jQuery('#p1').val() != jQuery('#p2').val()){
 				alert('las contasenas no coinciden');
 				return false;
 			}
-			$('#pkey').val( hex_md5( $('#p2').val() ) );
+			jQuery('#pkey').val( hex_md5( jQuery('#p2').val() ) );
 			return true;
 	}
 </script>
@@ -67,13 +67,13 @@ $usr = UsuarioDAO::getByPK( $_REQUEST['id'] );
 
 
 <h2>Editar contrase&ntilde;a</h2>
-<form onSubmit='return testP()' action='usuarios.php?action=detalles&id=<?php echo $_REQUEST['id']?>' method='POST'>
-<input type='hidden' name='pass' value='edit'>
-<input type='hidden' name='pkey' value='' id='pkey'>
-<table border="0" cellspacing="5" cellpadding="5">
-	<tr><td><b>Actual</b></td><td><?php echo $usr->getContrasena(); ?></td></tr>
-	<tr><td><b>Nueva</b></td><td><input type='password' id='p1' ></td></tr>
-	<tr><td><b>Repetir</b></td><td><input type='password' id='p2' ></td></tr>
-	<tr><td></td><td><input type='submit' value='Guardar'></td></tr>	
-</table>
+<form onSubmit='return testP();' action='usuarios.php?action=detalles&id=<?php echo $_REQUEST['id']?>' method='POST'>
+	<input type='hidden' name='pass' value='edit'>
+	<input type='hidden' name='pkey'  id='pkey'>
+	<table border="0" cellspacing="5" cellpadding="5">
+		<tr><td><b>Actual</b></td><td><?php echo $usr->getContrasena(); ?></td></tr>
+		<tr><td><b>Nueva</b></td><td><input type='password' id='p1' ></td></tr>
+		<tr><td><b>Repetir</b></td><td><input type='password' id='p2' ></td></tr>
+		<tr><td></td><td><input type='submit' value='Guardar'></td></tr>	
+	</table>
 </form>

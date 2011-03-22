@@ -27,7 +27,8 @@ Ext.MessageBox.YESNO[1].text = "Si";
 
 
 Ext.Ajax.timeout = 25000;
-POS.CHECK_DB_TIMEOUT = 60000;
+POS.CHECK_DB_TIMEOUT = 25000;
+
 POS.A = { failure : false,  sendHeart : true };
 POS.U = { g : null };
 
@@ -57,7 +58,7 @@ Ext.Ajax.on("beforerequest", function( conn, options ){
 	
 });
 
-Ext.Ajax.on("requestcomplete", function(){
+Ext.Ajax.on("requestcomplete", function(a,b,c){
     if(POS.A.failure){
         POS.A.failure = false;
         //Ext.getBody().unmask();
@@ -87,6 +88,8 @@ function task(){
 		params : { action : 1101, hash : heartHash },
 		success: function(response, opts) {
 			
+			if(DEBUG)console.log("heartbeat returned")
+
 			setTimeout("task()", POS.CHECK_DB_TIMEOUT);
 			
 			if(response.responseText.length == 0){
@@ -94,6 +97,12 @@ function task(){
 			}
 			
 			try{ r = Ext.util.JSON.decode( response.responseText ); }catch(e){ return; }
+
+			if((r.reboot !== undefined)){
+				console.error("REBBOT !");
+				window.location = ".";
+			}
+
 			
 			if( r.success && r.hash != heartHash){
 
