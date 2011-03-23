@@ -22,6 +22,11 @@ POS.currencyFormat = function (num){
 
 };
 
+//extrae informacion hacerca de la sucursal actual
+POS.infoSucursal = function(){
+    return "informacion";
+};
+
 //poner el boton de yes, con si 
 Ext.MessageBox.YESNO[1].text = "Si";
 

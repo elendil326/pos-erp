@@ -252,10 +252,6 @@ function createLoginForm( sucursal ){
     form.show();
 }
 
-//extrae informacion hacerca de la sucursal actual
-infoSucursal = function(){
-    return "informacion";
-};
 
 
 
