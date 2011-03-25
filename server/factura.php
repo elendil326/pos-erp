@@ -148,14 +148,14 @@
         validaDatos($args);
         
         //crea xml con los datos de la venta para enviar al webservice
-        $xml = parseVentaToXML($args['id_venta'] );
+        $xml_request = parseVentaToXML($args['id_venta'], $args['id_cliente'] );
                 
 
         //Realizamos una peticion al webservice para que se genere una nueva factura en el sistema.
-        $id_folio = nuevaFactura( $xml );        
+        $xml_response = getFacturaFromWebService( $xml_request );        
         
         //genera un json con todos los datos necesarios para generar el PDF de la factura electronica
-        $json_factura = parseFacturaToJSON($id_folio);
+        $json_factura = parseFacturaToJSON($xml_response);
         
         //llamar al metodo que genera el pdf
         
@@ -167,7 +167,7 @@
         * Recibe el id de una venta, extrae sus datos y regresa un xml con el formato que
         * se necesita enviar al web service.
         */
-    function parseVentaToXML($id_venta){
+    function parseVentaToXML($id_venta, $id_cliente){
 
         Logger::log("Iniciando proceso de parceo de venta a XML");
 
@@ -176,6 +176,13 @@
         {
             Logger::log("Error al obtener datos de la venta : {$id_venta}");
             die( '{"success": false, "reason": "Error al obtener datos de la venta ' . $id_venta . '." }' );
+        }    
+        
+        //obtenemos el objeto cliente
+        if( !( $cliente = ClientesDAO::getByPK( $id_cliente ) ) )
+        {
+            Logger::log("Error al obtener datos del cliente{$id_cliente}");
+            die( '{"success": false, "reason": "Error al obtener datos del cliente ' . $id_cliente . '." }' );
         }            
 
         //obtenemos el detalle de la venta
@@ -237,40 +244,40 @@
         
         $emisor = $xml -> createElement( 'emisor' );                
         
-        $emisor_razon_social = $XML -> createElement('razon_social');
+        $emisor_razon_social = $XML -> createElement('razon_social', $sucursal -> getRazonSocial());
         $emisor -> appendChild($emisor_razon_social);
         
-        $emisor_rfc = $XML -> createElement('rfc');
+        $emisor_rfc = $XML -> createElement('rfc', $sucursal -> getRfc());
         $emisor -> appendChild($emisor_rfc);
         
-        $emisor_calle = $XML -> createElement('calle');
+        $emisor_calle = $XML -> createElement('calle',$sucursal -> getCalle());
         $emisor -> appendChild($emisor_calle);
         
-        $emisor_numero_exterior = $XML -> createElement('numero_exterior');
+        $emisor_numero_exterior = $XML -> createElement('numero_exterior', $sucursal -> getNumeroExterior());
         $emisor -> appendChild($emisor_numero_exterior);
         
-        $emisor_numero_interior = $XML -> createElement('numero_interior');$comprobante -> appendChild($);
+        $emisor_numero_interior = $XML -> createElement('numero_interior', $sucursal -> getNumeroInterior());
         $emisor -> appendChild($emisor_numero_interior);
         
-        $emisor_colonia = $XML -> createElement('colonia');
+        $emisor_colonia = $XML -> createElement('colonia', $sucursal -> getColonia());
         $emisor -> appendChild($emisor_colonia);
         
-        $emisor_localidad = $XML -> createElement('localidad');
+        $emisor_localidad = $XML -> createElement('localidad', $sucursal -> getLocalidad());
         $emisor -> appendChild($emisor_localidad);
         
-        $emisor_referecia = $XML -> createElement('referencia');
+        $emisor_referecia = $XML -> createElement('referencia', $sucursal -> getReferencia());
         $emisor -> appendChild($emisor_referencia);
         
-        $emisor_municipio = $XML -> createElement('municipio');
+        $emisor_municipio = $XML -> createElement('municipio', $sucursal -> getMunicipio());
         $emisor -> appendChild($emisor_municipio);
         
-        $emisor_estado = $XML -> createElement('estado');
+        $emisor_estado = $XML -> createElement('estado', $sucursal -> getEstado());
         $emisor -> appendChild($emisor_estado);
         
-        $emisor_pais = $XML -> createElement('pais');
+        $emisor_pais = $XML -> createElement('pais', $sucursal -> getPais());
         $emisor -> appendChild($emisor_pais);
         
-        $emisor_codigo_postal = $XML -> createElement('codigo_postal');
+        $emisor_codigo_postal = $XML -> createElement('codigo_postal', $sucursal -> getCodigoPostal());
         $emisor -> appendChild($emisor_codigo_postal);
         
         $comprobante -> appendChild($emisor);
@@ -311,40 +318,40 @@
         
         $receptor = $xml -> createElement( 'receptor' ); 
         
-        $receptor_razon_social = $XML -> createElement('razon_social');
+        $receptor_razon_social = $XML -> createElement('razon_social', $cliente -> getRazonSocial());
         $receptor = $xml -> createElement($receptor_razon_social);
         
-        $receptor_rfc = $XML -> createElement('rfc');
+        $receptor_rfc = $XML -> createElement('rfc', $cliente -> getRfc());
         $receptor = $xml -> createElement($receptor_rfc);
         
-        $receptor_calle = $XML -> createElement('calle');
+        $receptor_calle = $XML -> createElement('calle', $cliente -> getCalle());
         $receptor = $xml -> createElement($receptor_calle);
         
-        $receptor_numero_exterior = $XML -> createElement('numero_exterior');
+        $receptor_numero_exterior = $XML -> createElement('numero_exterior', $cliente -> getNumeroExterior());
         $receptor = $xml -> createElement($receptor_numero_exterior);
         
-        $receptor_numero_interior = $XML -> createElement('numero_interior');
+        $receptor_numero_interior = $XML -> createElement('numero_interior', $cliente -> getNumeroInterior());
         $receptor = $xml -> createElement($receptor_numero_interior);
         
-        $receptor_colonia = $XML -> createElement('colonia');
+        $receptor_colonia = $XML -> createElement('colonia', $cliente -> getColonia());
         $receptor = $xml -> createElement($receptor_colonia);
         
-        $receptor_localidad = $XML -> createElement('localidad');
+        $receptor_localidad = $XML -> createElement('localidad', $cliente -> getLocalidad());
         $receptor = $xml -> createElement($receptor_localidad);
         
-        $receptor_referecia = $XML -> createElement('referencia');
+        $receptor_referecia = $XML -> createElement('referencia', $cliente -> getReferencia());
         $receptor = $xml -> createElement($receptor_referencia);
         
-        $receptor_municipio = $XML -> createElement('municipio');
+        $receptor_municipio = $XML -> createElement('municipio', $cliente -> getMunicipio());
         $receptor = $xml -> createElement($receptor_municipio);
         
-        $receptor_estado = $XML -> createElement('estado');
+        $receptor_estado = $XML -> createElement('estado', $cliente -> getEstado());
         $receptor = $xml -> createElement($receptor_estado);
         
-        $receptor_pais = $XML -> createElement('pais');
+        $receptor_pais = $XML -> createElement('pais', $cliente -> getPais());
         $receptor = $xml -> createElement($receptor_pais);
         
-        $receptor_codigo_postal = $XML -> createElement('codigo_postal');
+        $receptor_codigo_postal = $XML -> createElement('codigo_postal', $cliente -> getCodigoPostal());
         $receptor = $xml -> createElement($receptor_codigo_postal);
         
         $comprobante -> appendChild($receptor);
@@ -434,13 +441,13 @@
         
         $llaves = $xml -> createElement('llaves');
         
-        $llaves_publica = $xml  -> createElement('publica');
+        $llaves_publica = $xml  -> createElement('publica',$pos_config -> publica);
         $llaves = appendChild($llaves_publica);
         
-        $llaves_privada = $xml -> createElement('privada');
+        $llaves_privada = $xml -> createElement('privada', $pos_config -> privada);
         $llaves = appendChild($llaves_privada);
         
-        $llaves_noCertificado = $xml -> createElement('noCertificado');
+        $llaves_noCertificado = $xml -> createElement('noCertificado', $pos_config -> noCertificado);
         $llaves = appendChild($llaves_noCertificado);
         
         $comprobante -> appendChild($llaves);
@@ -454,13 +461,33 @@
     }
     
     /**
-        *
+        * Extrae la informacion acerca de las llaves para solicitar
         */
-    function getInformacionConfiguracion(){    
+    function getInformacionConfiguracion(){        
+    
         $llaves = new stdClass();
+                        
+
+        if( !( $llaves -> privada = PosConfigDAO::getByPK( 'llave_privada' ) ) )
+        {
+            Logger::log("Error al obtener la llave privada");
+            DAO::transRollback();
+            die( '{"success": false, "reason": "Error al obtener la llave privada" }' );
+        }
         
-        $pos_config = new PosConfig();
-        //$pos_config -> search
+        if( !( $llaves -> publica = PosConfigDAO::getByPK( 'llave_publica' ) ) )
+        {
+            Logger::log("Error al obtener la llave publica");
+            DAO::transRollback();
+            die( '{"success": false, "reason": "Error al obtener la llave privada" }' );
+        }
+        
+        if( !( $llaves -> noCertificado = PosConfigDAO::getByPK( 'noCertificado' ) ) )
+        {
+            Logger::log("Error al obtener el nuemro de certificado");
+            DAO::transRollback();
+            die( '{"success": false, "reason": "Error al obtener el numero de certificado" }' );
+        } 
         
         return $llaves;
     }            
@@ -496,9 +523,38 @@
         * Recibe un xml con el formato que necesita el web service para generar
         * una nueva factura electronica.
         */
-    function nuevaFactura($xml){
+    function getFacturaFromWebService( $xml_request ){
     
-        return $id_folio;
+        //obtenemos la url del web service
+        if( !( $url = PosConfigDAO::getByPK( 'url_timbrado' ) ) )
+        {
+            Logger::log("Error al obtener la url del ws");
+            DAO::transRollback();
+            die( '{"success": false, "reason": "Error al obtener la url del web service" }' );
+        }  
+        
+        $client = new SoapClient($url);
+    
+        $result = $client->RececpcionComprobante(array('comprobante' => $xml_request));
+      
+        //verificamos si la llamada fallo  
+        if (is_soap_fault($result)) {
+            trigger_error("La llamada al webservice ha fallado", E_USER_ERROR);
+        }
+    
+        //analizamos el success del xml
+        $dom = new DomDocument;
+        $dom->loadXML( $result -> RececpcionComprobanteResult);
+        
+        $success = $dom->getElementsByTagName('Complemento')
+                
+        $xml_response = $dom->saveXML();
+        
+        $xml_obj = new SimpleXMLElement($xml_response);
+        
+        
+    
+        return $xml_response;
     
     }
     
