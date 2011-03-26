@@ -543,18 +543,40 @@
         }
     
         //analizamos el success del xml
-        $dom = new DomDocument;
-        $dom->loadXML( $result -> RececpcionComprobanteResult);
         
-        $success = $dom->getElementsByTagName('Complemento')
+        
+        libxml_use_internal_errors(true);
+        
+        $xml_response->loadXML( $result -> RececpcionComprobanteResult);
+        
+        if (!$xml_response) {
+            $e = "Error cargando XML\n";
+            foreach(libxml_get_errors() as $error) {
+                $e.= "\t", $error->message;
+            }
+            
+            Logger::log("Error al leer xml del web service : {$e} ");
+            DAO::transRollback();
+            die( '{"success": false, "reason": "Error al leer xml del web service : ' . $e . '" }' );
+            
+        }
+        
+        
+        $params = $xml_response->getElementsByTagName('Complemento')
+        $k = 0;
                 
-        $xml_response = $dom->saveXML();
+        foreach ($params as $param) 
+        {
+            $success = $params->item($k)->getAttribute('success');
+        }
         
-        $xml_obj = new SimpleXMLElement($xml_response);
-        
-        
+        if( $success == false || $success == "false"){
+            Logger::log("Error al generar el xml del web service");
+            DAO::transRollback();
+            die( '{"success": false, "reason": "Error al generar el xml del web service" }' );
+        }        
     
-        return $xml_response;
+        return $xml_response -> saveXML();
     
     }
     
@@ -563,9 +585,67 @@
         * y regresa un json con el formato necesario para generar una 
         * nueva factura en formato pdf.
         */
-    function parseFacturaToJSON($id_folio){
+    function parseFacturaToJSON($xml_response){
     
-        return $json;
+        //obtenemos la url del logo
+        if( !( $url_logo = PosConfigDAO::getByPK( 'url_logo' ) ) )
+        {
+            $url_logo = "http://t2.gstatic.com/images?q=tbn:ANd9GcTLzjmaR_M58RmjwRE_xXRziJBi68hMg898kvKtYLD1lQ22i7Br";
+        }  
+    
+        $json = array();                
+        
+        array_push($json , "url" => $url_logo);
+        array_push("emisor",array(
+            "razon_social"
+        ))
+        /**
+            
+            {
+                "url" : "string",
+                "emisor": {
+                    "razon_social" : "string",
+                    "rfc": "string",
+                    "direccion": "string",
+                    "folio": "string" 
+                },
+                "receptor": {
+                    "razon_social" : "string",
+                    "rfc": "string",
+                    "direccion": "string" 
+                },
+                "datos_fiscales": {
+                    "numero_certificado": "string",
+                    "numero_aprobacion": "string",
+                    "anio_aprobacion": "string",
+                    "cadena_original": "string",
+                    "sello_digital": "string",
+                    "sello_digital_proveedor": "string",
+                    "pac": "string" 
+                },
+                "factura": {
+                    "productos": [
+                        {
+                            "cantidad": "string",
+                            "descripcion": "string",
+                            "precio": "string",
+                            "importe": "string" 
+                        } 
+                    ],
+                    "subtotal": "string",
+                    "descuento": "string",
+                    "iva": "string",
+                    "total": "string",
+                    "total_letra": "string",
+                    "forma_pago": "string",
+                    "metodo_pago": "string" 
+                }
+            }
+            
+            */
+        
+    
+        return json_encode($json);
     
     }        
     
