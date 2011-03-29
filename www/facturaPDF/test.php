@@ -30,6 +30,8 @@ $pdf->setStrokeColor(0,0,0);
 $pdf->filledrectangle (puntos_cm(2), puntos_cm(26.7), puntos_cm(17), puntos_cm(1.5));
 $pdf->setLineStyle(3,'round');
 $pdf->setColor(0, 0 ,0);
+$pdf->ezImage('img.jpg', 0, 50, 'none', 'left');
+//$pdf->ezImage('http://www.error500.net/images/articulos/logo-google-chrome.jpg', 0, 50, 'none', 'left');
 $pdf->addText(puntos_cm(3),puntos_cm(27.3),12,'POS Papas Supremas - Factura de Venta');
 $pdf->addText(puntos_cm(15),puntos_cm(27.3),12,'Folio: '.$emisor->folio);
 //$pdf->addPngFromFile('logo.png',puntos_cm(5),puntos_cm(15),puntos_cm(10));
@@ -277,7 +279,7 @@ $pdf->addText(puntos_cm(2),puntos_cm(1),12,'Este documento es una impresion de u
 //$pdf->ezOutput(1);
 $documento_pdf = $pdf->ezOutput(1);
 $pdf->ezStream();
-$fichero = fopen('prueba.pdf','w');
+$fichero = fopen('asd.pdf','w');
 fwrite ($fichero, $documento_pdf);
 fclose ($fichero);
 ?>
