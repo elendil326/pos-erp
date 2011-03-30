@@ -46,14 +46,14 @@
         }
         
         //verificamos que la venta exista                
-        if( !( $venta = VentaDAO::getByPK( $args['id_venta'] ) ) )
+        if( !( $venta = VentasDAO::getByPK( $args['id_venta'] ) ) )
         {
             Logger::log("No se tiene registro de la venta : {$args['id_venta']}");
             die( '{"success": false, "reason": "No se tiene registro de la venta ' . $args['id_venta'] . '." }' );
         }
            
         //verificamos que el cliente exista
-        if( !( $cliente = ClienteDAO::getByPK( $args['id_cliente'])) ) ){
+        if( !( $cliente = ClienteDAO::getByPK( $args['id_cliente'] ) ) ) {
             Logger::log("No se tiene registro del cliente : {$args['id_cliente']}.");
             die( '{"success": false, "reason": "No se tiene registro del cliente ' . $args['id_cliente'] . '." }' );
         }
@@ -61,13 +61,13 @@
         //verifiacmos que la venta este liquidada
         if( $venta->getLiquidada() != "1")
         {
-            Logger::log("La venta {$venta - > getIdVenta()} no esta lioquidada");
-            die( '{"success": false, "reason": "No se puede emitir la factura debido a que la venta ' . $venta - > getIdVenta() . ' no ha sido liquidada." }' );
+            Logger::log("La venta {$venta -> getIdVenta()} no esta lioquidada");
+            die( '{"success": false, "reason": "No se puede emitir la factura debido a que la venta ' . $venta -> getIdVenta() . ' no ha sido liquidada." }' );
         }
         
         //verificamos que la venta no este facturada
         $fv = new FacturaVentaDAO();
-        $fv -> setIdVenta( $venta - > getIdVenta() );
+        $fv -> setIdVenta( $venta -> getIdVenta() );
         
         $factuasVenta = FacturaVentaDAO::search( $fv );        
         $facturaVenta = null;
@@ -89,7 +89,6 @@
         }
         
         //verificamos que el cliente tenga correctamente definidos todos sus parametros
-        $venta = VentaDAO::getByPK( $args['id_venta'] ) ) )
             //razon soclial
         if( strlen( $cliente -> getRazonSocial() ) <= 10  ){
             Logger::log("La razon social del cliente es demaciado corta.");
@@ -154,8 +153,10 @@
         //Realizamos una peticion al webservice para que se genere una nueva factura en el sistema.
         $xml_response = getFacturaFromWebService( $xml_request );        
         
+		echo $xml_response;
+		
         //genera un json con todos los datos necesarios para generar el PDF de la factura electronica
-        $json_factura = parseFacturaToJSON($xml_response);
+        //$json_factura = parseFacturaToJSON($xml_response);
         
         //llamar al metodo que genera el pdf
         
@@ -535,7 +536,13 @@
         
         $client = new SoapClient($url);
     
+		echo "antes de llamar";
+	
         $result = $client->RececpcionComprobante(array('comprobante' => $xml_request));
+		
+		echo "despues de llamar";
+		
+		var_dump($result);
       
         //verificamos si la llamada fallo  
         if (is_soap_fault($result)) {
@@ -546,13 +553,15 @@
         
         
         libxml_use_internal_errors(true);
+		
+		
         
         $xml_response->loadXML( $result -> RececpcionComprobanteResult);
         
         if (!$xml_response) {
             $e = "Error cargando XML\n";
             foreach(libxml_get_errors() as $error) {
-                $e.= "\t", $error->message;
+                $e.= "\t" . $error->message;
             }
             
             Logger::log("Error al leer xml del web service : {$e} ");
@@ -562,7 +571,8 @@
         }
         
         
-        $params = $xml_response->getElementsByTagName('Complemento')
+        $params = $xml_response->getElementsByTagName('Complemento');
+		
         $k = 0;
                 
         foreach ($params as $param) 
@@ -595,10 +605,10 @@
     
         $json = array();                
         
-        array_push($json , "url" => $url_logo);
+        /*array_push($json , "url" -> $url_logo);
         array_push("emisor",array(
             "razon_social"
-        ))
+        ));*/
         /**
             
             {
@@ -678,7 +688,7 @@
         }
         
         //verificamos que exista ese folio
-        if( !( $factura = FacturaVentaDAO::getByPK( $args['id_folio'])) ) )
+        if( !( $factura = FacturaVentaDAO::getByPK( $args['id_folio'] ) ) )
         { 
             Logger::log("No se tiene registro del folio : {$args['id_folio']}.");
             die( '{"success": false, "reason": "No se tiene registro del folio : ' . $args['id_folio'] . '." }' );
