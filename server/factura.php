@@ -92,43 +92,43 @@
             //razon soclial
         if( strlen( $cliente -> getRazonSocial() ) <= 10  ){
             Logger::log("La razon social del cliente es demaciado corta.");
-            die( '{"success": false, "reason": "La razon social del cliente es demaciado corta." }' );                
+            die( '{"success": false, "reason": "Actualice la informacion del cliente : La razon social del cliente es demaciado corta." }' );                
         }
         
             //rfc
          if( strlen( $cliente -> getRfc() ) < 13 || strlen( $cliente -> getRfc() ) > 13 ){
              Logger::log("verifique la estructura del rfc : 4 caracteres para el nombre, 6 para la fecha y 3 para la homoclave");
-            die( '{"success": false, "reason": "verifique la estructura del rfc : 4 caracteres para el nombre, 6 para la fecha y 3 para la homoclave." }' );
+            die( '{"success": false, "reason": "Actualice la informacion del cliente : Verifique la estructura del rfc : 4 caracteres para el nombre, 6 para la fecha y 3 para la homoclave." }' );
         }
             //calle
          if( strlen( $cliente -> getCalle() ) < 3  ){
             Logger::log("La descripcion de la calle es demaciado corta.");
-            die( '{"success": false, "reason": "La descripcion de la callel es demaciado corta." }' );                
+            die( '{"success": false, "reason": "Actualice la informacion del cliente : La descripcion de la calle es demaciado corta." }' );                
         }
             //numero exterior
          if( strlen( $cliente -> getNumeroExterior() ) == 0  ){
            Logger::log("Indique el numero exterior del domicilio");
-            die( '{"success": false, "reason": "Indique el numero exterior del domicilio." }' );  
+            die( '{"success": false, "reason": "Actualice la informacion del cliente : Indique el numero exterior del domicilio." }' );  
         }
             //colonia
          if( strlen( $cliente -> getColonia() ) < 3  ){
            Logger::log("La descripcion de la colonia es demaciado corta.");
-            die( '{"success": false, "reason": "La descripcion de la colonia es demaciado corta." }' );       
+            die( '{"success": false, "reason": "Actualice la informacion del cliente : La descripcion de la colonia es demaciado corta." }' );       
         }
             //municipio
          if( strlen( $cliente -> getMunicipio() ) < 3  ){
             Logger::log("La descripcion del municipio es demaciado corta.");
-            die( '{"success": false, "reason": "La descripcion del municipio es demaciado corta." }' );       
+            die( '{"success": false, "reason": "Actualice la informacion del cliente : La descripcion del municipio es demaciado corta." }' );       
         }
             //estado
          if( strlen( $cliente -> getEstado() ) < 3  ){
             Logger::log("La descripcion del estado es demaciado corta.");
-            die( '{"success": false, "reason": "La descripcion del estado es demaciado corta." }' );       
+            die( '{"success": false, "reason": "Actualice la informacion del cliente : La descripcion del estado es demaciado corta." }' );       
         }
             //codigo postal
          if( strlen( $cliente -> getCodigoPostal() ) == 0  ){
              Logger::log("Indique el codigo postal.");
-            die( '{"success": false, "reason": "Indique el codigo postal." }' );       
+            die( '{"success": false, "reason": "Actualice la informacion del cliente : Indique el codigo postal." }' );       
         }
         
         Logger::log("Terminado proceso de validacion de datos para realizar factura electronica");
@@ -173,14 +173,14 @@
         Logger::log("Iniciando proceso de parceo de venta a XML");
 
         //obtenemos el objeto venta
-        if( !( $venta = VentaDAO::getByPK( $id_venta ) ) )
+        if( !( $venta = VentasDAO::getByPK( $id_venta ) ) )
         {
             Logger::log("Error al obtener datos de la venta : {$id_venta}");
             die( '{"success": false, "reason": "Error al obtener datos de la venta ' . $id_venta . '." }' );
         }    
         
         //obtenemos el objeto cliente
-        if( !( $cliente = ClientesDAO::getByPK( $id_cliente ) ) )
+        if( !( $cliente = ClienteDAO::getByPK( $id_cliente ) ) )
         {
             Logger::log("Error al obtener datos del cliente{$id_cliente}");
             die( '{"success": false, "reason": "Error al obtener datos del cliente ' . $id_cliente . '." }' );
@@ -188,7 +188,7 @@
 
         //obtenemos el detalle de la venta
         $detalle_venta = new DetalleVenta();
-        $detalle_venta -> setIdVenta();
+        $detalle_venta -> setIdVenta( $venta -> getIdVenta() );
         
         $productos = DetalleVentaDAO::search( $detalle_venta );                
         
@@ -222,7 +222,7 @@
         $serie = $xml -> createElement( 'serie', $sucursal -> getLetrasFactura());            
         $comprobante -> appendChild($serie);
         
-        $folio = $xml -> createElement( 'folio', $factua -> getIdFoio());
+        $folio = $xml -> createElement( 'folio', $factura -> getIdFolio());
         $comprobante -> appendChild($folio);
         
         $fecha = $xml -> createElement( 'fecha', date("y-m-d").'T'.date("H:i:s"));
@@ -231,7 +231,7 @@
         $forma_de_pago = $xml -> createElement( 'forma_de_pago','Pago en una sola exhibición');
         $comprobante -> appendChild($forma_de_pago);
         
-        $metodo_de_pago = $xml -> createElement( 'metodo_de_pago', ucfirst( strtolower( $venta -> getTipoPago ) ) );
+        $metodo_de_pago = $xml -> createElement( 'metodo_de_pago', ucfirst( strtolower( $venta -> getTipoPago() ) ) );
         $comprobante -> appendChild($metodo_de_pago);
         
         $subtotal = $xml -> createElement( 'subtotal', $venta -> getSubtotal() );
@@ -245,114 +245,114 @@
         
         $emisor = $xml -> createElement( 'emisor' );                
         
-        $emisor_razon_social = $XML -> createElement('razon_social', $sucursal -> getRazonSocial());
+        $emisor_razon_social = $xml -> createElement('razon_social', $sucursal -> getRazonSocial());
         $emisor -> appendChild($emisor_razon_social);
         
-        $emisor_rfc = $XML -> createElement('rfc', $sucursal -> getRfc());
+        $emisor_rfc = $xml -> createElement('rfc', $sucursal -> getRfc());
         $emisor -> appendChild($emisor_rfc);
         
-        $emisor_calle = $XML -> createElement('calle',$sucursal -> getCalle());
+        $emisor_calle = $xml -> createElement('calle',$sucursal -> getCalle());
         $emisor -> appendChild($emisor_calle);
         
-        $emisor_numero_exterior = $XML -> createElement('numero_exterior', $sucursal -> getNumeroExterior());
+        $emisor_numero_exterior = $xml -> createElement('numero_exterior', $sucursal -> getNumeroExterior());
         $emisor -> appendChild($emisor_numero_exterior);
         
-        $emisor_numero_interior = $XML -> createElement('numero_interior', $sucursal -> getNumeroInterior());
+        $emisor_numero_interior = $xml -> createElement('numero_interior', $sucursal -> getNumeroInterior());
         $emisor -> appendChild($emisor_numero_interior);
         
-        $emisor_colonia = $XML -> createElement('colonia', $sucursal -> getColonia());
+        $emisor_colonia = $xml -> createElement('colonia', $sucursal -> getColonia());
         $emisor -> appendChild($emisor_colonia);
         
-        $emisor_localidad = $XML -> createElement('localidad', $sucursal -> getLocalidad());
+        $emisor_localidad = $xml -> createElement('localidad', $sucursal -> getLocalidad());
         $emisor -> appendChild($emisor_localidad);
         
-        $emisor_referecia = $XML -> createElement('referencia', $sucursal -> getReferencia());
-        $emisor -> appendChild($emisor_referencia);
+        $emisor_referecia = $xml -> createElement('referencia', $sucursal -> getReferencia());
+        $emisor -> appendChild($emisor_referecia);
         
-        $emisor_municipio = $XML -> createElement('municipio', $sucursal -> getMunicipio());
+        $emisor_municipio = $xml -> createElement('municipio', $sucursal -> getMunicipio());
         $emisor -> appendChild($emisor_municipio);
         
-        $emisor_estado = $XML -> createElement('estado', $sucursal -> getEstado());
+        $emisor_estado = $xml -> createElement('estado', $sucursal -> getEstado());
         $emisor -> appendChild($emisor_estado);
         
-        $emisor_pais = $XML -> createElement('pais', $sucursal -> getPais());
+        $emisor_pais = $xml -> createElement('pais', $sucursal -> getPais());
         $emisor -> appendChild($emisor_pais);
         
-        $emisor_codigo_postal = $XML -> createElement('codigo_postal', $sucursal -> getCodigoPostal());
+        $emisor_codigo_postal = $xml -> createElement('codigo_postal', $sucursal -> getCodigoPostal());
         $emisor -> appendChild($emisor_codigo_postal);
         
         $comprobante -> appendChild($emisor);
         
         $expedido_por = $xml -> createElement( 'expedido_por' );
         
-        $expedido_por_calle = $XML -> createElement('calle');
+        $expedido_por_calle = $xml -> createElement('calle');
         $expedido_por-> appendChild($expedido_por_calle);
         
-        $expedido_por_numero_exterior = $XML -> createElement('numero_exterior');
+        $expedido_por_numero_exterior = $xml -> createElement('numero_exterior');
         $expedido_por-> appendChild($expedido_por_numero_exterior);
         
-        $expedido_por_numero_interior = $XML -> createElement('numero_interior');
+        $expedido_por_numero_interior = $xml -> createElement('numero_interior');
         $expedido_por-> appendChild($expedido_por_numero_interior);
         
-        $expedido_por_colonia = $XML -> createElement('colonia');
+        $expedido_por_colonia = $xml -> createElement('colonia');
         $expedido_por-> appendChild($expedido_por_colonia);
         
-        $expedido_por_localidad = $XML -> createElement('localidad');
+        $expedido_por_localidad = $xml -> createElement('localidad');
         $expedido_por-> appendChild($expedido_por_localidad);
         
-        $expedido_por_referecia = $XML -> createElement('referencia');
-        $expedido_por-> appendChild($expedido_por_referencia);
+        $expedido_por_referecia = $xml -> createElement('referencia');
+        $expedido_por-> appendChild($expedido_por_referecia);
         
-        $expedido_por_municipio = $XML -> createElement('municipio');
+        $expedido_por_municipio = $xml -> createElement('municipio');
         $expedido_por-> appendChild($expedido_por_municipio);
         
-        $expedido_por_estado = $XML -> createElement('estado');
+        $expedido_por_estado = $xml -> createElement('estado');
         $expedido_por-> appendChild($expedido_por_estado);
         
-        $expedido_por_pais = $XML -> createElement('pais');
+        $expedido_por_pais = $xml -> createElement('pais');
         $expedido_por-> appendChild($expedido_por_pais);
         
-        $expedido_por_codigo_postal = $XML -> createElement('codigo_postal');
+        $expedido_por_codigo_postal = $xml -> createElement('codigo_postal');
         $expedido_por-> appendChild($expedido_por_codigo_postal);
         
         $comprobante -> appendChild($expedido_por);
         
         $receptor = $xml -> createElement( 'receptor' ); 
         
-        $receptor_razon_social = $XML -> createElement('razon_social', $cliente -> getRazonSocial());
+        $receptor_razon_social = $xml -> createElement('razon_social', $cliente -> getRazonSocial());
         $receptor = $xml -> createElement($receptor_razon_social);
         
-        $receptor_rfc = $XML -> createElement('rfc', $cliente -> getRfc());
+        $receptor_rfc = $xml -> createElement('rfc', $cliente -> getRfc());
         $receptor = $xml -> createElement($receptor_rfc);
         
-        $receptor_calle = $XML -> createElement('calle', $cliente -> getCalle());
+        $receptor_calle = $xml -> createElement('calle', $cliente -> getCalle());
         $receptor = $xml -> createElement($receptor_calle);
         
-        $receptor_numero_exterior = $XML -> createElement('numero_exterior', $cliente -> getNumeroExterior());
+        $receptor_numero_exterior = $xml -> createElement('numero_exterior', $cliente -> getNumeroExterior());
         $receptor = $xml -> createElement($receptor_numero_exterior);
         
-        $receptor_numero_interior = $XML -> createElement('numero_interior', $cliente -> getNumeroInterior());
+        $receptor_numero_interior = $xml -> createElement('numero_interior', $cliente -> getNumeroInterior());
         $receptor = $xml -> createElement($receptor_numero_interior);
         
-        $receptor_colonia = $XML -> createElement('colonia', $cliente -> getColonia());
+        $receptor_colonia = $xml -> createElement('colonia', $cliente -> getColonia());
         $receptor = $xml -> createElement($receptor_colonia);
         
-        $receptor_localidad = $XML -> createElement('localidad', $cliente -> getLocalidad());
+        $receptor_localidad = $xml -> createElement('localidad', $cliente -> getLocalidad());
         $receptor = $xml -> createElement($receptor_localidad);
         
-        $receptor_referecia = $XML -> createElement('referencia', $cliente -> getReferencia());
+        $receptor_referecia = $xml -> createElement('referencia', $cliente -> getReferencia());
         $receptor = $xml -> createElement($receptor_referencia);
         
-        $receptor_municipio = $XML -> createElement('municipio', $cliente -> getMunicipio());
+        $receptor_municipio = $xml -> createElement('municipio', $cliente -> getMunicipio());
         $receptor = $xml -> createElement($receptor_municipio);
         
-        $receptor_estado = $XML -> createElement('estado', $cliente -> getEstado());
+        $receptor_estado = $xml -> createElement('estado', $cliente -> getEstado());
         $receptor = $xml -> createElement($receptor_estado);
         
-        $receptor_pais = $XML -> createElement('pais', $cliente -> getPais());
+        $receptor_pais = $xml -> createElement('pais', $cliente -> getPais());
         $receptor = $xml -> createElement($receptor_pais);
         
-        $receptor_codigo_postal = $XML -> createElement('codigo_postal', $cliente -> getCodigoPostal());
+        $receptor_codigo_postal = $xml -> createElement('codigo_postal', $cliente -> getCodigoPostal());
         $receptor = $xml -> createElement($receptor_codigo_postal);
         
         $comprobante -> appendChild($receptor);
