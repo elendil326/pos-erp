@@ -66,7 +66,7 @@
         }
         
         //verificamos que la venta no este facturada
-        $fv = new FacturaVentaDAO();
+        $fv = new FacturaVenta();
         $fv -> setIdVenta( $venta -> getIdVenta() );
         
         $factuasVenta = FacturaVentaDAO::search( $fv );        
