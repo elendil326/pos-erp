@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.2deb1
+-- version 3.3.9
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 22-03-2011 a las 18:40:21
--- Versión del servidor: 5.1.41
--- Versión de PHP: 5.3.2-1ubuntu4.7
+-- Tiempo de generación: 01-04-2011 a las 04:18:22
+-- Versión del servidor: 5.5.8
+-- Versión de PHP: 5.3.5
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -70,16 +70,17 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   `rfc` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'rfc del cliente si es que tiene',
   `razon_social` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'razon social del cliente',
   `calle` varchar(300) COLLATE utf8_unicode_ci NOT NULL COMMENT 'calle del domicilio fiscal del cliente',
-  `numero_exteriror` varchar(10) COLLATE utf8_unicode_ci NOT NULL COMMENT 'numero exteriror del domicilio fiscal del cliente',
+  `numero_exterior` varchar(10) COLLATE utf8_unicode_ci NOT NULL COMMENT 'numero exteriror del domicilio fiscal del cliente',
   `numero_interior` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'numero interior del domicilio fiscal del cliente',
   `colonia` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'colonia del domicilio fiscal del cliente',
   `referencia` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'referencia del domicilio fiscal del cliente',
+  `localidad` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Localidad del domicilio fiscal',
   `municipio` varchar(55) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Municipio de este cliente',
   `estado` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Estado del domicilio fiscal del cliente',
   `pais` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Pais del domicilio fiscal del cliente',
   `codigo_postal` varchar(15) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Codigo postal del domicilio fiscal del cliente',
   `telefono` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Telefono del cliete',
-  `e_mail` varchar(60) COLLATE utf8_unicode_ci DEFAULT '0' COMMENT 'dias de credito para que pague el cliente',
+  `e_mail` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'dias de credito para que pague el cliente',
   `limite_credito` float NOT NULL DEFAULT '0' COMMENT 'Limite de credito otorgado al cliente',
   `descuento` float NOT NULL DEFAULT '0' COMMENT 'Taza porcentual de descuento de 0.0 a 100.0',
   `activo` tinyint(2) NOT NULL DEFAULT '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
@@ -313,17 +314,19 @@ CREATE TABLE IF NOT EXISTS `factura_compra` (
 --
 
 CREATE TABLE IF NOT EXISTS `factura_venta` (
-  `folio` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'folio que tiene la factura',
+  `id_folio` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'folio que tiene la factura',
   `id_venta` int(11) NOT NULL COMMENT 'venta a la cual corresponde la factura',
-  `activa` int(11) NOT NULL DEFAULT '0' COMMENT '1 indica que la factura fue emitida y esta activa, 0 que la factura fue emitida y posteriormente fue cancelada',
-  `certificado` text COLLATE utf8_unicode_ci NOT NULL COMMENT 'sello digital, emitido por el pac',
-  `aprovacion` text COLLATE utf8_unicode_ci NOT NULL COMMENT 'Numero de aprovacion de la factura electronica',
-  `anio_aprovacion` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `cadena_original` text COLLATE utf8_unicode_ci NOT NULL,
-  `sello_digital` text COLLATE utf8_unicode_ci NOT NULL,
-  `sello_digital_proveedor` text COLLATE utf8_unicode_ci NOT NULL,
-  `pac` text COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`folio`),
+  `id_usuario` int(10) NOT NULL COMMENT 'Id del usuario que hiso al ultima modificacion a la factura',
+  `activa` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1 indica que la factura fue emitida y esta activa, 0 que la factura fue emitida y posteriormente fue cancelada',
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha cuando se genero esta factura',
+  `certificado` text COLLATE utf8_unicode_ci COMMENT 'sello digital, emitido por el pac',
+  `aprovacion` text COLLATE utf8_unicode_ci COMMENT 'Numero de aprovacion de la factura electronica',
+  `anio_aprovacion` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `cadena_original` text COLLATE utf8_unicode_ci,
+  `sello_digital` text COLLATE utf8_unicode_ci,
+  `sello_digital_proveedor` text COLLATE utf8_unicode_ci,
+  `pac` text COLLATE utf8_unicode_ci,
+  PRIMARY KEY (`id_folio`),
   KEY `factura_venta_venta` (`id_venta`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=17 ;
 
@@ -482,8 +485,8 @@ CREATE TABLE IF NOT EXISTS `pago_prestamo_sucursal` (
 --
 
 CREATE TABLE IF NOT EXISTS `pos_config` (
-  `opcion` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
-  `value` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `opcion` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `value` varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`opcion`),
   UNIQUE KEY `opcion` (`opcion`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -534,8 +537,18 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   `id_sucursal` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identificador de cada sucursal',
   `gerente` int(11) DEFAULT NULL COMMENT 'Gerente de esta sucursal',
   `descripcion` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre o descripcion de sucursal',
-  `direccion` varchar(200) COLLATE utf8_unicode_ci NOT NULL COMMENT 'direccion de la sucursal',
-  `rfc` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'El RFC de la sucursal',
+  `razon_social` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'razon social de la sucursal',
+  `rfc` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'El RFC de la sucursal',
+  `calle` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'calle del domicilio fiscal',
+  `numero_exterior` varchar(10) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nuemro exterior del domicilio fiscal',
+  `numero_interior` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'numero interior del domicilio fiscal',
+  `colonia` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'colonia del domicilio fiscal',
+  `localidad` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'localidad del domicilio fiscal',
+  `referencia` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'referencia del domicilio fiscal',
+  `municipio` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'municipio del domicilio fiscal',
+  `estado` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'estado del domicilio fiscal',
+  `pais` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'pais del domicilio fiscal',
+  `codigo_postal` varchar(15) COLLATE utf8_unicode_ci NOT NULL COMMENT 'codigo postal del domicilio fiscal',
   `telefono` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'El telefono de la sucursal',
   `token` varchar(512) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Token de seguridad para esta sucursal',
   `letras_factura` char(1) COLLATE utf8_unicode_ci NOT NULL,
@@ -582,7 +595,7 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   `tipo_pago` enum('efectivo','cheque','tarjeta') COLLATE utf8_unicode_ci DEFAULT 'efectivo' COMMENT 'tipo de pago para esta venta en caso de ser a contado',
   `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de venta',
   `subtotal` float DEFAULT NULL COMMENT 'subtotal de la venta, puede ser nulo',
-  `iva` float DEFAULT NULL COMMENT 'iva agregado por la venta, depende de cada sucursal',
+  `iva` float DEFAULT '0' COMMENT 'iva agregado por la venta, depende de cada sucursal',
   `descuento` float NOT NULL DEFAULT '0' COMMENT 'descuento aplicado a esta venta',
   `total` float NOT NULL DEFAULT '0' COMMENT 'total de esta venta',
   `id_sucursal` int(11) NOT NULL COMMENT 'sucursal de la venta',
@@ -595,7 +608,7 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`id_sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=232 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=233 ;
 
 --
 -- Filtros para las tablas descargadas (dump)
