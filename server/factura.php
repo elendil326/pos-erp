@@ -320,40 +320,40 @@
         $receptor = $xml -> createElement( 'receptor' ); 
         
         $receptor_razon_social = $xml -> createElement('razon_social', $cliente -> getRazonSocial());
-        $receptor = $xml -> createElement($receptor_razon_social);
+        $receptor = $xml -> appendChild($receptor_razon_social);
         
         $receptor_rfc = $xml -> createElement('rfc', $cliente -> getRfc());
-        $receptor = $xml -> createElement($receptor_rfc);
+        $receptor = $xml -> appendChild($receptor_rfc);
         
         $receptor_calle = $xml -> createElement('calle', $cliente -> getCalle());
-        $receptor = $xml -> createElement($receptor_calle);
+        $receptor = $xml -> appendChild($receptor_calle);
         
         $receptor_numero_exterior = $xml -> createElement('numero_exterior', $cliente -> getNumeroExterior());
-        $receptor = $xml -> createElement($receptor_numero_exterior);
+        $receptor = $xml -> appendChild($receptor_numero_exterior);
         
         $receptor_numero_interior = $xml -> createElement('numero_interior', $cliente -> getNumeroInterior());
-        $receptor = $xml -> createElement($receptor_numero_interior);
+        $receptor = $xml -> appendChild($receptor_numero_interior);
         
         $receptor_colonia = $xml -> createElement('colonia', $cliente -> getColonia());
-        $receptor = $xml -> createElement($receptor_colonia);
+        $receptor = $xml -> appendChild($receptor_colonia);
         
         $receptor_localidad = $xml -> createElement('localidad', $cliente -> getLocalidad());
-        $receptor = $xml -> createElement($receptor_localidad);
+        $receptor = $xml -> appendChild($receptor_localidad);
         
         $receptor_referecia = $xml -> createElement('referencia', $cliente -> getReferencia());
-        $receptor = $xml -> createElement($receptor_referencia);
+        $receptor = $xml -> appendChild($receptor_referencia);
         
         $receptor_municipio = $xml -> createElement('municipio', $cliente -> getMunicipio());
-        $receptor = $xml -> createElement($receptor_municipio);
+        $receptor = $xml -> appendChild($receptor_municipio);
         
         $receptor_estado = $xml -> createElement('estado', $cliente -> getEstado());
-        $receptor = $xml -> createElement($receptor_estado);
+        $receptor = $xml -> appendChild($receptor_estado);
         
         $receptor_pais = $xml -> createElement('pais', $cliente -> getPais());
-        $receptor = $xml -> createElement($receptor_pais);
+        $receptor = $xml -> appendChild($receptor_pais);
         
         $receptor_codigo_postal = $xml -> createElement('codigo_postal', $cliente -> getCodigoPostal());
-        $receptor = $xml -> createElement($receptor_codigo_postal);
+        $receptor = $xml -> appendChild($receptor_codigo_postal);
         
         $comprobante -> appendChild($receptor);
         
