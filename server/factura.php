@@ -202,7 +202,7 @@
         //DAO::transRollback();
         
         //creamos una nueva factura en la BD para obtener el folio
-        $factura =creaFacturaBD( $venta -> getIdVenta() ) ;
+        $factura = creaFacturaBD( $venta -> getIdVenta() ) ;
         
         //creamos un objeto sucursal
         if( !( $sucursal = SucursalDAO::getByPK( $_SESSION['sucursal'] ) ) )
@@ -217,143 +217,101 @@
         //creamos la raiz del DOM DOCUMENT
         $xml =  new DOMDocument( '1.0', 'utf-8' );                
         
-        $comprobante = $xml -> createElement( 'comprobante' );        
+        $comprobante = $xml -> createElement( 'comprobante' );                
+                  
+        $comprobante -> appendChild($xml -> createElement( 'serie', $sucursal -> getLetrasFactura()));
+                
+        $comprobante -> appendChild($xml -> createElement( 'folio_interno', $factura -> getIdFolio()));
+               
+        $comprobante -> appendChild($xml -> createElement( 'fecha', date("y-m-d").'T'.date("H:i:s")));
         
-        $serie = $xml -> createElement( 'serie', $sucursal -> getLetrasFactura());            
-        $comprobante -> appendChild($serie);
+        $comprobante -> appendChild($xml -> createElement( 'forma_de_pago','Pago en una sola exhibicion'));
         
-        $folio = $xml -> createElement( 'folio', $factura -> getIdFolio());
-        $comprobante -> appendChild($folio);
+        $comprobante -> appendChild($xml -> createElement( 'metodo_de_pago', ucfirst( strtolower( $venta -> getTipoPago() ) ) ));
+                
+        $comprobante -> appendChild($xml -> createElement( 'subtotal', $venta -> getSubtotal() ));
         
-        $fecha = $xml -> createElement( 'fecha', date("y-m-d").'T'.date("H:i:s"));
-        $comprobante -> appendChild($fecha);
+        $comprobante -> appendChild($xml -> createElement( 'total', $venta -> getTotal() ));
         
-        $forma_de_pago = $xml -> createElement( 'forma_de_pago','Pago en una sola exhibición');
-        $comprobante -> appendChild($forma_de_pago);
-        
-        $metodo_de_pago = $xml -> createElement( 'metodo_de_pago', ucfirst( strtolower( $venta -> getTipoPago() ) ) );
-        $comprobante -> appendChild($metodo_de_pago);
-        
-        $subtotal = $xml -> createElement( 'subtotal', $venta -> getSubtotal() );
-        $comprobante -> appendChild($subtotal);
-        
-        $total = $xml -> createElement( 'total', $venta -> getTotal() );
-        $comprobante -> appendChild($total);
-        
-        $iva = $xml -> createElement( 'iva', $venta -> getIva() );
-        $comprobante -> appendChild($iva);
+        $comprobante -> appendChild($xml -> createElement( 'iva', $venta -> getIva() ));
         
         $emisor = $xml -> createElement( 'emisor' );                
+                
+        $emisor -> appendChild($xml -> createElement('razon_social', $sucursal -> getRazonSocial()));
         
-        $emisor_razon_social = $xml -> createElement('razon_social', $sucursal -> getRazonSocial());
-        $emisor -> appendChild($emisor_razon_social);
-        
-        $emisor_rfc = $xml -> createElement('rfc', $sucursal -> getRfc());
-        $emisor -> appendChild($emisor_rfc);
-        
-        $emisor_calle = $xml -> createElement('calle',$sucursal -> getCalle());
-        $emisor -> appendChild($emisor_calle);
-        
-        $emisor_numero_exterior = $xml -> createElement('numero_exterior', $sucursal -> getNumeroExterior());
-        $emisor -> appendChild($emisor_numero_exterior);
-        
-        $emisor_numero_interior = $xml -> createElement('numero_interior', $sucursal -> getNumeroInterior());
-        $emisor -> appendChild($emisor_numero_interior);
-        
-        $emisor_colonia = $xml -> createElement('colonia', $sucursal -> getColonia());
-        $emisor -> appendChild($emisor_colonia);
-        
-        $emisor_localidad = $xml -> createElement('localidad', $sucursal -> getLocalidad());
-        $emisor -> appendChild($emisor_localidad);
-        
-        $emisor_referecia = $xml -> createElement('referencia', $sucursal -> getReferencia());
-        $emisor -> appendChild($emisor_referecia);
-        
-        $emisor_municipio = $xml -> createElement('municipio', $sucursal -> getMunicipio());
-        $emisor -> appendChild($emisor_municipio);
-        
-        $emisor_estado = $xml -> createElement('estado', $sucursal -> getEstado());
-        $emisor -> appendChild($emisor_estado);
-        
-        $emisor_pais = $xml -> createElement('pais', $sucursal -> getPais());
-        $emisor -> appendChild($emisor_pais);
-        
-        $emisor_codigo_postal = $xml -> createElement('codigo_postal', $sucursal -> getCodigoPostal());
-        $emisor -> appendChild($emisor_codigo_postal);
+        $emisor -> appendChild($xml -> createElement('rfc', $sucursal -> getRfc()));
+               
+        $emisor -> appendChild($xml -> createElement('calle',$sucursal -> getCalle()));
+                
+        $emisor -> appendChild($xml -> createElement('numero_exterior', $sucursal -> getNumeroExterior()));
+                
+        $emisor -> appendChild($xml -> createElement('numero_interior', $sucursal -> getNumeroInterior()));
+                
+        $emisor -> appendChild($xml -> createElement('colonia', $sucursal -> getColonia()));
+                
+        $emisor -> appendChild($xml -> createElement('localidad', $sucursal -> getLocalidad()));
+                
+        $emisor -> appendChild($xml -> createElement('referencia', $sucursal -> getReferencia()));
+                
+        $emisor -> appendChild($xml -> createElement('municipio', $sucursal -> getMunicipio()));
+                
+        $emisor -> appendChild($xml -> createElement('estado', $sucursal -> getEstado()));
+                
+        $emisor -> appendChild($xml -> createElement('pais', $sucursal -> getPais()));
+                
+        $emisor -> appendChild($xml -> createElement('codigo_postal', $sucursal -> getCodigoPostal()));
         
         $comprobante -> appendChild($emisor);
         
         $expedido_por = $xml -> createElement( 'expedido_por' );
-        
-        $expedido_por_calle = $xml -> createElement('calle');
-        $expedido_por-> appendChild($expedido_por_calle);
-        
-        $expedido_por_numero_exterior = $xml -> createElement('numero_exterior');
-        $expedido_por-> appendChild($expedido_por_numero_exterior);
-        
-        $expedido_por_numero_interior = $xml -> createElement('numero_interior');
-        $expedido_por-> appendChild($expedido_por_numero_interior);
-        
-        $expedido_por_colonia = $xml -> createElement('colonia');
-        $expedido_por-> appendChild($expedido_por_colonia);
-        
-        $expedido_por_localidad = $xml -> createElement('localidad');
-        $expedido_por-> appendChild($expedido_por_localidad);
-        
-        $expedido_por_referecia = $xml -> createElement('referencia');
-        $expedido_por-> appendChild($expedido_por_referecia);
-        
-        $expedido_por_municipio = $xml -> createElement('municipio');
-        $expedido_por-> appendChild($expedido_por_municipio);
-        
-        $expedido_por_estado = $xml -> createElement('estado');
-        $expedido_por-> appendChild($expedido_por_estado);
-        
-        $expedido_por_pais = $xml -> createElement('pais');
-        $expedido_por-> appendChild($expedido_por_pais);
-        
-        $expedido_por_codigo_postal = $xml -> createElement('codigo_postal');
-        $expedido_por-> appendChild($expedido_por_codigo_postal);
+                
+        $expedido_por -> appendChild($xml -> createElement('calle'));
+                
+        $expedido_por -> appendChild($xml -> createElement('numero_exterior'));
+                
+        $expedido_por -> appendChild($xml -> createElement('numero_interior'));
+                
+        $expedido_por -> appendChild($xml -> createElement('colonia'));
+                
+        $expedido_por -> appendChild($xml -> createElement('localidad'));
+                
+        $expedido_por -> appendChild($xml -> createElement('referencia'));
+                
+        $expedido_por -> appendChild($xml -> createElement('municipio'));
+                
+        $expedido_por -> appendChild($xml -> createElement('estado'));
+                
+        $expedido_por -> appendChild($xml -> createElement('pais'));
+                
+        $expedido_por -> appendChild($xml -> createElement('codigo_postal'));
         
         $comprobante -> appendChild($expedido_por);
         
         $receptor = $xml -> createElement( 'receptor' ); 
-        
-        $receptor_razon_social = $xml -> createElement('razon_social', $cliente -> getRazonSocial());
-        $receptor = $xml -> appendChild($receptor_razon_social);
-        
-        $receptor_rfc = $xml -> createElement('rfc', $cliente -> getRfc());
-        $receptor = $xml -> appendChild($receptor_rfc);
-        
-        $receptor_calle = $xml -> createElement('calle', $cliente -> getCalle());
-        $receptor = $xml -> appendChild($receptor_calle);
-        
-        $receptor_numero_exterior = $xml -> createElement('numero_exterior', $cliente -> getNumeroExterior());
-        $receptor = $xml -> appendChild($receptor_numero_exterior);
-        
-        $receptor_numero_interior = $xml -> createElement('numero_interior', $cliente -> getNumeroInterior());
-        $receptor = $xml -> appendChild($receptor_numero_interior);
-        
-        $receptor_colonia = $xml -> createElement('colonia', $cliente -> getColonia());
-        $receptor = $xml -> appendChild($receptor_colonia);
-        
-        $receptor_localidad = $xml -> createElement('localidad', $cliente -> getLocalidad());
-        $receptor = $xml -> appendChild($receptor_localidad);
-        
-        $receptor_referecia = $xml -> createElement('referencia', $cliente -> getReferencia());
-        $receptor = $xml -> appendChild($receptor_referencia);
-        
-        $receptor_municipio = $xml -> createElement('municipio', $cliente -> getMunicipio());
-        $receptor = $xml -> appendChild($receptor_municipio);
-        
-        $receptor_estado = $xml -> createElement('estado', $cliente -> getEstado());
-        $receptor = $xml -> appendChild($receptor_estado);
-        
-        $receptor_pais = $xml -> createElement('pais', $cliente -> getPais());
-        $receptor = $xml -> appendChild($receptor_pais);
-        
-        $receptor_codigo_postal = $xml -> createElement('codigo_postal', $cliente -> getCodigoPostal());
-        $receptor = $xml -> appendChild($receptor_codigo_postal);
+		        
+        $receptor -> appendChild($xml -> createElement('razon_social', $cliente -> getRazonSocial()));
+                
+        $receptor -> appendChild($xml -> createElement('rfc', $cliente -> getRfc()));
+                
+        $receptor -> appendChild($xml -> createElement('calle', $cliente -> getCalle()));
+                
+        $receptor -> appendChild($xml -> createElement('numero_exterior', $cliente -> getNumeroExterior()));
+                
+        $receptor -> appendChild($xml -> createElement('numero_interior', $cliente -> getNumeroInterior()));
+                
+        $receptor -> appendChild($xml -> createElement('colonia', $cliente -> getColonia()));
+                
+        $receptor -> appendChild($xml -> createElement('localidad', $cliente -> getLocalidad()));
+                
+        $receptor -> appendChild($xml -> createElement('referencia', $cliente -> getReferencia()));
+                
+        $receptor -> appendChild($xml -> createElement('municipio', $cliente -> getMunicipio()));
+                
+        $receptor -> appendChild($xml -> createElement('estado', $cliente -> getEstado()));
+                
+        $receptor -> appendChild($xml -> createElement('pais', $cliente -> getPais()));
+                
+        $receptor -> appendChild($xml -> createElement('codigo_postal', $cliente -> getCodigoPostal()));
         
         $comprobante -> appendChild($receptor);
         
@@ -385,54 +343,42 @@
             
             $venta_original = $producto -> getCantidad() > 0 ? true : false;
             $venta_procesada = $producto -> getCantidadProcesada() > 0 ? true : false;
-            $proceso = $inventario -> getTratamiento =="limpia"? true : false;
+            $proceso = $inventario -> getTratamiento() == "limpia"? true : false;
                         
             if( $venta_procesada )
             {
             
                 $concepto = $xml -> createElement( 'concepto' );
-            
-                $id_producto = $xml -> createElement( 'id_producto', $producto -> getIdProducto() );
-                $concepto -> appendChild($id_producto);
-                
-                $cantidad = $xml -> createElement( 'cantidad', $producto -> getCantidadProcesada() - $producto -> getDescuento() );
-                $concepto -> appendChild($cantidad);
-                
-                $unidad = $xml -> createElement( 'unidad', $inventaio -> getUnidad() );
-                $concepto -> appendChild($unidad);        
-                
-                $descripcion = $xml -> createElement( 'descripcion', ucfirst( strtolower(  $inventaio -> getDescripcion() . " ". $inventario -> getTratamiento ) ) );
-                $concepto -> appendChild($descripcion);        
-                
-                $valor = $xml -> createElement( 'valor', $producto -> getPrecioProcesada() );
-                $concepto -> appendChild($valor);        
-                
-                $importe = $xml -> createElement( 'importe', ($producto -> getCantidad() - $producto -> getDescuento()) * $producto -> getPrecioProcesada() );
-                $concepto -> appendChild($importe);        
+                            
+                $concepto -> appendChild($xml -> createElement( 'id_producto', $producto -> getIdProducto() ));
+                                
+                $concepto -> appendChild($xml -> createElement( 'cantidad', $producto -> getCantidadProcesada() - $producto -> getDescuento() ));
+                                
+                $concepto -> appendChild($xml -> createElement( 'unidad', $inventario -> getEscala() ));        
+                                
+                $concepto -> appendChild($xml -> createElement( 'descripcion', ucfirst( strtolower(  $inventario -> getDescripcion() . " ". $inventario -> getTratamiento() ) ) ));        
+                                
+                $concepto -> appendChild($xml -> createElement( 'valor', $producto -> getPrecioProcesada() ));        
+                                
+                $concepto -> appendChild($xml -> createElement( 'importe', ($producto -> getCantidad() - $producto -> getDescuento()) * $producto -> getPrecioProcesada() ));        
 
                 $conceptos -> appendChild($concepto);
                         
             }
             
             $concepto = $xml -> createElement( 'concepto' );            
-            
-            $id_producto = $xml -> createElement( 'id_producto', $producto -> getIdProducto() );
-            $concepto -> appendChild($id_producto);
-                
-            $cantidad = $xml -> createElement( 'cantidad', $producto -> getCantidad() - $producto -> getDescuento() );
-            $concepto -> appendChild($cantidad);
-               
-            $unidad = $xml -> createElement( 'unidad', $inventaio -> getUnidad() );
-            $concepto -> appendChild($unidad);        
-                
-            $descripcion = $xml -> createElement( 'descripcion', $inventaio -> getDescripcion() );
-            $concepto -> appendChild($descripcion);        
-                
-            $valor = $xml -> createElement( 'valor', $producto -> getPrecio() );
-            $concepto -> appendChild($valor);        
-                
-            $importe = $xml -> createElement( 'importe', ($producto -> getCantidad() - $producto -> getDescuento()) * $producto -> getPrecio() );
-            $concepto -> appendChild($importe);        
+                        
+            $concepto -> appendChild($xml -> createElement( 'id_producto', $producto -> getIdProducto() ));
+                            
+            $concepto -> appendChild($xml -> createElement( 'cantidad', $producto -> getCantidad() - $producto -> getDescuento() ));
+                           
+            $concepto -> appendChild($xml -> createElement( 'unidad', $inventario -> getEscala() ));        
+                            
+            $concepto -> appendChild($xml -> createElement( 'descripcion', $inventario -> getDescripcion() ));        
+                            
+            $concepto -> appendChild($xml -> createElement( 'valor', $producto -> getPrecio() ));        
+                            
+            $concepto -> appendChild($xml -> createElement( 'importe', ($producto -> getCantidad() - $producto -> getDescuento()) * $producto -> getPrecio() ));        
                                                               
             $conceptos -> appendChild($concepto);
             
@@ -441,15 +387,12 @@
         $comprobante -> appendChild($conceptos);
         
         $llaves = $xml -> createElement('llaves');
-        
-        $llaves_publica = $xml  -> createElement('publica',$pos_config -> publica);
-        $llaves = appendChild($llaves_publica);
-        
-        $llaves_privada = $xml -> createElement('privada', $pos_config -> privada);
-        $llaves = appendChild($llaves_privada);
-        
-        $llaves_noCertificado = $xml -> createElement('noCertificado', $pos_config -> noCertificado);
-        $llaves = appendChild($llaves_noCertificado);
+                
+        $llaves -> appendChild($xml  -> createElement('publica',$pos_config -> publica));
+                
+        $llaves -> appendChild($xml -> createElement('privada', $pos_config -> privada));
+                
+        $llaves -> appendChild($xml -> createElement('noCertificado', $pos_config -> noCertificado));
         
         $comprobante -> appendChild($llaves);
         
@@ -469,21 +412,21 @@
         $llaves = new stdClass();
                         
 
-        if( !( $llaves -> privada = PosConfigDAO::getByPK( 'llave_privada' ) ) )
+        if( !( $llaves -> privada = PosConfigDAO::getByPK( 'llave_privada' ) -> getValue() ) )
         {
             Logger::log("Error al obtener la llave privada");
             DAO::transRollback();
             die( '{"success": false, "reason": "Error al obtener la llave privada" }' );
         }
         
-        if( !( $llaves -> publica = PosConfigDAO::getByPK( 'llave_publica' ) ) )
+        if( !( $llaves -> publica = PosConfigDAO::getByPK( 'llave_publica' ) -> getValue() ) )
         {
             Logger::log("Error al obtener la llave publica");
             DAO::transRollback();
             die( '{"success": false, "reason": "Error al obtener la llave privada" }' );
         }
         
-        if( !( $llaves -> noCertificado = PosConfigDAO::getByPK( 'noCertificado' ) ) )
+        if( !( $llaves -> noCertificado = PosConfigDAO::getByPK( 'noCertificado' ) -> getValue() ) )
         {
             Logger::log("Error al obtener el nuemro de certificado");
             DAO::transRollback();
@@ -526,6 +469,8 @@
         */
     function getFacturaFromWebService( $xml_request ){
     
+		$xml_request = utf8_encode($xml_request);			
+	
         //obtenemos la url del web service
         if( !( $url = PosConfigDAO::getByPK( 'url_timbrado' ) ) )
         {
@@ -533,16 +478,17 @@
             DAO::transRollback();
             die( '{"success": false, "reason": "Error al obtener la url del web service" }' );
         }  
-        
-        $client = new SoapClient($url);
-    
-		echo "antes de llamar";
+				
+		
+        $client = new SoapClient($url -> getValue());	
+		
+		echo (string)$xml_request;
+		
+		//var_dump($xml_request);
 	
-        $result = $client->RececpcionComprobante(array('comprobante' => $xml_request));
+        $result = $client->RececpcionComprobante(array('comprobante'=>$xml_request));
 		
 		echo "despues de llamar";
-		
-		var_dump($result);
       
         //verificamos si la llamada fallo  
         if (is_soap_fault($result)) {
