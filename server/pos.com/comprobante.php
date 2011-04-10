@@ -11,6 +11,9 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/server/logger.php");
 
 //$_SERVER['DOCUMENT_ROOT'] = "C:/wamp/www/pos/trunk"
 
+
+
+
 /**
  * Archivo que contiene la clase Comprobante la cual provee de los medios necesarios
  * para conectarse con al web service de Caffeina, el cual obtiene las facturas electronicas,
@@ -52,12 +55,20 @@ class Comprobante {
      */
     private $success = null;
 
+
     /**
      * Construye un nuevo objeto Comprobante.
+     * Valida que cada componente del comprobante sea valido, al pasar la verificacion
+     * genera un archivo XML valido y se lo envia al webserive de caffeina que se encarga
+     * de obtener una nueva factura electronica.
      *
-     * x
-     *
-     * @throws Exception Si ocurre algun error.
+     * @param Generales $generales
+     * @param Conceptos $conceptos
+     * @param Emisor $emisor
+     * @param ExpedidoPor $expedido_por
+     * @param Llaves $llaves
+     * @param Receptor $receptor
+     * @return Comprobante
      */
     public function __construct($generales = null, $conceptos = null, $emisor = null, $expedido_por = null, $llaves = null, $receptor = null) {
 
@@ -132,20 +143,8 @@ class Comprobante {
      * Regresa un objeto que contiene informacion acerca del resultado de la operacion
      */
     public function getSuccess() {
-
-        $this->success=new StdClass();
-
-        if ($error != null) {
-
-            $this->success->success = true;
-            $this->success->info = "Operación realizada con éxito";
-        } else {
-
-            $this->success->success = false;
-            $this->success->info = $error;
-        }
-
-        return $this;
+        $this->success = new Success($this->error);
+        return $this->success;
     }
 
 //getSuccess

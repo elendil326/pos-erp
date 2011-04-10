@@ -7,13 +7,29 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/server/logger.php");
  * Archivo que contiene la clase ExpedidoPor la cual provee de los medios necesarios para validar
  * la estructura de los datos generales del formato de solicitud de factura electronica
  */
-class ExpedidoPor{
+class ExpedidoPor {
 
-     /**
+    /**
      *
      * @var <type>
      */
     private $calle = null;
+
+    /**
+     *
+     * @return <type>
+     */
+    public function getCalle() {
+        return $this->calle;
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setCalle($param) {
+        $this->calle = $param;
+    }
 
     /**
      *
@@ -23,9 +39,41 @@ class ExpedidoPor{
 
     /**
      *
+     * @return <type>
+     */
+    public function getNumeroExterior() {
+        return $this->numero_exterior;
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setNumeroExterior($param) {
+        $this->numero_exterior = $param;
+    }
+
+    /**
+     *
      * @var <type>
      */
     private $numero_interior = null;
+
+    /**
+     *
+     * @return <type>
+     */
+    public function getNumeroInterior() {
+        return $this->numero_interior;
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setNumeroInterior($param) {
+        $this->numero_interior = $param;
+    }
 
     /**
      *
@@ -35,9 +83,41 @@ class ExpedidoPor{
 
     /**
      *
+     * @return <type>
+     */
+    public function getColonia() {
+        return $this->colonia;
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setColonia($param) {
+        $this->colonia = $param;
+    }
+
+    /**
+     *
      * @var <type>
      */
     private $localidad = null;
+
+    /**
+     *
+     * @return <type>
+     */
+    public function getLocalidad() {
+        return $this->localidad;
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setLocalidad($param) {
+        $this->localidad = $param;
+    }
 
     /**
      *
@@ -47,9 +127,41 @@ class ExpedidoPor{
 
     /**
      *
+     * @return <type>
+     */
+    public function getReferencia() {
+        return $this->referencia;
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setReferencia($param) {
+        $this->referencia = $param;
+    }
+
+    /**
+     *
      * @var <type>
      */
     private $municipio = null;
+
+    /**
+     *
+     * @return <type>
+     */
+    public function getMunicipio() {
+        return $this->municipioo;
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setMunicipio($param) {
+        $this->municipio = $param;
+    }
 
     /**
      *
@@ -59,9 +171,41 @@ class ExpedidoPor{
 
     /**
      *
+     * @return <type>
+     */
+    public function getEstado() {
+        return $this->estado;
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setEstado($param) {
+        $this->estado = $param;
+    }
+
+    /**
+     *
      * @var <type>
      */
     private $pais = null;
+
+    /**
+     *
+     * @return <type>
+     */
+    public function getPais() {
+        return $this->pais;
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setPais($param) {
+        $this->pais = $param;
+    }
 
     /**
      *
@@ -70,17 +214,47 @@ class ExpedidoPor{
     private $codigo_postal = null;
 
     /**
+     *
+     * @return <type>
+     */
+    public function getCodigoPostal() {
+        return $this->codigo_postal;
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setCodigoPostal($param) {
+        $this->codigo_postal = $param;
+    }
+
+    /**
      * Contiene informacion acerca de posibles errores
      * @var String
      */
     private $error = "";
 
+    /**
+     *
+     * @return <type>
+     */
+    public function getError() {
+        return $this->error;
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setError($param) {
+        $this->error = $param;
+    }
 
     /**
      *
      */
-    public function __construct(){
-
+    public function __construct() {
 
     }
 
@@ -92,7 +266,7 @@ class ExpedidoPor{
         $this->success = new Success($this->error);
         return $this->success;
     }
-	
+
 }
 
 ?>

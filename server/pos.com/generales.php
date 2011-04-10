@@ -191,6 +191,28 @@ class Generales{
     private $success = null;
 
     /**
+     * Contiene informacion acerca de posibles errores
+     * @var String
+     */
+    private $error = "";
+
+    /**
+     *
+     * @return <type>
+     */
+    public function getError(){
+        return $this->error;
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setError($param){
+        $this->error = $param;
+    }
+
+    /**
      * 
      */
     public function __construct(){

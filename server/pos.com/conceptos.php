@@ -24,8 +24,29 @@ class Conceptos{
 
     /**
      *
+     * @return <type>
      */
-    public function __construct(){
+    public function getError(){
+
+        return $this->error;
+
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setError($param){
+        $this->error = $param;
+    }
+
+    /**
+     * Crea un objeto que contiene toda la informacion de todos los productos
+     * involucrados en esa venta y verifica que sean validos.
+     *
+     * @param Array $items
+     */
+    public function __construct($items){
 
 
     }
@@ -45,45 +66,170 @@ class Concepto{
 
     /**
      *
-     * @var <type>
+     * @var String
      */
     private $id_producto = null;
 
     /**
      *
-     * @var <type>
+     * @return <type>
+     */
+    public function getIdProducto(){
+
+        return $this->id_producto;
+
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setIdProducto($param){
+        $this->id_producto = $param;
+    }
+
+    /**
+     *
+     * @var String
      */
     private $cantidad = null;
 
     /**
      *
-     * @var <type>
+     * @return <type>
      */
-    private $unidaad = null;
+    public function getCantidad(){
+
+        return $this->cantidad;
+
+    }
 
     /**
      *
-     * @var <type>
+     * @param <type> $param
+     */
+    public function setCantidad($param){
+        $this->cantidad = $param;
+    }
+
+    /**
+     *
+     * @var String
+     */
+    private $unidad = null;
+
+    /**
+     *
+     * @return <type>
+     */
+    public function getUnidad(){
+
+        return $this->unidad;
+
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setUnidad($param){
+        $this->unidad = $param;
+    }
+
+    /**
+     *
+     * @var String
      */
     private $descripcion = null;
 
     /**
      *
-     * @var <type>
+     * @return <type>
      */
-    private $valor = null;
+    public function getDescripcion(){
+
+        return $this->descripcion;
+
+    }
 
     /**
      *
-     * @var <type> 
+     * @param <type> $param
+     */
+    public function setDescripcion($param){
+        $this->descripcion = $param;
+    }
+
+    /**
+     *
+     * @var String
+     */
+    private $valor = null;
+    /**
+     *
+     * @return <type>
+     */
+    public function getValor(){
+
+        return $this->valor;
+
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setValor($param){
+        $this->valor = $param;
+    }
+
+
+    /**
+     *
+     * @var String
      */
     private $importe = null;
+    /**
+     *
+     * @return <type>
+     */
+    public function getImporte(){
+
+        return $this->importe;
+
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setImporte($param){
+        $this->importe = $param;
+    }
+
 
     /**
      * Contiene informacion acerca de posibles errores
      * @var String
      */
     private $error = "";
+    /**
+     *
+     * @return <type>
+     */
+    public function getError(){
+
+        return $this->error;
+
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setError($param){
+        $this->error = $param;
+    }
 
     /**
      *

@@ -18,21 +18,85 @@ class Llaves{
 
     /**
      *
+     * @return <type> 
+     */
+    public function getPublica(){
+        return $this->publica;
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setPublica($param){
+        $this->publica = $param;
+    }
+
+    /**
+     *
      * @var <type>
      */
     private $privada = null;
 
     /**
      *
+     * @return <type>
+     */
+    public function getPrivada(){
+        return $this->privada;
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setPrivada($param){
+        $this->privada = $param;
+    }
+
+    /**
+     *
      * @var <type>
      */
-    private $noCestificado = null;
+    private $noCertificado = null;
+
+    /**
+     *
+     * @return <type>
+     */
+    public function getNoCertificado(){
+        return $this->noCertificado;
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setNoCertificado($param){
+        $this->noCertificado = $param;
+    }
 
     /**
      * Contiene informacion acerca de posibles errores
      * @var String
      */
     private $error = "";
+
+    /**
+     *
+     * @return <type>
+     */
+    public function getError(){
+        return $this->error;
+    }
+
+    /**
+     *
+     * @param <type> $param
+     */
+    public function setError($param){
+        $this->error = $param;
+    }
 
     /**
      *
