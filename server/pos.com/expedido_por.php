@@ -263,8 +263,45 @@ class ExpedidoPor {
      * @return Object Success
      */
     public function isValid() {
-        $this->success = new Success($this->error);
+
+        //verificamos si existe la calle
+        if( !(isset($this->getCalle()) && $this->getCalle() =! "") ){
+            $this->setError("No se ha definido la calle.");
+        }
+
+        //verificamos si existe el numero exterior
+        if( !(isset($this->getNumeroExterior()) && $this->getNumeroExterior() =! "") ){
+            $this->setError("No se ha definido el nuemro exterior.");
+        }
+
+        //verificamos si existe la colonia
+        if( !(isset($this->getColonia()) && $this->getColonia() =! "") ){
+            $this->setError("No se ha definido la colinia.");
+        }
+
+        //verificamos si existe el municipio
+        if( !(isset($this->getMunicipio()) && $this->getMunicipio() =! "") ){
+            $this->setError("No se ha definido el municipio.");
+        }
+
+        //verificamos si existe el estado
+        if( !(isset($this->getEstado()) && $this->getEstado() =! "") ){
+            $this->setError("No se ha definido el estado.");
+        }
+
+        //verificamos si existe el codigo postal
+        if( !(isset($this->getCodigoPostal()) && $this->getCodigoPostal() =! "") ){
+            $this->setError("No se ha definido el codigo postal.");
+        }
+
+        //verificamos si existe el pais
+        if( !(isset($this->getPais()) && $this->getPais() =! "") ){
+            $this->setError("No se ha definido el pais.");
+        }
+
+        $this->success = new Success($this->getError());
         return $this->success;
+
     }
 
 }

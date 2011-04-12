@@ -896,7 +896,7 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 			    empleado : r.empleado,
 			    saldo_prestamo : transaccion.saldo,
 			    monto_abono : transaccion.abono,
-			    sucursal_origen : Aplicacion.Mostrador.currentInstance.infoSucursal
+			    sucursal_origen : POS.infoSucursal
 			};
 			
 			Aplicacion.Clientes.currentInstance.finishedPanelShow( data_abono );
@@ -1867,7 +1867,7 @@ Aplicacion.Clientes.prototype.finishedPanelReimpresionTicketUpdater = function( 
         tipo_pago : venta.tipo_pago,
         subtotal : venta.subtotal,
         empleado : venta.cajero, 
-        sucursal : Aplicacion.Mostrador.currentInstance.infoSucursal,
+        sucursal : POS.infoSucursal,
         total : venta.total,
         subtotal : venta.subtotal,
         ticket : true,

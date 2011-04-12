@@ -56,6 +56,8 @@ function checkCurrentSession(){
 			
 
 			window.location = "../proxy.php?action=2005";
+
+                       
 			
 		},
 

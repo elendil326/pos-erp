@@ -143,11 +143,15 @@ function generaFactura($args) {
 
     //debemos de crear los objetos para poder crear un comprobante
 
-   
+    $datosGenerales = getDatosGenerales();
+
+    $emisor = getEmisor();
+
+    $expedido_por = getExpedidoPor();
+
+
 
     //------------------------------------------------------------
-
-
     //crea xml con los datos de la venta para enviar al webservice
     $xml_request = parseVentaToXML($args['id_venta'], $args['id_cliente']);
 
@@ -164,6 +168,136 @@ function generaFactura($args) {
     Logger::log("Terminando proceso de facturacion");
 }
 
+/**
+ * Regresa un oobjeto cargado con los datos del emisor
+ * 
+ * returns Object Emisor
+ */
+function getEmisor() {
+
+    if (!($pos_config = PosConfigDAO::getByPK('emisor') )) {
+        Logger::log("Error al obtener datos del emisor.");
+        die('{"success": false, "reason": "Error al obtener datos del emisor." }');
+    }
+
+    $json = json_decode($pos_config->getValue());
+
+    $emisor = new Emisor();
+
+    $emisor->setRazonSocial($json->nombre);
+
+    $emisor->setRFC($json->rfc);
+
+    $emisor->setCalle($json->calle);
+
+    $emisor->setNumeroExterior($json->numeroExterior);
+
+    if (isset($json->numeroInterior) && $json->numeroInterior != "") {
+        $emisor->setNumeroInterior($json->numeroInterior);
+    }
+
+    if (isset($json->referencia) && $json->referencia != "") {
+        $emisor->setReferencia($json->referencia);
+    }
+
+    $emisor->setColonia($json->colonia);
+
+    if (isset($json->localidad) && $json->localidad != "") {
+        $emisor->setNumeroInterior($json->localidad);
+    }
+
+    $emisor->setMunicipio($json->municipio);
+
+    $emisor->setEstado($json->estado);
+
+    $emisor->setPais($json->pais);
+
+    $emisor->setCodigoPostal($json->codigoPostal);
+
+    $success = $emisor->isValid();
+
+    if ($success->getSuccess()) {
+        return $emisor;
+    } else {
+        Logger::log("Error : {$success->getInfo()}");
+        die('{"success": false, "reason": "' . $success->getInfo() . '" }');
+    }
+}
+
+function getExpedidoPor() {
+
+    if (!($sucursal = SucursalDAO::getByPK($_SESSION['sucursal']) )) {
+        Logger::log("Error al obtener datos de la sucursal.");
+        die('{"success": false, "reason": "Error al obtener datos de la sucursal." }');
+    }
+
+    $expedidoPor = new ExpedidoPor();
+
+    $expedidoPor->setRazonSocial($sucursal->getRazonSocial());
+
+    $expedidoPor->setRFC($sucursal->getRfc());
+
+    $expedidoPor->setCalle($sucursal->getCalle());
+
+    $expedidoPor->setNumeroExterior($sucursal->getNumeroExterior());
+
+    if (isset($sucursal->getNumeroInterior()) && $sucursal->getNumeroInterior() != "") {
+        $expedidoPor->setNumeroInterior($sucursal->getNumeroInterior());
+    }
+
+    if (isset($sucursal->getReferencia()) && $$sucursal->getReferencia() != "") {
+        $expedidoPor->setReferencia($sucursal->getReferencia());
+    }
+
+    $expedidoPor->setColonia($sucursal->getColonia());
+
+    if (isset($sucursal->getLocalidad()) && $sucursal->getLocalidad() != "") {
+        $expedidoPor->setNumeroInterior($sucursal->getLocalidad());
+    }
+
+    $expedidoPor->setMunicipio($sucursal->getMunicipio());
+
+    $expedidoPor->setEstado($sucursal->getEstado());
+
+    $expedidoPor->setPais($sucursal->getPais());
+
+    $expedidoPor->setCodigoPostal($sucursal->getCodigoPostal());
+
+    $success = $expedidoPor->isValid();
+
+    if ($success->getSuccess()) {
+        return $expedidoPor;
+    } else {
+        Logger::log("Error : {$success->getInfo()}");
+        die('{"success": false, "reason": "' . $success->getInfo() . '" }');
+    }
+}
+
+
+function getDatosGenerales(){
+
+    $generales =  new Generales();
+
+    $generales->setFecha($param);
+
+    $generales->setFolioInterno($param);
+
+    $generales->setFormaDePago($param);
+
+    //TODO : Verificar a fondo como implementar mas impuestos
+    $generales->setIva($param);
+
+    $generales->setMetodoDePago($param);
+
+    $generales->setSerie();
+
+    $generales->setSubtotal();
+
+    $generales->setTotal($param);
+
+    return $generales;
+
+}
 /**
  * Recibe el id de una venta, extrae sus datos y regresa un xml con el formato que
  * se necesita enviar al web service.

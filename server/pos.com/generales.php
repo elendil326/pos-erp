@@ -225,6 +225,9 @@ class Generales{
      * @return Object Success
      */
     public function isValid() {
+
+
+
         $this->success = new Success($this->error);
         return $this->success;
     }

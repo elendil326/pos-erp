@@ -29,10 +29,7 @@ Aplicacion.Mostrador.prototype._init = function () {
 	//crear la forma de que todo salio bien en la venta
 	this.finishedPanelCreator();
 	
-	Aplicacion.Mostrador.currentInstance = this;
-	
-	//obtiene la informacion del carrito
-	Aplicacion.Mostrador.currentInstance.getInfoSucursal();
+	Aplicacion.Mostrador.currentInstance = this;		
 	
 	
 	return this;
@@ -48,64 +45,6 @@ Aplicacion.Mostrador.prototype.getConfig = function (){
 		card: this.mostradorPanel,
 		leaf: true
 		};
-};
-
-
-/* ********************************************************
-	Información de la sucursal
-******************************************************** */
-
-Aplicacion.Mostrador.prototype.infoSucursal = null;
-
-Aplicacion.Mostrador.prototype.getInfoSucursal = function()
-{
-	
-	var info = null;
-	
-	if(DEBUG){
-		console.log("Obteniendo información de la sucursal ....");
-	}
-	
-	Ext.Ajax.request({
-		url: '../proxy.php',
-		scope : this,
-		params : {
-			action : 712,
-		},
-		success: function(response, opts) {
-			try{
-				informacion = Ext.util.JSON.decode( response.responseText );				
-			}catch(e){
-				return POS.error(response, e);
-			}
-			
-			if( !informacion.success ){
-				//volver a intentar
-				if(DEBUG){
-					console.log("obtenicion de la informacion sin exito ",venta );
-				}
-				Ext.Msg.alert("Mostrador", informacion.reason);
-				return;
-
-			}
-			
-			if(DEBUG){
-				console.log("obtenicion de la informacion exitosa ", venta );
-			}
-						
-			Aplicacion.Mostrador.currentInstance.infoSucursal = informacion.datos;		
-			
-			if(DEBUG){
-				console.log("Aplicacion.Mostrador.currentInstance.infoSucursal contiene : ", Aplicacion.Mostrador.currentInstance.infoSucursal);	
-			}
-
-		},
-		failure: function( response ){
-			POS.error( response );
-		}
-	});
-	
-	
 };
 
 
@@ -1193,7 +1132,7 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 {
 	carrito = Aplicacion.Mostrador.currentInstance.carrito;
 	//incluye los datos de la sucursal
-	carrito.sucursal = Aplicacion.Mostrador.currentInstance.infoSucursal;
+	carrito.sucursal = POS.infoSucursal;
 	                                
     //restamos a la cantidad el descuento	                                
     for( var i = 0; i < carrito.items.length; i++ ){
