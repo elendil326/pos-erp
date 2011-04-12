@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.7deb5build0.10.10.1
+-- version 3.3.9
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 26-03-2011 a las 02:24:57
--- Versión del servidor: 5.1.49
--- Versión de PHP: 5.3.3-1ubuntu9.3
+-- Tiempo de generación: 12-04-2011 a las 20:14:29
+-- Versión del servidor: 5.5.8
+-- Versión de PHP: 5.3.5
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -236,16 +236,17 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   `rfc` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT 'rfc del cliente si es que tiene',
   `razon_social` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'razon social del cliente',
   `calle` varchar(300) COLLATE utf8_unicode_ci NOT NULL COMMENT 'calle del domicilio fiscal del cliente',
-  `numero_exteriror` varchar(10) COLLATE utf8_unicode_ci NOT NULL COMMENT 'numero exteriror del domicilio fiscal del cliente',
+  `numero_exterior` varchar(10) COLLATE utf8_unicode_ci NOT NULL COMMENT 'numero exteriror del domicilio fiscal del cliente',
   `numero_interior` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'numero interior del domicilio fiscal del cliente',
   `colonia` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'colonia del domicilio fiscal del cliente',
   `referencia` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'referencia del domicilio fiscal del cliente',
+  `localidad` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Localidad del domicilio fiscal',
   `municipio` varchar(55) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Municipio de este cliente',
   `estado` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Estado del domicilio fiscal del cliente',
   `pais` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Pais del domicilio fiscal del cliente',
   `codigo_postal` varchar(15) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Codigo postal del domicilio fiscal del cliente',
   `telefono` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Telefono del cliete',
-  `e_mail` varchar(60) COLLATE utf8_unicode_ci DEFAULT '0' COMMENT 'dias de credito para que pague el cliente',
+  `e_mail` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'dias de credito para que pague el cliente',
   `limite_credito` float NOT NULL DEFAULT '0' COMMENT 'Limite de credito otorgado al cliente',
   `descuento` float NOT NULL DEFAULT '0' COMMENT 'Taza porcentual de descuento de 0.0 a 100.0',
   `activo` tinyint(2) NOT NULL DEFAULT '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
@@ -261,21 +262,21 @@ CREATE TABLE IF NOT EXISTS `cliente` (
 -- Volcar la base de datos para la tabla `cliente`
 --
 
-INSERT INTO `cliente` (`id_cliente`, `rfc`, `razon_social`, `calle`, `numero_exteriror`, `numero_interior`, `colonia`, `referencia`, `municipio`, `estado`, `pais`, `codigo_postal`, `telefono`, `e_mail`, `limite_credito`, `descuento`, `activo`, `id_usuario`, `id_sucursal`, `fecha_ingreso`) VALUES
-(-2, 'Papas Supremas 2', 'Caja Comun', 'fsdfsdfdsfsadfasdfasdfasdfasdfasdfasdf', '', NULL, '', NULL, 'adfasdfasdfasdfasdfasdfasdfasdf', '', '', '', '6149974', '', 0, 0, 1, 101, 2, '2011-01-26 22:47:53'),
-(-1, 'Papas Supremas 1', 'Caja Comun', 'EEDTTRRRRRRRRRRRRRRRRRR', '', NULL, '', NULL, 'CELAYA', '', '', '', '172637667', '', 0, 0, 1, 101, 1, '2011-01-09 01:38:26'),
-(1, 'JICA870502', 'JOSE ALFERDO JIMENEZ CARSO', 'monte alban #123 col rosalinda', '', NULL, '', NULL, 'celaya', '', '', '', '', '', 19000, 0, 1, 101, 1, '2011-01-09 02:11:30'),
-(2, 'ALCB770612', 'BRENDA ALFARO CARMONA', 'MUTUALISMO #345, COL. CENTRO', '', NULL, '', NULL, 'CELAYA', '', '', '', 'a', '', 20, 2, 1, 101, 1, '2011-01-12 18:05:59'),
-(3, 'MOJL570312', 'LUCIA MORALES JUNCO', 'FRANCISCO JUAREZ #466, CENTRO', '', NULL, '', NULL, 'CELAYA', '', '', '', '4616115623', '', 19000, 11, 1, 101, 1, '2011-01-14 14:32:37'),
-(4, 'PRDC670822', 'ANA SOLACHE MALDONADO', 'GARAMBULLO #304 COL. DEL BOSQUE', '', NULL, '', NULL, 'CELAYA GTO', '', '', '', '46161167923', '', 2000, 11, 1, 102, 1, '2011-01-30 21:50:50'),
-(5, 'ESLN820412', 'NORMA SAMANTHA ESPARZA LAGUNA', 'RIO LERMA #304, COL. CENTRO', '', NULL, '', NULL, 'CELAYA', '', '', '', '4616162378', '', 1236, 20, 1, 102, 1, '2011-01-30 21:52:41'),
-(6, 'Cliente de Prueba 3', 'ANDRES RIVERA CARRILLO', 'ANDRES RIVERA CARRILLO', '', NULL, '', NULL, 'CELAYA', '', '', '', 'Cliente de Prueba 3', '', 0, 0, 1, 102, 1, '2011-01-30 21:54:12'),
-(7, 'JICA870502asdasd', 'JOSE ALFERDO JIMENEZ CARSO 2', 'monte alban #123 col rosalinda', '', NULL, '', NULL, 'celaya', '', '', '', '', '', 19000, 0, 1, 101, 1, '2011-01-09 02:11:30'),
-(8, 'ALCB770612asdasd', 'BRENDA ALFARO CARMONA 2', 'MUTUALISMO #345, COL. CENTRO', '', NULL, '', NULL, 'CELAYA', '', '', '', 'a', '', 20, 2, 1, 101, 1, '2011-01-12 18:05:59'),
-(9, 'MOJL570312asdasd', 'LUCIA MORALES JUNCO 2', 'FRANCISCO JUAREZ #466, CENTRO', '', NULL, '', NULL, 'CELAYA', '', '', '', '4616115623', '', 19000, 11, 1, 101, 1, '2011-01-14 14:32:37'),
-(10, 'PRDC670822asdasd', 'ANA SOLACHE MALDONADO 2', 'GARAMBULLO #304 COL. DEL BOSQUE', '', NULL, '', NULL, 'CELAYA GTO', '', '', '', '46161167923', '', 2000, 11, 1, 102, 1, '2011-01-30 21:50:50'),
-(11, 'ESLN820412asdasd', 'NORMA SAMANTHA ESPARZA LAGUNA 2', 'RIO LERMA #304, COL. CENTRO', '', NULL, '', NULL, 'CELAYA', '', '', '', '4616162378', '', 1236, 20, 1, 102, 1, '2011-01-30 21:52:41'),
-(12, 'Cliente de Prueba 3', 'ANDRES RIVERA CARRILLO 2', 'ANDRES RIVERA CARRILLO', '', NULL, '', NULL, 'CELAYA', '', '', '', 'Cliente de Prueba 3', '', 0, 0, 1, 102, 1, '2011-01-30 21:54:12');
+INSERT INTO `cliente` (`id_cliente`, `rfc`, `razon_social`, `calle`, `numero_exterior`, `numero_interior`, `colonia`, `referencia`, `localidad`, `municipio`, `estado`, `pais`, `codigo_postal`, `telefono`, `e_mail`, `limite_credito`, `descuento`, `activo`, `id_usuario`, `id_sucursal`, `fecha_ingreso`) VALUES
+(-2, 'Papas Supremas 2', 'Caja Comun', 'fsdfsdfdsfsadfasdfasdfasdfasdfasdfasdf', '', NULL, '', NULL, NULL, 'adfasdfasdfasdfasdfasdfasdfasdf', '', '', '', '6149974', '', 0, 0, 1, 101, 2, '2011-01-26 22:47:53'),
+(-1, 'Papas Supremas 1', 'Caja Comun', 'EEDTTRRRRRRRRRRRRRRRRRR', '', NULL, '', NULL, NULL, 'CELAYA', '', '', '', '172637667', '', 0, 0, 1, 101, 1, '2011-01-09 01:38:26'),
+(1, 'JICA870502XC2', 'JOSE ALFERDO JIMENEZ CARSO', 'monte alban', '123', '2', 'Rosalinda', 'Un lugar ', 'Celaya', 'Celaya', 'Guanajuato', 'Mexico', '38000', '4616112345', 'pepealfredo@caffeina.mx', 19000, 0, 1, 101, 1, '2011-01-09 02:11:30'),
+(2, 'ALCB770612', 'BRENDA ALFARO CARMONA', 'MUTUALISMO #345, COL. CENTRO', '', NULL, '', NULL, NULL, 'CELAYA', '', '', '', 'a', '', 20, 2, 1, 101, 1, '2011-01-12 18:05:59'),
+(3, 'MOJL570312', 'LUCIA MORALES JUNCO', 'FRANCISCO JUAREZ #466, CENTRO', '', NULL, '', NULL, NULL, 'CELAYA', '', '', '', '4616115623', '', 19000, 11, 1, 101, 1, '2011-01-14 14:32:37'),
+(4, 'PRDC670822', 'ANA SOLACHE MALDONADO', 'GARAMBULLO #304 COL. DEL BOSQUE', '', NULL, '', NULL, NULL, 'CELAYA GTO', '', '', '', '46161167923', '', 2000, 11, 1, 102, 1, '2011-01-30 21:50:50'),
+(5, 'ESLN820412', 'NORMA SAMANTHA ESPARZA LAGUNA', 'RIO LERMA #304, COL. CENTRO', '', NULL, '', NULL, NULL, 'CELAYA', '', '', '', '4616162378', '', 1236, 20, 1, 102, 1, '2011-01-30 21:52:41'),
+(6, 'Cliente de Prueba 3', 'ANDRES RIVERA CARRILLO', 'ANDRES RIVERA CARRILLO', '', NULL, '', NULL, NULL, 'CELAYA', '', '', '', 'Cliente de Prueba 3', '', 0, 0, 1, 102, 1, '2011-01-30 21:54:12'),
+(7, 'JICA870502asdasd', 'JOSE ALFERDO JIMENEZ CARSO 2', 'monte alban #123 col rosalinda', '', NULL, '', NULL, NULL, 'celaya', '', '', '', '', '', 19000, 0, 1, 101, 1, '2011-01-09 02:11:30'),
+(8, 'ALCB770612asdasd', 'BRENDA ALFARO CARMONA 2', 'MUTUALISMO #345, COL. CENTRO', '', NULL, '', NULL, NULL, 'CELAYA', '', '', '', 'a', '', 20, 2, 1, 101, 1, '2011-01-12 18:05:59'),
+(9, 'MOJL570312asdasd', 'LUCIA MORALES JUNCO 2', 'FRANCISCO JUAREZ #466, CENTRO', '', NULL, '', NULL, NULL, 'CELAYA', '', '', '', '4616115623', '', 19000, 11, 1, 101, 1, '2011-01-14 14:32:37'),
+(10, 'PRDC670822asdasd', 'ANA SOLACHE MALDONADO 2', 'GARAMBULLO #304 COL. DEL BOSQUE', '', NULL, '', NULL, NULL, 'CELAYA GTO', '', '', '', '46161167923', '', 2000, 11, 1, 102, 1, '2011-01-30 21:50:50'),
+(11, 'ESLN820412asdasd', 'NORMA SAMANTHA ESPARZA LAGUNA 2', 'RIO LERMA #304, COL. CENTRO', '', NULL, '', NULL, NULL, 'CELAYA', '', '', '', '4616162378', '', 1236, 20, 1, 102, 1, '2011-01-30 21:52:41'),
+(12, 'Cliente de Prueba 3', 'ANDRES RIVERA CARRILLO 2', 'ANDRES RIVERA CARRILLO', '', NULL, '', NULL, NULL, 'CELAYA', '', '', '', 'Cliente de Prueba 3', '', 0, 0, 1, 102, 1, '2011-01-30 21:54:12');
 
 -- --------------------------------------------------------
 
@@ -1030,7 +1031,7 @@ CREATE TABLE IF NOT EXISTS `equipo` (
   PRIMARY KEY (`id_equipo`),
   UNIQUE KEY `full_ua` (`full_ua`),
   UNIQUE KEY `token` (`token`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
 
 --
 -- Volcar la base de datos para la tabla `equipo`
@@ -1039,13 +1040,14 @@ CREATE TABLE IF NOT EXISTS `equipo` (
 INSERT INTO `equipo` (`id_equipo`, `token`, `full_ua`, `descripcion`, `locked`) VALUES
 (5, 'Macbook esfr', 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_6; es-es) AppleWebKit/533.19.4 (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4', 'Macbook esfr', 0),
 (6, NULL, 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_6; en-US) AppleWebKit/534.10 (KHTML, like Gecko) Chrome/8.0.552.237 Safari/534.10', 'Macbook ernesto', 0),
-(7, 'ManesLap', 'Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.151 Safari/534.16', 'ManesLap', 0),
+(7, 'ManesLap', 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.204 Safari/534.16', 'ManesLap', 0),
 (8, 'MANESLAPWINDOWS', 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.13 (KHTML, like Gecko) Chrome/9.0.597.107 Safari/534.13', 'MANESLAPWINDOWS', 0),
 (9, NULL, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; es-ES) AppleWebKit/533.19.4 (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4', 'acer', 0),
 (10, 'ManesLapChrome', 'Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/534.13 (KHTML, like Gecko) Chrome/9.0.597.94 Safari/534.13', 'ManesLapChrome', 0),
 (11, NULL, 'Mozilla/5.0 (X11; U; Linux i686; es-MX; rv:1.9.2.13) Gecko/20101206 Ubuntu/10.04 (lucid) Firefox/3.6.13 WebSlideShow/1.4.0', 'hp mozilla', 0),
 (12, NULL, 'Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/534.13 (KHTML, like Gecko) Ubuntu/10.04 Chromium/9.0.597.94 Chrome/9.0.597.94 Safari/534.13', 'ManesLap SUC 2', 0),
-(13, NULL, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.13 (KHTML, like Gecko) Chrome/9.0.597.98 Safari/534.13', 'chromewin', 0);
+(13, NULL, 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.13 (KHTML, like Gecko) Chrome/9.0.597.98 Safari/534.13', 'chromewin', 0),
+(14, NULL, 'Mozilla/5.0 (Windows NT 6.1; rv:2.0) Gecko/20100101 Firefox/4.0', 'Mozillahp', 0);
 
 -- --------------------------------------------------------
 
@@ -1073,6 +1075,7 @@ INSERT INTO `equipo_sucursal` (`id_equipo`, `id_sucursal`) VALUES
 (10, 1),
 (11, 1),
 (13, 1),
+(14, 1),
 (12, 2);
 
 -- --------------------------------------------------------
@@ -1509,6 +1512,7 @@ CREATE TABLE IF NOT EXISTS `pos_config` (
 --
 
 INSERT INTO `pos_config` (`opcion`, `value`) VALUES
+('emisor', '{     "emisor": {         "nombre" : "JUAN ANTONIO GARCIA TAPIA",         "rfc": "GATJ740714F48",         "calle": "AVENIDA CONSTITUYENTES",         "numeroExterior": "360",         "numeroInteior": "BODEGA 49",         "referencia": null,         "colonia": "CENTRO",         "localidad": null,         "municipio": "CELAYA",         "estado": "GUANAJUATO",         "pais": "MEXICO",         "codigoPostal": "38070"      } }'),
 ('llave_privada', '<RSAKeyValue><Modulus>98s1g5UleYF81Jl33fKBW1WciQpfgBhzEyWWVQnxWAbtGyLjOVtYGPLYcZJGZw3YzrTousm7ezYfdY8O0Y8938b7YwCQFYd08DWv6m1umsiLBOhdRATkIU/gTleX7FPcI17icmUhVV60lNw0xl1F5iW1VApsTmdwGPes+9MUQtk=</Modulus><Exponent>AQAB</Exponent><P>/Fn/S8tJ12o1vCs9OcRqpApmEQXibZixOtPxESWlBsAo28Wqs/vPmDgusz92XXJuaQH4Osdjama/CDhUCvRj7w==</P><Q>+2BXtIVDyesIzRNem+VosbXFVc4PGD76K+idru89/PPVErYdfKOdMFHpU47dudZumOetoWwHxhTGgEHsXB1dtw==</Q><DP>j1/Gp9aJTqWegBmFALQy7p6l3NgeDKyrTUQre9WKjGpTDIKi+P2Btfd9uQO+iVtBldGzqhmsx0A3G0F9pnex6w==</DP><DQ>gxRD57AuHxZeKoHVLbm8lB5S3mFq4ZvFXCwaPWQnkMWc7/ri+WFf0BiGcLnoyMUWOslkcu4gR5wBvlOh6o6tlQ==</DQ><InverseQ>3jk1GVeQ54uO7k34xuXR07ZSpVjn4WxABbcxS6C+Aztk7AzVdxmwoy942sKwIQMNUW9l/XPF5xVv099jCOLXdg==</InverseQ><D>7llSFUqebFzodRtV2HDOisszsgH/UJi0AAPUseHJezHWWpbZWC+L8xuMpNndzHzeQh50Ck/HfcHWyt6bk2mkSbp0yBVpBtCNRfsoVj/YMT0y77sRGwBIPRbPoxgbHBc1NqYCqs+s8cuX/NHMJDk8JtF+twGRCMWwxixc8Tj4w80=</D></RSAKeyValue>'),
 ('llave_publica', 'MIIEDTCCAvWgAwIBAgIUMDAwMDEwMDAwMDAxMDMwOTk5ODEwDQYJKoZIhvcNAQEFBQAwggE2MTgwNgYDVQQDDC9BLkMuIGRlbCBTZXJ2aWNpbyBkZSBBZG1pbmlzdHJhY2nDs24gVHJpYnV0YXJpYTEvMC0GA1UECgwmU2VydmljaW8gZGUgQWRtaW5pc3RyYWNpw7NuIFRyaWJ1dGFyaWExHzAdBgkqhkiG9w0BCQEWEGFjb2RzQHNhdC5nb2IubXgxJjAkBgNVBAkMHUF2LiBIaWRhbGdvIDc3LCBDb2wuIEd1ZXJyZXJvMQ4wDAYDVQQRDAUwNjMwMDELMAkGA1UEBhMCTVgxGTAXBgNVBAgMEERpc3RyaXRvIEZlZGVyYWwxEzARBgNVBAcMCkN1YXVodGVtb2MxMzAxBgkqhkiG9w0BCQIMJFJlc3BvbnNhYmxlOiBGZXJuYW5kbyBNYXJ0w61uZXogQ29zczAeFw0xMTAzMjAwMTA1NDNaFw0xMzAzMTkwMTA1NDNaMIGtMSIwIAYDVQQDExlKVUFOIEFOVE9OSU8gR0FSQ0lBIFRBUElBMSIwIAYDVQQpExlKVUFOIEFOVE9OSU8gR0FSQ0lBIFRBUElBMSIwIAYDVQQKExlKVUFOIEFOVE9OSU8gR0FSQ0lBIFRBUElBMRYwFAYDVQQtEw1HQVRKNzQwNzE0RjQ4MRswGQYDVQQFExJHQVRKNzQwNzE0SEdUUlBOMDMxCjAIBgNVBAsTASAwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAPfLNYOVJXmBfNSZd93ygVtVnIkKX4AYcxMlllUJ8VgG7Rsi4zlbWBjy2HGSRmcN2M606LrJu3s2H3WPDtGPPd/G+2MAkBWHdPA1r+ptbprIiwToXUQE5CFP4E5Xl+xT3CNe4nJlIVVetJTcNMZdReYltVQKbE5ncBj3rPvTFELZAgMBAAGjHTAbMAwGA1UdEwEB/wQCMAAwCwYDVR0PBAQDAgbAMA0GCSqGSIb3DQEBBQUAA4IBAQCfusmkDoo/iygnPWwTooH4Itt9HsNGW8OnUwwhMxSwyzjzmO+CYNv77DtAD/UuJ7cu/kzprHRbLUMng8vEEzBvOlPyEx3naoxOjSCDFiY5ATPkLM+i8Xb7WyqPneCKKdTmm6n/cZroJZLwShhhsK1LFRJKJRyEOqiIXXGq/YJJcBVbsMuznxW5/dRiKTBlOtWRdh7dq9eWch4fOBsOa4+alHaBbXKlbybgWHzHq8gpLTKE8q0o1u6hGPvGZevh9dDfusMPR4lAFxadCYJbv2z+dfdPaNSnwZg3jgOP4pKOAey2PiSPApNLMV9lveDOGcrnlJWLIep67921bdcc2odF'),
 ('noCertificado', '00001000000103099981'),
@@ -1540,7 +1544,7 @@ CREATE TABLE IF NOT EXISTS `prestamo_sucursal` (
 INSERT INTO `prestamo_sucursal` (`id_prestamo`, `prestamista`, `deudor`, `monto`, `saldo`, `liquidado`, `concepto`, `fecha`) VALUES
 (1, 1, 2, 10107, 0, 1, 'kokoko', '2011-02-02 01:58:46'),
 (2, 1, 2, 102356, 0, 1, 'kakakakakka', '2011-02-02 01:59:05'),
-(3, 1, 2, 1.01236e+06, 1.01136e+06, 0, 'dsfsdf', '2011-02-11 19:29:17'),
+(3, 1, 2, 1012360, 1011360, 0, 'dsfsdf', '2011-02-11 19:29:17'),
 (4, 2, 1, 1000, 1000, 0, 'La comida', '2011-02-01 22:35:32'),
 (5, 2, 1, 450, 450, 0, 'Unas cosas', '2011-02-01 22:35:32'),
 (6, 1, 2, 78, 78, 0, 'ewrwer', '2011-02-02 17:20:15'),
@@ -1553,7 +1557,7 @@ INSERT INTO `prestamo_sucursal` (`id_prestamo`, `prestamista`, `deudor`, `monto`
 (13, 1, 2, 1111, 1111, 0, 'sdfsdfsdf', NULL),
 (14, 1, 2, 1212, 1212, 0, 'dsfsdfsdf', NULL),
 (15, 1, 2, 222, 222, 0, 'qqqqqqqqq', NULL),
-(16, 1, 2, 3.33333e+08, 3.33333e+08, 0, '333333', NULL),
+(16, 1, 2, 333333000, 333333000, 0, '333333', NULL),
 (17, 1, 2, 444, 444, 0, '4444444444444', NULL),
 (18, 1, 2, 1300, 1300, 0, 'Pago de Internet', NULL),
 (19, 1, 2, 400, 400, 0, 'Pago de la Pintura', NULL),
@@ -1601,18 +1605,7 @@ INSERT INTO `proveedor` (`id_proveedor`, `rfc`, `nombre`, `direccion`, `telefono
 (2, '', 'AAAAAAAAaaaaa', 'AAAAAAAAaa', '', NULL, 1, 'admin'),
 (3, '', 'patamban', 'zamora mich.', '', NULL, 1, 'admin'),
 (4, '', 'asdfasdfasdf', 'aaaaaaaaaa', '', NULL, 1, 'admin'),
-(5, '', 'pepsi co.', 'celaya, gto', '', NULL, 1, 'ambos'),
-(6, 'ladksjflkadsj', 'Sandalias de mexico', 'mexico, mexico', '', NULL, 1, 'sucursal'),
-(7, 'aaaaaaaaaaaaaaaaaaa', 'aaaaaaaaaaaaaa', 'aaaaaaaaaaaaa', 'aaaaaaaaaaaa', '', 1, 'sucursal'),
-(8, 'Manuel Garcia', 'Manuel Garcia', 'Manuel Garcia', 'Manuel Garcia', '', 1, 'ambos'),
-(9, 'hhhhhhhhhhhhhhh', 'hhhhhhhhhhh', 'Manuel Garcia', 'Manuel Garcia', '', 1, 'ambos'),
-(10, 'dddddddddddddddddddd', 'dddddddddddddddddddddd', 'dddddddddddddddddddddd', 'dddddddddddddddddddd', 'dddddddddddddddddddddd', 1, 'sucursal'),
-(11, 'sdsdfsdfsdfsdfdssdf', 'sdsdfsdfsdfsdfdssdf', 'sdsdfsdfsdfsdfdssdf', 'sdsdfsdfsdfsdfdssdf', 'sdsdfsdfsdfsdfdssdf', 1, 'sucursal'),
-(12, '11111111111111111111', '111111111111111111111111', '111111111111111111111111', '11111111111111111111', '111111111111111111111111', 1, 'sucursal'),
-(13, '33333333333333333333', '33333333333333333333333', '33333333333333333333333', '33333333333333333333', '33333333333333333333333', 1, 'sucursal'),
-(14, '55555555555555555555', '555555555555555555555', '555555555555555555555', '55555555555555555555', '555555555555555555555', 1, 'sucursal'),
-(15, 'xxxxxxxxxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxxxxxxxxxxxxxx', 1, 'sucursal'),
-(16, 'yyyyyyyyyyyyyyyyyyyy', 'yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy', 'yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy', 'yyyyyyyyyyyyyyyyyyyy', 'yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy', 1, 'sucursal');
+(5, '', 'pepsi co.', 'celaya, gto', '', NULL, 1, 'ambos');
 
 -- --------------------------------------------------------
 
@@ -1652,7 +1645,7 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
 --
 
 INSERT INTO `sucursal` (`id_sucursal`, `gerente`, `descripcion`, `razon_social`, `rfc`, `calle`, `numero_exterior`, `numero_interior`, `colonia`, `localidad`, `referencia`, `municipio`, `estado`, `pais`, `codigo_postal`, `telefono`, `token`, `letras_factura`, `activo`, `fecha_apertura`, `saldo_a_favor`) VALUES
-(1, 102, 'papas supremas 1', 'monte radiante #123 col centro, celaya', 'alskdfjlasdj8787', '', '', NULL, '', '', NULL, '', '', '', '', '1726376672', NULL, 'c', 1, '2011-01-09 01:38:26', 0),
+(1, 102, 'papas supremas 1', 'papas supremas 1', 'SUPA871102XD2', 'Anden 3', '442', '42', 'Central de Abastos', 'Celaya', 'Una bodega en el mercado', 'Celaya', 'Guanajuato', 'Mexico', '38080', '1726376672', NULL, 'c', 1, '2011-01-09 01:38:26', 0),
 (2, 104, 'papas supremas 2', 'monte balcanes 107 2da secc arboledas celaya', 'sp9233876', '', '', NULL, '', '', NULL, '', '', '', '', '6149974', NULL, 'a', 1, '2011-01-26 22:47:53', 0);
 
 -- --------------------------------------------------------
@@ -1688,7 +1681,7 @@ INSERT INTO `usuario` (`id_usuario`, `RFC`, `nombre`, `contrasena`, `id_sucursal
 (100, 'LOMA870805', 'ADRIAN PASTOR LOPEZ MONRROY', '202cb962ac59075b964b07152d234b70', NULL, 1, NULL, 0, '0', '0', '2011-02-22 20:06:01'),
 (101, 'ESLI661206', 'IVAN ESCOBEDO LANDIN', '202cb962ac59075b964b07152d234b70', 1, 1, NULL, 0, '0', '0', '2011-02-22 20:06:36'),
 (102, 'goha881703', 'Alan gonzalez hernandez', '827ccb0eea8a706c4c34a16891f84e7b', 1, 1, NULL, 2000, 'monte balcanes #107 2da secc arboledas', '6149974', '2011-01-28 13:02:28'),
-(103, 'asdfasdfasdfff', 'dilbo martinez salgado', '827ccb0eea8a706c4c34a16891f84e7b', NULL, 0, NULL, 1e-06, 'asdfasdfasdf', 'asdfasdfsadf', '2011-01-13 00:00:00'),
+(103, 'asdfasdfasdfff', 'dilbo martinez salgado', '827ccb0eea8a706c4c34a16891f84e7b', NULL, 0, NULL, 0.000001, 'asdfasdfasdf', 'asdfasdfsadf', '2011-01-13 00:00:00'),
 (104, 'jgl12344332', 'jorge gerencias lopez', '202cb962ac59075b964b07152d234b70', 2, 1, NULL, 1000, 'monte balcanes #017 2da secc arboledas', '6149974', '2011-01-26 00:00:00'),
 (105, 'MOAJ841109', 'Jose Luis Monrroy Aguilar y asociados', '027667670d4fada2eb3a2c8943178b07', 1, 1, NULL, 1500, 'OCOTE #111 COL. LAS INSURGENTES CELAYA GTO', '4616148526', '2011-02-22 00:00:00'),
 (106, 'GACA900321', '-Alberto Garcia Carmona', '202cb962ac59075b964b07152d234b70', NULL, 1, NULL, 1200, 'circuito Marabu #127A', '4616132441', '2011-03-06 00:00:00');
@@ -1775,7 +1768,7 @@ INSERT INTO `ventas` (`id_venta`, `id_cliente`, `tipo_venta`, `tipo_pago`, `fech
 (47, 3, 'contado', 'efectivo', '2011-02-03 14:14:57', 20, NULL, 0, 17.8, 1, 102, 17.8, 0, '192.168.1.66', 1),
 (48, 3, 'contado', 'efectivo', '2011-02-03 14:17:29', 20, NULL, 0, 17.8, 1, 102, 17.8, 0, '192.168.1.66', 1),
 (49, 3, 'contado', 'efectivo', '2011-02-03 14:19:34', 11, NULL, 0, 9.79, 1, 102, 9.79, 0, '192.168.1.66', 1),
-(50, 1, 'contado', 'efectivo', '2011-02-03 14:22:20', 11, NULL, 0, 11, 1, 102, 11, 0, '192.168.1.66', 1),
+(50, 1, 'contado', 'efectivo', '2011-02-03 14:22:20', 11, 0, 0, 11, 1, 102, 11, 0, '192.168.1.66', 1),
 (51, -1, 'contado', 'efectivo', '2011-02-03 14:24:21', 11, NULL, 0, 11, 1, 102, 11, 0, '192.168.1.66', 1),
 (52, -1, 'contado', 'efectivo', '2011-02-03 14:35:51', 11, NULL, 0, 11, 1, 102, 11, 0, '192.168.1.66', 1),
 (53, -1, 'contado', 'efectivo', '2011-02-03 14:37:23', 11, NULL, 0, 11, 1, 102, 11, 0, '192.168.1.66', 1),
