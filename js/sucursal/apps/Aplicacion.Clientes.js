@@ -647,7 +647,8 @@ Aplicacion.Clientes.prototype.editarClienteCancelarBoton = function (  )
     Ext.getCmp("Clientes-EditarDetalles").setVisible(true);
     Ext.getCmp("Clientes-EditarDetallesGuardar").setVisible(false);
     Ext.getCmp("Clientes-EditarDetallesCancelar").setVisible(false);
-    Ext.getCmp("Clientes-credito-restante").show( Ext.anims.slide );
+    //Ext.getCmp("Clientes-credito-restante").show( Ext.anims.slide );
+    Ext.getCmp("DetallesCliente_limite_credito").show( Ext.anims.slide );
 };
 
 
@@ -691,7 +692,8 @@ Aplicacion.Clientes.prototype.editarCliente = function ( data )
             Ext.getCmp("Clientes-EditarDetallesCancelar").setVisible(false);
 
             //mostrar el credito de nuevo
-            Ext.getCmp("Clientes-credito-restante").show( Ext.anims.slide );
+            //Ext.getCmp("Clientes-credito-restante").show( Ext.anims.slide );
+            Ext.getCmp("DetallesCliente_limite_credito").show( Ext.anims.slide );
 
 
             //poner las instrucciones originales
@@ -793,7 +795,8 @@ Aplicacion.Clientes.prototype.editarClienteBoton = function ( )
     Ext.getCmp("Clientes-EditarDetallesCancelar").show( Ext.anims.slide );
 
     //quitar el credito restante
-    Ext.getCmp("Clientes-credito-restante").hide( Ext.anims.slide );
+    //Ext.getCmp("Clientes-credito-restante").hide( Ext.anims.slide );
+    Ext.getCmp("DetallesCliente_limite_credito").hide( Ext.anims.slide );
     	
 
 };
@@ -1390,7 +1393,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
                 name : 'pais',
                 label: 'Pais',
                 required:true,
-                values:'México',
+                value:'México',
                 listeners : {
                     'focus' : function (){
                         kconf = {
@@ -1463,6 +1466,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
                 required: false
             }),
             new Ext.form.Text({
+                id : 'DetallesCliente_limite_credito',
                 name : 'limite_credito',
                 label: 'Lim. Credito',
                 required: false,
@@ -1692,21 +1696,23 @@ Aplicacion.Clientes.prototype.nuevoClientePanelShow = function ( ){
  * Se llama para crear por primera vez el panel de nuevo cliente
  **/
 Aplicacion.Clientes.prototype.nuevoClientePanelCreator = function (  ){
+
     if(DEBUG){
         console.log("creando panel de nuevo cliente");
     }
 	
 	
     this.nuevoClientePanel = new Ext.form.FormPanel({
-
+        scroll:'vertical',
         items: [{
             xtype: 'fieldset',
             title: 'Ingrese los detalles del nuevo cliente',
             instructions: 'Si desea ofrecer un limite de credito que exceda los $20,000.00 debera pedir una autorizacion.',
             items: [
             new Ext.form.Text({
-                name: 'nombre',
-                label: 'Nombre',
+                name: 'razon_social',
+                label: 'Razon Social',
+                required:true,
                 listeners : {
                     'focus' : function (){
                         kconf = {
@@ -1720,6 +1726,7 @@ Aplicacion.Clientes.prototype.nuevoClientePanelCreator = function (  ){
             new Ext.form.Text({
                 name: 'rfc',
                 label: 'RFC',
+                required:true,
                 listeners : {
                     'focus' : function (){
                         kconf = {
@@ -1731,8 +1738,9 @@ Aplicacion.Clientes.prototype.nuevoClientePanelCreator = function (  ){
                 }
             }),
             new Ext.form.Text({
-                name : 'direccion',
-                label: 'Direccion',
+                name : 'calle',
+                label: 'Calle',
+                required:true,
                 listeners : {
                     'focus' : function (){
                         kconf = {
@@ -1744,8 +1752,76 @@ Aplicacion.Clientes.prototype.nuevoClientePanelCreator = function (  ){
                 }
             }),
             new Ext.form.Text({
-                name : 'ciudad',
-                label: 'Ciudad',
+                name : 'numero_exterior',
+                label: 'Numero Exterior',
+                required:true,
+                listeners : {
+                    'focus' : function (){
+                        kconf = {
+                            type : 'complete',
+                            submitText : 'Aceptar'
+                        };
+                        POS.Keyboard.Keyboard( this, kconf );
+                    }
+                }
+            }),
+            new Ext.form.Text({
+                name : 'numero_interior',
+                label: 'Numero Interior',
+                listeners : {
+                    'focus' : function (){
+                        kconf = {
+                            type : 'complete',
+                            submitText : 'Aceptar'
+                        };
+                        POS.Keyboard.Keyboard( this, kconf );
+                    }
+                }
+            }),
+            new Ext.form.Text({
+                name : 'colonia',
+                label: 'Colonia',
+                required:true,
+                listeners : {
+                    'focus' : function (){
+                        kconf = {
+                            type : 'complete',
+                            submitText : 'Aceptar'
+                        };
+                        POS.Keyboard.Keyboard( this, kconf );
+                    }
+                }
+            }),
+            new Ext.form.Text({
+                name : 'referencia',
+                label: 'Referencia',
+                listeners : {
+                    'focus' : function (){
+                        kconf = {
+                            type : 'complete',
+                            submitText : 'Aceptar'
+                        };
+                        POS.Keyboard.Keyboard( this, kconf );
+                    }
+                }
+            }),
+            new Ext.form.Text({
+                name : 'localidad',
+                label: 'Localidad',
+                listeners : {
+                    'focus' : function (){
+                        kconf = {
+                            type : 'complete',
+                            submitText : 'Aceptar'
+                        };
+                        POS.Keyboard.Keyboard( this, kconf );
+                    }
+                }
+            }),
+            new Ext.form.Text({
+                name : 'municipio',
+                label: 'Municipio',
+                required:true,
                 listeners : {
                     'focus' : function (){
                         kconf = {
@@ -1755,23 +1831,54 @@ Aplicacion.Clientes.prototype.nuevoClientePanelCreator = function (  ){
                         POS.Keyboard.Keyboard( this, kconf );
                     }
                 }
-            }), /*
-				new Ext.form.Text({
-                    name : 'e_mail',
-                    label: 'E-mail',
-                    listeners : {
-                        'focus' : function (){
-                            kconf = {
-                                type : 'complete',
-                                submitText : 'Aceptar'
-                            };
-                            POS.Keyboard.Keyboard( this, kconf );
-                        }
+            }),
+            new Ext.form.Text({
+                name : 'estado',
+                label: 'Estado',
+                required:true,
+                listeners : {
+                    'focus' : function (){
+                        kconf = {
+                            type : 'complete',
+                            submitText : 'Aceptar'
+                        };
+                        POS.Keyboard.Keyboard( this, kconf );
                     }
-                }), */
+                }
+            }),
+            new Ext.form.Text({
+                name : 'pais',
+                label: 'Pais',
+                required:true,
+                value:'México',
+                listeners : {
+                    'focus' : function (){
+                        kconf = {
+                            type : 'complete',
+                            submitText : 'Aceptar'
+                        };
+                        POS.Keyboard.Keyboard( this, kconf );
+                    }
+                }
+            }),
+            new Ext.form.Text({
+                name : 'codigo_postal',
+                label: 'Codigo Postal',
+                required:true,
+                listeners : {
+                    'focus' : function (){
+                        kconf = {
+                            type : 'complete',
+                            submitText : 'Aceptar'
+                        };
+                        POS.Keyboard.Keyboard( this, kconf );
+                    }
+                }
+            }),
             new Ext.form.Text({
                 name : 'telefono',
                 label: 'Telefono',
+                required:true,
                 listeners : {
                     'focus' : function (){
                         kconf = {
@@ -1783,9 +1890,23 @@ Aplicacion.Clientes.prototype.nuevoClientePanelCreator = function (  ){
                 }
             }),
             new Ext.form.Text({
+                name : 'e_mail',
+                label: 'E-mail',
+                listeners : {
+                    'focus' : function (){
+                        kconf = {
+                            type : 'complete',
+                            submitText : 'Aceptar'
+                        };
+                        POS.Keyboard.Keyboard( this, kconf );
+                    }
+                }
+            }),
+            new Ext.form.Text({
                 name : 'descuento',
                 label: 'Descuento',
                 required: false,
+                value : '0',
                 listeners : {
                     'focus' : function (){
                         kconf = {
@@ -1799,7 +1920,8 @@ Aplicacion.Clientes.prototype.nuevoClientePanelCreator = function (  ){
             new Ext.form.Text({
                 name : 'limite_credito',
                 label: 'Lim. Credito',
-                required: false,
+                value : '0',
+                required: true,
                 listeners : {
                     'focus' : function (){
                         kconf = {
@@ -1883,9 +2005,9 @@ Aplicacion.Clientes.prototype.crearClienteValidator = function ()
     campo = Aplicacion.Clientes.currentInstance.nuevoClientePanel.items.items[0];
 	
     //nombre
-    if(v.nombre.length < 10){
-        Ext.Msg.alert("Nuevo cliente", "El nombre debe ser mayor de diez caracteres.");
-        return campo.setInstructions("El nombre debe ser mayor de diez caracteres.");
+    if(v.razon_social.length < 10){
+        Ext.Msg.alert("Nuevo cliente", "La Razon Social del cliente debe ser mayor de diez caracteres.");
+        return campo.setInstructions("La Razon Social del cliente debe ser mayor de diez caracteres.");
     }
 	
     //rfc
@@ -1894,21 +2016,53 @@ Aplicacion.Clientes.prototype.crearClienteValidator = function ()
         return campo.setInstructions("El RFC debe ser mayor de diez caracteres.");
     }
 	
-    //direccion
-    if(v.direccion.length < 10){
-        Ext.Msg.alert("Nuevo cliente", "La direccion es muy corta.");
-        return campo.setInstructions("La direccion es muy corta.");
+    //calle
+    if(v.calle.length < 3){
+        Ext.Msg.alert("Nuevo cliente", "La descripcion de la calle es muy corta.");
+        return campo.setInstructions("La descripcion de la calle es muy corta.");
+    }
+
+    //numero_exterior
+    if(v.numero_exterior.length == 0){
+        Ext.Msg.alert("Nuevo cliente", "Indique el numero exterior.");
+        return campo.setInstructions("Indique el numero exterior.");
+    }    
+
+    //colonia
+    if(v.colonia.length < 3){
+        Ext.Msg.alert("Nuevo cliente", "La descripcion de la colonia es muy corta.");
+        return campo.setInstructions("La descripcion de la colonia es muy corta.");
+    }
+
+    //municipio
+    if(v.municipio.length < 3){
+        Ext.Msg.alert("Nuevo cliente", "La descripcion del municipio es muy corta.");
+        return campo.setInstructions("La descripcion del municipio es muy corta.");
     }
 	
-    //ciudad
-    if(v.ciudad.length < 3){
-        Ext.Msg.alert("Nuevo cliente", "La ciudad es muy corta." );
-        return campo.setInstructions("La ciudad es muy corta.");
+    //estado
+    if(v.estado.length < 3){
+        Ext.Msg.alert("Nuevo cliente", "La descripcion del estado es muy corta.");
+        return campo.setInstructions("La descripcion del estado es muy corta.");
+    }
+
+    //pais
+    if(v.pais.length < 3){
+        Ext.Msg.alert("Nuevo cliente", "La descripcion del pais es muy corta.");
+        return campo.setInstructions("La descripcion del pais es muy corta.");
     }
 	
-    //e_mail
-	
+    //codigo_postal
+    if(v.codigo_postal.length < 5 || isNaN(v.codigo_postal)){
+        Ext.Msg.alert("Nuevo cliente", "La descripcion del codigo postal es muy corta.");
+        return campo.setInstructions("La descripcion del codigo postal es muy corta.");
+    }
+
     //telefono
+    if(v.telefono.length < 10){
+        Ext.Msg.alert("Nuevo cliente", "La descripcion del telefono es muy corta.");
+        return campo.setInstructions("La descripcion del telefono es muy corta.");
+    }
 
 	
     //descuento

@@ -11,6 +11,8 @@ define('POS_MES', 1);
 # Configuracion Basica
 # *******************************
 
+define('HEARTBEAT_METHOD_TRIGGER', false);
+
 #segundos que deben de pasar antes de negar la eliminacion de la ultima venta
 define('POS_ELIMINATION_TIME', 7200);
 

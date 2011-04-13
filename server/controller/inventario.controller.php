@@ -13,7 +13,7 @@ require_once('model/inventario_maestro.dao.php');
 require_once('logger.php');
 
 /*
- * Regresa un obeto ActualizacionDePrecio con la informacion de la ultima actualizacion de precio
+ * Regresa un objeto ActualizacionDePrecio con la informacion de la ultima actualizacion de precio
  * @param $id_producto es el id del producto al cual nos referimos
  * @return ActualizacionDePrecio objeto de tipo ActualizacionDePrecio que contiene la informacion mas actualizada de los precios del producto
  * 
