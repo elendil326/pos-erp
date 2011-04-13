@@ -1,448 +1,1615 @@
 <?php
 
-	require_once("controller/inventario.controller.php");
+
+	require_once("model/sucursal.dao.php");
+    require_once('model/autorizacion.dao.php');
+	require_once("controller/clientes.controller.php");
 	require_once("controller/sucursales.controller.php");
+	require_once("controller/inventario.controller.php");
 	require_once('controller/clientes.controller.php');
 	require_once('model/cliente.dao.php');
+	
+	$productos = InventarioDAO::getAll();
+	
+	$iMaestro = listarInventarioMaestro(150, POS_SOLO_ACTIVOS) ;
 
+    if(isset( $_REQUEST['aut'])){
+        $autorizacion = AutorizacionDAO::getByPK( $_REQUEST['aut'] );
+        $autorizacionDetalles = json_decode( $autorizacion->getParametros() );
+    }
+	
+	$foo = new Sucursal();
+    $foo->setActivo(1);
+    $foo->setIdSucursal(1);
 
+    $bar = new Sucursal();
+    $bar->setIdSucursal(99);
 
-	$iMaestro = listarInventarioMaestro(200, POS_SOLO_ACTIVOS) ;
+    $sucursales = SucursalDAO::byRange($foo, $bar);
+
 ?>
 
-<script>
-	jQuery("#MAIN_TITLE").html("Venta a cliente");
-</script>
 
-<h2>Detalles del Cliente</h2>
-
-
-<?php
-	if(!isset($_REQUEST['cid'])){
-	    $clientes = listarClientes();
-    
-        ?>
-                <script>
-                    var CLIENTE = null;
-                    
-                	var datosClientes = <?php echo json_encode( $clientes ); ?>;
-					
-					function getCliente( id_cliente ){
-						for (var c = datosClientes.length - 1; c >= 0; c--){
-							if( parseInt(datosClientes[c].id_cliente) == id_cliente){
-								return datosClientes[c];
-							}
-						}
-						return null;
-					}
-                </script>
-        <?php
-
-		if(sizeof($clientes ) > 0){
-			echo '<select id="cliente_selector"> ';    
-			foreach( $clientes as $c ){
-				echo "<option value='" . $c['id_cliente'] . "' >" . $c['nombre']  . "</option>";
-			}
-			echo '</select>';    
-		}else{
-		
-			echo "<h3>No hay clientes a quien realizarle la venta</h3>";
-		}
-	}else{
-	
-		$cliente = ClienteDAO::getByPK( $_REQUEST['cid'] );
-		
-		if($cliente === null){
-			?>
-                <h3>Este cliente no existe</h3>
-
-            <?php
-		}else{
-		
-		?>
-            <script>
-                var CLIENTE = <?php echo $cliente->getIdCliente(); ?>;
-                var NOMBRECLIENTE = <?php echo $cliente->getNombre(); ?>;
-                var RFCCLIENTE = <?php echo $cliente->getRFC(); ?>;
-                var DIRECCIONCLIENTE = <?php echo $cliente->getDireccion(); ?>;
-                var CIUDADCLIENTE = <?php echo $cliente->getCiudad(); ?>;
-            </script>
-			<table border="0" cellspacing="1" cellpadding="1">
-				<tr><td><b>Nombre</b></td><td><?php echo $cliente->getNombre(); ?></td><td rowspan=12><div id="map_canvas"></div></td></tr>
-				<tr><td><b>RFC</b></td><td><?php echo $cliente->getRFC(); ?></td></tr>
-				<tr><td><b>Limite de Credito</b></td><td><?php echo moneyFormat($cliente->getLimiteCredito()); ?></td></tr>	
-				<tr><td><b>Descuento</b></td><td><?php echo percentFormat( $cliente->getDescuento() ); ?></td></tr>
-			</table>
-		
-		<?php
-		
-		}
-	
-	}
-
-
-?>
 <style>
-	.tabla-inventario{
-		font-size: 12px;
+	#ComposicionTabla input{
+		width: 65px;
 	}
 </style>
+<script type="text/javascript" charset="utf-8">
 
-<script>
+var DEBUG = true;
 
-	var carrito = [];
-    var venta = {
-           tipo_de_venta : 'credito', //{ credito, contado }
-           tipo_de_pago : null, //{ efectivo, tarjeta, cheque }           
-           factura : false,
+
+function toSmallUnit(unit){
+    switch(unit){
+        case "kilogramo" : return "Kgs";
+        case "pieza" : return "Pzs";        
+        case "unidad" : return "Uds";               
+    }
+    
+}
+
+
+function roundNumber(num) {
+    var dec = 2;
+    var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
+    return result;
+}
+
+function error(title, msg, el){
+
+	
+    Ext.MessageBox.show({
+           title: title,
+           msg: msg,
+		   animEl: el,
+           buttons: Ext.MessageBox.OK,
+       });
+	/*
+    var html = '<h1><img src="../media/icons/warning_32.png">&nbsp;' + title + '</h1>';
+    html += msg;
+    html += "<div align='center'><input type='button' value='Aceptar' onclick='jQuery(document).trigger(\"close.facebox\");'></div>";
+    jQuery.facebox( html );
+    */
+}
+
+
+
+
+    /**
+      * Arreglo con un objeto por cada sucursal
+      **/
+var sucursales = [],
+
+    /**
+      * Sucursal que se esta surtiendo en este momento
+      **/
+    currentSuc = null,
+    
+    /**
+      * El carrito final de productos que voy a surtir
+      **/
+    carrito = [],
+    
+    /**
+      * Un objeto de la clase inventario
+      **/
+    inventario,
+    
+    tablaInventario,
+    
+    composicionTabla,
+    
+    /**
+      * Un arreglo que contiene toda la informacion de las composiciones
+      **/ 
+    composiciones = [];
+
+
+
+
+/**
+  *
+  * Main
+  *
+  **/
+jQuery(document).ready(function(){
+
+    if(DEBUG){
+        console.log("Iniciando....");
+    }
+
+    //construir el objeto de inventario
+    inventario = new InventarioMaestro();
+    
+
+    
+    tablaInventario = new InventarioMaestroTabla({ 
+        inventario : inventario, 
+        renderTo : "InventarioMaestroTabla"
+    });
+    
+    
+    
+    //seleccionar sucursal si es que se envio un id de sucursal
+    <?php 
+        if(isset($_REQUEST['sid'])){ 
+            echo "seleccionarSucursal();"; 
+        } 
+    ?>
+
+    
+    jQuery("#MAIN_TITLE").html("Surtir sucursal");
+
+	if(DEBUG){
+		//seleccionDeProd(1 );
+	}
+});
+
+function round( n ){
+    return  Math.round(parseFloat(n)*Math.pow(10,4))/Math.pow(10,4); 
+}
+
+function tr(s, o){
+    if(o){
+        return "<tr "+o+">"+s+"</tr>";  
+    }else{
+        return "<tr >"+s+"</tr>";   
+    }
+}
+
+function td(s, o){
+    if(o){
+        return "<td "+o+">"+s+"</td>";
+    }else{
+        return "<td >"+s+"</td>";
+    }
+}
+
+function div(s, o){
+    if(o){
+        return "<div "+o+">"+s+"</div>";
+    }else{
+        return "<div >"+s+"</div>";
+    }
+
+    
+}
+
+/**
+  * Clase InventarioMaestro 
+  *
+  **/
+InventarioMaestro = function( ){
+    
+    var estructura = [],
+        z = 0;
+
+    //revisar si existe este producto en el inventario maestro
+    function existeProducto( producto ){
+        for( z = 0; z < estructura.length; z++ ){
+            if( estructura[z].compare(producto) ){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //agregar un producto al inventario maestro
+    function agregarProducto( producto ){
+        if( existeProducto(producto) ){
+            throw ("Este producto ya existe en el inventario maestro");
+        }else{
+            if(DEBUG){
+                console.log("Agregando ", producto, "a inventario maestro.");
+            }
+            estructura.push(producto);
+        }
+    }
+
+    this.getProductos = function(){
+        return estructura;
     };
 
-	
-	function remove(data){
-		jQuery("#" + data).css("color", "");
-		jQuery("#" + data).css("background-color", "");	
-		renderCarrito();
+    this.getProducto = function (id_compra, id_producto){
+        var z;
+        for( z = 0; z < estructura.length; z++ ){
+            if(estructura[z].id_compra_proveedor === id_compra && 
+                estructura[z].id_producto === id_producto){
+                    return estructura[z];
+                }
+        }
+        return null;
+    };
 
+    this.getProductoDesc = function(id_producto){
+        var z;
+        for( z = 0; z < estructura.length; z++ ){
+			console.log(estructura[z].id_producto, id_producto , estructura[z].id_producto === id_producto)
+            if( estructura[z].id_producto === id_producto){
+                    return {
+                        id_producto : estructura[z].id_producto,
+                        descripcion : estructura[z].producto_desc,
+                        escala      : estructura[z].escala
+                    };
+                }
+        }
+        //no encontre el producto porque no esta en el inventario 
+ 		//maestro, y como solo quiero la descripcion, lo sacare
+		//de la lista de productos
+		var other_prods = [];
+
+		<?php
+				$i = 0;
+				foreach($productos as $prod){
+					echo " other_prods[".$i."] = " . json_encode( $prod->asArray() ) . ";\n";
+					$i++;
+				}
+		?>
+		
+		for (var j = other_prods.length - 1; j >= 0; j--){
+			if(other_prods[j].id_producto == id_producto){
+				console.log("found !", other_prods[j].descripcion)
+				 return {
+                    id_producto : id_producto,
+                    descripcion : other_prods[j].descripcion,
+                    escala      : other_prods[j].escala
+                };
+			}
+		};
+
+		
+		
+        throw("No encontre el producto " + id_producto);
+    };
+
+    this.descontarProducto = function( prod ){
+
+        var p = this.getProducto( prod.id_compra, prod.id_producto );
+
+        p.existencias = p.existencias - prod.cantidad;
+        
+        if(prod.procesada){
+            p.existencias_procesadas = p.existencias_procesadas - prod.cantidad;
+        }
+        
+        //console.log("ya cambie el inventario maestro");
+        
+        /*
+        id_compra   : producto.id_compra_proveedor,
+        id_producto : producto.id_producto, 
+        cantidad    : 0,
+        desc        : producto.producto_desc,
+        procesada   : false,
+        precio      : producto.precio_por_kg,
+        descuento   : 0*/
+
+    };
+
+	this.recontarProducto = function ( prod ){
+		var p = this.getProducto( prod.id_compra, prod.id_producto );
+
+        p.existencias = p.existencias + prod.cantidad;
+        
+        if(prod.procesada){
+            p.existencias_procesadas = p.existencias_procesadas + prod.cantidad;
+        }
+	};
+
+    /**
+      * Constructor
+      *
+      *
+      **/
+    if(DEBUG){
+        console.log("Construyendo inventario maestro.");
+    }
+    var foo;
+    <?php
+    foreach( $iMaestro as $i ){ 
+        echo "  foo = new Producto (" . json_encode($i) . ") ;";
+        echo "  agregarProducto( foo );";
+    } ?>
+    
+
+
+};
+
+
+
+
+
+/**
+  * Clase Producto
+  *
+  **/
+Producto = function( json_rep ){
+
+    //compara si este producto es igual a *producto*
+    this.compare = function ( producto ){
+        return this.id_compra_proveedor === producto.id_compra_proveedor && 
+            this.id_producto === producto.id_producto;
+    };
+    
+    
+    //constructor a partir de un json
+    this.id_compra_proveedor    = parseInt( json_rep.id_compra_proveedor, 10 ); 
+    this.id_producto            = parseInt( json_rep.id_producto, 10 ); 
+    this.peso_origen            = parseFloat( json_rep.peso_origen, 10 );
+    this.id_proveedor           = parseInt( json_rep.id_proveedor, 10 );
+    this.fecha                  = json_rep.fecha;
+    this.fecha_origen           = json_rep.fecha_origen;
+    this.folio                  = json_rep.folio;   
+    this.numero_de_viaje        = json_rep.numero_de_viaje;
+    this.peso_recibido          = parseFloat( json_rep.peso_recibido );
+    this.arpillas               = parseFloat( json_rep.arpillas );
+    this.peso_por_arpilla       = parseFloat( json_rep.peso_por_arpilla );
+    this.productor              = json_rep.productor;
+    this.calidad                = json_rep.calidad;           
+    this.merma_por_arpilla      = parseFloat( json_rep.merma_por_arpilla );
+    this.total_origen           = parseFloat( json_rep.total_origen );
+    this.existencias            = parseFloat( json_rep.existencias );
+    this.existencias_procesadas = parseFloat( json_rep.existencias_procesadas );
+    this.sitio_descarga         = json_rep.sitio_descarga;
+    this.variedad               = json_rep.variedad;  
+    this.kg                     = json_rep.kg;        
+    this.precio_por_kg          = json_rep.precio_por_kg;
+    this.producto_desc          = json_rep.producto_desc;         
+    this.producto_tratamiento   = json_rep.producto_tratamiento;
+    this.escala                 = json_rep.medida;
+    this.sitio_descarga_desc    = json_rep.sitio_descarga_desc;
+    this.costo_flete            = parseFloat( json_rep.costo_flete );
+	this.agrupacion				= json_rep.agrupacion;
+	this.agrupacionTam			= json_rep.agrupacionTam;
+};
+
+
+
+
+
+/**
+  * Clase para dibujar el inventario maestro
+  *
+  **/
+InventarioMaestroTabla = function( config ) {
+    
+    /**
+      * 
+      **/
+    var inventario,
+
+    /**
+      * id del elemento donde se dibujara esta tabla
+      **/
+        renderTo;
+    
+    
+
+
+    function render(){ 
+		/*          */
+    }
+
+    function __init(config){
+        if( !config.inventario instanceof InventarioMaestro ){
+            throw ("Configuracion contiene algo que no es un inventario maestro");
+        }
+        
+        inventario = config.inventario;
+        
+        renderTo = config.renderTo;
+        
+        render();
+    }
+
+    this.tomarProducto = function (id_compra, id_producto, cantidadATomar, procesadas ){
+
+		//el producto en el inventario
+        var producto = inventario.getProducto(id_compra, id_producto);
+
+        //buscar la columna a editar
+		var gridRow = MasterGrid.getStore().findBy(function(r){
+			 return (r.get("id_compra_proveedor") == id_compra && r.get("id_producto") == id_producto);
+		}, this);
+        
+        if(procesadas){
+			//las tomare procesadas
+			MasterGrid.getStore().getAt( gridRow ).set("existencias_procesadas"	, producto.existencias_procesadas - cantidadATomar);
+			MasterGrid.getStore().getAt( gridRow ).set("existencias"			, producto.existencias);
+        }else{
+			//las tomare originales
+			MasterGrid.getStore().getAt( gridRow ).set("existencias_procesadas"	, producto.existencias_procesadas);
+			MasterGrid.getStore().getAt( gridRow ).set("existencias"			, producto.existencias - cantidadATomar);			
+        }
+    };
+    
+    this.regresarProducto = function(prod){
+		console.log("regresando " , prod)
+        this.tomarProducto( prod.id_compra, prod.id_producto, prod.cantidad * -1, prod.procesadas );
+    };
+
+
+	this.highlight = function (id_prod){
+		if(DEBUG){
+			console.log("haciendo highlight a " + id_prod);
+		}
+		//jQuery("#InventarioMaestroTabla tr").css("color", "rgb(68, 68, 68)");		
+		
+		//jQuery(".im_pid_" + id_prod).css("color", "#3F8CE9");
+	};
+
+    
+    __init(config);
+    
+};
+
+
+
+
+/**
+  * Clase de Composicion Tabla
+  *
+  **/
+ComposicionTabla = function( config ){
+    var renderTo,
+    
+        composicion = [],
+        
+        id_producto;
+    
+    function render(){
+        var html = '';
+        html += '<table style="width:100%">';
+        html += '<tr id="ASurtirTablaHeader">';
+            html += td("");
+            html += td("Remision");
+            html += td("Producto");
+            html += td("Cantidad");
+            html += td("Procesado");                        
+            html += td("Precio");       
+            html += td("Descuento");        
+            html += td("Importe");      
+        html += '</tr>';
+        html += '</table>';     
+        jQuery("#" + renderTo).html( html );
+    }
+    
+    function __init( config){
+        renderTo = config.renderTo;
+        id_producto = config.id_producto;
+		tablaInventario.highlight(id_producto);
+        render();
+    }
+    
+    this.doMath = function( id_compra, id_producto, campo, valor ){
+        
+        console.log("doing some math !", id_compra, id_producto, campo, valor);
+        
+        //buscar este producto en el inventario
+        var prod = inventario.getProducto( id_compra, id_producto ),
+			i,
+			comp;
+        
+        for (i = composicion.length - 1; i >= 0; i--){
+            if( composicion[i].id_compra === id_compra && composicion[i].id_producto === id_producto ){
+                comp = composicion[i];
+                break;
+            }
+        }
+
+        if(valor.length === 0){
+            valor = 0;
+        }
+
+        switch( campo ){
+            case "proc" : 
+				comp.procesada = valor;
+				//console.log(comp)
+				tablaInventario.tomarProducto( id_compra, id_producto, comp.cantidad, comp.procesada );	
+				break;
+			case "cantidad" :
+				if( !prod.agrupacion ){
+					//no hay agrupacion, enviar la cantidad tal cual
+					console.log( "no hay agrupacion, voy a tomar " + valor, "procesada:" + comp.procesada);
+					comp.cantidad = parseFloat(valor) ;
+                	tablaInventario.tomarProducto( id_compra, id_producto, parseFloat(valor), comp.procesada );					
+					break;
+				}
+				console.log("si hay agrupacion")
+				var qty = parseFloat(valor);
+
+                if(comp.procesada ==  "on"){
+					qty *= parseFloat(prod.agrupacionTam);
+					console.log("si hay agrupacion")
+				}else{
+					qty *= prod.peso_por_arpilla;
+				}
+				comp.cantidad = qty;
+                tablaInventario.tomarProducto( id_compra, id_producto, qty, comp.procesada );
+            break;
+            
+           
+            case "precio" :
+                comp.precio = parseFloat( valor );
+            break;
+            
+            case "descuento":
+				if( !prod.agrupacion ){
+					//no hay agrupacion, enviar la cantidad tal cual
+	                comp.descuento = parseFloat( valor );
+					break;
+				}
+			
+				//comp.cantidad
+				var x;
+	            if(comp.procesada ==  "on"){
+					x = comp.cantidad / prod.agrupacionTam;
+					valor = valor * x;
+				}else{
+					x = comp.cantidad / prod.peso_por_arpilla;
+					valor = valor * x;
+				}
+                comp.descuento = parseFloat( valor );
+            break;
+        }
+
+        
+        jQuery( "#" + comp.id_compra + "-" + comp.id_producto + "-importe" ).val( cf(comp.precio * (comp.cantidad - comp.descuento) ) );
+        
+        //console.log(composicion)
+        
+        var obj = {
+            peso_real : 0,
+            peso_a_cobrar: 0,
+            importe_por_unidad : 0,
+            importe_total : 0
+        };
+        
+        for (i = composicion.length - 1; i >= 0; i--){
+            obj.peso_real += parseFloat(composicion[i].cantidad);
+            obj.peso_a_cobrar += parseFloat(composicion[i].cantidad - composicion[i].descuento);
+            obj.importe_por_unidad += parseFloat(composicion[i].precio);
+        }
+        
+        obj.importe_por_unidad /= composicion.length;
+        //console.log( obj );
+        jQuery("#compuesto-peso-real").val ( obj.peso_real );
+        jQuery("#compuesto-peso-a-cobrar").val ( obj.peso_a_cobrar );
+        jQuery("#compuesto-importe-por-unidad").val ( cf(obj.importe_por_unidad) );
+        jQuery("#compuesto-importe-total").val ( cf(obj.importe_por_unidad * obj.peso_a_cobrar) );      
+        
+    };
+    
+    this.quitarProducto = function( id_compra, id_producto ){
+       
+        var index = null,
+			i;
+
+        jQuery("#" +  id_compra + "-" + id_producto + "-composicion").remove();
+        
+        //buscar esa composicion el arreglo
+        for ( i = composicion.length - 1; i >= 0; i--){
+            if( composicion[i].id_compra === id_compra 
+                    && composicion[i].id_producto === id_producto){
+                        index = i;
+                        break;
+                    }
+        }
+        
+        if(composicion[index].cantidad != 0){
+            this.doMath( id_compra, id_producto, "cantidad", 0 );
+        }
+        
+        composicion.splice(index,1);
+        
+    };
+    
+    this.agregarProducto = function( id_compra, id_producto, rowIndex ){
+        console.log( "agregarProducto( " + id_compra + "," +  id_producto +","+ rowIndex + " )" );
+
+		//obtener el producto
+        producto = inventario.getProducto( id_compra, id_producto );
+//        console.log(producto)
+        var html = "";
+        
+        html += td( "<img onClick='composicionTabla.quitarProducto(" + id_compra + "," + id_producto + ")' src='../media/icons/close_16.png'>" );
+        html += td( producto.folio );
+        html += td( producto.producto_desc );
+        
+        var keyup = "onkeyup='composicionTabla.doMath(" + id_compra + "," + id_producto + ", this.name, this.value )'";
+        var click = "onClick='composicionTabla.doMath(" + id_compra + "," + id_producto + ", this.name, this.value )'";
+        var escala;
+
+		if(producto.agrupacion){
+			escala = producto.agrupacion + "s";
+		}else{
+			escala = producto.escala + "s";
+		}
+
+        html += td( "<input name='cantidad' "+keyup+" value='0' type='text'>&nbsp;" + escala);
+
+        var procesadas = parseFloat( producto.existencias_procesadas );
+
+        if( producto.producto_tratamiento !== null){
+            if(procesadas > 0){
+                html += td( "<input style='width: 100px' name='proc' "+click+" type='checkbox'> " );         
+            }else{
+                html += td( "<input style='width: 100px'  type='checkbox' disabled> " );
+            }           
+        }else{
+                html += td( "<input type='hidden'><i>-</i>" );         
+        }
+
+        
+        var costo_flete = 0;
+        
+        if( parseFloat (producto.costo_flete) != 0){
+             costo_flete =   producto.costo_flete / producto.peso_origen;
+        }
+        
+        html += td( "<input name='precio'     value='"+ roundNumber( parseFloat(producto.precio_por_kg) 
+                                                    + parseFloat(costo_flete) )+"' "    +keyup+"    type='text'>" );
+        var escala_descuento;
+
+		if(producto.agrupacion){
+			escala_descuento = producto.escala + "s por " + producto.agrupacion;
+		}else{
+			escala_descuento = producto.escala + "s";
+		}
+
+        html += td( "<input name='descuento'  value='0'                     "   +keyup+"    type='text'>&nbsp;" + escala_descuento);
+        html += td( "<input id='" +id_compra+"-"+ id_producto+ "-importe'                   type='text' disabled>" );
+
+    
+        composicion.push({
+            id_compra   : producto.id_compra_proveedor,
+            id_producto : producto.id_producto, 
+            cantidad    : 0,
+            desc        : producto.producto_desc,
+            procesada   : false,
+            escala      : producto.escala,
+            precio      : producto.precio_por_kg,
+            descuento   : 0
+        });
+
+        jQuery("#ASurtirTablaHeader").after( tr(html, "id='" + id_compra + "-" + id_producto + "-composicion'") );      
+    };
+    
+    this.commitMix = function( ){
+        var c, total_qty = 0, i;
+        
+        //revisar que todo concuerde
+        for ( i = composicion.length - 1; i >= 0; i--){
+	
+            c = composicion[i];
+            total_qty += parseFloat( c.cantidad - c.descuento );
+
+			var el = c.id_compra + "-" + c.id_producto +  "-composicion" ;
+
+            if((c.cantidad - c.descuento) <= 0 ){
+                error( "Hay productos sin cantidad", " El producto " + c.desc + " tiene una cantidad de cero.", el);
+                return;
+            }
+
+        }
+
+        if(composicion.length == 0){
+            error("No ha agregado ningun producto", "El producto debe conmponerse de por lo menos un producto. Agregue un producto de su inventario maestro para continuar.");
+            return;
+        }
+
+        if(total_qty == 0){
+            error("El peso total es cero", "No puede componer un producto a surtir cuando el peso total es igual a cero. ");
+            return;
+        }
+
+        composiciones.push({
+            items : composicion,
+            producto : id_producto,
+            procesado : (jQuery("#compuesto-procesado:checked").length == 1)
+        });
+    
+        jQuery("#listaDeProductos").slideDown('fast', function (){
+
+            jQuery('#InvMaestro').slideUp();
+            jQuery('#ASurtir').slideUp('fast', function (){
+
+
+                //jQuery('html,body').animate({scrollTop: jQuery('#InvMaestro').position().top }, 1000);
+            });     
+
+        });
+        
+        for ( i = 0; i < composicion.length; i++) {
+            inventario.descontarProducto( composicion[i] );         
+        }
+
+        renderFinalShip();
+
+    };
+    
+    this.rollbackMixIndex = function( mix_index ){
+        var i;
+        
+        for (i=0; i < composiciones[mix_index].items.length; i++) {
+            tablaInventario.regresarProducto( composiciones[mix_index].items[i] );    
+			inventario.recontarProducto( composiciones[mix_index].items[i]  );             
+        }
+
+		/*
+		composicionTabla.doMath( //id_compra
+								composiciones[mix_index].id_compra , 
+								
+								//id_producto
+								composiciones[mix_index].id_producto, 
+								
+								//campo
+								"cantidad",
+								
+								//valor
+								"0 ");
+		*/
+		
+		
+		console.warn("Known bug #146");
+		
+		jQuery("#listaDeProductos").slideDown('fast', function (){
+            jQuery('#InvMaestro').slideUp();
+            jQuery('#ASurtir').slideUp('fast', function (){ } );     
+        });
+		composiciones.splice(mix_index, 1);
+        renderFinalShip();
+    };
+
+    this.rollbackMix = function(  ){
+        var i;
+        renderFinalShip();
+        
+        for (i=0; i < composicion.length; i++) {
+            tablaInventario.regresarProducto( composicion[i] );         
+        }
+        
+        
+        jQuery("#listaDeProductos").slideDown('fast', function (){
+
+            jQuery('#InvMaestro').slideUp();
+            jQuery('#ASurtir').slideUp('fast', function (){ } );     
+
+        });
+    };
+
+
+    
+    __init(config);
+};
+
+
+
+
+<?php 
+    /**
+     * Renderear un arreglo con las sucursales
+     * 
+     * */
+    foreach( $sucursales as $suc ){ 
+        echo " sucursales[" . $suc->getIdSucursal() . "] = \"" .  $suc->getDescripcion()  . "\";";
+    }
+?>
+
+function seleccionarSucursal(){
+
+
+    if(currentSuc !== null){
+        jQuery("#actual" + currentSuc).slideUp();
+    }
+
+
+    <?php 
+    if(isset($_REQUEST['aut'])) { 
+        echo 'jQuery("#Solicitud").slideDown();';
+    }
+    ?>            
+
+    jQuery("#actual" + jQuery('#sucursal').val()).slideDown();
+    //jQuery("#InvMaestro").slideDown();
+    //jQuery("#ASurtir").slideDown();
+    currentSuc = jQuery('#sucursal').val();
+    jQuery("#select_sucursal").slideUp();
+}
+
+function seleccionDeProd( id ){
+    
+    //console.log("Seleccione el producto "  + id);
+    
+    composicionTabla = new ComposicionTabla({
+        renderTo : "ComposicionTabla",
+        id_producto : id
+    });
+    
+    jQuery("#listaDeProductos").slideUp('fast', function (){
+        jQuery("#FinalShip").slideUp();
+        jQuery('#InvMaestro').slideDown();
+        jQuery('#ASurtir').slideDown('fast', function (){
+            
+
+            jQuery('html,body').animate({scrollTop: jQuery('#InvMaestro').position().top }, 1000);
+        });     
+        
+    });
+    
+}
+
+function getEscalaCorta(escala){
+    switch(escala){
+        case "kilogramo": return "Kgs"; break;
+        case "pieza": return "Pzas"; break;
+    }
+}
+
+function renderFinalShip(){
+    
+/*    if(composiciones.length == 0 )
+        return; */
+        
+    var global_qty = 0, global_qty_real = 0, global_importe = 0;
+    
+    var html = '<table style="width: 100%">';
+    html += '<tr align=left>'
+        + '<th></th>'
+        + '<th>Producto</th>'
+        + '<th>Peso real</th>'
+        + '<th>Peso a cobrar</th>'      
+        + '<th>Composicion</th>'
+        + '<th>Importe</th>';
+            
+    for (var i=0; i < composiciones.length; i++) {
+        
+        jQuery("#producto-" + composiciones[i].producto ).css("text-decoration", "line-through");
+        jQuery("#producto-" + composiciones[i].producto ).fadeTo(250, .25);
+        
+        desc = inventario.getProductoDesc( composiciones[i].producto );
+        
+        var total_qty = 0;
+        var total_qty_with_desc = 0;        
+        var total_money = 0;
+        var composition = '';
+        
+
+        
+        for (var j = composiciones[i].items.length - 1; j >= 0; j--){
+            total_qty += composiciones[i].items[j].cantidad  ;
+            total_qty_with_desc += composiciones[i].items[j].cantidad   - composiciones[i].items[j].descuento ;         
+            total_money += ( composiciones[i].items[j].cantidad - composiciones[i].items[j].descuento ) * composiciones[i].items[j].precio ;
+            
+            composition += "<b>"+ composiciones[i].items[j].desc + "</b>&nbsp;" + composiciones[i].items[j].procesada + "&nbsp;"
+						+ composiciones[i].items[j].cantidad.toFixed(4)  + getEscalaCorta( composiciones[i].items[j].escala )
+                        + "<b> - </b>" + composiciones[i].items[j].descuento.toFixed(4) + getEscalaCorta( composiciones[i].items[j].escala )+ " desc."
+
+                        + "<br>";
+        }
+        
+        var color = i % 2 == 0 ? 'style="background-color: #D7EAFF"' : "";
+        
+        html += tr(
+					td( "<img src='../media/icons/basket_close_32.png' onClick='composicionTabla.rollbackMixIndex("+i+")'><img src='../media/icons/basket_32.png'>" )
+                    + td( desc.descripcion )
+                    + td( total_qty.toFixed(4) + getEscalaCorta( desc.escala ) )
+                    + td( total_qty_with_desc.toFixed(4) + getEscalaCorta( desc.escala ) )     
+                    + td( composition)
+                    + td( cf(total_money)) , color);
+                    
+        global_qty += total_qty;
+        global_qty_real += total_qty_with_desc;
+        global_importe += total_money;
+    };
+
+
+
+    html += tr(
+                  td( "Totales", "style='padding-top: 10px'" )
+                + td( "")
+                + td( global_qty.toFixed(4) )
+                + td( global_qty_real.toFixed(4) )     
+                + td( "")
+                + td( cf(global_importe.toFixed(4)) ) ,
+                
+                "style='border-top: 1px solid #3F8CE9; font-size: 15px;'");
+
+    html += '</html>';
+    
+    jQuery("#FinalShipTabla").html(html);
+    jQuery("#FinalShip").fadeIn();
+    
+    jQuery("#compuesto-peso-real").val ( 0 );
+    jQuery("#compuesto-peso-a-cobrar").val ( 0 );
+    jQuery("#compuesto-importe-por-unidad").val ( cf(0) );
+    jQuery("#compuesto-importe-total").val ( cf(0) );
+    
+}
+
+
+function doSurtir()
+{
+
+    /* if(!currentSuc){
+        error("&iquest; A que sucursal ?", "No ha seleccionado a que sucural desea surtir este pedido.");
+        return;
+    } */
+
+    var readyDATA = {
+        productos : composiciones,
+        sucursal : currentSuc,
+        conductor : jQuery('#conductor').val()
+    };
+    
+    //hacer ajaxaso
+    jQuery.ajaxSettings.traditional = true;
+
+    jQuery("#submitButtons").fadeOut("slow",function(){
+        jQuery("#loader").fadeIn();
+        
+        jQuery.ajax({
+        url: "../proxy.php",
+        data: { 
+            action : 1005, 
+            data : jQuery.JSON.encode( readyDATA ),
+        },
+        cache: false,
+        success: function(data){
+            try{
+                response = jQuery.parseJSON(data);
+                //console.log(response, data.responseText)
+            }catch(e){
+            
+                jQuery("#loader").fadeOut('slow', function(){
+                    jQuery("#submitButtons").fadeIn();
+                    window.scroll(0,0);                         
+                    jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+                    jQuery("#submitButtons").fadeIn();
+                });                
+                return;                    
+            }
+    
+
+            if(response.success === false){
+                
+                jQuery("#loader").fadeOut('slow', function(){
+                    //jQuery("#submitButtons").fadeIn();    
+                    window.scroll(0,0);                                                             
+                    jQuery("#ajax_failure").html(response.reason).show();
+                    jQuery("#submitButtons").fadeIn();                  
+                });                
+                return ;
+            }
+
+            reason = "El caragmento se enuentra ahora en transito";
+            window.location = "inventario.php?action=transit&success=true&reason=" + reason;
+    
+        }
+        });
+    });
+}
+
+
+
+
+
+
+
+
+<?php 
+	echo " var inventario_maestro_extjs = " . json_encode( $iMaestro ) . ";";
+?>
+
+var MasterGrid;
+var sm = new Ext.grid.CheckboxSelectionModel();
+
+Ext.onReady(function(){
+    Ext.QuickTips.init();
+
+    // NOTE: This is an example showing simple state management. During development,
+    // it is generally best to disable state management as dynamically-generated ids
+    // can change across page loads, leading to unpredictable results.  The developer
+    // should ensure that stable state ids are set for stateful components in real apps.    
+
+	// uncomment this on deployment !!!
+    // Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
+
+	var inventario_formateado = [  ];
+	
+	for (var i = inventario_maestro_extjs.length - 1; i >= 0; i--){
+		inventario_formateado[i] = [
+			inventario_maestro_extjs[i].arpillas,
+			inventario_maestro_extjs[i].calidad,
+			inventario_maestro_extjs[i].chofer,
+			inventario_maestro_extjs[i].costo_flete,
+			inventario_maestro_extjs[i].existencias,
+			inventario_maestro_extjs[i].existencias_procesadas,
+			inventario_maestro_extjs[i].fecha,
+			inventario_maestro_extjs[i].fecha_origen,
+			inventario_maestro_extjs[i].folio,
+			inventario_maestro_extjs[i].id_compra_proveedor,
+			inventario_maestro_extjs[i].id_producto,
+			inventario_maestro_extjs[i].id_proveedor,
+			inventario_maestro_extjs[i].kg,
+			inventario_maestro_extjs[i].marca_camion,
+			inventario_maestro_extjs[i].medida,
+			inventario_maestro_extjs[i].merma_por_arpilla,
+			inventario_maestro_extjs[i].modelo_camion,
+			inventario_maestro_extjs[i].numero_de_viaje,
+			inventario_maestro_extjs[i].peso_origen,
+			inventario_maestro_extjs[i].peso_por_arpilla,
+			inventario_maestro_extjs[i].peso_recibido,
+			inventario_maestro_extjs[i].placas_camion,
+			inventario_maestro_extjs[i].precio_por_kg,
+			inventario_maestro_extjs[i].producto_desc,
+			inventario_maestro_extjs[i].producto_tratamiento,
+			inventario_maestro_extjs[i].productor,
+			inventario_maestro_extjs[i].sitio_descarga,
+			inventario_maestro_extjs[i].sitio_descarga_desc,
+			inventario_maestro_extjs[i].total_origen,
+			inventario_maestro_extjs[i].variedad,
+			inventario_maestro_extjs[i].agrupacion,
+			inventario_maestro_extjs[i].agrupacionTam								
+		];
+
+	};
+	
+
+
+    // create the data store
+    function getNewStore () {
+		return new Ext.data.ArrayStore({
+	        fields: [
+				{ name : 'arpillas', 				type : 'float' },
+				{ name : 'calidad', 				type : 'string' },
+				{ name : 'chofer', 					type : 'string' },
+				{ name : 'costo_flete', 			type : 'float' },
+				{ name : 'existencias', 			type : 'float' },
+				{ name : 'existencias_procesadas', 	type : 'float' },
+				{ name : 'fecha', 					type : 'date', dateFormat: 'j/m/y' },
+				{ name : 'fecha_origen', 			type : 'date', dateFormat: 'Y-m-d' },
+				{ name : 'folio', 					type : 'string' },
+				{ name : 'id_compra_proveedor', 	type : 'int' },
+				{ name : 'id_producto', 			type : 'int' },
+				{ name : 'id_proveedor', 			type : 'int' },
+				{ name : 'kg', 						type : 'float' },
+				{ name : 'marca_camion', 			type : 'string' },
+				{ name : 'medida', 					type : 'string' },
+				{ name : 'merma_por_arpilla', 		type : 'float' },
+				{ name : 'modelo_camion', 			type : 'string' },
+				{ name : 'numero_de_viaje', 		type : 'string' },
+				{ name : 'peso_origen', 			type : 'float' },
+				{ name : 'peso_por_arpilla', 		type : 'float' },
+				{ name : 'peso_recibido', 			type : 'float' },
+				{ name : 'placas_camion', 			type : 'string' },
+				{ name : 'precio_por_kg', 			type : 'float' },
+				{ name : 'producto_desc', 			type : 'string' },
+				{ name : 'producto_tratamiento', 	type : 'string' },
+				{ name : 'productor', 				type : 'string' },
+				{ name : 'sitio_descarga', 			type : 'int' },
+				{ name : 'sitio_descarga_desc', 	type : 'string' },
+				{ name : 'total_origen', 			type : 'float' },
+				{ name : 'variedad', 				type : 'string' },
+				{ name : 'agrupacion', 				type : 'string' },
+				{ name : 'agrupacionTam', 			type : 'float' }						
+	        ]
+	    });
 	}
 	
-	function add(data){
 	
-		//buscar en el carrito
-		
-		for( a = 0; a < carrito.length; a++){
-			if( carrito[a].tablaid == data ){
-			
-				//ya esta, hay que quitarlo
-				carrito.splice( a, 1 );
-				return remove(data);
+ 	var store = getNewStore();
+
+
+
+	function toSmallUnit( unit ){
+		switch(unit){
+			case "kilogramo" : return "Kgs";
+			case "pieza" : return "Pzas";
+			case "arpilla" : return "Arps";
+			case "cajas" : return "Cjs";
+			case "bulto" : return "Blts";				
+		}
+	}
+
+    // manually load local data
+    store.loadData(inventario_formateado);
+	
+    // create the Grid
+    MasterGrid = new Ext.grid.GridPanel({
+        store: store,
+		header : false,
+        columns: [
+	        {
+                header   : 'Fecha', 
+                width    : 75, 
+                sortable : true, 
+                renderer : Ext.util.Format.dateRenderer('d/m/Y'),  
+                dataIndex: 'fecha'
+            },
+            {
+                header   : 'Remision', 
+                width    : 75, 
+                sortable : true, 
+                dataIndex: 'folio'
+            },	
+            {
+                id       :'descripcion',
+                header   : 'Producto', 
+                width    : 180, 
+                sortable : true, 
+                dataIndex: 'producto_desc'
+            },
+            {
+                header   : 'Variedad', 
+                width    : 85, 
+                sortable : true, 
+                dataIndex: 'variedad'
+            },	
+            {
+                header   : 'Promedio', 
+                width    : 85, 
+                sortable : true, 
+				align 	 : "right",	
+				renderer : function(n, c){
+					return n.toFixed(4);
+				},
+                dataIndex: 'peso_por_arpilla'
+            },	
+            {
+                header   : 'Merma', 
+                width    : 85, 
+                sortable : true, 
+				hidden	 : true,
+                dataIndex: 'merma_por_arpilla'
+            },
+            {
+                header   : 'peso_origen', 
+                width    : 85, 
+                sortable : true, 
+				hidden: true,
+                dataIndex: 'peso_origen'
+            },
+            {
+                header   : 'Costo', 
+                width    : 85, 
+                sortable : true, 
+				hidden: true,	
+				renderer : 'usMoney',
+                dataIndex: 'precio_por_kg'
+            },			
+            {
+                header   : 'productor', 
+                width    : 85, 
+                sortable : true, 
+				hidden: true,	
+                dataIndex: 'productor'
+            },
+            {
+                header   : 'Originales', 
+                width    : 150, 
+                sortable : true, 
+				align 	 : "right",
+                renderer : function (n, a, row ){
+
+					if(row.data.agrupacion.length > 0){
+						//si hay agrupacion
+						var v = (parseFloat( n / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
+						+"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+						
+						if(n < 0){
+							return ( "<span style='color:red'>" + v +"</span>" );
+						}else{
+							return v;
+						}
+						
+					}else{
+						//no hay agrupacion
+						var v = n.toFixed(2) + " " +  toSmallUnit(row.data.medida);
+						
+						if(n < 0){
+							return ( "<span style='color:red'>" + v +"</span>" );
+						}else{
+							return v;
+						}
+					}
+
+				}, 
+                dataIndex: 'existencias'
+            },
+            {
+                header   : 'Procesadas', 
+                width    : 150, 
+				align 	 : "right",	
+                sortable : true, 
+                renderer : function(n,a,row){
+					if(isNaN(n)){
+						return "-";
+					}else{
+
+							if(row.data.agrupacion.length > 0){
+								//si hay agrupacion
+								var v = (parseFloat( n / row.data.agrupacionTam )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
+								+"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+
+								if(n < 0){
+									return ( "<span style='color:red'>" + v +"</span>" );
+								}else{
+									return v;
+								}
+
+							}else{
+								//no hay agrupacion
+								var v = n.toFixed(2) + " " +  toSmallUnit(row.data.medida);
+
+								if(n < 0){
+									return ( "<span style='color:red'>" + v +"</span>" );
+								}else{
+									return v;
+								}
+							}
+
+
+					}
+				}, 
+                dataIndex: 'existencias_procesadas'
+            },	
+            {
+                header   : 'sitio_descarga_desc', 
+                width    : 95, 
+                sortable : true, 
+				hidden: true,	
+                dataIndex: 'sitio_descarga_desc'
+            }
+        ],
+        stripeRows: true,
+        autoExpandColumn: 'descripcion',
+        height: "auto",
+		minHeight : 300,
+        width: "100%",
+/*		frame : false,
+		header: false, */
+        // title: 'Array Grid',
+        // config options for stateful behavior
+        stateful: false,
+        stateId: 'grid2',
+		listeners : {
+			"rowclick" : function (grid, rowIndex, e){
+				var datos = grid.getStore().getAt( rowIndex );
+				composicionTabla.agregarProducto(  datos.get("id_compra_proveedor" ), datos.get("id_producto"), rowIndex );
+				console.log( "rowclick !",  datos.get("id_compra_proveedor" ), datos.get("id_producto"), rowIndex );
+				//window.location = "inventario.php?action=detalleCompra&compra=" + datos.get("id_compra_proveedor") + "&producto=" + datos.get("id_producto");
 			}
 		}
 		
-		jQuery("#" + data).css("color", "#fff ");
-		jQuery("#" + data).css("background-color", "#3F8CE9 !important");
-		
-        //buscar este producto en el arreglo de inventario maestro
-        producto = inventario_maestro[ data.substring(7) ];
-
-		carrito.push( {
-			qty : 1,
-			tablaid : data,
-            id_producto : producto.id_producto,
-            id_compra_proveedor : producto.id_compra_proveedor,
-            procesado : false,
-            precio : producto.precio_por_kg,
-            descripcion:producto.producto_desc
-		});
-		
-		renderCarrito();
-		doMath();
-	}
-	var TOTALVENTA=0;
-	function doMath(){
-
-
-        //total de importe, y cantidad
-        var t_qty = 0, t_importe = 0;
-
-        for(a =0; a < carrito.length; a++){
-            
-            //recorreer los inputs
-            inputs = jQuery("#finalcart" + carrito[a].tablaid).children().children();
-
-
-            procesada  =    jQuery( inputs[0] ).val();
-            cantidad =      parseFloat( jQuery( inputs[1] ).val() );
-            precio =        parseFloat( jQuery( inputs[2] ).val() );
-            
-            carrito[a].qty = cantidad;
-            carrito[a].precio = precio;
-
-            t_qty += cantidad;
-            t_importe += ( cantidad * precio );
-
-            jQuery( inputs[3] ).val( cf(cantidad * precio) );
-
-        }
-
-
-           jQuery("#total_importe").html( cf( t_importe ) )
-           jQuery("#total_qty").html( t_qty )
-           TOTALVENTA= t_importe;
-           console.log( t_importe + " > t_importe recalculado" )
-	}
-
-	
-	function dovender(){
-	var datosC=getCliente(jQuery("#cliente_selector").val());
-		console.log( "listo para vender", TOTALVENTA )
-        json = {
-        	cliente: {
-	            nombre: datosC["nombre"],
-                rfc: datosC["rfc"],
-                ciudad: datosC["ciudad"],
-                direccion: datosC["direccion"]
-            } ,
-            id_cliente: CLIENTE !== null ? CLIENTE : jQuery("#cliente_selector").val() ,
-            tipo_venta: venta.tipo_de_venta,
-            tipo_pago:  venta.tipo_de_pago,
-            factura:    venta.factura,
-            total:    TOTALVENTA,
-            subtotal:    TOTALVENTA,
-            items: [  ]
-        };
-        
-
-        for(a =0; a < carrito.length; a++){
-            d = jQuery("#finalcart" + carrito[a].tablaid).children();
-
-            //recorreer los inputs
-            jQuery( jQuery("#finalcart" + carrito[a].tablaid).children().children()[0] ).val()
-
-            json.items.push({
-                id_producto: carrito[a].id_producto,
-                id_compra_proveedor: carrito[a].id_compra_proveedor,
-                procesado: carrito[a].procesado,
-                precio: carrito[a].precio,
-                descripcion: carrito[a].descripcion,
-                precioVenta: carrito[a].precio,
-                cantidad: carrito[a].qty
-            });
-
-        }
-
-
-        
-    	jQuery.ajaxSettings.traditional = true;
-
-
-        jQuery.ajax({
-	      url: "../proxy.php",
-	      data: { 
-            action : 101, 
-            payload : jQuery.JSON.encode(json)
-           },
-	      cache: false,
-	      success: function(data){
-	      		try{
-			        response = jQuery.parseJSON(data);
-			    }catch(e){
-           			jQuery("#loader").hide();
-					window.scroll(0,0);           			
-                    return jQuery("#ajax_failure").html("Error en el servidor. Intente de nuevo.").show();			    
-			    }
-
-                if(response.success == false){
-           			jQuery("#loader").hide();
-					window.scroll(0,0);           			
-                    return jQuery("#ajax_failure").html(response.reason).show();
-                }
+    });
 
 
 
-				//window.open( "../impresora/pdf.php?json=%7B%22tipo_venta%22%3A%20%22contado%22%2C%22items%22%3A%20%5B%7B%22descripcion%22%3A%20%22papas%20primeras%22%2C%22existencias%22%3A%20%221123%22%2C%22existencias_procesadas%22%3A%20%22462%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%2211%22%2C%22precioVentaSinProcesar%22%3A%20%228.5%22%2C%22precio%22%3A%20%2211%22%2C%22id_producto%22%3A%201%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%2210%22%2C%22precioIntersucursalSinProcesar%22%3A%20%229%22%2C%22procesado%22%3A%20%22true%22%2C%22cantidad%22%3A%204%2C%22idUnique%22%3A%20%221_1%22%7D%2C%7B%22descripcion%22%3A%20%22papas%20primeras%22%2C%22existencias%22%3A%20%221123%22%2C%22existencias_procesadas%22%3A%20%22462%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%2211%22%2C%22precioVentaSinProcesar%22%3A%20%228.5%22%2C%22precio%22%3A%20%2211%22%2C%22id_producto%22%3A%201%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%2210%22%2C%22precioIntersucursalSinProcesar%22%3A%20%229%22%2C%22procesado%22%3A%20%22true%22%2C%22cantidad%22%3A%204%2C%22idUnique%22%3A%20%221_1%22%7D%2C%7B%22descripcion%22%3A%20%22papas%20primeras%22%2C%22existencias%22%3A%20%221123%22%2C%22existencias_procesadas%22%3A%20%22462%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%2211%22%2C%22precioVentaSinProcesar%22%3A%20%228.5%22%2C%22precio%22%3A%20%2211%22%2C%22id_producto%22%3A%201%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%2210%22%2C%22precioIntersucursalSinProcesar%22%3A%20%229%22%2C%22procesado%22%3A%20%22true%22%2C%22cantidad%22%3A%204%2C%22idUnique%22%3A%20%221_1%22%7D%2C%7B%22descripcion%22%3A%20%22papas%20primeras%22%2C%22existencias%22%3A%20%221123%22%2C%22existencias_procesadas%22%3A%20%22462%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%2211%22%2C%22precioVentaSinProcesar%22%3A%20%228.5%22%2C%22precio%22%3A%20%2211%22%2C%22id_producto%22%3A%201%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%2210%22%2C%22precioIntersucursalSinProcesar%22%3A%20%229%22%2C%22procesado%22%3A%20%22true%22%2C%22cantidad%22%3A%204%2C%22idUnique%22%3A%20%221_1%22%7D%2C%7B%22descripcion%22%3A%20%22papas%20primeras%22%2C%22existencias%22%3A%20%221123%22%2C%22existencias_procesadas%22%3A%20%22462%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%2211%22%2C%22precioVentaSinProcesar%22%3A%20%228.5%22%2C%22precio%22%3A%20%2211%22%2C%22id_producto%22%3A%201%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%2210%22%2C%22precioIntersucursalSinProcesar%22%3A%20%229%22%2C%22procesado%22%3A%20%22true%22%2C%22cantidad%22%3A%204%2C%22idUnique%22%3A%20%221_1%22%7D%2C%7B%22descripcion%22%3A%20%22papas%20primeras%22%2C%22existencias%22%3A%20%221123%22%2C%22existencias_procesadas%22%3A%20%22462%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%2211%22%2C%22precioVentaSinProcesar%22%3A%20%228.5%22%2C%22precio%22%3A%20%2211%22%2C%22id_producto%22%3A%201%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%2210%22%2C%22precioIntersucursalSinProcesar%22%3A%20%229%22%2C%22procesado%22%3A%20%22true%22%2C%22cantidad%22%3A%204%2C%22idUnique%22%3A%20%221_1%22%7D%2C%7B%22descripcion%22%3A%20%22papa%20segunda%22%2C%22existencias%22%3A%20%221984%22%2C%22existencias_procesadas%22%3A%20%221477%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%229%22%2C%22precioVentaSinProcesar%22%3A%20%220%22%2C%22precio%22%3A%20%229%22%2C%22id_producto%22%3A%202%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%229%22%2C%22precioIntersucursalSinProcesar%22%3A%20%220%22%2C%22procesado%22%3A%20%22true%22%2C%22cantidad%22%3A%206%2C%22idUnique%22%3A%20%222_2%22%7D%2C%7B%22descripcion%22%3A%20%22papas%20primeras%22%2C%22existencias%22%3A%20%221123%22%2C%22existencias_procesadas%22%3A%20%22462%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%2211%22%2C%22precioVentaSinProcesar%22%3A%20%228.5%22%2C%22precio%22%3A%20%228.5%22%2C%22id_producto%22%3A%201%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%2210%22%2C%22precioIntersucursalSinProcesar%22%3A%20%229%22%2C%22procesado%22%3A%20%22false%22%2C%22cantidad%22%3A%204%2C%22idUnique%22%3A%20%221_3%22%7D%2C%7B%22descripcion%22%3A%20%22papa%20segunda%22%2C%22existencias%22%3A%20%221984%22%2C%22existencias_procesadas%22%3A%20%221477%22%2C%22tratamiento%22%3A%20%22limpia%22%2C%22precioVenta%22%3A%20%229%22%2C%22precioVentaSinProcesar%22%3A%20%220%22%2C%22precio%22%3A%206%2C%22id_producto%22%3A%202%2C%22escala%22%3A%20%22kilogramo%22%2C%22precioIntersucursal%22%3A%20%229%22%2C%22precioIntersucursalSinProcesar%22%3A%20%220%22%2C%22procesado%22%3A%20%22false%22%2C%22cantidad%22%3A%202%2C%22idUnique%22%3A%20%222_4%22%7D%5D%2C%22cliente%22%3A%20%7B%22id_cliente%22%3A%20%221%22%2C%22rfc%22%3A%20%22jija6778787%22%2C%22nombre%22%3A%20%22Jose%20alfredo%20jimenez%22%2C%22direccion%22%3A%20%22monte%20alban%20123%20col%20rosalinda%22%2C%22ciudad%22%3A%20%22celayaa%22%2C%22telefono%22%3A%20%22%22%2C%22e_mail%22%3A%20%22%22%2C%22limite_credito%22%3A%20%2219000%22%2C%22descuento%22%3A%20%220%22%2C%22activo%22%3A%20%221%22%2C%22id_usuario%22%3A%20%22101%22%2C%22id_sucursal%22%3A%20%221%22%2C%22fecha_ingreso%22%3A%20%222011-01-09%2002%3A11%3A30%22%2C%22credito_restante%22%3A%2015991%7D%2C%22factura%22%3A%20false%2C%22tipo_pago%22%3A%20%22efectivo%22%2C%22subtotal%22%3A%205250%2C%22total%22%3A%200%2C%22pagado%22%3A%20%22150%22%2C%22id_venta%22%3A%2060%2C%22empleado%22%3A%20%22Alan%20gonzalez%20hernandez%22%2C%22sucursal%22%3A%20%7B%22id_sucursal%22%3A%20%221%22%2C%22gerente%22%3A%20null%2C%22descripcion%22%3A%20%22papas%20supremas%201%22%2C%22direccion%22%3A%20%22monte%20radiante%20123%20col%20centro%2C%20celaya%22%2C%22rfc%22%3A%20%22alskdfjlasdj8787%22%2C%22telefono%22%3A%20%221726376672%22%2C%22token%22%3A%20null%2C%22letras_factura%22%3A%20%22c%22%2C%22activo%22%3A%20%221%22%2C%22fecha_apertura%22%3A%20%222011-01-09%2001%3A38%3A26%22%2C%22saldo_a_favor%22%3A%20%220%22%7D%2C%22ticket%22%3A%20true%7D" );
-				parametros=jQuery.JSON.encode(json);
-				do
-				{
-				parametros = parametros.replace('#','%23');
-				}
-				while(parametros.indexOf('#') >= 0);
-				window.open( "../impresora/pdf.php?json="+ parametros);
+    // render the grid to the specified div in the page
+    MasterGrid.render('inventario-maestro-grid');
 
-                reason = "Venta exitosa.";
-                window.location = 'ventas.php?action=lista&success=true&reason=' + reason;
-	      }
-	    });
+});
+/*
+function restart()
+{
 
-    }
+    
+    jQuery.facebox('<h1>Volver a comenzar</h1>Todos los cambios que ha realizado se perderan. &iquest; Esta seguro que desea comenzar de nuevo ?'
+            + "<br><div align='center'>"
+            + "         <input type='button' onclick=\"window.location = 'inventario.php?action=surtir'\" value='Si'>"
+            + "&nbsp;   <input type='button' onclick=\"jQuery(document).trigger('close.facebox')\" value='No'></div>"
+        );
+}
 
-
-
-
-	function renderCarrito (){
-		html = "<table style='width:100%'>";
-		html += "<tr align=left ><th>Remision</th><th>Producto</th><th>Procesada</th><th>Cantidad</th><th>Precio</th><th>Importe</th></tr>";
-
-        tots_qty = 0;
-        tots_importe = 0;
-
-		for(a = 0; a < carrito.length; a++){
-		
-			foo = jQuery("#" + carrito[a].tablaid).children();
-
-			html += "<tr id='finalcart"+ carrito[a].tablaid +"' ><td >" + 	foo[0].innerHTML +"</td>";
-			html += "<td>" + foo[1].innerHTML +"</td>";
-			html += "<td><input type='checkbox' >" + "</td>";
-			html += "<td><input type='text'     onKeyUp='doMath()' value='"+ carrito[a].qty +"'></td>";
-			html += "<td><input type='text'     onKeyUp='doMath()' value='"+ carrito[a].precio +"'>" + "</td>";
-			html += "<td><input type='text'                        value='"+ cf(carrito[a].precio * carrito[a].qty) +"' disabled></td>";
-			html += "</tr>";
-
-            tots_qty += carrito[a].qty;
-            tots_importe += (carrito[a].qty) * carrito[a].precio;
-			
-		}
-
-        //totales
-		html += "<tr>";
-        html += "<td colspan=3></td>";
-        html += "<td id='total_qty'>" + tots_qty +"</td>";
-        html += "<td ></td>";
-        html += "<td id='total_importe'>" + cf(tots_importe) + "</td>";
-		html += "</tr>";
-
-		html += "</table>";
-		
-        
-
-
-		
-		jQuery("#cart").html(html);
-		jQuery("#cart input").uniform();
-
-	}
-
-
-    function setPaymentType( tipo ){
-        venta.tipo_de_venta = tipo;
-        switch(tipo){
-            case "contado" : 
-                jQuery("#tipoDePago").show();
-            break;
-
-            case "credito" : 
-            default:
-                jQuery("#tipoDePago").hide();
-                setPayment(null);
-        }
-    }
-
-    function setPayment( tipo ){
-        jQuery("#tipoDePagoInfo").show();
-        venta.tipo_de_pago = tipo;
-
-        switch(tipo){
-            case "efectivo" : 
-                jQuery("#tipoDePagoInfo").html('Efectivo <input type="text">');
-            break;
-
-            case "cheque" :
-                jQuery("#tipoDePagoInfo").html('Referencia <input type="text">');                
-            break;
-
-            case "tarjeta":
-                jQuery("#tipoDePagoInfo").html('Datos <input type="text">');
-            break;
-
-            default:
-                jQuery("#tipoDePagoInfo").hide();
-        }
-    }
-
+****/
 </script>
 
 
 
 
-<h2>Inventario maestro</h2>
-<div class="tabla-inventario">
+<!-- 
+		SELECCIONAR CLIENTE
+ -->		<script>
+			jQuery("#MAIN_TITLE").html("Venta a cliente");
+		</script>
+
+		<h2>Detalles del Cliente</h2>
 <?php
 
-function toUnit( $e )
-{
-	if($e == "NA"){
-		return  "<i>N/A</i>";
-	}
-	return "<b>" . number_format($e, 2) . "</b>kg";
-}
+if(!isset($_REQUEST['cid'])){
+    $clientes = listarClientes();
 
-function toDateS( $d ){
-	$foo = toDate($d);
-	$bar = explode(" ", $foo);
-	return $bar[0];
-	 
-}
+    ?>
+            <script>
+                var CLIENTE = null;
+                
+            	var datosClientes = <?php echo json_encode( $clientes ); ?>;
+				
+				function getCliente( id_cliente ){
+					for (var c = datosClientes.length - 1; c >= 0; c--){
+						if( parseInt(datosClientes[c].id_cliente) == id_cliente){
+							return datosClientes[c];
+						}
+					}
+					return null;
+				}
+            </script>
+    <?php
 
-
-
-echo "<script>";
-echo " var inventario_maestro = [";
-foreach($iMaestro as $i){
-	echo json_encode($i) . ",";
-}
-echo "];";
-echo "</script>";
-
-
-$header = array(
-	"folio" 			=> "Remision",
-	"producto_desc" 	=> "Producto",
-	"variedad" 	 		=> "Variedad",
-	"arpillas"			=> "Arpillas origen",
-	"peso_por_arpilla"	=> "Kg/Arpilla",
-	"productor"			=> "Productor",
-	"fecha"				=> "Llegada",
-	//"transporte"				=> "Transporte",
-	"merma_por_arpilla"			=> "Merma",
-	//"sitio_descarga_desc"		=> "Sitio de descarga",
-	"existencias"				=> "Existencias",
-	"existencias_procesadas"	=> "Limpias" );
+	if(sizeof($clientes ) > 0){
+		echo '<select id="cliente_selector" > ';    
+		foreach( $clientes as $c ){
+			if($c['id_cliente'] <= 0 )continue;
+			echo "<option value='" . $c['id_cliente'] . "' >" . $c['nombre']  . "</option>";
+		}
+		echo '</select>';    
+	}else{
 	
-$tabla = new Tabla( $header, $iMaestro );
-$tabla->renderRowId("carrito"); //darle id's a las columnas
-$tabla->addOnClick("folio", "add", false, true); //enviar el id de la columna al javascriptooor
-$tabla->addColRender( "existencias", "toUnit" );
-$tabla->addColRender( "existencias_procesadas", "toUnit" );
-$tabla->addColRender( "fecha", "toDateS" );
-$tabla->render();
+		echo "<h3>No hay clientes a quien realizarle la venta</h3>";
+	}
+}else{
+
+	$cliente = ClienteDAO::getByPK( $_REQUEST['cid'] );
+	
+	if($cliente === null){
+		?>
+            <h3>Este cliente no existe</h3>
+
+        <?php
+	}else{
+	
+	?>
+        <script>
+            var CLIENTE = <?php echo $cliente->getIdCliente(); ?>;
+            var NOMBRECLIENTE = <?php echo $cliente->getNombre(); ?>;
+            var RFCCLIENTE = <?php echo $cliente->getRFC(); ?>;
+            var DIRECCIONCLIENTE = <?php echo $cliente->getDireccion(); ?>;
+            var CIUDADCLIENTE = <?php echo $cliente->getCiudad(); ?>;
+        </script>
+		<table border="0" cellspacing="1" cellpadding="1">
+			<tr><td><b>Nombre</b></td><td><?php echo $cliente->getNombre(); ?></td><td rowspan=12><div id="map_canvas"></div></td></tr>
+			<tr><td><b>RFC</b></td><td><?php echo $cliente->getRFC(); ?></td></tr>
+			<tr><td><b>Limite de Credito</b></td><td><?php echo moneyFormat($cliente->getLimiteCredito()); ?></td></tr>	
+			<tr><td><b>Descuento</b></td><td><?php echo percentFormat( $cliente->getDescuento() ); ?></td></tr>
+		</table>
+	
+	<?php
+	
+	}
+
+}
+
+
 
 ?>
+<?php /* if(!isset($_REQUEST['sid'])) { ?>
+	<div id="select_sucursal">
+    <h2>Seleccione el cliente al que le vendera</h2>
+    <form id="newClient">
+    <table border="0" cellspacing="5" cellpadding="5">
+	    <tr><td>Sucursal</td>
+		    <td>
+			    <select id="sucursal"> 
+			    <?php
+			
+
+				    foreach( $sucursales as $suc ){
+					    echo "<option value='" . $suc->getIdSucursal() . "' >" .  $suc->getDescripcion()  . "</option>";
+				    }
+			    ?>
+	
+	            </select>
+		    </td>
+            <td><input type="button" onClick="seleccionarSucursal()" value="Seleccionar"/> </td>
+	    </tr>
+    </table>
+    </form>
+    </div>
+<?php }else{ ?>
+    <input type="hidden" value="<?php echo $_REQUEST['sid']; ?>" id="sucursal" />
+<?php }  */ ?>
+
+
+
+
+
+<?php
+
+//get sucursales
+$sucursales = listarSucursales();
+
+function renderProducto( $val ,$row){
+	return "<b>" . number_format($val, 2) . "</b>&nbsp;" . $row['medida'] . "s";
+}
+
+function renderProductoSmall( $val ,$row){
+	
+	$medida = "";
+	
+	switch($row['medida']){
+		case "kilogramo" : $medida = "Kgs"; break;
+		case "pieza" : $medida = "Pzas"; break;
+	}
+	
+	return "<b>" . number_format( (float)$val, 2) . "</b>&nbsp;" . $medida ;
+}
+
+function toUnit( $e, $row )
+{
+	//$row["tratamiento"]
+	switch($row["medida"]){
+		case "kilogramo" : $escala = "Kgs"; break;
+		case "pieza" : $escala = "Pzas"; break;		
+	}
+
+	return "<b>" . number_format( $e / 60, 2 ) . "</b>Arp. / <b>" . number_format($e, 2) . "</b>" . $escala ;
+}
+
+function toUnitProc( $e, $row )
+{
+	if($row["tratamiento"] == null){
+		return "<i>NA</i>";
+	}
+
+	switch($row["medida"]){
+		case "kilogramo" : $escala = "Kgs"; break;
+		case "pieza" : $escala = "Pzas"; break;		
+	}
+
+	return "<b>" . number_format( $e / 60, 2 ) . "</b>Arp. / <b>" . number_format($e, 2) . "</b>" . $escala ;
+}
+
+foreach( $sucursales as $sucursal ){
+	
+	print ("<div id='actual" . $sucursal["id_sucursal"] . "' style='display: none'>");
+	print ("<h2>Inventario actual de " . $sucursal["descripcion"] . "</h2>");
+	
+	//obtener los clientes del controller de clientes
+	$inventario = listarInventario( $sucursal["id_sucursal"] );
+
+
+
+	//render the table
+	$header = array( 
+		"productoID" 		=> "ID",
+		"descripcion"		=> "Descripcion",
+		"precioVenta"		=> "Precio a la venta",
+		"existenciasOriginales"		=> "Originales",
+		"existenciasProcesadas"		=> "Procesadas" );
+		
+
+	
+	$tabla = new Tabla( $header, $inventario );
+	$tabla->addColRender( "precioVenta", "moneyFormat" );
+	$tabla->addColRender( "existenciasOriginales", "toUnit" );	
+	$tabla->addColRender( "existenciasProcesadas", "toUnitProc" );		
+    $tabla->addNoData("Esta sucursal no tiene nigun registro de productos en su inventario");
+	$tabla->render();
+	printf("</div>");
+}
+
+?>
+
+<!--
+	Seleccion de producto a surtir
+-->
+<div id="listaDeProductos">
+	<h2>Sub productos que conformaran este producto a vender</h2>
+		<?php
+		echo "<table border=0 style='width: 100%; font-size: 14px; cursor: pointer;'>";
+			echo "<tr>";
+			for($a = 0; $a < sizeof($productos); $a++){
+
+				//buscar su precio sugerido actual
+				$act = new ActualizacionDePrecio();
+				$act->setIdProducto( $productos[$a]->getIdProducto() );
+				$res = ActualizacionDePrecioDAO::search($act, "fecha", "desc");
+				$lastOne = $res[0];
+
+				//buscar todas las existencias
+				$totals = 0;
+				for($i = 0; $i < sizeof($iMaestro); $i++){
+					if($iMaestro[$i]['id_producto'] == $productos[$a]->getIdProducto()){
+						$totals +=  $iMaestro[$i]['existencias'];
+					}
+
+				}
+				if($a % 5 == 0){
+					echo "</tr><tr>";
+				}
+
+				echo "<td id='producto-" . $productos[$a]->getIdProducto() . "'  onClick='seleccionDeProd( " .  $productos[$a]->getIdProducto() . " )' onmouseover=\"this.style.backgroundColor = '#D7EAFF'\" onmouseout=\"this.style.backgroundColor = 'white'\"><img style='float:left;' src='../media/icons/basket_add_32.png'>" . $productos[$a]->getDescripcion() . "<br>";
+				//echo "<b>" . number_format( $totals , 2) ."</b>&nbsp;" .$productos[$a]->getEscala() . "s<br/><br/>";
+				echo " " . moneyFormat($lastOne->getPrecioVenta()) .  "<br><br>";
+				echo "</td>";
+			}
+			echo "</tr>";
+		echo "</table>";
+		?>
 </div>
 
 
 
 
-	<!-- -------------------------------
-			TABALA DE PRODUCTOS SELECCIONADOS
-	  ------------------------------- -->    
-<h2>Productos a vender</h2>
-    <div id='cart'>
 
-    </div>
-
-
-	<!-- -------------------------------
-            OPCIONES DE PAGO
-	  ------------------------------- -->   
-<h2>Opciones de pago</h2>
-
-<table width="100%" border=0 align=center>
-   <tr >
-    <td valign="top" >
-        <h3>Tipo de venta</h3>
-      <input type="radio" name="tipo_venta_input" onChange="setPaymentType(this.value)" value="credito" checked="checked" /> Credito<br />
-      <input type="radio" name="tipo_venta_input" onChange="setPaymentType(this.value)" value="contado"  /> Contado<br />
-    </td>
-
-
-    <td valign="top" id="tipoDePago" style="display:none;">
-      <h3>Tipo de pago</h3>
-      <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="efectivo" /> Efectivo<br />
-      <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="cheque"  /> Cheque<br />
-      <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="tarjeta" /> Tarjeta<br />
-    </td>
-
-    <td valign="top" id="tipoDePagoInfo" style="display:none;">
-
-    </td>
-    </tr>
-</table>
+<!-- 
+		MOSTRAR INVENTARIO MAESTRO
+ -->
+<div id="InvMaestro" style="display: none;">
+	<h2>Inventario Maestro</h2>
+	<h3>&iquest; Como se conformara este producto ?</h3>
+	<div id="InventarioMaestroTabla"></div>
+ 	<div id="inventario-maestro-grid" style="padding: 5px;"></div> 	
+</div>
 
 
 
-    <h4 align="center" id="do-sell">
-    	<input type="button" value="Vender" onClick="dovender()">
-    	<img src="../media/loader.gif" id="loader" style="display: none;">
-    </h4>
+
+
+<!-- 
+		SELECCIONAR PRODUCTOS A SURTIR
+ -->
+<div id="ASurtir" style="display: none;">
+<h2>Composicion del producto</h2>
+
+	<div id="ComposicionTabla"></div>
+
+
+	<h2>Detalles del producto a vender</h2>
+	<table>
+		<tr><td>Enviar producto procesado</td><td>
+			<input style="width: 100px" id="compuesto-procesado" type="checkbox">
+		</td></tr>		
+		<tr><td>Peso real</td><td>
+			<input style="width: 100px" id="compuesto-peso-real" type="text" disabled>
+		</td></tr>
+		<tr><td>Peso a cobrar</td><td>
+			<input style="width: 100px" id="compuesto-peso-a-cobrar" type="text" disabled>			
+		</td></tr>		
+		<tr><td>Importe por unidad</td><td>
+			<input style="width: 100px" id="compuesto-importe-por-unidad" type="text" disabled>
+		</td></tr>
+		<tr><td>Importe total por este producto</td><td>
+			<input style="width: 100px" id="compuesto-importe-total" type="text" disabled>
+		</td></tr>
+	</table>
+	<h4 >
+		<input type="button" value="Aceptar" onclick="composicionTabla.commitMix()">
+		<input type="button" value="Cancelar" onclick="composicionTabla.rollbackMix()">
+	</h4>
+		
+
+</div>
 
 
 
+
+<div id="FinalShip" style="display: none;">
+<h2>Productos a surtir</h2>
+
+	<div id="FinalShipTabla"></div>
+
+	<!--
+	    Seleccion de chofer
+	-->
+
+
+	<h4 id="submitButtons" align='center'  >
+		<input type="button" value="Vender" onclick="doVender()">
+		<!-- <input type="button" value="Volver a comenzar" onclick="restart()"> -->
+	</h4>
+
+	<div id="loader" 		style="display: none;" align="center"  >
+		<img src="../media/loader.gif">
+	</div>
+
+
+</div>
+
+
+<style>
+    table{
+		font-size: 11px;
+    }
+</style>

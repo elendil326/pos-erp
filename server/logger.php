@@ -176,7 +176,7 @@ class Logger
 
         if(isset($_SESSION['sucursal'])){
 			try{
-            	$out .= " | SUC:" . $_SESSION['sucursal'];				
+            	$out .= " | SUC:" . $_SESSION['sucursal'];
 			}catch(Exception $e){
 				return Logger::log($e);
 			}
