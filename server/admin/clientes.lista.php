@@ -153,15 +153,13 @@ foreach($clientesFoo as $c){
 }
 
 function sortClientes( $a, $b ){
-	
-	return strcasecmp($a["nombre"] , $b["nombre"]);
-	
+	return strcasecmp($a["rfc"] , $b["rfc"]);
 }
 
 usort( $clientes, "sortClientes" );
 
 //render the table
-$header = array(  "nombre" => "Nombre", "rfc" => "RFC", /* "direccion" => "Direccion",*/  "ciudad" => "Ciudad"  );
+$header = array(  "rfc" => "Razon Social", /*"rfc" => "RFC", /* "direccion" => "Direccion",*/  "municipio" => "Municipio"  );
 
 $tabla = new Tabla( $header, $clientes );
 $tabla->addOnClick("id_cliente", "mostrarDetalles");

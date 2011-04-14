@@ -14,7 +14,7 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 
 ?>
 
-<script>document.getElementById("MAIN_TITLE").innerHTML = "<?php echo $cliente->getNombre(); ?>";</script>
+<script>document.getElementById("MAIN_TITLE").innerHTML = "<?php echo $cliente->getRfc(); ?>";</script>
 
 
 <style type="text/css" media="screen">
@@ -29,11 +29,11 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 <h2>Detalles del cliente</h2>
 <table border="0" cellspacing="1" cellpadding="1" >
 	
-	<tr><td style="width:200px"><b>Nombre</b></td><td style="width:200px">			<?php 	echo $cliente->getNombre(); ?></td>
+	<tr><td style="width:200px"><b>Razon Social</b></td><td style="width:200px">			<?php 	echo $cliente->getRfc(); ?></td>
 			<td valign="top" rowspan=12><div id="map_canvas"></div></td></tr>
 	<tr><td><b>RFC</b></td><td>				<?php 	echo $cliente->getRFC(); ?></td></tr>
-	<tr><td><b>Direccion</b></td><td>		<?php 	echo $cliente->getDireccion(); ?></td></tr>
-	<tr><td><b>Ciudad</b></td><td>			<?php 	echo $cliente->getCiudad(); ?></td></tr>
+	<tr><td><b>Direccion</b></td><td>		<?php 	echo $cliente->getCalle(); ?></td></tr>
+	<tr><td><b>Ciudad</b></td><td>			<?php 	echo $cliente->getMunicipio(); ?></td></tr>
 	<tr><td><b>Telefono</b></td><td>		<?php 	echo $cliente->getTelefono(); ?></td></tr>	
 	<tr><td><b>E Mail</b></td><td>			<?php 	echo $cliente->getEMail(); ?></td></tr>	
 	<tr><td><b>Limite de Credito</b></td><td><?php 	echo moneyFormat($cliente->getLimiteCredito()); ?></td></tr>	
@@ -245,7 +245,7 @@ if($activo){
 		   $fv->setIdVenta( $id );
 		   $r = FacturaVentaDAO::search($fv);
 		   if(sizeof($r) > 0)
-		    return $r[0]->getFolio();
+		    return $r[0]->getIdFolio();
 		   else
 		    return null;
 	}
@@ -422,7 +422,7 @@ if(POS_ENABLE_GMAPS){
     function startMap(){
 
 	    GeocoderRequest = {
-		    address : "<?php echo $cliente->getDireccion(); ?>, <?php echo $cliente->getCiudad(); ?>, Mexico"
+		    address : "<?php echo $cliente->getCalle() . "," . $cliente->getColonia() . "," . $cliente->getEstado(); ?>, Mexico"
 	    };
 	    try{
 
