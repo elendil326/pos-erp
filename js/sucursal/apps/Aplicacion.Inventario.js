@@ -231,7 +231,7 @@ Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 				"selectionchange"  : function ( view, nodos, c ){
 
                                         if(DEBUG){
-                                            console.log("****+++++Esa mierda contiene : ",nodos[0]);
+                                            //console.log("****+++++Esa mierda contiene : ",nodos[0]);
                                         }
 
 					if(nodos.length > 0){

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 12-04-2011 a las 20:14:29
+-- Tiempo de generación: 14-04-2011 a las 16:37:22
 -- Versión del servidor: 5.5.8
 -- Versión de PHP: 5.3.5
 
@@ -256,7 +256,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   PRIMARY KEY (`id_cliente`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=14 ;
 
 --
 -- Volcar la base de datos para la tabla `cliente`
@@ -268,7 +268,7 @@ INSERT INTO `cliente` (`id_cliente`, `rfc`, `razon_social`, `calle`, `numero_ext
 (1, 'JICA870502XC2', 'JOSE ALFERDO JIMENEZ CARSO', 'monte alban', '123', '2', 'Rosalinda', 'Un lugar ', 'Celaya', 'Celaya', 'Guanajuato', 'Mexico', '38000', '4616112345', 'pepealfredo@caffeina.mx', 19000, 0, 1, 101, 1, '2011-01-09 02:11:30'),
 (2, 'ALCB770612', 'BRENDA ALFARO CARMONA', 'MUTUALISMO #345, COL. CENTRO', '', NULL, '', NULL, NULL, 'CELAYA', '', '', '', 'a', '', 20, 2, 1, 101, 1, '2011-01-12 18:05:59'),
 (3, 'MOJL570312', 'LUCIA MORALES JUNCO', 'FRANCISCO JUAREZ #466, CENTRO', '', NULL, '', NULL, NULL, 'CELAYA', '', '', '', '4616115623', '', 19000, 11, 1, 101, 1, '2011-01-14 14:32:37'),
-(4, 'PRDC670822', 'ANA SOLACHE MALDONADO', 'GARAMBULLO #304 COL. DEL BOSQUE', '', NULL, '', NULL, NULL, 'CELAYA GTO', '', '', '', '46161167923', '', 2000, 11, 1, 102, 1, '2011-01-30 21:50:50'),
+(4, 'PRDC670822MODIFICADO', 'ANA SOLACHE MALDONADO MODIFICADA', 'Calle', 'NE', 'NI', 'Colonia', 'Referencia', 'Localidad', 'Municipo', 'Estado', 'Pais', '12345', 'TelefonoTelefono', 'EMAIL', 2000, 10, 1, 102, 1, '2011-01-30 21:50:50'),
 (5, 'ESLN820412', 'NORMA SAMANTHA ESPARZA LAGUNA', 'RIO LERMA #304, COL. CENTRO', '', NULL, '', NULL, NULL, 'CELAYA', '', '', '', '4616162378', '', 1236, 20, 1, 102, 1, '2011-01-30 21:52:41'),
 (6, 'Cliente de Prueba 3', 'ANDRES RIVERA CARRILLO', 'ANDRES RIVERA CARRILLO', '', NULL, '', NULL, NULL, 'CELAYA', '', '', '', 'Cliente de Prueba 3', '', 0, 0, 1, 102, 1, '2011-01-30 21:54:12'),
 (7, 'JICA870502asdasd', 'JOSE ALFERDO JIMENEZ CARSO 2', 'monte alban #123 col rosalinda', '', NULL, '', NULL, NULL, 'celaya', '', '', '', '', '', 19000, 0, 1, 101, 1, '2011-01-09 02:11:30'),
@@ -276,7 +276,7 @@ INSERT INTO `cliente` (`id_cliente`, `rfc`, `razon_social`, `calle`, `numero_ext
 (9, 'MOJL570312asdasd', 'LUCIA MORALES JUNCO 2', 'FRANCISCO JUAREZ #466, CENTRO', '', NULL, '', NULL, NULL, 'CELAYA', '', '', '', '4616115623', '', 19000, 11, 1, 101, 1, '2011-01-14 14:32:37'),
 (10, 'PRDC670822asdasd', 'ANA SOLACHE MALDONADO 2', 'GARAMBULLO #304 COL. DEL BOSQUE', '', NULL, '', NULL, NULL, 'CELAYA GTO', '', '', '', '46161167923', '', 2000, 11, 1, 102, 1, '2011-01-30 21:50:50'),
 (11, 'ESLN820412asdasd', 'NORMA SAMANTHA ESPARZA LAGUNA 2', 'RIO LERMA #304, COL. CENTRO', '', NULL, '', NULL, NULL, 'CELAYA', '', '', '', '4616162378', '', 1236, 20, 1, 102, 1, '2011-01-30 21:52:41'),
-(12, 'Cliente de Prueba 3', 'ANDRES RIVERA CARRILLO 2', 'ANDRES RIVERA CARRILLO', '', NULL, '', NULL, NULL, 'CELAYA', '', '', '', 'Cliente de Prueba 3', '', 0, 0, 1, 102, 1, '2011-01-30 21:54:12');
+(13, 'RFCC121212CD8', 'Una Razon Social', 'UNA CALLE EN ALGUN SITIO', 'NUMERO EXT', 'NUMERO INT', 'COLONIA', 'REFERENCIA', 'LOCALIDAD', 'MUNICIPIO', 'ESTADO', 'PAIS', '123145', '014611111111', 'ALGUN EMAIL', 5000, 5, 1, 102, 1, '2011-04-13 01:38:32');
 
 -- --------------------------------------------------------
 
@@ -1594,7 +1594,7 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
   `activo` tinyint(2) NOT NULL DEFAULT '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
   `tipo_proveedor` enum('admin','sucursal','ambos') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'admin' COMMENT 'si este proveedor surtira al admin, a las sucursales o a ambos',
   PRIMARY KEY (`id_proveedor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=17 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 --
 -- Volcar la base de datos para la tabla `proveedor`
