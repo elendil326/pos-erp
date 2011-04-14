@@ -247,11 +247,45 @@ function modificarCliente($args) {
     if (isset($data->rfc))
         $cliente->setRfc($data->rfc);
 
-    if (isset($data->nombre))
-        $cliente->setNombre($data->nombre);
+    if (isset($data->razon_social))
+        $cliente->setRazonSocial($data->razon_social);
 
-    if (isset($data->direccion))
-        $cliente->setDireccion($data->direccion);
+    if (isset($data->calle))
+        $cliente->setCalle($data->calle);
+
+    if (isset($data->numero_exterior))
+        $cliente->setNumeroExterior($data->numero_exterior);
+
+    if (isset($data->numero_interior))
+        $cliente->setNumeroInterior($data->numero_interior);
+
+    if (isset($data->colonia))
+        $cliente->setColonia($data->colonia);
+
+    if (isset($data->referencia))
+        $cliente->setReferencia($data->referencia);
+
+    if (isset($data->localidad))
+        $cliente->setLocalidad($data->localidad);
+
+    if (isset($data->municipio))
+        $cliente->setMunicipio($data->municipio);
+
+    if (isset($data->estado))
+        $cliente->setEstado($data->estado);
+
+    if (isset($data->pais))
+        $cliente->setPais($data->pais);
+
+    if (isset($data->codigo_postal))
+        $cliente->setCodigoPostal($data->codigo_postal);
+
+    if (isset($data->telefono))
+        $cliente->setTelefono($data->telefono);
+
+    if (isset($data->e_mail))
+        $cliente->setEMail($data->e_mail);
+
 
 
     if (isset($data->limite_credito)) {
@@ -284,21 +318,12 @@ function modificarCliente($args) {
 
         $cliente->setDescuento($data->descuento);
     }
-
-
-    if (isset($data->telefono))
-        $cliente->setTelefono($data->telefono);
-
-    if (isset($data->e_mail))
-        $cliente->setEMail($data->e_mail);
+   
 
     if (isset($data->activo))
         $cliente->setActivo($data->activo);
 
-    if (isset($data->ciudad))
-        $cliente->setCiudad($data->ciudad);
-
-
+   
     //solo el admin puede editar estos campos
     if ($_SESSION['grupo'] <= 1) {
         if (isset($data->id_sucursal))
@@ -711,7 +736,7 @@ function listarVentasCliente($args) {
         $decode_venta['cajero'] = $cajero->getNombre();
 
         $cliente = ClienteDAO::getByPK($venta->getIdCliente());
-        $decode_venta["cliente"] = $cliente->getNombre();
+        $decode_venta["razon_social"] = $cliente->getRazonSocial();
 
         array_push($tot_ventas, $decode_venta);
     }

@@ -229,7 +229,11 @@ Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 					Aplicacion.Inventario.currentInstance.inventarioListaStore.clearFilter();
 				},
 				"selectionchange"  : function ( view, nodos, c ){
-					
+
+                                        if(DEBUG){
+                                            console.log("****+++++Esa mierda contiene : ",nodos[0]);
+                                        }
+
 					if(nodos.length > 0){
 						Aplicacion.Inventario.currentInstance.detalleInventarioPanelShow( nodos[0] );
 					}
