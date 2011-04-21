@@ -148,7 +148,7 @@ function getNombrecliente($id)
     if($id < 0){
          return "Caja Comun";
     }
-    return ClienteDAO::getByPK( $id )->getNombre();
+    return ClienteDAO::getByPK( $id )->getRazonSocial();
 }
 
 
