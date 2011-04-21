@@ -163,6 +163,21 @@ abstract class InventarioDAOBase extends DAO
 			array_push( $val, $inventario->getTratamiento() );
 		}
 
+		if( $inventario->getAgrupacion() != NULL){
+			$sql .= " agrupacion = ? AND";
+			array_push( $val, $inventario->getAgrupacion() );
+		}
+
+		if( $inventario->getAgrupacionTam() != NULL){
+			$sql .= " agrupacionTam = ? AND";
+			array_push( $val, $inventario->getAgrupacionTam() );
+		}
+
+		if( $inventario->getActivo() != NULL){
+			$sql .= " activo = ? AND";
+			array_push( $val, $inventario->getActivo() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -186,7 +201,7 @@ abstract class InventarioDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -194,11 +209,14 @@ abstract class InventarioDAOBase extends DAO
 	  **/
 	private static final function update( $inventario )
 	{
-		$sql = "UPDATE inventario SET  descripcion = ?, escala = ?, tratamiento = ? WHERE  id_producto = ?;";
+		$sql = "UPDATE inventario SET  descripcion = ?, escala = ?, tratamiento = ?, agrupacion = ?, agrupacionTam = ?, activo = ? WHERE  id_producto = ?;";
 		$params = array( 
 			$inventario->getDescripcion(), 
 			$inventario->getEscala(), 
 			$inventario->getTratamiento(), 
+			$inventario->getAgrupacion(), 
+			$inventario->getAgrupacionTam(), 
+			$inventario->getActivo(), 
 			$inventario->getIdProducto(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -222,12 +240,15 @@ abstract class InventarioDAOBase extends DAO
 	  **/
 	private static final function create( &$inventario )
 	{
-		$sql = "INSERT INTO inventario ( id_producto, descripcion, escala, tratamiento ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO inventario ( id_producto, descripcion, escala, tratamiento, agrupacion, agrupacionTam, activo ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$inventario->getIdProducto(), 
 			$inventario->getDescripcion(), 
 			$inventario->getEscala(), 
 			$inventario->getTratamiento(), 
+			$inventario->getAgrupacion(), 
+			$inventario->getAgrupacionTam(), 
+			$inventario->getActivo(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -315,6 +336,39 @@ abstract class InventarioDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " tratamiento = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $inventarioA->getAgrupacion()) != NULL) & ( ($b = $inventarioB->getAgrupacion()) != NULL) ){
+				$sql .= " agrupacion >= ? AND agrupacion <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " agrupacion = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $inventarioA->getAgrupacionTam()) != NULL) & ( ($b = $inventarioB->getAgrupacionTam()) != NULL) ){
+				$sql .= " agrupacionTam >= ? AND agrupacionTam <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " agrupacionTam = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $inventarioA->getActivo()) != NULL) & ( ($b = $inventarioB->getActivo()) != NULL) ){
+				$sql .= " activo >= ? AND activo <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " activo = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
