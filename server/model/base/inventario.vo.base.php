@@ -34,6 +34,15 @@ class Inventario extends VO
 			if( isset($data['tratamiento']) ){
 				$this->tratamiento = $data['tratamiento'];
 			}
+			if( isset($data['agrupacion']) ){
+				$this->agrupacion = $data['agrupacion'];
+			}
+			if( isset($data['agrupacionTam']) ){
+				$this->agrupacionTam = $data['agrupacionTam'];
+			}
+			if( isset($data['activo']) ){
+				$this->activo = $data['activo'];
+			}
 		}
 	}
 
@@ -50,7 +59,10 @@ class Inventario extends VO
 			"id_producto" => $this->id_producto,
 			"descripcion" => $this->descripcion,
 			"escala" => $this->escala,
-			"tratamiento" => $this->tratamiento
+			"tratamiento" => $this->tratamiento,
+			"agrupacion" => $this->agrupacion,
+			"agrupacionTam" => $this->agrupacionTam,
+			"activo" => $this->activo
 		); 
 	return json_encode($vec); 
 	}
@@ -92,6 +104,33 @@ class Inventario extends VO
 	  * @var enum('limpia')
 	  */
 	protected $tratamiento;
+
+	/**
+	  * agrupacion
+	  * 
+	  * La agrupacion de este producto<br>
+	  * @access protected
+	  * @var varchar(8)
+	  */
+	protected $agrupacion;
+
+	/**
+	  * agrupacionTam
+	  * 
+	  * El tamano de cada agrupacion<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $agrupacionTam;
+
+	/**
+	  * activo
+	  * 
+	  * si este producto esta activo o no en el sistema<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $activo;
 
 	/**
 	  * getIdProducto
@@ -191,6 +230,78 @@ class Inventario extends VO
 	final public function setTratamiento( $tratamiento )
 	{
 		$this->tratamiento = $tratamiento;
+	}
+
+	/**
+	  * getAgrupacion
+	  * 
+	  * Get the <i>agrupacion</i> property for this object. Donde <i>agrupacion</i> es La agrupacion de este producto
+	  * @return varchar(8)
+	  */
+	final public function getAgrupacion()
+	{
+		return $this->agrupacion;
+	}
+
+	/**
+	  * setAgrupacion( $agrupacion )
+	  * 
+	  * Set the <i>agrupacion</i> property for this object. Donde <i>agrupacion</i> es La agrupacion de este producto.
+	  * Una validacion basica se hara aqui para comprobar que <i>agrupacion</i> es de tipo <i>varchar(8)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(8)
+	  */
+	final public function setAgrupacion( $agrupacion )
+	{
+		$this->agrupacion = $agrupacion;
+	}
+
+	/**
+	  * getAgrupacionTam
+	  * 
+	  * Get the <i>agrupacionTam</i> property for this object. Donde <i>agrupacionTam</i> es El tamano de cada agrupacion
+	  * @return float
+	  */
+	final public function getAgrupacionTam()
+	{
+		return $this->agrupacionTam;
+	}
+
+	/**
+	  * setAgrupacionTam( $agrupacionTam )
+	  * 
+	  * Set the <i>agrupacionTam</i> property for this object. Donde <i>agrupacionTam</i> es El tamano de cada agrupacion.
+	  * Una validacion basica se hara aqui para comprobar que <i>agrupacionTam</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setAgrupacionTam( $agrupacionTam )
+	{
+		$this->agrupacionTam = $agrupacionTam;
+	}
+
+	/**
+	  * getActivo
+	  * 
+	  * Get the <i>activo</i> property for this object. Donde <i>activo</i> es si este producto esta activo o no en el sistema
+	  * @return tinyint(1)
+	  */
+	final public function getActivo()
+	{
+		return $this->activo;
+	}
+
+	/**
+	  * setActivo( $activo )
+	  * 
+	  * Set the <i>activo</i> property for this object. Donde <i>activo</i> es si este producto esta activo o no en el sistema.
+	  * Una validacion basica se hara aqui para comprobar que <i>activo</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setActivo( $activo )
+	{
+		$this->activo = $activo;
 	}
 
 }

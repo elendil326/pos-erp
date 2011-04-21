@@ -403,13 +403,9 @@ CREATE TABLE IF NOT EXISTS `ingresos` (
 -- Estructura de tabla para la tabla `inventario`
 --
 
-CREATE TABLE IF NOT EXISTS `inventario` (
-  `id_producto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del producto',
-  `descripcion` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT 'descripcion del producto',
-  `escala` enum('kilogramo','pieza','litro','unidad') COLLATE utf8_unicode_ci NOT NULL,
-  `tratamiento` enum('limpia') COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Tipo de tratatiento si es que existe para este producto.',
-  PRIMARY KEY (`id_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=16 ;
+
+
+
 
 -- --------------------------------------------------------
 
