@@ -40,7 +40,7 @@ abstract class FormatoTicket {
      * Indica al objeto grafico donde comenzara a imprimir respecto a la parte superior del ticket.
      * default : 20
      */
-    public int y = 20;
+    public int y = -100;
 
     /**
      * Recibe una cantidad de pixeles que se le sumaran a la posicion actual de "y" para que la

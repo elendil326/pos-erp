@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 01-04-2011 a las 04:18:22
+-- Tiempo de generación: 23-04-2011 a las 23:50:03
 -- Versión del servidor: 5.5.8
 -- Versión de PHP: 5.3.5
 
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `autorizacion` (
   PRIMARY KEY (`id_autorizacion`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=139 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=145 ;
 
 -- --------------------------------------------------------
 
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   PRIMARY KEY (`id_cliente`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=14 ;
 
 -- --------------------------------------------------------
 
@@ -267,6 +267,19 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `documento`
+--
+
+CREATE TABLE IF NOT EXISTS `documento` (
+  `id_documento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del documento',
+  `identificador` varchar(128) COLLATE utf8_unicode_ci NOT NULL COMMENT 'identificador con el cual se le conocera en el sistema',
+  `descripcion` varchar(256) COLLATE utf8_unicode_ci NOT NULL COMMENT 'descripcion breve del documento',
+  PRIMARY KEY (`id_documento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene información acerca todos de los documentos que se imprimen' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `equipo`
 --
 
@@ -279,7 +292,7 @@ CREATE TABLE IF NOT EXISTS `equipo` (
   PRIMARY KEY (`id_equipo`),
   UNIQUE KEY `full_ua` (`full_ua`),
   UNIQUE KEY `token` (`token`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
 
 -- --------------------------------------------------------
 
@@ -380,6 +393,34 @@ CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `impresiones`
+--
+
+CREATE TABLE IF NOT EXISTS `impresiones` (
+  `id_impresora` int(11) NOT NULL COMMENT 'id de la impresora',
+  `id_documento` int(11) NOT NULL COMMENT 'id del documento',
+  PRIMARY KEY (`id_impresora`,`id_documento`),
+  KEY `id_documento` (`id_documento`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='contiene la relación impresora-documento-sucursal';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `impresora`
+--
+
+CREATE TABLE IF NOT EXISTS `impresora` (
+  `id_impresora` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de la impresora',
+  `id_sucursal` int(11) NOT NULL COMMENT 'id de la sucursal donde se encuentra esta impresora',
+  `descripcion` varchar(256) COLLATE utf8_unicode_ci NOT NULL COMMENT 'descripcion breve de la impresora',
+  `identificador` varchar(128) COLLATE utf8_unicode_ci NOT NULL COMMENT 'es el nombre de como esta dada de alta la impresora en la sucursal',
+  PRIMARY KEY (`id_impresora`),
+  KEY `id_sucursal` (`id_sucursal`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene información acerca de todas las impresoras de todas las sucursales' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `ingresos`
 --
 
@@ -403,9 +444,13 @@ CREATE TABLE IF NOT EXISTS `ingresos` (
 -- Estructura de tabla para la tabla `inventario`
 --
 
-
-
-
+CREATE TABLE IF NOT EXISTS `inventario` (
+  `id_producto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del producto',
+  `descripcion` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT 'descripcion del producto',
+  `escala` enum('kilogramo','pieza','litro','unidad') COLLATE utf8_unicode_ci NOT NULL,
+  `tratamiento` enum('limpia') COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Tipo de tratatiento si es que existe para este producto.',
+  PRIMARY KEY (`id_producto`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=16 ;
 
 -- --------------------------------------------------------
 
@@ -521,7 +566,7 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
   `activo` tinyint(2) NOT NULL DEFAULT '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
   `tipo_proveedor` enum('admin','sucursal','ambos') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'admin' COMMENT 'si este proveedor surtira al admin, a las sucursales o a ambos',
   PRIMARY KEY (`id_proveedor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=17 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -604,7 +649,7 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`id_sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=233 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=245 ;
 
 --
 -- Filtros para las tablas descargadas (dump)
@@ -710,6 +755,19 @@ ALTER TABLE `gastos`
 ALTER TABLE `grupos_usuarios`
   ADD CONSTRAINT `grupos_usuarios_ibfk_1` FOREIGN KEY (`id_grupo`) REFERENCES `grupos` (`id_grupo`) ON UPDATE CASCADE,
   ADD CONSTRAINT `grupos_usuarios_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `impresiones`
+--
+ALTER TABLE `impresiones`
+  ADD CONSTRAINT `impresiones_ibfk_2` FOREIGN KEY (`id_impresora`) REFERENCES `impresora` (`id_impresora`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `impresiones_ibfk_3` FOREIGN KEY (`id_documento`) REFERENCES `documento` (`id_documento`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `impresora`
+--
+ALTER TABLE `impresora`
+  ADD CONSTRAINT `impresora_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `ingresos`

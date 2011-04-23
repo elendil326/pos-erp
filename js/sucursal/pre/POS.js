@@ -74,6 +74,110 @@ POS.loadInfoSucursal = function(){
 
 };
 
+//contiene informacion documentos que se imprimen en esa sucursal y con que impresoras se deben de imprimir
+POS.impresoras = null;
+
+//extrae informacion acerca de los docuemntos y con que impresoras se imprimen
+POS.loadImpresoras = function(){
+
+    if(DEBUG){
+        console.log("Obteniendo informaci\ufffdn de la sucursal ....");
+    }
+
+    Ext.Ajax.request({
+        url: '../proxy.php',
+        scope : this,
+        params : {
+            action : 712
+        },
+        success: function(response, opts) {
+            try{
+                informacion = Ext.util.JSON.decode( response.responseText );
+            }catch(e){
+                return POS.error(response, e);
+            }
+
+            if( !informacion.success ){
+                //volver a intentar
+                if(DEBUG){
+                    console.log("obtenicion de la informacion sin exito ");
+                }
+                Ext.Msg.alert("Error", informacion.reason);
+                return;
+
+            }
+
+            if(DEBUG){
+                console.log("obtenicion de la informacion exitosa ");
+            }
+
+            POS.infoSucursal = informacion.datos;
+
+            if(DEBUG){
+                console.log("POS.infoSucursal contiene : ", POS.infoSucursal);
+            }
+
+        },
+        failure: function( response ){
+            POS.error( response );
+        }
+    });
+
+
+};
+
+//contiene informacion acerca de las leyendas de los tickets
+POS.leyendasTicket = null;
+
+//extrae informacion acerca de las leyendas de los tickets
+POS.loadLeyendasTicket = function(){
+
+    if(DEBUG){
+        console.log("Obteniendo informaci\ufffdn de la sucursal ....");
+    }
+
+    Ext.Ajax.request({
+        url: '../proxy.php',
+        scope : this,
+        params : {
+            action : 712
+        },
+        success: function(response, opts) {
+            try{
+                informacion = Ext.util.JSON.decode( response.responseText );
+            }catch(e){
+                return POS.error(response, e);
+            }
+
+            if( !informacion.success ){
+                //volver a intentar
+                if(DEBUG){
+                    console.log("obtenicion de la informacion sin exito ");
+                }
+                Ext.Msg.alert("Error", informacion.reason);
+                return;
+
+            }
+
+            if(DEBUG){
+                console.log("obtenicion de la informacion exitosa ");
+            }
+
+            POS.infoSucursal = informacion.datos;
+
+            if(DEBUG){
+                console.log("POS.infoSucursal contiene : ", POS.infoSucursal);
+            }
+
+        },
+        failure: function( response ){
+            POS.error( response );
+        }
+    });
+
+
+};
+
 //poner el boton de yes, con si 
 Ext.MessageBox.YESNO[1].text = "Si";
 

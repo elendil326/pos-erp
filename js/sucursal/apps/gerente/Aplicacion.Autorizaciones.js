@@ -113,85 +113,57 @@ Aplicacion.Autorizaciones.prototype.nueva.createPanels = function ()
 //panel de la venta preferencial
 Aplicacion.Autorizaciones.prototype.nueva.ventaPreferencialPanel = null;
 
+//panel de la venta preferencial
+Aplicacion.Autorizaciones.prototype.nueva.ventaPreferencialPanelCliente = null;
 
-/**
-    *
-    *
-    */
-Aplicacion.Autorizaciones.prototype.nueva.ventaPreferencialPanelCreator = function()
-{
+//muestra al cliente que selecciono en la lista de cliented de venta preferencial
+Aplicacion.Autorizaciones.prototype.nueva.ventaPreferencialPanelClienteCreator = function( cliente ){
 
+    if(DEBUG){
+        console.log('cliente ----------->', cliente);
+    }
 
+    this.ventaPreferencialPanelCliente = new Ext.form.FormPanel({
 
-
-
-
-    clientesPanel = {
-        xtype: 'fieldset',
-        title: 'Autorización de Venta Preferencial',
-        //autoRender: true,
-        instructions:'Seleccione un cliente de la lista.',
-        listeners:{
-            'show':function(){
-                //TODO: verificar que esto solo se haga una sola vez
-                if( !Aplicacion.Mostrador.currentInstance.buscarClienteForm.getComponent(0).getStore() )
-                {
-                    Aplicacion.Mostrador.currentInstance.buscarClienteForm.getComponent(0).bindStore(Aplicacion.Clientes.currentInstance.listaDeClientesStore);
+        title : 'Solicitud de Venta Preferencial',
+        dockedItems :[new Ext.Toolbar({
+            ui: 'light',
+            dock: 'bottom',
+            items: [
+            {
+                text: 'Regresar',
+                ui: 'back',
+                handler : function(){
+                    sink.Main.ui.setActiveItem(Aplicacion.Autorizaciones.currentInstance.nueva.ventaPreferencialPanel, 'slide');
                 }
             }
-        },
-        centered: true,
-        items: [{
-			
-            width : '100%',
-            height: 345,
-            xtype: 'list',
-            store: Aplicacion.Clientes ? Aplicacion.Clientes.currentInstance.listaDeClientesStore : null ,
-            itemTpl: '<div class="listaDeClientesCliente"><strong>{nombre}</strong> {rfc}</div>',
-            grouped: true,
-            indexBar: true,
-            listeners : {
-                "selectionchange"  : function ( view, nodos, c ){
-					
-                    if(nodos.length > 0){
-                        //Aplicacion.Mostrador.currentInstance.clienteSeleccionado( nodos[0].data );
-                        //console.log(nodos[0].data)
-                        if( nodos[0].get("id_cliente") <= 0 ){
-                            Ext.Msg.alert("Autorizaciones","No puede realizar una solicitud de venta preferencial para una sucursal.");
-                        }
-                        else{
-                            Ext.getCmp('Autorizaciones-ventaPreferencial-cliente').setValue( nodos[0].data.nombre );
-                            Ext.getCmp('Autorizaciones-ventaPreferencial-clienteID').setValue( nodos[0].data.id_cliente );
-                        }
-												
-                    }
-
-                    //deseleccinar el cliente
-                    view.deselectAll();
-                }
-            }
-			
-        }]
-        
-    
-    };
-    
-    this.ventaPreferencialPanel = new Ext.Panel({
-        title:'Autorización de Venta Preferencial',        
-        items:[
-        clientesPanel,
+            ]
+        })],
+        items :[
         {
             xtype: 'fieldset',
-            title: 'Nombre del Cliente',
-            name:'nombre',
+            title: 'Solicitud de Venta Preferencial',
             items:[
             new Ext.form.Text({
                 id: 'Autorizaciones-ventaPreferencial-cliente',
-                label: 'Cliente'
+                label: 'Razon Social',
+                value: cliente.razon_social
+            }),
+            new Ext.form.Text({
+                label: 'RFC',
+                value: cliente.rfc
+            }),
+            new Ext.form.Text({
+                label: 'Limite de Credito',
+                value: cliente.limite_credito
+            }),
+            new Ext.form.Text({
+                label: 'Credito Restante',
+                value: cliente.credito_restante
             }),
             new Ext.form.Hidden({
                 id: 'Autorizaciones-ventaPreferencial-clienteID',
-                value : ""
+                value : cliente.id_cliente
             })
             ]
         },
@@ -204,6 +176,78 @@ Aplicacion.Autorizaciones.prototype.nueva.ventaPreferencialPanelCreator = functi
             text: 'Solicitar Autorización',
             handler : this.ventaPreferencialPanelValidator
         })
+        ]
+
+    });
+
+    sink.Main.ui.setActiveItem( this.ventaPreferencialPanelCliente, 'slide');
+
+}
+
+/**
+    *
+    *
+    */
+Aplicacion.Autorizaciones.prototype.nueva.ventaPreferencialPanelCreator = function()
+{
+
+   
+    
+    this.ventaPreferencialPanel = new Ext.Panel({
+        layout: 'fit',
+        items:[
+        {
+
+            //width : '100%',
+            //height: '100%',
+            xtype: 'list',
+            store: Aplicacion.Clientes ? Aplicacion.Clientes.currentInstance.listaDeClientesStore : null ,
+            itemTpl: '<div class="listaDeClientesCliente"><strong>{razon_social}</strong> {rfc}</div>',
+            grouped: true,
+            indexBar: true,
+            listeners : {
+                "selectionchange"  : function ( view, nodos, c ){
+
+                    if(nodos.length > 0){
+                        //Aplicacion.Mostrador.currentInstance.clienteSeleccionado( nodos[0].data );
+                        console.log(nodos[0].data)
+                        if( nodos[0].get("id_cliente") <= 0 ){
+                            Ext.Msg.alert("Autorizaciones","No puede realizar una solicitud de venta preferencial para una sucursal.");
+                        }
+                        else{
+                            Aplicacion.Autorizaciones.currentInstance.nueva.ventaPreferencialPanelClienteCreator(nodos[0].data);
+                        }
+
+                    }
+
+                    //deseleccinar el cliente
+                    view.deselectAll();
+                }
+            }
+
+        }
+        /*{
+
+            xtype: 'fieldset',
+            title: 'Autorización de Venta Preferencial',
+            //autoRender: true,
+            instructions:'Seleccione un cliente de la lista.',
+            listeners:{
+                'show':function(){
+                    //TODO: verificar que esto solo se haga una sola vez
+                    if( !Aplicacion.Mostrador.currentInstance.buscarClienteForm.getComponent(0).getStore() )
+                    {
+                        Aplicacion.Mostrador.currentInstance.buscarClienteForm.getComponent(0).bindStore(Aplicacion.Clientes.currentInstance.listaDeClientesStore);
+                    }
+                }
+            },
+            centered: true,
+            items: [
+                //aqui estaba la lista
+            ]
+        
+    
+        }*/
         ]
     });
     
@@ -330,7 +374,7 @@ Aplicacion.Autorizaciones.prototype.nueva.creditoModificarPanelShow = function( 
 
     //poner los valores del cliente en la forma
     Ext.getCmp("Autorizaciones-CreditoIdCliente").setValue(cliente.data.id_cliente);
-    Ext.getCmp("Autorizaciones-CreditoCliente").setValue(cliente.data.nombre);
+    Ext.getCmp("Autorizaciones-CreditoCliente").setValue(cliente.data.razon_social);
     Ext.getCmp("Autorizaciones-CreditoActual").setValue( POS.currencyFormat( cliente.data.limite_credito) );
     Ext.getCmp("Autorizaciones-CreditoUsado").setValue( POS.currencyFormat( cliente.data.limite_credito - cliente.credito_restante ) );
     
@@ -452,15 +496,15 @@ Aplicacion.Autorizaciones.prototype.nueva.creditoModificarPanelCreator = functio
                     }
                 }
             })
-        ]
+            ]
         },
-    new Ext.Button({
-        ui  : 'action',
-        text: 'Pedir autorizacion',
-        margin : 5,
-        handler : this.nuevoCreditoModificarValidator
-    })
-    ]
+        new Ext.Button({
+            ui  : 'action',
+            text: 'Pedir autorizacion',
+            margin : 5,
+            handler : this.nuevoCreditoModificarValidator
+        })
+        ]
     });
 };
 
@@ -478,11 +522,11 @@ Aplicacion.Autorizaciones.prototype.nueva.creditoPanelCreator = function()
             instructions: 'Seleccione al cliente al que desea extenerle el credito',
             items: [{
                 width : '100%',
-                height : 350,
+                height : 600,
                 padding : 2,
                 xtype: 'list',
                 store: Aplicacion.Clientes.currentInstance.listaDeClientesStore,
-                itemTpl: '<div class="listaDeClientesCliente"><strong>{nombre}</strong> {rfc}</div>',
+                itemTpl: '<div class="listaDeClientesCliente"><strong>{razon_social}</strong> {rfc}</div>',
                 grouped: true,
                 indexBar: true,
                 listeners : {
@@ -506,9 +550,9 @@ Aplicacion.Autorizaciones.prototype.nueva.creditoPanelCreator = function()
                 }
             }
             ]
-            }
+        }
         ]
-        });
+    });
 };
 
 
@@ -635,32 +679,32 @@ Aplicacion.Autorizaciones.prototype.solicitarMermaCompra = function( id_compra, 
                     }
                 }
             })
-        ]
+            ]
         },
-    new Ext.Button({
-        ui  : 'action',
-        text: 'Enviar Solicitud',
-        margin : 15,
-        handler : this.solicitarMermaCompraPanelValidator
-    })
-    ]
+        new Ext.Button({
+            ui  : 'action',
+            text: 'Enviar Solicitud',
+            margin : 15,
+            handler : this.solicitarMermaCompraPanelValidator
+        })
+        ]
     });
 
-this.panelSolicitudMerma = new Ext.Panel({
-    floating:true,
-    modal:true,
-    centered:true,
-    height: 390,
-    width: 680,
-    scroll:'none',
-    //styleHtmlContent:true,
-    //html:'ok'
-    items:[
-    this.solicitarMermaCompraPanel
-    ]
-});
+    this.panelSolicitudMerma = new Ext.Panel({
+        floating:true,
+        modal:true,
+        centered:true,
+        height: 390,
+        width: 680,
+        scroll:'none',
+        //styleHtmlContent:true,
+        //html:'ok'
+        items:[
+        this.solicitarMermaCompraPanel
+        ]
+    });
 
-this.panelSolicitudMerma.show('pop');
+    this.panelSolicitudMerma.show('pop');
 
 };
 
@@ -810,19 +854,19 @@ Aplicacion.Autorizaciones.prototype.nueva.mermaPanelCreator = function ()
                     }
                 }
             })
-        ]
+            ]
         },
-    new Ext.Button({
-        ui  : 'action',
-        text: 'Buscar Compra',
-        margin : 15,
-        handler : this.mermaBuscarCompraBoton
-    }),
-{
-        id: 'MermaHtmlPanel',
-        html : null
-    }
-    ]
+        new Ext.Button({
+            ui  : 'action',
+            text: 'Buscar Compra',
+            margin : 15,
+            handler : this.mermaBuscarCompraBoton
+        }),
+        {
+            id: 'MermaHtmlPanel',
+            html : null
+        }
+        ]
     });
 };
 
@@ -934,72 +978,72 @@ Aplicacion.Autorizaciones.prototype.solicitarDevolucionVenta = function( id_vent
                     }
                 }
             }),
-        new Ext.form.Text({
-            id:'Autorizacion-DevolucionVentaPanel-cantidadProcesada',
-            name:'cantidadProcesadaDevuelta',
-            label: 'Procesada a devolver',
-            disabled : ( cantidad_procesada )? false : true ,
-            listeners : {
-                'focus' : function (){
-                    kconf = {
-                        type : 'num',
-                        submitText : 'Aceptar',
-                        callback : null
-                    };
-                    POS.Keyboard.Keyboard( this, kconf );
+            new Ext.form.Text({
+                id:'Autorizacion-DevolucionVentaPanel-cantidadProcesada',
+                name:'cantidadProcesadaDevuelta',
+                label: 'Procesada a devolver',
+                disabled : ( cantidad_procesada )? false : true ,
+                listeners : {
+                    'focus' : function (){
+                        kconf = {
+                            type : 'num',
+                            submitText : 'Aceptar',
+                            callback : null
+                        };
+                        POS.Keyboard.Keyboard( this, kconf );
+                    }
                 }
-            }
-        }),
-    new Ext.form.Hidden({
-        id: 'Autorizacion-DevolucionVentaPanel-descripcion',
-        name : "descripcion",
-        value : descripcion
-    })
-    ]
-    }
-    ]
-});
+            }),
+            new Ext.form.Hidden({
+                id: 'Autorizacion-DevolucionVentaPanel-descripcion',
+                name : "descripcion",
+                value : descripcion
+            })
+            ]
+        }
+        ]
+    });
 
 
 
     
 
 
-var dockedItems = [new Ext.Toolbar({
-    ui: 'light',
-    dock: 'bottom',
-    items: [new Ext.Button({
-        ui  : 'back',
-        text: 'Regresar',
-        handler : this.limpiarDevolucionesPanel
-    })].concat({
-        xtype: 'spacer'
-    }).concat(new Ext.Button({
-        ui  : 'forward',
-        text: 'Enviar Solicitud',
-        handler : this.solicitarDevolucionVentaPanelValidator
-    }))
-})];
+    var dockedItems = [new Ext.Toolbar({
+        ui: 'light',
+        dock: 'bottom',
+        items: [new Ext.Button({
+            ui  : 'back',
+            text: 'Regresar',
+            handler : this.limpiarDevolucionesPanel
+        })].concat({
+            xtype: 'spacer'
+        }).concat(new Ext.Button({
+            ui  : 'forward',
+            text: 'Enviar Solicitud',
+            handler : this.solicitarDevolucionVentaPanelValidator
+        }))
+    })];
 
 
 
-this.panelSolicitudDevolucion = new Ext.Panel({
-    //floating:true,
-    //modal: false,
-    dockedItems : dockedItems,
-    centered:true,
-    height: 465,
-    width: 680,
-    scroll:'none',
-    //styleHtmlContent:true,
-    //html:'ok'
-    items:[
-    this.solicitarDevolucionVentaPanel
-    ]
-});
+    this.panelSolicitudDevolucion = new Ext.Panel({
+        //floating:true,
+        //modal: false,
+        dockedItems : dockedItems,
+        centered:true,
+        height: 465,
+        width: 680,
+        scroll:'none',
+        //styleHtmlContent:true,
+        //html:'ok'
+        items:[
+        this.solicitarDevolucionVentaPanel
+        ]
+    });
   
   
-sink.Main.ui.setActiveItem( this.panelSolicitudDevolucion, 'slide');
+    sink.Main.ui.setActiveItem( this.panelSolicitudDevolucion, 'slide');
 
 };
 
@@ -1223,19 +1267,19 @@ Aplicacion.Autorizaciones.prototype.nueva.devolucionesPanelCreator = function()
                     }
                 }
             })
-        ]
+            ]
         },
-    new Ext.Button({
-        ui  : 'action',
-        text: 'Buscar Venta',
-        margin : 15,
-        handler: this.devolucionBuscarVentaBoton
-    }),
-{
-        id: 'DevolucionHtmlPanel',
-        html : null
-    }
-    ]
+        new Ext.Button({
+            ui  : 'action',
+            text: 'Buscar Venta',
+            margin : 15,
+            handler: this.devolucionBuscarVentaBoton
+        }),
+        {
+            id: 'DevolucionHtmlPanel',
+            html : null
+        }
+        ]
     });
 };
 
@@ -1866,7 +1910,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
             html += "   </tr>";
 
             
-            for ( var i = 0; i < parametros.productos.length; i++ ){
+            for ( i = 0; i < parametros.productos.length; i++ ){
             
                 var cantidad = parametros.productos[i].procesado == true?  parametros.productos[i].cantidad_procesada :  parametros.productos[i].cantidad;
                 var procesado = parametros.productos[i].procesado == true? "Si":"No";
@@ -1889,7 +1933,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
                 }),{
                     id:     'detalleAutorizacionFormPanel-Tabla',
                     html:   html,
-                    cls :   'Tabla',
+                    cls :   'Tabla'
                 }
                 );
 
@@ -1925,7 +1969,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
             html += "       <td>Cantidad Procesada</td>";
             html += "   </tr>";
 
-            for ( var i = 0; i < parametros.productos.length; i++ ){
+            for ( i = 0; i < parametros.productos.length; i++ ){
                 html += "<tr  >";
                 html += "   <td>" + parametros.productos[i].id_producto + " " + parametros.productos[i].descripcion +  "</td>";
                 html += "   <td>" + parametros.productos[i].cantidad + " " + parametros.productos[i].escala + "s</td>";
@@ -1938,7 +1982,7 @@ Aplicacion.Autorizaciones.prototype.detalleAutorizacionPanelShow = function( aut
             itemsForm.push({
                 id:     'detalleAutorizacionFormPanel-Tabla',
                 html:   html,
-                cls :   'Tabla',
+                cls :   'Tabla'
             });
 
             instrucciones = "Esta es una solicitud de producto al centro de distribucion.";
