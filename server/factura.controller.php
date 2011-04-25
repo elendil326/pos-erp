@@ -730,7 +730,7 @@ function parseFacturaToJSON($xml_response) {
  * cancela una factura
  */
 function cancelaFactura($args) {
-    return printf('{"success" : true}'');
+    return printf('{"success" : true}');
 }
 
 /**
