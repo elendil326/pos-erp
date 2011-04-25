@@ -33,13 +33,13 @@ function verificarDatosVenta($args) {
         die('{"success": false, "reason": "La venta no se ha definido" }');
     }
 
-    //verificamos que id_venta sea nuemrico
+    //verificamos que id_venta sea numerico
     if (is_nan($args['id_venta'])) {
         Logger::log("El id de la venta no es un numero");
         die('{"success": false, "reason": "Error el parametro de venta, no es un numero" }');
     }
 
-    //verificamos que id_cliente sea nuemrico
+    //verificamos que id_cliente sea numerico
     if (is_nan($args['id_cliente'])) {
         Logger::log("El id del cliente no es un numero");
         die('{"success": false, "reason": "Error el parametro de cliente, no es un numero" }');
@@ -57,6 +57,12 @@ function verificarDatosVenta($args) {
         die('{"success": false, "reason": "No se tiene registro del cliente ' . $args['id_cliente'] . '." }');
     }
 
+    //verificamos que el cliente este acivo
+    if ($cliente -> getActivo != "1" ) {
+        Logger::log("El cliente  : {$args['id_cliente']} no se encuentra activo.");
+        die('{"success": false, "reason": "El cliente ' . $args['id_cliente'] . ' no se encuentra activo." }');
+    }
+
     //verifiacmos que la venta este liquidada
     if ($venta->getLiquidada() != "1") {
         Logger::log("La venta {$venta->getIdVenta()} no esta lioquidada");
@@ -67,16 +73,21 @@ function verificarDatosVenta($args) {
     $fv = new FacturaVenta();
     $fv->setIdVenta($venta->getIdVenta());
 
-    $factuasVenta = FacturaVentaDAO::search($fv);
+    //obtiene un conjunto que contiene todas las facturas venta
+    $facturasVenta = FacturaVentaDAO::search($fv);
+
+    //almacenara la factura para la venta $fv si es que la encuentra
     $facturaVenta = null;
 
-    foreach ($factuasVenta as $factura) {
+    //revisa si encontro una factura para la venra $fv en el confjunto de todas las facuras
+    foreach ($facturasVenta as $factura) {
         if ($factura->getEstado() == "1") {
             $facturaVenta = $factura;
             break;
         }
     }
 
+    //si la encontro entonces termina el proceso
     if ($facturaVenta != null) {
         //la factura de la venta esta activa
         Logger::log("La venta {$facturaVenta->getIdVenta()} ha sido facturada con el folio {$facturaVenta->getFolio()}y esta la factura activa");
@@ -572,7 +583,8 @@ function creaFacturaBD($id_venta) {
     try {
         FacturaVentaDAO::save($factura);
     } catch (Exception $e) {
-        Logger::log("Error al salvar la factura de la venta");
+        Logger::log("Error al salvar la factura de la venta : {$e}");
+        die('{"success": false, "reason": "Error al salvar la factura de la venta intente nuevamente" }');
     }
 
     Logger::log("Terminado proceso de creacion de factura en la BD");
@@ -628,7 +640,7 @@ function getFacturaFromWebService($xml_request) {
 
         Logger::log("Error al leer xml del web service : {$e} ");
         DAO::transRollback();
-        die('{"success": false, "reason": "Error al leer xml del web service : ' . $e . '" }');
+        die('{"success": false, "reason": "Error al leer xml del web service : ' . preg_quote($e) . '" }');
     }
 
 
@@ -718,7 +730,7 @@ function parseFacturaToJSON($xml_response) {
  * cancela una factura
  */
 function cancelaFactura($args) {
-    return printf("{success : true}");
+    return printf('{"success" : true}'');
 }
 
 /**
