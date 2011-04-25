@@ -1362,13 +1362,13 @@ if(!isset($_REQUEST['cid'])){
 	?>
         <script>
             var CLIENTE = <?php echo $cliente->getIdCliente(); ?>;
-            var NOMBRECLIENTE = <?php echo $cliente->getNombre(); ?>;
+            var NOMBRECLIENTE = <?php echo $cliente->getRazonSocial(); ?>;
             var RFCCLIENTE = <?php echo $cliente->getRFC(); ?>;
-            var DIRECCIONCLIENTE = <?php echo $cliente->getDireccion(); ?>;
-            var CIUDADCLIENTE = <?php echo $cliente->getCiudad(); ?>;
+            var DIRECCIONCLIENTE = <?php echo $cliente->getCalle(); ?>;
+            var CIUDADCLIENTE = <?php echo $cliente->getMunicipio(); ?>;
         </script>
 		<table border="0" cellspacing="1" cellpadding="1">
-			<tr><td><b>Nombre</b></td><td><?php echo $cliente->getNombre(); ?></td><td rowspan=12><div id="map_canvas"></div></td></tr>
+			<tr><td><b>Nombre</b></td><td><?php echo $cliente->getRazonSocial(); ?></td><td rowspan=12><div id="map_canvas"></div></td></tr>
 			<tr><td><b>RFC</b></td><td><?php echo $cliente->getRFC(); ?></td></tr>
 			<tr><td><b>Limite de Credito</b></td><td><?php echo moneyFormat($cliente->getLimiteCredito()); ?></td></tr>	
 			<tr><td><b>Descuento</b></td><td><?php echo percentFormat( $cliente->getDescuento() ); ?></td></tr>
