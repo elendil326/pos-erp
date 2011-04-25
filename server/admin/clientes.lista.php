@@ -142,6 +142,38 @@ require_once("controller/inventario.controller.php");
     
 
 <br>
+
+<style>
+	.tab_holder{
+		border-bottom:  1px solid #3F8CE9;
+		font-weight: normal;
+		font-size: 1.1em;
+		color: white;
+	}
+	
+	.tab_itself{
+		background-color: #3F8CE9;;
+		margin: 5px;
+		padding-top: 5px;
+		padding-left: 5px;
+		padding-right: 5px;
+		-moz-border-radius: 15px;
+		
+		border-top-left-radius: 5px;
+		border-top-right-radius: 6px;		
+	}
+	
+	.tab_itself.selected{
+		background-color: blue;
+	}
+</style>
+
+<div class="tab_holder">
+	<span class="tab_itself">Todos los clientes</span>
+	<span class="tab_itself selected">Clientes deudores</span>
+	<span class="tab_itself">Nuevo cliente</span>
+</div>
+
 <h2><!-- <img src='../media/icons/users_32.png'>&nbsp; -->Todos los clientes</h2><?php
 //obtener los clientes del controller de clientes
 $clientesFoo = listarClientes();
