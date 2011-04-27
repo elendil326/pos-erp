@@ -12,29 +12,38 @@ package printer;
 public class Impresora {
 
     /**
+     * Variable que sirve para controlar las impresiones que facilitan la depuracion
+     */
+    static private boolean debug = false;
+    /**
      * Nombre o descripcion de la impresora
      */
     private static String descripcion = null;
+
     /**
      * Obtiene la descripcion o nombre de la impresora
      * @return
      */
-    public static String getDescripcion(){
+    public static String getDescripcion() {
         return descripcion;
     }
+
     /**
      * Establece el nombre o descripcion de la impresora
      * @param _descripcion
      */
-    public static void setDescripcion( String _descripcion ){
+    public static void setDescripcion(String _descripcion) {
         descripcion = _descripcion;
     }
+
     /**
      * Verifica que se ahyan establecido correctamte todos los valores necesarios para la impresion
      */
-    public static void validator(){
+    public static void validator() {
 
-        System.out.println("Iniciando proceso de validacion de impresora");
+        if (debug) {
+            System.out.println("Iniciando proceso de validacion de impresora");
+        }
 
         int cont = 0;
 
@@ -43,8 +52,9 @@ public class Impresora {
             cont++;
         }
 
-        System.out.println("Terminado proceso de validacion de impresora. se encontraron " + cont + " errores.");
+        if (debug) {
+            System.out.println("Terminado proceso de validacion de impresora. se encontraron " + cont + " errores.");
+        }
 
     }
-
 }

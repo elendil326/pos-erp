@@ -36,6 +36,10 @@ public class Producto {
      * }
      */
     /**
+     * Variable que sirve para controlar las impresiones que facilitan la depuracion
+     */
+    private boolean debug = false;
+    /**
      * Cadena con formato de JSON que contiene la configuracion del producto
      */
     private String json = null;
@@ -185,7 +189,7 @@ public class Producto {
      * @return
      */
     public float getPrecio() {
-        return this.precioVentaIntersucursalSinProcesar;
+        return this.precio;
     }
 
     /**
@@ -326,7 +330,9 @@ public class Producto {
     }//Producto
 
     private void init(String json) {
-        System.out.println("Iniciado proceso de construccion de Producto");
+        if (debug) {
+            System.out.println("Iniciado proceso de construccion de Producto");
+        }
 
         this.setJSON(json);
 
@@ -345,7 +351,9 @@ public class Producto {
 
                     try {
                         this.setDescripcion(entry.getValue().toString());
-                        System.out.println("descripcion : " + this.getDescripcion());
+                        if (debug) {
+                            System.out.println("descripcion : " + this.getDescripcion());
+                        }
                     } catch (Exception e) {
                         System.err.println(e);
                     }
@@ -356,7 +364,9 @@ public class Producto {
 
                     try {
                         this.setTratamiento(entry.getValue().toString());
-                        System.out.println("tratamiento : " + this.getTratamiento());
+                        if (debug) {
+                            System.out.println("tratamiento : " + this.getTratamiento());
+                        }
                     } catch (Exception e) {
                         System.err.println(e);
                     }
@@ -367,7 +377,9 @@ public class Producto {
 
                     try {
                         this.setPrecioVenta(Float.parseFloat(entry.getValue().toString()));
-                        System.out.println("precioVenta : " + this.getPrecioVenta());
+                        if (debug) {
+                            System.out.println("precioVenta : " + this.getPrecioVenta());
+                        }
                     } catch (Exception e) {
                         System.err.println(e);
                     }
@@ -377,7 +389,9 @@ public class Producto {
 
                     try {
                         this.setPrecioVentaSinProcesar(Float.parseFloat(entry.getValue().toString()));
-                        System.out.println("precioVentaSinProcesar : " + this.getPrecioVentaSinProcesar());
+                        if (debug) {
+                            System.out.println("precioVentaSinProcesar : " + this.getPrecioVentaSinProcesar());
+                        }
                     } catch (Exception e) {
                         System.err.println(e);
                     }
@@ -387,7 +401,9 @@ public class Producto {
 
                     try {
                         this.setPrecio(Float.parseFloat(entry.getValue().toString()));
-                        System.out.println("precio : " + this.getPrecio());
+                        if (debug) {
+                            System.out.println("precio : " + this.getPrecio());
+                        }
                     } catch (Exception e) {
                         System.err.println(e);
                     }
@@ -396,7 +412,9 @@ public class Producto {
                 if (entry.getKey().toString().equals("precioIntersucursal")) {
                     try {
                         this.setPrecioVentaIntersucursal(Float.parseFloat(entry.getValue().toString()));
-                        System.out.println("precioVentaIntersucursal : " + this.getPrecioVentaIntersucursal());
+                        if (debug) {
+                            System.out.println("precioVentaIntersucursal : " + this.getPrecioVentaIntersucursal());
+                        }
                     } catch (Exception e) {
                         System.err.println(e);
                     }
@@ -405,7 +423,9 @@ public class Producto {
                 if (entry.getKey().toString().equals("precioIntersucursalSinProcesar")) {
                     try {
                         this.setPrecioVentaIntersucursalSinProcesar(Float.parseFloat(entry.getValue().toString()));
-                        System.out.println("precioVentaIntersucursalSinProcesar : " + this.getPrecioVentaIntersucursal());
+                        if (debug) {
+                            System.out.println("precioVentaIntersucursalSinProcesar : " + this.getPrecioVentaIntersucursal());
+                        }
                     } catch (Exception e) {
                         System.err.println(e);
                     }
@@ -414,7 +434,9 @@ public class Producto {
                 if (entry.getKey().toString().equals("productoID")) {
                     try {
                         this.setId(Integer.parseInt(entry.getValue().toString()));
-                        System.out.println("id : " + this.getId());
+                        if (debug) {
+                            System.out.println("id : " + this.getId());
+                        }
                     } catch (Exception e) {
                         System.err.println(e);
                     }
@@ -424,7 +446,9 @@ public class Producto {
 
                     try {
                         this.setEscala(entry.getValue().toString());
-                        System.out.println("escala : " + this.getEscala());
+                        if (debug) {
+                            System.out.println("escala : " + this.getEscala());
+                        }
                     } catch (Exception e) {
                         System.err.println(e);
                     }
@@ -434,7 +458,9 @@ public class Producto {
 
                     try {
                         this.setCantidad(Float.parseFloat(entry.getValue().toString()));
-                        System.out.println("cantidad : " + this.getCantidad());
+                        if (debug) {
+                            System.out.println("cantidad : " + this.getCantidad());
+                        }
                     } catch (Exception e) {
                         System.err.println(e);
                     }
@@ -444,95 +470,119 @@ public class Producto {
 
             this.setSubTotal(this.getCantidad() * this.getPrecio());
 
-            System.out.println("Terminado proceso de construccion de Producto");
+            if (debug) {
+                System.out.println("Terminado proceso de construccion de Producto");
+            }
 
             //iniciamos al validacion de al construccion de producto
             this.validator();
 
-        } catch (Exception pe) {
-            System.out.println(pe);
+        } catch (Exception pe) {            
+                System.err.println(pe);
         }
     }
 
-     /**
+    /**
      * Verifica que se hayan establecido correctamente todos los valores que describen al producto
      */
     private void validator() {
 
-        System.out.println("Iniciando proceso de validacion de Producto");
+        if (debug) {
+            System.out.println("Iniciando proceso de validacion de Producto");
+        }
 
         int cont = 0;
 
-        if( this.getDescripcion() != null ){
-            System.out.println("descripcion : ok - " + this.getDescripcion());
-        }else{
+        if (this.getDescripcion() != null) {
+            if (debug) {
+                //System.out.println("descripcion : ok - " + this.getDescripcion());
+            }
+        } else {
             System.err.println("descripcion : fail - " + this.getDescripcion());
             cont++;
         }
 
 
-        if( this.getTratamiento() != null ){
-            System.out.println("tratamiento : ok - " + this.getTratamiento());
-        }else{
+        if (this.getTratamiento() != null) {
+            if (debug) {
+                //System.out.println("tratamiento : ok - " + this.getTratamiento());
+            }
+        } else {
             System.err.println("tratamiento : fail - " + this.getTratamiento());
             cont++;
         }
 
 
-        if( this.getPrecioVenta() > 0 ){
-            System.out.println("precioVenta : ok - " + this.getPrecioVenta());
-        }else{
+        if (this.getPrecioVenta() > 0) {
+            if (debug) {
+                //System.out.println("precioVenta : ok - " + this.getPrecioVenta());
+            }
+        } else {
             System.err.println("precioVenta : fail - " + this.getPrecioVenta());
             cont++;
         }
 
 
-        if( this.getPrecioVentaSinProcesar() > 0 ){
-            System.out.println("precioVentaSinProcesar : ok - " + this.getPrecioVentaSinProcesar());
-        }else{
+        if (this.getPrecioVentaSinProcesar() > 0) {
+            if (debug) {
+                //System.out.println("precioVentaSinProcesar : ok - " + this.getPrecioVentaSinProcesar());
+            }
+        } else {
             System.err.println("precioVentaSinProcesar : fail - " + this.getPrecioVentaSinProcesar());
             cont++;
         }
 
 
-        if( this.getPrecio() > 0 ){
-            System.out.println("precio : ok - " + this.getPrecio());
-        }else{
+        if (this.getPrecio() > 0) {
+            if (debug) {
+                //System.out.println("precio : ok - " + this.getPrecio());
+            }
+        } else {
             System.err.println("precio : fail - " + this.getPrecio());
         }
 
 
-        if( this.getPrecioVentaIntersucursal() > 0 ){
-            System.out.println("precioVentaIntersucursal : ok - " + this.getPrecioVentaIntersucursal());
-        }else{
+        if (this.getPrecioVentaIntersucursal() > 0) {
+            if (debug) {
+                //System.out.println("precioVentaIntersucursal : ok - " + this.getPrecioVentaIntersucursal());
+            }
+        } else {
             System.err.println("IntersprecioVentaIntersucursal : fail - " + this.getPrecioVentaIntersucursal());
             cont++;
         }
 
-        
-        if( this.getId() >= 0 ){
-            System.out.println("ID : ok - " + this.getId());
-        }else{
+
+        if (this.getId() >= 0) {
+            if (debug) {
+                //System.out.println("ID : ok - " + this.getId());
+            }
+        } else {
             System.err.println("ID : fail - " + this.getId());
             cont++;
         }
-        
 
-        if( this.getEscala() != null ){
-            System.out.println("escala : ok - " + this.getEscala());
-        }else{
+
+        if (this.getEscala() != null) {
+            if (debug) {
+                //System.out.println("escala : ok - " + this.getEscala());
+            }
+        } else {
             System.err.println("escala : fail - " + this.getEscala());
             cont++;
         }
 
-        if( this.getCantidad() >= 0 ){
-            System.out.println("cantidad : ok - " + this.getCantidad());
-        }else{
+        if (this.getCantidad() >= 0) {
+            if (debug) {
+                //System.out.println("cantidad : ok - " + this.getCantidad());
+            }
+        } else {
             System.err.println("cantidad : fail - " + this.getCantidad());
             cont++;
         }
-        
-        System.out.println("Terminado proceso de validacion de Producto. se encontraron " + cont + " errores.");
+
+        if (debug) {
+            System.out.println("Terminado proceso de validacion de Producto. se encontraron " + cont + " errores.");
+        }
 
     }
 }//class Producto

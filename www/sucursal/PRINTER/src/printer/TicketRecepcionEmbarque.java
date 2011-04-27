@@ -66,6 +66,11 @@ import org.json.simple.parser.JSONParser;
  */
 public class TicketRecepcionEmbarque extends FormatoTicket implements Printable {
 
+    /**
+     * Variable que sirve para controlar las impresiones que facilitan la depuracion
+     */
+    private boolean debug = false;
+
     private ArrayList<Producto> productos = new ArrayList<Producto>();
     private Sucursal sucursal = null;
     private String empleado = null;
@@ -77,6 +82,7 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
 
     void init(String json, String hora, String fecha) {
 
+        if(debug)
         System.out.println("Iniciado proceso de construccion de Recepción Embarque");
 
         this.setJSON(json);
@@ -92,6 +98,7 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
             Map jsonmap = (Map) parser.parse(this.json);
             Iterator iter = jsonmap.entrySet().iterator();
 
+            if(debug)
             System.out.println("Se iterara a : " + iter.toString().toString());
 
             //recorremos cada propiedad del JSON
@@ -100,6 +107,7 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
 
                 Map.Entry entry = (Map.Entry) iter.next();
 
+                if(debug)
                 System.out.println(entry.getKey().toString() + " => " + entry.getValue().toString());
 
                 if (entry.getKey().toString().equals("sucursal")) {
@@ -126,6 +134,7 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
 
                         this.productos.add(new Producto(array.get(i).toString()));
 
+                        if(debug)
                         System.out.println(this.productos.get(i).getDescripcion() + ", Cantidad : " + this.productos.get(i).getCantidad() + ", Precio : " + this.productos.get(i).getPrecio());
 
                     }
@@ -148,18 +157,20 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
 
             }
 
+            if(debug)
             System.out.println("Terminado proceso de construccion de Recepción Embarque");
 
             this.validator();
 
-        } catch (Exception pe) {
-            System.out.println(pe);
+        } catch (Exception pe) {            
+            System.err.println(pe);
         }
 
     }
 
     void validator() {
 
+        if(debug)
         System.out.println("Iniciando proceso de validacion de Recepción Embarque");
 
         int cont = 0;
@@ -179,6 +190,7 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
             cont++;
         }
 
+        if(debug)
         System.out.println("Terminado proceso de validacion de recepcion de embarque. se encontraron " + cont + " errores.");
 
     }
@@ -188,6 +200,7 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
             return NO_SUCH_PAGE;
         }
 
+        if(debug)
         System.out.println("Iniciando proceso de impresion de recepcion de embarque");
 
         //inicializamos el objeto grafico
@@ -320,6 +333,7 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
         this.grafico.drawString(LeyendasTicket.getGracias(), this.x + 30, this.y);
         this.incrementY(this.height_normal);
 
+        if(debug)
         System.out.println("Terminado proceso de impresion de recepcion de embarque");
 
         return PAGE_EXISTS;

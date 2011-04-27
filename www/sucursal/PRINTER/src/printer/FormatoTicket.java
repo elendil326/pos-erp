@@ -21,6 +21,10 @@ abstract class FormatoTicket {
     //--------------------------------------------------------------------//
 
     /**
+     * Variable que sirve para controlar las impresiones que facilitan la depuracion
+     */
+    private boolean debug = true;
+    /**
      * Objeto grafico empleado para imprimir en el lienzo
      */
     Graphics2D grafico;
@@ -388,35 +392,51 @@ abstract class FormatoTicket {
         }
 
         if (_counter < 20) {
-//System.out.println(">15");
+            if (debug) {
+                System.out.println(">15");
+            }
             return "DIECI" + transformaCantidadEnLetra(_counter - 10);
         }
         if (_counter < 30) {
-//System.out.println(">20");
+            if (debug) {
+                System.out.println(">20");
+            }
             return "VEINTI" + transformaCantidadEnLetra(_counter - 20);
         }
         if (_counter < 100) {
-//System.out.println("<100");
+            if (debug) {
+                System.out.println("<100");
+            }
             return transformaCantidadEnLetra((int) (_counter / 10) * 10) + " Y " + transformaCantidadEnLetra(_counter % 10);
         }
         if (_counter < 200) {
-//System.out.println("<200");
+            if (debug) {
+                System.out.println("<200");
+            }
             return "CIENTO " + transformaCantidadEnLetra(_counter - 100);
         }
         if (_counter < 1000) {
-//System.out.println("<1000");
+            if (debug) {
+                System.out.println("<1000");
+            }
             return transformaCantidadEnLetra((int) (_counter / 100) * 100) + " " + transformaCantidadEnLetra(_counter % 100);
         }
         if (_counter < 2000) {
-//System.out.println("<2000");
+            if (debug) {
+                System.out.println("<2000");
+            }
             return "MIL " + transformaCantidadEnLetra(_counter % 1000);
         }
         if (_counter < 1000000) {
             String var = "";
-//System.out.println("<1000000");
+            if (debug) {
+                System.out.println("<1000000");
+            }
             var = transformaCantidadEnLetra((int) (_counter / 1000)) + " MIL";
             if (_counter % 1000 != 0) {
-//System.out.println(var);
+                if (debug) {
+                    System.out.println(var);
+                }
                 var += " " + transformaCantidadEnLetra(_counter % 1000);
             }
             return var;

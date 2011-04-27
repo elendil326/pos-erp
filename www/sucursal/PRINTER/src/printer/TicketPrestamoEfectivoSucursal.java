@@ -20,6 +20,10 @@ import org.json.simple.parser.JSONParser;
 public final class TicketPrestamoEfectivoSucursal extends FormatoTicket implements Printable {
 
     /**
+     * Variable que sirve para controlar las impresiones que facilitan la depuracion
+     */
+    private boolean debug = false;
+    /**
      * Id del prestamo de la sucursal origen a la sucursal destino
      */
     private int idPrestamo = -1;
@@ -158,8 +162,9 @@ public final class TicketPrestamoEfectivoSucursal extends FormatoTicket implemen
     @Override
     void init(String json, String hora, String fecha) {
 
-
-        System.out.println("Iniciado proceso de construccion de Prestamo de Efectivo a Sucursal");
+        if (debug) {
+            System.out.println("Iniciado proceso de construccion de Prestamo de Efectivo a Sucursal");
+        }
 
         this.setJSON(json);
 
@@ -174,7 +179,9 @@ public final class TicketPrestamoEfectivoSucursal extends FormatoTicket implemen
             Map jsonmap = (Map) parser.parse(this.json);
             Iterator iter = jsonmap.entrySet().iterator();
 
-            System.out.println("Se iterara a : " + iter.toString().toString());
+            if (debug) {
+                System.out.println("Se iterara a : " + iter.toString().toString());
+            }
 
             //recorremos cada propiedad del JSON
 
@@ -272,12 +279,16 @@ public final class TicketPrestamoEfectivoSucursal extends FormatoTicket implemen
 
             }//while
 
-            System.out.println("Terminado proceso de construccion de Prestamo de Efectivo a Sucursal");
+            if (debug) {
+                System.out.println("Terminado proceso de construccion de Prestamo de Efectivo a Sucursal");
+            }
 
             this.validator();
 
         } catch (Exception pe) {
-            System.out.println(pe);
+            if (debug) {
+                System.out.println(pe);
+            }
         }
 
     }
@@ -288,7 +299,9 @@ public final class TicketPrestamoEfectivoSucursal extends FormatoTicket implemen
     @Override
     void validator() {
 
-        System.out.println("Iniciado proceso de validacion de Prestamo de Efectivo a Sucursal");
+        if (debug) {
+            System.out.println("Iniciado proceso de validacion de Prestamo de Efectivo a Sucursal");
+        }
 
         int cont = 0;
 
@@ -323,19 +336,25 @@ public final class TicketPrestamoEfectivoSucursal extends FormatoTicket implemen
             cont++;
         }
 
-        System.out.println("Termiando proceso de validacion de Prestamo de Efectivo a Sucursal. se encontraron " + cont + " errores.");
+        if (debug) {
+            System.out.println("Termiando proceso de validacion de Prestamo de Efectivo a Sucursal. se encontraron " + cont + " errores.");
+        }
 
     }
 
     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
 
-        System.out.println("Iniciando proceso de impresion de prestamo de efectivo a sucursal");
+        if (debug) {
+            System.out.println("Iniciando proceso de impresion de prestamo de efectivo a sucursal");
+        }
 
         if (pageIndex != 0) {
             return NO_SUCH_PAGE;
         }
 
-        System.out.println("Iniciando proceso de impresion de abono a venta a cliente");
+        if (debug) {
+            System.out.println("Iniciando proceso de impresion de abono a venta a cliente");
+        }
 
         //inicializamos el objeto grafico
         this.grafico = (Graphics2D) graphics;
@@ -437,8 +456,9 @@ public final class TicketPrestamoEfectivoSucursal extends FormatoTicket implemen
         this.incrementY(this.height_normal);
 
 
-
-        System.out.println("Terminado proceso de impresion de prestamo de efectivo a sucursal");
+        if (debug) {
+            System.out.println("Terminado proceso de impresion de prestamo de efectivo a sucursal");
+        }
 
         return PAGE_EXISTS;
 

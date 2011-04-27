@@ -30,6 +30,10 @@ public class Sucursal {
     }
      */
     /**
+     * Variable que sirve para controlar las impresiones que facilitan la depuracion
+     */
+    private boolean debug = false;
+    /**
      * JSON que contiene la configuracion de la sucursal
      */
     private String json = null;
@@ -136,7 +140,9 @@ public class Sucursal {
     private void init(String json) {
         this.json = json;
 
-        System.out.println("Iniciado proceso de construccion de Sucursal");
+        if (debug) {
+            System.out.println("Iniciado proceso de construccion de Sucursal");
+        }
 
         JSONParser parser = new JSONParser();
 
@@ -152,7 +158,9 @@ public class Sucursal {
 
                     try {
                         this.setDescripcion(entry.getValue().toString());
-                        System.out.println("descripcion : " + this.getDescripcion());
+                        if (debug) {
+                            System.out.println("descripcion : " + this.getDescripcion());
+                        }
                     } catch (Exception e) {
                         System.err.println(e);
                     }
@@ -164,7 +172,9 @@ public class Sucursal {
 
                     try {
                         this.setDireccion(entry.getValue().toString());
-                        System.out.println("direccion : " + this.getDireccion());
+                        if (debug) {
+                            System.out.println("direccion : " + this.getDireccion());
+                        }
                     } catch (Exception e) {
                         System.err.println(e);
                     }
@@ -175,7 +185,9 @@ public class Sucursal {
 
                     try {
                         this.setRFC(entry.getValue().toString());
-                        System.out.println("rfc : " + this.getRFC());
+                        if (debug) {
+                            System.out.println("rfc : " + this.getRFC());
+                        }
                     } catch (Exception e) {
                         System.err.println(e);
                     }
@@ -186,7 +198,9 @@ public class Sucursal {
 
                     try {
                         this.setTelefono(entry.getValue().toString());
-                        System.out.println("telefono : " + this.getTelefono());
+                        if (debug) {
+                            System.out.println("telefono : " + this.getTelefono());
+                        }
                     } catch (Exception e) {
                         System.err.println(e);
                     }
@@ -195,49 +209,63 @@ public class Sucursal {
 
             }//while
 
-            System.out.println("Terminado proceso de construccion de Sucursal");
+            if (debug) {
+                System.out.println("Terminado proceso de construccion de Sucursal");
+            }
 
         } catch (Exception pe) {
-            System.out.println(pe);
+            System.err.println(pe);
         }
     }
 
     private void validator() {
 
-        System.out.println("Iniciando proceso de validacion de sucursal");
+        if (debug) {
+            System.out.println("Iniciando proceso de validacion de sucursal");
+        }
 
         int cont = 0;
 
-        if( this.getDescripcion() != null ){
-            System.out.println("descripcion : ok - " + this.getDescripcion());
-        }else{
+        if (this.getDescripcion() != null) {
+            if (debug) {
+                System.out.println("descripcion : ok - " + this.getDescripcion());
+            }
+        } else {
             System.err.println("descripcion : fail");
             cont++;
         }
 
-        if( this.getDireccion() != null ){
-            System.out.println("direccion : ok - " + this.getDireccion());
-        }else{
+        if (this.getDireccion() != null) {
+            if (debug) {
+                System.out.println("direccion : ok - " + this.getDireccion());
+            }
+        } else {
             System.err.println("direccion : fail - " + this.getDireccion());
             cont++;
         }
 
-       
-        if( this.getRFC() != null ){
-            System.out.println("rfc : ok - " + this.getRFC());
-        }else{
+
+        if (this.getRFC() != null) {
+            if (debug) {
+                System.out.println("rfc : ok - " + this.getRFC());
+            }
+        } else {
             System.err.println("rfc : fail - " + this.getRFC());
             cont++;
         }
 
-        if( this.getTelefono() != null ){
-            System.out.println("telefono : ok - " + this.getTelefono());
-        }else{
+        if (this.getTelefono() != null) {
+            if (debug) {
+                System.out.println("telefono : ok - " + this.getTelefono());
+            }
+        } else {
             System.err.println("telefono : fail - " + this.getTelefono());
             cont++;
         }
 
-        System.out.println("Terminado proceso de validacion de sucursal. se encontraron " + cont + " errores.");
+        if (debug) {
+            System.out.println("Terminado proceso de validacion de sucursal. se encontraron " + cont + " errores.");
+        }
 
     }
 }//class

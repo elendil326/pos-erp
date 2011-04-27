@@ -20,6 +20,10 @@ import org.json.simple.parser.JSONParser;
 public class TicketAbonoVentaCliente extends FormatoTicket implements Printable {
 
     /**
+     * Variable que sirve para controlar las impresiones que facilitan la depuracion
+     */
+    private boolean debug = false;
+    /**
      * Id de la venta a la cual re sealizara el abono
      */
     private String idVenta = null;
@@ -140,7 +144,9 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
      */
     void init(String json, String hora, String fecha) {
 
-        System.out.println("Iniciado proceso de construccion de Abono a Venta a Cliente");
+        if (debug) {
+            System.out.println("Iniciado proceso de construccion de Abono a Venta a Cliente");
+        }
 
         this.setJSON(json);
 
@@ -155,7 +161,9 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
             Map jsonmap = (Map) parser.parse(this.json);
             Iterator iter = jsonmap.entrySet().iterator();
 
-            System.out.println("Se iterara a : " + iter.toString().toString());
+            if (debug) {
+                System.out.println("Se iterara a : " + iter.toString().toString());
+            }
 
             //recorremos cada propiedad del JSON
 
@@ -238,19 +246,23 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
 
             }//while
 
-            System.out.println("Terminado proceso de construccion de Abono a Venta a Cliente");
+            if (debug) {
+                System.out.println("Terminado proceso de construccion de Abono a Venta a Cliente");
+            }
 
             this.validator();
 
         } catch (Exception pe) {
-            System.out.println(pe);
+                System.err.println(pe);
         }
 
     }
 
     void validator() {
 
-        System.out.println("Iniciando proceso de validacion de abono a venta a cliente");
+        if (debug) {
+            System.out.println("Iniciando proceso de validacion de abono a venta a cliente");
+        }
 
         int cont = 0;
 
@@ -279,8 +291,9 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
             cont++;
         }
 
-
-        System.out.println("Terminado proceso de validacion de abono a venta a cliente. se encontraron " + cont + " errores.");
+        if (debug) {
+            System.out.println("Terminado proceso de validacion de abono a venta a cliente. se encontraron " + cont + " errores.");
+        }
 
     }
 
@@ -290,7 +303,9 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
             return NO_SUCH_PAGE;
         }
 
-        System.out.println("Iniciando proceso de impresion de abono a venta a cliente");
+        if (debug) {
+            System.out.println("Iniciando proceso de impresion de abono a venta a cliente");
+        }
 
         //inicializamos el objeto grafico
         this.grafico = (Graphics2D) graphics;
@@ -383,7 +398,7 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
 
         this.incrementY(this.height_normal);
 
-         this.grafico.setFont(this.boldSmall);
+        this.grafico.setFont(this.boldSmall);
 
         this.grafico.drawString("SALDO", this.x + 63, this.y);
 
@@ -392,7 +407,7 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
             this.grafico.drawString("Pagado", this.x + 130, this.y);
 
         } else {
-            
+
             this.grafico.drawString(this.formatoDinero.format(this.getSaldoPrestamo()), this.x + 130, this.y);
 
         }
@@ -415,7 +430,9 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
 
         this.incrementY(this.height_normal);
 
-        System.out.println("Terminado proceso de impresion de abono a venta a cliente");
+        if (debug) {
+            System.out.println("Terminado proceso de impresion de abono a venta a cliente");
+        }
 
         return PAGE_EXISTS;
 

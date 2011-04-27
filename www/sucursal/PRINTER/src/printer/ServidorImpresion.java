@@ -22,6 +22,11 @@ import org.json.simple.parser.ParseException;
 class ServidorImpresion {
 
     /**
+     * Variable que sirve para controlar las impresiones que facilitan la depuracion
+     */
+    static private boolean debug = false;
+
+    /**
      * se encarga de colocar en el objeto gráfico la cadena que se le pasa como
      * parámetro y se imprime.
      * @param formato
@@ -49,11 +54,10 @@ class ServidorImpresion {
         if (selectedService != null) {
             job.setPrintService(selectedService);
 
-            try{
+            try {
                 job.print();
-                System.exit(0);
-            }
-            catch(PrinterException exception){
+                //System.exit(0);
+            } catch (PrinterException exception) {
                 System.err.println("La impresora no esta recibiendo documentos.");
             }
 
@@ -118,25 +122,35 @@ class ServidorImpresion {
 
                     try {
                         ticket = entry.getValue().toString();
-                        System.out.println("El documento a imprimir es : " + ticket);
+                        if (debug) {
+                            System.out.println("El documento a imprimir es : " + ticket);
+                        }
 
                         if (ticket.equals("venta_cliente")) {
-                            System.out.println("Creando objeto FormatoTicketVentaCliente");
+                            if (debug) {
+                                System.out.println("Creando objeto FormatoTicketVentaCliente");
+                            }
                             obj = new TicketVentaCliente(json, hora, fecha);
                         }
 
                         if (ticket.equals("prestamo_efectivo_sucursal")) {
-                            System.out.println("Creando objeto FormatoTicketPrestamoEfectivoSucursal");
+                            if (debug) {
+                                System.out.println("Creando objeto FormatoTicketPrestamoEfectivoSucursal");
+                            }
                             obj = new TicketPrestamoEfectivoSucursal(json, hora, fecha);
                         }
 
                         if (ticket.equals("recepcion_embarque")) {
-                            System.out.println("Creando objeto FormatoTicketRecepcionEmbarque");
+                            if (debug) {
+                                System.out.println("Creando objeto FormatoTicketRecepcionEmbarque");
+                            }
                             obj = new TicketRecepcionEmbarque(json, hora, fecha);
                         }
 
                         if (ticket.equals("abono_venta_cliente")) {
-                            System.out.println("Creando objeto FormatoTicketAbonoVentaCliente");
+                            if (debug) {
+                                System.out.println("Creando objeto FormatoTicketAbonoVentaCliente");
+                            }
                             obj = new TicketAbonoVentaCliente(json, hora, fecha);
                         }
                     } catch (Exception e) {
@@ -163,7 +177,7 @@ class ServidorImpresion {
             }
 
         } catch (Exception pe) {
-            System.out.println(pe);
+            System.err.println(pe);
         }
 
         return obj;

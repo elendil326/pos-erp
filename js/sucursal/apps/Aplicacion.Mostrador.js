@@ -1161,21 +1161,25 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
     for( var i = 0; i < carrito.items.length; i++ ){
         carrito.items[i].cantidad -= carrito.items[i].descuento;
     }
-    	                                
-    /*indica que se quiere imprimir un ticket, ya que existen 3 casos de impresion
-		1.- solo ticket
-		2.- solo factura
-		3.- ambos
-	*/
 	
-    carrito.ticket = true;
+    carrito.ticket = "venta_cliente";
+
+    for( i = 0; i < POS.documentos.length; i++){
+        if( POS.documentos[i].documento == carrito.ticket ){
+            carrito.impresora = POS.documentos[i].impresora;
+            break;
+        }
+    }
+
+    carrito.leyendasTicket = POS.leyendasTicket;
 
     if(DEBUG){
         console.log("carrito : ", carrito);
+        console.log("carrito.items : ", carrito.items);
     }
 
     json = encodeURI( Ext.util.JSON.encode( carrito ) );
-	
+
     do
     {
         json = json.replace('#','%23');
@@ -1263,7 +1267,7 @@ Aplicacion.Mostrador.prototype.doVenta = function ()
             return;
         }
 		
-        this.carrito.pagado = pagado;
+        this.carrito.pagado = parseFloat(pagado);
         this.vender();
 
 		

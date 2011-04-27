@@ -16,9 +16,14 @@ import org.json.simple.parser.JSONParser;
 public class LeyendasTicket {
 
     /**
+     * Variable que sirve para controlar las impresiones que facilitan la depuracion
+     */
+    static private boolean debug = false;
+    /**
      * Json que contiene la informacion acerca de las leyendas
      */
     private String json = null;
+
     /**
      * Establece una cadena en formato de JSON que contiene informacion acerca de las leyendas
      * @param json
@@ -227,7 +232,9 @@ public class LeyendasTicket {
      */
     public static void validator() {
 
-        System.out.println("Iniciando proceso de validacion de leyendas ticket");
+        if (debug) {
+            System.out.println("Iniciando proceso de validacion de leyendas ticket");
+        }
 
         int cont = 0;
 
@@ -281,7 +288,9 @@ public class LeyendasTicket {
             cont++;
         }
 
-        System.out.println("Terminado proceso de validacion de leyendas ticket. se encontraron " + cont + " errores.");
+        if (debug) {
+            System.out.println("Terminado proceso de validacion de leyendas ticket. se encontraron " + cont + " errores.");
+        }
 
     }
 
@@ -289,10 +298,12 @@ public class LeyendasTicket {
         init(json);
     }
 
-    private void init(String json){
+    private void init(String json) {
         this.setJson(json);
 
-        System.out.println("Iniciado proceso de construccion de LeyendasTicket");
+        if (debug) {
+            System.out.println("Iniciado proceso de construccion de LeyendasTicket");
+        }
 
         JSONParser parser = new JSONParser();
 
@@ -308,13 +319,15 @@ public class LeyendasTicket {
 
                     if (entry.getValue() != null) {
 
-                        try{
+                        try {
 
                             LeyendasTicket.setCabeceraTicket(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda cabeceraTicket : " + LeyendasTicket.getCabeceraTicket());
+                            if (debug) {
+                                System.out.println("Estableciendo la leyenda cabeceraTicket : " + LeyendasTicket.getCabeceraTicket());
+                            }
 
-                        }catch(Exception e){
-                             System.err.println(e);
+                        } catch (Exception e) {
+                            System.err.println(e);
                         }
 
                     }
@@ -323,15 +336,17 @@ public class LeyendasTicket {
 
                 if (entry.getKey().toString().equals("rfc")) {
 
-                   if (entry.getValue() != null) {
+                    if (entry.getValue() != null) {
 
-                        try{
+                        try {
 
                             LeyendasTicket.setRFC(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda rfc : " + LeyendasTicket.getRFC());
+                            if (debug) {
+                                System.out.println("Estableciendo la leyenda rfc : " + LeyendasTicket.getRFC());
+                            }
 
-                        }catch(Exception e){
-                             System.err.println(e);
+                        } catch (Exception e) {
+                            System.err.println(e);
                         }
 
                     }
@@ -341,13 +356,15 @@ public class LeyendasTicket {
 
                     if (entry.getValue() != null) {
 
-                        try{
+                        try {
 
                             LeyendasTicket.setNombreEmpresa(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda nombreEmpresat : " + LeyendasTicket.getNombreEmpresa());
+                            if (debug) {
+                                System.out.println("Estableciendo la leyenda nombreEmpresa : " + LeyendasTicket.getNombreEmpresa());
+                            }
 
-                        }catch(Exception e){
-                             System.err.println(e);
+                        } catch (Exception e) {
+                            System.err.println(e);
                         }
 
                     }
@@ -357,13 +374,15 @@ public class LeyendasTicket {
 
                     if (entry.getValue() != null) {
 
-                        try{
+                        try {
 
                             LeyendasTicket.setDireccion(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda direccion : " + LeyendasTicket.getDireccion());
+                            if (debug) {
+                                System.out.println("Estableciendo la leyenda direccion : " + LeyendasTicket.getDireccion());
+                            }
 
-                        }catch(Exception e){
-                             System.err.println(e);
+                        } catch (Exception e) {
+                            System.err.println(e);
                         }
 
                     }
@@ -373,13 +392,15 @@ public class LeyendasTicket {
 
                     if (entry.getValue() != null) {
 
-                        try{
+                        try {
 
                             LeyendasTicket.setTelefono(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda telefono : " + LeyendasTicket.getTelefono());
+                            if (debug) {
+                                System.out.println("Estableciendo la leyenda telefono : " + LeyendasTicket.getTelefono());
+                            }
 
-                        }catch(Exception e){
-                             System.err.println(e);
+                        } catch (Exception e) {
+                            System.err.println(e);
                         }
 
                     }
@@ -389,13 +410,15 @@ public class LeyendasTicket {
 
                     if (entry.getValue() != null) {
 
-                        try{
+                        try {
 
                             LeyendasTicket.setNotaFiscal(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda notaFiscal : " + LeyendasTicket.getNotaFiscal());
+                            if (debug) {
+                                System.out.println("Estableciendo la leyenda notaFiscal : " + LeyendasTicket.getNotaFiscal());
+                            }
 
-                        }catch(Exception e){
-                             System.err.println(e);
+                        } catch (Exception e) {
+                            System.err.println(e);
                         }
 
                     }
@@ -405,13 +428,15 @@ public class LeyendasTicket {
 
                     if (entry.getValue() != null) {
 
-                        try{
+                        try {
 
                             LeyendasTicket.setCabeceraPagare(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda cabeceraPagare : " + LeyendasTicket.getCabeceraPagare());
+                            if (debug) {
+                                System.out.println("Estableciendo la leyenda cabeceraPagare : " + LeyendasTicket.getCabeceraPagare());
+                            }
 
-                        }catch(Exception e){
-                             System.err.println(e);
+                        } catch (Exception e) {
+                            System.err.println(e);
                         }
 
                     }
@@ -421,13 +446,15 @@ public class LeyendasTicket {
 
                     if (entry.getValue() != null) {
 
-                        try{
+                        try {
 
                             LeyendasTicket.setPagare(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda pagare : " + LeyendasTicket.getPagare());
+                            if (debug) {
+                                System.out.println("Estableciendo la leyenda pagare : " + LeyendasTicket.getPagare());
+                            }
 
-                        }catch(Exception e){
-                             System.err.println(e);
+                        } catch (Exception e) {
+                            System.err.println(e);
                         }
 
                     }
@@ -437,13 +464,15 @@ public class LeyendasTicket {
 
                     if (entry.getValue() != null) {
 
-                        try{
+                        try {
 
                             LeyendasTicket.setContacto(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda contacto : " + LeyendasTicket.getContacto());
+                            if (debug) {
+                                System.out.println("Estableciendo la leyenda contacto : " + LeyendasTicket.getContacto());
+                            }
 
-                        }catch(Exception e){
-                             System.err.println(e);
+                        } catch (Exception e) {
+                            System.err.println(e);
                         }
 
                     }
@@ -453,13 +482,15 @@ public class LeyendasTicket {
 
                     if (entry.getValue() != null) {
 
-                        try{
+                        try {
 
                             LeyendasTicket.setGracias(entry.getValue().toString());
-                            System.out.println("Estableciendo la leyenda gracias : " + LeyendasTicket.getGracias());
+                            if (debug) {
+                                System.out.println("Estableciendo la leyenda gracias : " + LeyendasTicket.getGracias());
+                            }
 
-                        }catch(Exception e){
-                             System.err.println(e);
+                        } catch (Exception e) {
+                            System.err.println(e);
                         }
 
                     }
@@ -468,11 +499,13 @@ public class LeyendasTicket {
 
             }//while
 
-            System.out.println("Termiando proceso de construccion de LeyendasTicket");
-            
+            if (debug) {
+                System.out.println("Termiando proceso de construccion de LeyendasTicket");
+            }
+
 
         } catch (Exception pe) {
-            System.out.println(pe);
+            System.err.println(pe);
         }
     }
 }

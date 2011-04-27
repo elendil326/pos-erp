@@ -24,8 +24,11 @@ import org.json.simple.parser.JSONParser;
  */
 public class TicketVentaCliente extends FormatoTicket implements Printable {
 
+    /**
+     * Variable que sirve para controlar las impresiones que facilitan la depuracion
+     */
+    private boolean debug = true;
     //EJEMPLO : "{\"tipo_venta\": \"credito\",\"impresora\":\"EPSON TM-U220 Receipt\",\"leyendasTicket\":{\"cabeceraTicket\":\"JUAN ANTONIO GARCIA TAPIA\",\"rfc\":\"GATJ680704DF2\",\"nombreEmpresa\":\"PAPAS SUPREMAS 1\",\"direccion\":\"JUAN MANUEL GARCIA CARMONA ING\",\"telefono\":\"(461) 61 28194\",\"notaFiscal\":\"Este comprobante no es valido para fines fiscales.\",\"cabeceraPagare\":\"PAGARE\",\"pagare\":\"DEBE(MOS) Y PAGARE(MOS) INCONDICIONALMENTE A LA ORDEN DE JUAN ANTONIO GARCIA TAPIA EN LA CIUDAD DE ____________________ EL ____________________ LA CANTIDAD DE ____________________ VALOR RECEBIDO A NUESTRA ENTERA SATISFACCION.\",\"contacto\":\"QUEJAS Y SUGERENCIAS (461) 61 72030\",\"gracias\":\"GRACIAS POR SU COMPRA\"},\"items\": [{\"descripcion\": \"papas primeras\",\"existencias\": \"2197\",\"existencias_procesadas\": \"271\",\"tratamiento\": \"limpia\",\"precioVenta\": \"11\",\"precioVentaSinProcesar\": \"10\",\"precio\": \"11\",\"id_producto\": 1,\"escala\": \"kilogramo\",\"precioIntersucursal\": \"10.5\",\"precioIntersucursalSinProcesar\": \"9.5\",\"procesado\": \"true\",\"cantidad\": 2,\"idUnique\": \"1_7\",\"descuento\": \"0\"}],\"cliente\": {\"id_cliente\": \"2\",\"rfc\": \"ALCB770612\",\"nombre\": \"BRENDA ALFARO CARMONA\",\"direccion\": \"MUTUALISMO #345, COL. CENTRO\",\"ciudad\": \"CELAYA\",\"telefono\": \"a\",\"e_mail\" : \" \",\"limite_credito\": \"20\",\"descuento\": \"2\",\"activo\": \"1\",\"id_usuario\": \"101\",\"id_sucursal\": \"1\",\"fecha_ingreso\": \"2011-01-12 18:05:59\",\"credito_restante\": 19.5},\"venta_preferencial\": {\"cliente\": null,\"id_autorizacion\": null},\"factura\": false,\"tipo_pago\": \"cheque\",\"subtotal\": 22,\"total\": 21.56,\"pagado\": \"21.56\",\"id_venta\": 230,\"empleado\": \"Alan gonzalez hernandez\",\"sucursal\": {\"id_sucursal\": \"1\",\"gerente\": \"102\",\"descripcion\": \"papas supremas 1\",\"direccion\": \"monte radiante #123 col centro celaya\",\"rfc\": \"alskdfjlasdj8787\",\"telefono\": \"1726376672\",\"token\": null,\"letras_factura\": \"c\",\"activo\": \"1\",\"fecha_apertura\": \"2011-01-09 01:38:26\",\"saldo_a_favor\": \"0\"},\"ticket\": \"venta_cliente\"}"
-
     //--------------------------------------------------------------------//
     //     Propiedades especificas de este ticket                         //
     //--------------------------------------------------------------------//
@@ -260,7 +263,9 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
      */
     void init(String json, String hora, String fecha) {
 
-        System.out.println("Iniciado proceso de construccion de Venta a Cliente");
+        if (debug) {
+            System.out.println("Iniciado proceso de construccion de Venta a Cliente");
+        }
 
         this.setJSON(json);
 
@@ -272,10 +277,9 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
         try {
 
-            Map jsonmap = (Map) parser.parse(this.json);
-            Iterator iter = jsonmap.entrySet().iterator();
+            Map jsonmap = (Map) parser.parse(this.getJSON());
 
-            System.out.println("Se iterara a : " + iter.toString().toString());
+            Iterator iter = jsonmap.entrySet().iterator();
 
             //recorremos cada propiedad del JSON
 
@@ -283,7 +287,9 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                 Map.Entry entry = (Map.Entry) iter.next();
 
-                System.out.println(entry.getKey().toString() + " => " + entry.getValue().toString());
+                if (debug) {
+                    System.out.println(entry.getKey().toString() + " => " + entry.getValue().toString());
+                }
 
 
                 if (entry.getKey().toString().equals("tipo_venta")) {
@@ -292,6 +298,20 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                         try {
                             this.setTipoVenta(entry.getValue().toString());
+                        } catch (Exception e) {
+                            System.err.print(e);
+                        }
+
+                    }
+
+                }
+
+                if (entry.getKey().toString().equals("pagado")) {
+
+                    if (entry.getValue() != null && entry.getValue() != "") {
+
+                        try {
+                            this.setDineroRecibido(Float.parseFloat(entry.getValue().toString()));
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -330,6 +350,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                 if (entry.getKey().toString().equals("cliente")) {
 
+
                     if (entry.getValue() != null) {
 
                         try {
@@ -356,7 +377,9 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                         this.productos.add(new Producto(array.get(i).toString()));
 
-                        System.out.println(this.productos.get(i).getDescripcion() + ", Cantidad : " + this.productos.get(i).getCantidad() + ", Precio : " + this.productos.get(i).getPrecio() + ", Subtotal : " + this.productos.get(i).getSubTotal());
+                        if (debug) {
+                            System.out.println(this.productos.get(i).getDescripcion() + ", Cantidad : " + this.productos.get(i).getCantidad() + ", Precio : " + this.productos.get(i).getPrecio() + ", Subtotal : " + this.productos.get(i).getSubTotal());
+                        }
 
                     }//for
 
@@ -419,19 +442,6 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                 }
 
-                if (entry.getKey().toString().equals("pagado")) {
-
-                    if (entry.getValue() != null && entry.getValue() != "") {
-
-                        try {
-                            this.setDineroRecibido(Float.parseFloat(entry.getValue().toString()));
-                        } catch (Exception e) {
-                            System.err.print(e);
-                        }
-
-                    }
-
-                }
 
                 if (entry.getKey().toString().equals("reimpresion")) {
 
@@ -449,12 +459,14 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
             }//while
 
-            System.out.println("Terminado proceso de construccion de Venta a Cliente");
+            if (debug) {
+                System.out.println("Terminado proceso de construccion de Venta a Cliente");
+            }
 
             this.validator();
 
         } catch (Exception pe) {
-            System.out.println(pe);
+            System.err.println(pe);
         }
 
     }//init
@@ -464,17 +476,14 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
      */
     void validator() {
 
-        System.out.println("Iniciando proceso de validacion de venta a cliente");
+        if (debug) {
+            System.out.println("Iniciando proceso de validacion de venta a cliente");
+        }
 
         int cont = 0;
 
         if (this.getSucursal() == null) {
             System.err.println("Error : sucursal");
-            cont++;
-        }
-
-        if (this.getCliente() == null) {
-            System.err.println("Error : cliente");
             cont++;
         }
 
@@ -518,8 +527,9 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
             cont++;
         }
 
-
-        System.out.println("Terminado proceso de validacion de venta a cliente. se encontraron " + cont + " errores.");
+        if (debug) {
+            System.out.println("Terminado proceso de validacion de venta a cliente. se encontraron " + cont + " errores.");
+        }
 
     }
 
@@ -537,7 +547,9 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
             return NO_SUCH_PAGE;
         }
 
-        System.out.println("Iniciando proceso de impresion de venta a cliente");
+        if (debug) {
+            System.out.println("Iniciando proceso de impresion de venta a cliente");
+        }
 
         //inicializamos el objeto grafico
         this.grafico = (Graphics2D) graphics;
@@ -563,11 +575,11 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
         this.incrementY(this.height_normal);
 
-        this.imprimeSinDesborde(this.grafico, this.sucursal.getDescripcion(), " ", this.height_normal);
+        this.imprimeSinDesborde(this.grafico, LeyendasTicket.getNombreEmpresa(), " ", this.height_normal);
 
-        this.imprimeSinDesborde(this.grafico, this.sucursal.getDireccion(), " ", this.height_normal);
+        this.imprimeSinDesborde(this.grafico, LeyendasTicket.getDireccion(), " ", this.height_normal);
 
-        this.grafico.drawString("Tel. " + this.sucursal.getTelefono(), this.x, this.y);
+        this.grafico.drawString("Tel. " + LeyendasTicket.getTelefono(), this.x, this.y);
 
         this.incrementY(this.height_normal);
 
@@ -603,7 +615,11 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
         if (this.cliente != null) {
 
-            this.imprimeSinDesborde(this.grafico, "Cliente : " + this.cliente.getNombre(), this.height_normal);
+            this.imprimeSinDesborde(this.grafico, "Cliente : " + this.cliente.getRazonSocial(), this.height_normal);
+
+            if (this.tipoVenta != "contado") {
+                this.imprimeSinDesborde(this.grafico, "Usted debe hoy : " + this.formatoDinero.format(this.cliente.getLimiteCredito() - (this.cliente.getCreditoRestante() - this.getTotal())), this.height_normal);
+            }
 
         }
 
@@ -619,7 +635,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
         this.grafico.drawString("P.U.", this.x + 107, this.y);
 
-        this.grafico.drawString("SUBTOTAL", this.x + 138, this.y);
+        this.grafico.drawString("IMPORTE", this.x + 138, this.y);
 
         this.incrementY(this.height_normal);
 
@@ -758,8 +774,9 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
         this.grafico.drawString(LeyendasTicket.getGracias(), this.x + 30, this.y);
         this.incrementY(this.height_normal);
 
-
-        System.out.println("Terminado proceso de impresion de venta a cliente");
+        if (debug) {
+            System.out.println("Terminado proceso de impresion de venta a cliente");
+        }
 
         return PAGE_EXISTS;
 

@@ -75,20 +75,20 @@ POS.loadInfoSucursal = function(){
 };
 
 //contiene informacion documentos que se imprimen en esa sucursal y con que impresoras se deben de imprimir
-POS.impresoras = null;
+POS.documentos = null;
 
 //extrae informacion acerca de los docuemntos y con que impresoras se imprimen
-POS.loadImpresoras = function(){
+POS.loadDocumentos = function(){
 
     if(DEBUG){
-        console.log("Obteniendo informaci\ufffdn de la sucursal ....");
+        console.log("Obteniendo informaci\ufffdn de los docuemtnos e impresoras ....");
     }
 
     Ext.Ajax.request({
         url: '../proxy.php',
         scope : this,
         params : {
-            action : 712
+            action : 1300
         },
         success: function(response, opts) {
             try{
@@ -100,7 +100,7 @@ POS.loadImpresoras = function(){
             if( !informacion.success ){
                 //volver a intentar
                 if(DEBUG){
-                    console.log("obtenicion de la informacion sin exito ");
+                    console.log("obtenicion de documentos sin exito ");
                 }
                 Ext.Msg.alert("Error", informacion.reason);
                 return;
@@ -108,13 +108,13 @@ POS.loadImpresoras = function(){
             }
 
             if(DEBUG){
-                console.log("obtenicion de la informacion exitosa ");
+                console.log("obtenicion de documentos exitosa");
             }
 
-            POS.infoSucursal = informacion.datos;
+            POS.documentos = informacion.datos;
 
             if(DEBUG){
-                console.log("POS.infoSucursal contiene : ", POS.infoSucursal);
+                console.log("POS.documentos contiene : ", POS.documentos);
             }
 
         },
@@ -140,7 +140,7 @@ POS.loadLeyendasTicket = function(){
         url: '../proxy.php',
         scope : this,
         params : {
-            action : 712
+            action : 1301
         },
         success: function(response, opts) {
             try{
@@ -152,7 +152,7 @@ POS.loadLeyendasTicket = function(){
             if( !informacion.success ){
                 //volver a intentar
                 if(DEBUG){
-                    console.log("obtenicion de la informacion sin exito ");
+                    console.log("Error : POS.leyendasTicket ");
                 }
                 Ext.Msg.alert("Error", informacion.reason);
                 return;
@@ -160,13 +160,13 @@ POS.loadLeyendasTicket = function(){
             }
 
             if(DEBUG){
-                console.log("obtenicion de la informacion exitosa ");
+                console.log("obtenicion de leyendasTicket exitosa.");
             }
 
-            POS.infoSucursal = informacion.datos;
+            POS.leyendasTicket = informacion.datos;
 
             if(DEBUG){
-                console.log("POS.infoSucursal contiene : ", POS.infoSucursal);
+                console.log("POS.leyendasTicket contiene : ", POS.leyendasTicket);
             }
 
         },
@@ -404,4 +404,10 @@ POS.error = function (ajaxResponse, catchedError){
 
 //lee la informacion de la sucursal
 POS.loadInfoSucursal();
+
+//lee la informacion de todos los documentos y las impresoras con las que se imprimen
+POS.loadDocumentos();
+
+//lee la informacion de la sucursal
+POS.loadLeyendasTicket();
 
