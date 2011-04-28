@@ -245,7 +245,17 @@ function vender( $args ){
         }
     
     }
-   
+
+
+    /*
+     * A las cantidades de producto totales que se van vender le restamos el descuento de los productos.
+     * Ejemplo : Si se venden 100 articulos pero se indica qeu se descuenten 7, entonces la cantidad total
+     * de articulos a vender es 93.
+     */
+    for( $i = 0; $i < count($data->items); $i++ ){
+      $data->items[$i] -> cantidad -= $data->items[$i] -> descuento ;
+    }
+
    
     /*
     * Condensamos los productos

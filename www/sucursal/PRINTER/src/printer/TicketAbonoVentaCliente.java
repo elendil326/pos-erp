@@ -22,7 +22,7 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
     /**
      * Variable que sirve para controlar las impresiones que facilitan la depuracion
      */
-    private boolean debug = false;
+    static boolean debug = false;
     /**
      * Id de la venta a la cual re sealizara el abono
      */
@@ -291,8 +291,8 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
             cont++;
         }
 
-        if (debug) {
-            System.out.println("Terminado proceso de validacion de abono a venta a cliente. se encontraron " + cont + " errores.");
+        if (cont > 0) {
+            System.err.println("Terminado proceso de validacion de abono a venta a cliente. se encontraron " + cont + " errores.");
         }
 
     }

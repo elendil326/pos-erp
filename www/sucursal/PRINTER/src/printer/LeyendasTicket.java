@@ -18,7 +18,7 @@ public class LeyendasTicket {
     /**
      * Variable que sirve para controlar las impresiones que facilitan la depuracion
      */
-    static private boolean debug = false;
+    static boolean debug = false;
     /**
      * Json que contiene la informacion acerca de las leyendas
      */
@@ -288,8 +288,8 @@ public class LeyendasTicket {
             cont++;
         }
 
-        if (debug) {
-            System.out.println("Terminado proceso de validacion de leyendas ticket. se encontraron " + cont + " errores.");
+        if (cont > 0) {
+            System.err.println("Terminado proceso de validacion de leyendas ticket. se encontraron " + cont + " errores.");
         }
 
     }

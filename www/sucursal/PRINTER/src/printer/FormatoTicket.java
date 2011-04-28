@@ -23,7 +23,7 @@ abstract class FormatoTicket {
     /**
      * Variable que sirve para controlar las impresiones que facilitan la depuracion
      */
-    private boolean debug = true;
+    static boolean debug = false;
     /**
      * Objeto grafico empleado para imprimir en el lienzo
      */

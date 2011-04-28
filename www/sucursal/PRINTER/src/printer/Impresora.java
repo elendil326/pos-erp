@@ -14,7 +14,7 @@ public class Impresora {
     /**
      * Variable que sirve para controlar las impresiones que facilitan la depuracion
      */
-    static private boolean debug = false;
+    static boolean debug = false;
     /**
      * Nombre o descripcion de la impresora
      */
@@ -52,8 +52,8 @@ public class Impresora {
             cont++;
         }
 
-        if (debug) {
-            System.out.println("Terminado proceso de validacion de impresora. se encontraron " + cont + " errores.");
+        if (cont > 0) {
+            System.err.println("Terminado proceso de validacion de impresora. se encontraron " + cont + " errores.");
         }
 
     }

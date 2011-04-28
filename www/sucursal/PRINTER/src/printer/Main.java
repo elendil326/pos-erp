@@ -22,7 +22,7 @@ public class Main extends Applet {
     /**
      * Variable que sirve para controlar las impresiones que facilitan la depuracion
      */
-    private boolean debug = false;
+    static boolean debug = false;
 
     /**
      * Initialization method that will be called after the applet is loaded
@@ -33,6 +33,21 @@ public class Main extends Applet {
     }
 
     public void start() {
+
+        //fijamos valores para depuracion
+        Main.debug = false;
+        Cliente.debug= false;
+        FormatoTicket.debug = false;
+        Impresora.debug = false;
+        LeyendasTicket.debug = false;
+        Producto.debug = false;
+        ServidorImpresion.debug = false;
+        Sucursal.debug = false;
+        TicketAbonoVentaCliente.debug = false;
+        TicketPrestamoEfectivoSucursal.debug = false;
+        TicketRecepcionEmbarque.debug = false;
+        TicketVentaCliente.debug = true;
+
 
         RepaintManager currentManager =
                 RepaintManager.currentManager(this);

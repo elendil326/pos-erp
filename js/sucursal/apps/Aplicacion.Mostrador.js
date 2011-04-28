@@ -2,7 +2,6 @@
 
 Aplicacion.Mostrador = function ()
 {
-
     return this._init();
 };
 
@@ -585,7 +584,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 	
             });//c
 		    
-            //control donde se muestra el decuento
+            //control donde se muestra el descuento
             d = new Ext.form.Text({
                 renderTo : "Mostrador-carritoDescuento"+ carrito.items[i].idUnique ,
                 id : "Mostrador-carritoDescuento"+ carrito.items[i].idUnique + "Text",
@@ -1157,10 +1156,9 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
     //incluye los datos de la sucursal
     carrito.sucursal = POS.infoSucursal;
 	                                
-    //restamos a la cantidad el descuento	                                
-    for( var i = 0; i < carrito.items.length; i++ ){
-        carrito.items[i].cantidad -= carrito.items[i].descuento;
-    }
+    //parseamos el descuento
+    carrito.descuento = parseFloat(carrito.descuento);
+    
 	
     carrito.ticket = "venta_cliente";
 
@@ -1574,7 +1572,7 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelUpdater = function ()
     subtotal = 0;
     total = 0;
     for (var i=0; i < this.carrito.items.length; i++) {
-        subtotal += (this.carrito.items[i].precio * this.carrito.items[i].cantidad);
+        subtotal += (this.carrito.items[i].precio * (this.carrito.items[i].cantidad - this.carrito.items[i].descuento));
     }
 	
     if( this.carrito.cliente === null ){

@@ -35,7 +35,8 @@ public class Cliente {
     /**
      * Variable que sirve para controlar las impresiones que facilitan la depuracion
      */
-    private boolean debug = false;
+    static boolean debug = false;
+
     /**
      * JSON que contiene la configuracion del producto
      */

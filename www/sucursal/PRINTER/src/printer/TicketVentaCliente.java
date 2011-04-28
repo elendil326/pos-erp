@@ -27,7 +27,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
     /**
      * Variable que sirve para controlar las impresiones que facilitan la depuracion
      */
-    private boolean debug = true;
+    static boolean debug = false;
     //EJEMPLO : "{\"tipo_venta\": \"credito\",\"impresora\":\"EPSON TM-U220 Receipt\",\"leyendasTicket\":{\"cabeceraTicket\":\"JUAN ANTONIO GARCIA TAPIA\",\"rfc\":\"GATJ680704DF2\",\"nombreEmpresa\":\"PAPAS SUPREMAS 1\",\"direccion\":\"JUAN MANUEL GARCIA CARMONA ING\",\"telefono\":\"(461) 61 28194\",\"notaFiscal\":\"Este comprobante no es valido para fines fiscales.\",\"cabeceraPagare\":\"PAGARE\",\"pagare\":\"DEBE(MOS) Y PAGARE(MOS) INCONDICIONALMENTE A LA ORDEN DE JUAN ANTONIO GARCIA TAPIA EN LA CIUDAD DE ____________________ EL ____________________ LA CANTIDAD DE ____________________ VALOR RECEBIDO A NUESTRA ENTERA SATISFACCION.\",\"contacto\":\"QUEJAS Y SUGERENCIAS (461) 61 72030\",\"gracias\":\"GRACIAS POR SU COMPRA\"},\"items\": [{\"descripcion\": \"papas primeras\",\"existencias\": \"2197\",\"existencias_procesadas\": \"271\",\"tratamiento\": \"limpia\",\"precioVenta\": \"11\",\"precioVentaSinProcesar\": \"10\",\"precio\": \"11\",\"id_producto\": 1,\"escala\": \"kilogramo\",\"precioIntersucursal\": \"10.5\",\"precioIntersucursalSinProcesar\": \"9.5\",\"procesado\": \"true\",\"cantidad\": 2,\"idUnique\": \"1_7\",\"descuento\": \"0\"}],\"cliente\": {\"id_cliente\": \"2\",\"rfc\": \"ALCB770612\",\"nombre\": \"BRENDA ALFARO CARMONA\",\"direccion\": \"MUTUALISMO #345, COL. CENTRO\",\"ciudad\": \"CELAYA\",\"telefono\": \"a\",\"e_mail\" : \" \",\"limite_credito\": \"20\",\"descuento\": \"2\",\"activo\": \"1\",\"id_usuario\": \"101\",\"id_sucursal\": \"1\",\"fecha_ingreso\": \"2011-01-12 18:05:59\",\"credito_restante\": 19.5},\"venta_preferencial\": {\"cliente\": null,\"id_autorizacion\": null},\"factura\": false,\"tipo_pago\": \"cheque\",\"subtotal\": 22,\"total\": 21.56,\"pagado\": \"21.56\",\"id_venta\": 230,\"empleado\": \"Alan gonzalez hernandez\",\"sucursal\": {\"id_sucursal\": \"1\",\"gerente\": \"102\",\"descripcion\": \"papas supremas 1\",\"direccion\": \"monte radiante #123 col centro celaya\",\"rfc\": \"alskdfjlasdj8787\",\"telefono\": \"1726376672\",\"token\": null,\"letras_factura\": \"c\",\"activo\": \"1\",\"fecha_apertura\": \"2011-01-09 01:38:26\",\"saldo_a_favor\": \"0\"},\"ticket\": \"venta_cliente\"}"
     //--------------------------------------------------------------------//
     //     Propiedades especificas de este ticket                         //
@@ -122,7 +122,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
      * @return
      */
     public String getTipoPago() {
-        return this.tipoVenta;
+        return this.tipoPago;
     }
 
     /**
@@ -226,7 +226,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
      * @return
      */
     public String getEmpleado() {
-        return this.idVenta;
+        return this.empleado;
     }
 
     /**
@@ -286,18 +286,18 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
             while (iter.hasNext()) {
 
                 Map.Entry entry = (Map.Entry) iter.next();
-
-                if (debug) {
-                    System.out.println(entry.getKey().toString() + " => " + entry.getValue().toString());
-                }
-
-
+                
                 if (entry.getKey().toString().equals("tipo_venta")) {
 
                     if (entry.getValue() != null && entry.getValue() != "") {
 
                         try {
                             this.setTipoVenta(entry.getValue().toString());
+
+                            if (debug) {
+                                System.out.println("tipo_venta : " + this.getTipoVenta());
+                            }
+
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -312,6 +312,11 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                         try {
                             this.setDineroRecibido(Float.parseFloat(entry.getValue().toString()));
+                            
+                            if (debug) {
+                                System.out.println("dineroRecibido : " + this.getDineroRecibido());
+                            }
+                            
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -326,6 +331,10 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                         try {
                             this.setTipoPago(entry.getValue().toString());
+                            if (debug) {
+                                System.out.println(" tipo_pago: " + this.getTipoPago());
+                            }
+
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -340,6 +349,10 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                         try {
                             this.sucursal = new Sucursal(entry.getValue().toString());
+
+                            if (debug) {
+                                System.out.println(" sucursal: " + this.sucursal.getDescripcion());
+                            }
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -355,6 +368,11 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                         try {
                             this.cliente = new Cliente(entry.getValue().toString());
+
+                            if (debug) {
+                                System.out.println("cliente: " + this.cliente.getRazonSocial());
+                            }
+
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -392,6 +410,11 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                         try {
                             this.setIdVenta(entry.getValue().toString());
+
+                            if (debug) {
+                                System.out.println(" id_venta: " + this.getIdVenta());
+                            }
+
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -406,6 +429,11 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                         try {
                             this.setEmpleado(entry.getValue().toString());
+
+                            if (debug) {
+                                System.out.println(" empleado: " + this.getEmpleado());
+                            }
+
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -420,6 +448,11 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                         try {
                             this.setSubTotal(Float.parseFloat(entry.getValue().toString()));
+
+                            if (debug) {
+                                System.out.println("subtotal : " + this.getSubTotal());
+                            }
+
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -434,6 +467,11 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                         try {
                             this.setTotal(Float.parseFloat(entry.getValue().toString()));
+
+                            if (debug) {
+                                System.out.println("total : " + this.getTotal());
+                            }
+
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -449,6 +487,11 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                         try {
                             this.setReimpresion(Boolean.parseBoolean(entry.getValue().toString()));
+
+                            if (debug) {
+                                System.out.println("reimpresion : " + String.valueOf(this.getReimpresion()));
+                            }
+
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -492,11 +535,6 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
             cont++;
         }
 
-        if (this.getTipoPago() == null || this.getTipoPago().equals("")) {
-            System.err.println("Error : tipoPago");
-            cont++;
-        }
-
         if (this.productos.size() <= 0) {
             System.err.println("Error : size de productos es <= 0");
             cont++;
@@ -513,8 +551,14 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
         }
 
         if (this.getDineroRecibido() == -1) {
-            System.err.print("Error : No se definio dineroRecibido (pagado)");
-            cont++;
+
+            if (this.getTipoPago().equals("cheque")) {
+                this.setDineroRecibido(this.getTotal());
+            } else {
+                System.err.print("Error : No se definio dineroRecibido (pagado). El tipo de pago es : " + this.getTipoPago());
+                cont++;
+            }
+
         }
 
         if (this.getIdVenta() == null) {
@@ -523,12 +567,12 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
         }
 
         if (this.getEmpleado() == null) {
-            System.err.println("Error : No se definio el responsable");
+            System.err.println("Error : No se definio el empleado responsable");
             cont++;
         }
 
-        if (debug) {
-            System.out.println("Terminado proceso de validacion de venta a cliente. se encontraron " + cont + " errores.");
+        if (cont > 0) {
+            System.err.println("Terminado proceso de validacion de venta a cliente. se encontraron " + cont + " errores.");
         }
 
     }
@@ -587,7 +631,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
         this.grafico.setFont(this.bold);
 
-        this.grafico.drawString(this.tipoVenta, this.x + 72, this.y);
+        this.grafico.drawString(this.getTipoVenta(), this.x + 72, this.y);
 
         this.grafico.setFont(this.normal);
 
@@ -617,7 +661,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
             this.imprimeSinDesborde(this.grafico, "Cliente : " + this.cliente.getRazonSocial(), this.height_normal);
 
-            if (this.tipoVenta != "contado") {
+            if (this.getTipoVenta().equals("credito")) {
                 this.imprimeSinDesborde(this.grafico, "Usted debe hoy : " + this.formatoDinero.format(this.cliente.getLimiteCredito() - (this.cliente.getCreditoRestante() - this.getTotal())), this.height_normal);
             }
 
@@ -658,6 +702,21 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
             this.grafico.drawString(this.formatoDinero.format(this.productos.get(j).getCantidad() * this.productos.get(j).getPrecio()), this.x + 138, this.y);
 
             this.incrementY(this.height_normal);
+
+            if (this.productos.get(j).getDescuento() > 0) {
+
+                this.grafico.drawString("Descuento", this.x + 10, this.y);
+
+                this.grafico.drawString(String.valueOf(this.productos.get(j).getDescuento()), this.x + 75, this.y);
+
+                this.grafico.drawString("-", this.x + 133, this.y);
+
+                this.grafico.drawString(this.formatoDinero.format(this.productos.get(j).getDescuento() * this.productos.get(j).getPrecio()), this.x + 138, this.y);
+
+                this.incrementY(this.height_normal);
+
+            }
+
 
         }//for
 
@@ -722,7 +781,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
             }
 
 
-            if (!this.getReimpresion()) {
+            if (!this.getReimpresion() && !this.getTipoPago().equals("cheque")) {
 
                 //entra si no es una reimpresion
 

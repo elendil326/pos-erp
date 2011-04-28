@@ -22,7 +22,7 @@ public final class TicketPrestamoEfectivoSucursal extends FormatoTicket implemen
     /**
      * Variable que sirve para controlar las impresiones que facilitan la depuracion
      */
-    private boolean debug = false;
+    static boolean debug = false;
     /**
      * Id del prestamo de la sucursal origen a la sucursal destino
      */
@@ -336,8 +336,8 @@ public final class TicketPrestamoEfectivoSucursal extends FormatoTicket implemen
             cont++;
         }
 
-        if (debug) {
-            System.out.println("Termiando proceso de validacion de Prestamo de Efectivo a Sucursal. se encontraron " + cont + " errores.");
+        if (cont > 0) {
+            System.err.println("Termiando proceso de validacion de Prestamo de Efectivo a Sucursal. se encontraron " + cont + " errores.");
         }
 
     }

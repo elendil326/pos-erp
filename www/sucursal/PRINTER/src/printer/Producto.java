@@ -38,7 +38,7 @@ public class Producto {
     /**
      * Variable que sirve para controlar las impresiones que facilitan la depuracion
      */
-    private boolean debug = false;
+    static boolean debug = false;
     /**
      * Cadena con formato de JSON que contiene la configuracion del producto
      */
@@ -466,6 +466,18 @@ public class Producto {
                     }
                 }
 
+                if (entry.getKey().toString().equals("descuento")) {
+
+                    try {
+                        this.setDescuento(Float.parseFloat(entry.getValue().toString()));
+                        if (debug) {
+                            System.out.println("descuento : " + this.getDescuento());
+                        }
+                    } catch (Exception e) {
+                        System.err.println(e);
+                    }
+                }
+
             }//while
 
             this.setSubTotal(this.getCantidad() * this.getPrecio());
@@ -580,8 +592,17 @@ public class Producto {
             cont++;
         }
 
-        if (debug) {
-            System.out.println("Terminado proceso de validacion de Producto. se encontraron " + cont + " errores.");
+        if (this.getDescuento() >= 0) {
+            if (debug) {
+                //System.out.println("c : ok - " + this.getCantidad());
+            }
+        } else {
+            System.err.println("descuento : fail - " + this.getDescuento());
+            cont++;
+        }
+
+        if (cont > 0) {
+            System.err.println("Terminado proceso de validacion de Producto. se encontraron " + cont + " errores.");
         }
 
     }

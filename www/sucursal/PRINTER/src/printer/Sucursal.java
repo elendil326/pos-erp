@@ -32,7 +32,7 @@ public class Sucursal {
     /**
      * Variable que sirve para controlar las impresiones que facilitan la depuracion
      */
-    private boolean debug = false;
+    static boolean debug = false;
     /**
      * JSON que contiene la configuracion de la sucursal
      */
@@ -263,8 +263,8 @@ public class Sucursal {
             cont++;
         }
 
-        if (debug) {
-            System.out.println("Terminado proceso de validacion de sucursal. se encontraron " + cont + " errores.");
+        if (cont > 0) {
+            System.err.println("Terminado proceso de validacion de sucursal. se encontraron " + cont + " errores.");
         }
 
     }

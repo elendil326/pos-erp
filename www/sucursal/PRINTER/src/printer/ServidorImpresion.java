@@ -24,7 +24,7 @@ class ServidorImpresion {
     /**
      * Variable que sirve para controlar las impresiones que facilitan la depuracion
      */
-    static private boolean debug = false;
+    static boolean debug = false;
 
     /**
      * se encarga de colocar en el objeto gráfico la cadena que se le pasa como
