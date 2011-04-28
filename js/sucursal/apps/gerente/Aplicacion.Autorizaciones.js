@@ -1323,18 +1323,29 @@ Aplicacion.Autorizaciones.prototype.finishedPanelUpdater = function( productos, 
 
     embarque = {
         productos : null,
-        ticket_surtir : null,
+        ticket : null,
         sucursal : null,
-        empleado : null
+        empleado : null,
+        impresora : null,
+        leyendasTicket : null
+    }
+
+    for( i = 0; i < POS.documentos.length; i++){
+        if( POS.documentos[i].documento == 'abono_venta_cliente' ){
+            var impresora = POS.documentos[i].impresora;
+            break;
+        }
     }
 
     embarque.productos = productos ;
-    embarque.ticket_surtir = true;
+    embarque.ticket = 'recepcion_embarque';
     embarque.sucursal = POS.infoSucursal;
     embarque.empleado = empleado;
+    embarque.impresora = impresora;
+    embarque.leyendasTicket = POS.leyendasTicket;
 	
     if(DEBUG){
-        console.log( "se mando a imporimir : ", Ext.util.JSON.encode( embarque  ) );
+        console.log( "se mando a imprimir : ", Ext.util.JSON.encode( embarque  ) );
     }
 	
     json = encodeURI( Ext.util.JSON.encode( embarque ) );

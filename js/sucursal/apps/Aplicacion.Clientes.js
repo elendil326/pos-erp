@@ -965,14 +965,23 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 
             //recargamos el formulario con los detalles de la venta
             Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange( "", Ext.getCmp("Clentes-CreditoVentasLista").getValue() );
-			
+
+            for( i = 0; i < POS.documentos.length; i++){
+                if( POS.documentos[i].documento == 'abono_venta_cliente' ){
+                    var impresora = POS.documentos[i].impresora;
+                    break;
+                }
+            }
+
             var data_abono = {
-                abono_venta : true,
+                ticket : 'abono_venta_cliente',
                 id_venta : Ext.getCmp("Clentes-CreditoVentasLista").getValue(),
                 empleado : r.empleado,
                 saldo_prestamo : transaccion.saldo,
                 monto_abono : transaccion.abono,
-                sucursal_origen : POS.infoSucursal
+                sucursal : POS.infoSucursal,
+                impresora : impresora,
+                leyendasTicket : POS.leyendasTicket
             };
 			
             Aplicacion.Clientes.currentInstance.finishedPanelShow( data_abono );
@@ -2186,7 +2195,7 @@ Aplicacion.Clientes.prototype.finishedPanelUpdater = function( data_abono )
 {   
 	
     if(DEBUG){
-        console.log( "se mando a imporimir : ", Ext.util.JSON.encode( data_abono  ) );
+        console.log( "se mando a imprimir : ", Ext.util.JSON.encode( data_abono  ) );
     }
 	
     json = encodeURI( Ext.util.JSON.encode( data_abono ) );

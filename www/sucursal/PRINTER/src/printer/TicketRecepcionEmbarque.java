@@ -72,9 +72,8 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
     static boolean debug = false;
 
     private ArrayList<Producto> productos = new ArrayList<Producto>();
+
     private Sucursal sucursal = null;
-    private String empleado = null;
-    private float total = 0;
 
     TicketRecepcionEmbarque(String json, String hora, String fecha) {
         init(json, hora, fecha);
@@ -99,19 +98,11 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
             Map jsonmap = (Map) parser.parse(this.json);
             Iterator iter = jsonmap.entrySet().iterator();
 
-            if (debug) {
-                System.out.println("Se iterara a : " + iter.toString().toString());
-            }
-
             //recorremos cada propiedad del JSON
 
             while (iter.hasNext()) {
 
                 Map.Entry entry = (Map.Entry) iter.next();
-
-                if (debug) {
-                    System.out.println(entry.getKey().toString() + " => " + entry.getValue().toString());
-                }
 
                 if (entry.getKey().toString().equals("sucursal")) {
                     if (entry.getValue() != null) {
@@ -235,11 +226,11 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
 
         this.incrementY(this.height_normal);
 
-        this.imprimeSinDesborde(this.grafico, this.sucursal.getDescripcion(), " ", this.height_normal);
+        this.imprimeSinDesborde(this.grafico, LeyendasTicket.getNombreEmpresa(), " ", this.height_normal);
 
-        this.imprimeSinDesborde(this.grafico, this.sucursal.getDireccion(), " ", this.height_normal);
+        this.imprimeSinDesborde(this.grafico, LeyendasTicket.getDireccion(), " ", this.height_normal);
 
-        this.grafico.drawString("Tel. " + this.sucursal.getTelefono(), this.x, this.y);
+        this.grafico.drawString("Tel. " + LeyendasTicket.getTelefono(), this.x, this.y);
 
         this.incrementY(this.height_normal);
 
@@ -291,6 +282,7 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
 
         this.grafico.setFont(this.normal);
 
+        float sum = 0;
 
         for (int j = 0; j < this.productos.size(); j++) {
 
@@ -307,11 +299,13 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
 
             this.grafico.drawString(this.formatoDinero.format(this.productos.get(j).getCantidad() * this.productos.get(j).getPrecio()), this.x + 138, this.y);
 
-            this.setTotal(this.getTotal() + this.productos.get(j).getCantidad() * this.productos.get(j).getPrecio());
+            sum += this.productos.get(j).getCantidad() * this.productos.get(j).getPrecio();
 
             this.incrementY(this.height_normal);
 
         }//for
+
+        this.setTotal(sum);
 
         this.grafico.setFont(this.normal);
 
@@ -363,6 +357,8 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
         this.sucursal = sucursal;
     }
 
+    private String empleado = null;
+
     /**
      * @return the empleado
      */
@@ -376,6 +372,8 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
     public void setEmpleado(String empleado) {
         this.empleado = empleado;
     }
+
+    private float total = 0;
 
     /**
      * @return the total

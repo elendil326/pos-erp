@@ -41,12 +41,12 @@ public class Main extends Applet {
         Impresora.debug = false;
         LeyendasTicket.debug = false;
         Producto.debug = false;
-        ServidorImpresion.debug = false;
+        ServidorImpresion.debug = true;
         Sucursal.debug = false;
         TicketAbonoVentaCliente.debug = false;
         TicketPrestamoEfectivoSucursal.debug = false;
-        TicketRecepcionEmbarque.debug = false;
-        TicketVentaCliente.debug = true;
+        TicketRecepcionEmbarque.debug = true;
+        TicketVentaCliente.debug = false;
 
 
         RepaintManager currentManager =

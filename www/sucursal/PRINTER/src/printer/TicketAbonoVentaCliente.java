@@ -53,7 +53,7 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
      * @return
      */
     public String getEmpleado() {
-        return this.idVenta;
+        return this.empleado;
     }
 
     /**
@@ -160,11 +160,7 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
 
             Map jsonmap = (Map) parser.parse(this.json);
             Iterator iter = jsonmap.entrySet().iterator();
-
-            if (debug) {
-                System.out.println("Se iterara a : " + iter.toString().toString());
-            }
-
+            
             //recorremos cada propiedad del JSON
 
             while (iter.hasNext()) {
@@ -178,6 +174,11 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
 
                         try {
                             this.setIdVenta(entry.getValue().toString());
+
+                            if (debug) {
+                                System.out.println("id_venta : " + this.getIdVenta());
+                            }
+
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -192,6 +193,11 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
 
                         try {
                             this.setEmpleado(entry.getValue().toString());
+
+                            if (debug) {
+                                System.out.println("empleado : " + this.getEmpleado());
+                            }
+
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -206,6 +212,11 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
 
                         try {
                             this.setMontoAbono(Float.parseFloat(entry.getValue().toString()));
+
+                            if (debug) {
+                                System.out.println("monto_abono : " + this.getMontoAbono());
+                            }
+
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -220,6 +231,11 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
 
                         try {
                             this.setSaldoPrestamo(Float.parseFloat(entry.getValue().toString()));
+
+                            if (debug) {
+                                System.out.println("saldo_prestamo : " + this.getSaldoPrestamo());
+                            }
+
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -234,6 +250,11 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
 
                         try {
                             this.sucursal = new Sucursal(entry.getValue().toString());
+
+                            if (debug) {
+                                System.out.println("sucursal : " + this.getSucursal().getDescripcion());
+                            }
+
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -253,7 +274,7 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
             this.validator();
 
         } catch (Exception pe) {
-                System.err.println(pe);
+            System.err.println(pe);
         }
 
     }
@@ -334,11 +355,11 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
 
         this.incrementY(this.height_normal);
 
-        this.imprimeSinDesborde(this.grafico, this.sucursal.getDescripcion(), " ", this.height_normal);
+        this.imprimeSinDesborde(this.grafico, LeyendasTicket.getNombreEmpresa(), " ", this.height_normal);
 
-        this.imprimeSinDesborde(this.grafico, this.sucursal.getDireccion(), " ", this.height_normal);
+        this.imprimeSinDesborde(this.grafico, LeyendasTicket.getDireccion(), " ", this.height_normal);
 
-        this.grafico.drawString("Tel. " + this.sucursal.getTelefono(), this.x, this.y);
+        this.grafico.drawString("Tel. " + LeyendasTicket.getTelefono(), this.x, this.y);
 
         this.incrementY(this.height_normal);
 
@@ -346,7 +367,7 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
 
         this.grafico.setFont(this.bold);
 
-        this.grafico.drawString("Abono", this.x + 72, this.y);
+        this.grafico.drawString("Venta", this.x + 72, this.y);
 
         this.grafico.setFont(this.normal);
 
@@ -356,7 +377,7 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
 
         this.grafico.setFont(this.bold);
 
-        this.grafico.drawString(this.idVenta, this.x + 80, this.y);
+        this.grafico.drawString(this.getIdVenta(), this.x + 80, this.y);
 
         this.incrementY(this.height_normal);
 
@@ -438,7 +459,3 @@ public class TicketAbonoVentaCliente extends FormatoTicket implements Printable 
 
     }
 }
-/*
- *
-
- */

@@ -179,10 +179,6 @@ public final class TicketPrestamoEfectivoSucursal extends FormatoTicket implemen
             Map jsonmap = (Map) parser.parse(this.json);
             Iterator iter = jsonmap.entrySet().iterator();
 
-            if (debug) {
-                System.out.println("Se iterara a : " + iter.toString().toString());
-            }
-
             //recorremos cada propiedad del JSON
 
             while (iter.hasNext()) {
@@ -383,23 +379,23 @@ public final class TicketPrestamoEfectivoSucursal extends FormatoTicket implemen
 
         this.incrementY(this.height_normal);
 
-        this.imprimeSinDesborde(this.grafico, this.sucursalOrigen.getDescripcion(), " ", this.height_normal);
+        this.imprimeSinDesborde(this.grafico, LeyendasTicket.getNombreEmpresa(), " ", this.height_normal);
 
-        this.imprimeSinDesborde(this.grafico, this.sucursalOrigen.getDireccion(), " ", this.height_normal);
+        this.imprimeSinDesborde(this.grafico, LeyendasTicket.getDireccion(), " ", this.height_normal);
 
-        this.grafico.drawString("Tel. " + this.sucursalOrigen.getTelefono(), this.x, this.y);
+        this.grafico.drawString("Tel. " + LeyendasTicket.getTelefono(), this.x, this.y);
 
         this.incrementY(this.height_normal);
 
         this.grafico.drawString("==============================", this.x, this.y);
+
+        this.incrementY(this.height_normal);
 
         this.grafico.setFont(this.bold);
 
         this.grafico.drawString("Prestamo " + this.getIdPrestamo(), this.x + 65, this.y);
 
         this.grafico.setFont(this.normal);
-
-        this.grafico.drawString("==============================", this.x + 120, this.y);
 
         this.incrementY(this.height_normal);
 
@@ -425,7 +421,7 @@ public final class TicketPrestamoEfectivoSucursal extends FormatoTicket implemen
 
         this.grafico.drawString("CONCEPTO", this.x, this.y);
 
-        this.grafico.drawString("MONTO", this.x + 138, this.y);
+        this.grafico.drawString("MONTO", this.x + 135, this.y);
 
         this.incrementY(this.height_normal);
 
@@ -433,7 +429,7 @@ public final class TicketPrestamoEfectivoSucursal extends FormatoTicket implemen
 
         this.imprimeSinDesborde(this.grafico, this.getConcepto(), " ", this.height_normal);
 
-        this.grafico.drawString(this.formatoDinero.format(this.getMonto()), this.x + 138, this.y);
+        this.grafico.drawString(this.formatoDinero.format(this.getMonto()), this.x + 135, this.y);
 
         this.incrementY(this.height_normal);
 
@@ -441,18 +437,16 @@ public final class TicketPrestamoEfectivoSucursal extends FormatoTicket implemen
 
         this.incrementY(this.height_normal);
 
+        this.imprimeSinDesborde(this.grafico, this.getCantidadEnLetra(this.getMonto()), this.height_normal);
+
+        this.incrementY(this.height_normal + 20);
+
         this.grafico.drawString("_____________________________________________________________", this.x, this.y);
 
         this.incrementY(this.height_normal);
 
         this.grafico.drawString("Firma(s)", this.x + 70, this.y);
 
-        this.incrementY(this.height_normal + 15);
-
-        this.grafico.drawString(LeyendasTicket.getContacto(), this.x, this.y);
-        this.incrementY(this.height_normal);
-
-        this.grafico.drawString(LeyendasTicket.getContacto(), this.x + 30, this.y);
         this.incrementY(this.height_normal);
 
 

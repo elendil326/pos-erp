@@ -559,17 +559,26 @@ Aplicacion.Operaciones.prototype.finishedPanelCreator = function()
                 {
                     Ext.Msg.alert("Operaciones","Error: " + prestamo.reason); 
                 }
-                
+
+                for( i = 0; i < POS.documentos.length; i++){
+                    if( POS.documentos[i].documento == 'abono_venta_cliente' ){
+                        var impresora = POS.documentos[i].impresora;
+                        break;
+                    }
+                }
+
                 //contiene la informacion asociada al prestamo para enviarla a la sucursal
                 data_prestamo = {                
-                    ticket_prestamo : true,           
+                    ticket : 'prestamo_efectivo_sucursal',
                     id_prestamo : prestamo.id_prestamo,         
                     empleado : prestamo.empleado,
-                    concepto_prestamo : data.concepto,
+                    concepto : data.concepto,
                     saldo_prestamo : data.monto,
-                    monto_abono : data.monto,
+                    monto : data.monto,
                     sucursal_origen : prestamo.sucursal_origen,
                     sucursal_destino : prestamo.sucursal_destino,
+                    leyendasTicket : POS.leyendasTicket,
+                    impresora : impresora
                 };
                                 
                 
