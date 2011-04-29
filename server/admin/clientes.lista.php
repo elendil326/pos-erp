@@ -191,7 +191,10 @@ function sortClientes( $a, $b ){
 usort( $clientes, "sortClientes" );
 
 //render the table
-$header = array(  "rfc" => "Razon Social", /*"rfc" => "RFC", /* "direccion" => "Direccion",*/  "municipio" => "Municipio"  );
+$header = array(  
+		"rfc" => "Razon Social", 
+		/*"rfc" => "RFC", /* "direccion" => "Direccion",*/  
+		"municipio" => "Municipio"  );
 
 $tabla = new Tabla( $header, $clientes );
 $tabla->addOnClick("id_cliente", "mostrarDetalles");
@@ -209,7 +212,10 @@ $tabla->render();
 $clientes = listarClientesDeudores();
 
 //render the table
-$header = array(  "nombre" => "Nombre", "rfc" => "RFC", /* "direccion" => "Direccion", */ "saldo" => "Saldo" );
+$header = array(  
+	"razon_social" => "Nombre", 
+	/* "direccion" => "Direccion", */ 
+	"saldo" => "Saldo" );
 
 $tabla = new Tabla( $header, $clientes );
 $tabla->addColRender( 'saldo', "moneyFormat" );

@@ -18,7 +18,9 @@
 	function renderTipoProv($tipo){
 		
 		switch($tipo){
-			case "admin" : return "Este proveedor surte al centro de administracion.";
+			case "admin" : return "Solo surte al centro de administracion.";
+			case "ambos" : return "Surte a ambos.";			
+			case "sucursal" : return "Surte a sucursales.";			
 		}
 		
 	}

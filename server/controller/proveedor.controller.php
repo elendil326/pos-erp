@@ -388,6 +388,9 @@ function editarProveedor( $json = null ){
 	
 	if( isset($data->nombre) )
 		$proveedor->setNombre( $data->nombre );
+
+	if( isset($data->tipo) )
+		$proveedor->setTipoProveedor( $data->tipo );
 		
 	if( isset($data->direccion) )
 		$proveedor->setDireccion( $data->direccion );		
@@ -410,8 +413,10 @@ function editarProveedor( $json = null ){
 	    die( '{"success": false, "reason": "Error. Porfavor intente de nuevo." }' );
 	}
 
-   printf( '{"success": true, "id": "%s"}' , $proveedor->getIdProveedor() );
    Logger::log("Proveedor " . $proveedor->getIdProveedor() . " modificado !");
+
+   printf( '{"success": true, "id": "%s"}' , $proveedor->getIdProveedor() );
+
 }
 
 
