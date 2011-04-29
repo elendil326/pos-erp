@@ -851,9 +851,10 @@ function nuevaCompraSucursal( $json = null){
 
 	DAO::transEnd();
 	
-	Logger::log("Proceso de venta a sucursal finalizado con exito!");
+	Logger::log("Proceso de venta a sucursal finalizado con exito !");
 	
-	printf('{"success": true}');
+
+	printf('{"success": true ,  "compra_id" : '.  $compraSucursal->getIdCompra() .' }');
 	
 }
 

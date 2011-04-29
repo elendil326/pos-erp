@@ -973,15 +973,18 @@ function doSurtir()
                 
                 jQuery("#loader").fadeOut('slow', function(){
                     //jQuery("#submitButtons").fadeIn();    
-                    window.scroll(0,0);                                                             
-                    jQuery("#ajax_failure").html(response.reason).show();
-                    jQuery("#submitButtons").fadeIn();                  
+                    window.scroll(0,0);
+					try{
+                    	jQuery("#ajax_failure").html(response.reason).show();
+					}catch(e){
+						jQuery("#ajax_failure").html("Error inesperado").show();
+					}
+
+                    jQuery("#submitButtons").fadeIn();
                 });                
                 return ;
             }
-
-            reason = "El caragmento se enuentra ahora en transito";
-            window.location = "inventario.php?action=transit&success=true&reason=" + reason;
+            window.location = "inventario.php?action=detalleCompraSucursal&cid=" + response.compra_id + "&pp=1";
     
         }
         });

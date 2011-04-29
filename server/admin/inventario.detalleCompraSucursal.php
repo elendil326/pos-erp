@@ -85,7 +85,27 @@ function toUnit( $e )
 ?>
 
 
+<script>
+	<?php
+		//please print
+		if($_REQUEST["pp"]){
+			?>
+				Ext.Msg.confirm("Surtir sucursal",
+				"Se ha surtido con exito esta sucursal. &iquest; Desea imprimir un reporte ?",
+				function(res){
 
+					if(res == "yes"){
+						window.print();
+						if(DEBUG){
+							console.log("imprimir esta pagina")
+						}
+						
+					}
+				} )
+			<?php
+		}
+	?>
+</script>
 
 
 
