@@ -169,7 +169,7 @@ Aplicacion.Operaciones.prototype.getConfig = function (){
 	                
                     Ext.getCmp('Operaciones-cancelarVentaPanel-Tabla').update(html);     
                     
-                   Ext.getCmp('Operaciones-cancelarVentaPanel-Form-Cliente').setValue(  r.cliente.nombre );
+                   Ext.getCmp('Operaciones-cancelarVentaPanel-Form-Cliente').setValue(  r.cliente.razon_social );
                    
                    Ext.getCmp('Operaciones-cancelarVentaPanel-Form-Subtotal').setValue( POS.currencyFormat( subtotal ) );
                    
