@@ -25,13 +25,13 @@ require_once("controller/inventario.controller.php");
 <script>//document.getElementById("MAIN_TITLE").innerHTML = "Lista de clientes";</script>
 
 
-<!--
+
 <h2>Mapa de clientes</h2>
 <div id="finance">
     <div id="fechas">
     </div>
 </div>
--->
+
 
 <script type="text/javascript" charset="utf-8">
 	function mostrarDetalles( a ){
@@ -45,7 +45,7 @@ require_once("controller/inventario.controller.php");
     }
 
     <?php
-	/*
+
     //obtener la fecha de la sucursal que abrio primero
     $firstSuc = SucursalDAO::getAll(1, 1, 'fecha_apertura', 'ASC' );
 
@@ -109,14 +109,14 @@ require_once("controller/inventario.controller.php");
             echo "];\n";
 
     }
-    * */
+
     ?>
             
 
 
 
 
-	/*
+
 	Event.observe(document, 'dom:loaded', function() {
 		if(window.numClientes){
 		    var graficaVentas = new HumbleFinance();
@@ -127,7 +127,7 @@ require_once("controller/inventario.controller.php");
 			$('finance').innerHTML = "No hay clientes";
 		}
 	});
-	*/
+
 </script>
 
 
@@ -167,14 +167,19 @@ require_once("controller/inventario.controller.php");
 		background-color: blue;
 	}
 </style>
-
+<!--
 <div class="tab_holder">
 	<span class="tab_itself">Todos los clientes</span>
 	<span class="tab_itself selected">Clientes deudores</span>
 	<span class="tab_itself">Nuevo cliente</span>
 </div>
+-->
 
-<h2><!-- <img src='../media/icons/users_32.png'>&nbsp; -->Todos los clientes</h2><?php
+
+
+<h2>Todos los clientes</h2>
+<?php
+
 //obtener los clientes del controller de clientes
 $clientesFoo = listarClientes();
 $clientes = array();
@@ -184,16 +189,16 @@ foreach($clientesFoo as $c){
 	array_push( $clientes, $c);
 }
 
-function sortClientes( $a, $b ){
-	return strcasecmp($a["rfc"] , $b["rfc"]);
+function sortClientesByName( $a, $b ){
+	return strcasecmp($a["razon_social"] , $b["razon_social"]);
 }
 
-usort( $clientes, "sortClientes" );
+usort( $clientes, "sortClientesByName" );
 
 //render the table
 $header = array(  
-		"rfc" => "Razon Social", 
-		/*"rfc" => "RFC", /* "direccion" => "Direccion",*/  
+		"razon_social" => "Razon Social", 
+		"rfc" => "RFC", 
 		"municipio" => "Municipio"  );
 
 $tabla = new Tabla( $header, $clientes );
@@ -206,15 +211,25 @@ $tabla->render();
 
 ?>
 
-<h2><!-- <img src='../media/icons/user_warning_32.png'>&nbsp;-->Clientes deudores</h2> <?php
+<h2>Clientes deudores</h2> 
+<?php
 
 //obtener los clientes deudores del controller de clientes
 $clientes = listarClientesDeudores();
 
+
+function sortClientesByMoney( $a, $b ){
+	return $a["saldo"] < $b["saldo"];
+}
+
+usort( $clientes, "sortClientesByMoney" );
+
+
 //render the table
 $header = array(  
 	"razon_social" => "Nombre", 
-	/* "direccion" => "Direccion", */ 
+	"rfc" => "RFC", 
+	"municipio" => "Municipio",
 	"saldo" => "Saldo" );
 
 $tabla = new Tabla( $header, $clientes );

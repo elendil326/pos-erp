@@ -7,19 +7,26 @@
 
 
 
-<script> //document.getElementById("MAIN_TITLE").innerHTML = "Nuevo cliente"; </script>
-
 <h2>Nuevo cliente</h2>
 <form id="newClient">
 	<table border="0" cellspacing="5" cellpadding="5">
-		<tr><td>Nombre</td><td><input type="text"               id="nombre" size="40"/></td></tr>
-		<tr><td>RFC</td><td><input type="text"                  id="rfc" size="40"/></td></tr>
-		<tr><td>Direccion</td><td><input type="text"            id="direccion" size="40"/></td></tr>
-		<tr><td>Ciudad</td><td><input type="text"            	id="ciudad" size="40"/></td></tr>	
-		<tr><td>Telefono</td><td><input type="text"             id="telefono" size="40"/></td></tr>
-		<tr><td>Descuento</td><td><input type="text"            value="0" id="descuento" size="40"/></td></tr>
-		<tr><td>Limite de credito</td><td><input type="text"    value="0" id="limite_credito" size="40"/></td></tr>
-		
+		<tr><td>Razon Social</td><td><input type="text" size="40" id="razon_social"/></td></tr>
+		<tr><td>RFC</td><td><input type="text" size="40" id="rfc"/></td></tr>
+		<tr><td>Calle</td><td><input type="text" size="40" id="calle"/></td></tr>
+		<tr><td>Numero Exterior</td><td><input type="text" size="40" id="numero_exterior"/></td></tr>
+		<tr><td>Numero Interior</td><td><input type="text" size="40" id="numero_interior"/></td></tr>		
+		<tr><td>Colonia</td><td><input type="text" size="40" id="colonia"/></td></tr>				
+		<tr><td>Referencia</td><td><input type="text" size="40" id="referencia"/></td></tr>				
+		<tr><td>Localidad</td><td><input type="text" size="40" id="localidad"/></td></tr>				
+		<tr><td>Municipio</td><td><input type="text" size="40" id="municipio"/></td></tr>				
+		<tr><td>Estado</td><td><input type="text" size="40" id="estado"/></td></tr>				
+		<tr><td>Pais</td><td><input type="text" size="40" id="pais"/></td></tr>		
+		<tr><td>Codigo Postal</td><td><input type="text" size="40" id="codigo_postal"/></td></tr>				
+		<tr><td>Telefono</td><td><input type="text" size="40" id="telefono"/></td></tr>				
+		<tr><td>Email</td><td><input type="text" size="40" id="e_mail"/></td></tr>				
+		<tr><td>Limite de credito</td><td><input type="text" size="40" id="limite_credito"/></td></tr>				
+		<tr><td>Descuento</td><td><input type="text" size="40" id="descuento"/></td></tr>												
+
 		<tr><td>Sucursal</td><td>
 			    <select id="sucursal"> 
 			    <?php
@@ -42,39 +49,45 @@
 
 
 <script type="text/javascript" charset="utf-8">
+	function error(title){
+		jQuery('html,body').animate({scrollTop: 0 }, 1000);
+        return jQuery("#ajax_failure").html(title).show();		
+	}
+
     function validar(){
 
-        if(jQuery('#nombre').val().length < 8){
-			jQuery('html,body').animate({scrollTop: 0 }, 1000);
-            return jQuery("#ajax_failure").html("El nombre es muy corto.").show();
+        if(jQuery('#razon_social').val().length < 8){
+			return error("La razon social es muy corta");
         }
 
-/*
-        if(jQuery('#direccion').val().length < 10){
-            return jQuery("#ajax_failure").html("La direccion es muy corta.").show();            
-        }
-*/
 
         if(jQuery('#rfc').val().length < 7){
-			jQuery('html,body').animate({scrollTop: 0 }, 1000);	
-            return jQuery("#ajax_failure").html("El RFC es muy corto.").show();
-
+			return error("El rfc es muy corto.");
         }
 
 
-        obj = {
-            nombre : 	jQuery('#nombre').val(), 
-            direccion : jQuery("#direccion").val(), 
-            rfc : 		jQuery("#rfc").val(), 
-            descuento:	jQuery("#descuento").val(),
-            telefono : 	jQuery("#telefono").val(),
-            ciudad :	jQuery("#ciudad").val(),
-            limite_credito:	jQuery("#limite_credito").val(),
-            id_sucursal:	jQuery('#sucursal').val(),
+        guardar({
+            razon_social : 	jQuery('#razon_social').val(), 
+            rfc : jQuery("#rfc").val(), 
+            calle : jQuery("#calle").val(), 
+            numero_exterior : jQuery("#numero_exterior").val(), 
+            numero_interior : jQuery("#numero_interior").val(), 
+            colonia : jQuery("#colonia").val(), 
+            referencia : jQuery("#referencia").val(), 
+            localidad : jQuery("#localidad").val(), 
+            municipio : jQuery("#municipio").val(), 
+            estado : jQuery("#estado").val(), 
+            pais : jQuery("#pais").val(), 
+            codigo_postal : jQuery("#codigo_postal").val(), 
+            telefono : jQuery("#telefono").val(), 
+            e_mail : jQuery("#e_mail").val(), 
+            limite_credito : jQuery("#limite_credito").val(), 
+            descuento : jQuery("#descuento").val(), 
+            id_sucursal : jQuery("#sucursal").val(), 
             id_usuario : <?php echo $_SESSION['userid']; ?>
-        };        
+        });  
 
-        guardar(obj);
+
     }
 
 
@@ -104,7 +117,7 @@
                 }
 
 
-                reason = "Los datos se han editado con exito !";
+                reason = "Se ha creado el nuevo cliente.";
                 window.location = 'clientes.php?action=lista&success=true&reason=' + reason;
 	      }
 	    });

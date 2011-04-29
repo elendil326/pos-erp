@@ -928,18 +928,15 @@ function renderFinalShip(){
 }
 
 
-function doSurtir()
+function doVender()
 {
 
-    /* if(!currentSuc){
-        error("&iquest; A que sucursal ?", "No ha seleccionado a que sucural desea surtir este pedido.");
-        return;
-    } */
+	console.log("listo para vender !");
+
 
     var readyDATA = {
         productos : composiciones,
-        sucursal : currentSuc,
-        conductor : jQuery('#conductor').val()
+        sucursal : currentSuc
     };
     
     //hacer ajaxaso
@@ -1361,11 +1358,11 @@ if(!isset($_REQUEST['cid'])){
 	
 	?>
         <script>
-            var CLIENTE = <?php echo $cliente->getIdCliente(); ?>;
-            var NOMBRECLIENTE = <?php echo $cliente->getRazonSocial(); ?>;
-            var RFCCLIENTE = <?php echo $cliente->getRFC(); ?>;
-            var DIRECCIONCLIENTE = <?php echo $cliente->getCalle(); ?>;
-            var CIUDADCLIENTE = <?php echo $cliente->getMunicipio(); ?>;
+            var CLIENTE = "<?php echo $cliente->getIdCliente(); ?>";
+            var NOMBRECLIENTE = "<?php echo $cliente->getRazonSocial(); ?>";
+            var RFCCLIENTE = "<?php echo $cliente->getRFC(); ?>";
+            var DIRECCIONCLIENTE = "<?php echo $cliente->getCalle(); ?>";
+            var CIUDADCLIENTE = "<?php echo $cliente->getMunicipio(); ?>";
         </script>
 		<table border="0" cellspacing="1" cellpadding="1">
 			<tr><td><b>Nombre</b></td><td><?php echo $cliente->getRazonSocial(); ?></td><td rowspan=12><div id="map_canvas"></div></td></tr>

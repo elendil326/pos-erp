@@ -19,6 +19,7 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 
 <style type="text/css" media="screen">
 	#map_canvas { 
+		margin: 5px;
 		height: 200px;
 		width: 400px;
  	}
@@ -29,16 +30,28 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 <h2>Detalles del cliente</h2>
 <table border="0" cellspacing="1" cellpadding="1" >
 	
-	<tr><td style="width:200px"><b>Razon Social</b></td><td style="width:200px"><?php 	echo $cliente->getRazonSocial(); ?></td>
-			<td valign="top" rowspan=12><div id="map_canvas"></div></td></tr>
-	<tr><td><b>RFC</b></td><td>				<?php 	echo $cliente->getRFC(); ?></td></tr>
-	<tr><td><b>Direccion</b></td><td>		<?php 	echo $cliente->getCalle(); ?></td></tr>
-	<tr><td><b>Ciudad</b></td><td>			<?php 	echo $cliente->getMunicipio(); ?></td></tr>
-	<tr><td><b>Telefono</b></td><td>		<?php 	echo $cliente->getTelefono(); ?></td></tr>	
-	<tr><td><b>E Mail</b></td><td>			<?php 	echo $cliente->getEMail(); ?></td></tr>	
-	<tr><td><b>Limite de Credito</b></td><td><?php 	echo moneyFormat($cliente->getLimiteCredito()); ?></td></tr>	
-	<tr><td><b>Descuento</b></td><td>		<?php 	echo percentFormat( $cliente->getDescuento() ); ?></td></tr>
-	<tr><td><b>Fecha Ingreso</b></td><td>	<?php 	echo toDate( $cliente->getFechaIngreso() ); ?></td></tr>
+	<tr><td style="width:200px"><b>Razon Social</b></td><td ><?php 	echo $cliente->getRazonSocial(); ?></td>
+			<td valign="top" rowspan=12 ><div id="map_canvas"></div></td></tr>
+			
+	<tr><td><b>RFC</b></td><td><?php 				echo $cliente->getRFC(); ?></td></tr>
+	<tr><td><b>Calle</b></td><td><?php 				echo $cliente->getCalle(); ?></td></tr>
+	<tr><td><b>Numero Exterior</b></td><td><?php 	echo $cliente->getNumeroExterior(); ?></td></tr>
+	<tr><td><b>Numero Interior</b></td><td><?php 	echo $cliente->getNumeroInterior(); ?></td ?></td></tr>	
+	<tr><td><b>Colonia</b></td><td><?php 			echo $cliente->getColonia(); ?></td></tr>	
+	<tr><td><b>Referencia</b></td><td><?php 		echo $cliente->getReferencia(); ?></td></tr>	
+	<tr><td><b>Localidad</b></td><td><?php 			echo $cliente->getLocalidad(); ?></td></tr>
+	<tr><td><b>Municipio</b></td><td><?php 			echo $cliente->getMunicipio(); ?></td></tr>
+	<tr><td><b>Estado</b></td><td><?php 			echo $cliente->getEstado(); ?></td></tr>
+	<tr><td><b>Pais</b></td><td><?php 				echo $cliente->getPais(); ?></td></tr>
+	<tr><td><b>Codigo Postal</b></td><td><?php 		echo $cliente->getCodigoPostal(); ?></td></tr>
+	<tr><td><b>Telefono</b></td><td><?php 			echo $cliente->getTelefono(); ?></td></tr>
+	<tr><td><b>Email</b></td><td><?php 				echo $cliente->getEMail(); ?></td></tr>
+	<tr><td><b>Limite de credito</b></td><td><?php 	echo moneyFormat($cliente->getLimiteCredito()); ?></td></tr>
+	<tr><td><b>Descuento</b></td><td><?php 			echo percentFormat( $cliente->getDescuento() ); ?></td></tr>
+	
+	<tr><td><b>Fecha de ingreso</b></td><td><?php 	echo toDate( $cliente->getFechaIngreso() ); ?></td></tr>	
+	
+	
 	<tr><td><b>Gerente que dio de alta</b></td><td><?php echo UsuarioDAO::getByPK( $cliente->getIdUsuario() )->getNombre() ; ?></td></tr>
 	
 	<?php
