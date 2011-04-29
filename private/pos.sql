@@ -272,6 +272,7 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
 
 CREATE TABLE IF NOT EXISTS `documento` (
   `id_documento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del documento',
+  `numero_de_impresiones` int(11) NOT NULL COMMENT 'numero de veces que se tiene que imprmir este documento',
   `identificador` varchar(128) COLLATE utf8_unicode_ci NOT NULL COMMENT 'identificador con el cual se le conocera en el sistema',
   `descripcion` varchar(256) COLLATE utf8_unicode_ci NOT NULL COMMENT 'descripcion breve del documento',
   PRIMARY KEY (`id_documento`)
@@ -449,8 +450,11 @@ CREATE TABLE IF NOT EXISTS `inventario` (
   `descripcion` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT 'descripcion del producto',
   `escala` enum('kilogramo','pieza','litro','unidad') COLLATE utf8_unicode_ci NOT NULL,
   `tratamiento` enum('limpia') COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Tipo de tratatiento si es que existe para este producto.',
+  `agrupacion` varchar(8) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'La agrupacion de este producto',
+  `agrupacionTam` float DEFAULT NULL COMMENT 'El tamano de cada agrupacion',
+  `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'si este producto esta activo o no en el sistema',
   PRIMARY KEY (`id_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=16 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=22 ;
 
 -- --------------------------------------------------------
 
