@@ -96,10 +96,6 @@ function toUnit( $e )
 
 					if(res == "yes"){
 						window.print();
-						if(DEBUG){
-							console.log("imprimir esta pagina")
-						}
-						
 					}
 				} )
 			<?php
