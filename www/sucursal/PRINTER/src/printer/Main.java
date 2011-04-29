@@ -45,7 +45,7 @@ public class Main extends Applet {
         Sucursal.debug = false;
         TicketAbonoVentaCliente.debug = false;
         TicketPrestamoEfectivoSucursal.debug = false;
-        TicketRecepcionEmbarque.debug = true;
+        TicketRecepcionEmbarque.debug = false;
         TicketVentaCliente.debug = false;
 
 

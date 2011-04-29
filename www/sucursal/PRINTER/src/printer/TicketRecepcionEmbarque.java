@@ -328,11 +328,7 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
         this.incrementY(this.height_normal);
 
         this.imprimeSinDesborde(this.grafico, this.getCantidadEnLetra(this.getTotal()), this.height_normal);
-
-        this.grafico.drawString(LeyendasTicket.getContacto(), this.x, this.y);
-        this.incrementY(this.height_normal);
-
-        this.grafico.drawString(LeyendasTicket.getGracias(), this.x + 30, this.y);
+        
         this.incrementY(this.height_normal);
 
         if (debug) {

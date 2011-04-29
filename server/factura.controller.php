@@ -141,24 +141,29 @@ function verificarDatosVenta($args) {
 }
 
 /**
- * Realiza todas als validaciones pertinentes para crear con esito la factura electronica
+ * Realiza todas las validaciones pertinentes para crear con esito la factura electronica
  * ademas realiza una peticion al webservice para emitir una nueva factura
  */
-function generaFactura($args) {
+function generaFactura($args) {    
 
     Logger::log("Iniciando proceso de facturacion");
 
     //verifica que los datos de la venta y el cliente esten correctos
     verificarDatosVenta($args);
 
+    DAO::transBegin();
 
     //debemos de crear los objetos para poder crear un comprobante
 
-    $datosGenerales = getDatosGenerales();
+    $datosGenerales = getDatosGenerales($args);
 
     $emisor = getEmisor();
 
     $expedido_por = getExpedidoPor();
+
+    $llaves = getLlaves();
+
+    $receptor = getReceptor();
 
 
 
@@ -180,7 +185,59 @@ function generaFactura($args) {
 }
 
 /**
- * Regresa un oobjeto cargado con los datos del emisor
+ * Regresa un objeto cargado con los datos del receptor de la factura
+ * return Object Receptor
+ */
+function getReceptor(){
+    
+}
+
+/**
+ * Regresa un objeto cargado con las llaves para generar la factura
+ * return Object Llaves
+ */
+function getLlaves(){
+
+    if (!($pos_config_privada = PosConfigDAO::getByPK('llave_privada') )) {
+        Logger::log("Error al obtener datos de la llave privada.");
+        DAO::transRollback();
+        die('{"success": false, "reason": "Error al obtener datos de la llave privada." }');
+    }
+
+    if (!($pos_config_publica = PosConfigDAO::getByPK('llave_publica') )) {
+        Logger::log("Error al obtener datos de la llave publica.");
+        DAO::transRollback();
+        die('{"success": false, "reason": "Error al obtener datos de la llave publica." }');
+    }
+
+    if (!($pos_config_certificado = PosConfigDAO::getByPK('noCertificado') )) {
+        Logger::log("Error al obtener datos del numero de certificado.");
+        DAO::transRollback();
+        die('{"success": false, "reason": "Error al obtener datos del numero de certificado." }');
+    }
+
+    $llaves = new Llaves();
+    
+    $llaves->setPrivada($pos_config_privada->getValue());
+
+    $llaves->setPublica($pos_config_publica->getValue());
+
+    $llaves->setNoCertificado($pos_config_certificado->getValue());
+
+    $success = $llaves->isValid();
+
+    if ($success->getSuccess()) {
+        return $llaves;
+    } else {
+        Logger::log("Error : {$success->getInfo()}");
+        DAO::transRollback();
+        die('{"success": false, "reason": "' . $success->getInfo() . '" }');
+    }
+
+}
+
+/**
+ * Regresa un objeto cargado con los datos del emisor
  * 
  * returns Object Emisor
  */
@@ -188,6 +245,7 @@ function getEmisor() {
 
     if (!($pos_config = PosConfigDAO::getByPK('emisor') )) {
         Logger::log("Error al obtener datos del emisor.");
+        DAO::transRollback();
         die('{"success": false, "reason": "Error al obtener datos del emisor." }');
     }
 
@@ -231,6 +289,7 @@ function getEmisor() {
         return $emisor;
     } else {
         Logger::log("Error : {$success->getInfo()}");
+        DAO::transRollback();
         die('{"success": false, "reason": "' . $success->getInfo() . '" }');
     }
 }
@@ -239,6 +298,7 @@ function getExpedidoPor() {
 
     if (!($sucursal = SucursalDAO::getByPK($_SESSION['sucursal']) )) {
         Logger::log("Error al obtener datos de la sucursal.");
+        DAO::transRollback();
         die('{"success": false, "reason": "Error al obtener datos de la sucursal." }');
     }
 
@@ -280,33 +340,52 @@ function getExpedidoPor() {
         return $expedidoPor;
     } else {
         Logger::log("Error : {$success->getInfo()}");
+        DAO::transRollback();
         die('{"success": false, "reason": "' . $success->getInfo() . '" }');
     }
 }
 
 
-function getDatosGenerales(){
+function getDatosGenerales($args){
+
+    //generamos una factura en la BD
+
+    $facturaBD = creaFacturaBD($args['id_venta']);
+
+    $venta = VentasDAO::getByPK($args['id_venta']);
+
+    $sucursal = SucursalDAO::getByPK($_SESSION['sucursal']);
 
     $generales =  new Generales();
 
-    $generales->setFecha($param);
+    $generales->setFecha(date("d/m/y")."T".date("H:i:s"));
 
-    $generales->setFolioInterno($param);
+    $generales->setFolioInterno($facturaBD->getIdFolio());
 
-    $generales->setFormaDePago($param);
+    //TODO : Hacer algo para los tipos de pago
+    $generales->setFormaDePago("pago en una sola exibicion");
 
     //TODO : Verificar a fondo como implementar mas impuestos
-    $generales->setIva($param);
+    $generales->setIva("0");
 
-    $generales->setMetodoDePago($param);
+    //TODO : Verificar que onda con los tipos de pago, solo hay credito y contado?
+    $generales->setMetodoDePago($venta->getTipoPago());
 
-    $generales->setSerie();
+    $generales->setSerie($sucursal->getLetrasFactura());
 
-    $generales->setSubtotal();
+    $generales->setSubtotal($venta->getSubtotal());
 
-    $generales->setTotal($param);
+    $generales->setTotal($venta->getTotal());
 
-    return $generales;
+    $success = $generales->isValid();
+
+    if ($success->getSuccess()) {
+        return $generales;
+    } else {
+        Logger::log("Error : {$success->getInfo()}");
+        DAO::transRollback();
+        die('{"success": false, "reason": "' . $success->getInfo() . '" }');
+    }
 
 }
 /**
@@ -584,6 +663,7 @@ function creaFacturaBD($id_venta) {
         FacturaVentaDAO::save($factura);
     } catch (Exception $e) {
         Logger::log("Error al salvar la factura de la venta : {$e}");
+        DAO::transRollback();
         die('{"success": false, "reason": "Error al salvar la factura de la venta intente nuevamente" }');
     }
 

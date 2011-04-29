@@ -2,222 +2,221 @@
 
 require_once("success.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/server/logger.php");
-	
+
 /**
  * Archivo que contiene la clase Generales la cual provee de los medios necesarios para validar
  * la estructura de los datos generales del formato de solicitud de factura electronica
  */
-class Generales{
+class Generales {
 
     /**
-     *
+     * Contiene la informacion acerca de la serie de la factura.
      * @var String
      */
     private $serie = null;
 
     /**
-     *
+     * Establece la informacion acerca de la serie de la factura.
      * @param <type> $param 
      */
-    public function setSerie($param){
+    public function setSerie($param) {
         $this->serie = $param;
     }
 
     /**
-     *
+     * Obtiene la informacion acerca de la serie de la factura.
      * @return <type> 
      */
-    public function getSerie(){
+    public function getSerie() {
         return $this->serie;
     }
 
     /**
-     *
+     * Contiene la informacion acerca del folio interno de la factura.
      * @var <type>
      */
     private $folio_interno = null;
 
     /**
-     *
+     * Establece la informacion acerca del folio interno de la factura.
      * @param <type> $param
      */
-    public function setFolioInterno($param){
+    public function setFolioInterno($param) {
         $this->folio_interno = $param;
     }
 
     /**
-     *
+     * Obtiene la informacion acerca del folio interno de la factura.
      * @return <type>
      */
-    public function getFolioInterno(){
+    public function getFolioInterno() {
         return $this->folio_interno;
     }
 
     /**
-     *
+     * Contiene la informacion acerca de la fecha de emision de la factura.
      * @var <type>
      */
     private $fecha = null;
+
     /**
-     *
+     * Establece la informacion acerca de la fecha de emision de la factura.
      * @param <type> $param
      */
-    public function setFecha($param){
+    public function setFecha($param) {
         $this->fecha = $param;
     }
 
     /**
-     *
+     * Obtiene la informacion acerca de la fecha de emision de la factura.
      * @return <type>
      */
-    public function getFecha(){
+    public function getFecha() {
         return $this->fecha;
     }
 
-
     /**
-     *
+     * Contiene la informacion acerca de la forma de pago de la factura.
      * @var <type>
      */
     private $forma_de_pago = null;
 
     /**
-     *
+     * Establece la informacion acerca de la forma de pago de la factura.
      * @param <type> $param
      */
-    public function setFormaDePago($param){
+    public function setFormaDePago($param) {
         $this->forma_de_pago = $param;
     }
 
     /**
-     *
+     * Obtiene la informacion acerca de la forma de pago de la factura.
      * @return <type>
      */
-    public function getFormaDePago(){
+    public function getFormaDePago() {
         return $this->forma_de_pago;
     }
 
     /**
-     *
+     * Contiene la informacion acerca del metodo de pago de la factura.
      * @var <type>
      */
     private $metodo_de_pago = null;
+
     /**
-     *
+     * Establece la informacion acerca del metodo de pago de la factura.
      * @param <type> $param
      */
-    public function setMetodoDePago($param){
+    public function setMetodoDePago($param) {
         $this->metodo_de_pago = $param;
     }
 
     /**
-     *
+     * Obtiene  la información acerca del metodo de pago de la factura.
      * @return <type>
      */
-    public function getMetodoDePago(){
+    public function getMetodoDePago() {
         return $this->metodo_de_pago;
     }
 
-
     /**
-     *
+     * Contiene la información acerca del subtotal de la factura.
      * @var <type>
      */
     private $subtotal = null;
+
     /**
-     *
+     * Establece la información acerca del subtotal de la factura.
      * @param <type> $param
      */
-    public function setSubtotal($param){
+    public function setSubtotal($param) {
         $this->subtotal = $param;
     }
 
     /**
-     *
+     * Obtiene la información acerca del subtotal de la factura.
      * @return <type>
      */
-    public function getSubtotal(){
+    public function getSubtotal() {
         return $this->subtotal;
     }
 
-
     /**
-     *
+     * Contiene la información acerca del total de la factura.
      * @var <type>
      */
     private $total = null;
 
     /**
-     *
+     * Estableca la información acerca del total de la factura.
      * @param <type> $param
      */
-    public function setTotal($param){
+    public function setTotal($param) {
         $this->total = $param;
     }
 
     /**
-     *
+     * Obtiene la información acerca del total de la factura.
      * @return <type>
      */
-    public function getTotal(){
+    public function getTotal() {
         return $this->total;
     }
 
     /**
-     *
+     * Contiene la información acerca del iva de la factura.
      * @var <type> 
      */
     private $iva = null;
+
     /**
-     *
+     * Establece la información acerca del iva de la factura.
      * @param <type> $param
      */
-    public function setIva($param){
+    public function setIva($param) {
         $this->iva = $param;
     }
 
     /**
-     *
+     * Obtiene la información acerca del iva de la factura.
      * @return <type>
      */
-    public function getIva(){
+    public function getIva() {
         return $this->iva;
     }
 
     /**
-     * Contiene informacion acerca de la crecion de da
+     * Verifica que el objeto contenga toda la informacion necesaria.
      * @var Object
      */
     private $success = null;
-
     /**
-     * Contiene informacion acerca de posibles errores
+     * Contiene información acerca de posibles errores
      * @var String
      */
     private $error = "";
 
     /**
-     *
+     * Obtiene información acerca de posibles errores
      * @return <type>
      */
-    public function getError(){
+    public function getError() {
         return $this->error;
     }
 
     /**
-     *
+     * Establece información acerca de posibles errores
      * @param <type> $param
      */
-    public function setError($param){
+    public function setError($param) {
         $this->error = $param;
     }
 
     /**
      * 
      */
-    public function __construct(){
+    public function __construct() {
 
-    
     }
 
     /**
@@ -226,12 +225,50 @@ class Generales{
      */
     public function isValid() {
 
+        //verificamos si existe el 
+        if (!(isset($this->getFecha()) && $this->getFecha() = !"")) {
+            $this->setError("No se ha definido la fecha.");
+        }
 
+        //verificamos si existe el
+        if (!(isset($this->getFolioInterno()) && $this->getFolioInterno() = !"")) {
+            $this->setError("No se ha definido el folio interno.");
+        }
+
+        //verificamos si existe el
+        if (!(isset($this->getFormaDePago()) && $this->getFormaDePago() = !"")) {
+            $this->setError("No se ha definido la forma de pago.");
+        }
+
+        //verificamos si existe el
+        if (!(isset($this->getIva()) && $this->getIva() = !"")) {
+            $this->setError("No se ha definido el iva.");
+        }
+
+        //verificamos si existe el
+        if (!(isset($this->getMetodoDePago()) && $this->getMetodoDePago() = !"")) {
+            $this->setError("No se ha definido el metodo de pago.");
+        }
+
+        //verificamos si existe el
+        if (!(isset($this->getSerie()) && $this->getSerie() = !"")) {
+            $this->setError("No se ha definido la serie.");
+        }
+
+        //verificamos si existe el
+        if (!(isset($this->getSubtotal()) && $this->getSubtotal() = !"")) {
+            $this->setError("No se ha definido el subtotal.");
+        }
+
+        //verificamos si existe el
+        if (!(isset($this->getTotal()) && $this->getTotal() = !"")) {
+            $this->setError("No se ha definido el total.");
+        }
 
         $this->success = new Success($this->error);
         return $this->success;
     }
-	
+
 }
 
 ?>

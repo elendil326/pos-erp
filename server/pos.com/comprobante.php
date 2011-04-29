@@ -59,7 +59,7 @@ class Comprobante {
     /**
      * Construye un nuevo objeto Comprobante.
      * Valida que cada componente del comprobante sea valido, al pasar la verificacion
-     * genera un archivo XML valido y se lo envia al webserive de caffeina que se encarga
+     * genera un archivo XML valido y se lo envia al webservice de caffeina que se encarga
      * de obtener una nueva factura electronica.
      *
      * @param Generales $generales
