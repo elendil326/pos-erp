@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Documento }. 
-  * @author no author especified
+  * @author Alan Gonzalez
   * @access private
   * @abstract
   * @package docs
@@ -148,6 +148,11 @@ abstract class DocumentoDAOBase extends DAO
 			array_push( $val, $documento->getIdDocumento() );
 		}
 
+		if( $documento->getNumeroDeImpresiones() != NULL){
+			$sql .= " numero_de_impresiones = ? AND";
+			array_push( $val, $documento->getNumeroDeImpresiones() );
+		}
+
 		if( $documento->getIdentificador() != NULL){
 			$sql .= " identificador = ? AND";
 			array_push( $val, $documento->getIdentificador() );
@@ -181,7 +186,7 @@ abstract class DocumentoDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -189,8 +194,9 @@ abstract class DocumentoDAOBase extends DAO
 	  **/
 	private static final function update( $documento )
 	{
-		$sql = "UPDATE documento SET  identificador = ?, descripcion = ? WHERE  id_documento = ?;";
+		$sql = "UPDATE documento SET  numero_de_impresiones = ?, identificador = ?, descripcion = ? WHERE  id_documento = ?;";
 		$params = array( 
+			$documento->getNumeroDeImpresiones(), 
 			$documento->getIdentificador(), 
 			$documento->getDescripcion(), 
 			$documento->getIdDocumento(), );
@@ -216,9 +222,10 @@ abstract class DocumentoDAOBase extends DAO
 	  **/
 	private static final function create( &$documento )
 	{
-		$sql = "INSERT INTO documento ( id_documento, identificador, descripcion ) VALUES ( ?, ?, ?);";
+		$sql = "INSERT INTO documento ( id_documento, numero_de_impresiones, identificador, descripcion ) VALUES ( ?, ?, ?, ?);";
 		$params = array( 
 			$documento->getIdDocumento(), 
+			$documento->getNumeroDeImpresiones(), 
 			$documento->getIdentificador(), 
 			$documento->getDescripcion(), 
 		 );
@@ -275,6 +282,17 @@ abstract class DocumentoDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " id_documento = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $documentoA->getNumeroDeImpresiones()) != NULL) & ( ($b = $documentoB->getNumeroDeImpresiones()) != NULL) ){
+				$sql .= " numero_de_impresiones >= ? AND numero_de_impresiones <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " numero_de_impresiones = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

@@ -2,7 +2,7 @@
 /** Value Object file for table documento.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author no author especified
+  * @author Alan Gonzalez
   * @access public
   * @package docs
   * 
@@ -25,6 +25,9 @@ class Documento extends VO
 			if( isset($data['id_documento']) ){
 				$this->id_documento = $data['id_documento'];
 			}
+			if( isset($data['numero_de_impresiones']) ){
+				$this->numero_de_impresiones = $data['numero_de_impresiones'];
+			}
 			if( isset($data['identificador']) ){
 				$this->identificador = $data['identificador'];
 			}
@@ -45,6 +48,7 @@ class Documento extends VO
 	{ 
 		$vec = array( 
 			"id_documento" => $this->id_documento,
+			"numero_de_impresiones" => $this->numero_de_impresiones,
 			"identificador" => $this->identificador,
 			"descripcion" => $this->descripcion
 		); 
@@ -61,6 +65,15 @@ class Documento extends VO
 	  * @var int(11)
 	  */
 	protected $id_documento;
+
+	/**
+	  * numero_de_impresiones
+	  * 
+	  * numero de veces que se tiene que imprmir este documento<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $numero_de_impresiones;
 
 	/**
 	  * identificador
@@ -106,6 +119,30 @@ class Documento extends VO
 	final public function setIdDocumento( $id_documento )
 	{
 		$this->id_documento = $id_documento;
+	}
+
+	/**
+	  * getNumeroDeImpresiones
+	  * 
+	  * Get the <i>numero_de_impresiones</i> property for this object. Donde <i>numero_de_impresiones</i> es numero de veces que se tiene que imprmir este documento
+	  * @return int(11)
+	  */
+	final public function getNumeroDeImpresiones()
+	{
+		return $this->numero_de_impresiones;
+	}
+
+	/**
+	  * setNumeroDeImpresiones( $numero_de_impresiones )
+	  * 
+	  * Set the <i>numero_de_impresiones</i> property for this object. Donde <i>numero_de_impresiones</i> es numero de veces que se tiene que imprmir este documento.
+	  * Una validacion basica se hara aqui para comprobar que <i>numero_de_impresiones</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setNumeroDeImpresiones( $numero_de_impresiones )
+	{
+		$this->numero_de_impresiones = $numero_de_impresiones;
 	}
 
 	/**

@@ -5,7 +5,7 @@ require_once("base/impresora.dao.base.php");
 require_once("base/impresora.vo.base.php");
 /** Page-level DocBlock .
   * 
-  * @author no author especified
+  * @author Alan Gonzalez
   * @package docs
   * 
   */
@@ -13,7 +13,7 @@ require_once("base/impresora.vo.base.php");
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Impresora }. 
-  * @author no author especified
+  * @author Alan Gonzalez
   * @access public
   * @package docs
   * 
