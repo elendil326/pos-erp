@@ -32,14 +32,10 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 <link rel="stylesheet" href="../frameworks/humblefinance/humble/finance.css" type="text/css" media="screen" title="no title" charset="utf-8">
 
 
-<!--
-<h1><?php echo $sucursal->getDescripcion(); ?></h1>
--->
-
 <h2>Detalles</h2>
 <table style="width:100%" border="0" cellspacing="1" cellpadding="1">
 	<tr><td><b>Descripcion</b></td><td>		<?php echo $sucursal->getDescripcion(); ?></td><td valign="top" align="right" rowspan=9><div  id="map_canvas"></div></td></tr>
-	<tr><td><b>Direccion</b></td><td>		<?php echo $sucursal->getDireccion(); ?></td></tr>
+	<tr><td><b>Direccion</b></td><td>		<?php echo $sucursal->getCalle(); ?></td></tr>
 	<tr><td><b>Apertura</b></td><td>		<?php echo toDate($sucursal->getFechaApertura()); ?></td></tr>
 	<tr><td><b>Gerente</b></td><td>
         <?php 
@@ -51,8 +47,6 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 	            echo $gerente->getNombre();
 	            echo "</a>";				
 			}
-
-
         ?>
     </td></tr>
 	<tr><td><b>ID</b></td><td>				<?php echo $sucursal->getIdSucursal(); ?></td></tr>
@@ -100,7 +94,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
     function startMap(){
 
 	    GeocoderRequest = {
-		    address : "<?php echo $sucursal->getDireccion(); ?>, Mexico"
+		    address : "<?php echo $sucursal->getCalle(); ?>, Mexico"
 	    };
 	    try{
 

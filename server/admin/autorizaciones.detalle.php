@@ -203,7 +203,7 @@ switch( $autorizacionDetalles->clave ){
 								$p = InventarioDAO::getByPK( $producto->id_producto ) ;
 								 echo $p->getDescripcion(); 
 							?></td>
-						<td><?php echo $producto->cantidad; ?></td></tr><?php
+						<td><b><?php echo $producto->cantidad . "</b> " . $p->getEscala(); ?>s</td></tr><?php
                 }
                 ?>
                 <tr><td></td><td></td></tr>
@@ -213,16 +213,16 @@ switch( $autorizacionDetalles->clave ){
             <?php
             
             if($autorizacion->getEstado() != 4){
-	            ?><h4>
-<!--  	<input type=button value="Editar" onclick="editarAutorizacion(<?php    echo $autorizacion->getIdAutorizacion(); ?>)" > -->
+	            ?>
+				<!--  	<input type=button value="Editar" onclick="editarAutorizacion(<?php    echo $autorizacion->getIdAutorizacion(); ?>)" > -->
+	            <?php
+            	if($autorizacion->getEstado()==3){
+            		?>
+	            		<h4><input type=button value="Cancelar" onclick="cancelar(<?php    echo $autorizacion->getIdAutorizacion(); ?>)" ></h4>
 	            	<?php
-            if($autorizacion->getEstado()==3){
-            ?>
-	            	<input type=button value="Cancelar" onclick="cancelar(<?php    echo $autorizacion->getIdAutorizacion(); ?>)" >
-	            	<?php
-	            	}
-	            	?>
-	            </h4>
+	            }
+	            ?>
+	            
 	    	<?php
             }else{
 				?><div align=center><h3>Usted ya ha respondido a esta autorizacion.</h3></div><?php
