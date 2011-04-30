@@ -1151,7 +1151,7 @@ function comprasDeSucursal( $sid = null, $n = 10 ){
  * resultados de todas las sucursales.
  *
  **/
-function comprasDeSucursalSinSaldar( $sid = null ){
+function comprasDeSucursalSinSaldar( $sid = null, $need_the_items = true ){
 
 	$foo = new CompraSucursal();
 		
@@ -1167,6 +1167,13 @@ function comprasDeSucursalSinSaldar( $sid = null ){
 	$foo->setLiquidado( 0 );
 	
 	$compras = CompraSucursalDAO::search($foo, "fecha", "desc");
+	
+	
+	
+	if(!$need_the_items){
+		//if i dont need 'them items
+		return $compras;
+	}
 	
 	$result = array();
 	

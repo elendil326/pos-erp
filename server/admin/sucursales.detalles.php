@@ -94,7 +94,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
     function startMap(){
 
 	    GeocoderRequest = {
-		    address : "<?php echo $sucursal->getCalle(); ?>, Mexico"
+		    address : "<?php echo $sucursal->getCalle() . " " . $sucursal->getNumeroExterior() . ", ". $sucursal->getColonia() . ", " .  $sucursal->getMunicipio(); ?>, Mexico"
 	    };
 	    try{
 
@@ -134,61 +134,118 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
     function editar(){ window.location = "sucursales.php?action=editar&sid=<?php echo $_REQUEST['id'] ?>"; }
 
     <?php
-        $ventasEstaSucursal = array();
-        $todasLasVentas = array();
+		/*
+		 * Buscar el numero de ventas de esta sucursal, versus las ventas de todas las sucursales en la empresa
+		 * 
+		 * */
+		
+		//entero con el numero de ventas
+        $ventasEstaSucursal = VentasDAO::contarVentasPorDia( $sucursal->getIdSucursal(), -1 );
+
+		//entero con el numero de ventas de todas las sucursales
+        $ventasTodasLasSucursales = VentasDAO::contarVentasPorDia( null, -1 );
+
+		//fechas en Y-m-d
         $fechas = array();
-        
-		//obtener la fecha de la primera venta de esta sucursal
-        $primeraVenta = SucursalDAO::getByPK( $_REQUEST['id'] )->getFechaApertura();
-        
-		$start = date("Y-m-d", strtotime("-1 day", strtotime($primeraVenta)));
-		$now = date ( "Y-m-d" );
-        
-        while(true){
-			//buscar las ventas de todas las sucursales
-		    $v1 = new Ventas();
-		    $v1->setFecha( $start . " 00:00:00" );
 
-		    $v2 = new Ventas();
-		    $v2->setFecha( $start . " 23:59:59" );
+		//buscar la fecha mas vieja
+		$startDate = strtotime($ventasEstaSucursal[0]["fecha"]);
 
-		    $results = VentasDAO::byRange($v1, $v2);
-            array_push( $todasLasVentas, count($results) );
+		if( strtotime( $ventasTodasLasSucursales[0]["fecha"] )
+				< strtotime($ventasEstaSucursal[0]["fecha"])  )
+		{
+			$startDate = strtotime($ventasTodasLasSucursales[0]["fecha"]) ;
+		}
+		
+		echo "/*";
 
+		//current day
+		$cDay =  date("Y-m-d",  $startDate  ); 
+		
+		//the day the loop will end
+		$tomorrow = date("Y-m-d", strtotime("+1 day",  time()));
+		
+		//utility variables
+		$thisBranchSales = $ventasEstaSucursal;
+		$thisBranchSalesIndex = $thisBranchMissingDays = 0;
+		
+		$allBranchesSales = $ventasTodasLasSucursales;
+		$allBranchesSalesIndex = $allBranchesMissingDays = 0;
+				
+		//iniciar en $startDate y sumar dias hasta llegar al dia de hoy
+		//en $cDay esta el dia en la iteracion
+		while( $tomorrow != $cDay ){
 
-            //ventas de esta sucursal
-		    $v1->setIdSucursal( $_REQUEST['id'] );
-		    $results = VentasDAO::byRange($v1, $v2);
-            array_push( $ventasEstaSucursal, count($results) );
-
-            array_push( $fechas, $start );
-
-            
-			if($start == $now){
-				break;
+			array_push($fechas, $cDay);
+			
+			echo "TODAY IS THE " . $cDay . "\n";
+			
+			if( sizeof($allBranchesSales) == $allBranchesSalesIndex ){
+				//im out of days !
+				array_push($allBranchesSales, array( "fecha" => $cDay, "ventas" => 0 ));
 			}
 			
-			$start = date("Y-m-d", strtotime("+1 day", strtotime($start)));        
+		 	if( $allBranchesSales[ $allBranchesSalesIndex ]["fecha"] != $cDay){
+				$allBranchesMissingDays++;
+				echo "All branches is missing this day !\n";
+			}else{
+				//fill the allBranchesMissingDays !
+				echo "all branches have this day ! ive got " . $thisBranchMissingDays . " missing days ! \n" ;				
+				for($a = 0 ; $a < $allBranchesMissingDays; $a++){
+					array_splice($allBranchesSales, $allBranchesSalesIndex, 0, array(array( "fecha" => "missing_day" , "ventas" => 0)) );
+				}
+				$allBranchesSalesIndex += $allBranchesMissingDays+1;
+				$allBranchesMissingDays = 0;
+			}
+			
 
-        }
-        
-     
+			if( sizeof($thisBranchSales) == $thisBranchSalesIndex ){
+				//im out of days !
+				array_push($thisBranchSales, array( "fecha" => $cDay, "ventas" => 0 ));
+			}
+			
+		 	if( $thisBranchSales[ $thisBranchSalesIndex ]["fecha"] != $cDay){
+				$thisBranchMissingDays++;
+				echo "this branch is missing this day !\n";
+			}else{
+				echo "this brach hast this day ! ive got " . $thisBranchMissingDays . " missing days ! \n" ;
+				for($a = 0 ; $a < $thisBranchMissingDays; $a++){
+					array_splice($thisBranchSales, $thisBranchSalesIndex, 0, array(array( "fecha" => "missing_day" , "ventas" => 0)) );
+				}
+				
+				$thisBranchSalesIndex += $thisBranchMissingDays+1;
+				$thisBranchMissingDays = 0;
+			}
+			
+			
+			echo "\n";
+			
+			$cDay = date("Y-m-d", strtotime("+1 day", strtotime($cDay)));
+		}
+		
 
+		
 
+				
+		echo "*/";
+
+		
+		
         echo "\nvar estaSucursal = [";
-        for($i = 0; $i < sizeof($ventasEstaSucursal); $i++ ){
-            echo  "[" . $i . "," . $ventasEstaSucursal[$i] . "]";
-            if($i < sizeof($ventasEstaSucursal) - 1){
+        for($i = 0; $i < sizeof($thisBranchSales); $i++ ){
+            echo  "[" . $i . "," . $thisBranchSales[$i]["ventas"] . "]";
+            if($i < sizeof($thisBranchSales) - 1){
                 echo ",";
             }
         }
         echo "];\n";
 
-
-        echo "var todasSucursales = [";
-        for($i = 0; $i < sizeof($todasLasVentas); $i++ ){
-            echo  "[" . $i . "," . $todasLasVentas[$i] . "]";
-            if($i < sizeof($todasLasVentas) - 1){
+		echo "console.log( 'esta sucural->', estaSucursal );";
+		
+       echo "\nvar todasSucursales = [";
+        for($i = 0; $i < sizeof($allBranchesSales); $i++ ){
+            echo  "[" . $i . "," . $allBranchesSales[$i]["ventas"] . "]";
+            if($i < sizeof($allBranchesSales) - 1){
                 echo ",";
             }
         }
@@ -212,16 +269,18 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 	Event.observe(document, 'dom:loaded', function() {
 
 
-        <?php 
-            if(POS_ENABLE_GMAPS){ ?>startMap();<?php }
-        ?>
- 
-		var graficaVentas = new HumbleFinance();
-        graficaVentas.addGraph( estaSucursal );
-        graficaVentas.addGraph( todasSucursales );
-        graficaVentas.addSummaryGraph( todasSucursales );
-        graficaVentas.render('finance');
-        
+	<?php 
+		if(POS_ENABLE_GMAPS){
+			echo "startMap();";
+		}
+	?>
+
+	var graficaVentas = new HumbleFinance();
+	graficaVentas.addGraph( estaSucursal );
+	graficaVentas.addGraph( todasSucursales );
+	graficaVentas.addSummaryGraph( todasSucursales );
+	graficaVentas.render('finance');
+
 
 	});
 
@@ -264,7 +323,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
         if($id < 0){
              return "Caja Comun";
         }
-        return ClienteDAO::getByPK( $id )->getNombre();
+        return ClienteDAO::getByPK( $id )->getRazonSocial();
     }
 
 
@@ -318,8 +377,9 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 		$bar = explode(" ", $foo);
 		return $bar[0];
 	}
-	$compras = comprasDeSucursalSinSaldar( $_REQUEST['id'] );	
 	
+	$compras = comprasDeSucursalSinSaldar( $_REQUEST['id'] , false );	
+
 	$header = array(
 			"id_compra" => "ID Compra",
 		    "fecha"=> "Fecha",

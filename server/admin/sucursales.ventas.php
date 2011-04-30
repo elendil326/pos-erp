@@ -21,6 +21,8 @@ require_once("controller/inventario.controller.php");
 
 	$comprasSucursal = CompraSucursalDAO::getAll(  );
 	
+	rsort($comprasSucursal);
+	
 	$proveedores = array();
 	$centro = array();
 	

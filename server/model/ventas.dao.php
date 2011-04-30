@@ -23,18 +23,35 @@ class VentasDAO extends VentasDAOBase
 {
 	/**
 	  * Obtener un arreglo con las ultimas ventas por dia de los ultimos
-	  * <i>$dias</i> dias.
+	  * <i>$dias</i> dias. Si dias es negativo se regresaran todos las coincidencias
+	  * y si sucursal es null, se regresara para todas las sucursales
 	  **/
-	public static function contarVentasPorDia($sucursal , $dias = 7){
-		$sql = "select date_format(fecha,'%Y-%m-%d') as fecha, count(*) as ventas from ventas where id_sucursal = ? group by date_format(fecha,'%Y-%m-%d') order by fecha limit ?";
+	public static function contarVentasPorDia($sucursal = null, $dias = 7){
+		
+		$sql = "select date_format(fecha,'%Y-%m-%d') as fecha, count(*) as ventas from ventas ";
+		$val = array();
+		
+		if($sucursal != null){
+			array_push( $val, $sucursal );
+			$sql .= " where id_sucursal = ?";			
+		}
+		$sql .= " group by date_format(fecha,'%Y-%m-%d') order by fecha ";
+		
+		if($dias > 0 ){
+			$sql .= " limit ?";
+			array_push( $val, $dias );			
+		}
 		
 		global $conn;
-		$val = array( $sucursal, $dias );
+		
+
 		$rs = $conn->Execute($sql, $val);
 
 		$res = array();
 		foreach ($rs as $foo) {
-			array_push( $res, array( $foo[0] => $foo[1] ) );
+			array_push( $res, array( 
+				"fecha" => $foo[0],
+				"ventas" => $foo[1] ) );
 		}
 		return $res;
 
