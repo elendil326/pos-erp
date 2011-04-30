@@ -46,6 +46,17 @@ var HumbleFinance = function(  ){
 	this.xTickFormatter= Flotr.defaultTickFormatter;
     this.yTickFormatter= Flotr.defaultTickFormatter;
 	
+	this.setXFormater = function(f){
+		this.xTickFormatter = f;
+	}
+	
+	this.setYFormater = function(f){
+		this.yTickFormatter = f;
+	}
+	
+	this.setTracker = function(t){
+		this.trackFormatter= t;
+	}
 	
 	this.addGraph = function (data){
 		this.graphs.push(data);
@@ -111,7 +122,7 @@ var HumbleFinance = function(  ){
 
         // Build DOM element
         this.containers.mainGraph = new Element('div', 	{id: this.id + 'priceGraph', style: 'margin-bottom: 10px; width: 100%; height: 240px;'});
-        this.containers.summary = new Element('div', 	{id: this.id + 'summaryGraph', style: ' width: 100%; height: 60px;'});
+        this.containers.summary = new Element('div', 	{id: this.id + 'summaryGraph', style: ' width: 100%; height: 60px; margin-bottom: 15px;'});
         this.containers.flags = new Element('div', 		{id: this.id + 'flagContainer'/*, style: 'width: 0px; height: 0px;'*/});
         this.handles.left = new Element('div', 			{id: this.id + 'leftHandle', 'class': 'handle zoomHandle', style: 'display: none;'});
         this.handles.right = new Element('div', 		{id: this.id + 'rightHandle', 'class': 'handle zoomHandle', style: 'display: none;'});
@@ -197,11 +208,13 @@ var HumbleFinance = function(  ){
                 mouse: {track: true, sensibility: 1, trackDecimals: 4, trackFormatter: this.trackFormatter, position: 'ne'},
                 shadowSize: false,
                 HtmlText: true,
+				selection: false
+				/*
 				selection: {
 					mode: 'x',		// => one of null, 'x', 'y' or 'xy'
 					color: '#cb4b4b',	// => selection box color
 					fps: 24			// => frames-per-second
-				}
+				}*/
             }
         );
         

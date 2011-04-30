@@ -120,6 +120,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
     <div id="fechas">
     </div>
 </div>
+<br>
 
 <!--
 <h2>Mapa de rendimiento</h2>
@@ -178,8 +179,6 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 
 			array_push($fechas, $cDay);
 			
-			echo "TODAY IS THE " . $cDay . "\n";
-			
 			if( sizeof($allBranchesSales) == $allBranchesSalesIndex ){
 				//im out of days !
 				array_push($allBranchesSales, array( "fecha" => $cDay, "ventas" => 0 ));
@@ -187,10 +186,8 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 			
 		 	if( $allBranchesSales[ $allBranchesSalesIndex ]["fecha"] != $cDay){
 				$allBranchesMissingDays++;
-				echo "All branches is missing this day !\n";
 			}else{
 				//fill the allBranchesMissingDays !
-				echo "all branches have this day ! ive got " . $thisBranchMissingDays . " missing days ! \n" ;				
 				for($a = 0 ; $a < $allBranchesMissingDays; $a++){
 					array_splice($allBranchesSales, $allBranchesSalesIndex, 0, array(array( "fecha" => "missing_day" , "ventas" => 0)) );
 				}
@@ -206,9 +203,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 			
 		 	if( $thisBranchSales[ $thisBranchSalesIndex ]["fecha"] != $cDay){
 				$thisBranchMissingDays++;
-				echo "this branch is missing this day !\n";
 			}else{
-				echo "this brach hast this day ! ive got " . $thisBranchMissingDays . " missing days ! \n" ;
 				for($a = 0 ; $a < $thisBranchMissingDays; $a++){
 					array_splice($thisBranchSales, $thisBranchSalesIndex, 0, array(array( "fecha" => "missing_day" , "ventas" => 0)) );
 				}
@@ -218,8 +213,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 			}
 			
 			
-			echo "\n";
-			
+		
 			$cDay = date("Y-m-d", strtotime("+1 day", strtotime($cDay)));
 		}
 		
@@ -275,7 +269,49 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 		}
 	?>
 
+	function meses(m){
+		m = parseInt(m);
+		switch(m){
+			case 1: return "enero";
+			case 2: return "febrero";
+			case 3: return "marzo";
+			case 4: return "abril";
+			case 5: return "mayo";
+			case 6: return "junio";
+			case 7: return "julio";
+			case 8: return "agosto";
+			case 9: return "septiembre";
+			case 10: return "octubre";
+			case 11: return "noviembre";
+			case 12: return "diciembre";
+									
+		}
+	}
+
 	var graficaVentas = new HumbleFinance();
+	graficaVentas.setXFormater(
+			function(val){
+				return meses(fechasVentas[val].fecha.split("-")[1]) + " "  + fechasVentas[val].fecha.split("-")[2]; 
+			}
+		);
+		
+	graficaVentas.setYFormater(
+			function(val){
+				if(val ==0)return "";
+				return val + " ventas";
+			}
+		);
+	
+	graficaVentas.setTracker(
+		function (obj){
+				obj.x = parseInt( obj.x );
+				
+				return meses(fechasVentas[obj.x].fecha.split("-")[1]) + " "  + fechasVentas[obj.x].fecha.split("-")[2]
+							+ ", <b>"+ parseInt(obj.y) + "</b> ventas";
+
+			}
+		);	
+
 	graficaVentas.addGraph( estaSucursal );
 	graficaVentas.addGraph( todasSucursales );
 	graficaVentas.addSummaryGraph( todasSucursales );

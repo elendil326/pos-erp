@@ -28,7 +28,8 @@
 .flotr-grid-label {
     font-size: 11px;
     background: #ffffff;
-    margin: 2px 0px 0px 4px;
+    /*margin: 2px 0px 0px 4px;*/
+	margin: 14px 0px 0px 4px;
 }
 .flotr-mouse-value {
 	font-size: 10px;

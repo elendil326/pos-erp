@@ -116,7 +116,7 @@ foreach( $sucursales as $sucursal ){
 		}
 
 		echo $todas;
-			echo "; var sinventas = false; ";
+		echo "; var sinventas = false; ";
 	}else{
 		echo " var sinventas = true; ";
 	}
@@ -137,16 +137,56 @@ Event.observe(document, 'dom:loaded', function() {
 	 			echo "graficaVentas.addGraph( ventas[$suc], 'suc'); 	";
 			}
 		?>
-		/*
-		HumbleFinance.trackFormatter = function (obj) {
+		
+		function meses(m){
+			m = parseInt(m);
+			switch(m){
+				case 1: return "enero";
+				case 2: return "febrero";
+				case 3: return "marzo";
+				case 4: return "abril";
+				case 5: return "mayo";
+				case 6: return "junio";
+				case 7: return "julio";
+				case 8: return "agosto";
+				case 9: return "septiembre";
+				case 10: return "octubre";
+				case 11: return "noviembre";
+				case 12: return "diciembre";
 
-		        var x = Math.floor(obj.x);
-		        var data = jsonData[x];
-		        var text = data.date + " Price: " + data.close + " Vol: " + data.volume;
+			}
+		}
 
-		        return text;
-		    };
-		*/
+		var fechasVentas = [<?php
+			
+			foreach($fechas as $f){
+				echo "\"" . $f . "\", ";
+			}
+		?>];
+
+		graficaVentas.setXFormater(
+				function(val){
+					return meses(fechasVentas[val].split("-")[1]) + " "  + fechasVentas[val].split("-")[2]; 
+				}
+			);
+
+		graficaVentas.setYFormater(
+				function(val){
+					if(val==0)return "";
+					return val + " ventas";
+				}
+			);
+
+		graficaVentas.setTracker(
+			function (obj){
+					obj.x = parseInt( obj.x );
+
+					return meses(fechasVentas[obj.x].split("-")[1]) + " "  + fechasVentas[obj.x].split("-")[2]
+								+ ", <b>"+ parseInt(obj.y) + "</b> ventas";
+
+				}
+			);
+			
 	    graficaVentas.addSummaryGraph( todas );
 	    graficaVentas.render('graph');
 	}
