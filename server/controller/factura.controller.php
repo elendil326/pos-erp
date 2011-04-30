@@ -58,7 +58,7 @@ function verificarDatosVenta($args) {
     }
 
     //verificamos que el cliente este acivo
-    if ($cliente -> getActivo != "1" ) {
+    if ($cliente->getActivo != "1") {
         Logger::log("El cliente  : {$args['id_cliente']} no se encuentra activo.");
         die('{"success": false, "reason": "El cliente ' . $args['id_cliente'] . ' no se encuentra activo." }');
     }
@@ -144,7 +144,7 @@ function verificarDatosVenta($args) {
  * Realiza todas las validaciones pertinentes para crear con esito la factura electronica
  * ademas realiza una peticion al webservice para emitir una nueva factura
  */
-function generaFactura($args) {    
+function generaFactura($args) {
 
     Logger::log("Iniciando proceso de facturacion");
 
@@ -153,27 +153,35 @@ function generaFactura($args) {
 
     DAO::transBegin();
 
-    //debemos de crear los objetos para poder crear un comprobante
+    $comprobante = new Comprobante();
 
-    $datosGenerales = getDatosGenerales($args);
+    $comprobante->setGenerales(getDatosGenerales($args)); //1
 
-    $emisor = getEmisor();
+    $comprobante->setConceptos(getConceptos($args)); //2
 
-    $expedido_por = getExpedidoPor();
+    $comprobante->setEmisor(getEmisor()); //3
 
-    $llaves = getLlaves();
+    $comprobante->setExpedidoPor(getExpedidoPor()); //4
 
-    $receptor = getReceptor();
+    $comprobante->setLlaves(getLlaves()); //5
 
+    $comprobantes->setReceptor(getReceptor()); //6
 
+    $success = $comprobante->isValid();
 
-    //------------------------------------------------------------
-    //crea xml con los datos de la venta para enviar al webservice
-    $xml_request = parseVentaToXML($args['id_venta'], $args['id_cliente']);
+    if (!$success->getSuccess()) {
+        Logger::log($success->getInfo());
+        DAO::transRollback();
+        die('{"success": false, "reason": "' . $success->getInfo() . '" }');
+    }
 
+    $xml_response = $comprobante->getNuevaFactura();      
 
-    //Realizamos una peticion al webservice para que se genere una nueva factura en el sistema.
-    $xml_response = getFacturaFromWebService($xml_request);
+    if($xml_response != null){
+        echo $xml_response;
+    }else{
+        echo "Fallo";
+    }
 
     echo $xml_response;
 
@@ -185,18 +193,127 @@ function generaFactura($args) {
 }
 
 /**
+ * Regresa un objeto qeu contiene la informacion acerca de los conceptos de la venta
+ * return Object Conceptos
+ */
+function getConceptos($args) {
+
+    //obtenemos el juego de articulos vendidos en la venta
+    $detalle_venta = new DetalleVenta();
+    $detalle_venta->setIdVenta($args['id_venta']);
+    $detalle_venta = DetalleVentaDAO::search($detalle_venta);
+
+    //objeto que almacenara a todos los conceptos de la venta
+    $conceptos = new Conceptos();
+
+    //llenamos a $conceptos con los conceptos de la venta
+    foreach ($detalle_venta as $articulo) {
+
+        //verificamos que el producto este registrado en el inventario
+        if (!($inventario = InventarioDAO::getByPK($articulo->getIdProducto()))) {
+            Logger::log("el producto : {$id_producto} no se tiene registrado en el inventario");
+            DAO::transRollback();
+            die('{"success": false, "reason": "el producto : ' . $id_producto . ' no se tiene registrado en el inventario" }');
+        }
+
+        $concepto = new Concepto();
+        $concepto->setIdProducto($$inventario->getIdProducto());
+        $concepto->setDescripcion($inventario->getDescripcion());
+        $concepto->setUnidad($inventario->getEscala());
+
+        /*
+         * TODO: Por lo que veo como se esta manejando lo de cantidad procesada y sin procesar debemos de
+         * manejarlo de forma diferente para otros puntos de venta ya que no esta bien asi como se esta manejando.
+         */
+
+        /*
+         * ahora tenemos que verificar si en esta venta especificamente de este producto se vendio producto
+         * procesado y sin procesar ya que si se vendio de los dos, se tienen que agregar 2 conceptos al
+         * array de conceptos
+         */
+
+        if ($articulo->getCantidad() > 0) {
+
+            $concepto->setCantidad($articulo->getCantidad());
+            $concepto->setValor($articulo->getPrecio());
+            $concepto->setImporte($articulo->getCantidad() * $articulo->getPrecio());
+
+            $conceptos->addConcepto($concepto);
+        }
+
+        if ($articulo->getCantidadProcesada() > 0) {
+
+            $concepto->setCantidad($articulo->getCantidadProcesada());
+            $concepto->setValor($articulo->getPrecioProcesada());
+            $concepto->setImporte($articulo->getCantidadProcesada() * $articulo->getPrecioProcesada());
+
+            $conceptos->addConcepto($concepto);
+        }
+    }
+
+    return $conceptos;
+}
+
+/**
  * Regresa un objeto cargado con los datos del receptor de la factura
  * return Object Receptor
  */
-function getReceptor(){
-    
+function getReceptor() {
+
+    if (!($cliente = ClienteDAO::getByPK('id_cliente') )) {
+        Logger::log("Error al obtener datos del cliente.");
+        DAO::transRollback();
+        die('{"success": false, "reason": "Error al obtener datos del cliente." }');
+    }
+
+    $receptor = new Receptor();
+
+    $receptor->setRazonSocial($cliente->getRazonSocial());
+
+    $receptor->setRFC($cliente->getRfc());
+
+    $receptor->setCalle($cliente->getCalle());
+
+    $receptor->setNumeroExterior($cliente->getNumeroExterior());
+
+    if ($cliente->getNumeroInterior() != "") {
+        $emisor->setNumeroInterior($cliente->getNumeroInterior());
+    }
+
+    if ($cliente->getReferencia() != "") {
+        $receptor->setReferencia($cliente->getReferencia());
+    }
+
+    $receptor->setColonia($cliente->getColonia());
+
+    if ($cliente->getLocalidad() != "") {
+        $receptor->setNumeroInterior($cliente->getLocalidad());
+    }
+
+    $receptor->setMunicipio($cliente->getMunicipio());
+
+    $receptor->setEstado($cliente->getEstado());
+
+    $receptor->setPais($cliente->getPais());
+
+    $receptor->setCodigoPostal($cliente->getCodigoPostal());
+
+    $success = $receptor->isValid();
+
+    if ($success->getSuccess()) {
+        return $receptor;
+    } else {
+        Logger::log("Error : {$success->getInfo()}");
+        DAO::transRollback();
+        die('{"success": false, "reason": "' . $success->getInfo() . '" }');
+    }
 }
 
 /**
  * Regresa un objeto cargado con las llaves para generar la factura
  * return Object Llaves
  */
-function getLlaves(){
+function getLlaves() {
 
     if (!($pos_config_privada = PosConfigDAO::getByPK('llave_privada') )) {
         Logger::log("Error al obtener datos de la llave privada.");
@@ -217,7 +334,7 @@ function getLlaves(){
     }
 
     $llaves = new Llaves();
-    
+
     $llaves->setPrivada($pos_config_privada->getValue());
 
     $llaves->setPublica($pos_config_publica->getValue());
@@ -233,7 +350,6 @@ function getLlaves(){
         DAO::transRollback();
         die('{"success": false, "reason": "' . $success->getInfo() . '" }');
     }
-
 }
 
 /**
@@ -345,8 +461,7 @@ function getExpedidoPor() {
     }
 }
 
-
-function getDatosGenerales($args){
+function getDatosGenerales($args) {
 
     //generamos una factura en la BD
 
@@ -356,9 +471,9 @@ function getDatosGenerales($args){
 
     $sucursal = SucursalDAO::getByPK($_SESSION['sucursal']);
 
-    $generales =  new Generales();
+    $generales = new Generales();
 
-    $generales->setFecha(date("d/m/y")."T".date("H:i:s"));
+    $generales->setFecha(date("d/m/y") . "T" . date("H:i:s"));
 
     $generales->setFolioInterno($facturaBD->getIdFolio());
 
@@ -386,237 +501,9 @@ function getDatosGenerales($args){
         DAO::transRollback();
         die('{"success": false, "reason": "' . $success->getInfo() . '" }');
     }
-
 }
-/**
- * Recibe el id de una venta, extrae sus datos y regresa un xml con el formato que
- * se necesita enviar al web service.
- */
-function parseVentaToXML($id_venta, $id_cliente) {
 
-    Logger::log("Iniciando proceso de parceo de venta a XML");
 
-    //obtenemos el objeto venta
-    if (!( $venta = VentasDAO::getByPK($id_venta) )) {
-        Logger::log("Error al obtener datos de la venta : {$id_venta}");
-        die('{"success": false, "reason": "Error al obtener datos de la venta ' . $id_venta . '." }');
-    }
-
-    //obtenemos el objeto cliente
-    if (!( $cliente = ClienteDAO::getByPK($id_cliente) )) {
-        Logger::log("Error al obtener datos del cliente{$id_cliente}");
-        die('{"success": false, "reason": "Error al obtener datos del cliente ' . $id_cliente . '." }');
-    }
-
-    //obtenemos el detalle de la venta
-    $detalle_venta = new DetalleVenta();
-    $detalle_venta->setIdVenta($venta->getIdVenta());
-
-    $productos = DetalleVentaDAO::search($detalle_venta);
-
-    if (count($productos) <= 0) {
-        Logger::log("Error al obtener el detalle de la venta: {$id_venta}");
-        die('{"success": false, "reason": "Error al obtener el detalle de la venta ' . $id_venta . '." }');
-    }
-
-    DAO::transBegin();
-    //DAO::transRollback();
-    //creamos una nueva factura en la BD para obtener el folio
-    $factura = creaFacturaBD($venta->getIdVenta());
-
-    //creamos un objeto sucursal
-    if (!( $sucursal = SucursalDAO::getByPK($_SESSION['sucursal']) )) {
-        Logger::log("Error al obtener datos de la sucursal.");
-        die('{"success": false, "reason": "Error al obtener datos de la sucursal." }');
-    }
-
-    //obtenemos un objeto que contenga la informacion de las llaves para crear el xml
-    $pos_config = getInformacionConfiguracion();
-
-    //creamos la raiz del DOM DOCUMENT
-    $xml = new DOMDocument('1.0', 'utf-8');
-
-    $comprobante = $xml->createElement('comprobante');
-
-    $comprobante->appendChild($xml->createElement('serie', $sucursal->getLetrasFactura()));
-
-    $comprobante->appendChild($xml->createElement('folio_interno', $factura->getIdFolio()));
-
-    $comprobante->appendChild($xml->createElement('fecha', date("y-m-d") . 'T' . date("H:i:s")));
-
-    $comprobante->appendChild($xml->createElement('forma_de_pago', 'Pago en una sola exhibicion'));
-
-    $comprobante->appendChild($xml->createElement('metodo_de_pago', ucfirst(strtolower($venta->getTipoPago()))));
-
-    $comprobante->appendChild($xml->createElement('subtotal', $venta->getSubtotal()));
-
-    $comprobante->appendChild($xml->createElement('total', $venta->getTotal()));
-
-    $comprobante->appendChild($xml->createElement('iva', $venta->getIva()));
-
-    $emisor = $xml->createElement('emisor');
-
-    $emisor->appendChild($xml->createElement('razon_social', $sucursal->getRazonSocial()));
-
-    $emisor->appendChild($xml->createElement('rfc', $sucursal->getRfc()));
-
-    $emisor->appendChild($xml->createElement('calle', $sucursal->getCalle()));
-
-    $emisor->appendChild($xml->createElement('numero_exterior', $sucursal->getNumeroExterior()));
-
-    $emisor->appendChild($xml->createElement('numero_interior', $sucursal->getNumeroInterior()));
-
-    $emisor->appendChild($xml->createElement('colonia', $sucursal->getColonia()));
-
-    $emisor->appendChild($xml->createElement('localidad', $sucursal->getLocalidad()));
-
-    $emisor->appendChild($xml->createElement('referencia', $sucursal->getReferencia()));
-
-    $emisor->appendChild($xml->createElement('municipio', $sucursal->getMunicipio()));
-
-    $emisor->appendChild($xml->createElement('estado', $sucursal->getEstado()));
-
-    $emisor->appendChild($xml->createElement('pais', $sucursal->getPais()));
-
-    $emisor->appendChild($xml->createElement('codigo_postal', $sucursal->getCodigoPostal()));
-
-    $comprobante->appendChild($emisor);
-
-    $expedido_por = $xml->createElement('expedido_por');
-
-    $expedido_por->appendChild($xml->createElement('calle'));
-
-    $expedido_por->appendChild($xml->createElement('numero_exterior'));
-
-    $expedido_por->appendChild($xml->createElement('numero_interior'));
-
-    $expedido_por->appendChild($xml->createElement('colonia'));
-
-    $expedido_por->appendChild($xml->createElement('localidad'));
-
-    $expedido_por->appendChild($xml->createElement('referencia'));
-
-    $expedido_por->appendChild($xml->createElement('municipio'));
-
-    $expedido_por->appendChild($xml->createElement('estado'));
-
-    $expedido_por->appendChild($xml->createElement('pais'));
-
-    $expedido_por->appendChild($xml->createElement('codigo_postal'));
-
-    $comprobante->appendChild($expedido_por);
-
-    $receptor = $xml->createElement('receptor');
-
-    $receptor->appendChild($xml->createElement('razon_social', $cliente->getRazonSocial()));
-
-    $receptor->appendChild($xml->createElement('rfc', $cliente->getRfc()));
-
-    $receptor->appendChild($xml->createElement('calle', $cliente->getCalle()));
-
-    $receptor->appendChild($xml->createElement('numero_exterior', $cliente->getNumeroExterior()));
-
-    $receptor->appendChild($xml->createElement('numero_interior', $cliente->getNumeroInterior()));
-
-    $receptor->appendChild($xml->createElement('colonia', $cliente->getColonia()));
-
-    $receptor->appendChild($xml->createElement('localidad', $cliente->getLocalidad()));
-
-    $receptor->appendChild($xml->createElement('referencia', $cliente->getReferencia()));
-
-    $receptor->appendChild($xml->createElement('municipio', $cliente->getMunicipio()));
-
-    $receptor->appendChild($xml->createElement('estado', $cliente->getEstado()));
-
-    $receptor->appendChild($xml->createElement('pais', $cliente->getPais()));
-
-    $receptor->appendChild($xml->createElement('codigo_postal', $cliente->getCodigoPostal()));
-
-    $comprobante->appendChild($receptor);
-
-    $conceptos = $xml->createElement('conceptos');
-
-    foreach ($productos as $producto) {
-
-        /*
-         * verificamos si el articulo tiene algun proceso:
-         *     si :    
-         *         verificamos si se vendio  original (case 2)
-         *         verificamos si se vendio procesado (case 3)
-         *         verificamos si se vendieron ambos (case 4)
-         *     no :
-         *         solo extraemos la descripcion y la cantidad (original) y su precio  (case 1)
-         *
-         */
-
-
-
-        //creamos un objeto inventario para verificar si tiene un proceso
-        if (!( $inventario = InventarioDAO::getByPK($producto->getIdProducto()) )) {
-            DAO::transRollback();
-            Logger::log("Error al obtener datos de la sucursal.");
-            die('{"success": false, "reason": "Error al obtener datos de la sucursal." }');
-        }
-
-
-        $venta_original = $producto->getCantidad() > 0 ? true : false;
-        $venta_procesada = $producto->getCantidadProcesada() > 0 ? true : false;
-        $proceso = $inventario->getTratamiento() == "limpia" ? true : false;
-
-        if ($venta_procesada) {
-
-            $concepto = $xml->createElement('concepto');
-
-            $concepto->appendChild($xml->createElement('id_producto', $producto->getIdProducto()));
-
-            $concepto->appendChild($xml->createElement('cantidad', $producto->getCantidadProcesada() - $producto->getDescuento()));
-
-            $concepto->appendChild($xml->createElement('unidad', $inventario->getEscala()));
-
-            $concepto->appendChild($xml->createElement('descripcion', ucfirst(strtolower($inventario->getDescripcion() . " " . $inventario->getTratamiento()))));
-
-            $concepto->appendChild($xml->createElement('valor', $producto->getPrecioProcesada()));
-
-            $concepto->appendChild($xml->createElement('importe', ($producto->getCantidad() - $producto->getDescuento()) * $producto->getPrecioProcesada()));
-
-            $conceptos->appendChild($concepto);
-        }
-
-        $concepto = $xml->createElement('concepto');
-
-        $concepto->appendChild($xml->createElement('id_producto', $producto->getIdProducto()));
-
-        $concepto->appendChild($xml->createElement('cantidad', $producto->getCantidad() - $producto->getDescuento()));
-
-        $concepto->appendChild($xml->createElement('unidad', $inventario->getEscala()));
-
-        $concepto->appendChild($xml->createElement('descripcion', $inventario->getDescripcion()));
-
-        $concepto->appendChild($xml->createElement('valor', $producto->getPrecio()));
-
-        $concepto->appendChild($xml->createElement('importe', ($producto->getCantidad() - $producto->getDescuento()) * $producto->getPrecio()));
-
-        $conceptos->appendChild($concepto);
-    }
-
-    $comprobante->appendChild($conceptos);
-
-    $llaves = $xml->createElement('llaves');
-
-    $llaves->appendChild($xml->createElement('publica', $pos_config->publica));
-
-    $llaves->appendChild($xml->createElement('privada', $pos_config->privada));
-
-    $llaves->appendChild($xml->createElement('noCertificado', $pos_config->noCertificado));
-
-    $comprobante->appendChild($llaves);
-
-    $xml->appendChild($comprobante);
-
-    DAO::transEnd();
-    Logger::log("Terminado proceso de parceo de venta a XML");
-    return $xml->saveXML();
-}
 
 /**
  * Extrae la informacion acerca de las llaves para solicitar
@@ -672,139 +559,6 @@ function creaFacturaBD($id_venta) {
     return $factura;
 }
 
-/**
- * Recibe un xml con el formato que necesita el web service para generar
- * una nueva factura electronica.
- */
-function getFacturaFromWebService($xml_request) {
-
-    $xml_request = utf8_encode($xml_request);
-
-    //obtenemos la url del web service
-    if (!( $url = PosConfigDAO::getByPK('url_timbrado') )) {
-        Logger::log("Error al obtener la url del ws");
-        DAO::transRollback();
-        die('{"success": false, "reason": "Error al obtener la url del web service" }');
-    }
-
-
-    $client = new SoapClient($url->getValue());
-
-    echo (string) $xml_request;
-
-    //var_dump($xml_request);
-
-    $result = $client->RececpcionComprobante(array('comprobante' => $xml_request));
-
-    echo "despues de llamar";
-
-    //verificamos si la llamada fallo
-    if (is_soap_fault($result)) {
-        trigger_error("La llamada al webservice ha fallado", E_USER_ERROR);
-    }
-
-    //analizamos el success del xml
-
-
-    libxml_use_internal_errors(true);
-
-
-
-    $xml_response->loadXML($result->RececpcionComprobanteResult);
-
-    if (!$xml_response) {
-        $e = "Error cargando XML\n";
-        foreach (libxml_get_errors () as $error) {
-            $e.= "\t" . $error->message;
-        }
-
-        Logger::log("Error al leer xml del web service : {$e} ");
-        DAO::transRollback();
-        die('{"success": false, "reason": "Error al leer xml del web service : ' . preg_quote($e) . '" }');
-    }
-
-
-    $params = $xml_response->getElementsByTagName('Complemento');
-
-    $k = 0;
-
-    foreach ($params as $param) {
-        $success = $params->item($k)->getAttribute('success');
-    }
-
-    if ($success == false || $success == "false") {
-        Logger::log("Error al generar el xml del web service");
-        DAO::transRollback();
-        die('{"success": false, "reason": "Error al generar el xml del web service" }');
-    }
-
-    return $xml_response->saveXML();
-}
-
-/**
- * Recibe el id de un folio de una factura
- * y regresa un json con el formato necesario para generar una 
- * nueva factura en formato pdf.
- */
-function parseFacturaToJSON($xml_response) {
-
-    //obtenemos la url del logo
-    if (!( $url_logo = PosConfigDAO::getByPK('url_logo') )) {
-        $url_logo = "http://t2.gstatic.com/images?q=tbn:ANd9GcTLzjmaR_M58RmjwRE_xXRziJBi68hMg898kvKtYLD1lQ22i7Br";
-    }
-
-    $json = array();
-
-    /* array_push($json , "url" -> $url_logo);
-      array_push("emisor",array(
-      "razon_social"
-      )); */
-    /**
-
-      {
-      "url" : "string",
-      "emisor": {
-      "razon_social" : "string",
-      "rfc": "string",
-      "direccion": "string",
-      "folio": "string"
-      },
-      "receptor": {
-      "razon_social" : "string",
-      "rfc": "string",
-      "direccion": "string"
-      },
-      "datos_fiscales": {
-      "numero_certificado": "string",
-      "numero_aprobacion": "string",
-      "anio_aprobacion": "string",
-      "cadena_original": "string",
-      "sello_digital": "string",
-      "sello_digital_proveedor": "string",
-      "pac": "string"
-      },
-      "factura": {
-      "productos": [
-      {
-      "cantidad": "string",
-      "descripcion": "string",
-      "precio": "string",
-      "importe": "string"
-      }
-      ],
-      "subtotal": "string",
-      "descuento": "string",
-      "iva": "string",
-      "total": "string",
-      "total_letra": "string",
-      "forma_pago": "string",
-      "metodo_pago": "string"
-      }
-      }
-
-     */
-    return json_encode($json);
-}
 
 /**
  * cancela una factura

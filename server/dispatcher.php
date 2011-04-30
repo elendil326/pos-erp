@@ -111,7 +111,7 @@ switch( ((int)($args['action'] / 100))*100 )
 	break;
 	
 	case 1200:
-	    require_once('factura.controller.php');
+	    require_once('controller/factura.controller.php');
 	break;
 
         case 1300:

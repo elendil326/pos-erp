@@ -10,6 +10,20 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/server/logger.php");
 class Receptor {
 
     /**
+     * Nombre de la clase
+     * @var String Nombre de la clase
+     */
+    private $type = "Receptor";
+
+    /**
+     * Regresa el nombre de esta clase
+     * @return String Nombde de la clase
+     */
+    public function getType(){
+        return $this->type;
+    }
+
+    /**
      *
      * @var <type>
      */

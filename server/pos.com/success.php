@@ -6,7 +6,21 @@
  * @author Manuel
  */
 class Success {
-    
+
+    /**
+     * Nombre de la clase
+     * @var String Nombre de la clase
+     */
+    private $type = "Success";
+
+    /**
+     * Regresa el nombre de esta clase
+     * @return String Nombde de la clase
+     */
+    public function getType(){
+        return $this->type;
+    }
+
     /**
      * Contiene informacion acerca del success
      * @var String 

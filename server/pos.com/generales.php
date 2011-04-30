@@ -10,6 +10,20 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/server/logger.php");
 class Generales {
 
     /**
+     * Nombre de la clase
+     * @var String Nombre de la clase
+     */
+    private $type = "Generales";
+
+    /**
+     * Regresa el nombre de esta clase
+     * @return String Nombde de la clase
+     */
+    public function getType(){
+        return $this->type;
+    }
+
+    /**
      * Contiene la informacion acerca de la serie de la factura.
      * @var String
      */

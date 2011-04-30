@@ -10,6 +10,20 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/server/logger.php");
 class Llaves {
 
     /**
+     * Nombre de la clase
+     * @var String Nombre de la clase
+     */
+    private $type = "Llaves";
+
+    /**
+     * Regresa el nombre de esta clase
+     * @return String Nombde de la clase
+     */
+    public function getType(){        
+        return $this->type;
+    }
+
+    /**
      * Contiene la inforamción acerca de la llave publica.
      * @var <type>
      */

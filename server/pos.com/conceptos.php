@@ -10,10 +10,41 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/server/logger.php");
 class Conceptos {
 
     /**
+     * Nombre de la clase
+     * @var String Nombre de la clase
+     */
+    private $type = "Conceptos";
+
+    /**
+     * Regresa el nombre de esta clase
+     * @return String Nombde de la clase
+     */
+    public function getType() {
+        return $this->type;
+    }
+
+    /**
      * Array que contiene objetos de tipo Concepto
      * @var array
      */
     private $conceptos = array();
+
+    /**
+     * Agrega un nuevo concepto al arreglo de conceptos
+     * @param <Concepto> $concepto
+     */
+    public function addConcepto($concepto) {
+        array_push($this->conceptos, $concepto);
+    }
+
+    /**
+     * Obtiene todos los conceptos
+     * @return <Conceptos>
+     */
+    public function getConceptos() {
+        return $this->conceptos;
+    }
+
     /**
      * Contiene la información acerca de posibles errores.
      * @var String
@@ -28,7 +59,6 @@ class Conceptos {
 
         return $this->error;
     }
-
     /**
      * Establece la información acerca de posibles errores.
      * @param <type> $param
@@ -36,22 +66,30 @@ class Conceptos {
     public function setError($param) {
         $this->error = $param;
     }
-
     /**
      * Crea un objeto que contiene toda la informacion de todos los productos
      * involucrados en esa venta y verifica que sean validos.
      *
      * @param Array $items
      */
-    public function __construct($items) {
+    public function __construct() {
 
     }
-
     /**
      * Verifica que el objeto contenga toda la informacion necesaria
      * @return boolean
      */
     public function isValid() {
+
+        foreach ($this->conceptos as $concepto) {
+            $success = $concepto->isValid();
+
+            if (!$success->getSuccess()) {
+                $this->setError($success->getInfo());
+                break;
+            }
+        }
+
         $this->success = new Success($this->error);
         return $this->success;
     }
@@ -59,6 +97,20 @@ class Conceptos {
 }
 
 class Concepto {
+
+    /**
+     * Nombre de la clase
+     * @var String Nombre de la clase
+     */
+    private $type = "Concepto";
+
+    /**
+     * Regresa el nombre de esta clase
+     * @return String Nombde de la clase
+     */
+    public function getType() {
+        return $this->type;
+    }
 
     /**
      *
@@ -264,7 +316,7 @@ class Concepto {
             $this->setError("No se ha definido el valor del producto : {$this->getDescripcion()}.");
         }
 
-        $this->success = new Success($this->error);
+        $this->success = new Success($this->getError());
         return $this->success;
     }
 
