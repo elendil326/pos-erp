@@ -78,8 +78,14 @@
 										//enviado este mes, mostrar dias
 										echo "Hace " . (date( "d") - date("d", $enviado)) . " dias.";
 									}else{
-										//enviado hace mas de un mes
-										echo "Hace " . (date( "m") - date("m", $enviado)) . " meses.";
+										//enviado en un mes diferente
+										if((date( "m") - date("m", $enviado)) == 1){
+											//fue enviado el mes pasado
+											echo "Hace " . (date( "d") + (date( "t",  $enviado)) - date("d", $enviado) +1) . " dias.";
+										}else{	
+											echo "Hace " . (date( "m") - date("m", $enviado)) . " meses.";	
+										}
+										
 										
 									}
 
