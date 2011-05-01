@@ -22,11 +22,69 @@ require_once("controller/inventario.controller.php");
 <link rel="stylesheet" href="../frameworks/humblefinance/humble/finance.css" type="text/css" media="screen" title="no title" charset="utf-8">
 
 
-<script>//document.getElementById("MAIN_TITLE").innerHTML = "Lista de clientes";</script>
+<?php
 
+	
+	//obtener todas las sucursales activas
+	$sucursales = listarSucursales(  );
+	
+	$clientesRegistradosPorSucursal = array();
+	
+	//buscar cuantos clientes se han registado en todas las sucursales
+	$foo = 0;
+	foreach($sucursales as $s){
+		$clientesRegistradosPorSucursal[ $foo ] = ClienteDAO::contarClientesRegistradosPorDia( $s["id_sucursal"] );
+		$missingDays[ $foo ] = 0;
+		$sucDayIndex[ $foo ] = 0;
+		$foo++;
+	}
+	
+	//obtener la sucursal que abrio primero
+    $firstSuc = SucursalDAO::getAll(1, 1, 'fecha_apertura', 'ASC' );
+	
+	//esa el la fecha que comenzare a iterar
+	$dayIndex =  date("Y-m-d",  strtotime($firstSuc[0]->getFechaApertura())  );
+	
+	//the day the loop will end
+	$tomorrow = date("Y-m-d", strtotime("+1 day",  time()));	
+	
+	
+	//array donde guardamos las fechas que hemos estado analizando
+	$fechas = array();
+	
 
+	
+	while( $tomorrow != $dayIndex ){
+		
+		for ($sucursalIndex=0; $sucursalIndex < sizeof($clientesRegistradosPorSucursal); $sucursalIndex++) { 
+			
+			//im out of days !
+			if( sizeof($clientesRegistradosPorSucursal[ $sucursalIndex ]) == $sucDayIndex[ $sucursalIndex ] ){
+				array_push($clientesRegistradosPorSucursal[ $sucursalIndex ], array( "fecha" => $dayIndex, "clientes" => 0 ));
+			}
+			
+			if( $clientesRegistradosPorSucursal[ $sucursalIndex ][ $sucDayIndex[ $sucursalIndex ] ]["fecha"] != $dayIndex){
+				$missingDays[ $sucursalIndex ]++;
+			}else{
+				for($a = 0 ; $a < $missingDays[ $sucursalIndex ]; $a++){
+					array_splice($clientesRegistradosPorSucursal[ $sucursalIndex ], $sucDayIndex[ $sucursalIndex ], 0, array(array( "fecha" => "missing_day" , "clientes" => 0)) );
+				}
+			 	$sucDayIndex[ $sucursalIndex ] += $missingDays[ $sucursalIndex ]+1;
+				$missingDays[ $sucursalIndex ] = 0;
+			}
+			
+		}
+		
+		
+		array_push($fechas, $dayIndex);
+		$dayIndex = date("Y-m-d", strtotime("+1 day", strtotime($dayIndex)));
+	}
+	
+	
 
-<h2>Mapa de clientes</h2>
+	
+?>
+<h2>Mapa de clientes por sucursal</h2>
 <div id="finance">
     <div id="fechas">
     </div>
@@ -46,87 +104,95 @@ require_once("controller/inventario.controller.php");
 
     <?php
 
-    //obtener la fecha de la sucursal que abrio primero
-    $firstSuc = SucursalDAO::getAll(1, 1, 'fecha_apertura', 'ASC' );
 
-    
-    if(sizeof($firstSuc)!=0)
-    {
-    
-            $numClientes = array();
-            $fechas = array();
-            $n = 0;
-    		
-            $primerCliente = $firstSuc[0]->getFechaApertura();
-            
-            $start = date("Y-m-d", strtotime("-1 day", strtotime($primerCliente)));
-            $now = date ( "Y-m-d" );
+	
+	for ($s=0; $s < sizeof($clientesRegistradosPorSucursal); $s++) { 
 
-		
-			while( true ){
+		$acc = 0;		
+		echo "\nvar clientesEnSucursal". $s ." = [";
 
-	            $v1 = new Cliente();
-                $v1->setIdCliente("0");
-	            $v1->setFechaIngreso( $start . " 00:00:00" );
+		for($i = 0; $i < sizeof($clientesRegistradosPorSucursal[$s]); $i++ ){
+			$acc += $clientesRegistradosPorSucursal[$s][$i]["clientes"] ;
+			echo  "[" . $i . "," . $acc . "]";
 
-	            $v2 = new Cliente();
-                $v2->setIdCliente("999");
-	            $v2->setFechaIngreso( $start . " 23:59:59" );				
-	            
-	            $results = ClienteDAO::byRange($v1, $v2);
-                $n += count($results);	            
-                
-                array_push( $numClientes, $n );
-                array_push( $fechas, $start );
-                
-   				if($start == $now){
-   					break;
-   				}
-   				
-  				$start = date("Y-m-d", strtotime("+1 day", strtotime($start)));
+			if($i < sizeof($clientesRegistradosPorSucursal[$s]) - 1){
+					echo ",";		
 			}
-			
+		}
+		echo "];\n";
+	}
+	
 
-            echo "\nvar numClientes = [";
-            for($i = 0; $i < sizeof($numClientes); $i++ ){
-                echo  "[" . $i . "," . $numClientes[$i] . "]";
-                if($i < sizeof($numClientes) - 1){
-                    echo ",";
-                }
-            }
-            echo "];\n";
-
-
-
-
-            echo "var fechas = [";
-            for($i = 0; $i < sizeof($fechas); $i++ ){
-                echo  "{ fecha : '" . $fechas[$i] . "'}";
-                if($i < sizeof($fechas) - 1){
-                    echo ",";
-                }
-            }
-            echo "];\n";
-
-    }
+	echo "var fechas = [";
+	for($i = 0; $i < sizeof($fechas); $i++ ){
+		echo  "{ fecha : '" . $fechas[$i] . "'}";
+		if($i < sizeof($fechas) - 1){
+			echo ",";
+		}
+	}
+	echo "];\n";
 
     ?>
-            
 
 
 
-
-
-	Event.observe(document, 'dom:loaded', function() {
-		if(window.numClientes){
-		    var graficaVentas = new HumbleFinance();
-		    graficaVentas.addGraph( numClientes );
-		    graficaVentas.addSummaryGraph( numClientes );
-		    graficaVentas.render('finance');		
-		}else{
-			$('finance').innerHTML = "No hay clientes";
+	function meses(m){
+		m = parseInt(m);
+		switch(m){
+			case 1: return "enero";
+			case 2: return "febrero";
+			case 3: return "marzo";
+			case 4: return "abril";
+			case 5: return "mayo";
+			case 6: return "junio";
+			case 7: return "julio";
+			case 8: return "agosto";
+			case 9: return "septiembre";
+			case 10: return "octubre";
+			case 11: return "noviembre";
+			case 12: return "diciembre";
+									
 		}
+	}
+	
+	
+	
+	Event.observe(document, 'dom:loaded', function() {
+	    var graficaVentas = new HumbleFinance();
+	
+		graficaVentas.setXFormater(
+				function(val){
+					if(val ==0)return "";					
+					return meses(fechas[val].fecha.split("-")[1]) + " "  + fechas[val].fecha.split("-")[2]; 
+				}
+			);
+
+		graficaVentas.setYFormater(
+				function(val){
+					if(val ==0)return "";
+					return val + " clientes";
+				}
+			);
+
+		graficaVentas.setTracker(
+			function (obj){
+					obj.x = parseInt( obj.x );
+					
+					return meses(fechas[obj.x].fecha.split("-")[1]) + " "  + fechas[obj.x].fecha.split("-")[2]
+								+ ", <b>"+ parseInt(obj.y) + "</b> clientes";
+
+				}
+			);
+		<?php
+			for ($s=0; $s < sizeof($clientesRegistradosPorSucursal); $s++) { 
+				echo "graficaVentas.addGraph( clientesEnSucursal".$s." );";						
+			}
+
+		?>
+	    graficaVentas.addSummaryGraph( clientesEnSucursal0 );
+	    graficaVentas.render('finance');
 	});
+
 
 </script>
 

@@ -20,7 +20,7 @@
 				<li>
 				  <a href="inventario.php?action=surtir">Surtir Sucursal</a>
 				</li>
-<!--				<LI><A href="sucursales.php?action=abrir">Nueva sucursal</A></LI> -->
+				<LI><A href="sucursales.php?action=abrir">Nueva sucursal</A></LI> 
 				<LI><A href="sucursales.php?action=ventas">Ventas a sucursales</A></LI>
 				<LI><A href="gerentes.php?action=lista">Gerentes</A></LI>
 <!-- 				<LI><A href="gerentes.php?action=asignar">Asignar gerencias</A></LI>				-->

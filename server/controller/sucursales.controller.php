@@ -24,7 +24,7 @@ function listarSucursales(  ){
 
     foreach( $sucursales as $sucursal ){
 	
-	   if( $_SESSION['sucursal'] == $sucursal->getIdSucursal() )
+	   if(( $_SESSION['sucursal'] == $sucursal->getIdSucursal()) )
 	   {	             
             continue;
 	   }

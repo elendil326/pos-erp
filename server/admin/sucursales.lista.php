@@ -12,18 +12,6 @@ $sucursales = listarSucursales();
 
 
 
-$data = array();
-
-foreach( $sucursales as $sucursal ){
-
-	//obtener los clientes del controller de clientes
-	$detalles = detallesSucursal( $sucursal["id_sucursal"] );
-	array_push($data, $detalles); 
-}
-
-
-
-
 
 
 /****************************
@@ -204,24 +192,25 @@ function bold($s){
 	return "<b>" . $s . "</b>";
 }
 
+
+
+
+
 //render the table
 $header = array( 
-	//"id_sucursal" => "ID",
 	"descripcion"=> "",
-	"direccion"=> "" );
-	//"rfc"=> "RFC",
-	//"telefono"=> "Telefono",
-	//"letras_factura"=> "Facturas" );
-	$tabla = new Tabla( $header, $data );
+	"calle"=> "" );
+
+
+	$tabla = new Tabla( $header, $sucursales );
 	$tabla->addOnClick("id_sucursal", "mostrarDetallesSucursal");
 	$tabla->addNoData("No hay sucursales.");
 	$tabla->addColRender("descripcion", "bold");
 
 	print ("<br><h2>Sucursales Activas</h2>");
-	$tabla->render();	
-
-
+	$tabla->render();
 ?>
+
 <script type="text/javascript" charset="utf-8">
 	function mostrarDetallesSucursal ( sid ){
 		window.location = "sucursales.php?action=detalles&id=" + sid;
@@ -238,10 +227,3 @@ $header = array(
 <script type="text/javascript" charset="utf-8" src="../frameworks/humblefinance/humble/HumbleFinance.js"></script>
 <link rel="stylesheet" href="../frameworks/humblefinance/humble/finance.css" type="text/css" media="screen" title="no title" charset="utf-8">
 
-
-
-<?php
-
-	include( "admin/sucursales.abrir.php" );
-
-?>
