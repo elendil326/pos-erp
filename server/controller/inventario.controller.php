@@ -165,7 +165,7 @@ function listarInventarioMaestro( $n = 50, $show = POS_TODOS )
 				$bar["existencias_procesadas"] = "NA";
 			}
 			
-			$bar['sitio_descarga_desc'] = $sitio;
+			$bar['sitio_descarga_desc'] = isset($sitio) ? $sitio : null;
 			
 			$fecha = explode( " ", toDate($bar['fecha']));
 			$bar['fecha'] = $fecha[0];
