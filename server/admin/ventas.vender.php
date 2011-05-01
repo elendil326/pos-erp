@@ -139,7 +139,7 @@ jQuery(document).ready(function(){
     ?>
 
     
-    jQuery("#MAIN_TITLE").html("Surtir sucursal");
+    jQuery("#MAIN_TITLE").html("Vender a un cliente");
 
 	if(DEBUG){
 		//seleccionDeProd(1 );

@@ -140,13 +140,13 @@ function abrirSucursal( $json = null )
     $json = parseJSON( $json );
 
 	if($json == null){
-		Logger::log("Parametros invalidos para abrir sucursal:" . $foo );	
+		Logger::log("Parametros invalidos para abrir sucursal: Impsible parsear json: " . $foo );	
 		die('{"success" : false, "reason": "Parametros invalidos."}');	
 	}
 
 	if(!( isset($json->gerente) &&
 			isset($json->descripcion) &&
-			isset($json->direccion) &&			
+			isset($json->calle) &&			
 			isset($json->prefijo_factura) &&
 			isset($json->rfc) &&
 			isset($json->telefono)))
@@ -158,7 +158,7 @@ function abrirSucursal( $json = null )
 	
 	if(( strlen($json->gerente) < 1 ||
 			strlen($json->descripcion) < 1 ||
-			strlen($json->direccion) < 1 ||			
+			strlen($json->calle) < 1 ||			
 			strlen($json->prefijo_factura) < 1 ||
 			strlen($json->rfc) < 1 ||
 			strlen($json->telefono) < 1 ))
@@ -195,12 +195,26 @@ function abrirSucursal( $json = null )
 
     $sucursal->setActivo 		( "1");
     $sucursal->setDescripcion	( $json->descripcion );
-    $sucursal->setDireccion 	( $json->direccion);
+    $sucursal->setRazonSocial	( $json->descripcion );
+    $sucursal->setCalle 		( $json->calle);
     $sucursal->setGerente 		( $json->gerente);
     $sucursal->setLetrasFactura ( $json->prefijo_factura);
     $sucursal->setRfc 			( $json->rfc);
+    $sucursal->setPais 			( "Mexico");
     $sucursal->setTelefono 		( $json->telefono);
     $sucursal->setSaldoAfavor 	( 0 );
+
+
+
+	$sucursal->setNumeroExterior( $json->numero_exterior);
+	$sucursal->setNumeroInterior( $json->numero_interior);
+	$sucursal->setColonia( $json->colonia);
+	$sucursal->setLocalidad( $json->localidad);
+	$sucursal->setMunicipio( $json->municipio);	
+	$sucursal->setReferencia( $json->referencia);
+	$sucursal->setEstado( $json->estado);
+	$sucursal->setCodigoPostal( $json->codigo_postal);
+
 
 
 	
@@ -238,15 +252,20 @@ function abrirSucursal( $json = null )
     $cajaComun = new Cliente();
 
     $cajaComun->setActivo 		( 1 	);
-    $cajaComun->setCiudad 		( "" 	);
+    $cajaComun->setMunicipio	( "" 	);
+    $cajaComun->setNumeroExterior( "" 	);
+    $cajaComun->setColonia		( "" 	);
+    $cajaComun->setEstado		( "" 	);
+    $cajaComun->setPais		( "" 	);
+    $cajaComun->setCodigoPostal		( "" 	);
     $cajaComun->setDescuento 	( 0		);
-    $cajaComun->setDireccion 	( ""	);
+    $cajaComun->setCalle		( ""	);
     $cajaComun->setEMail 		( ""	);
     $cajaComun->setIdCliente 	( "-" . $sucursal->getIdSucursal() );
     $cajaComun->setIdSucursal	( $sucursal->getIdSucursal() );
     $cajaComun->setIdUsuario 	( $_SESSION['userid'] );
     $cajaComun->setLimiteCredito( 0		);
-    $cajaComun->setNombre 		( "Caja Comun"		);
+    $cajaComun->setRazonSocial	( "Caja Comun"		);
     $cajaComun->setRfc 			( $json->rfc	);
     $cajaComun->setTelefono 	( $json->telefono );
 

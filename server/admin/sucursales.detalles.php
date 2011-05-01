@@ -150,111 +150,112 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
         $fechas = array();
 
 		//buscar la fecha mas vieja
-		$startDate = strtotime($ventasEstaSucursal[0]["fecha"]);
-
-		if( strtotime( $ventasTodasLasSucursales[0]["fecha"] )
-				< strtotime($ventasEstaSucursal[0]["fecha"])  )
-		{
-			$startDate = strtotime($ventasTodasLasSucursales[0]["fecha"]) ;
-		}
-		
-		echo "/*";
-
-		//current day
-		$cDay =  date("Y-m-d",  $startDate  ); 
-		
-		//the day the loop will end
-		$tomorrow = date("Y-m-d", strtotime("+1 day",  time()));
-		
-		//utility variables
-		$thisBranchSales = $ventasEstaSucursal;
-		$thisBranchSalesIndex = $thisBranchMissingDays = 0;
-		
-		$allBranchesSales = $ventasTodasLasSucursales;
-		$allBranchesSalesIndex = $allBranchesMissingDays = 0;
-				
-		//iniciar en $startDate y sumar dias hasta llegar al dia de hoy
-		//en $cDay esta el dia en la iteracion
-		while( $tomorrow != $cDay ){
-
-			array_push($fechas, $cDay);
+		if(sizeof($ventasEstaSucursal) != 0){
+			//no hay ventas aca
+			// 
+			// 
 			
-			if( sizeof($allBranchesSales) == $allBranchesSalesIndex ){
-				//im out of days !
-				array_push($allBranchesSales, array( "fecha" => $cDay, "ventas" => 0 ));
+			$startDate = strtotime($ventasEstaSucursal[0]["fecha"]);
+
+			if( strtotime( $ventasTodasLasSucursales[0]["fecha"] )
+					< strtotime($ventasEstaSucursal[0]["fecha"])  )
+			{
+				$startDate = strtotime($ventasTodasLasSucursales[0]["fecha"]) ;
 			}
-			
-		 	if( $allBranchesSales[ $allBranchesSalesIndex ]["fecha"] != $cDay){
-				$allBranchesMissingDays++;
-			}else{
-				//fill the allBranchesMissingDays !
-				for($a = 0 ; $a < $allBranchesMissingDays; $a++){
-					array_splice($allBranchesSales, $allBranchesSalesIndex, 0, array(array( "fecha" => "missing_day" , "ventas" => 0)) );
+
+
+
+			//current day
+			$cDay =  date("Y-m-d",  $startDate  ); 
+
+			//the day the loop will end
+			$tomorrow = date("Y-m-d", strtotime("+1 day",  time()));
+
+			//utility variables
+			$thisBranchSales = $ventasEstaSucursal;
+			$thisBranchSalesIndex = $thisBranchMissingDays = 0;
+
+			$allBranchesSales = $ventasTodasLasSucursales;
+			$allBranchesSalesIndex = $allBranchesMissingDays = 0;
+
+			//iniciar en $startDate y sumar dias hasta llegar al dia de hoy
+			//en $cDay esta el dia en la iteracion
+			while( $tomorrow != $cDay ){
+
+				array_push($fechas, $cDay);
+
+				if( sizeof($allBranchesSales) == $allBranchesSalesIndex ){
+					//im out of days !
+					array_push($allBranchesSales, array( "fecha" => $cDay, "ventas" => 0 ));
 				}
-				$allBranchesSalesIndex += $allBranchesMissingDays+1;
-				$allBranchesMissingDays = 0;
-			}
-			
 
-			if( sizeof($thisBranchSales) == $thisBranchSalesIndex ){
-				//im out of days !
-				array_push($thisBranchSales, array( "fecha" => $cDay, "ventas" => 0 ));
-			}
-			
-		 	if( $thisBranchSales[ $thisBranchSalesIndex ]["fecha"] != $cDay){
-				$thisBranchMissingDays++;
-			}else{
-				for($a = 0 ; $a < $thisBranchMissingDays; $a++){
-					array_splice($thisBranchSales, $thisBranchSalesIndex, 0, array(array( "fecha" => "missing_day" , "ventas" => 0)) );
+			 	if( $allBranchesSales[ $allBranchesSalesIndex ]["fecha"] != $cDay){
+					$allBranchesMissingDays++;
+				}else{
+					//fill the allBranchesMissingDays !
+					for($a = 0 ; $a < $allBranchesMissingDays; $a++){
+						array_splice($allBranchesSales, $allBranchesSalesIndex, 0, array(array( "fecha" => "missing_day" , "ventas" => 0)) );
+					}
+					$allBranchesSalesIndex += $allBranchesMissingDays+1;
+					$allBranchesMissingDays = 0;
 				}
-				
-				$thisBranchSalesIndex += $thisBranchMissingDays+1;
-				$thisBranchMissingDays = 0;
+
+
+				if( sizeof($thisBranchSales) == $thisBranchSalesIndex ){
+					//im out of days !
+					array_push($thisBranchSales, array( "fecha" => $cDay, "ventas" => 0 ));
+				}
+
+			 	if( $thisBranchSales[ $thisBranchSalesIndex ]["fecha"] != $cDay){
+					$thisBranchMissingDays++;
+				}else{
+					for($a = 0 ; $a < $thisBranchMissingDays; $a++){
+						array_splice($thisBranchSales, $thisBranchSalesIndex, 0, array(array( "fecha" => "missing_day" , "ventas" => 0)) );
+					}
+
+					$thisBranchSalesIndex += $thisBranchMissingDays+1;
+					$thisBranchMissingDays = 0;
+				}
+
+
+
+				$cDay = date("Y-m-d", strtotime("+1 day", strtotime($cDay)));
 			}
-			
-			
-		
-			$cDay = date("Y-m-d", strtotime("+1 day", strtotime($cDay)));
+
+
+
+	        echo "\nvar estaSucursal = [";
+	        for($i = 0; $i < sizeof($thisBranchSales); $i++ ){
+	            echo  "[" . $i . "," . $thisBranchSales[$i]["ventas"] . "]";
+	            if($i < sizeof($thisBranchSales) - 1){
+	                echo ",";
+	            }
+	        }
+	        echo "];\n";
+
+			echo "console.log( 'esta sucural->', estaSucursal );";
+
+	       echo "\nvar todasSucursales = [";
+	        for($i = 0; $i < sizeof($allBranchesSales); $i++ ){
+	            echo  "[" . $i . "," . $allBranchesSales[$i]["ventas"] . "]";
+	            if($i < sizeof($allBranchesSales) - 1){
+	                echo ",";
+	            }
+	        }
+	        echo "];\n";			
+
+
+
+	        echo "var fechasVentas = [";
+	        for($i = 0; $i < sizeof($fechas); $i++ ){
+	            echo  "{ fecha : '" . $fechas[$i] . "'}";
+	            if($i < sizeof($fechas) - 1){
+	                echo ",";
+	            }
+	        }
+	        echo "];\n";
 		}
-		
-
-		
-
-				
-		echo "*/";
-
-		
-		
-        echo "\nvar estaSucursal = [";
-        for($i = 0; $i < sizeof($thisBranchSales); $i++ ){
-            echo  "[" . $i . "," . $thisBranchSales[$i]["ventas"] . "]";
-            if($i < sizeof($thisBranchSales) - 1){
-                echo ",";
-            }
-        }
-        echo "];\n";
-
-		echo "console.log( 'esta sucural->', estaSucursal );";
-		
-       echo "\nvar todasSucursales = [";
-        for($i = 0; $i < sizeof($allBranchesSales); $i++ ){
-            echo  "[" . $i . "," . $allBranchesSales[$i]["ventas"] . "]";
-            if($i < sizeof($allBranchesSales) - 1){
-                echo ",";
-            }
-        }
-        echo "];\n";			
-		
-
-
-        echo "var fechasVentas = [";
-        for($i = 0; $i < sizeof($fechas); $i++ ){
-            echo  "{ fecha : '" . $fechas[$i] . "'}";
-            if($i < sizeof($fechas) - 1){
-                echo ",";
-            }
-        }
-        echo "];\n";			
+					
 	?>
 
 
@@ -291,6 +292,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 	var graficaVentas = new HumbleFinance();
 	graficaVentas.setXFormater(
 			function(val){
+				if(val ==0)return "";
 				return meses(fechasVentas[val].fecha.split("-")[1]) + " "  + fechasVentas[val].fecha.split("-")[2]; 
 			}
 		);
@@ -305,7 +307,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 	graficaVentas.setTracker(
 		function (obj){
 				obj.x = parseInt( obj.x );
-				
+
 				return meses(fechasVentas[obj.x].fecha.split("-")[1]) + " "  + fechasVentas[obj.x].fecha.split("-")[2]
 							+ ", <b>"+ parseInt(obj.y) + "</b> ventas";
 
@@ -624,7 +626,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 	$clientes = ClienteDAO::byRange($foo, $bar);
 
     //render the table
-    $header = array(  "nombre" => "Nombre", "rfc" => "RFC", /* "direccion" => "Direccion", */ "ciudad" => "Ciudad"  );
+    $header = array(  "razon_social" => "Razon Social", "rfc" => "RFC", /* "direccion" => "Direccion", */ "municipio" => "Municipio"  );
     $tabla = new Tabla( $header, $clientes );
     $tabla->addOnClick("id_cliente", "mostrarDetalles");
     $tabla->addNoData("Ningun cliente se ha registrado en esta sucursal.");
@@ -653,14 +655,14 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 
 
     if(sizeof($cortes) == 0){
-        echo "No se han hecho cortes en esta sucursal. Mostrando flujo desde la apertura de sucursal.<br><br>";
+        echo "<div align=center>No se han hecho cortes en esta sucursal. Mostrando flujo desde la apertura de sucursal.</div><br>";
         
         $fecha = $sucursal->getFechaApertura();
 
     }else{
 
         $corte = $cortes[0];
-        echo "Fecha de ultimo corte: <b>" . $corte->getFecha() . "</b><br><br>";
+        echo "Fecha de ultimo corte: <b>" . $corte->getFecha() . "</b><br>";
         $fecha = $corte->getFecha();
 
     }
