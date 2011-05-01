@@ -1,7 +1,6 @@
 <?php
 
 require_once("success.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/server/logger.php");
 
 /**
  * Archivo que contiene la clase Comceptos la cual provee de los medios necesarios para validar
@@ -59,6 +58,7 @@ class Conceptos {
 
         return $this->error;
     }
+
     /**
      * Establece la información acerca de posibles errores.
      * @param <type> $param
@@ -66,6 +66,7 @@ class Conceptos {
     public function setError($param) {
         $this->error = $param;
     }
+
     /**
      * Crea un objeto que contiene toda la informacion de todos los productos
      * involucrados en esa venta y verifica que sean validos.
@@ -73,8 +74,9 @@ class Conceptos {
      * @param Array $items
      */
     public function __construct() {
-
+        
     }
+
     /**
      * Verifica que el objeto contenga toda la informacion necesaria
      * @return boolean
@@ -287,32 +289,32 @@ class Concepto {
     public function isValid() {
 
         //verificamos si existe el
-        if (!(isset($this->getDescripcion()) && $this->getDescripcion() = !"")) {
+        if (!($this->getDescripcion() != null && $this->getDescripcion() != "")) {
             $this->setError("No se ha definido la descripción.");
         }
 
         //verificamos si existe el
-        if (!(isset($this->getCantidad()) && $this->getCantidad() = !"")) {
+        if (!($this->getCantidad() != null && $this->getCantidad() != "")) {
             $this->setError("No se ha definido la cantidad del producto : {$this->getDescripcion()}.");
         }
 
         //verificamos si existe el
-        if (!(isset($this->getIdProducto()) && $this->getIdProducto() = !"")) {
+        if (!($this->getIdProducto() != null && $this->getIdProducto() != "")) {
             $this->setError("No se ha definido el id del producto : {$this->getDescripcion()}.");
         }
 
         //verificamos si existe el
-        if (!(isset($this->getImporte()) && $this->getImporte() = !"")) {
+        if (!($this->getImporte() != null && $this->getImporte() != "")) {
             $this->setError("No se ha definido el importe del producto : {$this->getDescripcion()}.");
         }
 
         //verificamos si existe el
-        if (!(isset($this->getUnidad()) && $this->getUnidad() = !"")) {
+        if (!($this->getUnidad() != null && $this->getUnidad() != "")) {
             $this->setError("No se ha definido la unidad del producto : {$this->getDescripcion()}.");
         }
 
         //verificamos si existe el
-        if (!(isset($this->getValor()) && $this->getValor() = !"")) {
+        if (!($this->getValor() != null && $this->getValor() != "")) {
             $this->setError("No se ha definido el valor del producto : {$this->getDescripcion()}.");
         }
 

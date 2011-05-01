@@ -9,7 +9,6 @@ require_once("llaves.php");
 require_once("success.php");
 require_once("addendas.php");
 require_once("impuestos.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/server/logger.php");
 
 //$_SERVER['DOCUMENT_ROOT'] = "C:/wamp/www/pos/trunk"
 
@@ -285,193 +284,156 @@ class Comprobante {
      */
     function getNuevaFactura() {
 
-        $this->formXML();
+        return $this->formXML();
 
-        return $this->getResponseFromWebService();
+        //return $this->getResponseFromWebService();
     }
 
-    private function formXML() {        
+    /**
+     *
+     * @return <type>
+     */
+    private function formXML() {
 
         //creamos la raiz del DOM DOCUMENT
         $xml = new DOMDocument('1.0', 'utf-8');
 
         $comprobante = $xml->createElement('comprobante');
 
-        $comprobante->appendChild($xml->createElement('serie', $sucursal->getLetrasFactura()));
+        $comprobante->appendChild($xml->createElement('serie', $this->getGenerales()->getSerie()));
 
-        $comprobante->appendChild($xml->createElement('folio_interno', $factura->getIdFolio()));
+        $comprobante->appendChild($xml->createElement('folio_interno', $this->getGenerales()->getFolioInterno()));
 
-        $comprobante->appendChild($xml->createElement('fecha', date("y-m-d") . 'T' . date("H:i:s")));
+        $comprobante->appendChild($xml->createElement('fecha', $this->getGenerales()->getFecha()));
 
-        $comprobante->appendChild($xml->createElement('forma_de_pago', 'Pago en una sola exhibicion'));
+        $comprobante->appendChild($xml->createElement('forma_de_pago', $this->getGenerales()->getFormaDePago()));
 
-        $comprobante->appendChild($xml->createElement('metodo_de_pago', ucfirst(strtolower($venta->getTipoPago()))));
+        $comprobante->appendChild($xml->createElement('metodo_de_pago', ucfirst(strtolower($this->getGenerales()->getMetodoDePago()))));
 
-        $comprobante->appendChild($xml->createElement('subtotal', $venta->getSubtotal()));
+        $comprobante->appendChild($xml->createElement('subtotal', $this->getGenerales()->getSubtotal()));
 
-        $comprobante->appendChild($xml->createElement('total', $venta->getTotal()));
+        $comprobante->appendChild($xml->createElement('total', $this->getGenerales()->getTotal()));
 
-        $comprobante->appendChild($xml->createElement('iva', $venta->getIva()));
+        $comprobante->appendChild($xml->createElement('iva', $this->getGenerales()->getIva()));
 
         $emisor = $xml->createElement('emisor');
 
-        $emisor->appendChild($xml->createElement('razon_social', $sucursal->getRazonSocial()));
+        $emisor->appendChild($xml->createElement('razon_social', $this->getEmisor()->getRazonSocial()));
 
-        $emisor->appendChild($xml->createElement('rfc', $sucursal->getRfc()));
+        $emisor->appendChild($xml->createElement('rfc', $this->getEmisor()->getRFC()));
 
-        $emisor->appendChild($xml->createElement('calle', $sucursal->getCalle()));
+        $emisor->appendChild($xml->createElement('calle', $this->getEmisor()->getCalle()));
 
-        $emisor->appendChild($xml->createElement('numero_exterior', $sucursal->getNumeroExterior()));
+        $emisor->appendChild($xml->createElement('numero_exterior', $this->getEmisor()->getNumeroExterior()));
 
-        $emisor->appendChild($xml->createElement('numero_interior', $sucursal->getNumeroInterior()));
+        $emisor->appendChild($xml->createElement('numero_interior', $this->getEmisor()->getNumeroInterior()));
 
-        $emisor->appendChild($xml->createElement('colonia', $sucursal->getColonia()));
+        $emisor->appendChild($xml->createElement('colonia', $this->getEmisor()->getColonia()));
 
-        $emisor->appendChild($xml->createElement('localidad', $sucursal->getLocalidad()));
+        $emisor->appendChild($xml->createElement('localidad', $this->getEmisor()->getLocalidad()));
 
-        $emisor->appendChild($xml->createElement('referencia', $sucursal->getReferencia()));
+        $emisor->appendChild($xml->createElement('referencia', $this->getEmisor()->getReferencia()));
 
-        $emisor->appendChild($xml->createElement('municipio', $sucursal->getMunicipio()));
+        $emisor->appendChild($xml->createElement('municipio', $this->getEmisor()->getMunicipio()));
 
-        $emisor->appendChild($xml->createElement('estado', $sucursal->getEstado()));
+        $emisor->appendChild($xml->createElement('estado', $this->getEmisor()->getEstado()));
 
-        $emisor->appendChild($xml->createElement('pais', $sucursal->getPais()));
+        $emisor->appendChild($xml->createElement('pais', $this->getEmisor()->getPais()));
 
-        $emisor->appendChild($xml->createElement('codigo_postal', $sucursal->getCodigoPostal()));
+        $emisor->appendChild($xml->createElement('codigo_postal', $this->getEmisor()->getCodigoPostal()));
 
         $comprobante->appendChild($emisor);
 
         $expedido_por = $xml->createElement('expedido_por');
 
-        $expedido_por->appendChild($xml->createElement('calle'));
+        $expedido_por->appendChild($xml->createElement('calle', $this->getExpedidoPor()->getCalle()));
 
-        $expedido_por->appendChild($xml->createElement('numero_exterior'));
+        $expedido_por->appendChild($xml->createElement('numero_exterior', $this->getExpedidoPor()->getNumeroExterior()));
 
-        $expedido_por->appendChild($xml->createElement('numero_interior'));
+        $expedido_por->appendChild($xml->createElement('numero_interior', $this->getExpedidoPor()->getNumeroInterior()));
 
-        $expedido_por->appendChild($xml->createElement('colonia'));
+        $expedido_por->appendChild($xml->createElement('colonia', $this->getExpedidoPor()->getColonia()));
 
-        $expedido_por->appendChild($xml->createElement('localidad'));
+        $expedido_por->appendChild($xml->createElement('localidad', $this->getExpedidoPor()->getLocalidad()));
 
-        $expedido_por->appendChild($xml->createElement('referencia'));
+        $expedido_por->appendChild($xml->createElement('referencia', $this->getExpedidoPor()->getReferencia()));
 
-        $expedido_por->appendChild($xml->createElement('municipio'));
+        $expedido_por->appendChild($xml->createElement('municipio', $this->getExpedidoPor()->getMunicipio()));
 
-        $expedido_por->appendChild($xml->createElement('estado'));
+        $expedido_por->appendChild($xml->createElement('estado', $this->getExpedidoPor()->getEstado()));
 
-        $expedido_por->appendChild($xml->createElement('pais'));
+        $expedido_por->appendChild($xml->createElement('pais', $this->getExpedidoPor()->getPais()));
 
-        $expedido_por->appendChild($xml->createElement('codigo_postal'));
+        $expedido_por->appendChild($xml->createElement('codigo_postal', $this->getExpedidoPor()->getCodigoPostal()));
 
         $comprobante->appendChild($expedido_por);
 
         $receptor = $xml->createElement('receptor');
 
-        $receptor->appendChild($xml->createElement('razon_social', $cliente->getRazonSocial()));
+        $receptor->appendChild($xml->createElement('razon_social', $this->getReceptor()->getRazonSocial()));
 
-        $receptor->appendChild($xml->createElement('rfc', $cliente->getRfc()));
+        $receptor->appendChild($xml->createElement('rfc', $this->getReceptor()->getRFC()));
 
-        $receptor->appendChild($xml->createElement('calle', $cliente->getCalle()));
+        $receptor->appendChild($xml->createElement('calle', $this->getReceptor()->getCalle()));
 
-        $receptor->appendChild($xml->createElement('numero_exterior', $cliente->getNumeroExterior()));
+        $receptor->appendChild($xml->createElement('numero_exterior', $this->getReceptor()->getNumeroExterior()));
 
-        $receptor->appendChild($xml->createElement('numero_interior', $cliente->getNumeroInterior()));
+        $receptor->appendChild($xml->createElement('numero_interior', $this->getReceptor()->getNumeroInterior()));
 
-        $receptor->appendChild($xml->createElement('colonia', $cliente->getColonia()));
+        $receptor->appendChild($xml->createElement('colonia', $this->getReceptor()->getColonia()));
 
-        $receptor->appendChild($xml->createElement('localidad', $cliente->getLocalidad()));
+        $receptor->appendChild($xml->createElement('localidad', $this->getReceptor()->getLocalidad()));
 
-        $receptor->appendChild($xml->createElement('referencia', $cliente->getReferencia()));
+        $receptor->appendChild($xml->createElement('referencia', $this->getReceptor()->getReferencia()));
 
-        $receptor->appendChild($xml->createElement('municipio', $cliente->getMunicipio()));
+        $receptor->appendChild($xml->createElement('municipio', $this->getReceptor()->getMunicipio()));
 
-        $receptor->appendChild($xml->createElement('estado', $cliente->getEstado()));
+        $receptor->appendChild($xml->createElement('estado', $this->getReceptor()->getEstado()));
 
-        $receptor->appendChild($xml->createElement('pais', $cliente->getPais()));
+        $receptor->appendChild($xml->createElement('pais', $this->getReceptor()->getPais()));
 
-        $receptor->appendChild($xml->createElement('codigo_postal', $cliente->getCodigoPostal()));
+        $receptor->appendChild($xml->createElement('codigo_postal', $this->getReceptor()->getCodigoPostal()));
 
         $comprobante->appendChild($receptor);
 
         $conceptos = $xml->createElement('conceptos');
 
-        foreach ($productos as $producto) {
 
-            /*
-             * verificamos si el articulo tiene algun proceso:
-             *     si :
-             *         verificamos si se vendio  original (case 2)
-             *         verificamos si se vendio procesado (case 3)
-             *         verificamos si se vendieron ambos (case 4)
-             *     no :
-             *         solo extraemos la descripcion y la cantidad (original) y su precio  (case 1)
-             *
-             */
+        foreach ($this->getConceptos()->getConceptos() as $articulo) {
 
-
-
-            //creamos un objeto inventario para verificar si tiene un proceso
-            if (!( $inventario = InventarioDAO::getByPK($producto->getIdProducto()) )) {
-                DAO::transRollback();
-                Logger::log("Error al obtener datos de la sucursal.");
-                die('{"success": false, "reason": "Error al obtener datos de la sucursal." }');
-            }
-
-
-            $venta_original = $producto->getCantidad() > 0 ? true : false;
-            $venta_procesada = $producto->getCantidadProcesada() > 0 ? true : false;
-            $proceso = $inventario->getTratamiento() == "limpia" ? true : false;
-
-            if ($venta_procesada) {
-
-                $concepto = $xml->createElement('concepto');
-
-                $concepto->appendChild($xml->createElement('id_producto', $producto->getIdProducto()));
-
-                $concepto->appendChild($xml->createElement('cantidad', $producto->getCantidadProcesada() - $producto->getDescuento()));
-
-                $concepto->appendChild($xml->createElement('unidad', $inventario->getEscala()));
-
-                $concepto->appendChild($xml->createElement('descripcion', ucfirst(strtolower($inventario->getDescripcion() . " " . $inventario->getTratamiento()))));
-
-                $concepto->appendChild($xml->createElement('valor', $producto->getPrecioProcesada()));
-
-                $concepto->appendChild($xml->createElement('importe', ($producto->getCantidad() - $producto->getDescuento()) * $producto->getPrecioProcesada()));
-
-                $conceptos->appendChild($concepto);
-            }
 
             $concepto = $xml->createElement('concepto');
 
-            $concepto->appendChild($xml->createElement('id_producto', $producto->getIdProducto()));
+            $concepto->appendChild($xml->createElement('id_producto', $articulo->getIdProducto()));
 
-            $concepto->appendChild($xml->createElement('cantidad', $producto->getCantidad() - $producto->getDescuento()));
+            $concepto->appendChild($xml->createElement('cantidad', $articulo->getCantidad()));
 
-            $concepto->appendChild($xml->createElement('unidad', $inventario->getEscala()));
+            $concepto->appendChild($xml->createElement('unidad', $articulo->getUnidad()));
 
-            $concepto->appendChild($xml->createElement('descripcion', $inventario->getDescripcion()));
+            $concepto->appendChild($xml->createElement('descripcion', $articulo->getDescripcion()));
 
-            $concepto->appendChild($xml->createElement('valor', $producto->getPrecio()));
+            $concepto->appendChild($xml->createElement('valor', $articulo->getValor()));
 
-            $concepto->appendChild($xml->createElement('importe', ($producto->getCantidad() - $producto->getDescuento()) * $producto->getPrecio()));
+            $concepto->appendChild($xml->createElement('importe', $articulo->getImporte()));
 
             $conceptos->appendChild($concepto);
         }
+
 
         $comprobante->appendChild($conceptos);
 
         $llaves = $xml->createElement('llaves');
 
-        $llaves->appendChild($xml->createElement('publica', $pos_config->publica));
+        $llaves->appendChild($xml->createElement('publica', $this->getLlaves()->getPublica()));
 
-        $llaves->appendChild($xml->createElement('privada', $pos_config->privada));
+        $llaves->appendChild($xml->createElement('privada', $this->getLlaves()->getPrivada()));
 
-        $llaves->appendChild($xml->createElement('noCertificado', $pos_config->noCertificado));
+        $llaves->appendChild($xml->createElement('noCertificado', $this->getLlaves()->getNoCertificado()));
 
         $comprobante->appendChild($llaves);
 
         $xml->appendChild($comprobante);
-        
+
         Logger::log("Terminado proceso de parceo de venta a XML");
         return $xml->saveXML();
     }

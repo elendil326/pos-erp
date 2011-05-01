@@ -1,7 +1,6 @@
 <?php
 
 require_once("success.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/server/logger.php");
 
 /**
  * Archivo que contiene la clase Llaves la cual provee de los medios necesarios para validar
@@ -19,7 +18,7 @@ class Llaves {
      * Regresa el nombre de esta clase
      * @return String Nombde de la clase
      */
-    public function getType(){        
+    public function getType() {
         return $this->type;
     }
 
@@ -125,17 +124,17 @@ class Llaves {
     public function isValid() {
 
         //verificamos si existe el numero de certificado
-        if (!(isset($this->getNoCertificado()) && $this->getNoCertificado() = !"")) {
+        if (!($this->getNoCertificado() != null && $this->getNoCertificado() != "")) {
             $this->setError("No se ha definido el numero de certificado.");
         }
 
         //verificamos si existe la llave privada
-        if (!(isset($this->getPrivada()) && $this->getPrivada() = !"")) {
+        if (!($this->getPrivada() != null && $this->getPrivada() != "")) {
             $this->setError("No se ha definido la llave privada.");
         }
 
         //verificamos si existe la llave publica
-        if (!(isset($this->getPublica()) && $this->getPublica() = !"")) {
+        if (!($this->getPublica() != null && $this->getPublica() != "")) {
             $this->setError("No se ha definido la llave publica.");
         }
 

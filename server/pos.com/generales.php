@@ -1,7 +1,6 @@
 <?php
 
 require_once("success.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/server/logger.php");
 
 /**
  * Archivo que contiene la clase Generales la cual provee de los medios necesarios para validar
@@ -19,7 +18,7 @@ class Generales {
      * Regresa el nombre de esta clase
      * @return String Nombde de la clase
      */
-    public function getType(){
+    public function getType() {
         return $this->type;
     }
 
@@ -240,42 +239,42 @@ class Generales {
     public function isValid() {
 
         //verificamos si existe el 
-        if (!(isset($this->getFecha()) && $this->getFecha() = !"")) {
+        if (!( $this->getFecha() != null && $this->getFecha() != "")) {
             $this->setError("No se ha definido la fecha.");
         }
 
         //verificamos si existe el
-        if (!(isset($this->getFolioInterno()) && $this->getFolioInterno() = !"")) {
+        if (!($this->getFolioInterno() != null && $this->getFolioInterno() != "")) {
             $this->setError("No se ha definido el folio interno.");
         }
 
         //verificamos si existe el
-        if (!(isset($this->getFormaDePago()) && $this->getFormaDePago() = !"")) {
+        if (!($this->getFormaDePago() != null && $this->getFormaDePago() != "")) {
             $this->setError("No se ha definido la forma de pago.");
         }
 
         //verificamos si existe el
-        if (!(isset($this->getIva()) && $this->getIva() = !"")) {
+        if (!($this->getIva() != null && $this->getIva() != "")) {
             $this->setError("No se ha definido el iva.");
         }
 
         //verificamos si existe el
-        if (!(isset($this->getMetodoDePago()) && $this->getMetodoDePago() = !"")) {
+        if (!($this->getMetodoDePago() != null && $this->getMetodoDePago() != "")) {
             $this->setError("No se ha definido el metodo de pago.");
         }
 
         //verificamos si existe el
-        if (!(isset($this->getSerie()) && $this->getSerie() = !"")) {
+        if (!($this->getSerie() != null && $this->getSerie() != "")) {
             $this->setError("No se ha definido la serie.");
         }
 
         //verificamos si existe el
-        if (!(isset($this->getSubtotal()) && $this->getSubtotal() = !"")) {
+        if (!($this->getSubtotal() != null && $this->getSubtotal() != "")) {
             $this->setError("No se ha definido el subtotal.");
         }
 
         //verificamos si existe el
-        if (!(isset($this->getTotal()) && $this->getTotal() = !"")) {
+        if (!($this->getTotal() != null && $this->getTotal() != "")) {
             $this->setError("No se ha definido el total.");
         }
 

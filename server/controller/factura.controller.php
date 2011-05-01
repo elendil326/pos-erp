@@ -58,7 +58,7 @@ function verificarDatosVenta($args) {
     }
 
     //verificamos que el cliente este acivo
-    if ($cliente->getActivo != "1") {
+    if ($cliente->getActivo() != "1") {
         Logger::log("El cliente  : {$args['id_cliente']} no se encuentra activo.");
         die('{"success": false, "reason": "El cliente ' . $args['id_cliente'] . ' no se encuentra activo." }');
     }
@@ -165,7 +165,7 @@ function generaFactura($args) {
 
     $comprobante->setLlaves(getLlaves()); //5
 
-    $comprobantes->setReceptor(getReceptor()); //6
+    $comprobante->setReceptor(getReceptor($args)); //6
 
     $success = $comprobante->isValid();
 
@@ -182,8 +182,6 @@ function generaFactura($args) {
     }else{
         echo "Fallo";
     }
-
-    echo $xml_response;
 
     //genera un json con todos los datos necesarios para generar el PDF de la factura electronica
     //$json_factura = parseFacturaToJSON($xml_response);
@@ -217,7 +215,7 @@ function getConceptos($args) {
         }
 
         $concepto = new Concepto();
-        $concepto->setIdProducto($$inventario->getIdProducto());
+        $concepto->setIdProducto($inventario->getIdProducto());
         $concepto->setDescripcion($inventario->getDescripcion());
         $concepto->setUnidad($inventario->getEscala());
 
@@ -258,9 +256,9 @@ function getConceptos($args) {
  * Regresa un objeto cargado con los datos del receptor de la factura
  * return Object Receptor
  */
-function getReceptor() {
+function getReceptor($args) {
 
-    if (!($cliente = ClienteDAO::getByPK('id_cliente') )) {
+    if (!($cliente = ClienteDAO::getByPK($args['id_cliente']) )) {
         Logger::log("Error al obtener datos del cliente.");
         DAO::transRollback();
         die('{"success": false, "reason": "Error al obtener datos del cliente." }');
@@ -277,7 +275,7 @@ function getReceptor() {
     $receptor->setNumeroExterior($cliente->getNumeroExterior());
 
     if ($cliente->getNumeroInterior() != "") {
-        $emisor->setNumeroInterior($cliente->getNumeroInterior());
+        $receptor->setNumeroInterior($cliente->getNumeroInterior());
     }
 
     if ($cliente->getReferencia() != "") {
@@ -369,35 +367,35 @@ function getEmisor() {
 
     $emisor = new Emisor();
 
-    $emisor->setRazonSocial($json->nombre);
+    $emisor->setRazonSocial($json->emisor->nombre);
 
-    $emisor->setRFC($json->rfc);
+    $emisor->setRFC($json->emisor->rfc);
 
-    $emisor->setCalle($json->calle);
+    $emisor->setCalle($json->emisor->calle);
 
-    $emisor->setNumeroExterior($json->numeroExterior);
+    $emisor->setNumeroExterior($json->emisor->numeroExterior);
 
-    if (isset($json->numeroInterior) && $json->numeroInterior != "") {
-        $emisor->setNumeroInterior($json->numeroInterior);
+    if (isset($json->emisor->numeroInterior) && $json->emisor->numeroInterior != "") {
+        $emisor->setNumeroInterior($json->emisor->numeroInterior);
     }
 
-    if (isset($json->referencia) && $json->referencia != "") {
-        $emisor->setReferencia($json->referencia);
+    if (isset($json->emisor->referencia) && $json->emisor->referencia != "") {
+        $emisor->setReferencia($json->emisor->referencia);
     }
 
-    $emisor->setColonia($json->colonia);
+    $emisor->setColonia($json->emisor->colonia);
 
-    if (isset($json->localidad) && $json->localidad != "") {
-        $emisor->setNumeroInterior($json->localidad);
+    if (isset($json->emisor->localidad) && $json->emisor->localidad != "") {
+        $emisor->setNumeroInterior($json->emisor->localidad);
     }
 
-    $emisor->setMunicipio($json->municipio);
+    $emisor->setMunicipio($json->emisor->municipio);
 
-    $emisor->setEstado($json->estado);
+    $emisor->setEstado($json->emisor->estado);
 
-    $emisor->setPais($json->pais);
+    $emisor->setPais($json->emisor->pais);
 
-    $emisor->setCodigoPostal($json->codigoPostal);
+    $emisor->setCodigoPostal($json->emisor->codigoPostal);
 
     $success = $emisor->isValid();
 
@@ -420,25 +418,21 @@ function getExpedidoPor() {
 
     $expedidoPor = new ExpedidoPor();
 
-    $expedidoPor->setRazonSocial($sucursal->getRazonSocial());
-
-    $expedidoPor->setRFC($sucursal->getRfc());
-
     $expedidoPor->setCalle($sucursal->getCalle());
 
     $expedidoPor->setNumeroExterior($sucursal->getNumeroExterior());
 
-    if (isset($sucursal->getNumeroInterior()) && $sucursal->getNumeroInterior() != "") {
+    if ($sucursal->getNumeroInterior() != "") {
         $expedidoPor->setNumeroInterior($sucursal->getNumeroInterior());
     }
 
-    if (isset($sucursal->getReferencia()) && $$sucursal->getReferencia() != "") {
+    if ($sucursal->getReferencia() != "") {
         $expedidoPor->setReferencia($sucursal->getReferencia());
     }
 
     $expedidoPor->setColonia($sucursal->getColonia());
 
-    if (isset($sucursal->getLocalidad()) && $sucursal->getLocalidad() != "") {
+    if ($sucursal->getLocalidad() != "") {
         $expedidoPor->setNumeroInterior($sucursal->getLocalidad());
     }
 
@@ -545,6 +539,7 @@ function creaFacturaBD($id_venta) {
 
     $factura->setIdVenta($id_venta);
     $factura->setIdUsuario($_SESSION['userid']);
+    $factura->setActiva(1);
 
     try {
         FacturaVentaDAO::save($factura);

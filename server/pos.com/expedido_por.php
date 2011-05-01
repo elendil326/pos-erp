@@ -1,7 +1,6 @@
 <?php
 
 require_once("success.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/server/logger.php");
 
 /**
  * Archivo que contiene la clase ExpedidoPor la cual provee de los medios necesarios para validar
@@ -19,7 +18,7 @@ class ExpedidoPor {
      * Regresa el nombre de esta clase
      * @return String Nombde de la clase
      */
-    public function getType(){
+    public function getType() {
         return $this->type;
     }
 
@@ -166,7 +165,7 @@ class ExpedidoPor {
      * @return <type>
      */
     public function getMunicipio() {
-        return $this->municipioo;
+        return $this->municipio;
     }
 
     /**
@@ -279,43 +278,42 @@ class ExpedidoPor {
     public function isValid() {
 
         //verificamos si existe la calle
-        if( !(isset($this->getCalle()) && $this->getCalle() =! "") ){
+        if (!($this->getCalle() != null && $this->getCalle() != "")) {
             $this->setError("No se ha definido la calle.");
         }
 
         //verificamos si existe el numero exterior
-        if( !(isset($this->getNumeroExterior()) && $this->getNumeroExterior() =! "") ){
+        if (!($this->getNumeroExterior() != null && $this->getNumeroExterior() != "")) {
             $this->setError("No se ha definido el nuemro exterior.");
         }
 
         //verificamos si existe la colonia
-        if( !(isset($this->getColonia()) && $this->getColonia() =! "") ){
+        if (!($this->getColonia() != null && $this->getColonia() != "")) {
             $this->setError("No se ha definido la colinia.");
         }
 
         //verificamos si existe el municipio
-        if( !(isset($this->getMunicipio()) && $this->getMunicipio() =! "") ){
+        if (!($this->getMunicipio() != null && $this->getMunicipio() != "")) {
             $this->setError("No se ha definido el municipio.");
         }
 
         //verificamos si existe el estado
-        if( !(isset($this->getEstado()) && $this->getEstado() =! "") ){
+        if (!($this->getEstado() != null && $this->getEstado() != "")) {
             $this->setError("No se ha definido el estado.");
         }
 
         //verificamos si existe el codigo postal
-        if( !(isset($this->getCodigoPostal()) && $this->getCodigoPostal() =! "") ){
+        if (!($this->getCodigoPostal() != null && $this->getCodigoPostal() != "")) {
             $this->setError("No se ha definido el codigo postal.");
         }
 
         //verificamos si existe el pais
-        if( !(isset($this->getPais()) && $this->getPais() =! "") ){
+        if (!($this->getPais() != null && $this->getPais() != "")) {
             $this->setError("No se ha definido el pais.");
         }
 
         $this->success = new Success($this->getError());
         return $this->success;
-
     }
 
 }
