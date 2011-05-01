@@ -5,12 +5,12 @@
 	<UL class="nav">
 		<LI class="drop">
 			<A href="clientes.php?action=lista">CLIENTES</A>
-			<!--
+
 			<UL class="nav sub" >
 				<LI><A href="clientes.php?action=lista">Lista de clientes</A></LI>
 				<LI class="last"><A href="clientes.php?action=nuevo">Nuevo Cliente</A></LI>
 			</UL>	
-			-->
+
 		</LI>
 		
 		<LI class="drop">

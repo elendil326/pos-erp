@@ -24,10 +24,12 @@ require_once("controller/inventario.controller.php");
 
 <?php
 
+
 	
 	//obtener todas las sucursales activas
 	$sucursales = listarSucursales(  );
 	
+
 	$clientesRegistradosPorSucursal = array();
 	
 	//buscar cuantos clientes se han registado en todas las sucursales
@@ -51,11 +53,13 @@ require_once("controller/inventario.controller.php");
 	
 	//array donde guardamos las fechas que hemos estado analizando
 	$fechas = array();
-	
-
+	$acumulado = array();
+	$acumulado_index = 0;
+	$sub_total = 0;
 	
 	while( $tomorrow != $dayIndex ){
 		
+	
 		for ($sucursalIndex=0; $sucursalIndex < sizeof($clientesRegistradosPorSucursal); $sucursalIndex++) { 
 			
 			//im out of days !
@@ -66,8 +70,12 @@ require_once("controller/inventario.controller.php");
 			if( $clientesRegistradosPorSucursal[ $sucursalIndex ][ $sucDayIndex[ $sucursalIndex ] ]["fecha"] != $dayIndex){
 				$missingDays[ $sucursalIndex ]++;
 			}else{
+				$sub_total += $clientesRegistradosPorSucursal[ $sucursalIndex ][ $sucDayIndex[ $sucursalIndex ] ]["clientes"];
 				for($a = 0 ; $a < $missingDays[ $sucursalIndex ]; $a++){
-					array_splice($clientesRegistradosPorSucursal[ $sucursalIndex ], $sucDayIndex[ $sucursalIndex ], 0, array(array( "fecha" => "missing_day" , "clientes" => 0)) );
+					array_splice($clientesRegistradosPorSucursal[ $sucursalIndex ], 
+									$sucDayIndex[ $sucursalIndex ], 
+									0, 
+									array(array( "fecha" => "missing_day" , "clientes" => 0)));
 				}
 			 	$sucDayIndex[ $sucursalIndex ] += $missingDays[ $sucursalIndex ]+1;
 				$missingDays[ $sucursalIndex ] = 0;
@@ -75,7 +83,7 @@ require_once("controller/inventario.controller.php");
 			
 		}
 		
-		
+		$acumulado[$acumulado_index++] = $sub_total;
 		array_push($fechas, $dayIndex);
 		$dayIndex = date("Y-m-d", strtotime("+1 day", strtotime($dayIndex)));
 	}
@@ -109,7 +117,7 @@ require_once("controller/inventario.controller.php");
 	for ($s=0; $s < sizeof($clientesRegistradosPorSucursal); $s++) { 
 
 		$acc = 0;		
-		echo "\nvar clientesEnSucursal". $s ." = [";
+		echo "var clientesEnSucursal". $s ." = [";
 
 		for($i = 0; $i < sizeof($clientesRegistradosPorSucursal[$s]); $i++ ){
 			$acc += $clientesRegistradosPorSucursal[$s][$i]["clientes"] ;
@@ -119,9 +127,24 @@ require_once("controller/inventario.controller.php");
 					echo ",";		
 			}
 		}
-		echo "];\n";
+		echo "];\n\n";
 	}
 	
+	
+	
+	
+	echo "var todos = [";
+
+	for($i = 0; $i < sizeof($acumulado); $i++ ){
+		echo  "[" . $i . "," . $acumulado[$i] . "]";
+
+		if($i < sizeof($acumulado) - 1){
+				echo ",";		
+		}
+	}
+	echo "];\n\n";
+
+
 
 	echo "var fechas = [";
 	for($i = 0; $i < sizeof($fechas); $i++ ){
@@ -189,7 +212,7 @@ require_once("controller/inventario.controller.php");
 			}
 
 		?>
-	    graficaVentas.addSummaryGraph( clientesEnSucursal0 );
+	    graficaVentas.addSummaryGraph( todos );
 	    graficaVentas.render('finance');
 	});
 
@@ -304,9 +327,12 @@ $tabla->addOnClick("id_cliente", "mostrarDetalles");
 $tabla->addNoData("No hay clientes deudores.");
 $tabla->render();
 
-
-
-include ("admin/clientes.nuevo.php");
-
+$total_en_deuda = 0;
+foreach( $clientes as $c ){
+	$total_en_deuda += $c["saldo"];
+}
 ?>
 
+<div align=right style='border-top: 1px solid #3F8CE9; font-size: 14px;'>
+Total en deuda <b><?php echo moneyFormat($total_en_deuda); ?></b>
+</div>
