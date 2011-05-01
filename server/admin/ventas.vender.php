@@ -931,13 +931,15 @@ function renderFinalShip(){
 function doVender()
 {
 
-	console.log("listo para vender !");
+
 
 
     var readyDATA = {
-        productos : composiciones,
-        sucursal : currentSuc
+        productos 	: composiciones,
+        cliente 	: jQuery("#cliente_selector").val()
     };
+
+	console.log("Listo para vender con estos datos!", readyDATA);
     
     //hacer ajaxaso
     jQuery.ajaxSettings.traditional = true;
@@ -948,7 +950,7 @@ function doVender()
         jQuery.ajax({
         url: "../proxy.php",
         data: { 
-            action : 1005, 
+            action : 101, 
             data : jQuery.JSON.encode( readyDATA ),
         },
         cache: false,
@@ -1338,7 +1340,7 @@ if(!isset($_REQUEST['cid'])){
 		echo '<select id="cliente_selector" > ';    
 		foreach( $clientes as $c ){
 			if($c['id_cliente'] <= 0 )continue;
-			echo "<option value='" . $c['id_cliente'] . "' >" . $c['nombre']  . "</option>";
+			echo "<option value='" . $c['id_cliente'] . "' >" . $c['razon_social']  . "</option>";
 		}
 		echo '</select>';    
 	}else{

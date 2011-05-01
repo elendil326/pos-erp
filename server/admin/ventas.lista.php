@@ -156,8 +156,12 @@ function getNombrecliente($id)
 
 function getDescSuc($sid)
 {
-
-    return SucursalDAO::getByPK( $sid )->getDescripcion();
+	$suc = SucursalDAO::getByPK( $sid );
+	
+	if($suc)
+		return $suc->getDescripcion();
+	else 
+		return "Error";
 
 }
 

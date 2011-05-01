@@ -29,7 +29,7 @@ $venta = $detalles['detalles'];
             if($venta->getIdCliente() < 0){
                 echo "Caja Comun";
             }else{
-                echo ClienteDAO::getByPK( $venta->getIdCliente() )->getNombre();
+                echo ClienteDAO::getByPK( $venta->getIdCliente() )->getRazonSocial();
             }
 
         ?></td>
@@ -59,7 +59,13 @@ $venta = $detalles['detalles'];
     <tr>
         <td><b>Sucursal</b></td>
         <td><?php 
-            echo SucursalDAO::getByPK( $venta->getIdSucursal() )->getDescripcion();
+
+			$suc = SucursalDAO::getByPK( $venta->getIdSucursal() );
+
+			if($suc)
+				echo $suc->getDescripcion();
+			else 
+				echo "Sucursal invalida";
         ?></td>
 
 	    <?php if($venta->getTipoVenta() == 'credito'){ ?>
