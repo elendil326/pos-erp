@@ -146,6 +146,29 @@ class Comprobante {
     }
 
     /**
+     * Cadena que contiene el valor del XML que se enviara al PAC.
+     * @var String
+     */
+    private $xml_request = null;
+
+    /**
+     * Establece una cadena que contiene el XML que se enviara al PAC.
+     */
+    private function setXMLrequest($xml_request) {
+        $this->xml_request = $xml_request;
+    }
+
+    /**
+     * Obtiene una cadena que contiene el XML que se enviara al PAC.
+     * @return String $xml_response
+     */
+    public function getXMLrequest() {
+        return $this->xml_request;
+    }
+
+    //private function
+
+    /**
      * Respuesta del PAC
      * @var String
      */
@@ -155,8 +178,15 @@ class Comprobante {
      * Regresa una cadena con la respuesta del WebService sobre la peticion de la nueva factura.
      * @return String $xml_response
      */
-    private function getResponseFromWebService() {
+    public function getXMLresponse() {
         return $this->xml_response;
+    }
+
+    /**
+     * Establece una cadena con la respuesta del WebService sobre la peticion de la nueva factura.
+     */
+    private function setXMLresponse($xml_response) {
+        $this->xml_response = $xml_response;
     }
 
     /**
@@ -412,7 +442,7 @@ class Comprobante {
 
             $concepto->appendChild($xml->createElement('descripcion', $articulo->getDescripcion()));
 
-            $concepto->appendChild($xml->createElement('valor', $articulo->getValor()));
+            $concepto->appendChild($xml->createElement('valor_unitario', $articulo->getValor()));
 
             $concepto->appendChild($xml->createElement('importe', $articulo->getImporte()));
 
@@ -434,17 +464,19 @@ class Comprobante {
 
         $xml->appendChild($comprobante);
 
+        $this->setXMLrequest($xml->saveXML());
+
         Logger::log("Terminado proceso de parceo de venta a XML");
-        return $xml->saveXML();
+
+        //realizamos una peticion al webservice para que genere una nueva factura
+        return $this->getFacturaFromWebService();
     }
 
     /**
-     * Recibe un xml con el formato que necesita el web service para generar
-     * una nueva factura electronica.
+     * Realiza una petición al webservice para que genere un nuevo CFDI
+     * return Boolean true en casod e tener exito, false de lo contrario
      */
-    private function getFacturaFromWebService($xml_request) {
-
-        $xml_request = utf8_encode($xml_request);
+    private function getFacturaFromWebService() {
 
         //obtenemos la url del web service
         if (!( $url = PosConfigDAO::getByPK('url_timbrado') )) {
@@ -453,28 +485,26 @@ class Comprobante {
             die('{"success": false, "reason": "Error al obtener la url del web service" }');
         }
 
-
         $client = new SoapClient($url->getValue());
 
-        echo (string) $xml_request;
+        //TODO : Mejorar esto
+        $url_encoded = str_replace("&lt;", "<", $this->getXMLrequest());
+        $url_encoded = str_replace("&gt;", ">", $url_encoded);
 
-        //var_dump($xml_request);
-
-        $result = $client->RececpcionComprobante(array('comprobante' => $xml_request));
-
-        echo "despues de llamar";
+        //realiza la peticion al webservice
+        $result = $client->RececpcionComprobante(array('comprobante' => $url_encoded));
 
         //verificamos si la llamada fallo
+
         if (is_soap_fault($result)) {
             trigger_error("La llamada al webservice ha fallado", E_USER_ERROR);
-        }
+        }        
 
         //analizamos el success del xml
 
-
         libxml_use_internal_errors(true);
 
-
+        $xml_response = new DOMDocument();
 
         $xml_response->loadXML($result->RececpcionComprobanteResult);
 
@@ -485,10 +515,8 @@ class Comprobante {
             }
 
             Logger::log("Error al leer xml del web service : {$e} ");
-            DAO::transRollback();
             die('{"success": false, "reason": "Error al leer xml del web service : ' . preg_quote($e) . '" }');
         }
-
 
         $params = $xml_response->getElementsByTagName('Complemento');
 
@@ -499,12 +527,17 @@ class Comprobante {
         }
 
         if ($success == false || $success == "false") {
-            Logger::log("Error al generar el xml del web service");
-            DAO::transRollback();
-            die('{"success": false, "reason": "Error al generar el xml del web service" }');
+            Logger::log("Error al generar el xml del web service, el webservice contesto success : false");
+            $this->setError("Error al generar el xml del web service, el webservice contesto success : false");
         }
 
-        return $xml_response->saveXML();
+        //almacenamos la respuesta del webservice
+
+        $this->setXMLresponse($xml_response->saveXML());
+
+        $this->success = new Success($this->getError());
+        return $this->success;
+
     }
 
     /**

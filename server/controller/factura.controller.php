@@ -175,12 +175,14 @@ function generaFactura($args) {
         die('{"success": false, "reason": "' . $success->getInfo() . '" }');
     }
 
-    $xml_response = $comprobante->getNuevaFactura();      
+    $success = $comprobante->getNuevaFactura();
 
-    if($xml_response != null){
-        echo $xml_response;
-    }else{
-        echo "Fallo";
+    if ($success->getSuccess()) {
+        echo $comprobante->getXMLresponse();
+    } else {
+        Logger::log($success->getInfo());
+        DAO::transRollback();
+        die('{"success": false, "reason": "' . $success->getInfo() . '" }');
     }
 
     //genera un json con todos los datos necesarios para generar el PDF de la factura electronica
@@ -467,7 +469,7 @@ function getDatosGenerales($args) {
 
     $generales = new Generales();
 
-    $generales->setFecha(date("d/m/y") . "T" . date("H:i:s"));
+    $generales->setFecha(date("Y-m-d") . "T" . date("H:i:s"));
 
     $generales->setFolioInterno($facturaBD->getIdFolio());
 
@@ -496,8 +498,6 @@ function getDatosGenerales($args) {
         die('{"success": false, "reason": "' . $success->getInfo() . '" }');
     }
 }
-
-
 
 /**
  * Extrae la informacion acerca de las llaves para solicitar
@@ -553,7 +553,6 @@ function creaFacturaBD($id_venta) {
 
     return $factura;
 }
-
 
 /**
  * cancela una factura
