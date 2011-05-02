@@ -933,10 +933,14 @@ function doVender()
 
 
 
-
+	console.warn("Tipo de venta, y tipo de pago, estan hardcodeados en lo que hago la interfaz grafica");
+	
     var readyDATA = {
         productos 	: composiciones,
-        cliente 	: jQuery("#cliente_selector").val()
+        cliente 	: jQuery("#cliente_selector").val(),
+	    tipo_venta 	: "contado", // | "credito",
+	 	tipo_pago 	: "efectivo",
+	 	factura 	: false
     };
 
 	console.log("Listo para vender con estos datos!", readyDATA);
@@ -1380,44 +1384,6 @@ if(!isset($_REQUEST['cid'])){
 }
 
 
-
-?>
-<?php /* if(!isset($_REQUEST['sid'])) { ?>
-	<div id="select_sucursal">
-    <h2>Seleccione el cliente al que le vendera</h2>
-    <form id="newClient">
-    <table border="0" cellspacing="5" cellpadding="5">
-	    <tr><td>Sucursal</td>
-		    <td>
-			    <select id="sucursal"> 
-			    <?php
-			
-
-				    foreach( $sucursales as $suc ){
-					    echo "<option value='" . $suc->getIdSucursal() . "' >" .  $suc->getDescripcion()  . "</option>";
-				    }
-			    ?>
-	
-	            </select>
-		    </td>
-            <td><input type="button" onClick="seleccionarSucursal()" value="Seleccionar"/> </td>
-	    </tr>
-    </table>
-    </form>
-    </div>
-<?php }else{ ?>
-    <input type="hidden" value="<?php echo $_REQUEST['sid']; ?>" id="sucursal" />
-<?php }  */ ?>
-
-
-
-
-
-<?php
-
-//get sucursales
-$sucursales = listarSucursales();
-
 function renderProducto( $val ,$row){
 	return "<b>" . number_format($val, 2) . "</b>&nbsp;" . $row['medida'] . "s";
 }
@@ -1458,36 +1424,7 @@ function toUnitProc( $e, $row )
 
 	return "<b>" . number_format( $e / 60, 2 ) . "</b>Arp. / <b>" . number_format($e, 2) . "</b>" . $escala ;
 }
-
-foreach( $sucursales as $sucursal ){
-	
-	print ("<div id='actual" . $sucursal["id_sucursal"] . "' style='display: none'>");
-	print ("<h2>Inventario actual de " . $sucursal["descripcion"] . "</h2>");
-	
-	//obtener los clientes del controller de clientes
-	$inventario = listarInventario( $sucursal["id_sucursal"] );
-
-
-
-	//render the table
-	$header = array( 
-		"productoID" 		=> "ID",
-		"descripcion"		=> "Descripcion",
-		"precioVenta"		=> "Precio a la venta",
-		"existenciasOriginales"		=> "Originales",
-		"existenciasProcesadas"		=> "Procesadas" );
-		
-
-	
-	$tabla = new Tabla( $header, $inventario );
-	$tabla->addColRender( "precioVenta", "moneyFormat" );
-	$tabla->addColRender( "existenciasOriginales", "toUnit" );	
-	$tabla->addColRender( "existenciasProcesadas", "toUnitProc" );		
-    $tabla->addNoData("Esta sucursal no tiene nigun registro de productos en su inventario");
-	$tabla->render();
-	printf("</div>");
-}
-
+ 
 ?>
 
 <!--
