@@ -571,13 +571,14 @@ ComposicionTabla = function( config ){
             importe_total : 0
         };
         
+
         for (i = composicion.length - 1; i >= 0; i--){
             obj.peso_real += parseFloat(composicion[i].cantidad);
             obj.peso_a_cobrar += parseFloat(composicion[i].cantidad - composicion[i].descuento);
-            obj.importe_por_unidad += parseFloat(composicion[i].precio);
+            obj.importe_por_unidad += parseFloat( composicion[i].precio * composicion[i].cantidad );
         }
         
-        obj.importe_por_unidad /= composicion.length;
+        obj.importe_por_unidad /= obj.peso_a_cobrar;
 
         jQuery("#compuesto-peso-real").html 		( obj.peso_real.toFixed(4) );
         jQuery("#compuesto-peso-a-cobrar").html 	( obj.peso_a_cobrar.toFixed(4) );
@@ -898,7 +899,7 @@ function renderFinalShip(){
             composition += "<b>"+ composiciones[i].items[j].desc 
 						+ "</b>&nbsp;" 
 						+ (composiciones[i].items[j].procesada ? "Procesada" : "Original")
-						+ "&nbsp;"
+						+ "<br>"
 						+ composiciones[i].items[j].cantidad.toFixed(2)  + getEscalaCorta( composiciones[i].items[j].escala )
                         + "<b> - </b>" 
 						+ composiciones[i].items[j].descuento.toFixed(2) + getEscalaCorta( composiciones[i].items[j].escala )+ " desc."

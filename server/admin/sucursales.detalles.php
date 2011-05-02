@@ -161,7 +161,6 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 	    //"iva"=>  "IVA",
 	    "descuento"=>  "Descuento",
 	    "total"=>  "Total",
-
 	    //"pagado"=>  "Pagado" 
         );
 
@@ -196,16 +195,16 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 
 
     $tabla = new Tabla( $header, $ventas );
-    $tabla->addColRender( "subtotal", "moneyFormat" ); 
-    $tabla->addColRender( "saldo", "moneyFormat" ); 
-    $tabla->addColRender( "total", "moneyFormat" ); 
-    $tabla->addColRender( "pagado", "moneyFormat" ); 
+    $tabla->addColRender( "subtotal", 	"moneyFormat" ); 
+    $tabla->addColRender( "saldo", 		"moneyFormat" ); 
+    $tabla->addColRender( "total", 		"moneyFormat" ); 
+    $tabla->addColRender( "pagado", 	"moneyFormat" ); 
     $tabla->addColRender( "tipo_venta", "setTipoColor" ); 
     $tabla->addColRender( "id_cliente", "getNombreCliente" ); 
-    $tabla->addColRender( "fecha", "pDate" ); 
-    $tabla->addOnClick("id_venta", "mostrarDetallesVenta");
-    $tabla->addColRender( "descuento", "percentFormat" );
-    $tabla->addNoData("Esta sucursal no ha realizado ventas este dia.");
+    $tabla->addColRender( "fecha", 		"pDate" ); 
+    $tabla->addOnClick	("id_venta", 	"mostrarDetallesVenta");
+    $tabla->addColRender( "descuento", 	"percentFormat" );
+    $tabla->addNoData	("Esta sucursal no ha realizado ventas este dia.");
     $tabla->render();
 
 
