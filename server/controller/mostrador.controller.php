@@ -759,7 +759,7 @@ function venderAdminV2($args) {
 
             foreach ($array_items as $item) {
 
-                if ($items->items[$i]->id_producto == $item->id_producto && $items->items[$i]->id_compra == $items->items[$i]->id_compra) {
+                if ($items->items[$i]->id_producto == $item->id_producto && $item->id_compra_proveedor == $items->items[$i]->id_compra) {
 
                     $found = true;
 
@@ -963,7 +963,7 @@ function venderAdminV2($args) {
             $_item->id_producto = $array_items_venta[$i]->id_producto;
             $_item->procesado = $array_items_venta[$i]->procesado;
 
-            if ($data->items[$i]->procesado == "true") {
+            if ($array_items_venta[$i]->procesado == "true") {
                 $_item->cantidad_procesada = $array_items_venta[$i]->cantidad;
                 $_item->precio_procesada = $array_items_venta[$i]->precio;
                 $_item->cantidad = 0;
