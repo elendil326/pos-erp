@@ -243,3 +243,23 @@ if($venta->getTipoVenta() == 'credito'){
     </table>
 </div>
 <?php } ?>
+
+
+
+<script>
+	<?php
+		//please print
+		if($_REQUEST["pp"]){
+			?>
+				Ext.Msg.confirm("Surtir sucursal",
+				"Venta exitosa. &iquest; Desea imprimir un comprobante ?",
+				function(res){
+
+					if(res == "yes"){
+						window.print();
+					}
+				} )
+			<?php
+		}
+	?>
+</script>

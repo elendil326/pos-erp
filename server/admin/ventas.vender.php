@@ -568,15 +568,15 @@ ComposicionTabla = function( config ){
         for (i = composicion.length - 1; i >= 0; i--){
             obj.peso_real += parseFloat(composicion[i].cantidad);
             obj.peso_a_cobrar += parseFloat(composicion[i].cantidad - composicion[i].descuento);
-            obj.importe_por_unidad += parseFloat(composicion[i].precio);
+            obj.importe_por_unidad += parseFloat( composicion[i].precio * (composicion[i].cantidad - composicion[i].descuento) );
         }
         
-        obj.importe_por_unidad /= composicion.length;
-        //console.log( obj );
-        jQuery("#compuesto-peso-real").val ( obj.peso_real );
-        jQuery("#compuesto-peso-a-cobrar").val ( obj.peso_a_cobrar );
-        jQuery("#compuesto-importe-por-unidad").val ( cf(obj.importe_por_unidad) );
-        jQuery("#compuesto-importe-total").val ( cf(obj.importe_por_unidad * obj.peso_a_cobrar) );      
+        obj.importe_por_unidad /= obj.peso_a_cobrar;
+
+        jQuery("#compuesto-peso-real").html 		( obj.peso_real.toFixed(4) );
+        jQuery("#compuesto-peso-a-cobrar").html 	( obj.peso_a_cobrar.toFixed(4) );
+        jQuery("#compuesto-importe-por-unidad").html( cf(obj.importe_por_unidad) );
+        jQuery("#compuesto-importe-total").html		( cf(obj.importe_por_unidad * obj.peso_a_cobrar) );    
         
     };
     
@@ -668,7 +668,8 @@ ComposicionTabla = function( config ){
             desc        : producto.producto_desc,
             procesada   : false,
             escala      : producto.escala,
-            precio      : producto.precio_por_kg,
+            precio      : parseFloat(producto.precio_por_kg) + parseFloat(costo_flete),
+			precio_original : parseFloat(producto.precio_por_kg) + parseFloat(costo_flete) ,
             descuento   : 0
         });
 
@@ -851,7 +852,7 @@ function renderFinalShip(){
 /*    if(composiciones.length == 0 )
         return; */
         
-    var global_qty = 0, global_qty_real = 0, global_importe = 0;
+    var global_qty = 0, global_qty_real = 0, global_importe = 0, global_cost = 0;
     
     var html = '<table style="width: 100%">';
     html += '<tr align=left>'
@@ -860,7 +861,9 @@ function renderFinalShip(){
         + '<th>Peso real</th>'
         + '<th>Peso a cobrar</th>'      
         + '<th>Composicion</th>'
-        + '<th>Importe</th>';
+		+ '<th>Costo</th>'
+        + '<th>Importe</th>'
+		+ '<th>Rendimiento</th>';
             
     for (var i=0; i < composiciones.length; i++) {
         
@@ -873,57 +876,67 @@ function renderFinalShip(){
         var total_qty_with_desc = 0;        
         var total_money = 0;
         var composition = '';
-        
+        var costo_total = 0;        
 
         
         for (var j = composiciones[i].items.length - 1; j >= 0; j--){
             total_qty += composiciones[i].items[j].cantidad  ;
             total_qty_with_desc += composiciones[i].items[j].cantidad   - composiciones[i].items[j].descuento ;         
             total_money += ( composiciones[i].items[j].cantidad - composiciones[i].items[j].descuento ) * composiciones[i].items[j].precio ;
+			costo_total += composiciones[i].items[j].precio_original * composiciones[i].items[j].cantidad ;
             
-            composition += "<b>"+ composiciones[i].items[j].desc + "</b>&nbsp;" + composiciones[i].items[j].procesada + "&nbsp;"
-						+ composiciones[i].items[j].cantidad.toFixed(4)  + getEscalaCorta( composiciones[i].items[j].escala )
-                        + "<b> - </b>" + composiciones[i].items[j].descuento.toFixed(4) + getEscalaCorta( composiciones[i].items[j].escala )+ " desc."
-
+            composition += "<b>"+ composiciones[i].items[j].desc 
+						+ "</b>&nbsp;" 
+						+ (composiciones[i].items[j].procesada ? "Procesada" : "Original")
+						+ "<br>"
+						+ composiciones[i].items[j].cantidad.toFixed(2)  + getEscalaCorta( composiciones[i].items[j].escala )
+                        + "<b> - </b>" 
+						+ composiciones[i].items[j].descuento.toFixed(2) + getEscalaCorta( composiciones[i].items[j].escala )+ " desc."
                         + "<br>";
         }
         
         var color = i % 2 == 0 ? 'style="background-color: #D7EAFF"' : "";
         
         html += tr(
-					td( "<img src='../media/icons/basket_close_32.png' onClick='composicionTabla.rollbackMixIndex("+i+")'><img src='../media/icons/basket_32.png'>" )
+					td( "<img src='../media/icons/basket_close_32.png' onClick='composicionTabla.rollbackMixIndex("+i+")'>" )
                     + td( desc.descripcion )
                     + td( total_qty.toFixed(4) + getEscalaCorta( desc.escala ) )
-                    + td( total_qty_with_desc.toFixed(4) + getEscalaCorta( desc.escala ) )     
+                    + td( total_qty_with_desc.toFixed(4) + " " + getEscalaCorta( desc.escala ) )     
                     + td( composition)
-                    + td( cf(total_money)) , color);
+                    + td( cf(costo_total))
+                    + td( cf(total_money)) 
+					+ td( cf(total_money-costo_total)), color)
                     
         global_qty += total_qty;
         global_qty_real += total_qty_with_desc;
         global_importe += total_money;
+		global_cost += costo_total;
     };
 
 
 
-    html += tr(
+	html += tr(
                   td( "Totales", "style='padding-top: 10px'" )
                 + td( "")
-                + td( global_qty.toFixed(4) )
-                + td( global_qty_real.toFixed(4) )     
+                + td( global_qty.toFixed(2) )
+                + td( global_qty_real.toFixed(2) )     
                 + td( "")
-                + td( cf(global_importe.toFixed(4)) ) ,
+                + td( cf(global_cost.toFixed(4)))
+                + td( cf(global_importe.toFixed(4) ) )
+                + td( cf(global_importe.toFixed(4) - global_cost.toFixed(4)) , 
+					(global_importe.toFixed(4) - global_cost.toFixed(4)) < 0 ? "style='color:red;'" : "style='color:green;'" ),
                 
-                "style='border-top: 1px solid #3F8CE9; font-size: 15px;'");
+                "style='border-top: 1px solid #3F8CE9; font-size: 13px;'");
 
     html += '</html>';
     
     jQuery("#FinalShipTabla").html(html);
     jQuery("#FinalShip").fadeIn();
     
-    jQuery("#compuesto-peso-real").val ( 0 );
-    jQuery("#compuesto-peso-a-cobrar").val ( 0 );
-    jQuery("#compuesto-importe-por-unidad").val ( cf(0) );
-    jQuery("#compuesto-importe-total").val ( cf(0) );
+    jQuery("#compuesto-peso-real").html 		( 0 );
+    jQuery("#compuesto-peso-a-cobrar").html 	( 0 );
+    jQuery("#compuesto-importe-por-unidad").html( cf(0) );
+    jQuery("#compuesto-importe-total").html 	( cf(0) );
     
 }
 
@@ -985,8 +998,8 @@ function doVender()
                 return ;
             }
 
-            reason = "El caragmento se enuentra ahora en transito";
-            window.location = "inventario.php?action=transit&success=true&reason=" + reason;
+            reason = "Venta exitosa";
+            window.location = "ventas.php?action=detalles&id="+response.id_venta+"&action=transit&pp=1&success=true&reason=" + reason;
     
         }
         });
@@ -1493,21 +1506,26 @@ function toUnitProc( $e, $row )
 
 
 	<h2>Detalles del producto a vender</h2>
-	<table>
+	<table >
 		<tr><td>Enviar producto procesado</td><td>
-			<input style="width: 100px" id="compuesto-procesado" type="checkbox">
+			<input style="width: 100px; margin: 5px;" id="compuesto-procesado" type="checkbox">
 		</td></tr>		
 		<tr><td>Peso real</td><td>
-			<input style="width: 100px" id="compuesto-peso-real" type="text" disabled>
+			<div style="width: 100px; margin: 5px;" id="compuesto-peso-real" >0.00</div>
+
 		</td></tr>
 		<tr><td>Peso a cobrar</td><td>
-			<input style="width: 100px" id="compuesto-peso-a-cobrar" type="text" disabled>			
+			<div style="width: 100px; margin: 5px;" id="compuesto-peso-a-cobrar" >0.00</div>
+		
 		</td></tr>		
 		<tr><td>Importe por unidad</td><td>
-			<input style="width: 100px" id="compuesto-importe-por-unidad" type="text" disabled>
+			<div style="width: 100px; margin: 5px;" id="compuesto-importe-por-unidad" >$0.00</div>
+			
 		</td></tr>
 		<tr><td>Importe total por este producto</td><td>
-			<input style="width: 100px" id="compuesto-importe-total" type="text" disabled>
+			<div style="width: 100px; margin: 5px;" id="compuesto-importe-total" >$0.00</div>
+
+			
 		</td></tr>
 	</table>
 	<h4 >

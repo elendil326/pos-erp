@@ -575,7 +575,7 @@ ComposicionTabla = function( config ){
         for (i = composicion.length - 1; i >= 0; i--){
             obj.peso_real += parseFloat(composicion[i].cantidad);
             obj.peso_a_cobrar += parseFloat(composicion[i].cantidad - composicion[i].descuento);
-            obj.importe_por_unidad += parseFloat( composicion[i].precio * composicion[i].cantidad );
+            obj.importe_por_unidad += parseFloat( composicion[i].precio * * (composicion[i].cantidad - composicion[i].descuento) );
         }
         
         obj.importe_por_unidad /= obj.peso_a_cobrar;
