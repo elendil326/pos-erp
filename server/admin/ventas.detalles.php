@@ -137,6 +137,7 @@ if($venta->getTipoVenta() == 'credito'){
     $tabla = new Tabla( $header, $abonos );
     $tabla->addColRender( 'precio', "moneyFormat" );
     $tabla->addColRender( 'monto', "moneyFormat" );
+    $tabla->addColRender( 'fecha', "toDate" );
 	$tabla->addNoData("No se han hecho abonos a esta venta");
     $tabla->render();
 }
