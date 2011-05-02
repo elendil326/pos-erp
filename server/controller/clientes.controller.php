@@ -172,46 +172,49 @@ function crearCliente($args) {
     Logger::log("Cliente creado !");
 }
 
+/*
+ * 
+ * 
+ * 
+ * */
 function listarClientes() {
-    $total_customers = array();
+	
+	
+	$clientes = ClienteDAO::getAll();
+	$clientesDeudores = listarClientesDeudores();
+	
+	$clientesArray = array();
+	for ($c=0; $c < sizeof($clientes); $c++) {
+		
+		if($clientes[$c]->getIdCliente() < 0 )
+			continue;
 
-    //buscar clientes que esten activos
-    $foo = new Cliente();
-    $foo->setIdCliente("-9999");
-    $foo->setActivo("1");
+		$asArray = $clientes[$c]->asArray();
 
+		$found = false;
+		
+		//buscar si este es un cliente deudor
+		for ($cd=0; $cd < sizeof($clientesDeudores); $cd++) { 
 
-    $bar = new Cliente();
-    $bar->setIdCliente("9999");
+			if( $clientesDeudores[$cd]["id_cliente"] == $asArray["id_cliente"] ){
 
-    $clientes = ClienteDAO::byRange($foo, $bar);
-
-    foreach ($clientes as $cliente) {
-
-        //buscar a este cliente en las ventas a credito
-        $qventa = new Ventas();
-        $qventa->setIdCliente($cliente->getIdCliente());
-        $qventa->setTipoVenta("credito");
-        $res = VentasDAO::search($qventa);
-
-        if ($cliente->getIdCliente() == ( $_SESSION['sucursal'] * -1 )) {
-            continue;
-        }
-
-        $por_pagar = 0;
-        foreach ($res as $venta) {
-            //restar lo que ha pagado del total
-            $por_pagar += $venta->getTotal() - $venta->getPagado();
-        }
+				$asArray["credito_restante"] = $clientesDeudores[$cd]["credito_restante"];
+				$found = true;
+				break;
+			}
+		}
 
 
-        $c = $cliente->asArray();
-        $c["credito_restante"] = $cliente->getLimiteCredito() - $por_pagar;
+		if(!$found){
+			//si no lo encontre en deudores, entonces su credito restante es igual a su limite de credito
+			$asArray["credito_restante"] = $asArray["limite_credito"];
+		}
 
-        array_push($total_customers, $c);
-    }
+		array_push($clientesArray, $asArray);
+	}
+	
+	return $clientesArray;
 
-    return $total_customers;
 }
 
 function modificarCliente($args) {
@@ -350,7 +353,10 @@ function modificarCliente($args) {
  * */
 
 function listarVentasClientes() {
-
+	Logger::log("#################################################################");
+	Logger::log("# Esta funcion debe ser deprecada por el bien del performance ! #");
+	Logger::log("#################################################################");
+		
     $ventas = VentasDAO::getAll();
     $tot_ventas = array();
 
@@ -542,43 +548,13 @@ function abonarVenta($args) {
 }
 
 function listarClientesDeudores() {
-    $total_customers = array();
-
-    //buscar clientes que esten activos
-    $tcliente = new Cliente();
-    $tcliente->setActivo(1);
-    $clientes = ClienteDAO::search($tcliente);
-
-    foreach ($clientes as $cliente) {
-        //si es una caja comun, continuar
-        if ($cliente->getIdCliente() < 0) {
-            continue;
-        }
-
-        //buscar a este cliente en las ventas a credito
-        $qventa = new Ventas();
-        $qventa->setIdCliente($cliente->getIdCliente());
-        $qventa->setTipoVenta("credito");
-        $res = VentasDAO::search($qventa);
-
-        $por_pagar = 0;
-        foreach ($res as $venta) {
-            //restar lo que ha pagado del total
-            $por_pagar += $venta->getTotal() - $venta->getPagado();
-        }
-
-        $c = $cliente->asArray();
-
-
-        $c["credito_restante"] = $cliente->getLimiteCredito() - $por_pagar;
-        $c["saldo"] = $por_pagar;
-
-        if ($por_pagar > 0) {
-            array_push($total_customers, $c);
-        }
-    }
-
-    return $total_customers;
+	
+	$deudores = ClienteDAO::obtenerClientesDeudores();
+	for ($i=0; $i < sizeof($deudores); $i++) { 
+		$deudores[$i]["credito_restante"] = $deudores[$i]["limite_credito"] - $deudores[$i]["saldo"];
+	}
+	return $deudores;
+	
 }
 
 function facturarVenta($args) {

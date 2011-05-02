@@ -45,4 +45,19 @@ class ClienteDAO extends ClienteDAOBase
 
 	}
 	
+	
+	public static function obtenerClientesDeudores(){
+		$sql = "SELECT c.*, sum(v.total - v.pagado) as saldo from ventas as v, cliente as c WHERE ( tipo_venta = 'credito' AND liquidada = 0 AND c.id_cliente = v.id_cliente ) group by c.id_cliente";
+		global $conn;
+
+		$rs = $conn->Execute($sql);
+
+		$res = array();
+		foreach ($rs as $foo  ) {
+			array_push( $res, $foo );
+		}
+		return $res;
+	}
+	
+	
 }
