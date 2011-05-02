@@ -120,6 +120,8 @@ var HumbleFinance = function(  ){
 	this.buildDOM = function(){
 		var container = $(this.id);
 
+		//console.log(this.id.id + 'priceGraph', this.id.id);
+		
         // Build DOM element
         this.containers.mainGraph = new Element('div', 	{id: this.id + 'priceGraph', style: 'margin-bottom: 10px; width: 100%; height: 240px;'});
         this.containers.summary = new Element('div', 	{id: this.id + 'summaryGraph', style: ' width: 100%; height: 60px; margin-bottom: 15px;'});

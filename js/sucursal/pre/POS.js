@@ -61,6 +61,8 @@ POS.loadInfoSucursal = function(){
 
             POS.infoSucursal = informacion.datos;
 
+			imReadyToStart();
+
             if(DEBUG){
                 console.log("POS.infoSucursal contiene : ", POS.infoSucursal);
             }

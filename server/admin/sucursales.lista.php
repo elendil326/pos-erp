@@ -3,189 +3,31 @@
 
 require_once("controller/sucursales.controller.php");
 require_once("controller/inventario.controller.php");
-
+require_once("model/ventas.dao.php");
 
 
 $sucursales = listarSucursales();
 
+$reporteDeRendimientoDiario = new Reporte();
+$numeroDeVentasDiarias = new Reporte();
 
 
+$reporteDeRendimientoDiario->setEscalaEnY	( "pesos" );
+$numeroDeVentasDiarias->setEscalaEnY		( "ventas" );
+
+foreach($sucursales as $s)
+{
+	$reporteDeRendimientoDiario->agregarMuestra	( $s["descripcion"], VentasDAO::rendimientoDiarioEnVentasAContadoPorSucursal( $s["id_sucursal"] ) );
+	$numeroDeVentasDiarias->agregarMuestra		( $s["descripcion"], VentasDAO::contarVentasPorDia($s['id_sucursal'], -1 ));
+}
+
+$numeroDeVentasDiarias->fechaDeInicio( strtotime(VentasDAO::getByPK( 1 )->getFecha() ) );
+$reporteDeRendimientoDiario->fechaDeInicio( strtotime(VentasDAO::getByPK( 1 )->getFecha() ) );
 
 
-
-
-/****************************
- * Grafica 
- *****************************/
-?>
-<h2>Ventas por sucursales</h2><br>
-<div id="graph">
-    <div id="fechas">
-    </div>
-</div>
-
-<br><br>
-<?php
-
-	$ventas = array();
-	
-	foreach( $sucursales as $sucursal ){
-		$ventas[$sucursal['id_sucursal']] = (object)VentasDAO::contarVentasPorDia($sucursal['id_sucursal'] , 180);
-	}
-
-	//echo json_encode($ventas);
-?>
-<script type="text/javascript" charset="utf-8">
-
-<?php
-
-    $ventas = array();//ventas
-		
-		
-    $fechas = array();
-    
-	//obtener la fecha de la primera venta de esta sucursal
-    $primeraVenta = VentasDAO::getByPK( 1 )->getFecha();
-
-	if($primeraVenta){
-		$start = date("Y-m-d", strtotime("-1 day", strtotime($primeraVenta)));
-		$now = date ( "Y-m-d" );
-
-		$v1 = new Ventas();
-		$v2 = new Ventas();
-
-		$todas = "var todas = [";
-		$foo =  0;
-
-	    while(true){
-
-		    $v1->setFecha( $start . " 00:00:00" );
-		    $v2->setFecha( $start . " 23:59:59" );
-
-	        array_push( $fechas, $start );
-
-			$sum = 0;
-
-			foreach( $sucursales as $sucursal ){
-
-		    	$v1->setIdSucursal( $sucursal['id_sucursal']  );
-
-			    $results = VentasDAO::byRange($v1, $v2);
-
-				if( !isset($ventas[$sucursal['id_sucursal'] ] ))
-					$ventas[ $sucursal['id_sucursal'] ] = array();
-
-		        array_push( $ventas[ $sucursal['id_sucursal'] ], count($results) );			
-				$sum += count($results);
-			}
-
-			$todas .= "[ $foo, $sum ], ";
-			$foo++;
-
-			if($start == $now){
-				break;
-			}
-
-			$start = date("Y-m-d", strtotime("+1 day", strtotime($start)));        
-
-	    }
-
-		$todas .= "]";
-
-		echo "var ventas = [];";
-
-		foreach($ventas as $suc => $key){
-
-	        echo  "ventas[$suc] = [];";
-			for($i = 0; $i < sizeof($key); $i++ ){
-		        echo  "ventas[$suc].push([" . $i . "," . $key[$i] . "]);\n";
-
-		    }
-		}
-
-		echo $todas;
-		echo "; var sinventas = false; ";
-	}else{
-		echo " var sinventas = true; ";
-	}
-	
-	
-?>
-
-
-var graficaVentas;
-
-Event.observe(document, 'dom:loaded', function() {
-
-	if(!sinventas){
-		graficaVentas = new HumbleFinance();
-
-		<?php
-			foreach($ventas as $suc => $key){
-	 			echo "graficaVentas.addGraph( ventas[$suc], 'suc'); 	";
-			}
-		?>
-		
-		function meses(m){
-			m = parseInt(m);
-			switch(m){
-				case 1: return "enero";
-				case 2: return "febrero";
-				case 3: return "marzo";
-				case 4: return "abril";
-				case 5: return "mayo";
-				case 6: return "junio";
-				case 7: return "julio";
-				case 8: return "agosto";
-				case 9: return "septiembre";
-				case 10: return "octubre";
-				case 11: return "noviembre";
-				case 12: return "diciembre";
-
-			}
-		}
-
-		var fechasVentas = [<?php
-			
-			foreach($fechas as $f){
-				echo "\"" . $f . "\", ";
-			}
-		?>];
-
-		graficaVentas.setXFormater(
-				function(val){
-					return meses(fechasVentas[val].split("-")[1]) + " "  + fechasVentas[val].split("-")[2]; 
-				}
-			);
-
-		graficaVentas.setYFormater(
-				function(val){
-					if(val==0)return "";
-					return val + " ventas";
-				}
-			);
-
-		graficaVentas.setTracker(
-			function (obj){
-					obj.x = parseInt( obj.x );
-
-					return meses(fechasVentas[obj.x].split("-")[1]) + " "  + fechasVentas[obj.x].split("-")[2]
-								+ ", <b>"+ parseInt(obj.y) + "</b> ventas";
-
-				}
-			);
-			
-	    graficaVentas.addSummaryGraph( todas );
-	    graficaVentas.render('graph');
-	}
-
-    
-
-});
-</script>
-
-
-<?php
+$numeroDeVentasDiarias->graficar		( "Ventas diarias por sucursal" );
+echo "<br>";
+$reporteDeRendimientoDiario->graficar	( "Ingresos diarios en ventas a contado por sucursal" );
 
 
 function bold($s){

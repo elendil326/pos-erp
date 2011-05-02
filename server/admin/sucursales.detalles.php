@@ -115,212 +115,23 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 	}
 </script>
 
-<h2>Mapa de ventas</h2>
-<div id="finance">
-    <div id="fechas">
-    </div>
-</div>
-<br>
-
-<!--
-<h2>Mapa de rendimiento</h2>
-<div id="rendimiento">
-    <div id="fechas_rendimiento">
-    </div>
-</div>
--->
 
 <script type="text/javascript" charset="utf-8">
     function mostrarDetallesVenta (vid){ window.location = "ventas.php?action=detalles&id=" + vid; }
     function editar(){ window.location = "sucursales.php?action=editar&sid=<?php echo $_REQUEST['id'] ?>"; }
-
-    <?php
-		/*
-		 * Buscar el numero de ventas de esta sucursal, versus las ventas de todas las sucursales en la empresa
-		 * 
-		 * */
-		
-		//entero con el numero de ventas
-        $ventasEstaSucursal = VentasDAO::contarVentasPorDia( $sucursal->getIdSucursal(), -1 );
-
-		//entero con el numero de ventas de todas las sucursales
-        $ventasTodasLasSucursales = VentasDAO::contarVentasPorDia( null, -1 );
-
-		//fechas en Y-m-d
-        $fechas = array();
-
-		//buscar la fecha mas vieja
-		if(sizeof($ventasEstaSucursal) != 0){
-			//no hay ventas aca
-		
-			$startDate = strtotime($ventasEstaSucursal[0]["fecha"]);
-
-			if( strtotime( $ventasTodasLasSucursales[0]["fecha"] )
-					< strtotime($ventasEstaSucursal[0]["fecha"])  )
-			{
-				$startDate = strtotime($ventasTodasLasSucursales[0]["fecha"]) ;
-			}
-
-
-
-			//current day
-			$cDay =  date("Y-m-d",  $startDate  ); 
-
-			//the day the loop will end
-			$tomorrow = date("Y-m-d", strtotime("+1 day",  time()));
-
-			//utility variables
-			$thisBranchSales = $ventasEstaSucursal;
-			$thisBranchSalesIndex = $thisBranchMissingDays = 0;
-
-			$allBranchesSales = $ventasTodasLasSucursales;
-			$allBranchesSalesIndex = $allBranchesMissingDays = 0;
-
-			//iniciar en $startDate y sumar dias hasta llegar al dia de hoy
-			//en $cDay esta el dia en la iteracion
-			while( $tomorrow != $cDay ){
-
-				array_push($fechas, $cDay);
-
-				if( sizeof($allBranchesSales) == $allBranchesSalesIndex ){
-					//im out of days !
-					array_push($allBranchesSales, array( "fecha" => $cDay, "ventas" => 0 ));
-				}
-
-			 	if( $allBranchesSales[ $allBranchesSalesIndex ]["fecha"] != $cDay){
-					$allBranchesMissingDays++;
-				}else{
-					//fill the allBranchesMissingDays !
-					for($a = 0 ; $a < $allBranchesMissingDays; $a++){
-						array_splice($allBranchesSales, $allBranchesSalesIndex, 0, array(array( "fecha" => "missing_day" , "ventas" => 0)) );
-					}
-					$allBranchesSalesIndex += $allBranchesMissingDays+1;
-					$allBranchesMissingDays = 0;
-				}
-
-
-				if( sizeof($thisBranchSales) == $thisBranchSalesIndex ){
-					//im out of days !
-					array_push($thisBranchSales, array( "fecha" => $cDay, "ventas" => 0 ));
-				}
-
-			 	if( $thisBranchSales[ $thisBranchSalesIndex ]["fecha"] != $cDay){
-					$thisBranchMissingDays++;
-				}else{
-					for($a = 0 ; $a < $thisBranchMissingDays; $a++){
-						array_splice($thisBranchSales, $thisBranchSalesIndex, 0, array(array( "fecha" => "missing_day" , "ventas" => 0)) );
-					}
-
-					$thisBranchSalesIndex += $thisBranchMissingDays+1;
-					$thisBranchMissingDays = 0;
-				}
-
-
-
-				$cDay = date("Y-m-d", strtotime("+1 day", strtotime($cDay)));
-			}
-
-
-
-	        echo "\nvar estaSucursal = [";
-	        for($i = 0; $i < sizeof($thisBranchSales); $i++ ){
-	            echo  "[" . $i . "," . $thisBranchSales[$i]["ventas"] . "]";
-	            if($i < sizeof($thisBranchSales) - 1){
-	                echo ",";
-	            }
-	        }
-	        echo "];\n";
-
-			echo "console.log( 'esta sucural->', estaSucursal );";
-
-	       echo "\nvar todasSucursales = [";
-	        for($i = 0; $i < sizeof($allBranchesSales); $i++ ){
-	            echo  "[" . $i . "," . $allBranchesSales[$i]["ventas"] . "]";
-	            if($i < sizeof($allBranchesSales) - 1){
-	                echo ",";
-	            }
-	        }
-	        echo "];\n";			
-
-
-
-	        echo "var fechasVentas = [";
-	        for($i = 0; $i < sizeof($fechas); $i++ ){
-	            echo  "{ fecha : '" . $fechas[$i] . "'}";
-	            if($i < sizeof($fechas) - 1){
-	                echo ",";
-	            }
-	        }
-	        echo "];\n";
-		}
-					
-	?>
-
-
-
-
-	Event.observe(document, 'dom:loaded', function() {
-
-
-	<?php 
-		if(POS_ENABLE_GMAPS){
-			echo "startMap();";
-		}
-	?>
-
-	function meses(m){
-		m = parseInt(m);
-		switch(m){
-			case 1: return "enero";
-			case 2: return "febrero";
-			case 3: return "marzo";
-			case 4: return "abril";
-			case 5: return "mayo";
-			case 6: return "junio";
-			case 7: return "julio";
-			case 8: return "agosto";
-			case 9: return "septiembre";
-			case 10: return "octubre";
-			case 11: return "noviembre";
-			case 12: return "diciembre";
-									
-		}
-	}
-
-	var graficaVentas = new HumbleFinance();
-	graficaVentas.setXFormater(
-			function(val){
-				if(val ==0)return "";
-				return meses(fechasVentas[val].fecha.split("-")[1]) + " "  + fechasVentas[val].fecha.split("-")[2]; 
-			}
-		);
-		
-	graficaVentas.setYFormater(
-			function(val){
-				if(val ==0)return "";
-				return val + " ventas";
-			}
-		);
-	
-	graficaVentas.setTracker(
-		function (obj){
-				obj.x = parseInt( obj.x );
-
-				return meses(fechasVentas[obj.x].fecha.split("-")[1]) + " "  + fechasVentas[obj.x].fecha.split("-")[2]
-							+ ", <b>"+ parseInt(obj.y) + "</b> ventas";
-
-			}
-		);	
-
-	graficaVentas.addGraph( estaSucursal );
-	graficaVentas.addGraph( todasSucursales );
-	graficaVentas.addSummaryGraph( todasSucursales );
-	graficaVentas.render('finance');
-
-
-	});
-
 </script>
+<?php
+/*
+	* Buscar el numero de ventas de esta sucursal, versus las ventas de todas las sucursales en la empresa
+	* 
+	* */
+	$numeroDeVentasDiarias = new Reporte();
+	$numeroDeVentasDiarias->agregarMuestra		( "", VentasDAO::contarVentasPorDia( $sucursal->getIdSucursal(), -1 ));
+	$numeroDeVentasDiarias->agregarMuestra		( "", VentasDAO::contarVentasPorDia( null, -1 ));		
+	$numeroDeVentasDiarias->fechaDeInicio		( strtotime(VentasDAO::getByPK( 1 )->getFecha() ) );
+	$numeroDeVentasDiarias->setEscalaEnY		( "ventas" );		
+	$numeroDeVentasDiarias->graficar			( "Ventas de esta sucursal" );
+?>
 
 <h2><img src='../media/icons/basket_go_32.png'>&nbsp;Ventas en el ultimo dia</h2>
 

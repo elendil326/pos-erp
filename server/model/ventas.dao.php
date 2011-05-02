@@ -51,7 +51,7 @@ class VentasDAO extends VentasDAOBase
 		foreach ($rs as $foo) {
 			array_push( $res, array( 
 				"fecha" => $foo[0],
-				"ventas" => $foo[1] ) );
+				"value" => $foo[1] ) );
 		}
 		return $res;
 
@@ -89,6 +89,24 @@ class VentasDAO extends VentasDAOBase
 			array_push( $res, array( 
 				"fecha" => $foo[0],
 				"ventas" => $foo[1] ) );
+		}
+		return $res;
+	}
+	
+	
+	public static function rendimientoDiarioEnVentasAContadoPorSucursal($id_sucursal){
+		$sql = "select date_format(fecha,'%Y-%m-%d') as fecha, SUM(total) as total from ventas where (id_sucursal = ? and  tipo_venta = 'contado' and liquidada =1) group by date_format(fecha,'%Y-%m-%d') order by fecha";
+		$val = array($id_sucursal);
+
+		global $conn;
+
+		$rs = $conn->Execute($sql, $val);
+
+		$res = array();
+		foreach ($rs as $foo) {
+			array_push( $res, array( 
+				"fecha" => $foo[0],
+				"value" => $foo[1] ) );
 		}
 		return $res;
 	}

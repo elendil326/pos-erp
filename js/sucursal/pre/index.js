@@ -2,13 +2,12 @@ Ext.ns('POS', 'sink', 'Ext.ux');
 
 
 
-
 Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
     fullscreen: true,
     layout: 'card',
     items: [{
         cls: 'launchscreen',
-        html: '<div><img src="../media/cash_register.png"><img src="../media/logo_pos.png"></div>'
+        html: '<div align=center><img src="../media/cash_register.png"><br><div id="space_for_suc_name"></div><img src="../media/logo_pos.png"></div>'
     }],
     backText: 'Regresar',
     useTitleAsBackText: false,
@@ -241,13 +240,21 @@ Ext.setup({
 				console.log('resize',a,b,c);
 			}
 		});
-	
-        sink.Main.init();
+		imReadyToStart();
+        
     }
 });
 
+var SYSTEMS_NEEDED = 2;
+var systemsLoaded = 0;
+function imReadyToStart(  ){
+	if( ++systemsLoaded == SYSTEMS_NEEDED ){
+		sink.Main.init();
+		
+		Ext.get("space_for_suc_name").update(   POS.infoSucursal.descripcion  );
 
-
+	}
+}
 
 //esta es la estructura del sink, 
 //aqui se guardan las applicaciones
