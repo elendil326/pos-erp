@@ -845,9 +845,9 @@ function venderAdminV2($args) {
     }
 
 
-    var_dump($array_items);
-    echo "----------------------------------";
-    var_dump($array_items_venta);
+    //var_dump($array_items);
+    //echo "----------------------------------";
+    //var_dump($array_items_venta);
 
     //TODO : Cambiar esto
     //revisamos si las existencias en el inventario maestro satisfacen a las requeridas en la venta
