@@ -999,7 +999,7 @@ function doVender()
             }
 
             reason = "Venta exitosa";
-            window.location = "ventas.php?action=detalles&id="+response.id_venta+"&action=transit&pp=1&success=true&reason=" + reason;
+            window.location = "ventas.php?action=detalles&id="+response.id_venta+"&pp=1&success=true&reason=" + reason;
     
         }
         });
