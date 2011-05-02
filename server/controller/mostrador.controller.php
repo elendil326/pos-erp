@@ -743,8 +743,8 @@ function venderAdminV2($args) {
             $item->precio = $items->items[0]->precio;
         }
 
-        $producto->cantidad_producto_vendido += $item->cantidad;
-        $producto->cantidad_producto_descontado += $item->descuento;
+        /*$producto->cantidad_producto_vendido += $item->cantidad;
+        $producto->cantidad_producto_descontado += $item->descuento;*/
 
         //insertamos el primer producto
         array_push($array_items, $item);
@@ -823,8 +823,8 @@ function venderAdminV2($args) {
                     $_item->precio = $items->items[$i]->precio;
                 }
 
-                $producto->cantidad_producto_vendido += $_item->cantidad;
-                $producto->cantidad_producto_descontado += $_item->descuento;
+                /*$producto->cantidad_producto_vendido += $_item->cantidad;
+                $producto->cantidad_producto_descontado += $_item->descuento;*/
 
                 array_push($array_items, $_item);
             }
