@@ -152,9 +152,7 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 		//buscar la fecha mas vieja
 		if(sizeof($ventasEstaSucursal) != 0){
 			//no hay ventas aca
-			// 
-			// 
-			
+		
 			$startDate = strtotime($ventasEstaSucursal[0]["fecha"]);
 
 			if( strtotime( $ventasTodasLasSucursales[0]["fecha"] )

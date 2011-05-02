@@ -3,6 +3,7 @@
 
 require_once("model/sucursal.dao.php");
 require_once("model/usuario.dao.php");
+require_once("model/ventas.dao.php");
 require_once("model/factura_venta.dao.php");
 require_once("controller/clientes.controller.php");
 
@@ -90,55 +91,58 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 
 
             <?php
-
+			
             //graficar desde la fecha de ingreso de este cliente
-            $primerVenta = $cliente->getFechaIngreso();
-       		$start = date("Y-m-d", strtotime("-1 day", strtotime($primerVenta)));
-			$now = date ( "Y-m-d" );
+			$ventasDeCliente = VentasDAO::contarVentasDeCliente( $cliente->getIdCliente() );
+		
 			$activo = false;
-            $numVentas = array();
-            $fechas = array();
-            $n = 0;
+			
+			if(count($ventasDeCliente) > 0){
+				$activo = true;
+			}
+			
+			//current day
+			$cDay =  date("Y-m-d",  strtotime($cliente->getFechaIngreso())  ); 
 
-            while(true){
-				//buscar las ventas de todas las sucursales
-				$v1 = new Ventas();
-				$v1->setFecha( $start . " 00:00:00" );
-				$v1->setIdCliente( $_REQUEST['id'] );
+			//the day the loop will end
+			$tomorrow = date("Y-m-d", strtotime("+1 day",  time()));
+			
+			$fechas = array();
+			
+			$index = 0 ;
+			$missing_days = 0; 
 
-				$v2 = new Ventas();
-				$v2->setFecha( $start . " 23:59:59" );
+			while( $tomorrow != $cDay ){
 
-				$results = VentasDAO::byRange($v1, $v2);
-				
-				if(count($results) > 0){
-					$activo = true;
+				array_push($fechas, $cDay);
+
+				if( sizeof($ventasDeCliente) == $index ){
+					//im out of days !
+					array_push($ventasDeCliente, array( "fecha" => $cDay, "ventas" => 0 ));
 				}
-				array_push( $numVentas, count($results) );
-		        array_push( $fechas, $start );
 
-		        $foo = explode("-", $start);
-		        $bar = explode("-", $now );
-		        
-		        if(($foo[0] > $bar[0]) && ($foo[1] > $bar[1]) && ($foo[2] > $bar[2])){
-		        	break;
-		        }
-		        
-				if($start == $now){
-					break;
+			 	if( $ventasDeCliente[ $index ]["fecha"] != $cDay){
+					$missing_days++;
+				}else{
+					//fill the allBranchesMissingDays !
+					for($a = 0 ; $a < $missing_days; $a++){
+						array_splice($ventasDeCliente, $index, 0, array(array( "fecha" => "missing_day" , "ventas" => 0)) );
+					}
+					$index += $missing_days+1;
+					$missing_days = 0;
 				}
-				
-				$start = date("Y-m-d", strtotime("+1 day", strtotime($start))); 
 
-         	}
-
+				$cDay = date("Y-m-d", strtotime("+1 day", strtotime($cDay)));
+			}
+			
+			
 			echo "var actividad = " . ( $activo === true ? "true" : "false" ) . ";";
 
 			if($activo){
 				echo "\nvar numVentas = [";
-		        for($i = 0; $i < sizeof($numVentas); $i++ ){
-		            echo  "[" . $i . "," . $numVentas[$i] . "]";
-		            if($i < sizeof($numVentas) - 1){
+		        for($i = 0; $i < sizeof($ventasDeCliente); $i++ ){
+		            echo  "[" . $i . "," . $ventasDeCliente[$i]["ventas"] . "]";
+		            if($i < sizeof($ventasDeCliente) - 1){
 		                echo ",";
 		            }
 		        }
@@ -176,6 +180,49 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 			$("finance").update("<h3>Este cliente no ha realizado ninguna compra.</h3>");
 		}else{
 			var graficaVentas = new HumbleFinance();
+			function meses(m){
+				m = parseInt(m);
+				switch(m){
+					case 1: return "enero";
+					case 2: return "febrero";
+					case 3: return "marzo";
+					case 4: return "abril";
+					case 5: return "mayo";
+					case 6: return "junio";
+					case 7: return "julio";
+					case 8: return "agosto";
+					case 9: return "septiembre";
+					case 10: return "octubre";
+					case 11: return "noviembre";
+					case 12: return "diciembre";
+
+				}
+			}
+
+			var graficaVentas = new HumbleFinance();
+			graficaVentas.setXFormater(
+					function(val){
+						if(val ==0)return "";
+						return meses(fechas[val].fecha.split("-")[1]) + " "  + fechas[val].fecha.split("-")[2]; 
+					}
+				);
+
+			graficaVentas.setYFormater(
+					function(val){
+						if(val ==0)return "";
+						return val + " ventas";
+					}
+				);
+
+			graficaVentas.setTracker(
+				function (obj){
+						obj.x = parseInt( obj.x );
+
+						return meses(fechas[obj.x].fecha.split("-")[1]) + " "  + fechas[obj.x].fecha.split("-")[2]
+									+ ", <b>"+ parseInt(obj.y) + "</b> ventas";
+
+					}
+				);
 		    graficaVentas.addGraph( numVentas );
 		    graficaVentas.addSummaryGraph( numVentas );
 		    graficaVentas.render('finance');

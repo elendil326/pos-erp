@@ -71,5 +71,26 @@ class VentasDAO extends VentasDAOBase
 		return $res;
 
 	}
+	
+	
+	public static function contarVentasDeCliente($id_cliente){
+		$sql = "select date_format(fecha,'%Y-%m-%d') as fecha, count(*) as ventas from ventas where id_cliente = ? group by date_format(fecha,'%Y-%m-%d') order by fecha";
+		$val = array($id_cliente);
+		
+
+		
+		global $conn;
+		
+
+		$rs = $conn->Execute($sql, $val);
+
+		$res = array();
+		foreach ($rs as $foo) {
+			array_push( $res, array( 
+				"fecha" => $foo[0],
+				"ventas" => $foo[1] ) );
+		}
+		return $res;
+	}
 
 }
