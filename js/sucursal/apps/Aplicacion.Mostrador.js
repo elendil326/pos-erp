@@ -1440,7 +1440,7 @@ Aplicacion.Mostrador.prototype.setTipoVenta = function ( tipo_venta ){
         Aplicacion.Mostrador.currentInstance.carrito.tipo_venta = "credito";
         
         //ocultamos el boton de factura
-        //Ext.getCmp('Mostrador-doNuevaVentaFacturar').setVisible(false);
+        Ext.getCmp('Mostrador-doNuevaVentaFacturar').setVisible(false);
         
        
         //establecemos nulo el tipo de pago
@@ -1491,7 +1491,7 @@ Aplicacion.Mostrador.prototype.setTipoPago = function( tipoPago ){
 
             //verificamos si es un cliente para mostrar el boton de factura
             if( Aplicacion.Mostrador.currentInstance.carrito.cliente != null ){
-                //Ext.getCmp('Mostrador-doNuevaVentaFacturar').setVisible(true);
+                Ext.getCmp('Mostrador-doNuevaVentaFacturar').setVisible(true);
             }
             
             //fijamo el importe en ceros
@@ -1504,7 +1504,7 @@ Aplicacion.Mostrador.prototype.setTipoPago = function( tipoPago ){
 
             //verificamos si es un cliente para mostrar el boton de factura
             if( Aplicacion.Mostrador.currentInstance.carrito.cliente != null ){
-                //Ext.getCmp('Mostrador-doNuevaVentaFacturar').setVisible(true);
+                Ext.getCmp('Mostrador-doNuevaVentaFacturar').setVisible(true);
             }
             
             //fijamos el importe igual al total
@@ -1552,11 +1552,11 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelUpdater = function ()
     Ext.getCmp('Mostrador-doNuevaVentaDescuento').setValue( "" );			
 		
     //ocultamos el boton de factura
-    /*if( Ext.getCmp('Mostrador-doNuevaVentaFacturar').rendered ){
+    if( Ext.getCmp('Mostrador-doNuevaVentaFacturar').rendered ){
         Ext.getCmp('Mostrador-doNuevaVentaFacturar').reset();
-    }*/
+    }
     
-    //Ext.getCmp('Mostrador-doNuevaVentaFacturar').setVisible(false);
+    Ext.getCmp('Mostrador-doNuevaVentaFacturar').setVisible(false);
 
     //mostramos el campo de importe
     Ext.getCmp('Mostrador-doNuevaVentaImporte').show();
