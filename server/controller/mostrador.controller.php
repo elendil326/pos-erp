@@ -612,7 +612,7 @@ function venderAdmin($args) {
 
     //verificamos que se manden todos los parametros necesarios
 
-    if (!( isset($data->cliente) && isset($data->tipo_venta) && isset($data->tipo_pago) && isset($data->productos) )) {
+    if (!( isset($data->cliente) && isset($data->tipo_venta) && isset($data->productos) )) {
         Logger::log("Falta uno o mas parametros");
         die('{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }');
     }
@@ -1114,11 +1114,14 @@ function venderAdmin($args) {
     if ($venta->getTipoVenta() == "credito") {
         //verificamos si el cliente cuenta con suficiente limite de credito para solventar esta venta
         $ventas_credito = listarVentaCliente($cliente->getIdCliente(), $venta->getTipoVenta());
-        $adeuda = 0;
+        $adeuda = 0;       
 
         foreach ($ventas_credito as $vc) {
-            if ($vc->liquidada == "0") {
-                $adeuda = $vc->saldo;
+
+            //var_dump($vc);
+
+            if ($vc['liquidada'] == "0") {
+                $adeuda = $vc['saldo'];
             }
         }
 
@@ -1138,8 +1141,8 @@ function venderAdmin($args) {
         if($data->efectivo < $venta->getTotal())
         {
             DAO::transRollback();
-            Logger::log("Error : No cuenta con suficiente efectivo para cubrir la cuenta." . $e);
-            die('{"success": false, "reason": "Error : No cuenta con suficiente efectivo para cubrir la cuenta." }');
+            Logger::log("Error : No cuenta con suficiente efectivo para cubrir el total de la venta.");
+            die('{"success": false, "reason": "Error : No cuenta con suficiente efectivo para cubrir el total de la venta." }');
         }
     }
 
