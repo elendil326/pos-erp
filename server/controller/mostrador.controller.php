@@ -1125,9 +1125,11 @@ function venderAdmin($args) {
             }
         }
 
+        echo "limite : {$cliente->getLimiteCredito()}, total : {$venta->getTotal()} adeuda : {$adeuda}";
+
         if ($cliente->getLimiteCredito() < ($venta->getTotal() + $adeuda)) {
             DAO::transRollback();
-            Logger::log("Error : No cuenta con suficiente limite de credito para realizar esta evnta a credito." . $e);
+            Logger::log("Error : No cuenta con suficiente limite de credito para realizar esta evnta a credito.");
             die('{"success": false, "reason": "Error : No cuenta con suficiente limite de credito para realizar esta evnta a credito." }');
         }
     }
