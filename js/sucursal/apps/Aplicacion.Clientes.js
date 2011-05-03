@@ -616,7 +616,8 @@ Aplicacion.Clientes.prototype.comprasDeClientesPanelUpdater = function ( id_clie
             html += "<tr onClick='Aplicacion.Clientes.currentInstance.detallesDeVentaPanelShow(" +lista[i].id_venta+ ");'>";
 		
         html += "<td>" + lista[i].id_venta + "</td>";
-        html += "<td>" + lista[i].fecha + "</td>";
+		var fecha = POS.fecha(lista[i].fecha);
+        html += "<td>" + fecha + "</td>";
         html += "<td>" + lista[i].sucursal + "</td>";
         html += "<td>" + lista[i].tipo_venta + "</td>";
         html += "<td>" + POS.currencyFormat ( lista[i].total ) + "</td>";
@@ -805,7 +806,7 @@ Aplicacion.Clientes.prototype.editarClienteGuardarBoton = function (  )
     }
 
     //telefono
-    if(v.telefono.length < 10){
+    if(v.telefono.length < 5){
         Ext.Msg.alert("Nuevo cliente", "La descripcion del telefono es muy corta.");
         return campo.setInstructions("La descripcion del telefono es muy corta.");
     }

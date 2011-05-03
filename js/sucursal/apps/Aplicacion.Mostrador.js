@@ -927,7 +927,7 @@ Aplicacion.Mostrador.prototype.clienteSeleccionado = function ( cliente )
 	
     this.buscarClienteFormShow();
 	
-    Ext.getCmp("Mostrador-tipoCliente").getComponent(1).setBadge(cliente.nombre);
+    Ext.getCmp("Mostrador-tipoCliente").getComponent(1).setBadge(cliente.razon_social);
 	
     Aplicacion.Mostrador.currentInstance.carrito.cliente = cliente;
 	
@@ -957,7 +957,7 @@ Aplicacion.Mostrador.prototype.clientePreferencialSeleccionado = function ( clie
     }
 	
 	
-    Ext.getCmp("Mostrador-tipoCliente").getComponent(1).setBadge(cliente.nombre);
+    Ext.getCmp("Mostrador-tipoCliente").getComponent(1).setBadge(cliente.razon_social);
 	
     Aplicacion.Mostrador.currentInstance.carrito.cliente = cliente;
 	
@@ -1075,7 +1075,7 @@ Aplicacion.Mostrador.prototype.buscarClienteFormCreator = function ()
             height: '100%',
             xtype: 'list',
             store: Aplicacion.Clientes ? Aplicacion.Clientes.currentInstance.listaDeClientesStore : null ,
-            itemTpl: '<div class="listaDeClientesCliente"><strong>{nombre}</strong> {rfc}</div>',
+            itemTpl: '<div class="listaDeClientesCliente"><strong>{razon_social}</strong> {rfc}</div>',
             grouped: true,
             indexBar: true,
             listeners : {
@@ -1594,7 +1594,7 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelUpdater = function ()
     }else{
 				
         //es un cliente
-        Ext.getCmp('Mostrador-doNuevaVentaCliente').setValue( this.carrito.cliente.nombre + "  " + this.carrito.cliente.rfc );
+        Ext.getCmp('Mostrador-doNuevaVentaCliente').setValue( this.carrito.cliente.razon_social + "  " + this.carrito.cliente.rfc );
 		
         //verificamos si el cliente tiene asignado un limite de credito
         if(this.carrito.cliente.limite_credito > 0){

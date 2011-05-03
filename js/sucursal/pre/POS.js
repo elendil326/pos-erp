@@ -128,6 +128,29 @@ POS.loadDocumentos = function(){
 
 };
 
+POS.fecha = function( f ){
+	var fecha = new Date(f);
+	var mes ;
+	switch(fecha.getMonth()){
+		case 0 : mes = "Enero"; break;
+		case 1 : mes = "Febrero";break;
+		case 2 : mes = "Marzo";break;
+		case 3 : mes = "Abril";break;
+		case 4 : mes = "Mayo";break;
+		case 5 : mes = "Junio";break;
+		case 6 : mes = "Julio";break;
+		case 7 : mes = "Agosto";break;
+		case 8 : mes = "Septiembre";break;
+		case 9 : mes = "Octubre";break;
+		case 10 : mes = "Noviembre";break;
+		case 11 : mes = "Diciembre";break;
+	}
+	
+	var min = fecha.getMinutes() < 10 ? "0" + fecha.getMinutes() : fecha.getMinutes(); 
+	var hours = Math.abs(fecha.getHours() - 12);
+	return fecha.getDate() +" "+ mes + " " + hours + ":" + min;
+}
+
 //contiene informacion acerca de las leyendas de los tickets
 POS.leyendasTicket = null;
 
