@@ -13,7 +13,7 @@ require_once("model/inventario_maestro.dao.php");
 require_once("model/compra_proveedor.dao.php");
 require_once("logger.php");
 require_once('autorizaciones.controller.php');
-require_ocne('clientes.controller.php');
+require_once('clientes.controller.php');
 
 /*
  * Crea una factura para este objeto venta
