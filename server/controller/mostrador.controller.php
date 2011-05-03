@@ -1121,9 +1121,11 @@ function venderAdmin($args) {
             //var_dump($vc);
 
             if ($vc['liquidada'] == "0") {
-                $adeuda = $vc['saldo'];
+                $adeuda += $vc['saldo'];
             }
-        }        
+        }
+
+        //echo "limite : {$cliente->getLimiteCredito()}, total : {$venta->getTotal()} adeuda : {$adeuda}";
 
         if ($cliente->getLimiteCredito() < ($venta->getTotal() + $adeuda)) {
             DAO::transRollback();
