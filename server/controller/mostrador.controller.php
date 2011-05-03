@@ -554,7 +554,7 @@ function vender($args) {
  * VENDER DESDE EL ADMIN VERSION 2
  *
  *
- * Venta desde el centro de distribucion V2.
+ * Venta desde el centro de distribucion.
  *
  * Realiza una venta desde el centro de distribucion, descontando
  * los productos a vender de las remisiones.
@@ -587,7 +587,7 @@ function vender($args) {
  *
  * {"id_cliente": 1,"tipo_venta": "contado","tipo_pago":"efectivo","factura": false,"items": [{"items":[{"id_compra":10,"id_producto":1,"cantidad":20,"desc":"papas primeras","procesada":false,"escala":"kilogramo","precio":"5","descuento":0},{"id_compra":6,"id_producto":2,"cantidad":12,"desc":"papa segunda","procesada":false,"escala":"kilogramo","precio":"4","descuento":0}],"producto":1,"procesado":false},{"items":[{"id_compra":5,"id_producto":1,"cantidad":52,"desc":"papas primeras","procesada":false,"escala":"kilogramo","precio":"12","descuento":0},{"id_compra":4,"id_producto":1,"cantidad":3,"desc":"papas primeras","procesada":false,"escala":"kilogramo","precio":"12","descuento":0},{"id_compra":6,"id_producto":2,"cantidad":5,"desc":"papa segunda","procesada":false,"escala":"kilogramo","precio":"4","descuento":0}],"producto":2,"procesado":false}]}
  * */
-function venderAdminV2($args) {
+function venderAdmin($args) {
 
     Logger::log("Iniciando proceso de venta (admin)");
 
@@ -686,7 +686,7 @@ function venderAdminV2($args) {
      * Arreglo que contendra los articulos que se armaron para vender
      */
     $array_items_venta = array();
-    
+
 
     foreach ($data->productos as $items) {
 
@@ -743,8 +743,8 @@ function venderAdminV2($args) {
             $item->precio = $items->items[0]->precio;
         }
 
-        /*$producto->cantidad_producto_vendido += $item->cantidad;
-        $producto->cantidad_producto_descontado += $item->descuento;*/
+        /* $producto->cantidad_producto_vendido += $item->cantidad;
+          $producto->cantidad_producto_descontado += $item->descuento; */
 
         //insertamos el primer producto
         array_push($array_items, $item);
@@ -790,7 +790,7 @@ function venderAdminV2($args) {
             }
 
             if (!$found) {
-                
+
                 //si no se encuentra el producto en el arreglo de objetos hay que crearlo
                 $_item = new stdClass();
                 $_item->id_compra_proveedor = $items->items[$i]->id_compra;
@@ -823,8 +823,8 @@ function venderAdminV2($args) {
                     $_item->precio = $items->items[$i]->precio;
                 }
 
-                /*$producto->cantidad_producto_vendido += $_item->cantidad;
-                $producto->cantidad_producto_descontado += $_item->descuento;*/
+                /* $producto->cantidad_producto_vendido += $_item->cantidad;
+                  $producto->cantidad_producto_descontado += $_item->descuento; */
 
                 array_push($array_items, $_item);
             }
@@ -848,7 +848,6 @@ function venderAdminV2($args) {
     //var_dump($array_items);
     //echo "----------------------------------";
     //var_dump($array_items_venta);
-
     //TODO : Cambiar esto
     //revisamos si las existencias en el inventario maestro satisfacen a las requeridas en la venta
     if (!revisarExistenciasAdmin($array_items)) {
@@ -1108,6 +1107,27 @@ function venderAdminV2($args) {
     $total = ( $subtotal - ( ( $subtotal * $cliente->getDescuento() ) / 100 ) );
     $venta->setTotal($total);
 
+
+    //para ventas a credito
+    if ($venta->getTipoVenta() == "credito") {
+        //verificamos si el cliente cuenta con suficiente limite de credito para solventar esta venta
+        $ventas_credito = listarVentaCliente($cliente->getIdCliente(), $venta->getTipoVenta());
+        $adeuda = 0;
+
+        foreach ($ventas_credito as $vc) {
+            if ($vc->liquidada == "0") {
+                $adeuda = $vc->saldo;
+            }
+        }
+
+        if ($cliente->getLimiteCredito() < ($venta->getTotal() + $adeuda)) {
+            DAO::transRollback();
+            Logger::log("Error : No cuenta con suficiente limite de credito para realizar esta evnta a credito." . $e);
+            die('{"success": false, "reason": "Error : No cuenta con suficiente limite de credito para realizar esta evnta a credito." }');
+        }
+    }
+
+
     //si la venta es de contado, hay que liquidarla
     if ($venta->getTipoVenta() == "contado") {
         $venta->setPagado($total);
@@ -1146,7 +1166,7 @@ if (isset($args['action'])) {
 
         case 101:
             //realizar una venta desde el admin
-            venderAdminV2($args);
+            venderAdmin($args);
             break;
     }
 }

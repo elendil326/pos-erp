@@ -436,7 +436,8 @@ function listarVentaCliente($id_cliente, $tipo_venta = null) {
             "subtotal" => $c->getSubtotal(),
             "tipo_venta" => $c->getTipoVenta(),
             "total" => $c->getTotal(),
-            "saldo" => $c->getTotal() - $c->getPagado()
+            "saldo" => $c->getTotal() - $c->getPagado(),
+            "liquidada" => $c->getLiquidada()
         );
 
 
