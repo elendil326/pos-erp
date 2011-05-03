@@ -21,13 +21,16 @@ foreach($sucursales as $s)
 	$numeroDeVentasDiarias->agregarMuestra		( $s["descripcion"], VentasDAO::contarVentasPorDia($s['id_sucursal'], -1 ));
 }
 
-$numeroDeVentasDiarias->fechaDeInicio( strtotime(VentasDAO::getByPK( 1 )->getFecha() ) );
-$reporteDeRendimientoDiario->fechaDeInicio( strtotime(VentasDAO::getByPK( 1 )->getFecha() ) );
+if( VentasDAO::getByPK( 1 ) != null ){
+	$numeroDeVentasDiarias->fechaDeInicio( strtotime(VentasDAO::getByPK( 1 )->getFecha() ) );
+	$reporteDeRendimientoDiario->fechaDeInicio( strtotime(VentasDAO::getByPK( 1 )->getFecha() ) );
 
 
-$numeroDeVentasDiarias->graficar		( "Ventas diarias por sucursal" );
-echo "<br>";
-$reporteDeRendimientoDiario->graficar	( "Ingresos diarios en ventas a contado por sucursal" );
+	$numeroDeVentasDiarias->graficar		( "Ventas diarias por sucursal" );
+	echo "<br>";
+	$reporteDeRendimientoDiario->graficar	( "Ingresos diarios en ventas a contado por sucursal" );	
+}
+
 
 
 function bold($s){

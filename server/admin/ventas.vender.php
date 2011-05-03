@@ -1326,11 +1326,12 @@ function restart()
 
 <!-- 
 		SELECCIONAR CLIENTE
- -->		<script>
-			jQuery("#MAIN_TITLE").html("Venta a cliente");
-		</script>
+ -->		
+<script>
+	jQuery("#MAIN_TITLE").html("Venta a cliente");
+</script>
 
-		<h2>Detalles del Cliente</h2>
+<h2>Detalles del Cliente</h2>
 <?php
 
 if(!isset($_REQUEST['cid'])){
@@ -1393,7 +1394,6 @@ if(!isset($_REQUEST['cid'])){
 	<?php
 	
 	}
-
 }
 
 

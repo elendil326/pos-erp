@@ -322,11 +322,12 @@ InventarioMaestro = function( ){
 
 
 
-
+//esto ya esta definido en admin.js
 /**
   * Clase Producto
   *
   **/
+
 Producto = function( json_rep ){
 
     //compara si este producto es igual a *producto*
@@ -685,7 +686,7 @@ ComposicionTabla = function( config ){
             descuento   : 0
         });
 
-        jQuery("#ASurtirTablaHeader").after( tr(html, "id='" + id_compra + "-" + id_producto + "-composicion'") );      
+        jQuery("#ASurtirTablaHeader").after( tr(html, "id='" + id_compra + "-" + id_producto + "-composicion'") );
     };
     
     this.commitMix = function( ){

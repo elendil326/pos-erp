@@ -125,12 +125,15 @@ $sucursal = SucursalDAO::getByPK( $_REQUEST['id'] );
 	* Buscar el numero de ventas de esta sucursal, versus las ventas de todas las sucursales en la empresa
 	* 
 	* */
-	$numeroDeVentasDiarias = new Reporte();
-	$numeroDeVentasDiarias->agregarMuestra		( "", VentasDAO::contarVentasPorDia( $sucursal->getIdSucursal(), -1 ));
-	$numeroDeVentasDiarias->agregarMuestra		( "", VentasDAO::contarVentasPorDia( null, -1 ));		
-	$numeroDeVentasDiarias->fechaDeInicio		( strtotime(VentasDAO::getByPK( 1 )->getFecha() ) );
-	$numeroDeVentasDiarias->setEscalaEnY		( "ventas" );		
-	$numeroDeVentasDiarias->graficar			( "Ventas de esta sucursal" );
+	if(VentasDAO::getByPK( 1 ) != null){
+		$numeroDeVentasDiarias = new Reporte();
+		$numeroDeVentasDiarias->agregarMuestra		( "", VentasDAO::contarVentasPorDia( $sucursal->getIdSucursal(), -1 ));
+		$numeroDeVentasDiarias->agregarMuestra		( "", VentasDAO::contarVentasPorDia( null, -1 ));		
+		$numeroDeVentasDiarias->fechaDeInicio		( strtotime(VentasDAO::getByPK( 1 )->getFecha() ) );
+		$numeroDeVentasDiarias->setEscalaEnY		( "ventas" );		
+		$numeroDeVentasDiarias->graficar			( "Ventas de esta sucursal" );		
+	}
+
 ?>
 
 <h2><img src='../media/icons/basket_go_32.png'>&nbsp;Ventas en el ultimo dia</h2>

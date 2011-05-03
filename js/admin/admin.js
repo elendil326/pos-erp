@@ -69,7 +69,40 @@ function meses(m){
 		case 9: return "septiembre";
 		case 10: return "octubre";
 		case 11: return "noviembre";
-		case 12: return "diciembre";
-								
+		case 12: return "diciembre";				
 	}
 }
+
+
+
+
+
+
+
+
+function tr(s, o){
+    if(o){
+        return "<tr "+o+">"+s+"</tr>";  
+    }else{
+        return "<tr >"+s+"</tr>";   
+    }
+}
+
+function td(s, o){
+    if(o){
+        return "<td "+o+">"+s+"</td>";
+    }else{
+        return "<td >"+s+"</td>";
+    }
+}
+
+function div(s, o){
+    if(o){
+        return "<div "+o+">"+s+"</div>";
+    }else{
+        return "<div >"+s+"</div>";
+    }
+
+
+}
+

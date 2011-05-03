@@ -92,6 +92,7 @@ require_once("controller/inventario.controller.php");
 
 	
 ?>
+
 <h2>Mapa de clientes por sucursal</h2>
 <div id="finance">
     <div id="fechas">
@@ -213,7 +214,8 @@ require_once("controller/inventario.controller.php");
 
 		?>
 	    graficaVentas.addSummaryGraph( todos );
-	    graficaVentas.render('finance');
+		graficaVentas.render('finance');
+
 	});
 
 
@@ -331,8 +333,14 @@ $total_en_deuda = 0;
 foreach( $clientes as $c ){
 	$total_en_deuda += $c["saldo"];
 }
+
+if(sizeof($clientes) > 0 ){
+	?>
+	<div align=right style='border-top: 1px solid #3F8CE9; font-size: 14px;'>
+	Total en deuda <b><?php echo moneyFormat($total_en_deuda); ?></b>
+	</div>
+	<?php
+}
 ?>
 
-<div align=right style='border-top: 1px solid #3F8CE9; font-size: 14px;'>
-Total en deuda <b><?php echo moneyFormat($total_en_deuda); ?></b>
-</div>
+
