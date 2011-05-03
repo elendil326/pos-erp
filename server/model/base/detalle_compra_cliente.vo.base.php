@@ -1,5 +1,5 @@
 <?php
-/** Value Object file for table detalle_compra_sucursal.
+/** Value Object file for table detalle_compra_cliente.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
   * @author no author especified
@@ -8,15 +8,15 @@
   * 
   */
 
-class DetalleCompraSucursal extends VO
+class DetalleCompraCliente extends VO
 {
 	/**
-	  * Constructor de DetalleCompraSucursal
+	  * Constructor de DetalleCompraCliente
 	  * 
-	  * Para construir un objeto de tipo DetalleCompraSucursal debera llamarse a el constructor 
+	  * Para construir un objeto de tipo DetalleCompraCliente debera llamarse a el constructor 
 	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
 	  * cuyos campos son iguales a las variables que constituyen a este objeto.
-	  * @return DetalleCompraSucursal
+	  * @return DetalleCompraCliente
 	  */
 	function __construct( $data = NULL)
 	{ 
@@ -37,16 +37,13 @@ class DetalleCompraSucursal extends VO
 			if( isset($data['descuento']) ){
 				$this->descuento = $data['descuento'];
 			}
-			if( isset($data['procesadas']) ){
-				$this->procesadas = $data['procesadas'];
-			}
 		}
 	}
 
 	/**
 	  * Obtener una representacion en String
 	  * 
-	  * Este metodo permite tratar a un objeto DetalleCompraSucursal en forma de cadena.
+	  * Este metodo permite tratar a un objeto DetalleCompraCliente en forma de cadena.
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
@@ -57,8 +54,7 @@ class DetalleCompraSucursal extends VO
 			"id_producto" => $this->id_producto,
 			"cantidad" => $this->cantidad,
 			"precio" => $this->precio,
-			"descuento" => $this->descuento,
-			"procesadas" => $this->procesadas
+			"descuento" => $this->descuento
 		); 
 	return json_encode($vec); 
 	}
@@ -66,7 +62,7 @@ class DetalleCompraSucursal extends VO
 	/**
 	  * id_compra
 	  * 
-	  * id de la compra<br>
+	  * compra a que se referencia<br>
 	  * <b>Llave Primaria</b><br>
 	  * @access protected
 	  * @var int(11)
@@ -76,7 +72,7 @@ class DetalleCompraSucursal extends VO
 	/**
 	  * id_producto
 	  * 
-	  * id del producto<br>
+	  * producto de la compra<br>
 	  * <b>Llave Primaria</b><br>
 	  * @access protected
 	  * @var int(11)
@@ -86,7 +82,7 @@ class DetalleCompraSucursal extends VO
 	/**
 	  * cantidad
 	  * 
-	  * cantidad comprada<br>
+	  * cantidad que se compro<br>
 	  * @access protected
 	  * @var float
 	  */
@@ -95,7 +91,7 @@ class DetalleCompraSucursal extends VO
 	/**
 	  * precio
 	  * 
-	  * costo de compra<br>
+	  * precio al que se compro<br>
 	  * @access protected
 	  * @var float
 	  */
@@ -104,25 +100,16 @@ class DetalleCompraSucursal extends VO
 	/**
 	  * descuento
 	  * 
-	  *  [Campo no documentado]<br>
+	  * indica cuanto producto original se va a descontar de ese producto en esa compra<br>
 	  * @access protected
-	  * @var int(11)
+	  * @var float
 	  */
 	protected $descuento;
 
 	/**
-	  * procesadas
-	  * 
-	  * verdadero si este detalle se refiere a compras procesadas (limpias)<br>
-	  * @access protected
-	  * @var tinyint(1)
-	  */
-	protected $procesadas;
-
-	/**
 	  * getIdCompra
 	  * 
-	  * Get the <i>id_compra</i> property for this object. Donde <i>id_compra</i> es id de la compra
+	  * Get the <i>id_compra</i> property for this object. Donde <i>id_compra</i> es compra a que se referencia
 	  * @return int(11)
 	  */
 	final public function getIdCompra()
@@ -133,7 +120,7 @@ class DetalleCompraSucursal extends VO
 	/**
 	  * setIdCompra( $id_compra )
 	  * 
-	  * Set the <i>id_compra</i> property for this object. Donde <i>id_compra</i> es id de la compra.
+	  * Set the <i>id_compra</i> property for this object. Donde <i>id_compra</i> es compra a que se referencia.
 	  * Una validacion basica se hara aqui para comprobar que <i>id_compra</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
@@ -148,7 +135,7 @@ class DetalleCompraSucursal extends VO
 	/**
 	  * getIdProducto
 	  * 
-	  * Get the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es id del producto
+	  * Get the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es producto de la compra
 	  * @return int(11)
 	  */
 	final public function getIdProducto()
@@ -159,7 +146,7 @@ class DetalleCompraSucursal extends VO
 	/**
 	  * setIdProducto( $id_producto )
 	  * 
-	  * Set the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es id del producto.
+	  * Set the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es producto de la compra.
 	  * Una validacion basica se hara aqui para comprobar que <i>id_producto</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
@@ -174,7 +161,7 @@ class DetalleCompraSucursal extends VO
 	/**
 	  * getCantidad
 	  * 
-	  * Get the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es cantidad comprada
+	  * Get the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es cantidad que se compro
 	  * @return float
 	  */
 	final public function getCantidad()
@@ -185,7 +172,7 @@ class DetalleCompraSucursal extends VO
 	/**
 	  * setCantidad( $cantidad )
 	  * 
-	  * Set the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es cantidad comprada.
+	  * Set the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es cantidad que se compro.
 	  * Una validacion basica se hara aqui para comprobar que <i>cantidad</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -198,7 +185,7 @@ class DetalleCompraSucursal extends VO
 	/**
 	  * getPrecio
 	  * 
-	  * Get the <i>precio</i> property for this object. Donde <i>precio</i> es costo de compra
+	  * Get the <i>precio</i> property for this object. Donde <i>precio</i> es precio al que se compro
 	  * @return float
 	  */
 	final public function getPrecio()
@@ -209,7 +196,7 @@ class DetalleCompraSucursal extends VO
 	/**
 	  * setPrecio( $precio )
 	  * 
-	  * Set the <i>precio</i> property for this object. Donde <i>precio</i> es costo de compra.
+	  * Set the <i>precio</i> property for this object. Donde <i>precio</i> es precio al que se compro.
 	  * Una validacion basica se hara aqui para comprobar que <i>precio</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -222,8 +209,8 @@ class DetalleCompraSucursal extends VO
 	/**
 	  * getDescuento
 	  * 
-	  * Get the <i>descuento</i> property for this object. Donde <i>descuento</i> es  [Campo no documentado]
-	  * @return int(11)
+	  * Get the <i>descuento</i> property for this object. Donde <i>descuento</i> es indica cuanto producto original se va a descontar de ese producto en esa compra
+	  * @return float
 	  */
 	final public function getDescuento()
 	{
@@ -233,38 +220,14 @@ class DetalleCompraSucursal extends VO
 	/**
 	  * setDescuento( $descuento )
 	  * 
-	  * Set the <i>descuento</i> property for this object. Donde <i>descuento</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>descuento</i> es de tipo <i>int(11)</i>. 
+	  * Set the <i>descuento</i> property for this object. Donde <i>descuento</i> es indica cuanto producto original se va a descontar de ese producto en esa compra.
+	  * Una validacion basica se hara aqui para comprobar que <i>descuento</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
+	  * @param float
 	  */
 	final public function setDescuento( $descuento )
 	{
 		$this->descuento = $descuento;
-	}
-
-	/**
-	  * getProcesadas
-	  * 
-	  * Get the <i>procesadas</i> property for this object. Donde <i>procesadas</i> es verdadero si este detalle se refiere a compras procesadas (limpias)
-	  * @return tinyint(1)
-	  */
-	final public function getProcesadas()
-	{
-		return $this->procesadas;
-	}
-
-	/**
-	  * setProcesadas( $procesadas )
-	  * 
-	  * Set the <i>procesadas</i> property for this object. Donde <i>procesadas</i> es verdadero si este detalle se refiere a compras procesadas (limpias).
-	  * Una validacion basica se hara aqui para comprobar que <i>procesadas</i> es de tipo <i>tinyint(1)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param tinyint(1)
-	  */
-	final public function setProcesadas( $procesadas )
-	{
-		$this->procesadas = $procesadas;
 	}
 
 }

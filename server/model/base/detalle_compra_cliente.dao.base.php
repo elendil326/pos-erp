@@ -1,15 +1,15 @@
 <?php
-/** DetalleCompraSucursal Data Access Object (DAO) Base.
+/** DetalleCompraCliente Data Access Object (DAO) Base.
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
-  * almacenar de forma permanente y recuperar instancias de objetos {@link DetalleCompraSucursal }. 
+  * almacenar de forma permanente y recuperar instancias de objetos {@link DetalleCompraCliente }. 
   * @author no author especified
   * @access private
   * @abstract
   * @package docs
   * 
   */
-abstract class DetalleCompraSucursalDAOBase extends DAO
+abstract class DetalleCompraClienteDAOBase extends DAO
 {
 
 		private static $loadedRecords = array();
@@ -35,47 +35,47 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	/**
 	  *	Guardar registros. 
 	  *	
-	  *	Este metodo guarda el estado actual del objeto {@link DetalleCompraSucursal} pasado en la base de datos. La llave 
+	  *	Este metodo guarda el estado actual del objeto {@link DetalleCompraCliente} pasado en la base de datos. La llave 
 	  *	primaria indicara que instancia va a ser actualizado en base de datos. Si la llave primara o combinacion de llaves
 	  *	primarias describen una fila que no se encuentra en la base de datos, entonces save() creara una nueva fila, insertando
 	  *	en ese objeto el ID recien creado.
 	  *	
 	  *	@static
 	  * @throws Exception si la operacion fallo.
-	  * @param DetalleCompraSucursal [$detalle_compra_sucursal] El objeto de tipo DetalleCompraSucursal
+	  * @param DetalleCompraCliente [$detalle_compra_cliente] El objeto de tipo DetalleCompraCliente
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	public static final function save( &$detalle_compra_sucursal )
+	public static final function save( &$detalle_compra_cliente )
 	{
-		if(  self::getByPK(  $detalle_compra_sucursal->getIdCompra() , $detalle_compra_sucursal->getIdProducto() ) !== NULL )
+		if(  self::getByPK(  $detalle_compra_cliente->getIdCompra() , $detalle_compra_cliente->getIdProducto() ) !== NULL )
 		{
-			try{ return DetalleCompraSucursalDAOBase::update( $detalle_compra_sucursal) ; } catch(Exception $e){ throw $e; }
+			try{ return DetalleCompraClienteDAOBase::update( $detalle_compra_cliente) ; } catch(Exception $e){ throw $e; }
 		}else{
-			try{ return DetalleCompraSucursalDAOBase::create( $detalle_compra_sucursal) ; } catch(Exception $e){ throw $e; }
+			try{ return DetalleCompraClienteDAOBase::create( $detalle_compra_cliente) ; } catch(Exception $e){ throw $e; }
 		}
 	}
 
 
 	/**
-	  *	Obtener {@link DetalleCompraSucursal} por llave primaria. 
+	  *	Obtener {@link DetalleCompraCliente} por llave primaria. 
 	  *	
-	  * Este metodo cargara un objeto {@link DetalleCompraSucursal} de la base de datos 
+	  * Este metodo cargara un objeto {@link DetalleCompraCliente} de la base de datos 
 	  * usando sus llaves primarias. 
 	  *	
 	  *	@static
-	  * @return @link DetalleCompraSucursal Un objeto del tipo {@link DetalleCompraSucursal}. NULL si no hay tal registro.
+	  * @return @link DetalleCompraCliente Un objeto del tipo {@link DetalleCompraCliente}. NULL si no hay tal registro.
 	  **/
 	public static final function getByPK(  $id_compra, $id_producto )
 	{
 		if(self::recordExists(  $id_compra, $id_producto)){
 			return self::getRecord( $id_compra, $id_producto );
 		}
-		$sql = "SELECT * FROM detalle_compra_sucursal WHERE (id_compra = ? AND id_producto = ? ) LIMIT 1;";
+		$sql = "SELECT * FROM detalle_compra_cliente WHERE (id_compra = ? AND id_producto = ? ) LIMIT 1;";
 		$params = array(  $id_compra, $id_producto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
-			$foo = new DetalleCompraSucursal( $rs );
+			$foo = new DetalleCompraCliente( $rs );
 			self::pushRecord( $foo,  $id_compra, $id_producto );
 			return $foo;
 	}
@@ -85,7 +85,7 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	  *	Obtener todas las filas.
 	  *	
 	  * Esta funcion leera todos los contenidos de la tabla en la base de datos y construira
-	  * un vector que contiene objetos de tipo {@link DetalleCompraSucursal}. Tenga en cuenta que este metodo
+	  * un vector que contiene objetos de tipo {@link DetalleCompraCliente}. Tenga en cuenta que este metodo
 	  * consumen enormes cantidades de recursos si la tabla tiene muchas filas. 
 	  * Este metodo solo debe usarse cuando las tablas destino tienen solo pequenas cantidades de datos o se usan sus parametros para obtener un menor numero de filas.
 	  *	
@@ -94,11 +94,11 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	  * @param $columnas_por_pagina Columnas por pagina.
 	  * @param $orden Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $tipo_de_orden 'ASC' o 'DESC' el default es 'ASC'
-	  * @return Array Un arreglo que contiene objetos del tipo {@link DetalleCompraSucursal}.
+	  * @return Array Un arreglo que contiene objetos del tipo {@link DetalleCompraCliente}.
 	  **/
 	public static final function getAll( $pagina = NULL, $columnas_por_pagina = NULL, $orden = NULL, $tipo_de_orden = 'ASC' )
 	{
-		$sql = "SELECT * from detalle_compra_sucursal";
+		$sql = "SELECT * from detalle_compra_cliente";
 		if($orden != NULL)
 		{ $sql .= " ORDER BY " . $orden . " " . $tipo_de_orden;	}
 		if($pagina != NULL)
@@ -109,7 +109,7 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 		$rs = $conn->Execute($sql);
 		$allData = array();
 		foreach ($rs as $foo) {
-			$bar = new DetalleCompraSucursal($foo);
+			$bar = new DetalleCompraCliente($foo);
     		array_push( $allData, $bar);
 			//id_compra
 			//id_producto
@@ -122,7 +122,7 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	/**
 	  *	Buscar registros.
 	  *	
-	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link DetalleCompraSucursal} de la base de datos. 
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link DetalleCompraCliente} de la base de datos. 
 	  * Consiste en buscar todos los objetos que coinciden con las variables permanentes instanciadas de objeto pasado como argumento. 
 	  * Aquellas variables que tienen valores NULL seran excluidos en busca de criterios.
 	  *	
@@ -139,42 +139,37 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param DetalleCompraSucursal [$detalle_compra_sucursal] El objeto de tipo DetalleCompraSucursal
+	  * @param DetalleCompraCliente [$detalle_compra_cliente] El objeto de tipo DetalleCompraCliente
 	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function search( $detalle_compra_sucursal , $orderBy = null, $orden = 'ASC')
+	public static final function search( $detalle_compra_cliente , $orderBy = null, $orden = 'ASC')
 	{
-		$sql = "SELECT * from detalle_compra_sucursal WHERE ("; 
+		$sql = "SELECT * from detalle_compra_cliente WHERE ("; 
 		$val = array();
-		if( $detalle_compra_sucursal->getIdCompra() != NULL){
+		if( $detalle_compra_cliente->getIdCompra() != NULL){
 			$sql .= " id_compra = ? AND";
-			array_push( $val, $detalle_compra_sucursal->getIdCompra() );
+			array_push( $val, $detalle_compra_cliente->getIdCompra() );
 		}
 
-		if( $detalle_compra_sucursal->getIdProducto() != NULL){
+		if( $detalle_compra_cliente->getIdProducto() != NULL){
 			$sql .= " id_producto = ? AND";
-			array_push( $val, $detalle_compra_sucursal->getIdProducto() );
+			array_push( $val, $detalle_compra_cliente->getIdProducto() );
 		}
 
-		if( $detalle_compra_sucursal->getCantidad() != NULL){
+		if( $detalle_compra_cliente->getCantidad() != NULL){
 			$sql .= " cantidad = ? AND";
-			array_push( $val, $detalle_compra_sucursal->getCantidad() );
+			array_push( $val, $detalle_compra_cliente->getCantidad() );
 		}
 
-		if( $detalle_compra_sucursal->getPrecio() != NULL){
+		if( $detalle_compra_cliente->getPrecio() != NULL){
 			$sql .= " precio = ? AND";
-			array_push( $val, $detalle_compra_sucursal->getPrecio() );
+			array_push( $val, $detalle_compra_cliente->getPrecio() );
 		}
 
-		if( $detalle_compra_sucursal->getDescuento() != NULL){
+		if( $detalle_compra_cliente->getDescuento() != NULL){
 			$sql .= " descuento = ? AND";
-			array_push( $val, $detalle_compra_sucursal->getDescuento() );
-		}
-
-		if( $detalle_compra_sucursal->getProcesadas() != NULL){
-			$sql .= " procesadas = ? AND";
-			array_push( $val, $detalle_compra_sucursal->getProcesadas() );
+			array_push( $val, $detalle_compra_cliente->getDescuento() );
 		}
 
 		if(sizeof($val) == 0){return array();}
@@ -187,7 +182,7 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-			$bar =  new DetalleCompraSucursal($foo);
+			$bar =  new DetalleCompraCliente($foo);
     		array_push( $ar,$bar);
     		self::pushRecord( $bar, $foo["id_compra"],$foo["id_producto"] );
 		}
@@ -204,17 +199,16 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
-	  * @param DetalleCompraSucursal [$detalle_compra_sucursal] El objeto de tipo DetalleCompraSucursal a actualizar.
+	  * @param DetalleCompraCliente [$detalle_compra_cliente] El objeto de tipo DetalleCompraCliente a actualizar.
 	  **/
-	private static final function update( $detalle_compra_sucursal )
+	private static final function update( $detalle_compra_cliente )
 	{
-		$sql = "UPDATE detalle_compra_sucursal SET  cantidad = ?, precio = ?, descuento = ?, procesadas = ? WHERE  id_compra = ? AND id_producto = ?;";
+		$sql = "UPDATE detalle_compra_cliente SET  cantidad = ?, precio = ?, descuento = ? WHERE  id_compra = ? AND id_producto = ?;";
 		$params = array( 
-			$detalle_compra_sucursal->getCantidad(), 
-			$detalle_compra_sucursal->getPrecio(), 
-			$detalle_compra_sucursal->getDescuento(), 
-			$detalle_compra_sucursal->getProcesadas(), 
-			$detalle_compra_sucursal->getIdCompra(),$detalle_compra_sucursal->getIdProducto(), );
+			$detalle_compra_cliente->getCantidad(), 
+			$detalle_compra_cliente->getPrecio(), 
+			$detalle_compra_cliente->getDescuento(), 
+			$detalle_compra_cliente->getIdCompra(),$detalle_compra_cliente->getIdProducto(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
@@ -226,25 +220,24 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	  *	Crear registros.
 	  *	
 	  * Este metodo creara una nueva fila en la base de datos de acuerdo con los 
-	  * contenidos del objeto DetalleCompraSucursal suministrado. Asegurese
+	  * contenidos del objeto DetalleCompraCliente suministrado. Asegurese
 	  * de que los valores para todas las columnas NOT NULL se ha especificado 
 	  * correctamente. Despues del comando INSERT, este metodo asignara la clave 
-	  * primaria generada en el objeto DetalleCompraSucursal dentro de la misma transaccion.
+	  * primaria generada en el objeto DetalleCompraCliente dentro de la misma transaccion.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
-	  * @param DetalleCompraSucursal [$detalle_compra_sucursal] El objeto de tipo DetalleCompraSucursal a crear.
+	  * @param DetalleCompraCliente [$detalle_compra_cliente] El objeto de tipo DetalleCompraCliente a crear.
 	  **/
-	private static final function create( &$detalle_compra_sucursal )
+	private static final function create( &$detalle_compra_cliente )
 	{
-		$sql = "INSERT INTO detalle_compra_sucursal ( id_compra, id_producto, cantidad, precio, descuento, procesadas ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO detalle_compra_cliente ( id_compra, id_producto, cantidad, precio, descuento ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
-			$detalle_compra_sucursal->getIdCompra(), 
-			$detalle_compra_sucursal->getIdProducto(), 
-			$detalle_compra_sucursal->getCantidad(), 
-			$detalle_compra_sucursal->getPrecio(), 
-			$detalle_compra_sucursal->getDescuento(), 
-			$detalle_compra_sucursal->getProcesadas(), 
+			$detalle_compra_cliente->getIdCompra(), 
+			$detalle_compra_cliente->getIdProducto(), 
+			$detalle_compra_cliente->getCantidad(), 
+			$detalle_compra_cliente->getPrecio(), 
+			$detalle_compra_cliente->getDescuento(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -259,8 +252,8 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	/**
 	  *	Buscar por rango.
 	  *	
-	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link DetalleCompraSucursal} de la base de datos siempre y cuando 
-	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link DetalleCompraSucursal}.
+	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link DetalleCompraCliente} de la base de datos siempre y cuando 
+	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link DetalleCompraCliente}.
 	  * 
 	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
@@ -284,16 +277,16 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	  *	  }
 	  * </code>
 	  *	@static
-	  * @param DetalleCompraSucursal [$detalle_compra_sucursal] El objeto de tipo DetalleCompraSucursal
-	  * @param DetalleCompraSucursal [$detalle_compra_sucursal] El objeto de tipo DetalleCompraSucursal
+	  * @param DetalleCompraCliente [$detalle_compra_cliente] El objeto de tipo DetalleCompraCliente
+	  * @param DetalleCompraCliente [$detalle_compra_cliente] El objeto de tipo DetalleCompraCliente
 	  * @param $orderBy Debe ser una cadena con el nombre de una columna en la base de datos.
 	  * @param $orden 'ASC' o 'DESC' el default es 'ASC'
 	  **/
-	public static final function byRange( $detalle_compra_sucursalA , $detalle_compra_sucursalB , $orderBy = null, $orden = 'ASC')
+	public static final function byRange( $detalle_compra_clienteA , $detalle_compra_clienteB , $orderBy = null, $orden = 'ASC')
 	{
-		$sql = "SELECT * from detalle_compra_sucursal WHERE ("; 
+		$sql = "SELECT * from detalle_compra_cliente WHERE ("; 
 		$val = array();
-		if( (($a = $detalle_compra_sucursalA->getIdCompra()) != NULL) & ( ($b = $detalle_compra_sucursalB->getIdCompra()) != NULL) ){
+		if( (($a = $detalle_compra_clienteA->getIdCompra()) != NULL) & ( ($b = $detalle_compra_clienteB->getIdCompra()) != NULL) ){
 				$sql .= " id_compra >= ? AND id_compra <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
@@ -304,7 +297,7 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 			
 		}
 
-		if( (($a = $detalle_compra_sucursalA->getIdProducto()) != NULL) & ( ($b = $detalle_compra_sucursalB->getIdProducto()) != NULL) ){
+		if( (($a = $detalle_compra_clienteA->getIdProducto()) != NULL) & ( ($b = $detalle_compra_clienteB->getIdProducto()) != NULL) ){
 				$sql .= " id_producto >= ? AND id_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
@@ -315,7 +308,7 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 			
 		}
 
-		if( (($a = $detalle_compra_sucursalA->getCantidad()) != NULL) & ( ($b = $detalle_compra_sucursalB->getCantidad()) != NULL) ){
+		if( (($a = $detalle_compra_clienteA->getCantidad()) != NULL) & ( ($b = $detalle_compra_clienteB->getCantidad()) != NULL) ){
 				$sql .= " cantidad >= ? AND cantidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
@@ -326,7 +319,7 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 			
 		}
 
-		if( (($a = $detalle_compra_sucursalA->getPrecio()) != NULL) & ( ($b = $detalle_compra_sucursalB->getPrecio()) != NULL) ){
+		if( (($a = $detalle_compra_clienteA->getPrecio()) != NULL) & ( ($b = $detalle_compra_clienteB->getPrecio()) != NULL) ){
 				$sql .= " precio >= ? AND precio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
@@ -337,23 +330,12 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 			
 		}
 
-		if( (($a = $detalle_compra_sucursalA->getDescuento()) != NULL) & ( ($b = $detalle_compra_sucursalB->getDescuento()) != NULL) ){
+		if( (($a = $detalle_compra_clienteA->getDescuento()) != NULL) & ( ($b = $detalle_compra_clienteB->getDescuento()) != NULL) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a == NULL ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( (($a = $detalle_compra_sucursalA->getProcesadas()) != NULL) & ( ($b = $detalle_compra_sucursalB->getProcesadas()) != NULL) ){
-				$sql .= " procesadas >= ? AND procesadas <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
-			$sql .= " procesadas = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
@@ -368,7 +350,7 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 		$rs = $conn->Execute($sql, $val);
 		$ar = array();
 		foreach ($rs as $foo) {
-    		array_push( $ar, new DetalleCompraSucursal($foo));
+    		array_push( $ar, new DetalleCompraCliente($foo));
 		}
 		return $ar;
 	}
@@ -378,20 +360,20 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	  *	Eliminar registros.
 	  *	
 	  * Este metodo eliminara la informacion de base de datos identificados por la clave primaria
-	  * en el objeto DetalleCompraSucursal suministrado. Una vez que se ha suprimido un objeto, este no 
+	  * en el objeto DetalleCompraCliente suministrado. Una vez que se ha suprimido un objeto, este no 
 	  * puede ser restaurado llamando a save(). save() al ver que este es un objeto vacio, creara una nueva fila 
 	  * pero el objeto resultante tendra una clave primaria diferente de la que estaba en el objeto eliminado. 
 	  * Si no puede encontrar eliminar fila coincidente a eliminar, Exception sera lanzada.
 	  *	
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return int El numero de filas afectadas.
-	  * @param DetalleCompraSucursal [$detalle_compra_sucursal] El objeto de tipo DetalleCompraSucursal a eliminar
+	  * @param DetalleCompraCliente [$detalle_compra_cliente] El objeto de tipo DetalleCompraCliente a eliminar
 	  **/
-	public static final function delete( &$detalle_compra_sucursal )
+	public static final function delete( &$detalle_compra_cliente )
 	{
-		if(self::getByPK($detalle_compra_sucursal->getIdCompra(), $detalle_compra_sucursal->getIdProducto()) === NULL) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM detalle_compra_sucursal WHERE  id_compra = ? AND id_producto = ?;";
-		$params = array( $detalle_compra_sucursal->getIdCompra(), $detalle_compra_sucursal->getIdProducto() );
+		if(self::getByPK($detalle_compra_cliente->getIdCompra(), $detalle_compra_cliente->getIdProducto()) === NULL) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM detalle_compra_cliente WHERE  id_compra = ? AND id_producto = ?;";
+		$params = array( $detalle_compra_cliente->getIdCompra(), $detalle_compra_cliente->getIdProducto() );
 		global $conn;
 
 		$conn->Execute($sql, $params);

@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link DetalleInventario }. 
-  * @author Alan Gonzalez
+  * @author no author especified
   * @access private
   * @abstract
   * @package docs
@@ -162,6 +162,11 @@ abstract class DetalleInventarioDAOBase extends DAO
 			array_push( $val, $detalle_inventario->getPrecioVenta() );
 		}
 
+		if( $detalle_inventario->getPrecioCompra() != NULL){
+			$sql .= " precio_compra = ? AND";
+			array_push( $val, $detalle_inventario->getPrecioCompra() );
+		}
+
 		if( $detalle_inventario->getExistencias() != NULL){
 			$sql .= " existencias = ? AND";
 			array_push( $val, $detalle_inventario->getExistencias() );
@@ -195,7 +200,7 @@ abstract class DetalleInventarioDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -203,9 +208,10 @@ abstract class DetalleInventarioDAOBase extends DAO
 	  **/
 	private static final function update( $detalle_inventario )
 	{
-		$sql = "UPDATE detalle_inventario SET  precio_venta = ?, existencias = ?, existencias_procesadas = ? WHERE  id_producto = ? AND id_sucursal = ?;";
+		$sql = "UPDATE detalle_inventario SET  precio_venta = ?, precio_compra = ?, existencias = ?, existencias_procesadas = ? WHERE  id_producto = ? AND id_sucursal = ?;";
 		$params = array( 
 			$detalle_inventario->getPrecioVenta(), 
+			$detalle_inventario->getPrecioCompra(), 
 			$detalle_inventario->getExistencias(), 
 			$detalle_inventario->getExistenciasProcesadas(), 
 			$detalle_inventario->getIdProducto(),$detalle_inventario->getIdSucursal(), );
@@ -231,11 +237,12 @@ abstract class DetalleInventarioDAOBase extends DAO
 	  **/
 	private static final function create( &$detalle_inventario )
 	{
-		$sql = "INSERT INTO detalle_inventario ( id_producto, id_sucursal, precio_venta, existencias, existencias_procesadas ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO detalle_inventario ( id_producto, id_sucursal, precio_venta, precio_compra, existencias, existencias_procesadas ) VALUES ( ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$detalle_inventario->getIdProducto(), 
 			$detalle_inventario->getIdSucursal(), 
 			$detalle_inventario->getPrecioVenta(), 
+			$detalle_inventario->getPrecioCompra(), 
 			$detalle_inventario->getExistencias(), 
 			$detalle_inventario->getExistenciasProcesadas(), 
 		 );
@@ -314,6 +321,17 @@ abstract class DetalleInventarioDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " precio_venta = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $detalle_inventarioA->getPrecioCompra()) != NULL) & ( ($b = $detalle_inventarioB->getPrecioCompra()) != NULL) ){
+				$sql .= " precio_compra >= ? AND precio_compra <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " precio_compra = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

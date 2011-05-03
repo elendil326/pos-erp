@@ -1,5 +1,5 @@
 <?php
-/** Value Object file for table ventas.
+/** Value Object file for table compra_cliente.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
   * @author no author especified
@@ -8,28 +8,28 @@
   * 
   */
 
-class Ventas extends VO
+class CompraCliente extends VO
 {
 	/**
-	  * Constructor de Ventas
+	  * Constructor de CompraCliente
 	  * 
-	  * Para construir un objeto de tipo Ventas debera llamarse a el constructor 
+	  * Para construir un objeto de tipo CompraCliente debera llamarse a el constructor 
 	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
 	  * cuyos campos son iguales a las variables que constituyen a este objeto.
-	  * @return Ventas
+	  * @return CompraCliente
 	  */
 	function __construct( $data = NULL)
 	{ 
 		if(isset($data))
 		{
-			if( isset($data['id_venta']) ){
-				$this->id_venta = $data['id_venta'];
+			if( isset($data['id_compra']) ){
+				$this->id_compra = $data['id_compra'];
 			}
 			if( isset($data['id_cliente']) ){
 				$this->id_cliente = $data['id_cliente'];
 			}
-			if( isset($data['tipo_venta']) ){
-				$this->tipo_venta = $data['tipo_venta'];
+			if( isset($data['tipo_compra']) ){
+				$this->tipo_compra = $data['tipo_compra'];
 			}
 			if( isset($data['tipo_pago']) ){
 				$this->tipo_pago = $data['tipo_pago'];
@@ -73,16 +73,16 @@ class Ventas extends VO
 	/**
 	  * Obtener una representacion en String
 	  * 
-	  * Este metodo permite tratar a un objeto Ventas en forma de cadena.
+	  * Este metodo permite tratar a un objeto CompraCliente en forma de cadena.
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
 	public function __toString( )
 	{ 
 		$vec = array( 
-			"id_venta" => $this->id_venta,
+			"id_compra" => $this->id_compra,
 			"id_cliente" => $this->id_cliente,
-			"tipo_venta" => $this->tipo_venta,
+			"tipo_compra" => $this->tipo_compra,
 			"tipo_pago" => $this->tipo_pago,
 			"fecha" => $this->fecha,
 			"subtotal" => $this->subtotal,
@@ -100,38 +100,38 @@ class Ventas extends VO
 	}
 	
 	/**
-	  * id_venta
+	  * id_compra
 	  * 
-	  * id de venta<br>
+	  * id de compra<br>
 	  * <b>Llave Primaria</b><br>
 	  * <b>Auto Incremento</b><br>
 	  * @access protected
 	  * @var int(11)
 	  */
-	protected $id_venta;
+	protected $id_compra;
 
 	/**
 	  * id_cliente
 	  * 
-	  * cliente al que se le vendio<br>
+	  * cliente al que se le compro<br>
 	  * @access protected
 	  * @var int(11)
 	  */
 	protected $id_cliente;
 
 	/**
-	  * tipo_venta
+	  * tipo_compra
 	  * 
-	  * tipo de venta, contado o credito<br>
+	  * tipo de compra, contado o credito<br>
 	  * @access protected
 	  * @var enum('credito','contado')
 	  */
-	protected $tipo_venta;
+	protected $tipo_compra;
 
 	/**
 	  * tipo_pago
 	  * 
-	  * tipo de pago para esta venta en caso de ser a contado<br>
+	  * tipo de pago para esta compra en caso de ser a contado<br>
 	  * @access protected
 	  * @var enum('efectivo','cheque','tarjeta')
 	  */
@@ -140,7 +140,7 @@ class Ventas extends VO
 	/**
 	  * fecha
 	  * 
-	  * fecha de venta<br>
+	  * fecha de compra<br>
 	  * @access protected
 	  * @var timestamp
 	  */
@@ -149,7 +149,7 @@ class Ventas extends VO
 	/**
 	  * subtotal
 	  * 
-	  * subtotal de la venta, puede ser nulo<br>
+	  * subtotal de la compra, puede ser nulo<br>
 	  * @access protected
 	  * @var float
 	  */
@@ -158,7 +158,7 @@ class Ventas extends VO
 	/**
 	  * iva
 	  * 
-	  * iva agregado por la venta, depende de cada sucursal<br>
+	  * iva agregado por la compra, depende de cada sucursal<br>
 	  * @access protected
 	  * @var float
 	  */
@@ -167,7 +167,7 @@ class Ventas extends VO
 	/**
 	  * descuento
 	  * 
-	  * descuento aplicado a esta venta<br>
+	  * descuento aplicado a esta compra<br>
 	  * @access protected
 	  * @var float
 	  */
@@ -176,7 +176,7 @@ class Ventas extends VO
 	/**
 	  * total
 	  * 
-	  * total de esta venta<br>
+	  * total de esta compra<br>
 	  * @access protected
 	  * @var float
 	  */
@@ -185,7 +185,7 @@ class Ventas extends VO
 	/**
 	  * id_sucursal
 	  * 
-	  * sucursal de la venta<br>
+	  * sucursal de la compra<br>
 	  * @access protected
 	  * @var int(11)
 	  */
@@ -203,7 +203,7 @@ class Ventas extends VO
 	/**
 	  * pagado
 	  * 
-	  * porcentaje pagado de esta venta<br>
+	  * porcentaje pagado de esta compra<br>
 	  * @access protected
 	  * @var float
 	  */
@@ -212,7 +212,7 @@ class Ventas extends VO
 	/**
 	  * cancelada
 	  * 
-	  * verdadero si esta venta ha sido cancelada, falso si no<br>
+	  * verdadero si esta compra ha sido cancelada, falso si no<br>
 	  * @access protected
 	  * @var tinyint(1)
 	  */
@@ -230,44 +230,44 @@ class Ventas extends VO
 	/**
 	  * liquidada
 	  * 
-	  * Verdadero si esta venta ha sido liquidada, falso si hay un saldo pendiente<br>
+	  * Verdadero si esta compra ha sido liquidada, falso si hay un saldo pendiente<br>
 	  * @access protected
 	  * @var tinyint(1)
 	  */
 	protected $liquidada;
 
 	/**
-	  * getIdVenta
+	  * getIdCompra
 	  * 
-	  * Get the <i>id_venta</i> property for this object. Donde <i>id_venta</i> es id de venta
+	  * Get the <i>id_compra</i> property for this object. Donde <i>id_compra</i> es id de compra
 	  * @return int(11)
 	  */
-	final public function getIdVenta()
+	final public function getIdCompra()
 	{
-		return $this->id_venta;
+		return $this->id_compra;
 	}
 
 	/**
-	  * setIdVenta( $id_venta )
+	  * setIdCompra( $id_compra )
 	  * 
-	  * Set the <i>id_venta</i> property for this object. Donde <i>id_venta</i> es id de venta.
-	  * Una validacion basica se hara aqui para comprobar que <i>id_venta</i> es de tipo <i>int(11)</i>. 
+	  * Set the <i>id_compra</i> property for this object. Donde <i>id_compra</i> es id de compra.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_compra</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
-	  * No deberias usar setIdVenta( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * No deberias usar setIdCompra( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
-	  * No deberias usar setIdVenta( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * No deberias usar setIdCompra( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
-	final public function setIdVenta( $id_venta )
+	final public function setIdCompra( $id_compra )
 	{
-		$this->id_venta = $id_venta;
+		$this->id_compra = $id_compra;
 	}
 
 	/**
 	  * getIdCliente
 	  * 
-	  * Get the <i>id_cliente</i> property for this object. Donde <i>id_cliente</i> es cliente al que se le vendio
+	  * Get the <i>id_cliente</i> property for this object. Donde <i>id_cliente</i> es cliente al que se le compro
 	  * @return int(11)
 	  */
 	final public function getIdCliente()
@@ -278,7 +278,7 @@ class Ventas extends VO
 	/**
 	  * setIdCliente( $id_cliente )
 	  * 
-	  * Set the <i>id_cliente</i> property for this object. Donde <i>id_cliente</i> es cliente al que se le vendio.
+	  * Set the <i>id_cliente</i> property for this object. Donde <i>id_cliente</i> es cliente al que se le compro.
 	  * Una validacion basica se hara aqui para comprobar que <i>id_cliente</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
@@ -289,33 +289,33 @@ class Ventas extends VO
 	}
 
 	/**
-	  * getTipoVenta
+	  * getTipoCompra
 	  * 
-	  * Get the <i>tipo_venta</i> property for this object. Donde <i>tipo_venta</i> es tipo de venta, contado o credito
+	  * Get the <i>tipo_compra</i> property for this object. Donde <i>tipo_compra</i> es tipo de compra, contado o credito
 	  * @return enum('credito','contado')
 	  */
-	final public function getTipoVenta()
+	final public function getTipoCompra()
 	{
-		return $this->tipo_venta;
+		return $this->tipo_compra;
 	}
 
 	/**
-	  * setTipoVenta( $tipo_venta )
+	  * setTipoCompra( $tipo_compra )
 	  * 
-	  * Set the <i>tipo_venta</i> property for this object. Donde <i>tipo_venta</i> es tipo de venta, contado o credito.
-	  * Una validacion basica se hara aqui para comprobar que <i>tipo_venta</i> es de tipo <i>enum('credito','contado')</i>. 
+	  * Set the <i>tipo_compra</i> property for this object. Donde <i>tipo_compra</i> es tipo de compra, contado o credito.
+	  * Una validacion basica se hara aqui para comprobar que <i>tipo_compra</i> es de tipo <i>enum('credito','contado')</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param enum('credito','contado')
 	  */
-	final public function setTipoVenta( $tipo_venta )
+	final public function setTipoCompra( $tipo_compra )
 	{
-		$this->tipo_venta = $tipo_venta;
+		$this->tipo_compra = $tipo_compra;
 	}
 
 	/**
 	  * getTipoPago
 	  * 
-	  * Get the <i>tipo_pago</i> property for this object. Donde <i>tipo_pago</i> es tipo de pago para esta venta en caso de ser a contado
+	  * Get the <i>tipo_pago</i> property for this object. Donde <i>tipo_pago</i> es tipo de pago para esta compra en caso de ser a contado
 	  * @return enum('efectivo','cheque','tarjeta')
 	  */
 	final public function getTipoPago()
@@ -326,7 +326,7 @@ class Ventas extends VO
 	/**
 	  * setTipoPago( $tipo_pago )
 	  * 
-	  * Set the <i>tipo_pago</i> property for this object. Donde <i>tipo_pago</i> es tipo de pago para esta venta en caso de ser a contado.
+	  * Set the <i>tipo_pago</i> property for this object. Donde <i>tipo_pago</i> es tipo de pago para esta compra en caso de ser a contado.
 	  * Una validacion basica se hara aqui para comprobar que <i>tipo_pago</i> es de tipo <i>enum('efectivo','cheque','tarjeta')</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param enum('efectivo','cheque','tarjeta')
@@ -339,7 +339,7 @@ class Ventas extends VO
 	/**
 	  * getFecha
 	  * 
-	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha de venta
+	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha de compra
 	  * @return timestamp
 	  */
 	final public function getFecha()
@@ -350,7 +350,7 @@ class Ventas extends VO
 	/**
 	  * setFecha( $fecha )
 	  * 
-	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha de venta.
+	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es fecha de compra.
 	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>timestamp</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param timestamp
@@ -363,7 +363,7 @@ class Ventas extends VO
 	/**
 	  * getSubtotal
 	  * 
-	  * Get the <i>subtotal</i> property for this object. Donde <i>subtotal</i> es subtotal de la venta, puede ser nulo
+	  * Get the <i>subtotal</i> property for this object. Donde <i>subtotal</i> es subtotal de la compra, puede ser nulo
 	  * @return float
 	  */
 	final public function getSubtotal()
@@ -374,7 +374,7 @@ class Ventas extends VO
 	/**
 	  * setSubtotal( $subtotal )
 	  * 
-	  * Set the <i>subtotal</i> property for this object. Donde <i>subtotal</i> es subtotal de la venta, puede ser nulo.
+	  * Set the <i>subtotal</i> property for this object. Donde <i>subtotal</i> es subtotal de la compra, puede ser nulo.
 	  * Una validacion basica se hara aqui para comprobar que <i>subtotal</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -387,7 +387,7 @@ class Ventas extends VO
 	/**
 	  * getIva
 	  * 
-	  * Get the <i>iva</i> property for this object. Donde <i>iva</i> es iva agregado por la venta, depende de cada sucursal
+	  * Get the <i>iva</i> property for this object. Donde <i>iva</i> es iva agregado por la compra, depende de cada sucursal
 	  * @return float
 	  */
 	final public function getIva()
@@ -398,7 +398,7 @@ class Ventas extends VO
 	/**
 	  * setIva( $iva )
 	  * 
-	  * Set the <i>iva</i> property for this object. Donde <i>iva</i> es iva agregado por la venta, depende de cada sucursal.
+	  * Set the <i>iva</i> property for this object. Donde <i>iva</i> es iva agregado por la compra, depende de cada sucursal.
 	  * Una validacion basica se hara aqui para comprobar que <i>iva</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -411,7 +411,7 @@ class Ventas extends VO
 	/**
 	  * getDescuento
 	  * 
-	  * Get the <i>descuento</i> property for this object. Donde <i>descuento</i> es descuento aplicado a esta venta
+	  * Get the <i>descuento</i> property for this object. Donde <i>descuento</i> es descuento aplicado a esta compra
 	  * @return float
 	  */
 	final public function getDescuento()
@@ -422,7 +422,7 @@ class Ventas extends VO
 	/**
 	  * setDescuento( $descuento )
 	  * 
-	  * Set the <i>descuento</i> property for this object. Donde <i>descuento</i> es descuento aplicado a esta venta.
+	  * Set the <i>descuento</i> property for this object. Donde <i>descuento</i> es descuento aplicado a esta compra.
 	  * Una validacion basica se hara aqui para comprobar que <i>descuento</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -435,7 +435,7 @@ class Ventas extends VO
 	/**
 	  * getTotal
 	  * 
-	  * Get the <i>total</i> property for this object. Donde <i>total</i> es total de esta venta
+	  * Get the <i>total</i> property for this object. Donde <i>total</i> es total de esta compra
 	  * @return float
 	  */
 	final public function getTotal()
@@ -446,7 +446,7 @@ class Ventas extends VO
 	/**
 	  * setTotal( $total )
 	  * 
-	  * Set the <i>total</i> property for this object. Donde <i>total</i> es total de esta venta.
+	  * Set the <i>total</i> property for this object. Donde <i>total</i> es total de esta compra.
 	  * Una validacion basica se hara aqui para comprobar que <i>total</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -459,7 +459,7 @@ class Ventas extends VO
 	/**
 	  * getIdSucursal
 	  * 
-	  * Get the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es sucursal de la venta
+	  * Get the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es sucursal de la compra
 	  * @return int(11)
 	  */
 	final public function getIdSucursal()
@@ -470,7 +470,7 @@ class Ventas extends VO
 	/**
 	  * setIdSucursal( $id_sucursal )
 	  * 
-	  * Set the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es sucursal de la venta.
+	  * Set the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es sucursal de la compra.
 	  * Una validacion basica se hara aqui para comprobar que <i>id_sucursal</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
@@ -507,7 +507,7 @@ class Ventas extends VO
 	/**
 	  * getPagado
 	  * 
-	  * Get the <i>pagado</i> property for this object. Donde <i>pagado</i> es porcentaje pagado de esta venta
+	  * Get the <i>pagado</i> property for this object. Donde <i>pagado</i> es porcentaje pagado de esta compra
 	  * @return float
 	  */
 	final public function getPagado()
@@ -518,7 +518,7 @@ class Ventas extends VO
 	/**
 	  * setPagado( $pagado )
 	  * 
-	  * Set the <i>pagado</i> property for this object. Donde <i>pagado</i> es porcentaje pagado de esta venta.
+	  * Set the <i>pagado</i> property for this object. Donde <i>pagado</i> es porcentaje pagado de esta compra.
 	  * Una validacion basica se hara aqui para comprobar que <i>pagado</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -531,7 +531,7 @@ class Ventas extends VO
 	/**
 	  * getCancelada
 	  * 
-	  * Get the <i>cancelada</i> property for this object. Donde <i>cancelada</i> es verdadero si esta venta ha sido cancelada, falso si no
+	  * Get the <i>cancelada</i> property for this object. Donde <i>cancelada</i> es verdadero si esta compra ha sido cancelada, falso si no
 	  * @return tinyint(1)
 	  */
 	final public function getCancelada()
@@ -542,7 +542,7 @@ class Ventas extends VO
 	/**
 	  * setCancelada( $cancelada )
 	  * 
-	  * Set the <i>cancelada</i> property for this object. Donde <i>cancelada</i> es verdadero si esta venta ha sido cancelada, falso si no.
+	  * Set the <i>cancelada</i> property for this object. Donde <i>cancelada</i> es verdadero si esta compra ha sido cancelada, falso si no.
 	  * Una validacion basica se hara aqui para comprobar que <i>cancelada</i> es de tipo <i>tinyint(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param tinyint(1)
@@ -579,7 +579,7 @@ class Ventas extends VO
 	/**
 	  * getLiquidada
 	  * 
-	  * Get the <i>liquidada</i> property for this object. Donde <i>liquidada</i> es Verdadero si esta venta ha sido liquidada, falso si hay un saldo pendiente
+	  * Get the <i>liquidada</i> property for this object. Donde <i>liquidada</i> es Verdadero si esta compra ha sido liquidada, falso si hay un saldo pendiente
 	  * @return tinyint(1)
 	  */
 	final public function getLiquidada()
@@ -590,7 +590,7 @@ class Ventas extends VO
 	/**
 	  * setLiquidada( $liquidada )
 	  * 
-	  * Set the <i>liquidada</i> property for this object. Donde <i>liquidada</i> es Verdadero si esta venta ha sido liquidada, falso si hay un saldo pendiente.
+	  * Set the <i>liquidada</i> property for this object. Donde <i>liquidada</i> es Verdadero si esta compra ha sido liquidada, falso si hay un saldo pendiente.
 	  * Una validacion basica se hara aqui para comprobar que <i>liquidada</i> es de tipo <i>tinyint(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param tinyint(1)

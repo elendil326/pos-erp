@@ -2,7 +2,7 @@
 /** Value Object file for table detalle_inventario.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Alan Gonzalez
+  * @author no author especified
   * @access public
   * @package docs
   * 
@@ -31,6 +31,9 @@ class DetalleInventario extends VO
 			if( isset($data['precio_venta']) ){
 				$this->precio_venta = $data['precio_venta'];
 			}
+			if( isset($data['precio_compra']) ){
+				$this->precio_compra = $data['precio_compra'];
+			}
 			if( isset($data['existencias']) ){
 				$this->existencias = $data['existencias'];
 			}
@@ -53,6 +56,7 @@ class DetalleInventario extends VO
 			"id_producto" => $this->id_producto,
 			"id_sucursal" => $this->id_sucursal,
 			"precio_venta" => $this->precio_venta,
+			"precio_compra" => $this->precio_compra,
 			"existencias" => $this->existencias,
 			"existencias_procesadas" => $this->existencias_procesadas
 		); 
@@ -87,6 +91,15 @@ class DetalleInventario extends VO
 	  * @var float
 	  */
 	protected $precio_venta;
+
+	/**
+	  * precio_compra
+	  * 
+	  * el precio a la compra para el publico general de este producto en esta sucursal<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $precio_compra;
 
 	/**
 	  * existencias
@@ -180,6 +193,30 @@ class DetalleInventario extends VO
 	final public function setPrecioVenta( $precio_venta )
 	{
 		$this->precio_venta = $precio_venta;
+	}
+
+	/**
+	  * getPrecioCompra
+	  * 
+	  * Get the <i>precio_compra</i> property for this object. Donde <i>precio_compra</i> es el precio a la compra para el publico general de este producto en esta sucursal
+	  * @return float
+	  */
+	final public function getPrecioCompra()
+	{
+		return $this->precio_compra;
+	}
+
+	/**
+	  * setPrecioCompra( $precio_compra )
+	  * 
+	  * Set the <i>precio_compra</i> property for this object. Donde <i>precio_compra</i> es el precio a la compra para el publico general de este producto en esta sucursal.
+	  * Una validacion basica se hara aqui para comprobar que <i>precio_compra</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setPrecioCompra( $precio_compra )
+	{
+		$this->precio_compra = $precio_compra;
 	}
 
 	/**

@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link ActualizacionDePrecio }. 
-  * @author Alan Gonzalez
+  * @author no author especified
   * @access private
   * @abstract
   * @package docs
@@ -163,6 +163,11 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 			array_push( $val, $actualizacion_de_precio->getPrecioVenta() );
 		}
 
+		if( $actualizacion_de_precio->getPrecioCompra() != NULL){
+			$sql .= " precio_compra = ? AND";
+			array_push( $val, $actualizacion_de_precio->getPrecioCompra() );
+		}
+
 		if( $actualizacion_de_precio->getPrecioVentaSinProcesar() != NULL){
 			$sql .= " precio_venta_sin_procesar = ? AND";
 			array_push( $val, $actualizacion_de_precio->getPrecioVentaSinProcesar() );
@@ -206,7 +211,7 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -214,11 +219,12 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 	  **/
 	private static final function update( $actualizacion_de_precio )
 	{
-		$sql = "UPDATE actualizacion_de_precio SET  id_producto = ?, id_usuario = ?, precio_venta = ?, precio_venta_sin_procesar = ?, precio_intersucursal = ?, precio_intersucursal_sin_procesar = ?, fecha = ? WHERE  id_actualizacion = ?;";
+		$sql = "UPDATE actualizacion_de_precio SET  id_producto = ?, id_usuario = ?, precio_venta = ?, precio_compra = ?, precio_venta_sin_procesar = ?, precio_intersucursal = ?, precio_intersucursal_sin_procesar = ?, fecha = ? WHERE  id_actualizacion = ?;";
 		$params = array( 
 			$actualizacion_de_precio->getIdProducto(), 
 			$actualizacion_de_precio->getIdUsuario(), 
 			$actualizacion_de_precio->getPrecioVenta(), 
+			$actualizacion_de_precio->getPrecioCompra(), 
 			$actualizacion_de_precio->getPrecioVentaSinProcesar(), 
 			$actualizacion_de_precio->getPrecioIntersucursal(), 
 			$actualizacion_de_precio->getPrecioIntersucursalSinProcesar(), 
@@ -246,12 +252,13 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 	  **/
 	private static final function create( &$actualizacion_de_precio )
 	{
-		$sql = "INSERT INTO actualizacion_de_precio ( id_actualizacion, id_producto, id_usuario, precio_venta, precio_venta_sin_procesar, precio_intersucursal, precio_intersucursal_sin_procesar, fecha ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO actualizacion_de_precio ( id_actualizacion, id_producto, id_usuario, precio_venta, precio_compra, precio_venta_sin_procesar, precio_intersucursal, precio_intersucursal_sin_procesar, fecha ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$actualizacion_de_precio->getIdActualizacion(), 
 			$actualizacion_de_precio->getIdProducto(), 
 			$actualizacion_de_precio->getIdUsuario(), 
 			$actualizacion_de_precio->getPrecioVenta(), 
+			$actualizacion_de_precio->getPrecioCompra(), 
 			$actualizacion_de_precio->getPrecioVentaSinProcesar(), 
 			$actualizacion_de_precio->getPrecioIntersucursal(), 
 			$actualizacion_de_precio->getPrecioIntersucursalSinProcesar(), 
@@ -343,6 +350,17 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " precio_venta = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $actualizacion_de_precioA->getPrecioCompra()) != NULL) & ( ($b = $actualizacion_de_precioB->getPrecioCompra()) != NULL) ){
+				$sql .= " precio_compra >= ? AND precio_compra <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " precio_compra = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
