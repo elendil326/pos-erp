@@ -40,8 +40,8 @@ class CompraCliente extends VO
 			if( isset($data['subtotal']) ){
 				$this->subtotal = $data['subtotal'];
 			}
-			if( isset($data['iva']) ){
-				$this->iva = $data['iva'];
+			if( isset($data['impuesto']) ){
+				$this->impuesto = $data['impuesto'];
 			}
 			if( isset($data['descuento']) ){
 				$this->descuento = $data['descuento'];
@@ -86,7 +86,7 @@ class CompraCliente extends VO
 			"tipo_pago" => $this->tipo_pago,
 			"fecha" => $this->fecha,
 			"subtotal" => $this->subtotal,
-			"iva" => $this->iva,
+			"impuesto" => $this->impuesto,
 			"descuento" => $this->descuento,
 			"total" => $this->total,
 			"id_sucursal" => $this->id_sucursal,
@@ -156,13 +156,13 @@ class CompraCliente extends VO
 	protected $subtotal;
 
 	/**
-	  * iva
+	  * impuesto
 	  * 
-	  * iva agregado por la compra, depende de cada sucursal<br>
+	  * impuesto agregado por la compra, depende de cada sucursal<br>
 	  * @access protected
 	  * @var float
 	  */
-	protected $iva;
+	protected $impuesto;
 
 	/**
 	  * descuento
@@ -385,27 +385,27 @@ class CompraCliente extends VO
 	}
 
 	/**
-	  * getIva
+	  * getImpuesto
 	  * 
-	  * Get the <i>iva</i> property for this object. Donde <i>iva</i> es iva agregado por la compra, depende de cada sucursal
+	  * Get the <i>impuesto</i> property for this object. Donde <i>impuesto</i> es impuesto agregado por la compra, depende de cada sucursal
 	  * @return float
 	  */
-	final public function getIva()
+	final public function getImpuesto()
 	{
-		return $this->iva;
+		return $this->impuesto;
 	}
 
 	/**
-	  * setIva( $iva )
+	  * setImpuesto( $impuesto )
 	  * 
-	  * Set the <i>iva</i> property for this object. Donde <i>iva</i> es iva agregado por la compra, depende de cada sucursal.
-	  * Una validacion basica se hara aqui para comprobar que <i>iva</i> es de tipo <i>float</i>. 
+	  * Set the <i>impuesto</i> property for this object. Donde <i>impuesto</i> es impuesto agregado por la compra, depende de cada sucursal.
+	  * Una validacion basica se hara aqui para comprobar que <i>impuesto</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
-	final public function setIva( $iva )
+	final public function setImpuesto( $impuesto )
 	{
-		$this->iva = $iva;
+		$this->impuesto = $impuesto;
 	}
 
 	/**

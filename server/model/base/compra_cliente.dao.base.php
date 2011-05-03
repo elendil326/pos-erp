@@ -173,9 +173,9 @@ abstract class CompraClienteDAOBase extends DAO
 			array_push( $val, $compra_cliente->getSubtotal() );
 		}
 
-		if( $compra_cliente->getIva() != NULL){
-			$sql .= " iva = ? AND";
-			array_push( $val, $compra_cliente->getIva() );
+		if( $compra_cliente->getImpuesto() != NULL){
+			$sql .= " impuesto = ? AND";
+			array_push( $val, $compra_cliente->getImpuesto() );
 		}
 
 		if( $compra_cliente->getDescuento() != NULL){
@@ -249,14 +249,14 @@ abstract class CompraClienteDAOBase extends DAO
 	  **/
 	private static final function update( $compra_cliente )
 	{
-		$sql = "UPDATE compra_cliente SET  id_cliente = ?, tipo_compra = ?, tipo_pago = ?, fecha = ?, subtotal = ?, iva = ?, descuento = ?, total = ?, id_sucursal = ?, id_usuario = ?, pagado = ?, cancelada = ?, ip = ?, liquidada = ? WHERE  id_compra = ?;";
+		$sql = "UPDATE compra_cliente SET  id_cliente = ?, tipo_compra = ?, tipo_pago = ?, fecha = ?, subtotal = ?, impuesto = ?, descuento = ?, total = ?, id_sucursal = ?, id_usuario = ?, pagado = ?, cancelada = ?, ip = ?, liquidada = ? WHERE  id_compra = ?;";
 		$params = array( 
 			$compra_cliente->getIdCliente(), 
 			$compra_cliente->getTipoCompra(), 
 			$compra_cliente->getTipoPago(), 
 			$compra_cliente->getFecha(), 
 			$compra_cliente->getSubtotal(), 
-			$compra_cliente->getIva(), 
+			$compra_cliente->getImpuesto(), 
 			$compra_cliente->getDescuento(), 
 			$compra_cliente->getTotal(), 
 			$compra_cliente->getIdSucursal(), 
@@ -288,7 +288,7 @@ abstract class CompraClienteDAOBase extends DAO
 	  **/
 	private static final function create( &$compra_cliente )
 	{
-		$sql = "INSERT INTO compra_cliente ( id_compra, id_cliente, tipo_compra, tipo_pago, fecha, subtotal, iva, descuento, total, id_sucursal, id_usuario, pagado, cancelada, ip, liquidada ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO compra_cliente ( id_compra, id_cliente, tipo_compra, tipo_pago, fecha, subtotal, impuesto, descuento, total, id_sucursal, id_usuario, pagado, cancelada, ip, liquidada ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$compra_cliente->getIdCompra(), 
 			$compra_cliente->getIdCliente(), 
@@ -296,7 +296,7 @@ abstract class CompraClienteDAOBase extends DAO
 			$compra_cliente->getTipoPago(), 
 			$compra_cliente->getFecha(), 
 			$compra_cliente->getSubtotal(), 
-			$compra_cliente->getIva(), 
+			$compra_cliente->getImpuesto(), 
 			$compra_cliente->getDescuento(), 
 			$compra_cliente->getTotal(), 
 			$compra_cliente->getIdSucursal(), 
@@ -419,12 +419,12 @@ abstract class CompraClienteDAOBase extends DAO
 			
 		}
 
-		if( (($a = $compra_clienteA->getIva()) != NULL) & ( ($b = $compra_clienteB->getIva()) != NULL) ){
-				$sql .= " iva >= ? AND iva <= ? AND";
+		if( (($a = $compra_clienteA->getImpuesto()) != NULL) & ( ($b = $compra_clienteB->getImpuesto()) != NULL) ){
+				$sql .= " impuesto >= ? AND impuesto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " iva = ? AND"; 
+			$sql .= " impuesto = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
