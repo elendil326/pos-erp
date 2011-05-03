@@ -951,10 +951,11 @@ function doVender()
     var readyDATA = {
         productos 	: composiciones,
         cliente 	: jQuery("#cliente_selector").val(),
-	    tipo_venta 	: "contado", // | "credito",
-	 	tipo_pago 	: "efectivo",
+	    tipo_venta 	: tipo_de_venta,
+	 	tipo_pago 	: tipo_de_pago,
+		efectivo	: jQuery("#tipo-de-pago-efectivo").val(), 
 	 	factura 	: false
-    };
+    };	
 
 	console.log("Listo para vender con estos datos!", readyDATA);
     
@@ -1377,6 +1378,7 @@ if(!isset($_REQUEST['cid'])){
 	}else{
 	
 	?>
+		<input type="hidden" id="cliente_selector" value="<?php echo $cliente->getIdCliente(); ?>">
         <script>
             var CLIENTE = "<?php echo $cliente->getIdCliente(); ?>";
             var NOMBRECLIENTE = "<?php echo $cliente->getRazonSocial(); ?>";
@@ -1536,7 +1538,52 @@ function toUnitProc( $e, $row )
 
 </div>
 
+<script>
+	var tipo_de_venta = "credito",
+		tipo_de_pago = "";
+	
+   function setPaymentType( tipo ){
+        tipo_de_venta = tipo;
+        switch(tipo){
+            case "contado" : 
+                jQuery("#tipoDePago").show();
+            break;
 
+            case "credito" : 
+            default:
+                jQuery("#tipoDePago").hide();
+                setPayment(null);
+        }
+    }
+
+    function setPayment( tipo ){
+        jQuery("#tipoDePagoInfo").show();
+        tipo_de_pago = tipo;
+
+        switch(tipo){
+            case "efectivo" : 
+                jQuery("#tipoDePagoInfo").html('Efectivo <input type="text" id="tipo-de-pago-efectivo">');
+            break;
+
+            case "cheque" :
+                jQuery("#tipoDePagoInfo").html('Referencia <input type="text">');                
+            break;
+
+            case "tarjeta":
+                jQuery("#tipoDePagoInfo").html('Datos <input type="text">');
+            break;
+
+            default:
+                jQuery("#tipoDePagoInfo").hide();
+        }
+    }
+
+</script>
+
+
+<!-- 
+	OPCIONES DE PAGO
+-->   
 
 
 <div id="FinalShip" style="display: none;">
@@ -1544,11 +1591,33 @@ function toUnitProc( $e, $row )
 
 	<div id="FinalShipTabla"></div>
 
-	<!--
-	    Seleccion de chofer
-	-->
 
 
+	<h2>Opciones de pago</h2>
+
+	<table width="100%" border=0 align=center>
+	   <tr >
+	    <td valign="top" >
+	        <h3>Tipo de venta</h3>
+	      <input type="radio" name="tipo_venta_input" onChange="setPaymentType(this.value)" value="credito" checked="checked" /> Credito<br />
+	      <input type="radio" name="tipo_venta_input" onChange="setPaymentType(this.value)" value="contado"  /> Contado<br />
+	    </td>
+
+
+	    <td valign="top" id="tipoDePago" style="display:none;">
+	      <h3>Tipo de pago</h3>
+	      <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="efectivo" /> Efectivo<br />
+	      <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="cheque"  /> Cheque<br />
+	      <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="tarjeta" /> Tarjeta<br />
+	    </td>
+
+	    <td valign="top" id="tipoDePagoInfo" style="display:none; padding: 5px;">
+
+	    </td>
+	    </tr>
+	</table>
+	
+	
 	<h4 id="submitButtons" align='center'  >
 		<input type="button" value="Vender" onclick="doVender()">
 		<!-- <input type="button" value="Volver a comenzar" onclick="restart()"> -->
@@ -1557,8 +1626,6 @@ function toUnitProc( $e, $row )
 	<div id="loader" 		style="display: none;" align="center"  >
 		<img src="../media/loader.gif">
 	</div>
-
-
 </div>
 
 
