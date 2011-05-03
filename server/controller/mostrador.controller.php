@@ -13,6 +13,7 @@ require_once("model/inventario_maestro.dao.php");
 require_once("model/compra_proveedor.dao.php");
 require_once("logger.php");
 require_once('autorizaciones.controller.php');
+require_ocne('clientes.controller.php');
 
 /*
  * Crea una factura para este objeto venta
@@ -567,7 +568,8 @@ function vender($args) {
  *             "tipo_venta": "contado" | "credito",
  *             "tipo_pago": "tarjeta" | "cheque" | "efectivo",
  *             "factura": false | true,
- *             "cliente": int
+ *             "cliente": int,
+ *             "efectivo" : float,
  *             "productos":[
  *                 "producto": int,
  *                 "procesado": false,
@@ -1131,6 +1133,14 @@ function venderAdmin($args) {
     //si la venta es de contado, hay que liquidarla
     if ($venta->getTipoVenta() == "contado") {
         $venta->setPagado($total);
+
+        //validamos que el efectivo con el que se pago sea suficiente
+        if($data->efectivo < $venta->getTotal())
+        {
+            DAO::transRollback();
+            Logger::log("Error : No cuenta con suficiente efectivo para cubrir la cuenta." . $e);
+            die('{"success": false, "reason": "Error : No cuenta con suficiente efectivo para cubrir la cuenta." }');
+        }
     }
 
     try {

@@ -1189,7 +1189,7 @@ function nuevaCompraCliente($args = null) {
     }
 
     //verificamos que se manden todos los parametros necesarios
-    if (!( isset($data->id_cliente) && isset($data->tipo_compra) && isset($data->tipo_pago) && isset($data->productos)  )) {
+    if (!( isset($data->id_cliente) && isset($data->tipo_compra) && isset($data->tipo_pago) && isset($data->productos) )) {
         Logger::log("Falta uno o mas parametros");
         die('{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }');
     }
@@ -1213,17 +1213,175 @@ function nuevaCompraCliente($args = null) {
     }
 
     //creamos la compra
-    
+
     $compra = new CompraCliente();
-    $compra->setCancelada(0);
     $compra->setIdCliente($cliente->getIdCliente());
-    $compra->setIdSucursal($_SESSION['sucxursal']);
-    $compra->setIp($_SERVER['REMOTE_ADDR']);
     $compra->setTipoCompra($data->tipo_compra);
     $compra->setTipoPago($data->tipo_pago);
-    $compra->setIdUsuario($_SESSION['userid']);
+    $compra->setSubtotal(0);
 
-   
+    //TODO: creo qeu seria buena idea relacionar las compras o ventas con otras tablas para manejar los impuestos
+    //ya que segun yo puede haber mas de un impuesto
+    $compra->setImpuesto("0");
+
+    //TODO : No entiendo muy bien para que habria un descuento aqui, si en el detalel de la compra se manejan los descuentos
+    $compra->setDescuento("0");
+
+    $compra->setTotal("0");
+    $compra->setIdSucursal($_SESSION['sucxursal']);
+    $compra->setIdUsuario($_SESSION['userid']);
+    $compra->setPagado("0");
+    $compra->setCancelada("0");
+    $compra->setIp($_SERVER['REMOTE_ADDR']);
+    $compra->setLiquidada(false);
+
+    DAO::transBegin();
+
+    try {
+        CompraCliente::save($compra);
+    } catch (Exception $e) {
+        Logger::log("Error al guardar la nueva compra:" . $e);
+        DAO::transRollback();
+        die('{"success": false, "reason": "Error" }');
+    }
+
+    /*
+     * Condensamos los productos
+     * iteramos el array de productos enviado ($data -> productos) e insertandolos en otro array, este nuevo array contiene objetos
+     * antes de insertar un nuevo producto de
+     * $data -> productos antes revisamos que no haya un producto con el mismo id, y de haberlo sumamos las cantidades del producto
+     * para que solo haya un mismo producto a la ves y asi pudiendo consegir un solo registro de un mismo producto con cantidaddes
+     * de producto procesado o sin procesar.
+     */
+
+    $array_items = array();
+    //insertamos el primer producto de item
+
+    $item = new stdClass();
+    $item->id_producto = $data->productos[0]->id_producto;
+
+    if ($data->productos[0]->cantidad <= 0) {
+        Logger::log("La cantidad de los productos debe ser mayor que cero.");
+        die('{"success": false, "reason": "La cantidad de los productos debe ser mayor que cero." }');
+    }
+
+    if ($data->productoss[0]->precio <= 0) {
+        Logger::log("El precio de los productos debe ser mayor que cero.");
+        die('{"success": false, "reason": "El precio de los productos debe ser mayor que cero." }');
+    }
+
+
+    $item->cantidad = $data->productos[0]->cantidad;
+    $item->precio = $data->productos[0]->precio;
+    $item->descuento = $data->productos[0]->descuento;
+
+
+    //insertamos el primer producto
+    array_push($array_items, $item);
+
+    //recorremos a $data->items para condensar el array de productos
+    for ($i = 1; $i < count($data->productos); $i++) {
+
+        if ($data->productos[$i]->cantidad <= 0) {
+            Logger::log("La cantidad de los productos debe ser mayor que cero.");
+            die('{"success": false, "reason": "La cantidad de los productos debe ser mayor que cero." }');
+        }
+
+        if ($data->productos[$i]->precio <= 0) {
+            Logger::log("El precio de los productos debe ser mayor que cero.");
+            die('{"success": false, "reason": "El precio de los productos debe ser mayor que cero." }');
+        }
+
+        //bandera para verificar si el producto no esta dentro de array_items
+        $found = false;
+
+        //iteramos el array_items y lo comparamos cada elementod e el con el producto actual
+        foreach ($array_items as $item) {
+
+            //comparamos haber si ya existe el producto en array_items
+            if ($data->productos[$i]->id_producto == $item->id_producto) {
+
+                $found = true;
+
+                //(el producto se encontro) y es un producto procesado
+                $item->cantidad += $data->productos[$i]->cantidad;
+                $item->precio += $data->productos[$i]->precio;
+                $item->descuento += $data->productos[$i]->descuento;
+            }
+        }//for each del array_items
+
+        if (!$found) {
+
+            //si no se encuentra el producto en el arreglo de objetos hay que crearlo
+            $_item = new stdClass();
+            $_item->id_producto = $data->productos[$i]->id_producto;
+            $_item->cantidad = $data->productos[$i]->cantidad;
+            $_item->precio = $data->productos[$i]->precio;
+            $_item->descuento = $data->productos[$i]->descuento;
+
+            array_push($array_items, $_item);
+        }
+    }//for de $data->items
+
+
+    $descuento = 0;
+    $subtotal = 0;
+
+    //realizamos calculos
+    foreach ($array_items as $producto) {
+
+        $detalle_compra = new DetalleCompraCliente();
+
+        $detalle_compra->setIdCompra($compra->getIdCompra());
+        $detalle_compra->setIdProducto($producto->id_producto);
+        $detalle_compra->setCantidad($producto->cantidad);
+        $detalle_compra->setPrecio($producto->precio);
+        $detalle_compra->setDescuento($producto->descuento);
+
+        $descuento += $detalle_compra->getDescuento();
+        $subtotal = ($detalle_compra->getCantidad() * $detalle_compra->getPrecio());
+
+        try {
+            DetalleCompraCliente::save($detalle_compra);
+        } catch (Exception $e) {
+            Logger::log("Error al guardar el detalle de la compra:" . $e);
+            DAO::transRollback();
+            die('{"success": false, "reason": "Error" }');
+        }
+    }
+
+    //actualizamos los datos de la compra
+
+    $compra->setSubtotal($subtotal);
+    $compra->setTotal(($compra->getSubtotal() - ( $cliente->getDescuento() * $compra->getSubtotal() / 100 )) + $compra->getImpuesto());
+
+    //saldamos la compra en caso de ser compra en efectivo
+    if ($compra->getTipoCompra() == "efectivo") {
+
+        $compra->setPagado($compra->setTotal($total));
+
+        $compra->setLiquidada("1");
+
+        //si paga con un cheque descontarlo de la cuenta de cheques
+        if ($compra->getTipoPago() == "cheque") {
+            //TODO: Crear algo para manejar los pagos con cheques
+        }
+    }
+
+    //actualizamos los datos de la compra
+    try {
+        CompraCliente::save($compra);
+    } catch (Exception $e) {
+        Logger::log("Error al guardar la nueva compra:" . $e);
+        DAO::transRollback();
+        die('{"success": false, "reason": "Error" }');
+    }
+
+    $empleado = UsuarioDAO::getByPK($_SESSION['userid']);
+
+    printf('{"success": true, "id_compra":%s, "empleado":"%s"}', $compra->getIdCompra(), $empleado->getNombre());
+
+    DAO::transEnd();
 }
 
 if (isset($args['action'])) {
@@ -1289,7 +1447,7 @@ if (isset($args['action'])) {
 
         case 1006:
             //compra a clente
-             nuevaCompraCliente($args);
+            nuevaCompraCliente($args);
             break;
 
         default:
