@@ -2,6 +2,7 @@
 
 require_once('model/inventario.dao.php');
 require_once('model/compra_proveedor.dao.php');
+require_once('model/compra_cliente.dao.php');
 require_once('model/detalle_compra_proveedor.dao.php');
 require_once('model/compra_sucursal.dao.php');
 require_once('model/detalle_compra_sucursal.dao.php');
@@ -10,6 +11,7 @@ require_once('model/compra_proveedor_flete.dao.php');
 require_once('model/inventario_maestro.dao.php');
 require_once 'model/proveedor.dao.php';
 require_once('model/autorizacion.dao.php');
+require_once('model/cliente.dao.php');
 
 require_once('logger.php');
 
@@ -1279,9 +1281,9 @@ function nuevaCompraCliente($args = null) {
     }
 
     //verificamos que el cliente exista
-    if (!( $cliente = ClienteDAO::getByPK($data->cliente) )) {
-        Logger::log("No se tiene registro del cliente : " . $data->cliente);
-        die('{"success": false, "reason": "No se tiene registro del cliente ' . $data->cliente . '." }');
+    if (!( $cliente = ClienteDAO::getByPK($data->id_cliente) )) {
+        Logger::log("No se tiene registro del cliente : " . $data->id_cliente);
+        die('{"success": false, "reason": "No se tiene registro del cliente ' . $data->id_cliente . '." }');
     }
 
     //creamos la compra
@@ -1300,7 +1302,7 @@ function nuevaCompraCliente($args = null) {
     $compra->setDescuento("0");
 
     $compra->setTotal("0");
-    $compra->setIdSucursal($_SESSION['sucxursal']);
+    $compra->setIdSucursal($_SESSION['sucursal']);
     $compra->setIdUsuario($_SESSION['userid']);
     $compra->setPagado("0");
     $compra->setCancelada("0");
@@ -1310,7 +1312,7 @@ function nuevaCompraCliente($args = null) {
     DAO::transBegin();
 
     try {
-        CompraCliente::save($compra);
+        CompraClienteDAO::save($compra);
     } catch (Exception $e) {
         Logger::log("Error al guardar la nueva compra:" . $e);
         DAO::transRollback();
@@ -1337,7 +1339,7 @@ function nuevaCompraCliente($args = null) {
         die('{"success": false, "reason": "La cantidad de los productos debe ser mayor que cero." }');
     }
 
-    if ($data->productoss[0]->precio <= 0) {
+    if ($data->productos[0]->precio <= 0) {
         Logger::log("El precio de los productos debe ser mayor que cero.");
         die('{"success": false, "reason": "El precio de los productos debe ser mayor que cero." }');
     }
@@ -1409,12 +1411,11 @@ function nuevaCompraCliente($args = null) {
         $detalle_compra->setCantidad($producto->cantidad);
         $detalle_compra->setPrecio($producto->precio);
         $detalle_compra->setDescuento($producto->descuento);
-
-        $descuento += $detalle_compra->getDescuento();
-        $subtotal = ($detalle_compra->getCantidad() * $detalle_compra->getPrecio());
+        
+        $subtotal += ($detalle_compra->getCantidad() * $detalle_compra->getPrecio());
 
         try {
-            DetalleCompraCliente::save($detalle_compra);
+            DetalleCompraClienteDAO::save($detalle_compra);
         } catch (Exception $e) {
             Logger::log("Error al guardar el detalle de la compra:" . $e);
             DAO::transRollback();
@@ -1428,9 +1429,9 @@ function nuevaCompraCliente($args = null) {
     $compra->setTotal(($compra->getSubtotal() - ( $cliente->getDescuento() * $compra->getSubtotal() / 100 )) + $compra->getImpuesto());
 
     //saldamos la compra en caso de ser compra en efectivo
-    if ($compra->getTipoCompra() == "efectivo") {
+    if ($compra->getTipoCompra() == "contado") {
 
-        $compra->setPagado($compra->setTotal($total));
+        $compra->setPagado($compra->getTotal());
 
         $compra->setLiquidada("1");
 
@@ -1442,7 +1443,7 @@ function nuevaCompraCliente($args = null) {
 
     //actualizamos los datos de la compra
     try {
-        CompraCliente::save($compra);
+        CompraClienteDAO::save($compra);
     } catch (Exception $e) {
         Logger::log("Error al guardar la nueva compra:" . $e);
         DAO::transRollback();
