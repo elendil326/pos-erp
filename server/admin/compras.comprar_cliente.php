@@ -101,6 +101,8 @@ if(!isset($_REQUEST['cid'])){
 	
 	function doMath(  ){
 		
+
+		
 		//si hay un producto con cantidad zero
 		var zero_qty = false,
 		
@@ -126,9 +128,9 @@ if(!isset($_REQUEST['cid'])){
 			if( isNaN(jQuery("#item-descuento-"+id).val()) || (jQuery("#item-descuento-"+id).val().length == 0) )
 				jQuery("#item-descuento-"+id).val(0);
 			
-			var sub_total = (jQuery("#item-cantidad-"+id).val() - jQuery("#item-cantidad-"+id).val()) 
-				* jQuery("#item-precio-"+id).val();
+			var sub_total = (jQuery("#item-cantidad-"+id).val() - jQuery("#item-descuento-"+id).val()) * jQuery("#item-precio-"+id).val();
 			
+
 			jQuery("#item-importe-"+ id).html( cf(sub_total) );
 
 		}
@@ -251,7 +253,8 @@ if(!isset($_REQUEST['cid'])){
 	                });                
 	                return ;
 	            }
-	            window.location = "compras.php?action=detalleCompraCliente&cid=" + response.compra_id + "&pp=1";
+
+				window.location = "compras.php?action=detalleCompraCliente&cid=" + response.id_compra + "&pp=1";
 
 	        }
 	        });

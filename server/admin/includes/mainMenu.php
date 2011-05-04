@@ -13,20 +13,44 @@
 
 		</LI>
 		
-		<LI class="drop">
-			<A >SUCURSALES</A>
-			<UL  class="nav sub" >
-				<LI><A href="sucursales.php?action=lista">Sucursales</A></LI>
-				<li>
-				  <a href="inventario.php?action=surtir">Surtir Sucursal</a>
-				</li>
-				<LI><A href="sucursales.php?action=abrir">Nueva sucursal</A></LI> 
-				<LI><A href="sucursales.php?action=ventas">Ventas a sucursales</A></LI>
-				<LI><A href="gerentes.php?action=lista">Gerentes</A></LI>
-<!-- 				<LI><A href="gerentes.php?action=asignar">Asignar gerencias</A></LI>				-->
-<!--				<LI class="last"><A href="gerentes.php?action=nuevo">Nuevo gerente</A></LI> 		-->
-			</UL>			
-		</LI>
+		<?php
+			if( POS_MULTI_SUCURSAL ){
+				
+				?>
+				<LI class="drop">
+					<A >SUCURSALES</A>
+					<UL  class="nav sub" >
+						<LI><A href="sucursales.php?action=lista">Sucursales</A></LI>
+						<li><a href="inventario.php?action=surtir">Surtir Sucursal</a></li>
+						<LI><A href="sucursales.php?action=abrir">Nueva sucursal</A></LI> 
+						<LI><A href="sucursales.php?action=ventas">Ventas a sucursales</A></LI>
+						<LI><A href="gerentes.php?action=lista">Gerentes</A></LI>
+						<!-- 				<LI><A href="gerentes.php?action=asignar">Asignar gerencias</A></LI>				-->
+						<!--				<LI class="last"><A href="gerentes.php?action=nuevo">Nuevo gerente</A></LI> 		-->
+					</UL>			
+				</LI>
+				<?php
+				
+			}
+		?>
+		
+		
+		<?php
+			if( POS_COMPRA_A_CLIENTES ){
+
+				?>
+				<LI class="drop">
+					<A >COMPRAS</A>
+					<UL  class="nav sub" >
+						<LI><A href="compras.php?action=comprar_cliente">Comprar a cliente</A></LI>
+						<li><a href="compras.php?action=lista">Lista de compras</a></li>
+					</UL>			
+				</LI>
+				<?php
+
+			}
+		?>
+
 		
 		<LI class="drop">
 			<A >VENTAS</A>

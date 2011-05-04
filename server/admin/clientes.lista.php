@@ -186,7 +186,8 @@ require_once("controller/inventario.controller.php");
 	
 		graficaVentas.setXFormater(
 				function(val){
-					if(val ==0)return "";					
+					if(val ==0)return "";
+					if(fechas[val] === undefined) return "";
 					return meses(fechas[val].fecha.split("-")[1]) + " "  + fechas[val].fecha.split("-")[2]; 
 				}
 			);

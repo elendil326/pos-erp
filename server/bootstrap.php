@@ -92,16 +92,13 @@
 	#estilo para las fechas
 	define('POS_DATE_FORMAT', 				$rs['DATE_FORMAT']);
 	
-	
 	define('DB_USER',       				$rs['DB_USER']);
 	define('DB_PASSWORD',   				$rs['DB_PASSWORD']);
 	define('DB_NAME',       				$rs['DB_NAME']);
 	define('DB_DRIVER',     				$rs['DB_DRIVER']);
 	define('DB_HOST',       				$rs['DB_HOST']);
 	define('DB_DEBUG',      				$rs['DB_DEBUG']);
-	
-	require('db/DBConnection.php');
-	
+
 	define("HEARTBEAT_METHOD_TRIGGER", 		$rs['HEARTBEAT_METHOD_TRIGGER']);
 	define("HEARTBEAT_INTERVAL", 			$rs['HEARTBEAT_INTERVAL']);
 	
@@ -114,4 +111,31 @@
 	# base de datos.
 	define( 'POS_SUCURSAL_TEST_TOKEN', 		$rs['POS_SUCURSAL_TEST_TOKEN'] );
 	define( 'DEMO', 						$rs['DEMO']);
+
+	#leer las caracteristicas del sistema
+	$sql = "SELECT * FROM core_functionality WHERE ( instance_id = ? ) ;";
+	$params = array(  $_SESSION["INSTANCE_ID"] );
+
+	$rs = $core_conn->GetRow($sql, $params);
+
+	if(count($rs)==0){
+		//no existe esta instancia !!
+		Logger::log("This instance does not exist !!!",3);
+		die("this instance does not exist !");
+	}
+
+
+	define("POS_MULTI_SUCURSAL", 	$rs['multi_sucursal']);
+	define("POS_COMPRA_A_CLIENTES", $rs['compra_a_clientes']);
+	
+	require('db/DBConnection.php');
+	
+
+	
+	
+	
+
+	
+	
+	
 	

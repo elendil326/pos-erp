@@ -1,8 +1,7 @@
 <?php
-	require_once("../../server/config.php");	
-	require_once("db/DBConnection.php");
-	require_once("ingenieria/includes/checkSession.php");
-	require_once("admin/includes/static.php");	
+require_once("../../server/bootstrap.php");	
+require_once("ingenieria/includes/checkSession.php");
+require_once("admin/includes/static.php");
 
 
  	if(isset($_GET["action"]) && is_file("../../server/ingenieria/logs." . $_GET["action"] . ".php") && ( $_GET['action'] == "descargar" )){
