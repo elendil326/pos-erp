@@ -1030,7 +1030,7 @@ function doSurtir()
 ?>
 
 var MasterGrid;
-var sm = new Ext.grid.CheckboxSelectionModel();
+//var sm = new Ext.grid.CheckboxSelectionModel();
 
 Ext.onReady(function(){
     Ext.QuickTips.init();
