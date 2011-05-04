@@ -19,8 +19,8 @@
 		}
 		</script>
 
-	    <link rel="stylesheet" href="http://api.caffeina.mx/sencha-touch-1.0.1a/resources/css/sencha-touch.css" type="text/css">
-	    <script type="text/javascript" src="http://api.caffeina.mx/sencha-touch-1.0.1a/sencha-touch.js"></script>
+	    <link rel="stylesheet" href="http://api.caffeina.mx/sencha-latest/resources/css/sencha-touch.css" type="text/css">
+	    <script type="text/javascript" src="http://api.caffeina.mx/sencha-latest/sencha-touch.js"></script>
 	
 		<link rel="stylesheet" type="text/css" href="../getResource.php?mod=sucursal&type=css">
 		<link rel="stylesheet" type="text/css" href="../getResource.php?mod=shared&type=css">

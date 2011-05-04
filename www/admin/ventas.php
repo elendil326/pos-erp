@@ -10,7 +10,7 @@ require_once("admin/includes/static.php");
 	
 <head>
 	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-3.3.1/resources/css/ext-all.css" /> 
+	<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-latest/resources/css/ext-all.css" /> 
 	<title>POS | Inventario</title>
 	<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript"></script>
 
@@ -32,10 +32,10 @@ require_once("admin/includes/static.php");
 	
 	
 	<!-- ExtJS library: base/adapter --> 
-    <script type="text/javascript" src="http://api.caffeina.mx/ext-3.3.1/adapter/ext/ext-base.js"></script> 
+    <script type="text/javascript" src="http://api.caffeina.mx/ext-latest/adapter/ext/ext-base.js"></script> 
  
     <!-- ExtJS library: all widgets --> 
-    <script type="text/javascript" src="http://api.caffeina.mx/ext-3.3.1/ext-all.js"></script>
+    <script type="text/javascript" src="http://api.caffeina.mx/ext-latest/ext-all.js"></script>
 </head>
 
 
