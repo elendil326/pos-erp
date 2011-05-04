@@ -8,6 +8,7 @@ require_once('model/detalle_compra_sucursal.dao.php');
 require_once('model/detalle_compra_cliente.dao.php');
 require_once('model/compra_proveedor_flete.dao.php');
 require_once('model/inventario_maestro.dao.php');
+require_once 'model/proveedor.dao.php';
 require_once('model/autorizacion.dao.php');
 
 require_once('logger.php');
@@ -105,6 +106,13 @@ function nuevaCompraProveedor($data = null) {
     printf('{"success": true, "id_compra" : ' . $id_compra_proveedor . '}');
 }
 
+
+/**
+ *
+ * @param <type> $data
+ * @param <type> $productos
+ * @return <type>
+ */
 function compraProveedor($data = null, $productos = null) {
 
     /* if($json == null){
@@ -291,6 +299,13 @@ function compraProveedor($data = null, $productos = null) {
     //printf('{"success": true, "id": "%s"}' , $compra->getIdCompraProveedor());
 }
 
+/**
+ *
+ * @param <type> $data
+ * @param <type> $id_compra_proveedor
+ * @param <type> $costo_flete
+ * @return <type>
+ */
 function compraProveedorFlete($data = null, $id_compra_proveedor = null, $costo_flete = null) {
 
     /* if($json == null){
@@ -356,6 +371,10 @@ function compraProveedorFlete($data = null, $id_compra_proveedor = null, $costo_
     return;
 }
 
+/**
+ *
+ * @param <type> $json
+ */
 function editarCompraProveedor($json) {
 
     if ($json == null) {
@@ -418,6 +437,11 @@ function editarCompraProveedor($json) {
     Logger::log("Compra a proveedor modificada !");
 }
 
+/**
+ *
+ * @param <type> $id_compra
+ * @return <type>
+ */
 function detalleCompraProveedor($id_compra) {
 
     if (!isset($id_compra)) {
@@ -462,11 +486,19 @@ function detalleCompraProveedor($id_compra) {
     return $info_compra;
 }
 
+/**
+ *
+ * @return <type>
+ */
 function listarComprasProveedor() {
 
     return CompraProveedorDAO::getAll();
 }
 
+/**
+ *
+ * @param <type> $json
+ */
 function editarCompraProveedorFlete($json = null) {
 
     if ($json == null) {
@@ -521,6 +553,12 @@ function editarCompraProveedorFlete($json = null) {
     printf('{"success": true}');
 }
 
+/**
+ *
+ * @param <type> $data
+ * @param <type> $id_compra_proveedor
+ * @param <type> $peso_por_arpilla
+ */
 function ingresarDetalleCompraProveedor($data = null, $id_compra_proveedor =null, $peso_por_arpilla = null) {
 
 
@@ -569,6 +607,12 @@ function ingresarDetalleCompraProveedor($data = null, $id_compra_proveedor =null
     Logger::log("Proceso de alta a detalle proveedor finalizado con exito!");
 }
 
+/**
+ *
+ * @param <type> $data
+ * @param <type> $id_compra_proveedor
+ * @param <type> $peso_por_arpilla
+ */
 function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = null, $peso_por_arpilla = null) {
 
 
@@ -612,6 +656,8 @@ function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = 
 
 /**
  *
+ * Realiza un compra de parte de la sucursal al centro de distribucion
+ *
  * 	{
  *         "productos": [
  *             {
@@ -644,7 +690,7 @@ function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = 
  *         "sucursal": "1"
  *       }
  *
- * */
+ */
 function nuevaCompraSucursal($json = null) {
 
     $data = parseJSON($json);
@@ -829,6 +875,13 @@ function nuevaCompraSucursal($json = null) {
     printf('{"success": true ,  "compra_id" : ' . $compraSucursal->getIdCompra() . ' }');
 }
 
+/**
+ *
+ * @param <type> $id_compra
+ * @param <type> $id_producto
+ * @param <type> $cantidad
+ * @param <type> $procesada
+ */
 function descontarDeInventarioMaestro($id_compra, $id_producto, $cantidad, $procesada) {
     Logger::log("Descontando " . $cantidad . " de (" . $id_compra . "," . $id_producto . ") de inventario maestro");
     DAO::transBegin();
@@ -874,6 +927,12 @@ function descontarDeInventarioMaestro($id_compra, $id_producto, $cantidad, $proc
     DAO::transEnd();
 }
 
+/**
+ *
+ * @param <type> $data
+ * @param <type> $sucursal
+ * @return CompraSucursal
+ */
 function insertarCompraSucursal($data = null, $sucursal = null) {
 
     Logger::log("Iniciando proceso de compra sucursal");
@@ -916,6 +975,12 @@ function insertarCompraSucursal($data = null, $sucursal = null) {
     return $compra_sucursal;
 }
 
+/**
+ *
+ * @param <type> $data
+ * @param <type> $id_compra
+ * @return <type>
+ */
 function ingresarDetalleCompraSucursal($data = null, $id_compra) {
 
     Logger::log("Creacion de detalle compra sucursal de compra " . $id_compra);
@@ -968,6 +1033,12 @@ function ingresarDetalleCompraSucursal($data = null, $id_compra) {
     return;
 }
 
+/**
+ *
+ * @param <type> $data
+ * @param <type> $sucursal
+ * @param <type> $id_compra
+ */
 function ingresarAutorizacion($data = null, $sucursal = null, $id_compra = null) {
 
     Logger::log("Iniciando proceso de ingreso de autorizacion en transito");
@@ -1151,7 +1222,8 @@ function comprasDeSucursalSinSaldar($sid = null, $need_the_items = true) {
 }
 
 /**
- * 
+ * Realiza una compra a un cliente desde el mostrador de las sucursal
+ *
  * {
  *     id_cliente : int,
  *     tipo_compra : enum('credito','contado'),
@@ -1384,6 +1456,242 @@ function nuevaCompraCliente($args = null) {
     DAO::transEnd();
 }
 
+
+/**
+ * Realiza una compra desde el mostrador de la sucursal a un proveedor
+ * 
+ * {
+ *     id_proveedor : int
+ *     tipo_pago : enum('efectivo','cheque','tarjeta')
+ *     tipo_compra : enum('credito','contado')
+ *     productos :[
+ *         {
+ *             id_producto : int
+ *             cantidad : float
+ *             costo : float
+ *         }
+ *     ]   
+ * }
+ * 
+ */
+function nuevaCompraSucursalProveedor($args = null){
+
+    Logger::log("Iniciando proceso de compra a cliente");
+
+    if (!isset($args['data'])) {
+        Logger::log("Sin parametros para realizar la compra");
+        die('{"success": false, "reason": "No hay parametros para realizar la compra." }');
+    }
+
+    try {
+        $data = parseJSON($args['data']);
+    } catch (Exception $e) {
+        Logger::log("json invalido para realizar la compra : " . $e);
+        die('{"success": false, "reason": "Parametros invalidos." }');
+    }
+
+    if ($data == null) {
+        Logger::log("el parseo del json de la compra resulto en un objeto nulo");
+        die('{"success": false, "reason": "Parametros invalidos. El objeto es nulo." }');
+    }
+
+    //verificamos que se manden todos los parametros necesarios
+    if (!( isset($data->id_proveedor) && isset($data->tipo_compra) && isset($data->productos) )) {
+        Logger::log("Falta uno o mas parametros");
+        die('{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }');
+    }
+
+    //verificar que $data->items  sea un array
+    if (!is_array($data->productos)) {
+        Logger::log("data -> productos no es un array de productos");
+        die('{"success": false, "reason": "No se generaron correctamente las descripciones de los productos para la venta." }');
+    }
+
+    //verificamos que $data->items almenos tenga un producto
+    if (count($data->productos) <= 0) {
+        Logger::log("data -> items no contiene ningun producto");
+        die('{"success": false, "reason": "No se envio ningun producto para generar una nueva venta." }');
+    }
+
+    //verificamos que el proveedor exista
+    if (!( $proveedor = ProveedorDAO::getByPK($data->id_proveedor) )) {
+        Logger::log("No se tiene registro del proveedor : " . $data->cliente);
+        die('{"success": false, "reason": "No se tiene registro del proveedor ' . $data->id_proveedor . '." }');
+    }
+
+    //creamos la compra
+
+    $compra = new CompraCliente();
+    $compra->setIdCliente($cliente->getIdCliente());
+    $compra->setTipoCompra($data->tipo_compra);
+    $compra->setTipoPago($data->tipo_pago);
+    $compra->setSubtotal(0);
+
+    //TODO: creo qeu seria buena idea relacionar las compras o ventas con otras tablas para manejar los impuestos
+    //ya que segun yo puede haber mas de un impuesto
+    $compra->setImpuesto("0");
+
+    //TODO : No entiendo muy bien para que habria un descuento aqui, si en el detalel de la compra se manejan los descuentos
+    $compra->setDescuento("0");
+
+    $compra->setTotal("0");
+    $compra->setIdSucursal($_SESSION['sucxursal']);
+    $compra->setIdUsuario($_SESSION['userid']);
+    $compra->setPagado("0");
+    $compra->setCancelada("0");
+    $compra->setIp($_SERVER['REMOTE_ADDR']);
+    $compra->setLiquidada(false);
+
+    DAO::transBegin();
+
+    try {
+        CompraCliente::save($compra);
+    } catch (Exception $e) {
+        Logger::log("Error al guardar la nueva compra:" . $e);
+        DAO::transRollback();
+        die('{"success": false, "reason": "Error" }');
+    }
+
+    /*
+     * Condensamos los productos
+     * iteramos el array de productos enviado ($data -> productos) e insertandolos en otro array, este nuevo array contiene objetos
+     * antes de insertar un nuevo producto de
+     * $data -> productos antes revisamos que no haya un producto con el mismo id, y de haberlo sumamos las cantidades del producto
+     * para que solo haya un mismo producto a la ves y asi pudiendo consegir un solo registro de un mismo producto con cantidaddes
+     * de producto procesado o sin procesar.
+     */
+
+    $array_items = array();
+    //insertamos el primer producto de item
+
+    $item = new stdClass();
+    $item->id_producto = $data->productos[0]->id_producto;
+
+    if ($data->productos[0]->cantidad <= 0) {
+        Logger::log("La cantidad de los productos debe ser mayor que cero.");
+        die('{"success": false, "reason": "La cantidad de los productos debe ser mayor que cero." }');
+    }
+
+    if ($data->productoss[0]->precio <= 0) {
+        Logger::log("El precio de los productos debe ser mayor que cero.");
+        die('{"success": false, "reason": "El precio de los productos debe ser mayor que cero." }');
+    }
+
+
+    $item->cantidad = $data->productos[0]->cantidad;
+    $item->precio = $data->productos[0]->precio;
+    $item->descuento = $data->productos[0]->descuento;
+
+
+    //insertamos el primer producto
+    array_push($array_items, $item);
+
+    //recorremos a $data->items para condensar el array de productos
+    for ($i = 1; $i < count($data->productos); $i++) {
+
+        if ($data->productos[$i]->cantidad <= 0) {
+            Logger::log("La cantidad de los productos debe ser mayor que cero.");
+            die('{"success": false, "reason": "La cantidad de los productos debe ser mayor que cero." }');
+        }
+
+        if ($data->productos[$i]->precio <= 0) {
+            Logger::log("El precio de los productos debe ser mayor que cero.");
+            die('{"success": false, "reason": "El precio de los productos debe ser mayor que cero." }');
+        }
+
+        //bandera para verificar si el producto no esta dentro de array_items
+        $found = false;
+
+        //iteramos el array_items y lo comparamos cada elementod e el con el producto actual
+        foreach ($array_items as $item) {
+
+            //comparamos haber si ya existe el producto en array_items
+            if ($data->productos[$i]->id_producto == $item->id_producto) {
+
+                $found = true;
+
+                //(el producto se encontro) y es un producto procesado
+                $item->cantidad += $data->productos[$i]->cantidad;
+                $item->precio += $data->productos[$i]->precio;
+                $item->descuento += $data->productos[$i]->descuento;
+            }
+        }//for each del array_items
+
+        if (!$found) {
+
+            //si no se encuentra el producto en el arreglo de objetos hay que crearlo
+            $_item = new stdClass();
+            $_item->id_producto = $data->productos[$i]->id_producto;
+            $_item->cantidad = $data->productos[$i]->cantidad;
+            $_item->precio = $data->productos[$i]->precio;
+            $_item->descuento = $data->productos[$i]->descuento;
+
+            array_push($array_items, $_item);
+        }
+    }//for de $data->items
+
+
+    $descuento = 0;
+    $subtotal = 0;
+
+    //realizamos calculos
+    foreach ($array_items as $producto) {
+
+        $detalle_compra = new DetalleCompraCliente();
+
+        $detalle_compra->setIdCompra($compra->getIdCompra());
+        $detalle_compra->setIdProducto($producto->id_producto);
+        $detalle_compra->setCantidad($producto->cantidad);
+        $detalle_compra->setPrecio($producto->precio);
+        $detalle_compra->setDescuento($producto->descuento);
+
+        $descuento += $detalle_compra->getDescuento();
+        $subtotal = ($detalle_compra->getCantidad() * $detalle_compra->getPrecio());
+
+        try {
+            DetalleCompraCliente::save($detalle_compra);
+        } catch (Exception $e) {
+            Logger::log("Error al guardar el detalle de la compra:" . $e);
+            DAO::transRollback();
+            die('{"success": false, "reason": "Error" }');
+        }
+    }
+
+    //actualizamos los datos de la compra
+
+    $compra->setSubtotal($subtotal);
+    $compra->setTotal(($compra->getSubtotal() - ( $cliente->getDescuento() * $compra->getSubtotal() / 100 )) + $compra->getImpuesto());
+
+    //saldamos la compra en caso de ser compra en efectivo
+    if ($compra->getTipoCompra() == "efectivo") {
+
+        $compra->setPagado($compra->setTotal($total));
+
+        $compra->setLiquidada("1");
+
+        //si paga con un cheque descontarlo de la cuenta de cheques
+        if ($compra->getTipoPago() == "cheque") {
+            //TODO: Crear algo para manejar los pagos con cheques
+        }
+    }
+
+    //actualizamos los datos de la compra
+    try {
+        CompraCliente::save($compra);
+    } catch (Exception $e) {
+        Logger::log("Error al guardar la nueva compra:" . $e);
+        DAO::transRollback();
+        die('{"success": false, "reason": "Error" }');
+    }
+
+    $empleado = UsuarioDAO::getByPK($_SESSION['userid']);
+
+    printf('{"success": true, "id_compra":%s, "empleado":"%s"}', $compra->getIdCompra(), $empleado->getNombre());
+
+    DAO::transEnd();
+    
+}
+
 if (isset($args['action'])) {
     switch ($args['action']) {
 
@@ -1446,8 +1754,13 @@ if (isset($args['action'])) {
             break;
 
         case 1006:
-            //compra a clente
+            //Realiza una compra a un cliente desde el mostrador de las sucursal
             nuevaCompraCliente($args);
+            break;
+
+        case 1007:
+            //Realiza una compra de parte de la sucursal hacia un proveedor
+            nuevaCompraSucursalProveedor($args);
             break;
 
         default:

@@ -500,7 +500,7 @@ function vender($args) {
         } catch (Exception $e) {
             DAO::transRollback();
             Logger::log("Error, al descontar el pedido de productos del inventario de la sucursal, exception : " . $e);
-            die('{"success": false, "reason": "Error, al descontar el pedido de productos del inventario de la sucursal" }');
+            die('{"success": false, "reason": "Error, al descontar el pedido de productos del inventario de la sucursal.}');
         }
     }
 

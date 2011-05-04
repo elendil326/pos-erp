@@ -491,6 +491,23 @@ class Comprobante {
         $url_encoded = str_replace("&lt;", "<", $this->getXMLrequest());
         $url_encoded = str_replace("&gt;", ">", $url_encoded);
 
+
+
+        //-----------------------------------
+
+        $dom = new DOMDocument('1.0', 'utf-8');
+
+        $element = $dom->createElement('factura', $url_encoded);
+
+        // Insertamos el nuevo elemento como raíz (hijo del documento)
+        $dom->appendChild($element);
+
+        echo $dom->saveXML();
+
+        //------------------------------------
+
+
+
         //realiza la peticion al webservice
         $result = $client->RececpcionComprobante(array('comprobante' => $url_encoded));
 
@@ -498,7 +515,7 @@ class Comprobante {
 
         if (is_soap_fault($result)) {
             trigger_error("La llamada al webservice ha fallado", E_USER_ERROR);
-        }        
+        }
 
         //analizamos el success del xml
 
@@ -536,8 +553,22 @@ class Comprobante {
         $this->setXMLresponse($xml_response->saveXML());
 
         $this->success = new Success($this->getError());
-        return $this->success;
 
+
+        //-----------------------------------
+
+        /*$dom = new DOMDocument('1.0', 'utf-8');
+
+        $element = $dom->createElement('factura', $result->RececpcionComprobanteResult);
+
+        // Insertamos el nuevo elemento como raíz (hijo del documento)
+        $dom->appendChild($element);
+
+        echo $dom->saveXML();*/
+
+        //------------------------------------    
+
+        return $this->success;
     }
 
     /**
