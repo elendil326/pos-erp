@@ -167,6 +167,9 @@ class Logger
         $out .= " | " . $_SERVER["REMOTE_ADDR"];
 
         
+        if(isset($_SESSION["INSTANCE_ID"])){
+            $out .= " | INSTANCE:" . $_SESSION["INSTANCE_ID"];
+        }
 
 
         if(isset($_SESSION['userid'])){

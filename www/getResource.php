@@ -3,9 +3,7 @@
 if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandler"); else ob_start();
 
 //requerir la configuracion
-require ( "../server/config.php" );
-
-require_once('logger.php');
+require ( "../server/bootstrap.php" );
 
 require_once('controller/login.controller.php');
 
@@ -112,7 +110,6 @@ switch($module)
         if(isset($_SESSION['grupo'])){
         	echo "POS.U.g = " . (($_SESSION['grupo'] == 2) ? "true" : "false" ) . ";";	
 			echo "POS.CHECK_DB_TIMEOUT = ".HEARTBEAT_INTERVAL.";";
-
 		}
 
 			

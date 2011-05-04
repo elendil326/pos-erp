@@ -4,9 +4,6 @@
 	require_once("model/cliente.dao.php");
 	require_once("model/compra_cliente.dao.php");
 	require_once("model/detalle_compra_cliente.dao.php");
-	
-
-	
 ?>
 
 

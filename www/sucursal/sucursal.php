@@ -1,4 +1,8 @@
-<!doctype html>
+<?php
+
+	require_once( "../../server/bootstrap.php" );
+
+?><!doctype html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
@@ -15,8 +19,8 @@
 		}
 		</script>
 
-	    <link rel="stylesheet" href="../frameworks/sencha/resources/css/sencha-touch.css" type="text/css">
-	    <script type="text/javascript" src="../frameworks/sencha/sencha-touch.js"></script>
+	    <link rel="stylesheet" href="http://api.caffeina.mx/sencha-touch-1.0.1a/resources/css/sencha-touch.css" type="text/css">
+	    <script type="text/javascript" src="http://api.caffeina.mx/sencha-touch-1.0.1a/sencha-touch.js"></script>
 	
 		<!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script> -->
 

@@ -1,9 +1,11 @@
 <?php 
-    require_once('../../server/config.php'); 
+	require_once('../../server/bootstrap.php');
+
+
 ?><!DOCTYPE html>
 <html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>Punto de venta | Administracion</title>
+    <title>Caffeina POS</title>
 	
     <style>
         html,body,div,h1,h2,h3,h4,h5,h6,p,pre,abbr,acronym,blockquote,img,dl,dt,dd,ol,ul,li,table,caption,tbody,tfoot,thead,tr,th,td,form,fieldset,embed,object,applet {

@@ -249,7 +249,7 @@ if($venta->getTipoVenta() == 'credito'){
 <script>
 	<?php
 		//please print
-		if($_REQUEST["pp"]){
+		if(isset($_REQUEST["pp"]) && $_REQUEST["pp"]){
 			?>
 				Ext.Msg.confirm("Surtir sucursal",
 				"Venta exitosa. &iquest; Desea imprimir un comprobante ?",

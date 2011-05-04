@@ -12,17 +12,20 @@
 
 
 
-require_once('config.php');
+require_once('bootstrap.php');
 
-require_once('logger.php');
 
+if( isset($_GET['action'])  && ($_GET['action'] == 666) ){
+	var_dump($_SESSION);
+	die();
+}
 
 
 //Comprobamos que la variable que trae la funcion a ejecutar exista y despues 
 //entramos al switch.
 if ( !isset($_REQUEST['action']) )
 {
-	echo "{ \"success\": false , \"reason\" : \"Invalid method call for dispatching.\" }";
+	echo '{ "success": false , "reason" : "Invalid method call for dispatching." }';	
     Logger::log("Invalid method call for dispatching. No hay action en el request.");
     return;
 }
@@ -58,7 +61,7 @@ unset($_GET);
 
 
 if( $args['action'] != 1101 ){
-	Logger::log("Iniciando peticion (".$args['action'].") !");	
+	Logger::log("Request for action ".$args['action']." ");	
 }
 
 

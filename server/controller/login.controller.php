@@ -6,7 +6,6 @@ require_once("model/grupos.dao.php");
 require_once("model/sucursal.dao.php");
 require_once("model/equipo.dao.php");
 require_once("model/equipo_sucursal.dao.php");
-require_once("logger.php");
 
 
 
@@ -197,6 +196,8 @@ function logOut( $verbose = true  )
     else
         Logger::log("Cerrando sesion generica");
 
+
+
     if($verbose){
         if(isset($_SESSION['grupo'])){
             if($_SESSION['grupo'] <= 1)	
@@ -208,10 +209,21 @@ function logOut( $verbose = true  )
         }
     }
 
-    
-    
 
-    session_unset ();
+	//por alguna razon, usar session_unset
+	//no me deja volver a poner el valor de 
+	//la instancia de nuevo en la sesion
+	//asi que es mejor si borro individualmente
+	//cada una
+	
+    //session_unset ();
+
+    unset($_SESSION['ip']);
+    unset($_SESSION['pass']);
+    unset($_SESSION['ua']);
+	unset($_SESSION['grupo']);
+	unset($_SESSION['userid']);
+	unset($_SESSION['sucursal']);
 
 }
 
@@ -317,7 +329,7 @@ function sucursalTest( ){
 
 
 function dispatch($args){
-	Logger::log("Dispatching route for user group {$_SESSION['grupo']}");
+	Logger::log("Dispatching route for user group {$_SESSION['grupo']} and instance {$_SESSION['INSTANCE_ID']}");
 	if(!isset($_SESSION['grupo'])){
 		die( "Accesso no autorizado." );
 	}
@@ -328,14 +340,14 @@ function dispatch($args){
 		die( "Acceso no autorizado." );		
 	}
 	
-	$debug = isset($args['DEBUG']) ? "?debug" : "";
+	$debug = isset($args['DEBUG']) ? "&debug" : "";
 
 
 	switch($_SESSION['grupo']){
-		case "1" : echo "<script>window.location = 'admin/".$debug."'</script>"; break;
-		case "2" : echo "<script>window.location = 'sucursal/sucursal.html".$debug."'</script>"; break;
-		case "3" : echo "<script>window.location = 'sucursal/sucursal.html".$debug."'</script>"; break;
-        case "0" : echo "<script>window.location = 'ingenieria/".$debug."'</script>"; break;
+		case "1" : echo "<script>window.location = 'admin/?i=" . $_SESSION["INSTANCE_ID"] .$debug."'</script>"; break;
+		case "2" : echo "<script>window.location = 'sucursal/sucursal.php?i=" . $_SESSION["INSTANCE_ID"] .$debug."'</script>"; break;
+		case "3" : echo "<script>window.location = 'sucursal/sucursal.php?i=" . $_SESSION["INSTANCE_ID"] .$debug."'</script>"; break;
+        case "0" : echo "<script>window.location = 'ingenieria/?i=" . $_SESSION["INSTANCE_ID"] .$debug."'</script>"; break;
 	}
 }
 

@@ -1,4 +1,8 @@
-<html>
+<?php
+
+	require_once( "../../server/bootstrap.php" );
+
+?><html>
 <head>
 	<title>Punto de Venta</title>
 	

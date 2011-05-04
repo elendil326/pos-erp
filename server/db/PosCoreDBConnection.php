@@ -21,15 +21,15 @@ require_once('adodb5/adodb.inc.php');
 */
 require_once('adodb5/adodb-exceptions.inc.php');
 
-$conn = null;
+$core_conn = null;
 
 try{
 
-    $conn = ADONewConnection(DB_DRIVER);
-    $conn->debug = DB_DEBUG;
-    $conn->PConnect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+    $core_conn = ADONewConnection(POS_CORE_DB_DRIVER);
+    $core_conn->debug = POS_CORE_DB_DEBUG;
+    $core_conn->PConnect(POS_CORE_DB_HOST, POS_CORE_DB_USER, POS_CORE_DB_PASSWORD, POS_CORE_DB_NAME);
 
-    if(!$conn) {
+    if(!$core_conn) {
 
 	    die( '{ "success" : false, "reason" : "NO_DB" }' );	
     }
