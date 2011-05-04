@@ -362,13 +362,15 @@ public class Producto {
 
                 if (entry.getKey().toString().equals("tratamiento")) {
 
-                    try {
-                        this.setTratamiento(entry.getValue().toString());
-                        if (debug) {
-                            System.out.println("tratamiento : " + this.getTratamiento());
+                    if (entry.getValue() != null) {
+                        try {
+                            this.setTratamiento(entry.getValue().toString());
+                            if (debug) {
+                                System.out.println("tratamiento : " + this.getTratamiento());
+                            }
+                        } catch (Exception e) {
+                            System.err.println(e);
                         }
-                    } catch (Exception e) {
-                        System.err.println(e);
                     }
                 }
 
@@ -413,7 +415,7 @@ public class Producto {
                     try {
                         this.setPrecioVentaIntersucursal(Float.parseFloat(entry.getValue().toString()));
                         if (debug) {
-                            System.out.println("precioVentaIntersucursal : " + this.getPrecioVentaIntersucursal());
+                            System.out.println("precioIntersucursal : " + this.getPrecioVentaIntersucursal());
                         }
                     } catch (Exception e) {
                         System.err.println(e);
@@ -424,7 +426,7 @@ public class Producto {
                     try {
                         this.setPrecioVentaIntersucursalSinProcesar(Float.parseFloat(entry.getValue().toString()));
                         if (debug) {
-                            System.out.println("precioVentaIntersucursalSinProcesar : " + this.getPrecioVentaIntersucursal());
+                            System.out.println("precioIntersucursalSinProcesar : " + this.getPrecioVentIntersucursalSinProcesar());
                         }
                     } catch (Exception e) {
                         System.err.println(e);
@@ -489,8 +491,8 @@ public class Producto {
             //iniciamos al validacion de al construccion de producto
             this.validator();
 
-        } catch (Exception pe) {            
-                System.err.println(pe);
+        } catch (Exception pe) {
+            System.err.println(pe);
         }
     }
 
@@ -515,14 +517,15 @@ public class Producto {
         }
 
 
-        if (this.getTratamiento() != null) {
-            if (debug) {
-                //System.out.println("tratamiento : ok - " + this.getTratamiento());
-            }
-        } else {
-            System.err.println("tratamiento : fail - " + this.getTratamiento());
-            cont++;
+        //COMENTO ESTO POR QUE NO TODOS LOS PRODUCTOS TIENEN UN TRATAMIENTO
+        /*if (this.getTratamiento() != null) {
+        if (debug) {
+        //System.out.println("tratamiento : ok - " + this.getTratamiento());
         }
+        } else {
+        System.err.println("tratamiento : fail - " + this.getTratamiento());
+        cont++;
+        }*/
 
 
         if (this.getPrecioVenta() > 0) {

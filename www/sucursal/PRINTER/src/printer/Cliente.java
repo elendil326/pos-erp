@@ -36,7 +36,6 @@ public class Cliente {
      * Variable que sirve para controlar las impresiones que facilitan la depuracion
      */
     static boolean debug = false;
-
     /**
      * JSON que contiene la configuracion del producto
      */
@@ -209,7 +208,7 @@ public class Cliente {
 
                     this.setRazonSocial(entry.getValue().toString());
                     if (debug) {
-                        System.out.println("nombre : " + this.getRazonSocial());
+                        System.out.println("razon_social : " + this.getRazonSocial());
                     }
 
                 }
@@ -223,24 +222,24 @@ public class Cliente {
                 }
 
 
-                if (entry.getKey().toString().equals("direccion")) {
+                /*if (entry.getKey().toString().equals("direccion")) {
 
-                    this.setDireccion(entry.getValue().toString());
-                    if (debug) {
-                        System.out.println("direccion : " + this.getDireccion());
-                    }
+                this.setDireccion(entry.getValue().toString());
+                if (debug) {
+                System.out.println("direccion : " + this.getDireccion());
+                }
 
                 }
 
 
                 if (entry.getKey().toString().equals("ciudad")) {
 
-                    this.setCiudad(entry.getValue().toString());
-                    if (debug) {
-                        System.out.println("ciudad : " + this.getCiudad());
-                    }
-
+                this.setCiudad(entry.getValue().toString());
+                if (debug) {
+                System.out.println("ciudad : " + this.getCiudad());
                 }
+
+                }*/
 
                 if (entry.getKey().toString().equals("limite_credito")) {
 
@@ -262,11 +261,12 @@ public class Cliente {
 
                 if (entry.getKey().toString().equals("descuento")) {
 
-                    this.setDescuento(Float.parseFloat(entry.getValue().toString()));
-                    if (debug) {
-                        System.out.println("this.descuento : " + this.getDescuento());
+                    if (entry.getValue() != null) {
+                        this.setDescuento(Float.parseFloat(entry.getValue().toString()));
+                        if (debug) {
+                            System.out.println("descuento : " + this.getDescuento());
+                        }
                     }
-
                 }
 
             }//while

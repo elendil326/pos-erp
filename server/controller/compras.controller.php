@@ -1496,7 +1496,7 @@ function nuevaCompraSucursalProveedor($args = null){
     }
 
     //verificamos que se manden todos los parametros necesarios
-    if (!( isset($data->id_proveedor) && isset($data->tipo_compra) && isset($data->productos) )) {
+    if (!( isset($data->id_proveedor) && isset($data->tipo_pago) && isset($data->tipo_compra) && isset($data->productos) )) {
         Logger::log("Falta uno o mas parametros");
         die('{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }');
     }
@@ -1518,6 +1518,8 @@ function nuevaCompraSucursalProveedor($args = null){
         Logger::log("No se tiene registro del proveedor : " . $data->cliente);
         die('{"success": false, "reason": "No se tiene registro del proveedor ' . $data->id_proveedor . '." }');
     }
+
+
 
     //creamos la compra
 

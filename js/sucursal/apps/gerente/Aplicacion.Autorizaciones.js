@@ -1372,7 +1372,29 @@ Aplicacion.Autorizaciones.prototype.finishedPanelUpdater = function( productos, 
     html += "</table>";
 
 	
-    html += "<iframe src ='PRINTER/src/impresion.php?json=" + json + "' width='0px' height='0px'></iframe> ";
+    //html += "<iframe src ='PRINTER/src/impresion.php?json=" + json + "' width='0px' height='0px'></iframe> ";
+
+    hora = new Date()
+    var dia = hora.getDate();
+    var mes = hora.getMonth();
+    var anio = hora.getFullYear();
+    horas = hora.getHours()
+    minutos = hora.getMinutes()
+    segundos = hora.getSeconds()
+    if (mes <= 9) mes = "0" + mes
+    if (horas >= 12) tiempo = " p.m."
+    else tiempo = " a.m."
+    if (horas > 12) horas -= 12
+    if (horas == 0) horas = 12
+    if (minutos <= 9) minutos = "0" + minutos
+    if (segundos <= 9) segundos = "0" + segundos
+
+    html += ''
+    +'<applet code="printer.Main" archive="PRINTER/dist/PRINTER.jar" WIDTH=0 HEIGHT=0>'
+    +'     <param name="json" value="'+ json +'">'
+    +'     <param name="hora" value="' + horas + ":" + minutos + ":" + segundos + tiempo + '">'
+    +'     <param name="fecha" value="' + dia +"/"+ (hora.getMonth() + 1) +"/"+ anio + '">'
+    +' </applet>';
 	
     //actualiza el panel de la impresion
     this.finishedPanel.update(html);

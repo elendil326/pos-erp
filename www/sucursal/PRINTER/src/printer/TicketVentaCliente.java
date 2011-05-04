@@ -286,7 +286,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
             while (iter.hasNext()) {
 
                 Map.Entry entry = (Map.Entry) iter.next();
-                
+
                 if (entry.getKey().toString().equals("tipo_venta")) {
 
                     if (entry.getValue() != null && entry.getValue() != "") {
@@ -312,11 +312,11 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                         try {
                             this.setDineroRecibido(Float.parseFloat(entry.getValue().toString()));
-                            
+
                             if (debug) {
                                 System.out.println("dineroRecibido : " + this.getDineroRecibido());
                             }
-                            
+
                         } catch (Exception e) {
                             System.err.print(e);
                         }
@@ -552,24 +552,26 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
         if (this.getDineroRecibido() == -1) {
 
-            if (this.getTipoPago().equals("cheque")) {
-                this.setDineroRecibido(this.getTotal());
-            } else {
-                System.err.print("Error : No se definio dineroRecibido (pagado). El tipo de pago es : " + this.getTipoPago());
-                cont++;
+            if (this.getTipoPago() != null) {
+                if (this.getTipoPago().equals("cheque")) {
+                    this.setDineroRecibido(this.getTotal());
+                } else {
+                    System.err.print("Error : No se definio dineroRecibido (pagado). El tipo de pago es : " + this.getTipoPago());
+                    cont++;
+                }
             }
 
         }
 
-        if (this.getIdVenta() == null) {
-            System.err.println("Error : No se definio el id_venta");
-            cont++;
+        /*if (this.getIdVenta() == null) {
+        System.err.println("Error : No se definio el id_venta");
+        cont++;
         }
 
         if (this.getEmpleado() == null) {
-            System.err.println("Error : No se definio el empleado responsable");
-            cont++;
-        }
+        System.err.println("Error : No se definio el empleado responsable");
+        cont++;
+        }*/
 
         if (cont > 0) {
             System.err.println("Terminado proceso de validacion de venta a cliente. se encontraron " + cont + " errores.");
