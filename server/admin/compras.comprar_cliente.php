@@ -188,14 +188,16 @@ if(!isset($_REQUEST['cid'])){
 		
 		var objToSend = {
 			id_cliente : parseInt(jQuery("#cliente_selector").val()),
-			items : []
+			tipo_compra : "contado",
+			tipo_pago	: "efectivo",
+			productos : []
 		};
 		
 		for (var i=0; i < carritoDeCompra.length; i++) {
 			
 			id = carritoDeCompra[i].id_producto;
 
-			objToSend.items.push({
+			objToSend.productos.push({
 				id_producto : id,
 				cantidad 	: parseFloat(jQuery("#item-cantidad-"+id).val()),
 				precio 		: parseFloat(jQuery("#item-precio-"+id).val()),
@@ -214,7 +216,7 @@ if(!isset($_REQUEST['cid'])){
 	        jQuery.ajax({
 	        url: "../proxy.php",
 	        data: { 
-	            action : 1007, 
+	            action : 1006, 
 	            data : jQuery.JSON.encode( objToSend ),
 	        },
 	        cache: false,
