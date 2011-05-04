@@ -215,10 +215,15 @@ public class Cliente {
 
                 if (entry.getKey().toString().equals("rfc")) {
 
-                    this.setRFC(entry.getValue().toString());
-                    if (debug) {
-                        System.out.println("rfc : " + this.getRFC());
+                    if (entry.getValue() != null) {
+                        this.setRFC(entry.getValue().toString());
+                        if (debug) {
+                            System.out.println("rfc : " + this.getRFC());
+                        }
+                    }else{
+                        this.setRFC("");
                     }
+
                 }
 
 
@@ -266,6 +271,8 @@ public class Cliente {
                         if (debug) {
                             System.out.println("descuento : " + this.getDescuento());
                         }
+                    } else {
+                        this.setDescuento(0);
                     }
                 }
 
