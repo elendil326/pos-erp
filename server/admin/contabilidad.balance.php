@@ -11,9 +11,11 @@ require_once('model/corte.dao.php');
 ?>
 
 
-<h2><img src='../media/icons/window_app_list_chart_32.png'>&nbsp;Flujo de efectivo desde el ultimo corte</h2>
+<h2>Flujo de efectivo desde el ultimo corte</h2>
 
-
+<script>
+	jQuery("#MAIN_TITLE").html("Balance");
+</script>
 <?php
 
 function renderUsuario($var) {
@@ -41,7 +43,11 @@ $cortes = CorteDAO::getAll(1, 1, 'fecha', 'desc');
 
 
 if (sizeof($cortes) == 0) {
-    echo "<div align=center>No se han hecho cortes en esta sucursal. Mostrando flujo desde la apertura de sucursal.</div><br>";
+    if(POS_MULTI_SUCURSAL){
+		echo "<div class='light-blue-rounded' >No se han hecho cortes en esta sucursal. Mostrando flujo desde la apertura de sucursal.</div><br>";
+	}else{
+		echo "<div class='light-blue-rounded' >No se han hecho cortes. Mostrando flujo desde la apertura.</div><br>";
+	}
 
     $fecha = $sucursal->getFechaApertura();
 } else {
@@ -224,34 +230,33 @@ foreach ($flujo as $f) {
     $enCaja += $f['monto'];
 }
 
-echo "<div align=right><h3>Total en caja: " . moneyFormat($enCaja) . "</h3></div>";
-?>
-
-
-<h2>Total de compras</h2>
-
-<?php echo "<div align=right><h3>" . moneyFormat($total_compras) . "</h3></div>"; ?>
-
-<h2>Total de ventas</h2>
-
-<?php echo "<div align=right><h3>" . moneyFormat($total_ventas) . "</h3></div>"; ?>
-
-<h2>Total de bancos</h2>
-
-<?php 
-
-$total_bancos = 0;
-
-echo "<div align=right><h3>" . moneyFormat($total_bancos) . "</h3></div>"; 
 
 ?>
+<div align=center style="margin-top: 15px">
+	<div  class='blue-rounded' style='width: 300px;'>Saldo <?php echo moneyFormat($enCaja); ?> pesos </div>
+</div>
 
-<h2>Total de efectivo</h2>
 
-<?php 
 
-$total_efectivo = 0;
+<table style="margin-top:50px; width:100%">
+	<tr>
+		<td class="light-blue-rounded">
+			<b>Total en compras</b>
+			<?php echo moneyFormat($total_compras); ?>
+		</td>
+		<td class="light-blue-rounded">
+			<b>Total en ventas</b>
+			<?php echo moneyFormat($total_ventas); ?>
+		</td>
+		<td class="light-blue-rounded">
+			<b>Total en bancos</b>
+			<?php echo moneyFormat(0); ?>
+		</td>
+		<td class="light-blue-rounded">
+			<b>Total en efectivo</b>
+			<?php echo moneyFormat($total_compras); ?>
+		</td>
+	</tr>
 
-echo "<div align=right><h3>" . moneyFormat($total_efectivo) . "</h3></div>"; 
+	</table>
 
-?>
