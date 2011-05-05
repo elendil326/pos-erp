@@ -55,9 +55,16 @@
 		<LI class="drop">
 			<A >VENTAS</A>
 				<ul class="nav sub">
-				<li >
-				  <a  href="ventas.php?action=vender">Realizar venta</a>
-				</li>
+					<?php if(POS_MULTI_SUCURSAL){ ?>
+						<li >
+						  <a  href="ventas.php?action=vender">Realizar venta</a>
+						</li>
+					<?php } else { ?>
+						<li >
+						  <a  href="ventas.php?action=vender_simple">Realizar venta</a>
+						</li>
+					<?php }  ?>						
+
 				<li>
 				  <a  href="ventas.php?action=lista">Ver ventas</a>
 				</li>
@@ -74,6 +81,7 @@
 			  </ul>
 		</LI>
 		
+		<?php if(POS_MULTI_SUCURSAL) {?>
 		<LI class="drop">
 			<A href="autorizaciones.php?action=historial">AUTORIZACIONES</A>
 			<!--
@@ -87,6 +95,8 @@
 		  </ul>
 		-->
 		</LI>
+		<?php } ?>
+		
 		
 		<?php if(POS_MODULO_CONTABILIDAD) {?>
 		<LI class="drop">
@@ -125,21 +135,19 @@
 		  </ul>			
 		</LI>
 		
+		
 		<LI class="drop">
 			<A  href="inventario.php?action=maestro">INVENTARIO</A>
 			  <ul class="nav sub">
 				<li >
 				  <a href="inventario.php?action=maestro">Inventario maestro</a>
 				</li>
-				<?php
-				if(POS_MULTI_SUCURSAL){
-					?>
-					<li >
-					  <a href="inventario.php?action=lista">Inventario de sucursales</a>
-					</li>
-					<?php
-				}
-				?>
+
+				<?php if(POS_MULTI_SUCURSAL){ ?>
+				<li >
+				  <a href="inventario.php?action=lista">Inventario de sucursales</a>
+				</li>
+				<?php } ?>
 
 
 				<li>

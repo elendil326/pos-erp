@@ -1,5 +1,8 @@
 cf = function (num){
 
+	if(num == null)
+		num = 0;
+
 	num = num.toString().replace(/\$|\,/g,'');
 	if(isNaN(num)){
 		num = "0";
