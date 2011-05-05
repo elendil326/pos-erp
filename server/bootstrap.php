@@ -127,7 +127,9 @@
 
 	define("POS_MULTI_SUCURSAL", 	$rs['multi_sucursal']);
 	define("POS_COMPRA_A_CLIENTES", $rs['compra_a_clientes']);
-	
+	define("POS_MODULO_CONTABILIDAD", $rs['POS_MODULO_CONTABILIDAD']);
+
+		
 	require('db/DBConnection.php');
 	
 

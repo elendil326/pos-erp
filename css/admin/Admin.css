@@ -27,6 +27,23 @@
 	border-radius: 15px;
 	padding: 5px;
 }
+.blue-rounded{
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	padding: 5px;
+	color : white;
+	background-color : #3F8CE9;
+	text-align: center;
+}
+
+.light-blue-rounded{
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	padding: 5px;
+	background-color : #D7EAFF;
+	text-align: center;
+}
+
 /*#errorExplanation {
 color: #d95843;
 margin-top: 25px;

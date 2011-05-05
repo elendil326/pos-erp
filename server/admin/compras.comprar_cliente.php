@@ -153,12 +153,17 @@ if(!isset($_REQUEST['cid'])){
 			//precio total para comprar
 			final_price = 0,
 			
-			estimated_earnings_at_sell_time = 0;
+			estimated_earnings_at_sell_time = 0,
+			
+			final_weight = 0,
+			
+			//escala de los productos
+			tipo_de_producto = null;
 		
 		for (var i=0; i < carritoDeCompra.length; i++) {
 			
 			id = carritoDeCompra[i].id_producto;
-			 
+			
 			if( isNaN(jQuery("#item-cantidad-"+id).val()) || (jQuery("#item-cantidad-"+id).val().length == 0))
 				jQuery("#item-cantidad-"+id).val(0);
 			
@@ -176,7 +181,8 @@ if(!isset($_REQUEST['cid'])){
 			
 			var sub_total = (jQuery("#item-cantidad-"+id).val() - jQuery("#item-descuento-"+id).val()) * jQuery("#item-precio-"+id).val();
 			var sub_total_venta = (jQuery("#item-cantidad-"+id).val() - jQuery("#item-descuento-"+id).val()) * parseFloat(carritoDeCompra[i].precio_venta);
-			
+
+			final_weight += parseFloat(jQuery("#item-cantidad-"+id).val() - jQuery("#item-descuento-"+id).val());
 			estimated_earnings_at_sell_time += sub_total_venta;
 			final_price += sub_total;
 			
@@ -196,11 +202,25 @@ if(!isset($_REQUEST['cid'])){
 				//le ganara dinero, mostarr en verde
 				rendimiento = div( "+" + cf(rendimiento), "style='color:green'" );				
 			}
-			jQuery("#rendimeinto-rendimiento-"+ id).html(  rendimiento ) ; //rendimiento			
+			
+			jQuery("#rendimeinto-rendimiento-"+ id).html(  rendimiento ) ; //rendimiento		
+			
+			
+			if(tipo_de_producto == null){
+				tipo_de_producto = carritoDeCompra[i].escala;
+			}else{
+				if(carritoDeCompra[i].escala != tipo_de_producto){
+					//productos varios
+				}
+			}
+
 		}
 		
+		//mostrar totales del carrito
 		
-		
+		jQuery("#compra-totales-peso").html(  final_weight + " " + tipo_de_producto + "s"  )
+		jQuery("#compra-totales-importe").html(  cf(final_price)  )
+				
 		//mostrar los totales de rendimiento
 		jQuery("#rendimientos-totales-rendimiento").html(  cf(final_price-estimated_earnings_at_sell_time)  )
    
@@ -335,7 +355,7 @@ if(!isset($_REQUEST['cid'])){
 	                return ;
 	            }
 
-				window.location = "compras.php?action=detalleCompraCliente&cid=" + response.id_compra + "&pp=1";
+				window.location = "compras.php?action=detalleCompraCliente&id=" + response.id_compra + "&pp=1";
 
 	        }
 	        });
@@ -358,13 +378,19 @@ if(!isset($_REQUEST['cid'])){
         <td>Precio de compra</td>
         <td>Importe</td>  
     </tr>
+    <tr >
+        <td></td>
+        <td ></td>
+        <td class="rounded" style='background-color: #D7EAFF;' id="compra-totales-peso"></td>	
+        <td ></td>  
+        <td ></td>  
+        <td class="rounded" style='background-color: #3F8CE9; color:white ;' id="compra-totales-importe"></td>	
+    </tr>
     </table>
 </div>
 
 
-<div id="loader" 		style="display: none;" align="center"  >
-	Procesando <img src="../media/loader.gif">
-</div>
+
 
 
 
@@ -381,11 +407,14 @@ if(!isset($_REQUEST['cid'])){
 	        <td></td>
 	        <td ></td>
 	        <td ></td>  
-	        <td id="rendimientos-totales-rendimiento"></td>	
+	        <td class="rounded" style='background-color: #D7EAFF; ' id="rendimientos-totales-rendimiento"></td>	
+	 <!-- 	        <td style='border-top: 1px solid #3F8CE9;' id="rendimientos-totales-rendimiento"></td>	 -->
 	    </tr>
 	    </table>
 </div>
-
+<div id="loader" 		style="display: none;" align="center"  >
+	Procesando <img src="../media/loader.gif">
+</div>
 <div id="readyToBuy" style="display:none" align=center>
 	<h4><input type=button value="Realizar la compra" onClick="doSell()"></h4>
 </div>

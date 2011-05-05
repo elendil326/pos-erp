@@ -88,16 +88,22 @@
 		-->
 		</LI>
 		
+		<?php if(POS_MODULO_CONTABILIDAD) {?>
 		<LI class="drop">
 			<A >CONTABILIDAD</A>
 		  <ul class="nav sub">
 			<li >
 			  <a href="contabilidad.php?action=balance">Balance</a>
 			</li>
-		
-
-		  </ul>			
+			<li >
+			  <a href="contabilidad.php?action=egresos">Egresos</a>
+			</li>
+			<li >
+			  <a href="contabilidad.php?action=ingresos">Ingresos</a>
+			</li>
+		  </ul>
 		</LI>
+		<?php } ?>		
 		
 		<LI class="drop">
 			<A >PROVEEDORES</A>

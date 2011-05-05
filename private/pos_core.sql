@@ -47,9 +47,13 @@ CREATE TABLE IF NOT EXISTS `instances` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
--- Volcar la base de datos para la tabla `instances`
+-- Estructura de tabla para la tabla  `core_functionality`
 --
 
-INSERT INTO `instances` (`instance_id`, `desc`, `MAX_LIMITE_DE_CREDITO`, `MAX_LIMITE_DESCUENTO`, `PERIODICIDAD_SALARIO`, `ENABLE_GMAPS`, `DATE_FORMAT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_DRIVER`, `DB_HOST`, `DB_DEBUG`, `HEARTBEAT_METHOD_TRIGGER`, `HEARTBEAT_INTERVAL`, `POS_SUCURSAL_TEST_TOKEN`, `DEMO`) VALUES
-(1, 'PAPAS SUPREMAS', 20000, 35, 'POS_SEMANA', 1, 'j/m/y h:i:s A', 'root', '', 'pos', 'mysqlt', 'localhost', 0, 'false', '5000', 'FULL_UA', 1),
-(2, 'REMESA', 5000, 20, '', 1, 'j/m/y h:i:s A', 'root', '', 'pos-fierros', 'mysqlt', 'localhost', 0, 'false', '5000', 'FULL_UA', 0);
+CREATE TABLE IF NOT EXISTS `core_functionality` (
+  `instance_id` int(11) NOT NULL,
+  `multi_sucursal` tinyint(1) NOT NULL COMMENT 'Verdadero cuando se tienen mas de una sucursal',
+  `compra_a_clientes` tinyint(1) NOT NULL COMMENT 'Verdadero cuando se desea comprar a los clientes',
+  `POS_MODULO_CONTABILIDAD` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`instance_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
