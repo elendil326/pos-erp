@@ -108,7 +108,7 @@ function renderMoney($money, $row){
 }
 
 //render the table
-$header = array( 
+$header = array(
 	"id_producto" => "ID", 
 	"descripcion" => "Descripcion", 
 	"cantidad" => "Cantidad",
@@ -265,3 +265,5 @@ $tabla->render();
 		}*/
 	?>
 </script>
+
+
