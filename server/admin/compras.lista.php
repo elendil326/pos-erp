@@ -10,7 +10,7 @@ require_once('model/compra_cliente.dao.php');
 <script>
 
     function mostrarDetallesCompra (cid){
-        window.location = "compra.php?action=detallesCompraCliente&id=" + cid;
+        window.location = "compras.php?action=detalleCompraCliente&id=" + cid;
     }
 
 </script>
