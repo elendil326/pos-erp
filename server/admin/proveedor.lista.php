@@ -8,7 +8,7 @@ $header = array(
 	//"id_proveedor" => "ID",
 	"nombre"=> "Nombre",
 	"direccion"=> "Direccion",
-	"rfc"=> "RFC",
+	//"rfc"=> "RFC",
 	"telefono"=> "Telefono",
 	/* "e_mail"=> "E Mail" */);
 	

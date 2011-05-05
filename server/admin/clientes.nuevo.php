@@ -7,27 +7,45 @@
 
 
 
-<h2>Nuevo cliente</h2>
+<h2>Detalles del nuevo cliente</h2>
 <form id="newClient">
-	<table border="0" cellspacing="5" cellpadding="5">
-		<tr><td>Razon Social</td><td><input type="text" size="40" id="razon_social"/></td></tr>
-		<tr><td>RFC</td><td><input type="text" size="40" id="rfc"/></td></tr>
-		<tr><td>Calle</td><td><input type="text" size="40" id="calle"/></td></tr>
-		<tr><td>Numero Exterior</td><td><input type="text" size="40" id="numero_exterior"/></td></tr>
-		<tr><td>Numero Interior</td><td><input type="text" size="40" id="numero_interior"/></td></tr>		
-		<tr><td>Colonia</td><td><input type="text" size="40" id="colonia"/></td></tr>				
-		<tr><td>Referencia</td><td><input type="text" size="40" id="referencia"/></td></tr>				
-		<tr><td>Localidad</td><td><input type="text" size="40" id="localidad"/></td></tr>				
-		<tr><td>Municipio</td><td><input type="text" size="40" id="municipio"/></td></tr>				
-		<tr><td>Estado</td><td><input type="text" size="40" id="estado"/></td></tr>				
-		<tr><td>Pais</td><td><input type="text" size="40" id="pais"/></td></tr>		
-		<tr><td>Codigo Postal</td><td><input type="text" size="40" id="codigo_postal"/></td></tr>				
-		<tr><td>Telefono</td><td><input type="text" size="40" id="telefono"/></td></tr>				
-		<tr><td>Email</td><td><input type="text" size="40" id="e_mail"/></td></tr>				
-		<tr><td>Limite de credito</td><td><input type="text" size="40" id="limite_credito"/></td></tr>				
-		<tr><td>Descuento</td><td><input type="text" size="40" id="descuento"/></td></tr>												
+	<table border="0" cellspacing="5" cellpadding="5" style="width:100%">
+		<tr>
+			<td>Razon Social</td><td><input type="text" size="40" id="razon_social" placeholder="Obligatorio"/></td>	
+			<td>RFC</td><td><input type="text" size="40" id="rfc" placeholder="Obligatorio" /></td>
+		</tr>
+		</tr>	
+			<td>Limite de credito</td><td><input type="text" size="40" placeholder="Obligatorio" id="limite_credito"/></td>
+			<td>Descuento</td><td><input type="text" size="40" id="descuento"/></td>		
+		<tr>
+		<tr>
+			<td>Calle</td><td><input type="text" size="40" id="calle"/></td>
+			<td>Numero Exterior</td><td><input type="text" size="40" id="numero_exterior"/></td>
+		</tr>
+			<td>Numero Interior</td><td><input type="text" size="40" id="numero_interior"/></td>
+			<td>Colonia</td><td><input type="text" size="40" id="colonia"/></td>		
+		<tr>	
+		</tr>
+			<td>Referencia</td><td><input type="text" size="40" id="referencia"/></td>
+			<td>Localidad</td><td><input type="text" size="40" id="localidad"/></td>	
+		<tr>	
+		</tr>
+			<td>Municipio</td><td><input type="text" size="40" id="municipio"/></td>
+			<td>Estado</td><td><input type="text" size="40" id="estado"/></td>
+		<tr>
+		</tr>	
+			<td>Pais</td><td><input type="text" size="40" id="pais"/></td>
+			<td>Codigo Postal</td><td><input type="text" size="40" id="codigo_postal"/></td>		
+		<tr>
+		</tr>	
+			<td>Telefono</td><td><input type="text" size="40" id="telefono"/></td>	
+			<td>Email</td><td><input type="text" size="40" id="e_mail"/></td>					
+		<tr>	
 
-		<tr><td>Sucursal</td><td>
+
+		<?php if(POS_MULTI_SUCURSAL){	?>
+		<tr>
+			<td>Sucursal</td><td>
 			    <select id="sucursal"> 
 			    <?php
 			
@@ -40,10 +58,13 @@
 	
 	            </select>
 		    </td>
+			
 		</tr>
-		<tr><td colspan=2>
+		<?php } ?>
+		<tr><td colspan=4>
 			<h4><input type="button" onClick="validar()" value="Crear el nuevo cliente"/> </h4>
-		</td></tr>
+		</td>	
+</tr>
 	</table>
 </form>
 

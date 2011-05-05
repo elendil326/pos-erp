@@ -56,10 +56,14 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 	<tr><td><b>Gerente que dio de alta</b></td><td><?php echo UsuarioDAO::getByPK( $cliente->getIdUsuario() )->getNombre() ; ?></td></tr>
 	
 	<?php
-		$foo = SucursalDAO::getByPK( $cliente->getIdSucursal() );
-		$_suc = $foo == null ? "Ninguna" : $foo->getDescripcion();
+		if(POS_MULTI_SUCURSAL){
+			$foo = SucursalDAO::getByPK( $cliente->getIdSucursal() );
+			$_suc = $foo == null ? "Ninguna" : $foo->getDescripcion();			
+			?><tr><td><b>Sucursal donde se dio de alta</b></td><td><?php echo $_suc; ?></td></tr><?php
+		}
+
 	?>
-	<tr><td><b>Sucursal donde se dio de alta</b></td><td><?php echo $_suc; ?></td></tr>
+
 
 	<tr><td colspan=3>
 		<h4>

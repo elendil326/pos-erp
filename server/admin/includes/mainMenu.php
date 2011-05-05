@@ -90,7 +90,7 @@
 		
 		<?php if(POS_MODULO_CONTABILIDAD) {?>
 		<LI class="drop">
-			<A >CONTABILIDAD</A>
+			<A href="contabilidad.php?action=balance">CONTABILIDAD</A>
 		  <ul class="nav sub">
 			<li >
 			  <a href="contabilidad.php?action=balance">Balance</a>

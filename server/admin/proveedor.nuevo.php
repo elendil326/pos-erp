@@ -7,25 +7,38 @@
 
 
 
-<h1>Registrar nuevo proveedor</h1>
 <h2>Detalles del nuevo proveedor</h2>
 <form id="newClient">
-	<table border="0" cellspacing="5" cellpadding="5">
-		<tr><td>Nombre</td><td><input type="text"               id="nombre" size="40"/></td></tr>
-		<tr><td>Direccion</td><td><input type="text"            id="direccion" size="40"/></td></tr>
-		<tr><td>RFC</td><td><input type="text"                  id="rfc" size="40"/></td></tr>
-		<tr><td>Telefono</td><td><input type="text"             id="telefono" size="40"/></td></tr>
-		<tr><td>E Mail</td><td><input type="text"               id="e_mail" size="40"/></td></tr>		
-		<tr><td>Tipo de proveedor</td>
+	<table border="0" cellspacing="5" cellpadding="5" style="width:100%">
+		<tr>
+			<td>Nombre</td><td><input type="text"               id="nombre" size="40"/></td>
+			<td>RFC</td><td><input type="text"                  id="rfc" size="40"/></td>
+		</tr>
+			
+		<tr>
+			<td>Direccion</td><td><input type="text"            id="direccion" size="40"/></td>		
+			<td>Telefono</td><td><input type="text"             id="telefono" size="40"/></td>			
+		</tr>
+		
+		<tr>
+			<td>E Mail</td><td><input type="text"               id="e_mail" size="40"/></td>
+		</tr>
+		<?php if(POS_MULTI_SUCURSAL) { ?>
+		<tr>
+			<td>Tipo de proveedor</td>
 			<td>
 			<select id="tipo_proveedor">
 				<option value='admin' 	>Surte a centro de distribucion</option>
 				<option value='sucursal'>Surte a sucursales</option>
 				<option value='ambos' 	>Surte a ambos</option>
-
 	        </select>
-			</td></tr>
-		<tr><td colspan=2>
+			</td>
+		</tr>
+		<?php } else {?>		
+			<input type=hidden value="ambos" id="tipo_proveedor">
+		<?php } ?>			
+		<tr>
+			<td colspan=4>
 			<h4>
 				<input id="submit" type="button" onClick="validar()" value="Crear el nuevo proveedor"/><div id="loader" style='display:none'><img src="../media/loader.gif"></div>
 			</h4>	

@@ -7,9 +7,14 @@ require_once("controller/sucursales.controller.php");
 require_once('model/actualizacion_de_precio.dao.php');
 require_once('model/compra_proveedor.dao.php');
 
+if(POS_MULTI_SUCURSAL){
+	$iMaestro = listarInventarioMaestro(200, POS_SOLO_ACTIVOS) ;
+	$iMaestroTerminados = listarInventarioMaestro(50, POS_SOLO_VACIOS) ;	
+}else{
+	$iMaestro = listarInventarioMaestro(200, POS_SOLO_ACTIVOS) ;
+	$iMaestroTerminados = listarInventarioMaestro(50, POS_SOLO_VACIOS) ;
+}
 
-$iMaestro = listarInventarioMaestro(200, POS_SOLO_ACTIVOS) ;
-$iMaestroTerminados = listarInventarioMaestro(50, POS_SOLO_VACIOS) ;
 
 ?>
 
@@ -17,16 +22,10 @@ $iMaestroTerminados = listarInventarioMaestro(50, POS_SOLO_VACIOS) ;
 
 <script>
 	jQuery("#MAIN_TITLE").html("Inventario Maestro");
-	help = "<h2>Invenario Maestro</h2>";
-	help += "El inventario maestro es donde se concentra la informacion sobre ";
-	help += "todos los proudcotos y camiones..";
-	jQuery("#ayuda").html(help);
 	
-	<?php 
-		echo " var inventario = " . json_encode( $iMaestro ) . ";";
-		echo " var inventarioAgotado = " . json_encode( $iMaestroTerminados ) . ";";
-	?>
-	var myData;
+	var inventario = <?php echo json_encode( $iMaestro ); ?>,
+		inventarioAgotado = <?php echo json_encode( $iMaestroTerminados ); ?>,
+		myData;
 	
 	Ext.onReady(function(){
 	    Ext.QuickTips.init();
@@ -77,7 +76,6 @@ $iMaestroTerminados = listarInventarioMaestro(50, POS_SOLO_VACIOS) ;
 				inventario[i].agrupacion,
 				inventario[i].agrupacionTam								
 			];
-
 		};
 		
 		for (var i = inventarioAgotado.length - 1; i >= 0; i--){
@@ -471,9 +469,6 @@ $productos = InventarioDAO::getAll();
 
 
 ?>
-<!--
-	Seleccion de producto a surtir
--->
 
 <div  >
 	<h2>Productos</h2>

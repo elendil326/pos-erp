@@ -9,7 +9,8 @@ require_once('model/sucursal.dao.php');
 
 
 <script>
-
+	
+	jQuery("#MAIN_TITLE").html("Abastecer de proveedor");
 	
 	<?php
 		$todos = ProveedorDAO::getAll();
@@ -306,29 +307,46 @@ require_once('model/sucursal.dao.php');
 
 
 
-<h1>Abastecer de proveedores</h1>
+
 <h2>Proveedor</h2>
 <div id="chooseSupplier">
-<h3>Seleccione el proveedor de quien se desea abastecer</h3>
-    <table border="0" cellspacing="5" cellpadding="5">
-	    <tr><td>Proveedor</td>
-		    <td>
-			    <select id="proveedores"> 
-			    <?php
-			
-				    $p = ProveedorDAO::getAll();
-				    foreach( $p as $proveedor ){
-					    echo "<option value='" . $proveedor->getIdProveedor() . "' >" .  $proveedor->getNombre()  . "</option>";
-				    }
-			
-			    ?>
-	
-	            </select>
-		    </td>
-            <td><input type="button" onClick="seleccionarProveedor()" value="Seleccionar"/> </td>
-	    </tr>
-    </table>
-</div>
+<?php
+	$p = ProveedorDAO::getAll();
+	if(count($p) == 0){
+		?>
+			<br>
+			<a href="proveedor.php?action=nuevo" style="text-decoration: none">
+			<div class="light-blue-rounded" >
+				No se han registrado proveedores. Haga click aqui para registrar un proveedor.
+			</div>
+			</a>
+		<?php
+	}else{
+		?>
+		<h3>Seleccione el proveedor de quien se desea abastecer</h3>
+		    <table border="0" cellspacing="5" cellpadding="5">
+			    <tr><td>Proveedor</td>
+				    <td>
+					    <select id="proveedores"> 
+					    <?php
+
+
+						    foreach( $p as $proveedor ){
+							    echo "<option value='" . $proveedor->getIdProveedor() . "' >" .  $proveedor->getNombre()  . "</option>";
+						    }
+
+					    ?>
+
+			            </select>
+				    </td>
+		            <td><input type="button" onClick="seleccionarProveedor()" value="Seleccionar"/> </td>
+			    </tr>
+		    </table>
+		</div>
+		<?php
+	}
+?>
+
 <div id="chooseSupplierDetails">
 	
 </div>

@@ -146,19 +146,29 @@ function crearCliente($args) {
 
     $cliente->setActivo(1);
 
+    $cliente->setIdUsuario($_SESSION['userid']);
+
+
     //si esta peticion viene de un administrador, usar los
     // datos que vienen en el request, de lo contrario
     // utilizar los datos que estan en la sesion
     if ($_SESSION['grupo'] <= 1) {
-        if (isset($data->id_sucursal) && isset($data->id_usuario)) {
+        if (isset($data->id_sucursal)) {
             $cliente->setIdSucursal($data->id_sucursal);
-            $cliente->setIdUsuario($data->id_usuario);
+
         } else {
-            die('{"success": false, "reason": "Debe proporcionar una sucursal y un usuario." }');
+			if(POS_MULTI_SUCURSAL){
+				//es multisucursal, y no envio la sucursal a la
+				//que pertenece
+            	die('{"success": false, "reason": "No proporciono a que sucursal pertenece este nuevo cliente." }');				
+			}else{
+				//no importa que no haya enviado sucursal
+	            $cliente->setIdSucursal(0);
+			}
+
         }
     } else {
         $cliente->setIdSucursal($_SESSION['sucursal']);
-        $cliente->setIdUsuario($_SESSION['userid']);
     }
 
     try {

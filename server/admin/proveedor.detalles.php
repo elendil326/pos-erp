@@ -40,7 +40,7 @@
     
     </script>
 <h2>Detalles del proveedor</h2>
-<table border="0" cellspacing="5" cellpadding="5">
+<table border="0" cellspacing="5" cellpadding="5" style="width:100%">
 	<tr><td>Nombre</td>				<td><?php echo $proveedor->getNombre(); ?></td></tr>
 	<tr><td>Direccion</td>			<td><?php echo $proveedor->getDireccion(); ?></td></tr>
 	<tr><td>RFC</td>				<td><?php echo $proveedor->getRFC(); ?></td></tr>
