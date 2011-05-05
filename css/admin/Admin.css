@@ -22,7 +22,11 @@
 	font-weight:bold;
 }
 
-
+.rounded{
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	padding: 5px;
+}
 /*#errorExplanation {
 color: #d95843;
 margin-top: 25px;

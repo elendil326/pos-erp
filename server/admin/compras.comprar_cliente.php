@@ -4,7 +4,7 @@
 	require_once("model/cliente.dao.php");
 	require_once("controller/clientes.controller.php");
 
-	$productos = InventarioDAO::getAll();
+
 	$clientes = ClienteDAO::getAll();
 	
 ?>
@@ -77,14 +77,55 @@ if(!isset($_REQUEST['cid'])){
 }
 ?>
 
+
+<div  >
+	<h2>Productos disponibles</h2>
+		<?php
+		
+		$productos = InventarioDAO::getAll();
+		$javascriptWithProds = "";
+		
+		echo "<table border=0 style='width: 100%; font-size: 14px; cursor: pointer;'>";
+		echo "<tr>";
+		
+		for($a = 0; $a < sizeof($productos); $a++){
+
+				//buscar su precio sugerido actual
+				$act = new ActualizacionDePrecio();
+				$act->setIdProducto( $productos[$a]->getIdProducto() );
+				$res = ActualizacionDePrecioDAO::search($act, "fecha", "desc");
+				$lastOne = $res[0];
+
+				$productWithPrice = $productos[$a]->asArray();
+				$productWithPrice["precio_compra"] = $lastOne->getPrecioCompra();
+				$productWithPrice["precio_venta"] = $lastOne->getPrecioVenta();
+				
+				//agraarlo al javascirpt
+				$javascriptWithProds .= "productos.push(". json_encode($productWithPrice) .");\n";
+				
+				if($a % 5 == 0){
+					echo "</tr><tr>";
+				}
+
+				echo "<td class='rounded' id='producto-" . $productWithPrice["id_producto"] . "' ";
+				echo " onClick='agregarACompra( " .  $productWithPrice["id_producto"] . " )' ";
+				echo " onmouseover=\"this.style.backgroundColor = '#D7EAFF'\" onmouseout=\"this.style.backgroundColor = 'white'\"><img style='float:left;' src='../media/icons/basket_32.png'>" . $productWithPrice["descripcion"] . "<br>";
+				echo " " . moneyFormat( $productWithPrice["precio_compra"] ) .  "<br>";
+				echo "</td>";
+			}
+			
+		echo "</tr>";
+		echo "</table>";
+		?>
+</div>
+
 <script>
 
 	var productos = [];
-	
+		
 	<?php
-		foreach($productos as $p){
-			echo "productos.push(". $p .");\n";
-		}
+		//imprimir el javascript que genere arriba
+		echo $javascriptWithProds;
 	?>
 	
 	var carritoDeCompra = [];
@@ -107,7 +148,12 @@ if(!isset($_REQUEST['cid'])){
 		var zero_qty = false,
 		
 			//si hay algun precio en zeros
-			zero_price = false;
+			zero_price = false,
+			
+			//precio total para comprar
+			final_price = 0,
+			
+			estimated_earnings_at_sell_time = 0;
 		
 		for (var i=0; i < carritoDeCompra.length; i++) {
 			
@@ -129,21 +175,45 @@ if(!isset($_REQUEST['cid'])){
 				jQuery("#item-descuento-"+id).val(0);
 			
 			var sub_total = (jQuery("#item-cantidad-"+id).val() - jQuery("#item-descuento-"+id).val()) * jQuery("#item-precio-"+id).val();
+			var sub_total_venta = (jQuery("#item-cantidad-"+id).val() - jQuery("#item-descuento-"+id).val()) * parseFloat(carritoDeCompra[i].precio_venta);
 			
-
+			estimated_earnings_at_sell_time += sub_total_venta;
+			final_price += sub_total;
+			
 			jQuery("#item-importe-"+ id).html( cf(sub_total) );
-
+			
+			
+			//calcular los rendimientos
+			jQuery("#rendimeinto-importe-"+ id).html(cf(sub_total) ) ; //importe
+			jQuery("#rendimeinto-alaventa-"+ id).html(cf(carritoDeCompra[i].precio_venta)) ; 			//a la venta
+			
+			var rendimiento = sub_total - sub_total_venta;
+			
+			if(rendimiento <= 0){
+				//le perdera dinero, mostar en rojo
+				rendimiento = div( cf(rendimiento), "style='color:red'" );
+			}else{
+				//le ganara dinero, mostarr en verde
+				rendimiento = div( "+" + cf(rendimiento), "style='color:green'" );				
+			}
+			jQuery("#rendimeinto-rendimiento-"+ id).html(  rendimiento ) ; //rendimiento			
 		}
 		
-
+		
+		
+		//mostrar los totales de rendimiento
+		jQuery("#rendimientos-totales-rendimiento").html(  cf(final_price-estimated_earnings_at_sell_time)  )
+   
 
 		if( carritoDeCompra.length > 0 
 			&& !zero_qty 
 			&& !zero_price 
 		){
 			jQuery("#readyToBuy").fadeIn();
+			jQuery("#rendimientos").fadeIn();
 		}else{
 			jQuery("#readyToBuy").fadeOut();
+			jQuery("#rendimientos").fadeOut();			
 		}
 			
 
@@ -171,17 +241,28 @@ if(!isset($_REQUEST['cid'])){
 		}
 		
 		carritoDeCompra.push( prod )
-		
+
+		//agregarlo a la tabla de venta
 		var html = "";
 		html += td( "" );
 		html += td( prod.descripcion );
-		html += td( "<input id='item-cantidad-"+id_producto+"' onKeyUp='doMath( )' type=text >" );
-		html += td( "<input id='item-descuento-"+id_producto+"' onKeyUp='doMath(  )' value='"+ 0 +"' type=text>" );
-		html += td( "<input id='item-precio-"+id_producto+"' onKeyUp='doMath(  )' type=text>" );
+		html += td( "<input id='item-cantidad-"+id_producto+"' onKeyUp='doMath( )' value='1' type=text >" + prod.escala + "s" );
+		html += td( "<input id='item-descuento-"+id_producto+"' onKeyUp='doMath(  )'  type=text>" );
+		html += td( "<input id='item-precio-"+id_producto+"' onKeyUp='doMath(  )' value='"+ prod.precio_compra +"' type=text>" );
 		html += td( div("", "id='item-importe-"+id_producto+"'")  );		
 		html = tr(html);
 		
 		jQuery("#TablaDeEstaCompra").after( html );
+		
+		//agregarlo a la tabla de rendimientos
+		html = "";
+		html += td( prod.descripcion );
+		html += td( div("", "id='rendimeinto-importe-"+ id_producto + "'" ) ); //importe
+		html += td( div("", "id='rendimeinto-alaventa-"+ id_producto + "'" ) ); //a la venta
+		html += td( div("", "id='rendimeinto-rendimiento-"+ id_producto + "'") ); //rendimiento
+		html = tr(html);
+		
+		jQuery("#TablaDeRendimientos").after( html );
 		
 		doMath();
 	}
@@ -263,33 +344,7 @@ if(!isset($_REQUEST['cid'])){
 </script>
 
 
-<div  >
-	<h2>Productos disponibles</h2>
-		<?php
-		echo "<table border=0 style='width: 100%; font-size: 14px; cursor: pointer;'>";
-			echo "<tr>";
-			for($a = 0; $a < sizeof($productos); $a++){
 
-				//buscar su precio sugerido actual
-				$act = new ActualizacionDePrecio();
-				$act->setIdProducto( $productos[$a]->getIdProducto() );
-				$res = ActualizacionDePrecioDAO::search($act, "fecha", "desc");
-				$lastOne = $res[0];
-
-				if($a % 5 == 0){
-					echo "</tr><tr>";
-				}
-
-				echo "<td id='producto-" . $productos[$a]->getIdProducto() . "' ";
-				echo " onClick='agregarACompra( " .  $productos[$a]->getIdProducto() . " )' ";
-				echo " onmouseover=\"this.style.backgroundColor = '#D7EAFF'\" onmouseout=\"this.style.backgroundColor = 'white'\"><img style='float:left;' src='../media/icons/basket_32.png'>" . $productos[$a]->getDescripcion() . "<br>";
-				echo " " . moneyFormat($lastOne->getPrecioVenta()) .  "<br><br>";
-				echo "</td>";
-			}
-			echo "</tr>";
-		echo "</table>";
-		?>
-</div>
 
 
 <h2>Detalles en esta compra</h2>
@@ -299,8 +354,8 @@ if(!isset($_REQUEST['cid'])){
         <td></td>
         <td>Producto</td>
         <td>Cantidad</td>
-        <td>Precio de compra</td>
         <td>Descuento</td>
+        <td>Precio de compra</td>
         <td>Importe</td>  
     </tr>
     </table>
@@ -309,6 +364,26 @@ if(!isset($_REQUEST['cid'])){
 
 <div id="loader" 		style="display: none;" align="center"  >
 	Procesando <img src="../media/loader.gif">
+</div>
+
+
+
+<div id="rendimientos" style="display:none" >
+	<h2>Rendimiento para esta compra</h4>
+		<table style="width:100%">
+	    <tr id="TablaDeRendimientos">
+	        <td>Producto</td>
+	        <td>Importe de producto</td>
+	        <td>Precio a la venta actual</td>  
+	        <td>Rendimiento</td>	
+	    </tr>
+	    <tr >
+	        <td></td>
+	        <td ></td>
+	        <td ></td>  
+	        <td id="rendimientos-totales-rendimiento"></td>	
+	    </tr>
+	    </table>
 </div>
 
 <div id="readyToBuy" style="display:none" align=center>

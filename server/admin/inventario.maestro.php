@@ -474,13 +474,6 @@ $productos = InventarioDAO::getAll();
 <!--
 	Seleccion de producto a surtir
 -->
-<style>
-	.rounded{
-		-moz-border-radius: 15px;
-		border-radius: 15px;
-		padding: 5px;
-	}
-</style>
 
 <div  >
 	<h2>Productos</h2>
