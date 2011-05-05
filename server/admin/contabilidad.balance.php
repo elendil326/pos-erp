@@ -105,32 +105,6 @@ foreach ($ingresos as $i) {
 
 
 /* * *****************************************
- * Compras
- * Buscar todas la compras a contado para esta sucursal desde esa fecha
- * ****************************************** */
-$foo = new CompraCliente();
-$foo->setFecha($fecha);
-$foo->setIdSucursal($sucursal->getIdSucursal());
-$foo->setTipoCompra('contado');
-
-$bar = new CompraCliente();
-$bar->setFecha($hoy);
-
-$compras = CompraClienteDAO::byRange($foo, $bar);
-
-
-//las compras
-foreach ($compras as $i) {
-    array_push($flujo, array(
-        "tipo" => "compra",
-        "concepto" => "<a href='compras.php?action=detalleCompraCliente&id=" . $i->getIdCompra() . "'>Compra de contado</a>",
-        "monto" => ($i->getPagado() * -1),
-        "usuario" => $i->getIdUsuario(),
-        "fecha" => $i->getFecha()
-    ));
-}
-
-/* * *****************************************
  * Ventas
  * Buscar todas la ventas a contado para esta sucursal desde esa fecha
  * ****************************************** */
@@ -144,7 +118,7 @@ $bar->setFecha($hoy);
 
 $ventas = VentasDAO::byRange($foo, $bar);
 
-
+$total_ventas = 0;
 //las ventas
 foreach ($ventas as $i) {
     array_push($flujo, array(
@@ -154,8 +128,36 @@ foreach ($ventas as $i) {
         "usuario" => $i->getIdUsuario(),
         "fecha" => $i->getFecha()
     ));
+    $total_ventas += $i->getPagado();
 }
 
+/* * *****************************************
+ * Compras
+ * Buscar todas la compras a contado para esta sucursal desde esa fecha
+ * ****************************************** */
+$foo = new CompraCliente();
+$foo->setFecha($fecha);
+$foo->setIdSucursal($sucursal->getIdSucursal());
+$foo->setTipoCompra('contado');
+
+$bar = new CompraCliente();
+$bar->setFecha($hoy);
+
+$compras = CompraClienteDAO::byRange($foo, $bar);
+
+$total_compras = 0;
+
+//las compras
+foreach ($compras as $i) {
+    array_push($flujo, array(
+        "tipo" => "compra",
+        "concepto" => "<a href='compras.php?action=detalleCompraCliente&id=" . $i->getIdCompra() . "'>Compra de contado</a>",
+        "monto" => ($i->getPagado() * -1),
+        "usuario" => $i->getIdUsuario(),
+        "fecha" => $i->getFecha()
+    ));
+    $total_compras += $i->getPagado();
+}
 
 
 /* * *****************************************
@@ -223,3 +225,33 @@ foreach ($flujo as $f) {
 }
 
 echo "<div align=right><h3>Total en caja: " . moneyFormat($enCaja) . "</h3></div>";
+?>
+
+
+<h2>Total de compras</h2>
+
+<?php echo "<div align=right><h3>" . moneyFormat($total_compras) . "</h3></div>"; ?>
+
+<h2>Total de ventas</h2>
+
+<?php echo "<div align=right><h3>" . moneyFormat($total_ventas) . "</h3></div>"; ?>
+
+<h2>Total de bancos</h2>
+
+<?php 
+
+$total_bancos = 0;
+
+echo "<div align=right><h3>" . moneyFormat($total_bancos) . "</h3></div>"; 
+
+?>
+
+<h2>Total de efectivo</h2>
+
+<?php 
+
+$total_efectivo = 0;
+
+echo "<div align=right><h3>" . moneyFormat($total_efectivo) . "</h3></div>"; 
+
+?>
