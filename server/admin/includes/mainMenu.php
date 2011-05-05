@@ -89,6 +89,17 @@
 		</LI>
 		
 		<LI class="drop">
+			<A >CONTABILIDAD</A>
+		  <ul class="nav sub">
+			<li >
+			  <a href="contabilidad.php?action=balance">Balance</a>
+			</li>
+		
+
+		  </ul>			
+		</LI>
+		
+		<LI class="drop">
 			<A >PROVEEDORES</A>
 		  <ul class="nav sub">
 			<li >
