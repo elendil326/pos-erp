@@ -7,13 +7,95 @@ require_once("controller/sucursales.controller.php");
 require_once('model/actualizacion_de_precio.dao.php');
 require_once('model/compra_proveedor.dao.php');
 
-if(POS_MULTI_SUCURSAL){
-	$iMaestro = listarInventarioMaestro(200, POS_SOLO_ACTIVOS) ;
-	$iMaestroTerminados = listarInventarioMaestro(50, POS_SOLO_VACIOS) ;	
-}else{
+
+
+
+
+$productos = InventarioDAO::getAll();
+
+
+?>
+<script>
+function detalle_inventario(id){
+	window.location = "inventario.php?action=detalle&id="+ id;
+}
+</script>
+<div  >
+	<h2>Productos</h2>
+		<?php
+		echo "<table border=0 style='width: 100%; font-size: 14px; cursor: pointer;'>";
+			echo "<tr>";
+			for($a = 0; $a < sizeof($productos); $a++){
+
+				//buscar su precio sugerido actual
+				$act = new ActualizacionDePrecio();
+				$act->setIdProducto( $productos[$a]->getIdProducto() );
+				$res = ActualizacionDePrecioDAO::search($act, "fecha", "desc");
+				$lastOne = $res[0];
+
+				if($a % 5 == 0){
+					echo "</tr><tr>";
+				}
+				
+				echo "<td class='rounded' id='producto-" . $productos[$a]->getIdProducto() . "'  onClick='detalle_inventario( " .  $productos[$a]->getIdProducto() . " )' onmouseover=\"this.style.backgroundColor = '#D7EAFF'\" onmouseout=\"this.style.backgroundColor = 'white'\">";
+				echo "<img style='float:left;' src='../media/icons/basket_32.png'><br><div align=center ><b>" .  $productos[$a]->getDescripcion() . "</b></div>";
+				echo "<div align=right style='padding-right:20px'>";
+				echo " A la venta " . moneyFormat($lastOne->getPrecioVenta()) .  "<br>";
+				if( POS_COMPRA_A_CLIENTES ){
+					echo " A la compra " . moneyFormat($lastOne->getPrecioCompra()) ;
+				}				
+				echo "</div>";
+				echo "</td>";
+			}
+			echo "</tr>";
+		echo "</table>";
+		?>
+</div>
+
+<?php
+	##########################################################
+	#	INVENTARIO MAESTRO PARA NO MULTISUCURSALES
+	##########################################################
+	if(!POS_MULTI_SUCURSAL){
+		
+		//buscar todos los productos en detalle inventario de la unica sucursal, que en este caso es la cero
+		$inventario_simple = array();
+		
+		foreach( $productos as $p ){
+			$d = DetalleInventarioDAO::getByPK( $p->getIdProducto(), 0 );
+			if($d){
+				//si existe el producto
+				array_push( $inventario_simple, array_merge( $p->asArray(), $d->asArray() ) );
+			}
+		}
+
+		$header = array( 
+			"id_producto"=> "",
+			"descripcion" => "Producto",
+			"existencias"=> "Existencias actuales");
+
+		function renderExistencias($n, $row){
+			return $n . " " . $row["escala"] . "s";
+		}
+
+		$tabla = new Tabla( $header, $inventario_simple );
+		$tabla->addNoData("No hay proveedores.");
+		$tabla->addColRender("existencias", "renderExistencias");
+		echo "<h2>Inventario Maestro</h2>";
+		$tabla->render();
+	
+		return;
+	}
+
+
+
+	##########################################################
+	#	INVENTARIO MAESTRO PARA MULTISUCURSALES
+	##########################################################
+
 	$iMaestro = listarInventarioMaestro(200, POS_SOLO_ACTIVOS) ;
 	$iMaestroTerminados = listarInventarioMaestro(50, POS_SOLO_VACIOS) ;
-}
+
 
 
 ?>
@@ -460,62 +542,8 @@ if(POS_MULTI_SUCURSAL){
 	    grid.render('inventario-maestro-grid');
 	    gridAgotado.render('inventario-maestro-agotados-grid');	
 	});
-</script>
 
 
-<?php
-
-$productos = InventarioDAO::getAll();
-
-
-?>
-
-<div  >
-	<h2>Productos</h2>
-		<?php
-		echo "<table border=0 style='width: 100%; font-size: 14px; cursor: pointer;'>";
-			echo "<tr>";
-			for($a = 0; $a < sizeof($productos); $a++){
-
-				//buscar su precio sugerido actual
-				$act = new ActualizacionDePrecio();
-				$act->setIdProducto( $productos[$a]->getIdProducto() );
-				$res = ActualizacionDePrecioDAO::search($act, "fecha", "desc");
-				$lastOne = $res[0];
-
-				//buscar todas las existencias
-				$totals = 0;
-				for($i = 0; $i < sizeof($iMaestro); $i++){
-					if($iMaestro[$i]['id_producto'] == $productos[$a]->getIdProducto()){
-						$totals +=  $iMaestro[$i]['existencias'];
-					}
-
-				}
-				if($a % 5 == 0){
-					echo "</tr><tr>";
-				}
-				
-				echo "<td class='rounded' id='producto-" . $productos[$a]->getIdProducto() . "'  onClick='detalle_inventario( " .  $productos[$a]->getIdProducto() . " )' onmouseover=\"this.style.backgroundColor = '#D7EAFF'\" onmouseout=\"this.style.backgroundColor = 'white'\">";
-				echo "<img style='float:left;' src='../media/icons/basket_32.png'><br><div align=center ><b>" .  $productos[$a]->getDescripcion() . "</b></div>";
-				echo "<div align=right style='padding-right:20px'>";
-				echo " A la venta " . moneyFormat($lastOne->getPrecioVenta()) .  "<br>";
-				if( POS_COMPRA_A_CLIENTES ){
-					echo " A la compra " . moneyFormat($lastOne->getPrecioCompra()) ;
-				}				
-				echo "</div>";
-				echo "</td>";
-			}
-			echo "</tr>";
-		echo "</table>";
-		?>
-</div>
-<?php
-
-
-?><script>
-	function detalle_inventario(id){
-		window.location = "inventario.php?action=detalle&id="+ id;
-	}
 </script>
 
 
