@@ -1401,11 +1401,24 @@ function nuevaCompraCliente($args = null) {
     //realizamos calculos
     foreach ($array_items as $producto) {
 
-        //verificamos que el producto exista en el inventario  
+        //verificamos si el producto no existe en el inventario de la sucursal
         if (!( $detalle_inventario = DetalleInventarioDAO::getByPK($producto->id_producto, $_SESSION['sucursal']) )) {
-            Logger::log("No se tiene registro del producto " . $producto->id_producto . " en esta sucursal.");
-            DAO::transRollback();
-            die('{"success": false, "reason": "No se tiene registro del producto ' . $producto->id_producto . ' en esta sucursal.." }');
+            //lo insertamos en el inventario de la sucursal            
+            $detalle_inventario = new DetalleInventario();
+            $detalle_inventario->setIdProducto($producto->id_producto);
+            $detalle_inventario->setIdSucursal($_SESSION['sucursal']);
+            $detalle_inventario->setPrecioVenta($producto->precio);
+            $detalle_inventario->setPrecioCompra($producto->precio);
+            $detalle_inventario->setExistencias(0);
+            $detalle_inventario->setExistenciasProcesadas(0);
+
+            try {
+                DetalleInventarioDAO::save($detalle_inventario);
+            } catch (Exception $e) {
+                Logger::log("Error al agregar el nuevo producto en el inventario de la sucursal.");
+                DAO::transRollback();
+                die('{"success": false, "reason": "Error al agregar el nuevo producto en el inventario de la sucursal." }');
+            }        
         }
 
         $detalle_compra = new DetalleCompraCliente();
@@ -1416,26 +1429,25 @@ function nuevaCompraCliente($args = null) {
         $detalle_compra->setPrecio($producto->precio);
         $detalle_compra->setDescuento($producto->descuento);
 
-        $subtotal += ( $detalle_compra->getCantidad() * $detalle_compra->getPrecio());        
+        $subtotal += ( $detalle_compra->getCantidad() * $detalle_compra->getPrecio());
 
         try {
             DetalleCompraClienteDAO::save($detalle_compra);
         } catch (Exception $e) {
-            Logger::log("Error al guardar el detalle de la compra." );
+            Logger::log("Error al guardar el detalle de la compra.");
             DAO::transRollback();
             die('{"success": false, "reason": "Error al guardar el detalle de la compra." }');
         }
-        
+
         $detalle_inventario->setExistencias($detalle_inventario->getExistencias() + $detalle_compra->getCantidad());
-        
+
         try {
             DetalleInventarioDAO::save($detalle_inventario);
-        } catch (Exception $e) {            
+        } catch (Exception $e) {
             Logger::log("Error al cargar la compra en el inventario de la sucursal.");
             DAO::transRollback();
             die('{"success": false, "reason": "Error al cargar la compra en el inventario de la sucursal." }');
         }
-        
     }
 
     //actualizamos los datos de la compra
