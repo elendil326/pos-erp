@@ -109,21 +109,31 @@
 		</LI>
 		
 		<LI class="drop">
-			<A >INVENTARIO</A>
+			<A  href="inventario.php?action=maestro">INVENTARIO</A>
 			  <ul class="nav sub">
 				<li >
 				  <a href="inventario.php?action=maestro">Inventario maestro</a>
-				</li>      
-				<li >
-				  <a href="inventario.php?action=lista">Inventario de sucursales</a>
 				</li>
+				<?php
+				if(POS_MULTI_SUCURSAL){
+					?>
+					<li >
+					  <a href="inventario.php?action=lista">Inventario de sucursales</a>
+					</li>
+					<?php
+				}
+				?>
+
 
 				<li>
 				  <a href="inventario.php?action=nuevo">Nuevo Producto</a>
 				</li>
-				<li>
-				  <a href="inventario.php?action=transit">En transito</a>
-				</li>
+				<?php if(POS_MULTI_SUCURSAL){ ?>
+					<li>
+					  <a href="inventario.php?action=transit">En transito</a>
+					</li>
+				<?php } ?>
+
 			  </ul>
 		</LI>
 					

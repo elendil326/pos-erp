@@ -176,8 +176,8 @@ if(!isset($_REQUEST['cid'])){
 		html += td( "" );
 		html += td( prod.descripcion );
 		html += td( "<input id='item-cantidad-"+id_producto+"' onKeyUp='doMath( )' type=text >" );
+		html += td( "<input id='item-descuento-"+id_producto+"' onKeyUp='doMath(  )' value='"+ 0 +"' type=text>" );
 		html += td( "<input id='item-precio-"+id_producto+"' onKeyUp='doMath(  )' type=text>" );
-		html += td( "<input id='item-descuento-"+id_producto+"' onKeyUp='doMath(  )' type=text>" );
 		html += td( div("", "id='item-importe-"+id_producto+"'")  );		
 		html = tr(html);
 		
@@ -299,7 +299,7 @@ if(!isset($_REQUEST['cid'])){
         <td></td>
         <td>Producto</td>
         <td>Cantidad</td>
-        <td>Precio</td>
+        <td>Precio de compra</td>
         <td>Descuento</td>
         <td>Importe</td>  
     </tr>

@@ -474,6 +474,14 @@ $productos = InventarioDAO::getAll();
 <!--
 	Seleccion de producto a surtir
 -->
+<style>
+	.rounded{
+		-moz-border-radius: 15px;
+		border-radius: 15px;
+		padding: 5px;
+	}
+</style>
+
 <div  >
 	<h2>Productos</h2>
 		<?php
@@ -498,10 +506,15 @@ $productos = InventarioDAO::getAll();
 				if($a % 5 == 0){
 					echo "</tr><tr>";
 				}
-
-				echo "<td id='producto-" . $productos[$a]->getIdProducto() . "'  onClick='detalle_inventario( " .  $productos[$a]->getIdProducto() . " )' onmouseover=\"this.style.backgroundColor = '#D7EAFF'\" onmouseout=\"this.style.backgroundColor = 'white'\"><img style='float:left;' src='../media/icons/basket_32.png'>" . $productos[$a]->getDescripcion() . "<br>";
-				//echo "<b>" . number_format( $totals , 2) ."</b>&nbsp;" .$productos[$a]->getEscala() . "s<br/><br/>";
-				echo " " . moneyFormat($lastOne->getPrecioVenta()) .  "<br><br>";
+				
+				echo "<td class='rounded' id='producto-" . $productos[$a]->getIdProducto() . "'  onClick='detalle_inventario( " .  $productos[$a]->getIdProducto() . " )' onmouseover=\"this.style.backgroundColor = '#D7EAFF'\" onmouseout=\"this.style.backgroundColor = 'white'\">";
+				echo "<img style='float:left;' src='../media/icons/basket_32.png'><br><div align=center ><b>" .  $productos[$a]->getDescripcion() . "</b></div>";
+				echo "<div align=right style='padding-right:20px'>";
+				echo " A la venta " . moneyFormat($lastOne->getPrecioVenta()) .  "<br>";
+				if( POS_COMPRA_A_CLIENTES ){
+					echo " A la compra " . moneyFormat($lastOne->getPrecioCompra()) ;
+				}				
+				echo "</div>";
 				echo "</td>";
 			}
 			echo "</tr>";

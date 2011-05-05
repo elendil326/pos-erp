@@ -8,8 +8,17 @@
 
 <table border="0" cellspacing="5" cellpadding="5">
 	<tr><td>Descripcion</td><td><input type="text" id="descripcion" size="40"/></td></tr>
-	<tr><td>Precio sugerido</td><td><input type="text" id="precioVenta" size="40"/></td></tr>
-	<tr><td>Precio intersucursal</td><td><input type="text" id="precioIntersucursal" size="40"/></td></tr>
+	<tr><td>Precio a la venta sugerido</td><td><input type="text" id="precioVenta" size="40"/></td></tr>
+	
+	<?php
+	if(POS_MULTI_SUCURSAL){ ?>
+		<tr><td>Precio intersucursal</td><td><input type="text" id="precioIntersucursal" size="40"/></td></tr>
+	<?php } ?>
+	
+	<?php
+	if(POS_COMPRA_A_CLIENTES){ ?>
+		<tr><td>Precio a la compra</td><td><input type="text" id="precioCompra" size="40"/></td></tr>
+	<?php } ?>
 	<tr><td>Escala</td>
 		<td>
 			<select id="escala" onChange="escalaSeleccionada(this.value)">
@@ -86,19 +95,28 @@
         if(jQuery('#precioVenta').val().length ==  0 ){
 	        return jQuery("#ajax_failure").html("El precio sugerido no puede dejarse vacio.").show();
         }
-
+		/*
         if(jQuery('#precioIntersucursal').val().length ==  0 ){
 	        return jQuery("#ajax_failure").html("El precio intersucursal no puede dejarse vacio.").show();
         }
-        
+        */
         data = {
                 descripcion : 			jQuery('#descripcion').val(),
                 escala : 				jQuery('#escala').val(),
                 tratamiento:			jQuery('#tratamiento').val(),
                 precio_venta : 			jQuery('#precioVenta').val(),
-                precio_intersucursal : 	jQuery('#precioIntersucursal').val(),
+				precio_intersucursal : 	jQuery('#precioIntersucursal').val(),
+				<?php
+				if(POS_MULTI_SUCURSAL)
+					echo "precio_intersucursal : 	jQuery('#precioIntersucursal').val(),";
+				?>
 				agrupacion : 			jQuery('#agrupacion').val(),
-				agrupacionTam: 			jQuery('#agrupacionTam').val() 
+				<?php
+				if(POS_COMPRA_A_CLIENTES)
+					echo "precio_compra: 			jQuery('#precioCompra').val(),";
+				?>
+				agrupacionTam: 			jQuery('#agrupacionTam').val()
+
             };
 
         jQuery.ajaxSettings.traditional = true;

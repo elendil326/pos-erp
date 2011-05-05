@@ -39,12 +39,20 @@ document.getElementById("MAIN_TITLE").innerHTML = "<?php echo $producto->getDesc
 
 	
 <form id="detalles">
-<table border="0" cellspacing="5" cellpadding="5" style="width: 50%">
-	<tr><td>ID Producto</td><td><?php echo $producto->getIdProducto();?></td></tr>
-	<tr><td>Descripcion</td><td><?php echo $producto->getDescripcion();?></td></tr>
+<table border="0" cellspacing="5" cellpadding="5" style="width: 100%">
+	<tr><td>ID Producto</td><td><?php echo $producto->getIdProducto();?></td><td>&nbsp;</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+	<tr><td>Descripcion</td><td><b><?php echo $producto->getDescripcion();?></b></td></tr>
 
 	<tr><td>Escala</td><td><?php echo ucfirst($producto->getEscala());?>s</td></tr>
-	<tr><td>Tratamiento</td><td><?php echo ucfirst($producto->getTratamiento());?></td></tr>	
+	<?php
+	
+
+		if( $producto->getTratamiento() )
+			$tratamiento = ucfirst($producto->getTratamiento());
+		else
+			$tratamiento = "Sin tratamiento";
+	?>
+	<tr><td>Tratamiento</td><td><?php echo $tratamiento; ?></td></tr>	
 	<tr><td>Agrupacion</td><td>
 		<?php 
 			if($producto->getAgrupacion()){
@@ -53,8 +61,8 @@ document.getElementById("MAIN_TITLE").innerHTML = "<?php echo $producto->getDesc
 				echo "Sin agrupacion";
 			}
 		?></td></tr>	
-	<tr ><td colspan=2>
-		<h4><input type="button" onclick="window.location='inventario.php?action=editar&id=<?php echo $producto->getIdProducto();?>' " value="Editar" /></h4>
+	<tr ><td colspan=4>
+		<h4><input type="button" onclick="window.location='inventario.php?action=editar&id=<?php echo $producto->getIdProducto();?>' " value="Editar detalles del producto" /></h4>
 	</td></tr>
 	
 </table>
@@ -68,17 +76,29 @@ function renderUsuario( $uid )
 	$u = UsuarioDAO::getByPK( $uid );
 	return $u->getNombre();
 }
-    $header = array( 
-//	    "id_actualizacion" => "ID",
-	    "fecha"=> "Fecha",
-//	    "id_producto"=> "Producto",
-	    "id_usuario"=> "Usuario",
-	    "precio_venta"=> "Precio Sugerido",
-	    "precio_intersucursal"=> "Precio Intersusucursal" );
 
+
+	//campos base
+    $header = array( 
+	    "fecha"=> "Fecha",
+	    "id_usuario"=> "Usuario",
+	    "precio_venta"=> "Precio de Venta Sugerido" );
+	
+	if(POS_MULTI_SUCURSAL)
+		$header["precio_intersucursal"] = "Precio Intersusucursal" ;
+
+	if(POS_COMPRA_A_CLIENTES)
+		$header["precio_compra"] = "Precio de Compra Sugerido" ;
+		
     $tabla = new Tabla( $header, $fluctuaciones );
     $tabla->addColRender( "precio_venta", "moneyFormat" ); 
-    $tabla->addColRender( "precio_intersucursal", "moneyFormat" ); 
+
+	if(POS_MULTI_SUCURSAL)
+    	$tabla->addColRender( "precio_intersucursal", "moneyFormat" ); 
+
+	if(POS_COMPRA_A_CLIENTES)
+    	$tabla->addColRender( "precio_compra", "moneyFormat" ); 
+
     $tabla->addColRender( "id_usuario", "renderUsuario" ); 
     $tabla->addColRender( "fecha", "toDate" ); 
     $tabla->render();

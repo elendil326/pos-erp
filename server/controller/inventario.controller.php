@@ -367,7 +367,7 @@ function nuevoProducto($data)
     $inventario->setTratamiento ( $jsonData->tratamiento == "null" ? null : $jsonData->tratamiento );
     $inventario->setAgrupacion  ( $jsonData->agrupacion == "null" ? null : $jsonData->agrupacion );
     $inventario->setAgrupacionTam (  $jsonData->agrupacion == "null" ? null : $jsonData->agrupacionTam );
-
+    $inventario->setActivo ( 1 );
     DAO::transBegin();
 
     try{
@@ -376,7 +376,7 @@ function nuevoProducto($data)
     }catch(Exception $e){
 	    DAO::transRollback();
 		Logger::log("Imposible crear nuevo producto:" . $e);
-        return array( "success" => false, "reason" => $e );
+        return array( "success" => false, "reason" =>  "Error al crear el nuevo producto, porfavor intente de nuevo.");
         
     }
 
@@ -386,12 +386,25 @@ function nuevoProducto($data)
 
     $actualizacion->setIdProducto 			 ( $inventario->getIdProducto() );
     $actualizacion->setIdUsuario 			 ( $_SESSION['userid'] );
-    $actualizacion->setPrecioIntersucursal 	 ( $jsonData->precio_intersucursal );
     $actualizacion->setPrecioVenta 			 ( $jsonData->precio_venta );
 
-	//nuevo campos
-	$actualizacion->setPrecioVentaSinProcesar( $jsonData->precio_intersucursal );
-	$actualizacion->setPrecioIntersucursalSinProcesar( $jsonData->precio_intersucursal );
+	if(POS_COMPRA_A_CLIENTES){
+		$actualizacion->setPrecioCompra( $jsonData->precio_compra );		
+	}
+	
+	if(!isset($jsonData->precio_intersucursal))
+		$actualizacion->setPrecioVentaSinProcesar( 0 );
+	else
+		$actualizacion->setPrecioVentaSinProcesar( $jsonData->precio_intersucursal );
+
+	if(POS_MULTI_SUCURSAL){
+		$actualizacion->setPrecioIntersucursal 	 			( $jsonData->precio_intersucursal );	
+		$actualizacion->setPrecioIntersucursalSinProcesar	( $jsonData->precio_intersucursal );
+	}else{
+		$actualizacion->setPrecioIntersucursal 	 			( 0 );	
+		$actualizacion->setPrecioIntersucursalSinProcesar	( 0 );
+	}
+
 	
     try{
         ActualizacionDePrecioDAO::save( $actualizacion );

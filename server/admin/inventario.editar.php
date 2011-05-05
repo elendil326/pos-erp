@@ -34,24 +34,39 @@
 
 
     if(isset($_REQUEST['editar'])){
-        //cambiar el precio y costo del producto
+        //CAMBIAR PRECIOS DEL PRODCUTO
         $na = new ActualizacionDePrecio();
         $na->setIdProducto($_REQUEST['id']);
         $na->setIdUsuario($_SESSION['userid']);
         $na->setPrecioVenta($_REQUEST['precio_venta']);
-        $na->setPrecioIntersucursal($_REQUEST['precio_interusucursal']);
 
+		//si hay que editar precio a compra a clientes
+		if(POS_COMPRA_A_CLIENTES)
+        	$na->setPrecioCompra($_REQUEST['precio_compra']);
+
+		if(POS_MULTI_SUCURSAL){
+			$na->setPrecioIntersucursal($_REQUEST['precio_interusucursal']);
+		}else{
+			$na->setPrecioIntersucursal(0);
+		}
+			
+			
 		if( isset( $_REQUEST['precio_venta_sin_procesar'] ) ){
 	        $na->setPrecioVentaSinProcesar( $_REQUEST['precio_venta_sin_procesar'] );
 		}else{
 	        $na->setPrecioVentaSinProcesar( $_REQUEST['precio_venta'] );			
 		}
-
-		if( isset( $_REQUEST['precio_intersucursal_sin_procesar'] ) ){
-	        $na->setPrecioIntersucursalSinProcesar($_REQUEST['precio_intersucursal_sin_procesar']);	
+		
+		if(POS_MULTI_SUCURSAL){
+			if( isset( $_REQUEST['precio_intersucursal_sin_procesar'] ) ){
+		        $na->setPrecioIntersucursalSinProcesar($_REQUEST['precio_intersucursal_sin_procesar']);	
+			}else{
+				$na->setPrecioIntersucursalSinProcesar($_REQUEST['precio_interusucursal']);	
+			}
 		}else{
-			$na->setPrecioIntersucursalSinProcesar($_REQUEST['precio_interusucursal']);	
+			$na->setPrecioIntersucursalSinProcesar(0);
 		}
+
 
 		
         
@@ -63,6 +78,9 @@
         foreach ($inventariosSucursales as $i)
         {
             $i->setPrecioVenta( $_REQUEST['precio_venta'] );
+
+			if(POS_COMPRA_A_CLIENTES)
+            	$i->setPrecioCompra( $_REQUEST['precio_compra'] );
         }
 
 
@@ -210,28 +228,58 @@
 <input type="hidden" name="editar" value="1">
 
 <table border="0" cellspacing="5" cellpadding="5" style="width:100%">
-	<?php if($producto->getTratamiento()) { ?>
+	
+	<?php 
+		if($producto->getTratamiento()) { 
+		//con tratamientos
+	?>
 		<tr style="text-align:left"><th></th><th>Original</th><th>Procesado</th></tr>
 		<tr>
 			<td>Precio Sugerido</td>
 			<td><input type="text" name="precio_venta" value="<?php echo $general->getPrecioVenta(); ?>" size="40"/></td>
 			<td><input type="text" name="precio_venta_sin_procesar" value="<?php echo $general->getPrecioVentaSinProcesar();?>" size="40"/></td>
 		</tr>
+		
+		<?php if(POS_MULTI_SUCURSAL){ ?>
 		<tr>
 			<td>Precio Intersucursal</td>	
 			<td> <input type="text" name="precio_interusucursal" value="<?php echo $general->getPrecioIntersucursal();?>" size="40"/></td>
 			<td> <input type="text" name="precio_intersucursal_sin_procesar" value="<?php echo $general->getPrecioIntersucursalSinProcesar();?>" size="40"/></td>		
 		</tr>
-	<?php } else { ?>
+		<?php }	?>
+		
+		<?php if(POS_COMPRA_A_CLIENTES){ ?>
+		<tr>
+			<td>Precio a la compra</td>	
+			<td> <input type="text" name="precio_compra" value="<?php echo $general->getPrecioCompra();?>" size="40"/></td>
+			<td> <input type="text" name="precio_compra_sin_procesar" value="<?php echo $general->getPrecioCompra();?>" size="40"/></td>		
+		</tr>
+		<?php }	?>
+
+	<?php 
+		} else { 
+		//sin tratamiento
+	?>
 		<tr style="text-align:left"><th></th><th></th></tr>
 		<tr>
 			<td>Precio Sugerido</td>
 			<td><input type="text" name="precio_venta" value="<?php echo $general->getPrecioVenta(); ?>" size="40"/></td>
 		</tr>
+		
+		<?php if(POS_MULTI_SUCURSAL){ ?>
 		<tr>
 			<td>Precio Intersucursal</td>	
 			<td> <input type="text" name="precio_interusucursal" value="<?php echo $general->getPrecioIntersucursal();?>" size="40"/></td>
-		</tr>		
+		</tr>
+		<?php }	?>
+		
+		
+		<?php if(POS_COMPRA_A_CLIENTES){ ?>
+		<tr>
+			<td>Precio a la compra</td>	
+			<td> <input type="text" name="precio_compra" value="<?php echo $general->getPrecioCompra();?>" size="40"/></td>
+		</tr>
+		<?php }	?>
 		
 	<?php } ?>
 
