@@ -10,13 +10,161 @@ require_once("controller/inventario.controller.php");
 require_once('model/pagos_venta.dao.php');
 require_once('model/corte.dao.php');
 
+
+function renderUsuario($var) {
+    return UsuarioDAO::getByPK($var)->getNombre();
+}
 ?>
 
 <script>
 	jQuery("#MAIN_TITLE").html("EGRESOS");
+	
+	function doNuevoGasto(){
+		
+		//recuperacion
+		var g = {
+			concepto	: jQuery("#gasto-concepto").val(),
+			fecha 		: jQuery("#gasto-fecha").val(),
+			folio		: jQuery("#gasto-folio").val(),
+			nota 		: jQuery("#gasto-nota").html(),
+			monto 		: jQuery("#gasto-monto").val()
+		};
+		
+		//validacion
+		if(isNaN(g.monto) || g.monto.length == 0){
+			window.scroll(0,0);                         
+            jQuery("#ajax_failure").html("El monto no es un numero.").show();
+			return;
+		}
+
+		console.log(g);
+
+	    //hacer ajaxaso
+	    jQuery.ajaxSettings.traditional = true;
+
+	    jQuery("#submitGasto").fadeOut("slow",function(){
+	        jQuery("#loader").fadeIn();
+
+	        jQuery.ajax({
+	        url: "../proxy.php",
+	        data: { 
+	            action : 600, 
+	            data : jQuery.JSON.encode( g ),
+	        },
+	        cache: false,
+	        success: function(data){
+	            try{
+	                response = jQuery.parseJSON(data);
+	                //console.log(response, data.responseText)
+	            }catch(e){
+
+	                jQuery("#loader").fadeOut('slow', function(){
+	                    jQuery("#submitGasto").fadeIn();
+	                    window.scroll(0,0);                         
+	                    jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+	                    jQuery("#submitGasto").fadeIn();
+	                });                
+	                return;                    
+	            }
+
+
+	            if(response.success === false){
+
+	                jQuery("#loader").fadeOut('slow', function(){
+	                    //jQuery("#submitGasto").fadeIn();    
+	                    window.scroll(0,0);
+						try{
+	                    	jQuery("#ajax_failure").html(response.reason).show();
+						}catch(e){
+							jQuery("#ajax_failure").html("Error inesperado").show();
+						}
+
+	                    jQuery("#submitGasto").fadeIn();
+	                });                
+	                return ;
+	            }
+
+				var msg = "Gasto creado exitosamente.";
+				window.location = "contabilidad.php?action=egresos&success=true&reason=" + msg;
+
+	        }
+	        });
+	    });
+	}
 </script>
 
-<h2><img src='../media/icons/window_app_list_chart_32.png'>&nbsp;Egresos desde el ultimo corte</h2>
+
+<h2>Nuevo Gasto</h2>
+<div>
+	
+	<table style="width:100%">
+		
+		<tr>
+			<td>Concepto</td>
+			<td>
+				<select id="gasto-concepto">
+					<option>Comida</option>
+					<option>Gasolina</option>
+					<option>Lubricantes</option>
+					<option>Refacciones</option>
+					<option>Oxigeno</option>
+					<option>Gas</option>
+					<option>Papeleria</option>
+					<option>Material Limpieza</option>
+					<option>Luz</option>
+					<option>Agua</option>
+					<option>Teléfono</option>
+					<option>Teléfono Celular</option>
+					<option>Multas y Recargos</option>
+					<option>Permisos Autorizados</option>
+					<option>Prestamos Personales</option>
+					<option>Sueldos y salarios</option>
+					<option>Comisiónes de Personal</option>
+					<option>Bascula Publíca</option>
+					<option>Casa</option>
+					<option>Luis Alberto / Personal</option>
+					<option>Varios</option>
+					<option>Articulos de Oficina</option>
+					<option>Equipo de Seguridad</option>
+					<option>Ferreteria</option>
+					<option>Carto Empaques</option>
+					<option>disel</option>
+					<option>AGUINALDOS</option>
+					<option>Lucy</option>
+					<option>Servicios de casa</option>
+					<option>Casetas de CAPUFE</option>
+					<option>Estafeta</option>
+					<option>Estacionamientos</option>
+					<option>Deudas/pagadas</option>		
+				</select>
+			</td>
+			
+			<td>Fecha del egreso</td>
+			<td><input id="gasto-fecha" type="text" style="width:185px;" placeholder="dd/mm/aaaa"></td>
+		</tr>
+		
+		<tr>
+			<td>Folio</td>
+			<td><input type="text" id="gasto-folio" style="width:185px;" placeholder="Sin folio"></td>
+			<td>Nota</td>
+			<td><textarea style="width:300px;" id="gasto-nota" placeholder="Nota adicional sobre este gasto"></textarea></td>
+		</tr>
+
+		<tr>
+			<td>Monto</td>
+			<td><input style="width:185px;" id="gasto-monto" type="text"></td>
+		</tr>
+		
+	</table>
+	<div id="loader" 		style="display: none;" align="center"  >
+		Procesando <img src="../media/loader.gif">
+	</div>
+	<div id="submitGasto">
+		<h4><input type="button" value="CREAR EL NUEVO GASTO" onClick="doNuevoGasto()"></h4>
+	</div>
+</div>
+
+<h2>Egresos desde el ultimo corte</h2>
 
 
 <?php
@@ -81,7 +229,6 @@ require_once('model/corte.dao.php');
     foreach ($gastos as $g )
     {
         array_push( $flujo, array(
-            "tipo" => "gasto",
             "concepto" => $g->getConcepto(),
             "monto" => $g->getMonto() * -1,
             "usuario" => $g->getIdUsuario(),
@@ -95,7 +242,6 @@ require_once('model/corte.dao.php');
 	 * DIBUJAR LA GRAFICA
 	 * *******************************************/
     $header = array(
-               "tipo" => "Tipo",
                "concepto" => "Concepto",
                "usuario" => "Usuario",
                "fecha"=> "Fecha",
@@ -133,5 +279,10 @@ usort($flujo, "cmpFecha");
 		$enCaja += $f['monto'];
 	}
 	
-	if($enCaja != 0)
-	echo "<div align=right><h3>Total en caja: " . moneyFormat($enCaja) . "</h3></div>";
+	if($enCaja != 0){
+		?>
+			<div align=center style="margin-top: 15px">
+				<div  class='blue-rounded' style='width: 300px;'>Egresos totales <?php echo moneyFormat( abs($enCaja) ); ?> pesos </div>
+			</div>
+		<?php
+	}

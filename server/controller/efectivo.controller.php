@@ -89,15 +89,15 @@ require_once('logger.php');
 
 	    $data = parseJSON( $args['data'] );
 
-
-        if( !isset( $data->folio ) || !isset( $data->concepto ) || !isset( $data->monto ) )
+		//por lo menos, concepto y monto
+        if(  !isset( $data->concepto ) || !isset( $data->monto ) )
         {
             die('{"success": false, "reason": "Faltan parametros." }');
         }
 
         if(!is_numeric( $data->monto ))
         {
-            die( '{ "success" : "false" , "reason" : "No es una cantidad valida." }' ); 
+            die( '{ "success" : "false" , "reason" : "El monto no es una cantidad valida." }' ); 
         }
 
         $gasto = new Gastos();
