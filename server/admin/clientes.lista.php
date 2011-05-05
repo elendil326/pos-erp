@@ -27,8 +27,12 @@ require_once("controller/inventario.controller.php");
 
 	
 	//obtener todas las sucursales activas
-	$sucursales = listarSucursales(  );
+	if(POS_MULTI_SUCURSAL)
+		$sucursales = listarSucursales(  );
+	else
+		$sucursales = array( SucursalDAO::getByPk(0)->asArray() );
 	
+
 
 	$clientesRegistradosPorSucursal = array();
 	
