@@ -108,7 +108,6 @@ function nuevaCompraProveedor($data = null) {
     printf('{"success": true, "id_compra" : ' . $id_compra_proveedor . '}');
 }
 
-
 /**
  *
  * @param <type> $data
@@ -755,10 +754,7 @@ function nuevaCompraSucursal($json = null) {
 
             Logger::log("SE TOMA EN CUENTA EL DESCUENTO AQUI!?!?!?");
 
-            descontarDeInventarioMaestro($subproducto->id_compra,
-                    $subproducto->id_producto,
-                    $subproducto->cantidad,
-                    $subproducto->procesada);
+            descontarDeInventarioMaestro($subproducto->id_compra, $subproducto->id_producto, $subproducto->cantidad, $subproducto->procesada);
         }//foreach
 
 
@@ -1411,8 +1407,8 @@ function nuevaCompraCliente($args = null) {
         $detalle_compra->setCantidad($producto->cantidad);
         $detalle_compra->setPrecio($producto->precio);
         $detalle_compra->setDescuento($producto->descuento);
-        
-        $subtotal += ($detalle_compra->getCantidad() * $detalle_compra->getPrecio());
+
+        $subtotal += ( $detalle_compra->getCantidad() * $detalle_compra->getPrecio());
 
         try {
             DetalleCompraClienteDAO::save($detalle_compra);
@@ -1457,7 +1453,6 @@ function nuevaCompraCliente($args = null) {
     DAO::transEnd();
 }
 
-
 /**
  * Realiza una compra desde el mostrador de la sucursal a un proveedor
  * 
@@ -1475,7 +1470,7 @@ function nuevaCompraCliente($args = null) {
  * }
  * 
  */
-function nuevaCompraSucursalProveedor($args = null){
+function nuevaCompraSucursalProveedor($args = null) {
 
     Logger::log("Iniciando proceso de compra a cliente");
 
@@ -1692,7 +1687,47 @@ function nuevaCompraSucursalProveedor($args = null){
     printf('{"success": true, "id_compra":%s, "empleado":"%s"}', $compra->getIdCompra(), $empleado->getNombre());
 
     DAO::transEnd();
-    
+}
+
+/**
+ * Regresa un array con los detalle de la compra a los clientes
+ * return Array 
+ */
+function detalleCompracliente($id) {
+
+
+    $compra = CompraClienteDAO::getByPK($id);
+
+    $detalle_compra = new DetalleCompraCliente();
+    $detalle_compra->setIdCompra($compra->getIdCompra());
+    $detalle_compra = DetalleCompraClienteDAO::search($detalle_compra);
+
+
+    $items = array();
+
+    foreach ($detalle_compra as $dc) {
+
+        $producto = InventarioDAO::getByPK($dc->getIdProducto());
+
+        array_push($items, array(
+            "id_producto" => $dc->getIdProducto(),
+            "escala" => $producto->getEscala(),
+            "descripcion" => $producto->getDescripcion(),
+            "cantidad" => $dc->getCantidad(),
+            "descuento" => $dc->getDescuento(),
+            "precio" => $dc->getPrecio(),
+            "importe" => ($dc->getCantidad() * $dc->getPrecio())
+        ));
+        
+    }
+
+
+    $results = array(
+        'detalles' => $compra,
+        'items' => $items
+    );
+
+    return $results;
 }
 
 if (isset($args['action'])) {
