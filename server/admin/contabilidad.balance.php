@@ -81,7 +81,10 @@ foreach ($gastos as $g) {
         "concepto" => $g->getConcepto(),
         "monto" => $g->getMonto() * -1,
         "usuario" => $g->getIdUsuario(),
-        "fecha" => $g->getFecha()
+        "fecha" => $g->getFecha(),
+		"cargo" => $g->getMonto() * -1,
+		"abono" => null,
+		"saldo" => null
     ));
 }
 
@@ -105,7 +108,10 @@ foreach ($ingresos as $i) {
         "concepto" => $i->getConcepto(),
         "monto" => $i->getMonto(),
         "usuario" => $i->getIdUsuario(),
-        "fecha" => $i->getFecha()
+        "fecha" => $i->getFecha(),
+		"abono" => $i->getMonto(),
+		"cargo" => null,
+		"saldo" => null
     ));
 }
 
@@ -132,7 +138,10 @@ foreach ($ventas as $i) {
         "concepto" => "<a href='ventas.php?action=detalles&id=" . $i->getIdVenta() . "'>Venta de contado</a>",
         "monto" => $i->getPagado(),
         "usuario" => $i->getIdUsuario(),
-        "fecha" => $i->getFecha()
+        "fecha" => $i->getFecha(),
+		"abono" => $g->getPagado(),
+		"cargo" => null,
+		"saldo" => null
     ));
     $total_ventas += $i->getPagado();
 }
@@ -160,7 +169,10 @@ foreach ($compras as $i) {
         "concepto" => "<a href='compras.php?action=detalleCompraCliente&id=" . $i->getIdCompra() . "'>Compra de contado</a>",
         "monto" => ($i->getPagado() * -1),
         "usuario" => $i->getIdUsuario(),
-        "fecha" => $i->getFecha()
+        "fecha" => $i->getFecha(),
+		"cargo" => $i->getPagado() * -1,
+		"abono" => null,
+		"saldo" => null
     ));
     $total_compras += $i->getPagado();
 }
@@ -186,7 +198,10 @@ foreach ($results as $pago) {
         "concepto" => "<a href='ventas.php?action=detalles&id=" . $pago->getIdVenta() . "'>Abono a venta</a>",
         "monto" => $pago->getMonto(),
         "usuario" => $pago->getIdUsuario(),
-        "fecha" => $pago->getFecha()
+        "fecha" => $pago->getFecha(),
+		"abono" => $i->getPagado(),
+		"cargo" => null,
+		"saldo" => null
     ));
 }
 
@@ -195,13 +210,18 @@ foreach ($results as $pago) {
  * DIBUJAR LA GRAFICA
  * ****************************************** */
 $header = array(
-    "tipo" => "Tipo",
-    "concepto" => "Concepto",
-    "usuario" => "Usuario",
-    "fecha" => "Fecha",
-    "monto" => "Monto");
+		"tipo" => "Tipo",
+		"concepto" => "Concepto",
+		"usuario" => "Usuario",
+		"fecha" => "Fecha",
+//		"monto" => "Monto",
+		"abono"	=> "Abonos",
+		"cargo" => "Cargos",
+		"saldo" => "Saldo"
+	);
 
 function renderMonto($monto) {
+	if($monto == null) return "";
     if ($monto < 0)
         return "<div style='color:red;'>" . moneyFormat($monto) . "</div>";
 
@@ -217,10 +237,30 @@ function cmpFecha($a, $b) {
 
 usort($flujo, "cmpFecha");
 
+$saldo_inicial = 0;
+
+function renderSaldo($n, $row){
+	global $saldo_inicial;
+	if($row["abono"] != null){
+		//es un abono
+		$saldo_inicial += abs($row["abono"]);
+		
+	}else{
+		//es un cargo
+		$saldo_inicial -= abs($row["cargo"]);
+		
+	}
+
+	return renderMonto($saldo_inicial);
+}
+
 $tabla = new Tabla($header, $flujo);
 $tabla->addColRender("usuario", "renderUsuario");
 $tabla->addColRender("fecha", "toDate");
-$tabla->addColRender("monto", "renderMonto");
+
+$tabla->addColRender("abono", "renderMonto");
+$tabla->addColRender("cargo", "renderMonto");
+$tabla->addColRender("saldo", "renderSaldo");
 $tabla->addNoData("No hay operaciones.");
 $tabla->render();
 
