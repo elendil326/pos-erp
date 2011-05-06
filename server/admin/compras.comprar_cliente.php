@@ -179,10 +179,20 @@ if(!isset($_REQUEST['cid'])){
 			if( isNaN(jQuery("#item-descuento-"+id).val()) || (jQuery("#item-descuento-"+id).val().length == 0) )
 				jQuery("#item-descuento-"+id).val(0);
 			
-			var sub_total = (jQuery("#item-cantidad-"+id).val() - jQuery("#item-descuento-"+id).val()) * jQuery("#item-precio-"+id).val();
-			var sub_total_venta = (jQuery("#item-cantidad-"+id).val() - jQuery("#item-descuento-"+id).val()) * parseFloat(carritoDeCompra[i].precio_venta);
+			var producto_descontado = 0;
+			if(jQuery("#item-descuento-tipo-"+id).val() == "escala"){
+				//descontar x unidades
+				producto_descontado = jQuery("#item-descuento-"+id).val();
+			}else{
+				//descontar x porciento de las unidades
+				producto_descontado = (parseFloat(jQuery("#item-descuento-"+id).val() ) / 100) * jQuery("#item-cantidad-"+id).val();
+			}
+			
+			var sub_total = 		(jQuery("#item-cantidad-"+id).val() - producto_descontado) * jQuery("#item-precio-"+id).val();
+			var sub_total_venta = 	(jQuery("#item-cantidad-"+id).val() - producto_descontado) * parseFloat(carritoDeCompra[i].precio_venta);
 
-			final_weight += parseFloat(jQuery("#item-cantidad-"+id).val() - jQuery("#item-descuento-"+id).val());
+			final_weight += parseFloat(jQuery("#item-cantidad-"+id).val() - producto_descontado);
+			
 			estimated_earnings_at_sell_time += sub_total_venta;
 			final_price += sub_total;
 			
@@ -267,7 +277,13 @@ if(!isset($_REQUEST['cid'])){
 		html += td( "" );
 		html += td( prod.descripcion );
 		html += td( "<input id='item-cantidad-"+id_producto+"' onKeyUp='doMath( )' value='1' type=text >" + prod.escala + "s" );
-		html += td( "<input id='item-descuento-"+id_producto+"' onKeyUp='doMath(  )'  type=text>" );
+		
+		var html_desc = "<select id='item-descuento-tipo-"+id_producto+"' onChange='doMath()'>"
+			+ "<option value='escala'		>"+prod.escala+"s</option>"
+			+ "<option value='porciento'	>%</option>"			
+			+ "</select>";
+		
+		html += td( "<input id='item-descuento-"+id_producto+"' onKeyUp='doMath(  )'  type=text>" + html_desc);
 		html += td( "<input id='item-precio-"+id_producto+"' onKeyUp='doMath(  )' value='"+ prod.precio_compra +"' type=text>" );
 		html += td( div("", "id='item-importe-"+id_producto+"'")  );		
 		html = tr(html);

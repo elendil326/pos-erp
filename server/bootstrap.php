@@ -33,13 +33,12 @@
 
 	require_once('utils.php');
 
-
 	//tengo el id de instancia ?
 	if(!isset($_GET["i"])
 		&& !isset($_SESSION["INSTANCE_ID"])
 	){
 		Logger::log("There is no instance number nowhere !!");
-		die("there is no instance number");
+		die("There is no instance number");
 	}
 	
 	//no esta la de sescion, pero esta el get
@@ -125,9 +124,9 @@
 	}
 
 
-	define("POS_MULTI_SUCURSAL", 	$rs['multi_sucursal']);
-	define("POS_COMPRA_A_CLIENTES", $rs['compra_a_clientes']);
-	define("POS_MODULO_CONTABILIDAD", $rs['POS_MODULO_CONTABILIDAD']);
+	define("POS_MULTI_SUCURSAL", 		$rs['multi_sucursal']			);
+	define("POS_COMPRA_A_CLIENTES", 	$rs['compra_a_clientes']		);
+	define("POS_MODULO_CONTABILIDAD", 	$rs['POS_MODULO_CONTABILIDAD']	);
 
 		
 	require('db/DBConnection.php');
