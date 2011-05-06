@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.9
+-- version 3.3.7deb5build0.10.10.1
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 23-04-2011 a las 23:50:03
--- Versión del servidor: 5.5.8
--- Versión de PHP: 5.3.5
+-- Tiempo de generación: 06-05-2011 a las 04:35:03
+-- Versión del servidor: 5.1.49
+-- Versión de PHP: 5.3.3-1ubuntu9.5
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS `actualizacion_de_precio` (
   `id_producto` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `precio_venta` float NOT NULL,
+  `precio_compra` float DEFAULT NULL COMMENT 'el precio a la compra para el publico de este producto',
   `precio_venta_sin_procesar` float NOT NULL COMMENT 'El precio a que se vende este producto sin procesar si es que se procesa',
   `precio_intersucursal` float NOT NULL,
   `precio_intersucursal_sin_procesar` float NOT NULL,
@@ -37,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `actualizacion_de_precio` (
   PRIMARY KEY (`id_actualizacion`),
   KEY `id_producto` (`id_producto`),
   KEY `id_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=21 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=141 ;
 
 -- --------------------------------------------------------
 
@@ -57,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `autorizacion` (
   PRIMARY KEY (`id_autorizacion`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=145 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=322 ;
 
 -- --------------------------------------------------------
 
@@ -90,7 +91,32 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   PRIMARY KEY (`id_cliente`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=54 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `compra_cliente`
+--
+
+CREATE TABLE IF NOT EXISTS `compra_cliente` (
+  `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de compra',
+  `id_cliente` int(11) NOT NULL COMMENT 'cliente al que se le compro',
+  `tipo_compra` enum('credito','contado') COLLATE utf8_unicode_ci NOT NULL COMMENT 'tipo de compra, contado o credito',
+  `tipo_pago` enum('efectivo','cheque','tarjeta') COLLATE utf8_unicode_ci DEFAULT 'efectivo' COMMENT 'tipo de pago para esta compra en caso de ser a contado',
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de compra',
+  `subtotal` float DEFAULT NULL COMMENT 'subtotal de la compra, puede ser nulo',
+  `impuesto` float DEFAULT '0' COMMENT 'impuesto agregado por la compra, depende de cada sucursal',
+  `descuento` float NOT NULL DEFAULT '0' COMMENT 'descuento aplicado a esta compra',
+  `total` float NOT NULL DEFAULT '0' COMMENT 'total de esta compra',
+  `id_sucursal` int(11) NOT NULL COMMENT 'sucursal de la compra',
+  `id_usuario` int(11) NOT NULL COMMENT 'empleado que lo vendio',
+  `pagado` float NOT NULL DEFAULT '0' COMMENT 'porcentaje pagado de esta compra',
+  `cancelada` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'verdadero si esta compra ha sido cancelada, falso si no',
+  `ip` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0.0.0.0' COMMENT 'ip de donde provino esta compra',
+  `liquidada` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Verdadero si esta compra ha sido liquidada, falso si hay un saldo pendiente',
+  PRIMARY KEY (`id_compra`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -115,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `compra_proveedor` (
   `total_origen` float DEFAULT NULL COMMENT 'Es lo que vale el embarque segun el proveedor',
   PRIMARY KEY (`id_compra_proveedor`),
   KEY `id_proveedor` (`id_proveedor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=88 ;
 
 -- --------------------------------------------------------
 
@@ -171,7 +197,7 @@ CREATE TABLE IF NOT EXISTS `compra_sucursal` (
   PRIMARY KEY (`id_compra`),
   KEY `compras_sucursal` (`id_sucursal`),
   KEY `compras_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=58 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=313 ;
 
 -- --------------------------------------------------------
 
@@ -195,6 +221,22 @@ CREATE TABLE IF NOT EXISTS `corte` (
   PRIMARY KEY (`id_corte`),
   KEY `id_sucursal` (`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalle_compra_cliente`
+--
+
+CREATE TABLE IF NOT EXISTS `detalle_compra_cliente` (
+  `id_compra` int(11) NOT NULL COMMENT 'compra a que se referencia',
+  `id_producto` int(11) NOT NULL COMMENT 'producto de la compra',
+  `cantidad` float NOT NULL COMMENT 'cantidad que se compro',
+  `precio` float NOT NULL COMMENT 'precio al que se compro',
+  `descuento` float unsigned DEFAULT '0' COMMENT 'indica cuanto producto original se va a descontar de ese producto en esa compra',
+  PRIMARY KEY (`id_compra`,`id_producto`),
+  KEY `detalle_compra_producto` (`id_producto`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -240,6 +282,7 @@ CREATE TABLE IF NOT EXISTS `detalle_inventario` (
   `id_producto` int(11) NOT NULL COMMENT 'id del producto al que se refiere',
   `id_sucursal` int(11) NOT NULL COMMENT 'id de la sucursal',
   `precio_venta` float NOT NULL COMMENT 'precio al que se vendera al publico',
+  `precio_compra` float DEFAULT NULL COMMENT 'el precio a la compra para el publico general de este producto en esta sucursal',
   `existencias` float NOT NULL DEFAULT '0' COMMENT 'cantidad de producto que hay actualmente en almacen de esta sucursal',
   `existencias_procesadas` float NOT NULL,
   PRIMARY KEY (`id_producto`,`id_sucursal`),
@@ -276,7 +319,7 @@ CREATE TABLE IF NOT EXISTS `documento` (
   `identificador` varchar(128) COLLATE utf8_unicode_ci NOT NULL COMMENT 'identificador con el cual se le conocera en el sistema',
   `descripcion` varchar(256) COLLATE utf8_unicode_ci NOT NULL COMMENT 'descripcion breve del documento',
   PRIMARY KEY (`id_documento`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene información acerca todos de los documentos que se imprimen' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene información acerca todos de los documentos que se i' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -293,7 +336,7 @@ CREATE TABLE IF NOT EXISTS `equipo` (
   PRIMARY KEY (`id_equipo`),
   UNIQUE KEY `full_ua` (`full_ua`),
   UNIQUE KEY `token` (`token`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 -- --------------------------------------------------------
 
@@ -331,18 +374,21 @@ CREATE TABLE IF NOT EXISTS `factura_venta` (
   `id_folio` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'folio que tiene la factura',
   `id_venta` int(11) NOT NULL COMMENT 'venta a la cual corresponde la factura',
   `id_usuario` int(10) NOT NULL COMMENT 'Id del usuario que hiso al ultima modificacion a la factura',
+  `xml` text COLLATE utf8_unicode_ci NOT NULL COMMENT 'xml en bruto',
+  `lugar_emision` int(11) NOT NULL COMMENT 'id de la sucursal donde se emitio la factura',
+  `tipo_comprobante` enum('ingreso','egreso') COLLATE utf8_unicode_ci NOT NULL,
   `activa` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1 indica que la factura fue emitida y esta activa, 0 que la factura fue emitida y posteriormente fue cancelada',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha cuando se genero esta factura',
-  `certificado` text COLLATE utf8_unicode_ci COMMENT 'sello digital, emitido por el pac',
-  `aprovacion` text COLLATE utf8_unicode_ci COMMENT 'Numero de aprovacion de la factura electronica',
-  `anio_aprovacion` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `cadena_original` text COLLATE utf8_unicode_ci,
-  `sello_digital` text COLLATE utf8_unicode_ci,
-  `sello_digital_proveedor` text COLLATE utf8_unicode_ci,
-  `pac` text COLLATE utf8_unicode_ci,
+  `sellada` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Indica si el WS ha timbrado la factura',
+  `forma_pago` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `fecha_emision` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `folio_fiscal` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
+  `fecha_certificacion` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `numero_certificado_sat` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
+  `sello_digital_emisor` varchar(512) COLLATE utf8_unicode_ci NOT NULL,
+  `sello_digital_sat` varchar(512) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id_folio`),
   KEY `factura_venta_venta` (`id_venta`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=17 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -363,7 +409,7 @@ CREATE TABLE IF NOT EXISTS `gastos` (
   PRIMARY KEY (`id_gasto`),
   KEY `id_sucursal` (`id_sucursal`),
   KEY `id_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -417,7 +463,7 @@ CREATE TABLE IF NOT EXISTS `impresora` (
   `identificador` varchar(128) COLLATE utf8_unicode_ci NOT NULL COMMENT 'es el nombre de como esta dada de alta la impresora en la sucursal',
   PRIMARY KEY (`id_impresora`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene información acerca de todas las impresoras de todas las sucursales' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene información acerca de todas las impresoras de todas' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -454,7 +500,7 @@ CREATE TABLE IF NOT EXISTS `inventario` (
   `agrupacionTam` float DEFAULT NULL COMMENT 'El tamano de cada agrupacion',
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'si este producto esta activo o no en el sistema',
   PRIMARY KEY (`id_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=22 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=16 ;
 
 -- --------------------------------------------------------
 
@@ -506,7 +552,7 @@ CREATE TABLE IF NOT EXISTS `pagos_venta` (
   KEY `pagos_venta_venta` (`id_venta`),
   KEY `id_sucursal` (`id_sucursal`),
   KEY `id_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=91 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=252 ;
 
 -- --------------------------------------------------------
 
@@ -521,7 +567,7 @@ CREATE TABLE IF NOT EXISTS `pago_prestamo_sucursal` (
   `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'La fecha cuando se realizo este pago',
   `monto` float NOT NULL COMMENT 'El monto a abonar',
   PRIMARY KEY (`id_pago`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=28 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -552,7 +598,7 @@ CREATE TABLE IF NOT EXISTS `prestamo_sucursal` (
   `concepto` varchar(256) NOT NULL COMMENT 'El concepto de este prestamo',
   `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'fecha en la que se registro el gasto',
   PRIMARY KEY (`id_prestamo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=36 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -570,7 +616,7 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
   `activo` tinyint(2) NOT NULL DEFAULT '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
   `tipo_proveedor` enum('admin','sucursal','ambos') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'admin' COMMENT 'si este proveedor surtira al admin, a las sucursales o a ambos',
   PRIMARY KEY (`id_proveedor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=21 ;
 
 -- --------------------------------------------------------
 
@@ -603,7 +649,7 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   PRIMARY KEY (`id_sucursal`),
   UNIQUE KEY `letras_factura` (`letras_factura`),
   KEY `gerente` (`gerente`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=12 ;
 
 -- --------------------------------------------------------
 
@@ -625,7 +671,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `fecha_inicio` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha cuando este usuario comenzo a laborar',
   PRIMARY KEY (`id_usuario`),
   KEY `fk_usuario_1` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=107 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=105 ;
 
 -- --------------------------------------------------------
 
@@ -653,171 +699,4 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`id_sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=245 ;
-
---
--- Filtros para las tablas descargadas (dump)
---
-
---
--- Filtros para la tabla `actualizacion_de_precio`
---
-ALTER TABLE `actualizacion_de_precio`
-  ADD CONSTRAINT `actualizacion_de_precio_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `actualizacion_de_precio_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE ON UPDATE NO ACTION;
-
---
--- Filtros para la tabla `autorizacion`
---
-ALTER TABLE `autorizacion`
-  ADD CONSTRAINT `autorizacion_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `autorizacion_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE CASCADE ON UPDATE NO ACTION;
-
---
--- Filtros para la tabla `cliente`
---
-ALTER TABLE `cliente`
-  ADD CONSTRAINT `cliente_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `cliente_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Filtros para la tabla `compra_proveedor`
---
-ALTER TABLE `compra_proveedor`
-  ADD CONSTRAINT `compra_proveedor_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id_proveedor`);
-
---
--- Filtros para la tabla `compra_proveedor_flete`
---
-ALTER TABLE `compra_proveedor_flete`
-  ADD CONSTRAINT `compra_proveedor_flete_ibfk_1` FOREIGN KEY (`id_compra_proveedor`) REFERENCES `compra_proveedor` (`id_compra_proveedor`);
-
---
--- Filtros para la tabla `compra_sucursal`
---
-ALTER TABLE `compra_sucursal`
-  ADD CONSTRAINT `compra_sucursal_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `compra_sucursal_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `corte`
---
-ALTER TABLE `corte`
-  ADD CONSTRAINT `corte_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`);
-
---
--- Filtros para la tabla `detalle_compra_proveedor`
---
-ALTER TABLE `detalle_compra_proveedor`
-  ADD CONSTRAINT `detalle_compra_proveedor_ibfk_1` FOREIGN KEY (`id_compra_proveedor`) REFERENCES `compra_proveedor` (`id_compra_proveedor`),
-  ADD CONSTRAINT `detalle_compra_proveedor_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`);
-
---
--- Filtros para la tabla `detalle_compra_sucursal`
---
-ALTER TABLE `detalle_compra_sucursal`
-  ADD CONSTRAINT `detalle_compra_sucursal_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compra_sucursal` (`id_compra`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `detalle_compra_sucursal_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON DELETE CASCADE ON UPDATE NO ACTION;
-
---
--- Filtros para la tabla `detalle_inventario`
---
-ALTER TABLE `detalle_inventario`
-  ADD CONSTRAINT `detalle_inventario_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `detalle_inventario_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `detalle_venta`
---
-ALTER TABLE `detalle_venta`
-  ADD CONSTRAINT `detalle_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `detalle_venta_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`) ON DELETE CASCADE ON UPDATE NO ACTION;
-
---
--- Filtros para la tabla `equipo_sucursal`
---
-ALTER TABLE `equipo_sucursal`
-  ADD CONSTRAINT `equipo_sucursal_ibfk_1` FOREIGN KEY (`id_equipo`) REFERENCES `equipo` (`id_equipo`),
-  ADD CONSTRAINT `equipo_sucursal_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`);
-
---
--- Filtros para la tabla `factura_compra`
---
-ALTER TABLE `factura_compra`
-  ADD CONSTRAINT `factura_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compra_sucursal` (`id_compra`) ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `gastos`
---
-ALTER TABLE `gastos`
-  ADD CONSTRAINT `gastos_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`),
-  ADD CONSTRAINT `gastos_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Filtros para la tabla `grupos_usuarios`
---
-ALTER TABLE `grupos_usuarios`
-  ADD CONSTRAINT `grupos_usuarios_ibfk_1` FOREIGN KEY (`id_grupo`) REFERENCES `grupos` (`id_grupo`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `grupos_usuarios_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `impresiones`
---
-ALTER TABLE `impresiones`
-  ADD CONSTRAINT `impresiones_ibfk_2` FOREIGN KEY (`id_impresora`) REFERENCES `impresora` (`id_impresora`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `impresiones_ibfk_3` FOREIGN KEY (`id_documento`) REFERENCES `documento` (`id_documento`) ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `impresora`
---
-ALTER TABLE `impresora`
-  ADD CONSTRAINT `impresora_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `ingresos`
---
-ALTER TABLE `ingresos`
-  ADD CONSTRAINT `ingresos_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`),
-  ADD CONSTRAINT `ingresos_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Filtros para la tabla `inventario_maestro`
---
-ALTER TABLE `inventario_maestro`
-  ADD CONSTRAINT `inventario_maestro_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`id_producto`),
-  ADD CONSTRAINT `inventario_maestro_ibfk_2` FOREIGN KEY (`id_compra_proveedor`) REFERENCES `compra_proveedor` (`id_compra_proveedor`),
-  ADD CONSTRAINT `inventario_maestro_ibfk_3` FOREIGN KEY (`sitio_descarga`) REFERENCES `sucursal` (`id_sucursal`);
-
---
--- Filtros para la tabla `pagos_compra`
---
-ALTER TABLE `pagos_compra`
-  ADD CONSTRAINT `pagos_compra_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compra_sucursal` (`id_compra`) ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `pagos_venta`
---
-ALTER TABLE `pagos_venta`
-  ADD CONSTRAINT `pagos_venta_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `pagos_venta_ibfk_2` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`),
-  ADD CONSTRAINT `pagos_venta_ibfk_3` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Filtros para la tabla `sucursal`
---
-ALTER TABLE `sucursal`
-  ADD CONSTRAINT `sucursal_ibfk_1` FOREIGN KEY (`gerente`) REFERENCES `usuario` (`id_usuario`);
-
---
--- Filtros para la tabla `usuario`
---
-ALTER TABLE `usuario`
-  ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`) ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `ventas`
---
-ALTER TABLE `ventas`
-  ADD CONSTRAINT `ventas_ibfk_4` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`),
-  ADD CONSTRAINT `ventas_ibfk_5` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id_sucursal`),
-  ADD CONSTRAINT `ventas_ibfk_6` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3982 ;
