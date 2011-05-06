@@ -135,7 +135,7 @@ $cliente = ClienteDAO::getByPK($_REQUEST['id']);
             return jQuery("#ajax_failure").html("El descuento no es un numero valido.").show();
         }
 
-        if( (jQuery('#detalle-cliente-descuento').val() >= 100) || (jQuery('#detalle-cliente-descuento').val() < 0) ){
+        if( (jQuery('#detalle-cliente-descuento').val() > 100) || (jQuery('#detalle-cliente-descuento').val() < 0) ){
             return jQuery("#ajax_failure").html("El descuento debe ser la taza porcentual de descuento, entre 0% y 100%").show();            
         }
 
@@ -173,7 +173,7 @@ $cliente = ClienteDAO::getByPK($_REQUEST['id']);
             limite_credito : jQuery("#detalle-cliente-limite_credito").val(),
             
             telefono : jQuery("#detalle-cliente-telefono").val(),
-            e_mail : jQuery("#detalle-cliente-e_mail").val(),                        
+            e_mail : jQuery("#detalle-cliente-e_mail").val()                    
             
             
         };        

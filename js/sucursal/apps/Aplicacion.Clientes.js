@@ -1441,7 +1441,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
                         kconf = {
                             type : 'alfa',
                             submitText : 'Aceptar'
-                        };
+                        }; 
                         POS.Keyboard.Keyboard( this, kconf );
                     }
                 }
@@ -1449,6 +1449,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
             new Ext.form.Text({
                 name : 'estado',
                 label: 'Estado',
+                value:'GUANAJUATO',
                 required:true,
                 listeners : {
                     'focus' : function (){
@@ -1464,7 +1465,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
                 name : 'pais',
                 label: 'Pais',
                 required:true,
-                value:'México',
+                value:'MEXICO',
                 listeners : {
                     'focus' : function (){
                         kconf = {
@@ -1905,7 +1906,8 @@ Aplicacion.Clientes.prototype.nuevoClientePanelCreator = function (  ){
             }),
             new Ext.form.Text({
                 name : 'estado',
-                label: 'Estado',
+                label: 'Estado',                
+                value:'GUANAJUATO',
                 required:true,
                 listeners : {
                     'focus' : function (){
@@ -1921,7 +1923,7 @@ Aplicacion.Clientes.prototype.nuevoClientePanelCreator = function (  ){
                 name : 'pais',
                 label: 'Pais',
                 required:true,
-                value:'México',
+                value:'MEXICO',
                 listeners : {
                     'focus' : function (){
                         kconf = {
