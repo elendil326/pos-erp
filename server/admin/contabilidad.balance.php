@@ -23,7 +23,7 @@ function renderUsuario($var) {
 }
 
 if (POS_MULTI_SUCURSAL) {
-    $sucursal = SucursalDAO::getByPK($_REQUEST['id']);
+    $sucursal = SucursalDAO::getByPK(1);
 } else {
     $sucursal = SucursalDAO::getByPK(0);
 }
@@ -139,7 +139,7 @@ foreach ($ventas as $i) {
         "monto" => $i->getPagado(),
         "usuario" => $i->getIdUsuario(),
         "fecha" => $i->getFecha(),
-		"abono" => $g->getPagado(),
+		"abono" => $i->getPagado(),
 		"cargo" => null,
 		"saldo" => null
     ));

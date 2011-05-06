@@ -162,7 +162,10 @@ function checkCurrentSession()
     if( !(isset( $_SESSION['ua'] ) &&  $_SESSION['ua'] == $_SERVER['HTTP_USER_AGENT']) ){
         Logger::log("session[ua] not set or wrong!");
         return false;
-    } 
+    }
+
+
+
 
     $grupoUsuario = GruposUsuariosDAO::getByPK( $_SESSION['userid'] );
     

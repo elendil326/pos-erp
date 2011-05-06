@@ -37,8 +37,25 @@
 	if(!isset($_GET["i"])
 		&& !isset($_SESSION["INSTANCE_ID"])
 	){
-		Logger::log("There is no instance number nowhere !!");
-		die("There is no instance number");
+		
+		Logger::log("There is no instance number nowhere !!" );
+		
+		//la pagina de login, poner I_AM_LOGIN en verdadero, 
+		//es una buena manera de saber si vengo del login
+		//si vengo del login, entonces me vale si no hay instancia
+		//puedo sacarla despues de que el usaurio ponga sus credenciales
+		if(defined("I_AM_LOGIN") && I_AM_LOGIN) {
+			//
+			//Logger::log("Showing log page, althoug there is no instance id");
+			//return;
+			die("NO INSTANCE !");
+			
+		}else{
+			//no estoy en el log.php, redireccionar a el
+			die(header("Location: ./log.php"));
+		}
+
+		
 	}
 	
 	//no esta la de sescion, pero esta el get
@@ -53,7 +70,13 @@
 	if(isset($_SESSION["INSTANCE_ID"]) && isset($_GET["i"])
 		&& $_SESSION["INSTANCE_ID"] != $_GET["i"]
 		){
-		Logger::log("hay dos id's de instancias !!!",3 );
+		Logger::log("SE HA CAMBIADO LA INSTANCIA !!!!",3 );
+		
+		//cerrar la sesion actual
+		require("controller/login.controller.php");
+		logOut(false);
+		
+		echo "<script>window.location = '.';</script>";
 		$_SESSION["INSTANCE_ID"] = $_GET["i"];
 	}
 

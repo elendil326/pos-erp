@@ -1,4 +1,5 @@
 <?php 
+	define("I_AM_LOGIN", true);
 	require_once('../../server/bootstrap.php');
 
 
