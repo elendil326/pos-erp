@@ -155,6 +155,10 @@ class Comprobante {
      * Establece una cadena que contiene el XML que se enviara al PAC.
      */
     private function setXMLrequest($xml_request) {
+
+        $xml_request = str_replace("&lt;", "<", $this->getXMLrequest());
+        $xml_request = str_replace("&gt;", ">", $xml_request);
+
         $this->xml_request = $xml_request;
     }
 
@@ -190,6 +194,140 @@ class Comprobante {
     }
 
     /**
+     * Folio fiscal.
+     */
+    private $folio_fiscal = null;
+
+    /**
+     * Regresa una cadena que describe el folio fical de la factura.
+     * @return String $xml_response
+     */
+    public function getFolioFiscal() {
+        return $this->folio_fiscal;
+    }
+
+    /**
+     * Establece una cadena que describe el folio fical de la factura.
+     */
+    private function setFolioFiscal($_folio_fiscal) {
+        $this->folio_fiscal = $_folio_fiscal;
+    }
+
+    /**
+     * Fecha y hora de certificacion 
+     */
+    private $fecha_certificacion = null;
+
+    /**
+     * Obtiene la fecha y hora de certificacion
+     */
+    public function getFechaCertificacion() {
+        return $this->fecha_certificacion;
+    }
+
+    /**
+     * Establece la fecha y hora de certificacion
+     */
+    private function setFechaCertificacion($_fecha_certificacion) {
+        $this->fecha_certificacion = str_replace(array("T"), array(" "), $_fecha_certificacion);
+    }
+
+    /**
+     * Numero de serie del certificado del SAT
+     */
+    private $numero_certificado_sat = null;
+
+    /**
+     * Obtiene el numero de serie del certificado del SAT
+     */
+    public function getNumeroCertificadoSAT() {
+        return $this->numero_certificado_sat;
+    }
+
+    /**
+     * Establece el numero de serie del certificado del SAT
+     */
+    public function setNumeroCertificadoSAT($_numero_certificado_sat) {
+        $this->numero_certificado_sat = $_numero_certificado_sat;
+    }
+
+    /**
+     * Sello digital del emisor
+     */
+    private $sello_digital_emisor = null;
+
+    /**
+     * Obtiene el sello digital del emisor
+     */
+    public function getSelloDigitalEmisor() {
+        return $this->sello_digital_emisor;
+    }
+
+    /**
+     * Establece el sello digital del emisor
+     */
+    private function setSelloDigitalEmisor($_sello_digital_emisor) {
+        $this->sello_digital_emisor = $_sello_digital_emisor;
+    }
+
+    /**
+     * Sello digital del sat
+     */
+    private $sello_digital_sat = null;
+
+    /**
+     * Obtiene el sello digital del sat
+     */
+    public function getSelloDigitalSAT() {
+        return $this->sello_digital_sat;
+    }
+
+    /**
+     * Establece el sello digital del sat
+     */
+    private function setSelloDigitalSAT($_sello_digital_sat) {
+        $this->sello_digital_sat = $_sello_digital_sat;
+    }
+
+    /**
+     * Version del timbre fiscal digital 
+     */
+    private $version_tfd = null;
+
+    /**
+     * Obtiene la version del timbre fiscal digital 
+     */
+    public function getVersionTFD() {
+        return $this->version_tfd;
+    }
+
+    /**
+     * Establece la version del timbre fiscal digital 
+     */
+    public function setVersionTFD($_version_tfd) {
+        $this->version_tfd = $_version_tfd;
+    }
+
+    /**
+     * UUID
+     */
+    private $uuid = null;
+
+    /**
+     * Obtiene el UUID
+     */
+    public function getUUID() {
+        return $this->uuid;
+    }
+
+    /**
+     * Establece el UUID
+     */
+    public function setUUID($_uuid) {
+        $this->uuid = $_uuid;
+    }
+
+    /**
      * Contiene informacion acerca de posibles errores
      * @var String
      */
@@ -216,6 +354,77 @@ class Comprobante {
      * Objeto que informara al usuario acerca del exito de la operacion
      */
     private $success = null;
+    /**
+     * Url donde donde se aloja el webservice
+     */
+    private $url_webservice = null;
+
+    /**
+     * Establece una cadena con la direccion donde se aloja el WebService.
+     */
+    public function setUrlWS($_url_webservice) {
+        $this->url_webservice = $_url_webservice;
+    }
+
+    /**
+     *  Obtiene una cadena con la direccion donde se aloja el WebService.
+     */
+    private function getUrlWS() {
+        return $this->url_webservice;
+    }
+
+    /**
+     * cadena original del cfdi
+     */
+    private $cadena_original = null;
+
+    /**
+     * Obtiene la cadena original del cfdi
+     */
+    public function getCadenaOriginal() {
+        return $this->cadena_original;
+    }
+
+    /**
+     * 
+     */
+    private function formCadenaOriginal() {        
+        $this->cadena_original = "||" . $this->getVersionTFD() . "|";
+        $this->cadena_original .= $this->getUUID() . "|";        
+        $this->cadena_original .= str_replace(array(" "), array("T"), $this->getFechaCertificacion()) . "|";
+        $this->cadena_original .= $this->getSelloDigitalEmisor() . "|";        
+        //$this->cadena_original .= $this->getSelloDigitalSAT() . "|";        
+        $this->cadena_original .= $this->getNumeroCertificadoSAT() . "||";        
+    }
+
+    /**
+     * Indica si esta en modo debug
+     */
+    private $productionMode = false;
+
+    /**
+     * Establece informacion acerca de si el api esta en modo debug
+     * @param type $_debugMode 
+     */
+    private function setProductionMode($_debugMode) {
+        $this->productionMode = $_debugMode;
+    }
+
+    /**
+     * Obtiene informacion acerca de si el api esta en modo debug, verdadero si esta en modo debug, falso de lo contrario.
+     * @return type 
+     */
+    public function getProductionMode() {
+        return $this->productionMode;
+    }
+    
+    /**
+     * XML usado para depurar el api
+     * @return type 
+     */
+    private function getXmlHardCode() {
+        return '<?xml version="1.0" encoding="utf-8"?><cfdi:Comprobante xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" serie="A" folio="1" fecha="2011-04-03T22:55:56" sello="QgrmCjQtbzOR+lYZSRlqPvK2AMdnsX67F8Cjj08/ATWqKCcxemR4f0eSx2SoZE51bvSNRowTGTxfm6ohQj0YJi9SeC9l1o7i5kl+nF3T2KSoNdGYYWlb9XLOLbyr9P3AS+VDB+F3z/D5/7FOTAlDvSVRK7d5Hq8ReQ+0C/IVMQ8=" formaDePago="Pago en una sola exhibicion" noCertificado="00001000000103099981" certificado="MIIEDTCCAvWgAwIBAgIUMDAwMDEwMDAwMDAxMDMwOTk5ODEwDQYJKoZIhvcNAQEFBQAwggE2MTgwNgYDVQQDDC9BLkMuIGRlbCBTZXJ2aWNpbyBkZSBBZG1pbmlzdHJhY2nDs24gVHJpYnV0YXJpYTEvMC0GA1UECgwmU2VydmljaW8gZGUgQWRtaW5pc3RyYWNpw7NuIFRyaWJ1dGFyaWExHzAdBgkqhkiG9w0BCQEWEGFjb2RzQHNhdC5nb2IubXgxJjAkBgNVBAkMHUF2LiBIaWRhbGdvIDc3LCBDb2wuIEd1ZXJyZXJvMQ4wDAYDVQQRDAUwNjMwMDELMAkGA1UEBhMCTVgxGTAXBgNVBAgMEERpc3RyaXRvIEZlZGVyYWwxEzARBgNVBAcMCkN1YXVodGVtb2MxMzAxBgkqhkiG9w0BCQIMJFJlc3BvbnNhYmxlOiBGZXJuYW5kbyBNYXJ0w61uZXogQ29zczAeFw0xMTAzMjAwMTA1NDNaFw0xMzAzMTkwMTA1NDNaMIGtMSIwIAYDVQQDExlKVUFOIEFOVE9OSU8gR0FSQ0lBIFRBUElBMSIwIAYDVQQpExlKVUFOIEFOVE9OSU8gR0FSQ0lBIFRBUElBMSIwIAYDVQQKExlKVUFOIEFOVE9OSU8gR0FSQ0lBIFRBUElBMRYwFAYDVQQtEw1HQVRKNzQwNzE0RjQ4MRswGQYDVQQFExJHQVRKNzQwNzE0SEdUUlBOMDMxCjAIBgNVBAsTASAwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAPfLNYOVJXmBfNSZd93ygVtVnIkKX4AYcxMlllUJ8VgG7Rsi4zlbWBjy2HGSRmcN2M606LrJu3s2H3WPDtGPPd/G+2MAkBWHdPA1r+ptbprIiwToXUQE5CFP4E5Xl+xT3CNe4nJlIVVetJTcNMZdReYltVQKbE5ncBj3rPvTFELZAgMBAAGjHTAbMAwGA1UdEwEB/wQCMAAwCwYDVR0PBAQDAgbAMA0GCSqGSIb3DQEBBQUAA4IBAQCfusmkDoo/iygnPWwTooH4Itt9HsNGW8OnUwwhMxSwyzjzmO+CYNv77DtAD/UuJ7cu/kzprHRbLUMng8vEEzBvOlPyEx3naoxOjSCDFiY5ATPkLM+i8Xb7WyqPneCKKdTmm6n/cZroJZLwShhhsK1LFRJKJRyEOqiIXXGq/YJJcBVbsMuznxW5/dRiKTBlOtWRdh7dq9eWch4fOBsOa4+alHaBbXKlbybgWHzHq8gpLTKE8q0o1u6hGPvGZevh9dDfusMPR4lAFxadCYJbv2z+dfdPaNSnwZg3jgOP4pKOAey2PiSPApNLMV9lveDOGcrnlJWLIep67921bdcc2odF" subTotal="20444.00" TipoCambio="1.0" Moneda="MXN" total="20444.00" tipoDeComprobante="ingreso" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv3.xsd" xmlns:cfdi="http://www.sat.gob.mx/cfd/3"><cfdi:Emisor rfc="GATJ740714F48" nombre="JUAN ANTONIO GARCIA TAPIA"><cfdi:DomicilioFiscal calle="AVENIDA CONSTITUYENTES" noExterior="360" noInterior="BODEGA 49" colonia="CENTRO" municipio="CELAYA" estado="GUANAJUATO" pais="MEXICO" codigoPostal="38070" /></cfdi:Emisor><cfdi:Receptor rfc="MESC780327436" nombre="Carlos Francisco Mendez Sanchez"><cfdi:Domicilio calle="Av. Irrigacion" noExterior="419" noInterior="Local B" colonia="Villas del Benavente 1" municipio="Celaya" estado="Guanajuato" pais="Mexico" codigoPostal="38034" /></cfdi:Receptor><cfdi:Conceptos><cfdi:Concepto cantidad="1" descripcion="Varios Verduras" valorUnitario="20444" importe="20444" /></cfdi:Conceptos><cfdi:Impuestos totalImpuestosTrasladados="0.00"><cfdi:Traslados><cfdi:Traslado impuesto="IVA" tasa="0.00" importe="0.00" /></cfdi:Traslados></cfdi:Impuestos><cfdi:Complemento><tfd:TimbreFiscalDigital version="1.0" UUID="4B3D22A9-D8A0-40FA-B0AA-6ACB6CD7BFF4" FechaTimbrado="2011-04-03T22:50:40" selloCFD="QgrmCjQtbzOR+lYZSRlqPvK2AMdnsX67F8Cjj08/ATWqKCcxemR4f0eSx2SoZE51bvSNRowTGTxfm6ohQj0YJi9SeC9l1o7i5kl+nF3T2KSoNdGYYWlb9XLOLbyr9P3AS+VDB+F3z/D5/7FOTAlDvSVRK7d5Hq8ReQ+0C/IVMQ8=" noCertificadoSAT="00001000000102629688" selloSAT="bHuroY2kRFbCOZFoOQayVB5nnbal5WF4gBmTs5AD6/yxIaSHKQ7D3UKie72X4JX64DBpUAUYNV7Pb1OdcFUoRdXDCIN9tOhTTkbKY4N+m01O4+OrqIepvGgFcoN5kKJOw0Sbnp2qEj9E1CzaYHPmsgsS3tQo+y3cqIc2p4boOGo=" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/TimbreFiscalDigital/TimbreFiscalDigital.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" /></cfdi:Complemento></cfdi:Comprobante>';
+    }
 
     /**
      * Construye un nuevo objeto Comprobante.
@@ -228,8 +437,56 @@ class Comprobante {
         
     }
 
-//__construct
+    /**
+     * Valida si se leyeron correctamente los datos del sello de la factura
+     * @return Success
+     */
+    public function isValidSelloFactura() {
 
+        /* if ($this->getFolioFiscal() == null) {
+          Logger::log("Error : No se leyo el folio fiscal de la respuesta de la factura.");
+          $this->setError("Error : No se leyo el folio fiscal de la respuesta de la factura.");
+          } */
+
+        if ($this->getFechaCertificacion() == null) {
+            Logger::log("Error : No se leyo la fecha de la certificacion de la respuesta de la factura.");
+            $this->setError("Error : No se leyo la fecha de la certificacion de la respuesta de la factura.");
+        }
+
+        if ($this->getNumeroCertificadoSAT() == null) {
+            Logger::log("Error : No se leyo la fecha de la certificacion de la respuesta de la factura.");
+            $this->setError("Error : No se leyo la fecha de la certificacion de la respuesta de la factura.");
+        }
+
+        if ($this->getSelloDigitalEmisor() == null) {
+            Logger::log("Error : No se leyo el sello digital del emisor de la respuesta de la factura.");
+            $this->setError("Error : No se leyo el sello digital del emisor de la respuesta de la factura.");
+        }
+
+        if ($this->getSelloDigitalSAT() == null) {
+            Logger::log("Error : No se leyo el sello digital del sat de la respuesta de la factura.");
+            $this->setError("Error : No se leyo el sello digital del sat de la respuesta de la factura.");
+        }
+
+        if ($this->getVersionTFD() == null) {
+            Logger::log("Error : No se leyo la version del timbre fiscal digital de la respuesta de la factura.");
+            $this->setError("Error : No se leyo la version del timbre fiscal digital de la respuesta de la factura.");
+        }
+
+        if ($this->getUUID() == null) {
+            Logger::log("Error : No se leyo el UUID de la respuesta de la factura.");
+            $this->setError("Error : No se leyo el UUID de la respuesta de la factura.");
+        }
+
+
+        $this->success = new Success($this->getError());
+        return $this->success;
+    }
+
+    /**
+     * Valida si estan correctamente formados los objetos que conforman el Comprobante
+     * @return Success
+     */
     public function isValid() {
 
 
@@ -303,6 +560,11 @@ class Comprobante {
             }
         }
 
+        if ($this->getUrlWS() == null) {
+            Logger::log("Error : No se ha indicado la url del WebService.");
+            $this->setError("Error : No se ha indicado la url del WebService.");
+        }
+
         $this->success = new Success($this->getError());
         return $this->success;
     }
@@ -314,13 +576,21 @@ class Comprobante {
      */
     function getNuevaFactura() {
 
-        return $this->formXML();
+        //verificamos si se construyo el comprobante correctamente
+        $success = $this->isValid();
+
+        if (!$success->getSuccess()) {
+            $this->success = new Success($success->getInfo());
+            return $this->success;
+        } else {
+            return $this->formXML();
+        }
 
         //return $this->getResponseFromWebService();
     }
 
     /**
-     *
+     * Construye un XML para enviarlo al WS
      * @return <type>
      */
     private function formXML() {
@@ -464,6 +734,7 @@ class Comprobante {
 
         $xml->appendChild($comprobante);
 
+        //guardamos en este objeto el XML que se envia al SAT
         $this->setXMLrequest($xml->saveXML());
 
         Logger::log("Terminado proceso de parceo de venta a XML");
@@ -474,169 +745,84 @@ class Comprobante {
 
     /**
      * Realiza una petición al webservice para que genere un nuevo CFDI
-     * return Boolean true en casod e tener exito, false de lo contrario
+     * return Boolean true en caso de tener exito, false de lo contrario
      */
     private function getFacturaFromWebService() {
 
-        //obtenemos la url del web service
-        if (!( $url = PosConfigDAO::getByPK('url_timbrado') )) {
-            Logger::log("Error al obtener la url del ws");
-            DAO::transRollback();
-            die('{"success": false, "reason": "Error al obtener la url del web service" }');
-        }
+        //creamos una instancia de un objeto SoapClient
 
-        $client = new SoapClient($url->getValue());
+        if ($this->getProductionMode()) {
+            
+            $client = new SoapClient($this->getUrlWS());
+            
+            //realiza la peticion al webservice
+            $result = $client->RececpcionComprobante(array('comprobante' => $this->getXMLrequest()));
 
-        //TODO : Mejorar esto
-        $url_encoded = str_replace("&lt;", "<", $this->getXMLrequest());
-        $url_encoded = str_replace("&gt;", ">", $url_encoded);
+            //verificamos si la llamada fallo
 
-
-
-        //-----------------------------------
-
-        $dom = new DOMDocument('1.0', 'utf-8');
-
-        $element = $dom->createElement('factura', $url_encoded);
-
-        // Insertamos el nuevo elemento como raíz (hijo del documento)
-        $dom->appendChild($element);
-
-        echo $dom->saveXML();
-
-        //------------------------------------
-
-
-
-        //realiza la peticion al webservice
-        $result = $client->RececpcionComprobante(array('comprobante' => $url_encoded));
-
-        //verificamos si la llamada fallo
-
-        if (is_soap_fault($result)) {
-            trigger_error("La llamada al webservice ha fallado", E_USER_ERROR);
-        }
-
-        //analizamos el success del xml
-
-        libxml_use_internal_errors(true);
-
-        $xml_response = new DOMDocument();
-
-        $xml_response->loadXML($result->RececpcionComprobanteResult);
-
-        if (!$xml_response) {
-            $e = "Error cargando XML\n";
-            foreach (libxml_get_errors () as $error) {
-                $e.= "\t" . $error->message;
+            if (is_soap_fault($result)) {
+                trigger_error("La llamada al webservice ha fallado", E_USER_ERROR);
             }
 
-            Logger::log("Error al leer xml del web service : {$e} ");
-            die('{"success": false, "reason": "Error al leer xml del web service : ' . preg_quote($e) . '" }');
+            //analizamos el success del xml
+
+            libxml_use_internal_errors(true);
+
+            if (!$xml_response) {
+                $e = "Error cargando XML\n";
+                foreach (libxml_get_errors() as $error) {
+                    $e.= "\t" . $error->message;
+                }
+
+                Logger::log("Error al leer xml del web service : {$e} ");
+                die('{"success": false, "reason": "Error al leer xml del web service : ' . preg_quote($e) . '" }');
+            }
+
+            $response = $result->RececpcionComprobanteResult;
+        } else {
+            $response = $this->getXmlHardCode();
         }
 
-        $params = $xml_response->getElementsByTagName('Complemento');
+        //almacenamos el xml (en bruto) de respuesta en el objeto
+        $this->setXMLresponse($response);
 
-        $k = 0;
+        $response = str_replace(array("cfdi:", "tfd:"), array("", ""), $response);
+        
+        $xml_response = new SimpleXMLElement($response);
 
-        foreach ($params as $param) {
-            $success = $params->item($k)->getAttribute('success');
+        //fecha de certificacion
+        $this->setFechaCertificacion($xml_response->Complemento->TimbreFiscalDigital["FechaTimbrado"]);
+        
+        //numero de certificado del sat
+        $this->setNumeroCertificadoSAT($xml_response->Complemento->TimbreFiscalDigital["noCertificadoSAT"]);
+        
+        //sello digital del emisor
+        $this->setSelloDigitalEmisor($xml_response->Complemento->TimbreFiscalDigital["selloCFD"]);
+        
+        //sello digital del sat
+        $this->setSelloDigitalSAT($xml_response->Complemento->TimbreFiscalDigital["selloSAT"]);
+        
+        //version del timbre fiscal digital
+        $this->setVersionTFD($xml_response->Complemento->TimbreFiscalDigital["version"]);
+        
+        //UUID
+        $this->setUUID($xml_response->Complemento->TimbreFiscalDigital["UUID"]);
+        
+        //construye la cadena original
+        $this->formCadenaOriginal();
+
+        //TODO : que pasara si ocurre un error aqui?
+        //validamos que se hayan formado bien los datos
+        $success = $this->isValidSelloFactura();
+        if (!$success->getSuccess()) {
+            $this->setError($success->getInfo());
         }
-
-        if ($success == false || $success == "false") {
-            Logger::log("Error al generar el xml del web service, el webservice contesto success : false");
-            $this->setError("Error al generar el xml del web service, el webservice contesto success : false");
-        }
-
-        //almacenamos la respuesta del webservice
-
-        $this->setXMLresponse($xml_response->saveXML());
 
         $this->success = new Success($this->getError());
 
-
-        //-----------------------------------
-
-        /*$dom = new DOMDocument('1.0', 'utf-8');
-
-        $element = $dom->createElement('factura', $result->RececpcionComprobanteResult);
-
-        // Insertamos el nuevo elemento como raíz (hijo del documento)
-        $dom->appendChild($element);
-
-        echo $dom->saveXML();*/
-
-        //------------------------------------    
-
         return $this->success;
-    }
-
-    /**
-     * Recibe el id de un folio de una factura
-     * y regresa un json con el formato necesario para generar una
-     * nueva factura en formato pdf.
-     */
-    private function parseFacturaToJSON($xml_response) {
-
-        //obtenemos la url del logo
-        if (!( $url_logo = PosConfigDAO::getByPK('url_logo') )) {
-            $url_logo = "http://t2.gstatic.com/images?q=tbn:ANd9GcTLzjmaR_M58RmjwRE_xXRziJBi68hMg898kvKtYLD1lQ22i7Br";
-        }
-
-        $json = array();
-
-        /* array_push($json , "url" -> $url_logo);
-          array_push("emisor",array(
-          "razon_social"
-          )); */
-        /**
-
-          {
-          "url" : "string",
-          "emisor": {
-          "razon_social" : "string",
-          "rfc": "string",
-          "direccion": "string",
-          "folio": "string"
-          },
-          "receptor": {
-          "razon_social" : "string",
-          "rfc": "string",
-          "direccion": "string"
-          },
-          "datos_fiscales": {
-          "numero_certificado": "string",
-          "numero_aprobacion": "string",
-          "anio_aprobacion": "string",
-          "cadena_original": "string",
-          "sello_digital": "string",
-          "sello_digital_proveedor": "string",
-          "pac": "string"
-          },
-          "factura": {
-          "productos": [
-          {
-          "cantidad": "string",
-          "descripcion": "string",
-          "precio": "string",
-          "importe": "string"
-          }
-          ],
-          "subtotal": "string",
-          "descuento": "string",
-          "iva": "string",
-          "total": "string",
-          "total_letra": "string",
-          "forma_pago": "string",
-          "metodo_pago": "string"
-          }
-          }
-
-         */
-        return json_encode($json);
-    }
+    }    
 
 }
 
-//class
 ?>

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 06-05-2011 a las 04:35:03
+-- Tiempo de generación: 07-05-2011 a las 08:26:46
 -- Versión del servidor: 5.1.49
 -- Versión de PHP: 5.3.3-1ubuntu9.5
 
@@ -381,14 +381,16 @@ CREATE TABLE IF NOT EXISTS `factura_venta` (
   `sellada` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Indica si el WS ha timbrado la factura',
   `forma_pago` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `fecha_emision` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `version_tfd` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `folio_fiscal` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   `fecha_certificacion` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `numero_certificado_sat` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   `sello_digital_emisor` varchar(512) COLLATE utf8_unicode_ci NOT NULL,
   `sello_digital_sat` varchar(512) COLLATE utf8_unicode_ci NOT NULL,
+  `cadena_original` varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id_folio`),
   KEY `factura_venta_venta` (`id_venta`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=38 ;
 
 -- --------------------------------------------------------
 

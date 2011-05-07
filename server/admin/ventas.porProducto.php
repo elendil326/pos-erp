@@ -86,11 +86,11 @@
 
         $prodData['mes'] = $totalProductos;
 
-        array_push( $tabla, $prodData );    
+        array_push( $tabla, $prodData );    */
     }
 
     
-    $header = array( 
+    /*$header = array( 
 	    "id_producto" =>  "Id",
     	"descripcion" =>  "Descripcion",
     	"dia" =>  "Ultimo dia",

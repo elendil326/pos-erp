@@ -2,7 +2,7 @@
 /** Value Object file for table factura_venta.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author Alan Gonzalez
+  * @author no author especified
   * @access public
   * @package docs
   * 
@@ -52,6 +52,9 @@ class FacturaVenta extends VO
 			if( isset($data['fecha_emision']) ){
 				$this->fecha_emision = $data['fecha_emision'];
 			}
+			if( isset($data['version_tfd']) ){
+				$this->version_tfd = $data['version_tfd'];
+			}
 			if( isset($data['folio_fiscal']) ){
 				$this->folio_fiscal = $data['folio_fiscal'];
 			}
@@ -66,6 +69,9 @@ class FacturaVenta extends VO
 			}
 			if( isset($data['sello_digital_sat']) ){
 				$this->sello_digital_sat = $data['sello_digital_sat'];
+			}
+			if( isset($data['cadena_original']) ){
+				$this->cadena_original = $data['cadena_original'];
 			}
 		}
 	}
@@ -90,11 +96,13 @@ class FacturaVenta extends VO
 			"sellada" => $this->sellada,
 			"forma_pago" => $this->forma_pago,
 			"fecha_emision" => $this->fecha_emision,
+			"version_tfd" => $this->version_tfd,
 			"folio_fiscal" => $this->folio_fiscal,
 			"fecha_certificacion" => $this->fecha_certificacion,
 			"numero_certificado_sat" => $this->numero_certificado_sat,
 			"sello_digital_emisor" => $this->sello_digital_emisor,
-			"sello_digital_sat" => $this->sello_digital_sat
+			"sello_digital_sat" => $this->sello_digital_sat,
+			"cadena_original" => $this->cadena_original
 		); 
 	return json_encode($vec); 
 	}
@@ -192,6 +200,15 @@ class FacturaVenta extends VO
 	protected $fecha_emision;
 
 	/**
+	  * version_tfd
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access protected
+	  * @var varchar(10)
+	  */
+	protected $version_tfd;
+
+	/**
 	  * folio_fiscal
 	  * 
 	  *  [Campo no documentado]<br>
@@ -235,6 +252,15 @@ class FacturaVenta extends VO
 	  * @var varchar(512)
 	  */
 	protected $sello_digital_sat;
+
+	/**
+	  * cadena_original
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access protected
+	  * @var varchar(2048)
+	  */
+	protected $cadena_original;
 
 	/**
 	  * getIdFolio
@@ -481,6 +507,30 @@ class FacturaVenta extends VO
 	}
 
 	/**
+	  * getVersionTfd
+	  * 
+	  * Get the <i>version_tfd</i> property for this object. Donde <i>version_tfd</i> es  [Campo no documentado]
+	  * @return varchar(10)
+	  */
+	final public function getVersionTfd()
+	{
+		return $this->version_tfd;
+	}
+
+	/**
+	  * setVersionTfd( $version_tfd )
+	  * 
+	  * Set the <i>version_tfd</i> property for this object. Donde <i>version_tfd</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>version_tfd</i> es de tipo <i>varchar(10)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(10)
+	  */
+	final public function setVersionTfd( $version_tfd )
+	{
+		$this->version_tfd = $version_tfd;
+	}
+
+	/**
 	  * getFolioFiscal
 	  * 
 	  * Get the <i>folio_fiscal</i> property for this object. Donde <i>folio_fiscal</i> es  [Campo no documentado]
@@ -598,6 +648,30 @@ class FacturaVenta extends VO
 	final public function setSelloDigitalSat( $sello_digital_sat )
 	{
 		$this->sello_digital_sat = $sello_digital_sat;
+	}
+
+	/**
+	  * getCadenaOriginal
+	  * 
+	  * Get the <i>cadena_original</i> property for this object. Donde <i>cadena_original</i> es  [Campo no documentado]
+	  * @return varchar(2048)
+	  */
+	final public function getCadenaOriginal()
+	{
+		return $this->cadena_original;
+	}
+
+	/**
+	  * setCadenaOriginal( $cadena_original )
+	  * 
+	  * Set the <i>cadena_original</i> property for this object. Donde <i>cadena_original</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>cadena_original</i> es de tipo <i>varchar(2048)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(2048)
+	  */
+	final public function setCadenaOriginal( $cadena_original )
+	{
+		$this->cadena_original = $cadena_original;
 	}
 
 }

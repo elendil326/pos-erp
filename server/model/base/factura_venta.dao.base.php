@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link FacturaVenta }. 
-  * @author Alan Gonzalez
+  * @author no author especified
   * @access private
   * @abstract
   * @package docs
@@ -193,6 +193,11 @@ abstract class FacturaVentaDAOBase extends DAO
 			array_push( $val, $factura_venta->getFechaEmision() );
 		}
 
+		if( $factura_venta->getVersionTfd() != NULL){
+			$sql .= " version_tfd = ? AND";
+			array_push( $val, $factura_venta->getVersionTfd() );
+		}
+
 		if( $factura_venta->getFolioFiscal() != NULL){
 			$sql .= " folio_fiscal = ? AND";
 			array_push( $val, $factura_venta->getFolioFiscal() );
@@ -218,6 +223,11 @@ abstract class FacturaVentaDAOBase extends DAO
 			array_push( $val, $factura_venta->getSelloDigitalSat() );
 		}
 
+		if( $factura_venta->getCadenaOriginal() != NULL){
+			$sql .= " cadena_original = ? AND";
+			array_push( $val, $factura_venta->getCadenaOriginal() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -241,7 +251,7 @@ abstract class FacturaVentaDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -249,7 +259,7 @@ abstract class FacturaVentaDAOBase extends DAO
 	  **/
 	private static final function update( $factura_venta )
 	{
-		$sql = "UPDATE factura_venta SET  id_venta = ?, id_usuario = ?, xml = ?, lugar_emision = ?, tipo_comprobante = ?, activa = ?, sellada = ?, forma_pago = ?, fecha_emision = ?, folio_fiscal = ?, fecha_certificacion = ?, numero_certificado_sat = ?, sello_digital_emisor = ?, sello_digital_sat = ? WHERE  id_folio = ?;";
+		$sql = "UPDATE factura_venta SET  id_venta = ?, id_usuario = ?, xml = ?, lugar_emision = ?, tipo_comprobante = ?, activa = ?, sellada = ?, forma_pago = ?, fecha_emision = ?, version_tfd = ?, folio_fiscal = ?, fecha_certificacion = ?, numero_certificado_sat = ?, sello_digital_emisor = ?, sello_digital_sat = ?, cadena_original = ? WHERE  id_folio = ?;";
 		$params = array( 
 			$factura_venta->getIdVenta(), 
 			$factura_venta->getIdUsuario(), 
@@ -260,11 +270,13 @@ abstract class FacturaVentaDAOBase extends DAO
 			$factura_venta->getSellada(), 
 			$factura_venta->getFormaPago(), 
 			$factura_venta->getFechaEmision(), 
+			$factura_venta->getVersionTfd(), 
 			$factura_venta->getFolioFiscal(), 
 			$factura_venta->getFechaCertificacion(), 
 			$factura_venta->getNumeroCertificadoSat(), 
 			$factura_venta->getSelloDigitalEmisor(), 
 			$factura_venta->getSelloDigitalSat(), 
+			$factura_venta->getCadenaOriginal(), 
 			$factura_venta->getIdFolio(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -288,7 +300,7 @@ abstract class FacturaVentaDAOBase extends DAO
 	  **/
 	private static final function create( &$factura_venta )
 	{
-		$sql = "INSERT INTO factura_venta ( id_folio, id_venta, id_usuario, xml, lugar_emision, tipo_comprobante, activa, sellada, forma_pago, fecha_emision, folio_fiscal, fecha_certificacion, numero_certificado_sat, sello_digital_emisor, sello_digital_sat ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO factura_venta ( id_folio, id_venta, id_usuario, xml, lugar_emision, tipo_comprobante, activa, sellada, forma_pago, fecha_emision, version_tfd, folio_fiscal, fecha_certificacion, numero_certificado_sat, sello_digital_emisor, sello_digital_sat, cadena_original ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$factura_venta->getIdFolio(), 
 			$factura_venta->getIdVenta(), 
@@ -300,11 +312,13 @@ abstract class FacturaVentaDAOBase extends DAO
 			$factura_venta->getSellada(), 
 			$factura_venta->getFormaPago(), 
 			$factura_venta->getFechaEmision(), 
+			$factura_venta->getVersionTfd(), 
 			$factura_venta->getFolioFiscal(), 
 			$factura_venta->getFechaCertificacion(), 
 			$factura_venta->getNumeroCertificadoSat(), 
 			$factura_venta->getSelloDigitalEmisor(), 
 			$factura_venta->getSelloDigitalSat(), 
+			$factura_venta->getCadenaOriginal(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -463,6 +477,17 @@ abstract class FacturaVentaDAOBase extends DAO
 			
 		}
 
+		if( (($a = $factura_ventaA->getVersionTfd()) != NULL) & ( ($b = $factura_ventaB->getVersionTfd()) != NULL) ){
+				$sql .= " version_tfd >= ? AND version_tfd <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " version_tfd = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
 		if( (($a = $factura_ventaA->getFolioFiscal()) != NULL) & ( ($b = $factura_ventaB->getFolioFiscal()) != NULL) ){
 				$sql .= " folio_fiscal >= ? AND folio_fiscal <= ? AND";
 				array_push( $val, min($a,$b)); 
@@ -513,6 +538,17 @@ abstract class FacturaVentaDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " sello_digital_sat = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $factura_ventaA->getCadenaOriginal()) != NULL) & ( ($b = $factura_ventaB->getCadenaOriginal()) != NULL) ){
+				$sql .= " cadena_original >= ? AND cadena_original <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " cadena_original = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

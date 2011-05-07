@@ -168,7 +168,7 @@ public class Producto {
      * Obtiene el precio de venta intersucursal del producto sin procesar
      * @return
      */
-    public float getPrecioVentIntersucursalSinProcesar() {
+    public float getPrecioVentaIntersucursalSinProcesar() {
         return this.precioVentaIntersucursalSinProcesar;
     }
 
@@ -198,6 +198,26 @@ public class Producto {
      */
     private void setPrecio(float _precio) {
         this.precio = _precio;
+    }
+    /**
+     * Precio real al cual se vendio el producto procesado (para cuando la sucursal le compra al centro de distribucion)
+     */
+    private float precioProcesada = 0;
+
+    /**
+     * Obtiene el precio de venta real del producto procesado (para cuando la sucursal le compra al centro de distribucion)
+     * @return
+     */
+    public float getPrecioProcesada() {
+        return this.precioProcesada;
+    }
+
+    /**
+     * Establece el precio de venta real del producto procesado (para cuando la sucursal le compra al centro de distribucion)
+     * @param _descripcion
+     */
+    private void setPrecioProcesada(float _precioProcesada) {
+        this.precioProcesada = _precioProcesada;
     }
     /**
      * bandera que indica si el producto esta procesado o sin procesar.
@@ -255,6 +275,26 @@ public class Producto {
      */
     private void setCantidad(float _cantidad) {
         this.cantidad = _cantidad;
+    }
+    /**
+     * Cantidad de producto procesado vendido
+     */
+    private float cantidadProcesada = 0;
+
+    /**
+     * Obtenemos la cantidad vendida de este producto procesado
+     * @return
+     */
+    public float getCantidadProcesada() {
+        return this.cantidadProcesada;
+    }
+
+    /**
+     * Establece la cantidad vendida de este  procesado
+     * @param _cantidad
+     */
+    private void setCantidadProcesada(float _cantidadProcesada) {
+        this.cantidadProcesada = _cantidadProcesada;
     }
     /**
      * Cantidad descontada del producto vendido
@@ -411,6 +451,18 @@ public class Producto {
                     }
                 }
 
+                if (entry.getKey().toString().equals("precio_procesada")) {
+
+                    try {
+                        this.setPrecio(Float.parseFloat(entry.getValue().toString()));
+                        if (debug) {
+                            System.out.println("precio procesada: " + this.getPrecioProcesada());
+                        }
+                    } catch (Exception e) {
+                        System.err.println(e);
+                    }
+                }
+
                 if (entry.getKey().toString().equals("precioIntersucursal")) {
                     try {
                         this.setPrecioVentaIntersucursal(Float.parseFloat(entry.getValue().toString()));
@@ -426,7 +478,7 @@ public class Producto {
                     try {
                         this.setPrecioVentaIntersucursalSinProcesar(Float.parseFloat(entry.getValue().toString()));
                         if (debug) {
-                            System.out.println("precioIntersucursalSinProcesar : " + this.getPrecioVentIntersucursalSinProcesar());
+                            System.out.println("precioIntersucursalSinProcesar : " + this.getPrecioVentaIntersucursalSinProcesar());
                         }
                     } catch (Exception e) {
                         System.err.println(e);
@@ -462,6 +514,31 @@ public class Producto {
                         this.setCantidad(Float.parseFloat(entry.getValue().toString()));
                         if (debug) {
                             System.out.println("cantidad : " + this.getCantidad());
+                        }
+                    } catch (Exception e) {
+                        System.err.println(e);
+                    }
+                }
+
+                if (entry.getKey().toString().equals("procesado")) {
+
+                    try {
+                        this.setProcesado(Boolean.parseBoolean(entry.getValue().toString()));
+                        if (debug) {
+                            System.out.println("procesado : " + this.getProcesado());
+                        }
+                    } catch (Exception e) {
+                        System.err.println(e);
+                    }
+
+                }
+
+                if (entry.getKey().toString().equals("cantidad_procesada")) {
+
+                    try {
+                        this.setCantidadProcesada(Float.parseFloat(entry.getValue().toString()));
+                        if (debug) {
+                            System.out.println("cantidad procesada : " + this.getCantidadProcesada());
                         }
                     } catch (Exception e) {
                         System.err.println(e);
