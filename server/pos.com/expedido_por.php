@@ -279,37 +279,37 @@ class ExpedidoPor {
 
         //verificamos si existe la calle
         if (!($this->getCalle() != null && $this->getCalle() != "")) {
-            $this->setError("No se ha definido la calle.");
+            $this->setError("No se ha definido la calle de la sucursal.");
         }
 
         //verificamos si existe el numero exterior
         if (!($this->getNumeroExterior() != null && $this->getNumeroExterior() != "")) {
-            $this->setError("No se ha definido el nuemro exterior.");
+            $this->setError("No se ha definido el nuemro exterior de la sucursal.");
         }
 
         //verificamos si existe la colonia
         if (!($this->getColonia() != null && $this->getColonia() != "")) {
-            $this->setError("No se ha definido la colinia.");
+            $this->setError("No se ha definido la colonia de la sucursal.");
         }
 
         //verificamos si existe el municipio
         if (!($this->getMunicipio() != null && $this->getMunicipio() != "")) {
-            $this->setError("No se ha definido el municipio.");
+            $this->setError("No se ha definido el municipio de la sucursal.");
         }
 
         //verificamos si existe el estado
         if (!($this->getEstado() != null && $this->getEstado() != "")) {
-            $this->setError("No se ha definido el estado.");
+            $this->setError("No se ha definido el estado de la sucursal.");
         }
 
         //verificamos si existe el codigo postal
         if (!($this->getCodigoPostal() != null && $this->getCodigoPostal() != "")) {
-            $this->setError("No se ha definido el codigo postal.");
+            $this->setError("No se ha definido el codigo postal de la sucursal.");
         }
 
         //verificamos si existe el pais
         if (!($this->getPais() != null && $this->getPais() != "")) {
-            $this->setError("No se ha definido el pais.");
+            $this->setError("No se ha definido el pais de la sucursal.");
         }
 
         $this->success = new Success($this->getError());

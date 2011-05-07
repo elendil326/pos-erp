@@ -329,42 +329,42 @@ class Emisor{
 
         //verificamos si existe la razon social
         if( !($this->getRazonSocial() != null && $this->getRazonSocial() != "") ){
-            $this->setError("No se ha definido la razon social.");
+            $this->setError("No se ha definido la razon social del emisor.");
         }
 
         //verificampos si existe el rfc
         if( !($this->getRFC() != null && $this->getRFC() != "") ){
-            $this->setError("No se ha definido el rfc.");
+            $this->setError("No se ha definido el rfc del emisor.");
         }
 
         //verificamos si existe la calle
         if( !($this->getCalle() != null && $this->getCalle() != "") ){
-            $this->setError("No se ha definido la calle.");
+            $this->setError("No se ha definido la calle del emisor.");
         }
 
         //verificamos si existe el numero exterior
         if( !($this->getNumeroExterior() != null && $this->getNumeroExterior() != "") ){
-            $this->setError("No se ha definido el nuemro exterior.");
+            $this->setError("No se ha definido el nuemro exterior del emisor.");
         }
 
         //verificamos si existe la colonia
         if( !($this->getColonia() != null && $this->getColonia() != "") ){
-            $this->setError("No se ha definido la colinia.");
+            $this->setError("No se ha definido la colinia del emisor.");
         }
 
         //verificamos si existe el municipio
         if( !($this->getMunicipio() != null && $this->getMunicipio() != "") ){
-            $this->setError("No se ha definido el municipio.");
+            $this->setError("No se ha definido el municipio del emisor.");
         }
 
         //verificamos si existe el estado
         if( !($this->getEstado() != null && $this->getEstado() != "") ){
-            $this->setError("No se ha definido el estado.");
+            $this->setError("No se ha definido el estado del emisor.");
         }
 
         //verificamos si existe el codigo postal
         if( !($this->getCodigoPostal() != null && $this->getCodigoPostal() != "") ){
-            $this->setError("No se ha definido el codigo postal.");
+            $this->setError("No se ha definido el codigo postal del emisor.");
         }
 
         //verificamos si existe el pais
