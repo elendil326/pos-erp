@@ -187,7 +187,7 @@ function imprimirFactura($id_venta, $venta_especial = null){
 				)
 		);
 		
-		$pdf->ezSetY( puntos_cm( 28.7 ) );
+		$pdf->ezSetY( puntos_cm( 26.7 ) );
 		$opciones_tabla = array();
 		$opciones_tabla['showLines']	= 0;
 		$opciones_tabla['showHeadings']	= 0;
@@ -364,7 +364,7 @@ function imprimirFactura($id_venta, $venta_especial = null){
 	/* *************************
  	* Tipo de pago
  	* ************************* */
-	$pdf->ezText("\nPago en una sola exibicion\n", 10 , array('justification' => 'center'));
+	$pdf->ezText("\nPago en una sola exibicion", 9 , array('justification' => 'center'));
 	
 	/* *************************
  	* DATOS DE SELLOS
@@ -384,7 +384,7 @@ function imprimirFactura($id_venta, $venta_especial = null){
 	$pdf->ezSetY( puntos_cm( 6.0 ) );	
 	$opciones_tabla['xPos']			= puntos_cm( 6 );
 	$opciones_tabla['width']		= puntos_cm( 12.4 );
-	$opciones_tabla['fontSize']		= 7;	
+	$opciones_tabla['fontSize']		= 6;	
 	$opciones_tabla['showLines']	= 0;	
 	$pdf->ezTable( $sellos, "", "", $opciones_tabla);
 	
@@ -431,7 +431,7 @@ function imprimirFactura($id_venta, $venta_especial = null){
 	$pdf->ezStream();
 	
 	//ok ya la hize, var si existe este documento en static content, sino, guardarlo
-	//if(!is_file( "../static_content/facturas/" . $_SESSION["INSTANCE_ID"] . "_" . $venta->getIdVenta() . ".pdf" ))
+	if(!is_file( "../static_content/facturas/" . $_SESSION["INSTANCE_ID"] . "_" . $venta->getIdVenta() . ".pdf" ))
 		file_put_contents("../static_content/facturas/" . $_SESSION["INSTANCE_ID"] . "_" . $venta->getIdVenta() . ".pdf", $documento_pdf);
 	
 
@@ -458,8 +458,8 @@ id	UUID del comprobante, precedido por el texto “&id=”	40
 De esta manera se generan los datos válidos para realizar una consulta de un CFDI por medio de su expresión impresa.
 Ejemplo:
 ?re=XAXX010101000&rr=XAXX010101000&tt=1234567890.123456&id=ad662d33-6934-459c-a128-BDf0393f0f44
-?re=GATJ740714F48&rr=CAAI6012142Q6&tt=10000.00&id=5CA3BD64-0507-41E4-B6D4-1F629705ABF1
-https://chart.googleapis.com/chart?chs=500x500&cht=qr&chld=H|1&choe=UTF-8&chl=
+?re=GATJ740714F48&rr=CAAI6012142Q6&tt=0000010000.000000&id=5CA3BD64-0507-41E4-B6D4-1F629705ABF1
+https://chart.googleapis.com/chart?chs=500x500&cht=qr&chld=H|1&choe=UTF-8&chl=%3Fre%3DGATJ740714F48%26rr%3DCAAI6012142Q6%26tt%3D0000010000.000000%26id%3D5CA3BD64-0507-41E4-B6D4-1F629705ABF1
 */
 function obternerQRCode( $rfcEmisor = null, $rfcReceptor = null, $total = null, $uuid = null  ){
 
