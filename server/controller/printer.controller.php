@@ -521,6 +521,277 @@ function obternerQRCode( $rfcEmisor = null, $rfcReceptor = null, $total = null, 
 
 function imprimirNotaDeVenta($id_venta){
 	
+	$venta = VentasDAO::getByPK( $id_venta);
+	
+	if(!$venta){
+		die("Esta venta no existe");
+	}
+
+	//validar que el cliente tenga todos los datos necesarios
+	$cliente = ClienteDAO::getByPK( $venta->getIdCliente() );
+
+	if(!$cliente){
+		die("El cliente de esta venta no existe.");
+	}
+
+	$detalle_de_venta 		= detalleVenta( $venta->getIdVenta() );
+	$productos 				= $detalle_de_venta["items"];
+	$detalle_de_venta 		= $detalle_de_venta["detalles"];
+
+	//buscar los datos del emisor
+	$conf = new PosConfig();
+	$conf->setOpcion("emisor");
+	
+	$results = PosConfigDAO::search( $conf );
+	if(sizeof($results) != 1){
+		Logger::log("no encuentro los datos del numero de certificado");
+		die("no encuentro los datos del emisor");
+	}
+
+	$emisor = json_decode( $results[0]->getValue() )->emisor;
+
+	$sucursal = SucursalDAO::getByPK($venta->getIdSucursal());
+	
+	if(!$sucursal){
+		die("Sucursal invalida");
+	}
+
+	include_once('librerias/ezpdf/class.pdf.php');
+	include_once('librerias/ezpdf/class.ezpdf.php');
+	
+	$pdf = new Cezpdf(); 
+
+	$pdf->selectFont('../server/librerias/ezpdf/fonts/Helvetica.afm'); 
+	
+	//margenes de un centimetro para toda la pagina
+	$pdf->ezSetMargins(1,1,1,1);
+
+	/* *************************
+	 * ENCABEZADO
+	 * ************************* */
+
+	
+		/* *************************
+	 	* TITULO
+	    * Datos del emisor, lugar de expedicion, folio, fecha de emision, no de serie
+	    * del certificado del contribuyente
+	 	* ************************* */	
+		$e = "<b>" . readableText($emisor->nombre) . "</b>\n";
+		$e .= formatAddress( $emisor );
+		$e .= "RFC: " . $emisor->rfc;
+
+		//datos de la sucursal
+		$s = "<b>Lugar de expedicion</b>\n";
+		$s .= formatAddress( $sucursal );
+
+		$datos = array(
+			array(
+				"emisor"	=> $e,
+				'sucursal'	=> $s, 
+				)
+		);
+		
+		$pdf->ezSetY( puntos_cm( 26.7 ) );
+		$opciones_tabla = array();
+		$opciones_tabla['showLines']	= 0;
+		$opciones_tabla['showHeadings']	= 0;
+		$opciones_tabla['shaded']		= 0;
+		$opciones_tabla['fontSize']		= 8;
+		$opciones_tabla['xOrientation']	= 'right';
+		$opciones_tabla['xPos']			= puntos_cm(3);
+		$opciones_tabla['width']		= puntos_cm(11);
+		$opciones_tabla['textCol'] 		= array(0,0,0);
+		$opciones_tabla['titleFontSize']= 12;
+		$opciones_tabla['rowGap'] 		= 3;
+		$opciones_tabla['colGap'] 		= 3;
+
+		$pdf->ezTable($datos, "", "", $opciones_tabla);
+		
+		$cajero = UsuarioDAO::getByPK($venta->getIdUsuario())->getNombre();
+		$datos = array(
+
+			array( "col"	=> "<b>Venta</b>" ),
+			array( "col"	=> $venta->getIdVenta() ),
+			array( "col"	=> "<b>Fecha de venta</b>" ),
+			array( "col"	=> toDate($venta->getFecha()) ),			
+			array( "col"	=> "<b>Tipo de venta</b>" ),
+			array( "col"	=> readableText($venta->getTipoVenta()) ),
+			array( "col"	=> "<b>Cajero</b>" ),
+			array( "col"	=> readableText($cajero) )			
+		);
+		
+		$pdf->ezSetY( puntos_cm( 28.8 ) );
+
+		$opciones_tabla['xPos']			= puntos_cm(14.2);
+		$opciones_tabla['width']		= puntos_cm( 4);
+		$opciones_tabla['showLines']	= 0;
+		$opciones_tabla['shaded']		= 2;						
+		$opciones_tabla['shadeCol']  	= array(1,1,1);
+		$opciones_tabla['shadeCol2'] 	=  array(0.8984375,0.95703125,0.99609375);
+		$pdf->ezTable( $datos, "", "", $opciones_tabla);
+
+		roundRect($pdf, puntos_cm(14.2),puntos_cm(28.8),puntos_cm(4),puntos_cm(4.25));
+		
+
+		
+	/* *************************
+    * Cliente
+ 	* ************************* */
+	$datos_receptor = $cliente->getRAzonSocial() .  "\n";
+	$datos_receptor .= formatAddress($cliente) ;
+	$datos_receptor .= "RFC: " . $cliente->getRfc();
+
+	$receptor = array(
+		array( "receptor"	=> "<b>Cliente</b>" ),
+		array( "receptor"	=> $datos_receptor ),		
+	);
+
+	$pdf->ezSetY( puntos_cm( 24.3 ) );
+	$opciones_tabla['xPos']			= puntos_cm( 2);
+	$opciones_tabla['width']		= puntos_cm( 16.2);
+	$opciones_tabla['showLines']	= 0;
+	$pdf->ezTable( $receptor, "", "", $opciones_tabla);
+	
+	roundRect($pdf, 
+			puntos_cm(2),puntos_cm(24.3),
+			puntos_cm(16.2),puntos_cm(3.2));
+
+
+	/* *************************
+ 	* PRODUCTOS
+ 	* ************************* */
+	$elementos = array(
+		array(	'cantidad'=>'Cantidad', 
+				'descripcion'=>'Descripcion                                                                                                     ', 'precio'=>'Precio', 'importe'=>'Importe'),
+	);
+	
+	
+	foreach($productos as $p){
+		if($p["cantidadProc"] > 0){
+			
+			$prod['cantidad']		= $p["cantidadProc"];
+			$prod['descripcion']	= $p["descripcion"] . " PROCESADA";
+			$prod['precio']			= moneyFormat($p["precioProc"], DONT_USE_HTML);
+			$prod['importe']		= moneyFormat($p["precioProc"] * $p["cantidadProc"], DONT_USE_HTML);
+
+			array_push($elementos,$prod);
+						
+		}
+		
+		if($p["cantidad"] > 0){
+			$prod['cantidad']		= $p["cantidad"];
+			$prod['descripcion']	= $p["descripcion"];
+			$prod['precio']			= moneyFormat($p["precio"], DONT_USE_HTML);
+			$prod['importe']		= moneyFormat($p["precio"] * $p["cantidad"], DONT_USE_HTML);
+
+			array_push($elementos,$prod);
+		}
+	}
+	
+
+
+	array_push($elementos, 
+		array( "cantidad" => "", 
+				"descripcion" => "", 
+				"precio" => "Subtotal", 	
+				"importe" =>  moneyFormat($venta->getSubTotal(), DONT_USE_HTML)) );
+		
+	array_push($elementos, 
+		array( "cantidad" => "", 
+				"descripcion" => "", 
+				"precio" => "Descuento", 	
+				"importe" => moneyFormat( $venta->getDescuento(), DONT_USE_HTML)) );
+		
+	array_push($elementos, 
+		array( "cantidad" => "", 
+				"descripcion" => "", 
+				"precio" => "IVA", 		
+				"importe" => moneyFormat( $venta->getIVA(), DONT_USE_HTML)) );
+		
+	array_push($elementos, 
+		array( "cantidad" => "", 
+				"descripcion" => "", 
+				"precio" => "Total", 		
+				"importe" => moneyFormat( $venta->getTotal(), DONT_USE_HTML)) );
+		
+	
+	$pdf->ezText("", 10 , array('justification' => 'center'));
+	$pdf->ezSetY( puntos_cm( 20.9 ) );
+	$opciones_tabla['xPos']			= puntos_cm( 2 );
+	$opciones_tabla['width']		= puntos_cm( 16.2 );
+	$pdf->ezTable($elementos, "", "", $opciones_tabla);
+
+	
+	roundRect($pdf, 
+			puntos_cm(2),puntos_cm(20.9),
+			puntos_cm(16.2),puntos_cm(14.2));
+
+	
+	/* *************************
+ 	* PAGARE
+ 	* ************************* */
+	$pagare = "Por este pagare me obligo a pagar incondicionalmente a la orden de de ". readableText($emisor->nombre) ." en esta ciudad de " . readableText($emisor->municipio);
+	$pagare .= "o en cualquier otra que se me requira de pago, el dia " . toDate($venta->getFecha()) . " la cantidad de ";
+	$pagare .= moneyFormat($venta->getTotal(), DONT_USE_HTML) ." (%%%%% ). Valor recibido a ";
+	$pagare .= "nuestra entera satisfaccion a nuestra entera satisfaccion, este pagare es meracantil y se encuentra regido ";
+	$pagare .= "por la ley general de titulos y operaciones de credito. En caso de no ser pagada la cantidad estipulada en el ";
+	$pagare .= "presente pagare en la fecha de su vencimiento, este titulo de credito causara intereses moratorios a razon de 3% mensual";
+	$pagare .= "pagadero en esta ciudad o en cualquier otra conjuntamente con la obligacion principal.";
+
+	$receptor = array(
+		 	array( "receptor"	=> $pagare ), 
+			array( "receptor"	=> "\n\n   ___________________\n       ACEPTO(AMOS)" ) 
+	);
+
+
+	
+	$pdf->ezSetY( puntos_cm( 6.3 ) );
+	$opciones_tabla['xPos']			= puntos_cm( 2);
+	$opciones_tabla['width']		= puntos_cm( 16.2);
+	$opciones_tabla['shaded']		= 0;
+	$opciones_tabla['showLines']	= 0;
+	$pdf->ezTable( $receptor, "", "", $opciones_tabla);
+	
+	roundRect($pdf, 
+			puntos_cm(2),puntos_cm( 6.3),
+			puntos_cm(16.2),puntos_cm(3.86));
+			
+	/* *************************
+ 	* notas de abajo
+ 	* ************************* */
+	$pdf->setLineStyle(1);
+	$pdf->setStrokeColor(0.3359375,0.578125,0.89453125);
+	
+	$pdf->line( puntos_cm( 2 ), puntos_cm( 1.3  ),
+				puntos_cm( 18.2 ), puntos_cm( 1.3 ) );
+
+	
+	$pdf->addText(puntos_cm( 2 ), 
+					puntos_cm( 1.0 ), 
+					7, 
+					"Fecha de impresion: " . time());
+					
+				
+
+	$pdf->addJpegFromFile("../www/media/logo_simbolo.jpg", 
+						puntos_cm( 15.9 ), 
+						puntos_cm( .25 ), 
+						25  );
+						
+
+	$pdf->addText(puntos_cm( 16.70 ), 
+					puntos_cm( .60 ), 
+					8, 
+					"caffeina.mx");	
+
+	$pdf->ezStream();
+
+
+	return;
+
+	/* **************************************************************************************************************
+	 * 	THIS IS THE OLD ONE
+	 * ************************************************************************************************************** */	
 	require('librerias/fpdf16/fpdf.php');
 	$venta = VentasDAO::getByPK( $id_venta );
 

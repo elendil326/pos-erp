@@ -262,4 +262,15 @@ if($venta->getTipoVenta() == 'credito'){
 			<?php
 		}
 	?>
+	
+	function printComprobante(){
+		window.location = "../proxy.php?action=1306&id_venta=<?php echo $_REQUEST['id']; ?>" ;
+	}
+	
 </script>
+
+
+<h4>
+	<input type=button value="Imprimir comprobante" onClick="printComprobante()">
+	
+</h4>
