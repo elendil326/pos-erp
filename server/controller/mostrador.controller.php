@@ -1138,6 +1138,7 @@ function venderAdmin($args) {
     //si la venta es de contado, hay que liquidarla
     if ($venta->getTipoVenta() == "contado") {
         $venta->setPagado($total);
+        $venta->setLiquidada("1");
 
         //validamos que el efectivo con el que se pago sea suficiente
         if($data->efectivo < $venta->getTotal())
