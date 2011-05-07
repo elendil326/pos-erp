@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link FacturaVenta }. 
-  * @author no author especified
+  * @author Alan Gonzalez
   * @access private
   * @abstract
   * @package docs
@@ -158,49 +158,64 @@ abstract class FacturaVentaDAOBase extends DAO
 			array_push( $val, $factura_venta->getIdUsuario() );
 		}
 
+		if( $factura_venta->getXml() != NULL){
+			$sql .= " xml = ? AND";
+			array_push( $val, $factura_venta->getXml() );
+		}
+
+		if( $factura_venta->getLugarEmision() != NULL){
+			$sql .= " lugar_emision = ? AND";
+			array_push( $val, $factura_venta->getLugarEmision() );
+		}
+
+		if( $factura_venta->getTipoComprobante() != NULL){
+			$sql .= " tipo_comprobante = ? AND";
+			array_push( $val, $factura_venta->getTipoComprobante() );
+		}
+
 		if( $factura_venta->getActiva() != NULL){
 			$sql .= " activa = ? AND";
 			array_push( $val, $factura_venta->getActiva() );
 		}
 
-		if( $factura_venta->getFecha() != NULL){
-			$sql .= " fecha = ? AND";
-			array_push( $val, $factura_venta->getFecha() );
+		if( $factura_venta->getSellada() != NULL){
+			$sql .= " sellada = ? AND";
+			array_push( $val, $factura_venta->getSellada() );
 		}
 
-		if( $factura_venta->getCertificado() != NULL){
-			$sql .= " certificado = ? AND";
-			array_push( $val, $factura_venta->getCertificado() );
+		if( $factura_venta->getFormaPago() != NULL){
+			$sql .= " forma_pago = ? AND";
+			array_push( $val, $factura_venta->getFormaPago() );
 		}
 
-		if( $factura_venta->getAprovacion() != NULL){
-			$sql .= " aprovacion = ? AND";
-			array_push( $val, $factura_venta->getAprovacion() );
+		if( $factura_venta->getFechaEmision() != NULL){
+			$sql .= " fecha_emision = ? AND";
+			array_push( $val, $factura_venta->getFechaEmision() );
 		}
 
-		if( $factura_venta->getAnioAprovacion() != NULL){
-			$sql .= " anio_aprovacion = ? AND";
-			array_push( $val, $factura_venta->getAnioAprovacion() );
+		if( $factura_venta->getFolioFiscal() != NULL){
+			$sql .= " folio_fiscal = ? AND";
+			array_push( $val, $factura_venta->getFolioFiscal() );
 		}
 
-		if( $factura_venta->getCadenaOriginal() != NULL){
-			$sql .= " cadena_original = ? AND";
-			array_push( $val, $factura_venta->getCadenaOriginal() );
+		if( $factura_venta->getFechaCertificacion() != NULL){
+			$sql .= " fecha_certificacion = ? AND";
+			array_push( $val, $factura_venta->getFechaCertificacion() );
 		}
 
-		if( $factura_venta->getSelloDigital() != NULL){
-			$sql .= " sello_digital = ? AND";
-			array_push( $val, $factura_venta->getSelloDigital() );
+		if( $factura_venta->getNumeroCertificadoSat() != NULL){
+			$sql .= " numero_certificado_sat = ? AND";
+			array_push( $val, $factura_venta->getNumeroCertificadoSat() );
 		}
 
-		if( $factura_venta->getSelloDigitalProveedor() != NULL){
-			$sql .= " sello_digital_proveedor = ? AND";
-			array_push( $val, $factura_venta->getSelloDigitalProveedor() );
+		if( $factura_venta->getSelloDigitalEmisor() != NULL){
+			$sql .= " sello_digital_emisor = ? AND";
+			array_push( $val, $factura_venta->getSelloDigitalEmisor() );
 		}
 
-		if( $factura_venta->getPac() != NULL){
-			$sql .= " pac = ? AND";
-			array_push( $val, $factura_venta->getPac() );
+		if( $factura_venta->getSelloDigitalSat() != NULL){
+			$sql .= " sello_digital_sat = ? AND";
+			array_push( $val, $factura_venta->getSelloDigitalSat() );
 		}
 
 		if(sizeof($val) == 0){return array();}
@@ -226,7 +241,7 @@ abstract class FacturaVentaDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cuántas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -234,19 +249,22 @@ abstract class FacturaVentaDAOBase extends DAO
 	  **/
 	private static final function update( $factura_venta )
 	{
-		$sql = "UPDATE factura_venta SET  id_venta = ?, id_usuario = ?, activa = ?, fecha = ?, certificado = ?, aprovacion = ?, anio_aprovacion = ?, cadena_original = ?, sello_digital = ?, sello_digital_proveedor = ?, pac = ? WHERE  id_folio = ?;";
+		$sql = "UPDATE factura_venta SET  id_venta = ?, id_usuario = ?, xml = ?, lugar_emision = ?, tipo_comprobante = ?, activa = ?, sellada = ?, forma_pago = ?, fecha_emision = ?, folio_fiscal = ?, fecha_certificacion = ?, numero_certificado_sat = ?, sello_digital_emisor = ?, sello_digital_sat = ? WHERE  id_folio = ?;";
 		$params = array( 
 			$factura_venta->getIdVenta(), 
 			$factura_venta->getIdUsuario(), 
+			$factura_venta->getXml(), 
+			$factura_venta->getLugarEmision(), 
+			$factura_venta->getTipoComprobante(), 
 			$factura_venta->getActiva(), 
-			$factura_venta->getFecha(), 
-			$factura_venta->getCertificado(), 
-			$factura_venta->getAprovacion(), 
-			$factura_venta->getAnioAprovacion(), 
-			$factura_venta->getCadenaOriginal(), 
-			$factura_venta->getSelloDigital(), 
-			$factura_venta->getSelloDigitalProveedor(), 
-			$factura_venta->getPac(), 
+			$factura_venta->getSellada(), 
+			$factura_venta->getFormaPago(), 
+			$factura_venta->getFechaEmision(), 
+			$factura_venta->getFolioFiscal(), 
+			$factura_venta->getFechaCertificacion(), 
+			$factura_venta->getNumeroCertificadoSat(), 
+			$factura_venta->getSelloDigitalEmisor(), 
+			$factura_venta->getSelloDigitalSat(), 
 			$factura_venta->getIdFolio(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -270,20 +288,23 @@ abstract class FacturaVentaDAOBase extends DAO
 	  **/
 	private static final function create( &$factura_venta )
 	{
-		$sql = "INSERT INTO factura_venta ( id_folio, id_venta, id_usuario, activa, fecha, certificado, aprovacion, anio_aprovacion, cadena_original, sello_digital, sello_digital_proveedor, pac ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO factura_venta ( id_folio, id_venta, id_usuario, xml, lugar_emision, tipo_comprobante, activa, sellada, forma_pago, fecha_emision, folio_fiscal, fecha_certificacion, numero_certificado_sat, sello_digital_emisor, sello_digital_sat ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$factura_venta->getIdFolio(), 
 			$factura_venta->getIdVenta(), 
 			$factura_venta->getIdUsuario(), 
+			$factura_venta->getXml(), 
+			$factura_venta->getLugarEmision(), 
+			$factura_venta->getTipoComprobante(), 
 			$factura_venta->getActiva(), 
-			$factura_venta->getFecha(), 
-			$factura_venta->getCertificado(), 
-			$factura_venta->getAprovacion(), 
-			$factura_venta->getAnioAprovacion(), 
-			$factura_venta->getCadenaOriginal(), 
-			$factura_venta->getSelloDigital(), 
-			$factura_venta->getSelloDigitalProveedor(), 
-			$factura_venta->getPac(), 
+			$factura_venta->getSellada(), 
+			$factura_venta->getFormaPago(), 
+			$factura_venta->getFechaEmision(), 
+			$factura_venta->getFolioFiscal(), 
+			$factura_venta->getFechaCertificacion(), 
+			$factura_venta->getNumeroCertificadoSat(), 
+			$factura_venta->getSelloDigitalEmisor(), 
+			$factura_venta->getSelloDigitalSat(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -365,6 +386,39 @@ abstract class FacturaVentaDAOBase extends DAO
 			
 		}
 
+		if( (($a = $factura_ventaA->getXml()) != NULL) & ( ($b = $factura_ventaB->getXml()) != NULL) ){
+				$sql .= " xml >= ? AND xml <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " xml = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $factura_ventaA->getLugarEmision()) != NULL) & ( ($b = $factura_ventaB->getLugarEmision()) != NULL) ){
+				$sql .= " lugar_emision >= ? AND lugar_emision <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " lugar_emision = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $factura_ventaA->getTipoComprobante()) != NULL) & ( ($b = $factura_ventaB->getTipoComprobante()) != NULL) ){
+				$sql .= " tipo_comprobante >= ? AND tipo_comprobante <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " tipo_comprobante = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
 		if( (($a = $factura_ventaA->getActiva()) != NULL) & ( ($b = $factura_ventaB->getActiva()) != NULL) ){
 				$sql .= " activa >= ? AND activa <= ? AND";
 				array_push( $val, min($a,$b)); 
@@ -376,89 +430,89 @@ abstract class FacturaVentaDAOBase extends DAO
 			
 		}
 
-		if( (($a = $factura_ventaA->getFecha()) != NULL) & ( ($b = $factura_ventaB->getFecha()) != NULL) ){
-				$sql .= " fecha >= ? AND fecha <= ? AND";
+		if( (($a = $factura_ventaA->getSellada()) != NULL) & ( ($b = $factura_ventaB->getSellada()) != NULL) ){
+				$sql .= " sellada >= ? AND sellada <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " fecha = ? AND"; 
+			$sql .= " sellada = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $factura_ventaA->getCertificado()) != NULL) & ( ($b = $factura_ventaB->getCertificado()) != NULL) ){
-				$sql .= " certificado >= ? AND certificado <= ? AND";
+		if( (($a = $factura_ventaA->getFormaPago()) != NULL) & ( ($b = $factura_ventaB->getFormaPago()) != NULL) ){
+				$sql .= " forma_pago >= ? AND forma_pago <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " certificado = ? AND"; 
+			$sql .= " forma_pago = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $factura_ventaA->getAprovacion()) != NULL) & ( ($b = $factura_ventaB->getAprovacion()) != NULL) ){
-				$sql .= " aprovacion >= ? AND aprovacion <= ? AND";
+		if( (($a = $factura_ventaA->getFechaEmision()) != NULL) & ( ($b = $factura_ventaB->getFechaEmision()) != NULL) ){
+				$sql .= " fecha_emision >= ? AND fecha_emision <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " aprovacion = ? AND"; 
+			$sql .= " fecha_emision = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $factura_ventaA->getAnioAprovacion()) != NULL) & ( ($b = $factura_ventaB->getAnioAprovacion()) != NULL) ){
-				$sql .= " anio_aprovacion >= ? AND anio_aprovacion <= ? AND";
+		if( (($a = $factura_ventaA->getFolioFiscal()) != NULL) & ( ($b = $factura_ventaB->getFolioFiscal()) != NULL) ){
+				$sql .= " folio_fiscal >= ? AND folio_fiscal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " anio_aprovacion = ? AND"; 
+			$sql .= " folio_fiscal = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $factura_ventaA->getCadenaOriginal()) != NULL) & ( ($b = $factura_ventaB->getCadenaOriginal()) != NULL) ){
-				$sql .= " cadena_original >= ? AND cadena_original <= ? AND";
+		if( (($a = $factura_ventaA->getFechaCertificacion()) != NULL) & ( ($b = $factura_ventaB->getFechaCertificacion()) != NULL) ){
+				$sql .= " fecha_certificacion >= ? AND fecha_certificacion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " cadena_original = ? AND"; 
+			$sql .= " fecha_certificacion = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $factura_ventaA->getSelloDigital()) != NULL) & ( ($b = $factura_ventaB->getSelloDigital()) != NULL) ){
-				$sql .= " sello_digital >= ? AND sello_digital <= ? AND";
+		if( (($a = $factura_ventaA->getNumeroCertificadoSat()) != NULL) & ( ($b = $factura_ventaB->getNumeroCertificadoSat()) != NULL) ){
+				$sql .= " numero_certificado_sat >= ? AND numero_certificado_sat <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " sello_digital = ? AND"; 
+			$sql .= " numero_certificado_sat = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $factura_ventaA->getSelloDigitalProveedor()) != NULL) & ( ($b = $factura_ventaB->getSelloDigitalProveedor()) != NULL) ){
-				$sql .= " sello_digital_proveedor >= ? AND sello_digital_proveedor <= ? AND";
+		if( (($a = $factura_ventaA->getSelloDigitalEmisor()) != NULL) & ( ($b = $factura_ventaB->getSelloDigitalEmisor()) != NULL) ){
+				$sql .= " sello_digital_emisor >= ? AND sello_digital_emisor <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " sello_digital_proveedor = ? AND"; 
+			$sql .= " sello_digital_emisor = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $factura_ventaA->getPac()) != NULL) & ( ($b = $factura_ventaB->getPac()) != NULL) ){
-				$sql .= " pac >= ? AND pac <= ? AND";
+		if( (($a = $factura_ventaA->getSelloDigitalSat()) != NULL) & ( ($b = $factura_ventaB->getSelloDigitalSat()) != NULL) ){
+				$sql .= " sello_digital_sat >= ? AND sello_digital_sat <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " pac = ? AND"; 
+			$sql .= " sello_digital_sat = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

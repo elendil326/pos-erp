@@ -2,7 +2,7 @@
 /** Value Object file for table factura_venta.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author no author especified
+  * @author Alan Gonzalez
   * @access public
   * @package docs
   * 
@@ -31,32 +31,41 @@ class FacturaVenta extends VO
 			if( isset($data['id_usuario']) ){
 				$this->id_usuario = $data['id_usuario'];
 			}
+			if( isset($data['xml']) ){
+				$this->xml = $data['xml'];
+			}
+			if( isset($data['lugar_emision']) ){
+				$this->lugar_emision = $data['lugar_emision'];
+			}
+			if( isset($data['tipo_comprobante']) ){
+				$this->tipo_comprobante = $data['tipo_comprobante'];
+			}
 			if( isset($data['activa']) ){
 				$this->activa = $data['activa'];
 			}
-			if( isset($data['fecha']) ){
-				$this->fecha = $data['fecha'];
+			if( isset($data['sellada']) ){
+				$this->sellada = $data['sellada'];
 			}
-			if( isset($data['certificado']) ){
-				$this->certificado = $data['certificado'];
+			if( isset($data['forma_pago']) ){
+				$this->forma_pago = $data['forma_pago'];
 			}
-			if( isset($data['aprovacion']) ){
-				$this->aprovacion = $data['aprovacion'];
+			if( isset($data['fecha_emision']) ){
+				$this->fecha_emision = $data['fecha_emision'];
 			}
-			if( isset($data['anio_aprovacion']) ){
-				$this->anio_aprovacion = $data['anio_aprovacion'];
+			if( isset($data['folio_fiscal']) ){
+				$this->folio_fiscal = $data['folio_fiscal'];
 			}
-			if( isset($data['cadena_original']) ){
-				$this->cadena_original = $data['cadena_original'];
+			if( isset($data['fecha_certificacion']) ){
+				$this->fecha_certificacion = $data['fecha_certificacion'];
 			}
-			if( isset($data['sello_digital']) ){
-				$this->sello_digital = $data['sello_digital'];
+			if( isset($data['numero_certificado_sat']) ){
+				$this->numero_certificado_sat = $data['numero_certificado_sat'];
 			}
-			if( isset($data['sello_digital_proveedor']) ){
-				$this->sello_digital_proveedor = $data['sello_digital_proveedor'];
+			if( isset($data['sello_digital_emisor']) ){
+				$this->sello_digital_emisor = $data['sello_digital_emisor'];
 			}
-			if( isset($data['pac']) ){
-				$this->pac = $data['pac'];
+			if( isset($data['sello_digital_sat']) ){
+				$this->sello_digital_sat = $data['sello_digital_sat'];
 			}
 		}
 	}
@@ -74,15 +83,18 @@ class FacturaVenta extends VO
 			"id_folio" => $this->id_folio,
 			"id_venta" => $this->id_venta,
 			"id_usuario" => $this->id_usuario,
+			"xml" => $this->xml,
+			"lugar_emision" => $this->lugar_emision,
+			"tipo_comprobante" => $this->tipo_comprobante,
 			"activa" => $this->activa,
-			"fecha" => $this->fecha,
-			"certificado" => $this->certificado,
-			"aprovacion" => $this->aprovacion,
-			"anio_aprovacion" => $this->anio_aprovacion,
-			"cadena_original" => $this->cadena_original,
-			"sello_digital" => $this->sello_digital,
-			"sello_digital_proveedor" => $this->sello_digital_proveedor,
-			"pac" => $this->pac
+			"sellada" => $this->sellada,
+			"forma_pago" => $this->forma_pago,
+			"fecha_emision" => $this->fecha_emision,
+			"folio_fiscal" => $this->folio_fiscal,
+			"fecha_certificacion" => $this->fecha_certificacion,
+			"numero_certificado_sat" => $this->numero_certificado_sat,
+			"sello_digital_emisor" => $this->sello_digital_emisor,
+			"sello_digital_sat" => $this->sello_digital_sat
 		); 
 	return json_encode($vec); 
 	}
@@ -117,6 +129,33 @@ class FacturaVenta extends VO
 	protected $id_usuario;
 
 	/**
+	  * xml
+	  * 
+	  * xml en bruto<br>
+	  * @access protected
+	  * @var text
+	  */
+	protected $xml;
+
+	/**
+	  * lugar_emision
+	  * 
+	  * id de la sucursal donde se emitio la factura<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $lugar_emision;
+
+	/**
+	  * tipo_comprobante
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access protected
+	  * @var enum('ingreso','egreso')
+	  */
+	protected $tipo_comprobante;
+
+	/**
 	  * activa
 	  * 
 	  * 1 indica que la factura fue emitida y esta activa, 0 que la factura fue emitida y posteriormente fue cancelada<br>
@@ -126,76 +165,76 @@ class FacturaVenta extends VO
 	protected $activa;
 
 	/**
-	  * fecha
+	  * sellada
 	  * 
-	  * Fecha cuando se genero esta factura<br>
+	  * Indica si el WS ha timbrado la factura<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $sellada;
+
+	/**
+	  * forma_pago
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access protected
+	  * @var varchar(100)
+	  */
+	protected $forma_pago;
+
+	/**
+	  * fecha_emision
+	  * 
+	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var timestamp
 	  */
-	protected $fecha;
+	protected $fecha_emision;
 
 	/**
-	  * certificado
-	  * 
-	  * sello digital, emitido por el pac<br>
-	  * @access protected
-	  * @var text
-	  */
-	protected $certificado;
-
-	/**
-	  * aprovacion
-	  * 
-	  * Numero de aprovacion de la factura electronica<br>
-	  * @access protected
-	  * @var text
-	  */
-	protected $aprovacion;
-
-	/**
-	  * anio_aprovacion
+	  * folio_fiscal
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access protected
-	  * @var varchar(10)
+	  * @var varchar(128)
 	  */
-	protected $anio_aprovacion;
+	protected $folio_fiscal;
 
 	/**
-	  * cadena_original
+	  * fecha_certificacion
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access protected
-	  * @var text
+	  * @var timestamp
 	  */
-	protected $cadena_original;
+	protected $fecha_certificacion;
 
 	/**
-	  * sello_digital
+	  * numero_certificado_sat
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access protected
-	  * @var text
+	  * @var varchar(128)
 	  */
-	protected $sello_digital;
+	protected $numero_certificado_sat;
 
 	/**
-	  * sello_digital_proveedor
+	  * sello_digital_emisor
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access protected
-	  * @var text
+	  * @var varchar(512)
 	  */
-	protected $sello_digital_proveedor;
+	protected $sello_digital_emisor;
 
 	/**
-	  * pac
+	  * sello_digital_sat
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access protected
-	  * @var text
+	  * @var varchar(512)
 	  */
-	protected $pac;
+	protected $sello_digital_sat;
 
 	/**
 	  * getIdFolio
@@ -274,6 +313,78 @@ class FacturaVenta extends VO
 	}
 
 	/**
+	  * getXml
+	  * 
+	  * Get the <i>xml</i> property for this object. Donde <i>xml</i> es xml en bruto
+	  * @return text
+	  */
+	final public function getXml()
+	{
+		return $this->xml;
+	}
+
+	/**
+	  * setXml( $xml )
+	  * 
+	  * Set the <i>xml</i> property for this object. Donde <i>xml</i> es xml en bruto.
+	  * Una validacion basica se hara aqui para comprobar que <i>xml</i> es de tipo <i>text</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param text
+	  */
+	final public function setXml( $xml )
+	{
+		$this->xml = $xml;
+	}
+
+	/**
+	  * getLugarEmision
+	  * 
+	  * Get the <i>lugar_emision</i> property for this object. Donde <i>lugar_emision</i> es id de la sucursal donde se emitio la factura
+	  * @return int(11)
+	  */
+	final public function getLugarEmision()
+	{
+		return $this->lugar_emision;
+	}
+
+	/**
+	  * setLugarEmision( $lugar_emision )
+	  * 
+	  * Set the <i>lugar_emision</i> property for this object. Donde <i>lugar_emision</i> es id de la sucursal donde se emitio la factura.
+	  * Una validacion basica se hara aqui para comprobar que <i>lugar_emision</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setLugarEmision( $lugar_emision )
+	{
+		$this->lugar_emision = $lugar_emision;
+	}
+
+	/**
+	  * getTipoComprobante
+	  * 
+	  * Get the <i>tipo_comprobante</i> property for this object. Donde <i>tipo_comprobante</i> es  [Campo no documentado]
+	  * @return enum('ingreso','egreso')
+	  */
+	final public function getTipoComprobante()
+	{
+		return $this->tipo_comprobante;
+	}
+
+	/**
+	  * setTipoComprobante( $tipo_comprobante )
+	  * 
+	  * Set the <i>tipo_comprobante</i> property for this object. Donde <i>tipo_comprobante</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>tipo_comprobante</i> es de tipo <i>enum('ingreso','egreso')</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param enum('ingreso','egreso')
+	  */
+	final public function setTipoComprobante( $tipo_comprobante )
+	{
+		$this->tipo_comprobante = $tipo_comprobante;
+	}
+
+	/**
 	  * getActiva
 	  * 
 	  * Get the <i>activa</i> property for this object. Donde <i>activa</i> es 1 indica que la factura fue emitida y esta activa, 0 que la factura fue emitida y posteriormente fue cancelada
@@ -298,195 +409,195 @@ class FacturaVenta extends VO
 	}
 
 	/**
-	  * getFecha
+	  * getSellada
 	  * 
-	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es Fecha cuando se genero esta factura
-	  * @return timestamp
+	  * Get the <i>sellada</i> property for this object. Donde <i>sellada</i> es Indica si el WS ha timbrado la factura
+	  * @return tinyint(1)
 	  */
-	final public function getFecha()
+	final public function getSellada()
 	{
-		return $this->fecha;
+		return $this->sellada;
 	}
 
 	/**
-	  * setFecha( $fecha )
+	  * setSellada( $sellada )
 	  * 
-	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es Fecha cuando se genero esta factura.
-	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>timestamp</i>. 
+	  * Set the <i>sellada</i> property for this object. Donde <i>sellada</i> es Indica si el WS ha timbrado la factura.
+	  * Una validacion basica se hara aqui para comprobar que <i>sellada</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setSellada( $sellada )
+	{
+		$this->sellada = $sellada;
+	}
+
+	/**
+	  * getFormaPago
+	  * 
+	  * Get the <i>forma_pago</i> property for this object. Donde <i>forma_pago</i> es  [Campo no documentado]
+	  * @return varchar(100)
+	  */
+	final public function getFormaPago()
+	{
+		return $this->forma_pago;
+	}
+
+	/**
+	  * setFormaPago( $forma_pago )
+	  * 
+	  * Set the <i>forma_pago</i> property for this object. Donde <i>forma_pago</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>forma_pago</i> es de tipo <i>varchar(100)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(100)
+	  */
+	final public function setFormaPago( $forma_pago )
+	{
+		$this->forma_pago = $forma_pago;
+	}
+
+	/**
+	  * getFechaEmision
+	  * 
+	  * Get the <i>fecha_emision</i> property for this object. Donde <i>fecha_emision</i> es  [Campo no documentado]
+	  * @return timestamp
+	  */
+	final public function getFechaEmision()
+	{
+		return $this->fecha_emision;
+	}
+
+	/**
+	  * setFechaEmision( $fecha_emision )
+	  * 
+	  * Set the <i>fecha_emision</i> property for this object. Donde <i>fecha_emision</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_emision</i> es de tipo <i>timestamp</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param timestamp
 	  */
-	final public function setFecha( $fecha )
+	final public function setFechaEmision( $fecha_emision )
 	{
-		$this->fecha = $fecha;
+		$this->fecha_emision = $fecha_emision;
 	}
 
 	/**
-	  * getCertificado
+	  * getFolioFiscal
 	  * 
-	  * Get the <i>certificado</i> property for this object. Donde <i>certificado</i> es sello digital, emitido por el pac
-	  * @return text
+	  * Get the <i>folio_fiscal</i> property for this object. Donde <i>folio_fiscal</i> es  [Campo no documentado]
+	  * @return varchar(128)
 	  */
-	final public function getCertificado()
+	final public function getFolioFiscal()
 	{
-		return $this->certificado;
+		return $this->folio_fiscal;
 	}
 
 	/**
-	  * setCertificado( $certificado )
+	  * setFolioFiscal( $folio_fiscal )
 	  * 
-	  * Set the <i>certificado</i> property for this object. Donde <i>certificado</i> es sello digital, emitido por el pac.
-	  * Una validacion basica se hara aqui para comprobar que <i>certificado</i> es de tipo <i>text</i>. 
+	  * Set the <i>folio_fiscal</i> property for this object. Donde <i>folio_fiscal</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>folio_fiscal</i> es de tipo <i>varchar(128)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param text
+	  * @param varchar(128)
 	  */
-	final public function setCertificado( $certificado )
+	final public function setFolioFiscal( $folio_fiscal )
 	{
-		$this->certificado = $certificado;
+		$this->folio_fiscal = $folio_fiscal;
 	}
 
 	/**
-	  * getAprovacion
+	  * getFechaCertificacion
 	  * 
-	  * Get the <i>aprovacion</i> property for this object. Donde <i>aprovacion</i> es Numero de aprovacion de la factura electronica
-	  * @return text
+	  * Get the <i>fecha_certificacion</i> property for this object. Donde <i>fecha_certificacion</i> es  [Campo no documentado]
+	  * @return timestamp
 	  */
-	final public function getAprovacion()
+	final public function getFechaCertificacion()
 	{
-		return $this->aprovacion;
+		return $this->fecha_certificacion;
 	}
 
 	/**
-	  * setAprovacion( $aprovacion )
+	  * setFechaCertificacion( $fecha_certificacion )
 	  * 
-	  * Set the <i>aprovacion</i> property for this object. Donde <i>aprovacion</i> es Numero de aprovacion de la factura electronica.
-	  * Una validacion basica se hara aqui para comprobar que <i>aprovacion</i> es de tipo <i>text</i>. 
+	  * Set the <i>fecha_certificacion</i> property for this object. Donde <i>fecha_certificacion</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_certificacion</i> es de tipo <i>timestamp</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param text
+	  * @param timestamp
 	  */
-	final public function setAprovacion( $aprovacion )
+	final public function setFechaCertificacion( $fecha_certificacion )
 	{
-		$this->aprovacion = $aprovacion;
+		$this->fecha_certificacion = $fecha_certificacion;
 	}
 
 	/**
-	  * getAnioAprovacion
+	  * getNumeroCertificadoSat
 	  * 
-	  * Get the <i>anio_aprovacion</i> property for this object. Donde <i>anio_aprovacion</i> es  [Campo no documentado]
-	  * @return varchar(10)
+	  * Get the <i>numero_certificado_sat</i> property for this object. Donde <i>numero_certificado_sat</i> es  [Campo no documentado]
+	  * @return varchar(128)
 	  */
-	final public function getAnioAprovacion()
+	final public function getNumeroCertificadoSat()
 	{
-		return $this->anio_aprovacion;
+		return $this->numero_certificado_sat;
 	}
 
 	/**
-	  * setAnioAprovacion( $anio_aprovacion )
+	  * setNumeroCertificadoSat( $numero_certificado_sat )
 	  * 
-	  * Set the <i>anio_aprovacion</i> property for this object. Donde <i>anio_aprovacion</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>anio_aprovacion</i> es de tipo <i>varchar(10)</i>. 
+	  * Set the <i>numero_certificado_sat</i> property for this object. Donde <i>numero_certificado_sat</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>numero_certificado_sat</i> es de tipo <i>varchar(128)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(10)
+	  * @param varchar(128)
 	  */
-	final public function setAnioAprovacion( $anio_aprovacion )
+	final public function setNumeroCertificadoSat( $numero_certificado_sat )
 	{
-		$this->anio_aprovacion = $anio_aprovacion;
+		$this->numero_certificado_sat = $numero_certificado_sat;
 	}
 
 	/**
-	  * getCadenaOriginal
+	  * getSelloDigitalEmisor
 	  * 
-	  * Get the <i>cadena_original</i> property for this object. Donde <i>cadena_original</i> es  [Campo no documentado]
-	  * @return text
+	  * Get the <i>sello_digital_emisor</i> property for this object. Donde <i>sello_digital_emisor</i> es  [Campo no documentado]
+	  * @return varchar(512)
 	  */
-	final public function getCadenaOriginal()
+	final public function getSelloDigitalEmisor()
 	{
-		return $this->cadena_original;
+		return $this->sello_digital_emisor;
 	}
 
 	/**
-	  * setCadenaOriginal( $cadena_original )
+	  * setSelloDigitalEmisor( $sello_digital_emisor )
 	  * 
-	  * Set the <i>cadena_original</i> property for this object. Donde <i>cadena_original</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>cadena_original</i> es de tipo <i>text</i>. 
+	  * Set the <i>sello_digital_emisor</i> property for this object. Donde <i>sello_digital_emisor</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>sello_digital_emisor</i> es de tipo <i>varchar(512)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param text
+	  * @param varchar(512)
 	  */
-	final public function setCadenaOriginal( $cadena_original )
+	final public function setSelloDigitalEmisor( $sello_digital_emisor )
 	{
-		$this->cadena_original = $cadena_original;
+		$this->sello_digital_emisor = $sello_digital_emisor;
 	}
 
 	/**
-	  * getSelloDigital
+	  * getSelloDigitalSat
 	  * 
-	  * Get the <i>sello_digital</i> property for this object. Donde <i>sello_digital</i> es  [Campo no documentado]
-	  * @return text
+	  * Get the <i>sello_digital_sat</i> property for this object. Donde <i>sello_digital_sat</i> es  [Campo no documentado]
+	  * @return varchar(512)
 	  */
-	final public function getSelloDigital()
+	final public function getSelloDigitalSat()
 	{
-		return $this->sello_digital;
+		return $this->sello_digital_sat;
 	}
 
 	/**
-	  * setSelloDigital( $sello_digital )
+	  * setSelloDigitalSat( $sello_digital_sat )
 	  * 
-	  * Set the <i>sello_digital</i> property for this object. Donde <i>sello_digital</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>sello_digital</i> es de tipo <i>text</i>. 
+	  * Set the <i>sello_digital_sat</i> property for this object. Donde <i>sello_digital_sat</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>sello_digital_sat</i> es de tipo <i>varchar(512)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param text
+	  * @param varchar(512)
 	  */
-	final public function setSelloDigital( $sello_digital )
+	final public function setSelloDigitalSat( $sello_digital_sat )
 	{
-		$this->sello_digital = $sello_digital;
-	}
-
-	/**
-	  * getSelloDigitalProveedor
-	  * 
-	  * Get the <i>sello_digital_proveedor</i> property for this object. Donde <i>sello_digital_proveedor</i> es  [Campo no documentado]
-	  * @return text
-	  */
-	final public function getSelloDigitalProveedor()
-	{
-		return $this->sello_digital_proveedor;
-	}
-
-	/**
-	  * setSelloDigitalProveedor( $sello_digital_proveedor )
-	  * 
-	  * Set the <i>sello_digital_proveedor</i> property for this object. Donde <i>sello_digital_proveedor</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>sello_digital_proveedor</i> es de tipo <i>text</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param text
-	  */
-	final public function setSelloDigitalProveedor( $sello_digital_proveedor )
-	{
-		$this->sello_digital_proveedor = $sello_digital_proveedor;
-	}
-
-	/**
-	  * getPac
-	  * 
-	  * Get the <i>pac</i> property for this object. Donde <i>pac</i> es  [Campo no documentado]
-	  * @return text
-	  */
-	final public function getPac()
-	{
-		return $this->pac;
-	}
-
-	/**
-	  * setPac( $pac )
-	  * 
-	  * Set the <i>pac</i> property for this object. Donde <i>pac</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>pac</i> es de tipo <i>text</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param text
-	  */
-	final public function setPac( $pac )
-	{
-		$this->pac = $pac;
+		$this->sello_digital_sat = $sello_digital_sat;
 	}
 
 }

@@ -19,6 +19,10 @@ function puntos_cm ($medida, $resolucion=72)
 
 
 
+
+
+
+
 function imprimirFactura($id_venta){
 
 
@@ -43,9 +47,18 @@ function imprimirFactura($id_venta){
 	}
 
 
+	//una vez que ya se que si puedo imprimir esta factura
+	//tengo que descargar el QR CODE de google charts.
+	//tal vez, estoy reimprimiendo la factura, asi que
+	//voy a buscar si ya la tengo en la carpeta de QR
+	//CODES.
+	
+
 	$detalle_de_venta 		= detalleVenta( $venta->getIdVenta() );
 	$productos 				= $detalle_de_venta["items"];
 	$detalle_de_venta 		= $detalle_de_venta["detalles"];
+	
+	//$factura = FacturaVentaDAO::getByPK(  );
 
 	include_once('librerias/ezpdf/class.pdf.php');
 	include_once('librerias/ezpdf/class.ezpdf.php');
@@ -53,25 +66,28 @@ function imprimirFactura($id_venta){
 	$pdf = new Cezpdf(); 
 	$pdf->selectFont('../server/librerias/ezpdf/fonts/Helvetica.afm'); 
 
-	//$pdf->ezImage("cerdo3.jpg", 0, 420, 'none', 'left');
-	//$pdf->addJpegFromFile("cerdo3.jpg",50,50,300); 
 
-	$pdf->selectFont		('fonts/Times-Roman');
-	//$pdf->addText(puntos_cm(4),puntos_cm(26.7),12,'Encabezado');
+	/* *************************
+	 * ENCABEZADO
+	 * ************************* */
 	$pdf->setColor			(0.8,0.8,0.8);
 	$pdf->setStrokeColor	(0,0,0);
 	$pdf->filledrectangle 	(puntos_cm(2), puntos_cm(26.7), puntos_cm(17), puntos_cm(1.5));
 	$pdf->setLineStyle		(3,'round');
 	$pdf->setColor			(0, 0 ,0);
-	$pdf->ezImage			('img.jpg', 0, 50, 'none', 'left');
+	$pdf->ezImage			('../server/librerias/ezpdf/img.jpg', 0, 50, 'none', 'left');
 
-	//$pdf->ezImage('http://www.error500.net/images/articulos/logo-google-chrome.jpg', 0, 50, 'none', 'left');
 
-	$pdf->addText(puntos_cm(3),puntos_cm(27.3),12,'POS Papas Supremas - Factura de Venta');
-	$pdf->addText(puntos_cm(15),puntos_cm(27.3),12,'Folio: '."emisor->folio");
-	//$pdf->addPngFromFile('logo.png',puntos_cm(5),puntos_cm(15),puntos_cm(10));
-
-	//$pdf->ezImage("logo.png", 0, 20, 'none', 'left');
+	/* *************************
+	 * TITULO
+	 * ************************* */
+	$pdf->addText(puntos_cm(3),puntos_cm(27.3),12, 'POS Papas Supremas - Factura de Venta');
+	
+	
+	/* *************************
+	 * NUMERO DE FACTURA: FOLIO
+	 * ************************* */
+	$pdf->addText(puntos_cm(15),puntos_cm(27.3),12,'Folio: ' . "emisor->folio");
 
 	$pdf->setStrokeColor(0,0,0);
 	$pdf->line(puntos_cm(2),puntos_cm(26.5),puntos_cm(19),puntos_cm(26.5));
@@ -198,7 +214,7 @@ function imprimirFactura($id_venta){
 	//// margen interno de las celdas
 	$opciones_tabla['rowGap'] = 2;
 	$opciones_tabla['colGap'] = 2;
-	$pdf->ezTable($data, "", "",$opciones_tabla);
+	$pdf->ezTable($data, "", "", $opciones_tabla);
 	$pdf->ezText('');
 
 
@@ -337,7 +353,7 @@ function imprimirFactura($id_venta){
 	$opciones_tabla['colGap'] = 3;
 	$pdf->ezTable($fiscales, "", "",$opciones_tabla);
 
-	$pdf->addText(puntos_cm(2),puntos_cm(1),12,'Este documento es una impresion de un CFDI');
+	$pdf->addText(puntos_cm(2),puntos_cm(1),12,'Este documento es una representacion impresa de un CFDI');
 
 
 	//$pdf->ezOutput(1);
@@ -346,6 +362,50 @@ function imprimirFactura($id_venta){
 	
 	
 }
+
+
+
+function obternerQRCode( $rfcEmisor = null, $rfcReceptor = null, $total = null, $uuid = null  ){
+	
+	if( !$rfcEmisor || !$rfcReceptor || !$total || !$uuid ){
+		return false;
+	}
+	
+	
+	
+	/*
+	 * Código de barras bidimensional QR, con base al estándar ISO/IEC 18004:2000, conteniendo los siguientes datos en el siguiente formato:
+	RFC del emisor
+	RFC del receptor
+	Total (a 6 decimales fijos)
+	Identificador único del timbre (UUID) asignado
+	Donde se manejarán 95 caracteres conformados de la siguiente manera:
+	Prefijo	Datos	Caracteres
+	re	RFC del Emisor, a 12/13 posiciones, precedido por el texto ”?re=”	17
+	rr	RFC del Receptor, a 12/13 posiciones, precedido por el texto
+	“&rr=”	17
+	tt	Total del comprobante a 17 posiciones (10 para los enteros, 1 para carácter “.”, 6 para los decimales), precedido por el texto “&tt=”	21
+	id	UUID del comprobante, precedido por el texto “&id=”	40
+		95
+
+	De esta manera se generan los datos válidos para realizar una consulta de un CFDI por medio de su expresión impresa.
+	Ejemplo:
+	?re=XAXX010101000&rr=XAXX010101000&tt=1234567890.123456&id=ad662d33-6934-459c-a128-BDf0393f0f44
+	El código de barras bidimensional deberá ser impreso en un área no menor a 2.75 centímetros cuadrados, ejemplo:
+	 * */
+	/*
+	 * 
+	 * 
+	 * 
+	?re=XAXX010101000&rr=XAXX010101000&tt=1234567890.123456&id=ad662d33-6934-459c-a128-BDf0393f0f44
+	?re=GATJ740714F48&rr=CAAI6012142Q6&tt=10000.00&id=5CA3BD64-0507-41E4-B6D4-1F629705ABF1
+	%3Fre%3DGATJ740714F48%26rr%3DCAAI6012142Q6%26tt%3D10000.00%26id%3D5CA3BD64-0507-41E4-B6D4-1F629705ABF1
+	re=XAXX010101000&rr=XAXX010101000&tt=1234567890.123456&id=ad662d33-6934-459c-a128-BDf0393f0f44
+	https://chart.googleapis.com/chart?chs=500x500&cht=qr&chld=H|1&choe=UTF-8&chl=re%3DGATJ740714F48%26rr%3DCAAI6012142Q6%26tt%3D10000.00%26id%3D5CA3BD64-0507-41E4-B6D4-1F629705ABF1
+	*/
+}
+
+
 
 function imprimirNotaDeVenta($id_venta){
 	

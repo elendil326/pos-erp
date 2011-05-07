@@ -595,6 +595,10 @@ function reimprimirFactura($args) {
     //llamada a la funcion que reimprime la factura
 }
 
+
+
+
+
 /**
  *
  */
