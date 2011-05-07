@@ -200,25 +200,27 @@ public class Producto {
         this.precio = _precio;
     }
     /**
-     * Precio real al cual se vendio el producto procesado (para cuando la sucursal le compra al centro de distribucion)
+<<<<<<< .mine
+     * Precio real al cual se vendio el producto (desde el centro de distribucion a la sucursal)
      */
-    private float precioProcesada = 0;
+    private float precio_procesada = 0;
 
     /**
-     * Obtiene el precio de venta real del producto procesado (para cuando la sucursal le compra al centro de distribucion)
+     * Obtiene el precio de venta real del producto (desde el centro de distribucion a la sucursal)
      * @return
      */
     public float getPrecioProcesada() {
-        return this.precioProcesada;
+        return this.precio_procesada;
     }
 
     /**
-     * Establece el precio de venta real del producto procesado (para cuando la sucursal le compra al centro de distribucion)
+     * Establece el precio de venta real del producto (desde el centro de distribucion a la sucursal)
      * @param _descripcion
      */
-    private void setPrecioProcesada(float _precioProcesada) {
-        this.precioProcesada = _precioProcesada;
+    private void setPrecioProcesada(float _precio_procesada) {
+        this.precio_procesada = _precio_procesada;
     }
+
     /**
      * bandera que indica si el producto esta procesado o sin procesar.
      * default : false
@@ -277,25 +279,27 @@ public class Producto {
         this.cantidad = _cantidad;
     }
     /**
-     * Cantidad de producto procesado vendido
+<<<<<<< .mine
+     * Cantidad de producto vendido (desde el centro de distribucion a la sucursal)
      */
-    private float cantidadProcesada = 0;
+    private float cantidad_procesada = 0;
 
     /**
-     * Obtenemos la cantidad vendida de este producto procesado
+     * Obtenemos la cantidad vendida de este producto (desde el centro de distribucion a la sucursal)
      * @return
      */
     public float getCantidadProcesada() {
-        return this.cantidadProcesada;
+        return this.cantidad_procesada;
     }
 
     /**
-     * Establece la cantidad vendida de este  procesado
+     * Establece la cantidad vendida de este producto (desde el centro de distribucion a la sucursal)
      * @param _cantidad
      */
-    private void setCantidadProcesada(float _cantidadProcesada) {
-        this.cantidadProcesada = _cantidadProcesada;
+    private void setCantidadProcesada(float _cantidad_procesada) {
+        this.cantidad_procesada = _cantidad_procesada;
     }
+
     /**
      * Cantidad descontada del producto vendido
      */
@@ -387,15 +391,29 @@ public class Producto {
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
 
-                if (entry.getKey().toString().equals("descripcion")) {
+                if (entry.getKey().toString().equals("procesado")) {
 
                     try {
-                        this.setDescripcion(entry.getValue().toString());
+                        this.setProcesado(Boolean.parseBoolean(entry.getValue().toString()));
                         if (debug) {
-                            System.out.println("descripcion : " + this.getDescripcion());
+                            System.out.println("procesado : " + this.getProcesado());
                         }
                     } catch (Exception e) {
                         System.err.println(e);
+                    }
+                }
+
+                if (entry.getKey().toString().equals("descripcion")) {
+
+                    if (entry.getValue() != null) {
+                        try {
+                            this.setDescripcion(entry.getValue().toString());
+                            if (debug) {
+                                System.out.println("descripcion : " + this.getDescripcion());
+                            }
+                        } catch (Exception e) {
+                            System.err.println(e);
+                        }
                     }
 
                 }
@@ -451,17 +469,19 @@ public class Producto {
                     }
                 }
 
+
                 if (entry.getKey().toString().equals("precio_procesada")) {
 
                     try {
-                        this.setPrecio(Float.parseFloat(entry.getValue().toString()));
+                        this.setPrecioProcesada(Float.parseFloat(entry.getValue().toString()));
                         if (debug) {
-                            System.out.println("precio procesada: " + this.getPrecioProcesada());
+                            System.out.println("precio_procesada : " + this.getPrecioProcesada());
                         }
                     } catch (Exception e) {
                         System.err.println(e);
                     }
                 }
+
 
                 if (entry.getKey().toString().equals("precioIntersucursal")) {
                     try {
@@ -520,25 +540,12 @@ public class Producto {
                     }
                 }
 
-                if (entry.getKey().toString().equals("procesado")) {
-
-                    try {
-                        this.setProcesado(Boolean.parseBoolean(entry.getValue().toString()));
-                        if (debug) {
-                            System.out.println("procesado : " + this.getProcesado());
-                        }
-                    } catch (Exception e) {
-                        System.err.println(e);
-                    }
-
-                }
-
                 if (entry.getKey().toString().equals("cantidad_procesada")) {
 
                     try {
                         this.setCantidadProcesada(Float.parseFloat(entry.getValue().toString()));
                         if (debug) {
-                            System.out.println("cantidad procesada : " + this.getCantidadProcesada());
+                            System.out.println("cantidad : " + this.getCantidadProcesada());
                         }
                     } catch (Exception e) {
                         System.err.println(e);

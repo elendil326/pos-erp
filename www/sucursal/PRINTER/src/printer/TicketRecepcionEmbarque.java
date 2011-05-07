@@ -70,9 +70,7 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
      * Variable que sirve para controlar las impresiones que facilitan la depuracion
      */
     static boolean debug = false;
-
     private ArrayList<Producto> productos = new ArrayList<Producto>();
-
     private Sucursal sucursal = null;
 
     TicketRecepcionEmbarque(String json, String hora, String fecha) {
@@ -276,7 +274,7 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
 
         this.grafico.drawString("P.U.", this.x + 107, this.y);
 
-        this.grafico.drawString("SUBTOTAL", this.x + 138, this.y);
+        this.grafico.drawString("IMPORTE", this.x + 138, this.y);
 
         this.incrementY(this.height_normal);
 
@@ -293,13 +291,27 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
 
             this.grafico.drawString(this.productos.get(j).getDescripcion(), this.x, this.y);
 
-            this.grafico.drawString(String.valueOf(this.productos.get(j).getCantidad()), this.x + 75, this.y);
+            if (!this.productos.get(j).getProcesado()) {
 
-            this.grafico.drawString(this.formatoDinero.format(this.productos.get(j).getPrecio()), this.x + 107, this.y);
+                this.grafico.drawString(String.valueOf(this.productos.get(j).getCantidad()), this.x + 75, this.y);
 
-            this.grafico.drawString(this.formatoDinero.format(this.productos.get(j).getCantidad() * this.productos.get(j).getPrecio()), this.x + 138, this.y);
+                this.grafico.drawString(this.formatoDinero.format(this.productos.get(j).getPrecio()), this.x + 107, this.y);
 
-            sum += this.productos.get(j).getCantidad() * this.productos.get(j).getPrecio();
+                this.grafico.drawString(this.formatoDinero.format(this.productos.get(j).getCantidad() * this.productos.get(j).getPrecio()), this.x + 138, this.y);
+
+                sum += this.productos.get(j).getCantidad() * this.productos.get(j).getPrecio();
+
+            } else {
+
+                this.grafico.drawString(String.valueOf(this.productos.get(j).getCantidadProcesada()), this.x + 75, this.y);
+
+                this.grafico.drawString(this.formatoDinero.format(this.productos.get(j).getPrecioProcesada()), this.x + 107, this.y);
+
+                this.grafico.drawString(this.formatoDinero.format(this.productos.get(j).getCantidadProcesada() * this.productos.get(j).getPrecioProcesada()), this.x + 138, this.y);
+
+                sum += this.productos.get(j).getCantidadProcesada() * this.productos.get(j).getPrecioProcesada();
+                
+            }
 
             this.incrementY(this.height_normal);
 
@@ -328,7 +340,7 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
         this.incrementY(this.height_normal);
 
         this.imprimeSinDesborde(this.grafico, this.getCantidadEnLetra(this.getTotal()), this.height_normal);
-        
+
         this.incrementY(this.height_normal);
 
         if (debug) {
@@ -352,7 +364,6 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
     public void setSucursal(Sucursal sucursal) {
         this.sucursal = sucursal;
     }
-
     private String empleado = null;
 
     /**
@@ -368,7 +379,6 @@ public class TicketRecepcionEmbarque extends FormatoTicket implements Printable 
     public void setEmpleado(String empleado) {
         this.empleado = empleado;
     }
-
     private float total = 0;
 
     /**

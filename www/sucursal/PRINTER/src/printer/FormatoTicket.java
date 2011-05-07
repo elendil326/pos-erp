@@ -509,6 +509,7 @@ abstract class FormatoTicket {
     public void setFecha(String _fecha) {
         this.fecha = _fecha;
     }
+    
     /**
      * Impresora con la cual se imprimira el documento
      */

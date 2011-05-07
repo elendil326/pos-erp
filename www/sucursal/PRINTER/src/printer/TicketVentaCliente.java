@@ -237,6 +237,27 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
         this.empleado = _empleado;
     }
 
+    /**
+     * Fecha real en la cual se registro la venta (es para reimpresiones de ticket de venta)
+     */
+    private String fecha_venta = null;
+
+    /**
+     * Obtiene la fecha real en la cual se registro la venta (es para reimpresiones de ticket de venta)
+     * @return
+     */
+    public String getFechaVenta() {
+        return this.fecha_venta;
+    }
+
+    /**
+     * Establece la fecha real en la cual se registro la venta (es para reimpresiones de ticket de venta)
+     * @param _fecha
+     */
+    public void setFechaVenta(String _fecha_venta) {
+        this.fecha_venta = _fecha_venta;
+    }
+
     //--------------------------------------------------------------------//
     //     Constructor de la clase                                        //
     //--------------------------------------------------------------------//
@@ -296,6 +317,25 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                             if (debug) {
                                 System.out.println("tipo_venta : " + this.getTipoVenta());
+                            }
+
+                        } catch (Exception e) {
+                            System.err.print(e);
+                        }
+
+                    }
+
+                }
+
+                if (entry.getKey().toString().equals("fecha_venta")) {
+
+                    if (entry.getValue() != null && entry.getValue() != "") {
+
+                        try {
+                            this.setFechaVenta(entry.getValue().toString());
+
+                            if (debug) {
+                                System.out.println("fecha_venta : " + this.getFechaVenta());
                             }
 
                         } catch (Exception e) {
@@ -653,7 +693,28 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
         this.incrementY(this.height_normal);
 
-        this.grafico.drawString("Fecha : " + this.getFecha() + " " + this.hora, this.x, this.y);
+        if (this.getReimpresion()) {
+
+            this.grafico.setFont(this.bold);
+
+            this.grafico.drawString("REIMPRESION", this.x + 61, this.y);
+
+            this.incrementY(this.height_normal);            
+            
+            this.grafico.setFont(this.normal);
+
+            //recha de cuando se realizo la venta
+            this.grafico.drawString("Fecha : " + this.getFechaVenta(), this.x, this.y);
+
+
+        } else {
+            this.grafico.setFont(this.normal);
+
+            //fecha real de envio de impresion
+            this.grafico.drawString("Fecha : " + this.getFecha() + " " + this.getHora(), this.x, this.y);
+        }
+
+
 
         this.incrementY(this.height_normal);
 
@@ -663,7 +724,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
             this.imprimeSinDesborde(this.grafico, "Cliente : " + this.cliente.getRazonSocial(), this.height_normal);
 
-            if (this.getTipoVenta().equals("credito")) {
+            if (this.getTipoVenta().equals("credito") && !this.getReimpresion()) {
                 this.imprimeSinDesborde(this.grafico, "Usted debe hoy : " + this.formatoDinero.format(this.cliente.getLimiteCredito() - (this.cliente.getCreditoRestante() - this.getTotal())), this.height_normal);
             }
 
@@ -809,23 +870,28 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
             //entra si el tipo de venta es a credito
 
-            this.imprimeSinDesborde(this.grafico, LeyendasTicket.getNotaFiscal(), " ", this.height_normal);
+            if (!this.getReimpresion()) {
 
-            this.grafico.setFont(this.bold);
+                //entra si no es una reimpresion
 
-            this.imprimeSinDesborde(this.grafico, LeyendasTicket.getCabeceraPagare(), " ", this.height_normal);
+                this.imprimeSinDesborde(this.grafico, LeyendasTicket.getNotaFiscal(), " ", this.height_normal);
 
-            this.grafico.setFont(this.normal);
+                this.grafico.setFont(this.bold);
 
-            this.imprimeSinDesborde(this.grafico, LeyendasTicket.getPagare(), " ", this.height_normal);
+                this.imprimeSinDesborde(this.grafico, LeyendasTicket.getCabeceraPagare(), " ", this.height_normal);
 
-            this.grafico.drawString("_____________________________________________________________", this.x, this.y);
+                this.grafico.setFont(this.normal);
 
-            this.incrementY(this.height_normal);
+                this.imprimeSinDesborde(this.grafico, LeyendasTicket.getPagare(), " ", this.height_normal);
 
-            this.grafico.drawString("Firma(s)", this.x + 70, this.y);
+                this.grafico.drawString("_____________________________________________________________", this.x, this.y);
 
-            this.incrementY(this.height_normal + 15);
+                this.incrementY(this.height_normal);
+
+                this.grafico.drawString("Firma(s)", this.x + 70, this.y);
+
+                this.incrementY(this.height_normal + 15);
+            }
 
         }
 
