@@ -7,27 +7,87 @@ require_once('model/pos_config.dao.php');
 require_once('model/sucursal.dao.php');
 require_once("model/ventas.dao.php");
 require_once("model/cliente.dao.php");
+require_once("model/factura_venta.dao.php");
 require_once("controller/ventas.controller.php");
+require_once("model/pos_config.dao.php");
+require_once("admin/includes/static.php");
+
 
 
 function puntos_cm ($medida, $resolucion=72)
 {
    //// 2.54 cm / pulgada
    //se supone ke la pagina mide 29.7 cm por 21.0 cm
-   return ($medida/(2.54))*$resolucion;
+	//$medida += 29.7;
+	return ( $medida / (2.54) ) * $resolucion ;
 }
 
 
 
 
+function readableText($bar){
+	$foo = explode(" " , $bar);
+	$end = "";
+	foreach($foo as $i){
+		$end .= ucfirst(strtolower($i)) . " ";
+	}
 
+	return $end;
+}
 
-
-function imprimirFactura($id_venta){
-
-
+function formatAddress($d){
 	
-	$venta = VentasDAO::getByPK( $id_venta);
+	if($d instanceof stdClass){
+		$e = "";
+		$e .= readableText($d->calle) . " " . $d->numeroExterior ;
+		if(isset($d->numeroInterior))
+			$e .= "\n" . $d->numeroInterior;
+		$e .= "\n";
+		$e .= readableText($d->colonia) . " C.P." . $d->codigoPostal . "\n";
+		$e .= readableText($d->municipio) . ", " . readableText($d->estado) . ", " . readableText($d->pais). "\n" ;		
+	}else{
+		$e = "";
+		$e .= readableText($d->getCalle()) . " " . $d->getNumeroExterior() ;
+		if($d->getNumeroInterior() != null)
+			$e .= "\n" . $d->getNumeroInterior();
+			
+		$e .= readableText($d->getColonia()) . " C.P." . $d->getCodigoPostal() . "\n";
+		$e .= readableText($d->getMunicipio()) . ", " . readableText($d->getEstado()) . ", " . readableText($d->getPais()). "\n" ;	
+	}
+
+	return $e;
+}
+
+
+function roundRect($pdf, $x,$y,$w,$h){
+	
+	$pdf->setStrokeColor(0.3359375,0.578125,0.89453125);
+	$pdf->setLineStyle(1);
+	
+	$x -= puntos_cm(.1);
+	$y -= 2; 
+
+	$pdf->line(	 $x + 2 , $y, $x+$w-2, $y); //arriba
+	$pdf->line(	 $x , $y-2, $x , $y-$h+2);		//izquierda
+	$pdf->line(	 $x +2, $y-$h, $x+$w-2, $y-$h); //abajo
+	$pdf->line(	 $x+$w , $y-2, $x+$w , $y-$h+2);	//derecha		
+
+	$pdf->partEllipse($x+3	,$y-3	,90		,180	,3); //top-left
+	$pdf->partEllipse($x+$w-3 ,$y-3	,0		,90		,3); //top-right
+	$pdf->partEllipse($x+$w-3, $y-$h+3,360	,240	,3); //bottom-right
+	$pdf->partEllipse($x +3,$y-$h+3	,180	,270	,3); //bottom-left
+}
+
+
+function imprimirFactura($id_venta, $venta_especial = null){
+
+
+	if($id_venta == null){
+		$venta = $venta_especial;
+	}else{
+		$venta = VentasDAO::getByPK( $id_venta);		
+	}
+
 
 	if(!$venta){
 		die("Esta venta no existe");
@@ -35,7 +95,7 @@ function imprimirFactura($id_venta){
 
 	//validar que la venta sea a contado, o bien que este saldada
 	if(!$venta->getLiquidada()){
-		die("Esta venta no ha sido liquidada, no se puede facturar.");
+		die("Esta venta no ha sido liquidada, no se puede imprimir factura.");
 	}
 
 
@@ -47,362 +107,414 @@ function imprimirFactura($id_venta){
 	}
 
 
-	//una vez que ya se que si puedo imprimir esta factura
-	//tengo que descargar el QR CODE de google charts.
-	//tal vez, estoy reimprimiendo la factura, asi que
-	//voy a buscar si ya la tengo en la carpeta de QR
-	//CODES.
+	//buscar los detalles de la factura de venta
+	$factura_q = new FacturaVenta();
+	$factura_q->setIdVenta( $venta->getIdVenta() );
 	
+	$facturas_poll = FacturaVentaDAO::search( $factura_q );
+	
+	if(sizeof($facturas_poll) != 1){
+		Logger::log("Los datos de esta factura estan incompletos o hay mas de un detalle de factura");
+		die("Los datos de esta factura estan incompletos o hay mas de un detalle de factura");
+	}
+
+	$factura = $facturas_poll[0];
 
 	$detalle_de_venta 		= detalleVenta( $venta->getIdVenta() );
 	$productos 				= $detalle_de_venta["items"];
 	$detalle_de_venta 		= $detalle_de_venta["detalles"];
-	
-	//$factura = FacturaVentaDAO::getByPK(  );
 
+	//buscar los datos del emisor
+	$conf = new PosConfig();
+	$conf->setOpcion("emisor");
+	
+	$results = PosConfigDAO::search( $conf );
+	if(sizeof($results) != 1){
+		Logger::log("no encuentro los datos del numero de certificado");
+		die("no encuentro los datos del emisor");
+	}
+
+	$emisor = json_decode( $results[0]->getValue() )->emisor;
+
+	//buscar los datos del no de certificado
+	$conf = new PosConfig();
+	$conf->setOpcion("noCertificado");
+	
+	$results = PosConfigDAO::search( $conf );
+	if(sizeof($results) != 1){
+		Logger::log("no encuentro los datos del numero de certificado");
+		die("no encuentro los datos del numero de certificado");
+	}
+
+	$serie_cert_contribuyente = $results[0]->getValue();
+
+	$sucursal = SucursalDAO::getByPK($venta->getIdSucursal());
+
+	$qr_file_name = obternerQRCode( $emisor->rfc, $cliente->getRFC(), $venta->getTotal(), $factura->getFolioFiscal() );
+	
 	include_once('librerias/ezpdf/class.pdf.php');
 	include_once('librerias/ezpdf/class.ezpdf.php');
 	
 	$pdf = new Cezpdf(); 
-	$pdf->selectFont('../server/librerias/ezpdf/fonts/Helvetica.afm'); 
 
+	$pdf->selectFont('../server/librerias/ezpdf/fonts/Helvetica.afm'); 
+	
+	//margenes de un centimetro para toda la pagina
+	$pdf->ezSetMargins(1,1,1,1);
 
 	/* *************************
 	 * ENCABEZADO
 	 * ************************* */
-	$pdf->setColor			(0.8,0.8,0.8);
-	$pdf->setStrokeColor	(0,0,0);
-	$pdf->filledrectangle 	(puntos_cm(2), puntos_cm(26.7), puntos_cm(17), puntos_cm(1.5));
-	$pdf->setLineStyle		(3,'round');
-	$pdf->setColor			(0, 0 ,0);
-	$pdf->ezImage			('../server/librerias/ezpdf/img.jpg', 0, 50, 'none', 'left');
 
+	
+		/* *************************
+	 	* TITULO
+	    * Datos del emisor, lugar de expedicion, folio, fecha de emision, no de serie
+	    * del certificado del contribuyente
+	 	* ************************* */	
+		$e = "<b>" . readableText($emisor->nombre) . "</b>\n";
+		$e .= formatAddress( $emisor );
+		$e .= "RFC: " . $emisor->rfc;
 
+		//datos de la sucursal
+		$s = "<b>Lugar de expedicion</b>\n";
+		$s .= formatAddress( $sucursal );
+
+		$datos = array(
+			array(
+				"emisor"	=> $e,
+				'sucursal'	=> $s, 
+				)
+		);
+		
+		$pdf->ezSetY( puntos_cm( 28.7 ) );
+		$opciones_tabla = array();
+		$opciones_tabla['showLines']	= 0;
+		$opciones_tabla['showHeadings']	= 0;
+		$opciones_tabla['shaded']		= 0;
+		$opciones_tabla['fontSize']		= 8;
+		$opciones_tabla['xOrientation']	= 'right';
+		$opciones_tabla['xPos']			= puntos_cm(3);
+		$opciones_tabla['width']		= puntos_cm(11);
+		$opciones_tabla['textCol'] 		= array(0,0,0);
+		$opciones_tabla['titleFontSize']= 12;
+		$opciones_tabla['rowGap'] 		= 3;
+		$opciones_tabla['colGap'] 		= 3;
+
+		$pdf->ezTable($datos, "", "", $opciones_tabla);
+		
+		$datos = array(
+			array( "col"	=> "<b>Folio</b>" ),
+			array( "col"	=> $factura->getIdFolio() ),
+			array( "col"	=> "<b>Fecha y hora de Emision</b>" ),
+			array( "col"	=> $factura->getFechaEmision() ),
+			array( "col"	=> "<b>Numero de serie del certificado del contribuyente</b>" ),
+			array( "col"	=> $serie_cert_contribuyente )			
+		);
+		
+		$pdf->ezSetY( puntos_cm( 28.7 ) );
+		
+		$opciones_tabla['xPos']			= puntos_cm(14.2);
+		$opciones_tabla['width']		= puntos_cm( 4);
+		$opciones_tabla['showLines']	= 0;
+		$opciones_tabla['shaded']		= 2;						
+		$opciones_tabla['shadeCol']  	= array(1,1,1);
+		$opciones_tabla['shadeCol2'] 	=  array(0.8984375,0.95703125,0.99609375);
+		$pdf->ezTable( $datos, "", "", $opciones_tabla);
+
+		roundRect($pdf, puntos_cm(14.2),puntos_cm(28.7),puntos_cm(4),puntos_cm(4));
+		
+
+		
 	/* *************************
-	 * TITULO
-	 * ************************* */
-	$pdf->addText(puntos_cm(3),puntos_cm(27.3),12, 'POS Papas Supremas - Factura de Venta');
+ 	* Receptor del comprobante fiscal
+    * Datos del receptor
+ 	* ************************* */
+	$datos_receptor = $cliente->getRAzonSocial() .  "\n";
+	$datos_receptor .= formatAddress($cliente) ;
+	$datos_receptor .= "RFC:" . $cliente->getRfc();
+
+	$receptor = array(
+		array( "receptor"	=> "<b>Receptor del comprobante fiscal</b>" ),
+		array( "receptor"	=> $datos_receptor ),		
+	);
+
+	$pdf->ezSetY( puntos_cm( 24.3 ) );
+	$opciones_tabla['xPos']			= puntos_cm( 2);
+	$opciones_tabla['width']		= puntos_cm( 8.2);
+	$opciones_tabla['showLines']	= 0;
+	$pdf->ezTable( $receptor, "", "", $opciones_tabla);
+	
+
+
+	
+	/* *************************
+	*	Timbrado
+ 	* ************************* */
+	$pdf->ezSetY( puntos_cm( 24.3 ) );
+	$opciones_tabla['xPos']			= puntos_cm( 10.4);
+	$opciones_tabla['width']		= puntos_cm( 7.8);
+	$timbre = array(
+		array( "dat"	=> "<b>Folio Fiscal</b>" ),
+		array( "dat"	=> $factura->getFolioFiscal() ),
+		array( "dat"	=> "<b>Fecha y hora de certificacion</b>" ),
+		array( "dat"	=> $factura->getFechaCertificacion() ),
+		array( "dat"	=> "<b>Numero de serie del certificaco del sat</b>" ),
+		array( "dat"	=> $factura->getNumeroCertificadoSat() )				
+	);
+	
+	$pdf->ezTable( $timbre, "", "", $opciones_tabla);
+	
+	roundRect($pdf, 
+			puntos_cm(2),puntos_cm(24.3),
+			puntos_cm(16.2),puntos_cm(3.2));
+		
 	
 	
 	/* *************************
-	 * NUMERO DE FACTURA: FOLIO
-	 * ************************* */
-	$pdf->addText(puntos_cm(15),puntos_cm(27.3),12,'Folio: ' . "emisor->folio");
-
-	$pdf->setStrokeColor(0,0,0);
-	$pdf->line(puntos_cm(2),puntos_cm(26.5),puntos_cm(19),puntos_cm(26.5));
-	$pdf->setColor(0.8,0.8,0.8);
-	$pdf->setStrokeColor(0,0,0);
-	$pdf->setLineStyle(1,'round'); 
-	$pdf->setColor(0,0,0);
-	//$pdf->addText(puntos_cm(2),puntos_cm(25.5),12,'Folio: '.$emisor->folio);
-	$pdf->addText(puntos_cm(15),puntos_cm(26),12,'Fecha: '.date("d / m / y"));
-	$pdf->addText(puntos_cm(2),puntos_cm(25.5),12,'Emisor: ');
-	$pdf->addText(puntos_cm(10.5),puntos_cm(25.5),12,'Receptor: ');
-
-	//$pdf->filledrectangle (puntos_cm(14), puntos_cm(22), puntos_cm(3), puntos_cm(1.5));
-	//$pdf->rectangle (puntos_cm(14), puntos_cm(22), puntos_cm(3), puntos_cm(1.5));
-
-	//$pdf->setColor(0, 0 ,0);
-	//$pdf->addText(puntos_cm(15),puntos_cm(22.5),12,'Final');
-
-	$pdf->ezSetY(puntos_cm(25.5));
-
-	$datos = array(
-	array('id'=>'RFC', 'ref'=>"emisor->rfc"),
-	array('id'=>'Nombre', 'ref'=>"emisor->razon_social"),
-	array('id'=>'Domicilio', 'ref'=>"emisor->direccion")
+ 	* Tipo de comprobante
+ 	* ************************* */
+	$pdf->ezSetY( puntos_cm( 20.9 ) );
+	$opciones_tabla['xPos']			= puntos_cm( 2 );
+	$opciones_tabla['width']		= puntos_cm( 16.2 );
+	$comprobante = array(
+		array( 	"r1"	=> "Tipo de comprobante",
+				"r2"	=> "Moneda",
+				"r3" 	=> "Tipo de cambio",
+				"r4"	=> "<b>Version</b>" ),
+				
+		array( 	"r1"	=> readableText($factura->getTipoComprobante()),
+				"r2"	=> "MXN",
+				"r3" 	=> "1.0",
+				"r4"	=> "3.0" ),
 	);
-
-	////creamos un nuevo array en el que pondremos un borde=1
-	///y las cabeceras de la tabla las pondremos ocultas
-	unset ($opciones_tabla);
+	$pdf->ezTable( $comprobante, "", "", $opciones_tabla);
 	
-	//// mostrar las lineas
-	$opciones_tabla['showlines']=1;
-	//// mostrar las cabeceras
-	$opciones_tabla['showHeadings']=0;
-	//// lineas sombreadas
-	$opciones_tabla['shaded']= 1;
-	//// tamaño letra del texto
-	$opciones_tabla['fontSize']= 10;
-	//// alineacion de la tabla
-	$opciones_tabla['xOrientation']= 'right';
-	//// tamaño letra del texto
-	$opciones_tabla['xPos']= puntos_cm(2);
-	//// tamaño de la tabla
-	$opciones_tabla['width']= puntos_cm(8);
-	//// color del texto
-	$opciones_tabla['textCol'] = array(0,0,0);
-	//// tamaño de las cabeceras (texto)
-	$opciones_tabla['titleFontSize'] = 12;
-	//// margen interno de las celdas
-	$opciones_tabla['rowGap'] = 3;
-	$opciones_tabla['colGap'] = 3;
-
+	roundRect($pdf, 
+			puntos_cm(2),puntos_cm(20.9),
+			puntos_cm(16.2),puntos_cm(1.2));
 	
-	$pdf->ezTable($datos, "", "",$opciones_tabla);
-
-
-	$pdf->ezSetY(puntos_cm(25.5));
-	$datos = array(
-	array('id'=>'RFC', 'ref'=> "receptor->rfc"),
-	array('id'=>'Nombre', 'ref'=> "receptor->razon_social"),
-	array('id'=>'Domicilio', 'ref'=>"receptor->direccion")
-	);
-
-	////creamos un nuevo array en el que pondremos un borde=1
-	///y las cabeceras de la tabla las pondremos ocultas
-	unset ($opciones_tabla);
-	//// mostrar las lineas
-	$opciones_tabla['showlines']=1;
-	//// mostrar las cabeceras
-	$opciones_tabla['showHeadings']=0;
-	//// lineas sombreadas
-	$opciones_tabla['shaded']= 1;
-	//// tamaño letra del texto
-	$opciones_tabla['fontSize']= 10;
-	//// alineacion de la tabla
-	$opciones_tabla['xOrientation']= 'right';
-	//// tamaño letra del texto
-	$opciones_tabla['xPos']= puntos_cm(10.5);
-	//// tamaño de la tabla
-	$opciones_tabla['width']= puntos_cm(8.5);
-	//// color del texto
-	$opciones_tabla['textCol'] = array(0,0,0);
-	//// tamaño de las cabeceras (texto)
-	$opciones_tabla['titleFontSize'] = 12;
-	//// margen interno de las celdas
-	$opciones_tabla['rowGap'] = 3;
-	$opciones_tabla['colGap'] = 3;
-	$pdf->ezTable($datos, "", "",$opciones_tabla);
-	$pdf->ezText('');
-
-
-	$anio='A'.utf8_decode('ñ').'o Aprobacion';
-	//certificado sello digital, num aprobacion, year aprobacion
-	$data = array(
-	array('certificado'=>'No. Certificado de Sello Digital                                                                                            ',
-	 	'aprobacion'=>'No. Aprobacion', 
-		'anioAprobacion'=>$anio),
-		array(
-			'certificado'=>"datos_fiscales->numero_certificado", 
-			'aprobacion'=> "datos_fiscales->numero_aprobacion", 'anioAprobacion'=> "datos_fiscales->anio_aprobacion"
-		)
-	);
-	////creamos un nuevo array en el que pondremos un borde=1
-	///y las cabeceras de la tabla las pondremos ocultas
-	unset ($opciones_tabla);
-	//// mostrar las lineas
-	$opciones_tabla['showLines']=0;
-	//// mostrar las cabeceras
-	$opciones_tabla['showHeadings']=0;
-	//// lineas sombreadas
-	$opciones_tabla['shaded']= 1;
-	//// tamaño letra del texto
-	$opciones_tabla['fontSize']= 10;
-	//// alineacion de la tabla
-	$opciones_tabla['xOrientation']= 'right';
-	//// alineacion de la tabla
-	$opciones_tabla['xPos']= puntos_cm(2);
-	//// tamaño de la tabla
-	$opciones_tabla['width']= puntos_cm(17);
-	//// color del texto
-	$opciones_tabla['textCol'] = array(0,0,0);
-	//// tamaño de las cabeceras (texto)
-	$opciones_tabla['titleFontSize'] = 10;
-	//// margen interno de las celdas
-	$opciones_tabla['rowGap'] = 2;
-	$opciones_tabla['colGap'] = 2;
-	$pdf->ezTable($data, "", "", $opciones_tabla);
-	$pdf->ezText('');
-
-
-	//PRODUCTOS
+	/* *************************
+ 	* PRODUCTOS
+ 	* ************************* */
 	$elementos = array(
-	array('cantidad'=>'Cantidad', 'descripcion'=>'Descripcion                                                                                                     ', 'precio'=>'Precio', 'importe'=>'Importe'),
+		array(	'cantidad'=>'Cantidad', 
+				'descripcion'=>'Descripcion                                                                                                     ', 'precio'=>'Precio', 'importe'=>'Importe'),
 	);
+	
+	
 	foreach($productos as $p){
-	$prod['cantidad']= "p->cantidad";
-	$prod['descripcion']= "p->descripcion";
-	$prod['precio']="p->precio";
-	$prod['importe']="p->importe";
-	//array_push($elementos, 'cantidad'=>$cantidad, 'descripcion'=>$descripcion, 'precio'=>$precio, 'importe'=>$importe);
-	array_push($elementos,$prod);
+		if($p["cantidadProc"] > 0){
+			
+			$prod['cantidad']		= $p["cantidadProc"];
+			$prod['descripcion']	= $p["descripcion"] . " PROCESADA";
+			$prod['precio']			= moneyFormat($p["precioProc"], DONT_USE_HTML);
+			$prod['importe']		= moneyFormat($p["precioProc"] * $p["cantidadProc"], DONT_USE_HTML);
+
+			array_push($elementos,$prod);
+						
+		}
+		
+		if($p["cantidad"] > 0){
+			$prod['cantidad']		= $p["cantidad"];
+			$prod['descripcion']	= $p["descripcion"];
+			$prod['precio']			= moneyFormat($p["precio"], DONT_USE_HTML);
+			$prod['importe']		= moneyFormat($p["precio"] * $p["cantidad"], DONT_USE_HTML);
+
+			array_push($elementos,$prod);
+		}
 	}
-
-	$prod['cantidad']="";
-	$prod['descripcion']="";
-	$prod['precio']='Subtotal';
-	$prod['importe']= "factura->subtotal";
-	array_push($elementos,$prod);
-
-	$prod['cantidad']="";
-	$prod['descripcion']="";
-	$prod['precio']='Descuento';
-	$prod['importe']= "factura->descuento";
-	array_push($elementos,$prod);
-
-	$prod['cantidad']="";
-	$prod['descripcion']="";
-	$prod['precio']='IVA';
-	$prod['importe']= "factura->iva";
-	array_push($elementos,$prod);
-
-	$prod['cantidad']="";
-	$prod['descripcion']="";
-	$prod['precio']='Total';
-	$prod['importe']= "factura->total";
-	array_push($elementos,$prod);
-
-	////creamos un nuevo array en el que pondremos un borde=1
-	///y las cabeceras de la tabla las pondremos ocultas
-	unset ($opciones_tabla);
-	//// mostrar las lineas
-	$opciones_tabla['showlines']=1;
-	//// mostrar las cabeceras
-	$opciones_tabla['showHeadings']=0;
-	//// lineas sombreadas
-	$opciones_tabla['shaded']= 1;
-	//// tamaño letra del texto
-	$opciones_tabla['fontSize']= 10;
-	//// alineacion de la tabla
-	$opciones_tabla['xOrientation']= 'right';
-	//// alineacion de la tabla
-	$opciones_tabla['xPos']= puntos_cm(2);
-	//// tamaño de la tabla
-	$opciones_tabla['width']= puntos_cm(17);
-	//// color del texto
-	$opciones_tabla['textCol'] = array(0,0,0);
-	//// tamaño de las cabeceras (texto)
-	$opciones_tabla['titleFontSize'] = 12;
-	//// margen interno de las celdas
-	$opciones_tabla['rowGap'] = 3;
-	$opciones_tabla['colGap'] = 3;
-	$pdf->ezTable($elementos, "", "Productos",$opciones_tabla);
-	$pdf->ezText('');
+	
 
 
-	//Final de la factura
-	$footer = array(
-	array(	'letra'=>'Total con letra                                                                                        ',
-			'forma'=>'Forma Pago',
-			'metodo'=>'Metodo Pago'),
-			array('letra'=>"factura->total_letra",
-				'forma'=>"factura->forma_pago",
-				'metodo'=>"factura->metodo_pago"
-			)
+	array_push($elementos, 
+		array( "cantidad" => "", 
+				"descripcion" => "", 
+				"precio" => "Subtotal", 	
+				"importe" =>  moneyFormat($venta->getSubTotal(), DONT_USE_HTML)) );
+		
+	array_push($elementos, 
+		array( "cantidad" => "", 
+				"descripcion" => "", 
+				"precio" => "Descuento", 	
+				"importe" => moneyFormat( $venta->getDescuento(), DONT_USE_HTML)) );
+		
+	array_push($elementos, 
+		array( "cantidad" => "", 
+				"descripcion" => "", 
+				"precio" => "IVA", 		
+				"importe" => moneyFormat( $venta->getIVA(), DONT_USE_HTML)) );
+		
+	array_push($elementos, 
+		array( "cantidad" => "", 
+				"descripcion" => "", 
+				"precio" => "Total", 		
+				"importe" => moneyFormat( $venta->getTotal(), DONT_USE_HTML)) );
+		
+	
+	$pdf->ezText("", 10 , array('justification' => 'center'));
+	$pdf->ezTable($elementos, "", "", $opciones_tabla);
+	
+	$pdf->addJpegFromFile("../static_content/qr_codes/" . $qr_file_name, 30, 30,150  );
+	
+	roundRect($pdf, 
+			puntos_cm(2),puntos_cm(19.7-.25),
+			puntos_cm(16.2),puntos_cm(13.2));
+	
+	/* *************************
+ 	* Tipo de pago
+ 	* ************************* */
+	$pdf->ezText("\nPago en una sola exibicion\n", 10 , array('justification' => 'center'));
+	
+	/* *************************
+ 	* DATOS DE SELLOS
+ 	* ************************* */
+
+
+	
+	$sellos = array(
+		array( 	"r1"	=> "Sello digital del emisor:"),
+		array( 	"r1"	=> $factura->getSelloDigitalEmisor()),
+		array( 	"r1"	=> "Sello digital del SAT:"),	
+		array( 	"r1"	=> $factura->getSelloDigitalSat()),	
+		array( 	"r1"	=> "Cadena original del complemento de certificacion digital del sat:"),					
+		array( 	"r1"	=> $factura->getCadenaOriginal())
 	);
+	
+	$pdf->ezSetY( puntos_cm( 6.0 ) );	
+	$opciones_tabla['xPos']			= puntos_cm( 6 );
+	$opciones_tabla['width']		= puntos_cm( 12.4 );
+	$opciones_tabla['fontSize']		= 7;	
+	$opciones_tabla['showLines']	= 0;	
+	$pdf->ezTable( $sellos, "", "", $opciones_tabla);
+	
+	
+	
+	/* *************************
+ 	* notas de abajo
+ 	* ************************* */
+	$pdf->setLineStyle(1);
+	$pdf->setStrokeColor(0.3359375,0.578125,0.89453125);
+	
+	$pdf->line( puntos_cm( 2 ), puntos_cm( 1.3  ),
+				puntos_cm( 18.2 ), puntos_cm( 1.3 ) );
 
-	////creamos un nuevo array en el que pondremos un borde=1
-	///y las cabeceras de la tabla las pondremos ocultas
-	unset ($opciones_tabla);
-	//// mostrar las lineas
-	$opciones_tabla['showLines']=0;
-	//// mostrar las cabeceras
-	$opciones_tabla['showHeadings']=0;
-	//// lineas sombreadas
-	$opciones_tabla['shaded']= 0;
-	//// tamaño letra del texto
-	$opciones_tabla['fontSize']= 10;
-	//// alineacion de la tabla
-	$opciones_tabla['xOrientation']= 'right';
-	//// alineacion de la tabla
-	$opciones_tabla['xPos']= puntos_cm(2);
-	//// tamaño de la tabla
-	$opciones_tabla['width']= puntos_cm(17);
-	//// color del texto
-	$opciones_tabla['textCol'] = array(0,0,0);
-	//// tamaño de las cabeceras (texto)
-	$opciones_tabla['titleFontSize'] = 12;
-	//// margen interno de las celdas
-	$opciones_tabla['rowGap'] = 3;
-	$opciones_tabla['colGap'] = 3;
-	$pdf->ezTable($footer, "", "",$opciones_tabla);
+	
+	$pdf->addText(puntos_cm( 2 ), 
+					puntos_cm( 1.0 ), 
+					7, 
+					"Este documento es una representacion impresa de un CFDI");
+					
+				
 
-	$fiscales = array(
-	array('campo1'=>'Cadena Original: '. "datos_fiscales->cadena_original"),
-	array('campo1'=>'Sello Digital: '. "datos_fiscales->sello_digital"),
-	array('campo1'=>'Sello Digital Proveedor CFDI: '. "datos_fiscales->sello_digital_proveedor"),
-	array('campo1'=>'Informacion PAC: '. "datos_fiscales->pac")
-	);
+	$pdf->addJpegFromFile("../www/media/logo_simbolo.jpg", 
+						puntos_cm( 15.9 ), 
+						puntos_cm( .25 ), 
+						25  );
+						
 
-	////creamos un nuevo array en el que pondremos un borde=1
-	///y las cabeceras de la tabla las pondremos ocultas
-	unset ($opciones_tabla);
-	//// mostrar las lineas
-	$opciones_tabla['showLines']=1;
-	//// mostrar las cabeceras
-	$opciones_tabla['showHeadings']=0;
-	//// lineas sombreadas
-	$opciones_tabla['shaded']= 1;
-	//// tamaño letra del texto
-	$opciones_tabla['fontSize']= 10;
-	//// alineacion de la tabla
-	$opciones_tabla['xOrientation']= 'right';
-	//// alineacion de la tabla
-	$opciones_tabla['xPos']= puntos_cm(2);
-	//// tamaño de la tabla
-	$opciones_tabla['width']= puntos_cm(17);
-	//// color del texto
-	$opciones_tabla['textCol'] = array(0,0,0);
-	//// tamaño de las cabeceras (texto)
-	$opciones_tabla['titleFontSize'] = 12;
-	//// margen interno de las celdas
-	$opciones_tabla['rowGap'] = 3;
-	$opciones_tabla['colGap'] = 3;
-	$pdf->ezTable($fiscales, "", "",$opciones_tabla);
+	$pdf->addText(puntos_cm( 16.70 ), 
+					puntos_cm( .60 ), 
+					8, 
+					"caffeina.mx");	
+	
 
-	$pdf->addText(puntos_cm(2),puntos_cm(1),12,'Este documento es una representacion impresa de un CFDI');
+	$pdf->setLineStyle(1,'round','',array(0,2));
+	$pdf->setStrokeColor(0.3359375,0.578125,0.89453125);
 
+	$pdf->line( puntos_cm( 8.2+2 ), puntos_cm( 24.3 - .15 ),
+				puntos_cm( 8.2+2 ), puntos_cm( 21.051 ) );
 
-	//$pdf->ezOutput(1);
+					
 	$documento_pdf = $pdf->ezOutput(1);
+
 	$pdf->ezStream();
 	
+	//ok ya la hize, var si existe este documento en static content, sino, guardarlo
+	//if(!is_file( "../static_content/facturas/" . $_SESSION["INSTANCE_ID"] . "_" . $venta->getIdVenta() . ".pdf" ))
+		file_put_contents("../static_content/facturas/" . $_SESSION["INSTANCE_ID"] . "_" . $venta->getIdVenta() . ".pdf", $documento_pdf);
 	
+
 }
 
 
 
+
+/*
+ * Código de barras bidimensional QR, con base al estándar ISO/IEC 18004:2000, conteniendo los siguientes datos en el siguiente formato:
+RFC del emisor
+RFC del receptor
+Total (a 6 decimales fijos)
+Identificador único del timbre (UUID) asignado
+Donde se manejarán 95 caracteres conformados de la siguiente manera:
+Prefijo	Datos	Caracteres
+re	RFC del Emisor, a 12/13 posiciones, precedido por el texto ”?re=”	17
+rr	RFC del Receptor, a 12/13 posiciones, precedido por el texto
+“&rr=”	17
+tt	Total del comprobante a 17 posiciones (10 para los enteros, 1 para carácter “.”, 6 para los decimales), precedido por el texto “&tt=”	21
+id	UUID del comprobante, precedido por el texto “&id=”	40
+	95
+
+De esta manera se generan los datos válidos para realizar una consulta de un CFDI por medio de su expresión impresa.
+Ejemplo:
+?re=XAXX010101000&rr=XAXX010101000&tt=1234567890.123456&id=ad662d33-6934-459c-a128-BDf0393f0f44
+?re=GATJ740714F48&rr=CAAI6012142Q6&tt=10000.00&id=5CA3BD64-0507-41E4-B6D4-1F629705ABF1
+https://chart.googleapis.com/chart?chs=500x500&cht=qr&chld=H|1&choe=UTF-8&chl=
+*/
 function obternerQRCode( $rfcEmisor = null, $rfcReceptor = null, $total = null, $uuid = null  ){
-	
+
 	if( !$rfcEmisor || !$rfcReceptor || !$total || !$uuid ){
-		return false;
+		Logger::log("Faltan datos para buscar el codigo qr");
+		return null;
 	}
 	
 	
+	$file_name = $rfcEmisor . $rfcReceptor . $total . $uuid ;
+	$file_full_path  = "../static_content/qr_codes/" . $file_name . ".jpg";
 	
-	/*
-	 * Código de barras bidimensional QR, con base al estándar ISO/IEC 18004:2000, conteniendo los siguientes datos en el siguiente formato:
-	RFC del emisor
-	RFC del receptor
-	Total (a 6 decimales fijos)
-	Identificador único del timbre (UUID) asignado
-	Donde se manejarán 95 caracteres conformados de la siguiente manera:
-	Prefijo	Datos	Caracteres
-	re	RFC del Emisor, a 12/13 posiciones, precedido por el texto ”?re=”	17
-	rr	RFC del Receptor, a 12/13 posiciones, precedido por el texto
-	“&rr=”	17
-	tt	Total del comprobante a 17 posiciones (10 para los enteros, 1 para carácter “.”, 6 para los decimales), precedido por el texto “&tt=”	21
-	id	UUID del comprobante, precedido por el texto “&id=”	40
-		95
+	if(is_file(  $file_full_path )){
+		Logger::log("Ya existe este codigo QR");
+		return $file_name . ".jpg";
+	}
 
-	De esta manera se generan los datos válidos para realizar una consulta de un CFDI por medio de su expresión impresa.
-	Ejemplo:
-	?re=XAXX010101000&rr=XAXX010101000&tt=1234567890.123456&id=ad662d33-6934-459c-a128-BDf0393f0f44
-	El código de barras bidimensional deberá ser impreso en un área no menor a 2.75 centímetros cuadrados, ejemplo:
-	 * */
-	/*
-	 * 
-	 * 
-	 * 
-	?re=XAXX010101000&rr=XAXX010101000&tt=1234567890.123456&id=ad662d33-6934-459c-a128-BDf0393f0f44
-	?re=GATJ740714F48&rr=CAAI6012142Q6&tt=10000.00&id=5CA3BD64-0507-41E4-B6D4-1F629705ABF1
-	%3Fre%3DGATJ740714F48%26rr%3DCAAI6012142Q6%26tt%3D10000.00%26id%3D5CA3BD64-0507-41E4-B6D4-1F629705ABF1
-	re=XAXX010101000&rr=XAXX010101000&tt=1234567890.123456&id=ad662d33-6934-459c-a128-BDf0393f0f44
-	https://chart.googleapis.com/chart?chs=500x500&cht=qr&chld=H|1&choe=UTF-8&chl=re%3DGATJ740714F48%26rr%3DCAAI6012142Q6%26tt%3D10000.00%26id%3D5CA3BD64-0507-41E4-B6D4-1F629705ABF1
-	*/
+	//el codigo no existe, sacarlo de google
+	//primero tengo que ver si es posible que escriba en la carpeta de qr codes
+	if(!is_writable("../static_content/qr_codes/")){
+		Logger::log( "No puedo escribir en la carpeta de QRCODES !" );
+		return null;
+	}
+
+	
+	Logger::log("Codigo QR no esta en static, sacarlo de google");
+	
+	$cadena = "?re=" . $rfcEmisor;
+	$cadena .= "&rr=" . $rfcReceptor;
+	
+	$total_seis_decimales = sprintf(  "%10.6f", $total);
+	Logger::log("AQUI FALTA SABER SI SON DIEZ CARATERES PARA EL TOTAL, O SOLO LOS NECESARIOS, O QUE PEDO?");
+	
+	$cadena .= "&tt=" . $total_seis_decimales;
+	$cadena .= "&id=" . $uuid;
+
+	$google_api_call = "https://chart.googleapis.com/chart?chs=150x150&cht=qr&chld=H|1&choe=UTF-8&chl=";
+
+	$f = file_get_contents( $google_api_call . urlencode( $cadena ) );
+	
+	if($f == null){
+		//volver a intentar
+		Logger::log("FALLE AL OBTENER EL QR CODE DE GOOGLE, REINTENTANDO...", 3);
+		obternerQRCode( $rfcEmisor, $rfcReceptor, $total , $uuid   );
+	}
+	
+	file_put_contents($file_full_path, $f);
+
+	//la imagen esta en png, hay que convertirla a jpg para que no haya pedos en el pdf
+    $image = imagecreatefrompng($file_full_path);
+    imagejpeg($image, "../static_content/qr_codes/" . $file_name . ".jpg" , 100);
+    imagedestroy($image);
+
+	return $file_name . ".jpg";
+
 }
 
 

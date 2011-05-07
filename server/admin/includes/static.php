@@ -1,10 +1,15 @@
 <?php 
 
-
-function moneyFormat( $val ){
+define("DONT_USE_HTML", FALSE);
+function moneyFormat( $val, $useHtml = true){
 	
-	return "$&nbsp;<b>" . number_format( (float)$val, 2 ) . "</b>";
-	//return sprintf( "$&nbsp;<b>%.2f</b>", $val );
+	if( $useHtml ==  DONT_USE_HTML){
+		return "$ <b>" . number_format( (float)$val, 2 ) . "</b>";		
+	}else{
+		return "$&nbsp;<b>" . number_format( (float)$val, 2 ) . "</b>";		
+	}
+
+
 }
 
 
