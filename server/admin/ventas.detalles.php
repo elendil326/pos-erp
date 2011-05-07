@@ -221,7 +221,7 @@ if($venta->getTipoVenta() == 'credito'){
 
 <div id="abonar_detalles" style="display:none;">
 	<h2>Detalles del nuevo abono</h2>
-    <table >
+    <table style="width:100%">
         <tr>
             <td>Cantidad </td>
             <td><input type="text" id="abonar_cantidad" ></td>
@@ -247,6 +247,10 @@ if($venta->getTipoVenta() == 'credito'){
 
 
 <script>
+	function printComprobante(){
+		window.location = "../proxy.php?action=1306&id_venta=<?php echo $_REQUEST['id']; ?>" ;
+	}
+
 	<?php
 		//please print
 		if(isset($_REQUEST["pp"]) && $_REQUEST["pp"]){
@@ -256,21 +260,84 @@ if($venta->getTipoVenta() == 'credito'){
 				function(res){
 
 					if(res == "yes"){
-						window.print();
+						printComprobante();
 					}
 				} )
 			<?php
 		}
 	?>
 	
-	function printComprobante(){
-		window.location = "../proxy.php?action=1306&id_venta=<?php echo $_REQUEST['id']; ?>" ;
+	function facturar(){
+		//window.location = "../proxy.php?action=1200&id_venta=<?php echo $_REQUEST["id"]; ?>";
+		
+	    //hacer ajaxaso
+	    jQuery.ajaxSettings.traditional = true;
+
+	    jQuery("#submitButtons").fadeOut("slow",function(){
+	        jQuery("#loader").fadeIn();
+
+	        jQuery.ajax({
+	        url: "../proxy.php",
+	        data: { 
+	            action : 1200, 
+	            id_venta : <?php echo $_REQUEST["id"]; ?>
+	        },
+	        cache: false,
+	        success: function(data){
+	            try{
+	                response = jQuery.parseJSON(data);
+	            }catch(e){
+
+	                jQuery("#loader").fadeOut('slow', function(){
+	                    jQuery("#submitButtons").fadeIn();
+	                    window.scroll(0,0);                         
+	                    jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+	                    jQuery("#submitButtons").fadeIn();
+	                });                
+	                return;                    
+	            }
+
+
+	            if(response.success === false){
+
+	                jQuery("#loader").fadeOut('slow', function(){
+	                    //jQuery("#submitButtons").fadeIn();    
+	                    window.scroll(0,0);                                                             
+	                    jQuery("#ajax_failure").html(response.reason).show();
+	                    jQuery("#submitButtons").fadeIn();                  
+	                });                
+	                return ;
+	            }
+
+	            reason = "Su venta ha sido facturada.";
+	            window.location = "ventas.php?action=detalles&id=<?php echo $_REQUEST["id"]; ?>&success=true&reason=" + reason;
+
+	        }
+	        });
+	    });
 	}
 	
 </script>
 
 
-<h4>
+<h4 id="submitButtons">
 	<input type=button value="Imprimir comprobante" onClick="printComprobante()">
-	
+	<?php
+		if($venta->getLiquidada() && !$venta->getCancelada()){
+			$q = new FacturaVenta();
+			$q->setIdVenta( $venta->getIdVenta() );
+			$res = FacturaVentaDAO::search(  $q  );
+		
+			if(sizeof($res) == 0){
+				//no se ha hecho factura
+				?><input type="button" value="Facturar esta venta" onClick='facturar()' ><?php
+			}else{
+				//ya se ha hecho factura !
+				?><input type="button" value="Reimprimir factura" onClick='window.location = "../proxy.php?action=1305&id_venta=<?php echo $_REQUEST["id"]; ?>";'><?php
+			}
+		}
+	?>
 </h4>
+<div id="loader" 		style="display: none;" align="center"  >
+	Procesando <img src="../media/loader.gif"> 
+</div>

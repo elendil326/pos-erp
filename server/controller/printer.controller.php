@@ -29,10 +29,10 @@ function readableText($bar){
 	$foo = explode(" " , $bar);
 	$end = "";
 	foreach($foo as $i){
-		$end .= ucfirst(strtolower($i)) . " ";
+		$end .= ucfirst(strtolower(trim($i))) . " ";
 	}
 
-	return $end;
+	return trim($end);
 }
 
 function formatAddress($d){
@@ -41,17 +41,17 @@ function formatAddress($d){
 		$e = "";
 		$e .= readableText($d->calle) . " " . $d->numeroExterior ;
 		if(isset($d->numeroInterior))
-			$e .= "\n" . $d->numeroInterior;
+			$e .= "\n" . readableText($d->numeroInterior);
 		$e .= "\n";
-		$e .= readableText($d->colonia) . " C.P." . $d->codigoPostal . "\n";
+		$e .= readableText($d->colonia) . " C.P. " . $d->codigoPostal . "\n";
 		$e .= readableText($d->municipio) . ", " . readableText($d->estado) . ", " . readableText($d->pais). "\n" ;		
 	}else{
 		$e = "";
 		$e .= readableText($d->getCalle()) . " " . $d->getNumeroExterior() ;
 		if($d->getNumeroInterior() != null)
-			$e .= "\n" . $d->getNumeroInterior();
+			$e .= "\n" . readableText($d->getNumeroInterior());
 			
-		$e .= readableText($d->getColonia()) . " C.P." . $d->getCodigoPostal() . "\n";
+		$e .= readableText($d->getColonia()) . " C.P. " . $d->getCodigoPostal() . "\n";
 		$e .= readableText($d->getMunicipio()) . ", " . readableText($d->getEstado()) . ", " . readableText($d->getPais()). "\n" ;	
 	}
 

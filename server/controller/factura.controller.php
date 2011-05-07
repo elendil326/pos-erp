@@ -221,7 +221,7 @@ function generaFactura($args) {
     }
 
     DAO::transEnd();
-    echo "Llamada al metodo que crea los archivos";
+    //echo "Llamada al metodo que crea los archivos";
     
     //genera un json con todos los datos necesarios para generar el PDF de la factura electronica
     //$json_factura = parseFacturaToJSON($xml_response);
