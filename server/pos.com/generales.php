@@ -199,6 +199,28 @@ class Generales {
     }
 
     /**
+     * Contiene la información acerca del tipo de venta (credito o contado)
+     * @var <type> 
+     */
+    private $tipo_venta = null;
+
+    /**
+     * Establece la información acerca del tipo de venta
+     * @param <type> $param
+     */
+    public function setTipoVenta($_tipo_venta) {
+        $this->tipo_venta = $_tipo_venta;
+    }
+
+    /**
+     * Obtiene la información acerca del tipo de venta
+     * @return <type>
+     */
+    public function getTipoVenta() {
+        return $this->tipo_venta;
+    }
+
+    /**
      * Verifica que el objeto contenga toda la informacion necesaria.
      * @var Object
      */
@@ -229,7 +251,7 @@ class Generales {
      * 
      */
     public function __construct() {
-
+        
     }
 
     /**
@@ -258,10 +280,11 @@ class Generales {
             $this->setError("No se ha definido el iva.");
         }
 
-        //verificamos si existe el
+        //verificamos si existe el metodo de pago
         if (!($this->getMetodoDePago() != null && $this->getMetodoDePago() != "")) {
             $this->setError("No se ha definido el metodo de pago.");
         }
+
 
         //verificamos si existe el
         if (!($this->getSerie() != null && $this->getSerie() != "")) {

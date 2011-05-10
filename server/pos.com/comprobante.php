@@ -91,8 +91,8 @@ class Comprobante {
      * Establece el valor del objeto ExpedidoPor
      * @param Emisor $emisor
      */
-    public function setExpedidoPor($expedidoPor) {
-        $this->expedido_por = $expedidoPor;
+    public function setExpedidoPor($_expedido_por) {
+        $this->expedido_por = $expedido_por;
     }
 
     /**
@@ -388,13 +388,13 @@ class Comprobante {
     /**
      * 
      */
-    private function formCadenaOriginal() {        
+    private function formCadenaOriginal() {
         $this->cadena_original = "||" . $this->getVersionTFD() . "|";
-        $this->cadena_original .= $this->getUUID() . "|";        
+        $this->cadena_original .= $this->getUUID() . "|";
         $this->cadena_original .= str_replace(array(" "), array("T"), $this->getFechaCertificacion()) . "|";
-        $this->cadena_original .= $this->getSelloDigitalEmisor() . "|";        
+        $this->cadena_original .= $this->getSelloDigitalEmisor() . "|";
         //$this->cadena_original .= $this->getSelloDigitalSAT() . "|";        
-        $this->cadena_original .= $this->getNumeroCertificadoSAT() . "||";        
+        $this->cadena_original .= $this->getNumeroCertificadoSAT() . "||";
     }
 
     /**
@@ -417,7 +417,7 @@ class Comprobante {
     public function getProductionMode() {
         return $this->productionMode;
     }
-    
+
     /**
      * XML usado para depurar el api
      * @return type 
@@ -525,7 +525,8 @@ class Comprobante {
         }
 
 
-        if ($this->getExpedidoPor() == null) {
+        //ESTO LO COMENTO YA QUE SIS E FACTURA DESDE EL CENTRO DE DISTRIBUCION ESTO DEBERIA DE SER NULL
+        /*if ($this->getExpedidoPor() == null) {
             Logger::log("Error : El objeto 'expedido_por' es invalido");
             $this->setError("El objeto 'expedido_por' es invalido");
         } else {
@@ -534,7 +535,7 @@ class Comprobante {
                 Logger::log($success->getInfo());
                 $this->setError($success->getInfo());
             }
-        }
+        }*/
 
 
         if ($this->getLlaves() == null) {
@@ -605,9 +606,9 @@ class Comprobante {
         $comprobante->appendChild($xml->createElement('folio_interno', $this->getGenerales()->getFolioInterno()));
 
         $comprobante->appendChild($xml->createElement('fecha', $this->getGenerales()->getFecha()));
-
+        
         $comprobante->appendChild($xml->createElement('forma_de_pago', $this->getGenerales()->getFormaDePago()));
-
+        
         $comprobante->appendChild($xml->createElement('metodo_de_pago', ucfirst(strtolower($this->getGenerales()->getMetodoDePago()))));
 
         $comprobante->appendChild($xml->createElement('subtotal', $this->getGenerales()->getSubtotal()));
@@ -626,13 +627,19 @@ class Comprobante {
 
         $emisor->appendChild($xml->createElement('numero_exterior', $this->getEmisor()->getNumeroExterior()));
 
-        $emisor->appendChild($xml->createElement('numero_interior', $this->getEmisor()->getNumeroInterior()));
+        if ($this->getEmisor()->getNumeroInterior() != null) {
+            $emisor->appendChild($xml->createElement('numero_interior', $this->getEmisor()->getNumeroInterior()));
+        }
 
         $emisor->appendChild($xml->createElement('colonia', $this->getEmisor()->getColonia()));
 
-        $emisor->appendChild($xml->createElement('localidad', $this->getEmisor()->getLocalidad()));
+        if ($this->getEmisor()->getLocalidad() != null) {
+            $emisor->appendChild($xml->createElement('localidad', $this->getEmisor()->getLocalidad()));
+        }
 
-        $emisor->appendChild($xml->createElement('referencia', $this->getEmisor()->getReferencia()));
+        if ($this->getEmisor()->getReferencia() != null) {
+            $emisor->appendChild($xml->createElement('referencia', $this->getEmisor()->getReferencia()));
+        }
 
         $emisor->appendChild($xml->createElement('municipio', $this->getEmisor()->getMunicipio()));
 
@@ -646,25 +653,34 @@ class Comprobante {
 
         $expedido_por = $xml->createElement('expedido_por');
 
-        $expedido_por->appendChild($xml->createElement('calle', $this->getExpedidoPor()->getCalle()));
+        if ($this->getExpedidoPor() != null) {
 
-        $expedido_por->appendChild($xml->createElement('numero_exterior', $this->getExpedidoPor()->getNumeroExterior()));
+            $expedido_por->appendChild($xml->createElement('calle', $this->getExpedidoPor()->getCalle()));
 
-        $expedido_por->appendChild($xml->createElement('numero_interior', $this->getExpedidoPor()->getNumeroInterior()));
+            $expedido_por->appendChild($xml->createElement('numero_exterior', $this->getExpedidoPor()->getNumeroExterior()));
 
-        $expedido_por->appendChild($xml->createElement('colonia', $this->getExpedidoPor()->getColonia()));
+            if ($this->getExpedidoPor()->getNumeroInterior() != null) {
+                $expedido_por->appendChild($xml->createElement('numero_interior', $this->getExpedidoPor()->getNumeroInterior()));
+            }
 
-        $expedido_por->appendChild($xml->createElement('localidad', $this->getExpedidoPor()->getLocalidad()));
+            $expedido_por->appendChild($xml->createElement('colonia', $this->getExpedidoPor()->getColonia()));
 
-        $expedido_por->appendChild($xml->createElement('referencia', $this->getExpedidoPor()->getReferencia()));
+            if ($this->getExpedidoPor()->getLocalidad() != null) {
+                $expedido_por->appendChild($xml->createElement('localidad', $this->getExpedidoPor()->getLocalidad()));
+            }
 
-        $expedido_por->appendChild($xml->createElement('municipio', $this->getExpedidoPor()->getMunicipio()));
+            if ($this->getExpedidoPor()->getReferencia() != null) {
+                $expedido_por->appendChild($xml->createElement('referencia', $this->getExpedidoPor()->getReferencia()));
+            }
 
-        $expedido_por->appendChild($xml->createElement('estado', $this->getExpedidoPor()->getEstado()));
+            $expedido_por->appendChild($xml->createElement('municipio', $this->getExpedidoPor()->getMunicipio()));
 
-        $expedido_por->appendChild($xml->createElement('pais', $this->getExpedidoPor()->getPais()));
+            $expedido_por->appendChild($xml->createElement('estado', $this->getExpedidoPor()->getEstado()));
 
-        $expedido_por->appendChild($xml->createElement('codigo_postal', $this->getExpedidoPor()->getCodigoPostal()));
+            $expedido_por->appendChild($xml->createElement('pais', $this->getExpedidoPor()->getPais()));
+
+            $expedido_por->appendChild($xml->createElement('codigo_postal', $this->getExpedidoPor()->getCodigoPostal()));
+        }
 
         $comprobante->appendChild($expedido_por);
 
@@ -677,14 +693,20 @@ class Comprobante {
         $receptor->appendChild($xml->createElement('calle', $this->getReceptor()->getCalle()));
 
         $receptor->appendChild($xml->createElement('numero_exterior', $this->getReceptor()->getNumeroExterior()));
-
-        $receptor->appendChild($xml->createElement('numero_interior', $this->getReceptor()->getNumeroInterior()));
-
+        
+        if($this->getReceptor()->getNumeroInterior() != null){
+            $receptor->appendChild($xml->createElement('numero_interior', $this->getReceptor()->getNumeroInterior()));
+        }
+        
         $receptor->appendChild($xml->createElement('colonia', $this->getReceptor()->getColonia()));
+        
+        if($this->getReceptor()->getLocalidad() != null){
+            $receptor->appendChild($xml->createElement('localidad', $this->getReceptor()->getLocalidad()));
+        }        
 
-        $receptor->appendChild($xml->createElement('localidad', $this->getReceptor()->getLocalidad()));
-
-        $receptor->appendChild($xml->createElement('referencia', $this->getReceptor()->getReferencia()));
+        if($this->getReceptor()->getReferencia() != null){
+            $receptor->appendChild($xml->createElement('referencia', $this->getReceptor()->getReferencia()));
+        }                
 
         $receptor->appendChild($xml->createElement('municipio', $this->getReceptor()->getMunicipio()));
 
@@ -752,9 +774,9 @@ class Comprobante {
         //creamos una instancia de un objeto SoapClient
 
         if ($this->getProductionMode()) {
-            
+
             $client = new SoapClient($this->getUrlWS());
-            
+
             //realiza la peticion al webservice
             $result = $client->RececpcionComprobante(array('comprobante' => $this->getXMLrequest()));
 
@@ -787,27 +809,27 @@ class Comprobante {
         $this->setXMLresponse($response);
 
         $response = str_replace(array("cfdi:", "tfd:"), array("", ""), $response);
-        
+
         $xml_response = new SimpleXMLElement($response);
 
         //fecha de certificacion
         $this->setFechaCertificacion($xml_response->Complemento->TimbreFiscalDigital["FechaTimbrado"]);
-        
+
         //numero de certificado del sat
         $this->setNumeroCertificadoSAT($xml_response->Complemento->TimbreFiscalDigital["noCertificadoSAT"]);
-        
+
         //sello digital del emisor
         $this->setSelloDigitalEmisor($xml_response->Complemento->TimbreFiscalDigital["selloCFD"]);
-        
+
         //sello digital del sat
         $this->setSelloDigitalSAT($xml_response->Complemento->TimbreFiscalDigital["selloSAT"]);
-        
+
         //version del timbre fiscal digital
         $this->setVersionTFD($xml_response->Complemento->TimbreFiscalDigital["version"]);
-        
+
         //UUID
         $this->setUUID($xml_response->Complemento->TimbreFiscalDigital["UUID"]);
-        
+
         //construye la cadena original
         $this->formCadenaOriginal();
 
@@ -821,7 +843,7 @@ class Comprobante {
         $this->success = new Success($this->getError());
 
         return $this->success;
-    }    
+    }
 
 }
 

@@ -5,6 +5,7 @@ require_once("model/detalle_venta.dao.php");
 require_once("model/cliente.dao.php");
 require_once("model/factura_venta.dao.php");
 require_once('model/sucursal.dao.php');
+require_once('model/pagos_venta.dao.php');
 require_once("model/inventario.dao.php");
 require_once("model/pos_config.dao.php");
 require_once("pos.com/comprobante.php");
@@ -15,71 +16,57 @@ require_once("logger.php");
  * y que los datos criticos del cliente esten correctamente establecidos.
  *
  * @param Array $args
- * returns JSON
+ * returns Cliente
  */
-function verificarDatosVenta($args) {
+function verificarDatosVenta($id_venta = null) {
 
-    //var_dump($args);
+    Logger::log("Iniciando proceso de validacion de datos para realizar factura electronica");
+
     //verificamos que el parametro de la venta este definido
-    if (!isset($args['id_venta'])) {
+    if (!isset($id_venta)) {
         Logger::log("EL parametro de la venta no se ha definido");
         die('{"success": false, "reason": "La venta no se ha definido" }');
     }
 
     //verificamos que id_venta sea numerico
-    if (is_nan($args['id_venta'])) {
+    if (is_nan($id_venta)) {
         Logger::log("El id de la venta no es un numero");
         die('{"success": false, "reason": "Error el parametro de venta, no es un numero" }');
     }
 
     //verificamos que la venta exista
-    if (!( $venta = VentasDAO::getByPK($args['id_venta']) )) {
-        Logger::log("No se tiene registro de la venta : {$args['id_venta']}");
-        die('{"success": false, "reason": "No se tiene registro de la venta ' . $args['id_venta'] . '." }');
+    if (!( $venta = VentasDAO::getByPK($id_venta) )) {
+        Logger::log("No se tiene registro de la venta : {$id_venta}");
+        die('{"success": false, "reason": "No se tiene registro de la venta ' . $id_venta . '." }');
     }
-
-    /*
-     * verificamos si se mando en el arreglo de argumentos un cliene, no necesariamente
-     * deberia de sacar el cliente de la venta, ya que si el cliente lo desea puede facturar
-     * su venta dias despues incluso si el cliente no esta registrado
-     */
-    if (!isset($args['id_cliente'])) {
-        //extraemos el id del cliente de la venta 
-
-        if (( $cliente = $venta->getIdCliente() ) <= 0) {
-            Logger::log("Error : Se esta intentando facturar una venta que al momento que se registro la venta no se indico un cliente valido, en este caso usted debe de indicar a que cliente se debe de facturar esta venta.");
-            die('{"success": false, "reason": "Error : Se esta intentando facturar una venta que al momento que se registro la venta no se indico un cliente valido, en este caso usted debe de indicar a que cliente se debe de facturar esta venta." }');
-        } else {
-            $args['id_cliente'] = $cliente;
-        }
+    
+    if($venta->getLiquidada() != "1"){
+        Logger::log("Error : No puede facturar una venta que no este liquidada.");
+        die('{"success": false, "reason": "Error : No puede facturar una venta que no este liquidada." }');
     }
-
-    Logger::log("Iniciando proceso de validacion de datos para realizar factura electronica");
-
-    //verificamos que el cliente este definido
-    if (!isset($args['id_cliente'])) {
-        Logger::log("El cliente no esta definido");
-        die('{"success": false, "reason": "El cliente no esta definido" }');
+    
+    //extraemos el id del cliente de la venta 
+    if (( $id_cliente = $venta->getIdCliente() ) <= 0) {
+        Logger::log("Error : Se esta intentando facturar una venta que al momento que se registro la venta no se indico un cliente valido, en este caso usted debe de indicar a que cliente se debe de facturar esta venta.");
+        die('{"success": false, "reason": "Error : Se esta intentando facturar una venta que al momento que se registro la venta no se indico un cliente valido, en este caso usted debe de indicar a que cliente se debe de facturar esta venta." }');
     }
 
     //verificamos que id_cliente sea numerico
-    if (is_nan($args['id_cliente'])) {
+    if (is_nan($id_cliente)) {
         Logger::log("El id del cliente no es un numero");
         die('{"success": false, "reason": "Error el parametro de cliente, no es un numero" }');
     }
 
-
-
     //verificamos que el cliente exista
-    if (!( $cliente = ClienteDAO::getByPK($args['id_cliente']) )) {
-        Logger::log("No se tiene registro del cliente : {$args['id_cliente']}.");
-        die('{"success": false, "reason": "No se tiene registro del cliente ' . $args['id_cliente'] . '." }');
+    if (!( $cliente = ClienteDAO::getByPK($id_cliente) )) {
+        Logger::log("No se tiene registro del cliente : {$id_cliente}.");
+        die('{"success": false, "reason": "No se tiene registro del cliente ' . $id_cliente . '." }');
     }
 
     //verificamos que el cliente este acivo
     if ($cliente->getActivo() != "1") {
-        Logger::log("El cliente  : {$args['id_cliente']} no se encuentra activo.");
-        die('{"success": false, "reason": "El cliente ' . $args['id_cliente'] . ' no se encuentra activo." }');
+        Logger::log("El cliente  : {$id_cliente} no se encuentra activo.");
+        die('{"success": false, "reason": "El cliente ' . $id_cliente . ' no se encuentra activo." }');
     }
 
     //verifiacmos que la venta este liquidada
@@ -110,7 +97,7 @@ function verificarDatosVenta($args) {
     if ($facturaVenta != null) {
         //la factura de la venta esta activa
         Logger::log("La venta {$facturaVenta->getIdVenta()} ha sido facturada con el folio {$facturaVenta->getIdFolio()} y esta la factura activa");
-        die('{"success": false, "reason": "No se puede emitir la factura debido a que la venta ' . $args['id_venta'] . ' ha sido facturada con el folio : ' . $facturaVenta->getIdFolio() . ' y esta activa." }');
+        die('{"success": false, "reason": "No se puede emitir la factura debido a que la venta ' . $id_venta . ' ha sido facturada con el folio : ' . $facturaVenta->getIdFolio() . ' y esta activa." }');
     }
 
     //verificamos que el cliente tenga correctamente definidos todos sus parametros
@@ -157,36 +144,41 @@ function verificarDatosVenta($args) {
     }
 
     Logger::log("Terminado proceso de validacion de datos para realizar factura electronica");
+
+    return $cliente;
 }
 
 /**
  * Realiza todas las validaciones pertinentes para crear con esto la factura electronica
  * ademas realiza una peticion al webservice para emitir una nueva factura
  */
-function generaFactura($args) {
+function generaFactura($id_venta) {
 
     Logger::log("Iniciando proceso de facturacion");
 
     //verifica que los datos de la venta y el cliente esten correctos
-    verificarDatosVenta($args);
+    $cliente = verificarDatosVenta($id_venta);
 
     DAO::transBegin();
 
-    $data = getDatosGenerales($args);
+    $data = getDatosGenerales($id_venta);
 
     $comprobante = new Comprobante();
 
     $comprobante->setGenerales($data->generales); //1
 
-    $comprobante->setConceptos(getConceptos($args)); //2
+    $comprobante->setConceptos(getConceptos($id_venta)); //2
 
     $comprobante->setEmisor(getEmisor()); //3
 
-    $comprobante->setExpedidoPor(getExpedidoPor()); //4
+    if ($_SESSION['sucursal'] != 0) {
+        $comprobante->setExpedidoPor(getExpedidoPor()); //4
+    }
+
 
     $comprobante->setLlaves(getLlaves()); //5
 
-    $comprobante->setReceptor(getReceptor($args)); //6
+    $comprobante->setReceptor(getReceptor($cliente)); //6
 
     $comprobante->setUrlWS(getUrlWS()); //7
     //intentamos obtener la factura sellada
@@ -205,7 +197,7 @@ function generaFactura($args) {
         $data->factura->setSelloDigitalEmisor($comprobante->getSelloDigitalEmisor());
         $data->factura->setSelloDigitalSat($comprobante->getSelloDigitalSAT());
         $data->factura->setCadenaOriginal($comprobante->getCadenaOriginal());
-        
+
         try {
             FacturaVentaDAO::save($data->factura);
         } catch (Exception $e) {
@@ -213,7 +205,6 @@ function generaFactura($args) {
             DAO::transRollback();
             die('{"success": false, "reason": "Error al salvar la factura de la venta intente nuevamente" }');
         }
-        
     } else {
         Logger::log($success->getInfo());
         DAO::transRollback();
@@ -221,8 +212,7 @@ function generaFactura($args) {
     }
 
     DAO::transEnd();
-    //echo "Llamada al metodo que crea los archivos";
-    
+    echo "Llamada al metodo que crea los archivos";
     //genera un json con todos los datos necesarios para generar el PDF de la factura electronica
     //$json_factura = parseFacturaToJSON($xml_response);
     //llamar al metodo que genera el pdf
@@ -248,11 +238,11 @@ function getUrlWS() {
  * Regresa un objeto qeu contiene la informacion acerca de los conceptos de la venta
  * return Object Conceptos
  */
-function getConceptos($args) {
+function getConceptos($id_venta) {
 
     //obtenemos el juego de articulos vendidos en la venta
     $detalle_venta = new DetalleVenta();
-    $detalle_venta->setIdVenta($args['id_venta']);
+    $detalle_venta->setIdVenta($id_venta);
     $detalle_venta = DetalleVentaDAO::search($detalle_venta);
 
     //objeto que almacenara a todos los conceptos de la venta
@@ -310,12 +300,12 @@ function getConceptos($args) {
  * Regresa un objeto cargado con los datos del receptor de la factura
  * return Object Receptor
  */
-function getReceptor($args) {
-
-    if (!($cliente = ClienteDAO::getByPK($args['id_cliente']) )) {
-        Logger::log("Error al obtener datos del cliente.");
+function getReceptor($cliente) {
+    
+    if ($cliente->getIdCliente() <= 0) {
+        Logger::log("Error : El Cliente con el ID : {$cliente->getIdCliente()} es invalido.");
         DAO::transRollback();
-        die('{"success": false, "reason": "Error al obtener datos del cliente." }');
+        die('{"success": false, "reason": "El Cliente con el ID : ' . $cliente->getIdCliente() . ' es invalido." }');
     }
 
     $receptor = new Receptor();
@@ -509,15 +499,18 @@ function getExpedidoPor() {
     }
 }
 
-function getDatosGenerales($args) {
+/**
+ * Crea un objeto de tipo Generales y un objeto Factura con los datos basicos de la factura.
+ * @param type $args
+ * @return stdClass Regresa un objeto de tipo Generales generales y un objto Factura factura
+ */
+function getDatosGenerales($id_venta) {
 
     //generamos una factura en la BD
 
-    $facturaBD = creaFacturaBD($args['id_venta']);
+    $facturaBD = creaFacturaBD($id_venta);
 
-    $venta = VentasDAO::getByPK($args['id_venta']);
-
-    $sucursal = SucursalDAO::getByPK($_SESSION['sucursal']);
+    $venta = VentasDAO::getByPK($id_venta);
 
     $generales = new Generales();
 
@@ -525,16 +518,58 @@ function getDatosGenerales($args) {
 
     $generales->setFolioInterno($facturaBD->getIdFolio());
 
-    //TODO : Hacer algo para los tipos de pago
-    $generales->setFormaDePago("pago en una sola exibicion");
+    //TODO : En un futuro incluir parcialidades
+    $generales->setFormaDePago("Pago en una sola exhibicion");
 
     //TODO : Verificar a fondo como implementar mas impuestos
     $generales->setIva("0");
 
-    //TODO : Verificar que onda con los tipos de pago, solo hay credito y contado?
-    $generales->setMetodoDePago($venta->getTipoPago());
 
-    $generales->setSerie($sucursal->getLetrasFactura());
+    //extraemos el metodo de pago con el cual liquido la venta en caso de ser venta a credito
+    if ($venta->getTipoVenta() == "credito") {
+
+        $pagos_venta = new PagosVenta();
+        $pagos_venta->setIdVenta($venta->getIdVenta());
+        $pagos_venta = PagosVentaDAO::search($pagos_venta, 'fecha', 'desc');
+
+        $generales->setMetodoDePago($pagos_venta[0]->getTipoPago());
+    } else {
+
+        $generales->setMetodoDePago($venta->getTipoPago());
+    }
+
+
+    if ($_SESSION['sucursal'] != 0) {
+
+        //significa que tomara la serie de la         
+        $sucursal = SucursalDAO::getByPK($_SESSION['sucursal']);
+        $generales->setSerie($sucursal->getLetrasFactura());
+    } else {
+
+        if (!($pos_config = PosConfigDAO::getByPK('emisor') )) {
+            Logger::log("Error al obtener datos del emisor.");
+            DAO::transRollback();
+            die('{"success": false, "reason": "Error al obtener los datos del emisor." }');
+        }
+
+        $json = json_decode($pos_config->getValue());
+
+        if (isset($json->emisor->serie)) {
+
+            $serie = str_replace(array(" "), array(""), $json->emisor->serie);
+
+            if (strlen($serie) == 0) {
+                Logger::log("Error : No se ha definido la serie en los datos del emisor.");
+                DAO::transRollback();
+                die('{"success": false, "reason": "Error : No se ha definido la serie en los datos del emisor." }');
+            }
+        }
+
+        $generales->setSerie($serie);
+    }
+
+
+
 
     $generales->setSubtotal($venta->getSubtotal());
 
@@ -673,8 +708,9 @@ function reimprimirFactura($args) {
 if (isset($args['action'])) {
     switch ($args['action']) {
         case 1200:
-            //realiza una peticion al web service para que regrese una factura sellada
-            generaFactura($args);
+            //realiza una peticion al web service para que regrese una factura sellada            
+            
+            generaFactura($args['id_venta']);
             break;
 
         case 1201:

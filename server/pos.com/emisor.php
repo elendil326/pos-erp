@@ -290,6 +290,28 @@ class Emisor{
     public function setCodigoPostal($param){
         $this->codigo_postal = $param;
     }
+    
+    /**
+     *
+     * @var <type>
+     */
+    private $serie = null;
+
+    /**
+     *
+     * @return <type>
+     */
+    public function getSerie(){
+        return $this->serie;
+    }
+
+     /**
+     *
+     * @param <type> $_serie 
+     */
+    public function setSerie($_serie ){
+        $this->serie = $_serie ;
+    }
 
     /**
      * Contiene informacion acerca de posibles errores
