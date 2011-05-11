@@ -178,6 +178,11 @@ abstract class InventarioDAOBase extends DAO
 			array_push( $val, $inventario->getActivo() );
 		}
 
+		if( $inventario->getPrecioPorAgrupacion() != NULL){
+			$sql .= " precio_por_agrupacion = ? AND";
+			array_push( $val, $inventario->getPrecioPorAgrupacion() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -209,7 +214,7 @@ abstract class InventarioDAOBase extends DAO
 	  **/
 	private static final function update( $inventario )
 	{
-		$sql = "UPDATE inventario SET  descripcion = ?, escala = ?, tratamiento = ?, agrupacion = ?, agrupacionTam = ?, activo = ? WHERE  id_producto = ?;";
+		$sql = "UPDATE inventario SET  descripcion = ?, escala = ?, tratamiento = ?, agrupacion = ?, agrupacionTam = ?, activo = ?, precio_por_agrupacion = ? WHERE  id_producto = ?;";
 		$params = array( 
 			$inventario->getDescripcion(), 
 			$inventario->getEscala(), 
@@ -217,6 +222,7 @@ abstract class InventarioDAOBase extends DAO
 			$inventario->getAgrupacion(), 
 			$inventario->getAgrupacionTam(), 
 			$inventario->getActivo(), 
+			$inventario->getPrecioPorAgrupacion(), 
 			$inventario->getIdProducto(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -240,7 +246,7 @@ abstract class InventarioDAOBase extends DAO
 	  **/
 	private static final function create( &$inventario )
 	{
-		$sql = "INSERT INTO inventario ( id_producto, descripcion, escala, tratamiento, agrupacion, agrupacionTam, activo ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO inventario ( id_producto, descripcion, escala, tratamiento, agrupacion, agrupacionTam, activo, precio_por_agrupacion ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$inventario->getIdProducto(), 
 			$inventario->getDescripcion(), 
@@ -249,6 +255,7 @@ abstract class InventarioDAOBase extends DAO
 			$inventario->getAgrupacion(), 
 			$inventario->getAgrupacionTam(), 
 			$inventario->getActivo(), 
+			$inventario->getPrecioPorAgrupacion(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -369,6 +376,17 @@ abstract class InventarioDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " activo = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $inventarioA->getPrecioPorAgrupacion()) != NULL) & ( ($b = $inventarioB->getPrecioPorAgrupacion()) != NULL) ){
+				$sql .= " precio_por_agrupacion >= ? AND precio_por_agrupacion <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " precio_por_agrupacion = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

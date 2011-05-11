@@ -43,6 +43,9 @@ class Inventario extends VO
 			if( isset($data['activo']) ){
 				$this->activo = $data['activo'];
 			}
+			if( isset($data['precio_por_agrupacion']) ){
+				$this->precio_por_agrupacion = $data['precio_por_agrupacion'];
+			}
 		}
 	}
 
@@ -62,7 +65,8 @@ class Inventario extends VO
 			"tratamiento" => $this->tratamiento,
 			"agrupacion" => $this->agrupacion,
 			"agrupacionTam" => $this->agrupacionTam,
-			"activo" => $this->activo
+			"activo" => $this->activo,
+			"precio_por_agrupacion" => $this->precio_por_agrupacion
 		); 
 	return json_encode($vec); 
 	}
@@ -131,6 +135,15 @@ class Inventario extends VO
 	  * @var tinyint(1)
 	  */
 	protected $activo;
+
+	/**
+	  * precio_por_agrupacion
+	  * 
+	  * Verdadero cuando el precio marcado es por agrupacion, de ser falso, el precio marcado es por unidad, sea la que la escala dictamine<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $precio_por_agrupacion;
 
 	/**
 	  * getIdProducto
@@ -302,6 +315,30 @@ class Inventario extends VO
 	final public function setActivo( $activo )
 	{
 		$this->activo = $activo;
+	}
+
+	/**
+	  * getPrecioPorAgrupacion
+	  * 
+	  * Get the <i>precio_por_agrupacion</i> property for this object. Donde <i>precio_por_agrupacion</i> es Verdadero cuando el precio marcado es por agrupacion, de ser falso, el precio marcado es por unidad, sea la que la escala dictamine
+	  * @return tinyint(1)
+	  */
+	final public function getPrecioPorAgrupacion()
+	{
+		return $this->precio_por_agrupacion;
+	}
+
+	/**
+	  * setPrecioPorAgrupacion( $precio_por_agrupacion )
+	  * 
+	  * Set the <i>precio_por_agrupacion</i> property for this object. Donde <i>precio_por_agrupacion</i> es Verdadero cuando el precio marcado es por agrupacion, de ser falso, el precio marcado es por unidad, sea la que la escala dictamine.
+	  * Una validacion basica se hara aqui para comprobar que <i>precio_por_agrupacion</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setPrecioPorAgrupacion( $precio_por_agrupacion )
+	{
+		$this->precio_por_agrupacion = $precio_por_agrupacion;
 	}
 
 }
