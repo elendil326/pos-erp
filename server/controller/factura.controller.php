@@ -214,7 +214,8 @@ function generaFactura($id_venta) {
 
     DAO::transEnd();
     
-    //LAMAR AL METODO DEL PDF
+    //Termino todo correctamente   
+    printf('{"success":true, "id_venta":%s}', $id_venta);
 
     Logger::log("Terminando proceso de facturacion");
 }
