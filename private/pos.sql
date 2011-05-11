@@ -486,7 +486,6 @@ CREATE TABLE IF NOT EXISTS `ingresos` (
 --
 -- Estructura de tabla para la tabla `inventario`
 --
-
 CREATE TABLE IF NOT EXISTS `inventario` (
   `id_producto` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del producto',
   `descripcion` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT 'descripcion del producto',
@@ -495,7 +494,7 @@ CREATE TABLE IF NOT EXISTS `inventario` (
   `agrupacion` varchar(8) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'La agrupacion de este producto',
   `agrupacionTam` float DEFAULT NULL COMMENT 'El tamano de cada agrupacion',
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'si este producto esta activo o no en el sistema',
-  `precioPorAgrupacion` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Verdadero cuando el precio marcado es por agrupacion, de ser falso, el precio marcado es por unidad, sea la que la escala dictamine',
+  `precio_por_agrupacion` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Verdadero cuando el precio marcado es por agrupacion, de ser falso, el precio marcado es por unidad, sea la que la escala dictamine',
   PRIMARY KEY (`id_producto`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=16 ;
 
