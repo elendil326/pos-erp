@@ -510,7 +510,11 @@ function abonarVenta($args) {
     }
 
     //si pago mas de lo que debo
-
+    $saldo = $venta->getTotal() - $venta->getPagado();
+    
+    if($data->monto > $saldo){
+        $data->monto = $saldo;
+    }
 
     $pagosVenta = new PagosVenta();
     $pagosVenta->setIdVenta($data->id_venta);
