@@ -171,14 +171,15 @@ class Test{
 	
 	public static boolean test ( TestCase caso ) throws IOException {
 	
-	
+
 		URL                 url;
 		URLConnection       urlConn;
 		DataOutputStream    printout;
 		DataInputStream     input;
 		
 		// URL of CGI-Bin script.
-		url = new URL (caso.codeBase + caso.fileName);
+		url = new URL (caso.codeBase + caso.fileName + "?i=1");
+			
 		urlConn = url.openConnection();
 		urlConn.setDoInput (true);
 		urlConn.setDoOutput (true);
@@ -195,13 +196,22 @@ class Test{
 
 
 		String content = caso.input; //URLEncoder.encode (args);
-			
+		//String content = URLEncoder.encode (caso.input);
+					
 		printout.writeBytes (content);
 		printout.flush ();
 		printout.close ();
 		
+
+		
 		// get response data
-		input = new DataInputStream (urlConn.getInputStream ());
+		try{
+			input = new DataInputStream ( urlConn.getInputStream() );			
+		}catch( java.io.FileNotFoundException fnfe ){
+			System.out.println( fnfe );
+			return false;
+		}
+
 		
 		if(verbose){
 			System.out.println("============= Request Headers ================");
