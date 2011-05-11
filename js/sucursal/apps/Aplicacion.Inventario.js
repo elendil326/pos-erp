@@ -33,7 +33,6 @@ Aplicacion.Inventario.prototype._init = function (){
 
 Aplicacion.Inventario.prototype.getConfig = function (){
 
-
     if(POS.U.g === null){
         window.location = "sucursal.html";
     }
@@ -61,11 +60,9 @@ Aplicacion.Inventario.prototype.getConfig = function (){
  * Registra el model para listaInventario
  */
 Ext.regModel('listaInventarioModel', {
-
-
 	fields: [
 		{name: 'descripcion',	  type: 'string'},
-		{name: 'productoID',	  type: 'float'} 
+		{name: 'productoID',	  type: 'int'} 
 	]
 });
 
@@ -199,7 +196,6 @@ Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 		items: [{
 			xtype: 'list',
 			store: this.inventarioListaStore,
-			//itemTpl: '<div class=""><b>{productoID}</b>&nbsp;{descripcion} </div>',
 			itemTpl: '<div class="">'
 				+'<table width = 100% >'
 					+'<tr width = 100%>'
@@ -224,15 +220,15 @@ Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 			listeners : {
 				"activate" : function(){
 					if(DEBUG){
-						console.log("Mostrando lista de inventario*************");
+						console.log("Mostrando lista de inventario.");
 					}
 					Aplicacion.Inventario.currentInstance.inventarioListaStore.clearFilter();
 				},
 				"selectionchange"  : function ( view, nodos, c ){
 
-                                        if(DEBUG){
-                                            //console.log("****+++++Esa mierda contiene : ",nodos[0]);
-                                        }
+
+
+
 
 					if(nodos.length > 0){
 						Aplicacion.Inventario.currentInstance.detalleInventarioPanelShow( nodos[0] );

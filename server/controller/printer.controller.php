@@ -230,7 +230,7 @@ function imprimirFactura($id_venta, $venta_especial = null){
  	* Receptor del comprobante fiscal
     * Datos del receptor
  	* ************************* */
-	$datos_receptor = $cliente->getRAzonSocial() .  "\n";
+	$datos_receptor = readableText($cliente->getRAzonSocial()) .  "\n";
 	$datos_receptor .= formatAddress($cliente) ;
 	$datos_receptor .= "RFC:" . $cliente->getRfc();
 

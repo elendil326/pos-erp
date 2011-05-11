@@ -282,7 +282,23 @@
 		<?php }	?>
 		
 	<?php } ?>
-
+	<tr>
+		<td>
+			Precio
+		</td>
+		<td>
+			<select name="tipo_de_precio">
+				<option>Precio por <?php echo $producto->getEscala(); ?></option>
+				<?php
+					if( $producto->getAgrupacion() != null ){
+						?>
+							<option>Precio por <?php echo $producto->getAgrupacion(); ?></option>						
+						<?php
+					}
+				?>
+			</select>			
+		</td>		
+	</tr>
 </table>
  <h4> <input type="submit" value="Guardar nuevo precio" size="40"/> </h4>
 </form>	

@@ -1,9 +1,7 @@
 <?php
-	require_once("../../server/config.php");	
-	require_once("db/DBConnection.php");
-	require_once("admin/includes/checkSession.php");
-	require_once("admin/includes/static.php");	
-	require_once('model/cliente.dao.php');
+require_once("../../server/bootstrap.php");	
+require_once("admin/includes/checkSession.php");
+require_once("admin/includes/static.php");
 
 ?>
 <!DOCTYPE html>

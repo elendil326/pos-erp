@@ -61,12 +61,14 @@ function listarInventario( $sucID = null ){
             "descripcion" => $productoData->getDescripcion(),
             "tratamiento" => $productoData->getTratamiento(),
             "precioVenta" => $producto->getPrecioVenta(),
-            "precioVentaSinProcesar" => $actualizacion_de_precio ->  getPrecioVentaSinProcesar(),
+            "precioVentaSinProcesar" => $actualizacion_de_precio->getPrecioVentaSinProcesar(),
             "existenciasOriginales" => $producto->getExistencias(),
             "existenciasProcesadas" => $producto->getExistenciasProcesadas(),
             "medida" => $productoData->getEscala(),
             "precioIntersucursal" => $actualizacion_de_precio -> getPrecioIntersucursal(),
-            "precioIntersucursalSinProcesar" => $actualizacion_de_precio -> getPrecioIntersucursalSinProcesar()
+            "precioIntersucursalSinProcesar" => $actualizacion_de_precio -> getPrecioIntersucursalSinProcesar(),
+            "agrupacion" => $productoData->getAgrupacion(),
+            "agrupacionTam" => $productoData->getAgrupacionTam()
         ));
         
     }

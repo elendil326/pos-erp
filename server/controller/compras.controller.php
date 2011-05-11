@@ -747,27 +747,31 @@ function nuevaCompraSucursal($json = null) {
         foreach ($producto->items as $subproducto) {
 
             $cantidad += $subproducto->cantidad;
+
+			//hacer calculo sobre el descuento, puede ser 
+			//descuento en kilos sobre arpilla, solo en kilos
+			//etc...
             $descuento += $subproducto->descuento;
+
+			
 
             //calculamos el precio de este subproducto,
             //y lo sumamos a lo de los demas
-            $precio += $subproducto->precio * ($subproducto->cantidad - $subproducto->descuento);
-
-            Logger::log("SE TOMA EN CUENTA EL DESCUENTO AQUI!?!?!?");
+			$precio += $subproducto->precio * ( $subproducto->cantidad  );
 
             descontarDeInventarioMaestro($subproducto->id_compra, $subproducto->id_producto, $subproducto->cantidad, $subproducto->procesada);
         }//foreach
 
 
-
-        $global_total_importe += ( ($precio / $cantidad) * $cantidad );
+		$cantidad_a_pagar = $cantidad - $descuento;
+        $global_total_importe += $precio * $cantidad_a_pagar ;
 
         $detalle = new DetalleCompraSucursal();
-        $detalle->setIdProducto($producto->producto);
-        $detalle->setCantidad($cantidad);
-        $detalle->setDescuento($descuento);
-        $detalle->setPrecio($precio / $cantidad);
-        $detalle->setProcesadas($producto->procesado);
+        $detalle->setIdProducto	($producto->producto);
+        $detalle->setCantidad	($cantidad);
+        $detalle->setDescuento	($descuento);
+        $detalle->setPrecio		($precio / $cantidad);
+        $detalle->setProcesadas	($producto->procesado);
 
         array_push($detalles_de_compra, $detalle);
 

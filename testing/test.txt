@@ -58,13 +58,13 @@
 #beginTest
 	#Desc funcion para probar a que grupo pertenesco, aunque aun no estoy loggeado
 	#Input action=2007
-	#JSONOutput {"success": false , "reason": "Accesso denegado" }
+	#JSONOutput {"success": false , "reason": "Accesso denegado" , "reboot" : true }
 #endTest
 
 #beginTest
 	#Desc listar empleados de esta sucursal, aunque aun no estoy loggeado
 	#Input action=501
-	#JSONOutput {"success": false , "reason": "Accesso denegado" }
+	#JSONOutput {"success": false , "reason": "Accesso denegado" , "reboot" : true }
 #endTest
 
 #beginTest
@@ -257,14 +257,14 @@
 	#Desc Llamar a getResource.php solicitando modulos de sucursal de js
 	#fileName getResource.php
 	#Input type=js&mod=sucursal
-	#Output /* ACCESO DENEGADO */
+	#Output window.location = ".";
 #endTest
 
 #beginTest
 	#Desc Llamar a getResource.php solicitando modulos de sucursal de css
 	#fileName getResource.php
 	#Input type=css&mod=sucursal
-	#Output /* ACCESO DENEGADO */
+	#Output window.location = ".";
 #endTest
 
 
@@ -292,7 +292,7 @@
 
 #beginTest
 	#Desc Envio correcto de usuario y password para ingeniero.
-	#Input action=2099&u=1&p=5e0bdcbddccca4d66d74ba8c1cee1a68
+	#Input action=2099&u=77&p=202cb962ac59075b964b07152d234b70
 	#JSONOutput {"success": true , "payload": { "sucursaloverride": false , "type": "0" }}
 #endTest
 
@@ -305,13 +305,13 @@
 						PERSONAL
 =================================================================================================== 
 */
-   
+   /*
 #beginTest
 	#Desc Listar a todos los empleados del sistema. 
 	#Input action=501
 	#JSONOutput {"success": true, "empleados": []}
 #endTest
-
+*/
 
 
 #beginTest
