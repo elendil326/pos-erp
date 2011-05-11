@@ -635,6 +635,55 @@ function venderAdmin($args) {
         die('{"success": false, "reason": "No se tiene registro del cliente ' . $data->cliente . '." }');
     }
 
+    if ($data->tipo_venta == "contado" || $data->tipo_venta == "mixto") {
+
+        if (!isset($data->tipo_pago)) {
+            Logger::log("Error en venta a contado : No se ha especificado el tipo de pago.");
+            die('{"success": false, "reason": "Error en venta a contado : No se ha especificado el tipo de pago." }');
+        }
+
+        switch ($data->tipo_pago) {
+            case 'efectivo' :
+                //validamos que envie el efectivo con el cual pago
+                if (!isset($data->efectivo)) {
+                    Logger::log("Pago en efectivo, Error : No se ha especificado la cantidad de efectivo con la que pago.");
+                    die('{"success": false, "reason": "Pago en efectivo, Error : No se ha especificado la cantidad de efectivo con la que pago." }');
+                }
+
+                if ($data->efectivo <= 0) {
+                    Logger::log("Pago en efectivo, Error : La cantidad con la cual intenta pagar debe de ser mayor que cero.");
+                    die('{"success": false, "reason": "Pago en efectivo, Error : La cantidad con la cual intenta pagar debe ser mayor o igual que cero." }');
+                }
+                break;
+            case 'cheque' :
+                if (!isset($data->efectivo)) {
+                    Logger::log("Pago con cheque, Error : No se ha especificado la cantidad de efectivo con la que pago.");
+                    die('{"success": false, "reason": "Pago con cheque, Error : No se ha especificado la cantidad de efectivo con la que pago." }');
+                }
+
+                if ($data->efectivo <= 0) {
+                    Logger::log("Pago con cheque, Error : La cantidad con la cual intenta pagar debe de ser mayor que cero.");
+                    die('{"success": false, "reason": "Pago con cheque, Error : La cantidad con la cual intenta pagar debe ser mayor o igual que cero." }');
+                }
+                break;
+            case 'tarjeta' :
+                if (!isset($data->efectivo)) {
+                    Logger::log("Pago con targeta, Error : No se ha especificado la cantidad con la que pago.");
+                    die('{"success": false, "reason": "Pago con targeta, Error : No se ha especificado la cantidad con la que pago." }');
+                }
+
+                if ($data->efectivo <= 0) {
+                    Logger::log("Pago con targeta, Error : La cantidad con la cual intenta pagar debe de ser mayor que cero.");
+                    die('{"success": false, "reason": "Pago con targeta, Error : La cantidad con la cual intenta pagar debe ser mayor o igual que cero." }');
+                }
+                break;
+            default:
+                Logger::log("Error en venta a contado : No se ha especificado un tipo de pago valido.");
+                die('{"success": false, "reason": "Error en venta a contado : No se ha especificado un tipo de pago valido. (' . $data->tipo_pago . ')" }');
+        }
+    }
+
+
     //verificamos que cada objeto de producto tenga los parametros necesarios
 
     foreach ($data->productos as $items) {
@@ -1020,6 +1069,10 @@ function venderAdmin($args) {
             $venta->setTipoVenta($data->tipo_venta);
             break;
 
+        case 'mixto':
+            $venta->setTipoVenta('credito');
+            break;
+
         default:
             Logger::log("El tipo de venta no es valido : " . $data->tipo_venta);
             die('{"success": false, "reason": "El tipo de venta no es valido ' . $data->tipo_venta . '." }');
@@ -1114,7 +1167,7 @@ function venderAdmin($args) {
     if ($venta->getTipoVenta() == "credito") {
         //verificamos si el cliente cuenta con suficiente limite de credito para solventar esta venta
         $ventas_credito = listarVentaCliente($cliente->getIdCliente(), $venta->getTipoVenta());
-        $adeuda = 0;       
+        $adeuda = 0;
 
         foreach ($ventas_credito as $vc) {
 
@@ -1135,18 +1188,35 @@ function venderAdmin($args) {
     }
 
 
+
     //si la venta es de contado, hay que liquidarla
     if ($venta->getTipoVenta() == "contado") {
-        $venta->setPagado($total);
-        $venta->setLiquidada("1");
 
-        //validamos que el efectivo con el que se pago sea suficiente
-        if($data->efectivo < $venta->getTotal())
-        {
+        if ($data->efectivo < $venta->getTotal()) {
             DAO::transRollback();
             Logger::log("Error : No cuenta con suficiente efectivo para cubrir el total de la venta.");
             die('{"success": false, "reason": "Error : No cuenta con suficiente efectivo para cubrir el total de la venta." }');
         }
+
+        $venta->setPagado($total);
+        $venta->setLiquidada("1");
+    }
+
+    //verificamos si en un tipo de pago mixto
+    if ($data->tipo_venta == "mixto") {
+
+        //verificamos si el efectivo enviado supera el total        
+        if ($data->efectivo > $venta->getTotal()) {
+            $venta->setPagado($venta->getTotal());
+            $venta->setLiquidada(1);
+        } else {
+            //abonamos lo enviado en efectivo
+            $venta->setPagado($data->efectivo);
+            $venta->setLiquidada(0);
+        }
+        
+        $venta->setTipoPago($data->tipo_pago);
+        
     }
 
     try {

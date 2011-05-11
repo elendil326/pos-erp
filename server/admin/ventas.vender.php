@@ -63,7 +63,7 @@ function error(title, msg, el){
            title: title,
            msg: msg,
 		   animEl: el,
-           buttons: Ext.MessageBox.OK,
+           buttons: Ext.MessageBox.OK
        });
 	/*
     var html = '<h1><img src="../media/icons/warning_32.png">&nbsp;' + title + '</h1>';
@@ -969,7 +969,7 @@ function doVender()
         url: "../proxy.php",
         data: { 
             action : 101, 
-            data : jQuery.JSON.encode( readyDATA ),
+            data : jQuery.JSON.encode( readyDATA )
         },
         cache: false,
         success: function(data){
@@ -1547,6 +1547,14 @@ function toUnitProc( $e, $row )
         switch(tipo){
             case "contado" : 
                 jQuery("#tipoDePago").show();
+                tipo_de_pago = "efectivo";
+                setPayment( tipo_de_pago );
+            break;
+
+            case "mixto":
+                jQuery("#tipoDePago").show();
+                tipo_de_pago = "efectivo";
+                setPayment( tipo_de_pago );
             break;
 
             case "credito" : 
@@ -1566,11 +1574,11 @@ function toUnitProc( $e, $row )
             break;
 
             case "cheque" :
-                jQuery("#tipoDePagoInfo").html('Referencia <input type="text">');                
+                jQuery("#tipoDePagoInfo").html('Referencia <input type="text" id="tipo-de-pago-efectivo">');                
             break;
 
             case "tarjeta":
-                jQuery("#tipoDePagoInfo").html('Datos <input type="text">');
+                jQuery("#tipoDePagoInfo").html('Datos <input type="text" id="tipo-de-pago-efectivo">');
             break;
 
             default:
@@ -1601,12 +1609,13 @@ function toUnitProc( $e, $row )
 	        <h3>Tipo de venta</h3>
 	      <input type="radio" name="tipo_venta_input" onChange="setPaymentType(this.value)" value="credito" checked="checked" /> Credito<br />
 	      <input type="radio" name="tipo_venta_input" onChange="setPaymentType(this.value)" value="contado"  /> Contado<br />
+              <input type="radio" name="tipo_venta_input" onChange="setPaymentType(this.value)" value="mixto"  /> Mixto<br />
 	    </td>
 
 
 	    <td valign="top" id="tipoDePago" style="display:none;">
 	      <h3>Tipo de pago</h3>
-	      <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="efectivo" /> Efectivo<br />
+	      <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="efectivo" checked /> Efectivo<br />
 	      <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="cheque"  /> Cheque<br />
 	      <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="tarjeta" /> Tarjeta<br />
 	    </td>
