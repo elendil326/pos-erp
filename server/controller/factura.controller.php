@@ -71,7 +71,7 @@ function verificarDatosVenta($id_venta = null) {
 
     //verifiacmos que la venta este liquidada
     if ($venta->getLiquidada() != "1") {
-        Logger::log("La venta {$venta->getIdVenta()} no esta lioquidada");
+        Logger::log("La venta {$venta->getIdVenta()} no esta liquidada");
         die('{"success": false, "reason": "No se puede emitir la factura debido a que la venta ' . $venta->getIdVenta() . ' no ha sido liquidada." }');
     }
 
@@ -107,11 +107,12 @@ function verificarDatosVenta($id_venta = null) {
         die('{"success": false, "reason": "Actualice la informacion del cliente : La razon social del cliente es demaciado corta." }');
     }
 
-    //rfc
+    /*//rfc
     if (strlen($cliente->getRfc()) < 13 || strlen($cliente->getRfc()) > 13) {
         Logger::log("verifique la estructura del rfc : 4 caracteres para el nombre, 6 para la fecha y 3 para la homoclave");
         die('{"success": false, "reason": "Actualice la informacion del cliente : Verifique la estructura del rfc : 4 caracteres para el nombre, 6 para la fecha y 3 para la homoclave." }');
-    }
+    }*/
+    
     //calle
     if (strlen($cliente->getCalle()) < 3) {
         Logger::log("La descripcion de la calle es demaciado corta.");

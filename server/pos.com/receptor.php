@@ -314,7 +314,7 @@ class Receptor {
      *
      */
     public function __construct() {
-
+        
     }
 
     /**
@@ -330,7 +330,13 @@ class Receptor {
 
         //verificampos si existe el rfc
         if (!($this->getRFC() != null && $this->getRFC() != "")) {
-            $this->setError("No se ha definido el rfc del receptor.");
+            $this->setError("No se ha definido el rfc del emisor.");
+        } else {
+
+            $success = $this->isValidRFC($this->getRFC());
+            if (!$success->getSuccess()) {
+                $this->setError($success->getInfo());
+            }
         }
 
         //verificamos si existe la calle
@@ -369,6 +375,75 @@ class Receptor {
         }
 
         $this->success = new Success($this->error);
+        return $this->success;
+    }
+
+    /**
+     *
+     * @param type $cadena
+     * @return Success success
+     */
+    public function isValidRFC($cadena) {
+        
+        /**
+         * Morales: Se compone de 3 letras seguidas por 6 dígitos y 3 caracteres alfanumericos
+         * Físicas: consta de 4 letras seguida por 6 dígitos y 3 caracteres alfanumericos
+         * Para hacer una longitud de 12 y 13 caracteres, las primeras letras (3 y 4) pertenecen al nombre 
+         * los siguientes 6 dígitos son la fecha de nacimiento o fecha de creación. 		
+         * Para las morales, y los últimos 3 perteneces a la suma de valores pertenecientes al nombre.
+         */
+        //validamos al longitud de la cadena
+        if (!(strlen($cadena) > 11 && strlen($cadena) < 14 )) {
+            $this->setError("La longitud del RFC del receptor no es valido.");
+        }
+
+        //indicara la posicion en la cual se encuentra la cadena
+        $i = 0;
+
+        //verificamos si es una persona fisica y si es asi revisamos su primer digito
+        if (strlen($cadena) == 12) {
+            //es persona moral, entonces agregamos un relleno al principio de la cadena para dar una longitud igual a la de la persona fisica
+            $cadena = "-" . $cadena;
+        } else {
+            //es persona fisica y verificamos si el primer caracter es una letra
+            if (is_numeric($cadena[$i])) {
+                $this->setError("Formato invalido del RFC del receptor, verifique si el " . ($i + 1) . "caracter es correcto");
+            }
+        }
+
+        $i = 1;
+
+        //revisamos los 3 caracteres que deberan de ir en el RFC (para personas fisicas son 4 pero ya anteriror mente revisamos el primero)
+        for ($j = $i; $j <= 3; $j++) {
+
+            $i = $j;
+
+            if (is_numeric($cadena[$j])) {
+                $this->setError("Formato invalido el RFC del receptor, verifique si el " . ($i + 1) . "caracter es correcto");
+            }
+        }
+
+        //revisamos los 6 digitos
+        for ($j = 4; $j <= 9; $j++) {
+
+            $i = $j;
+
+            if (!is_numeric($cadena[$j])) {
+                $this->setError("Formato invalido el RFC del receptor, verifique si el " . ($i + 1) . " caracter es correcto");
+            }
+        }
+
+        //revisamos los 3 caracteres alfanumericos que restan	
+        for ($j = 10; $j <= 12; $j++) {
+
+            $i = $j;
+
+            if (!ctype_alnum($cadena[$j])) {
+                $this->setError("Formato invalido el RFC del receptor, verifique si el " . ($i + 1) . " caracter es correcto");
+            }
+        }
+
+        $this->success = new Success($this->getError());
         return $this->success;
     }
 
