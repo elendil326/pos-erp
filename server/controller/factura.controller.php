@@ -39,12 +39,12 @@ function verificarDatosVenta($id_venta = null) {
         Logger::log("No se tiene registro de la venta : {$id_venta}");
         die('{"success": false, "reason": "No se tiene registro de la venta ' . $id_venta . '." }');
     }
-    
-    if($venta->getLiquidada() != "1"){
+
+    if ($venta->getLiquidada() != "1") {
         Logger::log("Error : No puede facturar una venta que no este liquidada.");
         die('{"success": false, "reason": "Error : No puede facturar una venta que no este liquidada." }');
     }
-    
+
     //extraemos el id del cliente de la venta 
     if (( $id_cliente = $venta->getIdCliente() ) <= 0) {
         Logger::log("Error : Se esta intentando facturar una venta que al momento que se registro la venta no se indico un cliente valido, en este caso usted debe de indicar a que cliente se debe de facturar esta venta.");
@@ -107,12 +107,12 @@ function verificarDatosVenta($id_venta = null) {
         die('{"success": false, "reason": "Actualice la informacion del cliente : La razon social del cliente es demaciado corta." }');
     }
 
-    /*//rfc
-    if (strlen($cliente->getRfc()) < 13 || strlen($cliente->getRfc()) > 13) {
-        Logger::log("verifique la estructura del rfc : 4 caracteres para el nombre, 6 para la fecha y 3 para la homoclave");
-        die('{"success": false, "reason": "Actualice la informacion del cliente : Verifique la estructura del rfc : 4 caracteres para el nombre, 6 para la fecha y 3 para la homoclave." }');
-    }*/
-    
+    /* //rfc
+      if (strlen($cliente->getRfc()) < 13 || strlen($cliente->getRfc()) > 13) {
+      Logger::log("verifique la estructura del rfc : 4 caracteres para el nombre, 6 para la fecha y 3 para la homoclave");
+      die('{"success": false, "reason": "Actualice la informacion del cliente : Verifique la estructura del rfc : 4 caracteres para el nombre, 6 para la fecha y 3 para la homoclave." }');
+      } */
+
     //calle
     if (strlen($cliente->getCalle()) < 3) {
         Logger::log("La descripcion de la calle es demaciado corta.");
@@ -163,6 +163,13 @@ function generaFactura($id_venta) {
     DAO::transBegin();
 
     $data = getDatosGenerales($id_venta);
+    
+    /*Termino aqui la transaccion por que si ocurre un error, al momento de la lectura de los XML quiero qeu se guarde
+     *el registro de factura_venta.     
+     */
+    DAO::transEnd();
+    
+    DAO::transBegin();
 
     $comprobante = new Comprobante();
 
@@ -213,7 +220,7 @@ function generaFactura($id_venta) {
     }
 
     DAO::transEnd();
-    
+
     //Termino todo correctamente   
     printf('{"success":true, "id_venta":%s}', $id_venta);
 
@@ -301,7 +308,7 @@ function getConceptos($id_venta) {
  * return Object Receptor
  */
 function getReceptor($cliente) {
-    
+
     if ($cliente->getIdCliente() <= 0) {
         Logger::log("Error : El Cliente con el ID : {$cliente->getIdCliente()} es invalido.");
         DAO::transRollback();
@@ -538,38 +545,9 @@ function getDatosGenerales($id_venta) {
         $generales->setMetodoDePago($venta->getTipoPago());
     }
 
-
-    if ($_SESSION['sucursal'] != 0) {
-
-        //significa que tomara la serie de la         
-        $sucursal = SucursalDAO::getByPK($_SESSION['sucursal']);
-        $generales->setSerie($sucursal->getLetrasFactura());
-    } else {
-
-        if (!($pos_config = PosConfigDAO::getByPK('emisor') )) {
-            Logger::log("Error al obtener datos del emisor.");
-            DAO::transRollback();
-            die('{"success": false, "reason": "Error al obtener los datos del emisor." }');
-        }
-
-        $json = json_decode($pos_config->getValue());
-
-        if (isset($json->emisor->serie)) {
-
-            $serie = str_replace(array(" "), array(""), $json->emisor->serie);
-
-            if (strlen($serie) == 0) {
-                Logger::log("Error : No se ha definido la serie en los datos del emisor.");
-                DAO::transRollback();
-                die('{"success": false, "reason": "Error : No se ha definido la serie en los datos del emisor." }');
-            }
-        }
-
-        $generales->setSerie($serie);
-    }
-
-
-
+    //significa que tomara la serie de la         
+    $sucursal = SucursalDAO::getByPK($_SESSION['sucursal']);
+    $generales->setSerie($sucursal->getLetrasFactura());
 
     $generales->setSubtotal($venta->getSubtotal());
 
@@ -709,7 +687,7 @@ if (isset($args['action'])) {
     switch ($args['action']) {
         case 1200:
             //realiza una peticion al web service para que regrese una factura sellada            
-            
+
             generaFactura($args['id_venta']);
             break;
 

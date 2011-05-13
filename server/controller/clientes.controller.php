@@ -736,6 +736,79 @@ function listarVentasCliente($args) {
     return $tot_ventas;
 }
 
+/**
+ * Regresa el estdo de cuenta de un cliente en especifico
+ * @param Array $args,  $args['id_cliente'=>12[,'tipo_venta'=> 'credito | contado | saldo'] ], por default obtiene todas las compras del cliente
+ * $args['tipo_venta']
+ */
+function estadoCuentaCliente($args){
+    
+    if (!isset($args['id_cliente'])) {
+        Logger::log("Error al obtener el estado de cuenta, no se ha especificado un cliente.");
+        die('{"success": false, "reason": "Error al obtener el estado de cuenta, no se ha especificado un cliente."}');
+    }
+
+    Logger::log("Obteniendo estado de cuenta del cliente : {$args['id_cliente'] }.");
+
+    $ventas = new Ventas();
+    $ventas->setIdCliente($args['id_cliente']);
+    
+    if(isset($args['tipo_venta'])){   
+        
+        switch($args['tipo_venta']){
+            case 'credito':
+                //obtiene todas las compras a credito
+                $ventas->setTipoVenta("credito");
+                break;
+            case 'contado':
+                //obtiene todas las compras de contado
+                $ventas->setTipoVenta("contado");
+                break;
+            case 'saldo':
+                //obtiene todas las compras a credito sin saldar
+                $ventas->setLiquidada(0);
+                break;
+        }
+        
+    }
+    
+    $ventas = VentasDAO::search($ventas);
+
+    $array_ventas = array();
+
+    foreach ($ventas as $venta) {
+
+        $decode_venta = $venta->asArray();
+        
+        $array_venta['id_venta'] = $venta->getIdVenta();
+        
+        $array_venta['fecha'] = $venta->getFecha();
+        
+        $sucursal = SucursalDAO::getByPK($venta->getIdSucursal());
+        $array_venta['sucursal'] = $sucursal->getDescripcion();
+
+        $cajero = UsuarioDAO::getByPK($venta->getIdUsuario());
+        $array_venta['cajero'] = $cajero->getNombre();
+        
+        $array_venta['cancelada'] = $venta->getCancelada();
+        
+        $array_venta['tipo_venta'] = $venta->getTipoVenta();
+        
+        $array_venta['tipo_pago'] = $venta->getTipoPago();
+                
+        $array_venta['total'] = $venta->getTotal();
+                
+        $array_venta['pagado'] = $venta->getPagado();
+                
+        $array_venta['saldo'] = $venta->getTotal() - $venta->getPagado();
+
+        array_push($array_ventas, $array_venta);
+    }
+
+    Logger::log("Estado de cuenta del cliente  {$args['id_cliente']}, se encontraron " . count($array_ventas) . " coincidencias.");
+    return $array_ventas;   
+}
+
 /*
  * 
  * 	Case dispatching for proxy
@@ -818,6 +891,12 @@ if (isset($args['action'])) {
         case 309:
             //lista todas las ventas de un cliente en especifico
             printf('{ "success": true, "datos": %s }', json_encode(listarVentasCliente($args)));
+            break;
+        
+        case 310:
+            //lista el estado de cuenta de los clientes
+            $ventas = estadoCuentaCliente($args);
+            printf('{ "success": true, "total": ' . count($ventas) . ' "datos": %s }', json_encode($ventas));
             break;
     }
 }

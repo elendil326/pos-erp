@@ -154,12 +154,21 @@ class Comprobante {
     /**
      * Establece una cadena que contiene el XML que se enviara al PAC.
      */
-    private function setXMLrequest($xml_request) {
+    private function setXMLrequest($_xml_request) {
 
-        $xml_request = str_replace("&lt;", "<", $this->getXMLrequest());
-        $xml_request = str_replace("&gt;", ">", $xml_request);
+        /* $xml_request = str_replace("&lt;", "<", $this->getXMLrequest());
+          $xml_request = str_replace("&gt;", ">", $xml_request); */
 
-        $this->xml_request = $xml_request;
+        /* $dom = new DOMDocument('1.0', 'utf-8');
+
+          $element = $dom->createElement('factura', $_xml_request);
+
+          // Insertamos el nuevo elemento como raíz (hijo del documento)
+          $dom->appendChild($element);
+
+          $this->xml_request = $dom->saveXML(); */
+
+        $this->xml_request = $_xml_request;
     }
 
     /**
@@ -189,8 +198,8 @@ class Comprobante {
     /**
      * Establece una cadena con la respuesta del WebService sobre la peticion de la nueva factura.
      */
-    private function setXMLresponse($xml_response) {
-        $this->xml_response = $xml_response;
+    private function setXMLresponse($_xml_response) {
+        $this->xml_response = $_xml_response;
     }
 
     /**
@@ -398,24 +407,46 @@ class Comprobante {
     }
 
     /**
-     * Indica si esta en modo debug
+     * Indica si esta en modo produccion
      */
-    private $productionMode = false;
+    private $productionMode = true;
+
+    /**
+     * Establece informacion acerca de si el api esta en modo produccion
+     * @param type $_productionMode 
+     */
+    private function setProductionMode($_productionMode) {
+        $this->productionMode = $_productionMode;
+    }
+
+    /**
+     * Obtiene informacion acerca de si el api esta en modo produccion, verdadero si esta en modo produccion, falso de lo contrario.
+     * @return type 
+     */
+    public function getProductionMode() {
+        return $this->productionMode;
+    }
+
+    /**
+     * Indica si esta en modo debug.
+     * Sufuncionalidad radica en que imprime en pantalla el xml request y el xml response.
+     */
+    private $debugMode = false;
 
     /**
      * Establece informacion acerca de si el api esta en modo debug
      * @param type $_debugMode 
      */
-    private function setProductionMode($_debugMode) {
-        $this->productionMode = $_debugMode;
+    private function setDebugMode($_debugMode) {
+        $this->debugMode = $_debugMode;
     }
 
     /**
      * Obtiene informacion acerca de si el api esta en modo debug, verdadero si esta en modo debug, falso de lo contrario.
      * @return type 
      */
-    public function getProductionMode() {
-        return $this->productionMode;
+    public function getDebugMode() {
+        return $this->debugMode;
     }
 
     /**
@@ -525,17 +556,17 @@ class Comprobante {
         }
 
 
-        //ESTO LO COMENTO YA QUE SIS E FACTURA DESDE EL CENTRO DE DISTRIBUCION ESTO DEBERIA DE SER NULL
-        /*if ($this->getExpedidoPor() == null) {
-            Logger::log("Error : El objeto 'expedido_por' es invalido");
-            $this->setError("El objeto 'expedido_por' es invalido");
-        } else {
-            $success = $this->getExpedidoPor()->isValid();
-            if (!$success->getSuccess()) {
-                Logger::log($success->getInfo());
-                $this->setError($success->getInfo());
-            }
-        }*/
+        //ESTO LO COMENTO YA QUE SI SE FACTURA DESDE EL CENTRO DE DISTRIBUCION ESTO DEBERIA DE SER NULL
+        /* if ($this->getExpedidoPor() == null) {
+          Logger::log("Error : El objeto 'expedido_por' es invalido");
+          $this->setError("El objeto 'expedido_por' es invalido");
+          } else {
+          $success = $this->getExpedidoPor()->isValid();
+          if (!$success->getSuccess()) {
+          Logger::log($success->getInfo());
+          $this->setError($success->getInfo());
+          }
+          } */
 
 
         if ($this->getLlaves() == null) {
@@ -606,16 +637,16 @@ class Comprobante {
         $comprobante->appendChild($xml->createElement('folio_interno', $this->getGenerales()->getFolioInterno()));
 
         $comprobante->appendChild($xml->createElement('fecha', $this->getGenerales()->getFecha()));
-        
+
         $comprobante->appendChild($xml->createElement('forma_de_pago', $this->getGenerales()->getFormaDePago()));
-        
+
         $comprobante->appendChild($xml->createElement('metodo_de_pago', ucfirst(strtolower($this->getGenerales()->getMetodoDePago()))));
 
-        $comprobante->appendChild($xml->createElement('subtotal', $this->getGenerales()->getSubtotal()));
+        $comprobante->appendChild($xml->createElement('subtotal', sprintf("%10.6f", $this->getGenerales()->getSubtotal())));
 
-        $comprobante->appendChild($xml->createElement('total', $this->getGenerales()->getTotal()));
+        $comprobante->appendChild($xml->createElement('total', sprintf("%10.6f", $this->getGenerales()->getTotal())));
 
-        $comprobante->appendChild($xml->createElement('iva', $this->getGenerales()->getIva()));
+        $comprobante->appendChild($xml->createElement('iva', sprintf("%10.6f", $this->getGenerales()->getIva())));
 
         $emisor = $xml->createElement('emisor');
 
@@ -629,16 +660,22 @@ class Comprobante {
 
         if ($this->getEmisor()->getNumeroInterior() != null) {
             $emisor->appendChild($xml->createElement('numero_interior', $this->getEmisor()->getNumeroInterior()));
+        } else {
+            $emisor->appendChild($xml->createElement('numero_interior', ''));
         }
 
         $emisor->appendChild($xml->createElement('colonia', $this->getEmisor()->getColonia()));
 
         if ($this->getEmisor()->getLocalidad() != null) {
             $emisor->appendChild($xml->createElement('localidad', $this->getEmisor()->getLocalidad()));
+        } else {
+            $emisor->appendChild($xml->createElement('localidad', ''));
         }
 
         if ($this->getEmisor()->getReferencia() != null) {
             $emisor->appendChild($xml->createElement('referencia', $this->getEmisor()->getReferencia()));
+        } else {
+            $emisor->appendChild($xml->createElement('referencia', ''));
         }
 
         $emisor->appendChild($xml->createElement('municipio', $this->getEmisor()->getMunicipio()));
@@ -661,16 +698,22 @@ class Comprobante {
 
             if ($this->getExpedidoPor()->getNumeroInterior() != null) {
                 $expedido_por->appendChild($xml->createElement('numero_interior', $this->getExpedidoPor()->getNumeroInterior()));
+            } else {
+                $expedido_por->appendChild($xml->createElement('numero_interior', ''));
             }
 
             $expedido_por->appendChild($xml->createElement('colonia', $this->getExpedidoPor()->getColonia()));
 
             if ($this->getExpedidoPor()->getLocalidad() != null) {
                 $expedido_por->appendChild($xml->createElement('localidad', $this->getExpedidoPor()->getLocalidad()));
+            } else {
+                $expedido_por->appendChild($xml->createElement('localidad', ''));
             }
 
             if ($this->getExpedidoPor()->getReferencia() != null) {
                 $expedido_por->appendChild($xml->createElement('referencia', $this->getExpedidoPor()->getReferencia()));
+            } else {
+                $expedido_por->appendChild($xml->createElement('referencia', ''));
             }
 
             $expedido_por->appendChild($xml->createElement('municipio', $this->getExpedidoPor()->getMunicipio()));
@@ -680,6 +723,26 @@ class Comprobante {
             $expedido_por->appendChild($xml->createElement('pais', $this->getExpedidoPor()->getPais()));
 
             $expedido_por->appendChild($xml->createElement('codigo_postal', $this->getExpedidoPor()->getCodigoPostal()));
+        } else {
+            $expedido_por->appendChild($xml->createElement('calle', ''));
+
+            $expedido_por->appendChild($xml->createElement('numero_exterior', ''));
+
+            $expedido_por->appendChild($xml->createElement('numero_interior', ''));
+
+            $expedido_por->appendChild($xml->createElement('colonia', ''));
+
+            $expedido_por->appendChild($xml->createElement('localidad', ''));
+
+            $expedido_por->appendChild($xml->createElement('referencia', ''));
+
+            $expedido_por->appendChild($xml->createElement('municipio', ''));
+
+            $expedido_por->appendChild($xml->createElement('estado', ''));
+
+            $expedido_por->appendChild($xml->createElement('pais', ''));
+
+            $expedido_por->appendChild($xml->createElement('codigo_postal', ''));
         }
 
         $comprobante->appendChild($expedido_por);
@@ -693,20 +756,26 @@ class Comprobante {
         $receptor->appendChild($xml->createElement('calle', $this->getReceptor()->getCalle()));
 
         $receptor->appendChild($xml->createElement('numero_exterior', $this->getReceptor()->getNumeroExterior()));
-        
-        if($this->getReceptor()->getNumeroInterior() != null){
-            $receptor->appendChild($xml->createElement('numero_interior', $this->getReceptor()->getNumeroInterior()));
-        }
-        
-        $receptor->appendChild($xml->createElement('colonia', $this->getReceptor()->getColonia()));
-        
-        if($this->getReceptor()->getLocalidad() != null){
-            $receptor->appendChild($xml->createElement('localidad', $this->getReceptor()->getLocalidad()));
-        }        
 
-        if($this->getReceptor()->getReferencia() != null){
+        if ($this->getReceptor()->getNumeroInterior() != null) {
+            $receptor->appendChild($xml->createElement('numero_interior', $this->getReceptor()->getNumeroInterior()));
+        } else {
+            $receptor->appendChild($xml->createElement('numero_interior', ''));
+        }
+
+        $receptor->appendChild($xml->createElement('colonia', $this->getReceptor()->getColonia()));
+
+        if ($this->getReceptor()->getLocalidad() != null) {
+            $receptor->appendChild($xml->createElement('localidad', $this->getReceptor()->getLocalidad()));
+        } else {
+            $receptor->appendChild($xml->createElement('localidad', ''));
+        }
+
+        if ($this->getReceptor()->getReferencia() != null) {
             $receptor->appendChild($xml->createElement('referencia', $this->getReceptor()->getReferencia()));
-        }                
+        } else {
+            $receptor->appendChild($xml->createElement('referencia', ''));
+        }
 
         $receptor->appendChild($xml->createElement('municipio', $this->getReceptor()->getMunicipio()));
 
@@ -728,15 +797,15 @@ class Comprobante {
 
             $concepto->appendChild($xml->createElement('id_producto', $articulo->getIdProducto()));
 
-            $concepto->appendChild($xml->createElement('cantidad', $articulo->getCantidad()));
+            $concepto->appendChild($xml->createElement('cantidad', sprintf("%10.6f", $articulo->getCantidad())));
 
             $concepto->appendChild($xml->createElement('unidad', $articulo->getUnidad()));
 
             $concepto->appendChild($xml->createElement('descripcion', $articulo->getDescripcion()));
 
-            $concepto->appendChild($xml->createElement('valor_unitario', $articulo->getValor()));
+            $concepto->appendChild($xml->createElement('valor_unitario', sprintf("%10.6f", $articulo->getValor())));
 
-            $concepto->appendChild($xml->createElement('importe', $articulo->getImporte()));
+            $concepto->appendChild($xml->createElement('importe', sprintf("%10.6f", $articulo->getImporte())));
 
             $conceptos->appendChild($concepto);
         }
@@ -776,9 +845,13 @@ class Comprobante {
         if ($this->getProductionMode()) {
 
             $client = new SoapClient($this->getUrlWS());
-
             //realiza la peticion al webservice
-            $result = $client->RececpcionComprobante(array('comprobante' => $this->getXMLrequest()));
+
+            $ready_to_send = $this->getXMLrequest();
+            $ready_to_send = str_replace("&lt;", "<", $ready_to_send);
+            $ready_to_send = str_replace("&gt;", ">", $ready_to_send);
+
+            $result = $client->RececpcionComprobante(array('comprobante' => $ready_to_send));
 
             //verificamos si la llamada fallo
 
@@ -790,7 +863,7 @@ class Comprobante {
 
             libxml_use_internal_errors(true);
 
-            if (!$xml_response) {
+            if (!$result) {
                 $e = "Error cargando XML\n";
                 foreach (libxml_get_errors() as $error) {
                     $e.= "\t" . $error->message;
@@ -803,12 +876,57 @@ class Comprobante {
             $response = $result->RececpcionComprobanteResult;
         } else {
             $response = $this->getXmlHardCode();
+        }        
+
+        //DEBUG
+        if ($this->getDebugMode()) {
+
+            echo "<br>------XML REQUEST-------<br>";
+
+            $dom = new DOMDocument('1.0', 'utf-8');
+
+            $element = $dom->createElement('factura', $this->getXMLrequest());
+
+            // Insertamos el nuevo elemento como raíz (hijo del documento)
+            $dom->appendChild($element);
+
+            echo $dom->saveXML();
+
+            echo "<br>------XML RESPONSE-------<br>";
+
+            $dom = new DOMDocument('1.0', 'utf-8');
+
+            $element = $dom->createElement('factura', $this->getXMLresponse());
+
+            // Insertamos el nuevo elemento como raíz (hijo del documento)
+            $dom->appendChild($element);
+
+            echo $dom->saveXML();
+
+            echo "<br>";
         }
 
-        //almacenamos el xml (en bruto) de respuesta en el objeto
-        $this->setXMLresponse($response);
+        //$response = str_replace(array("cfdi:", "tfd:"), array("", ""), $response);
 
-        $response = str_replace(array("cfdi:", "tfd:"), array("", ""), $response);
+        //-------------------ELIMINAMOS EL NODO-------------------
+
+        $response = str_replace(array("cfdi:Comprobante", "cfdi:Emisor", "cfdi:Receptor", "cfdi:Conceptos", "cfdi:Concepto", "cfdi:Impuestos", "cfdi:Complemento", "cfdi:Traslados", "cfdi:Traslado", "tfd:TimbreFiscalDigital"), array("Comprobante", "Emisor", "Receptor", "Conceptos", "Concepto", "Impuestos", "Complemento", "Traslados", "Traslado", "TimbreFiscalDigital"), $response);
+
+        $dom = new SimpleXMLElement($response);
+
+        unset($dom->Complemento['success']);
+
+        unset($dom->Complemento->cadenas);
+
+        $response = $dom->saveXML();
+
+        //almacenamos el xml reconstruido
+        $response_r = str_replace(array("/Comprobante", "<Comprobante", "Emisor", "Receptor", "Conceptos", "Concepto", "Impuestos", "Complemento", "Traslados", "Traslado", "TimbreFiscalDigital"), array("/cfdi:Comprobante", "<cfdi:Comprobante", "cfdi:Emisor", "cfdi:Receptor", "cfdi:Conceptos", "cfdi:Concepto", "cfdi:Impuestos", "cfdi:Complemento", "cfdi:Traslados", "cfdi:Traslado", "tfd:TimbreFiscalDigital"), $response);
+        $response_r = str_replace(array("cfdi:cfdi:"), array("cfdi:"), $response_r);                
+        $this->setXMLresponse($response_r);
+
+        //--------------------------------------------------------
+
 
         $xml_response = new SimpleXMLElement($response);
 
