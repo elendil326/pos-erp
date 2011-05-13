@@ -409,7 +409,7 @@ class Comprobante {
     /**
      * Indica si esta en modo produccion
      */
-    private $productionMode = true;
+    private $productionMode = false;
 
     /**
      * Establece informacion acerca de si el api esta en modo produccion
@@ -465,6 +465,10 @@ class Comprobante {
      * @return Comprobante
      */
     public function __construct() {
+        
+        //$this->setProductionMode( gethostbyname($_SERVER['REMOTE_ADDR']) == "127.0.0.1" ? false : true );
+        
+        //$this->setProductionMode( $_SERVER['HTTP_HOST'] == "pos.caffeina.mx" ? true : false );
         
     }
 
