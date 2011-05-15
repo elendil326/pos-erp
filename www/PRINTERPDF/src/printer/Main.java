@@ -44,11 +44,11 @@ public class Main extends Applet {
                 RepaintManager.currentManager(this);
         currentManager.setDoubleBufferingEnabled(false);
 
-        //String file = URLDecoder.decode(getParameter("file"));
-        String file = "prueba.pdf";
+        String file = URLDecoder.decode(getParameter("file"));
+        //String file = "prueba.pdf";
 
-        //String printer = URLDecoder.decode(getParameter("printer"));
-        String printer = "HP Photosmart D110 series";
+        String printer = URLDecoder.decode(getParameter("printer"));
+        //String printer = "HP Photosmart D110 series";
 
         try {
             new ServidorImpresion(file, printer);
