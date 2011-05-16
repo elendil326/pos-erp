@@ -737,9 +737,10 @@ function listarVentasCliente($args) {
 }
 
 /**
- * Regresa el estdo de cuenta de un cliente en especifico
+ * Calcula el estado de cuenta de un cliente en especifico
  * @param Array $args,  $args['id_cliente'=>12[,'tipo_venta'=> 'credito | contado | saldo'] ], por default obtiene todas las compras del cliente
- * $args['tipo_venta']
+ * $args['tipo_venta
+ *  @return Object, propiedades : array_ventas (arreglo con informacion de las ventas), limite_credito (limite de credito del cliente), saldo (saldo por pagar de todas sus compras)
  */
 function estadoCuentaCliente($args){
     
@@ -748,7 +749,12 @@ function estadoCuentaCliente($args){
         die('{"success": false, "reason": "Error al obtener el estado de cuenta, no se ha especificado un cliente."}');
     }
 
-    Logger::log("Obteniendo estado de cuenta del cliente : {$args['id_cliente'] }.");
+    if(!$cliente = ClienteDAO::getByPK($args['id_cliente'])){
+        Logger::log("Error al obtener el estado de cuenta, no se tiene registro del cliente {$args['id_cliente']}.");
+        die('{"success": false, "reason": "Error al obtener el estado de cuenta, no se tiene registro del cliente '.$args['id_cliente'].'."}');
+    }
+    
+    Logger::log("Obteniendo estado de cuenta del cliente : {$cliente->getIdCliente() }.");
 
     $ventas = new Ventas();
     $ventas->setIdCliente($args['id_cliente']);
@@ -768,6 +774,7 @@ function estadoCuentaCliente($args){
                 //obtiene todas las compras a credito sin saldar
                 $ventas->setLiquidada(0);
                 break;
+            default:
         }
         
     }
@@ -805,8 +812,25 @@ function estadoCuentaCliente($args){
         array_push($array_ventas, $array_venta);
     }
 
-    Logger::log("Estado de cuenta del cliente  {$args['id_cliente']}, se encontraron " . count($array_ventas) . " coincidencias.");
-    return $array_ventas;   
+    //calculamos el saldo total
+    $saldo = 0;
+    $ventas = new Ventas();
+    $ventas->setIdCliente($args['id_cliente']);
+    foreach(VentasDAO::search($ventas) as $venta){
+        if($venta->getLiquidada() != "1"){
+            $saldo += $venta->getTotal() - $venta->getPagado();
+        }
+    }
+    
+    
+    $estado_cuenta = new StdClass();
+    $estado_cuenta->array_ventas = $array_ventas;
+    $estado_cuenta->limite_credito = $cliente->getLimiteCredito();
+    $estado_cuenta->saldo = $saldo;
+    
+    
+    Logger::log("Estado de cuenta del cliente  {$args['id_cliente']}, se encontraron " . count($estado_cuenta->array_ventas) . " coincidencias.");
+    return $estado_cuenta;   
 }
 
 /*
@@ -895,8 +919,8 @@ if (isset($args['action'])) {
         
         case 310:
             //lista el estado de cuenta de los clientes
-            $ventas = estadoCuentaCliente($args);
-            printf('{ "success": true, "total": ' . count($ventas) . ' "datos": %s }', json_encode($ventas));
+            $estado_cuenta = estadoCuentaCliente($args);
+            printf('{ "success": true, "total": ' . count($estado_cuenta->array_ventas) . ' "datos": %s }', json_encode($estado_cuenta));
             break;
     }
 }
