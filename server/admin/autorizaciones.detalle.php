@@ -199,11 +199,13 @@ switch( $autorizacionDetalles->clave ){
                 foreach ($autorizacionDetalles->productos as $producto)
                 {
                     ?><tr>
-						<td><?php 
-								$p = InventarioDAO::getByPK( $producto->id_producto ) ;
-								 echo $p->getDescripcion(); 
-							?></td>
-						<td><b><?php echo $producto->cantidad . "</b> " . $p->getEscala(); ?>s</td></tr><?php
+						<td>
+                                                    <?php $p = InventarioDAO::getByPK( $producto->id_producto ); echo $p->getDescripcion(); ?>
+                                                </td>
+						<td><b>
+                                                    <?php 
+                                                        echo $producto->procesado == true?$producto->cantidad_procesada:$producto->cantidad . "</b> " . $p->getEscala(); 
+                                                    ?>s</td></tr><?php
                 }
                 ?>
                 <tr><td></td><td></td></tr>
