@@ -469,7 +469,16 @@ function vender($args) {
         $detalle_venta->setIdVenta($id_venta);
         $detalle_venta->setIdProducto($producto->id_producto);
         $detalle_venta->setCantidad($producto->cantidad);
-        $detalle_venta->setPrecio($producto->precio);
+
+/*
+		if($producto->getPrecioPorAgrupacion()){
+	        $detalle_venta->setPrecio($producto->getAgrupacionTam() / $producto->precio );
+		}else{
+        	$detalle_venta->setPrecio($producto->precio);			
+		}
+*/
+       	$detalle_venta->setPrecio($producto->precio);			
+
         $detalle_venta->setCantidadProcesada($producto->cantidad_procesada);
         $detalle_venta->setPrecioProcesada($producto->precio_procesada);
         $detalle_venta->setDescuento($producto->descuento);

@@ -76,7 +76,7 @@
    	<!--<a href="http://www.caffeina.mx">Página principal de Caffeina</a> - <a href="http://www.caffeina.mx/report/">Reportar una falla</a> - <a href="http://www.caffeina.mx/contacto.php">Envíenos un mensaje</a>-->
     <br>
 	<div align=center style="padding-bottom: 10px;">
-		 <img src='../media/logo_simbolo.png'> <br>
+		 <img src='../media/logo_simbolo.jpg'> <br>
     ©2010 Caffeina Mexico 
 	</div>
 

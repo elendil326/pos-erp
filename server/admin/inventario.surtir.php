@@ -185,7 +185,7 @@ InventarioMaestro = function( ){
 
     //revisar si existe este producto en el inventario maestro
     function existeProducto( producto ){
-		console.log( "InventarioMaestro.existeProducto("+ producto +")" );
+		//console.log( "InventarioMaestro.existeProducto("+ producto +")" );
         for( z = 0; z < estructura.length; z++ ){
             if( estructura[z].compare(producto) ){
                 return true;
@@ -196,25 +196,23 @@ InventarioMaestro = function( ){
 
     //agregar un producto al inventario maestro
     function agregarProducto( producto ){
-		console.log( "InventarioMaestro.agregarProducto("+ producto +")" );
+		//console.log( "InventarioMaestro.agregarProducto("+ producto +")" );
 		
         if( existeProducto(producto) ){
             throw ("Este producto ya existe en el inventario maestro");
         }else{
-            if(DEBUG){
-                console.log("Agregando ", producto, "a inventario maestro.");
-            }
+	
             estructura.push(producto);
         }
     }
 
     this.getProductos = function(){
-		console.log( "InventarioMaestro.getProductos()" );
+		//console.log( "InventarioMaestro.getProductos()" );
         return estructura;
     };
 
     this.getProducto = function (id_compra, id_producto){
-		console.log( "InventarioMaestro.getProducto("+id_compra+","+id_producto+")" );
+		//console.log( "InventarioMaestro.getProducto("+id_compra+","+id_producto+")" );
 		
         var z;
         for( z = 0; z < estructura.length; z++ ){
@@ -234,7 +232,9 @@ InventarioMaestro = function( ){
                     return {
                         id_producto : estructura[z].id_producto,
                         descripcion : estructura[z].producto_desc,
-                        escala      : estructura[z].escala
+                        escala      : estructura[z].escala,
+						agrupacion	: estructura[z].agrupacion,
+						agrupacionTam: estructura[z].agrupacionTam
                     };
                 }
         }
@@ -366,6 +366,7 @@ Producto = function( json_rep ){
     this.costo_flete            = parseFloat( json_rep.costo_flete );
 	this.agrupacion				= json_rep.agrupacion;
 	this.agrupacionTam			= json_rep.agrupacionTam;
+	this.precio_por_agrupacion	= json_rep.precio_por_agrupacion;
 };
 
 
@@ -392,7 +393,7 @@ InventarioMaestroTabla = function( config ) {
 
 
     function render(){ 
-		/*          */
+
     }
 
     function __init(config){
@@ -408,7 +409,7 @@ InventarioMaestroTabla = function( config ) {
     }
 
     this.tomarProducto = function (id_compra, id_producto, cantidadATomar, procesadas ){
-		console.log( "InventarioMaestroTabla.tomarProducto("+id_compra+","+id_producto+","+cantidadATomar+","+procesadas+",)" );
+		console.log( "InventarioMaestroTabla.tomarProducto(comra="+id_compra+", producto="+id_producto+", cantidad="+cantidadATomar+", procesada="+procesadas+")" );
 		
 		//el producto en el inventario
         var producto = inventario.getProducto(id_compra, id_producto);
@@ -418,19 +419,36 @@ InventarioMaestroTabla = function( config ) {
 			 return (r.get("id_compra_proveedor") == id_compra && r.get("id_producto") == id_producto);
 		}, this);
         
+		if(producto.agrupacion){
+			
+		}
+
         if(procesadas){
 			//las tomare procesadas
-			MasterGrid.getStore().getAt( gridRow ).set("existencias_procesadas"	, producto.existencias_procesadas - cantidadATomar);
-			MasterGrid.getStore().getAt( gridRow ).set("existencias"			, producto.existencias);
+			if(producto.agrupacion){
+				MasterGrid.getStore().getAt( gridRow ).set("existencias_procesadas"	, producto.existencias_procesadas - (cantidadATomar * producto.agrupacionTam));
+			}else{
+				MasterGrid.getStore().getAt( gridRow ).set("existencias_procesadas"	, producto.existencias_procesadas - cantidadATomar);
+			}
+			
+			MasterGrid.getStore().getAt( gridRow ).set("existencias_procesadas"	, producto.existencias_procesadas - cantidadATomar);			
+			MasterGrid.getStore().getAt( gridRow ).set("existencias"			, producto.existencias);			
+			
         }else{
 			//las tomare originales
+			if(producto.agrupacion){
+				MasterGrid.getStore().getAt( gridRow ).set("existencias"			, producto.existencias - (cantidadATomar * producto.agrupacionTam));				
+			}else{
+				MasterGrid.getStore().getAt( gridRow ).set("existencias"			, producto.existencias - cantidadATomar);				
+			}
+			MasterGrid.getStore().getAt( gridRow ).set("existencias"			, producto.existencias - cantidadATomar);	
 			MasterGrid.getStore().getAt( gridRow ).set("existencias_procesadas"	, producto.existencias_procesadas);
-			MasterGrid.getStore().getAt( gridRow ).set("existencias"			, producto.existencias - cantidadATomar);			
+			
         }
     };
     
     this.regresarProducto = function(prod){
-		console.log("InventarioMaestroTabla.regresrProducto("+prod+")")
+		console.log("InventarioMaestroTabla.regresarProducto("+prod+")")
 
         this.tomarProducto( prod.id_compra, prod.id_producto, prod.cantidad * -1, prod.procesadas );
     };
@@ -465,6 +483,9 @@ ComposicionTabla = function( config ){
         id_producto;
     
     function render(){
+		if(DEBUG){
+			console.log("Rendereando composicionTabla !");
+		}
         var html = '';
         html += '<table style="width:100%">';
         html += '<tr id="ASurtirTablaHeader">';
@@ -488,6 +509,17 @@ ComposicionTabla = function( config ){
         render();
     }
     
+	/**
+	  * Recalcular totales.
+	  *
+	  * Recalcula los totales de un row en la tabla de composiciones. Puede hacer el recalculo basado
+	  * en un campo y en el nuevo valor. Los posibles campos a cambiar son:
+	  * proc, cantidad, precio y descuento. 
+	  *
+	  *			
+	  * Para ubicar que row hay que recalcular, se proporciona el id de la compra y el id del producto
+	  * ya que estos valores son unicos para cada row.
+	  **/
     this.doMath = function( id_compra, id_producto, campo, valor ){
         
         console.log("ComposicionTabla.doMath("+id_compra+", "+id_producto+", "+campo+", "+valor+")" );
@@ -497,6 +529,7 @@ ComposicionTabla = function( config ){
 			i,
 			comp;
         
+		//buscar este producto en el arreglo de composicion
         for (i = composicion.length - 1; i >= 0; i--){
             if( composicion[i].id_compra === id_compra && composicion[i].id_producto === id_producto ){
                 comp = composicion[i];
@@ -508,32 +541,58 @@ ComposicionTabla = function( config ){
             valor = 0;
         }
 
+		//depende del campo que voy a cambiar, hacer la logica del negocio
         switch( campo ){
             case "proc" : 
-				comp.procesada = valor;
-				//console.log(comp)
-				tablaInventario.tomarProducto( id_compra, id_producto, comp.cantidad, comp.procesada );	
+				comp.procesada = (valor == "on") ;
+				console.log( "cambiando procesado a .." , comp.procesada);
+				//tablaInventario.tomarProducto( id_compra, id_producto, comp.cantidad, comp.procesada );
+				console.log("la cantidad que yo tenia es de " + comp.cantidad );
+				this.doMath( id_compra, id_producto, "cantidad", comp.cantidad );
 				break;
+				
 			case "cantidad" :
-				if( !prod.agrupacion ){
-					//no hay agrupacion, enviar la cantidad tal cual
-					console.log( "no hay agrupacion, voy a tomar " + valor, "procesada:" + comp.procesada);
-					comp.cantidad = parseFloat(valor) ;
-                	tablaInventario.tomarProducto( id_compra, id_producto, parseFloat(valor), comp.procesada );					
-					break;
-				}
-				console.log("si hay agrupacion")
-				var qty = parseFloat(valor);
 
-                if(comp.procesada ==  "on"){
-					qty *= parseFloat(prod.agrupacionTam);
-					console.log("si hay agrupacion")
+				var qty = 0;
+				console.log( "cambiando cantidad..", valor );
+							
+				if( !prod.agrupacion ){
+					//no hay agrupacion, tomar la cantidad tal cual del inventario maestro
+					comp.cantidad = parseFloat(valor) ;
+					qty = comp.cantidad;
+					console.log("No hay agrupacion");
+					
 				}else{
-					qty *= prod.peso_por_arpilla;
+					console.log("Hay agrupacion");
+					//si hay agrupacion
+					comp.cantidad = parseFloat(valor);
+					qty = comp.cantidad;
+					console.log( "solicite " + valor + " agrupaciones" );
+					
+					//ok, es agrupada, ahora, a saber si tiene proceso o si no tiene proceso
+					console.warn( prod );
+					if(prod.producto_tratamiento === null){
+						//no hay tratamiento !
+						//la agrupacion se mide entonces con lo que hay en la base de datos
+						qty *= prod.agrupacionTam;
+					}else{
+						//si hay tratamiento, ver si esta procesada o no
+		                if(comp.procesada){
+							console.log("esta procesada, el tamano de agrupacion es de " + prod.agrupacionTam );
+							qty *= parseFloat(prod.agrupacionTam);
+						}else{
+							console.log("es original, el promedio es de " + prod.peso_por_arpilla );	
+							qty *= prod.peso_por_arpilla;
+						}						
+					}
+
+
 				}
-				comp.cantidad = qty;
+				
+
                 tablaInventario.tomarProducto( id_compra, id_producto, qty, comp.procesada );
-            break;
+
+            	break;
             
            
             case "precio" :
@@ -541,48 +600,86 @@ ComposicionTabla = function( config ){
             break;
             
             case "descuento":
-				if( !prod.agrupacion ){
-					//no hay agrupacion, enviar la cantidad tal cual
-	                comp.descuento = parseFloat( valor );
-					break;
-				}
-			
-				//comp.cantidad
-				var x;
-	            if(comp.procesada ==  "on"){
-					x = comp.cantidad / prod.agrupacionTam;
-					valor = valor * x;
-				}else{
-					x = comp.cantidad / prod.peso_por_arpilla;
-					valor = valor * x;
-				}
-                comp.descuento = parseFloat( valor );
+
+				comp.descuento = parseFloat(valor);
+
             break;
         }
 
-        
-        jQuery( "#" + comp.id_compra + "-" + comp.id_producto + "-importe" ).val( cf(comp.precio * (comp.cantidad - comp.descuento) ) );
-        
-        //console.log(composicion)
-        
+
+		        
         var obj = {
             peso_real : 0,
             peso_a_cobrar: 0,
             importe_por_unidad : 0,
-            importe_total : 0
+            importe_total : 0,
+			escala : null
         };
         
-
+		//recorrer los items en la composicion para calcular totales, y de paso
+		//calcular el importe de cada producto e insertarlo en sus respectivas 
+		//cajas !
         for (i = composicion.length - 1; i >= 0; i--){
-            obj.peso_real += parseFloat(composicion[i].cantidad);
-            obj.peso_a_cobrar += parseFloat(composicion[i].cantidad - composicion[i].descuento);
-            obj.importe_por_unidad += parseFloat( composicion[i].precio * (composicion[i].cantidad - composicion[i].descuento) );
+	
+			var prod = inventario.getProducto( 
+							composicion[i].id_compra,
+				 			composicion[i].id_producto
+						);
+			
+			console.log("analizando la composicion " + i , composicion[i]);
+	
+			if(obj.escala === null){
+				obj.escala = prod.escala;
+			}else{
+				if(obj.escala != prod.escala){
+					obj.escala = "Diferentes escalas !";
+				}
+			}
+	
+			//vamos a ver si tiene una agrupacion
+			if(prod.agrupacion){
+				//si hay agrupacion !
+				//entonces la cantidad puesta en composicion[].cantidad es
+				//la cantidad de agrupaciones, para el total en escala hay 
+				//que multiplicar eso por escalTam
+				if(prod.producto_tratamiento === null){
+					//no hay tratamiento !
+					//usar la agrupacion que viene en agrupacionTAM
+					composicion[i].peso_real = parseFloat(composicion[i].cantidad * prod.agrupacionTam);
+				}else{
+					//si hay tratamiento !
+					//ahora, hay que ver si este producto es original o procesado
+					if(composicion[i].procesada){
+						composicion[i].peso_real = parseFloat(composicion[i].cantidad * prod.agrupacionTam);
+					}else{
+						composicion[i].peso_real = parseFloat(composicion[i].cantidad * prod.peso_por_arpilla);
+					}
+				}
+
+				composicion[i].peso_a_cobrar = parseFloat( composicion[i].peso_real - (composicion[i].cantidad * composicion[i].descuento) );
+
+			}else{
+				//no hay agrupacion !
+
+				composicion[i].peso_real = parseFloat(composicion[i].cantidad);
+				composicion[i].peso_a_cobrar = parseFloat(composicion[i].cantidad - composicion[i].descuento );
+			}
+			
+			//actualizar las cajas de los importes
+	        jQuery( "#" + composicion[i].id_compra + "-" + composicion[i].id_producto + "-importe" ).val( 
+				cf(	composicion[i].peso_a_cobrar * composicion[i].precio ) 
+			);
+			
+			obj.peso_real += composicion[i].peso_real;
+			obj.peso_a_cobrar += composicion[i].peso_a_cobrar;			
+            
+            obj.importe_por_unidad += parseFloat( composicion[i].precio * composicion[i].peso_a_cobrar );
         }
         
         obj.importe_por_unidad /= obj.peso_a_cobrar;
 
-        jQuery("#compuesto-peso-real").html 		( obj.peso_real.toFixed(4) );
-        jQuery("#compuesto-peso-a-cobrar").html 	( obj.peso_a_cobrar.toFixed(4) );
+        jQuery("#compuesto-peso-real").html 		( obj.peso_real.toFixed(4)  + " " + obj.escala + "s");
+        jQuery("#compuesto-peso-a-cobrar").html 	( obj.peso_a_cobrar.toFixed(4) + " " + obj.escala + "s");
         jQuery("#compuesto-importe-por-unidad").html( cf(obj.importe_por_unidad) );
         jQuery("#compuesto-importe-total").html		( cf(obj.importe_por_unidad * obj.peso_a_cobrar) );      
         
@@ -618,8 +715,6 @@ ComposicionTabla = function( config ){
 		//obtener el producto
         producto = inventario.getProducto( id_compra, id_producto );
 
-
-		
         var html = "";
         
         html += td( "<img onClick='composicionTabla.quitarProducto(" + id_compra + "," + id_producto + ")' src='../media/icons/close_16.png'>" );
@@ -637,8 +732,9 @@ ComposicionTabla = function( config ){
 			escala = producto.escala + "s";
 		}
 
-        html += td( "<input name='cantidad' "+keyup+" value='0' type='text'>&nbsp;" + escala);
 
+        html += td( "<input name='cantidad' "+keyup+" value='0' type='text'>&nbsp;" + escala );
+		
         var procesadas = parseFloat( producto.existencias_procesadas );
 
         if( producto.producto_tratamiento !== null){
@@ -646,7 +742,7 @@ ComposicionTabla = function( config ){
                 html += td( "<input style='width: 100px' name='proc' "+click+" type='checkbox'> " );         
             }else{
                 html += td( "<input style='width: 100px'  type='checkbox' disabled> " );
-            }           
+            }
         }else{
                 html += td( "<input type='hidden'><i>-</i>" );         
         }
@@ -661,7 +757,8 @@ ComposicionTabla = function( config ){
 		console.log("El precio original de este producto ya con flete es de " + cf(parseFloat(producto.precio_por_kg) + parseFloat(costo_flete)) + " pesos.");
 		        
         html += td( "<input name='precio'     value='"+ roundNumber( parseFloat(producto.precio_por_kg) 
-                                                    + parseFloat(costo_flete) )+"' "    +keyup+"    type='text'>" );
+                                                    + parseFloat(costo_flete) )+"' "    +keyup+"    type='text'>"
+													+ "&nbsp; por " + producto.escala );
         var escala_descuento;
 
 		if(producto.agrupacion){
@@ -674,7 +771,11 @@ ComposicionTabla = function( config ){
         html += td( "<input id='" +id_compra+"-"+ id_producto+ "-importe'                   type='text' disabled>" );
 
     
+		var c = new Composicion();
+		c.setIdProducto( producto.id_producto );
+		
         composicion.push({
+			agrupacion  : producto.agrupacion,
             id_compra   : producto.id_compra_proveedor,
             id_producto : producto.id_producto, 
             cantidad    : 0,
@@ -700,10 +801,10 @@ ComposicionTabla = function( config ){
 
 			var el = c.id_compra + "-" + c.id_producto +  "-composicion" ;
 
-            if((c.cantidad - c.descuento) <= 0 ){
+            /*if((c.cantidad - c.descuento) <= 0 ){
                 error( "Hay productos sin cantidad", " El producto " + c.desc + " tiene una cantidad de cero.", el);
                 return;
-            }
+            }*/
 
         }
 
@@ -792,11 +893,33 @@ ComposicionTabla = function( config ){
     };
 
 
-    
+    if(DEBUG){
+		console.log("Construyendo ComposicionTabla !");
+	}
     __init(config);
 };
 
-
+   
+var Composicion = function(){
+	
+	var unidaes,
+		agrupada,
+		tipoDeAgrupacion,
+		tamAgrupacion,
+		procesable,
+		procesada;
+		
+	this.setIdProducto = function (id_producto){
+		var p = inventario.getProductoDesc(id_producto);
+		console.log(p)
+		
+	}
+		
+	var __init = function(  ){
+		
+	}
+	
+}
 
 
 <?php 
@@ -832,22 +955,25 @@ function seleccionarSucursal(){
 
 function seleccionDeProd( id ){
     
-    //console.log("Seleccione el producto "  + id);
+	if(DEBUG){
+		console.log("Producto seleccionado ! pid="  + id);		
+	}
     
     composicionTabla = new ComposicionTabla({
         renderTo : "ComposicionTabla",
         id_producto : id
     });
     
+	if(DEBUG){
+		console.log("Ya cree la tabla de composicion...");
+	}
+
     jQuery("#listaDeProductos").slideUp('fast', function (){
         jQuery("#FinalShip").slideUp();
         jQuery('#InvMaestro').slideDown();
         jQuery('#ASurtir').slideDown('fast', function (){
-            
-
             jQuery('html,body').animate({scrollTop: jQuery('#InvMaestro').position().top }, 1000);
         });     
-        
     });
     
 }
@@ -1221,16 +1347,28 @@ Ext.onReady(function(){
                 renderer : function (n, a, row ){
 
 					if(row.data.agrupacion.length > 0){
+
 						//si hay agrupacion
-						var v = (parseFloat( n / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
-						+"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
-						
+						if(row.data.producto_tratamiento.length == 0){
+							/* ********************************
+							 *  agrupacion y sin tratamiento !
+							 * ********************************	*/
+							var v = (parseFloat( n / row.data.agrupacionTam )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
+							+"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+
+						}else{
+							/* ********************************
+							 *  agrupacion y CON tratamiento !
+							 * ********************************	*/							
+							var v = (parseFloat( n / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
+							+"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+						}
+
 						if(n < 0){
 							return ( "<span style='color:red'>" + v +"</span>" );
 						}else{
 							return v;
 						}
-						
 					}else{
 						//no hay agrupacion
 						var v = n.toFixed(2) + " " +  toSmallUnit(row.data.medida);
@@ -1304,9 +1442,12 @@ Ext.onReady(function(){
 		listeners : {
 			"rowclick" : function (grid, rowIndex, e){
 				var datos = grid.getStore().getAt( rowIndex );
+				
 				composicionTabla.agregarProducto(  datos.get("id_compra_proveedor" ), datos.get("id_producto"), rowIndex );
-				console.log( "rowclick !",  datos.get("id_compra_proveedor" ), datos.get("id_producto"), rowIndex );
-				//window.location = "inventario.php?action=detalleCompra&compra=" + datos.get("id_compra_proveedor") + "&producto=" + datos.get("id_producto");
+				
+				if(DEBUG){
+					console.log( "Row click !",  datos.get("id_compra_proveedor" ), datos.get("id_producto"), rowIndex );					
+				}
 			}
 		}
 		
@@ -1459,7 +1600,7 @@ foreach( $sucursales as $sucursal ){
 			for($a = 0; $a < sizeof($productos); $a++){
 
 				//buscar su precio sugerido actual
-				$act = new ActualizacionDePrecio();
+				$act = new ActualizacionDePrecio(  );
 				$act->setIdProducto( $productos[$a]->getIdProducto() );
 				$res = ActualizacionDePrecioDAO::search($act, "fecha", "desc");
 				$lastOne = $res[0];
@@ -1476,9 +1617,11 @@ foreach( $sucursales as $sucursal ){
 					echo "</tr><tr>";
 				}
 
-				echo "<td id='producto-" . $productos[$a]->getIdProducto() . "'  onClick='seleccionDeProd( " .  $productos[$a]->getIdProducto() . " )' onmouseover=\"this.style.backgroundColor = '#D7EAFF'\" onmouseout=\"this.style.backgroundColor = 'white'\"><img style='float:left;' src='../media/icons/basket_add_32.png'>" . $productos[$a]->getDescripcion() . "<br>";
-				//echo "<b>" . number_format( $totals , 2) ."</b>&nbsp;" .$productos[$a]->getEscala() . "s<br/><br/>";
-				echo " " . moneyFormat($lastOne->getPrecioVenta()) .  "<br><br>";
+				echo "<td class='rounded' id='producto-" . $productos[$a]->getIdProducto() . "'  onClick='seleccionDeProd( " .  $productos[$a]->getIdProducto() . " )' onmouseover=\"this.style.backgroundColor = '#D7EAFF'\" onmouseout=\"this.style.backgroundColor = 'white'\">";
+				echo "<img style='float:left;' src='../media/icons/basket_32.png'><div align=center ><b>" .  $productos[$a]->getDescripcion() . "</b></div>";
+				echo "<div align=center style='padding-right:20px'>";
+				echo moneyFormat($lastOne->getPrecioVenta());
+				echo "</div>";
 				echo "</td>";
 			}
 			echo "</tr>";

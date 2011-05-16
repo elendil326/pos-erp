@@ -61,6 +61,13 @@ document.getElementById("MAIN_TITLE").innerHTML = "<?php echo $producto->getDesc
 				echo "Sin agrupacion";
 			}
 		?></td></tr>	
+		<tr><td>Precio</td><td><?php
+			if($producto->getPrecioPorAgrupacion()){
+				echo "Por " . $producto->getAgrupacion() ;
+			}else{
+				echo "Por " . $producto->getEscala();
+			}
+		?></td></tr>
 	<tr ><td colspan=4>
 		<h4><input type="button" onclick="window.location='inventario.php?action=editar&id=<?php echo $producto->getIdProducto();?>' " value="Editar detalles del producto" /></h4>
 	</td></tr>

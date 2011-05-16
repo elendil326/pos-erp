@@ -12,6 +12,7 @@
 		
         //cambiar los detalles en el inventario maestro
         $prod = InventarioDAO::getByPK($_REQUEST['id']);
+
         $prod->setDescripcion( 			$_REQUEST['descripcion'] );
         $prod->setEscala( 				$_REQUEST['escala'] );
 		$prod->setTratamiento( 			$_REQUEST['tratamiento'] == "null" ? null : $_REQUEST['tratamiento'] );
@@ -39,6 +40,23 @@
         $na->setIdProducto($_REQUEST['id']);
         $na->setIdUsuario($_SESSION['userid']);
         $na->setPrecioVenta($_REQUEST['precio_venta']);
+
+		
+		
+		$producto = InventarioDAO::getByPK( $_REQUEST['id'] );
+		if( $_REQUEST["tipo_de_precio"] == "escala" ){
+			//el precio sera por escala ! es decir, por kilo, o metro o asi
+			$producto->setPrecioPorAgrupacion(0);
+		}else{
+			//el precio sera por agrupacion, como arpilla, o caja o asi
+			$producto->setPrecioPorAgrupacion(1);
+		}
+		try{
+			InventarioDAO::save( $producto );
+		}catch(Exception $e){
+			Logger::log($e);
+		}
+
 
 		//si hay que editar precio a compra a clientes
 		if(POS_COMPRA_A_CLIENTES)
@@ -106,6 +124,8 @@
 
 
     $producto = InventarioDAO::getByPK($_REQUEST['id']);
+
+	
 
     //obtener la ultima actualizacion de precio para este producto
     //esos son sus detalles "generales"
@@ -288,11 +308,21 @@
 		</td>
 		<td>
 			<select name="tipo_de_precio">
-				<option>Precio por <?php echo $producto->getEscala(); ?></option>
+				<option value="escala" 
+					<?php 
+						//si no hay agrupacion, o bien, el precio por agrupacion esta en falso
+						if( ($producto->getAgrupacion() == null) || ( $producto->getPrecioPorAgrupacion() == false )) 
+							echo " selected "; 
+					?>>Precio por <?php echo $producto->getEscala(); ?></option>
 				<?php
 					if( $producto->getAgrupacion() != null ){
 						?>
-							<option>Precio por <?php echo $producto->getAgrupacion(); ?></option>						
+							<option value="agrupacion"
+							<?php 
+								//si no hay agrupacion, o bien, el precio por agrupacion esta en falso
+								if(  $producto->getPrecioPorAgrupacion() == true ) 
+									echo " selected "; 
+							?>>Precio por <?php echo $producto->getAgrupacion(); ?></option>						
 						<?php
 					}
 				?>
