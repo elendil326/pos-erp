@@ -1342,7 +1342,7 @@ Aplicacion.Mostrador.prototype.vender = function ()
         url: '../proxy.php',
         scope : this,
         params : {
-            action : 100,
+            action 	: 100,
             payload : json
         },
         success: function(response, opts) {

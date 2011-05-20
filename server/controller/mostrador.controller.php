@@ -596,7 +596,6 @@ function vender($args) {
  *        }
  * </code>
  *
- * {"id_cliente": 1,"tipo_venta": "contado","tipo_pago":"efectivo","factura": false,"items": [{"items":[{"id_compra":10,"id_producto":1,"cantidad":20,"desc":"papas primeras","procesada":false,"escala":"kilogramo","precio":"5","descuento":0},{"id_compra":6,"id_producto":2,"cantidad":12,"desc":"papa segunda","procesada":false,"escala":"kilogramo","precio":"4","descuento":0}],"producto":1,"procesado":false},{"items":[{"id_compra":5,"id_producto":1,"cantidad":52,"desc":"papas primeras","procesada":false,"escala":"kilogramo","precio":"12","descuento":0},{"id_compra":4,"id_producto":1,"cantidad":3,"desc":"papas primeras","procesada":false,"escala":"kilogramo","precio":"12","descuento":0},{"id_compra":6,"id_producto":2,"cantidad":5,"desc":"papa segunda","procesada":false,"escala":"kilogramo","precio":"4","descuento":0}],"producto":2,"procesado":false}]}
  * */
 function venderAdmin($args) {
 
@@ -620,9 +619,20 @@ function venderAdmin($args) {
     }
 
     //verificamos que se manden todos los parametros necesarios
+	
+    if (! isset($data->cliente) ) {
+        Logger::log("Falta uno o mas parametros: cliente");
+        die('{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }');
+    }
 
-    if (!( isset($data->cliente) && isset($data->tipo_venta) && isset($data->productos) )) {
-        Logger::log("Falta uno o mas parametros");
+    if (!isset($data->tipo_venta) ) {
+        Logger::log("Falta uno o mas parametros: tipo de venta");
+        die('{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }');
+    }
+
+
+    if (! isset($data->productos) ) {
+        Logger::log("Falta uno o mas parametros:  productos");
         die('{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }');
     }
 

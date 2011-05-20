@@ -24,6 +24,22 @@
 	}
 </style>
 <script>
+function error(title, msg, el){
+
+	
+    Ext.MessageBox.show({
+           title: title,
+           msg: msg,
+		   animEl: el,
+           buttons: Ext.MessageBox.OK
+       });
+	/*
+    var html = '<h1><img src="../media/icons/warning_32.png">&nbsp;' + title + '</h1>';
+    html += msg;
+    html += "<div align='center'><input type='button' value='Aceptar' onclick='jQuery(document).trigger(\"close.facebox\");'></div>";
+    jQuery.facebox( html );
+    */
+}
 
 /** **********************************************
   *
@@ -577,7 +593,7 @@
 			
 			//mostar la tabla de composiciones
 			jQuery("#composicion").slideDown();
-
+			
 		}
 		
 		this.quitarProducto = function ( id_compra, id_producto ){
@@ -630,7 +646,7 @@
 						found = true;
 						break;
 					}
-			};
+			}
 			
 			if(!found) return;
 			
@@ -718,6 +734,7 @@
 				cantidad_en_unidades = composicion.cantidad;
 			}
 			
+			composicion.cantidad_en_unidades  = cantidad_en_unidades;
 			composicion.descuento_en_unidades = descuento;
 			composicion.importe = composicion.precio * (cantidad_en_unidades - descuento);
 			
@@ -900,6 +917,7 @@
 	        var c, total_qty = 0, i;
 
 	        //revisar que todo concuerde
+	/*
 	        for ( i = composicion_actual.length - 1; i >= 0; i--){
 
 	            c = composicion_actual[i];
@@ -913,22 +931,30 @@
 	            }
 
 	    	}
+	*/
 	
 	        if(composicion_actual.length == 0){
 	            error("No ha agregado ningun producto", "El producto debe conmponerse de por lo menos un producto. Agregue un producto de su inventario maestro para continuar.");
 	            return;
 	        }
 
-	        if(total_qty == 0){
+/*	        if(total_qty == 0){
 	            error("El peso total es cero", "No puede componer un producto a surtir cuando el peso total es igual a cero. ");
 	            return;
-	        }
+	        } */
 
 	        composicionesTerminadas.push({
 	            composicion : composicion_actual,
 	            producto : id_producto,
 	            procesado : (jQuery("#compuesto-procesado:checked").length == 1)
 	        });
+
+			//quitar las cajas de la composicion
+			for (var ci=0; ci < composicion_actual.length; ci++) {
+		
+				jQuery("#" + composicion_actual[ci].id_compra + "-" + composicion_actual[ci].id_producto + "-composicion").remove();
+			};
+
 
 	        jQuery("#lista_de_productos").slideDown('fast', function (){
 
@@ -937,110 +963,409 @@
             	});     
 	        });
 
-	        renderFinalShip();
+	        Composicion.renderFinalShip();
 		}
 		
-		var renderFinalShip = function (){
-			console.log("rendering final ship !");
-			/*
-			
-		    var global_qty = 0, global_qty_real = 0, global_importe = 0, global_cost = 0;
-
-		    var html = '<table style="width: 100%">';
-		    html += '<tr align=left>'
-		        + '<th></th>'
-		        + '<th>Producto</th>'
-		        + '<th>Peso real</th>'
-		        + '<th>Peso a cobrar</th>'      
-		        + '<th>Composicion</th>'
-				+ '<th>Costo</th>'
-		        + '<th>Importe</th>'
-				+ '<th>Rendimiento</th>';
-
-		    for (var i=0; i < composiciones.length; i++) {
-
-		        jQuery("#producto-" + composiciones[i].producto ).css("text-decoration", "line-through");
-		        jQuery("#producto-" + composiciones[i].producto ).fadeTo(250, .25);
-
-		        desc = inventario.getProductoDesc( composiciones[i].producto );
-
-		        var total_qty = 0;
-		        var total_qty_with_desc = 0;        
-		        var total_money = 0;
-		        var composition = '';
-		        var costo_total = 0;        
-
-
-		        for (var j = composiciones[i].items.length - 1; j >= 0; j--){
-		            total_qty += composiciones[i].items[j].cantidad  ;
-		            total_qty_with_desc += composiciones[i].items[j].cantidad   - composiciones[i].items[j].descuento ;         
-		            total_money += ( composiciones[i].items[j].cantidad - composiciones[i].items[j].descuento ) * composiciones[i].items[j].precio ;
-					costo_total += composiciones[i].items[j].precio_original * composiciones[i].items[j].cantidad ;
-
-		            composition += "<b>"+ composiciones[i].items[j].desc 
-								+ "</b>&nbsp;" 
-								+ (composiciones[i].items[j].procesada ? "Procesada" : "Original")
-								+ "<br>"
-								+ composiciones[i].items[j].cantidad.toFixed(2)  + getEscalaCorta( composiciones[i].items[j].escala )
-		                        + "<b> - </b>" 
-								+ composiciones[i].items[j].descuento.toFixed(2) + getEscalaCorta( composiciones[i].items[j].escala )+ " desc."
-		                        + "<br>";
-		        }
-
-		        var color = i % 2 == 0 ? 'style="background-color: #D7EAFF"' : "";
-
-		        html += tr(
-							td( "<img src='../media/icons/basket_close_32.png' onClick='composicionTabla.rollbackMixIndex("+i+")'>" )
-		                    + td( desc.descripcion )
-		                    + td( total_qty.toFixed(4) + getEscalaCorta( desc.escala ) )
-		                    + td( total_qty_with_desc.toFixed(4) + " " + getEscalaCorta( desc.escala ) )     
-		                    + td( composition)
-		                    + td( cf(costo_total))
-		                    + td( cf(total_money)) 
-							+ td( cf(total_money-costo_total)), color)
-
-		        global_qty += total_qty;
-		        global_qty_real += total_qty_with_desc;
-		        global_importe += total_money;
-				global_cost += costo_total;
-		    };
-
-
-
-			html += tr(
-		                  td( "Totales", "style='padding-top: 10px'" )
-		                + td( "")
-		                + td( global_qty.toFixed(2) )
-		                + td( global_qty_real.toFixed(2) )     
-		                + td( "")
-		                + td( cf(global_cost.toFixed(4)))
-		                + td( cf(global_importe.toFixed(4) ) )
-		                + td( cf(global_importe.toFixed(4) - global_cost.toFixed(4)) , 
-							(global_importe.toFixed(4) - global_cost.toFixed(4)) < 0 ? "style='color:red;'" : "style='color:green;'" ),
-
-		                "style='border-top: 1px solid #3F8CE9; font-size: 13px;'");
-
-		    html += '</html>';
-
-		    jQuery("#FinalShipTabla").html(html);
-		    jQuery("#FinalShip").fadeIn();
-
-		    jQuery("#compuesto-peso-real").html 		( 0 );
-		    jQuery("#compuesto-peso-a-cobrar").html 	( 0 );
-		    jQuery("#compuesto-importe-por-unidad").html( cf(0) );
-		    jQuery("#compuesto-importe-total").html 	( cf(0) );
-		*/
-		}
+	
 		
 		var __init = function (pid){
 			//reiniciar el arreglo, por cualquier cosa
-			composicion_actual = [];
+			composicion_actual = [ ];
 			producto_a_componer = pid;
+			
+			jQuery("#final_ship").slideUp();
+			jQuery("#submit_form").fadeOut();
 			iniciarComposicion();
 		}
+
 		
 		__init(id_producto);
 	}
+	
+	
+Composicion.rollback = function(index){
+	var comp_to_destroy = composicionesTerminadas[index];
+	
+	if(!comp_to_destroy){
+		return;
+	}
+	
+	var i;
+
+	//recontar los productos        
+       for (i=0; i < comp_to_destroy.composicion.length; i++) {
+
+		id_prod 	= comp_to_destroy.composicion[i].id_producto;
+		id_compra 	= comp_to_destroy.composicion[i].id_compra;
+		units 		= comp_to_destroy.composicion[i].cantidad_en_unidades;
+		
+		console.log( id_prod, id_compra, units );
+		
+		/*
+           tablaInventario.regresarProducto( composiciones[mix_index].items[i] );    
+		inventario.recontarProducto( composiciones[mix_index].items[i]  );             
+		*/
+       }
+
+
+
+	composicionesTerminadas.splice( index, 1);
+	
+       Composicion.renderFinalShip();
+}
+
+
+Composicion.renderFinalShip = function (){
+		console.log("rendering final ship !");
+			
+		var global_qty = 0, global_qty_real = 0, global_importe = 0, global_cost = 0;
+		var composiciones = composicionesTerminadas;
+			
+	    var html = '<table style="width: 100%">';
+	    html += '<tr align=left>'
+	        + '<th></th>'
+	        + '<th>Producto</th>'
+	        + '<th>Peso real</th>'
+	        + '<th>Peso a cobrar</th>'      
+	        + '<th>Composicion</th>'
+			+ '<th>Costo</th>'
+	        + '<th>Importe</th>'
+			+ '<th>Rendimiento</th>';
+
+		//cada producto
+	    for (var i=0; i < composicionesTerminadas.length; i++) {
+			
+	        jQuery("#producto-" + composiciones[i].producto ).css("text-decoration", "line-through");
+	        jQuery("#producto-" + composiciones[i].producto ).fadeTo(250, .25);
+
+			var producto = new Producto(composiciones[i].producto);
+			var composicion = composicionesTerminadas[i].composicion;
+	        var composition_html = "";
+			
+			
+	        var total_qty = 0;
+	        var total_qty_with_desc = 0;        
+	        var total_money = 0;
+
+	        var costo_total = 0;      
+	  
+			//por cada composicion de ese producto
+	        for (var j = composicion.length - 1; j >= 0; j--){
+				
+				var composite_prod = new Producto( composicion[j].id_producto );
+				
+	            total_qty 			+= composicion[j].cantidad_en_unidades;
+	            total_qty_with_desc += composicion[j].cantidad_en_unidades - composicion[j].descuento_en_unidades ;
+	            total_money 		+= composicion[j].importe;
+				costo_total 		+= composicion[j].precio_original * composicion[j].cantidad_en_unidades ;
+
+				//caja de detalles de la composicion
+
+				//detalles del producto
+	            composition_html += "<b>"+ composite_prod.getDescripcion() + "</b>&nbsp;" ;
+	
+				//es procesada u original ?
+				if( composite_prod.isTratable() ){
+					composition_html += (composicion[j].procesada ? "Procesada" : "Original");
+				}
+				
+				composition_html += "<br>";
+				
+				//la cantidad !
+				if(composite_prod.isAgrupable()){
+					//hay agrupacion, esta agrupado este numero
+					composition_html += composicion[j].cantidad.toFixed(2)  + composite_prod.getAgrupacionDescCorta();
+				}else{
+					//no hay agrupacion, esta en unidades
+					composition_html += composicion[j].cantidad.toFixed(2)  + composite_prod.getEscalaCorta() ;
+				}
+				
+				//el descuento
+				composition_html += "<b> - </b>"
+					+ composicion[j].descuento_en_unidades.toFixed(2) + " "+ composite_prod.getEscalaCorta() + " ";
+				
+				if(composite_prod.isAgrupable()){
+					composition_html += "por " + composite_prod.getAgrupacionDesc("singular");
+				}
+				
+				composition_html += " desc. <br><br>";
+	        }
+
+	        var color = i % 2 == 0 ? 'style="background-color: #D7EAFF"' : "";
+
+			//tabla final para este producto
+	        html += tr(
+						td( "<img src='../media/icons/basket_close_32.png' onClick='Composicion.rollback("+i+")'>" )
+	                    + td( producto.getDescripcion() )
+	                    + td(  total_qty.toFixed(4) + " " + producto.getEscala() + "s"  )
+	                    + td( total_qty_with_desc.toFixed(4) + " "+ producto.getEscala() + "s")     
+	                    + td( composition_html )
+	                    + td( cf(costo_total) )
+	                    + td( cf(total_money) ) 
+						+ td( cf(total_money - costo_total)), color)
+
+	        global_qty 		+= total_qty;
+	        global_qty_real += total_qty_with_desc;
+	        global_importe 	+= total_money;
+			global_cost 	+= costo_total;
+	    }
+
+		html += tr(
+	                  td( "Totales", "style='padding-top: 10px'" )
+	                + td( "")
+	                + td( global_qty.toFixed(2) )
+	                + td( global_qty_real.toFixed(2) )     
+	                + td( "")
+	                + td( cf(global_cost.toFixed(4)))
+	                + td( cf(global_importe.toFixed(4) ) )
+	                + td( cf(global_importe.toFixed(4) - global_cost.toFixed(4)) , 
+						(global_importe.toFixed(4) - global_cost.toFixed(4)) < 0 ? "style='color:red;'" : "style='color:green;'" ),
+
+	                "style='border-top: 1px solid #3F8CE9; font-size: 13px;'");
+
+	    html += '</table>';
+
+	    jQuery("#final_ship_tabla").html(html);
+	    jQuery("#final_ship").fadeIn();
+		jQuery("#submit_form").fadeIn();
+
+		//reiniciar los contadores de la composicion
+	    jQuery("#compuesto-peso-real").html 		( 0 );
+	    jQuery("#compuesto-peso-a-cobrar").html 	( 0 );
+	    jQuery("#compuesto-importe-por-unidad").html( cf(0) );
+	    jQuery("#compuesto-importe-total").html 	( cf(0) );
+}
+
+
+/** **********************************************
+  *
+  *		Vender
+  *
+  * ********************************************** */
+Vender = {
+	
+	tipo_de_venta : null,
+	
+	tipo_de_pago : null,
+	
+	CONTADO : "contado",
+	CREDITO : "credito",
+	EFECTIVO : "efectivo",
+	CHEQUE : "cheque",
+	
+	init : function (){
+		//hay cliente seleccionado ?
+		
+		tipo_de_venta = null;
+		jQuery(".payment_option").slideUp('fast', function(){
+			
+			jQuery("#do_sell").slideUp('fast', function(){
+
+				jQuery("#lista_de_productos").slideUp('fast', function(){
+
+					jQuery("#cash_or_credit").slideDown('fast', function(){
+
+						jQuery("#back_option").slideDown();
+						
+						jQuery("#ready_to_sell").fadeOut();
+						
+					});
+
+				});			
+
+			});			
+		});
+		
+
+	},
+	
+	tipoDeVenta : function( tipo ){
+		
+		Vender.tipo_de_venta = tipo;
+		
+		jQuery("#cash_or_credit").slideUp('fast', function(){
+			
+			switch(Vender.tipo_de_venta){
+				case Vender.CONTADO : 
+					console.log("contado")
+					jQuery("#cash_or_check").slideDown();
+				break;
+				
+				case Vender.CREDITO: 
+					jQuery("#credito").slideDown();				
+				break;
+			}
+		});
+
+	},
+	
+	tipoDePago : function ( tipo ){
+		Vender.tipo_de_pago = tipo;
+		
+		jQuery("#cash_or_check").slideUp('fast', function(){
+			jQuery("#credito").slideUp('fast', function(){
+				switch(Vender.tipo_de_pago){
+					case Vender.EFECTIVO : 
+						jQuery("#enter_cash").slideDown();
+					break;
+
+					case Vender.CHEQUE: 
+						jQuery("#cheque_detalles").slideDown();
+					break;
+				}
+			});			
+		});
+
+	},
+	
+	
+	doMath : function ( ){
+		
+		//si todo esta bien ..
+		jQuery("#ready_to_sell").fadeIn();
+	},
+	
+	sellNow : function(){
+		var data = {
+			cliente 		: Cliente.seleccionado,
+			tipo_venta	: Vender.tipo_de_venta,
+			tipo_pago	: Vender.tipo_de_pago,
+			factura 		: false,
+			efectivo 		: jQuery("#cash_val").val(),
+			productos		: null
+		};
+		
+		var prods = [];
+		
+		for (var i=0; i < composicionesTerminadas.length; i++) {
+			//todos los productos
+			var sub_prods = [];
+			
+			for (var sub=0; sub < composicionesTerminadas[i].composicion.length; sub++) {
+				sub_prods.push({
+				   id_compra	: composicionesTerminadas[i].composicion[sub].id_compra,
+			       id_producto	: composicionesTerminadas[i].composicion[sub].id_producto,
+			       cantidad		: composicionesTerminadas[i].composicion[sub].cantidad_en_unidades,
+			       procesada	: composicionesTerminadas[i].composicion[sub].procesada,
+			       precio		: composicionesTerminadas[i].composicion[sub].precio,
+			       descuento	: composicionesTerminadas[i].composicion[sub].descuento_en_unidades					
+				});
+			}
+			
+			prods.push({
+				producto 	: composicionesTerminadas[i].producto,
+				procesado 	: composicionesTerminadas[i].procesado,
+				items 		: sub_prods
+			});
+			
+		}
+
+		data.productos = prods;
+
+		jQuery.ajaxSettings.traditional = true;
+		
+		jQuery(".hide_on_ajax").fadeOut("slow",function(){
+	        jQuery("#loader").fadeIn();
+
+	        jQuery.ajax({
+	        url: "../proxy.php",
+	        data: { 
+	            action : 101, 
+	            data : jQuery.JSON.encode( data )
+	        },
+	        cache: false,
+	        success: function(data){
+	            try{
+	                response = jQuery.parseJSON(data);
+	                //console.log(response, data.responseText)
+	            }catch(e){
+
+	                jQuery("#loader").fadeOut('slow', function(){
+	                    window.scroll(0,0);                         
+	                    jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+	                    jQuery(".hide_on_ajax").fadeIn();
+	                });                
+	                return;                    
+	            }
+
+
+	            if(response.success === false){
+
+	                jQuery("#loader").fadeOut('slow', function(){
+	                    //jQuery("#submitButtons").fadeIn();    
+	                    window.scroll(0,0); 
+						if(response.reason){
+	                    	jQuery("#ajax_failure").html(response.reason).show();							
+						}else{
+							jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+						}
+
+	                    jQuery(".hide_on_ajax").fadeIn();                  
+	                });                
+	                return ;
+	            }
+
+	            reason = "Venta exitosa.";
+	            window.location = "ventas.php?action=detalles&id="+response.id_venta+"&pp=1&success=true&reason=" + reason;
+
+	        }
+	        });
+	    });
+	}
+
+};
+
+
+/** **********************************************
+  *
+  *		Clientes
+  *
+  * ********************************************** */
+Cliente = {
+	
+	datos_de_clientes : [],
+	
+	seleccionado : null,
+	
+	buscar : function(id_cliente){
+		for (var c_index=0; c_index < Cliente.datos_de_clientes.length; c_index++) {
+			if(Cliente.datos_de_clientes[c_index].id_cliente == id_cliente){
+				return Cliente.datos_de_clientes[c_index];
+			}
+		}
+		
+		return null;
+	},
+	
+	seleccionar : function (id_cliente){
+		
+		cliente = Cliente.buscar(parseInt(id_cliente));
+		
+		if(cliente === null){
+			error("Este cliente no existe");
+			return;
+		}
+		
+		Cliente.seleccionado = parseInt(id_cliente);
+		
+		var cliente_html = 	'<table border="0" cellspacing="4" cellpadding="1" style="margin: 5px;">';
+	
+			cliente_html += "<tr><td><b>Nombre</b></td><td>"+ cliente.razon_social  +"</td></tr>";
+			cliente_html += "<tr><td><b>RFC</b></td><td>"+ cliente.rfc  +"</td></tr>";
+			cliente_html += "<tr><td><b>Limite de Credito</b></td><td>"+ cf(cliente.limite_credito)  +"</td></tr>	";
+			cliente_html += "<tr><td><b>Credito restante</b></td><td>"+ cf(cliente.credito_restante)  +"</td></tr>	";
+			cliente_html += "<tr><td><b>Descuento</b></td><td>"+ cliente.descuento  +"</td></tr>";
+			cliente_html += "</table>";
+		
+		console.log(cliente)
+		
+		jQuery("#selector_de_clientes").slideUp('fast', function(){
+				jQuery("#detalles_del_cliente").html( cliente_html );
+				jQuery("#detalles_del_cliente").slideDown();
+		});
+	}
+
+}
 
 /** **********************************************
   *
@@ -1052,6 +1377,12 @@
 		console.log("Iniciando...");
 		
 		inventarioMaestro = new InventarioMaestro();
+		
+		<?php
+			if(isset($_REQUEST['cid'])){
+				?>Cliente.seleccionar( <?php echo $_REQUEST["cid"]; ?> );<?php
+			}
+		?>
 		
 	});
 
@@ -1068,7 +1399,32 @@
 
 
 
+<h2>Detalles del Cliente</h2>
+<div id="selector_de_clientes">
+	<?php $clientes = listarClientes(); ?>
+     <script>
+        Cliente.datos_de_clientes  = <?php echo json_encode( $clientes ); ?>;
+     </script>
 
+    <?php
+
+	if(sizeof($clientes ) > 0){
+		echo '<select id="cliente_selector" > ';    
+		foreach( $clientes as $c ){
+			if($c['id_cliente'] <= 0 )continue;
+			echo "<option value='" . $c['id_cliente'] . "' >" . $c['razon_social']  . "</option>";
+		}
+		echo '</select>';
+		echo '<input type="button" value="Seleccionar cliente" onclick="Cliente.seleccionar( jQuery(\'#cliente_selector\').val() )">'  ;
+	}else{
+	
+		echo "<h3>No hay clientes a quien realizarle la venta</h3>";
+	}
+
+?>
+</div>
+<div id= "detalles_del_cliente" style="display:none;">
+</div>
 
 
 <!--
@@ -1165,3 +1521,132 @@
 		<input type="button" value="Cancelar" onclick="composicionActual.rollbackMix()">
 	</h4>
 </div>
+
+
+
+
+<!-- 
+	final ship 
+-->
+<div id="final_ship" style="display:none" >
+	<h2>Productos en esta venta</h2>
+	<div id="final_ship_tabla"></div>
+	
+</div>
+
+
+<!-- 
+	vender
+-->
+<div id="submit_form" style="display:block;">
+
+	<div id="cash_or_credit" class="payment_option" align=center style="display:none;" >
+		<table >
+			<tr>
+				<td class='rounded'
+					onClick='Vender.tipoDeVenta(Vender.CONTADO)' 
+					onmouseover="this.style.backgroundColor = '#D7EAFF'" 
+					onmouseout="this.style.backgroundColor = 'white'">
+						<img src='../media/Money.png'>
+				</td>
+				<td	class='rounded'
+					onClick='Vender.tipoDeVenta(Vender.CREDITO)' 
+					onmouseover="this.style.backgroundColor = '#D7EAFF'" 
+					onmouseout="this.style.backgroundColor = 'white'">
+						<img src='../media/venta_credito.png'>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align:center;"><h3>Contado</h3></td>
+				<td style="text-align:center;"><h3>Credito</h3></td>
+			</tr>
+		</table>
+	</div>
+
+	<div id="cash_or_check"  class="payment_option" align=center style="display:none;">
+		<table >
+			<tr>
+				<td class='rounded'
+					onClick='Vender.tipoDePago(Vender.EFECTIVO)' 
+					onmouseover="this.style.backgroundColor = '#D7EAFF'" 
+					onmouseout="this.style.backgroundColor = 'white'">
+						<img src='../media/pago_efectivo.png'>
+				</td>
+				<td	class='rounded'
+					onClick='Vender.tipoDePago(Vender.CHEQUE)' 
+					onmouseover="this.style.backgroundColor = '#D7EAFF'" 
+					onmouseout="this.style.backgroundColor = 'white'">
+						<img src='../media/pago_cheque.png'>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align:center;"><h3>Efectivo</h3></td>
+				<td style="text-align:center;"><h3>Cheque</h3></td>
+			</tr>
+		</table>		
+	</div>
+	
+	<div id="enter_cash"  class="payment_option" align=center style="display:none;">
+		<table >
+			<tr>
+
+				<td>
+					<input type="text" 
+							id="cash_val" 
+							style="font-size: 33px; width:200px;" 
+							placeholder="Efectivo"
+							onKeyUp="Vender.doMath()">
+				</td>
+			</tr>
+			<tr>
+
+			</tr>
+		</table>		
+	</div>
+	
+	<div id="cheque_detalles"  class="payment_option" align=center style="display:none;">
+		<table >
+			<tr>
+
+				<td>
+					datos del chque
+				</td>
+			</tr>
+			<tr>
+				<td align=center>
+					<input type="button" value="Vender" onclick="Vender.mostrarTipoDePago()" >
+				</td>
+			</tr>
+		</table>		
+	</div>
+	
+	<div id="credito"  class="payment_option" align=center style="display:none;">
+		<table >
+			<tr>
+
+				<td>
+				credito, detalles del cliente
+				</td>
+			</tr>
+			<tr>
+	
+			</tr>
+		</table>		
+	</div>
+	
+	<h4 id="back_option" style="display:none;">
+		<input type="button" class="hide_on_ajax" value="Regresar" onclick="Vender.init()" >
+		<span id="ready_to_sell"  class="hide_on_ajax" style="display:none;">
+			<input type="button" value="Realizar venta"  onclick="Vender.sellNow()" >
+		</span>
+		<div id="loader" 		style="display: none;" align="center"  >
+			Realizando venta <img src="../media/loader.gif">
+		</div>
+	</h4>
+	
+	<h4 id="do_sell" align='center'  >
+		<input type="button" value="Vender" onclick="Vender.init()">
+		<!-- <input type="button" value="Volver a comenzar" onclick="restart()"> -->
+	</h4>
+</div>
+
