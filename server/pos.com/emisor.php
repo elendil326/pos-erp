@@ -368,7 +368,7 @@ class Emisor {
 
         //verificamos si existe el numero exterior
         if (!($this->getNumeroExterior() != null && $this->getNumeroExterior() != "")) {
-            $this->setError("No se ha definido el nuemro exterior del emisor.");
+            $this->setError("No se ha definido el numero exterior del emisor.");
         }
 
         //verificamos si existe la colonia

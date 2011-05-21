@@ -673,16 +673,6 @@ function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = 
  *                     "escala": "kilogramo",
  *                     "precio": 7,
  *                     "descuento": 0
- *                 },
- *                 {
- *                     "id_compra": 10,
- *                     "id_producto": 1,
- *                     "cantidad": 200,
- *                     "desc": "papas primeras",
- *                     "procesada": false,
- *                     "escala": "kilogramo",
- *                     "precio": 7,
- *                     "descuento": 0
  *                 }
  *             ],
  *             "producto": 1,
@@ -709,7 +699,7 @@ function nuevaCompraSucursal($json = null) {
 
 
     //verificamos que exista la sucursal
-    if (!SucursalDAO::getByPK($data->sucursal)) {
+    if (!$sucursal = SucursalDAO::getByPK($data->sucursal)) {
         Logger::log("Sucursal no encontrada ");
         die('{"success": false , "reason": "Parametros invalidos." }');
     }
@@ -748,30 +738,48 @@ function nuevaCompraSucursal($json = null) {
 
             $cantidad += $subproducto->cantidad;
 
-			//hacer calculo sobre el descuento, puede ser 
-			//descuento en kilos sobre arpilla, solo en kilos
-			//etc...
+            //hacer calculo sobre el descuento, puede ser 
+            //descuento en kilos sobre arpilla, solo en kilos
+            //etc...
             $descuento += $subproducto->descuento;
 
-			
+
 
             //calculamos el precio de este subproducto,
             //y lo sumamos a lo de los demas
-			$precio += $subproducto->precio * ( $subproducto->cantidad  );
+            $precio += $subproducto->precio * ( $subproducto->cantidad );
 
             descontarDeInventarioMaestro($subproducto->id_compra, $subproducto->id_producto, $subproducto->cantidad, $subproducto->procesada);
+            
+            $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
+            $compra_proveedor_fragmentacion->setIdCompraProveedor($subproducto->id_compra);
+            $compra_proveedor_fragmentacion->setIdProducto($subproducto->id_producto);
+            $compra_proveedor_fragmentacion->setDescripcion("SE SURTIO A LA SUCURSAL " . $sucursal->getDescripcion() ." LA CANTIDAD DE " . ($subproducto->cantidad + $producto->descuento) . $subproducto->escala . " DE " . $subproducto->desc . " " . ($subproducto->procesada?"PROCESADA":"ORIGINAL") );
+            $compra_proveedor_fragmentacion->setProcesada($subproducto->procesada);
+            $compra_proveedor_fragmentacion->setCantidad(($subproducto->cantidad + $producto->descuento) * -1);
+            $compra_proveedor_fragmentacion->setPrecio($subproducto->precio);
+            $compra_proveedor_fragmentacion->setDescripcionRefId($id_venta);
+
+            try {
+                CompraProveedorFragmentacionDAO::save($compra_proveedor_fragmentacion);
+            } catch (Exception $e) {
+                DAO::transRollback();
+                Logger::log("Error, al guardar los datos del historial del producto del inventario maestro. : " . $e);
+                die('{"success": false, "reason": "Error, al guardar los datos del historial del producto del inventario maestro." }');
+            }
+            
         }//foreach
 
 
-		$cantidad_a_pagar = $cantidad - $descuento;
-        $global_total_importe += $precio * $cantidad_a_pagar ;
+        $cantidad_a_pagar = $cantidad - $descuento;
+        $global_total_importe += $precio * $cantidad_a_pagar;
 
         $detalle = new DetalleCompraSucursal();
-        $detalle->setIdProducto	($producto->producto);
-        $detalle->setCantidad	($cantidad);
-        $detalle->setDescuento	($descuento);
-        $detalle->setPrecio		($precio / $cantidad);
-        $detalle->setProcesadas	($producto->procesado);
+        $detalle->setIdProducto($producto->producto);
+        $detalle->setCantidad($cantidad);
+        $detalle->setDescuento($descuento);
+        $detalle->setPrecio($precio / $cantidad);
+        $detalle->setProcesadas($producto->procesado);
 
         array_push($detalles_de_compra, $detalle);
 
@@ -886,7 +894,7 @@ function nuevaCompraSucursal($json = null) {
  * @param <type> $procesada
  */
 function descontarDeInventarioMaestro($id_compra, $id_producto, $cantidad, $procesada) {
-    Logger::log("Descontando " . $cantidad . " de (" . $id_compra . "," . $id_producto . ") de inventario maestro");
+    Logger::log("Descontando {$cantidad} de ({$id_compra} , {$id_producto}) de inventario maestro");
     DAO::transBegin();
 
     //obtenemos el articulo del inventario maestro
@@ -1422,7 +1430,7 @@ function nuevaCompraCliente($args = null) {
                 Logger::log("Error al agregar el nuevo producto en el inventario de la sucursal.");
                 DAO::transRollback();
                 die('{"success": false, "reason": "Error al agregar el nuevo producto en el inventario de la sucursal." }');
-            }        
+            }
         }
 
         $detalle_compra = new DetalleCompraCliente();

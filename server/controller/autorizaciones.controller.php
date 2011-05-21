@@ -289,11 +289,11 @@ function detalleAutorizacion($id_autorizacion) {
  * Crea una autorizacion para surtir productos a una sucursal en especifico o modifica una existente en caso de enviar el argumento opcional "responseToAut".
  *
  * @param Array $args( 
- *                                        'data' => [ {"id_producto" : int, "cantidad" : int, "cantidad_procesada" : int }[, {"id_producto" : int, "cantidad" : int, "cantidad_procesada" : int } ] ],
- *                                        'conductor' => string,
- *                                        'id_sucursal' => int[,
- *                                        'responseToAut' => int ]
- *                                      )
+ *                       'data' => [{"id_producto" : int, "cantidad" : int, "cantidad_procesada" : int }],
+ *                       'conductor' => string,
+ *                       'id_sucursal' => int
+ *                       [,'responseToAut' => int ]
+ *                   )
  * @return void
  *
  * */
@@ -311,7 +311,7 @@ function responderAutorizacionSolicitudProductos($args) {
 
     try {
 
-        Logger::log("JSON BRuto vale : " + $args['data']);
+        Logger::log("JSON Bruto vale : " + $args['data']);
 
         $data = parseJSON($args['data']);
     } catch (Exception $e) {

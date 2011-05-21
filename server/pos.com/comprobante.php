@@ -646,11 +646,11 @@ class Comprobante {
 
         $comprobante->appendChild($xml->createElement('metodo_de_pago', ucfirst(strtolower($this->getGenerales()->getMetodoDePago()))));
 
-        $comprobante->appendChild($xml->createElement('subtotal', sprintf("%10.6f", $this->getGenerales()->getSubtotal())));
+        $comprobante->appendChild($xml->createElement('subtotal', sprintf("%01.2f", $this->getGenerales()->getSubtotal())));
 
-        $comprobante->appendChild($xml->createElement('total', sprintf("%10.6f", $this->getGenerales()->getTotal())));
+        $comprobante->appendChild($xml->createElement('total', sprintf("%01.2f", $this->getGenerales()->getTotal())));
 
-        $comprobante->appendChild($xml->createElement('iva', sprintf("%10.6f", $this->getGenerales()->getIva())));
+        $comprobante->appendChild($xml->createElement('iva', sprintf("%01.2f", $this->getGenerales()->getIva())));
 
         $emisor = $xml->createElement('emisor');
 
@@ -796,22 +796,22 @@ class Comprobante {
 
         foreach ($this->getConceptos()->getConceptos() as $articulo) {
 
-
             $concepto = $xml->createElement('concepto');
 
             $concepto->appendChild($xml->createElement('id_producto', $articulo->getIdProducto()));
 
-            $concepto->appendChild($xml->createElement('cantidad', sprintf("%10.6f", $articulo->getCantidad())));
+            $concepto->appendChild($xml->createElement('cantidad', sprintf("%01.2f", $articulo->getCantidad())));
 
             $concepto->appendChild($xml->createElement('unidad', $articulo->getUnidad()));
 
             $concepto->appendChild($xml->createElement('descripcion', $articulo->getDescripcion()));
 
-            $concepto->appendChild($xml->createElement('valor_unitario', sprintf("%10.6f", $articulo->getValor())));
+            $concepto->appendChild($xml->createElement('valor_unitario', sprintf("%01.2f", $articulo->getValor())));
 
-            $concepto->appendChild($xml->createElement('importe', sprintf("%10.6f", $articulo->getImporte())));
+            $concepto->appendChild($xml->createElement('importe', sprintf("%01.2f", $articulo->getImporte())));
 
             $conceptos->appendChild($concepto);
+            
         }
 
 
@@ -889,7 +889,7 @@ class Comprobante {
 
             $dom = new DOMDocument('1.0', 'utf-8');
 
-            $element = $dom->createElement('factura', $this->getXMLrequest());
+            $element = $dom->createElement('request', $this->getXMLrequest());
 
             // Insertamos el nuevo elemento como raíz (hijo del documento)
             $dom->appendChild($element);
@@ -900,7 +900,7 @@ class Comprobante {
 
             $dom = new DOMDocument('1.0', 'utf-8');
 
-            $element = $dom->createElement('factura', $this->getXMLresponse());
+            $element = $dom->createElement('response', $response);
 
             // Insertamos el nuevo elemento como raíz (hijo del documento)
             $dom->appendChild($element);
@@ -924,10 +924,46 @@ class Comprobante {
 
         $response = $dom->saveXML();
 
+        //TODO : Verificar si se puede explorar el xml ya reconstruido para almacenar de ahi los datos en la BD
+        //
         //almacenamos el xml reconstruido
-        $response_r = str_replace(array("/Comprobante", "<Comprobante", "Emisor", "Receptor", "Conceptos", "Concepto", "Impuestos", "Complemento", "Traslados", "Traslado", "TimbreFiscalDigital"), array("/cfdi:Comprobante", "<cfdi:Comprobante", "cfdi:Emisor", "cfdi:Receptor", "cfdi:Conceptos", "cfdi:Concepto", "cfdi:Impuestos", "cfdi:Complemento", "cfdi:Traslados", "cfdi:Traslado", "tfd:TimbreFiscalDigital"), $response);
-        $response_r = str_replace(array("cfdi:cfdi:"), array("cfdi:"), $response_r);                
+        
+        $response_r = str_replace(array("/Comprobante", "<Comprobante", "Emisor", "Receptor", "Conceptos", "Concepto", "Impuestos", "Complemento", "Traslados", "Traslado", "<TimbreFiscalDigital"), array("/cfdi:Comprobante", "<cfdi:Comprobante", "cfdi:Emisor", "cfdi:Receptor", "cfdi:Conceptos", "cfdi:Concepto", "cfdi:Impuestos", "cfdi:Complemento", "cfdi:Traslados", "cfdi:Traslado", "<tfd:TimbreFiscalDigital"), $response);
+        $response_r = str_replace(array("cfdi:cfdi:"), array("cfdi:"), $response_r);    
+        $response_r = preg_replace('/\s+(<.*?>)\s+|[\r\n]/is', '$1', $response_r);
+        
         $this->setXMLresponse($response_r);
+        
+        //creamos el archivo
+        
+        
+        //DEBUG
+        if ($this->getDebugMode()) {
+
+            echo "<br>------XML REQUEST-------<br>";
+
+            $dom = new DOMDocument('1.0', 'utf-8');
+
+            $element = $dom->createElement('request', $this->getXMLrequest());
+
+            // Insertamos el nuevo elemento como raíz (hijo del documento)
+            $dom->appendChild($element);
+
+            echo $dom->saveXML();
+
+            echo "<br>------XML RESPONSE-------<br>";
+
+            $dom = new DOMDocument('1.0', 'utf-8');
+
+            $element = $dom->createElement('response', $response_r);
+
+            // Insertamos el nuevo elemento como raíz (hijo del documento)
+            $dom->appendChild($element);
+
+            echo $dom->saveXML();
+
+            echo "<br>";
+        }
 
         //--------------------------------------------------------
 

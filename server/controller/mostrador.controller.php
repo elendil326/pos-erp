@@ -11,6 +11,7 @@ require_once("model/factura_venta.dao.php");
 require_once("model/usuario.dao.php");
 require_once("model/inventario_maestro.dao.php");
 require_once("model/compra_proveedor.dao.php");
+require_once("model/compra_proveedor_fragmentacion.dao.php");
 require_once("logger.php");
 require_once('autorizaciones.controller.php');
 require_once('clientes.controller.php');
@@ -470,14 +471,14 @@ function vender($args) {
         $detalle_venta->setIdProducto($producto->id_producto);
         $detalle_venta->setCantidad($producto->cantidad);
 
-/*
-		if($producto->getPrecioPorAgrupacion()){
-	        $detalle_venta->setPrecio($producto->getAgrupacionTam() / $producto->precio );
-		}else{
-        	$detalle_venta->setPrecio($producto->precio);			
-		}
-*/
-       	$detalle_venta->setPrecio($producto->precio);			
+        /*
+          if($producto->getPrecioPorAgrupacion()){
+          $detalle_venta->setPrecio($producto->getAgrupacionTam() / $producto->precio );
+          }else{
+          $detalle_venta->setPrecio($producto->precio);
+          }
+         */
+        $detalle_venta->setPrecio($producto->precio);
 
         $detalle_venta->setCantidadProcesada($producto->cantidad_procesada);
         $detalle_venta->setPrecioProcesada($producto->precio_procesada);
@@ -919,7 +920,8 @@ function venderAdmin($args) {
     //echo "----------------------------------";
     //var_dump($array_items_venta);
     //TODO : Cambiar esto
-    //revisamos si las existencias en el inventario maestro satisfacen a las requeridas en la venta
+    //revisamos si las existencias en el inventario maestro satisfacen a las requeridas en la venta        
+
     if (!revisarExistenciasAdmin($array_items)) {
         Logger::log("No hay existencias suficientes en el Inventario maestro para satisfacer la demanda");
         die('{"success": false, "reason": "No hay suficiente producto en el Inventario Maestro para satisfacer la demanda. Intente de nuevo." }');
@@ -1066,6 +1068,8 @@ function venderAdmin($args) {
 
         array_push($detallesVenta, $dv);
     }//foreach
+    
+    
     //inicializamos un objeto venta
     $venta = new Ventas();
     $venta->setIdUsuario($_SESSION['userid']);
@@ -1159,14 +1163,75 @@ function venderAdmin($args) {
 
     //descontamos del inventario el pedido
     foreach ($array_items as $producto) {
-        $inventario_maestro = InventarioMaestroDAO::getByPK($producto->id_producto, $producto->id_compra_proveedor);
-        if ($producto->procesada == true) {
+
+        //TODO : Este codigo se reemplazara debido a que se basaba en la desicion de $producto->procesada == true
+        //siendo que la propiedad e procesada no la tiene ningun elemento de $array_items
+
+        /* if ($producto->procesada == true) {
+          //requiere producto procesada
+          $inventario_maestro->setExistenciasProcesadas($inventario_maestro->getExistenciasProcesadas() - ($producto->cantidad + $producto->descuento));
+
+          $compra_proveedor_fragmentacion->setCantidad($producto->cantidad_procesada);
+          $compra_proveedor_fragmentacion->setPrecio($producto->precio_procesada);
+          } else {
+          //requiere producto sin procesar
+          $inventario_maestro->setExistencias($inventario_maestro->getExistencias() - $producto->cantidad);
+
+          $compra_proveedor_fragmentacion->setCantidad($producto->cantidad);
+          $compra_proveedor_fragmentacion->setPrecio($producto->precio);
+          } */
+
+        $inventario_producto = InventarioDAO::getByPK($producto->id_producto);
+        
+        if ($producto->cantidad > 0) {
             //requiere producto procesada
-            $inventario_maestro->setExistenciasProcesadas($inventario_maestro->getExistenciasProcesadas() - ($producto->cantidad + $producto->descuento));
-        } else {
-            //requiere producto sin procesar
-            $inventario_maestro->setExistencias($inventario_maestro->getExistencias() - $producto->cantidad);
+            
+            $inventario_maestro = InventarioMaestroDAO::getByPK($producto->id_producto, $producto->id_compra_proveedor);
+            
+            $inventario_maestro->setExistencias($inventario_maestro->getExistencias() - ($producto->cantidad + $producto->descuento));            
+
+            $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
+            $compra_proveedor_fragmentacion->setIdCompraProveedor($producto->id_compra_proveedor);
+            $compra_proveedor_fragmentacion->setIdProducto($producto->id_producto);
+            $compra_proveedor_fragmentacion->setDescripcion("SE VENDIO A " . $cliente->getRazonSocial() . " LA CANTIDAD DE " . $producto->cantidad_procesada . " " . $inventario_producto->getEscala() . "s DEL PRODUCTO " . $inventario_producto->getDescripcion() . " ORIGINAL");
+            $compra_proveedor_fragmentacion->setProcesada($producto->procesada);
+            $compra_proveedor_fragmentacion->setCantidad(($producto->cantidad + $producto->descuento) * -1);
+            $compra_proveedor_fragmentacion->setPrecio($producto->precio);
+            $compra_proveedor_fragmentacion->setDescripcionRefId($id_venta);
+
+            try {
+                CompraProveedorFragmentacionDAO::save($compra_proveedor_fragmentacion);
+            } catch (Exception $e) {
+                DAO::transRollback();
+                Logger::log("Error, al guardar los datos del historial del producto del inventario maestro. : " . $e);
+                die('{"success": false, "reason": "Error, al guardar los datos del historial del producto del inventario maestro." }');
+            }
         }
+
+        if ($producto->cantidad_procesada > 0) {
+            //requiere producto sin procesar
+            $inventario_maestro->setExistenciasProcesadas($inventario_maestro->getExistenciasProcesadas() - $producto->cantidad_procesada);
+
+            $inventario_maestro = InventarioMaestroDAO::getByPK($producto->id_producto, $producto->id_compra_proveedor);
+
+            $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
+            $compra_proveedor_fragmentacion->setIdCompraProveedor($producto->id_compra_proveedor);
+            $compra_proveedor_fragmentacion->setIdProducto($producto->id_producto);
+            $compra_proveedor_fragmentacion->setDescripcion("SE VENDIO A " . $cliente->getRazonSocial() . " LA CANTIDAD DE " . $producto->cantidad_procesada . " " . $inventario_producto->getEscala() . "s DEL PRODUCTO " . $inventario_producto->getDescripcion() . " PROCESADO");
+            $compra_proveedor_fragmentacion->setProcesada($producto->procesada);
+            $compra_proveedor_fragmentacion->setCantidad(($producto->cantidad_procesada) * -1);
+            $compra_proveedor_fragmentacion->setPrecio($producto->precio_procesada);
+            $compra_proveedor_fragmentacion->setDescripcionRefId($id_venta);
+            
+            try {
+                CompraProveedorFragmentacionDAO::save($compra_proveedor_fragmentacion);
+            } catch (Exception $e) {
+                DAO::transRollback();
+                Logger::log("Error, al guardar los datos del historial del producto del inventario maestro. : " . $e);
+                die('{"success": false, "reason": "Error, al guardar los datos del historial del producto del inventario maestro." }');
+            }
+        }
+
         try {
             InventarioMaestroDAO::save($inventario_maestro);
         } catch (Exception $e) {
@@ -1233,9 +1298,8 @@ function venderAdmin($args) {
             $venta->setPagado($data->efectivo);
             $venta->setLiquidada(0);
         }
-        
+
         $venta->setTipoPago($data->tipo_pago);
-        
     }
 
     try {
@@ -1255,7 +1319,7 @@ function venderAdmin($args) {
 
     DAO::transEnd();
 
-    Logger::log("Proveso de venta (admin), termino con exito!! id_venta : {$id_venta}.");
+    Logger::log("Proceso de venta (admin), termino con exito!! id_venta : {$id_venta}.");
 }
 
 //vender

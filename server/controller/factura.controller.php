@@ -155,7 +155,13 @@ function verificarDatosVenta($id_venta = null) {
  */
 function generaFactura($id_venta) {
 
-    Logger::log("Iniciando proceso de facturacion");
+    Logger::log("Iniciando proceso de facturacion");        
+    
+    //verificamos si podemos escribir en la carpeta de facturas
+    if (!is_writable("../static_content/facturas/")) {
+        Logger::log("No puedo escribir en la carpeta de facturas.");
+        die('{"success": false, "reason": "No puedo escribir en la carpeta de facturas." }');
+    }
 
     //verifica que los datos de la venta y el cliente esten correctos
     $cliente = verificarDatosVenta($id_venta);
@@ -220,6 +226,15 @@ function generaFactura($id_venta) {
     }
 
     DAO::transEnd();
+    
+    
+    
+    //creamos el archivo del xml
+    $archivo = '../static_content/facturas/' . $_SESSION["INSTANCE_ID"] . "_" . $id_venta . '.xml';
+    $fp = fopen($archivo, "a");
+    $string = $comprobante->getXMLresponse();
+    $write = fputs($fp, $string);
+    fclose($fp);
 
     //Termino todo correctamente   
     printf('{"success":true, "id_venta":%s}', $id_venta);

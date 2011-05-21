@@ -194,14 +194,24 @@ switch( $autorizacionDetalles->clave ){
         ?>
             <h2>Solicitud para surtir sucursal / envio de productos</h2>
             <table style="width:100%">
-                <tr style="text-align: left;"><th>Producto solicitado</th><th>Cantidad</th><th>Agrupación</th></tr>
+                <tr style="text-align: left;"><th>Producto solicitado</th><th>Estado</th><th>Cantidad</th><th>Agrupación</th></tr>
                 <?php
                 foreach ($autorizacionDetalles->productos as $producto)
                 {
                     ?><tr>
 						<td>
-                                                    <?php $p = InventarioDAO::getByPK( $producto->id_producto ); echo $p->getDescripcion(); ?>
-                                                </td>
+                                                    <?php 
+                                                        $p = InventarioDAO::getByPK( $producto->id_producto ); 
+                                                        echo $p->getDescripcion();
+                                                        
+                                                    ?>
+                                                </td><td>
+                                                    
+                                                        <?php
+                                                            echo $producto->procesado == true?"PROCESADO" : "ORIGINAL"; 
+                                                        ?>
+                                                    
+                                                        </td>
 						<td>
                                                     <?php 
                                                         printf("%10.2f",$producto->procesado == true?$producto->cantidad_procesada:$producto->cantidad) ;
@@ -216,9 +226,18 @@ switch( $autorizacionDetalles->clave ){
                                                         //preguntar si este producto es agrupado
                                                         if($p->getAgrupacion()){
                                                             
-                                                            
+                                                            if($producto->procesado){
+                                                                
+                                                                $promedio = $p->getAgrupacionTam();
+                                                                
+                                                            }else{
+                                                                
+                                                                
+                                                                
+                                                            }
+                                                                                                                        
                                                             if($p->getAgrupacionTam() > 0){
-                                                                echo  sprintf("%10.2f",($producto->procesado == true?$producto->cantidad_procesada:$producto->cantidad) / $p->getAgrupacionTam()) . " " . $p->getAgrupacion();
+                                                                echo  sprintf("%10.2f",($producto->procesado == true?$producto->cantidad_procesada:$producto->cantidad) / $promedio) . " " . $p->getAgrupacion();
                                                             }else{
                                                                 echo "Verifique la cantidad de la agrupacion, atualmente es de cero.";
                                                             }

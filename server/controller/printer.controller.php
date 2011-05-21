@@ -38,7 +38,7 @@ function formatAddress($d) {
         if (isset($d->numeroInterior))
             $e .= "\n" . readableText($d->numeroInterior);
         $e .= "\n";
-        $e .= readableText($d->colonia) . " C.P. " . $d->codigoPostal . "\n";
+        $e .= " " . readableText($d->colonia) . " C.P. " . $d->codigoPostal . "\n";
         $e .= readableText($d->municipio) . ", " . readableText($d->estado) . ", " . readableText($d->pais) . "\n";
     }else {
         $e = "";
@@ -46,7 +46,7 @@ function formatAddress($d) {
         if ($d->getNumeroInterior() != null)
             $e .= "\n" . readableText($d->getNumeroInterior());
 
-        $e .= readableText($d->getColonia()) . " C.P. " . $d->getCodigoPostal() . "\n";
+        $e .= " " . readableText($d->getColonia()) . " C.P. " . $d->getCodigoPostal() . "\n";
         $e .= readableText($d->getMunicipio()) . ", " . readableText($d->getEstado()) . ", " . readableText($d->getPais()) . "\n";
     }
 
@@ -154,6 +154,18 @@ function imprimirFactura($id_venta, $venta_especial = null) {
 
     //margenes de un centimetro para toda la pagina
     $pdf->ezSetMargins(1, 1, 1, 1);
+    
+    /*
+     * LOGO
+     */
+
+    if (!$logo = PosConfigDAO::getByPK('url_logo')) {
+        Logger::log("Verifique la configuracion del pos_config, no se encontro el camṕo 'url_logo'");
+        die("Verifique la configuracion del POS, no se encontro el url del logo");
+    }
+
+    //addJpegFromFile(imgFileName,x,y,w,[h])
+    $pdf->addJpegFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
 
     /*     * ************************
      * ENCABEZADO
@@ -167,27 +179,35 @@ function imprimirFactura($id_venta, $venta_especial = null) {
      * ************************* */
     $e = "<b>" . readableText($emisor->nombre) . "</b>\n";
     $e .= formatAddress($emisor);
-    $e .= "RFC: " . $emisor->rfc;
+    $e .= "RFC: " . $emisor->rfc . "\n\n";
 
     //datos de la sucursal
-    $s = "<b>Lugar de expedicion</b>\n";
-    $s .= formatAddress($sucursal);
+    //$s = "<b>Lugar de expedicion</b>\n";
+    //$s .= formatAddress($sucursal);
+    $e .= "<b>Lugar de expedicion</b>\n";
+    if($sucursal->getIdSucursal() != '0'){
+        $e .= formatAddress($sucursal);
+    }
+    
 
     $datos = array(
         array(
-            "emisor" => $e,
-            'sucursal' => $s,
+            "emisor" => $e/*,
+            'sucursal' => $s,*/
         )
     );
 
-    $pdf->ezSetY(puntos_cm(26.7));
+    //$pdf->ezSetY(puntos_cm(26.7));
+    $pdf->ezSetY(puntos_cm(28.7));
     $opciones_tabla = array();
     $opciones_tabla['showLines'] = 0;
     $opciones_tabla['showHeadings'] = 0;
     $opciones_tabla['shaded'] = 0;
     $opciones_tabla['fontSize'] = 8;
+    //$opciones_tabla['xOrientation'] = 'right';
     $opciones_tabla['xOrientation'] = 'right';
-    $opciones_tabla['xPos'] = puntos_cm(3);
+    //$opciones_tabla['xPos'] = puntos_cm(3);
+    $opciones_tabla['xPos'] = puntos_cm(7.5);
     $opciones_tabla['width'] = puntos_cm(11);
     $opciones_tabla['textCol'] = array(0, 0, 0);
     $opciones_tabla['titleFontSize'] = 12;
@@ -223,7 +243,7 @@ function imprimirFactura($id_venta, $venta_especial = null) {
      * Receptor del comprobante fiscal
      * Datos del receptor
      * ************************* */
-    $datos_receptor = readableText($cliente->getRAzonSocial()) . "\n";
+    $datos_receptor = readableText($cliente->getRazonSocial()) . "\n";
     $datos_receptor .= formatAddress($cliente);
     $datos_receptor .= "RFC:" . $cliente->getRfc();
 
