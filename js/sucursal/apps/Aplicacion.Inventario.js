@@ -162,6 +162,114 @@ Aplicacion.Inventario.prototype.listaInventarioPanelShow = function ()
 	sink.Main.ui.setActiveItem( this.listaInventarioPanel , 'slide');
 };
 
+Aplicacion.Inventario.crearHtmlDeInventario = function (){
+	
+	var inventario = Aplicacion.Inventario.currentInstance.inventarioListaStore,
+		html = "",
+		tmp_qty = 0;
+
+	//ordenar el inventario
+	
+
+	html += "<table border=0 style='width:100%; font-size: 14px;'>"
+		+ 	"<tr style='font-size: 16px'>"
+		+ 		"<td>Producto</td>"
+		+ 		"<td>Existencias</td>"
+		+ 		"<td>Precio</td>"
+		+ 		"<td>Existencias Procesadas</td>"
+		+ 		"<td>Precio</td>"
+		+ 		"<td></td>"				
+		+ 	"</tr>";
+
+	console.log(inventario.getAt(0).data)
+	
+	for (var i=0; i < inventario.getCount(); i++) {
+		
+		//html += "<tr style='border-top: 1px solid #D1D1D1;'>";
+		
+		style = "height: 80px;";
+		style += "border-top: 1px solid #D1D1D1;";
+		style += "text-shadow: rgba(255, 255 , 255, 0.5) 0 -0.08em 0;"
+/*		+ "background-color: #06346A;"
+		+ "background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #167BF3), color-stop(2%, #07448C), color-stop(100%, #042348));"
+		+ "background-image: linear-gradient(#167BF3,#07448C 2%,#042348);"
+		+ "color: white;"
+		+ "text-shadow: rgba(0, 0, 0, 0.5) 0 -0.08em 0;"
+		+ "border-top-color: #084B9B;"
+		+ "border-bottom-color: #021022;"; */
+		
+		html += "<tr style='"+style+"'>";
+		
+		r = inventario.getAt(i);
+
+		html += "<td style='padding-left: 5px'>" + r.get("productoID") + " " + r.get("descripcion") + "</td>";
+		
+		//existencias originales
+		html += "<td>" + r.get("existenciasOriginales") + " " + r.get("medida") + "s ";
+		
+		if(r.get("agrupacion") != null) {
+			if(parseFloat(r.get("agrupacionTam")) == 0){
+				//watch divizion by zero
+				tmp_qty = "!";
+			}else{
+				tmp_qty = parseFloat(r.get("existenciasOriginales")) / parseFloat(r.get("agrupacionTam"));
+				tmp_qty = tmp_qty.toFixed(2);		
+			}
+
+			html += "<br>( "+ tmp_qty + " " + r.get("agrupacion") +"s )";
+		}
+		
+		html += "</td>";
+		html += "<td>" + POS.currencyFormat( r.get("precioVentaSinProcesar") ) + " ";
+		if(r.get("precioPorAgrupacion")){
+			html += " por " + r.get("agrupacion");
+		}else{
+			html += " por " + r.get("medida");			
+		}
+		html += "</td>";
+
+		//existencias procesadas		
+		if(r.get("tratamiento") == null){
+			html += "<td ></td><td></td>"
+		}else{
+			//se puede tratar
+			
+			html += "<td>" + r.get("existenciasProcesadas") + " " + r.get("medida") + "s ";
+
+			if(r.get("agrupacion") != null) {
+				if(parseFloat(r.get("agrupacionTam")) == 0){
+					//watch divizion by zero
+					tmp_qty = "!";
+				}else{
+					tmp_qty = parseFloat(r.get("existenciasProcesadas")) / parseFloat(r.get("agrupacionTam"));
+					tmp_qty = tmp_qty.toFixed(2);		
+				}
+
+				html += "<br>( "+ tmp_qty + " " + r.get("agrupacion") +"s )";
+			}
+			html += "</td>";			
+			html += "<td>" + POS.currencyFormat( r.get("precioVenta") ) + " ";
+			if(r.get("precioPorAgrupacion")){
+				html += " por " + r.get("agrupacion");
+			}else{
+				html += " por " + r.get("medida");			
+			}
+			html += "</td>";			
+		}
+
+		
+		
+		//imagen de ver mas
+		html += "<td><img src='../media/arrow2.png'></td>";
+		html += "</tr>";
+
+	};
+
+
+	html += "</table>";
+	return html;
+}
+
 Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 {
 
@@ -192,8 +300,19 @@ Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 	};
 	
 
-
 	this.listaInventarioPanel = new Ext.Panel({
+		layout: 'fit',
+		html : "hey biatches",
+		scroll: "vertical",
+		listeners : {
+			"render" : function(){
+				//renderear el html del inventario
+				this.update(Aplicacion.Inventario.crearHtmlDeInventario());
+			}
+		}
+	});
+
+	this.listaInventarioPanel0 = new Ext.Panel({
 		layout: 'fit',
 		items: [{
 			xtype: 'list',
