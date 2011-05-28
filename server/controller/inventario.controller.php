@@ -45,6 +45,7 @@ function listarInventario($sucID = null) {
     }
 
     $q = new DetalleInventario();
+
     $q->setIdSucursal($sucID);
 
     $results = DetalleInventarioDAO::search($q);
@@ -57,18 +58,19 @@ function listarInventario($sucID = null) {
         $actualizacion_de_precio = obtenerActualizacionDePrecio($producto->getIdProducto());
 
         Array_push($json, array(
-            "productoID" => $productoData->getIdProducto(),
-            "descripcion" => $productoData->getDescripcion(),
-            "tratamiento" => $productoData->getTratamiento(),
-            "precioVenta" => $producto->getPrecioVenta(),
-            "precioVentaSinProcesar" => $actualizacion_de_precio->getPrecioVentaSinProcesar(),
-            "existenciasOriginales" => $producto->getExistencias(),
-            "existenciasProcesadas" => $producto->getExistenciasProcesadas(),
-            "medida" => $productoData->getEscala(),
-            "precioIntersucursal" => $actualizacion_de_precio->getPrecioIntersucursal(),
+            "productoID" 				=> $productoData->getIdProducto(),
+            "descripcion" 				=> $productoData->getDescripcion(),
+            "tratamiento" 				=> $productoData->getTratamiento(),
+            "precioVenta" 				=> $producto->getPrecioVenta(),
+            "precioVentaSinProcesar" 	=> $actualizacion_de_precio->getPrecioVentaSinProcesar(),
+            "existenciasOriginales" 	=> $producto->getExistencias(),
+            "existenciasProcesadas"		=> $producto->getExistenciasProcesadas(),
+            "medida" 					=> $productoData->getEscala(),
+            "precioIntersucursal"		=> $actualizacion_de_precio->getPrecioIntersucursal(),
             "precioIntersucursalSinProcesar" => $actualizacion_de_precio->getPrecioIntersucursalSinProcesar(),
-            "agrupacion" => $productoData->getAgrupacion(),
-            "agrupacionTam" => $productoData->getAgrupacionTam()
+            "agrupacion" 				=> $productoData->getAgrupacion(),
+            "agrupacionTam" 			=> $productoData->getAgrupacionTam(),
+			"precioPorAgrupacion"		=> $productoData->getPrecioPorAgrupacion() == "1"
         ));
     }
 

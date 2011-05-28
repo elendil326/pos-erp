@@ -208,7 +208,7 @@ Ext.MessageBox.YESNO[1].text = "Si";
 
 
 Ext.Ajax.timeout = 25000;
-POS.CHECK_DB_TIMEOUT = 25000;
+POS.CHECK_DB_TIMEOUT = 5000;
 
 POS.A = {
     failure : false,
@@ -279,7 +279,7 @@ function task(){
         },
         success: function(response, opts) {
 			
-            if(DEBUG)console.log("heartbeat returned")
+           if(DEBUG)console.log("heartbeat returned")
 
             setTimeout("task()", POS.CHECK_DB_TIMEOUT);
 			
@@ -293,8 +293,13 @@ function task(){
                 return;
             }
 
+
+
             if((r.reboot !== undefined)){
-                console.error("REBBOT !");
+				if(DEBUG){
+					console.error("reboot !");
+				}
+
                 window.location = ".";
             }
 

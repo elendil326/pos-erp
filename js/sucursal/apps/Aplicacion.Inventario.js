@@ -119,6 +119,8 @@ Aplicacion.Inventario.prototype.cargarInventario = function ()
 				console.log("Inventario retrived !", inventario);
 			}
 			
+			
+			
 			this.Inventario.productos = inventario.datos;
 			this.Inventario.lastUpdate = Math.round(new Date().getTime()/1000.0);
             this.Inventario.hash = inventario.hash;
@@ -290,11 +292,38 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelUpdater = function( produc
 
 	Aplicacion.Inventario.currentInstance.procesarProducto.setProducto( producto );
 
+
+	
+	if((producto.get("tratamiento") === null) || (producto.get("tratamiento") === false)){
+		Ext.getCmp("Aplicacion.Inventario.detalles.existenciasProcesadas").hide();		
+	}else{
+		Ext.getCmp("Aplicacion.Inventario.detalles.existenciasProcesadas").show();		
+	}
+	
+	var precio_txt = POS.currencyFormat( producto.get('precioVenta') ) + " por ";
+	
+	if(producto.get("precioPorAgrupacion")){
+		precio_txt += producto.get("agrupacion");
+	}else{
+		precio_txt += producto.get("medida");		
+	}
+	
+	var cantidad_txt = " ";
+	
+	if(producto.get("agrupacion")){
+		
+		var qty = parseFloat(producto.get('existenciasOriginales')) / parseFloat(producto.get("agrupacionTam"));
+		cantidad_txt  = producto.get('existenciasOriginales') + " " + producto.get("medida") + "s";		
+		cantidad_txt += " ( " + qty.toFixed(2) + " " + producto.get("agrupacion") + "s )";
+	}else{
+		cantidad_txt = producto.get('existenciasOriginales') + " " + producto.get("medida")+ "s";
+	}
+	
 	detallesPanel.setValues({
         productoID  :   producto.get('productoID'),
         descripcion :   producto.get('descripcion'),
-        precioVenta :   POS.currencyFormat( producto.get('precioVenta') ),
-        existenciasOriginales : producto.get('existenciasOriginales') + " " + producto.get('medida')+"s",
+        precioVenta :   precio_txt,
+        existenciasOriginales : cantidad_txt,
         existenciasProcesadas : producto.get('existenciasProcesadas') + " " + producto.get('medida')+"s"
     });
 
@@ -365,8 +394,9 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelCreator = function()
 				new Ext.form.Text({ name: 'productoID', label: 'ID del producto' }),
 				new Ext.form.Text({ name: 'descripcion', label: 'Descripcion' }),
 				new Ext.form.Text({ name: 'precioVenta', label: 'Precio sugerido' }),
-				new Ext.form.Text({ name : 'existenciasOriginales', label: 'Existencias originales' }),
-				new Ext.form.Text({ name : 'existenciasProcesadas', label: 'Existencias procesadas' }),
+				new Ext.form.Text({ id : 'Aplicacion.Inventario.detalles.existenciasProcesadas', name : 'existenciasProcesadas', label: 'Existencias procesadas' }),
+				new Ext.form.Text({ id : 'Aplicacion.Inventario.detalles.existenciasOriginales', name : 'existenciasOriginales', label: 'Existencias originales' })
+
 	//			new Ext.form.Text({ name : 'existenciasMinimas', label: 'Existencias Minimas' })
 			]}
 	]});

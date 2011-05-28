@@ -44,6 +44,12 @@ class POS{
 			
 			if(HEARTBEAT_METHOD_TRIGGER){
 				$foo = PosConfigDAO::getByPK("DB_VER");
+				
+				if($foo == null){
+					Logger::log("HEARTBEAT METHOD ES CON TRIGGER, PERO NO HAY COLUMNA DE DB_VER !!");
+					 
+				}
+				
 				$hash = $foo->getValue();
 			}else{
 				$hash = md5( json_encode( listarClientesDeudores() )

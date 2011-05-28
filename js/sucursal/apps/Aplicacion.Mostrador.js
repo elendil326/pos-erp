@@ -270,7 +270,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
     style += "font-weight: bold;";
     style += "margin: 32px 0 0 -4px;";
     style += "text-shadow: 1px 1px 4px black;";
-    style += "color: white;";
+    style += "color: black;";
     style += "font-family: 'ff-din-web-1', 'ff-din-web-2', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Arial, Helvetica, sans-serif;";
     style += "letter-spacing: -3px;";
 	

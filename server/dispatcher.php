@@ -40,7 +40,12 @@ require_once('controller/login.controller.php');
 if( ! ($_REQUEST['action']  == "2001" || $_REQUEST['action']  == "2004" || $_REQUEST['action']  == "2099") )
 {
 	if(!checkCurrentSession()){
-		Logger::log("Sesion invalida.");
+		Logger::log("Sesion invalida ! Cerrando la sesion y forzando reboot.");
+		
+		//cerrar esta sesion
+		logOut(false);
+		
+		//morir con un js que diga que hay que salir
 		die( '{"success": false , "reason": "Accesso denegado" , "reboot" : true }' );
 	}
     
