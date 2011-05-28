@@ -408,7 +408,14 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelUpdater = function( produc
 Aplicacion.Inventario.prototype.detalleInventarioPanelCreator = function()
 {
 	
-	opciones = [{
+	opciones = [
+	{
+		text: 'Regresar a Inventario',
+		ui: 'back',
+		handler : function (){
+			sink.Main.ui.setActiveItem( 	Aplicacion.Inventario.currentInstance.listaInventarioPanel , 'slide');
+		}
+	},{
 		text: 'Agregar a Mostrador',
 		ui: 'normal',
 		handler : function (){

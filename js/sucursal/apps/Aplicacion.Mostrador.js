@@ -857,11 +857,11 @@ Aplicacion.Mostrador.prototype.mostradorPanelCreator = function (){
         id : 'Mostrador-tipoCliente',
         allowDepress: false,
         items: [{
-            text: 'Venta a Caja Comun',
+            text: 'Caja Comun',
             pressed: true,
             handler : this.setCajaComun
         }, {
-            text: 'Venta a Cliente',
+            text: 'Cliente',
             handler : this.buscarClienteFormShow,
             badgeText : ""
         }]
