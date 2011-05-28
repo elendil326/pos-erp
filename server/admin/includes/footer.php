@@ -1,6 +1,7 @@
 <!-- footer -->
 
 <div class="footer" align=center >
+
 	<table align=center>
     <tr>
 
@@ -27,9 +28,11 @@
 				<li>
 				  <a  href="ventas.php?action=lista">Ver ventas</a>
 				</li>
+				<!--
 				<li>
 				  <a  href="ventas.php?action=porProducto">Ventas por producto</a>
 				</li>
+				-->
 			  </ul>
     	</td>
 
@@ -77,7 +80,10 @@
     <br>
 	<div align=center style="padding-bottom: 10px;">
 		 <img src='../media/logo_simbolo.jpg'> <br>
-    ©2010 Caffeina Mexico 
+		<br>
+    	©2010 Caffeina Mexico 
+
+		<!--		 <img src='../media/banners/LOGO-SUP-FAC.jpg'> -->
 	</div>
 
 </div>

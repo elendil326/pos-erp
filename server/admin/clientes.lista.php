@@ -35,6 +35,7 @@ require_once("controller/inventario.controller.php");
 
 
 	$clientesRegistradosPorSucursal = array();
+	$sucursalesLabels = array();
 	
 	//buscar cuantos clientes se han registado en todas las sucursales
 	$foo = 0;
@@ -42,6 +43,7 @@ require_once("controller/inventario.controller.php");
 		$clientesRegistradosPorSucursal[ $foo ] = ClienteDAO::contarClientesRegistradosPorDia( $s["id_sucursal"] );
 		$missingDays[ $foo ] = 0;
 		$sucDayIndex[ $foo ] = 0;
+		$sucursalesLabels [ $foo ] = $s["descripcion"];
 		$foo++;
 	}
 	
@@ -126,7 +128,7 @@ require_once("controller/inventario.controller.php");
 
 		for($i = 0; $i < sizeof($clientesRegistradosPorSucursal[$s]); $i++ ){
 			$acc += $clientesRegistradosPorSucursal[$s][$i]["clientes"] ;
-			echo  "[" . $i . "," . $acc . "]";
+			echo  "[ " . $i . "," . $acc . "] ";
 
 			if($i < sizeof($clientesRegistradosPorSucursal[$s]) - 1){
 					echo ",";		
@@ -214,7 +216,8 @@ require_once("controller/inventario.controller.php");
 			);
 		<?php
 			for ($s=0; $s < sizeof($clientesRegistradosPorSucursal); $s++) { 
-				echo "graficaVentas.addGraph( clientesEnSucursal".$s." );";						
+				
+				echo "graficaVentas.addGraph( clientesEnSucursal".$s.", '". $sucursalesLabels[$s] ."' );";						
 			}
 
 		?>

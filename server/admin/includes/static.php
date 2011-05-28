@@ -355,7 +355,7 @@ class Reporte{
 					);
 				<?php
 					for ($s=0; $s < sizeof($this->timelines); $s++) { 
-						echo "g.addGraph( g".$this->random_id . $s." );";						
+						echo "g.addGraph( g".$this->random_id . $s." , \"" .$this->titles[$s]. "\" );";
 					}
 
 				?>

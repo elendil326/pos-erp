@@ -37,6 +37,7 @@ var HumbleFinance = function(  ){
 
 
 	this.graphs = [];
+	this.titles = [];	
 	this.summary = null;
 	this.summaryData = null;
 	this.bounds = {xmin: null, xmax: null, ymin: null, ymax: null};
@@ -58,11 +59,12 @@ var HumbleFinance = function(  ){
 		this.trackFormatter= t;
 	}
 	
-	this.addGraph = function (data){
-		this.graphs.push(data);
+	this.addGraph = function (data , title){
+		this.graphs.push( data );
+		this.titles.push( title );		
 	}
 	
-	this.addSummaryGraph = function (data){
+	this.addSummaryGraph = function ( data ){
 		this.summaryData = data;
 	}
 	
@@ -110,6 +112,7 @@ var HumbleFinance = function(  ){
                 selection: {mode: 'x'},
                 shadowSize: false,
                 HtmlText: true
+				
             }
         );
         
@@ -181,7 +184,13 @@ var HumbleFinance = function(  ){
         
         newData = [];
 		for(var i = 0; i < this.graphs.length; i++ ){
-			newData.push( this.graphs[i].slice(xmin, xmax+1) );
+			// latest change
+			if( this.graphs[i] instanceof Array ){
+				newData.push( this.graphs[i].slice(xmin, xmax+1) );				
+			}else{
+				newData.push( this.graphs[i].data.slice(xmin, xmax+1) );				
+			}
+
 		}
 
         this.graphs.price = this.drawGraphs( newData, newBounds);
@@ -199,9 +208,23 @@ var HumbleFinance = function(  ){
         var ymin = bounds.ymin;
         var ymax = bounds.ymax;
 
+		console.warn(graficas[0]);
+		
+		var final_structure = [];
+		
+		for (var g_index=0; g_index < graficas.length; g_index++) {
+			final_structure.push({
+				data : graficas[g_index],
+				label : this.titles[ g_index ]
+			})
+		};
+		
+		
+		console.warn(final_structure);
+		
         var p = Flotr.draw(
             $(this.id + 'priceGraph'),
-            graficas,
+            final_structure ,//[{data: graficas[0] , label : "asdf"}] ,
             {
                 lines: {show: true, fill: true, fillOpacity: .1, lineWidth: 2},
                 yaxis: {min: ymin, max: ymax, tickFormatter: this.yTickFormatter, noTicks: 3, autoscaleMargin: .5,  tickDecimals: 0},
@@ -210,7 +233,13 @@ var HumbleFinance = function(  ){
                 mouse: {track: true, sensibility: 1, trackDecimals: 4, trackFormatter: this.trackFormatter, position: 'ne'},
                 shadowSize: false,
                 HtmlText: true,
-				selection: false
+				selection: false, 
+				legend:{
+					
+					position		: 'se', 		
+					labelFormatter	: function(r){  return r;},
+					backgroundColor	: '#ffffff' 
+				}
 				/*
 				selection: {
 					mode: 'x',		// => one of null, 'x', 'y' or 'xy'

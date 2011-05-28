@@ -123,8 +123,8 @@ if ($gerente === null) {
  * */
 if (VentasDAO::getByPK(1) != null) {
     $numeroDeVentasDiarias = new Reporte();
-    $numeroDeVentasDiarias->agregarMuestra("", VentasDAO::contarVentasPorDia($sucursal->getIdSucursal(), -1));
-    $numeroDeVentasDiarias->agregarMuestra("", VentasDAO::contarVentasPorDia(null, -1));
+    $numeroDeVentasDiarias->agregarMuestra("Esta sucursal", VentasDAO::contarVentasPorDia($sucursal->getIdSucursal(), -1));
+    $numeroDeVentasDiarias->agregarMuestra("Todas las sucursales", VentasDAO::contarVentasPorDia(null, -1));
     $numeroDeVentasDiarias->fechaDeInicio(strtotime(VentasDAO::getByPK(1)->getFecha()));
     $numeroDeVentasDiarias->setEscalaEnY("ventas");
     $numeroDeVentasDiarias->graficar("Ventas de esta sucursal");

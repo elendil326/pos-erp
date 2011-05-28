@@ -1456,8 +1456,13 @@ Flotr.Graph = Class.create({
 	 * Adds a legend div to the canvas container or draws it on the canvas.
 	 */
 	insertLegend: function(){
+		
+		console.log("insertLegend()");
+		
 		if(!this.options.legend.show)
 			return;
+		
+		console.log("go ahead with insertion");
 			
 		var series = this.series,
 			plotOffset = this.plotOffset,

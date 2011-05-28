@@ -181,7 +181,8 @@ margin: 0;
 
 #header p.logo a {
 display: block;
-background-image: url(media/logos.png);
+ background-image: url(media/logos.png); 
+ /*background-image: url(media/banners/LOGO-SUP-FAC.jpg);*/
 background-repeat: no-repeat;
 background-position: 0 0px;
 height: 76px;
