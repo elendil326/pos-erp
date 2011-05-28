@@ -121,9 +121,9 @@
 	define('DB_HOST',       				$rs['DB_HOST']);
 	define('DB_DEBUG',      				$rs['DB_DEBUG']);
 
-	define("HEARTBEAT_METHOD_TRIGGER", 		$rs['HEARTBEAT_METHOD_TRIGGER']);
+	define("HEARTBEAT_METHOD_TRIGGER", 		$rs['HEARTBEAT_METHOD_TRIGGER'] == "true");
 	define("HEARTBEAT_INTERVAL", 			$rs['HEARTBEAT_INTERVAL']);
-	
+
 	
 	# metodo de validacion de sucursales mediante user-agent
 	# puede ser 'FULL_UA' o bien 'SID_TOKEN'
