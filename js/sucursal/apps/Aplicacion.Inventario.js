@@ -164,16 +164,17 @@ Aplicacion.Inventario.prototype.listaInventarioPanelShow = function ()
 
 Aplicacion.Inventario.crearHtmlDeInventario = function (){
 	
+
 	var inventario = Aplicacion.Inventario.currentInstance.inventarioListaStore,
 		html = "",
 		tmp_qty = 0;
 
 	//ordenar el inventario
-	
+	inventario.clearFilter();
 
-	html += "<table border=0 style='width:100%; font-size: 14px;'>"
-		+ 	"<tr style='font-size: 16px'>"
-		+ 		"<td>Producto</td>"
+	html += "<table border=0 style='width:100%; font-size: 16px;'>"
+		+ 	"<tr style='font-size: 16px; ' >"
+		+ 		"<td style='padding-left: 7px;'>Producto</td>"
 		+ 		"<td>Existencias</td>"
 		+ 		"<td>Precio</td>"
 		+ 		"<td>Existencias Procesadas</td>"
@@ -198,9 +199,10 @@ Aplicacion.Inventario.crearHtmlDeInventario = function (){
 		+ "border-top-color: #084B9B;"
 		+ "border-bottom-color: #021022;"; */
 		
-		html += "<tr style='"+style+"'>";
-		
+
 		r = inventario.getAt(i);
+
+		html += "<tr style='"+style+"' >";
 
 		html += "<td style='padding-left: 5px'>" + r.get("productoID") + " " + r.get("descripcion") + "</td>";
 		
@@ -260,7 +262,7 @@ Aplicacion.Inventario.crearHtmlDeInventario = function (){
 		
 		
 		//imagen de ver mas
-		html += "<td><img src='../media/arrow2.png'></td>";
+		html += "<td onclick='Aplicacion.Inventario.currentInstance.detalleInventarioPanelShow("+ r.get("productoID") +")'  ><img src='../media/arrow2.png' ></td>";
 		html += "</tr>";
 
 	};
@@ -302,7 +304,7 @@ Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 
 	this.listaInventarioPanel = new Ext.Panel({
 		layout: 'fit',
-		html : "hey biatches",
+		html : "",
 		scroll: "vertical",
 		listeners : {
 			"render" : function(){
@@ -311,58 +313,6 @@ Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 			}
 		}
 	});
-
-	this.listaInventarioPanel0 = new Ext.Panel({
-		layout: 'fit',
-		items: [{
-			xtype: 'list',
-			store: this.inventarioListaStore,
-			itemTpl: '<div class="">'
-				+'<table width = 100% >'
-					+'<tr width = 100%>'
-						+'<td width = 20%>'
-							+'<div align=center><b>{productoID}</b> &nbsp; {descripcion}</div>'
-						+'</td>'
-						+'<td width = 20%>'
-							+'<b>Original</b> <br>&nbsp; {existenciasOriginales} {medida}s'
-						+'</td>'
-						+'<td width = 10% >${precioVentaSinProcesar}'
-						+'</td>'
-						+'<td width = 20%>'
-							+'<b>Procesado</b> <br>&nbsp; {existenciasProcesadas} {medida}s'
-						+'</td>'
-						+'<td width = 10% > ${precioVenta} '
-						+'</td>'
-					+'</tr>'
-				+'</table>'
-				+'</div>',
-			grouped: false,
-			indexBar: true,
-			listeners : {
-				"activate" : function(){
-					if(DEBUG){
-						console.log("Mostrando lista de inventario.");
-					}
-					Aplicacion.Inventario.currentInstance.inventarioListaStore.clearFilter();
-				},
-				"selectionchange"  : function ( view, nodos, c ){
-
-
-
-
-
-					if(nodos.length > 0){
-						Aplicacion.Inventario.currentInstance.detalleInventarioPanelShow( nodos[0] );
-					}
-
-					//deseleccinar
-					view.deselectAll();
-				}
-			}
-			
-		}]
-	});
-
 	
 };
 
@@ -381,13 +331,18 @@ Aplicacion.Inventario.prototype.detalleInventarioPanel = null;
 
 //muestra la forma de detalles de inventario
 //recibe un objeto con el producto a mostrar
-Aplicacion.Inventario.prototype.detalleInventarioPanelShow = function( producto )
+Aplicacion.Inventario.prototype.detalleInventarioPanelShow = function( id_producto )
 {
 	if(this.detalleInventarioPanel){
 		this.detalleInventarioPanelCreator();
 	}
 	
+	var inventario = Aplicacion.Inventario.currentInstance.inventarioListaStore;
+	
+	producto = inventario.findRecord("productoID", id_producto)
+	
 	this.detalleInventarioPanelUpdater( producto );
+	
 	sink.Main.ui.setActiveItem( this.detalleInventarioPanel , 'slide'); 
 };
 
