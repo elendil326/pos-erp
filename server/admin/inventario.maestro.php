@@ -326,8 +326,10 @@ function detalle_inventario(id){
 	                width    : 85, 
 	                sortable : true, 
 					hidden: true,	
-					renderer : 'usMoney',
-	                dataIndex: 'precio_por_kg'
+	                dataIndex: 'precio_por_kg',
+					renderer : function(n,a,row){
+						return '$' + ((n + (row.get("costo_flete") / row.get("peso_recibido"))).toFixed(2));
+					}
 	            },			
 	            {
 	                header   : 'Originales', 
@@ -462,7 +464,9 @@ function detalle_inventario(id){
 	                header   : 'Costo', 
 	                width    : 85, 
 	                sortable : true, 
-					renderer : 'usMoney',
+					renderer : function(n,a,row){
+						return '$' + ((n + (row.get("costo_flete") / row.get("peso_recibido"))).toFixed(2));
+					},
 	                dataIndex: 'precio_por_kg'
 	            },			
 	            {

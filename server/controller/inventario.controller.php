@@ -122,23 +122,22 @@ function listarInventarioMaestro($n = 50, $show = POS_TODOS) {
 
         $flete = CompraProveedorFleteDAO::getByPK($compra->getIdCompraProveedor());
 
-
-//ciclar por los detalles
+		
+		//ciclar por los detalles
         foreach ($detalles as $detalle) {
 
             $iM = InventarioMaestroDAO::getByPK($detalle->getIdProducto(), $compra->getIdCompraProveedor());
 
-
-
             if ($iM->getExistencias() == 0) {
                 if ($show == POS_SOLO_ACTIVOS)
-                    continue;
+                    continue;	
+
             }else {
                 if ($show == POS_SOLO_VACIOS)
                     continue;
             }
 
-//buscar la descripcion del producto
+			//buscar la descripcion del producto
             foreach ($inventario as $i) {
                 if ($i->getIdProducto() == $detalle->getIdProducto()) {
                     $p = $i;
@@ -155,12 +154,14 @@ function listarInventarioMaestro($n = 50, $show = POS_TODOS) {
             }
 
             $bar = array_merge($compra->asArray(), $iM->asArray(), $detalle->asArray(), $flete->asArray());
-            $bar['producto_desc'] = $p->getDescripcion();
-            $bar['producto_tratamiento'] = $p->getTratamiento();
-            $bar['medida'] = $p->getEscala();
-            $bar['agrupacion'] = $p->getAgrupacion();
-            $bar['agrupacionTam'] = $p->getAgrupacionTam();
-            $bar['precio_por_agrupacion'] = $p->getPrecioPorAgrupacion();
+
+            $bar['producto_desc'] 			= $p->getDescripcion();
+            $bar['producto_tratamiento'] 	= $p->getTratamiento();
+            $bar['medida']					= $p->getEscala();
+            $bar['agrupacion'] 				= $p->getAgrupacion();
+            $bar['agrupacionTam'] 			= $p->getAgrupacionTam();
+            $bar['precio_por_agrupacion'] 	= $p->getPrecioPorAgrupacion();
+			//$bar['costo_con_flete'] 		= 	$flete->costoFlete();
 
             if ($p->getTratamiento() === null) {
                 $bar["existencias_procesadas"] = "NA";
