@@ -42,11 +42,31 @@
 
 
 
-function toUnit( $e )
+function toUnit( $e, $row )
+{
+	//unidaes del producto
+	$producto = InventarioDAO::getByPK( $row['id_producto'] );
+	
+	$return = $e . " " . $producto->getEscala() . "s ";
+			
+	if($producto->getAgrupacion()){
+		//tiene agrupacion
+		$return .= "<i>( " . ($e / $producto->getAgrupacionTam()) . " " . $producto->getAgrupacion() . "s )</i>" ;
+		
+	}else{
+		//no tiene agrupacion, solo mostrar la escala
+		
+	}
+	
+	//buscar este producto
+	return $return;
+	
+}
+
+function toUnitDesc( $e )
 {
 	return "<b>" . number_format($e, 2) . "</b>kg";
 }
-
 	
 	$query = new DetalleCompraSucursal();
 	$query->setIdCompra( $_REQUEST["cid"] );
@@ -69,26 +89,28 @@ function toUnit( $e )
 	}
 
 	$header = array(
-		"id_producto" => "Producto",
-		"cantidad" => "Cantidad",
-		"precio" => "Precio",
-		"descuento" => "Descuento",
-		"procesadas" => "procesada" );
+		"id_producto" 	=> "Producto",
+		"procesadas" 	=> "Procesada",
+		"cantidad" 		=> "Cantidad",
+		"precio" 		=> "Precio",
+		"descuento" 	=> "Descuento"  );
 
 	$tabla = new Tabla($header, $detalles);
-	$tabla->addColRender("precio", "moneyFormat");
-	$tabla->addColRender("cantidad", "toUnit");
+	$tabla->addColRender("precio", 		"moneyFormat");
+	$tabla->addColRender("cantidad", 	"toUnit");
 	$tabla->addColRender("id_producto", "renderProd");
-	$tabla->addColRender("descuento", "toUnit");	
-	$tabla->addColRender("procesada", "toUnit");	
+	$tabla->addColRender("descuento", 	"toUnitDesc");	
+	$tabla->addColRender("procesadas", "renderProc");	
 	$tabla->render();
+	
+	
 ?>
 
 
 <script>
 	<?php
 		//please print
-		if($_REQUEST["pp"]){
+		if(isset($_REQUEST["pp"]) && $_REQUEST["pp"]){
 			?>
 				Ext.Msg.confirm("Surtir sucursal",
 				"Se ha surtido con exito esta sucursal. &iquest; Desea imprimir un reporte ?",

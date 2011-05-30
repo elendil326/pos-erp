@@ -13,6 +13,7 @@ require_once('model/inventario_maestro.dao.php');
 require_once 'model/proveedor.dao.php';
 require_once('model/autorizacion.dao.php');
 require_once('model/cliente.dao.php');
+require_once('model/compra_proveedor_fragmentacion.dao.php');
 
 require_once('logger.php');
 
@@ -751,6 +752,7 @@ function nuevaCompraSucursal($json = null) {
 
             descontarDeInventarioMaestro($subproducto->id_compra, $subproducto->id_producto, $subproducto->cantidad, $subproducto->procesada);
             
+/*
             $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
             $compra_proveedor_fragmentacion->setIdCompraProveedor($subproducto->id_compra);
             $compra_proveedor_fragmentacion->setIdProducto($subproducto->id_producto);
@@ -767,6 +769,7 @@ function nuevaCompraSucursal($json = null) {
                 Logger::log("Error, al guardar los datos del historial del producto del inventario maestro. : " . $e);
                 die('{"success": false, "reason": "Error, al guardar los datos del historial del producto del inventario maestro." }');
             }
+*/
             
         }//foreach
 
