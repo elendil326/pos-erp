@@ -14,22 +14,19 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 
 		private static $loadedRecords = array();
 
-		private static function recordExists(  $id_compra, $id_producto ){
+		private static function recordExists(  $id_detalle_compra_sucursal ){
 			$pk = "";
-			$pk .= $id_compra . "-";
-			$pk .= $id_producto . "-";
+			$pk .= $id_detalle_compra_sucursal . "-";
 			return array_key_exists ( $pk , self::$loadedRecords );
 		}
-		private static function pushRecord( $inventario,  $id_compra, $id_producto){
+		private static function pushRecord( $inventario,  $id_detalle_compra_sucursal){
 			$pk = "";
-			$pk .= $id_compra . "-";
-			$pk .= $id_producto . "-";
+			$pk .= $id_detalle_compra_sucursal . "-";
 			self::$loadedRecords [$pk] = $inventario;
 		}
-		private static function getRecord(  $id_compra, $id_producto ){
+		private static function getRecord(  $id_detalle_compra_sucursal ){
 			$pk = "";
-			$pk .= $id_compra . "-";
-			$pk .= $id_producto . "-";
+			$pk .= $id_detalle_compra_sucursal . "-";
 			return self::$loadedRecords[$pk];
 		}
 	/**
@@ -47,7 +44,7 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	  **/
 	public static final function save( &$detalle_compra_sucursal )
 	{
-		if(  self::getByPK(  $detalle_compra_sucursal->getIdCompra() , $detalle_compra_sucursal->getIdProducto() ) !== NULL )
+		if(  self::getByPK(  $detalle_compra_sucursal->getIdDetalleCompraSucursal() ) !== NULL )
 		{
 			try{ return DetalleCompraSucursalDAOBase::update( $detalle_compra_sucursal) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -65,18 +62,18 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	  *	@static
 	  * @return @link DetalleCompraSucursal Un objeto del tipo {@link DetalleCompraSucursal}. NULL si no hay tal registro.
 	  **/
-	public static final function getByPK(  $id_compra, $id_producto )
+	public static final function getByPK(  $id_detalle_compra_sucursal )
 	{
-		if(self::recordExists(  $id_compra, $id_producto)){
-			return self::getRecord( $id_compra, $id_producto );
+		if(self::recordExists(  $id_detalle_compra_sucursal)){
+			return self::getRecord( $id_detalle_compra_sucursal );
 		}
-		$sql = "SELECT * FROM detalle_compra_sucursal WHERE (id_compra = ? AND id_producto = ? ) LIMIT 1;";
-		$params = array(  $id_compra, $id_producto );
+		$sql = "SELECT * FROM detalle_compra_sucursal WHERE (id_detalle_compra_sucursal = ? ) LIMIT 1;";
+		$params = array(  $id_detalle_compra_sucursal );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new DetalleCompraSucursal( $rs );
-			self::pushRecord( $foo,  $id_compra, $id_producto );
+			self::pushRecord( $foo,  $id_detalle_compra_sucursal );
 			return $foo;
 	}
 
@@ -111,9 +108,8 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar = new DetalleCompraSucursal($foo);
     		array_push( $allData, $bar);
-			//id_compra
-			//id_producto
-    		self::pushRecord( $bar, $foo["id_compra"],$foo["id_producto"] );
+			//id_detalle_compra_sucursal
+    		self::pushRecord( $bar, $foo["id_detalle_compra_sucursal"] );
 		}
 		return $allData;
 	}
@@ -147,6 +143,11 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	{
 		$sql = "SELECT * from detalle_compra_sucursal WHERE ("; 
 		$val = array();
+		if( $detalle_compra_sucursal->getIdDetalleCompraSucursal() != NULL){
+			$sql .= " id_detalle_compra_sucursal = ? AND";
+			array_push( $val, $detalle_compra_sucursal->getIdDetalleCompraSucursal() );
+		}
+
 		if( $detalle_compra_sucursal->getIdCompra() != NULL){
 			$sql .= " id_compra = ? AND";
 			array_push( $val, $detalle_compra_sucursal->getIdCompra() );
@@ -189,7 +190,7 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new DetalleCompraSucursal($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_compra"],$foo["id_producto"] );
+    		self::pushRecord( $bar, $foo["id_detalle_compra_sucursal"] );
 		}
 		return $ar;
 	}
@@ -208,13 +209,15 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	  **/
 	private static final function update( $detalle_compra_sucursal )
 	{
-		$sql = "UPDATE detalle_compra_sucursal SET  cantidad = ?, precio = ?, descuento = ?, procesadas = ? WHERE  id_compra = ? AND id_producto = ?;";
+		$sql = "UPDATE detalle_compra_sucursal SET  id_compra = ?, id_producto = ?, cantidad = ?, precio = ?, descuento = ?, procesadas = ? WHERE  id_detalle_compra_sucursal = ?;";
 		$params = array( 
+			$detalle_compra_sucursal->getIdCompra(), 
+			$detalle_compra_sucursal->getIdProducto(), 
 			$detalle_compra_sucursal->getCantidad(), 
 			$detalle_compra_sucursal->getPrecio(), 
 			$detalle_compra_sucursal->getDescuento(), 
 			$detalle_compra_sucursal->getProcesadas(), 
-			$detalle_compra_sucursal->getIdCompra(),$detalle_compra_sucursal->getIdProducto(), );
+			$detalle_compra_sucursal->getIdDetalleCompraSucursal(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
@@ -237,8 +240,9 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	  **/
 	private static final function create( &$detalle_compra_sucursal )
 	{
-		$sql = "INSERT INTO detalle_compra_sucursal ( id_compra, id_producto, cantidad, precio, descuento, procesadas ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO detalle_compra_sucursal ( id_detalle_compra_sucursal, id_compra, id_producto, cantidad, precio, descuento, procesadas ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
+			$detalle_compra_sucursal->getIdDetalleCompraSucursal(), 
 			$detalle_compra_sucursal->getIdCompra(), 
 			$detalle_compra_sucursal->getIdProducto(), 
 			$detalle_compra_sucursal->getCantidad(), 
@@ -293,6 +297,17 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	{
 		$sql = "SELECT * from detalle_compra_sucursal WHERE ("; 
 		$val = array();
+		if( (($a = $detalle_compra_sucursalA->getIdDetalleCompraSucursal()) != NULL) & ( ($b = $detalle_compra_sucursalB->getIdDetalleCompraSucursal()) != NULL) ){
+				$sql .= " id_detalle_compra_sucursal >= ? AND id_detalle_compra_sucursal <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " id_detalle_compra_sucursal = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
 		if( (($a = $detalle_compra_sucursalA->getIdCompra()) != NULL) & ( ($b = $detalle_compra_sucursalB->getIdCompra()) != NULL) ){
 				$sql .= " id_compra >= ? AND id_compra <= ? AND";
 				array_push( $val, min($a,$b)); 
@@ -389,9 +404,9 @@ abstract class DetalleCompraSucursalDAOBase extends DAO
 	  **/
 	public static final function delete( &$detalle_compra_sucursal )
 	{
-		if(self::getByPK($detalle_compra_sucursal->getIdCompra(), $detalle_compra_sucursal->getIdProducto()) === NULL) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM detalle_compra_sucursal WHERE  id_compra = ? AND id_producto = ?;";
-		$params = array( $detalle_compra_sucursal->getIdCompra(), $detalle_compra_sucursal->getIdProducto() );
+		if(self::getByPK($detalle_compra_sucursal->getIdDetalleCompraSucursal()) === NULL) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM detalle_compra_sucursal WHERE  id_detalle_compra_sucursal = ?;";
+		$params = array( $detalle_compra_sucursal->getIdDetalleCompraSucursal() );
 		global $conn;
 
 		$conn->Execute($sql, $params);

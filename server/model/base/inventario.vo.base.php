@@ -139,7 +139,7 @@ class Inventario extends VO
 	/**
 	  * precio_por_agrupacion
 	  * 
-	  * Verdadero cuando el precio marcado es por agrupacion, de ser falso, el precio marcado es por unidad, sea la que la escala dictamine<br>
+	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var tinyint(1)
 	  */
@@ -320,7 +320,7 @@ class Inventario extends VO
 	/**
 	  * getPrecioPorAgrupacion
 	  * 
-	  * Get the <i>precio_por_agrupacion</i> property for this object. Donde <i>precio_por_agrupacion</i> es Verdadero cuando el precio marcado es por agrupacion, de ser falso, el precio marcado es por unidad, sea la que la escala dictamine
+	  * Get the <i>precio_por_agrupacion</i> property for this object. Donde <i>precio_por_agrupacion</i> es  [Campo no documentado]
 	  * @return tinyint(1)
 	  */
 	final public function getPrecioPorAgrupacion()
@@ -331,7 +331,7 @@ class Inventario extends VO
 	/**
 	  * setPrecioPorAgrupacion( $precio_por_agrupacion )
 	  * 
-	  * Set the <i>precio_por_agrupacion</i> property for this object. Donde <i>precio_por_agrupacion</i> es Verdadero cuando el precio marcado es por agrupacion, de ser falso, el precio marcado es por unidad, sea la que la escala dictamine.
+	  * Set the <i>precio_por_agrupacion</i> property for this object. Donde <i>precio_por_agrupacion</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>precio_por_agrupacion</i> es de tipo <i>tinyint(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param tinyint(1)

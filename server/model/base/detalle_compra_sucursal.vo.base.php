@@ -22,6 +22,9 @@ class DetalleCompraSucursal extends VO
 	{ 
 		if(isset($data))
 		{
+			if( isset($data['id_detalle_compra_sucursal']) ){
+				$this->id_detalle_compra_sucursal = $data['id_detalle_compra_sucursal'];
+			}
 			if( isset($data['id_compra']) ){
 				$this->id_compra = $data['id_compra'];
 			}
@@ -53,6 +56,7 @@ class DetalleCompraSucursal extends VO
 	public function __toString( )
 	{ 
 		$vec = array( 
+			"id_detalle_compra_sucursal" => $this->id_detalle_compra_sucursal,
 			"id_compra" => $this->id_compra,
 			"id_producto" => $this->id_producto,
 			"cantidad" => $this->cantidad,
@@ -64,10 +68,19 @@ class DetalleCompraSucursal extends VO
 	}
 	
 	/**
+	  * id_detalle_compra_sucursal
+	  * 
+	  *  [Campo no documentado]<br>
+	  * <b>Llave Primaria</b><br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_detalle_compra_sucursal;
+
+	/**
 	  * id_compra
 	  * 
 	  * id de la compra<br>
-	  * <b>Llave Primaria</b><br>
 	  * @access protected
 	  * @var int(11)
 	  */
@@ -77,7 +90,6 @@ class DetalleCompraSucursal extends VO
 	  * id_producto
 	  * 
 	  * id del producto<br>
-	  * <b>Llave Primaria</b><br>
 	  * @access protected
 	  * @var int(11)
 	  */
@@ -120,6 +132,32 @@ class DetalleCompraSucursal extends VO
 	protected $procesadas;
 
 	/**
+	  * getIdDetalleCompraSucursal
+	  * 
+	  * Get the <i>id_detalle_compra_sucursal</i> property for this object. Donde <i>id_detalle_compra_sucursal</i> es  [Campo no documentado]
+	  * @return int(11)
+	  */
+	final public function getIdDetalleCompraSucursal()
+	{
+		return $this->id_detalle_compra_sucursal;
+	}
+
+	/**
+	  * setIdDetalleCompraSucursal( $id_detalle_compra_sucursal )
+	  * 
+	  * Set the <i>id_detalle_compra_sucursal</i> property for this object. Donde <i>id_detalle_compra_sucursal</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>id_detalle_compra_sucursal</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdDetalleCompraSucursal( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * @param int(11)
+	  */
+	final public function setIdDetalleCompraSucursal( $id_detalle_compra_sucursal )
+	{
+		$this->id_detalle_compra_sucursal = $id_detalle_compra_sucursal;
+	}
+
+	/**
 	  * getIdCompra
 	  * 
 	  * Get the <i>id_compra</i> property for this object. Donde <i>id_compra</i> es id de la compra
@@ -136,8 +174,6 @@ class DetalleCompraSucursal extends VO
 	  * Set the <i>id_compra</i> property for this object. Donde <i>id_compra</i> es id de la compra.
 	  * Una validacion basica se hara aqui para comprobar que <i>id_compra</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
-	  * No deberias usar setIdCompra( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdCompra( $id_compra )
@@ -162,8 +198,6 @@ class DetalleCompraSucursal extends VO
 	  * Set the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es id del producto.
 	  * Una validacion basica se hara aqui para comprobar que <i>id_producto</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
-	  * No deberias usar setIdProducto( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
 	final public function setIdProducto( $id_producto )
