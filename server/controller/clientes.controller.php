@@ -833,6 +833,7 @@ function estadoCuentaCliente($args){
     return $estado_cuenta;   
 }
 
+
 /*
  * 
  * 	Case dispatching for proxy
@@ -920,7 +921,8 @@ if (isset($args['action'])) {
         case 310:
             //lista el estado de cuenta de los clientes
             $estado_cuenta = estadoCuentaCliente($args);
-            printf('{ "success": true, "total": ' . count($estado_cuenta->array_ventas) . ' "datos": %s }', json_encode($estado_cuenta));
+            printf('{ "success": true, "total": ' . count($estado_cuenta->array_ventas) . ', "datos": %s }', json_encode($estado_cuenta));
             break;
+
     }
 }

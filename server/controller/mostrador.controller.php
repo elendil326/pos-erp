@@ -620,19 +620,19 @@ function venderAdmin($args) {
     }
 
     //verificamos que se manden todos los parametros necesarios
-	
-    if (! isset($data->cliente) ) {
+
+    if (!isset($data->cliente)) {
         Logger::log("Falta uno o mas parametros: cliente");
         die('{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }');
     }
 
-    if (!isset($data->tipo_venta) ) {
+    if (!isset($data->tipo_venta)) {
         Logger::log("Falta uno o mas parametros: tipo de venta");
         die('{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }');
     }
 
 
-    if (! isset($data->productos) ) {
+    if (!isset($data->productos)) {
         Logger::log("Falta uno o mas parametros:  productos");
         die('{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }');
     }
@@ -1068,8 +1068,6 @@ function venderAdmin($args) {
 
         array_push($detallesVenta, $dv);
     }//foreach
-    
-    
     //inicializamos un objeto venta
     $venta = new Ventas();
     $venta->setIdUsuario($_SESSION['userid']);
@@ -1182,13 +1180,13 @@ function venderAdmin($args) {
           } */
 
         $inventario_producto = InventarioDAO::getByPK($producto->id_producto);
-        
+
         if ($producto->cantidad > 0) {
             //requiere producto procesada
-            
+
             $inventario_maestro = InventarioMaestroDAO::getByPK($producto->id_producto, $producto->id_compra_proveedor);
-            
-            $inventario_maestro->setExistencias($inventario_maestro->getExistencias() - ($producto->cantidad + $producto->descuento));            
+
+            $inventario_maestro->setExistencias($inventario_maestro->getExistencias() - ($producto->cantidad + $producto->descuento));
 
             $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
             $compra_proveedor_fragmentacion->setIdCompraProveedor($producto->id_compra_proveedor);
@@ -1222,7 +1220,7 @@ function venderAdmin($args) {
             $compra_proveedor_fragmentacion->setCantidad(($producto->cantidad_procesada) * -1);
             $compra_proveedor_fragmentacion->setPrecio($producto->precio_procesada);
             $compra_proveedor_fragmentacion->setDescripcionRefId($id_venta);
-            
+
             try {
                 CompraProveedorFragmentacionDAO::save($compra_proveedor_fragmentacion);
             } catch (Exception $e) {
@@ -1249,25 +1247,40 @@ function venderAdmin($args) {
 
     //para ventas a credito
     if ($venta->getTipoVenta() == "credito") {
-        //verificamos si el cliente cuenta con suficiente limite de credito para solventar esta venta
-        $ventas_credito = listarVentaCliente($cliente->getIdCliente(), $venta->getTipoVenta());
-        $adeuda = 0;
 
-        foreach ($ventas_credito as $vc) {
 
-            //var_dump($vc);
+        if (isset($data->faltante)) {
+            
+            //este es un caso especial, donde el cliente quiere utilizar su credito restante para
+            //cubrir una parte de la venta, y el $data->faltante se agregara como un abono a esa compra a credito
+            //este caso se da exclusivamente cuando el total de la venta supera al credito restante y aun que el
+            //total de la venta supere al credito restante, esto no afectara la integridad de la informacion
+            //ya que el saldo de la venta a credito sera igual al limite de crediro restante que tenia
+            
+            $venta->setPagado($data->faltante);
+            
+        } else {
 
-            if ($vc['liquidada'] == "0") {
-                $adeuda += $vc['saldo'];
+            //verificamos si el cliente cuenta con suficiente limite de credito para solventar esta venta
+            $ventas_credito = listarVentaCliente($cliente->getIdCliente(), $venta->getTipoVenta());
+            $adeuda = 0;
+
+            foreach ($ventas_credito as $vc) {
+
+                //var_dump($vc);
+
+                if ($vc['liquidada'] == "0") {
+                    $adeuda += $vc['saldo'];
+                }
             }
-        }
 
-        //echo "limite : {$cliente->getLimiteCredito()}, total : {$venta->getTotal()} adeuda : {$adeuda}";
+            //echo "limite : {$cliente->getLimiteCredito()}, total : {$venta->getTotal()} adeuda : {$adeuda}";
 
-        if ($cliente->getLimiteCredito() < ($venta->getTotal() + $adeuda)) {
-            DAO::transRollback();
-            Logger::log("Error : No cuenta con suficiente limite de credito para realizar esta venta a credito.");
-            die('{"success": false, "reason": "Error : No cuenta con suficiente limite de credito para realizar esta venta a credito." }');
+            if ($cliente->getLimiteCredito() < ($venta->getTotal() + $adeuda)) {
+                DAO::transRollback();
+                Logger::log("Error : No cuenta con suficiente limite de credito para realizar esta venta a credito.");
+                die('{"success": false, "reason": "Error : No cuenta con suficiente limite de credito para realizar esta venta a credito." }');
+            }
         }
     }
 
