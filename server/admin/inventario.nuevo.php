@@ -51,6 +51,16 @@
 			<input type="text" id="agrupacionTam" size="20"/><span id="agrupacionCaption"></span>
 		</td>
 	</tr>
+	<tr>
+		<td id="precioPorAgrupacionLabel" style="display:none">Tipo de precio</td>
+		<td id="precioPorAgrupacionBox" style="display:none">
+			
+			<!--  - - - - - - -->
+
+			<!--  - - - - - - -->
+			
+		</td>
+	</tr>
 </table>
 <h4><input type="button" onClick="save()" value="Guardar"/></h4>
 
@@ -58,24 +68,47 @@
 
 <script type="text/javascript" charset="utf-8">
 
+	function crearCajaDePrecioPorAgrupacion( ){
+		h = '<select id="tipo_de_precio"> '
+		h += '<option id="precio_por_escala" 		value="escala"  	>Precio por '+ jQuery("#escala").val() +'</option>'
+		h += '<option id="precio_por_agrupacion" 	value="agrupacion" 	>Precio por ' + jQuery("#agrupacion").val() + '</option>'				
+		h += '</select>'
+		
+		if(jQuery("#agrupacion").val() != "null"){
+			jQuery( "#precioPorAgrupacionBox" ).html(h).fadeIn();	
+			jQuery( "#precioPorAgrupacionLabel" ).fadeIn('fast');			
+		}
+		
+
+						
+	}
+
 	function agrupacionSeleccionada(val){
 		if(val != "null"){
+			
 			//mostrar la caja
 			if(!jQuery( "#agrupacionBox" ).is(":visible")){
-				jQuery( "#agrupacionBox" ).fadeIn();	
-			}
+				jQuery( "#agrupacionBox" ).fadeIn();
 
+				
+			}
+			
+			crearCajaDePrecioPorAgrupacion();
+			
 			jQuery( "#agrupacionCaption" ).html(" " + jQuery("#escala").val() + "s por " + val);
 
 		}else{
 			//ocultar la caja
 			jQuery( "#agrupacionBox" ).fadeOut();
+			jQuery( "#precioPorAgrupacionBox" ).fadeOut('fast');
+			jQuery( "#precioPorAgrupacionLabel" ).fadeOut('fast');
 		}
 		
 	}
 	
 	function escalaSeleccionada(val){
 		agrupacionSeleccionada( jQuery("#agrupacion").val() );
+		crearCajaDePrecioPorAgrupacion();
 	}
 
 	jQuery("#MAIN_TITLE").html("Nuevo producto");
@@ -106,6 +139,7 @@
                 tratamiento:			jQuery('#tratamiento').val(),
                 precio_venta : 			jQuery('#precioVenta').val(),
 				precio_intersucursal : 	jQuery('#precioIntersucursal').val(),
+				tipo_de_precio : 		jQuery('#tipo_de_precio').val(),
 				<?php
 				if(POS_MULTI_SUCURSAL)
 					echo "precio_intersucursal : 	jQuery('#precioIntersucursal').val(),";

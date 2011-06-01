@@ -338,6 +338,7 @@ function nuevoProducto($data) {
     $inventario->setTratamiento($jsonData->tratamiento == "null" ? null : $jsonData->tratamiento );
     $inventario->setAgrupacion($jsonData->agrupacion == "null" ? null : $jsonData->agrupacion );
     $inventario->setAgrupacionTam($jsonData->agrupacion == "null" ? null : $jsonData->agrupacionTam );
+    $inventario->setPrecioPorAgrupacion($jsonData->tipo_de_precio == "agrupacion" );
     $inventario->setActivo(1);
     DAO::transBegin();
 
