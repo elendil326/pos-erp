@@ -104,12 +104,12 @@ class Tabla {
 		//cicle trough rows
 		for( $a = 0; $a < sizeof($this->rows) ; $a++ ){
 
-/*			if($a == 50){
+			if($a == 50){
 				$html .= "<tr style='background-color:#3F8CE9; color:white; text-align:center;'><td colspan=" .sizeof($this->header). ">Mostrar siguientes 50</td></tr>";
 				break;
 					
 			}
-*/			
+
 			if( !is_array($this->rows[$a]) ){
 				$row = $this->rows[$a]->asArray();
 			}else{

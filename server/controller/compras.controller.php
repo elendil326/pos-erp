@@ -712,8 +712,8 @@ function nuevaCompraSucursal($json = null) {
     }
 
     Logger::log("Inicial el proceso de compra sucursal");
-    DAO::transBegin();
 
+    DAO::transBegin();
 
     $detalles_de_compra = array();
 
@@ -723,21 +723,19 @@ function nuevaCompraSucursal($json = null) {
 
     $global_total_importe = 0;
 
-
-
     //iteramos todos los productos a surtie
     foreach ($data->productos as $producto) {
 
         Logger::log("Producto a surtir : " . $producto->producto . " con " . sizeof($producto->items) . " subproductos");
 
-        $cantidad = 0;
-        $precio = 0;
-        $descuento = 0;
+        $cantidad 	= 0;
+        $precio 	= 0;
+        $descuento 	= 0;
 
         //iteramos todos los subproductos que componen al producto actual
         foreach ($producto->items as $subproducto) {
 
-            $cantidad += $subproducto->cantidad;
+            $cantidad += $subproducto->peso_real;
 
             //hacer calculo sobre el descuento, puede ser 
             //descuento en kilos sobre arpilla, solo en kilos
@@ -748,9 +746,9 @@ function nuevaCompraSucursal($json = null) {
 
             //calculamos el precio de este subproducto,
             //y lo sumamos a lo de los demas
-            $precio += $subproducto->precio * ( $subproducto->cantidad );
+            $precio += $subproducto->importe;
 
-            descontarDeInventarioMaestro($subproducto->id_compra, $subproducto->id_producto, $subproducto->cantidad, $subproducto->procesada);
+            descontarDeInventarioMaestro($subproducto->id_compra, $subproducto->id_producto, $subproducto->peso_real, $subproducto->procesada);
             
 /*
             $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
@@ -774,14 +772,17 @@ function nuevaCompraSucursal($json = null) {
         }//foreach
 
 
-        $cantidad_a_pagar = $cantidad - $descuento;
-        $global_total_importe += $precio * $cantidad_a_pagar;
+        $cantidad_a_pagar 		= $precio;
+        $global_total_importe 	+= $precio;
+
+		Logger::log("Creando el detalle de compra para : " . $producto->producto );
+
 
         $detalle = new DetalleCompraSucursal();
         $detalle->setIdProducto($producto->producto);
         $detalle->setCantidad($cantidad);
         $detalle->setDescuento($descuento);
-        $detalle->setPrecio($precio / $cantidad);
+        $detalle->setPrecio($precio);
         $detalle->setProcesadas($producto->procesado);
 
         array_push($detalles_de_compra, $detalle);
@@ -808,6 +809,7 @@ function nuevaCompraSucursal($json = null) {
             "precio" => $producto->procesado ? 0 : $detalle->getPrecio()
         ));
     }//foreach
+
     //insertar la nueva compra sucursal
     $compraSucursal = new CompraSucursal();
     $compraSucursal->setSubtotal($global_total_importe);

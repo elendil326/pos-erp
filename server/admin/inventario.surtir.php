@@ -1224,6 +1224,10 @@ function doSurtir()
         conductor : jQuery('#conductor').val()
     };
     
+	console.warn("ESTO ES LO QUE VOY A ENVIAR !", readyDATA);
+
+	var debugging = true;
+
     //hacer ajaxaso
     jQuery.ajaxSettings.traditional = true;
 
@@ -1253,8 +1257,10 @@ function doSurtir()
             }
     
 
-            if(response.success === false){
-                
+            if(response.success === false ){
+	
+
+
                 jQuery("#loader").fadeOut('slow', function(){
                     //jQuery("#submitButtons").fadeIn();    
                     window.scroll(0,0);
@@ -1268,6 +1274,14 @@ function doSurtir()
                 });                
                 return ;
             }
+
+            if(debugging){
+				 jQuery("#loader").fadeOut();
+                jQuery("#submitButtons").fadeIn();					
+				window.open ("inventario.php?action=detalleCompraSucursal&cid=" + response.compra_id + "&pp=1");
+				return;
+			}
+			
             window.location = "inventario.php?action=detalleCompraSucursal&cid=" + response.compra_id + "&pp=1";
     
         }

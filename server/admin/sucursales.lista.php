@@ -7,6 +7,43 @@ require_once("model/ventas.dao.php");
 
 $sucursales = listarSucursales();
 
+
+
+?><h2>Sucursales Activas</h2><br><?php
+
+echo "<div align=center>";
+foreach($sucursales as $s){
+	echo  "<span class='prod rounded'  ><a style='text-decoration:none' href='sucursales.php?action=detalles&id=". $s["id_sucursal"] ."' >" . $s["descripcion"]  . "</a></span>&nbsp;";
+}
+echo "</div>"
+
+?>
+<style> 
+.prod {
+    background:#fff;
+    color:#333;
+    text-decoration:none;
+    padding:5px 10px;
+	border:1px solid #fff;
+ 
+ 
+    /* Add the transition properties! */
+   	-webkit-transition-property: background-color, color, border; 
+    -webkit-transition-duration: 300ms;
+ 
+    /* you can control the acceleration curve here */
+    -webkit-transition-timing-function: ease-in-out; 
+}
+ 
+.prod:hover {
+    background:#D7EAFF;
+    color:#000;
+    border:1px solid #3F8CE9;
+}
+</style> 
+
+<?php
+
 $reporteDeRendimientoDiario = new Reporte();
 $numeroDeVentasDiarias = new Reporte();
 
@@ -31,35 +68,8 @@ if( VentasDAO::getByPK( 1 ) != null ){
 }
 
 
-
-function bold($s){
-	return "<b>" . $s . "</b>";
-}
-
-
-
-
-
-//render the table
-$header = array( 
-	"descripcion"=> "",
-	"calle"=> "" );
-
-
-	$tabla = new Tabla( $header, $sucursales );
-	$tabla->addOnClick("id_sucursal", "mostrarDetallesSucursal");
-	$tabla->addNoData("No hay sucursales.");
-	$tabla->addColRender("descripcion", "bold");
-
-	print ("<br><h2>Sucursales Activas</h2>");
-	$tabla->render();
 ?>
 
-<script type="text/javascript" charset="utf-8">
-	function mostrarDetallesSucursal ( sid ){
-		window.location = "sucursales.php?action=detalles&id=" + sid;
-	}
-</script>
 
 
 
