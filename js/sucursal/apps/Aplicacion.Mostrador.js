@@ -110,20 +110,31 @@ Aplicacion.Mostrador.prototype.carritoCambiarCantidad = function ( id, qty, forc
 	
 };
 
+
+
+/**
+  * refrescarMostrador. 
+  *
+  * Refrescar el panel que muestra los productos y demas listos para vender.
+  *
+  **/
 Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 {	
+	
+	//obtener el carrito
     carrito = Aplicacion.Mostrador.currentInstance.carrito;
 	
-    var html = "<table border = 0>";
+	//comenzar el html del carrito
+    var html = "<table border=0  style='font-size: 14px;border: 1px solid #DDD;' >";
 	
     html += "<tr class='top'>";
     html +=     "<td align='left'>Descripcion</td>";
     html +=     "<td>&nbsp</td>";
-    html +=     "<td>Descuento</td>";
-    html +=     "<td>&nbsp</td>";
+
 	
-    html +=     "<td align='center' colspan=3>Cantidad</td>";
-    html +=     "<td align='center' ></td>";
+    html +=     "<td align='center' colspan=5>Cantidad</td>";
+
+    html +=     "<td>Descuento</td>";
     html +=     "<td align='left' >Total</td>";
     html +=     "<td align='left' >Precio</td>";
     html +=     "<td align='left' >Sub Total</td>";
@@ -138,20 +149,20 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
         }
     }
 	
+	
     var stotal = 0;
+
 	
     //iteramos los productos que hay en el carrito para crear la tabla dond se muestran los productos
     for (var i=0; i < carrito.items.length; i++){
-		
-		
-		
-		
+
 		
         var productoI = inventario.findRecord("productoID", carrito.items[i].id_producto, 0, false, true, true);
-		
-		
-		
-        //revisar si es por pieza o unidad
+
+		console.log("Producto : " , productoI);
+
+        //revisar si las cantidades son por pieza o cajas o asi.. 
+		//si son por pieza, entonces no me deja vender fracciones y asi
         switch(productoI.get("medida")){
             case "pieza" :
                 carrito.items[i].cantidad  = Math.round(carrito.items[i].cantidad );
@@ -163,6 +174,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
         }
 		
 		
+		//revisar existencias
         if( parseFloat(productoI.get("existenciasOriginales")) == 0){
             if(DEBUG){
                 console.log("no hay originales !!");
@@ -217,6 +229,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 
 		
         var color = i % 2 == 0 ? "" : "style='background-color:#f7f7f7;'";
+		color = "";
         /*
 		if( i == carrito.items.length - 1 ){
 			html += "<tr " + color + " class='last'>";
@@ -224,39 +237,57 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 			
 		}*/
         html += "<tr " + color + ">";
-		
+
+		//descripcion del producto
         html += "<td style='width: 18.7%;' ><b>" + carrito.items[i].id_producto + "</b> &nbsp;" + carrito.items[i].descripcion+ "</td>";
-		
+
+		//selector de tratamiento
         html += "<td style='width: 12%;' ><div id='Mostrador-carritoTratamiento"+ carrito.items[i].idUnique +"'></div></td>";
         		
-        html += "<td style='width: 8%;' ><div id='Mostrador-carritoDescuento"+ carrito.items[i].idUnique +"'></div></td>";
-
+		//quitar del carrito
         html += "<td  align='right' style='width:4%;'> <span class='boton'  onClick=\"Aplicacion.Mostrador.currentInstance.quitarDelCarrito('"+ carrito.items[i].idUnique +"')\"><img src='../media/icons/close_16.png'></span></td>";
 
-        html += "<td  align='center'  style='width: 8.1%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique + "', -1, false)\">&nbsp;-&nbsp;<img src='../media/icons/arrow_down_16.png'></span></td>";
+		//sumar una unidad
+        html += "<td  align='center'  style='width: 8.1%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique + "', -1, false)\"><img src='../media/icons/arrow_down_16.png'></span></td>";
 		
-        var m ;
-        switch(productoI.get("medida")){
-            case "kilogramo":
-                m = "kgs";
-                break;
-            case "pieza":
-                m = "pzas";
-                break;
-            case "litro":
-                m = "lts";
-                break;
-        }
-
+        var escala_de_compra ;
 		
-        html += "<td  align='center'  style='width: 6.3%;' ><div id='Mostrador-carritoCantidad"+ carrito.items[i].idUnique +"'></div></td><td>"+m+"</td>";
+		if(productoI.get("precioPorAgrupacion")){
+			// el precio es por agrupacion !
+			escala_de_compra = productoI.get("agrupacion");
+		}else{
+			//el precio es por escala
+			switch(productoI.get("medida")){
+	            case "kilogramo":
+	                escala_de_compra = "Kgs";
+	                break;
+	            case "pieza":
+	                escala_de_compra = "Pzas";
+	                break;
+	            case "litro":
+	                escala_de_compra = "Lts.";
+	                break;
+	        }
+		}
 
-        html += "<td  align='center'  style='width: 8.1%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique +"', 1, false)\"><img src='../media/icons/arrow_up_16.png'>&nbsp;+&nbsp;</span></td>";
 
-        html += "<td  align='center'  style='width: 6.3%;' ><div id='Mostrador-carritoTotalProductos"+ carrito.items[i].idUnique +"'></div></td>";
+
+		//cantidad ! y escala !
+        html += "<td  align='center'  style='width: 6.3%;' ><div id='Mostrador-carritoCantidad"+ carrito.items[i].idUnique +"'></div></td><td>"+ escala_de_compra +"</td>";
+
+		//quitar una unidad
+        html += "<td  align='center'  style='width: 8.1%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique +"', 1, false)\"><img src='../media/icons/arrow_up_16.png'></span></td>";
+
+		//selector de descuento
+        html += "<td style='width: 8%;' ><div id='Mostrador-carritoDescuento"+ carrito.items[i].idUnique +"'></div></td>";
+
+		//total ya con descuento
+        html += "<td  align='center'  style='width: 6.3%;' ><div >" + (carrito.items[i].cantidad - carrito.items[i].descuento) + " " + escala_de_compra + "</div></td>";
+		
 		
         html += "<td style='width: 10.4%;'> <div  id='Mostrador-carritoPrecio"+ carrito.items[i].idUnique +"'></div></td>";
 		
+		//importe
         html += "<td  style='width: 11.3%;'>" + POS.currencyFormat( ( carrito.items[i].cantidad - carrito.items[i].descuento ) * carrito.items[i].precio )+"</td>";
 		
         html += "</tr>";
@@ -268,16 +299,20 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
     var style = "";
     //style += "font-size: 35px;";
     style += "font-weight: bold;";
-    style += "margin: 32px 0 0 -4px;";
-    style += "text-shadow: 1px 1px 4px black;";
+    //style += "margin: 32px 0 0 -4px;";
+    //style += "text-shadow: 1px 1px 4px black;";
     style += "color: black;";
-    style += "font-family: 'ff-din-web-1', 'ff-din-web-2', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Arial, Helvetica, sans-serif;";
-    style += "letter-spacing: -3px;";
-	
+    //style += "font-family: 'ff-din-web-1', 'ff-din-web-2', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Arial, Helvetica, sans-serif;";
+    //style += "letter-spacing: -2px;";
+	//style += "background-color: gray;";
 	
     if(carrito.items.length > 0){
         //html += "<div style='"+style+"' align=right>Total "+POS.currencyFormat( stotal )+"&nbsp;</div>";
-        html += "<tr class='last' style='"+style+"'><td colspan=8 style='text-align:right'>Total</td><td>" +POS.currencyFormat( stotal )+ "</td></tr>" ;
+        html += "<tr class='last' style='"+style+"' align=right>";
+		html += "	<td colspan=9></td>";
+        html += "	<td style='text-align:right'>Total</td>";
+        html += "	<td style='text-align:left'>" +POS.currencyFormat( stotal )+ "</td>";
+        html += "</tr>" ;
     }
 	
     html += "</table>";
@@ -302,9 +337,16 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
         if(Ext.get("Mostrador-carritoCantidad"+ carrito.items[i].productoID + "Text")){
             continue;
         }
+		
+		/*
+		if(carrito.items[i].input_box_rendered)
+			continue;
+		
+		carrito.items[i].input_box_rendered = true;
+	 	*/
 	
-	 
-	
+
+		
         //control donde se muestra la cantidad de producto
         a = new Ext.form.Text({
             renderTo : "Mostrador-carritoCantidad"+ carrito.items[i].idUnique ,
@@ -665,6 +707,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		
             });
 		    
+			/*
             e = new Ext.form.Text({
                 renderTo : "Mostrador-carritoTotalProductos"+ carrito.items[i].idUnique ,
                 id : "Mostrador-carritoTotalProductos"+ carrito.items[i].idUnique + "Text",
@@ -674,7 +717,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                     width: '100%'
                 }
             });
-		    
+		    */
+		
         }//if
 		
     }//for
@@ -734,7 +778,7 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
             }
 			
             if( incidencias > 1 ){
-                Ext.Msg.alert("Alerta","El producto '" + res.data.descripcion + "' ya existe en el carrito.");
+                Ext.Msg.alert("Mostrador","El producto " + res.data.descripcion + " ya existe en el carrito.");
                 found = true;
                 break;
             }
@@ -774,7 +818,8 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
             procesado : "true",
             cantidad : 1,
             idUnique : res.data.productoID + "_" +  Aplicacion.Mostrador.currentInstance.uniqueIndex,
-            descuento : "0"
+            descuento : "0",
+			input_box_rendered : false
         });
 		
         Aplicacion.Mostrador.currentInstance.uniqueIndex++; //identificador unico e irepetible

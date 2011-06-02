@@ -18,9 +18,14 @@
 		height: 40px;
 		-webkit-box-shadow: 2px 2px 3px #000;
 		-webkit-border-radius: 5px;
+		
 }
 
-
+.Keyboard-key:active{
+		background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(188,188,190)), to(rgb(162,162,167)));
+		border-width:2px;
+		border-color: rgb(59,59,60);
+}
 
 
 .Keyboard-key.long{

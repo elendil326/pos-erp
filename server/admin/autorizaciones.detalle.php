@@ -129,7 +129,7 @@ switch( $autorizacionDetalles->clave ){
             <table>
                 <tr><td>Cliente</td><td><?php 
 						$foo = ClienteDAO::getByPK($autorizacionDetalles->id_cliente); 
-						echo $foo->getNombre(); //$autorizacionDetalles->id_cliente; 
+						echo $foo->getRazonSocial(); //$autorizacionDetalles->id_cliente; 
 					?></td></tr>
                 <tr><td>Cantidad</td><td><?php echo moneyFormat( $autorizacionDetalles->cantidad ); ?></td></tr>
                 <tr><td></td><td>

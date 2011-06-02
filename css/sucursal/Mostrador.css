@@ -1,6 +1,5 @@
 .boton{
 	width: 58px;
-/*	-webkit-box-shadow: black 2px 2px 3px; */
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EEEEF0), to(#D4D4D9));
 	border-color: #1D1D1E;
 	border-bottom-left-radius: 5px 5px;
@@ -9,12 +8,16 @@
 	border-width: 1px;
 	border-top-left-radius: 5px 5px;
 	border-top-right-radius: 5px 5px;
-/*	float: left; */
-	height: 30px;
 
-	padding: 5px;
+	height: 30px;
+	padding: 7px;
 	width: 80px;
 
+}
+
+.boton:active{
+	
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#DDDDE0), to(#E3E3E8));
 }
 
 

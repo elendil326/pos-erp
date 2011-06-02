@@ -1226,7 +1226,7 @@ function doSurtir()
     
 	console.warn("ESTO ES LO QUE VOY A ENVIAR !", readyDATA);
 
-	var debugging = true;
+	var debugging = false;
 
     //hacer ajaxaso
     jQuery.ajaxSettings.traditional = true;
