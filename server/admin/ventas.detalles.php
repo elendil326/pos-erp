@@ -102,7 +102,7 @@ function renderMoney($money, $row){
 $header = array( 
 	"id_producto" => "ID", 
 	"descripcion" => "Descripcion", 
-	"cantidad" => "Cantidad orignal",
+	"cantidad" => "Cantidad original",
 	"precio" => "Precio original",
 	"cantidadProc" => "Cantidad procesada",
 	"precioProc" => "Precio procesada" );

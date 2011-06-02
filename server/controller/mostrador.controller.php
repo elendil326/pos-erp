@@ -524,6 +524,14 @@ function vender($args) {
         $detalle_inventario->setExistenciasProcesadas($detalle_inventario->getExistenciasProcesadas() - $producto->cantidad_procesada);
         $detalle_inventario->setExistencias($detalle_inventario->getExistencias() - $producto->cantidad);
 
+        //verificamos si su precio es por agrupacion
+
+		$producto_inventario = InventarioDAO::getByPK( $producto->id_producto );
+        if( $producto_inventario->getPrecioPorAgrupacion() ){
+            $producto->cantidad /= $producto_inventario->getAgrupacionTam(); 
+            $producto->cantidad_procesada /= $producto_inventario->getAgrupacionTam(); 
+        }
+
         $subtotal += ( ( $producto->cantidad_procesada * $producto->precio_procesada ) + ( $producto->cantidad * $producto->precio ) );
 
         try {
@@ -537,6 +545,7 @@ function vender($args) {
 
     //ya que se tiene el total de la venta se actualiza el total de la venta
     $venta->setSubtotal($subtotal);
+
     $total = ( $subtotal - ( ( $subtotal * $descuento ) / 100 ) );
     $venta->setTotal($total);
 

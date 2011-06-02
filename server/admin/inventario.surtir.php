@@ -824,7 +824,11 @@ ComposicionTabla = function( config ){
              costo_flete =   producto.costo_flete / producto.peso_origen;
         }
 
-		console.log("El precio original de este producto ya con flete es de " + cf(parseFloat(producto.precio_por_kg) + parseFloat(costo_flete)) + " pesos.");
+
+
+		
+
+		console.log("El precio original de este producto ya con flete es de " + cf(parseFloat(producto.precio_por_kg) + parseFloat(costo_flete)) + " pesos por escala.");
 		
 		var escala_precio;
 		
@@ -838,9 +842,14 @@ ComposicionTabla = function( config ){
 			escala_precio = producto.escala ;
 
 		}
-				        
-        html += td( "<input name='precio'     value='"+ roundNumber( parseFloat(producto.precio_por_kg) 
-                                                    + parseFloat(costo_flete) )+"' "    +keyup+"    type='text'>"
+	
+		var precio_total = roundNumber( parseFloat(producto.precio_por_kg)  + parseFloat(costo_flete) );
+		
+		if(producto.precio_por_agrupacion){
+			precio_total *= producto.agrupacionTam;
+		}
+
+        html += td( "<input name='precio'     value='"+precio_total +"' "    +keyup+"    type='text'>"
 													+ "&nbsp; por " + escala_precio );
         var escala_descuento;
 

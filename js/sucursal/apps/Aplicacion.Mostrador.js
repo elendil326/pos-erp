@@ -797,22 +797,22 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
         var len = this.carrito.items.length;
 	
         this.carrito.items.push({
-            descripcion : res.data.descripcion,
-            existencias : res.data.existenciasOriginales,
-            existencias_procesadas : res.data.existenciasProcesadas,
-            tratamiento : res.data.tratamiento,   //si es !null  entonces el producto puede ser original o procesado
-            precioVenta : res.data.precioVenta,
-            precioVentaSinProcesar : res.data.precioVentaSinProcesar,
-            precio : venta_intersucursal? res.data.precioIntersucursal : res.data.precioVenta,
-            id_producto : res.data.productoID,
-            escala : res.data.medida,
-            precioIntersucursal : res.data.precioIntersucursal,
+            descripcion 			: res.data.descripcion,
+            existencias 			: res.data.existenciasOriginales,
+            existencias_procesadas 	: res.data.existenciasProcesadas,
+            tratamiento 			: res.data.tratamiento,   //si es !null  entonces el producto puede ser original o procesado
+            precioVenta 			: res.data.precioVenta,
+            precioVentaSinProcesar 	: res.data.precioVentaSinProcesar,
+            precio 					: venta_intersucursal ? res.data.precioIntersucursal : res.data.precioVenta,
+            id_producto 			: res.data.productoID,
+            escala 					: res.data.medida,
+            precioIntersucursal 	: res.data.precioIntersucursal,
             precioIntersucursalSinProcesar : res.data.precioIntersucursalSinProcesar,
-            procesado : "true",
-            cantidad : 1,
-            idUnique : res.data.productoID + "_" +  Aplicacion.Mostrador.currentInstance.uniqueIndex,
-            descuento : "0",
-			input_box_rendered : false
+            procesado 				: "false",
+            cantidad 				: 1,
+            idUnique 				: res.data.productoID + "_" +  Aplicacion.Mostrador.currentInstance.uniqueIndex,
+            descuento 				: "0",
+			input_box_rendered 		: false
         });
 		
         Aplicacion.Mostrador.currentInstance.uniqueIndex++; //identificador unico e irepetible
@@ -1216,11 +1216,11 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 
     json = encodeURI( Ext.util.JSON.encode( carrito ) );
 
-    do
-    {
+    do{
+
         json = json.replace('#','%23');
-    }
-    while(json.indexOf('#') >= 0);
+
+    }while(json.indexOf('#') >= 0);
 	
     html = "";
 	
@@ -1373,7 +1373,7 @@ Aplicacion.Mostrador.prototype.vender = function ()
     json = Ext.util.JSON.encode( Aplicacion.Mostrador.currentInstance.carrito );
 	
     if(DEBUG){
-        console.log("Enviando venta ....", json);
+        console.log("Enviando venta .... !", json);
     }
 	
     Ext.Ajax.request({
