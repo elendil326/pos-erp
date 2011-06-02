@@ -248,13 +248,14 @@ function vender($args) {
         //verificamos si su precio es por agrupacion
         if( $producto->getPrecioPorAgrupacion() ){
             $data->items[$i]->cantidad *= $producto->getAgrupacionTam(); 
-            $data->items[$i]->precio /= $producto->getAgrupacionTam(); 
+            //$data->items[$i]->precio /= $producto->getAgrupacionTam(); 
         }
         
         //----------------------
         
         
         $data->items[$i]->cantidad -= $data->items[$i]->descuento;
+        
     }
 
 
@@ -384,6 +385,9 @@ function vender($args) {
         }
     }//for de $data->items
     //revisamos si las existencias en el inventario de la sucursal para ver si satisfacen a las requeridas en la venta
+    
+   // var_dump($array_items);
+    
     if (!revisarExistenciasSucursal($array_items)) {
         Logger::log("No hay existencias suficientes en el inventario de la suursal para satisfacer la demanda");
         die('{"success": false, "reason": "No hay existencias suficientes en el inventario de la suursal para satisfacer la demanda. Intente de nuevo." }');
