@@ -200,53 +200,53 @@ switch( $autorizacionDetalles->clave ){
                 {
                     ?><tr>
 						<td>
-                                                    <?php 
-                                                        $p = InventarioDAO::getByPK( $producto->id_producto ); 
-                                                        echo $p->getDescripcion();
-                                                        
-                                                    ?>
-                                                </td><td>
-                                                    
-                                                        <?php
-                                                            echo $producto->procesado == true?"PROCESADO" : "ORIGINAL"; 
-                                                        ?>
-                                                    
-                                                        </td>
-						<td>
-                                                    <?php 
-                                                        printf("%10.2f",$producto->procesado == true?$producto->cantidad_procesada:$producto->cantidad) ;
-                                                        echo " " . $p->getEscala() . "s"; 
-                                                        
-                                                                                                                
-                                                        
-                                                        ?></td><td><?php 
-                                                        
-                                                            //----------------------------
-                                                        
-                                                        //preguntar si este producto es agrupado
-                                                        if($p->getAgrupacion()){
-                                                            
-                                                            if($producto->procesado){
-                                                                
-                                                                $promedio = $p->getAgrupacionTam();
-                                                                
-                                                            }else{
-                                                                
-                                                                
-                                                                
-                                                            }
-                                                                                                                        
-                                                            if($p->getAgrupacionTam() > 0){
-                                                                echo  sprintf("%10.2f",($producto->procesado == true?$producto->cantidad_procesada:$producto->cantidad) / $promedio) . " " . $p->getAgrupacion();
-                                                            }else{
-                                                                echo "Verifique la cantidad de la agrupacion, atualmente es de cero.";
-                                                            }
-                                                            
-                                                        }
-                                                        
-                                                        //----------------------------
-                                                        
-                                                        ?></td></tr><?php
+  	                <?php 
+	                      $p = InventarioDAO::getByPK( $producto->id_producto ); 
+	                      echo $p->getDescripcion();
+                      
+	                  ?>
+	              </td><td>
+                  
+	                      <?php
+	                          echo $producto->procesado == true?"PROCESADO" : "ORIGINAL"; 
+	                      ?>
+                  
+	                      </td>
+	<td>
+	                  <?php 
+	                      printf("%10.2f",$producto->procesado == true?$producto->cantidad_procesada:$producto->cantidad) ;
+	                      echo " " . $p->getEscala() . "s"; 
+                      
+                                                                              
+                      
+	                      ?></td><td><?php 
+                      
+	                          //----------------------------
+                      
+	                      //preguntar si este producto es agrupado
+	                      if($p->getAgrupacion()){
+                          
+	                          if($producto->procesado){
+                              
+	                              $promedio = $p->getAgrupacionTam();
+                              
+	                          }else{
+                              
+                              	 $promedio = $p->getAgrupacionTam();
+                              
+	                          }
+                                                                                      
+	                          if($p->getAgrupacionTam() > 0){
+	                              echo  sprintf("%10.2f",($producto->procesado == true?$producto->cantidad_procesada:$producto->cantidad) / $promedio) . " " . $p->getAgrupacion();
+	                          }else{
+	                              echo "Verifique la cantidad de la agrupacion, atualmente es de cero.";
+	                          }
+                          
+	                      }
+                      
+	                      //----------------------------
+                      
+	                      ?></td></tr><?php
                 }
                 ?>
                     

@@ -310,6 +310,10 @@ Aplicacion.Inventario.prototype.listaInventarioPanelCreate = function ()
 			"render" : function(){
 				//renderear el html del inventario
 				this.update(Aplicacion.Inventario.crearHtmlDeInventario());
+			},
+			"show" : function(){
+				//renderear el html del inventario
+				this.update(Aplicacion.Inventario.crearHtmlDeInventario());
 			}
 		}
 	});
