@@ -98,6 +98,9 @@ function renderMoney($money, $row){
 	return moneyFormat($money) ;
 }
 
+//buscar si el prodcuto es procesable
+
+
 //render the table
 $header = array( 
 	"id_producto" => "ID", 
@@ -105,13 +108,20 @@ $header = array(
 	"cantidad" => "Cantidad original",
 	"precio" => "Precio original",
 	"cantidadProc" => "Cantidad procesada",
-	"precioProc" => "Precio procesada" );
+	"precioProc" => "Precio procesada" ,
+	"descuento" => "Descuento" );
+
+/*echo "<pre>";
+var_dump($detalles);
+var_dump($venta);
+echo "</pre>";*/
 
 $tabla = new Tabla( $header, $detalles['items'] );
 $tabla->addColRender( 'precio', "renderMoney" );
 $tabla->addColRender( 'precioProc', "renderMoney" );
 $tabla->addColRender( 'cantidad', 'renderProd');
 $tabla->addColRender( 'cantidadProc', 'renderProd');
+$tabla->addColRender( 'descuento', 'renderProd');
 $tabla->render();
 
 

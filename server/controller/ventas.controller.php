@@ -119,6 +119,7 @@ function detalleVenta( $vid ){
 			"escala" => $productoData->getEscala(),
             "descripcion" => $productoData->getDescripcion(),
             "cantidad" => $dV->getCantidad(),
+            "descuento" => $dV->getDescuento(),
             "cantidadProc" => $dV->getCantidadProcesada(),
             "precio" => $dV->getPrecio(),
             "precioProc" => $dV->getPrecioProcesada()
