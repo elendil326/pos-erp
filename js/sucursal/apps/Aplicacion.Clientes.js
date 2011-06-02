@@ -355,15 +355,18 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
 	
 
     var html = "";
-    html += "<table border=0>";
+    html += "<table border = '0' align = 'center'>";
 	
     html += "<tr class='top'>";
     html += "<td>Producto</td>";
     html += "<td>Descripcion</td>";
-    html += "<td>Cantidad</td>";
+    html += "<td>Cantidad Original Entregada</td>";    
+    html += "<td>Descuento</td>";
+    html += "<td>Cantidad Original Cobrada</td>";
     html += "<td>Precio</td>";
     html += "<td>Cantidad procesada</td>";
     html += "<td>Precio procesada</td>";
+    
     html += "<td>Subtotal</td>";
     html += "</tr>";
 	
@@ -381,6 +384,8 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
 		
         html += "<td>" + detalleVenta[i].id_producto + "</td>";
         html += "<td>" + detalleVenta[i].descripcion + "</td>";
+        html += "<td>" + (parseFloat(detalleVenta[i].cantidad) + parseFloat(detalleVenta[i].descuento)) + "</td>";
+        html += "<td style = '" + (detalleVenta[i].descuento > 0 ? "color:red":"") + "'>" + detalleVenta[i].descuento + "</td>";
         html += "<td>" + detalleVenta[i].cantidad + "</td>";
         html += "<td>" + POS.currencyFormat ( detalleVenta[i].precio ) + "</td>";
         html += "<td>" + detalleVenta[i].cantidad_procesada + "</td>";
@@ -391,6 +396,8 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
 		
         subtotal = subtotal + subtotal_procesada;
 
+       
+
         html += "<td>" + POS.currencyFormat ( subtotal ) + "</td>";
         html += "</tr>";
     }
@@ -398,7 +405,7 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
     html += "</table>";
 	
     this.detallesDeVentaPanel.update( html );
-    this.detallesDeVentaPanel.setWidth( 800 );
+    this.detallesDeVentaPanel.setWidth( 900 );
     this.detallesDeVentaPanel.setHeight( 400 );
 };
 
