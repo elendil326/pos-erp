@@ -248,7 +248,10 @@ function vender($args) {
         //verificamos si su precio es por agrupacion
         if( $producto->getPrecioPorAgrupacion() ){
             $data->items[$i]->cantidad *= $producto->getAgrupacionTam(); 
-            //$data->items[$i]->precio /= $producto->getAgrupacionTam(); 
+        }
+        
+        if($producto->getTratamiento() == null){
+            $data->items[$i]->procesado = false;
         }
         
         //----------------------
