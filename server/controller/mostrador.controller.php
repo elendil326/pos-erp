@@ -173,7 +173,7 @@ function descontarInventario($productos) {
  *                     "procesado": true | false,
  *                     "precio":float,
  *                     "cantidad": float,
- *                      "descuento": float
+ *                     "descuento": float
  *                 }
  *             ]
  *        }
@@ -237,6 +237,23 @@ function vender($args) {
      * de articulos a vender es 93.
      */
     for ($i = 0; $i < count($data->items); $i++) {
+        
+        //----------------------
+        
+        if(!($producto = InventarioDAO::getByPK($data->items[$i]->id_producto))){
+            Logger::log("No se tiene registro del producto {$data->items[$i]->id_producto}.");
+            die('{"success": false, "reason": "No se tiene registro del producto ' . $data->items[$i]->id_producto . '." }');
+        }
+        
+        //verificamos si su precio es por agrupacion
+        if( $producto->getPrecioPorAgrupacion() ){
+            $data->items[$i]->cantidad *= $producto->getAgrupacionTam(); 
+            $data->items[$i]->precio /= $producto->getAgrupacionTam(); 
+        }
+        
+        //----------------------
+        
+        
         $data->items[$i]->cantidad -= $data->items[$i]->descuento;
     }
 

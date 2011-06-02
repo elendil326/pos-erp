@@ -409,7 +409,7 @@ class Comprobante {
     /**
      * Indica si esta en modo produccion
      */
-    private $productionMode = true;
+    private $productionMode = false;
 
     /**
      * Establece informacion acerca de si el api esta en modo produccion
