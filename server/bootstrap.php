@@ -42,8 +42,7 @@
 		
 		//la pagina de login, poner I_AM_LOGIN en verdadero, 
 		//es una buena manera de saber si vengo del login
-		//si vengo del login, entonces me vale si no hay instancia
-		//puedo sacarla despues de que el usaurio ponga sus credenciales
+		//si vengo del login
 		if(defined("I_AM_LOGIN") && I_AM_LOGIN) {
 			//
 			//Logger::log("Showing log page, althoug there is no instance id");
@@ -52,7 +51,13 @@
 			
 		}else{
 			//no estoy en el log.php, redireccionar a el
+			
+			if(defined("I_AM_SUCURSAL") && I_AM_SUCURSAL) {
+				die("NO INSTANCE !");
+			}
+			
 			die(header("Location: ./log.php"));
+			
 		}
 
 		
