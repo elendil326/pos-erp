@@ -8,6 +8,7 @@ require_once('model/proveedor.dao.php');
 require_once('model/actualizacion_de_precio.dao.php');
 require_once('model/compra_proveedor.dao.php');
 require_once('model/detalle_compra_proveedor.dao.php');
+require_once('model/compra_proveedor_fragmentacion.dao.php');
 require_once('model/compra_proveedor_flete.dao.php');
 require_once('model/inventario_maestro.dao.php');
 require_once('logger.php');
@@ -58,19 +59,19 @@ function listarInventario($sucID = null) {
         $actualizacion_de_precio = obtenerActualizacionDePrecio($producto->getIdProducto());
 
         Array_push($json, array(
-            "productoID" 				=> $productoData->getIdProducto(),
-            "descripcion" 				=> $productoData->getDescripcion(),
-            "tratamiento" 				=> $productoData->getTratamiento(),
-            "precioVenta" 				=> $producto->getPrecioVenta(),
-            "precioVentaSinProcesar" 	=> $actualizacion_de_precio->getPrecioVentaSinProcesar(),
-            "existenciasOriginales" 	=> $producto->getExistencias(),
-            "existenciasProcesadas"		=> $producto->getExistenciasProcesadas(),
-            "medida" 					=> $productoData->getEscala(),
-            "precioIntersucursal"		=> $actualizacion_de_precio->getPrecioIntersucursal(),
+            "productoID" => $productoData->getIdProducto(),
+            "descripcion" => $productoData->getDescripcion(),
+            "tratamiento" => $productoData->getTratamiento(),
+            "precioVenta" => $producto->getPrecioVenta(),
+            "precioVentaSinProcesar" => $actualizacion_de_precio->getPrecioVentaSinProcesar(),
+            "existenciasOriginales" => $producto->getExistencias(),
+            "existenciasProcesadas" => $producto->getExistenciasProcesadas(),
+            "medida" => $productoData->getEscala(),
+            "precioIntersucursal" => $actualizacion_de_precio->getPrecioIntersucursal(),
             "precioIntersucursalSinProcesar" => $actualizacion_de_precio->getPrecioIntersucursalSinProcesar(),
-            "agrupacion" 				=> $productoData->getAgrupacion(),
-            "agrupacionTam" 			=> $productoData->getAgrupacionTam(),
-			"precioPorAgrupacion"		=> $productoData->getPrecioPorAgrupacion() == "1"
+            "agrupacion" => $productoData->getAgrupacion(),
+            "agrupacionTam" => $productoData->getAgrupacionTam(),
+            "precioPorAgrupacion" => $productoData->getPrecioPorAgrupacion() == "1"
         ));
     }
 
@@ -122,22 +123,21 @@ function listarInventarioMaestro($n = 50, $show = POS_TODOS) {
 
         $flete = CompraProveedorFleteDAO::getByPK($compra->getIdCompraProveedor());
 
-		
-		//ciclar por los detalles
+
+        //ciclar por los detalles
         foreach ($detalles as $detalle) {
 
             $iM = InventarioMaestroDAO::getByPK($detalle->getIdProducto(), $compra->getIdCompraProveedor());
 
             if ($iM->getExistencias() == 0) {
                 if ($show == POS_SOLO_ACTIVOS)
-                    continue;	
-
+                    continue;
             }else {
                 if ($show == POS_SOLO_VACIOS)
                     continue;
             }
 
-			//buscar la descripcion del producto
+            //buscar la descripcion del producto
             foreach ($inventario as $i) {
                 if ($i->getIdProducto() == $detalle->getIdProducto()) {
                     $p = $i;
@@ -155,13 +155,13 @@ function listarInventarioMaestro($n = 50, $show = POS_TODOS) {
 
             $bar = array_merge($compra->asArray(), $iM->asArray(), $detalle->asArray(), $flete->asArray());
 
-            $bar['producto_desc'] 			= $p->getDescripcion();
-            $bar['producto_tratamiento'] 	= $p->getTratamiento();
-            $bar['medida']					= $p->getEscala();
-            $bar['agrupacion'] 				= $p->getAgrupacion();
-            $bar['agrupacionTam'] 			= $p->getAgrupacionTam();
-            $bar['precio_por_agrupacion'] 	= $p->getPrecioPorAgrupacion();
-			//$bar['costo_con_flete'] 		= 	$flete->costoFlete();
+            $bar['producto_desc'] = $p->getDescripcion();
+            $bar['producto_tratamiento'] = $p->getTratamiento();
+            $bar['medida'] = $p->getEscala();
+            $bar['agrupacion'] = $p->getAgrupacion();
+            $bar['agrupacionTam'] = $p->getAgrupacionTam();
+            $bar['precio_por_agrupacion'] = $p->getPrecioPorAgrupacion();
+            //$bar['costo_con_flete'] 		= 	$flete->costoFlete();
 
             if ($p->getTratamiento() === null) {
                 $bar["existencias_procesadas"] = "NA";
@@ -338,7 +338,7 @@ function nuevoProducto($data) {
     $inventario->setTratamiento($jsonData->tratamiento == "null" ? null : $jsonData->tratamiento );
     $inventario->setAgrupacion($jsonData->agrupacion == "null" ? null : $jsonData->agrupacion );
     $inventario->setAgrupacionTam($jsonData->agrupacion == "null" ? null : $jsonData->agrupacionTam );
-    $inventario->setPrecioPorAgrupacion($jsonData->tipo_de_precio == "agrupacion" );
+    $inventario->setPrecioPorAgrupacion($jsonData->tipo_de_precio == "agrupacion");
     $inventario->setActivo(1);
     DAO::transBegin();
 
@@ -473,7 +473,7 @@ function procesarProducto($json = null) {
 
 
     $producto = InventarioDAO::getByPK($data->id_producto);
-    
+
     //registramos este egreso en el inventario maestro
     $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
     $compra_proveedor_fragmentacion->setIdCompraProveedor($data->id_compra_proveedor);
@@ -583,8 +583,71 @@ function terminarCargamentoCompra($json = null) {
     $existencias = $inventario_maestro->getExistencias();
     $existencias_procesadas = $inventario_maestro->getExistenciasProcesadas();
 
+    $total_existencias_originales = $existencias - $existencias_procesadas;
+    $total_existencias_procesadas = $existencias_procesadas;
+
     $inventario_maestro->setExistencias(0);
     $inventario_maestro->setExistenciasProcesadas(0);
+
+    //------------------------ AGREGAMOS LA FRAGMENTACION
+
+    if (!($inventario = InventarioDAO::getByPK($data->id_producto))) {
+        Logger::log("Error al obtener los datos del producto {$data->id_producto}.");
+        die('{"success": false , "reason": "Error al obtener los datos del producto ' . $data->id_producto . '." }');
+    }
+
+    if (!($remision = CompraProveedorDAO::getByPK($data->id_compra_proveedor))) {
+        Logger::log("Error al obtener los datos de la compra al proveedor.");
+        die('{"success": false , "reason": "Error al obtener los datos de la compra al proveedor." }');
+    }
+
+    if (!($detalle_compra_proveedor = DetalleCompraProveedorDAO::getByPK($data->id_compra_proveedor, $data->id_producto))) {
+            Logger::log("Error al obtener los datos del detalle de la compra al proveedor.");
+            die('{"success": false , "reason": "Error al obtener los datos del detalle de la compra al proveedor." }');
+        }
+
+    if ($total_existencias_procesadas > 0) {
+
+        $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
+        $compra_proveedor_fragmentacion->setIdCompraProveedor($data->id_compra_proveedor);
+        $compra_proveedor_fragmentacion->setIdProducto($data->id_producto);
+        $compra_proveedor_fragmentacion->setDescripcion("SE DIO POR TERMINADO EL PRODUCTO {$inventario->getDescripcion()} PROCESADA DE LA REMISION {$remision->getFolio()} ");
+        $compra_proveedor_fragmentacion->setProcesada(1);
+        $compra_proveedor_fragmentacion->setCantidad($total_existencias_procesadas * -1);
+        $compra_proveedor_fragmentacion->setPrecio($detalle_compra_proveedor->getPrecioPorKg());
+        $compra_proveedor_fragmentacion->setDescripcionRefId(0);
+
+        try {
+            CompraProveedorFragmentacionDAO::save($compra_proveedor_fragmentacion);
+        } catch (Exception $e) {
+            DAO::transRollback();
+            Logger::log("Error, al guardar los datos del historial del producto del inventario maestro. : " . $e);
+            die('{"success": false, "reason": "Error, al guardar los datos del historial del producto del inventario maestro." }');
+        }
+    }
+
+    if ($total_existencias_originales > 0) {
+
+        $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
+        $compra_proveedor_fragmentacion->setIdCompraProveedor($data->id_compra_proveedor);
+        $compra_proveedor_fragmentacion->setIdProducto($data->id_producto);
+        $compra_proveedor_fragmentacion->setDescripcion("SE DIO POR TERMINADO EL PRODUCTO {$inventario->getDescripcion()} ORIGINAL DE LA REMISION {$remision->getFolio()} ");
+        $compra_proveedor_fragmentacion->setProcesada(0);
+        $compra_proveedor_fragmentacion->setCantidad($total_existencias_originales * -1);
+        $compra_proveedor_fragmentacion->setPrecio($detalle_compra_proveedor->getPrecioPorKg());
+        $compra_proveedor_fragmentacion->setDescripcionRefId(0);
+
+        try {
+            CompraProveedorFragmentacionDAO::save($compra_proveedor_fragmentacion);
+        } catch (Exception $e) {
+            DAO::transRollback();
+            Logger::log("Error, al guardar los datos del historial del producto del inventario maestro. : " . $e);
+            die('{"success": false, "reason": "Error, al guardar los datos del historial del producto del inventario maestro." }');
+        }
+    }
+
+
+    //------------------------
 
     try {
         InventarioMaestroDAO::save($inventario_maestro);
@@ -608,6 +671,65 @@ function terminarCargamentoCompra($json = null) {
             DAO::transRollback();
             die('{"success": false, "reason": "Error al transferir el producto en la otra compra."}');
         }
+
+        if (!($inventario = InventarioDAO::getByPK($data->restante->id_producto))) {
+            Logger::log("Error al obtener los datos del producto {$data->restante->id_producto}.");
+            die('{"success": false , "reason": "Error al obtener los datos del producto ' . $data->restante->id_producto . '." }');
+        }
+
+        if (!($remision = CompraProveedorDAO::getByPK($data->restante->id_compra_proveedor))) {
+            Logger::log("Error al obtener los datos de la compra al proveedor.");
+            die('{"success": false , "reason": "Error al obtener los datos de la compra al proveedor." }');
+        }
+        
+        if (!($detalle_compra_proveedor = DetalleCompraProveedorDAO::getByPK($data->restante->id_compra_proveedor, $data->restante->id_producto))) {
+            Logger::log("Error al obtener los datos del detalle de la compra al proveedor.");
+            die('{"success": false , "reason": "Error al obtener los datos del detalle de la compra al proveedor." }');
+        }
+
+        //------------------------------
+
+        if ($total_existencias_procesadas > 0) {
+
+            $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
+            $compra_proveedor_fragmentacion->setIdCompraProveedor($data->restante->id_compra_proveedor);
+            $compra_proveedor_fragmentacion->setIdProducto($data->restante->id_producto);
+            $compra_proveedor_fragmentacion->setDescripcion("SE TRANSLADO EL PRODUCTO {$inventario->getDescripcion()} PROCESADA DE LA REMISION {$remision->getFolio()} ");
+            $compra_proveedor_fragmentacion->setProcesada(1);
+            $compra_proveedor_fragmentacion->setCantidad($total_existencias_procesadas);
+            $compra_proveedor_fragmentacion->setPrecio($detalle_compra_proveedor->getPrecioPorKg());
+            $compra_proveedor_fragmentacion->setDescripcionRefId($remision->getIdCompraProveedor());
+
+            try {
+                CompraProveedorFragmentacionDAO::save($compra_proveedor_fragmentacion);
+            } catch (Exception $e) {
+                DAO::transRollback();
+                Logger::log("Error, al guardar los datos del historial del producto del inventario maestro. : " . $e);
+                die('{"success": false, "reason": "Error, al guardar los datos del historial del producto del inventario maestro." }');
+            }
+        }
+
+        if ($total_existencias_originales > 0) {
+
+            $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
+            $compra_proveedor_fragmentacion->setIdCompraProveedor($data->restante->id_compra_proveedor);
+            $compra_proveedor_fragmentacion->setIdProducto($data->restante->id_producto);
+            $compra_proveedor_fragmentacion->setDescripcion("SE TRANSLADO EL PRODUCTO {$inventario->getDescripcion()} ORIGINAL DE LA REMISION {$remision->getFolio()} ");
+            $compra_proveedor_fragmentacion->setProcesada(0);
+            $compra_proveedor_fragmentacion->setCantidad($total_existencias_originales);
+            $compra_proveedor_fragmentacion->setPrecio($detalle_compra_proveedor->getPrecioPorKg());
+            $compra_proveedor_fragmentacion->setDescripcionRefId($remision->getIdCompraProveedor());
+
+            try {
+                CompraProveedorFragmentacionDAO::save($compra_proveedor_fragmentacion);
+            } catch (Exception $e) {
+                DAO::transRollback();
+                Logger::log("Error, al guardar los datos del historial del producto del inventario maestro. : " . $e);
+                die('{"success": false, "reason": "Error, al guardar los datos del historial del producto del inventario maestro." }');
+            }
+        }
+
+        //------------------------------
     }
 
 
