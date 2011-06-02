@@ -1257,12 +1257,10 @@ echo " inventario_maestro_extjs = " . json_encode($iMaestro) . ";";
                             //no se puede cubrir el total con el credito restante
                                                         
                             //verificamos si almenos tiene algo de credito restante
-                            if(!cliente.credito_restante > 0){
+                            if(parseFloat(cliente.credito_restante) <= 1){
                                 
-                                Ext.Msg.alert("VENTA A CREDITO", "ESTA VENTA TIENE QUE PAGARSE EN EFECTIVO DEBIDO A QUE EL CLIENTE NO CUENTA CON SUFICIENTE CREDITO.", function(){
-                                    return;                                    
-                                });
-                                
+                                Ext.Msg.alert("VENTA A CREDITO", "ESTA VENTA TIENE QUE PAGARSE EN EFECTIVO DEBIDO A QUE " + cliente.razon_social + " NO CUENTA CON SUFICIENTE CREDITO.");
+                                return;
                             }
                                                         
                             Vender.faltante = parseFloat(Composicion.totalVenta) - parseFloat(cliente.credito_restante);                                                        
@@ -1373,60 +1371,61 @@ echo " inventario_maestro_extjs = " . json_encode($iMaestro) . ";";
 
             data.productos = prods;
 
-            jQuery.ajaxSettings.traditional = true;
-		
-            jQuery(".hide_on_ajax").fadeOut("slow",function(){
-                jQuery("#loader").fadeIn();
+            jQuery.ajaxSettings.traditional = true;		
 
-                jQuery.ajax({
-                    url: "../proxy.php",
-                    data: { 
-                        action : 101, 
-                        data : jQuery.JSON.encode( data )
-                    },
-                    cache: false,
-                    success: function(data){
-                        try{
-                            response = jQuery.parseJSON(data);
-                            //console.log(response, data.responseText)
-                        }catch(e){
+            jQuery("#loader").fadeIn();
 
-                            jQuery("#loader").fadeOut('slow', function(){
-                                window.scroll(0,0);                         
-                                jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
-                                jQuery(".hide_on_ajax").fadeIn();
-                            });                
-                            return;                    
-                        }
+            jQuery(".hide_on_ajax").fadeOut("slow");
 
+            jQuery.ajax({
+                url: "../proxy.php",
+                data: { 
+                    action : 101, 
+                    data : jQuery.JSON.encode( data )
+                },
+                cache: false,
+                success: function(data){
+                    try{
+                        response = jQuery.parseJSON(data);
+                        //console.log(response, data.responseText)
+                    }catch(e){
 
-                        if(response.success === false){
-
-                            jQuery("#loader").fadeOut('slow', function(){
-                                //jQuery("#submitButtons").fadeIn();    
-                                window.scroll(0,0); 
-                                if(response.reason){
-                                    jQuery("#ajax_failure").html(response.reason).show();							
-                                }else{
-                                    jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
-                                }
-
-                                jQuery(".hide_on_ajax").fadeIn();                  
-                            });                
-                            return ;
-                        }
-
-                        //redireccionar para realizar un abono a la venta a credito
-                        //if(Vender.pago_mixto){
-                        //    window.location = "ventas.php?action=detalles&id="+response.id_venta+"&pp=1&success=true&reason=" + reason;
-                        //}
-
-                        reason = "Venta exitosa.";
-                        window.location = "ventas.php?action=detalles&id="+response.id_venta+"&pp=1&success=true&reason=" + reason;
-
+                        jQuery("#loader").fadeOut('slow', function(){
+                            window.scroll(0,0);                         
+                            jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+                            jQuery(".hide_on_ajax").fadeIn();
+                        });                
+                        return;                    
                     }
-                });
+
+
+                    if(response.success === false){
+
+                        jQuery("#loader").fadeOut('slow', function(){
+                            //jQuery("#submitButtons").fadeIn();    
+                            window.scroll(0,0); 
+                            if(response.reason){
+                                jQuery("#ajax_failure").html(response.reason).show();							
+                            }else{
+                                jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+                            }
+
+                            jQuery(".hide_on_ajax").fadeIn();                  
+                        });                
+                        return ;
+                    }
+
+                    //redireccionar para realizar un abono a la venta a credito
+                    //if(Vender.pago_mixto){
+                    //    window.location = "ventas.php?action=detalles&id="+response.id_venta+"&pp=1&success=true&reason=" + reason;
+                    //}
+
+                    reason = "Venta exitosa.";
+                    window.location = "ventas.php?action=detalles&id="+response.id_venta+"&pp=1&success=true&reason=" + reason;
+
+                }
             });
+
         }
 
     };

@@ -1322,6 +1322,7 @@ function venderAdmin($args) {
             printf('{"success": true, "id_venta":%s, "empleado":"%s"}', $venta->getIdVenta(), $empleado->getNombre());
         } else {
             DAO::transRollback();
+            Logger::log("No se pudo actualizar el total de la venta");
             die('{"success": false, "reason": "No se pudo actualizar el total de la venta" }');
         }
     } catch (Exception $e) {
