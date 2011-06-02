@@ -66,7 +66,7 @@ Aplicacion.Autorizaciones.prototype.getConfig = function (){
             }]
         },
         {
-            text: 'Autorizaciones de hoy',
+            text: 'Lista de Autorizaciones',
             card: Aplicacion.Autorizaciones.currentInstance.listaDeAutorizacionesPanel,
             leaf: true
         }]
@@ -1440,7 +1440,9 @@ Ext.regModel('listaDeAutorizacionesModel', {
 
     {
         name: 'fecha_peticion',
-        type: 'date'
+        convert: function(v, record){
+			return POS.fecha(v);
+		}
     }
     ]
 });
@@ -1466,8 +1468,11 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizaciones = {
  */
 Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesStore = new Ext.data.Store({
     model: 'listaDeAutorizacionesModel' ,
-    sorters: 'fecha_peticion',
-    
+    sorters: {
+			property : 'id_autorizacion',
+    		direction: 'DESC'			
+		},
+
 
     getGroupString : function(record) {
 
@@ -1555,7 +1560,17 @@ Aplicacion.Autorizaciones.prototype.listaDeAutorizacionesPanelCreator = function
             xtype: 'list',
             emptyText: "vacio",
             store: this.listaDeAutorizacionesStore,
-            itemTpl: '<div style = "float:left; position:relative;" class="listaDeAutorizacionesAutorizacion" onClick = "Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionPanelShow({id_autorizacion})">ID de autorizacion : {id_autorizacion}&nbsp; Enviada el {fecha_peticion}</div><div style = "margin-left:5px;float:left; position:relative;" id = "autorizacion_{id_autorizacion}"></div>',
+			//
+            itemTpl: '<table border=0 >'
+			+ '	<tr>'
+			+ '		<td style="width:400px;">Autorizacion numero {id_autorizacion}&nbsp;</td>'
+			+ '		<td style="width:200px;"><span  id="autorizacion_{id_autorizacion}"></span></td>'
+			+ '		<td rowspan=2 style="width:150px;" align=right><img src="../media/arrow2.png" onClick = "Aplicacion.Autorizaciones.currentInstance.detalleAutorizacionPanelShow({id_autorizacion})"></td>'
+			+ '	</tr>'
+			+ '	<tr>'
+			+	'	<td colspan=2><span style="font-size:11px; color: gray;">Enviada el {fecha_peticion}</span></td>'
+			+	'</tr>'
+			+  '</table>',
             grouped: true,
             indexBar: false,
             listeners : {
@@ -1624,7 +1639,7 @@ Aplicacion.Autorizaciones.prototype.updateListaAutorizaciones = function(){
         upTo=document.createTextNode('( ' + desc + ' )');
         //---------
 
-        var div = document.createElement('div');
+        var div = document.createElement('span');
         div.style.color = color;
         div.appendChild( upTo );
         //----------

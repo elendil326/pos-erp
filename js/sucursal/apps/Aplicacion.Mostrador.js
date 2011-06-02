@@ -273,7 +273,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 
 
 		//cantidad ! y escala !
-        html += "<td  align='center'  style='width: 6.3%;' ><div id='Mostrador-carritoCantidad"+ carrito.items[i].idUnique +"'></div></td><td>"+ escala_de_compra +"</td>";
+        html += "<td  align='center'  style='width: 7.2%;' ><div id='Mostrador-carritoCantidad"+ carrito.items[i].idUnique +"'></div></td><td>"+ escala_de_compra +"</td>";
 
 		//quitar una unidad
         html += "<td  align='center'  style='width: 8.1%;'> <span class='boton' onClick=\"Aplicacion.Mostrador.currentInstance.carritoCambiarCantidad('"+ carrito.items[i].idUnique +"', 1, false)\"><img src='../media/icons/arrow_up_16.png'></span></td>";
@@ -334,17 +334,10 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
     //creamos los controles de la tabla
     for (i=0; i < carrito.items.length; i++){
 		
+		// dan
         if(Ext.get("Mostrador-carritoCantidad"+ carrito.items[i].productoID + "Text")){
             continue;
         }
-		
-		/*
-		if(carrito.items[i].input_box_rendered)
-			continue;
-		
-		carrito.items[i].input_box_rendered = true;
-	 	*/
-	
 
 		
         //control donde se muestra la cantidad de producto

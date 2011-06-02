@@ -148,7 +148,8 @@ POS.fecha = function( f ){
 	
 	var min = fecha.getMinutes() < 10 ? "0" + fecha.getMinutes() : fecha.getMinutes(); 
 	var hours = Math.abs(fecha.getHours() - 12);
-	return fecha.getDate() +" "+ mes + " " + hours + ":" + min;
+	var meridiano = fecha.getHours() > 12 ? "pm" : "am";
+	return fecha.getDate() +" de "+ mes + " a las " + hours + ":" + min + " " + meridiano;
 }
 
 //contiene informacion acerca de las leyendas de los tickets
