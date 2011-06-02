@@ -987,7 +987,7 @@ function venderAdmin($args) {
         //bandera para verificar si el producto no esta dentro de array_items
         $found = false;
 
-        //iteramos el array_items y lo comparamos cada elementod e el con el producto actual
+        //iteramos el array_items y lo comparamos cada elemento de el con el producto actual
         foreach ($array_items as $item) {
 
             //comparamos haber si ya existe el producto en array_items
@@ -1157,6 +1157,7 @@ function venderAdmin($args) {
             Logger::log($e);
             die('{"success": false, "reason": "Error, al guardar el detalle venta." }');
         }
+        
     }
 
     //descontamos del inventario el pedido
@@ -1208,10 +1209,11 @@ function venderAdmin($args) {
 
         if ($producto->cantidad_procesada > 0) {
             //requiere producto sin procesar
-            $inventario_maestro->setExistenciasProcesadas($inventario_maestro->getExistenciasProcesadas() - $producto->cantidad_procesada);
-
+            
             $inventario_maestro = InventarioMaestroDAO::getByPK($producto->id_producto, $producto->id_compra_proveedor);
-
+            $inventario_maestro->setExistenciasProcesadas($inventario_maestro->getExistenciasProcesadas() - $producto->cantidad_procesada);
+            $inventario_maestro->setExistencias($inventario_maestro->getExistencias() - $producto->cantidad_procesada);
+            
             $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
             $compra_proveedor_fragmentacion->setIdCompraProveedor($producto->id_compra_proveedor);
             $compra_proveedor_fragmentacion->setIdProducto($producto->id_producto);

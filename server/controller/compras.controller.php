@@ -666,14 +666,19 @@ function insertarProductoInventarioMaestro($data = null, $id_compra_proveedor = 
  *             {
  *             "items": [
  *                 {
+ *                     "agrupacion":"valor"
  *                     "id_compra": 6,
  *                     "id_producto": 2,
  *                     "cantidad": 400,
  *                     "desc": "papa segunda",
  *                     "procesada": false,
- *                     "escala": "kilogramo",
- *                     "precio": 7,
- *                     "descuento": 0
+ *                     "escala" : "kilogramo",
+ *                     "precio" : 7,
+ *                     "precio_original" : 7,
+ *                     "descuento" : 5,
+ *                     "peso_real" : 10,
+ *                     "peso_a_cobrar" : 5,
+ *                     "importe" : 38.5
  *                 }
  *             ],
  *             "producto": 1,
@@ -717,6 +722,8 @@ function nuevaCompraSucursal($json = null) {
 
     $detalles_de_compra = array();
 
+    $fragmentaciones = array();
+
     $parametros = array();
 
     $preparametros = array();
@@ -728,9 +735,9 @@ function nuevaCompraSucursal($json = null) {
 
         Logger::log("Producto a surtir : " . $producto->producto . " con " . sizeof($producto->items) . " subproductos");
 
-        $cantidad 	= 0;
-        $precio 	= 0;
-        $descuento 	= 0;
+        $cantidad = 0;
+        $precio = 0;
+        $descuento = 0;
 
         //iteramos todos los subproductos que componen al producto actual
         foreach ($producto->items as $subproducto) {
@@ -749,33 +756,29 @@ function nuevaCompraSucursal($json = null) {
             $precio += $subproducto->importe;
 
             descontarDeInventarioMaestro($subproducto->id_compra, $subproducto->id_producto, $subproducto->peso_real, $subproducto->procesada);
-            
-/*
+
+
+            //-------------------------------
+
+
             $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
             $compra_proveedor_fragmentacion->setIdCompraProveedor($subproducto->id_compra);
             $compra_proveedor_fragmentacion->setIdProducto($subproducto->id_producto);
-            $compra_proveedor_fragmentacion->setDescripcion("SE SURTIO A LA SUCURSAL " . $sucursal->getDescripcion() ." LA CANTIDAD DE " . ($subproducto->cantidad + $producto->descuento) . $subproducto->escala . " DE " . $subproducto->desc . " " . ($subproducto->procesada?"PROCESADA":"ORIGINAL") );
+            $compra_proveedor_fragmentacion->setDescripcion("SE SURTIO A LA SUCURSAL " . $sucursal->getDescripcion() . " LA CANTIDAD DE " . $subproducto->peso_real . " " .$subproducto->escala . "s DE " . $subproducto->desc . " " . ($subproducto->procesada ? "PROCESADA" : "ORIGINAL"));
             $compra_proveedor_fragmentacion->setProcesada($subproducto->procesada);
-            $compra_proveedor_fragmentacion->setCantidad(($subproducto->cantidad + $producto->descuento) * -1);
+            $compra_proveedor_fragmentacion->setCantidad($subproducto->peso_real * -1);
             $compra_proveedor_fragmentacion->setPrecio($subproducto->precio);
-            $compra_proveedor_fragmentacion->setDescripcionRefId($id_venta);
 
-            try {
-                CompraProveedorFragmentacionDAO::save($compra_proveedor_fragmentacion);
-            } catch (Exception $e) {
-                DAO::transRollback();
-                Logger::log("Error, al guardar los datos del historial del producto del inventario maestro. : " . $e);
-                die('{"success": false, "reason": "Error, al guardar los datos del historial del producto del inventario maestro." }');
-            }
-*/
-            
+            array_push($fragmentaciones, $compra_proveedor_fragmentacion);
+
+            //-------------------------------
         }//foreach
 
 
-        $cantidad_a_pagar 		= $precio;
-        $global_total_importe 	+= $precio;
+        $cantidad_a_pagar = $precio;
+        $global_total_importe += $precio;
 
-		Logger::log("Creando el detalle de compra para : " . $producto->producto );
+        Logger::log("Creando el detalle de compra para : " . $producto->producto);
 
 
         $detalle = new DetalleCompraSucursal();
@@ -809,7 +812,6 @@ function nuevaCompraSucursal($json = null) {
             "precio" => $producto->procesado ? 0 : $detalle->getPrecio()
         ));
     }//foreach
-
     //insertar la nueva compra sucursal
     $compraSucursal = new CompraSucursal();
     $compraSucursal->setSubtotal($global_total_importe);
@@ -882,6 +884,23 @@ function nuevaCompraSucursal($json = null) {
         DAO::transRollback();
         die('{"success": false, "reason": "Error al agregar la autorizacion de compra sucursal"}');
     }
+
+    //----------------- INSERTAMOS LAS FRAGMENTACIONES
+
+    foreach ($fragmentaciones as $fragmentacion) {
+
+        $fragmentacion->setDescripcionRefId($compraSucursal->getIdCompra());
+
+        try {
+            CompraProveedorFragmentacionDAO::save($fragmentacion);
+        } catch (Exception $e) {
+            DAO::transRollback();
+            Logger::log("Error, al guardar los datos del historial del producto del inventario maestro. : " . $e);
+            die('{"success": false, "reason": "Error, al guardar los datos del historial del producto del inventario maestro." }');
+        }
+    }
+
+    //----------------
 
     DAO::transEnd();
 
