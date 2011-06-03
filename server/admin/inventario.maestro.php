@@ -302,8 +302,17 @@ function detalle_inventario(id){
 	                width    : 85, 
 	                sortable : true, 
 					align 	 : "right",	
-					renderer : function(n, c){
-						return n.toFixed(4);
+					renderer : function(n, c, row){
+						if(row.get("producto_tratamiento")){
+							//con tratamiento !
+							return n.toFixed(4);
+
+						}else{
+							//sin tratamiento
+							return "-";
+
+						}						
+					
 					},
 	                dataIndex: 'peso_por_arpilla'
 	            },	
@@ -336,18 +345,35 @@ function detalle_inventario(id){
 	                width    : 150, 
 	                sortable : true, 
 					align 	 : "right",
-	                renderer : function (n, a, row ){
+					 renderer : function (n, a, row ){
 
-						if(row.data.agrupacion.length > 0){
-							//si hay agrupacion
-							return  (parseFloat( n / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
-							+"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
-						}else{
-							//no hay agrupacion
-							return n.toFixed(2) + " " +  toSmallUnit(row.data.medida);
-						}
 
-					}, 
+
+							if(row.data.agrupacion.length > 0){
+								//si hay agrupacion
+
+								if(row.get("producto_tratamiento")){
+									//con tratamiento !
+									return  (parseFloat( n / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
+									+"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+
+								}else{
+									//sin tratamiento
+									console.log(row.get("producto_desc"), row);
+									console.log("sin tratamiento");			
+
+									console.log(n, row.get("agrupacionTam"), parseFloat( n / row.get("agrupacionTam") ));
+									return  (parseFloat( n / row.get("agrupacionTam") )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
+									+"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+
+								}
+
+							}else{
+								//no hay agrupacion
+								return n.toFixed(2) + " " +  toSmallUnit(row.data.medida);
+							}
+
+						},
 	                dataIndex: 'existencias'
 	            },
 	            {
@@ -482,11 +508,28 @@ function detalle_inventario(id){
 					hidden : true,
 					align 	 : "right",
 	                renderer : function (n, a, row ){
+						
+						
 
 						if(row.data.agrupacion.length > 0){
 							//si hay agrupacion
-							return  (parseFloat( n / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
-							+"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+
+							if(row.get("producto_tratamiento")){
+								//con tratamiento !
+								return  (parseFloat( n / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
+								+"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+
+							}else{
+								//sin tratamiento
+								console.log(row.get("producto_desc"), row);
+								console.log("sin tratamiento");			
+												
+								console.log(n, row.get("agrupacionTam"), parseFloat( n / row.get("agrupacionTam") ));
+								return  (parseFloat( n / row.get("agrupacionTam") )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
+								+"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+
+							}
+
 						}else{
 							//no hay agrupacion
 							return n.toFixed(2) + " " +  toSmallUnit(row.data.medida);

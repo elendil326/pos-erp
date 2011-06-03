@@ -125,7 +125,7 @@ jQuery(document).ready(function(){
     ?>
 
     
-    jQuery("#MAIN_TITLE").html("Surtir sucursal");
+    jQuery("#MAIN_TITLE").html("Realizar venta");
 
 	if(DEBUG){
 		//seleccionDeProd(1 );
@@ -1172,87 +1172,12 @@ function renderFinalShip(){
     jQuery("#compuesto-peso-a-cobrar").html 	( 0 );
     jQuery("#compuesto-importe-por-unidad").html( cf(0) );
     jQuery("#compuesto-importe-total").html 	( cf(0) );
+
+  	if(composiciones.length > 0 )
+		jQuery("#submit_form").fadeIn();
+	else
+		jQuery("#submit_form").fadeOut();
     
-}
-
-
-function doSurtir()
-{
-
-    if(!currentSuc){
-        error("&iquest; A que sucursal ?", "No ha seleccionado a que sucural desea surtir este pedido.");
-        return;
-    }
-
-    var readyDATA = {
-        productos : composiciones,
-        sucursal : currentSuc,
-        conductor : jQuery('#conductor').val()
-    };
-    
-	console.warn("ESTO ES LO QUE VOY A ENVIAR !", readyDATA);
-
-	var debugging = false;
-
-    //hacer ajaxaso
-    jQuery.ajaxSettings.traditional = true;
-
-    jQuery("#submitButtons").fadeOut("slow",function(){
-        jQuery("#loader").fadeIn();
-        
-        jQuery.ajax({
-        url: "../proxy.php",
-        data: { 
-            action : 1005, 
-            data : jQuery.JSON.encode( readyDATA ),
-        },
-        cache: false,
-        success: function(data){
-            try{
-                response = jQuery.parseJSON(data);
-                //console.log(response, data.responseText)
-            }catch(e){
-            
-                jQuery("#loader").fadeOut('slow', function(){
-                    jQuery("#submitButtons").fadeIn();
-                    window.scroll(0,0);                         
-                    jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
-                    jQuery("#submitButtons").fadeIn();
-                });                
-                return;                    
-            }
-    
-
-            if(response.success === false ){
-	
-
-
-                jQuery("#loader").fadeOut('slow', function(){
-                    //jQuery("#submitButtons").fadeIn();    
-                    window.scroll(0,0);
-					try{
-                    	jQuery("#ajax_failure").html(response.reason).show();
-					}catch(e){
-						jQuery("#ajax_failure").html("Error inesperado").show();
-					}
-
-                    jQuery("#submitButtons").fadeIn();
-                });                
-                return ;
-            }
-
-            if(debugging){
-				 jQuery("#loader").fadeOut();
-                jQuery("#submitButtons").fadeIn();					
-				window.open ("inventario.php?action=detalleCompraSucursal&cid=" + response.compra_id + "&pp=1");
-				return;
-			}
-			
-            window.location = "inventario.php?action=detalleCompraSucursal&cid=" + response.compra_id + "&pp=1";
-    
-        }
-        });
-    });
 }
 
 
@@ -1620,18 +1545,29 @@ Cliente = {
                 }
 
 
+				if(response === null){
+					 jQuery(".hide_on_ajax").fadeIn();  
+					console.warn("RESPONSE WAS NULL!");
+					window.scroll(0,0); 
+					jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+					return;
+				}
+				
+				
                 if(response.success === false){
+
+                    if(response.reason){
+                        jQuery("#ajax_failure").html(response.reason).show();							
+                    }else{
+                        jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+                    }
+
+                    jQuery(".hide_on_ajax").fadeIn();
 
                     jQuery("#loader").fadeOut('slow', function(){
                         //jQuery("#submitButtons").fadeIn();    
                         window.scroll(0,0); 
-                        if(response.reason){
-                            jQuery("#ajax_failure").html(response.reason).show();							
-                        }else{
-                            jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
-                        }
 
-                        jQuery(".hide_on_ajax").fadeIn();                  
                     });                
                     return ;
                 }
@@ -1928,14 +1864,15 @@ Vender = {
 
                 if(response.success === false){
 
+					if(response.reason){
+                        jQuery("#ajax_failure").html(response.reason).show();							
+                    }else{
+                        jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+                    }
+
                     jQuery("#loader").fadeOut('slow', function(){
                         //jQuery("#submitButtons").fadeIn();    
                         window.scroll(0,0); 
-                        if(response.reason){
-                            jQuery("#ajax_failure").html(response.reason).show();							
-                        }else{
-                            jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
-                        }
 
                         jQuery(".hide_on_ajax").fadeIn();                  
                     });                
@@ -1948,6 +1885,7 @@ Vender = {
                 //}
 
                 reason = "Venta exitosa.";
+
                 window.location = "ventas.php?action=detalles&id="+response.id_venta+"&pp=1&success=true&reason=" + reason;
 
             }
@@ -1999,8 +1937,8 @@ Vender = {
 	Seleccion de producto a surtir
 -->
 <div id="listaDeProductos">
-	<h2>Productos disponibles para surtir</h2>
-	<h3>&iquest; Que productos desea surtir ?</h3>
+	<h2>Productos disponibles para vender</h2>
+	<h3>&iquest; Que productos desea vender ?</h3>
 		<?php
 		echo "<table border=0 style='width: 100%; font-size: 14px; cursor: pointer;'>";
 			echo "<tr>";
@@ -2085,7 +2023,7 @@ Vender = {
 
 	<div id="ComposicionTabla"></div>
 
-	<h2>Detalles del producto a surtir</h2>
+	<h2>Detalles del producto a vender</h2>
 	<table width=100% >
 		<tr style="background-color: #f0f0f0;  border-color: gray; border-top-color: white; border: 1px solid;"><td>Enviar producto procesado</td><td style="width:50%">
 			<input style="width: 100px; margin: 5px;" id="compuesto-procesado" type="checkbox">
@@ -2118,7 +2056,7 @@ Vender = {
 
 
 <div id="FinalShip" style="display: none;">
-<h2>Productos a surtir</h2>
+<h2>Productos en esta venta</h2>
 
 	<div id="FinalShipTabla"></div>
 
@@ -2137,7 +2075,7 @@ Vender = {
 <!-- 
 	vender
 -->
-<div id="submit_form" style="display:block;">
+<div id="submit_form" style="display:none;">
 
     <div id="cash_or_credit" class="payment_option" align=center style="display:none;" >
         <table >

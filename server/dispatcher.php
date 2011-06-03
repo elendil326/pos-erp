@@ -65,7 +65,7 @@ unset($_POST);
 unset($_GET);
 
 
-if( $args['action'] != 1101 ){
+if( ! (($args['action'] == 1101) || ($args['action'] == 207) )){
 	Logger::log("Request for action ".$args['action']." ");	
 }
 

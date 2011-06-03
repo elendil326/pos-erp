@@ -590,7 +590,91 @@ function vender($args) {
     Logger::log("Proveso de venta (sucursal), termino con exito!! id_venta : {$id_venta}.");
 }
 
-//vender
+
+/**
+ * Descuenta un producto del inventario maestro
+ * 
+ * Esta funcion alterara la base de datos, sin embargo no hara ninguna transaccion, ni la abrira ni la cerrara !
+ *
+ * @param id_compra
+ * @param id_producto
+ * @param la cantidad a descontar en *escala* ! nada de agrupaciones
+ * @param si se descontara procesado o no, si este producto no se puede procesar, se descontara de orignales sin importar lo que este valor tenga
+ * @return true si se pudo descontar y false si no se pudo descontar porque ya no habia de ese producto
+ * */
+function descontarDeInventarioMaestro($id_compra, $id_producto, $cantidad_en_escala_a_descontar, $procesado = null )
+{
+	
+	//primero vamos a ver que existan suficientes para abastecer la cantidad
+	$producto_en_inventario_maestro = InventarioMaestroDAO::getByPK($id_producto, $id_compra);
+	
+	if(!$producto_en_inventario_maestro){
+		Logger::log("Esta remision no existe en el inventario maestro !");
+		return false;
+	}
+
+	//buscar este producto para ver sus propiedades
+	$producto_en_inventario =  InventarioDAO::getByPK($id_producto);
+	
+	if(!$producto_en_inventario){
+		Logger::log("Esta remision no existe en el inventario  !");
+		return false;
+	}
+	
+	
+	//vamos a ver si este producto se puede procesar o no
+	if( $producto_en_inventario->getTratamiento() ){
+		//si se puede procesar !
+		
+	}else{
+		//no se puede procesar !
+		$procesado = false;
+	}
+	
+	$existencias_actuales = 0;
+	
+	if($procesado){
+		$existencias_actuales = $producto_en_inventario_maestro->getExistenciasProcesadas();
+		
+		if(	$cantidad_en_escala_a_descontar >  $existencias_actuales){
+			Logger::log("No hay suficientes !");
+			return false;			
+		}
+
+	}else{
+		$existencias_actuales = $producto_en_inventario_maestro->getExistencias();
+		
+		if(	$cantidad_en_escala_a_descontar >  $existencias_actuales){
+			Logger::log("No hay suficientes !");			
+			return false;
+		}
+	}
+
+	//ok, si hay suficientes, ahora a descontar
+	if($procesado){
+		$producto_en_inventario_maestro->setExistenciasProcesadas( $existencias_actuales - $cantidad_en_escala_a_descontar );
+	}else{
+		$producto_en_inventario_maestro->setExistencias( $existencias_actuales - $cantidad_en_escala_a_descontar );
+	}
+
+	//guardar el objeto
+	try{
+		InventarioMaestroDAO::save( $producto_en_inventario_maestro );		
+	}catch(Exception $e){
+		Logger::log("Error al descontar del inventario maestro !");		
+		Logger::log($e);
+		return false;
+	}
+
+	return true;
+}
+
+
+
+
+
+
+
 
 /**
  *
@@ -647,16 +731,27 @@ function venderAdmin($args) {
         die('{"success": false, "reason": "Parametros invalidos." }');
     }
 
+
+
     if ($data == null) {
         Logger::log("el parseo del json de la venta resulto en un objeto nulo");
         die('{"success": false, "reason": "Parametros invalidos. El objeto es nulo." }');
     }
 
+	Logger::log("******** Venta desde administracion **********" );
+	Logger::log("cliente:" . $data->cliente);
+
+	
     //verificamos que se manden todos los parametros necesarios
 
     if (!isset($data->cliente)) {
         Logger::log("Falta uno o mas parametros: cliente");
         die('{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }');
+    }
+
+    if (!isset($data->efectivo)) {
+        Logger::log("Falta uno o mas parametros: efectivo");
+        die('{"success": false, "reason": "No se envio la cantidad en efectivo." }');
     }
 
     if (!isset($data->tipo_venta)) {
@@ -688,7 +783,10 @@ function venderAdmin($args) {
         die('{"success": false, "reason": "No se tiene registro del cliente ' . $data->cliente . '." }');
     }
 
-    if ($data->tipo_venta == "contado" || $data->tipo_venta == "mixto") {
+	
+
+
+    if ($data->tipo_venta == "contado"  ) {
 
         if (!isset($data->tipo_pago)) {
             Logger::log("Error en venta a contado : No se ha especificado el tipo de pago.");
@@ -735,7 +833,8 @@ function venderAdmin($args) {
                 die('{"success": false, "reason": "Error en venta a contado : No se ha especificado un tipo de pago valido. (' . $data->tipo_pago . ')" }');
         }
     }
-
+	
+	
 
     //verificamos que cada objeto de producto tenga los parametros necesarios
 
@@ -771,604 +870,314 @@ function venderAdmin($args) {
             }
         }
     }
-
-    /*
-     * Condensamos los productos (solo para verificar las existencias)
-     * iteramos el array de productos enviado ($data->productos)  e insertandolos en otro array, este nuevo array contiene objetos
-     * de tipo standard se especifican la cantidad de producto procesado y sin procesar, antes de insertar un nuevo producto de
-     * $data -> productos -> items antes revisamos que no haya un producto con el mismo id_producto y id_compra , y de haberlo sumamos las cantidades del producto
-     * para que solo haya un mismo producto a la ves y asi pudiendo consegir un solo registro de un mismo producto con cantidaddes
-     * de producto procesado o sin procesar.
-     */
-
-    /**
-     * Arreglo que contendra una version condensada de todos los productos que se van a solicitar
-     */
-    $array_items = array();
-
-    /**
-     * Arreglo que contendra los articulos que se armaron para vender
-     */
-    $array_items_venta = array();
-
-
-    foreach ($data->productos as $items) {
-
-        //Iniciamos la condenzacion de los productos
-
-        $producto_armado = new stdClass();
-        $producto_armado->id_producto = $items->producto;
-        $producto_armado->procesado = $items->procesado;
-        $producto_armado->cantidad = 0;
-        $producto_armado->precio = 0;
-        $producto_armado->descuento = 0;
-
-
-        $suma_precios = 0;
-        $cont_articulos = 0;
-        $precio_promedio = 0;
-        $cont_descuento = 0;
-        $sum_total_articulos = 0;
-
-
-
-        //var_dump($itm);
-        //insertamos el primer producto de item
-
-        $item = new stdClass();
-        $item->id_compra_proveedor = $items->items[0]->id_compra;
-        $item->id_producto = $items->items[0]->id_producto;
-        $item->procesada = $items->items[0]->procesada;
-        $item->descuento = $items->items[0]->descuento;
-
-        //$suma_precios += $items->items[0]->precio;//<------------antes del cambio
-        $suma_precios += $items->items[0]->precio * $items->items[0]->cantidad;
-
-
-        if ($items->items[0]->procesada == true) {
-
-            $sum_total_articulos += $items->items[0]->cantidad;
-            $cont_articulos++;
-
-            $item->cantidad_procesada = $items->items[0]->cantidad;
-            $item->precio_procesada = $items->items[0]->precio;
-            $item->cantidad = 0;
-            $item->precio = 0;
-        } else {
-
-            $cont_descuento += $items->items[0]->descuento;
-
-            $sum_total_articulos += ( $items->items[0]->cantidad - $items->items[0]->descuento);
-            $cont_articulos++;
-
-            $item->cantidad_procesada = 0;
-            $item->precio_procesada = 0;
-            $item->cantidad = $items->items[0]->cantidad - $items->items[0]->descuento;
-            $item->precio = $items->items[0]->precio;
-        }
-
-        /* $producto->cantidad_producto_vendido += $item->cantidad;
-          $producto->cantidad_producto_descontado += $item->descuento; */
-
-        //insertamos el primer producto
-        array_push($array_items, $item);
-
-        //recorremos a $data->items para condensar el array de productos
-        for ($i = 1; $i < count($items->items); $i++) {
-
-
-            $found = false;
-
-            //iteramos el $obj_items
-
-            foreach ($array_items as $item) {
-
-                if ($items->items[$i]->id_producto == $item->id_producto && $item->id_compra_proveedor == $items->items[$i]->id_compra) {
-
-                    $found = true;
-
-                    //$suma_precios += $items->items[$i]->precio; //<----- antes del cambio
-                    $suma_precios += $items->items[$i]->precio * $items->items[$i]->cantidad;
-
-                    //si se encuentra ese producto en el arreglo de objetos
-                    if ($items->items[$i]->procesada == true) {
-
-                        $sum_total_articulos += $items->items[$i]->cantidad;
-                        $cont_articulos++;
-
-                        $item->cantidad_procesada += $items->items[$i]->cantidad;
-                        //TODO:ESTO ESTA BIEN? parece que si
-                        $item->precio_procesada = $items->items[$i]->precio;
-                    } else {
-
-                        $cont_descuento += $items->items[$i]->descuento;
-
-                        $sum_total_articulos += ( $items->items[$i]->cantidad - $items->items[$i]->descuento);
-                        $cont_articulos++;
-
-                        $item->cantidad += $items->items[$i]->cantidad - $items->items[$i]->descuento;
-                        //TODO:ESTO ESTA BIEN? parece que si
-                        $item->precio = $items->items[$i]->precio;
-                    }
-                }
-            }
-
-            if (!$found) {
-
-                //si no se encuentra el producto en el arreglo de objetos hay que crearlo
-                $_item = new stdClass();
-                $_item->id_compra_proveedor = $items->items[$i]->id_compra;
-                $_item->id_producto = $items->items[$i]->id_producto;
-                $_item->descuento = $items->items[$i]->descuento;
-                $_item->procesada = $items->items[$i]->procesada;
-
-                //$suma_precios += $items->items[$i]->precio; //<------------ antes del cambio
-                $suma_precios += $items->items[$i]->precio * $items->items[$i]->cantidad;
-
-                if ($items->items[$i]->procesada == true) {
-
-                    $sum_total_articulos += $items->items[$i]->cantidad;
-                    $cont_articulos++;
-
-                    $_item->cantidad_procesada = $items->items[$i]->cantidad;
-                    $_item->precio_procesada = $items->items[$i]->precio;
-                    $_item->cantidad = 0;
-                    $_item->precio = 0;
-                } else {
-
-                    $cont_descuento += $items->items[$i]->descuento;
-
-                    $sum_total_articulos += ( $items->items[$i]->cantidad - $items->items[$i]->descuento);
-                    $cont_articulos++;
-
-                    $_item->cantidad_procesada = 0;
-                    $_item->precio_procesada = 0;
-                    $_item->cantidad = $items->items[$i]->cantidad;
-                    $_item->precio = $items->items[$i]->precio;
-                }
-
-                /* $producto->cantidad_producto_vendido += $_item->cantidad;
-                  $producto->cantidad_producto_descontado += $_item->descuento; */
-
-                array_push($array_items, $_item);
-            }
-        }
-
-
-        //$precio_promedio = $suma_precios / $cont_articulos; //<----------antes
-        $precio_promedio = $suma_precios / $sum_total_articulos;
-
-        //echo "suma_precios : {$suma_precios} / cont_articulos : {$cont_articulos} = precio_promedio : {$precio_promedio}";
-
-
-        $producto_armado->cantidad = $sum_total_articulos;
-        $producto_armado->precio = $precio_promedio;
-        $producto_armado->descuento = $cont_descuento;
-
-        array_push($array_items_venta, $producto_armado);
-    }
-
-
-    //var_dump($array_items);
-    //echo "----------------------------------";
-    //var_dump($array_items_venta);
-    //TODO : Cambiar esto
-    //revisamos si las existencias en el inventario maestro satisfacen a las requeridas en la venta        
-
-    if (!revisarExistenciasAdmin($array_items)) {
-        Logger::log("No hay existencias suficientes en el Inventario maestro para satisfacer la demanda");
-        die('{"success": false, "reason": "No hay suficiente producto en el Inventario Maestro para satisfacer la demanda. Intente de nuevo." }');
-    }
-
-
-    /*
-     * Ahora condenzamos los productos que realmente se van a vender para poder crear
-     * correctamente el detalle de la venta con los productos que se armaron y no con
-     * los que se descontaran del inventario maestro.
-     */
-
-    $array_items_venta_codenzado = array();
-    //insertamos el primer producto de item
-
-    $item = new stdClass();
-    $item->id_producto = $array_items_venta[0]->id_producto;
-    $item->procesado = $array_items_venta[0]->procesado;
-
-    if ($array_items_venta[0]->cantidad <= 0) {
-        Logger::log("La cantidad de los productos debe ser mayor que cero.");
-        die('{"success": false, "reason": "La cantidad de los productos debe ser mayor que cero." }');
-    }
-
-    if ($array_items_venta[0]->precio <= 0) {
-        Logger::log("El precio de los productos debe ser mayor que cero.");
-        die('{"success": false, "reason": "El precio de los productos debe ser mayor que cero." }');
-    }
-
-    if ($array_items_venta[0]->procesado == "true") {
-
-        $item->cantidad_procesada = $array_items_venta[0]->cantidad;
-        $item->precio_procesada = $array_items_venta[0]->precio;
-        $item->cantidad = 0;
-        $item->precio = 0;
-        $item->descuento = $array_items_venta[0]->descuento;
-    } else {
-        $item->cantidad_procesada = 0;
-        $item->precio_procesada = 0;
-        $item->cantidad = $array_items_venta[0]->cantidad;
-        $item->precio = $array_items_venta[0]->precio;
-        $item->descuento = 0;
-    }
-
-    //insertamos el primer producto
-    array_push($array_items_venta_codenzado, $item);
-
-
-
-    //recorremos a $data->items para condensar el array de productos
-    for ($i = 1; $i < count($array_items_venta); $i++) {
-
-        if ($array_items_venta[$i]->cantidad <= 0) {
-            Logger::log("La cantidad de los productos debe ser mayor que cero.");
-            die('{"success": false, "reason": "La cantidad de los productos debe ser mayor que cero." }');
-        }
-
-        if ($array_items_venta[$i]->precio <= 0) {
-            Logger::log("El precio de los productos debe ser mayor que cero.");
-            die('{"success": false, "reason": "El precio de los productos debe ser mayor que cero." }');
-        }
-
-        //bandera para verificar si el producto no esta dentro de array_items
-        $found = false;
-
-        //iteramos el array_items y lo comparamos cada elemento de el con el producto actual
-        foreach ($array_items as $item) {
-
-            //comparamos haber si ya existe el producto en array_items
-            if ($array_items_venta[$i]->id_producto == $item->id_producto) {
-
-                $found = true;
-
-                //(el producto se encontro) y es un producto procesado
-                if ($array_items_venta[$i]->procesado == "true") {
-                    $item->cantidad_procesada += $array_items_venta[$i]->cantidad;
-
-                    /* if ($item->precio_procesada != 0 && $item->precio_procesada != $array_items_venta[$i]->precio) {
-                      Logger::log("Selecciono dos productos iguales, pero con diferente precio.");
-                      die('{"success": false, "reason": "Selecciono dos o mas productos ' . $item->id_producto . ' - PROCESADO, pero con diferente precio." }');
-                      } */
-
-                    $item->precio_procesada = $array_items_venta[$i]->precio;
-                } else {
-                    //(el producto se encontro) y es un producto original
-                    $item->cantidad += $array_items_venta[$i]->cantidad;
-
-                    /* if ($item->precio != 0 && $item->precio != $array_items_venta[$i]->precio) {
-                      Logger::log("Selecciono dos productos iguales, pero con diferente precio.");
-                      die('{"success": false, "reason": "Selecciono dos o mas productos ' . $item->id_producto . ' - ORIGINAL, pero con diferente precio." }');
-                      } */
-
-                    $item->precio = $array_items_venta[$i]->precio;
-
-                    if ($item->descuento != 0 && $item->descuento != $array_items_venta[$i]->descuento) {
-                        Logger::log("Selecciono dos productos iguales, pero con diferente descuento.");
-                        die('{"success": false, "reason": "Selecciono dos o mas productos ' . $item->id_producto . ' - PROCESADO, pero con diferente descuento." }');
-                    }
-
-                    $item->descuento = $array_items_venta[$i]->descuento;
-                }
-            }
-        }//for each del array_items
-
-        if (!$found) {
-
-            //si no se encuentra el producto en el arreglo de objetos hay que crearlo
-            $_item = new stdClass();
-            //$_item -> id_compra_proveedor = $data->items[$i] -> id_compra_proveedor;
-            $_item->id_producto = $array_items_venta[$i]->id_producto;
-            $_item->procesado = $array_items_venta[$i]->procesado;
-
-            if ($array_items_venta[$i]->procesado == "true") {
-                $_item->cantidad_procesada = $array_items_venta[$i]->cantidad;
-                $_item->precio_procesada = $array_items_venta[$i]->precio;
-                $_item->cantidad = 0;
-                $_item->precio = 0;
-                $_item->descuento = 0;
-            } else {
-                $_item->cantidad_procesada = 0;
-                $_item->precio_procesada = 0;
-                $_item->cantidad = $array_items_venta[$i]->cantidad;
-                $_item->precio = $array_items_venta[$i]->precio;
-                $_item->descuento = $array_items_venta[$i]->descuento;
-            }
-            array_push($array_items_venta_codenzado, $_item);
-        }
-    }//for de $data->items
-
-
-    $detallesVenta = array();
-    $subtotal = 0.0;
-
-    foreach ($array_items_venta_codenzado as $producto) {
-
-        $subtotal += ( ( ($producto->cantidad) * $producto->precio ) + ( $producto->cantidad_procesada * $producto->precio_procesada ) );
-        $dv = new DetalleVenta();
-        $dv->setIdProducto($producto->id_producto);
-
-        $dv->setCantidad($producto->cantidad);
-        $dv->setPrecio($producto->precio);
-        $dv->setCantidadProcesada($producto->cantidad_procesada);
-        $dv->setPrecioProcesada($producto->precio_procesada);
-
-        array_push($detallesVenta, $dv);
-    }//foreach
-    //inicializamos un objeto venta
-    $venta = new Ventas();
-    $venta->setIdUsuario($_SESSION['userid']);
-    $venta->setTotal(0);
-    $venta->setIdSucursal($_SESSION['sucursal']);
-    $venta->setIp($_SERVER['REMOTE_ADDR']);
-    $venta->setPagado(0);
-    $venta->setLiquidada(0);
-
-    $venta->setCancelada(0);
-
-    //verificamos que el tipo de venta sea valido
-    switch ($data->tipo_venta) {
-
-        case 'credito':
-            $venta->setTipoVenta($data->tipo_venta);
-            break;
-
-        case 'contado':
-            $venta->setTipoVenta($data->tipo_venta);
-            break;
-
-        case 'mixto':
-            $venta->setTipoVenta('credito');
-            break;
-
-        default:
-            Logger::log("El tipo de venta no es valido : " . $data->tipo_venta);
-            die('{"success": false, "reason": "El tipo de venta no es valido ' . $data->tipo_venta . '." }');
-    }
-
-    if (isset($data->tipo_pago) && $data->tipo_venta == "contado") {
-
-        //verificamos que el tipo de pago sea valido
-        switch ($data->tipo_pago) {
-
-            case 'efectivo':
-                $venta->setTipoPago($data->tipo_pago);
-                break;
-
-            case 'cheque':
-                $venta->setTipoPago($data->tipo_pago);
-                break;
-
-            case 'tarjeta':
-                $venta->setTipoPago($data->tipo_pago);
-                break;
-
-            default:
-                Logger::log("El tipo de pago no es valido : " . $data->tipo_pago);
-                die('{"success": false, "reason": "El tipo de pago no es valido : ' . $data->tipo_pago . '." }');
-        }
-    }
-
-    $venta->setIdCliente($data->cliente);
-
-    $venta->setDescuento($cliente->getDescuento());
-
-    DAO::transBegin();
-
-    try {
-        VentasDAO::save($venta);
-        $id_venta = $venta->getIdVenta();
+	
+	//----------------- Termina validacion ----------------- //
+
+	//iniciar la transaccion
+	DAO::transBegin();
+	
+	
+	//crear esta venta
+	$venta_actual = new Ventas();
+	
+	//campos que ya tenemos sus valores
+    $venta_actual->setIdUsuario		( $_SESSION['userid']    );
+    $venta_actual->setIdCliente		( $data->cliente	     );
+    $venta_actual->setTipoVenta		( $data->tipo_venta      );
+    $venta_actual->setTipoPago		( $data->tipo_pago       );
+    $venta_actual->setIdSucursal	( $_SESSION['sucursal']  );
+    $venta_actual->setIp			( $_SERVER['REMOTE_ADDR']);
+    $venta_actual->setCancelada		(0);
+
+	//campos que llenaremos despues
+    $venta_actual->setTotal			(0);
+    $venta_actual->setSubtotal		(0);
+    $venta_actual->setPagado		(0);
+    $venta_actual->setDescuento		(0);
+    $venta_actual->setLiquidada		(0);
+
+	
+	//guardar la venta
+	try {
+        VentasDAO::save($venta_actual);
     } catch (Exception $e) {
         Logger::log($e);
         DAO::transRollback();
         die('{"success": false, "reason": "No se pudo registrar la venta." }');
     }
+	
+	//un lugar donde guardamos los totales
+	$totales_de_venta = array(
+		"subtotal" => 0
+	);
 
-    //TODO : Desarrollar una funcion que cree la factura con el api
-    /* if ($data->factura) {
-      insertarFacturaVenta($venta);
-      } */
-
-    //hasta aqui ya esta creada la venta, ahora sigue llenar el detalle de la venta
-    //$productos = $data->items;
-    //insertar detalles de la venta
-    foreach ($detallesVenta as $dVenta) {
-
-        $dVenta->setIdVenta($id_venta);
-
-        try {
-            DetalleVentaDAO::save($dVenta);
-        } catch (Exception $e) {
-
-            DAO::transRollback();
-            Logger::log($e);
-            die('{"success": false, "reason": "Error, al guardar el detalle venta." }');
-        }
-        
-    }
-
-    //descontamos del inventario el pedido
-    foreach ($array_items as $producto) {
-
-        //TODO : Este codigo se reemplazara debido a que se basaba en la desicion de $producto->procesada == true
-        //siendo que la propiedad e procesada no la tiene ningun elemento de $array_items
-
-        /* if ($producto->procesada == true) {
-          //requiere producto procesada
-          $inventario_maestro->setExistenciasProcesadas($inventario_maestro->getExistenciasProcesadas() - ($producto->cantidad + $producto->descuento));
-
-          $compra_proveedor_fragmentacion->setCantidad($producto->cantidad_procesada);
-          $compra_proveedor_fragmentacion->setPrecio($producto->precio_procesada);
-          } else {
-          //requiere producto sin procesar
-          $inventario_maestro->setExistencias($inventario_maestro->getExistencias() - $producto->cantidad);
-
-          $compra_proveedor_fragmentacion->setCantidad($producto->cantidad);
-          $compra_proveedor_fragmentacion->setPrecio($producto->precio);
-          } */
-
-        $inventario_producto = InventarioDAO::getByPK($producto->id_producto);
-
-        if ($producto->cantidad > 0) {
-            //requiere producto procesada
-
-            $inventario_maestro = InventarioMaestroDAO::getByPK($producto->id_producto, $producto->id_compra_proveedor);
-
-            $inventario_maestro->setExistencias($inventario_maestro->getExistencias() - ($producto->cantidad + $producto->descuento));
-
-            $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
-            $compra_proveedor_fragmentacion->setIdCompraProveedor($producto->id_compra_proveedor);
-            $compra_proveedor_fragmentacion->setIdProducto($producto->id_producto);
-            $compra_proveedor_fragmentacion->setDescripcion("SE VENDIO A " . $cliente->getRazonSocial() . " LA CANTIDAD DE " . $producto->cantidad_procesada . " " . $inventario_producto->getEscala() . "s DEL PRODUCTO " . $inventario_producto->getDescripcion() . " ORIGINAL");
-            $compra_proveedor_fragmentacion->setProcesada($producto->procesada);
-            $compra_proveedor_fragmentacion->setCantidad(($producto->cantidad + $producto->descuento) * -1);
-            $compra_proveedor_fragmentacion->setPrecio($producto->precio);
-            $compra_proveedor_fragmentacion->setDescripcionRefId($id_venta);
-
-            try {
-                CompraProveedorFragmentacionDAO::save($compra_proveedor_fragmentacion);
-            } catch (Exception $e) {
-                DAO::transRollback();
-                Logger::log("Error, al guardar los datos del historial del producto del inventario maestro. : " . $e);
-                die('{"success": false, "reason": "Error, al guardar los datos del historial del producto del inventario maestro." }');
-            }
-        }
-
-        if ($producto->cantidad_procesada > 0) {
-            //requiere producto sin procesar
-            
-            $inventario_maestro = InventarioMaestroDAO::getByPK($producto->id_producto, $producto->id_compra_proveedor);
-            $inventario_maestro->setExistenciasProcesadas($inventario_maestro->getExistenciasProcesadas() - $producto->cantidad_procesada);
-            $inventario_maestro->setExistencias($inventario_maestro->getExistencias() - $producto->cantidad_procesada);
-            
-            $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
-            $compra_proveedor_fragmentacion->setIdCompraProveedor($producto->id_compra_proveedor);
-            $compra_proveedor_fragmentacion->setIdProducto($producto->id_producto);
-            $compra_proveedor_fragmentacion->setDescripcion("SE VENDIO A " . $cliente->getRazonSocial() . " LA CANTIDAD DE " . $producto->cantidad_procesada . " " . $inventario_producto->getEscala() . "s DEL PRODUCTO " . $inventario_producto->getDescripcion() . " PROCESADO");
-            $compra_proveedor_fragmentacion->setProcesada($producto->procesada);
-            $compra_proveedor_fragmentacion->setCantidad(($producto->cantidad_procesada) * -1);
-            $compra_proveedor_fragmentacion->setPrecio($producto->precio_procesada);
-            $compra_proveedor_fragmentacion->setDescripcionRefId($id_venta);
-
-            try {
-                CompraProveedorFragmentacionDAO::save($compra_proveedor_fragmentacion);
-            } catch (Exception $e) {
-                DAO::transRollback();
-                Logger::log("Error, al guardar los datos del historial del producto del inventario maestro. : " . $e);
-                die('{"success": false, "reason": "Error, al guardar los datos del historial del producto del inventario maestro." }');
-            }
-        }
-
-        try {
-            InventarioMaestroDAO::save($inventario_maestro);
-        } catch (Exception $e) {
-            DAO::transRollback();
-            Logger::log("Error, al descontar el pedido de productos del inventario maestro, exception : " . $e);
-            die('{"success": false, "reason": "Error, al descontar el pedido de productos del inventario maestro" }');
-        }
-    }
-
-    //ya que se tiene el total de la venta se actualiza el total de la venta
-    $venta->setSubtotal($subtotal);
-    $total = ( $subtotal - ( ( $subtotal * $cliente->getDescuento() ) / 100 ) );
-    $venta->setTotal($total);
+	foreach($data->productos as $producto){
+		
+		$producto_a_vender = InventarioDAO::getByPK( $producto->producto );
+		
+		Logger::log("Vendiendo " . $producto_a_vender->getDescripcion()  . ", se compone de : ");
+		
+		//lugar para guardar todo de los subproductos
+		$totales_de_sub_producto = array(
+			"subtotal" => 0,
+			"cantidad" => 0,
+			"descuento" => 0
+		);
+		
+		//iteramos por sus subproductos
+		foreach( $producto->items as $sub_producto ){
+			
+			/* ******************************************************
+			 * Asi es como se ve un sub producto:
+			 *  "id_compra": 51,
+			 *  "id_producto": 6,
+			 *  "cantidad": 300,
+			 *  "procesada": false,
+			 *  "precio": 983.3333333333334,
+			 *  "descuento": 1
+			 *
+			 *  -La cantidad ya esta en escala, y no tiene aplicado el descuento.
+			 *  -Ignorar el valor de procesada si este producto no se procesa.
+			 *  -El precio ya es el total que se cobrara por todo esto, por toda 
+			 *   la cantidad YA con descuento
+			 *  -El descuento viene en escalas, si este producto tiene precio por agrupacion,
+			 *   entonces este descuento se aplica por cada agrupacion, sino, solamente se 
+			 *   resta de cantidad.
+			 *  -Ojo porque la agrupacion depende de si esta procesada o no !
+			 ****************************************************** */
+			
+			//obtener ese subproducto para ver sus propiedades
+			$sub_producto_a_vender = InventarioDAO::getByPK( $sub_producto->id_producto );
 
 
-    //para ventas a credito
-    if ($venta->getTipoVenta() == "credito") {
+			//mostrar los detalles en el log
+			Logger::log("		"  . $sub_producto_a_vender->getDescripcion() );
+			Logger::log("		"  . $sub_producto->cantidad . " " 	. $sub_producto_a_vender->getEscala() );
+			Logger::log("		"  . $sub_producto->descuento . " " . $sub_producto_a_vender->getEscala() . " de descuento" );
+			Logger::log("		$" . $sub_producto->precio  );			
 
 
-        if (isset($data->faltante)) {
-            
-            //este es un caso especial, donde el cliente quiere utilizar su credito restante para
-            //cubrir una parte de la venta, y el $data->faltante se agregara como un abono a esa compra a credito
-            //este caso se da exclusivamente cuando el total de la venta supera al credito restante y aun que el
-            //total de la venta supere al credito restante, esto no afectara la integridad de la informacion
-            //ya que el saldo de la venta a credito sera igual al limite de crediro restante que tenia
-            
-            $venta->setPagado($data->faltante);
-            
-        } else {
+			
 
-            //verificamos si el cliente cuenta con suficiente limite de credito para solventar esta venta
-            $ventas_credito = listarVentaCliente($cliente->getIdCliente(), $venta->getTipoVenta());
-            $adeuda = 0;
+			//ver que existan suficintes existencias
+			$descuento_ok = descontarDeInventarioMaestro(
+								$sub_producto->id_compra,
+                    			$sub_producto->id_producto,
+								$sub_producto->cantidad,
+								$sub_producto->procesada
+								);
+								
+			if(! $descuento_ok){
+				//algo no salio bien al descontar !
+				DAO::transRollback();
+				echo '{"success":false, reason : "No hay suficiente producto para satisfacer la demanda"}';
+				return ;				
+			}
+			
+			// el producto ha sido descontado
+			// podemos contabilizar los totales
+			$totales_de_venta["subtotal"] += $sub_producto->precio;
+			$totales_de_sub_producto["subtotal"] += $sub_producto->precio;
+			
+			//el total de este producto
+			$totales_de_sub_producto["cantidad"] += $sub_producto->cantidad;
 
-            foreach ($ventas_credito as $vc) {
+			//restar el descuento
+			if($sub_producto_a_vender->getPrecioPorAgrupacion()){
+				//el descuento es por agrupacion
+				//debemos saber si se puede procesar, si no se puede
+				//procesar entonces el tamano de la agrupacion
+				//es agrupacion_tam, si si se puede procesar
+				//el tamano de la agrupacion depende de si esta 
+				//procesado o no. Si esta procesado es agrupacion_tam
+				//si no, es el promedio de ese inventario maestro
+				
+				$descuento_en_escala = 0;
+				
+				if($sub_producto_a_vender->getTratamiento()){
+					//si se puede procesar, revisamos si esta procesado o no
+					if($sub_producto->procesado){
+						//esta procesado ! entonces su agrupacion es por agrupacion_tam
+						$foo = InventarioDAO::getByPK( $sub_producto->id_producto );
+						
+						//cuantas agrupaciones hay ?
+						$agrupaciones = $sub_producto->cantidad / $foo->getAgrupacionTam();
+						$descuento_en_escala = $sub_producto->descuento * $agrupaciones;
+						
+					}else{
+						//no esta procesado ! entonces su agrupacion la dice el la compra a proveedor
+						$foo = CompraProveedorDAO::getByPK(	$sub_producto->id_compra );
 
-                //var_dump($vc);
+						$agrupaciones = $sub_producto->cantidad / $foo->getPesoPorArpilla();
+						$descuento_en_escala = $sub_producto->descuento * $agrupaciones;
+					}
+				}else{
+					//no hay tratamiento, el tamano es por agrupacion_tam
+					$foo = InventarioDAO::getByPK( $sub_producto->id_producto );
 
-                if ($vc['liquidada'] == "0") {
-                    $adeuda += $vc['saldo'];
-                }
-            }
+					$agrupaciones = $sub_producto->cantidad / $foo->getAgrupacionTam();
+					$descuento_en_escala = $sub_producto->descuento * $agrupaciones;				
+				}
+				
+			}else{
+				//el descuento ya viene como debe ir
+				$descuento_en_escala = $sub_producto->descuento;
+			}
+			
+			//agregar al subtotal 
+			$totales_de_sub_producto["descuento"] += $descuento_en_escala;	
+					
+			Logger::log("		descuento_total : " 	. $descuento_en_escala);
+			Logger::log("		cantidad_ya_con_des : " . ($sub_producto->cantidad - $descuento_en_escala) );			
+			
+			Logger::log("");
+		}//fin-sub-productos
+		
+		
+		Logger::log("			Totales SubProducto:");
+		Logger::log("			cantidad:" . $totales_de_sub_producto["cantidad"]);
+		Logger::log("			descuent:" . $totales_de_sub_producto["descuento"]);		
+		Logger::log("			total_ca:" . ($totales_de_sub_producto["cantidad"] - $totales_de_sub_producto["descuento"]));				
+		Logger::log("			subtotal:" . $totales_de_sub_producto["subtotal"]);		
 
-            //echo "limite : {$cliente->getLimiteCredito()}, total : {$venta->getTotal()} adeuda : {$adeuda}";
 
-            if ($cliente->getLimiteCredito() < ($venta->getTotal() + $adeuda)) {
-                DAO::transRollback();
-                Logger::log("Error : No cuenta con suficiente limite de credito para realizar esta venta a credito.");
-                die('{"success": false, "reason": "Error : No cuenta con suficiente limite de credito para realizar esta venta a credito." }');
-            }
-        }
-    }
+		//ya han sido descontado los subproductos, es hora de generar los detalles de venta
+		// recuerda que este ya es el producto final, no importa de como se formo
+		$detalle_de_venta = new DetalleVenta();
+		$detalle_de_venta->setIdVenta				( $venta_actual->getIdVenta() );
+		$detalle_de_venta->setIdProducto			( $producto->producto );
+		
+		//calcular el precio por unidad
+		$precio_por_unidad = 0;
+		
+		//depende, si el precio es por agrupacion o no
+		if( $producto_a_vender->getPrecioPorAgrupacion() ){
+			//saca cuantos grupos hay...
+			
+			if($producto_a_vender->getTratamiento()){
+				//si se puede procesar, revisamos si esta procesado o no
 
+				if($producto->procesado){
+					//esta procesado ! entonces su agrupacion es por agrupacion_tam
+			
+					//cuantas agrupaciones hay ?
+					$agrupaciones = $totales_de_sub_producto["cantidad"] / $producto_a_vender->getAgrupacionTam();
+					$precio_por_unidad = $totales_de_sub_producto["subtotal"] / $agrupaciones;
+					
+				}else{
+					//que paso ?
+					$agrupaciones = $totales_de_sub_producto["cantidad"] / $producto_a_vender->getAgrupacionTam();
+					$precio_por_unidad = $totales_de_sub_producto["subtotal"] / $agrupaciones;
+				}
+				
+			}else{
+				//no hay tratamiento, el tamano es por agrupacion_tam
+				$agrupaciones = $totales_de_sub_producto["cantidad"] / $producto_a_vender->getAgrupacionTam();
+				$precio_por_unidad = $totales_de_sub_producto["subtotal"] / $agrupaciones;	
+			}
+			
+		}else{
+			//divide el subtotal entre la cantidad
+			$precio_por_unidad = $totales_de_sub_producto["subtotal"] / $totales_de_sub_producto["cantidad"];
+		}
+		
+		//poner si es procesada o no es procesada
+		if( ($producto_a_vender->getTratamiento() !== null) && $producto->procesado ){
+			//esta procesada
+			$detalle_de_venta->setCantidad				( 0 );
+			$detalle_de_venta->setPrecio				( 0 );
+			
+			$detalle_de_venta->setCantidadProcesada		( $totales_de_sub_producto["cantidad"]);
+			$detalle_de_venta->setPrecioProcesada		( $precio_por_unidad);						
 
+		}else{
+			//no esta procesada !
+			$detalle_de_venta->setCantidad				( $totales_de_sub_producto["cantidad"] );
+			$detalle_de_venta->setPrecio				( $precio_por_unidad );
+			
+			$detalle_de_venta->setCantidadProcesada		( 0 );
+			$detalle_de_venta->setPrecioProcesada		( 0 );			
+		}
 
-    //si la venta es de contado, hay que liquidarla
-    if ($venta->getTipoVenta() == "contado") {
+		$detalle_de_venta->setDescuento	( $totales_de_sub_producto["descuento"] );
+		Logger::log(" 			importe por unidad  " . $precio_por_unidad );
+		
+		//guardar el detalle de la venta
+		try{
+			DetalleVentaDAO::save($detalle_de_venta);
+		}catch(Exception $e){
+	        Logger::log($e);
+	        DAO::transRollback();
+	        die('{"success": false, "reason": "No se pudo registrar la venta." }');
+		}
 
-        if ($data->efectivo < $venta->getTotal()) {
-            DAO::transRollback();
-            Logger::log("Error : No cuenta con suficiente efectivo para cubrir el total de la venta.");
-            die('{"success": false, "reason": "Error : No cuenta con suficiente efectivo para cubrir el total de la venta." }');
-        }
+	}
+	
+	
+	$venta_actual->setSubTotal		($totales_de_venta["subtotal"]);
+	
+	$cliente = ClienteDAO::getByPK($data->cliente);
+	
+	$descuento_del_cliente = $cliente->getDescuento();
+	
+	$descuento_en_venta = ($descuento_del_cliente / 100) * $venta_actual->getSubTotal();
+	
+	$venta_actual->setDescuento		( $descuento_en_venta );
+	
+	$venta_actual->setTotal			( $venta_actual->getSubTotal() - $descuento_en_venta );
+	
+	if( $data->efectivo >= $venta_actual->getTotal()  ){
+		//se pago todo
+		$venta_actual->setPagado		($venta_actual->getTotal());
+		$venta_actual->setLiquidada		(true);
+	}else{
+		//no se ha pagado todo
+	    $venta_actual->setPagado		($data->efectivo);
+	   	$venta_actual->setLiquidada		(false);		
+	}
+	
+	Logger::log("Totales:");
+	Logger::log("	Subtotal:" . $venta_actual->getSubtotal());
+	Logger::log("	Total:" . $venta_actual->getTotal());
 
-        $venta->setPagado($total);
-        $venta->setLiquidada("1");
-    }
+	//ah pero espera ! si es a contado y no esta liquidada en el primer putaso, a la verga !
+	if(($venta_actual->getTipoVenta() == "contado") && (!$venta_actual->getLiquidada())){
+		DAO::transRollback();
+		echo '{"success":false, "reason" : "No hay suficiente dinero para cubrir la venta de contado"}';
+		return ;
+	}
 
-    //verificamos si en un tipo de pago mixto
-    if ($data->tipo_venta == "mixto") {
-
-        //verificamos si el efectivo enviado supera el total        
-        if ($data->efectivo > $venta->getTotal()) {
-            $venta->setPagado($venta->getTotal());
-            $venta->setLiquidada(1);
-        } else {
-            //abonamos lo enviado en efectivo
-            $venta->setPagado($data->efectivo);
-            $venta->setLiquidada(0);
-        }
-
-        $venta->setTipoPago($data->tipo_pago);
-    }
-
-    try {
-        if (VentasDAO::save($venta)) {
-            $empleado = UsuarioDAO::getByPK($venta->getIdUsuario());
-
-            printf('{"success": true, "id_venta":%s, "empleado":"%s"}', $venta->getIdVenta(), $empleado->getNombre());
-        } else {
-            DAO::transRollback();
-            Logger::log("No se pudo actualizar el total de la venta");
-            die('{"success": false, "reason": "No se pudo actualizar el total de la venta" }');
-        }
-    } catch (Exception $e) {
+	try{
+		VentasDAO::save( $venta_actual );
+	}catch(Exception $e){
+		Logger::log($e);
         DAO::transRollback();
-        Logger::log($e);
-        die('{"success": false, "reason": "Intente de nuevo." }');
-    }
+        die('{"success": false, "reason": "No se pudo registrar la venta." }');
+	}
+	
+	$empleado = UsuarioDAO::getByPK($venta_actual->getIdUsuario());
+	
+
 
     DAO::transEnd();
 
-    Logger::log("Proceso de venta (admin), termino con exito!! id_venta : {$id_venta}.");
+    printf('{"success": true, "id_venta":%s, "empleado":"%s"}', $venta_actual->getIdVenta(), $empleado->getNombre());	
+
+    Logger::log("***** Proceso de venta (admin), termino con exito!! id_venta : "  . $venta_actual->getIdVenta() . " *********");
+
+	return;
+	DAO::transRollback();
+	echo '{"success":false, reason : "DEBUG"}';
+	return ;
+	
+	
+	/*  *********************************************************************************************************
+		*********************************************************************************************************
+		************************************************ Aqui voy  (dan)  ***************************************
+		*********************************************************************************************************
+		*********************************************************************************************************  */
+		
+		
 }
 
 //vender
