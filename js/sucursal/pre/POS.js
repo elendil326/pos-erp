@@ -129,7 +129,9 @@ POS.loadDocumentos = function(){
 };
 
 POS.fecha = function( f ){
-	var fecha = new Date(f);
+
+	var fecha = new Date(f.replace(/-/g, "/"));
+	
 	var mes ;
 	switch(fecha.getMonth()){
 		case 0 : mes = "Enero"; break;
