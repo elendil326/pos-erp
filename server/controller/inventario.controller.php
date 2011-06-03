@@ -532,7 +532,7 @@ function procesarProducto($json = null) {
     $compra_proveedor_fragmentacion->setDescripcion("HUBO UN INGRESO DE {$data->resultante}KG. DEL PRODUCTO {$producto->getDescripcion()} PROCESADO POR CONCEPTO DE UN PROCESO EN LA REMISION CON EL FOLIO {$compra_proveedor->getFolio()}.");
     $compra_proveedor_fragmentacion->setProcesada(true);
     $compra_proveedor_fragmentacion->setCantidad($data->resultante);
-    $compra_proveedor_fragmentacion->setPrecio(0);
+    $compra_proveedor_fragmentacion->setPrecio($detalle_compra_proveedor->getPrecioPorKg());
     $compra_proveedor_fragmentacion->setDescripcionRefId($inventario_maestro->getIdCompraProveedor());
 
     try {
