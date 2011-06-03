@@ -487,7 +487,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 
         if(carrito.items[i].tratamiento != null  ){
 		 
-            var dis = false;
+            var habilitar_boton_tratamiento = true;
             var productoI = inventario.findRecord("productoID", carrito.items[i].id_producto, 0, false, true, true);
 			
             if( parseFloat(productoI.get("existenciasOriginales")) == 0){
@@ -495,7 +495,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                     console.log("no hay originales !!");
                 }
                 carrito.items[i].procesado = "true";
-                dis  = true;
+                habilitar_boton_tratamiento  = false;
             }
 		
 		
@@ -504,14 +504,14 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                     console.log("no hay procesadas !!");
                 }
                 carrito.items[i].procesado = "false";
-                dis  = true;
+                habilitar_boton_tratamiento  = false;
             }
 		
             c = new Ext.form.Select({
                 renderTo : "Mostrador-carritoTratamiento"+ carrito.items[i].idUnique ,
                 id : "Mostrador-carritoTratamiento"+ carrito.items[i].idUnique + "Select",
                 idUnique : carrito.items[i].idUnique,
-                disabled : dis,
+                disabled : !habilitar_boton_tratamiento,
                 value : carrito.items[i].procesado,
                 style:{
                     width: '100%'
@@ -808,7 +808,7 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
             escala 					: res.data.medida,
             precioIntersucursal 	: res.data.precioIntersucursal,
             precioIntersucursalSinProcesar : res.data.precioIntersucursalSinProcesar,
-            procesado 				: "false",
+            procesado 				: "true",
             cantidad 				: 1,
             idUnique 				: res.data.productoID + "_" +  Aplicacion.Mostrador.currentInstance.uniqueIndex,
             descuento 				: "0",
