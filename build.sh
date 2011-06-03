@@ -95,5 +95,6 @@ mv pos-build.tar.gz "pos-build-`date +%Y_%m_%d`.tar.gz"
 rm -rf www
 rm -rf css
 rm -rf server
+rm -rf static_content
 rm -rf js
 
