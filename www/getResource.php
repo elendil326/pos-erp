@@ -116,12 +116,14 @@ switch($module)
 
 
 		loadDir( "sucursal/apps" , $type );
-					
+
 					
 		if($_SESSION['grupo'] == 2 ){
 			//si es gerente tambien cargar los de gerencia
 			loadDir( "sucursal/apps/gerente" , $type );
 		}
+
+		loadDir( "sucursal/apps/post" , $type );
 		
 		loadDir( "sucursal/post" , $type );
 

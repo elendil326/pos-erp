@@ -852,6 +852,7 @@ ComposicionTabla = function( config ){
 
     
 		var c = new Composicion();
+		
 		c.setIdProducto( producto.id_producto );
 		
         composicion.push({
@@ -862,8 +863,8 @@ ComposicionTabla = function( config ){
             desc        : producto.producto_desc,
             procesada   : false,
             escala      : producto.escala,
-            precio      : parseFloat(producto.precio_por_kg) + parseFloat(costo_flete),
-			precio_original : parseFloat(producto.precio_por_kg) + parseFloat(costo_flete) ,
+            precio      : precio_total, //parseFloat(producto.precio_por_kg) + parseFloat(costo_flete),
+			precio_original : precio_total,//parseFloat(producto.precio_por_kg) + parseFloat(costo_flete) ,
             descuento   : 0
         });
 

@@ -37,7 +37,7 @@ function detalle_inventario(id){
 					echo "</tr><tr>";
 				}
 				
-				echo "<td class='rounded' id='producto-" . $productos[$a]->getIdProducto() . "'  onClick='detalle_inventario( " .  $productos[$a]->getIdProducto() . " )' onmouseover=\"this.style.backgroundColor = '#D7EAFF'\" onmouseout=\"this.style.backgroundColor = 'white'\">";
+				echo "<td class='prod rounded' id='producto-" . $productos[$a]->getIdProducto() . "'  onClick='detalle_inventario( " .  $productos[$a]->getIdProducto() . " )' >";
 				echo "<img style='float:left;' src='../media/icons/basket_32.png'><br><div align=center ><b>" .  $productos[$a]->getDescripcion() . "</b></div>";
 				echo "<div align=right style='padding-right:20px'>";
 				echo " A la venta " . moneyFormat($lastOne->getPrecioVenta()) .  "<br>";
@@ -51,7 +51,29 @@ function detalle_inventario(id){
 		echo "</table>";
 		?>
 </div>
+<style>
+.prod {
+    background:#fff;
+    color:#333;
+    text-decoration:none;
+    padding:5px 10px;
+	border:1px solid #fff;
 
+
+    /* Add the transition properties! */
+   	-webkit-transition-property: background-color, color, border; 
+    -webkit-transition-duration: 300ms;
+
+    /* you can control the acceleration curve here */
+    -webkit-transition-timing-function: ease-in-out; 
+}
+
+.prod:hover {
+    background:#D7EAFF;
+    color:#000;
+    border:1px solid #3F8CE9;
+}
+</style>
 <?php
 	##########################################################
 	#	INVENTARIO MAESTRO PARA NO MULTISUCURSALES
