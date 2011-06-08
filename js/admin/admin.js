@@ -56,7 +56,7 @@ function heartbeat(){
 setInterval("heartbeat()", 15000);
 
 function meses(m){
-	m = parseInt(m);
+	m = parseFloat(m);
 	switch(m){
 		case 1: return "enero";
 		case 2: return "febrero";

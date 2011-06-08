@@ -416,3 +416,15 @@ class Reporte{
 
 
 
+
+
+class ExtTabla {
+	
+	
+	
+	
+	
+	
+}
+
+

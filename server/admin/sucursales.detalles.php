@@ -210,26 +210,118 @@ function toDateS($d) {
 }
 
 $compras = comprasDeSucursalSinSaldar($_REQUEST['id'], false);
-
-$header = array(
-    "id_compra" => "ID Compra",
-    "fecha" => "Fecha",
-    "total" => "Total",
-    "pagado" => "Pagado");
-
-$tabla = new Tabla($header, $compras);
-$tabla->addColRender("fecha", "toDate");
-$tabla->addColRender("total", "moneyFormat");
-$tabla->addColRender("pagado", "rSaldo");
-$tabla->addOnClick("id_compra", "detalleCompraSucursal");
-$tabla->addNoData("Esta sucursal no tiene cuentas sin saldar");
-$tabla->render();
+##########################################################################
 ?>
 <script>
-    function detalleCompraSucursal(id){
-        window.location = "inventario.php?action=detalleCompraSucursal&cid=" + id;
-    }
+		var compras_no_saldadas = [];
+
+		var store_para_compras =  new Ext.data.ArrayStore({
+	        fields: [
+					{ name : 'id_compra', 		type : 'int' },
+					{ name : 'fecha', 			type : 'date', dateFormat: 'Y-m-d H:i:s' },
+					{ name : 'subtotal', 		type : 'float' },
+					{ name : 'id_usuario', 		type : 'int' },
+					{ name : 'pagado', 			type : 'float' },
+					{ name : 'liquidado', 		type : 'float' },
+					{ name : 'total', 			type : 'float' }
+				]
+			});
+			
+<?php
+
+foreach($compras as $c){
+	?>
+	compras_no_saldadas.push([
+			<?php echo $c->getIdCompra(); ?>,
+			"<?php echo $c->getFecha(); ?>",
+			<?php echo $c->getSubtotal(); ?>,
+			<?php echo $c->getIdUsuario(); ?>,
+			<?php echo $c->getPagado(); ?>,
+			<?php echo $c->getLiquidado(); ?>,
+			<?php echo $c->getTotal(); ?>
+		]);
+	//compras_no_saldadas.push( <?php echo json_encode ( $c->asArray() ) ?> );
+	<?php
+}
+
+?>
+
+
+
+
+
+		Ext.onReady(function(){
+		    Ext.QuickTips.init();
+		    store_para_compras.loadData(compras_no_saldadas);
+			// create the Grid
+		    var tabla_compras_no_saldadas = new Ext.grid.GridPanel({
+		        store: store_para_compras,
+				header : false,
+		        columns: [
+			        {
+		                header   : 'Fecha', 
+		                width    : 75, 
+		                sortable : true, 
+		                renderer : Ext.util.Format.dateRenderer('d/m/Y'),  
+		                dataIndex: 'fecha'
+		            },
+		            {
+		                header   : 'ID Compra', 
+		                width    : 75, 
+		                sortable : true, 
+		                dataIndex: 'id_compra'
+		            },	
+		            {
+		                header   : 'Subtotal', 
+		                width    : 180, 
+						renderer : 'usMoney',
+		                sortable : true, 
+		                dataIndex: 'subtotal'
+		            },
+		            {
+      					header   : 'Total', 
+		                width    : 85, 
+		                sortable : true, 
+						renderer : 'usMoney',
+		                dataIndex: 'total'
+		            },
+		            {
+		                header   : 'Pagado', 
+		                width    : 85, 
+		                sortable : true, 
+						renderer : 'usMoney',
+		                dataIndex: 'pagado'
+		            }],
+			        stripeRows: false,
+			        //autoExpandColumn: 'total',
+			        height: 500,
+					minHeight : 300,
+			        width: "100%",
+			        stateful: false,
+			        stateId: 'sucursales_compras_no_saldadas_cookie',
+					listeners : {
+						"rowclick" : function (grid, rowIndex, e){
+							
+							var datos = grid.getStore().getAt( rowIndex );
+
+							
+        					window.location = "inventario.php?action=detalleCompraSucursal&cid=" + datos.get("id_compra" );
+						}
+					}
+
+			    });
+			tabla_compras_no_saldadas.render("tabla_compras_no_saldadas_holder");
+		});
+
+
 </script>
+
+<div id="tabla_compras_no_saldadas_holder" style="padding: 5px;">
+</div>
+
+<?php
+##########################################################################
+?>
 
 
 
