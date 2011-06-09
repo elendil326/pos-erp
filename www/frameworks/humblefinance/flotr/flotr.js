@@ -1457,12 +1457,12 @@ Flotr.Graph = Class.create({
 	 */
 	insertLegend: function(){
 		
-		console.log("insertLegend()");
+		//console.log("insertLegend()");
 		
 		if(!this.options.legend.show)
 			return;
 		
-		console.log("go ahead with insertion");
+		//console.log("go ahead with insertion");
 			
 		var series = this.series,
 			plotOffset = this.plotOffset,

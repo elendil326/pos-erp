@@ -696,7 +696,7 @@ ComposicionTabla = function( config ){
 			
 			console.log("peso real : " + composicion[i].peso_real);
 			console.log("peso peso a cobrar : " + composicion[i].peso_a_cobrar);
-						
+
 			//actualizar las cajas de los importes
 			// vamos a ver si el precio a cobrar es por agrupacion o por escala
 			// si tiene agrupacion... 

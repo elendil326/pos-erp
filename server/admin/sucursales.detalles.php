@@ -54,14 +54,95 @@ if ($gerente === null) {
     <tr><td colspan=2><input type=button value="Editar detalles" onclick="editar()"></td> </tr>
 </table>
 
-
 <?php
 
-//$ingresos_diarios = ContabilidadController::getIngresosDiarios();
+$balance = ContabilidadController::getBalancePorSucursal($_REQUEST['id']);
 
 
 
 ?>
+<style>
+.pr{
+	font-size: 2.6em;
+	font-weight: bold;
+}
+.ch {
+	font-size: 1.8em;
+	vertical-align: text-top;
+}
+
+.tiny-text{
+	font-size: 11px;
+	color:gray;
+}
+</style>
+
+<table border=0>
+	<tr>
+		<td class="tiny-text">
+			Balance actual:
+		</td>
+		<td class="tiny-text">
+			Con respecto al 
+			<?php 
+				$date = toDate($balance[ sizeof($balance) -2 ]["fecha"]);
+				$foo = explode( " ", $date );
+				echo $foo[0];
+			?> :
+		</td>	
+	</tr>
+	<tr>
+		<td>
+			<?php echo "<div class='pr'>" . moneyFormat($balance[ sizeof($balance) -1 ]["value"]) . "</div>"; ?>
+		</td>
+		<td>
+			<?php
+			$change  = $balance[ sizeof($balance) -1 ]["value"] - $balance[ sizeof($balance) -2 ]["value"];
+			$change_pct = ($change * 100) / $balance[ sizeof($balance) -2 ]["value"];
+			$change_pct = round( $change_pct, 4 );
+			if($change > 0){
+				$change = moneyFormat( $change );
+				echo "<div class='ch' style='color:green;'>+" . $change . " ( " . $change_pct ." % )</div>";
+			}else{
+				$change = moneyFormat( $change );				
+				echo "<div class='ch' style='color:#A03;'>" . $change . " ( " . $change_pct ." % )</div>";
+			}
+			?>
+		</td>		
+	</tr>
+	<tr>
+		<td style="text-align:right">
+
+		</td>
+
+	</tr>
+</table>
+
+<?php
+
+
+
+
+
+
+$ingreos_darios_g = new Reporte();
+$ingreos_darios_g->agregarMuestra("Balance general", $balance, false  );
+$ingreos_darios_g->fechaDeInicio( strtotime(  $sucursal->getFechaApertura()  ) );
+$ingreos_darios_g->setEscalaEnY("pesos");
+$ingreos_darios_g->graficar("Mapa");
+
+?><br><hr><?php
+$ingresos_diarios = ContabilidadController::getIngresosDiarios($_REQUEST['id']);
+$gastos_diarios = ContabilidadController::getGastosDiarios($_REQUEST['id']);
+
+$asdf = new Reporte();
+$asdf->agregarMuestra("Ingresos", $ingresos_diarios, true  );
+$asdf->agregarMuestra("Egresos", $gastos_diarios, true  );
+$asdf->fechaDeInicio( strtotime(  $sucursal->getFechaApertura()  ) );
+$asdf->setEscalaEnY("pesos");
+$asdf->graficar("Flujo diario");
+
+?><br>
 
 <script type="text/javascript"> 
 

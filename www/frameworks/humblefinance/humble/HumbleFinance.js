@@ -208,7 +208,7 @@ var HumbleFinance = function(  ){
         var ymin = bounds.ymin;
         var ymax = bounds.ymax;
 
-		console.warn(graficas[0]);
+		//console.warn(graficas[0]);
 		
 		var final_structure = [];
 		
@@ -220,7 +220,7 @@ var HumbleFinance = function(  ){
 		};
 		
 		
-		console.warn(final_structure);
+		//console.warn(final_structure);
 		
         var p = Flotr.draw(
             $(this.id + 'priceGraph'),

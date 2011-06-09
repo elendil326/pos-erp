@@ -196,6 +196,7 @@ class Tabla {
 class Reporte{
 	
 	private $timelines;
+	private $timelines_draw_acumulable;
 	private $titles;
 	private $indexes;
 	private $missingDays;
@@ -208,6 +209,7 @@ class Reporte{
 	
 	function __construct(){
 		$this->timelines = array();
+		$this->timelines_draw_acumulable = array();		
 		$this->titles = array();
 		$this->indexes = array();
 		$this->missingDays = array();
@@ -220,11 +222,12 @@ class Reporte{
 	
 	
 	
-	public function agregarMuestra( $title, $data ){
+	public function agregarMuestra( $title, $data, $acumulable = false ){
 		array_push( $this->indexes, 0 );
 		array_push( $this->missingDays, 0 );
 		array_push( $this->titles, $title );
 		array_push( $this->timelines, $data );
+		array_push( $this->timelines_draw_acumulable, $acumulable );		
 	}
 	
 	public function setEscalaEnY($e){
@@ -235,7 +238,7 @@ class Reporte{
 		$this->dateStart = $time;
 	}
 	
-	public function graficar($title ){
+	public function graficar( $title ){
 		$this->fillEmptySpaces();
 		$this->writeJavascriptAndHTML($title);		
 	}
@@ -249,8 +252,9 @@ class Reporte{
 
 		    <?php
 			$GRAFICAS_ACUMULATIVAS = false;
+			
 			for ($s=0; $s < sizeof($this->timelines); $s++) { 
-
+				$GRAFICAS_ACUMULATIVAS = $this->timelines_draw_acumulable[$s];
 				$acc = 0;		
 				echo "var g". $this->random_id . $s ." = [";
 
@@ -312,7 +316,13 @@ class Reporte{
 							if(val ==0)return "";
 							<?php
 								if($this->yFormater == "pesos"){
-									?>	return cf(val) + " <?php echo $this->yFormater; ?>"; <?php
+									?>
+									if(val < 0){
+										return "<span style='color:red'>" + cf(val) + " <?php echo $this->yFormater; ?></span>"; 
+									}else{
+										return cf(val) + " <?php echo $this->yFormater; ?>"; 
+									}
+									<?php
 								}else{
 									?>	return  val  + " <?php echo $this->yFormater; ?>";  <?php
 								}

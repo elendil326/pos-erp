@@ -8,69 +8,143 @@ require_once("controller/autorizaciones.controller.php");
 class ContabilidadController{
 	
 	
-	/**
-      * Revisar persistencia.
-      *
-      * Esta funcion recibe un hash md5 generado por
-      * {POS::getPersistencyHash} y regresa verdadero si
-      * es que existe un cambio desde que se genero ese
-      * hash. Regresa falso si no.
-      *
-      * @param String Una cadena que contiene un hash MD5
-      * @return boolean Verdadero si el hash actual del sistema es igual al argumento, falso si no.
-      **/
-	public static function getIngresosDiarios(  ){
-		$flujo = array();
+	
+	public static function getBalancePorSucursal($id_sucursal){
+		$ingresos_diarios = ContabilidadController::getIngresosDiarios($id_sucursal );
+		$gastos_diarios = ContabilidadController::getGastosDiarios($id_sucursal );
 
-
-		/* * *****************************************
-		 * Fecha desde el ultimo corte
-		 * ****************************************** */
-		$corte = new Corte();
-		$corte->setIdSucursal($_REQUEST['id']);
-
-		$cortes = CorteDAO::getAll(1, 1, 'fecha', 'desc');
-
-
-
-		if (sizeof($cortes) == 0) {
-		    echo "<div align=center>No se han hecho cortes en esta sucursal. Mostrando flujo desde la apertura de sucursal.</div><br>";
-
-		    $fecha = $sucursal->getFechaApertura();
-		} else {
-
-		    $corte = $cortes[0];
-		    echo "Fecha de ultimo corte: <b>" . $corte->getFecha() . "</b><br>";
-		    $fecha = $corte->getFecha();
+		$bal = array();
+		$last_one = 0;
+		for ($index=0; $index < sizeof($ingresos_diarios); $index++) { 
+			array_push($bal, array(
+				"fecha" => $ingresos_diarios[$index]["fecha"],
+				"value" => $ingresos_diarios[$index]["value"] - $gastos_diarios[$index]["value"] + $last_one
+			));
+			
+			$last_one = $ingresos_diarios[$index]["value"] - $gastos_diarios[$index]["value"] + $last_one;
 		}
+		
+		return $bal;
+		
+	}
+	
+	/**
+      * Calcuras gastos diarios por sucursal.
+      *
+      *
+      * @param int el id de la sucursal
+      **/
+	public static function getGastosDiarios(  $id_sucursal ){
+
+		$sucursal = SucursalDAO::getByPK( $id_sucursal );
+
+	    $fecha = $sucursal->getFechaApertura();
+		
+		$flujo = array();
 
 
 		$now = new DateTime("now");
 		$hoy = $now->format("Y-m-d H:i:s");
 
+
 		/* * *****************************************
-		 * Buscar los gastos
-		 * Buscar todos los gastos desde la fecha inicial
-		 * **************************************** */
+		 * Egresos
+		 * Buscar todos los ingresos desde la fecha inicial
+		 * ****************************************** */
 		$foo = new Gastos();
 		$foo->setFecha($fecha);
-		$foo->setIdSucursal($_REQUEST['id']);
+		$foo->setIdSucursal( $id_sucursal );
 
 		$bar = new Gastos();
 		$bar->setFecha($hoy);
 
-		$gastos = GastosDAO::byRange($foo, $bar);
+		$Gastos = GastosDAO::byRange($foo, $bar);
 
-
-		foreach ($gastos as $g) {
+		foreach ($Gastos as $i) {
 		    array_push($flujo, array(
-		        "tipo" => "gasto",
-		        "concepto" => $g->getConcepto(),
-		        "monto" => $g->getMonto() * -1,
-		        "usuario" => $g->getIdUsuario(),
-		        "fecha" => $g->getFecha()
+		        "monto" => $i->getMonto(),
+		        "fecha" => date("Y-m-d", strtotime( $i->getFecha() )  )
 		    ));
 		}
+
+
+		/* * *****************************************
+		 * Ventas a credito
+		 * Buscar todas la ventas a contado para esta sucursal desde esa fecha
+		 * ****************************************** */
+		$foo = new Ventas();
+		$foo->setFecha($fecha);
+		$foo->setIdSucursal($id_sucursal);
+		$foo->setTipoVenta('credito');
+
+		$bar = new Ventas();
+		$bar->setFecha($hoy);
+
+		$ventas = VentasDAO::byRange($foo, $bar);
+
+		//las ventas
+		foreach ($ventas as $i) {
+		    array_push($flujo, array(
+		        "monto" => $i->getTotal(),
+		        "fecha" => date("Y-m-d", strtotime( $i->getFecha() )  )
+		    ));
+		}
+
+
+		/* * *****************************************
+		 * Prestamos
+		 * Buscar todos los abonos para esta sucursal que se hicierond espues de esa fecha
+		 * ****************************************** */
+		
+		
+
+		/* * *****************************************
+		 * compras a proveedores
+		 * Buscar todos los abonos para esta sucursal que se hicierond espues de esa fecha
+		 * ****************************************** */
+		$query = new CompraSucursal();
+		$query->setIdSucursal($id_sucursal);
+		$query->setFecha($fecha);
+
+		$queryE = new CompraSucursal();
+		$queryE->setFecha($hoy);
+
+
+		$results = CompraSucursalDAO::byRange($query, $queryE);
+
+		foreach ($results as $compra) {
+		    array_push($flujo, array(
+		        "monto" => $compra->getTotal(),
+		        "fecha" => date("Y-m-d", strtotime( $compra->getFecha() )  )
+		    ));
+		}
+		
+		//ok, todos los ingresos ya estan en $flujo,
+		//ahora solo hay que ordenarlos por la fecha que tienen
+		return ContabilidadController::groupArrayByDate( $flujo, $fecha );
+
+	}//getGastosDiarios()
+	
+	
+	
+	
+	/**
+      * Calcuras ingresos diarios por sucursal.
+      *
+      *
+      * @param int el id de la sucursal
+      **/
+	public static function getIngresosDiarios(  $id_sucursal ){
+
+		$sucursal = SucursalDAO::getByPK( $id_sucursal );
+
+	    $fecha = $sucursal->getFechaApertura();
+		
+		$flujo = array();
+
+
+		$now = new DateTime("now");
+		$hoy = $now->format("Y-m-d H:i:s");
 
 
 		/* * *****************************************
@@ -79,7 +153,7 @@ class ContabilidadController{
 		 * ****************************************** */
 		$foo = new Ingresos();
 		$foo->setFecha($fecha);
-		$foo->setIdSucursal($_REQUEST['id']);
+		$foo->setIdSucursal( $id_sucursal );
 
 		$bar = new Ingresos();
 		$bar->setFecha($hoy);
@@ -88,22 +162,19 @@ class ContabilidadController{
 
 		foreach ($ingresos as $i) {
 		    array_push($flujo, array(
-		        "tipo" => "ingreso",
-		        "concepto" => $i->getConcepto(),
 		        "monto" => $i->getMonto(),
-		        "usuario" => $i->getIdUsuario(),
-		        "fecha" => $i->getFecha()
+		        "fecha" => date("Y-m-d", strtotime( $i->getFecha() )  )
 		    ));
 		}
 
 
 		/* * *****************************************
-		 * Ventas
+		 * Ventas a contado
 		 * Buscar todas la ventas a contado para esta sucursal desde esa fecha
 		 * ****************************************** */
 		$foo = new Ventas();
 		$foo->setFecha($fecha);
-		$foo->setIdSucursal($_REQUEST['id']);
+		$foo->setIdSucursal($id_sucursal);
 		$foo->setTipoVenta('contado');
 
 		$bar = new Ventas();
@@ -111,26 +182,28 @@ class ContabilidadController{
 
 		$ventas = VentasDAO::byRange($foo, $bar);
 
-
 		//las ventas
 		foreach ($ventas as $i) {
 		    array_push($flujo, array(
-		        "tipo" => "venta",
-		        "concepto" => "<a href='ventas.php?action=detalles&id=" . $i->getIdVenta() . "'>Venta de contado</a>",
 		        "monto" => $i->getPagado(),
-		        "usuario" => $i->getIdUsuario(),
-		        "fecha" => $i->getFecha()
+		        "fecha" => date("Y-m-d", strtotime( $i->getFecha() )  )
 		    ));
 		}
 
 
+		/* * *****************************************
+		 * Prestamos
+		 * Buscar todos los abonos para esta sucursal que se hicierond espues de esa fecha
+		 * ****************************************** */
+		
+		
 
 		/* * *****************************************
 		 * Abonos
 		 * Buscar todos los abonos para esta sucursal que se hicierond espues de esa fecha
 		 * ****************************************** */
 		$query = new PagosVenta();
-		$query->setIdSucursal($_REQUEST["id"]);
+		$query->setIdSucursal($id_sucursal);
 		$query->setFecha($fecha);
 
 		$queryE = new PagosVenta();
@@ -141,16 +214,73 @@ class ContabilidadController{
 
 		foreach ($results as $pago) {
 		    array_push($flujo, array(
-		        "tipo" => "abono",
-		        "concepto" => "<a href='ventas.php?action=detalles&id=" . $pago->getIdVenta() . "'>Abono a venta</a>",
 		        "monto" => $pago->getMonto(),
-		        "usuario" => $pago->getIdUsuario(),
-		        "fecha" => $pago->getFecha()
+		        "fecha" => date("Y-m-d", strtotime( $pago->getFecha() )  )
 		    ));
 		}
+		
+		//ok, todos los ingresos ya estan en $flujo,
+		//ahora solo hay que ordenarlos por la fecha que tienen
+		return ContabilidadController::groupArrayByDate( $flujo, $fecha );
+
+	}//getIngresosDiarios()
+	
+	
+	
+	
+	private static function compareDatesFromObj($o1, $o2){
+		if(strtotime($o1["fecha"]) == strtotime($o2["fecha"])) return 0;
+		return strtotime($o1["fecha"]) > strtotime($o2["fecha"]);
 	}
 	
 	
+	
+	private static function groupArrayByDate( $flujo_array, $date_start ){
+		
+		usort( $flujo_array, "ContabilidadController::compareDatesFromObj" );
+
+		//esa el la fecha que comenzare a iterar
+		$dayIndex =  date("Y-m-d", strtotime( $date_start )  );
+
+		//the day the loop will end
+		$tomorrow = date("Y-m-d", strtotime("+1 day",  time()));
+
+		$arranged_data = array();
+		//print( "comenzando en el array " . $flujo_array[0]["fecha"]);
+
+		$where_i_left = 0;
+
+		while( $tomorrow != $dayIndex ){
+
+			$total_de_hoy = 0;
+			$found_some_data = false;
+			$next_day = date("Y-m-d", strtotime("+1 day", strtotime($dayIndex) ) );
+			
+			for ($index = $where_i_left; $index < sizeof($flujo_array); $index++) { 
+				
+				if( $flujo_array[$index]["fecha"] == $dayIndex){
+					$total_de_hoy += $flujo_array[$index]["monto"];
+					$found_some_data = true;
+				}
+				
+				//si ya estoy en el dia de manana segun ese dia, a la verga
+				if($flujo_array[$index]["fecha"] == $next_day ){
+					$where_i_left = $index;
+					break;					
+				}
+			}
+
+			
+			array_push( $arranged_data, array(
+				"fecha" => $dayIndex,
+				"value" => $total_de_hoy
+			) );
+			
+			$dayIndex = date("Y-m-d", strtotime("+1 day", strtotime($dayIndex)));
+		}
+		
+		return $arranged_data;
+	}
 
 }
 
