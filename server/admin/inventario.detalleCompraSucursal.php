@@ -37,13 +37,9 @@
 
 
 
-<h2>Detalles de esta compra </h2>
-<?php
+<h2>Detalles de esta compra </h2><?php
 
-
-
-function toUnit( $e, $row )
-{
+function toUnit( $e, $row ){
 	//unidaes del producto
 	$producto = InventarioDAO::getByPK( $row['id_producto'] );
 	
@@ -51,7 +47,10 @@ function toUnit( $e, $row )
 			
 	if($producto->getAgrupacion()){
 		//tiene agrupacion
-		$return .= "<i>( " . ($e / $producto->getAgrupacionTam()) . " " . $producto->getAgrupacion() . "s )</i>" ;
+		
+		$size = $e / $producto->getAgrupacionTam();
+		$size = round($size,2);
+		$return .= "<i>( " . $size . " " . $producto->getAgrupacion() . "s )</i>" ;
 		
 	}else{
 		//no tiene agrupacion, solo mostrar la escala
@@ -63,45 +62,61 @@ function toUnit( $e, $row )
 	
 }
 
-function toUnitDesc( $e )
-{
+function toUnitDesc( $e ){
 	return "<b>" . number_format($e, 2) . "</b>kg";
 }
 	
-	$query = new DetalleCompraSucursal();
-	$query->setIdCompra( $_REQUEST["cid"] );
-
-	$detalles = DetalleCompraSucursalDAO::search( $query );
+function renderProd($pid){
+	$foo = InventarioDAO::getByPK( $pid );
+	return $foo->getDescripcion();
+}
 	
-	function renderProd($pid){
+function renderProc($proc){
+	if($proc){
+		return "Si";
+	}else{
+		return "No";
+	}
+}
+	
+function renderCostPerUnit($t, $row){
+	
+	//buscar el producto del que estoy hablando
+	$p = InventarioDAO::getByPK( $row["id_producto"] );
+	
+	if($p->getPrecioPorAgrupacion()){
 		
-		$foo = InventarioDAO::getByPK( $pid );
-		return $foo->getDescripcion();
-	}
-	
-	
-	function renderProc($proc){
-		if($proc){
-			return "Si";
-		}else{
-			return "No";
-		}
+		$size = $row["cantidad"] / $p->getAgrupacionTam();
+		
+		return moneyFormat( $t / $size  ) . " por " . $p->getAgrupacion() . " &nbsp; " . moneyFormat( $t ); 
+		
+	}else{
+		return moneyFormat( $t / $row["cantidad"]  ) . " por " . $p->getEscala() . " &nbsp; " . moneyFormat( $t ); 
 	}
 
-	$header = array(
-		"id_producto" 	=> "Producto",
-		"procesadas" 	=> "Procesada",
-		"cantidad" 		=> "Cantidad",
-		"precio" 		=> "Precio",
-		"descuento" 	=> "Descuento"  );
+}
+	
 
-	$tabla = new Tabla($header, $detalles);
-	$tabla->addColRender("precio", 		"moneyFormat");
-	$tabla->addColRender("cantidad", 	"toUnit");
-	$tabla->addColRender("id_producto", "renderProd");
-	$tabla->addColRender("descuento", 	"toUnitDesc");	
-	$tabla->addColRender("procesadas", "renderProc");	
-	$tabla->render();
+$query = new DetalleCompraSucursal();
+
+$query->setIdCompra( $_REQUEST["cid"] );
+
+$detalles = DetalleCompraSucursalDAO::search( $query );	
+	
+$header = array(
+	"id_producto" 	=> "Producto",
+	"procesadas" 	=> "Procesada",
+	"cantidad" 		=> "Cantidad",
+	"descuento" 	=> "Descuento",	
+	"precio" 		=> "Precio unitario"  );
+
+$tabla = new Tabla($header, $detalles);
+$tabla->addColRender("precio", 		"renderCostPerUnit");
+$tabla->addColRender("cantidad", 	"toUnit");
+$tabla->addColRender("id_producto", "renderProd");
+$tabla->addColRender("descuento", 	"toUnitDesc");	
+$tabla->addColRender("procesadas", "renderProc");	
+$tabla->render();
 	
 	
 ?>

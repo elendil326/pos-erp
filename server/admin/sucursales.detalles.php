@@ -5,6 +5,7 @@ require_once("controller/ventas.controller.php");
 require_once("controller/personal.controller.php");
 require_once("controller/efectivo.controller.php");
 require_once("controller/inventario.controller.php");
+require_once("controller/contabilidad.controller.php");
 
 require_once('model/pagos_venta.dao.php');
 require_once('model/corte.dao.php');
@@ -52,6 +53,15 @@ if ($gerente === null) {
 
     <tr><td colspan=2><input type=button value="Editar detalles" onclick="editar()"></td> </tr>
 </table>
+
+
+<?php
+
+//$ingresos_diarios = ContabilidadController::getIngresosDiarios();
+
+
+
+?>
 
 <script type="text/javascript"> 
 
