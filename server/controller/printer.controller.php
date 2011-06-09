@@ -12,6 +12,7 @@ require_once("controller/ventas.controller.php");
 require_once("model/pos_config.dao.php");
 require_once("admin/includes/static.php");
 require_once("clientes.controller.php");
+require_once("librerias/CNumeroaLetra.php");
 
 function puntos_cm($medida, $resolucion=72) {
     //// 2.54 cm / pulgada
@@ -38,16 +39,43 @@ function formatAddress($d) {
         if (isset($d->numeroInterior))
             $e .= "\n" . readableText($d->numeroInterior);
         $e .= "\n";
-        $e .= " " . readableText($d->colonia) . " C.P. " . $d->codigoPostal . "\n";
-        $e .= readableText($d->municipio) . ", " . readableText($d->estado) . ", " . readableText($d->pais) . "\n";
+
+        $e .= " " . readableText($d->colonia) ;
+		if(strlen( $d->codigoPostal )  > 0){
+        	$e .=  " C.P. " . $d->codigoPostal . "\n";			
+		}
+
+		if(strlen( $d->municipio ) > 0){
+			$e .= readableText($d->municipio) . ", ";
+		}
+		
+		if(strlen( $d->estado ) > 0){
+			$e .= readableText($d->estado ) . ", ";
+		}
+		
+        $e .= readableText($d->pais) . "\n";
     }else {
+	
         $e = "";
         $e .= readableText($d->getCalle()) . " " . $d->getNumeroExterior();
         if ($d->getNumeroInterior() != null)
             $e .= "\n" . readableText($d->getNumeroInterior());
 
-        $e .= " " . readableText($d->getColonia()) . " C.P. " . $d->getCodigoPostal() . "\n";
-        $e .= readableText($d->getMunicipio()) . ", " . readableText($d->getEstado()) . ", " . readableText($d->getPais()) . "\n";
+        //$e .= " " . readableText($d->getColonia()) . " C.P. " . $d->getCodigoPostal() . "\n";
+        $e .= " " . readableText($d->getColonia()) ;
+		if(strlen( $d->getCodigoPostal() )  > 0){
+        	$e .=  " C.P. " . $d->getCodigoPostal() . "\n";			
+		}
+		
+		if(strlen( $d->getMunicipio() ) > 0){
+			$e .= readableText($d->getMunicipio()) . ", ";
+		}
+		
+		if(strlen( $d->getEstado() ) > 0){
+			$e .= readableText($d->getEstado()) . ", ";
+		}
+		
+        $e .= readableText($d->getPais()) . "\n";
     }
 
     return $e;
@@ -647,13 +675,22 @@ function imprimirNotaDeVenta($id_venta) {
 
 
     foreach ($productos as $p) {
+	
+		$p_inventario = InventarioDAO::getByPK( $p["id_producto"] );
+	
         if ($p["cantidadProc"] > 0) {
 
             $prod['cantidad'] = $p["cantidadProc"];
             $prod['descripcion'] = $p["descripcion"] . " PROCESADA";
             $prod['precio'] = moneyFormat($p["precioProc"], DONT_USE_HTML);
-            $prod['importe'] = moneyFormat($p["precioProc"] * $p["cantidadProc"], DONT_USE_HTML);
 
+
+			if($p_inventario->getPrecioPorAgrupacion()){
+				$size = $p["cantidadProc"] / $p_inventario->getAgrupacionTam();
+            	$prod['importe'] = moneyFormat($size * $p["precioProc"] , DONT_USE_HTML);				
+			}else{
+            	$prod['importe'] = moneyFormat($p["precioProc"] * $p["cantidadProc"] , DONT_USE_HTML);
+			}
             array_push($elementos, $prod);
         }
 
@@ -661,8 +698,14 @@ function imprimirNotaDeVenta($id_venta) {
             $prod['cantidad'] = $p["cantidad"];
             $prod['descripcion'] = $p["descripcion"];
             $prod['precio'] = moneyFormat($p["precio"], DONT_USE_HTML);
-            $prod['importe'] = moneyFormat($p["precio"] * $p["cantidad"], DONT_USE_HTML);
 
+			//ver si hay precio por agrupacion
+			if($p_inventario->getPrecioPorAgrupacion()){
+				$size = $p["cantidad"] / $p_inventario->getAgrupacionTam();
+            	$prod['importe'] = moneyFormat($size * $p["precio"] , DONT_USE_HTML);				
+			}else{
+            	$prod['importe'] = moneyFormat($p["precio"] * $p["cantidad"] , DONT_USE_HTML);
+			}
             array_push($elementos, $prod);
         }
     }
@@ -703,12 +746,20 @@ function imprimirNotaDeVenta($id_venta) {
     /*     * ************************
      * PAGARE
      * ************************* */
-    $pagare = "Por este pagare me obligo a pagar incondicionalmente a la orden de de " . readableText($emisor->nombre) . " en esta ciudad de " . readableText($emisor->municipio);
-    $pagare .= "o en cualquier otra que se me requira de pago, el dia " . toDate($venta->getFecha()) . " la cantidad de ";
-    $pagare .= moneyFormat($venta->getTotal(), DONT_USE_HTML) . " (%%%%% ). Valor recibido a ";
-    $pagare .= "nuestra entera satisfaccion a nuestra entera satisfaccion, este pagare es meracantil y se encuentra regido ";
+	$fecha_pagare = toDate($venta->getFecha());
+	$fecha_pagare = explode( " ", $fecha_pagare );
+	$fecha_pagare = $fecha_pagare[0];
+
+	$en_letra = new CNumeroaletra(); 
+	$en_letra->setNumero($venta->getTotal()); 
+
+
+    $pagare = "Por este PAGARE me obligo a pagar incondicionalmente a la orden de de " . readableText($emisor->nombre) . " en esta ciudad de " . readableText($emisor->municipio). " ";
+    $pagare .= "o en cualquier otra que se me requira de pago, el dia " . $fecha_pagare . " la cantidad de ";
+    $pagare .= moneyFormat($venta->getTotal(), DONT_USE_HTML) . " ". $en_letra->letra() .". Valor recibido a ";
+    $pagare .= "nuestra entera satisfaccion, este pagare es meracantil y se encuentra regido ";
     $pagare .= "por la ley general de titulos y operaciones de credito. En caso de no ser pagada la cantidad estipulada en el ";
-    $pagare .= "presente pagare en la fecha de su vencimiento, este titulo de credito causara intereses moratorios a razon de 3% mensual";
+    $pagare .= "presente pagare en la fecha de su vencimiento, este titulo de credito causara intereses moratorios a razon de 3% mensual ";
     $pagare .= "pagadero en esta ciudad o en cualquier otra conjuntamente con la obligacion principal.";
 
     $receptor = array(
@@ -733,17 +784,14 @@ function imprimirNotaDeVenta($id_venta) {
     $pdf->setLineStyle(1);
     $pdf->setStrokeColor(0.3359375, 0.578125, 0.89453125);
 
-    $pdf->line(puntos_cm(2), puntos_cm(1.3), puntos_cm(18.2), puntos_cm(1.3));
+    $pdf->line(puntos_cm(2), puntos_cm(2.0), puntos_cm(18.1), puntos_cm(2.0));
+
+    $pdf->addText(puntos_cm(2), puntos_cm(1.61), 7, "Fecha de impresion: " . time());
+
+    $pdf->addJpegFromFile("../www/media/logo_simbolo.jpg", puntos_cm(15.9), puntos_cm(.95), 25);
 
 
-    $pdf->addText(puntos_cm(2), puntos_cm(1.0), 7, "Fecha de impresion: " . time());
-
-
-
-    $pdf->addJpegFromFile("../www/media/logo_simbolo.jpg", puntos_cm(15.9), puntos_cm(.25), 25);
-
-
-    $pdf->addText(puntos_cm(16.70), puntos_cm(.60), 8, "caffeina.mx");
+    $pdf->addText(puntos_cm(16.70), puntos_cm(1.30), 8, "caffeina.mx");
 
     $pdf->ezStream();
 
