@@ -1,5 +1,6 @@
 <?php
 	define("I_AM_SUCURSAL", true);
+	
 	require_once( "../../server/bootstrap.php" );
 
 ?><!doctype html>

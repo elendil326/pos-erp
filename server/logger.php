@@ -176,7 +176,7 @@ class Logger
             $out .= " | USERID:" . $_SESSION['userid'];
         }
 
-		
+		/*
         if(isset($_SESSION['sucursal']) 
 			&& method_exists($_SESSION['sucursal'], '__toString') //bug #121
 		){
@@ -186,7 +186,7 @@ class Logger
 				return Logger::log($e);
 			}
 
-        }
+        }*/
 
 		if(POS_LOG_TRACKBACK){
 	        $d = debug_backtrace();

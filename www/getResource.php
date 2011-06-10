@@ -83,11 +83,15 @@ switch($module)
 		}
 		
 		if(!isset($_SESSION['grupo'])){
+			
 			Logger::log("Solicitud de recurso para sucursal sin sesion valida.");
+			Logger::log("La variable de grupo no existe !");
+						
             if( $type == "js" ){
+				Logger::log("Ya que me solicitaron un JS enviare una redireccion al homepage.");				
     			die("window.location = \".\";");
             }
-
+			
 			die("/* ACCESO DENEGADO */");
 		}
 

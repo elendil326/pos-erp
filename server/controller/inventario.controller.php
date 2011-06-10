@@ -891,9 +891,12 @@ function procesarProductoSucursal($json) {
 if (isset($args['action'])) {
     switch ($args['action']) {
         case 400:
+
+			Logger::log("Listando el inventario....");
+			
             $json = json_encode(listarInventario($_SESSION["sucursal"]));
             if (isset($args['hashCheck'])) {
-//revisar hashes
+				//revisar hashes
                 if (md5($json) == $args['hashCheck']) {
                     return;
                 }

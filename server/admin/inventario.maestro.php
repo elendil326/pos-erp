@@ -26,12 +26,19 @@ function detalle_inventario(id){
 		echo "<table border=0 style='width: 100%; font-size: 14px; cursor: pointer;'>";
 			echo "<tr>";
 			for($a = 0; $a < sizeof($productos); $a++){
-
+				
 				//buscar su precio sugerido actual
 				$act = new ActualizacionDePrecio();
 				$act->setIdProducto( $productos[$a]->getIdProducto() );
 				$res = ActualizacionDePrecioDAO::search($act, "fecha", "desc");
-				$lastOne = $res[0];
+				
+				if(sizeof($res) == 0){
+					$lastOne = new ActualizacionDePrecio();
+					$lastOne->setPrecioVenta(0);
+					$lastOne->setPrecioCompra(0);					
+				}else{
+					$lastOne = $res[0];					
+				}
 
 				if($a % 5 == 0){
 					echo "</tr><tr>";
