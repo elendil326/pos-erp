@@ -195,9 +195,9 @@ function logOut( $verbose = true  )
 {
     
     if(isset($_SESSION['userid']))
-        Logger::log("Cerrando sesion para {$_SESSION['userid']}");
+        Logger::log("---- Cerrando sesion para {$_SESSION['userid']} ----");
     else
-        Logger::log("Cerrando sesion generica");
+        Logger::log("---- Cerrando sesion generica ----");
 
 
 
@@ -333,7 +333,9 @@ function sucursalTest( ){
 
 function dispatch($args){
 	Logger::log("Dispatching route for user group {$_SESSION['grupo']} and instance {$_SESSION['INSTANCE_ID']}");
+	
 	if(!isset($_SESSION['grupo'])){
+		Logger::log("Accesso no autorizado ! [No hay grupo]");
 		die( "Accesso no autorizado." );
 	}
 	

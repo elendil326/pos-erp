@@ -22,11 +22,18 @@
 	# *******************************
 	# Bootstrap
 	# *******************************
-	$ss = session_start (  );
+	try{
+		$ss = session_start (  );
+	}catch(Exception $e){
+		Logger::log($e);
+		die();
+	}
+
 
 	if(!$ss){
 		echo '{"success": false,"reason": "Imposible iniciar sesion." }';
-		return;
+		Logger::log("Imposible iniciar sesion !");
+		die();
 	}
 
 
@@ -38,7 +45,7 @@
 		&& !isset($_SESSION["INSTANCE_ID"])
 	){
 		
-		Logger::log("There is no instance number nowhere !!" );
+		
 		
 		//la pagina de login, poner I_AM_LOGIN en verdadero, 
 		//es una buena manera de saber si vengo del login
@@ -47,14 +54,18 @@
 			//
 			//Logger::log("Showing log page, althoug there is no instance id");
 			//return;
+			Logger::log("I_AM_LOGIN: There is no instance number nowhere !!" );
 			die("NO INSTANCE !");
 			
 		}else{
 			//no estoy en el log.php, redireccionar a el
 			
 			if(defined("I_AM_SUCURSAL") && I_AM_SUCURSAL) {
+			Logger::log("I_AM_SUCURSAL: There is no instance number nowhere !!" );				
 				die("NO INSTANCE !");
 			}
+			
+			Logger::log("UNKNOWN: There is no instance number nowhere, sending header to log.php !!" );
 			
 			die(header("Location: ./log.php"));
 			
@@ -65,7 +76,7 @@
 	
 	//no esta la de sescion, pero esta el get
 	if(!isset($_SESSION["INSTANCE_ID"]) && isset($_GET["i"])){
-		Logger::log("There is no instance in the cooke, setting that bitch" );
+		Logger::log("No hay instancia en la sesion, pero si como parametro. Insertando en sesion." );
 		$_SESSION["INSTANCE_ID"] = $_GET["i"];
 	}
 
@@ -75,7 +86,7 @@
 	if(isset($_SESSION["INSTANCE_ID"]) && isset($_GET["i"])
 		&& $_SESSION["INSTANCE_ID"] != $_GET["i"]
 		){
-		Logger::log("SE HA CAMBIADO LA INSTANCIA !!!!",3 );
+		Logger::log("SE HA CAMBIADO LA INSTANCIA !!!!", 3 );
 		
 		//cerrar la sesion actual
 		require("controller/login.controller.php");

@@ -28,18 +28,24 @@ function heartbeat(){
 		    try{
                 response = jQuery.parseJSON(data);
 
-				//console.log("parsed response", response)
+				console.log("parsed response", response)
 				
 				if( response == null ){
 					return;
 				}
-				
+
+				if(response.reboot){
+					console.warn("reboot!");
+					window.location = "../proxy.php?action=2002";
+					return;
+				}
+
 				if(	(auths_hash != null) && (auths_hash != response.hash)){
-					
 					notification();					
 				}
 
-				
+
+
 				auths_hash = response.hash;
 				
             }catch(e){
