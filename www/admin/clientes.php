@@ -32,8 +32,8 @@
 
 <body class="sub">
   <div id="wrapper">
-
-    <div id="header" class="clientes2" >
+	
+    <div id="header" class="clientes2" <?php if( POS_STYLE_CLIENTES_BANNER ) echo " style='background-image: url(". POS_STYLE_CLIENTES_BANNER .")'"; ?> >
       
       <div id="top-bar">
         

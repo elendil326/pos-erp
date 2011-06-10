@@ -156,7 +156,39 @@
 	define("POS_COMPRA_A_CLIENTES", 	$rs['compra_a_clientes']		);
 	define("POS_MODULO_CONTABILIDAD", 	$rs['POS_MODULO_CONTABILIDAD']	);
 
+	
+	#leer las caracteristicas del sistema
+	$sql = "SELECT * FROM personalization WHERE ( instance_id = ? ) ;";
+	$params = array(  $_SESSION["INSTANCE_ID"] );
+
+	$rs = $core_conn->GetRow($sql, $params);
+
+
+	
+
+	if(count($rs)==0){
+		//no hay datos de personalizacion
+		define("POS_STYLE_CLIENTES_BANNER", 		"../media/banners/clientes.jpeg" );
+		define("POS_STYLE_SUCURSALES_BANNER", 		"../media/banners/clientes.jpeg" );
+		define("POS_STYLE_VENTAS_BANNER", 			"../media/banners/2474716389_b6433e764f_b.jpg" );
+		define("POS_STYLE_AUTORIZACIONES_BANNER", 	"../media/banners/clientes.jpeg" );
+		define("POS_STYLE_CONTABILIDAD_BANNER", 	"../media/banners/clientes.jpeg" );
+		define("POS_STYLE_PROVEEDORES_BANNER", 		"../media/banners/2101237066_7eabf6b3c8_b.jpg" );
+		define("POS_STYLE_INVENTARIO_BANNER", 		"../media/banners/2474716389_b6433e764f_b.jpg" );
 		
+	}else{
+		//si hay datos !
+		define("POS_STYLE_CLIENTES_BANNER", 		$rs['mod_clientes_banner'] );
+		define("POS_STYLE_SUCURSALES_BANNER", 		$rs['mod_sucursales_banner'] );
+		define("POS_STYLE_VENTAS_BANNER", 			$rs['mod_ventas_banner'] );
+		define("POS_STYLE_AUTORIZACIONES_BANNER", 	$rs['mod_autorizaciones_banner'] );
+		define("POS_STYLE_CONTABILIDAD_BANNER", 	$rs['mod_contabilidad_banner'] );
+		define("POS_STYLE_PROVEEDORES_BANNER", 		$rs['mod_proveedores_banner'] );
+		define("POS_STYLE_INVENTARIO_BANNER", 		$rs['mod_inventario_banner'] );
+										
+	}
+	
+	
 	require('db/DBConnection.php');
 	
 

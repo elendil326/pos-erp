@@ -44,7 +44,7 @@ require_once("admin/includes/static.php");
 <body class="sub">
   <div id="wrapper">
 
-    <div id="header" class="inventario" >
+    <div id="header" class="inventario" <?php if( POS_STYLE_INVENTARIO_BANNER ) echo " style='background-image: url(". POS_STYLE_INVENTARIO_BANNER .")'"; ?> >
       
       <div id="top-bar">
         

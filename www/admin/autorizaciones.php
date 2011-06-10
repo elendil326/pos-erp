@@ -39,7 +39,7 @@
 <body class="sub">
   <div id="wrapper">
 
-    <div id="header" class="clientes" >
+    <div id="header" class="clientes" <?php if( POS_STYLE_AUTORIZACIONES_BANNER ) echo " style='background-image: url(". POS_STYLE_AUTORIZACIONES_BANNER .")'"; ?>>
       
       <div id="top-bar">
         

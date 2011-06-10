@@ -35,7 +35,7 @@ require_once("admin/includes/static.php");
 <body class="sub">
   <div id="wrapper">
 
-    <div id="header" class="proveedor" >
+    <div id="header" class="proveedor" <?php if( POS_STYLE_PROVEEDORES_BANNER ) echo " style='background-image: url(". POS_STYLE_PROVEEDORES_BANNER .")'"; ?>>
       
       <div id="top-bar">
         
