@@ -40,41 +40,41 @@ function formatAddress($d) {
             $e .= "\n" . readableText($d->numeroInterior);
         $e .= "\n";
 
-        $e .= " " . readableText($d->colonia) ;
-		if(strlen( $d->codigoPostal )  > 0){
-        	$e .=  " C.P. " . $d->codigoPostal . "\n";			
-		}
+        $e .= " " . readableText($d->colonia);
+        if (strlen($d->codigoPostal) > 0) {
+            $e .= " C.P. " . $d->codigoPostal . "\n";
+        }
 
-		if(strlen( $d->municipio ) > 0){
-			$e .= readableText($d->municipio) . ", ";
-		}
-		
-		if(strlen( $d->estado ) > 0){
-			$e .= readableText($d->estado ) . ", ";
-		}
-		
+        if (strlen($d->municipio) > 0) {
+            $e .= readableText($d->municipio) . ", ";
+        }
+
+        if (strlen($d->estado) > 0) {
+            $e .= readableText($d->estado) . ", ";
+        }
+
         $e .= readableText($d->pais) . "\n";
-    }else {
-	
+    } else {
+
         $e = "";
         $e .= readableText($d->getCalle()) . " " . $d->getNumeroExterior();
         if ($d->getNumeroInterior() != null)
             $e .= "\n" . readableText($d->getNumeroInterior());
 
         //$e .= " " . readableText($d->getColonia()) . " C.P. " . $d->getCodigoPostal() . "\n";
-        $e .= " " . readableText($d->getColonia()) ;
-		if(strlen( $d->getCodigoPostal() )  > 0){
-        	$e .=  " C.P. " . $d->getCodigoPostal() . "\n";			
-		}
-		
-		if(strlen( $d->getMunicipio() ) > 0){
-			$e .= readableText($d->getMunicipio()) . ", ";
-		}
-		
-		if(strlen( $d->getEstado() ) > 0){
-			$e .= readableText($d->getEstado()) . ", ";
-		}
-		
+        $e .= " " . readableText($d->getColonia());
+        if (strlen($d->getCodigoPostal()) > 0) {
+            $e .= " C.P. " . $d->getCodigoPostal() . "\n";
+        }
+
+        if (strlen($d->getMunicipio()) > 0) {
+            $e .= readableText($d->getMunicipio()) . ", ";
+        }
+
+        if (strlen($d->getEstado()) > 0) {
+            $e .= readableText($d->getEstado()) . ", ";
+        }
+
         $e .= readableText($d->getPais()) . "\n";
     }
 
@@ -182,7 +182,7 @@ function imprimirFactura($id_venta, $venta_especial = null) {
 
     //margenes de un centimetro para toda la pagina
     $pdf->ezSetMargins(1, 1, 1, 1);
-    
+
     /*
      * LOGO
      */
@@ -193,7 +193,17 @@ function imprimirFactura($id_venta, $venta_especial = null) {
     }
 
     //addJpegFromFile(imgFileName,x,y,w,[h])
-    $pdf->addJpegFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
+    //$pdf->addJpegFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
+    
+    if (substr($logo->getValue(), -3) == "jpg" || substr($logo->getValue(), -3) == "JPG" || substr($logo->getValue(), -4) == "jpeg" || substr($logo->getValue(), -4) == "JPEG") {
+        $pdf->addJpegFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
+    } elseif (substr($logo->getValue(), -3) == "png" || substr($logo->getValue(), -3) == "PNG") {
+        $pdf->addPngFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
+    } else {
+        Logger::log("Verifique la configuracion del pos_config, la extension de la imagen del logo no es compatible");
+        die("La extension de la imagen usada para el logo del negocio no es valida.");
+    }
+
 
     /*     * ************************
      * ENCABEZADO
@@ -213,15 +223,15 @@ function imprimirFactura($id_venta, $venta_especial = null) {
     //$s = "<b>Lugar de expedicion</b>\n";
     //$s .= formatAddress($sucursal);
     $e .= "<b>Lugar de expedicion</b>\n";
-    if($sucursal->getIdSucursal() != '0'){
+    if ($sucursal->getIdSucursal() != '0') {
         $e .= formatAddress($sucursal);
     }
-    
+
 
     $datos = array(
         array(
-            "emisor" => $e/*,
-            'sucursal' => $s,*/
+            "emisor" => $e/* ,
+          'sucursal' => $s, */
         )
     );
 
@@ -675,9 +685,9 @@ function imprimirNotaDeVenta($id_venta) {
 
 
     foreach ($productos as $p) {
-	
-		$p_inventario = InventarioDAO::getByPK( $p["id_producto"] );
-	
+
+        $p_inventario = InventarioDAO::getByPK($p["id_producto"]);
+
         if ($p["cantidadProc"] > 0) {
 
             $prod['cantidad'] = $p["cantidadProc"];
@@ -685,12 +695,12 @@ function imprimirNotaDeVenta($id_venta) {
             $prod['precio'] = moneyFormat($p["precioProc"], DONT_USE_HTML);
 
 
-			if($p_inventario->getPrecioPorAgrupacion()){
-				$size = $p["cantidadProc"] / $p_inventario->getAgrupacionTam();
-            	$prod['importe'] = moneyFormat($size * $p["precioProc"] , DONT_USE_HTML);				
-			}else{
-            	$prod['importe'] = moneyFormat($p["precioProc"] * $p["cantidadProc"] , DONT_USE_HTML);
-			}
+            if ($p_inventario->getPrecioPorAgrupacion()) {
+                $size = $p["cantidadProc"] / $p_inventario->getAgrupacionTam();
+                $prod['importe'] = moneyFormat($size * $p["precioProc"], DONT_USE_HTML);
+            } else {
+                $prod['importe'] = moneyFormat($p["precioProc"] * $p["cantidadProc"], DONT_USE_HTML);
+            }
             array_push($elementos, $prod);
         }
 
@@ -699,13 +709,13 @@ function imprimirNotaDeVenta($id_venta) {
             $prod['descripcion'] = $p["descripcion"];
             $prod['precio'] = moneyFormat($p["precio"], DONT_USE_HTML);
 
-			//ver si hay precio por agrupacion
-			if($p_inventario->getPrecioPorAgrupacion()){
-				$size = $p["cantidad"] / $p_inventario->getAgrupacionTam();
-            	$prod['importe'] = moneyFormat($size * $p["precio"] , DONT_USE_HTML);				
-			}else{
-            	$prod['importe'] = moneyFormat($p["precio"] * $p["cantidad"] , DONT_USE_HTML);
-			}
+            //ver si hay precio por agrupacion
+            if ($p_inventario->getPrecioPorAgrupacion()) {
+                $size = $p["cantidad"] / $p_inventario->getAgrupacionTam();
+                $prod['importe'] = moneyFormat($size * $p["precio"], DONT_USE_HTML);
+            } else {
+                $prod['importe'] = moneyFormat($p["precio"] * $p["cantidad"], DONT_USE_HTML);
+            }
             array_push($elementos, $prod);
         }
     }
@@ -746,17 +756,17 @@ function imprimirNotaDeVenta($id_venta) {
     /*     * ************************
      * PAGARE
      * ************************* */
-	$fecha_pagare = toDate($venta->getFecha());
-	$fecha_pagare = explode( " ", $fecha_pagare );
-	$fecha_pagare = $fecha_pagare[0];
+    $fecha_pagare = toDate($venta->getFecha());
+    $fecha_pagare = explode(" ", $fecha_pagare);
+    $fecha_pagare = $fecha_pagare[0];
 
-	$en_letra = new CNumeroaletra(); 
-	$en_letra->setNumero($venta->getTotal()); 
+    $en_letra = new CNumeroaletra();
+    $en_letra->setNumero($venta->getTotal());
 
 
-    $pagare = "Por este PAGARE me obligo a pagar incondicionalmente a la orden de de " . readableText($emisor->nombre) . " en esta ciudad de " . readableText($emisor->municipio). " ";
+    $pagare = "Por este PAGARE me obligo a pagar incondicionalmente a la orden de de " . readableText($emisor->nombre) . " en esta ciudad de " . readableText($emisor->municipio) . " ";
     $pagare .= "o en cualquier otra que se me requira de pago, el dia " . $fecha_pagare . " la cantidad de ";
-    $pagare .= moneyFormat($venta->getTotal(), DONT_USE_HTML) . " ". $en_letra->letra() .". Valor recibido a ";
+    $pagare .= moneyFormat($venta->getTotal(), DONT_USE_HTML) . " " . $en_letra->letra() . ". Valor recibido a ";
     $pagare .= "nuestra entera satisfaccion, este pagare es meracantil y se encuentra regido ";
     $pagare .= "por la ley general de titulos y operaciones de credito. En caso de no ser pagada la cantidad estipulada en el ";
     $pagare .= "presente pagare en la fecha de su vencimiento, este titulo de credito causara intereses moratorios a razon de 3% mensual ";
@@ -923,8 +933,17 @@ function imprimirEstadoCuentaCliente($args) {
         die("Verifique la configuracion del POS, no se encontro el url del logo");
     }
 
-    //addJpegFromFile(imgFileName,x,y,w,[h])
-    $pdf->addJpegFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
+    //addJpegFromFile(imgFileName,x,y,w,[h])    
+    //detectamos el tipo de imagen del logo
+    if (substr($logo->getValue(), -3) == "jpg" || substr($logo->getValue(), -3) == "JPG" || substr($logo->getValue(), -4) == "jpeg" || substr($logo->getValue(), -4) == "JPEG") {
+        $pdf->addJpegFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
+    } elseif (substr($logo->getValue(), -3) == "png" || substr($logo->getValue(), -3) == "PNG") {
+        $pdf->addPngFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
+    } else {
+        Logger::log("Verifique la configuracion del pos_config, la extension de la imagen del logo no es compatible");
+        die("La extension de la imagen usada para el logo del negocio no es valida.");
+    }
+
 
     /*     * ************************
      * ENCABEZADO
@@ -991,14 +1010,14 @@ function imprimirEstadoCuentaCliente($args) {
      */
     $elementos = array(
         array('id_venta' => 'Venta',
-            'fecha' => 'Fecha', 
-            'sucursal' => 'Sucursal', 
-            'cajero' => 'Cajero', 
-            //'cancelada' => 'Cancelada', 
-            'tipo_venta' => 'Tipo', 
-            'tipo_pago' => 'Pago', 
-            'total' => 'Total', 
-            'pagado' => 'Pagado', 
+            'fecha' => 'Fecha',
+            'sucursal' => 'Sucursal',
+            'cajero' => 'Cajero',
+            //'cancelada' => 'Cancelada',
+            'tipo_venta' => 'Tipo',
+            'tipo_pago' => 'Pago',
+            'total' => 'Total',
+            'pagado' => 'Pagado',
             'saldo' => 'Saldo'),
     );
 
@@ -1006,7 +1025,7 @@ function imprimirEstadoCuentaCliente($args) {
     foreach ($estado_cuenta->array_ventas as $venta) {
 
         $array_venta = array();
-        
+
         $array_venta['id_venta'] = $venta['id_venta'];
         $array_venta['fecha'] = $venta['fecha'];
         $array_venta['sucursal'] = readableText($venta['sucursal']);

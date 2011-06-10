@@ -502,9 +502,12 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelShow = function ( id_client
     //deshabilitamos el boton de editar cliente en caso de que sea una sucursal
     if( id_cliente <= 0 ){
         Ext.getCmp("Clientes-EditarDetalles").setVisible(false);
+        Ext.getCmp("Clientes-Estado-Cuenta").setVisible(false);
+
     }
     else{
         Ext.getCmp("Clientes-EditarDetalles").setVisible(true);
+        Ext.getCmp("Clientes-Estado-Cuenta").setVisible(true);
     }
 	
     //hacer un setcard manual
@@ -677,6 +680,7 @@ Aplicacion.Clientes.prototype.editarClienteCancelarBoton = function (  )
     detallesPanel.items.items[0].setInstructions("Todos los campos son obligatorios. Serciorese de que todos los campos sean correctos.");
 	
     Ext.getCmp("Clientes-EditarDetalles").setVisible(true);
+    Ext.getCmp("Clientes-Estado-Cuenta").setVisible(true);
     Ext.getCmp("Clientes-EditarDetallesGuardar").setVisible(false);
     Ext.getCmp("Clientes-EditarDetallesCancelar").setVisible(false);
     Ext.getCmp("Clientes-credito-restante").show( Ext.anims.slide );
@@ -720,6 +724,7 @@ Aplicacion.Clientes.prototype.editarCliente = function ( data )
             var detallesPanel = Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0];
             detallesPanel.disable();
             Ext.getCmp("Clientes-EditarDetalles").setVisible(true);
+            Ext.getCmp("Clientes-Estado-Cuenta").setVisible(true);
             Ext.getCmp("Clientes-EditarDetallesGuardar").setVisible(false);
             Ext.getCmp("Clientes-EditarDetallesCancelar").setVisible(false);
 
@@ -862,6 +867,7 @@ Aplicacion.Clientes.prototype.editarClienteBoton = function ( )
 	
 
     Ext.getCmp("Clientes-EditarDetalles").hide( Ext.anims.slide );
+    Ext.getCmp("Clientes-Estado-Cuenta").hide(Ext.anims.slide);
     Ext.getCmp("Clientes-EditarDetallesGuardar").show( Ext.anims.slide );
     Ext.getCmp("Clientes-EditarDetallesCancelar").show( Ext.anims.slide );
 
@@ -1270,11 +1276,19 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 		}}),	
 		*/
     new Ext.Button({
+        id : 'Clientes-Estado-Cuenta',
+        ui  : 'action',
+        text: 'Imprimir Estado de Cuenta',
+         handler : function(){
+             window.open("http://pos.caffeina.mx/proxy.php?action=1307&id_cliente=" + Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0].getValues().id_cliente);
+         }
+    }),
+    new Ext.Button({
         id : 'Clientes-EditarDetalles',
         ui  : 'action',
         text: 'Editar Detalles del Cliente',
         handler : this.editarClienteBoton
-    }),
+    }),    
     new Ext.Button({
         id : 'Clientes-EditarDetallesCancelar',
         ui  : 'decline',
