@@ -192,7 +192,7 @@ function surtirProducto($id_autorizacion) {
             $actualizacion = $actualizacion[0];
 
             $nuevo_detalle_producto->setPrecioVenta($actualizacion->getPrecioVenta());
-
+            $nuevo_detalle_producto->setPrecioVentaProcesado($actualizacion->getPrecioVentaProcesado());
 
             try {
                 DetalleInventarioDAO::save($nuevo_detalle_producto);
