@@ -248,6 +248,11 @@ abstract class SucursalDAOBase extends DAO
 			array_push( $val, $sucursal->getSaldoAFavor() );
 		}
 
+		if( $sucursal->getCurrentIsp() != NULL){
+			$sql .= " current_isp = ? AND";
+			array_push( $val, $sucursal->getCurrentIsp() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -279,7 +284,7 @@ abstract class SucursalDAOBase extends DAO
 	  **/
 	private static final function update( $sucursal )
 	{
-		$sql = "UPDATE sucursal SET  gerente = ?, descripcion = ?, razon_social = ?, rfc = ?, calle = ?, numero_exterior = ?, numero_interior = ?, colonia = ?, localidad = ?, referencia = ?, municipio = ?, estado = ?, pais = ?, codigo_postal = ?, telefono = ?, token = ?, letras_factura = ?, activo = ?, fecha_apertura = ?, saldo_a_favor = ? WHERE  id_sucursal = ?;";
+		$sql = "UPDATE sucursal SET  gerente = ?, descripcion = ?, razon_social = ?, rfc = ?, calle = ?, numero_exterior = ?, numero_interior = ?, colonia = ?, localidad = ?, referencia = ?, municipio = ?, estado = ?, pais = ?, codigo_postal = ?, telefono = ?, token = ?, letras_factura = ?, activo = ?, fecha_apertura = ?, saldo_a_favor = ?, current_isp = ? WHERE  id_sucursal = ?;";
 		$params = array( 
 			$sucursal->getGerente(), 
 			$sucursal->getDescripcion(), 
@@ -301,6 +306,7 @@ abstract class SucursalDAOBase extends DAO
 			$sucursal->getActivo(), 
 			$sucursal->getFechaApertura(), 
 			$sucursal->getSaldoAFavor(), 
+			$sucursal->getCurrentIsp(), 
 			$sucursal->getIdSucursal(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -324,7 +330,7 @@ abstract class SucursalDAOBase extends DAO
 	  **/
 	private static final function create( &$sucursal )
 	{
-		$sql = "INSERT INTO sucursal ( id_sucursal, gerente, descripcion, razon_social, rfc, calle, numero_exterior, numero_interior, colonia, localidad, referencia, municipio, estado, pais, codigo_postal, telefono, token, letras_factura, activo, fecha_apertura, saldo_a_favor ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO sucursal ( id_sucursal, gerente, descripcion, razon_social, rfc, calle, numero_exterior, numero_interior, colonia, localidad, referencia, municipio, estado, pais, codigo_postal, telefono, token, letras_factura, activo, fecha_apertura, saldo_a_favor, current_isp ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$sucursal->getIdSucursal(), 
 			$sucursal->getGerente(), 
@@ -347,6 +353,7 @@ abstract class SucursalDAOBase extends DAO
 			$sucursal->getActivo(), 
 			$sucursal->getFechaApertura(), 
 			$sucursal->getSaldoAFavor(), 
+			$sucursal->getCurrentIsp(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -621,6 +628,17 @@ abstract class SucursalDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " saldo_a_favor = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $sucursalA->getCurrentIsp()) != NULL) & ( ($b = $sucursalB->getCurrentIsp()) != NULL) ){
+				$sql .= " current_isp >= ? AND current_isp <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " current_isp = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

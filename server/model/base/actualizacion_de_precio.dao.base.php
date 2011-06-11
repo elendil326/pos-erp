@@ -163,14 +163,9 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 			array_push( $val, $actualizacion_de_precio->getPrecioVenta() );
 		}
 
-		if( $actualizacion_de_precio->getPrecioCompra() != NULL){
-			$sql .= " precio_compra = ? AND";
-			array_push( $val, $actualizacion_de_precio->getPrecioCompra() );
-		}
-
-		if( $actualizacion_de_precio->getPrecioVentaSinProcesar() != NULL){
-			$sql .= " precio_venta_sin_procesar = ? AND";
-			array_push( $val, $actualizacion_de_precio->getPrecioVentaSinProcesar() );
+		if( $actualizacion_de_precio->getPrecioVentaProcesado() != NULL){
+			$sql .= " precio_venta_procesado = ? AND";
+			array_push( $val, $actualizacion_de_precio->getPrecioVentaProcesado() );
 		}
 
 		if( $actualizacion_de_precio->getPrecioIntersucursal() != NULL){
@@ -178,9 +173,9 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 			array_push( $val, $actualizacion_de_precio->getPrecioIntersucursal() );
 		}
 
-		if( $actualizacion_de_precio->getPrecioIntersucursalSinProcesar() != NULL){
-			$sql .= " precio_intersucursal_sin_procesar = ? AND";
-			array_push( $val, $actualizacion_de_precio->getPrecioIntersucursalSinProcesar() );
+		if( $actualizacion_de_precio->getPrecioIntersucursalProcesado() != NULL){
+			$sql .= " precio_intersucursal_procesado = ? AND";
+			array_push( $val, $actualizacion_de_precio->getPrecioIntersucursalProcesado() );
 		}
 
 		if( $actualizacion_de_precio->getFecha() != NULL){
@@ -219,15 +214,14 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 	  **/
 	private static final function update( $actualizacion_de_precio )
 	{
-		$sql = "UPDATE actualizacion_de_precio SET  id_producto = ?, id_usuario = ?, precio_venta = ?, precio_compra = ?, precio_venta_sin_procesar = ?, precio_intersucursal = ?, precio_intersucursal_sin_procesar = ?, fecha = ? WHERE  id_actualizacion = ?;";
+		$sql = "UPDATE actualizacion_de_precio SET  id_producto = ?, id_usuario = ?, precio_venta = ?, precio_venta_procesado = ?, precio_intersucursal = ?, precio_intersucursal_procesado = ?, fecha = ? WHERE  id_actualizacion = ?;";
 		$params = array( 
 			$actualizacion_de_precio->getIdProducto(), 
 			$actualizacion_de_precio->getIdUsuario(), 
 			$actualizacion_de_precio->getPrecioVenta(), 
-			$actualizacion_de_precio->getPrecioCompra(), 
-			$actualizacion_de_precio->getPrecioVentaSinProcesar(), 
+			$actualizacion_de_precio->getPrecioVentaProcesado(), 
 			$actualizacion_de_precio->getPrecioIntersucursal(), 
-			$actualizacion_de_precio->getPrecioIntersucursalSinProcesar(), 
+			$actualizacion_de_precio->getPrecioIntersucursalProcesado(), 
 			$actualizacion_de_precio->getFecha(), 
 			$actualizacion_de_precio->getIdActualizacion(), );
 		global $conn;
@@ -252,16 +246,15 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 	  **/
 	private static final function create( &$actualizacion_de_precio )
 	{
-		$sql = "INSERT INTO actualizacion_de_precio ( id_actualizacion, id_producto, id_usuario, precio_venta, precio_compra, precio_venta_sin_procesar, precio_intersucursal, precio_intersucursal_sin_procesar, fecha ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO actualizacion_de_precio ( id_actualizacion, id_producto, id_usuario, precio_venta, precio_venta_procesado, precio_intersucursal, precio_intersucursal_procesado, fecha ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$actualizacion_de_precio->getIdActualizacion(), 
 			$actualizacion_de_precio->getIdProducto(), 
 			$actualizacion_de_precio->getIdUsuario(), 
 			$actualizacion_de_precio->getPrecioVenta(), 
-			$actualizacion_de_precio->getPrecioCompra(), 
-			$actualizacion_de_precio->getPrecioVentaSinProcesar(), 
+			$actualizacion_de_precio->getPrecioVentaProcesado(), 
 			$actualizacion_de_precio->getPrecioIntersucursal(), 
-			$actualizacion_de_precio->getPrecioIntersucursalSinProcesar(), 
+			$actualizacion_de_precio->getPrecioIntersucursalProcesado(), 
 			$actualizacion_de_precio->getFecha(), 
 		 );
 		global $conn;
@@ -355,23 +348,12 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 			
 		}
 
-		if( (($a = $actualizacion_de_precioA->getPrecioCompra()) != NULL) & ( ($b = $actualizacion_de_precioB->getPrecioCompra()) != NULL) ){
-				$sql .= " precio_compra >= ? AND precio_compra <= ? AND";
+		if( (($a = $actualizacion_de_precioA->getPrecioVentaProcesado()) != NULL) & ( ($b = $actualizacion_de_precioB->getPrecioVentaProcesado()) != NULL) ){
+				$sql .= " precio_venta_procesado >= ? AND precio_venta_procesado <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " precio_compra = ? AND"; 
-			$a = $a == NULL ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( (($a = $actualizacion_de_precioA->getPrecioVentaSinProcesar()) != NULL) & ( ($b = $actualizacion_de_precioB->getPrecioVentaSinProcesar()) != NULL) ){
-				$sql .= " precio_venta_sin_procesar >= ? AND precio_venta_sin_procesar <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
-			$sql .= " precio_venta_sin_procesar = ? AND"; 
+			$sql .= " precio_venta_procesado = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
@@ -388,12 +370,12 @@ abstract class ActualizacionDePrecioDAOBase extends DAO
 			
 		}
 
-		if( (($a = $actualizacion_de_precioA->getPrecioIntersucursalSinProcesar()) != NULL) & ( ($b = $actualizacion_de_precioB->getPrecioIntersucursalSinProcesar()) != NULL) ){
-				$sql .= " precio_intersucursal_sin_procesar >= ? AND precio_intersucursal_sin_procesar <= ? AND";
+		if( (($a = $actualizacion_de_precioA->getPrecioIntersucursalProcesado()) != NULL) & ( ($b = $actualizacion_de_precioB->getPrecioIntersucursalProcesado()) != NULL) ){
+				$sql .= " precio_intersucursal_procesado >= ? AND precio_intersucursal_procesado <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " precio_intersucursal_sin_procesar = ? AND"; 
+			$sql .= " precio_intersucursal_procesado = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

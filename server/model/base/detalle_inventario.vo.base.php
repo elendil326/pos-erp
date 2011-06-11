@@ -31,8 +31,8 @@ class DetalleInventario extends VO
 			if( isset($data['precio_venta']) ){
 				$this->precio_venta = $data['precio_venta'];
 			}
-			if( isset($data['precio_compra']) ){
-				$this->precio_compra = $data['precio_compra'];
+			if( isset($data['precio_venta_procesado']) ){
+				$this->precio_venta_procesado = $data['precio_venta_procesado'];
 			}
 			if( isset($data['existencias']) ){
 				$this->existencias = $data['existencias'];
@@ -56,7 +56,7 @@ class DetalleInventario extends VO
 			"id_producto" => $this->id_producto,
 			"id_sucursal" => $this->id_sucursal,
 			"precio_venta" => $this->precio_venta,
-			"precio_compra" => $this->precio_compra,
+			"precio_venta_procesado" => $this->precio_venta_procesado,
 			"existencias" => $this->existencias,
 			"existencias_procesadas" => $this->existencias_procesadas
 		); 
@@ -93,13 +93,13 @@ class DetalleInventario extends VO
 	protected $precio_venta;
 
 	/**
-	  * precio_compra
+	  * precio_venta_procesado
 	  * 
-	  * el precio a la compra para el publico general de este producto en esta sucursal<br>
+	  *  [Campo no documentado]<br>
 	  * @access protected
 	  * @var float
 	  */
-	protected $precio_compra;
+	protected $precio_venta_procesado;
 
 	/**
 	  * existencias
@@ -196,27 +196,27 @@ class DetalleInventario extends VO
 	}
 
 	/**
-	  * getPrecioCompra
+	  * getPrecioVentaProcesado
 	  * 
-	  * Get the <i>precio_compra</i> property for this object. Donde <i>precio_compra</i> es el precio a la compra para el publico general de este producto en esta sucursal
+	  * Get the <i>precio_venta_procesado</i> property for this object. Donde <i>precio_venta_procesado</i> es  [Campo no documentado]
 	  * @return float
 	  */
-	final public function getPrecioCompra()
+	final public function getPrecioVentaProcesado()
 	{
-		return $this->precio_compra;
+		return $this->precio_venta_procesado;
 	}
 
 	/**
-	  * setPrecioCompra( $precio_compra )
+	  * setPrecioVentaProcesado( $precio_venta_procesado )
 	  * 
-	  * Set the <i>precio_compra</i> property for this object. Donde <i>precio_compra</i> es el precio a la compra para el publico general de este producto en esta sucursal.
-	  * Una validacion basica se hara aqui para comprobar que <i>precio_compra</i> es de tipo <i>float</i>. 
+	  * Set the <i>precio_venta_procesado</i> property for this object. Donde <i>precio_venta_procesado</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>precio_venta_procesado</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
 	  */
-	final public function setPrecioCompra( $precio_compra )
+	final public function setPrecioVentaProcesado( $precio_venta_procesado )
 	{
-		$this->precio_compra = $precio_compra;
+		$this->precio_venta_procesado = $precio_venta_procesado;
 	}
 
 	/**

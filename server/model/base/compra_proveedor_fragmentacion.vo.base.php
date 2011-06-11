@@ -117,7 +117,7 @@ class CompraProveedorFragmentacion extends VO
 	  * 
 	  * la descripcion de lo que ha sucedido, vendido, surtido, basura... etc.<br>
 	  * @access protected
-	  * @var varchar(16)
+	  * @var varchar(128)
 	  */
 	protected $descripcion;
 
@@ -259,7 +259,7 @@ class CompraProveedorFragmentacion extends VO
 	  * getDescripcion
 	  * 
 	  * Get the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es la descripcion de lo que ha sucedido, vendido, surtido, basura... etc.
-	  * @return varchar(16)
+	  * @return varchar(128)
 	  */
 	final public function getDescripcion()
 	{
@@ -270,9 +270,9 @@ class CompraProveedorFragmentacion extends VO
 	  * setDescripcion( $descripcion )
 	  * 
 	  * Set the <i>descripcion</i> property for this object. Donde <i>descripcion</i> es la descripcion de lo que ha sucedido, vendido, surtido, basura... etc..
-	  * Una validacion basica se hara aqui para comprobar que <i>descripcion</i> es de tipo <i>varchar(16)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>descripcion</i> es de tipo <i>varchar(128)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(16)
+	  * @param varchar(128)
 	  */
 	final public function setDescripcion( $descripcion )
 	{

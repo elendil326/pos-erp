@@ -454,7 +454,9 @@ class Comprobante {
      * @return type 
      */
     private function getXmlHardCode() {
-        return '<?xml version="1.0" encoding="utf-8"?><cfdi:Comprobante xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" serie="A" folio="1" fecha="2011-04-03T22:55:56" sello="QgrmCjQtbzOR+lYZSRlqPvK2AMdnsX67F8Cjj08/ATWqKCcxemR4f0eSx2SoZE51bvSNRowTGTxfm6ohQj0YJi9SeC9l1o7i5kl+nF3T2KSoNdGYYWlb9XLOLbyr9P3AS+VDB+F3z/D5/7FOTAlDvSVRK7d5Hq8ReQ+0C/IVMQ8=" formaDePago="Pago en una sola exhibicion" noCertificado="00001000000103099981" certificado="MIIEDTCCAvWgAwIBAgIUMDAwMDEwMDAwMDAxMDMwOTk5ODEwDQYJKoZIhvcNAQEFBQAwggE2MTgwNgYDVQQDDC9BLkMuIGRlbCBTZXJ2aWNpbyBkZSBBZG1pbmlzdHJhY2nDs24gVHJpYnV0YXJpYTEvMC0GA1UECgwmU2VydmljaW8gZGUgQWRtaW5pc3RyYWNpw7NuIFRyaWJ1dGFyaWExHzAdBgkqhkiG9w0BCQEWEGFjb2RzQHNhdC5nb2IubXgxJjAkBgNVBAkMHUF2LiBIaWRhbGdvIDc3LCBDb2wuIEd1ZXJyZXJvMQ4wDAYDVQQRDAUwNjMwMDELMAkGA1UEBhMCTVgxGTAXBgNVBAgMEERpc3RyaXRvIEZlZGVyYWwxEzARBgNVBAcMCkN1YXVodGVtb2MxMzAxBgkqhkiG9w0BCQIMJFJlc3BvbnNhYmxlOiBGZXJuYW5kbyBNYXJ0w61uZXogQ29zczAeFw0xMTAzMjAwMTA1NDNaFw0xMzAzMTkwMTA1NDNaMIGtMSIwIAYDVQQDExlKVUFOIEFOVE9OSU8gR0FSQ0lBIFRBUElBMSIwIAYDVQQpExlKVUFOIEFOVE9OSU8gR0FSQ0lBIFRBUElBMSIwIAYDVQQKExlKVUFOIEFOVE9OSU8gR0FSQ0lBIFRBUElBMRYwFAYDVQQtEw1HQVRKNzQwNzE0RjQ4MRswGQYDVQQFExJHQVRKNzQwNzE0SEdUUlBOMDMxCjAIBgNVBAsTASAwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAPfLNYOVJXmBfNSZd93ygVtVnIkKX4AYcxMlllUJ8VgG7Rsi4zlbWBjy2HGSRmcN2M606LrJu3s2H3WPDtGPPd/G+2MAkBWHdPA1r+ptbprIiwToXUQE5CFP4E5Xl+xT3CNe4nJlIVVetJTcNMZdReYltVQKbE5ncBj3rPvTFELZAgMBAAGjHTAbMAwGA1UdEwEB/wQCMAAwCwYDVR0PBAQDAgbAMA0GCSqGSIb3DQEBBQUAA4IBAQCfusmkDoo/iygnPWwTooH4Itt9HsNGW8OnUwwhMxSwyzjzmO+CYNv77DtAD/UuJ7cu/kzprHRbLUMng8vEEzBvOlPyEx3naoxOjSCDFiY5ATPkLM+i8Xb7WyqPneCKKdTmm6n/cZroJZLwShhhsK1LFRJKJRyEOqiIXXGq/YJJcBVbsMuznxW5/dRiKTBlOtWRdh7dq9eWch4fOBsOa4+alHaBbXKlbybgWHzHq8gpLTKE8q0o1u6hGPvGZevh9dDfusMPR4lAFxadCYJbv2z+dfdPaNSnwZg3jgOP4pKOAey2PiSPApNLMV9lveDOGcrnlJWLIep67921bdcc2odF" subTotal="20444.00" TipoCambio="1.0" Moneda="MXN" total="20444.00" tipoDeComprobante="ingreso" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv3.xsd" xmlns:cfdi="http://www.sat.gob.mx/cfd/3"><cfdi:Emisor rfc="GATJ740714F48" nombre="JUAN ANTONIO GARCIA TAPIA"><cfdi:DomicilioFiscal calle="AVENIDA CONSTITUYENTES" noExterior="360" noInterior="BODEGA 49" colonia="CENTRO" municipio="CELAYA" estado="GUANAJUATO" pais="MEXICO" codigoPostal="38070" /></cfdi:Emisor><cfdi:Receptor rfc="MESC780327436" nombre="Carlos Francisco Mendez Sanchez"><cfdi:Domicilio calle="Av. Irrigacion" noExterior="419" noInterior="Local B" colonia="Villas del Benavente 1" municipio="Celaya" estado="Guanajuato" pais="Mexico" codigoPostal="38034" /></cfdi:Receptor><cfdi:Conceptos><cfdi:Concepto cantidad="1" descripcion="Varios Verduras" valorUnitario="20444" importe="20444" /></cfdi:Conceptos><cfdi:Impuestos totalImpuestosTrasladados="0.00"><cfdi:Traslados><cfdi:Traslado impuesto="IVA" tasa="0.00" importe="0.00" /></cfdi:Traslados></cfdi:Impuestos><cfdi:Complemento><tfd:TimbreFiscalDigital version="1.0" UUID="4B3D22A9-D8A0-40FA-B0AA-6ACB6CD7BFF4" FechaTimbrado="2011-04-03T22:50:40" selloCFD="QgrmCjQtbzOR+lYZSRlqPvK2AMdnsX67F8Cjj08/ATWqKCcxemR4f0eSx2SoZE51bvSNRowTGTxfm6ohQj0YJi9SeC9l1o7i5kl+nF3T2KSoNdGYYWlb9XLOLbyr9P3AS+VDB+F3z/D5/7FOTAlDvSVRK7d5Hq8ReQ+0C/IVMQ8=" noCertificadoSAT="00001000000102629688" selloSAT="bHuroY2kRFbCOZFoOQayVB5nnbal5WF4gBmTs5AD6/yxIaSHKQ7D3UKie72X4JX64DBpUAUYNV7Pb1OdcFUoRdXDCIN9tOhTTkbKY4N+m01O4+OrqIepvGgFcoN5kKJOw0Sbnp2qEj9E1CzaYHPmsgsS3tQo+y3cqIc2p4boOGo=" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/TimbreFiscalDigital/TimbreFiscalDigital.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" /></cfdi:Complemento></cfdi:Comprobante>';
+        /*return '<?xml version="1.0" encoding="utf-8"?><cfdi:Comprobante xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" serie="A" folio="1" fecha="2011-04-03T22:55:56" sello="sellodepruebasinvalor" formaDePago="Pago en una sola exhibicion" noCertificado="00000000000000000001" certificado="certificadodepruebasinvalor" subTotal="1.00" TipoCambio="1.0" Moneda="MXN" total="1.00" tipoDeComprobante="ingreso" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv3.xsd" xmlns:cfdi="http://www.sat.gob.mx/cfd/3"><cfdi:Emisor rfc="GAGA771212GA1" nombre="GARCIA GRANADOS ARMANDO"><cfdi:DomicilioFiscal calle="FICTICIA" noExterior="101" noInterior="200 B" colonia="IMAGINARIA" municipio="TEST TOWN" estado="STATE" pais="COUNTRY" codigoPostal="01234" /></cfdi:Emisor><cfdi:Receptor rfc="PORT" nombre="PORTILLO RAMIREZ TOMAS"><cfdi:Domicilio calle="AV IMAGINARIA" noExterior="123" noInterior="LOCAL C" colonia="BIG VILLE" municipio="CITY" estado="STATE" pais="COUNTRY" codigoPostal="01234" /></cfdi:Receptor><cfdi:Conceptos><cfdi:Concepto cantidad="1" descripcion="ALGUNAS COSAS SIN IMPROTANCIA" valorUnitario="1.00" importe="1.0" /></cfdi:Conceptos><cfdi:Impuestos totalImpuestosTrasladados="0.00"><cfdi:Traslados><cfdi:Traslado impuesto="IVA" tasa="0.00" importe="0.00" /></cfdi:Traslados></cfdi:Impuestos><cfdi:Complemento><tfd:TimbreFiscalDigital version="1.0" UUID="A0B1C2D3-E4F5-G6H7-I8J9-0A1B2C3D4E5F" FechaTimbrado="2011-04-03T22:50:40" selloCFD="SELLODELCFD" noCertificadoSAT="00000000000000000002" selloSAT="SELLODELSAT" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/TimbreFiscalDigital/TimbreFiscalDigital.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" /></cfdi:Complemento></cfdi:Comprobante>';*/
+        return '<?xml version="1.0" encoding="utf-8"?><cfdi:Comprobante xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" serie="A" folio="1" fecha="2011-04-03T22:55:56" sello="sellodepruebasinvalor" formaDePago="Pago en una sola exhibicion" noCertificado="00000000000000000001" certificado="certificadodepruebasinvalor" subTotal="1.00" TipoCambio="1.0" Moneda="MXN" total="1.00" tipoDeComprobante="ingreso" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv3.xsd" xmlns:cfdi="http://www.sat.gob.mx/cfd/3"><cfdi:Emisor rfc="GAGA771212GA1" nombre="GARCIA GRANADOS ARMANDO"><cfdi:DomicilioFiscal calle="FICTICIA" noExterior="101" noInterior="200 B" colonia="IMAGINARIA" municipio="TEST TOWN" estado="STATE" pais="COUNTRY" codigoPostal="01234" /></cfdi:Emisor><cfdi:Receptor rfc="PORT" nombre="PORTILLO RAMIREZ TOMAS"><cfdi:Domicilio calle="AV IMAGINARIA" noExterior="123" noInterior="LOCAL C" colonia="BIG VILLE" municipio="CITY" estado="STATE" pais="COUNTRY codigoPostal="01234" /></cfdi:Receptor><cfdi:Conceptos><cfdi:Concepto cantidad="1" descripcion="ALGUNAS COSAS SIN IMPROTANCIA" valorUnitario="1.00" importe="1.0" /></cfdi:Conceptos><cfdi:Impuestos totalImpuestosTrasladados="0.00"><cfdi:Traslados><cfdi:Traslado impuesto="IVA" tasa="0.00" importe="0.00" /></cfdi:Traslados></cfdi:Impuestos><cfdi:Complemento><tfd:TimbreFiscalDigital version="1.0" UUID="A0B1C2D3-E4F5-G6H7-I8J9-0A1B2C3D4E5F" FechaTimbrado="2011-04-03T22:50:40" selloCFD="SELLODELCFD" noCertificadoSAT="00000000000000000002" selloSAT="SELLODELSAT" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/TimbreFiscalDigital/TimbreFiscalDigital.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" /></cfdi:Complemento></cfdi:Comprobante>';
+        
     }
 
     /**
@@ -485,36 +487,40 @@ class Comprobante {
 
         if ($this->getFechaCertificacion() == null) {
             Logger::log("Error : No se leyo la fecha de la certificacion de la respuesta de la factura.");
-            $this->setError("Error : No se leyo la fecha de la certificacion de la respuesta de la factura.");
+            $this->setError("Error al generar la factura, intentelo nuevamente.");
         }
 
         if ($this->getNumeroCertificadoSAT() == null) {
             Logger::log("Error : No se leyo la fecha de la certificacion de la respuesta de la factura.");
-            $this->setError("Error : No se leyo la fecha de la certificacion de la respuesta de la factura.");
+            $this->setError("Error al generar la factura, intentelo nuevamente.");
         }
 
         if ($this->getSelloDigitalEmisor() == null) {
             Logger::log("Error : No se leyo el sello digital del emisor de la respuesta de la factura.");
-            $this->setError("Error : No se leyo el sello digital del emisor de la respuesta de la factura.");
+            $this->setError("Error al generar la factura, intentelo nuevamente.");
         }
 
         if ($this->getSelloDigitalSAT() == null) {
             Logger::log("Error : No se leyo el sello digital del sat de la respuesta de la factura.");
-            $this->setError("Error : No se leyo el sello digital del sat de la respuesta de la factura.");
+            $this->setError("Error al generar la factura, intentelo nuevamente.");
         }
 
         if ($this->getVersionTFD() == null) {
             Logger::log("Error : No se leyo la version del timbre fiscal digital de la respuesta de la factura.");
-            $this->setError("Error : No se leyo la version del timbre fiscal digital de la respuesta de la factura.");
+            $this->setError("Error al generar la factura, intentelo nuevamente.");
         }
 
         if ($this->getUUID() == null) {
             Logger::log("Error : No se leyo el UUID de la respuesta de la factura.");
-            $this->setError("Error : No se leyo el UUID de la respuesta de la factura.");
+            $this->setError("Error al generar la factura, intentelo nuevamente.");
         }
 
-
         $this->success = new Success($this->getError());
+        
+        if (!$this->success->getSuccess()) {
+            Logger::log("Error : el webservice respondio a la solicitud de la factura : {$this->getXMLresponse()}");
+        }
+        
         return $this->success;
     }
 
@@ -916,7 +922,13 @@ class Comprobante {
 
         $response = str_replace(array("cfdi:Comprobante", "cfdi:Emisor", "cfdi:Receptor", "cfdi:Conceptos", "cfdi:Concepto", "cfdi:Impuestos", "cfdi:Complemento", "cfdi:Traslados", "cfdi:Traslado", "tfd:TimbreFiscalDigital"), array("Comprobante", "Emisor", "Receptor", "Conceptos", "Concepto", "Impuestos", "Complemento", "Traslados", "Traslado", "TimbreFiscalDigital"), $response);
 
-        $dom = new SimpleXMLElement($response);
+        try{
+            $dom = new SimpleXMLElement($response);
+        }catch(Exception $e){
+             Logger::log("Error al leer xml de respuesta del web service : {$e} ");
+            $this->success = new Success("Error al generar la factura, intente nuevamente.");
+            return $this->success;
+        }
 
         unset($dom->Complemento['success']);
 

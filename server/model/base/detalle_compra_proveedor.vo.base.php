@@ -106,7 +106,7 @@ class DetalleCompraProveedor extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access protected
-	  * @var int(11)
+	  * @var float
 	  */
 	protected $kg;
 
@@ -115,7 +115,7 @@ class DetalleCompraProveedor extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access protected
-	  * @var int(11)
+	  * @var float
 	  */
 	protected $precio_por_kg;
 
@@ -223,7 +223,7 @@ class DetalleCompraProveedor extends VO
 	  * getKg
 	  * 
 	  * Get the <i>kg</i> property for this object. Donde <i>kg</i> es  [Campo no documentado]
-	  * @return int(11)
+	  * @return float
 	  */
 	final public function getKg()
 	{
@@ -234,9 +234,9 @@ class DetalleCompraProveedor extends VO
 	  * setKg( $kg )
 	  * 
 	  * Set the <i>kg</i> property for this object. Donde <i>kg</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>kg</i> es de tipo <i>int(11)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>kg</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
+	  * @param float
 	  */
 	final public function setKg( $kg )
 	{
@@ -247,7 +247,7 @@ class DetalleCompraProveedor extends VO
 	  * getPrecioPorKg
 	  * 
 	  * Get the <i>precio_por_kg</i> property for this object. Donde <i>precio_por_kg</i> es  [Campo no documentado]
-	  * @return int(11)
+	  * @return float
 	  */
 	final public function getPrecioPorKg()
 	{
@@ -258,9 +258,9 @@ class DetalleCompraProveedor extends VO
 	  * setPrecioPorKg( $precio_por_kg )
 	  * 
 	  * Set the <i>precio_por_kg</i> property for this object. Donde <i>precio_por_kg</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>precio_por_kg</i> es de tipo <i>int(11)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>precio_por_kg</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
+	  * @param float
 	  */
 	final public function setPrecioPorKg( $precio_por_kg )
 	{
