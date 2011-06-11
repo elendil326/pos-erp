@@ -60,22 +60,22 @@ if (isset($_REQUEST['editar'])) {
         $na->setPrecioCompra($_REQUEST['precio_compra']);
 
     if (POS_MULTI_SUCURSAL) {
+        if (isset($_REQUEST['precio_intersucursal_procesado']))
+            $na->setPrecioIntersucursalProcesado($_REQUEST['precio_intersucursal_procesado']);
         if (isset($_REQUEST['precio_intersucursal']))
-            $na->setPrecioIntersucursalProcesado($_REQUEST['precio_intersucursal']);
-        if (isset($_REQUEST['precio_intersucursal_sin_procesar']))
-            $na->setPrecioIntersucursal($_REQUEST['precio_intersucursal_sin_procesar']);
+            $na->setPrecioIntersucursal($_REQUEST['precio_intersucursal']);
     }else {
         $na->setPrecioIntersucursal(0);
         $na->setPrecioIntersucursalProcesado(0);
     }
 
 
-    if (isset($_REQUEST['precio_venta_sin_procesar'])) {
-        $na->setPrecioVenta($_REQUEST['precio_venta_sin_procesar']);
+    if (isset($_REQUEST['precio_venta'])) {
+        $na->setPrecioVenta($_REQUEST['precio_venta']);
     } 
     
-    if (isset($_REQUEST['precio_venta'])) {
-        $na->setPrecioVentaProcesado($_REQUEST['precio_venta']);
+    if (isset($_REQUEST['precio_venta_procesado'])) {
+        $na->setPrecioVentaProcesado($_REQUEST['precio_venta_procesado']);
     }
 
 
@@ -252,16 +252,16 @@ switch ($proc) {
             ?>
             <tr style="text-align:left"><th></th><th>Original</th><th>Procesado</th></tr>
             <tr>
-                <td>Precio Sugerido</td>
-                <td><input type="text" name="precio_venta" value="<?php echo $general->getPrecioVentaProcesado(); ?>" size="40"/></td>
-                <td><input type="text" name="precio_venta_sin_procesar" value="<?php echo $general->getPrecioVenta(); ?>" size="40"/></td>
+                <td>Precio Sugerido</td>                
+                <td><input type="text" name="precio_venta" value="<?php echo $general->getPrecioVenta(); ?>" size="40"/></td>
+                <td><input type="text" name="precio_venta_procesado" value="<?php echo $general->getPrecioVentaProcesado(); ?>" size="40"/></td>
             </tr>
 
     <?php if (POS_MULTI_SUCURSAL) { ?>
                 <tr>
                     <td>Precio Intersucursal</td>	
-                    <td> <input type="text" name="precio_intersucursal" value="<?php echo $general->getPrecioIntersucursalProcesado(); ?>" size="40"/></td>
-                    <td> <input type="text" name="precio_intersucursal_sin_procesar" value="<?php echo $general->getPrecioIntersucursal(); ?>" size="40"/></td>		
+                    <td> <input type="text" name="precio_intersucursal" value="<?php echo $general->getPrecioIntersucursal(); ?>" size="40"/></td>		
+                    <td> <input type="text" name="precio_intersucursal_procesado" value="<?php echo $general->getPrecioIntersucursalProcesado(); ?>" size="40"/></td>                    
                 </tr>
             <?php } ?>
 

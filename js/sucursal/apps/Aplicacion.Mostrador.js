@@ -604,12 +604,12 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                                         break;
                                     }else{
                                         //si no se encontro un producto con las mismas propiedades entonces le asignamos el valos por default
-										if(venta_intersucursal){
-                                        	Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursal;
+					if(venta_intersucursal){
+                                        	Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursalProcesado;
 
-										}else{
-											Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta;
-										}
+					}else{
+						Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaProcesado;
+					}
 
                                     }
 					                    
@@ -637,13 +637,22 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                                         }
 							                
                                     }
-							            
+					
+                                    
                                     if(found ){
                                         break;
                                     }else{
                                         //si no se encontro un producto con las mismas propiedades entonces le asignamos el valos por default
-                                        Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = venta_intersucursal ? Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursal : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta;
+					if(venta_intersucursal){
+                                        	Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursal;
+
+					}else{
+						Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta;
+					}
+
                                     }
+                                    
+                                    
                                 }
 					                
 					                
@@ -834,7 +843,6 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
     //si no, agregarlo al carrito
     if(!found)
     {
-
         this.carrito.items.push({
             descripcion 			: res.data.descripcion,
             existencias 			: res.data.existencias,
@@ -848,12 +856,12 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
             precioIntersucursalProcesado : res.data.precioIntersucursalProcesado,
 
 			//esto que es ?
-            precio 					: venta_intersucursal ? res.data.precioIntersucursal : res.data.precioVenta,
+            precio 					: venta_intersucursal ? res.data.tratamiento != null ? res.data.precioIntersucursalProcesado : res.data.precioIntersucursalProcesado : res.data.tratamiento != null ? res.data.precioVentaProcesado : res.data.precioVenta,
 
             id_producto 			: res.data.productoID,
             escala 					: res.data.medida,
 
-            procesado 				: "true",
+            procesado 				: res.data.tratamiento != null ? "true":"false",
             cantidad 				: 1,
             idUnique 				: res.data.productoID + "_" +  Aplicacion.Mostrador.currentInstance.uniqueIndex,
             descuento 				: "0",
