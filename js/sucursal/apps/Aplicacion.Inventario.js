@@ -61,8 +61,33 @@ Aplicacion.Inventario.prototype.getConfig = function (){
  */
 Ext.regModel('listaInventarioModel', {
 	fields: [
-		{name: 'descripcion',	  type: 'string'},
-		{name: 'productoID',	  type: 'int'} 
+	
+		{ name: 'descripcion',	  type: 'string' },
+		{ name: 'productoID',	  type: 'int' },
+
+		// estos pueden ser nulos, asi que mejor no les pongo 
+		// nada en el model, porque si recibe un nulo lo va 
+		// a poner como cadena vacia, uncool
+		// name: 'tratamiento'
+		// name: 'agrupacion'
+		
+		{ name: 'medida',	 				type: 'string' },
+
+		{ name: 'agrupacionTam',	  		type: 'float' },
+		{ name: 'precioPorAgrupacion',		type: 'bool' },
+		
+		{ name: 'precioVenta',	  			type: 'float' },
+		{ name: 'precioVentaProcesado',		type: 'float' },
+		
+		{ name: 'existencias',	  			type: 'float' },
+		
+		{ name: 'existenciasOriginales', 	type: 'float' },
+		{ name: 'existenciasProcesadas', 	type: 'float' },
+		
+		{ name: 'precioIntersucursal',	 	type: 'float' },
+		{ name: 'precioIntersucursalProcesado',	  type: 'float' }
+	
+		
 	]
 });
 
@@ -73,11 +98,14 @@ Ext.regModel('listaInventarioModel', {
  */
 Aplicacion.Inventario.prototype.inventarioListaStore = new Ext.data.Store({
 	model: 'listaInventarioModel',
+	
 	sorters: 'descripcion',
+	
 	getGroupString : function(record) {
 		var s = record.get('descripcion');
 		return s.split(" ")[0];
 	}
+	
 });
 
 /* 
@@ -126,8 +154,13 @@ Aplicacion.Inventario.prototype.cargarInventario = function ()
             this.Inventario.hash = inventario.hash;
 
 			//agregarlo en el store
+			if(DEBUG){
+				console.log("Insertando el inventario en el store !", inventario.datos);
+			}
 			this.inventarioListaStore.loadData( inventario.datos );
-
+			if(DEBUG){
+				console.log("Asi quedo el store", this.inventarioListaStore);
+			}
 		},
 		failure: function( response ){
 			POS.error( response );
@@ -222,7 +255,7 @@ Aplicacion.Inventario.crearHtmlDeInventario = function (){
 		}
 		
 		html += "</td>";
-		html += "<td>" + POS.currencyFormat( r.get("precioVentaSinProcesar") ) + " ";
+		html += "<td>" + POS.currencyFormat( r.get("precioVenta") ) + " ";
 		if(r.get("precioPorAgrupacion")){
 			html += " por " + r.get("agrupacion");
 		}else{
@@ -250,7 +283,7 @@ Aplicacion.Inventario.crearHtmlDeInventario = function (){
 				html += "<br>( "+ tmp_qty + " " + r.get("agrupacion") +"s )";
 			}
 			html += "</td>";			
-			html += "<td>" + POS.currencyFormat( r.get("precioVenta") ) + " ";
+			html += "<td>" + POS.currencyFormat( r.get("precioVentaProcesado") ) + " ";
 			if(r.get("precioPorAgrupacion")){
 				html += " por " + r.get("agrupacion");
 			}else{

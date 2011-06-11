@@ -1,12 +1,9 @@
-/*jslint white: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, regexp: true, newcap: true, immed: true, maxerr: 1590, maxlen: 80 */
+
 
 Aplicacion.Mostrador = function ()
 {
     return this._init();
 };
-
-
-
 
 Aplicacion.Mostrador.prototype._init = function () {
     if(DEBUG){
@@ -34,9 +31,6 @@ Aplicacion.Mostrador.prototype._init = function () {
     return this;
 };
 
-
-
-
 Aplicacion.Mostrador.prototype.getConfig = function (){
     return {
         text: 'Mostrador',
@@ -48,15 +42,15 @@ Aplicacion.Mostrador.prototype.getConfig = function (){
 
 
 
-/* ********************************************************
-	Panel Forma de pago
-******************************************************** */
 
 
 
-/* ********************************************************
-	Funciones del carrito
-******************************************************** */
+/*  ****************************************************************************************************************
+    ****************************************************************************************************************
+	*	Carrito de compra
+	****************************************************************************************************************
+    **************************************************************************************************************** 	*/
+
 /*
  *	Estructura donde se guardaran los detalles de la venta actual.
  * */
@@ -159,7 +153,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		
         var productoI = inventario.findRecord("productoID", carrito.items[i].id_producto, 0, false, true, true);
 
-		console.log("Producto : " , productoI);
+		console.log("Producto en carrito("+ i +"): " , productoI);
 
         //revisar si las cantidades son por pieza o cajas o asi.. 
 		//si son por pieza, entonces no me deja vender fracciones y asi
@@ -175,9 +169,9 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		
 		
 		//revisar existencias
-        if( parseFloat(productoI.get("existenciasOriginales")) == 0){
+        if( parseFloat(productoI.get("existencias")) == 0){
             if(DEBUG){
-                console.log("no hay originales !!");
+                console.log("No hay originales !!");
             }
             carrito.items[i].procesado = "true";
         }
@@ -185,7 +179,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 	
         if( parseFloat(productoI.get("existenciasProcesadas")) == 0){
             if(DEBUG){
-                console.log("no hay procesadas !!");
+                console.log("No hay procesadas !!");
             }
             carrito.items[i].procesado = "false";
         }
@@ -206,12 +200,12 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                 }
             }else{
                 if(DEBUG){
-                    console.log("quiero "+carrito.items[i].cantidad + " originales y hay "+ productoI.get("existenciasOriginales") );
+                    console.log("quiero "+carrito.items[i].cantidad + " originales y hay "+ productoI.get("existencias") );
                 }
 
 		
-                if( parseFloat(productoI.get("existenciasOriginales") ) < parseFloat(carrito.items[i].cantidad)){
-                    carrito.items[i].cantidad = parseFloat(productoI.get("existenciasOriginales") );
+                if( parseFloat(productoI.get("existencias") ) < parseFloat(carrito.items[i].cantidad)){
+                    carrito.items[i].cantidad = parseFloat(productoI.get("existencias") );
                     Ext.Msg.alert("Mostrador", "No hay suficientes existencias de " + productoI.get("descripcion") );
                 }
             }
@@ -221,8 +215,8 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
         }else{
             // no se pueden procesar
 			
-            if( parseFloat(productoI.get("existenciasOriginales") ) < parseFloat(carrito.items[i].cantidad)){
-                carrito.items[i].cantidad = parseFloat(productoI.get("existenciasOriginales") );
+            if( parseFloat(productoI.get("existencias") ) < parseFloat(carrito.items[i].cantidad)){
+                carrito.items[i].cantidad = parseFloat(productoI.get("existencias") );
                 Ext.Msg.alert("Mostrador", "No hay suficientes existencias de " + productoI.get("descripcion") );
             }
         }
@@ -334,13 +328,14 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
     //creamos los controles de la tabla
     for (i=0; i < carrito.items.length; i++){
 		
-		// dan
         if(Ext.get("Mostrador-carritoCantidad"+ carrito.items[i].productoID + "Text")){
             continue;
         }
 
-		
-        //control donde se muestra la cantidad de producto
+		//----------------------------------------------------------------
+		//----------------------------------------------------------------
+        // Control donde se muestra la cantidad de producto
+		//----------------------------------------------------------------
         a = new Ext.form.Text({
             renderTo : "Mostrador-carritoCantidad"+ carrito.items[i].idUnique ,
             id : "Mostrador-carritoCantidad"+ carrito.items[i].idUnique + "Text",
@@ -382,7 +377,12 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		
         });
 
-        //control donde se muestra el precio del producto
+
+
+		//----------------------------------------------------------------
+		//----------------------------------------------------------------
+        // control donde se muestra el precio del producto
+		//----------------------------------------------------------------
         b = new Ext.form.Text({
             renderTo : "Mostrador-carritoPrecio"+ carrito.items[i].idUnique ,
             id : "Mostrador-carritoPrecio"+ carrito.items[i].idUnique + "Text",
@@ -408,9 +408,34 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                             for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
 
                                 if(Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique == campo.idUnique){
+
+									//
+									// 
+									//
+									if( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true" ){
+										//esta procesado
+						            	precioVenta = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaProcesado ;				
+
+									}else{
+										//no esta procesado
+						            	precioVenta = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta ;
+
+									}
 									
-                                    precioVenta = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true"  )?Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaSinProcesar ;
-                                    precioVentaIntersucursal = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true"  )?Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursal : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursalSinProcesar ;
+									// 
+									// 
+									// 
+									if( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true" ){
+										//esta procesado
+						            	precioVentaIntersucursal = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursalProcesado ;				
+
+									}else{
+										//no esta procesado
+						            	precioVentaIntersucursal = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursal ;
+
+									}
+																		
+
                                     //verificamos que sea una venta preferencial
                                     //haya un cliente_preferencial y un cliente y el id
 											
@@ -490,7 +515,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
             var habilitar_boton_tratamiento = true;
             var productoI = inventario.findRecord("productoID", carrito.items[i].id_producto, 0, false, true, true);
 			
-            if( parseFloat(productoI.get("existenciasOriginales")) == 0){
+            if( parseFloat(productoI.get("existencias")) == 0){
                 if(DEBUG){
                     console.log("no hay originales !!");
                 }
@@ -507,6 +532,14 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                 habilitar_boton_tratamiento  = false;
             }
 		
+		
+		
+		
+		
+			//----------------------------------------------------------------
+			//----------------------------------------------------------------
+	        // cada de tratamiento
+			//----------------------------------------------------------------
             c = new Ext.form.Select({
                 renderTo : "Mostrador-carritoTratamiento"+ carrito.items[i].idUnique ,
                 id : "Mostrador-carritoTratamiento"+ carrito.items[i].idUnique + "Select",
@@ -528,6 +561,10 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                 listeners : {
                     "change" : function (){
                      
+						if(DEBUG){
+							console.log("OK, cambie de tipo de proceso a ...", this.value);
+						}
+						
                         //iteramos el arreglo de productos
                         for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
                         
@@ -567,7 +604,13 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                                         break;
                                     }else{
                                         //si no se encontro un producto con las mismas propiedades entonces le asignamos el valos por default
-                                        Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = venta_intersucursal ?  Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursal : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta;
+										if(venta_intersucursal){
+                                        	Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursal;
+
+										}else{
+											Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta;
+										}
+
                                     }
 					                    
                                 }else{
@@ -599,14 +642,13 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                                         break;
                                     }else{
                                         //si no se encontro un producto con las mismas propiedades entonces le asignamos el valos por default
-                                        Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = venta_intersucursal ? Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursalSinProcesar : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaSinProcesar;
+                                        Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = venta_intersucursal ? Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursal : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta;
                                     }
                                 }
 					                
 					                
                                 if(DEBUG){
                                     console.log("El producto " + this.idUnique + " esta  procesado ?"  + Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado );	
-                                    console.log( "Todos los productos : " + Aplicacion.Mostrador.currentInstance.carrito.items );	                            
                                 }	
                             }
                         }
@@ -719,7 +761,6 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 };
 
 
-	
 Aplicacion.Mostrador.prototype.agregarProducto = function (	 )
 {	
     val = Aplicacion.Mostrador.currentInstance.mostradorPanel.getDockedComponent(0).getComponent(0).getValue();
@@ -793,21 +834,25 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
     //si no, agregarlo al carrito
     if(!found)
     {
-	
-        var len = this.carrito.items.length;
-	
+
         this.carrito.items.push({
             descripcion 			: res.data.descripcion,
-            existencias 			: res.data.existenciasOriginales,
+            existencias 			: res.data.existencias,
             existencias_procesadas 	: res.data.existenciasProcesadas,
             tratamiento 			: res.data.tratamiento,   //si es !null  entonces el producto puede ser original o procesado
+
             precioVenta 			: res.data.precioVenta,
-            precioVentaSinProcesar 	: res.data.precioVentaSinProcesar,
+            precioVentaProcesado 	: res.data.precioVentaProcesado,
+
+            precioIntersucursal 	: res.data.precioIntersucursal,
+            precioIntersucursalProcesado : res.data.precioIntersucursalProcesado,
+
+			//esto que es ?
             precio 					: venta_intersucursal ? res.data.precioIntersucursal : res.data.precioVenta,
+
             id_producto 			: res.data.productoID,
             escala 					: res.data.medida,
-            precioIntersucursal 	: res.data.precioIntersucursal,
-            precioIntersucursalSinProcesar : res.data.precioIntersucursalSinProcesar,
+
             procesado 				: "true",
             cantidad 				: 1,
             idUnique 				: res.data.productoID + "_" +  Aplicacion.Mostrador.currentInstance.uniqueIndex,
@@ -815,7 +860,8 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
 			input_box_rendered 		: false
         });
 		
-        Aplicacion.Mostrador.currentInstance.uniqueIndex++; //identificador unico e irepetible
+		//identificador unico e irepetible
+        Aplicacion.Mostrador.currentInstance.uniqueIndex++; 
 		
     }
 	
@@ -824,11 +870,12 @@ Aplicacion.Mostrador.prototype.agregarProductoPorID = function ( id )
     this.refrescarMostrador();
 };
 
+
 Aplicacion.Mostrador.prototype.uniqueIndex = 0;
 
-/*
+/**
  * Quita un articulo del carrito dado su id
- * */
+ */
 Aplicacion.Mostrador.prototype.quitarDelCarrito = function ( id )
 {
     if(DEBUG){
@@ -847,18 +894,25 @@ Aplicacion.Mostrador.prototype.quitarDelCarrito = function ( id )
 	
 };
 
-/* ********************************************************
-	Panel principal del mostrador
-******************************************************** */
 
+
+
+
+
+/*  ****************************************************************************************************************
+    ****************************************************************************************************************
+	*	Panel principal del mostrador
+	****************************************************************************************************************
+    **************************************************************************************************************** 	*/
 
 /**
  * Contiene el panel con la forma del mostrador
  */
 Aplicacion.Mostrador.prototype.mostradorPanel = null;
 
+
 /**
- * Pone un panel en mostradorPanel
+ * Crea el panel del mostrador
  */
 Aplicacion.Mostrador.prototype.mostradorPanelCreator = function (){
 	
@@ -949,10 +1003,12 @@ Aplicacion.Mostrador.prototype.mostradorPanelCreator = function (){
 
 
 
-/* ********************************************************
-	Buscar y seleccionar cliente para la venta
-******************************************************** */
 
+/*  ****************************************************************************************************************
+    ****************************************************************************************************************
+	*	Buscar y seleccionar cliente para la venta
+	****************************************************************************************************************
+    **************************************************************************************************************** 	*/
 
 Aplicacion.Mostrador.prototype.buscarClienteForm = null;
 
@@ -1022,41 +1078,6 @@ Aplicacion.Mostrador.prototype.setCajaComun = function ()
 	
 };
 
-//se llama cuando se han modificado los valores de los precios de los prcutos y afinal de cuenta no se realiza la venta preferencial
-Aplicacion.Mostrador.prototype.restaurarPreciosOriginales = function()
-{
-
-    if(DEBUG){
-        console.log("restaurando precios originales");
-    }
-
-    for( var i = 0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++ )
-    {
-        precioVenta = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true"  )?Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaSinProcesar ;
-        Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = precioVenta;
-    }
-
-    Aplicacion.Mostrador.currentInstance.refrescarMostrador();
-
-}
-
-Aplicacion.Mostrador.prototype.restaurarPreciosIntersucursal = function()
-{
-
-    if(DEBUG){
-        console.log("restaurando precios intersucursales");
-    }
-
-    for( var i = 0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++ )
-
-    {
-            precioVenta = ( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true"  )?Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursal : Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursalSinProcesar ;
-            Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = precioVenta;
-        }
-
-    Aplicacion.Mostrador.currentInstance.refrescarMostrador();
-
-}
 
 Aplicacion.Mostrador.prototype.buscarClienteFormCreator = function ()
 {
@@ -1149,6 +1170,7 @@ Aplicacion.Mostrador.prototype.buscarClienteFormCreator = function ()
 
 };
 
+
 Aplicacion.Mostrador.prototype.buscarClienteFormShow = function (  )
 {
 
@@ -1169,9 +1191,81 @@ Aplicacion.Mostrador.prototype.buscarClienteFormShow = function (  )
 
 
 
-/* ********************************************************
-	Thank You for your bussiness
-******************************************************** */
+
+/*  ****************************************************************************************************************
+    ****************************************************************************************************************
+	*	Venta preferencial
+	****************************************************************************************************************
+    **************************************************************************************************************** 	*/
+
+
+/**
+  * se llama cuando se han modificado los valores de los 
+  * precios de los prcutos y afinal de cuenta no se realiza 
+  * la venta preferencial
+  **/
+Aplicacion.Mostrador.prototype.restaurarPreciosOriginales = function()
+{
+
+    if(DEBUG){
+        console.log("restaurando precios originales");
+    }
+
+    for( var i = 0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++ )
+    {
+		//el producto esta procesado
+		if( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true" ){
+			precioVenta = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVentaProcesado;
+			
+		}else{
+			precioVenta = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta;
+			
+		}
+
+        Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = precioVenta;
+    }
+
+    Aplicacion.Mostrador.currentInstance.refrescarMostrador();
+
+}
+
+Aplicacion.Mostrador.prototype.restaurarPreciosIntersucursal = function()
+{
+
+    if(DEBUG){
+        console.log("restaurando precios intersucursales");
+    }
+
+    for( var i = 0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++ )
+    {
+
+			if( Aplicacion.Mostrador.currentInstance.carrito.items[i].procesado == "true" ){
+				//esta procesado
+            	precioVenta = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursalProcesado ;				
+
+			}else{
+				//no esta procesado
+            	precioVenta = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursal ;
+
+			}
+			
+			Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = precioVenta;
+	}
+
+    Aplicacion.Mostrador.currentInstance.refrescarMostrador();
+
+}
+
+
+
+
+
+
+/*  ****************************************************************************************************************
+    ****************************************************************************************************************
+	*	Venta terminada !
+	****************************************************************************************************************
+    **************************************************************************************************************** 	*/
 Aplicacion.Mostrador.prototype.finishedPanel = null;
 
 Aplicacion.Mostrador.prototype.finishedPanelShow = function()
@@ -1185,8 +1279,6 @@ Aplicacion.Mostrador.prototype.finishedPanelShow = function()
     sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.finishedPanel , 'fade');
 	
 };
-
-
 
 Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 {
@@ -1300,9 +1392,11 @@ Aplicacion.Mostrador.prototype.finishedPanelCreator = function()
 
 
 
-/* ********************************************************
-	Hacer la venta
-******************************************************** */
+/*  ****************************************************************************************************************
+    ****************************************************************************************************************
+	*	Realizar la Venta  !
+	****************************************************************************************************************
+    **************************************************************************************************************** 	*/
 
 Aplicacion.Mostrador.prototype.doVenta = function ()
 {
@@ -1458,6 +1552,7 @@ Aplicacion.Mostrador.prototype.vender = function ()
  **/
 Aplicacion.Mostrador.prototype.doVentaPanel = null;
 Aplicacion.Mostrador.prototype.doNuevaVentaPanel = null;
+
 
 /*
  * Es la funcion de entrada para mostrar el panel de venta
