@@ -110,5 +110,47 @@ class VentasDAO extends VentasDAOBase
 		}
 		return $res;
 	}
+	
+	
+	public static function ventasPorProducto($id_producto, $id_sucursal = null){
+		
+		$val = array( $id_producto );
+		
+		$q = "SELECT 
+				  sum(dv.cantidad), 
+				  sum(dv.cantidad_procesada),
+				  date_format(v.fecha,'%Y-%m-%d') as fecha
+				FROM ventas as v, detalle_venta dv 
+				where v.id_venta = dv.id_venta
+				  and dv.id_producto = ? ";
+				
+		if($id_sucursal !== null){
+			$q .=  "AND v.id_sucursal = ? ";
+			array_push($val, $id_sucursal);
+		}
+			
+				
+		$q .= " group by date_format(v.fecha,'%Y-%m-%d') 
+				order by fecha";
+		global $conn;
+
+		$rs = $conn->Execute($q, $val);
+		$res = array();
+		foreach ($rs as $foo) {
+			array_push( $res, array( 
+				"fecha" => $foo[2],
+				"value" => $foo[1] + $foo[0] ));
+		}
+		return $res;
+	}
+
 
 }
+
+
+
+
+
+
+
+
