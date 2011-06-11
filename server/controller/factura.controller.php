@@ -222,6 +222,15 @@ function generaFactura($id_venta) {
     } else {
         Logger::log($success->getInfo());
         DAO::transRollback();
+        
+        try {
+            FacturaVentaDAO::delete($data->factura);
+        } catch (Exception $e) {
+            Logger::log("ERROR CRITICO : Error al crear la factua y error al eliminar el registro de la factura de la venta : {$e}");
+            DAO::transRollback();
+            die('{"success": false, "reason": "ERROR CRITICO!! Comuniquese con soporte tecnico" }');
+        }
+        
         die('{"success": false, "reason": "' . $success->getInfo() . '" }');
     }
 

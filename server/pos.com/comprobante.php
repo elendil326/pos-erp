@@ -922,13 +922,13 @@ class Comprobante {
 
         $response = str_replace(array("cfdi:Comprobante", "cfdi:Emisor", "cfdi:Receptor", "cfdi:Conceptos", "cfdi:Concepto", "cfdi:Impuestos", "cfdi:Complemento", "cfdi:Traslados", "cfdi:Traslado", "tfd:TimbreFiscalDigital"), array("Comprobante", "Emisor", "Receptor", "Conceptos", "Concepto", "Impuestos", "Complemento", "Traslados", "Traslado", "TimbreFiscalDigital"), $response);
 
-        try{
+        //try{
             $dom = new SimpleXMLElement($response);
-        }catch(Exception $e){
+        /*}catch(Exception $e){
              Logger::log("Error al leer xml de respuesta del web service : {$e} ");
             $this->success = new Success("Error al generar la factura, intente nuevamente.");
             return $this->success;
-        }
+        }*/
 
         unset($dom->Complemento['success']);
 
