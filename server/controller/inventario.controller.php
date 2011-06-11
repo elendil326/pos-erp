@@ -156,26 +156,38 @@ function listarInventario($sucID = null) {
     foreach ($results as $producto) {
         $productoData = InventarioDAO::getByPK($producto->getIdProducto());
 
+		//buscar esta actualizacion de precio
         $actualizacion_de_precio = obtenerActualizacionDePrecio($producto->getIdProducto());
 
         Array_push($json, array(
+
+			//detalles basicos que jamas cambian
             "productoID"			=> $productoData->getIdProducto(),
             "descripcion" 			=> $productoData->getDescripcion(),
             "tratamiento" 			=> $productoData->getTratamiento(),
-
-            "precioVenta" 			=> $producto->getPrecioVenta(),
-            "precioVentaProcesado" => $actualizacion_de_precio->getPrecioVentaProcesado(),
-
-
-            "existenciasOriginales" => $producto->getExistencias(),
-            "existenciasProcesadas" => $producto->getExistenciasProcesadas(),
-
             "medida" 				=> $productoData->getEscala(),
-            "precioIntersucursal" 	=> $actualizacion_de_precio->getPrecioIntersucursal(),
-            "precioIntersucursalProcesado" => $actualizacion_de_precio->getPrecioIntersucursalProcesado(),
             "agrupacion" 			=> $productoData->getAgrupacion(),
             "agrupacionTam" 		=> $productoData->getAgrupacionTam(),
-            "precioPorAgrupacion" 	=> $productoData->getPrecioPorAgrupacion() == "1"
+            "precioPorAgrupacion" 	=> $productoData->getPrecioPorAgrupacion() == "1",
+
+			//precios de la tabla de detalle inventario !
+            "precioVenta" 			=> $producto->getPrecioVenta(),
+            "precioVentaProcesado"  => $producto->getPrecioVentaProcesado(),
+
+			//las existencias originales, son las existencias
+			//totales menos las existencias procesadas
+            "existencias" => ($producto->getExistencias() - $producto->getExistenciasProcesadas()),			
+
+			//mantendre existenciasOriginales para 
+			//backwards compatibility
+            "existenciasOriginales" => ($producto->getExistencias() - $producto->getExistenciasProcesadas()),
+            "existenciasProcesadas" => $producto->getExistenciasProcesadas(),
+
+			// estos precios si vienen de la tabla de
+			// actualizacion de precio
+            "precioIntersucursal" 			=> $actualizacion_de_precio->getPrecioIntersucursal(),
+            "precioIntersucursalProcesado" 	=> $actualizacion_de_precio->getPrecioIntersucursalProcesado()
+
         ));
     }
 
