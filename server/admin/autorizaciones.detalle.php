@@ -65,7 +65,7 @@ function cancelar(aut){
 	}
 ?>
 
-<h1>Detalles de autorizacion</h1>
+
 <h2>Detalles de la autorizacion</h2>
 
 <table border="0" cellspacing="5" cellpadding="5">
@@ -237,7 +237,7 @@ switch( $autorizacionDetalles->clave ){
 	                          }
                                                                                       
 	                          if($p->getAgrupacionTam() > 0){
-	                              echo  sprintf("%10.2f",($producto->procesado == true?$producto->cantidad_procesada:$producto->cantidad) / $promedio) . " " . $p->getAgrupacion();
+	                              echo  sprintf("%10.2f",($producto->procesado == true?$producto->cantidad_procesada:$producto->cantidad) / $promedio) . " " . $p->getAgrupacion(). "s";
 	                          }else{
 	                              echo "Verifique la cantidad de la agrupacion, atualmente es de cero.";
 	                          }
