@@ -13,6 +13,90 @@ require_once('model/compra_proveedor_flete.dao.php');
 require_once('model/inventario_maestro.dao.php');
 require_once('logger.php');
 
+
+
+
+/**
+ * Evaluar el valor del inventario actual
+ * 
+ * 
+ * 
+ * @param id_sucursal El id de la sucursal a evaluar
+ * **/
+function valorDelInventarioActual($id_sucursal){ 
+	//obtener el inventario de esta sucursal
+	
+	$inventario = listarInventario( $id_sucursal );
+	
+	$valor_total = 0;
+	
+	
+	foreach($inventario as $producto_existencias ){
+		
+		
+		// calcular el valor, con la ultima actualizacion
+		// de precio multiplicado por la cantidad
+		// de producto orignal que hay
+		
+		//primero hay que saber si el precio que 
+		//voy a ver es por agrupacion o por unidad
+		if( $producto_existencias["precioPorAgrupacion"] ){
+			
+			//el precio es por agrupacion, sacar el tamano
+			//de la agrupacion y calcular el precio por unidad
+			$valor_unitario = $producto_existencias["precioVentaSinProcesar"] / $producto_existencias["agrupacionTam"];
+			
+			
+		}else{
+			
+			$valor_unitario = $producto_existencias["precioVentaSinProcesar"];
+			
+		}
+		
+		$valor_total +=  ( $valor_unitario * $producto_existencias["existenciasOriginales"] );
+		
+		
+		
+		
+		// Tambien se trata este producto, 
+		// hay que contabilizar los productos
+		// procesados si es que hay
+		if($producto_existencias["tratamiento"]){
+			
+		}
+		
+		
+		
+	}
+	
+	
+	return $valor_total;
+
+}
+
+
+
+
+
+
+/**
+ * Evaluar el costo del inventario actual
+ * 
+ * 
+ * 
+ * @param id_sucursal El id de la sucursal a evaluar
+ * **/
+function costoDelInventarioActual($id_sucursal){ 
+	
+}
+
+
+
+
+
+
+
+
 /*
  * Regresa un objeto ActualizacionDePrecio con la informacion de la ultima actualizacion de precio
  * @param $id_producto es el id del producto al cual nos referimos
@@ -35,10 +119,13 @@ function obtenerActualizacionDePrecio($id_producto) {
     return $result[0];
 }
 
+
+
+
+
 /*
  * listar las existencias para la sucursal dada sucursal
  * */
-
 function listarInventario($sucID = null) {
 
     if (!$sucID) {
@@ -59,24 +146,30 @@ function listarInventario($sucID = null) {
         $actualizacion_de_precio = obtenerActualizacionDePrecio($producto->getIdProducto());
 
         Array_push($json, array(
-            "productoID" => $productoData->getIdProducto(),
-            "descripcion" => $productoData->getDescripcion(),
-            "tratamiento" => $productoData->getTratamiento(),
-            "precioVenta" => $producto->getPrecioVenta(),
+            "productoID"			=> $productoData->getIdProducto(),
+            "descripcion" 			=> $productoData->getDescripcion(),
+            "tratamiento" 			=> $productoData->getTratamiento(),
+            "precioVenta" 			=> $producto->getPrecioVenta(),
             "precioVentaSinProcesar" => $actualizacion_de_precio->getPrecioVentaSinProcesar(),
             "existenciasOriginales" => $producto->getExistencias(),
             "existenciasProcesadas" => $producto->getExistenciasProcesadas(),
-            "medida" => $productoData->getEscala(),
-            "precioIntersucursal" => $actualizacion_de_precio->getPrecioIntersucursal(),
+            "medida" 				=> $productoData->getEscala(),
+            "precioIntersucursal" 	=> $actualizacion_de_precio->getPrecioIntersucursal(),
             "precioIntersucursalSinProcesar" => $actualizacion_de_precio->getPrecioIntersucursalSinProcesar(),
-            "agrupacion" => $productoData->getAgrupacion(),
-            "agrupacionTam" => $productoData->getAgrupacionTam(),
-            "precioPorAgrupacion" => $productoData->getPrecioPorAgrupacion() == "1"
+            "agrupacion" 			=> $productoData->getAgrupacion(),
+            "agrupacionTam" 		=> $productoData->getAgrupacionTam(),
+            "precioPorAgrupacion" 	=> $productoData->getPrecioPorAgrupacion() == "1"
         ));
     }
 
     return $json;
 }
+
+
+
+
+
+
 
 function detalleProductoSucursal($args) {
 

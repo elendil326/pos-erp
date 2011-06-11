@@ -84,10 +84,15 @@ $balance = ContabilidadController::getBalancePorSucursal($_REQUEST['id']);
 		</td>
 		<td class="tiny-text">
 			Con respecto al 
-			<?php 
-				$date = toDate($balance[ sizeof($balance) -2 ]["fecha"]);
-				$foo = explode( " ", $date );
-				echo $foo[0];
+			<?php
+				if((sizeof($balance) -2) < 0){
+					echo "";
+				}else{
+					$date = toDate($balance[ sizeof($balance) -2 ]["fecha"]);
+					$foo = explode( " ", $date );
+					echo $foo[0];					
+				}
+
 			?> :
 		</td>	
 	</tr>
@@ -97,15 +102,17 @@ $balance = ContabilidadController::getBalancePorSucursal($_REQUEST['id']);
 		</td>
 		<td>
 			<?php
-			$change  = $balance[ sizeof($balance) -1 ]["value"] - $balance[ sizeof($balance) -2 ]["value"];
-			$change_pct = ($change * 100) / $balance[ sizeof($balance) -2 ]["value"];
-			$change_pct = round( $change_pct, 4 );
-			if($change > 0){
-				$change = moneyFormat( $change );
-				echo "<div class='ch' style='color:green;'>+" . $change . " ( " . $change_pct ." % )</div>";
-			}else{
-				$change = moneyFormat( $change );				
-				echo "<div class='ch' style='color:#A03;'>" . $change . " ( " . $change_pct ." % )</div>";
+			if((sizeof($balance) -2) >= 0){
+				$change  = $balance[ sizeof($balance) -1 ]["value"] - $balance[ sizeof($balance) -2 ]["value"];
+				$change_pct = ($change * 100) / $balance[ sizeof($balance) -2 ]["value"];
+				$change_pct = round( $change_pct, 4 );
+				if($change > 0){
+					$change = moneyFormat( $change );
+					echo "<div class='ch' style='color:green;'>+" . $change . " ( " . $change_pct ." % )</div>";
+				}else{
+					$change = moneyFormat( $change );				
+					echo "<div class='ch' style='color:#A03;'>" . $change . " ( " . $change_pct ." % )</div>";
+				}
 			}
 			?>
 		</td>		

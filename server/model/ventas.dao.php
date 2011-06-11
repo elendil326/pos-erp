@@ -145,6 +145,21 @@ class VentasDAO extends VentasDAOBase
 	}
 
 
+	public static function totalVentasDesdeFecha($id_sucursal, $fecha){
+		
+		$val = array( $id_sucursal, $fecha );
+		
+		$q = "SELECT SUM( total ) 
+				FROM ventas
+				WHERE id_sucursal = ? 
+				AND fecha >  ?" ;
+
+		global $conn;
+
+		$rs = $conn->GetRow($q, $val);
+
+		return $rs[0];
+	}
 }
 
 

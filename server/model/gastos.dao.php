@@ -21,4 +21,8 @@ require_once("base/gastos.vo.base.php");
 class GastosDAO extends GastosDAOBase
 {
 
+	public static function totalGastosDesde($fecha){
+		
+	}
+
 }
