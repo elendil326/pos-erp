@@ -128,6 +128,19 @@ function obtenerActualizacionDePrecio($id_producto) {
  * */
 function listarInventario($sucID = null) {
 
+	Logger::log("--------------------------------");
+		        $d = debug_backtrace();
+				$track = "ESTOY USANDO LISTARINVENTARIO ! : ";
+				for ($i= 1; $i < sizeof($d) -1 ; $i++) { 
+					$track .= isset($d[$i]["function"]) ? "->" . $d[$i]["function"] . "()": "*" ;
+					$track .= isset($d[$i]["file"]) ? substr( strrchr( $d[$i]["file"], "/" ), 1 )  : "*"; 
+					$track .= isset($d[$i]["line"]) ? ":" .  $d[$i]["line"] ." "  : "* " ;
+				}
+				Logger::log($track);
+	Logger::log("--------------------------------");
+	
+	
+
     if (!$sucID) {
         return null;
     }
@@ -149,13 +162,17 @@ function listarInventario($sucID = null) {
             "productoID"			=> $productoData->getIdProducto(),
             "descripcion" 			=> $productoData->getDescripcion(),
             "tratamiento" 			=> $productoData->getTratamiento(),
+
             "precioVenta" 			=> $producto->getPrecioVenta(),
-            "precioVentaSinProcesar" => $actualizacion_de_precio->getPrecioVentaSinProcesar(),
+            "precioVentaProcesado" => $actualizacion_de_precio->getPrecioVentaProcesado(),
+
+
             "existenciasOriginales" => $producto->getExistencias(),
             "existenciasProcesadas" => $producto->getExistenciasProcesadas(),
+
             "medida" 				=> $productoData->getEscala(),
             "precioIntersucursal" 	=> $actualizacion_de_precio->getPrecioIntersucursal(),
-            "precioIntersucursalSinProcesar" => $actualizacion_de_precio->getPrecioIntersucursalSinProcesar(),
+            "precioIntersucursalProcesado" => $actualizacion_de_precio->getPrecioIntersucursalProcesado(),
             "agrupacion" 			=> $productoData->getAgrupacion(),
             "agrupacionTam" 		=> $productoData->getAgrupacionTam(),
             "precioPorAgrupacion" 	=> $productoData->getPrecioPorAgrupacion() == "1"
