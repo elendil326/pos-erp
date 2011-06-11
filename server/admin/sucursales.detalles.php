@@ -656,7 +656,7 @@ foreach ($gastos as $g) {
 }
 
 
-/* * *****************************************
+/* ******************************************
  * Ingresos
  * Buscar todos los ingresos desde la fecha inicial
  * ****************************************** */
@@ -772,10 +772,13 @@ foreach ($flujo as $f) {
     $enCaja += $f['monto'];
 }
 
+
 echo "<div align=right><h3>Total en caja: " . moneyFormat($enCaja) . "</h3></div>";
 ?>
 
-
+<h4><input type="button" 
+	value= "Realizar corte" 
+	onClick="window.location = 'sucursales.php?action=realizarCorte&id_sucursal=<?php echo $sucursal->getIdSucursal(); ?>';"></h4>
 
 <?php
 if (POS_ENABLE_GMAPS) {

@@ -5,6 +5,7 @@ require_once('model/ventas.dao.php');
 require_once('model/usuario.dao.php');
 require_once('model/grupos_usuarios.dao.php');
 require_once('model/cliente.dao.php');
+require_once('model/corte.dao.php');
 
 require_once('logger.php');
 
@@ -463,8 +464,40 @@ function agregarGerente() {
     
 }
 
-function corte() {
+function realizarCorte( $id_sucursal, $verbose = true ) {
+    Logger::log("---- Realizando Corte ----");
+	
+    DAO::transBegin();
     
+	$c = new Corte();
+	$c->setIdSucursal($id_sucursal);
+	$c->setTotalVentas(0);
+	$c->setTotalVentasAbonado(0);
+	$c->setTotalVentasSaldo(0);
+	$c->setTotalCompras(0);
+	$c->setTotalComprasAbonado(0);
+	$c->setTotalGastos(0);
+	$c->setTotalGastosAbonado(0);
+	$c->setTotalIngresos(0);
+	$c->setTotalGananciaNeta(0);
+	
+	try{
+		CorteDAO::save( $c );
+	}catch(Exception $e){
+		Logger::log($e);
+		echo '{ "success" : false, "reason" : "Error, intente de nuevo" }';
+		DAO::transRollback();
+	    
+		return;
+	}
+	
+	DAO::transEnd();
+	if($verbose){
+		echo '{ "success" : true }';
+	}
+
+	
+	Logger::log("---- Fin de Corte ----");
 }
 
 function clientesDeudores() {
@@ -704,7 +737,7 @@ if (isset($args['action'])) {
             break;
 
         case 708://hacer corte
-            corte($args);
+            realizarCorte( $args["id_sucursal"] );
             break;
 
         case 709://clientes deudores sucursal (arrojara le total de las deudas de la sucursal)
