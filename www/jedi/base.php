@@ -6,6 +6,18 @@ require_once("../../server/jedi/check_session.php");
 
 require_once("../../server/jedi/bootstrap.php");
 
+if( isset($_GET["action"]) 
+	&& is_file("../../server/jedi/base." . $_GET["action"] . ".php") 
+	&& isset($_GET["BACKUP"])
+	&& $_GET["BACKUP"] 
+	&& ( $_GET['action'] == "lista" ))
+{
+		
+	require_once("jedi/base." . $_GET["action"] . ".php");
+	
+	die( );
+}
+
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 

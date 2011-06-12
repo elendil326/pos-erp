@@ -5,8 +5,7 @@
 	$instancias = $rs->GetArray();
 
 
-	function backup_tables($host, $user, $pass, $name, $tables = '*')
-	{
+	function backup_tables($host, $user, $pass, $name, $tables = '*'){
 
 		$link = mysql_connect($host,$user,$pass);
 
@@ -90,7 +89,11 @@
 		$handle = fopen('../../static_content/db_backups/'. time() .'.dbs.zip','w+');
 	  	fwrite($handle, $zipfile->file());
 	  	fclose($handle);
-
+		
+		header("Content-type: application/octet-stream");
+		header("Content-disposition: attachment; filename=fotos.zip");
+		echo $zipfile->file();
+		die();
 		
 	}
 	
@@ -115,3 +118,15 @@
 	<input type="submit" value="Descargar" method="GET">
 </form>
 
+
+
+
+
+<h2>Subir paquete con bases de datos</h2>
+
+<form >
+	<input type="file" name="somename" size="chars"> 
+	<input type="hidden" name="action" value="lista">
+	<input type="hidden" name="UPLOAD" value="1">
+	<input type="submit" value="subir" method="GET">
+</form>
