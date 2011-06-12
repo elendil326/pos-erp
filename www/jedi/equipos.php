@@ -34,7 +34,7 @@ require_once("../../server/jedi/bootstrap.php");
 <body class="sub">
   <div id="wrapper">
 
-    <div id="header" class="control" >
+    <div id="header" class="matrix" >
       
       <div id="top-bar">
         

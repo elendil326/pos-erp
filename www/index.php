@@ -75,7 +75,7 @@ html,body,div,h1,h2,h3,h4,h5,h6,p,pre,abbr,acronym,blockquote,img,dl,dt,dd,ol,ul
 	        <tr><td></td><td align=right>RFC</td>    <td><input type="text" id="usr" size="40"/></td></tr>
 	        <tr><td></td><td align=right>Contrase&ntilde;a</td>      <td>
 					<input type="password" id="pass" size="40" onkeypress="handleKeyPress(event)"/></td></tr>
-	        <tr valign=top><td></td><td></td> <td >
+	        <tr valign=top><td></td><td></td> <td align=right >
 					<input type="button" onClick="doStart()" value="Ingresar" onkeypress="handleKeyPress(event)"/></td></tr>
 	        <tr><td></td><td></td>           <td></td></tr>
         </table>
