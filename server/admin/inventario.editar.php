@@ -32,6 +32,9 @@ if (isset($_REQUEST['editar_detalles'])) {
 
 
 if (isset($_REQUEST['editar'])) {
+
+
+    //var_dump($_REQUEST);
     //CAMBIAR PRECIOS DEL PRODCUTO
     $na = new ActualizacionDePrecio();
     $na->setIdProducto($_REQUEST['id']);
@@ -56,12 +59,18 @@ if (isset($_REQUEST['editar'])) {
 
 
     //si hay que editar precio a compra a clientes
-    if (POS_COMPRA_A_CLIENTES)
+    if (POS_COMPRA_A_CLIENTES) 
         $na->setPrecioCompra($_REQUEST['precio_compra']);
+    
 
     if (POS_MULTI_SUCURSAL) {
+
         if (isset($_REQUEST['precio_intersucursal_procesado']))
             $na->setPrecioIntersucursalProcesado($_REQUEST['precio_intersucursal_procesado']);
+        else
+        //si entra aqui este producto no tiene proceso
+            $na->setPrecioIntersucursalProcesado(0);
+
         if (isset($_REQUEST['precio_intersucursal']))
             $na->setPrecioIntersucursal($_REQUEST['precio_intersucursal']);
     }else {
@@ -70,12 +79,15 @@ if (isset($_REQUEST['editar'])) {
     }
 
 
-    if (isset($_REQUEST['precio_venta'])) {
+    if (isset($_REQUEST['precio_venta'])) 
         $na->setPrecioVenta($_REQUEST['precio_venta']);
-    } 
     
+
     if (isset($_REQUEST['precio_venta_procesado'])) {
         $na->setPrecioVentaProcesado($_REQUEST['precio_venta_procesado']);
+    } else {
+        //aqui entra cuando se edita le precio de un producto sin procesos
+        $na->setPrecioVentaProcesado(0);
     }
 
 
@@ -161,7 +173,7 @@ if ($producto->getAgrupacion()) {
     
 }
 ?>
-                    });
+    });
 	
 </script>
 
@@ -172,21 +184,21 @@ if ($producto->getAgrupacion()) {
         <tr><td>Descripcion</td><td><input type="text" value="<?php echo $producto->getDescripcion(); ?>" size="40" name="descripcion"/></td></tr>
         <tr><td>Escala</td>
             <td>
-<?php
-$escala = $producto->getEscala();
-$e0 = $e1 = $e2 = $e3 = "";
+                <?php
+                $escala = $producto->getEscala();
+                $e0 = $e1 = $e2 = $e3 = "";
 
-switch ($escala) {
-    case "kilogramo" : $e0 = "selected";
-        break;
-    case "pieza" : $e1 = "selected";
-        break;
-    case "litro" : $e2 = "selected";
-        break;
-    case "unidad" : $e3 = "selected";
-        break;
-}
-?>
+                switch ($escala) {
+                    case "kilogramo" : $e0 = "selected";
+                        break;
+                    case "pieza" : $e1 = "selected";
+                        break;
+                    case "litro" : $e2 = "selected";
+                        break;
+                    case "unidad" : $e3 = "selected";
+                        break;
+                }
+                ?>
                 <select name="escala" id="escala" onChange="escalaSeleccionada(this.value)">
                     <option value='kilogramo' 	<?php echo $e0; ?>>Kilogramo(s)</option>
                     <option value='pieza' 		<?php echo $e1; ?>>Pieza(s)</option>
@@ -197,17 +209,17 @@ switch ($escala) {
         </tr>
         <tr><td>Proceso</td>
             <td>
-<?php
-$proc = $producto->getTratamiento();
-$p0 = $p1 = "";
+                <?php
+                $proc = $producto->getTratamiento();
+                $p0 = $p1 = "";
 
-switch ($proc) {
-    case "": $p0 = "selected";
-        break;
-    case "limpia": $p1 = "selected";
-        break;
-}
-?>
+                switch ($proc) {
+                    case "": $p0 = "selected";
+                        break;
+                    case "limpia": $p1 = "selected";
+                        break;
+                }
+                ?>
 
                 <select name="tratamiento">
                     <option value='null' 		<?php echo $p0; ?>>Sin tratamientos</option>
@@ -257,7 +269,7 @@ switch ($proc) {
                 <td><input type="text" name="precio_venta_procesado" value="<?php echo $general->getPrecioVentaProcesado(); ?>" size="40"/></td>
             </tr>
 
-    <?php if (POS_MULTI_SUCURSAL) { ?>
+            <?php if (POS_MULTI_SUCURSAL) { ?>
                 <tr>
                     <td>Precio Intersucursal</td>	
                     <td> <input type="text" name="precio_intersucursal" value="<?php echo $general->getPrecioIntersucursal(); ?>" size="40"/></td>		
@@ -265,7 +277,7 @@ switch ($proc) {
                 </tr>
             <?php } ?>
 
-    <?php if (POS_COMPRA_A_CLIENTES) { ?>
+            <?php if (POS_COMPRA_A_CLIENTES) { ?>
                 <tr>
                     <td>Precio a la compra</td>	
                     <td> <input type="text" name="precio_compra" value="<?php echo $general->getPrecioCompra(); ?>" size="40"/></td>
@@ -283,22 +295,22 @@ switch ($proc) {
                 <td><input type="text" name="precio_venta" value="<?php echo $general->getPrecioVenta(); ?>" size="40"/></td>
             </tr>
 
-    <?php if (POS_MULTI_SUCURSAL) { ?>
+            <?php if (POS_MULTI_SUCURSAL) { ?>
                 <tr>
                     <td>Precio Intersucursal</td>	
-                    <td> <input type="text" name="precio_interusucursal" value="<?php echo $general->getPrecioIntersucursal(); ?>" size="40"/></td>
+                    <td> <input type="text" name="precio_intersucursal" value="<?php echo $general->getPrecioIntersucursal(); ?>" size="40"/></td>
                 </tr>
             <?php } ?>
 
 
-    <?php if (POS_COMPRA_A_CLIENTES) { ?>
+            <?php if (POS_COMPRA_A_CLIENTES) { ?>
                 <tr>
                     <td>Precio a la compra</td>	
                     <td> <input type="text" name="precio_compra" value="<?php echo $general->getPrecioCompra(); ?>" size="40"/></td>
                 </tr>
             <?php } ?>
 
-                <?php } ?>
+        <?php } ?>
         <tr>
             <td>
 			Precio
