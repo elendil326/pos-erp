@@ -59,9 +59,6 @@
 		return $fname;
 	}
 	
-	
-	
-
 	if(isset($_GET["BACKUP"])){
 		require_once("librerias/zipfile.php");
 		
@@ -97,10 +94,66 @@
 		
 	}
 	
+	function formatfilesize( $data ) {
+	        // bytes
+	        if( $data < 1024 ) {
+	            return $data . " bytes";
+	        }
+
+	        // kilobytes
+	        else if( $data < 1024000 ) {
+	            return round( ( $data / 1024 ), 1 ) . "k";
+	        }
+
+	        // megabytes
+	        else {
+	            return round( ( $data / 1024000 ), 1 ) . " MB";
+	        }
+	}
+
 	
 	
 	
+	
+
+$db_info = array();
+
+foreach ($instancias as $db) {
+
+
+	$link = mysql_connect($db["DB_HOST"],$db["DB_USER"],$db["DB_PASSWORD"],$db["DB_NAME"]);
+
+	if(!$link) continue;
+	
+	mysql_select_db( $db["DB_NAME"] );
+	
+	$result = mysql_query( "SHOW TABLE STATUS" );
+
+    $dbsize = 0;
+
+    while( $row = mysql_fetch_array( $result ) ) 
+        $dbsize += $row[ "Data_length" ] + $row[ "Index_length" ];
+
+	mysql_close($link);
+	
+	$db["total_size"] = formatfilesize($dbsize);
+	
+	array_push( $db_info, $db );
+}
+
+$header = array(
+	"instance_id" 	=> "Instancia",
+	"desc" 			=> "Descripcion",
+	"DB_NAME" 		=> "Base de datos",
+	"total_size" 	=> "Tama&ntilde;o" );
+
+
+$t = new Tabla($header, $db_info);
+$t->render();
+
 ?>
+
+
 
 <h2>Descargar bases de datos</h2>
 
@@ -129,4 +182,14 @@
 	<input type="hidden" name="action" value="lista">
 	<input type="hidden" name="UPLOAD" value="1">
 	<input type="submit" value="subir" method="GET">
+</form>
+
+
+<h2>Estructura incongruente</h2>
+<p>Revisar que la estructura de las bases de datos concuerden con el script dado</p>
+<form >
+	<input type="file" name="somename" size="chars"> 
+	<input type="hidden" name="action" value="lista">
+	<input type="hidden" name="test_structure" value="1">
+	<input type="submit" value="probar" method="GET">
 </form>
