@@ -210,7 +210,7 @@ if($venta->getTipoVenta() == 'credito'){
 	}
 
 	function printFactura(){
-		window.location = "../proxy.php?action=1306&id_venta=<?php echo $_REQUEST['id']; ?>" ;
+		window.location = "../proxy.php?action=1305&id_venta=<?php echo $_REQUEST['id']; ?>";
 	}
 </script>
 
