@@ -197,106 +197,10 @@ if($venta->getTipoVenta() == 'credito'){
 }
 
 ?>
-<script>
-    function cancelar(){
-        jQuery("#abonar").slideDown("slow", function (){
-            jQuery("#abonar_detalles").slideUp("slow", function (){
-
-
-            });
-        });
-    }
-
-    function abonar(){
-        jQuery("#abonar").slideUp("slow", function (){
-            jQuery("#abonar_detalles").slideDown("slow", function (){
-
-
-            });
-        });
-    }
-
-    var payment = "efectivo";
-
-    function setPayment(tipo){
-        payment = tipo;        
-
-    }
-
-    function doAbonar(){
-        jQuery.ajaxSettings.traditional = true;
-        json = {
-           id_venta : <?php echo $_REQUEST['id']; ?>,
-            monto :     parseFloat( jQuery("#abonar_cantidad").val() ),
-            tipo_pago : payment
-        };
-
-        jQuery.ajax({
-	      url: "../proxy.php",
-	      data: { 
-            action : 305, 
-            data : jQuery.JSON.encode(json)
-           },
-	      cache: false,
-	      success: function(data){
-	      		try{
-			        response = jQuery.parseJSON(data);
-			    }catch(e){
-           			jQuery("#loader").hide();
-					window.scroll(0,0);           			
-                    return jQuery("#ajax_failure").html("Error en el servidor. Intente de nuevo.").show();			    
-			    }
-
-                if(response.success == false){
-           			jQuery("#loader").hide();
-					window.scroll(0,0);           			
-                    return jQuery("#ajax_failure").html(response.reason).show();
-                }
-
-
-                reason = "Abono registrado correctamente";
-                window.location = 'ventas.php?action=detalles&success=true&id=<?php  echo $_REQUEST["id"]; ?>&reason=' + reason;
-	      }
-	    });
-    }
-</script>
 
 
 
 
-<?php if($venta->getTipoVenta() == 'credito' && $venta->getLiquidada() != 1 ){ ?>
-
-
-<br><br><br>
-<div id="abonar">
-<h4><input type="button" value="Abonar a esta venta" onClick="abonar()" ></h4>
-</div>
-
-
-<div id="abonar_detalles" style="display:none;">
-	<h2>Detalles del nuevo abono</h2>
-    <table style="width:100%">
-        <tr>
-            <td>Cantidad </td>
-            <td><input type="text" id="abonar_cantidad" ></td>
-        </tr>
-        <tr>
-            <td>Tipo de pago </td>
-            <td>
-              <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="efectivo" checked="checked" /> Efectivo<br />
-              <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="cheque"  /> Cheque<br />
-              <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="tarjeta" /> Tarjeta<br />
-            </td>
-        </tr>
-        <tr>
-            <td colspan=2>
-                <h4><input type="button" value="Cancelar" onClick="cancelar()" >
-                <input type="button" value="Abonar" onClick="doAbonar()" ></h4> 
-            </td>
-        </tr>
-    </table>
-</div>
-<?php } ?>
 
 
 
