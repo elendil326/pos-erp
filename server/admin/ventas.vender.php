@@ -12,7 +12,9 @@
 	$productos = InventarioDAO::getAll();
 	
 	$iMaestro = listarInventarioMaestro(150, POS_SOLO_ACTIVOS) ;
-
+    
+	$clientes = listarClientes();
+	
 ?>
 
 
@@ -420,7 +422,7 @@ InventarioMaestroTabla = function( config ) {
 			}
 			
 			MasterGrid.getStore().getAt( gridRow ).set("existencias_procesadas"	, producto.existencias_procesadas - cantidadATomar);			
-			MasterGrid.getStore().getAt( gridRow ).set("existencias"			, producto.existencias);			
+			MasterGrid.getAt().getAt( gridRow ).set("existencias"			, producto.existencias);			
 			
         }else{
 			//las tomare originales
@@ -1510,13 +1512,194 @@ Ext.onReady(function(){
  * ********************************************** */
 Cliente = {
 
-    datos_de_clientes : [],
+    datos_de_clientes : <?php echo json_encode($clientes); ?>,
 
     seleccionado : null,
     
     saldo : null,
+
+	preselected : null,
     
     limiteCredito : null,
+
+	win : null,
+
+	winTable : null,
+
+	searchClientTable : function(){
+		
+		if(Cliente.winTable){
+			return Cliente.winTable;			
+		}
+
+		var store =  new Ext.data.ArrayStore({
+		        fields: [
+					{ name : 'id_cliente', 			type : 'int' },
+					{ name : 'razon_social', 		type : 'string' },
+					{ name : 'rfc', 				type : 'string' },
+					{ name : 'calle', 				type : 'string' },
+					{ name : 'colonia', 			type : 'string' },
+					{ name : 'municipio', 			type : 'string' },
+					{ name : 'estado', 				type : 'string' },
+					{ name : 'telefono', 			type : 'string' },
+					{ name : 'limite_credito', 		type : 'float' },
+					{ name : 'credito_restante', 	type : 'float' }
+		        ]
+		    });
+		
+
+		store.loadData(<?php
+			echo "[";
+			foreach($clientes as $c){
+				echo "[";
+					echo $c['id_cliente'] . ",";
+					echo "\"" . $c['razon_social'] . "\",";
+					echo "\"" .	$c['rfc'] . "\",";
+					echo "\"" .	$c['calle'] . "\",";				
+					echo "\"" .	$c['colonia'] . "\",";
+					echo "\"" .	$c['municipio'] . "\",";
+					echo "\"" .	$c['estado'] . "\",";
+					echo "\"" .	$c['telefono'] . "\",";
+					echo "\"" .	$c['limite_credito'] . "\",";
+					echo $c['credito_restante'] . ",";
+				echo "],";	
+			}
+			echo "]";	
+		?>);
+
+		
+
+		Cliente.winTable = new Ext.grid.GridPanel({
+	        store: store,
+			header : false,
+	        columns: [
+	            {
+	                header   : 'Producto', 
+	                width    : 180, 
+	                sortable : true, 
+	                dataIndex: 'razon_social'
+	            },
+	            {
+	                header   : 'RFC', 
+	                width    : 100, 
+	                sortable : true, 
+	                dataIndex: 'rfc'
+	            },
+	            {
+	                header   : 'Calle', 
+	                width    : 120, 
+	                sortable : true, 
+					hidden	 : true,
+	                dataIndex: 'calle'
+	            },
+	            {
+	                header   : 'Colonia', 
+	                width    : 120, 
+	                sortable : true, 
+					hidden	 : true,
+	                dataIndex: 'colonia'
+	            },
+	            {
+	                header   : 'Municipio', 
+	                width    : 120, 
+	                sortable : true, 
+	                dataIndex: 'municipio'
+	            },
+	            {
+	                header   : 'Estado', 
+	                width    : 120, 
+	                sortable : true, 
+					hidden	 : true,
+	                dataIndex: 'estado'
+	            },
+	            {
+	                header   : 'Telefono', 
+	                width    : 100, 
+	                sortable : false, 
+	                dataIndex: 'telefono'
+	            },
+	            {
+	                header   : 'Limite de credito', 
+	                width    : 100, 
+	                sortable : true, 
+					renderer : 'usMoney',
+	                dataIndex: 'limite_credito'
+	            },
+	            {
+	                header   : 'Credito restante', 
+	                width    : 100,
+					renderer : 'usMoney',
+	                sortable : true, 
+	                dataIndex: 'credito_restante'
+	            },
+	        ],
+	        stripeRows: true,
+	        height: 350,
+			minHeight : 200,
+	        width: "100%",
+			title: "asdf",
+			frame : false,
+			header: false,
+			listeners : {
+				"cellclick" : function(grid, rowIndex, columnIndex, e) {
+					
+				    var record = grid.getStore().getAt(rowIndex);  // Get the Record
+				    var fieldName = grid.getColumnModel().getDataIndex(columnIndex); // Get field name
+					Cliente.preselected = record.get("id_cliente");
+					Ext.getCmp("buscar_cliente_do_select").enable();
+
+				},
+				"celldblclick" : function(grid, rowIndex, columnIndex, e) {
+					
+				    var record = grid.getStore().getAt(rowIndex);  // Get the Record
+				    Cliente.seleccionar(record.get("id_cliente"));
+					Cliente.win.hide();
+					
+				}
+			}
+			
+	    });		
+	
+		return Cliente.winTable;
+
+		},
+
+
+	showSearchWindow : function (el){
+		// create the window on the first click and reuse on subsequent clicks
+        if(!Cliente.win){
+            Cliente.win = new Ext.Window({
+                applyTo:'search-client-win',
+                layout:'fit',
+				listeres : {
+					"aftershow" : function(){
+						Ext.getCmp("buscar_cliente_do_select").disable();
+					}
+				},
+                width:780,
+				title : "Buscar cliente",
+                height:400,
+                closeAction:'hide',
+                plain: true,
+				items : [ Cliente.searchClientTable() ],
+                buttons: [{
+                    text:'Seleccionar',
+					id : "buscar_cliente_do_select",
+                    disabled: true,
+					handler : function(){
+					    Cliente.seleccionar( Cliente.preselected );
+						Cliente.win.hide();
+					}
+                },{
+                    text: 'Cancelar',
+                    handler: function(){
+                        Cliente.win.hide();
+                    }
+                }]
+            });
+        }
+        Cliente.win.show(el);
+	},
 
     getLimiteCredito :function (id_cliente) {
     
@@ -1611,12 +1794,11 @@ Cliente = {
         cliente_html += "<tr><td><b>Descuento</b></td><td>"+ cliente.descuento  +"</td></tr>";
         cliente_html += "</table>";
 	
-        console.log(cliente)
-	
         jQuery("#selector_de_clientes").slideUp('fast', function(){
-            jQuery("#detalles_del_cliente").html( cliente_html );
+            jQuery("#detalles_del_cliente_html").html( cliente_html );
             jQuery("#detalles_del_cliente").slideDown();
         });
+
     }
 
 }
@@ -1904,29 +2086,17 @@ Vender = {
 
 
 <h2>Detalles del Cliente</h2>
+
 <div id="selector_de_clientes">
-    <?php $clientes = listarClientes(); ?>
-    <script>
-        Cliente.datos_de_clientes  = <?php echo json_encode($clientes); ?>;
-    </script>
 
-    <?php
-    if (sizeof($clientes) > 0) {
-        echo '<select id="cliente_selector" > ';
-        foreach ($clientes as $c) {
-            if ($c['id_cliente'] <= 0)
-                continue;
-            echo "<option value='" . $c['id_cliente'] . "' >" . $c['razon_social'] . "</option>";
-        }
-        echo '</select>';
-        echo '<input type="button" value="Seleccionar cliente" onclick="Cliente.seleccionar( jQuery(\'#cliente_selector\').val() )">';
-    }else {
+	<input type="button" value="buscar cliente" onclick="Cliente.showSearchWindow( this )">
 
-        echo "<h3>No hay clientes a quien realizarle la venta</h3>";
-    }
-    ?>
 </div>
+
 <div id= "detalles_del_cliente" style="display:none;">
+	<input type="button" value="buscar otro cliente" onclick="Cliente.showSearchWindow( this )">
+	<div id="detalles_del_cliente_html">
+	</div>
 </div>
 
 
@@ -2188,7 +2358,7 @@ Vender = {
 </div>
 
 
-
+<div id="search-client-win"> </div>
 
 
 

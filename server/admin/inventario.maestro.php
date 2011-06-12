@@ -150,6 +150,7 @@ function detalle_inventario(id){
 	    // Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
 
 		var inventario_formateado = [  ];
+
 		var inventario_agotado_formateado = [];
 		
 		for (var i = inventario.length - 1; i >= 0; i--){
@@ -537,8 +538,6 @@ function detalle_inventario(id){
 					hidden : true,
 					align 	 : "right",
 	                renderer : function (n, a, row ){
-						
-						
 
 						if(row.data.agrupacion.length > 0){
 							//si hay agrupacion
