@@ -306,10 +306,15 @@ if($inventario->getExistencias() != 0 && $producto->getTratamiento()){
 -->
 	
 	
-	
 	<?php
 }	
 ?>
+
+<h2>Historial de Movimientos</h2>
+	<h3>Puede ver cada movimiento realizado con esta remisión.</h3>
+	<h4 align="center">
+		<input type="button" value="Ir al Historial" onClick="window.location = 'inventario.php?action=fragmentacion&id_compra_proveedor=<?php echo $_REQUEST['compra'] ?>'"><img src="../media/loader.gif" id="loader2" style="display: none;">
+	</h4>
 
 <script>
 	var subprods = [];
