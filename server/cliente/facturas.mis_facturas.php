@@ -5,6 +5,24 @@
 	require_once("model/factura_compra.dao.php");	
 	require_once("model/ventas.dao.php");	
 	
+	if(!function_exists("renderSucursal")){
+		function renderSucursal($id_sucursal){
+			$s = SucursalDAO::getByPK( $id_sucursal );
+			if(!$s){
+				return "!";
+			}
+
+			return $s->getDescripcion();
+
+		}		
+	}
+
+	
+	if(!function_exists("upperCase")){
+		function upperCase($s){
+			return strtoupper($s);
+		}	
+	}
 	
 ?><h2>Mis facturas</h2>
 

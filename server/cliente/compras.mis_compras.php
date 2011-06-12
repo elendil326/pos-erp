@@ -6,20 +6,24 @@
 	require_once("model/ventas.dao.php");	
 	require_once("model/sucursal.dao.php");	
 	
-	function renderSucursal($id_sucursal){
-		$s = SucursalDAO::getByPK( $id_sucursal );
-		if(!$s){
-			return "!";
-		}
-		
-		return $s->getDescripcion();
-		
+	if(!function_exists("renderSucursal")){
+		function renderSucursal($id_sucursal){
+			$s = SucursalDAO::getByPK( $id_sucursal );
+			if(!$s){
+				return "!";
+			}
+
+			return $s->getDescripcion();
+
+		}		
 	}
 	
-	
-	function upperCase($s){
-		return strtoupper($s);
+	if(!function_exists("upperCase")){
+		function upperCase($s){
+			return strtoupper($s);
+		}	
 	}
+
 	
 ?><h2>Mis compras</h2>
 
