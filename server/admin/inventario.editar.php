@@ -61,7 +61,8 @@ if (isset($_REQUEST['editar'])) {
     //si hay que editar precio a compra a clientes
     if (POS_COMPRA_A_CLIENTES) 
         $na->setPrecioCompra($_REQUEST['precio_compra']);
-    
+    else
+        $na->setPrecioCompra(0);
 
     if (POS_MULTI_SUCURSAL) {
 
