@@ -37,8 +37,24 @@ require_once('controller/login.controller.php');
 //validar los parametros de la conexion, salvo para estos dos que necesitan llegar
 //a sus controllers, son verificar estado de sesion y hacer login, dado que al inicio
 //no hay token, pues hay que saltar esta validacion, para todas las demas se debera pasar
-if( ! ($_REQUEST['action']  == "2001" || $_REQUEST['action']  == "2002" || $_REQUEST['action']  == "2004" || $_REQUEST['action']  == "2099") )
+if( ! (
+	//revisar estado de sesion en sucursal
+	$_REQUEST['action']  == "2001" 
+	
+	//logout
+	|| $_REQUEST['action']  == "2002" 
+	
+	//Login de sucursal
+	|| $_REQUEST['action']  == "2004" 
+	
+	//login de admin o ingeniero
+	|| $_REQUEST['action']  == "2099"
+	
+	//login de clientes
+	|| $_REQUEST['action']  == "2009" 
+) )
 {
+	
 	if(!checkCurrentSession()){
 		Logger::log("Sesion invalida ! Cerrando la sesion y forzando reboot.");
 		
@@ -60,6 +76,7 @@ foreach( $_REQUEST as $r ){
 	$args = stripslashes( $r ) ....
 }
 */
+
 $args = $_REQUEST;
 unset($_POST);
 unset($_GET);

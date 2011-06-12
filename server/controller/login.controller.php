@@ -6,6 +6,53 @@ require_once("model/grupos.dao.php");
 require_once("model/sucursal.dao.php");
 require_once("model/equipo.dao.php");
 require_once("model/equipo_sucursal.dao.php");
+require_once("model/cliente.dao.php");
+
+function loginCliente($u, $p){
+	$user = new Cliente();
+	$user->setRfc( $u );
+	$user->setPassword( $p );	
+
+	try{
+		$res = ClienteDAO::search( $user );		
+	}catch(Exception $e){
+		echo "{\"success\": false , \"reason\": 101, \"text\" : \"Error interno.\" }";
+        Logger::log($e);
+		return;		
+	}
+
+
+	if(count($res) != 1){
+    	//este usuario no existe
+		if( isset( $_SESSION[ 'c' ] )) $_SESSION[ 'c' ] ++; else $_SESSION[ 'c' ] = 1;
+
+        Logger::log("Credenciales invalidas para el CLIENTE " . $u . " intento:" . $_SESSION[ 'c' ], 1);
+		die(  "{\"success\": false , \"reason\": \"Invalidas\", \"text\" : \"Credenciales invalidas. Intento numero <b>". $_SESSION[ 'c' ] . "</b>. \" }" );
+
+	}
+	
+
+	//login correcto 
+	unset( $_SESSION[ 'c' ] );	
+
+	//buscar en que grupo esta este usuario
+	$cliente = $res[0];
+
+    $_SESSION['ip'] 	= getip();
+    $_SESSION['pass'] 	= $p;
+	$_fua 				= $_SERVER['HTTP_USER_AGENT'];
+    $_SESSION['ua'] 	= $_fua;
+	$_SESSION['grupo']  = 4;
+	$_SESSION['cliente_id'] = $cliente->getIdCliente();
+	
+
+    Logger::log("Accesso autorizado para cliente  " . $u );
+
+	echo '{"success": true }';
+}
+
+
+
 
 
 
@@ -114,6 +161,40 @@ function getUserType(){
 
 
 
+function checkCurrentClientSession(){
+
+
+    $ip = getip();
+
+    if( !(isset( $_SESSION['ip'] ) && $_SESSION['ip'] == $ip) ){
+        Logger::log("session[ip] not set or wrong!");
+        Logger::log("session:" . $_SESSION['ip'] . " actual:" . $ip );
+        return false;
+    }
+
+    $user = ClienteDAO::getByPK( $_SESSION['cliente_id'] );
+
+    if($user === null){
+        Logger::log("Cliente en sesion ya no existe en la base de datos");
+        return false;
+    }
+
+    $pass = $user->getPassword();
+
+    if( !(isset( $_SESSION['pass'] ) && $_SESSION['pass'] == $pass) ){
+        Logger::log("Cliente: session[pass] not set or wrong !");
+        return false;
+    }
+
+    if( !(isset( $_SESSION['ua'] ) &&  $_SESSION['ua'] == $_SERVER['HTTP_USER_AGENT']) ){
+        Logger::log("Cliente: session[ua] not set or wrong!");
+        return false;
+    }
+
+
+    return true;
+}
+
 
 
 
@@ -127,14 +208,23 @@ function getUserType(){
 function checkCurrentSession()
 {
 	
+
+	
 	if( !isset( $_SESSION['grupo'] ) ){
-        Logger::log("session[grupo] not set !");
+        Logger::log("checkCurrentSession(): session[grupo] not set !");
         return false;
 	}
 
+	//revisamos si vamos a validar
+	//la sesion de un cliente,
+	//ya que se maneja de otra manera
+	if(isset($_SESSION['cliente_id'])){
+		//voy a validar la sesion de un cliente
+		return checkCurrentClientSession();
+	}
 
     if(!isset($_SESSION['userid'])){
-        Logger::log("session[userid] not set !");
+        Logger::log("checkCurrentSession(): session[userid] not set !");
         return false;
     }
 
@@ -164,9 +254,6 @@ function checkCurrentSession()
         return false;
     }
 
-
-
-
     $grupoUsuario = GruposUsuariosDAO::getByPK( $_SESSION['userid'] );
     
     if( $grupoUsuario->getIdGrupo() != $_SESSION['grupo'] ){
@@ -183,9 +270,7 @@ function checkCurrentSession()
         }
     }
 
-    //Logger::log("Sesion actual valida para usuario : {$_SESSION['userid']}" );
     return true;
-
 }
 
 
@@ -196,19 +281,28 @@ function logOut( $verbose = true  )
     
     if(isset($_SESSION['userid']))
         Logger::log("---- Cerrando sesion para {$_SESSION['userid']} ----");
-    else
-        Logger::log("---- Cerrando sesion generica ----");
-
-
+    else if(isset($_SESSION['cliente_id']))
+		Logger::log("---- Cerrando sesion para cliente {$_SESSION['cliente_id']} ----");
+	else
+		Logger::log("---- Cerrando sesion generica ----");
 
     if($verbose){
+	
+		if(isset($_SESSION["INSTANCE_ID"])){
+			$print_instance = "?i=" . $_SESSION["INSTANCE_ID"]; 
+		}else{
+			$print_instance = "";
+		}
+		
         if(isset($_SESSION['grupo'])){
-            if($_SESSION['grupo'] <= 1)	
-                	print ('<script>window.location= "./admin/"</script>');
+			
+            if($_SESSION['grupo'] <= 1)
+                	print ('<script>window.location= "./admin/'.$print_instance.'"</script>');
             else
-                	print ('<script>window.location= "."</script>');
+                	print ('<script>window.location= ".'.$print_instance.'"</script>');
+
         }else{
-        	print ('<script>window.location= "."</script>');                
+        	print ('<script>window.location= ".'.$print_instance.'"</script>');                
         }
     }
 
@@ -332,6 +426,7 @@ function sucursalTest( ){
 
 
 function dispatch($args){
+	
 	Logger::log("Dispatching route for user group {$_SESSION['grupo']} and instance {$_SESSION['INSTANCE_ID']}");
 	
 	if(!isset($_SESSION['grupo'])){
@@ -345,14 +440,15 @@ function dispatch($args){
 		die( "Acceso no autorizado." );		
 	}
 	
-	$debug = isset($args['DEBUG']) ? "&debug" : "";
+	$debug = isset($args['DEBUG']) ? "?debug" : "";
 
 
 	switch($_SESSION['grupo']){
+        case "0" : echo "<script>window.location = 'ingenieria/?i=" . $_SESSION["INSTANCE_ID"] .$debug."'</script>"; break;
 		case "1" : echo "<script>window.location = 'admin/?i=" . $_SESSION["INSTANCE_ID"] .$debug."'</script>"; break;
 		case "2" : echo "<script>window.location = 'sucursal/sucursal.php?i=" . $_SESSION["INSTANCE_ID"] .$debug."'</script>"; break;
 		case "3" : echo "<script>window.location = 'sucursal/sucursal.php?i=" . $_SESSION["INSTANCE_ID"] .$debug."'</script>"; break;
-        case "0" : echo "<script>window.location = 'ingenieria/?i=" . $_SESSION["INSTANCE_ID"] .$debug."'</script>"; break;
+        case "4" : echo "<script>window.location = 'cliente/?i=" . $_SESSION["INSTANCE_ID"] .$debug."'</script>"; break;
 	}
 }
 
@@ -483,7 +579,11 @@ function login_controller_dispatch($args){
 			*/
 
 			case '2004':
-		        //login desde la sucursal
+			   /**
+			    * Login de sucursal
+			    * 
+			    * 
+			    * */
 				if(!sucursalTest()){
 		            //si no pasa el test de la sucursal...
 		           print(  '{"success": false, "response" : "Porfavor utilize un punto de venta destinado para esta sucursal."  }' ) ;
@@ -493,10 +593,15 @@ function login_controller_dispatch($args){
 		        }
 			break;
 
+
+
+
 			case '2099':
-			    //login desde otro lado
-				
-				
+			   /**
+			    * Login de admin/ingeniero
+			    * 
+			    * Los clientes pueden iniciar sesion para descargar sus facturas
+			    * */
 			    if(!isset($args['u'])){
 			    	$u = "";
 			    }else{
@@ -513,16 +618,44 @@ function login_controller_dispatch($args){
 			break;
 
 
+
+
+
+
 			case '2005':
 				dispatch($args);
 			break;
+
+
+
 
 			case '2007':
 				getUserType();
 			break;
 
+
+
+
+
 			case '2009':
-			   
+			   /**
+			    * Login de clientes
+			    * 
+			    * Los clientes pueden iniciar sesion para descargar sus facturas
+			    * */
+		  	  if(!isset($args['u'])){
+			    	$u = "";
+			    }else{
+			    	$u = $args['u'];
+			    }
+		    
+			    if(!isset($args['p'])){
+			    	$p = "";
+			    }else{
+			    	$p = $args['p'];
+			    }
+		    
+		        loginCliente($u, $p);
 			break;
 		}
 	}

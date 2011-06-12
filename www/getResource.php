@@ -62,7 +62,12 @@ switch($type)
 
 switch($module)
 {
-	//cargar modulos de admin
+	
+	
+	/**
+	 * Cargar modulos de Administrador
+	 * 
+	 * */
 	case 'admin' :
 		
 		if(isset($_SESSION['grupo']) && ($_SESSION['grupo'] == 1 || $_SESSION['grupo'] == 0))
@@ -74,7 +79,10 @@ switch($module)
 		
 	break;
 	
-	//cargar modulos de sucursal
+	/**
+	 * Cargar modulos de Sucursal
+	 * 
+	 * */
 	case 'sucursal':
 	
 		if(!sucursalTest()){
@@ -139,6 +147,10 @@ switch($module)
 	
 	//cargar login
 	case 'login' : loadDir( $module, $type ); break;
+	
+	//cargar login
+	case 'cliente' : loadDir( $module, $type ); break;
+	
 	
 	default : 
 		Logger::log("Solicitud de recurso de modulo inexistente: " . $module);
