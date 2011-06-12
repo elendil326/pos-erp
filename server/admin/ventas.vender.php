@@ -51,7 +51,7 @@ function error(title, msg, el){
            title: title,
            msg: msg,
 		   animEl: el,
-           buttons: Ext.MessageBox.OK,
+           buttons: Ext.MessageBox.OK
        });
 	/*
     var html = '<h1><img src="../media/icons/warning_32.png">&nbsp;' + title + '</h1>';

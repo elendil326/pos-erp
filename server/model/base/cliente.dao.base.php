@@ -248,6 +248,21 @@ abstract class ClienteDAOBase extends DAO
 			array_push( $val, $cliente->getFechaIngreso() );
 		}
 
+		if( $cliente->getPassword() != NULL){
+			$sql .= " password = ? AND";
+			array_push( $val, $cliente->getPassword() );
+		}
+
+		if( $cliente->getLastLogin() != NULL){
+			$sql .= " last_login = ? AND";
+			array_push( $val, $cliente->getLastLogin() );
+		}
+
+		if( $cliente->getGrantChanges() != NULL){
+			$sql .= " grant_changes = ? AND";
+			array_push( $val, $cliente->getGrantChanges() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -279,7 +294,7 @@ abstract class ClienteDAOBase extends DAO
 	  **/
 	private static final function update( $cliente )
 	{
-		$sql = "UPDATE cliente SET  rfc = ?, razon_social = ?, calle = ?, numero_exterior = ?, numero_interior = ?, colonia = ?, referencia = ?, localidad = ?, municipio = ?, estado = ?, pais = ?, codigo_postal = ?, telefono = ?, e_mail = ?, limite_credito = ?, descuento = ?, activo = ?, id_usuario = ?, id_sucursal = ?, fecha_ingreso = ? WHERE  id_cliente = ?;";
+		$sql = "UPDATE cliente SET  rfc = ?, razon_social = ?, calle = ?, numero_exterior = ?, numero_interior = ?, colonia = ?, referencia = ?, localidad = ?, municipio = ?, estado = ?, pais = ?, codigo_postal = ?, telefono = ?, e_mail = ?, limite_credito = ?, descuento = ?, activo = ?, id_usuario = ?, id_sucursal = ?, fecha_ingreso = ?, password = ?, last_login = ?, grant_changes = ? WHERE  id_cliente = ?;";
 		$params = array( 
 			$cliente->getRfc(), 
 			$cliente->getRazonSocial(), 
@@ -301,6 +316,9 @@ abstract class ClienteDAOBase extends DAO
 			$cliente->getIdUsuario(), 
 			$cliente->getIdSucursal(), 
 			$cliente->getFechaIngreso(), 
+			$cliente->getPassword(), 
+			$cliente->getLastLogin(), 
+			$cliente->getGrantChanges(), 
 			$cliente->getIdCliente(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -324,7 +342,7 @@ abstract class ClienteDAOBase extends DAO
 	  **/
 	private static final function create( &$cliente )
 	{
-		$sql = "INSERT INTO cliente ( id_cliente, rfc, razon_social, calle, numero_exterior, numero_interior, colonia, referencia, localidad, municipio, estado, pais, codigo_postal, telefono, e_mail, limite_credito, descuento, activo, id_usuario, id_sucursal, fecha_ingreso ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO cliente ( id_cliente, rfc, razon_social, calle, numero_exterior, numero_interior, colonia, referencia, localidad, municipio, estado, pais, codigo_postal, telefono, e_mail, limite_credito, descuento, activo, id_usuario, id_sucursal, fecha_ingreso, password, last_login, grant_changes ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$cliente->getIdCliente(), 
 			$cliente->getRfc(), 
@@ -347,6 +365,9 @@ abstract class ClienteDAOBase extends DAO
 			$cliente->getIdUsuario(), 
 			$cliente->getIdSucursal(), 
 			$cliente->getFechaIngreso(), 
+			$cliente->getPassword(), 
+			$cliente->getLastLogin(), 
+			$cliente->getGrantChanges(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -621,6 +642,39 @@ abstract class ClienteDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " fecha_ingreso = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $clienteA->getPassword()) != NULL) & ( ($b = $clienteB->getPassword()) != NULL) ){
+				$sql .= " password >= ? AND password <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " password = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $clienteA->getLastLogin()) != NULL) & ( ($b = $clienteB->getLastLogin()) != NULL) ){
+				$sql .= " last_login >= ? AND last_login <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " last_login = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $clienteA->getGrantChanges()) != NULL) & ( ($b = $clienteB->getGrantChanges()) != NULL) ){
+				$sql .= " grant_changes >= ? AND grant_changes <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " grant_changes = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

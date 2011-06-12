@@ -85,6 +85,15 @@ class Cliente extends VO
 			if( isset($data['fecha_ingreso']) ){
 				$this->fecha_ingreso = $data['fecha_ingreso'];
 			}
+			if( isset($data['password']) ){
+				$this->password = $data['password'];
+			}
+			if( isset($data['last_login']) ){
+				$this->last_login = $data['last_login'];
+			}
+			if( isset($data['grant_changes']) ){
+				$this->grant_changes = $data['grant_changes'];
+			}
 		}
 	}
 
@@ -118,7 +127,10 @@ class Cliente extends VO
 			"activo" => $this->activo,
 			"id_usuario" => $this->id_usuario,
 			"id_sucursal" => $this->id_sucursal,
-			"fecha_ingreso" => $this->fecha_ingreso
+			"fecha_ingreso" => $this->fecha_ingreso,
+			"password" => $this->password,
+			"last_login" => $this->last_login,
+			"grant_changes" => $this->grant_changes
 		); 
 	return json_encode($vec); 
 	}
@@ -313,6 +325,33 @@ class Cliente extends VO
 	  * @var timestamp
 	  */
 	protected $fecha_ingreso;
+
+	/**
+	  * password
+	  * 
+	  * el pass para que este cliente entre a descargar sus facturas<br>
+	  * @access protected
+	  * @var varchar(64)
+	  */
+	protected $password;
+
+	/**
+	  * last_login
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access protected
+	  * @var timestamp
+	  */
+	protected $last_login;
+
+	/**
+	  * grant_changes
+	  * 
+	  * verdadero cuando el cliente ha cambiado su contrasena y puede hacer cosas<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $grant_changes;
 
 	/**
 	  * getIdCliente
@@ -820,6 +859,78 @@ class Cliente extends VO
 	final public function setFechaIngreso( $fecha_ingreso )
 	{
 		$this->fecha_ingreso = $fecha_ingreso;
+	}
+
+	/**
+	  * getPassword
+	  * 
+	  * Get the <i>password</i> property for this object. Donde <i>password</i> es el pass para que este cliente entre a descargar sus facturas
+	  * @return varchar(64)
+	  */
+	final public function getPassword()
+	{
+		return $this->password;
+	}
+
+	/**
+	  * setPassword( $password )
+	  * 
+	  * Set the <i>password</i> property for this object. Donde <i>password</i> es el pass para que este cliente entre a descargar sus facturas.
+	  * Una validacion basica se hara aqui para comprobar que <i>password</i> es de tipo <i>varchar(64)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(64)
+	  */
+	final public function setPassword( $password )
+	{
+		$this->password = $password;
+	}
+
+	/**
+	  * getLastLogin
+	  * 
+	  * Get the <i>last_login</i> property for this object. Donde <i>last_login</i> es  [Campo no documentado]
+	  * @return timestamp
+	  */
+	final public function getLastLogin()
+	{
+		return $this->last_login;
+	}
+
+	/**
+	  * setLastLogin( $last_login )
+	  * 
+	  * Set the <i>last_login</i> property for this object. Donde <i>last_login</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>last_login</i> es de tipo <i>timestamp</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param timestamp
+	  */
+	final public function setLastLogin( $last_login )
+	{
+		$this->last_login = $last_login;
+	}
+
+	/**
+	  * getGrantChanges
+	  * 
+	  * Get the <i>grant_changes</i> property for this object. Donde <i>grant_changes</i> es verdadero cuando el cliente ha cambiado su contrasena y puede hacer cosas
+	  * @return tinyint(1)
+	  */
+	final public function getGrantChanges()
+	{
+		return $this->grant_changes;
+	}
+
+	/**
+	  * setGrantChanges( $grant_changes )
+	  * 
+	  * Set the <i>grant_changes</i> property for this object. Donde <i>grant_changes</i> es verdadero cuando el cliente ha cambiado su contrasena y puede hacer cosas.
+	  * Una validacion basica se hara aqui para comprobar que <i>grant_changes</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setGrantChanges( $grant_changes )
+	{
+		$this->grant_changes = $grant_changes;
 	}
 
 }

@@ -609,6 +609,14 @@ function detalle_inventario(id){
 	        // config options for stateful behavior
 	        stateful: true,
 	        stateId: 'gridAgotado',
+                listeners : {
+				"rowclick" : function (grid, rowIndex, e){
+					var datos = grid.getStore().getAt( rowIndex );
+					//window.location = "inventario.php?action=detalleCompra&compra=" + datos.get("id_compra_proveedor") + "&producto=" + datos.get("id_producto");
+                                        
+					window.location = "inventario.php?action=fragmentacion&id_compra_proveedor="+datos.get("id_compra_proveedor");
+				}
+			}
 			
 	    });
 
