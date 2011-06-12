@@ -28,6 +28,8 @@ class ContabilidadController{
 		
 	}
 	
+	
+	
 	/**
       * Calcuras gastos diarios por sucursal.
       *
@@ -124,10 +126,10 @@ class ContabilidadController{
 		return ContabilidadController::groupArrayByDate( $flujo, $fecha );
 
 	}//getGastosDiarios()
-	
-	
-	
-	
+
+
+
+
 	/**
       * Calcuras ingresos diarios por sucursal.
       *
@@ -228,10 +230,13 @@ class ContabilidadController{
 	
 	
 	
+
 	private static function compareDatesFromObj($o1, $o2){
 		if(strtotime($o1["fecha"]) == strtotime($o2["fecha"])) return 0;
 		return strtotime($o1["fecha"]) > strtotime($o2["fecha"]);
 	}
+	
+	
 	
 	
 	

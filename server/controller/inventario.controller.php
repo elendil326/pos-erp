@@ -44,16 +44,16 @@ function valorDelInventarioActual($id_sucursal){
 			
 			//el precio es por agrupacion, sacar el tamano
 			//de la agrupacion y calcular el precio por unidad
-			$valor_unitario = $producto_existencias["precioVentaSinProcesar"] / $producto_existencias["agrupacionTam"];
+			$valor_unitario = $producto_existencias["precioVenta"] / $producto_existencias["agrupacionTam"];
 			
 			
 		}else{
 			
-			$valor_unitario = $producto_existencias["precioVentaSinProcesar"];
+			$valor_unitario = $producto_existencias["precioVenta"];
 			
 		}
 		
-		$valor_total +=  ( $valor_unitario * $producto_existencias["existenciasOriginales"] );
+		$valor_total +=  ( $valor_unitario * $producto_existencias["existencias"] );
 		
 		
 		
@@ -483,7 +483,10 @@ function nuevoProducto($data) {
 
     if (POS_COMPRA_A_CLIENTES) {
         $actualizacion->setPrecioCompra($jsonData->precio_compra);
-    }
+    }else{
+	    $actualizacion->setPrecioCompra(0);
+	}
+
 
     if (!isset($jsonData->precio_intersucursal))
         $actualizacion->setPrecioVentaSinProcesar(0);
