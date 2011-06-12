@@ -177,6 +177,11 @@ abstract class DetalleInventarioDAOBase extends DAO
 			array_push( $val, $detalle_inventario->getExistenciasProcesadas() );
 		}
 
+		if( $detalle_inventario->getPrecioCompra() != NULL){
+			$sql .= " precio_compra = ? AND";
+			array_push( $val, $detalle_inventario->getPrecioCompra() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -208,12 +213,13 @@ abstract class DetalleInventarioDAOBase extends DAO
 	  **/
 	private static final function update( $detalle_inventario )
 	{
-		$sql = "UPDATE detalle_inventario SET  precio_venta = ?, precio_venta_procesado = ?, existencias = ?, existencias_procesadas = ? WHERE  id_producto = ? AND id_sucursal = ?;";
+		$sql = "UPDATE detalle_inventario SET  precio_venta = ?, precio_venta_procesado = ?, existencias = ?, existencias_procesadas = ?, precio_compra = ? WHERE  id_producto = ? AND id_sucursal = ?;";
 		$params = array( 
 			$detalle_inventario->getPrecioVenta(), 
 			$detalle_inventario->getPrecioVentaProcesado(), 
 			$detalle_inventario->getExistencias(), 
 			$detalle_inventario->getExistenciasProcesadas(), 
+			$detalle_inventario->getPrecioCompra(), 
 			$detalle_inventario->getIdProducto(),$detalle_inventario->getIdSucursal(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -237,7 +243,7 @@ abstract class DetalleInventarioDAOBase extends DAO
 	  **/
 	private static final function create( &$detalle_inventario )
 	{
-		$sql = "INSERT INTO detalle_inventario ( id_producto, id_sucursal, precio_venta, precio_venta_procesado, existencias, existencias_procesadas ) VALUES ( ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO detalle_inventario ( id_producto, id_sucursal, precio_venta, precio_venta_procesado, existencias, existencias_procesadas, precio_compra ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$detalle_inventario->getIdProducto(), 
 			$detalle_inventario->getIdSucursal(), 
@@ -245,6 +251,7 @@ abstract class DetalleInventarioDAOBase extends DAO
 			$detalle_inventario->getPrecioVentaProcesado(), 
 			$detalle_inventario->getExistencias(), 
 			$detalle_inventario->getExistenciasProcesadas(), 
+			$detalle_inventario->getPrecioCompra(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -354,6 +361,17 @@ abstract class DetalleInventarioDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " existencias_procesadas = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $detalle_inventarioA->getPrecioCompra()) != NULL) & ( ($b = $detalle_inventarioB->getPrecioCompra()) != NULL) ){
+				$sql .= " precio_compra >= ? AND precio_compra <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " precio_compra = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

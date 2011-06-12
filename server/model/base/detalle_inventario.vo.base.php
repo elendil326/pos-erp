@@ -40,6 +40,9 @@ class DetalleInventario extends VO
 			if( isset($data['existencias_procesadas']) ){
 				$this->existencias_procesadas = $data['existencias_procesadas'];
 			}
+			if( isset($data['precio_compra']) ){
+				$this->precio_compra = $data['precio_compra'];
+			}
 		}
 	}
 
@@ -58,7 +61,8 @@ class DetalleInventario extends VO
 			"precio_venta" => $this->precio_venta,
 			"precio_venta_procesado" => $this->precio_venta_procesado,
 			"existencias" => $this->existencias,
-			"existencias_procesadas" => $this->existencias_procesadas
+			"existencias_procesadas" => $this->existencias_procesadas,
+			"precio_compra" => $this->precio_compra
 		); 
 	return json_encode($vec); 
 	}
@@ -66,7 +70,7 @@ class DetalleInventario extends VO
 	/**
 	  * id_producto
 	  * 
-	  * id del producto al que se refiere<br>
+	  * identificador del proudcto en inventario<br>
 	  * <b>Llave Primaria</b><br>
 	  * @access protected
 	  * @var int(11)
@@ -95,7 +99,7 @@ class DetalleInventario extends VO
 	/**
 	  * precio_venta_procesado
 	  * 
-	  *  [Campo no documentado]<br>
+	  * cuando este producto tiene tratamiento este sera su precio de venta al estar procesado<br>
 	  * @access protected
 	  * @var float
 	  */
@@ -104,7 +108,7 @@ class DetalleInventario extends VO
 	/**
 	  * existencias
 	  * 
-	  * cantidad de producto que hay actualmente en almacen de esta sucursal<br>
+	  * cantidad de producto que hay actualmente en almacen de esta sucursal (originales+procesadas)<br>
 	  * @access protected
 	  * @var float
 	  */
@@ -113,16 +117,25 @@ class DetalleInventario extends VO
 	/**
 	  * existencias_procesadas
 	  * 
-	  *  [Campo no documentado]<br>
+	  * cantidad de producto solamente procesado !<br>
 	  * @access protected
 	  * @var float
 	  */
 	protected $existencias_procesadas;
 
 	/**
+	  * precio_compra
+	  * 
+	  * El precio de compra para este producto en esta sucursal, siempre y cuando este punto de venta tenga el modulo POS_COMPRA_A_CLIENTES<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $precio_compra;
+
+	/**
 	  * getIdProducto
 	  * 
-	  * Get the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es id del producto al que se refiere
+	  * Get the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es identificador del proudcto en inventario
 	  * @return int(11)
 	  */
 	final public function getIdProducto()
@@ -133,7 +146,7 @@ class DetalleInventario extends VO
 	/**
 	  * setIdProducto( $id_producto )
 	  * 
-	  * Set the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es id del producto al que se refiere.
+	  * Set the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es identificador del proudcto en inventario.
 	  * Una validacion basica se hara aqui para comprobar que <i>id_producto</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
@@ -198,7 +211,7 @@ class DetalleInventario extends VO
 	/**
 	  * getPrecioVentaProcesado
 	  * 
-	  * Get the <i>precio_venta_procesado</i> property for this object. Donde <i>precio_venta_procesado</i> es  [Campo no documentado]
+	  * Get the <i>precio_venta_procesado</i> property for this object. Donde <i>precio_venta_procesado</i> es cuando este producto tiene tratamiento este sera su precio de venta al estar procesado
 	  * @return float
 	  */
 	final public function getPrecioVentaProcesado()
@@ -209,7 +222,7 @@ class DetalleInventario extends VO
 	/**
 	  * setPrecioVentaProcesado( $precio_venta_procesado )
 	  * 
-	  * Set the <i>precio_venta_procesado</i> property for this object. Donde <i>precio_venta_procesado</i> es  [Campo no documentado].
+	  * Set the <i>precio_venta_procesado</i> property for this object. Donde <i>precio_venta_procesado</i> es cuando este producto tiene tratamiento este sera su precio de venta al estar procesado.
 	  * Una validacion basica se hara aqui para comprobar que <i>precio_venta_procesado</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -222,7 +235,7 @@ class DetalleInventario extends VO
 	/**
 	  * getExistencias
 	  * 
-	  * Get the <i>existencias</i> property for this object. Donde <i>existencias</i> es cantidad de producto que hay actualmente en almacen de esta sucursal
+	  * Get the <i>existencias</i> property for this object. Donde <i>existencias</i> es cantidad de producto que hay actualmente en almacen de esta sucursal (originales+procesadas)
 	  * @return float
 	  */
 	final public function getExistencias()
@@ -233,7 +246,7 @@ class DetalleInventario extends VO
 	/**
 	  * setExistencias( $existencias )
 	  * 
-	  * Set the <i>existencias</i> property for this object. Donde <i>existencias</i> es cantidad de producto que hay actualmente en almacen de esta sucursal.
+	  * Set the <i>existencias</i> property for this object. Donde <i>existencias</i> es cantidad de producto que hay actualmente en almacen de esta sucursal (originales+procesadas).
 	  * Una validacion basica se hara aqui para comprobar que <i>existencias</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -246,7 +259,7 @@ class DetalleInventario extends VO
 	/**
 	  * getExistenciasProcesadas
 	  * 
-	  * Get the <i>existencias_procesadas</i> property for this object. Donde <i>existencias_procesadas</i> es  [Campo no documentado]
+	  * Get the <i>existencias_procesadas</i> property for this object. Donde <i>existencias_procesadas</i> es cantidad de producto solamente procesado !
 	  * @return float
 	  */
 	final public function getExistenciasProcesadas()
@@ -257,7 +270,7 @@ class DetalleInventario extends VO
 	/**
 	  * setExistenciasProcesadas( $existencias_procesadas )
 	  * 
-	  * Set the <i>existencias_procesadas</i> property for this object. Donde <i>existencias_procesadas</i> es  [Campo no documentado].
+	  * Set the <i>existencias_procesadas</i> property for this object. Donde <i>existencias_procesadas</i> es cantidad de producto solamente procesado !.
 	  * Una validacion basica se hara aqui para comprobar que <i>existencias_procesadas</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float
@@ -265,6 +278,30 @@ class DetalleInventario extends VO
 	final public function setExistenciasProcesadas( $existencias_procesadas )
 	{
 		$this->existencias_procesadas = $existencias_procesadas;
+	}
+
+	/**
+	  * getPrecioCompra
+	  * 
+	  * Get the <i>precio_compra</i> property for this object. Donde <i>precio_compra</i> es El precio de compra para este producto en esta sucursal, siempre y cuando este punto de venta tenga el modulo POS_COMPRA_A_CLIENTES
+	  * @return float
+	  */
+	final public function getPrecioCompra()
+	{
+		return $this->precio_compra;
+	}
+
+	/**
+	  * setPrecioCompra( $precio_compra )
+	  * 
+	  * Set the <i>precio_compra</i> property for this object. Donde <i>precio_compra</i> es El precio de compra para este producto en esta sucursal, siempre y cuando este punto de venta tenga el modulo POS_COMPRA_A_CLIENTES.
+	  * Una validacion basica se hara aqui para comprobar que <i>precio_compra</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setPrecioCompra( $precio_compra )
+	{
+		$this->precio_compra = $precio_compra;
 	}
 
 }

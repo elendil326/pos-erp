@@ -43,6 +43,9 @@ class ActualizacionDePrecio extends VO
 			if( isset($data['precio_intersucursal_procesado']) ){
 				$this->precio_intersucursal_procesado = $data['precio_intersucursal_procesado'];
 			}
+			if( isset($data['precio_compra']) ){
+				$this->precio_compra = $data['precio_compra'];
+			}
 			if( isset($data['fecha']) ){
 				$this->fecha = $data['fecha'];
 			}
@@ -66,6 +69,7 @@ class ActualizacionDePrecio extends VO
 			"precio_venta_procesado" => $this->precio_venta_procesado,
 			"precio_intersucursal" => $this->precio_intersucursal,
 			"precio_intersucursal_procesado" => $this->precio_intersucursal_procesado,
+			"precio_compra" => $this->precio_compra,
 			"fecha" => $this->fecha
 		); 
 	return json_encode($vec); 
@@ -135,6 +139,15 @@ class ActualizacionDePrecio extends VO
 	  * @var float
 	  */
 	protected $precio_intersucursal_procesado;
+
+	/**
+	  * precio_compra
+	  * 
+	  * precio al que se le compra al publico este producto en caso de ser POS_COMPRA_A_CLIENTES<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $precio_compra;
 
 	/**
 	  * fecha
@@ -315,6 +328,30 @@ class ActualizacionDePrecio extends VO
 	final public function setPrecioIntersucursalProcesado( $precio_intersucursal_procesado )
 	{
 		$this->precio_intersucursal_procesado = $precio_intersucursal_procesado;
+	}
+
+	/**
+	  * getPrecioCompra
+	  * 
+	  * Get the <i>precio_compra</i> property for this object. Donde <i>precio_compra</i> es precio al que se le compra al publico este producto en caso de ser POS_COMPRA_A_CLIENTES
+	  * @return float
+	  */
+	final public function getPrecioCompra()
+	{
+		return $this->precio_compra;
+	}
+
+	/**
+	  * setPrecioCompra( $precio_compra )
+	  * 
+	  * Set the <i>precio_compra</i> property for this object. Donde <i>precio_compra</i> es precio al que se le compra al publico este producto en caso de ser POS_COMPRA_A_CLIENTES.
+	  * Una validacion basica se hara aqui para comprobar que <i>precio_compra</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setPrecioCompra( $precio_compra )
+	{
+		$this->precio_compra = $precio_compra;
 	}
 
 	/**
