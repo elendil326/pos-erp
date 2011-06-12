@@ -42,30 +42,7 @@
 		</tr>
 	</table>
 </div>
-<style>
-.prod {
-    background:#fff;
-    color:#333;
-    text-decoration:none;
-    padding:5px 10px;
-	border:1px solid #fff;
-	text-align: center;
 
-
-    /* Add the transition properties! */
-   	-webkit-transition-property: background-color, color, border; 
-    -webkit-transition-duration: 300ms;
-
-    /* you can control the acceleration curve here */
-    -webkit-transition-timing-function: ease-in-out; 
-}
-
-.prod:hover {
-    background:#D7EAFF;
-    color:#000;
-    border:1px solid #3F8CE9;
-}
-</style>
 
 <script type="text/javascript" charset="utf-8">
 	function filterByState( s ){

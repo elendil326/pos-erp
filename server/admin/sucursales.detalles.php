@@ -603,6 +603,10 @@ $tabla->addNoData("Ningun cliente se ha registrado en esta sucursal.");
 $tabla->render();
 
 
+
+
+?><br> <h2>Estado</h2> <?php
+
 $flujo = array();
 
 

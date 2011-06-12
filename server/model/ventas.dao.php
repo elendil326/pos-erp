@@ -57,6 +57,7 @@ class VentasDAO extends VentasDAOBase
 
 	}
 	
+	
 	public static function contarVentasPorMes($sucursal , $meses = 1){
 		$sql = "select date_format(fecha,'%Y-%m') as fecha, count(*) as ventas from ventas where id_sucursal = ? group by date_format(fecha,'%Y-%m') order by fecha limit ?";
 		

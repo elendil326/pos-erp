@@ -3,7 +3,8 @@
 	require_once("../../server/bootstrap.php");	
 	require_once("admin/includes/checkSession.php");
 	require_once("admin/includes/static.php");	
-
+	require_once('controller/autorizaciones.controller.php');
+	require_once("model/ventas.dao.php");
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
@@ -51,12 +52,32 @@
       </div>
     </div>
     
-    <div id="content" align=center>
+    <div id="content" >
 
-            <!-- <img src='../media/intro.png'>  -->
+			<h2>Actividades</h2>
+        <div  aling=center>
 
-        <h1>Bienvendio al centro de administracion</h1>
-        
+			<table border=0 style='width: 100%; font-size: 14px; cursor: pointer;'>
+				<tr>
+					<td class='prod rounded'   >
+						<a href="autorizaciones.php?action=historial">Autorizaciones pendientes ( <?php echo sizeof(autorizacionesPendientes()); ?> )</a>
+					</td>
+					<td class='prod rounded'   >
+						<a href="ventas.php?action=lista">
+						Ventas de hoy ( <?php 
+									$f = VentasDAO::contarVentasPorDia(null, 1);
+
+									echo $f[0]["value"];
+								?> )
+						</a>
+					</td>
+					<td class='prod rounded'    >
+						Surtir sucursal
+					</td>
+
+				</tr>
+			</table>
+		</div>
 
 	
     <?php include_once("admin/includes/footer.php"); ?>

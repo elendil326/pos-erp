@@ -15,7 +15,7 @@ echo "<div align=center>";
 foreach($sucursales as $s){
 	echo  "<span class='prod rounded'  ><a style='text-decoration:none' href='sucursales.php?action=detalles&id=". $s["id_sucursal"] ."' >" . $s["descripcion"]  . "</a></span>&nbsp;";
 }
-echo "</div>"
+echo "</div><br>";
 
 ?>
 <style> 
