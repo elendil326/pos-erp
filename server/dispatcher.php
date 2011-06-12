@@ -68,7 +68,38 @@ if( ! (
 }
 
 
-
+//solo dejar pasar algunos para el cliente
+// 
+/*
+if( ! (
+	//revisar estado de sesion en sucursal
+	$_REQUEST['action']  == "2001" 
+	
+	//logout
+	|| $_REQUEST['action']  == "2002" 
+	
+	//Login de sucursal
+	|| $_REQUEST['action']  == "2004" 
+	
+	//login de admin o ingeniero
+	|| $_REQUEST['action']  == "2099"
+	
+	//login de clientes
+	|| $_REQUEST['action']  == "2009" 
+) )
+{
+	
+	if(!checkCurrentSession()){
+		Logger::log("Sesion invalida ! Cerrando la sesion y forzando reboot.");
+		
+		//cerrar esta sesion
+		logOut(false);
+		
+		//morir con un js que diga que hay que salir
+		die( '{"success": false , "reason": "Accesso denegado" , "reboot" : true }' );
+	}
+    
+}*/
 
 
 /*

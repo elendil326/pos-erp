@@ -100,6 +100,10 @@ function roundRect($pdf, $x, $y, $w, $h) {
     $pdf->partEllipse($x + 3, $y - $h + 3, 180, 270, 3); //bottom-left
 }
 
+
+
+
+
 function imprimirFactura($id_venta, $venta_especial = null) {
 
 
@@ -113,6 +117,37 @@ function imprimirFactura($id_venta, $venta_especial = null) {
     if (!$venta) {
         die("Esta venta no existe");
     }
+
+
+
+	/**
+	 * Si soy un cliente, validar que esta venta sea mia !
+	 * 
+	 * 
+	 * 
+	 * **/
+	if($_SESSION["grupo"] == 4){
+		/**
+		 * Si soy un cliente  !
+		 *
+		 * **/
+		if($_SESSION["cliente_id"] != $venta->getIdCliente()){
+			/**
+			 * Esta venta no me pertenece  !
+			 *
+			 * **/
+			Logger::log("*******************************************************");
+			Logger::log("!!!!! CLIENTE HA SOLICITADO VENTA QUE NO ES DE EL !!!!!");
+			Logger::log("CLIENTE:" . $_SESSION["cliente_id"]);
+			Logger::log("*******************************************************");			
+			die("ACCESSO NO AUTORIZADO: INCIDENTE REPORTADO.");
+			
+		}
+		
+	}
+	
+	
+	
 
     //validar que la venta sea a contado, o bien que este saldada
     if (!$venta->getLiquidada()) {
@@ -551,9 +586,39 @@ function imprimirNotaDeVenta($id_venta) {
     //validar que el cliente tenga todos los datos necesarios
     $cliente = ClienteDAO::getByPK($venta->getIdCliente());
 
+
     if (!$cliente) {
         die("El cliente de esta venta no existe.");
     }
+
+
+	/**
+	 * Si soy un cliente, validar que esta venta sea mia !
+	 * 
+	 * 
+	 * 
+	 * **/
+	if($_SESSION["grupo"] == 4){
+		/**
+		 * Si soy un cliente  !
+		 *
+		 * **/
+		if($_SESSION["cliente_id"] != $venta->getIdCliente()){
+			/**
+			 * Esta venta no me pertenece  !
+			 *
+			 * **/
+			Logger::log("*******************************************************");
+			Logger::log("!!!!! CLIENTE HA SOLICITADO VENTA QUE NO ES DE EL !!!!!");
+			Logger::log("CLIENTE:" . $_SESSION["cliente_id"]);
+			Logger::log("*******************************************************");			
+			die("ACCESSO NO AUTORIZADO: INCIDENTE REPORTADO.");
+			
+		}
+		
+	}
+	
+
 
     $detalle_de_venta = detalleVenta($venta->getIdVenta());
     $productos = $detalle_de_venta["items"];

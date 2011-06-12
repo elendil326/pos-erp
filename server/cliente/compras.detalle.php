@@ -15,8 +15,10 @@ require_once("model/usuario.dao.php");
  * 
  * */
 if(!isset($_REQUEST['id'])){
+	Logger::log("*******************************************************");
 	Logger::log("!!!!! CLIENTE HA SOLICITADO VENTA QUE NO ES DE EL !!!!!");
 	Logger::log("CLIENTE:" . $_SESSION["cliente_id"]);
+	Logger::log("*******************************************************");
 	
 	?><script>window.location = '.';</script><?php
 	
@@ -30,8 +32,10 @@ $venta = $detalles['detalles'];
 
 
 if(!$venta){
+	Logger::log("*******************************************************");
 	Logger::log("!!!!! CLIENTE HA SOLICITADO VENTA QUE NO ES DE EL !!!!!");
 	Logger::log("CLIENTE:" . $_SESSION["cliente_id"]);
+	Logger::log("*******************************************************");
 	
 	?><script>window.location = '.';</script><?php
 	
