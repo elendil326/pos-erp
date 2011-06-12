@@ -1,6 +1,4 @@
 <?php
-	
-	
 
 	if(!is_file("../server/config.php")){
 		//not installed
@@ -9,19 +7,10 @@
 			<h2>Proceso de instalacion</h2>
 		<?php
 	}
-	
 
-//ok, esta instalado, vamos a ver si me mandaron una instancia
-if(!isset($_GET["i"])
-	&& !isset($_SESSION["INSTANCE_ID"]) ){
-	//no hay instancia en ningun lado !
-	?><div align=center><img src="media/intro.png"></div><?php
-	
-	die();
-}
+define("I_AM_CLIENTE", true);
 
 
-//ok, si me enviaron una instancia, deja me conecto
 require_once("../server/bootstrap.php");
 require_once("model/pos_config.dao.php");
 

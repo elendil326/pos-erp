@@ -41,38 +41,37 @@
 	require_once('utils.php');
 
 	//tengo el id de instancia ?
-	if(!isset($_GET["i"])
-		&& !isset($_SESSION["INSTANCE_ID"])
-	){
-		
-		
-		
-		//la pagina de login, poner I_AM_LOGIN en verdadero, 
+	if(!isset($_GET["i"]) && !isset($_SESSION["INSTANCE_ID"]) ){
+
+		//la pagina de login, pone I_AM_LOGIN en verdadero, 
 		//es una buena manera de saber si vengo del login
 		//si vengo del login
 		if(defined("I_AM_LOGIN") && I_AM_LOGIN) {
-			//
-			//Logger::log("Showing log page, althoug there is no instance id");
-			//return;
 			Logger::log("I_AM_LOGIN: There is no instance number nowhere !!" );
 			die("NO INSTANCE !");
 			
-		}else{
-			//no estoy en el log.php, redireccionar a el
-			
-			if(defined("I_AM_SUCURSAL") && I_AM_SUCURSAL) {
+		}
+		
+		
+		if(defined("I_AM_SUCURSAL") && I_AM_SUCURSAL) {
 			Logger::log("I_AM_SUCURSAL: There is no instance number nowhere !!" );				
-				die("NO INSTANCE !");
-			}
-			
-			Logger::log("UNKNOWN: There is no instance number nowhere, sending header to log.php !!" );
-			
-			die(header("Location: ./log.php"));
-			
+			die("NO INSTANCE !");
+				
 		}
 
+		if(defined("I_AM_CLIENTE") && I_AM_CLIENTE) {
+			Logger::log("I_AM_CLIENTE: There is no instance number nowhere !!" );				
+			die('<div align=center><img src="media/intro.png"></div>');
+				
+		}
+
+			
+		Logger::log("UNKNOWN: There is no instance number nowhere, sending header to log.php !!" );
+		die(header("Location: ./log.php"));
 		
 	}
+	
+	
 	
 	//no esta la de sescion, pero esta el get
 	if(!isset($_SESSION["INSTANCE_ID"]) && isset($_GET["i"])){
