@@ -650,14 +650,15 @@ function procesarProducto($json = null) {
         die('{"success": false, "reason": "Error al editar producto en inventario maestro"}');
     }
 
-    //registramos este egreso en el inventario maestro
+    //registramos este ingreso en el inventario maestro
     $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
     $compra_proveedor_fragmentacion->setIdCompraProveedor($inventario_maestro->getIdCompraProveedor());
     $compra_proveedor_fragmentacion->setIdProducto($inventario_maestro->getIdProducto());
-    $compra_proveedor_fragmentacion->setDescripcion("HUBO UN INGRESO DE {$data->resultante}KG. DEL PRODUCTO {$producto->getDescripcion()} PROCESADO POR CONCEPTO DE UN PROCESO EN LA REMISION CON EL FOLIO {$compra_proveedor->getFolio()}.");
+    $compra_proveedor_fragmentacion->setDescripcion("HUBO UN INGRESO DE {$data->resultante}KG. DEL PRODUCTO {$producto->getDescripcion()} PROCESADO COMO RESULTADO DE UN PROCESO DE ESTA MISMA REMISION CON EL FOLIO {$compra_proveedor->getFolio()}.");
     $compra_proveedor_fragmentacion->setProcesada(true);
     $compra_proveedor_fragmentacion->setCantidad($data->resultante);
-    $compra_proveedor_fragmentacion->setPrecio($detalle_compra_proveedor->getPrecioPorKg());
+    //$compra_proveedor_fragmentacion->setPrecio($detalle_compra_proveedor->getPrecioPorKg());
+    $compra_proveedor_fragmentacion->setPrecio(0);
     $compra_proveedor_fragmentacion->setDescripcionRefId($inventario_maestro->getIdCompraProveedor());
 
     try {
@@ -701,7 +702,7 @@ function procesarProducto($json = null) {
         $compra_proveedor_fragmentacion->setDescripcion("HUBO UN INGRESO DE {$subproducto->cantidad_procesada}KG. DEL PRODUCTO {$_producto->getDescripcion()} PROCESADO POR CONCEPTO DE UN PROCESO EN LA REMISION {$compra_proveedor->getFolio()} DEL PRODUCTO {$producto->getDescripcion()}.");
         $compra_proveedor_fragmentacion->setProcesada(true);
         $compra_proveedor_fragmentacion->setCantidad($subproducto->cantidad_procesada);
-        $compra_proveedor_fragmentacion->setPrecio($detalle_compra_proveedor->getPrecioPorKg());
+        $compra_proveedor_fragmentacion->setPrecio(0);
         $compra_proveedor_fragmentacion->setDescripcionRefId($compra_proveedor->getIdCompraProveedor());
 
         try {

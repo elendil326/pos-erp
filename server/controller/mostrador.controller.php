@@ -952,14 +952,14 @@ function venderAdmin($args) {
             $_producto = InventarioDAO::getByPK($sub_producto->id_producto);
 
             if ($sub_producto->procesada) {
-                $compra_proveedor_fragmentacion->setDescripcion("HUBO UN EGRESO DE {$sub_producto->cantidad} {$_producto->getEscala()}. DEL PRODUCTO {$_producto->getDescripcion()} PROCESADO POR CONCEPTO DE UNA VENTA.");
+                $compra_proveedor_fragmentacion->setDescripcion("SE VENDIO A {$cliente->getRazonSocial()} LA CANTIDAD DE {$sub_producto->cantidad} {$_producto->getEscala()}" . ($_producto->getEscala() == "unidad"?"es":"s") . " DEL PRODUCTO {$_producto->getDescripcion()} PROCESADO.");
                 $compra_proveedor_fragmentacion->setProcesada(true);
             } else {
-                $compra_proveedor_fragmentacion->setDescripcion("HUBO UN EGRESO DE {$sub_producto->cantidad} {$_producto->getEscala()}. DEL PRODUCTO {$_producto->getDescripcion()} ORIGINAL POR CONCEPTO DE UNA VENTA.");
+                $compra_proveedor_fragmentacion->setDescripcion("SE VENDIO A {$cliente->getRazonSocial()} LA CANTIDAD DE {$sub_producto->cantidad} {$_producto->getEscala()}" . ($_producto->getEscala() == "unidad"?"es":"s") . " DEL PRODUCTO {$_producto->getDescripcion()} PROCESADO.");
                 $compra_proveedor_fragmentacion->setProcesada(false);
             }
 
-            $compra_proveedor_fragmentacion->setCantidad(($sub_producto->cantidad * -1));
+            $compra_proveedor_fragmentacion->setCantidad(($sub_producto->cantidad));
             $compra_proveedor_fragmentacion->setPrecio($sub_producto->precio);
             $compra_proveedor_fragmentacion->setDescripcionRefId($venta_actual->getIdVenta());
 
