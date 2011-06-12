@@ -28,6 +28,16 @@ $detalles = detalleVenta($_REQUEST['id']);
 
 $venta = $detalles['detalles'];
 
+
+if(!$venta){
+	Logger::log("!!!!! CLIENTE HA SOLICITADO VENTA QUE NO ES DE EL !!!!!");
+	Logger::log("CLIENTE:" . $_SESSION["cliente_id"]);
+	
+	?><script>window.location = '.';</script><?php
+	
+	return;
+}
+
 /**
  * Antes que nada vamos a ver si esta venta 
  * si es de este cliente
