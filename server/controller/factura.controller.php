@@ -155,6 +155,8 @@ function verificarDatosVenta($id_venta = null) {
  */
 function generaFactura($id_venta) {
 
+    $_error = false;
+    
     Logger::log("Iniciando proceso de facturacion");        
     
     //verificamos si podemos escribir en la carpeta de facturas
@@ -221,22 +223,21 @@ function generaFactura($id_venta) {
         }
     } else {
         Logger::log($success->getInfo());
-        DAO::transRollback();
         
         try {
             FacturaVentaDAO::delete($data->factura);
+            DAO::transEnd();
+            die('{"success": false, "reason": "' . $success->getInfo() . '" }');
         } catch (Exception $e) {
-            Logger::log("ERROR CRITICO : Error al crear la factua y error al eliminar el registro de la factura de la venta : {$e}");
+            Logger::log("Error al crear la factura y error al eliminar el registro de la factura de la venta : {$e}");
             DAO::transRollback();
-            die('{"success": false, "reason": "ERROR CRITICO!! Comuniquese con soporte tecnico" }');
+            die('{"success": false, "reason": "Error al crear la factura y error al eliminar el registro de la factura de la venta" }');
         }
         
-        die('{"success": false, "reason": "' . $success->getInfo() . '" }');
+        $_error = true;
     }
 
     DAO::transEnd();
-    
-    
     
     //creamos el archivo del xml
     $archivo = '../static_content/facturas/' . $_SESSION["INSTANCE_ID"] . "_" . $id_venta . '.xml';

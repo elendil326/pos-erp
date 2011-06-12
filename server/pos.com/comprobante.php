@@ -850,6 +850,8 @@ class Comprobante {
      */
     private function getFacturaFromWebService() {
 
+        $ready_to_send = null;
+        
         //creamos una instancia de un objeto SoapClient
 
         if ($this->getProductionMode()) {
@@ -886,6 +888,7 @@ class Comprobante {
             $response = $result->RececpcionComprobanteResult;
         } else {
             $response = $this->getXmlHardCode();
+            $ready_to_send = "Esta es solo una prueba de generacion de CFDI.";
         }        
 
         //DEBUG
@@ -920,6 +923,8 @@ class Comprobante {
 
         //-------------------ELIMINAMOS EL NODO-------------------
 
+        $response_en_bruto = $response;
+        
         $response = str_replace(array("cfdi:Comprobante", "cfdi:Emisor", "cfdi:Receptor", "cfdi:Conceptos", "cfdi:Concepto", "cfdi:Impuestos", "cfdi:Complemento", "cfdi:Traslados", "cfdi:Traslado", "tfd:TimbreFiscalDigital"), array("Comprobante", "Emisor", "Receptor", "Conceptos", "Concepto", "Impuestos", "Complemento", "Traslados", "Traslado", "TimbreFiscalDigital"), $response);
 
         libxml_use_internal_errors(true); 
@@ -927,8 +932,8 @@ class Comprobante {
         try{
             $dom = new SimpleXMLElement($response);
         }catch(Exception $e){
-             Logger::log("Error al leer xml de respuesta del web service : {$e} ");
-            $this->success = new Success("Error al generar la factura, intente nuevamente {$e} .");
+             Logger::log("****************************** ERROR CON EL WEBSERVICE ******************************\n\n El POS envio al webservice : \n\n{$ready_to_send} \n\n  La respuesta en bruto del webservice fue : \n\n{$response_en_bruto}  \n\n  Despues del tratamiento de la respuesta obtenemos : \n\n{$response}\n\n La estructura del XML de respuesta del webservice esta mal formada, error :\n\n {$e} \n\n");
+            $this->success = new Success("El servicio web que genera las facturas esta experimentando algunos problemas, intente nuevamente.");
             return $this->success;
         }
 
