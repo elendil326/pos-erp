@@ -230,9 +230,21 @@ function checkCurrentSession()
 
     $ip = getip();
     if( !(isset( $_SESSION['ip'] ) && $_SESSION['ip'] == $ip) ){
-        Logger::log("session[ip] not set or wrong!");
-        Logger::log("session:" . $_SESSION['ip'] . " actual:" . $ip );
-        return false;
+		//ok, el ip ha cambiado, si es una sucursal, no hay pex
+		if( $_SESSION["grupo"] == 2
+			|| $_SESSION["grupo"] == 3
+		){
+			//soy una sucursal	
+			Logger::log("------ Esta sucursal ha cambiado de IP ------- ");
+			$_SESSION["ip"] = $ip;
+			
+		}else{
+			//soy otro tipo de usuario
+			Logger::log("session[ip] not set or wrong!");
+	        Logger::log("session:" . $_SESSION['ip'] . " actual:" . $ip );
+	        return false;
+		}
+
     }
 
     $user = UsuarioDAO::getByPK( $_SESSION['userid'] );
