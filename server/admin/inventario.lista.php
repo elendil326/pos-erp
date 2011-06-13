@@ -4,37 +4,34 @@ require_once("controller/inventario.controller.php");
 require_once("controller/sucursales.controller.php");
 require_once('model/actualizacion_de_precio.dao.php');
 
-function toUnit( $e, $row )
-{
-	if($e == "NA"){
-		return  "";
-	}
-	
-
-		
-	if( $row["medida"] == "kilogramo" ){
-		
-		if(isset($row['peso_por_arpilla']))
-			return "<b>" . number_format($e/$row['peso_por_arpilla'], 2) . "</b>Arp  " . "(<b>" . number_format($e, 2) . "</b>".smallUnit($row["medida"]).") ";			
-		else
-			return "<b>" . number_format($e/60, 2) . "</b>Arp  " . "(<b>" . number_format($e, 2) . "</b>".smallUnit($row["medida"]).") ";			
 
 
-	}
-	
-	return "<b>" . number_format($e, 2) . "</b>" . smallUnit($row["medida"]) ;
+
+function toUnit($e, $row) {
+    //$row["tratamiento"]
+    switch ($row["medida"]) {
+        case "kilogramo" : $escala = "Kgs";
+            break;
+        case "pieza" : $escala = "Pzas";
+            break;
+    }
+
+    return "<b>" . number_format($e / 60, 2) . "</b>Arp. / <b>" . number_format($e, 2) . "</b>" . $escala;
 }
 
+function toUnitProc($e, $row) {
+    if ($row["tratamiento"] == null) {
+        return "<i>-</i>";
+    }
 
-function toUnitProc($e, $row){
-	if($e == "NA"){
-		return  "";
-	}
+    switch ($row["medida"]) {
+        case "kilogramo" : $escala = "Kgs";
+            break;
+        case "pieza" : $escala = "Pzas";
+            break;
+    }
 
-
-	return "<b>" . number_format($e/60, 2) . "</b>Arp  " . "(<b>" . number_format($e, 2) . "</b> ".smallUnit($row["medida"]).") ";
-
-	
+    return "<b>" . number_format($e / 60, 2) . "</b>Arp. / <b>" . number_format($e, 2) . "</b>" . $escala;
 }
 
 

@@ -127,7 +127,7 @@ function obtenerActualizacionDePrecio($id_producto) {
  * listar las existencias para la sucursal dada sucursal
  * */
 function listarInventario($sucID = null) {
-
+	/*
 	Logger::log("--------------------------------");
 		        $d = debug_backtrace();
 				$track = "ESTOY USANDO LISTARINVENTARIO ! : ";
@@ -138,7 +138,7 @@ function listarInventario($sucID = null) {
 				}
 				Logger::log($track);
 	Logger::log("--------------------------------");
-	
+	*/
 	
 
     if (!$sucID) {

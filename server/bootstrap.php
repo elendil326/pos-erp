@@ -62,10 +62,9 @@
 		if(defined("I_AM_CLIENTE") && I_AM_CLIENTE) {
 			Logger::log("I_AM_CLIENTE: There is no instance number nowhere !!" );				
 			die('<div align=center><img src="media/intro.png"></div>');
-				
 		}
 
-			
+	
 		Logger::log("UNKNOWN: There is no instance number nowhere, sending header to log.php !!" );
 		die(header("Location: ./log.php"));
 		

@@ -88,7 +88,7 @@
 	  	fclose($handle);
 		
 		header("Content-type: application/octet-stream");
-		header("Content-disposition: attachment; filename=fotos.zip");
+		header("Content-disposition: attachment; filename=db_backup.zip");
 		echo $zipfile->file();
 		die();
 		
@@ -138,12 +138,25 @@ foreach ($instancias as $db) {
 	
 	$db["total_size"] = formatfilesize($dbsize);
 	
+	//ahora vamos a intentar abrirla con las credeciales de POS_CORE
+	//para saber si puedo hacer cosas
+	$link = @mysql_connect( $db["DB_HOST"], POS_CORE_DB_USER, POS_CORE_DB_PASSWORD,$db["DB_NAME"]);
+	
+	if($link){
+		$db["core_user_has_access"] = true;	
+	}else{
+		$db["core_user_has_access"] = false;
+	}
+	
+	mysql_close($link);
+	
 	array_push( $db_info, $db );
 }
 
 $header = array(
 	"instance_id" 	=> "Instancia",
 	"desc" 			=> "Descripcion",
+	"core_user_has_access" => "Core user access?",
 	"DB_NAME" 		=> "Base de datos",
 	"total_size" 	=> "Tama&ntilde;o" );
 

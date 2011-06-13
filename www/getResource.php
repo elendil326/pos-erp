@@ -70,7 +70,8 @@ switch($module)
 	 * */
 	case 'admin' :
 		
-		if(isset($_SESSION['grupo']) && ($_SESSION['grupo'] == 1 || $_SESSION['grupo'] == 0))
+		if(isset($_SESSION['grupo']) && 
+			($_SESSION['grupo'] == 1 || $_SESSION['grupo'] == 0 || $_SESSION['grupo']  == "JEDI"))
 			loadDir( $module, $type );
 		else{
 			Logger::log("Solicitud de recurso para admin/ingenieria sin sesion valida.");
