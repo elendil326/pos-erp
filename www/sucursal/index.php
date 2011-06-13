@@ -4,6 +4,8 @@
 	
 	require_once( "../../server/bootstrap.php" );
 
+	Logger::log(">> sucursal/index.php <<");
+	
 ?><html>
 <head>
 	<title>Punto de Venta</title>

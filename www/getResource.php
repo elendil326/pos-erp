@@ -38,7 +38,7 @@ function loadDir( $dir, $type )
 
 //revisar parametros
 if(! ( isset($_REQUEST['mod']) && isset($_REQUEST['type'] ) )) {
-	Logger::log("Solicitud de recurso incorrecto.");
+	Logger::log("    ->getResource.php: Solicitud de recurso incorrecto.");
 	die('{"success":false}');
 }
 
@@ -53,7 +53,7 @@ switch($type)
 	case 'js' : header('Content-Type:text/javascript'); break;
 	case 'css' : header('Content-Type:text/css'); break;
 	default : 
-		Logger::log("Solicitud de recurso con un tipo invalido:" . $type);
+		Logger::log("    ->getResource.php: Solicitud de recurso con un tipo invalido:" . $type);
 		die('{"success":false}');
 }
 
@@ -74,7 +74,7 @@ switch($module)
 			($_SESSION['grupo'] == 1 || $_SESSION['grupo'] == 0 || $_SESSION['grupo']  == "JEDI"))
 			loadDir( $module, $type );
 		else{
-			Logger::log("Solicitud de recurso para admin/ingenieria sin sesion valida.");
+			Logger::log("    ->getResource.php: Solicitud de recurso para admin/ingenieria sin sesion valida.");
 			die("/* ACCESO DENEGADO */");
 		}
 		
@@ -93,11 +93,11 @@ switch($module)
 		
 		if(!isset($_SESSION['grupo'])){
 			
-			Logger::log("Solicitud de recurso para sucursal sin sesion valida.");
-			Logger::log("La variable de grupo no existe !");
+			Logger::log("    ->getResource.php: Solicitud de recurso para sucursal sin sesion valida.");
+			Logger::log("    ->getResource.php: La variable de grupo no existe !");
 						
             if( $type == "js" ){
-				Logger::log("Ya que me solicitaron un JS enviare una redireccion al homepage.");				
+				Logger::log("    ->getResource.php: Ya que me solicitaron un JS enviare una redireccion al homepage.");				
     			die("window.location = \".\";");
             }
 			
@@ -154,7 +154,7 @@ switch($module)
 	
 	
 	default : 
-		Logger::log("Solicitud de recurso de modulo inexistente: " . $module);
+		Logger::log("    ->getResource.php: Solicitud de recurso de modulo inexistente: " . $module);
 		die('{"success":false}');
 	
 }

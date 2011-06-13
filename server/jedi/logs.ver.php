@@ -34,9 +34,9 @@ for($a = sizeof($lines) - 1; $a >= 0 ; $a-- ){
 		$octetos = explode(".", $ip);
 		
 		if(trim($this_ip) == trim($ip)){
-			echo "<div style='color: white; background-color: rgb( " . $octetos[1] . " , " . $octetos[2] . " , " . $octetos[3] . ")'><strike>" . $lines[$a] . "</strike>\n</div>" ;					
+			echo "<div style='color: BLACK; background-color: rgb( " . $octetos[1] . " , " . $octetos[2] . " , " . $octetos[3] . ")'><strike>" . $lines[$a] . "</strike>\n</div>" ;					
 		}else{
-			echo "<div style='color: white; background-color: rgb( " . $octetos[1] . " , " . $octetos[2] . " , " . $octetos[3] . ")'>" . $lines[$a] . "\n</div>" ;					
+			echo "<div style='color: black; background-color: rgb( " . $octetos[1] . " , " . $octetos[2] . " , " . $octetos[3] . ")'>" . $lines[$a] . "\n</div>" ;					
 		}
 				
 	}else{

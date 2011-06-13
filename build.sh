@@ -7,6 +7,13 @@ echo "Iniciando build"
 keytool -genkey -alias Caffeina -validity 365 -v
 echo caffeina  | jarsigner www/sucursal/PRINTER/dist/PRINTER.jar  Caffeina -verbose
 
+## ---- ####
+rm -rf www/PRINTERPDF
+rm -rf www/sucursal/PRINTER/JSONSIMPLE
+rm -rf www/sucursal/PRINTER/src
+rm -rf www/sucursal/PRINTER/nbproject
+rm -rf www/sucursal/PRINTER/test
+
 #compilar el jsminify
 cd build
 gcc jsmin.c -o ../jsmin
