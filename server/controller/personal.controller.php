@@ -334,7 +334,15 @@ function listarGerentes($asignados = null)
 
             if($gerenteSuc != null){
 
-                $data = UsuarioDAO::getByPK($gerenteSuc)->asArray();
+                $data = UsuarioDAO::getByPK($gerenteSuc);
+
+				if(!$data){
+					Logger::log("ERROR: al buscar al usuario ( ". $gerenteSuc ." )" );
+					continue;
+				}else{
+					$data = $data->asArray();
+				}
+				
                 if($data['activo'] == 0) continue;
                 $data['gerencia_sucursal_desc'] = SucursalDAO::getByPK($s->getIdSucursal())->getDescripcion();
                 $data['gerencia_sucursal_id'] = $s->getIdSucursal();
