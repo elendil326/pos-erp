@@ -6,6 +6,7 @@
 
 require_once("controller/inventario.controller.php");
 require_once("controller/sucursales.controller.php");
+require_once('model/actualizacion_de_precio.dao.php');
 
 require_once('model/actualizacion_de_precio.dao.php');
 require_once('model/compra_proveedor.dao.php');
@@ -87,40 +88,69 @@ $compra_proveedor_fragmentacion = CompraProveedorFragmentacionDAO::search(new Co
 
 <h2>Movimientos Efectuados</h2>
 
-<table border="0" cellspacing="0" cellpadding="5" style="width:100%">  
 
     <?php
-    echo "<tr align = center><th><b>Producto </b></th><th><b>Procesado</b></th><th><b>Fecha</b></th><th><b>Cantidad</b></th><th><b>Precio</b></th><th><b>Importe</b></th></tr>";
 
     $i = 0;
     $s = "background-color:#e8e8e8;";
     $d = "background-color:white";
     $suma = 0;
+
+    $array = array();
+
+
+
     foreach ($compra_proveedor_fragmentacion as $fragmentacion) {
 
         $producto = InventarioDAO::getByPK($fragmentacion->getIdProducto());
 
-        echo "<tr style = '" . ($i % 2 == 0 ? $d : $s) . "'>";
-        echo "  <td>{$producto->getDescripcion()}</td><td>" . ($fragmentacion->getProcesada() ? "Si" : "No") . "</td><td>" . toDate($fragmentacion->getFecha()) . "</td><td>{$fragmentacion->getCantidad()}</td><td>" . moneyFormat($fragmentacion->getPrecio()) . "</td><td>" . moneyFormat($fragmentacion->getPrecio() * $fragmentacion->getCantidad()) . "</td>";
-        echo "</tr>";
-        echo "<tr style = 'font-weight:bold; " . ($i % 2 == 0 ? $d : $s) . "'>";
-        echo "  <td colspan = '6' style = 'font-size:11px;'>{$fragmentacion->getDescripcion()}</td>";
-        echo "</tr>";
+        array_push($array, array(
+            "descripcion" => $producto->getDescripcion(),
+            "procesada" => ($fragmentacion->getProcesada() ? "Si" : "No"),
+            "fecha" => toDate($fragmentacion->getFecha()),
+            "cantidad" => $fragmentacion->getCantidad(),
+            "precio" => moneyFormat($fragmentacion->getPrecio()),
+            "importe" => moneyFormat($fragmentacion->getPrecio() * $fragmentacion->getCantidad()),
+            "resumen" => $fragmentacion->getDescripcion()
+        ));
 
-        $suma += ($fragmentacion->getPrecio() * $fragmentacion->getCantidad());
-        
+        $suma += ( $fragmentacion->getPrecio() * $fragmentacion->getCantidad());
+
         $i++;
     }
 
+    //render the table
+    $header = array(
+        "descripcion" => "<b>Producto</b>",
+        "procesada" => "<b>Procesado</b>",
+        "fecha" => "<b>Fecha</b>",
+        "cantidad" => "<b>Cantidad</b>",
+        "precio" => "<b>Precio</b>",
+        "importe" => "<b>Importe</b>",
+        "resumen" => "<b>Resumen</b>");
+
+    $tabla = new Tabla($header, $array);
+    $tabla->addRow("descripcion");
+    $tabla->addRow("procesada");
+    $tabla->addColRender("fecha", "toDate");
+    $tabla->addColRender("cantidad", "moneyFormat");
+    $tabla->addColRender("precio", "moneyFormat");
+    $tabla->addColRender("importe", "moneyFormat");
+    $tabla->addRow("resumen");
+    $tabla->addNoData("Aun no se han registrado movimientos para esta remisión");
+    $tabla->render();
     ?>
 
-</table>
+
 <table border="0" cellspacing="0" cellpadding="5" style="width:100%"> 
     <?php
     echo "<tr style = 'font-weight:bold; " . ($i % 2 == 0 ? $d : $s) . "'><th><b>Costo de la Remisión</b></th><th><b>Recoleccion</b></th><th><b>Estatus</b></th></tr>";
     echo "<tr style = 'font-weight:bold; " . ($i % 2 == 0 ? $d : $s) . "'>";
     $saldo = $suma - $compra_proveedor->getTotalOrigen();
-    echo "  <td>" . moneyFormat($compra_proveedor->getTotalOrigen()) . "</td><td>" . moneyFormat($suma) . "</td><td style = 'color:" . ($saldo < 0 ? "red":"green") . "'>" . moneyFormat($suma - $compra_proveedor->getTotalOrigen()) . "</td>";
+    echo "  <td>" . moneyFormat($compra_proveedor->getTotalOrigen()) . "</td><td>" . moneyFormat($suma) . "</td><td style = 'color:" . ($saldo < 0 ? "red" : "green") . "'>" . moneyFormat($suma - $compra_proveedor->getTotalOrigen()) . "</td>";
     echo "</tr>";
     ?>
 </table>
+
+<div style="height:100px;"></div>
+

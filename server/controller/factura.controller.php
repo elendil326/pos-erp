@@ -152,13 +152,43 @@ function verificarDatosVenta($id_venta = null) {
 /**
  * Realiza todas las validaciones pertinentes para crear con esto la factura electronica
  * ademas realiza una peticion al webservice para emitir una nueva factura
+ * 
+ * http://localhost/pos/trunk/www/proxy.php?action=1200?&id_venta=120&factura_generica={%22id_producto%22:%22xxl%22,%20%22descripcion%22:%22varios%20verduras%22,%22unidad%22:%22unidad%22,%22cantidad%22:1,%22valor%22:1350.50}
  */
-function generaFactura($id_venta) {
+function generaFactura($id_venta, $factura_generica = null) {
 
-    $_error = false;
-    
-    Logger::log("Iniciando proceso de facturacion");        
-    
+    if (isset($factura_generica)) {
+
+        $factura_generica = json_decode($factura_generica);
+
+        if (!isset($factura_generica->id_producto)) {
+            Logger::log("Error : No se definio el id del producto en la factura generia");
+            die('{"success": false, "reason": "Error : No se definio el id del producto"}');
+        }
+
+        if (!isset($factura_generica->descripcion)) {
+            Logger::log("Error : No se definio la descripcion del producto en la factura generia");
+            die('{"success": false, "reason": "Error : No se definio la descripcion del producto"}');
+        }
+
+        if (!isset($factura_generica->unidad)) {
+            Logger::log("Error : No se definio la unidad del producto en la factura generia");
+            die('{"success": false, "reason": "Error : No se definio la unidad del producto"}');
+        }
+
+        /* if(!isset($factura_generica->cantidad)){
+          Logger::log("Error : No se definio la cantidad del producto en la factura generia");
+          die('{"success": false, "reason": "Error : No se definio la cantidad del producto"}');
+          }
+
+          if(!isset($factura_generica->valor)){
+          Logger::log("Error : No se definio el valor del producto en la factura generia");
+          die('{"success": false, "reason": "Error : No se definio el valor del producto"}');
+          } */
+    }
+
+    Logger::log("Iniciando proceso de facturacion");
+
     //verificamos si podemos escribir en la carpeta de facturas
     if (!is_writable("../static_content/facturas/")) {
         Logger::log("No puedo escribir en la carpeta de facturas.");
@@ -171,19 +201,21 @@ function generaFactura($id_venta) {
     DAO::transBegin();
 
     $data = getDatosGenerales($id_venta);
-    
-    /*Termino aqui la transaccion por que si ocurre un error, al momento de la lectura de los XML quiero qeu se guarde
-     *el registro de factura_venta.     
+
+    /* Termino aqui la transaccion por que si ocurre un error, al momento de la lectura de los XML quiero que se guarde
+     * el registro de factura_venta.     
      */
     DAO::transEnd();
-    
+
     DAO::transBegin();
 
     $comprobante = new Comprobante();
 
     $comprobante->setGenerales($data->generales); //1
 
-    $comprobante->setConceptos(getConceptos($id_venta)); //2
+
+
+    $comprobante->setConceptos(getConceptos($id_venta, $factura_generica)); //2
 
     $comprobante->setEmisor(getEmisor()); //3
 
@@ -199,6 +231,7 @@ function generaFactura($id_venta) {
     $comprobante->setUrlWS(getUrlWS()); //7
     //intentamos obtener la factura sellada
     $success = $comprobante->getNuevaFactura();
+
 
     if ($success->getSuccess()) {
 
@@ -223,7 +256,7 @@ function generaFactura($id_venta) {
         }
     } else {
         Logger::log($success->getInfo());
-        
+
         try {
             FacturaVentaDAO::delete($data->factura);
             DAO::transEnd();
@@ -233,14 +266,20 @@ function generaFactura($id_venta) {
             DAO::transRollback();
             die('{"success": false, "reason": "Error al crear la factura y error al eliminar el registro de la factura de la venta" }');
         }
-        
-        $_error = true;
     }
 
     DAO::transEnd();
+
+    $file = '../static_content/facturas/' . $_SESSION["INSTANCE_ID"] . "_" . $id_venta . '.xml';
     
+    //verificamos que el archivo no exista, si existe lo eliminamos
+    while (is_file($file) == TRUE) {
+        chmod($file, 0666);
+        unlink($file);
+    }
+
     //creamos el archivo del xml
-    $archivo = '../static_content/facturas/' . $_SESSION["INSTANCE_ID"] . "_" . $id_venta . '.xml';
+    $archivo = $file;
     $fp = fopen($archivo, "a");
     $string = $comprobante->getXMLresponse();
     $write = fputs($fp, $string);
@@ -270,7 +309,7 @@ function getUrlWS() {
  * Regresa un objeto qeu contiene la informacion acerca de los conceptos de la venta
  * return Object Conceptos
  */
-function getConceptos($id_venta) {
+function getConceptos($id_venta, $factura_generica = null) {
 
     //obtenemos el juego de articulos vendidos en la venta
     $detalle_venta = new DetalleVenta();
@@ -279,6 +318,22 @@ function getConceptos($id_venta) {
 
     //objeto que almacenara a todos los conceptos de la venta
     $conceptos = new Conceptos();
+
+    if (isset($factura_generica)) {
+
+        $concepto = new Concepto();
+
+        $concepto->setIdProducto($factura_generica->id_producto);
+        $concepto->setDescripcion($factura_generica->descripcion);
+        $concepto->setUnidad($factura_generica->unidad);
+        $concepto->setCantidad(1);
+        $concepto->setValor(VentasDAO::getByPK($id_venta)->getTotal());
+        $concepto->setImporte(VentasDAO::getByPK($id_venta)->getTotal());
+
+        $conceptos->addConcepto($concepto);
+
+        return $conceptos;
+    }
 
     //llenamos a $conceptos con los conceptos de la venta
     foreach ($detalle_venta as $articulo) {
@@ -574,7 +629,10 @@ function getDatosGenerales($id_venta) {
     $sucursal = SucursalDAO::getByPK($_SESSION['sucursal']);
     $generales->setSerie($sucursal->getLetrasFactura());
 
-    $generales->setSubtotal($venta->getSubtotal());
+
+    //TODO : Investigar que es lo que pasa cuando tenemos un cliente que se le aplica un descuento, en el subtotal puede ir menor que el total en la factura? de momento cuando sea menor le pondre igual al total
+
+    $generales->setSubtotal(( $venta->getSubtotal() > $venta->getTotal() ) ? $venta->getTotal() : $venta->getSubtotal() );
 
     $generales->setTotal($venta->getTotal());
 
@@ -711,9 +769,20 @@ function reimprimirFactura($args) {
 if (isset($args['action'])) {
     switch ($args['action']) {
         case 1200:
-            //realiza una peticion al web service para que regrese una factura sellada            
+            //realiza una peticion al web service para que regrese una factura sellada     
 
-            generaFactura($args['id_venta']);
+            if (!isset($args['id_venta'])) {
+                die('{"success": false, "reason": "No se a especificado el id de la venta que se desea facturar." }');
+            }
+
+            $factura_generica = null;
+
+            if (isset($args['factura_generica']) && $args['factura_generica'] != "null" && $args['factura_generica'] != null && $args['factura_generica'] != "") {
+                $factura_generica = $args['factura_generica'];
+            }
+
+            generaFactura($args['id_venta'], $factura_generica);
+
             break;
 
         case 1201:

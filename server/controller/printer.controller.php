@@ -100,10 +100,6 @@ function roundRect($pdf, $x, $y, $w, $h) {
     $pdf->partEllipse($x + 3, $y - $h + 3, 180, 270, 3); //bottom-left
 }
 
-
-
-
-
 function imprimirFactura($id_venta, $venta_especial = null) {
 
 
@@ -120,34 +116,32 @@ function imprimirFactura($id_venta, $venta_especial = null) {
 
 
 
-	/**
-	 * Si soy un cliente, validar que esta venta sea mia !
-	 * 
-	 * 
-	 * 
-	 * **/
-	if($_SESSION["grupo"] == 4){
-		/**
-		 * Si soy un cliente  !
-		 *
-		 * **/
-		if($_SESSION["cliente_id"] != $venta->getIdCliente()){
-			/**
-			 * Esta venta no me pertenece  !
-			 *
-			 * **/
-			Logger::log("*******************************************************");
-			Logger::log("!!!!! CLIENTE HA SOLICITADO VENTA QUE NO ES DE EL !!!!!");
-			Logger::log("CLIENTE:" . $_SESSION["cliente_id"]);
-			Logger::log("*******************************************************");			
-			die("ACCESSO NO AUTORIZADO: INCIDENTE REPORTADO.");
-			
-		}
-		
-	}
-	
-	
-	
+    /**
+     * Si soy un cliente, validar que esta venta sea mia !
+     * 
+     * 
+     * 
+     * * */
+    if ($_SESSION["grupo"] == 4) {
+        /**
+         * Si soy un cliente  !
+         *
+         * * */
+        if ($_SESSION["cliente_id"] != $venta->getIdCliente()) {
+            /**
+             * Esta venta no me pertenece  !
+             *
+             * * */
+            Logger::log("*******************************************************");
+            Logger::log("!!!!! CLIENTE HA SOLICITADO VENTA QUE NO ES DE EL !!!!!");
+            Logger::log("CLIENTE:" . $_SESSION["cliente_id"]);
+            Logger::log("*******************************************************");
+            die("ACCESSO NO AUTORIZADO: INCIDENTE REPORTADO.");
+        }
+    }
+
+
+
 
     //validar que la venta sea a contado, o bien que este saldada
     if (!$venta->getLiquidada()) {
@@ -229,7 +223,7 @@ function imprimirFactura($id_venta, $venta_especial = null) {
 
     //addJpegFromFile(imgFileName,x,y,w,[h])
     //$pdf->addJpegFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
-    
+
     if (substr($logo->getValue(), -3) == "jpg" || substr($logo->getValue(), -3) == "JPG" || substr($logo->getValue(), -4) == "jpeg" || substr($logo->getValue(), -4) == "JPEG") {
         $pdf->addJpegFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
     } elseif (substr($logo->getValue(), -3) == "png" || substr($logo->getValue(), -3) == "PNG") {
@@ -498,6 +492,372 @@ function imprimirFactura($id_venta, $venta_especial = null) {
         file_put_contents("../static_content/facturas/" . $_SESSION["INSTANCE_ID"] . "_" . $venta->getIdVenta() . ".pdf", $documento_pdf);
 }
 
+/**
+ *
+ * @param type $id_venta
+ * @param type $venta_especial 
+ */
+function imprimirFacturaXML($id_venta, $venta_especial = null) {
+
+    //leemos el archivo del xml
+
+    $archivo = '../static_content/facturas/' . $_SESSION["INSTANCE_ID"] . "_" . $id_venta . '.xml';
+    
+    $fp = @fopen($archivo, "r");
+
+    if(!$fp){
+        die("Error al leer el XML de la factura de la venta : {$id_venta}");
+    }
+    
+    $xml = "";
+
+    while (!feof($fp)) {
+        $linea = fgets($fp);
+        $lineasalto = nl2br($linea);
+        $xml .= $lineasalto;
+    }
+
+    //quitamos toda la mierda que pone hacienda
+    //TODO : Verificar si en Comprobante.php se elimina la mierda de Domicilio, creo qeu no.
+    $xml = str_replace(array("cfdi:Comprobante", "cfdi:Emisor", "cfdi:Receptor", "cfdi:Domicilio", "cfdi:Conceptos", "cfdi:Concepto", "cfdi:Impuestos", "cfdi:Complemento", "cfdi:Traslados", "cfdi:Traslado", "tfd:TimbreFiscalDigital"), array("Comprobante", "Emisor", "Receptor", "Domicilio", "Conceptos", "Concepto", "Impuestos", "Complemento", "Traslados", "Traslado", "TimbreFiscalDigital"), $xml);
+    ;
+
+    $xml = new SimpleXMLElement($xml);
+
+    //echo $xml->Complemento->TimbreFiscalDigital["UUID"];
+
+    if ($fp != false) {
+        fclose($fp);
+    } else {
+        die("Error al acceder al XML de la factura");
+    }
+
+    $qr_file_name = obternerQRCode($xml->Emisor['rfc'], $xml->Receptor['rfc'], $xml['total'], $xml->Complemento->TimbreFiscalDigital['UUID']);
+
+    include_once('librerias/ezpdf/class.pdf.php');
+    include_once('librerias/ezpdf/class.ezpdf.php');
+
+    $pdf = new Cezpdf();
+
+    $pdf->selectFont('../server/librerias/ezpdf/fonts/Helvetica.afm');
+
+    //margenes de un centimetro para toda la pagina
+    $pdf->ezSetMargins(1, 1, 1, 1);
+
+    /*
+     * LOGO
+     */
+
+    if (!$logo = PosConfigDAO::getByPK('url_logo')) {
+        Logger::log("Verifique la configuracion del pos_config, no se encontro el camṕo 'url_logo'");
+        die("Verifique la configuracion del POS, no se encontro el url del logo");
+    }
+
+    //addJpegFromFile(imgFileName,x,y,w,[h])
+    //$pdf->addJpegFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
+
+    if (substr($logo->getValue(), -3) == "jpg" || substr($logo->getValue(), -3) == "JPG" || substr($logo->getValue(), -4) == "jpeg" || substr($logo->getValue(), -4) == "JPEG") {
+        $pdf->addJpegFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
+    } elseif (substr($logo->getValue(), -3) == "png" || substr($logo->getValue(), -3) == "PNG") {
+        $pdf->addPngFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
+    } else {
+        Logger::log("Verifique la configuracion del pos_config, la extension de la imagen del logo no es compatible");
+        die("La extension de la imagen usada para el logo del negocio no es valida.");
+    }
+
+
+    /*     * ************************
+     * ENCABEZADO
+     * ************************* */
+
+
+    /*     * ************************
+     * TITULO
+     * Datos del emisor, lugar de expedicion, folio, fecha de emision, no de serie
+     * del certificado del contribuyente
+     * ************************* */
+
+    $emisor_address = new stdClass();
+    $emisor_address->calle = $xml->Emisor->DomicilioFiscal['calle'];
+    $emisor_address->numeroExterior = $xml->Emisor->DomicilioFiscal['noExterior'];
+
+    if (isset($xml->Emisor->DomicilioFiscal['noInterior'])) {
+        $emisor_address->numeroInterior = $xml->Emisor->DomicilioFiscal['noInterior'];
+    }
+
+    $emisor_address->colonia = $xml->Emisor->DomicilioFiscal['colonia'];
+    $emisor_address->codigoPostal = $xml->Emisor->DomicilioFiscal['codigoPostal'];
+    $emisor_address->municipio = $xml->Emisor->DomicilioFiscal['municipio'];
+    $emisor_address->estado = $xml->Emisor->DomicilioFiscal['estado'];
+    $emisor_address->pais = $xml->Emisor->DomicilioFiscal['pais'];
+
+    //TODO: Incluir la referencia en formatAddress()
+    //$emisor_addres->referencia =$xml->Emisor->DomicilioFiscal['referencia'];
+
+
+    $e = "<b>" . readableText($xml->Emisor['nombre']) . "</b>\n";
+    $e .= formatAddress($emisor_address);
+    $e .= "RFC: " . $xml->Emisor['rfc'] . "\n\n";
+
+    //datos de la sucursal
+    //$s = "<b>Lugar de expedicion</b>\n";
+    //$s .= formatAddress($sucursal);
+    //TODO : Tomar en cuenta la sucursal de emision
+
+    $e .= "<b>Lugar de expedicion</b>\n";
+    /* if ($sucursal->getIdSucursal() != '0') {
+      $e .= formatAddress($sucursal);
+      } */
+
+
+    $datos = array(
+        array(
+            "emisor" => $e/* ,
+          'sucursal' => $s, */
+        )
+    );
+
+    //$pdf->ezSetY(puntos_cm(26.7));
+    $pdf->ezSetY(puntos_cm(28.7));
+    $opciones_tabla = array();
+    $opciones_tabla['showLines'] = 0;
+    $opciones_tabla['showHeadings'] = 0;
+    $opciones_tabla['shaded'] = 0;
+    $opciones_tabla['fontSize'] = 8;
+    //$opciones_tabla['xOrientation'] = 'right';
+    $opciones_tabla['xOrientation'] = 'right';
+    //$opciones_tabla['xPos'] = puntos_cm(3);
+    $opciones_tabla['xPos'] = puntos_cm(7.5);
+    $opciones_tabla['width'] = puntos_cm(11);
+    $opciones_tabla['textCol'] = array(0, 0, 0);
+    $opciones_tabla['titleFontSize'] = 12;
+    $opciones_tabla['rowGap'] = 3;
+    $opciones_tabla['colGap'] = 3;
+
+    $pdf->ezTable($datos, "", "", $opciones_tabla);
+
+    $datos = array(
+        array("col" => "<b>Folio</b>"),
+        array("col" => $xml['folio']),
+        array("col" => "<b>Fecha y hora de Emision</b>"),
+        array("col" => str_replace(array("T"), array(" "), $xml['fecha'])),
+        array("col" => "<b>Numero de serie del certificado del contribuyente</b>"),
+        array("col" => $xml['noCertificado'])
+    );
+
+    $pdf->ezSetY(puntos_cm(28.7));
+
+    $opciones_tabla['xPos'] = puntos_cm(14.2);
+    $opciones_tabla['width'] = puntos_cm(4);
+    $opciones_tabla['showLines'] = 0;
+    $opciones_tabla['shaded'] = 2;
+    $opciones_tabla['shadeCol'] = array(1, 1, 1);
+    $opciones_tabla['shadeCol2'] = array(0.8984375, 0.95703125, 0.99609375);
+    $pdf->ezTable($datos, "", "", $opciones_tabla);
+
+    roundRect($pdf, puntos_cm(14.2), puntos_cm(28.7), puntos_cm(4), puntos_cm(4));
+
+
+
+    /*     * ************************
+     * Receptor del comprobante fiscal
+     * Datos del receptor
+     * ************************* */
+
+    $receptor_address = new stdClass();
+    $receptor_address->calle = $xml->Receptor->Domicilio['calle'];
+    $receptor_address->numeroExterior = $xml->Receptor->Domicilio['noExterior'];
+
+    if (isset($xml->Receptor->DomicilioFiscal['noInterior'])) {
+        $receptor_address->numeroInterior = $xml->Receptor->Domicilio['noInterior'];
+    }
+
+    $receptor_address->colonia = $xml->Receptor->Domicilio['colonia'];
+    $receptor_address->codigoPostal = $xml->Receptor->Domicilio['codigoPostal'];
+    $receptor_address->municipio = $xml->Receptor->Domicilio['municipio'];
+    $receptor_address->estado = $xml->Receptor->Domicilio['estado'];
+    $receptor_address->pais = $xml->Receptor->Domicilio['pais'];
+
+    $datos_receptor = readableText($xml->Receptor['nombre']) . "\n";
+    $datos_receptor .= formatAddress($receptor_address);
+    $datos_receptor .= "RFC:" . $xml->Receptor['rfc'];
+
+    $receptor = array(
+        array("receptor" => "<b>Receptor del comprobante fiscal</b>"),
+        array("receptor" => $datos_receptor),
+    );
+
+    $pdf->ezSetY(puntos_cm(24.3));
+    $opciones_tabla['xPos'] = puntos_cm(2);
+    $opciones_tabla['width'] = puntos_cm(8.2);
+    $opciones_tabla['showLines'] = 0;
+    $pdf->ezTable($receptor, "", "", $opciones_tabla);
+
+
+
+
+    /*     * ************************
+     * 	Timbrado
+     * ************************* */
+    $pdf->ezSetY(puntos_cm(24.3));
+    $opciones_tabla['xPos'] = puntos_cm(10.4);
+    $opciones_tabla['width'] = puntos_cm(7.8);
+    $timbre = array(
+        array("dat" => "<b>Folio Fiscal</b>"),
+        array("dat" => $xml->Complemento->TimbreFiscalDigital['UUID']),
+        array("dat" => "<b>Fecha y hora de certificacion</b>"),
+        array("dat" => str_replace(array("T"), array(" "), $xml->Complemento->TimbreFiscalDigital['FechaTimbrado'])),
+        array("dat" => "<b>Numero de serie del certificaco del sat</b>"),
+        array("dat" => $xml->Complemento->TimbreFiscalDigital['noCertificadoSAT'])
+    );
+
+    $pdf->ezTable($timbre, "", "", $opciones_tabla);
+
+    roundRect($pdf, puntos_cm(2), puntos_cm(24.3), puntos_cm(16.2), puntos_cm(3.2));
+
+
+
+    /*     * ************************
+     * Tipo de comprobante
+     * ************************* */
+    $pdf->ezSetY(puntos_cm(20.9));
+    $opciones_tabla['xPos'] = puntos_cm(2);
+    $opciones_tabla['width'] = puntos_cm(16.2);
+    $comprobante = array(
+        array("r1" => "Tipo de comprobante",
+            "r2" => "Moneda",
+            "r3" => "Tipo de cambio",
+            "r4" => "<b>Version</b>"),
+        array("r1" => $xml['tipoDeComprobante'],
+            "r2" => $xml['Moneda'],
+            "r3" => $xml['TipoCambio'],
+            "r4" => $xml['version']),
+    );
+    $pdf->ezTable($comprobante, "", "", $opciones_tabla);
+
+    roundRect($pdf, puntos_cm(2), puntos_cm(20.9), puntos_cm(16.2), puntos_cm(1.2));
+
+    /*     * ************************
+     * PRODUCTOS
+     * ************************* */
+    $elementos = array(
+        array('cantidad' => 'Cantidad',
+            'descripcion' => 'Descripcion                                                                                                     ', 'precio' => 'Precio', 'importe' => 'Importe'),
+    );
+
+
+    foreach ($xml->Conceptos as $concepto) {
+
+        Logger::log("*****" . $concepto->Concepto["descripcion"]);
+        
+        $prod['cantidad'] = $concepto->Concepto["cantidad"];
+        $prod['descripcion'] = $concepto->Concepto["descripcion"];
+        $prod['precio'] = moneyFormat($concepto->Concepto["valorUnitario"], DONT_USE_HTML);
+        $prod['importe'] = moneyFormat($concepto->Concepto["importe"], DONT_USE_HTML);
+
+        array_push($elementos, $prod);
+    }
+
+
+
+
+    array_push($elementos, array("cantidad" => "",
+        "descripcion" => "",
+        "precio" => "Subtotal",
+        "importe" => moneyFormat($xml["subTotal"], DONT_USE_HTML)));
+
+
+
+    //TODO : El iva esta harcodeado, hay qeu revisar bien como se manejan los impuestos
+
+    array_push($elementos, array("cantidad" => "",
+        "descripcion" => "",
+        "precio" => "IVA",
+        "importe" => moneyFormat(0, DONT_USE_HTML)));
+
+    array_push($elementos, array("cantidad" => "",
+        "descripcion" => "",
+        "precio" => "Total",
+        "importe" => moneyFormat($xml["total"], DONT_USE_HTML)));
+
+
+    $pdf->ezText("", 10, array('justification' => 'center'));
+    $pdf->ezTable($elementos, "", "", $opciones_tabla);
+
+    $pdf->addJpegFromFile("../static_content/qr_codes/" . $qr_file_name, 30, 30, 150);
+
+    roundRect($pdf, puntos_cm(2), puntos_cm(19.7 - .25), puntos_cm(16.2), puntos_cm(13.2));
+
+    /*     * ************************
+     * Tipo de pago
+     * ************************* */
+    $pdf->ezText("\nPago en una sola exibicion", 9, array('justification' => 'center'));
+
+    /*     * ************************
+     * DATOS DE SELLOS
+     * ************************* */
+
+
+    $cadena_original = "||" . $xml->Complemento->TimbreFiscalDigital["version"] . "|";
+    $cadena_original .= $xml->Complemento->TimbreFiscalDigital["UUID"] . "|";
+    $cadena_original .= str_replace(array(" "), array("T"), $xml->Complemento->TimbreFiscalDigital["FechaTimbrado"]) . "|";
+    $cadena_original .= $xml->Complemento->TimbreFiscalDigital["selloCFD"] . "|";
+    //$this->cadena_original .= $this->getSelloDigitalSAT() . "|";        
+    $cadena_original .= $xml->Complemento->TimbreFiscalDigital["noCertificadoSAT"] . "||";
+
+
+    $sellos = array(
+        array("r1" => "Sello digital del emisor:"),
+        array("r1" => $xml->Complemento->TimbreFiscalDigital["selloCFD"]),
+        array("r1" => "Sello digital del SAT:"),
+        array("r1" => $xml->Complemento->TimbreFiscalDigital["selloSAT"]),
+        array("r1" => "Cadena original del complemento de certificacion digital del sat:"),
+        array("r1" => $cadena_original)
+    );
+
+    $pdf->ezSetY(puntos_cm(6.0));
+    $opciones_tabla['xPos'] = puntos_cm(6);
+    $opciones_tabla['width'] = puntos_cm(12.4);
+    $opciones_tabla['fontSize'] = 6;
+    $opciones_tabla['showLines'] = 0;
+    $pdf->ezTable($sellos, "", "", $opciones_tabla);
+
+
+
+    /*     * ************************
+     * notas de abajo
+     * ************************* */
+    $pdf->setLineStyle(1);
+    $pdf->setStrokeColor(0.3359375, 0.578125, 0.89453125);
+
+    $pdf->line(puntos_cm(2), puntos_cm(1.3), puntos_cm(18.2), puntos_cm(1.3));
+
+
+    $pdf->addText(puntos_cm(2), puntos_cm(1.0), 7, "Este documento es una representacion impresa de un CFDI");
+
+
+
+    $pdf->addJpegFromFile("../www/media/logo_simbolo.jpg", puntos_cm(15.9), puntos_cm(.25), 25);
+
+
+    $pdf->addText(puntos_cm(16.70), puntos_cm(.60), 8, "caffeina.mx");
+
+
+    $pdf->setLineStyle(1, 'round', '', array(0, 2));
+    $pdf->setStrokeColor(0.3359375, 0.578125, 0.89453125);
+
+    $pdf->line(puntos_cm(8.2 + 2), puntos_cm(24.3 - .15), puntos_cm(8.2 + 2), puntos_cm(21.051));
+
+
+    $documento_pdf = $pdf->ezOutput(1);
+
+    $pdf->ezStream();
+
+    //ok ya la hize, var si existe este documento en static content, sino, guardarlo
+    if (!is_file("../static_content/facturas/" . $_SESSION["INSTANCE_ID"] . "_" . $id_venta . ".pdf"))
+        file_put_contents("../static_content/facturas/" . $_SESSION["INSTANCE_ID"] . "_" . $id_venta . ".pdf", $documento_pdf);
+}
+
 /*
  * Código de barras bidimensional QR, con base al estándar ISO/IEC 18004:2000, conteniendo los siguientes datos en el siguiente formato:
   RFC del emisor
@@ -523,7 +883,7 @@ function imprimirFactura($id_venta, $venta_especial = null) {
 function obternerQRCode($rfcEmisor = null, $rfcReceptor = null, $total = null, $uuid = null) {
 
     if (!$rfcEmisor || !$rfcReceptor || !$total || !$uuid) {
-        Logger::log("Faltan datos para buscar el codigo qr");
+        Logger::log("Faltan datos para buscar el codigo qr. rfcEmisor : {$rfcEmisor}, rfcReceptor : {$rfcReceptor}, total : {$total}, uuid : {$uuid}");
         return null;
     }
 
@@ -592,32 +952,30 @@ function imprimirNotaDeVenta($id_venta) {
     }
 
 
-	/**
-	 * Si soy un cliente, validar que esta venta sea mia !
-	 * 
-	 * 
-	 * 
-	 * **/
-	if($_SESSION["grupo"] == 4){
-		/**
-		 * Si soy un cliente  !
-		 *
-		 * **/
-		if($_SESSION["cliente_id"] != $venta->getIdCliente()){
-			/**
-			 * Esta venta no me pertenece  !
-			 *
-			 * **/
-			Logger::log("*******************************************************");
-			Logger::log("!!!!! CLIENTE HA SOLICITADO VENTA QUE NO ES DE EL !!!!!");
-			Logger::log("CLIENTE:" . $_SESSION["cliente_id"]);
-			Logger::log("*******************************************************");			
-			die("ACCESSO NO AUTORIZADO: INCIDENTE REPORTADO.");
-			
-		}
-		
-	}
-	
+    /**
+     * Si soy un cliente, validar que esta venta sea mia !
+     * 
+     * 
+     * 
+     * * */
+    if ($_SESSION["grupo"] == 4) {
+        /**
+         * Si soy un cliente  !
+         *
+         * * */
+        if ($_SESSION["cliente_id"] != $venta->getIdCliente()) {
+            /**
+             * Esta venta no me pertenece  !
+             *
+             * * */
+            Logger::log("*******************************************************");
+            Logger::log("!!!!! CLIENTE HA SOLICITADO VENTA QUE NO ES DE EL !!!!!");
+            Logger::log("CLIENTE:" . $_SESSION["cliente_id"]);
+            Logger::log("*******************************************************");
+            die("ACCESSO NO AUTORIZADO: INCIDENTE REPORTADO.");
+        }
+    }
+
 
 
     $detalle_de_venta = detalleVenta($venta->getIdVenta());
@@ -1158,6 +1516,9 @@ if (isset($args['action'])) {
 
         case 1307 :
             imprimirEstadoCuentaCliente($args);
+
+        case 1308 :
+            imprimirFacturaXML($args['id_venta']);
 
         default:
             printf('{ "success" : "false" }');
