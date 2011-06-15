@@ -789,27 +789,27 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
         this.incrementY(this.height_normal);
 
-        this.grafico.setFont(this.boldSmall);
+        this.grafico.setFont(this.bold);
 
-        this.grafico.drawString("SUBTOTAL:", this.x + 63, this.y);
+        this.grafico.drawString("SUBTOTAL:", this.x + 30, this.y);
 
-        this.grafico.drawString(this.formatoDinero.format(this.getSubTotal()), this.x + 130, this.y);
+        this.grafico.drawString(this.formatoDinero.format(this.getSubTotal()), this.x + 100, this.y);
 
         this.incrementY(this.height_normal);
 
         if (this.getCliente() != null && this.getCliente().getDescuento() > 0) {
 
-            this.grafico.drawString("DESCUENTO:", this.x + 63, this.y);
+            this.grafico.drawString("DESCUENTO:", this.x + 30, this.y);
 
-            this.grafico.drawString(this.formatoDinero.format((this.getCliente().getDescuento() * this.getSubTotal() / 100)), this.x + 130, this.y);
+            this.grafico.drawString(this.formatoDinero.format((this.getCliente().getDescuento() * this.getSubTotal() / 100)), this.x + 100, this.y);
 
             this.incrementY(this.height_normal);
 
         }
 
-        this.grafico.drawString("TOTAL:", this.x + 63, this.y);
+        this.grafico.drawString("TOTAL:", this.x + 30, this.y);
 
-        this.grafico.drawString(this.formatoDinero.format(this.getTotal()), this.x + 130, this.y);
+        this.grafico.drawString(this.formatoDinero.format(this.getTotal()), this.x + 100, this.y);
 
         this.incrementY(this.height_normal);
 
@@ -817,13 +817,13 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
             //entra si el pago es de contado
 
-            this.grafico.drawString("PAGO:", this.x + 63, this.y);
+            this.grafico.drawString("PAGO:", this.x + 30, this.y);
 
             //verifica si se pago con un cheque
 
             if (this.getTipoPago().equals("cheque")) {
 
-                this.grafico.drawString(this.formatoDinero.format(this.getTotal()), this.x + 130, this.y);
+                this.grafico.drawString(this.formatoDinero.format(this.getTotal()), this.x + 100, this.y);
 
                 this.incrementY(this.height_normal);
 
@@ -835,7 +835,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                     //entra si no es una reimpresion del ticket
 
-                    this.grafico.drawString(this.formatoDinero.format(this.getDineroRecibido()), this.x + 130, this.y);
+                    this.grafico.drawString(this.formatoDinero.format(this.getDineroRecibido()), this.x + 100, this.y);
 
                     this.incrementY(this.height_normal);
 
@@ -848,9 +848,9 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
                 //entra si no es una reimpresion
 
-                this.grafico.drawString("CAMBIO:", this.x + 63, this.y);
+                this.grafico.drawString("CAMBIO:", this.x + 30, this.y);
 
-                this.grafico.drawString(this.formatoDinero.format(this.getDineroRecibido() - this.getTotal()), this.x + 130, this.y);
+                this.grafico.drawString(this.formatoDinero.format(this.getDineroRecibido() - this.getTotal()), this.x + 100, this.y);
 
                 this.incrementY(this.height_normal);
 
@@ -860,7 +860,7 @@ public class TicketVentaCliente extends FormatoTicket implements Printable {
 
         this.grafico.setFont(this.normal);
 
-        this.grafico.drawString("------------------------------------------------------------------------", this.x + 63, this.y);
+        this.grafico.drawString("------------------------------------------------------------------------", this.x + 30, this.y);
 
         this.incrementY(this.height_normal);
 
