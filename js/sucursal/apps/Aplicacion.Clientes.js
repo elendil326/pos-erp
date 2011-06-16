@@ -355,17 +355,17 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
 	
 
     var html = "";
-    html += "<table border = '0' align = 'center'>";
+    html += "<table border = '0' align = 'center' style = 'font-weight:bold; font-size:13px; !important;'>";
 	
-    html += "<tr class='top'>";
-    html += "<td>Producto</td>";
-    html += "<td>Descripcion</td>";
-    html += "<td>Cantidad Original Entregada</td>";    
-    html += "<td>Descuento</td>";
-    html += "<td>Cantidad Original Cobrada</td>";
-    html += "<td>Precio</td>";
-    html += "<td>Cantidad procesada</td>";
-    html += "<td>Precio procesada</td>";
+    html += "<tr class='top' align = 'center'>";
+    html += "<td align = 'center'>Producto</td>";
+    html += "<td align = 'center'>Descripcion</td>";
+    html += "<td align = 'center'>Cantidad Original Entregada</td>";    
+    html += "<td align = 'center'>Descuento</td>";
+    html += "<td align = 'center'>Cantidad Original Cobrada</td>";
+    html += "<td align = 'center'>Precio</td>";
+    html += "<td align = 'center'>Cantidad procesada</td>";
+    html += "<td align = 'center'>Precio procesada</td>";
     
     html += "<td>Subtotal</td>";
     html += "</tr>";
@@ -374,9 +374,9 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
 
 	
         if( i == detalleVenta.length - 1 )
-            html += "<tr class='last'>";
+            html += "<tr class='last' align = 'center'>";
         else
-            html += "<tr >";
+            html += "<tr align = 'center'>";
 		
         if(DEBUG){
             console.log("El detalle de la venta consiste en : ", detalleVenta[i]);
@@ -1726,6 +1726,10 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
         },{
             iconCls: 'download',
             title: 'Credito',
+            items : abonar
+        },{
+            iconCls: 'favorites',
+            title: 'Facturas',
             items : abonar
         }],
         tabBar: {
