@@ -699,7 +699,7 @@ function listarVentasCliente($args) {
     $tot_ventas = array();
 
     foreach ($ventas as $venta) {
-
+        
         $decode_venta = $venta->asArray();
 
         $dventa = new DetalleVenta();
@@ -728,7 +728,12 @@ function listarVentasCliente($args) {
 
         $cliente = ClienteDAO::getByPK($venta->getIdCliente());
         $decode_venta["razon_social"] = $cliente->getRazonSocial();
-
+        
+        //verificamos si la venta esta facturada
+        $factura_venta = FacturaVentaDAO::search(new FacturaVenta(array("id_venta"=>$venta->getIdVenta(),"activa"=>1,"sellada"=>1)));        
+        
+        $decode_venta["factura"] = count($factura_venta)>0?$factura_venta[0]->getIdFolio():null;        
+                
         array_push($tot_ventas, $decode_venta);
     }
 
