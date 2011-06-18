@@ -731,8 +731,17 @@ function listarVentasCliente($args) {
         
         //verificamos si la venta esta facturada
         $factura_venta = FacturaVentaDAO::search(new FacturaVenta(array("id_venta"=>$venta->getIdVenta(),"activa"=>1,"sellada"=>1)));        
+
+        $array_facturas = array();     
         
-        $decode_venta["factura"] = count($factura_venta)>0?$factura_venta[0]->getIdFolio():null;        
+        foreach($factura_venta as $fv){
+            $fv = $fv->asArray();
+            $fv['lugar_emision'] = SucursalDAO::getByPK($fv['lugar_emision'])->getDescripcion();
+            $fv['usuario'] = UsuarioDAO::getByPK($fv['id_usuario'])->getNombre();
+            array_push($array_facturas, $fv);
+        }
+        
+        $decode_venta["factura"] = count($array_facturas)>0?$array_facturas:null;        
                 
         array_push($tot_ventas, $decode_venta);
     }

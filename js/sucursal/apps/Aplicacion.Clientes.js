@@ -37,6 +37,9 @@ Aplicacion.Clientes.prototype._init = function (){
     //crea el panel donde se embebera el iframe para la impresion
     this.finishedPanelCreator();
     this.finishedPanelCreatorReimpresionTicket();
+    
+    //crea el panel de la factura
+    this.facturaPanelCreator();
 	
     Aplicacion.Clientes.currentInstance = this;
 	
@@ -81,7 +84,7 @@ Aplicacion.Clientes.prototype.getConfig = function (){
 
 /* ********************************************************
 	Compras de los Clientes
-******************************************************** */
+ ******************************************************** */
 
 
 
@@ -125,7 +128,7 @@ Aplicacion.Clientes.prototype.listaDeComprasClienteLoad = function ( id_cliente 
             }
 
             //refresca la lista de compras
-            this.listaDeCompras.lista = compras.datos;
+            this.listaDeCompras.lista = compras.datos;            
 
             if(DEBUG){
                 console.log("cargando la nueva lista mejorada ajax : ", this.listaDeCompras.lista);
@@ -154,7 +157,7 @@ Aplicacion.Clientes.prototype.listaDeComprasClienteLoad = function ( id_cliente 
 
 /* ********************************************************
 	Lista de Clientes
-******************************************************** */
+ ******************************************************** */
 
 /**
  * Registra el model para listaDeClientes
@@ -303,7 +306,7 @@ Aplicacion.Clientes.prototype.listaDeClientesPanelCreator = function (){
 
 /* ********************************************************
 	Detalles de la venta
-******************************************************** */
+ ******************************************************** */
 /*
  * Guarda el panel donde estan los detalles de la venta
  **/
@@ -317,8 +320,7 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanel = null;
  * Es la funcion de entrada para mostrar los detalles del cliente
  **/
 Aplicacion.Clientes.prototype.detallesDeVentaPanelShow = function ( venta ){
-
-	
+        
     if( this.detallesDeVentaPanel ){
         this.detallesDeVentaPanelUpdater(venta);
     }else{
@@ -328,12 +330,18 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelShow = function ( venta ){
 	
     this.detallesDeVentaPanel.setCentered(true);
     this.detallesDeVentaPanel.show( Ext.anims.fade );
-
+    
+    if(Aplicacion.Clientes.currentInstance.listaDeCompras.compraActual.factura != null ){
+        Ext.getCmp('facturar-venta-button').hide();
+        Ext.getCmp('reimprimir-factura-button').show();
+    }else{
+        Ext.getCmp('facturar-venta-button').show();
+        Ext.getCmp('reimprimir-factura-button').hide();
+    }
 };
 
 
-
-
+//contiene el valor 
 
 
 Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
@@ -353,6 +361,16 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
         }
     }
 	
+    var factura = null;    
+    //le poenmos el texto al boton de la factura
+    //Aplicacion.Clientes.currentInstance.detallesDeVentaPanel.getComponent(0).items.items[4].getEl().dom.textContent = ""
+    
+    if(ventas[i].factura != null){
+        factura = true;
+    }else{
+        factura = false;
+    }
+        
 
     var html = "";
     html += "<table border = '0' align = 'center' style = 'font-weight:bold; font-size:13px; !important;'>";
@@ -367,21 +385,22 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
     html += "<td align = 'center'>Cantidad procesada</td>";
     html += "<td align = 'center'>Precio procesada</td>";
     
-    html += "<td>Subtotal</td>";
+    html += "<td>Importe</td>";
     html += "</tr>";
-	
+
+    var i ;
+
     for (i=0; i < detalleVenta.length; i++) {
 
-	
-        if( i == detalleVenta.length - 1 )
-            html += "<tr class='last' align = 'center'>";
-        else
-            html += "<tr align = 'center'>";
+
+        html += "<tr align = 'center'>";
 		
         if(DEBUG){
             console.log("El detalle de la venta consiste en : ", detalleVenta[i]);
         }
-		
+	
+        detalleVenta[i].descuento = detalleVenta[i].descuento != null?detalleVenta[i].descuento:0;
+
         html += "<td>" + detalleVenta[i].id_producto + "</td>";
         html += "<td>" + detalleVenta[i].descripcion + "</td>";
         html += "<td>" + (parseFloat(detalleVenta[i].cantidad) + parseFloat(detalleVenta[i].descuento)) + "</td>";
@@ -400,13 +419,69 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelUpdater = function ( venta )
 
         html += "<td>" + POS.currencyFormat ( subtotal ) + "</td>";
         html += "</tr>";
-    }
+    }       
+    
+    html += "<tr class='last' align = 'center'>";
+    
+    html += "<td>&nbsp;</td>";
+    html += "<td>&nbsp;</td>";
+    html += "<td>&nbsp;</td>";
+    html += "<td>&nbsp;</td>";
+    html += "<td>&nbsp;</td>";
+    html += "<td>&nbsp;</td>";
+    html += "<td>&nbsp;</td>";
+    html += "<td>&nbsp;</td>";
+    html += "<td>&nbsp;</td>";
+
+    html += "<tr class='last' align = 'center' >";
+    
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td><b>Subtotal : </b></td>";
+    html += "<td><b>" + POS.currencyFormat (Aplicacion.Clientes.currentInstance.listaDeCompras.compraActual.subtotal) + "</b></td>";
+    
+
+    html += "<tr class='last' align = 'center'>";
+    
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td><b>Descuento : </b></td>";
+    html += "<td align = 'right'><b>- " + Aplicacion.Clientes.currentInstance.listaDeCompras.compraActual.descuento + "%</b></td>";
+    
+
+    html += "<tr class='last' align = 'center'>";
+
+    
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td></td>";
+    html += "<td><b>Total : </b></td>";
+    html += "<td style = 'color:red;'><b>" + POS.currencyFormat (Aplicacion.Clientes.currentInstance.listaDeCompras.compraActual.total) + "</b></td>";
+    
+
 	
     html += "</table>";
 	
-    this.detallesDeVentaPanel.update( html );
+    this.detallesDeVentaPanel.update( html );            
     this.detallesDeVentaPanel.setWidth( 900 );
     this.detallesDeVentaPanel.setHeight( 400 );
+
+    return factura;
+        
 };
 
 Aplicacion.Clientes.prototype.detallesDeVentaPanelCreator = function ()
@@ -426,7 +501,7 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelCreator = function ()
 	    text: 'Devoluciones',
 	    ui: 'drastic'
 	},
-    */{
+         */{
         text: 'Imprimir Ticket',
         ui: 'normal',
         handler : function(){
@@ -437,6 +512,60 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelCreator = function ()
             Aplicacion.Clientes.currentInstance.detallesDeVentaPanel.hide( Ext.anims.fade );
             
             Aplicacion.Clientes.currentInstance.finishedPanelShowReimpresionTicket(Aplicacion.Clientes.currentInstance.listaDeCompras.compraActual );
+            
+        }
+    },{ 
+        xtype: 'spacer'
+    },{
+        text: 'Facturar Venta',
+        id : 'facturar-venta-button',
+        ui: 'forward',
+        handler : function(){
+            
+            if(DEBUG){
+                console.log("Facturando la venta : ", Aplicacion.Clientes.currentInstance.listaDeCompras.compraActual );
+            }
+            
+         
+            //se generara la factura por primera vez
+                
+            //PONER EL PANEL DE LA NUEVA FACTURA
+            sink.Main.ui.setActiveItem( Aplicacion.Clientes.currentInstance.FacturaPanel , 'fade');
+                
+            var compra = Aplicacion.Clientes.currentInstance.listaDeCompras.compraActual;
+                
+            Ext.getCmp('facturaPanel-id_venta').setValue(compra.id_venta);
+            Ext.getCmp('facturaPanel-fecha').setValue(compra.fecha);
+            Ext.getCmp('facturaPanel-cajero').setValue(compra.cajero);
+            Ext.getCmp('facturaPanel-razon_social').setValue(compra.razon_social);
+            Ext.getCmp('facturaPanel-tipo_venta').setValue(compra.tipo_venta);
+            Ext.getCmp('facturaPanel-total').setValue(POS.currencyFormat(compra.total));
+            Ext.getCmp('facturaPanel-pagado').setValue(POS.currencyFormat(compra.pagado));
+            Ext.getCmp('facturaPanel-sucursal').setValue(compra.sucursal);
+                
+            if(compra.pagado < compra.total){
+                Ext.get('action-facturar-venta').hide( Ext.anims.fade );
+            }else{
+                Ext.get('action-facturar-venta').show( Ext.anims.fade );
+            }
+                
+            
+            Aplicacion.Clientes.currentInstance.detallesDeVentaPanel.hide( Ext.anims.fade );
+            
+        }
+    },{
+        text: 'Reimprimir Factura',
+        id : 'reimprimir-factura-button',
+        ui: 'forward',
+        handler : function(){
+            
+            if(DEBUG){
+                console.log("Facturando la venta : ", Aplicacion.Clientes.currentInstance.listaDeCompras.compraActual );
+            }                        
+            
+            Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.setActiveItem(3)
+            
+            Aplicacion.Clientes.currentInstance.detallesDeVentaPanel.hide( Ext.anims.fade );
             
         }
     }];
@@ -469,16 +598,9 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelCreator = function ()
 };
 
 
-
-
-
-
-
-
-
 /* ********************************************************
 	Detalles del Cliente
-******************************************************** */
+ ******************************************************** */
 /*
  * Guarda el panel donde estan los detalles del cliente
  **/
@@ -561,6 +683,9 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelUpdater = function ( id_cli
 	
     //actualizar las compras del cliente
     Aplicacion.Clientes.currentInstance.comprasDeClientesPanelUpdater( id_cliente );
+    
+    //actualizar las facturas del cliente
+    Aplicacion.Clientes.currentInstance.facturasDeClientesPanelUpdater();
 	
 };
 
@@ -656,7 +781,68 @@ Aplicacion.Clientes.prototype.comprasDeClientesPanelUpdater = function ( id_clie
 
 
 
+/*
+ * Se llama para actualizar el contenido del panel de facturas de los clientes, que ya estan en una estructura local
+ **/
+Aplicacion.Clientes.prototype.facturasDeClientesPanelUpdater = function ( )
+{
 
+    //sacar todas las facturas
+    if(DEBUG){
+        console.log("leyendo la lista mejorada : ", this.listaDeCompras.lista);
+    }
+
+    //actualizar los detalles del cliente
+    var facturasPanel = Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(3);
+    
+    //buscar este cliente en la estructura
+    var lista = Aplicacion.Clientes.currentInstance.listaDeCompras.lista;
+	
+    var html = "";
+    html += "<table border=0 align = 'center'>";
+	
+    html += "<tr class='top' align = 'center'>";
+    html += "<td>ID Folio</td>";
+    html += "<td>ID Venta</td>";
+    html += "<td>Fecha Timbrado</td>";
+    html += "<td>Lugar de Emision</td>";
+    html += "<td>Facturo</td>";
+    html += "<td>Reimprimir</td>";
+    html += "</tr>";
+
+
+    for (var i = lista.length - 1; i >= 0; i--){
+		
+        if(lista[i].factura == null){
+            continue;
+        }
+		
+        for(var j = 0; j < lista[i].factura.length; j++){
+         
+                html += "<tr align = 'center'>";
+
+		
+            html += "<td>" + lista[i].factura[j].id_folio + "</td>";
+            html += "<td>" + lista[i].id_venta + "</td>";
+            html += "<td>" + POS.fecha(lista[i].factura[j].fecha_certificacion) + "</td>";
+            html += "<td>" + lista[i].factura[j].lugar_emision + "</td>";
+            html += "<td>" + lista[i].factura[j].usuario + "</td>";
+                        
+            
+            html += "<td><img src = '../media/icons/page_text_32.png' onClick = 'window.open(\"http://pos.caffeina.mx/www/proxy.php?action=1308&id_venta=" +lista[i].id_venta + "\")'></td>";
+            //html += "<td><img src = '../media/icons/page_text_32.png' onClick = 'window.open(\"http://localhost/pos/trunk/www/proxy.php?action=1308&id_venta=" +lista[i].id_venta + "\")'></td>";
+           	
+            html += "</tr>";
+        }
+
+    }
+	
+    html += "</table>";
+
+	
+    //actualizar las compras del cliente
+    facturasPanel.update(html);
+};
 
 
 
@@ -1010,8 +1196,8 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
 
 
 /**
-* Muestra el panel para ingresar la cantidad del abono
-*/
+ * Muestra el panel para ingresar la cantidad del abono
+ */
 
 Aplicacion.Clientes.prototype.abonarVentaBoton = function (  )
 {
@@ -1274,14 +1460,14 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 			
 
 		}}),	
-		*/
+         */
     new Ext.Button({
         id : 'Clientes-Estado-Cuenta',
         ui  : 'action',
         text: 'Imprimir Estado de Cuenta',
-         handler : function(){
-             window.open("http://pos.caffeina.mx/proxy.php?action=1307&id_cliente=" + Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0].getValues().id_cliente);
-         }
+        handler : function(){
+            window.open("http://pos.caffeina.mx/proxy.php?action=1307&id_cliente=" + Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0].getValues().id_cliente);
+        }
     }),
     new Ext.Button({
         id : 'Clientes-EditarDetalles',
@@ -1729,8 +1915,11 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
             items : abonar
         },{
             iconCls: 'favorites',
+            id:'detallesDeClientesPanel-facturas',
             title: 'Facturas',
-            items : abonar
+            scroll:'vertical',
+            cls:"Tabla",
+            html : 'Lista de Facturas'
         }],
         tabBar: {
             dock: 'bottom',
@@ -1763,7 +1952,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 
 /* ********************************************************
 	Nuevo Cliente
-******************************************************** */
+ ******************************************************** */
 
 
 /*
@@ -2188,8 +2377,8 @@ Aplicacion.Clientes.prototype.crearClienteValidator = function ()
 
 
 /* ***************************************************************************
-   * Panel de impresion de ticket de recepcion de producto
-   *************************************************************************** */
+ * Panel de impresion de ticket de recepcion de producto
+ *************************************************************************** */
 
 Aplicacion.Clientes.prototype.finishedPanel = null;
 
@@ -2285,7 +2474,7 @@ Aplicacion.Clientes.prototype.finishedPanelUpdater = function( data_abono )
 
 /* ********************************************************
 	Panel de reimpresion de ticket
-******************************************************** */
+ ******************************************************** */
 Aplicacion.Clientes.prototype.finishedPanelReimpresionTicket = null;
 
 Aplicacion.Clientes.prototype.finishedPanelShowReimpresionTicket = function( venta )
@@ -2428,8 +2617,224 @@ Aplicacion.Clientes.prototype.finishedPanelCreatorReimpresionTicket = function()
 };
 
 
+/*********************************************************
+ *           FACTURACION
+ ***********************************************************/
+
+/**
+ * Contiene el panel donde se seelccionan las opciones para la facturacion
+ */
+Aplicacion.Clientes.prototype.FacturaPanel = null;
+
+
+/**
+ * Valida que todos los campos del formulario de nueva factura este llenados correctamente
+ **/
+Aplicacion.Clientes.prototype.facturaValidator = function (){
+    
+    //valida el total
+    
+    //
+    
+};
+
+/**
+ * Pone un panel en listaDeClientesPanel
+ */
+Aplicacion.Clientes.prototype.facturaPanelCreator = function (){
+
+    var dockedItems = [new Ext.Toolbar({
+        ui: 'dark',
+        dock: 'bottom',
+        items: [
+        { 
+            xtype: 'spacer'
+        },{
+            text: 'Facturar Venta',
+            id:'action-facturar-venta',            
+            ui: 'forward',
+            handler : function(){
+            
+                if(DEBUG){
+                    console.log("Facturando la venta : ", Aplicacion.Clientes.currentInstance.listaDeCompras.compraActual );
+                }
+            
+                Aplicacion.Clientes.currentInstance.facturaValidator();                            
+            
+            }
+        }
+        ]
+    })];
+
+    this.FacturaPanel =  new Ext.form.FormPanel({
+        scroll:'vertical',
+        items: [            
+        {
+            xtype: 'fieldset',
+            title:'Facturación',
+            instructions: 'Llene correctamente todos los campos.',
+            defaults : {
+                disabled : false
+            },
+            items: [
+            new Ext.form.Text({
+                name: 'facturaPanel-id_venta',
+                id: 'facturaPanel-id_venta',
+                label: 'Venta',
+                value:''
+            }),
+            new Ext.form.Text({
+                name: 'facturaPanel-fecha',
+                id: 'facturaPanel-fecha',
+                label: 'Feha de Venta',
+                value:''
+            }),
+            new Ext.form.Text({
+                name: 'facturaPanel-sucursal',
+                id: 'facturaPanel-sucursal',
+                label: 'Sucursal',
+                value:''
+            }),            
+            new Ext.form.Text({
+                name: 'facturaPanel-razon_social',
+                id: 'facturaPanel-razon_social',
+                label: 'Cliente',
+                value:''
+            }),
+            new Ext.form.Text({
+                name: 'facturaPanel-cajero',
+                id: 'facturaPanel-cajero',
+                label: 'Cajero',
+                value:''
+            }),
+            new Ext.form.Text({
+                name: 'facturaPanel-tipo_venta',
+                id: 'facturaPanel-tipo_venta',
+                label: 'Tipo de Venta',
+                value:''
+            }),
+            new Ext.form.Text({
+                name: 'facturaPanel-total',
+                id: 'facturaPanel-total',
+                label: 'Total de la Compra',
+                value:''
+            }),
+            new Ext.form.Text({
+                name: 'facturaPanel-pagado', 
+                id: 'facturaPanel-pagado', 
+                label:'Total Pagado',
+                value:''
+            }),                
+            new Ext.form.Select({
+                name: 'facturaPanel-concepto', 
+                id: 'facturaPanel-concepto', 
+                label:'Concepto',
+                options: [
+                    {
+                    text: 'Varios Verduras', 
+                    value: 'Varios Verduras'
+                },
+                {
+                    text: 'Varios Verduras', 
+                    value: 'Varios Verduras'
+                },
+
+                {
+                    text: 'Otro',  
+                    value: 'otro'
+                }
+                ],
+                listeners : {
+                    "change" : function (){
+                        //this.value
+                        if(this.value == 'otro'){
+                            Ext.getCmp("facturaPanel-otro_concepto").show( Ext.anims.slide );
+                        }else{
+                            Ext.getCmp("facturaPanel-otro_concepto").hide( Ext.anims.slide );
+                        }
+                    }
+                }
+            }),        
+            new Ext.form.Text({
+                name: 'facturaPanel-otro_concepto',
+                id: 'facturaPanel-otro_concepto',
+                label: 'Descripcion del Concepto',
+                required: false,
+                hidden:true,
+                listeners : {
+                    'focus' : function (){
+                        kconf = {
+                            type : 'alfanum',
+                            submitText : 'Aceptar'
+                        };
+                        POS.Keyboard.Keyboard( this, kconf );
+                    }
+                }
+            }),
+            new Ext.form.Select({
+                name: 'facturaPanel-unidad',     
+                id: 'facturaPanel-unidad',
+                label:'Unidad',
+                options: [
+                {
+                    text: 'Unidad',  
+                    value: 'unidad'
+                }
+                ]
+            })
+            ]
+        }
+        ],
+        dockedItems:dockedItems
+    });
+};
 
 
 
+
+Aplicacion.Clientes.prototype.factura = function(){
+    
+    Ext.getBody().mask('Creando Factura ...', 'x-mask-loading', true);
+    
+    /**
+     * factura_generica = {
+                id_producto:'GEN01',
+                descripcion:jQuery("#factura-concepto").val(),
+                unidad:'unidad'                    
+            };
+     */
+
+    Ext.Ajax.request({
+        url: '../proxy.php',
+        scope : this,
+        params : {
+            action : 1200,
+            factura_generica : factura_generica,
+            id_venta : id_venta
+        },
+        success: function(response, opts) {
+
+            try{
+                r = Ext.util.JSON.decode( response.responseText );
+            }catch(e){
+                POS.error(e);
+            }
+			
+
+            Ext.getBody().unmask();
+						
+            if( !r.success ){
+                
+                return;
+            }
+
+            
+
+        }
+    });                            
+    
+};
+
+    
 
 POS.Apps.push( new Aplicacion.Clientes() );
