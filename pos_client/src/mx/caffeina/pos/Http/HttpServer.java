@@ -14,9 +14,15 @@ public class HttpServer
 
 	
     ServerSocket m_ServerSocket; 
+	private boolean needToShutDown = false;
 	
 	public HttpServer()  {
 		 new HttpServer( 8080 );
+	}
+	
+	public void shutDown( ){
+		System.out.println("Trying to shut-down webserver.");
+		needToShutDown = true;
 	}
 	
     public HttpServer(int port)  
@@ -35,7 +41,7 @@ public class HttpServer
 		
         // Successfully created Server Socket. Now wait for connections. 
         int id = 0; 
-        while(true) 
+        while(!needToShutDown) 
         {                         
             try 
             { 
@@ -63,6 +69,9 @@ public class HttpServer
 
             } 
         } 
+
+		
+
     }
 
 	
@@ -75,6 +84,7 @@ public class HttpServer
 		
         ClientServiceThread(Socket s, int clientID) 
         { 
+	
 			System.out.println( "********************************" );
 			System.out.println( "   Connection recieved ! 		" );
 			System.out.println( "********************************" );
@@ -96,20 +106,21 @@ public class HttpServer
             // Print out details of this connection 
             System.out.println("Accepted Client : ID - " + m_clientID + " : Address - " +  m_clientSocket.getInetAddress()); 
 			
-            try 
-            {                                 
-                in = new BufferedReader(new InputStreamReader(m_clientSocket.getInputStream())); 
-                out = new PrintWriter(new OutputStreamWriter(m_clientSocket.getOutputStream())); 
-				
-                // At this point, we can read for input 
-                // and reply with appropriate output. 
-				
-				// Retrive response
+            try{ 
+	
+				in = new BufferedReader(new InputStreamReader(m_clientSocket.getInputStream())); 
+				out = new PrintWriter(new OutputStreamWriter(m_clientSocket.getOutputStream())); 
+
+				// At this point, we can read for input 
+				// and reply with appropriate output. 
+
+				// Retrive headers from request
 				String r ;
+				
 				while( ( r = in.readLine() ).length() > 0) 
-                {                     
+				{                     
 					System.out.println( r );
-                } 
+				} 
 
 
 				//send the response
@@ -124,10 +135,11 @@ public class HttpServer
 				out.println("Content-Length: " + response.length());
 				out.println("Connection: close");
 				out.println("Content-Type: text/javascript; charset=UTF-8\n\n");
+
+				//write and flush the response
 				out.println(response);
-				 
-				//flush output
-				 out.flush();
+				out.flush();
+			
 				
             }catch(Exception e){ 
                 e.printStackTrace(); 

@@ -162,9 +162,7 @@ POS.leyendasTicket = null;
 //extrae informacion acerca de las leyendas de los tickets
 POS.loadLeyendasTicket = function(){
 	
-	
-	
-	
+
 	/** **** Cross-broswer call **** **/
     Ext.util.JSONP.request({
         url: 'http://127.0.0.1:8080/',

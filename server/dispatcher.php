@@ -51,7 +51,10 @@ if( ! (
 	|| $_REQUEST['action']  == "2099"
 	
 	//login de clientes
-	|| $_REQUEST['action']  == "2009" 
+	|| $_REQUEST['action']  == "2009"
+	
+	//client application handlers
+	|| $_REQUEST['action']  == "1400"
 ) )
 {
 	
@@ -67,48 +70,12 @@ if( ! (
     
 }
 
-
-//solo dejar pasar algunos para el cliente
-// 
-/*
-if( ! (
-	//revisar estado de sesion en sucursal
-	$_REQUEST['action']  == "2001" 
-	
-	//logout
-	|| $_REQUEST['action']  == "2002" 
-	
-	//Login de sucursal
-	|| $_REQUEST['action']  == "2004" 
-	
-	//login de admin o ingeniero
-	|| $_REQUEST['action']  == "2099"
-	
-	//login de clientes
-	|| $_REQUEST['action']  == "2009" 
-) )
-{
-	
-	if(!checkCurrentSession()){
-		Logger::log("Sesion invalida ! Cerrando la sesion y forzando reboot.");
-		
-		//cerrar esta sesion
-		logOut(false);
-		
-		//morir con un js que diga que hay que salir
-		die( '{"success": false , "reason": "Accesso denegado" , "reboot" : true }' );
-	}
-    
-}*/
+//@todo filtrar ciertas cosas solo para el cliente
 
 
-/*
-foreach( $_REQUEST as $r ){
-	$args = stripslashes( $r ) ....
-}
-*/
-
+//@todo clean the request parameters
 $args = $_REQUEST;
+
 unset($_POST);
 unset($_GET);
 
@@ -172,6 +139,10 @@ switch( ((int)($args['action'] / 100))*100 )
 
     case 1300:
 	    require_once('controller/printer.controller.php');
+	break;
+	
+	case 1400:
+	    require_once('controller/client.controller.php');
 	break;
 	
 	case 2000:

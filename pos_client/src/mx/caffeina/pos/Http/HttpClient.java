@@ -77,11 +77,13 @@ public class HttpClient
 	* 
 	**/
 	private static String doRequest(  ){
-		BufferedReader in = null; 
-        PrintWriter out = null; 
-		String response = "";
-        try 
-        { 
+		
+		
+		BufferedReader 	in 			= null; 
+        PrintWriter 	out 		= null; 
+		String 			response 	= "";
+		
+        try{ 
             // Create the streams to send and receive information 
             in = new BufferedReader(new InputStreamReader(s.getInputStream())); 
             out = new PrintWriter(new OutputStreamWriter(s.getOutputStream())); 
@@ -95,42 +97,52 @@ public class HttpClient
 			// receive the reply. 
 			String r ;
 			boolean headerEnded = false;
+			int contentLength = 0;
 			
 			while( (r = in.readLine() ) != null ){
-				
-				if( r.length() == 0 )
+
+				if(headerEnded){
+
+					while(--contentLength >= 0){
+						response += (char)in.read();
+					}
+					
+					break;
+				}
+					
+
+				if(r.startsWith("Content-Length")){
+					contentLength = Integer.parseInt((r.split(":")[1]).trim());
+
+				}
+
+				if(r.startsWith("Content-Type")){
 					headerEnded = true;
-
-				
-				if(headerEnded)
-					response += r +"\n";
-
+				}
 			}
 
 
 
-        } 
-        catch(IOException ioe) 
-        { 
+        }catch(IOException ioe){ 
             System.out.println("Exception during communication. Server probably closed connection."); 
-        } 
-        finally 
-        { 
-            try 
-            { 
+
+        }finally{ 
+			System.out.println( "Closing buffers...");
+			
+            try{ 
                 // Close the streams 
                 out.close(); 
                 in.close(); 
 
                 // Close the socket before quitting 
-                s.close(); 
-            } 
-            catch(Exception e) 
-            { 
+                s.close();
+
+            }catch(Exception e){ 
                 e.printStackTrace(); 
+
             }                 
         }
-	
+
 		return response;
 	}
 	
