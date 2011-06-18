@@ -157,8 +157,28 @@ POS.fecha = function( f ){
 //contiene informacion acerca de las leyendas de los tickets
 POS.leyendasTicket = null;
 
+
+
 //extrae informacion acerca de las leyendas de los tickets
 POS.loadLeyendasTicket = function(){
+	
+	
+	
+	
+	/** **** Cross-broswer call **** **/
+    Ext.util.JSONP.request({
+        url: 'http://127.0.0.1:8080/',
+        callbackKey: "callback",
+        params: {
+            unique: Math.random()
+        },
+        callback: function(data)
+        {
+			console.log( data );
+        }
+    });
+	/** **** Cross-broswer call **** **/
+
 
     if(DEBUG){
         console.log("Obteniendo informaci\ufffdn de la sucursal ....");

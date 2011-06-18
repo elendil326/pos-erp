@@ -4,6 +4,7 @@
 	require_once( "../../server/bootstrap.php" );
 
 	Logger::log(">> sucursal/sucursal.php <<");
+	
 ?><!doctype html>
 <html>
 <head>
