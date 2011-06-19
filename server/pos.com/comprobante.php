@@ -409,7 +409,7 @@ class Comprobante {
     /**
      * Indica si esta en modo produccion
      */
-    private $productionMode = true;
+    private $productionMode = false;
 
     /**
      * Establece informacion acerca de si el api esta en modo produccion
@@ -455,8 +455,7 @@ class Comprobante {
      */
     private function getXmlHardCode() {
         return '<?xml version="1.0" encoding="utf-8"?><cfdi:Comprobante xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" serie="A" folio="1" fecha="2011-04-03T22:55:56" sello="sellodepruebasinvalor" formaDePago="Pago en una sola exhibicion" noCertificado="00000000000000000001" certificado="certificadodepruebasinvalor" subTotal="1.00" TipoCambio="1.0" Moneda="MXN" total="1.00" tipoDeComprobante="ingreso" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv3.xsd" xmlns:cfdi="http://www.sat.gob.mx/cfd/3"><cfdi:Emisor rfc="GAGA771212GA1" nombre="GARCIA GRANADOS ARMANDO"><cfdi:DomicilioFiscal calle="FICTICIA" noExterior="101" noInterior="200 B" colonia="IMAGINARIA" municipio="TEST TOWN" estado="STATE" pais="COUNTRY" codigoPostal="01234" /></cfdi:Emisor><cfdi:Receptor rfc="PORT" nombre="PORTILLO RAMIREZ TOMAS"><cfdi:Domicilio calle="AV IMAGINARIA" noExterior="123" noInterior="LOCAL C" colonia="BIG VILLE" municipio="CITY" estado="STATE" pais="COUNTRY" codigoPostal="01234" /></cfdi:Receptor><cfdi:Conceptos><cfdi:Concepto cantidad="1" descripcion="ALGUNAS COSAS SIN IMPROTANCIA" valorUnitario="1.00" importe="1.0" /></cfdi:Conceptos><cfdi:Impuestos totalImpuestosTrasladados="0.00"><cfdi:Traslados><cfdi:Traslado impuesto="IVA" tasa="0.00" importe="0.00" /></cfdi:Traslados></cfdi:Impuestos><cfdi:Complemento><tfd:TimbreFiscalDigital version="1.0" UUID="A0B1C2D3-E4F5-G6H7-I8J9-0A1B2C3D4E5F" FechaTimbrado="2011-04-03T22:50:40" selloCFD="SELLODELCFD" noCertificadoSAT="00000000000000000002" selloSAT="SELLODELSAT" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/TimbreFiscalDigital/TimbreFiscalDigital.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" /></cfdi:Complemento></cfdi:Comprobante>';
-        /*return '<?xml version="1.0" encoding="utf-8"?><cfdi:Comprobante xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" serie="A" folio="1" fecha="2011-04-03T22:55:56" sello="sellodepruebasinvalor" formaDePago="Pago en una sola exhibicion" noCertificado="00000000000000000001" certificado="certificadodepruebasinvalor" subTotal="1.00" TipoCambio="1.0" Moneda="MXN" total="1.00" tipoDeComprobante="ingreso" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv3.xsd" xmlns:cfdi="http://www.sat.gob.mx/cfd/3"><cfdi:Emisor rfc="GAGA771212GA1" nombre="GARCIA GRANADOS ARMANDO"><cfdi:DomicilioFiscal calle="FICTICIA" noExterior="101" noInterior="200 B" colonia="IMAGINARIA" municipio="TEST TOWN" estado="STATE" pais="COUNTRY" codigoPostal="01234" /></cfdi:Emisor><cfdi:Receptor rfc="PORT" nombre="PORTILLO RAMIREZ TOMAS"><cfdi:Domicilio calle="AV IMAGINARIA" noExterior="123" noInterior="LOCAL C" colonia="BIG VILLE" municipio="CITY" estado="STATE" pais="COUNTRY codigoPostal="01234" /></cfdi:Receptor><cfdi:Conceptos><cfdi:Concepto cantidad="1" descripcion="ALGUNAS COSAS SIN IMPROTANCIA" valorUnitario="1.00" importe="1.0" /></cfdi:Conceptos><cfdi:Impuestos totalImpuestosTrasladados="0.00"><cfdi:Traslados><cfdi:Traslado impuesto="IVA" tasa="0.00" importe="0.00" /></cfdi:Traslados></cfdi:Impuestos><cfdi:Complemento><tfd:TimbreFiscalDigital version="1.0" UUID="A0B1C2D3-E4F5-G6H7-I8J9-0A1B2C3D4E5F" FechaTimbrado="2011-04-03T22:50:40" selloCFD="SELLODELCFD" noCertificadoSAT="00000000000000000002" selloSAT="SELLODELSAT" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/TimbreFiscalDigital/TimbreFiscalDigital.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" /></cfdi:Complemento></cfdi:Comprobante>';*/
-        
+        /* return '<?xml version="1.0" encoding="utf-8"?><cfdi:Comprobante xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" serie="A" folio="1" fecha="2011-04-03T22:55:56" sello="sellodepruebasinvalor" formaDePago="Pago en una sola exhibicion" noCertificado="00000000000000000001" certificado="certificadodepruebasinvalor" subTotal="1.00" TipoCambio="1.0" Moneda="MXN" total="1.00" tipoDeComprobante="ingreso" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv3.xsd" xmlns:cfdi="http://www.sat.gob.mx/cfd/3"><cfdi:Emisor rfc="GAGA771212GA1" nombre="GARCIA GRANADOS ARMANDO"><cfdi:DomicilioFiscal calle="FICTICIA" noExterior="101" noInterior="200 B" colonia="IMAGINARIA" municipio="TEST TOWN" estado="STATE" pais="COUNTRY" codigoPostal="01234" /></cfdi:Emisor><cfdi:Receptor rfc="PORT" nombre="PORTILLO RAMIREZ TOMAS"><cfdi:Domicilio calle="AV IMAGINARIA" noExterior="123" noInterior="LOCAL C" colonia="BIG VILLE" municipio="CITY" estado="STATE" pais="COUNTRY codigoPostal="01234" /></cfdi:Receptor><cfdi:Conceptos><cfdi:Concepto cantidad="1" descripcion="ALGUNAS COSAS SIN IMPROTANCIA" valorUnitario="1.00" importe="1.0" /></cfdi:Conceptos><cfdi:Impuestos totalImpuestosTrasladados="0.00"><cfdi:Traslados><cfdi:Traslado impuesto="IVA" tasa="0.00" importe="0.00" /></cfdi:Traslados></cfdi:Impuestos><cfdi:Complemento><tfd:TimbreFiscalDigital version="1.0" UUID="A0B1C2D3-E4F5-G6H7-I8J9-0A1B2C3D4E5F" FechaTimbrado="2011-04-03T22:50:40" selloCFD="SELLODELCFD" noCertificadoSAT="00000000000000000002" selloSAT="SELLODELSAT" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/TimbreFiscalDigital/TimbreFiscalDigital.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" /></cfdi:Complemento></cfdi:Comprobante>'; */
     }
 
     /**
@@ -467,11 +466,9 @@ class Comprobante {
      * @return Comprobante
      */
     public function __construct() {
-        
+
         //$this->setProductionMode( gethostbyname($_SERVER['REMOTE_ADDR']) == "127.0.0.1" ? false : true );
-        
         //$this->setProductionMode( $_SERVER['HTTP_HOST'] == "pos.caffeina.mx" ? true : false );
-        
     }
 
     /**
@@ -516,11 +513,11 @@ class Comprobante {
         }
 
         $this->success = new Success($this->getError());
-        
+
         if (!$this->success->getSuccess()) {
             Logger::log("Error : el webservice respondio a la solicitud de la factura : {$this->getXMLresponse()}");
         }
-        
+
         return $this->success;
     }
 
@@ -817,7 +814,6 @@ class Comprobante {
             $concepto->appendChild($xml->createElement('importe', sprintf("%01.2f", $articulo->getImporte())));
 
             $conceptos->appendChild($concepto);
-            
         }
 
 
@@ -851,45 +847,30 @@ class Comprobante {
     private function getFacturaFromWebService() {
 
         $ready_to_send = null;
-        
+
         //creamos una instancia de un objeto SoapClient
 
         if ($this->getProductionMode()) {
-
-            $client = new SoapClient($this->getUrlWS());
-            //realiza la peticion al webservice
 
             $ready_to_send = $this->getXMLrequest();
             $ready_to_send = str_replace("&lt;", "<", $ready_to_send);
             $ready_to_send = str_replace("&gt;", ">", $ready_to_send);
 
-            $result = $client->RececpcionComprobante(array('comprobante' => $ready_to_send));
 
-            //verificamos si la llamada fallo
-
-            if (is_soap_fault($result)) {
-                trigger_error("La llamada al webservice ha fallado", E_USER_ERROR);
-            }
-
-            //analizamos el success del xml
-
-            libxml_use_internal_errors(true);
-
-            if (!$result) {
-                $e = "Error cargando XML\n";
-                foreach (libxml_get_errors() as $error) {
-                    $e.= "\t" . $error->message;
-                }
-
-                Logger::log("Error al leer xml del web service : {$e} ");
-                die('{"success": false, "reason": "Error al leer xml del web service : ' . preg_quote($e) . '" }');
+            try {
+                $client = new SoapClient($this->getUrlWS());
+                $result = $client->RececpcionComprobante(array('comprobante' => $ready_to_send));
+            } catch (SoapFault $fault) {
+                Logger::log("\n********** Informe de Error en la llamada SOAP **********\n Se envio al como parametro al WebService : \n {$ready_to_send}\n Codigo de Error : '\n{$fault->faultcode}\nMensaje de Error : \n{$fault->faultstring}\nDetalles : \n{$fault->detail}\n");
+                $this->success = new Success("El servicio web que genera las facturas esta experimentando algunos problemas, intente nuevamente.");
+                return $this->success;
             }
 
             $response = $result->RececpcionComprobanteResult;
         } else {
             $response = $this->getXmlHardCode();
             $ready_to_send = "Esta es solo una prueba de generacion de CFDI.";
-        }        
+        }
 
         //DEBUG
         if ($this->getDebugMode()) {
@@ -920,19 +901,18 @@ class Comprobante {
         }
 
         //$response = str_replace(array("cfdi:", "tfd:"), array("", ""), $response);
-
         //-------------------ELIMINAMOS EL NODO-------------------
 
         $response_en_bruto = $response;
-        
+
         $response = str_replace(array("cfdi:Comprobante", "cfdi:Emisor", "cfdi:Receptor", "cfdi:Conceptos", "cfdi:Concepto", "cfdi:Impuestos", "cfdi:Complemento", "cfdi:Traslados", "cfdi:Traslado", "tfd:TimbreFiscalDigital"), array("Comprobante", "Emisor", "Receptor", "Conceptos", "Concepto", "Impuestos", "Complemento", "Traslados", "Traslado", "TimbreFiscalDigital"), $response);
 
-        libxml_use_internal_errors(true); 
-        
-        try{
+        libxml_use_internal_errors(true);
+
+        try {
             $dom = new SimpleXMLElement($response);
-        }catch(Exception $e){
-             Logger::log("****************************** ERROR CON EL WEBSERVICE ******************************\n\n El POS envio al webservice : \n\n{$ready_to_send} \n\n  La respuesta en bruto del webservice fue : \n\n{$response_en_bruto}  \n\n  Despues del tratamiento de la respuesta obtenemos : \n\n{$response}\n\n La estructura del XML de respuesta del webservice esta mal formada, error :\n\n {$e} \n\n");
+        } catch (Exception $e) {
+            Logger::log("****************************** ERROR DE RESPUESTA CON EL WEBSERVICE ******************************\n\n El POS envio al webservice : \n\n{$ready_to_send} \n\n  La respuesta en bruto del webservice fue : \n\n{$response_en_bruto}  \n\n  Despues del tratamiento de la respuesta obtenemos : \n\n{$response}\n\n La estructura del XML de respuesta del webservice esta mal formada, error :\n\n {$e} \n\n");
             $this->success = new Success("El servicio web que genera las facturas esta experimentando algunos problemas, intente nuevamente.");
             return $this->success;
         }
@@ -940,22 +920,20 @@ class Comprobante {
         unset($dom->Complemento['success']);
 
         unset($dom->Complemento->cadenas);
-
+        
         $response = $dom->saveXML();
 
         //TODO : Verificar si se puede explorar el xml ya reconstruido para almacenar de ahi los datos en la BD
         //
         //almacenamos el xml reconstruido
-        
+
         $response_r = str_replace(array("/Comprobante", "<Comprobante", "Emisor", "Receptor", "Conceptos", "Concepto", "Impuestos", "Complemento", "Traslados", "Traslado", "<TimbreFiscalDigital"), array("/cfdi:Comprobante", "<cfdi:Comprobante", "cfdi:Emisor", "cfdi:Receptor", "cfdi:Conceptos", "cfdi:Concepto", "cfdi:Impuestos", "cfdi:Complemento", "cfdi:Traslados", "cfdi:Traslado", "<tfd:TimbreFiscalDigital"), $response);
-        $response_r = str_replace(array("cfdi:cfdi:"), array("cfdi:"), $response_r);    
+        $response_r = str_replace(array("cfdi:cfdi:"), array("cfdi:"), $response_r);
         $response_r = preg_replace('/\s+(<.*?>)\s+|[\r\n]/is', '$1', $response_r);
-        
+
         $this->setXMLresponse($response_r);
-        
+
         //creamos el archivo
-        
-        
         //DEBUG
         if ($this->getDebugMode()) {
 
