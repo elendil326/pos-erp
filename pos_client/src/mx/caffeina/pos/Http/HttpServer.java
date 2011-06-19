@@ -3,6 +3,8 @@ package mx.caffeina.pos.Http;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import mx.caffeina.pos.Dispatcher;
+
 
 /**
   * 
@@ -85,9 +87,7 @@ public class HttpServer
         ClientServiceThread(Socket s, int clientID) 
         { 
 	
-			System.out.println( "********************************" );
-			System.out.println( "   Connection recieved ! 		" );
-			System.out.println( "********************************" );
+			System.out.println( "Connection recieved !" );
 						
             m_clientSocket = s;
             m_clientID = clientID; 
@@ -104,7 +104,7 @@ public class HttpServer
             PrintWriter out = null; 
 			
             // Print out details of this connection 
-            System.out.println("Accepted Client : ID - " + m_clientID + " : Address - " +  m_clientSocket.getInetAddress()); 
+            //System.out.println("Accepted Client : ID - " + m_clientID + " : Address - " +  m_clientSocket.getInetAddress()); 
 			
             try{ 
 	
@@ -116,26 +116,35 @@ public class HttpServer
 
 				// Retrive headers from request
 				String r ;
+				String Get_Request = null;
 				
-				while( ( r = in.readLine() ).length() > 0) 
+				while
+				( 
+					(( r = in.readLine() ) != null)
+					&& r.length() > 0
+				) 
 				{                     
-					System.out.println( r );
+					if(r.startsWith("GET")){
+						Get_Request = r.substring(6, r.indexOf(" HTTP/1.1"));
+					}
 				} 
 
 
 				//send the response
-				String response = "Ext.util.JSONP.callback({\"results\":3});";
-
+				String response = Dispatcher.dispatch( Get_Request ); 
+				
+			
 				//send the headers
 				out.println("HTTP/1.1 200 OK");
 				out.println("Date: Mon, 23 May 2005 22:38:34 GMT");
 				out.println("Server: POSWebServer/0.0.1");
-				out.println("Last-Modified: Wed, 08 Jan 2003 23:11:55 GMT");
+				//out.println("Last-Modified: Wed, 08 Jan 2003 23:11:55 GMT");
 				out.println("Accept-Ranges: bytes");
 				out.println("Content-Length: " + response.length());
 				out.println("Connection: close");
-				out.println("Content-Type: text/javascript; charset=UTF-8\n\n");
-
+				out.println("Content-Type: text/javascript; charset=UTF-8");
+				out.println("");
+				
 				//write and flush the response
 				out.println(response);
 				out.flush();

@@ -2,7 +2,8 @@ package mx.caffeina.pos;
 
 
 import mx.caffeina.pos.Http.*;
-
+import mx.caffeina.pos.Dispatcher;
+import java.awt.TrayIcon;
 
 public class PosClient{
 	
@@ -23,6 +24,8 @@ public class PosClient{
 		System.out.println("Iniciando cliente de POS");
 		
 		Runtime.getRuntime().addShutdownHook(new ShutDown());
+
+        PosSystemTray trayIcon = new PosSystemTray();
 		
 		System.out.println("Enviando saludo a pos.caffeina.mx !");
 		
@@ -31,14 +34,24 @@ public class PosClient{
 		if(PRODUCTION)
 			response = HttpClient.Request("http://pos.caffeina.mx:80/trunk/www/proxy.php?i=1&action=1400");
 		else
-			response = HttpClient.Request("http://127.0.0.1:80/trunk/www/proxy.php?i=1&action=1400");
+			response = HttpClient.Request("http://192.168.1.66:80/trunk/www/proxy.php?i=1&action=1400");
 
-		System.out.println( response);
-
+		//System.out.println( response );
 		
 		//iniciar el servidor web
 		httpServer = new HttpServer(8080);
+
 	}
+
+
+	public static void sendLogToServer( String msg ){
+		if(PRODUCTION)
+			HttpClient.Request("http://pos.caffeina.mx:80/trunk/www/proxy.php?i=1&action=1401&msg=" + msg );
+		else
+			HttpClient.Request("http://192.168.1.66:80/trunk/www/proxy.php?i=1&action=1401&msg=" + msg );
+	}
+
+
 
 
 
@@ -48,18 +61,22 @@ public class PosClient{
 	
 			try{
 				//@todo this shit dont work
-				PosClient.httpServer.shutDown();				
+				PosClient.sendLogToServer( "Apagando cliente" );
+				PosClient.httpServer.shutDown();
+				
 			}catch(Exception e){
-				//System.out.println(e);
+				System.out.println(e);
 			}
 
 			
             System.out.println("Shutting down...");
 
-			//perform 
-			
         }
     }
 
 
 }//PosClient
+
+
+
+

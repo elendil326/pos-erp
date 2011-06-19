@@ -101,6 +101,8 @@ public class HttpClient
 			
 			while( (r = in.readLine() ) != null ){
 
+
+
 				if(headerEnded){
 
 					while(--contentLength >= 0){
@@ -118,6 +120,10 @@ public class HttpClient
 
 				if(r.startsWith("Content-Type")){
 					headerEnded = true;
+				}
+				
+				if(r.startsWith("Set-Cookie")){
+					//save the cookie somewhere
 				}
 			}
 

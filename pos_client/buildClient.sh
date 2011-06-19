@@ -10,16 +10,16 @@ rm file.list
 cd bin
 
 #create manifest file
-echo "Main-Class: mx.caffeina.pos.PosClient" > ../manifest
+echo "Main-Class: mx.caffeina.pos.PosClient
+Class-Path: lib/json-simple-1.1.jar" > ../manifest
 
-jar cfm ../PosClient.jar ../manifest mx
+jar cfm ../PosClient.jar ../manifest mx ../media
 
 
 rm ../manifest
 
-#run main biatch
-#java -cp .:lib/json-simple-1.1.jar 
 
 cd ..
 
+#run main biatch
 java -jar PosClient.jar 
