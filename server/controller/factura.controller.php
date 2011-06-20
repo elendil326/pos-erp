@@ -20,7 +20,7 @@ require_once("logger.php");
  */
 function verificarDatosVenta($id_venta = null) {
 
-    Logger::log("Iniciando proceso de validacion de datos para realizar factura electronica");
+    Logger::log("Iniciando proceso de validacion de datos de al venta..");
 
     //verificamos que el parametro de la venta este definido
     if (!isset($id_venta)) {
@@ -144,7 +144,7 @@ function verificarDatosVenta($id_venta = null) {
         die('{"success": false, "reason": "Actualice la informacion del cliente : Indique el codigo postal." }');
     }
 
-    Logger::log("Terminado proceso de validacion de datos para realizar factura electronica");
+    Logger::log("Terminado proceso de validacion de datos de la venta");
 
     return $cliente;
 }
@@ -157,8 +157,12 @@ function verificarDatosVenta($id_venta = null) {
  */
 function generaFactura($id_venta, $factura_generica = null) {
 
+    Logger::log("Entrando a la funcion generaFactura");
+    
     if (isset($factura_generica)) {
 
+        Logger::log("Se detecto que se solicito un CFDI generico, los datos son los siguientes :");
+        
         $factura_generica = json_decode($factura_generica);
 
         if (!isset($factura_generica->id_producto)) {
@@ -185,6 +189,8 @@ function generaFactura($id_venta, $factura_generica = null) {
           Logger::log("Error : No se definio el valor del producto en la factura generia");
           die('{"success": false, "reason": "Error : No se definio el valor del producto"}');
           } */
+        
+        Logger::log("ID : {$factura_generica->id_producto}, DESCRIPCION : {$factura_generica->descripcion}, UNIDAD : {$factura_generica->unidad} ");
     }
 
     Logger::log("Iniciando proceso de facturacion");
@@ -209,12 +215,13 @@ function generaFactura($id_venta, $factura_generica = null) {
 
     DAO::transBegin();
 
+    Logger::log("Iniciando creacion de objeto comprobante..");
     $comprobante = new Comprobante();
 
+    Logger::log("Asignando los datos del objeto generales al comprobante");
     $comprobante->setGenerales($data->generales); //1
 
-
-
+    Logger::log("Asignando los datos los conceptos al comprobante");
     $comprobante->setConceptos(getConceptos($id_venta, $factura_generica)); //2
 
     $comprobante->setEmisor(getEmisor()); //3
@@ -311,6 +318,8 @@ function getUrlWS() {
  */
 function getConceptos($id_venta, $factura_generica = null) {
 
+    Logger::log("Iniciando el proceso de extraccion de detalles de la venta");
+    
     //obtenemos el juego de articulos vendidos en la venta
     $detalle_venta = new DetalleVenta();
     $detalle_venta->setIdVenta($id_venta);
@@ -320,6 +329,8 @@ function getConceptos($id_venta, $factura_generica = null) {
     $conceptos = new Conceptos();
 
     if (isset($factura_generica)) {
+        
+        Logger::log("El concepto es de una factura generica..");
 
         $concepto = new Concepto();
 
@@ -332,6 +343,8 @@ function getConceptos($id_venta, $factura_generica = null) {
 
         $conceptos->addConcepto($concepto);
 
+        Logger::log("ID {$concepto->setIdProducto}");
+        
         return $conceptos;
     }
 
@@ -593,6 +606,8 @@ function getExpedidoPor() {
  */
 function getDatosGenerales($id_venta) {
 
+    Logger::log("Iniciando creacion de objeto con los datos generales.");
+    
     //generamos una factura en la BD
 
     $facturaBD = creaFacturaBD($id_venta);
@@ -649,6 +664,9 @@ function getDatosGenerales($id_venta) {
         DAO::transRollback();
         die('{"success": false, "reason": "' . $success->getInfo() . '" }');
     }
+    
+    Logger::log("Terminada creacion de objeto con los datos generales.");
+    
 }
 
 /**
@@ -710,6 +728,7 @@ function creaFacturaBD($id_venta) {
     $factura->setVersionTfd("0");
 
     try {
+        Logger::log("Salvando el registro de la factura de la venta");
         FacturaVentaDAO::save($factura);
     } catch (Exception $e) {
         Logger::log("Error al salvar la factura de la venta : {$e}");

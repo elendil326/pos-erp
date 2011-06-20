@@ -329,7 +329,7 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
 
         jQuery("#loader").fadeIn();
             
-        console.log("generica : ",factura_generica); 
+        //console.log("generica : ",factura_generica); 
             
         jQuery.ajax({
             url: "../proxy.php",

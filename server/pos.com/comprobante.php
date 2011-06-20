@@ -409,8 +409,7 @@ class Comprobante {
     /**
      * Indica si esta en modo produccion
      */
-    private $productionMode = false;
-
+    private $productionMode = true;
     /**
      * Establece informacion acerca de si el api esta en modo produccion
      * @param type $_productionMode 
@@ -850,18 +849,19 @@ class Comprobante {
 
         //creamos una instancia de un objeto SoapClient
 
+        
+        
         if ($this->getProductionMode()) {
 
             $ready_to_send = $this->getXMLrequest();
             $ready_to_send = str_replace("&lt;", "<", $ready_to_send);
-            $ready_to_send = str_replace("&gt;", ">", $ready_to_send);
-
+            $ready_to_send = str_replace("&gt;", ">", $ready_to_send);                        
 
             try {
                 $client = new SoapClient($this->getUrlWS());
                 $result = $client->RececpcionComprobante(array('comprobante' => $ready_to_send));
             } catch (SoapFault $fault) {
-                Logger::log("\n********** Informe de Error en la llamada SOAP **********\n Se envio al como parametro al WebService : \n {$ready_to_send}\n Codigo de Error : '\n{$fault->faultcode}\nMensaje de Error : \n{$fault->faultstring}\nDetalles : \n{$fault->detail}\n");
+                Logger::log("\n\n\n********** ERROR AL SOLICITAR NUEVO CFDI **********\n\n SE ENVIO COMO PARAMETRO AL WEBSERVICE : \n\n {$ready_to_send}\n\nCODIGO DE ERROR : \n\n{$fault->faultcode}\n\nMENSAJE DE ERROR : \n\n{$fault->faultstring}\n\n");
                 $this->success = new Success("El servicio web que genera las facturas esta experimentando algunos problemas, intente nuevamente.");
                 return $this->success;
             }
