@@ -55,7 +55,7 @@ public class PosSystemTray
             PopupMenu popup = new PopupMenu();
             MenuItem defaultItem = new MenuItem("Cerrar cliente");
             defaultItem.addActionListener(exitListener);
-            popup.add(defaultItem);
+            popup.add( defaultItem );
 
             trayIcon = new TrayIcon(image, "Pos Client", popup);
 
@@ -88,12 +88,6 @@ public class PosSystemTray
         }
     }
     
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args)
-    {
-
-    }
+ 
     
 }

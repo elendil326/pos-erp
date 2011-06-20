@@ -26,8 +26,42 @@ public class Dispatcher{
 		}
 		
 		System.out.println("Dispatching module " + action);
+		
+		
+		/**
+		* 
+		* 	Despachar a impresiones
+		* 
+		* 
+		* */
+		if(action.equals("Printer")){
+			ServidorImpresion.Print( data );			
+			return "Ext.util.JSONP.callback({\"success\": true});";			
+		}
 
-		ServidorImpresion.Print( data );
+
+
+
+		/**
+		* 
+		* 	Despachar a bascula
+		* 
+		* 
+		* */
+		if(action.equals("bascula")){
+			try{
+				Bascula b = new Bascula();
+				String rawValue = b.getRawData(16);
+				b.close();				
+				return "Ext.util.JSONP.callback({\"success\": true, \"reading\" : \""+ rawValue +"\"});";
+				
+				
+			}catch(Exception e){
+				return "Ext.util.JSONP.callback({\"success\": false, \"reason\" : \"La bascula no responde, revise que este conectada correctamente\"});";			
+			}
+		}
+
+
 		
 		return returnError();
 	}

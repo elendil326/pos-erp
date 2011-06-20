@@ -2,6 +2,8 @@
 #find java src files
 find src -name \*.java -print > file.list
 
+mkdir bin
+
 #compile those
 javac -d bin -cp src:lib/json-simple-1.1.jar @file.list 
 
@@ -19,6 +21,8 @@ jar cfm ../PosClient.jar ../manifest mx
 rm ../manifest
 
 cd ..
+
+rm posClient.zip
 
 #zip the client
 zip -r client.zip posClient.jar *.so *.dll lib media -x \*.svn*

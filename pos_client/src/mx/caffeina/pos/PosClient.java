@@ -41,12 +41,8 @@ public class PosClient{
 		//System.out.println( response );
 		
 		//iniciar el servidor web
-		//httpServer = new HttpServer(8080);
+		httpServer = new HttpServer(8080);
 		
-		Bascula b = new Bascula();
-		b.getRawData(16);
-		b.close();
-
 	}
 
 
