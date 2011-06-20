@@ -159,14 +159,16 @@ POS.leyendasTicket = null;
 
 POS.ajaxToClient = function( module, args, callback )
 {
-	console.log("AJAX TO CLIENT !!");
+	
+	console.log("AJAX TO CLIENT !!", args);
+	
 	/** **** Cross-broswer call **** **/
     Ext.util.JSONP.request({
         url: 'http://127.0.0.1:8080/',
         callbackKey: "callback",
         params: {
 			action : module,
-			data : args,
+			data : Ext.util.JSON.encode(args),
 			unique : Math.random()
 			
 		},
@@ -184,7 +186,7 @@ POS.ajaxToClient = function( module, args, callback )
 function test_p(){
 	POS.ajaxToClient(
 		"Printer",
-		Ext.util.JSON.encode({
+		{
 		    tipo_venta: "credito",
 		    impresora: "EPSON TM-U220 Receipt",
 		    leyendasTicket: {
@@ -259,9 +261,17 @@ function test_p(){
 		        saldo_a_favor: "0"
 		    },
 		    ticket: "venta_cliente"
-		})
+		}
     );
 }
+
+
+
+
+
+
+
+
 
 //extrae informacion acerca de las leyendas de los tickets
 POS.loadLeyendasTicket = function(){

@@ -61,8 +61,8 @@ public class PosClient{
 	
 			try{
 				//@todo this shit dont work
-				PosClient.sendLogToServer( "Apagando cliente" );
-				PosClient.httpServer.shutDown();
+				PosClient.sendLogToServer( "Cerrando cliente !" );
+				//PosClient.httpServer.shutDown();
 				
 			}catch(Exception e){
 				System.out.println(e);

@@ -153,7 +153,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		
         var productoI = inventario.findRecord("productoID", carrito.items[i].id_producto, 0, false, true, true);
 
-		console.log("Producto en carrito("+ i +"): " , productoI);
+		//console.log("Producto en carrito("+ i +"): " , productoI);
 
         //revisar si las cantidades son por pieza o cajas o asi.. 
 		//si son por pieza, entonces no me deja vender fracciones y asi
@@ -1288,18 +1288,26 @@ Aplicacion.Mostrador.prototype.finishedPanelShow = function()
 	
 };
 
+/**
+  *
+  *
+  **/
 Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 {
+	
+	//datos del carrito
     carrito = Aplicacion.Mostrador.currentInstance.carrito;
-    //incluye los datos de la sucursal
+    
+	//incluye los datos de la sucursal
     carrito.sucursal = POS.infoSucursal;
 	                                
     //parseamos el descuento
     carrito.descuento = parseFloat(carrito.descuento);
     
-	
+	//tipo de ticket a imprimir
     carrito.ticket = "venta_cliente";
 
+	//buscamos la impresora para este tipo de documento
     for( i = 0; i < POS.documentos.length; i++){
         if( POS.documentos[i].documento == carrito.ticket ){
             carrito.impresora = POS.documentos[i].impresora;
@@ -1314,14 +1322,6 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
         console.log("carrito.items : ", carrito.items);
     }
 
-    json = encodeURI( Ext.util.JSON.encode( carrito ) );
-
-    do{
-
-        json = json.replace('#','%23');
-
-    }while(json.indexOf('#') >= 0);
-	
     html = "";
 	
     html += "<table class='Mostrador-ThankYou'>";
@@ -1340,14 +1340,17 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 
     html += "</table>";
 	
+	
+	
+	
     if( carrito.factura )
     {
-        html += "<iframe id = 'frame' src ='../impresora/pdf.php?json=" + json + "' width='0px' height='0px'></iframe> ";
-        window.open("../impresora/pdf.php?json=" + json);
-    }
-    else
-    {
-        //html += "<iframe src ='PRINTER/src/impresion.php?json=" + json + "' width='0px' height='0px'></iframe> ";
+        //html += "<iframe id = 'frame' src ='../impresora/pdf.php?json=" + Ext.util.JSON.encode(carrito) + "' width='0px' height='0px'></iframe> ";
+        window.open("../impresora/pdf.php?json=" + Ext.util.JSON.encode(carrito));
+
+
+
+    } else {
 
         hora = new Date()
         var dia = hora.getDate();
@@ -1364,23 +1367,47 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
         if (minutos <= 9) minutos = "0" + minutos
         if (segundos <= 9) segundos = "0" + segundos
 
-        html += ''
-        +'<applet code="printer.Main" archive="PRINTER/dist/PRINTER.jar" WIDTH=0 HEIGHT=0>'
-        +'     <param name="json" value="'+ json +'">'
-        +'     <param name="hora" value="' + horas + ":" + minutos + ":" + segundos + tiempo + '">'
-        +'     <param name="fecha" value="' + dia +"/"+ (hora.getMonth() + 1) +"/"+ anio + '">'
-        +' </applet>';
+
+		var PRINT_VIA_JAVA_CLIENT = true;
+		
+		if(PRINT_VIA_JAVA_CLIENT)
+		{
+			/**
+			  *	Impresion via cliente
+			  *
+			  **/
+			POS.ajaxToClient(
+				"Printer",
+				carrito
+			);	
+					
+		}else{
+			/**
+			  *	Impresion via applet
+			  *
+			  **/
+	      	html += ''
+	        +'<applet code="printer.Main" archive="PRINTER/dist/PRINTER.jar" WIDTH=0 HEIGHT=0>'
+	        +'     <param name="json" value="'+ json +'">'
+	        +'     <param name="hora" value="' + horas + ":" + minutos + ":" + segundos + tiempo + '">'
+	        +'     <param name="fecha" value="' + dia +"/"+ (hora.getMonth() + 1) +"/"+ anio + '">'
+	        +' </applet>';
+	
+		}
+
+		
+		
+
 
     }
 	
 	
     this.finishedPanel.update(html);
-	
-	
-	
+
     Ext.getCmp("Mostrador-mostradorVender").hide( Ext.anims.slide );
 
     action = "sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.mostradorPanel , 'fade');";
+
     setTimeout(action, 4000);
 
 };
