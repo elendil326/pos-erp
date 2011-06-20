@@ -108,7 +108,7 @@ function detalle_inventario(id){
 		}
 
 		$tabla = new Tabla( $header, $inventario_simple );
-		$tabla->addNoData("No hay proveedores.");
+		$tabla->addNoData("El inventario maestro se encuentra vacio.");
 		$tabla->addColRender("existencias", "renderExistencias");
 		echo "<h2>Inventario Maestro</h2>";
 		$tabla->render();

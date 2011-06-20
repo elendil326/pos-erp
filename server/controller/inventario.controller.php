@@ -455,29 +455,31 @@ function nuevoProducto($data) {
 
 
     $inventario = new Inventario();
-    $inventario->setDescripcion($jsonData->descripcion);
-    $inventario->setEscala($jsonData->escala == "null" ? null : $jsonData->escala );
-    $inventario->setTratamiento($jsonData->tratamiento == "null" ? null : $jsonData->tratamiento );
-    $inventario->setAgrupacion($jsonData->agrupacion == "null" ? null : $jsonData->agrupacion );
-    $inventario->setAgrupacionTam($jsonData->agrupacion == "null" ? null : $jsonData->agrupacionTam );
+    $inventario->setDescripcion(		$jsonData->descripcion );
+    $inventario->setEscala(				$jsonData->escala == "null" ? null : $jsonData->escala );
+    $inventario->setTratamiento(		$jsonData->tratamiento == "null" ? null : $jsonData->tratamiento );
+    $inventario->setAgrupacion(			$jsonData->agrupacion == "null" ? null : $jsonData->agrupacion );
+    $inventario->setAgrupacionTam(		$jsonData->agrupacion == "null" ? null : $jsonData->agrupacionTam );
     $inventario->setPrecioPorAgrupacion($jsonData->tipo_de_precio == "agrupacion");
     $inventario->setActivo(1);
     DAO::transBegin();
 
     try {
         Logger::log("Insertando nuevo producto: " . $jsonData->descripcion . ", " . $jsonData->escala . ", " . $jsonData->tratamiento);
-        InventarioDAO::save($inventario);
+        InventarioDAO::save( $inventario );
+
     } catch (Exception $e) {
         DAO::transRollback();
         Logger::log("Imposible crear nuevo producto:" . $e);
         return array("success" => false, "reason" => "Error al crear el nuevo producto, porfavor intente de nuevo.");
+
     }
 
 
-//insertar actualizacion de precio
+	//insertar actualizacion de precio
     $actualizacion = new ActualizacionDePrecio();
 
-    $actualizacion->setIdProducto($inventario->getIdProducto());
+    $actualizacion->setIdProducto($inventario->getIdProducto() );
     $actualizacion->setIdUsuario($_SESSION['userid']);
     $actualizacion->setPrecioVenta($jsonData->precio_venta);
 

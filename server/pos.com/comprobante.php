@@ -10,7 +10,7 @@ require_once("success.php");
 require_once("addendas.php");
 require_once("impuestos.php");
 
-//$_SERVER['DOCUMENT_ROOT'] = "C:/wamp/www/pos/trunk"
+
 
 /**
  * Archivo que contiene la clase Comprobante la cual provee de los medios necesarios
@@ -409,7 +409,9 @@ class Comprobante {
     /**
      * Indica si esta en modo produccion
      */
-    private $productionMode = true;
+    private $productionMode = POS_FACTURACION_PRODUCCION;
+
+
     /**
      * Establece informacion acerca de si el api esta en modo produccion
      * @param type $_productionMode 
@@ -833,6 +835,11 @@ class Comprobante {
         //guardamos en este objeto el XML que se envia al SAT
         $this->setXMLrequest($xml->saveXML());
 
+		Logger::log( "--------------------------------- ");
+		Logger::log($xml);
+		Logger::log( "--------------------------------- ");
+		
+		
         Logger::log("Terminado proceso de parceo de venta a XML");
 
         //realizamos una peticion al webservice para que genere una nueva factura

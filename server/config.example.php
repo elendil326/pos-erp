@@ -19,6 +19,11 @@ define("POS_LOG_TRACKBACK", false);
 define("POS_LOG_DB_QUERYS", false);
 
 # *******************************
+# FACTURACION
+# *******************************
+defin("POS_FACTURACION_PRODUCCION", false);
+
+# *******************************
 # ZONA HORARIA
 # *******************************
 date_default_timezone_set("America/Mexico_City");

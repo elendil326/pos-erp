@@ -308,7 +308,7 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
         //window.location = "../proxy.php?action=1200&id_venta=<?php echo $_REQUEST["id"]; ?>";
                 
         var factura_generica = null;
-                
+
         if(facturaMode == "generica"){
             
             if(jQuery("#factura-concepto").val().replace(/ /g,"").length == 0){
@@ -316,9 +316,9 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
                 return;
             }else{
                 factura_generica = {
-                    id_producto:'GEN01',
-                    descripcion:jQuery("#factura-concepto").val(),
-                    unidad:'unidad'                    
+                    id_producto: 'GEN01',
+                    descripcion: jQuery("#factura-concepto").val(),
+                    unidad: 	'unidad'
                 };
             }
             
