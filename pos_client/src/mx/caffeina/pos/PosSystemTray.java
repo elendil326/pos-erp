@@ -20,56 +20,9 @@ public class PosSystemTray
 
             SystemTray tray = SystemTray.getSystemTray();
 
-				Image image = null;
-
-				/*try {
-				    image = ImageIO.read(ClassLoader.getSystemResourceAsStream("./media/logo.png"));
-				} catch(IOException e) {
-				    System.out.println(">>" + e);
-				}*/
-				
-				//ImageIcon icono = new ImageIcon(ClassLoader.getSystemResource("./media/logo.png"));
-				
-				//ImageIcon icono = new ImageIcon(getClass().getResource("/media/logo.png"));
-				//image = icono.getImage();
-				
-				InputStream stream = this.getClass().getClassLoader().getResourceAsStream("/media/logo.png");
-				try{
-					System.out.println(stream.read());					
-				}catch(Exception e){
-					System.out.println(e);
-				}
-
-				image = Toolkit.getDefaultToolkit().getImage( getClass().getResource("/media/logo.png"));
-				//image = icono.getImage();
-				
-				URL url = this.getClass().getResource("/");
-				System.out.println( ">" + url);
-				System.out.println( ">" + this.getClass().getName() );
-
-/*		
-				image = new ImageIcon( url ).getImage(); */
-				
-				/*
-			 	URL url = this.getClass().getResource("media/logo.png");
-				System.out.println(url);
-				ImageIcon icono = new ImageIcon(url);
-				Image image = null;
-				image = icono.getImage();
-				*/
-				/*
-				if(icono != null){
-					image = icono.getImage();
-					
-				}else{
-					image = Toolkit.getDefaultToolkit().getImage("tray.gif");	
-					System.out.println("no pude cargar la imagen :(");
-				}*/
-
-				
 				// WORKS with image outside jar
-				//ImageIcon icono = new ImageIcon("media/logo.png");
-				//Image image = icono.getImage();
+				ImageIcon icono = new ImageIcon("media/logo.png");
+				Image image = icono.getImage();
 
 
             MouseListener mouseListener = new MouseListener() {

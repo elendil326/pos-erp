@@ -24,5 +24,11 @@ if (isset($args['action'])) {
 			ClientController::clientStarted();
 
         break;
+
+        case 1401:
+
+			Logger::log("JAVA-CLIENT-SAYS: " . $args["msg"] );
+
+        break;
 	}
 }

@@ -54,7 +54,7 @@ if( ! (
 	|| $_REQUEST['action']  == "2009"
 	
 	//client application handlers
-	|| $_REQUEST['action']  == "1400"
+	|| ($_REQUEST['action']  >= 1400 && $_REQUEST['action'] <= 1499)
 ) )
 {
 	

@@ -18,8 +18,10 @@ jar cfm ../PosClient.jar ../manifest mx ../media
 
 rm ../manifest
 
-
 cd ..
+
+#zip the client
+zip -r client.zip posClient.jar lib media -x \*.svn*
 
 #run main biatch
 java -jar PosClient.jar 

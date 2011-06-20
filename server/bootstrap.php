@@ -64,8 +64,8 @@
 			die('<div align=center><img src="media/intro.png"></div>');
 		}
 
-	
-		Logger::log("UNKNOWN: There is no instance number nowhere, sending header to log.php !!" );
+		Logger::log("SOURCE : " . $_SERVER['REQUEST_URI']);
+		Logger::log("     There is no instance number nowhere, sending header to log.php !!" );
 		die(header("Location: ./log.php"));
 		
 	}

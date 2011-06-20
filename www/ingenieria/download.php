@@ -1,4 +1,8 @@
 <?php
+require_once("../../server/bootstrap.php");	
+require_once("ingenieria/includes/checkSession.php");
+require_once("admin/includes/static.php");
+
 
 function output_file($file, $name, $mime_type='')
 {
@@ -113,5 +117,15 @@ die();
 Make sure script execution doesn't time out.
 Set maximum execution time in seconds (0 means no limit).
 */
-set_time_limit(0);	
-output_file(POS_LOG_TO_FILE_FILENAME, 'log.log', 'text/plain');
+set_time_limit(0);
+
+switch($_REQUEST["file"]){
+	case "log" : 
+		output_file(POS_LOG_TO_FILE_FILENAME, 'log.log', 'text/plain');	
+	break;
+	
+	case "pos_client" : 
+		output_file("../../pos_client/client.zip", 'cliente.zip', 'application/zip');
+	break;
+}
+

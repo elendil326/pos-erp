@@ -74,8 +74,14 @@ require_once("admin/includes/static.php");
 	</table>
 	
 	
-	<h2>Nueva version</h2>
-
+	<h2>Cliente de POS</h2>
+	<table>
+		<tr>
+			<td></td>
+			<td><a href="download.php?file=pos_client">Descargar</a></td>
+			<td></td>
+		</tr>	
+	</table>
 	
 	
     <?php include_once("admin/includes/footerInge.php"); ?>
