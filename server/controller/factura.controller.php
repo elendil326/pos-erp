@@ -344,8 +344,6 @@ function getConceptos($id_venta, $factura_generica = null) {
         $concepto->setImporte(VentasDAO::getByPK($id_venta)->getTotal());
 
         $conceptos->addConcepto($concepto);
-
-        Logger::log("ID {$concepto->setIdProducto}");
         
         return $conceptos;
     }

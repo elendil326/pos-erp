@@ -18,6 +18,79 @@ require_once('model/usuario.dao.php');
 require_once('logger.php');
 
 /**
+ *
+ * @param string $cadena rfc a valdar
+ * @return type 
+ */
+function validaRFC($cadena) {
+
+    /**
+     * Morales: Se compone de 3 letras seguidas por 6 dígitos y 3 caracteres alfanumericos
+     * Físicas: consta de 4 letras seguida por 6 dígitos y 3 caracteres alfanumericos
+     * Para hacer una longitud de 12 y 13 caracteres, las primeras letras (3 y 4) pertenecen al nombre 
+     * los siguientes 6 dígitos son la fecha de nacimiento o fecha de creación. 		
+     * Para las morales, y los últimos 3 perteneces a la suma de valores pertenecientes al nombre.
+     */
+    //validamos al longitud de la cadena
+    if (!(strlen($cadena) > 11 && strlen($cadena) < 14 )) {
+        Logger::log("La longitud del RFC no es valida.");
+        die('{"success": false, "reason": "La longitud del RFC no es valida." }');
+    }
+
+    //indicara la posicion en la cual se encuentra la cadena
+    $i = 0;
+
+    //verificamos si es una persona fisica y si es asi revisamos su primer digito
+    if (strlen($cadena) == 12) {
+        //es persona moral, entonces agregamos un relleno al principio de la cadena para dar una longitud igual a la de la persona fisica
+        $cadena = "-" . $cadena;
+    } else {
+        //es persona fisica y verificamos si el primer caracter es una letra
+        if (is_numeric($cadena[$i])) {
+
+            Logger::log("Formato invalido del RFC del emisor, verifique si el " . ($i + 1) . "caracter es correcto");
+            die('{"success": false, "reason": "Formato invalido del RFC del emisor, verifique si el ' . ($i + 1) . 'caracter es correcto" }');
+        }
+    }
+
+    $i = 1;
+
+    //revisamos los 3 caracteres que deberan de ir en el RFC (para personas fisicas son 4 pero ya anteriror mente revisamos el primero)
+    for ($j = $i; $j <= 3; $j++) {
+
+        $i = $j;
+
+        if (is_numeric($cadena[$j])) {
+            Logger::log("Formato invalido el RFC del emisor, verifique si el " . ($i + 1) . "caracter es correcto");
+            die('{"success": false, "reason": "Formato invalido el RFC del emisor, verifique si el ' . ($i + 1) . 'caracter es correcto"}');
+        }
+    }
+
+    //revisamos los 6 digitos
+    for ($j = 4; $j <= 9; $j++) {
+
+        $i = $j;
+
+        if (!is_numeric($cadena[$j])) {
+            Logger::log("Formato invalido el RFC del emisor, verifique si el " . ($i + 1) . " caracter es correcto");
+            die('{"success": false, "reason": "Formato invalido el RFC del emisor, verifique si el ' . ($i + 1) . ' caracter es correcto"}');
+        }
+    }
+
+    //revisamos los 3 caracteres alfanumericos que restan	
+    for ($j = 10; $j <= 12; $j++) {
+
+        $i = $j;
+
+        if (!ctype_alnum($cadena[$j])) {
+            Logger::log("Formato invalido el RFC del emisor, verifique si el " . ($i + 1) . " caracter es correcto");
+            die('{"success": false, "reason": "Formato invalido el RFC del emisor, verifique si el ' . ($i + 1) . ' caracter es correcto"}');
+        }
+    }
+
+}
+
+/**
  * 	Crea un cliente.
  *
  * Este metodo intentara crear un cliente dado un arreglo de datos proporcionado.
@@ -59,9 +132,15 @@ function crearCliente($args) {
         die('{ "success": false, "reason" : "Faltan parametros." }');
     }
 
+    //validamos el rfc
+    validaRFC($data->rfc);           
+    
     //crear el objeto de cliente a ingresar
     $cliente = new Cliente();
-    $cliente->setRfc($data->rfc);
+    
+    $cliente->setGrantChanges(0);
+    
+    $cliente->setRfc(strtoupper($data->rfc));
 
     //buscar que no exista ya un cliente con este RFC
     if (count(ClienteDAO::search($cliente)) > 0) {
@@ -109,9 +188,9 @@ function crearCliente($args) {
         die('{"success": false, "reason": "El Limite de credito del cliente no puede ser tan grande." }');
     }
 
-    $cliente->setRazonSocial($data->razon_social);
+    $cliente->setRazonSocial(strtoupper($data->razon_social));
 
-    $cliente->setCalle($data->calle);
+    $cliente->setCalle(strtoupper($data->calle));
 
     $cliente->setNumeroExterior($data->numero_exterior);
 
@@ -121,16 +200,16 @@ function crearCliente($args) {
     $cliente->setColonia($data->colonia);
 
     if (isset($data->referencia))
-        $cliente->setReferencia($data->referencia);
+        $cliente->setReferencia(strtoupper($data->referencia));
 
     if (isset($data->localidad))
-        $cliente->setLocalidad($data->localidad);
+        $cliente->setLocalidad(strtoupper($data->localidad));
 
-    $cliente->setMunicipio($data->municipio);
+    $cliente->setMunicipio(strtoupper($data->municipio));
 
-    $cliente->setEstado($data->estado);
+    $cliente->setEstado(strtoupper($data->estado));
 
-    $cliente->setPais($data->pais);
+    $cliente->setPais(strtoupper($data->pais));
 
     $cliente->setCodigoPostal($data->codigo_postal);
 
@@ -142,7 +221,7 @@ function crearCliente($args) {
         $cliente->setTelefono($data->telefono);
 
     if (isset($data->e_mail))
-        $cliente->setEMail($data->e_mail);
+        $cliente->setEMail(strtoupper($data->e_mail));
 
     $cliente->setActivo(1);
 
@@ -155,17 +234,15 @@ function crearCliente($args) {
     if ($_SESSION['grupo'] <= 1) {
         if (isset($data->id_sucursal)) {
             $cliente->setIdSucursal($data->id_sucursal);
-
         } else {
-			if(POS_MULTI_SUCURSAL){
-				//es multisucursal, y no envio la sucursal a la
-				//que pertenece
-            	die('{"success": false, "reason": "No proporciono a que sucursal pertenece este nuevo cliente." }');				
-			}else{
-				//no importa que no haya enviado sucursal
-	            $cliente->setIdSucursal(0);
-			}
-
+            if (POS_MULTI_SUCURSAL) {
+                //es multisucursal, y no envio la sucursal a la
+                //que pertenece
+                die('{"success": false, "reason": "No proporciono a que sucursal pertenece este nuevo cliente." }');
+            } else {
+                //no importa que no haya enviado sucursal
+                $cliente->setIdSucursal(0);
+            }
         }
     } else {
         $cliente->setIdSucursal($_SESSION['sucursal']);
@@ -175,7 +252,7 @@ function crearCliente($args) {
         ClienteDAO::save($cliente);
     } catch (Exception $e) {
         Logger::log("Error al guardar el nuevo cliente:" . $e);
-        die('{"success": false, "reason": "Error" }');
+        die('{"success": false, "reason": "Error al guardar el nuevo cliente." }');
     }
 
     printf('{"success": true, "id": "%s"}', $cliente->getIdCliente());
@@ -187,44 +264,44 @@ function crearCliente($args) {
  * 
  * 
  * */
+
 function listarClientes() {
-	
-	
-	$clientes = ClienteDAO::getAll();
-	$clientesDeudores = listarClientesDeudores();
-	
-	$clientesArray = array();
-	for ($c=0; $c < sizeof($clientes); $c++) {
-		
-		if($clientes[$c]->getIdCliente() < 0 )
-			continue;
-
-		$asArray = $clientes[$c]->asArray();
-
-		$found = false;
-		
-		//buscar si este es un cliente deudor
-		for ($cd=0; $cd < sizeof($clientesDeudores); $cd++) { 
-
-			if( $clientesDeudores[$cd]["id_cliente"] == $asArray["id_cliente"] ){
-
-				$asArray["credito_restante"] = $clientesDeudores[$cd]["credito_restante"];
-				$found = true;
-				break;
-			}
-		}
 
 
-		if(!$found){
-			//si no lo encontre en deudores, entonces su credito restante es igual a su limite de credito
-			$asArray["credito_restante"] = $asArray["limite_credito"];
-		}
+    $clientes = ClienteDAO::getAll();
+    $clientesDeudores = listarClientesDeudores();
 
-		array_push($clientesArray, $asArray);
-	}
-	
-	return $clientesArray;
+    $clientesArray = array();
+    for ($c = 0; $c < sizeof($clientes); $c++) {
 
+        if ($clientes[$c]->getIdCliente() < 0)
+            continue;
+
+        $asArray = $clientes[$c]->asArray();
+
+        $found = false;
+
+        //buscar si este es un cliente deudor
+        for ($cd = 0; $cd < sizeof($clientesDeudores); $cd++) {
+
+            if ($clientesDeudores[$cd]["id_cliente"] == $asArray["id_cliente"]) {
+
+                $asArray["credito_restante"] = $clientesDeudores[$cd]["credito_restante"];
+                $found = true;
+                break;
+            }
+        }
+
+
+        if (!$found) {
+            //si no lo encontre en deudores, entonces su credito restante es igual a su limite de credito
+            $asArray["credito_restante"] = $asArray["limite_credito"];
+        }
+
+        array_push($clientesArray, $asArray);
+    }
+
+    return $clientesArray;
 }
 
 function modificarCliente($args) {
@@ -257,14 +334,17 @@ function modificarCliente($args) {
         die('{"success": false, "reason": "Este cliente no existe." }');
     }
 
-    if (isset($data->rfc))
-        $cliente->setRfc($data->rfc);
+    if (isset($data->rfc)){
+        //validamos el rfc
+        validaRFC($data->rfc);    
+        $cliente->setRfc(strtoupper($data->rfc));
+    }
 
     if (isset($data->razon_social))
-        $cliente->setRazonSocial($data->razon_social);
+        $cliente->setRazonSocial(strtoupper($data->razon_social));
 
     if (isset($data->calle))
-        $cliente->setCalle($data->calle);
+        $cliente->setCalle(strtoupper($data->calle));
 
     if (isset($data->numero_exterior))
         $cliente->setNumeroExterior($data->numero_exterior);
@@ -273,22 +353,22 @@ function modificarCliente($args) {
         $cliente->setNumeroInterior($data->numero_interior);
 
     if (isset($data->colonia))
-        $cliente->setColonia($data->colonia);
+        $cliente->setColonia(strtoupper($data->colonia));
 
     if (isset($data->referencia))
-        $cliente->setReferencia($data->referencia);
+        $cliente->setReferencia(strtoupper($data->referencia));
 
     if (isset($data->localidad))
-        $cliente->setLocalidad($data->localidad);
+        $cliente->setLocalidad(strtoupper($data->localidad));
 
     if (isset($data->municipio))
-        $cliente->setMunicipio($data->municipio);
+        $cliente->setMunicipio(strtoupper($data->municipio));
 
     if (isset($data->estado))
-        $cliente->setEstado($data->estado);
+        $cliente->setEstado(strtoupper($data->estado));
 
     if (isset($data->pais))
-        $cliente->setPais($data->pais);
+        $cliente->setPais(strtoupper($data->pais));
 
     if (isset($data->codigo_postal))
         $cliente->setCodigoPostal($data->codigo_postal);
@@ -297,7 +377,7 @@ function modificarCliente($args) {
         $cliente->setTelefono($data->telefono);
 
     if (isset($data->e_mail))
-        $cliente->setEMail($data->e_mail);
+        $cliente->setEMail(strtoupper($data->e_mail));
 
 
 
@@ -331,12 +411,12 @@ function modificarCliente($args) {
 
         $cliente->setDescuento($data->descuento);
     }
-   
+
 
     if (isset($data->activo))
         $cliente->setActivo($data->activo);
 
-   
+
     //solo el admin puede editar estos campos
     if ($_SESSION['grupo'] <= 1) {
         if (isset($data->id_sucursal))
@@ -363,10 +443,10 @@ function modificarCliente($args) {
  * */
 
 function listarVentasClientes() {
-	Logger::log("#################################################################");
-	Logger::log("# Esta funcion debe ser deprecada por el bien del performance ! #");
-	Logger::log("#################################################################");
-		
+    Logger::log("#################################################################");
+    Logger::log("# Esta funcion debe ser deprecada por el bien del performance ! #");
+    Logger::log("#################################################################");
+
     $ventas = VentasDAO::getAll();
     $tot_ventas = array();
 
@@ -511,8 +591,8 @@ function abonarVenta($args) {
 
     //si pago mas de lo que debo
     $saldo = $venta->getTotal() - $venta->getPagado();
-    
-    if($data->monto > $saldo){
+
+    if ($data->monto > $saldo) {
         $data->monto = $saldo;
     }
 
@@ -563,13 +643,12 @@ function abonarVenta($args) {
 }
 
 function listarClientesDeudores() {
-	
-	$deudores = ClienteDAO::obtenerClientesDeudores();
-	for ($i=0; $i < sizeof($deudores); $i++) { 
-		$deudores[$i]["credito_restante"] = $deudores[$i]["limite_credito"] - $deudores[$i]["saldo"];
-	}
-	return $deudores;
-	
+
+    $deudores = ClienteDAO::obtenerClientesDeudores();
+    for ($i = 0; $i < sizeof($deudores); $i++) {
+        $deudores[$i]["credito_restante"] = $deudores[$i]["limite_credito"] - $deudores[$i]["saldo"];
+    }
+    return $deudores;
 }
 
 function facturarVenta($args) {
@@ -653,7 +732,8 @@ function listarAbonos($cid, $vid = null) {
 
 
             if ($vid != null && $vid != $p->getIdVenta()
-                )continue;
+            )
+                continue;
 
             $data = array(
                 "cajero" => $cajero ? $cajero->getNombre() : "<b>Error</b>",
@@ -699,7 +779,7 @@ function listarVentasCliente($args) {
     $tot_ventas = array();
 
     foreach ($ventas as $venta) {
-        
+
         $decode_venta = $venta->asArray();
 
         $dventa = new DetalleVenta();
@@ -728,21 +808,21 @@ function listarVentasCliente($args) {
 
         $cliente = ClienteDAO::getByPK($venta->getIdCliente());
         $decode_venta["razon_social"] = $cliente->getRazonSocial();
-        
-        //verificamos si la venta esta facturada
-        $factura_venta = FacturaVentaDAO::search(new FacturaVenta(array("id_venta"=>$venta->getIdVenta(),"activa"=>1,"sellada"=>1)));        
 
-        $array_facturas = array();     
-        
-        foreach($factura_venta as $fv){
+        //verificamos si la venta esta facturada
+        $factura_venta = FacturaVentaDAO::search(new FacturaVenta(array("id_venta" => $venta->getIdVenta(), "activa" => 1, "sellada" => 1)));
+
+        $array_facturas = array();
+
+        foreach ($factura_venta as $fv) {
             $fv = $fv->asArray();
             $fv['lugar_emision'] = SucursalDAO::getByPK($fv['lugar_emision'])->getDescripcion();
             $fv['usuario'] = UsuarioDAO::getByPK($fv['id_usuario'])->getNombre();
             array_push($array_facturas, $fv);
         }
-        
-        $decode_venta["factura"] = count($array_facturas)>0?$array_facturas:null;        
-                
+
+        $decode_venta["factura"] = count($array_facturas) > 0 ? $array_facturas : null;
+
         array_push($tot_ventas, $decode_venta);
     }
 
@@ -756,26 +836,26 @@ function listarVentasCliente($args) {
  * $args['tipo_venta
  *  @return Object, propiedades : array_ventas (arreglo con informacion de las ventas), limite_credito (limite de credito del cliente), saldo (saldo por pagar de todas sus compras)
  */
-function estadoCuentaCliente($args){
-    
+function estadoCuentaCliente($args) {
+
     if (!isset($args['id_cliente'])) {
         Logger::log("Error al obtener el estado de cuenta, no se ha especificado un cliente.");
         die('{"success": false, "reason": "Error al obtener el estado de cuenta, no se ha especificado un cliente."}');
     }
 
-    if(!$cliente = ClienteDAO::getByPK($args['id_cliente'])){
+    if (!$cliente = ClienteDAO::getByPK($args['id_cliente'])) {
         Logger::log("Error al obtener el estado de cuenta, no se tiene registro del cliente {$args['id_cliente']}.");
-        die('{"success": false, "reason": "Error al obtener el estado de cuenta, no se tiene registro del cliente '.$args['id_cliente'].'."}');
+        die('{"success": false, "reason": "Error al obtener el estado de cuenta, no se tiene registro del cliente ' . $args['id_cliente'] . '."}');
     }
-    
+
     Logger::log("Obteniendo estado de cuenta del cliente : {$cliente->getIdCliente() }.");
 
     $ventas = new Ventas();
     $ventas->setIdCliente($args['id_cliente']);
-    
-    if(isset($args['tipo_venta'])){   
-        
-        switch($args['tipo_venta']){
+
+    if (isset($args['tipo_venta'])) {
+
+        switch ($args['tipo_venta']) {
             case 'credito':
                 //obtiene todas las compras a credito
                 $ventas->setTipoVenta("credito");
@@ -790,9 +870,8 @@ function estadoCuentaCliente($args){
                 break;
             default:
         }
-        
     }
-    
+
     $ventas = VentasDAO::search($ventas);
 
     $array_ventas = array();
@@ -800,27 +879,27 @@ function estadoCuentaCliente($args){
     foreach ($ventas as $venta) {
 
         $decode_venta = $venta->asArray();
-        
+
         $array_venta['id_venta'] = $venta->getIdVenta();
-        
+
         $array_venta['fecha'] = $venta->getFecha();
-        
+
         $sucursal = SucursalDAO::getByPK($venta->getIdSucursal());
         $array_venta['sucursal'] = $sucursal->getDescripcion();
 
         $cajero = UsuarioDAO::getByPK($venta->getIdUsuario());
         $array_venta['cajero'] = $cajero->getNombre();
-        
+
         $array_venta['cancelada'] = $venta->getCancelada();
-        
+
         $array_venta['tipo_venta'] = $venta->getTipoVenta();
-        
+
         $array_venta['tipo_pago'] = $venta->getTipoPago();
-                
+
         $array_venta['total'] = $venta->getTotal();
-                
+
         $array_venta['pagado'] = $venta->getPagado();
-                
+
         $array_venta['saldo'] = $venta->getTotal() - $venta->getPagado();
 
         array_push($array_ventas, $array_venta);
@@ -830,23 +909,22 @@ function estadoCuentaCliente($args){
     $saldo = 0;
     $ventas = new Ventas();
     $ventas->setIdCliente($args['id_cliente']);
-    foreach(VentasDAO::search($ventas) as $venta){
-        if($venta->getLiquidada() != "1"){
+    foreach (VentasDAO::search($ventas) as $venta) {
+        if ($venta->getLiquidada() != "1") {
             $saldo += $venta->getTotal() - $venta->getPagado();
         }
     }
-    
-    
+
+
     $estado_cuenta = new StdClass();
     $estado_cuenta->array_ventas = $array_ventas;
     $estado_cuenta->limite_credito = $cliente->getLimiteCredito();
     $estado_cuenta->saldo = $saldo;
-    
-    
-    Logger::log("Estado de cuenta del cliente  {$args['id_cliente']}, se encontraron " . count($estado_cuenta->array_ventas) . " coincidencias.");
-    return $estado_cuenta;   
-}
 
+
+    Logger::log("Estado de cuenta del cliente  {$args['id_cliente']}, se encontraron " . count($estado_cuenta->array_ventas) . " coincidencias.");
+    return $estado_cuenta;
+}
 
 /*
  * 
@@ -931,12 +1009,11 @@ if (isset($args['action'])) {
             //lista todas las ventas de un cliente en especifico
             printf('{ "success": true, "datos": %s }', json_encode(listarVentasCliente($args)));
             break;
-        
+
         case 310:
             //lista el estado de cuenta de los clientes
             $estado_cuenta = estadoCuentaCliente($args);
             printf('{ "success": true, "total": ' . count($estado_cuenta->array_ventas) . ', "datos": %s }', json_encode($estado_cuenta));
             break;
-
     }
 }
