@@ -865,17 +865,24 @@ class Comprobante {
             $ready_to_send = str_replace("&gt;", ">", $ready_to_send);                        
 
             try {
-                $client = new SoapClient($this->getUrlWS());
+				//If you want to dissable WSDL-caching, you can do so with 
+				ini_set('soap.wsdl_cache_enabled', '0'); 
+				ini_set('soap.wsdl_cache_ttl', '0');
+				
+                $client = new SoapClient(
+						$this->getUrlWS(), 
+						array("compression" => SOAP_COMPRESSION_DEFLATE));
+						
                 $result = $client->RececpcionComprobante(array('comprobante' => $ready_to_send));
 
             } catch (SoapFault $fault) {
 	
                 Logger::log("********** ERROR AL SOLICITAR NUEVO CFDI **********");
 				
-				Logger::log("** datos enviados **");
+				Logger::log( "** datos enviados **");
 				Logger::log( $ready_to_send );
 				
-				Logger::log(" ** informacion del error **  ");
+				Logger::log( " ** informacion del error **  ");
 				Logger::log( "Mensaje:" 	. $fault->getMessage ( ) );
 			 	Logger::log( "Codigo:" 		. $fault->getCode ( ) );
 				Logger::log( "Archivo:" 	. $fault->getFile ( ) );
