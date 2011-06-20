@@ -356,11 +356,11 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
 
 
                 if(response.success === false){
-
+	
+					jQuery("#ajax_failure").html(response.reason).show();
                     jQuery("#loader").fadeOut('slow', function(){
                         //jQuery("#submitButtons").fadeIn();    
                         window.scroll(0,0);                                                             
-                        jQuery("#ajax_failure").html(response.reason).show();
                         jQuery("#submitButtons").fadeIn();                  
                     });                
                     return ;

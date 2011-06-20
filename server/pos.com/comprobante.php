@@ -867,13 +867,27 @@ class Comprobante {
             try {
                 $client = new SoapClient($this->getUrlWS());
                 $result = $client->RececpcionComprobante(array('comprobante' => $ready_to_send));
+
             } catch (SoapFault $fault) {
-                Logger::log("\n\n\n********** ERROR AL SOLICITAR NUEVO CFDI **********\n\n SE ENVIO COMO PARAMETRO AL WEBSERVICE : \n\n {$ready_to_send}\n\nCODIGO DE ERROR : \n\n{$fault->faultcode}\n\nMENSAJE DE ERROR : \n\n{$fault->faultstring}\n\n");
+	
+                Logger::log("********** ERROR AL SOLICITAR NUEVO CFDI **********");
+				
+				Logger::log("** datos enviados **");
+				Logger::log( $ready_to_send );
+				
+				Logger::log(" ** informacion del error **  ");
+				Logger::log( "Mensaje:" 	. $fault->getMessage ( ) );
+			 	Logger::log( "Codigo:" 		. $fault->getCode ( ) );
+				Logger::log( "Archivo:" 	. $fault->getFile ( ) );
+				Logger::log( "Linea:" 		. $fault->getLine ( ) );
+				Logger::log( "Trace:" 		. $fault->getTraceAsString ( ) );
+
                 $this->success = new Success("El servicio web que genera las facturas esta experimentando algunos problemas, intente nuevamente.");
                 return $this->success;
-            }
-
+            } 
+			
             $response = $result->RececpcionComprobanteResult;
+
         } else {
             $response = $this->getXmlHardCode();
             $ready_to_send = "Esta es solo una prueba de generacion de CFDI.";
