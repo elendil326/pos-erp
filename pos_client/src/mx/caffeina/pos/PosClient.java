@@ -5,6 +5,8 @@ import mx.caffeina.pos.Http.*;
 import mx.caffeina.pos.Dispatcher;
 import java.awt.TrayIcon;
 
+import mx.caffeina.pos.Bascula.*;
+
 public class PosClient{
 	
 	static final boolean PRODUCTION = false;
@@ -39,7 +41,11 @@ public class PosClient{
 		//System.out.println( response );
 		
 		//iniciar el servidor web
-		httpServer = new HttpServer(8080);
+		//httpServer = new HttpServer(8080);
+		
+		Bascula b = new Bascula();
+		b.getRawData(16);
+		b.close();
 
 	}
 

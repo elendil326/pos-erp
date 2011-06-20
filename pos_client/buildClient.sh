@@ -11,9 +11,9 @@ cd bin
 
 #create manifest file
 echo "Main-Class: mx.caffeina.pos.PosClient
-Class-Path: lib/json-simple-1.1.jar" > ../manifest
+Class-Path: lib/json-simple-1.1.jar lib/GiovynetDriver.jar" > ../manifest
 
-jar cfm ../PosClient.jar ../manifest mx ../media
+jar cfm ../PosClient.jar ../manifest mx 
 
 
 rm ../manifest
@@ -21,7 +21,9 @@ rm ../manifest
 cd ..
 
 #zip the client
-zip -r client.zip posClient.jar lib media -x \*.svn*
+zip -r client.zip posClient.jar *.so *.dll lib media -x \*.svn*
+
+rm -rf bin
 
 #run main biatch
 java -jar PosClient.jar 

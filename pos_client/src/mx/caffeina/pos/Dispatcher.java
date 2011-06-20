@@ -1,6 +1,8 @@
 package mx.caffeina.pos;
 
 import mx.caffeina.pos.Printer.*;
+import mx.caffeina.pos.Bascula.*;
+
 import org.json.simple.parser.JSONParser;
 
 public class Dispatcher{
