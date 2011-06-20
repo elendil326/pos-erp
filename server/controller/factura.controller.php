@@ -211,9 +211,9 @@ function generaFactura($id_venta, $factura_generica = null) {
     /* Termino aqui la transaccion por que si ocurre un error, al momento de la lectura de los XML quiero que se guarde
      * el registro de factura_venta.     
      */
-    DAO::transEnd();
+ 
 
-    DAO::transBegin();
+ 
 
     Logger::log("Iniciando creacion de objeto comprobante..");
     $comprobante = new Comprobante();
@@ -236,6 +236,8 @@ function generaFactura($id_venta, $factura_generica = null) {
     $comprobante->setReceptor(getReceptor($cliente)); //6
 
     $comprobante->setUrlWS(getUrlWS()); //7
+
+
     //intentamos obtener la factura sellada
     $success = $comprobante->getNuevaFactura();
 
@@ -698,6 +700,9 @@ function getInformacionConfiguracion() {
     return $llaves;
 }
 
+
+
+
 /**
  * crea una factura en la BD y regresa una objeto con los tados de la factura realizada
  */
@@ -740,6 +745,8 @@ function creaFacturaBD($id_venta) {
 
     return $factura;
 }
+
+
 
 /**
  * cancela una factura
@@ -796,9 +803,19 @@ if (isset($args['action'])) {
 
             $factura_generica = null;
 
-            if (isset($args['factura_generica']) && $args['factura_generica'] != "null" && $args['factura_generica'] != null && $args['factura_generica'] != "") {
+            if (
+				isset($args['factura_generica']) 
+				&& $args['factura_generica'] != "null" 
+				&& $args['factura_generica'] != null 
+				&& $args['factura_generica'] != ""
+			)
+			{
+				Logger::log("Es una factura generica...");
+				Logger::log("Datos de la factura generia... " . $args['factura_generica']);
                 $factura_generica = $args['factura_generica'];
             }
+
+
 
             generaFactura($args['id_venta'], $factura_generica);
 

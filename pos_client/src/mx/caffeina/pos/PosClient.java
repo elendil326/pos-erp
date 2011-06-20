@@ -9,7 +9,7 @@ import mx.caffeina.pos.Bascula.*;
 
 public class PosClient{
 	
-	static final boolean PRODUCTION = false;
+	static final boolean PRODUCTION = true;
 	
 	public static HttpServer httpServer = null;
 	
@@ -34,7 +34,7 @@ public class PosClient{
 		String response = null;
 
 		if(PRODUCTION)
-			response = HttpClient.Request("http://pos.caffeina.mx:80/trunk/www/proxy.php?i=1&action=1400");
+			response = HttpClient.Request("http://development.pos.caffeina.mx:80/trunk/www/proxy.php?i=1&action=1400");
 		else
 			response = HttpClient.Request("http://192.168.1.66:80/trunk/www/proxy.php?i=1&action=1400");
 
@@ -48,7 +48,7 @@ public class PosClient{
 
 	public static void sendLogToServer( String msg ){
 		if(PRODUCTION)
-			HttpClient.Request("http://pos.caffeina.mx:80/trunk/www/proxy.php?i=1&action=1401&msg=" + msg );
+			HttpClient.Request("http://development.pos.caffeina.mx:80/trunk/www/proxy.php?i=1&action=1401&msg=" + msg );
 		else
 			HttpClient.Request("http://192.168.1.66:80/trunk/www/proxy.php?i=1&action=1401&msg=" + msg );
 	}
