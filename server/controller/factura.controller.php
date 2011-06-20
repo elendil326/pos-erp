@@ -163,7 +163,7 @@ function generaFactura($id_venta, $factura_generica = null) {
 
         Logger::log("Se detecto que se solicito un CFDI generico, los datos son los siguientes :");
         
-        $factura_generica = json_decode($factura_generica);
+        $factura_generica = parseJSON($factura_generica);
 
         if (!isset($factura_generica->id_producto)) {
             Logger::log("Error : No se definio el id del producto en la factura generia");
@@ -509,7 +509,7 @@ function getEmisor() {
         die('{"success": false, "reason": "Error al obtener datos del emisor." }');
     }
 
-    $json = json_decode($pos_config->getValue());
+    $json = parseJSON($pos_config->getValue());
 
     $emisor = new Emisor();
 
