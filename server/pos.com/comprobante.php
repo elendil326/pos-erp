@@ -836,7 +836,7 @@ class Comprobante {
         $this->setXMLrequest($xml->saveXML());
 
 		Logger::log( "--------------------------------- ");
-		Logger::log($xml);
+		//Logger::log($xml);
 		Logger::log( "--------------------------------- ");
 		
 		
