@@ -1164,6 +1164,13 @@ function imprimirNotaDeVenta($id_venta) {
         "descripcion" => "",
         "precio" => "Total",
         "importe" => moneyFormat($venta->getTotal(), DONT_USE_HTML)));
+    
+    if($venta->getPagado() < $venta->getTotal()){
+        array_push($elementos, array("cantidad" => "",
+        "descripcion" => "",
+        "precio" => "Saldo",
+        "importe" => moneyFormat(($venta->getTotal() - $venta->getPagado()), DONT_USE_HTML)));
+    }
 
 
     $pdf->ezText("", 10, array('justification' => 'center'));
@@ -1172,44 +1179,86 @@ function imprimirNotaDeVenta($id_venta) {
     $opciones_tabla['width'] = puntos_cm(16.2);
     $pdf->ezTable($elementos, "", "", $opciones_tabla);
 
-
-    roundRect($pdf, puntos_cm(2), puntos_cm(20.9), puntos_cm(16.2), puntos_cm(14.2));
+    //roundedRect($x, $y, $w, $h)
+    roundRect($pdf, puntos_cm(2), puntos_cm(20.9), puntos_cm(16.2), puntos_cm(13));
 
 
     /*     * ************************
      * PAGARE
      * ************************* */
-    $fecha_pagare = toDate($venta->getFecha());
-    $fecha_pagare = explode(" ", $fecha_pagare);
-    $fecha_pagare = $fecha_pagare[0];
+    $mes = "";
+    
+    switch(date("m")){
+        case 1 : 
+            $mes = 'Enero';
+            break;
+        case 2 : 
+            $mes = 'Febrero';
+            break;
+        case 3 : 
+            $mes = 'Marzo';
+            break;
+        case 4 : 
+            $mes = 'Abril';
+            break;
+        case 5 : 
+            $mes = 'Mayo';
+            break;
+        case 6 : 
+            $mes = 'Junio';
+            break;
+        case 7 : 
+            $mes = 'Julio';
+            break;
+        case 8 : 
+            $mes = 'Agosto';
+            break;
+        case 9 : 
+            $mes = 'Septiembre';
+            break;
+        case 10 : 
+            $mes = 'Octubre';
+            break;
+        case 11 : 
+            $mes = 'Noviembre';
+            break;
+        case 12 : 
+            $mes = 'Diciembre';
+            break;
+    }
 
     $en_letra = new CNumeroaletra();
-    $en_letra->setNumero($venta->getTotal());
+    $en_letra->setNumero(($venta->getTotal() - $venta->getPagado()));
 
+    $pagare = "                                                                                           <b>P A G A R E</b>\n\n";
+    $pagare .= "No. _________                                                                                                                            En " . readableText($emisor->municipio) . " a " . date("d") . " de " . $mes . " del " . date("Y") ."\n\n";
+    $pagare .= " Debe(mos) y pagare(mos) incondicionalmente por este Pagaré a la orden de " . readableText($emisor->nombre) . " en " . readableText($emisor->municipio) . " ";
+    $pagare .= "el __________________________  la cantidad de ";
+    $pagare .= moneyFormat(($venta->getTotal() - $venta->getPagado()), DONT_USE_HTML) . " " . $en_letra->letra() . ". Valor recibido a mi";
+    $pagare .= "(nuestra) entera satisfacción. Este pagaré forma parte de una serie numerada de 1 al _________ y todos están sujetos a la condición de que, ";
+    $pagare .= "al no pagarse cualquiera de ellos a su vencimiento, serán exigibles todos los que le sigan en numero, ademas de los ya vencidos, ";
+    $pagare .= "desde la fecha de vencimiento de este documento hasta el dia de su liquidacón, ";
+    $pagare .= "causara intereses moratorios al tipo de 20% mensual, ";
+    $pagare .= "pagadero en esta ciudad juntamente con el principal.";
 
-    $pagare = "Por este PAGARE me obligo a pagar incondicionalmente a la orden de de " . readableText($emisor->nombre) . " en esta ciudad de " . readableText($emisor->municipio) . " ";
-    $pagare .= "o en cualquier otra que se me requira de pago, el dia " . $fecha_pagare . " la cantidad de ";
-    $pagare .= moneyFormat($venta->getTotal(), DONT_USE_HTML) . " " . $en_letra->letra() . ". Valor recibido a ";
-    $pagare .= "nuestra entera satisfaccion, este pagare es meracantil y se encuentra regido ";
-    $pagare .= "por la ley general de titulos y operaciones de credito. En caso de no ser pagada la cantidad estipulada en el ";
-    $pagare .= "presente pagare en la fecha de su vencimiento, este titulo de credito causara intereses moratorios a razon de 3% mensual ";
-    $pagare .= "pagadero en esta ciudad o en cualquier otra conjuntamente con la obligacion principal.";
-
+    $firma =  "\n                                                                                   <b>___________________</b>";
+    $firma .= "\n                                                                                        <b>ACEPTO(AMOS)</b>";
     $receptor = array(
-        array("receptor" => $pagare),
-        array("receptor" => "\n\n   ___________________\n       ACEPTO(AMOS)")
-    );
+        array("receptor" => utf8_decode($pagare)),
+        array("receptor" => $firma)
+    ); 
 
 
 
-    $pdf->ezSetY(puntos_cm(6.3));
+    $pdf->ezSetY(puntos_cm(7.2));
     $opciones_tabla['xPos'] = puntos_cm(2);
     $opciones_tabla['width'] = puntos_cm(16.2);
     $opciones_tabla['shaded'] = 0;
     $opciones_tabla['showLines'] = 0;
     $pdf->ezTable($receptor, "", "", $opciones_tabla);
 
-    roundRect($pdf, puntos_cm(2), puntos_cm(6.3), puntos_cm(16.2), puntos_cm(3.86));
+    //roundedRect($x, $y, $w, $h)
+    roundRect($pdf, puntos_cm(2), puntos_cm(7.5), puntos_cm(16.2), puntos_cm(5.06));
 
     /*     * ************************
      * notas de abajo
