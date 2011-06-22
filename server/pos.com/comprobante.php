@@ -835,9 +835,7 @@ class Comprobante {
         //guardamos en este objeto el XML que se envia al SAT
         $this->setXMLrequest($xml->saveXML());
 
-		Logger::log( "--------------------------------- ");
-		//Logger::log($xml);
-		Logger::log( "--------------------------------- ");
+
 		
 		
         Logger::log("Terminado proceso de parceo de venta a XML");
@@ -856,23 +854,37 @@ class Comprobante {
 
         //creamos una instancia de un objeto SoapClient
 
-        
-        
+		if(POS_FACTURACION_PRODUCCION)
+      		Logger::log("POS_FACTURACION_PRODUCCION: TRUE");
+		else
+			Logger::log("POS_FACTURACION_PRODUCCION: FALSE");
+			
+			
         if ($this->getProductionMode()) {
 
             $ready_to_send = $this->getXMLrequest();
             $ready_to_send = str_replace("&lt;", "<", $ready_to_send);
-            $ready_to_send = str_replace("&gt;", ">", $ready_to_send);                        
-
+            $ready_to_send = str_replace("&gt;", ">", $ready_to_send);    
+                    
+			Logger::log( "-------------- ENVIANDO ESTO ------------------- ");
+			Logger::log( $ready_to_send );
+			Logger::log( "--------------- ------------ ------------------ ");
+	
             try {
 				//If you want to dissable WSDL-caching, you can do so with 
 				ini_set('soap.wsdl_cache_enabled', '0'); 
 				ini_set('soap.wsdl_cache_ttl', '0');
+	
+	
 				
+				Logger::log("URL DEL WS:" . $this->getUrlWS());
+
                 $client = new SoapClient(
-						$this->getUrlWS(), 
-						array("compression" => SOAP_COMPRESSION_DEFLATE));
-						
+					$this->getUrlWS(),
+					 array(
+						"location" => str_replace( '?wsdl','', $this->getUrlWS() )
+					));
+
                 $result = $client->RececpcionComprobante(array('comprobante' => $ready_to_send));
 
             } catch (SoapFault $fault) {

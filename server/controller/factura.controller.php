@@ -157,6 +157,8 @@ function verificarDatosVenta($id_venta = null) {
  */
 function generaFactura($id_venta, $factura_generica = null) {
 
+
+
     Logger::log("Entrando a la funcion generaFactura");
     
     if (isset($factura_generica)) {
@@ -277,8 +279,12 @@ function generaFactura($id_venta, $factura_generica = null) {
         }
     }
 
-    DAO::transEnd();
 
+
+	
+	DAO::transEnd();
+    
+	
     $file = '../static_content/facturas/' . $_SESSION["INSTANCE_ID"] . "_" . $id_venta . '.xml';
     
     //verificamos que el archivo no exista, si existe lo eliminamos
@@ -793,8 +799,8 @@ function reimprimirFactura($args) {
 if (isset($args['action'])) {
     switch ($args['action']) {
         case 1200:
-            //realiza una peticion al web service para que regrese una factura sellada     
 
+            //realiza una peticion al web service para que regrese una factura sellada     
             if (!isset($args['id_venta'])) {
                 die('{"success": false, "reason": "No se a especificado el id de la venta que se desea facturar." }');
             }
@@ -830,4 +836,4 @@ if (isset($args['action'])) {
             break;
     }
 }
-?>
+
