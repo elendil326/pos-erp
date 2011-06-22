@@ -1368,7 +1368,7 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
         if (segundos <= 9) segundos = "0" + segundos
 
 
-		var PRINT_VIA_JAVA_CLIENT = true;
+		var PRINT_VIA_JAVA_CLIENT = false;
 		
 		if(PRINT_VIA_JAVA_CLIENT)
 		{
