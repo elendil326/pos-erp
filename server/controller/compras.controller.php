@@ -764,9 +764,9 @@ function nuevaCompraSucursal($json = null) {
             $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
             $compra_proveedor_fragmentacion->setIdCompraProveedor($subproducto->id_compra);
             $compra_proveedor_fragmentacion->setIdProducto($subproducto->id_producto);
-            $compra_proveedor_fragmentacion->setDescripcion("SE SURTIO A LA SUCURSAL " . $sucursal->getDescripcion() . " LA CANTIDAD DE " . $subproducto->peso_real . " " .$subproducto->escala . "s DE " . $subproducto->desc . " " . ($subproducto->procesada ? "PROCESADA" : "ORIGINAL"));
+            $compra_proveedor_fragmentacion->setDescripcion("SE VENDIO A LA SUCURSAL " . $sucursal->getDescripcion() . " LA CANTIDAD DE " . $subproducto->peso_real . " " .$subproducto->escala . "s DE " . $subproducto->desc . " " . ($subproducto->procesada ? "PROCESADA" : "ORIGINAL"));
             $compra_proveedor_fragmentacion->setProcesada($subproducto->procesada);
-            $compra_proveedor_fragmentacion->setCantidad($subproducto->peso_real * -1);
+            $compra_proveedor_fragmentacion->setCantidad($subproducto->peso_real);
             $compra_proveedor_fragmentacion->setPrecio($subproducto->precio);
 
             array_push($fragmentaciones, $compra_proveedor_fragmentacion);

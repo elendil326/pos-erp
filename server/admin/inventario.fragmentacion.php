@@ -109,8 +109,8 @@ $compra_proveedor_fragmentacion = CompraProveedorFragmentacionDAO::search(new Co
             "procesada" => ($fragmentacion->getProcesada() ? "Si" : "No"),
             "fecha" => toDate($fragmentacion->getFecha()),
             "cantidad" => $fragmentacion->getCantidad(),
-            "precio" => moneyFormat($fragmentacion->getPrecio()),
-            "importe" => moneyFormat($fragmentacion->getPrecio() * $fragmentacion->getCantidad()),
+            "precio" => $fragmentacion->getPrecio(),
+            "importe" => ($fragmentacion->getPrecio() * $fragmentacion->getCantidad()),
             "resumen" => $fragmentacion->getDescripcion()
         ));
 
@@ -133,9 +133,9 @@ $compra_proveedor_fragmentacion = CompraProveedorFragmentacionDAO::search(new Co
     $tabla->addRow("descripcion");
     $tabla->addRow("procesada");
     $tabla->addColRender("fecha", "toDate");
-    $tabla->addColRender("cantidad", "moneyFormat");
+    $tabla->addColRender("cantidad","floatFormatAlert");
     $tabla->addColRender("precio", "moneyFormat");
-    $tabla->addColRender("importe", "moneyFormat");
+    $tabla->addColRender("importe", "moneyFormatAlert");
     $tabla->addRow("resumen");
     $tabla->addNoData("Aun no se han registrado movimientos para esta remisión");
     $tabla->render();
@@ -147,7 +147,7 @@ $compra_proveedor_fragmentacion = CompraProveedorFragmentacionDAO::search(new Co
     echo "<tr style = 'font-weight:bold; " . ($i % 2 == 0 ? $d : $s) . "'><th><b>Costo de la Remisión</b></th><th><b>Recoleccion</b></th><th><b>Estatus</b></th></tr>";
     echo "<tr style = 'font-weight:bold; " . ($i % 2 == 0 ? $d : $s) . "'>";
     $saldo = $suma - $compra_proveedor->getTotalOrigen();
-    echo "  <td>" . moneyFormat($compra_proveedor->getTotalOrigen()) . "</td><td>" . moneyFormat($suma) . "</td><td style = 'color:" . ($saldo < 0 ? "red" : "green") . "'>" . moneyFormat($suma - $compra_proveedor->getTotalOrigen()) . "</td>";
+    echo "  <td>" . moneyFormat($compra_proveedor->getTotalOrigen()) . "</td><td>" . moneyFormat($suma) . "</td><td>" . moneyFormatAlert($suma - $compra_proveedor->getTotalOrigen()) . "</td>";
     echo "</tr>";
     ?>
 </table>

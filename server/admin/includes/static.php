@@ -9,11 +9,33 @@ function moneyFormat( $val, $useHtml = true){
 		return "$&nbsp;<b>" . number_format( (float)$val, 2 ) . "</b>";		
 	}
 
-
 }
 
+function floatFormat( $val ){
+    return sprintf( "<b>%.2f</b>", $val);
+}
+
+function floatFormatAlert( $val ){
+    
+    $c1 = "red";
+    $c2 = "green";
+    
+    return sprintf( "<b style = 'color:" . ($val < 0 ? $c1: $c2) . "'>%.2f</b>", $val);
+}
+
+function moneyFormatAlert( $val, $useHtml = true){
+	
+        $c1 = "red";
+        $c2 = "green";
+    
+	if( $useHtml ==  DONT_USE_HTML){
+		return "$ <b style = 'color:" . ($val < 0 ? $c1: $c2) . "'>" . number_format( (float)$val, 2 ) . "</b>";		
+	}else{
+		return "$&nbsp;<b style = 'color:" . ($val < 0 ? $c1: $c2) . "'>" . number_format( (float)$val, 2 ) . "</b>";		
+	}
 
 
+}
 
 function percentFormat( $val ){
 	
@@ -92,10 +114,10 @@ class Tabla {
 		$html = "";
 		
 		$html .= '<table border="0" style="width:100%">';
-		$html .= '<tr >';
+		$html .= '<tr align = "left">';
 		
 		foreach ( $this->header  as $key => $value){
-			$html .= '<th align="left">' . $value . '</th>';			
+			$html .= '<th>' . $value . '</th>';			
 		}
 		
 
@@ -161,10 +183,10 @@ class Tabla {
 					
 					if( $found ){
 						
-						$html .=  "<td style='background-color:".$bgc.";'>" . call_user_func( $found[$key] , $row[ $key ], $row ) . "</td>";							
+						$html .=  "<td align='left' style='background-color:".$bgc.";'>" . call_user_func( $found[$key] , $row[ $key ], $row ) . "</td>";							
 
 					}else{
-						$html .=  "<td style='background-color:".$bgc.";'>" . $row[ $key ] . "</td>";
+						$html .=  "<td align='left' style='background-color:".$bgc.";'>" . $row[ $key ] . "</td>";
 					}
 					
 

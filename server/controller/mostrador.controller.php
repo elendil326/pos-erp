@@ -959,8 +959,8 @@ function venderAdmin($args) {
                 $compra_proveedor_fragmentacion->setProcesada(false);
             }
 
-            $compra_proveedor_fragmentacion->setCantidad(($sub_producto->cantidad));
-            $compra_proveedor_fragmentacion->setPrecio($sub_producto->precio);
+            $compra_proveedor_fragmentacion->setCantidad($sub_producto->cantidad);
+            $compra_proveedor_fragmentacion->setPrecio($sub_producto->cantidad/$sub_producto->precio);
             $compra_proveedor_fragmentacion->setDescripcionRefId($venta_actual->getIdVenta());
 
             try {

@@ -48,8 +48,8 @@ function validaRFC($cadena) {
         //es persona fisica y verificamos si el primer caracter es una letra
         if (is_numeric($cadena[$i])) {
 
-            Logger::log("Formato invalido del RFC del emisor, verifique si el " . ($i + 1) . "caracter es correcto");
-            die('{"success": false, "reason": "Formato invalido del RFC del emisor, verifique si el ' . ($i + 1) . 'caracter es correcto" }');
+            Logger::log("Formato invalido del RFC del cliente, verifique si el " . ($i + 1) . "caracter es correcto");
+            die('{"success": false, "reason": "Formato invalido del RFC del cliente, verifique si el ' . ($i + 1) . 'caracter es correcto" }');
         }
     }
 
@@ -61,8 +61,8 @@ function validaRFC($cadena) {
         $i = $j;
 
         if (is_numeric($cadena[$j])) {
-            Logger::log("Formato invalido el RFC del emisor, verifique si el " . ($i + 1) . "caracter es correcto");
-            die('{"success": false, "reason": "Formato invalido el RFC del emisor, verifique si el ' . ($i + 1) . 'caracter es correcto"}');
+            Logger::log("Formato invalido el RFC del cliente, verifique si el " . ($i + 1) . "caracter es correcto");
+            die('{"success": false, "reason": "Formato invalido el RFC del cliente, verifique si el ' . ($i + 1) . 'caracter es correcto"}');
         }
     }
 
@@ -72,8 +72,8 @@ function validaRFC($cadena) {
         $i = $j;
 
         if (!is_numeric($cadena[$j])) {
-            Logger::log("Formato invalido el RFC del emisor, verifique si el " . ($i + 1) . " caracter es correcto");
-            die('{"success": false, "reason": "Formato invalido el RFC del emisor, verifique si el ' . ($i + 1) . ' caracter es correcto"}');
+            Logger::log("Formato invalido el RFC del cliente, verifique si el " . ($i + 1) . " caracter es correcto");
+            die('{"success": false, "reason": "Formato invalido el RFC del cliente, verifique si el ' . ($i + 1) . ' caracter es correcto"}');
         }
     }
 
@@ -83,8 +83,8 @@ function validaRFC($cadena) {
         $i = $j;
 
         if (!ctype_alnum($cadena[$j])) {
-            Logger::log("Formato invalido el RFC del emisor, verifique si el " . ($i + 1) . " caracter es correcto");
-            die('{"success": false, "reason": "Formato invalido el RFC del emisor, verifique si el ' . ($i + 1) . ' caracter es correcto"}');
+            Logger::log("Formato invalido el RFC del cliente, verifique si el " . ($i + 1) . " caracter es correcto");
+            die('{"success": false, "reason": "Formato invalido el RFC del cliente, verifique si el ' . ($i + 1) . ' caracter es correcto"}');
         }
     }
 

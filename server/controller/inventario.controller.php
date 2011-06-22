@@ -607,7 +607,8 @@ function procesarProducto($json = null) {
     $compra_proveedor_fragmentacion->setDescripcion("HUBO UN EGRESO DE {$suma}KG. DEL PRODUCTO {$producto->getDescripcion()} ORIGINAL POR CONCEPTO DE UN PROCESO EN LA REMISION CON EL FOLIO {$compra_proveedor->getFolio()}.");
     $compra_proveedor_fragmentacion->setProcesada(false);
     $compra_proveedor_fragmentacion->setCantidad(($suma * -1));
-    $compra_proveedor_fragmentacion->setPrecio($detalle_compra_proveedor->getPrecioPorKg());
+    //$compra_proveedor_fragmentacion->setPrecio($detalle_compra_proveedor->getPrecioPorKg());.
+    $compra_proveedor_fragmentacion->setPrecio(0);
     $compra_proveedor_fragmentacion->setDescripcionRefId($inventario_maestro->getIdCompraProveedor());
 
     try {
