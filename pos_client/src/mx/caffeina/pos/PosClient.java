@@ -23,7 +23,7 @@ public class PosClient{
 	
 
 	PosClient(){
-		System.out.println("Iniciando cliente de POS");
+		System.out.println("Iniciando cliente de POS, nevermind...");
 		
 		Runtime.getRuntime().addShutdownHook(new ShutDown());
 
@@ -32,12 +32,12 @@ public class PosClient{
 		System.out.println("Enviando saludo a pos.caffeina.mx !");
 		
 		String response = null;
-
+		/*
 		if(PRODUCTION)
 			response = HttpClient.Request("http://development.pos.caffeina.mx:80/trunk/www/proxy.php?i=1&action=1400");
 		else
 			response = HttpClient.Request("http://192.168.1.66:80/trunk/www/proxy.php?i=1&action=1400");
-
+		*/
 		//System.out.println( response );
 		
 		//iniciar el servidor web

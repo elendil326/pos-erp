@@ -5,7 +5,7 @@ find src -name \*.java -print > file.list
 mkdir bin
 
 #compile those
-javac -d bin -cp src:lib/json-simple-1.1.jar @file.list 
+javac -d bin -cp src:lib/json-simple-1.1.jar:lib/GiovynetDriver.jar @file.list 
 
 rm file.list
 
@@ -15,7 +15,7 @@ cd bin
 echo "Main-Class: mx.caffeina.pos.PosClient
 Class-Path: lib/json-simple-1.1.jar lib/GiovynetDriver.jar" > ../manifest
 
-jar cfm ../PosClient.jar ../manifest mx 
+jar cfm ../posClient.jar ../manifest mx 
 
 
 rm ../manifest
@@ -30,4 +30,4 @@ zip -r client.zip posClient.jar *.so *.dll lib media -x \*.svn*
 rm -rf bin
 
 #run main biatch
-java -jar PosClient.jar 
+java -jar posClient.jar 
