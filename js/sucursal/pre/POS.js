@@ -160,7 +160,10 @@ POS.leyendasTicket = null;
 POS.ajaxToClient = function( module, args, callback )
 {
 	
-	console.log("AJAX TO CLIENT !!", args);
+	if(DEBUG){
+		console.log("AJAX TO CLIENT !!", args);		
+	}
+
 	
 	/** **** Cross-broswer call **** **/
     Ext.util.JSONP.request({
@@ -169,12 +172,15 @@ POS.ajaxToClient = function( module, args, callback )
         params: {
 			action : module,
 			data : Ext.util.JSON.encode(args),
-			unique : Math.random()
+			unique : Math.random(    )
 			
 		},
         callback: function(data)
         {
-			console.log("AJAX TO CLIENT RETURNED !!", data);
+			if(DEBUG){
+				console.log("AJAX TO CLIENT RETURNED !!", data);	
+			}
+			
 
         }
     });

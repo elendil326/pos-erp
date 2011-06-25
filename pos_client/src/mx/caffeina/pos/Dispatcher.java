@@ -13,7 +13,7 @@ public class Dispatcher{
 		// unique=0.03196072019636631&callback=Ext.util.JSONP.callback
 		
 		String [] args = request.split("&");
-		
+		System.out.println("Raw request: " + request);
 		String action = null, data = null;
 
 		//buscar el action
@@ -55,6 +55,8 @@ public class Dispatcher{
 				b.close();				
 				return "Ext.util.JSONP.callback({\"success\": true, \"reading\" : \""+ rawValue +"\"});";
 				
+			}catch(java.lang.UnsatisfiedLinkError usle){	
+				return "Ext.util.JSONP.callback({\"success\": false, \"reason\" : \"Imposible cargar las librerias para este sistema operativo.\"});";
 				
 			}catch(Exception e){
 				return "Ext.util.JSONP.callback({\"success\": false, \"reason\" : \"La bascula no responde, revise que este conectada correctamente\"});";			

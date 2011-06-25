@@ -1368,7 +1368,7 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
         if (segundos <= 9) segundos = "0" + segundos
 
 
-		var PRINT_VIA_JAVA_CLIENT = false;
+		var PRINT_VIA_JAVA_CLIENT = true;
 		
 		if(PRINT_VIA_JAVA_CLIENT)
 		{
@@ -1504,6 +1504,19 @@ Aplicacion.Mostrador.prototype.vender = function ()
     if(DEBUG){
         console.log("Enviando venta .... !", json);
     }
+	
+	
+	//Hay un error en la red justo ahora !
+	if(POS.A.failure){
+		//mostrar el panel final
+        Aplicacion.Mostrador.currentInstance.finishedPanelShow();
+		
+        //reseteamos el carrito
+        Aplicacion.Mostrador.currentInstance.cancelarVenta();
+
+		return;
+		
+	}
 	
     Ext.Ajax.request({
         url: '../proxy.php',

@@ -20,25 +20,17 @@ public class Bascula{
 	* 
 	* 
 	* */
-	public Bascula(){
+	public Bascula() throws UnsatisfiedLinkError, Exception {
 		
 		System.out.println("Instanciando bascula !");
 		
 		serialPort = new SerialPort();
-		try{
-			portsFree = serialPort.getFreeSerialPort();
-		}catch(java.lang.UnsatisfiedLinkError usle){
-			System.out.println("Imposible cargar las librerias de puerto serial !");
-			return;
-			
-		}catch(Exception e){
-			System.out.println(e);
-			return;
-		}
+		portsFree = serialPort.getFreeSerialPort();
 		
 		// If there are free ports, use the first found. 
         if ( !(portsFree != null && portsFree.size() > 0) ) {
 			System.out.println("No Free ports!!!");
+			return;
 		}
 	
 		for (String free : portsFree) {
@@ -47,12 +39,7 @@ public class Bascula{
 			
 		/****Open the port.****/
         Parameters parameters = null;
-		try{
-        	parameters = new Parameters();			
-		}catch(Exception e){
-			System.out.println(e);
-			return;
-		}
+       	parameters = new Parameters();			
 
 		parameters.setPort(portsFree.get(0));
 		parameters.setBaudRate(Baud._9600);
@@ -62,12 +49,7 @@ public class Bascula{
 		//parameters.setMinDelayWrite(1250);
 		
 		System.out.println("Open port: " + portsFree.get(0));
-		try{
-			com = new Com(parameters);			
-		}catch(Exception e){
-			System.out.println(e);
-			return;
-		}
+		com = new Com(parameters);			
 
 	}
 	
