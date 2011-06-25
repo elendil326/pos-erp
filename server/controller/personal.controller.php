@@ -105,6 +105,7 @@ function insertarEmpleado($args)
 	$user->setRFC( $data->RFC );
 	$user->setNombre( $data->nombre );
 	$user->setContrasena( $data->contrasena );
+        $user->setOnline(0);
 
 
     //si soy admin ponerle el que mando, de lo contrario, soy gerente, poner mi sucursal
@@ -144,7 +145,7 @@ function insertarEmpleado($args)
     }catch( Exception $e ){
     
     	DAO::transRollback();
-    	Logger::log("Insertando usuario en grupo inexistente.");
+    	Logger::log("Error al guardar usuario : {$e}.");
         die( '{ "success" : false, "reason" : "Grupo Inexistente"}' );
     } 
 
