@@ -470,6 +470,53 @@ foreach($compras as $c){
 
 ?>
 
+<h2><img src='../media/icons/window_app_list_add_32.png'>&nbsp;Ingresos de esta sucursal</h2>
+<?php
+
+    $ingresos = listarIngresosSucursal($_REQUEST['id']);
+    
+    $array_ingresos = array();
+    
+    foreach($ingresos as $ingreso){
+        
+        $empleado = UsuarioDAO::getByPK($ingreso->getIdUsuario());
+        
+        array_push($array_ingresos, 
+                array("concepto" => $ingreso->getConcepto(), 
+                    "monto" => $ingreso->getMonto(), 
+                    "fecha" => $ingreso->getFecha(),
+                    "fecha_ingreso" => $ingreso->getFechaIngreso(),
+                    "empleado" => $empleado->getNombre(),
+                    "nota" => $ingreso->getNota()
+                )
+        );        
+        
+    }
+    
+    $header = array(
+    
+    "concepto" => "Concepto",
+    "monto" => "Monto",
+    "fecha" => "Se Ingreso",
+    "fecha_ingreso" => "Fecha del Gasto",    
+    "empleado" => "Registro",
+    "nota" => "Nota");
+
+
+    $tabla = new Tabla($header, $array_ingresos);
+    $tabla->addNoData("Esta sucursal no cuenta con nigun gasto.");
+    
+    $tabla->addRow("concepto");
+    $tabla->addColRender("monto", "moneyFormat");
+    $tabla->addColRender("fecha", "toDate");   
+    $tabla->addColRender("fecha_ingreso", "toDateS");   
+    //$tabla->addOnClick("empleado", "(function(id){window.location='personal.php?action=detalles&uid=' + id;})");
+    $tabla->addRow("empleado");
+    $tabla->addRow("nota");
+    $tabla->render();
+
+?>
+
 <h2><img src='../media/icons/users_business_32.png'>&nbsp;Personal</h2><?php
 $empleados = listarEmpleados($_REQUEST['id']);
 
