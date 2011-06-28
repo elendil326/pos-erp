@@ -255,17 +255,23 @@ if ($venta->getIdCliente() < 0) {
     }
 
 <?php
-//please print
-if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
-    ?>
-            Ext.Msg.confirm("Surtir sucursal",
-            "Venta exitosa. &iquest; Desea imprimir un comprobante ?",
-            function(res){
 
-                if(res == "yes"){
-                    printComprobante();
-                }
-            } )
+/**
+ * Please print
+ * 
+ * */
+if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) 
+{
+    ?>
+	Ext.Msg.confirm(
+		"Surtir sucursal",
+		"Venta exitosa. &iquest; Desea imprimir un comprobante ?",
+		function(res){
+			if(res == "yes"){
+				printComprobante();
+			}
+		}
+	);
     <?php
 }
 ?>
@@ -383,9 +389,11 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
                     return ;
                 }
 
+				window.open("../proxy.php?action=1308&id_venta=<?php echo $_REQUEST["id"]; ?>");
+				
                 reason = "Su venta ha sido facturada.";
                 window.location = "ventas.php?action=detalles&id=<?php echo $_REQUEST["id"]; ?>&success=true&reason=" + reason;
-
+				
             }
         });
     
@@ -408,16 +416,21 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
         if (sizeof($res) == 0) {
             //no se ha hecho factura
             ?><input type="button" value="Facturar esta venta" onClick='showModoFactura()' ><?php
-    } else {
+    	} else {
         //ya se ha hecho factura !
-            ?><input type="button" value="Reimprimir factura" onClick='window.location = "../proxy.php?action=1308&id_venta=<?php echo $_REQUEST["id"]; ?>";'><?php
-    }
-}
+            ?><input type="button" value="Imprimir factura" onClick='window.location = "../proxy.php?action=1308&id_venta=<?php echo $_REQUEST["id"]; ?>";'><?php
+    	}
+	}
     ?>
 </h4>
-<div id="loader" 		style="display: none;" align="center"  >
+
+
+
+<div id="loader" style="display: none;" align="center"  >
 	Procesando <img src="../media/loader.gif"> 
 </div>
+
+
 
 <div id="factura-mode" style="display:none">
     <h2>Seleccione el modo de facturacion</h2>
