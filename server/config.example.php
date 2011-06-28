@@ -7,6 +7,10 @@
 #carpeta donde se encuentran los scripts del servidor,
 define( "POS_PATH_TO_SERVER_ROOT", "/Applications/XAMPP/xamppfiles/htdocs/trunk/server");
 
+#factura ventas sin liquidar
+define("POS_FACTURACION_ALL", false);
+
+
 # *******************************
 # Logs
 # *******************************

@@ -380,7 +380,8 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
 <h4 id="submitButtons">
     <input type=button value="Imprimir comprobante" onClick="printComprobante()">
     <?php
-    if ($venta->getLiquidada() && !$venta->getCancelada()) {
+    //if ($venta->getLiquidada() && !$venta->getCancelada()) {
+    if (POS_FACTURACION_ALL ? true : $venta->getLiquidada() && !$venta->getCancelada()) {
         $q = new FacturaVenta();
         $q->setIdVenta($venta->getIdVenta());
         $res = FacturaVentaDAO::search($q);
