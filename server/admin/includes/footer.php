@@ -1,7 +1,7 @@
 <!-- footer -->
 
 <div class="footer" align=center >
-
+	<!--
 	<table align=center>
     <tr>
 
@@ -28,11 +28,7 @@
 				<li>
 				  <a  href="ventas.php?action=lista">Ver ventas</a>
 				</li>
-				<!--
-				<li>
-				  <a  href="ventas.php?action=porProducto">Ventas por producto</a>
-				</li>
-				-->
+
 			  </ul>
     	</td>
 
@@ -75,7 +71,7 @@
     </tr>
 
     </table>
-	
+	-->
    	<!--<a href="http://www.caffeina.mx">Página principal de Caffeina</a> - <a href="http://www.caffeina.mx/report/">Reportar una falla</a> - <a href="http://www.caffeina.mx/contacto.php">Envíenos un mensaje</a>-->
     <br>
 	<div align=center style="padding-bottom: 10px;">

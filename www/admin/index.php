@@ -57,6 +57,7 @@
 			<h2>Actividades</h2>
         <div  aling=center>
 
+<!--
 			<table border=0 style='width: 100%; font-size: 14px; cursor: pointer;'>
 				<tr>
 					<td class='prod rounded'   >
@@ -77,6 +78,7 @@
 
 				</tr>
 			</table>
+-->
 		</div>
 
 	
