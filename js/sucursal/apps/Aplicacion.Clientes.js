@@ -829,7 +829,7 @@ Aplicacion.Clientes.prototype.facturasDeClientesPanelUpdater = function ( )
             html += "<td>" + lista[i].factura[j].usuario + "</td>";
                         
             
-            html += "<td><img src = '../media/icons/page_text_32.png' onClick = 'window.open(\"http://pos.caffeina.mx/www/proxy.php?action=1308&id_venta=" +lista[i].id_venta + "\")'></td>";
+            html += "<td><img src = '../media/icons/page_text_32.png' onClick = 'window.open(\"http://pos.caffeina.mx/proxy.php?action=1308&id_venta=" +lista[i].id_venta + "\")'></td>";
             //html += "<td><img src = '../media/icons/page_text_32.png' onClick = 'window.open(\"http://localhost/pos/trunk/www/proxy.php?action=1308&id_venta=" +lista[i].id_venta + "\")'></td>";
            	
             html += "</tr>";

@@ -1228,15 +1228,15 @@ function imprimirNotaDeVenta($id_venta) {
     }
 
     $en_letra = new CNumeroaletra();
-    $en_letra->setNumero(($venta->getTotal() - $venta->getPagado()));
+    $en_letra->setNumero($venta->getTotal());
 
-    $pagare = "                                                                                           <b>P A G A R E</b>\n\n";
-    $pagare .= "No. _________                                                                                                                            En " . readableText($emisor->municipio) . " a " . date("d") . " de " . $mes . " del " . date("Y") ."\n\n";
+    //$pagare = "                                                                                           <b>P A G A R E</b>\n\n";
+    $pagare = "\n\nNo. _________                                                                                                                            En " . readableText($emisor->municipio) . " a " . date("d") . " de " . $mes . " del " . date("Y") ."\n\n";
     $pagare .= " Debe(mos) y pagare(mos) incondicionalmente por este Pagaré a la orden de " . readableText($emisor->nombre) . " en " . readableText($emisor->municipio) . " ";
     $pagare .= "el __________________________  la cantidad de ";
-    $pagare .= moneyFormat(($venta->getTotal() - $venta->getPagado()), DONT_USE_HTML) . " " . $en_letra->letra() . ". Valor recibido a mi";
-    $pagare .= "(nuestra) entera satisfacción. Este pagaré forma parte de una serie numerada de 1 al _________ y todos están sujetos a la condición de que, ";
-    $pagare .= "al no pagarse cualquiera de ellos a su vencimiento, serán exigibles todos los que le sigan en numero, ademas de los ya vencidos, ";
+    $pagare .= moneyFormat($venta->getTotal(), DONT_USE_HTML) . " " . $en_letra->letra() . ". Valor recibido a mi";
+    $pagare .= "(nuestra) entera satisfacción. Este pagaré forma parte de una serie numerada de 1 al 1 y esta sujeto a la condición de que, ";
+    $pagare .= "al no pagarse a su vencimiento, sera exigible ";
     $pagare .= "desde la fecha de vencimiento de este documento hasta el dia de su liquidacón, ";
     $pagare .= "causara intereses moratorios al tipo de 20% mensual, ";
     $pagare .= "pagadero en esta ciudad juntamente con el principal.";
@@ -1249,6 +1249,7 @@ function imprimirNotaDeVenta($id_venta) {
     ); 
 
 
+    $pdf->addText(puntos_cm(8.2),puntos_cm(6.8),18,'P A G A R E');
 
     $pdf->ezSetY(puntos_cm(7.2));
     $opciones_tabla['xPos'] = puntos_cm(2);

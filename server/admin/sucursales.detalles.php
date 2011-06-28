@@ -9,6 +9,7 @@ require_once("controller/contabilidad.controller.php");
 
 require_once('model/pagos_venta.dao.php');
 require_once('model/corte.dao.php');
+require_once('model/usuario.dao.php');
 
 
 $sucursal = SucursalDAO::getByPK($_REQUEST['id']);
@@ -421,7 +422,53 @@ foreach($compras as $c){
 ##########################################################################
 ?>
 
+<h2><img src='../media/icons/window_app_list_search_32.png'>&nbsp;Gastos de esta sucursal</h2>
+<?php
 
+    $gastos = listarGastosSucursal($_REQUEST['id']);
+    
+    $array_gastos = array();
+    
+    foreach($gastos as $gasto){
+        
+        $empleado = UsuarioDAO::getByPK($gasto->getIdUsuario());
+        
+        array_push($array_gastos, 
+                array("folio" => $gasto->getFolio(), 
+                    "concepto" => $gasto->getConcepto(), 
+                    "monto" => $gasto->getMonto(), 
+                    "fecha" => $gasto->getFecha(),
+                    "fecha_ingreso" => $gasto->getFechaIngreso(),
+                    "empleado" => $empleado->getNombre(),
+                    "nota" => $gasto->getNota()
+                )
+        );        
+        
+    }
+    
+    $header = array(
+    "folio" => "Folio",
+    "concepto" => "Concepto",
+    "monto" => "Monto",
+    "fecha" => "Se Ingreso",
+    "fecha_ingreso" => "Fecha del Gasto",    
+    "empleado" => "Registro",
+    "nota" => "Nota");
+
+
+    $tabla = new Tabla($header, $array_gastos);
+    $tabla->addNoData("Esta sucursal no cuenta con nigun gasto.");
+    $tabla->addRow("folio");
+    $tabla->addRow("concepto");
+    $tabla->addColRender("monto", "moneyFormat");
+    $tabla->addColRender("fecha", "toDate");   
+    $tabla->addColRender("fecha_ingreso", "toDateS");   
+    //$tabla->addOnClick("empleado", "(function(id){window.location='personal.php?action=detalles&uid=' + id;})");
+    $tabla->addRow("empleado");
+    $tabla->addRow("nota");
+    $tabla->render();
+
+?>
 
 <h2><img src='../media/icons/users_business_32.png'>&nbsp;Personal</h2><?php
 $empleados = listarEmpleados($_REQUEST['id']);
