@@ -270,7 +270,12 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
 }
 ?>
     var facturaMode = "generica";
-        
+    
+
+
+	/**
+	  *
+	  **/
     function showModoFactura(){
                 
         jQuery("#submitButtons").slideUp("fast",function(){
@@ -278,7 +283,11 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
         });
                 
     }
-            
+
+
+	/**
+	  *
+	  **/            
     function seleccionarModoFactura(element){
         //document.getElementById('factura_general').style.display = 'block';
                 
@@ -294,7 +303,12 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
         }
                 
     }
-            
+
+
+
+	/**
+	  *
+	  **/     
     function hideModoFactura(){
                 
         jQuery("#submitButtons").slideDown("fast",function(){
@@ -302,8 +316,12 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
         });
                 
     }
+
+
                         
-        
+	/**
+	  *
+	  **/
     function facturar(){
         //window.location = "../proxy.php?action=1200&id_venta=<?php echo $_REQUEST["id"]; ?>";
                 
@@ -327,9 +345,10 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
         //hacer ajaxaso
         jQuery.ajaxSettings.traditional = true;
 
-        jQuery("#loader").fadeIn();
+        jQuery("#loader").fadeIn("slow", function(){
+			jQuery("#factura-mode").slideUp();
+		});
             
-        //console.log("generica : ",factura_generica); 
             
         jQuery.ajax({
             url: "../proxy.php",
@@ -337,7 +356,6 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
                 action : 1200, 
                 factura_generica : jQuery.JSON.encode(factura_generica),
                 id_venta : <?php echo $_REQUEST["id"]; ?>
-                            
             },
             cache: false,
             success: function(data){
@@ -346,7 +364,7 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
                 }catch(e){
 
                     jQuery("#loader").fadeOut('slow', function(){
-                        jQuery("#submitButtons").fadeIn();
+
                         window.scroll(0,0);                         
                         jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
                         jQuery("#submitButtons").fadeIn();
@@ -355,14 +373,13 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
                 }
 
 
-                if(response.success === false){
-	
+                if(!response.success){
 					jQuery("#ajax_failure").html(response.reason).show();
+					
                     jQuery("#loader").fadeOut('slow', function(){
-                        //jQuery("#submitButtons").fadeIn();    
                         window.scroll(0,0);                                                             
                         jQuery("#submitButtons").fadeIn();                  
-                    });                
+                    });
                     return ;
                 }
 
@@ -373,6 +390,8 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
         });
     
     }
+
+
 	
 </script>
 

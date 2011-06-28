@@ -25,7 +25,8 @@ define("POS_LOG_DB_QUERYS", false);
 # *******************************
 # FACTURACION
 # *******************************
-defin("POS_FACTURACION_PRODUCCION", false);
+define("POS_FACTURACION_PRODUCCION", false);
+define("POS_FACTURACION_ALL", false);
 
 # *******************************
 # ZONA HORARIA
