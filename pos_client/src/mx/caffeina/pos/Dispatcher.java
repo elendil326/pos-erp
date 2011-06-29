@@ -7,6 +7,8 @@ import org.json.simple.parser.JSONParser;
 
 public class Dispatcher{
 	
+	static String action = null, data = null, callback = null;
+	
 	public static String dispatch( String request ){
 		
 		//the request looks like this
@@ -14,7 +16,7 @@ public class Dispatcher{
 		
 		String [] args = request.split("&");
 		Logger.log("Raw request: " + request);
-		String action = null, data = null;
+		
 
 		//buscar el action
 		for ( int i = 0; i < args.length ; i++) {
@@ -22,7 +24,10 @@ public class Dispatcher{
 				action = args[i].substring(7);
 				
 			if( args[i].startsWith("data=") )
-				data = args[i].substring(5);				
+				data = args[i].substring(5);
+				
+			if( args[i].startsWith("callback=") )
+				callback = args[i].substring(5);								
 		}
 		
 		Logger.log("Dispatching module " + action);
@@ -36,7 +41,7 @@ public class Dispatcher{
 		* */
 		if(action.equals("Printer")){
 			ServidorImpresion.Print( data );			
-			return "Ext.util.JSONP.callback({\"success\": true});";			
+			return callback + "({\"success\": true});";			
 		}
 
 
@@ -53,13 +58,13 @@ public class Dispatcher{
 				Bascula b = new Bascula();
 				String rawValue = b.getRawData(16);
 				b.close();				
-				return "Ext.util.JSONP.callback({\"success\": true, \"reading\" : \""+ rawValue +"\"});";
+				return callback + "({\"success\": true, \"reading\" : \""+ rawValue +"\"});";
 				
 			}catch(java.lang.UnsatisfiedLinkError usle){	
-				return "Ext.util.JSONP.callback({\"success\": false, \"reason\" : \"Imposible cargar las librerias para este sistema operativo.\"});";
+				return callback + "({\"success\": false, \"reason\" : \"Imposible cargar las librerias para este sistema operativo.\"});";
 				
 			}catch(Exception e){
-				return "Ext.util.JSONP.callback({\"success\": false, \"reason\" : \"La bascula no responde, revise que este conectada correctamente\"});";			
+				return callback + "({\"success\": false, \"reason\" : \"La bascula no responde, revise que este conectada correctamente\"});";			
 			}
 		}
 
@@ -70,7 +75,7 @@ public class Dispatcher{
 	
 	
 	static String returnError(){
-		return "Ext.util.JSONP.callback({\"success\": false, \"reason\" : \"Bad dispatching\"});";
+		return callback + "({\"success\": false, \"reason\" : \"Bad dispatching\"});";
 	}
 	
 }

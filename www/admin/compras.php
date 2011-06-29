@@ -24,9 +24,17 @@ require_once("admin/includes/static.php");
 	<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
 	<script type="text/javascript" charset="utf-8">jQuery(function(){jQuery("input, select").uniform();});</script>
 		
+
+	
+	
+	<!-- ExtJS library: base/adapter --> 
+    <script type="text/javascript" src="http://api.caffeina.mx/ext-latest/adapter/ext/ext-base.js"></script> 
+ 
+    <!-- ExtJS library: all widgets --> 
+    <script type="text/javascript" src="http://api.caffeina.mx/ext-latest/ext-all.js"></script>
+
 	<link rel="stylesheet" type="text/css" href="./../getResource.php?mod=admin&type=css">
 	<script type="text/javascript" src="./../getResource.php?mod=admin&type=js"></script>
-
 </head>
 
 
