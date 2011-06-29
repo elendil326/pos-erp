@@ -27,7 +27,7 @@ public class Dispatcher{
 				data = args[i].substring(5);
 				
 			if( args[i].startsWith("callback=") )
-				callback = args[i].substring(5);								
+				callback = args[i].substring(9);								
 		}
 		
 		Logger.log("Dispatching module " + action);
@@ -60,11 +60,14 @@ public class Dispatcher{
 				b.close();				
 				return callback + "({\"success\": true, \"reading\" : \""+ rawValue +"\"});";
 				
-			}catch(java.lang.UnsatisfiedLinkError usle){	
+			}catch(java.lang.UnsatisfiedLinkError usle){
+				Logger.error(usle);	
 				return callback + "({\"success\": false, \"reason\" : \"Imposible cargar las librerias para este sistema operativo.\"});";
 				
 			}catch(Exception e){
+				Logger.error(e);					
 				return callback + "({\"success\": false, \"reason\" : \"La bascula no responde, revise que este conectada correctamente\"});";			
+				
 			}
 		}
 

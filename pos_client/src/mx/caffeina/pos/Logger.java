@@ -120,7 +120,23 @@ public class Logger{
 		log_file.flush();
 	}
 	
-	
+	public static void error(Error error_to_log)
+	{
+		if( log_file == null )
+		{
+			//log file not opened, go ahead and do that
+			try{
+				open_log_file();				
+			}catch(IOException ioe){
+				return;
+			}
+
+		}
+		
+		log_file.println( getBaseString() + error_to_log );
+		error_to_log.printStackTrace( log_file ) ;
+		log_file.flush();
+	}
 	
 	public static void logToServer( String text_to_log )
 	{

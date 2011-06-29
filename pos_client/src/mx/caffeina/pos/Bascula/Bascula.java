@@ -6,7 +6,7 @@ import giovynet.nativelink.SerialPort;
 import giovynet.serial.Baud;
 import giovynet.serial.Com;
 import giovynet.serial.Parameters;
-
+import mx.caffeina.pos.Logger;
 
 public class Bascula{
 	
@@ -22,19 +22,19 @@ public class Bascula{
 	* */
 	public Bascula() throws UnsatisfiedLinkError, Exception {
 		
-		System.out.println("Instanciando bascula !");
+		Logger.log("Instanciando bascula !");
 		
 		serialPort = new SerialPort();
 		portsFree = serialPort.getFreeSerialPort();
 		
 		// If there are free ports, use the first found. 
         if ( !(portsFree != null && portsFree.size() > 0) ) {
-			System.out.println("No Free ports!!!");
+			Logger.warn("No Free ports!!!");
 			return;
 		}
 	
 		for (String free : portsFree) {
-			System.out.println("Free port: "+free);
+			Logger.log("Free port: "+free);
 		}
 			
 		/****Open the port.****/
@@ -48,7 +48,7 @@ public class Bascula{
 		parameters.setStopBits("1");
 		//parameters.setMinDelayWrite(1250);
 		
-		System.out.println("Open port: " + portsFree.get(0));
+		Logger.log("Open port: " + portsFree.get(0));
 		com = new Com(parameters);			
 
 	}
@@ -71,7 +71,7 @@ public class Bascula{
 		try{
 			return com.receiveToString(bytes);			
 		}catch(Exception e){
-			System.out.println(e);
+			Logger.error(e);
 			return null;
 		}
 
@@ -86,7 +86,7 @@ public class Bascula{
 		try{
 			com.close();
 		}catch(Exception e){
-			System.out.println(e);
+			Logger.error(e);
 			return;
 		}
 	}
