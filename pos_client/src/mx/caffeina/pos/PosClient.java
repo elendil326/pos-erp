@@ -9,13 +9,15 @@ import mx.caffeina.pos.Bascula.*;
 
 public class PosClient{
 	
-	static final boolean PRODUCTION = true;
+	static final boolean PRODUCTION = false;
 	
 	public static HttpServer httpServer = null;
+
+
 	
-	
-	public static void main( String ... args){
-		
+	public static void main( String ... args)
+	{
+		Logger.log("Iniciando cliente...");
 		new PosClient();
 
 	}
@@ -23,15 +25,17 @@ public class PosClient{
 	
 
 	PosClient(){
+		
 		System.out.println("Iniciando cliente de POS, nevermind...");
 		
-		Runtime.getRuntime().addShutdownHook(new ShutDown());
+		Runtime.getRuntime().addShutdownHook(new ShutDown(  ));
 
         PosSystemTray trayIcon = new PosSystemTray();
 		
-		System.out.println("Enviando saludo a pos.caffeina.mx !");
+		Logger.log("Enviando saludo a pos.caffeina.mx !");
 		
 		String response = null;
+		
 		/*
 		if(PRODUCTION)
 			response = HttpClient.Request("http://development.pos.caffeina.mx:80/trunk/www/proxy.php?i=1&action=1400");
@@ -41,12 +45,13 @@ public class PosClient{
 		//System.out.println( response );
 		
 		//iniciar el servidor web
-		httpServer = new HttpServer(8080);
+		httpServer = new HttpServer( 8080 );
 		
 	}
 
 
-	public static void sendLogToServer( String msg ){
+	public static void sendLogToServer( String msg )
+	{
 		if(PRODUCTION)
 			HttpClient.Request("http://development.pos.caffeina.mx:80/trunk/www/proxy.php?i=1&action=1401&msg=" + msg );
 		else
@@ -60,17 +65,18 @@ public class PosClient{
  	public class ShutDown extends Thread {
 	
         public void run() {
-	
+
 			try{
 				//@todo this shit dont work
-				PosClient.sendLogToServer( "Cerrando cliente !" );
-				//PosClient.httpServer.shutDown();
+				//PosClient.sendLogToServer( "Cerrando cliente !" );
+				PosClient.httpServer.shutDown();
 				
 			}catch(Exception e){
-				System.out.println(e);
+				Logger.error(e);
 			}
 
-			
+			Logger.log("Cerrando cliente.");
+			Logger.close();			
             System.out.println("Shutting down...");
 
         }

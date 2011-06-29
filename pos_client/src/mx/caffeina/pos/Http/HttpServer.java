@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import mx.caffeina.pos.Dispatcher;
-
+import mx.caffeina.pos.Logger;
 
 /**
   * 
@@ -23,7 +23,7 @@ public class HttpServer
 	}
 	
 	public void shutDown( ){
-		System.out.println("Trying to shut-down webserver.");
+		Logger.log("Trying to shut-down webserver.");
 		needToShutDown = true;
 	}
 	
@@ -34,12 +34,12 @@ public class HttpServer
             m_ServerSocket = new ServerSocket(port); 
 
         }catch(IOException ioe){ 
-            System.out.println("Could not create server socket at "+port+". Quitting."); 
+            Logger.warn("Could not create server socket at "+port+". Quitting."); 
             System.exit(-1); 
 
         } 
 		
-        System.out.println("Listening for clients on "+port+"..."); 
+        Logger.log("Listening for clients on "+port+"..."); 
 		
         // Successfully created Server Socket. Now wait for connections. 
         int id = 0; 
@@ -66,7 +66,7 @@ public class HttpServer
                 cliThread.start(); 
 
             }catch(IOException ioe){ 
-                System.out.println("Exception encountered on accept. Ignoring. Stack Trace :"); 
+                Logger.error("Exception encountered on accept. Ignoring. Stack Trace :"); 
                 ioe.printStackTrace(); 
 
             } 
@@ -87,7 +87,7 @@ public class HttpServer
         ClientServiceThread(Socket s, int clientID) 
         { 
 	
-			System.out.println( "Connection recieved !" );
+			Logger.log( "Connection recieved !" );
 						
             m_clientSocket = s;
             m_clientID = clientID; 
@@ -104,7 +104,7 @@ public class HttpServer
             PrintWriter out = null; 
 			
             // Print out details of this connection 
-            //System.out.println("Accepted Client : ID - " + m_clientID + " : Address - " +  m_clientSocket.getInetAddress()); 
+            //Logger.log("Accepted Client : ID - " + m_clientID + " : Address - " +  m_clientSocket.getInetAddress()); 
 			
             try{ 
 	
@@ -160,7 +160,7 @@ public class HttpServer
                     in.close(); 
                     out.close(); 
                     m_clientSocket.close(); 
-                    System.out.println("...Stopped"); 
+                    Logger.log("...Stopped"); 
 					
                 }catch(IOException ioe){ 
                     ioe.printStackTrace(); 
