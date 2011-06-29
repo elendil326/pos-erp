@@ -47,6 +47,8 @@ public class PosClient{
 		//iniciar el servidor web
 		httpServer = new HttpServer( 8080 );
 		
+		
+		System.out.println("done with the server shit");
 	}
 
 

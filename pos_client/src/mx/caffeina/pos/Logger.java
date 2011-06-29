@@ -8,25 +8,22 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 public class Logger{
+
+	private static PrintWriter log_file = null;
+	private static DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	
 	private Logger()
 	{
 		//this class can not be instantiated
 	}
 	
-	private static PrintWriter log_file = null;
-	private static DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-	
-	
-	
+
 	private static void open_log_file() throws IOException
 	{
 		log_file = new PrintWriter( new FileWriter("pos-client.log" , true) );
 	}
 	
-	
-	
-	
+		
 	private static void close_log_file() throws IOException
 	{
 		log_file.flush();
@@ -102,9 +99,8 @@ public class Logger{
 		log_file.println( getBaseString() + text_to_log );
 		log_file.flush();
 	}
-	
-	
-	
+		
+		
 	public static void error(Exception exception_to_log)
 	{
 		if( log_file == null )
@@ -122,4 +118,6 @@ public class Logger{
 		exception_to_log.printStackTrace( log_file ) ;
 		log_file.flush();
 	}
+	
+	
 }
