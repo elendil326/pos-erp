@@ -13,11 +13,17 @@ public class Dispatcher{
 		
 		//the request looks like this
 		// unique=0.03196072019636631&callback=Ext.util.JSONP.callback
+
+		Logger.log("Raw request: " + request);
+
+		if(request == null)
+		{
+			Logger.log("Request vacio !");
+			return returnError();
+		}
 		
 		String [] args = request.split("&");
-		Logger.log("Raw request: " + request);
 		
-
 		//buscar el action
 		for ( int i = 0; i < args.length ; i++) {
 			if( args[i].startsWith("action=") )

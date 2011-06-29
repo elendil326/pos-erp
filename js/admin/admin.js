@@ -95,12 +95,15 @@ POS.ajaxToClient = function( module, args, callback )
 	    },
 	    scriptTag: true, // Use script tag transport
 	    success: function(r) {
-	        console.log(r.responseObject);
+	        //console.log(r.responseObject);
+			callback.call(null, r.responseObject);
 	    }
 	});
 	/** **** Cross-broswer call **** **/
 
 }
+
+
 
 
 Ext.onReady(function(){
@@ -287,6 +290,8 @@ Ext.onReady(function(){
 	    }
 	});
 });
+
+
 
 function tr(s, o){
     if(o){

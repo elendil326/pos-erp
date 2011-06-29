@@ -1444,6 +1444,7 @@ function nuevaCompraCliente($args = null) {
             $detalle_inventario->setIdProducto($producto->id_producto);
             $detalle_inventario->setIdSucursal($_SESSION['sucursal']);
             $detalle_inventario->setPrecioVenta($producto->precio);
+            $detalle_inventario->setPrecioVentaProcesado(0);
             $detalle_inventario->setPrecioCompra($producto->precio);
             $detalle_inventario->setExistencias(0);
             $detalle_inventario->setExistenciasProcesadas(0);
@@ -1452,6 +1453,7 @@ function nuevaCompraCliente($args = null) {
                 DetalleInventarioDAO::save($detalle_inventario);
             } catch (Exception $e) {
                 Logger::log("Error al agregar el nuevo producto en el inventario de la sucursal.");
+				Logger::log($e);
                 DAO::transRollback();
                 die('{"success": false, "reason": "Error al agregar el nuevo producto en el inventario de la sucursal." }');
             }

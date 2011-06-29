@@ -140,6 +140,25 @@ if(!isset($_REQUEST['cid'])){
 		return null;
 	}
 	
+	
+	function getWeightFromClient(id_producto)
+	{
+
+		POS.ajaxToClient("bascula", 
+			null, 
+			function(response){
+				console.log("reading" , a)
+				if(response.success){
+					jQuery("#item-cantidad-"+id_producto).val("YES");
+									
+				}else{
+					jQuery("#ajax_failure").html( response.reason );
+					jQuery("#ajax_failure").show(  );
+					
+				}
+			})
+	}
+	
 	function doMath(  ){
 		
 
@@ -276,8 +295,13 @@ if(!isset($_REQUEST['cid'])){
 		var html = "";
 		html += td( "" );
 		html += td( prod.descripcion );
-		html += td( "<input id='item-cantidad-"+id_producto+"' onKeyUp='doMath( )' value='1' type=text >" + prod.escala + "s" );
-		
+		html += td( "<input id='item-cantidad-"+id_producto+"' onKeyUp='doMath( )' value='1' type=text >"
+			+ "<input onClick='getWeightFromClient("+id_producto+")' value='Pesar' type=button >" 
+			+ prod.escala + "s" );
+
+
+
+
 		var html_desc = "<select id='item-descuento-tipo-"+id_producto+"' onChange='doMath()'>"
 			+ "<option value='escala'		>"+prod.escala+"s</option>"
 			+ "<option value='porciento'	>%</option>"			
