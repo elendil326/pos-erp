@@ -460,7 +460,7 @@ function nuevoProducto($data) {
     $inventario->setTratamiento(		$jsonData->tratamiento == "null" ? null : $jsonData->tratamiento );
     $inventario->setAgrupacion(			$jsonData->agrupacion == "null" ? null : $jsonData->agrupacion );
     $inventario->setAgrupacionTam(		$jsonData->agrupacion == "null" ? null : $jsonData->agrupacionTam );
-    $inventario->setPrecioPorAgrupacion($jsonData->tipo_de_precio == "agrupacion");
+    $inventario->setPrecioPorAgrupacion($jsonData->tipo_de_precio == "agrupacion"?1:0);
     $inventario->setActivo(1);
     DAO::transBegin();
 
@@ -491,16 +491,21 @@ function nuevoProducto($data) {
 
 
     if (!isset($jsonData->precio_intersucursal))
-        $actualizacion->setPrecioVentaSinProcesar(0);
+        //$actualizacion->setPrecioVentaSinProcesar(0);
+            $actualizacion->setPrecioVenta(0);
     else
-        $actualizacion->setPrecioVentaSinProcesar($jsonData->precio_intersucursal);
+        $actualizacion->setPrecioVenta($jsonData->precio_intersucursal);
 
     if (POS_MULTI_SUCURSAL) {
+        /*$actualizacion->setPrecioIntersucursal($jsonData->precio_intersucursal);
+        $actualizacion->setPrecioIntersucursalSinProcesar($jsonData->precio_intersucursal);*/
+        $actualizacion->setPrecioIntersucursalProcesado($jsonData->precio_intersucursal);
         $actualizacion->setPrecioIntersucursal($jsonData->precio_intersucursal);
-        $actualizacion->setPrecioIntersucursalSinProcesar($jsonData->precio_intersucursal);
     } else {
+        /*$actualizacion->setPrecioIntersucursal(0);
+        $actualizacion->setPrecioIntersucursalSinProcesar(0);*/
+        $actualizacion->setPrecioIntersucursaProcesadol(0);
         $actualizacion->setPrecioIntersucursal(0);
-        $actualizacion->setPrecioIntersucursalSinProcesar(0);
     }
 
 

@@ -375,10 +375,7 @@ function detalle_inventario(id){
 	                width    : 150, 
 	                sortable : true, 
 					align 	 : "right",
-					 renderer : function (n, a, row ){
-
-
-                                                        console.log("----------\n n : ", n, " a : ",a, " row : ", row);
+					 renderer : function (n, a, row ){                                                       
 
 							if(row.data.agrupacion.length > 0){
 								//si hay agrupacion
