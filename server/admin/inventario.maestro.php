@@ -378,13 +378,16 @@ function detalle_inventario(id){
 					 renderer : function (n, a, row ){
 
 
+                                                        console.log("----------\n n : ", n, " a : ",a, " row : ", row);
 
 							if(row.data.agrupacion.length > 0){
 								//si hay agrupacion
 
 								if(row.get("producto_tratamiento")){
 									//con tratamiento !
-									return  (parseFloat( n / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
+									/*return  (parseFloat( n / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
+									+"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";*/
+                                                                        return  ( parseFloat( ( n - row.data.existencias_procesadas) / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
 									+"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
 
 								}else{
