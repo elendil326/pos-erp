@@ -482,6 +482,7 @@ function nuevoProducto($data) {
     $actualizacion->setIdProducto($inventario->getIdProducto() );
     $actualizacion->setIdUsuario($_SESSION['userid']);
     $actualizacion->setPrecioVenta($jsonData->precio_venta);
+    $actualizacion->setPrecioVentaProcesado(0);
 
     if (POS_COMPRA_A_CLIENTES) {
         $actualizacion->setPrecioCompra($jsonData->precio_compra);
