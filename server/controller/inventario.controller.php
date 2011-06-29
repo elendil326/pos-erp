@@ -504,7 +504,7 @@ function nuevoProducto($data) {
     } else {
         /*$actualizacion->setPrecioIntersucursal(0);
         $actualizacion->setPrecioIntersucursalSinProcesar(0);*/
-        $actualizacion->setPrecioIntersucursaProcesadol(0);
+        $actualizacion->setPrecioIntersucursaProcesado(0);
         $actualizacion->setPrecioIntersucursal(0);
     }
 
