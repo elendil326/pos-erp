@@ -3,9 +3,12 @@ package mx.caffeina.pos.Http;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import mx.caffeina.pos.Dispatcher;
-import mx.caffeina.pos.Logger;
+import mx.caffeina.pos.*;
 
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.ImageIcon;
+import javax.imageio.ImageIO;
 /**
   * 
   * 
@@ -39,6 +42,10 @@ public class HttpServer
 
         } 
 		
+		PosClient.trayIcon.getTrayIcon().displayMessage("POS Listo", 
+            "Listening for clients on "+port+"...",
+            TrayIcon.MessageType.INFO);
+
         Logger.log("Listening for clients on "+port+"..."); 
 		
         // Successfully created Server Socket. Now wait for connections. 

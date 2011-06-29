@@ -1,28 +1,44 @@
 package mx.caffeina.pos;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.io.*;
 import java.net.URL;
+import java.awt.event.*;
+import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.imageio.ImageIO;
-import java.io.IOException;
-import java.io.*;
+
+
+
 
 public class PosSystemTray
 {
-    
+
+    final TrayIcon trayIcon;
+
+
+	public TrayIcon getTrayIcon()
+	{
+		return trayIcon ;
+	}
+
+
     public PosSystemTray()
     {
-        
-        final TrayIcon trayIcon;
-
-        if (SystemTray.isSupported()) {
+		
+		
+        if (!SystemTray.isSupported()) 
+		{
+            Logger.warn("System tray is currently not supported.");
+			trayIcon = null;
+			return;
+        }
 
             SystemTray tray = SystemTray.getSystemTray();
 
-				// WORKS with image outside jar
-				ImageIcon icono = new ImageIcon("media/logo.png");
-				Image image = icono.getImage();
+			// WORKS with image outside jar
+			ImageIcon icono = new ImageIcon("media/logo.png");
+			Image image = icono.getImage();
 
 
             MouseListener mouseListener = new MouseListener() {
@@ -60,12 +76,11 @@ public class PosSystemTray
             trayIcon = new TrayIcon(image, "Pos Client", popup);
 
             ActionListener actionListener = new ActionListener() {
+	
                 public void actionPerformed(ActionEvent e) {
-
                     trayIcon.displayMessage("Pos Client", 
                         "Pos client iniciado !",
                         TrayIcon.MessageType.INFO);
-				
                 }
             };
             
@@ -77,15 +92,13 @@ public class PosSystemTray
             //    out the following code to check for an AWTException when you add 
             //    an image to the system tray.
 
-                try {
-                      tray.add(trayIcon);
-                } catch (AWTException e) {
-                    System.err.println("TrayIcon could not be added.");
-                }
+			try {
+			      tray.add(trayIcon);
+			} catch (AWTException e) {
+			    Logger.error("TrayIcon could not be added.");
+			}
 
-        } else {
-            System.err.println("System tray is currently not supported.");
-        }
+        
     }
     
  

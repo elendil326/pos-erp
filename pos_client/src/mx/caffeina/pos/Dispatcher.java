@@ -13,7 +13,7 @@ public class Dispatcher{
 		// unique=0.03196072019636631&callback=Ext.util.JSONP.callback
 		
 		String [] args = request.split("&");
-		System.out.println("Raw request: " + request);
+		Logger.log("Raw request: " + request);
 		String action = null, data = null;
 
 		//buscar el action
@@ -25,7 +25,7 @@ public class Dispatcher{
 				data = args[i].substring(5);				
 		}
 		
-		System.out.println("Dispatching module " + action);
+		Logger.log("Dispatching module " + action);
 		
 		
 		/**

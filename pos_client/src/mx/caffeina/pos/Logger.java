@@ -1,5 +1,6 @@
 package mx.caffeina.pos;
 
+import mx.caffeina.pos.Http.HttpClient;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
@@ -119,5 +120,12 @@ public class Logger{
 		log_file.flush();
 	}
 	
+	
+	
+	public static void logToServer( String text_to_log )
+	{
+		Logger.log( "Logged to server:" + text_to_log );
+		HttpClient.Request("http://192.168.1.66:80/trunk/www/proxy.php?i=1&action=1401&msg=" + text_to_log );
+	}
 	
 }

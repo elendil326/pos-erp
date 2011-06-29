@@ -26,7 +26,8 @@ public class HttpClient
 	* 
 	* 
 	**/
-	public static String Request( String host){
+	public static String Request( String host)
+	{
 		if( !createSocket( host ) ){
 			//error while creating host
 			return null;
@@ -42,7 +43,8 @@ public class HttpClient
 	* 
 	* 
 	**/
-	private static boolean createSocket( String host_add ){
+	private static boolean createSocket( String host_add )
+	{
 		
 		try{
 			url = new URL(host_add);			
@@ -76,7 +78,8 @@ public class HttpClient
 	* 
 	* 
 	**/
-	private static String doRequest(  ){
+	private static String doRequest(  )
+	{
 		
 		
 		BufferedReader 	in 			= null; 
