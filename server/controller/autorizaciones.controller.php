@@ -184,6 +184,7 @@ function surtirProducto($id_autorizacion) {
             $nuevo_detalle_producto->setIdSucursal($_SESSION['sucursal']);
             $nuevo_detalle_producto->setExistencias(0);
             $nuevo_detalle_producto->setExistenciasProcesadas(0);
+            $nuevo_detalle_producto->setPrecioCompra(0);
 
             //buscar la ultima actualizacion de precio para este producto
             $foo = new ActualizacionDePrecio();
