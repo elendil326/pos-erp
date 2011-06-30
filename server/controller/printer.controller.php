@@ -1107,6 +1107,7 @@ function imprimirNotaDeVenta($id_venta) {
      * ************************* */
     $elementos = array(
         array('cantidad' => 'Cantidad',
+            'unidad'=>'Unidad',
             'descripcion' => 'Descripcion                                                                                                     ', 'precio' => 'Precio', 'importe' => 'Importe'),
     );
 
@@ -1117,7 +1118,7 @@ function imprimirNotaDeVenta($id_venta) {
 
         if ($p["cantidadProc"] > 0) {
 
-            $prod['cantidad'] = $p["cantidadProc"];
+            $prod['cantidad'] = $p["cantidadProc"];            
             $prod['descripcion'] = $p["descripcion"] . " PROCESADA";
             $prod['precio'] = moneyFormat($p["precioProc"], DONT_USE_HTML);
 
@@ -1125,8 +1126,10 @@ function imprimirNotaDeVenta($id_venta) {
             if ($p_inventario->getPrecioPorAgrupacion()) {
                 $size = $p["cantidadProc"] / $p_inventario->getAgrupacionTam();
                 $prod['importe'] = moneyFormat($size * $p["precioProc"], DONT_USE_HTML);
+                $prod['unidad'] = $p_inventario->getAgrupacion();
             } else {
                 $prod['importe'] = moneyFormat($p["precioProc"] * $p["cantidadProc"], DONT_USE_HTML);
+                $prod['unidad'] = $p_inventario->getEscala();
             }
             array_push($elementos, $prod);
         }
@@ -1150,27 +1153,32 @@ function imprimirNotaDeVenta($id_venta) {
 
 
     array_push($elementos, array("cantidad" => "",
+        "unidad" => "",
         "descripcion" => "",
         "precio" => "Subtotal",
         "importe" => moneyFormat($venta->getSubTotal(), DONT_USE_HTML)));
 
     array_push($elementos, array("cantidad" => "",
+        "unidad" => "",
         "descripcion" => "",
         "precio" => "Descuento",
         "importe" => moneyFormat($venta->getDescuento(), DONT_USE_HTML)));
 
     array_push($elementos, array("cantidad" => "",
+        "unidad" => "",
         "descripcion" => "",
         "precio" => "IVA",
         "importe" => moneyFormat($venta->getIVA(), DONT_USE_HTML)));
 
     array_push($elementos, array("cantidad" => "",
+        "unidad" => "",
         "descripcion" => "",
         "precio" => "Total",
         "importe" => moneyFormat($venta->getTotal(), DONT_USE_HTML)));
     
     if($venta->getPagado() < $venta->getTotal()){
         array_push($elementos, array("cantidad" => "",
+        "unidad" => "",
         "descripcion" => "",
         "precio" => "Saldo",
         "importe" => moneyFormat(($venta->getTotal() - $venta->getPagado()), DONT_USE_HTML)));
