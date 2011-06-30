@@ -742,18 +742,19 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
      * ************************* */
     $elementos = array(
         array('cantidad' => 'Cantidad',
+            'unidad' => 'Unidad',
             'descripcion' => 'Descripcion                                                                                                     ', 'precio' => 'Precio', 'importe' => 'Importe'),
     );
 
 
-    foreach ($xml->Conceptos as $concepto) {
-
-        Logger::log("*****" . $concepto->Concepto["descripcion"]);
+    for ($i = 0; $i < count($xml->Conceptos->Concepto); $i++) {
         
-        $prod['cantidad'] = $concepto->Concepto["cantidad"];
-        $prod['descripcion'] = $concepto->Concepto["descripcion"];
-        $prod['precio'] = moneyFormat($concepto->Concepto["valorUnitario"], DONT_USE_HTML);
-        $prod['importe'] = moneyFormat($concepto->Concepto["importe"], DONT_USE_HTML);
+        $prod['cantidad'] = $xml->Conceptos->Concepto[$i]["cantidad"];
+        $prod['unidad'] = $xml->Conceptos->Concepto[$i]["unidad"];
+        $prod['descripcion'] = $xml->Conceptos->Concepto[$i]["descripcion"];
+        $prod['precio'] = moneyFormat($xml->Conceptos->Concepto[$i]["valorUnitario"], DONT_USE_HTML);
+        $prod['importe'] = moneyFormat($xml->Conceptos->Concepto[$i]["importe"], DONT_USE_HTML);
+        
 
         array_push($elementos, $prod);
     }
@@ -762,6 +763,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
 
 
     array_push($elementos, array("cantidad" => "",
+        "unidad"=>"",
         "descripcion" => "",
         "precio" => "Subtotal",
         "importe" => moneyFormat($xml["subTotal"], DONT_USE_HTML)));
@@ -771,11 +773,13 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     //TODO : El iva esta harcodeado, hay qeu revisar bien como se manejan los impuestos
 
     array_push($elementos, array("cantidad" => "",
+        "unidad"=>"",
         "descripcion" => "",
         "precio" => "IVA",
         "importe" => moneyFormat(0, DONT_USE_HTML)));
 
     array_push($elementos, array("cantidad" => "",
+        "unidad"=>"",
         "descripcion" => "",
         "precio" => "Total",
         "importe" => moneyFormat($xml["total"], DONT_USE_HTML)));
