@@ -62,7 +62,8 @@ public class Dispatcher{
 		if(action.equals("bascula")){
 			try{
 				Bascula b = new Bascula();
-				String rawValue = b.getRawData(16);
+				b.getRawData(1);				
+				String rawValue = b.getRawData(9);
 				b.close();				
 				return callback + "({\"success\": true, \"reading\" : \""+ rawValue +"\"});";
 				
