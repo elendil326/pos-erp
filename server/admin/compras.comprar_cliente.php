@@ -140,6 +140,14 @@ if(!isset($_REQUEST['cid'])){
 		return null;
 	}
 	
+	function parseWeigthString ( raw_string )
+	{
+		var val = 0;
+		<?php
+			
+		?>
+		return val;
+	}
 	
 	function getWeightFromClient(id_producto)
 	{
@@ -147,16 +155,17 @@ if(!isset($_REQUEST['cid'])){
 		POS.ajaxToClient("bascula", 
 			null, 
 			function(response){
-				console.log("reading" , a)
+				//console.log("reading" , a)
 				if(response.success){
-					jQuery("#item-cantidad-"+id_producto).val("YES");
+					
+					jQuery("#item-cantidad-"+id_producto).val( parseWeightString( response.reading ) );
 									
 				}else{
 					jQuery("#ajax_failure").html( response.reason );
 					jQuery("#ajax_failure").show(  );
 					
 				}
-			})
+			});
 	}
 	
 	function doMath(  ){

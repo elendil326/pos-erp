@@ -9,20 +9,24 @@ import mx.caffeina.pos.Bascula.*;
 
 public class PosClient{
 	
-	static final boolean PRODUCTION = false;
-	public static PosSystemTray trayIcon = null;
-	public static HttpServer httpServer = null;
+	
+	static final boolean 		PRODUCTION 	= false;
+	public static PosSystemTray trayIcon 	= null;
+	public static HttpServer 	httpServer 	= null;
 
 	public static void main( String ... args)
 	{
+		
 		Logger.log("Iniciando cliente...");
+		
 		new PosClient();
 
 	}
 
 	
 
-	PosClient(){
+	PosClient()
+	{
 		
 		System.out.println("Iniciando cliente de POS, nevermind...");
 		
@@ -34,26 +38,10 @@ public class PosClient{
 		
 		String response = null;
 		
-		/*
-		if(PRODUCTION)
-			response = HttpClient.Request("http://development.pos.caffeina.mx:80/trunk/www/proxy.php?i=1&action=1400");
-		else
-			response = HttpClient.Request("http://192.168.1.66:80/trunk/www/proxy.php?i=1&action=1400");
-		*/
-		//System.out.println( response );
-		
 		//iniciar el servidor web
 		httpServer = new HttpServer( 8080 );
-		
-		
 
 	}
-
-
-
-
-
-
 
 
  	public class ShutDown extends Thread {
