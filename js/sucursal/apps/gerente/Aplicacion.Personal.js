@@ -522,7 +522,8 @@ Aplicacion.Personal.prototype.crearEmpleadoBoton = function (  )
 	
 	Ext.getBody().mask('Creando empleado ...', 'x-mask-loading', true);
 	v = Aplicacion.Personal.currentInstance.nuevoEmpleadoPanel.getValues();
-	v.contrasena = hex_md5( v.contrasena );
+	v.contrasena = hex_md5( v.contrasena );        
+	v.contrasena2 = hex_md5( v.contrasena2 );
 	json = Ext.util.JSON.encode( v );
 	
 	Ext.Ajax.request({
