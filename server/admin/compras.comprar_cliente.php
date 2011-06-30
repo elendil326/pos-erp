@@ -140,11 +140,11 @@ if(!isset($_REQUEST['cid'])){
 		return null;
 	}
 	
-	function parseWeigthString ( raw_string )
+	function parseWeightString ( raw_string )
 	{
 		var val = 0;
 		<?php
-			
+			echo "val = raw_string;";
 		?>
 		return val;
 	}
@@ -155,7 +155,6 @@ if(!isset($_REQUEST['cid'])){
 		POS.ajaxToClient("bascula", 
 			null, 
 			function(response){
-				//console.log("reading" , a)
 				if(response.success){
 					
 					jQuery("#item-cantidad-"+id_producto).val( parseWeightString( response.reading ) );

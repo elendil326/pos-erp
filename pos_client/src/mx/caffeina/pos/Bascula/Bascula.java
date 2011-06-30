@@ -59,7 +59,8 @@ public class Bascula{
 	* 
 	* */
 	public String getRawData(){
-		return getRawData(13);
+		getRawData(1);
+		return getRawData(12);
 	}
 	
 	
