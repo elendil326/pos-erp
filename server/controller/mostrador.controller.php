@@ -523,7 +523,7 @@ function vender($args) {
         $detalle_inventario = DetalleInventarioDAO::getByPK($producto->id_producto, $_SESSION['sucursal']);
 
         $detalle_inventario->setExistenciasProcesadas($detalle_inventario->getExistenciasProcesadas() - $producto->cantidad_procesada);
-        $detalle_inventario->setExistencias($detalle_inventario->getExistencias() - $producto->cantidad);
+        $detalle_inventario->setExistencias($detalle_inventario->getExistencias() - ($producto->cantidad + $producto->cantidad_procesada));
 
         //verificamos si su precio es por agrupacion
 

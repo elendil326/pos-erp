@@ -617,16 +617,13 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
         )
     );
 
-    //$pdf->ezSetY(puntos_cm(26.7));
     $pdf->ezSetY(puntos_cm(27));
     $opciones_tabla = array();
     $opciones_tabla['showLines'] = 0;
     $opciones_tabla['showHeadings'] = 0;
     $opciones_tabla['shaded'] = 0;
     $opciones_tabla['fontSize'] = 8;
-    //$opciones_tabla['xOrientation'] = 'right';
     $opciones_tabla['xOrientation'] = 'right';
-    //$opciones_tabla['xPos'] = puntos_cm(3);
     $opciones_tabla['xPos'] = puntos_cm(6);
     $opciones_tabla['width'] = puntos_cm(11);
     $opciones_tabla['textCol'] = array(0, 0, 0);
