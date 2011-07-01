@@ -537,7 +537,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     include_once('librerias/ezpdf/class.pdf.php');
     include_once('librerias/ezpdf/class.ezpdf.php');
 
-    $pdf = new Cezpdf();
+    $pdf = new Cezpdf( $paper = 'letter');
 
     $pdf->selectFont('../server/librerias/ezpdf/fonts/Helvetica.afm');
 
@@ -557,9 +557,9 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     //$pdf->addJpegFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
 
     if (substr($logo->getValue(), -3) == "jpg" || substr($logo->getValue(), -3) == "JPG" || substr($logo->getValue(), -4) == "jpeg" || substr($logo->getValue(), -4) == "JPEG") {
-        $pdf->addJpegFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
+        $pdf->addJpegFromFile($logo->getValue(), puntos_cm(2), puntos_cm(23.8), puntos_cm(3.5));
     } elseif (substr($logo->getValue(), -3) == "png" || substr($logo->getValue(), -3) == "PNG") {
-        $pdf->addPngFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
+        $pdf->addPngFromFile($logo->getValue(), puntos_cm(2), puntos_cm(23.8), puntos_cm(3.5));
     } else {
         Logger::log("Verifique la configuracion del pos_config, la extension de la imagen del logo no es compatible");
         die("La extension de la imagen usada para el logo del negocio no es valida.");
@@ -618,7 +618,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     );
 
     //$pdf->ezSetY(puntos_cm(26.7));
-    $pdf->ezSetY(puntos_cm(28.7));
+    $pdf->ezSetY(puntos_cm(27));
     $opciones_tabla = array();
     $opciones_tabla['showLines'] = 0;
     $opciones_tabla['showHeadings'] = 0;
@@ -645,7 +645,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
         array("col" => $xml['noCertificado'])
     );
 
-    $pdf->ezSetY(puntos_cm(28.7));
+    $pdf->ezSetY(puntos_cm(27));
 
     $opciones_tabla['xPos'] = puntos_cm(14.2);
     $opciones_tabla['width'] = puntos_cm(4);
@@ -655,7 +655,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     $opciones_tabla['shadeCol2'] = array(0.8984375, 0.95703125, 0.99609375);
     $pdf->ezTable($datos, "", "", $opciones_tabla);
 
-    roundRect($pdf, puntos_cm(14.2), puntos_cm(28.7), puntos_cm(4), puntos_cm(4));
+    roundRect($pdf, puntos_cm(14.2), puntos_cm(27), puntos_cm(4), puntos_cm(4));
 
 
 
@@ -687,7 +687,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
         array("receptor" => $datos_receptor),
     );
 
-    $pdf->ezSetY(puntos_cm(24.3));
+    $pdf->ezSetY(puntos_cm(22.6));
     $opciones_tabla['xPos'] = puntos_cm(2);
     $opciones_tabla['width'] = puntos_cm(8.2);
     $opciones_tabla['showLines'] = 0;
@@ -699,7 +699,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     /*     * ************************
      * 	Timbrado
      * ************************* */
-    $pdf->ezSetY(puntos_cm(24.3));
+    $pdf->ezSetY(puntos_cm(22.6));
     $opciones_tabla['xPos'] = puntos_cm(10.4);
     $opciones_tabla['width'] = puntos_cm(7.8);
     $timbre = array(
@@ -713,14 +713,14 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
 
     $pdf->ezTable($timbre, "", "", $opciones_tabla);
 
-    roundRect($pdf, puntos_cm(2), puntos_cm(24.3), puntos_cm(16.2), puntos_cm(3.2));
+    roundRect($pdf, puntos_cm(2), puntos_cm(22.6), puntos_cm(16.2), puntos_cm(3.2));
 
 
 
     /*     * ************************
      * Tipo de comprobante
      * ************************* */
-    $pdf->ezSetY(puntos_cm(20.9));
+    $pdf->ezSetY(puntos_cm(19.2));
     $opciones_tabla['xPos'] = puntos_cm(2);
     $opciones_tabla['width'] = puntos_cm(16.2);
     $comprobante = array(
@@ -735,7 +735,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     );
     $pdf->ezTable($comprobante, "", "", $opciones_tabla);
 
-    roundRect($pdf, puntos_cm(2), puntos_cm(20.9), puntos_cm(16.2), puntos_cm(1.2));
+    roundRect($pdf, puntos_cm(2), puntos_cm(19.2), puntos_cm(16.2), puntos_cm(1.2));
 
     /*     * ************************
      * PRODUCTOS
@@ -790,7 +790,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
 
     $pdf->addJpegFromFile("../static_content/qr_codes/" . $qr_file_name, 30, 30, 150);
 
-    roundRect($pdf, puntos_cm(2), puntos_cm(19.7 - .25), puntos_cm(16.2), puntos_cm(13.2));
+    roundRect($pdf, puntos_cm(2), puntos_cm(18 - .25), puntos_cm(16.2), puntos_cm(11.5));
 
     /*     * ************************
      * Tipo de pago
@@ -819,7 +819,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
         array("r1" => $cadena_original)
     );
 
-    $pdf->ezSetY(puntos_cm(6.0));
+    $pdf->ezSetY(puntos_cm(5.8));
     $opciones_tabla['xPos'] = puntos_cm(6);
     $opciones_tabla['width'] = puntos_cm(12.4);
     $opciones_tabla['fontSize'] = 6;
@@ -850,7 +850,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     $pdf->setLineStyle(1, 'round', '', array(0, 2));
     $pdf->setStrokeColor(0.3359375, 0.578125, 0.89453125);
 
-    $pdf->line(puntos_cm(8.2 + 2), puntos_cm(24.3 - .15), puntos_cm(8.2 + 2), puntos_cm(21.051));
+    $pdf->line(puntos_cm(8.2 + 2), puntos_cm(22.6 - .15), puntos_cm(8.2 + 2), puntos_cm(19.351));
 
 
     $documento_pdf = $pdf->ezOutput(1);
