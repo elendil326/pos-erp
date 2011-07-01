@@ -88,7 +88,7 @@ POS = {};
 POS.ajaxToClient = function( module, args, callback )
 {
 	
-	/** **** Cross-broswer call **** **/
+	/** **** Cross-domain call **** **/
 	Ext.Ajax.request({
 	    url: 'http://localhost:8080/',
 	    params: {
@@ -101,7 +101,7 @@ POS.ajaxToClient = function( module, args, callback )
 			callback.call(null, r.responseObject);
 	    }
 	});
-	/** **** Cross-broswer call **** **/
+	/** **** Cross-domain call **** **/
 
 }
 
