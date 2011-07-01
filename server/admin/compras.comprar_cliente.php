@@ -146,7 +146,10 @@ if(!isset($_REQUEST['cid'])){
 		<?php
 			echo "val = raw_string;";
 		?>
-		return val;
+		
+		trimmed = val.replace( /^\s+|\s+$/g, "" );
+		
+		return trimmed.replace( "K", ""  );
 	}
 	
 	function getWeightFromClient(id_producto)
