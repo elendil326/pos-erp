@@ -1013,6 +1013,27 @@ function imprimirNotaDeVenta($id_venta) {
 
     //margenes de un centimetro para toda la pagina
     $pdf->ezSetMargins(1, 1, 1, 1);
+    
+    
+    /*
+     * LOGO
+     */
+
+    if (!$logo = PosConfigDAO::getByPK('url_logo')) {
+        Logger::log("Verifique la configuracion del pos_config, no se encontro el camṕo 'url_logo'");
+        die("Verifique la configuracion del POS, no se encontro el url del logo");
+    }
+    
+    
+    if (substr($logo->getValue(), -3) == "jpg" || substr($logo->getValue(), -3) == "JPG" || substr($logo->getValue(), -4) == "jpeg" || substr($logo->getValue(), -4) == "JPEG") {
+        $pdf->addJpegFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
+    } elseif (substr($logo->getValue(), -3) == "png" || substr($logo->getValue(), -3) == "PNG") {
+        $pdf->addPngFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
+    } else {
+        Logger::log("Verifique la configuracion del pos_config, la extension de la imagen del logo no es compatible");
+        die("La extension de la imagen usada para el logo del negocio no es valida.");
+    }
+    
 
     /*     * ************************
      * ENCABEZADO
@@ -1029,24 +1050,24 @@ function imprimirNotaDeVenta($id_venta) {
     $e .= "RFC: " . $emisor->rfc;
 
     //datos de la sucursal
-    $s = "<b>Lugar de expedicion</b>\n";
-    $s .= formatAddress($sucursal);
+    $e .= "\n\n<b>Lugar de expedicion</b>\n";
+    $e .= formatAddress($sucursal);
 
     $datos = array(
         array(
             "emisor" => $e,
-            'sucursal' => $s,
+      //      'sucursal' => $s,
         )
     );
 
-    $pdf->ezSetY(puntos_cm(26.7));
+    $pdf->ezSetY(puntos_cm(28.5));
     $opciones_tabla = array();
     $opciones_tabla['showLines'] = 0;
     $opciones_tabla['showHeadings'] = 0;
     $opciones_tabla['shaded'] = 0;
     $opciones_tabla['fontSize'] = 8;
     $opciones_tabla['xOrientation'] = 'right';
-    $opciones_tabla['xPos'] = puntos_cm(3);
+    $opciones_tabla['xPos'] = puntos_cm(7.5);
     $opciones_tabla['width'] = puntos_cm(11);
     $opciones_tabla['textCol'] = array(0, 0, 0);
     $opciones_tabla['titleFontSize'] = 12;
