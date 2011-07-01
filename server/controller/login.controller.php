@@ -71,11 +71,13 @@ function login( $u, $p )
 	}
 
 	try{
-		$res = UsuarioDAO::search( $user );		
+		$res = UsuarioDAO::search( $user );	
+			
 	}catch(Exception $e){
 		echo "{\"success\": false , \"reason\": 101, \"text\" : \"Error interno.\" }";
         Logger::log($e);
 		return;		
+		
 	}
 
 
@@ -92,8 +94,16 @@ function login( $u, $p )
 	//login correcto 
 	unset( $_SESSION[ 'c' ] );	
 
+
 	//buscar en que grupo esta este usuario
 	$user = $res[0];
+
+
+	//ver si este usuario esta activo o no
+	if(	!$user->getActivo() ){
+        Logger::log("El usuario " . $u . " intento loggearse pero no esta activo en el sistema", 2);
+		die(  "{\"success\": false , \"reason\": \"Invalidas\", \"text\" : \"Su cuenta ha sido suspendida.\" }" );
+	}
 
 	$grpu = new GruposUsuarios();
 	$grpu->setIdUsuario( $user->getIdUsuario() );

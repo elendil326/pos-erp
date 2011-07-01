@@ -29,7 +29,7 @@ public class Bascula{
 		
 		// If there are free ports, use the first found. 
         if ( !(portsFree != null && portsFree.size() > 0) ) {
-			Logger.warn("No Free ports!!!");
+			Logger.warn("---- No Free ports !!! ----");
 			return;
 		}
 	
