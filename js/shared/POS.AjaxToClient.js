@@ -54,11 +54,13 @@ Ext.util.JSONP = {
         };
 
 
-POS.ajaxToClient = function( module, args, callback, onFailureCallback )
+POS.ajaxToClient = function( options ) //module, args, callback, onFailureCallback )
 {
 	
+	
+	
 	if(DEBUG){
-		console.log("AJAX TO CLIENT !!", args);		
+		console.log("AJAX TO CLIENT !!", options.args);		
 	}
 
 	
@@ -68,8 +70,8 @@ POS.ajaxToClient = function( module, args, callback, onFailureCallback )
 	        url: 'http://127.0.0.1:8080/',
 	        callbackKey: "callback",
 	        params: {
-				action : module,
-				data : Ext.util.JSON.encode(args),
+				action : options.module,
+				data : Ext.util.JSON.encode(options.args),
 				unique : Math.random(    )
 			},
 	        callback: function(r) {
@@ -77,13 +79,13 @@ POS.ajaxToClient = function( module, args, callback, onFailureCallback )
 					console.log("Client responded !");
 				}
 
-				callback.call(null, r);
+				options.success.call(null, r);
 		    },
 			onFailure: function() {
 				if(DEBUG){
 					console.error("Cant find client !!!!");
 				}
-				onFailureCallback.call(null);
+				options.failure.call(null);
 			}
 		
 	    });		

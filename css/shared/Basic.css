@@ -2,3 +2,11 @@
 	height: auto !important;
     width: 19.5em !important;
 }
+
+
+.x-mask-retry-button{
+	color:white;
+	background-color: blue;
+	width : 50%;
+	margin: 0px auto;
+}

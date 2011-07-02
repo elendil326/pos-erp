@@ -16,14 +16,30 @@ if(document.location.search=="?debug")
 
 function checkForClient()
 {
-	POS.ajaxToClient("handshake", "", function( response ){
-			//client back !
-			console.log("respuesta" , response)
-		});
+ 	Ext.getBody().mask('Iniciando...', 'x-mask-loading', false);
 
+	POS.ajaxToClient({
+		module : "handshake",
+		args : "",
+		success : function (){
+			//ok client is there...
+		},
+		failure: function (){
+			//client not found !
+			displayNoClient();
+		},
+	});
+	
 }
 
-
+function displayNoClient()
+{
+	var html = "<div onClick='checkForClient()'>No se ha encontrado el cliente de caffeina."
+		+ "Toque aqui para reintentar."
+		+ "<div>";
+		
+	Ext.getBody().mask( html, 'x-mask-loading', true );
+}
 
 
 function checkCurrentSession(){
@@ -142,7 +158,7 @@ Ext.setup({
     glossOnIcon: false,
     onReady: function() {
 
-        Ext.getBody().mask('Iniciando', 'x-mask-loading', false);
+       
 
 		checkForClient();
 		//checkCurrentSession();
