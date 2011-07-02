@@ -2,6 +2,7 @@ package mx.caffeina.pos;
 
 import mx.caffeina.pos.Printer.*;
 import mx.caffeina.pos.Bascula.*;
+import mx.caffeina.pos.Networking.*;
 
 import org.json.simple.parser.JSONParser;
 
@@ -50,7 +51,16 @@ public class Dispatcher{
 			return callback + "({\"success\": true});";			
 		}
 
-
+		/**
+		* 
+		* 	Despachar a networking
+		* 
+		* 
+		* */
+		if(action.equals("networking")){
+			String response = Networking.getMacAddd( );			
+			return callback + "({\"success\": true,  \"response\" : \""+response+"\"});";			
+		}
 
 
 		/**

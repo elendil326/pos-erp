@@ -5,7 +5,7 @@ find src -name \*.java -print > file.list
 mkdir bin
 
 #compile those
-javac -d bin -cp src:lib/json-simple-1.1.jar:lib/GiovynetDriver.jar @file.list 
+javac -d bin -cp src:lib/json-simple-1.1.jar:lib/GiovynetDriver.jar @file.list || rm file.list; rm -rf bin; exit;
 
 rm file.list
 

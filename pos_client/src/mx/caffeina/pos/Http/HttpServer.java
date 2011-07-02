@@ -131,8 +131,9 @@ public class HttpServer
 					&& r.length() > 0
 				) 
 				{                     
-					if(r.startsWith("GET")){
-						Get_Request = r.substring(6, r.indexOf(" HTTP/1.1"));
+					if(r.startsWith("GET"))
+					{
+						Get_Request = r.substring(6, r.indexOf(" HTTP/1.1")); 
 					}
 				} 
 
@@ -144,8 +145,7 @@ public class HttpServer
 				//send the headers
 				out.println("HTTP/1.1 200 OK");
 				out.println("Date: Mon, 23 May 2005 22:38:34 GMT");
-				out.println("Server: POSWebServer/0.0.1");
-				//out.println("Last-Modified: Wed, 08 Jan 2003 23:11:55 GMT");
+				out.println("Server: POSWebServer/0.0.2");
 				out.println("Accept-Ranges: bytes");
 				out.println("Content-Length: " + response.length());
 				out.println("Connection: close");
@@ -156,10 +156,13 @@ public class HttpServer
 				out.println(response);
 				out.flush();
 			
+			}catch(java.lang.StringIndexOutOfBoundsException sioobe){
+				Logger.error(sioobe);
 				
+a
             }catch(Exception e){ 
-                e.printStackTrace(); 
-
+				Logger.error(e);
+				
             }finally{ 
 	
                 // clean up 
@@ -167,11 +170,11 @@ public class HttpServer
                     in.close(); 
                     out.close(); 
                     m_clientSocket.close(); 
-                    Logger.log("...Stopped"); 
+                    Logger.log("closing server socket..."); 
 					
                 }catch(IOException ioe){ 
-                    ioe.printStackTrace(); 
-
+					Logger.error(ioe);
+					
                 }
             } 
 
