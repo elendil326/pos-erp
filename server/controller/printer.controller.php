@@ -1126,6 +1126,7 @@ function imprimirNotaDeVenta($id_venta) {
     $elementos = array(
         array('cantidad' => 'Cantidad',
             'unidad'=>'Unidad',
+            'agrupacion' => 'Agrupacion',
             'descripcion' => 'Descripcion                                                                                                     ', 'precio' => 'Precio', 'importe' => 'Importe'),
     );
 
@@ -1133,37 +1134,50 @@ function imprimirNotaDeVenta($id_venta) {
     foreach ($productos as $p) {
 
         $p_inventario = InventarioDAO::getByPK($p["id_producto"]);
+        
+        $agrupacion = $p_inventario->getAgrupacion() != null ? $p_inventario->getAgrupacion() : "unidad";
 
         if ($p["cantidadProc"] > 0) {
 
-            $prod['cantidad'] = $p["cantidadProc"];            
+            $prod['cantidad'] = sprintf("%01.2f",$p["cantidadProc"]);            
             $prod['descripcion'] = $p["descripcion"] . " PROCESADA";
             $prod['precio'] = moneyFormat($p["precioProc"], DONT_USE_HTML);
-
+            $size = $p_inventario->getAgrupacion() != null ? sprintf("%01.2f", ($p["cantidadProc"] / $p_inventario->getAgrupacionTam())) : "";    
 
             if ($p_inventario->getPrecioPorAgrupacion()) {
-                $size = $p["cantidadProc"] / $p_inventario->getAgrupacionTam();
+                
                 $prod['importe'] = moneyFormat($size * $p["precioProc"], DONT_USE_HTML);
                 $prod['unidad'] = $p_inventario->getAgrupacion();
+                
             } else {
                 $prod['importe'] = moneyFormat($p["precioProc"] * $p["cantidadProc"], DONT_USE_HTML);
                 $prod['unidad'] = $p_inventario->getEscala();
             }
+            
+            $prod['agrupacion'] = $size . " " . $agrupacion;
             array_push($elementos, $prod);
         }
 
         if ($p["cantidad"] > 0) {
-            $prod['cantidad'] = $p["cantidad"];
+            
+            $prod['cantidad'] = sprintf("%01.2f",$p["cantidad"]);
             $prod['descripcion'] = $p["descripcion"];
             $prod['precio'] = moneyFormat($p["precio"], DONT_USE_HTML);
-
+            
+            $size = $p_inventario->getAgrupacion() != null ? sprintf("%01.2f", ($p["cantidad"] / $p_inventario->getAgrupacionTam())) : "";    
+            
             //ver si hay precio por agrupacion
             if ($p_inventario->getPrecioPorAgrupacion()) {
-                $size = $p["cantidad"] / $p_inventario->getAgrupacionTam();
+                
                 $prod['importe'] = moneyFormat($size * $p["precio"], DONT_USE_HTML);
+                $prod['unidad'] = $p_inventario->getAgrupacion();
+                
             } else {
                 $prod['importe'] = moneyFormat($p["precio"] * $p["cantidad"], DONT_USE_HTML);
+                $prod['unidad'] = $p_inventario->getEscala();
             }
+            
+            $prod['agrupacion'] = $size . " " . $agrupacion;
             array_push($elementos, $prod);
         }
     }
@@ -1172,24 +1186,28 @@ function imprimirNotaDeVenta($id_venta) {
 
     array_push($elementos, array("cantidad" => "",
         "unidad" => "",
+        "agrupacion" => "",
         "descripcion" => "",
         "precio" => "Subtotal",
         "importe" => moneyFormat($venta->getSubTotal(), DONT_USE_HTML)));
 
     array_push($elementos, array("cantidad" => "",
         "unidad" => "",
+        "agrupacion" => "",
         "descripcion" => "",
         "precio" => "Descuento",
         "importe" => moneyFormat($venta->getDescuento(), DONT_USE_HTML)));
 
     array_push($elementos, array("cantidad" => "",
         "unidad" => "",
+        "agrupacion" => "",
         "descripcion" => "",
         "precio" => "IVA",
         "importe" => moneyFormat($venta->getIVA(), DONT_USE_HTML)));
 
     array_push($elementos, array("cantidad" => "",
         "unidad" => "",
+        "agrupacion" => "",
         "descripcion" => "",
         "precio" => "Total",
         "importe" => moneyFormat($venta->getTotal(), DONT_USE_HTML)));
@@ -1197,6 +1215,7 @@ function imprimirNotaDeVenta($id_venta) {
     if($venta->getPagado() < $venta->getTotal()){
         array_push($elementos, array("cantidad" => "",
         "unidad" => "",
+        "agrupacion" => "",
         "descripcion" => "",
         "precio" => "Saldo",
         "importe" => moneyFormat(($venta->getTotal() - $venta->getPagado()), DONT_USE_HTML)));

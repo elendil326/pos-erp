@@ -504,7 +504,7 @@ foreach($compras as $c){
 
 
     $tabla = new Tabla($header, $array_ingresos);
-    $tabla->addNoData("Esta sucursal no cuenta con nigun gasto.");
+    $tabla->addNoData("Esta sucursal no cuenta con nigun ingreso.");
     
     $tabla->addRow("concepto");
     $tabla->addColRender("monto", "moneyFormat");
