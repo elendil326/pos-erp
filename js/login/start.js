@@ -13,6 +13,19 @@ if(document.location.search=="?debug")
 }
 
 
+
+function checkForClient()
+{
+	POS.ajaxToClient("handshake", "", function( response ){
+			//client back !
+			console.log("respuesta" , response)
+		});
+
+}
+
+
+
+
 function checkCurrentSession(){
 	
 	Ext.Ajax.request({
@@ -128,13 +141,11 @@ var sendLogin = function (){
 Ext.setup({
     glossOnIcon: false,
     onReady: function() {
-        
-        
-        
+
         Ext.getBody().mask('Iniciando', 'x-mask-loading', false);
 
-
-		checkCurrentSession();
+		checkForClient();
+		//checkCurrentSession();
     }
 });
 

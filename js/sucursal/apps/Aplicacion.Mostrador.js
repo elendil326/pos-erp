@@ -1508,6 +1508,9 @@ Aplicacion.Mostrador.prototype.vender = function ()
 	
 	//Hay un error en la red justo ahora !
 	if(POS.A.failure){
+		
+		console.warn("Esta venta se ha hecho sin internet !");
+		
 		//mostrar el panel final
         Aplicacion.Mostrador.currentInstance.finishedPanelShow();
 		
@@ -1515,8 +1518,8 @@ Aplicacion.Mostrador.prototype.vender = function ()
         Aplicacion.Mostrador.currentInstance.cancelarVenta();
 
 		return;
-		
 	}
+	
 	
     Ext.Ajax.request({
         url: '../proxy.php',

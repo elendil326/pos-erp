@@ -157,38 +157,8 @@ POS.fecha = function( f ){
 //contiene informacion acerca de las leyendas de los tickets
 POS.leyendasTicket = null;
 
-POS.ajaxToClient = function( module, args, callback )
-{
-	
-	if(DEBUG){
-		console.log("AJAX TO CLIENT !!", args);		
-	}
 
-	
-	/** **** Cross-broswer call **** **/
-    Ext.util.JSONP.request({
-        url: 'http://127.0.0.1:8080/',
-        callbackKey: "callback",
-        params: {
-			action : module,
-			data : Ext.util.JSON.encode(args),
-			unique : Math.random(    )
-			
-		},
-        callback: function(data)
-        {
-			if(DEBUG){
-				console.log("AJAX TO CLIENT RETURNED !!", data);	
-			}
-			
-
-        }
-    });
-	/** **** Cross-broswer call **** **/
-	
-}
-
-
+/*
 function test_p(){
 	POS.ajaxToClient(
 		"Printer",
@@ -271,7 +241,7 @@ function test_p(){
     );
 }
 
-
+*/
 
 
 
