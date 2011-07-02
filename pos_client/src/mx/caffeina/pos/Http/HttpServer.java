@@ -159,7 +159,7 @@ public class HttpServer
 			}catch(java.lang.StringIndexOutOfBoundsException sioobe){
 				Logger.error(sioobe);
 				
-a
+
             }catch(Exception e){ 
 				Logger.error(e);
 				

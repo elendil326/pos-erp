@@ -42,6 +42,16 @@ public class Dispatcher{
 		
 		/**
 		* 
+		* 	El saludo para saber que el cliente esta vivo
+		* 
+		* 
+		* */
+		if(action.equals("handshake")){
+			return callback + "({\"success\": true, \"payload\": \"Hi !\" });";	
+		}
+		
+		/**
+		* 
 		* 	Despachar a impresiones
 		* 
 		* 
