@@ -57,8 +57,7 @@ public class Dispatcher{
 		* 
 		* */
 		if(action.equals("Printer")){
-			ServidorImpresion.Print( data );			
-			return callback + "({\"success\": true});";			
+			return callback + ServidorImpresion.Print( data );	
 		}
 
 		/**
