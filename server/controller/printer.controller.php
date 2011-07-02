@@ -1237,7 +1237,7 @@ function imprimirNotaDeVenta($id_venta) {
      * ************************* */
     $mes = "";
     
-    switch(date("m")){
+    switch( date( "m", strtotime( $venta->getFecha() ) ) ){
         case 1 : 
             $mes = 'Enero';
             break;
@@ -1280,7 +1280,7 @@ function imprimirNotaDeVenta($id_venta) {
     $en_letra->setNumero($venta->getTotal());
 
     
-    $pagare = "\n\nNo. _________                                                                                                                            En " . readableText($emisor->municipio) . " a " . date("d") . " de " . $mes . " del " . date("Y") ."\n\n";
+    $pagare = "\n\nNo. _________                                                                                                                            En " . readableText($emisor->municipio) . " a " . date("d", strtotime( $venta->getFecha() )) . " de " . $mes . " del " . date("Y", strtotime( $venta->getFecha() )) ."\n\n";
     $pagare .= " Debe(mos) y pagare(mos) incondicionalmente por este Pagaré a la orden de " . readableText($emisor->nombre) . " en " . readableText($emisor->municipio) . " " . readableText($emisor->estado) . " ";
     $pagare .= "el __________________________  la cantidad de ";
     $pagare .= moneyFormat($venta->getTotal(), DONT_USE_HTML) . " " . $en_letra->letra() . ". Valor recibido a mi";
