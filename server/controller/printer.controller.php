@@ -1229,7 +1229,7 @@ function imprimirNotaDeVenta($id_venta) {
     $pdf->ezTable($elementos, "", "", $opciones_tabla);
 
     //roundedRect($x, $y, $w, $h)
-    roundRect($pdf, puntos_cm(2), puntos_cm(18.6), puntos_cm(16.2), puntos_cm(10.7));
+    roundRect($pdf, puntos_cm(2), puntos_cm(18.6), puntos_cm(16.2), puntos_cm(9.7));
 
 
     /*     * ************************
@@ -1289,27 +1289,27 @@ function imprimirNotaDeVenta($id_venta) {
     $pagare .= "desde la fecha de vencimiento de este documento hasta el dia de su liquidacón, ";
     $pagare .= "causara intereses moratorios al tipo de 20% mensual, ";
     $pagare .= "pagadero en esta ciudad juntamente con el principal.";
-
-    $firma =  "                                                                                                                                            <b>Acepto(amos)</b> ";
-    $firma .=  "\n\n\n                                                                                                                                            <b>Firma(s) ________________________</b>";
+  
     $receptor = array(
-        array("receptor" => utf8_decode($pagare)),
-        array("receptor" => $firma)
+        array("receptor" => utf8_decode($pagare))
     ); 
 
 
-    $pdf->addText(puntos_cm(2.1),puntos_cm(6.8),18,utf8_decode('<i>P a g a r é</i>'));
-    $pdf->addText(puntos_cm(14),puntos_cm(6.8),9,utf8_decode('BUENO POR  ' . moneyFormat($venta->getTotal(), DONT_USE_HTML)));
+    $pdf->addText(puntos_cm(2.1),puntos_cm(7.8),18,utf8_decode('<i>P a g a r é</i>'));
+    $pdf->addText(puntos_cm(14),puntos_cm(7.8),9,utf8_decode('BUENO POR  ' . moneyFormat($venta->getTotal(), DONT_USE_HTML)));    
+    
+    $pdf->addText(puntos_cm(12.9),puntos_cm(4),8,utf8_decode('<b>Acepto(amos)</b>'));
+    $pdf->addText(puntos_cm(12.9),puntos_cm(2.65),8,utf8_decode('<b>Firma(s) ________________________</b>'));
     
     $pdf->setColor(0.419, 0.466, 0.443);
     
-    $pdf->addText(puntos_cm(4),puntos_cm(3.85),6,utf8_decode('Nombre y datos del deudor'));
-    $pdf->addText(puntos_cm(2),puntos_cm(3.35),6.5,utf8_decode('Nombre _____________________________________________'));
-    $pdf->addText(puntos_cm(2),puntos_cm(2.95),6.5,utf8_decode('Dirección ____________________________________________'));
-    $pdf->addText(puntos_cm(2),puntos_cm(2.55),6.5,utf8_decode('Población ____________________________________________'));
+    $pdf->addText(puntos_cm(4),puntos_cm(4.15),6,utf8_decode('Nombre y datos del deudor'));
+    $pdf->addText(puntos_cm(2),puntos_cm(3.6),6.5,utf8_decode('Nombre _____________________________________________'));
+    $pdf->addText(puntos_cm(2),puntos_cm(3.125),6.5,utf8_decode('Dirección ____________________________________________'));
+    $pdf->addText(puntos_cm(2),puntos_cm(2.65),6.5,utf8_decode('Población ____________________________________________'));
     
 
-    $pdf->ezSetY(puntos_cm(7.2));
+    $pdf->ezSetY(puntos_cm(8.2));
     $opciones_tabla['xPos'] = puntos_cm(2);
     $opciones_tabla['width'] = puntos_cm(16.2);
     $opciones_tabla['shaded'] = 0;
@@ -1317,7 +1317,7 @@ function imprimirNotaDeVenta($id_venta) {
     $pdf->ezTable($receptor, "", "", $opciones_tabla);
 
     //roundedRect($x, $y, $w, $h)
-    roundRect($pdf, puntos_cm(2), puntos_cm(7.5), puntos_cm(16.2), puntos_cm(5.06));
+    roundRect($pdf, puntos_cm(2), puntos_cm(8.5), puntos_cm(16.2), puntos_cm(6.06));
 
     /*     * ************************
      * notas de abajo
