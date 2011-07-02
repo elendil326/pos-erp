@@ -1376,10 +1376,18 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 			  *	Impresion via cliente
 			  *
 			  **/
-			POS.ajaxToClient(
-				"Printer",
-				carrito
-			);	
+			POS.ajaxToClient({
+				module : "Printer",
+				args : carrito,
+				success : function (){
+					//ok client is there...
+
+				},
+				failure: function (){
+					//client not found !
+
+				},
+			});
 					
 		}else{
 			/**

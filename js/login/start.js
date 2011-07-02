@@ -4,11 +4,11 @@ POS = {U:{G:null}};
 
 if(document.location.search=="?debug")
 {
-    DEBUG=true;
-
+    DEBUG = true;
 	console.log("Applicacion en modo de DEBUG !");
 	
 }else{
+	
 	DEBUG = false;
 }
 
@@ -23,6 +23,7 @@ function checkForClient()
 		args : "",
 		success : function (){
 			//ok client is there...
+			checkCurrentSession();
 		},
 		failure: function (){
 			//client not found !
@@ -43,7 +44,7 @@ function displayNoClient()
 
 
 function checkCurrentSession(){
-	
+	Ext.getBody().mask('Validando sucursal...', 'x-mask-loading', false);
 	Ext.Ajax.request({
 		url: '../proxy.php',
 		params : {
@@ -108,11 +109,8 @@ function parseLoginResults( args ){
 	if(!args.success){
 		//login invalido
 		
-
         form.getComponent(0).setInstructions(args.text);
         form.show();
-    
-
 		return;
 	}
 	
@@ -217,7 +215,7 @@ function createLoginForm( sucursal ){
 								type : 'complete',
 								submitText : 'Ingresar',
 								callback : function(a,b){
-									sendLogin();//console.log(a,b,this)
+									sendLogin();
 								}
 							};
 							POS.Keyboard.Keyboard( this, kconf );
