@@ -634,7 +634,7 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     $pdf->ezTable($datos, "", "", $opciones_tabla);
 
     $datos = array(
-        array("col" => "<b>Folio</b>"),
+        array("col" => "<b>Factura</b>"),
         array("col" => $xml['folio']),
         array("col" => "<b>Fecha y hora de Emision</b>"),
         array("col" => str_replace(array("T"), array(" "), $xml['fecha'])),
@@ -1004,7 +1004,7 @@ function imprimirNotaDeVenta($id_venta) {
     include_once('librerias/ezpdf/class.pdf.php');
     include_once('librerias/ezpdf/class.ezpdf.php');
 
-    $pdf = new Cezpdf();
+    $pdf = new Cezpdf( $paper = 'letter');
 
     $pdf->selectFont('../server/librerias/ezpdf/fonts/Helvetica.afm');
 
@@ -1023,9 +1023,9 @@ function imprimirNotaDeVenta($id_venta) {
     
     
     if (substr($logo->getValue(), -3) == "jpg" || substr($logo->getValue(), -3) == "JPG" || substr($logo->getValue(), -4) == "jpeg" || substr($logo->getValue(), -4) == "JPEG") {
-        $pdf->addJpegFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
+        $pdf->addJpegFromFile($logo->getValue(), puntos_cm(2), puntos_cm(23.8), puntos_cm(3.5));
     } elseif (substr($logo->getValue(), -3) == "png" || substr($logo->getValue(), -3) == "PNG") {
-        $pdf->addPngFromFile($logo->getValue(), puntos_cm(2), puntos_cm(25.5), puntos_cm(3.5));
+        $pdf->addPngFromFile($logo->getValue(), puntos_cm(2), puntos_cm(23.8), puntos_cm(3.5));
     } else {
         Logger::log("Verifique la configuracion del pos_config, la extension de la imagen del logo no es compatible");
         die("La extension de la imagen usada para el logo del negocio no es valida.");
@@ -1057,7 +1057,7 @@ function imprimirNotaDeVenta($id_venta) {
         )
     );
 
-    $pdf->ezSetY(puntos_cm(28.5));
+    $pdf->ezSetY(puntos_cm(26.8));
     $opciones_tabla = array();
     $opciones_tabla['showLines'] = 0;
     $opciones_tabla['showHeadings'] = 0;
@@ -1085,7 +1085,7 @@ function imprimirNotaDeVenta($id_venta) {
         array("col" => readableText($cajero))
     );
 
-    $pdf->ezSetY(puntos_cm(28.8));
+    $pdf->ezSetY(puntos_cm(26.8));
 
     $opciones_tabla['xPos'] = puntos_cm(14.2);
     $opciones_tabla['width'] = puntos_cm(4);
@@ -1095,7 +1095,7 @@ function imprimirNotaDeVenta($id_venta) {
     $opciones_tabla['shadeCol2'] = array(0.8984375, 0.95703125, 0.99609375);
     $pdf->ezTable($datos, "", "", $opciones_tabla);
 
-    roundRect($pdf, puntos_cm(14.2), puntos_cm(28.8), puntos_cm(4), puntos_cm(4.25));
+    roundRect($pdf, puntos_cm(14.2), puntos_cm(26.8), puntos_cm(4), puntos_cm(4.25));
 
 
 
@@ -1111,13 +1111,13 @@ function imprimirNotaDeVenta($id_venta) {
         array("receptor" => $datos_receptor),
     );
 
-    $pdf->ezSetY(puntos_cm(24.3));
+    $pdf->ezSetY(puntos_cm(22));
     $opciones_tabla['xPos'] = puntos_cm(2);
     $opciones_tabla['width'] = puntos_cm(16.2);
     $opciones_tabla['showLines'] = 0;
     $pdf->ezTable($receptor, "", "", $opciones_tabla);
 
-    roundRect($pdf, puntos_cm(2), puntos_cm(24.3), puntos_cm(16.2), puntos_cm(3.2));
+    roundRect($pdf, puntos_cm(2), puntos_cm(22), puntos_cm(16.2), puntos_cm(3.2));
 
 
     /*     * ************************
@@ -1223,13 +1223,13 @@ function imprimirNotaDeVenta($id_venta) {
 
 
     $pdf->ezText("", 10, array('justification' => 'center'));
-    $pdf->ezSetY(puntos_cm(20.9));
+    $pdf->ezSetY(puntos_cm(18.6));
     $opciones_tabla['xPos'] = puntos_cm(2);
     $opciones_tabla['width'] = puntos_cm(16.2);
     $pdf->ezTable($elementos, "", "", $opciones_tabla);
 
     //roundedRect($x, $y, $w, $h)
-    roundRect($pdf, puntos_cm(2), puntos_cm(20.9), puntos_cm(16.2), puntos_cm(13));
+    roundRect($pdf, puntos_cm(2), puntos_cm(18.6), puntos_cm(16.2), puntos_cm(10.7));
 
 
     /*     * ************************
@@ -1279,9 +1279,9 @@ function imprimirNotaDeVenta($id_venta) {
     $en_letra = new CNumeroaletra();
     $en_letra->setNumero($venta->getTotal());
 
-    //$pagare = "                                                                                           <b>P A G A R E</b>\n\n";
+    
     $pagare = "\n\nNo. _________                                                                                                                            En " . readableText($emisor->municipio) . " a " . date("d") . " de " . $mes . " del " . date("Y") ."\n\n";
-    $pagare .= " Debe(mos) y pagare(mos) incondicionalmente por este Pagaré a la orden de " . readableText($emisor->nombre) . " en " . readableText($emisor->municipio) . " ";
+    $pagare .= " Debe(mos) y pagare(mos) incondicionalmente por este Pagaré a la orden de " . readableText($emisor->nombre) . " en " . readableText($emisor->municipio) . " " . readableText($emisor->estado) . " ";
     $pagare .= "el __________________________  la cantidad de ";
     $pagare .= moneyFormat($venta->getTotal(), DONT_USE_HTML) . " " . $en_letra->letra() . ". Valor recibido a mi";
     $pagare .= "(nuestra) entera satisfacción. Este pagaré forma parte de una serie numerada de 1 al 1 y esta sujeto a la condición de que, ";
@@ -1290,15 +1290,24 @@ function imprimirNotaDeVenta($id_venta) {
     $pagare .= "causara intereses moratorios al tipo de 20% mensual, ";
     $pagare .= "pagadero en esta ciudad juntamente con el principal.";
 
-    $firma =  "\n                                                                                   <b>___________________</b>";
-    $firma .= "\n                                                                                        <b>ACEPTO(AMOS)</b>";
+    $firma =  "                                                                                                                                            <b>Acepto(amos)</b> ";
+    $firma .=  "\n\n\n                                                                                                                                            <b>Firma(s) ________________________</b>";
     $receptor = array(
         array("receptor" => utf8_decode($pagare)),
         array("receptor" => $firma)
     ); 
 
 
-    $pdf->addText(puntos_cm(8.2),puntos_cm(6.8),18,'P A G A R E');
+    $pdf->addText(puntos_cm(2.1),puntos_cm(6.8),18,utf8_decode('<i>P a g a r é</i>'));
+    $pdf->addText(puntos_cm(14),puntos_cm(6.8),9,utf8_decode('BUENO POR  ' . moneyFormat($venta->getTotal(), DONT_USE_HTML)));
+    
+    $pdf->setColor(0.419, 0.466, 0.443);
+    
+    $pdf->addText(puntos_cm(4),puntos_cm(3.85),6,utf8_decode('Nombre y datos del deudor'));
+    $pdf->addText(puntos_cm(2),puntos_cm(3.35),6.5,utf8_decode('Nombre _____________________________________________'));
+    $pdf->addText(puntos_cm(2),puntos_cm(2.95),6.5,utf8_decode('Dirección ____________________________________________'));
+    $pdf->addText(puntos_cm(2),puntos_cm(2.55),6.5,utf8_decode('Población ____________________________________________'));
+    
 
     $pdf->ezSetY(puntos_cm(7.2));
     $opciones_tabla['xPos'] = puntos_cm(2);
@@ -1318,7 +1327,7 @@ function imprimirNotaDeVenta($id_venta) {
 
     $pdf->line(puntos_cm(2), puntos_cm(2.0), puntos_cm(18.1), puntos_cm(2.0));
 
-    $pdf->addText(puntos_cm(2), puntos_cm(1.61), 7, "Fecha de impresion: " . time());
+    $pdf->addText(puntos_cm(2), puntos_cm(1.61), 7, "Fecha de impresion: " . date('Y-m-d'));
 
     $pdf->addJpegFromFile("../www/media/logo_simbolo.jpg", puntos_cm(15.9), puntos_cm(.95), 25);
 
