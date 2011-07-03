@@ -58,9 +58,40 @@ echo $c->getDescripcion();
                 //buscar este producto
                 return $return;
             }
+            
+            function amountReceivable($e, $row){
+                $producto = InventarioDAO::getByPK($row['id_producto']);                
 
-            function toUnitDesc($e) {
-                return "<b>" . number_format($e, 2) . "</b>kg";
+                if ($producto->getAgrupacion()) {
+                    //tiene agrupacion
+       
+                    $aCobrar = round($row["cantidad"] - ($row['descuento'] * $row["cantidad"] / $producto->getAgrupacionTam()));
+                    
+                    $return =  $aCobrar . " " . $producto->getEscala() . "s " . "<i>( " . round(($aCobrar / $producto->getAgrupacionTam()), 2) . " {$producto->getAgrupacion()}s )</i>";
+                } else {
+                    //no tiene agrupacion
+                    return $row['descuento'] . " " . $producto->getEscala();
+                }
+
+                //buscar este producto
+                return $return;
+            }
+
+            function toUnitDesc($e, $row) {
+                 $producto = InventarioDAO::getByPK($row['id_producto']);
+
+                $return = $e . " " . $producto->getEscala() . "s";
+
+                if ($producto->getAgrupacion()) {
+                    //tiene agrupacion                   
+                    $return .= "/" . $producto->getAgrupacion();
+                } else {
+                    //no tiene agrupacion
+                    return $row['descuento'];
+                }
+
+                //buscar este producto
+                return $return;
             }
 
             function renderProd($pid) {
@@ -78,17 +109,19 @@ echo $c->getDescripcion();
 
             function renderCostPerUnit($t, $row) {
 
-                //buscar el producto del que estoy hablando
-                $p = InventarioDAO::getByPK($row["id_producto"]);
+                $producto = InventarioDAO::getByPK($row['id_producto']);                
 
-                if ($p->getPrecioPorAgrupacion()) {
-
-                    $size = $row["cantidad"] / $p->getAgrupacionTam();
-
-                    return moneyFormat($t / $size) . " por " . $p->getAgrupacion() . " &nbsp; " . moneyFormat($t);
+                if ($producto->getAgrupacion()) {
+                    //tiene agrupacion
+       
+                    $aCobrar = round($row["cantidad"] - ($row['descuento'] * $row["cantidad"] / $producto->getAgrupacionTam()));
+                    
+                    return moneyFormat(round($row['precio'] / $aCobrar ,2));
                 } else {
-                    return moneyFormat($t / $row["cantidad"]) . " por " . $p->getEscala() . " &nbsp; " . moneyFormat($t);
+                    //no tiene agrupacion
+                    return moneyFormat(round($row['precio'] / $row["cantidad"] ,2));
                 }
+
             }
 
             $query = new DetalleCompraSucursal();
@@ -102,13 +135,18 @@ echo $c->getDescripcion();
                 "procesadas" => "Procesada",
                 "cantidad" => "Cantidad",
                 "descuento" => "Descuento",
-                "precio" => "Precio unitario");
+                "id_detalle_compra_sucursal" => "A Cobrar",
+                "id_compra" => "Precio Unitario",
+                "precio" => "Importe");
 
             $tabla = new Tabla($header, $detalles);
-            $tabla->addColRender("precio", "renderCostPerUnit");
+            //$tabla->addColRender("precio", "moneyFormat");
+            $tabla->addColRender("precio", "moneyFormat");
             $tabla->addColRender("cantidad", "toUnit");
             $tabla->addColRender("id_producto", "renderProd");
             $tabla->addColRender("descuento", "toUnitDesc");
+            $tabla->addColRender("id_detalle_compra_sucursal", "amountReceivable");
+            $tabla->addColRender("id_compra", "renderCostPerUnit");
             $tabla->addColRender("procesadas", "renderProc");
             $tabla->render();
 ?>
