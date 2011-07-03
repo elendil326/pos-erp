@@ -123,25 +123,6 @@ require_once('model/sucursal.dao.php');
 <h2>Ultimas ventas</h2> <?php
 //obtener los clientes del controller de clientes
 
-$ventas = VentasDAO::getAll (1, 50, 'fecha', 'desc');
-
-//render the table
-$header = array(
-	"id_venta"=>  "Venta",
-	"id_sucursal"=>  "Sucursal",
-	"id_cliente"=>  "Cliente",
-	"tipo_venta"=>  "Tipo",
-	"fecha"=>  "Fecha",
-	//"subtotal"=>  "Subtotal",
-	//"iva"=>  "IVA",
-	//"descuento"=>  "Descuento",
-	"total"=>  "Total",
-
-	//"pagado"=>  "Pagado" 
-    );
-
-
-
 
 function getNombrecliente($id)
 {
@@ -173,9 +154,49 @@ function setTipocolor($tipo)
 }
 
 
+$ventas = VentasDAO::getAll (1, 50, 'fecha', 'desc');
+
+$array_ventas = array();
+
+foreach($ventas  as $venta){
+    
+    $facturasVenta = FacturaVentaDAO::search(new FacturaVenta(array("id_venta" => $venta->getIdVenta(), "activa" => 1, "sellada" => 1)));
+    
+    $facturado = "No";
+    
+    if(count($facturasVenta) >= 1){
+        $facturado = "<span style = 'color : green;' >Si</span>";
+    }
+    
+    array_push($array_ventas, array(
+	"id_venta"=>  $venta->getIdVenta(),
+	"id_sucursal"=>  $venta->getIdSucursal(),
+	"id_cliente"=>  $venta->getIdCliente(),
+        "factura" => $facturado,
+	"tipo_venta"=>  $venta->getTipoVenta(),
+	"fecha"=>  $venta->getFecha(),
+	"total"=>  $venta->getTotal()
+    ));
+}
+
+//render the table
+$header = array(
+	"id_venta"=>  "Venta",
+	"id_sucursal"=>  "Sucursal",
+	"id_cliente"=>  "Cliente",
+        "factura" => "Facturada",
+	"tipo_venta"=>  "Tipo",
+	"fecha"=>  "Fecha",
+	//"subtotal"=>  "Subtotal",
+	//"iva"=>  "IVA",
+	//"descuento"=>  "Descuento",
+	"total"=>  "Total",
+
+	//"pagado"=>  "Pagado" 
+    );
 
 
-$tabla = new Tabla( $header, $ventas );
+$tabla = new Tabla( $header, $array_ventas );
 $tabla->addColRender( "subtotal", "moneyFormat" ); 
 $tabla->addColRender( "saldo", "moneyFormat" ); 
 $tabla->addColRender( "total", "moneyFormat" ); 
@@ -183,6 +204,7 @@ $tabla->addColRender( "pagado", "moneyFormat" );
 $tabla->addColRender( "fecha", "toDate" ); 
 $tabla->addColRender( "tipo_venta", "setTipoColor" ); 
 $tabla->addColRender( "id_cliente", "getNombreCliente" ); 
+$tabla->addRow( "factura" );
 $tabla->addColRender( "id_sucursal", "getDescSuc" ); 
 $tabla->addOnClick("id_venta", "mostrarDetallesVenta");
 $tabla->addColRender( "descuento", "percentFormat" );
