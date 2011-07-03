@@ -1159,19 +1159,10 @@ function venderAdmin($args) {
 
     printf('{"success": true, "id_venta":%s, "empleado":"%s"}', $venta_actual->getIdVenta(), $empleado->getNombre());
 
-    Logger::log("***** Proceso de venta (admin), termino con exito!! id_venta : " . $venta_actual->getIdVenta() . " *********");
+    Logger::log("***** Proceso de venta (admin) termino con exito!! id_venta : " . $venta_actual->getIdVenta() . " ****");
 
     return;
-    DAO::transRollback();
-    echo '{"success":false, reason : "DEBUG"}';
-    return;
 
-
-    /*     * ********************************************************************************************************
-     * ********************************************************************************************************
-     * *********************************************** Aqui voy  (dan)  ***************************************
-     * ********************************************************************************************************
-     * ********************************************************************************************************  */
 }
 
 //vender

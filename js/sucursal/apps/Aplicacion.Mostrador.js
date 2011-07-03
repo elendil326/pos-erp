@@ -69,7 +69,9 @@ Aplicacion.Mostrador.prototype.carrito = {
 
 Aplicacion.Mostrador.prototype.cancelarVenta = function ()
 {
-
+	if(DEBUG){
+		console.log("--cancelando venta--");
+	}
     Aplicacion.Mostrador.currentInstance.carrito.items = [];
 
     Aplicacion.Mostrador.currentInstance.refrescarMostrador();
@@ -1348,8 +1350,6 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
         //html += "<iframe id = 'frame' src ='../impresora/pdf.php?json=" + Ext.util.JSON.encode(carrito) + "' width='0px' height='0px'></iframe> ";
         window.open("../impresora/pdf.php?json=" + Ext.util.JSON.encode(carrito));
 
-
-
     } else {
 
         hora = new Date()
@@ -1379,13 +1379,19 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 			POS.ajaxToClient({
 				module : "Printer",
 				args : carrito,
-				success : function (){
+				success : function ( r ){
+					
 					//ok client is there...
+					if(DEBUG){
+						console.log("ticket printing responded", r);						
+					}
 
 				},
 				failure: function (){
 					//client not found !
-
+					if(DEBUG){
+						console.warn("client not found !!!", r);						
+					}
 				},
 			});
 					
@@ -1402,11 +1408,6 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 	        +' </applet>';
 	
 		}
-
-		
-		
-
-
     }
 	
 	
@@ -1481,6 +1482,23 @@ Aplicacion.Mostrador.prototype.doVenta = function ()
 
 };
 
+
+
+Aplicacion.Mostrador.prototype.offlineVender = function( )
+{
+	if(DEBUG){
+		console.warn("Venta offline !!!");
+	}
+	
+
+			
+	//mostrar el panel final
+    Aplicacion.Mostrador.currentInstance.finishedPanelShow();
+	
+    //reseteamos el carrito
+    Aplicacion.Mostrador.currentInstance.cancelarVenta();
+}
+
 Aplicacion.Mostrador.prototype.vender = function ()
 {
 
@@ -1517,15 +1535,7 @@ Aplicacion.Mostrador.prototype.vender = function ()
 	//Hay un error en la red justo ahora !
 	if(POS.A.failure){
 		
-		console.warn("Esta venta se ha hecho sin internet !");
-		
-		//mostrar el panel final
-        Aplicacion.Mostrador.currentInstance.finishedPanelShow();
-		
-        //reseteamos el carrito
-        Aplicacion.Mostrador.currentInstance.cancelarVenta();
-
-		return;
+		return offlineVender();
 	}
 	
 	
@@ -1581,7 +1591,8 @@ Aplicacion.Mostrador.prototype.vender = function ()
 			
 			
             //recargar la lista de clientes y de compras
-            if( Aplicacion.Mostrador.currentInstance.carrito.cliente !== null){
+            if( Aplicacion.Mostrador.currentInstance.carrito.cliente !== null)
+			{
                 Aplicacion.Clientes.currentInstance.listaDeClientesLoad();
             }
 
@@ -1595,6 +1606,7 @@ Aplicacion.Mostrador.prototype.vender = function ()
 
         },
         failure: function( response ){
+			return offlineVender();
             POS.error( response );
         }
     });

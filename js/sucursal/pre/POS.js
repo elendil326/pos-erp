@@ -528,9 +528,11 @@ if(POS.A.sendHeart){
 }
 
 
-POS.error = function (ajaxResponse, catchedError){
-
-    };
+POS.error = function (ajaxResponse, catchedError)
+{
+	//enviar error al cliente local !
+	console.warn("Enviar error a cliente local", ajaxResponse, catchedError);
+};
 
 //lee la informacion de la sucursal
 POS.loadInfoSucursal();

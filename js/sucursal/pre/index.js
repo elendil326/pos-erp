@@ -234,12 +234,13 @@ sink.Main = {
 Ext.setup({
     glossOnIcon: true,
     onReady: function() {
-	
+		/*
 		Ext.EventManager.onWindowResize(function (a,b,c) {
 			if(DEBUG){
 				console.log('resize',a,b,c);
 			}
 		});
+		*/
 		imReadyToStart();
         
     }
