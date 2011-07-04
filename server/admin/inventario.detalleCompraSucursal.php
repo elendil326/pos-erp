@@ -51,12 +51,14 @@ echo $c->getDescripcion();
                     $size = $e / $producto->getAgrupacionTam();
                     $size = round($size, 2);
                     $return .= "<i>( " . $size . " " . $producto->getAgrupacion() . "s )</i>";
+                    return $return;
                 } else {
                     //no tiene agrupacion, solo mostrar la escala
+                    return $row[cantidad] . " " . $producto->getEscala() . "s " ;
                 }
 
                 //buscar este producto
-                return $return;
+                
             }
             
             function amountReceivable($e, $row){
