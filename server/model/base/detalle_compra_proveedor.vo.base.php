@@ -2,7 +2,7 @@
 /** Value Object file for table detalle_compra_proveedor.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author no author especified
+  * @author Alan Gonzalez
   * @access public
   * @package docs
   * 
@@ -106,7 +106,7 @@ class DetalleCompraProveedor extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access protected
-	  * @var float
+	  * @var int(11)
 	  */
 	protected $kg;
 
@@ -223,7 +223,7 @@ class DetalleCompraProveedor extends VO
 	  * getKg
 	  * 
 	  * Get the <i>kg</i> property for this object. Donde <i>kg</i> es  [Campo no documentado]
-	  * @return float
+	  * @return int(11)
 	  */
 	final public function getKg()
 	{
@@ -234,9 +234,9 @@ class DetalleCompraProveedor extends VO
 	  * setKg( $kg )
 	  * 
 	  * Set the <i>kg</i> property for this object. Donde <i>kg</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>kg</i> es de tipo <i>float</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>kg</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
+	  * @param int(11)
 	  */
 	final public function setKg( $kg )
 	{

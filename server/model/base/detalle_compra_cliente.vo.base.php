@@ -2,7 +2,7 @@
 /** Value Object file for table detalle_compra_cliente.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author no author especified
+  * @author Alan Gonzalez
   * @access public
   * @package docs
   * 

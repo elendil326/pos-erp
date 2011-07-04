@@ -2,7 +2,7 @@
 /** Value Object file for table sucursal.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author no author especified
+  * @author Alan Gonzalez
   * @access public
   * @package docs
   * 
@@ -85,9 +85,6 @@ class Sucursal extends VO
 			if( isset($data['saldo_a_favor']) ){
 				$this->saldo_a_favor = $data['saldo_a_favor'];
 			}
-			if( isset($data['current_isp']) ){
-				$this->current_isp = $data['current_isp'];
-			}
 		}
 	}
 
@@ -121,8 +118,7 @@ class Sucursal extends VO
 			"letras_factura" => $this->letras_factura,
 			"activo" => $this->activo,
 			"fecha_apertura" => $this->fecha_apertura,
-			"saldo_a_favor" => $this->saldo_a_favor,
-			"current_isp" => $this->current_isp
+			"saldo_a_favor" => $this->saldo_a_favor
 		); 
 	return json_encode($vec); 
 	}
@@ -317,15 +313,6 @@ class Sucursal extends VO
 	  * @var float
 	  */
 	protected $saldo_a_favor;
-
-	/**
-	  * current_isp
-	  * 
-	  * el proveedor de servicios de internet, si se cambia de isp, no lo dejare entrar hasta que un inge lo actalize<br>
-	  * @access protected
-	  * @var varchar(256)
-	  */
-	protected $current_isp;
 
 	/**
 	  * getIdSucursal
@@ -833,30 +820,6 @@ class Sucursal extends VO
 	final public function setSaldoAFavor( $saldo_a_favor )
 	{
 		$this->saldo_a_favor = $saldo_a_favor;
-	}
-
-	/**
-	  * getCurrentIsp
-	  * 
-	  * Get the <i>current_isp</i> property for this object. Donde <i>current_isp</i> es el proveedor de servicios de internet, si se cambia de isp, no lo dejare entrar hasta que un inge lo actalize
-	  * @return varchar(256)
-	  */
-	final public function getCurrentIsp()
-	{
-		return $this->current_isp;
-	}
-
-	/**
-	  * setCurrentIsp( $current_isp )
-	  * 
-	  * Set the <i>current_isp</i> property for this object. Donde <i>current_isp</i> es el proveedor de servicios de internet, si se cambia de isp, no lo dejare entrar hasta que un inge lo actalize.
-	  * Una validacion basica se hara aqui para comprobar que <i>current_isp</i> es de tipo <i>varchar(256)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(256)
-	  */
-	final public function setCurrentIsp( $current_isp )
-	{
-		$this->current_isp = $current_isp;
 	}
 
 }

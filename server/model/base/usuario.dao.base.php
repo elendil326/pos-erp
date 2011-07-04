@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Usuario }. 
-  * @author no author especified
+  * @author Alan Gonzalez
   * @access private
   * @abstract
   * @package docs
@@ -193,16 +193,6 @@ abstract class UsuarioDAOBase extends DAO
 			array_push( $val, $usuario->getTelefono() );
 		}
 
-		if( $usuario->getUltimoAcceso() != NULL){
-			$sql .= " ultimo_acceso = ? AND";
-			array_push( $val, $usuario->getUltimoAcceso() );
-		}
-
-		if( $usuario->getOnline() != NULL){
-			$sql .= " online = ? AND";
-			array_push( $val, $usuario->getOnline() );
-		}
-
 		if( $usuario->getFechaInicio() != NULL){
 			$sql .= " fecha_inicio = ? AND";
 			array_push( $val, $usuario->getFechaInicio() );
@@ -231,7 +221,7 @@ abstract class UsuarioDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -239,7 +229,7 @@ abstract class UsuarioDAOBase extends DAO
 	  **/
 	private static final function update( $usuario )
 	{
-		$sql = "UPDATE usuario SET  RFC = ?, nombre = ?, contrasena = ?, id_sucursal = ?, activo = ?, finger_token = ?, salario = ?, direccion = ?, telefono = ?, ultimo_acceso = ?, online = ?, fecha_inicio = ? WHERE  id_usuario = ?;";
+		$sql = "UPDATE usuario SET  RFC = ?, nombre = ?, contrasena = ?, id_sucursal = ?, activo = ?, finger_token = ?, salario = ?, direccion = ?, telefono = ?, fecha_inicio = ? WHERE  id_usuario = ?;";
 		$params = array( 
 			$usuario->getRFC(), 
 			$usuario->getNombre(), 
@@ -250,8 +240,6 @@ abstract class UsuarioDAOBase extends DAO
 			$usuario->getSalario(), 
 			$usuario->getDireccion(), 
 			$usuario->getTelefono(), 
-			$usuario->getUltimoAcceso(), 
-			$usuario->getOnline(), 
 			$usuario->getFechaInicio(), 
 			$usuario->getIdUsuario(), );
 		global $conn;
@@ -276,7 +264,7 @@ abstract class UsuarioDAOBase extends DAO
 	  **/
 	private static final function create( &$usuario )
 	{
-		$sql = "INSERT INTO usuario ( id_usuario, RFC, nombre, contrasena, id_sucursal, activo, finger_token, salario, direccion, telefono, ultimo_acceso, online, fecha_inicio ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO usuario ( id_usuario, RFC, nombre, contrasena, id_sucursal, activo, finger_token, salario, direccion, telefono, fecha_inicio ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$usuario->getIdUsuario(), 
 			$usuario->getRFC(), 
@@ -288,8 +276,6 @@ abstract class UsuarioDAOBase extends DAO
 			$usuario->getSalario(), 
 			$usuario->getDireccion(), 
 			$usuario->getTelefono(), 
-			$usuario->getUltimoAcceso(), 
-			$usuario->getOnline(), 
 			$usuario->getFechaInicio(), 
 		 );
 		global $conn;
@@ -297,7 +283,7 @@ abstract class UsuarioDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		 $usuario->setIdUsuario( $conn->Insert_ID() );
+		/* save autoincremented value on obj */  $usuario->setIdUsuario( $conn->Insert_ID() ); /*  */ 
 		return $ar;
 	}
 
@@ -444,28 +430,6 @@ abstract class UsuarioDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " telefono = ? AND"; 
-			$a = $a == NULL ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( (($a = $usuarioA->getUltimoAcceso()) != NULL) & ( ($b = $usuarioB->getUltimoAcceso()) != NULL) ){
-				$sql .= " ultimo_acceso >= ? AND ultimo_acceso <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
-			$sql .= " ultimo_acceso = ? AND"; 
-			$a = $a == NULL ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( (($a = $usuarioA->getOnline()) != NULL) & ( ($b = $usuarioB->getOnline()) != NULL) ){
-				$sql .= " online >= ? AND online <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
-			$sql .= " online = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

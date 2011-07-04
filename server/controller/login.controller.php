@@ -437,10 +437,11 @@ function sucursalTest( ){
     }
 
 
-    Logger::log("Equipo {$equipo->getIdEquipo()} validado. Descripcion de equipo: {$equipo->getDescripcion()}");
+    Logger::log("Equipo --{$equipo->getIdEquipo()}-- validado. Descripcion de equipo: {$equipo->getDescripcion()}");
     Logger::log("Sucursal para esta sesion: " . $suc->getIdSucursal() . ", " . $suc->getDescripcion() );
-    $_SESSION['sucursal'] = $suc->getIdSucursal();
 
+    $_SESSION['sucursal'] = $suc->getIdSucursal();
+    $_SESSION['id_equipo'] = $equipo->getIdEquipo();
     return true;
 
 }
@@ -449,7 +450,7 @@ function sucursalTest( ){
 
 function dispatch($args){
 	
-	Logger::log("Dispatching route for user group {$_SESSION['grupo']} and instance {$_SESSION['INSTANCE_ID']}");
+	Logger::log("Dispatching route for user group {$_SESSION['grupo']} ");
 	
 	if(!isset($_SESSION['grupo'])){
 		Logger::log("Accesso no autorizado ! [No hay grupo]");
@@ -622,7 +623,7 @@ function login_controller_dispatch($args){
 			   /**
 			    * Login de admin/ingeniero
 			    * 
-			    * Los clientes pueden iniciar sesion para descargar sus facturas
+			    * 
 			    * */
 			    if(!isset($args['u'])){
 			    	$u = "";

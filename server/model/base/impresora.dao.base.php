@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Impresora }. 
-  * @author no author especified
+  * @author Alan Gonzalez
   * @access private
   * @abstract
   * @package docs
@@ -186,7 +186,7 @@ abstract class ImpresoraDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -234,7 +234,7 @@ abstract class ImpresoraDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		 $impresora->setIdImpresora( $conn->Insert_ID() );
+		/* save autoincremented value on obj */  $impresora->setIdImpresora( $conn->Insert_ID() ); /*  */ 
 		return $ar;
 	}
 

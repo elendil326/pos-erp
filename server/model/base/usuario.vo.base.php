@@ -2,7 +2,7 @@
 /** Value Object file for table usuario.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author no author especified
+  * @author Alan Gonzalez
   * @access public
   * @package docs
   * 
@@ -52,12 +52,6 @@ class Usuario extends VO
 			if( isset($data['telefono']) ){
 				$this->telefono = $data['telefono'];
 			}
-			if( isset($data['ultimo_acceso']) ){
-				$this->ultimo_acceso = $data['ultimo_acceso'];
-			}
-			if( isset($data['online']) ){
-				$this->online = $data['online'];
-			}
 			if( isset($data['fecha_inicio']) ){
 				$this->fecha_inicio = $data['fecha_inicio'];
 			}
@@ -84,8 +78,6 @@ class Usuario extends VO
 			"salario" => $this->salario,
 			"direccion" => $this->direccion,
 			"telefono" => $this->telefono,
-			"ultimo_acceso" => $this->ultimo_acceso,
-			"online" => $this->online,
 			"fecha_inicio" => $this->fecha_inicio
 		); 
 	return json_encode($vec); 
@@ -182,24 +174,6 @@ class Usuario extends VO
 	  * @var varchar(16)
 	  */
 	protected $telefono;
-
-	/**
-	  * ultimo_acceso
-	  * 
-	  * la ultima vez que este usuario hizo una peticion al sistema<br>
-	  * @access protected
-	  * @var timestamp
-	  */
-	protected $ultimo_acceso;
-
-	/**
-	  * online
-	  * 
-	  * esta online justo ahora ?<br>
-	  * @access protected
-	  * @var tinyint(1)
-	  */
-	protected $online;
 
 	/**
 	  * fecha_inicio
@@ -452,54 +426,6 @@ class Usuario extends VO
 	final public function setTelefono( $telefono )
 	{
 		$this->telefono = $telefono;
-	}
-
-	/**
-	  * getUltimoAcceso
-	  * 
-	  * Get the <i>ultimo_acceso</i> property for this object. Donde <i>ultimo_acceso</i> es la ultima vez que este usuario hizo una peticion al sistema
-	  * @return timestamp
-	  */
-	final public function getUltimoAcceso()
-	{
-		return $this->ultimo_acceso;
-	}
-
-	/**
-	  * setUltimoAcceso( $ultimo_acceso )
-	  * 
-	  * Set the <i>ultimo_acceso</i> property for this object. Donde <i>ultimo_acceso</i> es la ultima vez que este usuario hizo una peticion al sistema.
-	  * Una validacion basica se hara aqui para comprobar que <i>ultimo_acceso</i> es de tipo <i>timestamp</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param timestamp
-	  */
-	final public function setUltimoAcceso( $ultimo_acceso )
-	{
-		$this->ultimo_acceso = $ultimo_acceso;
-	}
-
-	/**
-	  * getOnline
-	  * 
-	  * Get the <i>online</i> property for this object. Donde <i>online</i> es esta online justo ahora ?
-	  * @return tinyint(1)
-	  */
-	final public function getOnline()
-	{
-		return $this->online;
-	}
-
-	/**
-	  * setOnline( $online )
-	  * 
-	  * Set the <i>online</i> property for this object. Donde <i>online</i> es esta online justo ahora ?.
-	  * Una validacion basica se hara aqui para comprobar que <i>online</i> es de tipo <i>tinyint(1)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param tinyint(1)
-	  */
-	final public function setOnline( $online )
-	{
-		$this->online = $online;
 	}
 
 	/**

@@ -3,7 +3,7 @@
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link Ventas }. 
-  * @author no author especified
+  * @author Alan Gonzalez
   * @access private
   * @abstract
   * @package docs
@@ -148,6 +148,16 @@ abstract class VentasDAOBase extends DAO
 			array_push( $val, $ventas->getIdVenta() );
 		}
 
+		if( $ventas->getIdVentaEquipo() != NULL){
+			$sql .= " id_venta_equipo = ? AND";
+			array_push( $val, $ventas->getIdVentaEquipo() );
+		}
+
+		if( $ventas->getIdEquipo() != NULL){
+			$sql .= " id_equipo = ? AND";
+			array_push( $val, $ventas->getIdEquipo() );
+		}
+
 		if( $ventas->getIdCliente() != NULL){
 			$sql .= " id_cliente = ? AND";
 			array_push( $val, $ventas->getIdCliente() );
@@ -241,7 +251,7 @@ abstract class VentasDAOBase extends DAO
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -249,8 +259,10 @@ abstract class VentasDAOBase extends DAO
 	  **/
 	private static final function update( $ventas )
 	{
-		$sql = "UPDATE ventas SET  id_cliente = ?, tipo_venta = ?, tipo_pago = ?, fecha = ?, subtotal = ?, iva = ?, descuento = ?, total = ?, id_sucursal = ?, id_usuario = ?, pagado = ?, cancelada = ?, ip = ?, liquidada = ? WHERE  id_venta = ?;";
+		$sql = "UPDATE ventas SET  id_venta_equipo = ?, id_equipo = ?, id_cliente = ?, tipo_venta = ?, tipo_pago = ?, fecha = ?, subtotal = ?, iva = ?, descuento = ?, total = ?, id_sucursal = ?, id_usuario = ?, pagado = ?, cancelada = ?, ip = ?, liquidada = ? WHERE  id_venta = ?;";
 		$params = array( 
+			$ventas->getIdVentaEquipo(), 
+			$ventas->getIdEquipo(), 
 			$ventas->getIdCliente(), 
 			$ventas->getTipoVenta(), 
 			$ventas->getTipoPago(), 
@@ -288,9 +300,11 @@ abstract class VentasDAOBase extends DAO
 	  **/
 	private static final function create( &$ventas )
 	{
-		$sql = "INSERT INTO ventas ( id_venta, id_cliente, tipo_venta, tipo_pago, fecha, subtotal, iva, descuento, total, id_sucursal, id_usuario, pagado, cancelada, ip, liquidada ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO ventas ( id_venta, id_venta_equipo, id_equipo, id_cliente, tipo_venta, tipo_pago, fecha, subtotal, iva, descuento, total, id_sucursal, id_usuario, pagado, cancelada, ip, liquidada ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$ventas->getIdVenta(), 
+			$ventas->getIdVentaEquipo(), 
+			$ventas->getIdEquipo(), 
 			$ventas->getIdCliente(), 
 			$ventas->getTipoVenta(), 
 			$ventas->getTipoPago(), 
@@ -311,7 +325,7 @@ abstract class VentasDAOBase extends DAO
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
 		$ar = $conn->Affected_Rows();
 		if($ar == 0) return 0;
-		 $ventas->setIdVenta( $conn->Insert_ID() );
+		/* save autoincremented value on obj */  $ventas->setIdVenta( $conn->Insert_ID() ); /*  */ 
 		return $ar;
 	}
 
@@ -359,6 +373,28 @@ abstract class VentasDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " id_venta = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $ventasA->getIdVentaEquipo()) != NULL) & ( ($b = $ventasB->getIdVentaEquipo()) != NULL) ){
+				$sql .= " id_venta_equipo >= ? AND id_venta_equipo <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " id_venta_equipo = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $ventasA->getIdEquipo()) != NULL) & ( ($b = $ventasB->getIdEquipo()) != NULL) ){
+				$sql .= " id_equipo >= ? AND id_equipo <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " id_equipo = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			

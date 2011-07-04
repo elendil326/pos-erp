@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 04-07-2011 a las 13:19:20
+-- Tiempo de generación: 04-07-2011 a las 15:55:54
 -- Versión del servidor: 5.1.37
 -- Versión de PHP: 5.3.0
 
@@ -118,110 +118,6 @@ CREATE TABLE IF NOT EXISTS `compra_cliente` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `compra_proveedor`
---
-
-CREATE TABLE IF NOT EXISTS `compra_proveedor` (
-  `id_compra_proveedor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador de la compra',
-  `peso_origen` float NOT NULL,
-  `id_proveedor` int(11) NOT NULL COMMENT 'id del proveedor a quien se le hizo esta compra',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de cuando se recibio el embarque',
-  `fecha_origen` date NOT NULL COMMENT 'fecha de cuando se envio este embarque',
-  `folio` varchar(11) CHARACTER SET latin1 COLLATE latin1_general_cs DEFAULT NULL COMMENT 'folio de la remision',
-  `numero_de_viaje` varchar(11) CHARACTER SET latin1 COLLATE latin1_general_cs DEFAULT NULL COMMENT 'numero de viaje',
-  `peso_recibido` float NOT NULL COMMENT 'peso en kilogramos reportado en la remision',
-  `arpillas` float NOT NULL COMMENT 'numero de arpillas en el camion',
-  `peso_por_arpilla` float NOT NULL COMMENT 'peso promedio en kilogramos por arpilla',
-  `productor` varchar(64) NOT NULL,
-  `calidad` tinyint(3) unsigned DEFAULT NULL COMMENT 'Describe la calidad del producto asignando una calificacion en eel rango de 0-100',
-  `merma_por_arpilla` float NOT NULL,
-  `total_origen` float DEFAULT NULL COMMENT 'Es lo que vale el embarque segun el proveedor',
-  PRIMARY KEY (`id_compra_proveedor`),
-  KEY `id_proveedor` (`id_proveedor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=120 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `compra_proveedor_flete`
---
-
-CREATE TABLE IF NOT EXISTS `compra_proveedor_flete` (
-  `id_compra_proveedor` int(11) NOT NULL,
-  `chofer` varchar(64) NOT NULL,
-  `marca_camion` varchar(64) DEFAULT NULL,
-  `placas_camion` varchar(64) NOT NULL,
-  `modelo_camion` varchar(64) DEFAULT NULL,
-  `costo_flete` float NOT NULL,
-  PRIMARY KEY (`id_compra_proveedor`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `compra_proveedor_fragmentacion`
---
-
-CREATE TABLE IF NOT EXISTS `compra_proveedor_fragmentacion` (
-  `id_fragmentacion` int(11) NOT NULL AUTO_INCREMENT,
-  `id_compra_proveedor` int(11) NOT NULL COMMENT 'La compra a proveedor del producto',
-  `id_producto` int(11) NOT NULL COMMENT 'El id del producto',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'la fecha de esta operacion',
-  `descripcion` varchar(16) NOT NULL COMMENT 'la descripcion de lo que ha sucedido, vendido, surtido, basura... etc.',
-  `cantidad` double NOT NULL DEFAULT '0' COMMENT 'cuanto fue consumido o agregado !!! en la escala que se tiene de este prod',
-  `procesada` tinyint(1) NOT NULL COMMENT 'si estamos hablando de producto procesado, debera ser true',
-  `precio` int(11) NOT NULL COMMENT 'a cuanto se vendio esta porcion del producto, si es el resultado de algun proceso sera 0 por ejemplo',
-  `descripcion_ref_id` int(11) DEFAULT NULL COMMENT 'si se refiere a una venta, se puede poner el id de esa venta, si fue de surtir, el id de la compra, etc..',
-  PRIMARY KEY (`id_fragmentacion`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=379 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `compra_sucursal`
---
-
-CREATE TABLE IF NOT EXISTS `compra_sucursal` (
-  `id_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de la compra',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de compra',
-  `subtotal` float NOT NULL COMMENT 'subtotal de compra',
-  `id_sucursal` int(11) NOT NULL COMMENT 'sucursal en que se compro',
-  `id_usuario` int(11) NOT NULL COMMENT 'quien realizo la compra',
-  `id_proveedor` int(11) DEFAULT NULL COMMENT 'En caso de ser una compra a un proveedor externo, contendra el id de ese proveedor, en caso de ser una compra a centro de distribucion este campo sera null.',
-  `pagado` float NOT NULL DEFAULT '0' COMMENT 'total de pago abonado a esta compra',
-  `liquidado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'indica si la cuenta ha sido liquidada o no',
-  `total` float NOT NULL,
-  PRIMARY KEY (`id_compra`),
-  KEY `compras_sucursal` (`id_sucursal`),
-  KEY `compras_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=454 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `corte`
---
-
-CREATE TABLE IF NOT EXISTS `corte` (
-  `id_corte` int(12) NOT NULL AUTO_INCREMENT COMMENT 'identificador del corte',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha de este corte',
-  `id_sucursal` int(12) NOT NULL COMMENT 'sucursal a la que se realizo este corte',
-  `total_ventas` float NOT NULL COMMENT 'total de activo realizado en ventas para esta sucursal incluyendo ventas a credito y ventas a contado aunque no esten saldadas',
-  `total_ventas_abonado` float NOT NULL COMMENT 'total de efectivo adquirido gracias a ventas, incluye ventas a contado y los abonos de las ventas a credito',
-  `total_ventas_saldo` float NOT NULL COMMENT 'total de dinero que se le debe a esta sucursal por ventas a credito',
-  `total_compras` float NOT NULL COMMENT 'total de gastado en compras',
-  `total_compras_abonado` float NOT NULL COMMENT 'total de abonado en compras',
-  `total_gastos` float NOT NULL COMMENT 'total de gastos con saldo o sin salgo',
-  `total_gastos_abonado` float NOT NULL COMMENT 'total de gastos pagados ya',
-  `total_ingresos` float NOT NULL COMMENT 'total de ingresos para esta sucursal desde el ultimo corte',
-  `total_ganancia_neta` float NOT NULL COMMENT 'calculo de ganancia neta',
-  PRIMARY KEY (`id_corte`),
-  KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `detalle_compra_cliente`
 --
 
@@ -234,40 +130,6 @@ CREATE TABLE IF NOT EXISTS `detalle_compra_cliente` (
   PRIMARY KEY (`id_compra`,`id_producto`),
   KEY `detalle_compra_producto` (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `detalle_compra_proveedor`
---
-
-CREATE TABLE IF NOT EXISTS `detalle_compra_proveedor` (
-  `id_compra_proveedor` int(11) NOT NULL,
-  `id_producto` int(11) NOT NULL,
-  `variedad` varchar(64) NOT NULL,
-  `arpillas` int(11) NOT NULL,
-  `kg` int(11) NOT NULL,
-  `precio_por_kg` float NOT NULL,
-  PRIMARY KEY (`id_compra_proveedor`,`id_producto`),
-  KEY `id_producto` (`id_producto`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `detalle_compra_sucursal`
---
-
-CREATE TABLE IF NOT EXISTS `detalle_compra_sucursal` (
-  `id_detalle_compra_sucursal` int(11) NOT NULL AUTO_INCREMENT,
-  `id_compra` int(11) NOT NULL COMMENT 'id de la compra',
-  `id_producto` int(11) NOT NULL COMMENT 'id del producto',
-  `cantidad` float NOT NULL COMMENT 'cantidad comprada',
-  `precio` float NOT NULL COMMENT 'costo de compra',
-  `descuento` int(11) NOT NULL,
-  `procesadas` tinyint(1) NOT NULL COMMENT 'verdadero si este detalle se refiere a compras procesadas (limpias)',
-  PRIMARY KEY (`id_detalle_compra_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1220 ;
 
 -- --------------------------------------------------------
 
@@ -308,20 +170,6 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `documento`
---
-
-CREATE TABLE IF NOT EXISTS `documento` (
-  `id_documento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id del documento',
-  `numero_de_impresiones` int(11) NOT NULL COMMENT 'numero de veces que se tiene que imprmir este documento',
-  `identificador` varchar(128) COLLATE utf8_unicode_ci NOT NULL COMMENT 'identificador con el cual se le conocera en el sistema',
-  `descripcion` varchar(256) COLLATE utf8_unicode_ci NOT NULL COMMENT 'descripcion breve del documento',
-  PRIMARY KEY (`id_documento`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene informaci?n acerca todos de los documentos que se i' AUTO_INCREMENT=5 ;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `equipo`
 --
 
@@ -335,19 +183,6 @@ CREATE TABLE IF NOT EXISTS `equipo` (
   UNIQUE KEY `full_ua` (`full_ua`),
   UNIQUE KEY `token` (`token`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `equipo_sucursal`
---
-
-CREATE TABLE IF NOT EXISTS `equipo_sucursal` (
-  `id_equipo` int(6) NOT NULL COMMENT 'identificador del equipo ',
-  `id_sucursal` int(6) NOT NULL COMMENT 'identifica una sucursal',
-  PRIMARY KEY (`id_equipo`),
-  KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -414,45 +249,6 @@ CREATE TABLE IF NOT EXISTS `gastos` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `grupos`
---
-
-CREATE TABLE IF NOT EXISTS `grupos` (
-  `id_grupo` int(11) NOT NULL,
-  `nombre` varchar(45) NOT NULL COMMENT 'Nombre del Grupo',
-  `descripcion` varchar(256) NOT NULL,
-  PRIMARY KEY (`id_grupo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `grupos_usuarios`
---
-
-CREATE TABLE IF NOT EXISTS `grupos_usuarios` (
-  `id_grupo` int(11) NOT NULL,
-  `id_usuario` int(11) NOT NULL,
-  PRIMARY KEY (`id_usuario`),
-  KEY `fk_grupos_usuarios_1` (`id_grupo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `impresiones`
---
-
-CREATE TABLE IF NOT EXISTS `impresiones` (
-  `id_impresora` int(11) NOT NULL COMMENT 'id de la impresora',
-  `id_documento` int(11) NOT NULL COMMENT 'id del documento',
-  PRIMARY KEY (`id_impresora`,`id_documento`),
-  KEY `id_documento` (`id_documento`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='contiene la relaci?n impresora-documento-sucursal';
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `impresora`
 --
 
@@ -506,38 +302,6 @@ CREATE TABLE IF NOT EXISTS `inventario` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `inventario_maestro`
---
-
-CREATE TABLE IF NOT EXISTS `inventario_maestro` (
-  `id_producto` int(11) NOT NULL,
-  `id_compra_proveedor` int(11) NOT NULL,
-  `existencias` float NOT NULL,
-  `existencias_procesadas` float NOT NULL,
-  `sitio_descarga` int(11) NOT NULL,
-  PRIMARY KEY (`id_producto`,`id_compra_proveedor`),
-  KEY `id_compra_proveedor` (`id_compra_proveedor`),
-  KEY `sitio_descarga` (`sitio_descarga`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `pagos_compra`
---
-
-CREATE TABLE IF NOT EXISTS `pagos_compra` (
-  `id_pago` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del pago',
-  `id_compra` int(11) NOT NULL COMMENT 'identificador de la compra a la que pagamos',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'fecha en que se abono',
-  `monto` float NOT NULL COMMENT 'monto que se abono',
-  PRIMARY KEY (`id_pago`),
-  KEY `pagos_compra_compra` (`id_compra`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `pagos_venta`
 --
 
@@ -554,70 +318,6 @@ CREATE TABLE IF NOT EXISTS `pagos_venta` (
   KEY `id_sucursal` (`id_sucursal`),
   KEY `id_usuario` (`id_usuario`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=444 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `pago_prestamo_sucursal`
---
-
-CREATE TABLE IF NOT EXISTS `pago_prestamo_sucursal` (
-  `id_pago` int(11) NOT NULL AUTO_INCREMENT COMMENT 'El identificador de este pago',
-  `id_prestamo` int(11) NOT NULL COMMENT 'El id del prestamo al que pertenece este prestamo',
-  `id_usuario` int(11) NOT NULL COMMENT 'El usurio que recibe este dinero',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'La fecha cuando se realizo este pago',
-  `monto` float NOT NULL COMMENT 'El monto a abonar',
-  PRIMARY KEY (`id_pago`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `pos_config`
---
-
-CREATE TABLE IF NOT EXISTS `pos_config` (
-  `opcion` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `value` varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`opcion`),
-  UNIQUE KEY `opcion` (`opcion`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `prestamo_sucursal`
---
-
-CREATE TABLE IF NOT EXISTS `prestamo_sucursal` (
-  `id_prestamo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'El identificador de este prestamo',
-  `prestamista` int(11) NOT NULL COMMENT 'La sucursal que esta prestando',
-  `deudor` int(11) NOT NULL COMMENT 'La sucursal que esta recibiendo',
-  `monto` float NOT NULL COMMENT 'El monto prestado',
-  `saldo` float NOT NULL COMMENT 'El saldo pendiente para liquidar',
-  `liquidado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Bandera para buscar rapidamente los prestamos que aun no estan saldados',
-  `concepto` varchar(256) NOT NULL COMMENT 'El concepto de este prestamo',
-  `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'fecha en la que se registro el gasto',
-  PRIMARY KEY (`id_prestamo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `proveedor`
---
-
-CREATE TABLE IF NOT EXISTS `proveedor` (
-  `id_proveedor` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del proveedor',
-  `rfc` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'rfc del proveedor',
-  `nombre` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre del proveedor',
-  `direccion` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'direccion del proveedor',
-  `telefono` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'telefono',
-  `e_mail` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'email del provedor',
-  `activo` tinyint(2) NOT NULL DEFAULT '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
-  `tipo_proveedor` enum('admin','sucursal','ambos') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'admin' COMMENT 'si este proveedor surtira al admin, a las sucursales o a ambos',
-  PRIMARY KEY (`id_proveedor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=26 ;
 
 -- --------------------------------------------------------
 
@@ -651,28 +351,6 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   UNIQUE KEY `letras_factura` (`letras_factura`),
   KEY `gerente` (`gerente`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=12 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `usuario`
---
-
-CREATE TABLE IF NOT EXISTS `usuario` (
-  `id_usuario` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificador del usuario',
-  `RFC` varchar(40) COLLATE utf8_unicode_ci NOT NULL COMMENT 'RFC de este usuario',
-  `nombre` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'nombre del empleado',
-  `contrasena` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
-  `id_sucursal` int(11) DEFAULT NULL COMMENT 'Id de la sucursal a que pertenece',
-  `activo` tinyint(1) NOT NULL COMMENT 'Guarda el estado de la cuenta del usuario',
-  `finger_token` varchar(1024) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Una cadena que sera comparada con el token que mande el scanner de huella digital',
-  `salario` float NOT NULL COMMENT 'Salario actual',
-  `direccion` varchar(512) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Direccion del empleado',
-  `telefono` varchar(16) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Telefono del empleado',
-  `fecha_inicio` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha cuando este usuario comenzo a laborar',
-  PRIMARY KEY (`id_usuario`),
-  KEY `fk_usuario_1` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=106 ;
 
 -- --------------------------------------------------------
 

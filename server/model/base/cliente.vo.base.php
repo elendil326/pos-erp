@@ -2,7 +2,7 @@
 /** Value Object file for table cliente.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author no author especified
+  * @author Alan Gonzalez
   * @access public
   * @package docs
   * 
@@ -178,7 +178,7 @@ class Cliente extends VO
 	  * 
 	  * numero exteriror del domicilio fiscal del cliente<br>
 	  * @access protected
-	  * @var varchar(10)
+	  * @var varchar(20)
 	  */
 	protected $numero_exterior;
 
@@ -187,7 +187,7 @@ class Cliente extends VO
 	  * 
 	  * numero interior del domicilio fiscal del cliente<br>
 	  * @access protected
-	  * @var varchar(10)
+	  * @var varchar(20)
 	  */
 	protected $numero_interior;
 
@@ -457,7 +457,7 @@ class Cliente extends VO
 	  * getNumeroExterior
 	  * 
 	  * Get the <i>numero_exterior</i> property for this object. Donde <i>numero_exterior</i> es numero exteriror del domicilio fiscal del cliente
-	  * @return varchar(10)
+	  * @return varchar(20)
 	  */
 	final public function getNumeroExterior()
 	{
@@ -468,9 +468,9 @@ class Cliente extends VO
 	  * setNumeroExterior( $numero_exterior )
 	  * 
 	  * Set the <i>numero_exterior</i> property for this object. Donde <i>numero_exterior</i> es numero exteriror del domicilio fiscal del cliente.
-	  * Una validacion basica se hara aqui para comprobar que <i>numero_exterior</i> es de tipo <i>varchar(10)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>numero_exterior</i> es de tipo <i>varchar(20)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(10)
+	  * @param varchar(20)
 	  */
 	final public function setNumeroExterior( $numero_exterior )
 	{
@@ -481,7 +481,7 @@ class Cliente extends VO
 	  * getNumeroInterior
 	  * 
 	  * Get the <i>numero_interior</i> property for this object. Donde <i>numero_interior</i> es numero interior del domicilio fiscal del cliente
-	  * @return varchar(10)
+	  * @return varchar(20)
 	  */
 	final public function getNumeroInterior()
 	{
@@ -492,9 +492,9 @@ class Cliente extends VO
 	  * setNumeroInterior( $numero_interior )
 	  * 
 	  * Set the <i>numero_interior</i> property for this object. Donde <i>numero_interior</i> es numero interior del domicilio fiscal del cliente.
-	  * Una validacion basica se hara aqui para comprobar que <i>numero_interior</i> es de tipo <i>varchar(10)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>numero_interior</i> es de tipo <i>varchar(20)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(10)
+	  * @param varchar(20)
 	  */
 	final public function setNumeroInterior( $numero_interior )
 	{

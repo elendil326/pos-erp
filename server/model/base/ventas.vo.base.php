@@ -2,7 +2,7 @@
 /** Value Object file for table ventas.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
-  * @author no author especified
+  * @author Alan Gonzalez
   * @access public
   * @package docs
   * 
@@ -24,6 +24,12 @@ class Ventas extends VO
 		{
 			if( isset($data['id_venta']) ){
 				$this->id_venta = $data['id_venta'];
+			}
+			if( isset($data['id_venta_equipo']) ){
+				$this->id_venta_equipo = $data['id_venta_equipo'];
+			}
+			if( isset($data['id_equipo']) ){
+				$this->id_equipo = $data['id_equipo'];
 			}
 			if( isset($data['id_cliente']) ){
 				$this->id_cliente = $data['id_cliente'];
@@ -81,6 +87,8 @@ class Ventas extends VO
 	{ 
 		$vec = array( 
 			"id_venta" => $this->id_venta,
+			"id_venta_equipo" => $this->id_venta_equipo,
+			"id_equipo" => $this->id_equipo,
 			"id_cliente" => $this->id_cliente,
 			"tipo_venta" => $this->tipo_venta,
 			"tipo_pago" => $this->tipo_pago,
@@ -109,6 +117,24 @@ class Ventas extends VO
 	  * @var int(11)
 	  */
 	protected $id_venta;
+
+	/**
+	  * id_venta_equipo
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_venta_equipo;
+
+	/**
+	  * id_equipo
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_equipo;
 
 	/**
 	  * id_cliente
@@ -262,6 +288,54 @@ class Ventas extends VO
 	final public function setIdVenta( $id_venta )
 	{
 		$this->id_venta = $id_venta;
+	}
+
+	/**
+	  * getIdVentaEquipo
+	  * 
+	  * Get the <i>id_venta_equipo</i> property for this object. Donde <i>id_venta_equipo</i> es  [Campo no documentado]
+	  * @return int(11)
+	  */
+	final public function getIdVentaEquipo()
+	{
+		return $this->id_venta_equipo;
+	}
+
+	/**
+	  * setIdVentaEquipo( $id_venta_equipo )
+	  * 
+	  * Set the <i>id_venta_equipo</i> property for this object. Donde <i>id_venta_equipo</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>id_venta_equipo</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdVentaEquipo( $id_venta_equipo )
+	{
+		$this->id_venta_equipo = $id_venta_equipo;
+	}
+
+	/**
+	  * getIdEquipo
+	  * 
+	  * Get the <i>id_equipo</i> property for this object. Donde <i>id_equipo</i> es  [Campo no documentado]
+	  * @return int(11)
+	  */
+	final public function getIdEquipo()
+	{
+		return $this->id_equipo;
+	}
+
+	/**
+	  * setIdEquipo( $id_equipo )
+	  * 
+	  * Set the <i>id_equipo</i> property for this object. Donde <i>id_equipo</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>id_equipo</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdEquipo( $id_equipo )
+	{
+		$this->id_equipo = $id_equipo;
 	}
 
 	/**
