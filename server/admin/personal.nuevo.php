@@ -13,7 +13,6 @@ require_once("model/grupos.dao.php");
             return;
         }
 
-
         if(jQuery('#direccion').val().length < 10){
             jQuery("#ajax_failure").html("La direccion es muy corta.").show();
             return;
@@ -22,14 +21,12 @@ require_once("model/grupos.dao.php");
         if(jQuery('#rfc').val().length < 7){
             jQuery("#ajax_failure").html("El RFC es muy corto.").show();
             return;            
-
         }
 
         if(jQuery('#telefono').val().length < 7){
             jQuery("#ajax_failure").html("El telefono es muy corto.").show();
             return;
         }
-
 
         if( isNaN(jQuery('#salario').val()) || jQuery('#salario').val().length == 0){
             jQuery("#ajax_failure").html("El salario debe ser un nuemero.").show();
@@ -42,14 +39,12 @@ require_once("model/grupos.dao.php");
 
         if( jQuery('#grupo').val() == 0){
             return jQuery("#ajax_failure").html("Seleccione un puesto para el empleado").show();
-        }   
+        }
 
-        if (jQuery("#grupo").val() <= 3 && jQuery("#grupo").val() > 0){
-            
+        if (jQuery("#grupo").val() <= 3 && jQuery("#grupo").val() > 0){            
             if( jQuery('#contrasena').val() != jQuery('#contrasena2').val()){
                 return jQuery("#ajax_failure").html("Verifique que las contraseñas sean iguales").show();
-            } 
-            
+            }             
         }
 
           
@@ -66,6 +61,7 @@ require_once("model/grupos.dao.php");
         };        
 
         guardar(obj);
+        
     }
 
 

@@ -785,9 +785,27 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     $pdf->ezText("", 10, array('justification' => 'center'));
     $pdf->ezTable($elementos, "", "", $opciones_tabla);
 
-    $pdf->addJpegFromFile("../static_content/qr_codes/" . $qr_file_name, 30, 30, 150);
+    $pdf->addJpegFromFile("../static_content/qr_codes/" . $qr_file_name, puntos_cm(5.7), puntos_cm(1), puntos_cm(3));
+    
+    /*
+     * CEDULA
+     */
 
-    roundRect($pdf, puntos_cm(2), puntos_cm(18 - .25), puntos_cm(16.2), puntos_cm(11.5));
+    if (!$cedula = PosConfigDAO::getByPK('url_cedula')) {
+        Logger::log("Verifique la configuracion del pos_config, no se encontro el camṕo 'url_cedula'");
+        die("Verifique la configuracion del POS, no se encontro el url de la cedula");
+    }
+
+    if (substr($cedula->getValue(), -3) == "jpg" || substr($cedula->getValue(), -3) == "JPG" || substr($cedula->getValue(), -4) == "jpeg" || substr($cedula->getValue(), -4) == "JPEG") {
+        $pdf->addJpegFromFile($cedula->getValue(), puntos_cm(2), puntos_cm(1.4), puntos_cm(4));
+    } elseif (substr($cedula->getValue(), -3) == "png" || substr($cedula->getValue(), -3) == "PNG") {
+        $pdf->addPngFromFile($cedula->getValue(), puntos_cm(2), puntos_cm(1.4), puntos_cm(4));
+    } else {
+        Logger::log("Verifique la configuracion del pos_config, la extension de la imagen de la cedula no es compatible");
+        die("La extension de la imagen usada para la cedula del negocio no es valida.");
+    }
+
+    roundRect($pdf, puntos_cm(2), puntos_cm(18 - .25), puntos_cm(16.2), puntos_cm(8.5));
 
     /*     * ************************
      * Tipo de pago
@@ -816,14 +834,101 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
         array("r1" => $cadena_original)
     );
 
-    $pdf->ezSetY(puntos_cm(5.8));
-    $opciones_tabla['xPos'] = puntos_cm(6);
-    $opciones_tabla['width'] = puntos_cm(12.4);
-    $opciones_tabla['fontSize'] = 6;
+    $pdf->ezSetY(puntos_cm(5));
+    $opciones_tabla['xPos'] = puntos_cm(8.4);
+    $opciones_tabla['width'] = puntos_cm(9.8);
+    $opciones_tabla['fontSize'] = 5;
     $opciones_tabla['showLines'] = 0;
     $pdf->ezTable($sellos, "", "", $opciones_tabla);
 
+    
+    /*     * ************************
+     * pagare
+     * ************************* */
+    $mes = "";
+    
+    $fecha_emision = str_replace(array("T"), array(" "), $xml->Complemento->TimbreFiscalDigital['FechaTimbrado']);
+    
+    switch( date( "m", strtotime( $fecha_emision ) ) ){
+        case 1 : 
+            $mes = 'Enero';
+            break;
+        case 2 : 
+            $mes = 'Febrero';
+            break;
+        case 3 : 
+            $mes = 'Marzo';
+            break;
+        case 4 : 
+            $mes = 'Abril';
+            break;
+        case 5 : 
+            $mes = 'Mayo';
+            break;
+        case 6 : 
+            $mes = 'Junio';
+            break;
+        case 7 : 
+            $mes = 'Julio';
+            break;
+        case 8 : 
+            $mes = 'Agosto';
+            break;
+        case 9 : 
+            $mes = 'Septiembre';
+            break;
+        case 10 : 
+            $mes = 'Octubre';
+            break;
+        case 11 : 
+            $mes = 'Noviembre';
+            break;
+        case 12 : 
+            $mes = 'Diciembre';
+            break;
+    }
 
+    $en_letra = new CNumeroaletra();
+    $en_letra->setNumero($xml["total"]);
+
+    
+    $pagare = "\n\nNo. _________                                                                                                                                                                                    En " . readableText($xml->Emisor->DomicilioFiscal['municipio']) . " a " . date("d", strtotime( $fecha_emision )) . " de " . $mes . " del " . date("Y", strtotime( $fecha_emision )) ."\n\n";
+    $pagare .= " Debe(mos) y pagare(mos) incondicionalmente por este Pagaré a la orden de " . readableText($xml->Emisor['nombre']) . " en " . readableText($xml->Emisor->DomicilioFiscal['municipio']) . " " . readableText($xml->Emisor->DomicilioFiscal['estado']) . " ";
+    $pagare .= "el __________________________  la cantidad de ";
+    $pagare .= moneyFormat($xml["total"], DONT_USE_HTML) . " " . $en_letra->letra() . ". Valor recibido a mi";
+    $pagare .= "(nuestra) entera satisfacción. Este pagaré forma parte de una serie numerada de 1 al 1 y esta sujeto a la condición de que, ";
+    $pagare .= "al no pagarse a su vencimiento, sera exigible ";
+    $pagare .= "desde la fecha de vencimiento de este documento hasta el dia de su liquidacón, ";
+    $pagare .= "causara intereses moratorios al tipo de 20% mensual, ";
+    $pagare .= "pagadero en esta ciudad juntamente con el principal.";
+  
+    $receptor = array(
+        array("receptor" => utf8_decode($pagare))
+    ); 
+
+
+    $pdf->addText(puntos_cm(2.1),puntos_cm(8.3),15,utf8_decode('<i>P a g a r é</i>'));
+    $pdf->addText(puntos_cm(14),puntos_cm(8.3),8,utf8_decode('BUENO POR  ' . moneyFormat($xml["total"], DONT_USE_HTML)));    
+    
+    $pdf->addText(puntos_cm(8.4),puntos_cm(5.2),8,utf8_decode('<b>Acepto(amos)</b>'));
+    $pdf->addText(puntos_cm(12.9),puntos_cm(5.2),8,utf8_decode('<b>Firma(s) _________________________</b>'));
+    
+    $pdf->setColor(0.419, 0.466, 0.443);
+    
+    $pdf->addText(puntos_cm(4),puntos_cm(5.5),6,utf8_decode('Nombre y datos del deudor'));
+    $pdf->addText(puntos_cm(2),puntos_cm(5),6.5,utf8_decode('Nombre _____________________________________'));
+    $pdf->addText(puntos_cm(2),puntos_cm(4.525),6.5,utf8_decode('Dirección ____________________________________'));
+    $pdf->addText(puntos_cm(2),puntos_cm(4.05),6.5,utf8_decode('Población ____________________________________'));
+   
+
+    $pdf->ezSetY(puntos_cm(8.7));
+    $opciones_tabla['xPos'] = puntos_cm(2);
+    $opciones_tabla['width'] = puntos_cm(16.2);
+    $opciones_tabla['shaded'] = 0;
+    $opciones_tabla['showLines'] = 0;
+    $opciones_tabla['fontSize'] = 6.2;
+    $pdf->ezTable($receptor, "", "", $opciones_tabla);
+    
 
     /*     * ************************
      * notas de abajo
