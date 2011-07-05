@@ -36,16 +36,16 @@ $sucursal = SucursalDAO::getByPK($_REQUEST['id']);
     <tr><td><b>Direccion</b></td><td>		<?php echo $sucursal->getCalle() . " " . $sucursal->getNumeroExterior() . " " . $sucursal->getColonia() . " " . $sucursal->getMunicipio(); ?></td></tr>
     <tr><td><b>Apertura</b></td><td>		<?php echo toDate($sucursal->getFechaApertura()); ?></td></tr>
     <tr><td><b>Gerente</b></td><td>
-<?php
-$gerente = UsuarioDAO::getByPK($sucursal->getGerente());
-if ($gerente === null) {
-    echo "Esta sucursa no tiene gerente !";
-} else {
-    echo "<a href='gerentes.php?action=detalles&id=" . $sucursal->getGerente() . "'>";
-    echo $gerente->getNombre();
-    echo "</a>";
-}
-?>
+            <?php
+            $gerente = UsuarioDAO::getByPK($sucursal->getGerente());
+            if ($gerente === null) {
+                echo "Esta sucursa no tiene gerente !";
+            } else {
+                echo "<a href='gerentes.php?action=detalles&id=" . $sucursal->getGerente() . "'>";
+                echo $gerente->getNombre();
+                echo "</a>";
+            }
+            ?>
         </td></tr>
     <tr><td><b>ID</b></td><td>				<?php echo $sucursal->getIdSucursal(); ?></td></tr>
     <tr><td><b>Letras factura</b></td><td>	<?php echo $sucursal->getLetrasFactura(); ?></td></tr>
@@ -56,100 +56,87 @@ if ($gerente === null) {
 </table>
 
 <?php
-
 $balance = ContabilidadController::getBalancePorSucursal($_REQUEST['id']);
-
-
-
 ?>
 <style>
-.pr{
-	font-size: 2.6em;
-	font-weight: bold;
-}
-.ch {
-	font-size: 1.8em;
-	vertical-align: text-top;
-}
+    .pr{
+        font-size: 2.6em;
+        font-weight: bold;
+    }
+    .ch {
+        font-size: 1.8em;
+        vertical-align: text-top;
+    }
 
-.tiny-text{
-	font-size: 11px;
-	color:gray;
-}
+    .tiny-text{
+        font-size: 11px;
+        color:gray;
+    }
 </style>
 
 <table border=0>
-	<tr>
-		<td class="tiny-text">
+    <tr>
+        <td class="tiny-text">
 			Balance actual:
-		</td>
-		<td class="tiny-text">
+        </td>
+        <td class="tiny-text">
 			Con respecto al 
-			<?php
-				if((sizeof($balance) -2) < 0){
-					echo "";
-				}else{
-					$date = toDate($balance[ sizeof($balance) -2 ]["fecha"]);
-					$foo = explode( " ", $date );
-					echo $foo[0];					
-				}
+            <?php
+            if ((sizeof($balance) - 2) < 0) {
+                echo "";
+            } else {
+                $date = toDate($balance[sizeof($balance) - 2]["fecha"]);
+                $foo = explode(" ", $date);
+                echo $foo[0];
+            }
+            ?> :
+        </td>	
+    </tr>
+    <tr>
+        <td>
+            <?php echo "<div class='pr'>" . moneyFormat($balance[sizeof($balance) - 1]["value"]) . "</div>"; ?>
+        </td>
+        <td>
+            <?php
+            if ((sizeof($balance) - 2) >= 0) {
+                $change = $balance[sizeof($balance) - 1]["value"] - $balance[sizeof($balance) - 2]["value"];
+                $change_pct = ($change * 100) / $balance[sizeof($balance) - 2]["value"];
+                $change_pct = round($change_pct, 4);
+                if ($change > 0) {
+                    $change = moneyFormat($change);
+                    echo "<div class='ch' style='color:green;'>+" . $change . " ( " . $change_pct . " % )</div>";
+                } else {
+                    $change = moneyFormat($change);
+                    echo "<div class='ch' style='color:#A03;'>" . $change . " ( " . $change_pct . " % )</div>";
+                }
+            }
+            ?>
+        </td>		
+    </tr>
+    <tr>
+        <td style="text-align:right">
 
-			?> :
-		</td>	
-	</tr>
-	<tr>
-		<td>
-			<?php echo "<div class='pr'>" . moneyFormat($balance[ sizeof($balance) -1 ]["value"]) . "</div>"; ?>
-		</td>
-		<td>
-			<?php
-			if((sizeof($balance) -2) >= 0){
-				$change  = $balance[ sizeof($balance) -1 ]["value"] - $balance[ sizeof($balance) -2 ]["value"];
-				$change_pct = ($change * 100) / $balance[ sizeof($balance) -2 ]["value"];
-				$change_pct = round( $change_pct, 4 );
-				if($change > 0){
-					$change = moneyFormat( $change );
-					echo "<div class='ch' style='color:green;'>+" . $change . " ( " . $change_pct ." % )</div>";
-				}else{
-					$change = moneyFormat( $change );				
-					echo "<div class='ch' style='color:#A03;'>" . $change . " ( " . $change_pct ." % )</div>";
-				}
-			}
-			?>
-		</td>		
-	</tr>
-	<tr>
-		<td style="text-align:right">
+        </td>
 
-		</td>
-
-	</tr>
+    </tr>
 </table>
 
 <?php
-
-
-
-
-
-
 $ingreos_darios_g = new Reporte();
-$ingreos_darios_g->agregarMuestra("Balance general", $balance, false  );
-$ingreos_darios_g->fechaDeInicio( strtotime(  $sucursal->getFechaApertura()  ) );
+$ingreos_darios_g->agregarMuestra("Balance general", $balance, false);
+$ingreos_darios_g->fechaDeInicio(strtotime($sucursal->getFechaApertura()));
 $ingreos_darios_g->setEscalaEnY("pesos");
 $ingreos_darios_g->graficar("Mapa");
-
 ?><br><hr><?php
 $ingresos_diarios = ContabilidadController::getIngresosDiarios($_REQUEST['id']);
 $gastos_diarios = ContabilidadController::getGastosDiarios($_REQUEST['id']);
 
 $asdf = new Reporte();
-$asdf->agregarMuestra("Ingresos", $ingresos_diarios, true  );
-$asdf->agregarMuestra("Egresos", $gastos_diarios, true  );
-$asdf->fechaDeInicio( strtotime(  $sucursal->getFechaApertura()  ) );
+$asdf->agregarMuestra("Ingresos", $ingresos_diarios, true);
+$asdf->agregarMuestra("Egresos", $gastos_diarios, true);
+$asdf->fechaDeInicio(strtotime($sucursal->getFechaApertura()));
 $asdf->setEscalaEnY("pesos");
 $asdf->graficar("Flujo diario");
-
 ?><br>
 
 <script type="text/javascript"> 
@@ -312,105 +299,103 @@ $compras = comprasDeSucursalSinSaldar($_REQUEST['id'], false);
 ##########################################################################
 ?>
 <script>
-		var compras_no_saldadas = [];
+    var compras_no_saldadas = [];
 
-		var store_para_compras =  new Ext.data.ArrayStore({
-	        fields: [
-					{ name : 'id_compra', 		type : 'int' },
-					{ name : 'fecha', 			type : 'date', dateFormat: 'Y-m-d H:i:s' },
-					{ name : 'subtotal', 		type : 'float' },
-					{ name : 'id_usuario', 		type : 'int' },
-					{ name : 'pagado', 			type : 'float' },
-					{ name : 'liquidado', 		type : 'float' },
-					{ name : 'total', 			type : 'float' }
-				]
-			});
+    var store_para_compras =  new Ext.data.ArrayStore({
+        fields: [
+            { name : 'id_compra', 		type : 'int' },
+            { name : 'fecha', 			type : 'date', dateFormat: 'Y-m-d H:i:s' },
+            { name : 'subtotal', 		type : 'float' },
+            { name : 'id_usuario', 		type : 'int' },
+            { name : 'pagado', 			type : 'float' },
+            { name : 'liquidado', 		type : 'float' },
+            { name : 'total', 			type : 'float' }
+        ]
+    });
 			
 <?php
-
-foreach($compras as $c){
-	?>
-	compras_no_saldadas.push([
-			<?php echo $c->getIdCompra(); ?>,
-			"<?php echo $c->getFecha(); ?>",
-			<?php echo $c->getSubtotal(); ?>,
-			<?php echo $c->getIdUsuario(); ?>,
-			<?php echo $c->getPagado(); ?>,
-			<?php echo $c->getLiquidado(); ?>,
-			<?php echo $c->getTotal(); ?>
-		]);
-	//compras_no_saldadas.push( <?php echo json_encode ( $c->asArray() ) ?> );
-	<?php
+foreach ($compras as $c) {
+    ?>
+            compras_no_saldadas.push([
+    <?php echo $c->getIdCompra(); ?>,
+                "<?php echo $c->getFecha(); ?>",
+    <?php echo $c->getSubtotal(); ?>,
+    <?php echo $c->getIdUsuario(); ?>,
+    <?php echo $c->getPagado(); ?>,
+    <?php echo $c->getLiquidado(); ?>,
+    <?php echo $c->getTotal(); ?>
+            ]);
+            //compras_no_saldadas.push( <?php echo json_encode($c->asArray()) ?> );
+    <?php
 }
-
 ?>
 
 
 
 
 
-		Ext.onReady(function(){
-		    Ext.QuickTips.init();
-		    store_para_compras.loadData(compras_no_saldadas);
-			// create the Grid
-		    var tabla_compras_no_saldadas = new Ext.grid.GridPanel({
-		        store: store_para_compras,
-				header : false,
-		        columns: [
-			        {
-		                header   : 'Fecha', 
-		                width    : 75, 
-		                sortable : true, 
-		                renderer : Ext.util.Format.dateRenderer('d/m/Y'),  
-		                dataIndex: 'fecha'
-		            },
-		            {
-		                header   : 'ID Compra', 
-		                width    : 75, 
-		                sortable : true, 
-		                dataIndex: 'id_compra'
-		            },	
-		            {
-		                header   : 'Subtotal', 
-		                width    : 180, 
-						renderer : 'usMoney',
-		                sortable : true, 
-		                dataIndex: 'subtotal'
-		            },
-		            {
-      					header   : 'Total', 
-		                width    : 85, 
-		                sortable : true, 
-						renderer : 'usMoney',
-		                dataIndex: 'total'
-		            },
-		            {
-		                header   : 'Pagado', 
-		                width    : 85, 
-		                sortable : true, 
-						renderer : 'usMoney',
-		                dataIndex: 'pagado'
-		            }],
-			        stripeRows: false,
-			        //autoExpandColumn: 'total',
-			        height: 500,
-					minHeight : 300,
-			        width: "100%",
-			        stateful: false,
-			        stateId: 'sucursales_compras_no_saldadas_cookie',
-					listeners : {
-						"rowclick" : function (grid, rowIndex, e){
+    Ext.onReady(function(){
+        Ext.QuickTips.init();
+        store_para_compras.loadData(compras_no_saldadas);
+        // create the Grid
+        var tabla_compras_no_saldadas = new Ext.grid.GridPanel({
+            store: store_para_compras,
+            header : false,
+            columns: [
+                {
+                    header   : 'Fecha', 
+                    width    : 75, 
+                    sortable : true, 
+                    renderer : Ext.util.Format.dateRenderer('d/m/Y'),  
+                    dataIndex: 'fecha'
+                },
+                {
+                    header   : 'ID Compra', 
+                    width    : 75, 
+                    sortable : true, 
+                    dataIndex: 'id_compra'
+                },	
+                {
+                    header   : 'Subtotal', 
+                    width    : 180, 
+                    renderer : 'usMoney',
+                    sortable : true, 
+                    dataIndex: 'subtotal'
+                },
+                {
+                    header   : 'Total', 
+                    width    : 85, 
+                    sortable : true, 
+                    renderer : 'usMoney',
+                    dataIndex: 'total'
+                },
+                {
+                    header   : 'Pagado', 
+                    width    : 85, 
+                    sortable : true, 
+                    renderer : 'usMoney',
+                    dataIndex: 'pagado'
+                }],
+            stripeRows: false,
+            //autoExpandColumn: 'total',
+            height: 500,
+            minHeight : 300,
+            width: "100%",
+            stateful: false,
+            stateId: 'sucursales_compras_no_saldadas_cookie',
+            listeners : {
+                "rowclick" : function (grid, rowIndex, e){
 							
-							var datos = grid.getStore().getAt( rowIndex );
+                    var datos = grid.getStore().getAt( rowIndex );
 
 							
-        					window.location = "inventario.php?action=detalleCompraSucursal&cid=" + datos.get("id_compra" );
-						}
-					}
+                    window.location = "inventario.php?action=detalleCompraSucursal&cid=" + datos.get("id_compra" );
+                }
+            }
 
-			    });
-			tabla_compras_no_saldadas.render("tabla_compras_no_saldadas_holder");
-		});
+        });
+        tabla_compras_no_saldadas.render("tabla_compras_no_saldadas_holder");
+    });
 
 
 </script>
@@ -424,97 +409,88 @@ foreach($compras as $c){
 
 <h2><img src='../media/icons/window_app_list_search_32.png'>&nbsp;Gastos de esta sucursal</h2>
 <?php
+$gastos = listarGastosSucursal($_REQUEST['id']);
 
-    $gastos = listarGastosSucursal($_REQUEST['id']);
-    
-    $array_gastos = array();
-    
-    foreach($gastos as $gasto){
-        
-        $empleado = UsuarioDAO::getByPK($gasto->getIdUsuario());
-        
-        array_push($array_gastos, 
-                array("folio" => $gasto->getFolio(), 
-                    "concepto" => $gasto->getConcepto(), 
-                    "monto" => $gasto->getMonto(), 
-                    "fecha" => $gasto->getFecha(),
-                    "fecha_ingreso" => $gasto->getFechaIngreso(),
-                    "empleado" => $empleado->getNombre(),
-                    "nota" => $gasto->getNota()
-                )
-        );        
-        
-    }
-    
-    $header = array(
+$array_gastos = array();
+
+foreach ($gastos as $gasto) {
+
+    $empleado = UsuarioDAO::getByPK($gasto->getIdUsuario());
+
+    array_push($array_gastos, array("folio" => $gasto->getFolio(),
+        "concepto" => $gasto->getConcepto(),
+        "monto" => $gasto->getMonto(),
+        "fecha" => $gasto->getFecha(),
+        "fecha_ingreso" => $gasto->getFechaIngreso(),
+        "empleado" => $empleado->getNombre(),
+        "nota" => $gasto->getNota()
+            )
+    );
+}
+
+$header = array(
     "folio" => "Folio",
     "concepto" => "Concepto",
     "monto" => "Monto",
     "fecha" => "Se Ingreso",
-    "fecha_ingreso" => "Fecha del Gasto",    
+    "fecha_ingreso" => "Fecha del Gasto",
     "empleado" => "Registro",
     "nota" => "Nota");
 
 
-    $tabla = new Tabla($header, $array_gastos);
-    $tabla->addNoData("Esta sucursal no cuenta con nigun gasto.");
-    $tabla->addRow("folio");
-    $tabla->addRow("concepto");
-    $tabla->addColRender("monto", "moneyFormat");
-    $tabla->addColRender("fecha", "toDate");   
-    $tabla->addColRender("fecha_ingreso", "toDateS");   
-    //$tabla->addOnClick("empleado", "(function(id){window.location='personal.php?action=detalles&uid=' + id;})");
-    $tabla->addRow("empleado");
-    $tabla->addRow("nota");
-    $tabla->render();
-
+$tabla = new Tabla($header, $array_gastos);
+$tabla->addNoData("Esta sucursal no cuenta con nigun gasto.");
+$tabla->addRow("folio");
+$tabla->addRow("concepto");
+$tabla->addColRender("monto", "moneyFormat");
+$tabla->addColRender("fecha", "toDate");
+$tabla->addColRender("fecha_ingreso", "toDateS");
+//$tabla->addOnClick("empleado", "(function(id){window.location='personal.php?action=detalles&uid=' + id;})");
+$tabla->addRow("empleado");
+$tabla->addRow("nota");
+$tabla->render();
 ?>
 
 <h2><img src='../media/icons/window_app_list_add_32.png'>&nbsp;Ingresos de esta sucursal</h2>
 <?php
+$ingresos = listarIngresosSucursal($_REQUEST['id']);
 
-    $ingresos = listarIngresosSucursal($_REQUEST['id']);
-    
-    $array_ingresos = array();
-    
-    foreach($ingresos as $ingreso){
-        
-        $empleado = UsuarioDAO::getByPK($ingreso->getIdUsuario());
-        
-        array_push($array_ingresos, 
-                array("concepto" => $ingreso->getConcepto(), 
-                    "monto" => $ingreso->getMonto(), 
-                    "fecha" => $ingreso->getFecha(),
-                    "fecha_ingreso" => $ingreso->getFechaIngreso(),
-                    "empleado" => $empleado->getNombre(),
-                    "nota" => $ingreso->getNota()
-                )
-        );        
-        
-    }
-    
-    $header = array(
-    
+$array_ingresos = array();
+
+foreach ($ingresos as $ingreso) {
+
+    $empleado = UsuarioDAO::getByPK($ingreso->getIdUsuario());
+
+    array_push($array_ingresos, array("concepto" => $ingreso->getConcepto(),
+        "monto" => $ingreso->getMonto(),
+        "fecha" => $ingreso->getFecha(),
+        "fecha_ingreso" => $ingreso->getFechaIngreso(),
+        "empleado" => $empleado->getNombre(),
+        "nota" => $ingreso->getNota()
+            )
+    );
+}
+
+$header = array(
     "concepto" => "Concepto",
     "monto" => "Monto",
     "fecha" => "Se Ingreso",
-    "fecha_ingreso" => "Fecha del Gasto",    
+    "fecha_ingreso" => "Fecha del Gasto",
     "empleado" => "Registro",
     "nota" => "Nota");
 
 
-    $tabla = new Tabla($header, $array_ingresos);
-    $tabla->addNoData("Esta sucursal no cuenta con nigun ingreso.");
-    
-    $tabla->addRow("concepto");
-    $tabla->addColRender("monto", "moneyFormat");
-    $tabla->addColRender("fecha", "toDate");   
-    $tabla->addColRender("fecha_ingreso", "toDateS");   
-    //$tabla->addOnClick("empleado", "(function(id){window.location='personal.php?action=detalles&uid=' + id;})");
-    $tabla->addRow("empleado");
-    $tabla->addRow("nota");
-    $tabla->render();
+$tabla = new Tabla($header, $array_ingresos);
+$tabla->addNoData("Esta sucursal no cuenta con nigun ingreso.");
 
+$tabla->addRow("concepto");
+$tabla->addColRender("monto", "moneyFormat");
+$tabla->addColRender("fecha", "toDate");
+$tabla->addColRender("fecha_ingreso", "toDateS");
+//$tabla->addOnClick("empleado", "(function(id){window.location='personal.php?action=detalles&uid=' + id;})");
+$tabla->addRow("empleado");
+$tabla->addRow("nota");
+$tabla->render();
 ?>
 
 <h2><img src='../media/icons/users_business_32.png'>&nbsp;Personal</h2><?php
@@ -557,13 +533,25 @@ $salarioGerente = 0;
 if ($gerente !== null)
     $salarioGerente = $gerente->getSalario();
 ?>
-<div align="right">
-    <table>
-        <tr><td>Salarios empleados</td><td><b><?php echo moneyFormat($totalEmpleados); ?></b></td></tr>
-        <tr><td>Salario gerente</td><td><b><?php echo moneyFormat($salarioGerente); ?></b></td></tr>
-        <tr><td>Total</td><td><b><?php echo moneyFormat($totalEmpleados + $salarioGerente); ?></b></td></tr>
+<div align="center">
+    <table width="100%">
+        <tr>
+            <td width ="50%">
+                <table align="center">
+                    <tr rowspan="3"><td colspan="2"><input type ="button" value ="Agregar Nuevo Empleado" onClick ="window.location='personal.php?action=nuevo&id=' + <?php echo $_REQUEST['id'] ?>"/></td></tr>                    
+                </table>
+            </td>
+            <td width ="50%">
+                <table align="right">
+                    <tr><td>Salarios empleados</td><td><b><?php echo moneyFormat($totalEmpleados); ?></b></td></tr>
+                    <tr><td>Salario gerente</td><td><b><?php echo moneyFormat($salarioGerente); ?></b></td></tr>
+                    <tr><td>Total</td><td><b><?php echo moneyFormat($totalEmpleados + $salarioGerente); ?></b></td></tr>
+                </table>
+            </td>
+        </tr>        
     </table>
 </div>
+
 
 
 
@@ -630,345 +618,317 @@ $tabla->addColRender("existenciasOriginales", "toUnit");
 $tabla->addColRender("existenciasProcesadas", "toUnitProc");
 $tabla->addNoData("Esta sucursal no cuenta con ningun producto en su inventario.");
 $tabla->render();
-
-
-
-
-
-
-
-
-
 ?><h2><img src='../media/icons/email_forward_32.png'>&nbsp;Autorizaciones pendientes</h2><?php
-
-$autorizacion = new Autorizacion();
-$autorizacion->setIdSucursal($_REQUEST['id']);
-$autorizacion->setEstado("0");
-$autorizaciones = AutorizacionDAO::search($autorizacion);
-
-
-$header = array(
-    "id_autorizacion" => "ID",
-    "fecha_peticion" => "Fecha",
-    "id_usuario" => "Usuario que realizo la peticion",
-    "parametros" => "Descripcion");
-
-function renderParam($json) {
-    $obj = json_decode($json);
-    return $obj->descripcion;
-}
-
-function renderUsuario($uid) {
-    $usuario = UsuarioDAO::getByPK($uid);
-    return $usuario->getNombre();
-}
-
-$tabla = new Tabla($header, $autorizaciones);
-$tabla->addColRender("parametros", "renderParam");
-$tabla->addColRender("id_usuario", "renderUsuario");
-$tabla->addOnClick("id_autorizacion", "detalle");
-$tabla->addNoData("No hay autorizaciones pendientes");
-$tabla->render();
+    $autorizacion = new Autorizacion();
+    $autorizacion->setIdSucursal($_REQUEST['id']);
+    $autorizacion->setEstado("0");
+    $autorizaciones = AutorizacionDAO::search($autorizacion);
 
 
+    $header = array(
+        "id_autorizacion" => "ID",
+        "fecha_peticion" => "Fecha",
+        "id_usuario" => "Usuario que realizo la peticion",
+        "parametros" => "Descripcion");
 
+    function renderParam($json) {
+        $obj = json_decode($json);
+        return $obj->descripcion;
+    }
 
+    function renderUsuario($uid) {
+        $usuario = UsuarioDAO::getByPK($uid);
+        return $usuario->getNombre();
+    }
 
-
-
-
+    $tabla = new Tabla($header, $autorizaciones);
+    $tabla->addColRender("parametros", "renderParam");
+    $tabla->addColRender("id_usuario", "renderUsuario");
+    $tabla->addOnClick("id_autorizacion", "detalle");
+    $tabla->addNoData("No hay autorizaciones pendientes");
+    $tabla->render();
 ?><h2><img src='../media/icons/user_add_32.png'>&nbsp;Clientes que se registraron en esta sucursal</h2><?php
+    $foo = new Cliente();
+    $foo->setActivo(1);
+    $foo->setIdCliente(1);
+    $foo->setIdSucursal($_REQUEST['id']);
 
-$foo = new Cliente();
-$foo->setActivo(1);
-$foo->setIdCliente(1);
-$foo->setIdSucursal($_REQUEST['id']);
+    $bar = new Cliente();
+    $bar->setIdCliente(999);
 
-$bar = new Cliente();
-$bar->setIdCliente(999);
-
-$clientes = ClienteDAO::byRange($foo, $bar);
+    $clientes = ClienteDAO::byRange($foo, $bar);
 
 //render the table
-$header = array("razon_social" => "Razon Social", "rfc" => "RFC", /* "direccion" => "Direccion", */ "municipio" => "Municipio");
-$tabla = new Tabla($header, $clientes);
-$tabla->addOnClick("id_cliente", "mostrarDetalles");
-$tabla->addNoData("Ningun cliente se ha registrado en esta sucursal.");
-$tabla->render();
-
-
-
-
+    $header = array("razon_social" => "Razon Social", "rfc" => "RFC", /* "direccion" => "Direccion", */ "municipio" => "Municipio");
+    $tabla = new Tabla($header, $clientes);
+    $tabla->addOnClick("id_cliente", "mostrarDetalles");
+    $tabla->addNoData("Ningun cliente se ha registrado en esta sucursal.");
+    $tabla->render();
 ?><br> <h2>Estado</h2> <?php
-
-$flujo = array();
-
-
-/* * *****************************************
- * Fecha desde el ultimo corte
- * ****************************************** */
-$corte = new Corte();
-$corte->setIdSucursal($sucursal->getIdSucursal());
-
-$cortes = CorteDAO::getAll(1, 1, 'fecha', 'desc');
-
-	/* ***** Este Corte ********** */
-	$esteCorte = new Corte();
-	
-	/* ***** Este Corte ********** */
-	$esteCorte->setIdSucursal($sucursal->getIdSucursal());
+    $flujo = array();
 
 
-	if (sizeof($cortes) == 0) {
-	    if(POS_MULTI_SUCURSAL){
-			echo "<div class='light-blue-rounded' >No se han hecho cortes en esta sucursal. Mostrando flujo desde la apertura de sucursal.</div><br>";
-		}else{
-			echo "<div class='light-blue-rounded' >No se han hecho cortes. Mostrando flujo desde la apertura.</div><br>";
-		}
+    /*     * *****************************************
+     * Fecha desde el ultimo corte
+     * ****************************************** */
+    $corte = new Corte();
+    $corte->setIdSucursal($sucursal->getIdSucursal());
 
-	    $fecha = $sucursal->getFechaApertura();
-	} else {
+    $cortes = CorteDAO::getAll(1, 1, 'fecha', 'desc');
 
-	    $corte = $cortes[0];
-	    echo "Fecha de ultimo corte: <b>" . $corte->getFecha() . "</b><br>";
-	    $fecha = $corte->getFecha();
-	}
+    /*     * **** Este Corte ********** */
+    $esteCorte = new Corte();
 
-
-	$now = new DateTime("now");
-	$hoy = $now->format("Y-m-d H:i:s");
+    /*     * **** Este Corte ********** */
+    $esteCorte->setIdSucursal($sucursal->getIdSucursal());
 
 
+    if (sizeof($cortes) == 0) {
+        if (POS_MULTI_SUCURSAL) {
+            echo "<div class='light-blue-rounded' >No se han hecho cortes en esta sucursal. Mostrando flujo desde la apertura de sucursal.</div><br>";
+        } else {
+            echo "<div class='light-blue-rounded' >No se han hecho cortes. Mostrando flujo desde la apertura.</div><br>";
+        }
 
-	/* * *****************************************
-	 * Total de ventas
-	 * total de activo realizado en ventas para 
-	 * esta sucursal incluyendo ventas a credito 
-	 * y ventas a contado aunque no esten saldadas
-	 * **************************************** */
+        $fecha = $sucursal->getFechaApertura();
+    } else {
 
-	/* ***** Este Corte ********** */
-	$esteCorte->setTotalVentas( 
-			VentasDAO::totalVentasDesdeFecha( $sucursal->getIdSucursal(), $fecha )
-		 );
-		
+        $corte = $cortes[0];
+        echo "Fecha de ultimo corte: <b>" . $corte->getFecha() . "</b><br>";
+        $fecha = $corte->getFecha();
+    }
 
-	/* * *****************************************
-	 * Total de ventas Abonado
-	 * total de efectivo adquirido gracias a ventas, 
-	 * incluye ventas a contado y los abonos de las 
-	 * ventas a credito
-	 * **************************************** */
 
-	//obtener todas la ventas a contado
-	$ventas_a_contado = 0;
-	
-		$foo = new Ventas();
-		$foo->setFecha($fecha);
-		$foo->setIdSucursal($sucursal->getIdSucursal());
-		$foo->setTipoVenta('contado');
+    $now = new DateTime("now");
+    $hoy = $now->format("Y-m-d H:i:s");
 
-		$bar = new Ventas();
-		$bar->setFecha($hoy);
 
-		$ventas = VentasDAO::byRange($foo, $bar);
 
-		foreach ($ventas as $i) {
-		    $ventas_a_contado += $i->getPagado();
-		}
-	
-	
-	//obtener todos los abonos
-	$abonos_a_creditos = 0;
-	
-		$query = new PagosVenta();
-		$query->setIdSucursal($sucursal->getIdSucursal());
-		$query->setFecha($fecha);
+    /*     * *****************************************
+     * Total de ventas
+     * total de activo realizado en ventas para 
+     * esta sucursal incluyendo ventas a credito 
+     * y ventas a contado aunque no esten saldadas
+     * **************************************** */
 
-		$queryE = new PagosVenta();
-		$queryE->setFecha($hoy);
+    /*     * **** Este Corte ********** */
+    $esteCorte->setTotalVentas(
+            VentasDAO::totalVentasDesdeFecha($sucursal->getIdSucursal(), $fecha)
+    );
 
-		$results = PagosVentaDAO::byRange($query, $queryE);
 
-		foreach ($results as $pago) {
-			$abonos_a_creditos += $pago->getMonto();
-		}
+    /*     * *****************************************
+     * Total de ventas Abonado
+     * total de efectivo adquirido gracias a ventas, 
+     * incluye ventas a contado y los abonos de las 
+     * ventas a credito
+     * **************************************** */
 
-	/* ***** Este Corte ********** */
-	$esteCorte->setTotalVentasAbonado( 
-			$abonos_a_creditos + $ventas_a_contado
-		 );
+    //obtener todas la ventas a contado
+    $ventas_a_contado = 0;
 
-		
-	/* * *****************************************
-	 * total ventas saldo
-	 * total de dinero que se le debe a esta sucursal
-	 * por ventas a credito
-	 * **************************************** */		
-	$foo = new Ventas();
-	$foo->setIdSucursal($sucursal->getIdSucursal());
-	$foo->setTipoVenta("credito");
-	$foo->setFecha($fecha);
-	$foo->setLiquidada(0);
-	
-	$bar = new Ventas();
-	$bar->setFecha($hoy);
-	
-	$res = VentasDAO::byRange($foo, $bar);
-	
-	$saldo_pendiente = 0;
-	
-	foreach ($res as $venta) {
-		$saldo_pendiente += ($venta->getTotal() - $venta->getPagado());
-	}
-	
-	
-	/* ***** Este Corte ********** */
-	$esteCorte->setTotalVentasSaldo( 
-			$saldo_pendiente
-		 );
-	
-	/* * *****************************************
-	 * Total Compras
-	 * total de gastado en compras
-	 * **************************************** */
-	$foo = new CompraSucursal();
-	$foo->setFecha($fecha);
-	$foo->setIdSucursal($sucursal->getIdSucursal());
+    $foo = new Ventas();
+    $foo->setFecha($fecha);
+    $foo->setIdSucursal($sucursal->getIdSucursal());
+    $foo->setTipoVenta('contado');
 
-	$bar = new CompraSucursal();
-	$bar->setFecha($hoy);
+    $bar = new Ventas();
+    $bar->setFecha($hoy);
 
-	$compras = CompraSucursalDAO::byRange($foo, $bar);
+    $ventas = VentasDAO::byRange($foo, $bar);
 
-	$total_compras = 0;
+    foreach ($ventas as $i) {
+        $ventas_a_contado += $i->getPagado();
+    }
 
-	//las compras
-	foreach ($compras as $i) {
-	    $total_compras += $i->getTotal();
-	}
-	
-	/* ***** Este Corte ********** */
-	$esteCorte->setTotalCompras( 
-			$total_compras
-		 );
-	
-	
-	/* * *****************************************
-	 * Total Compras Abonado
-	 * total de abonado en compras
-	 * **************************************** */	
-	$foo = new PagosCompra();
-	$foo->setFecha($fecha);
-	//$foo->setIdSucursal($sucursal->getIdSucursal());
 
-	$bar = new PagosCompra();
-	$bar->setFecha($hoy);
+    //obtener todos los abonos
+    $abonos_a_creditos = 0;
 
-	$compras = PagosCompraDAO::byRange($foo, $bar);
+    $query = new PagosVenta();
+    $query->setIdSucursal($sucursal->getIdSucursal());
+    $query->setFecha($fecha);
 
-	$total_compras_pagadas = 0;
+    $queryE = new PagosVenta();
+    $queryE->setFecha($hoy);
 
-	//las compras
-	foreach ($compras as $i) {
-	    $total_compras_pagadas += $i->getMonto();
-	}
-	
-	/* ***** Este Corte ********** */
-	$esteCorte->setTotalComprasAbonado( 
-			$total_compras_pagadas
-		 );
-		
-		
-	
+    $results = PagosVentaDAO::byRange($query, $queryE);
 
-	/* * *****************************************
-	 * Total Gastos
-	 * total de gastos con saldo o sin salgo
-	 * **************************************** */	
-		$foo = new Gastos();
-		$foo->setFecha($fecha);
-		$foo->setIdSucursal($sucursal->getIdSucursal());
+    foreach ($results as $pago) {
+        $abonos_a_creditos += $pago->getMonto();
+    }
 
-		$bar = new Gastos();
-		$bar->setFecha($hoy);
+    /*     * **** Este Corte ********** */
+    $esteCorte->setTotalVentasAbonado(
+            $abonos_a_creditos + $ventas_a_contado
+    );
 
-		$gastos = GastosDAO::byRange($foo, $bar);
 
-		$total_gastos = 0;
-		
-		foreach ($gastos as $g) {
-			$total_gastos += $g->getMonto();
-		}
-		
-	/* ***** Este Corte ********** */
-	$esteCorte->setTotalGastos( 
-			$total_gastos
-		 );	
-	
-	
-	/* ***** Este Corte ********** */
-	$esteCorte->setTotalGastosAbonado( 0 );
-	
-	
-	/* ***** Este Corte ********** */
-	$esteCorte->setTotalIngresos( 0 );
-	
-	
-	/* ***** Este Corte ********** */
-	$esteCorte->setTotalGananciaNeta( 0 );
-	
-	
+    /*     * *****************************************
+     * total ventas saldo
+     * total de dinero que se le debe a esta sucursal
+     * por ventas a credito
+     * **************************************** */
+    $foo = new Ventas();
+    $foo->setIdSucursal($sucursal->getIdSucursal());
+    $foo->setTipoVenta("credito");
+    $foo->setFecha($fecha);
+    $foo->setLiquidada(0);
 
-	
+    $bar = new Ventas();
+    $bar->setFecha($hoy);
+
+    $res = VentasDAO::byRange($foo, $bar);
+
+    $saldo_pendiente = 0;
+
+    foreach ($res as $venta) {
+        $saldo_pendiente += ( $venta->getTotal() - $venta->getPagado());
+    }
+
+
+    /*     * **** Este Corte ********** */
+    $esteCorte->setTotalVentasSaldo(
+            $saldo_pendiente
+    );
+
+    /*     * *****************************************
+     * Total Compras
+     * total de gastado en compras
+     * **************************************** */
+    $foo = new CompraSucursal();
+    $foo->setFecha($fecha);
+    $foo->setIdSucursal($sucursal->getIdSucursal());
+
+    $bar = new CompraSucursal();
+    $bar->setFecha($hoy);
+
+    $compras = CompraSucursalDAO::byRange($foo, $bar);
+
+    $total_compras = 0;
+
+    //las compras
+    foreach ($compras as $i) {
+        $total_compras += $i->getTotal();
+    }
+
+    /*     * **** Este Corte ********** */
+    $esteCorte->setTotalCompras(
+            $total_compras
+    );
+
+
+    /*     * *****************************************
+     * Total Compras Abonado
+     * total de abonado en compras
+     * **************************************** */
+    $foo = new PagosCompra();
+    $foo->setFecha($fecha);
+    //$foo->setIdSucursal($sucursal->getIdSucursal());
+
+    $bar = new PagosCompra();
+    $bar->setFecha($hoy);
+
+    $compras = PagosCompraDAO::byRange($foo, $bar);
+
+    $total_compras_pagadas = 0;
+
+    //las compras
+    foreach ($compras as $i) {
+        $total_compras_pagadas += $i->getMonto();
+    }
+
+    /*     * **** Este Corte ********** */
+    $esteCorte->setTotalComprasAbonado(
+            $total_compras_pagadas
+    );
+
+
+
+
+    /*     * *****************************************
+     * Total Gastos
+     * total de gastos con saldo o sin salgo
+     * **************************************** */
+    $foo = new Gastos();
+    $foo->setFecha($fecha);
+    $foo->setIdSucursal($sucursal->getIdSucursal());
+
+    $bar = new Gastos();
+    $bar->setFecha($hoy);
+
+    $gastos = GastosDAO::byRange($foo, $bar);
+
+    $total_gastos = 0;
+
+    foreach ($gastos as $g) {
+        $total_gastos += $g->getMonto();
+    }
+
+    /*     * **** Este Corte ********** */
+    $esteCorte->setTotalGastos(
+            $total_gastos
+    );
+
+
+    /*     * **** Este Corte ********** */
+    $esteCorte->setTotalGastosAbonado(0);
+
+
+    /*     * **** Este Corte ********** */
+    $esteCorte->setTotalIngresos(0);
+
+
+    /*     * **** Este Corte ********** */
+    $esteCorte->setTotalGananciaNeta(0);
 ?>
 <table style="margin-top:25px; width:100%" border=1>
-	<tr>
-		<td>total_ventas</td>
-		<td>total de activo realizado en ventas para esta sucursal incluyendo ventas a credito y ventas a contado aunque no esten saldadas</td>
-		<td><?php echo moneyFormat($esteCorte->getTotalVentas()); ?></td>
-	</tr>
-	<tr>
-		<td>total_ventas_abonado</td>
-		<td>total de efectivo adquirido gracias a ventas, incluye ventas a contado y los abonos de las ventas a credito</td>
-		<td><?php echo moneyFormat($esteCorte->getTotalVentasAbonado()); ?></td>
-	</tr>
-	<tr>
-		<td>total_ventas_saldo</td>
-		<td>total de dinero que se le debe a esta sucursal por ventas a credito</td>		
-		<td><?php echo moneyFormat($esteCorte->getTotalVentasSaldo()); ?></td>
-	</tr>
-	<tr>
-		<td>total_compras</td>
-		<td>total de gastado en compras</td>		
-		<td><?php echo moneyFormat($esteCorte->getTotalCompras()); ?></td>
-	</tr>
-	<tr>
-		<td>total_compras_abonado</td>
-		<td>total de abonado en compras</td>		
-		<td><?php echo moneyFormat($esteCorte->getTotalComprasAbonado()); ?></td>
-	</tr>			
-	<tr>
-		<td>total_gastos</td>
-		<td>total de gastos con saldo o sin salgo</td>		
-		<td><?php echo moneyFormat($esteCorte->getTotalGastos()); ?></td>
-	</tr>
-	<tr>
-		<td>total_ingresos</td>
-		<td>total de ingresos para esta sucursal desde el ultimo corte</td>		
-		<td><?php echo moneyFormat($esteCorte->getTotalIngresos()); ?></td>
-	</tr>
-	<tr>
-		<td>total_ganancia_neta</td>
-		<td>calculo de ganancia neta</td>		
-		<td><?php echo moneyFormat($esteCorte->getTotalGananciaNeta()); ?></td>
-	</tr>				
+    <tr>
+        <td>total_ventas</td>
+        <td>total de activo realizado en ventas para esta sucursal incluyendo ventas a credito y ventas a contado aunque no esten saldadas</td>
+        <td><?php echo moneyFormat($esteCorte->getTotalVentas()); ?></td>
+    </tr>
+    <tr>
+        <td>total_ventas_abonado</td>
+        <td>total de efectivo adquirido gracias a ventas, incluye ventas a contado y los abonos de las ventas a credito</td>
+        <td><?php echo moneyFormat($esteCorte->getTotalVentasAbonado()); ?></td>
+    </tr>
+    <tr>
+        <td>total_ventas_saldo</td>
+        <td>total de dinero que se le debe a esta sucursal por ventas a credito</td>		
+        <td><?php echo moneyFormat($esteCorte->getTotalVentasSaldo()); ?></td>
+    </tr>
+    <tr>
+        <td>total_compras</td>
+        <td>total de gastado en compras</td>		
+        <td><?php echo moneyFormat($esteCorte->getTotalCompras()); ?></td>
+    </tr>
+    <tr>
+        <td>total_compras_abonado</td>
+        <td>total de abonado en compras</td>		
+        <td><?php echo moneyFormat($esteCorte->getTotalComprasAbonado()); ?></td>
+    </tr>			
+    <tr>
+        <td>total_gastos</td>
+        <td>total de gastos con saldo o sin salgo</td>		
+        <td><?php echo moneyFormat($esteCorte->getTotalGastos()); ?></td>
+    </tr>
+    <tr>
+        <td>total_ingresos</td>
+        <td>total de ingresos para esta sucursal desde el ultimo corte</td>		
+        <td><?php echo moneyFormat($esteCorte->getTotalIngresos()); ?></td>
+    </tr>
+    <tr>
+        <td>total_ganancia_neta</td>
+        <td>calculo de ganancia neta</td>		
+        <td><?php echo moneyFormat($esteCorte->getTotalGananciaNeta()); ?></td>
+    </tr>				
 </table>
 
 
 <h4><input type="button" 
-	value= "Realizar corte" 
-	onClick="window.location = 'sucursales.php?action=realizarCorte&id_sucursal=<?php echo $sucursal->getIdSucursal(); ?>';">
+           value= "Realizar corte" 
+           onClick="window.location = 'sucursales.php?action=realizarCorte&id_sucursal=<?php echo $sucursal->getIdSucursal(); ?>';">
 </h4>
 
 
