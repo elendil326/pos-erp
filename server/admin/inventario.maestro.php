@@ -377,6 +377,8 @@ function detalle_inventario(id){
 					align 	 : "right",
 					 renderer : function (n, a, row ){                                                       
 
+                                                        console.log("n : ", n +" a : ", a , "row : " + row);
+
 							if(row.data.agrupacion.length > 0){
 								//si hay agrupacion
 
@@ -385,7 +387,7 @@ function detalle_inventario(id){
 									/*return  (parseFloat( n / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
 									+"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";*/
                                                                         return  ( parseFloat( ( n - row.data.existencias_procesadas) / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
-									+"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+									+"&nbsp;(<i>" + (n - row.data.existencias_procesadas).toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
 
 								}else{
 									//sin tratamiento

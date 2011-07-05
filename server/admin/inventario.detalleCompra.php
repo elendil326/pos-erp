@@ -160,11 +160,11 @@
 								$p = $inventario->getExistenciasProcesadas();
 								//escala
 								$e = $producto->getEscala();
-							
+                                                                
 							?>
 							<td><?php echo "<b>". number_format( $o / $compra->getPesoPorArpilla(), 2 ) ."</b> arpillas"; ?></td>
 							<td>&nbsp;</td>
-							<td><?php echo "<b>". number_format( $p / 60, 2  ) ."</b> arpillas"; ?></td>
+                                                        <td><?php echo "<b>". number_format( $p / ($producto->getAgrupacion() != null ? $producto->getAgrupacionTam() : 1), 2  ) ."</b> arpillas"; ?></td>
 						</tr>
 						<tr style="font-size: 16px;">
 							<td><?php echo "<b>". number_format( $o , 2 ) ."</b> " . $e . "s"; ?></td>
