@@ -1534,8 +1534,8 @@ echo " var inventario_maestro_extjs = " . json_encode($iMaestro) . ";";
                                 /* ********************************
                                  *  agrupacion y CON tratamiento !
                                  * ********************************	*/							
-                                var v = (parseFloat( n / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
-                                    +"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+                                var v = (parseFloat( ( n - row.data.existencias_procesadas) / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
+                                    +"&nbsp;(<i>" + ( n - row.data.existencias_procesadas).toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
                             }
 
                             if(n < 0){
