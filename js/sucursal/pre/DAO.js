@@ -380,7 +380,7 @@ var ActualizacionDePrecio = function ( config )
 	* @access private
 	* @var int(12)
 	*/
-	var _id_actualizacion = config === undefined ? null : config.id_actualizacion || null,
+	var _id_actualizacion = config === undefined ? '' : config.id_actualizacion || '',
 
  /**
 	* id_producto
@@ -389,7 +389,7 @@ var ActualizacionDePrecio = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_producto = config === undefined ? null : config.id_producto || null,
+	_id_producto = config === undefined ? '' : config.id_producto || '',
 
  /**
 	* id_usuario
@@ -398,7 +398,7 @@ var ActualizacionDePrecio = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_usuario = config === undefined ? null : config.id_usuario || null,
+	_id_usuario = config === undefined ? '' : config.id_usuario || '',
 
  /**
 	* precio_venta
@@ -407,7 +407,7 @@ var ActualizacionDePrecio = function ( config )
 	* @access private
 	* @var float
 	*/
-	_precio_venta = config === undefined ? null : config.precio_venta || null,
+	_precio_venta = config === undefined ? '' : config.precio_venta || '',
 
  /**
 	* precio_venta_procesado
@@ -416,7 +416,7 @@ var ActualizacionDePrecio = function ( config )
 	* @access private
 	* @var float
 	*/
-	_precio_venta_procesado = config === undefined ? null : config.precio_venta_procesado || null,
+	_precio_venta_procesado = config === undefined ? '' : config.precio_venta_procesado || '',
 
  /**
 	* precio_intersucursal
@@ -425,7 +425,7 @@ var ActualizacionDePrecio = function ( config )
 	* @access private
 	* @var float
 	*/
-	_precio_intersucursal = config === undefined ? null : config.precio_intersucursal || null,
+	_precio_intersucursal = config === undefined ? '' : config.precio_intersucursal || '',
 
  /**
 	* precio_intersucursal_procesado
@@ -434,7 +434,7 @@ var ActualizacionDePrecio = function ( config )
 	* @access private
 	* @var float
 	*/
-	_precio_intersucursal_procesado = config === undefined ? null : config.precio_intersucursal_procesado || null,
+	_precio_intersucursal_procesado = config === undefined ? '' : config.precio_intersucursal_procesado || '',
 
  /**
 	* precio_compra
@@ -443,7 +443,7 @@ var ActualizacionDePrecio = function ( config )
 	* @access private
 	* @var float
 	*/
-	_precio_compra = config === undefined ? null : config.precio_compra || null,
+	_precio_compra = config === undefined ? '' : config.precio_compra || '',
 
  /**
 	* fecha
@@ -452,7 +452,7 @@ var ActualizacionDePrecio = function ( config )
 	* @access private
 	* @var timestamp
 	*/
-	_fecha = config === undefined ? null : config.fecha || null;
+	_fecha = config === undefined ? '' : config.fecha || '';
 
 	/**
 	  * getIdActualizacion
@@ -690,11 +690,11 @@ var ActualizacionDePrecio = function ( config )
 		//console.log('estoy en save()');
 		ActualizacionDePrecio._callback_stack.push( _original_callback  );
 		ActualizacionDePrecio._callback_stack.push( function(res){ 
-						//console.log('estoy de regreso en save(',res,')');
+						console.log('estoy de regreso en save(',res,')');
 						if(res == null){
-							create(this);
+							create.call(this, this);
 						}else{
-							update(this);
+							update.call(res, res);
 						}
 	 			});
 		ActualizacionDePrecio.getByPK(  this.getIdActualizacion() , { context : this } ) 
@@ -805,7 +805,7 @@ var ActualizacionDePrecio = function ( config )
 	  **/
 	var create = function( actualizacion_de_precio )
 	{
-		//console.log('estoy en create()');
+		console.log('estoy en create(this)');
 		$sql = "INSERT INTO actualizacion_de_precio ( id_actualizacion, id_producto, id_usuario, precio_venta, precio_venta_procesado, precio_intersucursal, precio_intersucursal_procesado, precio_compra, fecha ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			actualizacion_de_precio.getIdActualizacion(), 
@@ -830,7 +830,7 @@ var ActualizacionDePrecio = function ( config )
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -849,7 +849,7 @@ var ActualizacionDePrecio = function ( config )
 			$actualizacion_de_precio.getPrecioCompra(), 
 			$actualizacion_de_precio.getFecha(), 
 			$actualizacion_de_precio.getIdActualizacion(),  ] ;
-		//console.log('estoy en update()');
+		console.log('estoy en update()');
 		db.query($sql, $params, function(tx, results){ 
 				//console.log('ya termine el query de update():',tx,results);
 				ActualizacionDePrecio._callback_stack.pop().call(null, $actualizacion_de_precio);  
@@ -1115,7 +1115,7 @@ var Autorizacion = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	var _id_autorizacion = config === undefined ? null : config.id_autorizacion || null,
+	var _id_autorizacion = config === undefined ? '' : config.id_autorizacion || '',
 
  /**
 	* id_usuario
@@ -1124,7 +1124,7 @@ var Autorizacion = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_usuario = config === undefined ? null : config.id_usuario || null,
+	_id_usuario = config === undefined ? '' : config.id_usuario || '',
 
  /**
 	* id_sucursal
@@ -1133,7 +1133,7 @@ var Autorizacion = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_sucursal = config === undefined ? null : config.id_sucursal || null,
+	_id_sucursal = config === undefined ? '' : config.id_sucursal || '',
 
  /**
 	* fecha_peticion
@@ -1142,7 +1142,7 @@ var Autorizacion = function ( config )
 	* @access private
 	* @var timestamp
 	*/
-	_fecha_peticion = config === undefined ? null : config.fecha_peticion || null,
+	_fecha_peticion = config === undefined ? '' : config.fecha_peticion || '',
 
  /**
 	* fecha_respuesta
@@ -1151,7 +1151,7 @@ var Autorizacion = function ( config )
 	* @access private
 	* @var timestamp
 	*/
-	_fecha_respuesta = config === undefined ? null : config.fecha_respuesta || null,
+	_fecha_respuesta = config === undefined ? '' : config.fecha_respuesta || '',
 
  /**
 	* estado
@@ -1160,7 +1160,7 @@ var Autorizacion = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_estado = config === undefined ? null : config.estado || null,
+	_estado = config === undefined ? '' : config.estado || '',
 
  /**
 	* parametros
@@ -1169,7 +1169,7 @@ var Autorizacion = function ( config )
 	* @access private
 	* @var varchar(2048)
 	*/
-	_parametros = config === undefined ? null : config.parametros || null,
+	_parametros = config === undefined ? '' : config.parametros || '',
 
  /**
 	* tipo
@@ -1178,7 +1178,7 @@ var Autorizacion = function ( config )
 	* @access private
 	* @var enum('envioDeProductosASucursal','solicitudDeProductos','solicitudDeMerma','solicitudDeCambioPrecio','solicitudDeDevolucion','solicitudDeCambioLimiteDeCredito','solicitudDeGasto')
 	*/
-	_tipo = config === undefined ? null : config.tipo || null;
+	_tipo = config === undefined ? '' : config.tipo || '';
 
 	/**
 	  * getIdAutorizacion
@@ -1392,11 +1392,11 @@ var Autorizacion = function ( config )
 		//console.log('estoy en save()');
 		Autorizacion._callback_stack.push( _original_callback  );
 		Autorizacion._callback_stack.push( function(res){ 
-						//console.log('estoy de regreso en save(',res,')');
+						console.log('estoy de regreso en save(',res,')');
 						if(res == null){
-							create(this);
+							create.call(this, this);
 						}else{
-							update(this);
+							update.call(res, res);
 						}
 	 			});
 		Autorizacion.getByPK(  this.getIdAutorizacion() , { context : this } ) 
@@ -1502,7 +1502,7 @@ var Autorizacion = function ( config )
 	  **/
 	var create = function( autorizacion )
 	{
-		//console.log('estoy en create()');
+		console.log('estoy en create(this)');
 		$sql = "INSERT INTO autorizacion ( id_autorizacion, id_usuario, id_sucursal, fecha_peticion, fecha_respuesta, estado, parametros, tipo ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			autorizacion.getIdAutorizacion(), 
@@ -1526,7 +1526,7 @@ var Autorizacion = function ( config )
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -1544,7 +1544,7 @@ var Autorizacion = function ( config )
 			$autorizacion.getParametros(), 
 			$autorizacion.getTipo(), 
 			$autorizacion.getIdAutorizacion(),  ] ;
-		//console.log('estoy en update()');
+		console.log('estoy en update()');
 		db.query($sql, $params, function(tx, results){ 
 				//console.log('ya termine el query de update():',tx,results);
 				Autorizacion._callback_stack.pop().call(null, $autorizacion);  
@@ -1798,7 +1798,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	var _id_cliente = config === undefined ? null : config.id_cliente || null,
+	var _id_cliente = config === undefined ? '' : config.id_cliente || '',
 
  /**
 	* rfc
@@ -1807,7 +1807,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var varchar(20)
 	*/
-	_rfc = config === undefined ? null : config.rfc || null,
+	_rfc = config === undefined ? '' : config.rfc || '',
 
  /**
 	* razon_social
@@ -1816,7 +1816,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var varchar(100)
 	*/
-	_razon_social = config === undefined ? null : config.razon_social || null,
+	_razon_social = config === undefined ? '' : config.razon_social || '',
 
  /**
 	* calle
@@ -1825,7 +1825,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var varchar(300)
 	*/
-	_calle = config === undefined ? null : config.calle || null,
+	_calle = config === undefined ? '' : config.calle || '',
 
  /**
 	* numero_exterior
@@ -1834,7 +1834,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var varchar(20)
 	*/
-	_numero_exterior = config === undefined ? null : config.numero_exterior || null,
+	_numero_exterior = config === undefined ? '' : config.numero_exterior || '',
 
  /**
 	* numero_interior
@@ -1843,7 +1843,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var varchar(20)
 	*/
-	_numero_interior = config === undefined ? null : config.numero_interior || null,
+	_numero_interior = config === undefined ? '' : config.numero_interior || '',
 
  /**
 	* colonia
@@ -1852,7 +1852,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var varchar(50)
 	*/
-	_colonia = config === undefined ? null : config.colonia || null,
+	_colonia = config === undefined ? '' : config.colonia || '',
 
  /**
 	* referencia
@@ -1861,7 +1861,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var varchar(100)
 	*/
-	_referencia = config === undefined ? null : config.referencia || null,
+	_referencia = config === undefined ? '' : config.referencia || '',
 
  /**
 	* localidad
@@ -1870,7 +1870,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var varchar(50)
 	*/
-	_localidad = config === undefined ? null : config.localidad || null,
+	_localidad = config === undefined ? '' : config.localidad || '',
 
  /**
 	* municipio
@@ -1879,7 +1879,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var varchar(55)
 	*/
-	_municipio = config === undefined ? null : config.municipio || null,
+	_municipio = config === undefined ? '' : config.municipio || '',
 
  /**
 	* estado
@@ -1888,7 +1888,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var varchar(50)
 	*/
-	_estado = config === undefined ? null : config.estado || null,
+	_estado = config === undefined ? '' : config.estado || '',
 
  /**
 	* pais
@@ -1897,7 +1897,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var varchar(50)
 	*/
-	_pais = config === undefined ? null : config.pais || null,
+	_pais = config === undefined ? '' : config.pais || '',
 
  /**
 	* codigo_postal
@@ -1906,7 +1906,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var varchar(15)
 	*/
-	_codigo_postal = config === undefined ? null : config.codigo_postal || null,
+	_codigo_postal = config === undefined ? '' : config.codigo_postal || '',
 
  /**
 	* telefono
@@ -1915,7 +1915,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var varchar(25)
 	*/
-	_telefono = config === undefined ? null : config.telefono || null,
+	_telefono = config === undefined ? '' : config.telefono || '',
 
  /**
 	* e_mail
@@ -1924,7 +1924,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var varchar(60)
 	*/
-	_e_mail = config === undefined ? null : config.e_mail || null,
+	_e_mail = config === undefined ? '' : config.e_mail || '',
 
  /**
 	* limite_credito
@@ -1933,7 +1933,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var float
 	*/
-	_limite_credito = config === undefined ? null : config.limite_credito || null,
+	_limite_credito = config === undefined ? '' : config.limite_credito || '',
 
  /**
 	* descuento
@@ -1942,7 +1942,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var float
 	*/
-	_descuento = config === undefined ? null : config.descuento || null,
+	_descuento = config === undefined ? '' : config.descuento || '',
 
  /**
 	* activo
@@ -1951,7 +1951,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var tinyint(2)
 	*/
-	_activo = config === undefined ? null : config.activo || null,
+	_activo = config === undefined ? '' : config.activo || '',
 
  /**
 	* id_usuario
@@ -1960,7 +1960,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_usuario = config === undefined ? null : config.id_usuario || null,
+	_id_usuario = config === undefined ? '' : config.id_usuario || '',
 
  /**
 	* id_sucursal
@@ -1969,7 +1969,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_sucursal = config === undefined ? null : config.id_sucursal || null,
+	_id_sucursal = config === undefined ? '' : config.id_sucursal || '',
 
  /**
 	* fecha_ingreso
@@ -1978,7 +1978,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var timestamp
 	*/
-	_fecha_ingreso = config === undefined ? null : config.fecha_ingreso || null,
+	_fecha_ingreso = config === undefined ? '' : config.fecha_ingreso || '',
 
  /**
 	* password
@@ -1987,7 +1987,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var varchar(64)
 	*/
-	_password = config === undefined ? null : config.password || null,
+	_password = config === undefined ? '' : config.password || '',
 
  /**
 	* last_login
@@ -1996,7 +1996,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var timestamp
 	*/
-	_last_login = config === undefined ? null : config.last_login || null,
+	_last_login = config === undefined ? '' : config.last_login || '',
 
  /**
 	* grant_changes
@@ -2005,7 +2005,7 @@ var Cliente = function ( config )
 	* @access private
 	* @var tinyint(1)
 	*/
-	_grant_changes = config === undefined ? null : config.grant_changes || null;
+	_grant_changes = config === undefined ? '' : config.grant_changes || '';
 
 	/**
 	  * getIdCliente
@@ -2603,11 +2603,11 @@ var Cliente = function ( config )
 		//console.log('estoy en save()');
 		Cliente._callback_stack.push( _original_callback  );
 		Cliente._callback_stack.push( function(res){ 
-						//console.log('estoy de regreso en save(',res,')');
+						console.log('estoy de regreso en save(',res,')');
 						if(res == null){
-							create(this);
+							create.call(this, this);
 						}else{
-							update(this);
+							update.call(res, res);
 						}
 	 			});
 		Cliente.getByPK(  this.getIdCliente() , { context : this } ) 
@@ -2793,7 +2793,7 @@ var Cliente = function ( config )
 	  **/
 	var create = function( cliente )
 	{
-		//console.log('estoy en create()');
+		console.log('estoy en create(this)');
 		$sql = "INSERT INTO cliente ( id_cliente, rfc, razon_social, calle, numero_exterior, numero_interior, colonia, referencia, localidad, municipio, estado, pais, codigo_postal, telefono, e_mail, limite_credito, descuento, activo, id_usuario, id_sucursal, fecha_ingreso, password, last_login, grant_changes ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			cliente.getIdCliente(), 
@@ -2833,7 +2833,7 @@ var Cliente = function ( config )
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -2867,7 +2867,7 @@ var Cliente = function ( config )
 			$cliente.getLastLogin(), 
 			$cliente.getGrantChanges(), 
 			$cliente.getIdCliente(),  ] ;
-		//console.log('estoy en update()');
+		console.log('estoy en update()');
 		db.query($sql, $params, function(tx, results){ 
 				//console.log('ya termine el query de update():',tx,results);
 				Cliente._callback_stack.pop().call(null, $cliente);  
@@ -3313,7 +3313,7 @@ var CompraCliente = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	var _id_compra = config === undefined ? null : config.id_compra || null,
+	var _id_compra = config === undefined ? '' : config.id_compra || '',
 
  /**
 	* id_cliente
@@ -3322,7 +3322,7 @@ var CompraCliente = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_cliente = config === undefined ? null : config.id_cliente || null,
+	_id_cliente = config === undefined ? '' : config.id_cliente || '',
 
  /**
 	* tipo_compra
@@ -3331,7 +3331,7 @@ var CompraCliente = function ( config )
 	* @access private
 	* @var enum('credito','contado')
 	*/
-	_tipo_compra = config === undefined ? null : config.tipo_compra || null,
+	_tipo_compra = config === undefined ? '' : config.tipo_compra || '',
 
  /**
 	* tipo_pago
@@ -3340,7 +3340,7 @@ var CompraCliente = function ( config )
 	* @access private
 	* @var enum('efectivo','cheque','tarjeta')
 	*/
-	_tipo_pago = config === undefined ? null : config.tipo_pago || null,
+	_tipo_pago = config === undefined ? '' : config.tipo_pago || '',
 
  /**
 	* fecha
@@ -3349,7 +3349,7 @@ var CompraCliente = function ( config )
 	* @access private
 	* @var timestamp
 	*/
-	_fecha = config === undefined ? null : config.fecha || null,
+	_fecha = config === undefined ? '' : config.fecha || '',
 
  /**
 	* subtotal
@@ -3358,7 +3358,7 @@ var CompraCliente = function ( config )
 	* @access private
 	* @var float
 	*/
-	_subtotal = config === undefined ? null : config.subtotal || null,
+	_subtotal = config === undefined ? '' : config.subtotal || '',
 
  /**
 	* impuesto
@@ -3367,7 +3367,7 @@ var CompraCliente = function ( config )
 	* @access private
 	* @var float
 	*/
-	_impuesto = config === undefined ? null : config.impuesto || null,
+	_impuesto = config === undefined ? '' : config.impuesto || '',
 
  /**
 	* descuento
@@ -3376,7 +3376,7 @@ var CompraCliente = function ( config )
 	* @access private
 	* @var float
 	*/
-	_descuento = config === undefined ? null : config.descuento || null,
+	_descuento = config === undefined ? '' : config.descuento || '',
 
  /**
 	* total
@@ -3385,7 +3385,7 @@ var CompraCliente = function ( config )
 	* @access private
 	* @var float
 	*/
-	_total = config === undefined ? null : config.total || null,
+	_total = config === undefined ? '' : config.total || '',
 
  /**
 	* id_sucursal
@@ -3394,7 +3394,7 @@ var CompraCliente = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_sucursal = config === undefined ? null : config.id_sucursal || null,
+	_id_sucursal = config === undefined ? '' : config.id_sucursal || '',
 
  /**
 	* id_usuario
@@ -3403,7 +3403,7 @@ var CompraCliente = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_usuario = config === undefined ? null : config.id_usuario || null,
+	_id_usuario = config === undefined ? '' : config.id_usuario || '',
 
  /**
 	* pagado
@@ -3412,7 +3412,7 @@ var CompraCliente = function ( config )
 	* @access private
 	* @var float
 	*/
-	_pagado = config === undefined ? null : config.pagado || null,
+	_pagado = config === undefined ? '' : config.pagado || '',
 
  /**
 	* cancelada
@@ -3421,7 +3421,7 @@ var CompraCliente = function ( config )
 	* @access private
 	* @var tinyint(1)
 	*/
-	_cancelada = config === undefined ? null : config.cancelada || null,
+	_cancelada = config === undefined ? '' : config.cancelada || '',
 
  /**
 	* ip
@@ -3430,7 +3430,7 @@ var CompraCliente = function ( config )
 	* @access private
 	* @var varchar(16)
 	*/
-	_ip = config === undefined ? null : config.ip || null,
+	_ip = config === undefined ? '' : config.ip || '',
 
  /**
 	* liquidada
@@ -3439,7 +3439,7 @@ var CompraCliente = function ( config )
 	* @access private
 	* @var tinyint(1)
 	*/
-	_liquidada = config === undefined ? null : config.liquidada || null;
+	_liquidada = config === undefined ? '' : config.liquidada || '';
 
 	/**
 	  * getIdCompra
@@ -3821,11 +3821,11 @@ var CompraCliente = function ( config )
 		//console.log('estoy en save()');
 		CompraCliente._callback_stack.push( _original_callback  );
 		CompraCliente._callback_stack.push( function(res){ 
-						//console.log('estoy de regreso en save(',res,')');
+						console.log('estoy de regreso en save(',res,')');
 						if(res == null){
-							create(this);
+							create.call(this, this);
 						}else{
-							update(this);
+							update.call(res, res);
 						}
 	 			});
 		CompraCliente.getByPK(  this.getIdCompra() , { context : this } ) 
@@ -3966,7 +3966,7 @@ var CompraCliente = function ( config )
 	  **/
 	var create = function( compra_cliente )
 	{
-		//console.log('estoy en create()');
+		console.log('estoy en create(this)');
 		$sql = "INSERT INTO compra_cliente ( id_compra, id_cliente, tipo_compra, tipo_pago, fecha, subtotal, impuesto, descuento, total, id_sucursal, id_usuario, pagado, cancelada, ip, liquidada ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			compra_cliente.getIdCompra(), 
@@ -3997,7 +3997,7 @@ var CompraCliente = function ( config )
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -4022,7 +4022,7 @@ var CompraCliente = function ( config )
 			$compra_cliente.getIp(), 
 			$compra_cliente.getLiquidada(), 
 			$compra_cliente.getIdCompra(),  ] ;
-		//console.log('estoy en update()');
+		console.log('estoy en update()');
 		db.query($sql, $params, function(tx, results){ 
 				//console.log('ya termine el query de update():',tx,results);
 				CompraCliente._callback_stack.pop().call(null, $compra_cliente);  
@@ -4360,7 +4360,7 @@ var DetalleCompraCliente = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	var _id_compra = config === undefined ? null : config.id_compra || null,
+	var _id_compra = config === undefined ? '' : config.id_compra || '',
 
  /**
 	* id_producto
@@ -4370,7 +4370,7 @@ var DetalleCompraCliente = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_producto = config === undefined ? null : config.id_producto || null,
+	_id_producto = config === undefined ? '' : config.id_producto || '',
 
  /**
 	* cantidad
@@ -4379,7 +4379,7 @@ var DetalleCompraCliente = function ( config )
 	* @access private
 	* @var float
 	*/
-	_cantidad = config === undefined ? null : config.cantidad || null,
+	_cantidad = config === undefined ? '' : config.cantidad || '',
 
  /**
 	* precio
@@ -4388,7 +4388,7 @@ var DetalleCompraCliente = function ( config )
 	* @access private
 	* @var float
 	*/
-	_precio = config === undefined ? null : config.precio || null,
+	_precio = config === undefined ? '' : config.precio || '',
 
  /**
 	* descuento
@@ -4397,7 +4397,7 @@ var DetalleCompraCliente = function ( config )
 	* @access private
 	* @var float
 	*/
-	_descuento = config === undefined ? null : config.descuento || null;
+	_descuento = config === undefined ? '' : config.descuento || '';
 
 	/**
 	  * getIdCompra
@@ -4541,11 +4541,11 @@ var DetalleCompraCliente = function ( config )
 		//console.log('estoy en save()');
 		DetalleCompraCliente._callback_stack.push( _original_callback  );
 		DetalleCompraCliente._callback_stack.push( function(res){ 
-						//console.log('estoy de regreso en save(',res,')');
+						console.log('estoy de regreso en save(',res,')');
 						if(res == null){
-							create(this);
+							create.call(this, this);
 						}else{
-							update(this);
+							update.call(res, res);
 						}
 	 			});
 		DetalleCompraCliente.getByPK(  this.getIdCompra() , this.getIdProducto() , { context : this } ) 
@@ -4636,7 +4636,7 @@ var DetalleCompraCliente = function ( config )
 	  **/
 	var create = function( detalle_compra_cliente )
 	{
-		//console.log('estoy en create()');
+		console.log('estoy en create(this)');
 		$sql = "INSERT INTO detalle_compra_cliente ( id_compra, id_producto, cantidad, precio, descuento ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = [
 			detalle_compra_cliente.getIdCompra(), 
@@ -4657,7 +4657,7 @@ var DetalleCompraCliente = function ( config )
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -4671,7 +4671,7 @@ var DetalleCompraCliente = function ( config )
 			$detalle_compra_cliente.getPrecio(), 
 			$detalle_compra_cliente.getDescuento(), 
 			$detalle_compra_cliente.getIdCompra(),$detalle_compra_cliente.getIdProducto(),  ] ;
-		//console.log('estoy en update()');
+		console.log('estoy en update()');
 		db.query($sql, $params, function(tx, results){ 
 				//console.log('ya termine el query de update():',tx,results);
 				DetalleCompraCliente._callback_stack.pop().call(null, $detalle_compra_cliente);  
@@ -4889,7 +4889,7 @@ var DetalleInventario = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	var _id_producto = config === undefined ? null : config.id_producto || null,
+	var _id_producto = config === undefined ? '' : config.id_producto || '',
 
  /**
 	* id_sucursal
@@ -4899,7 +4899,7 @@ var DetalleInventario = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_sucursal = config === undefined ? null : config.id_sucursal || null,
+	_id_sucursal = config === undefined ? '' : config.id_sucursal || '',
 
  /**
 	* precio_venta
@@ -4908,7 +4908,7 @@ var DetalleInventario = function ( config )
 	* @access private
 	* @var float
 	*/
-	_precio_venta = config === undefined ? null : config.precio_venta || null,
+	_precio_venta = config === undefined ? '' : config.precio_venta || '',
 
  /**
 	* precio_venta_procesado
@@ -4917,7 +4917,7 @@ var DetalleInventario = function ( config )
 	* @access private
 	* @var float
 	*/
-	_precio_venta_procesado = config === undefined ? null : config.precio_venta_procesado || null,
+	_precio_venta_procesado = config === undefined ? '' : config.precio_venta_procesado || '',
 
  /**
 	* existencias
@@ -4926,7 +4926,7 @@ var DetalleInventario = function ( config )
 	* @access private
 	* @var float
 	*/
-	_existencias = config === undefined ? null : config.existencias || null,
+	_existencias = config === undefined ? '' : config.existencias || '',
 
  /**
 	* existencias_procesadas
@@ -4935,7 +4935,7 @@ var DetalleInventario = function ( config )
 	* @access private
 	* @var float
 	*/
-	_existencias_procesadas = config === undefined ? null : config.existencias_procesadas || null,
+	_existencias_procesadas = config === undefined ? '' : config.existencias_procesadas || '',
 
  /**
 	* precio_compra
@@ -4944,7 +4944,7 @@ var DetalleInventario = function ( config )
 	* @access private
 	* @var float
 	*/
-	_precio_compra = config === undefined ? null : config.precio_compra || null;
+	_precio_compra = config === undefined ? '' : config.precio_compra || '';
 
 	/**
 	  * getIdProducto
@@ -5136,11 +5136,11 @@ var DetalleInventario = function ( config )
 		//console.log('estoy en save()');
 		DetalleInventario._callback_stack.push( _original_callback  );
 		DetalleInventario._callback_stack.push( function(res){ 
-						//console.log('estoy de regreso en save(',res,')');
+						console.log('estoy de regreso en save(',res,')');
 						if(res == null){
-							create(this);
+							create.call(this, this);
 						}else{
-							update(this);
+							update.call(res, res);
 						}
 	 			});
 		DetalleInventario.getByPK(  this.getIdProducto() , this.getIdSucursal() , { context : this } ) 
@@ -5241,7 +5241,7 @@ var DetalleInventario = function ( config )
 	  **/
 	var create = function( detalle_inventario )
 	{
-		//console.log('estoy en create()');
+		console.log('estoy en create(this)');
 		$sql = "INSERT INTO detalle_inventario ( id_producto, id_sucursal, precio_venta, precio_venta_procesado, existencias, existencias_procesadas, precio_compra ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			detalle_inventario.getIdProducto(), 
@@ -5264,7 +5264,7 @@ var DetalleInventario = function ( config )
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -5280,7 +5280,7 @@ var DetalleInventario = function ( config )
 			$detalle_inventario.getExistenciasProcesadas(), 
 			$detalle_inventario.getPrecioCompra(), 
 			$detalle_inventario.getIdProducto(),$detalle_inventario.getIdSucursal(),  ] ;
-		//console.log('estoy en update()');
+		console.log('estoy en update()');
 		db.query($sql, $params, function(tx, results){ 
 				//console.log('ya termine el query de update():',tx,results);
 				DetalleInventario._callback_stack.pop().call(null, $detalle_inventario);  
@@ -5522,7 +5522,7 @@ var DetalleVenta = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	var _id_venta = config === undefined ? null : config.id_venta || null,
+	var _id_venta = config === undefined ? '' : config.id_venta || '',
 
  /**
 	* id_producto
@@ -5532,7 +5532,7 @@ var DetalleVenta = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_producto = config === undefined ? null : config.id_producto || null,
+	_id_producto = config === undefined ? '' : config.id_producto || '',
 
  /**
 	* cantidad
@@ -5541,7 +5541,7 @@ var DetalleVenta = function ( config )
 	* @access private
 	* @var float
 	*/
-	_cantidad = config === undefined ? null : config.cantidad || null,
+	_cantidad = config === undefined ? '' : config.cantidad || '',
 
  /**
 	* cantidad_procesada
@@ -5550,7 +5550,7 @@ var DetalleVenta = function ( config )
 	* @access private
 	* @var float
 	*/
-	_cantidad_procesada = config === undefined ? null : config.cantidad_procesada || null,
+	_cantidad_procesada = config === undefined ? '' : config.cantidad_procesada || '',
 
  /**
 	* precio
@@ -5559,7 +5559,7 @@ var DetalleVenta = function ( config )
 	* @access private
 	* @var float
 	*/
-	_precio = config === undefined ? null : config.precio || null,
+	_precio = config === undefined ? '' : config.precio || '',
 
  /**
 	* precio_procesada
@@ -5568,7 +5568,7 @@ var DetalleVenta = function ( config )
 	* @access private
 	* @var float
 	*/
-	_precio_procesada = config === undefined ? null : config.precio_procesada || null,
+	_precio_procesada = config === undefined ? '' : config.precio_procesada || '',
 
  /**
 	* descuento
@@ -5577,7 +5577,7 @@ var DetalleVenta = function ( config )
 	* @access private
 	* @var float
 	*/
-	_descuento = config === undefined ? null : config.descuento || null;
+	_descuento = config === undefined ? '' : config.descuento || '';
 
 	/**
 	  * getIdVenta
@@ -5769,11 +5769,11 @@ var DetalleVenta = function ( config )
 		//console.log('estoy en save()');
 		DetalleVenta._callback_stack.push( _original_callback  );
 		DetalleVenta._callback_stack.push( function(res){ 
-						//console.log('estoy de regreso en save(',res,')');
+						console.log('estoy de regreso en save(',res,')');
 						if(res == null){
-							create(this);
+							create.call(this, this);
 						}else{
-							update(this);
+							update.call(res, res);
 						}
 	 			});
 		DetalleVenta.getByPK(  this.getIdVenta() , this.getIdProducto() , { context : this } ) 
@@ -5874,7 +5874,7 @@ var DetalleVenta = function ( config )
 	  **/
 	var create = function( detalle_venta )
 	{
-		//console.log('estoy en create()');
+		console.log('estoy en create(this)');
 		$sql = "INSERT INTO detalle_venta ( id_venta, id_producto, cantidad, cantidad_procesada, precio, precio_procesada, descuento ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			detalle_venta.getIdVenta(), 
@@ -5897,7 +5897,7 @@ var DetalleVenta = function ( config )
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -5913,7 +5913,7 @@ var DetalleVenta = function ( config )
 			$detalle_venta.getPrecioProcesada(), 
 			$detalle_venta.getDescuento(), 
 			$detalle_venta.getIdVenta(),$detalle_venta.getIdProducto(),  ] ;
-		//console.log('estoy en update()');
+		console.log('estoy en update()');
 		db.query($sql, $params, function(tx, results){ 
 				//console.log('ya termine el query de update():',tx,results);
 				DetalleVenta._callback_stack.pop().call(null, $detalle_venta);  
@@ -6155,7 +6155,7 @@ var Equipo = function ( config )
 	* @access private
 	* @var int(6)
 	*/
-	var _id_equipo = config === undefined ? null : config.id_equipo || null,
+	var _id_equipo = config === undefined ? '' : config.id_equipo || '',
 
  /**
 	* token
@@ -6164,7 +6164,7 @@ var Equipo = function ( config )
 	* @access private
 	* @var varchar(128)
 	*/
-	_token = config === undefined ? null : config.token || null,
+	_token = config === undefined ? '' : config.token || '',
 
  /**
 	* full_ua
@@ -6173,7 +6173,7 @@ var Equipo = function ( config )
 	* @access private
 	* @var varchar(256)
 	*/
-	_full_ua = config === undefined ? null : config.full_ua || null,
+	_full_ua = config === undefined ? '' : config.full_ua || '',
 
  /**
 	* descripcion
@@ -6182,7 +6182,7 @@ var Equipo = function ( config )
 	* @access private
 	* @var varchar(254)
 	*/
-	_descripcion = config === undefined ? null : config.descripcion || null,
+	_descripcion = config === undefined ? '' : config.descripcion || '',
 
  /**
 	* locked
@@ -6191,7 +6191,7 @@ var Equipo = function ( config )
 	* @access private
 	* @var tinyint(1)
 	*/
-	_locked = config === undefined ? null : config.locked || null;
+	_locked = config === undefined ? '' : config.locked || '';
 
 	/**
 	  * getIdEquipo
@@ -6333,11 +6333,11 @@ var Equipo = function ( config )
 		//console.log('estoy en save()');
 		Equipo._callback_stack.push( _original_callback  );
 		Equipo._callback_stack.push( function(res){ 
-						//console.log('estoy de regreso en save(',res,')');
+						console.log('estoy de regreso en save(',res,')');
 						if(res == null){
-							create(this);
+							create.call(this, this);
 						}else{
-							update(this);
+							update.call(res, res);
 						}
 	 			});
 		Equipo.getByPK(  this.getIdEquipo() , { context : this } ) 
@@ -6428,7 +6428,7 @@ var Equipo = function ( config )
 	  **/
 	var create = function( equipo )
 	{
-		//console.log('estoy en create()');
+		console.log('estoy en create(this)');
 		$sql = "INSERT INTO equipo ( id_equipo, token, full_ua, descripcion, locked ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = [
 			equipo.getIdEquipo(), 
@@ -6449,7 +6449,7 @@ var Equipo = function ( config )
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -6464,7 +6464,7 @@ var Equipo = function ( config )
 			$equipo.getDescripcion(), 
 			$equipo.getLocked(), 
 			$equipo.getIdEquipo(),  ] ;
-		//console.log('estoy en update()');
+		console.log('estoy en update()');
 		db.query($sql, $params, function(tx, results){ 
 				//console.log('ya termine el query de update():',tx,results);
 				Equipo._callback_stack.pop().call(null, $equipo);  
@@ -6682,7 +6682,7 @@ var FacturaCompra = function ( config )
 	* @access private
 	* @var varchar(15)
 	*/
-	var _folio = config === undefined ? null : config.folio || null,
+	var _folio = config === undefined ? '' : config.folio || '',
 
  /**
 	* id_compra
@@ -6691,7 +6691,7 @@ var FacturaCompra = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_compra = config === undefined ? null : config.id_compra || null;
+	_id_compra = config === undefined ? '' : config.id_compra || '';
 
 	/**
 	  * getFolio
@@ -6761,11 +6761,11 @@ var FacturaCompra = function ( config )
 		//console.log('estoy en save()');
 		FacturaCompra._callback_stack.push( _original_callback  );
 		FacturaCompra._callback_stack.push( function(res){ 
-						//console.log('estoy de regreso en save(',res,')');
+						console.log('estoy de regreso en save(',res,')');
 						if(res == null){
-							create(this);
+							create.call(this, this);
 						}else{
-							update(this);
+							update.call(res, res);
 						}
 	 			});
 		FacturaCompra.getByPK(  this.getFolio() , { context : this } ) 
@@ -6841,7 +6841,7 @@ var FacturaCompra = function ( config )
 	  **/
 	var create = function( factura_compra )
 	{
-		//console.log('estoy en create()');
+		console.log('estoy en create(this)');
 		$sql = "INSERT INTO factura_compra ( folio, id_compra ) VALUES ( ?, ?);";
 		$params = [
 			factura_compra.getFolio(), 
@@ -6859,7 +6859,7 @@ var FacturaCompra = function ( config )
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -6871,7 +6871,7 @@ var FacturaCompra = function ( config )
 		$params = [ 
 			$factura_compra.getIdCompra(), 
 			$factura_compra.getFolio(),  ] ;
-		//console.log('estoy en update()');
+		console.log('estoy en update()');
 		db.query($sql, $params, function(tx, results){ 
 				//console.log('ya termine el query de update():',tx,results);
 				FacturaCompra._callback_stack.pop().call(null, $factura_compra);  
@@ -7053,7 +7053,7 @@ var FacturaVenta = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	var _id_folio = config === undefined ? null : config.id_folio || null,
+	var _id_folio = config === undefined ? '' : config.id_folio || '',
 
  /**
 	* id_venta
@@ -7062,7 +7062,7 @@ var FacturaVenta = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_venta = config === undefined ? null : config.id_venta || null,
+	_id_venta = config === undefined ? '' : config.id_venta || '',
 
  /**
 	* id_usuario
@@ -7071,7 +7071,7 @@ var FacturaVenta = function ( config )
 	* @access private
 	* @var int(10)
 	*/
-	_id_usuario = config === undefined ? null : config.id_usuario || null,
+	_id_usuario = config === undefined ? '' : config.id_usuario || '',
 
  /**
 	* xml
@@ -7080,7 +7080,7 @@ var FacturaVenta = function ( config )
 	* @access private
 	* @var text
 	*/
-	_xml = config === undefined ? null : config.xml || null,
+	_xml = config === undefined ? '' : config.xml || '',
 
  /**
 	* lugar_emision
@@ -7089,7 +7089,7 @@ var FacturaVenta = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_lugar_emision = config === undefined ? null : config.lugar_emision || null,
+	_lugar_emision = config === undefined ? '' : config.lugar_emision || '',
 
  /**
 	* tipo_comprobante
@@ -7098,7 +7098,7 @@ var FacturaVenta = function ( config )
 	* @access private
 	* @var enum('ingreso','egreso')
 	*/
-	_tipo_comprobante = config === undefined ? null : config.tipo_comprobante || null,
+	_tipo_comprobante = config === undefined ? '' : config.tipo_comprobante || '',
 
  /**
 	* activa
@@ -7107,7 +7107,7 @@ var FacturaVenta = function ( config )
 	* @access private
 	* @var tinyint(1)
 	*/
-	_activa = config === undefined ? null : config.activa || null,
+	_activa = config === undefined ? '' : config.activa || '',
 
  /**
 	* sellada
@@ -7116,7 +7116,7 @@ var FacturaVenta = function ( config )
 	* @access private
 	* @var tinyint(1)
 	*/
-	_sellada = config === undefined ? null : config.sellada || null,
+	_sellada = config === undefined ? '' : config.sellada || '',
 
  /**
 	* forma_pago
@@ -7125,7 +7125,7 @@ var FacturaVenta = function ( config )
 	* @access private
 	* @var varchar(100)
 	*/
-	_forma_pago = config === undefined ? null : config.forma_pago || null,
+	_forma_pago = config === undefined ? '' : config.forma_pago || '',
 
  /**
 	* fecha_emision
@@ -7134,7 +7134,7 @@ var FacturaVenta = function ( config )
 	* @access private
 	* @var timestamp
 	*/
-	_fecha_emision = config === undefined ? null : config.fecha_emision || null,
+	_fecha_emision = config === undefined ? '' : config.fecha_emision || '',
 
  /**
 	* version_tfd
@@ -7143,7 +7143,7 @@ var FacturaVenta = function ( config )
 	* @access private
 	* @var varchar(10)
 	*/
-	_version_tfd = config === undefined ? null : config.version_tfd || null,
+	_version_tfd = config === undefined ? '' : config.version_tfd || '',
 
  /**
 	* folio_fiscal
@@ -7152,7 +7152,7 @@ var FacturaVenta = function ( config )
 	* @access private
 	* @var varchar(128)
 	*/
-	_folio_fiscal = config === undefined ? null : config.folio_fiscal || null,
+	_folio_fiscal = config === undefined ? '' : config.folio_fiscal || '',
 
  /**
 	* fecha_certificacion
@@ -7161,7 +7161,7 @@ var FacturaVenta = function ( config )
 	* @access private
 	* @var timestamp
 	*/
-	_fecha_certificacion = config === undefined ? null : config.fecha_certificacion || null,
+	_fecha_certificacion = config === undefined ? '' : config.fecha_certificacion || '',
 
  /**
 	* numero_certificado_sat
@@ -7170,7 +7170,7 @@ var FacturaVenta = function ( config )
 	* @access private
 	* @var varchar(128)
 	*/
-	_numero_certificado_sat = config === undefined ? null : config.numero_certificado_sat || null,
+	_numero_certificado_sat = config === undefined ? '' : config.numero_certificado_sat || '',
 
  /**
 	* sello_digital_emisor
@@ -7179,7 +7179,7 @@ var FacturaVenta = function ( config )
 	* @access private
 	* @var varchar(512)
 	*/
-	_sello_digital_emisor = config === undefined ? null : config.sello_digital_emisor || null,
+	_sello_digital_emisor = config === undefined ? '' : config.sello_digital_emisor || '',
 
  /**
 	* sello_digital_sat
@@ -7188,7 +7188,7 @@ var FacturaVenta = function ( config )
 	* @access private
 	* @var varchar(512)
 	*/
-	_sello_digital_sat = config === undefined ? null : config.sello_digital_sat || null,
+	_sello_digital_sat = config === undefined ? '' : config.sello_digital_sat || '',
 
  /**
 	* cadena_original
@@ -7197,7 +7197,7 @@ var FacturaVenta = function ( config )
 	* @access private
 	* @var varchar(2048)
 	*/
-	_cadena_original = config === undefined ? null : config.cadena_original || null;
+	_cadena_original = config === undefined ? '' : config.cadena_original || '';
 
 	/**
 	  * getIdFolio
@@ -7627,11 +7627,11 @@ var FacturaVenta = function ( config )
 		//console.log('estoy en save()');
 		FacturaVenta._callback_stack.push( _original_callback  );
 		FacturaVenta._callback_stack.push( function(res){ 
-						//console.log('estoy de regreso en save(',res,')');
+						console.log('estoy de regreso en save(',res,')');
 						if(res == null){
-							create(this);
+							create.call(this, this);
 						}else{
-							update(this);
+							update.call(res, res);
 						}
 	 			});
 		FacturaVenta.getByPK(  this.getIdFolio() , { context : this } ) 
@@ -7782,7 +7782,7 @@ var FacturaVenta = function ( config )
 	  **/
 	var create = function( factura_venta )
 	{
-		//console.log('estoy en create()');
+		console.log('estoy en create(this)');
 		$sql = "INSERT INTO factura_venta ( id_folio, id_venta, id_usuario, xml, lugar_emision, tipo_comprobante, activa, sellada, forma_pago, fecha_emision, version_tfd, folio_fiscal, fecha_certificacion, numero_certificado_sat, sello_digital_emisor, sello_digital_sat, cadena_original ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			factura_venta.getIdFolio(), 
@@ -7815,7 +7815,7 @@ var FacturaVenta = function ( config )
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -7842,7 +7842,7 @@ var FacturaVenta = function ( config )
 			$factura_venta.getSelloDigitalSat(), 
 			$factura_venta.getCadenaOriginal(), 
 			$factura_venta.getIdFolio(),  ] ;
-		//console.log('estoy en update()');
+		console.log('estoy en update()');
 		db.query($sql, $params, function(tx, results){ 
 				//console.log('ya termine el query de update():',tx,results);
 				FacturaVenta._callback_stack.pop().call(null, $factura_venta);  
@@ -8204,7 +8204,7 @@ var Gastos = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	var _id_gasto = config === undefined ? null : config.id_gasto || null,
+	var _id_gasto = config === undefined ? '' : config.id_gasto || '',
 
  /**
 	* folio
@@ -8213,7 +8213,7 @@ var Gastos = function ( config )
 	* @access private
 	* @var varchar(22)
 	*/
-	_folio = config === undefined ? null : config.folio || null,
+	_folio = config === undefined ? '' : config.folio || '',
 
  /**
 	* concepto
@@ -8222,7 +8222,7 @@ var Gastos = function ( config )
 	* @access private
 	* @var varchar(100)
 	*/
-	_concepto = config === undefined ? null : config.concepto || null,
+	_concepto = config === undefined ? '' : config.concepto || '',
 
  /**
 	* monto
@@ -8231,7 +8231,7 @@ var Gastos = function ( config )
 	* @access private
 	* @var float
 	*/
-	_monto = config === undefined ? null : config.monto || null,
+	_monto = config === undefined ? '' : config.monto || '',
 
  /**
 	* fecha
@@ -8240,7 +8240,7 @@ var Gastos = function ( config )
 	* @access private
 	* @var timestamp
 	*/
-	_fecha = config === undefined ? null : config.fecha || null,
+	_fecha = config === undefined ? '' : config.fecha || '',
 
  /**
 	* fecha_ingreso
@@ -8249,7 +8249,7 @@ var Gastos = function ( config )
 	* @access private
 	* @var timestamp
 	*/
-	_fecha_ingreso = config === undefined ? null : config.fecha_ingreso || null,
+	_fecha_ingreso = config === undefined ? '' : config.fecha_ingreso || '',
 
  /**
 	* id_sucursal
@@ -8258,7 +8258,7 @@ var Gastos = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_sucursal = config === undefined ? null : config.id_sucursal || null,
+	_id_sucursal = config === undefined ? '' : config.id_sucursal || '',
 
  /**
 	* id_usuario
@@ -8267,7 +8267,7 @@ var Gastos = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_usuario = config === undefined ? null : config.id_usuario || null,
+	_id_usuario = config === undefined ? '' : config.id_usuario || '',
 
  /**
 	* nota
@@ -8276,7 +8276,7 @@ var Gastos = function ( config )
 	* @access private
 	* @var varchar(512)
 	*/
-	_nota = config === undefined ? null : config.nota || null;
+	_nota = config === undefined ? '' : config.nota || '';
 
 	/**
 	  * getIdGasto
@@ -8514,11 +8514,11 @@ var Gastos = function ( config )
 		//console.log('estoy en save()');
 		Gastos._callback_stack.push( _original_callback  );
 		Gastos._callback_stack.push( function(res){ 
-						//console.log('estoy de regreso en save(',res,')');
+						console.log('estoy de regreso en save(',res,')');
 						if(res == null){
-							create(this);
+							create.call(this, this);
 						}else{
-							update(this);
+							update.call(res, res);
 						}
 	 			});
 		Gastos.getByPK(  this.getIdGasto() , { context : this } ) 
@@ -8629,7 +8629,7 @@ var Gastos = function ( config )
 	  **/
 	var create = function( gastos )
 	{
-		//console.log('estoy en create()');
+		console.log('estoy en create(this)');
 		$sql = "INSERT INTO gastos ( id_gasto, folio, concepto, monto, fecha, fecha_ingreso, id_sucursal, id_usuario, nota ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			gastos.getIdGasto(), 
@@ -8654,7 +8654,7 @@ var Gastos = function ( config )
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -8673,7 +8673,7 @@ var Gastos = function ( config )
 			$gastos.getIdUsuario(), 
 			$gastos.getNota(), 
 			$gastos.getIdGasto(),  ] ;
-		//console.log('estoy en update()');
+		console.log('estoy en update()');
 		db.query($sql, $params, function(tx, results){ 
 				//console.log('ya termine el query de update():',tx,results);
 				Gastos._callback_stack.pop().call(null, $gastos);  
@@ -8939,7 +8939,7 @@ var Impresora = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	var _id_impresora = config === undefined ? null : config.id_impresora || null,
+	var _id_impresora = config === undefined ? '' : config.id_impresora || '',
 
  /**
 	* id_sucursal
@@ -8948,7 +8948,7 @@ var Impresora = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_sucursal = config === undefined ? null : config.id_sucursal || null,
+	_id_sucursal = config === undefined ? '' : config.id_sucursal || '',
 
  /**
 	* descripcion
@@ -8957,7 +8957,7 @@ var Impresora = function ( config )
 	* @access private
 	* @var varchar(256)
 	*/
-	_descripcion = config === undefined ? null : config.descripcion || null,
+	_descripcion = config === undefined ? '' : config.descripcion || '',
 
  /**
 	* identificador
@@ -8966,7 +8966,7 @@ var Impresora = function ( config )
 	* @access private
 	* @var varchar(128)
 	*/
-	_identificador = config === undefined ? null : config.identificador || null;
+	_identificador = config === undefined ? '' : config.identificador || '';
 
 	/**
 	  * getIdImpresora
@@ -9084,11 +9084,11 @@ var Impresora = function ( config )
 		//console.log('estoy en save()');
 		Impresora._callback_stack.push( _original_callback  );
 		Impresora._callback_stack.push( function(res){ 
-						//console.log('estoy de regreso en save(',res,')');
+						console.log('estoy de regreso en save(',res,')');
 						if(res == null){
-							create(this);
+							create.call(this, this);
 						}else{
-							update(this);
+							update.call(res, res);
 						}
 	 			});
 		Impresora.getByPK(  this.getIdImpresora() , { context : this } ) 
@@ -9174,7 +9174,7 @@ var Impresora = function ( config )
 	  **/
 	var create = function( impresora )
 	{
-		//console.log('estoy en create()');
+		console.log('estoy en create(this)');
 		$sql = "INSERT INTO impresora ( id_impresora, id_sucursal, descripcion, identificador ) VALUES ( ?, ?, ?, ?);";
 		$params = [
 			impresora.getIdImpresora(), 
@@ -9194,7 +9194,7 @@ var Impresora = function ( config )
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -9208,7 +9208,7 @@ var Impresora = function ( config )
 			$impresora.getDescripcion(), 
 			$impresora.getIdentificador(), 
 			$impresora.getIdImpresora(),  ] ;
-		//console.log('estoy en update()');
+		console.log('estoy en update()');
 		db.query($sql, $params, function(tx, results){ 
 				//console.log('ya termine el query de update():',tx,results);
 				Impresora._callback_stack.pop().call(null, $impresora);  
@@ -9414,7 +9414,7 @@ var Ingresos = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	var _id_ingreso = config === undefined ? null : config.id_ingreso || null,
+	var _id_ingreso = config === undefined ? '' : config.id_ingreso || '',
 
  /**
 	* concepto
@@ -9423,7 +9423,7 @@ var Ingresos = function ( config )
 	* @access private
 	* @var varchar(100)
 	*/
-	_concepto = config === undefined ? null : config.concepto || null,
+	_concepto = config === undefined ? '' : config.concepto || '',
 
  /**
 	* monto
@@ -9432,7 +9432,7 @@ var Ingresos = function ( config )
 	* @access private
 	* @var float
 	*/
-	_monto = config === undefined ? null : config.monto || null,
+	_monto = config === undefined ? '' : config.monto || '',
 
  /**
 	* fecha
@@ -9441,7 +9441,7 @@ var Ingresos = function ( config )
 	* @access private
 	* @var timestamp
 	*/
-	_fecha = config === undefined ? null : config.fecha || null,
+	_fecha = config === undefined ? '' : config.fecha || '',
 
  /**
 	* fecha_ingreso
@@ -9450,7 +9450,7 @@ var Ingresos = function ( config )
 	* @access private
 	* @var timestamp
 	*/
-	_fecha_ingreso = config === undefined ? null : config.fecha_ingreso || null,
+	_fecha_ingreso = config === undefined ? '' : config.fecha_ingreso || '',
 
  /**
 	* id_sucursal
@@ -9459,7 +9459,7 @@ var Ingresos = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_sucursal = config === undefined ? null : config.id_sucursal || null,
+	_id_sucursal = config === undefined ? '' : config.id_sucursal || '',
 
  /**
 	* id_usuario
@@ -9468,7 +9468,7 @@ var Ingresos = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_usuario = config === undefined ? null : config.id_usuario || null,
+	_id_usuario = config === undefined ? '' : config.id_usuario || '',
 
  /**
 	* nota
@@ -9477,7 +9477,7 @@ var Ingresos = function ( config )
 	* @access private
 	* @var varchar(512)
 	*/
-	_nota = config === undefined ? null : config.nota || null;
+	_nota = config === undefined ? '' : config.nota || '';
 
 	/**
 	  * getIdIngreso
@@ -9691,11 +9691,11 @@ var Ingresos = function ( config )
 		//console.log('estoy en save()');
 		Ingresos._callback_stack.push( _original_callback  );
 		Ingresos._callback_stack.push( function(res){ 
-						//console.log('estoy de regreso en save(',res,')');
+						console.log('estoy de regreso en save(',res,')');
 						if(res == null){
-							create(this);
+							create.call(this, this);
 						}else{
-							update(this);
+							update.call(res, res);
 						}
 	 			});
 		Ingresos.getByPK(  this.getIdIngreso() , { context : this } ) 
@@ -9801,7 +9801,7 @@ var Ingresos = function ( config )
 	  **/
 	var create = function( ingresos )
 	{
-		//console.log('estoy en create()');
+		console.log('estoy en create(this)');
 		$sql = "INSERT INTO ingresos ( id_ingreso, concepto, monto, fecha, fecha_ingreso, id_sucursal, id_usuario, nota ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			ingresos.getIdIngreso(), 
@@ -9825,7 +9825,7 @@ var Ingresos = function ( config )
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -9843,7 +9843,7 @@ var Ingresos = function ( config )
 			$ingresos.getIdUsuario(), 
 			$ingresos.getNota(), 
 			$ingresos.getIdIngreso(),  ] ;
-		//console.log('estoy en update()');
+		console.log('estoy en update()');
 		db.query($sql, $params, function(tx, results){ 
 				//console.log('ya termine el query de update():',tx,results);
 				Ingresos._callback_stack.pop().call(null, $ingresos);  
@@ -10097,7 +10097,7 @@ var Inventario = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	var _id_producto = config === undefined ? null : config.id_producto || null,
+	var _id_producto = config === undefined ? '' : config.id_producto || '',
 
  /**
 	* descripcion
@@ -10106,7 +10106,7 @@ var Inventario = function ( config )
 	* @access private
 	* @var varchar(30)
 	*/
-	_descripcion = config === undefined ? null : config.descripcion || null,
+	_descripcion = config === undefined ? '' : config.descripcion || '',
 
  /**
 	* escala
@@ -10115,7 +10115,7 @@ var Inventario = function ( config )
 	* @access private
 	* @var enum('kilogramo','pieza','litro','unidad')
 	*/
-	_escala = config === undefined ? null : config.escala || null,
+	_escala = config === undefined ? '' : config.escala || '',
 
  /**
 	* tratamiento
@@ -10124,7 +10124,7 @@ var Inventario = function ( config )
 	* @access private
 	* @var enum('limpia')
 	*/
-	_tratamiento = config === undefined ? null : config.tratamiento || null,
+	_tratamiento = config === undefined ? '' : config.tratamiento || '',
 
  /**
 	* agrupacion
@@ -10133,7 +10133,7 @@ var Inventario = function ( config )
 	* @access private
 	* @var varchar(8)
 	*/
-	_agrupacion = config === undefined ? null : config.agrupacion || null,
+	_agrupacion = config === undefined ? '' : config.agrupacion || '',
 
  /**
 	* agrupacionTam
@@ -10142,7 +10142,7 @@ var Inventario = function ( config )
 	* @access private
 	* @var float
 	*/
-	_agrupacionTam = config === undefined ? null : config.agrupacionTam || null,
+	_agrupacionTam = config === undefined ? '' : config.agrupacionTam || '',
 
  /**
 	* activo
@@ -10151,7 +10151,7 @@ var Inventario = function ( config )
 	* @access private
 	* @var tinyint(1)
 	*/
-	_activo = config === undefined ? null : config.activo || null,
+	_activo = config === undefined ? '' : config.activo || '',
 
  /**
 	* precio_por_agrupacion
@@ -10160,7 +10160,7 @@ var Inventario = function ( config )
 	* @access private
 	* @var tinyint(1)
 	*/
-	_precio_por_agrupacion = config === undefined ? null : config.precio_por_agrupacion || null;
+	_precio_por_agrupacion = config === undefined ? '' : config.precio_por_agrupacion || '';
 
 	/**
 	  * getIdProducto
@@ -10374,11 +10374,11 @@ var Inventario = function ( config )
 		//console.log('estoy en save()');
 		Inventario._callback_stack.push( _original_callback  );
 		Inventario._callback_stack.push( function(res){ 
-						//console.log('estoy de regreso en save(',res,')');
+						console.log('estoy de regreso en save(',res,')');
 						if(res == null){
-							create(this);
+							create.call(this, this);
 						}else{
-							update(this);
+							update.call(res, res);
 						}
 	 			});
 		Inventario.getByPK(  this.getIdProducto() , { context : this } ) 
@@ -10484,7 +10484,7 @@ var Inventario = function ( config )
 	  **/
 	var create = function( inventario )
 	{
-		//console.log('estoy en create()');
+		console.log('estoy en create(this)');
 		$sql = "INSERT INTO inventario ( id_producto, descripcion, escala, tratamiento, agrupacion, agrupacionTam, activo, precio_por_agrupacion ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			inventario.getIdProducto(), 
@@ -10508,7 +10508,7 @@ var Inventario = function ( config )
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -10526,7 +10526,7 @@ var Inventario = function ( config )
 			$inventario.getActivo(), 
 			$inventario.getPrecioPorAgrupacion(), 
 			$inventario.getIdProducto(),  ] ;
-		//console.log('estoy en update()');
+		console.log('estoy en update()');
 		db.query($sql, $params, function(tx, results){ 
 				//console.log('ya termine el query de update():',tx,results);
 				Inventario._callback_stack.pop().call(null, $inventario);  
@@ -10780,7 +10780,7 @@ var PagosVenta = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	var _id_pago = config === undefined ? null : config.id_pago || null,
+	var _id_pago = config === undefined ? '' : config.id_pago || '',
 
  /**
 	* id_venta
@@ -10789,7 +10789,7 @@ var PagosVenta = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_venta = config === undefined ? null : config.id_venta || null,
+	_id_venta = config === undefined ? '' : config.id_venta || '',
 
  /**
 	* id_sucursal
@@ -10798,7 +10798,7 @@ var PagosVenta = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_sucursal = config === undefined ? null : config.id_sucursal || null,
+	_id_sucursal = config === undefined ? '' : config.id_sucursal || '',
 
  /**
 	* id_usuario
@@ -10807,7 +10807,7 @@ var PagosVenta = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_usuario = config === undefined ? null : config.id_usuario || null,
+	_id_usuario = config === undefined ? '' : config.id_usuario || '',
 
  /**
 	* fecha
@@ -10816,7 +10816,7 @@ var PagosVenta = function ( config )
 	* @access private
 	* @var timestamp
 	*/
-	_fecha = config === undefined ? null : config.fecha || null,
+	_fecha = config === undefined ? '' : config.fecha || '',
 
  /**
 	* monto
@@ -10825,7 +10825,7 @@ var PagosVenta = function ( config )
 	* @access private
 	* @var float
 	*/
-	_monto = config === undefined ? null : config.monto || null,
+	_monto = config === undefined ? '' : config.monto || '',
 
  /**
 	* tipo_pago
@@ -10834,7 +10834,7 @@ var PagosVenta = function ( config )
 	* @access private
 	* @var enum('efectivo','cheque','tarjeta')
 	*/
-	_tipo_pago = config === undefined ? null : config.tipo_pago || null;
+	_tipo_pago = config === undefined ? '' : config.tipo_pago || '';
 
 	/**
 	  * getIdPago
@@ -11024,11 +11024,11 @@ var PagosVenta = function ( config )
 		//console.log('estoy en save()');
 		PagosVenta._callback_stack.push( _original_callback  );
 		PagosVenta._callback_stack.push( function(res){ 
-						//console.log('estoy de regreso en save(',res,')');
+						console.log('estoy de regreso en save(',res,')');
 						if(res == null){
-							create(this);
+							create.call(this, this);
 						}else{
-							update(this);
+							update.call(res, res);
 						}
 	 			});
 		PagosVenta.getByPK(  this.getIdPago() , { context : this } ) 
@@ -11129,7 +11129,7 @@ var PagosVenta = function ( config )
 	  **/
 	var create = function( pagos_venta )
 	{
-		//console.log('estoy en create()');
+		console.log('estoy en create(this)');
 		$sql = "INSERT INTO pagos_venta ( id_pago, id_venta, id_sucursal, id_usuario, fecha, monto, tipo_pago ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			pagos_venta.getIdPago(), 
@@ -11152,7 +11152,7 @@ var PagosVenta = function ( config )
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -11169,7 +11169,7 @@ var PagosVenta = function ( config )
 			$pagos_venta.getMonto(), 
 			$pagos_venta.getTipoPago(), 
 			$pagos_venta.getIdPago(),  ] ;
-		//console.log('estoy en update()');
+		console.log('estoy en update()');
 		db.query($sql, $params, function(tx, results){ 
 				//console.log('ya termine el query de update():',tx,results);
 				PagosVenta._callback_stack.pop().call(null, $pagos_venta);  
@@ -11411,7 +11411,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	var _id_sucursal = config === undefined ? null : config.id_sucursal || null,
+	var _id_sucursal = config === undefined ? '' : config.id_sucursal || '',
 
  /**
 	* gerente
@@ -11420,7 +11420,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_gerente = config === undefined ? null : config.gerente || null,
+	_gerente = config === undefined ? '' : config.gerente || '',
 
  /**
 	* descripcion
@@ -11429,7 +11429,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var varchar(100)
 	*/
-	_descripcion = config === undefined ? null : config.descripcion || null,
+	_descripcion = config === undefined ? '' : config.descripcion || '',
 
  /**
 	* razon_social
@@ -11438,7 +11438,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var varchar(100)
 	*/
-	_razon_social = config === undefined ? null : config.razon_social || null,
+	_razon_social = config === undefined ? '' : config.razon_social || '',
 
  /**
 	* rfc
@@ -11447,7 +11447,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var varchar(20)
 	*/
-	_rfc = config === undefined ? null : config.rfc || null,
+	_rfc = config === undefined ? '' : config.rfc || '',
 
  /**
 	* calle
@@ -11456,7 +11456,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var varchar(50)
 	*/
-	_calle = config === undefined ? null : config.calle || null,
+	_calle = config === undefined ? '' : config.calle || '',
 
  /**
 	* numero_exterior
@@ -11465,7 +11465,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var varchar(10)
 	*/
-	_numero_exterior = config === undefined ? null : config.numero_exterior || null,
+	_numero_exterior = config === undefined ? '' : config.numero_exterior || '',
 
  /**
 	* numero_interior
@@ -11474,7 +11474,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var varchar(10)
 	*/
-	_numero_interior = config === undefined ? null : config.numero_interior || null,
+	_numero_interior = config === undefined ? '' : config.numero_interior || '',
 
  /**
 	* colonia
@@ -11483,7 +11483,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var varchar(50)
 	*/
-	_colonia = config === undefined ? null : config.colonia || null,
+	_colonia = config === undefined ? '' : config.colonia || '',
 
  /**
 	* localidad
@@ -11492,7 +11492,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var varchar(50)
 	*/
-	_localidad = config === undefined ? null : config.localidad || null,
+	_localidad = config === undefined ? '' : config.localidad || '',
 
  /**
 	* referencia
@@ -11501,7 +11501,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var varchar(200)
 	*/
-	_referencia = config === undefined ? null : config.referencia || null,
+	_referencia = config === undefined ? '' : config.referencia || '',
 
  /**
 	* municipio
@@ -11510,7 +11510,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var varchar(100)
 	*/
-	_municipio = config === undefined ? null : config.municipio || null,
+	_municipio = config === undefined ? '' : config.municipio || '',
 
  /**
 	* estado
@@ -11519,7 +11519,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var varchar(50)
 	*/
-	_estado = config === undefined ? null : config.estado || null,
+	_estado = config === undefined ? '' : config.estado || '',
 
  /**
 	* pais
@@ -11528,7 +11528,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var varchar(50)
 	*/
-	_pais = config === undefined ? null : config.pais || null,
+	_pais = config === undefined ? '' : config.pais || '',
 
  /**
 	* codigo_postal
@@ -11537,7 +11537,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var varchar(15)
 	*/
-	_codigo_postal = config === undefined ? null : config.codigo_postal || null,
+	_codigo_postal = config === undefined ? '' : config.codigo_postal || '',
 
  /**
 	* telefono
@@ -11546,7 +11546,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var varchar(20)
 	*/
-	_telefono = config === undefined ? null : config.telefono || null,
+	_telefono = config === undefined ? '' : config.telefono || '',
 
  /**
 	* token
@@ -11555,7 +11555,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var varchar(512)
 	*/
-	_token = config === undefined ? null : config.token || null,
+	_token = config === undefined ? '' : config.token || '',
 
  /**
 	* letras_factura
@@ -11564,7 +11564,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var char(1)
 	*/
-	_letras_factura = config === undefined ? null : config.letras_factura || null,
+	_letras_factura = config === undefined ? '' : config.letras_factura || '',
 
  /**
 	* activo
@@ -11573,7 +11573,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var tinyint(1)
 	*/
-	_activo = config === undefined ? null : config.activo || null,
+	_activo = config === undefined ? '' : config.activo || '',
 
  /**
 	* fecha_apertura
@@ -11582,7 +11582,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var timestamp
 	*/
-	_fecha_apertura = config === undefined ? null : config.fecha_apertura || null,
+	_fecha_apertura = config === undefined ? '' : config.fecha_apertura || '',
 
  /**
 	* saldo_a_favor
@@ -11591,7 +11591,7 @@ var Sucursal = function ( config )
 	* @access private
 	* @var float
 	*/
-	_saldo_a_favor = config === undefined ? null : config.saldo_a_favor || null;
+	_saldo_a_favor = config === undefined ? '' : config.saldo_a_favor || '';
 
 	/**
 	  * getIdSucursal
@@ -12117,11 +12117,11 @@ var Sucursal = function ( config )
 		//console.log('estoy en save()');
 		Sucursal._callback_stack.push( _original_callback  );
 		Sucursal._callback_stack.push( function(res){ 
-						//console.log('estoy de regreso en save(',res,')');
+						console.log('estoy de regreso en save(',res,')');
 						if(res == null){
-							create(this);
+							create.call(this, this);
 						}else{
-							update(this);
+							update.call(res, res);
 						}
 	 			});
 		Sucursal.getByPK(  this.getIdSucursal() , { context : this } ) 
@@ -12292,7 +12292,7 @@ var Sucursal = function ( config )
 	  **/
 	var create = function( sucursal )
 	{
-		//console.log('estoy en create()');
+		console.log('estoy en create(this)');
 		$sql = "INSERT INTO sucursal ( id_sucursal, gerente, descripcion, razon_social, rfc, calle, numero_exterior, numero_interior, colonia, localidad, referencia, municipio, estado, pais, codigo_postal, telefono, token, letras_factura, activo, fecha_apertura, saldo_a_favor ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			sucursal.getIdSucursal(), 
@@ -12329,7 +12329,7 @@ var Sucursal = function ( config )
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -12360,7 +12360,7 @@ var Sucursal = function ( config )
 			$sucursal.getFechaApertura(), 
 			$sucursal.getSaldoAFavor(), 
 			$sucursal.getIdSucursal(),  ] ;
-		//console.log('estoy en update()');
+		console.log('estoy en update()');
 		db.query($sql, $params, function(tx, results){ 
 				//console.log('ya termine el query de update():',tx,results);
 				Sucursal._callback_stack.pop().call(null, $sucursal);  
@@ -12770,7 +12770,7 @@ var Ventas = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	var _id_venta = config === undefined ? null : config.id_venta || null,
+	var _id_venta = config === undefined ? '' : config.id_venta || '',
 
  /**
 	* id_venta_equipo
@@ -12779,7 +12779,7 @@ var Ventas = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_venta_equipo = config === undefined ? null : config.id_venta_equipo || null,
+	_id_venta_equipo = config === undefined ? '' : config.id_venta_equipo || '',
 
  /**
 	* id_equipo
@@ -12788,7 +12788,7 @@ var Ventas = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_equipo = config === undefined ? null : config.id_equipo || null,
+	_id_equipo = config === undefined ? '' : config.id_equipo || '',
 
  /**
 	* id_cliente
@@ -12797,7 +12797,7 @@ var Ventas = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_cliente = config === undefined ? null : config.id_cliente || null,
+	_id_cliente = config === undefined ? '' : config.id_cliente || '',
 
  /**
 	* tipo_venta
@@ -12806,7 +12806,7 @@ var Ventas = function ( config )
 	* @access private
 	* @var enum('credito','contado')
 	*/
-	_tipo_venta = config === undefined ? null : config.tipo_venta || null,
+	_tipo_venta = config === undefined ? '' : config.tipo_venta || '',
 
  /**
 	* tipo_pago
@@ -12815,7 +12815,7 @@ var Ventas = function ( config )
 	* @access private
 	* @var enum('efectivo','cheque','tarjeta')
 	*/
-	_tipo_pago = config === undefined ? null : config.tipo_pago || null,
+	_tipo_pago = config === undefined ? '' : config.tipo_pago || '',
 
  /**
 	* fecha
@@ -12824,7 +12824,7 @@ var Ventas = function ( config )
 	* @access private
 	* @var timestamp
 	*/
-	_fecha = config === undefined ? null : config.fecha || null,
+	_fecha = config === undefined ? '' : config.fecha || '',
 
  /**
 	* subtotal
@@ -12833,7 +12833,7 @@ var Ventas = function ( config )
 	* @access private
 	* @var float
 	*/
-	_subtotal = config === undefined ? null : config.subtotal || null,
+	_subtotal = config === undefined ? '' : config.subtotal || '',
 
  /**
 	* iva
@@ -12842,7 +12842,7 @@ var Ventas = function ( config )
 	* @access private
 	* @var float
 	*/
-	_iva = config === undefined ? null : config.iva || null,
+	_iva = config === undefined ? '' : config.iva || '',
 
  /**
 	* descuento
@@ -12851,7 +12851,7 @@ var Ventas = function ( config )
 	* @access private
 	* @var float
 	*/
-	_descuento = config === undefined ? null : config.descuento || null,
+	_descuento = config === undefined ? '' : config.descuento || '',
 
  /**
 	* total
@@ -12860,7 +12860,7 @@ var Ventas = function ( config )
 	* @access private
 	* @var float
 	*/
-	_total = config === undefined ? null : config.total || null,
+	_total = config === undefined ? '' : config.total || '',
 
  /**
 	* id_sucursal
@@ -12869,7 +12869,7 @@ var Ventas = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_sucursal = config === undefined ? null : config.id_sucursal || null,
+	_id_sucursal = config === undefined ? '' : config.id_sucursal || '',
 
  /**
 	* id_usuario
@@ -12878,7 +12878,7 @@ var Ventas = function ( config )
 	* @access private
 	* @var int(11)
 	*/
-	_id_usuario = config === undefined ? null : config.id_usuario || null,
+	_id_usuario = config === undefined ? '' : config.id_usuario || '',
 
  /**
 	* pagado
@@ -12887,7 +12887,7 @@ var Ventas = function ( config )
 	* @access private
 	* @var float
 	*/
-	_pagado = config === undefined ? null : config.pagado || null,
+	_pagado = config === undefined ? '' : config.pagado || '',
 
  /**
 	* cancelada
@@ -12896,7 +12896,7 @@ var Ventas = function ( config )
 	* @access private
 	* @var tinyint(1)
 	*/
-	_cancelada = config === undefined ? null : config.cancelada || null,
+	_cancelada = config === undefined ? '' : config.cancelada || '',
 
  /**
 	* ip
@@ -12905,7 +12905,7 @@ var Ventas = function ( config )
 	* @access private
 	* @var varchar(16)
 	*/
-	_ip = config === undefined ? null : config.ip || null,
+	_ip = config === undefined ? '' : config.ip || '',
 
  /**
 	* liquidada
@@ -12914,7 +12914,7 @@ var Ventas = function ( config )
 	* @access private
 	* @var tinyint(1)
 	*/
-	_liquidada = config === undefined ? null : config.liquidada || null;
+	_liquidada = config === undefined ? '' : config.liquidada || '';
 
 	/**
 	  * getIdVenta
@@ -13344,11 +13344,11 @@ var Ventas = function ( config )
 		//console.log('estoy en save()');
 		Ventas._callback_stack.push( _original_callback  );
 		Ventas._callback_stack.push( function(res){ 
-						//console.log('estoy de regreso en save(',res,')');
+						console.log('estoy de regreso en save(',res,')');
 						if(res == null){
-							create(this);
+							create.call(this, this);
 						}else{
-							update(this);
+							update.call(res, res);
 						}
 	 			});
 		Ventas.getByPK(  this.getIdVenta() , { context : this } ) 
@@ -13499,7 +13499,7 @@ var Ventas = function ( config )
 	  **/
 	var create = function( ventas )
 	{
-		//console.log('estoy en create()');
+		console.log('estoy en create(this)');
 		$sql = "INSERT INTO ventas ( id_venta, id_venta_equipo, id_equipo, id_cliente, tipo_venta, tipo_pago, fecha, subtotal, iva, descuento, total, id_sucursal, id_usuario, pagado, cancelada, ip, liquidada ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			ventas.getIdVenta(), 
@@ -13532,7 +13532,7 @@ var Ventas = function ( config )
 	  *	
 	  * Este metodo es un metodo de ayuda para uso interno. Se ejecutara todas las manipulaciones
 	  * en la base de datos que estan dadas en el objeto pasado.No se haran consultas SELECT 
-	  * aqui, sin embargo. El valor de retorno indica cu‡ntas filas se vieron afectadas.
+	  * aqui, sin embargo. El valor de retorno indica cuÃ¡ntas filas se vieron afectadas.
 	  *	
 	  * @internal private information for advanced developers only
 	  * @return Filas afectadas o un string con la descripcion del error
@@ -13559,7 +13559,7 @@ var Ventas = function ( config )
 			$ventas.getIp(), 
 			$ventas.getLiquidada(), 
 			$ventas.getIdVenta(),  ] ;
-		//console.log('estoy en update()');
+		console.log('estoy en update()');
 		db.query($sql, $params, function(tx, results){ 
 				//console.log('ya termine el query de update():',tx,results);
 				Ventas._callback_stack.pop().call(null, $ventas);  

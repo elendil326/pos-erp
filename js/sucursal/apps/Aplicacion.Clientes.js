@@ -15,6 +15,7 @@ Aplicacion.Clientes = function (  ){
 
 
 Aplicacion.Clientes.prototype._init = function (){
+	
     if(DEBUG){
         console.log("ApplicacionClientes: construyendo");
     }
@@ -187,6 +188,7 @@ Aplicacion.Clientes.prototype.listaDeClientes = {
 
 
 
+var dan;
 
 /**
  * Leer la lista de clientes del servidor mediante AJAX
@@ -206,6 +208,7 @@ Aplicacion.Clientes.prototype.listaDeClientesLoad = function (){
         success: function(response, opts) {
             try{
                 clientes = Ext.util.JSON.decode( response.responseText );
+				raw_clientes = Ext.util.JSON.decode( response.responseText );
             }catch(e){
                 POS.error(e);
             }
@@ -215,9 +218,19 @@ Aplicacion.Clientes.prototype.listaDeClientesLoad = function (){
                 return this.listaDeClientesLoad();
             }
 			
+			console.log("Datos de cliente", raw_clientes);
+
+			for(asdf = 0; asdf < raw_clientes.datos.length ; asdf++){
+				console.log("guardando clietnes")
+				dan = new Cliente( raw_clientes.datos[asdf] );				
+				dan.save(function(r){console.log(r)});
+			}
+			
             this.listaDeClientes.lista = clientes.datos;
             this.listaDeClientes.lastUpdate = Math.round(new Date().getTime()/1000.0);
             this.listaDeClientes.hash = clientes.hash;
+
+
 			
             //agregarlo en el store
             this.listaDeClientesStore.loadData( clientes.datos );
