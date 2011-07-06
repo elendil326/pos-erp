@@ -531,7 +531,7 @@ if(POS.A.sendHeart){
 POS.error = function (ajaxResponse, catchedError)
 {
 	//enviar error al cliente local !
-	console.warn("Enviar error a cliente local", ajaxResponse, catchedError);
+	console.error("POS.ERROR() : ", ajaxResponse, catchedError);
 };
 
 //lee la informacion de la sucursal

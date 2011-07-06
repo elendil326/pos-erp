@@ -219,12 +219,12 @@ Aplicacion.Clientes.prototype.listaDeClientesLoad = function (){
             }
 			
 			//console.log("Datos de cliente", raw_clientes);
-
+			/*
 			for(asdf = 0; asdf < raw_clientes.datos.length ; asdf++){
 				//console.log("guardando clietnes")
 				dan = new Cliente( raw_clientes.datos[asdf] );				
 				dan.save(Ext.emptyFn);
-			}
+			}*/
 			
             this.listaDeClientes.lista = clientes.datos;
             this.listaDeClientes.lastUpdate = Math.round(new Date().getTime()/1000.0);
@@ -262,8 +262,23 @@ Aplicacion.Clientes.prototype.listaDeClientesStore = new Ext.data.Store({
     sorters: 'razon_social',
 
     getGroupString : function(record) {
-        //return record.get('nombre')[0].toUpperCase();
-        return record.get('razon_social')[0].toUpperCase();
+		if(
+			record.get('razon_social') === undefined
+			|| record.get('razon_social') === null
+		){
+			return "#";
+		}else{
+			
+			var fName = record.get('razon_social')[0];
+			
+			if(fName === undefined){
+				return "#";
+			}else{
+				return fName.toUpperCase();
+			}
+			
+
+		}
     }
 });
 

@@ -20,5 +20,26 @@ require_once("base/factura_venta.vo.base.php");
   */
 class FacturaVentaDAO extends FacturaVentaDAOBase
 {
+	public static function obtenerVentasFacturadasDeCliente($id_cliente){
+	                $sql = "SELECT * FROM 
+	                ventas as v,
+	                factura_venta as fv
+	                WHERE
+	                v.id_cliente = ?
+	                and v.id_venta = fv.id_venta ";
 
+	                $val = array($id_cliente);
+
+	                global $conn;
+
+
+	                $rs = $conn->Execute($sql, $val);
+
+	                $res = array();
+
+	                foreach ($rs as $foo) {
+	                        array_push( $res, $foo);
+	                }
+	                return $res;
+	        }
 }
