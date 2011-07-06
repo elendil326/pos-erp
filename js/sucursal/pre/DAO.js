@@ -336,13 +336,7 @@ var Database = function (){
 	        sqlWin,
 	        sqlFail
 	    	);
-	    tx.executeSql(
-			""
-			,
-	        [],
-	        sqlWin,
-	        sqlFail
-	    	);
+
 		}, txFail, txWin);
 
 		this.query = function( query, params, fn ){
@@ -672,6 +666,14 @@ var ActualizacionDePrecio = function ( config )
 		_fecha = fecha;
 	};
 
+	var _callback_stack = [];
+	this.pushCallback = function( fn, context ){
+	    _callback_stack.push({ f: fn, c: context });
+	}
+	this.callCallback = function(params){
+	    var t = _callback_stack.pop();
+	    t.f.call(t.c, params);
+	}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -685,21 +687,20 @@ var ActualizacionDePrecio = function ( config )
 	  * @param Function to callback
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	this.save = function( _original_callback )
+	this.save = function( callback )
 	{
-		//console.log('estoy en save()');
-		ActualizacionDePrecio._callback_stack.push( _original_callback  );
-		ActualizacionDePrecio._callback_stack.push( function(res){ 
-						console.log('estoy de regreso en save(',res,')');
-						if(res == null){
-							create.call(this, this);
-						}else{
-							update.call(res, res);
-						}
-	 			});
-		ActualizacionDePrecio.getByPK(  this.getIdActualizacion() , { context : this } ) 
+		if(DEBUG) console.log('estoy en save()');
+		this.pushCallback(callback, this);
+		var cb = function(res){
+                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(res == null){
+                    create.call(this,null);
+                }else{
+                    update.call(this,null);
+                }
+		};
+		ActualizacionDePrecio.getByPK(  this.getIdActualizacion() , { context : this, callback : cb } ) 
 	}; //save()
-
 
 	/**
 	  *	Buscar registros.
@@ -803,25 +804,26 @@ var ActualizacionDePrecio = function ( config )
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param ActualizacionDePrecio [$actualizacion_de_precio] El objeto de tipo ActualizacionDePrecio a crear.
 	  **/
-	var create = function( actualizacion_de_precio )
+	var create = function(  )
 	{
-		console.log('estoy en create(this)');
+		if(DEBUG)console.log('estoy en create(this)');
 		$sql = "INSERT INTO actualizacion_de_precio ( id_actualizacion, id_producto, id_usuario, precio_venta, precio_venta_procesado, precio_intersucursal, precio_intersucursal_procesado, precio_compra, fecha ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
-			actualizacion_de_precio.getIdActualizacion(), 
-			actualizacion_de_precio.getIdProducto(), 
-			actualizacion_de_precio.getIdUsuario(), 
-			actualizacion_de_precio.getPrecioVenta(), 
-			actualizacion_de_precio.getPrecioVentaProcesado(), 
-			actualizacion_de_precio.getPrecioIntersucursal(), 
-			actualizacion_de_precio.getPrecioIntersucursalProcesado(), 
-			actualizacion_de_precio.getPrecioCompra(), 
-			actualizacion_de_precio.getFecha(), 
+			this.getIdActualizacion(), 
+			this.getIdProducto(), 
+			this.getIdUsuario(), 
+			this.getPrecioVenta(), 
+			this.getPrecioVentaProcesado(), 
+			this.getPrecioIntersucursal(), 
+			this.getPrecioIntersucursalProcesado(), 
+			this.getPrecioCompra(), 
+			this.getFecha(), 
 		 ];
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de insert():',tx,results);
-				ActualizacionDePrecio._callback_stack.pop().call(null, actualizacion_de_precio);  
-			});
+                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                old_this.callCallback(old_this);
+		});
 		return; 
 	};
 
@@ -836,24 +838,25 @@ var ActualizacionDePrecio = function ( config )
 	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param ActualizacionDePrecio [$actualizacion_de_precio] El objeto de tipo ActualizacionDePrecio a actualizar.
 	  **/
-	var update = function( $actualizacion_de_precio )
+	var update = function(  )
 	{
+		if(DEBUG)console.log('estoy en update(',this,')');
 		$sql = "UPDATE actualizacion_de_precio SET  id_producto = ?, id_usuario = ?, precio_venta = ?, precio_venta_procesado = ?, precio_intersucursal = ?, precio_intersucursal_procesado = ?, precio_compra = ?, fecha = ? WHERE  id_actualizacion = ?;";
 		$params = [ 
-			$actualizacion_de_precio.getIdProducto(), 
-			$actualizacion_de_precio.getIdUsuario(), 
-			$actualizacion_de_precio.getPrecioVenta(), 
-			$actualizacion_de_precio.getPrecioVentaProcesado(), 
-			$actualizacion_de_precio.getPrecioIntersucursal(), 
-			$actualizacion_de_precio.getPrecioIntersucursalProcesado(), 
-			$actualizacion_de_precio.getPrecioCompra(), 
-			$actualizacion_de_precio.getFecha(), 
-			$actualizacion_de_precio.getIdActualizacion(),  ] ;
-		console.log('estoy en update()');
+			this.getIdProducto(), 
+			this.getIdUsuario(), 
+			this.getPrecioVenta(), 
+			this.getPrecioVentaProcesado(), 
+			this.getPrecioIntersucursal(), 
+			this.getPrecioIntersucursalProcesado(), 
+			this.getPrecioCompra(), 
+			this.getFecha(), 
+			this.getIdActualizacion(),  ] ;
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de update():',tx,results);
-				ActualizacionDePrecio._callback_stack.pop().call(null, $actualizacion_de_precio);  
-			});
+                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+			old_this.callCallback(old_this);  
+                });
 		return; 
 	}
 
@@ -1040,7 +1043,6 @@ var ActualizacionDePrecio = function ( config )
 
 
 }
-	ActualizacionDePrecio._callback_stack = [];
 	/**
 	  *	Obtener todas las filas.
 	  *	
@@ -1084,14 +1086,14 @@ var ActualizacionDePrecio = function ( config )
 	  **/
 	ActualizacionDePrecio.getByPK = function(  $id_actualizacion, config )
 	{
-		//console.log('estoy en getbypk()');
+		if(DEBUG) console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM actualizacion_de_precio WHERE (id_actualizacion = ? ) LIMIT 1;";
 		db.query($sql, [ $id_actualizacion] , function(tx,results){ 
-				//console.log('ya termine el query de getByPK():',tx,results);
-				if(results.rows.length == 0) fres = null;
-				else fres = new ActualizacionDePrecio(results.rows.item(0)); 
-				ActualizacionDePrecio._callback_stack.length == 0 ? config.callback.call(config.context || null, fres)    : ActualizacionDePrecio._callback_stack.pop().call(config.context || null, fres);  
-			});
+			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(results.rows.length == 0) fres = null;
+			else fres = new ActualizacionDePrecio(results.rows.item(0)); 
+			config.callback.call(config.context || null, fres);
+                });
 		return;
 	};
 
@@ -1374,6 +1376,14 @@ var Autorizacion = function ( config )
 		_tipo = tipo;
 	};
 
+	var _callback_stack = [];
+	this.pushCallback = function( fn, context ){
+	    _callback_stack.push({ f: fn, c: context });
+	}
+	this.callCallback = function(params){
+	    var t = _callback_stack.pop();
+	    t.f.call(t.c, params);
+	}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -1387,21 +1397,20 @@ var Autorizacion = function ( config )
 	  * @param Function to callback
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	this.save = function( _original_callback )
+	this.save = function( callback )
 	{
-		//console.log('estoy en save()');
-		Autorizacion._callback_stack.push( _original_callback  );
-		Autorizacion._callback_stack.push( function(res){ 
-						console.log('estoy de regreso en save(',res,')');
-						if(res == null){
-							create.call(this, this);
-						}else{
-							update.call(res, res);
-						}
-	 			});
-		Autorizacion.getByPK(  this.getIdAutorizacion() , { context : this } ) 
+		if(DEBUG) console.log('estoy en save()');
+		this.pushCallback(callback, this);
+		var cb = function(res){
+                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(res == null){
+                    create.call(this,null);
+                }else{
+                    update.call(this,null);
+                }
+		};
+		Autorizacion.getByPK(  this.getIdAutorizacion() , { context : this, callback : cb } ) 
 	}; //save()
-
 
 	/**
 	  *	Buscar registros.
@@ -1500,24 +1509,25 @@ var Autorizacion = function ( config )
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Autorizacion [$autorizacion] El objeto de tipo Autorizacion a crear.
 	  **/
-	var create = function( autorizacion )
+	var create = function(  )
 	{
-		console.log('estoy en create(this)');
+		if(DEBUG)console.log('estoy en create(this)');
 		$sql = "INSERT INTO autorizacion ( id_autorizacion, id_usuario, id_sucursal, fecha_peticion, fecha_respuesta, estado, parametros, tipo ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
-			autorizacion.getIdAutorizacion(), 
-			autorizacion.getIdUsuario(), 
-			autorizacion.getIdSucursal(), 
-			autorizacion.getFechaPeticion(), 
-			autorizacion.getFechaRespuesta(), 
-			autorizacion.getEstado(), 
-			autorizacion.getParametros(), 
-			autorizacion.getTipo(), 
+			this.getIdAutorizacion(), 
+			this.getIdUsuario(), 
+			this.getIdSucursal(), 
+			this.getFechaPeticion(), 
+			this.getFechaRespuesta(), 
+			this.getEstado(), 
+			this.getParametros(), 
+			this.getTipo(), 
 		 ];
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de insert():',tx,results);
-				Autorizacion._callback_stack.pop().call(null, autorizacion);  
-			});
+                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                old_this.callCallback(old_this);
+		});
 		return; 
 	};
 
@@ -1532,23 +1542,24 @@ var Autorizacion = function ( config )
 	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Autorizacion [$autorizacion] El objeto de tipo Autorizacion a actualizar.
 	  **/
-	var update = function( $autorizacion )
+	var update = function(  )
 	{
+		if(DEBUG)console.log('estoy en update(',this,')');
 		$sql = "UPDATE autorizacion SET  id_usuario = ?, id_sucursal = ?, fecha_peticion = ?, fecha_respuesta = ?, estado = ?, parametros = ?, tipo = ? WHERE  id_autorizacion = ?;";
 		$params = [ 
-			$autorizacion.getIdUsuario(), 
-			$autorizacion.getIdSucursal(), 
-			$autorizacion.getFechaPeticion(), 
-			$autorizacion.getFechaRespuesta(), 
-			$autorizacion.getEstado(), 
-			$autorizacion.getParametros(), 
-			$autorizacion.getTipo(), 
-			$autorizacion.getIdAutorizacion(),  ] ;
-		console.log('estoy en update()');
+			this.getIdUsuario(), 
+			this.getIdSucursal(), 
+			this.getFechaPeticion(), 
+			this.getFechaRespuesta(), 
+			this.getEstado(), 
+			this.getParametros(), 
+			this.getTipo(), 
+			this.getIdAutorizacion(),  ] ;
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de update():',tx,results);
-				Autorizacion._callback_stack.pop().call(null, $autorizacion);  
-			});
+                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+			old_this.callCallback(old_this);  
+                });
 		return; 
 	}
 
@@ -1723,7 +1734,6 @@ var Autorizacion = function ( config )
 
 
 }
-	Autorizacion._callback_stack = [];
 	/**
 	  *	Obtener todas las filas.
 	  *	
@@ -1767,14 +1777,14 @@ var Autorizacion = function ( config )
 	  **/
 	Autorizacion.getByPK = function(  $id_autorizacion, config )
 	{
-		//console.log('estoy en getbypk()');
+		if(DEBUG) console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM autorizacion WHERE (id_autorizacion = ? ) LIMIT 1;";
 		db.query($sql, [ $id_autorizacion] , function(tx,results){ 
-				//console.log('ya termine el query de getByPK():',tx,results);
-				if(results.rows.length == 0) fres = null;
-				else fres = new Autorizacion(results.rows.item(0)); 
-				Autorizacion._callback_stack.length == 0 ? config.callback.call(config.context || null, fres)    : Autorizacion._callback_stack.pop().call(config.context || null, fres);  
-			});
+			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(results.rows.length == 0) fres = null;
+			else fres = new Autorizacion(results.rows.item(0)); 
+			config.callback.call(config.context || null, fres);
+                });
 		return;
 	};
 
@@ -2585,6 +2595,14 @@ var Cliente = function ( config )
 		_grant_changes = grant_changes;
 	};
 
+	var _callback_stack = [];
+	this.pushCallback = function( fn, context ){
+	    _callback_stack.push({ f: fn, c: context });
+	}
+	this.callCallback = function(params){
+	    var t = _callback_stack.pop();
+	    t.f.call(t.c, params);
+	}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -2598,21 +2616,20 @@ var Cliente = function ( config )
 	  * @param Function to callback
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	this.save = function( _original_callback )
+	this.save = function( callback )
 	{
-		//console.log('estoy en save()');
-		Cliente._callback_stack.push( _original_callback  );
-		Cliente._callback_stack.push( function(res){ 
-						console.log('estoy de regreso en save(',res,')');
-						if(res == null){
-							create.call(this, this);
-						}else{
-							update.call(res, res);
-						}
-	 			});
-		Cliente.getByPK(  this.getIdCliente() , { context : this } ) 
+		if(DEBUG) console.log('estoy en save()');
+		this.pushCallback(callback, this);
+		var cb = function(res){
+                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(res == null){
+                    create.call(this,null);
+                }else{
+                    update.call(this,null);
+                }
+		};
+		Cliente.getByPK(  this.getIdCliente() , { context : this, callback : cb } ) 
 	}; //save()
-
 
 	/**
 	  *	Buscar registros.
@@ -2791,40 +2808,41 @@ var Cliente = function ( config )
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Cliente [$cliente] El objeto de tipo Cliente a crear.
 	  **/
-	var create = function( cliente )
+	var create = function(  )
 	{
-		console.log('estoy en create(this)');
+		if(DEBUG)console.log('estoy en create(this)');
 		$sql = "INSERT INTO cliente ( id_cliente, rfc, razon_social, calle, numero_exterior, numero_interior, colonia, referencia, localidad, municipio, estado, pais, codigo_postal, telefono, e_mail, limite_credito, descuento, activo, id_usuario, id_sucursal, fecha_ingreso, password, last_login, grant_changes ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
-			cliente.getIdCliente(), 
-			cliente.getRfc(), 
-			cliente.getRazonSocial(), 
-			cliente.getCalle(), 
-			cliente.getNumeroExterior(), 
-			cliente.getNumeroInterior(), 
-			cliente.getColonia(), 
-			cliente.getReferencia(), 
-			cliente.getLocalidad(), 
-			cliente.getMunicipio(), 
-			cliente.getEstado(), 
-			cliente.getPais(), 
-			cliente.getCodigoPostal(), 
-			cliente.getTelefono(), 
-			cliente.getEMail(), 
-			cliente.getLimiteCredito(), 
-			cliente.getDescuento(), 
-			cliente.getActivo(), 
-			cliente.getIdUsuario(), 
-			cliente.getIdSucursal(), 
-			cliente.getFechaIngreso(), 
-			cliente.getPassword(), 
-			cliente.getLastLogin(), 
-			cliente.getGrantChanges(), 
+			this.getIdCliente(), 
+			this.getRfc(), 
+			this.getRazonSocial(), 
+			this.getCalle(), 
+			this.getNumeroExterior(), 
+			this.getNumeroInterior(), 
+			this.getColonia(), 
+			this.getReferencia(), 
+			this.getLocalidad(), 
+			this.getMunicipio(), 
+			this.getEstado(), 
+			this.getPais(), 
+			this.getCodigoPostal(), 
+			this.getTelefono(), 
+			this.getEMail(), 
+			this.getLimiteCredito(), 
+			this.getDescuento(), 
+			this.getActivo(), 
+			this.getIdUsuario(), 
+			this.getIdSucursal(), 
+			this.getFechaIngreso(), 
+			this.getPassword(), 
+			this.getLastLogin(), 
+			this.getGrantChanges(), 
 		 ];
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de insert():',tx,results);
-				Cliente._callback_stack.pop().call(null, cliente);  
-			});
+                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                old_this.callCallback(old_this);
+		});
 		return; 
 	};
 
@@ -2839,39 +2857,40 @@ var Cliente = function ( config )
 	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Cliente [$cliente] El objeto de tipo Cliente a actualizar.
 	  **/
-	var update = function( $cliente )
+	var update = function(  )
 	{
+		if(DEBUG)console.log('estoy en update(',this,')');
 		$sql = "UPDATE cliente SET  rfc = ?, razon_social = ?, calle = ?, numero_exterior = ?, numero_interior = ?, colonia = ?, referencia = ?, localidad = ?, municipio = ?, estado = ?, pais = ?, codigo_postal = ?, telefono = ?, e_mail = ?, limite_credito = ?, descuento = ?, activo = ?, id_usuario = ?, id_sucursal = ?, fecha_ingreso = ?, password = ?, last_login = ?, grant_changes = ? WHERE  id_cliente = ?;";
 		$params = [ 
-			$cliente.getRfc(), 
-			$cliente.getRazonSocial(), 
-			$cliente.getCalle(), 
-			$cliente.getNumeroExterior(), 
-			$cliente.getNumeroInterior(), 
-			$cliente.getColonia(), 
-			$cliente.getReferencia(), 
-			$cliente.getLocalidad(), 
-			$cliente.getMunicipio(), 
-			$cliente.getEstado(), 
-			$cliente.getPais(), 
-			$cliente.getCodigoPostal(), 
-			$cliente.getTelefono(), 
-			$cliente.getEMail(), 
-			$cliente.getLimiteCredito(), 
-			$cliente.getDescuento(), 
-			$cliente.getActivo(), 
-			$cliente.getIdUsuario(), 
-			$cliente.getIdSucursal(), 
-			$cliente.getFechaIngreso(), 
-			$cliente.getPassword(), 
-			$cliente.getLastLogin(), 
-			$cliente.getGrantChanges(), 
-			$cliente.getIdCliente(),  ] ;
-		console.log('estoy en update()');
+			this.getRfc(), 
+			this.getRazonSocial(), 
+			this.getCalle(), 
+			this.getNumeroExterior(), 
+			this.getNumeroInterior(), 
+			this.getColonia(), 
+			this.getReferencia(), 
+			this.getLocalidad(), 
+			this.getMunicipio(), 
+			this.getEstado(), 
+			this.getPais(), 
+			this.getCodigoPostal(), 
+			this.getTelefono(), 
+			this.getEMail(), 
+			this.getLimiteCredito(), 
+			this.getDescuento(), 
+			this.getActivo(), 
+			this.getIdUsuario(), 
+			this.getIdSucursal(), 
+			this.getFechaIngreso(), 
+			this.getPassword(), 
+			this.getLastLogin(), 
+			this.getGrantChanges(), 
+			this.getIdCliente(),  ] ;
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de update():',tx,results);
-				Cliente._callback_stack.pop().call(null, $cliente);  
-			});
+                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+			old_this.callCallback(old_this);  
+                });
 		return; 
 	}
 
@@ -3238,7 +3257,6 @@ var Cliente = function ( config )
 
 
 }
-	Cliente._callback_stack = [];
 	/**
 	  *	Obtener todas las filas.
 	  *	
@@ -3282,14 +3300,14 @@ var Cliente = function ( config )
 	  **/
 	Cliente.getByPK = function(  $id_cliente, config )
 	{
-		//console.log('estoy en getbypk()');
+		if(DEBUG) console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM cliente WHERE (id_cliente = ? ) LIMIT 1;";
 		db.query($sql, [ $id_cliente] , function(tx,results){ 
-				//console.log('ya termine el query de getByPK():',tx,results);
-				if(results.rows.length == 0) fres = null;
-				else fres = new Cliente(results.rows.item(0)); 
-				Cliente._callback_stack.length == 0 ? config.callback.call(config.context || null, fres)    : Cliente._callback_stack.pop().call(config.context || null, fres);  
-			});
+			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(results.rows.length == 0) fres = null;
+			else fres = new Cliente(results.rows.item(0)); 
+			config.callback.call(config.context || null, fres);
+                });
 		return;
 	};
 
@@ -3803,6 +3821,14 @@ var CompraCliente = function ( config )
 		_liquidada = liquidada;
 	};
 
+	var _callback_stack = [];
+	this.pushCallback = function( fn, context ){
+	    _callback_stack.push({ f: fn, c: context });
+	}
+	this.callCallback = function(params){
+	    var t = _callback_stack.pop();
+	    t.f.call(t.c, params);
+	}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -3816,21 +3842,20 @@ var CompraCliente = function ( config )
 	  * @param Function to callback
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	this.save = function( _original_callback )
+	this.save = function( callback )
 	{
-		//console.log('estoy en save()');
-		CompraCliente._callback_stack.push( _original_callback  );
-		CompraCliente._callback_stack.push( function(res){ 
-						console.log('estoy de regreso en save(',res,')');
-						if(res == null){
-							create.call(this, this);
-						}else{
-							update.call(res, res);
-						}
-	 			});
-		CompraCliente.getByPK(  this.getIdCompra() , { context : this } ) 
+		if(DEBUG) console.log('estoy en save()');
+		this.pushCallback(callback, this);
+		var cb = function(res){
+                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(res == null){
+                    create.call(this,null);
+                }else{
+                    update.call(this,null);
+                }
+		};
+		CompraCliente.getByPK(  this.getIdCompra() , { context : this, callback : cb } ) 
 	}; //save()
-
 
 	/**
 	  *	Buscar registros.
@@ -3964,31 +3989,32 @@ var CompraCliente = function ( config )
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param CompraCliente [$compra_cliente] El objeto de tipo CompraCliente a crear.
 	  **/
-	var create = function( compra_cliente )
+	var create = function(  )
 	{
-		console.log('estoy en create(this)');
+		if(DEBUG)console.log('estoy en create(this)');
 		$sql = "INSERT INTO compra_cliente ( id_compra, id_cliente, tipo_compra, tipo_pago, fecha, subtotal, impuesto, descuento, total, id_sucursal, id_usuario, pagado, cancelada, ip, liquidada ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
-			compra_cliente.getIdCompra(), 
-			compra_cliente.getIdCliente(), 
-			compra_cliente.getTipoCompra(), 
-			compra_cliente.getTipoPago(), 
-			compra_cliente.getFecha(), 
-			compra_cliente.getSubtotal(), 
-			compra_cliente.getImpuesto(), 
-			compra_cliente.getDescuento(), 
-			compra_cliente.getTotal(), 
-			compra_cliente.getIdSucursal(), 
-			compra_cliente.getIdUsuario(), 
-			compra_cliente.getPagado(), 
-			compra_cliente.getCancelada(), 
-			compra_cliente.getIp(), 
-			compra_cliente.getLiquidada(), 
+			this.getIdCompra(), 
+			this.getIdCliente(), 
+			this.getTipoCompra(), 
+			this.getTipoPago(), 
+			this.getFecha(), 
+			this.getSubtotal(), 
+			this.getImpuesto(), 
+			this.getDescuento(), 
+			this.getTotal(), 
+			this.getIdSucursal(), 
+			this.getIdUsuario(), 
+			this.getPagado(), 
+			this.getCancelada(), 
+			this.getIp(), 
+			this.getLiquidada(), 
 		 ];
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de insert():',tx,results);
-				CompraCliente._callback_stack.pop().call(null, compra_cliente);  
-			});
+                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                old_this.callCallback(old_this);
+		});
 		return; 
 	};
 
@@ -4003,30 +4029,31 @@ var CompraCliente = function ( config )
 	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param CompraCliente [$compra_cliente] El objeto de tipo CompraCliente a actualizar.
 	  **/
-	var update = function( $compra_cliente )
+	var update = function(  )
 	{
+		if(DEBUG)console.log('estoy en update(',this,')');
 		$sql = "UPDATE compra_cliente SET  id_cliente = ?, tipo_compra = ?, tipo_pago = ?, fecha = ?, subtotal = ?, impuesto = ?, descuento = ?, total = ?, id_sucursal = ?, id_usuario = ?, pagado = ?, cancelada = ?, ip = ?, liquidada = ? WHERE  id_compra = ?;";
 		$params = [ 
-			$compra_cliente.getIdCliente(), 
-			$compra_cliente.getTipoCompra(), 
-			$compra_cliente.getTipoPago(), 
-			$compra_cliente.getFecha(), 
-			$compra_cliente.getSubtotal(), 
-			$compra_cliente.getImpuesto(), 
-			$compra_cliente.getDescuento(), 
-			$compra_cliente.getTotal(), 
-			$compra_cliente.getIdSucursal(), 
-			$compra_cliente.getIdUsuario(), 
-			$compra_cliente.getPagado(), 
-			$compra_cliente.getCancelada(), 
-			$compra_cliente.getIp(), 
-			$compra_cliente.getLiquidada(), 
-			$compra_cliente.getIdCompra(),  ] ;
-		console.log('estoy en update()');
+			this.getIdCliente(), 
+			this.getTipoCompra(), 
+			this.getTipoPago(), 
+			this.getFecha(), 
+			this.getSubtotal(), 
+			this.getImpuesto(), 
+			this.getDescuento(), 
+			this.getTotal(), 
+			this.getIdSucursal(), 
+			this.getIdUsuario(), 
+			this.getPagado(), 
+			this.getCancelada(), 
+			this.getIp(), 
+			this.getLiquidada(), 
+			this.getIdCompra(),  ] ;
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de update():',tx,results);
-				CompraCliente._callback_stack.pop().call(null, $compra_cliente);  
-			});
+                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+			old_this.callCallback(old_this);  
+                });
 		return; 
 	}
 
@@ -4285,7 +4312,6 @@ var CompraCliente = function ( config )
 
 
 }
-	CompraCliente._callback_stack = [];
 	/**
 	  *	Obtener todas las filas.
 	  *	
@@ -4329,14 +4355,14 @@ var CompraCliente = function ( config )
 	  **/
 	CompraCliente.getByPK = function(  $id_compra, config )
 	{
-		//console.log('estoy en getbypk()');
+		if(DEBUG) console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM compra_cliente WHERE (id_compra = ? ) LIMIT 1;";
 		db.query($sql, [ $id_compra] , function(tx,results){ 
-				//console.log('ya termine el query de getByPK():',tx,results);
-				if(results.rows.length == 0) fres = null;
-				else fres = new CompraCliente(results.rows.item(0)); 
-				CompraCliente._callback_stack.length == 0 ? config.callback.call(config.context || null, fres)    : CompraCliente._callback_stack.pop().call(config.context || null, fres);  
-			});
+			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(results.rows.length == 0) fres = null;
+			else fres = new CompraCliente(results.rows.item(0)); 
+			config.callback.call(config.context || null, fres);
+                });
 		return;
 	};
 
@@ -4523,6 +4549,14 @@ var DetalleCompraCliente = function ( config )
 		_descuento = descuento;
 	};
 
+	var _callback_stack = [];
+	this.pushCallback = function( fn, context ){
+	    _callback_stack.push({ f: fn, c: context });
+	}
+	this.callCallback = function(params){
+	    var t = _callback_stack.pop();
+	    t.f.call(t.c, params);
+	}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -4536,21 +4570,20 @@ var DetalleCompraCliente = function ( config )
 	  * @param Function to callback
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	this.save = function( _original_callback )
+	this.save = function( callback )
 	{
-		//console.log('estoy en save()');
-		DetalleCompraCliente._callback_stack.push( _original_callback  );
-		DetalleCompraCliente._callback_stack.push( function(res){ 
-						console.log('estoy de regreso en save(',res,')');
-						if(res == null){
-							create.call(this, this);
-						}else{
-							update.call(res, res);
-						}
-	 			});
-		DetalleCompraCliente.getByPK(  this.getIdCompra() , this.getIdProducto() , { context : this } ) 
+		if(DEBUG) console.log('estoy en save()');
+		this.pushCallback(callback, this);
+		var cb = function(res){
+                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(res == null){
+                    create.call(this,null);
+                }else{
+                    update.call(this,null);
+                }
+		};
+		DetalleCompraCliente.getByPK(  this.getIdCompra() , this.getIdProducto() , { context : this, callback : cb } ) 
 	}; //save()
-
 
 	/**
 	  *	Buscar registros.
@@ -4634,21 +4667,22 @@ var DetalleCompraCliente = function ( config )
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param DetalleCompraCliente [$detalle_compra_cliente] El objeto de tipo DetalleCompraCliente a crear.
 	  **/
-	var create = function( detalle_compra_cliente )
+	var create = function(  )
 	{
-		console.log('estoy en create(this)');
+		if(DEBUG)console.log('estoy en create(this)');
 		$sql = "INSERT INTO detalle_compra_cliente ( id_compra, id_producto, cantidad, precio, descuento ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = [
-			detalle_compra_cliente.getIdCompra(), 
-			detalle_compra_cliente.getIdProducto(), 
-			detalle_compra_cliente.getCantidad(), 
-			detalle_compra_cliente.getPrecio(), 
-			detalle_compra_cliente.getDescuento(), 
+			this.getIdCompra(), 
+			this.getIdProducto(), 
+			this.getCantidad(), 
+			this.getPrecio(), 
+			this.getDescuento(), 
 		 ];
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de insert():',tx,results);
-				DetalleCompraCliente._callback_stack.pop().call(null, detalle_compra_cliente);  
-			});
+                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                old_this.callCallback(old_this);
+		});
 		return; 
 	};
 
@@ -4663,19 +4697,20 @@ var DetalleCompraCliente = function ( config )
 	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param DetalleCompraCliente [$detalle_compra_cliente] El objeto de tipo DetalleCompraCliente a actualizar.
 	  **/
-	var update = function( $detalle_compra_cliente )
+	var update = function(  )
 	{
+		if(DEBUG)console.log('estoy en update(',this,')');
 		$sql = "UPDATE detalle_compra_cliente SET  cantidad = ?, precio = ?, descuento = ? WHERE  id_compra = ? AND id_producto = ?;";
 		$params = [ 
-			$detalle_compra_cliente.getCantidad(), 
-			$detalle_compra_cliente.getPrecio(), 
-			$detalle_compra_cliente.getDescuento(), 
-			$detalle_compra_cliente.getIdCompra(),$detalle_compra_cliente.getIdProducto(),  ] ;
-		console.log('estoy en update()');
+			this.getCantidad(), 
+			this.getPrecio(), 
+			this.getDescuento(), 
+			this.getIdCompra(),this.getIdProducto(),  ] ;
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de update():',tx,results);
-				DetalleCompraCliente._callback_stack.pop().call(null, $detalle_compra_cliente);  
-			});
+                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+			old_this.callCallback(old_this);  
+                });
 		return; 
 	}
 
@@ -4814,7 +4849,6 @@ var DetalleCompraCliente = function ( config )
 
 
 }
-	DetalleCompraCliente._callback_stack = [];
 	/**
 	  *	Obtener todas las filas.
 	  *	
@@ -4858,14 +4892,14 @@ var DetalleCompraCliente = function ( config )
 	  **/
 	DetalleCompraCliente.getByPK = function(  $id_compra, $id_producto, config )
 	{
-		//console.log('estoy en getbypk()');
+		if(DEBUG) console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM detalle_compra_cliente WHERE (id_compra = ? AND id_producto = ? ) LIMIT 1;";
 		db.query($sql, [ $id_compra, $id_producto] , function(tx,results){ 
-				//console.log('ya termine el query de getByPK():',tx,results);
-				if(results.rows.length == 0) fres = null;
-				else fres = new DetalleCompraCliente(results.rows.item(0)); 
-				DetalleCompraCliente._callback_stack.length == 0 ? config.callback.call(config.context || null, fres)    : DetalleCompraCliente._callback_stack.pop().call(config.context || null, fres);  
-			});
+			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(results.rows.length == 0) fres = null;
+			else fres = new DetalleCompraCliente(results.rows.item(0)); 
+			config.callback.call(config.context || null, fres);
+                });
 		return;
 	};
 
@@ -5118,6 +5152,14 @@ var DetalleInventario = function ( config )
 		_precio_compra = precio_compra;
 	};
 
+	var _callback_stack = [];
+	this.pushCallback = function( fn, context ){
+	    _callback_stack.push({ f: fn, c: context });
+	}
+	this.callCallback = function(params){
+	    var t = _callback_stack.pop();
+	    t.f.call(t.c, params);
+	}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -5131,21 +5173,20 @@ var DetalleInventario = function ( config )
 	  * @param Function to callback
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	this.save = function( _original_callback )
+	this.save = function( callback )
 	{
-		//console.log('estoy en save()');
-		DetalleInventario._callback_stack.push( _original_callback  );
-		DetalleInventario._callback_stack.push( function(res){ 
-						console.log('estoy de regreso en save(',res,')');
-						if(res == null){
-							create.call(this, this);
-						}else{
-							update.call(res, res);
-						}
-	 			});
-		DetalleInventario.getByPK(  this.getIdProducto() , this.getIdSucursal() , { context : this } ) 
+		if(DEBUG) console.log('estoy en save()');
+		this.pushCallback(callback, this);
+		var cb = function(res){
+                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(res == null){
+                    create.call(this,null);
+                }else{
+                    update.call(this,null);
+                }
+		};
+		DetalleInventario.getByPK(  this.getIdProducto() , this.getIdSucursal() , { context : this, callback : cb } ) 
 	}; //save()
-
 
 	/**
 	  *	Buscar registros.
@@ -5239,23 +5280,24 @@ var DetalleInventario = function ( config )
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param DetalleInventario [$detalle_inventario] El objeto de tipo DetalleInventario a crear.
 	  **/
-	var create = function( detalle_inventario )
+	var create = function(  )
 	{
-		console.log('estoy en create(this)');
+		if(DEBUG)console.log('estoy en create(this)');
 		$sql = "INSERT INTO detalle_inventario ( id_producto, id_sucursal, precio_venta, precio_venta_procesado, existencias, existencias_procesadas, precio_compra ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
-			detalle_inventario.getIdProducto(), 
-			detalle_inventario.getIdSucursal(), 
-			detalle_inventario.getPrecioVenta(), 
-			detalle_inventario.getPrecioVentaProcesado(), 
-			detalle_inventario.getExistencias(), 
-			detalle_inventario.getExistenciasProcesadas(), 
-			detalle_inventario.getPrecioCompra(), 
+			this.getIdProducto(), 
+			this.getIdSucursal(), 
+			this.getPrecioVenta(), 
+			this.getPrecioVentaProcesado(), 
+			this.getExistencias(), 
+			this.getExistenciasProcesadas(), 
+			this.getPrecioCompra(), 
 		 ];
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de insert():',tx,results);
-				DetalleInventario._callback_stack.pop().call(null, detalle_inventario);  
-			});
+                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                old_this.callCallback(old_this);
+		});
 		return; 
 	};
 
@@ -5270,21 +5312,22 @@ var DetalleInventario = function ( config )
 	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param DetalleInventario [$detalle_inventario] El objeto de tipo DetalleInventario a actualizar.
 	  **/
-	var update = function( $detalle_inventario )
+	var update = function(  )
 	{
+		if(DEBUG)console.log('estoy en update(',this,')');
 		$sql = "UPDATE detalle_inventario SET  precio_venta = ?, precio_venta_procesado = ?, existencias = ?, existencias_procesadas = ?, precio_compra = ? WHERE  id_producto = ? AND id_sucursal = ?;";
 		$params = [ 
-			$detalle_inventario.getPrecioVenta(), 
-			$detalle_inventario.getPrecioVentaProcesado(), 
-			$detalle_inventario.getExistencias(), 
-			$detalle_inventario.getExistenciasProcesadas(), 
-			$detalle_inventario.getPrecioCompra(), 
-			$detalle_inventario.getIdProducto(),$detalle_inventario.getIdSucursal(),  ] ;
-		console.log('estoy en update()');
+			this.getPrecioVenta(), 
+			this.getPrecioVentaProcesado(), 
+			this.getExistencias(), 
+			this.getExistenciasProcesadas(), 
+			this.getPrecioCompra(), 
+			this.getIdProducto(),this.getIdSucursal(),  ] ;
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de update():',tx,results);
-				DetalleInventario._callback_stack.pop().call(null, $detalle_inventario);  
-			});
+                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+			old_this.callCallback(old_this);  
+                });
 		return; 
 	}
 
@@ -5447,7 +5490,6 @@ var DetalleInventario = function ( config )
 
 
 }
-	DetalleInventario._callback_stack = [];
 	/**
 	  *	Obtener todas las filas.
 	  *	
@@ -5491,14 +5533,14 @@ var DetalleInventario = function ( config )
 	  **/
 	DetalleInventario.getByPK = function(  $id_producto, $id_sucursal, config )
 	{
-		//console.log('estoy en getbypk()');
+		if(DEBUG) console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM detalle_inventario WHERE (id_producto = ? AND id_sucursal = ? ) LIMIT 1;";
 		db.query($sql, [ $id_producto, $id_sucursal] , function(tx,results){ 
-				//console.log('ya termine el query de getByPK():',tx,results);
-				if(results.rows.length == 0) fres = null;
-				else fres = new DetalleInventario(results.rows.item(0)); 
-				DetalleInventario._callback_stack.length == 0 ? config.callback.call(config.context || null, fres)    : DetalleInventario._callback_stack.pop().call(config.context || null, fres);  
-			});
+			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(results.rows.length == 0) fres = null;
+			else fres = new DetalleInventario(results.rows.item(0)); 
+			config.callback.call(config.context || null, fres);
+                });
 		return;
 	};
 
@@ -5751,6 +5793,14 @@ var DetalleVenta = function ( config )
 		_descuento = descuento;
 	};
 
+	var _callback_stack = [];
+	this.pushCallback = function( fn, context ){
+	    _callback_stack.push({ f: fn, c: context });
+	}
+	this.callCallback = function(params){
+	    var t = _callback_stack.pop();
+	    t.f.call(t.c, params);
+	}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -5764,21 +5814,20 @@ var DetalleVenta = function ( config )
 	  * @param Function to callback
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	this.save = function( _original_callback )
+	this.save = function( callback )
 	{
-		//console.log('estoy en save()');
-		DetalleVenta._callback_stack.push( _original_callback  );
-		DetalleVenta._callback_stack.push( function(res){ 
-						console.log('estoy de regreso en save(',res,')');
-						if(res == null){
-							create.call(this, this);
-						}else{
-							update.call(res, res);
-						}
-	 			});
-		DetalleVenta.getByPK(  this.getIdVenta() , this.getIdProducto() , { context : this } ) 
+		if(DEBUG) console.log('estoy en save()');
+		this.pushCallback(callback, this);
+		var cb = function(res){
+                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(res == null){
+                    create.call(this,null);
+                }else{
+                    update.call(this,null);
+                }
+		};
+		DetalleVenta.getByPK(  this.getIdVenta() , this.getIdProducto() , { context : this, callback : cb } ) 
 	}; //save()
-
 
 	/**
 	  *	Buscar registros.
@@ -5872,23 +5921,24 @@ var DetalleVenta = function ( config )
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param DetalleVenta [$detalle_venta] El objeto de tipo DetalleVenta a crear.
 	  **/
-	var create = function( detalle_venta )
+	var create = function(  )
 	{
-		console.log('estoy en create(this)');
+		if(DEBUG)console.log('estoy en create(this)');
 		$sql = "INSERT INTO detalle_venta ( id_venta, id_producto, cantidad, cantidad_procesada, precio, precio_procesada, descuento ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
-			detalle_venta.getIdVenta(), 
-			detalle_venta.getIdProducto(), 
-			detalle_venta.getCantidad(), 
-			detalle_venta.getCantidadProcesada(), 
-			detalle_venta.getPrecio(), 
-			detalle_venta.getPrecioProcesada(), 
-			detalle_venta.getDescuento(), 
+			this.getIdVenta(), 
+			this.getIdProducto(), 
+			this.getCantidad(), 
+			this.getCantidadProcesada(), 
+			this.getPrecio(), 
+			this.getPrecioProcesada(), 
+			this.getDescuento(), 
 		 ];
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de insert():',tx,results);
-				DetalleVenta._callback_stack.pop().call(null, detalle_venta);  
-			});
+                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                old_this.callCallback(old_this);
+		});
 		return; 
 	};
 
@@ -5903,21 +5953,22 @@ var DetalleVenta = function ( config )
 	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param DetalleVenta [$detalle_venta] El objeto de tipo DetalleVenta a actualizar.
 	  **/
-	var update = function( $detalle_venta )
+	var update = function(  )
 	{
+		if(DEBUG)console.log('estoy en update(',this,')');
 		$sql = "UPDATE detalle_venta SET  cantidad = ?, cantidad_procesada = ?, precio = ?, precio_procesada = ?, descuento = ? WHERE  id_venta = ? AND id_producto = ?;";
 		$params = [ 
-			$detalle_venta.getCantidad(), 
-			$detalle_venta.getCantidadProcesada(), 
-			$detalle_venta.getPrecio(), 
-			$detalle_venta.getPrecioProcesada(), 
-			$detalle_venta.getDescuento(), 
-			$detalle_venta.getIdVenta(),$detalle_venta.getIdProducto(),  ] ;
-		console.log('estoy en update()');
+			this.getCantidad(), 
+			this.getCantidadProcesada(), 
+			this.getPrecio(), 
+			this.getPrecioProcesada(), 
+			this.getDescuento(), 
+			this.getIdVenta(),this.getIdProducto(),  ] ;
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de update():',tx,results);
-				DetalleVenta._callback_stack.pop().call(null, $detalle_venta);  
-			});
+                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+			old_this.callCallback(old_this);  
+                });
 		return; 
 	}
 
@@ -6080,7 +6131,6 @@ var DetalleVenta = function ( config )
 
 
 }
-	DetalleVenta._callback_stack = [];
 	/**
 	  *	Obtener todas las filas.
 	  *	
@@ -6124,14 +6174,14 @@ var DetalleVenta = function ( config )
 	  **/
 	DetalleVenta.getByPK = function(  $id_venta, $id_producto, config )
 	{
-		//console.log('estoy en getbypk()');
+		if(DEBUG) console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM detalle_venta WHERE (id_venta = ? AND id_producto = ? ) LIMIT 1;";
 		db.query($sql, [ $id_venta, $id_producto] , function(tx,results){ 
-				//console.log('ya termine el query de getByPK():',tx,results);
-				if(results.rows.length == 0) fres = null;
-				else fres = new DetalleVenta(results.rows.item(0)); 
-				DetalleVenta._callback_stack.length == 0 ? config.callback.call(config.context || null, fres)    : DetalleVenta._callback_stack.pop().call(config.context || null, fres);  
-			});
+			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(results.rows.length == 0) fres = null;
+			else fres = new DetalleVenta(results.rows.item(0)); 
+			config.callback.call(config.context || null, fres);
+                });
 		return;
 	};
 
@@ -6315,6 +6365,14 @@ var Equipo = function ( config )
 		_locked = locked;
 	};
 
+	var _callback_stack = [];
+	this.pushCallback = function( fn, context ){
+	    _callback_stack.push({ f: fn, c: context });
+	}
+	this.callCallback = function(params){
+	    var t = _callback_stack.pop();
+	    t.f.call(t.c, params);
+	}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -6328,21 +6386,20 @@ var Equipo = function ( config )
 	  * @param Function to callback
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	this.save = function( _original_callback )
+	this.save = function( callback )
 	{
-		//console.log('estoy en save()');
-		Equipo._callback_stack.push( _original_callback  );
-		Equipo._callback_stack.push( function(res){ 
-						console.log('estoy de regreso en save(',res,')');
-						if(res == null){
-							create.call(this, this);
-						}else{
-							update.call(res, res);
-						}
-	 			});
-		Equipo.getByPK(  this.getIdEquipo() , { context : this } ) 
+		if(DEBUG) console.log('estoy en save()');
+		this.pushCallback(callback, this);
+		var cb = function(res){
+                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(res == null){
+                    create.call(this,null);
+                }else{
+                    update.call(this,null);
+                }
+		};
+		Equipo.getByPK(  this.getIdEquipo() , { context : this, callback : cb } ) 
 	}; //save()
-
 
 	/**
 	  *	Buscar registros.
@@ -6426,21 +6483,22 @@ var Equipo = function ( config )
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Equipo [$equipo] El objeto de tipo Equipo a crear.
 	  **/
-	var create = function( equipo )
+	var create = function(  )
 	{
-		console.log('estoy en create(this)');
+		if(DEBUG)console.log('estoy en create(this)');
 		$sql = "INSERT INTO equipo ( id_equipo, token, full_ua, descripcion, locked ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = [
-			equipo.getIdEquipo(), 
-			equipo.getToken(), 
-			equipo.getFullUa(), 
-			equipo.getDescripcion(), 
-			equipo.getLocked(), 
+			this.getIdEquipo(), 
+			this.getToken(), 
+			this.getFullUa(), 
+			this.getDescripcion(), 
+			this.getLocked(), 
 		 ];
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de insert():',tx,results);
-				Equipo._callback_stack.pop().call(null, equipo);  
-			});
+                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                old_this.callCallback(old_this);
+		});
 		return; 
 	};
 
@@ -6455,20 +6513,21 @@ var Equipo = function ( config )
 	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Equipo [$equipo] El objeto de tipo Equipo a actualizar.
 	  **/
-	var update = function( $equipo )
+	var update = function(  )
 	{
+		if(DEBUG)console.log('estoy en update(',this,')');
 		$sql = "UPDATE equipo SET  token = ?, full_ua = ?, descripcion = ?, locked = ? WHERE  id_equipo = ?;";
 		$params = [ 
-			$equipo.getToken(), 
-			$equipo.getFullUa(), 
-			$equipo.getDescripcion(), 
-			$equipo.getLocked(), 
-			$equipo.getIdEquipo(),  ] ;
-		console.log('estoy en update()');
+			this.getToken(), 
+			this.getFullUa(), 
+			this.getDescripcion(), 
+			this.getLocked(), 
+			this.getIdEquipo(),  ] ;
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de update():',tx,results);
-				Equipo._callback_stack.pop().call(null, $equipo);  
-			});
+                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+			old_this.callCallback(old_this);  
+                });
 		return; 
 	}
 
@@ -6607,7 +6666,6 @@ var Equipo = function ( config )
 
 
 }
-	Equipo._callback_stack = [];
 	/**
 	  *	Obtener todas las filas.
 	  *	
@@ -6651,14 +6709,14 @@ var Equipo = function ( config )
 	  **/
 	Equipo.getByPK = function(  $id_equipo, config )
 	{
-		//console.log('estoy en getbypk()');
+		if(DEBUG) console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM equipo WHERE (id_equipo = ? ) LIMIT 1;";
 		db.query($sql, [ $id_equipo] , function(tx,results){ 
-				//console.log('ya termine el query de getByPK():',tx,results);
-				if(results.rows.length == 0) fres = null;
-				else fres = new Equipo(results.rows.item(0)); 
-				Equipo._callback_stack.length == 0 ? config.callback.call(config.context || null, fres)    : Equipo._callback_stack.pop().call(config.context || null, fres);  
-			});
+			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(results.rows.length == 0) fres = null;
+			else fres = new Equipo(results.rows.item(0)); 
+			config.callback.call(config.context || null, fres);
+                });
 		return;
 	};
 
@@ -6743,6 +6801,14 @@ var FacturaCompra = function ( config )
 		_id_compra = id_compra;
 	};
 
+	var _callback_stack = [];
+	this.pushCallback = function( fn, context ){
+	    _callback_stack.push({ f: fn, c: context });
+	}
+	this.callCallback = function(params){
+	    var t = _callback_stack.pop();
+	    t.f.call(t.c, params);
+	}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -6756,21 +6822,20 @@ var FacturaCompra = function ( config )
 	  * @param Function to callback
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	this.save = function( _original_callback )
+	this.save = function( callback )
 	{
-		//console.log('estoy en save()');
-		FacturaCompra._callback_stack.push( _original_callback  );
-		FacturaCompra._callback_stack.push( function(res){ 
-						console.log('estoy de regreso en save(',res,')');
-						if(res == null){
-							create.call(this, this);
-						}else{
-							update.call(res, res);
-						}
-	 			});
-		FacturaCompra.getByPK(  this.getFolio() , { context : this } ) 
+		if(DEBUG) console.log('estoy en save()');
+		this.pushCallback(callback, this);
+		var cb = function(res){
+                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(res == null){
+                    create.call(this,null);
+                }else{
+                    update.call(this,null);
+                }
+		};
+		FacturaCompra.getByPK(  this.getFolio() , { context : this, callback : cb } ) 
 	}; //save()
-
 
 	/**
 	  *	Buscar registros.
@@ -6839,18 +6904,19 @@ var FacturaCompra = function ( config )
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param FacturaCompra [$factura_compra] El objeto de tipo FacturaCompra a crear.
 	  **/
-	var create = function( factura_compra )
+	var create = function(  )
 	{
-		console.log('estoy en create(this)');
+		if(DEBUG)console.log('estoy en create(this)');
 		$sql = "INSERT INTO factura_compra ( folio, id_compra ) VALUES ( ?, ?);";
 		$params = [
-			factura_compra.getFolio(), 
-			factura_compra.getIdCompra(), 
+			this.getFolio(), 
+			this.getIdCompra(), 
 		 ];
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de insert():',tx,results);
-				FacturaCompra._callback_stack.pop().call(null, factura_compra);  
-			});
+                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                old_this.callCallback(old_this);
+		});
 		return; 
 	};
 
@@ -6865,17 +6931,18 @@ var FacturaCompra = function ( config )
 	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param FacturaCompra [$factura_compra] El objeto de tipo FacturaCompra a actualizar.
 	  **/
-	var update = function( $factura_compra )
+	var update = function(  )
 	{
+		if(DEBUG)console.log('estoy en update(',this,')');
 		$sql = "UPDATE factura_compra SET  id_compra = ? WHERE  folio = ?;";
 		$params = [ 
-			$factura_compra.getIdCompra(), 
-			$factura_compra.getFolio(),  ] ;
-		console.log('estoy en update()');
+			this.getIdCompra(), 
+			this.getFolio(),  ] ;
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de update():',tx,results);
-				FacturaCompra._callback_stack.pop().call(null, $factura_compra);  
-			});
+                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+			old_this.callCallback(old_this);  
+                });
 		return; 
 	}
 
@@ -6978,7 +7045,6 @@ var FacturaCompra = function ( config )
 
 
 }
-	FacturaCompra._callback_stack = [];
 	/**
 	  *	Obtener todas las filas.
 	  *	
@@ -7022,14 +7088,14 @@ var FacturaCompra = function ( config )
 	  **/
 	FacturaCompra.getByPK = function(  $folio, config )
 	{
-		//console.log('estoy en getbypk()');
+		if(DEBUG) console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM factura_compra WHERE (folio = ? ) LIMIT 1;";
 		db.query($sql, [ $folio] , function(tx,results){ 
-				//console.log('ya termine el query de getByPK():',tx,results);
-				if(results.rows.length == 0) fres = null;
-				else fres = new FacturaCompra(results.rows.item(0)); 
-				FacturaCompra._callback_stack.length == 0 ? config.callback.call(config.context || null, fres)    : FacturaCompra._callback_stack.pop().call(config.context || null, fres);  
-			});
+			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(results.rows.length == 0) fres = null;
+			else fres = new FacturaCompra(results.rows.item(0)); 
+			config.callback.call(config.context || null, fres);
+                });
 		return;
 	};
 
@@ -7609,6 +7675,14 @@ var FacturaVenta = function ( config )
 		_cadena_original = cadena_original;
 	};
 
+	var _callback_stack = [];
+	this.pushCallback = function( fn, context ){
+	    _callback_stack.push({ f: fn, c: context });
+	}
+	this.callCallback = function(params){
+	    var t = _callback_stack.pop();
+	    t.f.call(t.c, params);
+	}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -7622,21 +7696,20 @@ var FacturaVenta = function ( config )
 	  * @param Function to callback
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	this.save = function( _original_callback )
+	this.save = function( callback )
 	{
-		//console.log('estoy en save()');
-		FacturaVenta._callback_stack.push( _original_callback  );
-		FacturaVenta._callback_stack.push( function(res){ 
-						console.log('estoy de regreso en save(',res,')');
-						if(res == null){
-							create.call(this, this);
-						}else{
-							update.call(res, res);
-						}
-	 			});
-		FacturaVenta.getByPK(  this.getIdFolio() , { context : this } ) 
+		if(DEBUG) console.log('estoy en save()');
+		this.pushCallback(callback, this);
+		var cb = function(res){
+                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(res == null){
+                    create.call(this,null);
+                }else{
+                    update.call(this,null);
+                }
+		};
+		FacturaVenta.getByPK(  this.getIdFolio() , { context : this, callback : cb } ) 
 	}; //save()
-
 
 	/**
 	  *	Buscar registros.
@@ -7780,33 +7853,34 @@ var FacturaVenta = function ( config )
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param FacturaVenta [$factura_venta] El objeto de tipo FacturaVenta a crear.
 	  **/
-	var create = function( factura_venta )
+	var create = function(  )
 	{
-		console.log('estoy en create(this)');
+		if(DEBUG)console.log('estoy en create(this)');
 		$sql = "INSERT INTO factura_venta ( id_folio, id_venta, id_usuario, xml, lugar_emision, tipo_comprobante, activa, sellada, forma_pago, fecha_emision, version_tfd, folio_fiscal, fecha_certificacion, numero_certificado_sat, sello_digital_emisor, sello_digital_sat, cadena_original ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
-			factura_venta.getIdFolio(), 
-			factura_venta.getIdVenta(), 
-			factura_venta.getIdUsuario(), 
-			factura_venta.getXml(), 
-			factura_venta.getLugarEmision(), 
-			factura_venta.getTipoComprobante(), 
-			factura_venta.getActiva(), 
-			factura_venta.getSellada(), 
-			factura_venta.getFormaPago(), 
-			factura_venta.getFechaEmision(), 
-			factura_venta.getVersionTfd(), 
-			factura_venta.getFolioFiscal(), 
-			factura_venta.getFechaCertificacion(), 
-			factura_venta.getNumeroCertificadoSat(), 
-			factura_venta.getSelloDigitalEmisor(), 
-			factura_venta.getSelloDigitalSat(), 
-			factura_venta.getCadenaOriginal(), 
+			this.getIdFolio(), 
+			this.getIdVenta(), 
+			this.getIdUsuario(), 
+			this.getXml(), 
+			this.getLugarEmision(), 
+			this.getTipoComprobante(), 
+			this.getActiva(), 
+			this.getSellada(), 
+			this.getFormaPago(), 
+			this.getFechaEmision(), 
+			this.getVersionTfd(), 
+			this.getFolioFiscal(), 
+			this.getFechaCertificacion(), 
+			this.getNumeroCertificadoSat(), 
+			this.getSelloDigitalEmisor(), 
+			this.getSelloDigitalSat(), 
+			this.getCadenaOriginal(), 
 		 ];
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de insert():',tx,results);
-				FacturaVenta._callback_stack.pop().call(null, factura_venta);  
-			});
+                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                old_this.callCallback(old_this);
+		});
 		return; 
 	};
 
@@ -7821,32 +7895,33 @@ var FacturaVenta = function ( config )
 	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param FacturaVenta [$factura_venta] El objeto de tipo FacturaVenta a actualizar.
 	  **/
-	var update = function( $factura_venta )
+	var update = function(  )
 	{
+		if(DEBUG)console.log('estoy en update(',this,')');
 		$sql = "UPDATE factura_venta SET  id_venta = ?, id_usuario = ?, xml = ?, lugar_emision = ?, tipo_comprobante = ?, activa = ?, sellada = ?, forma_pago = ?, fecha_emision = ?, version_tfd = ?, folio_fiscal = ?, fecha_certificacion = ?, numero_certificado_sat = ?, sello_digital_emisor = ?, sello_digital_sat = ?, cadena_original = ? WHERE  id_folio = ?;";
 		$params = [ 
-			$factura_venta.getIdVenta(), 
-			$factura_venta.getIdUsuario(), 
-			$factura_venta.getXml(), 
-			$factura_venta.getLugarEmision(), 
-			$factura_venta.getTipoComprobante(), 
-			$factura_venta.getActiva(), 
-			$factura_venta.getSellada(), 
-			$factura_venta.getFormaPago(), 
-			$factura_venta.getFechaEmision(), 
-			$factura_venta.getVersionTfd(), 
-			$factura_venta.getFolioFiscal(), 
-			$factura_venta.getFechaCertificacion(), 
-			$factura_venta.getNumeroCertificadoSat(), 
-			$factura_venta.getSelloDigitalEmisor(), 
-			$factura_venta.getSelloDigitalSat(), 
-			$factura_venta.getCadenaOriginal(), 
-			$factura_venta.getIdFolio(),  ] ;
-		console.log('estoy en update()');
+			this.getIdVenta(), 
+			this.getIdUsuario(), 
+			this.getXml(), 
+			this.getLugarEmision(), 
+			this.getTipoComprobante(), 
+			this.getActiva(), 
+			this.getSellada(), 
+			this.getFormaPago(), 
+			this.getFechaEmision(), 
+			this.getVersionTfd(), 
+			this.getFolioFiscal(), 
+			this.getFechaCertificacion(), 
+			this.getNumeroCertificadoSat(), 
+			this.getSelloDigitalEmisor(), 
+			this.getSelloDigitalSat(), 
+			this.getCadenaOriginal(), 
+			this.getIdFolio(),  ] ;
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de update():',tx,results);
-				FacturaVenta._callback_stack.pop().call(null, $factura_venta);  
-			});
+                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+			old_this.callCallback(old_this);  
+                });
 		return; 
 	}
 
@@ -8129,7 +8204,6 @@ var FacturaVenta = function ( config )
 
 
 }
-	FacturaVenta._callback_stack = [];
 	/**
 	  *	Obtener todas las filas.
 	  *	
@@ -8173,14 +8247,14 @@ var FacturaVenta = function ( config )
 	  **/
 	FacturaVenta.getByPK = function(  $id_folio, config )
 	{
-		//console.log('estoy en getbypk()');
+		if(DEBUG) console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM factura_venta WHERE (id_folio = ? ) LIMIT 1;";
 		db.query($sql, [ $id_folio] , function(tx,results){ 
-				//console.log('ya termine el query de getByPK():',tx,results);
-				if(results.rows.length == 0) fres = null;
-				else fres = new FacturaVenta(results.rows.item(0)); 
-				FacturaVenta._callback_stack.length == 0 ? config.callback.call(config.context || null, fres)    : FacturaVenta._callback_stack.pop().call(config.context || null, fres);  
-			});
+			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(results.rows.length == 0) fres = null;
+			else fres = new FacturaVenta(results.rows.item(0)); 
+			config.callback.call(config.context || null, fres);
+                });
 		return;
 	};
 
@@ -8496,6 +8570,14 @@ var Gastos = function ( config )
 		_nota = nota;
 	};
 
+	var _callback_stack = [];
+	this.pushCallback = function( fn, context ){
+	    _callback_stack.push({ f: fn, c: context });
+	}
+	this.callCallback = function(params){
+	    var t = _callback_stack.pop();
+	    t.f.call(t.c, params);
+	}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -8509,21 +8591,20 @@ var Gastos = function ( config )
 	  * @param Function to callback
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	this.save = function( _original_callback )
+	this.save = function( callback )
 	{
-		//console.log('estoy en save()');
-		Gastos._callback_stack.push( _original_callback  );
-		Gastos._callback_stack.push( function(res){ 
-						console.log('estoy de regreso en save(',res,')');
-						if(res == null){
-							create.call(this, this);
-						}else{
-							update.call(res, res);
-						}
-	 			});
-		Gastos.getByPK(  this.getIdGasto() , { context : this } ) 
+		if(DEBUG) console.log('estoy en save()');
+		this.pushCallback(callback, this);
+		var cb = function(res){
+                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(res == null){
+                    create.call(this,null);
+                }else{
+                    update.call(this,null);
+                }
+		};
+		Gastos.getByPK(  this.getIdGasto() , { context : this, callback : cb } ) 
 	}; //save()
-
 
 	/**
 	  *	Buscar registros.
@@ -8627,25 +8708,26 @@ var Gastos = function ( config )
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Gastos [$gastos] El objeto de tipo Gastos a crear.
 	  **/
-	var create = function( gastos )
+	var create = function(  )
 	{
-		console.log('estoy en create(this)');
+		if(DEBUG)console.log('estoy en create(this)');
 		$sql = "INSERT INTO gastos ( id_gasto, folio, concepto, monto, fecha, fecha_ingreso, id_sucursal, id_usuario, nota ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
-			gastos.getIdGasto(), 
-			gastos.getFolio(), 
-			gastos.getConcepto(), 
-			gastos.getMonto(), 
-			gastos.getFecha(), 
-			gastos.getFechaIngreso(), 
-			gastos.getIdSucursal(), 
-			gastos.getIdUsuario(), 
-			gastos.getNota(), 
+			this.getIdGasto(), 
+			this.getFolio(), 
+			this.getConcepto(), 
+			this.getMonto(), 
+			this.getFecha(), 
+			this.getFechaIngreso(), 
+			this.getIdSucursal(), 
+			this.getIdUsuario(), 
+			this.getNota(), 
 		 ];
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de insert():',tx,results);
-				Gastos._callback_stack.pop().call(null, gastos);  
-			});
+                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                old_this.callCallback(old_this);
+		});
 		return; 
 	};
 
@@ -8660,24 +8742,25 @@ var Gastos = function ( config )
 	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Gastos [$gastos] El objeto de tipo Gastos a actualizar.
 	  **/
-	var update = function( $gastos )
+	var update = function(  )
 	{
+		if(DEBUG)console.log('estoy en update(',this,')');
 		$sql = "UPDATE gastos SET  folio = ?, concepto = ?, monto = ?, fecha = ?, fecha_ingreso = ?, id_sucursal = ?, id_usuario = ?, nota = ? WHERE  id_gasto = ?;";
 		$params = [ 
-			$gastos.getFolio(), 
-			$gastos.getConcepto(), 
-			$gastos.getMonto(), 
-			$gastos.getFecha(), 
-			$gastos.getFechaIngreso(), 
-			$gastos.getIdSucursal(), 
-			$gastos.getIdUsuario(), 
-			$gastos.getNota(), 
-			$gastos.getIdGasto(),  ] ;
-		console.log('estoy en update()');
+			this.getFolio(), 
+			this.getConcepto(), 
+			this.getMonto(), 
+			this.getFecha(), 
+			this.getFechaIngreso(), 
+			this.getIdSucursal(), 
+			this.getIdUsuario(), 
+			this.getNota(), 
+			this.getIdGasto(),  ] ;
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de update():',tx,results);
-				Gastos._callback_stack.pop().call(null, $gastos);  
-			});
+                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+			old_this.callCallback(old_this);  
+                });
 		return; 
 	}
 
@@ -8864,7 +8947,6 @@ var Gastos = function ( config )
 
 
 }
-	Gastos._callback_stack = [];
 	/**
 	  *	Obtener todas las filas.
 	  *	
@@ -8908,14 +8990,14 @@ var Gastos = function ( config )
 	  **/
 	Gastos.getByPK = function(  $id_gasto, config )
 	{
-		//console.log('estoy en getbypk()');
+		if(DEBUG) console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM gastos WHERE (id_gasto = ? ) LIMIT 1;";
 		db.query($sql, [ $id_gasto] , function(tx,results){ 
-				//console.log('ya termine el query de getByPK():',tx,results);
-				if(results.rows.length == 0) fres = null;
-				else fres = new Gastos(results.rows.item(0)); 
-				Gastos._callback_stack.length == 0 ? config.callback.call(config.context || null, fres)    : Gastos._callback_stack.pop().call(config.context || null, fres);  
-			});
+			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(results.rows.length == 0) fres = null;
+			else fres = new Gastos(results.rows.item(0)); 
+			config.callback.call(config.context || null, fres);
+                });
 		return;
 	};
 
@@ -9066,6 +9148,14 @@ var Impresora = function ( config )
 		_identificador = identificador;
 	};
 
+	var _callback_stack = [];
+	this.pushCallback = function( fn, context ){
+	    _callback_stack.push({ f: fn, c: context });
+	}
+	this.callCallback = function(params){
+	    var t = _callback_stack.pop();
+	    t.f.call(t.c, params);
+	}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -9079,21 +9169,20 @@ var Impresora = function ( config )
 	  * @param Function to callback
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	this.save = function( _original_callback )
+	this.save = function( callback )
 	{
-		//console.log('estoy en save()');
-		Impresora._callback_stack.push( _original_callback  );
-		Impresora._callback_stack.push( function(res){ 
-						console.log('estoy de regreso en save(',res,')');
-						if(res == null){
-							create.call(this, this);
-						}else{
-							update.call(res, res);
-						}
-	 			});
-		Impresora.getByPK(  this.getIdImpresora() , { context : this } ) 
+		if(DEBUG) console.log('estoy en save()');
+		this.pushCallback(callback, this);
+		var cb = function(res){
+                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(res == null){
+                    create.call(this,null);
+                }else{
+                    update.call(this,null);
+                }
+		};
+		Impresora.getByPK(  this.getIdImpresora() , { context : this, callback : cb } ) 
 	}; //save()
-
 
 	/**
 	  *	Buscar registros.
@@ -9172,20 +9261,21 @@ var Impresora = function ( config )
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Impresora [$impresora] El objeto de tipo Impresora a crear.
 	  **/
-	var create = function( impresora )
+	var create = function(  )
 	{
-		console.log('estoy en create(this)');
+		if(DEBUG)console.log('estoy en create(this)');
 		$sql = "INSERT INTO impresora ( id_impresora, id_sucursal, descripcion, identificador ) VALUES ( ?, ?, ?, ?);";
 		$params = [
-			impresora.getIdImpresora(), 
-			impresora.getIdSucursal(), 
-			impresora.getDescripcion(), 
-			impresora.getIdentificador(), 
+			this.getIdImpresora(), 
+			this.getIdSucursal(), 
+			this.getDescripcion(), 
+			this.getIdentificador(), 
 		 ];
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de insert():',tx,results);
-				Impresora._callback_stack.pop().call(null, impresora);  
-			});
+                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                old_this.callCallback(old_this);
+		});
 		return; 
 	};
 
@@ -9200,19 +9290,20 @@ var Impresora = function ( config )
 	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Impresora [$impresora] El objeto de tipo Impresora a actualizar.
 	  **/
-	var update = function( $impresora )
+	var update = function(  )
 	{
+		if(DEBUG)console.log('estoy en update(',this,')');
 		$sql = "UPDATE impresora SET  id_sucursal = ?, descripcion = ?, identificador = ? WHERE  id_impresora = ?;";
 		$params = [ 
-			$impresora.getIdSucursal(), 
-			$impresora.getDescripcion(), 
-			$impresora.getIdentificador(), 
-			$impresora.getIdImpresora(),  ] ;
-		console.log('estoy en update()');
+			this.getIdSucursal(), 
+			this.getDescripcion(), 
+			this.getIdentificador(), 
+			this.getIdImpresora(),  ] ;
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de update():',tx,results);
-				Impresora._callback_stack.pop().call(null, $impresora);  
-			});
+                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+			old_this.callCallback(old_this);  
+                });
 		return; 
 	}
 
@@ -9339,7 +9430,6 @@ var Impresora = function ( config )
 
 
 }
-	Impresora._callback_stack = [];
 	/**
 	  *	Obtener todas las filas.
 	  *	
@@ -9383,14 +9473,14 @@ var Impresora = function ( config )
 	  **/
 	Impresora.getByPK = function(  $id_impresora, config )
 	{
-		//console.log('estoy en getbypk()');
+		if(DEBUG) console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM impresora WHERE (id_impresora = ? ) LIMIT 1;";
 		db.query($sql, [ $id_impresora] , function(tx,results){ 
-				//console.log('ya termine el query de getByPK():',tx,results);
-				if(results.rows.length == 0) fres = null;
-				else fres = new Impresora(results.rows.item(0)); 
-				Impresora._callback_stack.length == 0 ? config.callback.call(config.context || null, fres)    : Impresora._callback_stack.pop().call(config.context || null, fres);  
-			});
+			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(results.rows.length == 0) fres = null;
+			else fres = new Impresora(results.rows.item(0)); 
+			config.callback.call(config.context || null, fres);
+                });
 		return;
 	};
 
@@ -9673,6 +9763,14 @@ var Ingresos = function ( config )
 		_nota = nota;
 	};
 
+	var _callback_stack = [];
+	this.pushCallback = function( fn, context ){
+	    _callback_stack.push({ f: fn, c: context });
+	}
+	this.callCallback = function(params){
+	    var t = _callback_stack.pop();
+	    t.f.call(t.c, params);
+	}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -9686,21 +9784,20 @@ var Ingresos = function ( config )
 	  * @param Function to callback
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	this.save = function( _original_callback )
+	this.save = function( callback )
 	{
-		//console.log('estoy en save()');
-		Ingresos._callback_stack.push( _original_callback  );
-		Ingresos._callback_stack.push( function(res){ 
-						console.log('estoy de regreso en save(',res,')');
-						if(res == null){
-							create.call(this, this);
-						}else{
-							update.call(res, res);
-						}
-	 			});
-		Ingresos.getByPK(  this.getIdIngreso() , { context : this } ) 
+		if(DEBUG) console.log('estoy en save()');
+		this.pushCallback(callback, this);
+		var cb = function(res){
+                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(res == null){
+                    create.call(this,null);
+                }else{
+                    update.call(this,null);
+                }
+		};
+		Ingresos.getByPK(  this.getIdIngreso() , { context : this, callback : cb } ) 
 	}; //save()
-
 
 	/**
 	  *	Buscar registros.
@@ -9799,24 +9896,25 @@ var Ingresos = function ( config )
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Ingresos [$ingresos] El objeto de tipo Ingresos a crear.
 	  **/
-	var create = function( ingresos )
+	var create = function(  )
 	{
-		console.log('estoy en create(this)');
+		if(DEBUG)console.log('estoy en create(this)');
 		$sql = "INSERT INTO ingresos ( id_ingreso, concepto, monto, fecha, fecha_ingreso, id_sucursal, id_usuario, nota ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
-			ingresos.getIdIngreso(), 
-			ingresos.getConcepto(), 
-			ingresos.getMonto(), 
-			ingresos.getFecha(), 
-			ingresos.getFechaIngreso(), 
-			ingresos.getIdSucursal(), 
-			ingresos.getIdUsuario(), 
-			ingresos.getNota(), 
+			this.getIdIngreso(), 
+			this.getConcepto(), 
+			this.getMonto(), 
+			this.getFecha(), 
+			this.getFechaIngreso(), 
+			this.getIdSucursal(), 
+			this.getIdUsuario(), 
+			this.getNota(), 
 		 ];
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de insert():',tx,results);
-				Ingresos._callback_stack.pop().call(null, ingresos);  
-			});
+                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                old_this.callCallback(old_this);
+		});
 		return; 
 	};
 
@@ -9831,23 +9929,24 @@ var Ingresos = function ( config )
 	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Ingresos [$ingresos] El objeto de tipo Ingresos a actualizar.
 	  **/
-	var update = function( $ingresos )
+	var update = function(  )
 	{
+		if(DEBUG)console.log('estoy en update(',this,')');
 		$sql = "UPDATE ingresos SET  concepto = ?, monto = ?, fecha = ?, fecha_ingreso = ?, id_sucursal = ?, id_usuario = ?, nota = ? WHERE  id_ingreso = ?;";
 		$params = [ 
-			$ingresos.getConcepto(), 
-			$ingresos.getMonto(), 
-			$ingresos.getFecha(), 
-			$ingresos.getFechaIngreso(), 
-			$ingresos.getIdSucursal(), 
-			$ingresos.getIdUsuario(), 
-			$ingresos.getNota(), 
-			$ingresos.getIdIngreso(),  ] ;
-		console.log('estoy en update()');
+			this.getConcepto(), 
+			this.getMonto(), 
+			this.getFecha(), 
+			this.getFechaIngreso(), 
+			this.getIdSucursal(), 
+			this.getIdUsuario(), 
+			this.getNota(), 
+			this.getIdIngreso(),  ] ;
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de update():',tx,results);
-				Ingresos._callback_stack.pop().call(null, $ingresos);  
-			});
+                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+			old_this.callCallback(old_this);  
+                });
 		return; 
 	}
 
@@ -10022,7 +10121,6 @@ var Ingresos = function ( config )
 
 
 }
-	Ingresos._callback_stack = [];
 	/**
 	  *	Obtener todas las filas.
 	  *	
@@ -10066,14 +10164,14 @@ var Ingresos = function ( config )
 	  **/
 	Ingresos.getByPK = function(  $id_ingreso, config )
 	{
-		//console.log('estoy en getbypk()');
+		if(DEBUG) console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM ingresos WHERE (id_ingreso = ? ) LIMIT 1;";
 		db.query($sql, [ $id_ingreso] , function(tx,results){ 
-				//console.log('ya termine el query de getByPK():',tx,results);
-				if(results.rows.length == 0) fres = null;
-				else fres = new Ingresos(results.rows.item(0)); 
-				Ingresos._callback_stack.length == 0 ? config.callback.call(config.context || null, fres)    : Ingresos._callback_stack.pop().call(config.context || null, fres);  
-			});
+			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(results.rows.length == 0) fres = null;
+			else fres = new Ingresos(results.rows.item(0)); 
+			config.callback.call(config.context || null, fres);
+                });
 		return;
 	};
 
@@ -10356,6 +10454,14 @@ var Inventario = function ( config )
 		_precio_por_agrupacion = precio_por_agrupacion;
 	};
 
+	var _callback_stack = [];
+	this.pushCallback = function( fn, context ){
+	    _callback_stack.push({ f: fn, c: context });
+	}
+	this.callCallback = function(params){
+	    var t = _callback_stack.pop();
+	    t.f.call(t.c, params);
+	}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -10369,21 +10475,20 @@ var Inventario = function ( config )
 	  * @param Function to callback
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	this.save = function( _original_callback )
+	this.save = function( callback )
 	{
-		//console.log('estoy en save()');
-		Inventario._callback_stack.push( _original_callback  );
-		Inventario._callback_stack.push( function(res){ 
-						console.log('estoy de regreso en save(',res,')');
-						if(res == null){
-							create.call(this, this);
-						}else{
-							update.call(res, res);
-						}
-	 			});
-		Inventario.getByPK(  this.getIdProducto() , { context : this } ) 
+		if(DEBUG) console.log('estoy en save()');
+		this.pushCallback(callback, this);
+		var cb = function(res){
+                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(res == null){
+                    create.call(this,null);
+                }else{
+                    update.call(this,null);
+                }
+		};
+		Inventario.getByPK(  this.getIdProducto() , { context : this, callback : cb } ) 
 	}; //save()
-
 
 	/**
 	  *	Buscar registros.
@@ -10482,24 +10587,25 @@ var Inventario = function ( config )
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Inventario [$inventario] El objeto de tipo Inventario a crear.
 	  **/
-	var create = function( inventario )
+	var create = function(  )
 	{
-		console.log('estoy en create(this)');
+		if(DEBUG)console.log('estoy en create(this)');
 		$sql = "INSERT INTO inventario ( id_producto, descripcion, escala, tratamiento, agrupacion, agrupacionTam, activo, precio_por_agrupacion ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
-			inventario.getIdProducto(), 
-			inventario.getDescripcion(), 
-			inventario.getEscala(), 
-			inventario.getTratamiento(), 
-			inventario.getAgrupacion(), 
-			inventario.getAgrupacionTam(), 
-			inventario.getActivo(), 
-			inventario.getPrecioPorAgrupacion(), 
+			this.getIdProducto(), 
+			this.getDescripcion(), 
+			this.getEscala(), 
+			this.getTratamiento(), 
+			this.getAgrupacion(), 
+			this.getAgrupacionTam(), 
+			this.getActivo(), 
+			this.getPrecioPorAgrupacion(), 
 		 ];
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de insert():',tx,results);
-				Inventario._callback_stack.pop().call(null, inventario);  
-			});
+                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                old_this.callCallback(old_this);
+		});
 		return; 
 	};
 
@@ -10514,23 +10620,24 @@ var Inventario = function ( config )
 	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Inventario [$inventario] El objeto de tipo Inventario a actualizar.
 	  **/
-	var update = function( $inventario )
+	var update = function(  )
 	{
+		if(DEBUG)console.log('estoy en update(',this,')');
 		$sql = "UPDATE inventario SET  descripcion = ?, escala = ?, tratamiento = ?, agrupacion = ?, agrupacionTam = ?, activo = ?, precio_por_agrupacion = ? WHERE  id_producto = ?;";
 		$params = [ 
-			$inventario.getDescripcion(), 
-			$inventario.getEscala(), 
-			$inventario.getTratamiento(), 
-			$inventario.getAgrupacion(), 
-			$inventario.getAgrupacionTam(), 
-			$inventario.getActivo(), 
-			$inventario.getPrecioPorAgrupacion(), 
-			$inventario.getIdProducto(),  ] ;
-		console.log('estoy en update()');
+			this.getDescripcion(), 
+			this.getEscala(), 
+			this.getTratamiento(), 
+			this.getAgrupacion(), 
+			this.getAgrupacionTam(), 
+			this.getActivo(), 
+			this.getPrecioPorAgrupacion(), 
+			this.getIdProducto(),  ] ;
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de update():',tx,results);
-				Inventario._callback_stack.pop().call(null, $inventario);  
-			});
+                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+			old_this.callCallback(old_this);  
+                });
 		return; 
 	}
 
@@ -10705,7 +10812,6 @@ var Inventario = function ( config )
 
 
 }
-	Inventario._callback_stack = [];
 	/**
 	  *	Obtener todas las filas.
 	  *	
@@ -10749,14 +10855,14 @@ var Inventario = function ( config )
 	  **/
 	Inventario.getByPK = function(  $id_producto, config )
 	{
-		//console.log('estoy en getbypk()');
+		if(DEBUG) console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM inventario WHERE (id_producto = ? ) LIMIT 1;";
 		db.query($sql, [ $id_producto] , function(tx,results){ 
-				//console.log('ya termine el query de getByPK():',tx,results);
-				if(results.rows.length == 0) fres = null;
-				else fres = new Inventario(results.rows.item(0)); 
-				Inventario._callback_stack.length == 0 ? config.callback.call(config.context || null, fres)    : Inventario._callback_stack.pop().call(config.context || null, fres);  
-			});
+			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(results.rows.length == 0) fres = null;
+			else fres = new Inventario(results.rows.item(0)); 
+			config.callback.call(config.context || null, fres);
+                });
 		return;
 	};
 
@@ -11006,6 +11112,14 @@ var PagosVenta = function ( config )
 		_tipo_pago = tipo_pago;
 	};
 
+	var _callback_stack = [];
+	this.pushCallback = function( fn, context ){
+	    _callback_stack.push({ f: fn, c: context });
+	}
+	this.callCallback = function(params){
+	    var t = _callback_stack.pop();
+	    t.f.call(t.c, params);
+	}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -11019,21 +11133,20 @@ var PagosVenta = function ( config )
 	  * @param Function to callback
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	this.save = function( _original_callback )
+	this.save = function( callback )
 	{
-		//console.log('estoy en save()');
-		PagosVenta._callback_stack.push( _original_callback  );
-		PagosVenta._callback_stack.push( function(res){ 
-						console.log('estoy de regreso en save(',res,')');
-						if(res == null){
-							create.call(this, this);
-						}else{
-							update.call(res, res);
-						}
-	 			});
-		PagosVenta.getByPK(  this.getIdPago() , { context : this } ) 
+		if(DEBUG) console.log('estoy en save()');
+		this.pushCallback(callback, this);
+		var cb = function(res){
+                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(res == null){
+                    create.call(this,null);
+                }else{
+                    update.call(this,null);
+                }
+		};
+		PagosVenta.getByPK(  this.getIdPago() , { context : this, callback : cb } ) 
 	}; //save()
-
 
 	/**
 	  *	Buscar registros.
@@ -11127,23 +11240,24 @@ var PagosVenta = function ( config )
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param PagosVenta [$pagos_venta] El objeto de tipo PagosVenta a crear.
 	  **/
-	var create = function( pagos_venta )
+	var create = function(  )
 	{
-		console.log('estoy en create(this)');
+		if(DEBUG)console.log('estoy en create(this)');
 		$sql = "INSERT INTO pagos_venta ( id_pago, id_venta, id_sucursal, id_usuario, fecha, monto, tipo_pago ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
-			pagos_venta.getIdPago(), 
-			pagos_venta.getIdVenta(), 
-			pagos_venta.getIdSucursal(), 
-			pagos_venta.getIdUsuario(), 
-			pagos_venta.getFecha(), 
-			pagos_venta.getMonto(), 
-			pagos_venta.getTipoPago(), 
+			this.getIdPago(), 
+			this.getIdVenta(), 
+			this.getIdSucursal(), 
+			this.getIdUsuario(), 
+			this.getFecha(), 
+			this.getMonto(), 
+			this.getTipoPago(), 
 		 ];
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de insert():',tx,results);
-				PagosVenta._callback_stack.pop().call(null, pagos_venta);  
-			});
+                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                old_this.callCallback(old_this);
+		});
 		return; 
 	};
 
@@ -11158,22 +11272,23 @@ var PagosVenta = function ( config )
 	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param PagosVenta [$pagos_venta] El objeto de tipo PagosVenta a actualizar.
 	  **/
-	var update = function( $pagos_venta )
+	var update = function(  )
 	{
+		if(DEBUG)console.log('estoy en update(',this,')');
 		$sql = "UPDATE pagos_venta SET  id_venta = ?, id_sucursal = ?, id_usuario = ?, fecha = ?, monto = ?, tipo_pago = ? WHERE  id_pago = ?;";
 		$params = [ 
-			$pagos_venta.getIdVenta(), 
-			$pagos_venta.getIdSucursal(), 
-			$pagos_venta.getIdUsuario(), 
-			$pagos_venta.getFecha(), 
-			$pagos_venta.getMonto(), 
-			$pagos_venta.getTipoPago(), 
-			$pagos_venta.getIdPago(),  ] ;
-		console.log('estoy en update()');
+			this.getIdVenta(), 
+			this.getIdSucursal(), 
+			this.getIdUsuario(), 
+			this.getFecha(), 
+			this.getMonto(), 
+			this.getTipoPago(), 
+			this.getIdPago(),  ] ;
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de update():',tx,results);
-				PagosVenta._callback_stack.pop().call(null, $pagos_venta);  
-			});
+                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+			old_this.callCallback(old_this);  
+                });
 		return; 
 	}
 
@@ -11336,7 +11451,6 @@ var PagosVenta = function ( config )
 
 
 }
-	PagosVenta._callback_stack = [];
 	/**
 	  *	Obtener todas las filas.
 	  *	
@@ -11380,14 +11494,14 @@ var PagosVenta = function ( config )
 	  **/
 	PagosVenta.getByPK = function(  $id_pago, config )
 	{
-		//console.log('estoy en getbypk()');
+		if(DEBUG) console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM pagos_venta WHERE (id_pago = ? ) LIMIT 1;";
 		db.query($sql, [ $id_pago] , function(tx,results){ 
-				//console.log('ya termine el query de getByPK():',tx,results);
-				if(results.rows.length == 0) fres = null;
-				else fres = new PagosVenta(results.rows.item(0)); 
-				PagosVenta._callback_stack.length == 0 ? config.callback.call(config.context || null, fres)    : PagosVenta._callback_stack.pop().call(config.context || null, fres);  
-			});
+			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(results.rows.length == 0) fres = null;
+			else fres = new PagosVenta(results.rows.item(0)); 
+			config.callback.call(config.context || null, fres);
+                });
 		return;
 	};
 
@@ -12099,6 +12213,14 @@ var Sucursal = function ( config )
 		_saldo_a_favor = saldo_a_favor;
 	};
 
+	var _callback_stack = [];
+	this.pushCallback = function( fn, context ){
+	    _callback_stack.push({ f: fn, c: context });
+	}
+	this.callCallback = function(params){
+	    var t = _callback_stack.pop();
+	    t.f.call(t.c, params);
+	}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -12112,21 +12234,20 @@ var Sucursal = function ( config )
 	  * @param Function to callback
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	this.save = function( _original_callback )
+	this.save = function( callback )
 	{
-		//console.log('estoy en save()');
-		Sucursal._callback_stack.push( _original_callback  );
-		Sucursal._callback_stack.push( function(res){ 
-						console.log('estoy de regreso en save(',res,')');
-						if(res == null){
-							create.call(this, this);
-						}else{
-							update.call(res, res);
-						}
-	 			});
-		Sucursal.getByPK(  this.getIdSucursal() , { context : this } ) 
+		if(DEBUG) console.log('estoy en save()');
+		this.pushCallback(callback, this);
+		var cb = function(res){
+                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(res == null){
+                    create.call(this,null);
+                }else{
+                    update.call(this,null);
+                }
+		};
+		Sucursal.getByPK(  this.getIdSucursal() , { context : this, callback : cb } ) 
 	}; //save()
-
 
 	/**
 	  *	Buscar registros.
@@ -12290,37 +12411,38 @@ var Sucursal = function ( config )
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Sucursal [$sucursal] El objeto de tipo Sucursal a crear.
 	  **/
-	var create = function( sucursal )
+	var create = function(  )
 	{
-		console.log('estoy en create(this)');
+		if(DEBUG)console.log('estoy en create(this)');
 		$sql = "INSERT INTO sucursal ( id_sucursal, gerente, descripcion, razon_social, rfc, calle, numero_exterior, numero_interior, colonia, localidad, referencia, municipio, estado, pais, codigo_postal, telefono, token, letras_factura, activo, fecha_apertura, saldo_a_favor ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
-			sucursal.getIdSucursal(), 
-			sucursal.getGerente(), 
-			sucursal.getDescripcion(), 
-			sucursal.getRazonSocial(), 
-			sucursal.getRfc(), 
-			sucursal.getCalle(), 
-			sucursal.getNumeroExterior(), 
-			sucursal.getNumeroInterior(), 
-			sucursal.getColonia(), 
-			sucursal.getLocalidad(), 
-			sucursal.getReferencia(), 
-			sucursal.getMunicipio(), 
-			sucursal.getEstado(), 
-			sucursal.getPais(), 
-			sucursal.getCodigoPostal(), 
-			sucursal.getTelefono(), 
-			sucursal.getToken(), 
-			sucursal.getLetrasFactura(), 
-			sucursal.getActivo(), 
-			sucursal.getFechaApertura(), 
-			sucursal.getSaldoAFavor(), 
+			this.getIdSucursal(), 
+			this.getGerente(), 
+			this.getDescripcion(), 
+			this.getRazonSocial(), 
+			this.getRfc(), 
+			this.getCalle(), 
+			this.getNumeroExterior(), 
+			this.getNumeroInterior(), 
+			this.getColonia(), 
+			this.getLocalidad(), 
+			this.getReferencia(), 
+			this.getMunicipio(), 
+			this.getEstado(), 
+			this.getPais(), 
+			this.getCodigoPostal(), 
+			this.getTelefono(), 
+			this.getToken(), 
+			this.getLetrasFactura(), 
+			this.getActivo(), 
+			this.getFechaApertura(), 
+			this.getSaldoAFavor(), 
 		 ];
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de insert():',tx,results);
-				Sucursal._callback_stack.pop().call(null, sucursal);  
-			});
+                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                old_this.callCallback(old_this);
+		});
 		return; 
 	};
 
@@ -12335,36 +12457,37 @@ var Sucursal = function ( config )
 	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Sucursal [$sucursal] El objeto de tipo Sucursal a actualizar.
 	  **/
-	var update = function( $sucursal )
+	var update = function(  )
 	{
+		if(DEBUG)console.log('estoy en update(',this,')');
 		$sql = "UPDATE sucursal SET  gerente = ?, descripcion = ?, razon_social = ?, rfc = ?, calle = ?, numero_exterior = ?, numero_interior = ?, colonia = ?, localidad = ?, referencia = ?, municipio = ?, estado = ?, pais = ?, codigo_postal = ?, telefono = ?, token = ?, letras_factura = ?, activo = ?, fecha_apertura = ?, saldo_a_favor = ? WHERE  id_sucursal = ?;";
 		$params = [ 
-			$sucursal.getGerente(), 
-			$sucursal.getDescripcion(), 
-			$sucursal.getRazonSocial(), 
-			$sucursal.getRfc(), 
-			$sucursal.getCalle(), 
-			$sucursal.getNumeroExterior(), 
-			$sucursal.getNumeroInterior(), 
-			$sucursal.getColonia(), 
-			$sucursal.getLocalidad(), 
-			$sucursal.getReferencia(), 
-			$sucursal.getMunicipio(), 
-			$sucursal.getEstado(), 
-			$sucursal.getPais(), 
-			$sucursal.getCodigoPostal(), 
-			$sucursal.getTelefono(), 
-			$sucursal.getToken(), 
-			$sucursal.getLetrasFactura(), 
-			$sucursal.getActivo(), 
-			$sucursal.getFechaApertura(), 
-			$sucursal.getSaldoAFavor(), 
-			$sucursal.getIdSucursal(),  ] ;
-		console.log('estoy en update()');
+			this.getGerente(), 
+			this.getDescripcion(), 
+			this.getRazonSocial(), 
+			this.getRfc(), 
+			this.getCalle(), 
+			this.getNumeroExterior(), 
+			this.getNumeroInterior(), 
+			this.getColonia(), 
+			this.getLocalidad(), 
+			this.getReferencia(), 
+			this.getMunicipio(), 
+			this.getEstado(), 
+			this.getPais(), 
+			this.getCodigoPostal(), 
+			this.getTelefono(), 
+			this.getToken(), 
+			this.getLetrasFactura(), 
+			this.getActivo(), 
+			this.getFechaApertura(), 
+			this.getSaldoAFavor(), 
+			this.getIdSucursal(),  ] ;
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de update():',tx,results);
-				Sucursal._callback_stack.pop().call(null, $sucursal);  
-			});
+                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+			old_this.callCallback(old_this);  
+                });
 		return; 
 	}
 
@@ -12695,7 +12818,6 @@ var Sucursal = function ( config )
 
 
 }
-	Sucursal._callback_stack = [];
 	/**
 	  *	Obtener todas las filas.
 	  *	
@@ -12739,14 +12861,14 @@ var Sucursal = function ( config )
 	  **/
 	Sucursal.getByPK = function(  $id_sucursal, config )
 	{
-		//console.log('estoy en getbypk()');
+		if(DEBUG) console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM sucursal WHERE (id_sucursal = ? ) LIMIT 1;";
 		db.query($sql, [ $id_sucursal] , function(tx,results){ 
-				//console.log('ya termine el query de getByPK():',tx,results);
-				if(results.rows.length == 0) fres = null;
-				else fres = new Sucursal(results.rows.item(0)); 
-				Sucursal._callback_stack.length == 0 ? config.callback.call(config.context || null, fres)    : Sucursal._callback_stack.pop().call(config.context || null, fres);  
-			});
+			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(results.rows.length == 0) fres = null;
+			else fres = new Sucursal(results.rows.item(0)); 
+			config.callback.call(config.context || null, fres);
+                });
 		return;
 	};
 
@@ -13326,6 +13448,14 @@ var Ventas = function ( config )
 		_liquidada = liquidada;
 	};
 
+	var _callback_stack = [];
+	this.pushCallback = function( fn, context ){
+	    _callback_stack.push({ f: fn, c: context });
+	}
+	this.callCallback = function(params){
+	    var t = _callback_stack.pop();
+	    t.f.call(t.c, params);
+	}
 	/**
 	  *	Guardar registros. 
 	  *	
@@ -13339,21 +13469,20 @@ var Ventas = function ( config )
 	  * @param Function to callback
 	  * @return Un entero mayor o igual a cero denotando las filas afectadas.
 	  **/
-	this.save = function( _original_callback )
+	this.save = function( callback )
 	{
-		//console.log('estoy en save()');
-		Ventas._callback_stack.push( _original_callback  );
-		Ventas._callback_stack.push( function(res){ 
-						console.log('estoy de regreso en save(',res,')');
-						if(res == null){
-							create.call(this, this);
-						}else{
-							update.call(res, res);
-						}
-	 			});
-		Ventas.getByPK(  this.getIdVenta() , { context : this } ) 
+		if(DEBUG) console.log('estoy en save()');
+		this.pushCallback(callback, this);
+		var cb = function(res){
+                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(res == null){
+                    create.call(this,null);
+                }else{
+                    update.call(this,null);
+                }
+		};
+		Ventas.getByPK(  this.getIdVenta() , { context : this, callback : cb } ) 
 	}; //save()
-
 
 	/**
 	  *	Buscar registros.
@@ -13497,33 +13626,34 @@ var Ventas = function ( config )
 	  * @return Un entero mayor o igual a cero identificando las filas afectadas, en caso de error, regresara una cadena con la descripcion del error
 	  * @param Ventas [$ventas] El objeto de tipo Ventas a crear.
 	  **/
-	var create = function( ventas )
+	var create = function(  )
 	{
-		console.log('estoy en create(this)');
+		if(DEBUG)console.log('estoy en create(this)');
 		$sql = "INSERT INTO ventas ( id_venta, id_venta_equipo, id_equipo, id_cliente, tipo_venta, tipo_pago, fecha, subtotal, iva, descuento, total, id_sucursal, id_usuario, pagado, cancelada, ip, liquidada ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
-			ventas.getIdVenta(), 
-			ventas.getIdVentaEquipo(), 
-			ventas.getIdEquipo(), 
-			ventas.getIdCliente(), 
-			ventas.getTipoVenta(), 
-			ventas.getTipoPago(), 
-			ventas.getFecha(), 
-			ventas.getSubtotal(), 
-			ventas.getIva(), 
-			ventas.getDescuento(), 
-			ventas.getTotal(), 
-			ventas.getIdSucursal(), 
-			ventas.getIdUsuario(), 
-			ventas.getPagado(), 
-			ventas.getCancelada(), 
-			ventas.getIp(), 
-			ventas.getLiquidada(), 
+			this.getIdVenta(), 
+			this.getIdVentaEquipo(), 
+			this.getIdEquipo(), 
+			this.getIdCliente(), 
+			this.getTipoVenta(), 
+			this.getTipoPago(), 
+			this.getFecha(), 
+			this.getSubtotal(), 
+			this.getIva(), 
+			this.getDescuento(), 
+			this.getTotal(), 
+			this.getIdSucursal(), 
+			this.getIdUsuario(), 
+			this.getPagado(), 
+			this.getCancelada(), 
+			this.getIp(), 
+			this.getLiquidada(), 
 		 ];
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de insert():',tx,results);
-				Ventas._callback_stack.pop().call(null, ventas);  
-			});
+                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                old_this.callCallback(old_this);
+		});
 		return; 
 	};
 
@@ -13538,32 +13668,33 @@ var Ventas = function ( config )
 	  * @return Filas afectadas o un string con la descripcion del error
 	  * @param Ventas [$ventas] El objeto de tipo Ventas a actualizar.
 	  **/
-	var update = function( $ventas )
+	var update = function(  )
 	{
+		if(DEBUG)console.log('estoy en update(',this,')');
 		$sql = "UPDATE ventas SET  id_venta_equipo = ?, id_equipo = ?, id_cliente = ?, tipo_venta = ?, tipo_pago = ?, fecha = ?, subtotal = ?, iva = ?, descuento = ?, total = ?, id_sucursal = ?, id_usuario = ?, pagado = ?, cancelada = ?, ip = ?, liquidada = ? WHERE  id_venta = ?;";
 		$params = [ 
-			$ventas.getIdVentaEquipo(), 
-			$ventas.getIdEquipo(), 
-			$ventas.getIdCliente(), 
-			$ventas.getTipoVenta(), 
-			$ventas.getTipoPago(), 
-			$ventas.getFecha(), 
-			$ventas.getSubtotal(), 
-			$ventas.getIva(), 
-			$ventas.getDescuento(), 
-			$ventas.getTotal(), 
-			$ventas.getIdSucursal(), 
-			$ventas.getIdUsuario(), 
-			$ventas.getPagado(), 
-			$ventas.getCancelada(), 
-			$ventas.getIp(), 
-			$ventas.getLiquidada(), 
-			$ventas.getIdVenta(),  ] ;
-		console.log('estoy en update()');
+			this.getIdVentaEquipo(), 
+			this.getIdEquipo(), 
+			this.getIdCliente(), 
+			this.getTipoVenta(), 
+			this.getTipoPago(), 
+			this.getFecha(), 
+			this.getSubtotal(), 
+			this.getIva(), 
+			this.getDescuento(), 
+			this.getTotal(), 
+			this.getIdSucursal(), 
+			this.getIdUsuario(), 
+			this.getPagado(), 
+			this.getCancelada(), 
+			this.getIp(), 
+			this.getLiquidada(), 
+			this.getIdVenta(),  ] ;
+            var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-				//console.log('ya termine el query de update():',tx,results);
-				Ventas._callback_stack.pop().call(null, $ventas);  
-			});
+                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+			old_this.callCallback(old_this);  
+                });
 		return; 
 	}
 
@@ -13846,7 +13977,6 @@ var Ventas = function ( config )
 
 
 }
-	Ventas._callback_stack = [];
 	/**
 	  *	Obtener todas las filas.
 	  *	
@@ -13890,14 +14020,14 @@ var Ventas = function ( config )
 	  **/
 	Ventas.getByPK = function(  $id_venta, config )
 	{
-		//console.log('estoy en getbypk()');
+		if(DEBUG) console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM ventas WHERE (id_venta = ? ) LIMIT 1;";
 		db.query($sql, [ $id_venta] , function(tx,results){ 
-				//console.log('ya termine el query de getByPK():',tx,results);
-				if(results.rows.length == 0) fres = null;
-				else fres = new Ventas(results.rows.item(0)); 
-				Ventas._callback_stack.length == 0 ? config.callback.call(config.context || null, fres)    : Ventas._callback_stack.pop().call(config.context || null, fres);  
-			});
+			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(results.rows.length == 0) fres = null;
+			else fres = new Ventas(results.rows.item(0)); 
+			config.callback.call(config.context || null, fres);
+                });
 		return;
 	};
 
