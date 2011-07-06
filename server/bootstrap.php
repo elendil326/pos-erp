@@ -63,6 +63,11 @@
 			Logger::log("I_AM_CLIENTE: There is no instance number nowhere !!" );				
 			die('<div align=center><img src="media/intro.png"></div>');
 		}
+		
+		if(defined("I_AM_PROXY") && I_AM_PROXY) {
+			Logger::log("I_AM_PROXY: There is no instance number nowhere !!" );				
+			die( '{"success": false , "reason": "Accesso denegado" , "reboot" : true }');
+		}
 
 		Logger::log("SOURCE : " . $_SERVER['REQUEST_URI']);
 		Logger::log("     There is no instance number nowhere, sending header to log.php !!" );

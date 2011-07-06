@@ -18,6 +18,8 @@
 
 */
 
+define("I_AM_PROXY" ,true);
+
 /**
 * Archivo principal del sistema
 */

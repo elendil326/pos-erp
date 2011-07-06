@@ -31,6 +31,7 @@ var Database = function (){
 			+ "  `fecha_respuesta` timestamp NULL DEFAULT NULL , "
 			+ "  `estado` int(11) NOT NULL , "
 			+ "  `parametros` varchar(2048) NOT NULL , "
+			+ "`tipo` varchar(32),"
 			+ " PRIMARY KEY (`id_autorizacion`)"
 			+ ");"
 			,
@@ -77,6 +78,8 @@ var Database = function (){
 			+ "CREATE TABLE IF NOT EXISTS `compra_cliente` ("
 			+ "  `id_compra` int(11) NOT NULL  , "
 			+ "  `id_cliente` int(11) NOT NULL , "
+			+ "`tipo_compra` varchar(32),"
+			+ "`tipo_pago` varchar(32),"
 			+ "  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP , "
 			+ "  `subtotal` float DEFAULT NULL , "
 			+ "  `impuesto` float DEFAULT '0' , "
@@ -179,6 +182,7 @@ var Database = function (){
 			+ "  `id_usuario` int(10) NOT NULL , "
 			+ "  `xml` text  NOT NULL , "
 			+ "  `lugar_emision` int(11) NOT NULL , "
+			+ "`tipo_comprobante` varchar(32),"
 			+ "  `activa` tinyint(1) NOT NULL DEFAULT '1' , "
 			+ "  `sellada` tinyint(1) NOT NULL DEFAULT '0' , "
 			+ "  `forma_pago` varchar(100)  NOT NULL,"
@@ -253,6 +257,8 @@ var Database = function (){
 			+ "CREATE TABLE IF NOT EXISTS `inventario` ("
 			+ "  `id_producto` int(11) NOT NULL  , "
 			+ "  `descripcion` varchar(30)  NOT NULL , "
+			+ "`escala` varchar(32),"
+			+ "`tratamiento` varchar(32),"
 			+ "  `agrupacion` varchar(8)  DEFAULT NULL , "
 			+ "  `agrupacionTam` float DEFAULT NULL , "
 			+ "  `activo` tinyint(1) NOT NULL DEFAULT '1' , "
@@ -273,6 +279,7 @@ var Database = function (){
 			+ "  `id_usuario` int(11) NOT NULL , "
 			+ "  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP , "
 			+ "  `monto` float NOT NULL , "
+			+ "`tipo_pago` varchar(32),"
 			+ " PRIMARY KEY (`id_pago`)"
 			+ ");"
 			,
@@ -318,6 +325,8 @@ var Database = function (){
 			+ "  `id_venta_equipo` int(11) NOT NULL,"
 			+ "  `id_equipo` int(11) DEFAULT NULL,"
 			+ "  `id_cliente` int(11) NOT NULL , "
+			+ "`tipo_venta` varchar(32),"
+			+ "`tipo_pago` varchar(32),"
 			+ "  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP , "
 			+ "  `subtotal` float DEFAULT NULL , "
 			+ "  `iva` float DEFAULT '0' , "
@@ -336,7 +345,13 @@ var Database = function (){
 	        sqlWin,
 	        sqlFail
 	    	);
-
+	    tx.executeSql(
+			""
+			,
+	        [],
+	        sqlWin,
+	        sqlFail
+	    	);
 		}, txFail, txWin);
 
 		this.query = function( query, params, fn ){
@@ -666,6 +681,20 @@ var ActualizacionDePrecio = function ( config )
 		_fecha = fecha;
 	};
 
+	this.json = {
+	
+	
+	id_actualizacion : _id_actualizacion,
+	id_producto : _id_producto,
+	id_usuario : _id_usuario,
+	precio_venta : _precio_venta,
+	precio_venta_procesado : _precio_venta_procesado,
+	precio_intersucursal : _precio_intersucursal,
+	precio_intersucursal_procesado : _precio_intersucursal_procesado,
+	precio_compra : _precio_compra,
+	fecha : _fecha
+	
+   };
 	var _callback_stack = [];
 	this.pushCallback = function( fn, context ){
 	    _callback_stack.push({ f: fn, c: context });
@@ -1376,6 +1405,19 @@ var Autorizacion = function ( config )
 		_tipo = tipo;
 	};
 
+	this.json = {
+	
+	
+	id_autorizacion : _id_autorizacion,
+	id_usuario : _id_usuario,
+	id_sucursal : _id_sucursal,
+	fecha_peticion : _fecha_peticion,
+	fecha_respuesta : _fecha_respuesta,
+	estado : _estado,
+	parametros : _parametros,
+	tipo : _tipo
+	
+   };
 	var _callback_stack = [];
 	this.pushCallback = function( fn, context ){
 	    _callback_stack.push({ f: fn, c: context });
@@ -2595,6 +2637,35 @@ var Cliente = function ( config )
 		_grant_changes = grant_changes;
 	};
 
+	this.json = {
+	
+	
+	id_cliente : _id_cliente,
+	rfc : _rfc,
+	razon_social : _razon_social,
+	calle : _calle,
+	numero_exterior : _numero_exterior,
+	numero_interior : _numero_interior,
+	colonia : _colonia,
+	referencia : _referencia,
+	localidad : _localidad,
+	municipio : _municipio,
+	estado : _estado,
+	pais : _pais,
+	codigo_postal : _codigo_postal,
+	telefono : _telefono,
+	e_mail : _e_mail,
+	limite_credito : _limite_credito,
+	descuento : _descuento,
+	activo : _activo,
+	id_usuario : _id_usuario,
+	id_sucursal : _id_sucursal,
+	fecha_ingreso : _fecha_ingreso,
+	password : _password,
+	last_login : _last_login,
+	grant_changes : _grant_changes
+	
+   };
 	var _callback_stack = [];
 	this.pushCallback = function( fn, context ){
 	    _callback_stack.push({ f: fn, c: context });
@@ -3821,6 +3892,26 @@ var CompraCliente = function ( config )
 		_liquidada = liquidada;
 	};
 
+	this.json = {
+	
+	
+	id_compra : _id_compra,
+	id_cliente : _id_cliente,
+	tipo_compra : _tipo_compra,
+	tipo_pago : _tipo_pago,
+	fecha : _fecha,
+	subtotal : _subtotal,
+	impuesto : _impuesto,
+	descuento : _descuento,
+	total : _total,
+	id_sucursal : _id_sucursal,
+	id_usuario : _id_usuario,
+	pagado : _pagado,
+	cancelada : _cancelada,
+	ip : _ip,
+	liquidada : _liquidada
+	
+   };
 	var _callback_stack = [];
 	this.pushCallback = function( fn, context ){
 	    _callback_stack.push({ f: fn, c: context });
@@ -4549,6 +4640,16 @@ var DetalleCompraCliente = function ( config )
 		_descuento = descuento;
 	};
 
+	this.json = {
+	
+	
+	id_compra : _id_compra,
+	id_producto : _id_producto,
+	cantidad : _cantidad,
+	precio : _precio,
+	descuento : _descuento
+	
+   };
 	var _callback_stack = [];
 	this.pushCallback = function( fn, context ){
 	    _callback_stack.push({ f: fn, c: context });
@@ -5152,6 +5253,18 @@ var DetalleInventario = function ( config )
 		_precio_compra = precio_compra;
 	};
 
+	this.json = {
+	
+	
+	id_producto : _id_producto,
+	id_sucursal : _id_sucursal,
+	precio_venta : _precio_venta,
+	precio_venta_procesado : _precio_venta_procesado,
+	existencias : _existencias,
+	existencias_procesadas : _existencias_procesadas,
+	precio_compra : _precio_compra
+	
+   };
 	var _callback_stack = [];
 	this.pushCallback = function( fn, context ){
 	    _callback_stack.push({ f: fn, c: context });
@@ -5793,6 +5906,18 @@ var DetalleVenta = function ( config )
 		_descuento = descuento;
 	};
 
+	this.json = {
+	
+	
+	id_venta : _id_venta,
+	id_producto : _id_producto,
+	cantidad : _cantidad,
+	cantidad_procesada : _cantidad_procesada,
+	precio : _precio,
+	precio_procesada : _precio_procesada,
+	descuento : _descuento
+	
+   };
 	var _callback_stack = [];
 	this.pushCallback = function( fn, context ){
 	    _callback_stack.push({ f: fn, c: context });
@@ -6365,6 +6490,16 @@ var Equipo = function ( config )
 		_locked = locked;
 	};
 
+	this.json = {
+	
+	
+	id_equipo : _id_equipo,
+	token : _token,
+	full_ua : _full_ua,
+	descripcion : _descripcion,
+	locked : _locked
+	
+   };
 	var _callback_stack = [];
 	this.pushCallback = function( fn, context ){
 	    _callback_stack.push({ f: fn, c: context });
@@ -6801,6 +6936,13 @@ var FacturaCompra = function ( config )
 		_id_compra = id_compra;
 	};
 
+	this.json = {
+	
+	
+	folio : _folio,
+	id_compra : _id_compra
+	
+   };
 	var _callback_stack = [];
 	this.pushCallback = function( fn, context ){
 	    _callback_stack.push({ f: fn, c: context });
@@ -7675,6 +7817,28 @@ var FacturaVenta = function ( config )
 		_cadena_original = cadena_original;
 	};
 
+	this.json = {
+	
+	
+	id_folio : _id_folio,
+	id_venta : _id_venta,
+	id_usuario : _id_usuario,
+	xml : _xml,
+	lugar_emision : _lugar_emision,
+	tipo_comprobante : _tipo_comprobante,
+	activa : _activa,
+	sellada : _sellada,
+	forma_pago : _forma_pago,
+	fecha_emision : _fecha_emision,
+	version_tfd : _version_tfd,
+	folio_fiscal : _folio_fiscal,
+	fecha_certificacion : _fecha_certificacion,
+	numero_certificado_sat : _numero_certificado_sat,
+	sello_digital_emisor : _sello_digital_emisor,
+	sello_digital_sat : _sello_digital_sat,
+	cadena_original : _cadena_original
+	
+   };
 	var _callback_stack = [];
 	this.pushCallback = function( fn, context ){
 	    _callback_stack.push({ f: fn, c: context });
@@ -8570,6 +8734,20 @@ var Gastos = function ( config )
 		_nota = nota;
 	};
 
+	this.json = {
+	
+	
+	id_gasto : _id_gasto,
+	folio : _folio,
+	concepto : _concepto,
+	monto : _monto,
+	fecha : _fecha,
+	fecha_ingreso : _fecha_ingreso,
+	id_sucursal : _id_sucursal,
+	id_usuario : _id_usuario,
+	nota : _nota
+	
+   };
 	var _callback_stack = [];
 	this.pushCallback = function( fn, context ){
 	    _callback_stack.push({ f: fn, c: context });
@@ -9148,6 +9326,15 @@ var Impresora = function ( config )
 		_identificador = identificador;
 	};
 
+	this.json = {
+	
+	
+	id_impresora : _id_impresora,
+	id_sucursal : _id_sucursal,
+	descripcion : _descripcion,
+	identificador : _identificador
+	
+   };
 	var _callback_stack = [];
 	this.pushCallback = function( fn, context ){
 	    _callback_stack.push({ f: fn, c: context });
@@ -9763,6 +9950,19 @@ var Ingresos = function ( config )
 		_nota = nota;
 	};
 
+	this.json = {
+	
+	
+	id_ingreso : _id_ingreso,
+	concepto : _concepto,
+	monto : _monto,
+	fecha : _fecha,
+	fecha_ingreso : _fecha_ingreso,
+	id_sucursal : _id_sucursal,
+	id_usuario : _id_usuario,
+	nota : _nota
+	
+   };
 	var _callback_stack = [];
 	this.pushCallback = function( fn, context ){
 	    _callback_stack.push({ f: fn, c: context });
@@ -10454,6 +10654,19 @@ var Inventario = function ( config )
 		_precio_por_agrupacion = precio_por_agrupacion;
 	};
 
+	this.json = {
+	
+	
+	id_producto : _id_producto,
+	descripcion : _descripcion,
+	escala : _escala,
+	tratamiento : _tratamiento,
+	agrupacion : _agrupacion,
+	agrupacionTam : _agrupacionTam,
+	activo : _activo,
+	precio_por_agrupacion : _precio_por_agrupacion
+	
+   };
 	var _callback_stack = [];
 	this.pushCallback = function( fn, context ){
 	    _callback_stack.push({ f: fn, c: context });
@@ -11112,6 +11325,18 @@ var PagosVenta = function ( config )
 		_tipo_pago = tipo_pago;
 	};
 
+	this.json = {
+	
+	
+	id_pago : _id_pago,
+	id_venta : _id_venta,
+	id_sucursal : _id_sucursal,
+	id_usuario : _id_usuario,
+	fecha : _fecha,
+	monto : _monto,
+	tipo_pago : _tipo_pago
+	
+   };
 	var _callback_stack = [];
 	this.pushCallback = function( fn, context ){
 	    _callback_stack.push({ f: fn, c: context });
@@ -12213,6 +12438,32 @@ var Sucursal = function ( config )
 		_saldo_a_favor = saldo_a_favor;
 	};
 
+	this.json = {
+	
+	
+	id_sucursal : _id_sucursal,
+	gerente : _gerente,
+	descripcion : _descripcion,
+	razon_social : _razon_social,
+	rfc : _rfc,
+	calle : _calle,
+	numero_exterior : _numero_exterior,
+	numero_interior : _numero_interior,
+	colonia : _colonia,
+	localidad : _localidad,
+	referencia : _referencia,
+	municipio : _municipio,
+	estado : _estado,
+	pais : _pais,
+	codigo_postal : _codigo_postal,
+	telefono : _telefono,
+	token : _token,
+	letras_factura : _letras_factura,
+	activo : _activo,
+	fecha_apertura : _fecha_apertura,
+	saldo_a_favor : _saldo_a_favor
+	
+   };
 	var _callback_stack = [];
 	this.pushCallback = function( fn, context ){
 	    _callback_stack.push({ f: fn, c: context });
@@ -13448,6 +13699,28 @@ var Ventas = function ( config )
 		_liquidada = liquidada;
 	};
 
+	this.json = {
+	
+	
+	id_venta : _id_venta,
+	id_venta_equipo : _id_venta_equipo,
+	id_equipo : _id_equipo,
+	id_cliente : _id_cliente,
+	tipo_venta : _tipo_venta,
+	tipo_pago : _tipo_pago,
+	fecha : _fecha,
+	subtotal : _subtotal,
+	iva : _iva,
+	descuento : _descuento,
+	total : _total,
+	id_sucursal : _id_sucursal,
+	id_usuario : _id_usuario,
+	pagado : _pagado,
+	cancelada : _cancelada,
+	ip : _ip,
+	liquidada : _liquidada
+	
+   };
 	var _callback_stack = [];
 	this.pushCallback = function( fn, context ){
 	    _callback_stack.push({ f: fn, c: context });

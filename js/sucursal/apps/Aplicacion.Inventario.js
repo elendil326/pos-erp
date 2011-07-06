@@ -132,7 +132,8 @@ Aplicacion.Inventario.prototype.cargarInventario = function ()
 		},
 		success: function(response, opts) {
 			try{
-				inventario = Ext.util.JSON.decode( response.responseText );				
+				inventario = Ext.util.JSON.decode( response.responseText );
+				inventario2 = Ext.util.JSON.decode( response.responseText );					
 			}catch(e){
 				return POS.error(response, e);
 			}
@@ -142,6 +143,25 @@ Aplicacion.Inventario.prototype.cargarInventario = function ()
 				//volver a intentar
 				return this.cargarInventario();
 			}
+			console.log(inventario2);
+			
+			for(i_index = 0; i_index < inventario2.datos.length ; i_index++){
+
+				prod = new Inventario({
+					id_producto : parseInt( inventario2.datos[i_index].productoID ),
+					descripcion : inventario2.datos[i_index].descripcion,
+					escala : inventario2.datos[i_index].medida,
+					tratamiento: inventario2.datos[i_index].tratamiento,
+					agrupacion : inventario2.datos[i_index].agrupacion,
+					agrupacionTam: parseFloat(inventario2.datos[i_index].agrupacionTam),
+					activo : 1,
+					precio_por_agrupacion: 1 // inventario2.datos[i_index].precioPorAgrupacion
+				});				
+				console.warn(prod);
+				prod.save(function(r){console.log(r)});
+			}
+			
+			
 			
 			if(DEBUG){
 				console.log("Inventario retrived !", inventario);

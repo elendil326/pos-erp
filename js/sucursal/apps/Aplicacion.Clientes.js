@@ -218,12 +218,12 @@ Aplicacion.Clientes.prototype.listaDeClientesLoad = function (){
                 return this.listaDeClientesLoad();
             }
 			
-			console.log("Datos de cliente", raw_clientes);
+			//console.log("Datos de cliente", raw_clientes);
 
 			for(asdf = 0; asdf < raw_clientes.datos.length ; asdf++){
-				console.log("guardando clietnes")
+				//console.log("guardando clietnes")
 				dan = new Cliente( raw_clientes.datos[asdf] );				
-				dan.save(function(r){console.log(r)});
+				dan.save(Ext.emptyFn);
 			}
 			
             this.listaDeClientes.lista = clientes.datos;
