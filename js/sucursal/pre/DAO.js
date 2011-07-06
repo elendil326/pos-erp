@@ -345,13 +345,7 @@ var Database = function (){
 	        sqlWin,
 	        sqlFail
 	    	);
-	    tx.executeSql(
-			""
-			,
-	        [],
-	        sqlWin,
-	        sqlFail
-	    	);
+
 		}, txFail, txWin);
 
 		this.query = function( query, params, fn ){

@@ -5,7 +5,7 @@ require_once("base/pos_config.dao.base.php");
 require_once("base/pos_config.vo.base.php");
 /** Page-level DocBlock .
   * 
-  * @author Alan Gonzalez
+  * @author caffeina
   * @package docs
   * 
   */
@@ -13,7 +13,7 @@ require_once("base/pos_config.vo.base.php");
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link PosConfig }. 
-  * @author Alan Gonzalez
+  * @author caffeina
   * @access public
   * @package docs
   * 

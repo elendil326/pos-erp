@@ -5,7 +5,7 @@ require_once("base/prestamo_sucursal.dao.base.php");
 require_once("base/prestamo_sucursal.vo.base.php");
 /** Page-level DocBlock .
   * 
-  * @author Alan Gonzalez
+  * @author caffeina
   * @package docs
   * 
   */
@@ -13,7 +13,7 @@ require_once("base/prestamo_sucursal.vo.base.php");
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
   * almacenar de forma permanente y recuperar instancias de objetos {@link PrestamoSucursal }. 
-  * @author Alan Gonzalez
+  * @author caffeina
   * @access public
   * @package docs
   * 

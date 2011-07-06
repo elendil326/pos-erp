@@ -2,7 +2,7 @@
 		/** Table Data Access Object.
        *	 
 		  * Esta clase abstracta comprende metodos comunes para todas las clases DAO que mapean una tabla
-		  * @author Alan Gonzalez
+		  * @author caffeina
 		  * @access private
 		  * @abstract
 		  * @package docs
@@ -63,7 +63,7 @@
 		/** Value Object.
 		  * 
 		  * Esta clase abstracta comprende metodos comunes para todas los objetos VO
-		  * @author Alan Gonzalez
+		  * @author caffeina
 		  * @access private
 		  * @package docs
 		  * 
