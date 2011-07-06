@@ -13,71 +13,55 @@ require_once('model/compra_proveedor_flete.dao.php');
 require_once('model/inventario_maestro.dao.php');
 require_once('logger.php');
 
-
-
-
 /**
  * Evaluar el valor del inventario actual
  * 
  * 
  * 
  * @param id_sucursal El id de la sucursal a evaluar
- * **/
-function valorDelInventarioActual($id_sucursal){ 
-	//obtener el inventario de esta sucursal
-	
-	$inventario = listarInventario( $id_sucursal );
-	
-	$valor_total = 0;
-	
-	
-	foreach($inventario as $producto_existencias ){
-		
-		
-		// calcular el valor, con la ultima actualizacion
-		// de precio multiplicado por la cantidad
-		// de producto orignal que hay
-		
-		//primero hay que saber si el precio que 
-		//voy a ver es por agrupacion o por unidad
-		if( $producto_existencias["precioPorAgrupacion"] ){
-			
-			//el precio es por agrupacion, sacar el tamano
-			//de la agrupacion y calcular el precio por unidad
-			$valor_unitario = $producto_existencias["precioVenta"] / $producto_existencias["agrupacionTam"];
-			
-			
-		}else{
-			
-			$valor_unitario = $producto_existencias["precioVenta"];
-			
-		}
-		
-		$valor_total +=  ( $valor_unitario * $producto_existencias["existencias"] );
-		
-		
-		
-		
-		// Tambien se trata este producto, 
-		// hay que contabilizar los productos
-		// procesados si es que hay
-		if($producto_existencias["tratamiento"]){
-			
-		}
-		
-		
-		
-	}
-	
-	
-	return $valor_total;
+ * * */
+function valorDelInventarioActual($id_sucursal) {
+    //obtener el inventario de esta sucursal
 
+    $inventario = listarInventario($id_sucursal);
+
+    $valor_total = 0;
+
+
+    foreach ($inventario as $producto_existencias) {
+
+
+        // calcular el valor, con la ultima actualizacion
+        // de precio multiplicado por la cantidad
+        // de producto orignal que hay
+        //primero hay que saber si el precio que 
+        //voy a ver es por agrupacion o por unidad
+        if ($producto_existencias["precioPorAgrupacion"]) {
+
+            //el precio es por agrupacion, sacar el tamano
+            //de la agrupacion y calcular el precio por unidad
+            $valor_unitario = $producto_existencias["precioVenta"] / $producto_existencias["agrupacionTam"];
+        } else {
+
+            $valor_unitario = $producto_existencias["precioVenta"];
+        }
+
+        $valor_total += ( $valor_unitario * $producto_existencias["existencias"] );
+
+
+
+
+        // Tambien se trata este producto, 
+        // hay que contabilizar los productos
+        // procesados si es que hay
+        if ($producto_existencias["tratamiento"]) {
+            
+        }
+    }
+
+
+    return $valor_total;
 }
-
-
-
-
-
 
 /**
  * Evaluar el costo del inventario actual
@@ -85,17 +69,10 @@ function valorDelInventarioActual($id_sucursal){
  * 
  * 
  * @param id_sucursal El id de la sucursal a evaluar
- * **/
-function costoDelInventarioActual($id_sucursal){ 
-	
+ * * */
+function costoDelInventarioActual($id_sucursal) {
+    
 }
-
-
-
-
-
-
-
 
 /*
  * Regresa un objeto ActualizacionDePrecio con la informacion de la ultima actualizacion de precio
@@ -119,27 +96,24 @@ function obtenerActualizacionDePrecio($id_producto) {
     return $result[0];
 }
 
-
-
-
-
 /*
  * listar las existencias para la sucursal dada sucursal
  * */
+
 function listarInventario($sucID = null) {
-	/*
-	Logger::log("--------------------------------");
-		        $d = debug_backtrace();
-				$track = "ESTOY USANDO LISTARINVENTARIO ! : ";
-				for ($i= 1; $i < sizeof($d) -1 ; $i++) { 
-					$track .= isset($d[$i]["function"]) ? "->" . $d[$i]["function"] . "()": "*" ;
-					$track .= isset($d[$i]["file"]) ? substr( strrchr( $d[$i]["file"], "/" ), 1 )  : "*"; 
-					$track .= isset($d[$i]["line"]) ? ":" .  $d[$i]["line"] ." "  : "* " ;
-				}
-				Logger::log($track);
-	Logger::log("--------------------------------");
-	*/
-	
+    /*
+      Logger::log("--------------------------------");
+      $d = debug_backtrace();
+      $track = "ESTOY USANDO LISTARINVENTARIO ! : ";
+      for ($i= 1; $i < sizeof($d) -1 ; $i++) {
+      $track .= isset($d[$i]["function"]) ? "->" . $d[$i]["function"] . "()": "*" ;
+      $track .= isset($d[$i]["file"]) ? substr( strrchr( $d[$i]["file"], "/" ), 1 )  : "*";
+      $track .= isset($d[$i]["line"]) ? ":" .  $d[$i]["line"] ." "  : "* " ;
+      }
+      Logger::log($track);
+      Logger::log("--------------------------------");
+     */
+
 
     if (!$sucID) {
         return null;
@@ -156,49 +130,37 @@ function listarInventario($sucID = null) {
     foreach ($results as $producto) {
         $productoData = InventarioDAO::getByPK($producto->getIdProducto());
 
-		//buscar esta actualizacion de precio
+        //buscar esta actualizacion de precio
         $actualizacion_de_precio = obtenerActualizacionDePrecio($producto->getIdProducto());
 
         Array_push($json, array(
-
-			//detalles basicos que jamas cambian
-            "productoID"			=> $productoData->getIdProducto(),
-            "descripcion" 			=> $productoData->getDescripcion(),
-            "tratamiento" 			=> $productoData->getTratamiento(),
-            "medida" 				=> $productoData->getEscala(),
-            "agrupacion" 			=> $productoData->getAgrupacion(),
-            "agrupacionTam" 		=> $productoData->getAgrupacionTam(),
-            "precioPorAgrupacion" 	=> $productoData->getPrecioPorAgrupacion() == "1",
-
-			//precios de la tabla de detalle inventario !
-            "precioVenta" 			=> $producto->getPrecioVenta(),
-            "precioVentaProcesado"  => $producto->getPrecioVentaProcesado(),
-
-			//las existencias originales, son las existencias
-			//totales menos las existencias procesadas
-            "existencias" => ($producto->getExistencias() - $producto->getExistenciasProcesadas()),			
-
-			//mantendre existenciasOriginales para 
-			//backwards compatibility
+            //detalles basicos que jamas cambian
+            "productoID" => $productoData->getIdProducto(),
+            "descripcion" => $productoData->getDescripcion(),
+            "tratamiento" => $productoData->getTratamiento(),
+            "medida" => $productoData->getEscala(),
+            "agrupacion" => $productoData->getAgrupacion(),
+            "agrupacionTam" => $productoData->getAgrupacionTam(),
+            "precioPorAgrupacion" => $productoData->getPrecioPorAgrupacion() == "1",
+            //precios de la tabla de detalle inventario !
+            "precioVenta" => $producto->getPrecioVenta(),
+            "precioVentaProcesado" => $producto->getPrecioVentaProcesado(),
+            //las existencias originales, son las existencias
+            //totales menos las existencias procesadas
+            "existencias" => ($producto->getExistencias() - $producto->getExistenciasProcesadas()),
+            //mantendre existenciasOriginales para 
+            //backwards compatibility
             "existenciasOriginales" => ($producto->getExistencias() - $producto->getExistenciasProcesadas()),
             "existenciasProcesadas" => $producto->getExistenciasProcesadas(),
-
-			// estos precios si vienen de la tabla de
-			// actualizacion de precio
-            "precioIntersucursal" 			=> $actualizacion_de_precio->getPrecioIntersucursal(),
-            "precioIntersucursalProcesado" 	=> $actualizacion_de_precio->getPrecioIntersucursalProcesado()
-
+            // estos precios si vienen de la tabla de
+            // actualizacion de precio
+            "precioIntersucursal" => $actualizacion_de_precio->getPrecioIntersucursal(),
+            "precioIntersucursalProcesado" => $actualizacion_de_precio->getPrecioIntersucursalProcesado()
         ));
     }
 
     return $json;
 }
-
-
-
-
-
-
 
 function detalleProductoSucursal($args) {
 
@@ -455,56 +417,54 @@ function nuevoProducto($data) {
 
 
     $inventario = new Inventario();
-    $inventario->setDescripcion(		$jsonData->descripcion );
-    $inventario->setEscala(				$jsonData->escala == "null" ? null : $jsonData->escala );
-    $inventario->setTratamiento(		$jsonData->tratamiento == "null" ? null : $jsonData->tratamiento );
-    $inventario->setAgrupacion(			$jsonData->agrupacion == "null" ? null : $jsonData->agrupacion );
-    $inventario->setAgrupacionTam(		$jsonData->agrupacion == "null" ? null : $jsonData->agrupacionTam );
-    $inventario->setPrecioPorAgrupacion(isset($jsonData->tipo_de_precio)?$jsonData->tipo_de_precio == "agrupacion"?1:0:0);
+    $inventario->setDescripcion($jsonData->descripcion);
+    $inventario->setEscala($jsonData->escala == "null" ? null : $jsonData->escala );
+    $inventario->setTratamiento($jsonData->tratamiento == "null" ? null : $jsonData->tratamiento );
+    $inventario->setAgrupacion($jsonData->agrupacion == "null" ? null : $jsonData->agrupacion );
+    $inventario->setAgrupacionTam($jsonData->agrupacion == "null" ? null : $jsonData->agrupacionTam );
+    $inventario->setPrecioPorAgrupacion(isset($jsonData->tipo_de_precio) ? $jsonData->tipo_de_precio == "agrupacion" ? 1 : 0 : 0);
     $inventario->setActivo(1);
     DAO::transBegin();
 
     try {
         Logger::log("Insertando nuevo producto: " . $jsonData->descripcion . ", " . $jsonData->escala . ", " . $jsonData->tratamiento);
-        InventarioDAO::save( $inventario );
-
+        InventarioDAO::save($inventario);
     } catch (Exception $e) {
         DAO::transRollback();
         Logger::log("Imposible crear nuevo producto:" . $e);
         return array("success" => false, "reason" => "Error al crear el nuevo producto, porfavor intente de nuevo.");
-
     }
 
 
-	//insertar actualizacion de precio
+    //insertar actualizacion de precio
     $actualizacion = new ActualizacionDePrecio();
 
-    $actualizacion->setIdProducto($inventario->getIdProducto() );
+    $actualizacion->setIdProducto($inventario->getIdProducto());
     $actualizacion->setIdUsuario($_SESSION['userid']);
     $actualizacion->setPrecioVenta($jsonData->precio_venta);
     $actualizacion->setPrecioVentaProcesado(0);
 
     if (POS_COMPRA_A_CLIENTES) {
         $actualizacion->setPrecioCompra($jsonData->precio_compra);
-    }else{
-	    $actualizacion->setPrecioCompra(0);
-	}
+    } else {
+        $actualizacion->setPrecioCompra(0);
+    }
 
 
     if (!isset($jsonData->precio_intersucursal))
-        //$actualizacion->setPrecioVentaSinProcesar(0);
-            $actualizacion->setPrecioVenta(0);
+    //$actualizacion->setPrecioVentaSinProcesar(0);
+        $actualizacion->setPrecioVenta(0);
     else
         $actualizacion->setPrecioVenta($jsonData->precio_intersucursal);
 
     if (POS_MULTI_SUCURSAL) {
-        /*$actualizacion->setPrecioIntersucursal($jsonData->precio_intersucursal);
-        $actualizacion->setPrecioIntersucursalSinProcesar($jsonData->precio_intersucursal);*/
+        /* $actualizacion->setPrecioIntersucursal($jsonData->precio_intersucursal);
+          $actualizacion->setPrecioIntersucursalSinProcesar($jsonData->precio_intersucursal); */
         $actualizacion->setPrecioIntersucursalProcesado($jsonData->precio_intersucursal);
         $actualizacion->setPrecioIntersucursal($jsonData->precio_intersucursal);
     } else {
-        /*$actualizacion->setPrecioIntersucursal(0);
-        $actualizacion->setPrecioIntersucursalSinProcesar(0);*/
+        /* $actualizacion->setPrecioIntersucursal(0);
+          $actualizacion->setPrecioIntersucursalSinProcesar(0); */
         $actualizacion->setPrecioIntersucursalProcesado(0);
         $actualizacion->setPrecioIntersucursal(0);
     }
@@ -610,7 +570,8 @@ function procesarProducto($json = null) {
     $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
     $compra_proveedor_fragmentacion->setIdCompraProveedor($inventario_maestro->getIdCompraProveedor());
     $compra_proveedor_fragmentacion->setIdProducto($inventario_maestro->getIdProducto());
-    $compra_proveedor_fragmentacion->setDescripcion("HUBO UN EGRESO DE {$suma}KG. DEL PRODUCTO {$producto->getDescripcion()} ORIGINAL POR CONCEPTO DE UN PROCESO EN LA REMISION CON EL FOLIO {$compra_proveedor->getFolio()}.");
+    //$compra_proveedor_fragmentacion->setDescripcion("HUBO UN EGRESO DE {$suma}KG. DEL PRODUCTO {$producto->getDescripcion()} ORIGINAL POR CONCEPTO DE UN PROCESO EN LA REMISION CON EL FOLIO {$compra_proveedor->getFolio()}.");
+    $compra_proveedor_fragmentacion->setDescripcion("HUBO UN EGRESO DE {$suma}KG. DEL PRODUCTO {$producto->getDescripcion()} ORIGINAL POR CONCEPTO DE UN PROCESO EN ESTA MISMA REMISION.");
     $compra_proveedor_fragmentacion->setProcesada(false);
     $compra_proveedor_fragmentacion->setCantidad(($suma * -1));
     //$compra_proveedor_fragmentacion->setPrecio($detalle_compra_proveedor->getPrecioPorKg());.
@@ -626,21 +587,23 @@ function procesarProducto($json = null) {
 
     $inventario_maestro->setExistencias($inventario_maestro->getExistencias() - $data->desecho);
 
-    //registramos este egreso de merma en el inventario maestro
-    $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
-    $compra_proveedor_fragmentacion->setIdCompraProveedor($inventario_maestro->getIdCompraProveedor());
-    $compra_proveedor_fragmentacion->setIdProducto($inventario_maestro->getIdProducto());
-    $compra_proveedor_fragmentacion->setDescripcion("HUBO UN EGRESO DE {$data->desecho}KG. DEL PRODUCTO {$producto->getDescripcion()} ORIGINAL POR CONCEPTO DE MERMA EN UN PROCESO EN LA REMISION CON EL FOLIO {$compra_proveedor->getFolio()}.");
-    $compra_proveedor_fragmentacion->setProcesada(false);
-    $compra_proveedor_fragmentacion->setCantidad(($data->desecho * -1));
-    $compra_proveedor_fragmentacion->setPrecio($detalle_compra_proveedor->getPrecioPorKg());
-    $compra_proveedor_fragmentacion->setDescripcionRefId($inventario_maestro->getIdCompraProveedor());
+    if ($data->desecho > 0) {
+        //registramos este egreso de merma en el inventario maestro
+        $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
+        $compra_proveedor_fragmentacion->setIdCompraProveedor($inventario_maestro->getIdCompraProveedor());
+        $compra_proveedor_fragmentacion->setIdProducto($inventario_maestro->getIdProducto());
+        $compra_proveedor_fragmentacion->setDescripcion("HUBO UN EGRESO DE {$data->desecho}KG. DEL PRODUCTO {$producto->getDescripcion()} ORIGINAL POR CONCEPTO DE MERMA.");
+        $compra_proveedor_fragmentacion->setProcesada(false);
+        $compra_proveedor_fragmentacion->setCantidad(($data->desecho * -1));
+        $compra_proveedor_fragmentacion->setPrecio($detalle_compra_proveedor->getPrecioPorKg());
+        $compra_proveedor_fragmentacion->setDescripcionRefId($inventario_maestro->getIdCompraProveedor());
 
-    try {
-        CompraProveedorFragmentacionDAO::save($compra_proveedor_fragmentacion);
-    } catch (Exception $e) {
-        DAO::transRollback();
-        Logger::log("Error, al guardar los datos del historial del producto del inventario maestro. : " . $e);
+        try {
+            CompraProveedorFragmentacionDAO::save($compra_proveedor_fragmentacion);
+        } catch (Exception $e) {
+            DAO::transRollback();
+            Logger::log("Error, al guardar los datos del historial del producto del inventario maestro. : " . $e);
+        }
     }
 
 
@@ -663,7 +626,8 @@ function procesarProducto($json = null) {
     $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
     $compra_proveedor_fragmentacion->setIdCompraProveedor($inventario_maestro->getIdCompraProveedor());
     $compra_proveedor_fragmentacion->setIdProducto($inventario_maestro->getIdProducto());
-    $compra_proveedor_fragmentacion->setDescripcion("HUBO UN INGRESO DE {$data->resultante}KG. DEL PRODUCTO {$producto->getDescripcion()} PROCESADO COMO RESULTADO DE UN PROCESO DE ESTA MISMA REMISION CON EL FOLIO {$compra_proveedor->getFolio()}.");
+    //$compra_proveedor_fragmentacion->setDescripcion("HUBO UN INGRESO DE {$data->resultante}KG. DEL PRODUCTO {$producto->getDescripcion()} PROCESADO COMO RESULTADO DE UN PROCESO DE ESTA MISMA REMISION CON EL FOLIO {$compra_proveedor->getFolio()}.");
+    $compra_proveedor_fragmentacion->setDescripcion("HUBO UN INGRESO DE {$data->resultante}KG. DEL PRODUCTO {$producto->getDescripcion()} PROCESADO COMO RESULTADO DE UN PROCESO DE ESTA MISMA REMISION.");
     $compra_proveedor_fragmentacion->setProcesada(true);
     $compra_proveedor_fragmentacion->setCantidad($data->resultante);
     //$compra_proveedor_fragmentacion->setPrecio($detalle_compra_proveedor->getPrecioPorKg());
@@ -1027,11 +991,11 @@ if (isset($args['action'])) {
     switch ($args['action']) {
         case 400:
 
-			Logger::log("Listando el inventario....");
-			
+            Logger::log("Listando el inventario....");
+
             $json = json_encode(listarInventario($_SESSION["sucursal"]));
             if (isset($args['hashCheck'])) {
-				//revisar hashes
+                //revisar hashes
                 if (md5($json) == $args['hashCheck']) {
                     return;
                 }

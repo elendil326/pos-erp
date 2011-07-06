@@ -94,7 +94,8 @@ $compra_proveedor_fragmentacion = CompraProveedorFragmentacionDAO::search(new Co
     $i = 0;
     $s = "background-color:#e8e8e8;";
     $d = "background-color:white";
-    $suma = 0;
+    $recoleccion = 0;
+    $perdida = 0;
 
     $array = array();
 
@@ -114,7 +115,11 @@ $compra_proveedor_fragmentacion = CompraProveedorFragmentacionDAO::search(new Co
             "resumen" => $fragmentacion->getDescripcion()
         ));
 
-        $suma += ( $fragmentacion->getPrecio() * $fragmentacion->getCantidad());
+        if($fragmentacion->getPrecio() * $fragmentacion->getCantidad() > 0){
+            $recoleccion += ( $fragmentacion->getPrecio() * $fragmentacion->getCantidad());
+        }else{
+            $perdida += ( $fragmentacion->getPrecio() * $fragmentacion->getCantidad());
+        }
 
         $i++;
     }
@@ -144,10 +149,9 @@ $compra_proveedor_fragmentacion = CompraProveedorFragmentacionDAO::search(new Co
 
 <table border="0" cellspacing="0" cellpadding="5" style="width:100%"> 
     <?php
-    echo "<tr style = 'font-weight:bold; " . ($i % 2 == 0 ? $d : $s) . "'><th><b>Costo de la Remisión</b></th><th><b>Recoleccion</b></th><th><b>Estatus</b></th></tr>";
+    echo "<tr style = 'font-weight:bold; " . ($i % 2 == 0 ? $d : $s) . "'><th><b>Costo de la Remisión</b></th><th><b>Perdida</b></th><th><b>Recoleccion</b></th><th><b>Estatus</b></th></tr>";
     echo "<tr style = 'font-weight:bold; " . ($i % 2 == 0 ? $d : $s) . "'>";
-    $saldo = $suma - $compra_proveedor->getTotalOrigen();
-    echo "  <td>" . moneyFormat($compra_proveedor->getTotalOrigen()) . "</td><td>" . moneyFormat($suma) . "</td><td>" . moneyFormatAlert($suma - $compra_proveedor->getTotalOrigen()) . "</td>";
+    echo "  <td>" . moneyFormat($compra_proveedor->getTotalOrigen()) . "</td><td>" . moneyFormatAlert($perdida) . "</td><td>" . moneyFormatAlert($recoleccion) . "</td><td>" . moneyFormatAlert($recoleccion - $compra_proveedor->getTotalOrigen()) . "</td>";
     echo "</tr>";
     ?>
 </table>

@@ -25,13 +25,28 @@ function floatFormatAlert( $val ){
 
 function moneyFormatAlert( $val, $useHtml = true){
 	
+        //var_dump($val);
+    
         $c1 = "red";
         $c2 = "green";
+        $c3 = "black";
+        
+        if($val < 0){
+            $c = "style = 'color:red'";
+        }
+        
+        if($val == 0){
+            $c = "";
+        }
+        
+        if($val > 0){
+            $c = "style = 'color:green'";
+        }
     
 	if( $useHtml ==  DONT_USE_HTML){
-		return "$ <b style = 'color:" . ($val < 0 ? $c1: $c2) . "'>" . number_format( (float)$val, 2 ) . "</b>";		
+		return "$ <b {$c}>" . number_format( (float)$val, 2 ) . "</b>";		
 	}else{
-		return "$&nbsp;<b style = 'color:" . ($val < 0 ? $c1: $c2) . "'>" . number_format( (float)$val, 2 ) . "</b>";		
+		return "$&nbsp;<b {$c}>" . number_format( (float)$val, 2 ) . "</b>";		
 	}
 
 
