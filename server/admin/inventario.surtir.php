@@ -794,7 +794,7 @@ foreach ($iMaestro as $i) {
         
         };
     
-        this.agregarProducto = function( id_compra, id_producto, rowIndex ){
+        this.agregarProducto = function( id_compra, id_producto, rowIndex ){           
         
             console.log( "agregarProducto( " + id_compra + "," +  id_producto +","+ rowIndex + " )" );
 
@@ -896,7 +896,9 @@ foreach ($iMaestro as $i) {
                 escala      : producto.escala,
                 precio      : precio_total, //parseFloat(producto.precio_por_kg) + parseFloat(costo_flete),
                 precio_original : parseFloat(producto.precio_por_kg) + parseFloat(costo_flete) ,
-                descuento   : 0
+                descuento   : 0,
+                existencias : producto.existencias,
+                existencias_procesadas : producto.existencias_procesadas
             });
 
             jQuery("#ASurtirTablaHeader").after( tr(html, "id='" + id_compra + "-" + id_producto + "-composicion'") );
@@ -909,19 +911,30 @@ foreach ($iMaestro as $i) {
             for ( i = composicion.length - 1; i >= 0; i--){
 	
                 c = composicion[i];
+                
                 total_qty += c.peso_total;
+                
+                if(c.cantidad <= 0){
+                    error("Verifique la cantidad de producto", "La cantidad de producto a vender debe ser mayor que cero.");
+                    return;
+                }
 
-                if(c.importe == 0){
-                    error("El importe es cero", "No puede vender un producto con un descuento tan grande que el importe sea cero. ");
+                if(c.importe <= 0){
+                    error("Descuento Excesivo", "No puede vender un producto con un descuento tan grande.");
                     return;
                 }
 
                 var el = c.id_compra + "-" + c.id_producto +  "-composicion" ;
 
-                /*if((c.cantidad - c.descuento) <= 0 ){
-                error( "Hay productos sin cantidad", " El producto " + c.desc + " tiene una cantidad de cero.", el);
-                return;
-            }*/
+                if(!c.procesada && c.cantidad > c.existencias){
+                    error("Verifique su cantidad", "No puede vender mas producto del que en realidad posee.");
+                    return;
+                }
+                
+                if(c.procesada && c.cantidad > c.existencias_procesadas){
+                    error("Verifique su cantidad", "No puede vender mas producto del que en realidad posee.");
+                    return;
+                }
 
             }
 
@@ -934,8 +947,7 @@ foreach ($iMaestro as $i) {
             if(total_qty == 0){
                 error("El peso total es cero", "No puede componer un producto a surtir cuando el peso total es igual a cero. ");
                 return;
-            }
-
+            }            
 
             composiciones.push({
                 items : composicion,
@@ -1628,7 +1640,7 @@ echo " var inventario_maestro_extjs = " . json_encode($iMaestro) . ";";
             stateId: 'grid2',
             listeners : {
                 "rowclick" : function (grid, rowIndex, e){
-                    var datos = grid.getStore().getAt( rowIndex );
+                    var datos = grid.getStore().getAt( rowIndex );                                        
 				
                     composicionTabla.agregarProducto(  datos.get("id_compra_proveedor" ), datos.get("id_producto"), rowIndex );
 				
