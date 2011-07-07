@@ -361,7 +361,7 @@ var Database = function (){
 	var txFail = function (err) { console.error("TX failed: " + err.message); }
 	var txWin = function(tx){  }	
 	var sqlFail = function(err) { console.error("SQL failed: " + err.message, err); }
-	var sqlWin = function(tx, response) { /*console.log("SQL succeeded: " + response.rows.length + " rows.");*/ }
+	var sqlWin = function(tx, response) { /*//console.log("SQL succeeded: " + response.rows.length + " rows.");*/ }
 };
 var db = new Database();
 /** Value Object file for table actualizacion_de_precio.
@@ -712,10 +712,10 @@ var ActualizacionDePrecio = function ( config )
 	  **/
 	this.save = function( callback )
 	{
-		if(DEBUG) console.log('estoy en save()');
+		if(DEBUG) //console.log('estoy en save()');
 		this.pushCallback(callback, this);
 		var cb = function(res){
-                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(DEBUG)//console.log('estoy de regreso en save(',res,') con el contexto:', this);
                 if(res == null){
                     create.call(this,null);
                 }else{
@@ -741,7 +741,7 @@ var ActualizacionDePrecio = function ( config )
 	  *	  resultados = cliente.search();
 	  *	  
 	  *	  foreach(resultados as c ){
-	  *	  	//console.log( c.getNombre() );
+	  *	  	////console.log( c.getNombre() );
 	  *	  }
 	  * </code>
 	  *	@static
@@ -829,7 +829,7 @@ var ActualizacionDePrecio = function ( config )
 	  **/
 	var create = function(  )
 	{
-		if(DEBUG)console.log('estoy en create(this)');
+		if(DEBUG)//console.log('estoy en create(this)');
 		$sql = "INSERT INTO actualizacion_de_precio ( id_actualizacion, id_producto, id_usuario, precio_venta, precio_venta_procesado, precio_intersucursal, precio_intersucursal_procesado, precio_compra, fecha ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			this.getIdActualizacion(), 
@@ -844,7 +844,7 @@ var ActualizacionDePrecio = function ( config )
 		 ];
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                if(DEBUG) //console.log('ya termine el query de insert():',tx,results);
                 old_this.callCallback(old_this);
 		});
 		return; 
@@ -863,7 +863,7 @@ var ActualizacionDePrecio = function ( config )
 	  **/
 	var update = function(  )
 	{
-		if(DEBUG)console.log('estoy en update(',this,')');
+		if(DEBUG)//console.log('estoy en update(',this,')');
 		$sql = "UPDATE actualizacion_de_precio SET  id_producto = ?, id_usuario = ?, precio_venta = ?, precio_venta_procesado = ?, precio_intersucursal = ?, precio_intersucursal_procesado = ?, precio_compra = ?, fecha = ? WHERE  id_actualizacion = ?;";
 		$params = [ 
 			this.getIdProducto(), 
@@ -877,7 +877,7 @@ var ActualizacionDePrecio = function ( config )
 			this.getIdActualizacion(),  ] ;
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+                    if(DEBUG)//console.log('ya termine el query de update():', tx, results, this);
 			old_this.callCallback(old_this);  
                 });
 		return; 
@@ -1093,7 +1093,7 @@ var ActualizacionDePrecio = function ( config )
 		db.query($sql, [], function(tx,results){ 
 				fres = [];
 				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new ActualizacionDePrecio( results.rows.item(i) ) ) }
-				//console.log(fres, config) 
+				////console.log(fres, config) 
 			});
 		return;
 	};
@@ -1109,10 +1109,10 @@ var ActualizacionDePrecio = function ( config )
 	  **/
 	ActualizacionDePrecio.getByPK = function(  $id_actualizacion, config )
 	{
-		if(DEBUG) console.log('estoy en getbypk()');
+		if(DEBUG) //console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM actualizacion_de_precio WHERE (id_actualizacion = ? ) LIMIT 1;";
 		db.query($sql, [ $id_actualizacion] , function(tx,results){ 
-			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(DEBUG)//console.log('ya termine el query de getByPK():',tx,results);
 			if(results.rows.length == 0) fres = null;
 			else fres = new ActualizacionDePrecio(results.rows.item(0)); 
 			config.callback.call(config.context || null, fres);
@@ -1435,10 +1435,10 @@ var Autorizacion = function ( config )
 	  **/
 	this.save = function( callback )
 	{
-		if(DEBUG) console.log('estoy en save()');
+		if(DEBUG) //console.log('estoy en save()');
 		this.pushCallback(callback, this);
 		var cb = function(res){
-                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(DEBUG)//console.log('estoy de regreso en save(',res,') con el contexto:', this);
                 if(res == null){
                     create.call(this,null);
                 }else{
@@ -1464,7 +1464,7 @@ var Autorizacion = function ( config )
 	  *	  resultados = cliente.search();
 	  *	  
 	  *	  foreach(resultados as c ){
-	  *	  	//console.log( c.getNombre() );
+	  *	  	////console.log( c.getNombre() );
 	  *	  }
 	  * </code>
 	  *	@static
@@ -1547,7 +1547,7 @@ var Autorizacion = function ( config )
 	  **/
 	var create = function(  )
 	{
-		if(DEBUG)console.log('estoy en create(this)');
+		if(DEBUG)//console.log('estoy en create(this)');
 		$sql = "INSERT INTO autorizacion ( id_autorizacion, id_usuario, id_sucursal, fecha_peticion, fecha_respuesta, estado, parametros, tipo ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			this.getIdAutorizacion(), 
@@ -1561,7 +1561,7 @@ var Autorizacion = function ( config )
 		 ];
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                if(DEBUG) //console.log('ya termine el query de insert():',tx,results);
                 old_this.callCallback(old_this);
 		});
 		return; 
@@ -1580,7 +1580,7 @@ var Autorizacion = function ( config )
 	  **/
 	var update = function(  )
 	{
-		if(DEBUG)console.log('estoy en update(',this,')');
+		if(DEBUG)//console.log('estoy en update(',this,')');
 		$sql = "UPDATE autorizacion SET  id_usuario = ?, id_sucursal = ?, fecha_peticion = ?, fecha_respuesta = ?, estado = ?, parametros = ?, tipo = ? WHERE  id_autorizacion = ?;";
 		$params = [ 
 			this.getIdUsuario(), 
@@ -1593,7 +1593,7 @@ var Autorizacion = function ( config )
 			this.getIdAutorizacion(),  ] ;
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+                    if(DEBUG)//console.log('ya termine el query de update():', tx, results, this);
 			old_this.callCallback(old_this);  
                 });
 		return; 
@@ -1797,7 +1797,7 @@ var Autorizacion = function ( config )
 		db.query($sql, [], function(tx,results){ 
 				fres = [];
 				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new Autorizacion( results.rows.item(i) ) ) }
-				//console.log(fres, config) 
+				////console.log(fres, config) 
 			});
 		return;
 	};
@@ -1813,10 +1813,10 @@ var Autorizacion = function ( config )
 	  **/
 	Autorizacion.getByPK = function(  $id_autorizacion, config )
 	{
-		if(DEBUG) console.log('estoy en getbypk()');
+		if(DEBUG) //console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM autorizacion WHERE (id_autorizacion = ? ) LIMIT 1;";
 		db.query($sql, [ $id_autorizacion] , function(tx,results){ 
-			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(DEBUG)//console.log('ya termine el query de getByPK():',tx,results);
 			if(results.rows.length == 0) fres = null;
 			else fres = new Autorizacion(results.rows.item(0)); 
 			config.callback.call(config.context || null, fres);
@@ -2683,10 +2683,10 @@ var Cliente = function ( config )
 	  **/
 	this.save = function( callback )
 	{
-		if(DEBUG) console.log('estoy en save()');
+		if(DEBUG) //console.log('estoy en save()');
 		this.pushCallback(callback, this);
 		var cb = function(res){
-                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(DEBUG)//console.log('estoy de regreso en save(',res,') con el contexto:', this);
                 if(res == null){
                     create.call(this,null);
                 }else{
@@ -2712,7 +2712,7 @@ var Cliente = function ( config )
 	  *	  resultados = cliente.search();
 	  *	  
 	  *	  foreach(resultados as c ){
-	  *	  	//console.log( c.getNombre() );
+	  *	  	////console.log( c.getNombre() );
 	  *	  }
 	  * </code>
 	  *	@static
@@ -2875,7 +2875,7 @@ var Cliente = function ( config )
 	  **/
 	var create = function(  )
 	{
-		if(DEBUG)console.log('estoy en create(this)');
+		if(DEBUG)//console.log('estoy en create(this)');
 		$sql = "INSERT INTO cliente ( id_cliente, rfc, razon_social, calle, numero_exterior, numero_interior, colonia, referencia, localidad, municipio, estado, pais, codigo_postal, telefono, e_mail, limite_credito, descuento, activo, id_usuario, id_sucursal, fecha_ingreso, password, last_login, grant_changes ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			this.getIdCliente(), 
@@ -2905,7 +2905,7 @@ var Cliente = function ( config )
 		 ];
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                if(DEBUG) //console.log('ya termine el query de insert():',tx,results);
                 old_this.callCallback(old_this);
 		});
 		return; 
@@ -2924,7 +2924,7 @@ var Cliente = function ( config )
 	  **/
 	var update = function(  )
 	{
-		if(DEBUG)console.log('estoy en update(',this,')');
+		if(DEBUG)//console.log('estoy en update(',this,')');
 		$sql = "UPDATE cliente SET  rfc = ?, razon_social = ?, calle = ?, numero_exterior = ?, numero_interior = ?, colonia = ?, referencia = ?, localidad = ?, municipio = ?, estado = ?, pais = ?, codigo_postal = ?, telefono = ?, e_mail = ?, limite_credito = ?, descuento = ?, activo = ?, id_usuario = ?, id_sucursal = ?, fecha_ingreso = ?, password = ?, last_login = ?, grant_changes = ? WHERE  id_cliente = ?;";
 		$params = [ 
 			this.getRfc(), 
@@ -2953,7 +2953,7 @@ var Cliente = function ( config )
 			this.getIdCliente(),  ] ;
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+                    if(DEBUG)//console.log('ya termine el query de update():', tx, results, this);
 			old_this.callCallback(old_this);  
                 });
 		return; 
@@ -3349,7 +3349,7 @@ var Cliente = function ( config )
 		db.query($sql, [], function(tx,results){ 
 				fres = [];
 				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new Cliente( results.rows.item(i) ) ) }
-				//console.log(fres, config) 
+				////console.log(fres, config) 
 			});
 		return;
 	};
@@ -3365,10 +3365,10 @@ var Cliente = function ( config )
 	  **/
 	Cliente.getByPK = function(  $id_cliente, config )
 	{
-		if(DEBUG) console.log('estoy en getbypk()');
+		if(DEBUG) //console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM cliente WHERE (id_cliente = ? ) LIMIT 1;";
 		db.query($sql, [ $id_cliente] , function(tx,results){ 
-			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(DEBUG)//console.log('ya termine el query de getByPK():',tx,results);
 			if(results.rows.length == 0) fres = null;
 			else fres = new Cliente(results.rows.item(0)); 
 			config.callback.call(config.context || null, fres);
@@ -3929,10 +3929,10 @@ var CompraCliente = function ( config )
 	  **/
 	this.save = function( callback )
 	{
-		if(DEBUG) console.log('estoy en save()');
+		if(DEBUG) //console.log('estoy en save()');
 		this.pushCallback(callback, this);
 		var cb = function(res){
-                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(DEBUG)//console.log('estoy de regreso en save(',res,') con el contexto:', this);
                 if(res == null){
                     create.call(this,null);
                 }else{
@@ -3958,7 +3958,7 @@ var CompraCliente = function ( config )
 	  *	  resultados = cliente.search();
 	  *	  
 	  *	  foreach(resultados as c ){
-	  *	  	//console.log( c.getNombre() );
+	  *	  	////console.log( c.getNombre() );
 	  *	  }
 	  * </code>
 	  *	@static
@@ -4076,7 +4076,7 @@ var CompraCliente = function ( config )
 	  **/
 	var create = function(  )
 	{
-		if(DEBUG)console.log('estoy en create(this)');
+		if(DEBUG)//console.log('estoy en create(this)');
 		$sql = "INSERT INTO compra_cliente ( id_compra, id_cliente, tipo_compra, tipo_pago, fecha, subtotal, impuesto, descuento, total, id_sucursal, id_usuario, pagado, cancelada, ip, liquidada ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			this.getIdCompra(), 
@@ -4097,7 +4097,7 @@ var CompraCliente = function ( config )
 		 ];
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                if(DEBUG) //console.log('ya termine el query de insert():',tx,results);
                 old_this.callCallback(old_this);
 		});
 		return; 
@@ -4116,7 +4116,7 @@ var CompraCliente = function ( config )
 	  **/
 	var update = function(  )
 	{
-		if(DEBUG)console.log('estoy en update(',this,')');
+		if(DEBUG)//console.log('estoy en update(',this,')');
 		$sql = "UPDATE compra_cliente SET  id_cliente = ?, tipo_compra = ?, tipo_pago = ?, fecha = ?, subtotal = ?, impuesto = ?, descuento = ?, total = ?, id_sucursal = ?, id_usuario = ?, pagado = ?, cancelada = ?, ip = ?, liquidada = ? WHERE  id_compra = ?;";
 		$params = [ 
 			this.getIdCliente(), 
@@ -4136,7 +4136,7 @@ var CompraCliente = function ( config )
 			this.getIdCompra(),  ] ;
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+                    if(DEBUG)//console.log('ya termine el query de update():', tx, results, this);
 			old_this.callCallback(old_this);  
                 });
 		return; 
@@ -4424,7 +4424,7 @@ var CompraCliente = function ( config )
 		db.query($sql, [], function(tx,results){ 
 				fres = [];
 				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new CompraCliente( results.rows.item(i) ) ) }
-				//console.log(fres, config) 
+				////console.log(fres, config) 
 			});
 		return;
 	};
@@ -4440,10 +4440,10 @@ var CompraCliente = function ( config )
 	  **/
 	CompraCliente.getByPK = function(  $id_compra, config )
 	{
-		if(DEBUG) console.log('estoy en getbypk()');
+		if(DEBUG) //console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM compra_cliente WHERE (id_compra = ? ) LIMIT 1;";
 		db.query($sql, [ $id_compra] , function(tx,results){ 
-			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(DEBUG)//console.log('ya termine el query de getByPK():',tx,results);
 			if(results.rows.length == 0) fres = null;
 			else fres = new CompraCliente(results.rows.item(0)); 
 			config.callback.call(config.context || null, fres);
@@ -4667,10 +4667,10 @@ var DetalleCompraCliente = function ( config )
 	  **/
 	this.save = function( callback )
 	{
-		if(DEBUG) console.log('estoy en save()');
+		if(DEBUG) //console.log('estoy en save()');
 		this.pushCallback(callback, this);
 		var cb = function(res){
-                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(DEBUG)//console.log('estoy de regreso en save(',res,') con el contexto:', this);
                 if(res == null){
                     create.call(this,null);
                 }else{
@@ -4696,7 +4696,7 @@ var DetalleCompraCliente = function ( config )
 	  *	  resultados = cliente.search();
 	  *	  
 	  *	  foreach(resultados as c ){
-	  *	  	//console.log( c.getNombre() );
+	  *	  	////console.log( c.getNombre() );
 	  *	  }
 	  * </code>
 	  *	@static
@@ -4764,7 +4764,7 @@ var DetalleCompraCliente = function ( config )
 	  **/
 	var create = function(  )
 	{
-		if(DEBUG)console.log('estoy en create(this)');
+		if(DEBUG)//console.log('estoy en create(this)');
 		$sql = "INSERT INTO detalle_compra_cliente ( id_compra, id_producto, cantidad, precio, descuento ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = [
 			this.getIdCompra(), 
@@ -4775,7 +4775,7 @@ var DetalleCompraCliente = function ( config )
 		 ];
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                if(DEBUG) //console.log('ya termine el query de insert():',tx,results);
                 old_this.callCallback(old_this);
 		});
 		return; 
@@ -4794,7 +4794,7 @@ var DetalleCompraCliente = function ( config )
 	  **/
 	var update = function(  )
 	{
-		if(DEBUG)console.log('estoy en update(',this,')');
+		if(DEBUG)//console.log('estoy en update(',this,')');
 		$sql = "UPDATE detalle_compra_cliente SET  cantidad = ?, precio = ?, descuento = ? WHERE  id_compra = ? AND id_producto = ?;";
 		$params = [ 
 			this.getCantidad(), 
@@ -4803,7 +4803,7 @@ var DetalleCompraCliente = function ( config )
 			this.getIdCompra(),this.getIdProducto(),  ] ;
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+                    if(DEBUG)//console.log('ya termine el query de update():', tx, results, this);
 			old_this.callCallback(old_this);  
                 });
 		return; 
@@ -4971,7 +4971,7 @@ var DetalleCompraCliente = function ( config )
 		db.query($sql, [], function(tx,results){ 
 				fres = [];
 				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new DetalleCompraCliente( results.rows.item(i) ) ) }
-				//console.log(fres, config) 
+				////console.log(fres, config) 
 			});
 		return;
 	};
@@ -4987,10 +4987,10 @@ var DetalleCompraCliente = function ( config )
 	  **/
 	DetalleCompraCliente.getByPK = function(  $id_compra, $id_producto, config )
 	{
-		if(DEBUG) console.log('estoy en getbypk()');
+		if(DEBUG) //console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM detalle_compra_cliente WHERE (id_compra = ? AND id_producto = ? ) LIMIT 1;";
 		db.query($sql, [ $id_compra, $id_producto] , function(tx,results){ 
-			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(DEBUG)//console.log('ya termine el query de getByPK():',tx,results);
 			if(results.rows.length == 0) fres = null;
 			else fres = new DetalleCompraCliente(results.rows.item(0)); 
 			config.callback.call(config.context || null, fres);
@@ -5282,10 +5282,10 @@ var DetalleInventario = function ( config )
 	  **/
 	this.save = function( callback )
 	{
-		if(DEBUG) console.log('estoy en save()');
+		if(DEBUG) //console.log('estoy en save()');
 		this.pushCallback(callback, this);
 		var cb = function(res){
-                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(DEBUG)//console.log('estoy de regreso en save(',res,') con el contexto:', this);
                 if(res == null){
                     create.call(this,null);
                 }else{
@@ -5311,7 +5311,7 @@ var DetalleInventario = function ( config )
 	  *	  resultados = cliente.search();
 	  *	  
 	  *	  foreach(resultados as c ){
-	  *	  	//console.log( c.getNombre() );
+	  *	  	////console.log( c.getNombre() );
 	  *	  }
 	  * </code>
 	  *	@static
@@ -5389,7 +5389,7 @@ var DetalleInventario = function ( config )
 	  **/
 	var create = function(  )
 	{
-		if(DEBUG)console.log('estoy en create(this)');
+		if(DEBUG)//console.log('estoy en create(this)');
 		$sql = "INSERT INTO detalle_inventario ( id_producto, id_sucursal, precio_venta, precio_venta_procesado, existencias, existencias_procesadas, precio_compra ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			this.getIdProducto(), 
@@ -5402,7 +5402,7 @@ var DetalleInventario = function ( config )
 		 ];
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                if(DEBUG) //console.log('ya termine el query de insert():',tx,results);
                 old_this.callCallback(old_this);
 		});
 		return; 
@@ -5421,7 +5421,7 @@ var DetalleInventario = function ( config )
 	  **/
 	var update = function(  )
 	{
-		if(DEBUG)console.log('estoy en update(',this,')');
+		if(DEBUG)//console.log('estoy en update(',this,')');
 		$sql = "UPDATE detalle_inventario SET  precio_venta = ?, precio_venta_procesado = ?, existencias = ?, existencias_procesadas = ?, precio_compra = ? WHERE  id_producto = ? AND id_sucursal = ?;";
 		$params = [ 
 			this.getPrecioVenta(), 
@@ -5432,7 +5432,7 @@ var DetalleInventario = function ( config )
 			this.getIdProducto(),this.getIdSucursal(),  ] ;
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+                    if(DEBUG)//console.log('ya termine el query de update():', tx, results, this);
 			old_this.callCallback(old_this);  
                 });
 		return; 
@@ -5624,7 +5624,7 @@ var DetalleInventario = function ( config )
 		db.query($sql, [], function(tx,results){ 
 				fres = [];
 				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new DetalleInventario( results.rows.item(i) ) ) }
-				//console.log(fres, config) 
+				////console.log(fres, config) 
 			});
 		return;
 	};
@@ -5640,10 +5640,10 @@ var DetalleInventario = function ( config )
 	  **/
 	DetalleInventario.getByPK = function(  $id_producto, $id_sucursal, config )
 	{
-		if(DEBUG) console.log('estoy en getbypk()');
+		if(DEBUG) //console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM detalle_inventario WHERE (id_producto = ? AND id_sucursal = ? ) LIMIT 1;";
 		db.query($sql, [ $id_producto, $id_sucursal] , function(tx,results){ 
-			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(DEBUG)//console.log('ya termine el query de getByPK():',tx,results);
 			if(results.rows.length == 0) fres = null;
 			else fres = new DetalleInventario(results.rows.item(0)); 
 			config.callback.call(config.context || null, fres);
@@ -5935,10 +5935,10 @@ var DetalleVenta = function ( config )
 	  **/
 	this.save = function( callback )
 	{
-		if(DEBUG) console.log('estoy en save()');
+		if(DEBUG) //console.log('estoy en save()');
 		this.pushCallback(callback, this);
 		var cb = function(res){
-                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(DEBUG)//console.log('estoy de regreso en save(',res,') con el contexto:', this);
                 if(res == null){
                     create.call(this,null);
                 }else{
@@ -5964,7 +5964,7 @@ var DetalleVenta = function ( config )
 	  *	  resultados = cliente.search();
 	  *	  
 	  *	  foreach(resultados as c ){
-	  *	  	//console.log( c.getNombre() );
+	  *	  	////console.log( c.getNombre() );
 	  *	  }
 	  * </code>
 	  *	@static
@@ -6042,7 +6042,7 @@ var DetalleVenta = function ( config )
 	  **/
 	var create = function(  )
 	{
-		if(DEBUG)console.log('estoy en create(this)');
+		if(DEBUG)//console.log('estoy en create(this)');
 		$sql = "INSERT INTO detalle_venta ( id_venta, id_producto, cantidad, cantidad_procesada, precio, precio_procesada, descuento ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			this.getIdVenta(), 
@@ -6055,7 +6055,7 @@ var DetalleVenta = function ( config )
 		 ];
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                if(DEBUG) //console.log('ya termine el query de insert():',tx,results);
                 old_this.callCallback(old_this);
 		});
 		return; 
@@ -6074,7 +6074,7 @@ var DetalleVenta = function ( config )
 	  **/
 	var update = function(  )
 	{
-		if(DEBUG)console.log('estoy en update(',this,')');
+		if(DEBUG)//console.log('estoy en update(',this,')');
 		$sql = "UPDATE detalle_venta SET  cantidad = ?, cantidad_procesada = ?, precio = ?, precio_procesada = ?, descuento = ? WHERE  id_venta = ? AND id_producto = ?;";
 		$params = [ 
 			this.getCantidad(), 
@@ -6085,7 +6085,7 @@ var DetalleVenta = function ( config )
 			this.getIdVenta(),this.getIdProducto(),  ] ;
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+                    if(DEBUG)//console.log('ya termine el query de update():', tx, results, this);
 			old_this.callCallback(old_this);  
                 });
 		return; 
@@ -6277,7 +6277,7 @@ var DetalleVenta = function ( config )
 		db.query($sql, [], function(tx,results){ 
 				fres = [];
 				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new DetalleVenta( results.rows.item(i) ) ) }
-				//console.log(fres, config) 
+				////console.log(fres, config) 
 			});
 		return;
 	};
@@ -6293,10 +6293,10 @@ var DetalleVenta = function ( config )
 	  **/
 	DetalleVenta.getByPK = function(  $id_venta, $id_producto, config )
 	{
-		if(DEBUG) console.log('estoy en getbypk()');
+		if(DEBUG) //console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM detalle_venta WHERE (id_venta = ? AND id_producto = ? ) LIMIT 1;";
 		db.query($sql, [ $id_venta, $id_producto] , function(tx,results){ 
-			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(DEBUG)//console.log('ya termine el query de getByPK():',tx,results);
 			if(results.rows.length == 0) fres = null;
 			else fres = new DetalleVenta(results.rows.item(0)); 
 			config.callback.call(config.context || null, fres);
@@ -6517,10 +6517,10 @@ var Equipo = function ( config )
 	  **/
 	this.save = function( callback )
 	{
-		if(DEBUG) console.log('estoy en save()');
+		if(DEBUG) //console.log('estoy en save()');
 		this.pushCallback(callback, this);
 		var cb = function(res){
-                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(DEBUG)//console.log('estoy de regreso en save(',res,') con el contexto:', this);
                 if(res == null){
                     create.call(this,null);
                 }else{
@@ -6546,7 +6546,7 @@ var Equipo = function ( config )
 	  *	  resultados = cliente.search();
 	  *	  
 	  *	  foreach(resultados as c ){
-	  *	  	//console.log( c.getNombre() );
+	  *	  	////console.log( c.getNombre() );
 	  *	  }
 	  * </code>
 	  *	@static
@@ -6614,7 +6614,7 @@ var Equipo = function ( config )
 	  **/
 	var create = function(  )
 	{
-		if(DEBUG)console.log('estoy en create(this)');
+		if(DEBUG)//console.log('estoy en create(this)');
 		$sql = "INSERT INTO equipo ( id_equipo, token, full_ua, descripcion, locked ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = [
 			this.getIdEquipo(), 
@@ -6625,7 +6625,7 @@ var Equipo = function ( config )
 		 ];
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                if(DEBUG) //console.log('ya termine el query de insert():',tx,results);
                 old_this.callCallback(old_this);
 		});
 		return; 
@@ -6644,7 +6644,7 @@ var Equipo = function ( config )
 	  **/
 	var update = function(  )
 	{
-		if(DEBUG)console.log('estoy en update(',this,')');
+		if(DEBUG)//console.log('estoy en update(',this,')');
 		$sql = "UPDATE equipo SET  token = ?, full_ua = ?, descripcion = ?, locked = ? WHERE  id_equipo = ?;";
 		$params = [ 
 			this.getToken(), 
@@ -6654,7 +6654,7 @@ var Equipo = function ( config )
 			this.getIdEquipo(),  ] ;
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+                    if(DEBUG)//console.log('ya termine el query de update():', tx, results, this);
 			old_this.callCallback(old_this);  
                 });
 		return; 
@@ -6822,7 +6822,7 @@ var Equipo = function ( config )
 		db.query($sql, [], function(tx,results){ 
 				fres = [];
 				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new Equipo( results.rows.item(i) ) ) }
-				//console.log(fres, config) 
+				////console.log(fres, config) 
 			});
 		return;
 	};
@@ -6838,10 +6838,10 @@ var Equipo = function ( config )
 	  **/
 	Equipo.getByPK = function(  $id_equipo, config )
 	{
-		if(DEBUG) console.log('estoy en getbypk()');
+		if(DEBUG) //console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM equipo WHERE (id_equipo = ? ) LIMIT 1;";
 		db.query($sql, [ $id_equipo] , function(tx,results){ 
-			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(DEBUG)//console.log('ya termine el query de getByPK():',tx,results);
 			if(results.rows.length == 0) fres = null;
 			else fres = new Equipo(results.rows.item(0)); 
 			config.callback.call(config.context || null, fres);
@@ -6960,10 +6960,10 @@ var FacturaCompra = function ( config )
 	  **/
 	this.save = function( callback )
 	{
-		if(DEBUG) console.log('estoy en save()');
+		if(DEBUG) //console.log('estoy en save()');
 		this.pushCallback(callback, this);
 		var cb = function(res){
-                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(DEBUG)//console.log('estoy de regreso en save(',res,') con el contexto:', this);
                 if(res == null){
                     create.call(this,null);
                 }else{
@@ -6989,7 +6989,7 @@ var FacturaCompra = function ( config )
 	  *	  resultados = cliente.search();
 	  *	  
 	  *	  foreach(resultados as c ){
-	  *	  	//console.log( c.getNombre() );
+	  *	  	////console.log( c.getNombre() );
 	  *	  }
 	  * </code>
 	  *	@static
@@ -7042,7 +7042,7 @@ var FacturaCompra = function ( config )
 	  **/
 	var create = function(  )
 	{
-		if(DEBUG)console.log('estoy en create(this)');
+		if(DEBUG)//console.log('estoy en create(this)');
 		$sql = "INSERT INTO factura_compra ( folio, id_compra ) VALUES ( ?, ?);";
 		$params = [
 			this.getFolio(), 
@@ -7050,7 +7050,7 @@ var FacturaCompra = function ( config )
 		 ];
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                if(DEBUG) //console.log('ya termine el query de insert():',tx,results);
                 old_this.callCallback(old_this);
 		});
 		return; 
@@ -7069,14 +7069,14 @@ var FacturaCompra = function ( config )
 	  **/
 	var update = function(  )
 	{
-		if(DEBUG)console.log('estoy en update(',this,')');
+		if(DEBUG)//console.log('estoy en update(',this,')');
 		$sql = "UPDATE factura_compra SET  id_compra = ? WHERE  folio = ?;";
 		$params = [ 
 			this.getIdCompra(), 
 			this.getFolio(),  ] ;
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+                    if(DEBUG)//console.log('ya termine el query de update():', tx, results, this);
 			old_this.callCallback(old_this);  
                 });
 		return; 
@@ -7208,7 +7208,7 @@ var FacturaCompra = function ( config )
 		db.query($sql, [], function(tx,results){ 
 				fres = [];
 				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new FacturaCompra( results.rows.item(i) ) ) }
-				//console.log(fres, config) 
+				////console.log(fres, config) 
 			});
 		return;
 	};
@@ -7224,10 +7224,10 @@ var FacturaCompra = function ( config )
 	  **/
 	FacturaCompra.getByPK = function(  $folio, config )
 	{
-		if(DEBUG) console.log('estoy en getbypk()');
+		if(DEBUG) //console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM factura_compra WHERE (folio = ? ) LIMIT 1;";
 		db.query($sql, [ $folio] , function(tx,results){ 
-			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(DEBUG)//console.log('ya termine el query de getByPK():',tx,results);
 			if(results.rows.length == 0) fres = null;
 			else fres = new FacturaCompra(results.rows.item(0)); 
 			config.callback.call(config.context || null, fres);
@@ -7856,10 +7856,10 @@ var FacturaVenta = function ( config )
 	  **/
 	this.save = function( callback )
 	{
-		if(DEBUG) console.log('estoy en save()');
+		if(DEBUG) //console.log('estoy en save()');
 		this.pushCallback(callback, this);
 		var cb = function(res){
-                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(DEBUG)//console.log('estoy de regreso en save(',res,') con el contexto:', this);
                 if(res == null){
                     create.call(this,null);
                 }else{
@@ -7885,7 +7885,7 @@ var FacturaVenta = function ( config )
 	  *	  resultados = cliente.search();
 	  *	  
 	  *	  foreach(resultados as c ){
-	  *	  	//console.log( c.getNombre() );
+	  *	  	////console.log( c.getNombre() );
 	  *	  }
 	  * </code>
 	  *	@static
@@ -8013,7 +8013,7 @@ var FacturaVenta = function ( config )
 	  **/
 	var create = function(  )
 	{
-		if(DEBUG)console.log('estoy en create(this)');
+		if(DEBUG)//console.log('estoy en create(this)');
 		$sql = "INSERT INTO factura_venta ( id_folio, id_venta, id_usuario, xml, lugar_emision, tipo_comprobante, activa, sellada, forma_pago, fecha_emision, version_tfd, folio_fiscal, fecha_certificacion, numero_certificado_sat, sello_digital_emisor, sello_digital_sat, cadena_original ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			this.getIdFolio(), 
@@ -8036,7 +8036,7 @@ var FacturaVenta = function ( config )
 		 ];
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                if(DEBUG) //console.log('ya termine el query de insert():',tx,results);
                 old_this.callCallback(old_this);
 		});
 		return; 
@@ -8055,7 +8055,7 @@ var FacturaVenta = function ( config )
 	  **/
 	var update = function(  )
 	{
-		if(DEBUG)console.log('estoy en update(',this,')');
+		if(DEBUG)//console.log('estoy en update(',this,')');
 		$sql = "UPDATE factura_venta SET  id_venta = ?, id_usuario = ?, xml = ?, lugar_emision = ?, tipo_comprobante = ?, activa = ?, sellada = ?, forma_pago = ?, fecha_emision = ?, version_tfd = ?, folio_fiscal = ?, fecha_certificacion = ?, numero_certificado_sat = ?, sello_digital_emisor = ?, sello_digital_sat = ?, cadena_original = ? WHERE  id_folio = ?;";
 		$params = [ 
 			this.getIdVenta(), 
@@ -8077,7 +8077,7 @@ var FacturaVenta = function ( config )
 			this.getIdFolio(),  ] ;
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+                    if(DEBUG)//console.log('ya termine el query de update():', tx, results, this);
 			old_this.callCallback(old_this);  
                 });
 		return; 
@@ -8389,7 +8389,7 @@ var FacturaVenta = function ( config )
 		db.query($sql, [], function(tx,results){ 
 				fres = [];
 				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new FacturaVenta( results.rows.item(i) ) ) }
-				//console.log(fres, config) 
+				////console.log(fres, config) 
 			});
 		return;
 	};
@@ -8405,10 +8405,10 @@ var FacturaVenta = function ( config )
 	  **/
 	FacturaVenta.getByPK = function(  $id_folio, config )
 	{
-		if(DEBUG) console.log('estoy en getbypk()');
+		if(DEBUG) //console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM factura_venta WHERE (id_folio = ? ) LIMIT 1;";
 		db.query($sql, [ $id_folio] , function(tx,results){ 
-			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(DEBUG)//console.log('ya termine el query de getByPK():',tx,results);
 			if(results.rows.length == 0) fres = null;
 			else fres = new FacturaVenta(results.rows.item(0)); 
 			config.callback.call(config.context || null, fres);
@@ -8765,10 +8765,10 @@ var Gastos = function ( config )
 	  **/
 	this.save = function( callback )
 	{
-		if(DEBUG) console.log('estoy en save()');
+		if(DEBUG) //console.log('estoy en save()');
 		this.pushCallback(callback, this);
 		var cb = function(res){
-                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(DEBUG)//console.log('estoy de regreso en save(',res,') con el contexto:', this);
                 if(res == null){
                     create.call(this,null);
                 }else{
@@ -8794,7 +8794,7 @@ var Gastos = function ( config )
 	  *	  resultados = cliente.search();
 	  *	  
 	  *	  foreach(resultados as c ){
-	  *	  	//console.log( c.getNombre() );
+	  *	  	////console.log( c.getNombre() );
 	  *	  }
 	  * </code>
 	  *	@static
@@ -8882,7 +8882,7 @@ var Gastos = function ( config )
 	  **/
 	var create = function(  )
 	{
-		if(DEBUG)console.log('estoy en create(this)');
+		if(DEBUG)//console.log('estoy en create(this)');
 		$sql = "INSERT INTO gastos ( id_gasto, folio, concepto, monto, fecha, fecha_ingreso, id_sucursal, id_usuario, nota ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			this.getIdGasto(), 
@@ -8897,7 +8897,7 @@ var Gastos = function ( config )
 		 ];
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                if(DEBUG) //console.log('ya termine el query de insert():',tx,results);
                 old_this.callCallback(old_this);
 		});
 		return; 
@@ -8916,7 +8916,7 @@ var Gastos = function ( config )
 	  **/
 	var update = function(  )
 	{
-		if(DEBUG)console.log('estoy en update(',this,')');
+		if(DEBUG)//console.log('estoy en update(',this,')');
 		$sql = "UPDATE gastos SET  folio = ?, concepto = ?, monto = ?, fecha = ?, fecha_ingreso = ?, id_sucursal = ?, id_usuario = ?, nota = ? WHERE  id_gasto = ?;";
 		$params = [ 
 			this.getFolio(), 
@@ -8930,7 +8930,7 @@ var Gastos = function ( config )
 			this.getIdGasto(),  ] ;
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+                    if(DEBUG)//console.log('ya termine el query de update():', tx, results, this);
 			old_this.callCallback(old_this);  
                 });
 		return; 
@@ -9146,7 +9146,7 @@ var Gastos = function ( config )
 		db.query($sql, [], function(tx,results){ 
 				fres = [];
 				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new Gastos( results.rows.item(i) ) ) }
-				//console.log(fres, config) 
+				////console.log(fres, config) 
 			});
 		return;
 	};
@@ -9162,10 +9162,10 @@ var Gastos = function ( config )
 	  **/
 	Gastos.getByPK = function(  $id_gasto, config )
 	{
-		if(DEBUG) console.log('estoy en getbypk()');
+		if(DEBUG) //console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM gastos WHERE (id_gasto = ? ) LIMIT 1;";
 		db.query($sql, [ $id_gasto] , function(tx,results){ 
-			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(DEBUG)//console.log('ya termine el query de getByPK():',tx,results);
 			if(results.rows.length == 0) fres = null;
 			else fres = new Gastos(results.rows.item(0)); 
 			config.callback.call(config.context || null, fres);
@@ -9352,10 +9352,10 @@ var Impresora = function ( config )
 	  **/
 	this.save = function( callback )
 	{
-		if(DEBUG) console.log('estoy en save()');
+		if(DEBUG) //console.log('estoy en save()');
 		this.pushCallback(callback, this);
 		var cb = function(res){
-                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(DEBUG)//console.log('estoy de regreso en save(',res,') con el contexto:', this);
                 if(res == null){
                     create.call(this,null);
                 }else{
@@ -9381,7 +9381,7 @@ var Impresora = function ( config )
 	  *	  resultados = cliente.search();
 	  *	  
 	  *	  foreach(resultados as c ){
-	  *	  	//console.log( c.getNombre() );
+	  *	  	////console.log( c.getNombre() );
 	  *	  }
 	  * </code>
 	  *	@static
@@ -9444,7 +9444,7 @@ var Impresora = function ( config )
 	  **/
 	var create = function(  )
 	{
-		if(DEBUG)console.log('estoy en create(this)');
+		if(DEBUG)//console.log('estoy en create(this)');
 		$sql = "INSERT INTO impresora ( id_impresora, id_sucursal, descripcion, identificador ) VALUES ( ?, ?, ?, ?);";
 		$params = [
 			this.getIdImpresora(), 
@@ -9454,7 +9454,7 @@ var Impresora = function ( config )
 		 ];
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                if(DEBUG) //console.log('ya termine el query de insert():',tx,results);
                 old_this.callCallback(old_this);
 		});
 		return; 
@@ -9473,7 +9473,7 @@ var Impresora = function ( config )
 	  **/
 	var update = function(  )
 	{
-		if(DEBUG)console.log('estoy en update(',this,')');
+		if(DEBUG)//console.log('estoy en update(',this,')');
 		$sql = "UPDATE impresora SET  id_sucursal = ?, descripcion = ?, identificador = ? WHERE  id_impresora = ?;";
 		$params = [ 
 			this.getIdSucursal(), 
@@ -9482,7 +9482,7 @@ var Impresora = function ( config )
 			this.getIdImpresora(),  ] ;
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+                    if(DEBUG)//console.log('ya termine el query de update():', tx, results, this);
 			old_this.callCallback(old_this);  
                 });
 		return; 
@@ -9638,7 +9638,7 @@ var Impresora = function ( config )
 		db.query($sql, [], function(tx,results){ 
 				fres = [];
 				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new Impresora( results.rows.item(i) ) ) }
-				//console.log(fres, config) 
+				////console.log(fres, config) 
 			});
 		return;
 	};
@@ -9654,10 +9654,10 @@ var Impresora = function ( config )
 	  **/
 	Impresora.getByPK = function(  $id_impresora, config )
 	{
-		if(DEBUG) console.log('estoy en getbypk()');
+		if(DEBUG) //console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM impresora WHERE (id_impresora = ? ) LIMIT 1;";
 		db.query($sql, [ $id_impresora] , function(tx,results){ 
-			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(DEBUG)//console.log('ya termine el query de getByPK():',tx,results);
 			if(results.rows.length == 0) fres = null;
 			else fres = new Impresora(results.rows.item(0)); 
 			config.callback.call(config.context || null, fres);
@@ -9980,10 +9980,10 @@ var Ingresos = function ( config )
 	  **/
 	this.save = function( callback )
 	{
-		if(DEBUG) console.log('estoy en save()');
+		if(DEBUG) //console.log('estoy en save()');
 		this.pushCallback(callback, this);
 		var cb = function(res){
-                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(DEBUG)//console.log('estoy de regreso en save(',res,') con el contexto:', this);
                 if(res == null){
                     create.call(this,null);
                 }else{
@@ -10009,7 +10009,7 @@ var Ingresos = function ( config )
 	  *	  resultados = cliente.search();
 	  *	  
 	  *	  foreach(resultados as c ){
-	  *	  	//console.log( c.getNombre() );
+	  *	  	////console.log( c.getNombre() );
 	  *	  }
 	  * </code>
 	  *	@static
@@ -10092,7 +10092,7 @@ var Ingresos = function ( config )
 	  **/
 	var create = function(  )
 	{
-		if(DEBUG)console.log('estoy en create(this)');
+		if(DEBUG)//console.log('estoy en create(this)');
 		$sql = "INSERT INTO ingresos ( id_ingreso, concepto, monto, fecha, fecha_ingreso, id_sucursal, id_usuario, nota ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			this.getIdIngreso(), 
@@ -10106,7 +10106,7 @@ var Ingresos = function ( config )
 		 ];
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                if(DEBUG) //console.log('ya termine el query de insert():',tx,results);
                 old_this.callCallback(old_this);
 		});
 		return; 
@@ -10125,7 +10125,7 @@ var Ingresos = function ( config )
 	  **/
 	var update = function(  )
 	{
-		if(DEBUG)console.log('estoy en update(',this,')');
+		if(DEBUG)//console.log('estoy en update(',this,')');
 		$sql = "UPDATE ingresos SET  concepto = ?, monto = ?, fecha = ?, fecha_ingreso = ?, id_sucursal = ?, id_usuario = ?, nota = ? WHERE  id_ingreso = ?;";
 		$params = [ 
 			this.getConcepto(), 
@@ -10138,7 +10138,7 @@ var Ingresos = function ( config )
 			this.getIdIngreso(),  ] ;
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+                    if(DEBUG)//console.log('ya termine el query de update():', tx, results, this);
 			old_this.callCallback(old_this);  
                 });
 		return; 
@@ -10342,7 +10342,7 @@ var Ingresos = function ( config )
 		db.query($sql, [], function(tx,results){ 
 				fres = [];
 				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new Ingresos( results.rows.item(i) ) ) }
-				//console.log(fres, config) 
+				////console.log(fres, config) 
 			});
 		return;
 	};
@@ -10358,10 +10358,10 @@ var Ingresos = function ( config )
 	  **/
 	Ingresos.getByPK = function(  $id_ingreso, config )
 	{
-		if(DEBUG) console.log('estoy en getbypk()');
+		if(DEBUG) //console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM ingresos WHERE (id_ingreso = ? ) LIMIT 1;";
 		db.query($sql, [ $id_ingreso] , function(tx,results){ 
-			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(DEBUG)//console.log('ya termine el query de getByPK():',tx,results);
 			if(results.rows.length == 0) fres = null;
 			else fres = new Ingresos(results.rows.item(0)); 
 			config.callback.call(config.context || null, fres);
@@ -10684,10 +10684,10 @@ var Inventario = function ( config )
 	  **/
 	this.save = function( callback )
 	{
-		if(DEBUG) console.log('estoy en save()');
+		if(DEBUG) //console.log('estoy en save()');
 		this.pushCallback(callback, this);
 		var cb = function(res){
-                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(DEBUG)//console.log('estoy de regreso en save(',res,') con el contexto:', this);
                 if(res == null){
                     create.call(this,null);
                 }else{
@@ -10713,7 +10713,7 @@ var Inventario = function ( config )
 	  *	  resultados = cliente.search();
 	  *	  
 	  *	  foreach(resultados as c ){
-	  *	  	//console.log( c.getNombre() );
+	  *	  	////console.log( c.getNombre() );
 	  *	  }
 	  * </code>
 	  *	@static
@@ -10796,7 +10796,7 @@ var Inventario = function ( config )
 	  **/
 	var create = function(  )
 	{
-		if(DEBUG)console.log('estoy en create(this)');
+		if(DEBUG)//console.log('estoy en create(this)');
 		$sql = "INSERT INTO inventario ( id_producto, descripcion, escala, tratamiento, agrupacion, agrupacionTam, activo, precio_por_agrupacion ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			this.getIdProducto(), 
@@ -10810,7 +10810,7 @@ var Inventario = function ( config )
 		 ];
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                if(DEBUG) //console.log('ya termine el query de insert():',tx,results);
                 old_this.callCallback(old_this);
 		});
 		return; 
@@ -10829,7 +10829,7 @@ var Inventario = function ( config )
 	  **/
 	var update = function(  )
 	{
-		if(DEBUG)console.log('estoy en update(',this,')');
+		if(DEBUG)//console.log('estoy en update(',this,')');
 		$sql = "UPDATE inventario SET  descripcion = ?, escala = ?, tratamiento = ?, agrupacion = ?, agrupacionTam = ?, activo = ?, precio_por_agrupacion = ? WHERE  id_producto = ?;";
 		$params = [ 
 			this.getDescripcion(), 
@@ -10842,7 +10842,7 @@ var Inventario = function ( config )
 			this.getIdProducto(),  ] ;
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+                    if(DEBUG)//console.log('ya termine el query de update():', tx, results, this);
 			old_this.callCallback(old_this);  
                 });
 		return; 
@@ -11046,7 +11046,7 @@ var Inventario = function ( config )
 		db.query($sql, [], function(tx,results){ 
 				fres = [];
 				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new Inventario( results.rows.item(i) ) ) }
-				//console.log(fres, config) 
+				////console.log(fres, config) 
 			});
 		return;
 	};
@@ -11062,10 +11062,10 @@ var Inventario = function ( config )
 	  **/
 	Inventario.getByPK = function(  $id_producto, config )
 	{
-		if(DEBUG) console.log('estoy en getbypk()');
+		if(DEBUG) //console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM inventario WHERE (id_producto = ? ) LIMIT 1;";
 		db.query($sql, [ $id_producto] , function(tx,results){ 
-			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(DEBUG)//console.log('ya termine el query de getByPK():',tx,results);
 			if(results.rows.length == 0) fres = null;
 			else fres = new Inventario(results.rows.item(0)); 
 			config.callback.call(config.context || null, fres);
@@ -11354,10 +11354,10 @@ var PagosVenta = function ( config )
 	  **/
 	this.save = function( callback )
 	{
-		if(DEBUG) console.log('estoy en save()');
+		if(DEBUG) //console.log('estoy en save()');
 		this.pushCallback(callback, this);
 		var cb = function(res){
-                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(DEBUG)//console.log('estoy de regreso en save(',res,') con el contexto:', this);
                 if(res == null){
                     create.call(this,null);
                 }else{
@@ -11383,7 +11383,7 @@ var PagosVenta = function ( config )
 	  *	  resultados = cliente.search();
 	  *	  
 	  *	  foreach(resultados as c ){
-	  *	  	//console.log( c.getNombre() );
+	  *	  	////console.log( c.getNombre() );
 	  *	  }
 	  * </code>
 	  *	@static
@@ -11461,7 +11461,7 @@ var PagosVenta = function ( config )
 	  **/
 	var create = function(  )
 	{
-		if(DEBUG)console.log('estoy en create(this)');
+		if(DEBUG)//console.log('estoy en create(this)');
 		$sql = "INSERT INTO pagos_venta ( id_pago, id_venta, id_sucursal, id_usuario, fecha, monto, tipo_pago ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			this.getIdPago(), 
@@ -11474,7 +11474,7 @@ var PagosVenta = function ( config )
 		 ];
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                if(DEBUG) //console.log('ya termine el query de insert():',tx,results);
                 old_this.callCallback(old_this);
 		});
 		return; 
@@ -11493,7 +11493,7 @@ var PagosVenta = function ( config )
 	  **/
 	var update = function(  )
 	{
-		if(DEBUG)console.log('estoy en update(',this,')');
+		if(DEBUG)//console.log('estoy en update(',this,')');
 		$sql = "UPDATE pagos_venta SET  id_venta = ?, id_sucursal = ?, id_usuario = ?, fecha = ?, monto = ?, tipo_pago = ? WHERE  id_pago = ?;";
 		$params = [ 
 			this.getIdVenta(), 
@@ -11505,7 +11505,7 @@ var PagosVenta = function ( config )
 			this.getIdPago(),  ] ;
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+                    if(DEBUG)//console.log('ya termine el query de update():', tx, results, this);
 			old_this.callCallback(old_this);  
                 });
 		return; 
@@ -11697,7 +11697,7 @@ var PagosVenta = function ( config )
 		db.query($sql, [], function(tx,results){ 
 				fres = [];
 				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new PagosVenta( results.rows.item(i) ) ) }
-				//console.log(fres, config) 
+				////console.log(fres, config) 
 			});
 		return;
 	};
@@ -11713,10 +11713,10 @@ var PagosVenta = function ( config )
 	  **/
 	PagosVenta.getByPK = function(  $id_pago, config )
 	{
-		if(DEBUG) console.log('estoy en getbypk()');
+		if(DEBUG) //console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM pagos_venta WHERE (id_pago = ? ) LIMIT 1;";
 		db.query($sql, [ $id_pago] , function(tx,results){ 
-			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(DEBUG)//console.log('ya termine el query de getByPK():',tx,results);
 			if(results.rows.length == 0) fres = null;
 			else fres = new PagosVenta(results.rows.item(0)); 
 			config.callback.call(config.context || null, fres);
@@ -12481,10 +12481,10 @@ var Sucursal = function ( config )
 	  **/
 	this.save = function( callback )
 	{
-		if(DEBUG) console.log('estoy en save()');
+		if(DEBUG) //console.log('estoy en save()');
 		this.pushCallback(callback, this);
 		var cb = function(res){
-                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(DEBUG)//console.log('estoy de regreso en save(',res,') con el contexto:', this);
                 if(res == null){
                     create.call(this,null);
                 }else{
@@ -12510,7 +12510,7 @@ var Sucursal = function ( config )
 	  *	  resultados = cliente.search();
 	  *	  
 	  *	  foreach(resultados as c ){
-	  *	  	//console.log( c.getNombre() );
+	  *	  	////console.log( c.getNombre() );
 	  *	  }
 	  * </code>
 	  *	@static
@@ -12658,7 +12658,7 @@ var Sucursal = function ( config )
 	  **/
 	var create = function(  )
 	{
-		if(DEBUG)console.log('estoy en create(this)');
+		if(DEBUG)//console.log('estoy en create(this)');
 		$sql = "INSERT INTO sucursal ( id_sucursal, gerente, descripcion, razon_social, rfc, calle, numero_exterior, numero_interior, colonia, localidad, referencia, municipio, estado, pais, codigo_postal, telefono, token, letras_factura, activo, fecha_apertura, saldo_a_favor ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			this.getIdSucursal(), 
@@ -12685,7 +12685,7 @@ var Sucursal = function ( config )
 		 ];
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                if(DEBUG) //console.log('ya termine el query de insert():',tx,results);
                 old_this.callCallback(old_this);
 		});
 		return; 
@@ -12704,7 +12704,7 @@ var Sucursal = function ( config )
 	  **/
 	var update = function(  )
 	{
-		if(DEBUG)console.log('estoy en update(',this,')');
+		if(DEBUG)//console.log('estoy en update(',this,')');
 		$sql = "UPDATE sucursal SET  gerente = ?, descripcion = ?, razon_social = ?, rfc = ?, calle = ?, numero_exterior = ?, numero_interior = ?, colonia = ?, localidad = ?, referencia = ?, municipio = ?, estado = ?, pais = ?, codigo_postal = ?, telefono = ?, token = ?, letras_factura = ?, activo = ?, fecha_apertura = ?, saldo_a_favor = ? WHERE  id_sucursal = ?;";
 		$params = [ 
 			this.getGerente(), 
@@ -12730,7 +12730,7 @@ var Sucursal = function ( config )
 			this.getIdSucursal(),  ] ;
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+                    if(DEBUG)//console.log('ya termine el query de update():', tx, results, this);
 			old_this.callCallback(old_this);  
                 });
 		return; 
@@ -13090,7 +13090,7 @@ var Sucursal = function ( config )
 		db.query($sql, [], function(tx,results){ 
 				fres = [];
 				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new Sucursal( results.rows.item(i) ) ) }
-				//console.log(fres, config) 
+				////console.log(fres, config) 
 			});
 		return;
 	};
@@ -13106,10 +13106,10 @@ var Sucursal = function ( config )
 	  **/
 	Sucursal.getByPK = function(  $id_sucursal, config )
 	{
-		if(DEBUG) console.log('estoy en getbypk()');
+		if(DEBUG) //console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM sucursal WHERE (id_sucursal = ? ) LIMIT 1;";
 		db.query($sql, [ $id_sucursal] , function(tx,results){ 
-			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(DEBUG)//console.log('ya termine el query de getByPK():',tx,results);
 			if(results.rows.length == 0) fres = null;
 			else fres = new Sucursal(results.rows.item(0)); 
 			config.callback.call(config.context || null, fres);
@@ -13738,10 +13738,10 @@ var Ventas = function ( config )
 	  **/
 	this.save = function( callback )
 	{
-		if(DEBUG) console.log('estoy en save()');
+		if(DEBUG) //console.log('estoy en save()');
 		this.pushCallback(callback, this);
 		var cb = function(res){
-                if(DEBUG)console.log('estoy de regreso en save(',res,') con el contexto:', this);
+                if(DEBUG)//console.log('estoy de regreso en save(',res,') con el contexto:', this);
                 if(res == null){
                     create.call(this,null);
                 }else{
@@ -13767,7 +13767,7 @@ var Ventas = function ( config )
 	  *	  resultados = cliente.search();
 	  *	  
 	  *	  foreach(resultados as c ){
-	  *	  	//console.log( c.getNombre() );
+	  *	  	////console.log( c.getNombre() );
 	  *	  }
 	  * </code>
 	  *	@static
@@ -13895,7 +13895,7 @@ var Ventas = function ( config )
 	  **/
 	var create = function(  )
 	{
-		if(DEBUG)console.log('estoy en create(this)');
+		if(DEBUG)//console.log('estoy en create(this)');
 		$sql = "INSERT INTO ventas ( id_venta, id_venta_equipo, id_equipo, id_cliente, tipo_venta, tipo_pago, fecha, subtotal, iva, descuento, total, id_sucursal, id_usuario, pagado, cancelada, ip, liquidada ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = [
 			this.getIdVenta(), 
@@ -13918,7 +13918,7 @@ var Ventas = function ( config )
 		 ];
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                if(DEBUG) console.log('ya termine el query de insert():',tx,results);
+                if(DEBUG) //console.log('ya termine el query de insert():',tx,results);
                 old_this.callCallback(old_this);
 		});
 		return; 
@@ -13937,7 +13937,7 @@ var Ventas = function ( config )
 	  **/
 	var update = function(  )
 	{
-		if(DEBUG)console.log('estoy en update(',this,')');
+		if(DEBUG)//console.log('estoy en update(',this,')');
 		$sql = "UPDATE ventas SET  id_venta_equipo = ?, id_equipo = ?, id_cliente = ?, tipo_venta = ?, tipo_pago = ?, fecha = ?, subtotal = ?, iva = ?, descuento = ?, total = ?, id_sucursal = ?, id_usuario = ?, pagado = ?, cancelada = ?, ip = ?, liquidada = ? WHERE  id_venta = ?;";
 		$params = [ 
 			this.getIdVentaEquipo(), 
@@ -13959,7 +13959,7 @@ var Ventas = function ( config )
 			this.getIdVenta(),  ] ;
             var old_this = this;
 		db.query($sql, $params, function(tx, results){ 
-                    if(DEBUG)console.log('ya termine el query de update():', tx, results, this);
+                    if(DEBUG)//console.log('ya termine el query de update():', tx, results, this);
 			old_this.callCallback(old_this);  
                 });
 		return; 
@@ -14271,7 +14271,7 @@ var Ventas = function ( config )
 		db.query($sql, [], function(tx,results){ 
 				fres = [];
 				for( i = 0; i < results.rows.length ; i++ ){ fres.push( new Ventas( results.rows.item(i) ) ) }
-				//console.log(fres, config) 
+				////console.log(fres, config) 
 			});
 		return;
 	};
@@ -14287,10 +14287,10 @@ var Ventas = function ( config )
 	  **/
 	Ventas.getByPK = function(  $id_venta, config )
 	{
-		if(DEBUG) console.log('estoy en getbypk()');
+		if(DEBUG) //console.log('estoy en getbypk()');
 		$sql = "SELECT * FROM ventas WHERE (id_venta = ? ) LIMIT 1;";
 		db.query($sql, [ $id_venta] , function(tx,results){ 
-			if(DEBUG)console.log('ya termine el query de getByPK():',tx,results);
+			if(DEBUG)//console.log('ya termine el query de getByPK():',tx,results);
 			if(results.rows.length == 0) fres = null;
 			else fres = new Ventas(results.rows.item(0)); 
 			config.callback.call(config.context || null, fres);

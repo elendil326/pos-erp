@@ -1185,12 +1185,13 @@ if (isset($args['action'])) {
         case 100:
             //realizar una venta desde una sucursal
             vender($args);
-            break;
+			//die('{"success": false}');
+        break;
 
         case 101:
             //realizar una venta desde el admin
             venderAdmin($args);
-            break;
+        break;
     }
 }
 ?>

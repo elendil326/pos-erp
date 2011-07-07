@@ -1483,11 +1483,13 @@ Aplicacion.Mostrador.prototype.doVenta = function ()
 };
 
 
+Aplicacion.Mostrador.thisPosSaleId = 10;
 
 Aplicacion.Mostrador.prototype.offlineVender = function( )
 {
 	if(DEBUG){
-		console.warn("Venta offline !!! o por un error");
+		console.warn("-------- Venta offline !!! ---------");
+		console.log("Aplicacion.Mostrador.thisPosSaleId="+Aplicacion.Mostrador.thisPosSaleId);
 	}
 	
 	//buscar el siguiente id_venta_equipo
@@ -1497,8 +1499,8 @@ Aplicacion.Mostrador.prototype.offlineVender = function( )
 	var carrito = Aplicacion.Mostrador.currentInstance.carrito;
 	
 	var this_sale = new Ventas({
-		id_venta		: 1,
-		id_venta_equipo	: 1,
+		id_venta		: Aplicacion.Mostrador.thisPosSaleId,
+		id_venta_equipo	: Aplicacion.Mostrador.thisPosSaleId,
 		id_equipo		: 1,
 		id_cliente		: carrito.cliente,
 		tipo_venta		: carrito.tipo_venta,
@@ -1516,10 +1518,9 @@ Aplicacion.Mostrador.prototype.offlineVender = function( )
 		liquidada		: null
 	});
 	
-	console.log(this_sale);
-	
+
 	this_sale.save(function(r){
-		console.log("back from saving...", r);
+		console.log("back from saving... that sale !", r);
 	});
 			
 	//mostrar el panel final
@@ -1560,7 +1561,8 @@ Aplicacion.Mostrador.prototype.vender = function ()
     if(DEBUG){
         console.log("Enviando venta .... !", json);
     }
-	
+
+	Aplicacion.Mostrador.thisPosSaleId++;
 	
 	//Hay un error en la red justo ahora !
 	if(POS.A.failure){
@@ -1579,11 +1581,13 @@ Aplicacion.Mostrador.prototype.vender = function ()
         success: function(response, opts) {
             try{
                 venta = Ext.util.JSON.decode( response.responseText );
+
             }catch(e){
 				//whoops algo paso en el servidor
 				POS.error( response, e );
 				Aplicacion.Mostrador.currentInstance.offlineVender();
 				return;
+				
             }
 			
             if( !venta.success ){
@@ -1591,7 +1595,9 @@ Aplicacion.Mostrador.prototype.vender = function ()
                 if(DEBUG){
                     console.log("resultado de la venta sin exito ",venta );
                 }
-                Ext.Msg.alert("Mostrador", venta.reason);
+
+				POS.error( venta );
+				Aplicacion.Mostrador.currentInstance.offlineVender();
                 return;
 
             }
