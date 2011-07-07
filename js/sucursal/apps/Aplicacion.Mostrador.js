@@ -70,7 +70,31 @@ Aplicacion.Mostrador.prototype.sendOfflineSales = function( ventas )
 		console.log( "Enviando ventas offline ....", ventas);
 	}
 	
+	var to_send = [];
 	
+	for (var v=0; v < ventas.length; v++) {
+		
+		if(DEBUG){
+			console.log("buscando el detalle de venta para la venta " + ventas[v].getIdVenta());
+		}
+		
+		to_send.push(ventas[v]);
+		
+		//buscar el detalle de venta para esa venta
+		/*DetalleVenta.getByPK(ventas[v].getIdVenta(), {
+			callback
+		});*/
+	};
+	
+	
+	
+	//vamos a suponer que ya llego esa madre, vamos a borrar
+	//todos los registros de la base de datos
+	for (var v=0; v < ventas.length; v++) {
+		ventas[v].delete({
+			callback: Ext.emptyFn
+		});
+	};
 	
 }
 
@@ -97,11 +121,13 @@ Aplicacion.Mostrador.prototype.carrito =
 };
 
 
+
 Aplicacion.Mostrador.prototype.cancelarVenta = function ()
 {
 	if(DEBUG){
-		console.log("--cancelando venta--");
+		console.log("------cancelando venta------");
 	}
+	
     Aplicacion.Mostrador.currentInstance.carrito.items = [];
 
     Aplicacion.Mostrador.currentInstance.refrescarMostrador();
@@ -1312,7 +1338,7 @@ Aplicacion.Mostrador.prototype.finishedPanelShow = function()
     this.finishedPanelUpdater();
 	
     //resetear los formularios
-    this.cancelarVenta();
+    //this.cancelarVenta();
 	
     sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.finishedPanel , 'fade');
 	
@@ -1510,7 +1536,8 @@ Aplicacion.Mostrador.prototype.doVenta = function ()
 
 };
 
-Aplicacion.Mostrador.thisPosSaleId = 10;
+Aplicacion.Mostrador.thisPosSaleId = 0;
+
 
 Aplicacion.Mostrador.prototype.offlineVender = function( )
 {
@@ -1518,13 +1545,9 @@ Aplicacion.Mostrador.prototype.offlineVender = function( )
 		console.warn("-------- Venta offline !!! ---------");
 		console.log("Aplicacion.Mostrador.thisPosSaleId="+Aplicacion.Mostrador.thisPosSaleId);
 	}
-	
-	//buscar el siguiente id_venta_equipo
-	
-	
-	
+
 	var carrito = Aplicacion.Mostrador.currentInstance.carrito;
-	
+
 	var this_sale = new Ventas({
 		id_venta		: Aplicacion.Mostrador.thisPosSaleId,
 		id_venta_equipo	: Aplicacion.Mostrador.thisPosSaleId,
@@ -1545,16 +1568,49 @@ Aplicacion.Mostrador.prototype.offlineVender = function( )
 		liquidada		: null
 	});
 	
+	this_sale.save(function(saved_sale){
+		
+		if(DEBUG) console.log("Back from saving offline sale sale !", saved_sale);
 
-	this_sale.save(function(r){
-		console.log("back from saving... that sale !", r);
-	});
+		//ahora a guardar los detalles de la venta
+		var detalles 	= Aplicacion.Mostrador.currentInstance.carrito.items,
+			l 			= Aplicacion.Mostrador.currentInstance.carrito.items.length;
+		
+		if(DEBUG) console.log("Ahora intentare guardar los " + l + " detalles.");		
+		
+		for (var d=0, td = null; d < detalles.length; d++) {
+			if(DEBUG)console.log("guardando detalle...");
 			
+			td = new DetalleVenta({
+				id_venta: 			saved_sale.getIdVenta(),
+				id_producto: 		detalles[d].id_producto,
+				cantidad: 			detalles[d].cantidad,
+				cantidad_procesada: detalles[d].cantidad,
+				precio: 			detalles[d].precioVenta,
+				precio_procesada: 	detalles[d].precioVentaProcesado,
+				descuento: 			detalles[d].descuento
+			});
+			
+			td.save(
+				function(){
+					if(DEBUG){
+						console.log("termine de guardar el detalle de venta");
+					}
+				}
+			);
+
+			//reseteamos el carrito
+		    Aplicacion.Mostrador.currentInstance.cancelarVenta();
+		};
+		
+		
+		
+	});
+
 	//mostrar el panel final
     Aplicacion.Mostrador.currentInstance.finishedPanelShow();
 	
-    //reseteamos el carrito
-    Aplicacion.Mostrador.currentInstance.cancelarVenta();
+
 }
 
 Aplicacion.Mostrador.prototype.vender = function ()

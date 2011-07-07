@@ -1184,8 +1184,8 @@ if (isset($args['action'])) {
 
         case 100:
             //realizar una venta desde una sucursal
-            vender($args);
-			//die('{"success": false}');
+            //vender($args);
+			die('{"success": false}');
         break;
 
         case 101:
