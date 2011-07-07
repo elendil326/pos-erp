@@ -213,7 +213,8 @@ function listarInventarioMaestro($n = 50, $show = POS_TODOS) {
 
             $iM = InventarioMaestroDAO::getByPK($detalle->getIdProducto(), $compra->getIdCompraProveedor());
 
-            if ($iM->getExistencias() == 0) {
+            //if ($iM->getExistencias() == 0) {
+            if ($iM->getExistencias() == 0 && $iM->getExistenciasProcesadas() == 0) {
                 if ($show == POS_SOLO_ACTIVOS)
                     continue;
             }else {
