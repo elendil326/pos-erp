@@ -1487,10 +1487,40 @@ Aplicacion.Mostrador.prototype.doVenta = function ()
 Aplicacion.Mostrador.prototype.offlineVender = function( )
 {
 	if(DEBUG){
-		console.warn("Venta offline !!!");
+		console.warn("Venta offline !!! o por un error");
 	}
 	
-
+	//buscar el siguiente id_venta_equipo
+	
+	
+	
+	var carrito = Aplicacion.Mostrador.currentInstance.carrito;
+	
+	var this_sale = new Ventas({
+		id_venta		: 1,
+		id_venta_equipo	: 1,
+		id_equipo		: 1,
+		id_cliente		: carrito.cliente,
+		tipo_venta		: carrito.tipo_venta,
+		tipo_pago		: carrito.tipo_pago,
+		fecha			: null,
+		subtotal		: carrito.subtotal,
+		iva				: carrito.iva,
+		descuento		: 0,
+		total			: carrito.total,
+		id_sucursal		: null,
+		id_usuario		: null,
+		pagado			: carrito.pagado,
+		cancelada		: null,
+		ip				: null,
+		liquidada		: null
+	});
+	
+	console.log(this_sale);
+	
+	this_sale.save(function(r){
+		console.log("back from saving...", r);
+	});
 			
 	//mostrar el panel final
     Aplicacion.Mostrador.currentInstance.finishedPanelShow();
@@ -1534,9 +1564,9 @@ Aplicacion.Mostrador.prototype.vender = function ()
 	
 	//Hay un error en la red justo ahora !
 	if(POS.A.failure){
-		
 		return offlineVender();
 	}
+	
 	
 	
     Ext.Ajax.request({
@@ -1550,7 +1580,10 @@ Aplicacion.Mostrador.prototype.vender = function ()
             try{
                 venta = Ext.util.JSON.decode( response.responseText );
             }catch(e){
-                return POS.error(response, e);
+				//whoops algo paso en el servidor
+				POS.error( response, e );
+				Aplicacion.Mostrador.currentInstance.offlineVender();
+				return;
             }
 			
             if( !venta.success ){
@@ -1606,8 +1639,9 @@ Aplicacion.Mostrador.prototype.vender = function ()
 
         },
         failure: function( response ){
+			Ext.Msg.alert("Error", "Error en la venta");
+			POS.error( response );
 			return offlineVender();
-            POS.error( response );
         }
     });
 };

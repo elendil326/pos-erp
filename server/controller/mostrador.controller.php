@@ -395,10 +395,21 @@ function vender($args) {
     }
 
 
+	//buscar la ultima venta de este equipo
+	$ultima_venta = VentasDAO::getAll( 1, 1, "id_venta_equipo", 'DESC'  );
+	$esta_venta_equipo_id = 0;
+	
+	if(sizeof($ultima_venta) == 1){
+		//no hay ventas anteriores
+		$esta_venta_equipo_id = $ultima_venta[0]->getIdVentaEquipo() + 1;
+	}
+	
     //inicializamos un objeto venta
     $venta = new Ventas();
     $venta->setIdUsuario($_SESSION['userid']);
     $venta->setTotal(0);
+    $venta->setIdEquipo( $_SESSION['id_equipo'] );
+    $venta->setIdVentaEquipo(  $esta_venta_equipo_id  );
     $venta->setIdSucursal($_SESSION['sucursal']);
     $venta->setIp($_SERVER['REMOTE_ADDR']);
     $venta->setPagado(0);

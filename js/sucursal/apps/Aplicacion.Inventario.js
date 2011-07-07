@@ -143,7 +143,7 @@ Aplicacion.Inventario.prototype.cargarInventario = function ()
 				//volver a intentar
 				return this.cargarInventario();
 			}
-			console.log(inventario2);
+			//console.log(inventario2);
 			
 			for(i_index = 0; i_index < inventario2.datos.length ; i_index++){
 
@@ -157,7 +157,7 @@ Aplicacion.Inventario.prototype.cargarInventario = function ()
 					activo : 1,
 					precio_por_agrupacion: 1 // inventario2.datos[i_index].precioPorAgrupacion
 				});				
-				console.warn(prod);
+				//console.warn(prod);
 				prod.save(function(r){console.log(r)});
 			}
 			
