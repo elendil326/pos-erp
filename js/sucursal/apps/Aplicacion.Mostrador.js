@@ -10,6 +10,7 @@ Aplicacion.Mostrador.prototype._init = function () {
         console.log("Mostrador: construyendo");
     }
 
+	this.checkForOfflineSales();
 	
     //crear el panel del mostrador
     this.mostradorPanelCreator();
@@ -42,8 +43,36 @@ Aplicacion.Mostrador.prototype.getConfig = function (){
 
 
 
+Aplicacion.Mostrador.prototype.checkForOfflineSales = function()
+{
+	Ventas.getAll({
+		context: this,
+		callback : function(f){
+						if(DEBUG){
+							if(f.length > 0){
+								console.log("HAY " + f.length + " ventas pendientes !");
+							}
+						}
+						
+						if(f.length > 0 )
+							this.sendOfflineSales(f);
+						
+					} 
+				});
+	
+}
 
 
+Aplicacion.Mostrador.prototype.sendOfflineSales = function( ventas )
+{
+	
+	if(DEBUG){
+		console.log( "Enviando ventas offline ....", ventas);
+	}
+	
+	
+	
+}
 
 /*  ****************************************************************************************************************
     ****************************************************************************************************************
@@ -54,7 +83,8 @@ Aplicacion.Mostrador.prototype.getConfig = function (){
 /*
  *	Estructura donde se guardaran los detalles de la venta actual.
  * */
-Aplicacion.Mostrador.prototype.carrito = {
+Aplicacion.Mostrador.prototype.carrito = 
+{
     tipo_venta : null,
     items : [],
     cliente : null,
@@ -1088,7 +1118,6 @@ Aplicacion.Mostrador.prototype.setCajaComun = function ()
 	
 };
 
-
 Aplicacion.Mostrador.prototype.buscarClienteFormCreator = function ()
 {
 	
@@ -1179,7 +1208,6 @@ Aplicacion.Mostrador.prototype.buscarClienteFormCreator = function ()
 
 
 };
-
 
 Aplicacion.Mostrador.prototype.buscarClienteFormShow = function (  )
 {
@@ -1482,7 +1510,6 @@ Aplicacion.Mostrador.prototype.doVenta = function ()
 
 };
 
-
 Aplicacion.Mostrador.thisPosSaleId = 10;
 
 Aplicacion.Mostrador.prototype.offlineVender = function( )
@@ -1533,34 +1560,11 @@ Aplicacion.Mostrador.prototype.offlineVender = function( )
 Aplicacion.Mostrador.prototype.vender = function ()
 {
 
-    /**
-    
-      *     {
-      *             "id_cliente": int | null,
-      *             "tipo_venta": "contado" | "credito",
-      *             "tipo_pago": "tarjeta" | "cheque" | "efectivo",
-      *             "factura": false | true,
-      *             "items": [
-      *                 {
-      *                     "id_producto": int,
-      *                     "procesado": true | false,
-      *                     "precio":float,
-      *                     "cantidad": float
-      *                 }
-      *             ]
-      *     }
-        */
 
     if(DEBUG){
-        console.log("El carrito que se enviara para registrar la venta sera  : ", Aplicacion.Mostrador.currentInstance.carrito);
+        console.log(" ----- Enviando venta :", Aplicacion.Mostrador.currentInstance.carrito , " ----------");
     }
-        
 
-    json = Ext.util.JSON.encode( Aplicacion.Mostrador.currentInstance.carrito );
-	
-    if(DEBUG){
-        console.log("Enviando venta .... !", json);
-    }
 
 	Aplicacion.Mostrador.thisPosSaleId++;
 	
@@ -1576,7 +1580,9 @@ Aplicacion.Mostrador.prototype.vender = function ()
         scope : this,
         params : {
             action 	: 100,
-            payload : json
+            payload : Ext.util.JSON.encode( 
+							Aplicacion.Mostrador.currentInstance.carrito
+						)
         },
         success: function(response, opts) {
             try{
@@ -1668,7 +1674,8 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanel = null;
 /*
  * Es la funcion de entrada para mostrar el panel de venta
  **/
-Aplicacion.Mostrador.prototype.doVentaPanelShow = function ( ){	
+Aplicacion.Mostrador.prototype.doVentaPanelShow = function ( )
+{	
 	
     //hacer un setcard manual
     sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel , 'slide');
