@@ -1417,11 +1417,24 @@ echo " var inventario_maestro_extjs = " . json_encode($iMaestro) . ";";
                                 /* ********************************
                                  *  agrupacion y CON tratamiento !
                                  * ********************************	*/							
-                                var v = (parseFloat( (row.data.existencias - row.data.existencias_procesadas) / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
-                                    +"&nbsp;(<i>" + (row.data.existencias - row.data.existencias_procesadas).toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+                                //var v = (parseFloat( (row.data.existencias - row.data.existencias_procesadas) / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
+                                //    +"&nbsp;(<i>" + (row.data.existencias - row.data.existencias_procesadas).toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+                                
+                                var diferencia =  n - row.data.existencias_procesadas;
+                                var cantidad_original = 0;//cantidad
+                                
+                                if(diferencia < 0){
+                                    cantidad_original = diferencia + row.data.existencias_procesadas;
+                                }else{
+                                    cantidad_original = diferencia;
+                                }
+                                
+                                var v = (parseFloat( cantidad_original / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
+                                    +"&nbsp;(<i>" + cantidad_original.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+                                
                             }
 
-                            if(n < 0){
+                            if(cantidad_original < 0){
                                 return ( "<span style='color:red'>" + v +"</span>" );
                             }else{
                                 return v;

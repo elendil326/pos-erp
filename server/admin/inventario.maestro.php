@@ -377,8 +377,20 @@ $iMaestroTerminados = listarInventarioMaestro(50, POS_SOLO_VACIOS);
                                 //con tratamiento !
                                 /*return  (parseFloat( n / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
                                                                         +"&nbsp;(<i>" + n.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";*/
-                                return  ( parseFloat( ( n - row.data.existencias_procesadas) / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
-                                    +"&nbsp;(<i>" + (n - row.data.existencias_procesadas).toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+                                //return  ( parseFloat( ( n - row.data.existencias_procesadas) / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
+                                //    +"&nbsp;(<i>" + (n - row.data.existencias_procesadas).toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
+                                
+                                var diferencia =  n - row.data.existencias_procesadas;
+                                var cantidad_original = 0;//cantidad
+                                
+                                if(diferencia < 0){
+                                    cantidad_original = diferencia + row.data.existencias_procesadas;
+                                }else{
+                                    cantidad_original = diferencia;
+                                }
+                                
+                                return (parseFloat( cantidad_original / row.data.peso_por_arpilla )).toFixed(2) + " " +  toSmallUnit(row.data.agrupacion)
+                                    +"&nbsp;(<i>" + cantidad_original.toFixed(2) + " " +  toSmallUnit(row.data.medida) + "</i>)";
 
                             }else{
                                 //sin tratamiento
