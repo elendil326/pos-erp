@@ -251,6 +251,8 @@ Ext.Ajax.on("beforerequest", function( conn, options ){
 	
     if(POS.A.failure && options.params.action != "dummy"){
         if(DEBUG){
+
+			console.warn("--- ---- conection is lost !!!! --------- ---");
             console.warn("server request on unreachable server" );
             console.log( "parametros:", options.params)
         }
@@ -261,7 +263,13 @@ Ext.Ajax.on("beforerequest", function( conn, options ){
 Ext.Ajax.on("requestcomplete", function(a,b,c){
     if(POS.A.failure){
         POS.A.failure = false;
-    //Ext.getBody().unmask();
+    	//Ext.getBody().unmask();
+
+		if(DEBUG){
+			console.warn("--- ---- conection is back !!!! --------- ---");
+		}
+		
+		Aplicacion.Mostrador.currentInstance.checkForOfflineSales();
     }
 });
 
