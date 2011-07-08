@@ -283,7 +283,7 @@ function dummyRequest(){
             action : 1105
         },
 		success : function( r ){
-			if(DEBUG){consle.log("dummy request completed !!!");}
+			if(DEBUG){console.log("dummy request completed !!!");}
 			
             try{
                 r = Ext.util.JSON.decode( response.responseText );

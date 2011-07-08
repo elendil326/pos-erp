@@ -2440,18 +2440,27 @@ Aplicacion.Clientes.prototype.finishedPanelUpdater = function( data_abono )
 {   
 	
     if(DEBUG){
-        console.log( "se mando a imprimir : ", Ext.util.JSON.encode( data_abono  ) );
+        console.log( "se mando a imprimir : ", data_abono );
     }
 	
-    json = encodeURI( Ext.util.JSON.encode( data_abono ) );
-	
-    do
-    {
-        json = json.replace('#','%23');
-    }
-    while(json.indexOf('#') >= 0);
-	
-	
+	POS.ajaxToClient({
+		module : "Printer",
+		args : data_abono,
+		success : function ( r ){
+			
+			//ok client is there...
+			if(DEBUG){
+				console.log("ticket printing responded", r);						
+			}
+
+		},
+		failure: function (){
+			//client not found !
+			if(DEBUG){
+				console.warn("client not found !!!", r);						
+			}
+		}
+	});
     html = "";
 	
     html += "<table class='Mostrador-ThankYou' style = 'margin : 0 !important;' >";
@@ -2466,29 +2475,6 @@ Aplicacion.Clientes.prototype.finishedPanelUpdater = function( data_abono )
 
     html += "</table>";
 
-	
-    //html += "<iframe src ='PRINTER/src/impresion.php?json=" + json + "' width='0px' height='0px'></iframe> ";
-    hora = new Date()
-    var dia = hora.getDate();
-    var mes = hora.getMonth();
-    var anio = hora.getFullYear();
-    horas = hora.getHours()
-    minutos = hora.getMinutes()
-    segundos = hora.getSeconds()
-    if (mes <= 9) mes = "0" + mes
-    if (horas >= 12) tiempo = " p.m."
-    else tiempo = " a.m."
-    if (horas > 12) horas -= 12
-    if (horas == 0) horas = 12
-    if (minutos <= 9) minutos = "0" + minutos
-    if (segundos <= 9) segundos = "0" + segundos
-
-    html += ''
-    +'<applet code="printer.Main" archive="PRINTER/dist/PRINTER.jar" WIDTH=0 HEIGHT=0>'
-    +'     <param name="json" value="'+ json +'">'
-    +'     <param name="hora" value="' + horas + ":" + minutos + ":" + segundos + tiempo + '">'
-    +'     <param name="fecha" value="' + dia +"/"+ (hora.getMonth() + 1) +"/"+ anio + '">'
-    +' </applet>';
 	
     //actualiza el panel de la impresion
     this.finishedPanel.update(html);
@@ -2521,30 +2507,29 @@ Aplicacion.Clientes.prototype.finishedPanelShowReimpresionTicket = function( ven
 Aplicacion.Clientes.prototype.finishedPanelReimpresionTicketUpdater = function( venta )
 {
 
+	if(DEBUG){
+		console.log("finishedPanelReimpresionTicketUpdater()");
+	}
     var items = [];
 
     for( var i = 0; i < venta.detalle_venta.length; i++){
             
         //verificamos si se vendio producto original
         if( venta.detalle_venta[i].cantidad > 0 ){
-            items.push(
-            {
+            items.push({
                 cantidad : venta.detalle_venta[i].cantidad,
                 descripcion : venta.detalle_venta[i].descripcion,
                 precio : venta.detalle_venta[i].precio
-            }
-            );
+            });
         }
             
         //verificamos si se vendio producto procesado
         if( venta.detalle_venta[i].cantidad_procesada > 0 ){
-            items.push(
-            {
+            items.push({
                 cantidad : venta.detalle_venta[i].cantidad_procesada - venta.detalle_venta[i].descuento,
                 descripcion : venta.detalle_venta[i].descripcion,
                 precio : venta.detalle_venta[i].precio_procesada
-            }
-            );
+            });
         }
             
     }
@@ -2581,13 +2566,24 @@ Aplicacion.Clientes.prototype.finishedPanelReimpresionTicketUpdater = function( 
         console.log("reimpresion de venta : ", reimprimirVenta);
     }
 
-    json = encodeURI( Ext.util.JSON.encode( reimprimirVenta ) );
-	
-    do
-    {
-        json = json.replace('#','%23');
-    }
-    while(json.indexOf('#') >= 0);
+	POS.ajaxToClient({
+		module : "Printer",
+		args :  reimprimirVenta ,
+		success : function ( r ){
+			
+			//ok client is there...
+			if(DEBUG){
+				console.log("ticket printing responded", r);						
+			}
+
+		},
+		failure: function (){
+			//client not found !
+			if(DEBUG){
+				console.warn("client not found !!!", r);						
+			}
+		},
+	});
 	
     html = "";
 	
@@ -2602,9 +2598,8 @@ Aplicacion.Clientes.prototype.finishedPanelReimpresionTicketUpdater = function( 
     html += "	</tr>";
 
     html += "</table>";
-		
-    //html += "<iframe src ='PRINTER/src/impresion.php?json=" + json + "' width='0px' height='0px'></iframe> ";
 
+	/*
     hora = new Date()
     var dia = hora.getDate();
     var mes = hora.getMonth();
@@ -2618,17 +2613,8 @@ Aplicacion.Clientes.prototype.finishedPanelReimpresionTicketUpdater = function( 
     if (horas > 12) horas -= 12
     if (horas == 0) horas = 12
     if (minutos <= 9) minutos = "0" + minutos
-    if (segundos <= 9) segundos = "0" + segundos
+    if (segundos <= 9) segundos = "0" + segundos */
 
-    html += ''
-    +'<applet code="printer.Main" archive="PRINTER/dist/PRINTER.jar" WIDTH=0 HEIGHT=0>'
-    +'     <param name="json" value="'+ json +'">'
-    +'     <param name="hora" value="' + horas + ":" + minutos + ":" + segundos + tiempo + '">'
-    +'     <param name="fecha" value="' + dia +"/"+ (hora.getMonth() + 1) +"/"+ anio + '">'
-    +' </applet>';
-
-	
-	
     this.finishedPanelReimpresionTicket.update(html);
 
     sink.Main.ui.setActiveItem( this.finishedPanelReimpresionTicket , 'fade');

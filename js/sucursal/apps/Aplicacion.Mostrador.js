@@ -1472,12 +1472,12 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 			  *	Impresion via applet
 			  *
 			  **/
-	      	html += ''
+	      	/*html += ''
 	        +'<applet code="printer.Main" archive="PRINTER/dist/PRINTER.jar" WIDTH=0 HEIGHT=0>'
 	        +'     <param name="json" value="'+ json +'">'
 	        +'     <param name="hora" value="' + horas + ":" + minutos + ":" + segundos + tiempo + '">'
 	        +'     <param name="fecha" value="' + dia +"/"+ (hora.getMonth() + 1) +"/"+ anio + '">'
-	        +' </applet>';
+	        +' </applet>'; */
 	
 		}
     }
