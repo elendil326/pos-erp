@@ -13,13 +13,13 @@
 	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 	<title>Caffeina</title>
-	<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript"></script>
+	<script src="http://api.caffeina.mx/jquery/jquery-1.4.2.min.js" type="text/javascript"></script>
 
 	<script>
 		$.noConflict();
 	</script>
 	
-	<script type="text/javascript" charset="utf-8" src="../frameworks/prototype/prototype.js"></script>		
+	<script type="text/javascript" charset="utf-8" src="http://api.caffeina.mx/prototype/prototype.js"></script>		
 
 
 	<link rel="stylesheet" type="text/css" href="./../getResource.php?mod=admin&type=css">

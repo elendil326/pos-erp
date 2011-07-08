@@ -13,16 +13,16 @@
 	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 	<title>POS | Configuracion</title>
-	<script src="../frameworks/jquery/jquery-1.4.2.min.js" type="text/javascript"></script>
+	<script src="http://api.caffeina.mx/jquery/jquery-1.4.2.min.js" type="text/javascript"></script>
 
 	<script>
 		$.noConflict();
 	</script>
 	
-	<script type="text/javascript" charset="utf-8" src="../frameworks/prototype/prototype.js"></script>		
+	<script type="text/javascript" charset="utf-8" src="http://api.caffeina.mx/prototype/prototype.js"></script>		
 
-	<script src="../frameworks/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
-	<link rel="stylesheet" href="../frameworks/uniform/css/uniform.default.css" type="text/css" media="screen">
+	<script src="http://api.caffeina.mx/uniform/jquery.uniform.min.js" type="text/javascript" charset="utf-8"></script> 
+	<link rel="stylesheet" href="http://api.caffeina.mx/uniform/css/uniform.default.css" type="text/css" media="screen">
 	<script type="text/javascript" charset="utf-8">jQuery(function(){jQuery("input, select").uniform();});</script>
 		
 	<link rel="stylesheet" type="text/css" href="./../getResource.php?mod=admin&type=css">
