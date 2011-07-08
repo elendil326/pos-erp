@@ -4,18 +4,19 @@ echo "Iniciando build"
 
 
 #firmando el applet
-keytool -genkey -alias Caffeina -validity 365 -v
-echo caffeina  | jarsigner www/sucursal/PRINTER/dist/PRINTER.jar  Caffeina -verbose
+#keytool -genkey -alias Caffeina -validity 365 -v
+#echo caffeina  | jarsigner www/sucursal/PRINTER/dist/PRINTER.jar  Caffeina -verbose
 
 ## ---- ####
-rm -rf www/sucursal/PRINTER/JSONSIMPLE
-rm -rf www/sucursal/PRINTER/src
-rm -rf www/sucursal/PRINTER/nbproject
-rm -rf www/sucursal/PRINTER/test
+#rm -rf www/sucursal/PRINTER/JSONSIMPLE
+#rm -rf www/sucursal/PRINTER/src
+#rm -rf www/sucursal/PRINTER/nbproject
+#rm -rf www/sucursal/PRINTER/test
 
 
-### mover el jar del cliente a static files ###
-
+### pos client ###
+rm -rf pos_client/src
+rm pos_client/buildClient.sh
 
 #compilar el jsminify
 cd build
