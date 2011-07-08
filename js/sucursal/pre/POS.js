@@ -282,6 +282,25 @@ function dummyRequest(){
         params : {
             action : 1105
         },
+		success : function( r ){
+			if(DEBUG){consle.log("dummy request completed !!!");}
+			
+            try{
+                r = Ext.util.JSON.decode( response.responseText );
+	            if((r.reboot !== undefined)){
+					if(DEBUG){
+						console.error("reboot !");
+					}
+	                window.location = ".";
+	            }
+            }catch(e){
+                return;
+            }
+
+
+
+
+		},
         failure: function() {
             setTimeout("dummyRequest()", 500);
         }

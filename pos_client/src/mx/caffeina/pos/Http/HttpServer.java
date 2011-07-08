@@ -43,7 +43,7 @@ public class HttpServer
         } 
 		
 		PosClient.trayIcon.getTrayIcon().displayMessage("POS Listo", 
-            "Listening for clients on "+port+"...",
+            "Pos Client iniciado !",
             TrayIcon.MessageType.INFO);
 
         Logger.log("Listening for clients on "+port+"..."); 

@@ -53,6 +53,7 @@ Ext.util.JSONP = {
             }
         };
 
+POS._ajaxToClientPORT = 16001;
 
 POS.ajaxToClient = function( options ) //module, args, callback, onFailureCallback )
 {
@@ -67,7 +68,7 @@ POS.ajaxToClient = function( options ) //module, args, callback, onFailureCallba
 	/** **** Cross-broswer call **** **/
 
 	    Ext.util.JSONP.request({
-	        url: 'http://127.0.0.1:8080/',
+	        url: 'http://127.0.0.1:'+POS._ajaxToClientPORT+'/',
 	        callbackKey: "callback",
 	        params: {
 				action : options.module,

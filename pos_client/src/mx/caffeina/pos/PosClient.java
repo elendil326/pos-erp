@@ -39,7 +39,7 @@ public class PosClient{
 		String response = null;
 		
 		//iniciar el servidor web
-		httpServer = new HttpServer( 8080 );
+		httpServer = new HttpServer( 16001 );
 
 	}
 
