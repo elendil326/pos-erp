@@ -248,10 +248,15 @@ Ext.setup({
 
 var SYSTEMS_NEEDED = 2;
 var systemsLoaded = 0;
+
 function imReadyToStart(  ){
+	
+	Ext.getBody().mask("cargando..." );
+
 	if( ++systemsLoaded == SYSTEMS_NEEDED ){
-		sink.Main.init();
 		
+		sink.Main.init();
+		Ext.getBody().unmask( );		
 		Ext.get("space_for_suc_name").update(   POS.infoSucursal.descripcion  );
 
 	}

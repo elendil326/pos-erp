@@ -158,92 +158,6 @@ POS.fecha = function( f ){
 POS.leyendasTicket = null;
 
 
-/*
-function test_p(){
-	POS.ajaxToClient(
-		"Printer",
-		{
-		    tipo_venta: "credito",
-		    impresora: "EPSON TM-U220 Receipt",
-		    leyendasTicket: {
-		        cabeceraTicket: "JUAN ANTONIO GARCIA TAPIA",
-		        rfc: "GATJ680704DF2",
-		        nombreEmpresa: "PAPAS SUPREMAS 1",
-		        direccion: "JUAN MANUEL GARCIA CARMONA ING",
-		        telefono: "(461) 61 28194",
-		        notaFiscal: "Este comprobante no es valido para fines fiscales.",
-		        cabeceraPagare: "PAGARE",
-		        pagare: "DEBE(MOS) Y PAGARE(MOS) INCONDICIONALMENTE A LA ORDEN DE JUAN ANTONIO GARCIA TAPIA EN LA CIUDAD DE ____________________ EL ____________________ LA CANTIDAD DE ____________________ VALOR RECEBIDO A NUESTRA ENTERA SATISFACCION.",
-		        contacto: "QUEJAS Y SUGERENCIAS (461) 61 72030",
-		        gracias: "GRACIAS POR SU COMPRA"
-		    },
-		    items: [
-		        {
-		            descripcion: "papas primeras",
-		            existencias: "2197",
-		            existencias_procesadas: "271",
-		            tratamiento: "limpia",
-		            precioVenta: "11",
-		            precioVentaSinProcesar: "10",
-		            precio: "11",
-		            id_producto: 1,
-		            escala: "kilogramo",
-		            precioIntersucursal: "10.5",
-		            precioIntersucursalSinProcesar: "9.5",
-		            procesado: "true",
-		            cantidad: 2,
-		            idUnique: "1_7",
-		            descuento: "0"
-		        }
-		    ],
-		    cliente: {
-		        id_cliente: "2",
-		        rfc: "ALCB770612",
-		        nombre: "BRENDA ALFARO CARMONA",
-		        direccion: "MUTUALISMO #345, COL. CENTRO",
-		        ciudad: "CELAYA",
-		        telefono: "a",
-		        e_mail: " ",
-		        limite_credito: "20",
-		        descuento: "2",
-		        activo: "1",
-		        id_usuario: "101",
-		        id_sucursal: "1",
-		        fecha_ingreso: "2011-01-12 18:05:59",
-		        credito_restante: 19.5
-		    },
-		    venta_preferencial: {
-		        cliente: null,
-		        id_autorizacion: null
-		    },
-		    factura: false,
-		    tipo_pago: "cheque",
-		    subtotal: 22,
-		    total: 21.56,
-		    pagado: "21.56",
-		    id_venta: 230,
-		    empleado: "Alan gonzalez hernandez",
-		    sucursal: {
-		        id_sucursal: "1",
-		        gerente: "102",
-		        descripcion: "papas supremas 1",
-		        direccion: "monte radiante #123 col centro celaya",
-		        rfc: "alskdfjlasdj8787",
-		        telefono: "1726376672",
-		        token: null,
-		        letras_factura: "c",
-		        activo: "1",
-		        fecha_apertura: "2011-01-09 01:38:26",
-		        saldo_a_favor: "0"
-		    },
-		    ticket: "venta_cliente"
-		}
-    );
-}
-
-*/
-
-
 
 
 
@@ -306,7 +220,7 @@ POS.loadLeyendasTicket = function(){
 Ext.MessageBox.YESNO[1].text = "Si";
 
 
-Ext.Ajax.timeout = 25000;
+Ext.Ajax.timeout = 10000;
 POS.CHECK_DB_TIMEOUT = 15000;
 
 POS.A = {
@@ -516,8 +430,6 @@ function reload(){
             }
         });
     }
-
-	
 }
 
 
@@ -532,6 +444,12 @@ POS.error = function (ajaxResponse, catchedError)
 {
 	//enviar error al cliente local !
 	console.error("POS.ERROR() : ", ajaxResponse, catchedError);
+	if(ajaxResponse !== undefined
+		&& ajaxResponse.reboot !== undefined
+		&& ajaxResponse.reboot === true
+	){
+		window.location = ".";
+	}
 };
 
 //lee la informacion de la sucursal

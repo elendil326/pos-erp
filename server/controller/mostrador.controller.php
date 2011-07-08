@@ -181,53 +181,105 @@ function descontarInventario($productos) {
  *
  * {"id_cliente": 1,"tipo_venta": "contado","tipo_pago":"efectivo","factura": false,"items": [{"id_producto": 1,"procesado": true,"precio": 5.5,"cantidad": 5}]}
  * */
-function vender($args) {
+function vender($json_string , $die_on_end = true) {
 
     Logger::log("Iniciando proceso de venta (sucursal)");
 
-    if (!isset($args['payload'])) {
+    if (!isset($json_string)) {
         Logger::log("Sin parametros para realizar venta (sucursal)");
         die('{"success": false, "reason": "No hay parametros para realizar la venta." }');
     }
 
     try {
-        $data = parseJSON($args['payload']);
+        $data = parseJSON($json_string);
     } catch (Exception $e) {
         Logger::log("json invalido para realizar venta : " . $e);
         die('{"success": false, "reason": "Parametros invalidos." }');
     }
 
     if ($data == null) {
-        Logger::log("el parseo del json de la venta resulto en un objeto nulo");
-        die('{"success": false, "reason": "Parametros invalidos. El objeto es nulo." }');
+        Logger::log("El parseo del json de la venta resulto en un objeto nulo : ");
+        Logger::log("---- json original ----");
+        Logger::log($json_string);
+        Logger::log("---- json original ----");
+
+		if($die_on_end)
+        	die('{"success": false, "reason": "Parametros invalidos. El objeto es nulo." }');
+		else 
+			return false;
     }
 
     //verificamos que se manden todos los parametros necesarios
 
     if (!( isset($data->tipo_venta) && isset($data->factura) && isset($data->items) )) {
+		
         Logger::log("Falta uno o mas parametros");
-        die('{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }');
+
+		if($die_on_end)
+        	die('{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }');
+		else 
+			return false;
+        
     }
 
     //verificar que $data->items  sea un array
     if (!is_array($data->items)) {
         Logger::log("data -> items no es un array de productos");
-        die('{"success": false, "reason": "No se genero correctamente las especificaciones de los productos a vender." }');
+
+		if($die_on_end)
+        	die('{"success": false, "reason": "No se genero correctamente las especificaciones de los productos a vender." }');
+		else 
+			return false;
+        
     }
 
     //verificamos que $data->items almenos tenga un producto
     if (count($data->items) <= 0) {
         Logger::log("data -> items no contiene ningun producto");
-        die('{"success": false, "reason": "No se especifico ningun producto para generar una nueva venta." }');
+        
+		if($die_on_end)
+        	die('{"success": false, "reason": "No se especifico ningun producto para generar una nueva venta." }');
+		else 
+			return false;
     }
 
     //verificamos que cada objeto de producto tenga los parametros necesarios
     foreach ($data->items as $item) {
 
-        if (!( isset($item->id_producto) && isset($item->procesado) && isset($item->precio) && isset($item->cantidad) )) {
-            Logger::log("Uno o mas objetos de data -> items no tiene el formato correcto");
-            die('{"success": false, "reason": "No se genero correctamente la descripcion de uno o mas productos." }');
+        if ( !isset($item->id_producto) ) {
+            Logger::log("No hay id_producto en el item");
+			if($die_on_end)
+	        	die('{"success": false, "reason": "No se genero correctamente la descripcion de uno o mas productos." }');
+			else 
+				return false;
+            
         }
+
+        if ( !isset($item->procesado) ) {
+            Logger::log("No hay procesado en el item !!!!");
+			if($die_on_end)
+	        	die('{"success": false, "reason": "No se genero correctamente la descripcion de uno o mas productos." }');
+			else 
+				return false;
+        }
+
+        if ( !isset($item->precio) ) {
+            Logger::log("No hay precio en el item !!!!");
+			if($die_on_end)
+	        	die('{"success": false, "reason": "No se genero correctamente la descripcion de uno o mas productos." }');
+			else 
+				return false;
+        }
+
+        if ( !isset($item->cantidad) ) {
+            Logger::log("No hay cantidad en el item !!!!");
+			if($die_on_end)
+	        	die('{"success": false, "reason": "No se genero correctamente la descripcion de uno o mas productos." }');
+			else 
+				return false;
+        }
+
+
     }
 
 
@@ -242,7 +294,11 @@ function vender($args) {
 
         if (!($producto = InventarioDAO::getByPK($data->items[$i]->id_producto))) {
             Logger::log("No se tiene registro del producto {$data->items[$i]->id_producto}.");
-            die('{"success": false, "reason": "No se tiene registro del producto ' . $data->items[$i]->id_producto . '." }');
+			if($die_on_end)
+	        	die('{"success": false, "reason": "No se tiene registro del producto ' . $data->items[$i]->id_producto . '." }');
+			else 
+				return false;
+
         }
 
         //verificamos si su precio es por agrupacion
@@ -571,7 +627,10 @@ function vender($args) {
         if (VentasDAO::save($venta)) {
             $empleado = UsuarioDAO::getByPK($venta->getIdUsuario());
 
-            printf('{"success": true, "id_venta":%s, "empleado":"%s"}', $venta->getIdVenta(), $empleado->getNombre());
+			if($die_on_end)
+	        	printf('{"success": true, "id_venta":%s, "empleado":"%s"}', $venta->getIdVenta(), $empleado->getNombre());
+         
+			
         } else {
             DAO::transRollback();
             die('{"success": false, "reason": "No se pudo actualizar el total de la venta" }');
@@ -583,7 +642,12 @@ function vender($args) {
     }
 
     //verificamos si la venta se hiso a una sucursal, si es asi entonces se poner en transito el producto    
-    if (isset($data->cliente) && $data->cliente->id_cliente < 0 && $venta->getTipoVenta() != "contado" && $data->cliente->id_cliente != ( $_SESSION['sucursal'] * -1 )) {
+    if ( isset($data->cliente) 
+		&& $data->cliente->id_cliente < 0 
+		&& $venta->getTipoVenta() != "contado" 
+		&& $data->cliente->id_cliente != ( $_SESSION['sucursal'] * -1 )
+	) 
+	{
         $en_transito = array(
             'id_sucursal' => $data->cliente->id_cliente * -1,
             'data' => json_encode($array_items),
@@ -592,10 +656,10 @@ function vender($args) {
 
         responderAutorizacionSolicitudProductos($en_transito);
     }
-
-
-    DAO::transEnd();
-
+	
+	DAO::transEnd();
+	
+	return true;
     Logger::log("Proveso de venta (sucursal), termino con exito!! id_venta : {$id_venta}.");
 }
 
@@ -1177,20 +1241,105 @@ function venderAdmin($args) {
 }
 
 //vender
+function registrarVentasOffline($config)
+{
+	Logger::log("Registrando ventas offline de un cliente");
+	
+	$load = json_decode($config);
+	
+	$ventas = $load->ventas;
+	$detalles_ventas = $load->detalles; 
+	
+	Logger::log("Intentare registrar " . sizeof( $ventas ) . " ventas desde el equipo ". $_SESSION["id_equipo"] . ".");
+	
+	foreach($ventas as $esta_venta)
+	{
+		
+		$detalles_esta_venta = array();
+		
+		//buscar los detalles de esta venta
+		for ($dv_index=0; $dv_index < sizeof($detalles_ventas); $dv_index++) { 
+			if( $detalles_ventas[$dv_index]->json->id_venta == $esta_venta->json->id_venta ){
+				array_push( $detalles_esta_venta, $detalles_ventas[$dv_index]->json  );
+			}
+		}
+		
+		
+		//listo tengo los detalles... organizare el arreglo
+		//de datos como si fuera que vienen normalmente del cliente
+		//incluso aramare un json
+		Logger::log("Hay " . sizeof($detalles_esta_venta) . " productos para registrar  esta venta offline...");
+		
+		$json_to_record = array(
+				"id_cliente" => $esta_venta->json->id_cliente,
+				"tipo_venta" => $esta_venta->json->tipo_venta,
+				"tipo_pago" => $esta_venta->json->tipo_pago,
+				"factura" => false,
+				"items" => array( )
+			);
+		
+		foreach( $detalles_esta_venta as $dv )
+		{
+			
+			$foo = get_object_vars($dv);
+			$foo["procesado"] = false;
+			
+			if($foo["cantidad_procesada"] > 0){
+				$foo["procesada"] = true;
+			}
+				
 
+			array_push( $json_to_record["items"], $foo  );
+		}
+		
+		$res = vender(json_encode( $json_to_record ), false);
+		
+		if(!$res){
+			Logger::log("ERROR AL VENDER !!");
+		}else{
+			Logger::log("Registrada correctamente....");
+		}
+		
+		
+		/*	{
+		 *             "id_cliente": int | null,
+		 *             "tipo_venta": "contado" | "credito",
+		 *             "tipo_pago": "tarjeta" | "cheque" | "efectivo",
+		 *             "factura": false | true,
+		 *             "items": [
+		 *                 {
+		 *                     "id_producto": int,
+		 *                     "procesado": true | false,
+		 *                     "precio":float,
+		 *                     "cantidad": float,
+		 *                     "descuento": float
+		 *                 }
+		 *             ]
+		 *        }
+		 */	
+	}
+	//vender();
+	
+}
 
 if (isset($args['action'])) {
     switch ($args['action']) {
 
         case 100:
             //realizar una venta desde una sucursal
-            //vender($args);
-			die('{"success": false}');
+            vender($args["payload"]);
+			//Logger::log("DEBUGGINGGGG");
+			//die('{"success": false}');
         break;
 
         case 101:
             //realizar una venta desde el admin
             venderAdmin($args);
+        break;
+
+        case 199:
+            //enviar ventas offline desde el cliente
+            registrarVentasOffline($args["payload"]);
         break;
     }
 }

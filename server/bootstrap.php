@@ -1,4 +1,10 @@
 <?php
+
+	# <debug>
+	//if(defined("I_AM_SUCURSAL") && I_AM_SUCURSAL) sleep(3);
+	# </debug>
+
+
 	# *******************************
 	# Definiciones
 	# *******************************

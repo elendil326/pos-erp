@@ -54,11 +54,15 @@ Aplicacion.Mostrador.prototype.checkForOfflineSales = function()
 							}
 						}
 						
-						if(f.length > 0 )
+						if(f.length > 0 ){
 							this.sendOfflineSales(f);
+						}else{
+							if(DEBUG){console.log("no hay ventas pendientes en la base de datos local");}
+						}
+							
 						
 					} 
-				});
+		});
 	
 }
 
@@ -67,36 +71,50 @@ Aplicacion.Mostrador.prototype.sendOfflineSales = function( ventas )
 {
 	
 	if(DEBUG){
-		console.log( "Enviando ventas offline ....", ventas);
+		console.log( "Enviando ventas offline ....");
 	}
 	
-	var to_send = [];
 	
-	for (var v=0; v < ventas.length; v++) {
-		
-		if(DEBUG){
-			console.log("buscando el detalle de venta para la venta " + ventas[v].getIdVenta());
+	//buscar el detalle de venta para esa venta
+	DetalleVenta.getAll({
+		context : this,
+		callback: function( detallesVentas ){
+			if(DEBUG){console.log("ya tengo los detalles de ventas..", detallesVentas, " para las ventas : " , ventas);}
+			
+			//send those bithces
+			Ext.Ajax.request({
+		        url: '../proxy.php',
+		        scope : this,
+		        params : {
+		            action 	: 199,
+		            payload : Ext.util.JSON.encode( { ventas : ventas, detalles : detallesVentas } )
+		        },
+				success : function(response){
+
+					//eliminar la ventas, una vez que el servidor ya sabe que pedo					
+					if(DEBUG){
+						console.log("ya regrese de enviar las ventas offline... a borrarlas de la bd");
+					}
+					for (var v_i=0; v_i < ventas.length; v_i++) {
+						ventas[v_i].delete({ callback: Ext.emptyFn });
+					}
+					
+					for (var dv_i=0; dv_i < detallesVentas.length; dv_i++) {
+						detallesVentas[dv_i].delete({ callback: Ext.emptyFn });
+					}
+
+				}
+			});
+			
+			
 		}
-		
-		to_send.push(ventas[v]);
-		
-		//buscar el detalle de venta para esa venta
-		/*DetalleVenta.getByPK(ventas[v].getIdVenta(), {
-			callback
-		});*/
-	};
-	
-	
-	
-	//vamos a suponer que ya llego esa madre, vamos a borrar
-	//todos los registros de la base de datos
-	for (var v=0; v < ventas.length; v++) {
-		ventas[v].delete({
-			callback: Ext.emptyFn
-		});
-	};
-	
-}
+	});
+
+
+	/*
+
+	*/
+}//sendOfflineSales()
 
 /*  ****************************************************************************************************************
     ****************************************************************************************************************
@@ -1626,7 +1644,7 @@ Aplicacion.Mostrador.prototype.vender = function ()
 	
 	//Hay un error en la red justo ahora !
 	if(POS.A.failure){
-		return offlineVender();
+		return Aplicacion.Mostrador.currentInstance.offlineVender();
 	}
 	
 	
