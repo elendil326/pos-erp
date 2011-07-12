@@ -1464,7 +1464,7 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 					if(DEBUG){
 						console.warn("client not found !!!", r);						
 					}
-				},
+				}
 			});
 					
 		}else{

@@ -59,7 +59,6 @@ POS.ajaxToClient = function( options ) //module, args, callback, onFailureCallba
 {
 	
 	
-	
 	if(DEBUG){
 		console.log("AJAX TO CLIENT !!", options.args);		
 	}

@@ -895,10 +895,10 @@ function imprimirFacturaXML($id_venta, $venta_especial = null) {
     $pagare = "\n\nNo. _________                                                                                                                                                                                    En " . readableText($xml->Emisor->DomicilioFiscal['municipio']) . " a " . date("d", strtotime( $fecha_emision )) . " de " . $mes . " del " . date("Y", strtotime( $fecha_emision )) ."\n\n";
     $pagare .= " Debe(mos) y pagare(mos) incondicionalmente por este Pagaré a la orden de " . readableText($xml->Emisor['nombre']) . " en " . readableText($xml->Emisor->DomicilioFiscal['municipio']) . " " . readableText($xml->Emisor->DomicilioFiscal['estado']) . " ";
     $pagare .= "el __________________________  la cantidad de ";
-    $pagare .= moneyFormat($xml["total"], DONT_USE_HTML) . " " . $en_letra->letra() . ". Valor recibido a mi";
-    $pagare .= "(nuestra) entera satisfacción. Este pagaré forma parte de una serie numerada de 1 al 1 y esta sujeto a la condición de que, ";
-    $pagare .= "al no pagarse a su vencimiento, sera exigible ";
-    $pagare .= "desde la fecha de vencimiento de este documento hasta el dia de su liquidacón, ";
+    $pagare .= moneyFormat($xml["total"], DONT_USE_HTML) . " " . $en_letra->letra() . ". Valor recibido a mi"; 
+    $pagare .= "(nuestra) entera satisfacción. Este pagaré forma parte de una serie numerada de 1 al 1 y todos estan sujetos a la condición de que, ";
+    $pagare .= "al no pagarse cualquiera de ellos a su vencimiento, serán exigibles todos los que le sigan en numero, además de los ya vencidos, ";
+    $pagare .= "desde la fecha de vencimiento de este documento hasta el día de su liquidacón, ";
     $pagare .= "causara intereses moratorios al tipo de 20% mensual, ";
     $pagare .= "pagadero en esta ciudad juntamente con el principal.";
   

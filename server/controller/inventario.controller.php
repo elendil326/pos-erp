@@ -115,7 +115,7 @@ function listarInventario($sucID = null) {
      */
 
 
-    if (!$sucID) {
+    if (!isset($sucID)) {
         return null;
     }
 

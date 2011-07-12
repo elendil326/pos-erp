@@ -83,8 +83,10 @@ if(!isset($_REQUEST['cid'])){
 		<?php
 		
 		$productos = InventarioDAO::getAll();
-		$javascriptWithProds = "";
-		
+                
+                
+		$javascriptWithProds = "";		               
+                
 		echo "<table border=0 style='width: 100%; font-size: 14px; cursor: pointer;'>";
 		echo "<tr>";
 		
@@ -93,7 +95,9 @@ if(!isset($_REQUEST['cid'])){
 				//buscar su precio sugerido actual
 				$act = new ActualizacionDePrecio();
 				$act->setIdProducto( $productos[$a]->getIdProducto() );
+                                
 				$res = ActualizacionDePrecioDAO::search($act, "fecha", "desc");
+                               
 				$lastOne = $res[0];
 
 				$productWithPrice = $productos[$a]->asArray();
