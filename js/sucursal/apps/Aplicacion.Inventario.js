@@ -487,6 +487,15 @@ Aplicacion.Inventario.prototype.detalleInventarioPanelCreator = function()
 			var id = Aplicacion.Inventario.currentInstance.detalleInventarioPanel.getValues().productoID;
 			Aplicacion.Mostrador.currentInstance.agregarProductoPorID( id );
 		}
+	},{
+		text: 'Agregar a Compras Mostrador',
+		ui: 'normal',
+		handler : function (){
+	        sink.Main.ui.setActiveItem( Aplicacion.ComprasMostrador.currentInstance.mostradorPanel , 'slide');
+
+			var id = Aplicacion.Inventario.currentInstance.detalleInventarioPanel.getValues().productoID;
+			Aplicacion.ComprasMostrador.currentInstance.agregarProductoPorID( id );
+		}
 	}];
 
 	
