@@ -211,9 +211,16 @@ Aplicacion.ComprasMostrador.prototype.refrescarMostrador = function (	)
     html +=     "<td align='left'>Descripcion</td>";
     html +=     "<td>&nbsp</td>";
 
-	
-    html +=     "<td align='center' colspan=5>Cantidad</td>";
+    html +=     "<td align='center'>&nbsp</td>";
+    html +=     "<td align='center'>&nbsp</td>";
+    html +=     "<td align='center'>&nbsp</td>";
+    html +=     "<td align='center'>Cantidad</td>";
+    html +=     "<td align='center'>&nbsp</td>";
+    html +=     "<td align='center'>&nbsp</td>";
+    
+    //html +=     "<td align='center' colspan=5>Cantidad</td>";
 
+    
     html +=     "<td>Descuento</td>";
     html +=     "<td align='left' >Total</td>";
     html +=     "<td align='left' >Precio</td>";
@@ -325,13 +332,13 @@ Aplicacion.ComprasMostrador.prototype.refrescarMostrador = function (	)
         html += "<td style='width: 12%;' ><div id='ComprasMostrador-carritoTratamiento"+ carritoCompras.items[i].idUnique +"'></div></td>";
         		
         //quitar del carritoCompras
-        html += "<td  align='right' style='width:4%;'> <span class='boton'  onClick=\"Aplicacion.ComprasMostrador.currentInstance.quitarDelcarritoCompras('"+ carritoCompras.items[i].idUnique +"')\"><img src='../media/icons/close_16.png'></span></td>";
+        html += "<td  style = 'background :none' align='right' style='width:4%;'> <span class='boton'  onClick=\"Aplicacion.ComprasMostrador.currentInstance.quitarDelcarritoCompras('"+ carritoCompras.items[i].idUnique +"')\"><img src='../media/icons/close_16.png'></span></td>";
 
         //pesar el producto
-        html += "<td  align='right' style='width:4%;'> <span class='boton'  onClick=\"Aplicacion.ComprasMostrador.currentInstance.pesarProducto('"+ carritoCompras.items[i].idUnique +"')\"><img width = 16px; height:16px;  valign = 'center' src='../media/icons/basket_search_32.png'></span></td>";
+        html += "<td style = 'background :none'  align='center' style='width:4%;'> <span class='boton'  onClick=\"Aplicacion.ComprasMostrador.currentInstance.pesarProducto('"+ carritoCompras.items[i].idUnique +"')\"><img width = 16px; height:16px;  valign = 'center' src='../media/icons/basket_search_32.png'></span></td>";
 
         //sumar una unidad
-        html += "<td  align='center'  style='width: 8.1%;'> <span class='boton' onClick=\"Aplicacion.ComprasMostrador.currentInstance.carritoComprasCambiarCantidad('"+ carritoCompras.items[i].idUnique + "', -1, false)\"><img src='../media/icons/arrow_down_16.png'></span></td>";
+        html += "<td  style = 'background :none' align='center'  style='width: 8.1%;'> <span class='boton' onClick=\"Aplicacion.ComprasMostrador.currentInstance.carritoComprasCambiarCantidad('"+ carritoCompras.items[i].idUnique + "', -1, false)\"><img src='../media/icons/arrow_down_16.png'></span></td>";
 		
         var escala_de_compra = null ;
 		
