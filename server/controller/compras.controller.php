@@ -764,7 +764,7 @@ function nuevaCompraSucursal($json = null) {
             $compra_proveedor_fragmentacion = new CompraProveedorFragmentacion();
             $compra_proveedor_fragmentacion->setIdCompraProveedor($subproducto->id_compra);
             $compra_proveedor_fragmentacion->setIdProducto($subproducto->id_producto);
-            $compra_proveedor_fragmentacion->setDescripcion("SE VENDIO A LA SUCURSAL " . $sucursal->getDescripcion() . " LA CANTIDAD DE " . $subproducto->peso_real . " " .$subproducto->escala . "s DE " . $subproducto->desc . " " . ($subproducto->procesada ? "PROCESADA" : "ORIGINAL"));
+            $compra_proveedor_fragmentacion->setDescripcion("SE VENDIO A LA SUCURSAL " . $sucursal->getDescripcion() . " LA CANTIDAD DE " . $subproducto->peso_real . " " . $subproducto->escala . "s DE " . $subproducto->desc . " " . ($subproducto->procesada ? "PROCESADA" : "ORIGINAL"));
             $compra_proveedor_fragmentacion->setProcesada($subproducto->procesada);
             $compra_proveedor_fragmentacion->setCantidad($subproducto->peso_real);
             $compra_proveedor_fragmentacion->setPrecio($subproducto->precio);
@@ -1296,7 +1296,7 @@ function nuevaCompraCliente($args = null) {
     }
 
     //verificamos que se manden todos los parametros necesarios
-    if (!( isset($data->id_cliente) && isset($data->tipo_compra) && isset($data->tipo_pago) && isset($data->productos) )) {
+    if (!( isset($data->tipo_compra) && isset($data->tipo_pago) && isset($data->productos) )) {
         Logger::log("Falta uno o mas parametros");
         die('{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }');
     }
@@ -1314,15 +1314,28 @@ function nuevaCompraCliente($args = null) {
     }
 
     //verificamos que el cliente exista
-    if (!( $cliente = ClienteDAO::getByPK($data->id_cliente) )) {
-        Logger::log("No se tiene registro del cliente : " . $data->id_cliente);
-        die('{"success": false, "reason": "No se tiene registro del cliente ' . $data->id_cliente . '." }');
+
+    $id_cliente = null;
+    
+    if (isset($data->id_cliente)) {
+        
+        if (!( $cliente = ClienteDAO::getByPK($data->id_cliente) )) {
+            Logger::log("No se tiene registro del cliente : " . $data->id_cliente);
+            die('{"success": false, "reason": "No se tiene registro del cliente ' . $data->id_cliente . '." }');
+        }
+        
+        $id_cliente = $cliente->getIdCliente();
+        
+    }else{
+        $id_cliente = $_SESSION['sucursal'] * -1;
     }
+
+
 
     //creamos la compra
 
     $compra = new CompraCliente();
-    $compra->setIdCliente($cliente->getIdCliente());
+    $compra->setIdCliente($id_cliente);
     $compra->setTipoCompra($data->tipo_compra);
     $compra->setTipoPago($data->tipo_pago);
     $compra->setSubtotal(0);
@@ -1453,7 +1466,7 @@ function nuevaCompraCliente($args = null) {
                 DetalleInventarioDAO::save($detalle_inventario);
             } catch (Exception $e) {
                 Logger::log("Error al agregar el nuevo producto en el inventario de la sucursal.");
-				Logger::log($e);
+                Logger::log($e);
                 DAO::transRollback();
                 die('{"success": false, "reason": "Error al agregar el nuevo producto en el inventario de la sucursal." }');
             }
@@ -1491,7 +1504,10 @@ function nuevaCompraCliente($args = null) {
     //actualizamos los datos de la compra
 
     $compra->setSubtotal($subtotal);
-    $compra->setTotal(($compra->getSubtotal() - ( $cliente->getDescuento() * $compra->getSubtotal() / 100 )) + $compra->getImpuesto());
+    
+    $descuento = isset($cliente)?( $cliente->getDescuento() * $compra->getSubtotal() / 100 ): 0;
+    
+    $compra->setTotal(($compra->getSubtotal() - $descuento) + $compra->getImpuesto());
 
     //saldamos la compra en caso de ser compra en efectivo
     if ($compra->getTipoCompra() == "contado") {
