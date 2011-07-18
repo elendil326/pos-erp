@@ -2296,7 +2296,6 @@ Aplicacion.ComprasMostrador.prototype.doNuevaCompraPanelCreator = function (	 ){
 
 
 //Pesar el producto
-
 Aplicacion.ComprasMostrador.prototype.pesarProducto = function (id_unique){
 
     POS.ajaxToClient({
@@ -2307,11 +2306,14 @@ Aplicacion.ComprasMostrador.prototype.pesarProducto = function (id_unique){
             //ok client is there...
             if(DEBUG){
                 console.log("bascula responded", r);						
-            }
-            
-            console.log("r = ",r);
-            
-            Ext.getCmp("ComprasMostrador-carritoCantidad"+ id_unique + "Text").setValue('pesado');
+            }            
+
+           var trimmed = r.reading;
+
+            trimmed = trimmed.replace( /^\s+|\s+$/g, "" );
+            trimmed = trimmed.replace( "K", ""  );
+
+            Ext.getCmp("ComprasMostrador-carritoCantidad"+ id_unique + "Text").setValue(trimmed);
 
         },
         failure: function (){
