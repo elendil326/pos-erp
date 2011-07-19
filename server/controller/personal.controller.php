@@ -185,13 +185,13 @@ function listarEmpleados($sid = null) {
             $foo['puesto'] = "No asignado";
         } else {
 
-            if ($searchGrupo[0]->getIdGrupo() <= 2) {
+            if ($searchGrupo[0]->getIdGrupo() <= 1) {
                 //no motrar administradores ni gerentes
                 continue;
             }
             $foo['tipo'] = $searchGrupo[0]->getIdGrupo();
             $foo['puesto'] = GruposDAO::getByPK($searchGrupo[0]->getIdGrupo())->getDescripcion();
-            ;
+            
         }
 
 
@@ -199,51 +199,10 @@ function listarEmpleados($sid = null) {
     }
 
     return $empleadosArray;
-    /*
-      $gru1 = new GruposUsuarios();
-      $gru1->setIdGrupo('3');
-
-      $gru2 = new GruposUsuarios();
-      $gru2->setIdGrupo('100');
-
-      $result = GruposUsuariosDAO::byRange($gru1, $gru2);
-
-      $array_empleados = array();
-
-      foreach($result as $r)
-      {
-      $usuario = new Usuario();
-      $usuario->setIdSucursal( $sid );
-      $usuario->setActivo( 1 );
-      $usuario->setIdUsuario( $r->getIdUsuario() );
-
-      $jsonUsuarios = UsuarioDAO::search( $usuario );
-
-      $descripcion_tipo = GruposDAOBase::getByPK($r->getIdGrupo());
-
-      foreach($jsonUsuarios as $empleado)
-      {
-      array_push( $array_empleados, array(
-      'id_usuario' => $empleado->getIdUsuario(),
-      'RFC' => $empleado->getRfc(),
-      'nombre' => $empleado->getNombre(),
-      'id_sucursal' => $empleado->getIdSucursal(),
-      'activo' => $empleado->getActivo(),
-      'finger_token' => $empleado->getFingerToken(),
-      'salario' => $empleado->getSalario(),
-      'direccion' => $empleado->getDireccion(),
-      'telefono' => $empleado->getTelefono(),
-      'tipo' => $r->getIdGrupo(),
-      'puesto' => $descripcion_tipo->getNombre(),
-      'fecha_inicio' => $empleado->getFechaInicio()
-      ) );
-      }
-
-      }
-
-      return $array_empleados;
-     */
+    
 }
+
+
 
 function listarGerentes($asignados = null) {
     $array_empleados = array();
