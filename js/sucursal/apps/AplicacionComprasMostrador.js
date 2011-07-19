@@ -138,7 +138,7 @@ Aplicacion.ComprasMostrador.prototype.sendOfflineSales = function( ventas )
  * */
 Aplicacion.ComprasMostrador.prototype.carritoCompras = 
 {
-    tipo_compra : null,
+    tipo_venta : null,
     items : [],
     cliente : null,
     venta_preferencial : {
@@ -1162,7 +1162,7 @@ Aplicacion.ComprasMostrador.prototype.setCajaComun = function ()
     Ext.getCmp("ComprasMostrador-tipoCliente").getComponent(1).setBadge( );
     Ext.getCmp('ComprasMostrador-tipoCliente').setPressed(0);
 
-    Aplicacion.ComprasMostrador.currentInstance.carritoCompras.tipo_compra = "contado";
+    Aplicacion.ComprasMostrador.currentInstance.carritoCompras.tipo_venta = "contado";
     Aplicacion.ComprasMostrador.currentInstance.carritoCompras.cliente = null;
 	
     Aplicacion.ComprasMostrador.currentInstance.restaurarPreciosOriginales ();
@@ -1386,7 +1386,7 @@ Aplicacion.ComprasMostrador.prototype.finishedPanelUpdater = function()
     carritoCompras.descuento = parseFloat(carritoCompras.descuento);
     
     //tipo de ticket a imprimir
-    carritoCompras.ticket = "compra_cliente";
+    carritoCompras.ticket = "venta_cliente";
 
     //buscamos la impresora para este tipo de documento
     for( i = 0; i < POS.documentos.length; i++){
@@ -1411,7 +1411,7 @@ Aplicacion.ComprasMostrador.prototype.finishedPanelUpdater = function()
     html += "		<td></td>";
     html += "	</tr>";
 	
-    if(carritoCompras.tipo_compra != "credito"){
+    if(carritoCompras.tipo_venta != "credito"){
         //mostrar el cambio
         html += "	<tr>";
         html += "		<td>Su cambio: <b>"+POS.currencyFormat( parseFloat( Ext.getCmp("ComprasMostrador-doNuevaVentaImporte").getValue() ) - parseFloat( carritoCompras.total ) )+"</b></td>";
@@ -1454,7 +1454,7 @@ Aplicacion.ComprasMostrador.prototype.finishedPanelUpdater = function()
             /**
 			  *	Impresion via cliente
 			  *
-			  **/
+			  **/           
             POS.ajaxToClient({
                 module : "Printer",
                 args : carritoCompras,
@@ -1526,7 +1526,7 @@ Aplicacion.ComprasMostrador.prototype.doCompra = function ()
 	
     carritoCompras = Aplicacion.ComprasMostrador.currentInstance.carritoCompras;
 
-    if(carritoCompras.tipo_compra == 'contado'){
+    if(carritoCompras.tipo_venta == 'contado'){
 	
         if(DEBUG){
             console.log("revisando compra a contado...");
@@ -1578,7 +1578,7 @@ Aplicacion.ComprasMostrador.prototype.offlineVender = function( )
         id_venta_equipo	: Aplicacion.ComprasMostrador.thisPosSaleId,
         id_equipo		: 1,
         id_cliente		: carritoCompras.cliente,
-        tipo_compra		: carritoCompras.tipo_compra,
+        tipo_venta		: carritoCompras.tipo_venta,
         tipo_pago		: carritoCompras.tipo_pago,
         fecha			: null,
         subtotal		: carritoCompras.subtotal,
@@ -1661,7 +1661,7 @@ Aplicacion.ComprasMostrador.prototype.comprar = function (){
             data : Ext.util.JSON.encode( 
             {
                 id_cliente : Aplicacion.ComprasMostrador.currentInstance.carritoCompras.cliente,
-                tipo_compra : Aplicacion.ComprasMostrador.currentInstance.carritoCompras.tipo_compra,
+                tipo_compra : Aplicacion.ComprasMostrador.currentInstance.carritoCompras.tipo_venta,
                 tipo_pago : Aplicacion.ComprasMostrador.currentInstance.carritoCompras.tipo_pago,
                 productos : Aplicacion.ComprasMostrador.currentInstance.carritoCompras.items
             }
@@ -1674,7 +1674,7 @@ Aplicacion.ComprasMostrador.prototype.comprar = function (){
             try{
                 compra = Ext.util.JSON.decode( response.responseText );
 
-            }catch(e){
+            }catch(e){                
                 //whoops algo paso en el servidor
                 POS.error( response, e );
                 Aplicacion.ComprasMostrador.currentInstance.offlineVender();
@@ -1682,7 +1682,7 @@ Aplicacion.ComprasMostrador.prototype.comprar = function (){
 				
             }
 			
-            if( !venta.success ){
+            if( !compra.success ){
                 //volver a intentar
                 if(DEBUG){
                     console.log("resultado de la compra sin exito ",compra );
@@ -1709,13 +1709,14 @@ Aplicacion.ComprasMostrador.prototype.comprar = function (){
                 Aplicacion.Autorizaciones.currentInstance.finalizarAutorizacionVentaPreferencial();
                                 
             }
-						
+
+            ///console.log("la compra : ", venta);
+
             //almacenamos en el carritoCompras el id de la venta
-            Aplicacion.ComprasMostrador.currentInstance.carritoCompras.id_compra = venta.id_compra;
+            carritoCompras.id_venta = compra.id_compra;
 			
             //almacenamos en el carritoCompras el nombre del empleado
-            Aplicacion.ComprasMostrador.currentInstance.carritoCompras.empleado = venta.empleado;
-			
+            Aplicacion.ComprasMostrador.currentInstance.carritoCompras.empleado = compra.empleado;			
 			
             //recargar el inventario
             Aplicacion.Inventario.currentInstance.cargarInventario();
@@ -1775,12 +1776,12 @@ Aplicacion.ComprasMostrador.prototype.doCompraPanelShow = function ( )
     dependiendo de la seleccion se ocultan los botones de Efectivo o Cheque, si es que selecciono Credito
     ademas se construye la estructura del formulario de la venta(subtotal, total, cambio etc)
 */
-Aplicacion.ComprasMostrador.prototype.setTipoVenta = function ( tipo_compra ){
+Aplicacion.ComprasMostrador.prototype.setTipoVenta = function ( tipo_venta ){
 
 
-    if( tipo_compra == "contado" ){
+    if( tipo_venta == "contado" ){
         //inicializamos valores
-        Aplicacion.ComprasMostrador.currentInstance.carritoCompras.tipo_compra = "contado";    
+        Aplicacion.ComprasMostrador.currentInstance.carritoCompras.tipo_venta = "contado";
         Aplicacion.ComprasMostrador.currentInstance.doNuevaCompraPanel.getComponent(1).setActiveItem(1, Ext.anims.slide);
   		
         Ext.getCmp('ComprasMostrador-doNuevaVentaClienteCredito' ).setVisible(false);
@@ -1794,9 +1795,9 @@ Aplicacion.ComprasMostrador.prototype.setTipoVenta = function ( tipo_compra ){
   		  
     }
 
-    if( tipo_compra == "credito" ){
+    if( tipo_venta == "credito" ){
         //inicializamos valores
-        Aplicacion.ComprasMostrador.currentInstance.carritoCompras.tipo_compra = "credito";
+        Aplicacion.ComprasMostrador.currentInstance.carritoCompras.tipo_venta = "credito";
         
         //ocultamos el boton de factura
         Ext.getCmp('ComprasMostrador-doNuevaVentaFacturar').setVisible(false);
@@ -1941,7 +1942,7 @@ Aplicacion.ComprasMostrador.prototype.doNuevaCompraPanelUpdater = function ()
         Aplicacion.ComprasMostrador.currentInstance.carritoCompras.factura = false;
 		
         //establecemos en elcarritoCompras el tipod e venta contado
-        Aplicacion.ComprasMostrador.currentInstance.carritoCompras.tipo_compra = "contado";
+        Aplicacion.ComprasMostrador.currentInstance.carritoCompras.tipo_venta = "contado";
 
         //ocultamos el boton tipo de venta a credito
         Ext.getCmp('ComprasMostrador-doNuevaVenta-Menu-Credito').hide( );
@@ -1968,7 +1969,7 @@ Aplicacion.ComprasMostrador.prototype.doNuevaCompraPanelUpdater = function ()
             Ext.getCmp('ComprasMostrador-doNuevaVentaClienteCredito').setVisible(false);
 			
             //establecemos el tipo de venta manualmente a contado ya que no tiene la posibilidad de pagar a credito
-            Aplicacion.ComprasMostrador.currentInstance.carritoCompras.tipo_compra = "contado";
+            Aplicacion.ComprasMostrador.currentInstance.carritoCompras.tipo_venta = "contado";
         }		 
 	
         //verificamos si este cliente tiene asignado un descuento
@@ -1996,7 +1997,7 @@ Aplicacion.ComprasMostrador.prototype.doNuevaCompraPanelUpdater = function ()
             //no puede comprar a credito
 
             //establecemos el tipo de venta manualmente a contado ya que no tiene la posibilidad de pagar a credito
-            Aplicacion.ComprasMostrador.currentInstance.carritoCompras.tipo_compra = "contado";
+            Aplicacion.ComprasMostrador.currentInstance.carritoCompras.tipo_venta = "contado";
 
             //ocultamos el boton tipo de venta a credito
             Ext.getCmp('ComprasMostrador-doNuevaVenta-Menu-Credito').hide( );
@@ -2308,23 +2309,29 @@ Aplicacion.ComprasMostrador.prototype.pesarProducto = function (id_unique){
                 console.log("bascula responded", r);						
             }            
 
-            var trimmed = r.reading;
+            if(r.success == true){
 
-            trimmed = trimmed.replace( /^\s+|\s+$/g, "" );
-            trimmed = trimmed.replace( "K", ""  );
+                var trimmed = r.reading;
 
-            //Ext.getCmp("ComprasMostrador-carritoCantidad"+ id_unique + "Text").setValue(trimmed);
+                trimmed = trimmed.replace( /^\s+|\s+$/g, "" );
+                trimmed = trimmed.replace( "K", ""  );
+
+                //Ext.getCmp("ComprasMostrador-carritoCantidad"+ id_unique + "Text").setValue(trimmed);
 
 
-            for (var i=0; i < Aplicacion.ComprasMostrador.currentInstance.carritoCompras.items.length; i++) {
+                for (var i=0; i < Aplicacion.ComprasMostrador.currentInstance.carritoCompras.items.length; i++) {
 
-                if(Aplicacion.ComprasMostrador.currentInstance.carritoCompras.items[i].idUnique  == id_unique ){
-                    Aplicacion.ComprasMostrador.currentInstance.carritoCompras.items[i].cantidad = parseFloat( (trimmed == null || trimmed == "null")? 0 :trimmed );
-                    break;
+                    if(Aplicacion.ComprasMostrador.currentInstance.carritoCompras.items[i].idUnique  == id_unique ){
+                        Aplicacion.ComprasMostrador.currentInstance.carritoCompras.items[i].cantidad = parseFloat( (trimmed == null || trimmed == "null")? 0 :trimmed );
+                        break;
+                    }
                 }
-            }
 
-            Aplicacion.ComprasMostrador.currentInstance.refrescarMostrador();
+                Aplicacion.ComprasMostrador.currentInstance.refrescarMostrador();
+
+            }else{
+                 Ext.Msg.alert("Alerta", "Error al acceder a la bascula" );
+            }
 
 
         },
