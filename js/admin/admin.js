@@ -90,7 +90,7 @@ POS.ajaxToClient = function( module, args, callback )
 	
 	/** **** Cross-domain call **** **/
 	Ext.Ajax.request({
-	    url: 'http://localhost:8080/',
+	    url: 'http://localhost:16001/',
 	    params: {
 	        action : module,
 	        data: args

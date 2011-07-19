@@ -27,7 +27,7 @@ require_once('logger.php');
 
     function listarGastosSucursal( $sid = null)
     {
-        if(!$sid) return null;
+        if($sid === null) return array();
 
         $gastos = new Gastos();
         $gastos->setIdSucursal( $sid );
@@ -52,7 +52,7 @@ require_once('logger.php');
      **/
     function listarIngresosSucursal( $sid = null)
     {
-        if(!$sid) return null;
+        if($sid === null) return array();
 
         $Ingresos = new Ingresos(  );
         $Ingresos->setIdSucursal($sid);

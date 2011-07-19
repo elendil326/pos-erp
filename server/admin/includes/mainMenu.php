@@ -30,7 +30,19 @@
 					</UL>			
 				</LI>
 				<?php
-				
+			}else{
+				?>
+				<LI class="drop">
+					<A href="sucursales.php?action=detalles&id=0">SUCURSAL</A>
+					<UL  class="nav sub" >
+						<LI><A href="sucursales.php?action=detalles&id=0">Sucursal</A></LI>
+						<LI><A href="sucursales.php?action=abrir">Nueva sucursal</A></LI> 
+						<LI><A href="gerentes.php?action=lista">Gerentes</A></LI>
+						<!-- 				<LI><A href="gerentes.php?action=asignar">Asignar gerencias</A></LI>				-->
+						<!--				<LI class="last"><A href="gerentes.php?action=nuevo">Nuevo gerente</A></LI> 		-->
+					</UL>			
+				</LI>
+				<?php
 			}
 		?>
 		

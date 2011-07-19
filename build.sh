@@ -19,6 +19,7 @@ rm -rf pos_client/src
 rm pos_client/buildClient.sh
 
 #compilar el jsminify
+echo "compilando jsminify.."
 cd build
 gcc jsmin.c -o ../jsmin
 cd ..
@@ -109,3 +110,4 @@ rm -rf server
 rm -rf static_content
 rm -rf js
 
+echo "fin de build !"
