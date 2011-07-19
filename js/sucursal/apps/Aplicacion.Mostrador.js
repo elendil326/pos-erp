@@ -358,7 +358,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
         html += "<td style='width: 10.4%;'> <div  id='Mostrador-carritoPrecio"+ carrito.items[i].idUnique +"'></div></td>";
 		
 		//importe
-        html += "<td  style='width: 11.3%;'>" + POS.currencyFormat( ( carrito.items[i].cantidad - carrito.items[i].descuento ) * carrito.items[i].precio )+"</td>";
+        html += "<td  style='width: 11.3%;'><div  id='Mostrador-carritoSubtotal"+ carrito.items[i].idUnique +"'></div</td>";
 		
         html += "</tr>";
 				
@@ -840,6 +840,54 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 		    */
 		
         }//if
+
+        // Control donde se muestra la cantidad de producto
+		//----------------------------------------------------------------
+        e = new Ext.form.Text({
+            renderTo : "Mostrador-carritoSubtotal"+ carrito.items[i].idUnique ,
+            id : "Mostrador-carritoSubtotal"+ carrito.items[i].idUnique + "Text",
+            value : POS.currencyFormat( ( carrito.items[i].cantidad - carrito.items[i].descuento ) * carrito.items[i].precio ),
+            prodID : carrito.items[i].id_producto,
+            idUnique : carrito.items[i].idUnique,
+            fieldCls:'Mostrador-input',
+            style:{
+                textAlign: 'center',
+                width: '100%'
+            },
+            placeHolder : "",
+            listeners : {
+                'focus' : function (){
+
+                    this.setValue( "");
+
+                    kconf = {
+                        type : 'num',
+                        submitText : 'Aceptar',
+                        callback : function ( campo ){
+
+                            //buscar el producto en la estructura y ponerle esa nueva cantidad
+                            for (var i=0; i < Aplicacion.Mostrador.currentInstance.carrito.items.length; i++) {
+
+                                if(Aplicacion.Mostrador.currentInstance.carrito.items[i].idUnique  == campo.idUnique ){//campo.getValue(
+                                    carrito.items[i].cantidad = ( parseFloat( campo.getValue() ) / carrito.items[i].precio ) + carrito.items[i].descuento;
+
+                                    if(DEBUG){
+                                        console.log("cantidad : ", carrito.items[i].cantidad, " valor : ", parseFloat( campo.getValue() ), " precio : ", carrito.items[i].precio, " descuento : ", carrito.items[i].descuento);
+                                    }
+
+                                    break;
+                                }
+                            }
+
+                            Aplicacion.Mostrador.currentInstance.refrescarMostrador();
+                        }
+                    };
+
+                    POS.Keyboard.Keyboard( this, kconf );
+                }
+            }
+
+        });
 		
     }//for
 	
