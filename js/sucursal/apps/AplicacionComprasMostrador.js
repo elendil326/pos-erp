@@ -308,10 +308,10 @@ Aplicacion.ComprasMostrador.prototype.refrescarMostrador = function (	)
         }else{
             // no se pueden procesar
 			
-            if( parseFloat(productoI.get("existencias") ) < parseFloat(carritoCompras.items[i].cantidad)){
+            /*if( parseFloat(productoI.get("existencias") ) < parseFloat(carritoCompras.items[i].cantidad)){
                 carritoCompras.items[i].cantidad = parseFloat(productoI.get("existencias") );
                 Ext.Msg.alert("Mostrador", "No hay suficientes existencias de " + productoI.get("descripcion") );
-            }
+            }*/
         }
 
 		
