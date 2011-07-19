@@ -70,7 +70,8 @@ public class Bascula{
 	* */
 	public String getRawData(int bytes){
 		try{
-			return com.receiveToString(bytes);			
+			String rd = com.receiveToString(bytes);
+			return rd.replaceAll("[^\\p{ASCII}]", "");			
 		}catch(Exception e){
 			Logger.error(e);
 			return null;
