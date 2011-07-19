@@ -287,20 +287,20 @@ Aplicacion.ComprasMostrador.prototype.refrescarMostrador = function (	)
                 }
 
 		
-                if( parseFloat(productoI.get("existenciasProcesadas") ) < parseFloat(carritoCompras.items[i].cantidad)){
+                /*if( parseFloat(productoI.get("existenciasProcesadas") ) < parseFloat(carritoCompras.items[i].cantidad)){
                     carritoCompras.items[i].cantidad = parseFloat(productoI.get("existenciasProcesadas") );
                     Ext.Msg.alert("Mostrador", "No hay suficientes existencias de " + productoI.get("descripcion") );
-                }
+                }*/
             }else{
                 if(DEBUG){
                     console.log("quiero "+carritoCompras.items[i].cantidad + " originales y hay "+ productoI.get("existencias") );
                 }
 
 		
-                if( parseFloat(productoI.get("existencias") ) < parseFloat(carritoCompras.items[i].cantidad)){
+                /*if( parseFloat(productoI.get("existencias") ) < parseFloat(carritoCompras.items[i].cantidad)){
                     carritoCompras.items[i].cantidad = parseFloat(productoI.get("existencias") );
                     Ext.Msg.alert("Mostrador", "No hay suficientes existencias de " + productoI.get("descripcion") );
-                }
+                }*/
             }
 		
 		
@@ -761,7 +761,6 @@ Aplicacion.ComprasMostrador.prototype.refrescarMostrador = function (	)
                         
                         //refrescar el html
                         Aplicacion.ComprasMostrador.currentInstance.refrescarMostrador();
-                        alert("dd");
 				        
                     }//change
                 }//listeners
