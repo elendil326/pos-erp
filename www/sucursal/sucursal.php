@@ -11,7 +11,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
     <title>POS</title>
 		<script>
+		
+		<?php
+
+			echo "var POS_COMPRA_A_CLIENTES = " . (POS_COMPRA_A_CLIENTES ? "true" : "false") . ";\n";
+				
+		?>
+		
 		var DEBUG; 
+		
 		if(document.location.search=="?debug")
 		{
 		    DEBUG=true;
