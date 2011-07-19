@@ -8,24 +8,22 @@
 
     $equipo = EquipoDAO::getByPK($_REQUEST['id']);
 
-    $save = false;
+    $save = true;
     
     if(isset($_REQUEST['fua'])){
         $equipo->setFullUa($_REQUEST['fua']);
-        $save = true;
-    }
+    
+    }else{
+	    $save = false;
+	}
 
     if(isset($_REQUEST['token'])){
         $equipo->setToken($_REQUEST['token']);
-        $save = true;
-    }
 
-	if($save){
-		if($_REQUEST['sucursal'] == 0){
-			$save = 0;
-			$status = "No puedes vincular un equipo al centro de distribucion.";
-		}
+    }else{
+	    $save = false;
 	}
+
 
     if($save){
 	
@@ -79,8 +77,9 @@
 			
 				$sucursales = SucursalDAO::getAll();
 				foreach( $sucursales as $suc ){
-					if($suc->getIdSucursal() == 0)
-						continue;
+					
+					/*if($suc->getIdSucursal() == 0)
+						continue;*/
 						
 					echo "<option value='" . $suc->getIdSucursal() . "' >" .  $suc->getDescripcion()  . "</option>";
 				}
