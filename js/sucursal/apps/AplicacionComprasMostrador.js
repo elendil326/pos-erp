@@ -435,7 +435,7 @@ Aplicacion.ComprasMostrador.prototype.refrescarMostrador = function (	)
         a = new Ext.form.Text({
             renderTo : "ComprasMostrador-carritoCantidad"+ carritoCompras.items[i].idUnique ,
             id : "ComprasMostrador-carritoCantidad"+ carritoCompras.items[i].idUnique + "Text",
-            value : carritoCompras.items[i].cantidad,
+            value : (carritoCompras.items[i].cantidad == null || carritoCompras.items[i].cantidad == "null")?"":carritoCompras.items[i].cantidad,
             prodID : carritoCompras.items[i].id_producto,
             idUnique : carritoCompras.items[i].idUnique,
             fieldCls:'ComprasMostrador-input',
@@ -2308,12 +2308,24 @@ Aplicacion.ComprasMostrador.prototype.pesarProducto = function (id_unique){
                 console.log("bascula responded", r);						
             }            
 
-           var trimmed = r.reading;
+            var trimmed = r.reading;
 
             trimmed = trimmed.replace( /^\s+|\s+$/g, "" );
             trimmed = trimmed.replace( "K", ""  );
 
-            Ext.getCmp("ComprasMostrador-carritoCantidad"+ id_unique + "Text").setValue(trimmed);
+            //Ext.getCmp("ComprasMostrador-carritoCantidad"+ id_unique + "Text").setValue(trimmed);
+
+
+            for (var i=0; i < Aplicacion.ComprasMostrador.currentInstance.carritoCompras.items.length; i++) {
+
+                if(Aplicacion.ComprasMostrador.currentInstance.carritoCompras.items[i].idUnique  == id_unique ){
+                    Aplicacion.ComprasMostrador.currentInstance.carritoCompras.items[i].cantidad = parseFloat( (trimmed == null || trimmed == "null")? 0 :trimmed );
+                    break;
+                }
+            }
+
+            Aplicacion.ComprasMostrador.currentInstance.refrescarMostrador();
+
 
         },
         failure: function (){
