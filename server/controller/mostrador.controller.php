@@ -485,19 +485,21 @@ function vender($json_string , $OVERRIDE_CURRENT_DATE = false, $die_on_end = tru
     $venta->setCancelada(0);
 
     if (!isset($data->cliente)) {
-
+		Logger::log("No se envio cliente, usare la caja comun...");
         $venta->setIdCliente($_SESSION['sucursal'] * -1);
         $venta->setTipoVenta("contado");
         $venta->setDescuento(0);
         $descuento = 0;
-    } else {
 
+    } else {
+		
         //verificamos que el cliente exista
         if (!( $cliente = ClienteDAO::getByPK($data->cliente->id_cliente) )) {
             Logger::log("No se tiene registro del cliente : " . $data->id_cliente);
-            die('{"success": false, "reason": "Parametros invalidos 5." }');
+            die('{"success": false, "reason": "Parametros invalidos, el cliente seleccionado no existe." }');
         }
 
+		Logger::log("Se envio cliente, y existe... es el cliente: " . $data->cliente->id_cliente);
         $venta->setIdCliente($data->cliente->id_cliente);
 
         //verificamos que el tipo de venta sea valido
@@ -1279,10 +1281,11 @@ function registrarVentasOffline($config)
 		//listo tengo los detalles... organizare el arreglo
 		//de datos como si fuera que vienen normalmente del cliente
 		//incluso aramare un json
-		Logger::log("Hay " . sizeof($detalles_esta_venta) . " productos para registrar  esta venta offline...");
+		Logger::log("Hay " . sizeof($detalles_esta_venta) . " productos para registrar en esta venta offline...");
+		Logger::log("cliente:" . $esta_venta->json->id_cliente);
 		
 		$json_to_record = array(
-				"id_cliente" => $esta_venta->json->id_cliente,
+				"cliente" => array( "id_cliente" => $esta_venta->json->id_cliente) ,
 				"tipo_venta" => $esta_venta->json->tipo_venta,
 				"tipo_pago" => $esta_venta->json->tipo_pago,
 				"factura" => false,

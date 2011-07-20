@@ -1515,18 +1515,6 @@ Aplicacion.Mostrador.prototype.finishedPanelUpdater = function()
 				}
 			});
 					
-		}else{
-			/**
-			  *	Impresion via applet
-			  *
-			  **/
-	      	/*html += ''
-	        +'<applet code="printer.Main" archive="PRINTER/dist/PRINTER.jar" WIDTH=0 HEIGHT=0>'
-	        +'     <param name="json" value="'+ json +'">'
-	        +'     <param name="hora" value="' + horas + ":" + minutos + ":" + segundos + tiempo + '">'
-	        +'     <param name="fecha" value="' + dia +"/"+ (hora.getMonth() + 1) +"/"+ anio + '">'
-	        +' </applet>'; */
-	
 		}
     }
 	
@@ -1608,19 +1596,21 @@ Aplicacion.Mostrador.thisPosSaleId = 0;
 
 Aplicacion.Mostrador.prototype.offlineVender = function( )
 {
+	var carrito = Aplicacion.Mostrador.currentInstance.carrito;
+	
 	if(DEBUG){
 		console.warn("-------- Venta offline !!! ---------");
 		console.log( "Aplicacion.Mostrador.thisPosSaleId=", Aplicacion.Mostrador.thisPosSaleId);
 		console.log( "Aplicacion.Mostrador.currentInstance.carrito=" , Aplicacion.Mostrador.currentInstance.carrito);
 	}
 
-	var carrito = Aplicacion.Mostrador.currentInstance.carrito;
+	
 
 	var this_sale = new Ventas({
 		id_venta		: Aplicacion.Mostrador.thisPosSaleId,
 		id_venta_equipo	: Aplicacion.Mostrador.thisPosSaleId,
 		id_equipo		: 1,
-		id_cliente		: carrito.cliente.id_cliente,
+		id_cliente		: carrito.cliente == null ? null : carrito.cliente.id_cliente,
 		tipo_venta		: carrito.tipo_venta,
 		tipo_pago		: carrito.tipo_pago,
 		fecha			: new Date(),
