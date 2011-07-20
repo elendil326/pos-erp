@@ -81,9 +81,14 @@ public class Dispatcher{
 		if(action.equals("bascula")){
 			try{
 				Bascula b = new Bascula();
-				b.getRawData(1);				
+				
+				if(b == null) 
+					return callback + "({\"success\": false, \"reason\" : \"No hay puertos disponibles.\"});";
+				
+				b.getRawData(1);	
 				String rawValue = b.getRawData(9);
-				b.close();				
+				b.close();
+						
 				return callback + "({\"success\": true, \"reading\" : \""+ rawValue +"\"});";
 				
 			}catch(java.lang.UnsatisfiedLinkError usle){

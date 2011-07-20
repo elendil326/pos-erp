@@ -881,7 +881,7 @@ var ActualizacionDePrecio = function ( config )
 			old_this.callCallback(old_this);  
                 });
 		return; 
-	}
+	};
 
 
 	/**
@@ -896,7 +896,7 @@ var ActualizacionDePrecio = function ( config )
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return boolean Verdadero si todo salio bien.
 	  **/
-	this.delete = function( config )
+	this.destruct = function( config )
 	{
 		$sql = "DELETE FROM actualizacion_de_precio WHERE  id_actualizacion = ?;";
 		$params = [ this.getIdActualizacion() ];
@@ -1597,7 +1597,7 @@ var Autorizacion = function ( config )
 			old_this.callCallback(old_this);  
                 });
 		return; 
-	}
+	};
 
 
 	/**
@@ -1612,7 +1612,7 @@ var Autorizacion = function ( config )
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return boolean Verdadero si todo salio bien.
 	  **/
-	this.delete = function( config )
+	this.destruct = function( config )
 	{
 		$sql = "DELETE FROM autorizacion WHERE  id_autorizacion = ?;";
 		$params = [ this.getIdAutorizacion() ];
@@ -2957,7 +2957,7 @@ var Cliente = function ( config )
 			old_this.callCallback(old_this);  
                 });
 		return; 
-	}
+	};
 
 
 	/**
@@ -2972,7 +2972,7 @@ var Cliente = function ( config )
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return boolean Verdadero si todo salio bien.
 	  **/
-	this.delete = function( config )
+	this.destruct = function( config )
 	{
 		$sql = "DELETE FROM cliente WHERE  id_cliente = ?;";
 		$params = [ this.getIdCliente() ];
@@ -4140,7 +4140,7 @@ var CompraCliente = function ( config )
 			old_this.callCallback(old_this);  
                 });
 		return; 
-	}
+	};
 
 
 	/**
@@ -4155,7 +4155,7 @@ var CompraCliente = function ( config )
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return boolean Verdadero si todo salio bien.
 	  **/
-	this.delete = function( config )
+	this.destruct = function( config )
 	{
 		$sql = "DELETE FROM compra_cliente WHERE  id_compra = ?;";
 		$params = [ this.getIdCompra() ];
@@ -4807,7 +4807,7 @@ var DetalleCompraCliente = function ( config )
 			old_this.callCallback(old_this);  
                 });
 		return; 
-	}
+	};
 
 
 	/**
@@ -4822,7 +4822,7 @@ var DetalleCompraCliente = function ( config )
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return boolean Verdadero si todo salio bien.
 	  **/
-	this.delete = function( config )
+	this.destruct = function( config )
 	{
 		$sql = "DELETE FROM detalle_compra_cliente WHERE  id_compra = ? AND id_producto = ?;";
 		$params = [ this.getIdCompra(), this.getIdProducto() ];
@@ -5436,7 +5436,7 @@ var DetalleInventario = function ( config )
 			old_this.callCallback(old_this);  
                 });
 		return; 
-	}
+	};
 
 
 	/**
@@ -5451,7 +5451,7 @@ var DetalleInventario = function ( config )
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return boolean Verdadero si todo salio bien.
 	  **/
-	this.delete = function( config )
+	this.destruct = function( config )
 	{
 		$sql = "DELETE FROM detalle_inventario WHERE  id_producto = ? AND id_sucursal = ?;";
 		$params = [ this.getIdProducto(), this.getIdSucursal() ];
@@ -6089,7 +6089,7 @@ var DetalleVenta = function ( config )
 			old_this.callCallback(old_this);  
                 });
 		return; 
-	}
+	};
 
 
 	/**
@@ -6104,7 +6104,7 @@ var DetalleVenta = function ( config )
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return boolean Verdadero si todo salio bien.
 	  **/
-	this.delete = function( config )
+	this.destruct = function( config )
 	{
 		$sql = "DELETE FROM detalle_venta WHERE  id_venta = ? AND id_producto = ?;";
 		$params = [ this.getIdVenta(), this.getIdProducto() ];
@@ -6658,7 +6658,7 @@ var Equipo = function ( config )
 			old_this.callCallback(old_this);  
                 });
 		return; 
-	}
+	};
 
 
 	/**
@@ -6673,7 +6673,7 @@ var Equipo = function ( config )
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return boolean Verdadero si todo salio bien.
 	  **/
-	this.delete = function( config )
+	this.destruct = function( config )
 	{
 		$sql = "DELETE FROM equipo WHERE  id_equipo = ?;";
 		$params = [ this.getIdEquipo() ];
@@ -7080,7 +7080,7 @@ var FacturaCompra = function ( config )
 			old_this.callCallback(old_this);  
                 });
 		return; 
-	}
+	};
 
 
 	/**
@@ -7095,7 +7095,7 @@ var FacturaCompra = function ( config )
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return boolean Verdadero si todo salio bien.
 	  **/
-	this.delete = function( config )
+	this.destruct = function( config )
 	{
 		$sql = "DELETE FROM factura_compra WHERE  folio = ?;";
 		$params = [ this.getFolio() ];
@@ -8081,7 +8081,7 @@ var FacturaVenta = function ( config )
 			old_this.callCallback(old_this);  
                 });
 		return; 
-	}
+	};
 
 
 	/**
@@ -8096,7 +8096,7 @@ var FacturaVenta = function ( config )
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return boolean Verdadero si todo salio bien.
 	  **/
-	this.delete = function( config )
+	this.destruct = function( config )
 	{
 		$sql = "DELETE FROM factura_venta WHERE  id_folio = ?;";
 		$params = [ this.getIdFolio() ];
@@ -8934,7 +8934,7 @@ var Gastos = function ( config )
 			old_this.callCallback(old_this);  
                 });
 		return; 
-	}
+	};
 
 
 	/**
@@ -8949,7 +8949,7 @@ var Gastos = function ( config )
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return boolean Verdadero si todo salio bien.
 	  **/
-	this.delete = function( config )
+	this.destruct = function( config )
 	{
 		$sql = "DELETE FROM gastos WHERE  id_gasto = ?;";
 		$params = [ this.getIdGasto() ];
@@ -9486,7 +9486,7 @@ var Impresora = function ( config )
 			old_this.callCallback(old_this);  
                 });
 		return; 
-	}
+	};
 
 
 	/**
@@ -9501,7 +9501,7 @@ var Impresora = function ( config )
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return boolean Verdadero si todo salio bien.
 	  **/
-	this.delete = function( config )
+	this.destruct = function( config )
 	{
 		$sql = "DELETE FROM impresora WHERE  id_impresora = ?;";
 		$params = [ this.getIdImpresora() ];
@@ -10142,7 +10142,7 @@ var Ingresos = function ( config )
 			old_this.callCallback(old_this);  
                 });
 		return; 
-	}
+	};
 
 
 	/**
@@ -10157,7 +10157,7 @@ var Ingresos = function ( config )
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return boolean Verdadero si todo salio bien.
 	  **/
-	this.delete = function( config )
+	this.destruct = function( config )
 	{
 		$sql = "DELETE FROM ingresos WHERE  id_ingreso = ?;";
 		$params = [ this.getIdIngreso() ];
@@ -10846,7 +10846,7 @@ var Inventario = function ( config )
 			old_this.callCallback(old_this);  
                 });
 		return; 
-	}
+	};
 
 
 	/**
@@ -10861,7 +10861,7 @@ var Inventario = function ( config )
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return boolean Verdadero si todo salio bien.
 	  **/
-	this.delete = function( config )
+	this.destruct = function( config )
 	{
 		$sql = "DELETE FROM inventario WHERE  id_producto = ?;";
 		$params = [ this.getIdProducto() ];
@@ -11509,7 +11509,7 @@ var PagosVenta = function ( config )
 			old_this.callCallback(old_this);  
                 });
 		return; 
-	}
+	};
 
 
 	/**
@@ -11524,7 +11524,7 @@ var PagosVenta = function ( config )
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return boolean Verdadero si todo salio bien.
 	  **/
-	this.delete = function( config )
+	this.destruct = function( config )
 	{
 		$sql = "DELETE FROM pagos_venta WHERE  id_pago = ?;";
 		$params = [ this.getIdPago() ];
@@ -12734,7 +12734,7 @@ var Sucursal = function ( config )
 			old_this.callCallback(old_this);  
                 });
 		return; 
-	}
+	};
 
 
 	/**
@@ -12749,7 +12749,7 @@ var Sucursal = function ( config )
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return boolean Verdadero si todo salio bien.
 	  **/
-	this.delete = function( config )
+	this.destruct = function( config )
 	{
 		$sql = "DELETE FROM sucursal WHERE  id_sucursal = ?;";
 		$params = [ this.getIdSucursal() ];
@@ -13963,7 +13963,7 @@ var Ventas = function ( config )
 			old_this.callCallback(old_this);  
                 });
 		return; 
-	}
+	};
 
 
 	/**
@@ -13978,7 +13978,7 @@ var Ventas = function ( config )
 	  *	@throws Exception Se arroja cuando el objeto no tiene definidas sus llaves primarias.
 	  *	@return boolean Verdadero si todo salio bien.
 	  **/
-	this.delete = function( config )
+	this.destruct = function( config )
 	{
 		$sql = "DELETE FROM ventas WHERE  id_venta = ?;";
 		$params = [ this.getIdVenta() ];
