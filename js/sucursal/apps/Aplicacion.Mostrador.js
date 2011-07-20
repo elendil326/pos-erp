@@ -1552,8 +1552,10 @@ Aplicacion.Mostrador.prototype.finishedPanelCreator = function()
 
 Aplicacion.Mostrador.prototype.doVenta = function ()
 {
-	
-    carrito = Aplicacion.Mostrador.currentInstance.carrito;
+
+	carrito = Aplicacion.Mostrador.currentInstance.carrito;
+
+
 
     if(carrito.tipo_venta == 'contado'){
 	
@@ -1794,6 +1796,20 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanel = null;
  **/
 Aplicacion.Mostrador.prototype.doVentaPanelShow = function ( )
 {	
+	//vamos a ver si hay muchos productos y si los productos tienen cantidad
+	carrito = Aplicacion.Mostrador.currentInstance.carrito;
+
+	for(  a = 0; a < carrito.items.length  ; a++ ){
+		if(DEBUG){
+			console.log("Revisando... " + carrito.items[a].descripcion);
+		}
+		
+		if( isNaN(carrito.items[a].cantidad) || carrito.items[a].cantidad == 0) {
+			Ext.Msg.alert("Mostrador", "Porfavor revise la cantidad de " + carrito.items[a].descripcion);
+			return;
+		}
+	}
+	
 	
     //hacer un setcard manual
     sink.Main.ui.setActiveItem( Aplicacion.Mostrador.currentInstance.doNuevaVentaPanel , 'slide');
