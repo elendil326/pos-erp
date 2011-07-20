@@ -181,7 +181,7 @@ function descontarInventario($productos) {
  *
  * {"id_cliente": 1,"tipo_venta": "contado","tipo_pago":"efectivo","factura": false,"items": [{"id_producto": 1,"procesado": true,"precio": 5.5,"cantidad": 5}]}
  * */
-function vender($json_string , $die_on_end = true) {
+function vender($json_string , $OVERRIDE_CURRENT_DATE = false, $die_on_end = true) {
 
     Logger::log("Iniciando proceso de venta (sucursal)");
 
@@ -464,6 +464,17 @@ function vender($json_string , $die_on_end = true) {
     $venta = new Ventas();
     $venta->setIdUsuario($_SESSION['userid']);
     $venta->setTotal(0);
+
+	if($OVERRIDE_CURRENT_DATE){
+		if(isset($data->fecha)){
+			Logger::log("Overriding current date and setting date :" . $data->fecha );
+			$venta->setFecha( date("Y-m-d H:i:s" , strtotime($data->fecha) ) );			
+		}else{
+			Logger::log("Fecha not set even though override current date is true !");
+		}
+
+	}
+    	
     $venta->setIdEquipo( $_SESSION['id_equipo'] );
     $venta->setIdVentaEquipo(  $esta_venta_equipo_id  );
     $venta->setIdSucursal($_SESSION['sucursal']);
@@ -658,9 +669,9 @@ function vender($json_string , $die_on_end = true) {
     }
 	
 	DAO::transEnd();
-	
+	Logger::log("Proceso de venta sucursal termino con exito!! id_venta : {$id_venta}.");
 	return true;
-    Logger::log("Proveso de venta (sucursal), termino con exito!! id_venta : {$id_venta}.");
+    
 }
 
 /**
@@ -1275,6 +1286,7 @@ function registrarVentasOffline($config)
 				"tipo_venta" => $esta_venta->json->tipo_venta,
 				"tipo_pago" => $esta_venta->json->tipo_pago,
 				"factura" => false,
+				"fecha" => $esta_venta->json->fecha,
 				"items" => array( )
 			);
 		
@@ -1292,7 +1304,7 @@ function registrarVentasOffline($config)
 			array_push( $json_to_record["items"], $foo  );
 		}
 		
-		$res = vender(json_encode( $json_to_record ), false);
+		$res = vender(json_encode( $json_to_record ), true, false);
 		
 		if(!$res){
 			Logger::log("ERROR AL VENDER !!");

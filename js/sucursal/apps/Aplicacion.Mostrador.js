@@ -1585,6 +1585,7 @@ Aplicacion.Mostrador.prototype.doVenta = function ()
         }
 		
         this.carrito.pagado = parseFloat(pagado);
+		this.carrito.fecha = new Date();
         this.vender();
 
 		
@@ -1609,7 +1610,8 @@ Aplicacion.Mostrador.prototype.offlineVender = function( )
 {
 	if(DEBUG){
 		console.warn("-------- Venta offline !!! ---------");
-		console.log("Aplicacion.Mostrador.thisPosSaleId="+Aplicacion.Mostrador.thisPosSaleId);
+		console.log( "Aplicacion.Mostrador.thisPosSaleId=", Aplicacion.Mostrador.thisPosSaleId);
+		console.log( "Aplicacion.Mostrador.currentInstance.carrito=" , Aplicacion.Mostrador.currentInstance.carrito);
 	}
 
 	var carrito = Aplicacion.Mostrador.currentInstance.carrito;
@@ -1618,10 +1620,10 @@ Aplicacion.Mostrador.prototype.offlineVender = function( )
 		id_venta		: Aplicacion.Mostrador.thisPosSaleId,
 		id_venta_equipo	: Aplicacion.Mostrador.thisPosSaleId,
 		id_equipo		: 1,
-		id_cliente		: carrito.cliente,
+		id_cliente		: carrito.cliente.id_cliente,
 		tipo_venta		: carrito.tipo_venta,
 		tipo_pago		: carrito.tipo_pago,
-		fecha			: null,
+		fecha			: new Date(),
 		subtotal		: carrito.subtotal,
 		iva				: carrito.iva,
 		descuento		: 0,
@@ -1633,6 +1635,7 @@ Aplicacion.Mostrador.prototype.offlineVender = function( )
 		ip				: null,
 		liquidada		: null
 	});
+	
 	
 	this_sale.save(function(saved_sale){
 		
@@ -1692,7 +1695,7 @@ Aplicacion.Mostrador.prototype.vender = function ()
 	
 	//Hay un error en la red justo ahora !
 	if(POS.A.failure){
-		return Aplicacion.Mostrador.currentInstance.offlineVender();
+		return Aplicacion.Mostrador.currentInstance.offlineVender(  );
 	}
 	
 	
@@ -1773,9 +1776,12 @@ Aplicacion.Mostrador.prototype.vender = function ()
 
         },
         failure: function( response ){
-			Ext.Msg.alert("Error", "Error en la venta");
+			//Ext.Msg.alert("Error", "Error en la venta");
+			if(DEBUG){
+				console.log("ya regrese del ajax, pero no habia conexion, estoy en el failure... hare una venta offline");
+			}
 			POS.error( response );
-			return offlineVender();
+			return Aplicacion.Mostrador.currentInstance.offlineVender();
         }
     });
 };
