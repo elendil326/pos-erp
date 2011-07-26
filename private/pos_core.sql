@@ -1,13 +1,19 @@
 -- phpMyAdmin SQL Dump
--- version 3.2.0.1
+-- version 3.3.7deb5build0.10.10.1
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 04-07-2011 a las 13:20:34
--- Versión del servidor: 5.1.37
--- Versión de PHP: 5.3.0
+-- Tiempo de generación: 26-07-2011 a las 13:13:14
+-- Versión del servidor: 5.1.49
+-- Versión de PHP: 5.3.3-1ubuntu9.5
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- Base de datos: `pos_core`
@@ -47,12 +53,12 @@ CREATE TABLE IF NOT EXISTS `instances` (
   `DB_DRIVER` varchar(32) NOT NULL,
   `DB_HOST` varchar(32) NOT NULL,
   `DB_DEBUG` tinyint(1) NOT NULL,
-  `HEARTBEAT_METHOD_TRIGGER` varchar(32) NOT NULL,
+  `HEARTBEAT_METHOD_TRIGGER` tinyint(1) NOT NULL DEFAULT '0',
   `HEARTBEAT_INTERVAL` varchar(32) NOT NULL,
   `POS_SUCURSAL_TEST_TOKEN` varchar(32) NOT NULL,
   `DEMO` tinyint(1) NOT NULL,
   PRIMARY KEY (`instance_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
