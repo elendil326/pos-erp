@@ -120,10 +120,18 @@ $db_info = array();
 
 foreach ($instancias as $db) {
 
+	try{
+		$link = @mysql_connect($db["DB_HOST"],$db["DB_USER"],$db["DB_PASSWORD"],$db["DB_NAME"]);	
+	}catch(Exception $e){
+		Logger::log($e);
+		continue;
+	}
+	
 
-	$link = mysql_connect($db["DB_HOST"],$db["DB_USER"],$db["DB_PASSWORD"],$db["DB_NAME"]);
-
-	if(!$link) continue;
+	if(!$link) {
+		Logger::log("Imposible conectarme a bd");
+		continue;	
+	}
 	
 	mysql_select_db( $db["DB_NAME"] );
 	
