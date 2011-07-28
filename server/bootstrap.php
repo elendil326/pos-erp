@@ -15,16 +15,19 @@
     require_once('config.php');
 
 	ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . POS_PATH_TO_SERVER_ROOT);
+	
+	//logger
+	require_once("logger.php");
+
+
 	//nombre de la galleta
 	//session_set_cookie_params ( int $lifetime [, string $path [, string $domain [, bool $secure = false [, bool $httponly = false ]]]] )
 	session_name("POS_ID");
 
 	session_set_cookie_params ( 0  , '/' );
 
-	//logger
-	require_once("logger.php");
 
-
+	
 	# *******************************
 	# Bootstrap
 	# *******************************
@@ -42,12 +45,27 @@
 		die();
 	}
 
-
-
 	require_once('utils.php');
 
+
+	if(	
+		defined("I_AM_GET_RESOURCE") 
+		&& I_AM_GET_RESOURCE
+		&& $_SESSION['grupo']  == "JEDI"
+	){
+		return;
+	}
+	
+	
+	
+
+
 	//tengo el id de instancia ?
-	if(!isset($_GET["i"]) && !isset($_SESSION["INSTANCE_ID"]) ){
+	if(	!isset($_GET["i"]) 
+		&& !isset($_SESSION["INSTANCE_ID"])
+	){
+
+
 
 		//la pagina de login, pone I_AM_LOGIN en verdadero, 
 		//es una buena manera de saber si vengo del login
@@ -83,7 +101,7 @@
 	
 	
 	
-	//no esta la de sescion, pero esta el get
+	//no esta la de sesion, pero esta el get
 	if(!isset($_SESSION["INSTANCE_ID"]) && isset($_GET["i"])){
 		Logger::log("No hay instancia en la sesion, pero si como parametro. Insertando en sesion." );
 		$_SESSION["INSTANCE_ID"] = $_GET["i"];

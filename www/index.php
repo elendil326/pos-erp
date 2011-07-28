@@ -3,9 +3,11 @@
 	if(!is_file("../server/config.php")){
 		//not installed
 		?>
-			<h1>Bienvenido a POS</h1>
-			<h2>Proceso de instalacion</h2>
+			<h1>Caffeina POS</h1>
+			<p>Porfavor cree el arvhico server/config.php</p>
+			
 		<?php
+		return;
 	}
 
 define("I_AM_CLIENTE", true);

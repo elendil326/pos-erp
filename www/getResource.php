@@ -1,11 +1,17 @@
 <?php
 
+define("I_AM_GET_RESOURCE", true);
+
 if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandler"); else ob_start();
 
 //requerir la configuracion
 require ( "../server/bootstrap.php" );
 
-require_once('controller/login.controller.php');
+
+if(is_file("controller/login.controller.php"))
+	require_once('controller/login.controller.php');
+else
+	require_once('../server/controller/login.controller.php');
 
 function writeConfig(){
 
@@ -69,6 +75,10 @@ switch($module)
 	 * 
 	 * */
 	case 'admin' :
+		if(defined("I_AM_JEDI") && I_AM_JEDI){
+			loadDir( $module, $type );
+			break;
+		}
 		
 		if(isset($_SESSION['grupo']) && 
 			($_SESSION['grupo'] == 1 || $_SESSION['grupo'] == 0 || $_SESSION['grupo']  == "JEDI"))
@@ -159,5 +169,3 @@ switch($module)
 	
 }
 	
-
-?>

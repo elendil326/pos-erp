@@ -35,7 +35,7 @@ try{
     }
 
 } catch (Exception $e) {
-
+	Logger::log($e);
 	die( '{ "success" : false, "reason" : "NO_DB" }' );	
 
 }
