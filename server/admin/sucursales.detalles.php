@@ -527,7 +527,10 @@ $tabla->render();
 $totalEmpleados = 0;
 
 foreach ($empleados as $e) {
-    $totalEmpleados += $e['salario'];
+    
+    if($e['activo'] == "1"){
+        $totalEmpleados += $e['salario'];
+    }
 }
 
 $salarioGerente = 0;
