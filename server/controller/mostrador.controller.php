@@ -483,19 +483,20 @@ function vender($json_string , $OVERRIDE_CURRENT_DATE = false, $die_on_end = tru
     $venta->setLiquidada(0);
     $venta->setDescuento(0);
     $venta->setCancelada(0);
-
-    if (!isset($data->cliente)) {
-		Logger::log("No se envio cliente, usare la caja comun...");
+    
+    if (!isset($data->cliente) || $data->cliente->id_cliente == "") {
+        
+	Logger::log("No se envio cliente, usare la caja comun...");
         $venta->setIdCliente($_SESSION['sucursal'] * -1);
         $venta->setTipoVenta("contado");
         $venta->setDescuento(0);
         $descuento = 0;
-
+        
     } else {
 		
         //verificamos que el cliente exista
         if (!( $cliente = ClienteDAO::getByPK($data->cliente->id_cliente) )) {
-            Logger::log("No se tiene registro del cliente : " . $data->id_cliente);
+            Logger::log("No se tiene registro del cliente : " . $data->cliente->id_cliente);
             die('{"success": false, "reason": "Parametros invalidos, el cliente seleccionado no existe." }');
         }
 
