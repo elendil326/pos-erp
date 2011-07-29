@@ -494,7 +494,7 @@ $tabla->render();
 ?>
 
 <h2><img src='../media/icons/users_business_32.png'>&nbsp;Personal</h2><?php
-$empleados = listarEmpleados($_REQUEST['id']);
+$empleados = listarEmpleados($_REQUEST['id'], true);
 
 
 switch (POS_PERIODICIDAD_SALARIO) {
@@ -507,6 +507,7 @@ switch (POS_PERIODICIDAD_SALARIO) {
 $header = array(
     "id_usuario" => "ID",
     "nombre" => "Nombre",
+    "_activo" => "Activo",
     "puesto" => "Puesto",
     "RFC" => "RFC",
     //"direccion" => "Direccion",

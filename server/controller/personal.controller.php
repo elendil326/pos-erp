@@ -153,7 +153,7 @@ function insertarEmpleado($args) {
  * @param $activo indica si se desea listar a usuarios activos o inactivos.
  * @return cadena en formato JSON que contiene los datos de los empleados.
  * */
-function listarEmpleados($sid = null) {
+function listarEmpleados($sid = null, $all = null) {
 
 
 
@@ -161,7 +161,10 @@ function listarEmpleados($sid = null) {
     $empleados = new Usuario();
     if ($sid !== null)
         $empleados->setIdSucursal($sid);
-    $empleados->setActivo("1");
+    
+    if($all == null){
+        $empleados->setActivo("1");
+    }
 
 
     $empleados = UsuarioDAO::search($empleados);
@@ -183,6 +186,7 @@ function listarEmpleados($sid = null) {
         if (count($searchGrupo) == 0) {
             //no esta asignado
             $foo['puesto'] = "No asignado";
+            $foo['_activo'] = $foo['activo'] == "1" ? "Si":"No";
         } else {
 
             if ($searchGrupo[0]->getIdGrupo() <= 1) {
@@ -191,6 +195,7 @@ function listarEmpleados($sid = null) {
             }
             $foo['tipo'] = $searchGrupo[0]->getIdGrupo();
             $foo['puesto'] = GruposDAO::getByPK($searchGrupo[0]->getIdGrupo())->getDescripcion();
+            $foo['_activo'] = $foo['activo'] == "1" ? "Si":"No";
             
         }
 

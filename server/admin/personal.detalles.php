@@ -16,19 +16,19 @@ $gerente = UsuarioDAO::getByPK($_REQUEST['uid']);
         <tr><td>Direccion</td><td><input type="text"        id="direccion" size="40" value="<?php echo $gerente->getDireccion(); ?>"/></td></tr>
         <tr><td>Telefono</td><td><input type="text"         id="telefono" size="40" value="<?php echo $gerente->getTelefono(); ?>"/></td></tr>
 
-<?php
-switch (POS_PERIODICIDAD_SALARIO) {
-    case POS_SEMANA :
-        echo '<tr><td>Salario Semanal</td><td><input type="text"  id="salario" size="40" value="' . $gerente->getSalario() . '"/></td></tr>';
-        break;
-    case POS_MES :
-        echo '<tr><td>Salario Mensual</td><td><input type="text"  id="salario" size="40" value="' . $gerente->getSalario() . '"/></td></tr>';
-        break;
-}
-?>
+        <?php
+        switch (POS_PERIODICIDAD_SALARIO) {
+            case POS_SEMANA :
+                echo '<tr><td>Salario Semanal</td><td><input type="text"  id="salario" size="40" value="' . $gerente->getSalario() . '"/></td></tr>';
+                break;
+            case POS_MES :
+                echo '<tr><td>Salario Mensual</td><td><input type="text"  id="salario" size="40" value="' . $gerente->getSalario() . '"/></td></tr>';
+                break;
+        }
+        ?>
 
 
-        <tr><td></td><td><input type="button" onClick="validar()" value="Guardar"/> </td></tr>
+        <tr><td></td><td><input type="button" onClick="validar()" value="Guardar"/><input type="button" onClick="changeStatus()" value=<?php echo $gerente->getActivo() == "1" ? "Despedir" : "Contratar" ?> /> </td></tr>
 
     </table>
 </form>
@@ -49,31 +49,31 @@ switch (POS_PERIODICIDAD_SALARIO) {
 
 <h2>Editar Gerencia</h2>
 <form id="editsucursal">
-<?php
+    <?php
 //ver si tiene una sucursal a su cargo
 //$gerente = UsuarioDAO::getByPK($_REQUEST['id']);
 
-$suc = new Sucursal();
-$suc->setGerente($gerente->getIdUsuario());
-$sucursal = SucursalDAO::search($suc);
+    $suc = new Sucursal();
+    $suc->setGerente($gerente->getIdUsuario());
+    $sucursal = SucursalDAO::search($suc);
 
-if (count($sucursal) == 0) {
-    echo "Este gerente no tiene a su cargo ninguna sucursal.";
-} else {
-    $sucursal = $sucursal[0];
-    echo "Actualmente <b>" . $gerente->getNombre() . "</b> es gerente de <b>" . $sucursal->getDescripcion() . "</b>.";
-}
-
-
-$suc = new Sucursal();
-$suc->setActivo("1");
-$sucursal = SucursalDAO::search($suc);
+    if (count($sucursal) == 0) {
+        echo "Este gerente no tiene a su cargo ninguna sucursal.";
+    } else {
+        $sucursal = $sucursal[0];
+        echo "Actualmente <b>" . $gerente->getNombre() . "</b> es gerente de <b>" . $sucursal->getDescripcion() . "</b>.";
+    }
 
 
-foreach ($sucursal as $s) {
-    
-}
-?>
+    $suc = new Sucursal();
+    $suc->setActivo("1");
+    $sucursal = SucursalDAO::search($suc);
+
+
+    foreach ($sucursal as $s) {
+        
+    }
+    ?>
 </form>
 
 
@@ -182,6 +182,36 @@ foreach ($sucursal as $s) {
             }
         });
     }
+    
+    function changeStatus()
+    {
+  
+        Ext.Msg.confirm("Alerta",'<?php echo $gerente->getActivo() == "1" ? "Esta seguro que desea despedir a este empleado" : "Esta seguro que desea contratar a este empleado" ?>', function(btn){
+            if (btn == 'yes') {
+                jQuery.ajax({
+                    url: "../proxy.php",
+                    data: { 
+                        action : 503, 
+                        id_empleado : <?php echo $_REQUEST['uid'] ?>,
+                        activo : <?php echo $gerente->getActivo() == "1" ? "0" : "1"; ?>
+                    },
+                    cache: false,
+                    success: function(data){
+                        response = jQuery.parseJSON(data);
+
+                        if(response.success == false){
+                            return jQuery("#ajax_failure").html(response.reason).show();
+                        }
+				
+                        reason = '<?php echo $gerente->getActivo() == "1" ? "Este empleado ha sido despedido" : "Este empleado ha sido contratado" ?>';
+                        window.location = "personal.php?action=detalles&uid=<?php echo $_REQUEST['uid'] ?>&success=true&reason=" + reason;
+                    }
+                });
+            }                       
+        });
+        
+    }
+    
 </script>
 
 
