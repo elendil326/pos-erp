@@ -168,13 +168,15 @@
 	define("HEARTBEAT_INTERVAL", 			$rs['HEARTBEAT_INTERVAL']);
 
 	
-	# metodo de validacion de sucursales mediante user-agent
-	# puede ser 'FULL_UA' o bien 'SID_TOKEN'
-	# 'FULL_UA' validara 
-	# 'SID_TOKEN' buscara la subcadena SID={00000} dentro del UA y
-	# comparara esta cadena de 5 caracteres contra un equipo en la 
-	# base de datos.
-	define( 'POS_SUCURSAL_TEST_TOKEN', 		$rs['POS_SUCURSAL_TEST_TOKEN'] );
+	# <DEPRECATED>
+	#	# metodo de validacion de sucursales mediante user-agent
+	#	# puede ser 'FULL_UA' o bien 'SID_TOKEN'
+	#	# 'FULL_UA' validara 
+	#	# 'SID_TOKEN' buscara la subcadena SID={00000} dentro del UA y
+	#	# comparara esta cadena de 5 caracteres contra un equipo en la 
+	#	# base de datos.
+	#	define( 'POS_SUCURSAL_TEST_TOKEN', 		$rs['POS_SUCURSAL_TEST_TOKEN'] );
+	# </DEPRECATED>	
 	define( 'DEMO', 						$rs['DEMO']);
 
 	#leer las caracteristicas del sistema

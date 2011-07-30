@@ -1,19 +1,38 @@
-var DEBUG; 
-var login;
-POS = {U:{G:null}};
 
-if(document.location.search=="?debug")
+	/**
+	  *
+	  *
+	  *
+	  **/
+var DEBUG = false,
+
+	/**
+	  *
+	  *
+	  *
+	  **/
+	login,
+	
+	/**
+	  * 
+	  *
+	  *
+	  **/
+	POS = {U:{G:null}};
+
+
+
+if( document.location.search == "?debug" )
 {
     DEBUG = true;
 	console.log("Applicacion en modo de DEBUG !");
-	
-}else{
-	
-	DEBUG = false;
 }
 
-
-
+/**
+  * Buscar si el cliente existe
+  * 
+  *
+  **/
 function checkForClient()
 {
  	Ext.getBody().mask('Iniciando...', 'x-mask-loading', false);
@@ -23,32 +42,68 @@ function checkForClient()
 		args : "",
 		success : function (){
 			//ok client is there...
-			checkCurrentSession();
+			checkForClientPIN();
 		},
 		failure: function (){
 			//client not found !
-			displayNoClient();
+			var html = "<div onClick='checkForClient()'>No se ha encontrado el cliente de caffeina."
+				+ "Toque aqui para reintentar."
+				+ "<div>";
+
+			Ext.getBody().mask( html, 'x-mask-loading', true );
 		},
 	});
 	
 }
 
-function displayNoClient()
+
+/**
+  * Una vez que el se que el cliente existe, 
+  * preguntar su token de seguridad
+  *
+  **/
+function checkForClientPIN()
 {
-	var html = "<div onClick='checkForClient()'>No se ha encontrado el cliente de caffeina."
-		+ "Toque aqui para reintentar."
-		+ "<div>";
-		
-	Ext.getBody().mask( html, 'x-mask-loading', true );
+ 	Ext.getBody().mask('Iniciando...', 'x-mask-loading', false);
+
+	POS.ajaxToClient({
+		module : "networking",
+		args : "",
+		success : function (a,b,c){
+
+
+			if(a.success === true){
+				checkCurrentSession(a.response);	
+				return;
+			}
+			var html = "<div onClick='checkForClient()'>Se ha encontrado un error con su cliente. Toque aqui para reintentar."
+				+ "<div>";
+
+			Ext.getBody().mask( html, 'x-mask-loading', true );
+		},
+		failure: function (){
+			//client not found !
+			var html = "<div onClick='checkForClient()'>No se ha encontrado el cliente de caffeina."
+				+ "Toque aqui para reintentar."
+				+ "<div>";
+
+			Ext.getBody().mask( html, 'x-mask-loading', true );
+		},
+	});
+	
 }
 
 
-function checkCurrentSession(){
+
+
+
+function checkCurrentSession( clientPIN ){
 	Ext.getBody().mask('Validando sucursal...', 'x-mask-loading', false);
 	Ext.Ajax.request({
 		url: '../proxy.php',
 		params : {
-			action : 2001
+			action : 2001,
+			pin    : clientPIN
 		},
 		
 		success: function(response, opts) {
@@ -156,10 +211,8 @@ Ext.setup({
     glossOnIcon: false,
     onReady: function() {
 
-       
-
 		checkForClient();
-		//checkCurrentSession();
+
     }
 });
 

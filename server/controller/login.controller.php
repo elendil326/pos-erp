@@ -8,6 +8,16 @@ require_once("model/equipo.dao.php");
 require_once("model/equipo_sucursal.dao.php");
 require_once("model/cliente.dao.php");
 
+
+/**
+ * 
+ * Funciones LOGIN de Cliente
+ * 
+ * 
+ * 
+ * 
+ * */
+
 function loginCliente($u, $p){
 	$user = new Cliente();
 	$user->setRfc( $u );
@@ -54,10 +64,50 @@ function loginCliente($u, $p){
 
 
 
+function checkCurrentClientSession(){
 
 
-function login( $u, $p )
-{
+    $ip = getip();
+
+    if( !(isset( $_SESSION['ip'] ) && $_SESSION['ip'] == $ip) ){
+        Logger::log("session[ip] not set or wrong!");
+        Logger::log("session:" . $_SESSION['ip'] . " actual:" . $ip );
+        return false;
+    }
+
+    $user = ClienteDAO::getByPK( $_SESSION['cliente_id'] );
+
+    if($user === null){
+        Logger::log("Cliente en sesion ya no existe en la base de datos");
+        return false;
+    }
+
+    $pass = $user->getPassword();
+
+    if( !(isset( $_SESSION['pass'] ) && $_SESSION['pass'] == $pass) ){
+        Logger::log("Cliente: session[pass] not set or wrong !");
+        return false;
+    }
+
+    if( !(isset( $_SESSION['ua'] ) &&  $_SESSION['ua'] == $_SERVER['HTTP_USER_AGENT']) ){
+        Logger::log("Cliente: session[ua] not set or wrong!");
+        return false;
+    }
+
+
+    return true;
+}
+
+
+/**
+ * 
+ * Funciones LOGIN de Sucursal y Admin
+ * 
+ * 
+ * 
+ * 
+ * */
+function login( $u, $p ){
 
 	$user = new Usuario();
 	$user->setIdUsuario( $u );
@@ -171,42 +221,6 @@ function getUserType(){
 
 
 
-function checkCurrentClientSession(){
-
-
-    $ip = getip();
-
-    if( !(isset( $_SESSION['ip'] ) && $_SESSION['ip'] == $ip) ){
-        Logger::log("session[ip] not set or wrong!");
-        Logger::log("session:" . $_SESSION['ip'] . " actual:" . $ip );
-        return false;
-    }
-
-    $user = ClienteDAO::getByPK( $_SESSION['cliente_id'] );
-
-    if($user === null){
-        Logger::log("Cliente en sesion ya no existe en la base de datos");
-        return false;
-    }
-
-    $pass = $user->getPassword();
-
-    if( !(isset( $_SESSION['pass'] ) && $_SESSION['pass'] == $pass) ){
-        Logger::log("Cliente: session[pass] not set or wrong !");
-        return false;
-    }
-
-    if( !(isset( $_SESSION['ua'] ) &&  $_SESSION['ua'] == $_SERVER['HTTP_USER_AGENT']) ){
-        Logger::log("Cliente: session[ua] not set or wrong!");
-        return false;
-    }
-
-
-    return true;
-}
-
-
-
 
 /*
     regresa verdadero si la sesion actual 
@@ -215,8 +229,7 @@ function checkCurrentClientSession(){
     o bien si los parametros de session
     no concuerdan
  */
-function checkCurrentSession()
-{
+function checkCurrentSession(){
 	
 
 	
@@ -342,7 +355,8 @@ function logOut( $verbose = true  )
     unset($_SESSION['ua']);
 	unset($_SESSION['grupo']);
 	unset($_SESSION['userid']);
-	unset($_SESSION['sucursal']);
+	
+	// unset($_SESSION['sucursal']); 
 
 }
 
@@ -350,66 +364,38 @@ function logOut( $verbose = true  )
 
 
 
-/* 
-    revisar si vengo de una sucursal valida
-    regresa verdadero si es una sucursal valida
-    si es una sucursal valida, la pone en
-    la variable de sesion de sucursal
-    */
+/**
+  *  revisar si vengo de una sucursal valida
+  *  regresa verdadero si es una sucursal valida
+  *  si es una sucursal valida, la pone en
+  *  la variable de sesion de sucursal.
+  *
+  **/
 function sucursalTest( ){
+	return $_SESSION['user_agent'] == $_SERVER['HTTP_USER_AGENT'];
+}
+
+
+/**
+  *  Validar el TOKEN DE SEGURIDAD que envia el cliente.
+  *
+  **/
+function sucursalTestToken( $pin ){
 	
-    //obtener el User agent que me envian
-    $ua = $_SERVER['HTTP_USER_AGENT'];
+	//buscar ese pin en la lista de equipos
+	Logger::log("Buscando token " . $pin);
+	
+	$equipo_q = new Equipo();
+    $equipo_q->setToken( $pin );
+    $search = EquipoDAO::search( $equipo_q );
 
-    if(POS_SUCURSAL_TEST_TOKEN == 'FULL_UA'){
-
-            $equipo = new Equipo();
-            $equipo->setFullUa( $ua );
-            $search = EquipoDAO::search( $equipo );
-
-            if(sizeof($search) != 1){
-                Logger::log("Equipo: " . $_SERVER['HTTP_USER_AGENT'] . " no encontrado !", 2);
-
-                return false;
-            }
-
-            $equipo = $search[0];
-            
-            
-
-    }elseif(POS_SUCURSAL_TEST_TOKEN == 'SID_TOKEN'){
-            $pos = strrpos( $ua, "sid={" );
-
-            if($pos === FALSE){
-                //no se encuentra la cadena
-                Logger::log("user agent no contiene token !", 1);
-                return false;
-            }
-
-
-            //buscar ese token en la lista de quipos
-            $equipoToken = substr($ua, stripos($ua, "sid={") + 5 , 5);
-
-            $equipo = new Equipo();
-            $equipo->setToken( $equipoToken );
-            $search = EquipoDAO::search( $equipo );
-
-            if(sizeof($search) != 1){
-                Logger::log("UA sent token { " . $equipoToken  ." } not found in DB", 2);
-                return false;
-            }
-
-            $equipo = $search[0];
-            Logger::log("UA sent token { " . $equipoToken  ." } found for equipo={$equipo->getIdEquipo()}", 2);
-
-    }else{
-        Logger::log('Modo de verificacion invalido en configuracion.');
-        return false;
-    }
-
-
-
-
+	if(sizeof($search) == 0){
+		Logger::log("Equipo no encontrado !");
+		return false;
+	}else{
+		$equipo = $search[0];
+		Logger::log("Token encontrado para el equipo ". $equipo->getIdEquipo() ." ( ". $equipo->getDescripcion() ." )!");
+	}
 
     $esuc = new EquipoSucursal();
     $esuc->setIdEquipo($equipo->getIdEquipo());
@@ -417,7 +403,7 @@ function sucursalTest( ){
     $search = EquipoSucursalDAO::search( $esuc );    
 
     if(sizeof($search) != 1){
-        Logger::log("equipo {$equipo->getIdEquipo()} no se encuentra vinculado a ninguna sucursal");
+        Logger::log("Equipo {$equipo->getIdEquipo()} no se encuentra vinculado a ninguna sucursal");
         return false;
     }
 
@@ -436,17 +422,15 @@ function sucursalTest( ){
         return false; 
     }
 
-
-    Logger::log("Equipo --{$equipo->getIdEquipo()}-- validado. Descripcion de equipo: {$equipo->getDescripcion()}");
     Logger::log("Sucursal para esta sesion: " . $suc->getIdSucursal() . ", " . $suc->getDescripcion() );
 
-    $_SESSION['sucursal'] = $suc->getIdSucursal();
-    $_SESSION['id_equipo'] = $equipo->getIdEquipo();
+    $_SESSION['sucursal'] 	= $suc->getIdSucursal();
+    $_SESSION['id_equipo'] 	= $equipo->getIdEquipo();
+    $_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+
     return true;
 
 }
-
-
 
 function dispatch($args){
 	
@@ -474,8 +458,6 @@ function dispatch($args){
         case "4" : echo "<script>window.location = 'cliente/?i=" . $_SESSION["INSTANCE_ID"] .$debug."'</script>"; break;
 	}
 }
-
-
 
 function validip($ip) {
  	
@@ -571,20 +553,20 @@ function login_controller_dispatch($args){
 			case '2001':
 
 		        //revisar estado de sesion en sucursal
-				if(!sucursalTest()){
-		            //si no pasa el test de la sucursal...
+				if(!sucursalTestToken( $args['pin']  )){
+		            //NO paso el test de la sucursal
 		           print(  '{"success": false, "response" : "Porfavor utilize un punto de venta destinado para esta sucursal."  }' ) ;
 
 		        }else{
 
 		            //la sucursal esta bien, hay que ver si esta logginiado
-		            if(checkCurrentSession()){
+		            if( checkCurrentSession( ) ){
 		               //logged in !
-		                print(  '{"success":true,"sesion":true}' );
+		                print(  '{"success":true, "sesion":true}' );
 		            }else{
 		                //not logged in
 		                $sucursal = SucursalDAO::getByPK( $_SESSION['sucursal'] );
-		                Logger::log("Sesion invalida");
+		                Logger::log("Sesion invalida: cerrando sesion");
 		                logOut(false);
 		                print(  '{"success":true,"sesion":false,"sucursal":"' .$sucursal->getDescripcion(). '"}' );                    
 		            }
@@ -607,7 +589,7 @@ function login_controller_dispatch($args){
 			    * 
 			    * 
 			    * */
-				if(!sucursalTest()){
+				if(!sucursalTest(  )){
 		            //si no pasa el test de la sucursal...
 		           print(  '{"success": false, "response" : "Porfavor utilize un punto de venta destinado para esta sucursal."  }' ) ;
 		        }else{

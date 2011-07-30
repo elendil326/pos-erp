@@ -34,7 +34,7 @@ public class PosClient{
 
         trayIcon = new PosSystemTray();
 		
-		Logger.log("Enviando saludo a pos.caffeina.mx !");
+		//Logger.log("Enviando saludo a pos.caffeina.mx !");
 		
 		String response = null;
 		
