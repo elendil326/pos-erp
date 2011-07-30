@@ -25,108 +25,15 @@ POS.currencyFormat = function (num){
 //almacena informacion hacerca de la sucursal
 POS.infoSucursal = null;
 
-//extrae informacion acerca de la sucursal actual
-POS.loadInfoSucursal = function(){
 
-    if(DEBUG){
-        console.log("Obteniendo informaci\ufffdn de la sucursal ....");
-    }
 
-    Ext.Ajax.request({
-        url: '../proxy.php',
-        scope : this,
-        params : {
-            action : 712
-        },
-        success: function(response, opts) {
-            try{
-                informacion = Ext.util.JSON.decode( response.responseText );
-            }catch(e){
-                return POS.error(response, e);
-            }
 
-            if( !informacion.success ){
-                //volver a intentar
-                if(DEBUG){
-                    console.log("obtenicion de la informacion sin exito ");
-                }
-                Ext.Msg.alert("Error", informacion.reason);
-                return;
 
-            }
-
-            if(DEBUG){
-                console.log("obtenicion de la informacion exitosa ");
-            }
-
-            POS.infoSucursal = informacion.datos;
-
-			imReadyToStart();
-
-            if(DEBUG){
-                console.log("POS.infoSucursal contiene : ", POS.infoSucursal);
-            }
-
-        },
-        failure: function( response ){
-            POS.error( response );
-        }
-    });
-   
-
-};
 
 //contiene informacion documentos que se imprimen en esa sucursal y con que impresoras se deben de imprimir
 POS.documentos = null;
 
-//extrae informacion acerca de los docuemntos y con que impresoras se imprimen
-POS.loadDocumentos = function(){
 
-    if(DEBUG){
-        console.log("Obteniendo informaci\ufffdn de los docuemtnos e impresoras ....");
-    }
-
-    Ext.Ajax.request({
-        url: '../proxy.php',
-        scope : this,
-        params : {
-            action : 1300
-        },
-        success: function(response, opts) {
-            try{
-                informacion = Ext.util.JSON.decode( response.responseText );
-            }catch(e){
-                return POS.error(response, e);
-            }
-
-            if( !informacion.success ){
-                //volver a intentar
-                if(DEBUG){
-                    console.log("obtenicion de documentos sin exito ");
-                }
-                Ext.Msg.alert("Error", informacion.reason);
-                return;
-
-            }
-
-            if(DEBUG){
-                console.log("obtenicion de documentos exitosa");
-            }
-
-            POS.documentos = informacion.datos;
-
-            if(DEBUG){
-                console.log("POS.documentos contiene : ", POS.documentos);
-            }
-
-        },
-        failure: function( response ){
-            POS.error( response );
-        }
-    });
-
-
-};
 
 POS.fecha = function( f ){
 
@@ -161,60 +68,6 @@ POS.leyendasTicket = null;
 
 
 
-
-
-//extrae informacion acerca de las leyendas de los tickets
-POS.loadLeyendasTicket = function(){
-	
-
-
-
-
-    if(DEBUG){
-        console.log("Obteniendo informaci\ufffdn de la sucursal ....");
-    }
-
-    Ext.Ajax.request({
-        url: '../proxy.php',
-        scope : this,
-        params : {
-            action : 1301
-        },
-        success: function(response, opts) {
-            try{
-                informacion = Ext.util.JSON.decode( response.responseText );
-            }catch(e){
-                return POS.error(response, e);
-            }
-
-            if( !informacion.success ){
-                //volver a intentar
-                if(DEBUG){
-                    console.log("Error : POS.leyendasTicket ");
-                }
-                Ext.Msg.alert("Error", informacion.reason);
-                return;
-
-            }
-
-            if(DEBUG){
-                console.log("obtenicion de leyendasTicket exitosa.");
-            }
-
-            POS.leyendasTicket = informacion.datos;
-
-            if(DEBUG){
-                console.log("POS.leyendasTicket contiene : ", POS.leyendasTicket);
-            }
-
-        },
-        failure: function( response ){
-            POS.error( response );
-        }
-    });
-
-
-};
 
 //poner el boton de yes, con si 
 Ext.MessageBox.YESNO[1].text = "Si";
@@ -478,6 +331,160 @@ POS.error = function (ajaxResponse, catchedError)
 		window.location = ".";
 	}
 };
+
+/* ------------------------------------------------------------------------------------------------------------ */
+//extrae informacion acerca de la sucursal actual
+POS.loadInfoSucursal = function(){
+
+    if(DEBUG){
+        console.log("Obteniendo informaci\ufffdn de la sucursal ....");
+    }
+    if(DEBUG){ console.warn("AJAX !"); }
+    Ext.Ajax.request({
+        url: '../proxy.php',
+        scope : this,
+        params : {
+            action : 712
+        },
+        success: function(response, opts) {
+            try{
+                informacion = Ext.util.JSON.decode( response.responseText );
+            }catch(e){
+                return POS.error(response, e);
+            }
+
+            if( !informacion.success ){
+                //volver a intentar
+                if(DEBUG){
+                    console.log("obtenicion de la informacion sin exito ");
+                }
+                Ext.Msg.alert("Error", informacion.reason);
+                return;
+
+            }
+
+            if(DEBUG){
+                console.log("obtenicion de la informacion exitosa ");
+            }
+
+            POS.infoSucursal = informacion.datos;
+
+			imReadyToStart();
+
+            if(DEBUG){
+                console.log("POS.infoSucursal contiene : ", POS.infoSucursal);
+            }
+
+        },
+        failure: function( response ){
+            POS.error( response );
+        }
+    });
+   
+
+};
+
+//extrae informacion acerca de los docuemntos y con que impresoras se imprimen
+POS.loadDocumentos = function(){
+
+    if(DEBUG){
+        console.log("Obteniendo informaci\ufffdn de los docuemtnos e impresoras ....");
+    }
+
+
+    if(DEBUG){ console.warn("AJAX !"); }
+
+    Ext.Ajax.request({
+        url: '../proxy.php',
+        scope : this,
+        params : {
+            action : 1300
+        },
+        success: function(response, opts) {
+            try{
+                informacion = Ext.util.JSON.decode( response.responseText );
+            }catch(e){
+                return POS.error(response, e);
+            }
+
+            if( !informacion.success ){
+                //volver a intentar
+                if(DEBUG){
+                    console.log("obtenicion de documentos sin exito ");
+                }
+                Ext.Msg.alert("Error", informacion.reason);
+                return;
+
+            }
+
+            if(DEBUG){
+                console.log("obtenicion de documentos exitosa");
+            }
+
+            POS.documentos = informacion.datos;
+
+            if(DEBUG){
+                console.log("POS.documentos contiene : ", POS.documentos);
+            }
+
+        },
+        failure: function( response ){
+            POS.error( response );
+        }
+    });
+
+
+};
+
+//extrae informacion acerca de las leyendas de los tickets
+POS.loadLeyendasTicket = function(){
+
+    if(DEBUG){
+        console.log("Obteniendo informaci\ufffdn de la sucursal ....");
+    }
+    if(DEBUG){ console.warn("AJAX !"); }
+    Ext.Ajax.request({
+        url: '../proxy.php',
+        scope : this,
+        params : {
+            action : 1301
+        },
+        success: function(response, opts) {
+            try{
+                informacion = Ext.util.JSON.decode( response.responseText );
+            }catch(e){
+                return POS.error(response, e);
+            }
+
+            if( !informacion.success ){
+                //volver a intentar
+                if(DEBUG){
+                    console.log("Error : POS.leyendasTicket ");
+                }
+                Ext.Msg.alert("Error", informacion.reason);
+                return;
+
+            }
+
+            if(DEBUG){
+                console.log("obtenicion de leyendasTicket exitosa.");
+            }
+
+            POS.leyendasTicket = informacion.datos;
+
+            if(DEBUG){
+                console.log("POS.leyendasTicket contiene : ", POS.leyendasTicket);
+            }
+
+        },
+        failure: function( response ){
+            POS.error( response );
+        }
+    });
+
+
+};
+
 
 //lee la informacion de la sucursal
 POS.loadInfoSucursal();

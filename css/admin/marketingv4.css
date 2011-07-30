@@ -231,11 +231,14 @@ color: #d95843;
 text-decoration: none;
 }
 
+
 #content {
-width: 840px;
-/* width: 1024px;*/
+
+width: 970px;
 margin: 5px auto 0 auto;
+position: relative;
 }
+
 
 h1 {
   color: #3F8CE9;
@@ -343,9 +346,6 @@ font-size: 13px;
 text-shadow: 1px 1px 2px #000;
 }
 
-#content {
-position: relative;
-}
 
 #content #main {
 width: 620px;
@@ -547,8 +547,8 @@ margin-right: 0px;
     color:#777;
     margin:3em 0 0 !important;
     height: 50px;
-	border-top: 1px solid #CCC;
-	padding-top: 10px;
+/*	border-top: 1px solid #CCC; */
+/*	padding-top: 10px; */
 	width: 100%;
 	font-size: 11px;
 /*text-align: right;
@@ -892,42 +892,6 @@ padding: 0 60px 0 15px;
 ul.bullet li {
 padding: 0 0 0 0;
 line-height: 24px;
-}
-
-.blog #content form#sub-form {
-margin: 0;
-}
-
-.blog #content form#sub-form p {
-font-size: 12px;
-margin: 0 0 8px 0;
-color: #666;
-line-height: 17px;
-}
-
-.blog #content form#sub-form input.email {
-color: #666;
-width: 93px;
-float: left;
-padding: 4px;
-font-size: 12px;
-}
-
-.blog #content form#sub-form input.submit {
-float: right;
-margin: -17px -2px 0 0;
-}
-
-.blog #content ul.recent {
-margin: 12px 0 0 0;
-padding: 0;
-list-style-type: none;
-font-size: 13px;
-}
-
-.blog #content ul.recent li {
-margin-bottom: 12px;
-line-height: 18px;
 }
 
 

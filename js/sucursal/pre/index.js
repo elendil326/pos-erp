@@ -199,7 +199,6 @@ Ext.ux.UniversalUI = Ext.extend(Ext.Panel, {
 
 
 sink.Main = {
-	
     init : function() {
 
         this.ui = new Ext.ux.UniversalUI({
@@ -214,7 +213,6 @@ sink.Main = {
         });
     },
 
-
     onNavigate : function(ui, record) {
 		if(DEBUG){
 			console.log("Navegando !");
@@ -223,7 +221,6 @@ sink.Main = {
 		Aplicacion.Inventario.currentInstance.inventarioListaStore.clearFilter();
 		
     }
-
 };
 
 
@@ -233,18 +230,12 @@ sink.Main = {
 
 Ext.setup({
     glossOnIcon: true,
-    onReady: function() {
-		/*
-		Ext.EventManager.onWindowResize(function (a,b,c) {
-			if(DEBUG){
-				console.log('resize',a,b,c);
-			}
-		});
-		*/
+    onReady: function() 
+	{
 		imReadyToStart();
-        
     }
 });
+
 
 var SYSTEMS_NEEDED = 2;
 var systemsLoaded = 0;
@@ -254,11 +245,9 @@ function imReadyToStart(  ){
 	Ext.getBody().mask("cargando..." );
 
 	if( ++systemsLoaded == SYSTEMS_NEEDED ){
-		
 		sink.Main.init();
 		Ext.getBody().unmask( );		
 		Ext.get("space_for_suc_name").update(   POS.infoSucursal.descripcion  );
-
 	}
 }
 

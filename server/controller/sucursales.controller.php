@@ -508,6 +508,8 @@ function inventarioSucursal() {
     //esta ya esta en inventario
 }
 
+
+
 //obtiene la informacion de la sucursal actual
 function informacionSucursal() {
 
@@ -521,6 +523,8 @@ function informacionSucursal() {
 
     printf('{ "success": true, "datos": %s }', $sucursal);
 }
+
+
 
 //operaciones intersucursales
 function venderASucursal($json) {

@@ -53,40 +53,251 @@
     </div>
     
     <div id="content" >
+		
 
-			<h2>Actividades</h2>
-        <div  aling=center>
 
-<!--
-			<table border=0 style='width: 100%; font-size: 14px; cursor: pointer;'>
-				<tr>
-					<td class='prod rounded'   >
-						<a href="autorizaciones.php?action=historial">Autorizaciones pendientes ( <?php echo sizeof(autorizacionesPendientes()); ?> )</a>
-					</td>
-					<td class='prod rounded'   >
-						<a href="ventas.php?action=lista">
-						Ventas de hoy ( <?php 
-									$f = VentasDAO::contarVentasPorDia(null, 1);
+	<div class="container">
 
-									echo $f[0]["value"];
-								?> )
+			<div class="document summary" >
+
+
+				<div id="xn_banner" style="height: auto; ">
+					<div class="xn_placeHolder">
+						&nbsp;
+					</div>
+					<div id="xn_bannerInner" style="position: static; visibility: visible; opacity: 1; ">
+					</div>
+				</div>
+
+
+				<!-- - - - - - - - - - - - - - - - - - - - - - - - -  Getting Started - - - - - - - - - - - - - - - - - - - - - - - - -->
+				<div class="gs-container" style="" >
+					<div class="get-started-title">
+						<h2>Getting Started with the Demo d</h2>
+						<em class="icons gs-close" >
+						&nbsp; </em><a href="" class="gs-close" ><span>You can use the help menu to show Getting Started again.</span> Hide Getting Started </a>
+					</div>
+					<div class="notify get-started">
+						<em>
+						&nbsp; </em>
+						<div class="message">
+							<p>
+								 Try out the features and get familiar with Xero using your own demo organization.
+							</p>
+							<ul>
+								<li><a href=""onclick="getStarted.showMovie(&#39;Getting Started Tour&#39;, &#39;/movies/gettingstarted/scrnCastPlayer_inApp.swf&#39;, &#39;/movies/gettingstarted/data.xml&#39;, 610, 455); return false;">Watch the Getting Started tour</a>. </li>
+								<li><a href=""target="_blank">Here's 10 things you can try out in Xero.</a></li>
+							</ul>
+							<p>
+								 There is <a href=""target="_blank">full online help in Xero</a> and you can always contact Customer Care at anytime to ask us a question.
+							</p>
+						</div>
+					</div>
+				</div>
+
+
+
+				<!-- - - - - - - - - - - - - - - - - - - - - - - - -  COLUMNA  - - - - - - - - - - - - - - - - - - - - - - - - -->
+				<div class="col">
+
+					<!-- - - - - - - - - - - - - - - - - - - - - - - - -  TITULO  - - - - - - - - - - - - - - - - - - - - - - - - -->
+					<h2>
+						<span>
+						<a href="">
+							Bank Accounts 
 						</a>
-					</td>
-					<td class='prod rounded'    >
-						Surtir sucursal
-					</td>
+						</span>
 
-				</tr>
-			</table>
--->
-		</div>
+						<a href="" id="OG_Glossary_BankSummary" onclick="" class="icons tip">&nbsp;</a>
+						<a href="">Go to Banking › </a>
+					</h2>
 
-	
-    <?php include_once("admin/includes/footer.php"); ?>
+					<!-- - - - - - - - - - - - - - - - - - - - - - - - -  CAJA  - - - - - - - - - - - - - - - - - - - - - - - - -->
+					<div class="bank">
+						<span class="logos global" style="width:auto;" >
+							<em>
+								&nbsp;
+							</em>
+						</span>
+						<a  href="" class="bank-name global">Ridgeway Business A/C<span>090-8007-006543</span></a>
+
+
+
+						<div class="content">
+							<div class="balance">
+								<div class="statement-balance">
+									<label>Statement Balance </label>
+									<span>7,827.22</span>
+								</div>
+								<div class="date-imported" >
+									29 Jul 2011
+								</div>
+								<div class="no-padding-top" style="margin-bottom:5px;">
+									<a class="xbtn blue" href=""  style="width: 105px; ">
+									Reconcile <span >27</span> items</a>
+								</div>
+								<div class="bank-balance">
+									<label>
+									Balance in Xero </label><span>3,171.89</span>
+								</div>
+							</div>
+						</div>
+					</div> <!-- /bank -->
+
+
+
+					<!-- - - - - - - - - - - - - - - - - - - - - - - - -  CAJA  - - - - - - - - - - - - - - - - - - - - - - - - -->
+					<div class="bank">
+							<span class="logos global" style="width:auto;" >
+								<em>
+									&nbsp;
+								</em>
+							</span>
+							<a  href="" class="bank-name global">Ridgeway Business A/C<span>090-8007-006543</span></a>
+
+
+
+							<div class="content">
+								<div class="balance">
+									<div class="statement-balance">
+										<label>Statement Balance </label>
+										<span>7,827.22</span>
+									</div>
+									<div class="date-imported" >
+										29 Jul 2011
+									</div>
+									<div class="no-padding-top" style="margin-bottom:5px;">
+										<a class="xbtn blue" href="" style="width: 105px; ">
+										Reconcile <span >27</span> items</a>
+									</div>
+
+
+										<div class="authorize no-transactions">
+											<h3>
+											No transactions importegd </h3>
+											<p>
+												<a href="">Import a bank statement to get started</a>
+											</p>
+										</div>
+
+
+									<div class="bank-balance">
+										<label>
+										Balance in Xero </label><span>3,171.89</span>
+									</div>
+
+								</div>
+							</div>
+						</div> <!-- /bank -->
+
+
+				</div><!-- </div class="col"> -->
+
+
+
+				<!-- - - - - - - - - - - - - - - - - - - - - - - - -  COLUMNA DERECHA  - - - - - - - - - - - - - - - - - - - - - - - - -->
+				<div class="col right">
+
+					<!-- - - - - - - - - - - - - - - - - - - - - - - - -  CAJA  - - - - - - - - - - - - - - - - - - - - - - - - -->
+					<div class="bank">
+						<span class="logos global" style="width:auto;" >
+							<em>
+								&nbsp;
+							</em>
+						</span>
+						<a  href="" class="bank-name global">Ridgeway Business A/C<span>090-8007-006543</span></a>
+
+
+
+						<div class="content">
+							<div class="balance">
+								<div class="statement-balance">
+									<label>Statement Balance </label>
+									<span>7,827.22</span>
+								</div>
+								<div class="date-imported" >
+									29 Jul 2011
+								</div>
+								<div class="no-padding-top" style="margin-bottom:5px;">
+									<a class="xbtn blue" href="" style="width: 105px; ">
+									Reconcile <span >27</span> items</a>
+								</div>
+								<div class="bank-balance">
+									<label>
+									Balance in Xero </label><span>3,171.89</span>
+								</div>
+							</div>
+						</div>
+					</div> <!-- /bank -->
+
+
+
+					<!-- - - - - - - - - - - - - - - - - - - - - - - - -  CAJA  - - - - - - - - - - - - - - - - - - - - - - - - -->
+					<div class="bank">
+							<span class="logos global" style="width:auto;" >
+								<em>
+									&nbsp;
+								</em>
+							</span>
+							<a  href="" class="bank-name global">Ridgeway Business A/C<span>090-8007-006543</span></a>
+
+
+
+							<div class="content">
+								<div class="balance">
+									<div class="statement-balance">
+										<label>Statement Balance </label>
+										<span>7,827.22</span>
+									</div>
+									<div class="date-imported" >
+										29 Jul 2011
+									</div>
+									<div class="no-padding-top" style="margin-bottom:5px;">
+										<a class="xbtn blue" href="" style="width: 105px; ">
+										Reconcile <span >27</span> items</a>
+									</div>
+
+
+										<div class="authorize no-transactions">
+											<h3>
+											No transactions importegd </h3>
+											<p>
+												<a href="">Import a bank statement to get started</a>
+											</p>
+										</div>
+
+
+									<div class="bank-balance">
+										<label>
+										Balance in Xero </label><span>3,171.89</span>
+									</div>
+
+								</div>
+							</div>
+						</div> <!-- /bank -->
+
+
+
+
+				</div><!-- /col -->
+
+			</div>
+
+
+
+			<div id="good_bad" class="document feedback">
+				<p>
+					 Overall, how are you feeling about Xero?
+				</p>
+			</div>
+
+	</div>
+
+<?php include_once("admin/includes/footer.php"); ?>
     </div> 
     <!-- /content -->
     
-    
+            
   </div> 
   <!-- /wrapper -->
 
