@@ -64,24 +64,37 @@
 <h2>Editar detalles</h2>
 <form action="equipos.php?action=editar&id=<?php echo $_GET['id']; ?>" method="POST">
 <table border="0" cellspacing="5" cellpadding="5" width="100%">
-	<tr><td>ID Equipo</td><td><input type="text" value="<?php echo $equipo->getIdEquipo(); ?>" id="id" disabled="true" size="40"/></td></tr>
-	<tr><td>Full User-Agent</td><td><input type="text" value="<?php echo $equipo->getFullUa(); ?>" name="fua" id="fua" size="40"/></td></tr>
-	<tr><td>SID Token</td><td><input type="text" value="<?php echo $equipo->getToken(); ?>" name="token" id="token" size="40"/></td></tr>
-	<tr><td>Descripcion</td><td><input type="text" value="<?php echo $equipo->getDescripcion(); ?>" name="token" id="token" size="40"/></td></tr>
-	<tr><td>Locked</td><td><input type="text" value="<?php echo $equipo->getLocked(); ?>" name="token" id="token" size="40" disabled/></td></tr>		
+	<tr><td>ID Equipo</td>
+		<td><input type="text" value="<?php echo $equipo->getIdEquipo(); ?>" id="id" disabled="true" size="40"/></td></tr>
+		
+	<tr><td>Full User-Agent</td>
+		<td><input type="text" value="<?php echo $equipo->getFullUa(); ?>" name="fua" id="fua" size="40"/></td></tr>
+		
+	<tr><td>Token</td>
+		<td><input type="text" value="<?php echo $equipo->getToken(); ?>" name="token" id="token" size="40"/></td></tr>
+		
+	<tr><td>Descripcion</td><td>
+		<input type="text" value="<?php echo $equipo->getDescripcion(); ?>" name="descripcion" id="descripcion" size="40"/></td></tr>
+
+			
 	<tr><td>Sucursal asociada</td>
         <td>
-
+			
    			<select name="sucursal"> 
 			<?php
-			
+				//buscar a que sucursal pertenece este equipo
+				$equipo_sucursal = EquipoSucursalDAO::getByPK( $equipo->getIdEquipo()  );
+				$equipo_sucursal_suc = $equipo_sucursal->getIdSucursal();
+				
 				$sucursales = SucursalDAO::getAll();
 				foreach( $sucursales as $suc ){
 					
 					/*if($suc->getIdSucursal() == 0)
 						continue;*/
 						
-					echo "<option value='" . $suc->getIdSucursal() . "' >" .  $suc->getDescripcion()  . "</option>";
+					echo "<option value='" . $suc->getIdSucursal() . "' ";
+					if($equipo_sucursal_suc == $suc->getIdSucursal()) echo " selected ";
+					echo ">" .  $suc->getDescripcion()  . "</option>";
 				}
 			
 			?>
