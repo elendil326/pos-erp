@@ -23,7 +23,13 @@
     }else{
 	    $save = false;
 	}
+	
+    if(isset($_REQUEST['descripcion'])){
+        $equipo->setDescripcion($_REQUEST['descripcion']);
 
+    }else{
+	    $save = false;
+	}
 
     if($save){
 	
