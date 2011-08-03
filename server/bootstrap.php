@@ -345,7 +345,7 @@
 	
 	if(count($rs)==0){
 		//no existe esta instancia !!
-		Logger::log("This instance does not exist !!!",3);
+		Logger::log("The instance {$_SESSION["INSTANCE_ID"]} does not exist !!!",3);
 		die("this instance does not exist !");
 	}
 
@@ -389,7 +389,7 @@
 
 	if(count($rs)==0){
 		//no existe esta instancia !!
-		Logger::log("This instance does not exist !!!",3);
+		Logger::log("This core_functionality for this instance are not  set !!!",3);
 		die("this instance does not exist !");
 	}
 
