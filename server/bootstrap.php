@@ -390,7 +390,7 @@
 	if(count($rs)==0){
 		//no existe esta instancia !!
 		Logger::log("This core_functionality for this instance are not  set !!!",3);
-		die("this instance does not exist !");
+		die("This core_functionality for this instance are not  set !!!!");
 	}
 
 

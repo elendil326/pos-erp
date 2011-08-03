@@ -131,6 +131,19 @@
 	}
 ?>
 
+<h2>Insertar El Token de este equipo</h2>
+<script>
+	var token;
+	
+
+	
+	function itoken(){
+		POS.ajaxToClient("networking", null, function(r){
+			jQuery("#token").val(r.response)
+		});
+	}
+</script>
+	<input id="itoken_button" type="button" onClick="itoken()" value="Insertar token"/>	
 
 
 <h2>Eliminar este equipo</h2>
