@@ -46,7 +46,7 @@ if( isset($_GET["action"])
 
 
 <body class="sub">
-  <div id="wrapper">
+  <div id="wrapper" >
 
     <div id="header" class="matrix" >
       

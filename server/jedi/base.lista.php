@@ -236,7 +236,7 @@ $header = array(
 	{
 		$global_diff = false;
 		
-		$diff_html = "<pre style='font-size:10px'><table border=1 width=600>";
+		$diff_html = "<pre style='font-size:10px; overflow: scroll; height: 500px'><table border=1 width=600>";
 		
 		$a_lines = explode("\n", $a);
 		$b_lines = explode("\n", $b);
@@ -303,7 +303,7 @@ $header = array(
 	$instancias_schema = array();
 	
 	$schema_index = -1;
-
+	?><p>Las comparaciones se haran asumiendo que la base de datos de la instancia 1 esta correcta. Las diferencias que radican en comentarios y en auto_increment se colorearan en naranaja. Todas las demas diferencias se colorearan en rojo.</p><?php
 	foreach($instancias as $i){
 
 		$schema_index ++;
