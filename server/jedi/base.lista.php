@@ -5,7 +5,7 @@
 	$instancias = $rs->GetArray();
 
 
-	function backup_tables($host, $user, $pass, $name, $tables = '*'){
+	function backup_tables($host, $user, $pass, $name, $tables = '*', $backup_values = true, $return_as_string = false){
 
 		$link = mysql_connect($host,$user,$pass);
 
@@ -34,24 +34,31 @@
 	    $row2 = mysql_fetch_row(mysql_query('SHOW CREATE TABLE '.$table));
 	    $return.= "\n\n".$row2[1].";\n\n";
 
-	    for ($i = 0; $i < $num_fields; $i++) 
-	    {
-	      while($row = mysql_fetch_row($result))
-	      {
-	        $return.= 'INSERT INTO '.$table.' VALUES(';
-	        for($j=0; $j<$num_fields; $j++) 
-	        {
-	          $row[$j] = addslashes($row[$j]);
-	          $row[$j] = @ereg_replace("\n","\\n",$row[$j]);
-	          if (isset($row[$j])) { $return.= '"'.$row[$j].'"' ; } else { $return.= '""'; }
-	          if ($j<($num_fields-1)) { $return.= ','; }
-	        }
-	        $return.= ");\n";
-	      }
-	    }
+		if($backup_values)
+		{
+		    for ($i = 0; $i < $num_fields; $i++) 
+		    {
+		      while($row = mysql_fetch_row($result))
+		      {
+		        $return.= 'INSERT INTO '.$table.' VALUES(';
+		        for($j=0; $j<$num_fields; $j++) 
+		        {
+		          $row[$j] = addslashes($row[$j]);
+		          $row[$j] = @ereg_replace("\n","\\n",$row[$j]);
+		          if (isset($row[$j])) { $return.= '"'.$row[$j].'"' ; } else { $return.= '""'; }
+		          if ($j<($num_fields-1)) { $return.= ','; }
+		        }
+		        $return.= ");\n";
+		      }
+		    }			
+		}
+
 	    $return.="\n\n\n";
 	  }
 	
+		if($return_as_string)
+			return $return;
+
 		$fname = '../../static_content/db_backups/db-backup-'.time().'-'.(md5(implode(',',$tables))).'.sql';
 	  	$handle = fopen($fname,'w+');
 	  	fwrite($handle, $return);
@@ -189,6 +196,8 @@ $header = array(
 
 
 
+
+
 <h2>Descargar bases de datos</h2>
 
 <form >
@@ -220,10 +229,109 @@ $header = array(
 
 
 <h2>Estructura incongruente</h2>
-<p>Revisar que la estructura de las bases de datos concuerden con el script dado</p>
-<form >
-	<input type="file" name="somename" size="chars"> 
-	<input type="hidden" name="action" value="lista">
-	<input type="hidden" name="test_structure" value="1">
-	<input type="submit" value="probar" method="GET">
-</form>
+<br>
+<?php
+
+	function diff( $a , $b )
+	{
+		$global_diff = false;
+		
+		$diff_html = "<pre style='font-size:10px'><table border=1 width=600>";
+		
+		$a_lines = explode("\n", $a);
+		$b_lines = explode("\n", $b);
+
+		
+		$max_lines = sizeof($a_lines) > sizeof($b_lines) ? sizeof($a_lines) : sizeof($b_lines);
+		
+		
+		for($i = 0; $i < $max_lines; $i++)
+		{
+			
+			
+			$is_diff = $a_lines[ $i ] != $b_lines[ $i ];
+			$is_really_diff = false;
+			$is_diff_style = "style='background-color: #bb0000; color: white;'";
+			
+			if($is_diff)
+			{
+				//es diferente... en que caracteres?
+				$is_really_diff = true;
+
+				//si la diferencia es en el numero de auto_increment
+				if((strpos($a_lines[ $i ], ") ENGINE=") !== false) && (strpos($b_lines[ $i ], ") ENGINE=") !== false))
+				{
+					$is_diff_style = "style='background-color: orange; color: white;'";		
+					$is_really_diff = false;
+				}
+				
+				//si la diferencia es en un comentario
+				if(($a_comment_at = strpos($a_lines[ $i ], "COMMENT")) !== false)
+				{
+					if(($b_comment_at = strpos($a_lines[ $i ], "COMMENT")) !== false)
+					
+					if(substr( $a_lines[ $i ], 0, $a_comment_at ) == substr( $b_lines[ $i ], 0, $b_comment_at ))
+					{
+						$is_diff_style = "style='background-color: orange; color: black;'";								
+					}
+					
+					$is_really_diff = false;
+				}
+				
+			}
+
+			if($is_really_diff)
+				$global_diff = true;
+
+
+			$diff_html .= "<tr ". ($is_diff ? $is_diff_style : '') .">";
+			$diff_html .= "<td width=300 style='width:300px; overflow:hidden;'>" . $a_lines[ $i ] . "</td>";	
+			$diff_html .= "<td width=300 style='width:300px; overflow:hidden;'>" . $b_lines[ $i ] . "</td>";
+			$diff_html .= "</tr>";
+
+			
+		
+		}
+	
+		$diff_html .=		"</table></pre>";
+		
+		return array( $global_diff, $diff_html);
+	}
+	
+	
+	
+	$instancias_schema = array();
+	
+	$schema_index = -1;
+
+	foreach($instancias as $i){
+
+		$schema_index ++;
+		$instancias_schema[$schema_index] = backup_tables($i["DB_HOST"], $i["DB_USER"], $i["DB_PASSWORD"], $i["DB_NAME"], '*', false, true);
+
+		if($schema_index == 0) continue;
+		
+		$diff = diff($instancias_schema[0], $instancias_schema[$schema_index], true);
+		
+		if($diff[0] === true )
+			echo "<input type='button' value='{$i["DB_NAME"]} Mostrar diferencia' onClick='showdiff(". $schema_index .")'>";
+		
+		echo "<div  id='html_diff_". $schema_index ."' style='display:none'>". $diff[1] ."</div>";
+	}
+	
+	
+	
+
+?>
+
+<script type="text/javascript" charset="utf-8">
+
+	function showdiff( schema_index )
+	{
+		if(jQuery("#html_diff_"+ schema_index +":visible").length == 1)
+			jQuery("#html_diff_"+ schema_index ).hide();
+		else
+			jQuery("#html_diff_"+ schema_index ).show();
+	}
+</script>
+
