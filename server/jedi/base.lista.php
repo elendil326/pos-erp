@@ -117,11 +117,13 @@
 	
 
 $db_info = array();
+$err_log = "";
 
 foreach ($instancias as $db) {
 
 	try{
-		$link = @mysql_connect($db["DB_HOST"],$db["DB_USER"],$db["DB_PASSWORD"],$db["DB_NAME"]);	
+		$link = @mysql_connect($db["DB_HOST"],$db["DB_USER"],$db["DB_PASSWORD"], $db["DB_NAME"]);	
+
 	}catch(Exception $e){
 		Logger::log($e);
 		continue;
@@ -130,12 +132,20 @@ foreach ($instancias as $db) {
 
 	if(!$link) {
 		Logger::log("Imposible conectarme a bd");
+		$err_log .= "<div>Imposible conectarse al servidor de base de datos.</div>";
 		continue;	
 	}
 	
-	mysql_select_db( $db["DB_NAME"] );
 	
-	$result = mysql_query( "SHOW TABLE STATUS" );
+	$success = mysql_select_db( $db["DB_NAME"] );
+	
+	if(!$success){
+		$err_log .= "<div>Imposible conectarse a la BD {$db["DB_NAME"]}</div>";
+		continue;
+	}
+
+	
+	$result = mysql_query( "SHOW TABLE STATUS" ) ;
 
     $dbsize = 0;
 
@@ -148,7 +158,7 @@ foreach ($instancias as $db) {
 	
 	//ahora vamos a intentar abrirla con las credeciales de POS_CORE
 	//para saber si puedo hacer cosas
-	$link = @mysql_connect( $db["DB_HOST"], POS_CORE_DB_USER, POS_CORE_DB_PASSWORD,$db["DB_NAME"]);
+	$link = @mysql_connect( $db["DB_HOST"], POS_CORE_DB_USER, POS_CORE_DB_PASSWORD, $db["DB_NAME"]);
 	
 	if($link){
 		$db["core_user_has_access"] = true;	
@@ -169,8 +179,11 @@ $header = array(
 	"total_size" 	=> "Tama&ntilde;o" );
 
 
-$t = new Tabla($header, $db_info);
-$t->render();
+
+	echo "<div>{$err_log}</div>";
+
+	$t = new Tabla($header, $db_info);
+	$t->render();
 
 ?>
 
