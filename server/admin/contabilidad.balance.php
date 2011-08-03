@@ -23,7 +23,7 @@ function renderUsuario($var) {
 }
 
 if (POS_MULTI_SUCURSAL) {
-    $sucursal = SucursalDAO::getByPK(1);
+    $sucursal = SucursalDAO::getByPK(0);
 } else {
     $sucursal = SucursalDAO::getByPK(0);
 }

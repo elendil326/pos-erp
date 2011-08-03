@@ -1,4 +1,9 @@
-window.webkitNotifications.requestPermission();
+try{
+	window.webkitNotifications.requestPermission();	
+}catch(e){
+	console.error(e)
+}
+
 
 function notification(){
 	if (window.webkitNotifications.checkPermission() == 0) {

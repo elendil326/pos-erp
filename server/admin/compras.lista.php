@@ -6,16 +6,17 @@ require_once('model/sucursal.dao.php');
 
 ?>
 
-
+<!--
 <script type="text/javascript" src="../frameworks/jquery-datepicker/js/jquery-ui-1.7.1.custom.min.js"></script>
 <script type="text/javascript" src="../frameworks/jquery-datepicker/js/daterangepicker.jQuery.js"></script>
 <link rel="stylesheet" href="../frameworks/jquery-datepicker/css/ui.daterangepicker.css" type="text/css" /> 
 <link rel="stylesheet" href="../frameworks/jquery-datepicker/css/redmond/jquery-ui-1.7.1.custom.css" type="text/css" title="ui-theme" /> 
-
+-->
 
 <script>
-    function mostrarDetallesVenta (vid){
-        window.location = "clientes.php?action=detalles&id=" + vid;
+    function mostrarDetallesCompra (vid)
+	{
+        window.location = "compras.php?action=detalleCompraCliente&id=" + vid;
     }
 
 	jQuery(function(){
@@ -120,10 +121,10 @@ require_once('model/sucursal.dao.php');
 
 
 
-<h2>Ultimas ventas</h2> <?php
+<h2>Ultimas compras</h2> <?php
 //obtener los clientes del controller de clientes
 
-$ventas = VentasDAO::getAll (1, 50, 'fecha', 'desc');
+$ventas = CompraClienteDAO::getAll (1, 50, 'fecha', 'desc');
 
 //render the table
 $header = array(
@@ -148,7 +149,10 @@ function getNombrecliente($id)
     if($id < 0){
          return "Caja Comun";
     }
-    return ClienteDAO::getByPK( $id )->getRazonSocial();
+	$c  = ClienteDAO::getByPK( $id );
+	if($c === null)
+	return "!";
+    return $c->getRazonSocial();
 }
 
 
@@ -184,6 +188,6 @@ $tabla->addColRender( "fecha", "toDate" );
 $tabla->addColRender( "tipo_venta", "setTipoColor" ); 
 $tabla->addColRender( "id_cliente", "getNombreCliente" ); 
 $tabla->addColRender( "id_sucursal", "getDescSuc" ); 
-$tabla->addOnClick("id_venta", "mostrarDetallesVenta");
+$tabla->addOnClick("id_compra", "mostrarDetallesCompra");
 $tabla->addColRender( "descuento", "percentFormat" );
 $tabla->render();
