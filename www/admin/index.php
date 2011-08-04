@@ -57,18 +57,9 @@
 
 
 	<div class="container">
-
+	<?php /*
 			<div class="document summary" >
-
-				<!-- que es esto ?
-				<div id="xn_banner" style="height: auto; ">
-					<div class="xn_placeHolder">
-						&nbsp;
-					</div>
-					<div id="xn_bannerInner" style="position: static; visibility: visible; opacity: 1; ">
-					</div>
-				</div>
-				-->
+			
 
 				<!-- - - - - - - - - - - - - - - - - - - - - - - - -  Getting Started - - - - - - - - - - - - - - - - - - - - - - - - -->
 				<div class="gs-container" style="" >
@@ -291,9 +282,10 @@
 				</p>
 			</div>
 
-	</div>
+			*/ ?>
+		</div>
 
-<?php include_once("admin/includes/footer.php"); ?>
+		<?php include_once("admin/includes/footer.php"); ?>
     </div> 
     <!-- /content -->
     

@@ -74,7 +74,7 @@ echo "</table>";
     .prod:hover {
         background:#D7EAFF;
         color:#000;
-        border:1px solid #3F8CE9;
+        /*border:1px solid #3F8CE9;*/
     }
 </style>
 <?php

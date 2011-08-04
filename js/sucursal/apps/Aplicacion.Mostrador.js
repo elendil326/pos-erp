@@ -96,8 +96,7 @@ Aplicacion.Mostrador.prototype.sendOfflineSales = function( ventas )
 						console.log("ya regrese de enviar las ventas offline... a borrarlas de la bd");
 					}
 					
-					/* dan */
-					return;
+
 					
 					for (var v_i=0; v_i < ventas.length; v_i++) {
 						ventas[v_i].destruct({ callback: Ext.emptyFn });

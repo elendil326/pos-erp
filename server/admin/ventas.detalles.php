@@ -403,27 +403,28 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"])
 	
 </script>
 
+<div align=center>
+	<h4 id="submitButtons">
+	
+	    <input type=button value="Imprimir comprobante" onClick="printComprobante()">
+	    <?php
+	    //if ($venta->getLiquidada() && !$venta->getCancelada()) {
+	    if (POS_FACTURACION_ALL ? true : $venta->getLiquidada() && !$venta->getCancelada()) {
+	        $q = new FacturaVenta();
+	        $q->setIdVenta($venta->getIdVenta());
+	        $res = FacturaVentaDAO::search($q);
 
-<h4 id="submitButtons">
-    <input type=button value="Imprimir comprobante" onClick="printComprobante()">
-    <?php
-    //if ($venta->getLiquidada() && !$venta->getCancelada()) {
-    if (POS_FACTURACION_ALL ? true : $venta->getLiquidada() && !$venta->getCancelada()) {
-        $q = new FacturaVenta();
-        $q->setIdVenta($venta->getIdVenta());
-        $res = FacturaVentaDAO::search($q);
-
-        if (sizeof($res) == 0) {
-            //no se ha hecho factura
-            ?><input type="button" value="Facturar esta venta" onClick='showModoFactura()' ><?php
-    	} else {
-        //ya se ha hecho factura !
-            ?><input type="button" value="Imprimir factura" onClick='window.location = "../proxy.php?action=1308&id_venta=<?php echo $_REQUEST["id"]; ?>";'><?php
-    	}
-	}
-    ?>
-</h4>
-
+	        if (sizeof($res) == 0) {
+	            //no se ha hecho factura
+	            ?><input type="button" value="Facturar esta venta" onClick='showModoFactura()' ><?php
+	    	} else {
+	        //ya se ha hecho factura !
+	            ?><input type="button" value="Imprimir factura" onClick='window.location = "../proxy.php?action=1308&id_venta=<?php echo $_REQUEST["id"]; ?>";'><?php
+	    	}
+		}
+	    ?>
+	</h4>
+</div>
 
 
 <div id="loader" style="display: none;" align="center"  >

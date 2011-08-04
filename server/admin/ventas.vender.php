@@ -2187,29 +2187,6 @@ echo "]";
     ?>
 </div>
 
-<style>
-    .prod {
-        background:#fff;
-        color:#333;
-        text-decoration:none;
-        padding:5px 10px;
-        border:1px solid #fff;
-
-
-        /* Add the transition properties! */
-        -webkit-transition-property: background-color, color, border; 
-        -webkit-transition-duration: 300ms;
-
-        /* you can control the acceleration curve here */
-        -webkit-transition-timing-function: ease-in-out; 
-    }
-
-    .prod:hover {
-        background:#D7EAFF;
-        color:#000;
-        border:1px solid #3F8CE9;
-    }
-</style>
 
 
 
@@ -2237,15 +2214,15 @@ echo "]";
     <div id="ComposicionTabla"></div>
 
     <h2>Detalles del producto a vender</h2>
-    <table width=100% >
-        <tr style="background-color: #f0f0f0;  border-color: gray; border-top-color: white; border: 1px solid;"><td>Enviar producto procesado</td><td style="width:50%">
+    <table width=100% > <!-- border-color: gray; border-top-color: white; border: 1px solid; -->
+        <tr style="background-color: #f0f0f0;  "><td>Enviar producto procesado</td><td style="width:50%">
                 <input style="width: 100px; margin: 5px;" id="compuesto-procesado" type="checkbox">
             </td></tr>		
         <tr ><td>Peso real</td><td>
                 <div style=" margin: 5px;" id="compuesto-peso-real" >0.00</div>
 
             </td></tr>
-        <tr style="background-color: #f0f0f0;  border-color: gray; border-top-color: white; border: 1px solid;"><td>Peso a cobrar</td><td>
+        <tr style="background-color: #f0f0f0;  "><td>Peso a cobrar</td><td>
                 <div style=" margin: 5px;" id="compuesto-peso-a-cobrar" >0.00</div>
 
             </td></tr>		
@@ -2253,7 +2230,7 @@ echo "]";
                 <div style=" margin: 5px;" id="compuesto-importe-por-unidad" >$0.00</div>
 
             </td></tr>
-        <tr style="background-color: #f0f0f0;  border-color: gray; border-top-color: white; border: 1px solid;"><td>Importe total por este producto</td><td>
+        <tr style="background-color: #f0f0f0;  "><td>Importe total por este producto</td><td>
                 <div style=" margin: 5px;" id="compuesto-importe-total" >$0.00</div>
 
 

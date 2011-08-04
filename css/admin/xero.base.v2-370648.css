@@ -1281,6 +1281,7 @@ div.document dl.spin dt,div.document div.spin a {
 	height:28px!important;
 	text-align:center;
 }
+/*
 div.document dl.spin dt em,div.document div.spin em {
 	height:28px;
 	background:transparent url(/common/images/spinner-63032e.gif) no-repeat center 5px;
@@ -1289,9 +1290,11 @@ div.document dl.spin dt em,div.document div.spin em {
 	text-align:center;
 	cursor:wait;
 }
+*/
 div.document div.spin em {
 	width:100%!important;
 }
+/*
 div.document div.spin.thin em {
 	background:transparent url(/common/images/spinner-63032e.gif) no-repeat center 4px;
 }
@@ -1302,6 +1305,7 @@ div.document dl.spin dt {
 	background:transparent url(/common/images/modules/gradients-e93e18.png) no-repeat 100% -298px;
 	padding:0!important;
 }
+*/
 div.document dl.spin.gray {
 	background-position:0 0;
 }
