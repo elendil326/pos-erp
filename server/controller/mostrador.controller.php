@@ -467,8 +467,22 @@ function vender($json_string , $OVERRIDE_CURRENT_DATE = false, $die_on_end = tru
 
 	if($OVERRIDE_CURRENT_DATE){
 		if(isset($data->fecha)){
+
 			Logger::log("Overriding current date and setting date :" . $data->fecha );
-			$venta->setFecha( date("Y-m-d H:i:s" , strtotime($data->fecha) ) );			
+
+			$venta->setFecha( date("Y-m-d H:i:s" , strtotime($data->fecha) ) );	
+			
+			if(false !== ($par = strpos ( $data->fecha , "(" )))
+			{
+				Logger::log( "-->" . $par );
+				Logger::log( "-->" . substr( $data->fecha, 0, $par ) );	
+				
+				$venta->setFecha( date("Y-m-d H:i:s" , strtotime( substr( $data->fecha, 0, $par ) ) ) );	
+			}
+			
+
+			Logger::log("Overriding current date and setting date :" . $venta->getFecha() );
+			
 		}else{
 			Logger::log("Fecha not set even though override current date is true !");
 		}
@@ -1283,7 +1297,19 @@ function registrarVentasOffline($config)
 		//de datos como si fuera que vienen normalmente del cliente
 		//incluso aramare un json
 		Logger::log("Hay " . sizeof($detalles_esta_venta) . " productos para registrar en esta venta offline...");
-		Logger::log("cliente:" . $esta_venta->json->id_cliente);
+		
+		foreach( $detalles_esta_venta as $dv )
+		{
+			
+			$foo = get_object_vars($dv);
+			
+			Logger::log( "-->id_producto:" .  $foo["id_producto"]);
+			Logger::log( "  -->Qty     :" .  $foo["cantidad"]);
+			Logger::log( "  -->QtyProc :" .  $foo["cantidad_procesada"]);
+			Logger::log( );
+		}
+		
+		Logger::log("id_cliente >" . $esta_venta->json->id_cliente ." <");
 		
 		$json_to_record = array(
 				"cliente" => array( "id_cliente" => $esta_venta->json->id_cliente) ,
@@ -1298,10 +1324,13 @@ function registrarVentasOffline($config)
 		{
 			
 			$foo = get_object_vars($dv);
+			
 			$foo["procesado"] = false;
 			
-			if($foo["cantidad_procesada"] > 0){
-				$foo["procesada"] = true;
+			if($foo["cantidad_procesada"] > 0)
+			{
+				$foo["cantidad"] = $foo["cantidad_procesada"];
+				$foo["procesado"] = true;
 			}
 				
 

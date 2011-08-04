@@ -95,6 +95,10 @@ Aplicacion.Mostrador.prototype.sendOfflineSales = function( ventas )
 					if(DEBUG){
 						console.log("ya regrese de enviar las ventas offline... a borrarlas de la bd");
 					}
+					
+					/* dan */
+					return;
+					
 					for (var v_i=0; v_i < ventas.length; v_i++) {
 						ventas[v_i].destruct({ callback: Ext.emptyFn });
 					}
@@ -1640,13 +1644,22 @@ Aplicacion.Mostrador.prototype.offlineVender = function( )
 		if(DEBUG) console.log("Ahora intentare guardar los " + l + " detalles.");		
 		
 		for (var d=0, td = null; d < detalles.length; d++) {
+			
 			if(DEBUG)console.log("guardando detalle...");
+			
+			var qty_dirty = "0", qty_proc = "0";
+			
+			if(detalles[d].procesado == "true"){
+				qty_proc = detalles[d].cantidad;
+			}else{
+				qty_dirty = detalles[d].cantidad;
+			}
 			
 			td = new DetalleVenta({
 				id_venta: 			saved_sale.getIdVenta(),
 				id_producto: 		detalles[d].id_producto,
-				cantidad: 			detalles[d].cantidad,
-				cantidad_procesada: detalles[d].cantidad,
+				cantidad: 			qty_dirty,
+				cantidad_procesada: qty_proc,
 				precio: 			detalles[d].precioVenta,
 				precio_procesada: 	detalles[d].precioVentaProcesado,
 				descuento: 			detalles[d].descuento
@@ -1686,7 +1699,8 @@ Aplicacion.Mostrador.prototype.vender = function ()
 	Aplicacion.Mostrador.thisPosSaleId++;
 	
 	//Hay un error en la red justo ahora !
-	if(POS.A.failure){
+	if(POS.A.failure)
+	{
 		return Aplicacion.Mostrador.currentInstance.offlineVender(  );
 	}
 	
