@@ -77,7 +77,7 @@ POS.Keyboard.Keyboard = function ( campo, config ){
         scroll: false,
         width: 100,
         height:100,
-		showAnimation : Ext.anims.fade ,
+		//showAnimation : Ext.anims.fade ,
 		hideOnMaskTap : true,
 		bodyPadding : 0,
 		bodyMargin : 0,
