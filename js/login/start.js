@@ -216,7 +216,7 @@ var sendLogin = function (){
 		}
 	});
 	
-}
+};
 
 
 
