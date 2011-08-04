@@ -44,7 +44,7 @@ require_once("../../server/jedi/bootstrap.php");
       <!-- /top-bar -->
 
       <div id="header-main">
-		<h1 id="MAIN_TITLE">Archivo de configuracion</h1> 
+		<h1 id="MAIN_TITLE">Instancias</h1> 
       </div>
     </div>
     

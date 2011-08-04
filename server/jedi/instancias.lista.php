@@ -4,6 +4,14 @@
 	*	Opciones de instancias
 	**************************************************** */
 ?>
+
+
+	<script type="text/javascript" charset="utf-8">
+		function ver_detalles( iid )
+		{
+			window.location = 'instancias.php?action=detalles&iid=' + iid;
+		}
+	</script>
 	<h2>Opciones</h2>
 	<input type="button" name="" value="Nueva instancia" id="">
 
@@ -30,15 +38,16 @@
 
 		//render the table
 		$header = array(  
-			"instance_id" => "INSTANCE_ID",
-			"desc" => "DESC",
-			"DB_NAME" => "DB_NAME",
-			"DB_DEBUG"	 => "DB_DEBUG",
+			"instance_id" 	=> "INSTANCE_ID",
+			"desc" 			=> "DESC",
+			"DB_NAME" 		=> "DB_NAME",
+			"DB_DEBUG"		 => "DB_DEBUG",
 			"HEARTBEAT_INTERVAL"	 => "HEARTBEAT_INTERVAL",
-			"DEMO" => "DEMO" );
+			"DEMO" 			=> "DEMO" );
 
 		$tabla = new Tabla( $header, $results );
-		$tabla->addNoData("No hay clientes registrados.");
+		$tabla->addNoData("No hay instancias registradas.");
+		$tabla->addOnClick("instance_id", "ver_detalles");		
 		$tabla->render();
 		
 	}
