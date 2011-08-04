@@ -178,12 +178,12 @@ foreach ($instancias as $db) {
 	array_push( $db_info, $db );
 }
 
-$header = array(
-	"instance_id" 	=> "Instancia",
-	"desc" 			=> "Descripcion",
-	"core_user_has_access" => "Core user access?",
-	"DB_NAME" 		=> "Base de datos",
-	"total_size" 	=> "Tama&ntilde;o" );
+	$header = array(
+		"instance_id" 	=> "Instancia",
+		"desc" 			=> "Descripcion",
+		"core_user_has_access" => "Core user access?",
+		"DB_NAME" 		=> "Base de datos",
+		"total_size" 	=> "Tama&ntilde;o" );
 
 
 
@@ -218,14 +218,7 @@ $header = array(
 
 
 
-<h2>Subir paquete con bases de datos</h2>
 
-<form >
-	<input type="file" name="somename" size="chars"> 
-	<input type="hidden" name="action" value="lista">
-	<input type="hidden" name="UPLOAD" value="1">
-	<input type="submit" value="subir" method="GET">
-</form>
 
 
 <h2>Estructura incongruente</h2>

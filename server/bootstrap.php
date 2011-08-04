@@ -44,7 +44,12 @@
 				margin:0;
 				font-size:11px;
 			}
-
+			
+			div.gs-container div.notify {
+				-moz-border-radius: 0 0 5px 5px;
+				-webkit-border-radius: 0 0 5px 5px;
+				border-radius: 0 0 5px 5px;
+			}
 
 			div.gs-container div.get-started-title {
 				-moz-border-radius:5px 5px 0 0;
