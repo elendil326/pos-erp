@@ -41,7 +41,8 @@ class POS{
       **/
 	public static function getPersistencyHash(){
 		try{
-			
+			/* * 
+			DEPRECADO
 			if(HEARTBEAT_METHOD_TRIGGER){
 				$foo = PosConfigDAO::getByPK("DB_VER");
 				
@@ -52,12 +53,13 @@ class POS{
 				
 				$hash = $foo->getValue();
 			}else{
-				$hash = md5( json_encode( listarClientesDeudores() )
-				 			. json_encode( listarClientes() )
-				 			. json_encode( listarInventario( $_SESSION["sucursal"] ) )
-				 			. json_encode( autorizacionesSucursal( $_SESSION["sucursal"] ) ) );				
+							
 			}
-
+			* */
+			$hash = md5( json_encode( listarClientesDeudores() )
+			 			. json_encode( listarClientes() )
+			 			. json_encode( listarInventario( $_SESSION["sucursal"] ) )
+			 			. json_encode( autorizacionesSucursal( $_SESSION["sucursal"] ) ) );
 
 		}catch(Exception $e){
 			Logger::log( $e );
