@@ -1348,7 +1348,7 @@ function nuevaCompraCliente($args = null) {
     $compra->setDescuento("0");
 
     $compra->setTotal("0");
-    $compra->setIdSucursal($_SESSION['sucursal']);
+    $compra->setIdSucursal($_SESSION['sucursal'] == null ? 0 : $_SESSION['sucursal']);
     $compra->setIdUsuario($_SESSION['userid']);
     $compra->setPagado("0");
     $compra->setCancelada("0");
