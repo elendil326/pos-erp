@@ -72,6 +72,35 @@ class POS{
 	
 	
 	
+	
+	
+	/**
+	 * 
+	 * 
+	 * 
+	 * */
+	public function getSucursalConfig()
+	{
+		
+		$config = array(  );
+		
+		$config["POS_MULTI_SUCURSAL"] 		= POS_MULTI_SUCURSAL;
+		$config["POS_COMPRA_A_CLIENTES"] 	= POS_COMPRA_A_CLIENTES;
+		$config["POS_MODULO_CONTABILIDAD"] 	= POS_MODULO_CONTABILIDAD;
+		
+		$config["EXT_AJAX_TIMEOUT"] 		= 10000;
+		$config["CHECK_DB_TIMEOUT"] 		= 15000;
+
+		$config["POS_INFO_SUCURSAL"] 		= informacionSucursal();
+		$config["POS_DOCUMENTOS"] 			= listarDocumentos();
+		$config["POS_LEYENDAS_TICKET"] 		= leerLeyendasTicket();
+
+		return $config;
+		
+	}
+	
+	
+	
 }
 
 
@@ -79,8 +108,12 @@ class POS{
 
 if(isset($args['action'])){
 	switch($args['action']){
+		/** 
+		 * 
+		 * 
+		 * 
+		 * */
 		case 1101 : 
-		
 			if(!isset($args["hash"])){
 				echo '{ "success" : false }';
 				return;
@@ -99,7 +132,12 @@ if(isset($args['action'])){
 				//bandwitdth
 			}
 		break;
-		
+
+		/** 
+		 * 
+		 * 
+		 * 
+		 * */		
 		case 1102 : 
 			$hash = POS::getPersistencyHash();
 			if($hash)
@@ -109,9 +147,25 @@ if(isset($args['action'])){
 		break;
 		
 		
-		
+		/** 
+		 * 
+		 * 
+		 * 
+		 * */		
 		case 1105 : 
-			Logger::log("Conexion reestablecida");
+			Logger::log(" Conexion reestablecida !");
 		break;
+		
+		
+		
+		/** 
+		 * 
+		 * 
+		 * 
+		 * */
+		case 1106 : 
+			Logger::log( json_encode( POS::getSucursalConfig() ) );
+			echo ( json_encode( POS::getSucursalConfig() ) );
+		break;		
 	}
 }

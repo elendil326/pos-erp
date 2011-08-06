@@ -12,11 +12,7 @@
     <title>POS</title>
 		<script>
 		
-		<?php
 
-			echo "var POS_COMPRA_A_CLIENTES = " . (POS_COMPRA_A_CLIENTES ? "true" : "false") . ";\n";
-
-		?>
 		
 		var DEBUG; 
 		

@@ -42,6 +42,7 @@ public class Bascula{
        	parameters = new Parameters();			
 
 		parameters.setPort(portsFree.get(0));
+		
 		parameters.setBaudRate(Baud._9600);
 		parameters.setByteSize("8");
 		parameters.setParity("N");

@@ -25,15 +25,8 @@ POS.currencyFormat = function (num){
 //almacena informacion hacerca de la sucursal
 POS.infoSucursal = null;
 
-
-
-
-
-
 //contiene informacion documentos que se imprimen en esa sucursal y con que impresoras se deben de imprimir
 POS.documentos = null;
-
-
 
 POS.fecha = function( f ){
 
@@ -65,16 +58,12 @@ POS.fecha = function( f ){
 POS.leyendasTicket = null;
 
 
-
-
-
-
 //poner el boton de yes, con si 
 Ext.MessageBox.YESNO[1].text = "Si";
 
 
-Ext.Ajax.timeout = 10000;
-POS.CHECK_DB_TIMEOUT = 15000;
+Ext.Ajax.timeout 		= 10000;
+POS.CHECK_DB_TIMEOUT 	= 15000;
 
 POS.A = {
     failure : false,
@@ -85,6 +74,7 @@ POS.U = {
     g : null
 };
 
+var POS_COMPRA_A_CLIENTES;
 
 Ext.Ajax.on("requestexception", function(a,b,c){
     if(!POS.A.failure){
@@ -98,7 +88,6 @@ Ext.Ajax.on("requestexception", function(a,b,c){
         }
     }
 });
-
 
 Ext.Ajax.on("beforerequest", function( conn, options ){
 	
@@ -215,8 +204,6 @@ function task(){
 	
 }
 
-
-
 function reload(){
 
 
@@ -315,8 +302,9 @@ function reload(){
 
 var heartHash = null;
 
-if(POS.A.sendHeart){
-    setTimeout("task()", POS.CHECK_DB_TIMEOUT);
+if(POS.A.sendHeart)
+{
+    setTimeout("task( )", POS.CHECK_DB_TIMEOUT);
 }
 
 
@@ -332,8 +320,14 @@ POS.error = function (ajaxResponse, catchedError)
 	}
 };
 
+
+
+
+
+
 /* ------------------------------------------------------------------------------------------------------------ */
 //extrae informacion acerca de la sucursal actual
+/*
 POS.loadInfoSucursal = function(){
 
     if(DEBUG){
@@ -369,7 +363,7 @@ POS.loadInfoSucursal = function(){
 
             POS.infoSucursal = informacion.datos;
 
-			imReadyToStart();
+			
 
             if(DEBUG){
                 console.log("POS.infoSucursal contiene : ", POS.infoSucursal);
@@ -435,14 +429,18 @@ POS.loadDocumentos = function(){
 
 
 };
+*/
 
+/*
 //extrae informacion acerca de las leyendas de los tickets
 POS.loadLeyendasTicket = function(){
 
     if(DEBUG){
         console.log("Obteniendo informaci\ufffdn de la sucursal ....");
     }
+
     if(DEBUG){ console.warn("AJAX !"); }
+
     Ext.Ajax.request({
         url: '../proxy.php',
         scope : this,
@@ -470,7 +468,7 @@ POS.loadLeyendasTicket = function(){
                 console.log("obtenicion de leyendasTicket exitosa.");
             }
 
-            POS.leyendasTicket = informacion.datos;
+            
 
             if(DEBUG){
                 console.log("POS.leyendasTicket contiene : ", POS.leyendasTicket);
@@ -481,17 +479,92 @@ POS.loadLeyendasTicket = function(){
             POS.error( response );
         }
     });
-
-
 };
-
+*/
 
 //lee la informacion de la sucursal
-POS.loadInfoSucursal();
+//POS.loadInfoSucursal();
 
 //lee la informacion de todos los documentos y las impresoras con las que se imprimen
-POS.loadDocumentos();
+//POS.loadDocumentos();
 
 //lee la informacion de la sucursal
-POS.loadLeyendasTicket();
+//POS.loadLeyendasTicket();
+/* ------------------------------------------------------------------------------------------------------------ */
 
+/* --------------------------------------------------------------------------------  -------------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------------  -------------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------------  -------------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------------  -------------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------------  -------------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------------  -------------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------------  -------------------------------------------------------------------------------- */
+//extrae informacion acerca de las leyendas de los tickets
+POS.RETRIVE_CONFIG = function(){
+
+    if(DEBUG)
+	{
+        console.log("Loading sucursal config ....");
+    }
+
+    Ext.Ajax.request({
+        url: '../proxy.php',
+        scope : this,
+        params : {
+            action : 1106
+        },
+        success: function(response, opts) {
+            try{
+                data = Ext.util.JSON.decode( response.responseText );
+            }catch(e){
+                return POS.error(response, e);
+            }
+
+			/* ---------------- OK TENGO LA INFO --------------------- */
+			/* ----------------                  --------------------- */	
+			console.group("CONFIG");		
+
+			console.log( "RAW_CONFIG", data );			
+
+			POS.leyendasTicket = data.POS_INFO_SUCURSAL;
+			if(DEBUG) console.log("POS.leyendasTicket = ", POS.leyendasTicket);
+			
+			POS.documentos = data.POS_DOCUMENTOS;
+			if(DEBUG) console.log("POS.documentos = ", POS.documentos);
+			
+			POS.infoSucursal = data.POS_INFO_SUCURSAL;
+			if(DEBUG) console.log("POS.infoSucursal = ", POS.infoSucursal);
+			
+			
+			Ext.Ajax.timeout = data.EXT_AJAX_TIMEOUT;
+			if(DEBUG) console.log("Ext.Ajax.timeout = ", Ext.Ajax.timeout);
+
+
+			POS.CHECK_DB_TIMEOUT = data.CHECK_DB_TIMEOUT;
+			if(DEBUG) console.log("POS.CHECK_DB_TIMEOUT = ", POS.CHECK_DB_TIMEOUT);
+
+			POS_COMPRA_A_CLIENTES = data.POS_COMPRA_A_CLIENTES;
+			if(DEBUG) console.log("POS_COMPRA_A_CLIENTES = ", POS_COMPRA_A_CLIENTES);
+			
+			console.groupEnd();					
+
+			imReadyToStart();
+						
+			/* ----------------                  --------------------- */
+			/* ----------------                  --------------------- */			
+        },
+        failure: function( response ){
+            POS.error( response );
+        }
+    });
+};
+
+POS.RETRIVE_CONFIG();
+
+/* --------------------------------------------------------------------------------  -------------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------------  -------------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------------  -------------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------------  -------------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------------  -------------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------------  -------------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------------  -------------------------------------------------------------------------------- */

@@ -130,6 +130,13 @@ switch( ((int)($args['action'] / 100))*100 )
 	break;
 	
 	case 1100:
+	
+		$action = $args['action'];
+		unset ( $args['action'] );
+		require_once('controller/printer.controller.php');
+		require_once('controller/sucursales.controller.php');		
+		$args['action'] = $action;
+		
 		require_once('controller/pos.controller.php');
 	break;
 	

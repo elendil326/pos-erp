@@ -513,15 +513,20 @@ function inventarioSucursal() {
 //obtiene la informacion de la sucursal actual
 function informacionSucursal() {
 
-    if (!isset($_SESSION['sucursal'])) {
-        die('{"success": false, "reason": "Su cuenta no esta ligada a una sucursal especifica." }');
+    if (!isset($_SESSION['sucursal']))
+	{
+		Logger::log("Su cuenta no esta ligada a una sucursal especifica.");
+		return null;
     }
 
-    if (!( $sucursal = SucursalDAO::getByPK($_SESSION['sucursal']) )) {
-        die('{"success": false, "reason": "No se tiene registros de esa sucursal." }');
+    if (!( $sucursal = SucursalDAO::getByPK($_SESSION['sucursal']) ))
+	{
+		Logger::log("No se tiene registros de esa sucursal.");
+		return null;
     }
+	
+	return $sucursal->asArray();
 
-    printf('{ "success": true, "datos": %s }', $sucursal);
 }
 
 

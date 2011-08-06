@@ -399,9 +399,9 @@
 	}
 
 
-	define("POS_MULTI_SUCURSAL", 		$rs['multi_sucursal']			);
-	define("POS_COMPRA_A_CLIENTES", 	$rs['compra_a_clientes']		);
-	define("POS_MODULO_CONTABILIDAD", 	$rs['POS_MODULO_CONTABILIDAD']	);
+	define("POS_MULTI_SUCURSAL", 		$rs['multi_sucursal']		   === "1" );
+	define("POS_COMPRA_A_CLIENTES", 	$rs['compra_a_clientes']	   === "1" );
+	define("POS_MODULO_CONTABILIDAD", 	$rs['POS_MODULO_CONTABILIDAD'] === "1" );
 
 	
 	#leer las caracteristicas del sistema
