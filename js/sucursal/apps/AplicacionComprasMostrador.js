@@ -215,7 +215,7 @@ Aplicacion.ComprasMostrador.prototype.refrescarMostrador = function (	)
     html += "               <div id = 'display-unit' style = 'position:relative; float:left; width:25%;'><div style = 'position:relative; width:80%; top:5px; height:50px; line-height:50px; border:solid 1px #8c898c; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;' onClick=\"Aplicacion.ComprasMostrador.currentInstance.setDisplay('C')\">lb/kg</div></div>";
     html += "               <div id = 'display-zero' style = 'position:relative; float:left; width:25%;'><div style = 'position:relative; width:80%; top:5px; height:50px; line-height:50px; border:solid 1px #8c898c; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;' onClick=\"Aplicacion.ComprasMostrador.currentInstance.setDisplay('Z')\">ZERO</div></div>";
     html += "               <div id = 'display-net-gross' style = 'position:relative; float:left; width:25%;'><div style = 'position:relative; width:80%; top:5px; height:50px; line-height:50px; border:solid 1px #8c898c; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;' onClick=\"Aplicacion.ComprasMostrador.currentInstance.setDisplay('GN')\">NET/GROSS</div></div>";
-    html += "               <div id = 'display-tare' style = 'position:relative; float:left; width:25%;'><div style = 'position:relative; width:80%; top:5px; height:50px; line-height:50px; border:solid 1px #8c898c; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;' onClick=\"Aplicacion.ComprasMostrador.currentInstance.setDisplay('T')\">TARE</div></div>";    
+    html += "               <div id = 'display-tare' style = 'position:relative; float:left; width:25%;'><div style = 'position:relative; width:80%; top:5px; height:50px; line-height:50px; border:solid 1px #8c898c; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;' onClick=\"Aplicacion.ComprasMostrador.currentInstance.setDisplay('P')\">PESAR</div></div>";    
     html += "           </div>";
     html += "       </div>";
     html +=     "</td>";
@@ -2399,7 +2399,7 @@ Aplicacion.ComprasMostrador.prototype.setDisplay = function(command_to_send){
                     send_command : command_to_send
                 },
                 success : function ( r ){
-    		_pesar();
+    		    _pesar();
                 },
                 failure: function (){
                     //client not found !
