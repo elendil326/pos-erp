@@ -111,7 +111,7 @@ public class Dispatcher{
 					send_command 	= "",
 					discard_first 	= "1",
 					read_next 		= "9",
-					read_random		= "true";
+					read_random		= "false";
 			
 			
 
