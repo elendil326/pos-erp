@@ -95,6 +95,9 @@ public class Dispatcher{
 			*	get_free_ports=true
 			*	
 			*
+			*   ###### READ RANDOM DATA ########
+			*	read_random=true
+			*
 			* 
 			*   ###### SEND AND READ DATA ########
 			*	port=(COM1)|[String]
@@ -107,13 +110,18 @@ public class Dispatcher{
 					port 			= "COM1",
 					send_command 	= "",
 					discard_first 	= "1",
-					read_next 		= "9";
+					read_next 		= "9",
+					read_random		= "true";
 			
 			
 
 			//buscar los argumentos, y parsearlos
 			for ( int i = 0; i < args.length ; i++) 
 			{
+				
+				if( args[i].startsWith("read_random=") )
+					read_random 	= args[i].substring( args[i].indexOf("=") +1);
+									
 				if( args[i].startsWith("get_free_ports=") )
 					get_free_ports 	= args[i].substring( args[i].indexOf("=") +1);
 
@@ -135,6 +143,17 @@ public class Dispatcher{
 			Logger.log("    send_command   ="	+ send_command 		+ ";");
 			Logger.log("    discard_first  ="	+ discard_first 	+ ";");						
 			Logger.log("    read_next      ="   + read_next 		+ ";");
+			Logger.log("    read_random    ="   + read_random 		+ ";");
+
+
+			/** ****************************
+			* 	Read random data
+			*   **************************** */			
+			if(read_random.equals("true")){
+				return callback + "({\"success\": true, \"reading\" : \""+ ( (int)(Math.random() * 100) ) +"KG\"});";
+			}
+			
+			
 			
 			
 			/** ****************************
