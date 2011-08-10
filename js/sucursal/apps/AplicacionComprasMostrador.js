@@ -2367,7 +2367,7 @@ function _pesar (){
                 module : "bascula",
                 raw_args : {
                     send_command : 'P',
-		    read_next = 14
+		    read_next : 14
                 },
                 success : function ( r ){
 			
