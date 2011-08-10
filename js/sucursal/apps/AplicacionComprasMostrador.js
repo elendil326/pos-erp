@@ -198,8 +198,12 @@ Aplicacion.ComprasMostrador.prototype.carritoComprasCambiarCantidad = function (
   * Refrescar el panel que muestra los productos y demas listos para vender.
   *
   **/
+
 Aplicacion.ComprasMostrador.prototype.refrescarMostrador = function (	)
 {	
+
+    
+    _pesar();
 	
     //obtener el carritoCompras
     carritoCompras = Aplicacion.ComprasMostrador.currentInstance.carritoCompras;
@@ -210,12 +214,12 @@ Aplicacion.ComprasMostrador.prototype.refrescarMostrador = function (	)
     html += "<tr class='top' style = 'height:200px;'>";
     html +=     "<td align='center' colspan = '12'>";
     html += "       <div align='center' width:100%; height:200px;'>";
-    html += "           <div id = 'led_display' style = 'position:relative; float:left; width:80%; left:10%; height:140px; line-height:140px; background-color:black; color:#00FF00; font-size:50px;'>12345.54</div>";
+    html += "           <div id = 'led_display' style = 'position:relative; float:left; width:80%; left:10%; height:140px; line-height:140px; background-color:black; color:#00FF00; font-size:50px;'>88888.88</div>";
     html += "           <div align='center' style = 'position:relative; float:left; width:80%; left:10%; height:60px; font-size:15px;'>";    
     html += "               <div id = 'display-unit' style = 'position:relative; float:left; width:25%;'><div style = 'position:relative; width:80%; top:5px; height:50px; line-height:50px; border:solid 1px #8c898c; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;' onClick=\"Aplicacion.ComprasMostrador.currentInstance.setDisplay('C')\">lb/kg</div></div>";
     html += "               <div id = 'display-zero' style = 'position:relative; float:left; width:25%;'><div style = 'position:relative; width:80%; top:5px; height:50px; line-height:50px; border:solid 1px #8c898c; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;' onClick=\"Aplicacion.ComprasMostrador.currentInstance.setDisplay('Z')\">ZERO</div></div>";
     html += "               <div id = 'display-net-gross' style = 'position:relative; float:left; width:25%;'><div style = 'position:relative; width:80%; top:5px; height:50px; line-height:50px; border:solid 1px #8c898c; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;' onClick=\"Aplicacion.ComprasMostrador.currentInstance.setDisplay('GN')\">NET/GROSS</div></div>";
-    html += "               <div id = 'display-tare' style = 'position:relative; float:left; width:25%;'><div style = 'position:relative; width:80%; top:5px; height:50px; line-height:50px; border:solid 1px #8c898c; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;' onClick=\"Aplicacion.ComprasMostrador.currentInstance.setDisplay('P')\">PESAR</div></div>";    
+    html += "               <div id = 'display-tare' style = 'position:relative; float:left; width:25%;'><div style = 'position:relative; width:80%; top:5px; height:50px; line-height:50px; border:solid 1px #8c898c; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;' onClick=\"Aplicacion.ComprasMostrador.currentInstance.setDisplay('T')\">TARA</div></div>";    
     html += "           </div>";
     html += "       </div>";
     html +=     "</td>";
@@ -2312,6 +2316,71 @@ Aplicacion.ComprasMostrador.prototype.doNuevaCompraPanelCreator = function (	 ){
 //Pesar el producto
 Aplicacion.ComprasMostrador.prototype.pesarProducto = function (id_unique){
 
+    	POS.ajaxToClient({
+                module : "bascula",
+                raw_args : {
+                    send_command : 'P',
+		    read_next : 8
+                },
+                success : function ( r ){
+			
+			//valor = r.reading
+            if(r.success == true){
+
+
+                var trimmed = r.reading;
+
+
+
+                trimmed = trimmed.replace( /^\s+|\s+$/g, "" );
+
+                trimmed = trimmed.replace( "K", ""  );
+
+
+
+                //Ext.getCmp("ComprasMostrador-carritoCantidad"+ id_unique + "Text").setValue(trimmed);
+
+
+
+
+
+                for (var i=0; i < Aplicacion.ComprasMostrador.currentInstance.carritoCompras.items.length; i++) {
+
+
+
+                    if(Aplicacion.ComprasMostrador.currentInstance.carritoCompras.items[i].idUnique  == id_unique ){
+
+                        Aplicacion.ComprasMostrador.currentInstance.carritoCompras.items[i].cantidad = parseFloat( (trimmed == null || trimmed == "null")? 0 :trimmed );
+
+                        break;
+
+                    }
+
+                }
+
+
+
+                Aplicacion.ComprasMostrador.currentInstance.refrescarMostrador();
+
+
+
+            }else{
+
+                 Ext.Msg.alert("Alerta", "Error al acceder a la bascula" );
+
+            }
+
+
+
+                },
+                failure: function (){
+                    //client not found !
+                    if(DEBUG){
+                        console.warn("client not found !!!", r);						
+                    }
+                }
+            });
+/*
     POS.ajaxToClient({
         module : "bascula",
         args : null,
@@ -2355,7 +2424,7 @@ Aplicacion.ComprasMostrador.prototype.pesarProducto = function (id_unique){
             }
         }
     }); 
-
+*/
 
 };
 
@@ -2374,11 +2443,8 @@ function _pesar (){
                         console.log("la erre",r);
                         
                         Ext.get('led_display').update(r.reading);
-                                        
-                    //ok client is there...
-                    if(DEBUG){
-                        console.log("ticket printing responded", r);						
-                    }
+
+			setTimeout( "_pesar()", 250 );
 
                 },
                 failure: function (){
@@ -2391,7 +2457,25 @@ function _pesar (){
 
 }
 
+
+
+
+
+Aplicacion.ComprasMostrador.NET_GROSS = true;
+
 Aplicacion.ComprasMostrador.prototype.setDisplay = function(command_to_send){
+
+	if(command_to_send == "NG"){
+
+		if(Aplicacion.ComprasMostrador.NET_GROSS){
+			command_to_send = "G";
+		}else{
+			command_to_send = "N";
+		}
+
+		Aplicacion.ComprasMostrador.NET_GROSS = !Aplicacion.ComprasMostrador.NET_GROSS;
+	}
+				
 
     	POS.ajaxToClient({
                 module : "bascula",
@@ -2399,7 +2483,7 @@ Aplicacion.ComprasMostrador.prototype.setDisplay = function(command_to_send){
                     send_command : command_to_send
                 },
                 success : function ( r ){
-    		    _pesar();
+    		    //_pesar();
                 },
                 failure: function (){
                     //client not found !
