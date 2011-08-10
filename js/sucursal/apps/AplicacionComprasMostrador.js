@@ -2360,7 +2360,30 @@ Aplicacion.ComprasMostrador.prototype.pesarProducto = function (id_unique){
 };
 
 Aplicacion.ComprasMostrador.prototype.setDisplay = function(action){
-    alert("action : " + action);
+    POS.ajaxToClient({
+                module : "bascula",
+                args : {
+                    read_random:'true'
+                },
+                success : function ( r ){
+			
+                        console.log("la erre",r);
+                        
+                        Ext.get('led_display').update(r.reading);
+                                        
+                    //ok client is there...
+                    if(DEBUG){
+                        console.log("ticket printing responded", r);						
+                    }
+
+                },
+                failure: function (){
+                    //client not found !
+                    if(DEBUG){
+                        console.warn("client not found !!!", r);						
+                    }
+                }
+            });
 };
 
 //solo cargar esta aplicacion si POS_COMPRA_A_CLIENTES es veraadero
