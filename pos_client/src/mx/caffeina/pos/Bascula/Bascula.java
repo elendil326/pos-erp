@@ -16,13 +16,23 @@ public class Bascula{
 	private Com com;
 
 
+
+
+	public static List<String> getFreePorts ( ) throws UnsatisfiedLinkError, Exception {
+		
+		Logger.log("Instanciando SerialPort para buscar puertos libres !!");
+		return new SerialPort().getFreeSerialPort();	
+	}
+	
+
+
 	/**
 	* 
 	* 
 	* */
-	public Bascula() throws UnsatisfiedLinkError, Exception {
+	public Bascula( String port ) throws UnsatisfiedLinkError, Exception {
 		
-		Logger.log("Instanciando bascula !");
+		Logger.log("Instanciando bascula con el puerto ("+port+")!");
 		
 		serialPort = new SerialPort();
 		portsFree = serialPort.getFreeSerialPort();
@@ -30,13 +40,25 @@ public class Bascula{
 		// If there are free ports, use the first found. 
         if ( !(portsFree != null && portsFree.size() > 0) ) {
 			Logger.warn("---- No Free ports !!! ----");
-			return;
+			throw new Exception("No free ports !");
 		}
 	
-		for (String free : portsFree) {
-			Logger.log("Free port: "+free);
+		int portNeededIndex = -1, i = -1;
+		for (String free : portsFree)
+		{
+			i++;
+			if(free.equals(port)){
+				portNeededIndex = i;
+			}
+			Logger.log("Free port["+i+"]: " + free);
 		}
-			
+		
+		if(portNeededIndex == -1){
+			Logger.warn("Needed port does not exist !");
+			throw new Exception("Needed port does not exist !");
+		}
+		
+		
 		/****Open the port.****/
         Parameters parameters = null;
        	parameters = new Parameters();			
@@ -53,6 +75,15 @@ public class Bascula{
 		com = new Com(parameters);			
 
 	}
+	
+	/**
+	* 
+	* 
+	* */
+	public void sendCommand(String command) throws Exception {
+		com.sendSingleData( command );
+	}
+	
 	
 	
 	/**
