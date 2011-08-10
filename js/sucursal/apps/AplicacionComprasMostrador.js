@@ -2346,5 +2346,6 @@ Aplicacion.ComprasMostrador.prototype.pesarProducto = function (id_unique){
 };
 
 //solo cargar esta aplicacion si POS_COMPRA_A_CLIENTES es veraadero
-if(POS_COMPRA_A_CLIENTES)
+console.error("POS_COMPRA_A_CLIENTES!!!")
+//if(POS_COMPRA_A_CLIENTES)
 	POS.Apps.push( new Aplicacion.ComprasMostrador() );
