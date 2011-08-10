@@ -2392,24 +2392,14 @@ function _pesar (){
 }
 
 Aplicacion.ComprasMostrador.prototype.setDisplay = function(command_to_send){
-	console.log(action);
+
     	POS.ajaxToClient({
                 module : "bascula",
                 raw_args : {
                     send_command : command_to_send
                 },
                 success : function ( r ){
-			
-                        console.log("la erre",r);
-                        
-                        //Ext.get('led_display').update(r.reading);
-                                        
-                    //ok client is there...
-                    if(DEBUG){
-                        console.log("ticket printing responded", r);						
-                    }
-
-			_pesar();
+    		_pesar();
                 },
                 failure: function (){
                     //client not found !
