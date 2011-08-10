@@ -90,6 +90,7 @@ public class Dispatcher{
 		* 
 		* */
 		if(action.equals("bascula")){
+			
 			/**
 			* 	###### PORT STATUS ########
 			*	get_free_ports=true

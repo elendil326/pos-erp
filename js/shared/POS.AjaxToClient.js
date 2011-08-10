@@ -65,15 +65,16 @@ POS.ajaxToClient = function( options ) //module, args, callback, onFailureCallba
 
 	
 	/** **** Cross-broswer call **** **/
-
+		var to_send = options.raw_args || {};
+		
+		to_send.action 	= options.module;
+		to_send.data 	= Ext.util.JSON.encode(options.args);
+		to_send.unique 	= Math.random(    );
+		
 	    Ext.util.JSONP.request({
 	        url: 'http://127.0.0.1:'+POS._ajaxToClientPORT+'/',
 	        callbackKey: "callback",
-	        params: {
-				action : options.module,
-				data : Ext.util.JSON.encode(options.args),
-				unique : Math.random(    )
-			},
+	        params: to_send,
 	        callback: function(r) {
 				if(DEBUG){
 					console.log("Client responded !");

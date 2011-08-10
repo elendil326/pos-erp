@@ -212,8 +212,8 @@ Aplicacion.ComprasMostrador.prototype.refrescarMostrador = function (	)
     html += "       <div align='center' width:100%; height:200px;'>";
     html += "           <div id = 'led_display' style = 'position:relative; float:left; width:80%; left:10%; height:140px; line-height:140px; background-color:black; color:#00FF00; font-size:50px;'>12345.54</div>";
     html += "           <div align='center' style = 'position:relative; float:left; width:80%; left:10%; height:60px; font-size:15px;'>";    
-    html += "               <div id = 'display-unit' style = 'position:relative; float:left; width:25%;'><div style = 'position:relative; width:80%; top:5px; height:50px; line-height:50px; border:solid 1px #8c898c; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;' onClick=\"Aplicacion.ComprasMostrador.currentInstance.setDisplay('unit')\">lb/kg</div></div>";
-    html += "               <div id = 'display-zero' style = 'position:relative; float:left; width:25%;'><div style = 'position:relative; width:80%; top:5px; height:50px; line-height:50px; border:solid 1px #8c898c; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;' onClick=\"Aplicacion.ComprasMostrador.currentInstance.setDisplay('zero')\">ZERO</div></div>";
+    html += "               <div id = 'display-unit' style = 'position:relative; float:left; width:25%;'><div style = 'position:relative; width:80%; top:5px; height:50px; line-height:50px; border:solid 1px #8c898c; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;' onClick=\"Aplicacion.ComprasMostrador.currentInstance.setDisplay('P')\">lb/kg</div></div>";
+    html += "               <div id = 'display-zero' style = 'position:relative; float:left; width:25%;'><div style = 'position:relative; width:80%; top:5px; height:50px; line-height:50px; border:solid 1px #8c898c; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;' onClick=\"Aplicacion.ComprasMostrador.currentInstance.setDisplay('Z')\">ZERO</div></div>";
     html += "               <div id = 'display-net-gross' style = 'position:relative; float:left; width:25%;'><div style = 'position:relative; width:80%; top:5px; height:50px; line-height:50px; border:solid 1px #8c898c; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;' onClick=\"Aplicacion.ComprasMostrador.currentInstance.setDisplay('gross')\">NET/GROSS</div></div>";
     html += "               <div id = 'display-tare' style = 'position:relative; float:left; width:25%;'><div style = 'position:relative; width:80%; top:5px; height:50px; line-height:50px; border:solid 1px #8c898c; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;' onClick=\"Aplicacion.ComprasMostrador.currentInstance.setDisplay('tare')\">TARE</div></div>";    
     html += "           </div>";
@@ -2362,7 +2362,7 @@ Aplicacion.ComprasMostrador.prototype.pesarProducto = function (id_unique){
 Aplicacion.ComprasMostrador.prototype.setDisplay = function(action){
     POS.ajaxToClient({
                 module : "bascula",
-                args : {
+                raw_args : {
                     read_random:'true'
                 },
                 success : function ( r ){

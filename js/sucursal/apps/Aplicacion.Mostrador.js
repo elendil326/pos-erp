@@ -1,4 +1,6 @@
 
+	
+	
 
 Aplicacion.Mostrador = function ()
 {
@@ -25,7 +27,7 @@ Aplicacion.Mostrador.prototype._init = function () {
     Ext.getCmp('Mostrador-doNuevaVenta-Menu-Cheque').hide();
     //crear la forma de que todo salio bien en la venta
     this.finishedPanelCreator();
-	
+		
     Aplicacion.Mostrador.currentInstance = this;
 	
 	
@@ -2250,7 +2252,7 @@ Aplicacion.Mostrador.prototype.doNuevaVentaPanelCreator = function (	 ){
             /****************************
 				 **		Primera tarjeta, CONTADO/CREDITO
 				 ** ************************ **/
-            {
+            	{
 				    		    
                 layout:'hbox',
                 style:{
