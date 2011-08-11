@@ -2,15 +2,62 @@
 
 Aplicacion.ComprasMostrador = function ()
 {
-    return this._init();
+		
+
+    	return this._init();
 };
 
-Aplicacion.ComprasMostrador.prototype._init = function () {
+
+Aplicacion.ComprasMostrador.bascula = 
+{
+	is_ok : false,
+	
+	time_out : 250,
+	
+	running : false,
+	
+	check_now : function(){
+		
+		if(Aplicacion.ComprasMostrador.bascula.running === false ) return;
+		
+		POS.ajaxToClient({
+                module : "bascula",
+                raw_args : {
+                    send_command : 'P',
+		    		read_next : 14
+                },
+                success : function ( r ){
+			
+						if(DEBUG)
+                        	console.log("la erre",r);
+                        
+                        Ext.get('led_display').update(r.reading);
+						
+						setTimeout( "Aplicacion.ComprasMostrador.bascula.check_now(  )", Aplicacion.ComprasMostrador.bascula.time_out );
+
+                },
+                failure: function (){
+                    //client not found !
+                    if(DEBUG){
+                        console.warn("client not found !!!", r);						
+                    }
+                }
+            });
+	}
+	
+	
+}
+
+Aplicacion.ComprasMostrador.prototype._init = function () 
+{
     if(DEBUG){
         console.log("Mostrador: construyendo");
     }
 
-    this.checkForOfflineSales();
+
+
+
+    //this.checkForOfflineSales();
 	
     //crear el panel del mostrador
     this.mostradorPanelCreator();
@@ -43,89 +90,6 @@ Aplicacion.ComprasMostrador.prototype.getConfig = function (){
 
 
 
-Aplicacion.ComprasMostrador.prototype.checkForOfflineSales = function()
-{
-    Ventas.getAll({
-        context: this,
-        callback : function(f){
-            if(DEBUG){
-                if(f.length > 0){
-                    console.log("HAY " + f.length + " ventas pendientes !");
-                }
-            }
-						
-            if(f.length > 0 ){
-                this.sendOfflineSales(f);
-            }else{
-                if(DEBUG){
-                    console.log("no hay ventas pendientes en la base de datos local");
-                }
-            }
-							
-						
-        } 
-    });
-	
-}
-
-
-Aplicacion.ComprasMostrador.prototype.sendOfflineSales = function( ventas )
-{
-	
-    if(DEBUG){
-        console.log( "Enviando ventas offline ....");
-    }
-	
-	
-    //buscar el detalle de venta para esa venta
-    DetalleVenta.getAll({
-        context : this,
-        callback: function( detallesVentas ){
-            if(DEBUG){
-                console.log("ya tengo los detalles de ventas..", detallesVentas, " para las ventas : " , ventas);
-            }
-			
-            //send those bithces
-            Ext.Ajax.request({
-                url: '../proxy.php',
-                scope : this,
-                params : {
-                    action 	: 199,
-                    payload : Ext.util.JSON.encode( {
-                        ventas : ventas, 
-                        detalles : detallesVentas
-                    } )
-                },
-                success : function(response){
-
-                    //eliminar la ventas, una vez que el servidor ya sabe que pedo					
-                    if(DEBUG){
-                        console.log("ya regrese de enviar las ventas offline... a borrarlas de la bd");
-                    }
-                    for (var v_i = 0; v_i < ventas.length; v_i++) {
-                        ventas[v_i].destruct({
-                            callback: Ext.emptyFn
-                        });
-                    }
-					
-                    for (var dv_i = 0; dv_i < detallesVentas.length; dv_i++) {
-                        detallesVentas[dv_i].destruct({
-                            callback: Ext.emptyFn
-                        });
-                    }
-
-                }
-            });
-			
-			
-        }
-    });
-
-
-/*
-
-	*/
-}//sendOfflineSales()
 
 /*  ****************************************************************************************************************
     ****************************************************************************************************************
@@ -203,8 +167,39 @@ Aplicacion.ComprasMostrador.prototype.refrescarMostrador = function (	)
 {	
 
     
-    _pesar();
-	
+	/*
+	 * Hay que revisar si la bascula responde bien
+	 *
+	 **/
+
+	if(DEBUG)
+		console.log("Revisando el estado de la bascula !!!!");
+		
+	POS.ajaxToClient({
+             module : "bascula",
+             raw_args : {
+                 send_command : 'P',
+		    	 read_next : 14
+             },
+             success : function ( r ){
+			
+				Aplicacion.ComprasMostrador.bascula.is_ok = r.success;
+				
+				console.log("Revision de la bascula regreso : " + r.success);
+				
+				if(!r.success){
+					 Ext.Msg.alert("Basculas", r.reason );
+				}else{
+					Aplicacion.ComprasMostrador.bascula.running = true;
+					Aplicacion.ComprasMostrador.bascula.check_now();
+				}
+             },
+             failure: function (){
+				Aplicacion.ComprasMostrador.bascula.running = false;	
+				Aplicacion.ComprasMostrador.bascula.is_ok = false;
+             }
+         });
+
     //obtener el carritoCompras
     carritoCompras = Aplicacion.ComprasMostrador.currentInstance.carritoCompras;
 	
@@ -1087,7 +1082,12 @@ Aplicacion.ComprasMostrador.prototype.mostradorPanelCreator = function (){
     this.mostradorPanel = new Ext.Panel({
 
         listeners : {
-            "show" : this.refrescarMostrador
+            "show" : this.refrescarMostrador,
+			"hide" : function(){
+				if(DEBUG)
+				console.log("Estoy ocultando el mostrador de compras ! Deteniendo la bascula");
+				Aplicacion.ComprasMostrador.bascula.running = false;
+			}
         },
         floating: false,
         ui : "dark",
@@ -1779,6 +1779,11 @@ Aplicacion.ComprasMostrador.prototype.doNuevaCompraPanel = null;
  **/
 Aplicacion.ComprasMostrador.prototype.doCompraPanelShow = function ( )
 {	
+	//
+	if(DEBUG)
+		console.log("Voy a hacer el calculo, detener la bascula");
+
+	Aplicacion.ComprasMostrador.bascula.running = false;
 	
     //hacer un setcard manual
     sink.Main.ui.setActiveItem( Aplicacion.ComprasMostrador.currentInstance.doNuevaCompraPanel , 'slide');
@@ -2427,36 +2432,6 @@ Aplicacion.ComprasMostrador.prototype.pesarProducto = function (id_unique){
 */
 
 };
-
-
-
-function _pesar (){
-
-    	POS.ajaxToClient({
-                module : "bascula",
-                raw_args : {
-                    send_command : 'P',
-		    read_next : 14
-                },
-                success : function ( r ){
-			
-                        console.log("la erre",r);
-                        
-                        Ext.get('led_display').update(r.reading);
-
-			setTimeout( "_pesar()", 250 );
-
-                },
-                failure: function (){
-                    //client not found !
-                    if(DEBUG){
-                        console.warn("client not found !!!", r);						
-                    }
-                }
-            });
-
-}
-
 
 
 
