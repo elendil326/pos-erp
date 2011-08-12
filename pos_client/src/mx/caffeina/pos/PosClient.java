@@ -28,7 +28,7 @@ public class PosClient{
 	PosClient()
 	{
 		
-		System.out.println("Iniciando cliente de POS, nevermind...");
+		System.out.println("Iniciando cliente de POS ...");
 		
 		Runtime.getRuntime().addShutdownHook( new ShutDown() );
 

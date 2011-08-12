@@ -14,12 +14,12 @@ public class Dispatcher{
 	
 	public static String dispatch( String request ){
 		
+		System.out.println(" -- -- -- -- WELCOME -- -- -- -- ");
+		
 		//the request looks like this
 		// unique=0.03196072019636631&callback=Ext.util.JSONP.callback
 
-		Logger.log("Raw request: " + request);
-
-
+		Logger.log("Raw request: >" + request + "<");
 
 		if(request == null)
 		{
