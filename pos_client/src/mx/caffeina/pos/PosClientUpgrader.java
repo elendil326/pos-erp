@@ -7,7 +7,7 @@ import mx.caffeina.pos.Networking.*;
 
 import java.awt.TrayIcon;
 import java.io.*;
-
+import java.util.zip.*;
 
 public class PosClientUpgrader{
 	
@@ -31,7 +31,8 @@ public class PosClientUpgrader{
 	
 		String response = HttpClient.Request(
 			// base url
-			"http://127.0.0.1/proyectos/pos-trunk/www/proxy.php?"
+			"http://development.pos.caffeina.mx/proxy.php?"
+			//"http://labs.caffeina.mx/alanboy/proyectos/pos-trunk/www/proxy.php?"
 			
 			// instance
 			+ "&i=1"
@@ -43,11 +44,12 @@ public class PosClientUpgrader{
 			+ "&my_version=" + getCurrentVersion()
 			
 			// this client's token
-			+ "&t=" + Networking.getMacAddd( ) );
+			+ "&t=" + Networking.getMacAddd( ) ).toString();
 
 		if(!response.trim().equals("PLEASE_UPGRADE_YOURSELF")){
 			Logger.log("No upgrade needed... carry on.");
 			return ;
+			
 		}
 		
 		//i need some upgrading man !
@@ -59,9 +61,80 @@ public class PosClientUpgrader{
 	
 	
 	private static void upgrade(){
+		
+		PosClient.trayIcon.getTrayIcon().displayMessage("Nueva Version", 
+            "Descargando...",
+            TrayIcon.MessageType.INFO);
 
-		System.out.println(  );				System.out.println(  );				System.out.println(  );		
-		System.out.println( HttpClient.Request("http://development.pos.caffeina.mx/proxy.php?action=2005") );
+		try{
+			
+
+			
+			PrintWriter pw = new PrintWriter(new FileWriter("new_version.zip"));
+			
+			StringBuilder s = HttpClient.Request("http://development.pos.caffeina.mx/proxy.php?&i=1&action=1401&t=00-1E-52-87-A2-9E");
+			//StringBuilder s = HttpClient.Request("http://labs.caffeina.mx/alanboy/proyectos/pos-trunk/www/proxy.php?&i=1&action=1401&t=00-1E-52-87-A2-9E");			
+			Logger.log("Descargando nueva version...[OK]");			
+
+			
+			pw.write(s.toString());
+			
+			pw.flush();
+			
+			pw.close();
+			Logger.log("Escribiendo archivo... [OK]");			
+
+
+
+			BufferedOutputStream dest = null;
+			FileInputStream fis = new FileInputStream("new_version.zip");
+			ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
+			ZipEntry entry;
+			
+			int BUFFER = 2048; 
+			
+			while((entry = zis.getNextEntry()) != null) {
+				Logger.log("Extracting : " + entry);
+				
+				if(entry.isDirectory())
+				{
+					new File(entry.getName()).mkdir();
+					continue;
+				}
+				
+				int count;
+				byte data [ ] = new byte[BUFFER];
+				
+				// write the files to the disk
+				FileOutputStream fos = new FileOutputStream( entry.getName() );
+				dest = new 	BufferedOutputStream(fos, BUFFER);
+				
+				while ((count = zis.read(data, 0, BUFFER)) != -1) {
+			 		dest.write(data, 0, count);
+				}
+				
+				dest.flush();
+				dest.close();
+			}
+			zis.close();
+			
+			Logger.log("Nueva version instalada !!!!");	
+			Logger.warn("Nueva version instalada !!!!");
+			
+
+
+		}catch(Exception e){
+			Logger.error(e);
+			
+		}
+		
+		try{
+			File f = new File("new_version.zip");
+			f.delete();
+		}catch(Exception e){
+			Logger.error(e);
+		}
+		
 	}
 	
 }

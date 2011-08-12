@@ -24,24 +24,20 @@ public class PosClient{
 
 	PosClient()
 	{
-		/*
+
 		Runtime.getRuntime().addShutdownHook( new ShutDown() );
 
         trayIcon = new PosSystemTray();
 		
 		String response = null;
-		
+				
+		//vamos a ver si hay una nueva version del cliente
+		PosClientUpgrader.checkForUpdates(  );
+
 		//iniciar el servidor web
 		httpServer = new HttpServer( 16001 );
-		*/
 
-		//vamos a ver si hay una nueva version del cliente
 
-//		System.out.println( "\n\n>>" + HttpClient.Request("http://127.0.0.1/proyectos/pos-trunk/www/proxy.php?") + "<<" );	
-//		System.out.println( "\n\n>>" + HttpClient.Request("http://www.httpwatch.com/httpgallery/chunked/") + "<<");
-		System.out.println( "\n\n>>" + HttpClient.Request("http://development.pos.caffeina.mx/proxy.php?action=2005") + "<<"); 
-		
-		//PosClientUpgrader.checkForUpdates(  );
 		
 	}
 

@@ -1,10 +1,15 @@
 package mx.caffeina.pos.Http;
 
+
+import  mx.caffeina.pos.*;
+
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import  mx.caffeina.pos.*;
+
+
 
 
 // A client for our multithreaded EchoServer. 
@@ -26,7 +31,7 @@ public class HttpClient
 	* 
 	* 
 	**/
-	public static String Request( String host )
+	public static StringBuilder Request( String host )
 	{
 		if( !createSocket( host ) ){
 			//error while creating host
@@ -88,14 +93,14 @@ public class HttpClient
 	* 
 	* 
 	**/
-	private static String doRequest(  )
+	private static StringBuilder doRequest(  )
 	{
 		
 		Logger.log("Doing request...");
 		
 		BufferedReader 	in 			= null; 
         PrintWriter 	out 		= null; 
-		String 			response 	= "";
+		StringBuilder	response 	= new StringBuilder("");
 		
         try{ 
             // Create the streams to send and receive information 
@@ -158,7 +163,7 @@ public class HttpClient
 							while( (chunk = Integer.parseInt( in.readLine() , 16) ) != 0 )
 							{
 									while(--chunk >= -1){
-										response += (char)in.read();
+										response.append( (char)in.read() );
 									}
 									
 									in.readLine();
@@ -170,14 +175,15 @@ public class HttpClient
 						//read line by line
 						while((r = in.readLine() ) != null)
 						{
-							response += r+"\n";
+							response.append(r+"\n");
 						}
 						
 					}else{
 						
 						//si me enviaron un content-length solo leer esosc aracteres
 						while(--contentLength >= 0){
-							response += (char)in.read();
+
+							response.append( (char)in.read() );
 						}						
 					}
 
@@ -190,6 +196,7 @@ public class HttpClient
 
 
         }catch(IOException ioe){ 
+			Logger.error(ioe);
             System.out.println("Exception during communication. Server probably closed connection."); 
 
         }finally{ 

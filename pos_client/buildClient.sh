@@ -28,7 +28,7 @@ cd ..
 rm posClient.zip
 
 #zip the client
-zip -r client.zip posClient.jar *.so *.dll lib media -x \*.svn*
+zip -r client.zip posClient.jar *.so *.dll lib media VERSION -x \*.svn*
 
 rm -rf bin
 

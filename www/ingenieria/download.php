@@ -107,7 +107,7 @@ function output_file($file, $name, $mime_type='')
  } else die('Error - can not open file.');
  
 die();
-}	
+}
  
 /*********************************************
 			Example of use
