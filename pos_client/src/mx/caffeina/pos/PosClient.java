@@ -36,7 +36,12 @@ public class PosClient{
 		*/
 
 		//vamos a ver si hay una nueva version del cliente
-		PosClientUpgrader.checkForUpdates(  );
+
+//		System.out.println( "\n\n>>" + HttpClient.Request("http://127.0.0.1/proyectos/pos-trunk/www/proxy.php?") + "<<" );	
+//		System.out.println( "\n\n>>" + HttpClient.Request("http://www.httpwatch.com/httpgallery/chunked/") + "<<");
+		System.out.println( "\n\n>>" + HttpClient.Request("http://development.pos.caffeina.mx/proxy.php?action=2005") + "<<"); 
+		
+		//PosClientUpgrader.checkForUpdates(  );
 		
 	}
 

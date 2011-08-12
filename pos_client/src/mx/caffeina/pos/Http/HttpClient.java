@@ -91,6 +91,7 @@ public class HttpClient
 	private static String doRequest(  )
 	{
 		
+		Logger.log("Doing request...");
 		
 		BufferedReader 	in 			= null; 
         PrintWriter 	out 		= null; 
@@ -100,44 +101,90 @@ public class HttpClient
             // Create the streams to send and receive information 
             in = new BufferedReader(new InputStreamReader(s.getInputStream())); 
             out = new PrintWriter(new OutputStreamWriter(s.getOutputStream())); 
-			
+
+
 			//send petition
-			out.println("GET /"+ url.getFile() +" HTTP/1.1");
-			out.println("Host: 127.0.0.1:80\n\n");
-			
+			out.println("GET "+ url.getFile() +" HTTP/1.1");
+			out.println("Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+			out.println("Accept-Charset:ISO-8859-1,utf-8;q=0.7,*;q=0.3");
+			/*out.println("Accept-Encoding:gzip,deflate,sdch");*/
+			out.println("User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1");
+			out.println("Host: "+url.getHost()+"\n\n");
+						
 			out.flush(); 
 			
 			// receive the reply. 
 			String r ;
 			boolean headerEnded = false;
 			int contentLength = 0;
+			String transferEncoding = null;
 			
 			while( (r = in.readLine() ) != null ){
 
 
-
-				if(headerEnded){
-
-					while(--contentLength >= 0){
-						response += (char)in.read();
-					}
-					
-					break;
-				}
-					
-
+				//System.out.println("---->" + r + "<-");
+				
 				if(r.startsWith("Content-Length")){
 					contentLength = Integer.parseInt((r.split(":")[1]).trim());
-
 				}
 
 				if(r.startsWith("Content-Type")){
-					headerEnded = true;
+					//headerEnded = true;
 				}
 				
 				if(r.startsWith("Set-Cookie")){
 					//save the cookie somewhere
 				}
+				
+				if(r.startsWith("Transfer-Encoding")){
+					transferEncoding = (r.split(":")[1]).trim();
+				}
+
+				if(r.length() == 0){
+					
+					/** ************************************************ **
+							READ THE ACTUAL RESPONSE
+					 ** ************************************************ **/
+
+					// ok, ya termine... 
+					if(contentLength == 0){
+						//no me enviaron content-length 
+						//leer hasta que el buffer tenga nulo
+
+						//read chunks
+						if(transferEncoding.equals("chunked"))
+						{
+							int chunk = 0;
+							while( (chunk = Integer.parseInt( in.readLine() , 16) ) != 0 )
+							{
+									while(--chunk >= -1){
+										response += (char)in.read();
+									}
+									
+									in.readLine();
+							}
+							
+							break;
+						}
+
+						//read line by line
+						while((r = in.readLine() ) != null)
+						{
+							response += r+"\n";
+						}
+						
+					}else{
+						
+						//si me enviaron un content-length solo leer esosc aracteres
+						while(--contentLength >= 0){
+							response += (char)in.read();
+						}						
+					}
+
+					break;
+				}
+
+
 			}
 
 
@@ -146,7 +193,7 @@ public class HttpClient
             System.out.println("Exception during communication. Server probably closed connection."); 
 
         }finally{ 
-			System.out.println( "Closing buffers...");
+			Logger.log( "Closing http-client buffers...");
 			
             try{ 
                 // Close the streams 
