@@ -526,7 +526,7 @@ POS.RETRIVE_CONFIG = function(){
 
 			console.log( "RAW_CONFIG", data );			
 
-			POS.leyendasTicket = data.POS_INFO_SUCURSAL;
+			POS.leyendasTicket = data.POS_LEYENDAS_TICKET;
 			if(DEBUG) console.log("POS.leyendasTicket = ", POS.leyendasTicket);
 			
 			POS.documentos = data.POS_DOCUMENTOS;

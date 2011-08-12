@@ -63,8 +63,8 @@ public class PosSystemTray
 
             ActionListener exitListener = new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("Exiting...");
-                    System.exit(0);
+                    //System.out.println("Exiting...");
+                    //System.exit(0);
                 }
             };
             
@@ -93,7 +93,7 @@ public class PosSystemTray
             //    an image to the system tray.
 
 			try {
-			      tray.add(trayIcon);
+			    tray.add(trayIcon);
 			} catch (AWTException e) {
 			    Logger.error("TrayIcon could not be added.");
 			}

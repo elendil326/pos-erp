@@ -45,7 +45,7 @@ public class PosClient{
  	public class ShutDown extends Thread {
 	
         public void run() {
-			/*
+			
 			try{
 				//@todo this shit dont work
 				//PosClient.sendLogToServer( "Cerrando cliente !" );
@@ -54,7 +54,7 @@ public class PosClient{
 			}catch(Exception e){
 				Logger.error(e);
 			}
-			*/
+			
 			
 			Logger.log("Cerrando cliente...");
             System.out.println("Shutting down...");
