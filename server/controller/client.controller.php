@@ -3,13 +3,17 @@
 
 class ClientController {
 	
-	public static function clientStarted()
+	/*
+	 * Client wants to know if there is a new client version.
+	 * 
+	 * */
+	public static function chechClientCurrentVersion()
 	{
 		
-		Logger::log("Client has started !");
-		echo "Hola cliente ! Como estas ! Yo bien !";
+		return "OK";
 
 	}
+	
 	
 	
 }
@@ -21,14 +25,9 @@ if (isset($args['action'])) {
 
         case 1400:
 
-			ClientController::clientStarted();
+			echo ClientController::chechClientCurrentVersion();
 
         break;
 
-        case 1401:
-
-			Logger::log("JAVA-CLIENT-SAYS: " . $args["msg"] );
-
-        break;
 	}
 }

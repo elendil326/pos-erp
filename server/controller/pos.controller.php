@@ -168,15 +168,6 @@ if(isset($args['action'])){
 			echo ( json_encode( POS::getSucursalConfig() ) );
 		break;
 		
-		
-		
-		/** 
-		 * Ver si hay una nueva version del cliente
-		 * 
-		 * 
-		 * */
-		case 1107 : 
-			echo "OK";
-		break;	
+
 	}
 }
