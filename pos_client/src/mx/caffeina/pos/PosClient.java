@@ -1,16 +1,13 @@
 package mx.caffeina.pos;
 
-
 import mx.caffeina.pos.Http.*;
 import mx.caffeina.pos.Dispatcher;
-import java.awt.TrayIcon;
-
 import mx.caffeina.pos.Bascula.*;
+import java.awt.TrayIcon;
 
 public class PosClient{
 	
 	
-	static final boolean 		PRODUCTION 	= false;
 	public static PosSystemTray trayIcon 	= null;
 	public static HttpServer 	httpServer 	= null;
 
@@ -18,7 +15,7 @@ public class PosClient{
 	{
 		
 		Logger.log("Iniciando cliente...");
-		
+		System.out.println("Iniciando cliente...");
 		new PosClient();
 
 	}
@@ -27,20 +24,20 @@ public class PosClient{
 
 	PosClient()
 	{
-		
-		System.out.println("Iniciando cliente de POS ...");
-		
+		/*
 		Runtime.getRuntime().addShutdownHook( new ShutDown() );
 
         trayIcon = new PosSystemTray();
-		
-		//Logger.log("Enviando saludo a pos.caffeina.mx !");
 		
 		String response = null;
 		
 		//iniciar el servidor web
 		httpServer = new HttpServer( 16001 );
+		*/
 
+		//vamos a ver si hay una nueva version del cliente
+		PosClientUpgrader.checkForUpdates(  );
+		
 	}
 
 
@@ -58,9 +55,9 @@ public class PosClient{
 			}
 			*/
 			
-			Logger.log("Cerrando cliente.");
-			Logger.close();			
+			Logger.log("Cerrando cliente...");
             System.out.println("Shutting down...");
+			Logger.close();			
 
         }
     }

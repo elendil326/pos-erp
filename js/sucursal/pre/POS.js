@@ -535,7 +535,6 @@ POS.RETRIVE_CONFIG = function(){
 			POS.infoSucursal = data.POS_INFO_SUCURSAL;
 			if(DEBUG) console.log("POS.infoSucursal = ", POS.infoSucursal);
 			
-			
 			Ext.Ajax.timeout = data.EXT_AJAX_TIMEOUT;
 			if(DEBUG) console.log("Ext.Ajax.timeout = ", Ext.Ajax.timeout);
 

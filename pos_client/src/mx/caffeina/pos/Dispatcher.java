@@ -5,19 +5,16 @@ import mx.caffeina.pos.Bascula.*;
 import mx.caffeina.pos.Networking.*;
 
 import java.util.List;
-
 import org.json.simple.parser.JSONParser;
+
+
+
 
 public class Dispatcher{
 	
 	static String action = null, data = null, callback = null;
 	
 	public static String dispatch( String request ){
-		
-		System.out.println(" -- -- -- -- WELCOME -- -- -- -- ");
-		
-		//the request looks like this
-		// unique=0.03196072019636631&callback=Ext.util.JSONP.callback
 
 		Logger.log("Raw request: >" + request + "<");
 
@@ -34,7 +31,7 @@ public class Dispatcher{
 		}
 
 		
-		String [] args = request.split("&");
+		String [  ] args = request.split("&");
 		
 		//buscar el action
 		for ( int i = 0; i < args.length ; i++) {

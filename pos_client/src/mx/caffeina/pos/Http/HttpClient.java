@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-
+import  mx.caffeina.pos.*;
 
 
 // A client for our multithreaded EchoServer. 
@@ -26,7 +26,7 @@ public class HttpClient
 	* 
 	* 
 	**/
-	public static String Request( String host)
+	public static String Request( String host )
 	{
 		if( !createSocket( host ) ){
 			//error while creating host
@@ -49,6 +49,7 @@ public class HttpClient
 		try{
 			url = new URL(host_add);			
 		}catch(java.net.MalformedURLException mue){
+			Logger.error(mue);
 			//MalformedURLException
 			return false;
 		}
@@ -56,14 +57,23 @@ public class HttpClient
 		
         try{
 	 		//create the socket
-            s = new Socket(url.getHost(), url.getPort()); 
+			if(url.getPort() == -1)
+				s = new Socket(url.getHost(), 80); 
+			else
+            	s = new Socket(url.getHost(), url.getPort()); 
 
+        }catch(IllegalArgumentException iae){ 
+			Logger.error(iae);
+			return false;
+				
         }catch(UnknownHostException uhe){ 
             // Host unreachable 
+			Logger.error(uhe);
 			return false;
 			
         }catch(IOException ioe){ 
             // Cannot connect to port on given host 
+			Logger.error(ioe);
 			return false;
 			
         }

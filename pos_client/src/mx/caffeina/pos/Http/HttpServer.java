@@ -30,8 +30,8 @@ public class HttpServer
 		needToShutDown = true;
 	}
 	
-    public HttpServer(int port)  
-    { 
+    public HttpServer(int port){ 
+	
         try{ 
             // Create the server socket. 
             m_ServerSocket = new ServerSocket(port); 
@@ -39,7 +39,6 @@ public class HttpServer
         }catch(IOException ioe){ 
             Logger.warn("Could not create server socket at "+port+". Quitting."); 
             System.exit(-1); 
-
         } 
 		
 		PosClient.trayIcon.getTrayIcon().displayMessage("POS Listo", 

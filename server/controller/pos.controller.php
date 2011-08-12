@@ -166,6 +166,17 @@ if(isset($args['action'])){
 		case 1106 : 
 			Logger::log( json_encode( POS::getSucursalConfig() ) );
 			echo ( json_encode( POS::getSucursalConfig() ) );
-		break;		
+		break;
+		
+		
+		
+		/** 
+		 * Ver si hay una nueva version del cliente
+		 * 
+		 * 
+		 * */
+		case 1107 : 
+			echo "OK";
+		break;	
 	}
 }

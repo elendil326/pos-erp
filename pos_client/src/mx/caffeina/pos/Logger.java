@@ -68,6 +68,10 @@ public class Logger{
 	
 	public static void warn(String text_to_log)
 	{
+
+		//if its a warning then print to stdout
+		System.out.println(getBaseString() + " WARNING: " + text_to_log);
+		
 		if( log_file == null )
 		{
 			//log file not opened, go ahead and do that
@@ -86,6 +90,8 @@ public class Logger{
 	
 	public static void error(String text_to_log)
 	{
+		System.out.println(getBaseString() + " ERROR: " + text_to_log);		
+		
 		if( log_file == null )
 		{
 			//log file not opened, go ahead and do that
@@ -104,6 +110,7 @@ public class Logger{
 		
 	public static void error(Exception exception_to_log)
 	{
+		System.out.println(getBaseString() + " WARNING: " + exception_to_log);
 		if( log_file == null )
 		{
 			//log file not opened, go ahead and do that
