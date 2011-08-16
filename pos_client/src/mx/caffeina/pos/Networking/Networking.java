@@ -18,6 +18,7 @@ public class Networking{
              * hardware address.
              */
             NetworkInterface ni = NetworkInterface.getByInetAddress(address);
+	    
             if (ni != null) {
                 byte[] mac = ni.getHardwareAddress();
                 if (mac != null) {
@@ -34,19 +35,19 @@ public class Networking{
 					
                 } else {
                     Logger.warn("Address doesn't exist or is not accessible.");
-					return "Address doesn't exist or is not accessible.";
+		    return "Address doesn't exist or is not accessible.";
                 }
             } else {
                 Logger.warn("Network Interface for the specified address is not found.");
-				return "Network Interface for the specified address is not found.";
+		return "Network Interface for the specified address is not found.";
             }
         } catch (UnknownHostException e) {
 
             Logger.error(e);
-			return e.getMessage();
+		return e.getMessage();
         } catch (SocketException e) {
             Logger.error(e);
-			return e.getMessage();
+		return e.getMessage();
         }
     }
 

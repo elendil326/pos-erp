@@ -131,8 +131,8 @@ switch($module)
 
         //imprimir que tipo de usuario soy
         if(isset($_SESSION['grupo'])){
-        	echo "POS.U.g = " . (($_SESSION['grupo'] == 2) ? "true" : "false" ) . ";";	
-			echo "POS.CHECK_DB_TIMEOUT = ".HEARTBEAT_INTERVAL.";";
+	        	echo "POS.U.g = " . (($_SESSION['grupo'] == 2) ? "true" : "false" ) . ";";	
+			//echo "POS.CHECK_DB_TIMEOUT = ".HEARTBEAT_INTERVAL.";";
 		}
 
 			

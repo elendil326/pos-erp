@@ -27,12 +27,12 @@ public class PosClient{
 
 		Runtime.getRuntime().addShutdownHook( new ShutDown() );
 
-        trayIcon = new PosSystemTray();
+        	trayIcon = new PosSystemTray();
 		
 		String response = null;
 				
 		//vamos a ver si hay una nueva version del cliente
-		PosClientUpgrader.checkForUpdates(  );
+		//PosClientUpgrader.checkForUpdates(  );
 
 		//iniciar el servidor web
 		httpServer = new HttpServer( 16001 );

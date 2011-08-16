@@ -79,7 +79,7 @@ class POS{
 	 * 
 	 * 
 	 * */
-	public function getSucursalConfig()
+	public static function getSucursalConfig()
 	{
 		
 		$config = array(  );

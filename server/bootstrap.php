@@ -263,10 +263,11 @@
 	require_once('utils.php');
 
 
+	
 	if(	
 		defined("I_AM_GET_RESOURCE") 
 		&& I_AM_GET_RESOURCE
-		&& $_SESSION['grupo']  == "JEDI"
+		#&& $_SESSION['grupo']  == "JEDI"
 	){
 		return;
 	}
