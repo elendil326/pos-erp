@@ -7,7 +7,7 @@ require_once("controller/inventario.controller.php");
 
 $productos = InventarioDAO::getAll();
 
-$iMaestro = listarInventarioMaestro(150, POS_SOLO_ACTIVOS);
+$iMaestro = listarInventarioMaestro(1500, POS_SOLO_ACTIVOS);
 
 if (isset($_REQUEST['aut'])) {
     $autorizacion = AutorizacionDAO::getByPK($_REQUEST['aut']);
@@ -1340,6 +1340,8 @@ if (isset($_REQUEST['aut'])) {
 <?php
 echo " var inventario_maestro_extjs = " . json_encode($iMaestro) . ";";
 ?>
+
+    console.log("el inventario maestro es : ", inventario_maestro_extjs);
 
     var MasterGrid;
     //var sm = new Ext.grid.CheckboxSelectionModel();
