@@ -1762,6 +1762,13 @@ Aplicacion.Mostrador.prototype.vender = function ()
                 }
 
                 POS.error( venta );
+
+                //verificamos si se solicito la factura
+                if( carrito.factura )
+                {
+                    Ext.Msg.alert("Error al Generar la Factura", "En este momento usted tiene problemas de conexión, solicite la factura mas tarde.");
+                }
+
                 Aplicacion.Mostrador.currentInstance.offlineVender();
                 return;
 
@@ -1803,10 +1810,6 @@ Aplicacion.Mostrador.prototype.vender = function ()
             //verificamos si se solicito la factura 
             if( carrito.factura )
             {
-                //html += "<iframe id = 'frame' src ='../impresora/pdf.php?json=" + Ext.util.JSON.encode(carrito) + "' width='0px' height='0px'></iframe> ";
-                //window.open("../impresora/pdf.php?json=" + Ext.util.JSON.encode(carrito));
-
-                console.log("EL CARRITO VALE : ", carrito);
 
                 var factura_generica = null;
 
@@ -1858,9 +1861,9 @@ Aplicacion.Mostrador.prototype.vender = function ()
                             console.log("resultado de la factura exitosa ", factura );
                         }
 
-                        //window.open('http://pos.caffeina.mx/proxy.php?action=1308&id_venta=' + carrito.id_venta);
+                        window.open('http://pos.caffeina.mx/proxy.php?action=1308&id_venta=' + carrito.id_venta);
 
-                        window.open('http://localhost/pos/trunk/www/proxy.php?action=1308&id_venta=' + carrito.id_venta);
+                    //window.open('http://localhost/pos/trunk/www/proxy.php?action=1308&id_venta=' + carrito.id_venta);
 
                     },
                     failure: function( response ){
