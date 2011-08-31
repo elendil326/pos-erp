@@ -92,7 +92,7 @@ class Comprobante {
      * @param Emisor $emisor
      */
     public function setExpedidoPor($_expedido_por) {
-        $this->expedido_por = $expedido_por;
+        $this->expedido_por = $_expedido_por;
     }
 
     /**

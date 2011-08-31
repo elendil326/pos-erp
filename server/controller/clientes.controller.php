@@ -645,9 +645,11 @@ function abonarVenta($args) {
 function listarClientesDeudores() {
 
     $deudores = ClienteDAO::obtenerClientesDeudores();
+
     for ($i = 0; $i < sizeof($deudores); $i++) {
         $deudores[$i]["credito_restante"] = $deudores[$i]["limite_credito"] - $deudores[$i]["saldo"];
     }
+    
     return $deudores;
 }
 
