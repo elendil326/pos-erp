@@ -63,17 +63,18 @@ if ($venta->getIdCliente() < 0) {
                 echo "Sucursal invalida";
 ?></td>
 
-        <?php if ($venta->getTipoVenta() == 'credito') { ?>
-            <td><b>Saldo pendiente</b></td>
-            <td><b style="color: red"><?php echo moneyFormat($venta->getPagado() - $venta->getTotal()); ?></b></td>
-        <?php } ?>
-    </tr>
+        <?php if ($venta->getTipoVenta() == 'credito') {
+ ?>
+                <td><b>Saldo pendiente</b></td>
+                <td><b style="color: red"><?php echo moneyFormat($venta->getPagado() - $venta->getTotal()); ?></b></td>
+<?php } ?>
+        </tr>
 
-    <tr>
-        <td><b>Cajero</b></td>
-        <td><?php
-        echo UsuarioDAO::getByPK($venta->getIdUsuario())->getNombre();
-        ?></td>
+        <tr>
+            <td><b>Cajero</b></td>
+            <td><?php
+            echo UsuarioDAO::getByPK($venta->getIdUsuario())->getNombre();
+?></td>
     </tr>
 
 
@@ -127,88 +128,88 @@ if ($venta->getIdCliente() < 0) {
 
 
             if ($venta->getTipoVenta() == 'credito') {
-            ?><h2>Abonos a esta venta</h2><?php
-    $abonos = listarAbonos($venta->getIdCliente(), $venta->getIdVenta());
+?><h2>Abonos a esta venta</h2><?php
+                $abonos = listarAbonos($venta->getIdCliente(), $venta->getIdVenta());
 
-    $header = array(
-        "id_pago" => "Pago",
-        "id_venta" => "Venta",
-        "sucursal" => "Sucursal",
-        "cajero" => "Cajero",
-        "fecha" => "Fecha",
-        "monto" => "Monto");
+                $header = array(
+                    "id_pago" => "Pago",
+                    "id_venta" => "Venta",
+                    "sucursal" => "Sucursal",
+                    "cajero" => "Cajero",
+                    "fecha" => "Fecha",
+                    "monto" => "Monto");
 
-    $tabla = new Tabla($header, $abonos);
-    $tabla->addColRender('precio', "moneyFormat");
-    $tabla->addColRender('monto', "moneyFormat");
-    $tabla->addColRender('fecha', "toDate");
-    $tabla->addNoData("No se han hecho abonos a esta venta");
-    $tabla->render();
-}
-        ?>
-<script>
-    function cancelar(){
-        jQuery("#abonar").slideDown("slow", function (){
-            jQuery("#abonar_detalles").slideUp("slow", function (){
-
-
-            });
-        });
-    }
-
-    function abonar(){
-        jQuery("#abonar").slideUp("slow", function (){
-            jQuery("#abonar_detalles").slideDown("slow", function (){
-
-
-            });
-        });
-    }
-
-    var payment = "efectivo";
-
-    function setPayment(tipo){
-        payment = tipo;        
-
-    }
-
-    function doAbonar(){
-        jQuery.ajaxSettings.traditional = true;
-        json = {
-            id_venta : <?php echo $_REQUEST['id']; ?>,
-            monto :     parseFloat( jQuery("#abonar_cantidad").val() ),
-            tipo_pago : payment
-        };
-
-        jQuery.ajax({
-            url: "../proxy.php",
-            data: { 
-                action : 305, 
-                data : jQuery.JSON.encode(json)
-            },
-            cache: false,
-            success: function(data){
-                try{
-                    response = jQuery.parseJSON(data);
-                }catch(e){
-                    jQuery("#loader").hide();
-                    window.scroll(0,0);           			
-                    return jQuery("#ajax_failure").html("Error en el servidor. Intente de nuevo.").show();			    
-                }
-
-                if(response.success == false){
-                    jQuery("#loader").hide();
-                    window.scroll(0,0);           			
-                    return jQuery("#ajax_failure").html(response.reason).show();
-                }
-
-
-                reason = "Abono registrado correctamente";
-                window.location = 'ventas.php?action=detalles&success=true&id=<?php echo $_REQUEST["id"]; ?>&reason=' + reason;
+                $tabla = new Tabla($header, $abonos);
+                $tabla->addColRender('precio', "moneyFormat");
+                $tabla->addColRender('monto', "moneyFormat");
+                $tabla->addColRender('fecha', "toDate");
+                $tabla->addNoData("No se han hecho abonos a esta venta");
+                $tabla->render();
             }
-        });
-    }
-</script>
+?>
+            <script>
+                function cancelar(){
+                    jQuery("#abonar").slideDown("slow", function (){
+                        jQuery("#abonar_detalles").slideUp("slow", function (){
+
+
+                        });
+                    });
+                }
+
+                function abonar(){
+                    jQuery("#abonar").slideUp("slow", function (){
+                        jQuery("#abonar_detalles").slideDown("slow", function (){
+
+
+                        });
+                    });
+                }
+
+                var payment = "efectivo";
+
+                function setPayment(tipo){
+                    payment = tipo;
+
+                }
+
+                function doAbonar(){
+                    jQuery.ajaxSettings.traditional = true;
+                    json = {
+                        id_venta : <?php echo $_REQUEST['id']; ?>,
+                        monto :     parseFloat( jQuery("#abonar_cantidad").val() ),
+                        tipo_pago : payment
+                    };
+
+                    jQuery.ajax({
+                        url: "../proxy.php",
+                        data: {
+                            action : 305,
+                            data : jQuery.JSON.encode(json)
+                        },
+                        cache: false,
+                        success: function(data){
+                            try{
+                                response = jQuery.parseJSON(data);
+                            }catch(e){
+                                jQuery("#loader").hide();
+                                window.scroll(0,0);
+                                return jQuery("#ajax_failure").html("Error en el servidor. Intente de nuevo.").show();
+                            }
+
+                            if(response.success == false){
+                                jQuery("#loader").hide();
+                                window.scroll(0,0);
+                                return jQuery("#ajax_failure").html(response.reason).show();
+                            }
+
+
+                            reason = "Abono registrado correctamente";
+                            window.location = 'ventas.php?action=detalles&success=true&id=<?php echo $_REQUEST["id"]; ?>&reason=' + reason;
+                        }
+                    });
+                }
+            </script>
 
 
 
@@ -216,214 +217,263 @@ if ($venta->getIdCliente() < 0) {
 <?php if ($venta->getTipoVenta() == 'credito' && $venta->getLiquidada() != 1) { ?>
 
 
-    <br><br><br>
-    <div id="abonar">
-        <h4><input type="button" value="Abonar a esta venta" onClick="abonar()" ></h4>
-    </div>
+                <br><br><br>
+                <div id="abonar">
+                    <h4><input type="button" value="Abonar a esta venta" onClick="abonar()" ></h4>
+                </div>
 
 
-    <div id="abonar_detalles" style="display:none;">
-        <h2>Detalles del nuevo abono</h2>
-        <table style="width:100%">
-            <tr>
-                <td>Cantidad </td>
-                <td><input type="text" id="abonar_cantidad" ></td>
-            </tr>
-            <tr>
-                <td>Tipo de pago </td>
-                <td>
-                    <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="efectivo" checked="checked" /> Efectivo<br />
-                    <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="cheque"  /> Cheque<br />
-                    <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="tarjeta" /> Tarjeta<br />
-                </td>
-            </tr>
-            <tr>
-                <td colspan=2>
-                    <h4><input type="button" value="Cancelar" onClick="cancelar()" >
-                        <input type="button" value="Abonar" onClick="doAbonar()" ></h4> 
-                </td>
-            </tr>
-        </table>
-    </div>
+                <div id="abonar_detalles" style="display:none;">
+                    <h2>Detalles del nuevo abono</h2>
+                    <table style="width:100%">
+                        <tr>
+                            <td>Cantidad </td>
+                            <td><input type="text" id="abonar_cantidad" ></td>
+                        </tr>
+                        <tr>
+                            <td>Tipo de pago </td>
+                            <td>
+                                <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="efectivo" checked="checked" /> Efectivo<br />
+                                <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="cheque"  /> Cheque<br />
+                                <input type="radio" name="tipo_pago_input" onChange="setPayment(this.value)" value="tarjeta" /> Tarjeta<br />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan=2>
+                                <h4><input type="button" value="Cancelar" onClick="cancelar()" >
+                                    <input type="button" value="Abonar" onClick="doAbonar()" ></h4>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
 <?php } ?>
 
 
 
-<script>
-    function printComprobante(){
-        window.location = "../proxy.php?action=1306&id_venta=<?php echo $_REQUEST['id']; ?>" ;
-    }
+            <script>
+                function printComprobante(){
+                    window.location = "../proxy.php?action=1306&id_venta=<?php echo $_REQUEST['id']; ?>" ;
+                }
 
 <?php
-
-/**
- * Please print
- * 
- * */
-if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) 
-{
-    ?>
-	Ext.Msg.confirm(
-		"Surtir sucursal",
-		"Venta exitosa. &iquest; Desea imprimir un comprobante ?",
-		function(res){
-			if(res == "yes"){
-				printComprobante();
-			}
-		}
-	);
-    <?php
-}
+            /**
+             * Please print
+             *
+             * */
+            if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
 ?>
-    var facturaMode = "generica";
-    
-
-
-	/**
-	  *
-	  **/
-    function showModoFactura(){
-                
-        jQuery("#submitButtons").slideUp("fast",function(){
-            jQuery("#factura-mode").slideDown();
-        });
-                
-    }
-
-
-	/**
-	  *
-	  **/            
-    function seleccionarModoFactura(element){
-        //document.getElementById('factura_general').style.display = 'block';
-                
-        facturaMode = element.value;
-                
-        switch(element.value){
-            case 'generica':
-                document.getElementById('factura_generica').style.display = 'block';                        
-                break;
-            case 'detallada':
-                document.getElementById('factura_generica').style.display = 'none';
-                break;                    
-        }
-                
-    }
-
-
-
-	/**
-	  *
-	  **/     
-    function hideModoFactura(){
-                
-        jQuery("#submitButtons").slideDown("fast",function(){
-            jQuery("#factura-mode").slideUp();
-        });
-                
-    }
-
-
-                        
-	/**
-	  *
-	  **/
-    function facturar(){
-        //window.location = "../proxy.php?action=1200&id_venta=<?php echo $_REQUEST["id"]; ?>";
-                
-        var factura_generica = null;
-
-        if(facturaMode == "generica"){
-            
-            if(jQuery("#factura-concepto").val().replace(/ /g,"").length == 0){
-                Ext.Msg.alert("Error","Debe de ingresar un concepto para realizar una factura generica.");
-                return;
-            }else{
-                factura_generica = {
-                    id_producto: 'GEN01',
-                    descripcion: jQuery("#factura-concepto").val(),
-                    unidad: 	'unidad'
-                };
+                        Ext.Msg.confirm(
+                        "Surtir sucursal",
+                        "Venta exitosa. &iquest; Desea imprimir un comprobante ?",
+                        function(res){
+                            if(res == "yes"){
+                                printComprobante();
+                            }
+                        }
+                    );
+<?php
             }
-            
-        }                
-                
-        //hacer ajaxaso
-        jQuery.ajaxSettings.traditional = true;
-
-        jQuery("#loader").fadeIn("slow", function(){
-			jQuery("#factura-mode").slideUp();
-		});
-            
-            
-        jQuery.ajax({
-            url: "../proxy.php",
-            data: { 
-                action : 1200, 
-                factura_generica : jQuery.JSON.encode(factura_generica),
-                id_venta : <?php echo $_REQUEST["id"]; ?>
-            },
-            cache: false,
-            success: function(data){
-                try{
-                    response = jQuery.parseJSON(data);
-                }catch(e){
-
-                    jQuery("#loader").fadeOut('slow', function(){
-
-                        window.scroll(0,0);                         
-                        jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
-                        jQuery("#submitButtons").fadeIn();
-                    });                
-                    return;                    
-                }
+?>
+                var facturaMode = "generica";
 
 
-                if(!response.success){
-					jQuery("#ajax_failure").html(response.reason).show();
-					
-                    jQuery("#loader").fadeOut('slow', function(){
-                        window.scroll(0,0);                                                             
-                        jQuery("#submitButtons").fadeIn();                  
+
+                /**
+                 *
+                 **/
+                function showModoFactura(){
+
+                    jQuery("#submitButtons").slideUp("fast",function(){
+                        jQuery("#factura-mode").slideDown();
                     });
-                    return ;
+
                 }
 
-				window.open("../proxy.php?action=1308&id_venta=<?php echo $_REQUEST["id"]; ?>");
-				
-                reason = "Su venta ha sido facturada.";
-                window.location = "ventas.php?action=detalles&id=<?php echo $_REQUEST["id"]; ?>&success=true&reason=" + reason;
-				
-            }
-        });
-    
-    }
+
+                /**
+                 *
+                 **/
+                function seleccionarModoFactura(element){
+                    //document.getElementById('factura_general').style.display = 'block';
+
+                    facturaMode = element.value;
+
+                    switch(element.value){
+                        case 'generica':
+                            document.getElementById('factura_generica').style.display = 'block';
+                            break;
+                        case 'detallada':
+                            document.getElementById('factura_generica').style.display = 'none';
+                            break;
+                    }
+
+                }
 
 
-	
-</script>
 
-<div align=center>
-	<h4 id="submitButtons">
-	
-	    <input type=button value="Imprimir comprobante" onClick="printComprobante()">
-	    <?php
-	    //if ($venta->getLiquidada() && !$venta->getCancelada()) {
-	    if (POS_FACTURACION_ALL ? true : $venta->getLiquidada() && !$venta->getCancelada()) {
-	        $q = new FacturaVenta();
-	        $q->setIdVenta($venta->getIdVenta());
-	        $res = FacturaVentaDAO::search($q);
+                /**
+                 *
+                 **/
+                function hideModoFactura(){
 
-	        if (sizeof($res) == 0) {
-	            //no se ha hecho factura
-	            ?><input type="button" value="Facturar esta venta" onClick='showModoFactura()' ><?php
-	    	} else {
-	        //ya se ha hecho factura !
-	            ?><input type="button" value="Imprimir factura" onClick='window.location = "../proxy.php?action=1308&id_venta=<?php echo $_REQUEST["id"]; ?>";'><?php
-	    	}
-		}
-	    ?>
-	</h4>
+                    jQuery("#submitButtons").slideDown("fast",function(){
+                        jQuery("#factura-mode").slideUp();
+                    });
+
+                }
+
+
+
+                /**
+                 *
+                 **/
+                function facturar(){
+                    //window.location = "../proxy.php?action=1200&id_venta=<?php echo $_REQUEST["id"]; ?>";
+
+                    var factura_generica = null;
+
+                    if(facturaMode == "generica"){
+
+                        if(jQuery("#factura-concepto").val().replace(/ /g,"").length == 0){
+                            Ext.Msg.alert("Error","Debe de ingresar un concepto para realizar una factura generica.");
+                            return;
+                        }else{
+                            factura_generica = {
+                                id_producto: 'GEN01',
+                                descripcion: jQuery("#factura-concepto").val(),
+                                unidad: 	'unidad'
+                            };
+                        }
+
+                    }
+
+                    //hacer ajaxaso
+                    jQuery.ajaxSettings.traditional = true;
+
+                    jQuery("#loader").fadeIn("slow", function(){
+                        jQuery("#factura-mode").slideUp();
+                    });
+
+
+                    jQuery.ajax({
+                        url: "../proxy.php",
+                        data: {
+                            action : 1200,
+                            factura_generica : jQuery.JSON.encode(factura_generica),
+                            id_venta : <?php echo $_REQUEST["id"]; ?>
+                        },
+                        cache: false,
+                        success: function(data){
+                            try{
+                                response = jQuery.parseJSON(data);
+                            }catch(e){
+
+                                jQuery("#loader").fadeOut('slow', function(){
+
+                                    window.scroll(0,0);
+                                    jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+                                    jQuery("#submitButtons").fadeIn();
+                                });
+                                return;
+                            }
+
+
+                            if(!response.success){
+                                jQuery("#ajax_failure").html(response.reason).show();
+
+                                jQuery("#loader").fadeOut('slow', function(){
+                                    window.scroll(0,0);
+                                    jQuery("#submitButtons").fadeIn();
+                                });
+                                return ;
+                            }
+
+                            window.open("../proxy.php?action=1308&id_venta=<?php echo $_REQUEST["id"]; ?>");
+
+                            reason = "Su venta ha sido facturada.";
+                            window.location = "ventas.php?action=detalles&id=<?php echo $_REQUEST["id"]; ?>&success=true&reason=" + reason;
+
+                        }
+                    });
+
+                }
+
+                function cancelarFactura(id_venta){
+                    jQuery.ajax({
+                        url: "../proxy.php",
+                        data: {
+                            action : 1201,
+                            id_venta : id_venta
+                        },
+                        cache: false,
+                        success: function(data){
+                            try{
+                                response = jQuery.parseJSON(data);
+                            }catch(e){
+
+                                jQuery("#loader").fadeOut('slow', function(){
+
+                                    window.scroll(0,0);
+                                    jQuery("#ajax_failure").html("Error en el servidor, porfavor intente de nuevo").show();
+                                    jQuery("#submitButtons").fadeIn();
+                                });
+                                return;
+                            }
+
+
+                            if(!response.success){
+                                jQuery("#ajax_failure").html(response.reason).show();
+
+                                jQuery("#loader").fadeOut('slow', function(){
+                                    window.scroll(0,0);
+                                    jQuery("#submitButtons").fadeIn();
+                                });
+                                return ;
+                            }
+
+                            reason = "Su venta ha sido cancelada, este al pendiente de su confirmación.";
+                            window.location = "ventas.php?action=detalles&id=<?php echo $_REQUEST["id"]; ?>&success=true&reason=" + reason;
+
+                        }
+                    });
+                }
+
+
+
+            </script>
+
+            <div align=center>
+                <h4 id="submitButtons">
+
+                    <input type=button value="Imprimir comprobante" onClick="printComprobante()">
+                    <?php
+                    //if ($venta->getLiquidada() && !$venta->getCancelada()) {
+                        if ((POS_FACTURACION_ALL ? true : $venta->getLiquidada() && !$venta->getCancelada() ) ) {
+                            $q = new FacturaVenta();
+                            $q->setIdVenta($venta->getIdVenta());
+                            $q->setActiva(1);
+                            $res = FacturaVentaDAO::search($q);
+
+                            if (sizeof($res) == 0) {
+                            //no se ha hecho factura
+                    ?>
+                    
+                    <input type="button" value="Facturar esta venta" onClick='showModoFactura()' >
+
+                    <?php
+                            } else {
+                            //ya se ha hecho factura !
+                    ?>
+
+                    <input type="button" value="Imprimir Factura" onClick='window.location = "../proxy.php?action=1308&id_venta=<?php echo $_REQUEST["id"]; ?>";'>
+                    <!--<input type="button" value="Cancelar Factura" onClick='window.location = "../proxy.php?action=1201&id_venta=<?php //echo $_REQUEST["id"]; ?>";'> -->
+                    <input type="button" value="Cancelar Factura" onClick="cancelarFactura('<?php echo $_REQUEST["id"]; ?>')">
+
+                    <?php
+                            }
+                        }
+                    ?>
+    </h4>
 </div>
 
 
@@ -435,7 +485,7 @@ if (isset($_REQUEST["pp"]) && $_REQUEST["pp"])
 
 <div id="factura-mode" style="display:none">
     <h2>Seleccione el modo de facturacion</h2>
-    </br>
+    <br/>
     <table width ="100%" align="center">
         <tr>
             <td>

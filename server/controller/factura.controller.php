@@ -756,6 +756,36 @@ function creaFacturaBD($id_venta) {
  * cancela una factura
  */
 function cancelaFactura($args) {
+
+    DAO::transBegin();
+
+    //no se envio el id_venta
+    if(!isset($args['id_venta'])){
+         die('{"success": false, "reason": "Error al cancelar la factura de la venta, verifique que haya enviado todos los parametros." }');
+    }    
+
+    //traer la factura mas reciente de esa venta
+    $factura_venta = FacturaVentaDAO::getAll(1, 1, 'fecha_emision', 'desc');   
+    
+    if (!( $folio = FacturaVentaDAO::getByPK($factura_venta[0]->getIdFolio()) )) {
+        Logger::log("Error al obtener el folio de la Factura a cancelar");        
+        die('{"success": false, "reason": "Error al obtener el folio de la Factura a cancelar" }');
+    }
+
+    //se cancela
+    $folio->setActiva(0);
+
+    try {
+        Logger::log("Salvando los cambios el folio");
+        FacturaVentaDAO::save($folio);
+    } catch (Exception $e) {
+        Logger::log("Error al cancelar el la factura : {$e}");
+        DAO::transRollback();
+        die('{"success": false, "reason": "Error al intentar cancelar la factura intente nuevamente." }');
+    }
+
+    DAO::transEnd();
+
     return printf('{"success" : true}');
 }
 
