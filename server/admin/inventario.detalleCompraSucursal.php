@@ -54,22 +54,21 @@ echo $c->getDescripcion();
                     return $return;
                 } else {
                     //no tiene agrupacion, solo mostrar la escala
-                    return $row[cantidad] . " " . $producto->getEscala() . "s " ;
+                    return $row[cantidad] . " " . $producto->getEscala() . "s ";
                 }
 
                 //buscar este producto
-                
             }
-            
-            function amountReceivable($e, $row){
-                $producto = InventarioDAO::getByPK($row['id_producto']);                
+
+            function amountReceivable($e, $row) {
+                $producto = InventarioDAO::getByPK($row['id_producto']);
 
                 if ($producto->getAgrupacion()) {
                     //tiene agrupacion
-       
+
                     $aCobrar = round($row["cantidad"] - ($row['descuento'] * $row["cantidad"] / $producto->getAgrupacionTam()));
-                    
-                    $return =  $aCobrar . " " . $producto->getEscala() . "s " . "<i>( " . round(($aCobrar / $producto->getAgrupacionTam()), 2) . " {$producto->getAgrupacion()}s )</i>";
+
+                    $return = $aCobrar . " " . $producto->getEscala() . "s " . "<i>( " . round(($aCobrar / $producto->getAgrupacionTam()), 2) . " {$producto->getAgrupacion()}s )</i>";
                 } else {
                     //no tiene agrupacion
                     return $row['descuento'] . " " . $producto->getEscala();
@@ -80,9 +79,51 @@ echo $c->getDescripcion();
             }
 
             function toUnitDesc($e, $row) {
-                 $producto = InventarioDAO::getByPK($row['id_producto']);
 
-                $return = $e . " " . $producto->getEscala() . "s";
+
+                /**
+                 *
+                 */
+
+                $producto = InventarioDAO::getByPK($row['id_producto']);
+
+                if ($producto->getAgrupacion()) {
+                    //tiene agrupacion
+
+                    $aCobrar = round($row["cantidad"] - ($row['descuento'] * $row["cantidad"] / $producto->getAgrupacionTam()));
+
+                    $a_cobrar = $aCobrar . " " . $producto->getEscala() . "s " . "<i>( " . round(($aCobrar / $producto->getAgrupacionTam()), 2) . " {$producto->getAgrupacion()}s )</i>";
+                } else {
+                    //no tiene agrupacion
+                    $a_cobrar =  $row['descuento'] . " " . $producto->getEscala();
+                }
+
+
+                /**
+                 *
+                 */
+
+
+                if ($producto->getAgrupacion()) {
+                    //tiene agrupacion
+
+                    $agrupSize = $row['cantidad'] / $producto->getAgrupacionTam();
+                    $agrupSize = round($agrupSize, 2);
+                } else {
+                    //no tiene agrupacion, solo mostrar la escala
+                    $agrupSize = 1;
+                }
+
+
+                /**
+                 *
+                 */
+
+                echo "cantidad : " . $row['cantidad'] . "<br>";
+                echo "a cobrar" . $a_cobrar . "<br>";
+                echo "agrupSize". $agrupSize ."<br>";
+
+                $return = (($row['cantidad'] - $a_cobrar)/$agrupSize) . " " . $producto->getEscala() . "s";
 
                 if ($producto->getAgrupacion()) {
                     //tiene agrupacion                   
@@ -94,6 +135,7 @@ echo $c->getDescripcion();
 
                 //buscar este producto
                 return $return;
+
             }
 
             function renderProd($pid) {
@@ -111,19 +153,18 @@ echo $c->getDescripcion();
 
             function renderCostPerUnit($t, $row) {
 
-                $producto = InventarioDAO::getByPK($row['id_producto']);                
+                $producto = InventarioDAO::getByPK($row['id_producto']);
 
                 if ($producto->getAgrupacion()) {
                     //tiene agrupacion
-       
+
                     $aCobrar = round($row["cantidad"] - ($row['descuento'] * $row["cantidad"] / $producto->getAgrupacionTam()));
-                    
-                    return moneyFormat(round($row['precio'] / $aCobrar ,2));
+
+                    return moneyFormat(round($row['precio'] / $aCobrar, 2));
                 } else {
                     //no tiene agrupacion
-                    return moneyFormat(round($row['precio'] / $row["cantidad"] ,2));
+                    return moneyFormat(round($row['precio'] / $row["cantidad"], 2));
                 }
-
             }
 
             $query = new DetalleCompraSucursal();
@@ -131,6 +172,20 @@ echo $c->getDescripcion();
             $query->setIdCompra($_REQUEST["cid"]);
 
             $detalles = DetalleCompraSucursalDAO::search($query);
+
+            $array_detalles = array();
+
+            foreach ($detalles as $detalle) {
+                array_push($array_detalles, array(
+                    'precio' => $detalle->getPrecio(),
+                    'cantidad' => $detalle->getCantidad(),
+                    'id_producto' => $detalle->getIdProducto(),
+                    'descuento' => $detalle->getDescuento(),
+                    'id_detalle_compra_sucursal' => $detalle->getIdDetalleCompraSucursal(),
+                    'id_compra' => $detalle->getIdCompra(),
+                    'procesadas' => $detalle->getProcesadas(),
+                ));
+            }
 
             $header = array(
                 "id_producto" => "Producto",
@@ -141,7 +196,7 @@ echo $c->getDescripcion();
                 "id_compra" => "Precio Unitario",
                 "precio" => "Importe");
 
-            $tabla = new Tabla($header, $detalles);
+            $tabla = new Tabla($header, $array_detalles);
             //$tabla->addColRender("precio", "moneyFormat");
             $tabla->addColRender("precio", "moneyFormat");
             $tabla->addColRender("cantidad", "toUnit");
@@ -154,21 +209,21 @@ echo $c->getDescripcion();
 ?>
 
 
-<script>
+            <script>
 <?php
 //please print
-if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
-    ?>
-                                Ext.Msg.confirm("Surtir sucursal",
-                                "Se ha surtido con exito esta sucursal. &iquest; Desea imprimir un reporte ?",
-                                function(res){
+            if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
+?>
+                        Ext.Msg.confirm("Surtir sucursal",
+                        "Se ha surtido con exito esta sucursal. &iquest; Desea imprimir un reporte ?",
+                        function(res){
 
-                                    if(res == "yes"){
-                                        window.print();
-                                    }
-                                } )
-    <?php
-}
+                            if(res == "yes"){
+                                window.print();
+                            }
+                        } )
+<?php
+            }
 ?>
 </script>
 
