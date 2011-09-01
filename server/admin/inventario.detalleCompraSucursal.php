@@ -106,7 +106,6 @@ echo $c->getDescripcion();
 
                 if ($producto->getAgrupacion()) {
                     //tiene agrupacion
-
                     $agrupSize = $row['cantidad'] / $producto->getAgrupacionTam();
                     $agrupSize = round($agrupSize, 2);
                 } else {
@@ -118,10 +117,6 @@ echo $c->getDescripcion();
                 /**
                  *
                  */
-
-                echo "cantidad : " . $row['cantidad'] . "<br>";
-                echo "a cobrar" . $a_cobrar . "<br>";
-                echo "agrupSize". $agrupSize ."<br>";
 
                 $return = (($row['cantidad'] - $a_cobrar)/$agrupSize) . " " . $producto->getEscala() . "s";
 
