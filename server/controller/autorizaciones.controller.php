@@ -209,7 +209,7 @@ function surtirProducto($id_autorizacion) {
 
         //actualizamos el inventario
         $p->setExistenciasProcesadas($p->getExistenciasProcesadas() + $producto->cantidad_procesada);
-        $p->setExistencias($p->getExistencias() + $producto->cantidad);
+        $p->setExistencias($p->getExistencias() + $producto->cantidad + $producto->cantidad_procesada);
 
 
 

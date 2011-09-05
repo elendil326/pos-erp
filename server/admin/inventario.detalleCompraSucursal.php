@@ -84,7 +84,6 @@ echo $c->getDescripcion();
                 /**
                  *
                  */
-
                 $producto = InventarioDAO::getByPK($row['id_producto']);
 
                 if ($producto->getAgrupacion()) {
@@ -95,15 +94,13 @@ echo $c->getDescripcion();
                     $a_cobrar = $aCobrar . " " . $producto->getEscala() . "s " . "<i>( " . round(($aCobrar / $producto->getAgrupacionTam()), 2) . " {$producto->getAgrupacion()}s )</i>";
                 } else {
                     //no tiene agrupacion
-                    $a_cobrar =  $row['descuento'] . " " . $producto->getEscala();
+                    $a_cobrar = $row['descuento'] . " " . $producto->getEscala();
                 }
 
 
                 /**
                  *
                  */
-
-
                 if ($producto->getAgrupacion()) {
                     //tiene agrupacion
                     $agrupSize = $row['cantidad'] / $producto->getAgrupacionTam();
@@ -117,8 +114,7 @@ echo $c->getDescripcion();
                 /**
                  *
                  */
-
-                $return = (($row['cantidad'] - $a_cobrar)/$agrupSize) . " " . $producto->getEscala() . "s";
+                $return = (($row['cantidad'] - $a_cobrar) / $agrupSize) . " " . $producto->getEscala() . "s";
 
                 if ($producto->getAgrupacion()) {
                     //tiene agrupacion                   
@@ -130,7 +126,6 @@ echo $c->getDescripcion();
 
                 //buscar este producto
                 return $return;
-
             }
 
             function renderProd($pid) {
@@ -209,14 +204,14 @@ echo $c->getDescripcion();
 //please print
             if (isset($_REQUEST["pp"]) && $_REQUEST["pp"]) {
 ?>
-                        Ext.Msg.confirm("Surtir sucursal",
-                        "Se ha surtido con exito esta sucursal. &iquest; Desea imprimir un reporte ?",
-                        function(res){
+                Ext.Msg.confirm("Surtir sucursal",
+                "Se ha surtido con exito esta sucursal. &iquest; Desea imprimir un reporte ?",
+                function(res){
 
-                            if(res == "yes"){
-                                window.print();
-                            }
-                        } )
+                if(res == "yes"){
+                window.print();
+                }
+                } )
 <?php
             }
 ?>
