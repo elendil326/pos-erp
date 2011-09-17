@@ -267,8 +267,10 @@ function crearCliente($args) {
 
 function listarClientes() {
 
+    $cliente = new Cliente();
+    $cliente->setActivo(1);
 
-    $clientes = ClienteDAO::getAll();
+    $clientes = ClienteDAO::search($cliente);
     $clientesDeudores = listarClientesDeudores();
 
     $clientesArray = array();

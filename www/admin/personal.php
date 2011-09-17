@@ -10,7 +10,7 @@ require_once("admin/includes/static.php");
 	
 <head>
 	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+        <link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-latest/resources/css/ext-all.css" /> 
 	<title>POS | Clientes</title>
 	<script src="http://api.caffeina.mx/jquery/jquery-1.4.2.min.js" type="text/javascript"></script>
 
@@ -26,6 +26,12 @@ require_once("admin/includes/static.php");
 		
 	<link rel="stylesheet" type="text/css" href="./../getResource.php?mod=admin&type=css">
 	<script type="text/javascript" src="./../getResource.php?mod=admin&type=js"></script>
+
+        <!-- ExtJS library: base/adapter -->
+    <script type="text/javascript" src="http://api.caffeina.mx/ext-latest/adapter/ext/ext-base.js"></script>
+
+    <!-- ExtJS library: all widgets -->
+    <script type="text/javascript" src="http://api.caffeina.mx/ext-latest/ext-all.js"></script>
 
 </head>
 

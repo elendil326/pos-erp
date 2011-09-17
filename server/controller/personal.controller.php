@@ -159,8 +159,10 @@ function listarEmpleados($sid = null, $all = null) {
 
 
     $empleados = new Usuario();
-    if ($sid !== null)
+    if ($sid !== null){
         $empleados->setIdSucursal($sid);
+        $empleados->setActivo("1");
+    }
     
     if($all == null){
         $empleados->setActivo("1");

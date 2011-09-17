@@ -147,7 +147,7 @@ function listarInventario($sucID = null) {
             "precioVentaProcesado" => $producto->getPrecioVentaProcesado(),
             //las existencias originales, son las existencias
             //totales menos las existencias procesadas
-            "existencias" => ($producto->getExistencias() - $producto->getExistenciasProcesadas()),
+            "existencias" => ($producto->getExistencias() - $producto->getExistenciasProcesadas()),            
             //mantendre existenciasOriginales para 
             //backwards compatibility
             "existenciasOriginales" => ($producto->getExistencias() - $producto->getExistenciasProcesadas()),

@@ -68,6 +68,7 @@ function autorizacionesPendientes() {
     Logger::log("Terminado proceso de obtencion de autorizaciones pendientes, preparandose para regresar los resultados.");
 
     return $array;
+    
 }
 
 //autorizacionesPendientes
