@@ -3,40 +3,34 @@
 require_once "Mail.php";
 
 Mail {
-	
 
 
-/*
-	 $from = "no-reply@iqbusiness.com.mx";
-	 $to = "Ramona Recipient <alan.gohe@gmail.com>";
+	/**
+	 * Enviar un correo electronico
+	 *
+	 *
+	 *
+	 **/
+	function send( $email_to = null, $subject = null, $body = null)
+	{
 
-	 $subject = "Hi!";
-	 $body = "Hi,\n\nHow are you?";
+		$headers = array (
+				'From' 	=> POS_MAIL_SMTP_FROM,
+				'To' 	=> $email_to,
+				'Subject' => $subject
+			);
 
-	 $host = "smtp.iqbusiness.com.mx";
-	 $username = "no-reply@iqbusiness.com.mx";
-	 $password = "77860450a5";
-	 $port = "587";
+		$smtp = Mail::factory('smtp',
+			array ('host' 	=> POS_MAIL_SMTP_HOST,
+				'port' 		=> POS_MAIL_SMTP_PORT,
+				'auth' 		=> true,
+				'username' 	=> POS_MAIL_SMTP_USERNAME,
+				'password' 	=> POS_MAIL_SMTP_PASSWORD));
 
-	 $headers = array (
-	        'From' => $from,
-	        'To' => $to,
-	        'Subject' => $subject);
+		$mail = $smtp->send($to, $headers, $body);
+		//$mail->getMessage()
+		return PEAR::isError($mail);
 
-	 $smtp = Mail::factory('smtp',
-	   array ('host' => $host,
-	     'port' => $port,
-	     'auth' => true,
-	     'username' => $username,
-	     'password' => $password));
-
-	 $mail = $smtp->send($to, $headers, $body);
-
-	 if (PEAR::isError($mail)) {
-	   echo( $mail->getMessage() . "\n");
-	  } else {
-	   echo("Message successfully sent!\n");
-	  }
-	  */
+	}
  
 }
