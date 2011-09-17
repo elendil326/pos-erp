@@ -9,17 +9,6 @@
 * @uses logger.php
 */
 
-/**
-* Capa de abstracción para la base de datos. 
-*
-* @link http://adodb.sourceforge.net/ ADOdb
-*/
-require_once('adodb5/adodb.inc.php');
-
-/**
-* @ignore
-*/
-require_once('adodb5/adodb-exceptions.inc.php');
 
 $core_conn = null;
 

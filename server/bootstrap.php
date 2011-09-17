@@ -13,32 +13,33 @@
 	define('POS_SEMANA', 1);
 	define('POS_MES', 1);
 
-	define('POS_PATH_TO_SERVER_ROOT', dirname(__DIR__)); 
 
+
+	# *******************************
+	# Buscar la ruta de SERVER
+	# *******************************
+	define('POS_PATH_TO_SERVER_ROOT', dirname(__DIR__)); 
 	ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . POS_PATH_TO_SERVER_ROOT);
 
-	//requerir la configuracion
-    require_once('config.php');
-	
-	
-	//logger
+
+	# *******************************
+	# Requerir lo de siempre
+	# *******************************
+    require_once("config.php");
 	require_once("logger.php");
+	require_once('utils.php');
+	require_once('librerias/adodb5/adodb.inc.php');
+	require_once('librerias/adodb5/adodb-exceptions.inc.php');
+	
 
-
-	//nombre de la galleta
-	//session_set_cookie_params ( int $lifetime [, string $path [, string $domain [, bool $secure = false [, bool $httponly = false ]]]] )
+	# *******************************
+	# Iniciar sesion
+	# *******************************
 	session_name("POS_ID");
 
 	session_set_cookie_params ( 0  , '/' );
 
-	function no_instance()
-	{
 
-	}
-	
-	# *******************************
-	# Bootstrap
-	# *******************************
 	try{
 		$ss = session_start (  );
 	}catch(Exception $e){
@@ -53,9 +54,13 @@
 		die();
 	}
 
-	require_once('utils.php');
+	
 
 
+	function no_instance()
+	{
+
+	}
 	
 	if(	
 		defined("I_AM_GET_RESOURCE") 
@@ -157,7 +162,7 @@
 	define('POS_MAX_LIMITE_DE_CREDITO', 	$rs['MAX_LIMITE_DE_CREDITO']);
 	define('POS_MAX_LIMITE_DESCUENTO', 		$rs['MAX_LIMITE_DESCUENTO']);
 
-	define('POS_PERIODICIDAD_SALARIO', POS_SEMANA);
+	define('POS_PERIODICIDAD_SALARIO', 		POS_SEMANA);
 
 	# habilitar o deshabilitar el uso de mapas en la aplicacion
 	define('POS_ENABLE_GMAPS', 				$rs['ENABLE_GMAPS']);
