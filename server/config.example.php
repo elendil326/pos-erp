@@ -3,6 +3,15 @@
 
 
 # *******************************
+# Mail
+# *******************************
+define("POS_MAIL_SMTP_HOST", 		"mail.caffeina.mx");
+define("POS_MAIL_SMTP_USERNAME", 	"facturas@caffeina.mx");
+define("POS_MAIL_SMTP_PASSWORD", 	"");
+define("POS_MAIL_SMTP_PORT", 		"26");
+
+
+# *******************************
 # Logs
 # *******************************
 # habilitar los logs
