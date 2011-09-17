@@ -49,7 +49,7 @@ function insertarEmpleado($args) {
     }
 
 
-    if($data->grupo <= 3 && $data->grupo > 0) {
+    if ($data->grupo <= 3 && $data->grupo > 0) {
         if (strlen($data->contrasena) < 5) {
             die('{"success": false, "reason": "Contraseña debe ser de por lo menos 5 caracteres." }');
         }
@@ -100,8 +100,6 @@ function insertarEmpleado($args) {
     $user->setNombre(strtoupper($data->nombre));
     $user->setContrasena($data->contrasena);
     //$user->setOnline(0);
-
-
     //si soy admin ponerle el que mando, de lo contrario, soy gerente, poner mi sucursal
     if ($_SESSION['grupo'] == 1 || $_SESSION['grupo'] == 0) {
         if (isset($data->sucursal)) {
@@ -120,9 +118,9 @@ function insertarEmpleado($args) {
 
 
     $user->setActivo(1);
-    $user->setSalario($data->salario == null ? 0 : $data->salario );
-    $user->setTelefono($data->telefono == null ? 0 : strtoupper($data->telefono) );
-    $user->setDireccion($data->direccion == null ? 0 : strtoupper($data->direccion) );
+    $user->setSalario($data->salario == null ? 0 : $data->salario);
+    $user->setTelefono($data->telefono == null ? 0 : strtoupper($data->telefono));
+    $user->setDireccion($data->direccion == null ? 0 : strtoupper($data->direccion));
     $now = new DateTime("now");
     $user->setFechaInicio($now->format('Y-m-d'));
 
@@ -159,12 +157,12 @@ function listarEmpleados($sid = null, $all = null) {
 
 
     $empleados = new Usuario();
-    if ($sid !== null){
+    if ($sid !== null) {
         $empleados->setIdSucursal($sid);
         $empleados->setActivo("1");
     }
-    
-    if($all == null){
+
+    if ($all == null) {
         $empleados->setActivo("1");
     }
 
@@ -188,7 +186,7 @@ function listarEmpleados($sid = null, $all = null) {
         if (count($searchGrupo) == 0) {
             //no esta asignado
             $foo['puesto'] = "No asignado";
-            $foo['_activo'] = $foo['activo'] == "1" ? "Si":"No";
+            $foo['_activo'] = $foo['activo'] == "1" ? "Si" : "No";
         } else {
 
             if ($searchGrupo[0]->getIdGrupo() <= 1) {
@@ -197,8 +195,7 @@ function listarEmpleados($sid = null, $all = null) {
             }
             $foo['tipo'] = $searchGrupo[0]->getIdGrupo();
             $foo['puesto'] = GruposDAO::getByPK($searchGrupo[0]->getIdGrupo())->getDescripcion();
-            $foo['_activo'] = $foo['activo'] == "1" ? "Si":"No";
-            
+            $foo['_activo'] = $foo['activo'] == "1" ? "Si" : "No";
         }
 
 
@@ -206,10 +203,7 @@ function listarEmpleados($sid = null, $all = null) {
     }
 
     return $empleadosArray;
-    
 }
-
-
 
 function listarGerentes($asignados = null) {
     $array_empleados = array();
@@ -691,6 +685,7 @@ function editarGerencias($data) {
     return array('success' => true);
 }
 
+
 if (isset($args['action'])) {
 
 
@@ -735,8 +730,6 @@ if (isset($args['action'])) {
         case 506: //editarGerencias
             echo json_encode(editarGerencias($args));
             break;
-
-
 
         default:
             printf('{ "success" : "false" }');
