@@ -1,12 +1,6 @@
 <?php 
 
 
-# *******************************
-# Configuracion Basica
-# *******************************
-#carpeta donde se encuentran los scripts del servidor,
-define( "POS_PATH_TO_SERVER_ROOT", "/Applications/XAMPP/xamppfiles/htdocs/trunk/server");
-
 
 # *******************************
 # Logs

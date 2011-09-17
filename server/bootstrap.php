@@ -4,6 +4,8 @@
 	//if(defined("I_AM_SUCURSAL") && I_AM_SUCURSAL) sleep(3);
 	# </debug>
 
+	
+	
 
 	# *******************************
 	# Definiciones
@@ -11,10 +13,14 @@
 	define('POS_SEMANA', 1);
 	define('POS_MES', 1);
 
+	define('POS_PATH_TO_SERVER_ROOT', dirname(__DIR__)); 
+
+	ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . POS_PATH_TO_SERVER_ROOT);
+
 	//requerir la configuracion
     require_once('config.php');
 
-	ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . POS_PATH_TO_SERVER_ROOT);
+	
 	
 	//logger
 	require_once("logger.php");
