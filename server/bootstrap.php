@@ -18,7 +18,8 @@
 	# *******************************
 	# Buscar la ruta de SERVER
 	# *******************************
-	define('POS_PATH_TO_SERVER_ROOT', dirname(__DIR__)); 
+	define('POS_PATH_TO_SERVER_ROOT', dirname(__DIR__) . "/server"); 
+
 	ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . POS_PATH_TO_SERVER_ROOT);
 
 
@@ -30,7 +31,7 @@
 	require_once('utils.php');
 	require_once('librerias/adodb5/adodb.inc.php');
 	require_once('librerias/adodb5/adodb-exceptions.inc.php');
-	
+	require_once('model/model.inc.php');
 
 	# *******************************
 	# Iniciar sesion
@@ -139,9 +140,27 @@
 
 
 
+	# *******************************
+	# Conectarme a la base de datos CORE
+	# *******************************
+	$core_conn = null;
 
-	//conectarme a la base de datos pos_core
-	require('db/PosCoreDBConnection.php');
+	try{
+
+	    $core_conn = ADONewConnection(POS_CORE_DB_DRIVER);
+	    $core_conn->debug = POS_CORE_DB_DEBUG;
+	    $core_conn->PConnect(POS_CORE_DB_HOST, POS_CORE_DB_USER, POS_CORE_DB_PASSWORD, POS_CORE_DB_NAME);
+
+	    if(!$core_conn) {
+
+		    die( '{ "success" : false, "reason" : "NO_DB" }' );	
+	    }
+
+	} catch (Exception $e) {
+		Logger::log($e);
+		die( '{ "success" : false, "reason" : "NO_DB" }' );	
+
+	}
 	
 	//buscar si existe una instancia con ese id
 	$sql = "SELECT * FROM instances WHERE (instance_id = ? ) LIMIT 1;";
@@ -237,5 +256,22 @@
 	}
 	
 	
-	require('db/DBConnection.php');
+	$conn = null;
+
+	try{
+
+	    $conn = ADONewConnection(DB_DRIVER);
+	    $conn->debug = DB_DEBUG;
+	    $conn->PConnect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+
+	    if(!$conn) {
+
+		    die( '{ "success" : false, "reason" : "NO_DB" }' );	
+	    }
+
+	} catch (Exception $e) {
+
+		die( '{ "success" : false, "reason" : "NO_DB" }' );	
+
+	}
 	
