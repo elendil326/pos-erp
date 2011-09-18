@@ -1,7 +1,6 @@
 <?php
 
 	define("I_AM_JEDI", true);
-
 	
 	require_once("../../server/jedi/check_session.php");
 	
