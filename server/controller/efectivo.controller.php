@@ -69,7 +69,6 @@ function listarIngresosSucursal($sid = null) {
  * 	
  * */
 function nuevoGasto($args) { //600
-
     if (!isset($args['data'])) {
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
@@ -163,7 +162,6 @@ function eliminarGasto($args) {
  * 	
  */
 function actualizarGasto($args) {//602
-
     if (!isset($args['data'])) {
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
@@ -217,7 +215,6 @@ function actualizarGasto($args) {//602
  * 	
  */
 function nuevoIngreso($args) { //603
-
     if (!isset($args['data'])) {
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
@@ -266,7 +263,6 @@ function nuevoIngreso($args) { //603
  * 	
  */
 function eliminarIngreso($args) {//604
-
     if (!isset($args['id_ingreso'])) {
         die('{ "success" : "false" , "reason" : "Faltan datos" }');
     }
@@ -306,7 +302,6 @@ function eliminarIngreso($args) {//604
  * 	
  */
 function actualizarIngreso($args) {//605
-
     if (!isset($args['data'])) {
         die('{"success": false, "reason": "No hay parametros para ingresar." }');
     }
@@ -355,7 +350,6 @@ function actualizarIngreso($args) {//605
  * 	
  * */
 function nuevoAbono($args) { //606
-
     if (!isset($_SESSION['monto'])) {
         die('{ "succes" : "false" , "reason" : "Faltan parametros."}');
     }
@@ -703,21 +697,77 @@ function listarGastosFijos() {
 
     $array_gastos_fijos = array();
 
-    foreach($gastos_fijos as $gasto_fijo){
+    foreach ($gastos_fijos as $gasto_fijo) {
         array_push($array_gastos_fijos, array(
-            'text'=>$gasto_fijo->getNombre(),
-            'value'=>$gasto_fijo->getDescripcion()
+            'text' => $gasto_fijo->getNombre(),
+            'value' => $gasto_fijo->getDescripcion()
         ));
     }
 
     return $array_gastos_fijos;
 }
 
-//listarPrestamosSucursal
+/**
+ * Crea un nuevo gasto en la base de datos
+ * @param <type> $args 
+ */
+function definirNuevoGasto($args) {
+    
+    $gasto = new GastosFijos();
+
+    if (!isset($args['data'])) {
+        die('{"success":false,"reason":"No se enviaron los parametros"}');
+    }
+
+    $json = parseJSON($args['data']);
+
+    $gasto->setNombre($json->nombre);
+    $gasto->setDescripcion($json->descripcion);
+
+    try {
+        GastosFijosDAO::save($gasto);
+    } catch (Exception $e) {
+        Logger::log($e);
+        die('{"success":false,"reason":"No se pudo registrar el nuevo gasto : ' . $e . '"}');
+    }
+
+    echo '{"success" : true}';
+
+    return true;
+}
+
+/**
+ * Edita la definicion de un gasto en la base de datos
+ * @param <type> $args
+ */
+function editarConceptoGasto($args) {
+
+    if(!isset($args['data'])){
+        die('{"success":false,"reason":"No se enviaron los parametros"}');
+    }
+
+    $json = parseJSON($args['data']);
+
+    if(!($gasto = GastosFijosDAO::getByPK($json->id))){
+        die('{"success":false,"reason":"No se pudo editar el concepto del gasto, no se encontro el registro"}');
+    }
+
+    $gasto->setNombre($json->nombre);
+    $gasto->setDescripcion($json->descripcion);
 
 
+    try {
+        GastosFijosDAO::save($gasto);
+    } catch (Exception $e) {
+        Logger::log($e);
+        die('{"success":false,"reason":"No se pudo modificar el puesto : ' . $e . '"}');
+    }
 
+    echo '{"success" : true}';
 
+    return true;
+    
+}
 
 if (isset($args['action'])) {
     switch ($args['action']) {
@@ -777,6 +827,14 @@ if (isset($args['action'])) {
 
         case 610:
             printf('{ "success": true, "data": %s }', json_encode(listarGastosFijos()));
+            break;
+
+        case 611:
+            definirNuevoGasto($args);
+            break;
+
+        case 612:
+            editarConceptoGasto($args);
             break;
 
         default:

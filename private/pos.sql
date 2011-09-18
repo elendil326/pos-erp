@@ -1,16 +1,22 @@
 -- phpMyAdmin SQL Dump
--- version 3.2.0.1
+-- version 3.3.9
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 06-07-2011 a las 16:01:03
--- Versión del servidor: 5.1.37
--- Versión de PHP: 5.3.0
+-- Tiempo de generaciÃ³n: 18-09-2011 a las 01:40:31
+-- VersiÃ³n del servidor: 5.5.8
+-- VersiÃ³n de PHP: 5.3.5
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
 --
--- Base de datos: `i1`
+-- Base de datos: `pos_in01`
 --
 
 -- --------------------------------------------------------
@@ -32,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `actualizacion_de_precio` (
   PRIMARY KEY (`id_actualizacion`),
   KEY `id_producto` (`id_producto`),
   KEY `id_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=192 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Actualizaciones de precios' AUTO_INCREMENT=234 ;
 
 -- --------------------------------------------------------
 
@@ -52,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `autorizacion` (
   PRIMARY KEY (`id_autorizacion`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=463 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=616 ;
 
 -- --------------------------------------------------------
 
@@ -88,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
   PRIMARY KEY (`id_cliente`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1002 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=86 ;
 
 -- --------------------------------------------------------
 
@@ -113,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `compra_cliente` (
   `ip` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0.0.0.0' COMMENT 'ip de donde provino esta compra',
   `liquidada` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Verdadero si esta compra ha sido liquidada, falso si hay un saldo pendiente',
   PRIMARY KEY (`id_compra`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -138,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `compra_proveedor` (
   `total_origen` float DEFAULT NULL COMMENT 'Es lo que vale el embarque segun el proveedor',
   PRIMARY KEY (`id_compra_proveedor`),
   KEY `id_proveedor` (`id_proveedor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=120 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=196 ;
 
 -- --------------------------------------------------------
 
@@ -173,7 +179,7 @@ CREATE TABLE IF NOT EXISTS `compra_proveedor_fragmentacion` (
   `precio` int(11) NOT NULL COMMENT 'a cuanto se vendio esta porcion del producto, si es el resultado de algun proceso sera 0 por ejemplo',
   `descripcion_ref_id` int(11) DEFAULT NULL COMMENT 'si se refiere a una venta, se puede poner el id de esa venta, si fue de surtir, el id de la compra, etc..',
   PRIMARY KEY (`id_fragmentacion`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=379 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1626 ;
 
 -- --------------------------------------------------------
 
@@ -194,7 +200,7 @@ CREATE TABLE IF NOT EXISTS `compra_sucursal` (
   PRIMARY KEY (`id_compra`),
   KEY `compras_sucursal` (`id_sucursal`),
   KEY `compras_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=454 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=606 ;
 
 -- --------------------------------------------------------
 
@@ -217,7 +223,7 @@ CREATE TABLE IF NOT EXISTS `corte` (
   `total_ganancia_neta` float NOT NULL COMMENT 'calculo de ganancia neta',
   PRIMARY KEY (`id_corte`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 -- --------------------------------------------------------
 
@@ -267,7 +273,7 @@ CREATE TABLE IF NOT EXISTS `detalle_compra_sucursal` (
   `descuento` int(11) NOT NULL,
   `procesadas` tinyint(1) NOT NULL COMMENT 'verdadero si este detalle se refiere a compras procesadas (limpias)',
   PRIMARY KEY (`id_detalle_compra_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1220 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1699 ;
 
 -- --------------------------------------------------------
 
@@ -317,7 +323,7 @@ CREATE TABLE IF NOT EXISTS `documento` (
   `identificador` varchar(128) COLLATE utf8_unicode_ci NOT NULL COMMENT 'identificador con el cual se le conocera en el sistema',
   `descripcion` varchar(256) COLLATE utf8_unicode_ci NOT NULL COMMENT 'descripcion breve del documento',
   PRIMARY KEY (`id_documento`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene informaci?n acerca todos de los documentos que se i' AUTO_INCREMENT=1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene información acerca todos de los documentos que se i' AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -334,7 +340,7 @@ CREATE TABLE IF NOT EXISTS `equipo` (
   PRIMARY KEY (`id_equipo`),
   UNIQUE KEY `full_ua` (`full_ua`),
   UNIQUE KEY `token` (`token`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 -- --------------------------------------------------------
 
@@ -388,7 +394,7 @@ CREATE TABLE IF NOT EXISTS `factura_venta` (
   `cadena_original` varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id_folio`),
   KEY `factura_venta_venta` (`id_venta`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=208 ;
 
 -- --------------------------------------------------------
 
@@ -409,7 +415,20 @@ CREATE TABLE IF NOT EXISTS `gastos` (
   PRIMARY KEY (`id_gasto`),
   KEY `id_sucursal` (`id_sucursal`),
   KEY `id_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `gastos_fijos`
+--
+
+CREATE TABLE IF NOT EXISTS `gastos_fijos` (
+  `id_gasto_fijo` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(64) CHARACTER SET utf8 NOT NULL,
+  `descripcion` varchar(128) CHARACTER SET utf8 NOT NULL,
+  PRIMARY KEY (`id_gasto_fijo`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -418,11 +437,11 @@ CREATE TABLE IF NOT EXISTS `gastos` (
 --
 
 CREATE TABLE IF NOT EXISTS `grupos` (
-  `id_grupo` int(11) NOT NULL,
+  `id_grupo` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL COMMENT 'Nombre del Grupo',
   `descripcion` varchar(256) NOT NULL,
   PRIMARY KEY (`id_grupo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
 
 -- --------------------------------------------------------
 
@@ -448,7 +467,7 @@ CREATE TABLE IF NOT EXISTS `impresiones` (
   `id_documento` int(11) NOT NULL COMMENT 'id del documento',
   PRIMARY KEY (`id_impresora`,`id_documento`),
   KEY `id_documento` (`id_documento`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='contiene la relaci?n impresora-documento-sucursal';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='contiene la relación impresora-documento-sucursal';
 
 -- --------------------------------------------------------
 
@@ -463,7 +482,7 @@ CREATE TABLE IF NOT EXISTS `impresora` (
   `identificador` varchar(128) COLLATE utf8_unicode_ci NOT NULL COMMENT 'es el nombre de como esta dada de alta la impresora en la sucursal',
   PRIMARY KEY (`id_impresora`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene informaci?n acerca de todas las impresoras de todas' AUTO_INCREMENT=1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene información acerca de todas las impresoras de todas' AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -483,7 +502,7 @@ CREATE TABLE IF NOT EXISTS `ingresos` (
   PRIMARY KEY (`id_ingreso`),
   KEY `usuario_ingreso` (`id_usuario`),
   KEY `sucursal_ingreso` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -501,7 +520,7 @@ CREATE TABLE IF NOT EXISTS `inventario` (
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'si este producto esta activo o no en el sistema',
   `precio_por_agrupacion` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_producto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=16 ;
 
 -- --------------------------------------------------------
 
@@ -533,7 +552,7 @@ CREATE TABLE IF NOT EXISTS `pagos_compra` (
   `monto` float NOT NULL COMMENT 'monto que se abono',
   PRIMARY KEY (`id_pago`),
   KEY `pagos_compra_compra` (`id_compra`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -553,7 +572,7 @@ CREATE TABLE IF NOT EXISTS `pagos_venta` (
   KEY `pagos_venta_venta` (`id_venta`),
   KEY `id_sucursal` (`id_sucursal`),
   KEY `id_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=444 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=663 ;
 
 -- --------------------------------------------------------
 
@@ -568,7 +587,7 @@ CREATE TABLE IF NOT EXISTS `pago_prestamo_sucursal` (
   `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'La fecha cuando se realizo este pago',
   `monto` float NOT NULL COMMENT 'El monto a abonar',
   PRIMARY KEY (`id_pago`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -599,7 +618,7 @@ CREATE TABLE IF NOT EXISTS `prestamo_sucursal` (
   `concepto` varchar(256) NOT NULL COMMENT 'El concepto de este prestamo',
   `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'fecha en la que se registro el gasto',
   PRIMARY KEY (`id_prestamo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -617,7 +636,7 @@ CREATE TABLE IF NOT EXISTS `proveedor` (
   `activo` tinyint(2) NOT NULL DEFAULT '1' COMMENT 'Indica si la cuenta esta activada o desactivada',
   `tipo_proveedor` enum('admin','sucursal','ambos') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'admin' COMMENT 'si este proveedor surtira al admin, a las sucursales o a ambos',
   PRIMARY KEY (`id_proveedor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=35 ;
 
 -- --------------------------------------------------------
 
@@ -650,7 +669,7 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   PRIMARY KEY (`id_sucursal`),
   UNIQUE KEY `letras_factura` (`letras_factura`),
   KEY `gerente` (`gerente`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=12 ;
 
 -- --------------------------------------------------------
 
@@ -672,7 +691,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `fecha_inicio` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha cuando este usuario comenzo a laborar',
   PRIMARY KEY (`id_usuario`),
   KEY `fk_usuario_1` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=106 ;
 
 -- --------------------------------------------------------
 
@@ -682,7 +701,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 
 CREATE TABLE IF NOT EXISTS `ventas` (
   `id_venta` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id de venta',
-  `id_venta_equipo` int(11) NOT NULL,
+  `id_venta_equipo` int(11) DEFAULT NULL,
   `id_equipo` int(11) DEFAULT NULL,
   `id_cliente` int(11) NOT NULL COMMENT 'cliente al que se le vendio',
   `tipo_venta` enum('credito','contado') COLLATE utf8_unicode_ci NOT NULL COMMENT 'tipo de venta, contado o credito',
@@ -699,8 +718,7 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   `ip` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0.0.0.0' COMMENT 'ip de donde provino esta compra',
   `liquidada` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Verdadero si esta venta ha sido liquidada, falso si hay un saldo pendiente',
   PRIMARY KEY (`id_venta`),
-  UNIQUE KEY `id_venta_equipo` (`id_venta_equipo`,`id_equipo`),
   KEY `ventas_cliente` (`id_cliente`),
   KEY `ventas_sucursal` (`id_sucursal`),
   KEY `ventas_usuario` (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=11551 ;

@@ -451,6 +451,19 @@ $tabla->addRow("nota");
 $tabla->render();
 ?>
 
+<div align="center">
+    <table width="100%">
+        <tr>
+            <td width ="50%">
+                <table align="center">
+                    <tr rowspan="3"><td colspan="2"><input type ="button" value ="Crear Nuevo Concepto de Gasto" onClick ="window.location='sucursales.php?action=editarGastos&id=' + <?php echo $_REQUEST['id'] ?>"/></td></tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
 <h2><img src='../media/icons/window_app_list_add_32.png'>&nbsp;Ingresos de esta sucursal</h2>
 <?php
 $ingresos = listarIngresosSucursal($_REQUEST['id']);

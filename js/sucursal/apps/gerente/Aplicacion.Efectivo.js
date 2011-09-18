@@ -286,6 +286,17 @@ Aplicacion.Efectivo.prototype.nuevoGastoValidator = function ()
         return;
     }
 
+    if(Ext.getCmp('Efectivo-nuevoGastoPanel-concepto').getValue() == ""){
+        Ext.Anim.run(Ext.getCmp('Efectivo-nuevoGastoPanel-concepto'),
+            'fade', {
+                duration: 250,
+                out: true,
+                autoClear: true
+            });
+
+        return;
+    }
+
     Aplicacion.Efectivo.currentInstance.nuevoGasto( values );
 
 };

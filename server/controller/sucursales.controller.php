@@ -742,7 +742,7 @@ function editarPuesto($args) {
     $json = parseJSON($args['data']);
 
     if(!($grupo = GruposDAO::getByPK($json->id))){
-        die('{"success":false,"reason":"No se oudo editar el puesto, no se encontro el registro"}');
+        die('{"success":false,"reason":"No se pudo editar el puesto, no se encontro el registro"}');
     }
 
     $grupo->setNombre($json->nombre);
