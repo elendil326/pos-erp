@@ -1,27 +1,18 @@
 <?php
 
-
-	require_once("controller/clientes.controller.php");
-
-
 	$p = new StdComponentPage();
 
-	$c = new LoginComponent();
+	$nuevo_cliente = new DAOFormComponent( new Cliente() );
+
+	$nuevo_cliente->hideField( "id_cliente" );
+	$nuevo_cliente->hideField( "id_usuario" );
 
 
-	$cliente = new Cliente();
-
-	$cliente->setRfc("1234564");
-
-	$c2 = new DAOFormComponent( $cliente );
-
-	$c2->hideField( "id_cliente" );
-
-	$p->addComponent($c2);
+	$p->addComponent($nuevo_cliente);
 
 	$p->render();
 
-return;
+	return;
 
 ?>
 
