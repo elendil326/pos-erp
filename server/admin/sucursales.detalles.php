@@ -48,7 +48,7 @@ $sucursal = SucursalDAO::getByPK($_REQUEST['id']);
             ?>
         </td></tr>
     <tr><td><b>ID</b></td><td>				<?php echo $sucursal->getIdSucursal(); ?></td></tr>
-    <tr><td><b>Letras factura</b></td><td>	<?php echo $sucursal->getLetrasFactura(); ?></td></tr>
+    <!--<tr><td><b>Letras factura</b></td><td>	<?php /*echo $sucursal->getLetrasFactura();*/ ?></td></tr>-->
     <tr><td><b>RFC</b></td><td>				<?php echo $sucursal->getRfc(); ?></td></tr>	
     <tr><td><b>Telefono</b></td><td>		<?php echo $sucursal->getTelefono(); ?></td></tr>	
 
