@@ -33,13 +33,22 @@
 	require_once('librerias/adodb5/adodb-exceptions.inc.php');
 	require_once('model/model.inc.php');
 
+
+
+	require_once("gui/Page.php");
+	require_once("gui/StdPage.php");
+	require_once("gui/StdComponentPage.php");
+	require_once("gui/GuiComponent.php");
+	require_once("gui/LoginComponent.php");
+	require_once("gui/FormComponent.php");
+	require_once("gui/DAOFormComponent.php");
+
 	# *******************************
 	# Iniciar sesion
 	# *******************************
 	session_name("POS_ID");
 
 	session_set_cookie_params ( 0  , '/' );
-
 
 	try{
 		$ss = session_start (  );
@@ -131,6 +140,7 @@
 		
 		//cerrar la sesion actual
 		require("controller/login.controller.php");
+
 		logOut(false);
 		
 		echo "<script>window.location = '.';</script>";

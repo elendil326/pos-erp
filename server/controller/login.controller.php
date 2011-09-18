@@ -1,12 +1,40 @@
 <?php
 
-require_once("model/usuario.dao.php");
-require_once("model/grupos_usuarios.dao.php");
-require_once("model/grupos.dao.php");
-require_once("model/sucursal.dao.php");
-require_once("model/equipo.dao.php");
-require_once("model/equipo_sucursal.dao.php");
-require_once("model/cliente.dao.php");
+class LoginController{
+	
+
+	protected function checkCurrentSession()
+	{
+		
+	}
+
+
+}
+
+
+
+class JediLoginController extends LoginController
+{
+	
+	function checkCurrentSession()
+	{
+			return false;
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /**
@@ -172,12 +200,12 @@ function login( $u, $p ){
     //usuario valido, y grupo valido
 	$grpu = $res[0];
 
-    $_SESSION['ip'] = getip();
-    $_SESSION['pass'] = $p;
-	$_fua = $_SERVER['HTTP_USER_AGENT'];
-    $_SESSION['ua'] = $_fua;
-	$_SESSION['grupo']  =  $grpu->getIdGrupo();
-	$_SESSION['userid'] =  $user->getIdUsuario();
+    $_SESSION['ip'] 		= getip();
+    $_SESSION['pass'] 		= $p;
+	$_fua 					= $_SERVER['HTTP_USER_AGENT'];
+    $_SESSION['ua'] 		= $_fua;
+	$_SESSION['grupo']  	= $grpu->getIdGrupo();
+	$_SESSION['userid'] 	= $user->getIdUsuario();
 
 
     if($grpu->getIdGrupo() == 1){
@@ -192,14 +220,14 @@ function login( $u, $p ){
     if($grpu->getIdGrupo() == 3){
 
         if($user->getIdSucursal() != $_SESSION['sucursal']){
-            Logger::log("cajero intento loggearse en una sucursal que no es suya");
+            Logger::log("Cajero intento loggearse en una sucursal que no es suya");
             die( "{\"success\": false , \"reason\": 101,  \"text\" : \"No perteneces a esta sucursal.\" }" );
         }
 
     }
 
 
-    Logger::log("Accesso autorizado para usuario  " . $u );
+    Logger::log("Accesso autorizado para usuario " . $u . " (" .  $user->getNombre() . ")"  );
 	echo "{\"success\": true , \"payload\": { \"sucursaloverride\": false , \"type\": \"" . $grpu->getIdGrupo() . "\" }}";
 		
 	return true;

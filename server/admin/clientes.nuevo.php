@@ -1,11 +1,29 @@
 <?php
 
-	require_once("model/sucursal.dao.php");
+
 	require_once("controller/clientes.controller.php");
 
+
+	$p = new StdComponentPage();
+
+	$c = new LoginComponent();
+
+
+	$cliente = new Cliente();
+
+	$cliente->setRfc("1234564");
+
+	$c2 = new DAOFormComponent( $cliente );
+
+	$c2->hideField( "id_cliente" );
+
+	$p->addComponent($c2);
+
+	$p->render();
+
+return;
+
 ?>
-
-
 
 <h2>Detalles del nuevo cliente</h2>
 <form id="newClient">

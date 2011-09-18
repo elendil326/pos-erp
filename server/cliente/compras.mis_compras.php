@@ -1,10 +1,6 @@
 <?php
 
-	require_once("model/cliente.dao.php");
-	require_once("model/factura_venta.dao.php");
-	require_once("model/factura_compra.dao.php");	
-	require_once("model/ventas.dao.php");	
-	require_once("model/sucursal.dao.php");	
+
 	
 	if(!function_exists("renderSucursal")){
 		function renderSucursal($id_sucursal){
