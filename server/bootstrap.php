@@ -4,14 +4,11 @@
 	//if(defined("I_AM_SUCURSAL") && I_AM_SUCURSAL) sleep(3);
 	# </debug>
 
-
-	
-
 	# *******************************
 	# Definiciones
 	# *******************************
-	define('POS_SEMANA', 1);
-	define('POS_MES', 1);
+	define('POS_SEMANA', 	1);
+	define('POS_MES', 		1);
 
 
 
@@ -19,7 +16,6 @@
 	# Buscar la ruta de SERVER
 	# *******************************
 	define('POS_PATH_TO_SERVER_ROOT', dirname(__DIR__) . "/server"); 
-
 	ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . POS_PATH_TO_SERVER_ROOT);
 
 
@@ -29,12 +25,19 @@
     require_once("config.php");
 	require_once("logger.php");
 	require_once('utils.php');
+
+
 	require_once('librerias/adodb5/adodb.inc.php');
 	require_once('librerias/adodb5/adodb-exceptions.inc.php');
+
+
 	require_once('model/model.inc.php');
 
 
+	require_once("controller/login.controller.php");
 
+
+	# Load GUI classes
 	require_once("gui/Page.php");
 	require_once("gui/StdPage.php");
 	require_once("gui/StdComponentPage.php");
@@ -42,25 +45,47 @@
 	require_once("gui/LoginComponent.php");
 	require_once("gui/FormComponent.php");
 	require_once("gui/DAOFormComponent.php");
+	require_once("gui/JediComponentPage.php");
+	
+
+
+	require_once("api/Validator.php");
+	require_once("api/ApiExposedProperty.php");
+	require_once("api/ApiHttpErrors.php");
+	require_once("api/ApiHandler.php");
+	require_once("api/CustomValidator.php");
+	require_once("api/DateRangeValidator.php");
+	require_once("api/DateValidator.php");
+	require_once("api/EnumValidator.php");
+	require_once("api/HtmlValidator.php");
+	require_once("api/NumericRangeValidator.php");
+	require_once("api/NumericValidator.php");
+	require_once("api/StringValidator.php");
+	
+
+
+
+
+
 
 	# *******************************
 	# Iniciar sesion
 	# *******************************
 	session_name("POS_ID");
-
 	session_set_cookie_params ( 0  , '/' );
 
 	try{
 		$ss = session_start (  );
 	}catch(Exception $e){
-		Logger::log($e);
-		die();
+		Logger::error($e);
+		die(header('HTTP/1.1 400 BAD REQUEST'));
+
 	}
 
 
 	if(!$ss){
 		echo '{"success": false,"reason": "Imposible iniciar sesion." }';
-		Logger::log("Imposible iniciar sesion !");
+		Logger::error("Imposible iniciar sesion !");
 		die();
 	}
 
@@ -70,8 +95,15 @@
 	function no_instance()
 	{
 
+		die(header('HTTP/1.1 400 BAD REQUEST'));
 	}
 	
+
+
+
+	###################################
+	#	GET_RESOURCE
+	###################################
 	if(	
 		defined("I_AM_GET_RESOURCE") 
 		&& I_AM_GET_RESOURCE
@@ -81,12 +113,33 @@
 	}
 	
 	
-	//tengo el id de instancia ?
-	if(	!isset($_GET["i"]) 
-		&& !isset($_SESSION["INSTANCE_ID"])
-	){
+	
+	if(	!isset($_GET["i"]) 	&& !isset($_SESSION["INSTANCE_ID"]))
+	{
 
+		###################################
+		#	NO HAY INSTANCIA
+		###################################
+		
+		switch(WHO_AM_I){
+			case "JEDI" : 
+				# I AM A JEDI, NEED SOME INSTANCE ID
+				return;
+			break;
 
+			case "PROXY" : 
+				
+			break;
+
+			case "" : 
+			break;
+
+			case "" : 
+			break;
+
+			default:
+				die(  header('HTTP/1.1 403 FORBIDDEN') );
+		}
 
 		//la pagina de login, pone I_AM_LOGIN en verdadero, 
 		//es una buena manera de saber si vengo del login

@@ -1,6 +1,10 @@
 <?php
 
 	require_once("../../server/bootstrap.php");	
+
+
+
+	
 	require_once("controller/gui.controller.php");
 	require_once("admin/includes/checkSession.php");
 	require_once("admin/includes/static.php");	

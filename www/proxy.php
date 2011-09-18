@@ -19,6 +19,7 @@
 */
 
 define("I_AM_PROXY" ,true);
+define("WHO_AM_I" , "PROXY");
 
 /**
 * Archivo principal del sistema

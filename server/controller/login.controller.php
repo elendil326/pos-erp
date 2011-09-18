@@ -1,13 +1,77 @@
 <?php
 
-class LoginController{
+class PermsissionDeniedException extends Exception { } 
+
+interface IPermission
+{
+	function isLoggedIn();
+}
+
+
+
+
+
+abstract class LoginController implements IPermission
+{
+	
+	function isLoggedIn()
+	{
+
+		//regresar falso si alguno de estos no esta 
+		if(
+				!isset($_SESSION['USER_ID']			)
+			|| 	!isset($_SESSION['PASSWORD']		)
+			|| 	!isset($_SESSION['HTTP_USER_AGENT']	)
+			|| 	!isset($_SESSION['USER_GROUP']		)
+		) return false;
+
+
+		//ok, los valores estan ahi, vamos a buscar a ese usuario
+		$user = UsuarioDAO::getByPK( $_SESSION['USER_ID'] );
+
+		if($user === null)
+		{
+			
+			Logger::error("El usuario que esta en sesion ya no existe en la BD.");
+			return false;
+		}
+
+
+		if($user->getActivo() === false)
+		{
+			Logger::error("El usuario que esta en sesion esta desactivado en la BD.");
+			return false;
+		}
+
+		if( $_SESSION['pass'] !== $user->getPassword())
+		{
+			Logger::error("La constrasena en sesion es diferente en la BD!");
+			return false;
+		}
+
+
+		if( $_SESSION['HTTP_USER_AGENT'] !== $_SERVER['HTTP_USER_AGENT']  )
+		{
+			Logger::error("El user agent en sesion es diferente al que envio la peticion");
+			return false;
+		}
+
+
+		return true;
+
+	}
 	
 
-	protected function checkCurrentSession()
+	function login($id_user)
 	{
 		
 	}
+	
 
+	function logout()
+	{
+
+	}
 
 }
 
@@ -16,8 +80,9 @@ class LoginController{
 class JediLoginController extends LoginController
 {
 	
-	function checkCurrentSession()
+	function checkForCurrentUser()
 	{
+			//need to see if current user is logged in first
 			return false;
 	}
 

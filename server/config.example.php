@@ -19,7 +19,9 @@ define("POS_MAIL_SMTP_FROM", 		"facturas@caffeina.mx");
 define("POS_LOG_TO_FILE", true);
 
 # archivo donde se guardaran los logs
-define("POS_LOG_TO_FILE_FILENAME", "/var/log/mx.caffeina.pos/pos.log");
+define("POS_LOG_ACCESS_FILE", "/var/log/mx.caffeina.pos/pos.log");
+define("POS_LOG_ERROR_FILE", "/var/log/mx.caffeina.pos/pos.log");
+
 define("POS_LOG_TRACKBACK", false);
 define("POS_LOG_DB_QUERYS", false);
 

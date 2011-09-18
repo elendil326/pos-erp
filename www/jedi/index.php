@@ -1,12 +1,41 @@
 <?php
 
-	define("I_AM_JEDI", true);
+	//define("I_AM_JEDI", true);
+
+	define("WHO_AM_I", "JEDI");
 	
-	require_once("../../server/jedi/check_session.php");
+	require_once("../../server/bootstrap.php");
+
+	try{
+		$page = new JediComponentPage();	
+
+	}catch( PermsissionDeniedException $pde ){
+		//crate a login webpage
+		$page = new StdComponentPage();
+
+		$login = new LoginComponent();
+
+		$login->submitTo("../proxy.php?action=2099");
+
+		$page->addComponent( $login );
+
+		$page->render();
+
+		exit(1);
+
+	}catch( Excpetion $e){
+		Logger::error($e);
+
+	}
 	
-	require_once("../../server/jedi/bootstrap.php");
 	
 
+
+
+
+	die();
+	//require_once("../../server/jedi/check_session.php");
+	
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
