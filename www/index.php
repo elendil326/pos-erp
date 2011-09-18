@@ -1,20 +1,10 @@
 <?php
 
-	if(!is_file("../server/config.php")){
-		//not installed
-		?>
-			<h1>Caffeina POS</h1>
-			<p>Porfavor cree el arvhico server/config.php</p>
-			
-		<?php
-		return;
-	}
-
-define("I_AM_CLIENTE", true);
+	define("I_AM_CLIENTE", true);
 
 
-require_once("../server/bootstrap.php");
-require_once("model/pos_config.dao.php");
+	require_once("../server/bootstrap.php");
+
 
 ?>
 <!DOCTYPE html>
