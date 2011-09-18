@@ -696,6 +696,71 @@ function detalleIngreso($iid) {
     return $items;
 }
 
+/**
+ * Crea un nuevo puesto de trabajo
+ * @param <type> $data
+ * @return string
+ */
+function nuevoPuesto($args) {
+
+    $grupo = new Grupos();
+
+    if(!isset($args['data'])){
+        die('{"success":false,"reason":"No se enviaron los parametros"}');
+    }
+
+    $json = parseJSON($args['data']);
+
+    $grupo->setNombre($json->nombre);
+    $grupo->setDescripcion($json->descripcion);
+    
+    
+    try {
+        GruposDAO::save($grupo);
+    } catch (Exception $e) {
+        Logger::log($e);        
+        die('{"success":false,"reason":"No se pudo registrar el nuevo puesto : ' . $e . '"}');
+    }
+
+    echo '{"success" : true}';
+
+    return true;
+}
+
+/**
+ * Edita un puesto de trabajo especifico
+ * @param <type> $data
+ * @return string
+ */
+function editarPuesto($args) {
+
+
+    if(!isset($args['data'])){
+        die('{"success":false,"reason":"No se enviaron los parametros"}');
+    }
+
+    $json = parseJSON($args['data']);
+
+    if(!($grupo = GruposDAO::getByPK($json->id))){
+        die('{"success":false,"reason":"No se oudo editar el puesto, no se encontro el registro"}');
+    }
+
+    $grupo->setNombre($json->nombre);
+    $grupo->setDescripcion($json->descripcion);
+
+
+    try {
+        GruposDAO::save($grupo);
+    } catch (Exception $e) {
+        Logger::log($e);
+        die('{"success":false,"reason":"No se pudo modificar el puesto : ' . $e . '"}');
+    }
+
+    echo '{"success" : true}';
+
+    return true;
+}
+
 if (isset($args['action'])) {
 
     switch ($args['action']) {
@@ -767,6 +832,13 @@ if (isset($args['action'])) {
 
         case 713:
             venderASucursal($args["data"]);
+            break;
+        case 714:
+            nuevoPuesto($args);
+            break;
+
+        case 715:
+            editarPuesto($args);
             break;
     }
 }

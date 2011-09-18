@@ -542,7 +542,7 @@ if ($gerente !== null)
         <tr>
             <td width ="50%">
                 <table align="center">
-                    <tr rowspan="3"><td colspan="2"><input type ="button" value ="Agregar Nuevo Empleado" onClick ="window.location='personal.php?action=nuevo&id=' + <?php echo $_REQUEST['id'] ?>"/></td></tr>                    
+                    <tr rowspan="3"><td colspan="2"><input type ="button" value ="Agregar Nuevo Empleado" onClick ="window.location='personal.php?action=nuevo&id=' + <?php echo $_REQUEST['id'] ?>"/></td><td>&nbsp;</td><td colspan="2"><input type ="button" value ="Editar Puestos" onClick ="window.location='sucursales.php?action=editarPuestos&id=' + <?php echo $_REQUEST['id'] ?>"/></td></tr>
                 </table>
             </td>
             <td width ="50%">

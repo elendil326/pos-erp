@@ -194,7 +194,16 @@ function listarEmpleados($sid = null, $all = null) {
                 continue;
             }
             $foo['tipo'] = $searchGrupo[0]->getIdGrupo();
-            $foo['puesto'] = GruposDAO::getByPK($searchGrupo[0]->getIdGrupo())->getDescripcion();
+
+            $descripcion = GruposDAO::getByPK($searchGrupo[0]->getIdGrupo());
+
+            if($descripcion != null){
+                $descripcion = $descripcion->getDescripcion();
+            }else{
+                $descripcion = "Indefinido";
+            }
+
+            $foo['puesto'] = $descripcion;
             $foo['_activo'] = $foo['activo'] == "1" ? "Si" : "No";
         }
 
