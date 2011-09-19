@@ -570,6 +570,7 @@ Aplicacion.Clientes.prototype.detallesDeVentaPanelCreator = function ()
             Ext.getCmp('facturaPanel-total').setValue(POS.currencyFormat(compra.total));
             Ext.getCmp('facturaPanel-pagado').setValue(POS.currencyFormat(compra.pagado));
             Ext.getCmp('facturaPanel-sucursal').setValue(compra.sucursal);
+            Ext.getCmp('facturaPanel-Concepto').setValue("")
                 
             if(compra.pagado < compra.total){
                 Ext.get('action-facturar-venta').hide( Ext.anims.fade );
