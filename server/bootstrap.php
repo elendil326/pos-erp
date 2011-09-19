@@ -15,7 +15,7 @@
 	# *******************************
 	# Buscar la ruta de SERVER
 	# *******************************
-	define('POS_PATH_TO_SERVER_ROOT', dirname(__DIR__) . "/server"); 
+	define('POS_PATH_TO_SERVER_ROOT', dirname(__DIR__)  ); 
 	ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . POS_PATH_TO_SERVER_ROOT);
 
 
