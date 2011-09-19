@@ -63,8 +63,8 @@ public class PosSystemTray
 
             ActionListener exitListener = new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    //System.out.println("Exiting...");
-                    //System.exit(0);
+                    System.out.println("Exiting...");
+                    System.exit(0);
                 }
             };
             
