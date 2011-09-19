@@ -1,6 +1,6 @@
 <?php
 
-	$p = new StdComponentPage();
+	/*$p = new StdComponentPage();
 
 	$nuevo_cliente = new DAOFormComponent( new Cliente() );
 
@@ -12,7 +12,7 @@
 
 	$p->render();
 
-	return;
+	return;*/
 
 ?>
 
@@ -23,10 +23,10 @@
 			<td>Razon Social</td><td><input type="text" size="40" id="razon_social" placeholder="Obligatorio"/></td>	
 			<td>RFC</td><td><input type="text" size="40" id="rfc" placeholder="Obligatorio" /></td>
 		</tr>
-		</tr>	
+		<tr>	
 			<td>Limite de credito</td><td><input type="text" size="40" placeholder="Obligatorio" id="limite_credito"/></td>
 			<td>Descuento</td><td><input type="text" size="40" id="descuento"/></td>		
-		<tr>
+		</tr>
 		<tr>
 			<td>Calle</td><td><input type="text" size="40" id="calle"/></td>
 			<td>Numero Exterior</td><td><input type="text" size="40" id="numero_exterior"/></td>

@@ -208,7 +208,7 @@ Aplicacion.Clientes.prototype.listaDeClientesLoad = function (){
         success: function(response, opts) {
             try{
                 clientes = Ext.util.JSON.decode( response.responseText );
-				raw_clientes = Ext.util.JSON.decode( response.responseText );
+                raw_clientes = Ext.util.JSON.decode( response.responseText );
             }catch(e){
                 POS.error(e);
             }
@@ -218,8 +218,8 @@ Aplicacion.Clientes.prototype.listaDeClientesLoad = function (){
                 return this.listaDeClientesLoad();
             }
 			
-			//console.log("Datos de cliente", raw_clientes);
-			/*
+            //console.log("Datos de cliente", raw_clientes);
+            /*
 			for(asdf = 0; asdf < raw_clientes.datos.length ; asdf++){
 				//console.log("guardando clietnes")
 				dan = new Cliente( raw_clientes.datos[asdf] );				
@@ -262,23 +262,23 @@ Aplicacion.Clientes.prototype.listaDeClientesStore = new Ext.data.Store({
     sorters: 'razon_social',
 
     getGroupString : function(record) {
-		if(
-			record.get('razon_social') === undefined
-			|| record.get('razon_social') === null
-		){
-			return "#";
-		}else{
+        if(
+            record.get('razon_social') === undefined
+            || record.get('razon_social') === null
+            ){
+            return "#";
+        }else{
 			
-			var fName = record.get('razon_social')[0];
+            var fName = record.get('razon_social')[0];
 			
-			if(fName === undefined){
-				return "#";
-			}else{
-				return fName.toUpperCase();
-			}
+            if(fName === undefined){
+                return "#";
+            }else{
+                return fName.toUpperCase();
+            }
 			
 
-		}
+        }
     }
 });
 
@@ -847,7 +847,7 @@ Aplicacion.Clientes.prototype.facturasDeClientesPanelUpdater = function ( )
 		
         for(var j = 0; j < lista[i].factura.length; j++){
          
-                html += "<tr align = 'center'>";
+            html += "<tr align = 'center'>";
 
 		
             html += "<td>" + lista[i].factura[j].id_folio + "</td>";
@@ -2443,24 +2443,24 @@ Aplicacion.Clientes.prototype.finishedPanelUpdater = function( data_abono )
         console.log( "se mando a imprimir : ", data_abono );
     }
 	
-	POS.ajaxToClient({
-		module : "Printer",
-		args : data_abono,
-		success : function ( r ){
+    POS.ajaxToClient({
+        module : "Printer",
+        args : data_abono,
+        success : function ( r ){
 			
-			//ok client is there...
-			if(DEBUG){
-				console.log("ticket printing responded", r);						
-			}
+            //ok client is there...
+            if(DEBUG){
+                console.log("ticket printing responded", r);
+            }
 
-		},
-		failure: function (){
-			//client not found !
-			if(DEBUG){
-				console.warn("client not found !!!", r);						
-			}
-		}
-	});
+        },
+        failure: function (){
+            //client not found !
+            if(DEBUG){
+                console.warn("client not found !!!", r);
+            }
+        }
+    });
     html = "";
 	
     html += "<table class='Mostrador-ThankYou' style = 'margin : 0 !important;' >";
@@ -2507,9 +2507,9 @@ Aplicacion.Clientes.prototype.finishedPanelShowReimpresionTicket = function( ven
 Aplicacion.Clientes.prototype.finishedPanelReimpresionTicketUpdater = function( venta )
 {
 
-	if(DEBUG){
-		console.log("finishedPanelReimpresionTicketUpdater()");
-	}
+    if(DEBUG){
+        console.log("finishedPanelReimpresionTicketUpdater()");
+    }
     var items = [];
 
     for( var i = 0; i < venta.detalle_venta.length; i++){
@@ -2566,24 +2566,24 @@ Aplicacion.Clientes.prototype.finishedPanelReimpresionTicketUpdater = function( 
         console.log("reimpresion de venta : ", reimprimirVenta);
     }
 
-	POS.ajaxToClient({
-		module : "Printer",
-		args :  reimprimirVenta ,
-		success : function ( r ){
+    POS.ajaxToClient({
+        module : "Printer",
+        args :  reimprimirVenta ,
+        success : function ( r ){
 			
-			//ok client is there...
-			if(DEBUG){
-				console.log("ticket printing responded", r);						
-			}
+            //ok client is there...
+            if(DEBUG){
+                console.log("ticket printing responded", r);
+            }
 
-		},
-		failure: function (){
-			//client not found !
-			if(DEBUG){
-				console.warn("client not found !!!", r);						
-			}
-		},
-	});
+        },
+        failure: function (){
+            //client not found !
+            if(DEBUG){
+                console.warn("client not found !!!", r);
+            }
+        }
+    });
 	
     html = "";
 	
@@ -2599,7 +2599,7 @@ Aplicacion.Clientes.prototype.finishedPanelReimpresionTicketUpdater = function( 
 
     html += "</table>";
 
-	/*
+    /*
     hora = new Date()
     var dia = hora.getDate();
     var mes = hora.getMonth();
@@ -2645,10 +2645,85 @@ Aplicacion.Clientes.prototype.FacturaPanel = null;
  * Valida que todos los campos del formulario de nueva factura este llenados correctamente
  **/
 Aplicacion.Clientes.prototype.facturaValidator = function (){
+
+
+    var factura_generica = null;
+
+    if(Ext.getCmp('facturaPanel-FacturaGenerica').getValue() == 1){
+
+        var str = Ext.getCmp('facturaPanel-Concepto').getValue();
+        str = str.replace(/^\s*|\s*$/g,"");
+
+        if( !( str.length >= 5 ) ){
+
+            Ext.Msg.alert("Factura Cliente", "El concepto de la factura generica es demaciado corta.");
+
+            return;
+
+        }
+
+
+        factura_generica = {
+            id_producto: 'GEN01',
+            descripcion: Ext.getCmp('facturaPanel-Concepto').getValue(),
+            unidad: 	'unidad'
+        };
+
+    }
+
+    Ext.Ajax.request({
+        url: '../proxy.php',
+        scope : this,
+        params : {
+            action : 1200,
+            factura_generica : Ext.util.JSON.encode(factura_generica),
+            id_venta : Ext.getCmp('facturaPanel-id_venta').getValue()
+        },
+        success: function(response, opts) {
+
+            var factura = null;
+
+            try{
+                factura = Ext.util.JSON.decode( response.responseText );
+            }catch(e){
+                //whoops algo paso en el servidor
+                Ext.Msg.alert("Error Factura Cliente", "Error al momento de solicitar la factura : " + e + ".");
+                return;
+
+            }
+
+            if( !factura.success ){
+                //volver a intentar
+                if(DEBUG){
+                    console.log("resultado de la factura sin exito ",factura );
+                }
+
+                Ext.Msg.alert("Error Factura Cliente", "Error al momento de solicitar la factura, intete mas tarde o solicitela al administrador.");
+
+                return;
+
+            }
+
+            if(DEBUG){
+                console.log("resultado de la factura exitosa ", factura );
+            }
+
+            window.open('http://pos.caffeina.mx/proxy.php?action=1308&id_venta=' + Ext.getCmp('facturaPanel-id_venta').getValue());
+
+        //window.open('http://localhost/pos/trunk/www/proxy.php?action=1308&id_venta=' + carrito.id_venta);
+
+        },
+        failure: function( response ){
+            //Ext.Msg.alert("Error", "Error en la venta");
+            if(DEBUG){
+                console.log("ya regrese del ajax, pero no habia conexion, estoy en el failure... hare una venta offline");
+            }
+
+            Ext.Msg.alert("Error Factura Cliente", "Error al momento de solicitar la factura, al parecer esta presentando problemas con su conexion, intente mas tarde o solicitela al administrador.");
+
+        }
+    });
     
-    //valida el total
-    
-    //
     
 };
 
@@ -2739,44 +2814,30 @@ Aplicacion.Clientes.prototype.facturaPanelCreator = function (){
                 label:'Total Pagado',
                 value:''
             }),                
-            new Ext.form.Select({
-                name: 'facturaPanel-concepto', 
-                id: 'facturaPanel-concepto', 
-                label:'Concepto',
-                options: [
-                    {
-                    text: 'Varios Verduras', 
-                    value: 'Varios Verduras'
-                },
-                {
-                    text: 'Varios Verduras', 
-                    value: 'Varios Verduras'
-                },
-
-                {
-                    text: 'Otro',  
-                    value: 'otro'
-                }
-                ],
+            new Ext.form.Toggle({
                 listeners : {
-                    "change" : function (){
-                        //this.value
-                        if(this.value == 'otro'){
-                            Ext.getCmp("facturaPanel-otro_concepto").show( Ext.anims.slide );
+                    "change" : function ( a, b, newVal, oldVal ){
+
+                        if(newVal == 1){
+                            Ext.getCmp('facturaPanel-Concepto').setValue("");
+                            Ext.getCmp('facturaPanel-Concepto').setVisible(true);
                         }else{
-                            Ext.getCmp("facturaPanel-otro_concepto").hide( Ext.anims.slide );
+                            Ext.getCmp('facturaPanel-Concepto').setValue("");
+                            Ext.getCmp('facturaPanel-Concepto').setVisible(false);
                         }
+
                     }
-                }
-            }),        
+                },
+                id : 'facturaPanel-FacturaGenerica',
+                label : 'Active para factura generica'
+            }),
             new Ext.form.Text({
-                name: 'facturaPanel-otro_concepto',
-                id: 'facturaPanel-otro_concepto',
-                label: 'Descripcion del Concepto',
-                required: false,
-                hidden:true,
+                label : 'Concepto',
+                id: 'facturaPanel-Concepto',
+                hidden : true,
                 listeners : {
                     'focus' : function (){
+
                         kconf = {
                             type : 'alfanum',
                             submitText : 'Aceptar'
@@ -2784,17 +2845,6 @@ Aplicacion.Clientes.prototype.facturaPanelCreator = function (){
                         POS.Keyboard.Keyboard( this, kconf );
                     }
                 }
-            }),
-            new Ext.form.Select({
-                name: 'facturaPanel-unidad',     
-                id: 'facturaPanel-unidad',
-                label:'Unidad',
-                options: [
-                {
-                    text: 'Unidad',  
-                    value: 'unidad'
-                }
-                ]
             })
             ]
         }
