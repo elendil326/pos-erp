@@ -441,7 +441,7 @@ CREATE TABLE IF NOT EXISTS `grupos` (
   `nombre` varchar(45) NOT NULL COMMENT 'Nombre del Grupo',
   `descripcion` varchar(256) NOT NULL,
   PRIMARY KEY (`id_grupo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT= 0 ;
 
 -- --------------------------------------------------------
 
