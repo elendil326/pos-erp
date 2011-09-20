@@ -8,15 +8,15 @@ class Logger
   public static final function read($lines = 100)
   {
 
-        if(!file_exists(POS_LOG_ACCESS_FILE)){
-            die("POS: Unable to open logfile:" .POS_LOG_ACCESS_FILE );
+        if(!file_exists(POS_CONFIG_LOG_ACCESS_FILE)){
+            die("POS: Unable to open logfile:" .POS_CONFIG_LOG_ACCESS_FILE );
         }
 
     // $file: Name of file to open
     // $lines: Number of lines to obtain from the end of the file
     // $header: flag to indicate that the file contains a header which should not be included if the number of lines in the file is <= lines
     
-    $file = POS_LOG_ACCESS_FILE;
+    $file = POS_CONFIG_LOG_ACCESS_FILE;
      $header = null;
     global $error_string;
     
@@ -151,19 +151,19 @@ class Logger
 
   public static final function log( $msg, $level = 0 )
   {
-        if(!POS_LOG_TO_FILE)
+        if(!POS_CONFIG_LOG_TO_FILE)
             return;
         
-        if(!file_exists(POS_LOG_ACCESS_FILE)){
-            die("POS: Unable to open logfile:" .POS_LOG_ACCESS_FILE );
+        if(!file_exists(POS_CONFIG_LOG_ACCESS_FILE)){
+            die("POS: Unable to open logfile:" .POS_CONFIG_LOG_ACCESS_FILE );
         }
 
-        if(!is_writable(POS_LOG_ACCESS_FILE)){
-            die("POS: Unable to write to logfile:" .POS_LOG_ACCESS_FILE );
+        if(!is_writable(POS_CONFIG_LOG_ACCESS_FILE)){
+            die("POS: Unable to write to logfile:" .POS_CONFIG_LOG_ACCESS_FILE );
         }
 
 
-        $log = fopen( POS_LOG_ACCESS_FILE, "a" );
+        $log = fopen( POS_CONFIG_LOG_ACCESS_FILE, "a" );
 
         
 
@@ -194,7 +194,7 @@ class Logger
 
         }*/
 
-    if(POS_LOG_TRACKBACK){
+    if(POS_CONFIG_LOG_TRACKBACK){
           $d = debug_backtrace();
       $track = " | TRACK : ";
       for ($i= 1; $i < sizeof($d) -1 ; $i++) { 
