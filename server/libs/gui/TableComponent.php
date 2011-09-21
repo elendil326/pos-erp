@@ -5,7 +5,7 @@ class TableComponent implements GuiComponent{
 
 
 	private $header;
-	private $rows;	
+	protected $rows;	
 	private $actionFunction;
 	private $actionField;
 	
@@ -14,10 +14,8 @@ class TableComponent implements GuiComponent{
 	private $specialRender;
 	
 	private $noDataText;
-	
 
-
-
+	protected $simple_render;
 
 	public function __construct
 	(
@@ -29,6 +27,7 @@ class TableComponent implements GuiComponent{
 		$this->specialRender = array();
 		$renderRowIds = null;
 		$this->noDataText = "No hay datos para mostrar.";
+		$this->simple_render = false;
 	}
 	
 	
@@ -42,15 +41,18 @@ class TableComponent implements GuiComponent{
 	
 
 
-	
+
 	public function addNoData ( $msg )
 	{
 		$this->noDataText = $msg;
 	}
 
+
+
+
 	public function addRow( $row )
 	{
-		
+		array_push($this->rows, $row);
 	}
 	
 	
@@ -93,11 +95,13 @@ class TableComponent implements GuiComponent{
 		//cicle trough rows
 		for( $a = 0; $a < sizeof($this->rows) ; $a++ ){
 
+			//@TODO pagination should be implemented here
 			/*if($a == 50){
 				$html .= "<tr style='background-color:#3F8CE9; color:white; text-align:center;'><td colspan=" .sizeof($this->header). ">Mostrar siguientes 50</td></tr>";
 				break;
 			}*/
 
+			//si el row no es un array intentar convertirlo
 			if( !is_array($this->rows[$a]) ){
 				$row = $this->rows[$a]->asArray();
 			}else{
@@ -109,10 +113,13 @@ class TableComponent implements GuiComponent{
 				if($this->actionSendJSON){
 					
 					$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( \''. urlencode(json_encode($row)) . '\' )" ';
+
 				}elseif($this->actionSendID){
 					$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( \'' . $this->renderRowIds . $a . '\' )" ';
+
 				}else{
-					$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( ' . $row[ $this->actionField ] . ' )" ';				
+					$html .= '<tr style=" cursor: pointer;" onClick="' . $this->actionFunction. '( ' . $row[ $this->actionField ] . ' )" ';		
+							
 				}
 				
 			}else{
@@ -120,45 +127,69 @@ class TableComponent implements GuiComponent{
 			}			
 
 			//renderear ids o no
-			if($this->renderRowIds != null)	{
+			if($this->renderRowIds != null)
+			{
 				$html .= " id=\"". $this->renderRowIds . $a ."\" ";
 			}
 
+			//efecto
             $html .= ' onmouseover="this.style.backgroundColor = \'#D7EAFF\'" onmouseout="this.style.backgroundColor = \'white\'" >';
             
 			$i = 0;
 			
-			foreach ( $this->header  as $key => $value){
-			
-				if( array_key_exists( $key , $row )){
 
-					//ver si necesita rendereo especial
-					$found = null;
-				
-					for( $k = 0; $k < sizeof($this->specialRender); $k++ ){
-						
-						if( array_key_exists( $key, $this->specialRender[$k] )){
-								$found = $this->specialRender[$k];
-						}
-					}
-					
+			if($this->simple_render){
+				/**
+				  *
+				  *	Just print the damn rows
+				  **/				
+				foreach($this->rows[$a] as $column){
 					if($i++ % 2 == 0){
 						$bgc = "";
 					}else{
 						$bgc = ""; //"rgba(200, 200, 200, 0.199219)";
 					}
+					$html .=  "<td align='left' style='background-color:".$bgc.";'>" . $column . "</td>";
+				}
+			}else{
+				/**
+				  *
+				  *	Render based on the header
+				  **/
+				foreach ( $this->header  as $key => $value){
+			
+					if( array_key_exists( $key , $row )){
+
+						//ver si necesita rendereo especial
+						$found = null;
 					
-					if( $found ){
+						for( $k = 0; $k < sizeof($this->specialRender); $k++ ){
+							
+							if( array_key_exists( $key, $this->specialRender[$k] )){
+									$found = $this->specialRender[$k];
+							}
+						}
 						
-						$html .=  "<td align='left' style='background-color:".$bgc.";'>" . call_user_func( $found[$key] , $row[ $key ], $row ) . "</td>";							
+						if($i++ % 2 == 0){
+							$bgc = "";
+						}else{
+							$bgc = ""; //"rgba(200, 200, 200, 0.199219)";
+						}
+						
+						if( $found ){
+							
+							$html .=  "<td align='left' style='background-color:".$bgc.";'>" . call_user_func( $found[$key] , $row[ $key ], $row ) . "</td>";							
 
-					}else{
-						$html .=  "<td align='left' style='background-color:".$bgc.";'>" . $row[ $key ] . "</td>";
+						}else{
+							$html .=  "<td align='left' style='background-color:".$bgc.";'>" . $row[ $key ] . "</td>";
+						}
+						
+
 					}
-					
-
 				}
 			}
+
+			
 			
 			$html .='</tr>';
 		}
@@ -171,3 +202,36 @@ class TableComponent implements GuiComponent{
 
 	}
 }
+
+
+
+
+
+class SimpleTableComponent extends TableComponent{
+	
+	function __construct()
+	{
+		parent::__construct();
+		$this->simple_render = true;
+	}
+
+	function addRow()
+	{
+		$row = array();
+		
+		$n_args =  func_num_args();
+
+		for ($ai=0; $ai < $n_args; $ai++)
+		{ 
+			array_push( $row , func_get_arg( $ai ) );	
+		}
+
+		parent::addRow( $row );
+	}
+
+}
+
+
+
+
+

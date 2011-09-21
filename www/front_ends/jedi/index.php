@@ -13,18 +13,14 @@
 	
 	$p->addComponent( new TitleComponent( "Estado del servidor" ) );
 
-
-	$header = array(  
-			"id_venta" => "Venta", 
-			"fecha" => "Fecha" );
-
-	$datos = array( array ("id_venta" => "1", "fecha" => 2), array("id_venta" => "1", "fecha" => 2) );
-
-	$estado_del_servidor = new TableComponent($header, $datos);
 	
+	$t = new SimpleTableComponent();
 
+	$t->addRow("PHP"	, "OK");
+	$t->addRow("MySQL"	, "OK");
+	$t->addRow("Perl"	, "OK");
 
-	$p->addComponent( $estado_del_servidor );	
+	$p->addComponent( $t );	
 
 	$p->render( );
 
