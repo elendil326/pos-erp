@@ -120,6 +120,8 @@
 	require_once("libs/gui/DAOFormComponent.php");
 	require_once("libs/gui/MessageComponent.php");
 	require_once("libs/gui/MenuComponent.php");
+	require_once("libs/gui/TitleComponent.php");
+	require_once("libs/gui/TableComponent.php");
 
 
 
@@ -143,9 +145,12 @@
 	}
 
 
-	echo "REVISANDO INSTANCIA";
+	
 
 
 	# *******************************
 	# Cosas de la instancia
 	# *******************************
+	die( "REVISANDO INSTANCIA" );
+
+

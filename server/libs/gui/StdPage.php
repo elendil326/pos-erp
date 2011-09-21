@@ -9,6 +9,8 @@ class StdPage implements Page{
 	private $menu;
 	private $content;
 	private $footer;
+	private $page_title;
+
 
 	function __construct()
 	{
@@ -18,6 +20,7 @@ class StdPage implements Page{
 		$this->menu 	= "";
 		$this->content 	= "";
 		$this->footer 	= "";
+		$this->page_title = "POS ERP";
 	}
 
 	public function addJs( $url )
@@ -57,6 +60,7 @@ class StdPage implements Page{
 		
 		print( $this->js_urls );
 		print( $this->css_urls );
+		print( "<title>" . $this->page_title . "</title>");
 
 		?></head><body><?php
 

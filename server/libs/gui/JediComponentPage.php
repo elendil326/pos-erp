@@ -8,8 +8,10 @@ class JediComponentPage extends StdComponentPage{
 	function __construct()
 	{
 
+
 		parent::__construct();
 
+		
 
 		//vamos a ver si tengo permiso para 
 		//crear una pagina jedi
@@ -62,6 +64,7 @@ class JediComponentPage extends StdComponentPage{
 
 		//there should be no path ending here!
 		Logger::error("JEDI component page : there should be no path ending here!");
+
 	}//__construct()
 
 
@@ -105,7 +108,6 @@ class JediComponentPage extends StdComponentPage{
 	  **/
 	function render()
 	{
-
 		parent::render();
 	}
 
