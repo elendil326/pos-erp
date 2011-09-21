@@ -119,6 +119,7 @@
 	require_once("libs/gui/FormComponent.php");
 	require_once("libs/gui/DAOFormComponent.php");
 	require_once("libs/gui/MessageComponent.php");
+	require_once("libs/gui/MenuComponent.php");
 
 
 

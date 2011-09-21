@@ -5,11 +5,6 @@ class JediComponentPage extends StdComponentPage{
 	private $permisos_controller;
 
 
-
-
-
-
-
 	function __construct()
 	{
 
@@ -22,7 +17,21 @@ class JediComponentPage extends StdComponentPage{
 
 		
 		//user is logged in, go ahead
-		if($jedi_login->isLoggedIn()) return;
+		if($jedi_login->isLoggedIn()) 
+		{
+			//usuario esta loggeado, 
+			//vamos a ver si quiere 
+			//cerrar sesion
+			if(isset($_GET["close_session"]))
+			{
+				//si quiere cerrar la sesion ! 
+				$jedi_login->logout();
+				die(header("Location: ./?bye"));
+			}
+
+			return $this->bootstrap();
+				
+		}
 		
 
 		//ok no esta loggeado, pero 
@@ -38,7 +47,7 @@ class JediComponentPage extends StdComponentPage{
 			if($jedi_login->login($_POST["user"], $_POST["password"]))
 			{
 				//login was succesful, keep building this object
-				return;
+				return $this->bootstrap();
 
 			}else{
 				//unsuccessful login
@@ -51,15 +60,21 @@ class JediComponentPage extends StdComponentPage{
 
 		}
 
-	
-
+		//there should be no path ending here!
+		Logger::error("JEDI component page : there should be no path ending here!");
 	}//__construct()
 
 
 
 
 
-
+	function bootstrap()
+	{
+		$m = new MenuComponent();
+		$m->addItem("Cerrar sesion", "./?close_session");
+		$m->addItem("Instancias", "instancias.php");
+		self::addComponent( $m );
+	}
 
 
 
@@ -79,8 +94,23 @@ class JediComponentPage extends StdComponentPage{
 		}
 
 		self::addComponent($login_cmp);
-		self::render();
+		parent::render();
 		exit();
 	}
 
+
+	/**
+	  *
+	  *
+	  **/
+	function render()
+	{
+
+		parent::render();
+	}
+
 }
+
+
+
+

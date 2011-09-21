@@ -12,7 +12,7 @@ class StdPage implements Page{
 
 	function __construct()
 	{
-		$this->js_urls 	= '<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>';
+		$this->js_urls 	= '';
 		$this->css_urls = "";
 		$this->header 	= "";
 		$this->menu 	= "";

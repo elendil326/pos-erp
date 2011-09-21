@@ -8,5 +8,7 @@
 
 	$p = new JediComponentPage();
 	
+	
+
 	$p->render();
 
