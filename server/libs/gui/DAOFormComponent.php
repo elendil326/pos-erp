@@ -28,9 +28,10 @@ class DAOFormComponent extends FormComponent
 		
 
 		for ($i=0; $i < $sof; $i++) { 
+
 			if( $this->form_fields[$i]->id == $field_name )
 			{
-				unset($this->form_fields[$i]);
+				array_splice ( $this->form_fields, $i , 1  );
 				
 				return true;			
 			}

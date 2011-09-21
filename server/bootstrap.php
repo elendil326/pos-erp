@@ -49,6 +49,32 @@
 	require_once('libs/adodb5/adodb-exceptions.inc.php');
 
 
+
+	# *******************************
+	# Iniciar sesion
+	# *******************************
+	session_name("POS_COOKIE");
+	session_set_cookie_params ( 3600  , '/' );
+
+	try{
+		$ss = session_start (  );
+
+	}catch(Exception $e){
+		Logger::error($e);
+		die(header('HTTP/1.1 500 INTERNAL SERVER ERROR'));
+
+	}
+
+
+	if(!$ss){
+		
+		Logger::error("Imposible iniciar sesion !");
+		die(header('HTTP/1.1 500 INTERNAL SERVER ERROR'));
+	}
+
+
+
+
 	# *******************************
 	# Conectarme a la base de datos CORE
 	# *******************************
@@ -82,6 +108,27 @@
 
 
 	# *******************************
+	# Cargar las librerias de GUI
+	# *******************************
+	require_once("libs/gui/Page.php");
+	require_once("libs/gui/StdPage.php");
+	require_once("libs/gui/StdComponentPage.php");
+	require_once("libs/gui/JediComponentPage.php");
+	require_once("libs/gui/GuiComponent.php");
+	require_once("libs/gui/LoginComponent.php");
+	require_once("libs/gui/FormComponent.php");
+	require_once("libs/gui/DAOFormComponent.php");
+	require_once("libs/gui/MessageComponent.php");
+
+
+
+	# *******************************
+	# Cargar controladores
+	# *******************************
+	require_once("controllers/login.controller.php");
+
+
+	# *******************************
 	# Buscar esta instancia si es que la necesito
 	# *******************************
 	//esta definicion se hace si NO queremos
@@ -95,7 +142,7 @@
 	}
 
 
-
+	echo "REVISANDO INSTANCIA";
 
 
 	# *******************************

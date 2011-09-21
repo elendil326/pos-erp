@@ -8,6 +8,7 @@ class StdComponentPage extends StdPage{
 
 	function __construct()
 	{
+		parent::__construct();
 		$this->components = array();
 	}
 
