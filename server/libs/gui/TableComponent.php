@@ -151,6 +151,7 @@ class TableComponent implements GuiComponent{
 					}
 					$html .=  "<td align='left' style='background-color:".$bgc.";'>" . $column . "</td>";
 				}
+
 			}else{
 				/**
 				  *
@@ -185,9 +186,11 @@ class TableComponent implements GuiComponent{
 						}
 						
 
-					}
-				}
-			}
+					}//if array key exists
+
+				}//foreach
+
+			}//simple_render
 
 			
 			
@@ -228,6 +231,12 @@ class SimpleTableComponent extends TableComponent{
 
 		parent::addRow( $row );
 	}
+
+
+	function setRows( $rows )
+	{
+		$this->rows = $rows;
+	}	
 
 }
 

@@ -1,8 +1,6 @@
 <?php
 
 
-
-
 	define("BYPASS_INSTANCE_CHECK", true);
 
 
@@ -16,6 +14,9 @@
 	
 	$t = new SimpleTableComponent();
 
+
+	
+	
 	$t->addRow("PHP"	, "OK");
 	$t->addRow("MySQL"	, "OK");
 	$t->addRow("Perl"	, "OK");
@@ -23,10 +24,3 @@
 	$p->addComponent( $t );	
 
 	$p->render( );
-
-
-
-
-
-
-

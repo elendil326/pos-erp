@@ -31,7 +31,7 @@ class FormComponent implements GuiComponent
 			
 			$html .= "</td><td>";
 
-			$html .= "<input value='" . $f->value .  "'>";
+			$html .= "<input value='" . $f->value .  "' >";
 
 			$html .= "</td></tr>";
 			
