@@ -2708,6 +2708,8 @@ Aplicacion.Clientes.prototype.facturaValidator = function (){
             if(DEBUG){
                 console.log("resultado de la factura exitosa ", factura );
             }
+            
+            Ext.Msg.alert("Factura Cliente", "Se ha realizado correctamente la factura!!");
 
             window.open('http://pos.caffeina.mx/proxy.php?action=1308&id_venta=' + Ext.getCmp('facturaPanel-id_venta').getValue());
 
@@ -2719,6 +2721,8 @@ Aplicacion.Clientes.prototype.facturaValidator = function (){
             if(DEBUG){
                 console.log("ya regrese del ajax, pero no habia conexion, estoy en el failure... hare una venta offline");
             }
+
+            POS.error( response );
 
             Ext.Msg.alert("Error Factura Cliente", "Error al momento de solicitar la factura, al parecer esta presentando problemas con su conexion, intente mas tarde o solicitela al administrador.");
 

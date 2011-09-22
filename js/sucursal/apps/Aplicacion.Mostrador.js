@@ -1838,9 +1838,8 @@ Aplicacion.Mostrador.prototype.vender = function ()
                         try{
                             factura = Ext.util.JSON.decode( response.responseText );
                         }catch(e){
-                            //whoops algo paso en el servidor
-                            POS.error( response, e );
-                            Aplicacion.Mostrador.currentInstance.offlineVender();
+                            Ext.Msg.alert("Error Factura Cliente", "Error al momento de solicitar la factura : " + e + ".");
+                            POS.error( factura, e );                            
                             return;
 
                         }
@@ -1852,7 +1851,6 @@ Aplicacion.Mostrador.prototype.vender = function ()
                             }
 
                             POS.error( factura );
-                            Aplicacion.Mostrador.currentInstance.offlineVender();
                             return;
 
                         }
@@ -1860,19 +1858,24 @@ Aplicacion.Mostrador.prototype.vender = function ()
                         if(DEBUG){
                             console.log("resultado de la factura exitosa ", factura );
                         }
-
+                        
+                        Ext.Msg.alert("Factura Cliente", "Se ha realizado correctamente la factura!!");
+                        
                         window.open('http://pos.caffeina.mx/proxy.php?action=1308&id_venta=' + carrito.id_venta);
 
                     //window.open('http://localhost/pos/trunk/www/proxy.php?action=1308&id_venta=' + carrito.id_venta);
 
                     },
                     failure: function( response ){
-                        //Ext.Msg.alert("Error", "Error en la venta");
+                        
                         if(DEBUG){
-                            console.log("ya regrese del ajax, pero no habia conexion, estoy en el failure... hare una venta offline");
+                            console.log("ya regrese del ajax, pero no habia conexion, estoy en el failure... no se realizo la factura");
                         }
+                        
+                        Ext.Msg.alert("Error Factura Cliente", "Error al Generar la Factura, al parecer esta experimentando problemas de conexion.");
+                        
                         POS.error( response );
-                        return Aplicacion.Mostrador.currentInstance.offlineVender();
+                        
                     }
                 });
             }
