@@ -27,7 +27,7 @@ public class PosClient{
 
 		Runtime.getRuntime().addShutdownHook( new ShutDown() );
 
-        	trayIcon = new PosSystemTray();
+        trayIcon = new PosSystemTray();
 		
 		String response = null;
 				

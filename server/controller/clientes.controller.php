@@ -723,6 +723,13 @@ function abonarVenta(
 
 
 
+
+
+
+
+
+
+
 /**
   *
   * abonar por cantidad
@@ -780,6 +787,22 @@ function abonar_por_cantidad($id_cliente, $monto, $tipo_pago = "efectivo")
     return true;
 }
 
+/*
+    nombre
+    papas supre
+    central 
+    venta 13213
+
+
+     - nombre del cliente - 
+
+     - 
+     - 
+     -
+
+
+
+*/
 
 
 
@@ -788,7 +811,10 @@ function abonar_por_cantidad($id_cliente, $monto, $tipo_pago = "efectivo")
 
 
 
-function listarClientesDeudores() {
+
+
+function listarClientesDeudores() 
+{
 
     $deudores = ClienteDAO::obtenerClientesDeudores();
 
