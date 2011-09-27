@@ -8,7 +8,7 @@
 
 
 	$p = new JediComponentPage( );
-	
+	echo "asdf";
 	$p->addComponent( new TitleComponent( "Estado del servidor" ) );
 
 	

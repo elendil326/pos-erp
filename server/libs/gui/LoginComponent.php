@@ -3,12 +3,20 @@
 class LoginComponent implements GuiComponent
 {
 
+
+
+
 	private $next_hop;
+
+
+
 
 	function __construct()
 	{
 		$this->next_hop = ".";
 	}
+
+
 
 
 	public function submitTo( $submit_to )
@@ -33,5 +41,8 @@ class LoginComponent implements GuiComponent
 				. '</td></tr></table><input type="hidden" name="jedi_login" value=1></form></div>';
 
 	}
+
+
+
 
 }

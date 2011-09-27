@@ -13,6 +13,8 @@
 	$p->addComponent( new TitleComponent( "Instancias" ) );
 
 
+
+
 	/**
 	  *
 	  * Lista de instancias
@@ -25,15 +27,29 @@
 	$p->addComponent( $t );	
 
 
+
+
 	/**
 	  *
 	  *	Nueva instancia
 	  *
 	  **/
 	$p->addComponent( new TitleComponent( "Nueva instancia", 2 ) );
+
+	
 	$form = new FormComponent();
 
-	$form->addField( "nombre", "nombre", "text" );
+	
+	$form->addField( "descripcion", "Descripcion", "text" );
+	$form->addField( "instance_token", "instance_token", "text" );
+	$form->addField( "db_user", "db_user", "text" );
+	$form->addField( "db_password", "db_password", "text" );
+	$form->addField( "db_name", "db_name", "text" );
+	$form->addField( "db_driver", "db_driver", "text" );
+	$form->addField( "db_host", "db_host", "text" );
+	$form->addField( "db_debug", "db_debug", "text" );
+
+
 
 	$p->addComponent( $form );
 
