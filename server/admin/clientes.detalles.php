@@ -17,7 +17,36 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 
 <script>document.getElementById("MAIN_TITLE").innerHTML = "<?php echo $cliente->getRazonSocial(); ?>";</script>
 
+<script type="text/javascript">
 
+	function saldar_por_cantidad()
+	{
+		Ext.MessageBox.prompt( "Abonar por cantidad", 
+			"&iquest; Cuando desea abonar a este cliente ?",
+			function (a,b,c){
+				
+				if(a != "ok") return;
+
+				var monto = b;
+
+					Ext.Ajax.request({
+					    url: '../proxy.php',
+					    params: {
+					        action		: 311,
+					        id_cliente 	: <?php echo $cliente->getIdCliente(); ?>,
+					        monto 		: monto
+					    },
+					    success: function(response){
+					        var text = response.responseText;
+					        // process server response here
+					        window.location = "?action=detalles&id=<?php echo $_GET["id"]; ?>&success=true&reason=El+abono+se+ha+realizado+con+exito.";
+					    }
+					});				
+
+			});
+	}
+
+</script>
 <style type="text/css" media="screen">
 	#map_canvas { 
 		margin: 5px;
@@ -69,6 +98,7 @@ $cliente = ClienteDAO::getByPK( $_REQUEST['id'] );
 		<h4>
 		<input type=button value="Editar detalles de cliente" onclick="editarCliente()">
 		<input type=button value="Vender a este cliente" onclick="window.location='ventas.php?action=vender&cid=<?php echo $_REQUEST['id']; ?>'">
+		<input type=button value="Abonar una cantidad" onclick="saldar_por_cantidad()">
 		</h4>
 	</td> </tr>
 </table>
@@ -396,7 +426,7 @@ if($activo){
 	echo "<h2>Ventas a credito</h2>";
 	$tabla->render();
 	if(sizeof($ventasCredito) > 0){
-		echo "<h4>Saldo pendiente : " . moneyFormat($totalDeuda) . "</h4>";
+		echo "<h4>Saldo pendiente  " . moneyFormat($totalDeuda) . "</h4>";
 	}
 }
 

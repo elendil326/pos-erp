@@ -259,12 +259,20 @@ function crearCliente($args) {
     Logger::log("Cliente creado !");
 }
 
+
+
+
+
+
+
+
+
+
 /*
  * 
  * 
  * 
  * */
-
 function listarClientes() {
 
     $cliente = new Cliente();
@@ -305,6 +313,15 @@ function listarClientes() {
 
     return $clientesArray;
 }
+
+
+
+
+
+
+
+
+
 
 function modificarCliente($args) {
 
@@ -440,16 +457,28 @@ function modificarCliente($args) {
     Logger::log("Cliente " . $cliente->getIdCliente() . " modificado !");
 }
 
+
+
+
+
+
+
+
+
+
+
+
 /* * *
  * Esta funcion debe ser erradicada por el bien del performance 
  * */
-
 function listarVentasClientes() {
     Logger::log("#################################################################");
     Logger::log("# Esta funcion debe ser deprecada por el bien del performance ! #");
     Logger::log("#################################################################");
 
+    //
     $ventas = VentasDAO::getAll();
+
     $tot_ventas = array();
 
     foreach ($ventas as $venta) {
@@ -486,6 +515,20 @@ function listarVentasClientes() {
     Logger::log("Listando ventas de clientes");
     return $tot_ventas;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //lista las ventas de un cliente en especidico (puede ser de contado o a credito si se especifica)
 function listarVentaCliente($id_cliente, $tipo_venta = null) {
@@ -540,19 +583,49 @@ function listarVentaCliente($id_cliente, $tipo_venta = null) {
     return $cC;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
  *  @TODO: Estea debe llamarse abonarAVenta !!
  *
  * */
+function abonarVenta(
+    $args,
+    $verbose = true,
+    $id_venta_arg = null, 
+    $monto_arg = null, 
+    $tipo_de_pago_arg = null
+) {
 
-function abonarVenta($args) {
+    if($args == null ){
 
-    if (!isset($args['data'])) {
-        Logger::log("No hay parametros para abonar a la compra");
-        die('{"success": false, "reason": "Parametros invalidos." }');
+        $data = new stdClass;
+        $data->id_venta     = $id_venta_arg;
+        $data->monto        = $monto_arg;
+        $data->tipo_pago = $tipo_de_pago_arg;
+
+    }else{
+
+        if (!isset($args['data'])) {
+            Logger::log("No hay parametros para abonar a la compra");
+            die('{"success": false, "reason": "Parametros invalidos." }');
+        }
+
+        $data = parseJSON($args['data']);
+
     }
-
-    $data = parseJSON($args['data']);
 
 
     if (!isset($data->id_venta)) {
@@ -641,8 +714,79 @@ function abonarVenta($args) {
 
     DAO::transEnd();
     Logger::log("Abono exitoso a la venta " . $data->id_venta);
-    printf('{ "success": "true", "empleado" : "%s" }', $empleado->getNombre());
+    
+    if($verbose)printf('{ "success": "true", "empleado" : "%s" }', $empleado->getNombre());
 }
+
+
+
+
+
+
+/**
+  *
+  * abonar por cantidad
+  *
+  * abonar a ventas dada una cantidad en vez de decir que ventas especificas 
+  * abonar, este metodo abonara a las ventas mas viejas
+  *
+  **/
+function abonar_por_cantidad($id_cliente, $monto, $tipo_pago = "efectivo")
+{
+    
+    //buscar las ventas pendientes
+    $ventas = listarVentaCliente($id_cliente, 'credito');
+
+    $to_pay = array();
+    $how_much_to_pay = array();
+
+    foreach($ventas as $venta)
+    {
+        
+        //ya esta liquidada
+        if($venta["liquidada"] == 1) continue;
+
+        //se acabo el dinero
+        if($monto == 0) break;
+
+        //alcanza para pagar todo el saldo ?
+        if($monto <= $venta["saldo"]){
+            array_push($how_much_to_pay, $monto);
+            array_push($to_pay, $venta["id_venta"]);
+            $monto = 0;
+            break;
+
+        }else{
+            //alcanza para pagar el saldo y aun mas
+            $monto -= $venta["saldo"];
+            array_push($to_pay, $venta["id_venta"]);
+            array_push($how_much_to_pay, $venta["saldo"]);
+        }
+
+    }
+
+    $cambio = $monto;
+
+    for ($i=0; $i < sizeof($to_pay); $i++) 
+    {
+        //echo $to_pay[$i] . "-->" . $how_much_to_pay[$i] ."\n";
+
+        abonarVenta(null, false, $to_pay[$i], $how_much_to_pay[$i], $tipo_pago );
+
+    }
+
+
+
+    return true;
+}
+
+
+
+
+
+
+
+
 
 function listarClientesDeudores() {
 
@@ -654,6 +798,13 @@ function listarClientesDeudores() {
     
     return $deudores;
 }
+
+
+
+
+
+
+
 
 function facturarVenta($args) {
 
@@ -1019,5 +1170,16 @@ if (isset($args['action'])) {
             $estado_cuenta = estadoCuentaCliente($args);
             printf('{ "success": true, "total": ' . count($estado_cuenta->array_ventas) . ', "datos": %s }', json_encode($estado_cuenta));
             break;
+
+        case 311:
+            //abonar_por_cantidad
+            if( abonar_por_cantidad($args["id_cliente"], $args["monto"], "efectivo") ){
+                printf('{ "success" : true }');
+            }else{
+                printf('{ "success" : false }');
+            }
+
+            
+        break;
     }
 }
