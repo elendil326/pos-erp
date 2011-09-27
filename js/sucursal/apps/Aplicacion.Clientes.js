@@ -1801,11 +1801,32 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 
     //abonar a una compra a credito
     abonar = [ new Ext.form.FormPanel({
-        items: [{
+        items: [
+        {
             xtype: 'fieldset',
-            title: 'Abonar a venta',
+            title: 'Abonar una cantidad especifica',
+            id : 'Clientes-Vender',
+            items: [{
+                //id : "Clentes-CreditoVentasLista",
+                xtype: 'textfield',
+                name: 'options',
+                label : "Cantidad",
+                options: [  ],
+                listeners : {
+                     'focus' : function (){
+                        kconf = {
+                            type : 'num',
+                            submitText : 'Aceptar'
+                        };
+                        POS.Keyboard.Keyboard( this, kconf );
+                    }
+                }
+            }]
+        },{
+            xtype: 'fieldset',
+            title: 'Abonar una venta especifica',
             id : 'Clientes-SeleccionVentaCredito',
-            instructions: 'Seleccione una venta para ver sus detalles.',
+
             items: [{
                 id : "Clentes-CreditoVentasLista",
                 xtype: 'selectfield',
