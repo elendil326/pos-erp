@@ -261,9 +261,21 @@ function generaFactura($id_venta, $factura_generica = null) {
         try {
             FacturaVentaDAO::save($data->factura);
         } catch (Exception $e) {
+            
             Logger::log("Error al salvar la factura de la venta : {$e}");
+            Logger::log("Al parecer se obtuvo una factura exitosamente pero hubo algun problema al guardarla, los datos de la factura son los siguientes : ");
+            Logger::log("Fecha de Certificacion : {$comprobante->getFechaCertificacion()}");
+            Logger::log("Version del TFD : {$comprobante->getVersionTFD()}");
+            Logger::log("Folio Fiscal : {$comprobante->getUUID()}");
+            Logger::log("Numero de certificado del sat : {$comprobante->getNumeroCertificadoSAT()}");
+            Logger::log("Sello digital del Emisor : {$comprobante->getSelloDigitalEmisor()}");
+            Logger::log("Sello digital del Sat : {$comprobante->getSelloDigitalSAT()}");
+            Logger::log("Cadena Original : {$comprobante->getCadenaOriginal()}");
+            
             DAO::transRollback();
-            die('{"success": false, "reason": "Error al salvar la factura de la venta intente nuevamente" }');
+            
+            die('{"success": false, "reason": "Error al salvar la factura de la venta intente nuevamente"}');
+            
         }
     } else {
         Logger::log($success->getInfo());

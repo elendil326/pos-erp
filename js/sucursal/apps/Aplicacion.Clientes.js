@@ -2741,6 +2741,9 @@ Aplicacion.Clientes.prototype.facturaValidator = function (){
 
     }
 
+    Ext.getBody().mask('Solicitando Factura ...', 'x-mask-loading', true);
+    
+
     Ext.Ajax.request({
         url: '../proxy.php',
         scope : this,
@@ -2756,6 +2759,7 @@ Aplicacion.Clientes.prototype.facturaValidator = function (){
             try{
                 factura = Ext.util.JSON.decode( response.responseText );
             }catch(e){
+                Ext.getBody().unmask();
                 //whoops algo paso en el servidor
                 Ext.Msg.alert("Error Factura Cliente", "Error al momento de solicitar la factura : " + e + ".");
                 return;
@@ -2768,7 +2772,9 @@ Aplicacion.Clientes.prototype.facturaValidator = function (){
                     console.log("resultado de la factura sin exito ",factura );
                 }
 
-                Ext.Msg.alert("Error Factura Cliente", "Error al momento de solicitar la factura, intete mas tarde o solicitela al administrador.");
+                Ext.getBody().unmask();
+
+                Ext.Msg.alert("Error Factura Cliente", "Error al momento de solicitar la factura, intete mas tarde o solicitela al administrador. Mas informacion : " + factura.reason);
 
                 return;
 
@@ -2777,6 +2783,8 @@ Aplicacion.Clientes.prototype.facturaValidator = function (){
             if(DEBUG){
                 console.log("resultado de la factura exitosa ", factura );
             }
+            
+            Ext.getBody().unmask();
             
             Ext.Msg.alert("Factura Cliente", "Se ha realizado correctamente la factura!!");
 
@@ -2790,6 +2798,8 @@ Aplicacion.Clientes.prototype.facturaValidator = function (){
             if(DEBUG){
                 console.log("ya regrese del ajax, pero no habia conexion, estoy en el failure... hare una venta offline");
             }
+
+            Ext.getBody().unmask();
 
             POS.error( response );
 
@@ -2933,6 +2943,7 @@ Aplicacion.Clientes.prototype.facturaPanelCreator = function (){
 Aplicacion.Clientes.prototype.factura = function(){
     
     Ext.getBody().mask('Creando Factura ...', 'x-mask-loading', true);
+    Ext.getBody().unmask();
     
     /**
      * factura_generica = {

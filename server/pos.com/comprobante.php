@@ -10,8 +10,6 @@ require_once("success.php");
 require_once("addendas.php");
 require_once("impuestos.php");
 
-
-
 /**
  * Archivo que contiene la clase Comprobante la cual provee de los medios necesarios
  * para conectarse con al web service de Caffeina, el cual obtiene las facturas electronicas,
@@ -410,7 +408,6 @@ class Comprobante {
      * Indica si esta en modo produccion
      */
     private $productionMode = POS_FACTURACION_PRODUCCION;
-
 
     /**
      * Establece informacion acerca de si el api esta en modo produccion
@@ -836,8 +833,8 @@ class Comprobante {
         $this->setXMLrequest($xml->saveXML());
 
 
-		
-		
+
+
         Logger::log("Terminado proceso de parceo de venta a XML");
 
         //realizamos una peticion al webservice para que genere una nueva factura
@@ -854,59 +851,57 @@ class Comprobante {
 
         //creamos una instancia de un objeto SoapClient
 
-		if(POS_FACTURACION_PRODUCCION)
-      		Logger::log("POS_FACTURACION_PRODUCCION: TRUE");
-		else
-			Logger::log("POS_FACTURACION_PRODUCCION: FALSE");
-			
-			
+        if (POS_FACTURACION_PRODUCCION)
+            Logger::log("POS_FACTURACION_PRODUCCION: TRUE");
+        else
+            Logger::log("POS_FACTURACION_PRODUCCION: FALSE");
+
+
         if ($this->getProductionMode()) {
 
             $ready_to_send = $this->getXMLrequest();
             $ready_to_send = str_replace("&lt;", "<", $ready_to_send);
-            $ready_to_send = str_replace("&gt;", ">", $ready_to_send);    
-                    
-			Logger::log( "-------------- ENVIANDO ESTO ------------------- ");
-			Logger::log( $ready_to_send );
-			Logger::log( "--------------- ------------ ------------------ ");
-	
+            $ready_to_send = str_replace("&gt;", ">", $ready_to_send);
+
+            Logger::log("-------------- ENVIANDO ESTO ------------------- ");
+            Logger::log($ready_to_send);
+            Logger::log("--------------- ------------ ------------------ ");
+
             try {
-				//If you want to dissable WSDL-caching, you can do so with 
-				ini_set('soap.wsdl_cache_enabled', '0'); 
-				ini_set('soap.wsdl_cache_ttl', '0');
-	
-	
-				
-				Logger::log("URL DEL WS:" . $this->getUrlWS());
+                //If you want to dissable WSDL-caching, you can do so with 
+                ini_set('soap.wsdl_cache_enabled', '0');
+                ini_set('soap.wsdl_cache_ttl', '0');
+
+
+
+                Logger::log("URL DEL WS:" . $this->getUrlWS());
 
                 $client = new SoapClient(
-					$this->getUrlWS(),
-					 array(
-						"location" => str_replace( '?wsdl','', $this->getUrlWS() )
-					));
+                                $this->getUrlWS(),
+                                array(
+                                    "location" => str_replace('?wsdl', '', $this->getUrlWS())
+                        ));
 
                 $result = $client->RececpcionComprobante(array('comprobante' => $ready_to_send));
-
             } catch (SoapFault $fault) {
-	
+
                 Logger::log("********** ERROR AL SOLICITAR NUEVO CFDI **********");
-				
-				Logger::log( "** datos enviados **");
-				Logger::log( $ready_to_send );
-				
-				Logger::log( " ** informacion del error **  ");
-				Logger::log( "Mensaje:" 	. $fault->getMessage ( ) );
-			 	Logger::log( "Codigo:" 		. $fault->getCode ( ) );
-				Logger::log( "Archivo:" 	. $fault->getFile ( ) );
-				Logger::log( "Linea:" 		. $fault->getLine ( ) );
-				Logger::log( "Trace:" 		. $fault->getTraceAsString ( ) );
+
+                Logger::log("** datos enviados **");
+                Logger::log($ready_to_send);
+
+                Logger::log(" ** informacion del error **  ");
+                Logger::log("Mensaje:" . $fault->getMessage());
+                Logger::log("Codigo:" . $fault->getCode());
+                Logger::log("Archivo:" . $fault->getFile());
+                Logger::log("Linea:" . $fault->getLine());
+                Logger::log("Trace:" . $fault->getTraceAsString());
 
                 $this->success = new Success("El servicio web que genera las facturas esta experimentando algunos problemas, intente nuevamente.");
                 return $this->success;
-            } 
-			
-            $response = $result->RececpcionComprobanteResult;
+            }
 
+            $response = $result->RececpcionComprobanteResult;
         } else {
             $response = $this->getXmlHardCode();
             $ready_to_send = "Esta es solo una prueba de generacion de CFDI.";
@@ -960,7 +955,7 @@ class Comprobante {
         unset($dom->Complemento['success']);
 
         unset($dom->Complemento->cadenas);
-        
+
         $response = $dom->saveXML();
 
         //TODO : Verificar si se puede explorar el xml ya reconstruido para almacenar de ahi los datos en la BD

@@ -561,8 +561,8 @@ $sucursal = SucursalDAO::getByPK($_REQUEST['id']);
                         <td width ="50%">
                             <table align="right">
                                 <tr><td>Salarios empleados</td><td><b><?php echo moneyFormat($totalEmpleados); ?></b></td></tr>
-                                <tr><td>Salario gerente</td><td><b><?php echo moneyFormat($salarioGerente); ?></b></td></tr>
-                                <tr><td>Total</td><td><b><?php echo moneyFormat($totalEmpleados + $salarioGerente); ?></b></td></tr>
+                                <!--<tr><td>Salario gerente</td><td><b><?php /*echo moneyFormat($salarioGerente);*/ ?></b></td></tr>-->
+                                <tr><td>Total</td><td><b><?php echo moneyFormat($totalEmpleados /*+ $salarioGerente*/); ?></b></td></tr>
                             </table>
                         </td>
                     </tr>

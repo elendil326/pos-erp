@@ -733,12 +733,14 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
                                     
                                     if(found ){
                                         break;
-                                    }else{
+                                    }
+                                    else{
                                         //si no se encontro un producto con las mismas propiedades entonces le asignamos el valos por default
                                         if(venta_intersucursal){
                                             Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioIntersucursal;
 
-                                        }else{
+                                        }
+                                        else{
                                             Aplicacion.Mostrador.currentInstance.carrito.items[i].precio = Aplicacion.Mostrador.currentInstance.carrito.items[i].precioVenta;
                                         }
 
@@ -1718,6 +1720,8 @@ Aplicacion.Mostrador.prototype.offlineVender = function( )
 Aplicacion.Mostrador.prototype.vender = function ()
 {
 
+    //obtenemos el carrito
+    carrito = Aplicacion.Mostrador.currentInstance.carrito;
 
     if(DEBUG){
         console.log(" ----- Enviando venta :", Aplicacion.Mostrador.currentInstance.carrito , " ----------");
@@ -1729,6 +1733,13 @@ Aplicacion.Mostrador.prototype.vender = function ()
     //Hay un error en la red justo ahora !
     if(POS.A.failure)
     {
+        
+        //verificamos si se solicito la factura 
+        if( carrito.factura )
+        {
+            Ext.Msg.alert("Error al Generar la Factura", "En este momento usted tiene problemas de conexión, solicite la factura mas tarde.");
+        }
+        
         return Aplicacion.Mostrador.currentInstance.offlineVender(  );
     }
 	
@@ -1748,6 +1759,13 @@ Aplicacion.Mostrador.prototype.vender = function ()
                 venta = Ext.util.JSON.decode( response.responseText );
 
             }catch(e){
+                
+                //verificamos si se solicito la factura 
+                if( carrito.factura )
+                {
+                    Ext.Msg.alert("Error al Generar la Factura", "En este momento usted tiene problemas de conexión, solicite la factura mas tarde.");
+                }
+                
                 //whoops algo paso en el servidor
                 POS.error( response, e );
                 Aplicacion.Mostrador.currentInstance.offlineVender();
@@ -1776,9 +1794,7 @@ Aplicacion.Mostrador.prototype.vender = function ()
 			
             if(DEBUG){
                 console.log("resultado de la venta exitosa ", venta );
-            }
-			
-            carrito = Aplicacion.Mostrador.currentInstance.carrito;
+            }			            
 			
             //verificamos si se hiso una venta preferencial
             if(  carrito.cliente != null &&  carrito.venta_preferencial.cliente != null &&
@@ -1823,6 +1839,8 @@ Aplicacion.Mostrador.prototype.vender = function ()
 
                 }
 
+                Ext.getBody().mask('Solicitando Factura ...', 'x-mask-loading', true);
+
                 Ext.Ajax.request({
                     url: '../proxy.php',
                     scope : this,
@@ -1838,6 +1856,7 @@ Aplicacion.Mostrador.prototype.vender = function ()
                         try{
                             factura = Ext.util.JSON.decode( response.responseText );
                         }catch(e){
+                            Ext.getBody().unmask();
                             Ext.Msg.alert("Error Factura Cliente", "Error al momento de solicitar la factura : " + e + ".");
                             POS.error( factura, e );                            
                             return;
@@ -1849,11 +1868,17 @@ Aplicacion.Mostrador.prototype.vender = function ()
                             if(DEBUG){
                                 console.log("resultado de la factura sin exito ",factura );
                             }
+                            
+                            Ext.getBody().unmask();
+
+                            Ext.Msg.alert("Error Factura Cliente", "Error al momento de solicitar la factura : " + factura.reason + ".");
 
                             POS.error( factura );
                             return;
 
                         }
+
+                        Ext.getBody().unmask();
 
                         if(DEBUG){
                             console.log("resultado de la factura exitosa ", factura );
@@ -1871,6 +1896,8 @@ Aplicacion.Mostrador.prototype.vender = function ()
                         if(DEBUG){
                             console.log("ya regrese del ajax, pero no habia conexion, estoy en el failure... no se realizo la factura");
                         }
+                        
+                        Ext.getBody().unmask();
                         
                         Ext.Msg.alert("Error Factura Cliente", "Error al Generar la Factura, al parecer esta experimentando problemas de conexion.");
                         
