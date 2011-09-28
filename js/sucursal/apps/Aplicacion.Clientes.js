@@ -1838,6 +1838,17 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
                         Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange(a,b);
                     }
                 }
+            },{
+                id : "Clientes-AbonarPorMonto",
+                xtype: 'textfield',
+                
+                label : "Abonar un monto",
+                options: [  ],
+                listeners : {
+                    "change" : function(a,b) {
+                       // Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange(a,b);
+                    }
+                }
             }]
         },{
             xtype: 'fieldset',

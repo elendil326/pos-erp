@@ -15,6 +15,7 @@
 	# *******************************
 	# Buscar la ruta de SERVER
 	# *******************************
+	// @todo esto no funciona en windows
 	define('POS_PATH_TO_SERVER_ROOT', str_replace("/bootstrap.php", "", __FILE__ ));
 	ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . POS_PATH_TO_SERVER_ROOT);
 	
