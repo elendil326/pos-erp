@@ -11,17 +11,23 @@
 	# Buscar la configuracion y cargarla
 	# *******************************
     require_once("config.default.php");
+    require_once("libs/Logger.php");
 	
 	if(is_file("config.php"))
 	{
 		//hay una configuracion especifica, load it
 		include("config.php");
+		
 	}
 
 
 
+
+
+
+
 	# *******************************
-	# Convertir la configuracion en definiciones
+	# 
 	# *******************************
 
 	define("POS_CONFIG_LOG_TO_FILE", 			$POS_CONFIG["LOG_TO_FILE"]);
@@ -39,12 +45,15 @@
 
 
 
+Logger::error("1");
 
-
+	if(!is_file("config.php"))
+	{	
+		Logger::error("config.php no exitste ! usando config.defatult.php");
+	}
 	# *******************************
 	# Requereir lo indispensable para seguir
 	# *******************************
-	require_once("libs/Logger.php");
 	require_once('libs/adodb5/adodb.inc.php');
 	require_once('libs/adodb5/adodb-exceptions.inc.php');
 
