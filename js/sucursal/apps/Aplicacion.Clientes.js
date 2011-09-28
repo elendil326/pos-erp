@@ -1165,6 +1165,7 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
                 id_venta    : parseFloat( Ext.getCmp("Clentes-CreditoVentasLista").getValue() ),
                 monto       : parseFloat( transaccion.abono ),
                 tipo_pago   : Ext.getCmp('Clentes-abonarTipoPago').getValue()
+
             })
         },
         success: function(response, opts) {
@@ -1204,8 +1205,21 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
                 }
             }
 
+
+            var clientes = Aplicacion.Clientes.currentInstance.listaDeClientes.lista;
+            var nombre  = "";
+            for (var i = clientes.length - 1; i >= 0; i--) 
+            {
+                if( clientes[i].data.id_cliente == Aplicacion.Clientes.CLIENTE_SELECCIONADO ){
+                    nombre = clientes[i].data.razon_social;
+                    break;
+                }
+                    
+            };
+
             var data_abono = {
                 ticket          : 'abono_venta_cliente',
+                nombre          : nombre,
                 id_venta        : Ext.getCmp("Clentes-CreditoVentasLista").getValue(),
                 empleado        : r.empleado,
                 saldo_prestamo  : transaccion.saldo,
