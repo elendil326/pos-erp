@@ -36,7 +36,7 @@ Aplicacion.Mostrador.prototype._init = function () {
 
 Aplicacion.Mostrador.prototype.getConfig = function (){
     return {
-        text: 'Mostrador',
+        text: 'Mostrador de ventas',
         cls: 'launchscreen',
         card: this.mostradorPanel,
         leaf: true
@@ -493,7 +493,7 @@ Aplicacion.Mostrador.prototype.refrescarMostrador = function (	)
 					
                     kconf = {
                         type : 'num',
-                        submitText : 'Cambiar',
+                        submitText : 'Aceptar',
                         callback : function ( campo ){
 						
                             //buscar el producto en la estructura y ponerle esa nueva cantidad

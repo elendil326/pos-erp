@@ -93,9 +93,10 @@ Aplicacion.Clientes.prototype.getConfig = function (){
  * Contiene un objeto con la lista de clientes actual, para no estar
  * haciendo peticiones a cada rato
  */
-Aplicacion.Clientes.prototype.listaDeCompras = {
-    lista : null,
-    compraActual : null
+Aplicacion.Clientes.prototype.listaDeCompras = 
+{
+    lista           : null,
+    compraActual    : null
 };
 
 
@@ -144,9 +145,6 @@ Aplicacion.Clientes.prototype.listaDeComprasClienteLoad = function ( id_cliente 
             //cargamos la lista de ventas a credito de este cliente
             Aplicacion.Clientes.currentInstance.creditoDeClientesPanelUpdater( id_cliente );
 
-            
-            
-                       
         }
     });
 	
@@ -1164,9 +1162,9 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
         params : {
             action : 305,
             data : Ext.util.JSON.encode({
-                id_venta : parseFloat( Ext.getCmp("Clentes-CreditoVentasLista").getValue() ),
-                monto : parseFloat( transaccion.abono ),
-                tipo_pago: Ext.getCmp('Clentes-abonarTipoPago').getValue()
+                id_venta    : parseFloat( Ext.getCmp("Clentes-CreditoVentasLista").getValue() ),
+                monto       : parseFloat( transaccion.abono ),
+                tipo_pago   : Ext.getCmp('Clentes-abonarTipoPago').getValue()
             })
         },
         success: function(response, opts) {
@@ -1207,14 +1205,14 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
             }
 
             var data_abono = {
-                ticket : 'abono_venta_cliente',
-                id_venta : Ext.getCmp("Clentes-CreditoVentasLista").getValue(),
-                empleado : r.empleado,
-                saldo_prestamo : transaccion.saldo,
-                monto_abono : transaccion.abono,
-                sucursal : POS.infoSucursal,
-                impresora : impresora,
-                leyendasTicket : POS.leyendasTicket
+                ticket          : 'abono_venta_cliente',
+                id_venta        : Ext.getCmp("Clentes-CreditoVentasLista").getValue(),
+                empleado        : r.empleado,
+                saldo_prestamo  : transaccion.saldo,
+                monto_abono     : transaccion.abono,
+                sucursal        : POS.infoSucursal,
+                impresora       : impresora,
+                leyendasTicket  : POS.leyendasTicket
             };
 			
             Aplicacion.Clientes.currentInstance.finishedPanelShow( data_abono );
@@ -1478,6 +1476,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 
     opciones = [
     //no se pueden eliminar clientes
+
     /*		new Ext.Button({ id : 'Clientes-EliminarCliente', ui  : 'action', text: 'Eliminar cliente',  handler : function(){
 			cliente = Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.getComponent(0).items.items[0].getRecord().data;
 			if(DEBUG){
@@ -1493,7 +1492,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 			
 
 		}}),	
-         */
+    */
     new Ext.Button({
         id : 'Clientes-Estado-Cuenta',
         ui  : 'action',
@@ -2031,9 +2030,9 @@ Aplicacion.Clientes.abonar_por_cantidad = function (id_cliente, monto)
             
             
             
-
+            //Aplicacion.Clientes.comprasDeClientesPanelUpdater(id_cliente);
             Ext.Msg.alert("Exito","Abono realizado con exito.");
-            
+            Aplicacion.Clientes.currentInstance.detallesDeClientesPanel.setActiveItem(1);
 
         }
     });

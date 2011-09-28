@@ -9,7 +9,7 @@ require_once('model/cliente.dao.php');
 
 $productos = InventarioDAO::getAll();
 
-$iMaestro = listarInventarioMaestro(150, POS_SOLO_ACTIVOS);
+$iMaestro = listarInventarioMaestro(1500, POS_SOLO_ACTIVOS);
 
 $clientes = listarClientes();
 ?>

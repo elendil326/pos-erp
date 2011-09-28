@@ -38,7 +38,7 @@ Aplicacion.Operaciones.prototype._init = function (){
 
 Aplicacion.Operaciones.prototype.getConfig = function (){
     return {
-        text: 'Operaciones',
+        text: 'Prestamos Intersucursal',
         cls: 'launchscreen',
         items: [
         {
