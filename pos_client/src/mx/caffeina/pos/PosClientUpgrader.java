@@ -82,9 +82,8 @@ public class PosClientUpgrader{
 			pw.flush();
 			
 			pw.close();
+
 			Logger.log("Escribiendo archivo... [OK]");			
-
-
 
 			BufferedOutputStream dest = null;
 			FileInputStream fis = new FileInputStream("new_version.zip");

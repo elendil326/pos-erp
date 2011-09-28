@@ -37,8 +37,6 @@ public class PosClient{
 		//iniciar el servidor web
 		httpServer = new HttpServer( 16001 );
 
-
-		
 	}
 
 

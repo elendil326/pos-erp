@@ -100,10 +100,10 @@ POS.Keyboard.Keyboard = function ( campo, config ){
 
 POS.Keyboard.hide = function () {
 
-	if(POS.Keyboard.KeyboardObj){
+	if(POS.Keyboard.KeyboardObj)
+	{
         POS.Keyboard.KeyboardObj.hide( Ext.anims.fade );
         POS.Keyboard.campo.blur();
-
 	}
 };
 

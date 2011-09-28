@@ -108,7 +108,9 @@ Aplicacion.Clientes.prototype.listaDeComprasClienteLoad = function ( id_cliente 
     if(DEBUG){
         console.log("Actualizando lista de compras del cliente " + id_cliente);
     }
-	
+
+	Aplicacion.Clientes.CLIENTE_SELECCIONADO = id_cliente;
+
     Ext.Ajax.request({
         url: '../proxy.php',
         scope : this,
@@ -290,6 +292,8 @@ Aplicacion.Clientes.prototype.listaDeClientesStore = new Ext.data.Store({
  */
 Aplicacion.Clientes.prototype.listaDeClientesPanel = null;
 
+
+Aplicacion.Clientes.CLIENTE_SELECCIONADO = null;
 
 /**
  * Pone un panel en listaDeClientesPanel
@@ -1804,7 +1808,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
         items: [
         {
             xtype: 'fieldset',
-            title: 'Abonar una cantidad especifica',
+            title: 'Abonar una cantidad ',
             id : 'Clientes-Vender',
             items: [{
                 //id : "Clentes-CreditoVentasLista",
@@ -1816,7 +1820,18 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
                      'focus' : function (){
                         kconf = {
                             type : 'num',
-                            submitText : 'Aceptar'
+                            submitText : 'Abonar',
+                            callback : function(a,b,c){
+                                console.log(a)
+                                Ext.Msg.confirm("Abono por cantidad", "&iquest; Esta seguro que desea abonar $" + a.value + " pesos a esta cuenta?", function(res){
+                                    
+                                    if(res == "yes") {
+                                        Aplicacion.Clientes.abonar_por_cantidad(Aplicacion.Clientes.CLIENTE_SELECCIONADO, a.value);
+                                        
+                                    }
+
+                                });
+                            }
                         };
                         POS.Keyboard.Keyboard( this, kconf );
                     }
@@ -1824,9 +1839,8 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
             }]
         },{
             xtype: 'fieldset',
-            title: 'Abonar una venta especifica',
+            title: 'Abonar una venta ',
             id : 'Clientes-SeleccionVentaCredito',
-
             items: [{
                 id : "Clentes-CreditoVentasLista",
                 xtype: 'selectfield',
@@ -1836,17 +1850,6 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
                 listeners : {
                     "change" : function(a,b) {
                         Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange(a,b);
-                    }
-                }
-            },{
-                id : "Clientes-AbonarPorMonto",
-                xtype: 'textfield',
-                
-                label : "Abonar un monto",
-                options: [  ],
-                listeners : {
-                    "change" : function(a,b) {
-                       // Aplicacion.Clientes.currentInstance.creditoDeClientesOptionChange(a,b);
                     }
                 }
             }]
@@ -1999,7 +2002,42 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 
 
 
+Aplicacion.Clientes.abonar_por_cantidad = function (id_cliente, monto)
+{
+    //alert("abonando " + monto  +  " a  "+ id_cliente  ) ;
 
+    Ext.Ajax.request({
+        url: '../proxy.php',
+        scope : this,
+        params : {
+            action      : 311,
+            id_cliente  : id_cliente,
+            monto       : monto
+        },
+        success: function(response, opts) {
+
+            try{
+                res = Ext.util.JSON.decode( response.responseText );
+            }catch(e){
+                return POS.error(e);
+            }
+            
+            if( !res.success ){
+                //volver a intentar
+                Ext.Msg.alert("Mostrador", res.reason);
+                return;
+
+            }
+            
+            
+            
+
+            Ext.Msg.alert("Exito","Abono realizado con exito.");
+            
+
+        }
+    });
+}
 
 
 
