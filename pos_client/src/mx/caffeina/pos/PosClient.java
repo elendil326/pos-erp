@@ -9,17 +9,19 @@ public class PosClient{
 	
 	
 	public static PosSystemTray trayIcon 	= null;
+
 	public static HttpServer 	httpServer 	= null;
 
-	public static void main( String ... args)
+	public static void main( String ... args )
 	{
 		
-		Logger.log("Iniciando cliente...");
+		Logger.log("----------------------------------");
+		Logger.log("Iniciando cliente !");
 		System.out.println("Iniciando cliente...");
+		
 		new PosClient();
 
 	}
-
 	
 
 	PosClient()
@@ -27,12 +29,12 @@ public class PosClient{
 
 		Runtime.getRuntime().addShutdownHook( new ShutDown() );
 
-        trayIcon = new PosSystemTray();
+		trayIcon = new PosSystemTray();
 		
 		String response = null;
 				
 		//vamos a ver si hay una nueva version del cliente
-		//PosClientUpgrader.checkForUpdates(  );
+		PosClientUpgrader.checkForUpdates( );
 
 		//iniciar el servidor web
 		httpServer = new HttpServer( 16001 );

@@ -12,10 +12,14 @@ import java.util.zip.*;
 public class PosClientUpgrader{
 	
 	private static String getCurrentVersion(){
+
 		try{
 			
 			BufferedReader br = new BufferedReader(new FileReader("VERSION"));
-			return br.readLine();
+			String version = br.readLine();
+			
+			br.close();
+			return version;
 			
 		}catch(Exception e){
 			return null;
@@ -27,12 +31,12 @@ public class PosClientUpgrader{
 	public static void checkForUpdates(){
 		
 		Logger.log("Buscando updates de pos Client...");
-
+		Logger.log("My actual version is : " + getCurrentVersion());
 	
 		String response = HttpClient.Request(
 			// base url
-			"http://development.pos.caffeina.mx/proxy.php?"
-			//"http://labs.caffeina.mx/alanboy/proyectos/pos-trunk/www/proxy.php?"
+			//"http://development.pos.caffeina.mx/proxy.php?"
+			"http://labs.caffeina.mx/alanboy/proyectos/pos/pos/trunk/www/proxy.php?"
 			
 			// instance
 			+ "&i=1"
@@ -46,23 +50,27 @@ public class PosClientUpgrader{
 			// this client's token
 			+ "&t=" + Networking.getMacAddd( ) ).toString();
 
-		if(!response.trim().equals("PLEASE_UPGRADE_YOURSELF")){
+		
+
+		if(!response.trim().equals("PLEASE_UPGRADE_YOURSELF"))
+		{
 			Logger.log("No upgrade needed... carry on.");
 			return ;
-			
 		}
 		
 		//i need some upgrading man !
 		Logger.warn("I NEED TO UPGRADE !");
 		
 		upgrade();
+
+		System.exit(1);
 		
 	}
 	
 	
 	private static void upgrade(){
 		
-		PosClient.trayIcon.getTrayIcon().displayMessage("Nueva Version", 
+		PosClient.trayIcon.getTrayIcon().displayMessage("Actualizando", 
             "Descargando...",
             TrayIcon.MessageType.INFO);
 
@@ -72,15 +80,14 @@ public class PosClientUpgrader{
 			
 			PrintWriter pw = new PrintWriter(new FileWriter("new_version.zip"));
 			
-			StringBuilder s = HttpClient.Request("http://development.pos.caffeina.mx/proxy.php?&i=1&action=1401&t=00-1E-52-87-A2-9E");
-			//StringBuilder s = HttpClient.Request("http://labs.caffeina.mx/alanboy/proyectos/pos-trunk/www/proxy.php?&i=1&action=1401&t=00-1E-52-87-A2-9E");			
+			StringBuilder s = HttpClient.Request("http://labs.caffeina.mx/alanboy/proyectos/pos/pos/trunk/www/proxy.php?&i=1&action=1401&t=00-1E-52-87-A2-9E");
+			//StringBuilder s = HttpClient.Request("http://labs.caffeina.mx/alanboy/proyectos/pos-trunk/www/proxy.php?&i=1&action=1401&t=00-1E-52-87-A2-9E");
+
 			Logger.log("Descargando nueva version...[OK]");			
 
 			
-			pw.write(s.toString());
-			
+			pw.write( s.toString() );
 			pw.flush();
-			
 			pw.close();
 
 			Logger.log("Escribiendo archivo... [OK]");			
@@ -92,7 +99,8 @@ public class PosClientUpgrader{
 			
 			int BUFFER = 2048; 
 			
-			while((entry = zis.getNextEntry()) != null) {
+			while((entry = zis.getNextEntry()) != null) 
+			{
 				Logger.log("Extracting : " + entry);
 				
 				if(entry.isDirectory())
@@ -108,23 +116,26 @@ public class PosClientUpgrader{
 				FileOutputStream fos = new FileOutputStream( entry.getName() );
 				dest = new 	BufferedOutputStream(fos, BUFFER);
 				
-				while ((count = zis.read(data, 0, BUFFER)) != -1) {
+				while ((count = zis.read(data, 0, BUFFER)) != -1) 	{
 			 		dest.write(data, 0, count);
 				}
 				
 				dest.flush();
 				dest.close();
 			}
+
 			zis.close();
 			
-			Logger.log("Nueva version instalada !!!!");	
 			Logger.warn("Nueva version instalada !!!!");
 			
 
 
 		}catch(Exception e){
+
 			Logger.error(e);
-			
+			Logger.error("--- cerrando cliente debido a exception ---");
+			System.out.println(e);
+			System.exit(1);
 		}
 		
 		try{

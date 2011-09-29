@@ -113,7 +113,7 @@ public class HttpClient
 			out.println("Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 			out.println("Accept-Charset:ISO-8859-1,utf-8;q=0.7,*;q=0.3");
 			/*out.println("Accept-Encoding:gzip,deflate,sdch");*/
-			out.println("User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1");
+			out.println("User-Agent: POS_CLIENT 1.0");
 			out.println("Host: "+url.getHost()+"\n\n");
 						
 			out.flush(); 
@@ -196,6 +196,7 @@ public class HttpClient
 
 
         }catch(IOException ioe){ 
+			Logger.error("Exception during communication. Server probably closed connection.");
 			Logger.error(ioe);
             System.out.println("Exception during communication. Server probably closed connection."); 
 
@@ -212,7 +213,7 @@ public class HttpClient
 
             }catch(Exception e){ 
                 e.printStackTrace(); 
-
+                Logger.error( e );
             }                 
         }
 

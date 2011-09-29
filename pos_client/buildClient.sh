@@ -27,14 +27,17 @@ cd ..
 
 rm posClient.zip
 
-#zip the client
-zip -r client.zip posClient.jar *.so *.dll lib media VERSION -x \*.svn*
-
-rm -rf bin
 
 #create the version file
 date | md5 -q > VERSION
 date "+BUILT: %Y-%m-%d  %H:%M:%S" >> VERSION
 
+
+#zip the client
+zip -Tr client.zip posClient.jar *.so *.dll lib media VERSION -x \*.svn* \*.DS_Store
+
+rm -rf bin
+
+
 #run main biatch
-java -jar posClient.jar 
+#java -jar posClient.jar 
