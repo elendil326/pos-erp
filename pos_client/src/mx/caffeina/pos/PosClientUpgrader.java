@@ -63,36 +63,23 @@ public class PosClientUpgrader{
 		
 		upgrade();
 
-		System.exit(1);
+		System.exit(3);
 		
 	}
 	
 	
 	private static void upgrade(){
 		
-		PosClient.trayIcon.getTrayIcon().displayMessage("Actualizando", 
+		PosClient.trayIcon.getTrayIcon().displayMessage("Actualizando POS", 
             "Descargando...",
             TrayIcon.MessageType.INFO);
 
 		try{
 			
-
-			
-			//PrintWriter pw = new PrintWriter(new FileWriter("new_version.zip"));
-			
-			//StringBuilder s = HttpClient.Request("http://labs.caffeina.mx/alanboy/proyectos/pos/pos/trunk/www/proxy.php?&i=1&action=1401&t=00-1E-52-87-A2-9E");
-			//StringBuilder s = HttpClient.Request("http://labs.caffeina.mx/alanboy/proyectos/pos-trunk/www/proxy.php?&i=1&action=1401&t=00-1E-52-87-A2-9E");
-
 			HttpClient.RequestBinToFile("http://labs.caffeina.mx/alanboy/proyectos/pos/pos/trunk/www/proxy.php?&i=1&action=1401&t=00-1E-52-87-A2-9E", "new_version.zip");
 
 			Logger.log("Descargando nueva version...[OK]");
 			
-
-			/*pw.write( s.toString() );
-			pw.flush();
-			pw.close();*/
-
-			/*Logger.log("Escribiendo archivo... [OK]");*/
 
 			BufferedOutputStream dest = null;
 			FileInputStream fis = new FileInputStream("new_version.zip");
@@ -147,6 +134,10 @@ public class PosClientUpgrader{
 		}catch(Exception e){
 			Logger.error(e);
 		}
+
+		PosClient.trayIcon.getTrayIcon().displayMessage("Actualizando POS", 
+            "Actualizacion completa",
+            TrayIcon.MessageType.INFO);
 		
 	}
 	

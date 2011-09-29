@@ -79,7 +79,7 @@ public class PosSystemTray
 	
                 public void actionPerformed(ActionEvent e) {
                     trayIcon.displayMessage("Pos Client", 
-                        "Pos client iniciado !",
+                        "Pos client corriendo !",
                         TrayIcon.MessageType.INFO);
                 }
             };

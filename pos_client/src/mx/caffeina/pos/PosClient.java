@@ -18,8 +18,8 @@ public class PosClient{
 		Logger.log("----------------------------------");
 		Logger.log("Iniciando cliente !");
 
-		System.out.println("Iniciando cliente...");
-		System.out.println("awebo puta madre");
+		
+		
 		new PosClient();
 
 	}
