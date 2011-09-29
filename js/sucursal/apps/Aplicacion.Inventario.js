@@ -234,7 +234,7 @@ Aplicacion.Inventario.crearHtmlDeInventario = function (){
 	html += "<table border=0 style='width:100%; font-size: 16px;'>"
 		+ 	"<tr style='font-size: 16px; ' >"
 		+ 		"<td style='padding-left: 7px;'>Producto</td>"
-		+ 		"<td>Existencias</td>"
+		+ 		"<td>Existencias Originales</td>"
 		+ 		"<td>Precio</td>"
 		+ 		"<td>Existencias Procesadas</td>"
 		+ 		"<td>Precio</td>"
