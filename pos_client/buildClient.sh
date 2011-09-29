@@ -2,19 +2,19 @@
 rm file.list
 rm -rf bin
 
-#find java src files
+##find java src files
 find src -name \*.java -print > file.list
 
 mkdir bin
 
-#compile those
+##compile those
 javac -d bin -cp src:lib/json-simple-1.1.jar:lib/GiovynetDriver.jar @file.list || exit;
 
 rm file.list
 
 cd bin
 
-#create manifest file
+##create manifest file
 echo "Main-Class: mx.caffeina.pos.PosClient
 Class-Path: lib/json-simple-1.1.jar lib/GiovynetDriver.jar" > ../manifest
 
@@ -25,17 +25,16 @@ rm ../manifest
 
 cd ..
 
-rm posClient.zip
+#rm posClient.zip
 
 
-#create the version file
+##create the version file
 date | md5 -q > VERSION
 date "+BUILT: %Y-%m-%d  %H:%M:%S" >> VERSION
 
 
-#zip the client
-zip -Tr client.zip posClient.jar *.so *.dll lib media VERSION -x \*.svn* \*.DS_Store
-
+##zip the client
+zip  -Tr client.zip posClient.jar *.so *.dll lib media VERSION -x \*.svn* \*.DS_Store
 rm -rf bin
 
 

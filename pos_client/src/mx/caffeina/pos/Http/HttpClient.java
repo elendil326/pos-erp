@@ -12,6 +12,7 @@ import java.util.*;
 
 
 
+
 // A client for our multithreaded EchoServer. 
 public class HttpClient
 { 
@@ -21,9 +22,9 @@ public class HttpClient
 	/**
 	*  The socket for this conection
 	* */
-	private static Socket s = null; 
-	private static URL url = null;
-
+	private static Socket s 	= null; 
+	private static URL url 		= null;
+	private static String binToFile 	= null;
 
 
 
@@ -41,7 +42,39 @@ public class HttpClient
 		return doRequest();
 	}
 	
-	
+	public static void RequestBinToFile  (String host, String file) throws Exception
+	{
+		URL u = new URL(host);
+	    URLConnection uc = u.openConnection();
+	    String contentType = uc.getContentType();
+	    int contentLength = uc.getContentLength();
+	    if (contentType.startsWith("text/") || contentLength == -1) {
+	      throw new IOException("This is not a binary file.");
+	    }
+	    InputStream raw = uc.getInputStream();
+	    InputStream in = new BufferedInputStream(raw);
+	    byte[] data = new byte[contentLength];
+	    int bytesRead = 0;
+	    int offset = 0;
+	    while (offset < contentLength) 
+	    {
+		      bytesRead = in.read(data, offset, data.length - offset);
+		      if (bytesRead == -1)
+		        break;
+		      offset += bytesRead;
+	    }
+	    in.close();
+
+	    if (offset != contentLength) {
+	      throw new IOException("Only read " + offset + " bytes; Expected " + contentLength + " bytes");
+	    }
+
+	    String filename = file;//u.getFile().substring(filename.lastIndexOf('/') + 1);
+	    FileOutputStream out = new FileOutputStream(filename);
+	    out.write(data);
+	    out.flush();
+	    out.close();
+	}
 	
 	
 	/**
@@ -68,7 +101,7 @@ public class HttpClient
             	s = new Socket(url.getHost(), url.getPort()); 
 
         }catch(IllegalArgumentException iae){ 
-			Logger.error(iae);
+			Logger.error(iae);	
 			return false;
 				
         }catch(UnknownHostException uhe){ 
@@ -180,11 +213,36 @@ public class HttpClient
 						
 					}else{
 						
-						//si me enviaron un content-length solo leer esosc aracteres
-						while(--contentLength >= 0){
 
+
+
+						//si me enviaron un content-length solo leer esosc aracteres
+						Logger.log("Reading Content-Length, which is ("+contentLength+") bytes");
+
+						if(binToFile != null ){
+							Logger.log( "reading binary file and saving to " + binToFile );
+
+							//PrintWriter pw = new PrintWriter(new FileWriter( binToFile ));
+							FileOutputStream fout = new FileOutputStream(binToFile);
+							while(--contentLength >= 0)
+							{
+								//pw.write( in.read() );
+								fout.write( (byte)in.read() );	
+							}	
+							//pw.flush();
+							//pw.close();
+							fout.close();
+							break;							
+						}
+
+
+						
+						while(--contentLength >= 0)
+						{
+							
 							response.append( (char)in.read() );
-						}						
+						}			
+						
 					}
 
 					break;

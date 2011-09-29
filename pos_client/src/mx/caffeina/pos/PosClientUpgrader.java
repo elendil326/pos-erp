@@ -78,19 +78,21 @@ public class PosClientUpgrader{
 			
 
 			
-			PrintWriter pw = new PrintWriter(new FileWriter("new_version.zip"));
+			//PrintWriter pw = new PrintWriter(new FileWriter("new_version.zip"));
 			
-			StringBuilder s = HttpClient.Request("http://labs.caffeina.mx/alanboy/proyectos/pos/pos/trunk/www/proxy.php?&i=1&action=1401&t=00-1E-52-87-A2-9E");
+			//StringBuilder s = HttpClient.Request("http://labs.caffeina.mx/alanboy/proyectos/pos/pos/trunk/www/proxy.php?&i=1&action=1401&t=00-1E-52-87-A2-9E");
 			//StringBuilder s = HttpClient.Request("http://labs.caffeina.mx/alanboy/proyectos/pos-trunk/www/proxy.php?&i=1&action=1401&t=00-1E-52-87-A2-9E");
 
-			Logger.log("Descargando nueva version...[OK]");			
+			HttpClient.RequestBinToFile("http://labs.caffeina.mx/alanboy/proyectos/pos/pos/trunk/www/proxy.php?&i=1&action=1401&t=00-1E-52-87-A2-9E", "new_version.zip");
 
+			Logger.log("Descargando nueva version...[OK]");
 			
-			pw.write( s.toString() );
-			pw.flush();
-			pw.close();
 
-			Logger.log("Escribiendo archivo... [OK]");			
+			/*pw.write( s.toString() );
+			pw.flush();
+			pw.close();*/
+
+			/*Logger.log("Escribiendo archivo... [OK]");*/
 
 			BufferedOutputStream dest = null;
 			FileInputStream fis = new FileInputStream("new_version.zip");
@@ -137,6 +139,7 @@ public class PosClientUpgrader{
 			System.out.println(e);
 			System.exit(1);
 		}
+		
 		
 		try{
 			File f = new File("new_version.zip");
