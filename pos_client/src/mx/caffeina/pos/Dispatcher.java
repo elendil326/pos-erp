@@ -1,6 +1,7 @@
 package mx.caffeina.pos;
 
 import mx.caffeina.pos.Printer.*;
+import mx.caffeina.pos.Impresiones.*;
 import mx.caffeina.pos.Bascula.*;
 import mx.caffeina.pos.Networking.*;
 
@@ -16,7 +17,7 @@ public class Dispatcher{
 	
 	public static String dispatch( String request ){
 
-		Logger.log("Raw request: >" + request + "<");
+		
 
 		if(request == null)
 		{
@@ -26,7 +27,7 @@ public class Dispatcher{
 
 		if(request.equals("avicon.ico"))
 		{
-			Logger.log("Omitinedo request de favicon.");
+			//Logger.log("Omitinedo request de favicon.");
 			return returnError();
 		}
 
@@ -44,7 +45,8 @@ public class Dispatcher{
 			if( args[i].startsWith("callback=") )
 				callback = args[i].substring(9);								
 		}
-		
+
+		Logger.log("Request: " + request + "");
 		Logger.log("Dispatching module " + action);
 		
 		
@@ -67,6 +69,18 @@ public class Dispatcher{
 		if(action.equals("Printer")){
 			return callback + ServidorImpresion.Print( data );	
 		}
+
+
+
+		/**
+		* 
+		* 	Despachar a impresiones
+		* 
+		* 
+		* */
+		if(action.equals("Impresiones")){
+			return callback + Impresiones.Print( data );	
+		}		
 
 		/**
 		* 

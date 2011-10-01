@@ -96,8 +96,7 @@ public class HttpServer
         ClientServiceThread(Socket s, int clientID) 
         { 
 	
-			Logger.log( "Connection recieved !" );
-						
+			Logger.log( "Connection recieved from " + s.getRemoteSocketAddress() );
             m_clientSocket = s;
             m_clientID = clientID; 
         } 

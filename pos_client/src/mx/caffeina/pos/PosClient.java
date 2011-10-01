@@ -16,8 +16,8 @@ public class PosClient{
 	{
 		
 		Logger.log("----------------------------------");
-		Logger.log("Iniciando cliente !");
-
+		Logger.log("     Iniciando cliente");
+		Logger.log("----------------------------------");
 		
 		
 		new PosClient();

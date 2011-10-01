@@ -63,15 +63,30 @@ public class PosSystemTray
 
             ActionListener exitListener = new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("Exiting...");
+                    
                     System.exit(0);
                 }
             };
             
+            ActionListener upgradeListener = new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    
+                    System.exit(3);
+                }
+            };
+
             PopupMenu popup = new PopupMenu();
+            
+            
             MenuItem defaultItem = new MenuItem("Cerrar cliente");
             defaultItem.addActionListener(exitListener);
             popup.add( defaultItem );
+
+
+            MenuItem defaultItem2 = new MenuItem("Actualizar Cliente");
+            defaultItem2.addActionListener(upgradeListener);
+            popup.add( defaultItem2 );
+
 
             trayIcon = new TrayIcon(image, "Pos Client", popup);
 
