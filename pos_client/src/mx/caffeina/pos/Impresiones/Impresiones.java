@@ -11,8 +11,6 @@ import javax.print.PrintServiceLookup;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import java.net.URLDecoder;
-//import java.util.logging.Level;
-//import java.util.logging.Logger;
 import mx.caffeina.pos.PosClient;
 import mx.caffeina.pos.Logger;
 import java.util.Calendar;
@@ -26,11 +24,14 @@ import java.text.SimpleDateFormat;
 
 public class Impresiones{
 	
-	private static String 	to_print;
-	private static String 	dispositivo_de_impresion_default ;
-	private static String 	dispositivo_de_impresion;
-	private static String 	request_json;
-	private static Map  	jsonmap;
+	private static String 		to_print;
+	private static String 		dispositivo_de_impresion_default ;
+	private static String 		dispositivo_de_impresion ;
+	private static String 		request_json;
+	private static Map  		jsonmap;
+	private static PrinterJob 	job;
+
+
 
 
 
@@ -44,7 +45,7 @@ public class Impresiones{
 
 			Logger.error("Imposible decodear este url" + npe);
 
-			return "({\"success\": false });";
+			return "({\"success\": false, reason : \"Imposible decodear este url\"});";
 		}
 
 
@@ -61,16 +62,30 @@ public class Impresiones{
 		}
 
 
+		job = PrinterJob.getPrinterJob();
+
 		to_print = null;
 
-		dispositivo_de_impresion_default = "EPSON";
+		dispositivo_de_impresion_default = "EPSON TM-U220 Receipt";
 
 		//buscar una impresora en el json
 		buscarImpresoraEnJson();
 
 		//buscar impresoras esa impresora en
 		//las impresoras disponibles
-		buscarImpresorasDisponibles();
+		try{
+			buscarImpresorasDisponibles();	
+
+		}catch(PrinterException pe){
+			Logger.error(pe);
+			return "(\"success\" : false )";
+
+		}catch(Exception e){
+			Logger.error(e);
+			return "(\"success\" : false, \"reason\" : \""+ e +"\" )";			
+
+		}
+		
 
 		//si se encontro impresora en json
 		//y esa impresora esta disponible
@@ -80,7 +95,7 @@ public class Impresiones{
 		//regresar un error
 		imprimir();
 
-		return "hola";
+		return "( \"success\": true )";
 
 	}
 
@@ -102,7 +117,8 @@ public class Impresiones{
 	        if (entry.getKey().toString().equals("free_text")) 
 	        {
 	        	
-				to_print = (String)entry.getValue();
+				to_print = String.valueOf( entry.getValue() );
+
 				break;
 	        }
         }
@@ -116,11 +132,14 @@ public class Impresiones{
         }
 
 
-        //let print this shit!
-        PrinterJob job = PrinterJob.getPrinterJob();
-        //job.setPrintService();
 
-        //job.setPrintable((Printable) formato);
+		job.setPrintable((Printable) new ImpresionesPagina( to_print ));
+
+        try {
+            job.print();
+        } catch (PrinterException exception) {
+            Logger.error("La impresora no esta recibiendo documentos.");
+        }
 
 	}
 
@@ -153,13 +172,17 @@ public class Impresiones{
 	}
 
 
-	private static void buscarImpresorasDisponibles()
+	private static void buscarImpresorasDisponibles() throws PrinterException, Exception
 	{
 		
         PrintService [] printServices = PrintServiceLookup.lookupPrintServices(null, null);
-        
+
         PrintService selectedService = null;
+
+        boolean found = false, found_default = false;
 		
+		PrintService service = null, defaultService = null;
+
         for (int i = 0; i < printServices.length; i++)
         {
 
@@ -167,16 +190,43 @@ public class Impresiones{
 
         	if(dispositivo_de_impresion == printServices[i].getName())
         	{
-        		Logger.log("Encontre el dispositivo que andaba buscando ;)");
-        		return;
+        		Logger.log("Encontre el dispositivo que andaba buscando");
+        		found = true;
+        		service = printServices[i];
+
+        	}
+
+        	if(dispositivo_de_impresion_default == printServices[i].getName())
+        	{
+        		Logger.log("Encontre el dispositivo default ");
+        		found_default = true;
+        		defaultService = printServices[i];
         	}
             
+            if(printServices[i].getName().startsWith("EPSON")){
+            	job.setPrintService( printServices[i] );
+            	return;
+            }
+            	
+
         }
 
-        Logger.warn("No encontre el dispositivo que venia en el json, imprimire en el default");
+        if(found){
+        	//usar el que me pidieron
+        	job.setPrintService(service);
 
-		dispositivo_de_impresion = dispositivo_de_impresion_default;
+        }else if(found_default){
+        	//usar el default
+ 			job.setPrintService(defaultService);
+
+        }else {
+        	//error
+        	throw new Exception("No se encontro ni la enviada, ni la default");
+        }
+
+		
 
 	}//buscarImpresorasDisponibles()
 
 }//Impresiones
+
