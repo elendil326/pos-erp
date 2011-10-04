@@ -1,0 +1,1565 @@
+<?php
+/** Value Object file for table usuario.
+  * 
+  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
+  * @author Andres
+  * @access public
+  * @package docs
+  * 
+  */
+
+class Usuario extends VO
+{
+	/**
+	  * Constructor de Usuario
+	  * 
+	  * Para construir un objeto de tipo Usuario debera llamarse a el constructor 
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  * cuyos campos son iguales a las variables que constituyen a este objeto.
+	  * @return Usuario
+	  */
+	function __construct( $data = NULL)
+	{ 
+		if(isset($data))
+		{
+			if( isset($data['id_usuario']) ){
+				$this->id_usuario = $data['id_usuario'];
+			}
+			if( isset($data['id_direccion']) ){
+				$this->id_direccion = $data['id_direccion'];
+			}
+			if( isset($data['id_direccion_alterna']) ){
+				$this->id_direccion_alterna = $data['id_direccion_alterna'];
+			}
+			if( isset($data['id_sucursal']) ){
+				$this->id_sucursal = $data['id_sucursal'];
+			}
+			if( isset($data['id_rol']) ){
+				$this->id_rol = $data['id_rol'];
+			}
+			if( isset($data['id_clasificacion_cliente']) ){
+				$this->id_clasificacion_cliente = $data['id_clasificacion_cliente'];
+			}
+			if( isset($data['id_clasificacion_proveedor']) ){
+				$this->id_clasificacion_proveedor = $data['id_clasificacion_proveedor'];
+			}
+			if( isset($data['id_moneda']) ){
+				$this->id_moneda = $data['id_moneda'];
+			}
+			if( isset($data['fecha_asignacion_rol']) ){
+				$this->fecha_asignacion_rol = $data['fecha_asignacion_rol'];
+			}
+			if( isset($data['nombre']) ){
+				$this->nombre = $data['nombre'];
+			}
+			if( isset($data['rfc']) ){
+				$this->rfc = $data['rfc'];
+			}
+			if( isset($data['curp']) ){
+				$this->curp = $data['curp'];
+			}
+			if( isset($data['comision_ventas']) ){
+				$this->comision_ventas = $data['comision_ventas'];
+			}
+			if( isset($data['telefono_personal1']) ){
+				$this->telefono_personal1 = $data['telefono_personal1'];
+			}
+			if( isset($data['telefono_personal2']) ){
+				$this->telefono_personal2 = $data['telefono_personal2'];
+			}
+			if( isset($data['fecha_alta']) ){
+				$this->fecha_alta = $data['fecha_alta'];
+			}
+			if( isset($data['fecha_baja']) ){
+				$this->fecha_baja = $data['fecha_baja'];
+			}
+			if( isset($data['activo']) ){
+				$this->activo = $data['activo'];
+			}
+			if( isset($data['limite_credito']) ){
+				$this->limite_credito = $data['limite_credito'];
+			}
+			if( isset($data['descuento']) ){
+				$this->descuento = $data['descuento'];
+			}
+			if( isset($data['password']) ){
+				$this->password = $data['password'];
+			}
+			if( isset($data['last_login']) ){
+				$this->last_login = $data['last_login'];
+			}
+			if( isset($data['consignatario']) ){
+				$this->consignatario = $data['consignatario'];
+			}
+			if( isset($data['salario']) ){
+				$this->salario = $data['salario'];
+			}
+			if( isset($data['correo_electronico']) ){
+				$this->correo_electronico = $data['correo_electronico'];
+			}
+			if( isset($data['pagina_web']) ){
+				$this->pagina_web = $data['pagina_web'];
+			}
+			if( isset($data['saldo_del_ejercicio']) ){
+				$this->saldo_del_ejercicio = $data['saldo_del_ejercicio'];
+			}
+			if( isset($data['ventas_a_credito']) ){
+				$this->ventas_a_credito = $data['ventas_a_credito'];
+			}
+			if( isset($data['representante_legal']) ){
+				$this->representante_legal = $data['representante_legal'];
+			}
+			if( isset($data['facturar_a_terceros']) ){
+				$this->facturar_a_terceros = $data['facturar_a_terceros'];
+			}
+			if( isset($data['dia_de_pago']) ){
+				$this->dia_de_pago = $data['dia_de_pago'];
+			}
+			if( isset($data['mensajeria']) ){
+				$this->mensajeria = $data['mensajeria'];
+			}
+			if( isset($data['intereses_moratorios']) ){
+				$this->intereses_moratorios = $data['intereses_moratorios'];
+			}
+			if( isset($data['denominacion_comercial']) ){
+				$this->denominacion_comercial = $data['denominacion_comercial'];
+			}
+			if( isset($data['dias_de_credito']) ){
+				$this->dias_de_credito = $data['dias_de_credito'];
+			}
+			if( isset($data['cuenta_de_mensajeria']) ){
+				$this->cuenta_de_mensajeria = $data['cuenta_de_mensajeria'];
+			}
+			if( isset($data['dia_de_revision']) ){
+				$this->dia_de_revision = $data['dia_de_revision'];
+			}
+			if( isset($data['codigo_usuario']) ){
+				$this->codigo_usuario = $data['codigo_usuario'];
+			}
+			if( isset($data['dias_de_embarque']) ){
+				$this->dias_de_embarque = $data['dias_de_embarque'];
+			}
+			if( isset($data['tiempo_entrega']) ){
+				$this->tiempo_entrega = $data['tiempo_entrega'];
+			}
+			if( isset($data['cuenta_bancaria']) ){
+				$this->cuenta_bancaria = $data['cuenta_bancaria'];
+			}
+		}
+	}
+
+	/**
+	  * Obtener una representacion en String
+	  * 
+	  * Este metodo permite tratar a un objeto Usuario en forma de cadena.
+	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
+	  * @return String 
+	  */
+	public function __toString( )
+	{ 
+		$vec = array( 
+			"id_usuario" => $this->id_usuario,
+			"id_direccion" => $this->id_direccion,
+			"id_direccion_alterna" => $this->id_direccion_alterna,
+			"id_sucursal" => $this->id_sucursal,
+			"id_rol" => $this->id_rol,
+			"id_clasificacion_cliente" => $this->id_clasificacion_cliente,
+			"id_clasificacion_proveedor" => $this->id_clasificacion_proveedor,
+			"id_moneda" => $this->id_moneda,
+			"fecha_asignacion_rol" => $this->fecha_asignacion_rol,
+			"nombre" => $this->nombre,
+			"rfc" => $this->rfc,
+			"curp" => $this->curp,
+			"comision_ventas" => $this->comision_ventas,
+			"telefono_personal1" => $this->telefono_personal1,
+			"telefono_personal2" => $this->telefono_personal2,
+			"fecha_alta" => $this->fecha_alta,
+			"fecha_baja" => $this->fecha_baja,
+			"activo" => $this->activo,
+			"limite_credito" => $this->limite_credito,
+			"descuento" => $this->descuento,
+			"password" => $this->password,
+			"last_login" => $this->last_login,
+			"consignatario" => $this->consignatario,
+			"salario" => $this->salario,
+			"correo_electronico" => $this->correo_electronico,
+			"pagina_web" => $this->pagina_web,
+			"saldo_del_ejercicio" => $this->saldo_del_ejercicio,
+			"ventas_a_credito" => $this->ventas_a_credito,
+			"representante_legal" => $this->representante_legal,
+			"facturar_a_terceros" => $this->facturar_a_terceros,
+			"dia_de_pago" => $this->dia_de_pago,
+			"mensajeria" => $this->mensajeria,
+			"intereses_moratorios" => $this->intereses_moratorios,
+			"denominacion_comercial" => $this->denominacion_comercial,
+			"dias_de_credito" => $this->dias_de_credito,
+			"cuenta_de_mensajeria" => $this->cuenta_de_mensajeria,
+			"dia_de_revision" => $this->dia_de_revision,
+			"codigo_usuario" => $this->codigo_usuario,
+			"dias_de_embarque" => $this->dias_de_embarque,
+			"tiempo_entrega" => $this->tiempo_entrega,
+			"cuenta_bancaria" => $this->cuenta_bancaria
+		); 
+	return json_encode($vec); 
+	}
+	
+	/**
+	  * id_usuario
+	  * 
+	  * Id de la tabla usuario<br>
+	  * <b>Llave Primaria</b><br>
+	  * <b>Auto Incremento</b><br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_usuario;
+
+	/**
+	  * id_direccion
+	  * 
+	  * Id de la direccion del usuario<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_direccion;
+
+	/**
+	  * id_direccion_alterna
+	  * 
+	  * Id de la direccion alterna del usuario<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_direccion_alterna;
+
+	/**
+	  * id_sucursal
+	  * 
+	  * Id sucursal en la que labora este usuario o dodne se dio de alta<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_sucursal;
+
+	/**
+	  * id_rol
+	  * 
+	  * Id del rol que desempeñara el usuario en la instancia<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_rol;
+
+	/**
+	  * id_clasificacion_cliente
+	  * 
+	  * Id de la clasificaiocn del cliente<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_clasificacion_cliente;
+
+	/**
+	  * id_clasificacion_proveedor
+	  * 
+	  * Id de la clasificacion del proveedor<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_clasificacion_proveedor;
+
+	/**
+	  * id_moneda
+	  * 
+	  * Id moneda de preferencia del usuario<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_moneda;
+
+	/**
+	  * fecha_asignacion_rol
+	  * 
+	  * Fecha en que se asigno o modifico el rol de este usuario<br>
+	  * @access protected
+	  * @var datetime
+	  */
+	protected $fecha_asignacion_rol;
+
+	/**
+	  * nombre
+	  * 
+	  * Nombre del agente<br>
+	  * @access protected
+	  * @var varchar(100)
+	  */
+	protected $nombre;
+
+	/**
+	  * rfc
+	  * 
+	  * RFC del agente<br>
+	  * @access protected
+	  * @var varchar(30)
+	  */
+	protected $rfc;
+
+	/**
+	  * curp
+	  * 
+	  * CURP del agente<br>
+	  * @access protected
+	  * @var varchar(30)
+	  */
+	protected $curp;
+
+	/**
+	  * comision_ventas
+	  * 
+	  * Comision sobre las ventas que recibira este agente<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $comision_ventas;
+
+	/**
+	  * telefono_personal1
+	  * 
+	  * Telefono personal del agente<br>
+	  * @access protected
+	  * @var varchar(20)
+	  */
+	protected $telefono_personal1;
+
+	/**
+	  * telefono_personal2
+	  * 
+	  * Telefono personal del agente<br>
+	  * @access protected
+	  * @var varchar(20)
+	  */
+	protected $telefono_personal2;
+
+	/**
+	  * fecha_alta
+	  * 
+	  * Fecha en que se creo este usuario<br>
+	  * @access protected
+	  * @var datetime
+	  */
+	protected $fecha_alta;
+
+	/**
+	  * fecha_baja
+	  * 
+	  * fecha en que se desactivo este usuario<br>
+	  * @access protected
+	  * @var datetime
+	  */
+	protected $fecha_baja;
+
+	/**
+	  * activo
+	  * 
+	  * si este usuario esta activo o no<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $activo;
+
+	/**
+	  * limite_credito
+	  * 
+	  * Limite de credito del usuario<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $limite_credito;
+
+	/**
+	  * descuento
+	  * 
+	  * Porcentaje del descuento del usuario<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $descuento;
+
+	/**
+	  * password
+	  * 
+	  * Password del usuario<br>
+	  * @access protected
+	  * @var varchar(64)
+	  */
+	protected $password;
+
+	/**
+	  * last_login
+	  * 
+	  * Fecha en la que ingreso el usuario por ultima vez<br>
+	  * @access protected
+	  * @var datetime
+	  */
+	protected $last_login;
+
+	/**
+	  * consignatario
+	  * 
+	  * Si el usuario es consignatario<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $consignatario;
+
+	/**
+	  * salario
+	  * 
+	  * El salario que recibe el usuaario actualmente<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $salario;
+
+	/**
+	  * correo_electronico
+	  * 
+	  * Correo electronico del usuario<br>
+	  * @access protected
+	  * @var varchar(30)
+	  */
+	protected $correo_electronico;
+
+	/**
+	  * pagina_web
+	  * 
+	  * Pagina Web del usuario<br>
+	  * @access protected
+	  * @var varchar(30)
+	  */
+	protected $pagina_web;
+
+	/**
+	  * saldo_del_ejercicio
+	  * 
+	  * Saldo del ejercicio del cliente<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $saldo_del_ejercicio;
+
+	/**
+	  * ventas_a_credito
+	  * 
+	  * Ventas a credito del cliente<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $ventas_a_credito;
+
+	/**
+	  * representante_legal
+	  * 
+	  * Nombre del representante legal del usuario<br>
+	  * @access protected
+	  * @var varchar(100)
+	  */
+	protected $representante_legal;
+
+	/**
+	  * facturar_a_terceros
+	  * 
+	  * Si el cliente puede facturar a terceros<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $facturar_a_terceros;
+
+	/**
+	  * dia_de_pago
+	  * 
+	  * Fecha de pago del cliente<br>
+	  * @access protected
+	  * @var datetime
+	  */
+	protected $dia_de_pago;
+
+	/**
+	  * mensajeria
+	  * 
+	  * Si el cliente cuenta con una cuenta de mensajería y paquetería<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $mensajeria;
+
+	/**
+	  * intereses_moratorios
+	  * 
+	  * Intereses moratorios del cliente<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $intereses_moratorios;
+
+	/**
+	  * denominacion_comercial
+	  * 
+	  * Denominación comercial del cliente<br>
+	  * @access protected
+	  * @var varchar(100)
+	  */
+	protected $denominacion_comercial;
+
+	/**
+	  * dias_de_credito
+	  * 
+	  * Días de crédito que se le darán al cliente<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $dias_de_credito;
+
+	/**
+	  * cuenta_de_mensajeria
+	  * 
+	  * Cuenta de mensajeria del cliente<br>
+	  * @access protected
+	  * @var varchar(50)
+	  */
+	protected $cuenta_de_mensajeria;
+
+	/**
+	  * dia_de_revision
+	  * 
+	  * Fecha de revisión del cliente<br>
+	  * @access protected
+	  * @var datetime
+	  */
+	protected $dia_de_revision;
+
+	/**
+	  * codigo_usuario
+	  * 
+	  * Codigo del usuario para uso interno de la empresa<br>
+	  * @access protected
+	  * @var varchar(50)
+	  */
+	protected $codigo_usuario;
+
+	/**
+	  * dias_de_embarque
+	  * 
+	  * Dias de embarque del proveedor (Lunes, Martes, etc)<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $dias_de_embarque;
+
+	/**
+	  * tiempo_entrega
+	  * 
+	  * Tiempo de entrega del proveedor en días<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $tiempo_entrega;
+
+	/**
+	  * cuenta_bancaria
+	  * 
+	  * Cuenta bancaria del usuario<br>
+	  * @access protected
+	  * @var varchar(50)
+	  */
+	protected $cuenta_bancaria;
+
+	/**
+	  * getIdUsuario
+	  * 
+	  * Get the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es Id de la tabla usuario
+	  * @return int(11)
+	  */
+	final public function getIdUsuario()
+	{
+		return $this->id_usuario;
+	}
+
+	/**
+	  * setIdUsuario( $id_usuario )
+	  * 
+	  * Set the <i>id_usuario</i> property for this object. Donde <i>id_usuario</i> es Id de la tabla usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_usuario</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
+	  * No deberias usar setIdUsuario( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdUsuario( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * @param int(11)
+	  */
+	final public function setIdUsuario( $id_usuario )
+	{
+		$this->id_usuario = $id_usuario;
+	}
+
+	/**
+	  * getIdDireccion
+	  * 
+	  * Get the <i>id_direccion</i> property for this object. Donde <i>id_direccion</i> es Id de la direccion del usuario
+	  * @return int(11)
+	  */
+	final public function getIdDireccion()
+	{
+		return $this->id_direccion;
+	}
+
+	/**
+	  * setIdDireccion( $id_direccion )
+	  * 
+	  * Set the <i>id_direccion</i> property for this object. Donde <i>id_direccion</i> es Id de la direccion del usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_direccion</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdDireccion( $id_direccion )
+	{
+		$this->id_direccion = $id_direccion;
+	}
+
+	/**
+	  * getIdDireccionAlterna
+	  * 
+	  * Get the <i>id_direccion_alterna</i> property for this object. Donde <i>id_direccion_alterna</i> es Id de la direccion alterna del usuario
+	  * @return int(11)
+	  */
+	final public function getIdDireccionAlterna()
+	{
+		return $this->id_direccion_alterna;
+	}
+
+	/**
+	  * setIdDireccionAlterna( $id_direccion_alterna )
+	  * 
+	  * Set the <i>id_direccion_alterna</i> property for this object. Donde <i>id_direccion_alterna</i> es Id de la direccion alterna del usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_direccion_alterna</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdDireccionAlterna( $id_direccion_alterna )
+	{
+		$this->id_direccion_alterna = $id_direccion_alterna;
+	}
+
+	/**
+	  * getIdSucursal
+	  * 
+	  * Get the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es Id sucursal en la que labora este usuario o dodne se dio de alta
+	  * @return int(11)
+	  */
+	final public function getIdSucursal()
+	{
+		return $this->id_sucursal;
+	}
+
+	/**
+	  * setIdSucursal( $id_sucursal )
+	  * 
+	  * Set the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es Id sucursal en la que labora este usuario o dodne se dio de alta.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_sucursal</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdSucursal( $id_sucursal )
+	{
+		$this->id_sucursal = $id_sucursal;
+	}
+
+	/**
+	  * getIdRol
+	  * 
+	  * Get the <i>id_rol</i> property for this object. Donde <i>id_rol</i> es Id del rol que desempeñara el usuario en la instancia
+	  * @return int(11)
+	  */
+	final public function getIdRol()
+	{
+		return $this->id_rol;
+	}
+
+	/**
+	  * setIdRol( $id_rol )
+	  * 
+	  * Set the <i>id_rol</i> property for this object. Donde <i>id_rol</i> es Id del rol que desempeñara el usuario en la instancia.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_rol</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdRol( $id_rol )
+	{
+		$this->id_rol = $id_rol;
+	}
+
+	/**
+	  * getIdClasificacionCliente
+	  * 
+	  * Get the <i>id_clasificacion_cliente</i> property for this object. Donde <i>id_clasificacion_cliente</i> es Id de la clasificaiocn del cliente
+	  * @return int(11)
+	  */
+	final public function getIdClasificacionCliente()
+	{
+		return $this->id_clasificacion_cliente;
+	}
+
+	/**
+	  * setIdClasificacionCliente( $id_clasificacion_cliente )
+	  * 
+	  * Set the <i>id_clasificacion_cliente</i> property for this object. Donde <i>id_clasificacion_cliente</i> es Id de la clasificaiocn del cliente.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_clasificacion_cliente</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdClasificacionCliente( $id_clasificacion_cliente )
+	{
+		$this->id_clasificacion_cliente = $id_clasificacion_cliente;
+	}
+
+	/**
+	  * getIdClasificacionProveedor
+	  * 
+	  * Get the <i>id_clasificacion_proveedor</i> property for this object. Donde <i>id_clasificacion_proveedor</i> es Id de la clasificacion del proveedor
+	  * @return int(11)
+	  */
+	final public function getIdClasificacionProveedor()
+	{
+		return $this->id_clasificacion_proveedor;
+	}
+
+	/**
+	  * setIdClasificacionProveedor( $id_clasificacion_proveedor )
+	  * 
+	  * Set the <i>id_clasificacion_proveedor</i> property for this object. Donde <i>id_clasificacion_proveedor</i> es Id de la clasificacion del proveedor.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_clasificacion_proveedor</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdClasificacionProveedor( $id_clasificacion_proveedor )
+	{
+		$this->id_clasificacion_proveedor = $id_clasificacion_proveedor;
+	}
+
+	/**
+	  * getIdMoneda
+	  * 
+	  * Get the <i>id_moneda</i> property for this object. Donde <i>id_moneda</i> es Id moneda de preferencia del usuario
+	  * @return int(11)
+	  */
+	final public function getIdMoneda()
+	{
+		return $this->id_moneda;
+	}
+
+	/**
+	  * setIdMoneda( $id_moneda )
+	  * 
+	  * Set the <i>id_moneda</i> property for this object. Donde <i>id_moneda</i> es Id moneda de preferencia del usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_moneda</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdMoneda( $id_moneda )
+	{
+		$this->id_moneda = $id_moneda;
+	}
+
+	/**
+	  * getFechaAsignacionRol
+	  * 
+	  * Get the <i>fecha_asignacion_rol</i> property for this object. Donde <i>fecha_asignacion_rol</i> es Fecha en que se asigno o modifico el rol de este usuario
+	  * @return datetime
+	  */
+	final public function getFechaAsignacionRol()
+	{
+		return $this->fecha_asignacion_rol;
+	}
+
+	/**
+	  * setFechaAsignacionRol( $fecha_asignacion_rol )
+	  * 
+	  * Set the <i>fecha_asignacion_rol</i> property for this object. Donde <i>fecha_asignacion_rol</i> es Fecha en que se asigno o modifico el rol de este usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_asignacion_rol</i> es de tipo <i>datetime</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param datetime
+	  */
+	final public function setFechaAsignacionRol( $fecha_asignacion_rol )
+	{
+		$this->fecha_asignacion_rol = $fecha_asignacion_rol;
+	}
+
+	/**
+	  * getNombre
+	  * 
+	  * Get the <i>nombre</i> property for this object. Donde <i>nombre</i> es Nombre del agente
+	  * @return varchar(100)
+	  */
+	final public function getNombre()
+	{
+		return $this->nombre;
+	}
+
+	/**
+	  * setNombre( $nombre )
+	  * 
+	  * Set the <i>nombre</i> property for this object. Donde <i>nombre</i> es Nombre del agente.
+	  * Una validacion basica se hara aqui para comprobar que <i>nombre</i> es de tipo <i>varchar(100)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(100)
+	  */
+	final public function setNombre( $nombre )
+	{
+		$this->nombre = $nombre;
+	}
+
+	/**
+	  * getRfc
+	  * 
+	  * Get the <i>rfc</i> property for this object. Donde <i>rfc</i> es RFC del agente
+	  * @return varchar(30)
+	  */
+	final public function getRfc()
+	{
+		return $this->rfc;
+	}
+
+	/**
+	  * setRfc( $rfc )
+	  * 
+	  * Set the <i>rfc</i> property for this object. Donde <i>rfc</i> es RFC del agente.
+	  * Una validacion basica se hara aqui para comprobar que <i>rfc</i> es de tipo <i>varchar(30)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(30)
+	  */
+	final public function setRfc( $rfc )
+	{
+		$this->rfc = $rfc;
+	}
+
+	/**
+	  * getCurp
+	  * 
+	  * Get the <i>curp</i> property for this object. Donde <i>curp</i> es CURP del agente
+	  * @return varchar(30)
+	  */
+	final public function getCurp()
+	{
+		return $this->curp;
+	}
+
+	/**
+	  * setCurp( $curp )
+	  * 
+	  * Set the <i>curp</i> property for this object. Donde <i>curp</i> es CURP del agente.
+	  * Una validacion basica se hara aqui para comprobar que <i>curp</i> es de tipo <i>varchar(30)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(30)
+	  */
+	final public function setCurp( $curp )
+	{
+		$this->curp = $curp;
+	}
+
+	/**
+	  * getComisionVentas
+	  * 
+	  * Get the <i>comision_ventas</i> property for this object. Donde <i>comision_ventas</i> es Comision sobre las ventas que recibira este agente
+	  * @return float
+	  */
+	final public function getComisionVentas()
+	{
+		return $this->comision_ventas;
+	}
+
+	/**
+	  * setComisionVentas( $comision_ventas )
+	  * 
+	  * Set the <i>comision_ventas</i> property for this object. Donde <i>comision_ventas</i> es Comision sobre las ventas que recibira este agente.
+	  * Una validacion basica se hara aqui para comprobar que <i>comision_ventas</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setComisionVentas( $comision_ventas )
+	{
+		$this->comision_ventas = $comision_ventas;
+	}
+
+	/**
+	  * getTelefonoPersonal1
+	  * 
+	  * Get the <i>telefono_personal1</i> property for this object. Donde <i>telefono_personal1</i> es Telefono personal del agente
+	  * @return varchar(20)
+	  */
+	final public function getTelefonoPersonal1()
+	{
+		return $this->telefono_personal1;
+	}
+
+	/**
+	  * setTelefonoPersonal1( $telefono_personal1 )
+	  * 
+	  * Set the <i>telefono_personal1</i> property for this object. Donde <i>telefono_personal1</i> es Telefono personal del agente.
+	  * Una validacion basica se hara aqui para comprobar que <i>telefono_personal1</i> es de tipo <i>varchar(20)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(20)
+	  */
+	final public function setTelefonoPersonal1( $telefono_personal1 )
+	{
+		$this->telefono_personal1 = $telefono_personal1;
+	}
+
+	/**
+	  * getTelefonoPersonal2
+	  * 
+	  * Get the <i>telefono_personal2</i> property for this object. Donde <i>telefono_personal2</i> es Telefono personal del agente
+	  * @return varchar(20)
+	  */
+	final public function getTelefonoPersonal2()
+	{
+		return $this->telefono_personal2;
+	}
+
+	/**
+	  * setTelefonoPersonal2( $telefono_personal2 )
+	  * 
+	  * Set the <i>telefono_personal2</i> property for this object. Donde <i>telefono_personal2</i> es Telefono personal del agente.
+	  * Una validacion basica se hara aqui para comprobar que <i>telefono_personal2</i> es de tipo <i>varchar(20)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(20)
+	  */
+	final public function setTelefonoPersonal2( $telefono_personal2 )
+	{
+		$this->telefono_personal2 = $telefono_personal2;
+	}
+
+	/**
+	  * getFechaAlta
+	  * 
+	  * Get the <i>fecha_alta</i> property for this object. Donde <i>fecha_alta</i> es Fecha en que se creo este usuario
+	  * @return datetime
+	  */
+	final public function getFechaAlta()
+	{
+		return $this->fecha_alta;
+	}
+
+	/**
+	  * setFechaAlta( $fecha_alta )
+	  * 
+	  * Set the <i>fecha_alta</i> property for this object. Donde <i>fecha_alta</i> es Fecha en que se creo este usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_alta</i> es de tipo <i>datetime</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param datetime
+	  */
+	final public function setFechaAlta( $fecha_alta )
+	{
+		$this->fecha_alta = $fecha_alta;
+	}
+
+	/**
+	  * getFechaBaja
+	  * 
+	  * Get the <i>fecha_baja</i> property for this object. Donde <i>fecha_baja</i> es fecha en que se desactivo este usuario
+	  * @return datetime
+	  */
+	final public function getFechaBaja()
+	{
+		return $this->fecha_baja;
+	}
+
+	/**
+	  * setFechaBaja( $fecha_baja )
+	  * 
+	  * Set the <i>fecha_baja</i> property for this object. Donde <i>fecha_baja</i> es fecha en que se desactivo este usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha_baja</i> es de tipo <i>datetime</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param datetime
+	  */
+	final public function setFechaBaja( $fecha_baja )
+	{
+		$this->fecha_baja = $fecha_baja;
+	}
+
+	/**
+	  * getActivo
+	  * 
+	  * Get the <i>activo</i> property for this object. Donde <i>activo</i> es si este usuario esta activo o no
+	  * @return tinyint(1)
+	  */
+	final public function getActivo()
+	{
+		return $this->activo;
+	}
+
+	/**
+	  * setActivo( $activo )
+	  * 
+	  * Set the <i>activo</i> property for this object. Donde <i>activo</i> es si este usuario esta activo o no.
+	  * Una validacion basica se hara aqui para comprobar que <i>activo</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setActivo( $activo )
+	{
+		$this->activo = $activo;
+	}
+
+	/**
+	  * getLimiteCredito
+	  * 
+	  * Get the <i>limite_credito</i> property for this object. Donde <i>limite_credito</i> es Limite de credito del usuario
+	  * @return float
+	  */
+	final public function getLimiteCredito()
+	{
+		return $this->limite_credito;
+	}
+
+	/**
+	  * setLimiteCredito( $limite_credito )
+	  * 
+	  * Set the <i>limite_credito</i> property for this object. Donde <i>limite_credito</i> es Limite de credito del usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>limite_credito</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setLimiteCredito( $limite_credito )
+	{
+		$this->limite_credito = $limite_credito;
+	}
+
+	/**
+	  * getDescuento
+	  * 
+	  * Get the <i>descuento</i> property for this object. Donde <i>descuento</i> es Porcentaje del descuento del usuario
+	  * @return float
+	  */
+	final public function getDescuento()
+	{
+		return $this->descuento;
+	}
+
+	/**
+	  * setDescuento( $descuento )
+	  * 
+	  * Set the <i>descuento</i> property for this object. Donde <i>descuento</i> es Porcentaje del descuento del usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>descuento</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setDescuento( $descuento )
+	{
+		$this->descuento = $descuento;
+	}
+
+	/**
+	  * getPassword
+	  * 
+	  * Get the <i>password</i> property for this object. Donde <i>password</i> es Password del usuario
+	  * @return varchar(64)
+	  */
+	final public function getPassword()
+	{
+		return $this->password;
+	}
+
+	/**
+	  * setPassword( $password )
+	  * 
+	  * Set the <i>password</i> property for this object. Donde <i>password</i> es Password del usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>password</i> es de tipo <i>varchar(64)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(64)
+	  */
+	final public function setPassword( $password )
+	{
+		$this->password = $password;
+	}
+
+	/**
+	  * getLastLogin
+	  * 
+	  * Get the <i>last_login</i> property for this object. Donde <i>last_login</i> es Fecha en la que ingreso el usuario por ultima vez
+	  * @return datetime
+	  */
+	final public function getLastLogin()
+	{
+		return $this->last_login;
+	}
+
+	/**
+	  * setLastLogin( $last_login )
+	  * 
+	  * Set the <i>last_login</i> property for this object. Donde <i>last_login</i> es Fecha en la que ingreso el usuario por ultima vez.
+	  * Una validacion basica se hara aqui para comprobar que <i>last_login</i> es de tipo <i>datetime</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param datetime
+	  */
+	final public function setLastLogin( $last_login )
+	{
+		$this->last_login = $last_login;
+	}
+
+	/**
+	  * getConsignatario
+	  * 
+	  * Get the <i>consignatario</i> property for this object. Donde <i>consignatario</i> es Si el usuario es consignatario
+	  * @return tinyint(1)
+	  */
+	final public function getConsignatario()
+	{
+		return $this->consignatario;
+	}
+
+	/**
+	  * setConsignatario( $consignatario )
+	  * 
+	  * Set the <i>consignatario</i> property for this object. Donde <i>consignatario</i> es Si el usuario es consignatario.
+	  * Una validacion basica se hara aqui para comprobar que <i>consignatario</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setConsignatario( $consignatario )
+	{
+		$this->consignatario = $consignatario;
+	}
+
+	/**
+	  * getSalario
+	  * 
+	  * Get the <i>salario</i> property for this object. Donde <i>salario</i> es El salario que recibe el usuaario actualmente
+	  * @return float
+	  */
+	final public function getSalario()
+	{
+		return $this->salario;
+	}
+
+	/**
+	  * setSalario( $salario )
+	  * 
+	  * Set the <i>salario</i> property for this object. Donde <i>salario</i> es El salario que recibe el usuaario actualmente.
+	  * Una validacion basica se hara aqui para comprobar que <i>salario</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setSalario( $salario )
+	{
+		$this->salario = $salario;
+	}
+
+	/**
+	  * getCorreoElectronico
+	  * 
+	  * Get the <i>correo_electronico</i> property for this object. Donde <i>correo_electronico</i> es Correo electronico del usuario
+	  * @return varchar(30)
+	  */
+	final public function getCorreoElectronico()
+	{
+		return $this->correo_electronico;
+	}
+
+	/**
+	  * setCorreoElectronico( $correo_electronico )
+	  * 
+	  * Set the <i>correo_electronico</i> property for this object. Donde <i>correo_electronico</i> es Correo electronico del usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>correo_electronico</i> es de tipo <i>varchar(30)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(30)
+	  */
+	final public function setCorreoElectronico( $correo_electronico )
+	{
+		$this->correo_electronico = $correo_electronico;
+	}
+
+	/**
+	  * getPaginaWeb
+	  * 
+	  * Get the <i>pagina_web</i> property for this object. Donde <i>pagina_web</i> es Pagina Web del usuario
+	  * @return varchar(30)
+	  */
+	final public function getPaginaWeb()
+	{
+		return $this->pagina_web;
+	}
+
+	/**
+	  * setPaginaWeb( $pagina_web )
+	  * 
+	  * Set the <i>pagina_web</i> property for this object. Donde <i>pagina_web</i> es Pagina Web del usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>pagina_web</i> es de tipo <i>varchar(30)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(30)
+	  */
+	final public function setPaginaWeb( $pagina_web )
+	{
+		$this->pagina_web = $pagina_web;
+	}
+
+	/**
+	  * getSaldoDelEjercicio
+	  * 
+	  * Get the <i>saldo_del_ejercicio</i> property for this object. Donde <i>saldo_del_ejercicio</i> es Saldo del ejercicio del cliente
+	  * @return float
+	  */
+	final public function getSaldoDelEjercicio()
+	{
+		return $this->saldo_del_ejercicio;
+	}
+
+	/**
+	  * setSaldoDelEjercicio( $saldo_del_ejercicio )
+	  * 
+	  * Set the <i>saldo_del_ejercicio</i> property for this object. Donde <i>saldo_del_ejercicio</i> es Saldo del ejercicio del cliente.
+	  * Una validacion basica se hara aqui para comprobar que <i>saldo_del_ejercicio</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setSaldoDelEjercicio( $saldo_del_ejercicio )
+	{
+		$this->saldo_del_ejercicio = $saldo_del_ejercicio;
+	}
+
+	/**
+	  * getVentasACredito
+	  * 
+	  * Get the <i>ventas_a_credito</i> property for this object. Donde <i>ventas_a_credito</i> es Ventas a credito del cliente
+	  * @return int(11)
+	  */
+	final public function getVentasACredito()
+	{
+		return $this->ventas_a_credito;
+	}
+
+	/**
+	  * setVentasACredito( $ventas_a_credito )
+	  * 
+	  * Set the <i>ventas_a_credito</i> property for this object. Donde <i>ventas_a_credito</i> es Ventas a credito del cliente.
+	  * Una validacion basica se hara aqui para comprobar que <i>ventas_a_credito</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setVentasACredito( $ventas_a_credito )
+	{
+		$this->ventas_a_credito = $ventas_a_credito;
+	}
+
+	/**
+	  * getRepresentanteLegal
+	  * 
+	  * Get the <i>representante_legal</i> property for this object. Donde <i>representante_legal</i> es Nombre del representante legal del usuario
+	  * @return varchar(100)
+	  */
+	final public function getRepresentanteLegal()
+	{
+		return $this->representante_legal;
+	}
+
+	/**
+	  * setRepresentanteLegal( $representante_legal )
+	  * 
+	  * Set the <i>representante_legal</i> property for this object. Donde <i>representante_legal</i> es Nombre del representante legal del usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>representante_legal</i> es de tipo <i>varchar(100)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(100)
+	  */
+	final public function setRepresentanteLegal( $representante_legal )
+	{
+		$this->representante_legal = $representante_legal;
+	}
+
+	/**
+	  * getFacturarATerceros
+	  * 
+	  * Get the <i>facturar_a_terceros</i> property for this object. Donde <i>facturar_a_terceros</i> es Si el cliente puede facturar a terceros
+	  * @return tinyint(1)
+	  */
+	final public function getFacturarATerceros()
+	{
+		return $this->facturar_a_terceros;
+	}
+
+	/**
+	  * setFacturarATerceros( $facturar_a_terceros )
+	  * 
+	  * Set the <i>facturar_a_terceros</i> property for this object. Donde <i>facturar_a_terceros</i> es Si el cliente puede facturar a terceros.
+	  * Una validacion basica se hara aqui para comprobar que <i>facturar_a_terceros</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setFacturarATerceros( $facturar_a_terceros )
+	{
+		$this->facturar_a_terceros = $facturar_a_terceros;
+	}
+
+	/**
+	  * getDiaDePago
+	  * 
+	  * Get the <i>dia_de_pago</i> property for this object. Donde <i>dia_de_pago</i> es Fecha de pago del cliente
+	  * @return datetime
+	  */
+	final public function getDiaDePago()
+	{
+		return $this->dia_de_pago;
+	}
+
+	/**
+	  * setDiaDePago( $dia_de_pago )
+	  * 
+	  * Set the <i>dia_de_pago</i> property for this object. Donde <i>dia_de_pago</i> es Fecha de pago del cliente.
+	  * Una validacion basica se hara aqui para comprobar que <i>dia_de_pago</i> es de tipo <i>datetime</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param datetime
+	  */
+	final public function setDiaDePago( $dia_de_pago )
+	{
+		$this->dia_de_pago = $dia_de_pago;
+	}
+
+	/**
+	  * getMensajeria
+	  * 
+	  * Get the <i>mensajeria</i> property for this object. Donde <i>mensajeria</i> es Si el cliente cuenta con una cuenta de mensajería y paquetería
+	  * @return tinyint(1)
+	  */
+	final public function getMensajeria()
+	{
+		return $this->mensajeria;
+	}
+
+	/**
+	  * setMensajeria( $mensajeria )
+	  * 
+	  * Set the <i>mensajeria</i> property for this object. Donde <i>mensajeria</i> es Si el cliente cuenta con una cuenta de mensajería y paquetería.
+	  * Una validacion basica se hara aqui para comprobar que <i>mensajeria</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setMensajeria( $mensajeria )
+	{
+		$this->mensajeria = $mensajeria;
+	}
+
+	/**
+	  * getInteresesMoratorios
+	  * 
+	  * Get the <i>intereses_moratorios</i> property for this object. Donde <i>intereses_moratorios</i> es Intereses moratorios del cliente
+	  * @return float
+	  */
+	final public function getInteresesMoratorios()
+	{
+		return $this->intereses_moratorios;
+	}
+
+	/**
+	  * setInteresesMoratorios( $intereses_moratorios )
+	  * 
+	  * Set the <i>intereses_moratorios</i> property for this object. Donde <i>intereses_moratorios</i> es Intereses moratorios del cliente.
+	  * Una validacion basica se hara aqui para comprobar que <i>intereses_moratorios</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setInteresesMoratorios( $intereses_moratorios )
+	{
+		$this->intereses_moratorios = $intereses_moratorios;
+	}
+
+	/**
+	  * getDenominacionComercial
+	  * 
+	  * Get the <i>denominacion_comercial</i> property for this object. Donde <i>denominacion_comercial</i> es Denominación comercial del cliente
+	  * @return varchar(100)
+	  */
+	final public function getDenominacionComercial()
+	{
+		return $this->denominacion_comercial;
+	}
+
+	/**
+	  * setDenominacionComercial( $denominacion_comercial )
+	  * 
+	  * Set the <i>denominacion_comercial</i> property for this object. Donde <i>denominacion_comercial</i> es Denominación comercial del cliente.
+	  * Una validacion basica se hara aqui para comprobar que <i>denominacion_comercial</i> es de tipo <i>varchar(100)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(100)
+	  */
+	final public function setDenominacionComercial( $denominacion_comercial )
+	{
+		$this->denominacion_comercial = $denominacion_comercial;
+	}
+
+	/**
+	  * getDiasDeCredito
+	  * 
+	  * Get the <i>dias_de_credito</i> property for this object. Donde <i>dias_de_credito</i> es Días de crédito que se le darán al cliente
+	  * @return int(11)
+	  */
+	final public function getDiasDeCredito()
+	{
+		return $this->dias_de_credito;
+	}
+
+	/**
+	  * setDiasDeCredito( $dias_de_credito )
+	  * 
+	  * Set the <i>dias_de_credito</i> property for this object. Donde <i>dias_de_credito</i> es Días de crédito que se le darán al cliente.
+	  * Una validacion basica se hara aqui para comprobar que <i>dias_de_credito</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setDiasDeCredito( $dias_de_credito )
+	{
+		$this->dias_de_credito = $dias_de_credito;
+	}
+
+	/**
+	  * getCuentaDeMensajeria
+	  * 
+	  * Get the <i>cuenta_de_mensajeria</i> property for this object. Donde <i>cuenta_de_mensajeria</i> es Cuenta de mensajeria del cliente
+	  * @return varchar(50)
+	  */
+	final public function getCuentaDeMensajeria()
+	{
+		return $this->cuenta_de_mensajeria;
+	}
+
+	/**
+	  * setCuentaDeMensajeria( $cuenta_de_mensajeria )
+	  * 
+	  * Set the <i>cuenta_de_mensajeria</i> property for this object. Donde <i>cuenta_de_mensajeria</i> es Cuenta de mensajeria del cliente.
+	  * Una validacion basica se hara aqui para comprobar que <i>cuenta_de_mensajeria</i> es de tipo <i>varchar(50)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(50)
+	  */
+	final public function setCuentaDeMensajeria( $cuenta_de_mensajeria )
+	{
+		$this->cuenta_de_mensajeria = $cuenta_de_mensajeria;
+	}
+
+	/**
+	  * getDiaDeRevision
+	  * 
+	  * Get the <i>dia_de_revision</i> property for this object. Donde <i>dia_de_revision</i> es Fecha de revisión del cliente
+	  * @return datetime
+	  */
+	final public function getDiaDeRevision()
+	{
+		return $this->dia_de_revision;
+	}
+
+	/**
+	  * setDiaDeRevision( $dia_de_revision )
+	  * 
+	  * Set the <i>dia_de_revision</i> property for this object. Donde <i>dia_de_revision</i> es Fecha de revisión del cliente.
+	  * Una validacion basica se hara aqui para comprobar que <i>dia_de_revision</i> es de tipo <i>datetime</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param datetime
+	  */
+	final public function setDiaDeRevision( $dia_de_revision )
+	{
+		$this->dia_de_revision = $dia_de_revision;
+	}
+
+	/**
+	  * getCodigoUsuario
+	  * 
+	  * Get the <i>codigo_usuario</i> property for this object. Donde <i>codigo_usuario</i> es Codigo del usuario para uso interno de la empresa
+	  * @return varchar(50)
+	  */
+	final public function getCodigoUsuario()
+	{
+		return $this->codigo_usuario;
+	}
+
+	/**
+	  * setCodigoUsuario( $codigo_usuario )
+	  * 
+	  * Set the <i>codigo_usuario</i> property for this object. Donde <i>codigo_usuario</i> es Codigo del usuario para uso interno de la empresa.
+	  * Una validacion basica se hara aqui para comprobar que <i>codigo_usuario</i> es de tipo <i>varchar(50)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(50)
+	  */
+	final public function setCodigoUsuario( $codigo_usuario )
+	{
+		$this->codigo_usuario = $codigo_usuario;
+	}
+
+	/**
+	  * getDiasDeEmbarque
+	  * 
+	  * Get the <i>dias_de_embarque</i> property for this object. Donde <i>dias_de_embarque</i> es Dias de embarque del proveedor (Lunes, Martes, etc)
+	  * @return int(11)
+	  */
+	final public function getDiasDeEmbarque()
+	{
+		return $this->dias_de_embarque;
+	}
+
+	/**
+	  * setDiasDeEmbarque( $dias_de_embarque )
+	  * 
+	  * Set the <i>dias_de_embarque</i> property for this object. Donde <i>dias_de_embarque</i> es Dias de embarque del proveedor (Lunes, Martes, etc).
+	  * Una validacion basica se hara aqui para comprobar que <i>dias_de_embarque</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setDiasDeEmbarque( $dias_de_embarque )
+	{
+		$this->dias_de_embarque = $dias_de_embarque;
+	}
+
+	/**
+	  * getTiempoEntrega
+	  * 
+	  * Get the <i>tiempo_entrega</i> property for this object. Donde <i>tiempo_entrega</i> es Tiempo de entrega del proveedor en días
+	  * @return int(11)
+	  */
+	final public function getTiempoEntrega()
+	{
+		return $this->tiempo_entrega;
+	}
+
+	/**
+	  * setTiempoEntrega( $tiempo_entrega )
+	  * 
+	  * Set the <i>tiempo_entrega</i> property for this object. Donde <i>tiempo_entrega</i> es Tiempo de entrega del proveedor en días.
+	  * Una validacion basica se hara aqui para comprobar que <i>tiempo_entrega</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setTiempoEntrega( $tiempo_entrega )
+	{
+		$this->tiempo_entrega = $tiempo_entrega;
+	}
+
+	/**
+	  * getCuentaBancaria
+	  * 
+	  * Get the <i>cuenta_bancaria</i> property for this object. Donde <i>cuenta_bancaria</i> es Cuenta bancaria del usuario
+	  * @return varchar(50)
+	  */
+	final public function getCuentaBancaria()
+	{
+		return $this->cuenta_bancaria;
+	}
+
+	/**
+	  * setCuentaBancaria( $cuenta_bancaria )
+	  * 
+	  * Set the <i>cuenta_bancaria</i> property for this object. Donde <i>cuenta_bancaria</i> es Cuenta bancaria del usuario.
+	  * Una validacion basica se hara aqui para comprobar que <i>cuenta_bancaria</i> es de tipo <i>varchar(50)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(50)
+	  */
+	final public function setCuentaBancaria( $cuenta_bancaria )
+	{
+		$this->cuenta_bancaria = $cuenta_bancaria;
+	}
+
+}

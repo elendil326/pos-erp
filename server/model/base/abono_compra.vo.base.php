@@ -1,0 +1,492 @@
+<?php
+/** Value Object file for table abono_compra.
+  * 
+  * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
+  * @author Andres
+  * @access public
+  * @package docs
+  * 
+  */
+
+class AbonoCompra extends VO
+{
+	/**
+	  * Constructor de AbonoCompra
+	  * 
+	  * Para construir un objeto de tipo AbonoCompra debera llamarse a el constructor 
+	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
+	  * cuyos campos son iguales a las variables que constituyen a este objeto.
+	  * @return AbonoCompra
+	  */
+	function __construct( $data = NULL)
+	{ 
+		if(isset($data))
+		{
+			if( isset($data['id_abono_compra']) ){
+				$this->id_abono_compra = $data['id_abono_compra'];
+			}
+			if( isset($data['id_compra']) ){
+				$this->id_compra = $data['id_compra'];
+			}
+			if( isset($data['id_sucursal']) ){
+				$this->id_sucursal = $data['id_sucursal'];
+			}
+			if( isset($data['monto']) ){
+				$this->monto = $data['monto'];
+			}
+			if( isset($data['id_caja']) ){
+				$this->id_caja = $data['id_caja'];
+			}
+			if( isset($data['id_deudor']) ){
+				$this->id_deudor = $data['id_deudor'];
+			}
+			if( isset($data['id_receptor']) ){
+				$this->id_receptor = $data['id_receptor'];
+			}
+			if( isset($data['nota']) ){
+				$this->nota = $data['nota'];
+			}
+			if( isset($data['fecha']) ){
+				$this->fecha = $data['fecha'];
+			}
+			if( isset($data['tipo_de_pago']) ){
+				$this->tipo_de_pago = $data['tipo_de_pago'];
+			}
+			if( isset($data['cancelado']) ){
+				$this->cancelado = $data['cancelado'];
+			}
+			if( isset($data['motivo_cancelacion']) ){
+				$this->motivo_cancelacion = $data['motivo_cancelacion'];
+			}
+		}
+	}
+
+	/**
+	  * Obtener una representacion en String
+	  * 
+	  * Este metodo permite tratar a un objeto AbonoCompra en forma de cadena.
+	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
+	  * @return String 
+	  */
+	public function __toString( )
+	{ 
+		$vec = array( 
+			"id_abono_compra" => $this->id_abono_compra,
+			"id_compra" => $this->id_compra,
+			"id_sucursal" => $this->id_sucursal,
+			"monto" => $this->monto,
+			"id_caja" => $this->id_caja,
+			"id_deudor" => $this->id_deudor,
+			"id_receptor" => $this->id_receptor,
+			"nota" => $this->nota,
+			"fecha" => $this->fecha,
+			"tipo_de_pago" => $this->tipo_de_pago,
+			"cancelado" => $this->cancelado,
+			"motivo_cancelacion" => $this->motivo_cancelacion
+		); 
+	return json_encode($vec); 
+	}
+	
+	/**
+	  * id_abono_compra
+	  * 
+	  * Id prestamo al que se le abona<br>
+	  * <b>Llave Primaria</b><br>
+	  * <b>Auto Incremento</b><br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_abono_compra;
+
+	/**
+	  * id_compra
+	  * 
+	  * Id de la compra<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_compra;
+
+	/**
+	  * id_sucursal
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_sucursal;
+
+	/**
+	  * monto
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $monto;
+
+	/**
+	  * id_caja
+	  * 
+	  * Id de la caja donde se registra el abono<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_caja;
+
+	/**
+	  * id_deudor
+	  * 
+	  * Id del usuario que abona<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_deudor;
+
+	/**
+	  * id_receptor
+	  * 
+	  * Id del usuario que registra el abono<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_receptor;
+
+	/**
+	  * nota
+	  * 
+	  * Nota del abono<br>
+	  * @access protected
+	  * @var varchar(255)
+	  */
+	protected $nota;
+
+	/**
+	  * fecha
+	  * 
+	  * Fecha en que se realiza el abono<br>
+	  * @access protected
+	  * @var datetime
+	  */
+	protected $fecha;
+
+	/**
+	  * tipo_de_pago
+	  * 
+	  * Si el tipo de pago es con tarjeta, con cheque, o en efectivo<br>
+	  * @access protected
+	  * @var varchar(50)
+	  */
+	protected $tipo_de_pago;
+
+	/**
+	  * cancelado
+	  * 
+	  * Si este abono es cancelado<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $cancelado;
+
+	/**
+	  * motivo_cancelacion
+	  * 
+	  * Motivo por el cual se realiza la cancelacion<br>
+	  * @access protected
+	  * @var varchar(255)
+	  */
+	protected $motivo_cancelacion;
+
+	/**
+	  * getIdAbonoCompra
+	  * 
+	  * Get the <i>id_abono_compra</i> property for this object. Donde <i>id_abono_compra</i> es Id prestamo al que se le abona
+	  * @return int(11)
+	  */
+	final public function getIdAbonoCompra()
+	{
+		return $this->id_abono_compra;
+	}
+
+	/**
+	  * setIdAbonoCompra( $id_abono_compra )
+	  * 
+	  * Set the <i>id_abono_compra</i> property for this object. Donde <i>id_abono_compra</i> es Id prestamo al que se le abona.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_abono_compra</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es de <b>Auto Incremento</b> !<br>
+	  * No deberias usar setIdAbonoCompra( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdAbonoCompra( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * @param int(11)
+	  */
+	final public function setIdAbonoCompra( $id_abono_compra )
+	{
+		$this->id_abono_compra = $id_abono_compra;
+	}
+
+	/**
+	  * getIdCompra
+	  * 
+	  * Get the <i>id_compra</i> property for this object. Donde <i>id_compra</i> es Id de la compra
+	  * @return int(11)
+	  */
+	final public function getIdCompra()
+	{
+		return $this->id_compra;
+	}
+
+	/**
+	  * setIdCompra( $id_compra )
+	  * 
+	  * Set the <i>id_compra</i> property for this object. Donde <i>id_compra</i> es Id de la compra.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_compra</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdCompra( $id_compra )
+	{
+		$this->id_compra = $id_compra;
+	}
+
+	/**
+	  * getIdSucursal
+	  * 
+	  * Get the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es  [Campo no documentado]
+	  * @return int(11)
+	  */
+	final public function getIdSucursal()
+	{
+		return $this->id_sucursal;
+	}
+
+	/**
+	  * setIdSucursal( $id_sucursal )
+	  * 
+	  * Set the <i>id_sucursal</i> property for this object. Donde <i>id_sucursal</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>id_sucursal</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdSucursal( $id_sucursal )
+	{
+		$this->id_sucursal = $id_sucursal;
+	}
+
+	/**
+	  * getMonto
+	  * 
+	  * Get the <i>monto</i> property for this object. Donde <i>monto</i> es  [Campo no documentado]
+	  * @return float
+	  */
+	final public function getMonto()
+	{
+		return $this->monto;
+	}
+
+	/**
+	  * setMonto( $monto )
+	  * 
+	  * Set the <i>monto</i> property for this object. Donde <i>monto</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>monto</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setMonto( $monto )
+	{
+		$this->monto = $monto;
+	}
+
+	/**
+	  * getIdCaja
+	  * 
+	  * Get the <i>id_caja</i> property for this object. Donde <i>id_caja</i> es Id de la caja donde se registra el abono
+	  * @return int(11)
+	  */
+	final public function getIdCaja()
+	{
+		return $this->id_caja;
+	}
+
+	/**
+	  * setIdCaja( $id_caja )
+	  * 
+	  * Set the <i>id_caja</i> property for this object. Donde <i>id_caja</i> es Id de la caja donde se registra el abono.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_caja</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdCaja( $id_caja )
+	{
+		$this->id_caja = $id_caja;
+	}
+
+	/**
+	  * getIdDeudor
+	  * 
+	  * Get the <i>id_deudor</i> property for this object. Donde <i>id_deudor</i> es Id del usuario que abona
+	  * @return int(11)
+	  */
+	final public function getIdDeudor()
+	{
+		return $this->id_deudor;
+	}
+
+	/**
+	  * setIdDeudor( $id_deudor )
+	  * 
+	  * Set the <i>id_deudor</i> property for this object. Donde <i>id_deudor</i> es Id del usuario que abona.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_deudor</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdDeudor( $id_deudor )
+	{
+		$this->id_deudor = $id_deudor;
+	}
+
+	/**
+	  * getIdReceptor
+	  * 
+	  * Get the <i>id_receptor</i> property for this object. Donde <i>id_receptor</i> es Id del usuario que registra el abono
+	  * @return int(11)
+	  */
+	final public function getIdReceptor()
+	{
+		return $this->id_receptor;
+	}
+
+	/**
+	  * setIdReceptor( $id_receptor )
+	  * 
+	  * Set the <i>id_receptor</i> property for this object. Donde <i>id_receptor</i> es Id del usuario que registra el abono.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_receptor</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setIdReceptor( $id_receptor )
+	{
+		$this->id_receptor = $id_receptor;
+	}
+
+	/**
+	  * getNota
+	  * 
+	  * Get the <i>nota</i> property for this object. Donde <i>nota</i> es Nota del abono
+	  * @return varchar(255)
+	  */
+	final public function getNota()
+	{
+		return $this->nota;
+	}
+
+	/**
+	  * setNota( $nota )
+	  * 
+	  * Set the <i>nota</i> property for this object. Donde <i>nota</i> es Nota del abono.
+	  * Una validacion basica se hara aqui para comprobar que <i>nota</i> es de tipo <i>varchar(255)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(255)
+	  */
+	final public function setNota( $nota )
+	{
+		$this->nota = $nota;
+	}
+
+	/**
+	  * getFecha
+	  * 
+	  * Get the <i>fecha</i> property for this object. Donde <i>fecha</i> es Fecha en que se realiza el abono
+	  * @return datetime
+	  */
+	final public function getFecha()
+	{
+		return $this->fecha;
+	}
+
+	/**
+	  * setFecha( $fecha )
+	  * 
+	  * Set the <i>fecha</i> property for this object. Donde <i>fecha</i> es Fecha en que se realiza el abono.
+	  * Una validacion basica se hara aqui para comprobar que <i>fecha</i> es de tipo <i>datetime</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param datetime
+	  */
+	final public function setFecha( $fecha )
+	{
+		$this->fecha = $fecha;
+	}
+
+	/**
+	  * getTipoDePago
+	  * 
+	  * Get the <i>tipo_de_pago</i> property for this object. Donde <i>tipo_de_pago</i> es Si el tipo de pago es con tarjeta, con cheque, o en efectivo
+	  * @return varchar(50)
+	  */
+	final public function getTipoDePago()
+	{
+		return $this->tipo_de_pago;
+	}
+
+	/**
+	  * setTipoDePago( $tipo_de_pago )
+	  * 
+	  * Set the <i>tipo_de_pago</i> property for this object. Donde <i>tipo_de_pago</i> es Si el tipo de pago es con tarjeta, con cheque, o en efectivo.
+	  * Una validacion basica se hara aqui para comprobar que <i>tipo_de_pago</i> es de tipo <i>varchar(50)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(50)
+	  */
+	final public function setTipoDePago( $tipo_de_pago )
+	{
+		$this->tipo_de_pago = $tipo_de_pago;
+	}
+
+	/**
+	  * getCancelado
+	  * 
+	  * Get the <i>cancelado</i> property for this object. Donde <i>cancelado</i> es Si este abono es cancelado
+	  * @return tinyint(1)
+	  */
+	final public function getCancelado()
+	{
+		return $this->cancelado;
+	}
+
+	/**
+	  * setCancelado( $cancelado )
+	  * 
+	  * Set the <i>cancelado</i> property for this object. Donde <i>cancelado</i> es Si este abono es cancelado.
+	  * Una validacion basica se hara aqui para comprobar que <i>cancelado</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setCancelado( $cancelado )
+	{
+		$this->cancelado = $cancelado;
+	}
+
+	/**
+	  * getMotivoCancelacion
+	  * 
+	  * Get the <i>motivo_cancelacion</i> property for this object. Donde <i>motivo_cancelacion</i> es Motivo por el cual se realiza la cancelacion
+	  * @return varchar(255)
+	  */
+	final public function getMotivoCancelacion()
+	{
+		return $this->motivo_cancelacion;
+	}
+
+	/**
+	  * setMotivoCancelacion( $motivo_cancelacion )
+	  * 
+	  * Set the <i>motivo_cancelacion</i> property for this object. Donde <i>motivo_cancelacion</i> es Motivo por el cual se realiza la cancelacion.
+	  * Una validacion basica se hara aqui para comprobar que <i>motivo_cancelacion</i> es de tipo <i>varchar(255)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param varchar(255)
+	  */
+	final public function setMotivoCancelacion( $motivo_cancelacion )
+	{
+		$this->motivo_cancelacion = $motivo_cancelacion;
+	}
+
+}
