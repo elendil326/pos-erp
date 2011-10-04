@@ -45,7 +45,7 @@
 
 
 
-Logger::error("1");
+
 
 	if(!is_file("config.php"))
 	{	
@@ -142,6 +142,11 @@ Logger::error("1");
 
 
 	# *******************************
+	# Cargar los DAO
+	# *******************************
+	require_once("model/model.inc.php");
+
+	# *******************************
 	# Buscar esta instancia si es que la necesito
 	# *******************************
 	//esta definicion se hace si NO queremos
@@ -161,9 +166,28 @@ Logger::error("1");
 	# *******************************
 	# Cosas de la instancia
 	# *******************************
-	if(!isset($_GET["_instancee_"])){
-		Logger.error("asdf");
+	if(!isset($_GET["_instance_"]))
+	{
+		Logger::error("No hay instancia en el url !");
 		die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
 	}
+	
+
+
 		
+	$sql = "SELECT * FROM instances WHERE ( instance_token = ? ) LIMIT 1;";
+
+	$params = array( $_GET["_instance_"] );
+
+	$rs = $POS_CONFIG["CORE_CONN"]->GetRow($sql, $params);
+		
+	if(count($rs) === 0)
+	{
+		Logger::warn("La instancia para el token {". $_GET["_instance_"] ."} no exite !");
+		die(header("HTTP/1.1 404 NOT FOUND"));
+	}
+
+	
+	
+	
 

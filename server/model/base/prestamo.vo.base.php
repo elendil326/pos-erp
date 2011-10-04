@@ -43,8 +43,8 @@ class Prestamo extends VO
 			if( isset($data['saldo']) ){
 				$this->saldo = $data['saldo'];
 			}
-			if( isset($data['interes mensual']) ){
-				$this->interes mensual = $data['interes mensual'];
+			if( isset($data['interes_mensual']) ){
+				$this->interes_mensual = $data['interes_mensual'];
 			}
 			if( isset($data['fecha']) ){
 				$this->fecha = $data['fecha'];
@@ -69,7 +69,7 @@ class Prestamo extends VO
 			"id_usuario" => $this->id_usuario,
 			"monto" => $this->monto,
 			"saldo" => $this->saldo,
-			"interes mensual" => $this->interes mensual,
+			"interes_mensual" => $this->interes_mensual,
 			"fecha" => $this->fecha
 		); 
 	return json_encode($vec); 
@@ -141,13 +141,13 @@ class Prestamo extends VO
 	protected $saldo;
 
 	/**
-	  * interes mensual
+	  * interes_mensual
 	  * 
-	  * Porcentaje de interes mensual del prestamo<br>
+	  * Porcentaje de interes_mensual del prestamo<br>
 	  * @access protected
 	  * @var mensual`
 	  */
-	protected $interes mensual;
+	protected $interes_mensual;
 
 	/**
 	  * fecha
@@ -331,27 +331,27 @@ class Prestamo extends VO
 	}
 
 	/**
-	  * getInteres mensual
+	  * getInteresMensual
 	  * 
-	  * Get the <i>interes mensual</i> property for this object. Donde <i>interes mensual</i> es Porcentaje de interes mensual del prestamo
+	  * Get the <i>interes_mensual</i> property for this object. Donde <i>interes_mensual</i> es Porcentaje de interes_mensual del prestamo
 	  * @return mensual`
 	  */
-	final public function getInteres mensual()
+	final public function getInteresMensual()
 	{
-		return $this->interes mensual;
+		return $this->interes_mensual;
 	}
 
 	/**
-	  * setInteres mensual( $interes mensual )
+	  * setInteresMensual( $interes_mensual )
 	  * 
-	  * Set the <i>interes mensual</i> property for this object. Donde <i>interes mensual</i> es Porcentaje de interes mensual del prestamo.
-	  * Una validacion basica se hara aqui para comprobar que <i>interes mensual</i> es de tipo <i>mensual`</i>. 
+	  * Set the <i>interes_mensual</i> property for this object. Donde <i>interes_mensual</i> es Porcentaje de interes_mensual del prestamo.
+	  * Una validacion basica se hara aqui para comprobar que <i>interes_mensual</i> es de tipo <i>mensual`</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param mensual`
 	  */
-	final public function setInteres mensual( $interes mensual )
+	final public function setInteresMensual( $interes_mensual )
 	{
-		$this->interes mensual = $interes mensual;
+		$this->interes_mensual = $interes_mensual;
 	}
 
 	/**

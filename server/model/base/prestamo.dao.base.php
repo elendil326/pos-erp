@@ -178,9 +178,9 @@ abstract class PrestamoDAOBase extends DAO
 			array_push( $val, $prestamo->getSaldo() );
 		}
 
-		if( $prestamo->getInteres mensual() != NULL){
+		if( $prestamo->getInteresMensual() != NULL){
 			$sql .= " interes mensual = ? AND";
-			array_push( $val, $prestamo->getInteres mensual() );
+			array_push( $val, $prestamo->getInteresMensual() );
 		}
 
 		if( $prestamo->getFecha() != NULL){
@@ -227,7 +227,7 @@ abstract class PrestamoDAOBase extends DAO
 			$prestamo->getIdUsuario(), 
 			$prestamo->getMonto(), 
 			$prestamo->getSaldo(), 
-			$prestamo->getInteres mensual(), 
+			$prestamo->getInteresMensual(), 
 			$prestamo->getFecha(), 
 			$prestamo->getIdPrestamo(), );
 		global $conn;
@@ -261,7 +261,7 @@ abstract class PrestamoDAOBase extends DAO
 			$prestamo->getIdUsuario(), 
 			$prestamo->getMonto(), 
 			$prestamo->getSaldo(), 
-			$prestamo->getInteres mensual(), 
+			$prestamo->getInteresMensual(), 
 			$prestamo->getFecha(), 
 		 );
 		global $conn;
@@ -388,7 +388,7 @@ abstract class PrestamoDAOBase extends DAO
 			
 		}
 
-		if( (($a = $prestamoA->getInteres mensual()) != NULL) & ( ($b = $prestamoB->getInteres mensual()) != NULL) ){
+		if( (($a = $prestamoA->getInteresMensual()) != NULL) & ( ($b = $prestamoB->getInteresMensual()) != NULL) ){
 				$sql .= " interes mensual >= ? AND interes mensual <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 

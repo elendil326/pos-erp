@@ -1,6 +1,6 @@
 <?php
 
-	define("BYPASS_INSTANCE_CHECK", true);
+	define("BYPASS_INSTANCE_CHECK", false);
 
 	require_once("../../../../server/bootstrap.php");
 
