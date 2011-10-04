@@ -78,11 +78,11 @@ public class Impresiones{
 
 		}catch(PrinterException pe){
 			Logger.error(pe);
-			return "(\"success\" : false )";
+			return "({\"success\" : false })";
 
 		}catch(Exception e){
 			Logger.error(e);
-			return "(\"success\" : false, \"reason\" : \""+ e +"\" )";			
+			return "({\"success\" : false, \"reason\" : \""+ e +"\" })";			
 
 		}
 		
@@ -95,7 +95,7 @@ public class Impresiones{
 		//regresar un error
 		imprimir();
 
-		return "( \"success\": true )";
+		return "( {\"success\": true })";
 
 	}
 
