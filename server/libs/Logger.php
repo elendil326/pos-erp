@@ -144,9 +144,9 @@ class Logger
   }
 
 
-  public static final function error ( $msg )
+  public static final function error ($msg )
   {
-    self::log( $msg );
+    self::log(  "ERROR:" . $msg );
   }
 
   public static final function log( $msg, $level = 0 )

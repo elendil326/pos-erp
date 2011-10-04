@@ -1,0 +1,15 @@
+# i guess this could be done more elegantly
+# 										-alan
+
+RewriteEngine on
+
+Options +FollowSymlinks
+
+
+RewriteRule ^([0-9]*)/ingenieria/(.*)$	__instance__/ingenieria/?_instance_=$1&$2
+RewriteRule ^([0-9]*)/$ 				__instance__/?_instance_=$1
+RewriteRule ^([0-9]*)/api/				__instance__/api/?_instance_=$1
+RewriteRule ^([0-9]*)/cliente/ 			__instance__/cliente/?_instance_=$1
+RewriteRule ^([0-9]*)/consignatario/ 	__instance__/consignatario/?_instance_=$1
+RewriteRule ^([0-9]*)/gerencia/ 		__instance__/gerencia/?_instance_=$1
+RewriteRule ^([0-9]*)/sucursal/ 		__instance__/sucursal/?_instance_=$1

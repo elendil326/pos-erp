@@ -146,7 +146,7 @@ Logger::error("1");
 	# *******************************
 	//esta definicion se hace si NO queremos
 	//que sea validada la instancia
-	if(defined("BYPASS_INSTANCE_CHECK"))
+	if(defined("BYPASS_INSTANCE_CHECK") && BYPASS_INSTANCE_CHECK)
 	{
 		
 
@@ -161,6 +161,9 @@ Logger::error("1");
 	# *******************************
 	# Cosas de la instancia
 	# *******************************
-	die( "REVISANDO INSTANCIA" );
-
+	if(!isset($_GET["_instancee_"])){
+		Logger.error("asdf");
+		die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+	}
+		
 
