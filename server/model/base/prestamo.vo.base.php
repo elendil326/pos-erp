@@ -143,9 +143,9 @@ class Prestamo extends VO
 	/**
 	  * interes_mensual
 	  * 
-	  * Porcentaje de interes_mensual del prestamo<br>
+	  * Porcentaje de interes mensual del prestamo<br>
 	  * @access protected
-	  * @var mensual`
+	  * @var float
 	  */
 	protected $interes_mensual;
 
@@ -333,8 +333,8 @@ class Prestamo extends VO
 	/**
 	  * getInteresMensual
 	  * 
-	  * Get the <i>interes_mensual</i> property for this object. Donde <i>interes_mensual</i> es Porcentaje de interes_mensual del prestamo
-	  * @return mensual`
+	  * Get the <i>interes_mensual</i> property for this object. Donde <i>interes_mensual</i> es Porcentaje de interes mensual del prestamo
+	  * @return float
 	  */
 	final public function getInteresMensual()
 	{
@@ -344,10 +344,10 @@ class Prestamo extends VO
 	/**
 	  * setInteresMensual( $interes_mensual )
 	  * 
-	  * Set the <i>interes_mensual</i> property for this object. Donde <i>interes_mensual</i> es Porcentaje de interes_mensual del prestamo.
-	  * Una validacion basica se hara aqui para comprobar que <i>interes_mensual</i> es de tipo <i>mensual`</i>. 
+	  * Set the <i>interes_mensual</i> property for this object. Donde <i>interes_mensual</i> es Porcentaje de interes mensual del prestamo.
+	  * Una validacion basica se hara aqui para comprobar que <i>interes_mensual</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param mensual`
+	  * @param float
 	  */
 	final public function setInteresMensual( $interes_mensual )
 	{

@@ -179,7 +179,7 @@ abstract class PrestamoDAOBase extends DAO
 		}
 
 		if( $prestamo->getInteresMensual() != NULL){
-			$sql .= " interes mensual = ? AND";
+			$sql .= " interes_mensual = ? AND";
 			array_push( $val, $prestamo->getInteresMensual() );
 		}
 
@@ -219,7 +219,7 @@ abstract class PrestamoDAOBase extends DAO
 	  **/
 	private static final function update( $prestamo )
 	{
-		$sql = "UPDATE prestamo SET  id_solicitante = ?, id_empresa_presta = ?, id_sucursal_presta = ?, id_usuario = ?, monto = ?, saldo = ?, interes mensual = ?, fecha = ? WHERE  id_prestamo = ?;";
+		$sql = "UPDATE prestamo SET  id_solicitante = ?, id_empresa_presta = ?, id_sucursal_presta = ?, id_usuario = ?, monto = ?, saldo = ?, interes_mensual = ?, fecha = ? WHERE  id_prestamo = ?;";
 		$params = array( 
 			$prestamo->getIdSolicitante(), 
 			$prestamo->getIdEmpresaPresta(), 
@@ -252,7 +252,7 @@ abstract class PrestamoDAOBase extends DAO
 	  **/
 	private static final function create( &$prestamo )
 	{
-		$sql = "INSERT INTO prestamo ( id_prestamo, id_solicitante, id_empresa_presta, id_sucursal_presta, id_usuario, monto, saldo, interes mensual, fecha ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO prestamo ( id_prestamo, id_solicitante, id_empresa_presta, id_sucursal_presta, id_usuario, monto, saldo, interes_mensual, fecha ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$prestamo->getIdPrestamo(), 
 			$prestamo->getIdSolicitante(), 
@@ -389,11 +389,11 @@ abstract class PrestamoDAOBase extends DAO
 		}
 
 		if( (($a = $prestamoA->getInteresMensual()) != NULL) & ( ($b = $prestamoB->getInteresMensual()) != NULL) ){
-				$sql .= " interes mensual >= ? AND interes mensual <= ? AND";
+				$sql .= " interes_mensual >= ? AND interes_mensual <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
-			$sql .= " interes mensual = ? AND"; 
+			$sql .= " interes_mensual = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
