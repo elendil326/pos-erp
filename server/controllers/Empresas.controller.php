@@ -1,4 +1,5 @@
 <?php
+require_once("Empresas.interface.php");
 /**
   *
   *
@@ -79,7 +80,7 @@
 		$calle, 
 		$numero_interior = null, 
 		$telefono2 = null, 
-		$e-mail = null, 
+		$email = null, 
 		$texto_extra = null, 
 		$direccion_web = null, 
 		$retenciones = null, 
@@ -145,7 +146,7 @@
 		$rfc, 
 		$ciudad, 
 		$razon_social, 
-		$e-mail = null, 
+		$email = null, 
 		$representante_legal = null, 
 		$numero_interno = null, 
 		$direccion_web = null, 

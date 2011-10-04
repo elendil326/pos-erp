@@ -1,4 +1,5 @@
 <?php
+require_once("CargosYAbonos.interface.php");
 /**
   *
   *
@@ -12,28 +13,28 @@
  	 *
  	 *Registra un nuevo ingreso
  	 *
- 	 * @param id_empresa int Id de la empresa a la que pertenece este ingreso
  	 * @param fecha_ingreso string Fecha del ingreso
+ 	 * @param id_empresa int Id de la empresa a la que pertenece este ingreso
  	 * @param monto float Monto del ingreso en caso de que no este contemplado por el concepto de ingreso o que sea diferente
- 	 * @param descripcion string Descripcion del ingreso en caso de no este contemplado en la lista de conceptos de ingreso
- 	 * @param folio string Folio de la factura del ingreso
- 	 * @param nota string Nota del ingreso
+ 	 * @param id_sucursal int Id de la caja a la que pertenece este ingreso
  	 * @param id_concepto_ingreso int Id del concepto al que hace referencia el ingreso
  	 * @param id_caja int Id de la caja en la que se registra el ingreso
- 	 * @param id_sucursal int Id de la caja a la que pertenece este ingreso
+ 	 * @param folio string Folio de la factura del ingreso
+ 	 * @param nota string Nota del ingreso
+ 	 * @param descripcion string Descripcion del ingreso en caso de no este contemplado en la lista de conceptos de ingreso
  	 * @return id_ingreso int Id autogenerado por la insercion del ingreso
  	 **/
 	public function NuevoIngreso
 	(
-		$id_empresa, 
 		$fecha_ingreso, 
-		$monto, 
-		$descripcion = null, 
-		$folio = null, 
-		$nota = null, 
+		$id_empresa, 
+		$monto = null, 
+		$id_sucursal = null, 
 		$id_concepto_ingreso = null, 
 		$id_caja = null, 
-		$id_sucursal = null
+		$folio = null, 
+		$nota = null, 
+		$descripcion = null
 	)
 	{  
   
@@ -312,30 +313,30 @@
 
 <br/><br/><b>Update :</b>Ademas deber?tambi?de tomar la fecha de ingreso del gasto del servidor y agregar tambi?como par?tro una fecha a la cual se deber?de aplicar el gasto. Por ejemplo si el d?09/09/11 (viernes) se tomo dinero para pagar la luz, pero resulta que ese d?se olvidaron de registrar el gasto y lo registran el 12/09/11 (lunes). Entonces tambien se deberia de tomar como parametro una <b>fecha</b> a la cual aplicar el gasto, tambien se deberia de enviar como parametro una <b>nota</b>
  	 *
- 	 * @param id_empresa int Id de la empresa a la que pertenece este gasto
  	 * @param fecha_gasto string Fecha del gasto
+ 	 * @param id_empresa int Id de la empresa a la que pertenece este gasto
  	 * @param monto float Monto del gasto en caso de que no este contemplado por el concepto de gasto o sea diferente a este
- 	 * @param folio string Folio de la factura del gasto
- 	 * @param nota string Nota del gasto
- 	 * @param descripcion string Descripcion del gasto en caso de que no este contemplado en la lista de concpetos de gasto
- 	 * @param id_orden_de_servicio int Id de la orden del servicio que genero este gasto
- 	 * @param id_concepto_gasto int Id del concepto al que  hace referencia el gasto
  	 * @param id_sucursal int Id de la sucursal a la que pertenece este gasto
  	 * @param id_caja int Id de la caja de la que se sustrae el dinero para pagar el gasto
+ 	 * @param id_orden_de_servicio int Id de la orden del servicio que genero este gasto
+ 	 * @param id_concepto_gasto int Id del concepto al que  hace referencia el gasto
+ 	 * @param descripcion string Descripcion del gasto en caso de que no este contemplado en la lista de concpetos de gasto
+ 	 * @param folio string Folio de la factura del gasto
+ 	 * @param nota string Nota del gasto
  	 * @return id_gasto int Id generado por la inserción del nuevo gasto
  	 **/
 	public function NuevoGasto
 	(
-		$id_empresa, 
 		$fecha_gasto, 
-		$monto, 
-		$folio = null, 
-		$nota = null, 
-		$descripcion = null, 
+		$id_empresa, 
+		$monto = null, 
+		$id_sucursal = null, 
+		$id_caja = null, 
 		$id_orden_de_servicio = null, 
 		$id_concepto_gasto = null, 
-		$id_sucursal = null, 
-		$id_caja = null
+		$descripcion = null, 
+		$folio = null, 
+		$nota = null
 	)
 	{  
   
@@ -347,23 +348,23 @@
  	 *Editar los detalles de un gasto.
 <br/><br/><b>Update : </b> Tambien se deberia de tomar  de la sesion el id del usuario qeu hiso al ultima modificacion y una fecha de ultima modificacion.
  	 *
- 	 * @param fecha_gasto string Fecha que el usuario selecciona en el sistema, a la cual le quiere asignar el gasto.
  	 * @param id_gasto int Id que hace referencia a este gasto
+ 	 * @param fecha_gasto string Fecha que el usuario selecciona en el sistema, a la cual le quiere asignar el gasto.
  	 * @param monto float Monto a gastar
- 	 * @param folio string Folio de la factura de ese gasto
+ 	 * @param id_concepto_gasto int Id del concepto del gasto
  	 * @param descripcion string Descripcion del gasto en caso de que no este en la lista de conceptos.
  	 * @param nota string Informacion adicinal sobre el gasto
- 	 * @param id_concepto_gasto int Id del concepto del gasto
+ 	 * @param folio string Folio de la factura de ese gasto
  	 **/
 	public function EditarGasto
 	(
-		$fecha_gasto, 
 		$id_gasto, 
-		$monto, 
-		$folio = null, 
+		$fecha_gasto, 
+		$monto = null, 
+		$id_concepto_gasto = null, 
 		$descripcion = null, 
 		$nota = null, 
-		$id_concepto_gasto = null
+		$folio = null
 	)
 	{  
   
@@ -376,23 +377,23 @@
 
 <br/><br/><b>Update :</b>El usuario y la fecha de la ultima modificaci?e deber? de obtener de la sesi?
  	 *
- 	 * @param id_ingreso int Id del ingreso que se editar
  	 * @param fecha_ingreso string Fecha que el usuario selecciona en el sistema, a la cual le quiere asignar el ingreso.
- 	 * @param monto float Monto a registrar como ingreso
- 	 * @param id_concepto_ingreso int Id del concepto del ingreso
+ 	 * @param id_ingreso int Id del ingreso que se editar
+ 	 * @param descrpicion string Descripciond el ingreso en caso de que no se encentre en la lista de conceptos.
  	 * @param folio string Folio de la factura generada por el ingreso
  	 * @param nota string Informacion adicional del ingreso
- 	 * @param descrpicion string Descripciond el ingreso en caso de que no se encentre en la lista de conceptos.
+ 	 * @param id_concepto_ingreso int Id del concepto del ingreso
+ 	 * @param monto float Monto a registrar como ingreso
  	 **/
 	public function EditarIngreso
 	(
-		$id_ingreso, 
 		$fecha_ingreso, 
-		$monto, 
-		$id_concepto_ingreso = null, 
+		$id_ingreso, 
+		$descrpicion = null, 
 		$folio = null, 
 		$nota = null, 
-		$descrpicion = null
+		$id_concepto_ingreso = null, 
+		$monto = null
 	)
 	{  
   

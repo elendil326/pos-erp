@@ -4,127 +4,407 @@
   *
   *
   **/
-
-  interaface IPersonal y agentes {
-  
-  
-	/**
- 	 *
- 	 *Insertar un nuevo usuario. El usuario que lo crea sera tomado de la sesion actual y la fecha sera tomada del servidor. Un usuario no puede tener mas de un rol en una misma sucursal de una misma empresa.
- 	 *
- 	 **/
-	protected function NuevoUsuario();  
-  
-  
-  
-  
-	/**
- 	 *
- 	 *Listar a todos los usuarios del sistema. Se puede ordenar por los atributos del usuario y filtrar en activos e inactivos
- 	 *
- 	 **/
-	protected function ListaUsuario();  
-  
-  
-  
-  
-	/**
- 	 *
- 	 *Editar los detalles de un usuario.
- 	 *
- 	 **/
-	protected function EditarUsuario();  
-  
-  
-  
-  
-	/**
- 	 *
- 	 *Lista los roles, se puede filtrar por empresa y ordenar por sus atributos
- 	 *
- 	 **/
-	protected function ListaRol();  
-  
-  
-  
-  
-	/**
- 	 *
- 	 *Asigna uno o varios permisos especificos a un usuario. No se pueden asignar permisos que ya se tienen
- 	 *
- 	 **/
-	protected function Asignar_permisosUsuario();  
-  
-  
+	
+  interface IPersonalYAgentes {
   
   
 	/**
  	 *
  	 *Este metodo asigna permisos a un rol. Cada vez que se llame a este metodo, se asignaran estos permisos a los usuarios que pertenezcan a este rol.
  	 *
+ 	 * @param id_rol int Id del rol al que se le asignaran los permisos
+ 	 * @param id_permisos json Arreglo de ids de los permisos que seran asignados al rol
  	 **/
-	protected function Asignar_permisoRol();  
+  function Asignar_permisoRol
+	(
+		$id_rol, 
+		$id_permisos
+	);  
   
   
-  
-  
-	/**
- 	 *
- 	 *Este metodo quita uno o varios permisos a un rol. Cuando este metodo es ejecutado, se quitan los permisos a todos los usuarios de este rol
- 	 *
- 	 **/
-	protected function Quitar_permisoRol();  
-  
-  
-  
-  
-	/**
- 	 *
- 	 *Quita uno o varios permisos a un usuario. No se puede negar un permiso que no se tiene
- 	 *
- 	 **/
-	protected function Quitar_permisosUsuario();  
-  
-  
-  
-  
-	/**
- 	 *
- 	 *Crea un nuevo grupo de usuarios. Se asignaran los permisos de este grupo al momento de su creacion.
- 	 *
- 	 **/
-	protected function NuevoRol();  
-  
-  
-  
+	
   
 	/**
  	 *
  	 *Edita la informacion de un grupo, puede usarse para editar los permisos del mismo
  	 *
+ 	 * @param nombre string Nombre del grupo
+ 	 * @param permisos json Ids de los permisos que tendra este rol
+ 	 * @param id_rol int Id del rol a editar
+ 	 * @param descuento float Descuento que se le hara a este rol
+ 	 * @param descripcion string Descripcion larga del grupo
+ 	 * @param salario float Salario base para este rol
  	 **/
-	protected function EditarRol();  
+  function EditarRol
+	(
+		$nombre, 
+		$permisos, 
+		$id_rol, 
+		$descuento = null, 
+		$descripcion = null, 
+		$salario = null
+	);  
   
   
+	
   
+	/**
+ 	 *
+ 	 *Este metodo desactiva un grupo, solo se podra desactivar un grupo si no hay ningun usuario que pertenezca a ?
+ 	 *
+ 	 * @param id_rol int Id del grupo a eliminar
+ 	 **/
+  function EliminarRol
+	(
+		$id_rol
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Lista los roles, se puede filtrar por empresa y ordenar por sus atributos
+ 	 *
+ 	 * @param orden json Objeto que determinara el orden de la lista
+ 	 * @return roles json Objeto que contendra la lista de los roles
+ 	 **/
+  function ListaRol
+	(
+		$orden = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Crea un nuevo grupo de usuarios. Se asignaran los permisos de este grupo al momento de su creacion.
+ 	 *
+ 	 * @param permisos json Ids de los permisos que tendra este rol
+ 	 * @param nombre string Nombre del grupo
+ 	 * @param descripcion string Descripcion larga del grupo
+ 	 * @param descuento float El procentaje de descuento que este grupo gozara al comprar cualquier producto
+ 	 * @param salario float El salario de este rol
+ 	 * @return id_rol int Id del grupo que se genero
+ 	 **/
+  function NuevoRol
+	(
+		$permisos, 
+		$nombre, 
+		$descripcion = null, 
+		$descuento = null, 
+		$salario = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Este metodo quita uno o varios permisos a un rol. Cuando este metodo es ejecutado, se quitan los permisos a todos los usuarios de este rol
+ 	 *
+ 	 * @param permisos json Objeto que contendra los ids de los permisos a negar
+ 	 * @param id_rol int Id del rol al que se le quitaran los permisos
+ 	 **/
+  function Quitar_permisoRol
+	(
+		$permisos, 
+		$id_rol
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Asigna uno o varios permisos especificos a un usuario. No se pueden asignar permisos que ya se tienen
+ 	 *
+ 	 * @param id_usuario int Id del usuario al que se le asignara el permiso
+ 	 * @param permisos json Ids de los permisos que se le asignaran a este usuario en especial
+ 	 **/
+  function Asignar_permisosUsuario
+	(
+		$id_usuario, 
+		$permisos
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Editar los detalles de un usuario.
+ 	 *
+ 	 * @param codigo_usuario string Codigo interno del usuario
+ 	 * @param nombre string Nombre del usuario
+ 	 * @param password string Password del usuario
+ 	 * @param id_usuario int Usuario a editar
+ 	 * @param id_rol int Id rol del usuario
+ 	 * @param intereses_moratorios float Intereses moratorios del cliente
+ 	 * @param telefono1 string Telefono del usuario
+ 	 * @param descuento_es_porcentaje bool Si el descuento es un porcentaje o es un valor fijo
+ 	 * @param cuenta_bancaria string Cuenta bancaria del usuario
+ 	 * @param id_clasificacion_cliente int Id de la clasificacion del cliente
+ 	 * @param cuenta_mensajeria string Cuenta de mensajeria del usuario
+ 	 * @param dia_de_revision string Fecha de revision del cliente
+ 	 * @param denominacion_comercial string Denominacion comercial del cliente
+ 	 * @param numero_exterior_2 string Numero exterior de la direccion alterna del usuario
+ 	 * @param numero_exterior string Numero exterior del domicilio del usuario
+ 	 * @param curp string CURP del usuario
+ 	 * @param dias_de_credito int Dias de credito del cliente
+ 	 * @param telefono2 string Otro telefono de la direccion del usuario
+ 	 * @param rfc string RFC del usuario
+ 	 * @param dias_de_embarque int Dias de emabrque del proveedor ( Lunes, Miercoles, etc)
+ 	 * @param correo_electronico string correo electronico del usuario
+ 	 * @param id_sucursal int Id de la sucursal en la que fue creada este usuario o donde labora.
+ 	 * @param calle_2 string Calle de la direccion alterna del usuario
+ 	 * @param comision_ventas float El porcentaje que gana como comision por ventas este usuario
+ 	 * @param id_clasificacion_proveedor int Id de la clasificacion del proveedor
+ 	 * @param colonia string Colonia donde vive el usuario
+ 	 * @param id_ciudad int Id de la ciudad del domicilio del usuario
+ 	 * @param numero_interior string Numero interior del domicilio del usuario
+ 	 * @param texto_extra string Referencia del domicilio del usuario
+ 	 * @param codigo_postal string Codigo Postal del domicilio del usuario
+ 	 * @param calle string calle del domicilio del usuario
+ 	 * @param numero_interior_2 string Numero interior de la direccion alterna del usuario
+ 	 * @param telefono1_2 string Telefono de la direccion alterna del usuario
+ 	 * @param id_ciudad_2 int Id de la ciudad de la direccion alterna del usuario
+ 	 * @param texto_extra_2 string Texto extra para ubicar la direccion alterna del usuario
+ 	 * @param colonia_2 string Colonia de la direccion alterna del usuario
+ 	 * @param codigo_postal_2 string Codigo postal de la direccion alterna del usuario
+ 	 * @param saldo_del_ejercicio float Saldo del ejercicio del cliente
+ 	 * @param impuestos json Objeto que contendra los ids de los impuestos que afectan a este usuario
+ 	 * @param ventas_a_credito int Ventas a credito del cliente
+ 	 * @param facturar_a_terceros bool Si el usuario puede facturar a terceros
+ 	 * @param telefono_personal_1 string telefono personal del usuario
+ 	 * @param descuento float Descuento que se le hara al usuario al venderle
+ 	 * @param telefono_personal_2 string Telefono personal alterno del usuario
+ 	 * @param mensajeria bool Si el usuario tiene una cuenta de mensajeria
+ 	 * @param limite_de_credito float Limite de credito del usuario
+ 	 * @param dia_de_pago string Fecha de pago del cliente
+ 	 * @param telefono2_2 string telefono2 de la direccion alterna del usuario
+ 	 * @param salario float Si el usuario contara con un salario no establecido por el rol
+ 	 * @param pagina_web string Pagina web del usuario
+ 	 * @param representante_legal string Nombre del representante legal del usuario
+ 	 * @param retenciones json Ids de las retenciones que afectan a este usuario
+ 	 **/
+  function EditarUsuario
+	(
+		$codigo_usuario, 
+		$nombre, 
+		$password, 
+		$id_usuario, 
+		$id_rol, 
+		$intereses_moratorios = null, 
+		$telefono1 = null, 
+		$descuento_es_porcentaje = null, 
+		$cuenta_bancaria = null, 
+		$id_clasificacion_cliente = null, 
+		$cuenta_mensajeria = null, 
+		$dia_de_revision = null, 
+		$denominacion_comercial = null, 
+		$numero_exterior_2 = null, 
+		$numero_exterior = null, 
+		$curp = null, 
+		$dias_de_credito = null, 
+		$telefono2 = null, 
+		$rfc = null, 
+		$dias_de_embarque = null, 
+		$correo_electronico = null, 
+		$id_sucursal = null, 
+		$calle_2 = null, 
+		$comision_ventas = null, 
+		$id_clasificacion_proveedor = null, 
+		$colonia = null, 
+		$id_ciudad = null, 
+		$numero_interior = null, 
+		$texto_extra = null, 
+		$codigo_postal = null, 
+		$calle = null, 
+		$numero_interior_2 = null, 
+		$telefono1_2 = null, 
+		$id_ciudad_2 = null, 
+		$texto_extra_2 = null, 
+		$colonia_2 = null, 
+		$codigo_postal_2 = null, 
+		$saldo_del_ejercicio = null, 
+		$impuestos = null, 
+		$ventas_a_credito = null, 
+		$facturar_a_terceros = null, 
+		$telefono_personal_1 = null, 
+		$descuento = null, 
+		$telefono_personal_2 = null, 
+		$mensajeria = null, 
+		$limite_de_credito = null, 
+		$dia_de_pago = null, 
+		$telefono2_2 = null, 
+		$salario = null, 
+		$pagina_web = null, 
+		$representante_legal = null, 
+		$retenciones = null
+	);  
+  
+  
+	
   
 	/**
  	 *
  	 *Este metodo desactiva un usuario, usese cuando un empleado ya no trabaje para usted.
  	 *
+ 	 * @param id_usuario int Id del usuario a eliminar
  	 **/
-	protected function EliminarUsuario();  
+  function EliminarUsuario
+	(
+		$id_usuario
+	);  
   
   
-  
+	
   
 	/**
  	 *
- 	 *Este metodo desactiva un grupo, solo se podra desactivar un grupo si no hay ningun usuario que pertenezca a él.
+ 	 *Listar a todos los usuarios del sistema. Se puede ordenar por los atributos del usuario y filtrar en activos e inactivos
  	 *
+ 	 * @param activo bool True si se mostrarn solo los usuarios activos, false si solo se mostrarn los usuarios inactivos
+ 	 * @param ordenar json Valor numrico que indicar la forma en que se ordenar la lista
+ 	 * @return usuarios json Arreglo de objetos que contendrá la información de los usuarios del sistema
  	 **/
-	protected function EliminarRol();  
+  function ListaUsuario
+	(
+		$activo = null, 
+		$ordenar = null
+	);  
   
   
+	
   
+	/**
+ 	 *
+ 	 *Insertar un nuevo usuario. El usuario que lo crea sera tomado de la sesion actual y la fecha sera tomada del servidor. Un usuario no puede tener mas de un rol en una misma sucursal de una misma empresa.
+ 	 *
+ 	 * @param password string Password del usuario
+ 	 * @param id_rol int Id del rol del usuario en la instnacia
+ 	 * @param nombre string Nombre del usuario
+ 	 * @param codigo_usuario string Codigo interno del usuario
+ 	 * @param facturar_a_terceros bool Si el usuario puede facturar a terceros
+ 	 * @param id_sucursal int Id de la sucursal donde fue creado el usuario o donde labora
+ 	 * @param mensajeria bool Si el cliente tiene una cuenta de mensajeria
+ 	 * @param mpuestos json Objeto que contendra los impuestos que afectan a este usuario
+ 	 * @param dia_de_pago string Fecha de pago del cliente
+ 	 * @param cuenta_bancaria string Cuenta bancaria del usuario
+ 	 * @param representante_legal string Nombre del representante legal del usuario
+ 	 * @param saldo_del_ejercicio float Saldo del ejercicio del cliente
+ 	 * @param salario float Si el usuario contara con un salario especial no especificado por el rol
+ 	 * @param intereses_moratorios float Intereses moratorios del cliente
+ 	 * @param ventas_a_credito int Ventas a credito del cliente
+ 	 * @param telefono_personal1 string Telefono personal del usuario
+ 	 * @param descuento float El porcentaje de descuento que se le hara al usuario al venderle
+ 	 * @param pagina_web string Pagina web del usuario
+ 	 * @param limite_credito float El limite de credito del usuario
+ 	 * @param telefno_personal2 string Telefono personal del usuario
+ 	 * @param telefono1_2 string Telefono de la direccion alterna del usuario
+ 	 * @param codigo_postal string Codigo postal del Agente
+ 	 * @param telefono2_2 string Telefono 2 de la direccion al terna del usuario
+ 	 * @param codigo_postal_2 string Codigo postal de la direccion alterna del usuario
+ 	 * @param texto_extra_2 string Texto extra para ubicar la direccion alterna del usuario
+ 	 * @param numero_interior_2 string Numero interior de la direccion alterna del usuario
+ 	 * @param id_ciudad int ID de la ciudad donde vive el agente
+ 	 * @param colonia_2 string Colonia de la direccion alterna del usuario
+ 	 * @param calle string Calle donde vive el agente
+ 	 * @param numero_interior string Numero interior del agente
+ 	 * @param id_ciudad_2 int Id de la ciudad de la direccion alterna del usuario
+ 	 * @param correo_electronico string Correo Electronico del agente
+ 	 * @param texto_extra string Comentario sobre la direccion del agente
+ 	 * @param telefono2 string Otro telefono del agente
+ 	 * @param denominacion_comercial string Denominacion comercial del cliente
+ 	 * @param dias_de_credito int Dias de credito del cliente
+ 	 * @param calle_2 string Calle de la direccion alterna del usuario
+ 	 * @param numero_exterior_2 string Numero exterior de la direccion alterna del usuario
+ 	 * @param telefono1 string Telefono principal del agente
+ 	 * @param dias_de_embarque int Dias de embarque del proveedor ( Lunes, Miercoles, Viernes, etc)
+ 	 * @param numero_exterior string Numero exterior del agente
+ 	 * @param id_clasificacion_cliente int Id de la clasificacion del cliente
+ 	 * @param curp string CURP del agente
+ 	 * @param dia_de_revision string Fecha de revision del cliente
+ 	 * @param cuenta_mensajeria string Cuenta de mensajeria del usuario
+ 	 * @param comision_ventas float El porcentaje de la comision que ganara este usuario especificamente por ventas
+ 	 * @param rfc string RFC del agente
+ 	 * @param id_clasificacion_proveedor int Id de la clasificacion del proveedor
+ 	 * @param colonia string Colonia donde vive el agente
+ 	 * @param retenciones json Ids de las retenciones que afectan a este usuario
+ 	 * @return id_usuario int Id generado por la inserción del usuario
+ 	 **/
+  function NuevoUsuario
+	(
+		$password, 
+		$id_rol, 
+		$nombre, 
+		$codigo_usuario, 
+		$facturar_a_terceros = null, 
+		$id_sucursal = null, 
+		$mensajeria = null, 
+		$mpuestos = null, 
+		$dia_de_pago = null, 
+		$cuenta_bancaria = null, 
+		$representante_legal = null, 
+		$saldo_del_ejercicio = null, 
+		$salario = null, 
+		$intereses_moratorios = null, 
+		$ventas_a_credito = null, 
+		$telefono_personal1 = null, 
+		$descuento = null, 
+		$pagina_web = null, 
+		$limite_credito = null, 
+		$telefno_personal2 = null, 
+		$telefono1_2 = null, 
+		$codigo_postal = null, 
+		$telefono2_2 = null, 
+		$codigo_postal_2 = null, 
+		$texto_extra_2 = null, 
+		$numero_interior_2 = null, 
+		$id_ciudad = null, 
+		$colonia_2 = null, 
+		$calle = null, 
+		$numero_interior = null, 
+		$id_ciudad_2 = null, 
+		$correo_electronico = null, 
+		$texto_extra = null, 
+		$telefono2 = null, 
+		$denominacion_comercial = null, 
+		$dias_de_credito = null, 
+		$calle_2 = null, 
+		$numero_exterior_2 = null, 
+		$telefono1 = null, 
+		$dias_de_embarque = null, 
+		$numero_exterior = null, 
+		$id_clasificacion_cliente = null, 
+		$curp = null, 
+		$dia_de_revision = null, 
+		$cuenta_mensajeria = null, 
+		$comision_ventas = null, 
+		$rfc = null, 
+		$id_clasificacion_proveedor = null, 
+		$colonia = null, 
+		$retenciones = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Quita uno o varios permisos a un usuario. No se puede negar un permiso que no se tiene
+ 	 *
+ 	 * @param id_usuario int Id del usuario al que se le niegan los permisos
+ 	 * @param permisos json Objeto que cotendra los ids de los permisos
+ 	 **/
+  function Quitar_permisosUsuario
+	(
+		$id_usuario, 
+		$permisos
+	);  
+  
+  
+	
   }

@@ -4,6 +4,6 @@
 
 	require_once("../../../../server/bootstrap.php");
 
-	var_dump($_GET);
 
-?>
+
+?>asdf

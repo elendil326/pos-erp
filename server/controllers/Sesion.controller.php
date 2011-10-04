@@ -1,4 +1,5 @@
 <?php
+require_once("Sesion.interface.php");
 /**
   *
   *

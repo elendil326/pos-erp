@@ -146,6 +146,37 @@
 	# *******************************
 	require_once("model/model.inc.php");
 
+
+
+	# *******************************
+	# Cargar los Controllers
+	# *******************************
+	require_once("controllers/Autorizaciones.controller.php");
+	require_once("controllers/CargosYAbonos.controller.php");
+	require_once("controllers/Clientes.controller.php");
+	require_once("controllers/Compras.controller.php");
+	require_once("controllers/Consignaciones.controller.php");
+	require_once("controllers/Contabilidad.controller.php");
+	require_once("controllers/Documentos.controller.php");
+	require_once("controllers/Efectivo.controller.php");
+	require_once("controllers/Empresas.controller.php");
+	require_once("controllers/ImpuestosYRetenciones.controller.php");
+	require_once("controllers/instances.controller.php");
+	require_once("controllers/Inventario.controller.php");
+	require_once("controllers/login.controller.php");
+	require_once("controllers/Paquetes.controller.php");
+	require_once("controllers/PersonalYAgentes.controller.php");
+	require_once("controllers/POS.controller.php");
+	require_once("controllers/Precio.controller.php");
+	require_once("controllers/Productos.controller.php");
+	require_once("controllers/Proveedores.controller.php");
+	require_once("controllers/Reportes.controller.php");
+	require_once("controllers/Servicios.controller.php");
+	require_once("controllers/Sesion.controller.php");
+	require_once("controllers/Sucursales.controller.php");
+	require_once("controllers/TransportacionYFletes.controller.php");
+	require_once("controllers/Ventas.controller.php");
+
 	# *******************************
 	# Buscar esta instancia si es que la necesito
 	# *******************************

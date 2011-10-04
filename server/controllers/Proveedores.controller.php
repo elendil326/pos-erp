@@ -1,4 +1,5 @@
 <?php
+require_once("Proveedores.interface.php");
 /**
   *
   *
@@ -103,7 +104,7 @@
  	 * @param id_moneda int Id de la moneda preferente del proveedor
  	 * @param rfc string RFC del proveedor
  	 * @param calle string Calle de la direccion del proveedor
- 	 * @param e-mail string Correo electronico del proveedor
+ 	 * @param email string Correo electronico del proveedor
  	 * @param telefono_personal string Telefono personal del cliente
  	 * @param dias_embarque int Dias en que el proveedor embarca ( Lunes, Martes, Miercoles, Jueves..)
  	 * @param impuestos json Ids de los impuestos que afectan a este proveedor
@@ -133,7 +134,7 @@
 		$id_moneda = null, 
 		$rfc = null, 
 		$calle = null, 
-		$e-mail = null, 
+		$email = null, 
 		$telefono_personal = null, 
 		$dias_embarque = null, 
 		$impuestos = null, 
@@ -178,7 +179,7 @@
  	 * @param rfc string RFC del proveedor
  	 * @param calle string Calle de la direccion del proveedor
  	 * @param telefono_personal string Telefono del proveedor
- 	 * @param e-mail string E-mail del proveedor
+ 	 * @param email string E-mail del proveedor
  	 * @param dias_embarque int Dias en que el proveedor embarca ( Lunes, Martes, Miercoles, Jueves..)
  	 * @param impuestos json Arreglo de enteros que contendr&#65533;n los ids de impuestos por comprar a este proveedor
  	 * @param telefono1 string Telefono 1 de la direccion del proveeor
@@ -208,7 +209,7 @@
 		$rfc = null, 
 		$calle = null, 
 		$telefono_personal = null, 
-		$e-mail = null, 
+		$email = null, 
 		$dias_embarque = null, 
 		$impuestos = null, 
 		$telefono1 = null, 

@@ -1,4 +1,5 @@
 <?php
+require_once("Inventario.interface.php");
 /**
   *
   *

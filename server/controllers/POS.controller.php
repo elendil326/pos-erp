@@ -1,4 +1,5 @@
 <?php
+require_once("POS.interface.php");
 /**
   *
   *
