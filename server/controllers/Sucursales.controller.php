@@ -58,32 +58,36 @@
  	 *
  	 *Vender productos desde el mostrador de una sucursal. Cualquier producto vendido aqui sera descontado del inventario de esta sucursal. La fecha ser?omada del servidor, el usuario y la sucursal ser?tomados del servidor. La ip ser?omada de la m?ina que manda a llamar al m?do. El valor del campo liquidada depender?e los campos total y pagado. La empresa se tomara del alamcen de donde salieron los productos
  	 *
- 	 * @param descuento float La cantidad que ser descontada a la compra
- 	 * @param total float El total de la venta
- 	 * @param impuesto float Cantidad sumada por impuestos
+ 	 * @param detalle json Objeto que contendr los id de los productos, sus cantidades, su precio y su descuento.
  	 * @param retencion float Cantidad sumada por retenciones
  	 * @param id_comprador int Id del cliente al que se le vende.
  	 * @param subtotal float El total de la venta antes de cargarle impuestos
- 	 * @param detalle json Objeto que contendr los id de los productos, sus cantidades, su precio y su descuento.
+ 	 * @param impuesto float Cantidad sumada por impuestos
+ 	 * @param total float El total de la venta
+ 	 * @param descuento float La cantidad que ser descontada a la compra
  	 * @param tipo_venta string Si la venta es a credito o a contado
+ 	 * @param saldo float La cantidad que ha sido abonada hasta el momento de la venta
  	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
  	 * @param tipo_pago string Si el pago ser efectivo, cheque o tarjeta.
- 	 * @param saldo float La cantidad que ha sido abonada hasta el momento de la venta
+ 	 * @param billetes_pago json Ids de los billetes que se recibieron 
+ 	 * @param billetes_cambio json Ids de billetes que se entregaron como cambio
  	 * @return id_venta int Id autogenerado de la inserción de la venta.
  	 **/
 	public function VenderCaja
 	(
-		$descuento, 
-		$total, 
-		$impuesto, 
+		$detalle, 
 		$retencion, 
 		$id_comprador, 
 		$subtotal, 
-		$detalle, 
+		$impuesto, 
+		$total, 
+		$descuento, 
 		$tipo_venta, 
+		$saldo = null, 
 		$cheques = null, 
 		$tipo_pago = null, 
-		$saldo = null
+		$billetes_pago = null, 
+		$billetes_cambio = null
 	)
 	{  
   
@@ -94,33 +98,37 @@
  	 *
  	 *Comprar productos en mostrador. No debe confundirse con comprar productos a un proveedor. Estos productos se agregaran al inventario de esta sucursal de manera automatica e instantanea. La IP ser?omada de la m?ina que realiza la compra. El usuario y la sucursal ser?tomados de la sesion activa. El estado del campo liquidada ser?omado de acuerdo al campo total y pagado.
  	 *
- 	 * @param tipo_compra string Si la compra es a credito o de contado
- 	 * @param id_empresa int Empresa a nombre de la cual se realiza la compra
- 	 * @param total float Total de la compra despues de impuestos y descuentos
- 	 * @param id_vendedor int Id del cliente al que se le compra
  	 * @param retencion float Cantidad sumada por retenciones
  	 * @param detalle json Objeto que contendr la informacin de los productos comprados, sus cantidades, sus descuentos, y sus precios
+ 	 * @param id_vendedor int Id del cliente al que se le compra
+ 	 * @param total float Total de la compra despues de impuestos y descuentos
+ 	 * @param tipo_compra string Si la compra es a credito o de contado
+ 	 * @param subtotal float Total de la compra antes de incluirle impuestos.
+ 	 * @param id_empresa int Empresa a nombre de la cual se realiza la compra
  	 * @param descuento float Cantidad restada por descuento
  	 * @param impuesto float Cantidad sumada por impuestos
- 	 * @param subtotal float Total de la compra antes de incluirle impuestos.
- 	 * @param saldo float Saldo de la compra
+ 	 * @param billetes_pago json Ids de billetes que se usaron para pagar
+ 	 * @param billetes_cambio json Ids de billetes que se recibieron como cambio
  	 * @param tipo_pago string Si el pago ser en efectivo, con tarjeta o con cheque
+ 	 * @param saldo float Saldo de la compra
  	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
  	 * @return id_compra_cliente string Id de la nueva compra
  	 **/
 	public function ComprarCaja
 	(
-		$tipo_compra, 
-		$id_empresa, 
-		$total, 
-		$id_vendedor, 
 		$retencion, 
 		$detalle, 
+		$id_vendedor, 
+		$total, 
+		$tipo_compra, 
+		$subtotal, 
+		$id_empresa, 
 		$descuento, 
 		$impuesto, 
-		$subtotal, 
-		$saldo = null, 
+		$billetes_pago = null, 
+		$billetes_cambio = null, 
 		$tipo_pago = null, 
+		$saldo = null, 
 		$cheques = null
 	)
 	{  
@@ -162,15 +170,19 @@
  	 *
  	 *Valida si una maquina que realizara peticiones al servidor pertenece a una sucursal.
  	 *
+ 	 * @param billetes json Ids de billetes y sus cantidades con los que inicia esta caja
  	 * @param saldo float Saldo con el que empieza a funcionar la caja
  	 * @param client_token string El token generado por el POS client
+ 	 * @param control_billetes bool Si se quiere llevar el control de billetes en la caja
  	 * @param id_cajero int Id del cajero que iniciara en esta caja en caso de que no sea este el que abre la caja
  	 * @return detalles_sucursal json Si esta es una sucursal valida, detalles sucursal contiene un objeto con informacion sobre esta sucursal.
  	 **/
 	public function AbrirCaja
 	(
+		$billetes, 
 		$saldo, 
 		$client_token, 
+		$control_billetes, 
 		$id_cajero = null
 	)
 	{  
@@ -299,12 +311,14 @@
  	 *Hace un corte en los flujos de dinero de la sucursal. El Id de la sucursal se tomara de la sesion actual. La fehca se tomara del servidor.
  	 *
  	 * @param saldo_real float Saldo que hay actualmente en la caja
+ 	 * @param billetes json Ids de billetes y sus cantidades encontrados en la caja al hacer el cierre
  	 * @param id_cajero int Id del cajero en caso de que no sea este el que realiza el cierre
  	 * @return id_cierre int Id del cierre autogenerado.
  	 **/
 	public function CerrarCaja
 	(
 		$saldo_real, 
+		$billetes, 
 		$id_cajero = null
 	)
 	{  
@@ -383,20 +397,24 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Realiza un corte de caja. Este metodo reduce el dinero de la caja y va registrando el dinero acumulado de esa caja. Si faltase dinero se carga una deuda al cajero. La fecha sera tomada del servidor. El usuario sera tomado de la sesion.
  	 *
- 	 * @param saldo_real float Saldo real encontrado en la caja
- 	 * @param id_caja int Id de la caja a la que se le hace el corte
  	 * @param saldo_final float Saldo que se dejara en la caja para que continue realizando sus operaciones.
- 	 * @param id_cajero_nuevo int Id del cajero que entrara despues de realizar el corte
+ 	 * @param id_caja int Id de la caja a la que se le hace el corte
+ 	 * @param saldo_real float Saldo real encontrado en la caja
+ 	 * @param billetes_encontrados json Ids de billetes encontrados en la caja al hacer el corte
+ 	 * @param billetes_dejados json Ids de billetes dejados en la caja despues de hacer el corte
  	 * @param id_cajero int Id del cajero en caso de que no sea este el que realiza el corte
+ 	 * @param id_cajero_nuevo int Id del cajero que entrara despues de realizar el corte
  	 * @return id_corte_caja int Id generado por la insercion del nuevo corte
  	 **/
 	public function CorteCaja
 	(
-		$saldo_real, 
-		$id_caja, 
 		$saldo_final, 
-		$id_cajero_nuevo = null, 
-		$id_cajero = null
+		$id_caja, 
+		$saldo_real, 
+		$billetes_encontrados, 
+		$billetes_dejados, 
+		$id_cajero = null, 
+		$id_cajero_nuevo = null
 	)
 	{  
   
