@@ -21,9 +21,13 @@ require_once("Empresas.interface.php");
 		$activa = null
 	)
 	{  
-  
-  
-	}
+  		if($activa === null)
+  			return EmpresaDAO::getAll();
+  		
+  		$e = new Empresa();
+  		$e->setActivo( $activa );
+  		return EmpresaDAO::search( $e );
+  	}
   
 	/**
  	 *
@@ -90,7 +94,26 @@ require_once("Empresas.interface.php");
 		$impuestos = null
 	)
 	{  
-  
+
+		$addr = new Direccion(array( 
+
+			));
+
+
+
+  		$e = new Empresa(array( 
+  				"activo" 			=> true,
+				"curp"				=> $curp,
+				"descuento"			=> $descuento,
+				"direccion_web"		=> $direccion_web,
+				"fecha_alta"		=> time(),
+				"fecha_baja"		=> null,
+				"id_direccion"		=> $addr->getIdDireccion(),
+				"margen_utilidad"	=> $margen_utilidad,
+				"razon_social"		=> $razon_social,
+				"representante_legal" => $representante_legal,
+				"rfc"				=> $rfc
+  			));
   
 	}
   

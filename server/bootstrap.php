@@ -49,8 +49,10 @@
 
 	if(!is_file("config.php"))
 	{	
-		Logger::error("config.php no exitste ! usando config.defatult.php");
+		Logger::warn("config.php no exitste. Usando config.defatult.php");
 	}
+
+
 	# *******************************
 	# Requereir lo indispensable para seguir
 	# *******************************

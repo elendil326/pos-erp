@@ -5,5 +5,8 @@
 	require_once("../../../../server/bootstrap.php");
 
 
+	$c = new EmpresasController();
 
-?>asdf
+	$c->lista();
+
+?>
