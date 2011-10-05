@@ -7,6 +7,10 @@
 	ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . POS_PATH_TO_SERVER_ROOT);
 
 
+	date_default_timezone_set ( "America/Mexico_City" );
+
+
+
 	# *******************************
 	# Buscar la configuracion y cargarla
 	# *******************************

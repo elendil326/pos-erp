@@ -1,0 +1,344 @@
+/*1315830813,169775812*/
+
+html body{background:#e7e7e7}
+
+.devsitePage{
+	font-family:"Lucida Grande", Tahoma, Verdana, Arial, sans-serif;
+	font-size: 11px;
+	color:#333;
+	margin:0;
+	min-width:1024px;
+	font-size: 11px
+}
+
+.devsitePage a:hover{text-decoration:underline}
+.devsitePage a.uiButton:hover,
+.devsitePage a.itemAnchor:hover{text-decoration:none}
+.devsitePage img{border:0}
+.devsitePage table{border:0;margin:0;border-collapse:collapse;border-spacing:0}
+.devsitePage table td,
+.devsitePage table th{border:0;padding:0;text-align:left;vertical-align:top}
+.devsitePage table th{font-weight:bold}
+.devsitePage h1,
+.devsitePage h2,
+.devsitePage h3,
+.devsitePage h4{margin:0;padding:0;border:0}
+.devsitePage .clear{clear:both}
+.devsitePage .body .content{margin:auto;max-width:940px}
+.devsitePage .header,
+.devsitePage .body,
+.devsitePage .body p,
+.devsitePage .body ul,
+.devsitePage .body ol,
+.devsitePage .body li,
+.devsitePage .body th,
+.devsitePage .body th,
+.devsitePage .body td{font-size: 12px}
+.devsitePage .body pre,
+.devsitePage .body p,
+.devsitePage .body li,
+.devsitePage .body dt,
+.devsitePage .body dd,
+.devsitePage .refindex .page,
+.devsitePage .body textarea,
+.devsitePage .body td{line-height:18px}
+.devsitePage dl,
+.devsitePage dt,
+.devsitePage dd{margin:0}
+.devsitePage dd,
+.devsitePage .refindex .page{margin-bottom:10px}
+.devsitePage dd p,
+.devsitePage .refindex .page .snippet p{margin:0}
+.devsitePage dt,
+.devsitePage .refindex .page .title{font-weight:bold}
+.devsitePage dt a.private,
+.devsitePage .refindex .page .title a.private,
+.devsitePage .bodyMenu li a.private{background:url(https://s-static.ak.facebook.com/rsrc.php/v1/y9/r/uADs2cgkzVe.png) no-repeat left center;padding-left:13px}
+.devsitePage .metanotice{background:#fff9d7;border:1px solid #e2c822;padding:1em;margin:1em}
+.devsitePage textarea{resize:none}
+.clearfix:after{clear:both;content:".";display:block;font-size:0;height:0;line-height:0;visibility:hidden}
+.clearfix{display:block;zoom:1}
+.devsitePage .plugin_form{float:left;background:#efefef;margin:10px 20px 15px 0;padding:10px;border-top:solid #C1C1C1 1px;width:220px}
+.devsitePage .plugin_form dt{color:#666}
+.devsitePage .plugin_form dt a.uiTooltip{font-weight:normal;font-size: 11px}
+.devsitePage .plugin_form dd{padding:5px 0 10px 0;border-bottom:solid #D0D0D0 1px;margin-bottom:5px}
+.devsitePage .plugin_form dd label{color:#000;font-weight:normal}
+.devsitePage .plugin_form .wideinputtext{width:210px}
+.devsitePage .plugin_example{float:left;width:420px;padding:10px}
+.devsitePage .dark_background{background-color:#333}
+.devsitePage .nofloat{float:none}
+.dialog_body{padding-bottom:0}
+.dialog_body .code{margin-bottom:16px}
+.dialog_body .code div{margin:5px 0}
+.dialog_body .code input,.dialog_body .code textarea{width:600px;font:12px monospace}
+.LDialog_DeveloperPluginCode .pop_container,.LDialog_DeveloperPluginCode .pop_container_advanced{width:630px}
+.LDialog_DeveloperPluginCode label{margin:5px;font-size: 12px}
+.devsitePage .body > .content{background:#fff;border:1px solid #d9d9d9;border-top:0;-webkit-box-shadow:#ddd 0 1px 1px;padding:75px 20px 20px}
+.devsitePage .nav > .content{background:#fff url(../media/coK3kMStN_j.gif) repeat-y}
+.devsitePage .body ol,.devsitePage .body ul{list-style-type:disc;padding-left:3em}
+.devsitePage .body .uiSelector ul,.devsitePage .body ul.uiList{list-style-type:none;margin:0;padding-left:0}
+.devsitePage .body ol{list-style-type:decimal}
+.devsitePage .body strong{font-weight:bold}
+.devsitePage em,.devsitePage .body i{font-style:italic}
+.devsitePage .body h1{font-size: 28px;font-weight:normal;margin:0;margin-bottom:8px}
+.devsitePage .body h2{font-size: 20px;font-weight:normal;letter-spacing:-0.03em;margin:25px 0 15px 0}
+.devsitePage .body h3{font-size: 15px;margin:15px 0 10px 0}
+.devsitePage .body dl,.devsitePage .body table,.devsitePage .body pre,.devsitePage .body ul,.devsitePage .body ol,.devsitePage .body p{margin:0;margin-bottom:1em}
+.devsitePage .body pre,.devsitePage .body code,.devsitePage .body table.params td.name{font-family:monospace;color:#006000;font-size: 13px}
+.devsitePage .body h2 code{font-size:inherit}
+.devsitePage .body pre,.devsitePage .body .pre{background:#f2f2f2;border:1px solid #d8dfea;border-left-width:3px;margin:18px;padding-top:7px;padding-bottom:7px;padding-left:10px;overflow:auto}
+.devsitePage .body img.externalLink{left:5px;position:relative;top:-5px;width:10px}
+.devsitePage .body table{margin-bottom:1em}
+.devsitePage .body table td,.devsitePage .body table th{border:1px solid #ddd;text-align:left;padding:6px;padding-top:4px;padding-bottom:4px;padding-right:10px;vertical-align:top}
+.devsitePage .body table td.closeButton{padding-right:0}
+.devsitePage .body table.noborder td{border:0}
+.devsitePage .body table.bordered td,.devsitePage .body table.bordered th{border:1px solid #ddd}
+.devsitePage .body table.uiGrid td{border:0}
+.devsitePage .body table td p:last-child{margin-bottom:0}
+.devsitePage .body table.uiInfoTable{width:auto}
+.devsitePage .body table.uiInfoTable td,.devsitePage .body table.uiInfoTable th{border:0;padding:6px;width:auto;height:auto;vertical-align:middle}
+.devsitePage .body table.uiInfoTable th{width:auto}
+.devsitePage .footer{color:#777;padding-bottom:30px}
+.devsitePage .footer .content{margin:0 auto;max-width:980px;padding:10px}
+.devsitePage .footer .copyright{float:left}
+.devsitePage .footer .links{text-align:right}
+.devsitePage .footer .links a{margin-left:15px}
+.devsitePage .header{background:white;border-bottom:1px solid #ddd;margin-bottom:20px;padding-bottom:25px;padding-top:0}
+.devsitePage .header h1{margin:0;font-size: 24px;font-weight:normal}
+.devsitePage .header h1 a{color:#333;text-decoration:none}
+.devsitePage .header .breadcrumbs{margin-top:4px}
+.devsitePage div.admin{background:#eee;border:1px solid #ddd;float:right;font-size: 11px;z-index:0;padding:8px;position:relative}
+.devsitePage div.admin a{margin:0 6px}
+/*
+.devsitePage div.admin a.gatekeeper{background:url(https://s-static.ak.facebook.com/rsrc.php/v1/y9/r/uADs2cgkzVe.png) no-repeat left center;padding-left:12px;font-weight:bold}
+*/
+.devsitePage .body .titleblock{margin:20px 0}
+.devsitePage .body .titleblock h1{font-size: 24px;font-weight:normal;padding:0}
+.devsitePage .body .titleblock h3{color:#797c80;font-size: 16px;font-weight:normal;line-height:22px;margin:0 0 3px 0;padding:0}
+.devsitePage .body .titleblock div.stats{margin-top:20px}
+.devsitePage .body .titleblock .statsbox{background:#eee;float:right;padding:20px 20px 10px 20px;width:200px}
+.devsitePage .body .titleblock div.stats .statsbox li{color:#333;font-size: 11px;line-height:14px}
+.devsitePage .body .titleblock div.stats ul{color:#627aad;list-style-type:square;padding:0 0 0 17px}
+.devsitePage .body .titleblock div.stats li{font-size: 14px;line-height:22px;margin-bottom:5px}
+.devsitePage .body .titleblock div.stats li span{color:#333}
+.devsitePage .body .titleblock img{float:left;height:65px;margin:0 10px 0 0}
+.devsitePage .body p.intro{color:#797c80;font-size: 14px;line-height:21px;margin-bottom:20px}
+.devsitePage .body p.intro b{color:#444}
+.devsitePage .body .contentblock{clear:right;float:left;margin:1.5em 0;position:relative;width:100%}
+.devsitePage .body hr{clear:right;margin:20px 0}
+.devsitePage .body h3{margin-top:25px}
+.devsitePage .body .contentblock h2{margin:0 0 15px 0;padding:0}
+.devsitePage .body .contentblock h2.mbn{margin:0}
+.devsitePage .body .contentblock h3{color:#999;font-size: 13px;font-weight:normal;margin:0 0 20px 0}
+.devsitePage .body .contentblock h4{color:#000;font-size: 14px;font-weight:bold;line-height:18px;margin-bottom:4px}
+.devsitePage .body .contentblock p{color:#333;font-size: 12px;line-height:18px;margin-bottom:18px}
+
+/*
+.devsitePage .body .contentblock a.more{background:url(/attachment/more.png) no-repeat 100% 3px;padding-right:10px}
+*/
+.devsitePage .body .contentblock img.right{float:right;margin:0 0 10px 20px}
+.devsitePage .body .contentblock img.left{display:table-cell;float:left;margin:0 20px 10px 0}
+.devsitePage .body .contentblock img.bleed{margin-right:-16px}
+.devsitePage .body .contentblock img.bordered{border:1px solid #ddd;margin-bottom:10px;padding:5px}
+.devsitePage .body .contentblock ol{margin:10px 0;padding:0 0 0 23px}
+.devsitePage .body .contentblock ol li{margin-bottom:10px}
+.devsitePage .body .fleft{float:left;width:357px}
+.devsitePage .body .fright{float:right;width:357px}
+.devsitePage .body .fleft ul,
+.devsitePage .body .fright ul{list-style-type:square;margin:0;padding:0 0 0 20px}
+.devsitePage .body .fleft ul li,
+.devsitePage .body .fright ul li{margin:0 0 10px 0}
+.devsitePage .body .fcol{float:left;width:231px}
+.devsitePage .body .poq{background:#f1f2f9;margin-bottom:20px;margin-top:-20px;padding:20px}
+.devsitePage .body .poq p{color:#666}
+.devsitePage .body .poq p.small{color:#999;font-size: 11px;margin:0}
+.devsitePage .body .poq .credit img.left{margin-right:10px}
+.devsitePage .body .poq.right{float:right;margin-left:20px;width:280px}
+.devsitePage .body .poq.left{float:left;margin-right:20px;width:280px}
+.devsitePage .body .pagebottom{border-top:1px solid #ddd;clear:both;height:25px;padding-top:20px}
+.devsitePage .body .pagebottom a.right{float:right}
+.devsitePage .body .pagebottom a.left{float:left}
+.devsitePage .thumbnail{float:left;margin-right:10px}
+.devsitePage .thumbnail .img{border:1px solid #ccc}
+.devsitePage .plugin .name, .devsitePage .plugin .desc{margin-left:143px}
+.devsitePage .plugin .name{font-size: 16px;line-height:24px}
+.devsitePage .timestamp{color:#666;font-size: 11px}
+.devsitePage .clearcols{clear:both;display:block;height:0;overflow:hidden;visibility:hidden;width:0}
+.devsitePage .menu{background:#254b82;font-weight:bold;padding-top:8px}
+.devsitePage .menu .content{background:#325c99;border:1px solid #1a3c6c;border-bottom:0;margin:0 auto;padding:0;width:980px}
+.devsitePage .menu,
+.devsitePage .menu a{color:#fff}
+.devsitePage .menu a.logo{border-right:1px solid #1a3c6c;margin-right:10px;padding:7px 20px 9px;line-height:0}
+.devsitePage .menu a.logo img{width:166px;height:17px}
+.devsitePage .menu a.logo,
+.devsitePage .menu a.l{display:block;float:left}
+.devsitePage .menu a.l{line-height:29px;padding:2px 11px 2px}
+.devsitePage .menu a.l:hover, .devsitePage .menu a.logo:hover{background:#1a3c6c;text-decoration:none}
+.devsitePage .menu .search{float:right;padding:5px 20px 5px 20px;width:280px}
+.devsitePage .menu .uiTypeahead{border:0}
+.devsitePage .menu .uiTypeahead .wrap{border:0}
+.devsitePage .menu .uiSearchInput{border:0}
+.devsitePage .menu .uiSearchInput input{width:270px}
+.devsitePage .menu .uiSearchInput span{border:0;padding:0}
+.devsitePage .menu .uiSearchInput button{top:1px}
+.devsitePage .menu .uiTypeaheadView{z-index:1}
+.devsitePage .menu .uiTypeaheadView li{color:#3b5998}
+.devsitePage .menu .inputtext{border:0;padding:5px 4px}
+.devsitePage .menu{position:fixed;width:100%;z-index:100}
+.devsitePage #navsubsectionpages{margin-top:20px}
+.devsitePage #navsubsectionpages h5{color:#777;font-size: 11px;margin:25px 0 10px 10px}
+.devsitePage #navsubsectionpages ul{margin-left:10px}
+.devsitePage #navsubsectionpages li{border:0;font-size: 11px;padding:1px 0}
+.devsitePage #navsubsectionpages li a{padding:0}
+.devsitePage .bodyText{margin-left:208px}
+/*
+.devsitePage .bodyMenu li a.private.selected{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/yE/r/JQgQHls27pw.png),
+url(https://s-static.ak.facebook.com/rsrc.php/v1/y9/r/uADs2cgkzVe.png);background-position:160px center, left center;background-repeat:no-repeat, no-repeat}
+*/
+.devsitePage .bodyMenu li a.private{margin-left:5px}
+.devsitePage .bodyMenu{float:left;overflow:hidden;width:166px}
+.devsitePage .bodyMenu.fixed{position:fixed}
+.devsitePage .bodyMenu.fixedScrolling{bottom:0}
+.devsitePage .bodyMenu .title{color:#666;font-size: 24px;font-weight:normal;line-height:28px;margin:0;padding:0}
+.devsitePage .bodyMenu ul{list-style-type:none;padding:0;margin:0;margin-bottom:0}
+.devsitePage .bodyMenu li{margin:0}
+.devsitePage .bodyMenu h4,
+.devsitePage .bodyMenu li a{padding:6px 6px 6px 10px}
+.devsitePage .bodyMenu h4{font-size: 16px;font-weight:normal;color:#666;padding-top:0;padding-bottom:0;margin-bottom:8px}
+.devsitePage .bodyMenu li a{display:block}
+/*
+.devsitePage .bodyMenu li a.selected{
+	color:#333;font-weight:bold;background:url(https://s-static.ak.facebook.com/rsrc.php/v1/yE/r/JQgQHls27pw.png) no-repeat right center
+}
+*/
+.devsitePage .bodyMenu li ul.subsections li a.selected{background-image:none}
+.devsitePage .body.reference hr{border:0;background-color:#d2d2d2;height:1px;margin:0;margin-top:40px}
+.devsitePage .body.reference h2{font-weight:normal;color:#666;font-size: 16px;margin-bottom:16px}
+.devsitePage .body div.fql_example{margin-bottom:1em}
+.devsitePage .bodyMenu .toplevelnav ul.subsections{margin:0;padding:0}
+.devsitePage .bodyMenu .toplevelnav li{border-bottom:1px solid #e5e5e5}
+.devsitePage .bodyMenu .toplevelnav li.active.withsubsections{padding-bottom:5px}
+.devsitePage .bodyMenu .toplevelnav li:first-child{border-top:1px solid #e5e5e5}
+.devsitePage .bodyMenu .toplevelnav ul.subsections li{border:0;padding:0 0 0 25px}
+.devsitePage .bodyMenu .toplevelnav ul.subsections li a{color:#333;font-size: 12px;padding:3px 6px}
+.devsitePage .bodyMenu .toplevelnav li a:hover{background:url(../media/JQgQHls27pw.png)
+no-repeat right center;color:#333;text-decoration:none}
+.devsitePage .bodyMenu .toplevelnav li ul.subsections li a:hover{background-image:none}
+.devsitePage .bodyMenu .toplevelnav ul li img.imgWrap{float:left;margin:6px 0 0 5px}
+.devsitePage .bodyMenu .toplevelnav ul li a.aWrap{display:inline-block;width:128px}
+
+#bootloader_PY_NW { height: 42px; }
+
+
+form{margin:0;padding:0}
+label{cursor:pointer;color:#666;font-weight:bold;vertical-align:middle}
+label input{font-weight:normal}
+textarea,.inputtext,.inputpassword{border:1px solid #bdc7d8;font-family:"lucida grande",tahoma,verdana,arial,sans-serif;font-size: 11px;padding:3px;-webkit-appearance:none;-webkit-border-radius:0}
+select{border:1px solid #bdc7d8;font-family:"lucida grande",tahoma,verdana,arial,sans-serif;font-size: 11px;padding:2px}
+.inputtext,.inputpassword{margin:0;padding-bottom:4px}
+.inputradio{padding:0;margin:0 5px 0 0;vertical-align:middle}
+.inputcheckbox{border:0;vertical-align:middle}
+.inputbutton,.inputsubmit{border-style:solid;border-width:1px;border-color:#d9dfea #0e1f5b #0e1f5b #d9dfea;background-color:#3b5998;color:#fff;padding:2px 15px 3px 15px;text-align:center}
+.inputsubmit_disabled{background-color:#999;border-bottom:1px solid #000;border-right:1px solid #666;color:#fff}
+.inputaux{background:#f0f0f0;border-color:#e7e7e7 #666 #666 #e7e7e7;color:#000}
+.inputaux_disabled{color:#999}
+/*.inputsearch{background:#fff url() no-repeat left 4px;padding-left:17px}*/
+body{background:#fff;font-size: 11px;font-family:"lucida grande",tahoma,verdana,arial,sans-serif;color:#333;line-height:1.28;margin:0;padding:0;text-align:left;direction:ltr;unicode-bidi:embed}
+h1,h2,h3,h4,h5,h6{font-size: 13px;color:#333;margin:0;padding:0}
+h1{font-size: 14px}
+h4,h5{font-size: 11px}
+p{margin:1em 0}
+a{cursor:pointer;color:#3b5998;text-decoration:none}
+a:hover{text-decoration:underline}
+img{border:0}
+td,td.label{font-size: 11px;text-align:left}
+dd{color:#000}
+dt{color:#777}
+ul{list-style-type:none;margin:0;padding:0}
+abbr{border-bottom:none}
+hr{background:#d9d9d9;border-width:0;color:#d9d9d9;height:1px}
+
+
+
+.clearfix:after{clear:both;content:".";display:block;font-size:0;height:0;line-height:0;visibility:hidden}
+.clearfix{zoom:1}
+.datawrap{word-wrap:break-word}
+.word_break{display:block;float:left;margin-left:-10px;padding:0}
+.img_loading{position:absolute;top:-9999999px}
+.aero{opacity:.5}
+.column{float:left}
+.center{margin-left:auto;margin-right:auto}
+#facebook .hidden_elem{display:none !important}
+#facebook .invisible_elem{visibility:hidden}
+.direction_ltr{direction:ltr}
+.direction_rtl{direction:rtl}
+.text_align_ltr{text-align:left}
+.text_align_rtl{text-align:right}
+.DOMControl_placeholder{color:#777}
+.no_js .DOMControl_placeholder{color:#000}
+body{overflow-y:scroll}
+.mini_iframe,.serverfbml_iframe{overflow-y:visible}
+.auto_resize_iframe{height:auto;overflow:hidden}
+.pipe{color:#808080;padding:0 3px}
+#content{width:auto;padding:0;margin:0}
+.profile #content,.home #content,.search #content{min-height:600px}
+.UIStandardFrame_Container{width:960px;padding:0;margin:20px auto 0}
+.UIStandardFrame_Content{width:760px;float:left;margin:0;padding:0}
+.UIStandardFrame_SidebarAds{width:200px;padding:0;margin:0;float:right}
+.UIFullPage_Container{width:940px;padding:0 12px;margin:20px auto 0}
+.empty_message{font-size: 13px;line-height:17px;padding:20px 20px 50px 20px;text-align:center;background:#f7f7f7}
+.see_all{text-align:right}
+.standard_status_element{visibility:hidden}
+.standard_status_element.async_saving{visibility:visible}
+img.tracking_pixel{height:1px;position:absolute;visibility:hidden;width:1px}
+#dropmenu_container{display:block;height:0;margin:0 auto;padding:0;position:absolute;width:964px;z-index:300}
+.fbx #pageFooter{margin:auto;width:auto}
+.hasLeftCol #pageFooter{background-color:#fff;clear:both;margin-left:180px}
+#pagefooter{border-top:0}
+#pageFooter{color:#737373;font-size: 11px;margin:0 auto;width:980px}
+#pageFooter a{text-decoration:none;white-space:nowrap}
+#pageFooter a:last-child{margin-right:0}
+#pageFooter a:hover{text-decoration:underline}
+#contentCurve{background-color:#fff;border-bottom:1px solid #b3b3b3;height:8px;font-size: 1px}
+.hasLeftCol #contentCurve{border:1px solid #b3b3b3;border-top:none;position:relative}
+#footerContainer{border-top:1px solid #eee;margin-bottom:30px;padding:8px;position:relative}
+#footerContainer .navigation{text-align:right}
+#pageHead{margin:0 auto;width:980px}
+.fbx #pageHead{margin:0;width:auto}
+#pageLogo{float:left;margin-left:-6px;z-index:5}
+
+/*
+#pageLogo a{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png);background-repeat:no-repeat;background-position:-104px -235px;background-color:#3b5998;display:block;height:31px;width:103px}
+*/
+/*
+#pageLogo a:hover,#pageLogo a:focus,#pageLogo a:active{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/y6/r/1Ifz-ufn5r2.png);background-repeat:no-repeat;background-position:0 -235px;background-color:#4b67a1;outline:none}
+*/
+#headNav{background-color:#627aad;border:1px solid #1d4088;border-bottom:0;height:30px;margin-left:180px}
+
+
+
+.uiSearchInput{background:#fff;border:1px solid #899bc1;border-top-color:#6484b4;display:inline-block}
+.uiSearchInput span{border:0;border-top:1px solid #ededed;display:inline-block;padding:1px 0 2px;position:relative}
+.uiSearchInput input{border:0;margin:0 10px 0 5px;outline:none;padding:1px 5px 2px 0;width:190px}
+
+.uiSearchInput button{
+	background-image:url(../media/1Ifz-ufn5r2.png);
+	background-repeat:no-repeat;
+	background-position:-262px -235px;
+	background-color:#fff;
+	border:0;
+	cursor:pointer;
+	display:block;
+	height:19px;
+	padding:0;
+	position:absolute;
+	right:0;
+	top:0;
+	width:22px
+}
+
+
+
+
+
+#bootloader_4GrDC { height: 42px; }

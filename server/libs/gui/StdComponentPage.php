@@ -3,7 +3,7 @@
 class StdComponentPage extends StdPage{
 	
 
-	private $components;
+	protected $components;
 	
 
 	function __construct()

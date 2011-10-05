@@ -14,7 +14,7 @@ class StdPage implements Page{
 
 	function __construct()
 	{
-		$this->js_urls 	= '';
+		$this->js_urls 	= "";
 		$this->css_urls = "";
 		$this->header 	= "";
 		$this->menu 	= "";
@@ -28,10 +28,13 @@ class StdPage implements Page{
 		$this->js_urls .= '<script type="text/javascript" src="' . $url . '"></script>';
 	}
 
+
 	public function addCss( $url )
 	{
-		$this->js_urls .= '<script type="text/javascript" src="' . $url . '"></script>';	
+		$this->css_urls .= '<link rel="stylesheet" type="text/css" href="' . $url . '">';
 	}
+
+
 
 	public function addHeader( $html )
 	{
