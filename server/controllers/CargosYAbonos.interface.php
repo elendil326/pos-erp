@@ -35,8 +35,13 @@
  	 **/
   function EliminarAbono
 	(
-		$id_abono, 
-		$motivo_cancelacion = null
+		$id_abono,
+		$motivo_cancelacion = null,
+                $compra = null,
+                $venta = null,
+                $prestamo = null,
+                $id_caja = null,
+                $billetes = null
 	);  
   
   
@@ -55,11 +60,24 @@
  	 **/
   function ListaAbono
 	(
-		$id_caja = null, 
-		$id_usuario = null, 
-		$orden = null, 
-		$id_sucursal = null, 
-		$id_empresa = null
+		$compra,
+                $venta,
+                $prestamo,
+		$id_caja = null,
+		$id_usuario = null,
+		$orden = null,
+		$id_sucursal = null,
+		$id_empresa = null,
+                $id_compra = null,
+                $id_venta = null,
+                $id_prestamo = null,
+                $cancelado = null,
+                $fecha_minima = null,
+                $fecha_maxima = null,
+                $fecha_actual = null,
+                $monto_menor_a = null,
+                $monto_mayor_a = null,
+                $monto_igual_a = null
 	);  
   
   
@@ -139,7 +157,7 @@
 <br/><br/><b>Update : </b>Falta especificar los parametros y el ejemplo de envio.
  	 *
  	 * @param ordenar json Valor que contendr la manera en que se ordenar la lista.
- 	 * @return conceptos_gasto json Arreglo que contendrá la información de conceptos de gasto.
+ 	 * @return conceptos_gasto json Arreglo que contendrï¿½ la informaciï¿½n de conceptos de gasto.
  	 **/
   function ListaConceptoGasto
 	(
@@ -158,7 +176,7 @@
  	 * @param nombre string la justificacion que aparecera despues de la leyenda "gasto por concepto de"
  	 * @param descripcion string Descripcion larga del concepto de gasto
  	 * @param monto float Monto fijo del concepto de gasto
- 	 * @return id_concepto_gasto int Id autogenerado por la inserción del nuevo gasto
+ 	 * @return id_concepto_gasto int Id autogenerado por la inserciï¿½n del nuevo gasto
  	 **/
   function NuevoConceptoGasto
 	(
@@ -263,7 +281,7 @@
  	 * @param descripcion string Descripcion del gasto en caso de que no este contemplado en la lista de concpetos de gasto
  	 * @param folio string Folio de la factura del gasto
  	 * @param nota string Nota del gasto
- 	 * @return id_gasto int Id generado por la inserción del nuevo gasto
+ 	 * @return id_gasto int Id generado por la inserciï¿½n del nuevo gasto
  	 **/
   function NuevoGasto
 	(
@@ -325,7 +343,7 @@
 <br/><br/><b>Update :</b>Falta especificar la estructura del JSON que se env?como parametro
  	 *
  	 * @param ordenar json Valor que indicar la forma en que se ordenar la lista
- 	 * @return conceptos_ingreso json Arreglo que contendrá la información de los conceptos de ingreso
+ 	 * @return conceptos_ingreso json Arreglo que contendrï¿½ la informaciï¿½n de los conceptos de ingreso
  	 **/
   function ListaConceptoIngreso
 	(

@@ -9,7 +9,7 @@ require_once("CargosYAbonos.interface.php");
   class CargosYAbonosController implements ICargosYAbonos{
 
         //valida que una empresa exista y tenga su estado en activo
-        private final $formato_fecha="Y-m-d H:i:s";
+        private $formato_fecha="Y-m-d H:i:s";
         private function validarEmpresa
         (
                 $id_empresa
