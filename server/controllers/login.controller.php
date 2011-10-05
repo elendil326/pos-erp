@@ -66,7 +66,7 @@ abstract class LoginController implements IPermission
 		}	
 		
 
-		if( $_SESSION['pass'] !== $user->getPassword())
+		if( $_SESSION['PASSWORD'] !== $user->getPassword())
 		{
 			Logger::error("La constrasena en sesion es diferente en la BD!");
 			return false;
@@ -77,22 +77,33 @@ abstract class LoginController implements IPermission
 	
 
 
-	function login($user_id, $password, $group_id )
+	function login($user_id, $password, $group )
 	{
+		Logger::warn("Iniciando sesion");
 		$_SESSION['USER_ID'		] 	= $user_id; 
 		$_SESSION['PASSWORD'	]	= $password;
 		$_SESSION['HTTP_USER_AGENT']= $_SERVER["HTTP_USER_AGENT"];
-		$_SESSION['USER_GROUP'	]	= $group_id;
+		$_SESSION['USER_GROUP'	]	= $group;
+
 	}
 	
 
 
 	function logout()
 	{
+		Logger::warn("Cerrando sesion");
 	    unset($_SESSION['USER_ID']			);
 	    unset($_SESSION['PASSWORD']			);
 	    unset($_SESSION['HTTP_USER_AGENT']	);
 		unset($_SESSION['USER_GROUP']		);
+	}
+
+
+	public static function getCurrentUser(){
+		if(self::isLoggedIn())
+			return $_SESSION['USER_ID'];
+		else
+			return null;
 	}
 
 }
@@ -107,6 +118,31 @@ abstract class LoginController implements IPermission
 
 
 
+class GerenciaLoginController extends LoginController{
+	
+	function login($user_id, $password)
+	{
+		$u = new Usuario();
+		$u->setIdUsuario 	( $user_id  );
+		$u->setPassword 	( md5( $password ) );
+		
+		$res = UsuarioDAO::search( $u );
+
+		if( sizeof($res) == 1 && (1 == $res[0]->getIdRol()) ){
+
+			parent::login( $user_id, md5($password), "0" );
+			return true;	
+
+		}else{
+
+			Logger::warn("Intento de inicio de sesion invalido para ( ".$user_id." )");
+			return false;
+
+		}
+
+		
+	}
+}
 
 
 

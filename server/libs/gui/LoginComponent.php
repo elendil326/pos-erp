@@ -38,7 +38,7 @@ class LoginComponent implements GuiComponent
 				. '<input type="password" name="password" size="40" onkeypress=""/>'
 				. '</td></tr><tr valign="top"><td></td><td></td><td align="right">'
 				. '<input type="submit" value="Ingresar" onkeypress=""/>'
-				. '</td></tr></table><input type="hidden" name="jedi_login" value=1></form></div>';
+				. '</td></tr></table><input type="hidden" name="do_login" value=1></form></div>';
 
 	}
 

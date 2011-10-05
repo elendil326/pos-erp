@@ -1,6 +1,7 @@
-<?php 
+<?php
 
-class JediComponentPage extends StdComponentPage{
+
+class GerenciaComponentPage extends StdComponentPage{
 
 	private $permisos_controller;
 
@@ -8,36 +9,35 @@ class JediComponentPage extends StdComponentPage{
 	function __construct()
 	{
 
-
 		parent::__construct();
 
-		
+		//vamos a ver si estamos loggeados
+		$permisos_controller = new GerenciaLoginController();
 
-		//vamos a ver si tengo permiso para 
-		//crear una pagina jedi
-		$jedi_login = new JediLoginController();
 
-		
 		//user is logged in, go ahead
-		if($jedi_login->isLoggedIn()) 
+		if($permisos_controller->isLoggedIn()) 
 		{
+			
 			//usuario esta loggeado, 
 			//vamos a ver si quiere 
 			//cerrar sesion
 			if(isset($_GET["close_session"]))
 			{
+				
 				//si quiere cerrar la sesion ! 
-				$jedi_login->logout();
-				die(header("Location: ./?bye"));
+				$permisos_controller->logout();
+				die(header("Location: ./&bye"));
 			}
 
 			return $this->bootstrap();
 				
 		}
-		
 
-		//ok no esta loggeado, pero 
-		//vamos a ver si se quiere loggear
+
+		//ok no esta loggeado,
+		//vamos a ver si se quiere 
+		//iniciar sesion
 		if(
 				isset($_POST["do_login"]	) 
 			&& 	$_POST["do_login"] == 1
@@ -46,7 +46,7 @@ class JediComponentPage extends StdComponentPage{
 		)
 		{
 			//user wants to login
-			if($jedi_login->login($_POST["user"], $_POST["password"]))
+			if($permisos_controller->login($_POST["user"], $_POST["password"]))
 			{
 				//login was succesful, keep building this object
 				return $this->bootstrap();
@@ -62,25 +62,17 @@ class JediComponentPage extends StdComponentPage{
 
 		}
 
-		//there should be no path ending here!
-		Logger::error("JEDI component page : there should be no path ending here!");
-
-	}//__construct()
-
-
+	}//__construct
 
 
 
 	function bootstrap()
 	{
 		$m = new MenuComponent();
-		$m->addItem("Cerrar sesion", "./?close_session");
+		$m->addItem("Cerrar sesion", "./&close_session");
 		$m->addItem("Instancias", "instancias.php");
 		self::addComponent( $m );
 	}
-
-
-
 
 
 	/**
@@ -100,19 +92,4 @@ class JediComponentPage extends StdComponentPage{
 		parent::render();
 		exit();
 	}
-
-
-	/**
-	  *
-	  *
-	  **/
-	function render()
-	{
-		parent::render();
-	}
-
 }
-
-
-
-

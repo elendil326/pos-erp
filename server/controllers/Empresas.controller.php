@@ -24,9 +24,14 @@ require_once("Empresas.interface.php");
   		if($activa === null)
   			return EmpresaDAO::getAll();
   		
+
+  		
+
   		$e = new Empresa();
   		$e->setActivo( $activa );
   		return EmpresaDAO::search( $e );
+
+
   	}
   
 	/**
