@@ -9,6 +9,7 @@ require_once("CargosYAbonos.interface.php");
   class CargosYAbonosController implements ICargosYAbonos{
 
         //valida que una empresa exista y tenga su estado en activo
+        private final $formato_fecha="Y-m-d H:i:s";
         private function validarEmpresa
         (
                 $id_empresa
@@ -101,7 +102,7 @@ require_once("CargosYAbonos.interface.php");
             $ingreso->setIdUsuario($id_usuario);
             $ingreso->setMonto($monto);
             $ingreso->setNota($nota);
-            $ingreso->setFechaDeRegistro(date("Y-m-d H:i:s", time()));
+            $ingreso->setFechaDeRegistro(date($this->formato_fecha, time()));
             DAO::transBegin();
             try
             {
@@ -596,15 +597,81 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function ListaAbono
 	(
+                $compra,
+                $venta,
+                $prestamo,
 		$id_caja = null, 
 		$id_usuario = null, 
 		$orden = null, 
 		$id_sucursal = null, 
-		$id_empresa = null
+		$id_empresa = null,
+                $id_compra = null,
+                $id_venta = null,
+                $id_prestamo = null,
+                $cancelado = null,
+                $fecha_minima = null,
+                $fecha_maxima = null,
+                $fecha_actual = null,
+                $monto_menor_a = null,
+                $monto_mayor_a = null,
+                $monto_igual_a = null
 	)
-	{  
-  
-  
+	{
+            if(!$compra&&!$venta&&!$prestamo)
+                return null;
+            if($compra)
+            {
+                $abono_criterio_compra=new AbonoCompra();
+                $abono_criterio_compra2=new AbonoCompra();
+                $abono_criterio_compra->setCancelado($cancelado);
+                $abono_criterio_compra->setIdCaja($id_caja);
+                if($fecha_minima!=null)
+                {
+                    $abono_criterio_compra->setFecha($fecha_minima);
+                    if($fecha_maxima!=null)
+                        $abono_criterio_compra2->setFecha($fecha_maxima);
+                    else
+                        $abono_criterio_compra2->setFecha(date($this->formato_fecha, time()));
+                }
+                else if($fecha_maxima!=null)
+                {
+                    $abono_criterio_compra->setFecha($fecha_maxima);
+                    $abono_criterio_compra2->setFecha("1000-01-01 00:00:00");
+                }
+                else if($fecha_actual)
+                    $abono_criterio_compra->setFecha($this->formato_fecha, time());
+                else
+                    $abono_criterio_compra->setFecha($fecha_actual);
+                $abono_criterio_compra->setIdCompra($id_compra);
+                $abono_criterio_compra->setIdDeudor($id_usuario);
+                $abono_criterio_compra->setIdSucursal($id_sucursal);
+                if($fecha_minima!=null)
+                {
+                    $abono_criterio_compra->setFecha($fecha_minima);
+                    if($fecha_maxima!=null)
+                        $abono_criterio_compra2->setFecha($fecha_maxima);
+                    else
+                        $abono_criterio_compra2->setFecha(date($this->formato_fecha, time()));
+                }
+                else if($monto_mayor_a!=null)
+                {
+                    $abono_criterio_compra->setMonto($monto_mayor_a);
+                    $abono_criterio_compra2->setMonto(0);
+                }
+                else if($fecha_actual)
+                    $abono_criterio_compra->setFecha($this->formato_fecha, time());
+                else
+                    $abono_criterio_compra->setFecha($fecha_actual);
+            }
+            if($venta)
+            {
+                $abono_criterio_venta=new AbonoVenta();
+            }
+            if($prestamo)
+            {
+                $abono_criterio_prestamo=new AbonoPrestamo();
+            }
+
 	}
   
 	/**
