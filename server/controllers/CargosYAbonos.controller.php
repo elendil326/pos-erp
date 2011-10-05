@@ -14,46 +14,18 @@ require_once("CargosYAbonos.interface.php");
                 $id_empresa
         )
         {
-            Logger::log("Validando empresa");
             $empresa=EmpresaDAO::getByPK($id_empresa);
             if($empresa==null)
             {
-                Logger::log("La empresa con id:".$id_empresa." no existe");
+                Logger::error("La empresa con id:".$id_empresa." no existe");
                 return false;
             }
             $activo=$empresa->getActivo();
-            Logger::log("La empresa con id:".$id_empresa." tiene un activo:".$activo);
+            if(!$activo)
+            Logger::error("La empresa con id:".$id_empresa." no esta activa");
             return $activo;
         }
 
-        private function cancelarAbonoCompra
-        (
-                AbonoCompra $abono
-        )
-        {
-
-        }
-
-        //valida que un usuario tenga permisos
-        private function validarPermisos
-        (
-                $id_usuario
-        )
-        {
-            return true;
-        }
-
-        //regresa el usuario de la sesion
-        private function getUsuario()
-        {
-            return 1;
-        }
-
-        //regresa la sucursal de la sesion
-        private function getSucursal()
-        {
-            return 1;
-        }
 	/**
  	 *
  	 *Registra un nuevo ingreso
@@ -83,31 +55,23 @@ require_once("CargosYAbonos.interface.php");
 	)
 	{  
             Logger::log("Creando nuevo ingreso");
-            $id_usuario=$this->getUsuario();
-            if($id_usuario==-1)
+            $id_usuario=LoginController::getCurrentUser();
+            if($id_usuario==null)
             {
                 Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
-                die('{ "success" : false , "reason" : "No se pudo obtener el usuario de la sesion, ya inicio sesion?" }');
-            }
-            Logger::log("Se obtuvo el usuario ".$id_usuario." de la sesion");
-            if(!$this->validarPermisos($id_usuario))
-            {
-                Logger::error("El usuario ".$id_usuario." no tiene el permiso");
-                die('{ "success" : false , "reason" : "El usuario '.$id_usuario.' no tiene el permiso" }');
+                throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
             }
             if(!$this->validarEmpresa($id_empresa))
             {
-                Logger::error("Se recibio una empresa no valida");
-                die('{ "success" : false , "reason" : "Se recibio una empresa no valida" }');
+                throw new Exception("Se recibio una empresa no valida");
             }
             if($id_concepto_ingreso!=null)
             {
-                Logger::log("Validando concepto de ingreso");
                 $concepto_ingreso=ConceptoIngresoDAO::getByPK($id_concepto_ingreso);
                 if($concepto_ingreso==null)
                 {
-                    Logger::log("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
-                    die('{ "success" : false , "reason" : "El concepto de ingreso con id:'.$id_concepto_ingreso.' no existe" }');
+                    Logger::error("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
+                    throw new Exception("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
                 }
             }
             if($monto==null)
@@ -116,21 +80,14 @@ require_once("CargosYAbonos.interface.php");
                 if($id_concepto_ingreso==null)
                 {
                     Logger::error("No se recibio un concepto de ingreso");
-                    die('{ "success" : false , "reason" : "No se recibio un concepto de ingreso ni un monto" }');
+                    throw new Exception("No se recibio un concepto de ingreso ni un monto");
                 }
                 $monto=$concepto_ingreso->getMonto();
                 if($monto==null)
                 {
                     Logger::error("El concepto de ingreso recibido no cuenta con un monto");
-                    die('{ "success" : false , "reason" : "El concepto de ingreso recibido no cuenta con un monto" }');
+                    throw new Exception("El concepto de ingreso recibido no cuenta con un monto ni se recibio un monto");
                 }
-                Logger::log("El monto obtenido para este ingreso es:".$monto);
-            }
-            $id_sucursal=$this->getSucursal();
-            if($id_sucursal==-1)
-            {
-                Logger::error("No se pudo obtener la sucursal en la que se realiza el ingreso");
-                die('{ "success" : false , "reason" : "No se pudo obtener la sucursal en la que se realiza el ingreso" }');
             }
             $ingreso=new Ingreso();
             $ingreso->setCancelado(0);
@@ -145,20 +102,22 @@ require_once("CargosYAbonos.interface.php");
             $ingreso->setMonto($monto);
             $ingreso->setNota($nota);
             $ingreso->setFechaDeRegistro(date("Y-m-d H:i:s", time()));
-            IngresoDAO::transBegin();
+            DAO::transBegin();
             try
             {
-                IngresoDAO::save($ingreso);
+                DAO::save($ingreso);
             }
             catch(Exception $e)
             {
                 Logger::error("Error al guardar el nuevo ingreso:".$e);
-                IngresoDAO::transRollback();
-                die('{ "success" : false , "reason" : "Error al guardar el nuevo ingreso:'.$e.'" }');
+                DAO::transRollback();
+                throw new Exception("Error al guardar el nuevo ingreso:".$e);
             }
-            IngresoDAO::transEnd();
+            DAO::transEnd();
             Logger::log("Ingreso creado exitosamente!");
-            printf('{ "success" : true , "id_ingreso" : %d }',$ingreso->getIdIngreso());
+            //PARA PROBAR
+            //printf('{ "success" : true , "id_ingreso" : %d }',$ingreso->getIdIngreso());
+            //
             return $ingreso->getIdIngreso();
 	}
   
@@ -175,44 +134,425 @@ require_once("CargosYAbonos.interface.php");
 		$motivo_cancelacion = null,
                 $compra = null,
                 $venta = null,
-                $prestamo = null
+                $prestamo = null,
+                $id_caja = null,
+                $billetes = null
 	)
 	{
             Logger::log("Cancelando abono");
             if($compra!=null&&$compra)
             {
-                Logger::log("El abono es un abono a una compra");
                 $abono=AbonoCompraDAO::getByPK($id_abono);
-                Logger::log("Validando abono");
                 if($abono==null)
                 {
-                    Logger::error("El abono con id:".$id_abono." no existe");
-                    die('{ "success" : false , "reason" : "El abono con id:'.$id_abono.' no existe" }');
+                    Logger::error("El abono para compra con id:".$id_abono." no existe");
+                    throw new Exception("El abono para compra con id:".$id_abono." no existe");
+                }
+                if($abono->getCancelado())
+                {
+                    Logger::log("El abono ya ha sido cancelado antes");
+                    return;
                 }
                 $abono->setCancelado(1);
-                AbonoCompraDAO::transBegin();
+                DAO::transBegin();
                 try {
-                    AbonoCompraDAO::save($abono);
-                    $this->cancelarAbonoCompra($abono);
+                    DAO::save($abono);
+                    $this->cancelarAbonoCompra($abono,$id_caja,$billetes);
                 }
                 catch(Exception $e)
                 {
-                    AbonoCompraDAO::transRollback();
+                    DAO::transRollback();
                     Logger::error("Error al cancelar el abono:".$e);
-                    die('{ "success" : false , "reason" : "Error al cancelar el abono:'.$e.'" }');
+                    throw new Exception("Error al cancelar el abono:".$e);
                 }
-                AbonoCompraDAO::transEnd();
-
+                DAO::transEnd();
+                Logger::log("Abono cancelado exitosamente");
             }
             else if($venta!=null&&$venta)
             {
-
+                $abono=AbonoVentaDAO::getByPK($id_abono);
+                if($abono==null)
+                {
+                    Logger::error("El abono para venta con id:".$id_abono." no existe");
+                    throw new Exception("El abono para venta con id:".$id_abono." no existe");
+                }
+                if($abono->getCancelado())
+                {
+                    Logger::log("El abono ya ha sido cancelado antes");
+                    return;
+                }
+                $abono->setCancelado(1);
+                DAO::transBegin();
+                try {
+                    DAO::save($abono);
+                    $this->cancelarAbonoVenta($abono,$id_caja,$billetes);
+                }
+                catch(Exception $e)
+                {
+                    DAO::transRollback();
+                    Logger::error("Error al cancelar el abono:".$e);
+                    throw new Exception("Error al cancelar el abono:".$e);
+                }
+                DAO::transEnd();
+                Logger::log("Abono cancelado exitosamente");
             }
             else if($prestamo!=null&&$prestamo)
             {
-
+                $abono=AbonoPrestamoDAO::getByPK($id_abono);
+                if($abono==null)
+                {
+                    Logger::error("El abono para prestamo con id:".$id_abono." no existe");
+                    throw new Exception("El abono para prestamo con id:".$id_abono." no existe");
+                }
+                if($abono->getCancelado())
+                {
+                    Logger::log("El abono ya ha sido cancelado antes");
+                    return;
+                }
+                $abono->setCancelado(1);
+                DAO::transBegin();
+                try {
+                    DAO::save($abono);
+                    $this->cancelarAbonoPrestamo($abono,$id_caja,$billetes);
+                }
+                catch(Exception $e)
+                {
+                    DAO::transRollback();
+                    Logger::error("Error al cancelar el abono:".$e);
+                    throw new Exception("Error al cancelar el abono:".$e);
+                }
+                DAO::transEnd();
+                Logger::log("Abono cancelado exitosamente");
+            }
+            else
+            {
+                Logger::error("No se recibio el parametro compra, venta ni prestamo, no se sabe que abono cancelar");
+                throw new Exception("No se recibio el parametro compra, venta ni prestamo, no se sabe que abono cancelar");
             }
 	}
+
+        private function cancelarAbonoCompra
+        (
+                AbonoCompra $abono,
+                $id_caja,
+                $billetes
+        )
+        {
+            $compra=CompraDAO::getByPK($abono->getIdCompra());
+            if($compra==null)
+            {
+                throw new Exception("FATAL!!!! Este abono apunta a una compra que no existe!!");
+            }
+            $usuario=UsuarioDAO::getByPK($compra->getIdVendedorCompra());
+            if($usuario==null)
+            {
+                throw new Exception("FATAL!!!! La compra de este abono no tiene un vendedor");
+            }
+            $monto=$abono->getMonto();
+            $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()-$monto);
+            $compra->setSaldo($compra->getSaldo()-$monto);
+
+            //
+            //Si la compra ha sido cancelada, quiere decir que se cancelaran todos los abonos y
+            //ese dinero solo se quedara a cuenta del usuario.
+            //
+            //Si no ha sido cancelada, quiere decir que solo se cancela este abono y por ende el
+            //dinero regresa a la caja que indica el usuario.
+            //
+            //Si no hay una caja, se tomara el dinero como perdido.
+            if(!$compra->getCancelada()&&$id_caja!=null)
+            {
+                $caja=CajaDAO::getByPK($id_caja);
+                //
+                //Si se esta llevando control de lo billetes en la caja
+                //tienen que haber pasado en un arreglo bidimensional los ids
+                //de los billetes con sus cantidades.
+                //
+                if($caja->getControlBilletes())
+                {
+                    if($billetes==null)
+                        throw new Exception("No se recibieron los billetes para esta caja");
+                    $numero_billetes=count($billetes);
+                    //
+                    //Inicializas el arreglo de billetes_caja con los billetes que recibes
+                    //para despues insertarlo o actualizarlo.
+                    //
+                    for($i=0;$i<$numero_billetes; $i++)
+                    {
+                        $billete_caja[$i]=new BilleteCaja();
+                        $billete_caja[$i]->setIdBillete($billetes[$i][0]);
+                        $billete_caja[$i]->setIdCaja($id_caja);
+                        $billete_caja[$i]->setCantidad($billete[$i][1]);
+                    }
+                    //
+                    //Intentas insertar cada billete con su cantidad, si ese billete ya existe
+                    //en esa caja, actulizas sus cantidad.
+                    //
+                    try
+                    {
+                        for($i=0;$i<$numero_billetes;$i++)
+                        {
+                            $billete_caja_original=BilleteCajaDAO::getByPK($billete_caja[$i]->getIdBillete(), $billete_caja[$i]->getIdCaja());
+                            if($billete_caja_original==null)
+                                BilleteCajaDAO::save($billete_caja[$i]);
+                            else
+                            {
+                                $billete_caja_original->setCantidad($billete_caja_original->getCantidad()+$billete_caja[$i]->getCantidad());
+                                BilleteCajaDAO::save($billete_caja_original[$i]);
+                            }
+                        }
+                    }
+                    catch(Exception $e)
+                    {
+                        throw $e;
+                    }
+                }
+                //
+                //Actualizas el saldo de la caja a la que ira el dinero
+                //
+                $caja->setSaldo($caja->getSaldo()+$monto);
+                try
+                {
+                    CajaDAO::save($caja);
+                }
+                catch(Exception $e)
+                {
+                    throw $e;
+                }
+            }
+            //
+            //Si no ha ocurrido ningun error con los billetes o con la caja, actualizas
+            //al usuario y a la compra
+            //
+            try
+            {
+                UsuarioDAO::save($usuario);
+                CompraDAO::save($compra);
+            }
+            catch(Exception $e)
+            {
+                throw $e;
+            }
+        }
+
+        private function cancelarAbonoVenta
+        (
+                AbonoVenta $abono,
+                $id_caja,
+                $billetes
+        )
+        {
+            $venta=VentaDAO::getByPK($abono->getIdVenta());
+            if($venta==null)
+            {
+                throw new Exception("FATAL!!!! Este abono apunta a una venta que no existe!!");
+            }
+            $usuario=UsuarioDAO::getByPK($venta->getIdCompradorVenta());
+            if($usuario==null)
+            {
+                throw new Exception("FATAL!!!! La venta de este abono no tiene un comprador");
+            }
+            $monto=$abono->getMonto();
+            $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()+$monto);
+            $venta->setSaldo($venta->getSaldo()-$monto);
+            //
+            //Si la venta ha sido cancelada, quiere decir que se cancelaran todos los abonos y
+            //ese dinero solo se quedara a cuenta del usuario.
+            //
+            //Si no ha sido cancelada, quiere decir que solo se cancela este abono y por ende el
+            //dinero sale de la caja que indica el usuario.
+            //
+            //Si no hay una caja, se tomara el dinero como ganado.
+            if(!$venta->getCancelada()&&$id_caja!=null)
+            {
+                $caja=CajaDAO::getByPK($id_caja);
+                //
+                //Si se esta llevando control de lo billetes en la caja
+                //tienen que haber pasado en un arreglo bidimensional los ids
+                //de los billetes con sus cantidades.
+                //
+                if($caja->getControlBilletes())
+                {
+                    if($billetes==null)
+                        throw new Exception("No se recibieron los billetes para esta caja");
+                    $numero_billetes=count($billetes);
+                    //
+                    //Inicializas el arreglo de billetes_caja con los billetes que recibes
+                    //para despues insertarlo o actualizarlo.
+                    //
+                    for($i=0;$i<$numero_billetes; $i++)
+                    {
+                        $billete_caja[$i]=new BilleteCaja();
+                        $billete_caja[$i]->setIdBillete($billetes[$i][0]);
+                        $billete_caja[$i]->setIdCaja($id_caja);
+                        $billete_caja[$i]->setCantidad($billete[$i][1]);
+                    }
+                    //
+                    //Intentas insertar cada billete con su cantidad, si ese billete ya existe
+                    //en esa caja, actulizas sus cantidad.
+                    //
+                    try
+                    {
+                        for($i=0;$i<$numero_billetes;$i++)
+                        {
+                            $billete_caja_original=BilleteCajaDAO::getByPK($billete_caja[$i]->getIdBillete(), $billete_caja[$i]->getIdCaja());
+                            if($billete_caja_original==null)
+                                BilleteCajaDAO::save($billete_caja[$i]);
+                            else
+                            {
+                                $billete_caja_original->setCantidad($billete_caja_original->getCantidad()-$billete_caja[$i]->getCantidad());
+                                BilleteCajaDAO::save($billete_caja_original[$i]);
+                            }
+                        }
+                    }
+                    catch(Exception $e)
+                    {
+                        throw $e;
+                    }
+                }
+                //
+                //Actualizas el saldo de la caja a la que ira el dinero
+                //
+                $caja->setSaldo($caja->getSaldo()+$monto);
+                try
+                {
+                    CajaDAO::save($caja);
+                }
+                catch(Exception $e)
+                {
+                    throw $e;
+                }
+            }
+            //
+            //Si no ha ocurrido ningun error con los billetes o con la caja, actualizas
+            //al usuario y a la compra
+            //
+            try
+            {
+                UsuarioDAO::save($usuario);
+                VentaDAO::save($venta);
+            }
+            catch(Exception $e)
+            {
+                throw $e;
+            }
+        }
+
+        private function cancelarAbonoPrestamo
+        (
+                AbonoPrestamo $abono,
+                $id_caja,
+                $billetes
+        )
+        {
+            $prestamo=PrestamoDAO::getByPK($abono->getIdPrestamo());
+            if($prestamo==null)
+            {
+                throw new Exception("FATAL!!!! Este abono apunta a un prestamo que no existe!!");
+            }
+            //
+            //Los solicitantes pueden ser positivos o negativos.
+            //Si son positivos, son usuarios, si son negativos, son sucursales.
+            //
+            //Cuando un usuario cancela su abono a un prestamo, se incrementa su deuda.
+            //
+            //Cuando una sucursal cancela su abono, solo se afecta el prestamo, pues
+            //la cuenta de la sucursal se calcula a partir de todos sus movimientos
+            //y es en el prestamo donde se vera reflejado el cambio.
+            //
+            $id_solicitante=$prestamo->getIdSolicitante();
+            if($id_solicitante>0)
+                $solicitante=UsuarioDAO::getByPK($id_solicitante);
+            else
+                $solicitante=AlmacenDAO::getByPK($id_solicitante*-1);
+            if($solicitante==null)
+            {
+                throw new Exception("FATAL!!!! El prestamo de este abono no tiene un solicitante");
+            }
+            $monto=$abono->getMonto();
+            if($id_solicitante>0)
+                $solicitante->setSaldoDelEjercicio($solicitante->getSaldoDelEjercicio()+$monto);
+            $prestamo->setSaldo($prestamo->getSaldo()-$monto);
+            //
+            //Un Prestamo no puede ser cancelado, solo liquidado.
+            //
+            //Si no hay una caja, se tomara el dinero como ganado.
+            //
+            if($id_caja!=null)
+            {
+                $caja=CajaDAO::getByPK($id_caja);
+                //
+                //Si se esta llevando control de lo billetes en la caja
+                //tienen que haber pasado en un arreglo bidimensional los ids
+                //de los billetes con sus cantidades.
+                //
+                if($caja->getControlBilletes())
+                {
+                    if($billetes==null)
+                        throw new Exception("No se recibieron los billetes para esta caja");
+                    $numero_billetes=count($billetes);
+                    //
+                    //Inicializas el arreglo de billetes_caja con los billetes que recibes
+                    //para despues insertarlo o actualizarlo.
+                    //
+                    for($i=0;$i<$numero_billetes; $i++)
+                    {
+                        $billete_caja[$i]=new BilleteCaja();
+                        $billete_caja[$i]->setIdBillete($billetes[$i][0]);
+                        $billete_caja[$i]->setIdCaja($id_caja);
+                        $billete_caja[$i]->setCantidad($billete[$i][1]);
+                    }
+                    //
+                    //Intentas insertar cada billete con su cantidad, si ese billete ya existe
+                    //en esa caja, actulizas su cantidad.
+                    //
+                    try
+                    {
+                        for($i=0;$i<$numero_billetes;$i++)
+                        {
+                            $billete_caja_original=BilleteCajaDAO::getByPK($billete_caja[$i]->getIdBillete(), $billete_caja[$i]->getIdCaja());
+                            if($billete_caja_original==null)
+                                BilleteCajaDAO::save($billete_caja[$i]);
+                            else
+                            {
+                                $billete_caja_original->setCantidad($billete_caja_original->getCantidad()-$billete_caja[$i]->getCantidad());
+                                BilleteCajaDAO::save($billete_caja_original[$i]);
+                            }
+                        }
+                    }
+                    catch(Exception $e)
+                    {
+                        throw $e;
+                    }
+                }
+                //
+                //Actualizas el saldo de la caja a la que ira el dinero
+                //
+                $caja->setSaldo($caja->getSaldo()+$monto);
+                try
+                {
+                    CajaDAO::save($caja);
+                }
+                catch(Exception $e)
+                {
+                    throw $e;
+                }
+            }
+            //
+            //Si no ha ocurrido ningun error con los billetes o con la caja, actualizas
+            //al usuario y a la compra
+            //
+            try
+            {
+                if($id_solicitante>0)
+                    UsuarioDAO::save($solicitante);
+                PrestamoDAO::save($prestamo);
+            }
+            catch(Exception $e)
+            {
+                throw $e;
+            }
+        }
   
 	/**
  	 *
