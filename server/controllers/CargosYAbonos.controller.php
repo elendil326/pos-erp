@@ -7,8 +7,53 @@ require_once("CargosYAbonos.interface.php");
   **/
 	
   class CargosYAbonosController implements ICargosYAbonos{
-  
-  
+
+        //valida que una empresa exista y tenga su estado en activo
+        private function validarEmpresa
+        (
+                $id_empresa
+        )
+        {
+            Logger::log("Validando empresa");
+            $empresa=EmpresaDAO::getByPK($id_empresa);
+            if($empresa==null)
+            {
+                Logger::log("La empresa con id:".$id_empresa." no existe");
+                return false;
+            }
+            $activo=$empresa->getActivo();
+            Logger::log("La empresa con id:".$id_empresa." tiene un activo:".$activo);
+            return $activo;
+        }
+
+        private function cancelarAbonoCompra
+        (
+                AbonoCompra $abono
+        )
+        {
+
+        }
+
+        //valida que un usuario tenga permisos
+        private function validarPermisos
+        (
+                $id_usuario
+        )
+        {
+            return true;
+        }
+
+        //regresa el usuario de la sesion
+        private function getUsuario()
+        {
+            return 1;
+        }
+
+        //regresa la sucursal de la sesion
+        private function getSucursal()
+        {
+            return 1;
+        }
 	/**
  	 *
  	 *Registra un nuevo ingreso
@@ -37,8 +82,84 @@ require_once("CargosYAbonos.interface.php");
 		$descripcion = null
 	)
 	{  
-  
-  
+            Logger::log("Creando nuevo ingreso");
+            $id_usuario=$this->getUsuario();
+            if($id_usuario==-1)
+            {
+                Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
+                die('{ "success" : false , "reason" : "No se pudo obtener el usuario de la sesion, ya inicio sesion?" }');
+            }
+            Logger::log("Se obtuvo el usuario ".$id_usuario." de la sesion");
+            if(!$this->validarPermisos($id_usuario))
+            {
+                Logger::error("El usuario ".$id_usuario." no tiene el permiso");
+                die('{ "success" : false , "reason" : "El usuario '.$id_usuario.' no tiene el permiso" }');
+            }
+            if(!$this->validarEmpresa($id_empresa))
+            {
+                Logger::error("Se recibio una empresa no valida");
+                die('{ "success" : false , "reason" : "Se recibio una empresa no valida" }');
+            }
+            if($id_concepto_ingreso!=null)
+            {
+                Logger::log("Validando concepto de ingreso");
+                $concepto_ingreso=ConceptoIngresoDAO::getByPK($id_concepto_ingreso);
+                if($concepto_ingreso==null)
+                {
+                    Logger::log("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
+                    die('{ "success" : false , "reason" : "El concepto de ingreso con id:'.$id_concepto_ingreso.' no existe" }');
+                }
+            }
+            if($monto==null)
+            {
+                Logger::log("No se recibio monto, se procede a buscar en el concepto de ingreso");
+                if($id_concepto_ingreso==null)
+                {
+                    Logger::error("No se recibio un concepto de ingreso");
+                    die('{ "success" : false , "reason" : "No se recibio un concepto de ingreso ni un monto" }');
+                }
+                $monto=$concepto_ingreso->getMonto();
+                if($monto==null)
+                {
+                    Logger::error("El concepto de ingreso recibido no cuenta con un monto");
+                    die('{ "success" : false , "reason" : "El concepto de ingreso recibido no cuenta con un monto" }');
+                }
+                Logger::log("El monto obtenido para este ingreso es:".$monto);
+            }
+            $id_sucursal=$this->getSucursal();
+            if($id_sucursal==-1)
+            {
+                Logger::error("No se pudo obtener la sucursal en la que se realiza el ingreso");
+                die('{ "success" : false , "reason" : "No se pudo obtener la sucursal en la que se realiza el ingreso" }');
+            }
+            $ingreso=new Ingreso();
+            $ingreso->setCancelado(0);
+            $ingreso->setDescripcion($descripcion);
+            $ingreso->setFechaDelIngreso($fecha_ingreso);
+            $ingreso->setFolio($folio);
+            $ingreso->setIdCaja($id_caja);
+            $ingreso->setIdConceptoIngreso($id_concepto_ingreso);
+            $ingreso->setIdEmpresa($id_empresa);
+            $ingreso->setIdSucursal($id_sucursal);
+            $ingreso->setIdUsuario($id_usuario);
+            $ingreso->setMonto($monto);
+            $ingreso->setNota($nota);
+            $ingreso->setFechaDeRegistro(date("Y-m-d H:i:s", time()));
+            IngresoDAO::transBegin();
+            try
+            {
+                IngresoDAO::save($ingreso);
+            }
+            catch(Exception $e)
+            {
+                Logger::error("Error al guardar el nuevo ingreso:".$e);
+                IngresoDAO::transRollback();
+                die('{ "success" : false , "reason" : "Error al guardar el nuevo ingreso:'.$e.'" }');
+            }
+            IngresoDAO::transEnd();
+            Logger::log("Ingreso creado exitosamente!");
+            printf('{ "success" : true , "id_ingreso" : %d }',$ingreso->getIdIngreso());
+            return $ingreso->getIdIngreso();
 	}
   
 	/**
@@ -51,11 +172,46 @@ require_once("CargosYAbonos.interface.php");
 	public function EliminarAbono
 	(
 		$id_abono, 
-		$motivo_cancelacion = null
+		$motivo_cancelacion = null,
+                $compra = null,
+                $venta = null,
+                $prestamo = null
 	)
-	{  
-  
-  
+	{
+            Logger::log("Cancelando abono");
+            if($compra!=null&&$compra)
+            {
+                Logger::log("El abono es un abono a una compra");
+                $abono=AbonoCompraDAO::getByPK($id_abono);
+                Logger::log("Validando abono");
+                if($abono==null)
+                {
+                    Logger::error("El abono con id:".$id_abono." no existe");
+                    die('{ "success" : false , "reason" : "El abono con id:'.$id_abono.' no existe" }');
+                }
+                $abono->setCancelado(1);
+                AbonoCompraDAO::transBegin();
+                try {
+                    AbonoCompraDAO::save($abono);
+                    $this->cancelarAbonoCompra($abono);
+                }
+                catch(Exception $e)
+                {
+                    AbonoCompraDAO::transRollback();
+                    Logger::error("Error al cancelar el abono:".$e);
+                    die('{ "success" : false , "reason" : "Error al cancelar el abono:'.$e.'" }');
+                }
+                AbonoCompraDAO::transEnd();
+
+            }
+            else if($venta!=null&&$venta)
+            {
+
+            }
+            else if($prestamo!=null&&$prestamo)
+            {
+
+            }
 	}
   
 	/**
@@ -160,7 +316,7 @@ require_once("CargosYAbonos.interface.php");
  	 * @param nombre string la justificacion que aparecera despues de la leyenda "gasto por concepto de"
  	 * @param descripcion string Descripcion larga del concepto de gasto
  	 * @param monto float Monto fijo del concepto de gasto
- 	 * @return id_concepto_gasto int Id autogenerado por la inserción del nuevo gasto
+ 	 * @return id_concepto_gasto int Id autogenerado por la inserciï¿½n del nuevo gasto
  	 **/
 	public function NuevoConceptoGasto
 	(
@@ -278,7 +434,7 @@ require_once("CargosYAbonos.interface.php");
 <br/><br/><b>Update : </b>Falta especificar los parametros y el ejemplo de envio.
  	 *
  	 * @param ordenar json Valor que contendr la manera en que se ordenar la lista.
- 	 * @return conceptos_gasto json Arreglo que contendrá la información de conceptos de gasto.
+ 	 * @return conceptos_gasto json Arreglo que contendrï¿½ la informaciï¿½n de conceptos de gasto.
  	 **/
 	public function ListaConceptoGasto
 	(
@@ -296,7 +452,7 @@ require_once("CargosYAbonos.interface.php");
 <br/><br/><b>Update :</b>Falta especificar la estructura del JSON que se env?como parametro
  	 *
  	 * @param ordenar json Valor que indicar la forma en que se ordenar la lista
- 	 * @return conceptos_ingreso json Arreglo que contendrá la información de los conceptos de ingreso
+ 	 * @return conceptos_ingreso json Arreglo que contendrï¿½ la informaciï¿½n de los conceptos de ingreso
  	 **/
 	public function ListaConceptoIngreso
 	(
@@ -323,7 +479,7 @@ require_once("CargosYAbonos.interface.php");
  	 * @param descripcion string Descripcion del gasto en caso de que no este contemplado en la lista de concpetos de gasto
  	 * @param folio string Folio de la factura del gasto
  	 * @param nota string Nota del gasto
- 	 * @return id_gasto int Id generado por la inserción del nuevo gasto
+ 	 * @return id_gasto int Id generado por la inserciï¿½n del nuevo gasto
  	 **/
 	public function NuevoGasto
 	(
