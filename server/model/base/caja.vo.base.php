@@ -37,6 +37,9 @@ class Caja extends VO
 			if( isset($data['abierta']) ){
 				$this->abierta = $data['abierta'];
 			}
+			if( isset($data['saldo']) ){
+				$this->saldo = $data['saldo'];
+			}
 			if( isset($data['control_billetes']) ){
 				$this->control_billetes = $data['control_billetes'];
 			}
@@ -61,6 +64,7 @@ class Caja extends VO
 			"token" => $this->token,
 			"descripcion" => $this->descripcion,
 			"abierta" => $this->abierta,
+			"saldo" => $this->saldo,
 			"control_billetes" => $this->control_billetes,
 			"activa" => $this->activa
 		); 
@@ -113,6 +117,15 @@ class Caja extends VO
 	  * @var tinyint(1)
 	  */
 	protected $abierta;
+
+	/**
+	  * saldo
+	  * 
+	  * Saldo actual de la caja<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $saldo;
 
 	/**
 	  * control_billetes
@@ -254,6 +267,30 @@ class Caja extends VO
 	final public function setAbierta( $abierta )
 	{
 		$this->abierta = $abierta;
+	}
+
+	/**
+	  * getSaldo
+	  * 
+	  * Get the <i>saldo</i> property for this object. Donde <i>saldo</i> es Saldo actual de la caja
+	  * @return float
+	  */
+	final public function getSaldo()
+	{
+		return $this->saldo;
+	}
+
+	/**
+	  * setSaldo( $saldo )
+	  * 
+	  * Set the <i>saldo</i> property for this object. Donde <i>saldo</i> es Saldo actual de la caja.
+	  * Una validacion basica se hara aqui para comprobar que <i>saldo</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setSaldo( $saldo )
+	{
+		$this->saldo = $saldo;
 	}
 
 	/**

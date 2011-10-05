@@ -168,6 +168,11 @@ abstract class CajaDAOBase extends DAO
 			array_push( $val, $caja->getAbierta() );
 		}
 
+		if( $caja->getSaldo() != NULL){
+			$sql .= " saldo = ? AND";
+			array_push( $val, $caja->getSaldo() );
+		}
+
 		if( $caja->getControlBilletes() != NULL){
 			$sql .= " control_billetes = ? AND";
 			array_push( $val, $caja->getControlBilletes() );
@@ -209,12 +214,13 @@ abstract class CajaDAOBase extends DAO
 	  **/
 	private static final function update( $caja )
 	{
-		$sql = "UPDATE caja SET  id_sucursal = ?, token = ?, descripcion = ?, abierta = ?, control_billetes = ?, activa = ? WHERE  id_caja = ?;";
+		$sql = "UPDATE caja SET  id_sucursal = ?, token = ?, descripcion = ?, abierta = ?, saldo = ?, control_billetes = ?, activa = ? WHERE  id_caja = ?;";
 		$params = array( 
 			$caja->getIdSucursal(), 
 			$caja->getToken(), 
 			$caja->getDescripcion(), 
 			$caja->getAbierta(), 
+			$caja->getSaldo(), 
 			$caja->getControlBilletes(), 
 			$caja->getActiva(), 
 			$caja->getIdCaja(), );
@@ -240,13 +246,14 @@ abstract class CajaDAOBase extends DAO
 	  **/
 	private static final function create( &$caja )
 	{
-		$sql = "INSERT INTO caja ( id_caja, id_sucursal, token, descripcion, abierta, control_billetes, activa ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO caja ( id_caja, id_sucursal, token, descripcion, abierta, saldo, control_billetes, activa ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$caja->getIdCaja(), 
 			$caja->getIdSucursal(), 
 			$caja->getToken(), 
 			$caja->getDescripcion(), 
 			$caja->getAbierta(), 
+			$caja->getSaldo(), 
 			$caja->getControlBilletes(), 
 			$caja->getActiva(), 
 		 );
@@ -347,6 +354,17 @@ abstract class CajaDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a || $b ){
 			$sql .= " abierta = ? AND"; 
+			$a = $a == NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $cajaA->getSaldo()) != NULL) & ( ($b = $cajaB->getSaldo()) != NULL) ){
+				$sql .= " saldo >= ? AND saldo <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a || $b ){
+			$sql .= " saldo = ? AND"; 
 			$a = $a == NULL ? $b : $a;
 			array_push( $val, $a);
 			
