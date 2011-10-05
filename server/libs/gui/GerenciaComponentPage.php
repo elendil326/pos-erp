@@ -69,8 +69,8 @@ class GerenciaComponentPage extends StdComponentPage{
 	function bootstrap()
 	{
 		$m = new MenuComponent();
+		$m->addItem("Home", "home.php");
 		$m->addItem("Cerrar sesion", "./&close_session");
-		$m->addItem("Instancias", "instancias.php");
 		self::addComponent( $m );
 	}
 

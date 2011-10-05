@@ -8,7 +8,7 @@
 
 	$page = new GerenciaComponentPage();
 	$c = new EmpresasController();
-	$c->Lista(1);
+	
 	$page->render();
 
 

@@ -8,8 +8,8 @@
 
 	$page = new GerenciaComponentPage();
 	
-	//$page->render();
-	echo "soy home";
+	$page->render();
+	
 
 
 
