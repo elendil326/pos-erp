@@ -76,9 +76,48 @@ class GerenciaComponentPage extends StdComponentPage{
 
 
 
+	private $main_menu_json;
+
+
+
+	/**
+	 *
+	 *	Crear los menues gracias a un json,
+	 *  en un futuro este json puede
+	 *  estar en la base de datos ! nice ! 
+	 **/
+	private function createMainMenu()
+	{
+		$this->main_menu_json = '
+				{ "main_menu" : [
+					{
+						"title" : "Empresas",
+						"url"	: "empresas.php",
+						"children" : [
+							{
+								"title" : "2Sucursales",
+								"url"	: "sucursales.php"
+							},
+							{
+								"title" : "3Sucursales",
+								"url"	: "sucursales.php"
+							}							
+						]
+					},
+					{
+						"title" : "Sucursales",
+						"url"	: "sucursales.php"
+					}
+				]}';
+		
+	}
+
 
 	function bootstrap()
 	{
+
+		$this->createMainMenu();
+
 		/*
 		$m = new MenuComponent();
 		$m->addItem("Home", "home.php");
@@ -118,23 +157,15 @@ class GerenciaComponentPage extends StdComponentPage{
 		<!DOCTYPE html>
 		<html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
 		<head>
-
 		<title>POS</title>
-
-
-		<link type="text/css" rel="stylesheet" href="../../../css/basic.css"/>
-
-
+			<link type="text/css" rel="stylesheet" href="../../../css/basic.css"/>
 		</head>
 		<body class="safari4 mac Locale_en_US">
-
 		<div id="FB_HiddenContainer" style="position:absolute; top:-10000px; width:0px; height:0px;"></div>
-
 		<div class="devsitePage">
 			<div class="menu">
 				<div class="content">
-					
-					<a class="logo" href="/">
+					<a class="logo" href="index.php">
 						<img class="img" src="../../../media/N2f0JA5UPFU.png" alt="" width="166" height="17"/>
 					</a>
 
@@ -185,31 +216,50 @@ class GerenciaComponentPage extends StdComponentPage{
 						<div class="toplevelnav">
 							<ul>
 
-							<!-- inactivo -->
-							<li>
-							<a href="api_doc.php?cat=4">
-								<div class="navSectionTitle">Menu1</div>
-							</a>
-							</li>
+							<?php
+							################ Main Menu ################
 
-							<!-- activo -->
-							<li class="active withsubsections">
-								<a class="selected" href="api_doc.php?cat=7">
-								<div class="navSectionTitle">MENU2</div>
-								</a>
+								$mm = json_decode( $this->main_menu_json );
 
-								<ul class="subsections">							
-								<li><a href="?&cat=7&m=187">abono/editar</a></li><li><a href="?&cat=7&m=188">abono/eliminar</a></li>
-								</ul></li>
+								foreach ( $mm->main_menu as $item )
+								{
 
-												
-								
-							</ul>
+									echo "<li ";
+
+									if(isset( $item->children ))
+									{
+										echo "class='withsubsections'";
+									}
+
+									echo "><a href='". $item->url  ."'><div clas='navSectionTitle'>" . $item->title . "</div></a>";
+
+									if(isset( $item->children ))
+									{
+
+										foreach( $item->children as $subitem )
+										{
+											echo '<ul class="subsections">';
+											echo "<li>";
+											echo '<a href="'. $subitem->url .'">' . $subitem->title . '</a>';
+											echo "</li>";
+											echo "</ul>";
+										}
+
+									}
+
+									echo "</li>";
+
+								}
+
+							################ Main Menu ################
+							?>
+
 						</div>
-
+						<!--
 						<ul id="navsubsectionpages">
-							
+							<li>asdf</li>
 						</ul>
+						-->
 					</div>
 					<div id="bodyText" class="bodyText">
 						<div class="header">

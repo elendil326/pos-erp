@@ -10,6 +10,7 @@ require_once("CargosYAbonos.interface.php");
 
         //valida que una empresa exista y tenga su estado en activo
         private $formato_fecha="Y-m-d H:i:s";
+        
         private function validarEmpresa
         (
                 $id_empresa

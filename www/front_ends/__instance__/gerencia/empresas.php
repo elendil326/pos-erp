@@ -8,7 +8,7 @@
 
 	$page = new GerenciaComponentPage();
 	
-	$page->addComponent( new TitleComponent( "Bienvenido" ) );
+	$page->addComponent( new TitleComponent( "Empresas" ) );
 
 
 	$foo = new Usuario();
