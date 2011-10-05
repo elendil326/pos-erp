@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `abono_compra` (
   `cancelado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este abono es cancelado',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_abono_compra`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle de la compra y los abonos de la misma' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle de la compra y los abonos de la misma' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `abono_prestamo` (
   `cancelado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este abono es cancelado',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_abono_prestamo`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle abono prestamo' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle abono prestamo' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `abono_venta` (
   `cancelado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este abono es cancelado',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_abono_venta`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle de la venta y sus abonos' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle de la venta y sus abonos' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `apertura_caja` (
   `saldo` float NOT NULL COMMENT 'Saldo con que inicia operaciones la caja',
   `id_cajero` int(11) NOT NULL COMMENT 'Id del usuario que realizará las funciones de cajero',
   PRIMARY KEY (`id_apertura_caja`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Tabla que lleva el control de la apertura de cajas' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que lleva el control de la apertura de cajas' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `billete` (
   `foto_billete` varchar(100) DEFAULT NULL COMMENT 'Url de la foto del billete',
   `activo` tinyint(1) NOT NULL COMMENT 'Si este billete esta activo o ya no se usa',
   PRIMARY KEY (`id_billete`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Billetes para llevar control en la caja' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Billetes para llevar control en la caja' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -156,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `billete_apertura_caja` (
   `id_apertura_caja` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL COMMENT 'Cantidad de billetes dejados en la apertura de caja',
   PRIMARY KEY (`id_billete`,`id_apertura_caja`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle apertura de caja billetes';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle apertura de caja billetes';
 
 -- --------------------------------------------------------
 
@@ -169,7 +169,7 @@ CREATE TABLE IF NOT EXISTS `billete_caja` (
   `id_caja` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL COMMENT 'Cantidad de estos billetes en la caja',
   PRIMARY KEY (`id_billete`,`id_caja`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle billetes caja';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle billetes caja';
 
 -- --------------------------------------------------------
 
@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `billete_cierre_caja` (
   `id_cierre_caja` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL COMMENT 'Cantidad de billetes encontrados en el cierre de caja',
   PRIMARY KEY (`id_billete`,`id_cierre_caja`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle billetes cierre de caja';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle billetes cierre de caja';
 
 -- --------------------------------------------------------
 
@@ -196,7 +196,7 @@ CREATE TABLE IF NOT EXISTS `billete_corte_caja` (
   `cantidad_encontrada` int(11) NOT NULL COMMENT 'Cantidad de este billete encontrado en la caja al hacer el corte',
   `cantidad_dejada` int(11) NOT NULL COMMENT 'Cantidad de este billete dejada al finalizar el corte',
   PRIMARY KEY (`id_billete`,`id_corte_caja`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle billetes corte de caja';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle billetes corte de caja';
 
 -- --------------------------------------------------------
 
@@ -231,7 +231,7 @@ CREATE TABLE IF NOT EXISTS `cheque` (
   `expedido` tinyint(1) NOT NULL COMMENT 'Verdadero si el cheque es expedido por la empresa, falso si es recibido',
   `id_usuario` int(11) DEFAULT NULL COMMENT 'Id del usuario que registra el cheque',
   PRIMARY KEY (`id_cheque`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -243,7 +243,7 @@ CREATE TABLE IF NOT EXISTS `cheque_abono_compra` (
   `id_cheque` int(11) NOT NULL COMMENT 'Id del cheque con el que se abono',
   `id_abono_compra` int(11) NOT NULL COMMENT 'Id del abono que se pago con ese cheque',
   PRIMARY KEY (`id_cheque`,`id_abono_compra`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle cheque abono compra';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle cheque abono compra';
 
 -- --------------------------------------------------------
 
@@ -255,7 +255,7 @@ CREATE TABLE IF NOT EXISTS `cheque_abono_prestamo` (
   `id_cheque` int(11) NOT NULL COMMENT 'Id del cheque con el que se abono',
   `id_abono_prestamo` int(11) NOT NULL COMMENT 'Id del abono que se pago con ese cheque',
   PRIMARY KEY (`id_cheque`,`id_abono_prestamo`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle cheque abono prestamo';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle cheque abono prestamo';
 
 -- --------------------------------------------------------
 
@@ -267,7 +267,7 @@ CREATE TABLE IF NOT EXISTS `cheque_abono_venta` (
   `id_cheque` int(11) NOT NULL COMMENT 'Id del cheque con el que se abono',
   `id_abono_venta` int(11) NOT NULL COMMENT 'Id del abono que se pago con ese cheque',
   PRIMARY KEY (`id_cheque`,`id_abono_venta`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle cheque abono venta';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle cheque abono venta';
 
 -- --------------------------------------------------------
 
@@ -279,7 +279,7 @@ CREATE TABLE IF NOT EXISTS `cheque_compra` (
   `id_cheque` int(11) NOT NULL COMMENT 'Id del cheque con el que se compro',
   `id_compra` int(11) NOT NULL COMMENT 'Id de la compra que se pago con ese cheque',
   PRIMARY KEY (`id_cheque`,`id_compra`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle cheque compra';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle cheque compra';
 
 -- --------------------------------------------------------
 
@@ -291,7 +291,7 @@ CREATE TABLE IF NOT EXISTS `cheque_venta` (
   `id_cheque` int(11) NOT NULL COMMENT 'Id del cheque con el que se pago la venta',
   `id_venta` int(11) NOT NULL COMMENT 'Id de la venta que se pago con el cheque',
   PRIMARY KEY (`id_cheque`,`id_venta`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle cheque venta';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle cheque venta';
 
 -- --------------------------------------------------------
 
@@ -307,7 +307,7 @@ CREATE TABLE IF NOT EXISTS `cierre_caja` (
   `saldo_real` float NOT NULL COMMENT 'Saldo de la caja',
   `saldo_esperado` float NOT NULL COMMENT 'Saldo que debería de haber en la caja después de todos los movimientos del día',
   PRIMARY KEY (`id_cierre_caja`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Tabla que lleva el control del cierre de cajas' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que lleva el control del cierre de cajas' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -368,7 +368,7 @@ CREATE TABLE IF NOT EXISTS `clasificacion_proveedor` (
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion larga de la clasificacion del proveedor',
   `activa` tinyint(1) NOT NULL COMMENT 'Si esta clasificacion esat activa o no',
   PRIMARY KEY (`id_clasificacion_proveedor`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Tabla que especifica las clasificaciones de proveedores' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que especifica las clasificaciones de proveedores' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -434,7 +434,7 @@ CREATE TABLE IF NOT EXISTS `compra_arpilla` (
   `merma_por_arpilla` float NOT NULL COMMENT 'La merma de producto por arpilla',
   `total_origen` float DEFAULT NULL COMMENT 'El valor del embarque según el proveedor',
   PRIMARY KEY (`id_compra_arpilla`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Tabla que detalla una compra realizada a un proveedor median' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que detalla una compra realizada a un proveedor median' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -452,7 +452,7 @@ CREATE TABLE IF NOT EXISTS `compra_producto` (
   `arpillas` float DEFAULT NULL COMMENT 'Numero de arpillas del producto',
   `retencion` float NOT NULL COMMENT 'Retencion unitaria del producto',
   PRIMARY KEY (`id_compra`,`id_producto`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle de la compra y los productos de la misma';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle de la compra y los productos de la misma';
 
 -- --------------------------------------------------------
 
@@ -467,7 +467,7 @@ CREATE TABLE IF NOT EXISTS `concepto_gasto` (
   `monto` float DEFAULT NULL COMMENT 'monto del concepto si este es fijo siempre',
   `activo` tinyint(1) NOT NULL COMMENT 'Si este concepto de gasto esta activo',
   PRIMARY KEY (`id_concepto_gasto`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Conceptos de gasto' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Conceptos de gasto' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -482,7 +482,7 @@ CREATE TABLE IF NOT EXISTS `concepto_ingreso` (
   `monto` float DEFAULT NULL COMMENT 'Si el concepto tienen un monto fijo',
   `activo` tinyint(1) NOT NULL COMMENT 'Si este concepto de ingreso esta activo',
   PRIMARY KEY (`id_concepto_ingreso`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Concepto de ingreso' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Concepto de ingreso' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -523,7 +523,7 @@ CREATE TABLE IF NOT EXISTS `consignacion_producto` (
   `retencion` float DEFAULT NULL COMMENT 'Monto generado por retenciones',
   `precio` float DEFAULT NULL COMMENT 'Precio del producto por ser de consignacion',
   PRIMARY KEY (`id_consignacion`,`id_producto`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle de la consignacion con su producto';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle de la consignacion con su producto';
 
 -- --------------------------------------------------------
 
@@ -617,7 +617,7 @@ CREATE TABLE IF NOT EXISTS `documento_cliente` (
   `id_documento` int(11) NOT NULL COMMENT 'Id del documento que se aplica al cliente',
   `id_cliente` int(11) NOT NULL COMMENT 'Id cliente',
   PRIMARY KEY (`id_documento`,`id_cliente`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle entre un documento y el cliente al que se le aplica';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre un documento y el cliente al que se le aplica';
 
 -- --------------------------------------------------------
 
@@ -629,7 +629,7 @@ CREATE TABLE IF NOT EXISTS `documento_compra` (
   `id_documento` int(11) NOT NULL COMMENT 'id del documento que se aplica a la compra',
   `id_compra` int(11) NOT NULL COMMENT 'id de la compra',
   PRIMARY KEY (`id_documento`,`id_compra`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle entre un documento y la compra';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre un documento y la compra';
 
 -- --------------------------------------------------------
 
@@ -641,7 +641,7 @@ CREATE TABLE IF NOT EXISTS `documento_venta` (
   `id_documento` int(11) NOT NULL COMMENT 'Id del documento que se aplica a la venta',
   `id_venta` int(11) NOT NULL COMMENT 'id de la venta',
   PRIMARY KEY (`id_documento`,`id_venta`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle entre un documento y la venta';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre un documento y la venta';
 
 -- --------------------------------------------------------
 
@@ -724,7 +724,7 @@ CREATE TABLE IF NOT EXISTS `impresora_caja` (
   `id_impresora` int(11) NOT NULL COMMENT 'Id de la impresora',
   `id_caja` int(11) NOT NULL COMMENT 'Id de la caja que utiliza la impresora',
   PRIMARY KEY (`id_impresora`,`id_caja`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle entre una caja y las impresoras que utiliza';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre una caja y las impresoras que utiliza';
 
 -- --------------------------------------------------------
 
@@ -751,7 +751,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_cliente` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto a aplicar al tipo de cliente',
   `id_clasificacion_cliente` int(11) NOT NULL COMMENT 'Id de la clasificacion del cliente',
   PRIMARY KEY (`id_impuesto`,`id_clasificacion_cliente`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle impuesto clasificacion cliente';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle impuesto clasificacion cliente';
 
 -- --------------------------------------------------------
 
@@ -763,7 +763,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_producto` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto a aplicarl al tipo de producto',
   `id_clasificacion_producto` int(11) NOT NULL COMMENT 'Id de la clasificacion del producto',
   PRIMARY KEY (`id_impuesto`,`id_clasificacion_producto`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle impuesto clasificacion producto';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle impuesto clasificacion producto';
 
 -- --------------------------------------------------------
 
@@ -775,7 +775,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_proveedor` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto a aplicar al tipo de proveedor',
   `id_clasificacion_proveedor` int(11) NOT NULL COMMENT 'Id de la clasificacion del proveedor',
   PRIMARY KEY (`id_impuesto`,`id_clasificacion_proveedor`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle impuesto clasificacion proveedor';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle impuesto clasificacion proveedor';
 
 -- --------------------------------------------------------
 
@@ -787,7 +787,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_clasificacion_servicio` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto a aplicar al tipo de servicio',
   `id_clasificacion_servicio` int(11) NOT NULL COMMENT 'Id de la clasificacion del servicio',
   PRIMARY KEY (`id_impuesto`,`id_clasificacion_servicio`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle entre impuesto clasificacion servicio';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre impuesto clasificacion servicio';
 
 -- --------------------------------------------------------
 
@@ -799,7 +799,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_empresa` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto que se aplicara a la empresa',
   `id_empresa` int(11) NOT NULL COMMENT 'id de la empresa',
   PRIMARY KEY (`id_impuesto`,`id_empresa`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle entre los impuestos con las empresas';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre los impuestos con las empresas';
 
 -- --------------------------------------------------------
 
@@ -811,7 +811,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_producto` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto a aplicar al producto',
   `id_producto` int(11) NOT NULL COMMENT 'Id del producto al que se le aplica el impuesto',
   PRIMARY KEY (`id_impuesto`,`id_producto`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle impuesto producto';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle impuesto producto';
 
 -- --------------------------------------------------------
 
@@ -823,7 +823,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_servicio` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto a aplicar al servicio',
   `id_servicio` int(11) NOT NULL COMMENT 'Id del servicio al que se le aplicara el impuesto',
   PRIMARY KEY (`id_impuesto`,`id_servicio`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle impuesto servicio';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle impuesto servicio';
 
 -- --------------------------------------------------------
 
@@ -835,7 +835,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_sucursal` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto que se aplicara a la sucursal',
   `id_sucursal` int(11) NOT NULL COMMENT 'Id de la sucursal que tiene diversos impuestos',
   PRIMARY KEY (`id_impuesto`,`id_sucursal`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle entre los impuestos con las sucursales';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre los impuestos con las sucursales';
 
 -- --------------------------------------------------------
 
@@ -847,7 +847,7 @@ CREATE TABLE IF NOT EXISTS `impuesto_usuario` (
   `id_impuesto` int(11) NOT NULL COMMENT 'Id del impuesto que se aplica al usuario',
   `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario al que se le cargan impuestos',
   PRIMARY KEY (`id_impuesto`,`id_usuario`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle entre los impuestos y los usuarios';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre los impuestos y los usuarios';
 
 -- --------------------------------------------------------
 
@@ -905,7 +905,7 @@ CREATE TABLE IF NOT EXISTS `inspeccion_consignacion_producto` (
   `solicitado` tinyint(1) NOT NULL COMMENT 'true si la cantidad se refiere a la cantidad de ese producto que se solicita',
   `devuelto` tinyint(1) NOT NULL COMMENT 'true si la cantidad de ese producto es devuelta',
   PRIMARY KEY (`id_inspeccion_consignacion`,`id_producto`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Tabla detalle entre una inspeccion de consignacion y los pro';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla detalle entre una inspeccion de consignacion y los pro';
 
 -- --------------------------------------------------------
 
@@ -931,7 +931,7 @@ CREATE TABLE IF NOT EXISTS `moneda` (
   `simbolo` varchar(10) NOT NULL COMMENT 'Simbolo de la moneda (US$,NP$)',
   `activa` tinyint(1) NOT NULL COMMENT 'Si esta moneda esta activa o ya no se usa',
   PRIMARY KEY (`id_moneda`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Tabla que contendrá las distintas monedas que usa el uusario' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que contendrá las distintas monedas que usa el uusario' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -965,7 +965,7 @@ CREATE TABLE IF NOT EXISTS `orden_de_servicio_paquete` (
   `id_paquete` int(11) NOT NULL COMMENT 'Id del paquete',
   `cantidad` float NOT NULL COMMENT 'Cantidad de ordenes de servicio incluidos en el paquete',
   PRIMARY KEY (`id_servicio`,`id_paquete`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle orden de servicio paquete';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle orden de servicio paquete';
 
 -- --------------------------------------------------------
 
@@ -982,7 +982,7 @@ CREATE TABLE IF NOT EXISTS `paquete` (
   `foto_paquete` varchar(255) DEFAULT NULL COMMENT 'Url de la foto del paquete',
   `activo` tinyint(1) NOT NULL COMMENT 'Si el paquete esta activo o no',
   PRIMARY KEY (`id_paquete`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Paquetes de productos y/o servicios' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Paquetes de productos y/o servicios' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -994,7 +994,7 @@ CREATE TABLE IF NOT EXISTS `paquete_empresa` (
   `id_paquete` int(11) NOT NULL,
   `id_empresa` int(11) NOT NULL,
   PRIMARY KEY (`id_paquete`,`id_empresa`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='detalle paquete empresa';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='detalle paquete empresa';
 
 -- --------------------------------------------------------
 
@@ -1006,7 +1006,7 @@ CREATE TABLE IF NOT EXISTS `paquete_sucursal` (
   `id_paquete` int(11) NOT NULL,
   `id_sucursal` int(11) NOT NULL,
   PRIMARY KEY (`id_paquete`,`id_sucursal`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle paquete sucursal';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle paquete sucursal';
 
 -- --------------------------------------------------------
 
@@ -1030,7 +1030,7 @@ CREATE TABLE IF NOT EXISTS `permiso_rol` (
   `id_permiso` int(11) NOT NULL COMMENT 'Id del permiso del rol en esa empresa',
   `id_rol` int(11) NOT NULL COMMENT 'Id del rol que tiene el permiso en esa empresa',
   PRIMARY KEY (`id_permiso`,`id_rol`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Tabla detalle entre los permisos de los roles en las empreas';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla detalle entre los permisos de los roles en las empreas';
 
 -- --------------------------------------------------------
 
@@ -1042,7 +1042,7 @@ CREATE TABLE IF NOT EXISTS `permiso_usuario` (
   `id_permiso` int(11) NOT NULL COMMENT 'Id del permiso del usuario en la empresa',
   `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario con el permiso en la empresa',
   PRIMARY KEY (`id_permiso`,`id_usuario`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle entre los permisos con los usuarios en las empresas';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre los permisos con los usuarios en las empresas';
 
 -- --------------------------------------------------------
 
@@ -1056,7 +1056,7 @@ CREATE TABLE IF NOT EXISTS `precio_paquete_rol` (
   `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje del margen de utilidad que se le ganara a este paquete para este rol',
   `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
   PRIMARY KEY (`id_paquete`,`id_rol`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un paquete para un';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un paquete para un';
 
 -- --------------------------------------------------------
 
@@ -1070,7 +1070,7 @@ CREATE TABLE IF NOT EXISTS `precio_paquete_tipo_cliente` (
   `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje del margen de utilidad que se le ganara a este paquete para este tipo de cliente',
   `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
   PRIMARY KEY (`id_paquete`,`id_tipo_cliente`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un paquete para un';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un paquete para un';
 
 -- --------------------------------------------------------
 
@@ -1084,7 +1084,7 @@ CREATE TABLE IF NOT EXISTS `precio_paquete_usuario` (
   `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje del margen de utilidad que se le ganara a este paquete para este usuario',
   `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
   PRIMARY KEY (`id_paquete`,`id_usuario`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un paquete para un';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un paquete para un';
 
 -- --------------------------------------------------------
 
@@ -1098,7 +1098,7 @@ CREATE TABLE IF NOT EXISTS `precio_producto_rol` (
   `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje del margen de utilidad que se le ganara a este producto para este rol',
   `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
   PRIMARY KEY (`id_producto`,`id_rol`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
 
 -- --------------------------------------------------------
 
@@ -1112,7 +1112,7 @@ CREATE TABLE IF NOT EXISTS `precio_producto_tipo_cliente` (
   `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
   `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje de margen de utilidad que se le ganara a este producto al venderle a este tipo de cliente',
   PRIMARY KEY (`id_producto`,`id_clasificacion_cliente`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
 
 -- --------------------------------------------------------
 
@@ -1126,7 +1126,7 @@ CREATE TABLE IF NOT EXISTS `precio_producto_usuario` (
   `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
   `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje de margen de utilidad que se le ganara a este producto al venderle a este usuario',
   PRIMARY KEY (`id_producto`,`id_usuario`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
 
 -- --------------------------------------------------------
 
@@ -1140,7 +1140,7 @@ CREATE TABLE IF NOT EXISTS `precio_servicio_rol` (
   `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
   `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje de margen de utilidad que se le ganara a este servicio al venderle a este rol',
   PRIMARY KEY (`id_servicio`,`id_rol`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
 
 -- --------------------------------------------------------
 
@@ -1154,7 +1154,7 @@ CREATE TABLE IF NOT EXISTS `precio_servicio_tipo_cliente` (
   `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
   `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje de margen de utilidad que se le ganara a este servicio al venderle a este tipo de cliente',
   PRIMARY KEY (`id_servicio`,`id_tipo_cliente`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
 
 -- --------------------------------------------------------
 
@@ -1168,7 +1168,7 @@ CREATE TABLE IF NOT EXISTS `precio_servicio_usuario` (
   `es_margen_utilidad` tinyint(1) NOT NULL COMMENT 'Verdadero si el valor del campo precio_utilidad es un margen de utilidad, false si es un precio fijo',
   `precio_utilidad` float NOT NULL COMMENT 'Precio o porcentaje de margen de utilidad que se le ganara a este servicio al venderle a este usuario',
   PRIMARY KEY (`id_servicio`,`id_usuario`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indica el precio o margen de utilidad de un producto para un';
 
 -- --------------------------------------------------------
 
@@ -1187,7 +1187,7 @@ CREATE TABLE IF NOT EXISTS `prestamo` (
   `interes_mensual` float NOT NULL COMMENT 'Porcentaje de interes mensual del prestamo',
   `fecha` datetime NOT NULL COMMENT 'Fecha en que se realiza el prestamo',
   PRIMARY KEY (`id_prestamo`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Prestamo de una sucursal a un solicitante' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Prestamo de una sucursal a un solicitante' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1227,7 +1227,7 @@ CREATE TABLE IF NOT EXISTS `producto_clasificacion` (
   `id_producto` int(11) NOT NULL COMMENT 'Id del producto con esa clasificacion',
   `id_clasificacion_producto` int(11) NOT NULL COMMENT 'Id de la clasificacion del producto',
   PRIMARY KEY (`id_producto`,`id_clasificacion_producto`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle prodcuto clasificacion';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle prodcuto clasificacion';
 
 -- --------------------------------------------------------
 
@@ -1239,7 +1239,7 @@ CREATE TABLE IF NOT EXISTS `producto_empresa` (
   `id_producto` int(11) NOT NULL COMMENT 'Id del producto que se vende en la empresa',
   `id_empresa` int(11) NOT NULL COMMENT 'Id de la empresa que ofrece ese producto',
   PRIMARY KEY (`id_producto`,`id_empresa`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle producto empresa';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle producto empresa';
 
 -- --------------------------------------------------------
 
@@ -1265,7 +1265,7 @@ CREATE TABLE IF NOT EXISTS `producto_paquete` (
   `id_paquete` int(11) NOT NULL COMMENT 'Id del paquete',
   `cantidad` float NOT NULL COMMENT 'Cantidad del producto ofrecido en el paquete',
   PRIMARY KEY (`id_producto`,`id_paquete`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle paquete producto';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle paquete producto';
 
 -- --------------------------------------------------------
 
@@ -1276,7 +1276,7 @@ CREATE TABLE IF NOT EXISTS `producto_paquete` (
 CREATE TABLE IF NOT EXISTS `reporte` (
   `id_reporte` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id del reporte',
   PRIMARY KEY (`id_reporte`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Tabla que contendrá los reportes generados' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que contendrá los reportes generados' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1303,7 +1303,7 @@ CREATE TABLE IF NOT EXISTS `retencion_clasificacion_cliente` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id del retencion a aplicar al tipo de cliente',
   `id_clasificacion_cliente` int(11) NOT NULL COMMENT 'Id de la clasificacion del cliente',
   PRIMARY KEY (`id_retencion`,`id_clasificacion_cliente`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle entre retencion clasificacion cliente';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre retencion clasificacion cliente';
 
 -- --------------------------------------------------------
 
@@ -1315,7 +1315,7 @@ CREATE TABLE IF NOT EXISTS `retencion_clasificacion_producto` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id del retencion a aplicar al tipo de producto',
   `id_clasificacion_producto` int(11) NOT NULL COMMENT 'Id de la clasificacion del producto',
   PRIMARY KEY (`id_retencion`,`id_clasificacion_producto`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle entre retencion clasificacion producto';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre retencion clasificacion producto';
 
 -- --------------------------------------------------------
 
@@ -1327,7 +1327,7 @@ CREATE TABLE IF NOT EXISTS `retencion_clasificacion_proveedor` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id del retencion a aplicar al tipo de proveedor',
   `id_clasificacion_proveedor` int(11) NOT NULL COMMENT 'Id de la clasificacion del proveedor',
   PRIMARY KEY (`id_retencion`,`id_clasificacion_proveedor`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle entre retencion clasificacion proveedor';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre retencion clasificacion proveedor';
 
 -- --------------------------------------------------------
 
@@ -1339,7 +1339,7 @@ CREATE TABLE IF NOT EXISTS `retencion_clasificacion_servicio` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id del retencion a aplicar al tipo de servicio',
   `id_clasificacion_servicio` int(11) NOT NULL COMMENT 'Id de la clasificacion del servicio',
   PRIMARY KEY (`id_retencion`,`id_clasificacion_servicio`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle entre retencion clasificacion servicio';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre retencion clasificacion servicio';
 
 -- --------------------------------------------------------
 
@@ -1351,7 +1351,7 @@ CREATE TABLE IF NOT EXISTS `retencion_empresa` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id de la retencion que se aplica a la empreas',
   `id_empresa` int(11) NOT NULL COMMENT 'Id de la empresa a la que se le aplica la retencion',
   PRIMARY KEY (`id_retencion`,`id_empresa`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle entre las retenciones y las empresas';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre las retenciones y las empresas';
 
 -- --------------------------------------------------------
 
@@ -1363,7 +1363,7 @@ CREATE TABLE IF NOT EXISTS `retencion_producto` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id de la retencion que se aplica al producto',
   `id_producto` int(11) NOT NULL COMMENT 'Id del producto al que se le aplica la retencion',
   PRIMARY KEY (`id_retencion`,`id_producto`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle retencion producto';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle retencion producto';
 
 -- --------------------------------------------------------
 
@@ -1375,7 +1375,7 @@ CREATE TABLE IF NOT EXISTS `retencion_servicio` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id de la retencion que se aplica al servicio',
   `id_servicio` int(11) NOT NULL COMMENT 'Id del servicio al que se le aplica la retencion',
   PRIMARY KEY (`id_retencion`,`id_servicio`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle retencion servicio';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle retencion servicio';
 
 -- --------------------------------------------------------
 
@@ -1387,7 +1387,7 @@ CREATE TABLE IF NOT EXISTS `retencion_sucursal` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id de la retencion que se aplica a la sucursal',
   `id_sucursal` int(11) NOT NULL COMMENT 'Id de la sucursal que tiene la retencion',
   PRIMARY KEY (`id_retencion`,`id_sucursal`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle entre las retenciones y las sucursales';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre las retenciones y las sucursales';
 
 -- --------------------------------------------------------
 
@@ -1399,7 +1399,7 @@ CREATE TABLE IF NOT EXISTS `retencion_usuario` (
   `id_retencion` int(11) NOT NULL COMMENT 'Id de la retencion que se aplica al usuario',
   `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario que tiene la retencion',
   PRIMARY KEY (`id_retencion`,`id_usuario`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle entre las retenciones y los usuarios';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre las retenciones y los usuarios';
 
 -- --------------------------------------------------------
 
@@ -1465,7 +1465,7 @@ CREATE TABLE IF NOT EXISTS `servicio_clasificacion` (
   `id_servicio` int(11) NOT NULL COMMENT 'Id del servicio ',
   `id_clasificacion_servicio` int(11) NOT NULL COMMENT 'Id de la clasificacio dnel servicio',
   PRIMARY KEY (`id_servicio`,`id_clasificacion_servicio`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle servicio clasificacion';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle servicio clasificacion';
 
 -- --------------------------------------------------------
 
@@ -1477,7 +1477,7 @@ CREATE TABLE IF NOT EXISTS `servicio_empresa` (
   `id_servicio` int(11) NOT NULL COMMENT 'Id del servicio ',
   `id_empresa` int(11) NOT NULL COMMENT 'Id de la empresa en la que se ofrece este servicio',
   PRIMARY KEY (`id_servicio`,`id_empresa`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle servicio empresa';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle servicio empresa';
 
 -- --------------------------------------------------------
 
@@ -1489,7 +1489,7 @@ CREATE TABLE IF NOT EXISTS `servicio_sucursal` (
   `id_servicio` int(11) NOT NULL,
   `id_sucursal` int(11) NOT NULL,
   PRIMARY KEY (`id_servicio`,`id_sucursal`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle servicio sucusal';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle servicio sucusal';
 
 -- --------------------------------------------------------
 
@@ -1525,7 +1525,7 @@ CREATE TABLE IF NOT EXISTS `sucursal_empresa` (
   `margen_utilidad` float DEFAULT NULL COMMENT 'Porcentaje de margen de utilidad que le gana esta sucursal a los productos de esta empresa',
   `descuento` float DEFAULT NULL COMMENT 'Descuento que se aplicara a todos los productos de esta empresa en esta sucursal',
   PRIMARY KEY (`id_sucursal`,`id_empresa`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='tabla detalle entre sucursal y las empresas a la que pertene';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='tabla detalle entre sucursal y las empresas a la que pertene';
 
 -- --------------------------------------------------------
 
@@ -1537,7 +1537,7 @@ CREATE TABLE IF NOT EXISTS `tipo_almacen` (
   `id_tipo_almacen` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(64) NOT NULL,
   PRIMARY KEY (`id_tipo_almacen`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1559,7 +1559,7 @@ CREATE TABLE IF NOT EXISTS `traspaso` (
   `cancelado` tinyint(1) NOT NULL COMMENT 'Si la solicitud de traspaso fue cancelada',
   `completo` tinyint(1) NOT NULL COMMENT 'Verdadero si se enviaron todos los productos solicitados al inicio del traspaso',
   PRIMARY KEY (`id_traspaso`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Traspasos entre un almacen y otro' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Traspasos entre un almacen y otro' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1574,7 +1574,7 @@ CREATE TABLE IF NOT EXISTS `traspaso_producto` (
   `enviado` tinyint(1) NOT NULL COMMENT 'Verdadero si este registro corresponde a un envio de producto como traspaso',
   `recibido` tinyint(1) NOT NULL COMMENT 'Verdadero si este registro corresponde a un recibo de producto cmo traspaso',
   PRIMARY KEY (`id_traspaso`,`id_producto`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='detalle traspaso producto';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='detalle traspaso producto';
 
 -- --------------------------------------------------------
 
@@ -1588,7 +1588,7 @@ CREATE TABLE IF NOT EXISTS `unidad_convertible` (
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion larga de esta unidad',
   `activa` tinyint(1) NOT NULL COMMENT 'Si esta unidad esa activa o no',
   PRIMARY KEY (`id_unidad_convertible`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='tabla de unidades convertibles (kilos, litros, libras, etc)' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='tabla de unidades convertibles (kilos, litros, libras, etc)' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1702,7 +1702,7 @@ CREATE TABLE IF NOT EXISTS `venta_arpilla` (
   `merma_por_arpilla` float NOT NULL COMMENT 'Merma por arpilla',
   `total_origen` float DEFAULT NULL COMMENT 'Valor del embarque',
   PRIMARY KEY (`id_venta_arpilla`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Tabla que detalla una venta realizada mediante un embarque d' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que detalla una venta realizada mediante un embarque d' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1718,7 +1718,7 @@ CREATE TABLE IF NOT EXISTS `venta_orden` (
   `impuesto` float NOT NULL COMMENT 'Cantidad añadida por los impuestos',
   `retencion` float NOT NULL COMMENT 'Cantidad añadida por las retenciones',
   PRIMARY KEY (`id_venta`,`id_orden_de_servicio`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Detalle venta ordenes de servicio';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle venta ordenes de servicio';
 
 -- --------------------------------------------------------
 
@@ -1733,7 +1733,7 @@ CREATE TABLE IF NOT EXISTS `venta_paquete` (
   `precio` float NOT NULL,
   `descuento` float NOT NULL,
   PRIMARY KEY (`id_venta`,`id_paquete`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='detalle venta paquete';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='detalle venta paquete';
 
 -- --------------------------------------------------------
 
@@ -1751,4 +1751,4 @@ CREATE TABLE IF NOT EXISTS `venta_producto` (
   `retencion` float NOT NULL COMMENT 'Retencion unitaria en el producto',
   `arpillas` float DEFAULT NULL COMMENT 'Numero de arpillas del producto',
   PRIMARY KEY (`id_venta`,`id_producto`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Tabla detalle entre una venta y los productos que se vendier';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla detalle entre una venta y los productos que se vendier';
