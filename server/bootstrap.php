@@ -218,7 +218,38 @@
 		die(header("HTTP/1.1 404 NOT FOUND"));
 	}
 
-	
-	
-	
 
+	
+	# *******************************
+	# Base de datos de la instancia
+	# *******************************
+	
+	$POS_CONFIG["INSTANCE_CONN"] = null;
+
+	try{
+
+	    $POS_CONFIG["INSTANCE_CONN"] = ADONewConnection($rs["db_driver"]);
+	    $POS_CONFIG["INSTANCE_CONN"]->debug = $rs["db_debug"];
+	    $POS_CONFIG["INSTANCE_CONN"]->PConnect($rs["db_host"], $rs["db_user"], $rs["db_password"], $rs["db_name"]);
+
+	    if(!$POS_CONFIG["INSTANCE_CONN"])
+	    {
+
+	    	Logger::error( "Imposible conectarme a la base de datos de la instancia." );
+			die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));    
+	    }
+
+	} catch (ADODB_Exception $ado_e) {
+	
+		Logger::error( $ado_e );
+		die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+		
+		
+
+	}catch ( Exception $e ){
+		Logger::error( $e );
+		die(header("HTTP/1.1 500 INTERNAL SERVER ERROR"));
+	}
+
+
+	$conn = $POS_CONFIG["INSTANCE_CONN"];
