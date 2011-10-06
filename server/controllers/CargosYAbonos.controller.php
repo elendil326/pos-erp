@@ -5,12 +5,11 @@ require_once("CargosYAbonos.interface.php");
   *
   *
   **/
-	
+
   class CargosYAbonosController implements ICargosYAbonos{
 
         //valida que una empresa exista y tenga su estado en activo
         private $formato_fecha="Y-m-d H:i:s";
-        
         private function validarEmpresa
         (
                 $id_empresa
@@ -45,17 +44,17 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function NuevoIngreso
 	(
-		$fecha_ingreso, 
-		$id_empresa, 
-		$monto = null, 
-		$id_sucursal = null, 
-		$id_concepto_ingreso = null, 
-		$id_caja = null, 
-		$folio = null, 
-		$nota = null, 
+		$fecha_ingreso,
+		$id_empresa,
+		$monto = null,
+		$id_sucursal = null,
+		$id_concepto_ingreso = null,
+		$id_caja = null,
+		$folio = null,
+		$nota = null,
 		$descripcion = null
 	)
-	{  
+	{
             Logger::log("Creando nuevo ingreso");
             $id_usuario=LoginController::getCurrentUser();
             if($id_usuario==null)
@@ -122,7 +121,7 @@ require_once("CargosYAbonos.interface.php");
             //
             return $ingreso->getIdIngreso();
 	}
-  
+
 	/**
  	 *
  	 *Cancela un abono
@@ -132,7 +131,7 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function EliminarAbono
 	(
-		$id_abono, 
+		$id_abono,
 		$motivo_cancelacion = null,
                 $compra = null,
                 $venta = null,
@@ -540,7 +539,7 @@ require_once("CargosYAbonos.interface.php");
                     {
                         for($i=0;$i<$numero_billetes;$i++)
                         {
-                            
+
                             $billete_caja_original=BilleteCajaDAO::getByPK($billete_caja[$i]->getIdBillete(), $billete_caja[$i]->getIdCaja());
                             if($billete_caja_original==null)
                                 BilleteCajaDAO::save($billete_caja[$i]);
@@ -584,7 +583,7 @@ require_once("CargosYAbonos.interface.php");
                 throw $e;
             }
         }
-  
+
 	/**
  	 *
  	 *Lista los abonos, puede filtrarse por empresa, por sucursal, por caja, por usuario que abona y puede ordenarse segun sus atributos
@@ -601,10 +600,10 @@ require_once("CargosYAbonos.interface.php");
                 $compra,
                 $venta,
                 $prestamo,
-		$id_caja = null, 
-		$id_usuario = null, 
-		$orden = null, 
-		$id_sucursal = null, 
+		$id_caja = null,
+		$id_usuario = null,
+		$orden = null,
+		$id_sucursal = null,
 		$id_empresa = null,
                 $id_compra = null,
                 $id_venta = null,
@@ -618,80 +617,405 @@ require_once("CargosYAbonos.interface.php");
                 $monto_igual_a = null
 	)
 	{
+            Logger::log("Inicia lista de abonos");
             if(!$compra&&!$venta&&!$prestamo)
+            {
+                Logger::warn("No se recibio si se listaran compras, ventas o prestamos, no se lista nada");
                 return null;
+            }
+            $abonos_compra=null;
+            $abonos_venta=null;
+            $abonos_prestamo=null;
+            $parametros=false;
+            //
+            //Verificar si se recibieron parametros para filtrar
+            //de no ser así, usar el metodo getAll en lugar del
+            //metodo getByRange
+            //
+            if
+            (
+                $id_caja != null||
+		$id_usuario != null||
+		$id_sucursal != null||
+		$id_empresa != null||
+                $id_compra != null||
+                $id_venta != null||
+                $id_prestamo != null||
+                $cancelado != null||
+                $fecha_minima != null||
+                $fecha_maxima != null||
+                $fecha_actual != null||
+                $monto_menor_a != null||
+                $monto_mayor_a != null||
+                $monto_igual_a != null
+            )
+            {
+                $parametros=true;
+            }
+            //
+            //Verficiar si se listaran abonos de compra
+            //
             if($compra)
             {
-                $abono_criterio_compra=new AbonoCompra();
-                $abono_criterio_compra2=new AbonoCompra();
-                $abono_criterio_compra->setCancelado($cancelado);
-                $abono_criterio_compra->setIdCaja($id_caja);
-                if($fecha_minima!=null)
+                if($parametros)
                 {
-                    $abono_criterio_compra->setFecha($fecha_minima);
-                    if($fecha_maxima!=null)
-                        $abono_criterio_compra2->setFecha($fecha_maxima);
-                    else
-                        $abono_criterio_compra2->setFecha(date($this->formato_fecha, time()));
+                    Logger::log("Se encontraron parametros para compra");
+                    $abono_criterio_compra=new AbonoCompra();
+                    $abono_criterio_compra2=new AbonoCompra();
+                    //
+                    //El objeto 1 (abono_criterio_compra) obtiene todos los valores recibidos
+                    //para que a la hora de comparar, getByRange traiga
+                    //los campos que cumplan exactamente con esa informacion
+                    //
+                    $abono_criterio_compra->setCancelado($cancelado);
+                    $abono_criterio_compra->setIdCaja($id_caja);
+                    if($fecha_minima!=null)
+                    {
+                        //
+                        //Si pasaron una fecha minima y existe una fecha maxima, entonces
+                        //el objeto 1 almacenara la minima y el objeto 2 la maxima para
+                        //que se impriman los abonos entre esas dos fechas.
+                        //
+                        //Si no hay fecha maxima, el objeto 2 almacenara la fecha de hoy
+                        //para que se impriman los abonos desde la fecha minima hasta hoy.
+                        //
+                        //
+                        $abono_criterio_compra->setFecha($fecha_minima);
+                        if($fecha_maxima!=null)
+                            $abono_criterio_compra2->setFecha($fecha_maxima);
+                        else
+                            $abono_criterio_compra2->setFecha(date($this->formato_fecha, time()));
+                    }
+                    else if($fecha_maxima!=null)
+                    {
+                        //
+                        //Si no se recibio fecha minima pero si fecha maxima
+                        //El objeto 1 guarda la fecha maxima y el objeto 2 guarda
+                        //la fecha minima posible de MySQL, para asi poder listar
+                        //los abonos anteriores a la fecha maxima.
+                        //
+                        $abono_criterio_compra->setFecha($fecha_maxima);
+                        $abono_criterio_compra2->setFecha("1000-01-01 00:00:00");
+                    }
+                    else if($fecha_actual)
+                    {
+                        //
+                        //Si se recibio el booleano fecha_actual, se listaran los abonos
+                        //solo de hoy, se crea un timestamp con el año, el mes y el dia de hoy
+                        //pero se inicia con la hora 00:00:00 y se almacena como fecha en el objeto 1.
+                        //
+                        //Se crea un segundo timestamp con el año, el mes y el dia de hoy pero
+                        //con la hora 23:59:59 y se almacena como fecha en el objeto 2.
+                        //
+                        $hoy=mktime(0,0,0,date("m"),date("d"),date("Y"));
+                        $abono_criterio_compra->setFecha(date($this->formato_fecha, $hoy));
+                        $manana=mktime(23,59,59,date("m"),date("d"),date("Y"));
+                        $abono_criterio_compra2->setFecha(date($this->formato_fecha,$manana));
+                    }
+
+                    $abono_criterio_compra->setIdCompra($id_compra);
+                    $abono_criterio_compra->setIdReceptor($id_usuario);
+                    $abono_criterio_compra->setIdSucursal($id_sucursal);
+                    if($monto_mayor_a!=null)
+                    {
+                        //
+                        //Si se recibio el monto_mayor_a y se recibio el monto_menor_a
+                        //el objeto 1 guarda el primero y el objeto2 guarda el segundo
+                        //para asi listar los abonos cuyo monto sea mayor a mayor_a y
+                        //menor a menor_a
+                        //
+                        //Si no, el objeto 2 almacena el valor mas grande posible
+                        //para que se listen los objeto cuyo monto sea mayor a mayor_a
+                        //
+                        $abono_criterio_compra->setMonto($monto_mayor_a);
+                        if($monto_menor_a!=null)
+                            $abono_criterio_compra2->setMonto($monto_menor_a);
+                        else
+                            $abono_criterio_compra2->setMonto(1.8e308);
+                    }
+                    else if($monto_menor_a!=null)
+                    {
+                        //
+                        //Si solo se obtuvo monto_menor_a, el objeto 1 lo almacena y el
+                        //objeto 2 almacena el monto mas bajo posible para que  se listen
+                        //los abonos cuyo monto sea menor a menor_a
+                        //
+                        $abono_criterio_compra->setMonto($monto_menor_a);
+                        $abono_criterio_compra2->setMonto(0);
+                    }
+                    else if($monto_igual_a!=null)
+                    {
+                        //
+                        //Si se recibe monto_igual_a se asignara este monto al
+                        //objeto 1 para que se listen solo los abonos con dicho monto
+                        //
+                        $abono_criterio_compra->setMonto($monto_igual_a);
+
+                    }
+                    //
+                    //Almacena la consulta en un arreglo de objetos
+                    //
+                    $abonos_compra=AbonoCompraDAO::byRange($abono_criterio_compra, $abono_criterio_compra2, $orden);
                 }
-                else if($fecha_maxima!=null)
-                {
-                    $abono_criterio_compra->setFecha($fecha_maxima);
-                    $abono_criterio_compra2->setFecha("1000-01-01 00:00:00");
-                }
-                else if($fecha_actual)
-                    $abono_criterio_compra->setFecha($this->formato_fecha, time());
                 else
-                    $abono_criterio_compra->setFecha($fecha_actual);
-                $abono_criterio_compra->setIdCompra($id_compra);
-                $abono_criterio_compra->setIdDeudor($id_usuario);
-                $abono_criterio_compra->setIdSucursal($id_sucursal);
-                if($fecha_minima!=null)
                 {
-                    $abono_criterio_compra->setFecha($fecha_minima);
-                    if($fecha_maxima!=null)
-                        $abono_criterio_compra2->setFecha($fecha_maxima);
-                    else
-                        $abono_criterio_compra2->setFecha(date($this->formato_fecha, time()));
+                    Logger::log("No se encontraron parametros para compra, se listan todos los abonos a compra");
+                    $abonos_compra=AbonoCompraDAO::getAll(null, null, $orden);
                 }
-                else if($monto_mayor_a!=null)
-                {
-                    $abono_criterio_compra->setMonto($monto_mayor_a);
-                    $abono_criterio_compra2->setMonto(0);
-                }
-                else if($fecha_actual)
-                    $abono_criterio_compra->setFecha($this->formato_fecha, time());
-                else
-                    $abono_criterio_compra->setFecha($fecha_actual);
             }
+            //
+            //Verficiar si se listaran abonos de venta
+            //
             if($venta)
             {
-                $abono_criterio_venta=new AbonoVenta();
+                if($parametros)
+                {
+                    $abono_criterio_venta=new AbonoVenta();
+                    $abono_criterio_venta2=new AbonoVenta();
+                    //
+                    //El objeto 1 (abono_criterio_venta) obtiene todos los valores recibidos
+                    //para que a la hora de comparar, getByRange traiga
+                    //los campos que cumplan exactamente con esa informacion
+                    //
+                    $abono_criterio_venta->setCancelado($cancelado);
+                    $abono_criterio_venta->setIdCaja($id_caja);
+                    if($fecha_minima!=null)
+                    {
+                        //
+                        //Si pasaron una fecha minima y existe una fecha maxima, entonces
+                        //el objeto 1 almacenara la minima y el objeto 2 la maxima para
+                        //que se impriman los abonos entre esas dos fechas.
+                        //
+                        //Si no hay fecha maxima, el objeto 2 almacenara la fecha de hoy
+                        //para que se impriman los abonos desde la fecha minima hasta hoy.
+                        //
+                        //
+                        $abono_criterio_venta->setFecha($fecha_minima);
+                        if($fecha_maxima!=null)
+                            $abono_criterio_venta2->setFecha($fecha_maxima);
+                        else
+                            $abono_criterio_venta2->setFecha(date($this->formato_fecha, time()));
+                    }
+                    else if($fecha_maxima!=null)
+                    {
+                        //
+                        //Si no se recibio fecha minima pero si fecha maxima
+                        //El objeto 1 guarda la fecha maxima y el objeto 2 guarda
+                        //la fecha minima posible de MySQL, para asi poder listar
+                        //los abonos anteriores a la fecha maxima.
+                        //
+                        $abono_criterio_venta->setFecha($fecha_maxima);
+                        $abono_criterio_venta2->setFecha("1000-01-01 00:00:00");
+                    }
+                    else if($fecha_actual)
+                    {
+                        //
+                        //Si se recibio el booleano fecha_actual, se listaran los abonos
+                        //solo de hoy, se crea un timestamp con el año, el mes y el dia de hoy
+                        //pero se inicia con la hora 00:00:00 y se almacena como fecha en el objeto 1.
+                        //
+                        //Se crea un segundo timestamp con el año, el mes y el dia de hoy pero
+                        //con la hora 23:59:59 y se almacena como fecha en el objeto 2.
+                        //
+                        $hoy=mktime(0,0,0,date("m"),date("d"),date("Y"));
+                        $abono_criterio_venta->setFecha(date($this->formato_fecha, $hoy));
+                        $manana=mktime(23,59,59,date("m"),date("d"),date("Y"));
+                        $abono_criterio_venta2->setFecha(date($this->formato_fecha,$manana));
+                    }
+                    $abono_criterio_venta->setIdVenta($id_venta);
+                    $abono_criterio_venta->setIdDeudor($id_usuario);
+                    $abono_criterio_venta->setIdSucursal($id_sucursal);
+                    if($monto_mayor_a!=null)
+                    {
+                        //
+                        //Si se recibio el monto_mayor_a y se recibio el monto_menor_a
+                        //el objeto 1 guarda el primero y el objeto2 guarda el segundo
+                        //para asi listar los abonos cuyo monto sea mayor a mayor_a y
+                        //menor a menor_a
+                        //
+                        //Si no, el objeto 2 almacena el valor mas grande posible
+                        //para que se listen los objeto cuyo monto sea mayor a mayor_a
+                        //
+                        $abono_criterio_venta->setMonto($monto_mayor_a);
+                        if($monto_menor_a!=null)
+                            $abono_criterio_venta2->setMonto($monto_menor_a);
+                        else
+                            $abono_criterio_venta2->setMonto(1.8e308);
+                    }
+                    else if($monto_menor_a!=null)
+                    {
+                        //
+                        //Si solo se obtuvo monto_menor_a, el objeto 1 lo almacena y el
+                        //objeto 2 almacena el monto mas bajo posible para que  se listen
+                        //los abonos cuyo monto sea menor a menor_a
+                        //
+                        $abono_criterio_venta->setMonto($monto_menor_a);
+                        $abono_criterio_venta2->setMonto(0);
+                    }
+                    else if($monto_igual_a!=null)
+                    {
+                        //
+                        //Si se recibe monto_igual_a se asignara este monto al
+                        //objeto 1 para que se listen solo los abonos con dicho monto
+                        //
+                        $abono_criterio_venta->setMonto($monto_igual_a);
+                    }
+                    //
+                    //Almacena la consulta en un arreglo de objetos
+                    //
+                    $abonos_venta=AbonoVentaDAO::byRange($abono_criterio_venta, $abono_criterio_venta2, $orden);
+                }
+                else
+                    $abonos_venta=AbonoVentaDAO::getAll(null, null, $orden);
+
             }
+            //
+            //Verficiar si se listaran abonos de prestamo
+            //
             if($prestamo)
             {
-                $abono_criterio_prestamo=new AbonoPrestamo();
+                if($parametros)
+                {
+                    $abono_criterio_prestamo=new AbonoPrestamo();
+                    $abono_criterio_prestamo2=new AbonoPrestamo();
+                    //
+                    //El objeto 1 (abono_criterio_prestamo) obtiene todos los valores recibidos
+                    //para que a la hora de comparar, getByRange traiga
+                    //los campos que cumplan exactamente con esa informacion
+                    //
+                    $abono_criterio_prestamo->setCancelado($cancelado);
+                    $abono_criterio_prestamo->setIdCaja($id_caja);
+                    if($fecha_minima!=null)
+                    {
+                        //
+                        //Si pasaron una fecha minima y existe una fecha maxima, entonces
+                        //el objeto 1 almacenara la minima y el objeto 2 la maxima para
+                        //que se impriman los abonos entre esas dos fechas.
+                        //
+                        //Si no hay fecha maxima, el objeto 2 almacenara la fecha de hoy
+                        //para que se impriman los abonos desde la fecha minima hasta hoy.
+                        //
+                        //
+                        $abono_criterio_prestamo->setFecha($fecha_minima);
+                        if($fecha_maxima!=null)
+                            $abono_criterio_prestamo2->setFecha($fecha_maxima);
+                        else
+                            $abono_criterio_prestamo2->setFecha(date($this->formato_fecha, time()));
+                    }
+                    else if($fecha_maxima!=null)
+                    {
+                        //
+                        //Si no se recibio fecha minima pero si fecha maxima
+                        //El objeto 1 guarda la fecha maxima y el objeto 2 guarda
+                        //la fecha minima posible de MySQL, para asi poder listar
+                        //los abonos anteriores a la fecha maxima.
+                        //
+                        $abono_criterio_prestamo->setFecha($fecha_maxima);
+                        $abono_criterio_prestamo2->setFecha("1000-01-01 00:00:00");
+                    }
+                    else if($fecha_actual)
+                    {
+                        //
+                        //Si se recibio el booleano fecha_actual, se listaran los abonos
+                        //solo de hoy, se crea un timestamp con el año, el mes y el dia de hoy
+                        //pero se inicia con la hora 00:00:00 y se almacena como fecha en el objeto 1.
+                        //
+                        //Se crea un segundo timestamp con el año, el mes y el dia de hoy pero
+                        //con la hora 23:59:59 y se almacena como fecha en el objeto 2.
+                        //
+                        $hoy=mktime(0,0,0,date("m"),date("d"),date("Y"));
+                        $abono_criterio_prestamo->setFecha(date($this->formato_fecha, $hoy));
+                        $manana=mktime(23,59,59,date("m"),date("d"),date("Y"));
+                        $abono_criterio_prestamo2->setFecha(date($this->formato_fecha,$manana));
+                    }
+                    $abono_criterio_prestamo->setIdPrestamo($id_prestamo);
+                    $abono_criterio_prestamo->setIdDeudor($id_usuario);
+                    $abono_criterio_prestamo->setIdSucursal($id_sucursal);
+                    if($monto_mayor_a!=null)
+                    {
+                        //
+                        //Si se recibio el monto_mayor_a y se recibio el monto_menor_a
+                        //el objeto 1 guarda el primero y el objeto2 guarda el segundo
+                        //para asi listar los abonos cuyo monto sea mayor a mayor_a y
+                        //menor a menor_a
+                        //
+                        //Si no, el objeto 2 almacena el valor mas grande posible
+                        //para que se listen los objeto cuyo monto sea mayor a mayor_a
+                        //
+                        $abono_criterio_prestamo->setMonto($monto_mayor_a);
+                        if($monto_menor_a!=null)
+                            $abono_criterio_prestamo2->setMonto($monto_menor_a);
+                        else
+                            $abono_criterio_prestamo2->setMonto(1.8e308);
+                    }
+                    else if($monto_menor_a!=null)
+                    {
+                        //
+                        //Si solo se obtuvo monto_menor_a, el objeto 1 lo almacena y el
+                        //objeto 2 almacena el monto mas bajo posible para que  se listen
+                        //los abonos cuyo monto sea menor a menor_a
+                        //
+                        $abono_criterio_prestamo->setMonto($monto_menor_a);
+                        $abono_criterio_prestamo2->setMonto(0);
+                    }
+                    else if($monto_igual_a!=null)
+                    {
+                        //
+                        //Si se recibe monto_igual_a se asignara este monto al
+                        //objeto 1 para que se listen solo los abonos con dicho monto
+                        //
+                        $abono_criterio_prestamo->setMonto($monto_igual_a);
+                    }
+                    //
+                    //Almacena la consulta en un arreglo de objetos
+                    //
+                    $abonos_prestamo=AbonoPrestamoDAO::byRange($abono_criterio_prestamo, $abono_criterio_prestamo2, $orden);
             }
-
+             else
+                $abonos_prestamo=AbonoPrestamoDAO::getAll(null, null, $orden);
+            }
+            $cont=0;
+            $abonos=null;
+            //
+            //Si la consulta de abonos en compras trae un resultado, agregala al arreglo de abonos
+            //y asi con las ventas y los prestamos.
+            //
+            if($abonos_compra!=null)
+            {
+                $abonos[$cont]=$abonos_compra;
+                $cont++;
+            }
+            if($abonos_venta!=null)
+            {
+                $abonos[$cont]=$abonos_venta;
+                $cont++;
+            }
+            if($abonos_prestamo!=null)
+            {
+                $abonos[$cont]=$abonos_prestamo;
+                $cont++;
+            }
+            Logger::log("Recuperado lista de abonos exitosamente");
+            return $abonos;
 	}
-  
+
 	/**
  	 *
- 	 *Cancela un gasto 
+ 	 *Cancela un gasto
  	 *
  	 * @param id_gasto int Id del gasto a eliminar
  	 * @param motivo_cancelacion string Motivo por el cual se realiza la cancelacion
  	 **/
 	public function EliminarGasto
 	(
-		$id_gasto, 
+		$id_gasto,
 		$motivo_cancelacion = null
 	)
-	{  
-  
-  
+	{
+
+
 	}
-  
+
 	/**
  	 *
  	 *Lista los gastos, se puede filtrar de acuerdo a la empresa, la sucursal, el usuario que registra el gasto, el concepto de gasto, la orden de servicio, la caja de la cual se sustrajo el dinero para pagar el gasto, de una fecha inicial a una final, por monto, por cancelacion, y se puede ordenar de acuerdo a ss atributos.
@@ -710,23 +1034,23 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function ListaGasto
 	(
-		$id_empresa = null, 
-		$id_usuario = null, 
-		$id_concepto_gasto = null, 
-		$id_orden_servicio = null, 
-		$id_caja = null, 
-		$fecha_inicial = null, 
-		$fecha_final = null, 
-		$id_sucursal = null, 
-		$cancelado = null, 
-		$monto_minimo = null, 
+		$id_empresa = null,
+		$id_usuario = null,
+		$id_concepto_gasto = null,
+		$id_orden_servicio = null,
+		$id_caja = null,
+		$fecha_inicial = null,
+		$fecha_final = null,
+		$id_sucursal = null,
+		$cancelado = null,
+		$monto_minimo = null,
 		$monto_maximo = null
 	)
-	{  
-  
-  
+	{
+
+
 	}
-  
+
 	/**
  	 *
  	 *Cancela un ingreso
@@ -736,14 +1060,14 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function EliminarIngreso
 	(
-		$id_ingreso, 
+		$id_ingreso,
 		$motivo_cancelacion = null
 	)
-	{  
-  
-  
+	{
+
+
 	}
-  
+
 	/**
  	 *
  	 *Registra un nuevo concepto de gasto
@@ -757,15 +1081,15 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function NuevoConceptoGasto
 	(
-		$nombre, 
-		$descripcion = null, 
+		$nombre,
+		$descripcion = null,
 		$monto = null
 	)
-	{  
-  
-  
+	{
+
+
 	}
-  
+
 	/**
  	 *
  	 *Edita la informaci?e un concepto de gasto
@@ -779,16 +1103,16 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function EditarConceptoGasto
 	(
-		$nombre, 
-		$id_concepto_gasto, 
-		$monto = null, 
+		$nombre,
+		$id_concepto_gasto,
+		$monto = null,
 		$descripcion = null
 	)
-	{  
-  
-  
+	{
+
+
 	}
-  
+
 	/**
  	 *
  	 *Deshabilita un concepto de gasto
@@ -800,11 +1124,11 @@ require_once("CargosYAbonos.interface.php");
 	(
 		$id_concepto_gasto
 	)
-	{  
-  
-  
+	{
+
+
 	}
-  
+
 	/**
  	 *
  	 *Crea un nuevo concepto de ingreso
@@ -818,15 +1142,15 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function NuevoConceptoIngreso
 	(
-		$nombre, 
-		$monto = null, 
+		$nombre,
+		$monto = null,
 		$descripcion = null
 	)
-	{  
-  
-  
+	{
+
+
 	}
-  
+
 	/**
  	 *
  	 *Edita un concepto de ingreso
@@ -838,16 +1162,16 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function EditarConceptoIngreso
 	(
-		$nombre, 
-		$id_concepto_ingreso, 
-		$descripcion = null, 
+		$nombre,
+		$id_concepto_ingreso,
+		$descripcion = null,
 		$monto = null
 	)
-	{  
-  
-  
+	{
+
+
 	}
-  
+
 	/**
  	 *
  	 *Deshabilita un concepto de ingreso
@@ -860,11 +1184,11 @@ require_once("CargosYAbonos.interface.php");
 	(
 		$id_concepto_ingreso
 	)
-	{  
-  
-  
+	{
+
+
 	}
-  
+
 	/**
  	 *
  	 *Lista los conceptos de gasto. Se puede ordenar por los atributos de concepto de gasto
@@ -877,14 +1201,14 @@ require_once("CargosYAbonos.interface.php");
 	(
 		$ordenar = null
 	)
-	{  
-  
-  
+	{
+
+
 	}
-  
+
 	/**
  	 *
- 	 *Lista los conceptos de ingreso, se puede ordenar por los atributos del concepto de ingreso.  
+ 	 *Lista los conceptos de ingreso, se puede ordenar por los atributos del concepto de ingreso.
 
 <br/><br/><b>Update :</b>Falta especificar la estructura del JSON que se env?como parametro
  	 *
@@ -895,11 +1219,11 @@ require_once("CargosYAbonos.interface.php");
 	(
 		$ordenar = null
 	)
-	{  
-  
-  
+	{
+
+
 	}
-  
+
 	/**
  	 *
  	 *Registrar un gasto. El usuario y la sucursal que lo registran ser?tomados de la sesi?ctual.
@@ -920,22 +1244,22 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function NuevoGasto
 	(
-		$fecha_gasto, 
-		$id_empresa, 
-		$monto = null, 
-		$id_sucursal = null, 
-		$id_caja = null, 
-		$id_orden_de_servicio = null, 
-		$id_concepto_gasto = null, 
-		$descripcion = null, 
-		$folio = null, 
+		$fecha_gasto,
+		$id_empresa,
+		$monto = null,
+		$id_sucursal = null,
+		$id_caja = null,
+		$id_orden_de_servicio = null,
+		$id_concepto_gasto = null,
+		$descripcion = null,
+		$folio = null,
 		$nota = null
 	)
-	{  
-  
-  
+	{
+
+
 	}
-  
+
 	/**
  	 *
  	 *Editar los detalles de un gasto.
@@ -951,19 +1275,19 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function EditarGasto
 	(
-		$id_gasto, 
-		$fecha_gasto, 
-		$monto = null, 
-		$id_concepto_gasto = null, 
-		$descripcion = null, 
-		$nota = null, 
+		$id_gasto,
+		$fecha_gasto,
+		$monto = null,
+		$id_concepto_gasto = null,
+		$descripcion = null,
+		$nota = null,
 		$folio = null
 	)
-	{  
-  
-  
+	{
+
+
 	}
-  
+
 	/**
  	 *
  	 *Edita un ingreso
@@ -980,19 +1304,19 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function EditarIngreso
 	(
-		$fecha_ingreso, 
-		$id_ingreso, 
-		$descrpicion = null, 
-		$folio = null, 
-		$nota = null, 
-		$id_concepto_ingreso = null, 
+		$fecha_ingreso,
+		$id_ingreso,
+		$descrpicion = null,
+		$folio = null,
+		$nota = null,
+		$id_concepto_ingreso = null,
 		$monto = null
 	)
-	{  
-  
-  
+	{
+
+
 	}
-  
+
 	/**
  	 *
  	 *Se crea un  nuevo abono, la caja o sucursal y el usuario que reciben el abono se tomaran de la sesion. La fecha se tomara del servidor
@@ -1010,21 +1334,21 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function NuevoAbono
 	(
-		$id_deudor, 
-		$tipo_pago, 
-		$monto, 
-		$nota = null, 
-		$id_venta = null, 
-		$varios = null, 
-		$cheques = null, 
-		$id_prestamo = null, 
+		$id_deudor,
+		$tipo_pago,
+		$monto,
+		$nota = null,
+		$id_venta = null,
+		$varios = null,
+		$cheques = null,
+		$id_prestamo = null,
 		$id_compra = null
 	)
-	{  
-  
-  
+	{
+
+
 	}
-  
+
 	/**
  	 *
  	 *Lista los ingresos, se puede filtrar de acuerdo a la empresa, la sucursal, el usuario que registra el ingreso, el concepto de ingreso, la caja que recibi? ingreso, de una fecha inicial a una final, por monto, por cancelacion, y se puede ordenar de acuerdo a sus atributos.
@@ -1042,22 +1366,22 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function ListaIngreso
 	(
-		$id_caja = null, 
-		$fecha_inicial = null, 
-		$fecha_final = null, 
-		$id_sucursal = null, 
-		$id_concepto_ingreso = null, 
-		$id_empresa = null, 
-		$id_usuario = null, 
-		$cancelado = null, 
-		$monto_minimo = null, 
+		$id_caja = null,
+		$fecha_inicial = null,
+		$fecha_final = null,
+		$id_sucursal = null,
+		$id_concepto_ingreso = null,
+		$id_empresa = null,
+		$id_usuario = null,
+		$cancelado = null,
+		$monto_minimo = null,
 		$monto_maximo = null
 	)
-	{  
-  
-  
+	{
+
+
 	}
-  
+
 	/**
  	 *
  	 *Edita la informaci?e un abono
@@ -1068,12 +1392,12 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function EditarAbono
 	(
-		$id_abono, 
-		$nota = null, 
+		$id_abono,
+		$nota = null,
 		$motivo_cancelacion = null
 	)
-	{  
-  
-  
+	{
+
+
 	}
   }
