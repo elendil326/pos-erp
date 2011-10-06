@@ -1012,8 +1012,36 @@ require_once("CargosYAbonos.interface.php");
 		$motivo_cancelacion = null
 	)
 	{
-
-
+            Logger::log("Eliminando gasto");
+            $gasto=GastoDAO::getByPK($id_gasto);
+            if($gasto)
+            {
+                if($gasto->getCancelado())
+                {
+                    Logger::log("El gasto ya ha sido cancelado");
+                    return;
+                }
+                $gasto->setCancelado(1);
+                $gasto->setMotivoCancelacion($motivo_cancelacion);
+                DAO::transBegin();
+                try
+                {
+                    GastoDAO::save($gasto);
+                }
+                catch(Exception $e)
+                {
+                    DAO::transRollback();
+                    Logger::error("No se ha podido cancelar el gasto: ".$e);
+                    throw new Exception("No se ha podido cancelar el gasto: ".$e);
+                }
+                DAO::transEnd();
+                Logger::log("Gasto cancelado exitosamente");
+            }
+            else
+            {
+                Logger::error("El gasto con id:".$id_gasto." no existe");
+                throw new Exception("El gasto con id:".$id_gasto." no existe");
+            }
 	}
 
 	/**
