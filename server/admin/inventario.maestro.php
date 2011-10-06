@@ -43,8 +43,19 @@ for ($a = 0; $a < sizeof($productos); $a++) {
     echo "<td class='prod rounded' id='producto-" . $productos[$a]->getIdProducto() . "'  onClick='detalle_inventario( " . $productos[$a]->getIdProducto() . " )' >";
     echo "<img style='float:left;' src='../media/icons/basket_32.png'><br><div align=center ><b>" . $productos[$a]->getDescripcion() . "</b></div>";
     echo "<div align=right style='padding-right:20px'>";
-    echo " A la venta " . moneyFormat($lastOne->getPrecioVenta()) . "<br>";
-    if (POS_COMPRA_A_CLIENTES) {
+    
+    if( $productos[$a]->getTratamiento() == "limpia" ){
+        echo "Original " . moneyFormat($lastOne->getPrecioVenta()) . "<br>";
+        echo "Procesado " . moneyFormat($lastOne->getPrecioVentaProcesado()) . "<br>";        
+
+    }else{
+         echo "Venta " . moneyFormat($lastOne->getPrecioVenta()) . "<br>";
+
+    }
+    
+    
+    if (POS_COMPRA_A_CLIENTES) 
+    {
         echo " A la compra " . moneyFormat($lastOne->getPrecioCompra());
     }
     echo "</div>";
