@@ -193,7 +193,7 @@
 		Logger::log("SE HA CAMBIADO LA INSTANCIA !!!!", 3 );
 		
 		//cerrar la sesion actual
-		require("controller/login.controller.php");
+		//require("controller/login.controller.php");
 
 		logOut(false);
 		
