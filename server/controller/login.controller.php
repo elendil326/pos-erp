@@ -1,6 +1,6 @@
 <?php
 
-class PermsissionDeniedException extends Exception { } 
+//class PermsissionDeniedException extends Exception { } 
 
 interface IPermission
 {
