@@ -303,13 +303,19 @@ Aplicacion.Clientes.prototype.listaDeClientesPanelCreator = function (){
         items: [{
             xtype: 'list',
             store: this.listaDeClientesStore,
+            //Aplicacion.Clientes.currentInstance.listaDeClientesPanel.items.items[0]
             itemTpl: '<div class="listaDeClientesCliente" onClick = "Aplicacion.Clientes.currentInstance.listaDeComprasClienteLoad( {id_cliente} )" ><strong>{razon_social}</strong> {rfc}</div>',
             grouped: true,
             indexBar: true,
             listeners : {
-                "beforerender" : function (){
-                //Aplicacion.Clientes.currentInstance.listaDeClientesPanel.getComponent(0).setHeight(sink.Main.ui.getSize().height - sink.Main.ui.navigationBar.getSize().height );
+                "beforerender" : function (a,b,c){
+                    //Aplicacion.Clientes.currentInstance.listaDeClientesPanel.getComponent(0).setHeight(sink.Main.ui.getSize().height - sink.Main.ui.navigationBar.getSize().height );
+                    if(DEBUG)console.log("beforerender lista de clientes panel creator:", a,b,c);
                 },
+                show : function (a,b,c){
+                    if(DEBUG)console.log("show lista de clicentes",a,b,c);
+                }
+                /*,
                 "selectionchange"  : function ( view, nodos, c ){
 					
                     if(nodos.length > 0){
@@ -317,14 +323,16 @@ Aplicacion.Clientes.prototype.listaDeClientesPanelCreator = function (){
                         // Aplicacion.Clientes.currentInstance.listaDeComprasClienteLoad( nodos[0] )
 
                         if(DEBUG){
-                            console.log("modos[0]",nodos[0]);
+                            console.log("modos[ 0 ] ->", nodos, nodos[0], nodos[0].data.razon_social);
+                            //Aplicacion.Clientes.currentInstance.listaDeComprasClienteLoad( nodos[0].data.id_cliente );
+                            //console.log(  )
                         }
 						
                     }
 
                     //deseleccinar el cliente
-                    view.deselectAll();
-                }
+                    //view.deselectAll();
+                }*/
             }
 			
         }]
@@ -1217,7 +1225,8 @@ Aplicacion.Clientes.prototype.doAbonar = function ( transaccion )
                     
             };
 
-            var data_abono = {
+            var data_abono = 
+            {
                 ticket          : 'abono_venta_cliente',
                 nombre          : nombre,
                 id_venta        : Ext.getCmp("Clentes-CreditoVentasLista").getValue(),
@@ -1409,7 +1418,7 @@ Aplicacion.Clientes.prototype.creditoDeClientesPanelUpdater = function ( id_clie
     Ext.getCmp("Clientes-AbonarVentaBoton").hide();
 
     if(DEBUG){
-        console.log('este cliente tien ' + ventasCredito.length + ' ventas a credito');
+        console.log('este cliente tiene ' + ventasCredito.length + ' ventas a credito');
     }
 	
     if( ventasCredito.length == 1){
@@ -1514,73 +1523,103 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
         handler : function(){
             //----------------------------------------------------------
             //----------------------            ------------------------
-            //----------------------------------------------------------            
+            //----------------------------------------------------------
+            
+            
+            var lista = Aplicacion.Clientes.currentInstance.listaDeCompras.lista;
+
+
+            
+            
+            ticket = POS.leyendasTicket.cabeceraTicket + "\n";
+            ticket += "R.F.C. " + POS.leyendasTicket.rfc + "\n";
+            ticket += POS.leyendasTicket.nombreEmpresa + "\n";
+            ticket += POS.leyendasTicket.direccion + "\n";
+            ticket += "Tel. " + POS.leyendasTicket.telefono + "\n";
+
+            ticket += "========== Estado de cuenta para ===========" + "\n";
+            
+            var clientes = Aplicacion.Clientes.currentInstance.listaDeClientes.lista;
+
+            for (var i = clientes.length - 1; i >= 0; i--) 
+            {
+                if( clientes[i].data.id_cliente == Aplicacion.Clientes.CLIENTE_SELECCIONADO ){
+                    ticket += clientes[i].data.razon_social+"\n";
+                    break;
+                }
+                    
+            };
+
+            ticket += "============================================" + "\n";
+
+            var saldo_total = 0;
+
+            for (var i = lista.length - 1; i >= 0; i--) {
+                if(lista[i].liquidada == "1") continue;
+                if(lista[i].liquidada == true) continue;
+                if(lista[i].tipo_venta == "contado") continue;
+                
+
+                saldo_total += parseFloat( lista[i].total ) - parseFloat( lista[i].pagado );
+
+                ticket += "\n\n-------- Venta " + lista[i].id_venta + " ---------"+ "\n";
+                
+                ticket += POS.fecha(lista[i].fecha) + "\n";
+                ticket += lista[i].sucursal + "\n";
+                ticket += lista[i].cajero + "\n";
+                //ticket += lista[i].tipo_venta + "\n";
+                ticket +=  "\n";
+
+                for (var j = lista[i].detalle_venta.length - 1; j >= 0; j--) {
+
+                    var item = lista[i].detalle_venta[j];
+
+                    if(item.cantidad != 0)
+                    {
+                        ticket += POS.fillWithSpaces ( item.descripcion, 13, false ) ;
+                        ticket += POS.fillWithSpaces ( item.cantidad,    5, false );
+                        ticket += POS.fillWithSpaces ( POS.currencyFormat(item.precio),      6, false ) ;
+                        ticket += POS.fillWithSpaces ( POS.currencyFormat(parseFloat( item.cantidad ) * parseFloat( item.precio )), 6, false ) + "\n";    
+                    }
+                    
+
+                    if(item.cantidad_procesada != 0)
+                    {
+                        ticket += POS.fillWithSpaces ( item.descripcion, 13, false )
+                        ticket += POS.fillWithSpaces ( item.cantidad_procesada, 5, false )
+                        ticket += POS.fillWithSpaces ( POS.currencyFormat(item.precio_procesada), 6, false )
+                        ticket += POS.fillWithSpaces ( POS.currencyFormat(parseFloat( item.cantidad_procesada ) * parseFloat( item.precio_procesada )), 6, false ) + "\n";
+                    }
+                    
+
+                };
+                
+                
+                ticket += "--------------------------------------"+ "\n";
+                ticket += "               Total    "  + POS.currencyFormat(lista[i].total) + "\n";
+                ticket += "               Saldado  "+ POS.currencyFormat(lista[i].pagado)+ "\n";
+                ticket += "               -----------------------"+ "\n";
+                ticket += "               Saldo    " + POS.currencyFormat((parseFloat( lista[i].total )) - parseFloat( lista[i].pagado ))+ "\n";
+          
+            };
+
+            ticket += "\n\n";
+
+            ticket += "===========================================" + "\n";
+            ticket += "      SALDO TOTAL : " + POS.currencyFormat(saldo_total) + "\n";
+            ticket += "===========================================" + "\n";
+            
+            
+            ticket += POS.leyendasTicket.contacto;
+
+            console.log(ticket)
+            return;
+      
             var to_print = 
             {
                 free_text : "================================================\n"
                             + "A123456789-A123456789-A123456789-A123456789\n"
-                            + "B123456789-B123456789-B123456789-B123456789\n"
-                            + "C123456789-C123456789-C123456789-C123456789\n"
-                            + "D123456789-D123456789-D123456789-D123456789\n"
-                            + "E123456789-E123456789-E123456789-E123456789\n"
-                            + "A123456789-A123456789-A123456789-A123456789\n"
-                            + "B123456789-B123456789-B123456789-B123456789\n"
-                            + "C123456789-C123456789-C123456789-C123456789\n"
-                            + "D123456789-D123456789-D123456789-D123456789\n"
-                            + "E123456789-E123456789-E123456789-E123456789\n"
-                            + "A123456789-A123456789-A123456789-A123456789\n"
-                            + "B123456789-B123456789-B123456789-B123456789\n"
-                            + "C123456789-C123456789-C123456789-C123456789\n"
-                            + "D123456789-D123456789-D123456789-D123456789\n"
-                            + "E123456789-E123456789-E123456789-E123456789\n"
-                            + "A123456789-A123456789-A123456789-A123456789\n"
-                            + "B123456789-B123456789-B123456789-B123456789\n"
-                            + "C123456789-C123456789-C123456789-C123456789\n"
-                            + "D123456789-D123456789-D123456789-D123456789\n"
-                            + "E123456789-E123456789-E123456789-E123456789\n"
-                            + "================================================\n"
-                            + "A123456789-A123456789-A123456789-A123456789\n"
-                            + "B123456789-B123456789-B123456789-B123456789\n"
-                            + "C123456789-C123456789-C123456789-C123456789\n"
-                            + "D123456789-D123456789-D123456789-D123456789\n"
-                            + "E123456789-E123456789-E123456789-E123456789\n"
-                            + "A123456789-A123456789-A123456789-A123456789\n"
-                            + "B123456789-B123456789-B123456789-B123456789\n"
-                            + "C123456789-C123456789-C123456789-C123456789\n"
-                            + "D123456789-D123456789-D123456789-D123456789\n"
-                            + "E123456789-E123456789-E123456789-E123456789\n"
-                            + "A123456789-A123456789-A123456789-A123456789\n"
-                            + "B123456789-B123456789-B123456789-B123456789\n"
-                            + "C123456789-C123456789-C123456789-C123456789\n"
-                            + "D123456789-D123456789-D123456789-D123456789\n"
-                            + "E123456789-E123456789-E123456789-E123456789\n"
-                            + "A123456789-A123456789-A123456789-A123456789\n"
-                            + "B123456789-B123456789-B123456789-B123456789\n"
-                            + "C123456789-C123456789-C123456789-C123456789\n"
-                            + "D123456789-D123456789-D123456789-D123456789\n"
-                            + "E123456789-E123456789-E123456789-E123456789\n"
-                            + "================================================\n"  
-                            + "A123456789-A123456789-A123456789-A123456789\n"
-                            + "B123456789-B123456789-B123456789-B123456789\n"
-                            + "C123456789-C123456789-C123456789-C123456789\n"
-                            + "D123456789-D123456789-D123456789-D123456789\n"
-                            + "E123456789-E123456789-E123456789-E123456789\n"
-                            + "A123456789-A123456789-A123456789-A123456789\n"
-                            + "B123456789-B123456789-B123456789-B123456789\n"
-                            + "C123456789-C123456789-C123456789-C123456789\n"
-                            + "D123456789-D123456789-D123456789-D123456789\n"
-                            + "E123456789-E123456789-E123456789-E123456789\n"
-                            + "A123456789-A123456789-A123456789-A123456789\n"
-                            + "B123456789-B123456789-B123456789-B123456789\n"
-                            + "C123456789-C123456789-C123456789-C123456789\n"
-                            + "D123456789-D123456789-D123456789-D123456789\n"
-                            + "E123456789-E123456789-E123456789-E123456789\n"
-                            + "A123456789-A123456789-A123456789-A123456789\n"
-                            + "B123456789-B123456789-B123456789-B123456789\n"
-                            + "C123456789-C123456789-C123456789-C123456789\n"
-                            + "D123456789-D123456789-D123456789-D123456789\n"
-                            + "E123456789-E123456789-E123456789-E123456789\n"
-                            + "================================================\n"                                                                                  
+                                                                                                              
             };
 
             POS.ajaxToClient({
@@ -2626,6 +2665,10 @@ Aplicacion.Clientes.prototype.finishedPanelUpdater = function( data_abono )
         console.log( "se mando a imprimir : ", data_abono );
     }
 	
+
+    /*** ****** ****** ****** ****** ****** ****** ***
+        ABONO A CLIENTE IMPRESION
+    *** ****** ****** ****** ****** ****** ****** *** */
     POS.ajaxToClient({
         module : "Printer",
         args : data_abono,
@@ -2644,6 +2687,9 @@ Aplicacion.Clientes.prototype.finishedPanelUpdater = function( data_abono )
             }
         }
     });
+
+
+
     html = "";
 	
     html += "<table class='Mostrador-ThankYou' style = 'margin : 0 !important;' >";

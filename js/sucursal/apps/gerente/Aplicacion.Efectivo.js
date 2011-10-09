@@ -17,7 +17,7 @@ Aplicacion.Efectivo.prototype._init = function (){
     this.cargarSucursales();
 
     //cargar la lista de gastos fijos
-    this.cargarGastosFijos();
+    //this.cargarGastosFijos();
 
     //crear el panel de nuevo gasto
     this.nuevoGastoPanelCreator();

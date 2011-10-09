@@ -41,7 +41,8 @@ public class HttpServer
 
         }catch(IOException ioe){ 
             Logger.warn("Could not create server socket at "+port+". Quitting."); 
-            System.exit(-1); 
+            System.exit(0); 
+
         } 
 		
 		PosClient.trayIcon.getTrayIcon().displayMessage("POS Listo", 

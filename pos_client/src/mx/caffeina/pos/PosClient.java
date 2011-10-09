@@ -18,12 +18,46 @@ public class PosClient{
 		Logger.log("----------------------------------");
 		Logger.log("     Iniciando cliente");
 		Logger.log("----------------------------------");
-		
-		
-		new PosClient();
 
+		/**
+		  *
+		  * Cargar argumentos
+		  **/
+		if( args.length > 0 )
+		{
+
+			//no-upgrade
+			if( args[0].indexOf("n") != -1 ) 
+			{
+						
+			}
+
+		}
+
+		String upgrade_url = "http://pos.caffeina.mx/";
+
+		for (int i = 0; i < args.length; i++) 
+		{
+			if( args[i].equals("--upgrade-url") )
+			{
+				
+				try{
+					upgrade_url = args[i+1];
+
+				}catch(Exception e){
+					Logger.error("Missing upgrade url");
+
+				}
+
+			}
+		}
+
+		new PosClient();
 	}
 	
+
+
+
 
 	PosClient()
 	{
@@ -41,6 +75,9 @@ public class PosClient{
 		httpServer = new HttpServer( 16001 );
 
 	}
+
+
+
 
 
  	public class ShutDown extends Thread {

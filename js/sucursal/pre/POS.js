@@ -116,6 +116,30 @@ Ext.Ajax.on("requestcomplete", function(a,b,c){
 });
 
 
+POS.fillWithSpaces = function( cad, spaces, multiline )
+{
+    //string is smaller than spaces needed
+    //fill with spaces
+    cad = cad.toString();
+    
+    if( cad.length < spaces ){
+
+        for (var s = cad.length; s < spaces; s++){
+            cad += " ";
+        };
+
+        return cad;
+    }
+
+    //string is larger
+    if(multiline){
+        
+    }else{
+        return cad.substring(0, spaces);
+    }
+
+}
+
 function dummyRequest(){
     //enviar hash de inventario
 	
