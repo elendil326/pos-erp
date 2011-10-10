@@ -1612,8 +1612,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
             
             ticket += POS.leyendasTicket.contacto;
 
-            console.log(ticket)
-            return;
+            
       
             var to_print = 
             {
@@ -1624,7 +1623,9 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 
             POS.ajaxToClient({
                 module : "Impresiones",
-                args :  to_print ,
+                args :  {
+                    free_text : ticket
+                },
                 success : function ( r ){
                     
                     //ok client is there...
