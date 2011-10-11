@@ -269,7 +269,7 @@ if($inventario->getExistencias() != 0 && $producto->getTratamiento()){
 			Mover a:<select id="subprodselector">
 				<?php
 				//$inventario = InventarioMaestroDAO::getAll();
-				$inventario = listarInventarioMaestro(200, POS_SOLO_ACTIVOS);
+				$inventario = listarInventarioMaestro(6000, POS_SOLO_ACTIVOS);
 				
 			    foreach( $inventario as $i ){
 				    // tengo la compra
