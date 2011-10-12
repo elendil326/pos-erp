@@ -150,14 +150,14 @@ public class Dispatcher{
 					read_next 		= args[i].substring( args[i].indexOf("=") +1);											
 			}
 			
-			
+			/*
 			Logger.log("    get_free_ports =" 	+ get_free_ports 	+ ";");
 			Logger.log("    port           =" 	+ port 				+ ";");
 			Logger.log("    send_command   ="	+ send_command 		+ ";");
 			Logger.log("    discard_first  ="	+ discard_first 	+ ";");						
 			Logger.log("    read_next      ="   + read_next 		+ ";");
 			Logger.log("    read_random    ="   + read_random 		+ ";");
-
+			*/
 
 			/** ****************************
 			* 	Read random data
@@ -217,7 +217,8 @@ public class Dispatcher{
 					b.sendCommand(send_command);
 				}
 
-				b.getRawData(Integer.parseInt(discard_first));
+				if(discard_first > 0)
+					b.getRawData(Integer.parseInt(discard_first));
 					
 					
 				String rawValue = b.getRawData(Integer.parseInt(read_next));

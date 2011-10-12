@@ -72,7 +72,7 @@ public class Bascula{
 		//parameters.setMinDelayWrite(1250);
 		
 		Logger.log("Open port: " + portsFree.get(portNeededIndex));
-		
+
 		com = new Com(parameters);			
 
 	}
@@ -102,12 +102,15 @@ public class Bascula{
 	* 
 	* */
 	public String getRawData(int bytes){
+		
 		try{
 			String rd = com.receiveToString(bytes);
-			return rd.replaceAll("[^\\p{ASCII}]", "");			
+			return rd.replaceAll("[^\\p{ASCII}]", "");	
+
 		}catch(Exception e){
 			Logger.error(e);
 			return null;
+
 		}
 
 	}
