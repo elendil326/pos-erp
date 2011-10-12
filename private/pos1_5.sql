@@ -1,30 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 3.2.4
--- http://www.phpmyadmin.net
---
--- Servidor: localhost
--- Tiempo de generación: 05-10-2011 a las 15:35:56
--- Versión del servidor: 5.1.44
--- Versión de PHP: 5.3.1
-
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
---
--- Base de datos: `pos1_5`
---
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `abono_compra`
---
-
 CREATE TABLE IF NOT EXISTS `abono_compra` (
   `id_abono_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id prestamo al que se le abona',
   `id_compra` int(11) NOT NULL COMMENT 'Id de la compra',
@@ -39,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `abono_compra` (
   `cancelado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este abono es cancelado',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_abono_compra`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle de la compra y los abonos de la misma' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Detalle de la compra y los abonos de la misma' AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -61,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `abono_prestamo` (
   `cancelado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este abono es cancelado',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_abono_prestamo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle abono prestamo' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Detalle abono prestamo' AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -83,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `abono_venta` (
   `cancelado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este abono es cancelado',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_abono_venta`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle de la venta y sus abonos' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Detalle de la venta y sus abonos' AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -215,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `caja` (
   `activa` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si la caja esta activa o ha sido eliminada',
   PRIMARY KEY (`id_caja`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -412,7 +385,7 @@ CREATE TABLE IF NOT EXISTS `compra` (
   `tipo_de_pago` enum('cheque','tarjeta','efectivo') DEFAULT NULL COMMENT 'Si la compra fue pagada con tarjeta, cheque o efectivo',
   `retencion` float NOT NULL COMMENT 'Monto de retencion',
   PRIMARY KEY (`id_compra`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -449,7 +422,7 @@ CREATE TABLE IF NOT EXISTS `compra_producto` (
   `precio` float NOT NULL COMMENT 'Precio unitario del producto',
   `descuento` float NOT NULL COMMENT 'Descuento unitario del producto',
   `impuesto` float NOT NULL COMMENT 'Impuesto unitario del producto',
-  `arpillas` float DEFAULT NULL COMMENT 'Numero de arpillas del producto',
+  `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad del producto',
   `retencion` float NOT NULL COMMENT 'Retencion unitaria del producto',
   PRIMARY KEY (`id_compra`,`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle de la compra y los productos de la misma';
@@ -663,7 +636,7 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `margen_utilidad` float DEFAULT NULL COMMENT 'Porcentaje del margen de utilidad que esta empresa le gana a todos sus productos',
   `descuento` float NOT NULL COMMENT 'Descuento que se aplicara a todos los productos de esta empresa',
   PRIMARY KEY (`id_empresa`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -700,7 +673,7 @@ CREATE TABLE IF NOT EXISTS `gasto` (
   `cancelado` tinyint(1) NOT NULL COMMENT 'Si este gasto ha sido cancelado o no',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_gasto`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -871,7 +844,7 @@ CREATE TABLE IF NOT EXISTS `ingreso` (
   `cancelado` tinyint(1) NOT NULL COMMENT 'Si este ingreso ha sido cancelado o no',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_ingreso`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -1187,7 +1160,7 @@ CREATE TABLE IF NOT EXISTS `prestamo` (
   `interes_mensual` float NOT NULL COMMENT 'Porcentaje de interes mensual del prestamo',
   `fecha` datetime NOT NULL COMMENT 'Fecha en que se realiza el prestamo',
   PRIMARY KEY (`id_prestamo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Prestamo de una sucursal a un solicitante' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Prestamo de una sucursal a un solicitante' AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -1212,8 +1185,7 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `costo_extra_almacen` float DEFAULT NULL COMMENT 'Si este producto produce un costo extra en el almacen',
   `codigo_de_barras` varchar(30) DEFAULT NULL COMMENT 'El codigo de barras de este producto',
   `peso_producto` float DEFAULT NULL COMMENT 'El peso de este producto en Kg',
-  `id_unidad_no_convertible` int(11) DEFAULT NULL COMMENT 'Id de la unidad no convertible del producto',
-  `id_unidad_convertible` int(11) DEFAULT NULL COMMENT 'Id de la unidad convertible del producto',
+  `id_unidad` int(11) DEFAULT NULL COMMENT 'Id de la unidad en la que usualmente se maneja este producto',
   PRIMARY KEY (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -1250,6 +1222,7 @@ CREATE TABLE IF NOT EXISTS `producto_empresa` (
 CREATE TABLE IF NOT EXISTS `producto_lote` (
   `id_producto` int(11) NOT NULL,
   `id_lote` int(11) NOT NULL,
+  `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad almacenada del producto',
   `cantidad` int(11) NOT NULL,
   PRIMARY KEY (`id_producto`,`id_lote`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -1264,6 +1237,7 @@ CREATE TABLE IF NOT EXISTS `producto_paquete` (
   `id_producto` int(11) NOT NULL COMMENT 'Id de producto',
   `id_paquete` int(11) NOT NULL COMMENT 'Id del paquete',
   `cantidad` float NOT NULL COMMENT 'Cantidad del producto ofrecido en el paquete',
+  `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad del producto en ese paquete',
   PRIMARY KEY (`id_producto`,`id_paquete`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle paquete producto';
 
@@ -1511,7 +1485,7 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   `margen_utilidad` float DEFAULT NULL COMMENT 'POrcentaje del margen de utilidad que esta sucursal le gana a todos los productos que ofrece',
   `descuento` float DEFAULT NULL COMMENT 'Descuento que se aplicara a todos los productos de esta sucursal',
   PRIMARY KEY (`id_sucursal`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='tabla de sucursales' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de sucursales' AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -1579,30 +1553,29 @@ CREATE TABLE IF NOT EXISTS `traspaso_producto` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `unidad_convertible`
+-- Estructura de tabla para la tabla `unidad`
 --
 
-CREATE TABLE IF NOT EXISTS `unidad_convertible` (
-  `id_unidad_convertible` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id de la tabal unidad convertible',
+CREATE TABLE IF NOT EXISTS `unidad` (
+  `id_unidad` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id de la tabal unidad convertible',
   `nombre` varchar(100) NOT NULL COMMENT 'nombre de la unidad convertible',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion larga de esta unidad',
   `activa` tinyint(1) NOT NULL COMMENT 'Si esta unidad esa activa o no',
-  PRIMARY KEY (`id_unidad_convertible`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='tabla de unidades convertibles (kilos, litros, libras, etc)' AUTO_INCREMENT=1 ;
+  PRIMARY KEY (`id_unidad`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='tabla de unidades (kilos, litros, libras, cajas, arpillas))' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `unidad_no_convertible`
+-- Estructura de tabla para la tabla `unidad_equivalencia`
 --
 
-CREATE TABLE IF NOT EXISTS `unidad_no_convertible` (
-  `id_unidad_no_convertible` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(100) CHARACTER SET utf8 NOT NULL COMMENT 'nombre de la unidad no convertible',
-  `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion de la unidad',
-  `activa` tinyint(1) NOT NULL COMMENT 'Si la unidad esta activa o no',
-  PRIMARY KEY (`id_unidad_no_convertible`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+CREATE TABLE IF NOT EXISTS `unidad_equivalencia` (
+  `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad origen',
+  `equivalencia` float NOT NULL COMMENT 'Numero de unidades de id_unidades que caben en la unidad id_unidad',
+  `id_unidades` int(11) NOT NULL COMMENT 'Id de las unidades equivalentes',
+  PRIMARY KEY (`id_unidad`,`id_unidades`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Equivalencias entre unidades, 1 id_unidad = n id_unidades, n';
 
 -- --------------------------------------------------------
 
@@ -1680,7 +1653,7 @@ CREATE TABLE IF NOT EXISTS `venta` (
   `tipo_de_pago` enum('cheque','tarjeta','efectivo') DEFAULT NULL COMMENT 'Si la venta fue pagada con tarjeta, cheque, o en efectivo',
   `retencion` float NOT NULL COMMENT 'Monto de retencion',
   PRIMARY KEY (`id_venta`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -1749,6 +1722,6 @@ CREATE TABLE IF NOT EXISTS `venta_producto` (
   `descuento` float NOT NULL COMMENT 'descuento que se aplico al producto',
   `impuesto` float NOT NULL COMMENT 'impuesto que se aplico al producto',
   `retencion` float NOT NULL COMMENT 'Retencion unitaria en el producto',
-  `arpillas` float DEFAULT NULL COMMENT 'Numero de arpillas del producto',
+  `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad del producto',
   PRIMARY KEY (`id_venta`,`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla detalle entre una venta y los productos que se vendier';
