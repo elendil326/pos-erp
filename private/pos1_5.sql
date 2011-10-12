@@ -1,3 +1,46 @@
+-- phpMyAdmin SQL Dump
+-- version 3.3.9
+-- http://www.phpmyadmin.net
+--
+-- Servidor: localhost
+-- Tiempo de generación: 12-10-2011 a las 22:52:17
+-- Versión del servidor: 5.1.53
+-- Versión de PHP: 5.3.4
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- Base de datos: `pos1_5`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `abasto_proveedor`
+--
+
+CREATE TABLE IF NOT EXISTS `abasto_proveedor` (
+  `id_abasto_proveedor` int(11) NOT NULL AUTO_INCREMENT,
+  `id_proveedor` int(11) NOT NULL COMMENT 'Id del proveedor que abastese, se usara -1 cuando la entrada sea por inventario fisico',
+  `id_almacen` int(11) NOT NULL COMMENT 'Id del almacen abastesido',
+  `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario que registra',
+  `fecha` datetime NOT NULL COMMENT 'Fecha del movimiento',
+  `motivo` varchar(255) NOT NULL COMMENT 'Motivo de la entrada del producto',
+  PRIMARY KEY (`id_abasto_proveedor`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Registro de abastesimientos de un proveedor' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `abono_compra`
+--
+
 CREATE TABLE IF NOT EXISTS `abono_compra` (
   `id_abono_compra` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id prestamo al que se le abona',
   `id_compra` int(11) NOT NULL COMMENT 'Id de la compra',
@@ -424,7 +467,7 @@ CREATE TABLE IF NOT EXISTS `compra_producto` (
   `impuesto` float NOT NULL COMMENT 'Impuesto unitario del producto',
   `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad del producto',
   `retencion` float NOT NULL COMMENT 'Retencion unitaria del producto',
-  PRIMARY KEY (`id_compra`,`id_producto`)
+  PRIMARY KEY (`id_compra`,`id_producto`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle de la compra y los productos de la misma';
 
 -- --------------------------------------------------------
@@ -1192,6 +1235,20 @@ CREATE TABLE IF NOT EXISTS `producto` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `producto_abasto_proveedor`
+--
+
+CREATE TABLE IF NOT EXISTS `producto_abasto_proveedor` (
+  `id_abasto_proveedor` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
+  `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad',
+  `cantidad` float NOT NULL COMMENT 'Cantidad de producto abastesido',
+  PRIMARY KEY (`id_abasto_proveedor`,`id_producto`,`id_unidad`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle producto Abasto proveedor';
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `producto_clasificacion`
 --
 
@@ -1224,7 +1281,7 @@ CREATE TABLE IF NOT EXISTS `producto_lote` (
   `id_lote` int(11) NOT NULL,
   `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad almacenada del producto',
   `cantidad` int(11) NOT NULL,
-  PRIMARY KEY (`id_producto`,`id_lote`)
+  PRIMARY KEY (`id_producto`,`id_lote`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -1238,8 +1295,22 @@ CREATE TABLE IF NOT EXISTS `producto_paquete` (
   `id_paquete` int(11) NOT NULL COMMENT 'Id del paquete',
   `cantidad` float NOT NULL COMMENT 'Cantidad del producto ofrecido en el paquete',
   `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad del producto en ese paquete',
-  PRIMARY KEY (`id_producto`,`id_paquete`)
+  PRIMARY KEY (`id_producto`,`id_paquete`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle paquete producto';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `producto_salida_almacen`
+--
+
+CREATE TABLE IF NOT EXISTS `producto_salida_almacen` (
+  `id_salida_almacen` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
+  `id_unidad` int(11) NOT NULL,
+  `cantidad` float NOT NULL COMMENT 'Cantidad de producto que sale del almacen en cierta unidad',
+  PRIMARY KEY (`id_salida_almacen`,`id_producto`,`id_unidad`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle producto salida almacen';
 
 -- --------------------------------------------------------
 
@@ -1389,6 +1460,21 @@ CREATE TABLE IF NOT EXISTS `rol` (
   `salario` float DEFAULT NULL COMMENT 'Si los usuarios con dicho rol contaran con un salario',
   PRIMARY KEY (`id_rol`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `salida_almacen`
+--
+
+CREATE TABLE IF NOT EXISTS `salida_almacen` (
+  `id_salida_almacen` int(11) NOT NULL AUTO_INCREMENT,
+  `id_almacen` int(11) NOT NULL COMMENT 'Id del almacen del cual sale producto',
+  `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario que registra',
+  `fecha_registro` datetime NOT NULL COMMENT 'Fecha en que se registra el movimiento',
+  `motivo` varchar(255) NOT NULL COMMENT 'motivo por le cual sale producto del almacen',
+  PRIMARY KEY (`id_salida_almacen`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Registro de salidas de un alacen' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1575,7 +1661,7 @@ CREATE TABLE IF NOT EXISTS `unidad_equivalencia` (
   `equivalencia` float NOT NULL COMMENT 'Numero de unidades de id_unidades que caben en la unidad id_unidad',
   `id_unidades` int(11) NOT NULL COMMENT 'Id de las unidades equivalentes',
   PRIMARY KEY (`id_unidad`,`id_unidades`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Equivalencias entre unidades, 1 id_unidad = n id_unidades, n';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Equivalencias entre unidades, 1 id_unidad = n id_unidades, n';
 
 -- --------------------------------------------------------
 
@@ -1723,5 +1809,5 @@ CREATE TABLE IF NOT EXISTS `venta_producto` (
   `impuesto` float NOT NULL COMMENT 'impuesto que se aplico al producto',
   `retencion` float NOT NULL COMMENT 'Retencion unitaria en el producto',
   `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad del producto',
-  PRIMARY KEY (`id_venta`,`id_producto`)
+  PRIMARY KEY (`id_venta`,`id_producto`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla detalle entre una venta y los productos que se vendier';
