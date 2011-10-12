@@ -50,7 +50,7 @@ public class Bascula{
 			if(free.equals(port)){
 				portNeededIndex = i;
 			}
-			Logger.log("Free port["+i+"]: " + free);
+			//Logger.log("Free port["+i+"]: " + free);
 		}
 		
 		if(portNeededIndex == -1){
@@ -63,7 +63,7 @@ public class Bascula{
         Parameters parameters = null;
        	parameters = new Parameters();			
 
-		parameters.setPort(portsFree.get(0));
+		parameters.setPort(portsFree.get(portNeededIndex));
 		
 		parameters.setBaudRate(Baud._9600);
 		parameters.setByteSize("8");
@@ -71,7 +71,8 @@ public class Bascula{
 		parameters.setStopBits("1");
 		//parameters.setMinDelayWrite(1250);
 		
-		Logger.log("Open port: " + portsFree.get(0));
+		Logger.log("Open port: " + portsFree.get(portNeededIndex));
+		
 		com = new Com(parameters);			
 
 	}

@@ -8,13 +8,9 @@ import mx.caffeina.pos.Networking.*;
 import java.awt.TrayIcon;
 import java.io.*;
 import java.util.zip.*;
-import java.net.UnknownHostException;
 
 public class PosClientUpgrader{
 	
-
-
-
 	private static String getCurrentVersion(){
 
 		try{
@@ -35,34 +31,37 @@ public class PosClientUpgrader{
 	public static void checkForUpdates(){
 		
 		Logger.log("Buscando updates de pos Client...");
-
 		Logger.log("My actual version is : " + getCurrentVersion());
 	
-		String response = null;
+		String response;
 
 		try{
-			response = HttpClient.Request(
-				// base url
-				//"http://development.pos.caffeina.mx/proxy.php?"
-				"http://labs.caffeina.mx/alanboy/proyectos/pos/pos/trunk/www/proxy.php?"
-				
-				// instance
-				+ "&i=1"
-				
-				// action
-				+ "&action=1400"
-				
-				// my version
-				+ "&my_version=" + getCurrentVersion()
-				
-				// this client's token
-				+ "&t=" + Networking.getMacAddd( ) ).toString();			
-		}catch( Exception uhe ){
+		
+				response = HttpClient.Request(
+							
+					//"http://development.pos.caffeina.mx/proxy.php?"
+					"http://labs.caffeina.mx/alanboy/proyectos/pos/pos/trunk/www/proxy.php?"
+					
+					// instance
+					+ "&i=1"
+					
+					// action
+					+ "&action=1400"
+					
+					// my version
+					+ "&my_version=" + getCurrentVersion()
+					
+					// this client's token
+					+ "&t=" + Networking.getMacAddd( ) 
+					
+				).toString();
 
-			Logger.error(uhe);
-			return;
-		}
 
+			}catch(Exception e){
+				Logger.error( e );
+				return ;
+
+			}
 
 		
 
@@ -77,7 +76,6 @@ public class PosClientUpgrader{
 		
 		upgrade();
 
-		//el 3 significa que necesito rebootear
 		System.exit(3);
 		
 	}
@@ -137,9 +135,9 @@ public class PosClientUpgrader{
 		}catch(Exception e){
 
 			Logger.error(e);
-			Logger.error("--- Imposible descargar el nuevo cliente ---");
-			
-			
+			Logger.error("--- cerrando cliente debido a exception ---");
+			System.out.println(e);
+			System.exit(1);
 		}
 		
 		

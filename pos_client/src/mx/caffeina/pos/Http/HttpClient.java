@@ -117,6 +117,9 @@ public class HttpClient
 			Logger.error(ioe);
 			return false;
 			
+        }catch(Exception e){
+        	Logger.error(e);
+        	return false;
         }
 
 		return true;
