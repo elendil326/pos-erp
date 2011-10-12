@@ -129,7 +129,7 @@ if (!POS_MULTI_SUCURSAL) {
 #	INVENTARIO MAESTRO PARA MULTISUCURSALES
 ##########################################################
 
-$iMaestro = listarInventarioMaestro(200, POS_SOLO_ACTIVOS);
+$iMaestro = listarInventarioMaestro(5000, POS_SOLO_ACTIVOS);
 $iMaestroTerminados = listarInventarioMaestro(50, POS_SOLO_VACIOS);
 ?>
 
