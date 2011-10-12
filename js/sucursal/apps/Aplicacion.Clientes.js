@@ -1612,14 +1612,7 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
             
             ticket += POS.leyendasTicket.contacto;
 
-            
-      
-            var to_print = 
-            {
-                free_text : "================================================\n"
-                            + "A123456789-A123456789-A123456789-A123456789\n"
-                                                                                                              
-            };
+
 
             POS.ajaxToClient({
                 module : "Impresiones",

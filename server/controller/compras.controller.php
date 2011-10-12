@@ -1296,9 +1296,10 @@ function nuevaCompraCliente($args = null) {
     }
 
     //verificamos que se manden todos los parametros necesarios
-    if (!( isset($data->tipo_compra) && isset($data->tipo_pago) && isset($data->productos) )) {
-        Logger::log("Falta uno o mas parametros");
-        die('{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }');
+    if (!( isset($data->tipo_compra) /*&& isset($data->tipo_pago)*/ && isset($data->productos) )) {
+        //Logger::log("Falta uno o mas parametros");
+        //die('{"success": false, "reason": "Verifique sus datos, falta uno o mas parametros." }');
+        $data->tipo_compra = "contado";
     }
 
     //verificar que $data->items  sea un array
@@ -1309,7 +1310,7 @@ function nuevaCompraCliente($args = null) {
 
     //verificamos que $data->items almenos tenga un producto
     if (count($data->productos) <= 0) {
-        Logger::log("data -> items no contiene ningun producto");
+        Logger::log("data -> productos no contiene ningun producto");
         die('{"success": false, "reason": "No se envio ningun producto para generar una nueva venta." }');
     }
 
@@ -1337,7 +1338,7 @@ function nuevaCompraCliente($args = null) {
     $compra = new CompraCliente();
     $compra->setIdCliente($id_cliente);
     $compra->setTipoCompra($data->tipo_compra);
-    $compra->setTipoPago($data->tipo_pago);
+    $compra->setTipoPago("efectivo");
     $compra->setSubtotal(0);
 
     //TODO: creo qeu seria buena idea relacionar las compras o ventas con otras tablas para manejar los impuestos

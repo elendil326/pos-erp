@@ -164,7 +164,7 @@ if(isset($args['action'])){
 		 * 
 		 * */
 		case 1106 : 
-			Logger::log( json_encode( POS::getSucursalConfig() ) );
+			//Logger::log( json_encode( POS::getSucursalConfig() ) );
 			echo ( json_encode( POS::getSucursalConfig() ) );
 		break;
 		
