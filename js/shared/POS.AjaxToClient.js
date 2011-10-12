@@ -55,15 +55,14 @@ Ext.util.JSONP = {
 
 POS._ajaxToClientPORT = 16001;
 
-POS.ajaxToClient = function( options ) //module, args, callback, onFailureCallback )
+POS.ajaxToClient = function( options ) //module, to_send, callback, onFailureCallback )
 {
 	
 	
 	if(DEBUG){
-		console.log("AJAX TO CLIENT !!", options.args);		
+		console.log("AJAX TO CLIENT : ", options );		
 	}
-
-	
+    
 	/** **** Cross-broswer call **** **/
 		var to_send = options.raw_args || {};
 		

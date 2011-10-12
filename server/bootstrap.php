@@ -122,6 +122,8 @@
 		#	NO HAY INSTANCIA
 		###################################
 		
+		if(!defined("WHO_AM_I")) die(header("HTTP/1.1 403 FORBIDDEN"));
+
 		switch(WHO_AM_I){
 			case "JEDI" : 
 				# I AM A JEDI, NEED SOME INSTANCE ID

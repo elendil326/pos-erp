@@ -205,6 +205,7 @@ if($inventario->getExistencias() != 0){
 					<?php
 					$foo = new InventarioMaestro();
 					$foo->setIdProducto( $producto->getIdProducto() );
+					//$foo->setIdProducto( $producto->getIdProducto() );
 					$moveto = InventarioMaestroDAO::search( $foo );
 				
 					foreach( $moveto as $i ){
