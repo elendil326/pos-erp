@@ -1520,6 +1520,7 @@ require_once("CargosYAbonos.interface.php");
             {
                 $conceptos_gasto=ConceptoGastoDAO::getAll(null, null, $orden);
             }
+            Logger::log("Lista exitosa");
             return $conceptos_gasto;
 	}
 
@@ -1534,11 +1535,24 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function ListaConceptoIngreso
 	(
-		$ordenar = null
+		$orden = null,
+                $activo = null
 	)
 	{
-
-
+            Logger::log("Listando conceptos de ingreso");
+            $conceptos_ingreso=null;
+            $concepto_ingreso_criterio = new ConceptoIngreso();
+            if($activo!==null)
+            {
+                $concepto_ingreso_criterio->setActivo($activo);
+                $conceptos_ingreso=ConceptoIngresoDAO::byRange($concepto_ingreso_criterio, new ConceptoIngreso(),$orden);
+            }
+            else
+            {
+                $conceptos_ingreso=ConceptoIngresoDAO::getAll(null, null, $orden);
+            }
+            Logger::log("Lista exitosa");
+            return $conceptos_ingreso;
 	}
 
 	/**
