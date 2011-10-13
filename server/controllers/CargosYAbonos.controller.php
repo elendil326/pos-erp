@@ -1466,8 +1466,32 @@ require_once("CargosYAbonos.interface.php");
 		$id_concepto_ingreso
 	)
 	{
-
-
+            Logger::log("Eliminando concepto de ingreso");
+            $concepto_ingreso = ConceptoIngresoDAO::getByPK($id_concepto_ingreso);
+            if(!$concepto_ingreso)
+            {
+                Logger::error("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
+                throw new Exception("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
+            }
+            if(!$concepto_ingreso->getActivo())
+            {
+                Logger::warn("El concepto de ingreso ya ha sido desactivado");
+                return;
+            }
+            $concepto_ingreso->setActivo(0);
+            DAO::transBegin();
+            try
+            {
+                ConceptoIngresoDAO::save($concepto_ingreso);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo desactivar el concepto de ingreso: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Concepto de ingreso desactivado exitosamente");
 	}
 
 	/**
