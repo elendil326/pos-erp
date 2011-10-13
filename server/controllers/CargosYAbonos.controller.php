@@ -1289,10 +1289,38 @@ require_once("CargosYAbonos.interface.php");
 		$descripcion = null
 	)
 	{
+            Logger::log("Editando concepto de gasto");
+            if(!$nombre && !$monto && !$descripcion)
+            {
+                Logger::warn("No se recibieron parametros para editar, no se edita nada");
+                return;
+            }
             $concepto_gasto=ConceptoGastoDAO::getByPK($id_concepto_gasto);
-            $concepto_gasto->setNombre($nombre);
-            $concepto_gasto->setMonto($monto);
-            $concepto_gasto->setDescripcion($descripcion);
+            if(!$concepto_gasto)
+            {
+                Logger::error("El concepto de gasto con id: ".$id_concepto_gasto." no existe");
+                throw new Exception("El concepto de gasto con id: ".$id_concepto_gasto." no existe");
+            }
+            if($nombre!==null)
+                $concepto_gasto->setNombre($nombre);
+            if($monto!==null)
+                $concepto_gasto->setMonto($monto);
+            if($descripcion!==null)
+                $concepto_gasto->setDescripcion($descripcion);
+            DAO::transBegin();
+            try
+            {
+                ConceptoGastoDAO::save($concepto_gasto);
+            }
+            catch(Exception $e)
+            {
+                Logger::error("No se pudo editar el concepto de gasto: ".$e);
+                DAO::transRollback();
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Se edito el concepto de gasto con exito");
+
 	}
 
 	/**
@@ -1344,8 +1372,8 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function EditarConceptoIngreso
 	(
-		$nombre,
-		$id_concepto_ingreso,
+                $id_concepto_ingreso,
+		$nombre = null,
 		$descripcion = null,
 		$monto = null
 	)
