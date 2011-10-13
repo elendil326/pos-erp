@@ -641,7 +641,7 @@ require_once("CargosYAbonos.interface.php");
                 $id_compra != null||
                 $id_venta != null||
                 $id_prestamo != null||
-                $cancelado != null||
+                $cancelado !== null||
                 $fecha_minima != null||
                 $fecha_maxima != null||
                 $fecha_actual != null||
@@ -716,7 +716,7 @@ require_once("CargosYAbonos.interface.php");
                     $abono_criterio_compra->setIdCompra($id_compra);
                     $abono_criterio_compra->setIdReceptor($id_usuario);
                     $abono_criterio_compra->setIdSucursal($id_sucursal);
-                    if($monto_mayor_a!=null)
+                    if($monto_mayor_a!==null)
                     {
                         //
                         //Si se recibio el monto_mayor_a y se recibio el monto_menor_a
@@ -728,12 +728,12 @@ require_once("CargosYAbonos.interface.php");
                         //para que se listen los objeto cuyo monto sea mayor a mayor_a
                         //
                         $abono_criterio_compra->setMonto($monto_mayor_a);
-                        if($monto_menor_a!=null)
+                        if($monto_menor_a!==null)
                             $abono_criterio_compra2->setMonto($monto_menor_a);
                         else
                             $abono_criterio_compra2->setMonto(1.8e308);
                     }
-                    else if($monto_menor_a!=null)
+                    else if($monto_menor_a!==null)
                     {
                         //
                         //Si solo se obtuvo monto_menor_a, el objeto 1 lo almacena y el
@@ -743,7 +743,7 @@ require_once("CargosYAbonos.interface.php");
                         $abono_criterio_compra->setMonto($monto_menor_a);
                         $abono_criterio_compra2->setMonto(0);
                     }
-                    else if($monto_igual_a!=null)
+                    else if($monto_igual_a!==null)
                     {
                         //
                         //Si se recibe monto_igual_a se asignara este monto al
@@ -825,7 +825,7 @@ require_once("CargosYAbonos.interface.php");
                     $abono_criterio_venta->setIdVenta($id_venta);
                     $abono_criterio_venta->setIdDeudor($id_usuario);
                     $abono_criterio_venta->setIdSucursal($id_sucursal);
-                    if($monto_mayor_a!=null)
+                    if($monto_mayor_a!==null)
                     {
                         //
                         //Si se recibio el monto_mayor_a y se recibio el monto_menor_a
@@ -837,12 +837,12 @@ require_once("CargosYAbonos.interface.php");
                         //para que se listen los objeto cuyo monto sea mayor a mayor_a
                         //
                         $abono_criterio_venta->setMonto($monto_mayor_a);
-                        if($monto_menor_a!=null)
+                        if($monto_menor_a!==null)
                             $abono_criterio_venta2->setMonto($monto_menor_a);
                         else
                             $abono_criterio_venta2->setMonto(1.8e308);
                     }
-                    else if($monto_menor_a!=null)
+                    else if($monto_menor_a!==null)
                     {
                         //
                         //Si solo se obtuvo monto_menor_a, el objeto 1 lo almacena y el
@@ -852,7 +852,7 @@ require_once("CargosYAbonos.interface.php");
                         $abono_criterio_venta->setMonto($monto_menor_a);
                         $abono_criterio_venta2->setMonto(0);
                     }
-                    else if($monto_igual_a!=null)
+                    else if($monto_igual_a!==null)
                     {
                         //
                         //Si se recibe monto_igual_a se asignara este monto al
@@ -931,7 +931,7 @@ require_once("CargosYAbonos.interface.php");
                     $abono_criterio_prestamo->setIdPrestamo($id_prestamo);
                     $abono_criterio_prestamo->setIdDeudor($id_usuario);
                     $abono_criterio_prestamo->setIdSucursal($id_sucursal);
-                    if($monto_mayor_a!=null)
+                    if($monto_mayor_a!==null)
                     {
                         //
                         //Si se recibio el monto_mayor_a y se recibio el monto_menor_a
@@ -943,12 +943,12 @@ require_once("CargosYAbonos.interface.php");
                         //para que se listen los objeto cuyo monto sea mayor a mayor_a
                         //
                         $abono_criterio_prestamo->setMonto($monto_mayor_a);
-                        if($monto_menor_a!=null)
+                        if($monto_menor_a!==null)
                             $abono_criterio_prestamo2->setMonto($monto_menor_a);
                         else
                             $abono_criterio_prestamo2->setMonto(1.8e308);
                     }
-                    else if($monto_menor_a!=null)
+                    else if($monto_menor_a!==null)
                     {
                         //
                         //Si solo se obtuvo monto_menor_a, el objeto 1 lo almacena y el
@@ -958,7 +958,7 @@ require_once("CargosYAbonos.interface.php");
                         $abono_criterio_prestamo->setMonto($monto_menor_a);
                         $abono_criterio_prestamo2->setMonto(0);
                     }
-                    else if($monto_igual_a!=null)
+                    else if($monto_igual_a!==null)
                     {
                         //
                         //Si se recibe monto_igual_a se asignara este monto al
@@ -1072,11 +1072,125 @@ require_once("CargosYAbonos.interface.php");
 		$id_sucursal = null,
 		$cancelado = null,
 		$monto_minimo = null,
-		$monto_maximo = null
+		$monto_maximo = null,
+                $orden = null,
+                $fecha_actual = null
 	)
 	{
-
-
+            Logger::log("Listando Gastos");
+            $parametros=false;
+            if
+            (
+                    $id_empresa!=null ||
+                    $id_usuario!=null ||
+                    $id_concepto_gasto!=null ||
+                    $id_orden_servicio!=null ||
+                    $id_caja!=null ||
+                    $fecha_inicial!=null ||
+                    $fecha_final!=null ||
+                    $id_sucursal!=null ||
+                    $cancelado!==null ||
+                    $monto_minimo!=null ||
+                    $monto_maximo!=null ||
+                    $fecha_actual!=null
+            )
+                $parametros=true;
+                $gastos=null;
+            if($parametros)
+            {
+                Logger::log("Se recibieron parametros, se listan los Gastos dentro del rango");
+                //
+                //Se almacenan los parametros recibidos en el objeto criterio 1
+                //para luego ser comparados.
+                //
+                $gasto_criterio_1 = new Gasto();
+                $gasto_criterio_2 = new Gasto();
+                $gasto_criterio_1->setIdEmpresa($id_empresa);
+                $gasto_criterio_1->setIdUsuario($id_usuario);
+                $gasto_criterio_1->setIdConceptoGasto($id_concepto_gasto);
+                $gasto_criterio_1->setIdOrdenDeServicio($id_orden_servicio);
+                $gasto_criterio_1->setIdCaja($id_caja);
+                $gasto_criterio_1->setIdSucursal($id_sucursal);
+                $gasto_criterio_1->setCancelado($cancelado);
+                if($fecha_inicial!=null)
+                {
+                    //
+                    //Si pasaron una fecha minima y existe una fecha maxima, entonces
+                    //el objeto 1 almacenara la minima y el objeto 2 la maxima para
+                    //que se impriman los gastos entre esas dos fechas.
+                    //
+                    //Si no hay fecha maxima, el objeto 2 almacenara la fecha de hoy
+                    //para que se impriman los gastos desde la fecha minima hasta hoy.
+                    //
+                    //
+                    $gasto_criterio_1->setFechaDelGasto($fecha_inicial);
+                    if($fecha_final!=null)
+                        $gasto_criterio_2->setFechaDelGasto($fecha_final);
+                    else
+                        $gasto_criterio_2->setFechaDelGasto(date($this->formato_fecha, time()));
+                }
+                else if($fecha_final!=null)
+                {
+                    //
+                    //Si no se recibio fecha minima pero si fecha maxima
+                    //El objeto 1 guarda la fecha maxima y el objeto 2 guarda
+                    //la fecha minima posible de MySQL, para asi poder listar
+                    //los gastos anteriores a la fecha maxima.
+                    //
+                    $gasto_criterio_1->setFechaDelGasto($fecha_final);
+                    $gasto_criterio_2->setFechaDelGasto("1000-01-01 00:00:00");
+                }
+                else if($fecha_actual)
+                {
+                    //
+                    //Si se recibio el booleano fecha_actual, se listaran los abonos
+                    //solo de hoy, se crea un timestamp con el año, el mes y el dia de hoy
+                    //pero se inicia con la hora 00:00:00 y se almacena como fecha en el objeto 1.
+                    //
+                    //Se crea un segundo timestamp con el año, el mes y el dia de hoy pero
+                    //con la hora 23:59:59 y se almacena como fecha en el objeto 2.
+                    //
+                    $hoy=mktime(0,0,0,date("m"),date("d"),date("Y"));
+                    $gasto_criterio_1->setFechaDelGasto(date($this->formato_fecha, $hoy));
+                    $manana=mktime(23,59,59,date("m"),date("d"),date("Y"));
+                    $gasto_criterio_2->setFechaDelGasto(date($this->formato_fecha,$manana));
+                }
+                if($monto_minimo!==null)
+                {
+                    //
+                    //Si se recibio el monto_minimo y se recibio el monto_maximo
+                    //el objeto 1 guarda el primero y el objeto2 guarda el segundo
+                    //para asi listar los gastos cuyo monto sea mayor al minimo y
+                    //menor que el maximo
+                    //
+                    //Si no, el objeto 2 almacena el valor mas grande posible
+                    //para que se listen los gastos cuyo monto sea mayor al minimo
+                    //
+                    $gasto_criterio_1->setMonto($monto_minimo);
+                    if($monto_maximo!==null)
+                        $gasto_criterio_2->setMonto($monto_maximo);
+                    else
+                        $gasto_criterio_2->setMonto(1.8e100);
+                }
+                else if($monto_maximo!==null)
+                {
+                    //
+                    //Si solo se obtuvo monto_maximo, el objeto 1 lo almacena y el
+                    //objeto 2 almacena el monto mas bajo posible para que  se listen
+                    //los gastos cuyo monto sea menor al maximo
+                    //
+                    $gasto_criterio_1->setMonto($monto_maximo);
+                    $gasto_criterio_2->setMonto(0);
+                }
+                $gastos=GastoDAO::byRange($gasto_criterio_1, $gasto_criterio_2, $orden);
+            }
+            else
+            {
+                Logger::log("No se recibieron parametros, se listan todos los Gastos");
+                $gastos=GastoDAO::getAll(null, null,$orden);
+            }
+            Logger::log("Se obtuvo la lista de gastos exitosamente");
+            return $gastos;
 	}
 
 	/**

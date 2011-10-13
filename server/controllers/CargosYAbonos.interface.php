@@ -259,7 +259,9 @@
 		$id_sucursal = null, 
 		$cancelado = null, 
 		$monto_minimo = null, 
-		$monto_maximo = null
+		$monto_maximo = null,
+                $orden = null,
+                $fecha_actual = null
 	);  
   
   
