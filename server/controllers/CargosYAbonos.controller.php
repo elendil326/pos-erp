@@ -75,7 +75,7 @@ require_once("CargosYAbonos.interface.php");
                     throw new Exception("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
                 }
             }
-            if($monto==null)
+            if($monto===null)
             {
                 Logger::log("No se recibio monto, se procede a buscar en el concepto de ingreso");
                 if($id_concepto_ingreso==null)
@@ -84,7 +84,7 @@ require_once("CargosYAbonos.interface.php");
                     throw new Exception("No se recibio un concepto de ingreso ni un monto");
                 }
                 $monto=$concepto_ingreso->getMonto();
-                if($monto==null)
+                if($monto===null)
                 {
                     Logger::error("El concepto de ingreso recibido no cuenta con un monto");
                     throw new Exception("El concepto de ingreso recibido no cuenta con un monto ni se recibio un monto");
@@ -141,7 +141,7 @@ require_once("CargosYAbonos.interface.php");
 	)
 	{
             Logger::log("Cancelando abono");
-            if($compra!=null&&$compra)
+            if($compra)
             {
                 $abono=AbonoCompraDAO::getByPK($id_abono);
                 if($abono==null)
@@ -170,7 +170,7 @@ require_once("CargosYAbonos.interface.php");
                 DAO::transEnd();
                 Logger::log("Abono cancelado exitosamente");
             }
-            else if($venta!=null&&$venta)
+            else if($venta)
             {
                 $abono=AbonoVentaDAO::getByPK($id_abono);
                 if($abono==null)
@@ -199,7 +199,7 @@ require_once("CargosYAbonos.interface.php");
                 DAO::transEnd();
                 Logger::log("Abono cancelado exitosamente");
             }
-            else if($prestamo!=null&&$prestamo)
+            else if($prestamo)
             {
                 $abono=AbonoPrestamoDAO::getByPK($id_abono);
                 if($abono==null)
@@ -1587,8 +1587,69 @@ require_once("CargosYAbonos.interface.php");
 		$nota = null
 	)
 	{
-
-
+            Logger::log("Creando nuevo gasto");
+            $id_usuario=LoginController::getCurrentUser();
+            if($id_usuario==null)
+            {
+                Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
+                throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
+            }
+            if(!$this->validarEmpresa($id_empresa))
+            {
+                throw new Exception("Se recibio una empresa no valida");
+            }
+            if($id_concepto_gasto!=null)
+            {
+                $concepto_gasto=ConceptoGastoDAO::getByPK($id_concepto_gasto);
+                if($concepto_gasto==null)
+                {
+                    Logger::error("El concepto de gasto con id:".$id_concepto_gasto." no existe");
+                    throw new Exception("El concepto de gasto con id:".$id_concepto_gasto." no existe");
+                }
+            }
+            if($monto===null)
+            {
+                Logger::log("No se recibio monto, se procede a buscar en el concepto de ingreso");
+                if($id_concepto_gasto==null)
+                {
+                    Logger::error("No se recibio un concepto de gasto");
+                    throw new Exception("No se recibio un concepto de gasto ni un monto");
+                }
+                $monto=$concepto_gasto->getMonto();
+                if($monto===null)
+                {
+                    Logger::error("El concepto de gasto recibido no cuenta con un monto");
+                    throw new Exception("El concepto de gasto recibido no cuenta con un monto ni se recibio un monto");
+                }
+            }
+            $gasto = new Gasto();
+            $gasto->setFechaDelGasto($fecha_gasto);
+            $gasto->setIdEmpresa($id_empresa);
+            $gasto->setMonto($monto);
+            $gasto->setIdSucursal($id_sucursal);
+            $gasto->setIdCaja($id_caja);
+            $gasto->setIdOrdenDeServicio($id_orden_de_servicio);
+            $gasto->setIdConceptoGasto($id_concepto_gasto);
+            $gasto->setDescripcion($descripcion);
+            $gasto->setFolio($folio);
+            $gasto->setNota($nota);
+            $gasto->setFechaDeRegistro(date($this->formato_fecha, time()));
+            $gasto->setIdUsuario($id_usuario);
+            $gasto->setCancelado(0);
+            DAO::transBegin();
+            try
+            {
+                GastoDAO::save($gasto);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear el gasto: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Gasto creado exitosamente");
+            return $gasto->getIdGasto();
 	}
 
 	/**
@@ -1615,8 +1676,7 @@ require_once("CargosYAbonos.interface.php");
 		$folio = null
 	)
 	{
-
-
+            
 	}
 
 	/**
