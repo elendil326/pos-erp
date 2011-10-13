@@ -127,8 +127,8 @@
  	 **/
   function EditarConceptoGasto
 	(
-		$nombre, 
-		$id_concepto_gasto, 
+		$id_concepto_gasto,
+                $nombre = null,
 		$monto = null, 
 		$descripcion = null
 	);  
@@ -313,8 +313,8 @@
  	 **/
   function EditarConceptoIngreso
 	(
-		$nombre, 
-		$id_concepto_ingreso, 
+		$id_concepto_ingreso,
+                $nombre = null,
 		$descripcion = null, 
 		$monto = null
 	);  

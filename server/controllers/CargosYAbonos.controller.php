@@ -1283,14 +1283,16 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function EditarConceptoGasto
 	(
-		$nombre,
 		$id_concepto_gasto,
+                $nombre = null,
 		$monto = null,
 		$descripcion = null
 	)
 	{
-
-
+            $concepto_gasto=ConceptoGastoDAO::getByPK($id_concepto_gasto);
+            $concepto_gasto->setNombre($nombre);
+            $concepto_gasto->setMonto($monto);
+            $concepto_gasto->setDescripcion($descripcion);
 	}
 
 	/**
