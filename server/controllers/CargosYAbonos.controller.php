@@ -1668,7 +1668,7 @@ require_once("CargosYAbonos.interface.php");
 	public function EditarGasto
 	(
 		$id_gasto,
-		$fecha_gasto,
+		$fecha_gasto = null,
 		$monto = null,
 		$id_concepto_gasto = null,
 		$descripcion = null,
@@ -1676,7 +1676,57 @@ require_once("CargosYAbonos.interface.php");
 		$folio = null
 	)
 	{
-            
+            Logger::log("Editando gasto");
+            $gasto=GastoDAO::getByPK($id_gasto);
+            if(!$fecha_gasto && !$monto && !$id_concepto_gasto && !$descripcion && !$nota && !$folio)
+            {
+                Logger::warn("No se recibieron parametros para editar, no hay nada que editar");
+                return;
+            }
+            if(!$gasto)
+            {
+                Logger::error("El gasto con id: ".$id_gasto." no existe");
+                throw new Exception("El gasto con id: ".$id_gasto." no existe");
+            }
+            if($gasto->getCancelado())
+            {
+                Logger::error("El gasto ya ha sido cancelado y no puede ser editado");
+                throw new Exception("El gasto ya ha sido cancelado y no puede ser editado");
+            }
+            if($id_concepto_gasto!==null)
+            {
+                $concepto_gasto=ConceptoGastoDAO::getByPK($id_concepto_gasto);
+                if($concepto_gasto==null)
+                {
+                    Logger::error("El concepto de gasto con id:".$id_concepto_gasto." no existe");
+                    throw new Exception("El concepto de gasto con id:".$id_concepto_gasto." no existe");
+                }
+            }
+            if($fecha_gasto!==null)
+                $gasto->setFechaDelGasto($fecha_gasto);
+            if($monto!==null)
+                $gasto->setMonto($monto);
+            if($id_concepto_gasto!==null)
+                $gasto->setIdConceptoGasto($id_concepto_gasto);
+            if($descripcion!==null)
+                $gasto->setDescripcion($descripcion);
+            if($nota!==null)
+                $gasto->setNota($nota);
+            if($folio!==null)
+                $gasto->setFolio($folio);
+            DAO::transBegin();
+            try
+            {
+                GastoDAO::save($gasto);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollBack();
+                Logger::error("No se pudo editar el gasto: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Gasto editado exitosamente");
 	}
 
 	/**

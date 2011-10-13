@@ -205,7 +205,7 @@
   function EditarGasto
 	(
 		$id_gasto, 
-		$fecha_gasto, 
+		$fecha_gasto = null,
 		$monto = null, 
 		$id_concepto_gasto = null, 
 		$descripcion = null, 
