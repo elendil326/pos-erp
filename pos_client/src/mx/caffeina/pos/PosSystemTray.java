@@ -73,6 +73,10 @@ public class PosSystemTray
 
                     PosClientUpgrader.checkForUpdates( );
 
+                    //si no me sali, es porque no habia updates
+                    PosClient.trayIcon.getTrayIcon().displayMessage("POS", 
+                                "POS esta en la version mas actual",
+                                TrayIcon.MessageType.INFO);
                     //System.exit(3);
                 }
             };
