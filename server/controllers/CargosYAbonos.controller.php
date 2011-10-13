@@ -1206,8 +1206,28 @@ require_once("CargosYAbonos.interface.php");
 		$motivo_cancelacion = null
 	)
 	{
-
-
+            Logger::log("Cancelando Ingreso");
+            $ingreso=IngresoDAO::getByPK($id_ingreso);
+            if(!$ingreso)
+            {
+                Logger::error("El ingreso con id: ".$id_ingreso." no existe");
+                throw new Exception("El ingreso con id: ".$id_ingreso." no existe");
+            }
+            $ingreso->setCancelado(1);
+            $ingreso->setMotivoCancelacion($motivo_cancelacion);
+            DAO::transBegin();
+            try
+            {
+                IngresoDAO::save($ingreso);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo Eliminar el ingreso: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Ingreso cancelado exitosamente");
 	}
 
 	/**
@@ -1228,8 +1248,26 @@ require_once("CargosYAbonos.interface.php");
 		$monto = null
 	)
 	{
-
-
+            Logger::log("Creando concepto de gasto");
+            $concepto_gasto = new ConceptoGasto();
+            $concepto_gasto->setNombre($nombre);
+            $concepto_gasto->setDescripcion($descripcion);
+            $concepto_gasto->setMonto($monto);
+            $concepto_gasto->setActivo(1);
+            DAO::transBegin();
+            try
+            {
+                ConceptoGastoDAO::save($concepto_gasto);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear el concepto de gasto: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Gasto creado exitosamente");
+            return $concepto_gasto->getIdConceptoGasto();
 	}
 
 	/**
