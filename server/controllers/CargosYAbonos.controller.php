@@ -1504,11 +1504,23 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function ListaConceptoGasto
 	(
-		$ordenar = null
+		$orden = null,
+                $activo = null
 	)
 	{
-
-
+            Logger::log("Listando conceptos de gasto");
+            $conceptos_gasto=null;
+            $concepto_gasto_criterio = new ConceptoGasto();
+            if($activo!==null)
+            {
+                $concepto_gasto_criterio->setActivo($activo);
+                $conceptos_gasto=ConceptoGastoDAO::byRange($concepto_gasto_criterio, new ConceptoGasto(),$orden);
+            }
+            else
+            {
+                $conceptos_gasto=ConceptoGastoDAO::getAll(null, null, $orden);
+            }
+            return $conceptos_gasto;
 	}
 
 	/**

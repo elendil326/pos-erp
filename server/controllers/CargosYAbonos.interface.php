@@ -161,7 +161,8 @@
  	 **/
   function ListaConceptoGasto
 	(
-		$ordenar = null
+		$orden = null,
+                $activo = null
 	);  
   
   
