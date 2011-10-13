@@ -1420,8 +1420,37 @@ require_once("CargosYAbonos.interface.php");
 		$monto = null
 	)
 	{
-
-
+            Logger::log("Editando concepto de ingreso");
+            if(!$nombre && !$descripcion && !$monto)
+            {
+                Logger::warn("No se ha recibido un parametro a editar, no hay nada que editar");
+                return;
+            }
+            $concepto_ingreso = ConceptoIngresoDAO::getByPK($id_concepto_ingreso);
+            if(!$concepto_ingreso)
+            {
+                Logger::error("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
+                throw new Exception("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
+            }
+            if($nombre !== null)
+                $concepto_ingreso->setNombre($nombre);
+            if($descripcion !== null)
+                $concepto_ingreso->setDescripcion($descripcion);
+            if($monto !== null)
+                $concepto_ingreso->setMonto($monto);
+            DAO::transBegin();
+            try
+            {
+                ConceptoIngresoDAO::save($concepto_ingreso);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo editar el concepto de ingreso: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Concepto de Ingreso editado exitosamente");
 	}
 
 	/**
