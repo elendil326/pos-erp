@@ -14,22 +14,25 @@ abstract class ProductoLoteDAOBase extends DAO
 
 		private static $loadedRecords = array();
 
-		private static function recordExists(  $id_producto, $id_lote ){
+		private static function recordExists(  $id_producto, $id_lote, $id_unidad ){
 			$pk = "";
 			$pk .= $id_producto . "-";
 			$pk .= $id_lote . "-";
+			$pk .= $id_unidad . "-";
 			return array_key_exists ( $pk , self::$loadedRecords );
 		}
-		private static function pushRecord( $inventario,  $id_producto, $id_lote){
+		private static function pushRecord( $inventario,  $id_producto, $id_lote, $id_unidad){
 			$pk = "";
 			$pk .= $id_producto . "-";
 			$pk .= $id_lote . "-";
+			$pk .= $id_unidad . "-";
 			self::$loadedRecords [$pk] = $inventario;
 		}
-		private static function getRecord(  $id_producto, $id_lote ){
+		private static function getRecord(  $id_producto, $id_lote, $id_unidad ){
 			$pk = "";
 			$pk .= $id_producto . "-";
 			$pk .= $id_lote . "-";
+			$pk .= $id_unidad . "-";
 			return self::$loadedRecords[$pk];
 		}
 	/**
@@ -47,7 +50,7 @@ abstract class ProductoLoteDAOBase extends DAO
 	  **/
 	public static final function save( &$producto_lote )
 	{
-		if(  self::getByPK(  $producto_lote->getIdProducto() , $producto_lote->getIdLote() ) !== NULL )
+		if(  self::getByPK(  $producto_lote->getIdProducto() , $producto_lote->getIdLote() , $producto_lote->getIdUnidad() ) !== NULL )
 		{
 			try{ return ProductoLoteDAOBase::update( $producto_lote) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -65,18 +68,18 @@ abstract class ProductoLoteDAOBase extends DAO
 	  *	@static
 	  * @return @link ProductoLote Un objeto del tipo {@link ProductoLote}. NULL si no hay tal registro.
 	  **/
-	public static final function getByPK(  $id_producto, $id_lote )
+	public static final function getByPK(  $id_producto, $id_lote, $id_unidad )
 	{
-		if(self::recordExists(  $id_producto, $id_lote)){
-			return self::getRecord( $id_producto, $id_lote );
+		if(self::recordExists(  $id_producto, $id_lote, $id_unidad)){
+			return self::getRecord( $id_producto, $id_lote, $id_unidad );
 		}
-		$sql = "SELECT * FROM producto_lote WHERE (id_producto = ? AND id_lote = ? ) LIMIT 1;";
-		$params = array(  $id_producto, $id_lote );
+		$sql = "SELECT * FROM producto_lote WHERE (id_producto = ? AND id_lote = ? AND id_unidad = ? ) LIMIT 1;";
+		$params = array(  $id_producto, $id_lote, $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new ProductoLote( $rs );
-			self::pushRecord( $foo,  $id_producto, $id_lote );
+			self::pushRecord( $foo,  $id_producto, $id_lote, $id_unidad );
 			return $foo;
 	}
 
@@ -113,7 +116,8 @@ abstract class ProductoLoteDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_producto
 			//id_lote
-    		self::pushRecord( $bar, $foo["id_producto"],$foo["id_lote"] );
+			//id_unidad
+    		self::pushRecord( $bar, $foo["id_producto"],$foo["id_lote"],$foo["id_unidad"] );
 		}
 		return $allData;
 	}
@@ -157,6 +161,11 @@ abstract class ProductoLoteDAOBase extends DAO
 			array_push( $val, $producto_lote->getIdLote() );
 		}
 
+		if( $producto_lote->getIdUnidad() != NULL){
+			$sql .= " id_unidad = ? AND";
+			array_push( $val, $producto_lote->getIdUnidad() );
+		}
+
 		if( $producto_lote->getCantidad() != NULL){
 			$sql .= " cantidad = ? AND";
 			array_push( $val, $producto_lote->getCantidad() );
@@ -174,7 +183,7 @@ abstract class ProductoLoteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ProductoLote($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_producto"],$foo["id_lote"] );
+    		self::pushRecord( $bar, $foo["id_producto"],$foo["id_lote"],$foo["id_unidad"] );
 		}
 		return $ar;
 	}
@@ -193,10 +202,10 @@ abstract class ProductoLoteDAOBase extends DAO
 	  **/
 	private static final function update( $producto_lote )
 	{
-		$sql = "UPDATE producto_lote SET  cantidad = ? WHERE  id_producto = ? AND id_lote = ?;";
+		$sql = "UPDATE producto_lote SET  cantidad = ? WHERE  id_producto = ? AND id_lote = ? AND id_unidad = ?;";
 		$params = array( 
 			$producto_lote->getCantidad(), 
-			$producto_lote->getIdProducto(),$producto_lote->getIdLote(), );
+			$producto_lote->getIdProducto(),$producto_lote->getIdLote(),$producto_lote->getIdUnidad(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
@@ -219,10 +228,11 @@ abstract class ProductoLoteDAOBase extends DAO
 	  **/
 	private static final function create( &$producto_lote )
 	{
-		$sql = "INSERT INTO producto_lote ( id_producto, id_lote, cantidad ) VALUES ( ?, ?, ?);";
+		$sql = "INSERT INTO producto_lote ( id_producto, id_lote, id_unidad, cantidad ) VALUES ( ?, ?, ?, ?);";
 		$params = array( 
 			$producto_lote->getIdProducto(), 
 			$producto_lote->getIdLote(), 
+			$producto_lote->getIdUnidad(), 
 			$producto_lote->getCantidad(), 
 		 );
 		global $conn;
@@ -241,7 +251,7 @@ abstract class ProductoLoteDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link ProductoLote} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link ProductoLote}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -272,35 +282,46 @@ abstract class ProductoLoteDAOBase extends DAO
 	{
 		$sql = "SELECT * from producto_lote WHERE ("; 
 		$val = array();
-		if( (($a = $producto_loteA->getIdProducto()) != NULL) & ( ($b = $producto_loteB->getIdProducto()) != NULL) ){
+		if( (($a = $producto_loteA->getIdProducto()) !== NULL) & ( ($b = $producto_loteB->getIdProducto()) !== NULL) ){
 				$sql .= " id_producto >= ? AND id_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_producto = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $producto_loteA->getIdLote()) != NULL) & ( ($b = $producto_loteB->getIdLote()) != NULL) ){
+		if( (($a = $producto_loteA->getIdLote()) !== NULL) & ( ($b = $producto_loteB->getIdLote()) !== NULL) ){
 				$sql .= " id_lote >= ? AND id_lote <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_lote = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $producto_loteA->getCantidad()) != NULL) & ( ($b = $producto_loteB->getCantidad()) != NULL) ){
+		if( (($a = $producto_loteA->getIdUnidad()) !== NULL) & ( ($b = $producto_loteB->getIdUnidad()) !== NULL) ){
+				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a !== NULL|| $b !== NULL ){
+			$sql .= " id_unidad = ? AND"; 
+			$a = $a === NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $producto_loteA->getCantidad()) !== NULL) & ( ($b = $producto_loteB->getCantidad()) !== NULL) ){
 				$sql .= " cantidad >= ? AND cantidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " cantidad = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
@@ -335,9 +356,9 @@ abstract class ProductoLoteDAOBase extends DAO
 	  **/
 	public static final function delete( &$producto_lote )
 	{
-		if(self::getByPK($producto_lote->getIdProducto(), $producto_lote->getIdLote()) === NULL) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM producto_lote WHERE  id_producto = ? AND id_lote = ?;";
-		$params = array( $producto_lote->getIdProducto(), $producto_lote->getIdLote() );
+		if(self::getByPK($producto_lote->getIdProducto(), $producto_lote->getIdLote(), $producto_lote->getIdUnidad()) === NULL) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM producto_lote WHERE  id_producto = ? AND id_lote = ? AND id_unidad = ?;";
+		$params = array( $producto_lote->getIdProducto(), $producto_lote->getIdLote(), $producto_lote->getIdUnidad() );
 		global $conn;
 
 		$conn->Execute($sql, $params);

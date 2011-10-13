@@ -40,8 +40,8 @@ class CompraProducto extends VO
 			if( isset($data['impuesto']) ){
 				$this->impuesto = $data['impuesto'];
 			}
-			if( isset($data['arpillas']) ){
-				$this->arpillas = $data['arpillas'];
+			if( isset($data['id_unidad']) ){
+				$this->id_unidad = $data['id_unidad'];
 			}
 			if( isset($data['retencion']) ){
 				$this->retencion = $data['retencion'];
@@ -65,7 +65,7 @@ class CompraProducto extends VO
 			"precio" => $this->precio,
 			"descuento" => $this->descuento,
 			"impuesto" => $this->impuesto,
-			"arpillas" => $this->arpillas,
+			"id_unidad" => $this->id_unidad,
 			"retencion" => $this->retencion
 		); 
 	return json_encode($vec); 
@@ -128,13 +128,14 @@ class CompraProducto extends VO
 	protected $impuesto;
 
 	/**
-	  * arpillas
+	  * id_unidad
 	  * 
-	  * Numero de arpillas del producto<br>
+	  * Id de la unidad del producto<br>
+	  * <b>Llave Primaria</b><br>
 	  * @access protected
-	  * @var float
+	  * @var int(11)
 	  */
-	protected $arpillas;
+	protected $id_unidad;
 
 	/**
 	  * retencion
@@ -294,27 +295,29 @@ class CompraProducto extends VO
 	}
 
 	/**
-	  * getArpillas
+	  * getIdUnidad
 	  * 
-	  * Get the <i>arpillas</i> property for this object. Donde <i>arpillas</i> es Numero de arpillas del producto
-	  * @return float
+	  * Get the <i>id_unidad</i> property for this object. Donde <i>id_unidad</i> es Id de la unidad del producto
+	  * @return int(11)
 	  */
-	final public function getArpillas()
+	final public function getIdUnidad()
 	{
-		return $this->arpillas;
+		return $this->id_unidad;
 	}
 
 	/**
-	  * setArpillas( $arpillas )
+	  * setIdUnidad( $id_unidad )
 	  * 
-	  * Set the <i>arpillas</i> property for this object. Donde <i>arpillas</i> es Numero de arpillas del producto.
-	  * Una validacion basica se hara aqui para comprobar que <i>arpillas</i> es de tipo <i>float</i>. 
+	  * Set the <i>id_unidad</i> property for this object. Donde <i>id_unidad</i> es Id de la unidad del producto.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_unidad</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param float
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdUnidad( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * @param int(11)
 	  */
-	final public function setArpillas( $arpillas )
+	final public function setIdUnidad( $id_unidad )
 	{
-		$this->arpillas = $arpillas;
+		$this->id_unidad = $id_unidad;
 	}
 
 	/**

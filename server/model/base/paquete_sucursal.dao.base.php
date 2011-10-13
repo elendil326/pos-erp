@@ -227,7 +227,7 @@ abstract class PaqueteSucursalDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link PaqueteSucursal} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link PaqueteSucursal}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -258,24 +258,24 @@ abstract class PaqueteSucursalDAOBase extends DAO
 	{
 		$sql = "SELECT * from paquete_sucursal WHERE ("; 
 		$val = array();
-		if( (($a = $paquete_sucursalA->getIdPaquete()) != NULL) & ( ($b = $paquete_sucursalB->getIdPaquete()) != NULL) ){
+		if( (($a = $paquete_sucursalA->getIdPaquete()) !== NULL) & ( ($b = $paquete_sucursalB->getIdPaquete()) !== NULL) ){
 				$sql .= " id_paquete >= ? AND id_paquete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_paquete = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $paquete_sucursalA->getIdSucursal()) != NULL) & ( ($b = $paquete_sucursalB->getIdSucursal()) != NULL) ){
+		if( (($a = $paquete_sucursalA->getIdSucursal()) !== NULL) & ( ($b = $paquete_sucursalB->getIdSucursal()) !== NULL) ){
 				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_sucursal = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

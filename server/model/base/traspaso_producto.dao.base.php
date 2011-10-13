@@ -255,7 +255,7 @@ abstract class TraspasoProductoDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link TraspasoProducto} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link TraspasoProducto}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -286,57 +286,57 @@ abstract class TraspasoProductoDAOBase extends DAO
 	{
 		$sql = "SELECT * from traspaso_producto WHERE ("; 
 		$val = array();
-		if( (($a = $traspaso_productoA->getIdTraspaso()) != NULL) & ( ($b = $traspaso_productoB->getIdTraspaso()) != NULL) ){
+		if( (($a = $traspaso_productoA->getIdTraspaso()) !== NULL) & ( ($b = $traspaso_productoB->getIdTraspaso()) !== NULL) ){
 				$sql .= " id_traspaso >= ? AND id_traspaso <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_traspaso = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspaso_productoA->getIdProducto()) != NULL) & ( ($b = $traspaso_productoB->getIdProducto()) != NULL) ){
+		if( (($a = $traspaso_productoA->getIdProducto()) !== NULL) & ( ($b = $traspaso_productoB->getIdProducto()) !== NULL) ){
 				$sql .= " id_producto >= ? AND id_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_producto = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspaso_productoA->getCantidad()) != NULL) & ( ($b = $traspaso_productoB->getCantidad()) != NULL) ){
+		if( (($a = $traspaso_productoA->getCantidad()) !== NULL) & ( ($b = $traspaso_productoB->getCantidad()) !== NULL) ){
 				$sql .= " cantidad >= ? AND cantidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " cantidad = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspaso_productoA->getEnviado()) != NULL) & ( ($b = $traspaso_productoB->getEnviado()) != NULL) ){
+		if( (($a = $traspaso_productoA->getEnviado()) !== NULL) & ( ($b = $traspaso_productoB->getEnviado()) !== NULL) ){
 				$sql .= " enviado >= ? AND enviado <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " enviado = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspaso_productoA->getRecibido()) != NULL) & ( ($b = $traspaso_productoB->getRecibido()) != NULL) ){
+		if( (($a = $traspaso_productoA->getRecibido()) !== NULL) & ( ($b = $traspaso_productoB->getRecibido()) !== NULL) ){
 				$sql .= " recibido >= ? AND recibido <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " recibido = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

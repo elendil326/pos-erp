@@ -322,7 +322,7 @@ abstract class GastoDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Gasto} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Gasto}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -353,167 +353,167 @@ abstract class GastoDAOBase extends DAO
 	{
 		$sql = "SELECT * from gasto WHERE ("; 
 		$val = array();
-		if( (($a = $gastoA->getIdGasto()) != NULL) & ( ($b = $gastoB->getIdGasto()) != NULL) ){
+		if( (($a = $gastoA->getIdGasto()) !== NULL) & ( ($b = $gastoB->getIdGasto()) !== NULL) ){
 				$sql .= " id_gasto >= ? AND id_gasto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_gasto = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getIdEmpresa()) != NULL) & ( ($b = $gastoB->getIdEmpresa()) != NULL) ){
+		if( (($a = $gastoA->getIdEmpresa()) !== NULL) & ( ($b = $gastoB->getIdEmpresa()) !== NULL) ){
 				$sql .= " id_empresa >= ? AND id_empresa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_empresa = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getIdUsuario()) != NULL) & ( ($b = $gastoB->getIdUsuario()) != NULL) ){
+		if( (($a = $gastoA->getIdUsuario()) !== NULL) & ( ($b = $gastoB->getIdUsuario()) !== NULL) ){
 				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_usuario = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getIdConceptoGasto()) != NULL) & ( ($b = $gastoB->getIdConceptoGasto()) != NULL) ){
+		if( (($a = $gastoA->getIdConceptoGasto()) !== NULL) & ( ($b = $gastoB->getIdConceptoGasto()) !== NULL) ){
 				$sql .= " id_concepto_gasto >= ? AND id_concepto_gasto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_concepto_gasto = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getIdOrdenDeServicio()) != NULL) & ( ($b = $gastoB->getIdOrdenDeServicio()) != NULL) ){
+		if( (($a = $gastoA->getIdOrdenDeServicio()) !== NULL) & ( ($b = $gastoB->getIdOrdenDeServicio()) !== NULL) ){
 				$sql .= " id_orden_de_servicio >= ? AND id_orden_de_servicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_orden_de_servicio = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getIdCaja()) != NULL) & ( ($b = $gastoB->getIdCaja()) != NULL) ){
+		if( (($a = $gastoA->getIdCaja()) !== NULL) & ( ($b = $gastoB->getIdCaja()) !== NULL) ){
 				$sql .= " id_caja >= ? AND id_caja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_caja = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getFechaDelGasto()) != NULL) & ( ($b = $gastoB->getFechaDelGasto()) != NULL) ){
+		if( (($a = $gastoA->getFechaDelGasto()) !== NULL) & ( ($b = $gastoB->getFechaDelGasto()) !== NULL) ){
 				$sql .= " fecha_del_gasto >= ? AND fecha_del_gasto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " fecha_del_gasto = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getFechaDeRegistro()) != NULL) & ( ($b = $gastoB->getFechaDeRegistro()) != NULL) ){
+		if( (($a = $gastoA->getFechaDeRegistro()) !== NULL) & ( ($b = $gastoB->getFechaDeRegistro()) !== NULL) ){
 				$sql .= " fecha_de_registro >= ? AND fecha_de_registro <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " fecha_de_registro = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getIdSucursal()) != NULL) & ( ($b = $gastoB->getIdSucursal()) != NULL) ){
+		if( (($a = $gastoA->getIdSucursal()) !== NULL) & ( ($b = $gastoB->getIdSucursal()) !== NULL) ){
 				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_sucursal = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getNota()) != NULL) & ( ($b = $gastoB->getNota()) != NULL) ){
+		if( (($a = $gastoA->getNota()) !== NULL) & ( ($b = $gastoB->getNota()) !== NULL) ){
 				$sql .= " nota >= ? AND nota <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " nota = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getDescripcion()) != NULL) & ( ($b = $gastoB->getDescripcion()) != NULL) ){
+		if( (($a = $gastoA->getDescripcion()) !== NULL) & ( ($b = $gastoB->getDescripcion()) !== NULL) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getFolio()) != NULL) & ( ($b = $gastoB->getFolio()) != NULL) ){
+		if( (($a = $gastoA->getFolio()) !== NULL) & ( ($b = $gastoB->getFolio()) !== NULL) ){
 				$sql .= " folio >= ? AND folio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " folio = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getMonto()) != NULL) & ( ($b = $gastoB->getMonto()) != NULL) ){
+		if( (($a = $gastoA->getMonto()) !== NULL) & ( ($b = $gastoB->getMonto()) !== NULL) ){
 				$sql .= " monto >= ? AND monto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " monto = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getCancelado()) != NULL) & ( ($b = $gastoB->getCancelado()) != NULL) ){
+		if( (($a = $gastoA->getCancelado()) !== NULL) & ( ($b = $gastoB->getCancelado()) !== NULL) ){
 				$sql .= " cancelado >= ? AND cancelado <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " cancelado = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $gastoA->getMotivoCancelacion()) != NULL) & ( ($b = $gastoB->getMotivoCancelacion()) != NULL) ){
+		if( (($a = $gastoA->getMotivoCancelacion()) !== NULL) & ( ($b = $gastoB->getMotivoCancelacion()) !== NULL) ){
 				$sql .= " motivo_cancelacion >= ? AND motivo_cancelacion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " motivo_cancelacion = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

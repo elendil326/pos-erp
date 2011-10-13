@@ -227,7 +227,7 @@ abstract class ChequeCompraDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link ChequeCompra} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link ChequeCompra}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -258,24 +258,24 @@ abstract class ChequeCompraDAOBase extends DAO
 	{
 		$sql = "SELECT * from cheque_compra WHERE ("; 
 		$val = array();
-		if( (($a = $cheque_compraA->getIdCheque()) != NULL) & ( ($b = $cheque_compraB->getIdCheque()) != NULL) ){
+		if( (($a = $cheque_compraA->getIdCheque()) !== NULL) & ( ($b = $cheque_compraB->getIdCheque()) !== NULL) ){
 				$sql .= " id_cheque >= ? AND id_cheque <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_cheque = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $cheque_compraA->getIdCompra()) != NULL) & ( ($b = $cheque_compraB->getIdCompra()) != NULL) ){
+		if( (($a = $cheque_compraA->getIdCompra()) !== NULL) & ( ($b = $cheque_compraB->getIdCompra()) !== NULL) ){
 				$sql .= " id_compra >= ? AND id_compra <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_compra = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

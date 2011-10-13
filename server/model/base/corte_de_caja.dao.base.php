@@ -273,7 +273,7 @@ abstract class CorteDeCajaDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link CorteDeCaja} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link CorteDeCaja}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -304,90 +304,90 @@ abstract class CorteDeCajaDAOBase extends DAO
 	{
 		$sql = "SELECT * from corte_de_caja WHERE ("; 
 		$val = array();
-		if( (($a = $corte_de_cajaA->getIdCorteDeCaja()) != NULL) & ( ($b = $corte_de_cajaB->getIdCorteDeCaja()) != NULL) ){
+		if( (($a = $corte_de_cajaA->getIdCorteDeCaja()) !== NULL) & ( ($b = $corte_de_cajaB->getIdCorteDeCaja()) !== NULL) ){
 				$sql .= " id_corte_de_caja >= ? AND id_corte_de_caja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_corte_de_caja = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $corte_de_cajaA->getIdCaja()) != NULL) & ( ($b = $corte_de_cajaB->getIdCaja()) != NULL) ){
+		if( (($a = $corte_de_cajaA->getIdCaja()) !== NULL) & ( ($b = $corte_de_cajaB->getIdCaja()) !== NULL) ){
 				$sql .= " id_caja >= ? AND id_caja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_caja = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $corte_de_cajaA->getIdCajero()) != NULL) & ( ($b = $corte_de_cajaB->getIdCajero()) != NULL) ){
+		if( (($a = $corte_de_cajaA->getIdCajero()) !== NULL) & ( ($b = $corte_de_cajaB->getIdCajero()) !== NULL) ){
 				$sql .= " id_cajero >= ? AND id_cajero <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_cajero = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $corte_de_cajaA->getIdCajeroNuevo()) != NULL) & ( ($b = $corte_de_cajaB->getIdCajeroNuevo()) != NULL) ){
+		if( (($a = $corte_de_cajaA->getIdCajeroNuevo()) !== NULL) & ( ($b = $corte_de_cajaB->getIdCajeroNuevo()) !== NULL) ){
 				$sql .= " id_cajero_nuevo >= ? AND id_cajero_nuevo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_cajero_nuevo = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $corte_de_cajaA->getFecha()) != NULL) & ( ($b = $corte_de_cajaB->getFecha()) != NULL) ){
+		if( (($a = $corte_de_cajaA->getFecha()) !== NULL) & ( ($b = $corte_de_cajaB->getFecha()) !== NULL) ){
 				$sql .= " fecha >= ? AND fecha <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " fecha = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $corte_de_cajaA->getSaldoReal()) != NULL) & ( ($b = $corte_de_cajaB->getSaldoReal()) != NULL) ){
+		if( (($a = $corte_de_cajaA->getSaldoReal()) !== NULL) & ( ($b = $corte_de_cajaB->getSaldoReal()) !== NULL) ){
 				$sql .= " saldo_real >= ? AND saldo_real <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " saldo_real = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $corte_de_cajaA->getSaldoEsperado()) != NULL) & ( ($b = $corte_de_cajaB->getSaldoEsperado()) != NULL) ){
+		if( (($a = $corte_de_cajaA->getSaldoEsperado()) !== NULL) & ( ($b = $corte_de_cajaB->getSaldoEsperado()) !== NULL) ){
 				$sql .= " saldo_esperado >= ? AND saldo_esperado <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " saldo_esperado = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $corte_de_cajaA->getSaldoFinal()) != NULL) & ( ($b = $corte_de_cajaB->getSaldoFinal()) != NULL) ){
+		if( (($a = $corte_de_cajaA->getSaldoFinal()) !== NULL) & ( ($b = $corte_de_cajaB->getSaldoFinal()) !== NULL) ){
 				$sql .= " saldo_final >= ? AND saldo_final <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " saldo_final = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

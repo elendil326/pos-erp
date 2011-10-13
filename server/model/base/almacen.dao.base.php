@@ -266,7 +266,7 @@ abstract class AlmacenDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Almacen} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Almacen}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -297,79 +297,79 @@ abstract class AlmacenDAOBase extends DAO
 	{
 		$sql = "SELECT * from almacen WHERE ("; 
 		$val = array();
-		if( (($a = $almacenA->getIdAlmacen()) != NULL) & ( ($b = $almacenB->getIdAlmacen()) != NULL) ){
+		if( (($a = $almacenA->getIdAlmacen()) !== NULL) & ( ($b = $almacenB->getIdAlmacen()) !== NULL) ){
 				$sql .= " id_almacen >= ? AND id_almacen <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_almacen = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $almacenA->getIdSucursal()) != NULL) & ( ($b = $almacenB->getIdSucursal()) != NULL) ){
+		if( (($a = $almacenA->getIdSucursal()) !== NULL) & ( ($b = $almacenB->getIdSucursal()) !== NULL) ){
 				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_sucursal = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $almacenA->getIdEmpresa()) != NULL) & ( ($b = $almacenB->getIdEmpresa()) != NULL) ){
+		if( (($a = $almacenA->getIdEmpresa()) !== NULL) & ( ($b = $almacenB->getIdEmpresa()) !== NULL) ){
 				$sql .= " id_empresa >= ? AND id_empresa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_empresa = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $almacenA->getIdTipoAlmacen()) != NULL) & ( ($b = $almacenB->getIdTipoAlmacen()) != NULL) ){
+		if( (($a = $almacenA->getIdTipoAlmacen()) !== NULL) & ( ($b = $almacenB->getIdTipoAlmacen()) !== NULL) ){
 				$sql .= " id_tipo_almacen >= ? AND id_tipo_almacen <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_tipo_almacen = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $almacenA->getNombre()) != NULL) & ( ($b = $almacenB->getNombre()) != NULL) ){
+		if( (($a = $almacenA->getNombre()) !== NULL) & ( ($b = $almacenB->getNombre()) !== NULL) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $almacenA->getDescripcion()) != NULL) & ( ($b = $almacenB->getDescripcion()) != NULL) ){
+		if( (($a = $almacenA->getDescripcion()) !== NULL) & ( ($b = $almacenB->getDescripcion()) !== NULL) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $almacenA->getActivo()) != NULL) & ( ($b = $almacenB->getActivo()) != NULL) ){
+		if( (($a = $almacenA->getActivo()) !== NULL) & ( ($b = $almacenB->getActivo()) !== NULL) ){
 				$sql .= " activo >= ? AND activo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " activo = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

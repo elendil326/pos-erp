@@ -255,7 +255,7 @@ abstract class VentaPaqueteDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link VentaPaquete} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link VentaPaquete}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -286,57 +286,57 @@ abstract class VentaPaqueteDAOBase extends DAO
 	{
 		$sql = "SELECT * from venta_paquete WHERE ("; 
 		$val = array();
-		if( (($a = $venta_paqueteA->getIdVenta()) != NULL) & ( ($b = $venta_paqueteB->getIdVenta()) != NULL) ){
+		if( (($a = $venta_paqueteA->getIdVenta()) !== NULL) & ( ($b = $venta_paqueteB->getIdVenta()) !== NULL) ){
 				$sql .= " id_venta >= ? AND id_venta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_venta = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_paqueteA->getIdPaquete()) != NULL) & ( ($b = $venta_paqueteB->getIdPaquete()) != NULL) ){
+		if( (($a = $venta_paqueteA->getIdPaquete()) !== NULL) & ( ($b = $venta_paqueteB->getIdPaquete()) !== NULL) ){
 				$sql .= " id_paquete >= ? AND id_paquete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_paquete = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_paqueteA->getCantidad()) != NULL) & ( ($b = $venta_paqueteB->getCantidad()) != NULL) ){
+		if( (($a = $venta_paqueteA->getCantidad()) !== NULL) & ( ($b = $venta_paqueteB->getCantidad()) !== NULL) ){
 				$sql .= " cantidad >= ? AND cantidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " cantidad = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_paqueteA->getPrecio()) != NULL) & ( ($b = $venta_paqueteB->getPrecio()) != NULL) ){
+		if( (($a = $venta_paqueteA->getPrecio()) !== NULL) & ( ($b = $venta_paqueteB->getPrecio()) !== NULL) ){
 				$sql .= " precio >= ? AND precio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " precio = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_paqueteA->getDescuento()) != NULL) & ( ($b = $venta_paqueteB->getDescuento()) != NULL) ){
+		if( (($a = $venta_paqueteA->getDescuento()) !== NULL) & ( ($b = $venta_paqueteB->getDescuento()) !== NULL) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

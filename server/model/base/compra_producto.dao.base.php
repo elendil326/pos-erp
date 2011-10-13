@@ -14,22 +14,25 @@ abstract class CompraProductoDAOBase extends DAO
 
 		private static $loadedRecords = array();
 
-		private static function recordExists(  $id_compra, $id_producto ){
+		private static function recordExists(  $id_compra, $id_producto, $id_unidad ){
 			$pk = "";
 			$pk .= $id_compra . "-";
 			$pk .= $id_producto . "-";
+			$pk .= $id_unidad . "-";
 			return array_key_exists ( $pk , self::$loadedRecords );
 		}
-		private static function pushRecord( $inventario,  $id_compra, $id_producto){
+		private static function pushRecord( $inventario,  $id_compra, $id_producto, $id_unidad){
 			$pk = "";
 			$pk .= $id_compra . "-";
 			$pk .= $id_producto . "-";
+			$pk .= $id_unidad . "-";
 			self::$loadedRecords [$pk] = $inventario;
 		}
-		private static function getRecord(  $id_compra, $id_producto ){
+		private static function getRecord(  $id_compra, $id_producto, $id_unidad ){
 			$pk = "";
 			$pk .= $id_compra . "-";
 			$pk .= $id_producto . "-";
+			$pk .= $id_unidad . "-";
 			return self::$loadedRecords[$pk];
 		}
 	/**
@@ -47,7 +50,7 @@ abstract class CompraProductoDAOBase extends DAO
 	  **/
 	public static final function save( &$compra_producto )
 	{
-		if(  self::getByPK(  $compra_producto->getIdCompra() , $compra_producto->getIdProducto() ) !== NULL )
+		if(  self::getByPK(  $compra_producto->getIdCompra() , $compra_producto->getIdProducto() , $compra_producto->getIdUnidad() ) !== NULL )
 		{
 			try{ return CompraProductoDAOBase::update( $compra_producto) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -65,18 +68,18 @@ abstract class CompraProductoDAOBase extends DAO
 	  *	@static
 	  * @return @link CompraProducto Un objeto del tipo {@link CompraProducto}. NULL si no hay tal registro.
 	  **/
-	public static final function getByPK(  $id_compra, $id_producto )
+	public static final function getByPK(  $id_compra, $id_producto, $id_unidad )
 	{
-		if(self::recordExists(  $id_compra, $id_producto)){
-			return self::getRecord( $id_compra, $id_producto );
+		if(self::recordExists(  $id_compra, $id_producto, $id_unidad)){
+			return self::getRecord( $id_compra, $id_producto, $id_unidad );
 		}
-		$sql = "SELECT * FROM compra_producto WHERE (id_compra = ? AND id_producto = ? ) LIMIT 1;";
-		$params = array(  $id_compra, $id_producto );
+		$sql = "SELECT * FROM compra_producto WHERE (id_compra = ? AND id_producto = ? AND id_unidad = ? ) LIMIT 1;";
+		$params = array(  $id_compra, $id_producto, $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new CompraProducto( $rs );
-			self::pushRecord( $foo,  $id_compra, $id_producto );
+			self::pushRecord( $foo,  $id_compra, $id_producto, $id_unidad );
 			return $foo;
 	}
 
@@ -113,7 +116,8 @@ abstract class CompraProductoDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_compra
 			//id_producto
-    		self::pushRecord( $bar, $foo["id_compra"],$foo["id_producto"] );
+			//id_unidad
+    		self::pushRecord( $bar, $foo["id_compra"],$foo["id_producto"],$foo["id_unidad"] );
 		}
 		return $allData;
 	}
@@ -177,9 +181,9 @@ abstract class CompraProductoDAOBase extends DAO
 			array_push( $val, $compra_producto->getImpuesto() );
 		}
 
-		if( $compra_producto->getArpillas() != NULL){
-			$sql .= " arpillas = ? AND";
-			array_push( $val, $compra_producto->getArpillas() );
+		if( $compra_producto->getIdUnidad() != NULL){
+			$sql .= " id_unidad = ? AND";
+			array_push( $val, $compra_producto->getIdUnidad() );
 		}
 
 		if( $compra_producto->getRetencion() != NULL){
@@ -199,7 +203,7 @@ abstract class CompraProductoDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new CompraProducto($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_compra"],$foo["id_producto"] );
+    		self::pushRecord( $bar, $foo["id_compra"],$foo["id_producto"],$foo["id_unidad"] );
 		}
 		return $ar;
 	}
@@ -218,15 +222,14 @@ abstract class CompraProductoDAOBase extends DAO
 	  **/
 	private static final function update( $compra_producto )
 	{
-		$sql = "UPDATE compra_producto SET  cantidad = ?, precio = ?, descuento = ?, impuesto = ?, arpillas = ?, retencion = ? WHERE  id_compra = ? AND id_producto = ?;";
+		$sql = "UPDATE compra_producto SET  cantidad = ?, precio = ?, descuento = ?, impuesto = ?, retencion = ? WHERE  id_compra = ? AND id_producto = ? AND id_unidad = ?;";
 		$params = array( 
 			$compra_producto->getCantidad(), 
 			$compra_producto->getPrecio(), 
 			$compra_producto->getDescuento(), 
 			$compra_producto->getImpuesto(), 
-			$compra_producto->getArpillas(), 
 			$compra_producto->getRetencion(), 
-			$compra_producto->getIdCompra(),$compra_producto->getIdProducto(), );
+			$compra_producto->getIdCompra(),$compra_producto->getIdProducto(),$compra_producto->getIdUnidad(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
@@ -249,7 +252,7 @@ abstract class CompraProductoDAOBase extends DAO
 	  **/
 	private static final function create( &$compra_producto )
 	{
-		$sql = "INSERT INTO compra_producto ( id_compra, id_producto, cantidad, precio, descuento, impuesto, arpillas, retencion ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO compra_producto ( id_compra, id_producto, cantidad, precio, descuento, impuesto, id_unidad, retencion ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$compra_producto->getIdCompra(), 
 			$compra_producto->getIdProducto(), 
@@ -257,7 +260,7 @@ abstract class CompraProductoDAOBase extends DAO
 			$compra_producto->getPrecio(), 
 			$compra_producto->getDescuento(), 
 			$compra_producto->getImpuesto(), 
-			$compra_producto->getArpillas(), 
+			$compra_producto->getIdUnidad(), 
 			$compra_producto->getRetencion(), 
 		 );
 		global $conn;
@@ -276,7 +279,7 @@ abstract class CompraProductoDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link CompraProducto} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link CompraProducto}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -307,90 +310,90 @@ abstract class CompraProductoDAOBase extends DAO
 	{
 		$sql = "SELECT * from compra_producto WHERE ("; 
 		$val = array();
-		if( (($a = $compra_productoA->getIdCompra()) != NULL) & ( ($b = $compra_productoB->getIdCompra()) != NULL) ){
+		if( (($a = $compra_productoA->getIdCompra()) !== NULL) & ( ($b = $compra_productoB->getIdCompra()) !== NULL) ){
 				$sql .= " id_compra >= ? AND id_compra <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_compra = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $compra_productoA->getIdProducto()) != NULL) & ( ($b = $compra_productoB->getIdProducto()) != NULL) ){
+		if( (($a = $compra_productoA->getIdProducto()) !== NULL) & ( ($b = $compra_productoB->getIdProducto()) !== NULL) ){
 				$sql .= " id_producto >= ? AND id_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_producto = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $compra_productoA->getCantidad()) != NULL) & ( ($b = $compra_productoB->getCantidad()) != NULL) ){
+		if( (($a = $compra_productoA->getCantidad()) !== NULL) & ( ($b = $compra_productoB->getCantidad()) !== NULL) ){
 				$sql .= " cantidad >= ? AND cantidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " cantidad = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $compra_productoA->getPrecio()) != NULL) & ( ($b = $compra_productoB->getPrecio()) != NULL) ){
+		if( (($a = $compra_productoA->getPrecio()) !== NULL) & ( ($b = $compra_productoB->getPrecio()) !== NULL) ){
 				$sql .= " precio >= ? AND precio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " precio = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $compra_productoA->getDescuento()) != NULL) & ( ($b = $compra_productoB->getDescuento()) != NULL) ){
+		if( (($a = $compra_productoA->getDescuento()) !== NULL) & ( ($b = $compra_productoB->getDescuento()) !== NULL) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $compra_productoA->getImpuesto()) != NULL) & ( ($b = $compra_productoB->getImpuesto()) != NULL) ){
+		if( (($a = $compra_productoA->getImpuesto()) !== NULL) & ( ($b = $compra_productoB->getImpuesto()) !== NULL) ){
 				$sql .= " impuesto >= ? AND impuesto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " impuesto = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $compra_productoA->getArpillas()) != NULL) & ( ($b = $compra_productoB->getArpillas()) != NULL) ){
-				$sql .= " arpillas >= ? AND arpillas <= ? AND";
+		if( (($a = $compra_productoA->getIdUnidad()) !== NULL) & ( ($b = $compra_productoB->getIdUnidad()) !== NULL) ){
+				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
-			$sql .= " arpillas = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+		}elseif( $a !== NULL|| $b !== NULL ){
+			$sql .= " id_unidad = ? AND"; 
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $compra_productoA->getRetencion()) != NULL) & ( ($b = $compra_productoB->getRetencion()) != NULL) ){
+		if( (($a = $compra_productoA->getRetencion()) !== NULL) & ( ($b = $compra_productoB->getRetencion()) !== NULL) ){
 				$sql .= " retencion >= ? AND retencion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " retencion = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
@@ -425,9 +428,9 @@ abstract class CompraProductoDAOBase extends DAO
 	  **/
 	public static final function delete( &$compra_producto )
 	{
-		if(self::getByPK($compra_producto->getIdCompra(), $compra_producto->getIdProducto()) === NULL) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM compra_producto WHERE  id_compra = ? AND id_producto = ?;";
-		$params = array( $compra_producto->getIdCompra(), $compra_producto->getIdProducto() );
+		if(self::getByPK($compra_producto->getIdCompra(), $compra_producto->getIdProducto(), $compra_producto->getIdUnidad()) === NULL) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM compra_producto WHERE  id_compra = ? AND id_producto = ? AND id_unidad = ?;";
+		$params = array( $compra_producto->getIdCompra(), $compra_producto->getIdProducto(), $compra_producto->getIdUnidad() );
 		global $conn;
 
 		$conn->Execute($sql, $params);

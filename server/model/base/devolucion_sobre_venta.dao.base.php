@@ -252,7 +252,7 @@ abstract class DevolucionSobreVentaDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link DevolucionSobreVenta} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link DevolucionSobreVenta}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -283,57 +283,57 @@ abstract class DevolucionSobreVentaDAOBase extends DAO
 	{
 		$sql = "SELECT * from devolucion_sobre_venta WHERE ("; 
 		$val = array();
-		if( (($a = $devolucion_sobre_ventaA->getIdDevolucionSobreVenta()) != NULL) & ( ($b = $devolucion_sobre_ventaB->getIdDevolucionSobreVenta()) != NULL) ){
+		if( (($a = $devolucion_sobre_ventaA->getIdDevolucionSobreVenta()) !== NULL) & ( ($b = $devolucion_sobre_ventaB->getIdDevolucionSobreVenta()) !== NULL) ){
 				$sql .= " id_devolucion_sobre_venta >= ? AND id_devolucion_sobre_venta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_devolucion_sobre_venta = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $devolucion_sobre_ventaA->getIdVenta()) != NULL) & ( ($b = $devolucion_sobre_ventaB->getIdVenta()) != NULL) ){
+		if( (($a = $devolucion_sobre_ventaA->getIdVenta()) !== NULL) & ( ($b = $devolucion_sobre_ventaB->getIdVenta()) !== NULL) ){
 				$sql .= " id_venta >= ? AND id_venta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_venta = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $devolucion_sobre_ventaA->getIdUsuario()) != NULL) & ( ($b = $devolucion_sobre_ventaB->getIdUsuario()) != NULL) ){
+		if( (($a = $devolucion_sobre_ventaA->getIdUsuario()) !== NULL) & ( ($b = $devolucion_sobre_ventaB->getIdUsuario()) !== NULL) ){
 				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_usuario = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $devolucion_sobre_ventaA->getFecha()) != NULL) & ( ($b = $devolucion_sobre_ventaB->getFecha()) != NULL) ){
+		if( (($a = $devolucion_sobre_ventaA->getFecha()) !== NULL) & ( ($b = $devolucion_sobre_ventaB->getFecha()) !== NULL) ){
 				$sql .= " fecha >= ? AND fecha <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " fecha = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $devolucion_sobre_ventaA->getMotivo()) != NULL) & ( ($b = $devolucion_sobre_ventaB->getMotivo()) != NULL) ){
+		if( (($a = $devolucion_sobre_ventaA->getMotivo()) !== NULL) & ( ($b = $devolucion_sobre_ventaB->getMotivo()) !== NULL) ){
 				$sql .= " motivo >= ? AND motivo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " motivo = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

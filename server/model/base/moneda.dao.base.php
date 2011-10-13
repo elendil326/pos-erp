@@ -245,7 +245,7 @@ abstract class MonedaDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Moneda} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Moneda}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -276,46 +276,46 @@ abstract class MonedaDAOBase extends DAO
 	{
 		$sql = "SELECT * from moneda WHERE ("; 
 		$val = array();
-		if( (($a = $monedaA->getIdMoneda()) != NULL) & ( ($b = $monedaB->getIdMoneda()) != NULL) ){
+		if( (($a = $monedaA->getIdMoneda()) !== NULL) & ( ($b = $monedaB->getIdMoneda()) !== NULL) ){
 				$sql .= " id_moneda >= ? AND id_moneda <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_moneda = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $monedaA->getNombre()) != NULL) & ( ($b = $monedaB->getNombre()) != NULL) ){
+		if( (($a = $monedaA->getNombre()) !== NULL) & ( ($b = $monedaB->getNombre()) !== NULL) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $monedaA->getSimbolo()) != NULL) & ( ($b = $monedaB->getSimbolo()) != NULL) ){
+		if( (($a = $monedaA->getSimbolo()) !== NULL) & ( ($b = $monedaB->getSimbolo()) !== NULL) ){
 				$sql .= " simbolo >= ? AND simbolo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " simbolo = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $monedaA->getActiva()) != NULL) & ( ($b = $monedaB->getActiva()) != NULL) ){
+		if( (($a = $monedaA->getActiva()) !== NULL) & ( ($b = $monedaB->getActiva()) !== NULL) ){
 				$sql .= " activa >= ? AND activa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " activa = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

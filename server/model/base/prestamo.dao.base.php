@@ -280,7 +280,7 @@ abstract class PrestamoDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Prestamo} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Prestamo}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -311,101 +311,101 @@ abstract class PrestamoDAOBase extends DAO
 	{
 		$sql = "SELECT * from prestamo WHERE ("; 
 		$val = array();
-		if( (($a = $prestamoA->getIdPrestamo()) != NULL) & ( ($b = $prestamoB->getIdPrestamo()) != NULL) ){
+		if( (($a = $prestamoA->getIdPrestamo()) !== NULL) & ( ($b = $prestamoB->getIdPrestamo()) !== NULL) ){
 				$sql .= " id_prestamo >= ? AND id_prestamo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_prestamo = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $prestamoA->getIdSolicitante()) != NULL) & ( ($b = $prestamoB->getIdSolicitante()) != NULL) ){
+		if( (($a = $prestamoA->getIdSolicitante()) !== NULL) & ( ($b = $prestamoB->getIdSolicitante()) !== NULL) ){
 				$sql .= " id_solicitante >= ? AND id_solicitante <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_solicitante = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $prestamoA->getIdEmpresaPresta()) != NULL) & ( ($b = $prestamoB->getIdEmpresaPresta()) != NULL) ){
+		if( (($a = $prestamoA->getIdEmpresaPresta()) !== NULL) & ( ($b = $prestamoB->getIdEmpresaPresta()) !== NULL) ){
 				$sql .= " id_empresa_presta >= ? AND id_empresa_presta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_empresa_presta = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $prestamoA->getIdSucursalPresta()) != NULL) & ( ($b = $prestamoB->getIdSucursalPresta()) != NULL) ){
+		if( (($a = $prestamoA->getIdSucursalPresta()) !== NULL) & ( ($b = $prestamoB->getIdSucursalPresta()) !== NULL) ){
 				$sql .= " id_sucursal_presta >= ? AND id_sucursal_presta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_sucursal_presta = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $prestamoA->getIdUsuario()) != NULL) & ( ($b = $prestamoB->getIdUsuario()) != NULL) ){
+		if( (($a = $prestamoA->getIdUsuario()) !== NULL) & ( ($b = $prestamoB->getIdUsuario()) !== NULL) ){
 				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_usuario = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $prestamoA->getMonto()) != NULL) & ( ($b = $prestamoB->getMonto()) != NULL) ){
+		if( (($a = $prestamoA->getMonto()) !== NULL) & ( ($b = $prestamoB->getMonto()) !== NULL) ){
 				$sql .= " monto >= ? AND monto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " monto = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $prestamoA->getSaldo()) != NULL) & ( ($b = $prestamoB->getSaldo()) != NULL) ){
+		if( (($a = $prestamoA->getSaldo()) !== NULL) & ( ($b = $prestamoB->getSaldo()) !== NULL) ){
 				$sql .= " saldo >= ? AND saldo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " saldo = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $prestamoA->getInteresMensual()) != NULL) & ( ($b = $prestamoB->getInteresMensual()) != NULL) ){
+		if( (($a = $prestamoA->getInteresMensual()) !== NULL) & ( ($b = $prestamoB->getInteresMensual()) !== NULL) ){
 				$sql .= " interes_mensual >= ? AND interes_mensual <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " interes_mensual = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $prestamoA->getFecha()) != NULL) & ( ($b = $prestamoB->getFecha()) != NULL) ){
+		if( (($a = $prestamoA->getFecha()) !== NULL) & ( ($b = $prestamoB->getFecha()) !== NULL) ){
 				$sql .= " fecha >= ? AND fecha <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " fecha = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

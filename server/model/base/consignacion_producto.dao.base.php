@@ -269,7 +269,7 @@ abstract class ConsignacionProductoDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link ConsignacionProducto} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link ConsignacionProducto}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -300,79 +300,79 @@ abstract class ConsignacionProductoDAOBase extends DAO
 	{
 		$sql = "SELECT * from consignacion_producto WHERE ("; 
 		$val = array();
-		if( (($a = $consignacion_productoA->getIdConsignacion()) != NULL) & ( ($b = $consignacion_productoB->getIdConsignacion()) != NULL) ){
+		if( (($a = $consignacion_productoA->getIdConsignacion()) !== NULL) & ( ($b = $consignacion_productoB->getIdConsignacion()) !== NULL) ){
 				$sql .= " id_consignacion >= ? AND id_consignacion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_consignacion = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $consignacion_productoA->getIdProducto()) != NULL) & ( ($b = $consignacion_productoB->getIdProducto()) != NULL) ){
+		if( (($a = $consignacion_productoA->getIdProducto()) !== NULL) & ( ($b = $consignacion_productoB->getIdProducto()) !== NULL) ){
 				$sql .= " id_producto >= ? AND id_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_producto = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $consignacion_productoA->getCantidad()) != NULL) & ( ($b = $consignacion_productoB->getCantidad()) != NULL) ){
+		if( (($a = $consignacion_productoA->getCantidad()) !== NULL) & ( ($b = $consignacion_productoB->getCantidad()) !== NULL) ){
 				$sql .= " cantidad >= ? AND cantidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " cantidad = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $consignacion_productoA->getImpuesto()) != NULL) & ( ($b = $consignacion_productoB->getImpuesto()) != NULL) ){
+		if( (($a = $consignacion_productoA->getImpuesto()) !== NULL) & ( ($b = $consignacion_productoB->getImpuesto()) !== NULL) ){
 				$sql .= " impuesto >= ? AND impuesto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " impuesto = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $consignacion_productoA->getDescuento()) != NULL) & ( ($b = $consignacion_productoB->getDescuento()) != NULL) ){
+		if( (($a = $consignacion_productoA->getDescuento()) !== NULL) & ( ($b = $consignacion_productoB->getDescuento()) !== NULL) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $consignacion_productoA->getRetencion()) != NULL) & ( ($b = $consignacion_productoB->getRetencion()) != NULL) ){
+		if( (($a = $consignacion_productoA->getRetencion()) !== NULL) & ( ($b = $consignacion_productoB->getRetencion()) !== NULL) ){
 				$sql .= " retencion >= ? AND retencion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " retencion = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $consignacion_productoA->getPrecio()) != NULL) & ( ($b = $consignacion_productoB->getPrecio()) != NULL) ){
+		if( (($a = $consignacion_productoA->getPrecio()) !== NULL) & ( ($b = $consignacion_productoB->getPrecio()) !== NULL) ){
 				$sql .= " precio >= ? AND precio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " precio = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

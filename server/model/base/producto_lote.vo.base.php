@@ -28,6 +28,9 @@ class ProductoLote extends VO
 			if( isset($data['id_lote']) ){
 				$this->id_lote = $data['id_lote'];
 			}
+			if( isset($data['id_unidad']) ){
+				$this->id_unidad = $data['id_unidad'];
+			}
 			if( isset($data['cantidad']) ){
 				$this->cantidad = $data['cantidad'];
 			}
@@ -46,6 +49,7 @@ class ProductoLote extends VO
 		$vec = array( 
 			"id_producto" => $this->id_producto,
 			"id_lote" => $this->id_lote,
+			"id_unidad" => $this->id_unidad,
 			"cantidad" => $this->cantidad
 		); 
 	return json_encode($vec); 
@@ -70,6 +74,16 @@ class ProductoLote extends VO
 	  * @var int(11)
 	  */
 	protected $id_lote;
+
+	/**
+	  * id_unidad
+	  * 
+	  * Id de la unidad almacenada del producto<br>
+	  * <b>Llave Primaria</b><br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_unidad;
 
 	/**
 	  * cantidad
@@ -130,6 +144,32 @@ class ProductoLote extends VO
 	final public function setIdLote( $id_lote )
 	{
 		$this->id_lote = $id_lote;
+	}
+
+	/**
+	  * getIdUnidad
+	  * 
+	  * Get the <i>id_unidad</i> property for this object. Donde <i>id_unidad</i> es Id de la unidad almacenada del producto
+	  * @return int(11)
+	  */
+	final public function getIdUnidad()
+	{
+		return $this->id_unidad;
+	}
+
+	/**
+	  * setIdUnidad( $id_unidad )
+	  * 
+	  * Set the <i>id_unidad</i> property for this object. Donde <i>id_unidad</i> es Id de la unidad almacenada del producto.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_unidad</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdUnidad( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * @param int(11)
+	  */
+	final public function setIdUnidad( $id_unidad )
+	{
+		$this->id_unidad = $id_unidad;
 	}
 
 	/**

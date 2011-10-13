@@ -252,7 +252,7 @@ abstract class ImpuestoDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Impuesto} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Impuesto}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -283,57 +283,57 @@ abstract class ImpuestoDAOBase extends DAO
 	{
 		$sql = "SELECT * from impuesto WHERE ("; 
 		$val = array();
-		if( (($a = $impuestoA->getIdImpuesto()) != NULL) & ( ($b = $impuestoB->getIdImpuesto()) != NULL) ){
+		if( (($a = $impuestoA->getIdImpuesto()) !== NULL) & ( ($b = $impuestoB->getIdImpuesto()) !== NULL) ){
 				$sql .= " id_impuesto >= ? AND id_impuesto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_impuesto = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $impuestoA->getMontoPorcentaje()) != NULL) & ( ($b = $impuestoB->getMontoPorcentaje()) != NULL) ){
+		if( (($a = $impuestoA->getMontoPorcentaje()) !== NULL) & ( ($b = $impuestoB->getMontoPorcentaje()) !== NULL) ){
 				$sql .= " monto_porcentaje >= ? AND monto_porcentaje <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " monto_porcentaje = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $impuestoA->getEsMonto()) != NULL) & ( ($b = $impuestoB->getEsMonto()) != NULL) ){
+		if( (($a = $impuestoA->getEsMonto()) !== NULL) & ( ($b = $impuestoB->getEsMonto()) !== NULL) ){
 				$sql .= " es_monto >= ? AND es_monto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " es_monto = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $impuestoA->getNombre()) != NULL) & ( ($b = $impuestoB->getNombre()) != NULL) ){
+		if( (($a = $impuestoA->getNombre()) !== NULL) & ( ($b = $impuestoB->getNombre()) !== NULL) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $impuestoA->getDescripcion()) != NULL) & ( ($b = $impuestoB->getDescripcion()) != NULL) ){
+		if( (($a = $impuestoA->getDescripcion()) !== NULL) & ( ($b = $impuestoB->getDescripcion()) !== NULL) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

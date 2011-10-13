@@ -252,7 +252,7 @@ abstract class RolDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Rol} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Rol}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -283,57 +283,57 @@ abstract class RolDAOBase extends DAO
 	{
 		$sql = "SELECT * from rol WHERE ("; 
 		$val = array();
-		if( (($a = $rolA->getIdRol()) != NULL) & ( ($b = $rolB->getIdRol()) != NULL) ){
+		if( (($a = $rolA->getIdRol()) !== NULL) & ( ($b = $rolB->getIdRol()) !== NULL) ){
 				$sql .= " id_rol >= ? AND id_rol <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_rol = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $rolA->getNombre()) != NULL) & ( ($b = $rolB->getNombre()) != NULL) ){
+		if( (($a = $rolA->getNombre()) !== NULL) & ( ($b = $rolB->getNombre()) !== NULL) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $rolA->getDescripcion()) != NULL) & ( ($b = $rolB->getDescripcion()) != NULL) ){
+		if( (($a = $rolA->getDescripcion()) !== NULL) & ( ($b = $rolB->getDescripcion()) !== NULL) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $rolA->getDescuento()) != NULL) & ( ($b = $rolB->getDescuento()) != NULL) ){
+		if( (($a = $rolA->getDescuento()) !== NULL) & ( ($b = $rolB->getDescuento()) !== NULL) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $rolA->getSalario()) != NULL) & ( ($b = $rolB->getSalario()) != NULL) ){
+		if( (($a = $rolA->getSalario()) !== NULL) & ( ($b = $rolB->getSalario()) !== NULL) ){
 				$sql .= " salario >= ? AND salario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " salario = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

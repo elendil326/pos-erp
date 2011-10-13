@@ -301,7 +301,7 @@ abstract class TraspasoDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Traspaso} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Traspaso}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -332,134 +332,134 @@ abstract class TraspasoDAOBase extends DAO
 	{
 		$sql = "SELECT * from traspaso WHERE ("; 
 		$val = array();
-		if( (($a = $traspasoA->getIdTraspaso()) != NULL) & ( ($b = $traspasoB->getIdTraspaso()) != NULL) ){
+		if( (($a = $traspasoA->getIdTraspaso()) !== NULL) & ( ($b = $traspasoB->getIdTraspaso()) !== NULL) ){
 				$sql .= " id_traspaso >= ? AND id_traspaso <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_traspaso = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getIdUsuarioPrograma()) != NULL) & ( ($b = $traspasoB->getIdUsuarioPrograma()) != NULL) ){
+		if( (($a = $traspasoA->getIdUsuarioPrograma()) !== NULL) & ( ($b = $traspasoB->getIdUsuarioPrograma()) !== NULL) ){
 				$sql .= " id_usuario_programa >= ? AND id_usuario_programa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_usuario_programa = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getIdUsuarioEnvia()) != NULL) & ( ($b = $traspasoB->getIdUsuarioEnvia()) != NULL) ){
+		if( (($a = $traspasoA->getIdUsuarioEnvia()) !== NULL) & ( ($b = $traspasoB->getIdUsuarioEnvia()) !== NULL) ){
 				$sql .= " id_usuario_envia >= ? AND id_usuario_envia <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_usuario_envia = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getIdAlmacenEnvia()) != NULL) & ( ($b = $traspasoB->getIdAlmacenEnvia()) != NULL) ){
+		if( (($a = $traspasoA->getIdAlmacenEnvia()) !== NULL) & ( ($b = $traspasoB->getIdAlmacenEnvia()) !== NULL) ){
 				$sql .= " id_almacen_envia >= ? AND id_almacen_envia <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_almacen_envia = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getFechaEnvioProgramada()) != NULL) & ( ($b = $traspasoB->getFechaEnvioProgramada()) != NULL) ){
+		if( (($a = $traspasoA->getFechaEnvioProgramada()) !== NULL) & ( ($b = $traspasoB->getFechaEnvioProgramada()) !== NULL) ){
 				$sql .= " fecha_envio_programada >= ? AND fecha_envio_programada <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " fecha_envio_programada = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getFechaEnvio()) != NULL) & ( ($b = $traspasoB->getFechaEnvio()) != NULL) ){
+		if( (($a = $traspasoA->getFechaEnvio()) !== NULL) & ( ($b = $traspasoB->getFechaEnvio()) !== NULL) ){
 				$sql .= " fecha_envio >= ? AND fecha_envio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " fecha_envio = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getIdUsuarioRecibe()) != NULL) & ( ($b = $traspasoB->getIdUsuarioRecibe()) != NULL) ){
+		if( (($a = $traspasoA->getIdUsuarioRecibe()) !== NULL) & ( ($b = $traspasoB->getIdUsuarioRecibe()) !== NULL) ){
 				$sql .= " id_usuario_recibe >= ? AND id_usuario_recibe <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_usuario_recibe = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getIdAlmacenRecibe()) != NULL) & ( ($b = $traspasoB->getIdAlmacenRecibe()) != NULL) ){
+		if( (($a = $traspasoA->getIdAlmacenRecibe()) !== NULL) & ( ($b = $traspasoB->getIdAlmacenRecibe()) !== NULL) ){
 				$sql .= " id_almacen_recibe >= ? AND id_almacen_recibe <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_almacen_recibe = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getFechaRecibo()) != NULL) & ( ($b = $traspasoB->getFechaRecibo()) != NULL) ){
+		if( (($a = $traspasoA->getFechaRecibo()) !== NULL) & ( ($b = $traspasoB->getFechaRecibo()) !== NULL) ){
 				$sql .= " fecha_recibo >= ? AND fecha_recibo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " fecha_recibo = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getEstado()) != NULL) & ( ($b = $traspasoB->getEstado()) != NULL) ){
+		if( (($a = $traspasoA->getEstado()) !== NULL) & ( ($b = $traspasoB->getEstado()) !== NULL) ){
 				$sql .= " estado >= ? AND estado <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " estado = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getCancelado()) != NULL) & ( ($b = $traspasoB->getCancelado()) != NULL) ){
+		if( (($a = $traspasoA->getCancelado()) !== NULL) & ( ($b = $traspasoB->getCancelado()) !== NULL) ){
 				$sql .= " cancelado >= ? AND cancelado <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " cancelado = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspasoA->getCompleto()) != NULL) & ( ($b = $traspasoB->getCompleto()) != NULL) ){
+		if( (($a = $traspasoA->getCompleto()) !== NULL) & ( ($b = $traspasoB->getCompleto()) !== NULL) ){
 				$sql .= " completo >= ? AND completo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " completo = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

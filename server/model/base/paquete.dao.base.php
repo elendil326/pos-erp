@@ -266,7 +266,7 @@ abstract class PaqueteDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Paquete} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Paquete}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -297,79 +297,79 @@ abstract class PaqueteDAOBase extends DAO
 	{
 		$sql = "SELECT * from paquete WHERE ("; 
 		$val = array();
-		if( (($a = $paqueteA->getIdPaquete()) != NULL) & ( ($b = $paqueteB->getIdPaquete()) != NULL) ){
+		if( (($a = $paqueteA->getIdPaquete()) !== NULL) & ( ($b = $paqueteB->getIdPaquete()) !== NULL) ){
 				$sql .= " id_paquete >= ? AND id_paquete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_paquete = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $paqueteA->getNombre()) != NULL) & ( ($b = $paqueteB->getNombre()) != NULL) ){
+		if( (($a = $paqueteA->getNombre()) !== NULL) & ( ($b = $paqueteB->getNombre()) !== NULL) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $paqueteA->getDescripcion()) != NULL) & ( ($b = $paqueteB->getDescripcion()) != NULL) ){
+		if( (($a = $paqueteA->getDescripcion()) !== NULL) & ( ($b = $paqueteB->getDescripcion()) !== NULL) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $paqueteA->getMargenUtilidad()) != NULL) & ( ($b = $paqueteB->getMargenUtilidad()) != NULL) ){
+		if( (($a = $paqueteA->getMargenUtilidad()) !== NULL) & ( ($b = $paqueteB->getMargenUtilidad()) !== NULL) ){
 				$sql .= " margen_utilidad >= ? AND margen_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " margen_utilidad = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $paqueteA->getDescuento()) != NULL) & ( ($b = $paqueteB->getDescuento()) != NULL) ){
+		if( (($a = $paqueteA->getDescuento()) !== NULL) & ( ($b = $paqueteB->getDescuento()) !== NULL) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $paqueteA->getFotoPaquete()) != NULL) & ( ($b = $paqueteB->getFotoPaquete()) != NULL) ){
+		if( (($a = $paqueteA->getFotoPaquete()) !== NULL) & ( ($b = $paqueteB->getFotoPaquete()) !== NULL) ){
 				$sql .= " foto_paquete >= ? AND foto_paquete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " foto_paquete = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $paqueteA->getActivo()) != NULL) & ( ($b = $paqueteB->getActivo()) != NULL) ){
+		if( (($a = $paqueteA->getActivo()) !== NULL) & ( ($b = $paqueteB->getActivo()) !== NULL) ){
 				$sql .= " activo >= ? AND activo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " activo = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

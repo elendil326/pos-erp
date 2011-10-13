@@ -259,7 +259,7 @@ abstract class ChequeDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Cheque} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Cheque}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -290,68 +290,68 @@ abstract class ChequeDAOBase extends DAO
 	{
 		$sql = "SELECT * from cheque WHERE ("; 
 		$val = array();
-		if( (($a = $chequeA->getIdCheque()) != NULL) & ( ($b = $chequeB->getIdCheque()) != NULL) ){
+		if( (($a = $chequeA->getIdCheque()) !== NULL) & ( ($b = $chequeB->getIdCheque()) !== NULL) ){
 				$sql .= " id_cheque >= ? AND id_cheque <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_cheque = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $chequeA->getNombreBanco()) != NULL) & ( ($b = $chequeB->getNombreBanco()) != NULL) ){
+		if( (($a = $chequeA->getNombreBanco()) !== NULL) & ( ($b = $chequeB->getNombreBanco()) !== NULL) ){
 				$sql .= " nombre_banco >= ? AND nombre_banco <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " nombre_banco = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $chequeA->getMonto()) != NULL) & ( ($b = $chequeB->getMonto()) != NULL) ){
+		if( (($a = $chequeA->getMonto()) !== NULL) & ( ($b = $chequeB->getMonto()) !== NULL) ){
 				$sql .= " monto >= ? AND monto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " monto = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $chequeA->getNumero()) != NULL) & ( ($b = $chequeB->getNumero()) != NULL) ){
+		if( (($a = $chequeA->getNumero()) !== NULL) & ( ($b = $chequeB->getNumero()) !== NULL) ){
 				$sql .= " numero >= ? AND numero <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " numero = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $chequeA->getExpedido()) != NULL) & ( ($b = $chequeB->getExpedido()) != NULL) ){
+		if( (($a = $chequeA->getExpedido()) !== NULL) & ( ($b = $chequeB->getExpedido()) !== NULL) ){
 				$sql .= " expedido >= ? AND expedido <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " expedido = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $chequeA->getIdUsuario()) != NULL) & ( ($b = $chequeB->getIdUsuario()) != NULL) ){
+		if( (($a = $chequeA->getIdUsuario()) !== NULL) & ( ($b = $chequeB->getIdUsuario()) !== NULL) ){
 				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_usuario = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

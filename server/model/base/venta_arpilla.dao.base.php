@@ -301,7 +301,7 @@ abstract class VentaArpillaDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link VentaArpilla} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link VentaArpilla}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -332,134 +332,134 @@ abstract class VentaArpillaDAOBase extends DAO
 	{
 		$sql = "SELECT * from venta_arpilla WHERE ("; 
 		$val = array();
-		if( (($a = $venta_arpillaA->getIdVentaArpilla()) != NULL) & ( ($b = $venta_arpillaB->getIdVentaArpilla()) != NULL) ){
+		if( (($a = $venta_arpillaA->getIdVentaArpilla()) !== NULL) & ( ($b = $venta_arpillaB->getIdVentaArpilla()) !== NULL) ){
 				$sql .= " id_venta_arpilla >= ? AND id_venta_arpilla <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_venta_arpilla = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_arpillaA->getIdVenta()) != NULL) & ( ($b = $venta_arpillaB->getIdVenta()) != NULL) ){
+		if( (($a = $venta_arpillaA->getIdVenta()) !== NULL) & ( ($b = $venta_arpillaB->getIdVenta()) !== NULL) ){
 				$sql .= " id_venta >= ? AND id_venta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_venta = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_arpillaA->getPesoDestino()) != NULL) & ( ($b = $venta_arpillaB->getPesoDestino()) != NULL) ){
+		if( (($a = $venta_arpillaA->getPesoDestino()) !== NULL) & ( ($b = $venta_arpillaB->getPesoDestino()) !== NULL) ){
 				$sql .= " peso_destino >= ? AND peso_destino <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " peso_destino = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_arpillaA->getFechaOrigen()) != NULL) & ( ($b = $venta_arpillaB->getFechaOrigen()) != NULL) ){
+		if( (($a = $venta_arpillaA->getFechaOrigen()) !== NULL) & ( ($b = $venta_arpillaB->getFechaOrigen()) !== NULL) ){
 				$sql .= " fecha_origen >= ? AND fecha_origen <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " fecha_origen = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_arpillaA->getFolio()) != NULL) & ( ($b = $venta_arpillaB->getFolio()) != NULL) ){
+		if( (($a = $venta_arpillaA->getFolio()) !== NULL) & ( ($b = $venta_arpillaB->getFolio()) !== NULL) ){
 				$sql .= " folio >= ? AND folio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " folio = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_arpillaA->getNumeroDeViaje()) != NULL) & ( ($b = $venta_arpillaB->getNumeroDeViaje()) != NULL) ){
+		if( (($a = $venta_arpillaA->getNumeroDeViaje()) !== NULL) & ( ($b = $venta_arpillaB->getNumeroDeViaje()) !== NULL) ){
 				$sql .= " numero_de_viaje >= ? AND numero_de_viaje <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " numero_de_viaje = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_arpillaA->getPesoOrigen()) != NULL) & ( ($b = $venta_arpillaB->getPesoOrigen()) != NULL) ){
+		if( (($a = $venta_arpillaA->getPesoOrigen()) !== NULL) & ( ($b = $venta_arpillaB->getPesoOrigen()) !== NULL) ){
 				$sql .= " peso_origen >= ? AND peso_origen <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " peso_origen = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_arpillaA->getArpillas()) != NULL) & ( ($b = $venta_arpillaB->getArpillas()) != NULL) ){
+		if( (($a = $venta_arpillaA->getArpillas()) !== NULL) & ( ($b = $venta_arpillaB->getArpillas()) !== NULL) ){
 				$sql .= " arpillas >= ? AND arpillas <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " arpillas = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_arpillaA->getPesoPorArpilla()) != NULL) & ( ($b = $venta_arpillaB->getPesoPorArpilla()) != NULL) ){
+		if( (($a = $venta_arpillaA->getPesoPorArpilla()) !== NULL) & ( ($b = $venta_arpillaB->getPesoPorArpilla()) !== NULL) ){
 				$sql .= " peso_por_arpilla >= ? AND peso_por_arpilla <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " peso_por_arpilla = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_arpillaA->getProductor()) != NULL) & ( ($b = $venta_arpillaB->getProductor()) != NULL) ){
+		if( (($a = $venta_arpillaA->getProductor()) !== NULL) & ( ($b = $venta_arpillaB->getProductor()) !== NULL) ){
 				$sql .= " productor >= ? AND productor <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " productor = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_arpillaA->getMermaPorArpilla()) != NULL) & ( ($b = $venta_arpillaB->getMermaPorArpilla()) != NULL) ){
+		if( (($a = $venta_arpillaA->getMermaPorArpilla()) !== NULL) & ( ($b = $venta_arpillaB->getMermaPorArpilla()) !== NULL) ){
 				$sql .= " merma_por_arpilla >= ? AND merma_por_arpilla <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " merma_por_arpilla = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $venta_arpillaA->getTotalOrigen()) != NULL) & ( ($b = $venta_arpillaB->getTotalOrigen()) != NULL) ){
+		if( (($a = $venta_arpillaA->getTotalOrigen()) !== NULL) & ( ($b = $venta_arpillaB->getTotalOrigen()) !== NULL) ){
 				$sql .= " total_origen >= ? AND total_origen <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " total_origen = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

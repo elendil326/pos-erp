@@ -70,11 +70,8 @@ class Producto extends VO
 			if( isset($data['peso_producto']) ){
 				$this->peso_producto = $data['peso_producto'];
 			}
-			if( isset($data['id_unidad_no_convertible']) ){
-				$this->id_unidad_no_convertible = $data['id_unidad_no_convertible'];
-			}
-			if( isset($data['id_unidad_convertible']) ){
-				$this->id_unidad_convertible = $data['id_unidad_convertible'];
+			if( isset($data['id_unidad']) ){
+				$this->id_unidad = $data['id_unidad'];
 			}
 		}
 	}
@@ -105,8 +102,7 @@ class Producto extends VO
 			"costo_extra_almacen" => $this->costo_extra_almacen,
 			"codigo_de_barras" => $this->codigo_de_barras,
 			"peso_producto" => $this->peso_producto,
-			"id_unidad_no_convertible" => $this->id_unidad_no_convertible,
-			"id_unidad_convertible" => $this->id_unidad_convertible
+			"id_unidad" => $this->id_unidad
 		); 
 	return json_encode($vec); 
 	}
@@ -258,22 +254,13 @@ class Producto extends VO
 	protected $peso_producto;
 
 	/**
-	  * id_unidad_no_convertible
+	  * id_unidad
 	  * 
-	  * Id de la unidad no convertible del producto<br>
+	  * Id de la unidad en la que usualmente se maneja este producto<br>
 	  * @access protected
 	  * @var int(11)
 	  */
-	protected $id_unidad_no_convertible;
-
-	/**
-	  * id_unidad_convertible
-	  * 
-	  * Id de la unidad convertible del producto<br>
-	  * @access protected
-	  * @var int(11)
-	  */
-	protected $id_unidad_convertible;
+	protected $id_unidad;
 
 	/**
 	  * getIdProducto
@@ -664,51 +651,27 @@ class Producto extends VO
 	}
 
 	/**
-	  * getIdUnidadNoConvertible
+	  * getIdUnidad
 	  * 
-	  * Get the <i>id_unidad_no_convertible</i> property for this object. Donde <i>id_unidad_no_convertible</i> es Id de la unidad no convertible del producto
+	  * Get the <i>id_unidad</i> property for this object. Donde <i>id_unidad</i> es Id de la unidad en la que usualmente se maneja este producto
 	  * @return int(11)
 	  */
-	final public function getIdUnidadNoConvertible()
+	final public function getIdUnidad()
 	{
-		return $this->id_unidad_no_convertible;
+		return $this->id_unidad;
 	}
 
 	/**
-	  * setIdUnidadNoConvertible( $id_unidad_no_convertible )
+	  * setIdUnidad( $id_unidad )
 	  * 
-	  * Set the <i>id_unidad_no_convertible</i> property for this object. Donde <i>id_unidad_no_convertible</i> es Id de la unidad no convertible del producto.
-	  * Una validacion basica se hara aqui para comprobar que <i>id_unidad_no_convertible</i> es de tipo <i>int(11)</i>. 
+	  * Set the <i>id_unidad</i> property for this object. Donde <i>id_unidad</i> es Id de la unidad en la que usualmente se maneja este producto.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_unidad</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
-	final public function setIdUnidadNoConvertible( $id_unidad_no_convertible )
+	final public function setIdUnidad( $id_unidad )
 	{
-		$this->id_unidad_no_convertible = $id_unidad_no_convertible;
-	}
-
-	/**
-	  * getIdUnidadConvertible
-	  * 
-	  * Get the <i>id_unidad_convertible</i> property for this object. Donde <i>id_unidad_convertible</i> es Id de la unidad convertible del producto
-	  * @return int(11)
-	  */
-	final public function getIdUnidadConvertible()
-	{
-		return $this->id_unidad_convertible;
-	}
-
-	/**
-	  * setIdUnidadConvertible( $id_unidad_convertible )
-	  * 
-	  * Set the <i>id_unidad_convertible</i> property for this object. Donde <i>id_unidad_convertible</i> es Id de la unidad convertible del producto.
-	  * Una validacion basica se hara aqui para comprobar que <i>id_unidad_convertible</i> es de tipo <i>int(11)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
-	  */
-	final public function setIdUnidadConvertible( $id_unidad_convertible )
-	{
-		$this->id_unidad_convertible = $id_unidad_convertible;
+		$this->id_unidad = $id_unidad;
 	}
 
 }

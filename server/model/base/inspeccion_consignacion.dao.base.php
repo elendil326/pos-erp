@@ -273,7 +273,7 @@ abstract class InspeccionConsignacionDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link InspeccionConsignacion} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link InspeccionConsignacion}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -304,90 +304,90 @@ abstract class InspeccionConsignacionDAOBase extends DAO
 	{
 		$sql = "SELECT * from inspeccion_consignacion WHERE ("; 
 		$val = array();
-		if( (($a = $inspeccion_consignacionA->getIdInspeccionConsignacion()) != NULL) & ( ($b = $inspeccion_consignacionB->getIdInspeccionConsignacion()) != NULL) ){
+		if( (($a = $inspeccion_consignacionA->getIdInspeccionConsignacion()) !== NULL) & ( ($b = $inspeccion_consignacionB->getIdInspeccionConsignacion()) !== NULL) ){
 				$sql .= " id_inspeccion_consignacion >= ? AND id_inspeccion_consignacion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_inspeccion_consignacion = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $inspeccion_consignacionA->getIdConsignacion()) != NULL) & ( ($b = $inspeccion_consignacionB->getIdConsignacion()) != NULL) ){
+		if( (($a = $inspeccion_consignacionA->getIdConsignacion()) !== NULL) & ( ($b = $inspeccion_consignacionB->getIdConsignacion()) !== NULL) ){
 				$sql .= " id_consignacion >= ? AND id_consignacion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_consignacion = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $inspeccion_consignacionA->getIdUsuario()) != NULL) & ( ($b = $inspeccion_consignacionB->getIdUsuario()) != NULL) ){
+		if( (($a = $inspeccion_consignacionA->getIdUsuario()) !== NULL) & ( ($b = $inspeccion_consignacionB->getIdUsuario()) !== NULL) ){
 				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_usuario = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $inspeccion_consignacionA->getIdCaja()) != NULL) & ( ($b = $inspeccion_consignacionB->getIdCaja()) != NULL) ){
+		if( (($a = $inspeccion_consignacionA->getIdCaja()) !== NULL) & ( ($b = $inspeccion_consignacionB->getIdCaja()) !== NULL) ){
 				$sql .= " id_caja >= ? AND id_caja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_caja = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $inspeccion_consignacionA->getFechaInspeccion()) != NULL) & ( ($b = $inspeccion_consignacionB->getFechaInspeccion()) != NULL) ){
+		if( (($a = $inspeccion_consignacionA->getFechaInspeccion()) !== NULL) & ( ($b = $inspeccion_consignacionB->getFechaInspeccion()) !== NULL) ){
 				$sql .= " fecha_inspeccion >= ? AND fecha_inspeccion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " fecha_inspeccion = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $inspeccion_consignacionA->getMontoAbonado()) != NULL) & ( ($b = $inspeccion_consignacionB->getMontoAbonado()) != NULL) ){
+		if( (($a = $inspeccion_consignacionA->getMontoAbonado()) !== NULL) & ( ($b = $inspeccion_consignacionB->getMontoAbonado()) !== NULL) ){
 				$sql .= " monto_abonado >= ? AND monto_abonado <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " monto_abonado = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $inspeccion_consignacionA->getCancelada()) != NULL) & ( ($b = $inspeccion_consignacionB->getCancelada()) != NULL) ){
+		if( (($a = $inspeccion_consignacionA->getCancelada()) !== NULL) & ( ($b = $inspeccion_consignacionB->getCancelada()) !== NULL) ){
 				$sql .= " cancelada >= ? AND cancelada <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " cancelada = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $inspeccion_consignacionA->getMotivoCancelacion()) != NULL) & ( ($b = $inspeccion_consignacionB->getMotivoCancelacion()) != NULL) ){
+		if( (($a = $inspeccion_consignacionA->getMotivoCancelacion()) !== NULL) & ( ($b = $inspeccion_consignacionB->getMotivoCancelacion()) !== NULL) ){
 				$sql .= " motivo_cancelacion >= ? AND motivo_cancelacion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " motivo_cancelacion = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

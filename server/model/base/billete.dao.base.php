@@ -259,7 +259,7 @@ abstract class BilleteDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Billete} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Billete}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -290,68 +290,68 @@ abstract class BilleteDAOBase extends DAO
 	{
 		$sql = "SELECT * from billete WHERE ("; 
 		$val = array();
-		if( (($a = $billeteA->getIdBillete()) != NULL) & ( ($b = $billeteB->getIdBillete()) != NULL) ){
+		if( (($a = $billeteA->getIdBillete()) !== NULL) & ( ($b = $billeteB->getIdBillete()) !== NULL) ){
 				$sql .= " id_billete >= ? AND id_billete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_billete = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $billeteA->getIdMoneda()) != NULL) & ( ($b = $billeteB->getIdMoneda()) != NULL) ){
+		if( (($a = $billeteA->getIdMoneda()) !== NULL) & ( ($b = $billeteB->getIdMoneda()) !== NULL) ){
 				$sql .= " id_moneda >= ? AND id_moneda <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_moneda = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $billeteA->getNombre()) != NULL) & ( ($b = $billeteB->getNombre()) != NULL) ){
+		if( (($a = $billeteA->getNombre()) !== NULL) & ( ($b = $billeteB->getNombre()) !== NULL) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $billeteA->getValor()) != NULL) & ( ($b = $billeteB->getValor()) != NULL) ){
+		if( (($a = $billeteA->getValor()) !== NULL) & ( ($b = $billeteB->getValor()) !== NULL) ){
 				$sql .= " valor >= ? AND valor <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " valor = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $billeteA->getFotoBillete()) != NULL) & ( ($b = $billeteB->getFotoBillete()) != NULL) ){
+		if( (($a = $billeteA->getFotoBillete()) !== NULL) & ( ($b = $billeteB->getFotoBillete()) !== NULL) ){
 				$sql .= " foto_billete >= ? AND foto_billete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " foto_billete = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $billeteA->getActivo()) != NULL) & ( ($b = $billeteB->getActivo()) != NULL) ){
+		if( (($a = $billeteA->getActivo()) !== NULL) & ( ($b = $billeteB->getActivo()) !== NULL) ){
 				$sql .= " activo >= ? AND activo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " activo = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

@@ -227,7 +227,7 @@ abstract class DocumentoVentaDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link DocumentoVenta} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link DocumentoVenta}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -258,24 +258,24 @@ abstract class DocumentoVentaDAOBase extends DAO
 	{
 		$sql = "SELECT * from documento_venta WHERE ("; 
 		$val = array();
-		if( (($a = $documento_ventaA->getIdDocumento()) != NULL) & ( ($b = $documento_ventaB->getIdDocumento()) != NULL) ){
+		if( (($a = $documento_ventaA->getIdDocumento()) !== NULL) & ( ($b = $documento_ventaB->getIdDocumento()) !== NULL) ){
 				$sql .= " id_documento >= ? AND id_documento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_documento = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $documento_ventaA->getIdVenta()) != NULL) & ( ($b = $documento_ventaB->getIdVenta()) != NULL) ){
+		if( (($a = $documento_ventaA->getIdVenta()) !== NULL) & ( ($b = $documento_ventaB->getIdVenta()) !== NULL) ){
 				$sql .= " id_venta >= ? AND id_venta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_venta = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

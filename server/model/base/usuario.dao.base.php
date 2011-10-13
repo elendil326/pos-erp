@@ -504,7 +504,7 @@ abstract class UsuarioDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Usuario} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Usuario}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -535,453 +535,453 @@ abstract class UsuarioDAOBase extends DAO
 	{
 		$sql = "SELECT * from usuario WHERE ("; 
 		$val = array();
-		if( (($a = $usuarioA->getIdUsuario()) != NULL) & ( ($b = $usuarioB->getIdUsuario()) != NULL) ){
+		if( (($a = $usuarioA->getIdUsuario()) !== NULL) & ( ($b = $usuarioB->getIdUsuario()) !== NULL) ){
 				$sql .= " id_usuario >= ? AND id_usuario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_usuario = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getIdDireccion()) != NULL) & ( ($b = $usuarioB->getIdDireccion()) != NULL) ){
+		if( (($a = $usuarioA->getIdDireccion()) !== NULL) & ( ($b = $usuarioB->getIdDireccion()) !== NULL) ){
 				$sql .= " id_direccion >= ? AND id_direccion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_direccion = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getIdDireccionAlterna()) != NULL) & ( ($b = $usuarioB->getIdDireccionAlterna()) != NULL) ){
+		if( (($a = $usuarioA->getIdDireccionAlterna()) !== NULL) & ( ($b = $usuarioB->getIdDireccionAlterna()) !== NULL) ){
 				$sql .= " id_direccion_alterna >= ? AND id_direccion_alterna <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_direccion_alterna = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getIdSucursal()) != NULL) & ( ($b = $usuarioB->getIdSucursal()) != NULL) ){
+		if( (($a = $usuarioA->getIdSucursal()) !== NULL) & ( ($b = $usuarioB->getIdSucursal()) !== NULL) ){
 				$sql .= " id_sucursal >= ? AND id_sucursal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_sucursal = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getIdRol()) != NULL) & ( ($b = $usuarioB->getIdRol()) != NULL) ){
+		if( (($a = $usuarioA->getIdRol()) !== NULL) & ( ($b = $usuarioB->getIdRol()) !== NULL) ){
 				$sql .= " id_rol >= ? AND id_rol <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_rol = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getIdClasificacionCliente()) != NULL) & ( ($b = $usuarioB->getIdClasificacionCliente()) != NULL) ){
+		if( (($a = $usuarioA->getIdClasificacionCliente()) !== NULL) & ( ($b = $usuarioB->getIdClasificacionCliente()) !== NULL) ){
 				$sql .= " id_clasificacion_cliente >= ? AND id_clasificacion_cliente <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_clasificacion_cliente = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getIdClasificacionProveedor()) != NULL) & ( ($b = $usuarioB->getIdClasificacionProveedor()) != NULL) ){
+		if( (($a = $usuarioA->getIdClasificacionProveedor()) !== NULL) & ( ($b = $usuarioB->getIdClasificacionProveedor()) !== NULL) ){
 				$sql .= " id_clasificacion_proveedor >= ? AND id_clasificacion_proveedor <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_clasificacion_proveedor = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getIdMoneda()) != NULL) & ( ($b = $usuarioB->getIdMoneda()) != NULL) ){
+		if( (($a = $usuarioA->getIdMoneda()) !== NULL) & ( ($b = $usuarioB->getIdMoneda()) !== NULL) ){
 				$sql .= " id_moneda >= ? AND id_moneda <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_moneda = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getFechaAsignacionRol()) != NULL) & ( ($b = $usuarioB->getFechaAsignacionRol()) != NULL) ){
+		if( (($a = $usuarioA->getFechaAsignacionRol()) !== NULL) & ( ($b = $usuarioB->getFechaAsignacionRol()) !== NULL) ){
 				$sql .= " fecha_asignacion_rol >= ? AND fecha_asignacion_rol <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " fecha_asignacion_rol = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getNombre()) != NULL) & ( ($b = $usuarioB->getNombre()) != NULL) ){
+		if( (($a = $usuarioA->getNombre()) !== NULL) & ( ($b = $usuarioB->getNombre()) !== NULL) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getRfc()) != NULL) & ( ($b = $usuarioB->getRfc()) != NULL) ){
+		if( (($a = $usuarioA->getRfc()) !== NULL) & ( ($b = $usuarioB->getRfc()) !== NULL) ){
 				$sql .= " rfc >= ? AND rfc <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " rfc = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getCurp()) != NULL) & ( ($b = $usuarioB->getCurp()) != NULL) ){
+		if( (($a = $usuarioA->getCurp()) !== NULL) & ( ($b = $usuarioB->getCurp()) !== NULL) ){
 				$sql .= " curp >= ? AND curp <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " curp = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getComisionVentas()) != NULL) & ( ($b = $usuarioB->getComisionVentas()) != NULL) ){
+		if( (($a = $usuarioA->getComisionVentas()) !== NULL) & ( ($b = $usuarioB->getComisionVentas()) !== NULL) ){
 				$sql .= " comision_ventas >= ? AND comision_ventas <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " comision_ventas = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getTelefonoPersonal1()) != NULL) & ( ($b = $usuarioB->getTelefonoPersonal1()) != NULL) ){
+		if( (($a = $usuarioA->getTelefonoPersonal1()) !== NULL) & ( ($b = $usuarioB->getTelefonoPersonal1()) !== NULL) ){
 				$sql .= " telefono_personal1 >= ? AND telefono_personal1 <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " telefono_personal1 = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getTelefonoPersonal2()) != NULL) & ( ($b = $usuarioB->getTelefonoPersonal2()) != NULL) ){
+		if( (($a = $usuarioA->getTelefonoPersonal2()) !== NULL) & ( ($b = $usuarioB->getTelefonoPersonal2()) !== NULL) ){
 				$sql .= " telefono_personal2 >= ? AND telefono_personal2 <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " telefono_personal2 = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getFechaAlta()) != NULL) & ( ($b = $usuarioB->getFechaAlta()) != NULL) ){
+		if( (($a = $usuarioA->getFechaAlta()) !== NULL) & ( ($b = $usuarioB->getFechaAlta()) !== NULL) ){
 				$sql .= " fecha_alta >= ? AND fecha_alta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " fecha_alta = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getFechaBaja()) != NULL) & ( ($b = $usuarioB->getFechaBaja()) != NULL) ){
+		if( (($a = $usuarioA->getFechaBaja()) !== NULL) & ( ($b = $usuarioB->getFechaBaja()) !== NULL) ){
 				$sql .= " fecha_baja >= ? AND fecha_baja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " fecha_baja = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getActivo()) != NULL) & ( ($b = $usuarioB->getActivo()) != NULL) ){
+		if( (($a = $usuarioA->getActivo()) !== NULL) & ( ($b = $usuarioB->getActivo()) !== NULL) ){
 				$sql .= " activo >= ? AND activo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " activo = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getLimiteCredito()) != NULL) & ( ($b = $usuarioB->getLimiteCredito()) != NULL) ){
+		if( (($a = $usuarioA->getLimiteCredito()) !== NULL) & ( ($b = $usuarioB->getLimiteCredito()) !== NULL) ){
 				$sql .= " limite_credito >= ? AND limite_credito <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " limite_credito = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getDescuento()) != NULL) & ( ($b = $usuarioB->getDescuento()) != NULL) ){
+		if( (($a = $usuarioA->getDescuento()) !== NULL) & ( ($b = $usuarioB->getDescuento()) !== NULL) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getPassword()) != NULL) & ( ($b = $usuarioB->getPassword()) != NULL) ){
+		if( (($a = $usuarioA->getPassword()) !== NULL) & ( ($b = $usuarioB->getPassword()) !== NULL) ){
 				$sql .= " password >= ? AND password <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " password = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getLastLogin()) != NULL) & ( ($b = $usuarioB->getLastLogin()) != NULL) ){
+		if( (($a = $usuarioA->getLastLogin()) !== NULL) & ( ($b = $usuarioB->getLastLogin()) !== NULL) ){
 				$sql .= " last_login >= ? AND last_login <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " last_login = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getConsignatario()) != NULL) & ( ($b = $usuarioB->getConsignatario()) != NULL) ){
+		if( (($a = $usuarioA->getConsignatario()) !== NULL) & ( ($b = $usuarioB->getConsignatario()) !== NULL) ){
 				$sql .= " consignatario >= ? AND consignatario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " consignatario = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getSalario()) != NULL) & ( ($b = $usuarioB->getSalario()) != NULL) ){
+		if( (($a = $usuarioA->getSalario()) !== NULL) & ( ($b = $usuarioB->getSalario()) !== NULL) ){
 				$sql .= " salario >= ? AND salario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " salario = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getCorreoElectronico()) != NULL) & ( ($b = $usuarioB->getCorreoElectronico()) != NULL) ){
+		if( (($a = $usuarioA->getCorreoElectronico()) !== NULL) & ( ($b = $usuarioB->getCorreoElectronico()) !== NULL) ){
 				$sql .= " correo_electronico >= ? AND correo_electronico <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " correo_electronico = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getPaginaWeb()) != NULL) & ( ($b = $usuarioB->getPaginaWeb()) != NULL) ){
+		if( (($a = $usuarioA->getPaginaWeb()) !== NULL) & ( ($b = $usuarioB->getPaginaWeb()) !== NULL) ){
 				$sql .= " pagina_web >= ? AND pagina_web <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " pagina_web = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getSaldoDelEjercicio()) != NULL) & ( ($b = $usuarioB->getSaldoDelEjercicio()) != NULL) ){
+		if( (($a = $usuarioA->getSaldoDelEjercicio()) !== NULL) & ( ($b = $usuarioB->getSaldoDelEjercicio()) !== NULL) ){
 				$sql .= " saldo_del_ejercicio >= ? AND saldo_del_ejercicio <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " saldo_del_ejercicio = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getVentasACredito()) != NULL) & ( ($b = $usuarioB->getVentasACredito()) != NULL) ){
+		if( (($a = $usuarioA->getVentasACredito()) !== NULL) & ( ($b = $usuarioB->getVentasACredito()) !== NULL) ){
 				$sql .= " ventas_a_credito >= ? AND ventas_a_credito <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " ventas_a_credito = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getRepresentanteLegal()) != NULL) & ( ($b = $usuarioB->getRepresentanteLegal()) != NULL) ){
+		if( (($a = $usuarioA->getRepresentanteLegal()) !== NULL) & ( ($b = $usuarioB->getRepresentanteLegal()) !== NULL) ){
 				$sql .= " representante_legal >= ? AND representante_legal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " representante_legal = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getFacturarATerceros()) != NULL) & ( ($b = $usuarioB->getFacturarATerceros()) != NULL) ){
+		if( (($a = $usuarioA->getFacturarATerceros()) !== NULL) & ( ($b = $usuarioB->getFacturarATerceros()) !== NULL) ){
 				$sql .= " facturar_a_terceros >= ? AND facturar_a_terceros <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " facturar_a_terceros = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getDiaDePago()) != NULL) & ( ($b = $usuarioB->getDiaDePago()) != NULL) ){
+		if( (($a = $usuarioA->getDiaDePago()) !== NULL) & ( ($b = $usuarioB->getDiaDePago()) !== NULL) ){
 				$sql .= " dia_de_pago >= ? AND dia_de_pago <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " dia_de_pago = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getMensajeria()) != NULL) & ( ($b = $usuarioB->getMensajeria()) != NULL) ){
+		if( (($a = $usuarioA->getMensajeria()) !== NULL) & ( ($b = $usuarioB->getMensajeria()) !== NULL) ){
 				$sql .= " mensajeria >= ? AND mensajeria <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " mensajeria = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getInteresesMoratorios()) != NULL) & ( ($b = $usuarioB->getInteresesMoratorios()) != NULL) ){
+		if( (($a = $usuarioA->getInteresesMoratorios()) !== NULL) & ( ($b = $usuarioB->getInteresesMoratorios()) !== NULL) ){
 				$sql .= " intereses_moratorios >= ? AND intereses_moratorios <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " intereses_moratorios = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getDenominacionComercial()) != NULL) & ( ($b = $usuarioB->getDenominacionComercial()) != NULL) ){
+		if( (($a = $usuarioA->getDenominacionComercial()) !== NULL) & ( ($b = $usuarioB->getDenominacionComercial()) !== NULL) ){
 				$sql .= " denominacion_comercial >= ? AND denominacion_comercial <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " denominacion_comercial = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getDiasDeCredito()) != NULL) & ( ($b = $usuarioB->getDiasDeCredito()) != NULL) ){
+		if( (($a = $usuarioA->getDiasDeCredito()) !== NULL) & ( ($b = $usuarioB->getDiasDeCredito()) !== NULL) ){
 				$sql .= " dias_de_credito >= ? AND dias_de_credito <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " dias_de_credito = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getCuentaDeMensajeria()) != NULL) & ( ($b = $usuarioB->getCuentaDeMensajeria()) != NULL) ){
+		if( (($a = $usuarioA->getCuentaDeMensajeria()) !== NULL) & ( ($b = $usuarioB->getCuentaDeMensajeria()) !== NULL) ){
 				$sql .= " cuenta_de_mensajeria >= ? AND cuenta_de_mensajeria <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " cuenta_de_mensajeria = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getDiaDeRevision()) != NULL) & ( ($b = $usuarioB->getDiaDeRevision()) != NULL) ){
+		if( (($a = $usuarioA->getDiaDeRevision()) !== NULL) & ( ($b = $usuarioB->getDiaDeRevision()) !== NULL) ){
 				$sql .= " dia_de_revision >= ? AND dia_de_revision <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " dia_de_revision = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getCodigoUsuario()) != NULL) & ( ($b = $usuarioB->getCodigoUsuario()) != NULL) ){
+		if( (($a = $usuarioA->getCodigoUsuario()) !== NULL) & ( ($b = $usuarioB->getCodigoUsuario()) !== NULL) ){
 				$sql .= " codigo_usuario >= ? AND codigo_usuario <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " codigo_usuario = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getDiasDeEmbarque()) != NULL) & ( ($b = $usuarioB->getDiasDeEmbarque()) != NULL) ){
+		if( (($a = $usuarioA->getDiasDeEmbarque()) !== NULL) & ( ($b = $usuarioB->getDiasDeEmbarque()) !== NULL) ){
 				$sql .= " dias_de_embarque >= ? AND dias_de_embarque <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " dias_de_embarque = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getTiempoEntrega()) != NULL) & ( ($b = $usuarioB->getTiempoEntrega()) != NULL) ){
+		if( (($a = $usuarioA->getTiempoEntrega()) !== NULL) & ( ($b = $usuarioB->getTiempoEntrega()) !== NULL) ){
 				$sql .= " tiempo_entrega >= ? AND tiempo_entrega <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " tiempo_entrega = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $usuarioA->getCuentaBancaria()) != NULL) & ( ($b = $usuarioB->getCuentaBancaria()) != NULL) ){
+		if( (($a = $usuarioA->getCuentaBancaria()) !== NULL) & ( ($b = $usuarioB->getCuentaBancaria()) !== NULL) ){
 				$sql .= " cuenta_bancaria >= ? AND cuenta_bancaria <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " cuenta_bancaria = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

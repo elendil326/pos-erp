@@ -252,7 +252,7 @@ abstract class ConceptoIngresoDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link ConceptoIngreso} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link ConceptoIngreso}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -283,57 +283,57 @@ abstract class ConceptoIngresoDAOBase extends DAO
 	{
 		$sql = "SELECT * from concepto_ingreso WHERE ("; 
 		$val = array();
-		if( (($a = $concepto_ingresoA->getIdConceptoIngreso()) != NULL) & ( ($b = $concepto_ingresoB->getIdConceptoIngreso()) != NULL) ){
+		if( (($a = $concepto_ingresoA->getIdConceptoIngreso()) !== NULL) & ( ($b = $concepto_ingresoB->getIdConceptoIngreso()) !== NULL) ){
 				$sql .= " id_concepto_ingreso >= ? AND id_concepto_ingreso <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_concepto_ingreso = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $concepto_ingresoA->getNombre()) != NULL) & ( ($b = $concepto_ingresoB->getNombre()) != NULL) ){
+		if( (($a = $concepto_ingresoA->getNombre()) !== NULL) & ( ($b = $concepto_ingresoB->getNombre()) !== NULL) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $concepto_ingresoA->getDescripcion()) != NULL) & ( ($b = $concepto_ingresoB->getDescripcion()) != NULL) ){
+		if( (($a = $concepto_ingresoA->getDescripcion()) !== NULL) & ( ($b = $concepto_ingresoB->getDescripcion()) !== NULL) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $concepto_ingresoA->getMonto()) != NULL) & ( ($b = $concepto_ingresoB->getMonto()) != NULL) ){
+		if( (($a = $concepto_ingresoA->getMonto()) !== NULL) & ( ($b = $concepto_ingresoB->getMonto()) !== NULL) ){
 				$sql .= " monto >= ? AND monto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " monto = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $concepto_ingresoA->getActivo()) != NULL) & ( ($b = $concepto_ingresoB->getActivo()) != NULL) ){
+		if( (($a = $concepto_ingresoA->getActivo()) !== NULL) & ( ($b = $concepto_ingresoB->getActivo()) !== NULL) ){
 				$sql .= " activo >= ? AND activo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " activo = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

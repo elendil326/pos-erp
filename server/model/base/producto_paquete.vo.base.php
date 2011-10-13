@@ -31,6 +31,9 @@ class ProductoPaquete extends VO
 			if( isset($data['cantidad']) ){
 				$this->cantidad = $data['cantidad'];
 			}
+			if( isset($data['id_unidad']) ){
+				$this->id_unidad = $data['id_unidad'];
+			}
 		}
 	}
 
@@ -46,7 +49,8 @@ class ProductoPaquete extends VO
 		$vec = array( 
 			"id_producto" => $this->id_producto,
 			"id_paquete" => $this->id_paquete,
-			"cantidad" => $this->cantidad
+			"cantidad" => $this->cantidad,
+			"id_unidad" => $this->id_unidad
 		); 
 	return json_encode($vec); 
 	}
@@ -79,6 +83,16 @@ class ProductoPaquete extends VO
 	  * @var float
 	  */
 	protected $cantidad;
+
+	/**
+	  * id_unidad
+	  * 
+	  * Id de la unidad del producto en ese paquete<br>
+	  * <b>Llave Primaria</b><br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_unidad;
 
 	/**
 	  * getIdProducto
@@ -154,6 +168,32 @@ class ProductoPaquete extends VO
 	final public function setCantidad( $cantidad )
 	{
 		$this->cantidad = $cantidad;
+	}
+
+	/**
+	  * getIdUnidad
+	  * 
+	  * Get the <i>id_unidad</i> property for this object. Donde <i>id_unidad</i> es Id de la unidad del producto en ese paquete
+	  * @return int(11)
+	  */
+	final public function getIdUnidad()
+	{
+		return $this->id_unidad;
+	}
+
+	/**
+	  * setIdUnidad( $id_unidad )
+	  * 
+	  * Set the <i>id_unidad</i> property for this object. Donde <i>id_unidad</i> es Id de la unidad del producto en ese paquete.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_unidad</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdUnidad( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * @param int(11)
+	  */
+	final public function setIdUnidad( $id_unidad )
+	{
+		$this->id_unidad = $id_unidad;
 	}
 
 }

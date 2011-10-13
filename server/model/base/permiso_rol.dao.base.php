@@ -227,7 +227,7 @@ abstract class PermisoRolDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link PermisoRol} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link PermisoRol}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -258,24 +258,24 @@ abstract class PermisoRolDAOBase extends DAO
 	{
 		$sql = "SELECT * from permiso_rol WHERE ("; 
 		$val = array();
-		if( (($a = $permiso_rolA->getIdPermiso()) != NULL) & ( ($b = $permiso_rolB->getIdPermiso()) != NULL) ){
+		if( (($a = $permiso_rolA->getIdPermiso()) !== NULL) & ( ($b = $permiso_rolB->getIdPermiso()) !== NULL) ){
 				$sql .= " id_permiso >= ? AND id_permiso <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_permiso = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $permiso_rolA->getIdRol()) != NULL) & ( ($b = $permiso_rolB->getIdRol()) != NULL) ){
+		if( (($a = $permiso_rolA->getIdRol()) !== NULL) & ( ($b = $permiso_rolB->getIdRol()) !== NULL) ){
 				$sql .= " id_rol >= ? AND id_rol <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_rol = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

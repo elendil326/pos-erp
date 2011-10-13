@@ -245,7 +245,7 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link ClasificacionProveedor} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link ClasificacionProveedor}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -276,46 +276,46 @@ abstract class ClasificacionProveedorDAOBase extends DAO
 	{
 		$sql = "SELECT * from clasificacion_proveedor WHERE ("; 
 		$val = array();
-		if( (($a = $clasificacion_proveedorA->getIdClasificacionProveedor()) != NULL) & ( ($b = $clasificacion_proveedorB->getIdClasificacionProveedor()) != NULL) ){
+		if( (($a = $clasificacion_proveedorA->getIdClasificacionProveedor()) !== NULL) & ( ($b = $clasificacion_proveedorB->getIdClasificacionProveedor()) !== NULL) ){
 				$sql .= " id_clasificacion_proveedor >= ? AND id_clasificacion_proveedor <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_clasificacion_proveedor = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_proveedorA->getNombre()) != NULL) & ( ($b = $clasificacion_proveedorB->getNombre()) != NULL) ){
+		if( (($a = $clasificacion_proveedorA->getNombre()) !== NULL) & ( ($b = $clasificacion_proveedorB->getNombre()) !== NULL) ){
 				$sql .= " nombre >= ? AND nombre <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " nombre = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_proveedorA->getDescripcion()) != NULL) & ( ($b = $clasificacion_proveedorB->getDescripcion()) != NULL) ){
+		if( (($a = $clasificacion_proveedorA->getDescripcion()) !== NULL) & ( ($b = $clasificacion_proveedorB->getDescripcion()) !== NULL) ){
 				$sql .= " descripcion >= ? AND descripcion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " descripcion = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $clasificacion_proveedorA->getActiva()) != NULL) & ( ($b = $clasificacion_proveedorB->getActiva()) != NULL) ){
+		if( (($a = $clasificacion_proveedorA->getActiva()) !== NULL) & ( ($b = $clasificacion_proveedorB->getActiva()) !== NULL) ){
 				$sql .= " activa >= ? AND activa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " activa = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

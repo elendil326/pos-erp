@@ -14,22 +14,25 @@ abstract class ProductoPaqueteDAOBase extends DAO
 
 		private static $loadedRecords = array();
 
-		private static function recordExists(  $id_producto, $id_paquete ){
+		private static function recordExists(  $id_producto, $id_paquete, $id_unidad ){
 			$pk = "";
 			$pk .= $id_producto . "-";
 			$pk .= $id_paquete . "-";
+			$pk .= $id_unidad . "-";
 			return array_key_exists ( $pk , self::$loadedRecords );
 		}
-		private static function pushRecord( $inventario,  $id_producto, $id_paquete){
+		private static function pushRecord( $inventario,  $id_producto, $id_paquete, $id_unidad){
 			$pk = "";
 			$pk .= $id_producto . "-";
 			$pk .= $id_paquete . "-";
+			$pk .= $id_unidad . "-";
 			self::$loadedRecords [$pk] = $inventario;
 		}
-		private static function getRecord(  $id_producto, $id_paquete ){
+		private static function getRecord(  $id_producto, $id_paquete, $id_unidad ){
 			$pk = "";
 			$pk .= $id_producto . "-";
 			$pk .= $id_paquete . "-";
+			$pk .= $id_unidad . "-";
 			return self::$loadedRecords[$pk];
 		}
 	/**
@@ -47,7 +50,7 @@ abstract class ProductoPaqueteDAOBase extends DAO
 	  **/
 	public static final function save( &$producto_paquete )
 	{
-		if(  self::getByPK(  $producto_paquete->getIdProducto() , $producto_paquete->getIdPaquete() ) !== NULL )
+		if(  self::getByPK(  $producto_paquete->getIdProducto() , $producto_paquete->getIdPaquete() , $producto_paquete->getIdUnidad() ) !== NULL )
 		{
 			try{ return ProductoPaqueteDAOBase::update( $producto_paquete) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -65,18 +68,18 @@ abstract class ProductoPaqueteDAOBase extends DAO
 	  *	@static
 	  * @return @link ProductoPaquete Un objeto del tipo {@link ProductoPaquete}. NULL si no hay tal registro.
 	  **/
-	public static final function getByPK(  $id_producto, $id_paquete )
+	public static final function getByPK(  $id_producto, $id_paquete, $id_unidad )
 	{
-		if(self::recordExists(  $id_producto, $id_paquete)){
-			return self::getRecord( $id_producto, $id_paquete );
+		if(self::recordExists(  $id_producto, $id_paquete, $id_unidad)){
+			return self::getRecord( $id_producto, $id_paquete, $id_unidad );
 		}
-		$sql = "SELECT * FROM producto_paquete WHERE (id_producto = ? AND id_paquete = ? ) LIMIT 1;";
-		$params = array(  $id_producto, $id_paquete );
+		$sql = "SELECT * FROM producto_paquete WHERE (id_producto = ? AND id_paquete = ? AND id_unidad = ? ) LIMIT 1;";
+		$params = array(  $id_producto, $id_paquete, $id_unidad );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new ProductoPaquete( $rs );
-			self::pushRecord( $foo,  $id_producto, $id_paquete );
+			self::pushRecord( $foo,  $id_producto, $id_paquete, $id_unidad );
 			return $foo;
 	}
 
@@ -113,7 +116,8 @@ abstract class ProductoPaqueteDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_producto
 			//id_paquete
-    		self::pushRecord( $bar, $foo["id_producto"],$foo["id_paquete"] );
+			//id_unidad
+    		self::pushRecord( $bar, $foo["id_producto"],$foo["id_paquete"],$foo["id_unidad"] );
 		}
 		return $allData;
 	}
@@ -162,6 +166,11 @@ abstract class ProductoPaqueteDAOBase extends DAO
 			array_push( $val, $producto_paquete->getCantidad() );
 		}
 
+		if( $producto_paquete->getIdUnidad() != NULL){
+			$sql .= " id_unidad = ? AND";
+			array_push( $val, $producto_paquete->getIdUnidad() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -174,7 +183,7 @@ abstract class ProductoPaqueteDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new ProductoPaquete($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_producto"],$foo["id_paquete"] );
+    		self::pushRecord( $bar, $foo["id_producto"],$foo["id_paquete"],$foo["id_unidad"] );
 		}
 		return $ar;
 	}
@@ -193,10 +202,10 @@ abstract class ProductoPaqueteDAOBase extends DAO
 	  **/
 	private static final function update( $producto_paquete )
 	{
-		$sql = "UPDATE producto_paquete SET  cantidad = ? WHERE  id_producto = ? AND id_paquete = ?;";
+		$sql = "UPDATE producto_paquete SET  cantidad = ? WHERE  id_producto = ? AND id_paquete = ? AND id_unidad = ?;";
 		$params = array( 
 			$producto_paquete->getCantidad(), 
-			$producto_paquete->getIdProducto(),$producto_paquete->getIdPaquete(), );
+			$producto_paquete->getIdProducto(),$producto_paquete->getIdPaquete(),$producto_paquete->getIdUnidad(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
@@ -219,11 +228,12 @@ abstract class ProductoPaqueteDAOBase extends DAO
 	  **/
 	private static final function create( &$producto_paquete )
 	{
-		$sql = "INSERT INTO producto_paquete ( id_producto, id_paquete, cantidad ) VALUES ( ?, ?, ?);";
+		$sql = "INSERT INTO producto_paquete ( id_producto, id_paquete, cantidad, id_unidad ) VALUES ( ?, ?, ?, ?);";
 		$params = array( 
 			$producto_paquete->getIdProducto(), 
 			$producto_paquete->getIdPaquete(), 
 			$producto_paquete->getCantidad(), 
+			$producto_paquete->getIdUnidad(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -241,7 +251,7 @@ abstract class ProductoPaqueteDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link ProductoPaquete} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link ProductoPaquete}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -272,35 +282,46 @@ abstract class ProductoPaqueteDAOBase extends DAO
 	{
 		$sql = "SELECT * from producto_paquete WHERE ("; 
 		$val = array();
-		if( (($a = $producto_paqueteA->getIdProducto()) != NULL) & ( ($b = $producto_paqueteB->getIdProducto()) != NULL) ){
+		if( (($a = $producto_paqueteA->getIdProducto()) !== NULL) & ( ($b = $producto_paqueteB->getIdProducto()) !== NULL) ){
 				$sql .= " id_producto >= ? AND id_producto <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_producto = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $producto_paqueteA->getIdPaquete()) != NULL) & ( ($b = $producto_paqueteB->getIdPaquete()) != NULL) ){
+		if( (($a = $producto_paqueteA->getIdPaquete()) !== NULL) & ( ($b = $producto_paqueteB->getIdPaquete()) !== NULL) ){
 				$sql .= " id_paquete >= ? AND id_paquete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_paquete = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $producto_paqueteA->getCantidad()) != NULL) & ( ($b = $producto_paqueteB->getCantidad()) != NULL) ){
+		if( (($a = $producto_paqueteA->getCantidad()) !== NULL) & ( ($b = $producto_paqueteB->getCantidad()) !== NULL) ){
 				$sql .= " cantidad >= ? AND cantidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " cantidad = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $producto_paqueteA->getIdUnidad()) !== NULL) & ( ($b = $producto_paqueteB->getIdUnidad()) !== NULL) ){
+				$sql .= " id_unidad >= ? AND id_unidad <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a !== NULL|| $b !== NULL ){
+			$sql .= " id_unidad = ? AND"; 
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
@@ -335,9 +356,9 @@ abstract class ProductoPaqueteDAOBase extends DAO
 	  **/
 	public static final function delete( &$producto_paquete )
 	{
-		if(self::getByPK($producto_paquete->getIdProducto(), $producto_paquete->getIdPaquete()) === NULL) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM producto_paquete WHERE  id_producto = ? AND id_paquete = ?;";
-		$params = array( $producto_paquete->getIdProducto(), $producto_paquete->getIdPaquete() );
+		if(self::getByPK($producto_paquete->getIdProducto(), $producto_paquete->getIdPaquete(), $producto_paquete->getIdUnidad()) === NULL) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM producto_paquete WHERE  id_producto = ? AND id_paquete = ? AND id_unidad = ?;";
+		$params = array( $producto_paquete->getIdProducto(), $producto_paquete->getIdPaquete(), $producto_paquete->getIdUnidad() );
 		global $conn;
 
 		$conn->Execute($sql, $params);

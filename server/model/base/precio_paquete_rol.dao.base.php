@@ -248,7 +248,7 @@ abstract class PrecioPaqueteRolDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link PrecioPaqueteRol} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link PrecioPaqueteRol}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -279,46 +279,46 @@ abstract class PrecioPaqueteRolDAOBase extends DAO
 	{
 		$sql = "SELECT * from precio_paquete_rol WHERE ("; 
 		$val = array();
-		if( (($a = $precio_paquete_rolA->getIdPaquete()) != NULL) & ( ($b = $precio_paquete_rolB->getIdPaquete()) != NULL) ){
+		if( (($a = $precio_paquete_rolA->getIdPaquete()) !== NULL) & ( ($b = $precio_paquete_rolB->getIdPaquete()) !== NULL) ){
 				$sql .= " id_paquete >= ? AND id_paquete <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_paquete = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $precio_paquete_rolA->getIdRol()) != NULL) & ( ($b = $precio_paquete_rolB->getIdRol()) != NULL) ){
+		if( (($a = $precio_paquete_rolA->getIdRol()) !== NULL) & ( ($b = $precio_paquete_rolB->getIdRol()) !== NULL) ){
 				$sql .= " id_rol >= ? AND id_rol <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_rol = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $precio_paquete_rolA->getPrecioUtilidad()) != NULL) & ( ($b = $precio_paquete_rolB->getPrecioUtilidad()) != NULL) ){
+		if( (($a = $precio_paquete_rolA->getPrecioUtilidad()) !== NULL) & ( ($b = $precio_paquete_rolB->getPrecioUtilidad()) !== NULL) ){
 				$sql .= " precio_utilidad >= ? AND precio_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " precio_utilidad = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $precio_paquete_rolA->getEsMargenUtilidad()) != NULL) & ( ($b = $precio_paquete_rolB->getEsMargenUtilidad()) != NULL) ){
+		if( (($a = $precio_paquete_rolA->getEsMargenUtilidad()) !== NULL) & ( ($b = $precio_paquete_rolB->getEsMargenUtilidad()) !== NULL) ){
 				$sql .= " es_margen_utilidad >= ? AND es_margen_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " es_margen_utilidad = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}

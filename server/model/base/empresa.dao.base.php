@@ -301,7 +301,7 @@ abstract class EmpresaDAOBase extends DAO
 	  * Este metodo proporciona capacidad de busqueda para conseguir un juego de objetos {@link Empresa} de la base de datos siempre y cuando 
 	  * esten dentro del rango de atributos activos de dos objetos criterio de tipo {@link Empresa}.
 	  * 
-	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda. 
+	  * Aquellas variables que tienen valores NULL seran excluidos en la busqueda (los valores 0 y false no son tomados como NULL) .
 	  * No es necesario ordenar los objetos criterio, asi como tambien es posible mezclar atributos.
 	  * Si algun atributo solo esta especificado en solo uno de los objetos de criterio se buscara que los resultados conicidan exactamente en ese campo.
 	  *	
@@ -332,134 +332,134 @@ abstract class EmpresaDAOBase extends DAO
 	{
 		$sql = "SELECT * from empresa WHERE ("; 
 		$val = array();
-		if( (($a = $empresaA->getIdEmpresa()) != NULL) & ( ($b = $empresaB->getIdEmpresa()) != NULL) ){
+		if( (($a = $empresaA->getIdEmpresa()) !== NULL) & ( ($b = $empresaB->getIdEmpresa()) !== NULL) ){
 				$sql .= " id_empresa >= ? AND id_empresa <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_empresa = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getIdDireccion()) != NULL) & ( ($b = $empresaB->getIdDireccion()) != NULL) ){
+		if( (($a = $empresaA->getIdDireccion()) !== NULL) & ( ($b = $empresaB->getIdDireccion()) !== NULL) ){
 				$sql .= " id_direccion >= ? AND id_direccion <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_direccion = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getCurp()) != NULL) & ( ($b = $empresaB->getCurp()) != NULL) ){
+		if( (($a = $empresaA->getCurp()) !== NULL) & ( ($b = $empresaB->getCurp()) !== NULL) ){
 				$sql .= " curp >= ? AND curp <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " curp = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getRfc()) != NULL) & ( ($b = $empresaB->getRfc()) != NULL) ){
+		if( (($a = $empresaA->getRfc()) !== NULL) & ( ($b = $empresaB->getRfc()) !== NULL) ){
 				$sql .= " rfc >= ? AND rfc <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " rfc = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getRazonSocial()) != NULL) & ( ($b = $empresaB->getRazonSocial()) != NULL) ){
+		if( (($a = $empresaA->getRazonSocial()) !== NULL) & ( ($b = $empresaB->getRazonSocial()) !== NULL) ){
 				$sql .= " razon_social >= ? AND razon_social <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " razon_social = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getRepresentanteLegal()) != NULL) & ( ($b = $empresaB->getRepresentanteLegal()) != NULL) ){
+		if( (($a = $empresaA->getRepresentanteLegal()) !== NULL) & ( ($b = $empresaB->getRepresentanteLegal()) !== NULL) ){
 				$sql .= " representante_legal >= ? AND representante_legal <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " representante_legal = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getFechaAlta()) != NULL) & ( ($b = $empresaB->getFechaAlta()) != NULL) ){
+		if( (($a = $empresaA->getFechaAlta()) !== NULL) & ( ($b = $empresaB->getFechaAlta()) !== NULL) ){
 				$sql .= " fecha_alta >= ? AND fecha_alta <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " fecha_alta = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getFechaBaja()) != NULL) & ( ($b = $empresaB->getFechaBaja()) != NULL) ){
+		if( (($a = $empresaA->getFechaBaja()) !== NULL) & ( ($b = $empresaB->getFechaBaja()) !== NULL) ){
 				$sql .= " fecha_baja >= ? AND fecha_baja <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " fecha_baja = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getActivo()) != NULL) & ( ($b = $empresaB->getActivo()) != NULL) ){
+		if( (($a = $empresaA->getActivo()) !== NULL) & ( ($b = $empresaB->getActivo()) !== NULL) ){
 				$sql .= " activo >= ? AND activo <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " activo = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getDireccionWeb()) != NULL) & ( ($b = $empresaB->getDireccionWeb()) != NULL) ){
+		if( (($a = $empresaA->getDireccionWeb()) !== NULL) & ( ($b = $empresaB->getDireccionWeb()) !== NULL) ){
 				$sql .= " direccion_web >= ? AND direccion_web <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " direccion_web = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getMargenUtilidad()) != NULL) & ( ($b = $empresaB->getMargenUtilidad()) != NULL) ){
+		if( (($a = $empresaA->getMargenUtilidad()) !== NULL) & ( ($b = $empresaB->getMargenUtilidad()) !== NULL) ){
 				$sql .= " margen_utilidad >= ? AND margen_utilidad <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " margen_utilidad = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $empresaA->getDescuento()) != NULL) & ( ($b = $empresaB->getDescuento()) != NULL) ){
+		if( (($a = $empresaA->getDescuento()) !== NULL) & ( ($b = $empresaB->getDescuento()) !== NULL) ){
 				$sql .= " descuento >= ? AND descuento <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
-		}elseif( $a || $b ){
+		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " descuento = ? AND"; 
-			$a = $a == NULL ? $b : $a;
+			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
