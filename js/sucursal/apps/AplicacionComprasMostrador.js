@@ -1439,9 +1439,11 @@ Aplicacion.ComprasMostrador.prototype.finishedPanelUpdater = function(compra_id)
 
 
     
-    
-            console.warn("Voy a imprimir el ticket id :" + compra_id);
-            console.warn("Los demas datos son", Aplicacion.ComprasMostrador.currentInstance.carritoCompras.items);
+    if(DEBUG){
+        console.warn("Voy a imprimir el ticket id :" + compra_id);
+        console.warn("Los demas datos son", Aplicacion.ComprasMostrador.currentInstance.carritoCompras.items);        
+    }
+
     
     // ------- imprimir ------- //
     
@@ -1468,7 +1470,8 @@ Aplicacion.ComprasMostrador.prototype.finishedPanelUpdater = function(compra_id)
         ticket +=  "\n";
 
 
-        ticket += POS.fillWithSpaces ( item.descripcion, 13, false ) ;
+        ticket += POS.fillWithSpaces ( item.descripcion, 15, false ) ;
+        ticket += " ";
         ticket += POS.fillWithSpaces ( item.cantidad,    5, false );
         ticket += POS.fillWithSpaces ( POS.currencyFormat(item.precio),      6, false ) ;
         ticket += POS.fillWithSpaces ( POS.currencyFormat(parseFloat( item.cantidad ) * parseFloat( item.precio )), 6, false ) + "\n";    
@@ -1487,16 +1490,32 @@ Aplicacion.ComprasMostrador.prototype.finishedPanelUpdater = function(compra_id)
   
     
 
-    ticket += "\n\n";
+    ticket += "\n";
 
-    /*ticket += "===========================================" + "\n";
-    ticket += "      SALDO TOTAL : " + POS.currencyFormat(saldo_total) + "\n";
-    ticket += "===========================================" + "\n";*/
-    
     
     ticket += POS.leyendasTicket.contacto;
 
-    console.log(ticket);
+            POS.ajaxToClient({
+                module : "Impresiones",
+                args :  {
+                    free_text : ticket
+                },
+                success : function ( r ){
+                    
+                    //ok client is there...
+                    if(DEBUG){
+                        console.log("ticket printing responded", r);
+                    }
+
+                },
+                failure: function (){
+                    //client not found !
+                    if(DEBUG){
+                        console.warn("client not found !!!", r);
+                    }
+                }
+            });
+    
 
     // ------- imprimir ------- //
 

@@ -1531,26 +1531,27 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 
             
             
-            ticket = POS.leyendasTicket.cabeceraTicket + "\n";
+            ticket = "\n\n" + POS.leyendasTicket.cabeceraTicket + "\n";
             ticket += "R.F.C. " + POS.leyendasTicket.rfc + "\n";
             ticket += POS.leyendasTicket.nombreEmpresa + "\n";
             ticket += POS.leyendasTicket.direccion + "\n";
-            ticket += "Tel. " + POS.leyendasTicket.telefono + "\n";
+            ticket += "Tel. " + POS.leyendasTicket.telefono + "\n\n";
 
-            ticket += "========== Estado de cuenta para ===========" + "\n";
+            ticket += "======== Estado de cuenta para ========" + "\n";
             
             var clientes = Aplicacion.Clientes.currentInstance.listaDeClientes.lista;
 
             for (var i = clientes.length - 1; i >= 0; i--) 
             {
                 if( clientes[i].data.id_cliente == Aplicacion.Clientes.CLIENTE_SELECCIONADO ){
-                    ticket += clientes[i].data.razon_social+"\n";
+                    ticket += "     " + clientes[i].data.razon_social+"\n";
                     break;
                 }
                     
             };
 
-            ticket += "============================================" + "\n";
+            ticket += "=======================================" + "\n";
+            
 
             var saldo_total = 0;
 
@@ -1562,44 +1563,100 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 
                 saldo_total += parseFloat( lista[i].total ) - parseFloat( lista[i].pagado );
 
-                ticket += "\n\n-------- Venta " + lista[i].id_venta + " ---------"+ "\n";
+                ticket += "\n\n------------- Venta " + lista[i].id_venta + " -------------"+ "\n";
                 
                 ticket += POS.fecha(lista[i].fecha) + "\n";
                 ticket += lista[i].sucursal + "\n";
                 ticket += lista[i].cajero + "\n";
                 //ticket += lista[i].tipo_venta + "\n";
-                ticket +=  "\n";
+                ticket +=  "\n\n";
+
+
+                
+                ticket += POS.fillWithSpaces ( "PRODUCTO", 14, false ) ;
+                ticket += " ";
+                ticket += POS.fillWithSpaces ( "CANT",    5, false );
+                ticket += " ";
+                ticket += POS.fillWithSpaces ( "PRECIO",     6, false ) ;
+                ticket += " ";
+                ticket += POS.fillWithSpaces ( "IMPORTE", 10, false ) + "\n";
+
+                ticket += "-------------------------------------"+ "\n";
 
                 for (var j = lista[i].detalle_venta.length - 1; j >= 0; j--) {
 
                     var item = lista[i].detalle_venta[j];
 
+
+                    if(DEBUG) { console.log("DETALLE:" , item); }
+
+
+
+                    /**
+                      *
+                      * Buscar si este producto
+                      * tiene o no precio por agrupacion
+                      *
+                      **/
+                    var prods = Aplicacion.Inventario.currentInstance.Inventario.productos;
+
+                    var p = 0, found = false;
+
+                    for (p = 0; p < prods.length; p++) 
+                    {
+                        if( parseInt(prods[p].data.productoID) == parseInt( item.id_producto) ) 
+                        {
+                            found = true; break;
+                        }
+                    };
+
+
                     if(item.cantidad != 0)
                     {
-                        ticket += POS.fillWithSpaces ( item.descripcion, 13, false ) ;
-                        ticket += POS.fillWithSpaces ( item.cantidad,    5, false );
+                        var qty = item.cantidad   ;
+
+                        if(found && prods[p].data.precioPorAgrupacion)
+                        {
+                            qty /= parseFloat( prods[p].data.agrupacionTam );
+                        }
+                                                
+                        ticket += POS.fillWithSpaces ( item.descripcion, 14, false ) ;
+                        ticket += " ";
+                        ticket += POS.fillWithSpaces ( qty,    5, false );
+                        ticket += " ";
                         ticket += POS.fillWithSpaces ( POS.currencyFormat(item.precio),      6, false ) ;
-                        ticket += POS.fillWithSpaces ( POS.currencyFormat(parseFloat( item.cantidad ) * parseFloat( item.precio )), 6, false ) + "\n";    
+                        ticket += " ";
+                        ticket += POS.fillWithSpaces ( POS.currencyFormat(parseFloat( qty ) * parseFloat( item.precio )), 10, false ) + "\n";    
                     }
                     
 
                     if(item.cantidad_procesada != 0)
                     {
-                        ticket += POS.fillWithSpaces ( item.descripcion, 13, false )
-                        ticket += POS.fillWithSpaces ( item.cantidad_procesada, 5, false )
+                        var qty = item.cantidad_procesada   ;
+
+                        if(found && prods[p].data.precioPorAgrupacion)
+                        {
+                            qty /= parseFloat( prods[p].data.agrupacionTam );
+                        }
+
+                        ticket += POS.fillWithSpaces ( item.descripcion, 14, false )
+                        ticket += " ";
+                        ticket += POS.fillWithSpaces ( qty, 5, false )
+                        ticket += " ";
                         ticket += POS.fillWithSpaces ( POS.currencyFormat(item.precio_procesada), 6, false )
-                        ticket += POS.fillWithSpaces ( POS.currencyFormat(parseFloat( item.cantidad_procesada ) * parseFloat( item.precio_procesada )), 6, false ) + "\n";
+                        ticket += " ";
+                        ticket += POS.fillWithSpaces ( POS.currencyFormat(parseFloat( qty ) * parseFloat( item.precio_procesada )), 10, false ) + "\n";
                     }
                     
 
                 };
                 
                 
-                ticket += "--------------------------------------"+ "\n";
-                ticket += "               Total    "  + POS.currencyFormat(lista[i].total) + "\n";
-                ticket += "               Saldado  "+ POS.currencyFormat(lista[i].pagado)+ "\n";
-                ticket += "               -----------------------"+ "\n";
-                ticket += "               Saldo    " + POS.currencyFormat((parseFloat( lista[i].total )) - parseFloat( lista[i].pagado ))+ "\n";
+                ticket += "-------------------------------------"+ "\n";
+                ticket += "                  Total     "  + POS.currencyFormat(lista[i].total) + "\n";
+                ticket += "                  Saldado   "+ POS.currencyFormat(lista[i].pagado)+ "\n";
+                ticket += "                  -------------------"+ "\n";
+                ticket += "                  Pendiente " + POS.currencyFormat((parseFloat( lista[i].total )) - parseFloat( lista[i].pagado ))+ "\n";
           
             };
 
@@ -1607,12 +1664,15 @@ Aplicacion.Clientes.prototype.detallesDeClientesPanelCreator = function (  ){
 
             ticket += "===========================================" + "\n";
             ticket += "      SALDO TOTAL : " + POS.currencyFormat(saldo_total) + "\n";
-            ticket += "===========================================" + "\n";
+            ticket += "===========================================" + "\n\n";
             
             
-            ticket += POS.leyendasTicket.contacto;
+            ticket += "  " + POS.leyendasTicket.contacto;
 
 
+            if(DEBUG){
+                console.log(ticket);
+            }
 
             POS.ajaxToClient({
                 module : "Impresiones",
