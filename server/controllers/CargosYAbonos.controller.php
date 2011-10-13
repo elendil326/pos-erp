@@ -1381,8 +1381,26 @@ require_once("CargosYAbonos.interface.php");
 		$descripcion = null
 	)
 	{
-
-
+            Logger::log("Creando nuevo concepto de ingreso");
+            $concepto_ingreso = new ConceptoIngreso();
+            $concepto_ingreso->setNombre($nombre);
+            $concepto_ingreso->setMonto($monto);
+            $concepto_ingreso->setDescripcion($descripcion);
+            $concepto_ingreso->setActivo(1);
+            DAO::transBegin();
+            try
+            {
+                ConceptoIngresoDAO::save($concepto_ingreso);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crea el nuevo concepto de ingreso: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Concepto de ingreso creado exitosamente");
+            return $concepto_ingreso->getIdConceptoIngreso();
 	}
 
 	/**
