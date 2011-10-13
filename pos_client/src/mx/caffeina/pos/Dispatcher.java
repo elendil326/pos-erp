@@ -217,7 +217,7 @@ public class Dispatcher{
 					b.sendCommand(send_command);
 				}
 
-				if(discard_first > 0)
+				if(Integer.parseInt(discard_first) > 0)
 					b.getRawData(Integer.parseInt(discard_first));
 					
 					

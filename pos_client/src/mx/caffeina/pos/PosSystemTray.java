@@ -70,8 +70,10 @@ public class PosSystemTray
             
             ActionListener upgradeListener = new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    
-                    System.exit(3);
+
+                    PosClientUpgrader.checkForUpdates( );
+
+                    //System.exit(3);
                 }
             };
 

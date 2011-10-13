@@ -107,7 +107,12 @@ public class Logger{
 		log_file.flush();
 	}
 		
-		
+	
+	public static void log(Exception exception_to_log)
+	{
+		error(exception_to_log);
+	}
+
 	public static void error(Exception exception_to_log)
 	{
 		System.out.println(getBaseString() + " WARNING: " + exception_to_log);
