@@ -1335,8 +1335,32 @@ require_once("CargosYAbonos.interface.php");
 		$id_concepto_gasto
 	)
 	{
-
-
+            Logger::log("Eliminando concepto de gasto");
+            $concepto_gasto=ConceptoGastoDAO::getByPK($id_concepto_gasto);
+            if(!$concepto_gasto)
+            {
+                Logger::error("El concepto gasto con id: ".$id_concepto_gasto." no existe");
+                throw new Exception("El concepto gasto con id: ".$id_concepto_gasto." no existe");
+            }
+            if(!$concepto_gasto->getActivo())
+            {
+                Logger::warn("El concepto de gasto ya ha sido desactivado");
+                return;
+            }
+            $concepto_gasto->setActivo(0);
+            DAO::transBegin();
+            try
+            {
+                ConceptoGastoDAO::save($concepto_gasto);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo eliminar el concepto de gasto: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Concepto de gasto eliminado con exito");
 	}
 
 	/**
