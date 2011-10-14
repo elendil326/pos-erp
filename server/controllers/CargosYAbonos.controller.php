@@ -1677,12 +1677,12 @@ require_once("CargosYAbonos.interface.php");
 	)
 	{
             Logger::log("Editando gasto");
-            $gasto=GastoDAO::getByPK($id_gasto);
             if(!$fecha_gasto && !$monto && !$id_concepto_gasto && !$descripcion && !$nota && !$folio)
             {
                 Logger::warn("No se recibieron parametros para editar, no hay nada que editar");
                 return;
             }
+            $gasto=GastoDAO::getByPK($id_gasto);
             if(!$gasto)
             {
                 Logger::error("El gasto con id: ".$id_gasto." no existe");
@@ -1745,16 +1745,66 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function EditarIngreso
 	(
-		$fecha_ingreso,
 		$id_ingreso,
-		$descrpicion = null,
+                $fecha_ingreso = null,
+		$descripcion = null,
 		$folio = null,
 		$nota = null,
 		$id_concepto_ingreso = null,
 		$monto = null
 	)
 	{
-
+            Logger::log("Editando gasto");
+            if(!$fecha_ingreso && !$monto && !$id_concepto_ingreso && !$descripcion && !$nota && !$folio)
+            {
+                Logger::warn("No se recibieron parametros para editar, no hay nada que editar");
+                return;
+            }
+            $ingreso=IngresoDAO::getByPK($id_ingreso);
+            if(!$ingreso)
+            {
+                Logger::error("El ingreso con id: ".$id_ingreso." no existe");
+                throw new Exception("El ingreso con id: ".$id_ingreso." no existe");
+            }
+            if($ingreso->getCancelado())
+            {
+                Logger::error("El ingreso ya ha sido cancelado y no puede ser editado");
+                throw new Exception("El ingreso ya ha sido cancelado y no puede ser editado");
+            }
+            if($id_concepto_ingreso!==null)
+            {
+                $concepto_ingreso=ConceptoIngresoDAO::getByPK($id_concepto_ingreso);
+                if($concepto_ingreso==null)
+                {
+                    Logger::error("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
+                    throw new Exception("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
+                }
+            }
+            if($fecha_ingreso!==null)
+                $ingreso->setFechaDelIngreso($fecha_ingreso);
+            if($monto!==null)
+                $ingreso->setMonto($monto);
+            if($id_concepto_ingreso!==null)
+                $ingreso->setIdConceptoIngreso($id_concepto_ingreso);
+            if($descripcion!==null)
+                $ingreso->setDescripcion($descripcion);
+            if($nota!==null)
+                $ingreso->setNota($nota);
+            if($folio!==null)
+                $ingreso->setFolio($folio);
+            DAO::transBegin();
+            try
+            {
+                IngresoDAO::save($ingreso);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollBack();
+                Logger::error("No se pudo editar el ingreso: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Ingreso editado exitosamente");
 
 	}
 

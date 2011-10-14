@@ -393,9 +393,9 @@
  	 **/
   function EditarIngreso
 	(
-		$fecha_ingreso, 
-		$id_ingreso, 
-		$descrpicion = null, 
+		$id_ingreso,
+                $fecha_ingreso = null,
+		$descripcion = null,
 		$folio = null, 
 		$nota = null, 
 		$id_concepto_ingreso = null, 
