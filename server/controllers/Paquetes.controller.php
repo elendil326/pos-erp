@@ -45,25 +45,25 @@ require_once("Paquetes.interface.php");
  	 *
  	 *Edita la informacion de un paquete
  	 *
- 	 * @param margen_utilidad float Margen de utilidad que se ganara al vender este paquete
- 	 * @param nombre string Nombre del paquete
  	 * @param id_paquete int ID del paquete a editar
- 	 * @param descripcion string Descripcion larga del paquete
- 	 * @param servicios json Objeto que contendra los ids de los servicios contenidos en el paquete con sus cantidades respectivas
+ 	 * @param foto_paquete string Url de la foto del paquete
  	 * @param productos json Objeto que contendra los ids de los productos contenidos en el paquete con sus cantidades respectivas
  	 * @param descuento float Descuento que sera aplicado a este paquete
- 	 * @param foto_paquete string Url de la foto del paquete
+ 	 * @param servicios json Objeto que contendra los ids de los servicios contenidos en el paquete con sus cantidades respectivas
+ 	 * @param nombre string Nombre del paquete
+ 	 * @param margen_utilidad float Margen de utilidad que se ganara al vender este paquete
+ 	 * @param descripcion string Descripcion larga del paquete
  	 **/
 	public function Editar
 	(
-		$margen_utilidad, 
-		$nombre, 
 		$id_paquete, 
-		$descripcion = null, 
-		$servicios = null, 
+		$foto_paquete = null, 
 		$productos = null, 
 		$descuento = null, 
-		$foto_paquete = null
+		$servicios = null, 
+		$nombre = null, 
+		$margen_utilidad = null, 
+		$descripcion = null
 	)
 	{  
   

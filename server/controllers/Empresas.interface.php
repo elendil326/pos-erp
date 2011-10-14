@@ -28,49 +28,49 @@
  	 *
  	 *Un administrador puede editar una sucursal, incuso si hay puntos de venta con sesiones activas que pertenecen a esa empresa. 
  	 *
- 	 * @param telefono1 string telefono de la empresa
- 	 * @param numero_exterior	 string Numero externo de la emresa
- 	 * @param colonia	 string Colonia de la empresa
- 	 * @param codigo_postal string Codigo postal de la empresa
- 	 * @param curp string CURP de la nueva empresa.
- 	 * @param calle	 string Calle de la empresa
  	 * @param id_empresa int Id de la empresa a modificar
- 	 * @param rfc string RFC de la nueva empresa.
- 	 * @param ciudad int Ciudad donde se encuentra la empresa
- 	 * @param razon_social string El nombre de la nueva empresa.
- 	 * @param email string Correo electronico de la empresa
- 	 * @param representante_legal string El nombre del representante legal de la nueva empresa.
- 	 * @param numero_interno string Numero interno de la empresa
- 	 * @param direccion_web string Direccin web de la empresa
- 	 * @param retenciones json Objeto que contendra los ids de las retenciones que aplican a esta empresa
  	 * @param descuento float Descuento que se aplicara a todos los productos de esta empresa
  	 * @param margen_utilidad float Porcentaje del margen de utilidad que esta empresa le gana a todos sus productos
  	 * @param impuestos json Objeto que contendra los ids de los impuestos que afectan a esta empresa
- 	 * @param texto_extra string Comentarios sobre la ubicacin de la empresa.
+ 	 * @param retenciones json Objeto que contendra los ids de las retenciones que aplican a esta empresa
+ 	 * @param direccion_web string Direccin web de la empresa
+ 	 * @param ciudad int Ciudad donde se encuentra la empresa
+ 	 * @param razon_social string El nombre de la nueva empresa.
+ 	 * @param rfc string RFC de la nueva empresa.
+ 	 * @param codigo_postal string Codigo postal de la empresa
+ 	 * @param curp string CURP de la nueva empresa.
+ 	 * @param calle	 string Calle de la empresa
+ 	 * @param numero_interno string Numero interno de la empresa
+ 	 * @param representante_legal string El nombre del representante legal de la nueva empresa.
+ 	 * @param telefono1 string telefono de la empresa
+ 	 * @param numero_exterior	 string Numero externo de la emresa
+ 	 * @param colonia	 string Colonia de la empresa
+ 	 * @param email string Correo electronico de la empresa
  	 * @param telefono2 string Telefono 2 de la empresa
+ 	 * @param texto_extra string Comentarios sobre la ubicacin de la empresa.
  	 **/
   function Editar
 	(
-		$telefono1, 
-		$numero_exterior	, 
-		$colonia	, 
-		$codigo_postal, 
-		$curp, 
-		$calle	, 
 		$id_empresa, 
-		$rfc, 
-		$ciudad, 
-		$razon_social, 
-		$email = null, 
-		$representante_legal = null, 
-		$numero_interno = null, 
-		$direccion_web = null, 
-		$retenciones = null, 
 		$descuento = null, 
 		$margen_utilidad = null, 
 		$impuestos = null, 
-		$texto_extra = null, 
-		$telefono2 = null
+		$retenciones = null, 
+		$direccion_web = null, 
+		$ciudad = null, 
+		$razon_social = null, 
+		$rfc = null, 
+		$codigo_postal = null, 
+		$curp = null, 
+		$calle	 = null, 
+		$numero_interno = null, 
+		$representante_legal = null, 
+		$telefono1 = null, 
+		$numero_exterior	 = null, 
+		$colonia	 = null, 
+		$email = null, 
+		$telefono2 = null, 
+		$texto_extra = null
 	);  
   
   
@@ -109,48 +109,48 @@
  	 *
  	 *Crear una nueva empresa. Por default una nueva empresa no tiene sucursales.
  	 *
- 	 * @param colonia string Colonia de la empresa
- 	 * @param telefono1 string telefono de la empresa
- 	 * @param codigo_postal string Codigo postal de la empresa
- 	 * @param curp string CURP de la nueva empresa.
- 	 * @param razon_social string El nombre de la nueva empresa.
- 	 * @param numero_exterior string Numero externo de la emresa
  	 * @param ciudad	 int Identificacor de la ciudad
+ 	 * @param numero_exterior string Numero externo de la emresa
+ 	 * @param razon_social string El nombre de la nueva empresa.
  	 * @param rfc string RFC de la nueva empresa.
  	 * @param calle string Calle de la empresa
- 	 * @param numero_interior string Numero interno de la empresa
- 	 * @param telefono2 string Telefono 2 de la empresa
- 	 * @param email string Correo electronico de la empresa
- 	 * @param texto_extra string Comentarios sobre la ubicacin de la empresa.
- 	 * @param direccion_web string Direccin web de la empresa
- 	 * @param retenciones json Objeto que contendra los ids de las retenciones que aplican a esta empresa
- 	 * @param margen_utilidad float Porcentaje del margen de utilidad que le gana esta empresa a todos los productos que ofrece
- 	 * @param descuento float Descuento que se aplciara a todos los productos de esta empresa
+ 	 * @param curp string CURP de la nueva empresa.
+ 	 * @param colonia string Colonia de la empresa
+ 	 * @param codigo_postal string Codigo postal de la empresa
+ 	 * @param telefono1 string telefono de la empresa
  	 * @param representante_legal string El nombre del representante legal de la nueva empresa.
  	 * @param impuestos json Objeto que contendra los ids de los impuestos que aplican a esta empresa 
+ 	 * @param descuento float Descuento que se aplciara a todos los productos de esta empresa
+ 	 * @param margen_utilidad float Porcentaje del margen de utilidad que le gana esta empresa a todos los productos que ofrece
+ 	 * @param numero_interior string Numero interno de la empresa
+ 	 * @param telefono2 string Telefono 2 de la empresa
+ 	 * @param texto_extra string Comentarios sobre la ubicacin de la empresa.
+ 	 * @param email string Correo electronico de la empresa
+ 	 * @param retenciones json Objeto que contendra los ids de las retenciones que aplican a esta empresa
+ 	 * @param direccion_web string Direccin web de la empresa
  	 * @return id_empresa int El ID autogenerado de la nueva empresa.
  	 **/
   function Nuevo
 	(
-		$colonia, 
-		$telefono1, 
-		$codigo_postal, 
-		$curp, 
-		$razon_social, 
-		$numero_exterior, 
 		$ciudad	, 
+		$numero_exterior, 
+		$razon_social, 
 		$rfc, 
 		$calle, 
+		$curp, 
+		$colonia, 
+		$codigo_postal, 
+		$telefono1, 
+		$representante_legal = null, 
+		$impuestos = null, 
+		$descuento = null, 
+		$margen_utilidad = null, 
 		$numero_interior = null, 
 		$telefono2 = null, 
-		$email = null, 
 		$texto_extra = null, 
-		$direccion_web = null, 
+		$email = null, 
 		$retenciones = null, 
-		$margen_utilidad = null, 
-		$descuento = null, 
-		$representante_legal = null, 
-		$impuestos = null
+		$direccion_web = null
 	);  
   
   

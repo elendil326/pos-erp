@@ -92,41 +92,6 @@ Se puede ordenar por los atributos de producto.
   
 	/**
  	 *
- 	 *Crea un traspaso solicitando cierta cantidad de producto a un almacen para depositarlo en un almacen destino.El usuario sera tomado de la sesion, la fecha sera toamda del servidor
- 	 *
- 	 * @param id_almacen_solicita int Id del almacen que solicita el producto
- 	 * @param id_almacen_envia int Id del almacen al que se le solicita el producto
- 	 * @param productos json Objeto que contendra los ids de los productos con sus cantidades que se solicitan
- 	 * @return id_traspaso int Id del traspaso generado
- 	 **/
-	public function SolicitudTraspaso
-	(
-		$id_almacen_solicita, 
-		$id_almacen_envia, 
-		$productos
-	)
-	{  
-  
-  
-	}
-  
-	/**
- 	 *
- 	 *Este metodo cancela una solicitud de traspaso. Un traspaso solo se puede cancelar si su estado sigue en solicitud. Cuando ya se ha enviado producto o ya se recibio, es imposible cancelar el traspaso
- 	 *
- 	 * @param id_traspaso int Id del traspaso a cancelar
- 	 **/
-	public function CancelarTraspaso
-	(
-		$id_traspaso
-	)
-	{  
-  
-  
-	}
-  
-	/**
- 	 *
  	 *Lista las ventas de una sucursal.
  	 *
  	 * @param id_sucursal int Id de la sucursal de la cual listaran sus ventas
@@ -135,43 +100,6 @@ Se puede ordenar por los atributos de producto.
 	public function Ventas_sucursal
 	(
 		$id_sucursal
-	)
-	{  
-  
-  
-	}
-  
-	/**
- 	 *
- 	 *Este metodo edita un traspaso ya solicitado o genera un envio de un almacen a otro sin necesidad de que haya sido solicitado primero, en caso de que haya un excedente en el almacen y tenga que ser enviado a otro. Este metodo peude relacionarse con transportes y fletes. El usuario sera tomado de la sesion actual. La fecha sera tomada del servidor. 
- 	 *
- 	 * @param productos json Objeto que contendra los ids de los productos que son enviados y sus cantidades
- 	 * @param id_traspaso int Id de la solicitud de traspaso a la que se responde con este envio
- 	 * @param id_almacen_destino int Id del almacen al que se dirije el envio, en caso de que no haya sido solicitado primero
- 	 * @param id_almacen_origen int Id del almacen del que salen los productos
- 	 * @return id_traspaso int Si el envio se genero sin haber primero una solicitud, este regresa un id_traspaso, si solo edito un traspaso solicitado agregandole los datos de enviono se regresa este parametro
- 	 **/
-	public function EnvioTraspaso
-	(
-		$productos, 
-		$id_traspaso = null, 
-		$id_almacen_destino = null, 
-		$id_almacen_origen = null
-	)
-	{  
-  
-  
-	}
-  
-	/**
- 	 *
- 	 *Registra que se recibio el traspaso de productos. El usuario sera tomado de la sesion actual y la fecha sera tomada del servidor. Este metodo es equivalente a una edicion, ya que da por realizado el traspaso e incrementa el producto en almacen
- 	 *
- 	 * @param id_traspaso int Id del traspaso que se recibe
- 	 **/
-	public function ReciboTraspaso
-	(
-		$id_traspaso
 	)
 	{  
   

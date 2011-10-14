@@ -95,51 +95,49 @@
  	 *
  	 *Edita la informaci?e un producto
  	 *
- 	 * @param codigo_producto string Codigo del producto
  	 * @param id_producto int Id del producto a editar
- 	 * @param costo_estandar float Valor del costo estndar del producto.
- 	 * @param nombre_producto string Nombre del producto
- 	 * @param empresas json arreglo de empresas a las que pertenece este producto
- 	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador
- 	 * @param activo bool Si queremos que este activo o no.
+ 	 * @param descuento float Descuento que tendra este producot
  	 * @param metodo_costeo string Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar
- 	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
- 	 * @param costo_extra_almacen float Si este producto produce un costo extra por tenerlo en almacen
- 	 * @param peso_producto float el peso de este producto en KG
- 	 * @param codigo_de_barras string El Codigo de barras para este producto
- 	 * @param garantía int Si este producto cuenta con un nmero de meses de garantia que no aplican a los demas productos de su categoria
- 	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
+ 	 * @param descripcion_producto string Descripcion larga del producto
  	 * @param id_unidad_no_convertible int Si este producto se relacionara con una unidad no convertible ( lotes, cajas, costales, etc.)
  	 * @param impuestos json array de ids de impuestos que tiene este producto
  	 * @param clasificaciones json Uno o varios id_clasificacion de este producto, esta clasificacion esta dada por el usuarioArray
  	 * @param id_unidad_convertible int Si este producto se relacionara con una unidad convertible (kilos, libras, litros, etc.) 
- 	 * @param descripcion_producto string Descripcion larga del producto
+ 	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
+ 	 * @param garantía int Si este producto cuenta con un nmero de meses de garantia que no aplican a los demas productos de su categoria
+ 	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador
+ 	 * @param codigo_de_barras string El Codigo de barras para este producto
+ 	 * @param empresas json arreglo de empresas a las que pertenece este producto
+ 	 * @param peso_producto float el peso de este producto en KG
+ 	 * @param costo_estandar float Valor del costo estndar del producto.
+ 	 * @param nombre_producto string Nombre del producto
+ 	 * @param costo_extra_almacen float Si este producto produce un costo extra por tenerlo en almacen
+ 	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
  	 * @param foto_del_producto string url a una foto de este producto
- 	 * @param descuento float Descuento que tendra este producot
+ 	 * @param codigo_producto string Codigo del producto
  	 **/
   function Editar
 	(
-		$codigo_producto, 
 		$id_producto, 
-		$costo_estandar, 
-		$nombre_producto, 
-		$empresas, 
-		$compra_en_mostrador, 
-		$activo, 
-		$metodo_costeo, 
-		$control_de_existencia = null, 
-		$costo_extra_almacen = null, 
-		$peso_producto = null, 
-		$codigo_de_barras = null, 
-		$garantía = null, 
-		$margen_de_utilidad = null, 
+		$descuento = null, 
+		$metodo_costeo = null, 
+		$descripcion_producto = null, 
 		$id_unidad_no_convertible = null, 
 		$impuestos = null, 
 		$clasificaciones = null, 
 		$id_unidad_convertible = null, 
-		$descripcion_producto = null, 
+		$margen_de_utilidad = null, 
+		$garantía = null, 
+		$compra_en_mostrador = null, 
+		$codigo_de_barras = null, 
+		$empresas = null, 
+		$peso_producto = null, 
+		$costo_estandar = null, 
+		$nombre_producto = null, 
+		$costo_extra_almacen = null, 
+		$control_de_existencia = null, 
 		$foto_del_producto = null, 
-		$descuento = null
+		$codigo_producto = null
 	);  
   
   
@@ -240,17 +238,17 @@ NOTA: Se crea un producto tipo = 1 que es para productos
   
 	/**
  	 *
- 	 *Este metodo modifica la informacion de una unidad convertible
+ 	 *Este metodo modifica la informacion de una unidad
  	 *
  	 * @param id_unidad_convertible string Id de la unidad convertible a editar
- 	 * @param nombre string Nombre de la unidad convertible
  	 * @param descripcion string Descripcion de la unidad convertible
+ 	 * @param nombre string Nombre de la unidad convertible
  	 **/
-  function EditarUnidad_convertible
+  function EditarUnidad
 	(
 		$id_unidad_convertible, 
-		$nombre, 
-		$descripcion = null
+		$descripcion = null, 
+		$nombre = null
 	);  
   
   
@@ -258,11 +256,30 @@ NOTA: Se crea un producto tipo = 1 que es para productos
   
 	/**
  	 *
- 	 *Descativa una unidad convertible para que no sea usada por otro metodo
+ 	 *Edita la equivalencia entre dos unidades.
+1 kg = 2.204 lb
+ 	 *
+ 	 * @param id_unidades int Id de la segunda unidad, en el ejemplo son libras
+ 	 * @param equivalencia float La nueva equivalencia que se pondra entre los dos valores, en el ejemplo es 2.204
+ 	 * @param id_unidad int Id de la unidad, en el ejemplo son kilogramos
+ 	 **/
+  function Editar_equivalenciaUnidad
+	(
+		$id_unidades, 
+		$equivalencia, 
+		$id_unidad
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Descativa una unidad para que no sea usada por otro metodo
  	 *
  	 * @param id_unidad_convertible int Id de la unidad convertible a eliminar
  	 **/
-  function EliminarUnidad_convertible
+  function EliminarUnidad
 	(
 		$id_unidad_convertible
 	);  
@@ -272,13 +289,30 @@ NOTA: Se crea un producto tipo = 1 que es para productos
   
 	/**
  	 *
- 	 *Lista las unidades convertibles. Se puede filtrar por activas o inactivas y ordenar por sus atributos
+ 	 *Elimina una equivalencia entre dos unidades.
+Ejemplo: 1 kg = 2.204 lb
+ 	 *
+ 	 * @param id_unidades int En el ejemplo son las libras
+ 	 * @param id_unidad int En el ejemplo es el kilogramo
+ 	 **/
+  function Eliminar_equivalenciaUnidad
+	(
+		$id_unidades, 
+		$id_unidad
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Lista las unidades. Se puede filtrar por activas o inactivas y ordenar por sus atributos
  	 *
  	 * @param activo bool Si este valor no es obtenido, se listaran tanto activas como inactivas, si es true, se listaran solo las activas, si es false se listaran solo las inactivas
  	 * @param ordenar json Valor que determina el orden de la lista
  	 * @return unidades_convertibles json Lista de unidades convertibles
  	 **/
-  function ListaUnidad_convertible
+  function ListaUnidad
 	(
 		$activo = null, 
 		$ordenar = null
@@ -289,13 +323,28 @@ NOTA: Se crea un producto tipo = 1 que es para productos
   
 	/**
  	 *
- 	 *Este metodo crea unidades convertibles, como son Kilogramos, Libras, Toneladas, Litros, etc.
+ 	 *Lista las equivalencias existentes. Se puede ordenar por sus atributos
+ 	 *
+ 	 * @param orden string Nombre de la columna de la tabla por la cual se ordenara la lista
+ 	 * @return unidades_equivalencia json Lista de unidades
+ 	 **/
+  function Lista_equivalenciaUnidad
+	(
+		$orden = null
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
+ 	 *Este metodo crea unidades, como son Kilogramos, Libras, Toneladas, Litros, costales, cajas, arpillas, etc.
  	 *
  	 * @param nombre string Nombre de la unidad convertible
  	 * @param descripcion string Descripcion de la unidad convertible
  	 * @return id_unidad_convertible string Id de la unidad convertible
  	 **/
-  function NuevaUnidad_convertible
+  function NuevaUnidad
 	(
 		$nombre, 
 		$descripcion = null
@@ -306,65 +355,17 @@ NOTA: Se crea un producto tipo = 1 que es para productos
   
 	/**
  	 *
- 	 *Metodo que cambia la informacion de una unidad no convertible
+ 	 *Crea un registro de la equivalencia entre una unidad y otra. Ejemplo: 1 kg = 2.204 lb
  	 *
- 	 * @param id_unidad_no_convertible int Id de la unidad no convertible a editar
- 	 * @param nombre string Nombre de la unidad no convertible
- 	 * @param descripcion string Descripcion larga de la unidad no convertible
+ 	 * @param id_unidad int Id de la unidad. Esta unidad es tomada con coeficiente 1 en la ecuacion de, en el ejemplo es el kilogramo equivalencia
+ 	 * @param id_unidades int Id de la unidad equivalente, en el ejemplo es la libra
+ 	 * @param equivalencia float Valor del coeficiente de la segunda unidad, es decir, las veces que cabe la segunda unidad en la primera
  	 **/
-  function EditarUnidad_no_convertible
+  function Nueva_equivalenciaUnidad
 	(
-		$id_unidad_no_convertible, 
-		$nombre, 
-		$descripcion = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Desactiva una unidad no convertible para que no sea usada por otro producto
- 	 *
- 	 * @param id_unidad_no_convertible int Id de la unidad no convertible a eliminar
- 	 **/
-  function EliminarUnidad_no_convertible
-	(
-		$id_unidad_no_convertible
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Lista las unidades no convertibles. Se puede filtrar por activas e inactivas y ordenar por sus atributos
- 	 *
- 	 * @param activo bool Si este valor no es obtenido, se listaran unidades tanto activas como inactivas. Si es true, se listaran solo las activas, si es false se listaran las inactivas
- 	 * @param ordenar json Valor que determina el orden de la lista
- 	 * @return unidades_no_convertibles json lista de unidades no convertibles
- 	 **/
-  function ListaUnidad_no_convertible
-	(
-		$activo = null, 
-		$ordenar = null
-	);  
-  
-  
-	
-  
-	/**
- 	 *
- 	 *Este metodo crea una nueva unidad no convertible (caja, lote, arpilla, costal, etc.) Las unidades no convertibles son aquellas que var? su valor y su peso de acuerdo al producto que se ingresa en ellas.
- 	 *
- 	 * @param nombre string Nombre de la unidad no convertible
- 	 * @param descripcion string Descripcion larga de la unidad no convertible
- 	 * @return id_unidad_no_convertible int Id autogenerado por la insercion de la unidad no convertible
- 	 **/
-  function NuevaUnidad_no_convertible
-	(
-		$nombre, 
-		$descripcion = null
+		$id_unidad, 
+		$id_unidades, 
+		$equivalencia
 	);  
   
   

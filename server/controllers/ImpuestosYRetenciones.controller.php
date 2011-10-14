@@ -14,18 +14,18 @@ require_once("ImpuestosYRetenciones.interface.php");
  	 *Edita la informacion de un impuesto
  	 *
  	 * @param id_impuesto int Id del impuesto a editar
- 	 * @param nombre string Nombre del impuesto
- 	 * @param monto_porcentaje float Monto o porcentaje que representa este impuesto
  	 * @param es_monto bool Si es verdadero, el campo de monto_porcentaje sera tomado como un monto fijo, si es false, sera tomado como un porcentaje
+ 	 * @param monto_porcentaje float Monto o porcentaje que representa este impuesto
  	 * @param descripcion string Descripcion larga del impuesto
+ 	 * @param nombre string Nombre del impuesto
  	 **/
 	public function EditarImpuesto
 	(
 		$id_impuesto, 
-		$nombre, 
-		$monto_porcentaje, 
-		$es_monto, 
-		$descripcion = null
+		$es_monto = null, 
+		$monto_porcentaje = null, 
+		$descripcion = null, 
+		$nombre = null
 	)
 	{  
   
@@ -37,18 +37,18 @@ require_once("ImpuestosYRetenciones.interface.php");
  	 *Edita la informacion de una retencion
  	 *
  	 * @param id_retencion int Id de la retencion a editar
- 	 * @param nombre string Nombre de la retencion
- 	 * @param monto_porcentaje float Monto o porcentaje de la retencion
  	 * @param es_monto bool Si es verdadero, el campo monto_porcentaje sera tomado como un monto fijo, si es false, sera tomado como un porcentaje
+ 	 * @param monto_porcentaje float Monto o porcentaje de la retencion
  	 * @param descripcion string Descripcion larga de al retencion
+ 	 * @param nombre string Nombre de la retencion
  	 **/
 	public function EditarRetencion
 	(
 		$id_retencion, 
-		$nombre, 
-		$monto_porcentaje, 
-		$es_monto, 
-		$descripcion = null
+		$es_monto = null, 
+		$monto_porcentaje = null, 
+		$descripcion = null, 
+		$nombre = null
 	)
 	{  
   

@@ -97,33 +97,33 @@
  	 *
  	 *Registra una nueva compra fuera de caja, puede usarse para que el administrador haga directamente una compra. El usuario y al sucursal seran tomados de la sesion. La fecha sera tomada del servidor. La empresa sera tomada del almacen del cual fueron tomados los productos.
  	 *
- 	 * @param total float Total de la compra
- 	 * @param id_usuario_compra int Id usuario al que se le compra, si es a una sucursal, se pone el id en negativo
- 	 * @param id_empresa int Id de la empresa a nombre de la cual se hace la compra
- 	 * @param retencion float Monto agregado por retenciones
- 	 * @param impuesto float Monto agregado por impuestos
- 	 * @param tipo_compra string Si la compra es a credito o de contado
- 	 * @param detalle json Objeto que contendr el arreglo de id productos, cantidad,  precio, descuento y procesado que involucran esta compra.
  	 * @param descuento float Monto descontado por descuentos
  	 * @param subtotal float Total de la compra antes de impuestos y descuentos.
- 	 * @param saldo float Cantidad pagada de la 
+ 	 * @param detalle json Objeto que contendr el arreglo de id productos, cantidad,  precio, descuento, id de unidad y procesado que involucran esta compra.
+ 	 * @param impuesto float Monto agregado por impuestos
+ 	 * @param tipo_compra string Si la compra es a credito o de contado
+ 	 * @param retencion float Monto agregado por retenciones
+ 	 * @param id_usuario_compra int Id usuario al que se le compra, si es a una sucursal, se pone el id en negativo
+ 	 * @param id_empresa int Id de la empresa a nombre de la cual se hace la compra
+ 	 * @param total float Total de la compra
  	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
+ 	 * @param saldo float Cantidad pagada de la 
  	 * @param tipo_de_pago string Si el pago sera en efectivo, con cheque o tarjeta
  	 * @return id_compra int Id autogenerado por la inserción de la compra
  	 **/
   function Nueva
 	(
-		$total, 
-		$id_usuario_compra, 
-		$id_empresa, 
-		$retencion, 
-		$impuesto, 
-		$tipo_compra, 
-		$detalle, 
 		$descuento, 
 		$subtotal, 
-		$saldo = null, 
+		$detalle, 
+		$impuesto, 
+		$tipo_compra, 
+		$retencion, 
+		$id_usuario_compra, 
+		$id_empresa, 
+		$total, 
 		$cheques = null, 
+		$saldo = null, 
 		$tipo_de_pago = null
 	);  
   

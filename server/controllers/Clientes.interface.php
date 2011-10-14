@@ -12,25 +12,25 @@
  	 *
  	 *Edita la informacion de la clasificacion de cliente
  	 *
- 	 * @param nombre string Nombre de la clasificacion
  	 * @param id_clasificacion_cliente int Id de la clasificacion del cliente a modificar
- 	 * @param clave_interna string Clave interna de la clasificacion
- 	 * @param margen_de_utilidad float Margen de utilidad que se le obtendra a todos los productos al venderle a este tipo de cliente
- 	 * @param descripcion string Descripcion larga de la clasificacion
+ 	 * @param impuestos json Ids de los impuestos que afectan a esta clasificacion
  	 * @param descuento float Descuento que se le aplicara a los productos 
  	 * @param retenciones json Ids de las retenciones que afectan esta clasificacion
- 	 * @param impuestos json Ids de los impuestos que afectan a esta clasificacion
+ 	 * @param clave_interna string Clave interna de la clasificacion
+ 	 * @param nombre string Nombre de la clasificacion
+ 	 * @param descripcion string Descripcion larga de la clasificacion
+ 	 * @param margen_de_utilidad float Margen de utilidad que se le obtendra a todos los productos al venderle a este tipo de cliente
  	 **/
   function EditarClasificacion
 	(
-		$nombre, 
 		$id_clasificacion_cliente, 
-		$clave_interna, 
-		$margen_de_utilidad = null, 
-		$descripcion = null, 
+		$impuestos = null, 
 		$descuento = null, 
 		$retenciones = null, 
-		$impuestos = null
+		$clave_interna = null, 
+		$nombre = null, 
+		$descripcion = null, 
+		$margen_de_utilidad = null
 	);  
   
   
@@ -99,79 +99,79 @@
 
 Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran los datos que ya tiene.
  	 *
- 	 * @param password string Password del cliente
- 	 * @param razon_social string Nombre o razon social del cliente.
  	 * @param id_cliente int Id del cliente a modificar.
+ 	 * @param telefono1 string Telefono del cliente
+ 	 * @param impuestos json Objeto que contendra los ids de los impuestos que afecan a este cliente
  	 * @param codigo_cliente string Codigo interno del cliente
- 	 * @param dia_de_revision string Fecha de revisin del cliente.
- 	 * @param intereses_moratorios float Interes por incumplimiento de pago.
- 	 * @param numero_interior string Nmero interior del cliente.
- 	 * @param mensajeria bool Si el cliente cuenta con un cliente de mensajera y paquetera.
- 	 * @param email string E-mail del cliente.
- 	 * @param dia_de_pago string Fecha de pago del cliente.
- 	 * @param estatus string Estatus del cliente.
- 	 * @param dias_de_credito int Das de crdito que se le darn al cliente.
- 	 * @param lim_credito float Valor asignado al lmite del crdito para este cliente.
- 	 * @param colonia string Colonia del cliente
- 	 * @param rfc string RFC del cliente.
- 	 * @param sucursal int Si se desea cambiar al cliente de sucursal, se pasa el id de la nueva sucursal.
- 	 * @param facturar_a_terceros bool Si el cliente puede facturar a terceros.
- 	 * @param ventas_a_credito int Nmero de ventas a crdito realizadas a este cliente.
- 	 * @param representante_legal string Nombre del representante legal del cliente.
+ 	 * @param retenciones json Objeto que contendra los ids de las retenciones que afectan a este cliente
+ 	 * @param direccion_web string Direccin web del cliente.
+ 	 * @param cuenta_de_mensajeria string Este parmetro se vuelve obligatorio si el parmetro Mensajera es true. Especifica la cuenta de mensajera y paquetera del cliente.
+ 	 * @param numero_exterior string Nmero exterior del cliente
+ 	 * @param telefono2 string Segundo telfono del cliente.
+ 	 * @param saldo_del_ejercicio float Saldo actual del ejercicio del cliente.
+ 	 * @param municipio int Municipio del cliente
+ 	 * @param clasificacion_cliente int La clasificacin del cliente.
+ 	 * @param denominacion_comercial string Nombre comercial del cliente.
+ 	 * @param moneda_del_cliente string Moneda que maneja el cliente
  	 * @param curp string CURP del cliente.
  	 * @param calle string Calle del cliente
- 	 * @param moneda_del_cliente string Moneda que maneja el cliente
- 	 * @param denominacion_comercial string Nombre comercial del cliente.
- 	 * @param clasificacion_cliente int La clasificacin del cliente.
- 	 * @param municipio int Municipio del cliente
- 	 * @param saldo_del_ejercicio float Saldo actual del ejercicio del cliente.
- 	 * @param telefono1 string Telefono del cliente
+ 	 * @param representante_legal string Nombre del representante legal del cliente.
+ 	 * @param ventas_a_credito int Nmero de ventas a crdito realizadas a este cliente.
+ 	 * @param password string Password del cliente
+ 	 * @param facturar_a_terceros bool Si el cliente puede facturar a terceros.
+ 	 * @param sucursal int Si se desea cambiar al cliente de sucursal, se pasa el id de la nueva sucursal.
+ 	 * @param colonia string Colonia del cliente
+ 	 * @param rfc string RFC del cliente.
  	 * @param texto_extra string Comentario sobre la direccin  del cliente.
+ 	 * @param lim_credito float Valor asignado al lmite del crdito para este cliente.
+ 	 * @param razon_social string Nombre o razon social del cliente.
+ 	 * @param estatus string Estatus del cliente.
+ 	 * @param dias_de_credito int Das de crdito que se le darn al cliente.
+ 	 * @param mensajeria bool Si el cliente cuenta con un cliente de mensajera y paquetera.
+ 	 * @param dia_de_pago string Fecha de pago del cliente.
+ 	 * @param email string E-mail del cliente.
+ 	 * @param intereses_moratorios float Interes por incumplimiento de pago.
  	 * @param codigo_postal string Codigo postal del cliente
- 	 * @param impuestos json Objeto que contendra los ids de los impuestos que afecan a este cliente
- 	 * @param direccion_web string Direccin web del cliente.
- 	 * @param retenciones json Objeto que contendra los ids de las retenciones que afectan a este cliente
- 	 * @param numero_exterior string Nmero exterior del cliente
- 	 * @param cuenta_de_mensajeria string Este parmetro se vuelve obligatorio si el parmetro Mensajera es true. Especifica la cuenta de mensajera y paquetera del cliente.
- 	 * @param telefono2 string Segundo telfono del cliente.
+ 	 * @param numero_interior string Nmero interior del cliente.
+ 	 * @param dia_de_revision string Fecha de revisin del cliente.
  	 **/
   function Editar
 	(
-		$password, 
-		$razon_social, 
 		$id_cliente, 
-		$codigo_cliente, 
-		$dia_de_revision = null, 
-		$intereses_moratorios = null, 
-		$numero_interior = null, 
-		$mensajeria = null, 
-		$email = null, 
-		$dia_de_pago = null, 
-		$estatus = null, 
-		$dias_de_credito = null, 
-		$lim_credito = null, 
-		$colonia = null, 
-		$rfc = null, 
-		$sucursal = null, 
-		$facturar_a_terceros = null, 
-		$ventas_a_credito = null, 
-		$representante_legal = null, 
+		$telefono1 = null, 
+		$impuestos = null, 
+		$codigo_cliente = null, 
+		$retenciones = null, 
+		$direccion_web = null, 
+		$cuenta_de_mensajeria = null, 
+		$numero_exterior = null, 
+		$telefono2 = null, 
+		$saldo_del_ejercicio = null, 
+		$municipio = null, 
+		$clasificacion_cliente = null, 
+		$denominacion_comercial = null, 
+		$moneda_del_cliente = null, 
 		$curp = null, 
 		$calle = null, 
-		$moneda_del_cliente = null, 
-		$denominacion_comercial = null, 
-		$clasificacion_cliente = null, 
-		$municipio = null, 
-		$saldo_del_ejercicio = null, 
-		$telefono1 = null, 
+		$representante_legal = null, 
+		$ventas_a_credito = null, 
+		$password = null, 
+		$facturar_a_terceros = null, 
+		$sucursal = null, 
+		$colonia = null, 
+		$rfc = null, 
 		$texto_extra = null, 
+		$lim_credito = null, 
+		$razon_social = null, 
+		$estatus = null, 
+		$dias_de_credito = null, 
+		$mensajeria = null, 
+		$dia_de_pago = null, 
+		$email = null, 
+		$intereses_moratorios = null, 
 		$codigo_postal = null, 
-		$impuestos = null, 
-		$direccion_web = null, 
-		$retenciones = null, 
-		$numero_exterior = null, 
-		$cuenta_de_mensajeria = null, 
-		$telefono2 = null
+		$numero_interior = null, 
+		$dia_de_revision = null
 	);  
   
   

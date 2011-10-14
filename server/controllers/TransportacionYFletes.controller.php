@@ -121,7 +121,7 @@ require_once("TransportacionYFletes.interface.php");
 	/**
  	 *
  	 *Mover mercancia de un carro a otro. 
-<h4>UPDATE</h4><br>
+UPDATE
 Se movera parcial o totalmente la carga?
  	 *
  	 * @param id_carro_origen int Id del carro del cual se mueve la carga
@@ -181,36 +181,36 @@ Se movera parcial o totalmente la carga?
  	 *
  	 *Edita la informacion de un carro
  	 *
- 	 * @param id_tipo_carro int Id del tipo de carro (camioneta, coche, camion)
- 	 * @param id_marca_carro int Id de la marca del vehiculo (Nissan, Mazda)
- 	 * @param id_modelo_vehiculo int Id del modelo del vehiculo
- 	 * @param id_localizacion int Id de la sucursal en la que se encuentra, se tomara un entero especial para determinar que se encuentra en una ruta.
- 	 * @param id_estado int Id del estado del vehiculo, debera contener [en servicio], [accidentado], [averiado], [baja definitiva], [taller]
- 	 * @param imagen string url del a imagen del vehiculo
  	 * @param id_carro int Id del carro a editar
- 	 * @param codigo string Codigo interno del vehiculo
- 	 * @param matricula string Matricula del vehiculo
+ 	 * @param km_por_litro float numero de kilometros que puede trnasitar el vehiculo por un litro de combustible
+ 	 * @param combustible float Cantidad de combustible que tiene el vehiculo
  	 * @param kilometros float Kilometros recorridos por el vehiculo
  	 * @param num_neumaticos int Numero de neumaticos del vehiculo
- 	 * @param combustible float Cantidad de combustible que tiene el vehiculo
- 	 * @param km_por_litro float numero de kilometros que puede trnasitar el vehiculo por un litro de combustible
+ 	 * @param codigo string Codigo interno del vehiculo
+ 	 * @param matricula string Matricula del vehiculo
+ 	 * @param imagen string url del a imagen del vehiculo
+ 	 * @param id_estado int Id del estado del vehiculo, debera contener [en servicio], [accidentado], [averiado], [baja definitiva], [taller]
+ 	 * @param id_modelo_vehiculo int Id del modelo del vehiculo
+ 	 * @param id_localizacion int Id de la sucursal en la que se encuentra, se tomara un entero especial para determinar que se encuentra en una ruta.
+ 	 * @param id_marca_carro int Id de la marca del vehiculo (Nissan, Mazda)
+ 	 * @param id_tipo_carro int Id del tipo de carro (camioneta, coche, camion)
  	 * @param ids_empresas json Los ids de las empresas a las que este vehiculo pertenece. Si este valor no se pasa, se tomara que el vehiculo pertenece a todas las empresas.
  	 **/
 	public function Editar
 	(
-		$id_tipo_carro, 
-		$id_marca_carro, 
-		$id_modelo_vehiculo, 
-		$id_localizacion, 
-		$id_estado, 
-		$imagen, 
 		$id_carro, 
-		$codigo = null, 
-		$matricula = null, 
+		$km_por_litro = null, 
+		$combustible = null, 
 		$kilometros = null, 
 		$num_neumaticos = null, 
-		$combustible = null, 
-		$km_por_litro = null, 
+		$codigo = null, 
+		$matricula = null, 
+		$imagen = null, 
+		$id_estado = null, 
+		$id_modelo_vehiculo = null, 
+		$id_localizacion = null, 
+		$id_marca_carro = null, 
+		$id_tipo_carro = null, 
 		$ids_empresas = null
 	)
 	{  
@@ -241,14 +241,14 @@ Se movera parcial o totalmente la carga?
  	 *Edita un registro de tipo de carro (camion, camioneta, etc)
  	 *
  	 * @param id_tipo_carro int Id del tipo de carro a editar
- 	 * @param nombre_tipo_carro string Nombre del tipo de carro
  	 * @param activo bool Si este carro va a estar activo para su seleccion
+ 	 * @param nombre_tipo_carro string Nombre del tipo de carro
  	 **/
 	public function EditarTipo
 	(
 		$id_tipo_carro, 
-		$nombre_tipo_carro, 
-		$activo = null
+		$activo = null, 
+		$nombre_tipo_carro = null
 	)
 	{  
   
@@ -315,14 +315,14 @@ Se movera parcial o totalmente la carga?
  	 *Edita una marca de un carro
  	 *
  	 * @param id_marca_carro int Id de la marca que sera editada
- 	 * @param nombre_marca string Nombre de la marca del  carro
  	 * @param activo bool Si la marca estara habilitada para su seleccion
+ 	 * @param nombre_marca string Nombre de la marca del  carro
  	 **/
 	public function EditarMarca
 	(
 		$id_marca_carro, 
-		$nombre_marca, 
-		$activo = null
+		$activo = null, 
+		$nombre_marca = null
 	)
 	{  
   

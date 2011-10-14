@@ -14,7 +14,7 @@ require_once("Empresas.interface.php");
  	 *Mostrar?odas la empresas en el sistema, as?omo sus sucursalse y sus gerentes[a] correspondientes. Por default no se mostraran las empresas ni sucursales inactivas. 
  	 *
  	 * @param activa bool Si no se obtiene este valor, se listaran tanto empresas activas como inactivas, si su valor es true, se mostraran solo las empresas activas, si es false, se mostraran solo las inactivas
- 	 * @return empresas json Arreglo de objetos que contendrá las empresas de la instancia
+ 	 * @return empresas json Arreglo de objetos que contendrï¿½ las empresas de la instancia
  	 **/
 	public function Lista
 	(
@@ -162,26 +162,26 @@ require_once("Empresas.interface.php");
  	 **/
 	public function Editar
 	(
-		$telefono1, 
-		$numero_exterior	, 
-		$colonia	, 
-		$codigo_postal, 
-		$curp, 
-		$calle	, 
-		$id_empresa, 
-		$rfc, 
-		$ciudad, 
-		$razon_social, 
-		$email = null, 
-		$representante_legal = null, 
-		$numero_interno = null, 
-		$direccion_web = null, 
-		$retenciones = null, 
-		$descuento = null, 
-		$margen_utilidad = null, 
-		$impuestos = null, 
-		$texto_extra = null, 
-		$telefono2 = null
+		$id_empresa,
+		$descuento = null,
+		$margen_utilidad = null,
+		$impuestos = null,
+		$retenciones = null,
+		$direccion_web = null,
+		$ciudad = null,
+		$razon_social = null,
+		$rfc = null,
+		$codigo_postal = null,
+		$curp = null,
+		$calle	 = null,
+		$numero_interno = null,
+		$representante_legal = null,
+		$telefono1 = null,
+		$numero_exterior	 = null,
+		$colonia	 = null,
+		$email = null,
+		$telefono2 = null,
+		$texto_extra = null
 	)
 	{  
   

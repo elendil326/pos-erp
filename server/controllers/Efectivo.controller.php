@@ -36,18 +36,18 @@ require_once("Efectivo.interface.php");
  	 *Edita la informacion de un billete
  	 *
  	 * @param id_billete int Id del billete a editar
- 	 * @param nombre string Nombre del billete, valor en texto, "cincuenta", "cien", etc
  	 * @param valor int Valor del billete
- 	 * @param id_moneda int Id de la moneda a la que pertenece el billete
  	 * @param foto_billete string Url de la foto del billete
+ 	 * @param nombre string Nombre del billete, valor en texto, "cincuenta", "cien", etc
+ 	 * @param id_moneda int Id de la moneda a la que pertenece el billete
  	 **/
 	public function EditarBillete
 	(
 		$id_billete, 
-		$nombre, 
-		$valor, 
-		$id_moneda, 
-		$foto_billete = null
+		$valor = null, 
+		$foto_billete = null, 
+		$nombre = null, 
+		$id_moneda = null
 	)
 	{  
   
@@ -116,8 +116,8 @@ require_once("Efectivo.interface.php");
 	public function EditarMoneda
 	(
 		$id_moneda, 
-		$nombre, 
-		$simbolo
+		$nombre = null, 
+		$simbolo = null
 	)
 	{  
   

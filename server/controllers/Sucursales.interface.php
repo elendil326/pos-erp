@@ -13,14 +13,14 @@
  	 *Edita la informacion de un almacen
  	 *
  	 * @param id_almacen int Id del almacen a editar
- 	 * @param nombre string Nombre del almacen
  	 * @param descripcion string Descripcion del almacen
+ 	 * @param nombre string Nombre del almacen
  	 **/
   function EditarAlmacen
 	(
 		$id_almacen, 
-		$nombre, 
-		$descripcion = null
+		$descripcion = null, 
+		$nombre = null
 	);  
   
   
@@ -47,7 +47,7 @@
 <h2>Update</h2>
 Creo que este metodo tiene que estar bajo sucursal.
  	 *
- 	 * @param productos json Objeto que contendr los ids de los productos y sus cantidades
+ 	 * @param productos json Objeto que contendr los ids de los productos, sus unidades y sus cantidades
  	 * @param id_almacen int Id del almacen que se surte
  	 * @param motivo string Motivo del movimiento
  	 * @return id_surtido string Id generado por el registro de surtir
@@ -110,7 +110,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Envia productos fuera del almacen. Ya sea que sea un traspaso de un alamcen a otro o por motivos de inventarios fisicos.
  	 *
- 	 * @param productos json Objeto que contendra los ids de los productos que seran sacados del alamcen con sus cantidades
+ 	 * @param productos json Objeto que contendra los ids de los productos que seran sacados del alamcen con sus cantidades y sus unidades
  	 * @param id_almacen int Id del almacen del cual se hace el movimiento
  	 * @param motivo string Motivo de la salida del producto
  	 * @return id_salida int ID de la salida del producto
@@ -144,14 +144,14 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *Para poder editar un traspaso,este no tuvo que haber sido enviado aun
  	 *
  	 * @param id_traspaso int Id del traspaso a editar
- 	 * @param fecha_envio_programada string Fecha de envio programada
  	 * @param productos json Productos a enviar con sus cantidades
+ 	 * @param fecha_envio_programada string Fecha de envio programada
  	 **/
   function EditarTraspasoAlmacen
 	(
 		$id_traspaso, 
-		$fecha_envio_programada, 
-		$productos
+		$productos = null, 
+		$fecha_envio_programada = null
 	);  
   
   
@@ -369,14 +369,14 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *Edita la informacion de una caja
  	 *
  	 * @param id_caja int Id de la caja a editar
- 	 * @param token string Token generado por el pos client
  	 * @param descripcion string Descripcion de la caja
+ 	 * @param token string Token generado por el pos client
  	 **/
   function EditarCaja
 	(
 		$id_caja, 
-		$token, 
-		$descripcion = null
+		$descripcion = null, 
+		$token = null
 	);  
   
   
@@ -462,45 +462,45 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 *Edita los datos de una sucursal
  	 *
- 	 * @param coidgo_postal string Codigo Postal de la sucursal
- 	 * @param colonia string Colonia de la sucursal
- 	 * @param calle string Calle de la sucursal
- 	 * @param municipio int Municipio de la sucursal
- 	 * @param rfc string Rfc de la sucursal
- 	 * @param numero_exterior string Numero exterior de la sucursal
- 	 * @param razon_social string Razon social de la sucursal
- 	 * @param saldo_a_favor float Saldo a favor de la sucursal
  	 * @param id_sucursal int Id de la sucursal a modificar
+ 	 * @param descuento float Descuento que tendran los productos ofrecidos por esta sucursal
+ 	 * @param margen_utilidad float Porcentaje del margen de utilidad que se obtendra de los productos vendidos en esta sucursal
+ 	 * @param descripcion string Descripcion de la sucursal
  	 * @param empresas json Objeto que contendra los ids de las empresas a las que esta sucursal pertenece, por lo menos tiene que haber una empresa. En este JSON, opcionalmente junto con el id de la empresa, aapreceran dos campos que seran margen_utilidad y descuento, que indicaran que todos los productos de esa empresa ofrecidos en esta sucursal tendran un margen de utilidad y/o un descuento con los valores en esos campos
- 	 * @param numero_interior string Numero interior de la sucursal
- 	 * @param impuestos json Objeto que contendra los ids de los impuestos que afectana esta sucursal
- 	 * @param id_gerente int Id del gerente de la sucursal
  	 * @param telefono1 string telefono 1 de la sucursal
  	 * @param telefono2 string telefono 2 de la sucursal
- 	 * @param descripcion string Descripcion de la sucursal
- 	 * @param margen_utilidad float Porcentaje del margen de utilidad que se obtendra de los productos vendidos en esta sucursal
- 	 * @param descuento float Descuento que tendran los productos ofrecidos por esta sucursal
+ 	 * @param numero_exterior string Numero exterior de la sucursal
+ 	 * @param razon_social string Razon social de la sucursal
+ 	 * @param id_gerente int Id del gerente de la sucursal
+ 	 * @param municipio int Municipio de la sucursal
+ 	 * @param impuestos json Objeto que contendra los ids de los impuestos que afectana esta sucursal
+ 	 * @param rfc string Rfc de la sucursal
+ 	 * @param saldo_a_favor float Saldo a favor de la sucursal
+ 	 * @param numero_interior string Numero interior de la sucursal
+ 	 * @param colonia string Colonia de la sucursal
+ 	 * @param calle string Calle de la sucursal
+ 	 * @param coidgo_postal string Codigo Postal de la sucursal
  	 **/
   function Editar
 	(
-		$coidgo_postal, 
-		$colonia, 
-		$calle, 
-		$municipio, 
-		$rfc, 
-		$numero_exterior, 
-		$razon_social, 
-		$saldo_a_favor, 
 		$id_sucursal, 
-		$empresas, 
-		$numero_interior = null, 
-		$impuestos = null, 
-		$id_gerente = null, 
+		$descuento = null, 
+		$margen_utilidad = null, 
+		$descripcion = null, 
+		$empresas = null, 
 		$telefono1 = null, 
 		$telefono2 = null, 
-		$descripcion = null, 
-		$margen_utilidad = null, 
-		$descuento = null
+		$numero_exterior = null, 
+		$razon_social = null, 
+		$id_gerente = null, 
+		$municipio = null, 
+		$impuestos = null, 
+		$rfc = null, 
+		$saldo_a_favor = null, 
+		$numero_interior = null, 
+		$colonia = null, 
+		$calle = null, 
+		$coidgo_postal = null
 	);  
   
   

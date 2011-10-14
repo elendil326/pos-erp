@@ -43,11 +43,13 @@
  	 *
  	 * @param id_consignacion int Id de la consignacion a editar
  	 * @param productos json Objeto que contendra los ids de los productos y sus cantidades que ahora tendra esta consignacion
+ 	 * @param agregar bool Si estos productos seran agregados a la consignacion o seran quitados de la misma.
  	 **/
   function Editar
 	(
 		$id_consignacion, 
-		$productos
+		$productos, 
+		$agregar
 	);  
   
   

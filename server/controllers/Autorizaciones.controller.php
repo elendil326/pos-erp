@@ -29,7 +29,7 @@ require_once("Autorizaciones.interface.php");
 	/**
  	 *
  	 *Solicitud para cambiar alg?ato de un cliente. La fecha de petici?e tomar?el servidor. El usuario y la sucursal que emiten la autorizaci?er?tomadas de la sesi?
-<br><br>
+
 La autorizacion se guardara con los datos del usuario que la pidio. Si es aceptada, entonces el usuario podra editar al cliente una vez.
  	 *
  	 * @param id_cliente int Id del cliente al que se le pide editar el lmite de crdito.
@@ -84,11 +84,11 @@ La autorizacion se guardara con los datos del usuario que la pidio. Si es acepta
  	 *
  	 *Solicitud para cambiar la relaci?ntre cliente y el precio ofrecido para cierto producto ya sea en compra o en venta. La fecha de peticion se tomar?el servidor. El usuario y la sucursal que emiten la autorizaci?er?tomadas de la sesi?
 
-<br/><br/><b>UPDATE :</b> Actualmente como se maneja esto es por medio de las ventas preferenciales, es decir, se manda una autorizaci?ara que el cajero pueda editar todos los precios que desee, de todos los productos "solo para esa venta y solo para ese cliente especificamente", ya que si el cliente quisiera que le vendieran mas de un solo producto a diferente precio tendr? que generar mas de una autorizaci?esto implica un incremento considerable en el tiempo de respuesta y aplicaci?e los cambios.
+UPDATE : Actualmente como se maneja esto es por medio de las ventas preferenciales, es decir, se manda una autorizaci?ara que el cajero pueda editar todos los precios que desee, de todos los productos "solo para esa venta y solo para ese cliente especificamente", ya que si el cliente quisiera que le vendieran mas de un solo producto a diferente precio tendr? que generar mas de una autorizaci?esto implica un incremento considerable en el tiempo de respuesta y aplicaci?e los cambios.
 
-<br/><br/><b>UPDATE 2:</b> Creo que los metodos : 
-<br/><i><b>api/autorizaciones/editar_precio_cliente</b></i> y <i><b>api/autorizaciones/editar_siguiente_compra_venta_precio_cliente</b></i>
-<br/>Se podr? combinar y as?ener un solo m?do para una compra venta preferencial.
+UPDATE 2: Creo que los metodos : 
+api/autorizaciones/editar_precio_cliente y api/autorizaciones/editar_siguiente_compra_venta_precio_cliente
+Se podr? combinar y as?ener un solo m?do para una compra venta preferencial.
  	 *
  	 * @param siguiente_compra bool Si es true, el cambio solo se acplicara a la siguiente compra/venta, pero si es false, el cambio se hara sobre la relacion del cliente con el tipo de precio
  	 * @param id_cliente int Id del cliente al que se le har el cambio.
@@ -116,7 +116,7 @@ La autorizacion se guardara con los datos del usuario que la pidio. Si es acepta
 	/**
  	 *
  	 *Muestra la lista de autorizaciones, con la opci?e filtrar por pendientes, aceptadas, rechazadas, en tr?ito, embarques recibidos y de ordenar seg?os atributos de autorizaciones. 
-<br/><br/><b>Update : </b> falta definir el ejemplo de envio.
+Update :  falta definir el ejemplo de envio.
  	 *
  	 * @param filtro json Valor numrico que definir que filtro se pondr a la lista.
  	 * @param ordenar json Valor numrico que definir el orden de la lista.
@@ -152,7 +152,7 @@ La autorizacion se guardara con los datos del usuario que la pidio. Si es acepta
 	/**
  	 *
  	 *Solicitud de un producto, la fecha de peticion se tomar?el servidor. El usuario y la sucursal que emiten la autorizaci?er?tomadas de la sesi?
-<br/><br/><b>Update : </b> Me parece que no es buena idea manejar en los argumentos solo un id_producto y cantidad, creo que seria mejor manejar un array de objetos producto, que tuvieran como propiedades el id del producto y la cantidad solicitada, ya que si por ejemplo llega un cliente grande y necesita mas de un producto, y no pudiera cubrir la cantidad solicitada, por cada producto tendr? que solicitar una autorizaci?
+Update :  Me parece que no es buena idea manejar en los argumentos solo un id_producto y cantidad, creo que seria mejor manejar un array de objetos producto, que tuvieran como propiedades el id del producto y la cantidad solicitada, ya que si por ejemplo llega un cliente grande y necesita mas de un producto, y no pudiera cubrir la cantidad solicitada, por cada producto tendr? que solicitar una autorizaci?
  
  	 *
  	 * @param descripcion string Justificacin del porqu la solicitud del producto.
@@ -192,11 +192,11 @@ La autorizacion se guardara con los datos del usuario que la pidio. Si es acepta
  	 *
  	 *Editar una autorizacion en caso de tener permiso.
 
-<br/><br/><b>Update : </b> Creo que seriabuena idea que se definiera de una vez la estructura de las autorizaciones, ya que como se maneja actualemnte es de la siguiente manera : 
+Update :  Creo que seriabuena idea que se definiera de una vez la estructura de las autorizaciones, ya que como se maneja actualemnte es de la siguiente manera : 
 
-Digo que seria buena idea definir el formato de las autorizaciones para ir pensando en como en un futuro se van a mostrar en las interfaces, apartir de que se se crearan los formularios, actualmente se toma el campo <b>tipo</b> para de ahi saber que tipo de autorizacion es y crear un formulario de este tipo para desplegar los datos, y dependiendo del <b>tipo</b> se identifica que formato de JSON se espera que contenga el campo <b>parametros</b> .
+Digo que seria buena idea definir el formato de las autorizaciones para ir pensando en como en un futuro se van a mostrar en las interfaces, apartir de que se se crearan los formularios, actualmente se toma el campo tipo para de ahi saber que tipo de autorizacion es y crear un formulario de este tipo para desplegar los datos, y dependiendo del tipo se identifica que formato de JSON se espera que contenga el campo parametros .
 
-<br/><br/>
+
 
 Al momento de editar la autorizacion veo que aparentemente se podria editar el id_autorizacion, id_usuario, id_sucursal, peticion y estado, creo yo que no es prudente editar ninguno de estos campos ya que el mal uso de esta informacion puede da?gravemente la integridad del sistema.
  	 *

@@ -14,24 +14,24 @@ require_once("Servicios.interface.php");
  	 *Edita la informaci?e una clasificaci?e servicio
  	 *
  	 * @param id_clasificacion_servicio int Id de la clasificacion del servicio que se edita
- 	 * @param nombre string Nombre de la clasificacion de servicio
- 	 * @param garantia int Numero de meses que tiene la garantia de este tipo de servicios
- 	 * @param descripcion string Descripcion de la clasificacion del servicio
- 	 * @param margen_utilidad float Margen de utilidad que tendran los servicios de este tipo de servicio
- 	 * @param descuento float Descuento que aplicara a los servicios de esta clasificacion
- 	 * @param impuestos json Impuestos que afectan a los servicios de esta clasificacion
  	 * @param retenciones json Retenciones que afectan a los servicios de esta clasificacion
+ 	 * @param impuestos json Impuestos que afectan a los servicios de esta clasificacion
+ 	 * @param descuento float Descuento que aplicara a los servicios de esta clasificacion
+ 	 * @param margen_utilidad float Margen de utilidad que tendran los servicios de este tipo de servicio
+ 	 * @param descripcion string Descripcion de la clasificacion del servicio
+ 	 * @param garantia int Numero de meses que tiene la garantia de este tipo de servicios
+ 	 * @param nombre string Nombre de la clasificacion de servicio
  	 **/
 	public function EditarClasificacion
 	(
 		$id_clasificacion_servicio, 
-		$nombre, 
-		$garantia = null, 
-		$descripcion = null, 
-		$margen_utilidad = null, 
-		$descuento = null, 
+		$retenciones = null, 
 		$impuestos = null, 
-		$retenciones = null
+		$descuento = null, 
+		$margen_utilidad = null, 
+		$descripcion = null, 
+		$garantia = null, 
+		$nombre = null
 	)
 	{  
   
@@ -173,42 +173,42 @@ require_once("Servicios.interface.php");
  	 *Edita un servicio
  	 *
  	 * @param id_servicio int Id del servicio a editar
- 	 * @param costo_estandar float Valor del costo estandar del servicio
- 	 * @param compra_en_mostrador string Verdadero si este servicio se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador
- 	 * @param codigo_servicio string Codigo de control del servicio manejado por la empresa, no se puede repetir
- 	 * @param empresas string Objeto que contiene los ids de las empresas a las que pertenece este servicio
- 	 * @param metodo_costeo string Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar
- 	 * @param nombre_servicio string Nombre del servicio
  	 * @param sucursales json Sucursales en las cuales estara disponible este servicio
+ 	 * @param nombre_servicio string Nombre del servicio
+ 	 * @param garantia int Si este servicio tiene una garanta en meses.
+ 	 * @param impuestos json array de ids de impuestos que tiene este servico
+ 	 * @param metodo_costeo string Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar
+ 	 * @param empresas string Objeto que contiene los ids de las empresas a las que pertenece este servicio
+ 	 * @param codigo_servicio string Codigo de control del servicio manejado por la empresa, no se puede repetir
+ 	 * @param descripcion_servicio string Descripcion del servicio
+ 	 * @param compra_en_mostrador string Verdadero si este servicio se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador
+ 	 * @param activo bool Si el servicio esta activo o no
  	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = LoteCaractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
+ 	 * @param foto_servicio string Url de la foto del servicio
  	 * @param margen_de_utilidad string Un porcentage de 0 a 100 si queremos que este servicio marque utilidad en especifico
  	 * @param clasificaciones json Uno o varios id_clasificacion de este servicio, esta clasificacion esta dada por el usuario Array
- 	 * @param activo bool Si el servicio esta activo o no
- 	 * @param descripcion_servicio string Descripcion del servicio
- 	 * @param impuestos json array de ids de impuestos que tiene este servico
- 	 * @param garantia int Si este servicio tiene una garanta en meses.
  	 * @param retenciones json Ids de retenciones que afectan este servicio
- 	 * @param foto_servicio string Url de la foto del servicio
+ 	 * @param costo_estandar float Valor del costo estandar del servicio
  	 **/
 	public function Editar
 	(
 		$id_servicio, 
-		$costo_estandar, 
-		$compra_en_mostrador, 
-		$codigo_servicio, 
-		$empresas, 
-		$metodo_costeo, 
-		$nombre_servicio, 
-		$sucursales, 
+		$sucursales = null, 
+		$nombre_servicio = null, 
+		$garantia = null, 
+		$impuestos = null, 
+		$metodo_costeo = null, 
+		$empresas = null, 
+		$codigo_servicio = null, 
+		$descripcion_servicio = null, 
+		$compra_en_mostrador = null, 
+		$activo = null, 
 		$control_de_existencia = null, 
+		$foto_servicio = null, 
 		$margen_de_utilidad = null, 
 		$clasificaciones = null, 
-		$activo = null, 
-		$descripcion_servicio = null, 
-		$impuestos = null, 
-		$garantia = null, 
 		$retenciones = null, 
-		$foto_servicio = null
+		$costo_estandar = null
 	)
 	{  
   

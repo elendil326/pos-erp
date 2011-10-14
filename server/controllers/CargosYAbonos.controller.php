@@ -26,7 +26,14 @@ require_once("CargosYAbonos.interface.php");
             Logger::error("La empresa con id:".$id_empresa." no esta activa");
             return $activo;
         }
-
+        private function getSucursal()
+        {
+            return 1;
+        }
+        private function getCaja()
+        {
+            return 1;
+        }
 	/**
  	 *
  	 *Registra un nuevo ingreso
@@ -44,15 +51,16 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function NuevoIngreso
 	(
-		$fecha_ingreso,
 		$id_empresa,
-		$monto = null,
+		$fecha_ingreso,
+		$descripcion = null,
+		$nota = null,
+		$folio = null,
 		$id_sucursal = null,
 		$id_concepto_ingreso = null,
 		$id_caja = null,
-		$folio = null,
-		$nota = null,
-		$descripcion = null
+		$monto = null, 
+		$billetes = null
 	)
 	{
             Logger::log("Creando nuevo ingreso");
@@ -88,6 +96,21 @@ require_once("CargosYAbonos.interface.php");
                 {
                     Logger::error("El concepto de ingreso recibido no cuenta con un monto");
                     throw new Exception("El concepto de ingreso recibido no cuenta con un monto ni se recibio un monto");
+                }
+            }
+            if(!$id_sucursal)
+                $id_sucursal=$this->getSucursal();
+            if(!$id_caja)
+                $id_caja=$this->getCaja();
+            if(!$id_caja)
+            {
+                try
+                {
+                    $this->modificarCaja($id_caja, 1,$billetes,$monto);
+                }
+                catch(Exception $e)
+                {
+                    throw $e;
                 }
             }
             $ingreso=new Ingreso();
@@ -164,7 +187,6 @@ require_once("CargosYAbonos.interface.php");
                 catch(Exception $e)
                 {
                     DAO::transRollback();
-                    Logger::error("Error al cancelar el abono:".$e);
                     throw new Exception("Error al cancelar el abono:".$e);
                 }
                 DAO::transEnd();
@@ -193,7 +215,6 @@ require_once("CargosYAbonos.interface.php");
                 catch(Exception $e)
                 {
                     DAO::transRollback();
-                    Logger::error("Error al cancelar el abono:".$e);
                     throw new Exception("Error al cancelar el abono:".$e);
                 }
                 DAO::transEnd();
@@ -222,7 +243,6 @@ require_once("CargosYAbonos.interface.php");
                 catch(Exception $e)
                 {
                     DAO::transRollback();
-                    Logger::error("Error al cancelar el abono:".$e);
                     throw new Exception("Error al cancelar el abono:".$e);
                 }
                 DAO::transEnd();
@@ -245,11 +265,13 @@ require_once("CargosYAbonos.interface.php");
             $compra=CompraDAO::getByPK($abono->getIdCompra());
             if($compra==null)
             {
+                Logger::error("FATAL!!!! Este abono apunta a una compra que no existe!!");
                 throw new Exception("FATAL!!!! Este abono apunta a una compra que no existe!!");
             }
             $usuario=UsuarioDAO::getByPK($compra->getIdVendedorCompra());
             if($usuario==null)
             {
+                Logger::error("FATAL!!!! La compra de este abono no tiene un vendedor");
                 throw new Exception("FATAL!!!! La compra de este abono no tiene un vendedor");
             }
             $monto=$abono->getMonto();
@@ -266,66 +288,9 @@ require_once("CargosYAbonos.interface.php");
             //Si no hay una caja, se tomara el dinero como perdido.
             if(!$compra->getCancelada()&&$id_caja!=null)
             {
-                $caja=CajaDAO::getByPK($id_caja);
-                if($caja==null)
-                {
-                    throw new Exception("La caja especificada no existe");
-                }
-                if(!$caja->getAbierta())
-                {
-                    throw new Exception("La caja especificada esta cerrada, tiene que abrirla para realizar movimientos");
-                }
-                //
-                //Si se esta llevando control de lo billetes en la caja
-                //tienen que haber pasado en un arreglo bidimensional los ids
-                //de los billetes con sus cantidades.
-                //
-                if($caja->getControlBilletes())
-                {
-                    if($billetes==null)
-                        throw new Exception("No se recibieron los billetes para esta caja");
-                    $numero_billetes=count($billetes);
-                    //
-                    //Inicializas el arreglo de billetes_caja con los billetes que recibes
-                    //para despues insertarlo o actualizarlo.
-                    //
-                    for($i=0;$i<$numero_billetes; $i++)
-                    {
-                        $billete_caja[$i]=new BilleteCaja();
-                        $billete_caja[$i]->setIdBillete($billetes[$i]["id_billete"]);
-                        $billete_caja[$i]->setIdCaja($id_caja);
-                        $billete_caja[$i]->setCantidad($billetes[$i]["cantidad"]);
-                    }
-                    //
-                    //Intentas insertar cada billete con su cantidad, si ese billete ya existe
-                    //en esa caja, actulizas sus cantidad.
-                    //
-                    try
-                    {
-                        for($i=0;$i<$numero_billetes;$i++)
-                        {
-                            $billete_caja_original=BilleteCajaDAO::getByPK($billete_caja[$i]->getIdBillete(), $billete_caja[$i]->getIdCaja());
-                            if($billete_caja_original==null)
-                                BilleteCajaDAO::save($billete_caja[$i]);
-                            else
-                            {
-                                $billete_caja_original->setCantidad($billete_caja_original->getCantidad()+$billete_caja[$i]->getCantidad());
-                                BilleteCajaDAO::save($billete_caja_original);
-                            }
-                        }
-                    }
-                    catch(Exception $e)
-                    {
-                        throw $e;
-                    }
-                }
-                //
-                //Actualizas el saldo de la caja a la que ira el dinero
-                //
-                $caja->setSaldo($caja->getSaldo()+$monto);
                 try
                 {
-                    CajaDAO::save($caja);
+                    $this->modificarCaja($id_caja, 1,$billetes,$monto);
                 }
                 catch(Exception $e)
                 {
@@ -336,6 +301,7 @@ require_once("CargosYAbonos.interface.php");
             //Si no ha ocurrido ningun error con los billetes o con la caja, actualizas
             //al usuario y a la compra
             //
+            DAO::transBegin();
             try
             {
                 UsuarioDAO::save($usuario);
@@ -343,8 +309,11 @@ require_once("CargosYAbonos.interface.php");
             }
             catch(Exception $e)
             {
+                DAO::transRollback();
+                Logger::error("No se ha podido actualiar al usuario ni la compra");
                 throw $e;
             }
+            DAO::transEnd();
         }
 
         private function cancelarAbonoVenta
@@ -357,11 +326,13 @@ require_once("CargosYAbonos.interface.php");
             $venta=VentaDAO::getByPK($abono->getIdVenta());
             if($venta==null)
             {
+                Logger::error("FATAL!!!! Este abono apunta a una venta que no existe!!");
                 throw new Exception("FATAL!!!! Este abono apunta a una venta que no existe!!");
             }
             $usuario=UsuarioDAO::getByPK($venta->getIdCompradorVenta());
             if($usuario==null)
             {
+                Logger::error("FATAL!!!! La venta de este abono no tiene un comprador");
                 throw new Exception("FATAL!!!! La venta de este abono no tiene un comprador");
             }
             $monto=$abono->getMonto();
@@ -377,66 +348,9 @@ require_once("CargosYAbonos.interface.php");
             //Si no hay una caja, se tomara el dinero como ganado.
             if(!$venta->getCancelada()&&$id_caja!=null)
             {
-                $caja=CajaDAO::getByPK($id_caja);
-                if($caja==null)
-                {
-                    throw new Exception("La caja especificada no existe");
-                }
-                if(!$caja->getAbierta())
-                {
-                    throw new Exception("La caja especificada esta cerrada, tiene que abrirla para realizar movimientos");
-                }
-                //
-                //Si se esta llevando control de lo billetes en la caja
-                //tienen que haber pasado en un arreglo bidimensional los ids
-                //de los billetes con sus cantidades.
-                //
-                if($caja->getControlBilletes())
-                {
-                    if($billetes==null)
-                        throw new Exception("No se recibieron los billetes para esta caja");
-                    $numero_billetes=count($billetes);
-                    //
-                    //Inicializas el arreglo de billetes_caja con los billetes que recibes
-                    //para despues insertarlo o actualizarlo.
-                    //
-                    for($i=0;$i<$numero_billetes; $i++)
-                    {
-                        $billete_caja[$i]=new BilleteCaja();
-                        $billete_caja[$i]->setIdBillete($billetes[$i]["id_billete"]);
-                        $billete_caja[$i]->setIdCaja($id_caja);
-                        $billete_caja[$i]->setCantidad($billetes[$i]["cantidad"]);
-                    }
-                    //
-                    //Intentas insertar cada billete con su cantidad, si ese billete ya existe
-                    //en esa caja, actulizas sus cantidad.
-                    //
-                    try
-                    {
-                        for($i=0;$i<$numero_billetes;$i++)
-                        {
-                            $billete_caja_original=BilleteCajaDAO::getByPK($billete_caja[$i]->getIdBillete(), $billete_caja[$i]->getIdCaja());
-                            if($billete_caja_original==null)
-                                BilleteCajaDAO::save($billete_caja[$i]);
-                            else
-                            {
-                                $billete_caja_original->setCantidad($billete_caja_original->getCantidad()-$billete_caja[$i]->getCantidad());
-                                BilleteCajaDAO::save($billete_caja_original);
-                            }
-                        }
-                    }
-                    catch(Exception $e)
-                    {
-                        throw $e;
-                    }
-                }
-                //
-                //Actualizas el saldo de la caja a la que ira el dinero
-                //
-                $caja->setSaldo($caja->getSaldo()-$monto);
                 try
                 {
-                    CajaDAO::save($caja);
+                    $this->modificarCaja($id_caja, 0,$billetes,$monto);
                 }
                 catch(Exception $e)
                 {
@@ -447,6 +361,7 @@ require_once("CargosYAbonos.interface.php");
             //Si no ha ocurrido ningun error con los billetes o con la caja, actualizas
             //al usuario y a la compra
             //
+            DAO::transBegin();
             try
             {
                 UsuarioDAO::save($usuario);
@@ -454,8 +369,11 @@ require_once("CargosYAbonos.interface.php");
             }
             catch(Exception $e)
             {
+                DAO::transRollback();
+                Logger::error("No se ha podido actualiar al usuario ni la venta");
                 throw $e;
             }
+            DAO::transEnd();
         }
 
         private function cancelarAbonoPrestamo
@@ -468,6 +386,7 @@ require_once("CargosYAbonos.interface.php");
             $prestamo=PrestamoDAO::getByPK($abono->getIdPrestamo());
             if($prestamo==null)
             {
+                Logger::error("FATAL!!!! Este abono apunta a un prestamo que no existe!!");
                 throw new Exception("FATAL!!!! Este abono apunta a un prestamo que no existe!!");
             }
             //
@@ -487,6 +406,7 @@ require_once("CargosYAbonos.interface.php");
                 $solicitante=SucursalDAO::getByPK($id_solicitante*-1);
             if($solicitante==null)
             {
+                Logger::error("FATAL!!!! El prestamo de este abono no tiene un solicitante");
                 throw new Exception("FATAL!!!! El prestamo de este abono no tiene un solicitante");
             }
             $monto=$abono->getMonto();
@@ -500,68 +420,9 @@ require_once("CargosYAbonos.interface.php");
             //
             if($id_caja!=null)
             {
-                $caja=CajaDAO::getByPK($id_caja);
-                if($caja==null)
-                {
-                    throw new Exception("La caja especificada no existe");
-                }
-                if(!$caja->getAbierta())
-                {
-                    throw new Exception("La caja especificada esta cerrada, tiene que abrirla para realizar movimientos");
-                }
-                //
-                //Si se esta llevando control de lo billetes en la caja
-                //tienen que haber pasado en un arreglo bidimensional los ids
-                //de los billetes con sus cantidades.
-                //
-                if($caja->getControlBilletes())
-                {
-                    if($billetes==null)
-                        throw new Exception("No se recibieron los billetes para esta caja");
-                    $numero_billetes=count($billetes);
-                    //
-                    //Inicializas el arreglo de billetes_caja con los billetes que recibes
-                    //para despues insertarlo o actualizarlo.
-                    //
-                    for($i=0;$i<$numero_billetes; $i++)
-                    {
-                        $billete_caja[$i]=new BilleteCaja();
-                        $billete_caja[$i]->setIdBillete($billetes[$i]["id_billete"]);
-                        $billete_caja[$i]->setIdCaja($id_caja);
-                        $billete_caja[$i]->setCantidad($billetes[$i]["cantidad"]);
-                    }
-                    //
-                    //Intentas insertar cada billete con su cantidad, si ese billete ya existe
-                    //en esa caja, actulizas su cantidad.
-                    //
-
-                    try
-                    {
-                        for($i=0;$i<$numero_billetes;$i++)
-                        {
-
-                            $billete_caja_original=BilleteCajaDAO::getByPK($billete_caja[$i]->getIdBillete(), $billete_caja[$i]->getIdCaja());
-                            if($billete_caja_original==null)
-                                BilleteCajaDAO::save($billete_caja[$i]);
-                            else
-                            {
-                                $billete_caja_original->setCantidad($billete_caja_original->getCantidad()-$billete_caja[$i]->getCantidad());
-                                BilleteCajaDAO::save($billete_caja_original);
-                            }
-                        }
-                    }
-                    catch(Exception $e)
-                    {
-                        throw $e;
-                    }
-                }
-                //
-                //Actualizas el saldo de la caja a la que ira el dinero
-                //
-                $caja->setSaldo($caja->getSaldo()-$monto);
                 try
                 {
-                    CajaDAO::save($caja);
+                    $this->modificarCaja($id_caja, 0,$billetes,$monto);
                 }
                 catch(Exception $e)
                 {
@@ -572,6 +433,7 @@ require_once("CargosYAbonos.interface.php");
             //Si no ha ocurrido ningun error con los billetes o con la caja, actualizas
             //al usuario y a la compra
             //
+            DAO::transBegin();
             try
             {
                 if($id_solicitante>0)
@@ -580,8 +442,102 @@ require_once("CargosYAbonos.interface.php");
             }
             catch(Exception $e)
             {
+                DAO::transRollback();
+                Logger::error("No se ha podido actualiar al usuario ni al prestamo");
                 throw $e;
             }
+            DAO::transEnd();
+        }
+
+        private function modificarCaja
+        (
+                $id_caja,
+                $suma,
+                $billetes,
+                $monto
+        )
+        {
+            $caja=CajaDAO::getByPK($id_caja);
+            if($caja==null)
+            {
+                Logger::error("La caja especificada no existe");
+                throw new Exception("La caja especificada no existe");
+            }
+            if(!$caja->getAbierta())
+            {
+                Logger::error("La caja especificada esta cerrada, tiene que abrirla para realizar movimientos");
+                throw new Exception("La caja especificada esta cerrada, tiene que abrirla para realizar movimientos");
+            }
+            //
+            //Si se esta llevando control de lo billetes en la caja
+            //tienen que haber pasado en un arreglo bidimensional los ids
+            //de los billetes con sus cantidades.
+            //
+            if($caja->getControlBilletes())
+            {
+                if($billetes==null)
+                {
+                    Logger::error("No se recibieron los billetes para esta caja");
+                    throw new Exception("No se recibieron los billetes para esta caja");
+                }
+                $numero_billetes=count($billetes);
+                //
+                //Inicializas el arreglo de billetes_caja con los billetes que recibes
+                //para despues insertarlo o actualizarlo.
+                //
+                for($i=0;$i<$numero_billetes; $i++)
+                {
+                    $billete_caja[$i]=new BilleteCaja();
+                    $billete_caja[$i]->setIdBillete($billetes[$i]["id_billete"]);
+                    $billete_caja[$i]->setIdCaja($id_caja);
+                    $billete_caja[$i]->setCantidad($billetes[$i]["cantidad"]);
+                }
+                //
+                //Intentas insertar cada billete con su cantidad, si ese billete ya existe
+                //en esa caja, actulizas su cantidad.
+                //
+                DAO::transBegin();
+                try
+                {
+                    for($i=0;$i<$numero_billetes;$i++)
+                    {
+                        $billete_caja_original=BilleteCajaDAO::getByPK($billete_caja[$i]->getIdBillete(), $billete_caja[$i]->getIdCaja());
+                        if($billete_caja_original==null)
+                            BilleteCajaDAO::save($billete_caja[$i]);
+                        else
+                        {
+                            $billete_caja_original->setCantidad($billete_caja_original->getCantidad()+$billete_caja[$i]->getCantidad());
+                            BilleteCajaDAO::save($billete_caja_original);
+                        }
+                    }
+                }
+                catch(Exception $e)
+                {
+                    DAO::transRollback();
+                    Logger::error("No se pudieron actualizar los billetes de la caja");
+                    throw $e;
+                }
+                DAO::transEnd();
+            }
+            //
+            //Actualizas el saldo de la caja
+            //
+            if($suma)
+                $caja->setSaldo($caja->getSaldo()+$monto);
+            else
+                $caja->setSaldo($caja->getSaldo()-$monto);
+            DAO::transBegin();
+            try
+            {
+                CajaDAO::save($caja);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo actualizar el saldo de la caja");
+                throw $e;
+            }
+            DAO::transEnd();
         }
 
 	/**
@@ -1622,6 +1578,10 @@ require_once("CargosYAbonos.interface.php");
                     throw new Exception("El concepto de gasto recibido no cuenta con un monto ni se recibio un monto");
                 }
             }
+            if(!$id_sucursal)
+                $id_sucursal=$this->getSucursal();
+            if(!$id_caja)
+                $id_caja=$this->getCaja();
             $gasto = new Gasto();
             $gasto->setFechaDelGasto($fecha_gasto);
             $gasto->setIdEmpresa($id_empresa);
@@ -1754,7 +1714,7 @@ require_once("CargosYAbonos.interface.php");
 		$monto = null
 	)
 	{
-            Logger::log("Editando gasto");
+            Logger::log("Editando ingreso");
             if(!$fecha_ingreso && !$monto && !$id_concepto_ingreso && !$descripcion && !$nota && !$folio)
             {
                 Logger::warn("No se recibieron parametros para editar, no hay nada que editar");
@@ -1836,6 +1796,12 @@ require_once("CargosYAbonos.interface.php");
 		$id_compra = null
 	)
 	{
+            $id_usuario=LoginController::getCurrentUser();
+            if($id_usuario==null)
+            {
+                Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
+                throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
+            }
 
 
 	}
@@ -1884,8 +1850,11 @@ require_once("CargosYAbonos.interface.php");
 	public function EditarAbono
 	(
 		$id_abono,
+		$motivo_cancelacion = null,
 		$nota = null,
-		$motivo_cancelacion = null
+		$compra = null,
+		$venta = null,
+		$prestamo = null
 	)
 	{
 
