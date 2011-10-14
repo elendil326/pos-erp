@@ -120,7 +120,7 @@ abstract class LoginController implements IPermission
 
 class GerenciaLoginController extends LoginController{
 	
-	function login($user_id, $password)
+	function login($user_id, $password, $group = 1)
 	{
 		$u = new Usuario();
 		$u->setIdUsuario 	( $user_id  );
@@ -172,7 +172,7 @@ class JediLoginController extends LoginController
 	}
 
 
-	function login($user, $password)
+	function login($user, $password, $group = "JEDI")
 	{
 
 		global $POS_CONFIG;

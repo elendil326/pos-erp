@@ -218,7 +218,7 @@ class SimpleTableComponent extends TableComponent{
 		$this->simple_render = true;
 	}
 
-	function addRow()
+	function addRow( $var_args )
 	{
 		$row = array();
 		
