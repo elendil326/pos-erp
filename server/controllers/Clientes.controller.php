@@ -29,8 +29,9 @@ Update :  ¿Es correcto que contenga el argumento id_sucursal? Ya que as?omo esta
 		$mostrar_inactivos = null
 	)
 	{  
-  
-  
+  		  		
+  		return UsuarioDAO::listarClientes(  );
+
 	}
   
 	/**
@@ -68,8 +69,8 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 	public function Nuevo
 	(
 		$razon_social, 
-		$password, 
 		$codigo_cliente, 
+		$password = null, 
 		$codigo_postal = null, 
 		$direccion_web = null, 
 		$rfc = null, 
@@ -92,8 +93,94 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 		$email = null, 
 		$texto_extra = null
 	)
-	{  
-  
+	{
+	
+		//buscar este codigo de cliente
+		$cliente = new Usuario();
+		$cliente->setCodigoCliente($codigo_cliente);
+
+		if( sizeof( UsuarioDAO::search( $cliente ) ) !== 0 ) 
+		{
+			//ya existe un usuario con este codigo de cliente
+			return false;
+		}
+
+
+
+
+		//crear el objeto de direccion
+		$addr = new Direccion();
+		$addr->setCalle 		($calle);
+		$addr->setNumeroExterior($numero_exterior);
+		$addr->setNumeroInterior($numero_interior);
+		//$addr->setReferencia	($referencia);
+		$addr->setColonia		($colonia);
+		$addr->setIdCiudad		($id_ciudad);
+		$addr->setCodigoPostal	($codigo_postal);
+		$addr->setTelefono 		($telefono1);
+		$addr->setTelefono2		($telefono2);
+		
+
+		//validar la direccion
+		$dc = new DireccionController(  );
+
+		try{
+			$dc->validarDireccion( $addr );	
+
+		}catch(Exception $e){
+			//direccion invalida
+			return false;
+		}
+		
+		//iniciar transaccion
+		DAO::transBegin();
+
+		//insertar direccion
+		try{
+			DireccionDAO::save( $addr );
+
+		}catch(Exception $e){
+			DAO::transRollback();
+			return false;
+
+		}
+
+
+		//validar datos del usuario
+		
+		
+		//insertar usuario
+  		/*$usr = new Usuario(array(
+  				"razon_social" => $,
+  				"" => $,
+  				"" => $,
+  				"" => $,
+  				"razon_social" => $, 
+				"codigo_cliente" => $, 
+				"password" => $, 
+				"codigo_postal" => $, 
+				"direccion_web" => $, 
+				"rfc" => $, 
+				"clasificacion_cliente" => $, 
+				"curp = null, "
+				"telefono2 = null, 
+				"mensajeria = null, 
+				"cuenta_de_mensajeria = null, 
+				"denominacion_comercial = null, 
+				"representante_legal = null, 
+				"colonia = null, 
+				"numero_interior = null, 
+				"moneda_del_cliente = null, 
+				"telefono1 = null, 
+				"id_ciudad = null, 
+				"retenciones = null, 
+				"impuestos = null, 
+				"email = null, 
+				"texto_extra = null
+	  		));*/
+
+	  		DAO::transEnd();
+	  		return true;
   
 	}
   

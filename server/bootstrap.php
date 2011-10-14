@@ -184,6 +184,8 @@
 	require_once("controllers/TransportacionYFletes.controller.php");
 	require_once("controllers/Ventas.controller.php");
 
+	require_once("controllers/Direcciones.controller.php");
+
 	# *******************************
 	# Buscar esta instancia si es que la necesito
 	# *******************************
