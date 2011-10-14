@@ -132,7 +132,8 @@
 		$id_prestamo = null, 
 		$id_venta = null, 
 		$varios = null, 
-		$nota = null
+		$nota = null,
+                $billetes = null
 	);  
   
   
@@ -182,7 +183,7 @@
  	 *
  	 * @param orden string Nombre de la columna mediante la cual se ordenara la lista
  	 * @param activo bool Si este valo no es obtenido, se listaran tanto activos como inactivos. Si es verdadero, se listaran solo los activos, si es falso, se listaran solo los inactivos
- 	 * @return conceptos_gasto json Arreglo que contendrá la información de conceptos de gasto.
+ 	 * @return conceptos_gasto json Arreglo que contendrï¿½ la informaciï¿½n de conceptos de gasto.
  	 **/
   function ListaConceptoGasto
 	(
@@ -202,7 +203,7 @@
  	 * @param nombre string la justificacion que aparecera despues de la leyenda "gasto por concepto de"
  	 * @param descripcion string Descripcion larga del concepto de gasto
  	 * @param monto float Monto fijo del concepto de gasto
- 	 * @return id_concepto_gasto int Id autogenerado por la inserción del nuevo gasto
+ 	 * @return id_concepto_gasto int Id autogenerado por la inserciï¿½n del nuevo gasto
  	 **/
   function NuevoConceptoGasto
 	(
@@ -234,7 +235,6 @@
 		$fecha_gasto = null, 
 		$descripcion = null, 
 		$nota = null, 
-		$monto = null, 
 		$id_concepto_gasto = null
 	);  
   
@@ -250,8 +250,10 @@
  	 **/
   function EliminarGasto
 	(
-		$id_gasto, 
-		$motivo_cancelacion = null
+		$id_gasto,
+		$motivo_cancelacion = null,
+                $id_caja=null,
+                $billetes=null
 	);  
   
   
@@ -311,7 +313,7 @@
  	 * @param descripcion string Descripcion del gasto en caso de que no este contemplado en la lista de concpetos de gasto
  	 * @param folio string Folio de la factura del gasto
  	 * @param nota string Nota del gasto
- 	 * @return id_gasto int Id generado por la inserción del nuevo gasto
+ 	 * @return id_gasto int Id generado por la inserciï¿½n del nuevo gasto
  	 **/
   function NuevoGasto
 	(
@@ -373,7 +375,7 @@
 <br/><br/><b>Update :</b>Falta especificar la estructura del JSON que se env?como parametro
  	 *
  	 * @param ordenar json Valor que indicar la forma en que se ordenar la lista
- 	 * @return conceptos_ingreso json Arreglo que contendrá la información de los conceptos de ingreso
+ 	 * @return conceptos_ingreso json Arreglo que contendrï¿½ la informaciï¿½n de los conceptos de ingreso
  	 **/
   function ListaConceptoIngreso
 	(
@@ -425,8 +427,7 @@
 		$descripcion = null, 
 		$folio = null, 
 		$fecha_ingreso = null, 
-		$nota = null, 
-		$monto = null
+		$nota = null 
 	);  
   
   
@@ -442,7 +443,9 @@
   function EliminarIngreso
 	(
 		$id_ingreso, 
-		$motivo_cancelacion = null
+		$motivo_cancelacion = null,
+                $id_caja=null,
+                $billetes=null
 	);  
   
   

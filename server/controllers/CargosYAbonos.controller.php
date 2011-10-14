@@ -102,7 +102,7 @@ require_once("CargosYAbonos.interface.php");
                 $id_sucursal=$this->getSucursal();
             if(!$id_caja)
                 $id_caja=$this->getCaja();
-            if(!$id_caja)
+            if($id_caja!=null)
             {
                 try
                 {
@@ -179,6 +179,8 @@ require_once("CargosYAbonos.interface.php");
                 }
                 $abono->setCancelado(1);
                 $abono->setMotivoCancelacion($motivo_cancelacion);
+                if(!$id_caja)
+                    $id_caja=$this->getCaja();
                 DAO::transBegin();
                 try {
                     AbonoCompraDAO::save($abono);
@@ -506,7 +508,10 @@ require_once("CargosYAbonos.interface.php");
                             BilleteCajaDAO::save($billete_caja[$i]);
                         else
                         {
-                            $billete_caja_original->setCantidad($billete_caja_original->getCantidad()+$billete_caja[$i]->getCantidad());
+                            if($suma)
+                                $billete_caja_original->setCantidad($billete_caja_original->getCantidad()+$billete_caja[$i]->getCantidad());
+                            else
+                                $billete_caja_original->setCantidad($billete_caja_original->getCantidad()-$billete_caja[$i]->getCantidad());
                             BilleteCajaDAO::save($billete_caja_original);
                         }
                     }
@@ -687,7 +692,7 @@ require_once("CargosYAbonos.interface.php");
                         if($monto_menor_a!==null)
                             $abono_criterio_compra2->setMonto($monto_menor_a);
                         else
-                            $abono_criterio_compra2->setMonto(1.8e308);
+                            $abono_criterio_compra2->setMonto(1.8e100);
                     }
                     else if($monto_menor_a!==null)
                     {
@@ -796,7 +801,7 @@ require_once("CargosYAbonos.interface.php");
                         if($monto_menor_a!==null)
                             $abono_criterio_venta2->setMonto($monto_menor_a);
                         else
-                            $abono_criterio_venta2->setMonto(1.8e308);
+                            $abono_criterio_venta2->setMonto(1.8e100);
                     }
                     else if($monto_menor_a!==null)
                     {
@@ -902,7 +907,7 @@ require_once("CargosYAbonos.interface.php");
                         if($monto_menor_a!==null)
                             $abono_criterio_prestamo2->setMonto($monto_menor_a);
                         else
-                            $abono_criterio_prestamo2->setMonto(1.8e308);
+                            $abono_criterio_prestamo2->setMonto(1.8e100);
                     }
                     else if($monto_menor_a!==null)
                     {
@@ -965,39 +970,51 @@ require_once("CargosYAbonos.interface.php");
 	public function EliminarGasto
 	(
 		$id_gasto,
-		$motivo_cancelacion = null
+		$motivo_cancelacion = null,
+                $id_caja=null,
+                $billetes=null
 	)
 	{
             Logger::log("Eliminando gasto");
             $gasto=GastoDAO::getByPK($id_gasto);
-            if($gasto)
-            {
-                if($gasto->getCancelado())
-                {
-                    Logger::log("El gasto ya ha sido cancelado");
-                    return;
-                }
-                $gasto->setCancelado(1);
-                $gasto->setMotivoCancelacion($motivo_cancelacion);
-                DAO::transBegin();
-                try
-                {
-                    GastoDAO::save($gasto);
-                }
-                catch(Exception $e)
-                {
-                    DAO::transRollback();
-                    Logger::error("No se ha podido cancelar el gasto: ".$e);
-                    throw new Exception("No se ha podido cancelar el gasto: ".$e);
-                }
-                DAO::transEnd();
-                Logger::log("Gasto cancelado exitosamente");
-            }
-            else
+            if(!$gasto)
             {
                 Logger::error("El gasto con id:".$id_gasto." no existe");
                 throw new Exception("El gasto con id:".$id_gasto." no existe");
             }
+            if($gasto->getCancelado())
+            {
+                Logger::log("El gasto ya ha sido cancelado");
+                return;
+            }
+            $gasto->setCancelado(1);
+            $gasto->setMotivoCancelacion($motivo_cancelacion);
+            if(!$id_caja)
+                $id_caja=$this->getCaja();
+            if($id_caja!=null)
+            {
+                try
+                {
+                    $this->modificarCaja($id_caja, 1, $billetes, $gasto->getMonto());
+                }
+                catch(Exception $e)
+                {
+                    throw $e;
+                }
+            }
+            DAO::transBegin();
+            try
+            {
+                GastoDAO::save($gasto);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se ha podido cancelar el gasto: ".$e);
+                throw new Exception("No se ha podido cancelar el gasto: ".$e);
+            }
+            DAO::transEnd();
+            Logger::log("Gasto cancelado exitosamente");
 	}
 
 	/**
@@ -1159,7 +1176,9 @@ require_once("CargosYAbonos.interface.php");
 	public function EliminarIngreso
 	(
 		$id_ingreso,
-		$motivo_cancelacion = null
+		$motivo_cancelacion = null,
+                $id_caja=null,
+                $billetes=null
 	)
 	{
             Logger::log("Cancelando Ingreso");
@@ -1171,6 +1190,19 @@ require_once("CargosYAbonos.interface.php");
             }
             $ingreso->setCancelado(1);
             $ingreso->setMotivoCancelacion($motivo_cancelacion);
+            if(!$id_caja)
+                $id_caja=$this->getCaja();
+            if($id_caja!=null)
+            {
+                try
+                {
+                    $this->modificarCaja($id_caja, 0, $billetes, $ingreso->getMonto());
+                }
+                catch(Exception $e)
+                {
+                    throw $e;
+                }
+            }
             DAO::transBegin();
             try
             {
@@ -1540,7 +1572,8 @@ require_once("CargosYAbonos.interface.php");
 		$id_concepto_gasto = null,
 		$descripcion = null,
 		$folio = null,
-		$nota = null
+		$nota = null,
+                $billetes = null
 	)
 	{
             Logger::log("Creando nuevo gasto");
@@ -1582,6 +1615,17 @@ require_once("CargosYAbonos.interface.php");
                 $id_sucursal=$this->getSucursal();
             if(!$id_caja)
                 $id_caja=$this->getCaja();
+            if($id_caja!=null)
+            {
+                try
+                {
+                    $this->modificarCaja($id_caja, 0,$billetes,$monto);
+                }
+                catch(Exception $e)
+                {
+                    throw $e;
+                }
+            }
             $gasto = new Gasto();
             $gasto->setFechaDelGasto($fecha_gasto);
             $gasto->setIdEmpresa($id_empresa);
@@ -1628,16 +1672,15 @@ require_once("CargosYAbonos.interface.php");
 	public function EditarGasto
 	(
 		$id_gasto,
+		$folio = null,
 		$fecha_gasto = null,
-		$monto = null,
-		$id_concepto_gasto = null,
 		$descripcion = null,
 		$nota = null,
-		$folio = null
+		$id_concepto_gasto = null
 	)
 	{
             Logger::log("Editando gasto");
-            if(!$fecha_gasto && !$monto && !$id_concepto_gasto && !$descripcion && !$nota && !$folio)
+            if(!$fecha_gasto && !$id_concepto_gasto && !$descripcion && !$nota && !$folio)
             {
                 Logger::warn("No se recibieron parametros para editar, no hay nada que editar");
                 return;
@@ -1664,8 +1707,6 @@ require_once("CargosYAbonos.interface.php");
             }
             if($fecha_gasto!==null)
                 $gasto->setFechaDelGasto($fecha_gasto);
-            if($monto!==null)
-                $gasto->setMonto($monto);
             if($id_concepto_gasto!==null)
                 $gasto->setIdConceptoGasto($id_concepto_gasto);
             if($descripcion!==null)
@@ -1706,16 +1747,15 @@ require_once("CargosYAbonos.interface.php");
 	public function EditarIngreso
 	(
 		$id_ingreso,
-                $fecha_ingreso = null,
+		$id_concepto_ingreso = null,
 		$descripcion = null,
 		$folio = null,
-		$nota = null,
-		$id_concepto_ingreso = null,
-		$monto = null
+		$fecha_ingreso = null,
+		$nota = null
 	)
 	{
             Logger::log("Editando ingreso");
-            if(!$fecha_ingreso && !$monto && !$id_concepto_ingreso && !$descripcion && !$nota && !$folio)
+            if(!$fecha_ingreso && !$id_concepto_ingreso && !$descripcion && !$nota && !$folio)
             {
                 Logger::warn("No se recibieron parametros para editar, no hay nada que editar");
                 return;
@@ -1742,8 +1782,6 @@ require_once("CargosYAbonos.interface.php");
             }
             if($fecha_ingreso!==null)
                 $ingreso->setFechaDelIngreso($fecha_ingreso);
-            if($monto!==null)
-                $ingreso->setMonto($monto);
             if($id_concepto_ingreso!==null)
                 $ingreso->setIdConceptoIngreso($id_concepto_ingreso);
             if($descripcion!==null)
@@ -1785,15 +1823,16 @@ require_once("CargosYAbonos.interface.php");
  	 **/
 	public function NuevoAbono
 	(
-		$id_deudor,
-		$tipo_pago,
 		$monto,
-		$nota = null,
-		$id_venta = null,
-		$varios = null,
+		$tipo_pago,
+		$id_deudor,
+		$id_compra = null,
 		$cheques = null,
 		$id_prestamo = null,
-		$id_compra = null
+		$id_venta = null,
+		$varios = null,
+		$nota = null,
+                $billetes = null
 	)
 	{
             $id_usuario=LoginController::getCurrentUser();
