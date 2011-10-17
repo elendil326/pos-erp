@@ -42,7 +42,7 @@
 		$garantia = null, 
 		$descuento = null, 
 		$margen_utilidad = null, 
-		$descripcion = null, 
+		$descripcion = "", 
 		$impuestos = null, 
 		$retenciones = null
 	);  
@@ -67,7 +67,7 @@
 	(
 		$nombre, 
 		$descripcion = null, 
-		$garantía = null, 
+		$garantía = "", 
 		$margen_utilidad = null, 
 		$descuento = null, 
 		$impuestos = null, 
@@ -120,24 +120,24 @@
 	(
 		$id_producto, 
 		$descuento = null, 
-		$metodo_costeo = null, 
-		$descripcion_producto = null, 
+		$metodo_costeo = "", 
+		$descripcion_producto = "", 
 		$id_unidad_no_convertible = null, 
-		$impuestos = null, 
-		$clasificaciones = null, 
+		$impuestos = "", 
+		$clasificaciones = "", 
 		$id_unidad_convertible = null, 
-		$margen_de_utilidad = null, 
+		$margen_de_utilidad = "", 
 		$garantía = null, 
-		$compra_en_mostrador = null, 
-		$codigo_de_barras = null, 
+		$compra_en_mostrador = "", 
+		$codigo_de_barras = "", 
 		$empresas = null, 
-		$peso_producto = null, 
-		$costo_estandar = null, 
-		$nombre_producto = null, 
+		$peso_producto = "", 
+		$costo_estandar = "", 
+		$nombre_producto = "", 
 		$costo_extra_almacen = null, 
-		$control_de_existencia = null, 
-		$foto_del_producto = null, 
-		$codigo_producto = null
+		$control_de_existencia = "", 
+		$foto_del_producto = "", 
+		$codigo_producto = ""
 	);  
   
   
@@ -210,7 +210,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$peso_producto = null, 
 		$descripcion_producto = null, 
 		$impuestos = null, 
-		$clasificaciones = null, 
+		$clasificaciones = 0, 
 		$id_unidad_convertible = null, 
 		$codigo_de_barras = null, 
 		$id_unidad_no_convertible = null, 
@@ -247,8 +247,8 @@ NOTA: Se crea un producto tipo = 1 que es para productos
   function EditarUnidad
 	(
 		$id_unidad_convertible, 
-		$descripcion = null, 
-		$nombre = null
+		$descripcion = "", 
+		$nombre = ""
 	);  
   
   
@@ -314,8 +314,8 @@ Ejemplo: 1 kg = 2.204 lb
  	 **/
   function ListaUnidad
 	(
-		$activo = null, 
-		$ordenar = null
+		$activo = "", 
+		$ordenar = ""
 	);  
   
   
@@ -330,7 +330,7 @@ Ejemplo: 1 kg = 2.204 lb
  	 **/
   function Lista_equivalenciaUnidad
 	(
-		$orden = null
+		$orden = ""
 	);  
   
   
@@ -347,7 +347,7 @@ Ejemplo: 1 kg = 2.204 lb
   function NuevaUnidad
 	(
 		$nombre, 
-		$descripcion = null
+		$descripcion = ""
 	);  
   
   

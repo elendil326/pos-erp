@@ -21,10 +21,10 @@
   function EditarImpuesto
 	(
 		$id_impuesto, 
-		$es_monto = null, 
-		$monto_porcentaje = null, 
-		$descripcion = null, 
-		$nombre = null
+		$es_monto = "", 
+		$monto_porcentaje = "", 
+		$descripcion = "", 
+		$nombre = ""
 	);  
   
   
@@ -39,7 +39,7 @@
  	 **/
   function ListaImpuesto
 	(
-		$ordenar = null
+		$ordenar = ""
 	);  
   
   
@@ -60,7 +60,7 @@
 		$monto_porcentaje, 
 		$nombre, 
 		$es_monto, 
-		$descripcion = null
+		$descripcion = ""
 	);  
   
   
@@ -79,10 +79,10 @@
   function EditarRetencion
 	(
 		$id_retencion, 
-		$es_monto = null, 
-		$monto_porcentaje = null, 
-		$descripcion = null, 
-		$nombre = null
+		$es_monto = "", 
+		$monto_porcentaje = "", 
+		$descripcion = "", 
+		$nombre = ""
 	);  
   
   
@@ -97,7 +97,7 @@
  	 **/
   function ListaRetencion
 	(
-		$ordenar = null
+		$ordenar = ""
 	);  
   
   
@@ -118,7 +118,7 @@
 		$es_monto, 
 		$monto_porcentaje, 
 		$nombre, 
-		$descripcion = null
+		$descripcion = ""
 	);  
   
   

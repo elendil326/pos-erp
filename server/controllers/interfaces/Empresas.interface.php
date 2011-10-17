@@ -99,7 +99,7 @@
  	 **/
   function Lista
 	(
-		$activa = null
+		$activa = false
 	);  
   
   
@@ -141,16 +141,16 @@
 		$colonia, 
 		$codigo_postal, 
 		$telefono1, 
-		$representante_legal = null, 
-		$impuestos = null, 
+		$representante_legal = "", 
+		$impuestos = "", 
 		$descuento = null, 
 		$margen_utilidad = null, 
-		$numero_interior = null, 
-		$telefono2 = null, 
-		$texto_extra = null, 
-		$email = null, 
+		$numero_interior = "", 
+		$telefono2 = "", 
+		$texto_extra = "", 
+		$email = "", 
 		$retenciones = null, 
-		$direccion_web = null
+		$direccion_web = ""
 	);  
   
   

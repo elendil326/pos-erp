@@ -271,7 +271,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
   
-  
+  		
 	}
   
 	/**
@@ -362,7 +362,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$salario = null
 	)
 	{  
-  
+  		
   
 	}
   
@@ -416,7 +416,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
   
-  
+  		
 	}
   
 	/**
@@ -428,7 +428,8 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	(
 	)
 	{  
-  
+
+  		return Permiso::getAll();
   
 	}
   }

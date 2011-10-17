@@ -53,13 +53,13 @@
   function Editar
 	(
 		$id_paquete, 
-		$foto_paquete = null, 
-		$productos = null, 
-		$descuento = null, 
-		$servicios = null, 
-		$nombre = null, 
-		$margen_utilidad = null, 
-		$descripcion = null
+		$foto_paquete = "", 
+		$productos = "", 
+		$descuento = "", 
+		$servicios = "", 
+		$nombre = "", 
+		$margen_utilidad = "", 
+		$descripcion = ""
 	);  
   
   
@@ -92,11 +92,11 @@
  	 **/
   function Lista
 	(
-		$id_empresa = null, 
-		$id_sucursal = null, 
-		$id_producto = null, 
-		$id_servicio = null, 
-		$activo = null
+		$id_empresa = "", 
+		$id_sucursal = "", 
+		$id_producto = "", 
+		$id_servicio = "", 
+		$activo = ""
 	);  
   
   
@@ -122,12 +122,12 @@
 		$nombre, 
 		$empresas, 
 		$sucursales, 
-		$productos = null, 
-		$sericios = null, 
-		$descripcion = null, 
-		$margen_utilidad = null, 
-		$descuento = null, 
-		$foto_paquete = null
+		$productos = "", 
+		$sericios = "", 
+		$descripcion = "", 
+		$margen_utilidad = "", 
+		$descuento = "", 
+		$foto_paquete = ""
 	);  
   
   

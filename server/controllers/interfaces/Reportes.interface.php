@@ -20,10 +20,10 @@
  	 **/
   function ProductosCliente
 	(
-		$id_sucursal = null, 
-		$id_empresa = null, 
-		$orden = null, 
-		$id_cliente = null
+		$id_sucursal = "", 
+		$id_empresa = "", 
+		$orden = "", 
+		$id_cliente = ""
 	);  
   
   
@@ -55,9 +55,9 @@
  	 **/
   function Lista
 	(
-		$id_empresa = null, 
-		$id_sucursal = null, 
-		$orden = null
+		$id_empresa = "", 
+		$id_sucursal = "", 
+		$orden = ""
 	);  
   
   
@@ -102,10 +102,10 @@
  	 **/
   function Servicio_cliente
 	(
-		$id_cliente = null, 
-		$orden = null, 
-		$id_empresa = null, 
-		$id_sucursal = null
+		$id_cliente = "", 
+		$orden = "", 
+		$id_empresa = "", 
+		$id_sucursal = ""
 	);  
   
   

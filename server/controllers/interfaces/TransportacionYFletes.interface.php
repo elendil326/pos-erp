@@ -77,19 +77,19 @@
   function Editar
 	(
 		$id_carro, 
-		$km_por_litro = null, 
-		$combustible = null, 
-		$kilometros = null, 
-		$num_neumaticos = null, 
-		$codigo = null, 
-		$matricula = null, 
-		$imagen = null, 
-		$id_estado = null, 
-		$id_modelo_vehiculo = null, 
-		$id_localizacion = null, 
-		$id_marca_carro = null, 
-		$id_tipo_carro = null, 
-		$ids_empresas = null
+		$km_por_litro = "", 
+		$combustible = "", 
+		$kilometros = "", 
+		$num_neumaticos = "", 
+		$codigo = "", 
+		$matricula = "", 
+		$imagen = "", 
+		$id_estado = "", 
+		$id_modelo_vehiculo = "", 
+		$id_localizacion = "", 
+		$id_marca_carro = "", 
+		$id_tipo_carro = "", 
+		$ids_empresas = ""
 	);  
   
   
@@ -145,8 +145,8 @@
   function EditarMarca
 	(
 		$id_marca_carro, 
-		$activo = null, 
-		$nombre_marca = null
+		$activo = true, 
+		$nombre_marca = ""
 	);  
   
   
@@ -163,7 +163,7 @@
   function NuevoMarca
 	(
 		$nombre_marca, 
-		$activo = null
+		$activo = ""
 	);  
   
   
@@ -181,7 +181,7 @@
 	(
 		$id_modelo_carro, 
 		$nombre_modelo_carro, 
-		$activo = null
+		$activo = true
 	);  
   
   
@@ -198,7 +198,7 @@
   function NuevoModelo
 	(
 		$nombre_modelo, 
-		$activo = null
+		$activo = true
 	);  
   
   
@@ -252,7 +252,7 @@
   function Registrar_llegada
 	(
 		$id_carro, 
-		$fecha_llegada = null
+		$fecha_llegada = ""
 	);  
   
   
@@ -269,8 +269,8 @@
   function EditarTipo
 	(
 		$id_tipo_carro, 
-		$activo = null, 
-		$nombre_tipo_carro = null
+		$activo = true, 
+		$nombre_tipo_carro = ""
 	);  
   
   
@@ -287,7 +287,7 @@
   function NuevoTipo
 	(
 		$nombre_tipo, 
-		$activo = null
+		$activo = true
 	);  
   
   

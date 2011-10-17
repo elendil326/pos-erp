@@ -22,9 +22,9 @@
 	(
 		$id_rol, 
 		$salario = null, 
-		$nombre = null, 
+		$nombre = "", 
 		$descuento = null, 
-		$descripcion = null
+		$descripcion = ""
 	);  
   
   
@@ -53,7 +53,7 @@
  	 **/
   function ListaRol
 	(
-		$orden = null
+		$orden = ""
 	);  
   
   
@@ -63,20 +63,18 @@
  	 *
  	 *Crea un nuevo grupo de usuarios. Se asignaran los permisos de este grupo al momento de su creacion.
  	 *
- 	 * @param permisos json Ids de los permisos que tendra este rol
- 	 * @param nombre string Nombre del grupo
  	 * @param descripcion string Descripcion larga del grupo
+ 	 * @param nombre string Nombre del grupo
  	 * @param descuento float El procentaje de descuento que este grupo gozara al comprar cualquier producto
  	 * @param salario float El salario de este rol
  	 * @return id_rol int Id del grupo que se genero
  	 **/
   function NuevoRol
 	(
-		$permisos, 
+		$descripcion, 
 		$nombre, 
-		$descripcion = null, 
-		$descuento = null, 
-		$salario = null
+		$descuento = 0, 
+		$salario = 0
 	);  
   
   
@@ -346,10 +344,10 @@
 		$salario = null, 
 		$intereses_moratorios = null, 
 		$ventas_a_credito = null, 
-		$telefono_personal1 = null, 
+		$telefono_personal1 = "", 
 		$descuento = null, 
 		$pagina_web = null, 
-		$limite_credito = null, 
+		$limite_credito = 0, 
 		$telefno_personal2 = null, 
 		$telefono1_2 = null, 
 		$codigo_postal = null, 

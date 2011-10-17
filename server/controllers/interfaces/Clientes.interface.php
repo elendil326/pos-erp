@@ -25,12 +25,12 @@
 	(
 		$id_clasificacion_cliente, 
 		$impuestos = null, 
-		$descuento = null, 
+		$descuento = "", 
 		$retenciones = null, 
-		$clave_interna = null, 
-		$nombre = null, 
-		$descripcion = null, 
-		$margen_de_utilidad = null
+		$clave_interna = "", 
+		$nombre = "", 
+		$descripcion = "", 
+		$margen_de_utilidad = ""
 	);  
   
   
@@ -69,7 +69,7 @@
 		$clave_interna, 
 		$nombre, 
 		$impuestos = null, 
-		$descripcion = null, 
+		$descripcion = "", 
 		$descuento = null, 
 		$retenciones = null, 
 		$utilidad = null
@@ -212,26 +212,26 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 		$razon_social, 
 		$id_cliente, 
 		$codigo_cliente, 
-		$moneda_del_cliente = null, 
-		$numero_exterior = null, 
-		$numero_interior = null, 
-		$telefono1 = null, 
-		$rfc = null, 
-		$representante_legal = null, 
-		$curp = null, 
-		$cuenta_de_mensajeria = null, 
-		$codigo_postal = null, 
-		$direccion_web = null, 
-		$mensajeria = null, 
-		$telefono2 = null, 
-		$denominacion_comercial = null, 
-		$estatus = null, 
-		$calle = null, 
-		$municipio = null, 
-		$clasificacion_cliente = null, 
-		$email = null, 
-		$texto_extra = null, 
-		$colonia = null
+		$moneda_del_cliente =  null, 
+		$numero_exterior =  null, 
+		$numero_interior =  null, 
+		$telefono1 =  null, 
+		$rfc =  null, 
+		$representante_legal =  null, 
+		$curp =  null, 
+		$cuenta_de_mensajeria =  null, 
+		$codigo_postal =  null, 
+		$direccion_web =  null, 
+		$mensajeria =  null, 
+		$telefono2 =  null, 
+		$denominacion_comercial =  null, 
+		$estatus =  null, 
+		$calle =  null, 
+		$municipio =  null, 
+		$clasificacion_cliente =  null, 
+		$email =  null, 
+		$texto_extra =  null, 
+		$colonia =  null
 	);  
   
   
@@ -299,7 +299,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 		$razon_social, 
 		$direccion_web = null, 
 		$calle = null, 
-		$clasificacion_cliente = null, 
+		$clasificacion_cliente = "", 
 		$rfc = null, 
 		$telefono2 = null, 
 		$curp = null, 
@@ -313,13 +313,13 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 		$texto_extra = null, 
 		$telefono1 = null, 
 		$numero_interior = null, 
-		$moneda_del_cliente = null, 
+		$moneda_del_cliente = "La moneda de la empresa", 
 		$id_ciudad = null, 
 		$retenciones = null, 
 		$impuestos = null, 
 		$codigo_postal = null, 
 		$email = null, 
-		$referencia = null
+		$referencia = ""
 	);  
   
   

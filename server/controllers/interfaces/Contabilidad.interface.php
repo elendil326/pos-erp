@@ -22,10 +22,10 @@ Update : ¿Es correcto como se esta manejando el argumento id_sucursal? Ya que en
  	 **/
   function ListaFacturas
 	(
-		$id_empresa = null, 
-		$orden = null, 
-		$activos = null, 
-		$id_sucursal = null
+		$id_empresa = "", 
+		$orden = "", 
+		$activos = "", 
+		$id_sucursal = ""
 	);  
   
   

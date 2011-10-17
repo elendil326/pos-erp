@@ -111,7 +111,7 @@ Update : No se si este metodo tenga una utilidad real, ya que cuando se recibe e
   function Lista
 	(
 		$activos, 
-		$id_empresa = null
+		$id_empresa = ""
 	);  
   
   

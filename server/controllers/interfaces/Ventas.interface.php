@@ -111,7 +111,7 @@
 		$id_comprador_venta, 
 		$detalle_venta, 
 		$datos_cheque = null, 
-		$saldo = null, 
+		$saldo = 0, 
 		$tipo_de_pago = null
 	);  
   
@@ -144,10 +144,10 @@
 		$fecha_origen, 
 		$peso_destino, 
 		$id_venta, 
-		$productor = null, 
-		$numero_de_viaje = null, 
-		$folio = null, 
-		$total_origen = null
+		$productor = "", 
+		$numero_de_viaje = "", 
+		$folio = "", 
+		$total_origen = ""
 	);  
   
   

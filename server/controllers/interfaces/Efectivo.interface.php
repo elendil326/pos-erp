@@ -21,10 +21,10 @@
   function EditarBillete
 	(
 		$id_billete, 
-		$valor = null, 
-		$foto_billete = null, 
-		$nombre = null, 
-		$id_moneda = null
+		$valor = "", 
+		$foto_billete = "", 
+		$nombre = "", 
+		$id_moneda = ""
 	);  
   
   
@@ -54,8 +54,8 @@
  	 **/
   function ListaBillete
 	(
-		$ordenar = null, 
-		$activo = null
+		$ordenar = "", 
+		$activo = ""
 	);  
   
   
@@ -76,7 +76,7 @@
 		$nombre, 
 		$valor, 
 		$id_moneda, 
-		$foto_billete = null
+		$foto_billete = ""
 	);  
   
   
@@ -93,8 +93,8 @@
   function EditarMoneda
 	(
 		$id_moneda, 
-		$nombre = null, 
-		$simbolo = null
+		$nombre = "", 
+		$simbolo = ""
 	);  
   
   
@@ -124,8 +124,8 @@
  	 **/
   function ListaMoneda
 	(
-		$orden = null, 
-		$activo = null
+		$orden = "", 
+		$activo = ""
 	);  
   
   

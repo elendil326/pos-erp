@@ -19,8 +19,8 @@
   function EditarAlmacen
 	(
 		$id_almacen, 
-		$descripcion = null, 
-		$nombre = null
+		$descripcion = "", 
+		$nombre = ""
 	);  
   
   
@@ -75,7 +75,7 @@ Creo que este metodo tiene que estar bajo sucursal.
   function ListaAlmacen
 	(
 		$id_empresa = null, 
-		$id_sucursal = null, 
+		$id_sucursal = "", 
 		$id_tipo_almacen = null, 
 		$activo = null
 	);  
@@ -150,8 +150,8 @@ Creo que este metodo tiene que estar bajo sucursal.
   function EditarTraspasoAlmacen
 	(
 		$id_traspaso, 
-		$productos = null, 
-		$fecha_envio_programada = null
+		$productos = "", 
+		$fecha_envio_programada = ""
 	);  
   
   
@@ -188,15 +188,15 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 **/
   function ListaTraspasoAlmacen
 	(
-		$cancelado = null, 
-		$completo = null, 
-		$id_producto = null, 
-		$id_almacen = null, 
-		$enviados = null, 
-		$id_sucursal = null, 
-		$id_empresa = null, 
-		$estado = null, 
-		$ordenar = null
+		$cancelado = "", 
+		$completo = "", 
+		$id_producto = "", 
+		$id_almacen = "", 
+		$enviados = "", 
+		$id_sucursal = "", 
+		$id_empresa = "", 
+		$estado = "", 
+		$ordenar = ""
 	);  
   
   
@@ -330,7 +330,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$billetes_pago = null, 
 		$billetes_cambio = null, 
 		$tipo_pago = null, 
-		$saldo = null, 
+		$saldo = 0, 
 		$cheques = null
 	);  
   
@@ -358,7 +358,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$billetes_encontrados, 
 		$billetes_dejados, 
 		$id_cajero = null, 
-		$id_cajero_nuevo = null
+		$id_cajero_nuevo = "Id del cajero actual"
 	);  
   
   
@@ -375,8 +375,8 @@ Creo que este metodo tiene que estar bajo sucursal.
   function EditarCaja
 	(
 		$id_caja, 
-		$descripcion = null, 
-		$token = null
+		$descripcion = "", 
+		$token = ""
 	);  
   
   
@@ -410,7 +410,7 @@ Creo que este metodo tiene que estar bajo sucursal.
   function NuevaCaja
 	(
 		$token, 
-		$codigo_caja = null, 
+		$codigo_caja = "Código de la Caja", 
 		$impresoras = null, 
 		$basculas = null, 
 		$descripcion = null
@@ -448,7 +448,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$total, 
 		$descuento, 
 		$tipo_venta, 
-		$saldo = null, 
+		$saldo = 0, 
 		$cheques = null, 
 		$tipo_pago = null, 
 		$billetes_pago = null, 

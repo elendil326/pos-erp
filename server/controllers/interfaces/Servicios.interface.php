@@ -24,13 +24,13 @@
   function EditarClasificacion
 	(
 		$id_clasificacion_servicio, 
-		$retenciones = null, 
-		$impuestos = null, 
-		$descuento = null, 
-		$margen_utilidad = null, 
-		$descripcion = null, 
-		$garantia = null, 
-		$nombre = null
+		$retenciones = "", 
+		$impuestos = "", 
+		$descuento = "", 
+		$margen_utilidad = "", 
+		$descripcion = "", 
+		$garantia = "", 
+		$nombre = ""
 	);  
   
   
@@ -67,13 +67,13 @@
   function NuevaClasificacion
 	(
 		$nombre, 
-		$garantia = null, 
-		$descripcion = null, 
-		$margen_utilidad = null, 
-		$descuento = null, 
-		$activa = null, 
-		$impuestos = null, 
-		$retenciones = null
+		$garantia = "", 
+		$descripcion = "", 
+		$margen_utilidad = "", 
+		$descuento = "", 
+		$activa = 1, 
+		$impuestos = "", 
+		$retenciones = ""
 	);  
   
   
@@ -154,7 +154,7 @@
 		$id_empresa = null, 
 		$id_sucursal = null, 
 		$activo = null, 
-		$orden = null
+		$orden = ""
 	);  
   
   
@@ -195,7 +195,7 @@
 		$garantia = null, 
 		$retenciones = null, 
 		$impuestos = null, 
-		$activo = null, 
+		$activo = true, 
 		$clasificaciones = null, 
 		$margen_de_utilidad = null, 
 		$control_de_existencia = null, 
@@ -215,7 +215,7 @@
   function CancelarOrden
 	(
 		$id_orden_de_servicio, 
-		$motivo_cancelacion = null
+		$motivo_cancelacion = ""
 	);  
   
   
@@ -248,10 +248,10 @@
  	 **/
   function ListaOrden
 	(
-		$id_empresa = null, 
-		$id_sucursal = null, 
-		$fecha_desde = null, 
-		$fecha_hasta = null
+		$id_empresa = "", 
+		$id_sucursal = "", 
+		$fecha_desde = "", 
+		$fecha_hasta = ""
 	);  
   
   

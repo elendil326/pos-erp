@@ -125,7 +125,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 		$id_empresa, 
 		$total, 
 		$cheques = null, 
-		$saldo = null, 
+		$saldo = 0, 
 		$tipo_de_pago = null
 	);  
   

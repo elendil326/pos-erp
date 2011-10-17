@@ -21,10 +21,10 @@
   function EditarClasificacion
 	(
 		$id_clasificacion_proveedor, 
-		$retenciones = null, 
-		$impuestos = null, 
-		$descripcion = null, 
-		$nombre = null
+		$retenciones = "", 
+		$impuestos = "", 
+		$descripcion = "", 
+		$nombre = ""
 	);  
   
   
@@ -110,7 +110,7 @@
 		$numero_interior = null, 
 		$numero_exterior = null, 
 		$representante_legal = null, 
-		$activo = null, 
+		$activo = 1, 
 		$rfc = null, 
 		$id_tipo_proveedor = null, 
 		$dias_de_credito = null, 
@@ -208,10 +208,10 @@
 		$direccion_web = null, 
 		$retenciones = null, 
 		$impuestos = null, 
-		$dias_embarque = null, 
+		$dias_embarque = true, 
 		$telefono_personal = null, 
 		$rfc = null, 
-		$calle = null, 
+		$calle = 1, 
 		$email = null, 
 		$id_moneda = null, 
 		$cuenta_bancaria = null, 

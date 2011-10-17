@@ -22,8 +22,8 @@
   function EditarAbono
 	(
 		$id_abono, 
-		$motivo_cancelacion = null, 
-		$nota = null, 
+		$motivo_cancelacion = "", 
+		$nota = "", 
 		$compra = null, 
 		$venta = null, 
 		$prestamo = null
@@ -90,14 +90,14 @@
 		$fecha_maxima = null, 
 		$monto_mayor_a = null, 
 		$fecha_minima = null, 
-		$id_sucursal = null, 
+		$id_sucursal = "", 
 		$fecha_actual = null, 
-		$id_usuario = null, 
+		$id_usuario = "", 
 		$id_compra = null, 
-		$orden = null, 
-		$id_caja = null, 
+		$orden = "", 
+		$id_caja = "", 
 		$monto_menor_a = null, 
-		$id_empresa = null, 
+		$id_empresa = "", 
 		$id_prestamo = null, 
 		$cancelado = null, 
 		$id_venta = null, 
@@ -251,7 +251,7 @@ Update :  Tambien se deberia de tomar  de la sesion el id del usuario qeu hiso a
   function EliminarGasto
 	(
 		$id_gasto, 
-		$motivo_cancelacion = null, 
+		$motivo_cancelacion = "", 
 		$id_caja = null, 
 		$billetes = null
 	);  
@@ -279,18 +279,18 @@ Update :  Tambien se deberia de tomar  de la sesion el id del usuario qeu hiso a
  	 **/
   function ListaGasto
 	(
-		$monto_maximo = null, 
+		$monto_maximo = "", 
 		$orden = null, 
-		$monto_minimo = null, 
-		$id_usuario = null, 
-		$id_empresa = null, 
-		$id_orden_servicio = null, 
-		$id_concepto_gasto = null, 
-		$id_caja = null, 
-		$fecha_final = null, 
-		$fecha_inicial = null, 
-		$id_sucursal = null, 
-		$cancelado = null, 
+		$monto_minimo = "", 
+		$id_usuario = "", 
+		$id_empresa = "", 
+		$id_orden_servicio = "", 
+		$id_concepto_gasto = "", 
+		$id_caja = "", 
+		$fecha_final = "", 
+		$fecha_inicial = "", 
+		$id_sucursal = "", 
+		$cancelado = "", 
 		$fecha_actual = null
 	);  
   
@@ -442,7 +442,7 @@ Update :El usuario y la fecha de la ultima modificaci?e deber? de obtener de la 
   function EliminarIngreso
 	(
 		$id_ingreso, 
-		$motivo_cancelacion = null
+		$motivo_cancelacion = ""
 	);  
   
   
@@ -467,16 +467,16 @@ Update :El usuario y la fecha de la ultima modificaci?e deber? de obtener de la 
  	 **/
   function ListaIngreso
 	(
-		$id_empresa = null, 
-		$fecha_final = null, 
-		$id_sucursal = null, 
-		$fecha_inicial = null, 
-		$id_concepto_ingreso = null, 
-		$id_caja = null, 
-		$monto_maximo = null, 
-		$monto_minimo = null, 
-		$id_usuario = null, 
-		$cancelado = null, 
+		$id_empresa = "", 
+		$fecha_final = "", 
+		$id_sucursal = "", 
+		$fecha_inicial = "", 
+		$id_concepto_ingreso = "", 
+		$id_caja = "", 
+		$monto_maximo = "", 
+		$monto_minimo = "", 
+		$id_usuario = "", 
+		$cancelado = "", 
 		$fecha_actual = null, 
 		$orden = null
 	);  
@@ -508,8 +508,8 @@ Update :El usuario y la fecha de la ultima modificaci?e deber? de obtener de la 
 		$nota = null, 
 		$folio = null, 
 		$id_sucursal = null, 
-		$id_concepto_ingreso = null, 
-		$id_caja = null, 
+		$id_concepto_ingreso = "", 
+		$id_caja = "", 
 		$monto = null, 
 		$billetes = null
 	);  
