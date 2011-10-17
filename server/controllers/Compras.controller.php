@@ -168,9 +168,39 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 		$fecha_origen = null, 
 		$productor = null
 	)
-	{  
-  
-  
+	{
+            Logger::log("Registrando compras de arpillas");
+            $compra_arpilla=new CompraArpilla();
+            $compra_arpilla->setPesoPorArpilla($peso_por_arpilla);
+            $compra_arpilla->setArpillas($arpillas);
+            $compra_arpilla->setPesoRecibido($peso_recibido);
+            if(CompraDAO::getByPK($id_compra)==null)
+            {
+                Logger::error("La compra con id: ".$id_compra." no existe");
+                throw new Exception("La compra con id: ".$id_compra." no existe");
+            }
+            $compra_arpilla->setIdCompra($id_compra);
+            $compra_arpilla->setTotalOrigen($total_origen);
+            $compra_arpilla->setMermaPorArpilla($merma_por_arpilla);
+            $compra_arpilla->setNumeroDeViaje($numero_de_viaje);
+            $compra_arpilla->setFolio($folio);
+            $compra_arpilla->setPesoOrigen($peso_origen);
+            $compra_arpilla->setFechaOrigen($fecha_origen);
+            $compra_arpilla->setProductor($productor);
+            DAO::transBegin();
+            try
+            {
+                CompraArpillaDAO::save($compra_arpilla);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo guardar la compra de arpillas");
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Se registro la compra de arpillas con exito ");
+            return $compra_arpilla->getIdCompraArpilla();
 	}
   
 	/**
