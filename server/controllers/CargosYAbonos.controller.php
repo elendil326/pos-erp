@@ -2068,7 +2068,7 @@ require_once("CargosYAbonos.interface.php");
                 {
                     foreach($cheques as $cheque)
                     {
-                        array_push($id_cheques,Cheques::NuevoCheque($cheque["nombre_banco"],$cheque["monto"],$cheque["numero"],$cheque["expedido"]));
+                        array_push($id_cheques,ChequesController::NuevoCheque($cheque["nombre_banco"],$cheque["monto"],$cheque["numero"],$cheque["expedido"]));
                     }
                 }
                 switch($from)

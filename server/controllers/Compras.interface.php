@@ -44,7 +44,7 @@
 <br/><br/><b>Update :</b> Todo este metodo esta mal, habria que definir nuevamente como se van a manejar las compras a los proveedores ya que como esta definido aqui solo funcionaria para el POS de las papas.
  	 *
  	 * @param id_compra int Id de la compra de la que se detallaran las compras por arpilla
- 	 * @return detalle_compra_arpilla json Objeto que contendrá la información del detalle de la compra
+ 	 * @return detalle_compra_arpilla json Objeto que contendrï¿½ la informaciï¿½n del detalle de la compra
  	 **/
   function Detalle_compra_arpilla
 	(
@@ -77,7 +77,7 @@
 	(
 		$fecha_inicial = null, 
 		$tipo_compra = null, 
-		$id_usuario_compra = null, 
+		$id_vendedor_compra = null,
 		$id_caja = null, 
 		$id_usuario = null, 
 		$id_empresa = null, 
@@ -87,7 +87,8 @@
 		$total_maximo = null, 
 		$saldada = null, 
 		$cancelada = null, 
-		$tipo_pago = null
+		$tipo_pago = null,
+                $orden = null
 	);  
   
   
@@ -109,7 +110,7 @@
  	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
  	 * @param saldo float Cantidad pagada de la 
  	 * @param tipo_de_pago string Si el pago sera en efectivo, con cheque o tarjeta
- 	 * @return id_compra int Id autogenerado por la inserción de la compra
+ 	 * @return id_compra int Id autogenerado por la inserciï¿½n de la compra
  	 **/
   function Nueva
 	(

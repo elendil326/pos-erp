@@ -2,7 +2,7 @@
 require_once("Cheques.interface.php");
 
 
-    class Cheques implements ICheques{
+    class ChequesController implements ICheques{
 
         public function NuevoCheque
         (

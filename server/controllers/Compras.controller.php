@@ -8,7 +8,7 @@ require_once("Compras.interface.php");
 	
   class ComprasController implements ICompras{
   
-  
+        private $formato_fecha="Y-m-d H:i:s";
 	/**
  	 *
  	 *Lista las compras. Se puede filtrar por empresa, sucursal, caja, usuario que registra la compra, usuario al que se le compra, tipo de compra, si estan pagadas o no, por tipo de pago, canceladas o no, por el total, por fecha, por el tipo de pago y se puede ordenar por sus atributos.
@@ -32,7 +32,7 @@ require_once("Compras.interface.php");
 	(
 		$fecha_inicial = null, 
 		$tipo_compra = null, 
-		$id_usuario_compra = null, 
+		$id_vendedor_compra = null,
 		$id_caja = null, 
 		$id_usuario = null, 
 		$id_empresa = null, 
@@ -42,11 +42,98 @@ require_once("Compras.interface.php");
 		$total_maximo = null, 
 		$saldada = null, 
 		$cancelada = null, 
-		$tipo_pago = null
+		$tipo_pago = null,
+                $orden = null
 	)
 	{  
-  
-  
+            Logger::log("Listando compras");
+            $parametros=false;
+            if
+            (
+                $fecha_inicial != null ||
+		$tipo_compra != null ||
+		$id_vendedor_compra != null ||
+		$id_caja != null ||
+		$id_usuario != null ||
+		$id_empresa != null ||
+		$id_sucursal != null ||
+		$fecha_final != null ||
+		$total_minimo != null ||
+		$total_maximo != null ||
+		$cancelada != null ||
+		$tipo_pago != null
+            )
+                $parametros = true;
+            $compras=null;
+            if($parametros)
+            {
+                Logger::log("Se recibieron parametros, se listan las compras en rango");
+                $compra_criterio_1 = new Compra();
+                $compra_criterio_2 = new Compra();
+                $compra_criterio_1->setTipoDeCompra($tipo_compra);
+                $compra_criterio_1->setIdVendedorCompra($id_vendedor_compra);
+                $compra_criterio_1->setIdCaja($id_caja);
+                $compra_criterio_1->setIdUsuario($id_usuario);
+                $compra_criterio_1->setIdEmpresa($id_empresa);
+                $compra_criterio_1->setIdSucursal($id_sucursal);
+                $compra_criterio_1->setCancelada($cancelada);
+                $compra_criterio_1->setTipoDePago($tipo_pago);
+                if($fecha_inicial!=null)
+                {
+                    $compra_criterio_1->setFecha($fecha_inicial);
+                    if($fecha_final!=null)
+                    {
+                        $compra_criterio_2->setFecha($fecha_final);
+                    }
+                    else
+                    {
+                        $compra_criterio_2->setFecha(date($this->formato_fecha,time()));
+                    }
+                }
+                else if($fecha_final!=null)
+                {
+                    $compra_criterio_1->setFecha($fecha_final);
+                    $compra_criterio_2->setFecha("1001-01-01 00:00:00");
+                }
+                if($total_minimo!==null)
+                {
+                    $compra_criterio_1->setTotal($total_minimo);
+                    if($total_maximo!==null)
+                        $compra_criterio_2->setTotal($total_maximo);
+                    else
+                        $compra_criterio_2->setTotal(1.8e100);
+                }
+                else if($total_maximo!==null)
+                {
+                    $compra_criterio_1->setTotal($total_maximo);
+                    $compra_criterio_2->setTotal(0);
+                }
+                $compras=CompraDAO::byRange($compra_criterio_1, $compra_criterio_2,$orden);
+            }
+            else
+            {
+                Logger::log("No se recibieron parametros, se listan todas las compras");
+                $compras=CompraDAO::getAll(null,null,$orden);
+            }
+            if($saldada!==null)
+            {
+                $temporal=array();
+                if($saldada)
+                    foreach($compras as $compra)
+                    {
+                        if($compra->getTotal()<=$compra->getSaldo())
+                            array_push($temporal, $compra);
+                    }
+                else
+                    foreach($compras as $compra)
+                    {
+                        if($compra->getTotal()>$compra->getSaldo())
+                            array_push($temporal, $compra);
+                    }
+                $compras=$temporal;
+            }
+            Logger::log("Se obtuvo la lista con Ã©xito");
+            return $compras;
 	}
   
 	/**
@@ -124,7 +211,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 Update : Todo este metodo esta mal, habria que definir nuevamente como se van a manejar las compras a los proveedores ya que como esta definido aqui solo funcionaria para el POS de las papas.
  	 *
  	 * @param id_compra int Id de la compra de la que se detallaran las compras por arpilla
- 	 * @return detalle_compra_arpilla json Objeto que contendrá la información del detalle de la compra
+ 	 * @return detalle_compra_arpilla json Objeto que contendrï¿½ la informaciï¿½n del detalle de la compra
  	 **/
 	public function Detalle_compra_arpilla
 	(
@@ -151,7 +238,7 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
  	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
  	 * @param saldo float Cantidad pagada de la 
  	 * @param tipo_de_pago string Si el pago sera en efectivo, con cheque o tarjeta
- 	 * @return id_compra int Id autogenerado por la inserción de la compra
+ 	 * @return id_compra int Id autogenerado por la inserciï¿½n de la compra
  	 **/
 	public function Nueva
 	(
