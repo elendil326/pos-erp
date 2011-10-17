@@ -2299,7 +2299,60 @@ require_once("CargosYAbonos.interface.php");
 		$prestamo = null
 	)
 	{
-
-
+            Logger::log("Editando abono");
+            $abono=null;
+            $from=0;
+            if($compra)
+            {
+                $abono=AbonoCompraDAO::getByPK($id_abono);
+                $from=1;
+            }
+            else if($venta)
+            {
+                $abono=AbonoVentaDAO::getByPK($id_abono);
+                $from=2;
+            }
+            else if($prestamo)
+            {
+                $abono=AbonoPrestamoDAO::getByPK($id_abono);
+                $from=3;
+            }
+            else
+            {
+                Logger::error("No se recibio si se editara un abono de compra, venta o prestamo");
+                throw new Exception("No se recibio si se editara un abono de compra, venta o prestamo");
+            }
+            if($nota!==null)
+                $abono->setNota($nota);
+            if($abono->getCancelado())
+            {
+                if($motivo_cancelacion!==null)
+                        $abono->setMotivoCancelacion($motivo_cancelacion);
+            }
+            else if($motivo_cancelacion!==null)
+                Logger::warn("No se editara el motivo de cancelacion pues el abono no ha sido cancelado aun");
+            DAO::transBegin();
+            try
+            {
+                switch($from)
+                {
+                    case 1:
+                        AbonoCompraDAO::save($abono);
+                        break;
+                    case 2:
+                        AbonoVentaDAO::save($abono);
+                        break;
+                    case 3:
+                        AbonoPrestamoDAO::save($abono);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo editar el abono: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Abono editado exitosamente");
 	}
   }
