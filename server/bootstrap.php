@@ -160,7 +160,7 @@
 	# *******************************
 	require_once("controllers/Autorizaciones.controller.php");
 	require_once("controllers/CargosYAbonos.controller.php");
-        require_once("controllers/Cheques.controller.php");
+    require_once("controllers/Cheques.controller.php");
 	require_once("controllers/Clientes.controller.php");
 	require_once("controllers/Compras.controller.php");
 	require_once("controllers/Consignaciones.controller.php");
