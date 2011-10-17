@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 12-10-2011 a las 22:52:17
+-- Tiempo de generación: 17-10-2011 a las 20:29:42
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -51,11 +51,11 @@ CREATE TABLE IF NOT EXISTS `abono_compra` (
   `id_receptor` int(11) NOT NULL COMMENT 'Id del usuario que registra el abono',
   `nota` varchar(255) DEFAULT NULL COMMENT 'Nota del abono',
   `fecha` datetime NOT NULL COMMENT 'Fecha en que se realiza el abono',
-  `tipo_de_pago` varchar(50) NOT NULL COMMENT 'Si el tipo de pago es con tarjeta, con cheque, o en efectivo',
+  `tipo_de_pago` enum('cheque','tarjeta','efectivo') NOT NULL COMMENT 'Si el tipo de pago es con tarjeta, con cheque, o en efectivo',
   `cancelado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este abono es cancelado',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_abono_compra`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Detalle de la compra y los abonos de la misma' AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Detalle de la compra y los abonos de la misma' AUTO_INCREMENT=8 ;
 
 -- --------------------------------------------------------
 
@@ -73,11 +73,11 @@ CREATE TABLE IF NOT EXISTS `abono_prestamo` (
   `id_receptor` int(11) NOT NULL COMMENT 'Id del usuario que registra el abono',
   `nota` varchar(255) DEFAULT NULL COMMENT 'Nota del abono',
   `fecha` datetime NOT NULL COMMENT 'Fecha en que se realiza el abono',
-  `tipo_de_pago` varchar(50) NOT NULL COMMENT 'Si el tipo de pago es con tarjeta, con cheque, o en efectivo',
+  `tipo_de_pago` enum('cheque','tarjeta','efectivo') NOT NULL COMMENT 'Si el tipo de pago es con tarjeta, con cheque, o en efectivo',
   `cancelado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este abono es cancelado',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_abono_prestamo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Detalle abono prestamo' AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Detalle abono prestamo' AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -95,11 +95,11 @@ CREATE TABLE IF NOT EXISTS `abono_venta` (
   `id_receptor` int(11) NOT NULL COMMENT 'Id del usuario que registra el abono',
   `nota` varchar(255) DEFAULT NULL COMMENT 'Nota del abono',
   `fecha` datetime NOT NULL COMMENT 'Fecha en que se realiza el abono',
-  `tipo_de_pago` varchar(50) NOT NULL COMMENT 'Si el tipo de pago es con tarjeta, con cheque, o en efectivo',
+  `tipo_de_pago` enum('cheque','tarjeta','efectivo') NOT NULL COMMENT 'Si el tipo de pago es con tarjeta, con cheque, o en efectivo',
   `cancelado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este abono es cancelado',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_abono_venta`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Detalle de la venta y sus abonos' AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Detalle de la venta y sus abonos' AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -247,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `cheque` (
   `expedido` tinyint(1) NOT NULL COMMENT 'Verdadero si el cheque es expedido por la empresa, falso si es recibido',
   `id_usuario` int(11) DEFAULT NULL COMMENT 'Id del usuario que registra el cheque',
   PRIMARY KEY (`id_cheque`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 -- --------------------------------------------------------
 
@@ -428,7 +428,7 @@ CREATE TABLE IF NOT EXISTS `compra` (
   `tipo_de_pago` enum('cheque','tarjeta','efectivo') DEFAULT NULL COMMENT 'Si la compra fue pagada con tarjeta, cheque o efectivo',
   `retencion` float NOT NULL COMMENT 'Monto de retencion',
   PRIMARY KEY (`id_compra`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
@@ -440,17 +440,17 @@ CREATE TABLE IF NOT EXISTS `compra_arpilla` (
   `id_compra_arpilla` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id de la tabla compra por arpilla',
   `id_compra` int(11) NOT NULL COMMENT 'Id de la compra a la que se refiere',
   `peso_origen` float DEFAULT NULL COMMENT 'El peso del camion en el origen',
-  `fecha_origen` datetime NOT NULL COMMENT 'Fecha en la que se envío el embarque',
+  `fecha_origen` datetime DEFAULT NULL COMMENT 'Fecha en la que se envío el embarque',
   `folio` varchar(11) DEFAULT NULL COMMENT 'Folio del camion',
   `numero_de_viaje` varchar(11) DEFAULT NULL COMMENT 'Número de viaje',
   `peso_recibido` float NOT NULL COMMENT 'Peso del camion al llegar',
   `arpillas` float NOT NULL COMMENT 'Cantidad de arpillas recibidas',
   `peso_por_arpilla` float NOT NULL COMMENT 'El peso por arpilla promedio',
-  `productor` varchar(64) NOT NULL COMMENT 'Nombre del productor',
+  `productor` varchar(64) DEFAULT NULL COMMENT 'Nombre del productor',
   `merma_por_arpilla` float NOT NULL COMMENT 'La merma de producto por arpilla',
   `total_origen` float DEFAULT NULL COMMENT 'El valor del embarque según el proveedor',
   PRIMARY KEY (`id_compra_arpilla`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que detalla una compra realizada a un proveedor median' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que detalla una compra realizada a un proveedor median' AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -481,9 +481,9 @@ CREATE TABLE IF NOT EXISTS `concepto_gasto` (
   `nombre` varchar(50) NOT NULL COMMENT 'Nombre del concepto',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion detallada del concepto',
   `monto` float DEFAULT NULL COMMENT 'monto del concepto si este es fijo siempre',
-  `activo` tinyint(1) NOT NULL COMMENT 'Si este concepto de gasto esta activo',
+  `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si este concepto de gasto esta activo',
   PRIMARY KEY (`id_concepto_gasto`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Conceptos de gasto' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Conceptos de gasto' AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -498,7 +498,7 @@ CREATE TABLE IF NOT EXISTS `concepto_ingreso` (
   `monto` float DEFAULT NULL COMMENT 'Si el concepto tienen un monto fijo',
   `activo` tinyint(1) NOT NULL COMMENT 'Si este concepto de ingreso esta activo',
   PRIMARY KEY (`id_concepto_ingreso`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Concepto de ingreso' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Concepto de ingreso' AUTO_INCREMENT=9 ;
 
 -- --------------------------------------------------------
 
@@ -716,7 +716,7 @@ CREATE TABLE IF NOT EXISTS `gasto` (
   `cancelado` tinyint(1) NOT NULL COMMENT 'Si este gasto ha sido cancelado o no',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_gasto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 -- --------------------------------------------------------
 
@@ -1696,7 +1696,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `salario` float DEFAULT NULL COMMENT 'El salario que recibe el usuaario actualmente',
   `correo_electronico` varchar(30) DEFAULT NULL COMMENT 'Correo electronico del usuario',
   `pagina_web` varchar(30) DEFAULT NULL COMMENT 'Pagina Web del usuario',
-  `saldo_del_ejercicio` float DEFAULT NULL COMMENT 'Saldo del ejercicio del cliente',
+  `saldo_del_ejercicio` float NOT NULL DEFAULT '0' COMMENT 'Saldo del ejercicio del cliente',
   `ventas_a_credito` int(11) DEFAULT NULL COMMENT 'Ventas a credito del cliente',
   `representante_legal` varchar(100) DEFAULT NULL COMMENT 'Nombre del representante legal del usuario',
   `facturar_a_terceros` tinyint(1) DEFAULT NULL COMMENT 'Si el cliente puede facturar a terceros',
@@ -1712,7 +1712,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `tiempo_entrega` int(11) DEFAULT NULL COMMENT 'Tiempo de entrega del proveedor en días',
   `cuenta_bancaria` varchar(50) DEFAULT NULL COMMENT 'Cuenta bancaria del usuario',
   PRIMARY KEY (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de usuarios' AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de usuarios' AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
