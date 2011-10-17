@@ -1936,6 +1936,7 @@ require_once("CargosYAbonos.interface.php");
                 $billetes = null
 	)
 	{
+            Logger::log("Creando abono");
             $id_usuario=LoginController::getCurrentUser();
             if($id_usuario==null)
             {
@@ -2161,11 +2162,123 @@ require_once("CargosYAbonos.interface.php");
 		$id_usuario = null,
 		$cancelado = null,
 		$monto_minimo = null,
-		$monto_maximo = null
+		$monto_maximo = null,
+                $fecha_actual = null,
+                $orden = null
 	)
 	{
-
-
+            Logger::log("Listando Ingresos");
+            $parametros=false;
+            if
+            (
+                    $id_empresa!=null ||
+                    $id_usuario!=null ||
+                    $id_concepto_ingreso!=null ||
+                    $id_caja!=null ||
+                    $fecha_inicial!=null ||
+                    $fecha_final!=null ||
+                    $id_sucursal!=null ||
+                    $cancelado!==null ||
+                    $monto_minimo!=null ||
+                    $monto_maximo!=null ||
+                    $fecha_actual!=null
+            )
+                $parametros=true;
+            $ingresos=null;
+            if($parametros)
+            {
+                Logger::log("Se recibieron parametros, se listan los Ingresos dentro del rango");
+                //
+                //Se almacenan los parametros recibidos en el objeto criterio 1
+                //para luego ser comparados.
+                //
+                $ingreso_criterio_1 = new Ingreso();
+                $ingreso_criterio_2 = new Ingreso();
+                $ingreso_criterio_1->setIdEmpresa($id_empresa);
+                $ingreso_criterio_1->setIdUsuario($id_usuario);
+                $ingreso_criterio_1->setIdConceptoIngreso($id_concepto_ingreso);
+                $ingreso_criterio_1->setIdCaja($id_caja);
+                $ingreso_criterio_1->setIdSucursal($id_sucursal);
+                $ingreso_criterio_1->setCancelado($cancelado);
+                if($fecha_inicial!=null)
+                {
+                    //
+                    //Si pasaron una fecha minima y existe una fecha maxima, entonces
+                    //el objeto 1 almacenara la minima y el objeto 2 la maxima para
+                    //que se impriman los ingresos entre esas dos fechas.
+                    //
+                    //Si no hay fecha maxima, el objeto 2 almacenara la fecha de hoy
+                    //para que se impriman los ingresos desde la fecha minima hasta hoy.
+                    //
+                    //
+                    $ingreso_criterio_1->setFechaDelIngreso($fecha_inicial);
+                    if($fecha_final!=null)
+                        $ingreso_criterio_2->setFechaDelIngreso($fecha_final);
+                    else
+                        $ingreso_criterio_2->setFechaDelIngreso(date($this->formato_fecha, time()));
+                }
+                else if($fecha_final!=null)
+                {
+                    //
+                    //Si no se recibio fecha minima pero si fecha maxima
+                    //El objeto 1 guarda la fecha maxima y el objeto 2 guarda
+                    //la fecha minima posible de MySQL, para asi poder listar
+                    //los ingresos anteriores a la fecha maxima.
+                    //
+                    $ingreso_criterio_1->setFechaDelIngreso($fecha_final);
+                    $ingreso_criterio_2->setFechaDelIngreso("1000-01-01 00:00:00");
+                }
+                else if($fecha_actual)
+                {
+                    //
+                    //Si se recibio el booleano fecha_actual, se listaran los ingresos
+                    //solo de hoy, se crea un timestamp con el año, el mes y el dia de hoy
+                    //pero se inicia con la hora 00:00:00 y se almacena como fecha en el objeto 1.
+                    //
+                    //Se crea un segundo timestamp con el año, el mes y el dia de hoy pero
+                    //con la hora 23:59:59 y se almacena como fecha en el objeto 2.
+                    //
+                    $hoy=mktime(0,0,0,date("m"),date("d"),date("Y"));
+                    $ingreso_criterio_1->setFechaDelIngreso(date($this->formato_fecha, $hoy));
+                    $manana=mktime(23,59,59,date("m"),date("d"),date("Y"));
+                    $ingreso_criterio_2->setFechaDelIngreso(date($this->formato_fecha,$manana));
+                }
+                if($monto_minimo!==null)
+                {
+                    //
+                    //Si se recibio el monto_minimo y se recibio el monto_maximo
+                    //el objeto 1 guarda el primero y el objeto2 guarda el segundo
+                    //para asi listar los ingresos cuyo monto sea mayor al minimo y
+                    //menor que el maximo
+                    //
+                    //Si no, el objeto 2 almacena el valor mas grande posible
+                    //para que se listen los gastos cuyo monto sea mayor al minimo
+                    //
+                    $ingreso_criterio_1->setMonto($monto_minimo);
+                    if($monto_maximo!==null)
+                        $ingreso_criterio_2->setMonto($monto_maximo);
+                    else
+                        $ingreso_criterio_2->setMonto(1.8e100);
+                }
+                else if($monto_maximo!==null)
+                {
+                    //
+                    //Si solo se obtuvo monto_maximo, el objeto 1 lo almacena y el
+                    //objeto 2 almacena el monto mas bajo posible para que  se listen
+                    //los gastos cuyo monto sea menor al maximo
+                    //
+                    $ingreso_criterio_1->setMonto($monto_maximo);
+                    $ingreso_criterio_2->setMonto(0);
+                }
+                $ingresos=IngresoDAO::byRange($ingreso_criterio_1, $ingreso_criterio_2, $orden);
+            }
+            else
+            {
+                Logger::log("No se recibieron parametros, se listan todos los Ingresos");
+                $ingresos=IngresoDAO::getAll(null, null,$orden);
+            }
+            Logger::log("Se obtuvo la lista de ingresos exitosamente");
+            return $ingresos;
 	}
 
 	/**

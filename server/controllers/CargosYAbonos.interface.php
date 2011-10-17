@@ -476,7 +476,9 @@
 		$id_usuario = null, 
 		$cancelado = null, 
 		$monto_minimo = null, 
-		$monto_maximo = null
+		$monto_maximo = null,
+                $fecha_actual = null,
+                $orden = null
 	);  
   
   
