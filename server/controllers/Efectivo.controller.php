@@ -1,5 +1,5 @@
 <?php
-require_once("Efectivo.interface.php");
+require_once("interfaces/Efectivo.interface.php");
 /**
   *
   *

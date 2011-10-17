@@ -41,10 +41,10 @@
  	 *
  	 *Muestra el detalle de una compra por arpillas. Este detalle no es el detalle por producto, este muestra los detalles por embarque de la compra. Para el detalle por producto refierase a api/compras/detalle
 
-<br/><br/><b>Update :</b> Todo este metodo esta mal, habria que definir nuevamente como se van a manejar las compras a los proveedores ya que como esta definido aqui solo funcionaria para el POS de las papas.
+Update : Todo este metodo esta mal, habria que definir nuevamente como se van a manejar las compras a los proveedores ya que como esta definido aqui solo funcionaria para el POS de las papas.
  	 *
  	 * @param id_compra int Id de la compra de la que se detallaran las compras por arpilla
- 	 * @return detalle_compra_arpilla json Objeto que contendrï¿½ la informaciï¿½n del detalle de la compra
+ 	 * @return detalle_compra_arpilla json Objeto que contendrá la información del detalle de la compra
  	 **/
   function Detalle_compra_arpilla
 	(
@@ -58,37 +58,38 @@
  	 *
  	 *Lista las compras. Se puede filtrar por empresa, sucursal, caja, usuario que registra la compra, usuario al que se le compra, tipo de compra, si estan pagadas o no, por tipo de pago, canceladas o no, por el total, por fecha, por el tipo de pago y se puede ordenar por sus atributos.
  	 *
+ 	 * @param tipo_pago string Se listaran las compras pagadas con cheque, tarjeta o efectivo de acuerdo a este valor
  	 * @param fecha_inicial string Se listaran las compras cuya fecha sea mayor a la indicada aqui
+ 	 * @param id_vendedor_compra int Se listaran las compras realizadas a este usuario(proveedor), si es sucursal su id sera negativo
  	 * @param tipo_compra string Si es a credito, se listaran las compras que sean a credito, si es de contado, se listaran las compras de contado
- 	 * @param id_usuario_compra int Se listaran las compras realizadas por este usuario, si es sucursal su id sera negativo
  	 * @param id_caja int Se listaran las compras registradas en esta caja
  	 * @param id_usuario int Se listaran las compras que ha registrado este usuario
  	 * @param id_empresa int Id de la empresa de la cual se listaran sus compras
  	 * @param id_sucursal int Id de la sucursal de la cual se listaran sus compras
  	 * @param fecha_final string Se listaran las compras cuya fecha sea menor a la indicada aqui
- 	 * @param total_minimo float Se listaran las compras cuyo total sea mayor a este
  	 * @param total_maximo float Se listaran las compras cuyo total sea menor a este
  	 * @param saldada bool Si este valor no es obtenido, se listaran las compras tanto saldadas como las que no lo estan. Si es verdadero se listaran solo las compras saldadas, si es falso, se listaran solo las compras que no lo estan
+ 	 * @param total_minimo float Se listaran las compras cuyo total sea mayor a este
  	 * @param cancelada bool Si este valor no es obtenido, se listaran tanto compras canceladas como no canceladas. Si es verdadero, se listaran solo las compras canceladas, si su valor es falso, se listaran solo las compras que no lo esten
- 	 * @param tipo_pago string Se listaran las compras pagadas con cheque, tarjeta o efectivo de acuerdo a este valor
+ 	 * @param orden string Nombre de la columna por la cual se ordenaran las compras
  	 * @return compras json Objeto que contendra la lista de las compras
  	 **/
   function Lista
 	(
+		$tipo_pago = null, 
 		$fecha_inicial = null, 
+		$id_vendedor_compra = null, 
 		$tipo_compra = null, 
-		$id_vendedor_compra = null,
 		$id_caja = null, 
 		$id_usuario = null, 
 		$id_empresa = null, 
 		$id_sucursal = null, 
 		$fecha_final = null, 
-		$total_minimo = null, 
 		$total_maximo = null, 
 		$saldada = null, 
+		$total_minimo = null, 
 		$cancelada = null, 
-		$tipo_pago = null,
-                $orden = null
+		$orden = null
 	);  
   
   
@@ -110,7 +111,7 @@
  	 * @param cheques json Si el tipo de pago es con cheque, se almacena el nombre del banco, el monto y los ultimos 4 numeros del o de los cheques
  	 * @param saldo float Cantidad pagada de la 
  	 * @param tipo_de_pago string Si el pago sera en efectivo, con cheque o tarjeta
- 	 * @return id_compra int Id autogenerado por la inserciï¿½n de la compra
+ 	 * @return id_compra int Id autogenerado por la inserción de la compra
  	 **/
   function Nueva
 	(
@@ -134,7 +135,7 @@
 	/**
  	 *
  	 *Registra una nueva compra por arpillas. Este metodo tiene que usarse en conjunto con el metodo api/compras/nueva
-<br/><br/><b>Update :</b> Todo este metodo esta mal, habria que definir nuevamente como se van a manejar las compras a los proveedores ya que como esta definido aqui solo funcionaria para el POS de las papas.
+Update : Todo este metodo esta mal, habria que definir nuevamente como se van a manejar las compras a los proveedores ya que como esta definido aqui solo funcionaria para el POS de las papas.
  	 *
  	 * @param peso_por_arpilla float peso por arpilla
  	 * @param arpillas float numero de arpillas recibidas

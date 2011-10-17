@@ -10,7 +10,7 @@
   
 	/**
  	 *
- 	 *<br/><br/><b>Update :</b> Falta indicar en los argumentos el si el documeto esta activo y a que sucursal pertenece.
+ 	 *Update : Falta indicar en los argumentos el si el documeto esta activo y a que sucursal pertenece.
  	 *
  	 * @param id_documento int Id del documento a editar.
  	 **/
@@ -55,7 +55,7 @@
  	 *
  	 *Genera una factura seg?a informaci?e un cliente y la venta realizada.
 
-<br/><br/><b>Update :</b> Falta especificar si seria una factura detallada (cuando en los conceptos de la factura describe a cada articulo) o generica (un solo concepto que engloba a todos los productos).
+Update : Falta especificar si seria una factura detallada (cuando en los conceptos de la factura describe a cada articulo) o generica (un solo concepto que engloba a todos los productos).
  	 *
  	 * @param id_venta int Id de la venta sobre la cual se facturara
  	 * @param id_cliente int Id del cliente al cual se le va a facturar
@@ -73,7 +73,7 @@
 	/**
  	 *
  	 *Imprime una factura
-<br/><br/><b>Update :</b> La respuesta solo deber?de contener success :true | false, y en caso de error, su descripcion, no se necesita apra anda en el JSON de respuesta una propiedad factura.
+Update : La respuesta solo deber?de contener success :true | false, y en caso de error, su descripcion, no se necesita apra anda en el JSON de respuesta una propiedad factura.
  	 *
  	 * @param id_folio int Id de la factura que se desea imprimir.
  	 * @return factura json Objeto con la informacion de la factura
@@ -90,7 +90,7 @@
  	 *
  	 *Imprime el xml de una factura.
 
-<br/><br/><b>Update :</b> No se si este metodo tenga una utilidad real, ya que cuando se recibe el XML timbrado, se crea el archivo .xml y en el unico momento que se vuelve a ocupar es para enviarlo por correo al cliente.
+Update : No se si este metodo tenga una utilidad real, ya que cuando se recibe el XML timbrado, se crea el archivo .xml y en el unico momento que se vuelve a ocupar es para enviarlo por correo al cliente.
  	 *
  	 **/
   function Imprimir_xmlFactura
@@ -137,7 +137,7 @@
  	 *
  	 *Crea un nuevo documento.
 
-<br/><br/><b>Update :</b> Falta indicar en los argumentos el si el documeto esta activo y a que sucursal pertenece.
+Update : Falta indicar en los argumentos el si el documeto esta activo y a que sucursal pertenece.
  	 *
  	 * @return id_documento int Id del nuevo documento
  	 **/

@@ -1,5 +1,5 @@
 <?php
-require_once("CargosYAbonos.interface.php");
+require_once("interfaces/CargosYAbonos.interface.php");
 /**
   *
   *

@@ -12,7 +12,7 @@
  	 *
  	 *Lista todas las facturas emitadas. Puede filtrarse por empresa, sucursal, estado y ordenarse por sus atributos 
 
-<br/><br/><b>Update :</b> ¿Es correcto como se esta manejando el argumento id_sucursal? Ya que entiendo que de esta manera solo se estan obteniendo las facturas de una sola sucursal.
+Update : ¿Es correcto como se esta manejando el argumento id_sucursal? Ya que entiendo que de esta manera solo se estan obteniendo las facturas de una sola sucursal.
  	 *
  	 * @param id_empresa int Id de la empresa de la cual se listaran las facturas
  	 * @param orden json Valor que determinara el orden de la lista

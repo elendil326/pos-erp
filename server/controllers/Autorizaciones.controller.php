@@ -1,5 +1,5 @@
 <?php
-require_once("Autorizaciones.interface.php");
+require_once("interfaces/Autorizaciones.interface.php");
 /**
   *
   *

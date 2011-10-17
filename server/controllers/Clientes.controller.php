@@ -1,5 +1,5 @@
 <?php
-require_once("Clientes.interface.php");
+require_once("interfaces/Clientes.interface.php");
 /**
   *
   *
@@ -68,30 +68,31 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
  	 **/
 	public function Nuevo
 	(
-		$razon_social, 
 		$codigo_cliente, 
-		$password = null, 
-		$codigo_postal = null, 
+		$razon_social, 
 		$direccion_web = null, 
-		$rfc = null, 
-		$clasificacion_cliente = null, 
 		$calle = null, 
-		$curp = null, 
+		$clasificacion_cliente = null, 
+		$rfc = null, 
 		$telefono2 = null, 
+		$curp = null, 
 		$mensajeria = null, 
+		$password = null, 
 		$numero_exterior = null, 
-		$cuenta_de_mensajeria = null, 
-		$denominacion_comercial = null, 
-		$representante_legal = null, 
 		$colonia = null, 
+		$denominacion_comercial = null, 
+		$cuenta_de_mensajeria = null, 
+		$representante_legal = null, 
+		$texto_extra = null, 
+		$telefono1 = null, 
 		$numero_interior = null, 
 		$moneda_del_cliente = null, 
-		$telefono1 = null, 
 		$id_ciudad = null, 
 		$retenciones = null, 
 		$impuestos = null, 
+		$codigo_postal = null, 
 		$email = null, 
-		$texto_extra = null
+		$referencia = null
 	)
 	{
 	

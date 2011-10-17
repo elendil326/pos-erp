@@ -44,7 +44,7 @@
  	 *
  	 *Metodo que surte una sucursal por parte de un proveedor. La sucursal sera tomada de la sesion actual.
 
-<h2>Update</h2>
+Update
 Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 * @param productos json Objeto que contendr los ids de los productos, sus unidades y sus cantidades

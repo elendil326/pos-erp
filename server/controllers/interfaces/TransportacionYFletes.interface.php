@@ -296,7 +296,7 @@
 	/**
  	 *
  	 *Mover mercancia de un carro a otro. 
-<h4>UPDATE</h4><br>
+UPDATE
 Se movera parcial o totalmente la carga?
  	 *
  	 * @param id_carro_origen int Id del carro del cual se mueve la carga

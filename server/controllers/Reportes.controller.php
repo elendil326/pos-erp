@@ -1,5 +1,5 @@
 <?php
-require_once("Reportes.interface.php");
+require_once("interfaces/Reportes.interface.php");
 /**
   *
   *

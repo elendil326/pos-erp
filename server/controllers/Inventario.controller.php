@@ -1,5 +1,5 @@
 <?php
-require_once("Inventario.interface.php");
+require_once("interfaces/Inventario.interface.php");
 /**
   *
   *

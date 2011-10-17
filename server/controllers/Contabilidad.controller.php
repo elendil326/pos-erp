@@ -1,5 +1,5 @@
 <?php
-require_once("Contabilidad.interface.php");
+require_once("interfaces/Contabilidad.interface.php");
 /**
   *
   *

@@ -1,5 +1,5 @@
 <?php
-require_once("Documentos.interface.php");
+require_once("interfaces/Documentos.interface.php");
 /**
   *
   *

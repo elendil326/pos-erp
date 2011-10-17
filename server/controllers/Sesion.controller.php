@@ -1,5 +1,5 @@
 <?php
-require_once("Sesion.interface.php");
+require_once("interfaces/Sesion.interface.php");
 /**
   *
   *

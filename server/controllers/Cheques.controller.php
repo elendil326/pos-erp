@@ -1,8 +1,8 @@
 <?php
-require_once("Cheques.interface.php");
 
 
-    class ChequesController implements ICheques{
+
+    class ChequesController {
 
         public function NuevoCheque
         (
@@ -45,4 +45,3 @@ require_once("Cheques.interface.php");
             return $cheque->getIdCheque();
         }
     }
-?>

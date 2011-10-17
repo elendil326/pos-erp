@@ -1,5 +1,5 @@
 <?php
-require_once("PersonalYAgentes.interface.php");
+require_once("interfaces/PersonalYAgentes.interface.php");
 /**
   *
   *
@@ -279,12 +279,12 @@ require_once("PersonalYAgentes.interface.php");
  	 *Asigna uno o varios permisos especificos a un usuario. No se pueden asignar permisos que ya se tienen
  	 *
  	 * @param id_usuario int Id del usuario al que se le asignara el permiso
- 	 * @param permisos json Ids de los permisos que se le asignaran a este usuario en especial
+ 	 * @param id_permiso int Id del permiso que se le asignaran a este usuario en especial
  	 **/
-	public function Asignar_permisosUsuario
+	public function AsignarPermisoUsuario
 	(
 		$id_usuario, 
-		$permisos
+		$id_permiso
 	)
 	{  
   
@@ -295,13 +295,13 @@ require_once("PersonalYAgentes.interface.php");
  	 *
  	 *Este metodo asigna permisos a un rol. Cada vez que se llame a este metodo, se asignaran estos permisos a los usuarios que pertenezcan a este rol.
  	 *
+ 	 * @param id_permiso int Arreglo de ids de los permisos que seran asignados al rol
  	 * @param id_rol int Id del rol al que se le asignaran los permisos
- 	 * @param id_permisos json Arreglo de ids de los permisos que seran asignados al rol
  	 **/
-	public function Asignar_permisoRol
+	public function AsignarPermisoRol
 	(
-		$id_rol, 
-		$id_permisos
+		$id_permiso, 
+		$id_rol
 	)
 	{  
   
@@ -312,12 +312,12 @@ require_once("PersonalYAgentes.interface.php");
  	 *
  	 *Este metodo quita uno o varios permisos a un rol. Cuando este metodo es ejecutado, se quitan los permisos a todos los usuarios de este rol
  	 *
- 	 * @param permisos json Objeto que contendra los ids de los permisos a negar
+ 	 * @param id_permiso int Id del permiso a remover
  	 * @param id_rol int Id del rol al que se le quitaran los permisos
  	 **/
-	public function Quitar_permisoRol
+	public function RemoverPermisoRol
 	(
-		$permisos, 
+		$id_permiso, 
 		$id_rol
 	)
 	{  
@@ -329,13 +329,13 @@ require_once("PersonalYAgentes.interface.php");
  	 *
  	 *Quita uno o varios permisos a un usuario. No se puede negar un permiso que no se tiene
  	 *
+ 	 * @param id_permiso int Id del permiso a quitar de este usuario
  	 * @param id_usuario int Id del usuario al que se le niegan los permisos
- 	 * @param permisos json Objeto que cotendra los ids de los permisos
  	 **/
-	public function Quitar_permisosUsuario
+	public function RemoverPermisoUsuario
 	(
-		$id_usuario, 
-		$permisos
+		$id_permiso, 
+		$id_usuario
 	)
 	{  
   
@@ -371,20 +371,18 @@ require_once("PersonalYAgentes.interface.php");
  	 *Edita la informacion de un grupo, puede usarse para editar los permisos del mismo
  	 *
  	 * @param id_rol int Id del rol a editar
- 	 * @param permisos json Ids de los permisos que tendra este rol
- 	 * @param descripcion string Descripcion larga del grupo
- 	 * @param descuento float Descuento que se le hara a este rol
  	 * @param salario float Salario base para este rol
  	 * @param nombre string Nombre del grupo
+ 	 * @param descuento float Descuento que se le hara a este rol
+ 	 * @param descripcion string Descripcion larga del grupo
  	 **/
 	public function EditarRol
 	(
 		$id_rol, 
-		$permisos = null, 
-		$descripcion = null, 
-		$descuento = null, 
 		$salario = null, 
-		$nombre = null
+		$nombre = null, 
+		$descuento = null, 
+		$descripcion = null
 	)
 	{  
   
@@ -415,6 +413,19 @@ require_once("PersonalYAgentes.interface.php");
 	public function EliminarRol
 	(
 		$id_rol
+	)
+	{  
+  
+  
+	}
+  
+	/**
+ 	 *
+ 	 *Regresa un alista de permisos, nombres y ids de los permisos del sistema.
+ 	 *
+ 	 **/
+	public function ListaPermisoRol
+	(
 	)
 	{  
   

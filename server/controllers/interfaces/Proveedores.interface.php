@@ -133,7 +133,7 @@
   
 	/**
  	 *
- 	 *Este metodo desactiva un proveedor. Para que este metodo funcione, no debe de haber ordenes de compra hacia ese proveedor <b>??</b>
+ 	 *Este metodo desactiva un proveedor. Para que este metodo funcione, no debe de haber ordenes de compra hacia ese proveedor ??
  	 *
  	 * @param id_proveedor int Id del proveedor que sera eliminado
  	 **/

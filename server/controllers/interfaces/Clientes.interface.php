@@ -241,7 +241,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
  	 *
  	 *Regresa una lista de clientes. Puede filtrarse por empresa, sucursal, activos, as?omo ordenarse seg?us atributs con el par?tro orden. Es posible que algunos clientes sean dados de alta por un admnistrador que no les asigne algun id_empresa, o id_sucursal.
 
-<br/><br/><b>Update : </b> ¿Es correcto que contenga el argumento id_sucursal? Ya que as?omo esta entiendo que solo te regresara los datos de los clientes de una sola sucursal.
+Update :  ¿Es correcto que contenga el argumento id_sucursal? Ya que as?omo esta entiendo que solo te regresara los datos de los clientes de una sola sucursal.
  	 *
  	 * @param orden json Valor que definir la forma de ordenamiento de la lista. 
  	 * @param id_empresa int Filtrara los resultados solo para los clientes que se dieron de alta en la empresa dada.
@@ -263,61 +263,63 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
 	/**
  	 *
  	 *Crear un nuevo cliente. Para los campos de Fecha_alta y Fecha_ultima_modificacion se usar?a fecha actual del servidor. El campo Agente y Usuario_ultima_modificacion ser?tomados de la sesi?ctiva. Para el campo Sucursal se tomar?a sucursal activa donde se est?reando el cliente. 
-<br><br>
+
 Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda ver sus facturas y eso, si tiene email. Al crearse se le enviara un correo electronico con el url.
  	 *
+ 	 * @param codigo_cliente string El codigo para este cliente, con el que se esta usando, puede ser su RFC u otra cosa.
  	 * @param razon_social string Nombre o razon social del cliente.
- 	 * @param password string Password del cliente
- 	 * @param codigo_cliente string Codigo interno del cliente
- 	 * @param codigo_postal string Codigo postal del cliente
  	 * @param direccion_web string Direccin web del cliente.
- 	 * @param rfc string RFC del cliente.
- 	 * @param clasificacion_cliente int Id de la clasificacin del cliente.
  	 * @param calle string Calle del cliente
- 	 * @param curp string CURP del cliente.
+ 	 * @param clasificacion_cliente int Id de la clasificacin del cliente.
+ 	 * @param rfc string RFC del cliente.
  	 * @param telefono2 string Segundo telfono del cliente.
+ 	 * @param curp string CURP del cliente.
  	 * @param mensajeria bool Si el cliente cuenta con un cliente de mensajera y paquetera.
+ 	 * @param password string Password del cliente, si no se envia se le creara uno automaticamente.
  	 * @param numero_exterior string Nmero exterior del cliente
- 	 * @param cuenta_de_mensajeria string Este parmetro se vuelve obligatorio si el parmetro Mensajera es true. Especifica la cuenta de mensajera instantanea del cliente.
- 	 * @param denominacion_comercial string Nombre comercial del cliente.
- 	 * @param representante_legal string Nombre del representante legal del cliente.
  	 * @param colonia string Colonia del cliente
+ 	 * @param denominacion_comercial string Nombre comercial del cliente.
+ 	 * @param cuenta_de_mensajeria string Este parmetro se vuelve obligatorio si el parmetro Mensajera es true. Especifica la cuenta de mensajera instantanea del cliente.
+ 	 * @param representante_legal string Nombre del representante legal del cliente.
+ 	 * @param texto_extra string Comentario sobre la direccin del cliente.
+ 	 * @param telefono1 string Telefono del cliente
  	 * @param numero_interior string Nmero interior del cliente.
  	 * @param moneda_del_cliente int Moneda que maneja el cliente.
- 	 * @param telefono1 string Telefono del cliente
  	 * @param id_ciudad int id de la ciudad
  	 * @param retenciones json Objeto que contendra los ids de las retenciones que afectan a este cliente
  	 * @param impuestos json Objeto que contendra los impuestos que afectan a este cliente
+ 	 * @param codigo_postal string Codigo postal del cliente
  	 * @param email string E-mail del cliente
- 	 * @param texto_extra string Comentario sobre la direccin del cliente.
+ 	 * @param referencia string Referencia a la direccion.
  	 * @return id_cliente int Id autogenerado del cliente que se insertó
  	 **/
   function Nuevo
 	(
-		$razon_social, 
-		$password, 
 		$codigo_cliente, 
-		$codigo_postal = null, 
+		$razon_social, 
 		$direccion_web = null, 
-		$rfc = null, 
-		$clasificacion_cliente = null, 
 		$calle = null, 
-		$curp = null, 
+		$clasificacion_cliente = null, 
+		$rfc = null, 
 		$telefono2 = null, 
+		$curp = null, 
 		$mensajeria = null, 
+		$password = null, 
 		$numero_exterior = null, 
-		$cuenta_de_mensajeria = null, 
-		$denominacion_comercial = null, 
-		$representante_legal = null, 
 		$colonia = null, 
+		$denominacion_comercial = null, 
+		$cuenta_de_mensajeria = null, 
+		$representante_legal = null, 
+		$texto_extra = null, 
+		$telefono1 = null, 
 		$numero_interior = null, 
 		$moneda_del_cliente = null, 
-		$telefono1 = null, 
 		$id_ciudad = null, 
 		$retenciones = null, 
 		$impuestos = null, 
+		$codigo_postal = null, 
 		$email = null, 
-		$texto_extra = null
+		$referencia = null
 	);  
   
   

@@ -1,5 +1,5 @@
 <?php
-require_once("Precio.interface.php");
+require_once("interfaces/Precio.interface.php");
 /**
   *
   *

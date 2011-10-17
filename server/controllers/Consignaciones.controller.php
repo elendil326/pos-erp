@@ -1,5 +1,5 @@
 <?php
-require_once("Consignaciones.interface.php");
+require_once("interfaces/Consignaciones.interface.php");
 /**
   *
   *
