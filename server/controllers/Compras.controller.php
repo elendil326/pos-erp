@@ -214,8 +214,50 @@ Update : Todo este metodo esta mal, habria que definir nuevamente como se van a 
 		$id_compra
 	)
 	{  
-  
-  
+            $compra=CompraDAO::getByPK($id_compra);
+            if($compra==null)
+            {
+                Logger::error("La compra con id: ".$id_compra." no existe");
+                throw new Exception("La compra con id: ".$id_compra." no existe");
+            }
+            if($compra->getCancelada())
+            {
+                Logger::warn("La compra ya ha sido cancelada");
+                return;
+            }
+            $usuario=UsuarioDAO::getByPK($compra->getIdVendedorCompra());
+            if($usuario==null)
+            {
+                Logger::error("FATAL!!! Esta compra apunta a un usuario que no existe");
+                throw new Exception("FATAL!!! Esta compra apunta a un usuario que no existe");
+            }
+            $compra->setCancelada(1);
+            DAO::transBegin();
+            try
+            {
+                CompraDAO::save($compra);
+                if($compra->getTipoDeCompra()==="credito")
+                {
+                    $abono_compra=new AbonoCompra();
+                    $abono_compra->setIdCompra($id_compra);
+                    $abonos=AbonoCompraDAO::search($abono_compra);
+                    foreach($abonos as $abono)
+                    {
+                        $cargosyabonos = new CargosYAbonosController();
+                        $cargosyabonos->EliminarAbono($abono->getIdAbonoCompra(),"Compra cancelada",1,0,0,null,null);
+                    }
+                    $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()-$compra->getTotal());
+                    UsuarioDAO::save($usuario);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("Error al cancelar la compra: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Compra cancelada exitosamente");
 	}
   
 	/**

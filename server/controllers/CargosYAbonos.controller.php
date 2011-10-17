@@ -1969,6 +1969,11 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     Logger::error("La compra con id: ".$id_compra." no existe");
                     throw new Exception("La compra con id: ".$id_compra." no existe");
                 }
+                if($operacion->getTipoDeCompra()!=="credito")
+                {
+                    Logger::error("La compra especificada no es a credito, no se puede abonar a una compra de contado");
+                    throw new Exception("La compra especificada no es a credito, no se puede abonar a una compra de contado");
+                }
                 if($operacion->getCancelada())
                 {
                     Logger::error("La compra ya ha sido cancelada, no se puede abonar a esta compra");
@@ -2023,6 +2028,11 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 {
                     Logger::error("La venta con id: ".$id_venta." no existe");
                     throw new Exception("La venta con id: ".$id_venta." no existe");
+                }
+                if($operacion->getTipoDeVenta()!=="credito")
+                {
+                    Logger::error("La ventaa especificada no es a credito, no se puede abonar a una venta de contado");
+                    throw new Exception("La venta especificada no es a credito, no se puede abonar a una venta de contado");
                 }
                 if($operacion->getCancelada())
                 {
