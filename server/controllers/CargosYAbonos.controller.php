@@ -277,7 +277,7 @@ require_once("CargosYAbonos.interface.php");
                 throw new Exception("FATAL!!!! La compra de este abono no tiene un vendedor");
             }
             $monto=$abono->getMonto();
-            $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()-$monto);
+            $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()+$monto);
             $compra->setSaldo($compra->getSaldo()-$monto);
 
             //
@@ -299,6 +299,17 @@ require_once("CargosYAbonos.interface.php");
                     throw $e;
                 }
             }
+            if(!$compra->getCancelada())
+            {
+                try
+                {
+                    $this->eliminarCheques($abono->getIdAbonoCompra(),1,null,null);
+                }
+                catch(Exception $e)
+                {
+                    throw $e;
+                }
+            }
             //
             //Si no ha ocurrido ningun error con los billetes o con la caja, actualizas
             //al usuario y a la compra
@@ -312,7 +323,7 @@ require_once("CargosYAbonos.interface.php");
             catch(Exception $e)
             {
                 DAO::transRollback();
-                Logger::error("No se ha podido actualiar al usuario ni la compra");
+                Logger::error("No se ha podido actualizar al usuario ni la compra");
                 throw $e;
             }
             DAO::transEnd();
@@ -338,7 +349,7 @@ require_once("CargosYAbonos.interface.php");
                 throw new Exception("FATAL!!!! La venta de este abono no tiene un comprador");
             }
             $monto=$abono->getMonto();
-            $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()+$monto);
+            $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()-$monto);
             $venta->setSaldo($venta->getSaldo()-$monto);
             //
             //Si la venta ha sido cancelada, quiere decir que se cancelaran todos los abonos y
@@ -359,6 +370,17 @@ require_once("CargosYAbonos.interface.php");
                     throw $e;
                 }
             }
+            if(!$venta->getCancelada())
+            {
+                try
+                {
+                    $this->eliminarCheques($abono->getIdAbonoVenta(),null,1,null);
+                }
+                catch(Exception $e)
+                {
+                    throw $e;
+                }
+            }
             //
             //Si no ha ocurrido ningun error con los billetes o con la caja, actualizas
             //al usuario y a la compra
@@ -372,7 +394,7 @@ require_once("CargosYAbonos.interface.php");
             catch(Exception $e)
             {
                 DAO::transRollback();
-                Logger::error("No se ha podido actualiar al usuario ni la venta");
+                Logger::error("No se ha podido actualizar al usuario ni la venta");
                 throw $e;
             }
             DAO::transEnd();
@@ -413,7 +435,7 @@ require_once("CargosYAbonos.interface.php");
             }
             $monto=$abono->getMonto();
             if($id_solicitante>0)
-                $solicitante->setSaldoDelEjercicio($solicitante->getSaldoDelEjercicio()+$monto);
+                $solicitante->setSaldoDelEjercicio($solicitante->getSaldoDelEjercicio()-$monto);
             $prestamo->setSaldo($prestamo->getSaldo()-$monto);
             //
             //Un Prestamo no puede ser cancelado, solo liquidado.
@@ -431,6 +453,14 @@ require_once("CargosYAbonos.interface.php");
                     throw $e;
                 }
             }
+            try
+            {
+                $this->eliminarCheques($abono->getIdAbonoPrestamo(),null,null,1);
+            }
+            catch(Exception $e)
+            {
+                throw $e;
+            }
             //
             //Si no ha ocurrido ningun error con los billetes o con la caja, actualizas
             //al usuario y a la compra
@@ -445,7 +475,7 @@ require_once("CargosYAbonos.interface.php");
             catch(Exception $e)
             {
                 DAO::transRollback();
-                Logger::error("No se ha podido actualiar al usuario ni al prestamo");
+                Logger::error("No se ha podido actualizar al usuario ni al prestamo");
                 throw $e;
             }
             DAO::transEnd();
@@ -505,7 +535,11 @@ require_once("CargosYAbonos.interface.php");
                     {
                         $billete_caja_original=BilleteCajaDAO::getByPK($billete_caja[$i]->getIdBillete(), $billete_caja[$i]->getIdCaja());
                         if($billete_caja_original==null)
+                        {
+                            if(!$suma)
+                                $billete_caja[$i]->setCantidad($billete_caja[$i]->getCantidad()*-1);
                             BilleteCajaDAO::save($billete_caja[$i]);
+                        }
                         else
                         {
                             if($suma)
@@ -540,6 +574,74 @@ require_once("CargosYAbonos.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se pudo actualizar el saldo de la caja");
+                throw $e;
+            }
+            DAO::transEnd();
+        }
+
+        private function eliminarCheques
+        (
+                $id_abono,
+                $compra=null,
+                $venta=null,
+                $prestamo=null
+        )
+        {
+            $resultados=null;
+            $from=0;
+            if($compra)
+            {
+                $cheque_abono_compra=new ChequeAbonoCompra();
+                $cheque_abono_compra->setIdAbonoCompra($id_abono);
+                $resultados=ChequeAbonoCompraDAO::search($cheque_abono_compra);
+                $from=1;
+            }
+            else if($venta)
+            {
+                $cheque_abono_venta=new ChequeAbonoVenta();
+                $cheque_abono_venta->setIdAbonoVenta($id_abono);
+                $resultados=ChequeAbonoVentaDAO::search($cheque_abono_venta);
+                $from=2;
+            }
+            else if($prestamo)
+            {
+                $cheque_abono_prestamo=new ChequeAbonoPrestamo();
+                $cheque_abono_prestamo->setIdAbonoPrestamo($id_abono);
+                $resultados=ChequeAbonoPrestamoDAO::search($cheque_abono_prestamo);
+                $from=3;
+            }
+            else
+            {
+                Logger::error("No se recibio si se eliminaran de una compra, una venta o un prestamo los cheques");
+                throw new Exception("No se recibio si los cheques se eliminaran de una compra, una venta o un prestamo");
+            }
+            $cheque=new Cheque();
+            if($resultados==null)
+                return;
+            DAO::transBegin();
+            try
+            {
+                foreach($resultados as $resultado)
+                {
+                    $cheque->setIdCheque($resultado->getIdCheque());
+                    ChequeDAO::delete($cheque);
+                    switch($from)
+                    {
+                        case 1:
+                            ChequeAbonoCompraDAO::delete($resultado);
+                            break;
+                        case 2:
+                            ChequeAbonoVentaDAO::delete($resultado);
+                            break;
+                        case 3:
+                            ChequeAbonoPrestamoDAO::delete($resultado);
+                    }
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudieron borrar los cheques: ".$e);
                 throw $e;
             }
             DAO::transEnd();
@@ -1830,7 +1932,6 @@ require_once("CargosYAbonos.interface.php");
 		$cheques = null,
 		$id_prestamo = null,
 		$id_venta = null,
-		$varios = null,
 		$nota = null,
                 $billetes = null
 	)
@@ -1841,9 +1942,198 @@ require_once("CargosYAbonos.interface.php");
                 Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
                 throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
             }
-
-
+            if($tipo_pago==="cheque"&&$cheques==null)
+            {
+                    Logger::error("No se recibio informacion del cheque");
+                    throw new Exception("No se recibio informacion del cheque");   
+            }
+            $usuario=UsuarioDAO::getByPK($id_deudor);
+            if($usuario==null)
+            {
+                Logger::error("El deudor obtenido no existe, verifique que este correcto");
+                throw new Exception("El deudor obtenido no existe, verifique que este correcto");
+            }
+            $id_sucursal=$this->getSucursal();
+            $id_caja=$this->getCaja();
+            $fecha=date($this->formato_fecha,time());
+            $cancelado=0;
+            $abono=null;
+            $from=0;
+            $operacion=null;
+            if($id_compra!=null)
+            {
+                $operacion=CompraDAO::getByPK($id_compra);
+                if($operacion==null)
+                {
+                    Logger::error("La compra con id: ".$id_compra." no existe");
+                    throw new Exception("La compra con id: ".$id_compra." no existe");
+                }
+                if($operacion->getCancelada())
+                {
+                    Logger::error("La compra ya ha sido cancelada, no se puede abonar a esta compra");
+                    throw new Exception("La compra ya ha sido cancelada, no se puede abonar a esta compra");
+                }
+                if($operacion->getTotal()<=$operacion->getSaldo())
+                {
+                    Logger::error("La compra ya ha sido saldada, no se puede abonar a esta compra");
+                    throw new Exception("La compra ya ha sido saldada, no se puede abonar a esta compra");
+                }
+                if($operacion->getTotal()<($operacion->getSaldo()+$monto))
+                {
+                    Logger::error("No se puede abonar esta cantidad a esta compra, pues sobrepasa el total de la misma");
+                    throw new Exception("No se puede abonar esta cantidad a esta compra, pues sobrepasa el total de la misma");
+                }
+                $abono=new AbonoCompra();
+                $abono->setIdCompra($id_compra);
+                $abono->setIdReceptor($id_deudor);
+                $abono->setIdDeudor($id_usuario);
+                $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()-$monto);
+                $from=1;
+            }
+            else if($id_prestamo!=null)
+            {
+                $operacion=PrestamoDAO::getByPK($id_prestamo);
+                if($operacion==null)
+                {
+                    Logger::error("El prestamo con id: ".$id_prestamo." no existe");
+                    throw new Exception("El prestamo con id: ".$id_prestamo." no existe");
+                }
+                if($operacion->getMonto()<=$operacion->getSaldo())
+                {
+                    Logger::error("El prestamo ya ha sido saldado, no se puede abonar a este prestamo");
+                    throw new Exception("El prestamo ya ha sido saldad0, no se puede abonar a este prestamo");
+                }
+                if($operacion->getMonto()<($operacion->getSaldo()+$monto))
+                {
+                    Logger::error("No se puede abonar esta cantidad a este prestamo, pues sobrepasa el total del mismo");
+                    throw new Exception("No se puede abonar esta cantidad a este prestamo, pues sobrepasa el total del mismo");
+                }
+                $abono=new AbonoPrestamo();
+                $abono->setIdPrestamo($id_prestamo);
+                $abono->setIdReceptor($id_usuario);
+                $abono->setIdDeudor($id_deudor);
+                $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()+$monto);
+                $from=2;
+            }
+            else if($id_venta!=null)
+            {
+                $operacion=VentaDAO::getByPK($id_venta);
+                if($operacion==null)
+                {
+                    Logger::error("La venta con id: ".$id_venta." no existe");
+                    throw new Exception("La venta con id: ".$id_venta." no existe");
+                }
+                if($operacion->getCancelada())
+                {
+                    Logger::error("La venta ya ha sido cancelada, no se puede abonar a esta venta");
+                    throw new Exception("La venta ya ha sido cancelada, no se puede abonar a esta venta");
+                }
+                if($operacion->getTotal()<=$operacion->getSaldo())
+                {
+                    Logger::error("La venta ya ha sido saldada, no se puede abonar a esta venta");
+                    throw new Exception("La venta ya ha sido saldada, no se puede abonar a esta venta");
+                }
+                if($operacion->getTotal()<($operacion->getSaldo()+$monto))
+                {
+                    Logger::error("No se puede abonar esta cantidad a esta venta, pues sobrepasa el total de la misma");
+                    throw new Exception("No se puede abonar esta cantidad a esta venta, pues sobrepasa el total de la misma");
+                }
+                $abono=new AbonoVenta();
+                $abono->setIdVenta($id_venta);
+                $abono->setIdReceptor($id_usuario);
+                $abono->setIdDeudor($id_deudor);
+                $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()+$monto);
+                $from=3;
+            }
+            else
+            {
+                Logger::error("No se recibio si el abono sera para una venta, una compra o un prestamo, no se hace nada");
+                throw new Exception("No se recibio si el abono sera para una venta, una compra o un prestamo, no se hace nada");
+            }
+            $operacion->setSaldo($operacion->getSaldo()+$monto);
+            $abono->setCancelado($cancelado);
+            $abono->setIdCaja($id_caja);
+            $abono->setFecha($fecha);
+            $abono->setIdSucursal($id_sucursal);
+            $abono->setMonto($monto);
+            $abono->setNota($nota);
+            $abono->setTipoDePago($tipo_pago);
+            $id_cheques=array();
+            $id_abono=null;
+            DAO::transBegin();
+            try
+            {
+                if($tipo_pago==="cheque"&&$cheques!=null)
+                {
+                    foreach($cheques as $cheque)
+                    {
+                        array_push($id_cheques,Cheques::NuevoCheque($cheque["nombre_banco"],$cheque["monto"],$cheque["numero"],$cheque["expedido"]));
+                    }
+                }
+                switch($from)
+                {
+                    case 1:
+                        AbonoCompraDAO::save($abono);
+                        CompraDAO::save($operacion);
+                        $id_abono=$abono->getIdAbonoCompra();
+                        $cheque_abono_compra=new ChequeAbonoCompra();
+                        $cheque_abono_compra->setIdAbonoCompra($id_abono);
+                        foreach($id_cheques as $id_cheque)
+                        {
+                            $cheque_abono_compra->setIdCheque($id_cheque);
+                            ChequeAbonoCompraDAO::save($cheque_abono_compra);
+                        }
+                        if($id_caja!=null)
+                        {
+                            $this->modificarCaja($id_caja, 0, $billetes, $monto);
+                        }
+                        break;
+                    case 2:
+                        AbonoPrestamoDAO::save($abono);
+                        PrestamoDAO::save($operacion);
+                        $id_abono=$abono->getIdAbonoPrestamo();
+                        $cheque_abono_prestamo=new ChequeAbonoPrestamo();
+                        $cheque_abono_prestamo->setIdAbonoPrestamo($id_abono);
+                        foreach($id_cheques as $id_cheque)
+                        {
+                            $cheque_abono_prestamo->setIdCheque($id_cheque);
+                            ChequeAbonoPrestamoDAO::save($cheque_abono_prestamo);
+                        }
+                        if($id_caja!=null)
+                        {
+                            $this->modificarCaja($id_caja, 1, $billetes, $monto);
+                        }
+                        break;
+                    case 3:
+                        AbonoVentaDAO::save($abono);
+                        VentaDAO::save($operacion);
+                        $id_abono=$abono->getIdAbonoVenta();
+                        $cheque_abono_venta=new ChequeAbonoVenta();
+                        $cheque_abono_venta->setIdAbonoVenta($id_abono);
+                        foreach($id_cheques as $id_cheque)
+                        {
+                            $cheque_abono_venta->setIdCheque($id_cheque);
+                            ChequeAbonoVentaDAO::save($cheque_abono_venta);
+                        }
+                        if($id_caja!=null)
+                        {
+                            $this->modificarCaja($id_caja, 1, $billetes, $monto);
+                        }
+                }
+                UsuarioDAO::save($usuario);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("Error al crear el abono");
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Abono creado exitosamente");
+            return $id_abono;
 	}
+
+        
 
 	/**
  	 *

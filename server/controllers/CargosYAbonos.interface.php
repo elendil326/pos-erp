@@ -131,7 +131,6 @@
 		$cheques = null, 
 		$id_prestamo = null, 
 		$id_venta = null, 
-		$varios = null, 
 		$nota = null,
                 $billetes = null
 	);  
