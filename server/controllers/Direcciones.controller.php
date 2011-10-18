@@ -11,7 +11,7 @@
   **/        
 class DireccionController{
 	
-
+        private $formato_fecha="Y-m-d H:i:s";
 	/**
 	  *
 	  * @param $direccion_vo Direccion
@@ -74,4 +74,55 @@ class DireccionController{
 		return true;
 	}
 
+        public function NuevaDireccion(
+                $calle,
+                $numero_exterior,
+                $colonia,
+                $id_ciudad,
+                $codigo_postal,
+                $numero_interior=null,
+                $referencia=null,
+                $telefono=null,
+                $telefono2=null
+        )
+        {
+            Logger::log("Creando nueva direccion");
+            $direccion = new Direccion();
+            if(CiudadDAO::getByPK($id_ciudad)==null)
+            {
+                Logger::error("La ciudad con id: ".$id_ciudad." no existe");
+                throw new Exception("La ciudad con id: ".$id_ciudad." no existe");
+            }
+            $id_usuario=LoginController::getCurrentUser();
+            if($id_usuario==null)
+            {
+                Logger::error("No se pudo obtener la sesion del usuario, ya inicio sesion?");
+                throw new Exception("No se pudo obtener la sesion del usuario, ya inicio sesion?");
+            }
+            $direccion->setCalle($calle);
+            $direccion->setNumeroExterior($numero_exterior);
+            $direccion->setColonia($colonia);
+            $direccion->setIdCiudad($id_ciudad);
+            $direccion->setCodigoPostal($codigo_postal);
+            $direccion->setNumeroInterior($numero_interior);
+            $direccion->setReferencia($referencia);
+            $direccion->setTelefono($telefono);
+            $direccion->setTelefono2($telefono2);
+            $direccion->setUltimaModificacion(date($this->formato_fecha,time()));
+            $direccion->setIdUsuarioUltimaModificacion($id_usuario);
+            DAO::transBegin();
+            try
+            {
+                DireccionDAO::save($direccion);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo guardar la direccion: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Direccion creada exitosamente");
+            return $direccion->getIdDireccion();
+        }
 }
