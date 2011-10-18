@@ -1453,7 +1453,7 @@ Aplicacion.ComprasMostrador.prototype.finishedPanelUpdater = function(compra_id)
     ticket += POS.leyendasTicket.direccion + "\n";
     ticket += "Tel. " + POS.leyendasTicket.telefono + "\n";
 
-    ticket += "============ COMPRA  "+compra_id+" ===================" + "\n";
+    ticket += "========= COMPRA  "+compra_id+" ===================" + "\n\n";
     
 
 
@@ -1461,32 +1461,69 @@ Aplicacion.ComprasMostrador.prototype.finishedPanelUpdater = function(compra_id)
     var subtotal = 0;
     var lista = Aplicacion.ComprasMostrador.currentInstance.carritoCompras.items
 
-    for (var i = lista.length - 1; i >= 0; i--) {
+    
+    ticket += POS.fillWithSpaces ( "PRODUCTO", 14, false ) ;
+    ticket += " ";
+    ticket += POS.fillWithSpaces ( "CANT",    5, false );
+    ticket += " ";
+    ticket += POS.fillWithSpaces ( "PRECIO",     6, false ) ;
+    ticket += " ";
+    ticket += POS.fillWithSpaces ( "IMPORTE", 10, false ) + "\n";
+    ticket += "-------------------------------------------------------------------------"+ "\n";
+
+
+    for (var i = lista.length - 1; i >= 0; i--) 
+    {
         
         var item = lista[i];
 
         subtotal += parseFloat( item.cantidad ) * parseFloat( item.precio );
 
-        ticket +=  "\n";
-
-
-        ticket += POS.fillWithSpaces ( item.descripcion, 15, false ) ;
-        ticket += " ";
-        ticket += POS.fillWithSpaces ( item.cantidad,    5, false );
-        ticket += POS.fillWithSpaces ( POS.currencyFormat(item.precio),      6, false ) ;
-        ticket += POS.fillWithSpaces ( POS.currencyFormat(parseFloat( item.cantidad ) * parseFloat( item.precio )), 6, false ) + "\n";    
-
-
         
+
+            var prods = Aplicacion.Inventario.currentInstance.Inventario.productos;
+
+            var p = 0, found = false;
+
+            for (p = 0; p < prods.length; p++) 
+            {
+                if( parseInt(prods[p].data.productoID) == parseInt( item.id_producto) ) 
+                {
+                    found = true; break;
+                }
+            };
+
+
+            if(item.cantidad != 0)
+            {
+                var qty = item.cantidad   ;
+
+                if(found && prods[p].data.precioPorAgrupacion)
+                {
+                    qty /= parseFloat( prods[p].data.agrupacionTam );
+                }
+                                        
+                ticket += POS.fillWithSpaces ( item.descripcion, 14, false ) ;
+                ticket += " ";
+                ticket += POS.fillWithSpaces ( qty,    5, false );
+                ticket += " ";
+                ticket += POS.fillWithSpaces ( POS.currencyFormat(item.precio),      6, false ) ;
+                ticket += " ";
+                ticket += POS.fillWithSpaces ( POS.currencyFormat(parseFloat( qty ) * parseFloat( item.precio )), 10, false ) + "\n";    
+            }
+
             
 
-        };
+    };
         
         
-        ticket += "--------------------------------------"+ "\n";
-        ticket += "               Total    "  + POS.currencyFormat(subtotal) + "\n";
-        ticket += "               -----------------------"+ "\n";
-        ticket += "               Total    " + POS.currencyFormat(subtotal)+ "\n";
+
+    ticket += "-------------------------------------------------------------------------"+ "\n";
+    ticket += "                  Subtotal  "  + POS.currencyFormat(subtotal) + "\n";
+    ticket += "                  -------------------"+ "\n";
+    ticket += "                  Total     " + POS.currencyFormat(subtotal)+ "\n";
+            
+
   
     
 
