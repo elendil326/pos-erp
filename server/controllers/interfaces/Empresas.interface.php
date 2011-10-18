@@ -95,7 +95,7 @@
  	 *Mostrar?odas la empresas en el sistema, as?omo sus sucursalse y sus gerentes[a] correspondientes. Por default no se mostraran las empresas ni sucursales inactivas. 
  	 *
  	 * @param activa bool Si no se obtiene este valor, se listaran tanto empresas activas como inactivas, si su valor es true, se mostraran solo las empresas activas, si es false, se mostraran solo las inactivas
- 	 * @return empresas json Arreglo de objetos que contendrá las empresas de la instancia
+ 	 * @return empresas json Arreglo de objetos que contendrï¿½ las empresas de la instancia
  	 **/
   function Lista
 	(
@@ -140,7 +140,7 @@
 		$curp, 
 		$colonia, 
 		$codigo_postal, 
-		$telefono1, 
+		$telefono1 = null,
 		$representante_legal = "", 
 		$impuestos = "", 
 		$descuento = null, 

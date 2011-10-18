@@ -8,7 +8,7 @@ require_once("interfaces/Empresas.interface.php");
 	
   class EmpresasController implements IEmpresas{
   
-  
+        var $formato_fecha="Y-m-d H:i:s";
 	/**
  	 *
  	 *Mostrar?odas la empresas en el sistema, as?omo sus sucursalse y sus gerentes[a] correspondientes. Por default no se mostraran las empresas ni sucursales inactivas. 
@@ -106,14 +106,14 @@ require_once("interfaces/Empresas.interface.php");
 	public function Nuevo
 	(
 		$colonia, 
-		$telefono1, 
 		$codigo_postal, 
 		$curp, 
 		$razon_social, 
 		$numero_exterior, 
 		$ciudad	, 
 		$rfc, 
-		$calle, 
+		$calle,
+                $telefono1 = null,
 		$numero_interior = null, 
 		$telefono2 = null, 
 		$email = null, 
@@ -126,27 +126,71 @@ require_once("interfaces/Empresas.interface.php");
 		$impuestos = null
 	)
 	{  
+            Logger::log("Creando empresa");
+//            $addr = new Direccion(array(
+//                        "calle"             =>  $calle,
+//                        "numero_exterior"   =>  $numero_exterior,
+//                        "colonia"           =>  $colonia,
+//                        "id_ciudad"         =>  $ciudad,
+//                        "codigo_postal"     =>  $codigo_postal,
+//                        "numero_interior"   =>  $numero_interior,
+//                        "referencia"        =>  $texto_extra,
+//                        "telefono"          =>  $telefono1,
+//                        "telefono2"         =>  $telefono2
+//                    ));
 
-		$addr = new Direccion(array( 
-
-			));
-
-
-
-  		$e = new Empresa(array( 
-  				"activo" 			=> true,
-				"curp"				=> $curp,
-				"descuento"			=> $descuento,
-				"direccion_web"		=> $direccion_web,
-				"fecha_alta"		=> time(),
-				"fecha_baja"		=> null,
-				"id_direccion"		=> $addr->getIdDireccion(),
-				"margen_utilidad"	=> $margen_utilidad,
-				"razon_social"		=> $razon_social,
-				"representante_legal" => $representante_legal,
-				"rfc"				=> $rfc
-  			));
-  
+            $e = new Empresa(array(
+                            "activo"                => true,
+                            "curp"                  => $curp,
+                            "descuento"             => $descuento,
+                            "direccion_web"         => $direccion_web,
+                            "fecha_alta"            => date($this->formato_fecha,time()),
+                            "fecha_baja"            => null,
+                            "margen_utilidad"       => $margen_utilidad,
+                            "razon_social"          => $razon_social,
+                            "representante_legal"   => $representante_legal,
+                            "rfc"                   => $rfc
+                    ));
+             DAO::transBegin();
+             try
+             {
+                 $id_direccion=DireccionController::NuevaDireccion($calle,$numero_exterior,$colonia,$ciudad,$codigo_postal,$numero_interior,$texto_extra,$telefono1,$telefono2);
+                 $e->setIdDireccion($id_direccion);
+                 EmpresaDAO::save($e);
+                 $impuesto_empresa=new ImpuestoEmpresa(array("id_empresa" => $e->getIdEmpresa()));
+                 if($impuestos)
+                 foreach($impuestos as $id_impuesto)
+                 {
+                     if(ImpuestoDAO::getByPK($id_impuesto)==null)
+                     {
+                         Logger::error("El impuesto con id: ".$id_impuesto." no existe");
+                         throw new Exception("El impuesto con id: ".$id_impuesto." no existe");
+                     }
+                     $impuesto_empresa->setIdImpuesto($id_impuesto);
+                     ImpuestoEmpresaDAO::save($impuesto_empresa);
+                 }
+                 $retencion_empresa=new RetencionEmpresa(array("id_empresa" => $e->getIdEmpresa()));
+                 if($retenciones)
+                 foreach($retenciones as $id_retencion)
+                 {
+                     if(RetencionDAO::getByPK($id_retencion)==null)
+                     {
+                         Logger::error("La retencion con id: ".$id_retencion." no existe");
+                         throw new Exception("La retencion con id: ".$id_retencion." no existe");
+                     }
+                     $retencion_empresa->setIdRetencion($id_retencion);
+                     RetencionEmpresaDAO::save($retencion_empresa);
+                 }
+             }
+             catch(Exception $e)
+             {
+                 DAO::transRollback();
+                 Logger::error("Error al crear la empresa: ".$e);
+                 throw $e;
+             }
+             DAO::transEnd();
+             Logger::log("Empresa creada exitosamente");
+             return $e->getIdEmpresa();
 	}
   
 	/**
