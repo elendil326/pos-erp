@@ -1448,12 +1448,12 @@ Aplicacion.ComprasMostrador.prototype.finishedPanelUpdater = function(compra_id)
     // ------- imprimir ------- //
     
     ticket = POS.leyendasTicket.cabeceraTicket + "\n";
-    ticket += "R.F.C. " + POS.leyendasTicket.rfc + "\n";
-    ticket += POS.leyendasTicket.nombreEmpresa + "\n";
+    //ticket += "R.F.C. " + POS.leyendasTicket.rfc + "\n";
+    //ticket += POS.leyendasTicket.nombreEmpresa + "\n";
     ticket += POS.leyendasTicket.direccion + "\n";
-    ticket += "Tel. " + POS.leyendasTicket.telefono + "\n";
+    //ticket += "Tel. " + POS.leyendasTicket.telefono + "\n";
 
-    ticket += "========= COMPRA  "+compra_id+" ===================" + "\n\n";
+    ticket += "======== COMPRA  "+compra_id+" ===================" + "\n\n";
     
 
 
