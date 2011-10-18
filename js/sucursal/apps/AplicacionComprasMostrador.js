@@ -1462,7 +1462,7 @@ Aplicacion.ComprasMostrador.prototype.finishedPanelUpdater = function(compra_id)
     var lista = Aplicacion.ComprasMostrador.currentInstance.carritoCompras.items
 
     
-    ticket += POS.fillWithSpaces ( "PRODUCTO", 14, false ) ;
+    ticket += POS.fillWithSpaces ( "PRODUCTO", 11, false ) ;
     ticket += " ";
     ticket += POS.fillWithSpaces ( "CANT",    5, false );
     ticket += " ";
@@ -1503,7 +1503,7 @@ Aplicacion.ComprasMostrador.prototype.finishedPanelUpdater = function(compra_id)
                     qty /= parseFloat( prods[p].data.agrupacionTam );
                 }
                                         
-                ticket += POS.fillWithSpaces ( item.descripcion, 14, false ) ;
+                ticket += POS.fillWithSpaces ( item.descripcion, 11, false ) ;
                 ticket += " ";
                 ticket += POS.fillWithSpaces ( qty,    5, false );
                 ticket += " ";
@@ -1519,9 +1519,9 @@ Aplicacion.ComprasMostrador.prototype.finishedPanelUpdater = function(compra_id)
         
 
     ticket += "-------------------------------------------------------------------------"+ "\n";
-    ticket += "                  Subtotal  "  + POS.currencyFormat(subtotal) + "\n";
-    ticket += "                  -------------------"+ "\n";
-    ticket += "                  Total     " + POS.currencyFormat(subtotal)+ "\n";
+    ticket += "               Subtotal  "  + POS.currencyFormat(subtotal) + "\n";
+    ticket += "               -------------------"+ "\n";
+    ticket += "               Total     " + POS.currencyFormat(subtotal)+ "\n";
             
 
   
