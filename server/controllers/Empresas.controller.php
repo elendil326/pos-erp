@@ -203,10 +203,102 @@ require_once("interfaces/Empresas.interface.php");
 	(
 		$id_empresa
 	)
-	{  
-  
-  
+	{
+            Logger::log("Eliminando empresa");
+            $empresa=EmpresaDAO::getByPK($id_empresa);
+            if($empresa==null)
+            {
+                Logger::error("La empresa con id: ".$id_empresa." no existe");
+                throw new Exception("La empresa con id: ".$id_empresa." no existe");
+            }
+            if(!$empresa->getActivo())
+            {
+                Logger::warn("La empresa ya esta cancelada");
+                return;
+            }
+            $empresa->setActivo(0);
+
+            $pr=new ProductoEmpresa(array("id_empresa"=>$id_empresa));
+            $producto_empresa=new ProductoEmpresa();
+            $productos_empresa=ProductoEmpresaDAO::search($pr);
+
+            $pa=new PaqueteEmpresa(array("id_empresa"=>$id_empresa));
+            $paquete_empresa=new PaqueteEmpresa();
+            $paquetes_empresa=PaqueteEmpresaDAO::search($pa);
+
+            $se=new ServicioEmpresa(array("id_empresa"=>$id_empresa));
+            $servicio_empresa=new ServicioEmpresa();
+            $servicios_empresa=ServicioEmpresaDAO::search($se);
+
+            $su=new SucursalEmpresa(array("id_empresa"=>$id_empresa));
+            $sucursal_empresa=new SucursalEmpresa();
+            $sucursales_empresa=SucursalEmpresaDAO::search($su);
+
+            $almacen=new Almacen(array("id_empresa"=>$id_empresa));
+
+            DAO::transBegin();
+            try
+            {
+                EmpresaDAO::save($empresa);
+                foreach($productos_empresa as $producto)
+                {
+                    $producto_empresa->setIdProducto($producto->getIdProducto());
+                    $productos=ProductoEmpresaDAO::search($producto_empresa);
+                    if(count($productos)<2)
+                    {
+                        ProductosController::Desactivar($producto->getIdProducto());
+                    }
+                }
+
+                foreach($paquetes_empresa as $paquete)
+                {
+                    $paquete_empresa->setIdPaquete($paquete->getIdPaquete());
+                    $paquetes=PaqueteEmpresaDAO::search($paquete_empresa);
+                    if(count($paquetes)<2)
+                    {
+                        PaquetesController::Eliminar($paquete->getIdPaquete());
+                    }
+                }
+
+                foreach($servicios_empresa as $servicio)
+                {
+                    $servicio_empresa->setIdServicio($servicio->getIdServicio());
+                    $servicios=ServicioEmpresaDAO::search($servicio_empresa);
+                    if(count($servicios)<2)
+                    {
+                        ServiciosController::Eliminar($servicio->getIdServicio());
+                    }
+                }
+
+                foreach($sucursales_empresa as $sucursal)
+                {
+                    $sucursal_empresa->setIdSucursal($sucursal->getIdSucursal());
+                    $sucursales=SucursalEmpresaDAO::search($sucursal_empresa);
+                    if(count($sucursales)<2)
+                    {
+                        SucursalesController::Eliminar($sucursal->getIdSucursal());
+                    }
+                    else
+                    {
+                        $almacen->setIdSucursal($sucursal->getIdSucursal());
+                        $almacenes=AlmacenDAO::search($almacen);
+                        foreach($almacenes as $a)
+                        {
+                            SucursalesController::EliminarAlmacen($a->getIdAlmacen());
+                        }
+                    }
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("Error al eliminar la empresa: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Empresa eliminada exitosamente");
 	}
+
   
 	/**
  	 *

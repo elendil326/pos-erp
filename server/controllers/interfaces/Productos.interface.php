@@ -56,7 +56,7 @@
  	 *
  	 * @param nombre string Nombre de la categoria
  	 * @param descripcion string Descripcion larga de la categoria
- 	 * @param garantía int Numero de meses de garantia con los que cuenta esta categoria de producto
+ 	 * @param garantï¿½a int Numero de meses de garantia con los que cuenta esta categoria de producto
  	 * @param margen_utilidad float Margen de utilidad que tendran los productos de esta categoria
  	 * @param descuento float Descuento que tendran los productos de esta categoria
  	 * @param impuestos json Ids de impuestos que afectan a esta categoria de producto
@@ -67,7 +67,7 @@
 	(
 		$nombre, 
 		$descripcion = null, 
-		$garantía = "", 
+		$garantia = "",
 		$margen_utilidad = null, 
 		$descuento = null, 
 		$impuestos = null, 
@@ -104,7 +104,7 @@
  	 * @param clasificaciones json Uno o varios id_clasificacion de este producto, esta clasificacion esta dada por el usuarioArray
  	 * @param id_unidad_convertible int Si este producto se relacionara con una unidad convertible (kilos, libras, litros, etc.) 
  	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
- 	 * @param garantía int Si este producto cuenta con un nmero de meses de garantia que no aplican a los demas productos de su categoria
+ 	 * @param garantï¿½a int Si este producto cuenta con un nmero de meses de garantia que no aplican a los demas productos de su categoria
  	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador
  	 * @param codigo_de_barras string El Codigo de barras para este producto
  	 * @param empresas json arreglo de empresas a las que pertenece este producto
@@ -127,7 +127,7 @@
 		$clasificaciones = "", 
 		$id_unidad_convertible = null, 
 		$margen_de_utilidad = "", 
-		$garantía = null, 
+		$garantia = null,
 		$compra_en_mostrador = "", 
 		$codigo_de_barras = "", 
 		$empresas = null, 
@@ -152,7 +152,7 @@
  	 * @param id_almacen int Id del almacen del cual se vern sus productos.
  	 * @param id_empresa int Id de la empresa de la cual se vern los productos.
  	 * @param id_sucursal int Id de la sucursal de la cual se vern los productos.
- 	 * @return productos json Objeto que contendrá el arreglo de productos en inventario.
+ 	 * @return productos json Objeto que contendrï¿½ el arreglo de productos en inventario.
  	 **/
   function Lista
 	(
@@ -179,7 +179,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param metodo_costeo string  Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar
  	 * @param costo_estandar float Valor del costo estndar del producto.
  	 * @param compra_en_mostrador bool Verdadero si este producto se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador
- 	 * @param garantía int Si este producto cuenta con un nmero de meses de garanta  que no aplica a los productos de su categora
+ 	 * @param garantï¿½a int Si este producto cuenta con un nmero de meses de garanta  que no aplica a los productos de su categora
  	 * @param costo_extra_almacen float Si este producto produce un costo extra por tenerlo en almacen
  	 * @param margen_de_utilidad float Un porcentage de 0 a 100 si queremos que este producto marque utilidad en especifico
  	 * @param control_de_existencia int 00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote
@@ -192,7 +192,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param id_unidad_no_convertible int Si este producto se relacionara con una unidad no convertible ( lotes, cajas, costales, etc.)
  	 * @param foto_del_producto string url a una foto de este producto
  	 * @param descuento float Descuento que se aplicara a este producot
- 	 * @return id_producto int Id generado por la inserción del nuevo producto
+ 	 * @return id_producto int Id generado por la inserciï¿½n del nuevo producto
  	 **/
   function Nuevo
 	(
@@ -203,7 +203,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
 		$metodo_costeo, 
 		$costo_estandar, 
 		$compra_en_mostrador, 
-		$garantía = null, 
+		$garantia = null,
 		$costo_extra_almacen = null, 
 		$margen_de_utilidad = null, 
 		$control_de_existencia = null, 
@@ -225,8 +225,8 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 *
  	 *Agregar productos en volumen mediante un archivo CSV.
  	 *
- 	 * @param productos json Arreglo de objetos que contendrán la información del nuevo producto
- 	 * @return id_productos json Arreglo de enteros que contendrá los ids de los productos insertados.
+ 	 * @param productos json Arreglo de objetos que contendrï¿½n la informaciï¿½n del nuevo producto
+ 	 * @return id_productos json Arreglo de enteros que contendrï¿½ los ids de los productos insertados.
  	 **/
   function En_volumenNuevo
 	(
