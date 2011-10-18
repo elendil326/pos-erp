@@ -146,42 +146,49 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 
 		}
 
+		//si no hay contraseña, generar una
+		if( is_null( $password ))
+		{
+			$password = md5( "THIS_IS_A_RANDOM_PASSWORD" );
+		}
+
+
+
 
 		//validar datos del usuario
-		
-		
-		//insertar usuario
-  		/*$usr = new Usuario(array(
-  				"razon_social" => $,
-  				"" => $,
-  				"" => $,
-  				"" => $,
-  				"razon_social" => $, 
-				"codigo_cliente" => $, 
-				"password" => $, 
-				"codigo_postal" => $, 
-				"direccion_web" => $, 
-				"rfc" => $, 
-				"clasificacion_cliente" => $, 
-				"curp = null, "
-				"telefono2 = null, 
-				"mensajeria = null, 
-				"cuenta_de_mensajeria = null, 
-				"denominacion_comercial = null, 
-				"representante_legal = null, 
-				"colonia = null, 
-				"numero_interior = null, 
-				"moneda_del_cliente = null, 
-				"telefono1 = null, 
-				"id_ciudad = null, 
-				"retenciones = null, 
-				"impuestos = null, 
-				"email = null, 
-				"texto_extra = null
-	  		));*/
+		$cliente->setRazonSocial		( $razon_social);
+		$cliente->setPassword 			( $password);
+		$cliente->setRFC 				( $rfc);
+		$cliente->setCurp 				( $curp);
+		$cliente->setTelefono 			( $telefono);
+		$cliente->setTelefono2 			( $telefono2);
+		$cliente->setDenominacionComercial( $denominacion_comercial);
+		$cliente->setRepresentanteLegal	( $representante_legal);
+		$cliente->setMonedaDelCliente	( $monenda_del_cliente);
+		$cliente->setEmail 				( $email);
+		$cliente->setTextoExtra 		( $texto_extra);
+		$cliente->setRetenciones 		( $retenciones);
+		$cliente->setdireccion_web 		( $direccion_web);
+		$cliente->setClasificacionCliente( $clasificacion_cliente);
+		$cliente->setCuentaDeMensajeria	( $cuent_de_mensajeria);
+		$cliente->setImpuestos 			( $impuestos);
 
-	  		DAO::transEnd();
-	  		return true;
+
+
+		//insertar usuario
+		try{
+			UsuarioDAO::save( $cliente );
+
+		}catch(Exception $e){
+			DAO::transRollback( );
+			return false;
+
+		}
+
+
+
+  		DAO::transEnd();
+  		return true;
   
 	}
   

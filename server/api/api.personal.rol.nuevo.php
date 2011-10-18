@@ -12,12 +12,22 @@
   class ApiPersonalRolNuevo extends ApiHandler {
   
 
-	protected function DeclareAllowedRoles(){}
-	protected function CheckAuthorization() {}
+	protected function DeclareAllowedRoles()
+	{
+		return BYPASS; //
+	}
+
+	protected function CheckAuthorization() 
+	{
+		
+	}
+
 	protected function GetRequest()
 	{
+		var_dump( $_GET );
+		die();
 		$this->request = array(	
-			"descripcion" => new ApiExposedProperty("descripcion", true, POST, array( "string" )),
+			//"descripcion" => new ApiExposedProperty("descripcion", true, GET, array( "string" )),
 			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
 			"descuento" => new ApiExposedProperty("descuento", false, POST, array( "float" )),
 			"salario" => new ApiExposedProperty("salario", false, POST, array( "float" )),
