@@ -24,7 +24,6 @@ require_once("interfaces/Empresas.interface.php");
   		if($activa === null)
   			return EmpresaDAO::getAll();
 
-
   		$e = new Empresa();
   		$e->setActivo( $activa );
   		return EmpresaDAO::search( $e );
@@ -44,9 +43,39 @@ require_once("interfaces/Empresas.interface.php");
 		$id_empresa, 
 		$sucursales
 	)
-	{  
-  
-  
+	{
+            Logger::log("Agregando sucursales a la empresa");
+            if(EmpresaDAO::getByPK($id_empresa)==null)
+            {
+                Logger::error("La empresa con id: ".$id_empresa." no existe");
+                throw new Exception("La empresa con id: ".$id_empresa." no existe");
+            }
+            $sucursal_empresa=new SucursalEmpresa();
+            $sucursal_empresa->setIdEmpresa($id_empresa);
+            DAO::transBegin();
+            try
+            {
+                foreach($sucursales as $sucursal)
+                {
+                    if(SucursalDAO::getByPK($sucursal["id_sucursal"])==null)
+                    {
+                        Logger::error("La sucursal con id: ".$sucursal["id_sucursal"]." no existe");
+                        throw new Exception("La sucursal con id: ".$sucursal["id_sucursal"]." no existe");
+                    }
+                    $sucursal_empresa->setIdSucursal($sucursal["id_sucursal"]);
+                    $sucursal_empresa->setDescuento($sucursal["descuento"]);
+                    $sucursal_empresa->setMargenUtilidad($sucursal["margen_utilidad"]);
+                    SucursalEmpresaDAO::save($sucursal_empresa);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudieron agregar las sucursales a la empresa: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Sucursales agregadas exitosamente");
 	}
   
 	/**
