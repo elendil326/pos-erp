@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 18-10-2011 a las 16:00:30
+-- Tiempo de generación: 18-10-2011 a las 19:59:15
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -604,7 +604,7 @@ CREATE TABLE IF NOT EXISTS `direccion` (
   `id_usuario_ultima_modificacion` int(11) NOT NULL COMMENT 'quien fue el usuario que modifico este registro la ultima vez',
   PRIMARY KEY (`id_direccion`),
   KEY `id_ciudad` (`id_ciudad`,`id_usuario_ultima_modificacion`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 -- --------------------------------------------------------
 
@@ -673,7 +673,7 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `margen_utilidad` float DEFAULT NULL COMMENT 'Porcentaje del margen de utilidad que esta empresa le gana a todos sus productos',
   `descuento` float DEFAULT NULL COMMENT 'Descuento que se aplicara a todos los productos de esta empresa',
   PRIMARY KEY (`id_empresa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -749,7 +749,7 @@ CREATE TABLE IF NOT EXISTS `impuesto` (
   `nombre` varchar(100) NOT NULL COMMENT 'Nombre del impuesto',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion larga del impuesto',
   PRIMARY KEY (`id_impuesto`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
@@ -987,9 +987,11 @@ CREATE TABLE IF NOT EXISTS `paquete` (
   `id_paquete` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id de la tabla paquete',
   `nombre` varchar(100) NOT NULL COMMENT 'Nombre del paquete',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'Descripcion larga del paquete',
-  `margen_utilidad` float NOT NULL COMMENT 'Margen de utilidad que se obtendra al vender este paquete',
+  `margen_utilidad` float DEFAULT NULL COMMENT 'Margen de utilidad que se obtendra al vender este paquete',
   `descuento` float DEFAULT NULL COMMENT 'Descuento que se aplciara a este paquete',
   `foto_paquete` varchar(255) DEFAULT NULL COMMENT 'Url de la foto del paquete',
+  `costo_estandar` float NOT NULL COMMENT 'Costo estandar del paquete',
+  `precio` float DEFAULT NULL COMMENT 'Precio dijo del paquete',
   `activo` tinyint(1) NOT NULL COMMENT 'Si el paquete esta activo o no',
   PRIMARY KEY (`id_paquete`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Paquetes de productos y/o servicios' AUTO_INCREMENT=1 ;
@@ -1003,6 +1005,8 @@ CREATE TABLE IF NOT EXISTS `paquete` (
 CREATE TABLE IF NOT EXISTS `paquete_empresa` (
   `id_paquete` int(11) NOT NULL,
   `id_empresa` int(11) NOT NULL,
+  `precio_utilidad` float DEFAULT NULL COMMENT 'Precio o margen de utilidad con el que se vendera este producto en esta empresa',
+  `es_margen_utilidad` float DEFAULT NULL COMMENT 'Si el campo precio_utilidad es un precio fijo o un margen de utilidad',
   PRIMARY KEY (`id_paquete`,`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='detalle paquete empresa';
 
@@ -1015,6 +1019,8 @@ CREATE TABLE IF NOT EXISTS `paquete_empresa` (
 CREATE TABLE IF NOT EXISTS `paquete_sucursal` (
   `id_paquete` int(11) NOT NULL,
   `id_sucursal` int(11) NOT NULL,
+  `precio_utilidad` float DEFAULT NULL COMMENT 'Precio o margen de utilidad con el que se vendera este paquete en esta sucursal',
+  `es_margen_utilidad` float DEFAULT NULL COMMENT 'Si el campo precio_utilidad es un margen de utilidad o un precio fijo',
   PRIMARY KEY (`id_paquete`,`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle paquete sucursal';
 
@@ -1208,7 +1214,7 @@ CREATE TABLE IF NOT EXISTS `prestamo` (
 CREATE TABLE IF NOT EXISTS `producto` (
   `id_producto` int(11) NOT NULL AUTO_INCREMENT,
   `compra_en_mostrador` tinyint(1) NOT NULL COMMENT 'Verdadero si el producto se puede comprar en mostrador',
-  `metodo_costeo` varchar(50) NOT NULL COMMENT 'Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar',
+  `metodo_costeo` enum('precio','margen') NOT NULL COMMENT 'Si el precio se toma del margen de utilidad o del precio fijo',
   `activo` tinyint(1) NOT NULL COMMENT 'Si el producto esta activo o no',
   `codigo_producto` varchar(30) NOT NULL COMMENT 'Codigo interno del producto',
   `nombre_producto` varchar(30) NOT NULL COMMENT 'Nombre del producto',
@@ -1223,6 +1229,7 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `codigo_de_barras` varchar(30) DEFAULT NULL COMMENT 'El codigo de barras de este producto',
   `peso_producto` float DEFAULT NULL COMMENT 'El peso de este producto en Kg',
   `id_unidad` int(11) DEFAULT NULL COMMENT 'Id de la unidad en la que usualmente se maneja este producto',
+  `precio` float DEFAULT NULL COMMENT 'El precio fijo del producto',
   PRIMARY KEY (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -1261,6 +1268,8 @@ CREATE TABLE IF NOT EXISTS `producto_clasificacion` (
 CREATE TABLE IF NOT EXISTS `producto_empresa` (
   `id_producto` int(11) NOT NULL COMMENT 'Id del producto que se vende en la empresa',
   `id_empresa` int(11) NOT NULL COMMENT 'Id de la empresa que ofrece ese producto',
+  `precio_utilidad` float DEFAULT NULL COMMENT 'Precio o margen de utilidad con el que se vendera este producto en esta empresa',
+  `es_margen_utilidad` float DEFAULT NULL COMMENT 'Si el campo precio_utilidad es un margen de utilidad o un precio fijo',
   PRIMARY KEY (`id_producto`,`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle producto empresa';
 
@@ -1275,6 +1284,8 @@ CREATE TABLE IF NOT EXISTS `producto_lote` (
   `id_lote` int(11) NOT NULL,
   `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad almacenada del producto',
   `cantidad` int(11) NOT NULL,
+  `precio_utilidad` float DEFAULT NULL COMMENT 'Precio o margen de utilidad con el que se vendera este producto en esta sucursal',
+  `es_margen_utilidad` float DEFAULT NULL COMMENT 'Si el campo precio_utilidad es un margen de utilidad o un precio fijo',
   PRIMARY KEY (`id_producto`,`id_lote`,`id_unidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -1330,7 +1341,7 @@ CREATE TABLE IF NOT EXISTS `retencion` (
   `nombre` varchar(100) NOT NULL COMMENT 'El nombre de la retencion',
   `descripcion` varchar(255) DEFAULT NULL COMMENT 'DEscripcion larga de la retencion',
   PRIMARY KEY (`id_retencion`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
@@ -1496,7 +1507,7 @@ CREATE TABLE IF NOT EXISTS `seguimiento_de_servicio` (
 CREATE TABLE IF NOT EXISTS `servicio` (
   `id_servicio` int(11) NOT NULL AUTO_INCREMENT,
   `nombre_servicio` varchar(50) NOT NULL COMMENT 'nombre del servicio',
-  `metodo_costeo` varchar(30) NOT NULL COMMENT 'Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar',
+  `metodo_costeo` enum('precio','margen') NOT NULL COMMENT 'Si el precio se toma del margen de utilidad o del precio fijo',
   `codigo_servicio` varchar(20) NOT NULL COMMENT 'Codigo de control del servicio manejado por la empresa, no se puede repetir',
   `compra_en_mostrador` tinyint(1) NOT NULL COMMENT 'Verdadero si este servicio se puede comprar en mostrador, para aquello de compra-venta. Para poder hacer esto, el sistema debe poder hacer compras en mostrador',
   `activo` tinyint(1) NOT NULL COMMENT 'Si el servicio esta activo',
@@ -1506,6 +1517,7 @@ CREATE TABLE IF NOT EXISTS `servicio` (
   `garantia` int(11) DEFAULT NULL COMMENT 'Si este servicio tiene una garantía en meses.',
   `control_existencia` int(11) DEFAULT NULL COMMENT '00000001 = Unidades. 00000010 = Caractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = LoteCaractersticas. 00000100 = Series. 00001000 = Pedimentos. 00010000 = Lote',
   `foto_servicio` varchar(50) NOT NULL COMMENT 'Url de la foto del servicio',
+  `precio` float DEFAULT NULL COMMENT 'El precio fijo del servicio',
   PRIMARY KEY (`id_servicio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -1530,6 +1542,8 @@ CREATE TABLE IF NOT EXISTS `servicio_clasificacion` (
 CREATE TABLE IF NOT EXISTS `servicio_empresa` (
   `id_servicio` int(11) NOT NULL COMMENT 'Id del servicio ',
   `id_empresa` int(11) NOT NULL COMMENT 'Id de la empresa en la que se ofrece este servicio',
+  `precio_utilidad` float DEFAULT NULL COMMENT 'Precio o margen de utilidad con el que se vendera este servicio en esta empresa',
+  `es_margen_utilidad` float DEFAULT NULL COMMENT 'Si el campo precio_utilidad es un margen de utilidad o un precio fijo',
   PRIMARY KEY (`id_servicio`,`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle servicio empresa';
 
@@ -1542,6 +1556,8 @@ CREATE TABLE IF NOT EXISTS `servicio_empresa` (
 CREATE TABLE IF NOT EXISTS `servicio_sucursal` (
   `id_servicio` int(11) NOT NULL,
   `id_sucursal` int(11) NOT NULL,
+  `precio_utilidad` float DEFAULT NULL COMMENT 'Precio o margen de utilidad con el que se vendera este servicio en esta sucursal',
+  `es_margen_utilidad` float DEFAULT NULL COMMENT 'Si el campo precio_utilidad es un margen de utilidad o un precio fijo',
   PRIMARY KEY (`id_servicio`,`id_sucursal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle servicio sucusal';
 
