@@ -1,20 +1,20 @@
 <?php
 
 
-require_once("libs/api/ApiOutputFormatter.php");
-require_once("libs/api/ApiExposedProperty.php");
-require_once("libs/api/ApiHttpErrors.php");
-require_once("libs/api/ApiException.php");
+require_once("ApiOutputFormatter.php");
+require_once("ApiExposedProperty.php");
+require_once("ApiHttpErrors.php");
+require_once("ApiException.php");
 
 
-require_once("libs/api/StringValidator.php");
-require_once("libs/api/NumericRangeValidator.php");
-require_once("libs/api/NumericValidator.php");
-require_once("libs/api/DateRangeValidator.php");
-require_once("libs/api/DateValidator.php");
-require_once("libs/api/EnumValidator.php");
-require_once("libs/api/HtmlValidator.php");
-require_once("libs/api/CustomValidator.php");
+require_once("StringValidator.php");
+require_once("NumericRangeValidator.php");
+require_once("NumericValidator.php");
+require_once("DateRangeValidator.php");
+require_once("DateValidator.php");
+require_once("EnumValidator.php");
+require_once("HtmlValidator.php");
+require_once("CustomValidator.php");
 
 
 /*
