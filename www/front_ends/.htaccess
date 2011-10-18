@@ -9,8 +9,11 @@ Options +FollowSymlinks
 RewriteRule ^([0-9]*)/ingenieria/([a-z]*\.php)?(.*)$	__instance__/ingenieria/$2?_instance_=$1&$3 [L]
 RewriteRule ^([0-9]*)/gerencia/([a-z]*\.php)?(.*)$	__instance__/gerencia/$2?_instance_=$1&$3 [L]
 
+RewriteRule ^([0-9]*)/api/(.*)$		__instance__/api/$2?_instance_=$1
+
+
 RewriteRule ^([0-9]*)/$ 				__instance__/?_instance_=$1
-RewriteRule ^([0-9]*)/api/				__instance__/api/?_instance_=$1
+
 RewriteRule ^([0-9]*)/cliente/ 			__instance__/cliente/?_instance_=$1
 RewriteRule ^([0-9]*)/consignatario/ 	__instance__/consignatario/?_instance_=$1
 RewriteRule ^([0-9]*)/sucursal/ 		__instance__/sucursal/?_instance_=$1

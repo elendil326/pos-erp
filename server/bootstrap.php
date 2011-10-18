@@ -187,6 +187,20 @@
 
 	require_once("controllers/Direcciones.controller.php");
 
+
+	require_once("libs/api/ApiHandler.php");
+
+	# *******************************
+	define('POST', "__ISPOST__");
+	define('GET', "__ISGET__");
+	define('ADMIN', '1');
+	define('CONTESTANT', '2');
+	define('JUDGE', '3');
+	define('VISITOR', '4');
+	define('BYPASS', '-1');
+	# *******************************
+	
+
 	# *******************************
 	# Buscar esta instancia si es que la necesito
 	# *******************************
