@@ -351,6 +351,7 @@ require_once("interfaces/Empresas.interface.php");
 	{
             Logger::log("Editando la empresa");
             $empresa=EmpresaDAO::getByPK($id_empresa);
+            $modificar_direccion=false;
             if($empresa==null)
             {
                 Logger::error("La empresa con id: ".$id_empresa." no existe");
@@ -382,6 +383,7 @@ require_once("interfaces/Empresas.interface.php");
             if($ciudad!==null)
             {
                 $direccion->setIdCiudad($ciudad);
+                $modificar_direccion=true;
             }
             if($razon_social!==null)
             {
@@ -394,6 +396,7 @@ require_once("interfaces/Empresas.interface.php");
             if($codigo_postal!==null)
             {
                 $direccion->setCodigoPostal($codigo_postal);
+                $modificar_direccion=true;
             }
             if($curp!==null)
             {
@@ -402,10 +405,12 @@ require_once("interfaces/Empresas.interface.php");
             if($calle!==null)
             {
                 $direccion->setCalle($calle);
+                $modificar_direccion=true;
             }
             if($numero_interno!==null)
             {
                 $direccion->setNumeroInterior($numero_interno);
+                $modificar_direccion=true;
             }
             if($representante_legal!==null)
             {
@@ -414,22 +419,37 @@ require_once("interfaces/Empresas.interface.php");
             if($telefono1!==null)
             {
                 $direccion->setTelefono($telefono1);
+                $modificar_direccion=true;
             }
             if($numero_exterior!==null)
             {
                 $direccion->setNumeroExterior($numero_exterior);
+                $modificar_direccion=true;
             }
             if($colonia!==null)
             {
                 $direccion->setColonia($colonia);
+                $modificar_direccion=true;
             }
             if($telefono2!==null)
             {
                 $direccion->setTelefono2($telefono2);
+                $modificar_direccion=true;
             }
             if($texto_extra!==null)
             {
                 $direccion->setReferencia($texto_extra);
+                $modificar_direccion=true;
+            }
+            if($modificar_direccion)
+            {
+                $direccion->setUltimaModificacion($this->formato_fecha,time());
+                $id_usuario=LoginController::getCurrentUser();
+                if($id_usuario==null)
+                {
+                    Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
+                    throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
+                }
             }
             $impuesto_empresa=new ImpuestoEmpresa(array("id_empresa"=>$id_empresa));
             $impuestos_empresa=ImpuestoEmpresaDAO::search($impuesto_empresa);
