@@ -85,9 +85,36 @@ require_once("interfaces/Sucursales.interface.php");
 		$id_tipo_almacen = null, 
 		$activo = null
 	)
-	{  
-  
-  
+	{
+            Logger::log("Listando Almacenes");
+            $parametros=false;
+            if
+            (
+                    $id_empresa != null ||
+                    $id_sucursal != null ||
+                    $id_tipo_almacen != null ||
+                    $activo !== null
+            )
+                $parametros=true;
+            $almacenes=null;
+            if($parametros)
+            {
+                Logger::log("Se recibieron parametros, se listan las almacenes en rango");
+                $almacen_criterio_1=new Almacen();
+                $almacen_criterio_2=new Almacen();
+                $almacen_criterio_1->setActivo($activo);
+                $almacen_criterio_1->setIdEmpresa($id_empresa);
+                $almacen_criterio_1->setIdSucursal($id_sucursal);
+                $almacen_criterio_1->setIdTipoAlmacen($id_tipo_almacen);
+                $almacenes=AlmacenDAO::byRange($almacen_criterio_1, $almacen_criterio_2);
+            }
+            else
+            {
+                Logger::log("No se recibieron parametros, se listan todos los almacenes");
+                $almacenes=AlmacenDAO::getAll();
+            }
+            Logger::log("Almacenes obtenidos exitosamente");
+            return $almacenes;
 	}
   
 	/**
