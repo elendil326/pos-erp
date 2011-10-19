@@ -28,9 +28,44 @@ require_once("interfaces/Sucursales.interface.php");
 		$id_tipo_almacen, 
 		$descripcion = null
 	)
-	{  
-  
-  
+	{
+            Logger::log("Creando nuevo almacen");
+            if(SucursalDAO::getByPK($id_sucursal)==null)
+            {
+                Logger::error("La sucursal con id: ".$id_sucursal." no existe");
+                throw new Exception("La sucursal con id: ".$id_sucursal." no existe");
+            }
+            if(EmpresaDAO::getByPK($id_empresa)==null)
+            {
+                Logger::error("La empresa con id: ".$id_empresa." no existe");
+                throw new Exception("La empresa con id: ".$id_empresa." no existe");
+            }
+            if(TipoAlmacenDAO::getByPK($id_tipo_almacen)==null)
+            {
+                Logger::error("El tipo de almacen con id: ".$id_tipo_almacen." no existe");
+                throw new Exception("El tipo de almacen con id: ".$id_tipo_almacen." no existe");
+            }
+            $almacen=new Almacen();
+            $almacen->setNombre($nombre);
+            $almacen->setDescripcion($descripcion);
+            $almacen->setIdSucursal($id_sucursal);
+            $almacen->setIdEmpresa($id_empresa);
+            $almacen->setIdTipoAlmacen($id_tipo_almacen);
+            $almacen->setActivo(1);
+            DAO::transBegin();
+            try
+            {
+                AlmacenDAO::save($almacen);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear el nuevo almacen");
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Almacen creado exitosamente");
+            return $almacen->getIdAlmacen();
 	}
   
 	/**
@@ -72,7 +107,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @param tipo_pago string Si el pago ser efectivo, cheque o tarjeta.
  	 * @param billetes_pago json Ids de los billetes que se recibieron 
  	 * @param billetes_cambio json Ids de billetes que se entregaron como cambio
- 	 * @return id_venta int Id autogenerado de la inserción de la venta.
+ 	 * @return id_venta int Id autogenerado de la inserciï¿½n de la venta.
  	 **/
 	public function VenderCaja
 	(
@@ -143,9 +178,9 @@ require_once("interfaces/Sucursales.interface.php");
  	 *
  	 * @param activo bool Si este valor no es pasado, se listaran sucursales tanto activas como inactivas, si su valor es true, solo se mostrarn las sucursales activas, si es false, solo se mostraran las sucursales inactivas.
  	 * @param id_empresa int Id de la empresa de la cual se listaran sus sucursales.
- 	 * @param saldo_inferior_que float Si este valor es obtenido, se mostrarán las sucursales que tengan un saldo inferior a este
- 	 * @param saldo_igual_que float Si este valor es obtenido, se mostrarán las sucursales que tengan un saldo igual a este
- 	 * @param saldo_superior_que float Si este valor es obtenido, se mostrarán las sucursales que tengan un saldo superior a este
+ 	 * @param saldo_inferior_que float Si este valor es obtenido, se mostrarï¿½n las sucursales que tengan un saldo inferior a este
+ 	 * @param saldo_igual_que float Si este valor es obtenido, se mostrarï¿½n las sucursales que tengan un saldo igual a este
+ 	 * @param saldo_superior_que float Si este valor es obtenido, se mostrarï¿½n las sucursales que tengan un saldo superior a este
  	 * @param fecha_apertura_inferior_que string Si este valor es pasado, se mostraran las sucursales cuya fecha de apertura sea inferior a esta.
  	 * @param fecha_apertura_igual_que string Si este valor es pasado, se mostraran las sucursales cuya fecha de apertura sea igual a esta.
  	 * @param fecha_apertura_superior_que string Si este valor es pasado, se mostraran las sucursales cuya fecha de apertura sea superior a esta.
