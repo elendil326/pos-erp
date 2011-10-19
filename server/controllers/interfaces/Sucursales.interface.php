@@ -19,7 +19,7 @@
   function EditarAlmacen
 	(
 		$id_almacen, 
-		$descripcion = "", 
+		$descripcion = "", f
 		$nombre = ""
 	);  
   
@@ -410,7 +410,7 @@ Creo que este metodo tiene que estar bajo sucursal.
   function NuevaCaja
 	(
 		$token, 
-		$codigo_caja = "Código de la Caja", 
+		$codigo_caja = "Cï¿½digo de la Caja", 
 		$impresoras = null, 
 		$basculas = null, 
 		$descripcion = null
@@ -436,11 +436,10 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 * @param tipo_pago string Si el pago ser efectivo, cheque o tarjeta.
  	 * @param billetes_pago json Ids de los billetes que se recibieron 
  	 * @param billetes_cambio json Ids de billetes que se entregaron como cambio
- 	 * @return id_venta int Id autogenerado de la inserción de la venta.
+ 	 * @return id_venta int Id autogenerado de la inserciï¿½n de la venta.
  	 **/
   function VenderCaja
 	(
-		$detalle, 
 		$retencion, 
 		$id_comprador, 
 		$subtotal, 
@@ -452,7 +451,11 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$cheques = null, 
 		$tipo_pago = null, 
 		$billetes_pago = null, 
-		$billetes_cambio = null
+		$billetes_cambio = null,
+                $id_venta_caja = null,
+                $detalle_producto = null,
+                $detalle_orden = null,
+                $detalle_paquete = null
 	);  
   
   
@@ -542,9 +545,9 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 *
  	 * @param activo bool Si este valor no es pasado, se listaran sucursales tanto activas como inactivas, si su valor es true, solo se mostrarn las sucursales activas, si es false, solo se mostraran las sucursales inactivas.
  	 * @param id_empresa int Id de la empresa de la cual se listaran sus sucursales.
- 	 * @param saldo_inferior_que float Si este valor es obtenido, se mostrarán las sucursales que tengan un saldo inferior a este
- 	 * @param saldo_igual_que float Si este valor es obtenido, se mostrarán las sucursales que tengan un saldo igual a este
- 	 * @param saldo_superior_que float Si este valor es obtenido, se mostrarán las sucursales que tengan un saldo superior a este
+ 	 * @param saldo_inferior_que float Si este valor es obtenido, se mostrarï¿½n las sucursales que tengan un saldo inferior a este
+ 	 * @param saldo_igual_que float Si este valor es obtenido, se mostrarï¿½n las sucursales que tengan un saldo igual a este
+ 	 * @param saldo_superior_que float Si este valor es obtenido, se mostrarï¿½n las sucursales que tengan un saldo superior a este
  	 * @param fecha_apertura_inferior_que string Si este valor es pasado, se mostraran las sucursales cuya fecha de apertura sea inferior a esta.
  	 * @param fecha_apertura_igual_que string Si este valor es pasado, se mostraran las sucursales cuya fecha de apertura sea igual a esta.
  	 * @param fecha_apertura_superior_que string Si este valor es pasado, se mostraran las sucursales cuya fecha de apertura sea superior a esta.

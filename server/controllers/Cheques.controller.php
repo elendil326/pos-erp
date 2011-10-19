@@ -4,7 +4,7 @@
 
     class ChequesController {
 
-        public function NuevoCheque
+        public static function NuevoCheque
         (
                 $nombre_banco,
                 $monto,

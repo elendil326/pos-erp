@@ -8,6 +8,16 @@ require_once("interfaces/Sucursales.interface.php");
 	
   class SucursalesController implements ISucursales{
   
+      private $formato_fecha="Y-m-d H:i:s";
+      private function getCaja()
+      {
+          return 1;
+      }
+
+      private function getSucursal()
+      {
+          return 1;
+      }
   
 	/**
  	 *
@@ -137,8 +147,7 @@ require_once("interfaces/Sucursales.interface.php");
  	 * @return id_venta int Id autogenerado de la inserci�n de la venta.
  	 **/
 	public function VenderCaja
-	(
-		$detalle, 
+	( 
 		$retencion, 
 		$id_comprador, 
 		$subtotal, 
@@ -150,11 +159,156 @@ require_once("interfaces/Sucursales.interface.php");
 		$cheques = null, 
 		$tipo_pago = null, 
 		$billetes_pago = null, 
-		$billetes_cambio = null
+		$billetes_cambio = null,
+                $id_venta_caja = null,
+                $detalle_producto = null,
+                $detalle_orden = null,
+                $detalle_paquete = null
 	)
-	{  
-  
-  
+	{
+            Logger::log("Realizando la venta");
+            $id_usuario=LoginController::getCurrentUser();
+            if($id_usuario==null)
+            {
+                Logger::error("No se pudo obtener al usuario de la sesion actual, ya inicio sesion?");
+                throw new Exception("No se pudo obtener al usuario de la sesion actual, ya inicio sesion?");
+            }
+            $usuario=UsuarioDAO::getByPK($id_comprador);
+            if($usuario==null)
+            {
+                Logger::error("El usuario recibido como comprador no existe");
+                throw new Exception("El usuario recibido como comprador no existe");
+            }
+            $venta=new Venta();
+            $venta->setRetencion($retencion);
+            $venta->setIdCompradorVenta($id_comprador);
+            $venta->setSubtotal($subtotal);
+            $venta->setImpuesto($impuesto);
+            $venta->setTotal($total);
+            $venta->setDescuento($descuento);
+            $venta->setTipoDeVenta($tipo_venta);
+            $venta->setIdCaja($this->getCaja());
+            $venta->setIdSucursal($this->getSucursal());
+            $venta->setIdUsuario($id_usuario);
+            $venta->setIdVentaCaja($id_venta_caja);
+            $venta->setCancelada(0);
+            $venta->setTipoDePago($tipo_pago);
+            $venta->setFecha(date($this->formato_fecha,time()));
+            DAO::transBegin();
+            try
+            {
+                if($tipo_venta==="contado")
+                {
+                    if($tipo_pago==="cheque"&&$cheques==null)
+                    {
+                        Logger::error("El tipo de pago es con cheque pero no se recibio informacion del mismo");
+                        throw new Exception("El tipo de pago es con cheque pero no se recibio informacion del mismo");
+                    }
+                    if($saldo!==null)
+                    {
+                        Logger::warn("Se recibio un saldo cuando la venta es de contado, el saldo se tomara del total");
+                    }
+                    $venta->setSaldo($total);
+                    VentaDAO::save($venta);
+                    if($tipo_pago==="cheque")
+                    {
+                        $cheque_venta = new ChequeVenta();
+                        $cheque_venta->setIdVenta($venta->getIdVenta());
+                        foreach($cheques as $cheque)
+                        {
+                            $id_cheque=ChequesController::NuevoCheque($cheque["nombre_banco"], $cheque["monto"], $cheque["numero"], 0);
+                            $cheque_venta->setIdCheque($id_cheque);
+                            ChequeVentaDAO::save($cheque_venta);
+                        }
+                    }
+                    else if($tipo_pago==="efectivo")
+                    {
+                        CajasController::modificarCaja($venta->getIdCaja(), 1, $billetes_pago, $total);
+                        if($billetes_cambio!=null)
+                        {
+                            CajasController::modificarCaja($venta->getIdCaja(), 0, $billetes_cambio, 0);
+                        }
+                    }
+                    else
+                    {
+                        Logger::error("No se recibio que tipo de pago se realiza para esta venta");
+                        throw new Exception("No se recibio que tipo de pago se realiza para esta venta");
+                    }
+                }
+                else if($tipo_venta=="credito")
+                {
+                    if($saldo==null)
+                    {
+                        Logger::warn("No se recibio un saldo, se tomara 0 como saldo");
+                        $saldo=0;
+                    }
+                    $venta->setSaldo($saldo);
+                    VentaDAO::save($venta);
+                    $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()-$total);
+                    UsuarioDAO::save($usuario);
+                }
+                else
+                {
+                    Logger::error("El tipo de venta recibida no es valido");
+                    throw new Exception("El tipo de venta recibida no es valido");
+                }
+                if($detalle_paquete!=null)
+                {
+                    $d_paquete=new VentaPaquete();
+                    $d_paquete->setIdVenta($venta->getIdVenta());
+                    foreach($detalle_paquete as $d_p)
+                    {
+                        $d_paquete->setCantidad($d_p["cantidad"]);
+                        $d_paquete->setDescuento($d_p["descuento"]);
+                        $d_paquete->setIdPaquete($d_p["id_paquete"]);
+                        $d_paquete->setPrecio($d_p["precio"]);
+                        VentaPaqueteDAO::save($d_paquete);
+                    }
+                }
+                else if($detalle_producto!=null)
+                {
+                    $d_producto=new VentaProducto();
+                    $d_producto->setIdVenta($venta->getIdVenta());
+                    foreach($detalle_producto as $d_p)
+                    {
+                        $d_producto->setCantidad($d_p["cantidad"]);
+                        $d_producto->setDescuento($d_p["descuento"]);
+                        $d_producto->setIdProducto($d_p["id_producto"]);
+                        $d_producto->setIdUnidad($d_p["id_unidad"]);
+                        $d_producto->setImpuesto($d_p["impuesto"]);
+                        $d_producto->setPrecio($d_p["precio"]);
+                        $d_producto->setRetencion($d_p["retencion"]);
+                        VentaProductoDAO::save($d_producto);
+                    }
+                }
+                else if($detalle_orden!=null)
+                {
+                    $d_orden = new VentaOrden();
+                    $d_orden->setIdVenta($venta->getIdVenta());
+                    foreach($detalle_orden as $d_p)
+                    {
+                        $d_orden->setDescuento($d_p["descuento"]);
+                        $d_orden->setIdOrdenDeServicio($d_p["id_orden_de_servicio"]);
+                        $d_orden->setImpuesto($d_p["impuesto"]);
+                        $d_orden->setPrecio($d_p["precio"]);
+                        $d_orden->setRetencion($d_p["retencion"]);
+                        VentaOrdenDAO::save($d_orden);
+                    }
+                }
+                else
+                {
+                    Logger::error("No se recibieron ni paquetes ni productos ni servicios para esta venta");
+                    throw new Exception ("No se recibieron ni paquetes ni productos ni servicios para esta venta");
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo realizar la venta: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("venta realizada exitosamente");
 	}
   
 	/**
