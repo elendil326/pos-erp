@@ -708,9 +708,9 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 $fecha_minima != null||
                 $fecha_maxima != null||
                 $fecha_actual != null||
-                $monto_menor_a != null||
-                $monto_mayor_a != null||
-                $monto_igual_a != null
+                $monto_menor_a !== null||
+                $monto_mayor_a !== null||
+                $monto_igual_a !== null
             )
             {
                 $parametros=true;
@@ -1165,8 +1165,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     $fecha_final!=null ||
                     $id_sucursal!=null ||
                     $cancelado!==null ||
-                    $monto_minimo!=null ||
-                    $monto_maximo!=null ||
+                    $monto_minimo!==null ||
+                    $monto_maximo!==null ||
                     $fecha_actual!=null
             )
                 $parametros=true;
@@ -2189,8 +2189,8 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     $fecha_final!=null ||
                     $id_sucursal!=null ||
                     $cancelado!==null ||
-                    $monto_minimo!=null ||
-                    $monto_maximo!=null ||
+                    $monto_minimo!==null ||
+                    $monto_maximo!==null ||
                     $fecha_actual!=null
             )
                 $parametros=true;
