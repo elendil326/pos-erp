@@ -348,8 +348,142 @@ require_once("interfaces/Empresas.interface.php");
 		$telefono2 = null,
 		$texto_extra = null
 	)
-	{  
-  
-  
+	{
+            Logger::log("Editando la empresa");
+            $empresa=EmpresaDAO::getByPK($id_empresa);
+            if($empresa==null)
+            {
+                Logger::error("La empresa con id: ".$id_empresa." no existe");
+                throw new Exception("La empresa con id: ".$id_empresa." no existe");
+            }
+            if(!$empresa->getActivo())
+            {
+                Logger::error("La empresa no esta activa, no se puede editar una empresa desactivada");
+                throw new Exception("La empresa no esta activa, no se puede editar una empresa desactivada");
+            }
+            $direccion=DireccionDAO::getByPK($empresa->getIdDireccion());
+            if($direccion==null)
+            {
+                Logger::error("FATAL!!! La empresa no cuenta con una direccion");
+                throw new Exception("FATAL!!! La empresa no cuenta con una direccion");
+            }
+            if($descuento!==null)
+            {
+                $empresa->setDescuento($descuento);
+            }
+            if($margen_utilidad!==null)
+            {
+                $empresa->setMargenUtilidad($margen_utilidad);
+            }
+            if($direccion_web!==null)
+            {
+                $empresa->setDireccionWeb($direccion_web);
+            }
+            if($ciudad!==null)
+            {
+                $direccion->setIdCiudad($ciudad);
+            }
+            if($razon_social!==null)
+            {
+                $empresa->setRazonSocial($razon_social);
+            }
+            if($rfc!==null)
+            {
+                $empresa->setRfc($rfc);
+            }
+            if($codigo_postal!==null)
+            {
+                $direccion->setCodigoPostal($codigo_postal);
+            }
+            if($curp!==null)
+            {
+                $empresa->setCurp($curp);
+            }
+            if($calle!==null)
+            {
+                $direccion->setCalle($calle);
+            }
+            if($numero_interno!==null)
+            {
+                $direccion->setNumeroInterior($numero_interno);
+            }
+            if($representante_legal!==null)
+            {
+                $empresa->setRepresentanteLegal($representante_legal);
+            }
+            if($telefono1!==null)
+            {
+                $direccion->setTelefono($telefono1);
+            }
+            if($numero_exterior!==null)
+            {
+                $direccion->setNumeroExterior($numero_exterior);
+            }
+            if($colonia!==null)
+            {
+                $direccion->setColonia($colonia);
+            }
+            if($telefono2!==null)
+            {
+                $direccion->setTelefono2($telefono2);
+            }
+            if($texto_extra!==null)
+            {
+                $direccion->setReferencia($texto_extra);
+            }
+            $impuesto_empresa=new ImpuestoEmpresa(array("id_empresa"=>$id_empresa));
+            $impuestos_empresa=ImpuestoEmpresaDAO::search($impuesto_empresa);
+            $retencion_empresa=new RetencionEmpresa(array("id_empresa"=>$id_empresa));
+            $retenciones_empresa=RetencionEmpresaDAO::search($retencion_empresa);
+            DAO::transBegin();
+            try
+            {
+                EmpresaDAO::save($empresa);
+                DireccionDAO::save($direccion);
+                if($impuestos_empresa)
+                    foreach($impuestos_empresa as $impuesto_empresa)
+                    {
+                        ImpuestoEmpresaDAO::delete($impuesto_empresa);
+                    }
+                if($impuestos!==null)
+                {
+                    $i_empresa=new ImpuestoEmpresa(array("id_empresa"=>$id_empresa));
+                    foreach($impuestos as $id_impuesto)
+                    {
+                        if(ImpuestoDAO::getByPK($id_impuesto)==null)
+                        {
+                            throw new Exception("El impuesto con id: ".$id_impuesto." no existe");
+                        }
+                        $i_empresa->setIdImpuesto($id_impuesto);
+                        ImpuestoEmpresaDAO::save($i_empresa);
+                    }
+                }
+                 if($retenciones_empresa)
+                    foreach($retenciones_empresa as $retencion_empresa)
+                    {
+                        RetencionEmpresaDAO::delete($retencion_empresa);
+                    }
+                if($retenciones!==null)
+                {
+                    $r_empresa=new RetencionEmpresa(array("id_empresa"=>$id_empresa));
+                    foreach($retenciones as $id_retencion)
+                    {
+                        if(ImpuestoDAO::getByPK($id_retencion)==null)
+                        {
+                            throw new Exception("La retencion con id: ".$id_retencion." no existe");
+                        }
+                        $r_empresa->setIdRetencion($id_retencion);
+                        RetencionEmpresaDAO::save($r_empresa);
+                    }
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo modificar la empresa");
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Empresa editada con exito");
 	}
   }
