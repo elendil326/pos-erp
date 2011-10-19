@@ -106,7 +106,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 try
                 {
-                    $this->modificarCaja($id_caja, 1,$billetes,$monto);
+                    CajasController::modificarCaja($id_caja, 1,$billetes,$monto);
                 }
                 catch(Exception $e)
                 {
@@ -292,7 +292,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 try
                 {
-                    $this->modificarCaja($id_caja, 1,$billetes,$monto);
+                    CajasController::modificarCaja($id_caja, 1,$billetes,$monto);
                 }
                 catch(Exception $e)
                 {
@@ -363,7 +363,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 try
                 {
-                    $this->modificarCaja($id_caja, 0,$billetes,$monto);
+                    CajasController::modificarCaja($id_caja, 0,$billetes,$monto);
                 }
                 catch(Exception $e)
                 {
@@ -446,7 +446,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 try
                 {
-                    $this->modificarCaja($id_caja, 0,$billetes,$monto);
+                    CajasController::modificarCaja($id_caja, 0,$billetes,$monto);
                 }
                 catch(Exception $e)
                 {
@@ -476,104 +476,6 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 DAO::transRollback();
                 Logger::error("No se ha podido actualizar al usuario ni al prestamo");
-                throw $e;
-            }
-            DAO::transEnd();
-        }
-
-        private function modificarCaja
-        (
-                $id_caja,
-                $suma,
-                $billetes,
-                $monto
-        )
-        {
-            $caja=CajaDAO::getByPK($id_caja);
-            if($caja==null)
-            {
-                Logger::error("La caja especificada no existe");
-                throw new Exception("La caja especificada no existe");
-            }
-            if(!$caja->getAbierta())
-            {
-                Logger::error("La caja especificada esta cerrada, tiene que abrirla para realizar movimientos");
-                throw new Exception("La caja especificada esta cerrada, tiene que abrirla para realizar movimientos");
-            }
-            //
-            //Si se esta llevando control de lo billetes en la caja
-            //tienen que haber pasado en un arreglo bidimensional los ids
-            //de los billetes con sus cantidades.
-            //
-            if($caja->getControlBilletes())
-            {
-                if($billetes==null)
-                {
-                    Logger::error("No se recibieron los billetes para esta caja");
-                    throw new Exception("No se recibieron los billetes para esta caja");
-                }
-                $numero_billetes=count($billetes);
-                //
-                //Inicializas el arreglo de billetes_caja con los billetes que recibes
-                //para despues insertarlo o actualizarlo.
-                //
-                for($i=0;$i<$numero_billetes; $i++)
-                {
-                    $billete_caja[$i]=new BilleteCaja();
-                    $billete_caja[$i]->setIdBillete($billetes[$i]["id_billete"]);
-                    $billete_caja[$i]->setIdCaja($id_caja);
-                    $billete_caja[$i]->setCantidad($billetes[$i]["cantidad"]);
-                }
-                //
-                //Intentas insertar cada billete con su cantidad, si ese billete ya existe
-                //en esa caja, actulizas su cantidad.
-                //
-                DAO::transBegin();
-                try
-                {
-                    for($i=0;$i<$numero_billetes;$i++)
-                    {
-                        $billete_caja_original=BilleteCajaDAO::getByPK($billete_caja[$i]->getIdBillete(), $billete_caja[$i]->getIdCaja());
-                        if($billete_caja_original==null)
-                        {
-                            if(!$suma)
-                                $billete_caja[$i]->setCantidad($billete_caja[$i]->getCantidad()*-1);
-                            BilleteCajaDAO::save($billete_caja[$i]);
-                        }
-                        else
-                        {
-                            if($suma)
-                                $billete_caja_original->setCantidad($billete_caja_original->getCantidad()+$billete_caja[$i]->getCantidad());
-                            else
-                                $billete_caja_original->setCantidad($billete_caja_original->getCantidad()-$billete_caja[$i]->getCantidad());
-                            BilleteCajaDAO::save($billete_caja_original);
-                        }
-                    }
-                }
-                catch(Exception $e)
-                {
-                    DAO::transRollback();
-                    Logger::error("No se pudieron actualizar los billetes de la caja");
-                    throw $e;
-                }
-                DAO::transEnd();
-            }
-            //
-            //Actualizas el saldo de la caja
-            //
-            if($suma)
-                $caja->setSaldo($caja->getSaldo()+$monto);
-            else
-                $caja->setSaldo($caja->getSaldo()-$monto);
-            DAO::transBegin();
-            try
-            {
-                CajaDAO::save($caja);
-            }
-            catch(Exception $e)
-            {
-                DAO::transRollback();
-                Logger::error("No se pudo actualizar el saldo de la caja");
                 throw $e;
             }
             DAO::transEnd();
@@ -1097,7 +999,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 try
                 {
-                    $this->modificarCaja($id_caja, 1, $billetes, $gasto->getMonto());
+                    CajasController::modificarCaja($id_caja, 1, $billetes, $gasto->getMonto());
                 }
                 catch(Exception $e)
                 {
@@ -1298,7 +1200,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 try
                 {
-                    $this->modificarCaja($id_caja, 0, $billetes, $ingreso->getMonto());
+                    CajasController::modificarCaja($id_caja, 0, $billetes, $ingreso->getMonto());
                 }
                 catch(Exception $e)
                 {
@@ -1721,7 +1623,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 try
                 {
-                    $this->modificarCaja($id_caja, 0,$billetes,$monto);
+                    CajasController::modificarCaja($id_caja, 0,$billetes,$monto);
                 }
                 catch(Exception $e)
                 {
@@ -2096,7 +1998,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         }
                         if($id_caja!=null)
                         {
-                            $this->modificarCaja($id_caja, 0, $billetes, $monto);
+                            CajasController::modificarCaja($id_caja, 0, $billetes, $monto);
                         }
                         break;
                     case 2:
@@ -2112,7 +2014,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         }
                         if($id_caja!=null)
                         {
-                            $this->modificarCaja($id_caja, 1, $billetes, $monto);
+                            CajasController::modificarCaja($id_caja, 1, $billetes, $monto);
                         }
                         break;
                     case 3:
@@ -2128,7 +2030,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         }
                         if($id_caja!=null)
                         {
-                            $this->modificarCaja($id_caja, 1, $billetes, $monto);
+                            CajasController::modificarCaja($id_caja, 1, $billetes, $monto);
                         }
                 }
                 UsuarioDAO::save($usuario);
