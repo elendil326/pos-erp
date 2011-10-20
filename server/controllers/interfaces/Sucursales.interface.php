@@ -19,7 +19,7 @@
   function EditarAlmacen
 	(
 		$id_almacen, 
-		$descripcion = "", f
+		$descripcion = "", 
 		$nombre = ""
 	);  
   
