@@ -260,8 +260,8 @@ require_once("interfaces/Sucursales.interface.php");
                     {
                         if(PaqueteDAO::getByPK($d_p["id_paquete"])==null)
                         {
-                            Logger::error("EL paquete con id: ".$d_p["id_paquete"]." no existe");
-                            throw new Exception("EL paquete con id: ".$d_p["id_paquete"]." no existe");
+                            Logger::error("El paquete con id: ".$d_p["id_paquete"]." no existe");
+                            throw new Exception("El paquete con id: ".$d_p["id_paquete"]." no existe");
                         }
                         $d_paquete->setCantidad($d_p["cantidad"]);
                         $d_paquete->setDescuento($d_p["descuento"]);
