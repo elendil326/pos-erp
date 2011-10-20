@@ -229,7 +229,7 @@ require_once("interfaces/Sucursales.interface.php");
                             CajasController::modificarCaja($venta->getIdCaja(), 0, $billetes_cambio, 0);
                         }
                     }
-                    else
+                    else if($tipo_pago!=="tarjeta")
                     {
                         Logger::error("No se recibio que tipo de pago se realiza para esta venta de contado");
                         throw new Exception("No se recibio que tipo de pago se realiza para esta venta de contado");
@@ -278,13 +278,19 @@ require_once("interfaces/Sucursales.interface.php");
                     {
                         if(ProductoDAO::getByPK($d_p["id_producto"])==null)
                         {
-                            Logger::eror("El producto con id: ".$d_p["id_producto"]." no existe");
+                            Logger::error("El producto con id: ".$d_p["id_producto"]." no existe");
                             throw new Exception("El producto con id: ".$d_p["id_producto"]." no existe");
                         }
-                        if(UnidadDAO::getByPk($d_p["id_unidad"]))
+                        if(UnidadDAO::getByPk($d_p["id_unidad"])==null)
                         {
                             Logger::error("La unidad con id: ".$d_p["id_unidad"]." no existe");
                             throw new Exception("La unidad con id: ".$d_p["id_unidad"]." no existe");
+                        }
+                        $producto=ProductoDAO::getByPK($d_p["id_producto"]);
+                        if(!$producto->getCompraEnMostrador())
+                        {
+                            Logger::error("No se puede vender el producto con id ".$d_p["id_producto"]." en mostrador");
+                            throw new Exception("No se puede vender el producto con id ".$d_p["id_producto"]." en mostrador");
                         }
                         $d_producto->setCantidad($d_p["cantidad"]);
                         $d_producto->setDescuento($d_p["descuento"]);
@@ -353,36 +359,49 @@ require_once("interfaces/Sucursales.interface.php");
         )
         {
             $empresas=array();
+            $id_empresas=array( "id" => array(), "total" => array());
             $parametro=false;
             if($detalle_producto!=null)
             {
                 $parametro=true;
                 $producto_empresa=new ProductoEmpresa();
-                foreach($detalle as $d_p)
+                foreach($detalle_producto as $d_p)
                 {
                     $producto_empresa->setIdProducto($d_p["id_producto"]);
-                    array_push($empresas,ProductoEmpresaDAO::search($producto_empresa));
+                    $productos_empresa=ProductoEmpresaDAO::search($producto_empresa);
+                    foreach($productos_empresa as $p_e)
+                    {
+                        $this->InsertarIdEmpresa($p_e, $id_empresas, $d_p["precio"]*$d_p["cantidad"]);
+                    }
                 }
             }
             if($detalle_paquete!=null)
             {
                 $parametro=true;
                 $paquete_empresa=new PaqueteEmpresa();
-                foreach($detalle as $d_p)
+                foreach($detalle_paquete as $d_p)
                 {
                     $paquete_empresa->setIdPaquete($d_p["id_paquete"]);
-                    array_push($empresas,PaqueteEmpresaDAO::search($paquete_empresa));
+                    $paquetes_empresa=PaqueteEmpresaDAO::search($paquete_empresa);
+                    foreach($paquetes_empresa as $p_e)
+                    {
+                        $this->InsertarIdEmpresa($p_e, $id_empresas, $d_p["precio"]*$d_p["cantidad"]);
+                    }
                 }
             }
             if($detalle_orden!=null)
             {
                 $parametro=true;
                 $servicio_empresa=new ServicioEmpresa();
-                foreach($detalle as $orden)
+                foreach($detalle_orden as $orden)
                 {
-                    $orden_de_servicio=OrdenDeServicioDAO::getByPK($orden["id_orden"]);
+                    $orden_de_servicio=OrdenDeServicioDAO::getByPK($orden["id_orden_de_servicio"]);
                     $servicio_empresa->setIdServicio($orden_de_servicio->getIdServicio());
-                    array_push($empresas,ServicioEmpresaDAO::search($servicio_empresa));
+                    $servicios_empresa=ServicioEmpresaDAO::search($servicio_empresa);
+                    foreach($servicios_empresa as $s_e)
+                    {
+                        $this->InsertarIdEmpresa($s_e, $id_empresas, $orden["precio"]);
+                    }
                 }
             }
             if(!$parametro)
@@ -390,7 +409,7 @@ require_once("interfaces/Sucursales.interface.php");
                 Logger::error("No se recibio un id_producto ni un id_paquete ni un id_orden");
                 throw new Exception("No se recibio un id_producto ni un id_paquete ni un id_orden");
             }
-            $id_empresas=array( "id" => array(), "total" => array());
+            
             foreach($empresas as $empresa)
             {
                 foreach($empresa as $objeto)
@@ -404,7 +423,8 @@ require_once("interfaces/Sucursales.interface.php");
         private function InsertarIdEmpresa
         (
                 $objeto,
-                &$id_empresas
+                &$id_empresas,
+                $precio
         )
         {
             $repetido=false;
@@ -420,11 +440,11 @@ require_once("interfaces/Sucursales.interface.php");
             if(!$repetido)
             {
                 array_push($id_empresas["id"],$objeto->getIdEmpresa());
-                array_push($id_empresas["total"],$objeto->getPrecio());
+                array_push($id_empresas["total"],$precio);
             }
             else if($i!=$n)
             {
-                $id_empresas["total"][$i]+=$objeto->getPrecio();
+                $id_empresas["total"][$i]+=$precio;
             }
         }
 
