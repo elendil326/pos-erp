@@ -104,8 +104,27 @@ public class Bascula{
 	public String getRawData(int bytes){
 		
 		try{
+
+			
+			/* * * * * * */
 			String rd = com.receiveToString(bytes);
-			return rd.replaceAll("[^\\p{ASCII}]", "");	
+			rd = rd.replaceAll("\\p{Cntrl}", "");
+			rd = rd.replaceAll("[^\\p{ASCII}]", "");
+
+			StringBuilder filtered = new StringBuilder(rd.length());
+
+			for (int i = 0; i < rd.length(); i++) 
+			{
+				char current = rd.charAt(i);
+				if (current >= 0x20 && current <= 0x7e) 
+				{
+					filtered.append(current);
+				}
+			}
+
+		    return filtered.toString();
+			/* * * * * * */
+
 
 		}catch(Exception e){
 			Logger.error(e);
