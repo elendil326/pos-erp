@@ -320,6 +320,19 @@ require_once("interfaces/Sucursales.interface.php");
                     Logger::error("No se recibieron ni paquetes ni productos ni servicios para esta venta");
                     throw new Exception ("No se recibieron ni paquetes ni productos ni servicios para esta venta");
                 }
+                $id_empresas=$this->ObtenerEmpresas($detalle_producto, $detalle_paquete, $detalle_orden);
+                $venta_empresa=new VentaEmpresa(array("id_venta" => $venta->getIdVenta()));
+                $n=count($id_empresas["id"]);
+                for($i = 0 ; $i < $n ; $i++)
+                {
+                    $venta_empresa->setIdEmpresa($id_empresas["id"][$i]);
+                    $venta_empresa->setTotal($id_empresas["total"][$i]);
+                    if($tipo_venta==="contado")
+                        $venta_empresa->setSaldada(1);
+                    else
+                        $venta_empresa->setSaldada(0);
+                    VentaEmpresaDAO::save($venta_empresa);
+                }
             }
             catch(Exception $e)
             {
@@ -329,8 +342,92 @@ require_once("interfaces/Sucursales.interface.php");
             }
             DAO::transEnd();
             Logger::log("venta realizada exitosamente");
+            return $venta->getIdVenta();
 	}
-  
+
+        private function ObtenerEmpresas
+        (
+                $detalle_producto=null,
+                $detalle_paquete=null,
+                $detalle_orden=null
+        )
+        {
+            $empresas=array();
+            $parametro=false;
+            if($detalle_producto!=null)
+            {
+                $parametro=true;
+                $producto_empresa=new ProductoEmpresa();
+                foreach($detalle as $d_p)
+                {
+                    $producto_empresa->setIdProducto($d_p["id_producto"]);
+                    array_push($empresas,ProductoEmpresaDAO::search($producto_empresa));
+                }
+            }
+            if($detalle_paquete!=null)
+            {
+                $parametro=true;
+                $paquete_empresa=new PaqueteEmpresa();
+                foreach($detalle as $d_p)
+                {
+                    $paquete_empresa->setIdPaquete($d_p["id_paquete"]);
+                    array_push($empresas,PaqueteEmpresaDAO::search($paquete_empresa));
+                }
+            }
+            if($detalle_orden!=null)
+            {
+                $parametro=true;
+                $servicio_empresa=new ServicioEmpresa();
+                foreach($detalle as $orden)
+                {
+                    $orden_de_servicio=OrdenDeServicioDAO::getByPK($orden["id_orden"]);
+                    $servicio_empresa->setIdServicio($orden_de_servicio->getIdServicio());
+                    array_push($empresas,ServicioEmpresaDAO::search($servicio_empresa));
+                }
+            }
+            if(!$parametro)
+            {
+                Logger::error("No se recibio un id_producto ni un id_paquete ni un id_orden");
+                throw new Exception("No se recibio un id_producto ni un id_paquete ni un id_orden");
+            }
+            $id_empresas=array( "id" => array(), "total" => array());
+            foreach($empresas as $empresa)
+            {
+                foreach($empresa as $objeto)
+                {
+                    $this->InsertarIdEmpresa($objeto, $id_empresas);
+                }
+            }
+            return $id_empresas;
+        }
+
+        private function InsertarIdEmpresa
+        (
+                $objeto,
+                &$id_empresas
+        )
+        {
+            $repetido=false;
+            $n=count($id_empresas["id"]);
+            for($i = 0; $i < $n; $i++)
+            {
+                if($id_empresas["id"][$i] == $objeto->getIdEmpresa())
+                {
+                    $repetido=true;
+                    break;
+                }
+            }
+            if(!$repetido)
+            {
+                array_push($id_empresas["id"],$objeto->getIdEmpresa());
+                array_push($id_empresas["total"],$objeto->getPrecio());
+            }
+            else if($i!=$n)
+            {
+                $id_empresas["total"][$i]+=$objeto->getPrecio();
+            }
+        }
+
 	/**
  	 *
  	 *Comprar productos en mostrador. No debe confundirse con comprar productos a un proveedor. Estos productos se agregaran al inventario de esta sucursal de manera automatica e instantanea. La IP ser?omada de la m?ina que realiza la compra. El usuario y la sucursal ser?tomados de la sesion activa. El estado del campo liquidada ser?omado de acuerdo al campo total y pagado.
