@@ -203,11 +203,6 @@ abstract class VentaDAOBase extends DAO
 			array_push( $val, $venta->getIdUsuario() );
 		}
 
-		if( $venta->getIdEmpresa() != NULL){
-			$sql .= " id_empresa = ? AND";
-			array_push( $val, $venta->getIdEmpresa() );
-		}
-
 		if( $venta->getSaldo() != NULL){
 			$sql .= " saldo = ? AND";
 			array_push( $val, $venta->getSaldo() );
@@ -259,7 +254,7 @@ abstract class VentaDAOBase extends DAO
 	  **/
 	private static final function update( $venta )
 	{
-		$sql = "UPDATE venta SET  id_caja = ?, id_venta_caja = ?, id_comprador_venta = ?, tipo_de_venta = ?, fecha = ?, subtotal = ?, impuesto = ?, descuento = ?, total = ?, id_sucursal = ?, id_usuario = ?, id_empresa = ?, saldo = ?, cancelada = ?, tipo_de_pago = ?, retencion = ? WHERE  id_venta = ?;";
+		$sql = "UPDATE venta SET  id_caja = ?, id_venta_caja = ?, id_comprador_venta = ?, tipo_de_venta = ?, fecha = ?, subtotal = ?, impuesto = ?, descuento = ?, total = ?, id_sucursal = ?, id_usuario = ?, saldo = ?, cancelada = ?, tipo_de_pago = ?, retencion = ? WHERE  id_venta = ?;";
 		$params = array( 
 			$venta->getIdCaja(), 
 			$venta->getIdVentaCaja(), 
@@ -272,7 +267,6 @@ abstract class VentaDAOBase extends DAO
 			$venta->getTotal(), 
 			$venta->getIdSucursal(), 
 			$venta->getIdUsuario(), 
-			$venta->getIdEmpresa(), 
 			$venta->getSaldo(), 
 			$venta->getCancelada(), 
 			$venta->getTipoDePago(), 
@@ -300,7 +294,7 @@ abstract class VentaDAOBase extends DAO
 	  **/
 	private static final function create( &$venta )
 	{
-		$sql = "INSERT INTO venta ( id_venta, id_caja, id_venta_caja, id_comprador_venta, tipo_de_venta, fecha, subtotal, impuesto, descuento, total, id_sucursal, id_usuario, id_empresa, saldo, cancelada, tipo_de_pago, retencion ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO venta ( id_venta, id_caja, id_venta_caja, id_comprador_venta, tipo_de_venta, fecha, subtotal, impuesto, descuento, total, id_sucursal, id_usuario, saldo, cancelada, tipo_de_pago, retencion ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$venta->getIdVenta(), 
 			$venta->getIdCaja(), 
@@ -314,7 +308,6 @@ abstract class VentaDAOBase extends DAO
 			$venta->getTotal(), 
 			$venta->getIdSucursal(), 
 			$venta->getIdUsuario(), 
-			$venta->getIdEmpresa(), 
 			$venta->getSaldo(), 
 			$venta->getCancelada(), 
 			$venta->getTipoDePago(), 
@@ -494,17 +487,6 @@ abstract class VentaDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_usuario = ? AND"; 
-			$a = $a === NULL ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( (($a = $ventaA->getIdEmpresa()) !== NULL) & ( ($b = $ventaB->getIdEmpresa()) !== NULL) ){
-				$sql .= " id_empresa >= ? AND id_empresa <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
-			$sql .= " id_empresa = ? AND"; 
 			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			

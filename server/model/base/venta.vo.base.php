@@ -58,9 +58,6 @@ class Venta extends VO
 			if( isset($data['id_usuario']) ){
 				$this->id_usuario = $data['id_usuario'];
 			}
-			if( isset($data['id_empresa']) ){
-				$this->id_empresa = $data['id_empresa'];
-			}
 			if( isset($data['saldo']) ){
 				$this->saldo = $data['saldo'];
 			}
@@ -98,7 +95,6 @@ class Venta extends VO
 			"total" => $this->total,
 			"id_sucursal" => $this->id_sucursal,
 			"id_usuario" => $this->id_usuario,
-			"id_empresa" => $this->id_empresa,
 			"saldo" => $this->saldo,
 			"cancelada" => $this->cancelada,
 			"tipo_de_pago" => $this->tipo_de_pago,
@@ -216,15 +212,6 @@ class Venta extends VO
 	  * @var int(11)
 	  */
 	protected $id_usuario;
-
-	/**
-	  * id_empresa
-	  * 
-	  * Id de la empresa que realiza la venta<br>
-	  * @access protected
-	  * @var int(11)
-	  */
-	protected $id_empresa;
 
 	/**
 	  * saldo
@@ -552,30 +539,6 @@ class Venta extends VO
 	final public function setIdUsuario( $id_usuario )
 	{
 		$this->id_usuario = $id_usuario;
-	}
-
-	/**
-	  * getIdEmpresa
-	  * 
-	  * Get the <i>id_empresa</i> property for this object. Donde <i>id_empresa</i> es Id de la empresa que realiza la venta
-	  * @return int(11)
-	  */
-	final public function getIdEmpresa()
-	{
-		return $this->id_empresa;
-	}
-
-	/**
-	  * setIdEmpresa( $id_empresa )
-	  * 
-	  * Set the <i>id_empresa</i> property for this object. Donde <i>id_empresa</i> es Id de la empresa que realiza la venta.
-	  * Una validacion basica se hara aqui para comprobar que <i>id_empresa</i> es de tipo <i>int(11)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
-	  */
-	final public function setIdEmpresa( $id_empresa )
-	{
-		$this->id_empresa = $id_empresa;
 	}
 
 	/**

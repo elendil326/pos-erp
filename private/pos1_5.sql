@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 20-10-2011 a las 14:50:18
+-- Tiempo de generación: 20-10-2011 a las 18:21:00
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -1731,7 +1731,6 @@ CREATE TABLE IF NOT EXISTS `venta` (
   `total` float NOT NULL COMMENT 'el total a pagar',
   `id_sucursal` int(11) DEFAULT NULL COMMENT 'el id de donde se hizo la venta, aunque ya tenemos en que caja se hizo, guardaremos la sucursal ya que la caja puede haberse ido ademas para hacer busquedas mas rapidas',
   `id_usuario` int(11) NOT NULL COMMENT 'el usuario que hizo esta venta',
-  `id_empresa` int(11) NOT NULL COMMENT 'Id de la empresa que realiza la venta',
   `saldo` float NOT NULL COMMENT 'el saldo pendiente por abonar en esta venta',
   `cancelada` tinyint(1) NOT NULL COMMENT 'Si la venta ha sido cancelada',
   `tipo_de_pago` enum('cheque','tarjeta','efectivo') DEFAULT NULL COMMENT 'Si la venta fue pagada con tarjeta, cheque, o en efectivo',
@@ -1760,6 +1759,20 @@ CREATE TABLE IF NOT EXISTS `venta_arpilla` (
   `total_origen` float DEFAULT NULL COMMENT 'Valor del embarque',
   PRIMARY KEY (`id_venta_arpilla`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que detalla una venta realizada mediante un embarque d' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `venta_empresa`
+--
+
+CREATE TABLE IF NOT EXISTS `venta_empresa` (
+  `id_venta` int(11) NOT NULL,
+  `id_empresa` int(11) NOT NULL,
+  `total` float NOT NULL COMMENT 'El total correspondiente',
+  `saldada` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si la venta ya fue saldada o aun no lo ha sido',
+  PRIMARY KEY (`id_venta`,`id_empresa`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle entre venta y empresa';
 
 -- --------------------------------------------------------
 
