@@ -203,6 +203,11 @@ abstract class ServicioDAOBase extends DAO
 			array_push( $val, $servicio->getFotoServicio() );
 		}
 
+		if( $servicio->getPrecio() != NULL){
+			$sql .= " precio = ? AND";
+			array_push( $val, $servicio->getPrecio() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -234,7 +239,7 @@ abstract class ServicioDAOBase extends DAO
 	  **/
 	private static final function update( $servicio )
 	{
-		$sql = "UPDATE servicio SET  nombre_servicio = ?, metodo_costeo = ?, codigo_servicio = ?, compra_en_mostrador = ?, activo = ?, margen_de_utilidad = ?, descripcion_servicio = ?, costo_estandar = ?, garantia = ?, control_existencia = ?, foto_servicio = ? WHERE  id_servicio = ?;";
+		$sql = "UPDATE servicio SET  nombre_servicio = ?, metodo_costeo = ?, codigo_servicio = ?, compra_en_mostrador = ?, activo = ?, margen_de_utilidad = ?, descripcion_servicio = ?, costo_estandar = ?, garantia = ?, control_existencia = ?, foto_servicio = ?, precio = ? WHERE  id_servicio = ?;";
 		$params = array( 
 			$servicio->getNombreServicio(), 
 			$servicio->getMetodoCosteo(), 
@@ -247,6 +252,7 @@ abstract class ServicioDAOBase extends DAO
 			$servicio->getGarantia(), 
 			$servicio->getControlExistencia(), 
 			$servicio->getFotoServicio(), 
+			$servicio->getPrecio(), 
 			$servicio->getIdServicio(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -270,7 +276,7 @@ abstract class ServicioDAOBase extends DAO
 	  **/
 	private static final function create( &$servicio )
 	{
-		$sql = "INSERT INTO servicio ( id_servicio, nombre_servicio, metodo_costeo, codigo_servicio, compra_en_mostrador, activo, margen_de_utilidad, descripcion_servicio, costo_estandar, garantia, control_existencia, foto_servicio ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO servicio ( id_servicio, nombre_servicio, metodo_costeo, codigo_servicio, compra_en_mostrador, activo, margen_de_utilidad, descripcion_servicio, costo_estandar, garantia, control_existencia, foto_servicio, precio ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$servicio->getIdServicio(), 
 			$servicio->getNombreServicio(), 
@@ -284,6 +290,7 @@ abstract class ServicioDAOBase extends DAO
 			$servicio->getGarantia(), 
 			$servicio->getControlExistencia(), 
 			$servicio->getFotoServicio(), 
+			$servicio->getPrecio(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -459,6 +466,17 @@ abstract class ServicioDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " foto_servicio = ? AND"; 
+			$a = $a === NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $servicioA->getPrecio()) !== NULL) & ( ($b = $servicioB->getPrecio()) !== NULL) ){
+				$sql .= " precio >= ? AND precio <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a !== NULL|| $b !== NULL ){
+			$sql .= " precio = ? AND"; 
 			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			

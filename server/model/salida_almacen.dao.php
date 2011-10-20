@@ -1,24 +1,24 @@
 <?php
 
 require_once ('Estructura.php');
-require_once("base/usuario.dao.base.php");
-require_once("base/usuario.vo.base.php");
+require_once("base/salida_almacen.dao.base.php");
+require_once("base/salida_almacen.vo.base.php");
 /** Page-level DocBlock .
   * 
   * @author Andres
   * @package docs
   * 
   */
-/** Usuario Data Access Object (DAO).
+/** SalidaAlmacen Data Access Object (DAO).
   * 
   * Esta clase contiene toda la manipulacion de bases de datos que se necesita para 
-  * almacenar de forma permanente y recuperar instancias de objetos {@link Usuario }. 
+  * almacenar de forma permanente y recuperar instancias de objetos {@link SalidaAlmacen }. 
   * @author Andres
   * @access public
   * @package docs
   * 
   */
-class UsuarioDAO extends UsuarioDAOBase
+class SalidaAlmacenDAO extends SalidaAlmacenDAOBase
 {
 
 }

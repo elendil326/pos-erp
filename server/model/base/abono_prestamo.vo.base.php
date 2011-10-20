@@ -175,7 +175,7 @@ class AbonoPrestamo extends VO
 	  * 
 	  * Si el tipo de pago es con tarjeta, con cheque, o en efectivo<br>
 	  * @access protected
-	  * @var varchar(50)
+	  * @var enum('cheque','tarjeta','efectivo')
 	  */
 	protected $tipo_de_pago;
 
@@ -421,7 +421,7 @@ class AbonoPrestamo extends VO
 	  * getTipoDePago
 	  * 
 	  * Get the <i>tipo_de_pago</i> property for this object. Donde <i>tipo_de_pago</i> es Si el tipo de pago es con tarjeta, con cheque, o en efectivo
-	  * @return varchar(50)
+	  * @return enum('cheque','tarjeta','efectivo')
 	  */
 	final public function getTipoDePago()
 	{
@@ -432,9 +432,9 @@ class AbonoPrestamo extends VO
 	  * setTipoDePago( $tipo_de_pago )
 	  * 
 	  * Set the <i>tipo_de_pago</i> property for this object. Donde <i>tipo_de_pago</i> es Si el tipo de pago es con tarjeta, con cheque, o en efectivo.
-	  * Una validacion basica se hara aqui para comprobar que <i>tipo_de_pago</i> es de tipo <i>varchar(50)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>tipo_de_pago</i> es de tipo <i>enum('cheque','tarjeta','efectivo')</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(50)
+	  * @param enum('cheque','tarjeta','efectivo')
 	  */
 	final public function setTipoDePago( $tipo_de_pago )
 	{

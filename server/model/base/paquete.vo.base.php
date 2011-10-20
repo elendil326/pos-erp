@@ -40,6 +40,12 @@ class Paquete extends VO
 			if( isset($data['foto_paquete']) ){
 				$this->foto_paquete = $data['foto_paquete'];
 			}
+			if( isset($data['costo_estandar']) ){
+				$this->costo_estandar = $data['costo_estandar'];
+			}
+			if( isset($data['precio']) ){
+				$this->precio = $data['precio'];
+			}
 			if( isset($data['activo']) ){
 				$this->activo = $data['activo'];
 			}
@@ -62,6 +68,8 @@ class Paquete extends VO
 			"margen_utilidad" => $this->margen_utilidad,
 			"descuento" => $this->descuento,
 			"foto_paquete" => $this->foto_paquete,
+			"costo_estandar" => $this->costo_estandar,
+			"precio" => $this->precio,
 			"activo" => $this->activo
 		); 
 	return json_encode($vec); 
@@ -122,6 +130,24 @@ class Paquete extends VO
 	  * @var varchar(255)
 	  */
 	protected $foto_paquete;
+
+	/**
+	  * costo_estandar
+	  * 
+	  * Costo estandar del paquete<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $costo_estandar;
+
+	/**
+	  * precio
+	  * 
+	  * Precio dijo del paquete<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $precio;
 
 	/**
 	  * activo
@@ -278,6 +304,54 @@ class Paquete extends VO
 	final public function setFotoPaquete( $foto_paquete )
 	{
 		$this->foto_paquete = $foto_paquete;
+	}
+
+	/**
+	  * getCostoEstandar
+	  * 
+	  * Get the <i>costo_estandar</i> property for this object. Donde <i>costo_estandar</i> es Costo estandar del paquete
+	  * @return float
+	  */
+	final public function getCostoEstandar()
+	{
+		return $this->costo_estandar;
+	}
+
+	/**
+	  * setCostoEstandar( $costo_estandar )
+	  * 
+	  * Set the <i>costo_estandar</i> property for this object. Donde <i>costo_estandar</i> es Costo estandar del paquete.
+	  * Una validacion basica se hara aqui para comprobar que <i>costo_estandar</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setCostoEstandar( $costo_estandar )
+	{
+		$this->costo_estandar = $costo_estandar;
+	}
+
+	/**
+	  * getPrecio
+	  * 
+	  * Get the <i>precio</i> property for this object. Donde <i>precio</i> es Precio dijo del paquete
+	  * @return float
+	  */
+	final public function getPrecio()
+	{
+		return $this->precio;
+	}
+
+	/**
+	  * setPrecio( $precio )
+	  * 
+	  * Set the <i>precio</i> property for this object. Donde <i>precio</i> es Precio dijo del paquete.
+	  * Una validacion basica se hara aqui para comprobar que <i>precio</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setPrecio( $precio )
+	{
+		$this->precio = $precio;
 	}
 
 	/**

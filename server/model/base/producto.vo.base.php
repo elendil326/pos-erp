@@ -73,6 +73,9 @@ class Producto extends VO
 			if( isset($data['id_unidad']) ){
 				$this->id_unidad = $data['id_unidad'];
 			}
+			if( isset($data['precio']) ){
+				$this->precio = $data['precio'];
+			}
 		}
 	}
 
@@ -102,7 +105,8 @@ class Producto extends VO
 			"costo_extra_almacen" => $this->costo_extra_almacen,
 			"codigo_de_barras" => $this->codigo_de_barras,
 			"peso_producto" => $this->peso_producto,
-			"id_unidad" => $this->id_unidad
+			"id_unidad" => $this->id_unidad,
+			"precio" => $this->precio
 		); 
 	return json_encode($vec); 
 	}
@@ -130,9 +134,9 @@ class Producto extends VO
 	/**
 	  * metodo_costeo
 	  * 
-	  * Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar<br>
+	  * Si el precio se toma del margen de utilidad o del precio fijo<br>
 	  * @access protected
-	  * @var varchar(50)
+	  * @var enum('precio','margen')
 	  */
 	protected $metodo_costeo;
 
@@ -263,6 +267,15 @@ class Producto extends VO
 	protected $id_unidad;
 
 	/**
+	  * precio
+	  * 
+	  * El precio fijo del producto<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $precio;
+
+	/**
 	  * getIdProducto
 	  * 
 	  * Get the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es  [Campo no documentado]
@@ -317,8 +330,8 @@ class Producto extends VO
 	/**
 	  * getMetodoCosteo
 	  * 
-	  * Get the <i>metodo_costeo</i> property for this object. Donde <i>metodo_costeo</i> es Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar
-	  * @return varchar(50)
+	  * Get the <i>metodo_costeo</i> property for this object. Donde <i>metodo_costeo</i> es Si el precio se toma del margen de utilidad o del precio fijo
+	  * @return enum('precio','margen')
 	  */
 	final public function getMetodoCosteo()
 	{
@@ -328,10 +341,10 @@ class Producto extends VO
 	/**
 	  * setMetodoCosteo( $metodo_costeo )
 	  * 
-	  * Set the <i>metodo_costeo</i> property for this object. Donde <i>metodo_costeo</i> es Mtodo de costeo del producto: 1 = Costo Promedio en Base a Entradas.2 = Costo Promedio en Base a Entradas Almacn.3 = ltimo costo.4 = UEPS.5 = PEPS.6 = Costo especfico.7 = Costo Estndar.
-	  * Una validacion basica se hara aqui para comprobar que <i>metodo_costeo</i> es de tipo <i>varchar(50)</i>. 
+	  * Set the <i>metodo_costeo</i> property for this object. Donde <i>metodo_costeo</i> es Si el precio se toma del margen de utilidad o del precio fijo.
+	  * Una validacion basica se hara aqui para comprobar que <i>metodo_costeo</i> es de tipo <i>enum('precio','margen')</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param varchar(50)
+	  * @param enum('precio','margen')
 	  */
 	final public function setMetodoCosteo( $metodo_costeo )
 	{
@@ -672,6 +685,30 @@ class Producto extends VO
 	final public function setIdUnidad( $id_unidad )
 	{
 		$this->id_unidad = $id_unidad;
+	}
+
+	/**
+	  * getPrecio
+	  * 
+	  * Get the <i>precio</i> property for this object. Donde <i>precio</i> es El precio fijo del producto
+	  * @return float
+	  */
+	final public function getPrecio()
+	{
+		return $this->precio;
+	}
+
+	/**
+	  * setPrecio( $precio )
+	  * 
+	  * Set the <i>precio</i> property for this object. Donde <i>precio</i> es El precio fijo del producto.
+	  * Una validacion basica se hara aqui para comprobar que <i>precio</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setPrecio( $precio )
+	{
+		$this->precio = $precio;
 	}
 
 }

@@ -173,6 +173,16 @@ abstract class PaqueteDAOBase extends DAO
 			array_push( $val, $paquete->getFotoPaquete() );
 		}
 
+		if( $paquete->getCostoEstandar() != NULL){
+			$sql .= " costo_estandar = ? AND";
+			array_push( $val, $paquete->getCostoEstandar() );
+		}
+
+		if( $paquete->getPrecio() != NULL){
+			$sql .= " precio = ? AND";
+			array_push( $val, $paquete->getPrecio() );
+		}
+
 		if( $paquete->getActivo() != NULL){
 			$sql .= " activo = ? AND";
 			array_push( $val, $paquete->getActivo() );
@@ -209,13 +219,15 @@ abstract class PaqueteDAOBase extends DAO
 	  **/
 	private static final function update( $paquete )
 	{
-		$sql = "UPDATE paquete SET  nombre = ?, descripcion = ?, margen_utilidad = ?, descuento = ?, foto_paquete = ?, activo = ? WHERE  id_paquete = ?;";
+		$sql = "UPDATE paquete SET  nombre = ?, descripcion = ?, margen_utilidad = ?, descuento = ?, foto_paquete = ?, costo_estandar = ?, precio = ?, activo = ? WHERE  id_paquete = ?;";
 		$params = array( 
 			$paquete->getNombre(), 
 			$paquete->getDescripcion(), 
 			$paquete->getMargenUtilidad(), 
 			$paquete->getDescuento(), 
 			$paquete->getFotoPaquete(), 
+			$paquete->getCostoEstandar(), 
+			$paquete->getPrecio(), 
 			$paquete->getActivo(), 
 			$paquete->getIdPaquete(), );
 		global $conn;
@@ -240,7 +252,7 @@ abstract class PaqueteDAOBase extends DAO
 	  **/
 	private static final function create( &$paquete )
 	{
-		$sql = "INSERT INTO paquete ( id_paquete, nombre, descripcion, margen_utilidad, descuento, foto_paquete, activo ) VALUES ( ?, ?, ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO paquete ( id_paquete, nombre, descripcion, margen_utilidad, descuento, foto_paquete, costo_estandar, precio, activo ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		$params = array( 
 			$paquete->getIdPaquete(), 
 			$paquete->getNombre(), 
@@ -248,6 +260,8 @@ abstract class PaqueteDAOBase extends DAO
 			$paquete->getMargenUtilidad(), 
 			$paquete->getDescuento(), 
 			$paquete->getFotoPaquete(), 
+			$paquete->getCostoEstandar(), 
+			$paquete->getPrecio(), 
 			$paquete->getActivo(), 
 		 );
 		global $conn;
@@ -358,6 +372,28 @@ abstract class PaqueteDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " foto_paquete = ? AND"; 
+			$a = $a === NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $paqueteA->getCostoEstandar()) !== NULL) & ( ($b = $paqueteB->getCostoEstandar()) !== NULL) ){
+				$sql .= " costo_estandar >= ? AND costo_estandar <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a !== NULL|| $b !== NULL ){
+			$sql .= " costo_estandar = ? AND"; 
+			$a = $a === NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $paqueteA->getPrecio()) !== NULL) & ( ($b = $paqueteB->getPrecio()) !== NULL) ){
+				$sql .= " precio >= ? AND precio <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a !== NULL|| $b !== NULL ){
+			$sql .= " precio = ? AND"; 
 			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			

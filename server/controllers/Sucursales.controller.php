@@ -231,8 +231,8 @@ require_once("interfaces/Sucursales.interface.php");
                     }
                     else
                     {
-                        Logger::error("No se recibio que tipo de pago se realiza para esta venta");
-                        throw new Exception("No se recibio que tipo de pago se realiza para esta venta");
+                        Logger::error("No se recibio que tipo de pago se realiza para esta venta de contado");
+                        throw new Exception("No se recibio que tipo de pago se realiza para esta venta de contado");
                     }
                 }
                 else if($tipo_venta=="credito")
@@ -249,8 +249,8 @@ require_once("interfaces/Sucursales.interface.php");
                 }
                 else
                 {
-                    Logger::error("El tipo de venta recibida no es valido");
-                    throw new Exception("El tipo de venta recibida no es valido");
+                    Logger::error("El tipo de venta recibido no es valido");
+                    throw new Exception("El tipo de venta recibido no es valido");
                 }
                 if($detalle_paquete!=null)
                 {
@@ -258,6 +258,11 @@ require_once("interfaces/Sucursales.interface.php");
                     $d_paquete->setIdVenta($venta->getIdVenta());
                     foreach($detalle_paquete as $d_p)
                     {
+                        if(PaqueteDAO::getByPK($d_p["id_paquete"])==null)
+                        {
+                            Logger::error("EL paquete con id: ".$d_p["id_paquete"]." no existe");
+                            throw new Exception("EL paquete con id: ".$d_p["id_paquete"]." no existe");
+                        }
                         $d_paquete->setCantidad($d_p["cantidad"]);
                         $d_paquete->setDescuento($d_p["descuento"]);
                         $d_paquete->setIdPaquete($d_p["id_paquete"]);
@@ -265,12 +270,22 @@ require_once("interfaces/Sucursales.interface.php");
                         VentaPaqueteDAO::save($d_paquete);
                     }
                 }
-                else if($detalle_producto!=null)
+                if($detalle_producto!=null)
                 {
                     $d_producto=new VentaProducto();
                     $d_producto->setIdVenta($venta->getIdVenta());
                     foreach($detalle_producto as $d_p)
                     {
+                        if(ProductoDAO::getByPK($d_p["id_producto"])==null)
+                        {
+                            Logger::eror("El producto con id: ".$d_p["id_producto"]." no existe");
+                            throw new Exception("El producto con id: ".$d_p["id_producto"]." no existe");
+                        }
+                        if(UnidadDAO::getByPk($d_p["id_unidad"]))
+                        {
+                            Logger::error("La unidad con id: ".$d_p["id_unidad"]." no existe");
+                            throw new Exception("La unidad con id: ".$d_p["id_unidad"]." no existe");
+                        }
                         $d_producto->setCantidad($d_p["cantidad"]);
                         $d_producto->setDescuento($d_p["descuento"]);
                         $d_producto->setIdProducto($d_p["id_producto"]);
@@ -281,12 +296,17 @@ require_once("interfaces/Sucursales.interface.php");
                         VentaProductoDAO::save($d_producto);
                     }
                 }
-                else if($detalle_orden!=null)
+                if($detalle_orden!=null)
                 {
                     $d_orden = new VentaOrden();
                     $d_orden->setIdVenta($venta->getIdVenta());
                     foreach($detalle_orden as $d_p)
                     {
+                        if(OrdenDeServicioDAO::getByPK($d_p["id_orden_de_servicio"])==null)
+                        {
+                            Logger::error("La orden de servicio con id: ".$d_p["id_orden_de_servicio"]." no existe");
+                            throw new Exception("La orden de servicio con id: ".$d_p["id_orden_de_servicio"]." no existe");
+                        }
                         $d_orden->setDescuento($d_p["descuento"]);
                         $d_orden->setIdOrdenDeServicio($d_p["id_orden_de_servicio"]);
                         $d_orden->setImpuesto($d_p["impuesto"]);

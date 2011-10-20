@@ -1,5 +1,5 @@
 <?php
-/** Value Object file for table producto_empresa.
+/** Value Object file for table producto_almacen.
   * 
   * VO does not have any behaviour except for storage and retrieval of its own data (accessors and mutators).
   * @author Andres
@@ -8,15 +8,15 @@
   * 
   */
 
-class ProductoEmpresa extends VO
+class ProductoAlmacen extends VO
 {
 	/**
-	  * Constructor de ProductoEmpresa
+	  * Constructor de ProductoAlmacen
 	  * 
-	  * Para construir un objeto de tipo ProductoEmpresa debera llamarse a el constructor 
+	  * Para construir un objeto de tipo ProductoAlmacen debera llamarse a el constructor 
 	  * sin parametros. Es posible, construir un objeto pasando como parametro un arreglo asociativo 
 	  * cuyos campos son iguales a las variables que constituyen a este objeto.
-	  * @return ProductoEmpresa
+	  * @return ProductoAlmacen
 	  */
 	function __construct( $data = NULL)
 	{ 
@@ -25,8 +25,14 @@ class ProductoEmpresa extends VO
 			if( isset($data['id_producto']) ){
 				$this->id_producto = $data['id_producto'];
 			}
-			if( isset($data['id_empresa']) ){
-				$this->id_empresa = $data['id_empresa'];
+			if( isset($data['id_almacen']) ){
+				$this->id_almacen = $data['id_almacen'];
+			}
+			if( isset($data['id_unidad']) ){
+				$this->id_unidad = $data['id_unidad'];
+			}
+			if( isset($data['cantidad']) ){
+				$this->cantidad = $data['cantidad'];
 			}
 			if( isset($data['precio_utilidad']) ){
 				$this->precio_utilidad = $data['precio_utilidad'];
@@ -40,7 +46,7 @@ class ProductoEmpresa extends VO
 	/**
 	  * Obtener una representacion en String
 	  * 
-	  * Este metodo permite tratar a un objeto ProductoEmpresa en forma de cadena.
+	  * Este metodo permite tratar a un objeto ProductoAlmacen en forma de cadena.
 	  * La representacion de este objeto en cadena es la forma JSON (JavaScript Object Notation) para este objeto.
 	  * @return String 
 	  */
@@ -48,7 +54,9 @@ class ProductoEmpresa extends VO
 	{ 
 		$vec = array( 
 			"id_producto" => $this->id_producto,
-			"id_empresa" => $this->id_empresa,
+			"id_almacen" => $this->id_almacen,
+			"id_unidad" => $this->id_unidad,
+			"cantidad" => $this->cantidad,
 			"precio_utilidad" => $this->precio_utilidad,
 			"es_margen_utilidad" => $this->es_margen_utilidad
 		); 
@@ -58,7 +66,7 @@ class ProductoEmpresa extends VO
 	/**
 	  * id_producto
 	  * 
-	  * Id del producto que se vende en la empresa<br>
+	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * @access protected
 	  * @var int(11)
@@ -66,19 +74,38 @@ class ProductoEmpresa extends VO
 	protected $id_producto;
 
 	/**
-	  * id_empresa
+	  * id_almacen
 	  * 
-	  * Id de la empresa que ofrece ese producto<br>
+	  *  [Campo no documentado]<br>
 	  * <b>Llave Primaria</b><br>
 	  * @access protected
 	  * @var int(11)
 	  */
-	protected $id_empresa;
+	protected $id_almacen;
+
+	/**
+	  * id_unidad
+	  * 
+	  * Id de la unidad almacenada del producto<br>
+	  * <b>Llave Primaria</b><br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $id_unidad;
+
+	/**
+	  * cantidad
+	  * 
+	  *  [Campo no documentado]<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $cantidad;
 
 	/**
 	  * precio_utilidad
 	  * 
-	  * Precio o margen de utilidad con el que se vendera este producto en esta empresa<br>
+	  * Precio o margen de utilidad con el que se vendera este producto en esta sucursal<br>
 	  * @access protected
 	  * @var float
 	  */
@@ -96,7 +123,7 @@ class ProductoEmpresa extends VO
 	/**
 	  * getIdProducto
 	  * 
-	  * Get the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es Id del producto que se vende en la empresa
+	  * Get the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es  [Campo no documentado]
 	  * @return int(11)
 	  */
 	final public function getIdProducto()
@@ -107,7 +134,7 @@ class ProductoEmpresa extends VO
 	/**
 	  * setIdProducto( $id_producto )
 	  * 
-	  * Set the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es Id del producto que se vende en la empresa.
+	  * Set the <i>id_producto</i> property for this object. Donde <i>id_producto</i> es  [Campo no documentado].
 	  * Una validacion basica se hara aqui para comprobar que <i>id_producto</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
@@ -120,35 +147,85 @@ class ProductoEmpresa extends VO
 	}
 
 	/**
-	  * getIdEmpresa
+	  * getIdAlmacen
 	  * 
-	  * Get the <i>id_empresa</i> property for this object. Donde <i>id_empresa</i> es Id de la empresa que ofrece ese producto
+	  * Get the <i>id_almacen</i> property for this object. Donde <i>id_almacen</i> es  [Campo no documentado]
 	  * @return int(11)
 	  */
-	final public function getIdEmpresa()
+	final public function getIdAlmacen()
 	{
-		return $this->id_empresa;
+		return $this->id_almacen;
 	}
 
 	/**
-	  * setIdEmpresa( $id_empresa )
+	  * setIdAlmacen( $id_almacen )
 	  * 
-	  * Set the <i>id_empresa</i> property for this object. Donde <i>id_empresa</i> es Id de la empresa que ofrece ese producto.
-	  * Una validacion basica se hara aqui para comprobar que <i>id_empresa</i> es de tipo <i>int(11)</i>. 
+	  * Set the <i>id_almacen</i> property for this object. Donde <i>id_almacen</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>id_almacen</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
-	  * No deberias usar setIdEmpresa( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * No deberias usar setIdAlmacen( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param int(11)
 	  */
-	final public function setIdEmpresa( $id_empresa )
+	final public function setIdAlmacen( $id_almacen )
 	{
-		$this->id_empresa = $id_empresa;
+		$this->id_almacen = $id_almacen;
+	}
+
+	/**
+	  * getIdUnidad
+	  * 
+	  * Get the <i>id_unidad</i> property for this object. Donde <i>id_unidad</i> es Id de la unidad almacenada del producto
+	  * @return int(11)
+	  */
+	final public function getIdUnidad()
+	{
+		return $this->id_unidad;
+	}
+
+	/**
+	  * setIdUnidad( $id_unidad )
+	  * 
+	  * Set the <i>id_unidad</i> property for this object. Donde <i>id_unidad</i> es Id de la unidad almacenada del producto.
+	  * Una validacion basica se hara aqui para comprobar que <i>id_unidad</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setIdUnidad( ) a menos que sepas exactamente lo que estas haciendo.<br>
+	  * @param int(11)
+	  */
+	final public function setIdUnidad( $id_unidad )
+	{
+		$this->id_unidad = $id_unidad;
+	}
+
+	/**
+	  * getCantidad
+	  * 
+	  * Get the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es  [Campo no documentado]
+	  * @return int(11)
+	  */
+	final public function getCantidad()
+	{
+		return $this->cantidad;
+	}
+
+	/**
+	  * setCantidad( $cantidad )
+	  * 
+	  * Set the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es  [Campo no documentado].
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setCantidad( $cantidad )
+	{
+		$this->cantidad = $cantidad;
 	}
 
 	/**
 	  * getPrecioUtilidad
 	  * 
-	  * Get the <i>precio_utilidad</i> property for this object. Donde <i>precio_utilidad</i> es Precio o margen de utilidad con el que se vendera este producto en esta empresa
+	  * Get the <i>precio_utilidad</i> property for this object. Donde <i>precio_utilidad</i> es Precio o margen de utilidad con el que se vendera este producto en esta sucursal
 	  * @return float
 	  */
 	final public function getPrecioUtilidad()
@@ -159,7 +236,7 @@ class ProductoEmpresa extends VO
 	/**
 	  * setPrecioUtilidad( $precio_utilidad )
 	  * 
-	  * Set the <i>precio_utilidad</i> property for this object. Donde <i>precio_utilidad</i> es Precio o margen de utilidad con el que se vendera este producto en esta empresa.
+	  * Set the <i>precio_utilidad</i> property for this object. Donde <i>precio_utilidad</i> es Precio o margen de utilidad con el que se vendera este producto en esta sucursal.
 	  * Una validacion basica se hara aqui para comprobar que <i>precio_utilidad</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param float

@@ -28,6 +28,12 @@ class PaqueteSucursal extends VO
 			if( isset($data['id_sucursal']) ){
 				$this->id_sucursal = $data['id_sucursal'];
 			}
+			if( isset($data['precio_utilidad']) ){
+				$this->precio_utilidad = $data['precio_utilidad'];
+			}
+			if( isset($data['es_margen_utilidad']) ){
+				$this->es_margen_utilidad = $data['es_margen_utilidad'];
+			}
 		}
 	}
 
@@ -42,7 +48,9 @@ class PaqueteSucursal extends VO
 	{ 
 		$vec = array( 
 			"id_paquete" => $this->id_paquete,
-			"id_sucursal" => $this->id_sucursal
+			"id_sucursal" => $this->id_sucursal,
+			"precio_utilidad" => $this->precio_utilidad,
+			"es_margen_utilidad" => $this->es_margen_utilidad
 		); 
 	return json_encode($vec); 
 	}
@@ -66,6 +74,24 @@ class PaqueteSucursal extends VO
 	  * @var int(11)
 	  */
 	protected $id_sucursal;
+
+	/**
+	  * precio_utilidad
+	  * 
+	  * Precio o margen de utilidad con el que se vendera este paquete en esta sucursal<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $precio_utilidad;
+
+	/**
+	  * es_margen_utilidad
+	  * 
+	  * Si el campo precio_utilidad es un margen de utilidad o un precio fijo<br>
+	  * @access protected
+	  * @var float
+	  */
+	protected $es_margen_utilidad;
 
 	/**
 	  * getIdPaquete
@@ -117,6 +143,54 @@ class PaqueteSucursal extends VO
 	final public function setIdSucursal( $id_sucursal )
 	{
 		$this->id_sucursal = $id_sucursal;
+	}
+
+	/**
+	  * getPrecioUtilidad
+	  * 
+	  * Get the <i>precio_utilidad</i> property for this object. Donde <i>precio_utilidad</i> es Precio o margen de utilidad con el que se vendera este paquete en esta sucursal
+	  * @return float
+	  */
+	final public function getPrecioUtilidad()
+	{
+		return $this->precio_utilidad;
+	}
+
+	/**
+	  * setPrecioUtilidad( $precio_utilidad )
+	  * 
+	  * Set the <i>precio_utilidad</i> property for this object. Donde <i>precio_utilidad</i> es Precio o margen de utilidad con el que se vendera este paquete en esta sucursal.
+	  * Una validacion basica se hara aqui para comprobar que <i>precio_utilidad</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setPrecioUtilidad( $precio_utilidad )
+	{
+		$this->precio_utilidad = $precio_utilidad;
+	}
+
+	/**
+	  * getEsMargenUtilidad
+	  * 
+	  * Get the <i>es_margen_utilidad</i> property for this object. Donde <i>es_margen_utilidad</i> es Si el campo precio_utilidad es un margen de utilidad o un precio fijo
+	  * @return float
+	  */
+	final public function getEsMargenUtilidad()
+	{
+		return $this->es_margen_utilidad;
+	}
+
+	/**
+	  * setEsMargenUtilidad( $es_margen_utilidad )
+	  * 
+	  * Set the <i>es_margen_utilidad</i> property for this object. Donde <i>es_margen_utilidad</i> es Si el campo precio_utilidad es un margen de utilidad o un precio fijo.
+	  * Una validacion basica se hara aqui para comprobar que <i>es_margen_utilidad</i> es de tipo <i>float</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param float
+	  */
+	final public function setEsMargenUtilidad( $es_margen_utilidad )
+	{
+		$this->es_margen_utilidad = $es_margen_utilidad;
 	}
 
 }

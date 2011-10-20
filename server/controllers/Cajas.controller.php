@@ -54,6 +54,11 @@ class CajasController{
                     //
                     for($i=0;$i<$numero_billetes; $i++)
                     {
+                        if(BilleteDAO::getByPK($billetes[$i]["id_billete"]==null))
+                        {
+                            Logger::error("El billete con id: ".$billetes[$i]["id_billete"]." no existe");
+                            throw new Exception("El billete con id: ".$billetes[$i]["id_billete"]." no existe");
+                        }
                         $billete_caja[$i]=new BilleteCaja();
                         $billete_caja[$i]->setIdBillete($billetes[$i]["id_billete"]);
                         $billete_caja[$i]->setIdCaja($id_caja);

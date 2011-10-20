@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 18-10-2011 a las 19:59:15
+-- Tiempo de generación: 20-10-2011 a las 14:50:18
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `almacen` (
   `activo` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si el almacen esta activo o no',
   PRIMARY KEY (`id_almacen`),
   KEY `id_tipo_almacen` (`id_tipo_almacen`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -920,18 +920,6 @@ CREATE TABLE IF NOT EXISTS `inspeccion_consignacion_producto` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `lote`
---
-
-CREATE TABLE IF NOT EXISTS `lote` (
-  `id_lote` int(11) NOT NULL AUTO_INCREMENT,
-  `id_almacen` int(11) NOT NULL,
-  PRIMARY KEY (`id_lote`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `moneda`
 --
 
@@ -1250,6 +1238,22 @@ CREATE TABLE IF NOT EXISTS `producto_abasto_proveedor` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `producto_almacen`
+--
+
+CREATE TABLE IF NOT EXISTS `producto_almacen` (
+  `id_producto` int(11) NOT NULL,
+  `id_almacen` int(11) NOT NULL,
+  `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad almacenada del producto',
+  `cantidad` int(11) NOT NULL,
+  `precio_utilidad` float DEFAULT NULL COMMENT 'Precio o margen de utilidad con el que se vendera este producto en esta sucursal',
+  `es_margen_utilidad` float DEFAULT NULL COMMENT 'Si el campo precio_utilidad es un margen de utilidad o un precio fijo',
+  PRIMARY KEY (`id_producto`,`id_almacen`,`id_unidad`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `producto_clasificacion`
 --
 
@@ -1272,22 +1276,6 @@ CREATE TABLE IF NOT EXISTS `producto_empresa` (
   `es_margen_utilidad` float DEFAULT NULL COMMENT 'Si el campo precio_utilidad es un margen de utilidad o un precio fijo',
   PRIMARY KEY (`id_producto`,`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle producto empresa';
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `producto_lote`
---
-
-CREATE TABLE IF NOT EXISTS `producto_lote` (
-  `id_producto` int(11) NOT NULL,
-  `id_lote` int(11) NOT NULL,
-  `id_unidad` int(11) NOT NULL COMMENT 'Id de la unidad almacenada del producto',
-  `cantidad` int(11) NOT NULL,
-  `precio_utilidad` float DEFAULT NULL COMMENT 'Precio o margen de utilidad con el que se vendera este producto en esta sucursal',
-  `es_margen_utilidad` float DEFAULT NULL COMMENT 'Si el campo precio_utilidad es un margen de utilidad o un precio fijo',
-  PRIMARY KEY (`id_producto`,`id_lote`,`id_unidad`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1607,7 +1595,7 @@ CREATE TABLE IF NOT EXISTS `tipo_almacen` (
   `id_tipo_almacen` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(64) NOT NULL,
   PRIMARY KEY (`id_tipo_almacen`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 

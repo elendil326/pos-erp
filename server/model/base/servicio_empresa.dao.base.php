@@ -157,6 +157,16 @@ abstract class ServicioEmpresaDAOBase extends DAO
 			array_push( $val, $servicio_empresa->getIdEmpresa() );
 		}
 
+		if( $servicio_empresa->getPrecioUtilidad() != NULL){
+			$sql .= " precio_utilidad = ? AND";
+			array_push( $val, $servicio_empresa->getPrecioUtilidad() );
+		}
+
+		if( $servicio_empresa->getEsMargenUtilidad() != NULL){
+			$sql .= " es_margen_utilidad = ? AND";
+			array_push( $val, $servicio_empresa->getEsMargenUtilidad() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -188,6 +198,15 @@ abstract class ServicioEmpresaDAOBase extends DAO
 	  **/
 	private static final function update( $servicio_empresa )
 	{
+		$sql = "UPDATE servicio_empresa SET  precio_utilidad = ?, es_margen_utilidad = ? WHERE  id_servicio = ? AND id_empresa = ?;";
+		$params = array( 
+			$servicio_empresa->getPrecioUtilidad(), 
+			$servicio_empresa->getEsMargenUtilidad(), 
+			$servicio_empresa->getIdServicio(),$servicio_empresa->getIdEmpresa(), );
+		global $conn;
+		try{$conn->Execute($sql, $params);}
+		catch(Exception $e){ throw new Exception ($e->getMessage()); }
+		return $conn->Affected_Rows();
 	}
 
 
@@ -206,10 +225,12 @@ abstract class ServicioEmpresaDAOBase extends DAO
 	  **/
 	private static final function create( &$servicio_empresa )
 	{
-		$sql = "INSERT INTO servicio_empresa ( id_servicio, id_empresa ) VALUES ( ?, ?);";
+		$sql = "INSERT INTO servicio_empresa ( id_servicio, id_empresa, precio_utilidad, es_margen_utilidad ) VALUES ( ?, ?, ?, ?);";
 		$params = array( 
 			$servicio_empresa->getIdServicio(), 
 			$servicio_empresa->getIdEmpresa(), 
+			$servicio_empresa->getPrecioUtilidad(), 
+			$servicio_empresa->getEsMargenUtilidad(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -275,6 +296,28 @@ abstract class ServicioEmpresaDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " id_empresa = ? AND"; 
+			$a = $a === NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $servicio_empresaA->getPrecioUtilidad()) !== NULL) & ( ($b = $servicio_empresaB->getPrecioUtilidad()) !== NULL) ){
+				$sql .= " precio_utilidad >= ? AND precio_utilidad <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a !== NULL|| $b !== NULL ){
+			$sql .= " precio_utilidad = ? AND"; 
+			$a = $a === NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $servicio_empresaA->getEsMargenUtilidad()) !== NULL) & ( ($b = $servicio_empresaB->getEsMargenUtilidad()) !== NULL) ){
+				$sql .= " es_margen_utilidad >= ? AND es_margen_utilidad <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a !== NULL|| $b !== NULL ){
+			$sql .= " es_margen_utilidad = ? AND"; 
 			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
