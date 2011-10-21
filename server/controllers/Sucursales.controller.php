@@ -5,10 +5,15 @@ require_once("interfaces/Sucursales.interface.php");
   *
   *
   **/
+
+
 	
   class SucursalesController implements ISucursales{
   
       private $formato_fecha="Y-m-d H:i:s";
+
+      private static $almacen_consignacion=2;
+
       private function getCaja()
       {
           return 1;
@@ -300,6 +305,7 @@ require_once("interfaces/Sucursales.interface.php");
                         $d_producto->setPrecio($d_p["precio"]);
                         $d_producto->setRetencion($d_p["retencion"]);
                         VentaProductoDAO::save($d_producto);
+                        $this->DescontarDeAlmacenes($d_producto, $this->getSucursal());
                     }
                 }
                 if($detalle_orden!=null)
@@ -447,6 +453,152 @@ require_once("interfaces/Sucursales.interface.php");
                 $id_empresas["total"][$i]+=$precio;
             }
         }
+
+        private function DescontarDeAlmacenes
+        (
+                VentaProducto $detalle_producto,
+                $id_sucursal
+        )
+        {
+            $almacenes=AlmacenDAO::search(new Almacen(array("id_sucursal" => $id_sucursal)));
+            $productos_almacen=array();
+            $total=0;
+            foreach($almacenes as $almacen)
+            {
+                if($almacen->getIdTipoAlmacen()==self::$almacen_consignacion)
+                    continue;
+                $producto_almacen=ProductoAlmacenDAO::getByPK($detalle_producto->getIdProducto(), $almacen->getIdAlmacen(), $detalle_producto->getIdUnidad());
+                if($producto_almacen!=null)
+                {
+                    if($producto_almacen->getCantidad()>0)
+                        $total+=$producto_almacen->getCantidad();
+                    array_push($productos_almacen,$producto_almacen);
+                }
+            }
+            if(empty ($productos_almacen))
+            {
+                Logger::error("No se encontro el producto en los almacenes de esta sucursal");
+                throw new Exception("No se encontro el producto en los almacenes de esta sucursal");
+            }
+            $n=$detalle_producto->getCantidad();
+            $n_almacenes=count($productos_almacen);
+            $unidad=UnidadDAO::getByPK($detalle_producto->getIdUnidad());
+            if($unidad==null)
+            {
+                Logger::error("FATAL!!! este producto no tiene unidad");
+                throw new Exception("FATAL!!! este producto no tiene unidad");
+            }
+            if($n>=$total)
+            {
+                $n-=$total;
+                if($unidad->getEsEntero())
+                {
+                    $mod=$n%$n_almacenes;
+                    $cantidad=floor($n/$n_almacenes);
+                }
+                else
+                {
+                    $mod=0;
+                    $cantidad=$n/$n_almacenes;
+                }
+                DAO::transBegin();
+                try
+                {
+                    foreach($productos_almacen as $p)
+                    {
+                        $temp=$cantidad;
+                        if($mod>0)
+                        {
+                            $temp++;
+                            $mod--;
+                        }
+                        $p->setCantidad(0-$temp);
+                        ProductoAlmacenDAO::save($p);
+                    }
+                }
+                catch(Exception $e)
+                {
+                    DAO::transRollback();
+                    Logger::error("No se pudo actualizar la cantidad de producto en almacen");
+                    throw $e;
+                }
+                DAO::transEnd();
+            }
+            else
+            {
+                $productos_almacen=$this->OrdenarProductosAlmacen($productos_almacen);
+                $diferencia=array();
+                for($i=0;$i<$n_almacenes-1;$i++)
+                {
+                    $diferencia[$i]=$productos_almacen[$i]->getCantidad()-$productos_almacen[$i+1]->getCantidad();
+                }
+                $diferencia[$i]=$productos_almacen[$i]->getCantidad();
+                for($i=0;$n>0&&$i<$n_almacenes;$i++)
+                {
+                    if($n/($i+1)<$diferencia[$i])
+                    {
+                        if($unidad->getEsEntero())
+                        {
+                            $mod=$n%($i+1);
+                            $cantidad=floor($n/($i+1));
+                        }
+                        else
+                        {
+                            $mod=0;
+                            $cantidad=$n/($i+1);
+                        }
+                        DAO::transBegin();
+                        try
+                        {
+                            for($j=$i;$j>=0;$j--)
+                            {
+                                $temp=$cantidad;
+                                if($mod>0)
+                                {
+                                    $temp++;
+                                    $mod--;
+                                }
+                                $productos_almacen[$j]->setCantidad($productos_almacen[$j]->getCantidad()-$temp);
+                                ProductoAlmacenDAO::save($productos_almacen[$j]);
+                            }
+                        }
+                        catch(Exception $e)
+                        {
+                            DAO::transRollback();
+                            Logger::error("No se pudo actualizar la cantidad de producto en almacen");
+                            throw $e;
+                        }
+                        DAO::transEnd();
+                    }
+                    else
+                    {
+                        for($j=$i;$j>=0;$j--)
+                        {
+                            $productos_almacen[$j]->setCantidad($productos_almacen[$j]->getCantidad()-$diferencia[$i]);
+                        }
+                    }
+                    $n-=$diferencia[$i]*($i+1);
+                }
+            }
+
+        }
+
+        public function OrdenarProductosAlmacen
+        (
+                $productos_almacen
+        )
+        {
+            $cantidades=array();
+            $productos_almacen_ordenado=array();
+            foreach($productos_almacen as $p)
+            {
+                $productos_almacen_ordenado[]=$p;
+                $cantidades[]=$p->getCantidad();
+            }
+            array_multisort($cantidades,SORT_DESC,$productos_almacen_ordenado);
+            return $productos_almacen_ordenado;
+        }
+
 
 	/**
  	 *
