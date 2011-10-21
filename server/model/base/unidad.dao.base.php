@@ -158,6 +158,11 @@ abstract class UnidadDAOBase extends DAO
 			array_push( $val, $unidad->getDescripcion() );
 		}
 
+		if( $unidad->getEsEntero() != NULL){
+			$sql .= " es_entero = ? AND";
+			array_push( $val, $unidad->getEsEntero() );
+		}
+
 		if( $unidad->getActiva() != NULL){
 			$sql .= " activa = ? AND";
 			array_push( $val, $unidad->getActiva() );
@@ -194,10 +199,11 @@ abstract class UnidadDAOBase extends DAO
 	  **/
 	private static final function update( $unidad )
 	{
-		$sql = "UPDATE unidad SET  nombre = ?, descripcion = ?, activa = ? WHERE  id_unidad = ?;";
+		$sql = "UPDATE unidad SET  nombre = ?, descripcion = ?, es_entero = ?, activa = ? WHERE  id_unidad = ?;";
 		$params = array( 
 			$unidad->getNombre(), 
 			$unidad->getDescripcion(), 
+			$unidad->getEsEntero(), 
 			$unidad->getActiva(), 
 			$unidad->getIdUnidad(), );
 		global $conn;
@@ -222,11 +228,12 @@ abstract class UnidadDAOBase extends DAO
 	  **/
 	private static final function create( &$unidad )
 	{
-		$sql = "INSERT INTO unidad ( id_unidad, nombre, descripcion, activa ) VALUES ( ?, ?, ?, ?);";
+		$sql = "INSERT INTO unidad ( id_unidad, nombre, descripcion, es_entero, activa ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$unidad->getIdUnidad(), 
 			$unidad->getNombre(), 
 			$unidad->getDescripcion(), 
+			$unidad->getEsEntero(), 
 			$unidad->getActiva(), 
 		 );
 		global $conn;
@@ -304,6 +311,17 @@ abstract class UnidadDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " descripcion = ? AND"; 
+			$a = $a === NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $unidadA->getEsEntero()) !== NULL) & ( ($b = $unidadB->getEsEntero()) !== NULL) ){
+				$sql .= " es_entero >= ? AND es_entero <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a !== NULL|| $b !== NULL ){
+			$sql .= " es_entero = ? AND"; 
 			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			

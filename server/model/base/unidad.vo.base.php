@@ -31,6 +31,9 @@ class Unidad extends VO
 			if( isset($data['descripcion']) ){
 				$this->descripcion = $data['descripcion'];
 			}
+			if( isset($data['es_entero']) ){
+				$this->es_entero = $data['es_entero'];
+			}
 			if( isset($data['activa']) ){
 				$this->activa = $data['activa'];
 			}
@@ -50,6 +53,7 @@ class Unidad extends VO
 			"id_unidad" => $this->id_unidad,
 			"nombre" => $this->nombre,
 			"descripcion" => $this->descripcion,
+			"es_entero" => $this->es_entero,
 			"activa" => $this->activa
 		); 
 	return json_encode($vec); 
@@ -83,6 +87,15 @@ class Unidad extends VO
 	  * @var varchar(255)
 	  */
 	protected $descripcion;
+
+	/**
+	  * es_entero
+	  * 
+	  * Si esta unidad manejara sus cantidades como enteras o como flotantes<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $es_entero;
 
 	/**
 	  * activa
@@ -167,6 +180,30 @@ class Unidad extends VO
 	final public function setDescripcion( $descripcion )
 	{
 		$this->descripcion = $descripcion;
+	}
+
+	/**
+	  * getEsEntero
+	  * 
+	  * Get the <i>es_entero</i> property for this object. Donde <i>es_entero</i> es Si esta unidad manejara sus cantidades como enteras o como flotantes
+	  * @return tinyint(1)
+	  */
+	final public function getEsEntero()
+	{
+		return $this->es_entero;
+	}
+
+	/**
+	  * setEsEntero( $es_entero )
+	  * 
+	  * Set the <i>es_entero</i> property for this object. Donde <i>es_entero</i> es Si esta unidad manejara sus cantidades como enteras o como flotantes.
+	  * Una validacion basica se hara aqui para comprobar que <i>es_entero</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setEsEntero( $es_entero )
+	{
+		$this->es_entero = $es_entero;
 	}
 
 	/**

@@ -98,7 +98,7 @@ class ProductoAlmacen extends VO
 	  * 
 	  *  [Campo no documentado]<br>
 	  * @access protected
-	  * @var int(11)
+	  * @var float
 	  */
 	protected $cantidad;
 
@@ -202,7 +202,7 @@ class ProductoAlmacen extends VO
 	  * getCantidad
 	  * 
 	  * Get the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es  [Campo no documentado]
-	  * @return int(11)
+	  * @return float
 	  */
 	final public function getCantidad()
 	{
@@ -213,9 +213,9 @@ class ProductoAlmacen extends VO
 	  * setCantidad( $cantidad )
 	  * 
 	  * Set the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es  [Campo no documentado].
-	  * Una validacion basica se hara aqui para comprobar que <i>cantidad</i> es de tipo <i>int(11)</i>. 
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad</i> es de tipo <i>float</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param int(11)
+	  * @param float
 	  */
 	final public function setCantidad( $cantidad )
 	{
