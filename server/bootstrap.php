@@ -149,6 +149,7 @@
 	require_once("controllers/instances.controller.php");
     
 
+
 	# *******************************
 	# Cargar los DAO
 	# *******************************
@@ -161,8 +162,8 @@
 	# *******************************
 	require_once("controllers/Autorizaciones.controller.php");
 	require_once("controllers/CargosYAbonos.controller.php");
-        require_once("controllers/Cajas.controller.php");
-        require_once("controllers/Cheques.controller.php");
+	require_once("controllers/Cajas.controller.php");
+	require_once("controllers/Cheques.controller.php");
 	require_once("controllers/Clientes.controller.php");
 	require_once("controllers/Compras.controller.php");
 	require_once("controllers/Consignaciones.controller.php");
@@ -186,7 +187,6 @@
 	require_once("controllers/Sucursales.controller.php");
 	require_once("controllers/TransportacionYFletes.controller.php");
 	require_once("controllers/Ventas.controller.php");
-
 	require_once("controllers/Direcciones.controller.php");
 
 

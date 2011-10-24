@@ -84,7 +84,8 @@ class GerenciaComponentPage extends StdComponentPage{
 	 *
 	 *	Crear los menues gracias a un json,
 	 *  en un futuro este json puede
-	 *  estar en la base de datos ! nice ! 
+	 *  estar en la base de datos y ser diferente 
+	 *  para cada usuario ! nice ! 
 	 **/
 	private function createMainMenu()
 	{

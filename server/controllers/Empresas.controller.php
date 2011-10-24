@@ -138,7 +138,7 @@ require_once("interfaces/Empresas.interface.php");
 //                        "telefono"          =>  $telefono1,
 //                        "telefono2"         =>  $telefono2
 //                    ));
-
+          Logger::log("Colonia:" . $colonia);
             $e = new Empresa(array(
                             "activo"                => true,
                             "curp"                  => $curp,
@@ -154,7 +154,18 @@ require_once("interfaces/Empresas.interface.php");
              DAO::transBegin();
              try
              {
-                 $id_direccion=DireccionController::NuevaDireccion($calle,$numero_exterior,$colonia,$ciudad,$codigo_postal,$numero_interior,$texto_extra,$telefono1,$telefono2);
+                 $id_direccion = DireccionController::NuevaDireccion( 
+                    $calle,
+                    $numero_exterior,
+                    $colonia,
+                    $ciudad,
+                    $codigo_postal,
+                    $numero_interior,
+                    $texto_extra,
+                    $telefono1,
+                    $telefono2
+                  );
+
                  $e->setIdDireccion($id_direccion);
                  EmpresaDAO::save($e);
                  $impuesto_empresa=new ImpuestoEmpresa(array("id_empresa" => $e->getIdEmpresa()));

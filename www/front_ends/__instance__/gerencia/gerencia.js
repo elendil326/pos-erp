@@ -5,19 +5,7 @@ var main = function ()
 
 	//POS.API.POST("api/personal/rol/nuevo/", { descripcion :"a", nombre : "asdf" }, function(a ){ console.log(a ); });
 
-	POS.API.POST("api/empresa/nuevo/", 
-		{ 
-			codigo_postal :"a", 
-			colonia :"a", 
-			curp :"a", 
-			numero_exterior: "123",
-			razon_social : "123",
-			rfc: "123",
-			ciudad : "123",
-			calle : "adsfasdfadsf",
-			
-			
-		}, function(a ){ console.log(a ); });
+
 
 }
 
@@ -37,6 +25,25 @@ var POS =
 		{
 				
 		};
+
+		this.nueva = function (   ) 
+		{
+			
+			POS.API.POST("api/empresa/nuevo/", 
+			{ 
+				codigo_postal :"a", 
+				colonia :"a", 
+				curp :"a", 
+				numero_exterior: "123",
+				razon_social : "123",
+				rfc: "123",
+				ciudad : "334",
+				calle : "Galena",
+				
+				
+			}, function(a ){ console.log(a ); });
+
+		}
 	}	
 
 
