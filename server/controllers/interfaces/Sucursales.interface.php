@@ -252,6 +252,7 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 **/
   function AbrirCaja
 	(
+                $id_caja, 
 		$billetes, 
 		$saldo, 
 		$client_token, 
@@ -556,13 +557,11 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 **/
   function Lista
 	(
-		$activo, 
+		$activo = null,
 		$id_empresa = null, 
 		$saldo_inferior_que = null, 
-		$saldo_igual_que = null, 
 		$saldo_superior_que = null, 
 		$fecha_apertura_inferior_que = null, 
-		$fecha_apertura_igual_que = null, 
 		$fecha_apertura_superior_que = null
 	);  
   

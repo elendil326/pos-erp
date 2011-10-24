@@ -798,18 +798,83 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public function Lista
 	(
-		$activo, 
+		$activo = null,
 		$id_empresa = null, 
 		$saldo_inferior_que = null, 
-		$saldo_igual_que = null, 
 		$saldo_superior_que = null, 
 		$fecha_apertura_inferior_que = null, 
-		$fecha_apertura_igual_que = null, 
 		$fecha_apertura_superior_que = null
 	)
-	{  
-  
-  
+	{
+            Logger::log("Listando sucursales");
+            $parametros=false;
+            if
+            (
+                    $activo !== null ||
+                    $id_empresa != null ||
+                    $saldo_inferior_que !== null ||
+                    $saldo_superior_que !== null ||
+                    $fecha_apertura_inferior_que != null || 
+                    $fecha_apertura_superior_que != null
+            )
+                $parametros=true;
+            $sucursales=array();
+            $sucursales1=array();
+            if($parametros)
+            {
+                Logger::log("se recibieron parametros, se listan las sucursales en rango");
+                if($id_empresa!=null)
+                {
+                    $sucursales_empresa=SucursalEmpresaDAO::search(new SucursalEmpresa(array( "id_empresa" => $id_empresa )));
+                    foreach($sucursales_empresa as $sucursal_empresa)
+                    {
+                        array_push($sucursales1,SucursalDAO::getByPK($sucursal_empresa->getIdSucursal()));
+                    }
+                }
+                else
+                {
+                    $sucursales1=SucursalDAO::getAll();
+                }
+                $sucursal_criterio1=new Sucursal();
+                $sucursal_criterio2=new Sucursal();
+
+                $sucursal_criterio1->setActiva($activo);
+                if($saldo_superior_que!==null)
+                {
+                    $sucursal_criterio1->setSaldoAFavor($saldo_superior_que);
+                    if($saldo_inferior_que!==null)
+                        $sucursal_criterio2->setSaldoAFavor($saldo_inferior_que);
+                    else
+                        $sucursal_criterio2->setSaldoAFavor(1.8e100);
+                }
+                else if($saldo_inferior_que!==null)
+                {
+                    $sucursal_criterio1->setSaldoAFavor($saldo_inferior_que);
+                    $sucursal_criterio2->setSaldoAFavor(0);
+                }
+                if($fecha_apertura_superior_que!=null)
+                {
+                    $sucursal_criterio1->setFechaApertura($fecha_apertura_superior_que);
+                    if($fecha_apertura_inferior_que!=null)
+                        $sucursal_criterio2->setFechaApertura($fecha_apertura_inferior_que);
+                    else
+                        $sucursal_criterio2->setFechaApertura(date($this->formato_fecha,time()));
+                }
+                else if($fecha_apertura_inferior_que!=null)
+                {
+                    $sucursal_criterio1->setFechaApertura($fecha_apertura_inferior_que);
+                    $sucursal_criterio2->setFechaApertura("1001-01-01 00:00:00");
+                }
+                $sucursales2=SucursalDAO::byRange($sucursal_criterio1, $sucursal_criterio2);
+                $sucursales=array_intersect($sucursales1, $sucursales2);
+            }
+            else
+            {
+                Logger::log("No se recibieron parametros, se listan todas las sucursales");
+                $sucursales=SucursalDAO::getAll();
+            }
+            Logger::log("Sucursales obtenidos con exitos");
+            return $sucursales;
 	}
   
 	/**
@@ -825,15 +890,65 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public function AbrirCaja
 	(
+                $id_caja,
 		$billetes, 
 		$saldo, 
 		$client_token, 
 		$control_billetes, 
 		$id_cajero = null
 	)
-	{  
-  
-  
+	{
+            Logger::log("Abriendo caja");
+            $caja=CajaDAO::getByPK($id_caja);
+            if($caja==null)
+            {
+                Logger::error("La caja con id: ".$id_caja." no existe");
+                throw new Exception("La caja con id: ".$id_caja." no existe");
+            }
+            if(!$caja->getActiva())
+            {
+                Logger::error("La caja no esta activa y no puede ser abierta");
+                throw new Exception("La caja no esta activa y no puede ser abierta");
+            }
+            if($caja->getAbierta())
+            {
+                Logger::warn("La caja ya ha sido abierta");
+                return;
+            }
+            $apertura_caja=new AperturaCaja();
+            $apertura_caja->setIdCaja($id_caja);
+            $apertura_caja->setFecha(date($this->formato_fecha,time()));
+            $apertura_caja->setIdCajero($id_cajero);
+            $apertura_caja->setSaldo($saldo);
+            $caja->setAbierta(1);
+            $caja->setSaldo($saldo);
+            $caja->setControlBilletes($control_billetes);
+            DAO::transBegin();
+            try
+            {
+                CajasController::modificarCaja($id_caja, 1, $billetes, 0);
+                AperturaCajaDAO::save($apertura_caja);
+                CajaDAO::save($caja);
+                if($control_billetes)
+                {
+                    $billete_apertura_caja=new BilleteAperturaCaja(array( "id_apertura_caja" => $apertura_caja->getIdAperturaCaja()));
+                    foreach($billetes as $billete)
+                    {
+                        $billete_apertura_caja->setIdBillete($billete["id_billete"]);
+                        $billete_apertura_caja->setCantidad($billete["cantidad"]);
+                        BilleteAperturaCajaDAO::save($billete_apertura_caja);
+                    }
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo abrir la caja: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Caja abierta exitosamente");
+            return $apertura_caja->getIdAperturaCaja();
 	}
   
 	/**
