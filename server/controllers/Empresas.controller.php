@@ -471,13 +471,13 @@ require_once("interfaces/Empresas.interface.php");
             {
                 EmpresaDAO::save($empresa);
                 DireccionDAO::save($direccion);
-                if($impuestos_empresa)
+                if($impuestos!==null)
+                {
+                    if($impuestos_empresa)
                     foreach($impuestos_empresa as $impuesto_empresa)
                     {
                         ImpuestoEmpresaDAO::delete($impuesto_empresa);
                     }
-                if($impuestos!==null)
-                {
                     $i_empresa=new ImpuestoEmpresa(array("id_empresa"=>$id_empresa));
                     foreach($impuestos as $id_impuesto)
                     {
@@ -489,13 +489,13 @@ require_once("interfaces/Empresas.interface.php");
                         ImpuestoEmpresaDAO::save($i_empresa);
                     }
                 }
-                 if($retenciones_empresa)
+                if($retenciones!==null)
+                {
+                    if($retenciones_empresa)
                     foreach($retenciones_empresa as $retencion_empresa)
                     {
                         RetencionEmpresaDAO::delete($retencion_empresa);
                     }
-                if($retenciones!==null)
-                {
                     $r_empresa=new RetencionEmpresa(array("id_empresa"=>$id_empresa));
                     foreach($retenciones as $id_retencion)
                     {

@@ -505,7 +505,8 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$numero_interior = null, 
 		$colonia = null, 
 		$calle = null, 
-		$coidgo_postal = null
+		$coidgo_postal = null,
+                $retenciones = null
 	);  
   
   

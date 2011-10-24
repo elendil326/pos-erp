@@ -1109,11 +1109,165 @@ require_once("interfaces/Sucursales.interface.php");
 		$numero_interior = null, 
 		$colonia = null, 
 		$calle = null, 
-		$coidgo_postal = null
+		$coidgo_postal = null,
+                $retenciones = null
 	)
 	{  
-  
-  
+            $sucursal=SucursalDAO::getByPK($id_sucursal);
+            $cambio_direccion=false;
+            if($sucursal==null)
+            {
+                Logger::error("La sucursal con id: ".$id_sucursal." no existe");
+                throw new Exception("La sucursal con id: ".$id_sucursal." no existe");
+            }
+            $direccion=DireccionDAO::getByPK($sucursal->getIdDireccion());
+            if($direccion==null)
+            {
+                Logger::error("FATAL!!! La sucursal no cuenta con una direccion");
+                throw new Exception("FATAL!!! La sucursal no cuenta con una direccion");
+            }
+            if($descuento!==null)
+            {
+                $sucursal->setDescuento($descuento);
+            }
+            if($margen_utilidad!==null)
+            {
+                $sucursal->setMargenUtilidad($margen_utilidad);
+            }
+            if($descripcion!=null)
+            {
+                $sucursal->setDescripcion($descripcion);
+            }
+            if($telefono1!=null)
+            {
+                $cambio_direccion=true;
+                $direccion->setTelefono($telefono1);
+            }
+            if($telefono2!=null)
+            {
+                $cambio_direccion=true;
+                $direccion->setTelefono2($telefono2);
+            }
+            if($numero_exterior!=null)
+            {
+                $cambio_direccion=true;
+                $direccion->setNumeroExterior($numero_exterior);
+            }
+            if($razon_social!=null)
+            {
+                $sucursal->setRazonSocial($razon_social);
+            }
+            if($id_gerente!=null)
+            {
+                $sucursal->setIdGerente($id_gerente);
+            }
+            if($municipio!=null)
+            {
+                $cambio_direccion=true;
+                $direccion->setIdCiudad($municipio);
+            }
+            if($rfc!=null)
+            {
+                $sucursal->setRfc($rfc);
+            }
+            if($saldo_a_favor!=null)
+            {
+                $sucursal->setSaldoAFavor($saldo_a_favor);
+            }
+            if($numero_interior!=null)
+            {
+                $cambio_direccion=true;
+                $direccion->setNumeroInterior($numero_interior);
+            }
+            if($colonia!=null)
+            {
+                $cambio_direccion=true;
+                $direccion->setColonia($colonia);
+            }
+            if($calle!=null)
+            {
+                $cambio_direccion=true;
+                $direccion->setCalle($calle);
+            }
+            if($coidgo_postal!=null)
+            {
+                $cambio_direccion=true;
+                $direccion->setCodigoPostal($coidgo_postal);
+            }
+            if($cambio_direccion)
+            {
+                $direccion->setUltimaModificacion(date($this->formato_fecha,time()));
+                $id_usuario=LoginController::getCurrentUser();
+                if($id_usuario==null)
+                {
+                    Logger::error("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
+                    throw new Exception("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
+                }
+                $direccion->setIdUsuarioUltimaModificacion($id_usuario);
+            }
+            DAO::transBegin();
+            try
+            {
+                DireccionDAO::save($direccion);
+                if($empresas!=null)
+                {
+                    $sucursales_empresa_actual=SucursalEmpresaDAO::search(new SucursalEmpresa(array( "id_sucursal" => $id_sucursal)));
+                    foreach($sucursales_empresa_actual as $e)
+                    {
+                        SucursalEmpresaDAO::delete($e);
+                    }
+                    foreach($empresas as $empresa)
+                    {
+                        if(EmpresaDAO::getByPK($empresa["id_empresa"])==null)
+                        {
+                            throw new Exception("La empresa con id: ".$empresa["id_empresa"]." no existe");
+                        }
+                        SucursalEmpresaDAO::save(new SucursalEmpresa(array( "id_sucursal" => $id_sucursal,
+                            "id_empresa" => $empresa["id_empresa"], "margen_utilidad" => $empresa["margen_utilidad"], "descuento" => $empresa["descuento"] )));
+                    }
+                }
+                if($impuestos!=null)
+                {
+                    $impuestos_sucursal_actual = ImpuestoSucursalDAO::search(new ImpuestoSucursal(array( "id_sucursal" => $id_sucursal)));
+                    foreach($impuestos_sucursal_actual as $i)
+                    {
+                        ImpuestoSucursalDAO::delete($i);
+                    }
+                    foreach($impuestos as $impuesto)
+                    {
+                        if(ImpuestoDAO::getByPK($impuesto)==null)
+                        {
+                            throw new Exception("El impuesto con id: ".$impuesto." no existe");
+                        }
+                        ImpuestoSucursalDAO::save(new ImpuestoSucursal(array( "id_sucursal" => $id_sucursal, "id_impuesto" => $impuesto)));
+                    }
+                }
+                if($retenciones!=null)
+                {
+                    $retenciones_sucursal_actual = RetencionSucursalDAO::search(new RetencionSucursal(array( "id_sucursal" => $id_sucursal)));
+                    foreach($retenciones_sucursal_actual as $r)
+                    {
+                        RetencionSucursalDAO::delete($r);
+                    }
+                    foreach($retenciones as $retencion)
+                    {
+                        if(RetencionDAO::getByPK($retencion)==null)
+                        {
+                            throw new Exception("La retencion con id: ".$retencion." no existe");
+                        }
+                        RetencionSucursalDAO::save(new RetencionSucursal(array( "id_sucursal" => $id_sucursal, "id_retencion" => $retencion)));
+                    }
+                    
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo actualizar la sucursal: ".$e);
+                throw new Exception("No se pudo actualizar la sucursal: ".$e);
+            }
+            DAO::transEnd();
+            Logger::log("Sucursal actualizada exitosamente");
 	}
   
 	/**
