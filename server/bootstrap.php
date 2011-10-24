@@ -138,6 +138,7 @@
 	require_once("libs/gui/TitleComponent.php");
 	require_once("libs/gui/TableComponent.php");
 	require_once("libs/gui/GerenciaComponentPage.php");
+	require_once("libs/gui/FreeHtmlComponent.php");
 
 
 

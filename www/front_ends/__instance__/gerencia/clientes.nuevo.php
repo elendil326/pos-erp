@@ -10,12 +10,22 @@
 	
 	$page->addComponent( new TitleComponent( "Nuevo cliente" ) );
 	
-	
-	$foo = new Usuario();
-	$cmp = new DAOFormComponent( $foo );
-	$page->addComponent( $cmp );
+
+
+
+	$page->addComponent( new TitleComponent( "Datos personales" , 3 ) );
+
+	$form = new DAOFormComponent( array( new Usuario(), new Direccion() ) );
+	$form->addOnClick( "Nuevo cliente" , "cliente.nuevo()" );
+
+	$page->addComponent( $form );
+
 
 	
+	$html = new FreeHtmlComponent("");
+
+	$page->addComponent( $html );
+
 	$page->render();
 
 

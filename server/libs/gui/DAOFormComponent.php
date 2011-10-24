@@ -10,16 +10,36 @@ class DAOFormComponent extends FormComponent
 
 		parent::__construct();
 
-		$fields = json_decode( $vo->__toString() );
+		if(is_array($vo)){
+			for ($a=0; $a < sizeof( $vo ); $a++) 
+			{ 
+				$fields = json_decode( $vo[$a]->__toString() );
 
-		foreach($fields as $k => $v)
-		{
+				foreach($fields as $k => $v)
+				{
 
-			$caption = ucwords(str_replace ( "_" , " " , $k ));
+					$caption = ucwords(str_replace ( "_" , " " , $k ));
 
-			parent::addField( $k, $caption, "text", $v, $k );
-			
+					parent::addField( $k, $caption, "text", $v, $k );
+					
+				}							
+			}
+				
+		}else{
+			$fields = json_decode( $vo->__toString() );
+
+			foreach($fields as $k => $v)
+			{
+
+				$caption = ucwords(str_replace ( "_" , " " , $k ));
+
+				parent::addField( $k, $caption, "text", $v, $k );
+				
+			}
 		}
+		
+
+
 
 	}
 
