@@ -8,7 +8,7 @@ require_once("interfaces/Empresas.interface.php");
 	
   class EmpresasController implements IEmpresas{
   
-        var $formato_fecha="Y-m-d H:i:s";
+        static $formato_fecha="Y-m-d H:i:s";
 	/**
  	 *
  	 *Mostrar?odas la empresas en el sistema, as?omo sus sucursalse y sus gerentes[a] correspondientes. Por default no se mostraran las empresas ni sucursales inactivas. 
@@ -144,7 +144,7 @@ require_once("interfaces/Empresas.interface.php");
                             "curp"                  => $curp,
                             "descuento"             => $descuento,
                             "direccion_web"         => $direccion_web,
-                            "fecha_alta"            => date($this->formato_fecha,time()),
+                            "fecha_alta"            => date("Y-m-d H:i:s",time()),
                             "fecha_baja"            => null,
                             "margen_utilidad"       => $margen_utilidad,
                             "razon_social"          => $razon_social,
@@ -443,7 +443,7 @@ require_once("interfaces/Empresas.interface.php");
             }
             if($modificar_direccion)
             {
-                $direccion->setUltimaModificacion($this->formato_fecha,time());
+                $direccion->setUltimaModificacion("Y-m-d H:i:s",time());
                 $id_usuario=LoginController::getCurrentUser();
                 if($id_usuario==null)
                 {
