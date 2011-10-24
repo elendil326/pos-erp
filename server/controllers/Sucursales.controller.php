@@ -535,7 +535,7 @@ require_once("interfaces/Sucursales.interface.php");
                 $diferencia[$i]=$productos_almacen[$i]->getCantidad();
                 for($i=0;$n>0&&$i<$n_almacenes;$i++)
                 {
-                    if($n/($i+1)<$diferencia[$i])
+                    if($n/($i+1)<=$diferencia[$i]*($i+1))
                     {
                         if($unidad->getEsEntero())
                         {
@@ -560,6 +560,7 @@ require_once("interfaces/Sucursales.interface.php");
                                 }
                                 $productos_almacen[$j]->setCantidad($productos_almacen[$j]->getCantidad()-$temp);
                                 ProductoAlmacenDAO::save($productos_almacen[$j]);
+                                
                             }
                         }
                         catch(Exception $e)
