@@ -89,26 +89,105 @@ class GerenciaComponentPage extends StdComponentPage{
 	private function createMainMenu()
 	{
 		$this->main_menu_json = '
-				{ "main_menu" : [
-					{
-						"title" : "Empresas",
-						"url"	: "empresas.php",
-						"children" : [
-							{
-								"title" : "2Sucursales",
-								"url"	: "sucursales.php"
-							},
-							{
-								"title" : "3Sucursales",
-								"url"	: "sucursales.php"
-							}							
-						]
-					},
-					{
-						"title" : "Sucursales",
-						"url"	: "sucursales.php"
-					}
-				]}';
+				{
+    "main_menu": [
+        {
+            "title": "Autorizaciones",
+            "url": "autorizaciones.php",
+            "children": [
+                {
+                    "title": "Lista",
+                    "url": ""
+                }
+            ]
+        },
+        {
+            "title": "Cargos y abonos",
+            "url": "cargos_y_abonos.php",
+            "children": [
+                {
+                    "title": "",
+                    "url": ""
+                }
+            ]
+        },
+        {
+            "title": "Clientes",
+            "url": "clientes.php",
+            "children" : [
+            	{
+            		"title" : "Nuevo",
+            		"url"   : "clientes.nuevo.php"
+            	}
+            ]
+        },
+        {
+            "title": "Compras",
+            "url": "compras.php"
+        },
+        {
+            "title": "Consignaciones",
+            "url": "consignaciones.php"
+        },
+        {
+            "title": "Contabilidad",
+            "url": "contabilidad.php"
+        },
+        {
+            "title": "Documentos",
+            "url": "documentos.php"
+        },
+        {
+            "title": "Efectivo",
+            "url": "efectivo.php"
+        },
+        {
+            "title": "Empresas",
+            "url": "empresas.php"
+        },
+        {
+            "title": "Impuestos y retenciones",
+            "url": "impuestos.php"
+        },
+        {
+            "title": "Inventarios",
+            "url": "inventario.php"
+        },
+        {
+            "title": "Productos",
+            "url": "productos.php"
+        },
+        {
+            "title": "Personal y agentes",
+            "url": "personal.php"
+        },
+        {
+            "title": "Proveedores",
+            "url": "proveedores.php"
+        },
+        {
+            "title": "Reportes",
+            "url": "reportes.php"
+        },
+        {
+            "title": "Servicios",
+            "url": "servicios.php"
+        },
+        {
+            "title": "Sucursales",
+            "url": "sucursales.php"
+        },
+        {
+            "title": "Transportacion y fletes",
+            "url": "transportacion.php"
+        },
+        {
+            "title": "Ventas",
+            "url": "ventas.php"
+        }
+    ]
+}
+				';
 		
 	}
 
@@ -160,7 +239,7 @@ class GerenciaComponentPage extends StdComponentPage{
 		<title>POS</title>
 			<link type="text/css" rel="stylesheet" href="../../../css/basic.css"/>
 		</head>
-		<body class="safari4 mac Locale_en_US">
+		<body class="">
 		<div id="FB_HiddenContainer" style="position:absolute; top:-10000px; width:0px; height:0px;"></div>
 		<div class="devsitePage">
 			<div class="menu">
@@ -170,6 +249,7 @@ class GerenciaComponentPage extends StdComponentPage{
 					</a>
 
 
+					<a class="l" href="./configuracion.php">Configuracion</a>
 					<a class="l" href="./&close_session">Salir</a>
 
 
@@ -267,18 +347,22 @@ class GerenciaComponentPage extends StdComponentPage{
 							<!-- ----------------------------------------------------------------------
 											CONTENIDO
 								 ---------------------------------------------------------------------- -->
+
 								 <?php
-									foreach( $this->components as $cmp ){
+									foreach( $this->components as $cmp )
+									{
 										echo $cmp->renderCmp();
 									}
 								 ?>
-								
-								<!--
+
+								 <!--
 								<div class="breadcrumbs">
 									<a href=".">POS ERP</a> 
 									&rsaquo; <a href=".">Cargos y abonos</a>							
-								</div>
+								</div>								
 								-->
+
+								
 									
 							</div>
 						</div>

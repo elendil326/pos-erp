@@ -24,10 +24,10 @@
 
 	protected function GetRequest()
 	{
-		var_dump( $_GET );
+		var_dump( $_REQUEST );
 		die();
 		$this->request = array(	
-			//"descripcion" => new ApiExposedProperty("descripcion", true, GET, array( "string" )),
+			"descripcion" => new ApiExposedProperty("descripcion", true, POST, array( "string" )),
 			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
 			"descuento" => new ApiExposedProperty("descuento", false, POST, array( "float" )),
 			"salario" => new ApiExposedProperty("salario", false, POST, array( "float" )),

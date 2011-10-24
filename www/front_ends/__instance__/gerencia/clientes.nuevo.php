@@ -8,12 +8,13 @@
 
 	$page = new GerenciaComponentPage();
 	
-	$page->addComponent( new TitleComponent( "Bienvenido" ) );
-	$page->addComponent( new TitleComponent( "POS ERP", 2 ) );
-
+	$page->addComponent( new TitleComponent( "Nuevo cliente" ) );
+	
+	
 	$foo = new Usuario();
 	$cmp = new DAOFormComponent( $foo );
-	//$page->addComponent( $cmp );
+	$page->addComponent( $cmp );
+
 	
 	$page->render();
 
