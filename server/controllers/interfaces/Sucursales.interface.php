@@ -611,7 +611,9 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$telefono1 = null, 
 		$descripcion = null, 
 		$impuestos = null, 
-		$descuento = null
+		$descuento = null,
+                $retenciones = null,
+                $referencia = null
 	);  
   
   

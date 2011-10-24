@@ -10,7 +10,7 @@ require_once("interfaces/Sucursales.interface.php");
 	
   class SucursalesController implements ISucursales{
   
-      private $formato_fecha="Y-m-d H:i:s";
+      var $formato_fecha="Y-m-d H:i:s";
 
       private static $almacen_consignacion=2;
 
@@ -994,11 +994,77 @@ require_once("interfaces/Sucursales.interface.php");
 		$telefono1 = null, 
 		$descripcion = null, 
 		$impuestos = null, 
-		$descuento = null
+		$descuento = null,
+                $retenciones = null,
+                $referencia = null
 	)
-	{  
-  
-  
+	{
+            Logger::log("Creando nueva sucursal");
+            $sucursal=new Sucursal();
+            $sucursal->setRfc($rfc);
+            $sucursal->setActiva($activo);
+            $sucursal->setRazonSocial($razon_social);
+            if(CiudadDAO::getByPK($id_ciudad)==null)
+            {
+                Logger::error("La ciudad con id: ".$id_ciudad." no existe");
+            }
+            $sucursal->setSaldoAFavor($saldo_a_favor);
+            $sucursal->setIdGerente($id_gerente);
+            $sucursal->setMargenUtilidad($margen_utilidad);
+            $sucursal->setDescripcion($descripcion);
+            $sucursal->setDescuento($descuento);
+            $sucursal->setFechaApertura($this->formato_fecha,time());
+            DAO::transBegin();
+            try
+            {
+                $id_direccion=DireccionController::NuevaDireccion($calle,$numero_exterior,$colonia,$id_ciudad,$codigo_postal,$numero_interior,$referencia,$telefono1,$telefono2);
+                $sucursal->setIdDireccion($id_direccion);
+                SucursalDAO::save($sucursal);
+                $sucursal_empresa = new SucursalEmpresa();
+                $sucursal_empresa->setIdSucursal($sucursal->getIdSucursal());
+                foreach($empresas as $empresa)
+                {
+                    $sucursal_empresa->setIdEmpresa($empresa["id_empresa"]);
+                    $sucursal_empresa->setDescuento($empresa["descuento"]);
+                    $sucursal_empresa->setMargenUtilidad($empresa["margen_utilidad"]);
+                    SucursalEmpresaDAO::save($sucursal_empresa);
+                }
+                if($impuestos!=null)
+                {
+                    $impuesto=new ImpuestoSucursal(array( "id_sucursal" => $sucursal->getIdSucursal()));
+                    foreach($impuestos as $i)
+                    {
+                        if(ImpuestoDAO::getByPK($i)==null)
+                        {
+                            throw new Exception("El impuesto con id: ".$i." no existe");
+                        }
+                        $impuesto->setIdImpuesto($i);
+                        ImpuestoSucursalDAO::save($impuesto);
+                    }
+                }
+                if($retenciones!=null)
+                {
+                    $retencion= new RetencionSucursal(array( "id_sucursal" => $sucursal->getIdSucursal()));
+                    foreach($retenciones as $r)
+                    {
+                        if(RetencionDAO::getByPK($r)==null)
+                        {
+                            throw new Exception("La retencion con id: ".$r." no existe");
+                        }
+                        $retencion->setIdRetencion($r);
+                        RetencionSucursalDAO::save($retencion);
+                    }
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear la nueva sucursal ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Sucursal creada con exito");
+            return $sucursal->getIdSucursal();
 	}
   
 	/**
