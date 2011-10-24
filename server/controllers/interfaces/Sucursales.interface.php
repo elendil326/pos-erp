@@ -331,7 +331,8 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$billetes_cambio = null, 
 		$tipo_pago = null, 
 		$saldo = 0, 
-		$cheques = null
+		$cheques = null,
+                $id_compra_caja = null
 	);  
   
   

@@ -2032,6 +2032,15 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         {
                             CajasController::modificarCaja($id_caja, 1, $billetes, $monto);
                         }
+                        if($operacion->getSaldo()>=$operacion->getTotal())
+                        {
+                            $ventas_empresa=VentaEmpresaDAO::search(new VentaEmpresa(array("id_venta" => $operacion->getIdVenta())));
+                            foreach($ventas_empresa as $venta_empresa)
+                            {
+                                $venta_empresa->setSaldada(1);
+                                VentaEmpresaDAO::save($venta_empresa);
+                            }
+                        }
                 }
                 UsuarioDAO::save($usuario);
             }

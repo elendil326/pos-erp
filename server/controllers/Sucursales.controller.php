@@ -206,7 +206,6 @@ require_once("interfaces/Sucursales.interface.php");
                 {
                     if($tipo_pago==="cheque"&&$cheques==null)
                     {
-                        Logger::error("El tipo de pago es con cheque pero no se recibio informacion del mismo");
                         throw new Exception("El tipo de pago es con cheque pero no se recibio informacion del mismo");
                     }
                     if($saldo!==null)
@@ -234,10 +233,9 @@ require_once("interfaces/Sucursales.interface.php");
                             CajasController::modificarCaja($venta->getIdCaja(), 0, $billetes_cambio, 0);
                         }
                     }
-                    else if($tipo_pago!=="tarjeta")
+                    else 
                     {
-                        Logger::error("No se recibio que tipo de pago se realiza para esta venta de contado");
-                        throw new Exception("No se recibio que tipo de pago se realiza para esta venta de contado");
+                        throw new Exception("Se recibio un tipo de pago de: ".$tipo_pago." para esta venta de contado");
                     }
                 }
                 else if($tipo_venta=="credito")
@@ -249,13 +247,16 @@ require_once("interfaces/Sucursales.interface.php");
                     }
                     $venta->setSaldo($saldo);
                     VentaDAO::save($venta);
-                    $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()-$total);
+                    $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()-$total+$saldo);
                     UsuarioDAO::save($usuario);
                 }
                 else
                 {
-                    Logger::error("El tipo de venta recibido no es valido");
                     throw new Exception("El tipo de venta recibido no es valido");
+                }
+                if($detalle_orden==null&&$detalle_paquete==null&&$detalle_producto==null)
+                {
+                    throw new Exception ("No se recibieron ni paquetes ni productos ni servicios para esta venta");
                 }
                 if($detalle_paquete!=null)
                 {
@@ -265,7 +266,6 @@ require_once("interfaces/Sucursales.interface.php");
                     {
                         if(PaqueteDAO::getByPK($d_p["id_paquete"])==null)
                         {
-                            Logger::error("El paquete con id: ".$d_p["id_paquete"]." no existe");
                             throw new Exception("El paquete con id: ".$d_p["id_paquete"]." no existe");
                         }
                         $d_paquete->setCantidad($d_p["cantidad"]);
@@ -281,20 +281,18 @@ require_once("interfaces/Sucursales.interface.php");
                     $d_producto->setIdVenta($venta->getIdVenta());
                     foreach($detalle_producto as $d_p)
                     {
-                        if(ProductoDAO::getByPK($d_p["id_producto"])==null)
+                        $producto=ProductoDAO::getByPK($d_p["id_producto"]);
+                        if($producto==null)
                         {
-                            Logger::error("El producto con id: ".$d_p["id_producto"]." no existe");
                             throw new Exception("El producto con id: ".$d_p["id_producto"]." no existe");
                         }
                         if(UnidadDAO::getByPk($d_p["id_unidad"])==null)
                         {
-                            Logger::error("La unidad con id: ".$d_p["id_unidad"]." no existe");
                             throw new Exception("La unidad con id: ".$d_p["id_unidad"]." no existe");
                         }
-                        $producto=ProductoDAO::getByPK($d_p["id_producto"]);
+                        
                         if(!$producto->getCompraEnMostrador())
                         {
-                            Logger::error("No se puede vender el producto con id ".$d_p["id_producto"]." en mostrador");
                             throw new Exception("No se puede vender el producto con id ".$d_p["id_producto"]." en mostrador");
                         }
                         $d_producto->setCantidad($d_p["cantidad"]);
@@ -316,7 +314,6 @@ require_once("interfaces/Sucursales.interface.php");
                     {
                         if(OrdenDeServicioDAO::getByPK($d_p["id_orden_de_servicio"])==null)
                         {
-                            Logger::error("La orden de servicio con id: ".$d_p["id_orden_de_servicio"]." no existe");
                             throw new Exception("La orden de servicio con id: ".$d_p["id_orden_de_servicio"]." no existe");
                         }
                         $d_orden->setDescuento($d_p["descuento"]);
@@ -326,11 +323,6 @@ require_once("interfaces/Sucursales.interface.php");
                         $d_orden->setRetencion($d_p["retencion"]);
                         VentaOrdenDAO::save($d_orden);
                     }
-                }
-                else
-                {
-                    Logger::error("No se recibieron ni paquetes ni productos ni servicios para esta venta");
-                    throw new Exception ("No se recibieron ni paquetes ni productos ni servicios para esta venta");
                 }
                 $id_empresas=$this->ObtenerEmpresas($detalle_producto, $detalle_paquete, $detalle_orden);
                 $venta_empresa=new VentaEmpresa(array("id_venta" => $venta->getIdVenta()));
@@ -412,7 +404,6 @@ require_once("interfaces/Sucursales.interface.php");
             }
             if(!$parametro)
             {
-                Logger::error("No se recibio un id_producto ni un id_paquete ni un id_orden");
                 throw new Exception("No se recibio un id_producto ni un id_paquete ni un id_orden");
             }
             
@@ -477,7 +468,6 @@ require_once("interfaces/Sucursales.interface.php");
             }
             if(empty ($productos_almacen))
             {
-                Logger::error("No se encontro el producto en los almacenes de esta sucursal");
                 throw new Exception("No se encontro el producto en los almacenes de esta sucursal");
             }
             $n=$detalle_producto->getCantidad();
@@ -485,7 +475,6 @@ require_once("interfaces/Sucursales.interface.php");
             $unidad=UnidadDAO::getByPK($detalle_producto->getIdUnidad());
             if($unidad==null)
             {
-                Logger::error("FATAL!!! este producto no tiene unidad");
                 throw new Exception("FATAL!!! este producto no tiene unidad");
             }
             if($n>=$total)
@@ -636,11 +625,161 @@ require_once("interfaces/Sucursales.interface.php");
 		$billetes_cambio = null, 
 		$tipo_pago = null, 
 		$saldo = null, 
-		$cheques = null
+		$cheques = null,
+                $id_compra_caja = null
 	)
 	{  
-  
-  
+            Logger::log("Realizando la compra");
+            $id_usuario=LoginController::getCurrentUser();
+            if($id_usuario==null)
+            {
+                Logger::error("No se pudo obtener al usuario de la sesion actual, ya inicio sesion?");
+                throw new Exception("No se pudo obtener al usuario de la sesion actual, ya inicio sesion?");
+            }
+            $usuario=UsuarioDAO::getByPK($id_vendedor);
+            if($usuario==null)
+            {
+                Logger::error("El usuario recibido como vendedor no existe");
+                throw new Exception("El usuario recibido como vendedor no existe");
+            }
+            $compra=new Compra();
+            $compra->setRetencion($retencion);
+            $compra->setIdVendedorCompra($id_vendedor);
+            $compra->setSubtotal($subtotal);
+            $compra->setImpuesto($impuesto);
+            $compra->setTotal($total);
+            $compra->setDescuento($descuento);
+            $compra->setTipoDeCompra($tipo_compra);
+            $compra->setIdCaja($this->getCaja());
+            $compra->setIdSucursal($this->getSucursal());
+            $compra->setIdUsuario($id_usuario);
+            $compra->setIdCompraCaja($id_compra_caja);
+            $compra->setCancelada(0);
+            $compra->setTipoDePago($tipo_pago);
+            $compra->setFecha(date($this->formato_fecha,time()));
+            $compra->setIdEmpresa($id_empresa);
+            DAO::transBegin();
+            try
+            {
+                if($tipo_compra==="contado")
+                {
+                    if($tipo_pago==="cheque"&&$cheques==null)
+                    {
+                        throw new Exception("El tipo de pago es con cheque pero no se recibio informacion del mismo");
+                    }
+                    if($saldo!==null)
+                    {
+                        Logger::warn("Se recibio un saldo cuando la venta es de contado, el saldo se tomara del total");
+                    }
+                    $compra->setSaldo($total);
+                    CompraDAO::save($compra);
+                    if($tipo_pago==="cheque")
+                    {
+                        $cheque_compra = new ChequeCompra();
+                        $cheque_compra->setIdCompra($compra->getIdCompra());
+                        foreach($cheques as $cheque)
+                        {
+                            $id_cheque=ChequesController::NuevoCheque($cheque["nombre_banco"], $cheque["monto"], $cheque["numero"], 1);
+                            $cheque_compra->setIdCheque($id_cheque);
+                            ChequeCompraDAO::save($cheque_compra);
+                        }
+                    }
+                    else if($tipo_pago==="efectivo")
+                    {
+                        CajasController::modificarCaja($compra->getIdCaja(), 0, $billetes_pago, $total);
+                        if($billetes_cambio!=null)
+                        {
+                            CajasController::modificarCaja($compra->getIdCaja(), 1, $billetes_cambio, 0);
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Se recibio un tipo de pago de: ".$tipo_pago." para esta compra de contado");
+                    }
+                }
+                else if($tipo_compra=="credito")
+                {
+                    if($saldo==null)
+                    {
+                        Logger::warn("No se recibio un saldo, se tomara 0 como saldo");
+                        $saldo=0;
+                    }
+                    $compra->setSaldo($saldo);
+                    CompraDAO::save($compra);
+                    $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()+$total-$saldo);
+                    UsuarioDAO::save($usuario);
+                }
+                else
+                {
+                    throw new Exception("El tipo de compra recibido no es valido");
+                }
+                if($detalle!=null)
+                {
+                    $d_producto=new CompraProducto();
+                    $d_producto->setIdCompra($compra->getIdCompra());
+                    $almacenes=AlmacenDAO::search(new Almacen(array("id_sucursal" => $this->getSucursal(), "id_empresa" => $id_empresa)));
+                    $id_almacen=null;
+                    foreach($almacenes as $a)
+                    {
+                        if($a->getIdTipoAlmacen()==self::$almacen_consignacion)
+                                continue;
+                        $id_almacen=$a->getIdAlmacen();
+                    }
+                    if($id_almacen==null)
+                    {
+                        throw new Exception("No existe un almacen para esta empresa en esta sucursal");
+                    }
+                    foreach($detalle as $d_p)
+                    {
+                        $producto=ProductoDAO::getByPK($d_p["id_producto"]);
+                        if($producto==null)
+                        {
+                            throw new Exception("El producto con id: ".$d_p["id_producto"]." no existe");
+                        }
+                        if(UnidadDAO::getByPk($d_p["id_unidad"])==null)
+                        {
+                            throw new Exception("La unidad con id: ".$d_p["id_unidad"]." no existe");
+                        }
+                        if(!$producto->getCompraEnMostrador())
+                        {
+                            throw new Exception("No se puede comprar el producto con id ".$d_p["id_producto"]." en mostrador");
+                        }
+                        if(ProductoEmpresaDAO::getByPK($d_p["id_producto"], $id_empresa)==null)
+                        {
+                            throw new Exception("El producto no pertenece a la empresa seleccionada");
+                        }
+                        $d_producto->setCantidad($d_p["cantidad"]);
+                        $d_producto->setDescuento($d_p["descuento"]);
+                        $d_producto->setIdProducto($d_p["id_producto"]);
+                        $d_producto->setIdUnidad($d_p["id_unidad"]);
+                        $d_producto->setImpuesto($d_p["impuesto"]);
+                        $d_producto->setPrecio($d_p["precio"]);
+                        $d_producto->setRetencion($d_p["retencion"]);
+                        CompraProductoDAO::save($d_producto);
+                        $producto_almacen=ProductoAlmacenDAO::getByPK($d_p["id_producto"], $id_almacen, $d_p["id_unidad"]);
+                        if($producto_almacen==null)
+                        {
+                            $producto_almacen=new ProductoAlmacen(array("id_producto" => $d_p["id_producto"], "id_almacen" => $id_almacen, "id_unidad" => $d_p["id_unidad"]));
+                        }
+                        $producto_almacen->setCantidad($producto_almacen->getCantidad() + $d_p["cantidad"]);
+                        ProductoAlmacenDAO::save($producto_almacen);
+                    }
+                }
+                else
+                {
+                    Logger::error("No se recibieron productos para esta compra");
+                    throw new Exception ("No se recibieron productos para esta compra");
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo realizar la compra: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("compra realizada exitosamente");
+            return $compra->getIdCompra();
 	}
   
 	/**
