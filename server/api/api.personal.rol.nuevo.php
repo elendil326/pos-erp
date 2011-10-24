@@ -8,12 +8,11 @@
   *
   *
   **/
-  
 
   class ApiPersonalRolNuevo extends ApiHandler {
   
 
-	protected function DeclareAllowedRoles(){ return BYPASS; }
+	protected function DeclareAllowedRoles(){  return BYPASS;  }
 	protected function CheckAuthorization() {}
 	protected function GetRequest()
 	{
@@ -26,7 +25,8 @@
 	}
 
 	protected function GenerateResponse() {		
-		$this->response = PersonalYAgentesController::NuevoRol( 
+		try{
+ 		$this->response = PersonalYAgentesController::NuevoRol( 
  			
 			
 			isset($_POST['descripcion'] ) ? $_POST['descripcion'] : null,
@@ -35,7 +35,11 @@
 			isset($_POST['salario'] ) ? $_POST['salario'] : null
 			
 			);
-	}
+		}catch(Exception $e){
+ 			Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation() );
+		}
+ 	}
   }
   
   

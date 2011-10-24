@@ -39,9 +39,9 @@
 		);
 	}
 
-	protected function GenerateResponse() {	
+	protected function GenerateResponse() {		
 		try{
-			$this->response = EmpresasController::Nuevo( 
+ 		$this->response = EmpresasController::Nuevo( 
  			
 			
 			isset($_POST['rfc'] ) ? $_POST['rfc'] : null,
@@ -66,11 +66,10 @@
 			
 			);
 		}catch(Exception $e){
-			throw new ApiException( $e->getMessage() );
-			
+ 			Logger::error($e);
+			throw new ApiException( $this->error_dispatcher->invalidDatabaseOperation() );
 		}
-
-	}
+ 	}
   }
   
   
