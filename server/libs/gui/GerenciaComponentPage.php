@@ -143,7 +143,13 @@ class GerenciaComponentPage extends StdComponentPage{
         },
         {
             "title": "Empresas",
-            "url": "empresas.php"
+            "url": "empresas.php",
+            "children" : [
+            	{
+            		"title" : "Nueva",
+            		"url" 	: "empresas.nuevo.php"
+            	}
+            ]
         },
         {
             "title": "Impuestos y retenciones",
@@ -232,12 +238,19 @@ class GerenciaComponentPage extends StdComponentPage{
 	function render()
 	{
 		?>
-
 		<!DOCTYPE html>
 		<html xmlns="http://www.w3.org/1999/xhtml" lang="en" >
 		<head>
 		<title>POS</title>
+
+
+
+			<link rel="stylesheet" type="text/css" href="http://api.caffeina.mx/ext-latest/resources/css/ext-all.css" /> 
+		    <script type="text/javascript" src="http://api.caffeina.mx/ext-latest/adapter/ext/ext-base.js"></script> 
+		    <script type="text/javascript" src="http://api.caffeina.mx/ext-latest/ext-all.js"></script> 
+
 			<link type="text/css" rel="stylesheet" href="../../../css/basic.css"/>
+			<script type="text/javascript" src="./gerencia.js"></script>
 		</head>
 		<body class="">
 		<div id="FB_HiddenContainer" style="position:absolute; top:-10000px; width:0px; height:0px;"></div>

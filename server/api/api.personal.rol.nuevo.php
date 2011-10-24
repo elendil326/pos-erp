@@ -24,8 +24,7 @@
 
 	protected function GetRequest()
 	{
-		var_dump( $_REQUEST );
-		die();
+		
 		$this->request = array(	
 			"descripcion" => new ApiExposedProperty("descripcion", true, POST, array( "string" )),
 			"nombre" => new ApiExposedProperty("nombre", true, POST, array( "string" )),
