@@ -122,12 +122,12 @@ class ApiExposedProperty
             foreach($this->validators as $v)
             {
 
-                if ( !$v->validate($this->getValue()) )
+                /*if ( !$v->validate($this->getValue()) )
                 {
                     // One validator failed, propagate error message
                     $this->errorMessage = "Validation failed for parameter " . $this->property_name . ": ". $v->getError();
                     return false;
-                }       
+                } */      
             }
         }
         
