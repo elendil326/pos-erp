@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 25-10-2011 a las 19:52:31
+-- Tiempo de generación: 25-10-2011 a las 20:22:07
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -193,7 +193,7 @@ CREATE TABLE IF NOT EXISTS `billete_cierre_caja` (
   `cantidad` int(11) NOT NULL COMMENT 'Cantidad de billetes encontrados en el cierre de caja',
   `sobro` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este billete sobro a la hora de cerrar la caja',
   `falto` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este billete falto a l ahora de cerrar la caja',
-  PRIMARY KEY (`id_billete`,`id_cierre_caja`)
+  PRIMARY KEY (`id_billete`,`id_cierre_caja`,`sobro`,`falto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle billetes cierre de caja';
 
 -- --------------------------------------------------------
@@ -314,12 +314,12 @@ CREATE TABLE IF NOT EXISTS `cheque_venta` (
 CREATE TABLE IF NOT EXISTS `cierre_caja` (
   `id_cierre_caja` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id del cierre de caja',
   `id_caja` int(11) NOT NULL COMMENT 'Id de la caja que se cierra',
-  `id_cajero` int(11) NOT NULL COMMENT 'Id del usuario que realiza las funciones de cajero al momento de cerrar la caja',
+  `id_cajero` int(11) DEFAULT NULL COMMENT 'Id del usuario que realiza las funciones de cajero al momento de cerrar la caja',
   `fecha` datetime NOT NULL COMMENT 'fecha en que se realiza la operacion',
   `saldo_real` float NOT NULL COMMENT 'Saldo de la caja',
   `saldo_esperado` float NOT NULL COMMENT 'Saldo que debería de haber en la caja después de todos los movimientos del día',
   PRIMARY KEY (`id_cierre_caja`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que lleva el control del cierre de cajas' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que lleva el control del cierre de cajas' AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 

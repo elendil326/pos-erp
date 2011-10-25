@@ -14,22 +14,28 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 
 		private static $loadedRecords = array();
 
-		private static function recordExists(  $id_billete, $id_cierre_caja ){
+		private static function recordExists(  $id_billete, $id_cierre_caja, $sobro, $falto ){
 			$pk = "";
 			$pk .= $id_billete . "-";
 			$pk .= $id_cierre_caja . "-";
+			$pk .= $sobro . "-";
+			$pk .= $falto . "-";
 			return array_key_exists ( $pk , self::$loadedRecords );
 		}
-		private static function pushRecord( $inventario,  $id_billete, $id_cierre_caja){
+		private static function pushRecord( $inventario,  $id_billete, $id_cierre_caja, $sobro, $falto){
 			$pk = "";
 			$pk .= $id_billete . "-";
 			$pk .= $id_cierre_caja . "-";
+			$pk .= $sobro . "-";
+			$pk .= $falto . "-";
 			self::$loadedRecords [$pk] = $inventario;
 		}
-		private static function getRecord(  $id_billete, $id_cierre_caja ){
+		private static function getRecord(  $id_billete, $id_cierre_caja, $sobro, $falto ){
 			$pk = "";
 			$pk .= $id_billete . "-";
 			$pk .= $id_cierre_caja . "-";
+			$pk .= $sobro . "-";
+			$pk .= $falto . "-";
 			return self::$loadedRecords[$pk];
 		}
 	/**
@@ -47,7 +53,7 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 	  **/
 	public static final function save( &$billete_cierre_caja )
 	{
-		if(  self::getByPK(  $billete_cierre_caja->getIdBillete() , $billete_cierre_caja->getIdCierreCaja() ) !== NULL )
+		if(  self::getByPK(  $billete_cierre_caja->getIdBillete() , $billete_cierre_caja->getIdCierreCaja() , $billete_cierre_caja->getSobro() , $billete_cierre_caja->getFalto() ) !== NULL )
 		{
 			try{ return BilleteCierreCajaDAOBase::update( $billete_cierre_caja) ; } catch(Exception $e){ throw $e; }
 		}else{
@@ -65,18 +71,18 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 	  *	@static
 	  * @return @link BilleteCierreCaja Un objeto del tipo {@link BilleteCierreCaja}. NULL si no hay tal registro.
 	  **/
-	public static final function getByPK(  $id_billete, $id_cierre_caja )
+	public static final function getByPK(  $id_billete, $id_cierre_caja, $sobro, $falto )
 	{
-		if(self::recordExists(  $id_billete, $id_cierre_caja)){
-			return self::getRecord( $id_billete, $id_cierre_caja );
+		if(self::recordExists(  $id_billete, $id_cierre_caja, $sobro, $falto)){
+			return self::getRecord( $id_billete, $id_cierre_caja, $sobro, $falto );
 		}
-		$sql = "SELECT * FROM billete_cierre_caja WHERE (id_billete = ? AND id_cierre_caja = ? ) LIMIT 1;";
-		$params = array(  $id_billete, $id_cierre_caja );
+		$sql = "SELECT * FROM billete_cierre_caja WHERE (id_billete = ? AND id_cierre_caja = ? AND sobro = ? AND falto = ? ) LIMIT 1;";
+		$params = array(  $id_billete, $id_cierre_caja, $sobro, $falto );
 		global $conn;
 		$rs = $conn->GetRow($sql, $params);
 		if(count($rs)==0)return NULL;
 			$foo = new BilleteCierreCaja( $rs );
-			self::pushRecord( $foo,  $id_billete, $id_cierre_caja );
+			self::pushRecord( $foo,  $id_billete, $id_cierre_caja, $sobro, $falto );
 			return $foo;
 	}
 
@@ -113,7 +119,9 @@ abstract class BilleteCierreCajaDAOBase extends DAO
     		array_push( $allData, $bar);
 			//id_billete
 			//id_cierre_caja
-    		self::pushRecord( $bar, $foo["id_billete"],$foo["id_cierre_caja"] );
+			//sobro
+			//falto
+    		self::pushRecord( $bar, $foo["id_billete"],$foo["id_cierre_caja"],$foo["sobro"],$foo["falto"] );
 		}
 		return $allData;
 	}
@@ -184,7 +192,7 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 		foreach ($rs as $foo) {
 			$bar =  new BilleteCierreCaja($foo);
     		array_push( $ar,$bar);
-    		self::pushRecord( $bar, $foo["id_billete"],$foo["id_cierre_caja"] );
+    		self::pushRecord( $bar, $foo["id_billete"],$foo["id_cierre_caja"],$foo["sobro"],$foo["falto"] );
 		}
 		return $ar;
 	}
@@ -203,12 +211,10 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 	  **/
 	private static final function update( $billete_cierre_caja )
 	{
-		$sql = "UPDATE billete_cierre_caja SET  cantidad = ?, sobro = ?, falto = ? WHERE  id_billete = ? AND id_cierre_caja = ?;";
+		$sql = "UPDATE billete_cierre_caja SET  cantidad = ? WHERE  id_billete = ? AND id_cierre_caja = ? AND sobro = ? AND falto = ?;";
 		$params = array( 
 			$billete_cierre_caja->getCantidad(), 
-			$billete_cierre_caja->getSobro(), 
-			$billete_cierre_caja->getFalto(), 
-			$billete_cierre_caja->getIdBillete(),$billete_cierre_caja->getIdCierreCaja(), );
+			$billete_cierre_caja->getIdBillete(),$billete_cierre_caja->getIdCierreCaja(),$billete_cierre_caja->getSobro(),$billete_cierre_caja->getFalto(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
 		catch(Exception $e){ throw new Exception ($e->getMessage()); }
@@ -371,9 +377,9 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 	  **/
 	public static final function delete( &$billete_cierre_caja )
 	{
-		if(self::getByPK($billete_cierre_caja->getIdBillete(), $billete_cierre_caja->getIdCierreCaja()) === NULL) throw new Exception('Campo no encontrado.');
-		$sql = "DELETE FROM billete_cierre_caja WHERE  id_billete = ? AND id_cierre_caja = ?;";
-		$params = array( $billete_cierre_caja->getIdBillete(), $billete_cierre_caja->getIdCierreCaja() );
+		if(self::getByPK($billete_cierre_caja->getIdBillete(), $billete_cierre_caja->getIdCierreCaja(), $billete_cierre_caja->getSobro(), $billete_cierre_caja->getFalto()) === NULL) throw new Exception('Campo no encontrado.');
+		$sql = "DELETE FROM billete_cierre_caja WHERE  id_billete = ? AND id_cierre_caja = ? AND sobro = ? AND falto = ?;";
+		$params = array( $billete_cierre_caja->getIdBillete(), $billete_cierre_caja->getIdCierreCaja(), $billete_cierre_caja->getSobro(), $billete_cierre_caja->getFalto() );
 		global $conn;
 
 		$conn->Execute($sql, $params);

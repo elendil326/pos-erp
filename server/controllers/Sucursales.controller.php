@@ -1383,8 +1383,6 @@ require_once("interfaces/Sucursales.interface.php");
                 Logger::warn("La caja proporcionada ya esta cerrada");
                 return;
             }
-            $caja->setAbierta(0);
-
             $cierre_caja=new CierreCaja(
                     array(
                         "id_caja" => $id_caja,
@@ -1394,20 +1392,51 @@ require_once("interfaces/Sucursales.interface.php");
                         "saldo_esperado" => $caja->getSaldo()
                     )
                     );
-            DAO::transBegin();
             try
             {
                 CajasController::modificarCaja($id_caja, 0, $billetes, $caja->getSaldo());
+            }
+            catch(Exception $e)
+            {
+                throw $e;
+            }
+            DAO::transBegin();
+            try
+            {
+                $caja->setAbierta(0);
                 CierreCajaDAO::save($cierre_caja);
                 CajaDAO::save($caja);
                 if($caja->getControlBilletes())
                 {
                     $billete_cierre_caja=new BilleteCierreCaja(array( "id_cierre_caja" => $cierre_caja->getIdCierreCaja() ));
+                    $billete_cierre_caja->setSobro(0);
+                    $billete_cierre_caja->setFalto(0);
                     foreach($billetes as $b)
                     {
                         $billete_cierre_caja->setIdBillete($b["id_billete"]);
                         $billete_cierre_caja->setCantidad($b["cantidad"]);
-                        
+                        BilleteCierreCajaDAO::save($billete_cierre_caja);
+                    }
+                    $billetes_caja=BilleteCajaDAO::search(new BilleteCaja(array( "id_caja" => $id_caja )));
+                    foreach($billetes_caja as $b_c)
+                    {
+                        if($b_c->getCantidad()>0)
+                        {
+                            $billete_cierre_caja->setIdBillete($b_c->getIdBillete());
+                            $billete_cierre_caja->setCantidad($b_c->getCantidad());
+                            $billete_cierre_caja->setSobro(1);
+                        }
+                        else if($b_c->getCantidad()<0)
+                        {
+                            $billete_cierre_caja->setIdBillete($b_c->getIdBillete());
+                            $billete_cierre_caja->setCantidad($b_c->getCantidad()*-1);
+                            $billete_cierre_caja->setFalto(1);
+                        }
+                        else
+                            continue;
+                        BilleteCierreCajaDAO::save($billete_cierre_caja);
+                        $billete_cierre_caja->setSobro(0);
+                        $billete_cierre_caja->setFalto(0);
                     }
                 }
             }

@@ -92,6 +92,7 @@ class BilleteCierreCaja extends VO
 	  * sobro
 	  * 
 	  * Si este billete sobro a la hora de cerrar la caja<br>
+	  * <b>Llave Primaria</b><br>
 	  * @access protected
 	  * @var tinyint(1)
 	  */
@@ -101,6 +102,7 @@ class BilleteCierreCaja extends VO
 	  * falto
 	  * 
 	  * Si este billete falto a l ahora de cerrar la caja<br>
+	  * <b>Llave Primaria</b><br>
 	  * @access protected
 	  * @var tinyint(1)
 	  */
@@ -199,6 +201,8 @@ class BilleteCierreCaja extends VO
 	  * Set the <i>sobro</i> property for this object. Donde <i>sobro</i> es Si este billete sobro a la hora de cerrar la caja.
 	  * Una validacion basica se hara aqui para comprobar que <i>sobro</i> es de tipo <i>tinyint(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setSobro( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param tinyint(1)
 	  */
 	final public function setSobro( $sobro )
@@ -223,6 +227,8 @@ class BilleteCierreCaja extends VO
 	  * Set the <i>falto</i> property for this object. Donde <i>falto</i> es Si este billete falto a l ahora de cerrar la caja.
 	  * Una validacion basica se hara aqui para comprobar que <i>falto</i> es de tipo <i>tinyint(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
+	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
+	  * No deberias usar setFalto( ) a menos que sepas exactamente lo que estas haciendo.<br>
 	  * @param tinyint(1)
 	  */
 	final public function setFalto( $falto )
