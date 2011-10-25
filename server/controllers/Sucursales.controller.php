@@ -1470,9 +1470,8 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$id_almacen, 
 		$motivo = null
 	)
-	{  
-  
-  
+	{
+            
 	}
   
 	/**

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 25-10-2011 a las 20:22:07
+-- Tiempo de generación: 25-10-2011 a las 21:44:00
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -319,7 +319,7 @@ CREATE TABLE IF NOT EXISTS `cierre_caja` (
   `saldo_real` float NOT NULL COMMENT 'Saldo de la caja',
   `saldo_esperado` float NOT NULL COMMENT 'Saldo que debería de haber en la caja después de todos los movimientos del día',
   PRIMARY KEY (`id_cierre_caja`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que lleva el control del cierre de cajas' AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que lleva el control del cierre de cajas' AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
@@ -676,6 +676,21 @@ CREATE TABLE IF NOT EXISTS `empresa` (
   `descuento` float DEFAULT NULL COMMENT 'Descuento que se aplicara a todos los productos de esta empresa',
   PRIMARY KEY (`id_empresa`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='tabla de empresas' AUTO_INCREMENT=7 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `entrada_almacen`
+--
+
+CREATE TABLE IF NOT EXISTS `entrada_almacen` (
+  `id_entrada_almacen` int(11) NOT NULL AUTO_INCREMENT,
+  `id_almacen` int(11) NOT NULL COMMENT 'Id del almacen al cual entra producto',
+  `id_usuario` int(11) NOT NULL COMMENT 'Id del usuario que registra',
+  `fecha_registro` datetime NOT NULL COMMENT 'Fecha en que se registra el movimiento',
+  `motivo` varchar(255) NOT NULL COMMENT 'motivo por le cual entra producto al almacen',
+  PRIMARY KEY (`id_entrada_almacen`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Registro de entradas de un almacen' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1278,6 +1293,20 @@ CREATE TABLE IF NOT EXISTS `producto_empresa` (
   `es_margen_utilidad` float DEFAULT NULL COMMENT 'Si el campo precio_utilidad es un margen de utilidad o un precio fijo',
   PRIMARY KEY (`id_producto`,`id_empresa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle producto empresa';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `producto_entrada_almacen`
+--
+
+CREATE TABLE IF NOT EXISTS `producto_entrada_almacen` (
+  `id_entrada_almacen` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
+  `id_unidad` int(11) NOT NULL,
+  `cantidad` float NOT NULL COMMENT 'Cantidad de producto que sale del almacen en cierta unidad',
+  PRIMARY KEY (`id_entrada_almacen`,`id_producto`,`id_unidad`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle producto entrada almacen';
 
 -- --------------------------------------------------------
 
