@@ -266,6 +266,10 @@ class GerenciaComponentPage extends StdComponentPage{
 					<a class="l" href="./configuracion.php">Configuracion</a>
 					<a class="l" href="./&close_session">Salir</a>
 
+					<a class="l">
+						<img style="margin-top:8px; display: none;" id="ajax_loader" src="../../../media/loader.gif">
+					</a>
+
 
 					<div class="search">
 						<form method="get" action="/search">

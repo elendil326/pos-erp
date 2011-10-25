@@ -18,15 +18,15 @@ Ext.onReady(main);
 var POS = 
 {
 	
-	Empresas : function ()
+	Empresas : 
 	{
 		
-		this.validarNuevaEmpresa = function (   )
+		validarNuevaEmpresa : function (   )
 		{
 				
-		};
+		},
 
-		this.nueva = function (   ) 
+		nueva : function (   ) 
 		{
 			
 			POS.API.POST("api/empresa/nuevo/", 
@@ -41,15 +41,12 @@ var POS =
 				calle : "Galena",
 				
 				
-			}, function(a ){ console.log(a ); });
+			},{
+				callback : function( a ){ console.log(a ); }
+			});
 
 		}
-	}	
-
-
-
-
-
+	}
 }
 
 
@@ -63,11 +60,11 @@ var POS =
 
 
 
-/*
-Ext.Ajax.on('beforerequest', this.showSpinner, this);
-Ext.Ajax.on('requestcomplete', this.hideSpinner, this);
-Ext.Ajax.on('requestexception', this.hideSpinner, this);
-*/
+
+Ext.Ajax.on('beforerequest', function (){ Ext.get("ajax_loader").show(); }, this);
+Ext.Ajax.on('requestcomplete', function (){ Ext.get("ajax_loader").hide(); }, this);
+Ext.Ajax.on('requestexception', function (){ Ext.get("ajax_loader").hide(); }, this);
+
 POS.API = 
 {
 	ajaxCallBack : function (callback, a, b, c)
@@ -112,15 +109,15 @@ POS.API =
 	},
 
 
-	GET : function( url, params, callback)
+	GET : function( url, params, o)
 	{
-		POS.API.actualAjax("GET", url, params, callback);
+		POS.API.actualAjax("GET", url, params, o.callback);
 	},
 
 
-	POST : function( url, params, callback)
+	POST : function( url, params, o)
 	{
-		POS.API.actualAjax("POST", url, params, callback);
+		POS.API.actualAjax("POST", url, params, o.callback);
 	}
 
 }
