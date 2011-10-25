@@ -75,7 +75,7 @@ class DireccionController{
 		return true;
 	}
 
-        public function NuevaDireccion(
+        public static function NuevaDireccion(
                 $calle,
                 $numero_exterior,
                 $colonia,

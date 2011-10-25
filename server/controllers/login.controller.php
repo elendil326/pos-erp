@@ -6,7 +6,7 @@ class PermsissionDeniedException extends Exception { }
 
 interface IPermission
 {
-	function isLoggedIn();
+	static function isLoggedIn();
 }
 
 
@@ -24,7 +24,7 @@ interface IPermission
 abstract class LoginController implements IPermission
 {
 	
-	function isLoggedIn()
+	static function isLoggedIn()
 	{
 
 		//regresar falso si alguno de estos no esta 
@@ -158,7 +158,7 @@ class GerenciaLoginController extends LoginController{
 class JediLoginController extends LoginController
 {
 	
-	function isLoggedIn()
+	static function isLoggedIn()
 	{
 		//@TODO see if the session is from some
 		//other type of user other than jedi
