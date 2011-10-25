@@ -1471,7 +1471,54 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$motivo = null
 	)
 	{
-            
+            Logger::log("Resgitrando entrada a almacen");
+            $entrada_almacen = new EntradaAlmacen();
+            $id_usuario=LoginController::getCurrentUser();
+            if($id_usuario==null)
+            {
+                Logger::error("No se puede obtener al usuario de la sesion, ya inicio sesion?");
+                throw new Exception("No se puede obtener al usuario de la sesion, ya inicio sesion?");
+            }
+            if(AlmacenDAO::getByPK($id_almacen)==null)
+            {
+                Logger::error("El almacen con id: ".$id_almacen." no existe");
+                throw new Exception("El almacen con id: ".$id_almacen." no existe");
+            }
+            $entrada_almacen->setIdAlmacen($id_almacen);
+            $entrada_almacen->setMotivo($motivo);
+            $entrada_almacen->setIdUsuario($id_usuario);
+            $entrada_almacen->setFechaRegistro(date("Y-m-d H:i:s",time()));
+            DAO::transBegin();
+            try
+            {
+                EntradaAlmacenDAO::save($entrada_almacen);
+                $producto_entrada_almacen=new ProductoEntradaAlmacen(array( "id_entrada_almacen" => $entrada_almacen->getIdEntradaAlmacen() ));
+                foreach($productos as $p)
+                {
+                    if(ProductoDAO::getByPK($p["id_producto"])==null)
+                        throw new Exception("El producto con id: ".$p["id_producto"]." no existe");
+                    $producto_entrada_almacen->setIdProducto($p["id_producto"]);
+                    if(UnidadDAO::getByPK($p["id_unidad"])==null)
+                        throw new Exception("La unidad con id: ".$p["id_unidad"]." no existe");
+                    $producto_entrada_almacen->setIdUnidad($p["id_unidad"]);
+                    $producto_entrada_almacen->setCantidad($p["cantidad"]);
+                    $producto_almacen=ProductoAlmacenDAO::getByPK($p["id_producto"], $id_almacen, $p["id_unidad"]);
+                    if($producto_almacen==null)
+                        $producto_almacen=new ProductoAlmacen(array( "id_producto" => $p["id_producto"] , "id_almacen" => $id_almacen , "id_unidad" => $p["id_unidad"] ));
+                    $producto_almacen->setCantidad($producto_almacen->getCantidad()+$p["cantidad"]);
+                    ProductoEntradaAlmacenDAO::save($producto_entrada_almacen);
+                    ProductoAlmacenDAO::save($producto_almacen);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo registrar la entrada al almacen: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Entrada a almacen registrada exitosamente");
+            return $entrada_almacen->getIdEntradaAlmacen();
 	}
   
 	/**
