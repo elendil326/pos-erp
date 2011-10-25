@@ -1226,7 +1226,7 @@ require_once("interfaces/Sucursales.interface.php");
                         $encontrado=false;
                         foreach($empresas as $empresa)
                         {
-                            if($empresa==$sucursal_empresa->getIdEmpresa())
+                            if($empresa["id_empresa"]==$sucursal_empresa->getIdEmpresa())
                             {
                                 $encontrado=true;
                                 break;
