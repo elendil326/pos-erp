@@ -132,24 +132,24 @@
  	 **/
   function Nuevo
 	(
-		$ciudad	, 
+		$rfc, 
+		$ciudad, 
+		$curp, 
 		$numero_exterior, 
 		$razon_social, 
-		$rfc, 
-		$calle, 
-		$curp, 
 		$colonia, 
 		$codigo_postal, 
-		$telefono1 = null,
+		$calle, 
 		$representante_legal = "", 
-		$impuestos = "", 
 		$descuento = null, 
-		$margen_utilidad = null, 
+		$impuestos = "", 
 		$numero_interior = "", 
-		$telefono2 = "", 
+		$margen_utilidad = null, 
 		$texto_extra = "", 
+		$telefono2 = "", 
 		$email = "", 
 		$retenciones = null, 
+		$telefono1 = "", 
 		$direccion_web = ""
 	);  
   

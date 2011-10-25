@@ -105,25 +105,25 @@ require_once("interfaces/Empresas.interface.php");
  	 **/
 	public function Nuevo
 	(
-		$colonia, 
-		$codigo_postal, 
-		$curp, 
-		$razon_social, 
-		$numero_exterior, 
-		$ciudad	, 
-		$rfc, 
-		$calle,
-                $telefono1 = null,
-		$numero_interior = null, 
-		$telefono2 = null, 
-		$email = null, 
-		$texto_extra = null, 
-		$direccion_web = null, 
-		$retenciones = null, 
-		$margen_utilidad = null, 
-		$descuento = null, 
-		$representante_legal = null, 
-		$impuestos = null
+    $rfc, 
+    $ciudad, 
+    $curp, 
+    $numero_exterior, 
+    $razon_social, 
+    $colonia, 
+    $codigo_postal, 
+    $calle, 
+    $representante_legal = "", 
+    $descuento = null, 
+    $impuestos = "", 
+    $numero_interior = "", 
+    $margen_utilidad = null, 
+    $texto_extra = "", 
+    $telefono2 = "", 
+    $email = "", 
+    $retenciones = null, 
+    $telefono1 = "", 
+    $direccion_web = ""
 	)
 	{  
             Logger::log("Creando empresa");
@@ -201,7 +201,8 @@ require_once("interfaces/Empresas.interface.php");
              }
              DAO::transEnd();
              Logger::log("Empresa creada exitosamente");
-             return $e->getIdEmpresa();
+
+            return array ( "id_empresa" => $e->getIdEmpresa() );
 	}
   
 	/**

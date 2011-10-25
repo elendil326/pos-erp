@@ -11,7 +11,8 @@
   **/        
 class DireccionController{
 	
-        private $formato_fecha="Y-m-d H:i:s";
+    
+
 	/**
 	  *
 	  * @param $direccion_vo Direccion
@@ -108,7 +109,7 @@ class DireccionController{
             $direccion->setReferencia($referencia);
             $direccion->setTelefono($telefono);
             $direccion->setTelefono2($telefono2);
-            $direccion->setUltimaModificacion(date($this->formato_fecha,time()));
+            $direccion->setUltimaModificacion( time() );
             $direccion->setIdUsuarioUltimaModificacion($id_usuario);
             DAO::transBegin();
             try
@@ -121,8 +122,11 @@ class DireccionController{
                 Logger::error("No se pudo guardar la direccion: ".$e);
                 throw $e;
             }
+
             DAO::transEnd();
+
             Logger::log("Direccion creada exitosamente");
+
             return $direccion->getIdDireccion();
         }
 }
