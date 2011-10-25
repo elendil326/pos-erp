@@ -162,6 +162,16 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 			array_push( $val, $billete_cierre_caja->getCantidad() );
 		}
 
+		if( $billete_cierre_caja->getSobro() != NULL){
+			$sql .= " sobro = ? AND";
+			array_push( $val, $billete_cierre_caja->getSobro() );
+		}
+
+		if( $billete_cierre_caja->getFalto() != NULL){
+			$sql .= " falto = ? AND";
+			array_push( $val, $billete_cierre_caja->getFalto() );
+		}
+
 		if(sizeof($val) == 0){return array();}
 		$sql = substr($sql, 0, -3) . " )";
 		if( $orderBy !== null ){
@@ -193,9 +203,11 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 	  **/
 	private static final function update( $billete_cierre_caja )
 	{
-		$sql = "UPDATE billete_cierre_caja SET  cantidad = ? WHERE  id_billete = ? AND id_cierre_caja = ?;";
+		$sql = "UPDATE billete_cierre_caja SET  cantidad = ?, sobro = ?, falto = ? WHERE  id_billete = ? AND id_cierre_caja = ?;";
 		$params = array( 
 			$billete_cierre_caja->getCantidad(), 
+			$billete_cierre_caja->getSobro(), 
+			$billete_cierre_caja->getFalto(), 
 			$billete_cierre_caja->getIdBillete(),$billete_cierre_caja->getIdCierreCaja(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -219,11 +231,13 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 	  **/
 	private static final function create( &$billete_cierre_caja )
 	{
-		$sql = "INSERT INTO billete_cierre_caja ( id_billete, id_cierre_caja, cantidad ) VALUES ( ?, ?, ?);";
+		$sql = "INSERT INTO billete_cierre_caja ( id_billete, id_cierre_caja, cantidad, sobro, falto ) VALUES ( ?, ?, ?, ?, ?);";
 		$params = array( 
 			$billete_cierre_caja->getIdBillete(), 
 			$billete_cierre_caja->getIdCierreCaja(), 
 			$billete_cierre_caja->getCantidad(), 
+			$billete_cierre_caja->getSobro(), 
+			$billete_cierre_caja->getFalto(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -300,6 +314,28 @@ abstract class BilleteCierreCajaDAOBase extends DAO
 				array_push( $val, max($a,$b)); 
 		}elseif( $a !== NULL|| $b !== NULL ){
 			$sql .= " cantidad = ? AND"; 
+			$a = $a === NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $billete_cierre_cajaA->getSobro()) !== NULL) & ( ($b = $billete_cierre_cajaB->getSobro()) !== NULL) ){
+				$sql .= " sobro >= ? AND sobro <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a !== NULL|| $b !== NULL ){
+			$sql .= " sobro = ? AND"; 
+			$a = $a === NULL ? $b : $a;
+			array_push( $val, $a);
+			
+		}
+
+		if( (($a = $billete_cierre_cajaA->getFalto()) !== NULL) & ( ($b = $billete_cierre_cajaB->getFalto()) !== NULL) ){
+				$sql .= " falto >= ? AND falto <= ? AND";
+				array_push( $val, min($a,$b)); 
+				array_push( $val, max($a,$b)); 
+		}elseif( $a !== NULL|| $b !== NULL ){
+			$sql .= " falto = ? AND"; 
 			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			

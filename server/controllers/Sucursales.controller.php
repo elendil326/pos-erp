@@ -1112,7 +1112,8 @@ require_once("interfaces/Sucursales.interface.php");
 		$coidgo_postal = null,
                 $retenciones = null
 	)
-	{  
+	{
+            Logger::log("Editando sucursal");
             $sucursal=SucursalDAO::getByPK($id_sucursal);
             $cambio_direccion=false;
             if($sucursal==null)
@@ -1313,7 +1314,8 @@ require_once("interfaces/Sucursales.interface.php");
 		$id_sucursal, 
 		$id_gerente
 	)
-	{  
+	{
+            Logger::log("Editando gerencia de sucursal");
             $sucursal=SucursalDAO::getByPK($id_sucursal);
             if($sucursal==null)
             {
@@ -1340,8 +1342,11 @@ require_once("interfaces/Sucursales.interface.php");
             catch(Exception $e)
             {
                 DAO::transRollback();
+                Logger::error("Error al editar la gerencia de la sucursal: ".$e);
+                throw $e;
             }
             DAO::transEnd();
+            Logger::log("Gerencia editada correctamente");
 	}
   
 	/**
@@ -1355,15 +1360,69 @@ require_once("interfaces/Sucursales.interface.php");
  	 **/
 	public function CerrarCaja
 	(
+                $id_caja,
 		$saldo_real, 
-		$billetes, 
+		$billetes = null,
 		$id_cajero = null
 	)
-	{  
-  
-  
+	{
+            Logger::log("Cerrando caja");
+            $caja=CajaDAO::getByPK($id_caja);
+            if($caja==null)
+            {
+                Logger::error("No existe la caja con id:".$id_caja." no existe");
+                throw new Exception("No existe la caja con id:".$id_caja." no existe");
+            }
+            if(!$caja->getActiva())
+            {
+                Logger::error("La caja proporcionada no esta activa, no se puede cerrar");
+                throw new Exception("La caja proporcionada no esta activa, no se puede cerrar");
+            }
+            if(!$caja->getAbierta())
+            {
+                Logger::warn("La caja proporcionada ya esta cerrada");
+                return;
+            }
+            $caja->setAbierta(0);
+
+            $cierre_caja=new CierreCaja(
+                    array(
+                        "id_caja" => $id_caja,
+                        "id_cajero" => $id_cajero,
+                        "fecha" => date("Y-m-d H:i:s",time()),
+                        "saldo_real" => $saldo_real,
+                        "saldo_esperado" => $caja->getSaldo()
+                    )
+                    );
+            DAO::transBegin();
+            try
+            {
+                CajasController::modificarCaja($id_caja, 0, $billetes, $caja->getSaldo());
+                CierreCajaDAO::save($cierre_caja);
+                CajaDAO::save($caja);
+                if($caja->getControlBilletes())
+                {
+                    $billete_cierre_caja=new BilleteCierreCaja(array( "id_cierre_caja" => $cierre_caja->getIdCierreCaja() ));
+                    foreach($billetes as $b)
+                    {
+                        $billete_cierre_caja->setIdBillete($b["id_billete"]);
+                        $billete_cierre_caja->setCantidad($b["cantidad"]);
+                        
+                    }
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("Error al cerrar la caja: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Caja cerrada exitosamente");
+            return $cierre_caja->getIdCierreCaja();
 	}
-  
+
+
 	/**
  	 *
  	 *Metodo que surte una sucursal por parte de un proveedor. La sucursal sera tomada de la sesion actual.

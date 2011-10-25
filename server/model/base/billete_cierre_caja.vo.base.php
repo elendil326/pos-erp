@@ -31,6 +31,12 @@ class BilleteCierreCaja extends VO
 			if( isset($data['cantidad']) ){
 				$this->cantidad = $data['cantidad'];
 			}
+			if( isset($data['sobro']) ){
+				$this->sobro = $data['sobro'];
+			}
+			if( isset($data['falto']) ){
+				$this->falto = $data['falto'];
+			}
 		}
 	}
 
@@ -46,7 +52,9 @@ class BilleteCierreCaja extends VO
 		$vec = array( 
 			"id_billete" => $this->id_billete,
 			"id_cierre_caja" => $this->id_cierre_caja,
-			"cantidad" => $this->cantidad
+			"cantidad" => $this->cantidad,
+			"sobro" => $this->sobro,
+			"falto" => $this->falto
 		); 
 	return json_encode($vec); 
 	}
@@ -79,6 +87,24 @@ class BilleteCierreCaja extends VO
 	  * @var int(11)
 	  */
 	protected $cantidad;
+
+	/**
+	  * sobro
+	  * 
+	  * Si este billete sobro a la hora de cerrar la caja<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $sobro;
+
+	/**
+	  * falto
+	  * 
+	  * Si este billete falto a l ahora de cerrar la caja<br>
+	  * @access protected
+	  * @var tinyint(1)
+	  */
+	protected $falto;
 
 	/**
 	  * getIdBillete
@@ -154,6 +180,54 @@ class BilleteCierreCaja extends VO
 	final public function setCantidad( $cantidad )
 	{
 		$this->cantidad = $cantidad;
+	}
+
+	/**
+	  * getSobro
+	  * 
+	  * Get the <i>sobro</i> property for this object. Donde <i>sobro</i> es Si este billete sobro a la hora de cerrar la caja
+	  * @return tinyint(1)
+	  */
+	final public function getSobro()
+	{
+		return $this->sobro;
+	}
+
+	/**
+	  * setSobro( $sobro )
+	  * 
+	  * Set the <i>sobro</i> property for this object. Donde <i>sobro</i> es Si este billete sobro a la hora de cerrar la caja.
+	  * Una validacion basica se hara aqui para comprobar que <i>sobro</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setSobro( $sobro )
+	{
+		$this->sobro = $sobro;
+	}
+
+	/**
+	  * getFalto
+	  * 
+	  * Get the <i>falto</i> property for this object. Donde <i>falto</i> es Si este billete falto a l ahora de cerrar la caja
+	  * @return tinyint(1)
+	  */
+	final public function getFalto()
+	{
+		return $this->falto;
+	}
+
+	/**
+	  * setFalto( $falto )
+	  * 
+	  * Set the <i>falto</i> property for this object. Donde <i>falto</i> es Si este billete falto a l ahora de cerrar la caja.
+	  * Una validacion basica se hara aqui para comprobar que <i>falto</i> es de tipo <i>tinyint(1)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param tinyint(1)
+	  */
+	final public function setFalto( $falto )
+	{
+		$this->falto = $falto;
 	}
 
 }

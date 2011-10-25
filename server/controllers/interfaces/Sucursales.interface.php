@@ -289,8 +289,9 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 **/
   function CerrarCaja
 	(
+                $id_caja,
 		$saldo_real, 
-		$billetes, 
+		$billetes = null,
 		$id_cajero = null
 	);  
   

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 21-10-2011 a las 18:53:15
+-- Tiempo de generación: 25-10-2011 a las 19:52:31
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `abono_venta` (
   `cancelado` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este abono es cancelado',
   `motivo_cancelacion` varchar(255) DEFAULT NULL COMMENT 'Motivo por el cual se realiza la cancelacion',
   PRIMARY KEY (`id_abono_venta`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Detalle de la venta y sus abonos' AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Detalle de la venta y sus abonos' AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -124,9 +124,9 @@ CREATE TABLE IF NOT EXISTS `apertura_caja` (
   `id_caja` int(11) NOT NULL COMMENT 'Id de la caja que se abre',
   `fecha` datetime NOT NULL COMMENT 'Fecha en que se realizo la apertura de caja',
   `saldo` float NOT NULL COMMENT 'Saldo con que inicia operaciones la caja',
-  `id_cajero` int(11) NOT NULL COMMENT 'Id del usuario que realizará las funciones de cajero',
+  `id_cajero` int(11) DEFAULT NULL COMMENT 'Id del usuario que realizará las funciones de cajero',
   PRIMARY KEY (`id_apertura_caja`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que lleva el control de la apertura de cajas' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que lleva el control de la apertura de cajas' AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -191,6 +191,8 @@ CREATE TABLE IF NOT EXISTS `billete_cierre_caja` (
   `id_billete` int(11) NOT NULL,
   `id_cierre_caja` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL COMMENT 'Cantidad de billetes encontrados en el cierre de caja',
+  `sobro` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este billete sobro a la hora de cerrar la caja',
+  `falto` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este billete falto a l ahora de cerrar la caja',
   PRIMARY KEY (`id_billete`,`id_cierre_caja`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle billetes cierre de caja';
 
@@ -241,7 +243,7 @@ CREATE TABLE IF NOT EXISTS `cheque` (
   `expedido` tinyint(1) NOT NULL COMMENT 'Verdadero si el cheque es expedido por la empresa, falso si es recibido',
   `id_usuario` int(11) DEFAULT NULL COMMENT 'Id del usuario que registra el cheque',
   PRIMARY KEY (`id_cheque`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
 
 -- --------------------------------------------------------
 
@@ -422,7 +424,7 @@ CREATE TABLE IF NOT EXISTS `compra` (
   `tipo_de_pago` enum('cheque','tarjeta','efectivo') DEFAULT NULL COMMENT 'Si la compra fue pagada con tarjeta, cheque o efectivo',
   `retencion` float NOT NULL COMMENT 'Monto de retencion',
   PRIMARY KEY (`id_compra`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 -- --------------------------------------------------------
 
@@ -604,7 +606,7 @@ CREATE TABLE IF NOT EXISTS `direccion` (
   `id_usuario_ultima_modificacion` int(11) NOT NULL COMMENT 'quien fue el usuario que modifico este registro la ultima vez',
   PRIMARY KEY (`id_direccion`),
   KEY `id_ciudad` (`id_ciudad`,`id_usuario_ultima_modificacion`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
 -- --------------------------------------------------------
 
@@ -1569,7 +1571,7 @@ CREATE TABLE IF NOT EXISTS `sucursal` (
   `margen_utilidad` float DEFAULT NULL COMMENT 'POrcentaje del margen de utilidad que esta sucursal le gana a todos los productos que ofrece',
   `descuento` float DEFAULT NULL COMMENT 'Descuento que se aplicara a todos los productos de esta sucursal',
   PRIMARY KEY (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de sucursales' AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='tabla de sucursales' AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -1737,7 +1739,7 @@ CREATE TABLE IF NOT EXISTS `venta` (
   `tipo_de_pago` enum('cheque','tarjeta','efectivo') DEFAULT NULL COMMENT 'Si la venta fue pagada con tarjeta, cheque, o en efectivo',
   `retencion` float NOT NULL COMMENT 'Monto de retencion',
   PRIMARY KEY (`id_venta`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=44 ;
 
 -- --------------------------------------------------------
 
