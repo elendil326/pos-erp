@@ -1211,11 +1211,6 @@ require_once("interfaces/Sucursales.interface.php");
                 DireccionDAO::save($direccion);
                 if($empresas!=null)
                 {
-                    $sucursales_empresa_actual=SucursalEmpresaDAO::search(new SucursalEmpresa(array( "id_sucursal" => $id_sucursal)));
-                    foreach($sucursales_empresa_actual as $e)
-                    {
-                        SucursalEmpresaDAO::delete($e);
-                    }
                     foreach($empresas as $empresa)
                     {
                         if(EmpresaDAO::getByPK($empresa["id_empresa"])==null)
@@ -1225,14 +1220,24 @@ require_once("interfaces/Sucursales.interface.php");
                         SucursalEmpresaDAO::save(new SucursalEmpresa(array( "id_sucursal" => $id_sucursal,
                             "id_empresa" => $empresa["id_empresa"], "margen_utilidad" => $empresa["margen_utilidad"], "descuento" => $empresa["descuento"] )));
                     }
+                    $sucursales_empresa_actual=SucursalEmpresaDAO::search(new SucursalEmpresa(array( "id_sucursal" => $id_sucursal)));
+                    foreach($sucursales_empresa_actual as $sucursal_empresa)
+                    {
+                        $encontrado=false;
+                        foreach($empresas as $empresa)
+                        {
+                            if($empresa==$sucursal_empresa->getIdEmpresa())
+                            {
+                                $encontrado=true;
+                                break;
+                            }
+                        }
+                        if(!$encontrado)
+                            SucursalEmpresaDAO::delete($sucursal_empresa);
+                    }
                 }
                 if($impuestos!=null)
                 {
-                    $impuestos_sucursal_actual = ImpuestoSucursalDAO::search(new ImpuestoSucursal(array( "id_sucursal" => $id_sucursal)));
-                    foreach($impuestos_sucursal_actual as $i)
-                    {
-                        ImpuestoSucursalDAO::delete($i);
-                    }
                     foreach($impuestos as $impuesto)
                     {
                         if(ImpuestoDAO::getByPK($impuesto)==null)
@@ -1241,14 +1246,26 @@ require_once("interfaces/Sucursales.interface.php");
                         }
                         ImpuestoSucursalDAO::save(new ImpuestoSucursal(array( "id_sucursal" => $id_sucursal, "id_impuesto" => $impuesto)));
                     }
+                    $impuestos_sucursal_actual = ImpuestoSucursalDAO::search(new ImpuestoSucursal(array( "id_sucursal" => $id_sucursal)));
+                    foreach($impuestos_sucursal_actual as $i)
+                    {
+                        $encontrado=false;
+                        foreach($impuestos as $impuesto)
+                        {
+                            if($impuesto==$i->getIdImpuesto())
+                            {
+                                $encontrado=true;
+                                break;
+                            }
+                        }
+                        if(!$encontrado)
+                        {
+                            ImpuestoSucursalDAO::delete($i);
+                        }
+                    }
                 }
                 if($retenciones!=null)
                 {
-                    $retenciones_sucursal_actual = RetencionSucursalDAO::search(new RetencionSucursal(array( "id_sucursal" => $id_sucursal)));
-                    foreach($retenciones_sucursal_actual as $r)
-                    {
-                        RetencionSucursalDAO::delete($r);
-                    }
                     foreach($retenciones as $retencion)
                     {
                         if(RetencionDAO::getByPK($retencion)==null)
@@ -1257,7 +1274,21 @@ require_once("interfaces/Sucursales.interface.php");
                         }
                         RetencionSucursalDAO::save(new RetencionSucursal(array( "id_sucursal" => $id_sucursal, "id_retencion" => $retencion)));
                     }
-                    
+                    $retenciones_sucursal_actual = RetencionSucursalDAO::search(new RetencionSucursal(array( "id_sucursal" => $id_sucursal)));
+                    foreach($retenciones_sucursal_actual as $r)
+                    {
+                        $encontrado=false;
+                        foreach($retenciones as $retencion)
+                        {
+                            if($retencion==$r->getIdRetencion())
+                            {
+                                $encontrado=true;
+                                break;
+                            }
+                        }
+                        if(!$encontrado)
+                            RetencionSucursalDAO::delete($r);
+                    }
                 }
             }
             catch(Exception $e)
