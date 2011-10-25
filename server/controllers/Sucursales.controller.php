@@ -1314,8 +1314,34 @@ require_once("interfaces/Sucursales.interface.php");
 		$id_gerente
 	)
 	{  
-  
-  
+            $sucursal=SucursalDAO::getByPK($id_sucursal);
+            if($sucursal==null)
+            {
+                Logger::error("La sucursal con id: ".$id_sucursal." no existe");
+                throw new Exception("La sucursal con id: ".$id_sucursal." no existe");
+            }
+            $gerente=UsuarioDAO::getByPK($id_gerente);
+            if($gerente==null)
+            {
+                Logger::error("El usuario con id: ".$gerente." no existe");
+                throw new Exception("El usuario con id: ".$gerente." no existe");
+            }
+            if($gerente->getIdRol()!=3)
+            {
+                Logger::error("El usuario no tiene rol de gerente");
+                throw new Exception("El usuario no tiene rol de gerente");
+            }
+            $sucursal->setIdGerente($id_gerente);
+            DAO::transBegin();
+            try
+            {
+                SucursalDAO::save($sucursal);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+            }
+            DAO::transEnd();
 	}
   
 	/**
