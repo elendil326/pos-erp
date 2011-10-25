@@ -474,11 +474,6 @@ require_once("interfaces/Empresas.interface.php");
                 DireccionDAO::save($direccion);
                 if($impuestos!==null)
                 {
-                    if($impuestos_empresa)
-                    foreach($impuestos_empresa as $impuesto_empresa)
-                    {
-                        ImpuestoEmpresaDAO::delete($impuesto_empresa);
-                    }
                     $i_empresa=new ImpuestoEmpresa(array("id_empresa"=>$id_empresa));
                     foreach($impuestos as $id_impuesto)
                     {
@@ -489,14 +484,25 @@ require_once("interfaces/Empresas.interface.php");
                         $i_empresa->setIdImpuesto($id_impuesto);
                         ImpuestoEmpresaDAO::save($i_empresa);
                     }
+                    foreach($impuestos_empresa as $impuesto_empresa)
+                    {
+                        $encontrado=false;
+                        foreach($impuestos as $id_impuesto)
+                        {
+                            if($id_impuesto==$impuesto_empresa->getIdImpuesto())
+                            {
+                                    $encontrado=true;
+                                    break;
+                            }
+                        }
+                        if(!$encontrado)
+                        {
+                            ImpuestoEmpresaDAO::delete($impuesto_empresa);
+                        }
+                    }
                 }
                 if($retenciones!==null)
                 {
-                    if($retenciones_empresa)
-                    foreach($retenciones_empresa as $retencion_empresa)
-                    {
-                        RetencionEmpresaDAO::delete($retencion_empresa);
-                    }
                     $r_empresa=new RetencionEmpresa(array("id_empresa"=>$id_empresa));
                     foreach($retenciones as $id_retencion)
                     {
@@ -506,6 +512,22 @@ require_once("interfaces/Empresas.interface.php");
                         }
                         $r_empresa->setIdRetencion($id_retencion);
                         RetencionEmpresaDAO::save($r_empresa);
+                    }
+                    foreach($retenciones_empresa as $retencion_empresa)
+                    {
+                        $encontrado=false;
+                        foreach($retenciones as $id_retencion)
+                        {
+                            if($id_retencion==$retencion_empresa->getIdRetencion())
+                            {
+                                $encontrado=true;
+                                break;
+                            }
+                        }
+                        if(!$encontrado)
+                        {
+                            RetencionEmpresaDAO::delete($retencion_empresa);
+                        }
                     }
                 }
             }
