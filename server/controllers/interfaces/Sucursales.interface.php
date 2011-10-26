@@ -20,7 +20,8 @@
 	(
 		$id_almacen, 
 		$descripcion = "", 
-		$nombre = ""
+		$nombre = "",
+                $id_tipo_almacen = null
 	);  
   
   

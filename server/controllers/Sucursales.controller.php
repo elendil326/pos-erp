@@ -1808,7 +1808,8 @@ Creo que este metodo tiene que estar bajo sucursal.
 	(
 		$id_almacen
 	)
-	{  
+	{
+            Logger::log("Eliminando almacen");
             $almacen=AlmacenDAO::getByPK($id_almacen);
             if($almacen==null)
             {
@@ -1860,11 +1861,63 @@ Creo que este metodo tiene que estar bajo sucursal.
 	(
 		$id_almacen, 
 		$descripcion = null, 
-		$nombre = null
+		$nombre = null,
+                $id_tipo_almacen = null
 	)
-	{  
-  
-  
+	{
+            Logger::log("Editando almacen");
+            $almacen=AlmacenDAO::getByPK($id_almacen);
+            if($almacen==null)
+            {
+                Logger::error("El almacen con id: ".$id_almacen." no existe");
+                throw new Exception("El almacen con id: ".$id_almacen." no existe");
+            }
+            if(!$almacen->getActivo())
+            {
+                Logger::error("El almacen no esta activo, no puede ser editado");
+                throw new Exception("El almacen no esta activo, no puede ser editado");
+            }
+            if($descripcion!==null)
+            {
+                $almacen->setDescripcion($descripcion);
+            }
+            if($nombre!==null)
+            {
+                $almacen->setNombre($nombre);
+            }
+            if($id_tipo_almacen!==null)
+            {
+                if(TipoAlmacenDAO::getByPK($id_tipo_almacen)==null)
+                {
+                    Logger::error("El tipo de almacen con id: ".$id_tipo_almacen." no existe");
+                    throw new Exception("El tipo de almacen con id: ".$id_tipo_almacen." no existe");
+                }
+                if($id_tipo_almacen==2)
+                {
+                    Logger::warn("Se busca cambiar el tipo de almacen para volverse un almacen de consignacion, no se hara nada pues esto no esta permitido");
+                }
+                else if($almacen->getIdTipoAlmacen()==2)
+                {
+                    Logger::warn("Se busca editar el tipo de almacen a un almacen de consignacion, no se hara nada pues esto no esta permitido");
+                }
+                else
+                {
+                    $almacen->setIdTipoAlmacen($id_tipo_almacen);
+                }
+            }
+            DAO::transBegin();
+            try
+            {
+                AlmacenDAO::save($almacen);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollBack();
+                Logger::error("No se pudo editar el almacen: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Almacen editado exitosamente");
 	}
   
 	/**
