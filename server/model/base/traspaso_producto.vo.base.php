@@ -28,14 +28,11 @@ class TraspasoProducto extends VO
 			if( isset($data['id_producto']) ){
 				$this->id_producto = $data['id_producto'];
 			}
-			if( isset($data['cantidad']) ){
-				$this->cantidad = $data['cantidad'];
+			if( isset($data['cantidad_enviada']) ){
+				$this->cantidad_enviada = $data['cantidad_enviada'];
 			}
-			if( isset($data['enviado']) ){
-				$this->enviado = $data['enviado'];
-			}
-			if( isset($data['recibido']) ){
-				$this->recibido = $data['recibido'];
+			if( isset($data['cantidad_recibida']) ){
+				$this->cantidad_recibida = $data['cantidad_recibida'];
 			}
 		}
 	}
@@ -52,9 +49,8 @@ class TraspasoProducto extends VO
 		$vec = array( 
 			"id_traspaso" => $this->id_traspaso,
 			"id_producto" => $this->id_producto,
-			"cantidad" => $this->cantidad,
-			"enviado" => $this->enviado,
-			"recibido" => $this->recibido
+			"cantidad_enviada" => $this->cantidad_enviada,
+			"cantidad_recibida" => $this->cantidad_recibida
 		); 
 	return json_encode($vec); 
 	}
@@ -80,31 +76,22 @@ class TraspasoProducto extends VO
 	protected $id_producto;
 
 	/**
-	  * cantidad
+	  * cantidad_enviada
 	  * 
 	  * cantidad de producto a traspasar<br>
 	  * @access protected
 	  * @var int(11)
 	  */
-	protected $cantidad;
+	protected $cantidad_enviada;
 
 	/**
-	  * enviado
+	  * cantidad_recibida
 	  * 
-	  * Verdadero si este registro corresponde a un envio de producto como traspaso<br>
+	  * Cantidad de producto recibida<br>
 	  * @access protected
-	  * @var tinyint(1)
+	  * @var int(11)
 	  */
-	protected $enviado;
-
-	/**
-	  * recibido
-	  * 
-	  * Verdadero si este registro corresponde a un recibo de producto cmo traspaso<br>
-	  * @access protected
-	  * @var tinyint(1)
-	  */
-	protected $recibido;
+	protected $cantidad_recibida;
 
 	/**
 	  * getIdTraspaso
@@ -159,75 +146,51 @@ class TraspasoProducto extends VO
 	}
 
 	/**
-	  * getCantidad
+	  * getCantidadEnviada
 	  * 
-	  * Get the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es cantidad de producto a traspasar
+	  * Get the <i>cantidad_enviada</i> property for this object. Donde <i>cantidad_enviada</i> es cantidad de producto a traspasar
 	  * @return int(11)
 	  */
-	final public function getCantidad()
+	final public function getCantidadEnviada()
 	{
-		return $this->cantidad;
+		return $this->cantidad_enviada;
 	}
 
 	/**
-	  * setCantidad( $cantidad )
+	  * setCantidadEnviada( $cantidad_enviada )
 	  * 
-	  * Set the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es cantidad de producto a traspasar.
-	  * Una validacion basica se hara aqui para comprobar que <i>cantidad</i> es de tipo <i>int(11)</i>. 
+	  * Set the <i>cantidad_enviada</i> property for this object. Donde <i>cantidad_enviada</i> es cantidad de producto a traspasar.
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad_enviada</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
-	final public function setCantidad( $cantidad )
+	final public function setCantidadEnviada( $cantidad_enviada )
 	{
-		$this->cantidad = $cantidad;
+		$this->cantidad_enviada = $cantidad_enviada;
 	}
 
 	/**
-	  * getEnviado
+	  * getCantidadRecibida
 	  * 
-	  * Get the <i>enviado</i> property for this object. Donde <i>enviado</i> es Verdadero si este registro corresponde a un envio de producto como traspaso
-	  * @return tinyint(1)
+	  * Get the <i>cantidad_recibida</i> property for this object. Donde <i>cantidad_recibida</i> es Cantidad de producto recibida
+	  * @return int(11)
 	  */
-	final public function getEnviado()
+	final public function getCantidadRecibida()
 	{
-		return $this->enviado;
+		return $this->cantidad_recibida;
 	}
 
 	/**
-	  * setEnviado( $enviado )
+	  * setCantidadRecibida( $cantidad_recibida )
 	  * 
-	  * Set the <i>enviado</i> property for this object. Donde <i>enviado</i> es Verdadero si este registro corresponde a un envio de producto como traspaso.
-	  * Una validacion basica se hara aqui para comprobar que <i>enviado</i> es de tipo <i>tinyint(1)</i>. 
+	  * Set the <i>cantidad_recibida</i> property for this object. Donde <i>cantidad_recibida</i> es Cantidad de producto recibida.
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad_recibida</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param tinyint(1)
+	  * @param int(11)
 	  */
-	final public function setEnviado( $enviado )
+	final public function setCantidadRecibida( $cantidad_recibida )
 	{
-		$this->enviado = $enviado;
-	}
-
-	/**
-	  * getRecibido
-	  * 
-	  * Get the <i>recibido</i> property for this object. Donde <i>recibido</i> es Verdadero si este registro corresponde a un recibo de producto cmo traspaso
-	  * @return tinyint(1)
-	  */
-	final public function getRecibido()
-	{
-		return $this->recibido;
-	}
-
-	/**
-	  * setRecibido( $recibido )
-	  * 
-	  * Set the <i>recibido</i> property for this object. Donde <i>recibido</i> es Verdadero si este registro corresponde a un recibo de producto cmo traspaso.
-	  * Una validacion basica se hara aqui para comprobar que <i>recibido</i> es de tipo <i>tinyint(1)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * @param tinyint(1)
-	  */
-	final public function setRecibido( $recibido )
-	{
-		$this->recibido = $recibido;
+		$this->cantidad_recibida = $cantidad_recibida;
 	}
 
 }

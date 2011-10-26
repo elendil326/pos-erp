@@ -157,19 +157,14 @@ abstract class TraspasoProductoDAOBase extends DAO
 			array_push( $val, $traspaso_producto->getIdProducto() );
 		}
 
-		if( $traspaso_producto->getCantidad() != NULL){
-			$sql .= " cantidad = ? AND";
-			array_push( $val, $traspaso_producto->getCantidad() );
+		if( $traspaso_producto->getCantidadEnviada() != NULL){
+			$sql .= " cantidad_enviada = ? AND";
+			array_push( $val, $traspaso_producto->getCantidadEnviada() );
 		}
 
-		if( $traspaso_producto->getEnviado() != NULL){
-			$sql .= " enviado = ? AND";
-			array_push( $val, $traspaso_producto->getEnviado() );
-		}
-
-		if( $traspaso_producto->getRecibido() != NULL){
-			$sql .= " recibido = ? AND";
-			array_push( $val, $traspaso_producto->getRecibido() );
+		if( $traspaso_producto->getCantidadRecibida() != NULL){
+			$sql .= " cantidad_recibida = ? AND";
+			array_push( $val, $traspaso_producto->getCantidadRecibida() );
 		}
 
 		if(sizeof($val) == 0){return array();}
@@ -203,11 +198,10 @@ abstract class TraspasoProductoDAOBase extends DAO
 	  **/
 	private static final function update( $traspaso_producto )
 	{
-		$sql = "UPDATE traspaso_producto SET  cantidad = ?, enviado = ?, recibido = ? WHERE  id_traspaso = ? AND id_producto = ?;";
+		$sql = "UPDATE traspaso_producto SET  cantidad_enviada = ?, cantidad_recibida = ? WHERE  id_traspaso = ? AND id_producto = ?;";
 		$params = array( 
-			$traspaso_producto->getCantidad(), 
-			$traspaso_producto->getEnviado(), 
-			$traspaso_producto->getRecibido(), 
+			$traspaso_producto->getCantidadEnviada(), 
+			$traspaso_producto->getCantidadRecibida(), 
 			$traspaso_producto->getIdTraspaso(),$traspaso_producto->getIdProducto(), );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -231,13 +225,12 @@ abstract class TraspasoProductoDAOBase extends DAO
 	  **/
 	private static final function create( &$traspaso_producto )
 	{
-		$sql = "INSERT INTO traspaso_producto ( id_traspaso, id_producto, cantidad, enviado, recibido ) VALUES ( ?, ?, ?, ?, ?);";
+		$sql = "INSERT INTO traspaso_producto ( id_traspaso, id_producto, cantidad_enviada, cantidad_recibida ) VALUES ( ?, ?, ?, ?);";
 		$params = array( 
 			$traspaso_producto->getIdTraspaso(), 
 			$traspaso_producto->getIdProducto(), 
-			$traspaso_producto->getCantidad(), 
-			$traspaso_producto->getEnviado(), 
-			$traspaso_producto->getRecibido(), 
+			$traspaso_producto->getCantidadEnviada(), 
+			$traspaso_producto->getCantidadRecibida(), 
 		 );
 		global $conn;
 		try{$conn->Execute($sql, $params);}
@@ -308,34 +301,23 @@ abstract class TraspasoProductoDAOBase extends DAO
 			
 		}
 
-		if( (($a = $traspaso_productoA->getCantidad()) !== NULL) & ( ($b = $traspaso_productoB->getCantidad()) !== NULL) ){
-				$sql .= " cantidad >= ? AND cantidad <= ? AND";
+		if( (($a = $traspaso_productoA->getCantidadEnviada()) !== NULL) & ( ($b = $traspaso_productoB->getCantidadEnviada()) !== NULL) ){
+				$sql .= " cantidad_enviada >= ? AND cantidad_enviada <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a !== NULL|| $b !== NULL ){
-			$sql .= " cantidad = ? AND"; 
+			$sql .= " cantidad_enviada = ? AND"; 
 			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
 		}
 
-		if( (($a = $traspaso_productoA->getEnviado()) !== NULL) & ( ($b = $traspaso_productoB->getEnviado()) !== NULL) ){
-				$sql .= " enviado >= ? AND enviado <= ? AND";
+		if( (($a = $traspaso_productoA->getCantidadRecibida()) !== NULL) & ( ($b = $traspaso_productoB->getCantidadRecibida()) !== NULL) ){
+				$sql .= " cantidad_recibida >= ? AND cantidad_recibida <= ? AND";
 				array_push( $val, min($a,$b)); 
 				array_push( $val, max($a,$b)); 
 		}elseif( $a !== NULL|| $b !== NULL ){
-			$sql .= " enviado = ? AND"; 
-			$a = $a === NULL ? $b : $a;
-			array_push( $val, $a);
-			
-		}
-
-		if( (($a = $traspaso_productoA->getRecibido()) !== NULL) & ( ($b = $traspaso_productoB->getRecibido()) !== NULL) ){
-				$sql .= " recibido >= ? AND recibido <= ? AND";
-				array_push( $val, min($a,$b)); 
-				array_push( $val, max($a,$b)); 
-		}elseif( $a !== NULL|| $b !== NULL ){
-			$sql .= " recibido = ? AND"; 
+			$sql .= " cantidad_recibida = ? AND"; 
 			$a = $a === NULL ? $b : $a;
 			array_push( $val, $a);
 			
