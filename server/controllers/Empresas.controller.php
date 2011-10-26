@@ -105,25 +105,25 @@ require_once("interfaces/Empresas.interface.php");
  	 **/
 	public function Nuevo
 	(
-    $rfc, 
-    $ciudad, 
-    $curp, 
-    $numero_exterior, 
-    $razon_social, 
-    $colonia, 
-    $codigo_postal, 
-    $calle, 
-    $representante_legal = "", 
-    $descuento = null, 
-    $impuestos = "", 
-    $numero_interior = "", 
-    $margen_utilidad = null, 
-    $texto_extra = "", 
-    $telefono2 = "", 
-    $email = "", 
-    $retenciones = null, 
-    $telefono1 = "", 
-    $direccion_web = ""
+                $rfc,
+                $ciudad,
+                $curp,
+                $numero_exterior,
+                $razon_social,
+                $colonia,
+                $codigo_postal,
+                $calle,
+                $representante_legal = "",
+                $descuento = null,
+                $impuestos = "",
+                $numero_interior = "",
+                $margen_utilidad = null,
+                $texto_extra = "",
+                $telefono2 = "",
+                $email = "",
+                $retenciones = null,
+                $telefono1 = "",
+                $direccion_web = ""
 	)
 	{  
             Logger::log("Creando empresa");
@@ -138,7 +138,7 @@ require_once("interfaces/Empresas.interface.php");
 //                        "telefono"          =>  $telefono1,
 //                        "telefono2"         =>  $telefono2
 //                    ));
-          Logger::log("Colonia:" . $colonia);
+            Logger::log("Colonia:" . $colonia);
             $e = new Empresa(array(
                             "activo"                => true,
                             "curp"                  => $curp,
@@ -248,6 +248,11 @@ require_once("interfaces/Empresas.interface.php");
 
             $almacen=new Almacen(array("id_empresa"=>$id_empresa));
 
+            $productos_controller=new ProductosController();
+            $paquetes_controller=new PaquetesController();
+            $servicios_controller=new ServiciosController();
+            $sucursales_controller=new SucursalesController();
+
             DAO::transBegin();
             try
             {
@@ -258,7 +263,7 @@ require_once("interfaces/Empresas.interface.php");
                     $productos=ProductoEmpresaDAO::search($producto_empresa);
                     if(count($productos)<2)
                     {
-                        ProductosController::Desactivar($producto->getIdProducto());
+                        $productos_controller->Desactivar($producto->getIdProducto());
                     }
                 }
 
@@ -268,7 +273,7 @@ require_once("interfaces/Empresas.interface.php");
                     $paquetes=PaqueteEmpresaDAO::search($paquete_empresa);
                     if(count($paquetes)<2)
                     {
-                        PaquetesController::Eliminar($paquete->getIdPaquete());
+                        $paquetes_controller->Eliminar($paquete->getIdPaquete());
                     }
                 }
 
@@ -278,7 +283,7 @@ require_once("interfaces/Empresas.interface.php");
                     $servicios=ServicioEmpresaDAO::search($servicio_empresa);
                     if(count($servicios)<2)
                     {
-                        ServiciosController::Eliminar($servicio->getIdServicio());
+                        $servicios_controller->Eliminar($servicio->getIdServicio());
                     }
                 }
 
@@ -288,7 +293,7 @@ require_once("interfaces/Empresas.interface.php");
                     $sucursales=SucursalEmpresaDAO::search($sucursal_empresa);
                     if(count($sucursales)<2)
                     {
-                        SucursalesController::Eliminar($sucursal->getIdSucursal());
+                        $sucursales_controller->Eliminar($sucursal->getIdSucursal());
                     }
                     else
                     {
@@ -296,7 +301,8 @@ require_once("interfaces/Empresas.interface.php");
                         $almacenes=AlmacenDAO::search($almacen);
                         foreach($almacenes as $a)
                         {
-                            SucursalesController::EliminarAlmacen($a->getIdAlmacen());
+                            if($a->getIdTipoAlmacen()!=2&&$a->getActivo())
+                                $sucursales_controller->EliminarAlmacen($a->getIdAlmacen());
                         }
                     }
                 }

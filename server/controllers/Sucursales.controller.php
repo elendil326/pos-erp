@@ -1809,8 +1809,43 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$id_almacen
 	)
 	{  
-  
-  
+            $almacen=AlmacenDAO::getByPK($id_almacen);
+            if($almacen==null)
+            {
+                Logger::error("El almacen con id: ".$id_almacen." no existe");
+                throw new Exception("El almacen con id: ".$id_almacen." no existe");
+            }
+            if(!$almacen->getActivo())
+            {
+                Logger::warn("El almacen ya esta inactivo");
+                return;
+            }
+            if($almacen->getIdTipoAlmacen()==2)
+            {
+                Logger::error("No se puede eliminar con este metodo un almacen de tipo consignacion");
+                throw new Exception("No se puede eliminar con este metodo un almacen de tipo consignacion");
+            }
+            $almacen->setActivo(0);
+            $productos_almacen=ProductoAlmacenDAO::search(new ProductoAlmacen(array( "id_almacen" => $id_almacen )));
+            try
+            {
+                AlmacenDAO::save($almacen);
+                foreach($productos_almacen as $producto_almacen)
+                {
+                    if($producto_almacen->getCantidad()!==0)
+                    {
+                        throw new Exception("El almacen no puede ser borrado pues aun contiene productos");
+                    }
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo eliminar el almacen: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Almacen eliminado exitosamente");
 	}
   
 	/**
