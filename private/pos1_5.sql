@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 25-10-2011 a las 21:44:00
+-- Tiempo de generación: 26-10-2011 a las 16:38:49
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -227,7 +227,7 @@ CREATE TABLE IF NOT EXISTS `caja` (
   `activa` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Si la caja esta activa o ha sido eliminada',
   PRIMARY KEY (`id_caja`),
   KEY `id_sucursal` (`id_sucursal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -546,7 +546,7 @@ CREATE TABLE IF NOT EXISTS `consignacion_producto` (
 CREATE TABLE IF NOT EXISTS `corte_de_caja` (
   `id_corte_de_caja` int(11) NOT NULL AUTO_INCREMENT,
   `id_caja` int(11) NOT NULL COMMENT 'Id de la caja a la que se le realiza el corte',
-  `id_cajero` int(11) NOT NULL COMMENT 'Id del usuario que funje como cajero',
+  `id_cajero` int(11) DEFAULT NULL COMMENT 'Id del usuario que funje como cajero',
   `id_cajero_nuevo` int(11) DEFAULT NULL COMMENT 'Id del usuario que entrara como nuevo cajero si es que hubo un cambio de turno con el corte de caja',
   `fecha` datetime NOT NULL COMMENT 'fecha en la que se realiza el corte de caja',
   `saldo_real` float NOT NULL COMMENT 'Saldo actual de la caja',
@@ -690,7 +690,7 @@ CREATE TABLE IF NOT EXISTS `entrada_almacen` (
   `fecha_registro` datetime NOT NULL COMMENT 'Fecha en que se registra el movimiento',
   `motivo` varchar(255) NOT NULL COMMENT 'motivo por le cual entra producto al almacen',
   PRIMARY KEY (`id_entrada_almacen`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Registro de entradas de un almacen' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Registro de entradas de un almacen' AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -739,7 +739,7 @@ CREATE TABLE IF NOT EXISTS `impresora` (
   `id_impresora` int(11) NOT NULL AUTO_INCREMENT,
   `puerto` varchar(16) NOT NULL,
   PRIMARY KEY (`id_impresora`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -1498,7 +1498,7 @@ CREATE TABLE IF NOT EXISTS `salida_almacen` (
   `fecha_registro` datetime NOT NULL COMMENT 'Fecha en que se registra el movimiento',
   `motivo` varchar(255) NOT NULL COMMENT 'motivo por le cual sale producto del almacen',
   PRIMARY KEY (`id_salida_almacen`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Registro de salidas de un alacen' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Registro de salidas de un alacen' AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
