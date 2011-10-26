@@ -45,17 +45,17 @@ require_once("interfaces/Sucursales.interface.php");
 	)
 	{
             Logger::log("Creando nuevo almacen");
-            if(SucursalDAO::getByPK($id_sucursal)==null)
+            if(is_null(SucursalDAO::getByPK($id_sucursal)))
             {
                 Logger::error("La sucursal con id: ".$id_sucursal." no existe");
                 throw new Exception("La sucursal con id: ".$id_sucursal." no existe");
             }
-            if(EmpresaDAO::getByPK($id_empresa)==null)
+            if(is_null(EmpresaDAO::getByPK($id_empresa)))
             {
                 Logger::error("La empresa con id: ".$id_empresa." no existe");
                 throw new Exception("La empresa con id: ".$id_empresa." no existe");
             }
-            if(TipoAlmacenDAO::getByPK($id_tipo_almacen)==null)
+            if(is_null(TipoAlmacenDAO::getByPK($id_tipo_almacen)))
             {
                 Logger::error("El tipo de almacen con id: ".$id_tipo_almacen." no existe");
                 throw new Exception("El tipo de almacen con id: ".$id_tipo_almacen." no existe");
@@ -105,10 +105,10 @@ require_once("interfaces/Sucursales.interface.php");
             $parametros=false;
             if
             (
-                    $id_empresa != null ||
-                    $id_sucursal != null ||
-                    $id_tipo_almacen != null ||
-                    $activo !== null
+                    !is_null($id_empresa)  ||
+                    !is_null($id_sucursal) ||
+                    !is_null($id_tipo_almacen) ||
+                    !is_null($activo)
             )
                 $parametros=true;
             $almacenes=null;
@@ -173,13 +173,13 @@ require_once("interfaces/Sucursales.interface.php");
 	{
             Logger::log("Realizando la venta");
             $id_usuario=LoginController::getCurrentUser();
-            if($id_usuario==null)
+            if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener al usuario de la sesion actual, ya inicio sesion?");
                 throw new Exception("No se pudo obtener al usuario de la sesion actual, ya inicio sesion?");
             }
             $usuario=UsuarioDAO::getByPK($id_comprador);
-            if($usuario==null)
+            if(is_null($usuario))
             {
                 Logger::error("El usuario recibido como comprador no existe");
                 throw new Exception("El usuario recibido como comprador no existe");
@@ -204,11 +204,11 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 if($tipo_venta==="contado")
                 {
-                    if($tipo_pago==="cheque"&&$cheques==null)
+                    if($tipo_pago==="cheque"&&is_null($cheques))
                     {
                         throw new Exception("El tipo de pago es con cheque pero no se recibio informacion del mismo");
                     }
-                    if($saldo!==null)
+                    if(!is_null($saldo))
                     {
                         Logger::warn("Se recibio un saldo cuando la venta es de contado, el saldo se tomara del total");
                     }
@@ -228,7 +228,7 @@ require_once("interfaces/Sucursales.interface.php");
                     else if($tipo_pago==="efectivo")
                     {
                         CajasController::modificarCaja($venta->getIdCaja(), 1, $billetes_pago, $total);
-                        if($billetes_cambio!=null)
+                        if(!is_null($billetes_cambio))
                         {
                             CajasController::modificarCaja($venta->getIdCaja(), 0, $billetes_cambio, 0);
                         }
@@ -240,7 +240,7 @@ require_once("interfaces/Sucursales.interface.php");
                 }
                 else if($tipo_venta=="credito")
                 {
-                    if($saldo==null)
+                    if(!is_null($saldo))
                     {
                         Logger::warn("No se recibio un saldo, se tomara 0 como saldo");
                         $saldo=0;
@@ -254,17 +254,17 @@ require_once("interfaces/Sucursales.interface.php");
                 {
                     throw new Exception("El tipo de venta recibido no es valido");
                 }
-                if($detalle_orden==null&&$detalle_paquete==null&&$detalle_producto==null)
+                if(is_null($detalle_orden)&&is_null($detalle_paquete)&&is_null($detalle_producto))
                 {
                     throw new Exception ("No se recibieron ni paquetes ni productos ni servicios para esta venta");
                 }
-                if($detalle_paquete!=null)
+                if(!is_null($detalle_paquete))
                 {
                     $d_paquete=new VentaPaquete();
                     $d_paquete->setIdVenta($venta->getIdVenta());
                     foreach($detalle_paquete as $d_p)
                     {
-                        if(PaqueteDAO::getByPK($d_p["id_paquete"])==null)
+                        if(is_null(PaqueteDAO::getByPK($d_p["id_paquete"])))
                         {
                             throw new Exception("El paquete con id: ".$d_p["id_paquete"]." no existe");
                         }
@@ -275,18 +275,18 @@ require_once("interfaces/Sucursales.interface.php");
                         VentaPaqueteDAO::save($d_paquete);
                     }
                 }
-                if($detalle_producto!=null)
+                if(!is_null($detalle_producto))
                 {
                     $d_producto=new VentaProducto();
                     $d_producto->setIdVenta($venta->getIdVenta());
                     foreach($detalle_producto as $d_p)
                     {
                         $producto=ProductoDAO::getByPK($d_p["id_producto"]);
-                        if($producto==null)
+                        if(is_null($producto))
                         {
                             throw new Exception("El producto con id: ".$d_p["id_producto"]." no existe");
                         }
-                        if(UnidadDAO::getByPk($d_p["id_unidad"])==null)
+                        if(is_null(UnidadDAO::getByPk($d_p["id_unidad"])))
                         {
                             throw new Exception("La unidad con id: ".$d_p["id_unidad"]." no existe");
                         }
@@ -306,13 +306,13 @@ require_once("interfaces/Sucursales.interface.php");
                         $this->DescontarDeAlmacenes($d_producto, $this->getSucursal());
                     }
                 }
-                if($detalle_orden!=null)
+                if(!is_null($detalle_orden))
                 {
                     $d_orden = new VentaOrden();
                     $d_orden->setIdVenta($venta->getIdVenta());
                     foreach($detalle_orden as $d_p)
                     {
-                        if(OrdenDeServicioDAO::getByPK($d_p["id_orden_de_servicio"])==null)
+                        if(is_null(OrdenDeServicioDAO::getByPK($d_p["id_orden_de_servicio"])))
                         {
                             throw new Exception("La orden de servicio con id: ".$d_p["id_orden_de_servicio"]." no existe");
                         }
@@ -324,7 +324,7 @@ require_once("interfaces/Sucursales.interface.php");
                         VentaOrdenDAO::save($d_orden);
                     }
                 }
-                $id_empresas=$this->ObtenerEmpresas($detalle_producto, $detalle_paquete, $detalle_orden);
+                $id_empresas=$this->ObtenerEmpresasParaAsignacionVenta($detalle_producto, $detalle_paquete, $detalle_orden);
                 $venta_empresa=new VentaEmpresa(array("id_venta" => $venta->getIdVenta()));
                 $n=count($id_empresas["id"]);
                 for($i = 0 ; $i < $n ; $i++)
@@ -349,7 +349,7 @@ require_once("interfaces/Sucursales.interface.php");
             return $venta->getIdVenta();
 	}
 
-        private function ObtenerEmpresas
+        private function ObtenerEmpresasParaAsignacionVenta
         (
                 $detalle_producto=null,
                 $detalle_paquete=null,
@@ -359,7 +359,7 @@ require_once("interfaces/Sucursales.interface.php");
             $empresas=array();
             $id_empresas=array( "id" => array(), "total" => array());
             $parametro=false;
-            if($detalle_producto!=null)
+            if(!is_null($detalle_producto))
             {
                 $parametro=true;
                 $producto_empresa=new ProductoEmpresa();
@@ -373,7 +373,7 @@ require_once("interfaces/Sucursales.interface.php");
                     }
                 }
             }
-            if($detalle_paquete!=null)
+            if(!is_null($detalle_paquete))
             {
                 $parametro=true;
                 $paquete_empresa=new PaqueteEmpresa();
@@ -387,7 +387,7 @@ require_once("interfaces/Sucursales.interface.php");
                     }
                 }
             }
-            if($detalle_orden!=null)
+            if(!is_null($detalle_orden))
             {
                 $parametro=true;
                 $servicio_empresa=new ServicioEmpresa();
@@ -459,7 +459,7 @@ require_once("interfaces/Sucursales.interface.php");
                 if($almacen->getIdTipoAlmacen()==self::$almacen_consignacion)
                     continue;
                 $producto_almacen=ProductoAlmacenDAO::getByPK($detalle_producto->getIdProducto(), $almacen->getIdAlmacen(), $detalle_producto->getIdUnidad());
-                if($producto_almacen!=null)
+                if(!is_null($producto_almacen))
                 {
                     if($producto_almacen->getCantidad()>0)
                         $total+=$producto_almacen->getCantidad();
@@ -473,7 +473,7 @@ require_once("interfaces/Sucursales.interface.php");
             $n=$detalle_producto->getCantidad();
             $n_almacenes=count($productos_almacen);
             $unidad=UnidadDAO::getByPK($detalle_producto->getIdUnidad());
-            if($unidad==null)
+            if(is_null($unidad))
             {
                 throw new Exception("FATAL!!! este producto no tiene unidad");
             }
@@ -631,13 +631,13 @@ require_once("interfaces/Sucursales.interface.php");
 	{  
             Logger::log("Realizando la compra");
             $id_usuario=LoginController::getCurrentUser();
-            if($id_usuario==null)
+            if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener al usuario de la sesion actual, ya inicio sesion?");
                 throw new Exception("No se pudo obtener al usuario de la sesion actual, ya inicio sesion?");
             }
             $usuario=UsuarioDAO::getByPK($id_vendedor);
-            if($usuario==null)
+            if(is_null($usuario))
             {
                 Logger::error("El usuario recibido como vendedor no existe");
                 throw new Exception("El usuario recibido como vendedor no existe");
@@ -663,11 +663,11 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 if($tipo_compra==="contado")
                 {
-                    if($tipo_pago==="cheque"&&$cheques==null)
+                    if($tipo_pago==="cheque"&&is_null($cheques))
                     {
                         throw new Exception("El tipo de pago es con cheque pero no se recibio informacion del mismo");
                     }
-                    if($saldo!==null)
+                    if(!is_null($saldo))
                     {
                         Logger::warn("Se recibio un saldo cuando la venta es de contado, el saldo se tomara del total");
                     }
@@ -687,7 +687,7 @@ require_once("interfaces/Sucursales.interface.php");
                     else if($tipo_pago==="efectivo")
                     {
                         CajasController::modificarCaja($compra->getIdCaja(), 0, $billetes_pago, $total);
-                        if($billetes_cambio!=null)
+                        if(!is_null($billetes_cambio))
                         {
                             CajasController::modificarCaja($compra->getIdCaja(), 1, $billetes_cambio, 0);
                         }
@@ -699,7 +699,7 @@ require_once("interfaces/Sucursales.interface.php");
                 }
                 else if($tipo_compra=="credito")
                 {
-                    if($saldo==null)
+                    if(is_null($saldo))
                     {
                         Logger::warn("No se recibio un saldo, se tomara 0 como saldo");
                         $saldo=0;
@@ -713,7 +713,7 @@ require_once("interfaces/Sucursales.interface.php");
                 {
                     throw new Exception("El tipo de compra recibido no es valido");
                 }
-                if($detalle!=null)
+                if(!is_null($detalle))
                 {
                     $d_producto=new CompraProducto();
                     $d_producto->setIdCompra($compra->getIdCompra());
@@ -725,18 +725,18 @@ require_once("interfaces/Sucursales.interface.php");
                                 continue;
                         $id_almacen=$a->getIdAlmacen();
                     }
-                    if($id_almacen==null)
+                    if(is_null($id_almacen))
                     {
                         throw new Exception("No existe un almacen para esta empresa en esta sucursal");
                     }
                     foreach($detalle as $d_p)
                     {
                         $producto=ProductoDAO::getByPK($d_p["id_producto"]);
-                        if($producto==null)
+                        if(is_null($producto))
                         {
                             throw new Exception("El producto con id: ".$d_p["id_producto"]." no existe");
                         }
-                        if(UnidadDAO::getByPk($d_p["id_unidad"])==null)
+                        if(is_null(UnidadDAO::getByPk($d_p["id_unidad"])))
                         {
                             throw new Exception("La unidad con id: ".$d_p["id_unidad"]." no existe");
                         }
@@ -744,7 +744,7 @@ require_once("interfaces/Sucursales.interface.php");
                         {
                             throw new Exception("No se puede comprar el producto con id ".$d_p["id_producto"]." en mostrador");
                         }
-                        if(ProductoEmpresaDAO::getByPK($d_p["id_producto"], $id_empresa)==null)
+                        if(is_null(ProductoEmpresaDAO::getByPK($d_p["id_producto"], $id_empresa)))
                         {
                             throw new Exception("El producto no pertenece a la empresa seleccionada");
                         }
@@ -757,7 +757,7 @@ require_once("interfaces/Sucursales.interface.php");
                         $d_producto->setRetencion($d_p["retencion"]);
                         CompraProductoDAO::save($d_producto);
                         $producto_almacen=ProductoAlmacenDAO::getByPK($d_p["id_producto"], $id_almacen, $d_p["id_unidad"]);
-                        if($producto_almacen==null)
+                        if(is_null($producto_almacen))
                         {
                             $producto_almacen=new ProductoAlmacen(array("id_producto" => $d_p["id_producto"], "id_almacen" => $id_almacen, "id_unidad" => $d_p["id_unidad"]));
                         }
@@ -810,12 +810,12 @@ require_once("interfaces/Sucursales.interface.php");
             $parametros=false;
             if
             (
-                    $activo !== null ||
-                    $id_empresa != null ||
-                    $saldo_inferior_que !== null ||
-                    $saldo_superior_que !== null ||
-                    $fecha_apertura_inferior_que != null || 
-                    $fecha_apertura_superior_que != null
+                    !is_null($activo) ||
+                    !is_null($id_empresa) ||
+                    !is_null($saldo_inferior_que) ||
+                    !is_null($saldo_superior_que) ||
+                    !is_null($fecha_apertura_inferior_que) ||
+                    !is_null($fecha_apertura_superior_que)
             )
                 $parametros=true;
             $sucursales=array();
@@ -823,7 +823,7 @@ require_once("interfaces/Sucursales.interface.php");
             if($parametros)
             {
                 Logger::log("se recibieron parametros, se listan las sucursales en rango");
-                if($id_empresa!=null)
+                if(!is_null($id_empresa))
                 {
                     $sucursales_empresa=SucursalEmpresaDAO::search(new SucursalEmpresa(array( "id_empresa" => $id_empresa )));
                     foreach($sucursales_empresa as $sucursal_empresa)
@@ -839,28 +839,28 @@ require_once("interfaces/Sucursales.interface.php");
                 $sucursal_criterio2=new Sucursal();
 
                 $sucursal_criterio1->setActiva($activo);
-                if($saldo_superior_que!==null)
+                if(!is_null($saldo_superior_que))
                 {
                     $sucursal_criterio1->setSaldoAFavor($saldo_superior_que);
-                    if($saldo_inferior_que!==null)
+                    if(!is_null($saldo_inferior_que))
                         $sucursal_criterio2->setSaldoAFavor($saldo_inferior_que);
                     else
                         $sucursal_criterio2->setSaldoAFavor(1.8e100);
                 }
-                else if($saldo_inferior_que!==null)
+                else if(!is_null($saldo_inferior_que))
                 {
                     $sucursal_criterio1->setSaldoAFavor($saldo_inferior_que);
                     $sucursal_criterio2->setSaldoAFavor(0);
                 }
-                if($fecha_apertura_superior_que!=null)
+                if(!is_null($fecha_apertura_superior_que))
                 {
                     $sucursal_criterio1->setFechaApertura($fecha_apertura_superior_que);
-                    if($fecha_apertura_inferior_que!=null)
+                    if(!is_null($fecha_apertura_inferior_que))
                         $sucursal_criterio2->setFechaApertura($fecha_apertura_inferior_que);
                     else
                         $sucursal_criterio2->setFechaApertura(date($this->formato_fecha,time()));
                 }
-                else if($fecha_apertura_inferior_que!=null)
+                else if(!is_null($fecha_apertura_inferior_que))
                 {
                     $sucursal_criterio1->setFechaApertura($fecha_apertura_inferior_que);
                     $sucursal_criterio2->setFechaApertura("1001-01-01 00:00:00");
@@ -900,7 +900,7 @@ require_once("interfaces/Sucursales.interface.php");
 	{
             Logger::log("Abriendo caja");
             $caja=CajaDAO::getByPK($id_caja);
-            if($caja==null)
+            if(is_null($caja))
             {
                 Logger::error("La caja con id: ".$id_caja." no existe");
                 throw new Exception("La caja con id: ".$id_caja." no existe");
@@ -913,7 +913,7 @@ require_once("interfaces/Sucursales.interface.php");
             if($caja->getAbierta())
             {
                 Logger::warn("La caja ya ha sido abierta");
-                return;
+                throw new Exception("La caja ya ha sido abierta");
             }
             $apertura_caja=new AperturaCaja();
             $apertura_caja->setIdCaja($id_caja);
@@ -931,12 +931,22 @@ require_once("interfaces/Sucursales.interface.php");
                 CajaDAO::save($caja);
                 if($control_billetes)
                 {
+                    $billetes_caja=BilleteCajaDAO::search(new BilleteCaja(array( "id_caja" => $id_caja)));
+                    foreach($billetes_caja as $b_c)
+                    {
+                        $b_c->setCantidad(0);
+                        BilleteCajaDAO::save($b_c);
+                    }
                     $billete_apertura_caja=new BilleteAperturaCaja(array( "id_apertura_caja" => $apertura_caja->getIdAperturaCaja()));
+                    $billete_caja=new BilleteCaja(array( "id_caja" => $id_caja ));
                     foreach($billetes as $billete)
                     {
                         $billete_apertura_caja->setIdBillete($billete["id_billete"]);
+                        $billete_caja->setIdBillete($billete["id_billete"]);
                         $billete_apertura_caja->setCantidad($billete["cantidad"]);
+                        $billete_caja->setCantidad($billete["cantidad"]);
                         BilleteAperturaCajaDAO::save($billete_apertura_caja);
+                        BilleteCajaDAO::save($billete_caja);
                     }
                 }
             }
@@ -1004,7 +1014,7 @@ require_once("interfaces/Sucursales.interface.php");
             $sucursal->setRfc($rfc);
             $sucursal->setActiva($activo);
             $sucursal->setRazonSocial($razon_social);
-            if(CiudadDAO::getByPK($id_ciudad)==null)
+            if(is_null(CiudadDAO::getByPK($id_ciudad)))
             {
                 Logger::error("La ciudad con id: ".$id_ciudad." no existe");
             }
@@ -1029,12 +1039,12 @@ require_once("interfaces/Sucursales.interface.php");
                     $sucursal_empresa->setMargenUtilidad($empresa["margen_utilidad"]);
                     SucursalEmpresaDAO::save($sucursal_empresa);
                 }
-                if($impuestos!=null)
+                if(!is_null($impuestos))
                 {
                     $impuesto=new ImpuestoSucursal(array( "id_sucursal" => $sucursal->getIdSucursal()));
                     foreach($impuestos as $i)
                     {
-                        if(ImpuestoDAO::getByPK($i)==null)
+                        if(is_null(ImpuestoDAO::getByPK($i)))
                         {
                             throw new Exception("El impuesto con id: ".$i." no existe");
                         }
@@ -1042,12 +1052,12 @@ require_once("interfaces/Sucursales.interface.php");
                         ImpuestoSucursalDAO::save($impuesto);
                     }
                 }
-                if($retenciones!=null)
+                if(!is_null($retenciones))
                 {
                     $retencion= new RetencionSucursal(array( "id_sucursal" => $sucursal->getIdSucursal()));
                     foreach($retenciones as $r)
                     {
-                        if(RetencionDAO::getByPK($r)==null)
+                        if(!is_null(RetencionDAO::getByPK($r)))
                         {
                             throw new Exception("La retencion con id: ".$r." no existe");
                         }
@@ -1116,81 +1126,81 @@ require_once("interfaces/Sucursales.interface.php");
             Logger::log("Editando sucursal");
             $sucursal=SucursalDAO::getByPK($id_sucursal);
             $cambio_direccion=false;
-            if($sucursal==null)
+            if(is_null($sucursal))
             {
                 Logger::error("La sucursal con id: ".$id_sucursal." no existe");
                 throw new Exception("La sucursal con id: ".$id_sucursal." no existe");
             }
             $direccion=DireccionDAO::getByPK($sucursal->getIdDireccion());
-            if($direccion==null)
+            if(is_null($direccion))
             {
                 Logger::error("FATAL!!! La sucursal no cuenta con una direccion");
                 throw new Exception("FATAL!!! La sucursal no cuenta con una direccion");
             }
-            if($descuento!==null)
+            if(!is_null($descuento))
             {
                 $sucursal->setDescuento($descuento);
             }
-            if($margen_utilidad!==null)
+            if(!is_null($margen_utilidad))
             {
                 $sucursal->setMargenUtilidad($margen_utilidad);
             }
-            if($descripcion!=null)
+            if(!is_null($descripcion))
             {
                 $sucursal->setDescripcion($descripcion);
             }
-            if($telefono1!=null)
+            if(!is_null($telefono1))
             {
                 $cambio_direccion=true;
                 $direccion->setTelefono($telefono1);
             }
-            if($telefono2!=null)
+            if(!is_null($telefono2))
             {
                 $cambio_direccion=true;
                 $direccion->setTelefono2($telefono2);
             }
-            if($numero_exterior!=null)
+            if(!is_null($numero_exterior))
             {
                 $cambio_direccion=true;
                 $direccion->setNumeroExterior($numero_exterior);
             }
-            if($razon_social!=null)
+            if(!is_null($razon_social))
             {
                 $sucursal->setRazonSocial($razon_social);
             }
-            if($id_gerente!=null)
+            if(!is_null($id_gerente))
             {
                 $sucursal->setIdGerente($id_gerente);
             }
-            if($municipio!=null)
+            if(!is_null($municipio))
             {
                 $cambio_direccion=true;
                 $direccion->setIdCiudad($municipio);
             }
-            if($rfc!=null)
+            if(!is_null($rfc))
             {
                 $sucursal->setRfc($rfc);
             }
-            if($saldo_a_favor!=null)
+            if(!is_null($saldo_a_favor))
             {
                 $sucursal->setSaldoAFavor($saldo_a_favor);
             }
-            if($numero_interior!=null)
+            if(!is_null($numero_interior))
             {
                 $cambio_direccion=true;
                 $direccion->setNumeroInterior($numero_interior);
             }
-            if($colonia!=null)
+            if(!is_null($colonia))
             {
                 $cambio_direccion=true;
                 $direccion->setColonia($colonia);
             }
-            if($calle!=null)
+            if(!is_null($calle))
             {
                 $cambio_direccion=true;
                 $direccion->setCalle($calle);
             }
-            if($coidgo_postal!=null)
+            if(!is_null($coidgo_postal))
             {
                 $cambio_direccion=true;
                 $direccion->setCodigoPostal($coidgo_postal);
@@ -1199,7 +1209,7 @@ require_once("interfaces/Sucursales.interface.php");
             {
                 $direccion->setUltimaModificacion(date($this->formato_fecha,time()));
                 $id_usuario=LoginController::getCurrentUser();
-                if($id_usuario==null)
+                if(is_null($id_usuario))
                 {
                     Logger::error("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
                     throw new Exception("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
@@ -1210,11 +1220,11 @@ require_once("interfaces/Sucursales.interface.php");
             try
             {
                 DireccionDAO::save($direccion);
-                if($empresas!=null)
+                if(!is_null($empresas))
                 {
                     foreach($empresas as $empresa)
                     {
-                        if(EmpresaDAO::getByPK($empresa["id_empresa"])==null)
+                        if(is_null(EmpresaDAO::getByPK($empresa["id_empresa"])))
                         {
                             throw new Exception("La empresa con id: ".$empresa["id_empresa"]." no existe");
                         }
@@ -1237,11 +1247,11 @@ require_once("interfaces/Sucursales.interface.php");
                             SucursalEmpresaDAO::delete($sucursal_empresa);
                     }
                 }
-                if($impuestos!=null)
+                if(!is_null($impuestos))
                 {
                     foreach($impuestos as $impuesto)
                     {
-                        if(ImpuestoDAO::getByPK($impuesto)==null)
+                        if(is_null(ImpuestoDAO::getByPK($impuesto)))
                         {
                             throw new Exception("El impuesto con id: ".$impuesto." no existe");
                         }
@@ -1265,11 +1275,11 @@ require_once("interfaces/Sucursales.interface.php");
                         }
                     }
                 }
-                if($retenciones!=null)
+                if(!is_null($retenciones))
                 {
                     foreach($retenciones as $retencion)
                     {
-                        if(RetencionDAO::getByPK($retencion)==null)
+                        if(is_null(RetencionDAO::getByPK($retencion)))
                         {
                             throw new Exception("La retencion con id: ".$retencion." no existe");
                         }
@@ -1317,13 +1327,13 @@ require_once("interfaces/Sucursales.interface.php");
 	{
             Logger::log("Editando gerencia de sucursal");
             $sucursal=SucursalDAO::getByPK($id_sucursal);
-            if($sucursal==null)
+            if(is_null($sucursal))
             {
                 Logger::error("La sucursal con id: ".$id_sucursal." no existe");
                 throw new Exception("La sucursal con id: ".$id_sucursal." no existe");
             }
             $gerente=UsuarioDAO::getByPK($id_gerente);
-            if($gerente==null)
+            if(is_null($gerente))
             {
                 Logger::error("El usuario con id: ".$gerente." no existe");
                 throw new Exception("El usuario con id: ".$gerente." no existe");
@@ -1368,7 +1378,7 @@ require_once("interfaces/Sucursales.interface.php");
 	{
             Logger::log("Cerrando caja");
             $caja=CajaDAO::getByPK($id_caja);
-            if($caja==null)
+            if(is_null($caja))
             {
                 Logger::error("No existe la caja con id:".$id_caja." no existe");
                 throw new Exception("No existe la caja con id:".$id_caja." no existe");
@@ -1381,7 +1391,7 @@ require_once("interfaces/Sucursales.interface.php");
             if(!$caja->getAbierta())
             {
                 Logger::warn("La caja proporcionada ya esta cerrada");
-                return;
+                throw new Exception("La caja proporcionada ya esta cerrada");
             }
             $cierre_caja=new CierreCaja(
                     array(
@@ -1421,7 +1431,7 @@ require_once("interfaces/Sucursales.interface.php");
                     foreach($billetes_caja as $b_c)
                     {
                         $billete_cierre_caja=BilleteCierreCajaDAO::getByPK($b_c->getIdBillete(), $cierre_caja->getIdCierreCaja());
-                        if($billete_cierre_caja==null)
+                        if(is_null($billete_cierre_caja))
                             $billete_cierre_caja=new BilleteCierreCaja(array(
                                                     "id_billete" => $b_c->getIdBillete(),
                                                     "id_cierre_caja" => $cierre_caja->getIdCierreCaja(),
@@ -1480,12 +1490,12 @@ Creo que este metodo tiene que estar bajo sucursal.
             Logger::log("Resgitrando entrada a almacen");
             $entrada_almacen = new EntradaAlmacen();
             $id_usuario=LoginController::getCurrentUser();
-            if($id_usuario==null)
+            if(is_null($id_usuario))
             {
                 Logger::error("No se puede obtener al usuario de la sesion, ya inicio sesion?");
                 throw new Exception("No se puede obtener al usuario de la sesion, ya inicio sesion?");
             }
-            if(AlmacenDAO::getByPK($id_almacen)==null)
+            if(is_null(AlmacenDAO::getByPK($id_almacen)))
             {
                 Logger::error("El almacen con id: ".$id_almacen." no existe");
                 throw new Exception("El almacen con id: ".$id_almacen." no existe");
@@ -1501,16 +1511,19 @@ Creo que este metodo tiene que estar bajo sucursal.
                 $producto_entrada_almacen=new ProductoEntradaAlmacen(array( "id_entrada_almacen" => $entrada_almacen->getIdEntradaAlmacen() ));
                 foreach($productos as $p)
                 {
-                    if(ProductoDAO::getByPK($p["id_producto"])==null)
+                    if(is_null(ProductoDAO::getByPK($p["id_producto"])))
                         throw new Exception("El producto con id: ".$p["id_producto"]." no existe");
+
                     $producto_entrada_almacen->setIdProducto($p["id_producto"]);
-                    if(UnidadDAO::getByPK($p["id_unidad"])==null)
+                    if(is_null(UnidadDAO::getByPK($p["id_unidad"])))
                         throw new Exception("La unidad con id: ".$p["id_unidad"]." no existe");
+
                     $producto_entrada_almacen->setIdUnidad($p["id_unidad"]);
                     $producto_entrada_almacen->setCantidad($p["cantidad"]);
                     $producto_almacen=ProductoAlmacenDAO::getByPK($p["id_producto"], $id_almacen, $p["id_unidad"]);
-                    if($producto_almacen==null)
+                    if(is_null($producto_almacen))
                         $producto_almacen=new ProductoAlmacen(array( "id_producto" => $p["id_producto"] , "id_almacen" => $id_almacen , "id_unidad" => $p["id_unidad"] ));
+
                     $producto_almacen->setCantidad($producto_almacen->getCantidad()+$p["cantidad"]);
                     ProductoEntradaAlmacenDAO::save($producto_entrada_almacen);
                     ProductoAlmacenDAO::save($producto_almacen);
@@ -1548,9 +1561,9 @@ Creo que este metodo tiene que estar bajo sucursal.
 	)
 	{
             Logger::log("Creando nueva caja");
-            if($id_sucursal!=null)
+            if(!is_null($id_sucursal))
             {
-                if(SucursalDAO::getByPK($id_sucursal)==null)
+                if(is_null(SucursalDAO::getByPK($id_sucursal)))
                 {
                     Logger::error("La sucursal con id: ".$id_sucursal." no existe");
                     throw new Exception("La sucursal con id: ".$id_sucursal." no existe");
@@ -1574,7 +1587,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                 $impresora_caja = new ImpresoraCaja(array( "id_caja" => $caja->getIdCaja() ));
                 foreach($impresoras as $id_impresora)
                 {
-                    if(ImpresoraDAO::getByPK($id_impresora)==null)
+                    if(is_null(ImpresoraDAO::getByPK($id_impresora)))
                     {
                         throw new Exception("La impresora con id: ".$id_impresora." no existe");
                     }
@@ -1611,12 +1624,12 @@ Creo que este metodo tiene que estar bajo sucursal.
 	{  
             Logger::log("Registrando salida de almacen");
             $id_usuario=LoginController::getCurrentUser();
-            if($id_usuario==null)
+            if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
                 throw new Exception("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
             }
-            if(AlmacenDAO::getByPK($id_almacen)==null)
+            if(is_null(AlmacenDAO::getByPK($id_almacen)))
             {
                 Logger::error("El almacen con id: ".$id_almacen." no existe");
                 throw new Exception("El almacen con id: ".$id_almacen." no existe");
@@ -1636,7 +1649,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                 foreach($productos as $p)
                 {
                     $producto_almacen=ProductoAlmacenDAO::getByPK($p["id_producto"], $id_almacen, $p["id_unidad"]);
-                    if($producto_almacen==null)
+                    if(is_null($producto_almacen))
                     {
                         throw new Exception("El producto: ".$p["id_producto"]." en la unidad: ".$p["id_unidad"]."
                             no se encuentra en el almacen: ".$id_almacen.". No se puede registrar la salida");
@@ -1691,7 +1704,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 	{
             Logger::log("Realizando corte de caja");
             $caja=CajaDAO::getByPK($id_caja);
-            if($caja==null)
+            if(is_null($caja))
             {
                 Logger::error("La caja con id: ".$id_caja." no existe");
                 throw new Exception("La caja con id: ".$id_caja." no existe");
@@ -1740,7 +1753,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                     foreach($billetes_caja as $b_c)
                     {
                         $billete_corte_caja=BilleteCorteCajaDAO::getByPK($b_c->getIdBillete(), $corte_de_caja->getIdCorteDeCaja());
-                        if($billete_corte_caja ==null)
+                        if(is_null($billete_corte_caja ))
                             $billete_corte_caja = new BilleteCorteCaja(array(
                                                     "id_billete" => $b_c->getIdBillete(),
                                                     "id_corte_caja" => $corte_de_caja->getIdCorteDeCaja(),
@@ -1764,14 +1777,14 @@ Creo que este metodo tiene que estar bajo sucursal.
                         BilleteCajaDAO::save($b_c);
                         BilleteCorteCajaDAO::save($billete_corte_caja);
                     }
-                    if($billetes_dejados==null&&$saldo_final!==0)
+                    if(is_null($billetes_dejados)&&$saldo_final!==0)
                     {
                         throw new Exception("No se encontro el parametro billetes_dejados cuando se esta llevando control de los billetes en esta caja");
                     }
                     foreach($billetes_dejados as $b_d)
                     {
                          $billete_corte_caja=BilleteCorteCajaDAO::getByPK($b_d["id_billete"], $corte_de_caja->getIdCorteDeCaja());
-                         if($billete_corte_caja ==null)
+                         if(is_null($billete_corte_caja ))
                             $billete_corte_caja = new BilleteCorteCaja(array(
                                                     "id_billete" => $b_d["id_billete"],
                                                     "id_corte_caja" => $corte_de_caja->getIdCorteDeCaja(),
@@ -1811,7 +1824,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 	{
             Logger::log("Eliminando almacen");
             $almacen=AlmacenDAO::getByPK($id_almacen);
-            if($almacen==null)
+            if(is_null($almacen))
             {
                 Logger::error("El almacen con id: ".$id_almacen." no existe");
                 throw new Exception("El almacen con id: ".$id_almacen." no existe");
@@ -1819,7 +1832,7 @@ Creo que este metodo tiene que estar bajo sucursal.
             if(!$almacen->getActivo())
             {
                 Logger::warn("El almacen ya esta inactivo");
-                return;
+                throw new Exception("El almacen ya esta inactivo");
             }
             if($almacen->getIdTipoAlmacen()==2)
             {
@@ -1867,7 +1880,7 @@ Creo que este metodo tiene que estar bajo sucursal.
 	{
             Logger::log("Editando almacen");
             $almacen=AlmacenDAO::getByPK($id_almacen);
-            if($almacen==null)
+            if(is_null($almacen))
             {
                 Logger::error("El almacen con id: ".$id_almacen." no existe");
                 throw new Exception("El almacen con id: ".$id_almacen." no existe");
@@ -1877,17 +1890,17 @@ Creo que este metodo tiene que estar bajo sucursal.
                 Logger::error("El almacen no esta activo, no puede ser editado");
                 throw new Exception("El almacen no esta activo, no puede ser editado");
             }
-            if($descripcion!==null)
+            if(!is_null($descripcion))
             {
                 $almacen->setDescripcion($descripcion);
             }
-            if($nombre!==null)
+            if(!is_null($nombre))
             {
                 $almacen->setNombre($nombre);
             }
-            if($id_tipo_almacen!==null)
+            if(!is_null($id_tipo_almacen))
             {
-                if(TipoAlmacenDAO::getByPK($id_tipo_almacen)==null)
+                if(is_null(TipoAlmacenDAO::getByPK($id_tipo_almacen)))
                 {
                     Logger::error("El tipo de almacen con id: ".$id_tipo_almacen." no existe");
                     throw new Exception("El tipo de almacen con id: ".$id_tipo_almacen." no existe");
@@ -1934,9 +1947,40 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$descripcion = null, 
 		$token = null
 	)
-	{  
-  
-  
+	{
+            Logger::log("Editando caja");
+            $caja=CajaDAO::getByPK($id_caja);
+            if(is_null($caja))
+            {
+                Logger::error("La caja con id: ".$id_caja." no existe");
+                throw new Exception("La caja con id: ".$id_caja." no existe");
+            }
+            if(!$caja->getActiva())
+            {
+                Logger::error("La caja no esta activa, no se puede editar");
+                throw new Exception("La caja no esta activa, no se puede editar");
+            }
+            if(!is_null($descripcion))
+            {
+                $caja->setDescripcion($descripcion);
+            }
+            if(!is_null($token))
+            {
+                $caja->setToken($token);
+            }
+            DAO::transBegin();
+            try
+            {
+                CajaDAO::save($caja);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo editar la caja: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Caja editada exitosamente");
 	}
   
 	/**

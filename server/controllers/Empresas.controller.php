@@ -21,7 +21,7 @@ require_once("interfaces/Empresas.interface.php");
 		$activa = null
 	)
 	{  
-  		if($activa === null)
+  		if(is_null($activa))
   			return EmpresaDAO::getAll();
 
   		$e = new Empresa();
@@ -45,7 +45,7 @@ require_once("interfaces/Empresas.interface.php");
 	)
 	{
             Logger::log("Agregando sucursales a la empresa");
-            if(EmpresaDAO::getByPK($id_empresa)==null)
+            if(is_null(EmpresaDAO::getByPK($id_empresa)))
             {
                 Logger::error("La empresa con id: ".$id_empresa." no existe");
                 throw new Exception("La empresa con id: ".$id_empresa." no existe");
@@ -57,7 +57,7 @@ require_once("interfaces/Empresas.interface.php");
             {
                 foreach($sucursales as $sucursal)
                 {
-                    if(SucursalDAO::getByPK($sucursal["id_sucursal"])==null)
+                    if(is_null(SucursalDAO::getByPK($sucursal["id_sucursal"])))
                     {
                         Logger::error("La sucursal con id: ".$sucursal["id_sucursal"]." no existe");
                         throw new Exception("La sucursal con id: ".$sucursal["id_sucursal"]." no existe");
@@ -172,7 +172,7 @@ require_once("interfaces/Empresas.interface.php");
                  if($impuestos)
                  foreach($impuestos as $id_impuesto)
                  {
-                     if(ImpuestoDAO::getByPK($id_impuesto)==null)
+                     if(is_null(ImpuestoDAO::getByPK($id_impuesto)))
                      {
                          Logger::error("El impuesto con id: ".$id_impuesto." no existe");
                          throw new Exception("El impuesto con id: ".$id_impuesto." no existe");
@@ -184,7 +184,7 @@ require_once("interfaces/Empresas.interface.php");
                  if($retenciones)
                  foreach($retenciones as $id_retencion)
                  {
-                     if(RetencionDAO::getByPK($id_retencion)==null)
+                     if(is_null(RetencionDAO::getByPK($id_retencion)))
                      {
                          Logger::error("La retencion con id: ".$id_retencion." no existe");
                          throw new Exception("La retencion con id: ".$id_retencion." no existe");
@@ -218,7 +218,7 @@ require_once("interfaces/Empresas.interface.php");
 	{
             Logger::log("Eliminando empresa");
             $empresa=EmpresaDAO::getByPK($id_empresa);
-            if($empresa==null)
+            if(is_null($empresa))
             {
                 Logger::error("La empresa con id: ".$id_empresa." no existe");
                 throw new Exception("La empresa con id: ".$id_empresa." no existe");
@@ -226,10 +226,10 @@ require_once("interfaces/Empresas.interface.php");
             if(!$empresa->getActivo())
             {
                 Logger::warn("La empresa ya esta cancelada");
-                return;
+                throw new Exception("La empresa ya esta cancelada");
             }
             $empresa->setActivo(0);
-
+            $empresa->setFechaBaja(date("Y-m-d H:i:s"));
             $pr=new ProductoEmpresa(array("id_empresa"=>$id_empresa));
             $producto_empresa=new ProductoEmpresa();
             $productos_empresa=ProductoEmpresaDAO::search($pr);
@@ -370,7 +370,7 @@ require_once("interfaces/Empresas.interface.php");
             Logger::log("Editando la empresa");
             $empresa=EmpresaDAO::getByPK($id_empresa);
             $modificar_direccion=false;
-            if($empresa==null)
+            if(is_null($empresa))
             {
                 Logger::error("La empresa con id: ".$id_empresa." no existe");
                 throw new Exception("La empresa con id: ".$id_empresa." no existe");
@@ -381,80 +381,80 @@ require_once("interfaces/Empresas.interface.php");
                 throw new Exception("La empresa no esta activa, no se puede editar una empresa desactivada");
             }
             $direccion=DireccionDAO::getByPK($empresa->getIdDireccion());
-            if($direccion==null)
+            if(is_null($direccion))
             {
                 Logger::error("FATAL!!! La empresa no cuenta con una direccion");
                 throw new Exception("FATAL!!! La empresa no cuenta con una direccion");
             }
-            if($descuento!==null)
+            if(!is_null($descuento))
             {
                 $empresa->setDescuento($descuento);
             }
-            if($margen_utilidad!==null)
+            if(!is_null($margen_utilidad))
             {
                 $empresa->setMargenUtilidad($margen_utilidad);
             }
-            if($direccion_web!==null)
+            if(!is_null($direccion_web))
             {
                 $empresa->setDireccionWeb($direccion_web);
             }
-            if($ciudad!==null)
+            if(!is_null($ciudad))
             {
                 $direccion->setIdCiudad($ciudad);
                 $modificar_direccion=true;
             }
-            if($razon_social!==null)
+            if(!is_null($razon_social))
             {
                 $empresa->setRazonSocial($razon_social);
             }
-            if($rfc!==null)
+            if(!is_null($rfc))
             {
                 $empresa->setRfc($rfc);
             }
-            if($codigo_postal!==null)
+            if(!is_null($codigo_postal))
             {
                 $direccion->setCodigoPostal($codigo_postal);
                 $modificar_direccion=true;
             }
-            if($curp!==null)
+            if(!is_null($curp))
             {
                 $empresa->setCurp($curp);
             }
-            if($calle!==null)
+            if(!is_null($calle))
             {
                 $direccion->setCalle($calle);
                 $modificar_direccion=true;
             }
-            if($numero_interno!==null)
+            if(!is_null($numero_interno))
             {
                 $direccion->setNumeroInterior($numero_interno);
                 $modificar_direccion=true;
             }
-            if($representante_legal!==null)
+            if(!is_null($representante_legal))
             {
                 $empresa->setRepresentanteLegal($representante_legal);
             }
-            if($telefono1!==null)
+            if(!is_null($telefono1))
             {
                 $direccion->setTelefono($telefono1);
                 $modificar_direccion=true;
             }
-            if($numero_exterior!==null)
+            if(!is_null($numero_exterior))
             {
                 $direccion->setNumeroExterior($numero_exterior);
                 $modificar_direccion=true;
             }
-            if($colonia!==null)
+            if(!is_null($colonia))
             {
                 $direccion->setColonia($colonia);
                 $modificar_direccion=true;
             }
-            if($telefono2!==null)
+            if(!is_null($telefono2))
             {
                 $direccion->setTelefono2($telefono2);
                 $modificar_direccion=true;
             }
-            if($texto_extra!==null)
+            if(!is_null($texto_extra))
             {
                 $direccion->setReferencia($texto_extra);
                 $modificar_direccion=true;
@@ -463,7 +463,7 @@ require_once("interfaces/Empresas.interface.php");
             {
                 $direccion->setUltimaModificacion("Y-m-d H:i:s",time());
                 $id_usuario=LoginController::getCurrentUser();
-                if($id_usuario==null)
+                if(is_null($id_usuario))
                 {
                     Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
                     throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
@@ -478,12 +478,12 @@ require_once("interfaces/Empresas.interface.php");
             {
                 EmpresaDAO::save($empresa);
                 DireccionDAO::save($direccion);
-                if($impuestos!==null)
+                if(!is_null($impuestos))
                 {
                     $i_empresa=new ImpuestoEmpresa(array("id_empresa"=>$id_empresa));
                     foreach($impuestos as $id_impuesto)
                     {
-                        if(ImpuestoDAO::getByPK($id_impuesto)==null)
+                        if(is_null(ImpuestoDAO::getByPK($id_impuesto)))
                         {
                             throw new Exception("El impuesto con id: ".$id_impuesto." no existe");
                         }
@@ -507,12 +507,12 @@ require_once("interfaces/Empresas.interface.php");
                         }
                     }
                 }
-                if($retenciones!==null)
+                if(!is_null($retenciones))
                 {
                     $r_empresa=new RetencionEmpresa(array("id_empresa"=>$id_empresa));
                     foreach($retenciones as $id_retencion)
                     {
-                        if(ImpuestoDAO::getByPK($id_retencion)==null)
+                        if(is_null(ImpuestoDAO::getByPK($id_retencion)))
                         {
                             throw new Exception("La retencion con id: ".$id_retencion." no existe");
                         }

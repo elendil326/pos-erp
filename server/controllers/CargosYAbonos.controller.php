@@ -16,7 +16,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
         )
         {
             $empresa=EmpresaDAO::getByPK($id_empresa);
-            if($empresa==null)
+            if(is_null($empresa))
             {
                 Logger::error("La empresa con id:".$id_empresa." no existe");
                 return false;
@@ -65,7 +65,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	{
             Logger::log("Creando nuevo ingreso");
             $id_usuario=LoginController::getCurrentUser();
-            if($id_usuario==null)
+            if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
                 throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
@@ -74,25 +74,25 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 throw new Exception("Se recibio una empresa no valida");
             }
-            if($id_concepto_ingreso!=null)
+            if(!is_null($id_concepto_ingreso))
             {
                 $concepto_ingreso=ConceptoIngresoDAO::getByPK($id_concepto_ingreso);
-                if($concepto_ingreso==null)
+                if(is_null($concepto_ingreso))
                 {
                     Logger::error("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
                     throw new Exception("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
                 }
             }
-            if($monto===null)
+            if(is_null($monto))
             {
                 Logger::log("No se recibio monto, se procede a buscar en el concepto de ingreso");
-                if($id_concepto_ingreso==null)
+                if(is_null($id_concepto_ingreso))
                 {
                     Logger::error("No se recibio un concepto de ingreso");
                     throw new Exception("No se recibio un concepto de ingreso ni un monto");
                 }
                 $monto=$concepto_ingreso->getMonto();
-                if($monto===null)
+                if(is_null($monto))
                 {
                     Logger::error("El concepto de ingreso recibido no cuenta con un monto");
                     throw new Exception("El concepto de ingreso recibido no cuenta con un monto ni se recibio un monto");
@@ -102,7 +102,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 $id_sucursal=$this->getSucursal();
             if(!$id_caja)
                 $id_caja=$this->getCaja();
-            if($id_caja!=null)
+            if(!is_null($id_caja))
             {
                 try
                 {
@@ -167,7 +167,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             if($compra)
             {
                 $abono=AbonoCompraDAO::getByPK($id_abono);
-                if($abono==null)
+                if(is_null($abono))
                 {
                     Logger::error("El abono para compra con id:".$id_abono." no existe");
                     throw new Exception("El abono para compra con id:".$id_abono." no existe");
@@ -175,7 +175,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 if($abono->getCancelado())
                 {
                     Logger::log("El abono ya ha sido cancelado antes");
-                    return;
+                    throw new Exception("El abono ya ha sido cancelado antes");
                 }
                 $abono->setCancelado(1);
                 $abono->setMotivoCancelacion($motivo_cancelacion);
@@ -197,7 +197,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             else if($venta)
             {
                 $abono=AbonoVentaDAO::getByPK($id_abono);
-                if($abono==null)
+                if(is_null($abono))
                 {
                     Logger::error("El abono para venta con id:".$id_abono." no existe");
                     throw new Exception("El abono para venta con id:".$id_abono." no existe");
@@ -205,7 +205,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 if($abono->getCancelado())
                 {
                     Logger::log("El abono ya ha sido cancelado antes");
-                    return;
+                    throw new Exception("El abono ya ha sido cancelado antes");
                 }
                 $abono->setCancelado(1);
                 $abono->setMotivoCancelacion($motivo_cancelacion);
@@ -225,7 +225,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             else if($prestamo)
             {
                 $abono=AbonoPrestamoDAO::getByPK($id_abono);
-                if($abono==null)
+                if(is_null($abono))
                 {
                     Logger::error("El abono para prestamo con id:".$id_abono." no existe");
                     throw new Exception("El abono para prestamo con id:".$id_abono." no existe");
@@ -233,7 +233,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 if($abono->getCancelado())
                 {
                     Logger::log("El abono ya ha sido cancelado antes");
-                    return;
+                    throw new Exception("El abono ya ha sido cancelado antes");
                 }
                 $abono->setCancelado(1);
                 $abono->setMotivoCancelacion($motivo_cancelacion);
@@ -265,13 +265,13 @@ require_once("interfaces/CargosYAbonos.interface.php");
         )
         {
             $compra=CompraDAO::getByPK($abono->getIdCompra());
-            if($compra==null)
+            if(is_null($compra))
             {
                 Logger::error("FATAL!!!! Este abono apunta a una compra que no existe!!");
                 throw new Exception("FATAL!!!! Este abono apunta a una compra que no existe!!");
             }
             $usuario=UsuarioDAO::getByPK($compra->getIdVendedorCompra());
-            if($usuario==null)
+            if(is_null($usuario))
             {
                 Logger::error("FATAL!!!! La compra de este abono no tiene un vendedor");
                 throw new Exception("FATAL!!!! La compra de este abono no tiene un vendedor");
@@ -288,7 +288,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             //dinero regresa a la caja que indica el usuario.
             //
             //Si no hay una caja, se tomara el dinero como perdido.
-            if(!$compra->getCancelada()&&$id_caja!=null)
+            if(!$compra->getCancelada()&&!is_null($id_caja))
             {
                 try
                 {
@@ -337,13 +337,13 @@ require_once("interfaces/CargosYAbonos.interface.php");
         )
         {
             $venta=VentaDAO::getByPK($abono->getIdVenta());
-            if($venta==null)
+            if(is_null($venta))
             {
                 Logger::error("FATAL!!!! Este abono apunta a una venta que no existe!!");
                 throw new Exception("FATAL!!!! Este abono apunta a una venta que no existe!!");
             }
             $usuario=UsuarioDAO::getByPK($venta->getIdCompradorVenta());
-            if($usuario==null)
+            if(is_null($usuario))
             {
                 Logger::error("FATAL!!!! La venta de este abono no tiene un comprador");
                 throw new Exception("FATAL!!!! La venta de este abono no tiene un comprador");
@@ -359,7 +359,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             //dinero sale de la caja que indica el usuario.
             //
             //Si no hay una caja, se tomara el dinero como ganado.
-            if(!$venta->getCancelada()&&$id_caja!=null)
+            if(!$venta->getCancelada()&&!is_null($id_caja))
             {
                 try
                 {
@@ -408,7 +408,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
         )
         {
             $prestamo=PrestamoDAO::getByPK($abono->getIdPrestamo());
-            if($prestamo==null)
+            if(is_null($prestamo))
             {
                 Logger::error("FATAL!!!! Este abono apunta a un prestamo que no existe!!");
                 throw new Exception("FATAL!!!! Este abono apunta a un prestamo que no existe!!");
@@ -428,7 +428,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 $solicitante=UsuarioDAO::getByPK($id_solicitante);
             else
                 $solicitante=SucursalDAO::getByPK($id_solicitante*-1);
-            if($solicitante==null)
+            if(is_null($solicitante))
             {
                 Logger::error("FATAL!!!! El prestamo de este abono no tiene un solicitante");
                 throw new Exception("FATAL!!!! El prestamo de este abono no tiene un solicitante");
@@ -442,7 +442,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             //
             //Si no hay una caja, se tomara el dinero como ganado.
             //
-            if($id_caja!=null)
+            if(!is_null($id_caja))
             {
                 try
                 {
@@ -518,7 +518,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 throw new Exception("No se recibio si los cheques se eliminaran de una compra, una venta o un prestamo");
             }
             $cheque=new Cheque();
-            if($resultados==null)
+            if(is_null($resultados))
                 return;
             DAO::transBegin();
             try
@@ -586,7 +586,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             if(!$compra&&!$venta&&!$prestamo)
             {
                 Logger::warn("No se recibio si se listaran compras, ventas o prestamos, no se lista nada");
-                return null;
+                throw new Exception("No se recibio si se listaran compras, ventas o prestamos, no se lista nada");
             }
             $abonos_compra=null;
             $abonos_venta=null;
@@ -599,20 +599,20 @@ require_once("interfaces/CargosYAbonos.interface.php");
             //
             if
             (
-                $id_caja != null||
-		$id_usuario != null||
-		$id_sucursal != null||
-		$id_empresa != null||
-                $id_compra != null||
-                $id_venta != null||
-                $id_prestamo != null||
-                $cancelado !== null||
-                $fecha_minima != null||
-                $fecha_maxima != null||
-                $fecha_actual != null||
-                $monto_menor_a !== null||
-                $monto_mayor_a !== null||
-                $monto_igual_a !== null
+                !is_null($id_caja)||
+		!is_null($id_usuario)||
+		!is_null($id_sucursal)||
+		!is_null($id_empresa)||
+                !is_null($id_compra)||
+                !is_null($id_venta)||
+                !is_null($id_prestamo)||
+                !is_null($cancelado)||
+                !is_null($fecha_minima)||
+                !is_null($fecha_maxima)||
+                !is_null($fecha_actual)||
+                !is_null($monto_menor_a)||
+                !is_null($monto_mayor_a)||
+                !is_null($monto_igual_a)
             )
             {
                 $parametros=true;
@@ -634,7 +634,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     //
                     $abono_criterio_compra->setCancelado($cancelado);
                     $abono_criterio_compra->setIdCaja($id_caja);
-                    if($fecha_minima!=null)
+                    if(!is_null($fecha_minima))
                     {
                         //
                         //Si pasaron una fecha minima y existe una fecha maxima, entonces
@@ -646,12 +646,12 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         //
                         //
                         $abono_criterio_compra->setFecha($fecha_minima);
-                        if($fecha_maxima!=null)
+                        if(!is_null($fecha_maxima))
                             $abono_criterio_compra2->setFecha($fecha_maxima);
                         else
                             $abono_criterio_compra2->setFecha(date($this->formato_fecha, time()));
                     }
-                    else if($fecha_maxima!=null)
+                    else if(!is_null($fecha_maxima))
                     {
                         //
                         //Si no se recibio fecha minima pero si fecha maxima
@@ -681,7 +681,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     $abono_criterio_compra->setIdCompra($id_compra);
                     $abono_criterio_compra->setIdReceptor($id_usuario);
                     $abono_criterio_compra->setIdSucursal($id_sucursal);
-                    if($monto_mayor_a!==null)
+                    if(!is_null($monto_mayor_a))
                     {
                         //
                         //Si se recibio el monto_mayor_a y se recibio el monto_menor_a
@@ -693,12 +693,12 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         //para que se listen los objeto cuyo monto sea mayor a mayor_a
                         //
                         $abono_criterio_compra->setMonto($monto_mayor_a);
-                        if($monto_menor_a!==null)
+                        if(!is_null($monto_menor_a))
                             $abono_criterio_compra2->setMonto($monto_menor_a);
                         else
                             $abono_criterio_compra2->setMonto(1.8e100);
                     }
-                    else if($monto_menor_a!==null)
+                    else if(!is_null($monto_menor_a))
                     {
                         //
                         //Si solo se obtuvo monto_menor_a, el objeto 1 lo almacena y el
@@ -708,7 +708,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         $abono_criterio_compra->setMonto($monto_menor_a);
                         $abono_criterio_compra2->setMonto(0);
                     }
-                    else if($monto_igual_a!==null)
+                    else if(!is_null($monto_igual_a))
                     {
                         //
                         //Si se recibe monto_igual_a se asignara este monto al
@@ -744,7 +744,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     //
                     $abono_criterio_venta->setCancelado($cancelado);
                     $abono_criterio_venta->setIdCaja($id_caja);
-                    if($fecha_minima!=null)
+                    if(!is_null($fecha_minima))
                     {
                         //
                         //Si pasaron una fecha minima y existe una fecha maxima, entonces
@@ -756,12 +756,12 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         //
                         //
                         $abono_criterio_venta->setFecha($fecha_minima);
-                        if($fecha_maxima!=null)
+                        if(!is_null($fecha_maxima))
                             $abono_criterio_venta2->setFecha($fecha_maxima);
                         else
                             $abono_criterio_venta2->setFecha(date($this->formato_fecha, time()));
                     }
-                    else if($fecha_maxima!=null)
+                    else if(!is_null($fecha_maxima))
                     {
                         //
                         //Si no se recibio fecha minima pero si fecha maxima
@@ -790,7 +790,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     $abono_criterio_venta->setIdVenta($id_venta);
                     $abono_criterio_venta->setIdDeudor($id_usuario);
                     $abono_criterio_venta->setIdSucursal($id_sucursal);
-                    if($monto_mayor_a!==null)
+                    if(!is_null($monto_mayor_a))
                     {
                         //
                         //Si se recibio el monto_mayor_a y se recibio el monto_menor_a
@@ -802,12 +802,12 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         //para que se listen los objeto cuyo monto sea mayor a mayor_a
                         //
                         $abono_criterio_venta->setMonto($monto_mayor_a);
-                        if($monto_menor_a!==null)
+                        if(!is_null($monto_menor_a))
                             $abono_criterio_venta2->setMonto($monto_menor_a);
                         else
                             $abono_criterio_venta2->setMonto(1.8e100);
                     }
-                    else if($monto_menor_a!==null)
+                    else if(!is_null($monto_menor_a))
                     {
                         //
                         //Si solo se obtuvo monto_menor_a, el objeto 1 lo almacena y el
@@ -817,7 +817,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         $abono_criterio_venta->setMonto($monto_menor_a);
                         $abono_criterio_venta2->setMonto(0);
                     }
-                    else if($monto_igual_a!==null)
+                    else if(!is_null($monto_igual_a))
                     {
                         //
                         //Si se recibe monto_igual_a se asignara este monto al
@@ -850,7 +850,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     //
                     $abono_criterio_prestamo->setCancelado($cancelado);
                     $abono_criterio_prestamo->setIdCaja($id_caja);
-                    if($fecha_minima!=null)
+                    if(!is_null($fecha_minima))
                     {
                         //
                         //Si pasaron una fecha minima y existe una fecha maxima, entonces
@@ -862,12 +862,12 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         //
                         //
                         $abono_criterio_prestamo->setFecha($fecha_minima);
-                        if($fecha_maxima!=null)
+                        if(!is_null($fecha_maxima))
                             $abono_criterio_prestamo2->setFecha($fecha_maxima);
                         else
                             $abono_criterio_prestamo2->setFecha(date($this->formato_fecha, time()));
                     }
-                    else if($fecha_maxima!=null)
+                    else if(!is_null($fecha_maxima))
                     {
                         //
                         //Si no se recibio fecha minima pero si fecha maxima
@@ -896,7 +896,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     $abono_criterio_prestamo->setIdPrestamo($id_prestamo);
                     $abono_criterio_prestamo->setIdDeudor($id_usuario);
                     $abono_criterio_prestamo->setIdSucursal($id_sucursal);
-                    if($monto_mayor_a!==null)
+                    if(!is_null($monto_mayor_a))
                     {
                         //
                         //Si se recibio el monto_mayor_a y se recibio el monto_menor_a
@@ -908,12 +908,12 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         //para que se listen los objeto cuyo monto sea mayor a mayor_a
                         //
                         $abono_criterio_prestamo->setMonto($monto_mayor_a);
-                        if($monto_menor_a!==null)
+                        if(!is_null($monto_menor_a))
                             $abono_criterio_prestamo2->setMonto($monto_menor_a);
                         else
                             $abono_criterio_prestamo2->setMonto(1.8e100);
                     }
-                    else if($monto_menor_a!==null)
+                    else if(!is_null($monto_menor_a))
                     {
                         //
                         //Si solo se obtuvo monto_menor_a, el objeto 1 lo almacena y el
@@ -923,7 +923,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         $abono_criterio_prestamo->setMonto($monto_menor_a);
                         $abono_criterio_prestamo2->setMonto(0);
                     }
-                    else if($monto_igual_a!==null)
+                    else if(!is_null($monto_igual_a))
                     {
                         //
                         //Si se recibe monto_igual_a se asignara este monto al
@@ -945,17 +945,17 @@ require_once("interfaces/CargosYAbonos.interface.php");
             //Si la consulta de abonos en compras trae un resultado, agregala al arreglo de abonos
             //y asi con las ventas y los prestamos.
             //
-            if($abonos_compra!=null)
+            if(!is_null($abonos_compra))
             {
                 $abonos[$cont]=$abonos_compra;
                 $cont++;
             }
-            if($abonos_venta!=null)
+            if(!is_null($abonos_venta))
             {
                 $abonos[$cont]=$abonos_venta;
                 $cont++;
             }
-            if($abonos_prestamo!=null)
+            if(!is_null($abonos_prestamo))
             {
                 $abonos[$cont]=$abonos_prestamo;
                 $cont++;
@@ -989,13 +989,13 @@ require_once("interfaces/CargosYAbonos.interface.php");
             if($gasto->getCancelado())
             {
                 Logger::log("El gasto ya ha sido cancelado");
-                return;
+                throw new Exception("El gasto ya ha sido cancelado");
             }
             $gasto->setCancelado(1);
             $gasto->setMotivoCancelacion($motivo_cancelacion);
             if(!$id_caja)
                 $id_caja=$this->getCaja();
-            if($id_caja!=null)
+            if(!is_null($id_caja))
             {
                 try
                 {
@@ -1058,18 +1058,18 @@ require_once("interfaces/CargosYAbonos.interface.php");
             $parametros=false;
             if
             (
-                    $id_empresa!=null ||
-                    $id_usuario!=null ||
-                    $id_concepto_gasto!=null ||
-                    $id_orden_servicio!=null ||
-                    $id_caja!=null ||
-                    $fecha_inicial!=null ||
-                    $fecha_final!=null ||
-                    $id_sucursal!=null ||
-                    $cancelado!==null ||
-                    $monto_minimo!==null ||
-                    $monto_maximo!==null ||
-                    $fecha_actual!=null
+                    !is_null($id_empresa) ||
+                    !is_null($id_usuario) ||
+                    !is_null($id_concepto_gasto) ||
+                    !is_null($id_orden_servicio) ||
+                    !is_null($id_caja) ||
+                    !is_null($fecha_inicial) ||
+                    !is_null($fecha_final) ||
+                    !is_null($id_sucursal) ||
+                    !is_null($cancelado) ||
+                    !is_null($monto_minimo) ||
+                    !is_null($monto_maximo) ||
+                    !is_null($fecha_actual)
             )
                 $parametros=true;
                 $gastos=null;
@@ -1089,7 +1089,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 $gasto_criterio_1->setIdCaja($id_caja);
                 $gasto_criterio_1->setIdSucursal($id_sucursal);
                 $gasto_criterio_1->setCancelado($cancelado);
-                if($fecha_inicial!=null)
+                if(!is_null($fecha_inicial))
                 {
                     //
                     //Si pasaron una fecha minima y existe una fecha maxima, entonces
@@ -1101,12 +1101,12 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     //
                     //
                     $gasto_criterio_1->setFechaDelGasto($fecha_inicial);
-                    if($fecha_final!=null)
+                    if(!is_null($fecha_final))
                         $gasto_criterio_2->setFechaDelGasto($fecha_final);
                     else
                         $gasto_criterio_2->setFechaDelGasto(date($this->formato_fecha, time()));
                 }
-                else if($fecha_final!=null)
+                else if(!is_null($fecha_final))
                 {
                     //
                     //Si no se recibio fecha minima pero si fecha maxima
@@ -1132,7 +1132,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     $manana=mktime(23,59,59,date("m"),date("d"),date("Y"));
                     $gasto_criterio_2->setFechaDelGasto(date($this->formato_fecha,$manana));
                 }
-                if($monto_minimo!==null)
+                if(!is_null($monto_minimo))
                 {
                     //
                     //Si se recibio el monto_minimo y se recibio el monto_maximo
@@ -1144,12 +1144,12 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     //para que se listen los gastos cuyo monto sea mayor al minimo
                     //
                     $gasto_criterio_1->setMonto($monto_minimo);
-                    if($monto_maximo!==null)
+                    if(!is_null($monto_maximo))
                         $gasto_criterio_2->setMonto($monto_maximo);
                     else
                         $gasto_criterio_2->setMonto(1.8e100);
                 }
-                else if($monto_maximo!==null)
+                else if(!is_null($monto_maximo))
                 {
                     //
                     //Si solo se obtuvo monto_maximo, el objeto 1 lo almacena y el
@@ -1196,7 +1196,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             $ingreso->setMotivoCancelacion($motivo_cancelacion);
             if(!$id_caja)
                 $id_caja=$this->getCaja();
-            if($id_caja!=null)
+            if(!is_null($id_caja))
             {
                 try
                 {
@@ -1285,7 +1285,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             if(!$nombre && !$monto && !$descripcion)
             {
                 Logger::warn("No se recibieron parametros para editar, no se edita nada");
-                return;
+                throw new Exception("No se recibieron parametros para editar, no se edita nada");
             }
             $concepto_gasto=ConceptoGastoDAO::getByPK($id_concepto_gasto);
             if(!$concepto_gasto)
@@ -1293,11 +1293,11 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 Logger::error("El concepto de gasto con id: ".$id_concepto_gasto." no existe");
                 throw new Exception("El concepto de gasto con id: ".$id_concepto_gasto." no existe");
             }
-            if($nombre!==null)
+            if(!is_null($nombre))
                 $concepto_gasto->setNombre($nombre);
-            if($monto!==null)
+            if(!is_null($monto))
                 $concepto_gasto->setMonto($monto);
-            if($descripcion!==null)
+            if(!is_null($descripcion))
                 $concepto_gasto->setDescripcion($descripcion);
             DAO::transBegin();
             try
@@ -1337,7 +1337,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             if(!$concepto_gasto->getActivo())
             {
                 Logger::warn("El concepto de gasto ya ha sido desactivado");
-                return;
+                throw new Exception("El concepto de gasto ya ha sido desactivado");
             }
             $concepto_gasto->setActivo(0);
             DAO::transBegin();
@@ -1416,7 +1416,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             if(!$nombre && !$descripcion && !$monto)
             {
                 Logger::warn("No se ha recibido un parametro a editar, no hay nada que editar");
-                return;
+                throw new Exception("No se ha recibido un parametro a editar, no hay nada que editar");
             }
             $concepto_ingreso = ConceptoIngresoDAO::getByPK($id_concepto_ingreso);
             if(!$concepto_ingreso)
@@ -1424,11 +1424,11 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 Logger::error("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
                 throw new Exception("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
             }
-            if($nombre !== null)
+            if(!is_null($nombre))
                 $concepto_ingreso->setNombre($nombre);
-            if($descripcion !== null)
+            if(!is_null($descripcion))
                 $concepto_ingreso->setDescripcion($descripcion);
-            if($monto !== null)
+            if(!is_null($monto))
                 $concepto_ingreso->setMonto($monto);
             DAO::transBegin();
             try
@@ -1468,7 +1468,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             if(!$concepto_ingreso->getActivo())
             {
                 Logger::warn("El concepto de ingreso ya ha sido desactivado");
-                return;
+                throw new Exception("El concepto de ingreso ya ha sido desactivado");
             }
             $concepto_ingreso->setActivo(0);
             DAO::transBegin();
@@ -1503,7 +1503,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             Logger::log("Listando conceptos de gasto");
             $conceptos_gasto=null;
             $concepto_gasto_criterio = new ConceptoGasto();
-            if($activo!==null)
+            if(!is_null($activo))
             {
                 $concepto_gasto_criterio->setActivo($activo);
                 $conceptos_gasto=ConceptoGastoDAO::byRange($concepto_gasto_criterio, new ConceptoGasto(),$orden);
@@ -1534,7 +1534,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             Logger::log("Listando conceptos de ingreso");
             $conceptos_ingreso=null;
             $concepto_ingreso_criterio = new ConceptoIngreso();
-            if($activo!==null)
+            if(!is_null($activo))
             {
                 $concepto_ingreso_criterio->setActivo($activo);
                 $conceptos_ingreso=ConceptoIngresoDAO::byRange($concepto_ingreso_criterio, new ConceptoIngreso(),$orden);
@@ -1582,7 +1582,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	{
             Logger::log("Creando nuevo gasto");
             $id_usuario=LoginController::getCurrentUser();
-            if($id_usuario==null)
+            if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
                 throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
@@ -1591,25 +1591,25 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 throw new Exception("Se recibio una empresa no valida");
             }
-            if($id_concepto_gasto!=null)
+            if(!is_null($id_concepto_gasto))
             {
                 $concepto_gasto=ConceptoGastoDAO::getByPK($id_concepto_gasto);
-                if($concepto_gasto==null)
+                if(is_null($concepto_gasto))
                 {
                     Logger::error("El concepto de gasto con id:".$id_concepto_gasto." no existe");
                     throw new Exception("El concepto de gasto con id:".$id_concepto_gasto." no existe");
                 }
             }
-            if($monto===null)
+            if(is_null($monto))
             {
                 Logger::log("No se recibio monto, se procede a buscar en el concepto de ingreso");
-                if($id_concepto_gasto==null)
+                if(is_null($id_concepto_gasto))
                 {
                     Logger::error("No se recibio un concepto de gasto");
                     throw new Exception("No se recibio un concepto de gasto ni un monto");
                 }
                 $monto=$concepto_gasto->getMonto();
-                if($monto===null)
+                if(is_null($monto))
                 {
                     Logger::error("El concepto de gasto recibido no cuenta con un monto");
                     throw new Exception("El concepto de gasto recibido no cuenta con un monto ni se recibio un monto");
@@ -1619,7 +1619,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 $id_sucursal=$this->getSucursal();
             if(!$id_caja)
                 $id_caja=$this->getCaja();
-            if($id_caja!=null)
+            if(!is_null($id_caja))
             {
                 try
                 {
@@ -1687,7 +1687,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             if(!$fecha_gasto && !$id_concepto_gasto && !$descripcion && !$nota && !$folio)
             {
                 Logger::warn("No se recibieron parametros para editar, no hay nada que editar");
-                return;
+                throw new Exception("No se recibieron parametros para editar, no hay nada que editar");
             }
             $gasto=GastoDAO::getByPK($id_gasto);
             if(!$gasto)
@@ -1700,24 +1700,24 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 Logger::error("El gasto ya ha sido cancelado y no puede ser editado");
                 throw new Exception("El gasto ya ha sido cancelado y no puede ser editado");
             }
-            if($id_concepto_gasto!==null)
+            if(!is_null($id_concepto_gasto))
             {
                 $concepto_gasto=ConceptoGastoDAO::getByPK($id_concepto_gasto);
-                if($concepto_gasto==null)
+                if(is_null($concepto_gasto))
                 {
                     Logger::error("El concepto de gasto con id:".$id_concepto_gasto." no existe");
                     throw new Exception("El concepto de gasto con id:".$id_concepto_gasto." no existe");
                 }
             }
-            if($fecha_gasto!==null)
+            if(!is_null($fecha_gasto))
                 $gasto->setFechaDelGasto($fecha_gasto);
-            if($id_concepto_gasto!==null)
+            if(!is_null($id_concepto_gasto))
                 $gasto->setIdConceptoGasto($id_concepto_gasto);
-            if($descripcion!==null)
+            if(!is_null($descripcion))
                 $gasto->setDescripcion($descripcion);
-            if($nota!==null)
+            if(!is_null($nota))
                 $gasto->setNota($nota);
-            if($folio!==null)
+            if(!is_null($folio))
                 $gasto->setFolio($folio);
             DAO::transBegin();
             try
@@ -1762,7 +1762,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             if(!$fecha_ingreso && !$id_concepto_ingreso && !$descripcion && !$nota && !$folio)
             {
                 Logger::warn("No se recibieron parametros para editar, no hay nada que editar");
-                return;
+                throw new Exception("No se recibieron parametros para editar, no hay nada que editar");
             }
             $ingreso=IngresoDAO::getByPK($id_ingreso);
             if(!$ingreso)
@@ -1775,24 +1775,24 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 Logger::error("El ingreso ya ha sido cancelado y no puede ser editado");
                 throw new Exception("El ingreso ya ha sido cancelado y no puede ser editado");
             }
-            if($id_concepto_ingreso!==null)
+            if(!is_null($id_concepto_ingreso))
             {
                 $concepto_ingreso=ConceptoIngresoDAO::getByPK($id_concepto_ingreso);
-                if($concepto_ingreso==null)
+                if(is_null($concepto_ingreso))
                 {
                     Logger::error("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
                     throw new Exception("El concepto de ingreso con id:".$id_concepto_ingreso." no existe");
                 }
             }
-            if($fecha_ingreso!==null)
+            if(!is_null($fecha_ingreso))
                 $ingreso->setFechaDelIngreso($fecha_ingreso);
-            if($id_concepto_ingreso!==null)
+            if(!is_null($id_concepto_ingreso))
                 $ingreso->setIdConceptoIngreso($id_concepto_ingreso);
-            if($descripcion!==null)
+            if(!is_null($descripcion))
                 $ingreso->setDescripcion($descripcion);
-            if($nota!==null)
+            if(!is_null($nota))
                 $ingreso->setNota($nota);
-            if($folio!==null)
+            if(!is_null($folio))
                 $ingreso->setFolio($folio);
             DAO::transBegin();
             try
@@ -1840,18 +1840,18 @@ require_once("interfaces/CargosYAbonos.interface.php");
 	{
             Logger::log("Creando abono");
             $id_usuario=LoginController::getCurrentUser();
-            if($id_usuario==null)
+            if(is_null($id_usuario))
             {
                 Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
                 throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
             }
-            if($tipo_pago==="cheque"&&$cheques==null)
+            if($tipo_pago==="cheque"&&is_null($cheques))
             {
                     Logger::error("No se recibio informacion del cheque");
                     throw new Exception("No se recibio informacion del cheque");   
             }
             $usuario=UsuarioDAO::getByPK($id_deudor);
-            if($usuario==null)
+            if(is_null($usuario))
             {
                 Logger::error("El deudor obtenido no existe, verifique que este correcto");
                 throw new Exception("El deudor obtenido no existe, verifique que este correcto");
@@ -1863,10 +1863,10 @@ require_once("interfaces/CargosYAbonos.interface.php");
             $abono=null;
             $from=0;
             $operacion=null;
-            if($id_compra!=null)
+            if(!is_null($id_compra))
             {
                 $operacion=CompraDAO::getByPK($id_compra);
-                if($operacion==null)
+                if(is_null($operacion))
                 {
                     Logger::error("La compra con id: ".$id_compra." no existe");
                     throw new Exception("La compra con id: ".$id_compra." no existe");
@@ -1898,10 +1898,10 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()-$monto);
                 $from=1;
             }
-            else if($id_prestamo!=null)
+            else if(!is_null($id_prestamo))
             {
                 $operacion=PrestamoDAO::getByPK($id_prestamo);
-                if($operacion==null)
+                if(is_null($operacion))
                 {
                     Logger::error("El prestamo con id: ".$id_prestamo." no existe");
                     throw new Exception("El prestamo con id: ".$id_prestamo." no existe");
@@ -1923,10 +1923,10 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 $usuario->setSaldoDelEjercicio($usuario->getSaldoDelEjercicio()+$monto);
                 $from=2;
             }
-            else if($id_venta!=null)
+            else if(!is_null($id_venta))
             {
                 $operacion=VentaDAO::getByPK($id_venta);
-                if($operacion==null)
+                if(is_null($operacion))
                 {
                     Logger::error("La venta con id: ".$id_venta." no existe");
                     throw new Exception("La venta con id: ".$id_venta." no existe");
@@ -1976,7 +1976,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             DAO::transBegin();
             try
             {
-                if($tipo_pago==="cheque"&&$cheques!=null)
+                if($tipo_pago==="cheque"&&!is_null($cheques))
                 {
                     foreach($cheques as $cheque)
                     {
@@ -1996,7 +1996,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                             $cheque_abono_compra->setIdCheque($id_cheque);
                             ChequeAbonoCompraDAO::save($cheque_abono_compra);
                         }
-                        if($id_caja!=null)
+                        if(!is_null($id_caja))
                         {
                             CajasController::modificarCaja($id_caja, 0, $billetes, $monto);
                         }
@@ -2012,7 +2012,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                             $cheque_abono_prestamo->setIdCheque($id_cheque);
                             ChequeAbonoPrestamoDAO::save($cheque_abono_prestamo);
                         }
-                        if($id_caja!=null)
+                        if(!is_null($id_caja))
                         {
                             CajasController::modificarCaja($id_caja, 1, $billetes, $monto);
                         }
@@ -2028,7 +2028,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                             $cheque_abono_venta->setIdCheque($id_cheque);
                             ChequeAbonoVentaDAO::save($cheque_abono_venta);
                         }
-                        if($id_caja!=null)
+                        if(!is_null($id_caja))
                         {
                             CajasController::modificarCaja($id_caja, 1, $billetes, $monto);
                         }
@@ -2092,17 +2092,17 @@ require_once("interfaces/CargosYAbonos.interface.php");
             $parametros=false;
             if
             (
-                    $id_empresa!=null ||
-                    $id_usuario!=null ||
-                    $id_concepto_ingreso!=null ||
-                    $id_caja!=null ||
-                    $fecha_inicial!=null ||
-                    $fecha_final!=null ||
-                    $id_sucursal!=null ||
-                    $cancelado!==null ||
-                    $monto_minimo!==null ||
-                    $monto_maximo!==null ||
-                    $fecha_actual!=null
+                    !is_null($id_empresa) ||
+                    !is_null($id_usuario) ||
+                    !is_null($id_concepto_ingreso) ||
+                    !is_null($id_caja) ||
+                    !is_null($fecha_inicial) ||
+                    !is_null($fecha_final) ||
+                    !is_null($id_sucursal) ||
+                    !is_null($cancelado) ||
+                    !is_null($monto_minimo) ||
+                    !is_null($monto_maximo) ||
+                    !is_null($fecha_actual)
             )
                 $parametros=true;
             $ingresos=null;
@@ -2121,7 +2121,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 $ingreso_criterio_1->setIdCaja($id_caja);
                 $ingreso_criterio_1->setIdSucursal($id_sucursal);
                 $ingreso_criterio_1->setCancelado($cancelado);
-                if($fecha_inicial!=null)
+                if(!is_null($fecha_inicial))
                 {
                     //
                     //Si pasaron una fecha minima y existe una fecha maxima, entonces
@@ -2133,12 +2133,12 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     //
                     //
                     $ingreso_criterio_1->setFechaDelIngreso($fecha_inicial);
-                    if($fecha_final!=null)
+                    if(!is_null($fecha_final))
                         $ingreso_criterio_2->setFechaDelIngreso($fecha_final);
                     else
                         $ingreso_criterio_2->setFechaDelIngreso(date($this->formato_fecha, time()));
                 }
-                else if($fecha_final!=null)
+                else if(!is_null($fecha_final))
                 {
                     //
                     //Si no se recibio fecha minima pero si fecha maxima
@@ -2164,7 +2164,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     $manana=mktime(23,59,59,date("m"),date("d"),date("Y"));
                     $ingreso_criterio_2->setFechaDelIngreso(date($this->formato_fecha,$manana));
                 }
-                if($monto_minimo!==null)
+                if(!is_null($monto_minimo))
                 {
                     //
                     //Si se recibio el monto_minimo y se recibio el monto_maximo
@@ -2176,12 +2176,12 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     //para que se listen los gastos cuyo monto sea mayor al minimo
                     //
                     $ingreso_criterio_1->setMonto($monto_minimo);
-                    if($monto_maximo!==null)
+                    if(!is_null($monto_maximo))
                         $ingreso_criterio_2->setMonto($monto_maximo);
                     else
                         $ingreso_criterio_2->setMonto(1.8e100);
                 }
-                else if($monto_maximo!==null)
+                else if(!is_null($monto_maximo))
                 {
                     //
                     //Si solo se obtuvo monto_maximo, el objeto 1 lo almacena y el
@@ -2243,14 +2243,14 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 Logger::error("No se recibio si se editara un abono de compra, venta o prestamo");
                 throw new Exception("No se recibio si se editara un abono de compra, venta o prestamo");
             }
-            if($nota!==null)
+            if(!is_null($nota))
                 $abono->setNota($nota);
             if($abono->getCancelado())
             {
-                if($motivo_cancelacion!==null)
+                if(!is_null($motivo_cancelacion))
                         $abono->setMotivoCancelacion($motivo_cancelacion);
             }
-            else if($motivo_cancelacion!==null)
+            else if(!is_null($motivo_cancelacion))
                 Logger::warn("No se editara el motivo de cancelacion pues el abono no ha sido cancelado aun");
             DAO::transBegin();
             try
