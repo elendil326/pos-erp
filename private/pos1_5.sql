@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 26-10-2011 a las 18:09:43
+-- Tiempo de generación: 26-10-2011 a las 18:14:33
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -190,6 +190,7 @@ CREATE TABLE IF NOT EXISTS `billete_caja` (
 CREATE TABLE IF NOT EXISTS `billete_cierre_caja` (
   `id_billete` int(11) NOT NULL,
   `id_cierre_caja` int(11) NOT NULL,
+  `cantidad_encontrada` int(11) NOT NULL COMMENT 'Cantidad de billetes encontrados en el cierre de caja',
   `cantidad_sobrante` int(11) NOT NULL COMMENT 'Cantidad de billetes saobrante en el cierre de caja',
   `cantidad_faltante` int(1) NOT NULL DEFAULT '0' COMMENT 'Cantidad de billetes faltante en el cierre de caja',
   PRIMARY KEY (`id_billete`,`id_cierre_caja`)

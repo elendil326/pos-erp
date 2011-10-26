@@ -28,6 +28,9 @@ class BilleteCierreCaja extends VO
 			if( isset($data['id_cierre_caja']) ){
 				$this->id_cierre_caja = $data['id_cierre_caja'];
 			}
+			if( isset($data['cantidad_encontrada']) ){
+				$this->cantidad_encontrada = $data['cantidad_encontrada'];
+			}
 			if( isset($data['cantidad_sobrante']) ){
 				$this->cantidad_sobrante = $data['cantidad_sobrante'];
 			}
@@ -49,6 +52,7 @@ class BilleteCierreCaja extends VO
 		$vec = array( 
 			"id_billete" => $this->id_billete,
 			"id_cierre_caja" => $this->id_cierre_caja,
+			"cantidad_encontrada" => $this->cantidad_encontrada,
 			"cantidad_sobrante" => $this->cantidad_sobrante,
 			"cantidad_faltante" => $this->cantidad_faltante
 		); 
@@ -74,6 +78,15 @@ class BilleteCierreCaja extends VO
 	  * @var int(11)
 	  */
 	protected $id_cierre_caja;
+
+	/**
+	  * cantidad_encontrada
+	  * 
+	  * Cantidad de billetes encontrados en el cierre de caja<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $cantidad_encontrada;
 
 	/**
 	  * cantidad_sobrante
@@ -143,6 +156,30 @@ class BilleteCierreCaja extends VO
 	final public function setIdCierreCaja( $id_cierre_caja )
 	{
 		$this->id_cierre_caja = $id_cierre_caja;
+	}
+
+	/**
+	  * getCantidadEncontrada
+	  * 
+	  * Get the <i>cantidad_encontrada</i> property for this object. Donde <i>cantidad_encontrada</i> es Cantidad de billetes encontrados en el cierre de caja
+	  * @return int(11)
+	  */
+	final public function getCantidadEncontrada()
+	{
+		return $this->cantidad_encontrada;
+	}
+
+	/**
+	  * setCantidadEncontrada( $cantidad_encontrada )
+	  * 
+	  * Set the <i>cantidad_encontrada</i> property for this object. Donde <i>cantidad_encontrada</i> es Cantidad de billetes encontrados en el cierre de caja.
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad_encontrada</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setCantidadEncontrada( $cantidad_encontrada )
+	{
+		$this->cantidad_encontrada = $cantidad_encontrada;
 	}
 
 	/**
