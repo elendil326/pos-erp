@@ -1535,14 +1535,56 @@ Creo que este metodo tiene que estar bajo sucursal.
 	public function NuevaCaja
 	(
 		$token, 
-		$codigo_caja = null, 
 		$impresoras = null, 
 		$basculas = null, 
-		$descripcion = null
+		$descripcion = null,
+                $id_sucursal = null
 	)
-	{  
-  
-  
+	{
+            Logger::log("Creando nueva caja");
+            if($id_sucursal!=null)
+            {
+                if(SucursalDAO::getByPK($id_sucursal)==null)
+                {
+                    Logger::error("La sucursal con id: ".$id_sucursal." no existe");
+                    throw new Exception("La sucursal con id: ".$id_sucursal." no existe");
+                }
+            }
+            else
+                $id_sucursal=$this->getSucursal();
+            $caja = new Caja();
+            $caja->setIdSucursal($id_sucursal);
+            $caja->setAbierta(0);
+            $caja->setActiva(1);
+            $caja->setControlBilletes(0);
+            $caja->setDescripcion($descripcion);
+            $caja->setIdSucursal($id_sucursal);
+            $caja->setSaldo(0);
+            $caja->setToken($token);
+            DAO::transBegin();
+            try
+            {
+                CajaDAO::save($caja);
+                $impresora_caja = new ImpresoraCaja(array( "id_caja" => $caja->getIdCaja() ));
+                foreach($impresoras as $id_impresora)
+                {
+                    if(ImpresoraDAO::getByPK($id_impresora)==null)
+                    {
+                        throw new Exception("La impresora con id: ".$id_impresora." no existe");
+                    }
+                    $impresora_caja->setIdImpresora($id_impresora);
+                    ImpresoraCajaDAO::save($impresora_caja);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear la caja: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("caja creada exitosamente");
+            return $caja->getIdCaja();
 	}
   
 	/**

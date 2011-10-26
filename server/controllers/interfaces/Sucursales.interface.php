@@ -412,11 +412,11 @@ Creo que este metodo tiene que estar bajo sucursal.
  	 **/
   function NuevaCaja
 	(
-		$token, 
-		$codigo_caja = "C�digo de la Caja", 
+		$token,  
 		$impresoras = null, 
 		$basculas = null, 
-		$descripcion = null
+		$descripcion = null,
+                $id_sucursal = null
 	);  
   
   
