@@ -2121,8 +2121,66 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$productos
 	)
 	{  
-  
-  
+            Logger::log("Creando traspaso");
+            $id_usuario=LoginController::getCurrentUser();
+            if(is_null($id_usuario))
+            {
+                Logger::error("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
+                throw new Exception("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
+            }
+            if(is_null(AlmacenDAO::getByPK($id_almacen_recibe)))
+            {
+                Logger::error("El almacen con id: ".$id_almacen_recibe." no existe");
+                throw new Exception("El almacen con id: ".$id_almacen_recibe." no existe");
+            }
+            if(is_null(AlmacenDAO::getByPK($id_almacen_envia)))
+            {
+                Logger::error("El almacen con id: ".$id_almacen_envia." no existe");
+                throw new Exception("El almacen con id: ".$id_almacen_envia." no existe");
+            }
+            $traspaso=new Traspaso(array(
+                            "id_usuario_programa"   => $id_usuario,
+                            "id_usuario_envia"      => 0,
+                            "id_almacen_envia"      => $id_almacen_envia,
+                            "fecha_envio_programada"=> $fecha_envio_programada,
+                            "fecha_envio"           => "0000-00-00 00:00:00",
+                            "id_usuario_recibe"     => 0,
+                            "id_almacen_recibe"     => $id_almacen_recibe,
+                            "fecha_recibo"          => "0000-00-00 00:00:00",
+                            "estado"                => "envio programado",
+                            "cancelado"             => 0,
+                            "completo"              => 0
+                            )
+                        );
+            DAO::transBegin();
+            try
+            {
+                TraspasoDAO::save($traspaso);
+                $traspaso_producto=new TraspasoProducto(array(
+                                    "id_traspaso"       => $traspaso->getIdTraspaso(),
+                                    "cantidad_recibida" => 0
+                                        )
+                                    );
+                foreach($productos as $p)
+                {
+                    if(ProductoDAO::getByPK($p["id_producto"]))
+                    {
+                        throw new Exception("El producto con id: ".$p["id_producto"]." no existe");
+                    }
+                    $traspaso_producto->setIdProducto($p["id_producto"]);
+                    $traspaso_producto->setCantidadEnviada($p["cantidad"]);
+                    TraspasoProductoDAO::save($traspaso_producto);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("Error al crear el traspaso de producto: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("traspaso creado exitosamente");
+            return $traspaso->getIdTraspaso();
 	}
   
 	/**
