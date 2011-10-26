@@ -1409,36 +1409,40 @@ require_once("interfaces/Sucursales.interface.php");
                 if($caja->getControlBilletes())
                 {
                     $billete_cierre_caja=new BilleteCierreCaja(array( "id_cierre_caja" => $cierre_caja->getIdCierreCaja() ));
-                    $billete_cierre_caja->setSobro(0);
-                    $billete_cierre_caja->setFalto(0);
+                    $billete_cierre_caja->setCantidadFaltante(0);
+                    $billete_cierre_caja->setCantidadSobrante(0);
                     foreach($billetes as $b)
                     {
                         $billete_cierre_caja->setIdBillete($b["id_billete"]);
-                        $billete_cierre_caja->setCantidad($b["cantidad"]);
+                        $billete_cierre_caja->setCantidadEncontrada($b["cantidad"]);
                         BilleteCierreCajaDAO::save($billete_cierre_caja);
                     }
                     $billetes_caja=BilleteCajaDAO::search(new BilleteCaja(array( "id_caja" => $id_caja )));
                     foreach($billetes_caja as $b_c)
                     {
+                        $billete_cierre_caja=BilleteCierreCajaDAO::getByPK($b_c->getIdBillete(), $cierre_caja->getIdCierreCaja());
+                        if($billete_cierre_caja==null)
+                            $billete_cierre_caja=new BilleteCierreCaja(array(
+                                                    "id_billete" => $b_c->getIdBillete(),
+                                                    "id_cierre_caja" => $cierre_caja->getIdCierreCaja(),
+                                                    "cantidad_encontrada" => 0,
+                                                    "cantidad_sobrante" => 0,
+                                                    "cantidad_faltante" => 0
+                                                    )
+                                                        );
                         if($b_c->getCantidad()>0)
                         {
-                            $billete_cierre_caja->setIdBillete($b_c->getIdBillete());
-                            $billete_cierre_caja->setCantidad($b_c->getCantidad());
-                            $billete_cierre_caja->setSobro(1);
+                            $billete_cierre_caja->setCantidadSobrante($b_c->getCantidad());
                         }
                         else if($b_c->getCantidad()<0)
                         {
-                            $billete_cierre_caja->setIdBillete($b_c->getIdBillete());
-                            $billete_cierre_caja->setCantidad($b_c->getCantidad()*-1);
-                            $billete_cierre_caja->setFalto(1);
+                            $billete_cierre_caja->setCantidadFaltante($b_c->getCantidad()*-1);
                         }
                         else
                             continue;
                         $b_c->setCantidad(0);
                         BilleteCierreCajaDAO::save($billete_cierre_caja);
                         BilleteCajaDAO::save($b_c);
-                        $billete_cierre_caja->setSobro(0);
-                        $billete_cierre_caja->setFalto(0);
                     }
                 }
             }
@@ -1684,12 +1688,23 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$id_cajero = null, 
 		$id_cajero_nuevo = null
 	)
-	{  
+	{
+            Logger::log("Realizando corte de caja");
             $caja=CajaDAO::getByPK($id_caja);
             if($caja==null)
             {
                 Logger::error("La caja con id: ".$id_caja." no existe");
                 throw new Exception("La caja con id: ".$id_caja." no existe");
+            }
+            if(!$caja->getActiva())
+            {
+                Logger::error("La caja proporcionada no esta activa, no se le puede hacer un corte");
+                throw new Exception("La caja proporcionada no esta activa, no se le puede hacer un corte");
+            }
+            if(!$caja->getAbierta())
+            {
+                Logger::error("La caja proporcionada esta cerrada, no se pueden realizar movimientos a una caja cerrada");
+                throw new Exception("La caja proporcionada esta cerrada, no se pueden realizar movimientos a una caja cerrada");
             }
             $corte_de_caja= new CorteDeCaja(array(
                                 "id_caja" => $id_caja,
@@ -1701,18 +1716,86 @@ Creo que este metodo tiene que estar bajo sucursal.
                                 "saldo_final" => $saldo_final
                                 )
                             );
-            $caja->setSaldo($saldo_final);
             DAO::transBegin();
             try
             {
-                CajaDAO::save($caja);
-                CajasController::modificarCaja($id_caja, 0, $billetes_encontrados, 0);
+                CorteDeCajaDAO::save($corte_de_caja);
+                CajasController::modificarCaja($id_caja, 0, $billetes_encontrados, $caja->getSaldo());
+                if($caja->getControlBilletes())
+                {
+                    $billete_corte_caja = new BilleteCorteCaja(array( 
+                                        "id_corte_caja" => $corte_de_caja->getIdCorteDeCaja(), 
+                                        "cantidad_dejada" => 0,
+                                        "cantidad_sobrante" => 0,
+                                        "cantidad_faltante" => 0
+                                                )
+                                            );
+                    foreach($billetes_encontrados as $billete)
+                    {
+                        $billete_corte_caja->setIdBillete($billete["id_billete"]);
+                        $billete_corte_caja->setCantidadEncontrada($billete["cantidad"]);
+                        BilleteCorteCajaDAO::save($billete_corte_caja);
+                    }
+                    $billetes_caja=BilleteCajaDAO::search(new BilleteCaja(array( "id_caja" => $id_caja )));
+                    foreach($billetes_caja as $b_c)
+                    {
+                        $billete_corte_caja=BilleteCorteCajaDAO::getByPK($b_c->getIdBillete(), $corte_de_caja->getIdCorteDeCaja());
+                        if($billete_corte_caja ==null)
+                            $billete_corte_caja = new BilleteCorteCaja(array(
+                                                    "id_billete" => $b_c->getIdBillete(),
+                                                    "id_corte_caja" => $corte_de_caja->getIdCorteDeCaja(),
+                                                    "cantidad_encontrada" => 0,
+                                                    "cantidad_dejada" => 0,
+                                                    "cantidad_sobrante" => 0,
+                                                    "cantidad_faltante" => 0
+                                                    )
+                                                            );
+                        if($b_c->getCantidad()>0)
+                        {
+                            $billete_corte_caja->setCantidadSobrante($b_c->getCantidad());
+                        }
+                        else if($b_c->getCantidad()<0)
+                        {
+                            $billete_corte_caja->setCantidadFaltante($b_c->getCantidad()*-1);
+                        }
+                        else
+                            continue;
+                        $b_c->setCantidad(0);
+                        BilleteCajaDAO::save($b_c);
+                        BilleteCorteCajaDAO::save($billete_corte_caja);
+                    }
+                    if($billetes_dejados==null&&$saldo_final!==0)
+                    {
+                        throw new Exception("No se encontro el parametro billetes_dejados cuando se esta llevando control de los billetes en esta caja");
+                    }
+                    foreach($billetes_dejados as $b_d)
+                    {
+                         $billete_corte_caja=BilleteCorteCajaDAO::getByPK($b_d["id_billete"], $corte_de_caja->getIdCorteDeCaja());
+                         if($billete_corte_caja ==null)
+                            $billete_corte_caja = new BilleteCorteCaja(array(
+                                                    "id_billete" => $b_d["id_billete"],
+                                                    "id_corte_caja" => $corte_de_caja->getIdCorteDeCaja(),
+                                                    "cantidad_encontrada" => 0,
+                                                    "cantidad_dejada" => 0,
+                                                    "cantidad_sobrante" => 0,
+                                                    "cantidad_faltante" => 0
+                                                    )
+                                                            );
+                         $billete_corte_caja->setCantidadDejada($b_d["cantidad"]);
+                         BilleteCorteCajaDAO::save($billete_corte_caja);
+                    }
+                }
+                CajasController::modificarCaja($id_caja, 1, $billetes_dejados, $saldo_final);
             }
             catch(Exception $e)
             {
                 DAO::transRollback();
+                Logger::error("No se pudo realizar el corte de caja: ".$e);
+                throw $e;
             }
             DAO::transEnd();
+            Logger::log("Corte de caja realizado correctamente");
+            return $corte_de_caja->getIdCorteDeCaja();
 	}
   
 	/**
