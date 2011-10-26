@@ -13,7 +13,7 @@
 
 
 	
-	$form = new DAOFormComponent( array ( new Empresa() , new Direccion ) );
+	$form = new DAOFormComponent( array ( new Empresa() , new Direccion() ) );
 
 	$form->addOnClick( "Nueva empresa", "POS.Empresas.nueva()" );
 	
