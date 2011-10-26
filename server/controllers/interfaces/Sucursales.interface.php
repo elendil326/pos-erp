@@ -265,21 +265,6 @@ Creo que este metodo tiene que estar bajo sucursal.
   
 	/**
  	 *
- 	 *Calcula el saldo esperado para una caja a partir de los cortes que le han realizado, la fecha de apertura y la fecha en que se realiza el calculo. La caja sera tomada de la sesion, la fecha sera tomada del servidor. Para poder realizar este metodo, la caja tiene que estar abierta
- 	 *
- 	 * @param id_caja int Id de la caja de la cual se hara el calculo.
- 	 * @return saldo_esperado float Saldo esperado de la caja para la fecha actual
- 	 **/
-  function Calcular_saldo_esperadoCaja
-	(
-		$id_caja
-	);  
-  
-  
-	
-  
-	/**
- 	 *
  	 *Hace un corte en los flujos de dinero de la sucursal. El Id de la sucursal se tomara de la sesion actual. La fehca se tomara del servidor.
  	 *
  	 * @param saldo_real float Saldo que hay actualmente en la caja
@@ -358,10 +343,10 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$saldo_final, 
 		$id_caja, 
 		$saldo_real, 
-		$billetes_encontrados, 
-		$billetes_dejados, 
+		$billetes_encontrados = null,
+		$billetes_dejados = null,
 		$id_cajero = null, 
-		$id_cajero_nuevo = "Id del cajero actual"
+		$id_cajero_nuevo = null
 	);  
   
   

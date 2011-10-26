@@ -28,14 +28,11 @@ class BilleteCierreCaja extends VO
 			if( isset($data['id_cierre_caja']) ){
 				$this->id_cierre_caja = $data['id_cierre_caja'];
 			}
-			if( isset($data['cantidad']) ){
-				$this->cantidad = $data['cantidad'];
+			if( isset($data['cantidad_sobrante']) ){
+				$this->cantidad_sobrante = $data['cantidad_sobrante'];
 			}
-			if( isset($data['sobro']) ){
-				$this->sobro = $data['sobro'];
-			}
-			if( isset($data['falto']) ){
-				$this->falto = $data['falto'];
+			if( isset($data['cantidad_faltante']) ){
+				$this->cantidad_faltante = $data['cantidad_faltante'];
 			}
 		}
 	}
@@ -52,9 +49,8 @@ class BilleteCierreCaja extends VO
 		$vec = array( 
 			"id_billete" => $this->id_billete,
 			"id_cierre_caja" => $this->id_cierre_caja,
-			"cantidad" => $this->cantidad,
-			"sobro" => $this->sobro,
-			"falto" => $this->falto
+			"cantidad_sobrante" => $this->cantidad_sobrante,
+			"cantidad_faltante" => $this->cantidad_faltante
 		); 
 	return json_encode($vec); 
 	}
@@ -80,33 +76,22 @@ class BilleteCierreCaja extends VO
 	protected $id_cierre_caja;
 
 	/**
-	  * cantidad
+	  * cantidad_sobrante
 	  * 
-	  * Cantidad de billetes encontrados en el cierre de caja<br>
+	  * Cantidad de billetes saobrante en el cierre de caja<br>
 	  * @access protected
 	  * @var int(11)
 	  */
-	protected $cantidad;
+	protected $cantidad_sobrante;
 
 	/**
-	  * sobro
+	  * cantidad_faltante
 	  * 
-	  * Si este billete sobro a la hora de cerrar la caja<br>
-	  * <b>Llave Primaria</b><br>
+	  * Cantidad de billetes faltante en el cierre de caja<br>
 	  * @access protected
-	  * @var tinyint(1)
+	  * @var int(1)
 	  */
-	protected $sobro;
-
-	/**
-	  * falto
-	  * 
-	  * Si este billete falto a l ahora de cerrar la caja<br>
-	  * <b>Llave Primaria</b><br>
-	  * @access protected
-	  * @var tinyint(1)
-	  */
-	protected $falto;
+	protected $cantidad_faltante;
 
 	/**
 	  * getIdBillete
@@ -161,79 +146,51 @@ class BilleteCierreCaja extends VO
 	}
 
 	/**
-	  * getCantidad
+	  * getCantidadSobrante
 	  * 
-	  * Get the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es Cantidad de billetes encontrados en el cierre de caja
+	  * Get the <i>cantidad_sobrante</i> property for this object. Donde <i>cantidad_sobrante</i> es Cantidad de billetes saobrante en el cierre de caja
 	  * @return int(11)
 	  */
-	final public function getCantidad()
+	final public function getCantidadSobrante()
 	{
-		return $this->cantidad;
+		return $this->cantidad_sobrante;
 	}
 
 	/**
-	  * setCantidad( $cantidad )
+	  * setCantidadSobrante( $cantidad_sobrante )
 	  * 
-	  * Set the <i>cantidad</i> property for this object. Donde <i>cantidad</i> es Cantidad de billetes encontrados en el cierre de caja.
-	  * Una validacion basica se hara aqui para comprobar que <i>cantidad</i> es de tipo <i>int(11)</i>. 
+	  * Set the <i>cantidad_sobrante</i> property for this object. Donde <i>cantidad_sobrante</i> es Cantidad de billetes saobrante en el cierre de caja.
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad_sobrante</i> es de tipo <i>int(11)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
 	  * @param int(11)
 	  */
-	final public function setCantidad( $cantidad )
+	final public function setCantidadSobrante( $cantidad_sobrante )
 	{
-		$this->cantidad = $cantidad;
+		$this->cantidad_sobrante = $cantidad_sobrante;
 	}
 
 	/**
-	  * getSobro
+	  * getCantidadFaltante
 	  * 
-	  * Get the <i>sobro</i> property for this object. Donde <i>sobro</i> es Si este billete sobro a la hora de cerrar la caja
-	  * @return tinyint(1)
+	  * Get the <i>cantidad_faltante</i> property for this object. Donde <i>cantidad_faltante</i> es Cantidad de billetes faltante en el cierre de caja
+	  * @return int(1)
 	  */
-	final public function getSobro()
+	final public function getCantidadFaltante()
 	{
-		return $this->sobro;
+		return $this->cantidad_faltante;
 	}
 
 	/**
-	  * setSobro( $sobro )
+	  * setCantidadFaltante( $cantidad_faltante )
 	  * 
-	  * Set the <i>sobro</i> property for this object. Donde <i>sobro</i> es Si este billete sobro a la hora de cerrar la caja.
-	  * Una validacion basica se hara aqui para comprobar que <i>sobro</i> es de tipo <i>tinyint(1)</i>. 
+	  * Set the <i>cantidad_faltante</i> property for this object. Donde <i>cantidad_faltante</i> es Cantidad de billetes faltante en el cierre de caja.
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad_faltante</i> es de tipo <i>int(1)</i>. 
 	  * Si esta validacion falla, se arrojara... algo. 
-	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
-	  * No deberias usar setSobro( ) a menos que sepas exactamente lo que estas haciendo.<br>
-	  * @param tinyint(1)
+	  * @param int(1)
 	  */
-	final public function setSobro( $sobro )
+	final public function setCantidadFaltante( $cantidad_faltante )
 	{
-		$this->sobro = $sobro;
-	}
-
-	/**
-	  * getFalto
-	  * 
-	  * Get the <i>falto</i> property for this object. Donde <i>falto</i> es Si este billete falto a l ahora de cerrar la caja
-	  * @return tinyint(1)
-	  */
-	final public function getFalto()
-	{
-		return $this->falto;
-	}
-
-	/**
-	  * setFalto( $falto )
-	  * 
-	  * Set the <i>falto</i> property for this object. Donde <i>falto</i> es Si este billete falto a l ahora de cerrar la caja.
-	  * Una validacion basica se hara aqui para comprobar que <i>falto</i> es de tipo <i>tinyint(1)</i>. 
-	  * Si esta validacion falla, se arrojara... algo. 
-	  * <br><br>Esta propiedad se mapea con un campo que es una <b>Llave Primaria</b> !<br>
-	  * No deberias usar setFalto( ) a menos que sepas exactamente lo que estas haciendo.<br>
-	  * @param tinyint(1)
-	  */
-	final public function setFalto( $falto )
-	{
-		$this->falto = $falto;
+		$this->cantidad_faltante = $cantidad_faltante;
 	}
 
 }

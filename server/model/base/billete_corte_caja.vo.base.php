@@ -34,6 +34,12 @@ class BilleteCorteCaja extends VO
 			if( isset($data['cantidad_dejada']) ){
 				$this->cantidad_dejada = $data['cantidad_dejada'];
 			}
+			if( isset($data['cantidad_sobrante']) ){
+				$this->cantidad_sobrante = $data['cantidad_sobrante'];
+			}
+			if( isset($data['cantidad_faltante']) ){
+				$this->cantidad_faltante = $data['cantidad_faltante'];
+			}
 		}
 	}
 
@@ -50,7 +56,9 @@ class BilleteCorteCaja extends VO
 			"id_billete" => $this->id_billete,
 			"id_corte_caja" => $this->id_corte_caja,
 			"cantidad_encontrada" => $this->cantidad_encontrada,
-			"cantidad_dejada" => $this->cantidad_dejada
+			"cantidad_dejada" => $this->cantidad_dejada,
+			"cantidad_sobrante" => $this->cantidad_sobrante,
+			"cantidad_faltante" => $this->cantidad_faltante
 		); 
 	return json_encode($vec); 
 	}
@@ -92,6 +100,24 @@ class BilleteCorteCaja extends VO
 	  * @var int(11)
 	  */
 	protected $cantidad_dejada;
+
+	/**
+	  * cantidad_sobrante
+	  * 
+	  * Cantidad de billetes saobrante en el corte de caja<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $cantidad_sobrante;
+
+	/**
+	  * cantidad_faltante
+	  * 
+	  * Cantidad de billetes faltante en el corte de caja<br>
+	  * @access protected
+	  * @var int(11)
+	  */
+	protected $cantidad_faltante;
 
 	/**
 	  * getIdBillete
@@ -191,6 +217,54 @@ class BilleteCorteCaja extends VO
 	final public function setCantidadDejada( $cantidad_dejada )
 	{
 		$this->cantidad_dejada = $cantidad_dejada;
+	}
+
+	/**
+	  * getCantidadSobrante
+	  * 
+	  * Get the <i>cantidad_sobrante</i> property for this object. Donde <i>cantidad_sobrante</i> es Cantidad de billetes saobrante en el corte de caja
+	  * @return int(11)
+	  */
+	final public function getCantidadSobrante()
+	{
+		return $this->cantidad_sobrante;
+	}
+
+	/**
+	  * setCantidadSobrante( $cantidad_sobrante )
+	  * 
+	  * Set the <i>cantidad_sobrante</i> property for this object. Donde <i>cantidad_sobrante</i> es Cantidad de billetes saobrante en el corte de caja.
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad_sobrante</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setCantidadSobrante( $cantidad_sobrante )
+	{
+		$this->cantidad_sobrante = $cantidad_sobrante;
+	}
+
+	/**
+	  * getCantidadFaltante
+	  * 
+	  * Get the <i>cantidad_faltante</i> property for this object. Donde <i>cantidad_faltante</i> es Cantidad de billetes faltante en el corte de caja
+	  * @return int(11)
+	  */
+	final public function getCantidadFaltante()
+	{
+		return $this->cantidad_faltante;
+	}
+
+	/**
+	  * setCantidadFaltante( $cantidad_faltante )
+	  * 
+	  * Set the <i>cantidad_faltante</i> property for this object. Donde <i>cantidad_faltante</i> es Cantidad de billetes faltante en el corte de caja.
+	  * Una validacion basica se hara aqui para comprobar que <i>cantidad_faltante</i> es de tipo <i>int(11)</i>. 
+	  * Si esta validacion falla, se arrojara... algo. 
+	  * @param int(11)
+	  */
+	final public function setCantidadFaltante( $cantidad_faltante )
+	{
+		$this->cantidad_faltante = $cantidad_faltante;
 	}
 
 }

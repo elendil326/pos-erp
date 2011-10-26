@@ -1434,7 +1434,9 @@ require_once("interfaces/Sucursales.interface.php");
                         }
                         else
                             continue;
+                        $b_c->setCantidad(0);
                         BilleteCierreCajaDAO::save($billete_cierre_caja);
+                        BilleteCajaDAO::save($b_c);
                         $billete_cierre_caja->setSobro(0);
                         $billete_cierre_caja->setFalto(0);
                     }
@@ -1677,14 +1679,40 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$saldo_final, 
 		$id_caja, 
 		$saldo_real, 
-		$billetes_encontrados, 
-		$billetes_dejados, 
+		$billetes_encontrados = null,
+		$billetes_dejados = null,
 		$id_cajero = null, 
 		$id_cajero_nuevo = null
 	)
 	{  
-  
-  
+            $caja=CajaDAO::getByPK($id_caja);
+            if($caja==null)
+            {
+                Logger::error("La caja con id: ".$id_caja." no existe");
+                throw new Exception("La caja con id: ".$id_caja." no existe");
+            }
+            $corte_de_caja= new CorteDeCaja(array(
+                                "id_caja" => $id_caja,
+                                "id_cajero" => $id_cajero,
+                                "id_cajero_nuevo" => $id_cajero_nuevo,
+                                "fecha" => date("Y-m-d H:i:s",time()),
+                                "saldo_real" => $saldo_real,
+                                "saldo_esperado" => $caja->getSaldo(),
+                                "saldo_final" => $saldo_final
+                                )
+                            );
+            $caja->setSaldo($saldo_final);
+            DAO::transBegin();
+            try
+            {
+                CajaDAO::save($caja);
+                CajasController::modificarCaja($id_caja, 0, $billetes_encontrados, 0);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+            }
+            DAO::transEnd();
 	}
   
 	/**
@@ -1715,22 +1743,6 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$id_almacen, 
 		$descripcion = null, 
 		$nombre = null
-	)
-	{  
-  
-  
-	}
-  
-	/**
- 	 *
- 	 *Calcula el saldo esperado para una caja a partir de los cortes que le han realizado, la fecha de apertura y la fecha en que se realiza el calculo. La caja sera tomada de la sesion, la fecha sera tomada del servidor. Para poder realizar este metodo, la caja tiene que estar abierta
- 	 *
- 	 * @param id_caja int Id de la caja de la cual se hara el calculo.
- 	 * @return saldo_esperado float Saldo esperado de la caja para la fecha actual
- 	 **/
-	public function Calcular_saldo_esperadoCaja
-	(
-		$id_caja
 	)
 	{  
   

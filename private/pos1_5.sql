@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 26-10-2011 a las 16:38:49
+-- Tiempo de generación: 26-10-2011 a las 18:09:43
 -- Versión del servidor: 5.1.53
 -- Versión de PHP: 5.3.4
 
@@ -190,10 +190,9 @@ CREATE TABLE IF NOT EXISTS `billete_caja` (
 CREATE TABLE IF NOT EXISTS `billete_cierre_caja` (
   `id_billete` int(11) NOT NULL,
   `id_cierre_caja` int(11) NOT NULL,
-  `cantidad` int(11) NOT NULL COMMENT 'Cantidad de billetes encontrados en el cierre de caja',
-  `sobro` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este billete sobro a la hora de cerrar la caja',
-  `falto` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Si este billete falto a l ahora de cerrar la caja',
-  PRIMARY KEY (`id_billete`,`id_cierre_caja`,`sobro`,`falto`)
+  `cantidad_sobrante` int(11) NOT NULL COMMENT 'Cantidad de billetes saobrante en el cierre de caja',
+  `cantidad_faltante` int(1) NOT NULL DEFAULT '0' COMMENT 'Cantidad de billetes faltante en el cierre de caja',
+  PRIMARY KEY (`id_billete`,`id_cierre_caja`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle billetes cierre de caja';
 
 -- --------------------------------------------------------
@@ -207,6 +206,8 @@ CREATE TABLE IF NOT EXISTS `billete_corte_caja` (
   `id_corte_caja` int(11) NOT NULL,
   `cantidad_encontrada` int(11) NOT NULL COMMENT 'Cantidad de este billete encontrado en la caja al hacer el corte',
   `cantidad_dejada` int(11) NOT NULL COMMENT 'Cantidad de este billete dejada al finalizar el corte',
+  `cantidad_sobrante` int(11) NOT NULL DEFAULT '0' COMMENT 'Cantidad de billetes saobrante en el corte de caja',
+  `cantidad_faltante` int(11) NOT NULL DEFAULT '0' COMMENT 'Cantidad de billetes faltante en el corte de caja',
   PRIMARY KEY (`id_billete`,`id_corte_caja`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Detalle billetes corte de caja';
 
