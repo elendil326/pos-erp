@@ -1603,8 +1603,60 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$motivo = null
 	)
 	{  
-  
-  
+            Logger::log("Registrando salida de almacen");
+            $id_usuario=LoginController::getCurrentUser();
+            if($id_usuario==null)
+            {
+                Logger::error("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
+                throw new Exception("No se pudo obtener al usuario de la sesion, ya inicio sesion?");
+            }
+            if(AlmacenDAO::getByPK($id_almacen)==null)
+            {
+                Logger::error("El almacen con id: ".$id_almacen." no existe");
+                throw new Exception("El almacen con id: ".$id_almacen." no existe");
+            }
+            $salida_almacen = new SalidaAlmacen(array(
+                            "id_almacen" => $id_almacen,
+                            "id_usuario" => $id_usuario,
+                            "fecha_registro" => date("Y-m-d H:i:s",time()),
+                            "motivo" => $motivo
+                                    )
+                                );
+            DAO::transBegin();
+            try
+            {
+                SalidaAlmacenDAO::save($salida_almacen);
+                $producto_salida_almacen=new ProductoSalidaAlmacen(array( "id_salida_almacen" => $salida_almacen->getIdSalidaAlmacen() ));
+                foreach($productos as $p)
+                {
+                    $producto_almacen=ProductoAlmacenDAO::getByPK($p["id_producto"], $id_almacen, $p["id_unidad"]);
+                    if($producto_almacen==null)
+                    {
+                        throw new Exception("El producto: ".$p["id_producto"]." en la unidad: ".$p["id_unidad"]."
+                            no se encuentra en el almacen: ".$id_almacen.". No se puede registrar la salida");
+                    }
+                    $cantidad_actual=$producto_almacen->getCantidad();
+                    if($cantidad_actual<$p["cantidad"])
+                    {
+                        throw new Exception("Se busca sacar mas cantidad de producto de la que hay actualmente. Actual: ".$cantidad_actual." - Salida: ".$p["cantidad"]);
+                    }
+                    $producto_almacen->setCantidad($cantidad_actual-$p["cantidad"]);
+                    $producto_salida_almacen->setIdProducto($p["id_producto"]);
+                    $producto_salida_almacen->setIdUnidad($p["id_unidad"]);
+                    $producto_salida_almacen->setCantidad($p["cantidad"]);
+                    ProductoAlmacenDAO::save($producto_almacen);
+                    ProductoSalidaAlmacenDAO::save($producto_salida_almacen);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo registrar la salida de producto: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Salida de almacen registrada correctamente");
+            return $salida_almacen->getIdSalidaAlmacen();
 	}
   
 	/**
