@@ -22,7 +22,7 @@
             if($expedido)
             {
                 $id_usuario=LoginController::getCurrentUser();
-                if($id_usuario==null)
+                if(is_null($id_usuario))
                 {
                     Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
                     throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");

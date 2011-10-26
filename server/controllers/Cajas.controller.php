@@ -14,7 +14,7 @@ class CajasController{
         )
         {
             $caja=CajaDAO::getByPK($id_caja);
-            if($caja==null)
+            if(is_null($caja))
             {
                 Logger::error("La caja especificada no existe");
                 throw new Exception("La caja especificada no existe");
@@ -42,7 +42,7 @@ class CajasController{
                 //
                 if($caja->getControlBilletes())
                 {
-                    if($billetes==null)
+                    if(is_null($billetes))
                     {
                         Logger::error("No se recibieron los billetes para esta caja");
                         throw new Exception("No se recibieron los billetes para esta caja");
@@ -54,7 +54,7 @@ class CajasController{
                     //
                     for($i=0;$i<$numero_billetes; $i++)
                     {
-                        if(BilleteDAO::getByPK($billetes[$i]["id_billete"]==null))
+                        if(is_null(BilleteDAO::getByPK($billetes[$i]["id_billete"])))
                         {
                             Logger::error("El billete con id: ".$billetes[$i]["id_billete"]." no existe");
                             throw new Exception("El billete con id: ".$billetes[$i]["id_billete"]." no existe");
@@ -71,7 +71,7 @@ class CajasController{
                     for($i=0;$i<$numero_billetes;$i++)
                     {
                         $billete_caja_original=BilleteCajaDAO::getByPK($billete_caja[$i]->getIdBillete(), $billete_caja[$i]->getIdCaja());
-                        if($billete_caja_original==null)
+                        if(is_null($billete_caja_original))
                         {
                             if(!$suma)
                                 $billete_caja[$i]->setCantidad($billete_caja[$i]->getCantidad()*-1);

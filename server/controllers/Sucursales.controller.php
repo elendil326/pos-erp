@@ -1017,6 +1017,7 @@ require_once("interfaces/Sucursales.interface.php");
             if(is_null(CiudadDAO::getByPK($id_ciudad)))
             {
                 Logger::error("La ciudad con id: ".$id_ciudad." no existe");
+                throw new Exception("La ciudad con id: ".$id_ciudad." no existe");
             }
             $sucursal->setSaldoAFavor($saldo_a_favor);
             $sucursal->setIdGerente($id_gerente);
@@ -1777,7 +1778,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                         BilleteCajaDAO::save($b_c);
                         BilleteCorteCajaDAO::save($billete_corte_caja);
                     }
-                    if(is_null($billetes_dejados)&&$saldo_final!==0)
+                    if(is_null($billetes_dejados)&&$saldo_final!=0)
                     {
                         throw new Exception("No se encontro el parametro billetes_dejados cuando se esta llevando control de los billetes en esta caja");
                     }
@@ -1846,7 +1847,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                 AlmacenDAO::save($almacen);
                 foreach($productos_almacen as $producto_almacen)
                 {
-                    if($producto_almacen->getCantidad()!==0)
+                    if($producto_almacen->getCantidad()!=0)
                     {
                         throw new Exception("El almacen no puede ser borrado pues aun contiene productos");
                     }
@@ -1994,8 +1995,42 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$id_caja
 	)
 	{  
-  
-  
+            Logger::log("Eliminando caja ".$id_caja);
+            $caja=CajaDAO::getByPK($id_caja);
+            if(is_null($caja))
+            {
+                Logger::error("La caja con id: ".$id_caja." no existe");
+                throw new Exception("La caja con id: ".$id_caja." no existe");
+            }
+            if(!$caja->getActiva())
+            {
+                Logger::warn("La caja ya ha sido eliminada");
+                throw new Exception("La caja ya ha sido eliminada");
+            }
+            if($caja->getAbierta())
+            {
+                Logger::error("La caja esta abierta y no puede ser eliminada");
+                throw new Exception("La caja esta abierta y no puede ser eliminada");
+            }
+            if($caja->getSaldo()!=0)
+            {
+                Logger::error("El saldo de la caja no esta en 0, no se puede eliminar");
+                throw new Exception("El saldo de la caja no esta en 0, no se puede eliminar");
+            }
+            $caja->setActiva(0);
+            DAO::transBegin();
+            try
+            {
+                CajaDAO::save($caja);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("Error al eliminar la caja ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Caja eliminada exitosamente");
 	}
   
 	/**
@@ -2008,9 +2043,64 @@ Creo que este metodo tiene que estar bajo sucursal.
 	(
 		$id_sucursal
 	)
-	{  
-  
-  
+	{
+            Logger::log("Eliminando sucursal ".$id_sucursal);
+            $sucursal=SucursalDAO::getByPK($id_sucursal);
+            if(is_null($sucursal))
+            {
+                Logger::error("La sucursal con id :".$id_sucursal." no existe");
+                throw new Exception("La sucursal con id :".$id_sucursal." no existe");
+            }
+            if(!$sucursal->getActiva())
+            {
+                Logger::warn("La sucursal ya ha sido eliminada");
+                throw new Exception("La sucursal ya ha sido eliminada");
+            }
+            if($sucursal->getSaldoAFavor()!=0)
+            {
+                Logger::error("La sucursal no tiene un saldo de 0 y no puede ser eliminada");
+                throw new Exception("La sucursal no tiene un saldo de 0 y no puede ser eliminada");
+            }
+            $sucursal->setFechaBaja(date("Y-m-d H:i:s"));
+            $sucursal->setActiva(0);
+            DAO::transBegin();
+            try
+            {
+                SucursalDAO::save($sucursal);
+                $cajas=CajaDAO::search(new Caja(array( "id_sucursal" => $id_sucursal )));
+                foreach($cajas as $c)
+                {
+                    $this->EliminarCaja($c->getIdCaja());
+                }
+                $impuestos_sucursal=ImpuestoSucursalDAO::search(new ImpuestoSucursal(array( "id_sucursal" => $id_sucursal )));
+                foreach($impuestos_sucursal as $i_e)
+                {
+                    ImpuestoSucursalDAO::delete($i_e);
+                }
+                $paquetes_sucursal=PaqueteSucursalDAO::search(new PaqueteSucursal(array( "id_sucursal" => $id_sucursal )));
+                foreach($paquetes_sucursal as $p_s)
+                {
+                    PaqueteSucursalDAO::delete($p_s);
+                }
+                $retencion_sucursal=RetencionSucursalDAO::search(new RetencionSucursal(array( "id_sucursal" => $id_sucursal )));
+                foreach($retencion_sucursal as $r_s)
+                {
+                    RetencionSucursalDAO::delete($r_s);
+                }
+                $servicio_sucursal=ServicioSucursalDAO::search(new ServicioSucursal(array( "id_sucursal" => $id_sucursal )));
+                foreach($servicio_sucursal as $s_s)
+                {
+                    ServicioSucursalDAO::delete($s_s);
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("La sucursal no pudo ser eliminada ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Sucursal eliminada exitosamente");
 	}
   
 	/**
