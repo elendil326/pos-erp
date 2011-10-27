@@ -63,7 +63,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 * @param id_clasificacion_proveedor int Id de la clasificacion del proveedor
  	 * @param colonia string Colonia donde vive el agente
  	 * @param retenciones json Ids de las retenciones que afectan a este usuario
- 	 * @return id_usuario int Id generado por la inserción del usuario
+ 	 * @return id_usuario int Id generado por la inserciï¿½n del usuario
  	 **/
 	public static function NuevoUsuario
 	(
@@ -129,7 +129,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
  	 *
  	 * @param activo bool True si se mostrarn solo los usuarios activos, false si solo se mostrarn los usuarios inactivos
  	 * @param ordenar json Valor numrico que indicar la forma en que se ordenar la lista
- 	 * @return usuarios json Arreglo de objetos que contendrá la información de los usuarios del sistema
+ 	 * @return usuarios json Arreglo de objetos que contendrï¿½ la informaciï¿½n de los usuarios del sistema
  	 **/
 	public static function ListaUsuario
 	(
@@ -360,8 +360,29 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 		$salario = 0
 	)
 	{  
-  
-  
+            Logger::log("Creando nuevo rol");
+            $rol=new Rol(
+                    array(
+                        "nombre"        => $nombre,
+                        "descripcion"   => $descripcion,
+                        "descuento"     => $descuento,
+                        "salario"       => $salario
+                    )
+                    );
+            DAO::transBegin();
+            try
+            {
+                RolDAO::save($rol);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("Error al crear el nuevo rol: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Rol creado exitosamente con id: ".$rol->getIdRol());
+            return $rol->getIdRol();
 	}
   
 	/**
