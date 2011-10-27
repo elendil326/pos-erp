@@ -8,7 +8,91 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	
   class PersonalYAgentesController implements IPersonalYAgentes{
   
-  
+
+      private function ValidarParametrosRol
+      (
+                $id_rol=null,
+                $descripcion=null,
+                $nombre = null,
+		$descuento = null,
+		$salario = null
+      )
+      {
+          $error="";
+          if(!is_null($id_rol))
+          {
+              if(is_null(RolDAO::getByPK($id_rol)))
+              {
+                  $error="El rol con id: ".$id_rol." no existe";
+                  return $error;
+              }
+          }
+          if(!is_null($descripcion))
+          {
+              if(is_string($descripcion))
+              {
+                  if(strlen($descripcion)==0||strlen($descripcion)>255)
+                  {
+                      $error="La longitud de la descripcion obtenida no esta en el rango 1-255";
+                      return $error;
+                  }
+              }
+              else
+              {
+                  $error="La descripcion proporcionada no es un string";
+                  return $error;
+              }
+          }
+          if(!is_null($nombre))
+          {
+              if(is_string($nombre))
+              {
+                  if(strlen($nombre)==0||strlen($nombre)>30)
+                  {
+                      $error="La longitud del nombre obtenido no esta en el rango 1-30";
+                      return $error;
+                  }
+              }
+              else
+              {
+                  $error="El nombre proporcionado no es un string";
+                  return $error;
+              }
+          }
+          if(!is_null($descuento))
+          {
+              if(!is_nan($descuento))
+              {
+                  if($descuento<0||$descuento>1.8e200)
+                  {
+                      $error="El descuento proporcionado no esta en el rango 0-1.8e200";
+                      return $error;
+                  }
+              }
+              else
+              {
+                  $error="El descuento proporcionado no es un numero";
+                  return $error;
+              }
+          }
+          if(!is_null($salario))
+          {
+              if(!is_nan($salario))
+              {
+                  if($salario<0||$salario>1.8e200)
+                  {
+                      $error="El salario proporcionado no esta en el rango 0-1.8e200";
+                      return $error;
+                  }
+              }
+              else
+              {
+                  $error="El salario proporcionado no es un numero";
+                  return $error;
+              }
+          }
+          return true;
+      }
 	/**
  	 *
  	 *Insertar un nuevo usuario. El usuario que lo crea sera tomado de la sesion actual y la fecha sera tomada del servidor. Un usuario no puede tener mas de un rol en una misma sucursal de una misma empresa.
@@ -361,6 +445,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Creando nuevo rol");
+            if(is_string($this->ValidarParametrosRol(null, $descripcion, $nombre, $descuento, $salario)))
             $rol=new Rol(
                     array(
                         "nombre"        => $nombre,
