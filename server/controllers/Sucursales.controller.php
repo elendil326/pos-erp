@@ -2147,7 +2147,7 @@ Creo que este metodo tiene que estar bajo sucursal.
                             "id_usuario_recibe"     => 0,
                             "id_almacen_recibe"     => $id_almacen_recibe,
                             "fecha_recibo"          => "0000-00-00 00:00:00",
-                            "estado"                => "envio programado",
+                            "estado"                => "Envio programado",
                             "cancelado"             => 0,
                             "completo"              => 0
                             )
@@ -2334,8 +2334,11 @@ Creo que este metodo tiene que estar bajo sucursal.
             catch(Exception $e)
             {
                 DAO::transRollback();
+                Logger::error("No se pudo recibir el traspaso: ".$e);
+                throw $e;
             }
             DAO::transEnd();
+            Logger::log("Eltraspaso ha sido recibido exitosamente");
 	}
   
 	/**
@@ -2349,8 +2352,38 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$id_traspaso
 	)
 	{  
-  
-  
+           Logger::log("Cancelando traspaso: ".$id_traspaso);
+           $traspaso=TraspasoDAO::getByPK($id_traspaso);
+           if(is_null($traspaso))
+           {
+               Logger::error("El traspaso con id: ".$id_traspaso." no existe");
+               throw new Exception("El traspaso con id: ".$id_traspaso." no existe");
+           }
+           if($traspaso->getCancelado())
+           {
+               Logger::warn("El traspaso ya ha sido cancelado");
+               throw new Exception("El traspaso ya ha sido cancelado");
+           }
+           if($traspaso->getCompleto()||$traspaso->getEstado()!=="Envio programado")
+           {
+               Logger::error("El traspaso no puede ser cancelado pues ya se han realizado acciones sobre el");
+               throw new Exception("El traspaso no puede ser cancelado pues ya se han realizado acciones sobre el");
+           }
+           $traspaso->setCancelado(1);
+           $traspaso->setEstado("Cancelado");
+           DAO::transBegin();
+           try
+           {
+               TraspasoDAO::save($traspaso);
+           }
+           catch(Exception $e)
+           {
+               DAO::transRollback();
+               Logger::error("No se pudo cancelar el traslado ".$e);
+               throw $e;
+           }
+           DAO::transEnd();
+           Logger::log("Traslado cancelado exitosamente");
 	}
   
 	/**
