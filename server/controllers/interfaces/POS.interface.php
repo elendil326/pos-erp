@@ -10,6 +10,18 @@
   
 	/**
  	 *
+ 	 *Metodo que elimina todos los registros en la base de datos, especialmente util para hacer pruebas unitarias. Este metodo NO estara disponible al publico.
+ 	 *
+ 	 **/
+  static function DropBd
+	(
+	);  
+  
+  
+	
+  
+	/**
+ 	 *
  	 *Si el cliente lo desea puede respaldar toda su informacion personal. Esto descargara la base de datos y los documentos que se generan automaticamente como las facturas. Para descargar la base de datos debe tenerse un grupo de 0 o bien el permiso correspondiente.
  	 *
  	 **/

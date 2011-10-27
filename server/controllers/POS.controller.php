@@ -3,7 +3,7 @@ require_once("interfaces/POS.interface.php");
 /**
   *
   *
-  *
+  * @author Alan Gonzalez <alan@caffeina.mx>
   **/
 	
   class POSController implements IPOS{
@@ -91,5 +91,23 @@ require_once("interfaces/POS.interface.php");
 	{  
   
   
+	}
+  
+	/**
+ 	 *
+ 	 *Metodo que elimina todos los registros en la base de datos, especialmente util para hacer pruebas unitarias. Este metodo NO estara disponible al publico.
+ 	 *
+ 	 **/
+	public static function DropBd
+	(
+	)
+	{  
+
+  		$sql = "TRUNCATE TABLE `rol`;";
+		
+		global $conn;
+
+		$rs = $conn->Execute($sql);
+
 	}
   }
