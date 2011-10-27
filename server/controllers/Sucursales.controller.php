@@ -2316,6 +2316,17 @@ Creo que este metodo tiene que estar bajo sucursal.
                 TraspasoDAO::save($traspaso);
                 foreach($productos as $p)
                 {
+                    $producto_traspaso=TraspasoProductoDAO::getByPK($id_traspaso, $p["id_producto"],$p["id_unidad"]);
+                    if(is_null($producto_traspaso))
+                    {
+                        $producto_traspaso= new TraspasoProducto(array(
+                                                        "id_traspaso"       => $id_traspaso,
+                                                        "id_producto"       => $p["id_producto"],
+                                                        "id_unidad"         => $p["id_unidad"],
+                                                        "cantidad_enviada"  => 0
+                                                        )
+                                                    );
+                    }
                     $producto_almacen=ProductoAlmacenDAO::getByPK($p["id_producto"], $traspaso->getIdAlmacenRecibe(), $p["id_unidad"]);
                     if(is_null($producto_almacen))
                     {
@@ -2328,7 +2339,9 @@ Creo que este metodo tiene que estar bajo sucursal.
                                                 );
                     }
                     $producto_almacen->setCantidad($producto_almacen->getCantidad()+$p["cantidad"]);
+                    $producto_traspaso->setCantidadRecibida($p["cantidad"]);
                     ProductoAlmacenDAO::save($producto_almacen);
+                    TraspasoProductoDAO::save($producto_traspaso);
                 }
             }
             catch(Exception $e)
@@ -2459,7 +2472,76 @@ Creo que este metodo tiene que estar bajo sucursal.
 		$fecha_envio_programada = null
 	)
 	{  
-  
-  
+            Logger::log("Editando traspaso ".$id_traspaso);
+            $traspaso=TraspasoDAO::getByPK($id_traspaso);
+            if(is_null($traspaso))
+            {
+                Logger::error("El traspaso con id: ".$id_traspaso." no existe");
+                throw new Exception("El traspaso con id: ".$id_traspaso." no existe");
+            }
+            if($traspaso->getCancelado())
+            {
+                Logger::error("El traspaso ya ha sido cancelado, no puede ser editado");
+                throw new Exception("El traspaso ya ha sido cancelado, no puede ser editado");
+            }
+            if($traspaso->getCompleto()||$traspaso->getEstado()!=="Envio programado")
+            {
+                Logger::error("No se puede editar el traspaso de almacen pues ya se han realizado acciones sobre el");
+                throw new Exception("No se puede editar el traspaso de almacen pues ya se han realizado acciones sobre el");
+            }
+            if(!is_null($fecha_envio_programada))
+            {
+                $traspaso->setFechaEnvioProgramada($fecha_envio_programada);
+            }
+            DAO::transBegin();
+            try
+            {
+                TraspasoDAO::save($traspaso);
+                if(!is_null($productos))
+                {
+                    foreach($productos as $p)
+                    {
+                        $traspaso_producto=TraspasoProductoDAO::getByPK($id_traspaso, $p["id_producto"],$p["id_unidad"]);
+                        if(is_null($traspaso_producto))
+                        {
+                            $traspaso_producto=new TraspasoProducto(array(
+                                                            "id_traspaso"       => $id_traspaso,
+                                                            "id_producto"       => $p["id_producto"],
+                                                            "id_unidad"         => $p["id_unidad"],
+                                                            "cantidad_recibida" => 0
+                                                            )
+                                                        );
+                        }
+                        $traspaso_producto->setCantidadEnviada($p["id_unidad"]);
+                        TraspasoProductoDAO::save($traspaso_producto);
+                    }
+                    $traspasos_producto=TraspasoProductoDAO::search(new TraspasoProducto(array( "id_traspaso" => $id_traspaso )));
+
+                    foreach($traspasos_producto as $t_p)
+                    {
+                        $encontrado=false;
+                        foreach($productos as $p)
+                        {
+                            if($t_p->getIdProducto()==$p["id_producto"]&&$t_p->getIdUnidad()==$p["id_unidad"])
+                            {
+                                $encontrado=true;
+                                break;
+                            }
+                        }
+                        if(!$encontrado)
+                        {
+                            TraspasoProductoDAO::delete($t_p);
+                        }
+                    }
+                }
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo editar el traspaso: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("Traspaso editado correctamente");
 	}
   }
