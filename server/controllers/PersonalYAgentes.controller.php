@@ -9,7 +9,7 @@ require_once("interfaces/PersonalYAgentes.interface.php");
   class PersonalYAgentesController implements IPersonalYAgentes{
   
 
-      private function ValidarParametrosRol
+      private static function ValidarParametrosRol
       (
                 $id_rol=null,
                 $descripcion=null,
@@ -445,12 +445,11 @@ require_once("interfaces/PersonalYAgentes.interface.php");
 	)
 	{  
             Logger::log("Creando nuevo rol");
-            $validar=$this->ValidarParametrosRol(null, $descripcion, $nombre, $descuento, $salario);
+            $validar=self::ValidarParametrosRol(null, $descripcion, $nombre, $descuento, $salario);
             if(is_string($validar))
             {
                 Logger::error($validar);
                 throw new Exception($validar);
-
             }
             $rol=new Rol(
                     array(
