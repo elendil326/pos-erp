@@ -17,7 +17,7 @@ require_once("interfaces/Productos.interface.php");
  	 * @param ordenar json Valor que determina el orden de la lista
  	 * @return unidades_convertibles json Lista de unidades convertibles
  	 **/
-	public function ListaUnidad
+	public static function ListaUnidad
 	(
 		$activo = null, 
 		$ordenar = null
@@ -47,15 +47,48 @@ require_once("interfaces/Productos.interface.php");
  	 * @param id_unidades int Id de la unidad equivalente, en el ejemplo es la libra
  	 * @param equivalencia float Valor del coeficiente de la segunda unidad, es decir, las veces que cabe la segunda unidad en la primera
  	 **/
-	public function Nueva_equivalenciaUnidad
+	public static function Nueva_equivalenciaUnidad
 	(
 		$id_unidad, 
 		$id_unidades, 
 		$equivalencia
 	)
 	{  
-  
-  
+            Logger::log("Crenado nueva equivalencia de unidades");
+            if(is_null(UnidadDAO::getByPK($id_unidad)))
+            {
+                Logger::error("La unidad con id: ".$id_unidad." no existe");
+                throw new Exception("La unidad con id: ".$id_unidad." no existe");
+            }
+            if(is_null(UnidadDAO::getByPK($id_unidades)))
+            {
+                Logger::error("La unidad con id: ".$id_unidades." no existe");
+                throw new Exception("La unidad con id: ".$id_unidades." no existe");
+            }
+            if($id_unidad===$id_unidades)
+            {
+                Logger::error("No se puede crear una equivalencia para la misma unidad");
+                throw new Exception("No se puede crear una equivalencia para la misma unidad");
+            }
+            $unidad_equivalencia=new UnidadEquivalencia(array(
+                                            "id_unidad"     => $id_unidad,
+                                            "equivalencia"  => $equivalencia,
+                                            "id_unidades"   => $id_unidades
+                                            )
+                                        );
+            DAO::transBegin();
+            try
+            {
+                UnidadEquivalenciaDAO::save($unidad_equivalencia);
+            }
+            catch(Exception $e)
+            {
+                DAO::transRollback();
+                Logger::error("No se pudo crear la equivalencia: ".$e);
+                throw $e;
+            }
+            DAO::transEnd();
+            Logger::log("La equivalencia fue creada exitosamente");
 	}
   
 	/**
@@ -67,7 +100,7 @@ require_once("interfaces/Productos.interface.php");
  	 * @param equivalencia float La nueva equivalencia que se pondra entre los dos valores, en el ejemplo es 2.204
  	 * @param id_unidad int Id de la unidad, en el ejemplo son kilogramos
  	 **/
-	public function Editar_equivalenciaUnidad
+	public static function Editar_equivalenciaUnidad
 	(
 		$id_unidades, 
 		$equivalencia, 
@@ -89,7 +122,7 @@ require_once("interfaces/Productos.interface.php");
  	 * @param id_sucursal int Id de la sucursal de la cual se vern los productos.
  	 * @return productos json Objeto que contendr� el arreglo de productos en inventario.
  	 **/
-	public function Lista
+	public static function Lista
 	(
 		$activo = null, 
 		$id_lote = null, 
@@ -130,7 +163,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param descuento float Descuento que se aplicara a este producot
  	 * @return id_producto int Id generado por la inserci�n del nuevo producto
  	 **/
-	public function Nuevo
+	public static function Nuevo
 	(
 		$activo, 
 		$codigo_producto, 
@@ -165,7 +198,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param productos json Arreglo de objetos que contendr�n la informaci�n del nuevo producto
  	 * @return id_productos json Arreglo de enteros que contendr� los ids de los productos insertados.
  	 **/
-	public function En_volumenNuevo
+	public static function En_volumenNuevo
 	(
 		$productos
 	)
@@ -180,7 +213,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 *
  	 * @param id_producto int Id del producto a desactivar
  	 **/
-	public function Desactivar
+	public static function Desactivar
 	(
 		$id_producto
 	)
@@ -214,7 +247,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param foto_del_producto string url a una foto de este producto
  	 * @param codigo_producto string Codigo del producto
  	 **/
-	public function Editar
+	public static function Editar
 	(
 		$id_producto, 
 		$descuento = null, 
@@ -255,7 +288,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param retenciones json Ids de retenciones que afectan esta clasificacion de productos
  	 * @return id_categoria int Id atogenerado por la insercion de la categoria
  	 **/
-	public function NuevaCategoria
+	public static function NuevaCategoria
 	(
 		$nombre, 
 		$descripcion = null, 
@@ -283,7 +316,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 * @param impuestos json Ids de impuestos que afectan a esta clasificacion de producto
  	 * @param retenciones json Ids de retenciones que afectan a esta clasificacion de producto
  	 **/
-	public function EditarCategoria
+	public static function EditarCategoria
 	(
 		$id_categoria, 
 		$nombre, 
@@ -305,7 +338,7 @@ NOTA: Se crea un producto tipo = 1 que es para productos
  	 *
  	 * @param id_categoria int Id de la categoria a desactivar
  	 **/
-	public function DesactivarCategoria
+	public static function DesactivarCategoria
 	(
 		$id_categoria
 	)
@@ -322,7 +355,7 @@ Ejemplo: 1 kg = 2.204 lb
  	 * @param id_unidades int En el ejemplo son las libras
  	 * @param id_unidad int En el ejemplo es el kilogramo
  	 **/
-	public function Eliminar_equivalenciaUnidad
+	public static function Eliminar_equivalenciaUnidad
 	(
 		$id_unidades, 
 		$id_unidad
@@ -339,7 +372,7 @@ Ejemplo: 1 kg = 2.204 lb
  	 * @param orden string Nombre de la columna de la tabla por la cual se ordenara la lista
  	 * @return unidades_equivalencia json Lista de unidades
  	 **/
-	public function Lista_equivalenciaUnidad
+	public static function Lista_equivalenciaUnidad
 	(
 		$orden = null
 	)
@@ -356,7 +389,7 @@ Ejemplo: 1 kg = 2.204 lb
  	 * @param descripcion string Descripcion de la unidad convertible
  	 * @return id_unidad_convertible string Id de la unidad convertible
  	 **/
-	public function NuevaUnidad
+	public static function NuevaUnidad
 	(
 		$nombre, 
 		$descripcion = null
@@ -374,7 +407,7 @@ Ejemplo: 1 kg = 2.204 lb
  	 * @param descripcion string Descripcion de la unidad convertible
  	 * @param nombre string Nombre de la unidad convertible
  	 **/
-	public function EditarUnidad
+	public static function EditarUnidad
 	(
 		$id_unidad_convertible, 
 		$descripcion = null, 
@@ -391,7 +424,7 @@ Ejemplo: 1 kg = 2.204 lb
  	 *
  	 * @param id_unidad_convertible int Id de la unidad convertible a eliminar
  	 **/
-	public function EliminarUnidad
+	public static function EliminarUnidad
 	(
 		$id_unidad_convertible
 	)

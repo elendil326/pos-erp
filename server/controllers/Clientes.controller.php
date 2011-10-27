@@ -13,15 +13,15 @@ require_once("interfaces/Clientes.interface.php");
  	 *
  	 *Regresa una lista de clientes. Puede filtrarse por empresa, sucursal, activos, as?omo ordenarse seg?us atributs con el par?tro orden. Es posible que algunos clientes sean dados de alta por un admnistrador que no les asigne algun id_empresa, o id_sucursal.
 
-Update :  ¿Es correcto que contenga el argumento id_sucursal? Ya que as?omo esta entiendo que solo te regresara los datos de los clientes de una sola sucursal.
+Update :  ï¿½Es correcto que contenga el argumento id_sucursal? Ya que as?omo esta entiendo que solo te regresara los datos de los clientes de una sola sucursal.
  	 *
  	 * @param orden json Valor que definir la forma de ordenamiento de la lista. 
  	 * @param id_empresa int Filtrara los resultados solo para los clientes que se dieron de alta en la empresa dada.
  	 * @param id_sucursal int Filtrara los resultados solo para los clientes que se dieron de alta en la sucursal dada.
  	 * @param mostrar_inactivos bool Si el valor es obtenido, cuando sea true, mostrar solo los clientes que estn activos, false si solo mostrar clientes inactivos.
- 	 * @return clientes json Arreglo de objetos que contendrá la información de los clientes.
+ 	 * @return clientes json Arreglo de objetos que contendrï¿½ la informaciï¿½n de los clientes.
  	 **/
-	public function Lista
+	public static function Lista
 	(
 		$orden = null, 
 		$id_empresa = null, 
@@ -64,9 +64,9 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
  	 * @param impuestos json Objeto que contendra los impuestos que afectan a este cliente
  	 * @param email string E-mail del cliente
  	 * @param texto_extra string Comentario sobre la direccin del cliente.
- 	 * @return id_cliente int Id autogenerado del cliente que se insertó
+ 	 * @return id_cliente int Id autogenerado del cliente que se insertï¿½
  	 **/
-	public function Nuevo
+	public static function Nuevo
 	(
 		$codigo_cliente, 
 		$razon_social, 
@@ -146,7 +146,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
 
 		}
 
-		//si no hay contraseña, generar una
+		//si no hay contraseï¿½a, generar una
 		if( is_null( $password ))
 		{
 			$password = md5( "THIS_IS_A_RANDOM_PASSWORD" );
@@ -221,7 +221,7 @@ Al crear un cliente se le creara un usuario para la interfaz de cliente y pueda 
  	 * @param texto_extra string Comentario sobre la direccin del cliente.
  	 * @param colonia string Colonia del cliente
  	 **/
-	public function Editar_perfil
+	public static function Editar_perfil
 	(
 		$password, 
 		$razon_social, 
@@ -295,7 +295,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
  	 * @param numero_interior string Nmero interior del cliente.
  	 * @param dia_de_revision string Fecha de revisin del cliente.
  	 **/
-	public function Editar
+	public static function Editar
 	(
 		$id_cliente, 
 		$telefono1 = null, 
@@ -343,9 +343,9 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
  	 *Obtener los detalles de un cliente.
  	 *
  	 * @param id_cliente int Id del cliente del cual se listarn sus datos.
- 	 * @return cliente json Arreglo que contendrá la información del cliente. 
+ 	 * @return cliente json Arreglo que contendrï¿½ la informaciï¿½n del cliente. 
  	 **/
-	public function Detalle
+	public static function Detalle
 	(
 		$id_cliente
 	)
@@ -367,7 +367,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
  	 * @param utilidad float Utilidad que se ganara a todos los productos que no cuenten con este campo. Se utiliza para calcular el precio al que se le venden los productos a este tipo de cliente.
  	 * @return id_categoria_cliente int El id para esta nueva categoria de cliente.
  	 **/
-	public function NuevaClasificacion
+	public static function NuevaClasificacion
 	(
 		$clave_interna, 
 		$nombre, 
@@ -389,7 +389,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
  	 * @param orden json Objeto que determinara el orden de la lista
  	 * @return clasifciaciones_cliente json Objeto que contendra la lista de clasificaciones de cliente
  	 **/
-	public function ListaClasificacion
+	public static function ListaClasificacion
 	(
 		$orden = null
 	)
@@ -411,7 +411,7 @@ Si no se envia alguno de los datos opcionales del cliente. Entonces se quedaran 
  	 * @param descripcion string Descripcion larga de la clasificacion
  	 * @param margen_de_utilidad float Margen de utilidad que se le obtendra a todos los productos al venderle a este tipo de cliente
  	 **/
-	public function EditarClasificacion
+	public static function EditarClasificacion
 	(
 		$id_clasificacion_cliente, 
 		$impuestos = null, 

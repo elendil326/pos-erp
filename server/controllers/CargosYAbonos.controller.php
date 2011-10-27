@@ -9,7 +9,6 @@ require_once("interfaces/CargosYAbonos.interface.php");
   class CargosYAbonosController implements ICargosYAbonos{
 
         //valida que una empresa exista y tenga su estado en activo
-        private $formato_fecha="Y-m-d H:i:s";
         private function validarEmpresa
         (
                 $id_empresa
@@ -26,11 +25,11 @@ require_once("interfaces/CargosYAbonos.interface.php");
             Logger::error("La empresa con id:".$id_empresa." no esta activa");
             return $activo;
         }
-        private function getSucursal()
+        private static function getSucursal()
         {
             return 1;
         }
-        private function getCaja()
+        private static function getCaja()
         {
             return 1;
         }
@@ -49,7 +48,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param descripcion string Descripcion del ingreso en caso de no este contemplado en la lista de conceptos de ingreso
  	 * @return id_ingreso int Id autogenerado por la insercion del ingreso
  	 **/
-	public function NuevoIngreso
+	public static function NuevoIngreso
 	(
 		$id_empresa,
 		$fecha_ingreso,
@@ -70,7 +69,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
                 throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
             }
-            if(!$this->validarEmpresa($id_empresa))
+            if(!self::validarEmpresa($id_empresa))
             {
                 throw new Exception("Se recibio una empresa no valida");
             }
@@ -99,9 +98,9 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 }
             }
             if(!$id_sucursal)
-                $id_sucursal=$this->getSucursal();
+                $id_sucursal=self::getSucursal();
             if(!$id_caja)
-                $id_caja=$this->getCaja();
+                $id_caja=self::getCaja();
             if(!is_null($id_caja))
             {
                 try
@@ -125,7 +124,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             $ingreso->setIdUsuario($id_usuario);
             $ingreso->setMonto($monto);
             $ingreso->setNota($nota);
-            $ingreso->setFechaDeRegistro(date($this->formato_fecha, time()));
+            $ingreso->setFechaDeRegistro(date("Y-m-d H:i:s", time()));
             DAO::transBegin();
             try
             {
@@ -152,7 +151,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param id_abono int Id del abono a cancelar
  	 * @param motivo_cancelacion string Motivo por el cual se realiza la cancelacion
  	 **/
-	public function EliminarAbono
+	public static function EliminarAbono
 	(
 		$id_abono,
 		$motivo_cancelacion = null,
@@ -180,11 +179,11 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 $abono->setCancelado(1);
                 $abono->setMotivoCancelacion($motivo_cancelacion);
                 if(!$id_caja)
-                    $id_caja=$this->getCaja();
+                    $id_caja=self::getCaja();
                 DAO::transBegin();
                 try {
                     AbonoCompraDAO::save($abono);
-                    $this->cancelarAbonoCompra($abono,$id_caja,$billetes);
+                    self::cancelarAbonoCompra($abono,$id_caja,$billetes);
                 }
                 catch(Exception $e)
                 {
@@ -212,7 +211,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 DAO::transBegin();
                 try {
                     AbonoVentaDAO::save($abono);
-                    $this->cancelarAbonoVenta($abono,$id_caja,$billetes);
+                    self::cancelarAbonoVenta($abono,$id_caja,$billetes);
                 }
                 catch(Exception $e)
                 {
@@ -240,7 +239,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 DAO::transBegin();
                 try {
                     AbonoPrestamoDAO::save($abono);
-                    $this->cancelarAbonoPrestamo($abono,$id_caja,$billetes);
+                    self::cancelarAbonoPrestamo($abono,$id_caja,$billetes);
                 }
                 catch(Exception $e)
                 {
@@ -257,7 +256,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             }
 	}
 
-        private function cancelarAbonoCompra
+        private static function cancelarAbonoCompra
         (
                 AbonoCompra $abono,
                 $id_caja,
@@ -303,7 +302,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 try
                 {
-                    $this->eliminarCheques($abono->getIdAbonoCompra(),1,null,null);
+                    self::eliminarCheques($abono->getIdAbonoCompra(),1,null,null);
                 }
                 catch(Exception $e)
                 {
@@ -329,7 +328,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             DAO::transEnd();
         }
 
-        private function cancelarAbonoVenta
+        private static function cancelarAbonoVenta
         (
                 AbonoVenta $abono,
                 $id_caja,
@@ -374,7 +373,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             {
                 try
                 {
-                    $this->eliminarCheques($abono->getIdAbonoVenta(),null,1,null);
+                    self::eliminarCheques($abono->getIdAbonoVenta(),null,1,null);
                 }
                 catch(Exception $e)
                 {
@@ -400,7 +399,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             DAO::transEnd();
         }
 
-        private function cancelarAbonoPrestamo
+        private static function cancelarAbonoPrestamo
         (
                 AbonoPrestamo $abono,
                 $id_caja,
@@ -455,7 +454,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             }
             try
             {
-                $this->eliminarCheques($abono->getIdAbonoPrestamo(),null,null,1);
+                self::eliminarCheques($abono->getIdAbonoPrestamo(),null,null,1);
             }
             catch(Exception $e)
             {
@@ -481,7 +480,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             DAO::transEnd();
         }
 
-        private function eliminarCheques
+        private static function eliminarCheques
         (
                 $id_abono,
                 $compra=null,
@@ -560,7 +559,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param id_empresa int Id de la empresa de la cual se mostraran los abonos
  	 * @return abonos json Objeto que contendra la lista de abonos
  	 **/
-	public function ListaAbono
+	public static function ListaAbono
 	(
                 $compra,
                 $venta,
@@ -649,7 +648,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         if(!is_null($fecha_maxima))
                             $abono_criterio_compra2->setFecha($fecha_maxima);
                         else
-                            $abono_criterio_compra2->setFecha(date($this->formato_fecha, time()));
+                            $abono_criterio_compra2->setFecha(date("Y-m-d H:i:s", time()));
                     }
                     else if(!is_null($fecha_maxima))
                     {
@@ -673,9 +672,9 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         //con la hora 23:59:59 y se almacena como fecha en el objeto 2.
                         //
                         $hoy=mktime(0,0,0,date("m"),date("d"),date("Y"));
-                        $abono_criterio_compra->setFecha(date($this->formato_fecha, $hoy));
+                        $abono_criterio_compra->setFecha(date("Y-m-d H:i:s", $hoy));
                         $manana=mktime(23,59,59,date("m"),date("d"),date("Y"));
-                        $abono_criterio_compra2->setFecha(date($this->formato_fecha,$manana));
+                        $abono_criterio_compra2->setFecha(date("Y-m-d H:i:s",$manana));
                     }
 
                     $abono_criterio_compra->setIdCompra($id_compra);
@@ -759,7 +758,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         if(!is_null($fecha_maxima))
                             $abono_criterio_venta2->setFecha($fecha_maxima);
                         else
-                            $abono_criterio_venta2->setFecha(date($this->formato_fecha, time()));
+                            $abono_criterio_venta2->setFecha(date("Y-m-d H:i:s", time()));
                     }
                     else if(!is_null($fecha_maxima))
                     {
@@ -783,9 +782,9 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         //con la hora 23:59:59 y se almacena como fecha en el objeto 2.
                         //
                         $hoy=mktime(0,0,0,date("m"),date("d"),date("Y"));
-                        $abono_criterio_venta->setFecha(date($this->formato_fecha, $hoy));
+                        $abono_criterio_venta->setFecha(date("Y-m-d H:i:s", $hoy));
                         $manana=mktime(23,59,59,date("m"),date("d"),date("Y"));
-                        $abono_criterio_venta2->setFecha(date($this->formato_fecha,$manana));
+                        $abono_criterio_venta2->setFecha(date("Y-m-d H:i:s",$manana));
                     }
                     $abono_criterio_venta->setIdVenta($id_venta);
                     $abono_criterio_venta->setIdDeudor($id_usuario);
@@ -865,7 +864,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         if(!is_null($fecha_maxima))
                             $abono_criterio_prestamo2->setFecha($fecha_maxima);
                         else
-                            $abono_criterio_prestamo2->setFecha(date($this->formato_fecha, time()));
+                            $abono_criterio_prestamo2->setFecha(date("Y-m-d H:i:s", time()));
                     }
                     else if(!is_null($fecha_maxima))
                     {
@@ -889,9 +888,9 @@ require_once("interfaces/CargosYAbonos.interface.php");
                         //con la hora 23:59:59 y se almacena como fecha en el objeto 2.
                         //
                         $hoy=mktime(0,0,0,date("m"),date("d"),date("Y"));
-                        $abono_criterio_prestamo->setFecha(date($this->formato_fecha, $hoy));
+                        $abono_criterio_prestamo->setFecha(date("Y-m-d H:i:s", $hoy));
                         $manana=mktime(23,59,59,date("m"),date("d"),date("Y"));
-                        $abono_criterio_prestamo2->setFecha(date($this->formato_fecha,$manana));
+                        $abono_criterio_prestamo2->setFecha(date("Y-m-d H:i:s",$manana));
                     }
                     $abono_criterio_prestamo->setIdPrestamo($id_prestamo);
                     $abono_criterio_prestamo->setIdDeudor($id_usuario);
@@ -971,7 +970,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param id_gasto int Id del gasto a eliminar
  	 * @param motivo_cancelacion string Motivo por el cual se realiza la cancelacion
  	 **/
-	public function EliminarGasto
+	public static function EliminarGasto
 	(
 		$id_gasto,
 		$motivo_cancelacion = null,
@@ -994,7 +993,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             $gasto->setCancelado(1);
             $gasto->setMotivoCancelacion($motivo_cancelacion);
             if(!$id_caja)
-                $id_caja=$this->getCaja();
+                $id_caja=self::getCaja();
             if(!is_null($id_caja))
             {
                 try
@@ -1037,7 +1036,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param monto_minimo float Se listaran los gastos cuyo monto sea mayor a este valor
  	 * @param monto_maximo float Se listaran los gastos cuyo monto sea menor a este valor
  	 **/
-	public function ListaGasto
+	public static function ListaGasto
 	(
 		$id_empresa = null,
 		$id_usuario = null,
@@ -1104,7 +1103,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     if(!is_null($fecha_final))
                         $gasto_criterio_2->setFechaDelGasto($fecha_final);
                     else
-                        $gasto_criterio_2->setFechaDelGasto(date($this->formato_fecha, time()));
+                        $gasto_criterio_2->setFechaDelGasto(date("Y-m-d H:i:s", time()));
                 }
                 else if(!is_null($fecha_final))
                 {
@@ -1128,9 +1127,9 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     //con la hora 23:59:59 y se almacena como fecha en el objeto 2.
                     //
                     $hoy=mktime(0,0,0,date("m"),date("d"),date("Y"));
-                    $gasto_criterio_1->setFechaDelGasto(date($this->formato_fecha, $hoy));
+                    $gasto_criterio_1->setFechaDelGasto(date("Y-m-d H:i:s", $hoy));
                     $manana=mktime(23,59,59,date("m"),date("d"),date("Y"));
-                    $gasto_criterio_2->setFechaDelGasto(date($this->formato_fecha,$manana));
+                    $gasto_criterio_2->setFechaDelGasto(date("Y-m-d H:i:s",$manana));
                 }
                 if(!is_null($monto_minimo))
                 {
@@ -1177,7 +1176,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param id_ingreso int Id del ingreso a cancelar
  	 * @param motivo_cancelacion string Motivo por el cual se realiza la cancelacion
  	 **/
-	public function EliminarIngreso
+	public static function EliminarIngreso
 	(
 		$id_ingreso,
 		$motivo_cancelacion = null,
@@ -1195,7 +1194,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             $ingreso->setCancelado(1);
             $ingreso->setMotivoCancelacion($motivo_cancelacion);
             if(!$id_caja)
-                $id_caja=$this->getCaja();
+                $id_caja=self::getCaja();
             if(!is_null($id_caja))
             {
                 try
@@ -1233,7 +1232,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param monto float Monto fijo del concepto de gasto
  	 * @return id_concepto_gasto int Id autogenerado por la inserci�n del nuevo gasto
  	 **/
-	public function NuevoConceptoGasto
+	public static function NuevoConceptoGasto
 	(
 		$nombre,
 		$descripcion = null,
@@ -1273,7 +1272,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param monto float monto fijo del concepto de gasto
  	 * @param descripcion string Descripcion larga del concepto de gasto
  	 **/
-	public function EditarConceptoGasto
+	public static function EditarConceptoGasto
 	(
 		$id_concepto_gasto,
                 $nombre = null,
@@ -1322,7 +1321,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 *
  	 * @param id_concepto_gasto int Id del concepto que ser eliminado
  	 **/
-	public function EliminarConceptoGasto
+	public static function EliminarConceptoGasto
 	(
 		$id_concepto_gasto
 	)
@@ -1366,7 +1365,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param descripcion string Descripcion larga de este concepto de ingreso
  	 * @return id_concepto_ingreso int Id autogenerado por la creacion del nuevo concepto de ingreso
  	 **/
-	public function NuevoConceptoIngreso
+	public static function NuevoConceptoIngreso
 	(
 		$nombre,
 		$monto = null,
@@ -1404,7 +1403,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param descripcion string Descripcion larga del concepto de ingreso
  	 * @param monto float Si este concepto tiene un monto fijo, se debe mostrar aqui. Si no hay un monto fijo, dejar esto como null.
  	 **/
-	public function EditarConceptoIngreso
+	public static function EditarConceptoIngreso
 	(
                 $id_concepto_ingreso,
 		$nombre = null,
@@ -1453,7 +1452,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 *
  	 * @param id_concepto_ingreso int Id del ingreso a eliminar
  	 **/
-	public function EliminarConceptoIngreso
+	public static function EliminarConceptoIngreso
 	(
 		$id_concepto_ingreso
 	)
@@ -1494,7 +1493,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param ordenar json Valor que contendr la manera en que se ordenar la lista.
  	 * @return conceptos_gasto json Arreglo que contendr� la informaci�n de conceptos de gasto.
  	 **/
-	public function ListaConceptoGasto
+	public static function ListaConceptoGasto
 	(
 		$orden = null,
                 $activo = null
@@ -1525,7 +1524,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param ordenar json Valor que indicar la forma en que se ordenar la lista
  	 * @return conceptos_ingreso json Arreglo que contendr� la informaci�n de los conceptos de ingreso
  	 **/
-	public function ListaConceptoIngreso
+	public static function ListaConceptoIngreso
 	(
 		$orden = null,
                 $activo = null
@@ -1565,7 +1564,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param nota string Nota del gasto
  	 * @return id_gasto int Id generado por la inserci�n del nuevo gasto
  	 **/
-	public function NuevoGasto
+	public static function NuevoGasto
 	(
 		$fecha_gasto,
 		$id_empresa,
@@ -1587,7 +1586,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 Logger::error("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
                 throw new Exception("No se pudo obtener el usuario de la sesion, ya inicio sesion?");
             }
-            if(!$this->validarEmpresa($id_empresa))
+            if(!self::validarEmpresa($id_empresa))
             {
                 throw new Exception("Se recibio una empresa no valida");
             }
@@ -1616,9 +1615,9 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 }
             }
             if(!$id_sucursal)
-                $id_sucursal=$this->getSucursal();
+                $id_sucursal=self::getSucursal();
             if(!$id_caja)
-                $id_caja=$this->getCaja();
+                $id_caja=self::getCaja();
             if(!is_null($id_caja))
             {
                 try
@@ -1641,7 +1640,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
             $gasto->setDescripcion($descripcion);
             $gasto->setFolio($folio);
             $gasto->setNota($nota);
-            $gasto->setFechaDeRegistro(date($this->formato_fecha, time()));
+            $gasto->setFechaDeRegistro(date("Y-m-d H:i:s", time()));
             $gasto->setIdUsuario($id_usuario);
             $gasto->setCancelado(0);
             DAO::transBegin();
@@ -1673,7 +1672,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param nota string Informacion adicinal sobre el gasto
  	 * @param folio string Folio de la factura de ese gasto
  	 **/
-	public function EditarGasto
+	public static function EditarGasto
 	(
 		$id_gasto,
 		$folio = null,
@@ -1748,7 +1747,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param id_concepto_ingreso int Id del concepto del ingreso
  	 * @param monto float Monto a registrar como ingreso
  	 **/
-	public function EditarIngreso
+	public static function EditarIngreso
 	(
 		$id_ingreso,
 		$id_concepto_ingreso = null,
@@ -1825,7 +1824,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param id_compra int Id de la compra a la que se abona
  	 * @return id_abono int El id autogenerado del abono de la sucursal
  	 **/
-	public function NuevoAbono
+	public static function NuevoAbono
 	(
 		$monto,
 		$tipo_pago,
@@ -1856,9 +1855,9 @@ require_once("interfaces/CargosYAbonos.interface.php");
                 Logger::error("El deudor obtenido no existe, verifique que este correcto");
                 throw new Exception("El deudor obtenido no existe, verifique que este correcto");
             }
-            $id_sucursal=$this->getSucursal();
-            $id_caja=$this->getCaja();
-            $fecha=date($this->formato_fecha,time());
+            $id_sucursal=self::getSucursal();
+            $id_caja=self::getCaja();
+            $fecha=date("Y-m-d H:i:s",time());
             $cancelado=0;
             $abono=null;
             $from=0;
@@ -2072,7 +2071,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param monto_minimo float Se listaran los ingresos cuyo monto sea mayor a este valor
  	 * @param monto_maximo float Se listaran los ingresos cuyo monto sea menor a este valor
  	 **/
-	public function ListaIngreso
+	public static function ListaIngreso
 	(
 		$id_caja = null,
 		$fecha_inicial = null,
@@ -2136,7 +2135,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     if(!is_null($fecha_final))
                         $ingreso_criterio_2->setFechaDelIngreso($fecha_final);
                     else
-                        $ingreso_criterio_2->setFechaDelIngreso(date($this->formato_fecha, time()));
+                        $ingreso_criterio_2->setFechaDelIngreso(date("Y-m-d H:i:s", time()));
                 }
                 else if(!is_null($fecha_final))
                 {
@@ -2160,9 +2159,9 @@ require_once("interfaces/CargosYAbonos.interface.php");
                     //con la hora 23:59:59 y se almacena como fecha en el objeto 2.
                     //
                     $hoy=mktime(0,0,0,date("m"),date("d"),date("Y"));
-                    $ingreso_criterio_1->setFechaDelIngreso(date($this->formato_fecha, $hoy));
+                    $ingreso_criterio_1->setFechaDelIngreso(date("Y-m-d H:i:s", $hoy));
                     $manana=mktime(23,59,59,date("m"),date("d"),date("Y"));
-                    $ingreso_criterio_2->setFechaDelIngreso(date($this->formato_fecha,$manana));
+                    $ingreso_criterio_2->setFechaDelIngreso(date("Y-m-d H:i:s",$manana));
                 }
                 if(!is_null($monto_minimo))
                 {
@@ -2210,7 +2209,7 @@ require_once("interfaces/CargosYAbonos.interface.php");
  	 * @param nota string Nota del abono
  	 * @param motivo_cancelacion string Motivo por el cual se cancelo el abono
  	 **/
-	public function EditarAbono
+	public static function EditarAbono
 	(
 		$id_abono,
 		$motivo_cancelacion = null,

@@ -8,7 +8,6 @@ require_once("interfaces/Empresas.interface.php");
 	
   class EmpresasController implements IEmpresas{
   
-        static $formato_fecha="Y-m-d H:i:s";
 	/**
  	 *
  	 *Mostrar?odas la empresas en el sistema, as?omo sus sucursalse y sus gerentes[a] correspondientes. Por default no se mostraran las empresas ni sucursales inactivas. 
@@ -16,7 +15,7 @@ require_once("interfaces/Empresas.interface.php");
  	 * @param activa bool Si no se obtiene este valor, se listaran tanto empresas activas como inactivas, si su valor es true, se mostraran solo las empresas activas, si es false, se mostraran solo las inactivas
  	 * @return empresas json Arreglo de objetos que contendr� las empresas de la instancia
  	 **/
-	public function Lista
+	public static function Lista
 	(
 		$activa = null
 	)
@@ -38,7 +37,7 @@ require_once("interfaces/Empresas.interface.php");
  	 * @param id_empresa int 
  	 * @param sucursales json Arreglo de objetos que tendran los ids de sucursales, un campo opcional de  margen de utilidad que simboliza el margen de utilidad que esas sucursales ganaran para los productos de esa empresa y un campo de descuento, que indica el descuento que se aplicara a todas los productos de esa empresa en esa sucursal
  	 **/
-	public function Agregar_sucursales
+	public static function Agregar_sucursales
 	(
 		$id_empresa, 
 		$sucursales
@@ -103,7 +102,7 @@ require_once("interfaces/Empresas.interface.php");
  	 * @param impuestos json Objeto que contendra los ids de los impuestos que aplican a esta empresa 
  	 * @return id_empresa int El ID autogenerado de la nueva empresa.
  	 **/
-	public function Nuevo
+	public static function Nuevo
 	(
                 $rfc,
                 $ciudad,
@@ -211,7 +210,7 @@ require_once("interfaces/Empresas.interface.php");
  	 *
  	 * @param id_empresa string El id de la empresa a eliminar.
  	 **/
-	public function Eliminar
+	public static function Eliminar
 	(
 		$id_empresa
 	)
@@ -248,11 +247,6 @@ require_once("interfaces/Empresas.interface.php");
 
             $almacen=new Almacen(array("id_empresa"=>$id_empresa));
 
-            $productos_controller=new ProductosController();
-            $paquetes_controller=new PaquetesController();
-            $servicios_controller=new ServiciosController();
-            $sucursales_controller=new SucursalesController();
-
             DAO::transBegin();
             try
             {
@@ -263,7 +257,7 @@ require_once("interfaces/Empresas.interface.php");
                     $productos=ProductoEmpresaDAO::search($producto_empresa);
                     if(count($productos)<2)
                     {
-                        $productos_controller->Desactivar($producto->getIdProducto());
+                        ProductosController::Desactivar($producto->getIdProducto());
                     }
                 }
 
@@ -273,7 +267,7 @@ require_once("interfaces/Empresas.interface.php");
                     $paquetes=PaqueteEmpresaDAO::search($paquete_empresa);
                     if(count($paquetes)<2)
                     {
-                        $paquetes_controller->Eliminar($paquete->getIdPaquete());
+                        PaquetesController::Eliminar($paquete->getIdPaquete());
                     }
                 }
 
@@ -283,7 +277,7 @@ require_once("interfaces/Empresas.interface.php");
                     $servicios=ServicioEmpresaDAO::search($servicio_empresa);
                     if(count($servicios)<2)
                     {
-                        $servicios_controller->Eliminar($servicio->getIdServicio());
+                        ServiciosController::Eliminar($servicio->getIdServicio());
                     }
                 }
 
@@ -293,7 +287,7 @@ require_once("interfaces/Empresas.interface.php");
                     $sucursales=SucursalEmpresaDAO::search($sucursal_empresa);
                     if(count($sucursales)<2)
                     {
-                        $sucursales_controller->Eliminar($sucursal->getIdSucursal());
+                        SucursalesController::Eliminar($sucursal->getIdSucursal());
                     }
                     else
                     {
@@ -302,7 +296,7 @@ require_once("interfaces/Empresas.interface.php");
                         foreach($almacenes as $a)
                         {
                             if($a->getIdTipoAlmacen()!=2&&$a->getActivo())
-                                $sucursales_controller->EliminarAlmacen($a->getIdAlmacen());
+                                SucursalesController::EliminarAlmacen($a->getIdAlmacen());
                         }
                     }
                     SucursalEmpresaDAO::delete($sucursal);
@@ -344,7 +338,7 @@ require_once("interfaces/Empresas.interface.php");
  	 * @param texto_extra string Comentarios sobre la ubicacin de la empresa.
  	 * @param telefono2 string Telefono 2 de la empresa
  	 **/
-	public function Editar
+	public static function Editar
 	(
 		$id_empresa,
 		$descuento = null,

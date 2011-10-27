@@ -18,7 +18,7 @@ class DireccionController{
 	  * @param $direccion_vo Direccion
 	  * 
 	  **/
-	public function validarDireccion( $direccion_vo )
+	public static function validarDireccion( $direccion_vo )
 	{
 
 		if( ( $direccion_vo instanceof Direccion ) === false )	
